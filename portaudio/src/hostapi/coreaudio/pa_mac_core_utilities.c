@@ -57,11 +57,6 @@
 */
 
 #include "pa_mac_core_utilities.h"
-#include "pa_mac_core_internal.h"
-#include <libkern/OSAtomic.h>
-#include <strings.h>
-#include <pthread.h>
-#include <sys/time.h>
 
 PaError PaMacCore_SetUnixError( int err, int line )
 {
@@ -204,19 +199,10 @@ PaError PaMacCore_SetError(OSStatus error, int line, int isError)
     else
         errorType = "Warning";
 
-    char str[20];
-    // see if it appears to be a 4-char-code
-    *(UInt32 *)(str + 1) = CFSwapInt32HostToBig(error);
-    if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4]))
-    {
-        str[0] = str[5] = '\'';
-        str[6] = '\0';
-    } else {
-        // no, format it as an integer
-        sprintf(str, "%d", (int)error);
-    }
-
-    DBUG(("%s on line %d: err='%s', msg=%s\n", errorType, line, str, errorText));
+    if ((int)error < -99999 || (int)error > 99999)
+        DBUG(("%s on line %d: err='%4s', msg='%s'\n", errorType, line, (const char *)&error, errorText));
+    else
+        DBUG(("%s on line %d: err=%d, 0x%x, msg='%s'\n", errorType, line, (int)error, (unsigned)error, errorText));
 
     PaUtil_SetLastHostErrorInfo( paCoreAudio, error, errorText );
 
@@ -306,13 +292,8 @@ long computeRingBufferSize( const PaStreamParameters *inputParameters,
 /*
  * Durring testing of core audio, I found that serious crashes could occur
  * if properties such as sample rate were changed multiple times in rapid
- * succession. The function below could be used to with a condition variable.
- * to prevent propertychanges from happening until the last property
- * change is acknowledged. Instead, I implemented a busy-wait, which is simpler
- * to implement b/c in second round of testing (nov '09) property changes occured
- * quickly and so there was no real way to test the condition variable implementation.
- * therefore, this function is not used, but it is aluded to in commented code below,
- * since it represents a theoretically better implementation.
+ * succession. The function below has some fancy logic to make sure that changes
+ * are acknowledged before another is requested. That seems to help a lot.
  */
 
 OSStatus propertyProc(
@@ -322,7 +303,9 @@ OSStatus propertyProc(
     AudioDevicePropertyID inPropertyID, 
     void* inClientData )
 {
-   // this is where we would set the condition variable
+   MutexAndBool *mab = (MutexAndBool *) inClientData;
+   mab->once = TRUE;
+   pthread_mutex_unlock( &(mab->mutex) );
    return noErr;
 }
 
@@ -330,11 +313,7 @@ OSStatus propertyProc(
    be acknowledged, and returns the final value, which is not guaranteed
    by this function to be the same as the desired value. Obviously, this
    function can only be used for data whose input and output are the
-   same size and format, and their size and format are known in advance.
-   whether or not the call succeeds, if the data is successfully read,
-   it is returned in outPropertyData. If it is not read successfully,
-   outPropertyData is zeroed, which may or may not be useful in
-   determining if the property was read. */
+   same size and format, and their size and format are known in advance.*/
 PaError AudioDeviceSetPropertyNowAndWaitForChange(
     AudioDeviceID inDevice,
     UInt32 inChannel, 
@@ -345,72 +324,83 @@ PaError AudioDeviceSetPropertyNowAndWaitForChange(
     void *outPropertyData )
 {
    OSStatus macErr;
+   int unixErr;
+   MutexAndBool mab;
    UInt32 outPropertyDataSize = inPropertyDataSize;
 
    /* First, see if it already has that value. If so, return. */
    macErr = AudioDeviceGetProperty( inDevice, inChannel,
                                  isInput, inPropertyID, 
                                  &outPropertyDataSize, outPropertyData );
-   if( macErr ) {
-      memset( outPropertyData, 0, inPropertyDataSize );
-      goto failMac;
-   }
+   if( macErr )
+      goto failMac2;
    if( inPropertyDataSize!=outPropertyDataSize )
       return paInternalError;
    if( 0==memcmp( outPropertyData, inPropertyData, outPropertyDataSize ) )
       return paNoError;
 
-   /* Ideally, we'd use a condition variable to determine changes.
-      we could set that up here. */
+   /* setup and lock mutex */
+   mab.once = FALSE;
+   unixErr = pthread_mutex_init( &mab.mutex, NULL );
+   if( unixErr )
+      goto failUnix2;
+   unixErr = pthread_mutex_lock( &mab.mutex );
+   if( unixErr )
+      goto failUnix;
 
-   /* If we were using a cond variable, we'd do something useful here,
-      but for now, this is just to make 10.6 happy. */
+   /* add property listener */
    macErr = AudioDeviceAddPropertyListener( inDevice, inChannel, isInput,
                                    inPropertyID, propertyProc,
-                                   NULL ); 
+                                   &mab ); 
    if( macErr )
-      /* we couldn't add a listener. */
       goto failMac;
-
    /* set property */
    macErr  = AudioDeviceSetProperty( inDevice, NULL, inChannel,
                                  isInput, inPropertyID,
                                  inPropertyDataSize, inPropertyData );
+   if( macErr ) {
+      /* we couldn't set the property, so we'll just unlock the mutex
+         and move on. */
+      pthread_mutex_unlock( &mab.mutex );
+   }
+
+   /* wait for property to change */                      
+   unixErr = pthread_mutex_lock( &mab.mutex );
+   if( unixErr )
+      goto failUnix;
+
+   /* now read the property back out */
+   macErr = AudioDeviceGetProperty( inDevice, inChannel,
+                                 isInput, inPropertyID, 
+                                 &outPropertyDataSize, outPropertyData );
    if( macErr )
       goto failMac;
+   /* cleanup */
+   AudioDeviceRemovePropertyListener( inDevice, inChannel, isInput,
+                                      inPropertyID, propertyProc );
+   unixErr = pthread_mutex_unlock( &mab.mutex );
+   if( unixErr )
+      goto failUnix2;
+   unixErr = pthread_mutex_destroy( &mab.mutex );
+   if( unixErr )
+      goto failUnix2;
 
-   /* busy-wait up to 30 seconds for the property to change */
-   /* busy-wait is justified here only because the correct alternative (condition variable)
-      was hard to test, since most of the waiting ended up being for setting rather than
-      getting in OS X 10.5. This was not the case in earlier OS versions. */
-   struct timeval tv1, tv2;
-   gettimeofday( &tv1, NULL );
-   memcpy( &tv2, &tv1, sizeof( struct timeval ) );
-   while( tv2.tv_sec - tv1.tv_sec < 30 ) {
-      /* now read the property back out */
-      macErr = AudioDeviceGetProperty( inDevice, inChannel,
-                                    isInput, inPropertyID, 
-                                    &outPropertyDataSize, outPropertyData );
-      if( macErr ) {
-         memset( outPropertyData, 0, inPropertyDataSize );
-         goto failMac;
-      }
-      /* and compare... */
-      if( 0==memcmp( outPropertyData, inPropertyData, outPropertyDataSize ) ) {
-         AudioDeviceRemovePropertyListener( inDevice, inChannel, isInput, inPropertyID, propertyProc );
-         return paNoError;
-      }
-      /* No match yet, so let's sleep and try again. */
-      Pa_Sleep( 100 );
-      gettimeofday( &tv2, NULL );
-   }
-   DBUG( ("Timeout waiting for device setting.\n" ) );
-   
-   AudioDeviceRemovePropertyListener( inDevice, inChannel, isInput, inPropertyID, propertyProc );
    return paNoError;
 
+ failUnix:
+   pthread_mutex_destroy( &mab.mutex );
+   AudioDeviceRemovePropertyListener( inDevice, inChannel, isInput,
+                                      inPropertyID, propertyProc );
+
+ failUnix2:
+   DBUG( ("Error #%d while setting a device property: %s\n", unixErr, strerror( unixErr ) ) );
+   return paUnanticipatedHostError;
+
  failMac:
-   AudioDeviceRemovePropertyListener( inDevice, inChannel, isInput, inPropertyID, propertyProc );
+   pthread_mutex_destroy( &mab.mutex );
+   AudioDeviceRemovePropertyListener( inDevice, inChannel, isInput,
+                                      inPropertyID, propertyProc );
+ failMac2:
    return ERR( macErr );
 }
 
@@ -428,6 +418,10 @@ PaError setBestSampleRateForDevice( const AudioDeviceID device,
                                     const bool requireExact,
                                     const Float64 desiredSrate )
 {
+   /*FIXME: changing the sample rate is disruptive to other programs using the
+            device, so it might be good to offer a custom flag to not change the
+            sample rate and just do conversion. (in my casual tests, there is
+            no disruption unless the sample rate really does need to change) */
    const bool isInput = isOutput ? 0 : 1;
    Float64 srate;
    UInt32 propsize = sizeof( Float64 );
@@ -439,15 +433,13 @@ PaError setBestSampleRateForDevice( const AudioDeviceID device,
    VDBUG(("Setting sample rate for device %ld to %g.\n",device,(float)desiredSrate));
 
    /* -- try setting the sample rate -- */
-   srate = 0;
    err = AudioDeviceSetPropertyNowAndWaitForChange(
                                  device, 0, isInput,
                                  kAudioDevicePropertyNominalSampleRate,
                                  propsize, &desiredSrate, &srate );
+   if( err )
+      return err;
 
-   /* -- if the rate agrees, and was changed, we are done -- */
-   if( srate != 0 && srate == desiredSrate )
-      return paNoError;
    /* -- if the rate agrees, and we got no errors, we are done -- */
    if( !err && srate == desiredSrate )
       return paNoError;
@@ -500,18 +492,18 @@ PaError setBestSampleRateForDevice( const AudioDeviceID device,
 
    /* -- set the sample rate -- */
    propsize = sizeof( best );
-   srate = 0;
    err = AudioDeviceSetPropertyNowAndWaitForChange(
                                  device, 0, isInput,
                                  kAudioDevicePropertyNominalSampleRate,
                                  propsize, &best, &srate );
-
-   /* -- if the set rate matches, we are done -- */
-   if( srate != 0 && srate == best )
-      return paNoError;
+   if( err )
+      return err;
 
    if( err )
       return ERR( err );
+   /* -- if the set rate matches, we are done -- */
+   if( srate == best )
+      return paNoError;
 
    /* -- otherwise, something wierd happened: we didn't set the rate, and we got no errors. Just bail. */
    return paInternalError;
@@ -528,9 +520,9 @@ PaError setBestSampleRateForDevice( const AudioDeviceID device,
    not usually catastrophic.
 */
 PaError setBestFramesPerBuffer( const AudioDeviceID device,
-                                const bool isOutput,
-                                UInt32 requestedFramesPerBuffer, 
-                                UInt32 *actualFramesPerBuffer )
+                                       const bool isOutput,
+                                       unsigned long requestedFramesPerBuffer, 
+                                       unsigned long *actualFramesPerBuffer )
 {
    UInt32 afpb;
    const bool isInput = !isOutput;
@@ -617,117 +609,3 @@ PaError setBestFramesPerBuffer( const AudioDeviceID device,
 
    return paNoError;
 }
-
-/**********************
- *
- * XRun stuff
- *
- **********************/
-
-struct PaMacXRunListNode_s {
-   PaMacCoreStream *stream;
-   struct PaMacXRunListNode_s *next;
-} ;
-
-typedef struct PaMacXRunListNode_s PaMacXRunListNode;
-
-/** Always empty, so that it can always be the one returned by
-    addToXRunListenerList. note that it's not a pointer. */
-static PaMacXRunListNode firstXRunListNode;
-static int xRunListSize;
-static pthread_mutex_t xrunMutex;
-
-OSStatus xrunCallback(
-    AudioDeviceID inDevice, 
-    UInt32 inChannel, 
-    Boolean isInput, 
-    AudioDevicePropertyID inPropertyID, 
-    void* inClientData)
-{
-   PaMacXRunListNode *node = (PaMacXRunListNode *) inClientData;
-
-   int ret = pthread_mutex_trylock( &xrunMutex ) ;
-
-   if( ret == 0 ) {
-
-      node = node->next ; //skip the first node
-
-      for( ; node; node=node->next ) {
-         PaMacCoreStream *stream = node->stream;
-
-         if( stream->state != ACTIVE )
-            continue; //if the stream isn't active, we don't care if the device is dropping
-
-         if( isInput ) {
-            if( stream->inputDevice == inDevice )
-               OSAtomicOr32( paInputOverflow, (uint32_t *)&(stream->xrunFlags) );
-         } else {
-            if( stream->outputDevice == inDevice )
-               OSAtomicOr32( paOutputUnderflow, (uint32_t *)&(stream->xrunFlags) );
-         }
-      }
-
-      pthread_mutex_unlock( &xrunMutex );
-   }
-
-   return 0;
-}
-
-int initializeXRunListenerList()
-{
-   xRunListSize = 0;
-   bzero( (void *) &firstXRunListNode, sizeof(firstXRunListNode) );
-   return pthread_mutex_init( &xrunMutex, NULL );
-}
-int destroyXRunListenerList()
-{
-   PaMacXRunListNode *node;
-   node = firstXRunListNode.next;
-   while( node ) {
-      PaMacXRunListNode *tmp = node;
-      node = node->next;
-      free( tmp );
-   }
-   xRunListSize = 0;
-   return pthread_mutex_destroy( &xrunMutex );
-}
-
-void *addToXRunListenerList( void *stream )
-{
-   pthread_mutex_lock( &xrunMutex );
-   PaMacXRunListNode *newNode;
-   // setup new node:
-   newNode = (PaMacXRunListNode *) malloc( sizeof( PaMacXRunListNode ) );
-   newNode->stream = (PaMacCoreStream *) stream;
-   newNode->next = firstXRunListNode.next;
-   // insert:
-   firstXRunListNode.next = newNode;
-   pthread_mutex_unlock( &xrunMutex );
-
-   return &firstXRunListNode;
-}
-
-int removeFromXRunListenerList( void *stream )
-{
-   pthread_mutex_lock( &xrunMutex );
-   PaMacXRunListNode *node, *prev;
-   prev = &firstXRunListNode;
-   node = firstXRunListNode.next;
-   while( node ) {
-      if( node->stream == stream ) {
-         //found it:
-         --xRunListSize;
-         prev->next = node->next;
-         free( node );
-         pthread_mutex_unlock( &xrunMutex );
-         return xRunListSize;
-      }
-      prev = prev->next;
-      node = node->next;
-   }
-
-   pthread_mutex_unlock( &xrunMutex );
-   // failure
-   return xRunListSize;
-}
-

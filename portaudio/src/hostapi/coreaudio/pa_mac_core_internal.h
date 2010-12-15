@@ -61,10 +61,9 @@
 #ifndef PA_MAC_CORE_INTERNAL_H__
 #define PA_MAC_CORE_INTERNAL_H__
 
-#include <CoreAudio/CoreAudio.h>
-#include <CoreServices/CoreServices.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
+
 
 #include "portaudio.h"
 #include "pa_util.h"
@@ -140,15 +139,14 @@ typedef struct PaMacCoreStream
     /* We need to preallocate an inputBuffer for reading data. */
     AudioBufferList inputAudioBufferList;
     AudioTimeStamp startTime;
-    /* FIXME: instead of volatile, these should be properly memory barriered */
     volatile PaStreamCallbackFlags xrunFlags;
+    volatile bool isTimeSet;
     volatile enum {
        STOPPED          = 0, /* playback is completely stopped,
                                 and the user has called StopStream(). */
        CALLBACK_STOPPED = 1, /* callback has requested stop,
                                 but user has not yet called StopStream(). */
-       STOPPING         = 2, /* The stream is in the process of closing
-                                because the user has called StopStream.
+       STOPPING         = 2, /* The stream is in the process of closing.
                                 This state is just used internally;
                                 externally it is indistinguishable from
                                 ACTIVE.*/
@@ -158,18 +156,6 @@ typedef struct PaMacCoreStream
     //these may be different from the stream sample rate due to SR conversion:
     double outDeviceSampleRate;
     double inDeviceSampleRate;
-	
-	/* data updated by main thread and notifications, protected by timingInformationMutex */
-	int timingInformationMutexIsInitialized;
-	pthread_mutex_t timingInformationMutex;
-	Float64 recipricalOfActualOutputSampleRate;
-	UInt32 deviceOutputLatencySamples;
-	UInt32 deviceInputLatencySamples;
-	
-	/* while the io proc is active, the following values are only accessed and manipulated by the ioproc */
-	Float64 recipricalOfActualOutputSampleRate_ioProcCopy;
-	UInt32 deviceOutputLatencySamples_ioProcCopy;
-	UInt32 deviceInputLatencySamples_ioProcCopy;
 }
 PaMacCoreStream;
 

@@ -40,6 +40,7 @@ in future releases.  The public (stable) API is in m_pd.h. */
 extern "C" {
 #endif
 
+    
 /* --------------------- geometry ---------------------------- */
 #define IOWIDTH 7       /* width of an inlet/outlet in pixels */
 #define IOMIDDLE ((IOWIDTH-1)/2)
@@ -75,6 +76,11 @@ EXTERN_STRUCT _canvasenvironment;
 
 EXTERN_STRUCT _fielddesc;
 #define t_fielddesc struct _fielddesc
+
+// jsarlo
+EXTERN_STRUCT _magicGlass;
+#define t_magicGlass struct _magicGlass
+// end jsarlo
 
 typedef struct _selection
 {
@@ -183,6 +189,10 @@ struct _glist
     unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
     unsigned int gl_isgraph:1;      /* show as graph on parent */
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
+	unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
+    // jsarlo
+    t_magicGlass *gl_magic_glass;   /* magic glass object */
+    // end jsarlo
 };
 
 #define gl_gobj gl_obj.te_g
@@ -262,6 +272,8 @@ typedef void (*t_visfn)(t_gobj *x, struct _glist *glist, int flag);
         /* field a mouse click (when not in "edit" mode) */
 typedef int (*t_clickfn)(t_gobj *x, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit);
+        /* and this to displace a gobj using tags: */
+typedef void (*t_displacefnwtag)(t_gobj *x, struct _glist *glist, int dx, int dy);
         /* ... and later, resizing; getting/setting font or color... */
 
 struct _widgetbehavior
@@ -273,6 +285,7 @@ struct _widgetbehavior
     t_deletefn w_deletefn;
     t_visfn w_visfn;
     t_clickfn w_clickfn;
+	t_displacefnwtag w_displacefnwtag;
 };
 
 /* -------- behaviors for scalars defined by objects in template --------- */
@@ -393,8 +406,7 @@ EXTERN void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     t_float x1, t_float y1, t_float x2, t_float y2,
     t_float px1, t_float py1, t_float px2, t_float py2);
-EXTERN void glist_arraydialog(t_glist *parent, t_symbol *name,
-    t_floatarg size, t_floatarg saveit, t_floatarg newgraph);
+EXTERN void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_binbuf *glist_writetobinbuf(t_glist *x, int wholething);
 EXTERN int glist_isgraph(t_glist *x);
 EXTERN void glist_redraw(t_glist *x);
@@ -410,6 +422,8 @@ extern int glist_amreloadingabstractions; /* stop GUI changes while reloading */
 /* -------------------- functions on texts ------------------------- */
 EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize);
 EXTERN void text_drawborder(t_text *x, t_glist *glist, char *tag,
+    int width, int height, int firsttime);
+EXTERN void text_drawborder_withtag(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
 EXTERN void text_eraseborder(t_text *x, t_glist *glist, char *tag);
 EXTERN int text_xcoord(t_text *x, t_glist *glist);

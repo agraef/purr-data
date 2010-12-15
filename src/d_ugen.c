@@ -219,11 +219,6 @@ static void block_float(t_block *x, t_floatarg f)
 
 static void block_bang(t_block *x)
 {
-    if (!dsp_chain) 
-    {
-        pd_error(x, "bang to block~ or switch~ with DSP off has no effect");
-        return;
-    }
     if (x->x_switched && !x->x_switchon)
     {
         t_int *ip;

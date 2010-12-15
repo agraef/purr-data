@@ -59,7 +59,7 @@ static void *Pt_CallbackProc(void *p)
     /* printf("pt_callback_proc_id %d, id %d\n", pt_callback_proc_id,
            parameters->id); */
     if (geteuid() == 0) setpriority(PRIO_PROCESS, 0, -20);
-    while (pt_callback_proc_id == parameters->id) {
+	while (pt_callback_proc_id == parameters->id) {
         /* wait for a multiple of resolution ms */
         struct timeval timeout;
         int delay = mytime++ * parameters->resolution - Pt_Time();
@@ -121,12 +121,6 @@ PtTimestamp Pt_Time()
     seconds = now.time - time_offset.time;
     milliseconds = now.millitm - time_offset.millitm;
     return seconds * 1000 + milliseconds;
-}
-
-
-void Pt_Sleep(long duration)
-{
-    usleep(duration * 1000);
 }
 
 

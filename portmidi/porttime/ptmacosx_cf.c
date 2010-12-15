@@ -133,8 +133,3 @@ PtTimestamp Pt_Time()
     return (PtTimestamp) ((now - startTime) * 1000.0);
 }
 
-
-void Pt_Sleep(long duration)
-{
-    usleep(duration * 1000);
-}

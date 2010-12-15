@@ -23,7 +23,7 @@ GFLAGS = -DINSTALL_PREFIX=\"$(prefix)\"
 
 # varibles to match packages/Makefile.buildlayout so that they can be easily
 # overridden when building Pd-extended builds. <hans@at.or.at>
-libpddir = $(libdir)/pd-extended
+libpddir = $(libdir)/pd-l2ork
 pddocdir = $(libpddir)/doc
 libpdbindir = $(libpddir)/bin
 
@@ -62,7 +62,7 @@ TYPE_PUNNING_SRC = d_ctl.c d_array.c d_delay.c d_filter.c d_math.c d_osc.c d_sou
 OPT_SAFE_SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
     g_scalar.c g_traversal.c g_guiconnect.c g_readwrite.c g_editor.c \
     g_all_guis.c g_bang.c g_hdial.c g_hslider.c g_mycanvas.c g_numbox.c \
-    g_toggle.c g_vdial.c g_vslider.c g_vumeter.c \
+    g_toggle.c g_vdial.c g_vslider.c g_vumeter.c g_magicglass.c \
     m_pd.c m_class.c m_obj.c m_atom.c m_memory.c m_binbuf.c \
     m_conf.c m_glob.c m_sched.c \
     s_main.c s_inter.c s_file.c s_print.c \
@@ -200,8 +200,9 @@ install:  all
 	install -m644 helpbrowser.tcl $(DESTDIR)$(libpdbindir)/helpbrowser.tcl
 	install -d $(DESTDIR)$(bindir)
 	install $(BINARYMODE) $(PDEXEC) $(DESTDIR)$(bindir)/@PDEXEC@
-# kludge to allow pd~ to work by default in pd-extended
-	ln -s $(bindir)/pdextended $(DESTDIR)$(libpddir)/pd
+# kludge to allow pd~ to work by default in pd-l2ork
+	rm -f $(DESTDIR)$(libpddir)/pd
+	ln -s $(bindir)/pd-l2ork $(DESTDIR)$(libpddir)/pd
 	install -m755 $(BIN_DIR)/pdsend $(DESTDIR)$(bindir)/pdsend
 	install -m755 $(BIN_DIR)/pdreceive $(DESTDIR)$(bindir)/pdreceive 
 	for dir in $(shell ls -1 ../doc | grep -v CVS); do \
@@ -220,12 +221,12 @@ install:  all
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
 	rsync -ax --exclude=.git --exclude=.svn ../extra $(DESTDIR)$(libpddir)/
-	install -d $(DESTDIR)$(includedir)/pdextended
-	install -m644 m_pd.h $(DESTDIR)$(includedir)/pdextended/m_pd.h
-	install -m644 m_imp.h $(DESTDIR)$(includedir)/pdextended/m_imp.h
-	install -m644 g_canvas.h $(DESTDIR)$(includedir)/pdextended/g_canvas.h
-	install -m644 s_stuff.h $(DESTDIR)$(includedir)/pdextended/s_stuff.h
-	install -m644 g_all_guis.h $(DESTDIR)$(includedir)/pdextended/g_all_guis.h
+	install -d $(DESTDIR)$(includedir)/pdl2ork
+	install -m644 m_pd.h $(DESTDIR)$(includedir)/pdl2ork/m_pd.h
+	install -m644 m_imp.h $(DESTDIR)$(includedir)/pdl2ork/m_imp.h
+	install -m644 g_canvas.h $(DESTDIR)$(includedir)/pdl2ork/g_canvas.h
+	install -m644 s_stuff.h $(DESTDIR)$(includedir)/pdl2ork/s_stuff.h
+	install -m644 g_all_guis.h $(DESTDIR)$(includedir)/pdl2ork/g_all_guis.h
 	install -d $(DESTDIR)$(mandir)/man1
 	gzip < ../man/pd.1 >  $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz
 	chmod 644 $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz

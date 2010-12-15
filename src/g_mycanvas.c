@@ -25,6 +25,9 @@
 #include <io.h>
 #endif
 
+extern int gfxstub_haveproperties(void *key);
+void my_canvas_draw_select(t_my_canvas* x, t_glist* glist);
+
 /* ---------- cnv  my gui-canvas for a window ---------------- */
 
 t_widgetbehavior my_canvas_widgetbehavior;
@@ -38,20 +41,26 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags %lxRECT\n",
-             canvas, xpos, ypos,
-             xpos + x->x_vis_w, ypos + x->x_vis_h,
-             x->x_gui.x_bcol, x->x_gui.x_bcol, x);
-    sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags %lxBASE\n",
-             canvas, xpos, ypos,
-             xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
-             x->x_gui.x_bcol, x);
-    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-             -font {{%s} %d %s} -fill #%6.6x -tags %lxLABEL\n",
-             canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-             x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-			 x->x_gui.x_lcol, x);
+	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
+	sprintf(sh->h_pathname, ".x%x.h%x", (int)canvas, (int)sh);
+
+	//if (glist_isvisible(glist)) {
+
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRECT %lxMYCNV}\n",
+		         canvas, xpos, ypos,
+		         xpos + x->x_vis_w, ypos + x->x_vis_h,
+		         x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags {%lxBASE %lxMYCNV}\n",
+		         canvas, xpos, ypos,
+		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
+		         x->x_gui.x_bcol, x, x);
+		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxMYCNV}\n",
+		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
+		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+				 x->x_gui.x_lcol, x, x);
+	//}
 }
 
 void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
@@ -60,34 +69,53 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c coords %lxRECT %d %d %d %d\n",
-             canvas, x, xpos, ypos, xpos + x->x_vis_w,
-             ypos + x->x_vis_h);
-    sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-             canvas, x, xpos, ypos,
-             xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-    sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-             canvas, x, xpos+x->x_gui.x_ldx,
-             ypos+x->x_gui.x_ldy);
+	if (glist_isvisible(canvas)) {
+
+		sys_vgui(".x%lx.c coords %lxRECT %d %d %d %d\n",
+		         canvas, x, xpos, ypos, xpos + x->x_vis_w,
+		         ypos + x->x_vis_h);
+		sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
+		         canvas, x, xpos, ypos,
+		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
+		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+		         canvas, x, xpos+x->x_gui.x_ldx,
+		         ypos+x->x_gui.x_ldy);
+		/* redraw scale handle rectangle if selected */
+		if (x->x_gui.x_fsf.x_selected) {
+			my_canvas_draw_select(x, x->x_gui.x_glist);
+		}
+	}
 }
 
 void my_canvas_draw_erase(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c delete %lxBASE\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxRECT\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
+	sys_vgui(".x%lx.c delete %lxMYCNV\n", canvas, x);
+	sys_vgui(".x%lx.c dtag all %lxMYCNV\n", canvas, x);
+	if (x->x_gui.x_fsf.x_selected) {
+		t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+		sys_vgui("destroy %s\n", sh->h_pathname);
+	}
+    //sys_vgui(".x%lx.c delete %lxBASE\n", canvas, x);
+    //sys_vgui(".x%lx.c delete %lxRECT\n", canvas, x);
+    //sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
 }
 
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
+	char color[64];
+	if (x->x_gui.x_fsf.x_selected)
+		sprintf(color, "$select_color");
+	else
+		sprintf(color, "#%6.6x", x->x_gui.x_bcol);
+
     sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -outline #%6.6x\n", canvas, x,
              x->x_gui.x_bcol, x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x,
-             x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_bcol);
+    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline %s\n", canvas, x,
+             color);
     sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 			 x->x_gui.x_lcol,
@@ -97,14 +125,155 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
 
-    if(x->x_gui.x_fsf.x_selected)
+	if (glist_isvisible(canvas)) {
+
+		if(x->x_gui.x_fsf.x_selected)
+		{
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+
+			if (x->x_gui.scale_vis)
+				sys_vgui("destroy %s\n", sh->h_pathname);
+
+			sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+			sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxMYCNV}\n",
+				 canvas, x->x_gui.x_obj.te_xpix + x->x_vis_w - SCALEHANDLE_WIDTH,
+				 x->x_gui.x_obj.te_ypix + x->x_vis_h - SCALEHANDLE_HEIGHT,
+				 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+				 sh->h_pathname, x, x);
+			sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+			sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+			sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+			x->x_gui.scale_vis = 1;
+
+			sys_vgui(".x%lx.c addtag selected withtag %lxMYCNV\n", canvas, x);
+		}
+		else
+		{
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, x->x_gui.x_bcol);
+			sys_vgui(".x%lx.c dtag %lxMYCNV selected\n", canvas, x);
+			sys_vgui("destroy %s\n", sh->h_pathname);
+			x->x_gui.scale_vis = 0;
+		}
+	}
+}
+
+static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+{
+
+	t_my_canvas *x = (t_my_canvas *)(sh->h_master);
+
+	if (xxx) x->x_gui.scale_offset_x = xxx;
+	if (yyy) x->x_gui.scale_offset_y = yyy;
+
+    int newstate = (int)f;
+    if (sh->h_dragon && newstate == 0)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
+		/* done dragging */
+
+		/* first set up the undo apply */
+		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+
+		if (sh->h_dragx || sh->h_dragy) {
+
+			x->x_vis_w = x->x_vis_w + sh->h_dragx - x->x_gui.scale_offset_x;
+			if (x->x_vis_w < SCALE_CNV_MINWIDTH)
+				x->x_vis_w = SCALE_CNV_MINWIDTH;
+			x->x_vis_h = x->x_vis_h + sh->h_dragy - x->x_gui.scale_offset_y;
+			if (x->x_vis_h < SCALE_CNV_MINHEIGHT)
+				x->x_vis_h = SCALE_CNV_MINHEIGHT;
+
+			if (x->x_gui.x_w > x->x_vis_w || x->x_gui.x_h > x->x_vis_h) {
+				x->x_gui.x_w = (x->x_vis_w > x->x_vis_h ? x->x_vis_h : x->x_vis_w);
+				x->x_gui.x_h = x->x_gui.x_w;
+			}
+			canvas_dirty(x->x_gui.x_glist, 1);
+		}
+
+		int properties = gfxstub_haveproperties((void *)x);
+
+		if (properties) {
+			sys_vgui(".gfxstub%lx.rng.min_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.rng.min_ent insert 0 %d\n", properties, x->x_vis_w);
+			sys_vgui(".gfxstub%lx.rng.max_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.rng.max_ent insert 0 %d\n", properties, x->x_vis_h);
+			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
+		}
+
+		if (glist_isvisible(x->x_gui.x_glist))
+		{
+			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+			my_canvas_draw_move(x, x->x_gui.x_glist);
+			sys_vgui("destroy %s\n", sh->h_pathname);
+			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+		}
     }
-    else
+    else if (!sh->h_dragon && newstate)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, x->x_gui.x_bcol);
+		/* dragging */
+		if (glist_isvisible(x->x_gui.x_glist))
+		{
+			sys_vgui("lower %s\n", sh->h_pathname);
+			sys_vgui(".x%x.c create rectangle %d %d %d %d\
+	 -outline $select_color -width 1 -tags %s\n",
+				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
+					x->x_gui.x_obj.te_xpix + x->x_vis_w,
+					x->x_gui.x_obj.te_ypix + x->x_vis_h, sh->h_outlinetag);
+		}
+
+		sh->h_dragx = 0;
+		sh->h_dragy = 0;
+    }
+    sh->h_dragon = newstate;
+}
+
+static void my_canvas__motionhook(t_scalehandle *sh,
+				    t_floatarg f1, t_floatarg f2)
+{
+    if (sh->h_dragon)
+    {
+		t_my_canvas *x = (t_my_canvas *)(sh->h_master);
+		int dx = (int)f1, dy = (int)f2;
+		int newx, newy;
+		newx = x->x_gui.x_obj.te_xpix + x->x_vis_w - x->x_gui.scale_offset_x + dx;
+		newy = x->x_gui.x_obj.te_ypix + x->x_vis_h - x->x_gui.scale_offset_y + dy;
+
+		if (newx < x->x_gui.x_obj.te_xpix + SCALE_CNV_MINWIDTH)
+			newx = x->x_gui.x_obj.te_xpix + SCALE_CNV_MINWIDTH;
+		if (newy < x->x_gui.x_obj.te_ypix + SCALE_CNV_MINHEIGHT)
+			newy = x->x_gui.x_obj.te_ypix + SCALE_CNV_MINHEIGHT;
+
+		if (glist_isvisible(x->x_gui.x_glist)) {
+			sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+				 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
+				 x->x_gui.x_obj.te_ypix, newx, newy);
+		}
+		sh->h_dragx = dx;
+		sh->h_dragy = dy;
+
+		int properties = gfxstub_haveproperties((void *)x);
+
+		if (properties) {
+			int new_w = x->x_vis_w - x->x_gui.scale_offset_x + sh->h_dragx;
+			int new_h = x->x_vis_h - x->x_gui.scale_offset_y + sh->h_dragy;
+			sys_vgui(".gfxstub%lx.rng.min_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.rng.min_ent insert 0 %d\n", properties, new_w);
+			sys_vgui(".gfxstub%lx.rng.max_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.rng.max_ent insert 0 %d\n", properties, new_h);
+			int min = (new_w < new_h ? new_w : new_h);
+			if (min <= x->x_gui.x_w) {
+				sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, min);
+			}
+		}
     }
 }
 
@@ -187,6 +356,8 @@ static void my_canvas_get_pos(t_my_canvas *x)
 
 static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
+	canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+
     t_symbol *srl[3];
     int a = (int)atom_getintarg(0, argc, argv);
     int w = (int)atom_getintarg(2, argc, argv);
@@ -206,6 +377,15 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     x->x_vis_h = h;
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+
+	/* forcing redraw of the scale handle */
+	if (x->x_gui.x_fsf.x_selected) {
+		my_canvas_draw_select(x, x->x_gui.x_glist);
+	}
+
+	//ico@bukvic.net 100518 update scrollbars when object potentially exceeds window size
+    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
 }
 
 static void my_canvas_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
@@ -348,6 +528,21 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     x->x_at[0].a_type = A_FLOAT;
     x->x_at[1].a_type = A_FLOAT;
     iemgui_verify_snd_ne_rcv(&x->x_gui);
+
+	/* scale handle init */
+    t_scalehandle *sh;
+    char buf[64];
+    x->x_gui.x_handle = pd_new(scalehandle_class);
+    sh = (t_scalehandle *)x->x_gui.x_handle;
+    sh->h_master = (t_gobj*)x;
+    sprintf(buf, "_h%x", (int)sh);
+    pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
+    sprintf(sh->h_outlinetag, "h%x", (int)sh);
+    sh->h_dragon = 0;
+	x->x_gui.scale_offset_x = 0;
+	x->x_gui.scale_offset_y = 0;
+	x->x_gui.scale_vis = 0;
+
     return (x);
 }
 
@@ -356,6 +551,13 @@ static void my_canvas_ff(t_my_canvas *x)
     if(x->x_gui.x_fsf.x_rcv_able)
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     gfxstub_deleteforkey(x);
+
+	/* scale handle deconstructor */
+    if (x->x_gui.x_handle)
+    {
+		pd_unbind(x->x_gui.x_handle, ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
+		pd_free(x->x_gui.x_handle);
+    }
 }
 
 void g_mycanvas_setup(void)
@@ -376,6 +578,13 @@ void g_mycanvas_setup(void)
     class_addmethod(my_canvas_class, (t_method)my_canvas_label_font, gensym("label_font"), A_GIMME, 0);
     class_addmethod(my_canvas_class, (t_method)my_canvas_get_pos, gensym("get_pos"), 0);
 
+    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
+				  sizeof(t_scalehandle), CLASS_PD, 0);
+    class_addmethod(scalehandle_class, (t_method)my_canvas__clickhook,
+		    gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(scalehandle_class, (t_method)my_canvas__motionhook,
+		    gensym("_motion"), A_FLOAT, A_FLOAT, 0);
+
     my_canvas_widgetbehavior.w_getrectfn = my_canvas_getrect;
     my_canvas_widgetbehavior.w_displacefn = iemgui_displace;
     my_canvas_widgetbehavior.w_selectfn = iemgui_select;
@@ -383,6 +592,7 @@ void g_mycanvas_setup(void)
     my_canvas_widgetbehavior.w_deletefn = iemgui_delete;
     my_canvas_widgetbehavior.w_visfn = iemgui_vis;
     my_canvas_widgetbehavior.w_clickfn = NULL;
+	my_canvas_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
     class_setwidget(my_canvas_class, &my_canvas_widgetbehavior);
     class_sethelpsymbol(my_canvas_class, gensym("my_canvas"));
     class_setsavefn(my_canvas_class, my_canvas_save);

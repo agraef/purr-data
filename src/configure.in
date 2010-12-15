@@ -175,12 +175,12 @@ GUISRC=
 fi
 
 # leave the executable as 'pd' on Mac OS X and Windows, but call it
-# 'pdextended' on GNU/Linux
+# 'pdl2ork' on GNU/Linux
 PDEXEC=pd
 
 if test `uname -s` = Linux;
 then
-    PDEXEC=pdextended
+    PDEXEC=pd-l2ork
     dnl Ckecking for ALSA
     echo .................... alsa= $alsa
 dnl This should be fixed so Pd can use ALSA shared libraries where appropriate.

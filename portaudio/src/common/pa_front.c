@@ -1,10 +1,10 @@
 /*
- * $Id: pa_front.c 1396 2008-11-03 19:31:30Z philburk $
+ * $Id: pa_front.c 1229 2007-06-15 16:11:11Z rossb $
  * Portable Audio I/O Library Multi-Host API front end
  * Validate function parameters and manage multiple host APIs.
  *
  * Based on the Open Source API proposed by Ross Bencina
- * Copyright (c) 1999-2008 Ross Bencina, Phil Burk
+ * Copyright (c) 1999-2002 Ross Bencina, Phil Burk
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files
@@ -40,20 +40,17 @@
 /** @file
  @ingroup common_src
 
- @brief Implements PortAudio API functions defined in portaudio.h, checks 
- some errors, delegates platform-specific behavior to host API implementations.
+ @brief Implements public PortAudio API, checks some errors, forwards to
+ host API implementations.
  
- Implements the functions defined in the PortAudio API (portaudio.h), 
- validates some parameters and checks for state inconsistencies before 
- forwarding API requests to specific Host API implementations (via the 
- interface declared in pa_hostapi.h), and Streams (via the interface 
- declared in pa_stream.h).
+ Implements the functions defined in the PortAudio API, checks for
+ some parameter and state inconsistencies and forwards API requests to
+ specific Host API implementations (via the interface declared in
+ pa_hostapi.h), and Streams (via the interface declared in pa_stream.h).
 
- This file manages initialization and termination of Host API
- implementations via initializer functions stored in the paHostApiInitializers
- global array (usually defined in an os-specific pa_[os]_hostapis.c file).
-
- This file maintains a list of all open streams and closes them at Pa_Terminate().
+ This file handles initialization and termination of Host API
+ implementations via initializers stored in the paHostApiInitializers
+ global variable.
 
  Some utility functions declared in pa_util.h are implemented in this file.
 
@@ -90,7 +87,7 @@
 
 
 #define PA_VERSION_  1899
-#define PA_VERSION_TEXT_ "PortAudio V19-devel (built " __DATE__  " " __TIME__ ")"
+#define PA_VERSION_TEXT_ "PortAudio V19-devel (built " __DATE__  ")"
 
 
 
@@ -408,8 +405,6 @@ const char *Pa_GetErrorText( PaError errorCode )
     case paCanNotWriteToACallbackStream:        result = "Can't write to a callback stream"; break;
     case paCanNotReadFromAnOutputOnlyStream:    result = "Can't read from an output only stream"; break;
     case paCanNotWriteToAnInputOnlyStream:      result = "Can't write to an input only stream"; break;
-    case paIncompatibleStreamHostApi: result = "Incompatible stream host API"; break;
-    case paBadBufferPtr:             result = "Bad buffer pointer"; break;
     default:                         
 		if( errorCode > 0 )
 			result = "Invalid error code (value greater than zero)"; 
@@ -1506,7 +1501,7 @@ const PaStreamInfo* Pa_GetStreamInfo( PaStream *stream )
         result = 0;
 
         PA_LOGAPI(("Pa_GetStreamInfo returned:\n" ));
-        PA_LOGAPI(("\tconst PaStreamInfo*: 0 [PaError error:%d ( %s )]\n", error, Pa_GetErrorText( error ) ));
+        PA_LOGAPI(("\tconst PaStreamInfo*: 0 [PaError error:%d ( %s )]\n", result, error, Pa_GetErrorText( error ) ));
 
     }
     else

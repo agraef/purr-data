@@ -203,5 +203,4 @@ void sys_ouch(void)
 {
     if (*errobject) error("%s: %s", errobject, errstring);
     else error("%s", errstring);
-    sys_gui("bell\n");
 }

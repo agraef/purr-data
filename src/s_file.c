@@ -6,7 +6,7 @@
  * this file implements a mechanism for storing and retrieving preferences.
  * Should later be renamed "preferences.c" or something.
  *
- * In unix this is handled by the "~/.pdextended" file, in windows by
+ * In unix this is handled by the "~/.pdl2ork" file, in windows by
  * the registry, and in MacOS by the Preferences system.
  */
 
@@ -58,10 +58,11 @@ static void sys_initloadpreferences( void)
 	char default_prefs_file[FILENAME_MAX];
     struct stat statbuf;
 
-	snprintf(default_prefs_file, FILENAME_MAX, "%s/default.pdextended", 
+	snprintf(default_prefs_file, FILENAME_MAX, "%s/default.pdl2ork", 
 			 sys_libdir->s_name);
+
     if (homedir)
-		snprintf(user_prefs_file, FILENAME_MAX, "%s/.pdextended", homedir);
+		snprintf(user_prefs_file, FILENAME_MAX, "%s/.pdl2ork", homedir);
 	if (stat(user_prefs_file, &statbuf) == 0) 
 		strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
 	else if (stat(default_prefs_file, &statbuf) == 0)
@@ -143,7 +144,7 @@ static void sys_initsavepreferences( void)
 
     if (!homedir)
         return;
-    snprintf(filenamebuf, FILENAME_MAX, "%s/.pdextended", homedir);
+    snprintf(filenamebuf, FILENAME_MAX, "%s/.pdl2ork", homedir);
     filenamebuf[FILENAME_MAX-1] = 0;
     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
     {
@@ -230,7 +231,7 @@ static void sys_donesavepreferences( void)
 #ifdef __APPLE__
 
 // prefs file that is currently the one to save to
-static char current_prefs[FILENAME_MAX] = "org.puredata.pdextended"; 
+static char current_prefs[FILENAME_MAX] = "org.puredata.pdl2ork"; 
 
 static void sys_initloadpreferences( void)
 {
@@ -247,13 +248,13 @@ static int sys_getpreference(const char *key, char *value, int size)
 	char *homedir = getenv("HOME");
     struct stat statbuf;
 	/* the 'defaults' command expects the filename without .plist at the end */
-	snprintf(default_prefs, FILENAME_MAX, "%s/../org.puredata.pdextended.default", 
+	snprintf(default_prefs, FILENAME_MAX, "%s/../org.puredata.pdl2ork.default", 
 			 sys_libdir->s_name);
-	snprintf(embedded_prefs, FILENAME_MAX, "%s/../org.puredata.pdextended", 
+	snprintf(embedded_prefs, FILENAME_MAX, "%s/../org.puredata.pdl2ork", 
 			 sys_libdir->s_name);
 	snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
 	snprintf(user_prefs_file, FILENAME_MAX, 
-			 "%s/Library/Preferences/org.puredata.pdextended.plist", homedir);
+			 "%s/Library/Preferences/org.puredata.pdl2ork.plist", homedir);
 	if (stat(embedded_prefs_file, &statbuf) == 0) 
 	{
 		snprintf(cmdbuf, FILENAME_MAX + 20, 
@@ -263,14 +264,14 @@ static int sys_getpreference(const char *key, char *value, int size)
 	else if (stat(user_prefs_file, &statbuf) == 0) 
 	{
 		snprintf(cmdbuf, FILENAME_MAX + 20, 
-				 "defaults read org.puredata.pdextended %s 2> /dev/null\n", key);
-        strcpy(current_prefs, "org.puredata.pdextended");
+				 "defaults read org.puredata.pdl2ork %s 2> /dev/null\n", key);
+        strcpy(current_prefs, "org.puredata.pdl2ork");
 	}
 	else 
 	{
 		snprintf(cmdbuf, FILENAME_MAX + 20, 
 				 "defaults read '%s' %s 2> /dev/null\n", default_prefs, key);
-        strcpy(current_prefs, "org.puredata.pdextended");
+        strcpy(current_prefs, "org.puredata.pdl2ork");
 	}
     FILE *fp = popen(cmdbuf, "r");
     while (nread < size)

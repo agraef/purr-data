@@ -14,8 +14,8 @@ static long time_resolution;
 static MMRESULT timer_id;
 static PtCallback *time_callback;
 
-void CALLBACK winmm_time_callback(UINT uID, UINT uMsg, DWORD_PTR dwUser, 
-                                  DWORD_PTR dw1, DWORD_PTR dw2)
+void CALLBACK winmm_time_callback(UINT uID, UINT uMsg, DWORD dwUser, 
+                                  DWORD dw1, DWORD dw2)
 {
     (*time_callback)(Pt_Time(), (void *) dwUser);
 }
@@ -31,7 +31,7 @@ PtError Pt_Start(int resolution, PtCallback *callback, void *userData)
     time_callback = callback;
     if (callback) {
         timer_id = timeSetEvent(resolution, 1, winmm_time_callback, 
-            (DWORD_PTR) userData, TIME_PERIODIC | TIME_CALLBACK_FUNCTION);
+            (DWORD) userData, TIME_PERIODIC | TIME_CALLBACK_FUNCTION);
         if (!timer_id) return ptHostError;
     }
     return ptNoError;
@@ -63,8 +63,3 @@ PtTimestamp Pt_Time()
     return timeGetTime() - time_offset;
 }
 
-
-void Pt_Sleep(long duration)
-{
-    Sleep(duration);
-}

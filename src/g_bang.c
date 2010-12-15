@@ -25,7 +25,9 @@
 #include <io.h>
 #endif
 
-
+extern int gfxstub_haveproperties(void *key);
+void bng_draw_select(t_bng* x, t_glist* glist);
+ 
 /* --------------- bng     gui-bang ------------------------- */
 
 t_widgetbehavior bng_widgetbehavior;
@@ -33,14 +35,8 @@ static t_class *bng_class;
 
 /*  widget helper functions  */
 
-
 void bng_draw_update(t_bng *x, t_glist *glist)
 {
-    if (!glist) /* BUG this function should not receive null glists */
-    {
-        bug("bng_draw_update");
-        return;
-    }
     if(glist_isvisible(glist))
     {
         sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", glist_getcanvas(glist), x,
@@ -54,30 +50,52 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags %lxBASE\n",
-             canvas, xpos, ypos,
-             xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
-             x->x_gui.x_bcol, x);
-    sys_vgui(".x%lx.c create oval %d %d %d %d -fill #%6.6x -tags %lxBUT\n",
-             canvas, xpos+1, ypos+1,
-             xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1,
-             x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, x);
-    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-             -font {{%s} %d %s} -fill #%6.6x -tags %lxLABEL\n",
-             canvas, xpos+x->x_gui.x_ldx,
-             ypos+x->x_gui.x_ldy,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-             x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-			 x->x_gui.x_lcol, x);
-    if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxOUT%d\n",
-             canvas, xpos,
-             ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
-             ypos + x->x_gui.x_h, x, 0);
-    if(!x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxIN%d\n",
-             canvas, xpos, ypos,
-             xpos + IOWIDTH, ypos+1, x, 0);
+	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
+	sprintf(sh->h_pathname, ".x%x.h%x", (int)canvas, (int)sh);
+
+	//if (glist_isvisible(canvas)) {
+
+		t_gobj *y = (t_gobj *)x;
+		t_object *ob = pd_checkobject(&y->g_pd);
+
+		/* GOP objects are unable to call findrtext triggering consistency check error */
+		t_rtext *yyyy = NULL;
+		if (!glist->gl_isgraph || glist_istoplevel(glist))
+			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
+
+		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
+		char *nlet_tag;
+		if (yyyy) nlet_tag = rtext_gettag(yyyy);
+		else nlet_tag = "bogus";
+
+
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxBNG}\n",
+		         canvas, xpos, ypos,
+		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
+		         x->x_gui.x_bcol, x, x);
+		sys_vgui(".x%lx.c create oval %d %d %d %d -fill #%6.6x -tags {%lxBUT %lxBNG}\n",
+		         canvas, xpos+1, ypos+1,
+		         xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1,
+		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x);
+		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxBNG}\n",
+		         canvas, xpos+x->x_gui.x_ldx,
+		         ypos+x->x_gui.x_ldy,
+		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+				 x->x_gui.x_lcol, x, x);
+		if(!x->x_gui.x_fsf.x_snd_able) {
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxBNG}\n",
+		         canvas, xpos,
+		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
+		         ypos + x->x_gui.x_h, nlet_tag, 0, x);
+		}
+		if(!x->x_gui.x_fsf.x_rcv_able) {
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxBNG}\n",
+		         canvas, xpos, ypos,
+		         xpos + IOWIDTH, ypos+1, nlet_tag, 0, x);
+		}
+	//}
 }
 
 void bng_draw_move(t_bng *x, t_glist *glist)
@@ -86,47 +104,79 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-             canvas, x, xpos, ypos,
-             xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-    sys_vgui(".x%lx.c coords %lxBUT %d %d %d %d\n",
-             canvas, x, xpos+1,ypos+1,
-             xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1);
-    sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
-             x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-             canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
-    if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c coords %lxOUT%d %d %d %d %d\n",
-             canvas, x, 0, xpos,
-             ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
-             ypos + x->x_gui.x_h);
-    if(!x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c coords %lxIN%d %d %d %d %d\n",
-             canvas, x, 0, xpos, ypos,
-             xpos + IOWIDTH, ypos+1);
+	if (glist_isvisible(canvas)) {
+
+		t_gobj *y = (t_gobj *)x;
+		t_object *ob = pd_checkobject(&y->g_pd);
+
+		/* GOP objects are unable to call findrtext triggering consistency check error */
+		t_rtext *yyyy = NULL;
+		if (!glist->gl_isgraph || glist_istoplevel(glist))
+			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
+
+		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
+		char *nlet_tag;
+		if (yyyy) nlet_tag = rtext_gettag(yyyy);
+		else nlet_tag = "bogus";
+
+		sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
+		         canvas, x, xpos, ypos,
+		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
+		sys_vgui(".x%lx.c coords %lxBUT %d %d %d %d\n",
+		         canvas, x, xpos+1,ypos+1,
+		         xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1);
+		sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
+		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
+		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
+		if(!x->x_gui.x_fsf.x_snd_able)
+		    sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
+		         canvas, nlet_tag, 0, xpos,
+		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
+		         ypos + x->x_gui.x_h);
+		if(!x->x_gui.x_fsf.x_rcv_able)
+		    sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
+		         canvas, nlet_tag, 0, xpos, ypos,
+		         xpos + IOWIDTH, ypos+1);
+		/* redraw scale handle rectangle if selected */
+		if (x->x_gui.x_fsf.x_selected)
+			bng_draw_select(x, x->x_gui.x_glist);
+	}
 }
 
 void bng_draw_erase(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-
+	sys_vgui(".x%lx.c delete %lxBNG\n", canvas, x);
+	sys_vgui(".x%lx.c dtag all %lxBNG\n", canvas, x);
+	if (x->x_gui.x_fsf.x_selected) {
+		t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+		sys_vgui("destroy %s\n", sh->h_pathname);
+	}
+/*
     sys_vgui(".x%lx.c delete %lxBASE\n", canvas, x);
     sys_vgui(".x%lx.c delete %lxBUT\n", canvas, x);
     sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
     if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c delete %lxOUT%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete %so%d\n", canvas, rtext_gettag(yy), 0);
     if(!x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c delete %lxIN%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete %si%d\n", canvas, rtext_gettag(yy), 0);
+*/
 }
 
 void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
+	char color[64];
+	if (x->x_gui.x_fsf.x_selected)
+		sprintf(color, "$select_color");
+	else
+		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
+
+    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill %s -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_lcol,
+             color,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
     sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
@@ -139,36 +189,196 @@ void bng_draw_io(t_bng* x, t_glist* glist, int old_snd_rcv_flags)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-    if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxOUT%d\n",
-             canvas, xpos,
-             ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
-             ypos + x->x_gui.x_h, x, 0);
-    if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c delete %lxOUT%d\n", canvas, x, 0);
-    if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxIN%d\n",
-             canvas, xpos, ypos,
-             xpos + IOWIDTH, ypos+1, x, 0);
-    if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c delete %lxIN%d\n", canvas, x, 0);
+	if (glist_isvisible(canvas)) {
+
+		t_gobj *y = (t_gobj *)x;
+		t_object *ob = pd_checkobject(&y->g_pd);
+
+		/* GOP objects are unable to call findrtext triggering consistency check error */
+		t_rtext *yyyy = NULL;
+		if (!glist->gl_isgraph || glist_istoplevel(glist))
+			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
+
+		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
+		char *nlet_tag;
+		if (yyyy) nlet_tag = rtext_gettag(yyyy);
+		else nlet_tag = "bogus";
+
+		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+		         canvas, xpos,
+		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
+		         ypos + x->x_gui.x_h, nlet_tag, 0);
+		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
+		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 0);
+		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+		         canvas, xpos, ypos,
+		         xpos + IOWIDTH, ypos+1, nlet_tag, 0);
+		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
+		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 0);
+	}
 }
 
 void bng_draw_select(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
 
-    if(x->x_gui.x_fsf.x_selected)
+	if (glist_isvisible(canvas)) {
+
+		if(x->x_gui.x_fsf.x_selected)
+		{
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+		    sys_vgui(".x%lx.c itemconfigure %lxBUT -outline $select_color\n", canvas, x);
+		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
+
+			if (x->x_gui.scale_vis)
+				sys_vgui("destroy %s\n", sh->h_pathname);
+
+			sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+			sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxBNG}\n",
+				 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w - SCALEHANDLE_WIDTH,
+				 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT,
+				 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+				 sh->h_pathname, x, x);
+			sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+			sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+			sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+			x->x_gui.scale_vis = 1;
+
+			sys_vgui(".x%lx.c addtag selected withtag %lxBNG\n", canvas, x);
+		}
+		else
+		{
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBUT -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
+			sys_vgui(".x%lx.c dtag %lxBNG selected\n", canvas, x);
+			sys_vgui("destroy %s\n", sh->h_pathname);
+			x->x_gui.scale_vis = 0;
+		}
+	}
+}
+
+static void bng__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+{
+
+	t_bng *x = (t_bng *)(sh->h_master);
+
+	if (xxx) x->x_gui.scale_offset_x = xxx;
+	if (yyy) x->x_gui.scale_offset_y = yyy;
+
+    int newstate = (int)f;
+    if (sh->h_dragon && newstate == 0)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
-        sys_vgui(".x%lx.c itemconfigure %lxBUT -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
+		/* done dragging */
+
+		/* first set up the undo apply */
+		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+
+		if (sh->h_dragx || sh->h_dragy) {
+
+			if (sh->h_dragx > sh->h_dragy)
+				sh->h_dragx = sh->h_dragy;
+			else sh->h_dragy = sh->h_dragx;
+
+			x->x_gui.x_w = x->x_gui.x_w + sh->h_dragx - x->x_gui.scale_offset_x;
+			if (x->x_gui.x_w < SCALE_BNG_MINWIDTH)
+				x->x_gui.x_w = SCALE_BNG_MINWIDTH;
+			x->x_gui.x_h = x->x_gui.x_h + sh->h_dragy - x->x_gui.scale_offset_y;
+			if (x->x_gui.x_h < SCALE_BNG_MINHEIGHT)
+				x->x_gui.x_h = SCALE_BNG_MINHEIGHT;
+
+			canvas_dirty(x->x_gui.x_glist, 1);
+		}
+
+		int properties = gfxstub_haveproperties((void *)x);
+
+		if (properties) {
+			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
+			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
+		}
+
+		if (glist_isvisible(x->x_gui.x_glist))
+		{
+			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+			bng_draw_move(x, x->x_gui.x_glist);
+			sys_vgui("destroy %s\n", sh->h_pathname);
+			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+		}
     }
-    else
+    else if (!sh->h_dragon && newstate)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
-        sys_vgui(".x%lx.c itemconfigure %lxBUT -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
+		/* dragging */
+		if (glist_isvisible(x->x_gui.x_glist))
+		{
+			sys_vgui("lower %s\n", sh->h_pathname);
+			sys_vgui(".x%x.c create rectangle %d %d %d %d\
+	 -outline $select_color -width 1 -tags %s\n",
+				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
+					x->x_gui.x_obj.te_xpix + x->x_gui.x_w,
+					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
+		}
+
+		sh->h_dragx = 0;
+		sh->h_dragy = 0;
+    }
+    sh->h_dragon = newstate;
+}
+
+static void bng__motionhook(t_scalehandle *sh,
+				    t_floatarg f1, t_floatarg f2)
+{
+    if (sh->h_dragon)
+    {
+		t_bng *x = (t_bng *)(sh->h_master);
+		int dx = (int)f1, dy = (int)f2;
+		int newx, newy;
+
+		if (dx > dy) {
+			dx = dy;
+			x->x_gui.scale_offset_x = x->x_gui.scale_offset_y;
+		}
+		else {
+			dy = dx;
+			x->x_gui.scale_offset_y = x->x_gui.scale_offset_x;
+		}
+
+		newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w - x->x_gui.scale_offset_x + dx;
+		newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h - x->x_gui.scale_offset_y + dy;
+
+		if (newx < x->x_gui.x_obj.te_xpix + SCALE_BNG_MINWIDTH)
+			newx = x->x_gui.x_obj.te_xpix + SCALE_BNG_MINWIDTH;
+		if (newy < x->x_gui.x_obj.te_ypix + SCALE_BNG_MINHEIGHT)
+			newy = x->x_gui.x_obj.te_ypix + SCALE_BNG_MINHEIGHT;
+
+		if (glist_isvisible(x->x_gui.x_glist)) {
+			sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+				 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
+				 x->x_gui.x_obj.te_ypix, newx, newy);
+		}
+		sh->h_dragx = dx;
+		sh->h_dragy = dy;
+
+		int properties = gfxstub_haveproperties((void *)x);
+
+		if (properties) {
+			int new_w = x->x_gui.x_w - x->x_gui.scale_offset_x + sh->h_dragx;
+			int new_h = x->x_gui.x_h - x->x_gui.scale_offset_y + sh->h_dragy;
+			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, new_w);
+			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, new_h);
+		}
     }
 }
 
@@ -325,6 +535,8 @@ static void bng_bang2(t_bng *x)/*wird immer gesendet, wenn moeglich*/
 
 static void bng_dialog(t_bng *x, t_symbol *s, int argc, t_atom *argv)
 {
+	canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+
     t_symbol *srl[3];
     int a = (int)atom_getintarg(0, argc, argv);
     int fthold = (int)atom_getintarg(2, argc, argv);
@@ -338,6 +550,15 @@ static void bng_dialog(t_bng *x, t_symbol *s, int argc, t_atom *argv)
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
     canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+
+	/* forcing redraw of the scale handle */
+	if (x->x_gui.x_fsf.x_selected) {
+		bng_draw_select(x, x->x_gui.x_glist);
+	}
+
+	//ico@bukvic.net 100518 update scrollbars when object potentially exceeds window size
+    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
 }
 
 static void bng_click(t_bng *x, t_floatarg xpos, t_floatarg ypos, t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
@@ -510,6 +731,21 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
     x->x_clock_brk = clock_new(x, (t_method)bng_tick_brk);
     x->x_clock_lck = clock_new(x, (t_method)bng_tick_lck);
     outlet_new(&x->x_gui.x_obj, &s_bang);
+
+	/* scale handle init */
+    t_scalehandle *sh;
+    char buf[64];
+    x->x_gui.x_handle = pd_new(scalehandle_class);
+    sh = (t_scalehandle *)x->x_gui.x_handle;
+    sh->h_master = (t_gobj*)x;
+    sprintf(buf, "_h%x", (int)sh);
+    pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
+    sprintf(sh->h_outlinetag, "h%x", (int)sh);
+    sh->h_dragon = 0;
+	x->x_gui.scale_offset_x = 0;
+	x->x_gui.scale_offset_y = 0;
+	x->x_gui.scale_vis = 0;
+
     return (x);
 }
 
@@ -521,6 +757,13 @@ static void bng_ff(t_bng *x)
     clock_free(x->x_clock_brk);
     clock_free(x->x_clock_hld);
     gfxstub_deleteforkey(x);
+
+	/* scale handle deconstructor */
+    if (x->x_gui.x_handle)
+    {
+		pd_unbind(x->x_gui.x_handle, ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
+		pd_free(x->x_gui.x_handle);
+    }
 }
 
 void g_bang_setup(void)
@@ -549,6 +792,14 @@ void g_bang_setup(void)
     class_addmethod(bng_class, (t_method)bng_label_pos, gensym("label_pos"), A_GIMME, 0);
     class_addmethod(bng_class, (t_method)bng_label_font, gensym("label_font"), A_GIMME, 0);
     class_addmethod(bng_class, (t_method)bng_init, gensym("init"), A_FLOAT, 0);
+ 
+    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
+				  sizeof(t_scalehandle), CLASS_PD, 0);
+    class_addmethod(scalehandle_class, (t_method)bng__clickhook,
+		    gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(scalehandle_class, (t_method)bng__motionhook,
+		    gensym("_motion"), A_FLOAT, A_FLOAT, 0);
+
     bng_widgetbehavior.w_getrectfn = bng_getrect;
     bng_widgetbehavior.w_displacefn = iemgui_displace;
     bng_widgetbehavior.w_selectfn = iemgui_select;
@@ -556,6 +807,7 @@ void g_bang_setup(void)
     bng_widgetbehavior.w_deletefn = iemgui_delete;
     bng_widgetbehavior.w_visfn = iemgui_vis;
     bng_widgetbehavior.w_clickfn = bng_newclick;
+    bng_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
     class_setwidget(bng_class, &bng_widgetbehavior);
     class_sethelpsymbol(bng_class, gensym("bng"));
     class_setsavefn(bng_class, bng_save);

@@ -13,6 +13,31 @@ to be different but are now unified except for some fossilized names.) */
 #include "g_canvas.h"
 #include <string.h>
 #include "g_all_guis.h"
+#include "g_magicglass.h"
+
+// jsarlo
+typedef struct _magicGlass
+{
+    t_object x_obj;
+    t_object *x_connectedObj;
+    int x_connectedOutno;
+    int x_visible;
+    char x_string[4096];
+    char x_old_string[4096];
+    int x_x;
+    int x_y;
+    int x_c;
+    float x_sigF;
+    int x_dspOn;
+    int x_viewOn;
+    float x_maxSample;
+    int x_sampleCount;
+    t_clock *x_clearClock;
+	t_clock *x_flashClock;
+	unsigned int x_maxSize;
+	unsigned int x_issignal;
+};
+// end jsarlo
 
     /* LATER consider adding font size to this struct (see glist_getfont()) */
 struct _canvasenvironment
@@ -314,7 +339,6 @@ t_outconnect *linetraverser_next(t_linetraverser *t)
         t->tr_x21 = t->tr_y21 = t->tr_x22 = t->tr_y22 = 0;
         t->tr_lx1 = t->tr_ly1 = t->tr_lx2 = t->tr_ly2 = 0;
     }
-    
     return (rval);
 }
 
@@ -348,7 +372,11 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     int vis = 0, width = GLIST_DEFCANVASWIDTH, height = GLIST_DEFCANVASHEIGHT;
     int xloc = 0, yloc = GLIST_DEFCANVASYLOC;
     int font = (owner ? owner->gl_font : sys_defaultfont);
+
     glist_init(x);
+    // jsarlo
+    x->gl_magic_glass = magicGlass_new((int)x);
+    // end jsarlo
     x->gl_obj.te_type = T_OBJECT;
     if (!owner)
         canvas_addtolist(x);
@@ -485,9 +513,12 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     }
     if (x1 == x2 || y1 == y2)
         x1 = 0, x2 = 100, y1 = 1, y2 = -1;
+	if (px1 != 0 && px2 == 0) px2 = px1 + GLIST_DEFGRAPHWIDTH;
+	if (py1 != 0 && py2 == py1) py2 = py1 + GLIST_DEFGRAPHHEIGHT;
     if (px1 >= px2 || py1 >= py2)
         px1 = 100, py1 = 20, px2 = 100 + GLIST_DEFGRAPHWIDTH,
             py2 = 20 + GLIST_DEFGRAPHHEIGHT;
+
     x->gl_name = sym;
     x->gl_x1 = x1;
     x->gl_x2 = x2;
@@ -512,13 +543,16 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     if (!menu)
         pd_pushsym(&x->gl_pd);
     glist_add(g, &x->gl_gobj);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(g));
     return (x);
 }
 
     /* call glist_addglist from a Pd message */
 void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
 {
-    t_symbol *sym = atom_getsymbolarg(0, argc, argv);   
+    t_symbol *sym = atom_getsymbolarg(0, argc, argv);
+	/* if we wish to put a graph where the mouse is we need to replace bogus name */
+	if (!strcmp(sym->s_name, "NULL")) sym = &s_;  
     t_float x1 = atom_getfloatarg(1, argc, argv);  
     t_float y1 = atom_getfloatarg(2, argc, argv);  
     t_float x2 = atom_getfloatarg(3, argc, argv);  
@@ -602,8 +636,9 @@ void canvas_reflecttitle(t_canvas *x)
         x, x->gl_dirty, canvas_getdir(x)->s_name, x->gl_name->s_name);
     sys_vgui("wm title .x%lx {%s%s}\n", x, x->gl_name->s_name, namebuf);
 #else
-    sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
-        x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
+	if(glist_istoplevel(x) || !x->gl_isgraph || x->gl_isgraph && x->gl_havewindow)
+	    sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
+	        x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
             canvas_getdir(x)->s_name);
 #endif
 }
@@ -669,6 +704,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
         if (glist_isvisible(x))
         {
                 /* just clear out the whole canvas */
+			sys_vgui(".x%lx.c dtag all selected\n", x);
             sys_vgui(".x%lx.c delete all\n", x);
             x->gl_mapped = 0;
         }
@@ -681,6 +717,11 @@ void canvas_redraw(t_canvas *x)
     {
         canvas_map(x, 0);
         canvas_map(x, 1);
+		
+		/* now re-highlight our selection */
+	    t_selection *y;
+    	for (y = x->gl_editor->e_selection; y; y = y->sel_next)		
+			gobj_select(y->sel_what, x, 1);
     }
 }
 
@@ -734,6 +775,10 @@ void canvas_free(t_canvas *x)
 {
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
+    // jsarlo
+    if (x->gl_magic_glass)
+      magicGlass_free(x->gl_magic_glass);
+    // end jsarlo
     canvas_noundo(x);
     if (canvas_editing == x)
         canvas_editing = 0;
@@ -1158,6 +1203,12 @@ static void canvas_dodsp(t_canvas *x, int toplevel, t_signal **sp)
         obj_nsigoutlets(&x->gl_obj));
 
         /* find all the "dsp" boxes and add them to the graph */
+
+    // jsarlo
+    ob = &x->gl_magic_glass->x_obj;
+    if (ob)
+       ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
+    // end jsarlo
     
     for (y = x->gl_list; y; y = y->g_next)
         if ((ob = pd_checkobject(&y->g_pd)) && zgetfn(&y->g_pd, dspsym))

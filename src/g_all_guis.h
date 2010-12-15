@@ -37,7 +37,11 @@
 #define IEM_GUI_COLNR_D_BLUE         28
 #define IEM_GUI_COLNR_D_MAGENTA      29
 
-#define IEM_GUI_COLOR_SELECTED       255
+/* deprecated in favor of the global iemgui_select var
+   left here for legacy externals that may rely upon this */
+#define IEM_GUI_COLOR_SELECTED       16749334
+/* end deprecated */
+
 #define IEM_GUI_COLOR_NORMAL         0
 
 #define IEM_GUI_MAX_COLOR            30
@@ -98,6 +102,28 @@
 #define IEM_GUI_COLOR_EDITED 16711680
 #define IEMGUI_MAX_NUM_LEN 32
 
+#define SCALE_BNG_MINWIDTH 8
+#define SCALE_BNG_MINHEIGHT 8
+#define SCALE_CNV_MINWIDTH 1
+#define SCALE_CNV_MINHEIGHT 1
+#define SCALE_HRDO_MINWIDTH 8
+#define SCALE_HRDO_MINHEIGHT 8
+#define SCALE_HSLD_MINWIDTH 2
+#define SCALE_HSLD_MINHEIGHT 8
+#define SCALE_NUM_MINWIDTH 1
+#define SCALE_NUM_MINHEIGHT 8
+#define SCALE_TGL_MINWIDTH 8
+#define SCALE_TGL_MINHEIGHT 8
+#define SCALE_VRDO_MINWIDTH 8
+#define SCALE_VRDO_MINHEIGHT 8
+#define SCALE_VSLD_MINWIDTH 8
+#define SCALE_VSLD_MINHEIGHT 2
+#define SCALE_VU_MINWIDTH 8
+#define SCALE_VU_MINHEIGHT 80
+
+#define SCALEHANDLE_WIDTH   10    /* item size is int */
+#define SCALEHANDLE_HEIGHT  10
+
 typedef struct _iem_fstyle_flags
 {
     unsigned int x_font_style:6;
@@ -135,11 +161,26 @@ typedef struct _iem_init_symargs
 
 typedef void (*t_iemfunptr)(void *x, t_glist *glist, int mode);
 
+typedef struct _scalehandle
+{
+    t_pd       h_pd;
+    t_gobj    *h_master;
+    t_symbol  *h_bindsym;
+    char       h_pathname[64];
+    char       h_outlinetag[64];
+    int        h_dragon;
+    int        h_dragx;
+    int        h_dragy;
+} t_scalehandle;
+
+static t_class *scalehandle_class;
+
 typedef struct _iemgui
 {
     t_object           x_obj;
     t_glist            *x_glist;
     t_iemfunptr        x_draw;
+    t_iemfunptr        x_draw_withtag;
     int                x_h;
     int                x_w;
     int                x_ldx;
@@ -159,6 +200,10 @@ typedef struct _iemgui
     t_symbol           *x_lab_unexpanded;
     int                x_binbufindex;       /* where in binbuf to find these */
     int                x_labelbindex;       /* where in binbuf to find label */
+	t_pd	   		   *x_handle;
+	int 			   scale_offset_x;
+	int				   scale_offset_y;
+	int				   scale_vis;
 } t_iemgui;
 
 typedef struct _iemguidummy
@@ -259,6 +304,9 @@ typedef struct _my_numbox
     int      x_lin0_log1;
     char     x_buf[IEMGUI_MAX_NUM_LEN];
     int      x_numwidth;
+    int      x_scalewidth; 		/* temporary value when resizing */
+	int		 x_scaleheight; 	/* temporary value when resizing */
+    int      x_tmpfontsize; 	/* temporary value when resizing */
     int      x_log_height;
 } t_my_numbox;
 
@@ -317,6 +365,7 @@ EXTERN void iemgui_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *a
 EXTERN void iemgui_color(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
 EXTERN int iemgui_list(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
 EXTERN void iemgui_displace(t_gobj *z, t_glist *glist, int dx, int dy);
+EXTERN void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy);
 EXTERN void iemgui_select(t_gobj *z, t_glist *glist, int selected);
 EXTERN void iemgui_delete(t_gobj *z, t_glist *glist);
 EXTERN void iemgui_vis(t_gobj *z, t_glist *glist, int vis);
@@ -331,3 +380,5 @@ EXTERN void iem_inttosymargs(t_iem_init_symargs *symargp, int n);
 EXTERN int iem_symargstoint(t_iem_init_symargs *symargp);
 EXTERN void iem_inttofstyle(t_iem_fstyle_flags *fstylep, int n);
 EXTERN int iem_fstyletoint(t_iem_fstyle_flags *fstylep);
+
+EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);

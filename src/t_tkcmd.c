@@ -380,7 +380,7 @@ static void pd_startfromgui( void)
     if (lastchar)
         snprintf(pdbuf, lastchar - arg0 + 1, "%s", arg0);
     else strcpy(pdbuf, ".");
-    strcat(pdbuf, "/../bin/pdextended");
+    strcat(pdbuf, "/../bin/pd-l2ork");
 #ifdef DEBUGCONNECT     
     fprintf(stderr, "pdbuf is %s\n", pdbuf);
 #endif

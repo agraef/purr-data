@@ -98,8 +98,12 @@ void glist_delete(t_glist *x, t_gobj *y)
             if (gl->gl_isgraph)
             {
                 char tag[80];
-                sprintf(tag, "graph%lx", (t_int)gl);
+                //sprintf(tag, "graph%lx", (t_int)gl);
+				//t_glist *yy = (t_glist *)y;
+				sprintf(tag, "%s", rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
                 glist_eraseiofor(x, &gl->gl_obj, tag);
+                text_eraseborder(&gl->gl_obj, x,
+                    rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
             }
             else
             {
@@ -113,6 +117,9 @@ void glist_delete(t_glist *x, t_gobj *y)
     if (drawcommand)
         canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
             glist_getcanvas(x)->gl_name)), 2);
+	//if(glist_isvisible(canvas)) {
+	//	gobj_select(y, x, 0);
+	//}
     gobj_delete(y, x);
     if (glist_isvisible(canvas))
         gobj_vis(y, x, 0);
@@ -132,6 +139,7 @@ void glist_delete(t_glist *x, t_gobj *y)
             glist_getcanvas(x)->gl_name)), 1);
     canvas_setdeleting(canvas, wasdeleting);
     x->gl_valid = ++glist_valid;
+	//canvas_redraw(x);
 }
 
     /* remove every object from a glist.  Experimental. */
@@ -184,7 +192,8 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
 
 t_canvas *glist_getcanvas(t_glist *x)
 {
-    while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph)
+    while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph &&
+        gobj_shouldvis(&x->gl_gobj, x->gl_owner))
             x = x->gl_owner;
     return((t_canvas *)x);
 }
@@ -665,7 +674,7 @@ void glist_redraw(t_glist *x)
             canvas_drawredrect(x, 0);
             if (x->gl_goprect)
             {
-                post("draw it");
+                //post("draw it");
                 canvas_drawredrect(x, 1);
             }
         }
@@ -703,7 +712,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     if (!vis)
         rtext_erase(glist_findrtext(parent_glist, &x->gl_obj));
 
-    sprintf(tag, "graph%lx", (t_int)x);
+    sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
+    //sprintf(tag, "graph%lx", (t_int)x);
+	//fprintf(stderr, "gettag=%s, tag=graph%lx\n", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)),(t_int)x);
     if (vis)
         glist_drawiofor(parent_glist, &x->gl_obj, 1,
             tag, x1, y1, x2, y2);
@@ -718,7 +729,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
  %d %d %d %d %d %d %d %d %d %d -tags %s -fill #c0c0c0\n",
                 glist_getcanvas(x->gl_owner),
                 x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
-            sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(x->gl_owner));
         }
         else
         {
@@ -737,7 +747,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         t_garray *ga;
             /* draw a rectangle around the graph */
         sys_vgui(".x%lx.c create line\
-            %d %d %d %d %d %d %d %d %d %d -fill $graph_outline -tags %s\n",
+            %d %d %d %d %d %d %d %d %d %d -fill $graph_outline -tags %sR\n",
             glist_getcanvas(x->gl_owner),
             x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
         
@@ -856,6 +866,8 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     {
         sys_vgui(".x%lx.c delete %s\n",
             glist_getcanvas(x->gl_owner), tag);
+        sys_vgui(".x%lx.c delete %sR\n",
+            glist_getcanvas(x->gl_owner), tag);
         for (g = x->gl_list; g; g = g->g_next)
             gobj_vis(g, x, 0);
     }
@@ -944,25 +956,32 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
         glist_redraw(x);
+		gobj_select(z, glist, 1);
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
     }
 }
 
 static void graph_select(t_gobj *z, t_glist *glist, int state)
 {
+	//fprintf(stderr,"graph_select\n");
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
         text_widgetbehavior.w_selectfn(z, glist, state);
-    else
+    else if(glist_istoplevel(glist))
     {
         t_rtext *y = glist_findrtext(glist, &x->gl_obj);
         if (canvas_showtext(x))
             rtext_select(y, state);
         sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", glist, 
-                 rtext_gettag(y), (state? "$select_color" : "black"));
+                 rtext_gettag(y), (state? "$select_color" : "$graph_outline"));
+/*
         sys_vgui(".x%lx.c itemconfigure graph%lx -fill %s\n",
                  glist_getcanvas(glist), z, 
                  (state? "$select_color" : "$graph_outline"));
+*/
+        sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
+                 glist, rtext_gettag(y), 
+                 (state? "$select_color" : "black"));
     }
 }
 
@@ -996,8 +1015,11 @@ static void graph_delete(t_gobj *z, t_glist *glist)
     t_glist *x = (t_glist *)z;
     t_gobj *y;
     text_widgetbehavior.w_deletefn(z, glist);
-    while (y = x->gl_list)
+    while (y = x->gl_list) {
         glist_delete(x, y);
+	}
+	if (glist_istoplevel(glist) && glist_isvisible(glist))
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
 }
 
 static t_float graph_lastxpix, graph_lastypix;
@@ -1083,6 +1105,7 @@ t_widgetbehavior graph_widgetbehavior =
     graph_delete,
     graph_vis,
     graph_click,
+	NULL,
 };
 
     /* find the graph most recently added to this glist;

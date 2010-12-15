@@ -426,8 +426,8 @@ void iemgui_label_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av
     iemgui->x_ldx = (int)atom_getintarg(0, ac, av);
     iemgui->x_ldy = (int)atom_getintarg(1, ac, av);
     if(glist_isvisible(iemgui->x_glist))
-        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                 glist_getcanvas(iemgui->x_glist), x,
+	    sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+	             glist_getcanvas(iemgui->x_glist), x,
                  text_xpix((t_object *)x,iemgui->x_glist)+iemgui->x_ldx,
                  text_ypix((t_object *)x,iemgui->x_glist)+iemgui->x_ldy);
 }
@@ -502,12 +502,21 @@ void iemgui_color(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
 void iemgui_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
     t_iemguidummy *x = (t_iemguidummy *)z;
-
     x->x_gui.x_obj.te_xpix += dx;
     x->x_gui.x_obj.te_ypix += dy;
     (*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_MOVE);
     canvas_fixlinesfor(glist_getcanvas(glist), (t_text *)z);
 }
+
+void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_iemguidummy *x = (t_iemguidummy *)z;
+    x->x_gui.x_obj.te_xpix += dx;
+    x->x_gui.x_obj.te_ypix += dy;
+    //(*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_MOVE);
+    canvas_fixlinesfor(glist_getcanvas(glist), (t_text *)z);
+}
+
 
 void iemgui_select(t_gobj *z, t_glist *glist, int selected)
 {

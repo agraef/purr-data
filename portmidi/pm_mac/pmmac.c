@@ -11,44 +11,27 @@ non-CoreMIDI devices.
 
 #include "stdlib.h"
 #include "portmidi.h"
-#include "pmutil.h"
-#include "pminternal.h"
 #include "pmmacosxcm.h"
 
-PmDeviceID pm_default_input_device_id = -1;
-PmDeviceID pm_default_output_device_id = -1;
-
-void pm_init()
+PmError pm_init()
 {
-    PmError err = pm_macosxcm_init();
-    // this is set when we return to Pm_Initialize, but we need it
-    // now in order to (successfully) call Pm_CountDevices()
-    pm_initialized = TRUE;
-    if (!err) {
-        pm_default_input_device_id = find_default_device(
-                "/PortMidi/PM_RECOMMENDED_INPUT_DEVICE", TRUE, 
-                pm_default_input_device_id);
-        pm_default_output_device_id = find_default_device(
-                "/PortMidi/PM_RECOMMENDED_OUTPUT_DEVICE", FALSE, 
-                pm_default_output_device_id);
-    }
+    return pm_macosxcm_init();
 }
-
 
 void pm_term(void)
 {
     pm_macosxcm_term();
 }
 
+PmDeviceID pm_default_input_device_id = -1;
+PmDeviceID pm_default_output_device_id = -1;
 
 PmDeviceID Pm_GetDefaultInputDeviceID()
 {
-    Pm_Initialize();
     return pm_default_input_device_id;
 }
 
 PmDeviceID Pm_GetDefaultOutputDeviceID() {
-    Pm_Initialize();
     return pm_default_output_device_id;
 }
 

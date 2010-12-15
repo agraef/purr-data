@@ -21,8 +21,6 @@
 extern "C" {
 #endif
 
-extern int pm_initialized; /* see note in portmidi.c */
-
 /* these are defined in system-specific file */
 void *pm_alloc(size_t s);
 void pm_free(void *ptr);
@@ -104,8 +102,16 @@ typedef struct pm_internal_struct {
     PmTimeProcPtr time_proc; /* where to get the time */
     void *time_info; /* pass this to get_time() */
     long buffer_len; /* how big is the buffer or queue? */
+#ifdef NEWBUFFER
     PmQueue *queue;
-
+#else
+    PmEvent *buffer; /* storage for: 
+                        - midi input 
+                        - midi output w/latency != 0 */
+    long head;
+    long tail;
+    int overflow; /* set to non-zero if input is dropped */
+#endif
     long latency; /* time delay in ms between timestamps and actual output */
                   /* set to zero to get immediate, simple blocking output */
                   /* if latency is zero, timestamps will be ignored; */
@@ -137,7 +143,7 @@ typedef struct pm_internal_struct {
      * important
      */
     unsigned char *fill_base; /* addr of ptr to sysex data */
-    unsigned long *fill_offset_ptr; /* offset of next sysex byte */
+    int *fill_offset_ptr; /* offset of next sysex byte */
     int fill_length; /* how many sysex bytes to write */
 } PmInternal;
 
@@ -169,8 +175,6 @@ void pm_read_short(PmInternal *midi, PmEvent *event);
 #define MIDI_REALTIME_MASK 0xf8
 #define is_real_time(msg) \
     ((Pm_MessageStatus(msg) & MIDI_REALTIME_MASK) == MIDI_REALTIME_MASK)
-
-int pm_find_default_device(char *pattern, int is_input);
 
 #ifdef __cplusplus
 }

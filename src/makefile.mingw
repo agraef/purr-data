@@ -254,15 +254,15 @@ install:  all
 	install -p pd.ico $(DESTDIR)$(bindir)/pd.ico
 	install -p pdsend.exe $(DESTDIR)$(bindir)/pdsend.exe
 	install -p pdreceive.exe $(DESTDIR)$(bindir)/pdreceive.exe
-	install -d $(DESTDIR)$(includedir)/pdextended
-	install -p m_pd.h $(DESTDIR)$(includedir)/pdextended/m_pd.h
-	install -p m_imp.h $(DESTDIR)$(includedir)/pdextended/m_imp.h
-	install -p g_canvas.h $(DESTDIR)$(includedir)/pdextended/g_canvas.h
-	install -p s_stuff.h $(DESTDIR)$(includedir)/pdextended/s_stuff.h
-	install -p g_all_guis.h $(DESTDIR)$(includedir)/pdextended/g_all_guis.h
+	install -d $(DESTDIR)$(includedir)/pdl2ork
+	install -p m_pd.h $(DESTDIR)$(includedir)/pdl2ork/m_pd.h
+	install -p m_imp.h $(DESTDIR)$(includedir)/pdl2ork/m_imp.h
+	install -p g_canvas.h $(DESTDIR)$(includedir)/pdl2ork/g_canvas.h
+	install -p s_stuff.h $(DESTDIR)$(includedir)/pdl2ork/s_stuff.h
+	install -p g_all_guis.h $(DESTDIR)$(includedir)/pdl2ork/g_all_guis.h
 # since Pd-vanilla on Mac OS X doesn't have an 'include/pd' folder,
 # Pd-extended will mimic Pd-vanilla's include/pd until Pd-vanilla gets one
-	cp -pr $(DESTDIR)$(includedir)/pdextended $(DESTDIR)$(includedir)/pd
+	cp -pr $(DESTDIR)$(includedir)/pdl2ork $(DESTDIR)$(includedir)/pd
 	install -p m_pd.h $(DESTDIR)$(includedir)
 	for dir in $(shell ls -1 ../doc | grep -v CVS); do \
 		echo "installing $$dir"; \

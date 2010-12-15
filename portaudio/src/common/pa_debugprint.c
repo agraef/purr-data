@@ -53,21 +53,17 @@
     @todo Consider reentrancy and possibly corrupted strdump buffer.
 */
 
+
 #include <stdio.h>
 #include <stdarg.h>
 
 #include "pa_debugprint.h"
 
-// for OutputDebugStringA
-#if defined(_MSC_VER) && defined(PA_ENABLE_MSVC_DEBUG_OUTPUT)
-	#define WIN32_LEAN_AND_MEAN // exclude rare headers
-	#include "windows.h"
-#endif
 
-// User callback
-static PaUtilLogCallback userCB = NULL;
 
-// Sets user callback
+static PaUtilLogCallback userCB=0;
+
+
 void PaUtil_SetDebugPrintFunction(PaUtilLogCallback cb)
 {
     userCB = cb;
@@ -76,51 +72,36 @@ void PaUtil_SetDebugPrintFunction(PaUtilLogCallback cb)
 /*
  If your platform doesn’t have vsnprintf, you are stuck with a
  VERY dangerous alternative, vsprintf (with no n)
-*/
-#if _MSC_VER
-	/* Some Windows Mobile SDKs don't define vsnprintf but all define _vsnprintf (hopefully).
-	   According to MSDN "vsnprintf is identical to _vsnprintf". So we use _vsnprintf with MSC.
-	*/
-	#define VSNPRINTF  _vsnprintf 
+ */
+
+#if (_MSC_VER) && (_MSC_VER < 1400)
+#define VSNPRINTF  _vsnprintf
 #else
-	#define VSNPRINTF  vsnprintf
+#define VSNPRINTF  vsnprintf
 #endif
 
-#define PA_LOG_BUF_SIZE 2048
+#define SIZEDUMP 1024
+
+static char strdump[SIZEDUMP];
 
 void PaUtil_DebugPrint( const char *format, ... )
 {
-	// Optional logging into Output console of Visual Studio
-#if defined(_MSC_VER) && defined(PA_ENABLE_MSVC_DEBUG_OUTPUT)
-	{
-		char buf[PA_LOG_BUF_SIZE];
-		va_list ap;
-		va_start(ap, format);
-		VSNPRINTF(buf, sizeof(buf), format, ap);
-		buf[sizeof(buf)-1] = 0;
-		OutputDebugStringA(buf);
-		va_end(ap);
-	}
-#endif
 
-	// Output to User-Callback
-    if (userCB != NULL)
+    if (userCB)
     {
-        char strdump[PA_LOG_BUF_SIZE];
         va_list ap;
-        va_start(ap, format);
-        VSNPRINTF(strdump, sizeof(strdump), format, ap);
-        strdump[sizeof(strdump)-1] = 0;
+        va_start( ap, format );
+        VSNPRINTF( strdump, SIZEDUMP, format, ap );
         userCB(strdump);
-        va_end(ap);
+        va_end( ap ); 
     }
     else
-	// Standard output to stderr
     {
         va_list ap;
-        va_start(ap, format);
-        vfprintf(stderr, format, ap);
-        va_end(ap);
-        fflush(stderr);
+        va_start( ap, format );
+        vfprintf( stderr, format, ap );
+        va_end( ap );
+        fflush( stderr );
     }
+
 }

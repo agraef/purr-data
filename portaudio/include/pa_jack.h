@@ -40,8 +40,7 @@
  */
 
 /** @file
- *  @ingroup public_header
- *  @brief JACK-specific PortAudio API extension header file.
+ * JACK-specific PortAudio API extension header file.
  */
 #include "portaudio.h"
 

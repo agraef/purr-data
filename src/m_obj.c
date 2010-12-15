@@ -470,6 +470,11 @@ t_outconnect *obj_connect(t_object *source, int outno,
     t_outlet *o;
     t_pd *to;
     t_outconnect *oc, *oc2;
+
+	/* ignore attempts to connect to the same object
+	   this occurs sometimes using undo/redo */
+	if (source == sink)
+		return (0);
     
     for (o = source->ob_outlet; o && outno; o = o->o_next, outno--) ;
     if (!o) return (0);
@@ -509,7 +514,6 @@ void obj_disconnect(t_object *source, int outno, t_object *sink, int inno)
     t_outlet *o;
     t_pd *to;
     t_outconnect *oc, *oc2;
-    
     for (o = source->ob_outlet; o && outno; o = o->o_next, outno--)
     if (!o) return;
     if (sink->ob_pd->c_firstin)
@@ -525,7 +529,7 @@ void obj_disconnect(t_object *source, int outno, t_object *sink, int inno)
     if (!i) return;
     to = &i->i_pd;
 doit:
-    if (!(oc = o->o_connections)) return;
+    if (!o || !(oc = o->o_connections)) return;
     if (oc->oc_to == to)
     {
         o->o_connections = oc->oc_next;

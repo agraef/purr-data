@@ -80,6 +80,8 @@ typedef int socklen_t;
 #define LOCALHOST "localhost"
 #endif
 
+#include <execinfo.h>
+
 typedef struct _fdpoll
 {
     int fdp_fd;
@@ -645,6 +647,19 @@ static void sys_trytogetmoreguibuf(int newsize)
     }
 }
 
+void blargh(void) {
+#ifdef MACOSX
+  fprintf(stderr,"unhandled exception\n");
+#else
+  int i;
+  void *array[25];
+  int nSize = backtrace(array, 25);
+  char **symbols = backtrace_symbols(array, nSize);
+  for (i=0; i<nSize; i++) fprintf(stderr,"%d: %s\n",i,symbols[i]);
+  free(symbols);
+#endif
+}
+
 void sys_vgui(char *fmt, ...)
 {
     int msglen, bytesleft, headwas, nwrote;
@@ -688,8 +703,10 @@ void sys_vgui(char *fmt, ...)
         if (msglen >= sys_guibufsize - sys_guibufhead)
             msglen = sys_guibufsize - sys_guibufhead;
     }
-    if (sys_debuglevel & DEBUG_MESSUP)
+    if (sys_debuglevel & DEBUG_MESSUP) {
+		//blargh();
         fprintf(stderr, "%s",  sys_guibuf + sys_guibufhead);
+	}
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
 }

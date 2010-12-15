@@ -25,7 +25,6 @@ static void *print_new(t_symbol *s, int argc, t_atom *argv)
         t_binbuf *bb = binbuf_new();
         binbuf_add(bb, argc, argv);
         binbuf_gettext(bb, &buf, &bufsize);
-        buf = t_resizebytes(buf, bufsize, bufsize+1);
         buf[bufsize] = 0;
         x->x_sym = gensym(buf);
         binbuf_free(bb);

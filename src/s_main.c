@@ -80,7 +80,7 @@ int sys_extraflags;
 char sys_extraflagsstring[MAXPDSTRING];
 int sys_run_scheduler(const char *externalschedlibname,
     const char *sys_extraflagsstring);
-int sys_noautopatch = 1;    /* temporary hack to defeat new 0.42 editing */
+int sys_noautopatch = 0;    /* temporary hack to defeat new 0.42 editing */
 
     /* here the "-1" counts signify that the corresponding vector hasn't been
     specified in command line arguments; sys_set_audio_settings will detect it
@@ -478,9 +478,9 @@ void sys_findprogdir(char *progname)
             .../doc
         and in "complicated" unix installations, it's:
             .../bin/pd
-            .../lib/pd-extended/bin/pd-gui
-            .../lib/pd-extended/doc
-        To decide which, we stat .../lib/pd-extended; if that exists, we assume it's
+            .../lib/pd-l2ork/bin/pd-gui
+            .../lib/pd-l2ork/doc
+        To decide which, we stat .../lib/pd-l2ork; if that exists, we assume it's
         the complicated layout.  In MSW, it's the "simple" layout, but
         the gui program is straight wish80:
             .../bin/pd
@@ -494,15 +494,15 @@ void sys_findprogdir(char *progname)
     realpath(sbuf2, sbuf);
     strncpy(sbuf2, sbuf, FILENAME_MAX-30);
     sbuf[FILENAME_MAX-30] = 0;
-    strcat(sbuf2, "/lib/pd-extended");
+    strcat(sbuf2, "/lib/pd-l2ork");
     if (stat(sbuf2, &statbuf) >= 0)
     {
             /* complicated layout: lib dir is the one we just stat-ed above */
         sys_libdir = gensym(sbuf2);
-            /* gui lives in .../lib/pd-extended/bin */
+            /* gui lives in .../lib/pd-l2ork/bin */
         strncpy(sbuf2, sbuf, FILENAME_MAX-30);
         sbuf[FILENAME_MAX-30] = 0;
-        strcat(sbuf2, "/lib/pd-extended/bin");
+        strcat(sbuf2, "/lib/pd-l2ork/bin");
         sys_guidir = gensym(sbuf2);
     }
     else

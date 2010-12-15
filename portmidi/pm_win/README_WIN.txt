@@ -1,11 +1,18 @@
 File: PortMidi Win32 Readme
 Author: Belinda Thom, June 16 2002
-Revised by: Roger Dannenberg, June 2002, May 2004, June 2007, 
-            Umpei Kurokawa, June 2007
+Revised by: Roger Dannenberg, June 2002, May 2004
 
 =============================================================================
 USING PORTMIDI:
 =============================================================================
+
+PortMidi has been created using a DLL because the Win32 MMedia API doesn't 
+handle midiInput properly in the debugger. Specifically, it doesn't clean up
+after itself if the user (i.e. you, a PortMidi application) hasn't explicitly
+closed all open midi input devices. This lack of cleanup can lead to much
+pain and agony, including the blue-screen-of-death. This situation becomes
+increasingly unacceptable when you are debugging your code, so a portMidi DLL
+seemed to be the most elegant solution.
 
 Using Microsoft Visual C++ project files (provided with PortMidi), there
 are two configurations of the PortMidi library. The Debug version is 
@@ -31,9 +38,9 @@ See <...>\pm_dll_test\test.c or <...>\multithread\test.c for usage examples.
 =============================================================================
 TO INSTALL PORTMIDI:
 =============================================================================
-1)  get current source from the portmedia project at SourceForge.net
+1)  download portmidi.zip
 
-2)  copy source into directory: <...>\portmidi
+2)  unzip portmidi.zip into directory: <...>\portmidi
 
 =============================================================================
 TO COMPILE PORTMIDI:
@@ -41,59 +48,58 @@ TO COMPILE PORTMIDI:
 
 3)  cd to or open the portmidi directory
 
-4)  start or click on the portmidi.sln workspace (note, there is also
-    portmidi-VC9.sln for Visual C++ version 9 users).
-	
+4)  start or click on the portmidi.dsw workspace
+
 5)  the following projects exist within this workspace:
     - portmidi (the PortMidi library)
-    - porttime (a small portable library implementing timer facilities)
-    - test (simple midi I/O testing)
-    - midithread (an example illustrating low-latency MIDI processing
-        using a dedicated low-latency thread)
-    - sysex (simple sysex message I/O testing)
-    - latency (uses porttime to measure system latency)
-    - midithru (an example illustrating software MIDI THRU)
-    - qtest (a test of the new multicore-safe queue implementation)
-    - mm  (allows monitoring of midi messages)
-    - pmjni (a dll to provide an interface to PortMidi for Java)
-
-6)  open the pmjni project properties
-    - visit Configuration Properties, C/C++, General
-    - find Additional Include Directories property and open the editor (...)
-    - at the end of the list, you will find two paths beginning with E:\
-    - these are absolute paths to the Java SDK; you'll need to install the
-      Java SDK (from Sun) and update these directories in order to build
-      this project.
+	- pm_dll (the dll library used to close midi ports on program exit)
+	- porttime (a small portable library implementing timer facilities)
+	- test (simple midi I/O testing)
+	- multithread (an example illustrating low-latency MIDI processing
+            using a dedicated low-latency thread)
+	- sysex (simple sysex message I/O testing)
+	- latency (uses porttime to measure system latency)
 
 6)  verify that all project settings are for Win32 Debug release:
-    - type Alt-F7
-    - highlight all three projects in left part of Project Settings window; 
-    - "Settings For" should say "Win32 Debug"
-	
-    -In Visual C++ 2005 Express Edition, there is a drop down menu in 
-     the top toolbar to select the Win32 and Debug option.
+	- type Alt-F7
+	- highlight all three projects in left part of Project Settings window; 
+	- "Settings For" should say "Win32 Debug"
 
 7)  use Build->Batch Build ... to build everything in the project
-	
-    -In Visual C++ 2005 Express Edition, use Build->Build Solution
-	
+
 8)  The settings for these projects were distributed in the zip file, so
     compile should just work.
 
-9)  run test project; use the menu that shows up from the command prompt to
+9)  IMPORTANT! PortMidi uses a DLL, pm_dll.dll, but there is no simple way
+    to set up projects to use pm_dll. THEREFORE, you need to copy DLLs
+    as follows (you can do this with <...>\portmidi\pm_win\copy-dll.bat):
+        copy <...>\portmidi\pm_win\Debug\pm_dll.dll to:
+            <...>\portmidi\pm_test\latencyDebug\pm_dll.dll
+            <...>\portmidi\pm_test\midithreadDebug\pm_dll.dll
+            <...>\portmidi\pm_test\sysexDebug\pm_dll.dll
+            <...>\portmidi\pm_test\testDebug\pm_dll.dll
+            <...>\portmidi\pm_test\midithruDebug\pm_dll.dll
+        and copy <...>\portmidi\pm_win\Release\pm_dll.dll to:
+            <...>\portmidi\pm_test\latencyRelease\pm_dll.dll
+            <...>\portmidi\pm_test\midithreadRelease\pm_dll.dll
+            <...>\portmidi\pm_test\sysexRelease\pm_dll.dll
+            <...>\portmidi\pm_test\testRelease\pm_dll.dll
+            <...>\portmidi\pm_test\midithruRelease\pm_dll.dll
+    each time you rebuild the pm_dll project, these copies must be redone!
+
+    Since Windows will look in the executable directory for DLLs, we 
+    recommend that you always install a copy of pm_dll.dll (either the
+    debug version or the release version) in the same directory as the
+    application using PortMidi. The release DLL is about 40KB. This will 
+    ensure that the application uses the correct DLL.
+
+10) run test project; use the menu that shows up from the command prompt to
     test that portMidi works on your system. tests include: 
 		- verify midi output works
 		- verify midi input works
+		- verify midi input w/midi thru works
 
-10) run other projects if you wish: sysex, latency, midithread, mm, 
-    qtest, midithru
-
-11) use pm_java/make.bat (run in a cmd window from pm_java) to compile
-    the java code.
-
-12) run pm_java/pmdefaults.bat (run in a cmd window from pm_java) to
-    run the PmDefaults program. This lets you select the default input
-    and output devices for PortMidi.
+11) run other projects if you wish: sysex, latency, midithread, mm, qtest
 
 ============================================================================
 TO CREATE YOUR OWN PORTMIDI CLIENT APPLICATION:
@@ -113,35 +119,43 @@ The easiest way is to start a new project w/in the portMidi workspace:
       in the next step)
 	- Click OK
 	- Select "An Empty Project" and click Finish
-	
-	In Visual C++ 2005 Express Edition, 
-	- File->New->Projects
-	- Location: <...>\portmidi\<yourProjectName>
-	- select Add to solution
-	- select CLR Empty project in CLR
-	- select Win32 Console Application in Win32
-	- select Empty project in General
-	
+
 2) Now this project will be the active project. Make it explicitly depend
    on PortMidi dll:
 	- Project->Dependencies
 	- Click pm_dll
 
-3) add whatever files you wish to add to your new project, using portMidi
+3) Important! in order to be able to use portMidi DLL from your new project
+   and set breakpoints,	copy following files from <...>\pm_dll\Debug into 
+   <...>\<yourProjectName>\Debug directory:
+		pm_dll.lib
+		pm_dll.dll
+    each time you rebuild pm_dll, these copies must be redone!
+
+4) add whatever files you wish to add to your new project, using portMidi
    calls as desired (see USING PORTMIDI at top of this readme)
 
-4) when you include portMidi files, do so like this:
-	- #include "..\pm_common\portmidi.h"
+5) when you include portMidi files, do so like this:
+	- #include "..\pm_dll\portmidi.h"
 	- etc.
 
-5) build and run your project
+6) build and run your project
 
 ============================================================================
 DESIGN NOTES
 ============================================================================
 
-PortMidi for Win32 exists as a simple static library,
+The DLL is used so that PortMidi can (usually) close open devices when the
+program terminates. Failure to close input devices under WinNT, Win2K, and
+probably later systems causes the OS to crash.
+
+This is accomplished with a .LIB/.DLL pair, linking to the .LIB
+in order to access functions in the .DLL. 
+
+PortMidi for Win32 exists as a simple library,
 with Win32-specific code in pmwin.c and MM-specific code in pmwinmm.c.
+pmwin.c uses a DLL in pmdll.c to call Pm_Terminate() when the program
+exits to make sure that all MIDI ports are closed.
 
 Orderly cleanup after errors are encountered is based on a fixed order of
 steps and state changes to reflect each step. Here's the order:
@@ -157,8 +171,10 @@ To open input:
         set descriptor field of PmInternal structure
         - open device
         set handle field of midiwinmm_type structure
-        - allocate buffers
-        - start device
+        - allocate buffer 1 for sysex
+        buffer is added to input port
+        - allocate buffer 2 for sysex
+        buffer is added to input port
         - return
     - return
 
@@ -271,15 +287,5 @@ part of PortMidi is allowed to directly copy sysex bytes to
 "fill_base[*fill_offset_ptr++]" until *fill_offset_ptr reaches
 fill_length. See the code for details.
 
------------
 
-Additional notes on using VS 2005 (maybe this is obsolete now?):
-
-1) Make sure "Configuration: All Configurations" is selected in all of the following Properties modifications!
-
-2) In my case the project defaulted to compiling all .c files with the C++ compiler, which was disastrous. I had to go to set Properties for each file, to wit: Expand Configuration Properties, Expand C/C++, Select Advanced, set the Compile As popup to Compile as C Code (/TC). (For better or worse, the project I inherited has a bunch of .c files that rely on C++ features, so I couldn't reliably set this the project properties level.)
-
-3) While you're there, make sure that the C/C++ -> General -> "Compile with Common Language Runtime support" is set to "No Common Language Runtime support" (the C compiler *can't* support CLR, but VS won't do anything useful like automatically set the two options to match)-.
-
-4) I never got VS precompiled header thing to work sensibly, so I took the path of least resistance and turned PCH's off for all my files. Properties -> Configuration Properties -> C/C++ -> Precompiled Headers -> Create/Use Precompiled Header popup set to "Not Using Precompiled Headers". The compiler is reasonably fast even if it has to parse all the header files, so unless someone wants to explain VS's PCHs to me, the hell with it, I say.
-
+  

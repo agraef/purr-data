@@ -26,7 +26,9 @@
 //#define CM_DEBUG 1
 
 #include "portmidi.h"
+#ifdef NEWBUFFER
 #include "pmutil.h"
+#endif
 #include "pminternal.h"
 #include "porttime.h"
 #include "pmmac.h"
@@ -100,7 +102,7 @@ midi_length(long msg)
         3, 3, 3, 3, 2, 2, 3, 1          /* 0x80 through 0xf0 */
     };
     static int low_lengths[] = {
-        1, 2, 3, 2, 1, 1, 1, 1,         /* 0xf0 through 0xf8 */
+        1, 1, 3, 2, 1, 1, 1, 1,         /* 0xf0 through 0xf8 */
         1, 1, 1, 1, 1, 1, 1, 1          /* 0xf9 through 0xff */
     };
 
@@ -108,7 +110,7 @@ midi_length(long msg)
     high = status >> 4;
     low = status & 15;
 
-    return (high != 0xF) ? high_lengths[high] : low_lengths[low];
+    return (high != 0xF0) ? high_lengths[high] : low_lengths[low];
 }
 
 static PmTimestamp midi_synchronize(PmInternal *midi)
@@ -418,18 +420,7 @@ midi_out_close(PmInternal *midi)
 static PmError
 midi_abort(PmInternal *midi)
 {
-    PmError err = pmNoError;
-    OSStatus macHostError;
-    MIDIEndpointRef endpoint =
-            (MIDIEndpointRef) descriptors[midi->device_id].descriptor;
-    macHostError = MIDIFlushOutput(endpoint);
-    if (macHostError != noErr) {
-        pm_hosterror = macHostError;
-        sprintf(pm_hosterror_text,
-                "Host error %ld: MIDIFlushOutput()", macHostError);
-        err = pmHostError;
-    }
-    return err;
+    return pmNoError;
 }
 
 
@@ -561,7 +552,13 @@ midi_end_sysex(PmInternal *midi, PmTimestamp when)
     /* make sure we don't go backward in time */
     if (m->sysex_timestamp < m->last_time) m->sysex_timestamp = m->last_time;
     
-    /* now send what's in the buffer */
+        /* if flush has been called in the meantime, packet list is NULL */
+    if (m->packet == NULL) {
+        m->packet = MIDIPacketListInit(m->packetList);
+        assert(m->packet);
+    }
+
+        /* now send what's in the buffer */
     err = send_packet(midi, m->sysex_buffer, m->sysex_byte_count,
                       m->sysex_timestamp);
     m->sysex_byte_count = 0;
@@ -682,10 +679,6 @@ CFStringRef EndpointName(MIDIEndpointRef endpoint, bool isExternal)
   
   str = NULL;
   MIDIObjectGetStringProperty(device, kMIDIPropertyName, &str);
-  if (CFStringGetLength(result) == 0) {
-      CFRelease(result);
-      return str;
-  }
   if (str != NULL) {
     // if an external device has only one entity, throw away
     // the endpoint name and just use the device name
@@ -693,10 +686,6 @@ CFStringRef EndpointName(MIDIEndpointRef endpoint, bool isExternal)
       CFRelease(result);
       return str;
     } else {
-      if (CFStringGetLength(str) == 0) {
-        CFRelease(str);
-        return result;
-      }
       // does the entity name already start with the device name?
       // (some drivers do this though they shouldn't)
       // if so, do not prepend
@@ -713,7 +702,6 @@ CFStringRef EndpointName(MIDIEndpointRef endpoint, bool isExternal)
   }
   return result;
 }
-
 
 // Obtain the name of an endpoint, following connections.
 // The result should be released by the caller.

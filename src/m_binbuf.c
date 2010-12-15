@@ -234,6 +234,7 @@ writing to file doesn't buffer everything together. */
 
 void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
 {
+	//fprintf(stderr,"binbuf_add_started %d\n", argc);
     int newsize = x->b_n + argc, i;
     t_atom *ap;
     if (ap = t_resizebytes(x->b_vec, x->b_n * sizeof(*x->b_vec),
@@ -244,6 +245,18 @@ void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
         error("binbuf_addmessage: out of space");
         return;
     }
+	/*
+	for (i=0; i < argc; i++) {
+        if (argv[i].a_type == A_SYMBOL)
+        {
+            fprintf(stderr, "binbuf_add: %s\n", argv[i].a_w.w_symbol->s_name);
+        }
+        else if (argv[i].a_type == A_FLOAT)
+        {
+            fprintf(stderr, "binbuf_add: %g\n", argv[i].a_w.w_float);
+        }
+	}
+	*/
 #if 0
     startpost("binbuf_add: ");
     postatom(argc, argv);
@@ -252,11 +265,13 @@ void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
     for (ap = x->b_vec + x->b_n, i = argc; i--; ap++)
         *ap = *(argv++);
     x->b_n = newsize;
+	//fprintf(stderr,"done binbuf_add\n");
 }
 
 #define MAXADDMESSV 100
 void binbuf_addv(t_binbuf *x, char *fmt, ...)
 {
+	//fprintf(stderr,"binbuf_addv started\n");
     va_list ap;
     t_atom arg[MAXADDMESSV], *at =arg;
     int nargs = 0;
@@ -272,9 +287,15 @@ void binbuf_addv(t_binbuf *x, char *fmt, ...)
         }
         switch(*fp++)
         {
-        case 'i': SETFLOAT(at, va_arg(ap, int)); break;
-        case 'f': SETFLOAT(at, va_arg(ap, double)); break;
-        case 's': SETSYMBOL(at, va_arg(ap, t_symbol *)); break;
+        case 'i': SETFLOAT(at, va_arg(ap, int));
+					//fprintf(stderr, "i = %f\n", at->a_w.w_float);
+					break;
+        case 'f': SETFLOAT(at, va_arg(ap, double)); 
+					//fprintf(stderr, "f = %f\n", at->a_w.w_float);
+					break;
+        case 's': SETSYMBOL(at, va_arg(ap, t_symbol *)); 
+					//fprintf(stderr, "s = %s\n", at->a_w.w_symbol->s_name);
+					break;
         case ';': SETSEMI(at); break;
         case ',': SETCOMMA(at); break;
         default: goto done;
@@ -284,6 +305,7 @@ void binbuf_addv(t_binbuf *x, char *fmt, ...)
     }
 done:
     va_end(ap);
+	//fprintf(stderr,"done binbuf_addv\n");
     binbuf_add(x, nargs, arg);
 }
 
@@ -292,6 +314,7 @@ symbols ";", "'",; the symbol ";" goes to "\;", etc. */
 
 void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
 {
+	//fprintf(stderr,"starting binbuf_addbinbuf\n");
     t_binbuf *z = binbuf_new();
     int i;
     t_atom *ap;
@@ -302,22 +325,28 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
         switch (ap->a_type)
         {
         case A_FLOAT:
+			//fprintf(stderr,"addbinbuf: float\n");
             break;
         case A_SEMI:
+			//fprintf(stderr,"addbinbuf: semi\n");
             SETSYMBOL(ap, gensym(";"));
             break;
         case A_COMMA:
+			//fprintf(stderr,"addbinbuf: comma\n");
             SETSYMBOL(ap, gensym(","));
             break;
         case A_DOLLAR:
+			//fprintf(stderr,"addbinbuf: dollar\n");
             sprintf(tbuf, "$%d", ap->a_w.w_index);
             SETSYMBOL(ap, gensym(tbuf));
             break;
         case A_DOLLSYM:
+			//fprintf(stderr,"addbinbuf: dollsym\n");
             atom_string(ap, tbuf, MAXPDSTRING);
             SETSYMBOL(ap, gensym(tbuf));
             break;
         case A_SYMBOL:
+			//fprintf(stderr,"addbinbuf: symbol\n");
                 /* FIXME make this general */
             if (!strcmp(ap->a_w.w_symbol->s_name, ";"))
                 SETSYMBOL(ap, gensym(";"));
@@ -330,6 +359,7 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
     }
     
     binbuf_add(x, z->b_n, z->b_vec);
+	//fprintf(stderr,"done binbuf_addbinbuf\n");
 }
 
 void binbuf_addsemi(t_binbuf *x)
@@ -778,21 +808,21 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
     
     if ((fd = binbuf_doopen(namebuf, 0)) < 0)
     {
-        fprintf(stderr, "open: ");
+        //fprintf(stderr, "open: ");
         perror(namebuf);
         return (1);
     }
     if ((length = lseek(fd, 0, SEEK_END)) < 0 || lseek(fd, 0, SEEK_SET) < 0 
         || !(buf = t_getbytes(length)))
     {
-        fprintf(stderr, "lseek: ");
+        //fprintf(stderr, "lseek: ");
         perror(namebuf);
         close(fd);
         return(1);
     }
     if ((readret = read(fd, buf, length)) < length)
     {
-        fprintf(stderr, "read (%d %ld) -> %d\n", fd, length, readret);
+        //fprintf(stderr, "read (%d %ld) -> %d\n", fd, length, readret);
         perror(namebuf);
         close(fd);
         t_freebytes(buf, length);
@@ -879,7 +909,7 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
     
     if (!(f = binbuf_dofopen(fbuf, "w")))
     {
-        fprintf(stderr, "open: ");
+        //fprintf(stderr, "open: ");
         sys_unixerror(fbuf);
         goto fail;
     }

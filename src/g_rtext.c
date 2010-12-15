@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "m_pd.h"
+#include "m_imp.h"
 #include "s_stuff.h"
 #include "g_canvas.h"
 #include "t_tk.h"
@@ -251,9 +252,19 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
     else if (action == SEND_UPDATE)
     {
+		/*fprintf(stderr, "SEND_UPDATE canvas_class=%d isgraph=%d goprect=%d\n",
+			(pd_class(&x->x_text->te_pd) == canvas_class ? 1 : 0),
+			((t_glist *)(x->x_text))->gl_isgraph,
+			((t_glist *)(x->x_text))->gl_goprect );*/
         sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
             canvas, x->x_tag, outchars, tempbuf);
-        if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
+		/*if ( pd_class(&x->x_text->te_pd) == canvas_class &&
+        	((t_glist *)(x->x_text))->gl_isgraph &&
+        	(((t_glist *)(x->x_text))->gl_goprect) ) {
+			fprintf(stderr, "do not update outlets\n");
+		}
+		else */
+		if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
             text_drawborder(x->x_text, x->x_glist, x->x_tag,
                 pixwide, pixhigh, 0);
         if (x->x_active)
@@ -388,6 +399,14 @@ void rtext_select(t_rtext *x, int state)
     t_canvas *canvas = glist_getcanvas(glist);
     sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
         x->x_tag, (state? "$select_color" : "$text_color"));
+	if (x->x_text->te_pd->c_wb && x->x_text->te_pd->c_wb->w_displacefnwtag) {
+		if (state)
+			sys_vgui(".x%lx.c addtag selected withtag %s\n",
+			   	glist_getcanvas(glist), x->x_tag);
+		else
+			sys_vgui(".x%lx.c dtag %s selected\n",
+		   		glist_getcanvas(glist), x->x_tag);
+	}
     canvas_editing = canvas;
 }
 
@@ -420,6 +439,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 {
     int w = 0, h = 0, indx, i, newsize, ndel;
     char *s1, *s2;
+	//post("keysym=%s", keysym->s_name);
     if (keynum)
     {
         int n = keynum;
@@ -479,7 +499,7 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_selend = x->x_selstart;
     }
         /* this should be improved...  life's too short */
-    else if (!strcmp(keysym->s_name, "Up"))
+    else if (!strcmp(keysym->s_name, "Up") || !strcmp(keysym->s_name, "Home"))
     {
         if (x->x_selstart)
             x->x_selstart--;
@@ -487,13 +507,38 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_selstart--;
         x->x_selend = x->x_selstart;
     }
-    else if (!strcmp(keysym->s_name, "Down"))
+    else if (!strcmp(keysym->s_name, "Down") || !strcmp(keysym->s_name, "End"))
     {
         while (x->x_selend < x->x_bufsize &&
             x->x_buf[x->x_selend] != '\n')
             x->x_selend++;
         if (x->x_selend < x->x_bufsize)
             x->x_selend++;
+        x->x_selstart = x->x_selend;
+    }
+    else if (!strcmp(keysym->s_name, "CtrlHome"))
+    {
+		/* first find first non-space char going back */
+		while (x->x_selstart > 0 && x->x_buf[x->x_selstart-1] == ' ')
+			x->x_selstart--;
+		/* now go back until you find another space or the beginning of the buffer */
+        while (x->x_selstart > 0 &&
+		  x->x_buf[x->x_selstart] != '\n' &&
+		  x->x_buf[x->x_selstart-1] != ' ')
+            x->x_selstart--;
+        x->x_selend = x->x_selstart;
+    }
+    else if (!strcmp(keysym->s_name, "CtrlEnd"))
+    {
+		/* now go forward until you find another space or the end of the buffer */
+        while (x->x_selend < x->x_bufsize &&
+          x->x_buf[x->x_selend] != '\n' &&
+		  x->x_buf[x->x_selend] != ' ')
+            x->x_selend++;
+		/* now skip all the spaces and land before next word */
+        while (x->x_selend < x->x_bufsize &&
+		  x->x_buf[x->x_selend] == ' ')
+            x->x_selend++;		
         x->x_selstart = x->x_selend;
     }
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);

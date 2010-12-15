@@ -49,7 +49,7 @@ d_fat: $(NAME).d_fat
 .SUFFIXES: .d_ppc .d_fat
 
 DARWINCFLAGS = -DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
-    -Wno-unused -Wno-parentheses -Wno-switch $(OPT_CFLAGS)
+    -Wno-unused -Wno-parentheses -Wno-switch
 
 .c.d_ppc:
 	$(CC) $(DARWINCFLAGS) $(LINUXINCLUDE) -o $*.o -c $*.c
@@ -59,7 +59,7 @@ DARWINCFLAGS = -DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
 .c.d_fat:
 	$(CC) -arch i386 -arch ppc $(DARWINCFLAGS) $(LINUXINCLUDE) -o $*.o -c $*.c
 	$(CC) -arch i386 -arch ppc -bundle -undefined suppress -flat_namespace \
-	    -o $*.pd_darwin $*.o 
+	    -o $*.d_fat $*.o 
 	rm -f $*.o
 
 # ----------------------------------------------------------

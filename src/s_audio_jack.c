@@ -13,7 +13,7 @@
 
 
 #define MAX_CLIENTS 100
-#define NUM_JACK_PORTS 128  /* seems like higher values give bad xrun problems */
+#define NUM_JACK_PORTS 128
 #define BUF_JACK 4096
 static jack_nframes_t jack_out_max;
 #define JACK_OUT_MAX  64
@@ -34,6 +34,11 @@ static int jack_dio_error;
 pthread_mutex_t jack_mutex;
 pthread_cond_t jack_sem;
 
+int jack_get_srate(void)
+{
+	if (jack_client) return jack_get_sample_rate (jack_client);
+	else return 0;
+}
 
 static int
 process (jack_nframes_t nframes, void *arg)
@@ -153,7 +158,7 @@ static char** jack_get_clients(void)
              * it in spot 0 put it in spot 0 and move whatever
              * was already in spot 0 to the end. */
 
-            if( strcmp( "alsa_pcm", tmp_client_name ) == 0 && num_clients > 0 )
+            if( strcmp( "system", tmp_client_name ) == 0 && num_clients > 0 )
             {
               char* tmp;
                 /* alsa_pcm goes in spot 0 */
@@ -216,7 +221,7 @@ static int jack_connect_ports(char* client)
 }
 
 
-static void pd_jack_error_callback(const char *desc) {
+void jack_error(const char *desc) {
   error("JACK error: %s", desc);
   return;
 }
@@ -232,11 +237,6 @@ jack_open_audio(int inchans, int outchans, int rate)
         int new_jack = 0;
         int srate;
         jack_status_t status;
-
-        if(NULL==jack_client_new) {
-            fprintf(stderr,"JACK framework not available\n");
-            return 1;
-        }
 
         jack_dio_error = 0;
         
@@ -288,7 +288,7 @@ jack_open_audio(int inchans, int outchans, int rate)
           
           jack_set_process_callback (jack_client, process, 0);
           
-          jack_set_error_function (pd_jack_error_callback);
+          //          jack_set_error_function (jack_error);
           
 #ifdef JACK_XRUN
           jack_set_xrun_callback (jack_client, jack_xrun, NULL);

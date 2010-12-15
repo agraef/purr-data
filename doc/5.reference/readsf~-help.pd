@@ -1,11 +1,11 @@
-#N canvas 340 118 785 483 12;
-#X msg 606 63 \; pd dsp 1;
-#X msg 99 240 1;
-#X msg 99 261 0;
+#N canvas 113 157 888 480 12;
+#X msg 561 8 \; pd dsp 1;
+#X msg 39 240 1;
+#X msg 39 261 0;
 #X obj 516 359 print didit;
 #X obj 139 361 env~ 16384;
 #X floatatom 139 380 0 0 0 0 - - -;
-#X msg 100 283 print;
+#X msg 40 283 print;
 #X obj 20 393 dac~;
 #X obj 233 360 env~ 16384;
 #X floatatom 233 379 0 0 0 0 - - -;
@@ -35,14 +35,12 @@ send a "1" to start playback. A "0" stops it.;
 automatically \, although only 2- 3- and 4- byte samples are accepted
 (4 bytes implies floating point and is not available in aiff format.)
 ;
-#X obj 116 442 soundfiler;
-#X text 24 442 see also:;
-#X msg 39 239 start;
-#X msg 39 262 stop;
-#X text 577 440 Updated for version 0.42-4;
-#X text 144 238 starts playback;
-#X text 144 260 stops it;
-#X obj 216 442 writesf~;
+#X text 647 450 Updated for version 0.37;
+#X obj 116 452 soundfiler;
+#X text 24 452 see also:;
+#X obj 216 452 readsf~;
+#X text 94 238 1 starts playback;
+#X text 97 261 0 stops it;
 #X connect 1 0 10 0;
 #X connect 2 0 10 0;
 #X connect 4 0 5 0;
@@ -63,5 +61,3 @@ automatically \, although only 2- 3- and 4- byte samples are accepted
 #X connect 16 0 7 1;
 #X connect 17 0 7 0;
 #X connect 19 0 10 0;
-#X connect 28 0 10 0;
-#X connect 29 0 10 0;

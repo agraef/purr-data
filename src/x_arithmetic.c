@@ -685,8 +685,6 @@ static void *wrap_new(void)
 {
     t_object *x = (t_object *)pd_new(wrap_class);
     outlet_new(x, &s_float);
-    pd_error(x, "A new incompatible [wrap] object was introduced in Pd 0.42.");
-    post("\tFor a backwards-compatible version, use [zexy/wrap]");
     return (x);
 }
 

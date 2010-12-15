@@ -345,12 +345,12 @@ void canvas_menuarray(t_glist *canvas)
 {
     t_glist *x = (t_glist *)canvas;
     char cmdbuf[200];
-    sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1\n", gcount+1);
+    sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx\n", gcount+1, (long unsigned int)canvas);
     gfxstub_new(&x->gl_pd, x, cmdbuf);
 }
 
     /* called from graph_dialog to set properties */
-void garray_properties(t_garray *x)
+void garray_properties(t_garray *x, t_glist *canvas)
 {
     char cmdbuf[200];
     t_array *a = garray_getarray(x);
@@ -363,19 +363,27 @@ void garray_properties(t_garray *x)
         properly; right now we just detect a leading '$' and escape
         it.  There should be a systematic way of doing this. */
     sprintf(cmdbuf, ((x->x_name->s_name[0] == '$') ?
-        "pdtk_array_dialog %%s \\%s %d %d 0\n" :
-        "pdtk_array_dialog %%s %s %d %d 0\n"),
+        "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx\n" :
+        "pdtk_array_dialog %%s %s %d %d 0 .x%lx\n"),
             x->x_name->s_name, a->a_n, x->x_saveit + 
             2 * (int)(template_getfloat(template_findbyname(sc->sc_template),
-            gensym("style"), x->x_scalar->sc_vec, 1)));
+            gensym("style"), x->x_scalar->sc_vec, 1)), (long unsigned int)glist_getcanvas(canvas));
     gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
 }
 
     /* this is called back from the dialog window to create a garray. 
     The otherflag requests that we find an existing graph to put it in. */
-void glist_arraydialog(t_glist *parent, t_symbol *name, t_floatarg size,
-    t_floatarg fflags, t_floatarg otherflag)
+void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
+//t_floatarg size, t_floatarg fflags, t_floatarg otherflag, float xdraw, float ydraw)
 {
+	t_float size, fflags, otherflag, xdraw, ydraw;
+	t_symbol *name = atom_getsymbolarg(0, argc, argv);
+	size = atom_getfloatarg(1, argc, argv);
+	fflags = atom_getfloatarg(2, argc, argv);
+	otherflag = atom_getfloatarg(3, argc, argv);
+	xdraw = atom_getfloatarg(4, argc, argv);
+	ydraw = atom_getfloatarg(5, argc, argv);
+
     t_glist *gl;
     t_garray *a;
     int flags = fflags;
@@ -383,9 +391,11 @@ void glist_arraydialog(t_glist *parent, t_symbol *name, t_floatarg size,
         size = 1;
     if (otherflag == 0 || (!(gl = glist_findgraph(parent))))
         gl = glist_addglist(parent, &s_, 0, 1,
-            (size > 1 ? size-1 : size), -1, 0, 0, 0, 0);
+            (size > 1 ? size-1 : size), -1, xdraw+30, ydraw+30, xdraw+30+GLIST_DEFGRAPHWIDTH, ydraw+30+GLIST_DEFGRAPHHEIGHT);
     a = graph_array(gl, sharptodollar(name), &s_float, size, flags);
     canvas_dirty(parent, 1);
+	canvas_redraw(glist_getcanvas(parent));
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(parent));
 }
 
     /* this is called from the properties dialog window for an existing array */
@@ -1069,6 +1079,7 @@ t_widgetbehavior garray_widgetbehavior =
     garray_delete,
     garray_vis,
     garray_click,
+	NULL,
 };
 
 /* ----------------------- public functions -------------------- */

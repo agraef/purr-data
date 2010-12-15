@@ -29,7 +29,7 @@ proc ::helpbrowser::open_helpbrowser {} {
         bind .help_browser <$::modifier-Key-w> "wm withdraw .help_browser"
 
         wm resizable .help_browser 0 0
-        frame .help_browser.frame
+        match_linux_wm [list frame .help_browser.frame]
         pack .help_browser.frame -side top -fill both
         build_references
 #        doc_make_listbox .help_browser.frame $::sys_libdir/doc 0
@@ -44,9 +44,10 @@ proc ::helpbrowser::make_rootlistbox {base} {
     # exportselection 0 looks good, but selection gets easily out-of-sync
 	set current_listbox [listbox "[set b $base.root]" -yscrollcommand "$b-scroll set" \
                              -highlightbackground white -highlightthickness 5 \
-                             -highlightcolor "#D6E5FC" -selectborderwidth 0 \
-                             -height 20 -width 23 -exportselection 0 -bd 0]
-	pack $current_listbox [scrollbar "$b-scroll" -command [list $current_listbox yview]] \
+                             -highlightcolor "#e87216" -selectborderwidth 0 \
+                             -height 20 -width 23 -exportselection 0 -bd 0 \
+							 -selectbackground "#e87216"]
+	pack $current_listbox [match_linux_wm [list scrollbar "$b-scroll" -command [list $current_listbox yview]]] \
         -side left -fill both -expand 1
     foreach item [concat [lsort [concat $libdirlist $helplist]]] {
 		$current_listbox insert end $item
@@ -94,9 +95,10 @@ proc ::helpbrowser::make_liblistbox {base dir} {
     # exportselection 0 looks good, but selection gets easily out-of-sync
 	set current_listbox [listbox "[set b $base.listbox0]" -yscrollcommand "$b-scroll set" \
                              -highlightbackground white -highlightthickness 5 \
-                             -highlightcolor "#D6E5FC" -selectborderwidth 0 \
-                             -height 20 -width 23 -exportselection 0 -bd 0]
-	pack $current_listbox [scrollbar "$b-scroll" -command [list $current_listbox yview]] \
+                             -highlightcolor "#e87216" -selectborderwidth 0 \
+                             -height 20 -width 23 -exportselection 0 -bd 0 \
+							 -selectbackground "#e87216"]
+	pack $current_listbox [match_linux_wm [list scrollbar "$b-scroll" -command [list $current_listbox yview]]] \
         -side left -fill both -expand 1
 	foreach item [lsort -dictionary [glob -directory $dir -nocomplain -types {d} -- *]] {
         if {[glob -directory $item -nocomplain -types {f} -- $doctypes] ne "" ||
@@ -134,9 +136,10 @@ proc ::helpbrowser::doc_make_listbox {base dir count} {
 	set current_listbox [listbox "[set b "$base.listbox$count"]-list" \
                              -yscrollcommand "$b-scroll set" \
                              -highlightbackground white -highlightthickness 5 \
-                             -highlightcolor "#D6E5FC" -selectborderwidth 0 \
-                             -height 20 -width 23 -exportselection 0 -bd 0]
-	pack $current_listbox [scrollbar "$b-scroll" -command "$current_listbox yview"] \
+                             -highlightcolor "#e87216" -selectborderwidth 0 \
+                             -height 20 -width 23 -exportselection 0 -bd 0 \
+							 -selectbackground "#e87216"]
+	pack $current_listbox [match_linux_wm [list scrollbar "$b-scroll" -command "$current_listbox yview"]] \
         -side left -fill both -expand 1
 	foreach item [lsort -dictionary [glob -directory $dir -nocomplain -types {d} -- *]] {
 		$current_listbox insert end "[file tail $item]/"

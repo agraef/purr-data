@@ -410,6 +410,7 @@ static t_widgetbehavior scalar_widgetbehavior =
     scalar_delete,
     scalar_vis,
     scalar_click,
+	NULL,
 };
 
 static void scalar_free(t_scalar *x)

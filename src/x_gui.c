@@ -14,6 +14,9 @@ away before the panel does... */
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+// jsarlo
+EXTERN void magicGlass_setup(void);
+// end jsarlo
 
 /* --------------------- graphics responder  ---------------- */
 
@@ -82,6 +85,16 @@ void gfxstub_new(t_pd *owner, void *key, const char *cmd)
     sprintf(buf, sprintfbuf, s->s_name);
     strncat(buf, afterpercent, (4*MAXPDSTRING) - afterpercentlen);
     sys_gui(buf);
+}
+
+int gfxstub_haveproperties(void *key) {
+    t_gfxstub *x;
+    for (x = gfxstub_list; x; x = x->x_next) {
+        if (x->x_key == key) {
+            return (t_int)x;
+		}
+	}
+	return 0;
 }
 
 static void gfxstub_offlist(t_gfxstub *x)
@@ -401,4 +414,7 @@ void x_gui_setup(void)
     openpanel_setup();
     savepanel_setup();
     key_setup();
+    // jsarlo
+    magicGlass_setup();
+    // end jsarlo
 }

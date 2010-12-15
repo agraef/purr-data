@@ -11,7 +11,7 @@ extern "C" {
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
 #define PD_BUGFIX_VERSION 5
-#define PD_TEST_VERSION "extended"
+#define PD_TEST_VERSION "extended-l2ork-20101215"
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
 "nmakefiles" for externs, which will define NT and not MSW */
@@ -646,6 +646,14 @@ EXTERN void c_addmess(t_method fn, t_symbol *sel, t_atomtype arg1, ...);
 #define t_resizebytes resizebytes
 #define typedmess pd_typedmess
 #define vmess pd_vmess
+
+// jsarlo
+EXTERN char sys_signal_line_color[8];
+EXTERN char sys_control_line_color[8];
+EXTERN char sys_iolet_select_color[8];
+EXTERN int sys_iolet_select_width;
+EXTERN int sys_dropshadow;
+// end jsarlo
 
 /* A definition to help gui objects straddle 0.34-0.35 changes.  If this is
 defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
