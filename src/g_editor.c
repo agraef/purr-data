@@ -885,7 +885,9 @@ static void *canvas_undo_set_apply(t_canvas *x, t_gobj *obj)
     t_gobj *y;
     t_linetraverser t;
     t_outconnect *oc;
-	/* select the object we are working on */
+	/* enable editor (in case it is disabled) and select the object we are working on */
+	if (!x->gl_edit)
+		canvas_editmode(x, 1);
 	if (!glist_isselected(x, obj))
 		glist_select(x, obj);
     int nnotsel= glist_selectionindex(x, 0, 0); /* get number of all items for the offset below */
@@ -1393,7 +1395,8 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 				else {
 					if (!x->gl_edit)
 						canvas_editmode(x, 1);
-					glist_select(x, y);
+					if (!glist_isselected(x, y))
+						glist_select(x, y);
                 	(*class_getpropertiesfn(pd_class(&y->g_pd)))(y, x);
 				}
                 return;
