@@ -1629,9 +1629,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             sys_vgui(".x%x.c itemconfigure %s -outline $select_nlet_color -width $highlight_width\n",
                                      x,
                                      canvas_cnct_outlet_tag);
-                            sys_vgui(".x%x.c raise %s\n",
-                                     x,
-                                     canvas_cnct_outlet_tag);
+                            //sys_vgui(".x%x.c raise %s\n",
+                            //         x,
+                            //         canvas_cnct_outlet_tag);
 							outlet_issignal = obj_issignaloutlet(ob,closest);
                         }
                         // jsarlo
@@ -1958,9 +1958,9 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     sys_vgui(".x%x.c itemconfigure %s -outline $select_nlet_color -width $highlight_width\n",
                              x,
                              canvas_cnct_inlet_tag);
-                    sys_vgui(".x%x.c raise %s\n",
-                             x,
-                             canvas_cnct_inlet_tag);
+                    //sys_vgui(".x%x.c raise %s\n",
+                    //         x,
+                    //         canvas_cnct_inlet_tag);
 					inlet_issignal = obj_issignaloutlet(ob2, closest2);
                 }
                 canvas_setcursor(x, CURSOR_EDITMODE_CONNECT);

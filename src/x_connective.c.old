@@ -349,7 +349,7 @@ static t_class *sel2_class;
 
 typedef struct _selectelement
 {
-    t_atom e_atom;
+    t_word e_w;
     t_outlet *e_outlet;
 } t_selectelement;
 
@@ -357,7 +357,6 @@ typedef struct _sel2
 {
     t_object x_obj;
     t_atomtype x_type;
-    t_int x_mixed;
     t_int x_nelement;
     t_selectelement *x_vec;
     t_outlet *x_rejectout;
@@ -367,10 +366,10 @@ static void sel2_float(t_sel2 *x, t_float f)
 {
     t_selectelement *e;
     int nelement;
-    if (x->x_type == A_FLOAT || x->x_mixed == 1)
+    if (x->x_type == A_FLOAT)
     {
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
-            if (e->e_atom.a_type == A_FLOAT && e->e_atom.a_w.w_float == f)
+            if (e->e_w.w_float == f)
         {
             outlet_bang(e->e_outlet);
             return;
@@ -383,10 +382,10 @@ static void sel2_symbol(t_sel2 *x, t_symbol *s)
 {
     t_selectelement *e;
     int nelement;
-    if (x->x_type == A_SYMBOL || x->x_mixed)
+    if (x->x_type == A_SYMBOL)
     {
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
-            if (e->e_atom.a_type == A_SYMBOL && e->e_atom.a_w.w_symbol == s)
+            if (e->e_w.w_symbol == s)
         {
             outlet_bang(e->e_outlet);
             return;
@@ -432,26 +431,15 @@ static void *select_new(t_symbol *s, int argc, t_atom *argv)
         t_selectelement *e;
         t_sel2 *x = (t_sel2 *)pd_new(sel2_class);
         x->x_nelement = argc;
-	x->x_type = argv[0].a_type;
-	t_int f,s = 0;
         x->x_vec = (t_selectelement *)getbytes(argc * sizeof(*x->x_vec));
+        x->x_type = argv[0].a_type;
         for (n = 0, e = x->x_vec; n < argc; n++, e++)
         {
             e->e_outlet = outlet_new(&x->x_obj, &s_bang);
-            if (argv[n].a_type == A_FLOAT)
-	    {
-	        e->e_atom.a_w.w_float = atom_getfloatarg(n, argc, argv);
-		e->e_atom.a_type = A_FLOAT;
-		f = 1;
-	    }
-            else
-	    {
-		e->e_atom.a_w.w_symbol = atom_getsymbolarg(n, argc, argv);
-		e->e_atom.a_type = A_SYMBOL;
-		s = 1;
-	    }
+            if ((x->x_type = argv->a_type) == A_FLOAT)
+                e->e_w.w_float = atom_getfloatarg(n, argc, argv);
+            else e->e_w.w_symbol = atom_getsymbolarg(n, argc, argv);
         }
-	x->x_mixed = f * s;
         x->x_rejectout = outlet_new(&x->x_obj, &s_float);
         return (x);
     }
@@ -520,8 +508,6 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
     {
         t_float f;
         if (!argc) return;
-        if (argv->a_type != A_FLOAT)
-            goto rejected;
         f = atom_getfloat(argv);
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
             if (e->e_w.w_float == f)
@@ -583,7 +569,6 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             }
         }
     }
- rejected:
     outlet_list(x->x_rejectout, 0, argc, argv);
 }
 
@@ -614,12 +599,6 @@ static void *route_new(t_symbol *s, int argc, t_atom *argv)
         if (x->x_type == A_FLOAT)
             e->e_w.w_float = atom_getfloatarg(n, argc, argv);
         else e->e_w.w_symbol = atom_getsymbolarg(n, argc, argv);
-    }
-    if (argc == 1)
-    {
-        if (argv->a_type == A_FLOAT)
-            floatinlet_new(&x->x_obj, &x->x_vec->e_w.w_float);
-        else symbolinlet_new(&x->x_obj, &x->x_vec->e_w.w_symbol);
     }
     x->x_rejectout = outlet_new(&x->x_obj, &s_list);
     return (x);
@@ -1280,15 +1259,12 @@ static void makefilename_float(t_makefilename *x, t_floatarg f)
     char buf[MAXPDSTRING];
     if (x->x_accept == A_FLOAT) {
         if (x->x_intconvert)
-            sprintf(buf, x->x_format->s_name, (int)f);
-        else sprintf(buf, x->x_format->s_name, f);
+    sprintf(buf, x->x_format->s_name, (int)f);
+        else
+            sprintf(buf, x->x_format->s_name, f);
     }
     else
-    {
-        char buf2[MAXPDSTRING];
-        sprintf(buf2, "%g", f);
-        sprintf(buf, x->x_format->s_name, buf2);
-    }
+        sprintf(buf, x->x_format->s_name, "");
     if (buf[0]!=0)
     outlet_symbol(x->x_obj.ob_outlet, gensym(buf));
 }
