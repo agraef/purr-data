@@ -1520,6 +1520,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     {
 		if (x->gl_editor->e_onmotion == MA_MOVE) {		
 			//fprintf(stderr,"letting go of objects\n");
+        	sys_vgui(".x%lx.c raise all_cords\n", x);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		}
         x->gl_editor->e_grab = 0;

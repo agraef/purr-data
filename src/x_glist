@@ -1,0 +1,2 @@
+g_text.c:		t_canvas *c = glist_getcanvas(y->x_glist);
+g_text.c~:		t_canvas *c = glist_getcanvas(y->x_glist);

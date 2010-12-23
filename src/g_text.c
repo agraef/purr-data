@@ -133,6 +133,8 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     if (pd_class(&x->ob_pd) == voutlet_class)
         canvas_resortoutlets(glist_getcanvas(gl));
     canvas_unsetcurrent((t_canvas *)gl);
+	if ( glist_isvisible( ((t_canvas *)gl) ) )
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)gl);
 }
 
 extern int sys_noautopatch;
@@ -1049,6 +1051,25 @@ static void text_getrect(t_gobj *z, t_glist *glist,
     {
         t_rtext *y = glist_findrtext(glist, x);
         width = rtext_width(y);
+
+		/*  now find if we have more inlets or outlets than
+			what can comfortably fit and adjust accordingly
+			but only do so if this is not gop object
+		*/
+
+		//fprintf(stderr,"isgraph %d\n", ((t_glist *)z)->gl_isgraph);
+		if (!((t_glist *)z)->gl_isgraph) {
+
+			t_object *ob = pd_checkobject(&x->te_pd);
+			int no = obj_noutlets(ob);
+			int ni = obj_ninlets(ob);
+
+			int m = ( ni > no ? ni : no);
+			if ( width < IOWIDTH * 2 * m ) {
+				/*	we have to resize the object */
+				width = IOWIDTH * 2 * m;
+			}
+		}
         height = rtext_height(y) - (iscomment << 1);
     }
     else width = height = 10;

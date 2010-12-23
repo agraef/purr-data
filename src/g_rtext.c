@@ -452,13 +452,19 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
             {
                 ....
             } */
-            if (x->x_selstart && (x->x_selstart == x->x_selend))
+            if (x->x_selstart && (x->x_selstart == x->x_selend)) {
                 x->x_selstart--;
+				if (glist_isvisible(glist_getcanvas(x->x_glist)))
+					sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
+			}
+			
         }
         else if (n == 127)      /* delete */
         {
             if (x->x_selend < x->x_bufsize && (x->x_selstart == x->x_selend))
                 x->x_selend++;
+			if (glist_isvisible(glist_getcanvas(x->x_glist)))
+				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
         }
         
         ndel = x->x_selend - x->x_selstart;
@@ -480,6 +486,8 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_buf[x->x_selstart] = n;
             x->x_bufsize = newsize;
             x->x_selstart = x->x_selstart + 1;
+			if (glist_isvisible(glist_getcanvas(x->x_glist)))
+				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
         }
         x->x_selend = x->x_selstart;
         x->x_glist->gl_editor->e_textdirty = 1;

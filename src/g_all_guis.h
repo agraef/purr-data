@@ -121,8 +121,8 @@
 #define SCALE_VU_MINWIDTH 8
 #define SCALE_VU_MINHEIGHT 80
 
-#define SCALEHANDLE_WIDTH   10    /* item size is int */
-#define SCALEHANDLE_HEIGHT  10
+#define SCALEHANDLE_WIDTH   5
+#define SCALEHANDLE_HEIGHT  5
 
 typedef struct _iem_fstyle_flags
 {
