@@ -1125,8 +1125,14 @@ void canvas_map(t_canvas *x, t_floatarg f);
     /* we call this when we want the window to become visible, mapped, and
     in front of all windows; or with "f" zero, when we want to get rid of
     the window. */
+//extern t_array *garray_getarray(t_garray *x);
+//extern void garray_fittograph(t_garray *x, int n);
+//extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
+//extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
+
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
+	//fprintf(stderr,"canvas_vis %f\n", f);
     char buf[30];
     int flag = (f != 0);
     if (x != glist_getcanvas(x))
@@ -1145,11 +1151,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 #else
             sys_vgui("raise .x%lx\n", x);
             sys_vgui("focus .x%lx.c\n", x);
-            sys_vgui("wm deiconify .x%lx\n", x);  
+            sys_vgui("wm deiconify .x%lx\n", x);
 #endif
         }
         else
         {
+			//fprintf(stderr,"new window\n");
             canvas_create_editor(x);
             sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
@@ -1158,6 +1165,57 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_edit);
             canvas_reflecttitle(x);
             x->gl_havewindow = 1;
+/*
+			//newly opened arrays created prior to pd-l2ork require fittograph
+			t_gobj *g, *gg = NULL;
+			t_garray *ga = NULL;
+			t_array *a = NULL;
+			int  num_elem = 0;
+			t_text *t = NULL;
+			int objnamesize;
+			char *objname;
+
+			for (g = x->gl_list; g; g = g->g_next) {
+				//fprintf(stderr, "searching\n");
+
+				//for subpatch garrays
+				if (pd_class(&g->g_pd) == garray_class) {
+					//fprintf(stderr,"found ya\n");
+					ga = (t_garray *)g;
+					if (ga) {
+						a = garray_getarray(ga);
+						num_elem = a->a_n;
+						garray_fittograph(ga, num_elem);
+					}
+				}
+				//for garrays in gop inside a newly opened patch window
+				else {
+					t_text *t = (t_text *)g;
+					t_rtext *y = glist_findrtext(x, t);
+					if (y) {
+						rtext_gettext(y, &objname, &objnamesize);
+						//fprintf(stderr,"objname %s\n", objname);					
+						if (!strcmp(objname, "graph ")) {
+							//fprintf(stderr,"got a graph\n");
+							for (gg = ((t_glist *)g)->gl_list; gg; gg = gg->g_next) {
+								//fprintf(stderr, "sub-searching\n");
+								if (pd_class(&gg->g_pd) == garray_class) {
+									//fprintf(stderr,"sub found ya\n");
+									ga = (t_garray *)gg;
+									if (ga) {
+										a = garray_getarray(ga);
+										num_elem = a->a_n;
+										garray_fittograph(ga, num_elem);
+										canvas_dirty(x, 2);
+									}
+								}
+							}					
+						}
+						//else fprintf(stderr,"fail %d >%s< >graph<\n", strcmp(objname, "graph"), objname);
+					}
+				}
+			}
+*/
             canvas_updatewindowlist();
         }
     }
@@ -1918,7 +1976,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 {
                     sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                            	x, canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+							(last_inlet_filter ? "black" : (obj_issignaloutlet(ob1, closest1) ? "$signal_cord" : "$msg_cord")),
 							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
                     canvas_cnct_inlet_tag[0] = 0;                  
                 }
@@ -1962,7 +2020,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     //sys_vgui(".x%x.c raise %s\n",
                     //         x,
                     //         canvas_cnct_inlet_tag);
-					inlet_issignal = obj_issignaloutlet(ob2, closest2);
+					inlet_issignal = obj_issignalinlet(ob2, closest2);
                 }
                 canvas_setcursor(x, CURSOR_EDITMODE_CONNECT);
             }

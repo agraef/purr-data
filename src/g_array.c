@@ -134,6 +134,8 @@ struct _garray
     char x_saveit;          /* true if we should save this with parent */
     char x_listviewing;     /* true if list view window is open */
     char x_hidename;        /* don't print name above graph */
+	int x_style;			/* so much simpler to keep it here */
+	t_symbol *x_send;		/* send_changed hook */
 };
 
 static t_pd *garray_arraytemplatecanvas;
@@ -199,6 +201,9 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     x->x_listviewing = 0;
     glist_add(gl, &x->x_gobj);
     x->x_glist = gl;
+	char buf[MAXPDSTRING];
+	sprintf(buf, "%s_changed", x->x_realname->s_name);
+	x->x_send = gensym(buf);
     return (x);
 }
 
@@ -255,7 +260,7 @@ int garray_getname(t_garray *x, t_symbol **namep)
 
         /* if there is one garray in a graph, reset the graph's coordinates
             to fit a new size and style for the garray */
-static void garray_fittograph(t_garray *x, int n, int style)
+void garray_fittograph(t_garray *x, int n)
 {
     t_array *array = garray_getarray(x);
     t_glist *gl = x->x_glist;
@@ -263,7 +268,7 @@ static void garray_fittograph(t_garray *x, int n, int style)
     {
         vmess(&gl->gl_pd, gensym("bounds"), "ffff",
             0., gl->gl_y1, (double)
-                (style == PLOTSTYLE_POINTS || n == 1 ? n : n-1),
+                (x->x_style == PLOTSTYLE_POINTS || n == 1 ? n : n-1),
                     gl->gl_y2);
                 /* close any dialogs that might have the wrong info now... */
         gfxstub_deleteforkey(gl);
@@ -323,15 +328,16 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *templateargsym,
     saveit = ((flags & 1) != 0);
     x = graph_scalar(gl, s, templatesym, saveit);
     x->x_hidename = ((flags & 8) >> 3);
+	x->x_style = style;
 
     if (n <= 0)
         n = 100;
     array_resize(x->x_scalar->sc_vec[zonset].w_array, n);
 
     template_setfloat(template, gensym("style"), x->x_scalar->sc_vec,
-        style, 1);
+        x->x_style, 1);
     template_setfloat(template, gensym("linewidth"), x->x_scalar->sc_vec, 
-        ((style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
+        ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
     if (x2 = pd_findbyclass(gensym("#A"), garray_class))
         pd_unbind(x2, gensym("#A"));
 
@@ -394,7 +400,8 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
             (size > 1 ? size-1 : size), -1, xdraw+30, ydraw+30, xdraw+30+GLIST_DEFGRAPHWIDTH, ydraw+30+GLIST_DEFGRAPHHEIGHT);
     a = graph_array(gl, sharptodollar(name), &s_float, size, flags);
     canvas_dirty(parent, 1);
-	canvas_redraw(glist_getcanvas(parent));
+	//canvas_redraw(glist_getcanvas(parent));
+	garray_fittograph(a, (int)size);
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(parent));
 }
 
@@ -405,9 +412,9 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
     int flags = fflags;
     int saveit = ((flags & 1) != 0);
     int style = ((flags & 6) >> 1);
-    t_float stylewas = template_getfloat(
+    /*t_float stylewas = template_getfloat(
         template_findbyname(x->x_scalar->sc_template),
-            gensym("style"), x->x_scalar->sc_vec, 1);
+            gensym("style"), x->x_scalar->sc_vec, 1);*/
     if (deleteit != 0)
     {
         glist_delete(x->x_glist, &x->x_gobj);
@@ -457,10 +464,16 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
             size = 1;
         if (size != a->a_n)
             garray_resize(x, size);
-        else if (style != stylewas)
-            garray_fittograph(x, size, style);
+        else if (style != x->x_style) {
+			x->x_style = style;
+            garray_fittograph(x, size);
+		}
         template_setfloat(scalartemplate, gensym("style"),
-            x->x_scalar->sc_vec, (t_float)style, 0);
+            x->x_scalar->sc_vec, (t_float)x->x_style, 0);
+
+		char buf[MAXPDSTRING];
+		sprintf(buf, "%s_changed", x->x_realname->s_name);
+		x->x_send = gensym(buf);
 
         garray_setsaveit(x, (saveit != 0));
         garray_redraw(x);
@@ -504,6 +517,7 @@ void garray_arrayviewlist_fillpage(t_garray *x,
                                    t_float page,
                                    t_float fTopItem)
 {
+	//fprintf(stderr,"garray_fillpage\n");
     int i, xonset=0, yonset=0, type=0, elemsize=0, topItem;
     t_float yval;
     char cmdbuf[200];
@@ -634,6 +648,7 @@ static t_float array_motion_xperpix;
 static t_float array_motion_yperpix;
 static int array_motion_lastx;
 static int array_motion_fatten;
+static t_garray* array_garray;
 
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
@@ -642,6 +657,9 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     array_motion_xcumulative += dx * array_motion_xperpix;
     array_motion_ycumulative += dy * array_motion_yperpix;
+
+	t_glist *graph = array_garray->x_glist;
+
     if (array_motion_xfield)
     {
             /* it's an x, y plot */
@@ -690,6 +708,15 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
                     (t_word *)(((char *)array_motion_wp) +
                         array_motion_elemsize * array_motion_lastx),
                             1);
+		if (graph->gl_y1 > graph->gl_y2) {
+			if (newy > graph->gl_y1) newy = graph->gl_y1;
+			if (newy < graph->gl_y2) newy = graph->gl_y2;
+		}
+		else {
+			if (newy < graph->gl_y1) newy = graph->gl_y1;
+			if (newy > graph->gl_y2) newy = graph->gl_y2;
+		}
+		//fprintf(stderr, "y = %f\n", newy);
         t_float ydiff = newy - oldy;
         if (thisx < 0) thisx = 0;
         else if (thisx >= array_motion_npoints)
@@ -708,10 +735,15 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
          }
          array_motion_lastx = thisx;
     }
+	//fprintf(stderr, "%f %f\n", graph->gl_y1, graph->gl_y2);
+
     if (array_motion_scalar)
         scalar_redraw(array_motion_scalar, array_motion_glist);
     if (array_motion_array)
         array_redraw(array_motion_array, array_motion_glist);
+
+	/* send a bang to the associated send to reflect the change via mouse click/drag */
+	if (array_garray->x_send->s_thing) pd_bang(array_garray->x_send->s_thing);
 }
 
 int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
@@ -1011,14 +1043,19 @@ static void garray_delete(t_gobj *z, t_glist *glist)
 
 static void garray_vis(t_gobj *z, t_glist *glist, int vis)
 {
+	//fprintf(stderr,"garray_vis %d\n", vis);
     t_garray *x = (t_garray *)z;
-    gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
+	gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
+	//if (((t_glist *)z)->gl_isgraph)
+	//	fprintf(stderr,"garray_vis am_graph\n");
 }
 
 static int garray_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//fprintf(stderr,"garray_click\n");
     t_garray *x = (t_garray *)z;
+	array_garray = x;
     return (gobj_click(&x->x_scalar->sc_gobj, glist,
         xpix, ypix, shift, alt, dbl, doit));
 }
@@ -1044,10 +1081,10 @@ static void garray_save(t_gobj *z, t_binbuf *b)
             x->x_scalar->sc_template->s_name);
         return;
     }
-    style = template_getfloat(scalartemplate, gensym("style"),
-            x->x_scalar->sc_vec, 0);    
-    filestyle = (style == PLOTSTYLE_POINTS ? 1 : 
-        (style == PLOTSTYLE_POLY ? 0 : style)); 
+    /* style = template_getfloat(scalartemplate, gensym("style"),
+            x->x_scalar->sc_vec, 0); */
+    filestyle = (x->x_style == PLOTSTYLE_POINTS ? 1 : 
+        (x->x_style == PLOTSTYLE_POLY ? 0 : x->x_style)); 
     binbuf_addv(b, "sssisi;", gensym("#X"), gensym("array"),
         x->x_name, array->a_n, &s_float,
             x->x_saveit + 2 * filestyle + 8*x->x_hidename);
@@ -1091,6 +1128,7 @@ void garray_usedindsp(t_garray *x)
 
 static void garray_doredraw(t_gobj *client, t_glist *glist)
 {
+	//fprintf(stderr,"garray_doredraw\n");
     t_garray *x = (t_garray *)client;
     if (glist_isvisible(x->x_glist))
     {
@@ -1101,6 +1139,7 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
 
 void garray_redraw(t_garray *x)
 {
+	//fprintf(stderr,"garray_redraw\n");
     if (glist_isvisible(x->x_glist))
         sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
     /* jsarlo { */
@@ -1108,6 +1147,7 @@ void garray_redraw(t_garray *x)
        performance reasons */
     else
     {
+	  //fprintf(stderr,"garray_redraw_listviewing\n");
       if (x->x_listviewing)
         sys_vgui("pdtk_array_listview_fillpage %s\n",
                  x->x_realname->s_name);
@@ -1389,7 +1429,16 @@ static void garray_rename(t_garray *x, t_symbol *s)
     }
     /* } jsarlo */
     pd_unbind(&x->x_gobj.g_pd, x->x_realname);
-    pd_bind(&x->x_gobj.g_pd, x->x_realname = x->x_name = s);
+
+	x->x_name = s;
+	x->x_realname = canvas_realizedollar(x->x_glist, x->x_name);
+
+    pd_bind(&x->x_gobj.g_pd, x->x_realname);
+
+	char buf[MAXPDSTRING];
+	sprintf(buf, "%s_changed", x->x_realname->s_name);
+	x->x_send = gensym(buf);
+
     garray_redraw(x);
 }
 
@@ -1476,9 +1525,9 @@ void garray_resize(t_garray *x, t_floatarg f)
     t_array *array = garray_getarray(x);
     t_glist *gl = x->x_glist;
     int n = (f < 1 ? 1 : f);
-    garray_fittograph(x, n, template_getfloat(
+    garray_fittograph(x, n);/*template_getfloat(
         template_findbyname(x->x_scalar->sc_template),
-            gensym("style"), x->x_scalar->sc_vec, 1));
+            gensym("style"), x->x_scalar->sc_vec, 1));*/
     array_resize_and_redraw(array, x->x_glist, n);
     if (x->x_usedindsp)
         canvas_update_dsp();

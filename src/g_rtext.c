@@ -157,142 +157,144 @@ extern int sys_oldtclversion;
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     int *indexp)
 {
-    t_float dispx, dispy;
-    char smallbuf[200], *tempbuf;
-    int outchars = 0, nlines = 0, ncolumns = 0,
-        pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
-    int reportedindex = 0;
-    t_canvas *canvas = glist_getcanvas(x->x_glist);
-    int widthspec = x->x_text->te_width;
-    int widthlimit = (widthspec ? widthspec : BOXWIDTH);
-    int inindex = 0;
-    int selstart = 0, selend = 0;
-        /* if we're a GOP (the new, "goprect" style) borrow the font size
-        from the inside to preserve the spacing */
-    if (pd_class(&x->x_text->te_pd) == canvas_class &&
-        ((t_glist *)(x->x_text))->gl_isgraph &&
-        ((t_glist *)(x->x_text))->gl_goprect)
-            font =  glist_getfont((t_glist *)(x->x_text));
-    else font = glist_getfont(x->x_glist);
-    fontwidth = sys_fontwidth(font);
-    fontheight = sys_fontheight(font);
-    findx = (*widthp + (fontwidth/2)) / fontwidth;
-    findy = *heightp / fontheight;
-    if (x->x_bufsize >= 100)
-         tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
-    else tempbuf = smallbuf;
-    while (x->x_bufsize - inindex > 0)
-    {
-        int inchars = x->x_bufsize - inindex;
-        int maxindex = (inchars > widthlimit ? widthlimit : inchars);
-        int eatchar = 1;
-        int foundit = firstone(x->x_buf + inindex, '\n', maxindex);
-        if (foundit < 0)
-        {
-            if (inchars > widthlimit)
-            {
-                foundit = lastone(x->x_buf + inindex, ' ', maxindex);
-                if (foundit < 0)
-                {
-                    foundit = maxindex;
-                    eatchar = 0;
-                }
-            }
-            else
-            {
-                foundit = inchars;
-                eatchar = 0;
-            }
-        }
-        if (nlines == findy)
-        {
-            int actualx = (findx < 0 ? 0 :
-                (findx > foundit ? foundit : findx));
-            *indexp = inindex + actualx;
-            reportedindex = 1;
-        }
-        strncpy(tempbuf+outchars, x->x_buf + inindex, foundit);
-        if (x->x_selstart >= inindex &&
-            x->x_selstart <= inindex + foundit + eatchar)
-                selstart = x->x_selstart + outchars - inindex;
-        if (x->x_selend >= inindex &&
-            x->x_selend <= inindex + foundit + eatchar)
-                selend = x->x_selend + outchars - inindex;
-        outchars += foundit;
-        inindex += (foundit + eatchar);
-        if (inindex < x->x_bufsize)
-            tempbuf[outchars++] = '\n';
-        if (foundit > ncolumns)
-            ncolumns = foundit;
-        nlines++;
-    }
-    if (!reportedindex)
-        *indexp = outchars;
-    dispx = text_xpix(x->x_text, x->x_glist);
-    dispy = text_ypix(x->x_text, x->x_glist);
-    if (nlines < 1) nlines = 1;
-    if (!widthspec)
-    {
-        while (ncolumns < 3)
-        {
-            tempbuf[outchars++] = ' ';
-            ncolumns++;
-        }
-    }
-    else ncolumns = widthspec;
-    pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
-    pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
-
-    if (action == SEND_FIRST)
-        sys_vgui("pdtk_text_new .x%lx.c %s %f %f {%.*s} %d %s\n",
-            canvas, x->x_tag,
-            dispx + LMARGIN, dispy + TMARGIN,
-            outchars, tempbuf, sys_hostfontsize(font),
-            (glist_isselected(x->x_glist,
-                &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
-    else if (action == SEND_UPDATE)
-    {
-		/*fprintf(stderr, "SEND_UPDATE canvas_class=%d isgraph=%d goprect=%d\n",
-			(pd_class(&x->x_text->te_pd) == canvas_class ? 1 : 0),
-			((t_glist *)(x->x_text))->gl_isgraph,
-			((t_glist *)(x->x_text))->gl_goprect );*/
-        sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
-            canvas, x->x_tag, outchars, tempbuf);
-		/*if ( pd_class(&x->x_text->te_pd) == canvas_class &&
-        	((t_glist *)(x->x_text))->gl_isgraph &&
-        	(((t_glist *)(x->x_text))->gl_goprect) ) {
-			fprintf(stderr, "do not update outlets\n");
+	if (x) {
+		t_float dispx, dispy;
+		char smallbuf[200], *tempbuf;
+		int outchars = 0, nlines = 0, ncolumns = 0,
+		    pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
+		int reportedindex = 0;
+		t_canvas *canvas = glist_getcanvas(x->x_glist);
+		int widthspec = x->x_text->te_width;
+		int widthlimit = (widthspec ? widthspec : BOXWIDTH);
+		int inindex = 0;
+		int selstart = 0, selend = 0;
+		    /* if we're a GOP (the new, "goprect" style) borrow the font size
+		    from the inside to preserve the spacing */
+		if (pd_class(&x->x_text->te_pd) == canvas_class &&
+		    ((t_glist *)(x->x_text))->gl_isgraph &&
+		    ((t_glist *)(x->x_text))->gl_goprect)
+		        font =  glist_getfont((t_glist *)(x->x_text));
+		else font = glist_getfont(x->x_glist);
+		fontwidth = sys_fontwidth(font);
+		fontheight = sys_fontheight(font);
+		findx = (*widthp + (fontwidth/2)) / fontwidth;
+		findy = *heightp / fontheight;
+		if (x->x_bufsize >= 100)
+		     tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
+		else tempbuf = smallbuf;
+		while (x->x_bufsize - inindex > 0)
+		{
+		    int inchars = x->x_bufsize - inindex;
+		    int maxindex = (inchars > widthlimit ? widthlimit : inchars);
+		    int eatchar = 1;
+		    int foundit = firstone(x->x_buf + inindex, '\n', maxindex);
+		    if (foundit < 0)
+		    {
+		        if (inchars > widthlimit)
+		        {
+		            foundit = lastone(x->x_buf + inindex, ' ', maxindex);
+		            if (foundit < 0)
+		            {
+		                foundit = maxindex;
+		                eatchar = 0;
+		            }
+		        }
+		        else
+		        {
+		            foundit = inchars;
+		            eatchar = 0;
+		        }
+		    }
+		    if (nlines == findy)
+		    {
+		        int actualx = (findx < 0 ? 0 :
+		            (findx > foundit ? foundit : findx));
+		        *indexp = inindex + actualx;
+		        reportedindex = 1;
+		    }
+		    strncpy(tempbuf+outchars, x->x_buf + inindex, foundit);
+		    if (x->x_selstart >= inindex &&
+		        x->x_selstart <= inindex + foundit + eatchar)
+		            selstart = x->x_selstart + outchars - inindex;
+		    if (x->x_selend >= inindex &&
+		        x->x_selend <= inindex + foundit + eatchar)
+		            selend = x->x_selend + outchars - inindex;
+		    outchars += foundit;
+		    inindex += (foundit + eatchar);
+		    if (inindex < x->x_bufsize)
+		        tempbuf[outchars++] = '\n';
+		    if (foundit > ncolumns)
+		        ncolumns = foundit;
+		    nlines++;
 		}
-		else */
-		if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
-            text_drawborder(x->x_text, x->x_glist, x->x_tag,
-                pixwide, pixhigh, 0);
-        if (x->x_active)
-        {
-            if (selend > selstart)
-            {
-                sys_vgui(".x%lx.c select from %s %d\n", canvas, 
-                    x->x_tag, selstart);
-                sys_vgui(".x%lx.c select to %s %d\n", canvas, 
-                    x->x_tag, selend + (sys_oldtclversion ? 0 : -1));
-                sys_vgui(".x%lx.c focus \"\"\n", canvas);        
-            }
-            else
-            {
-                sys_vgui(".x%lx.c select clear\n", canvas);
-                sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
-                    selstart);
-                sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
-            }
-        }
-    }
-    x->x_drawnwidth = pixwide;
-    x->x_drawnheight = pixhigh;
-    
-    *widthp = pixwide;
-    *heightp = pixhigh;
-    if (tempbuf != smallbuf)
-        t_freebytes(tempbuf, 2 * x->x_bufsize + 1);
+		if (!reportedindex)
+		    *indexp = outchars;
+		dispx = text_xpix(x->x_text, x->x_glist);
+		dispy = text_ypix(x->x_text, x->x_glist);
+		if (nlines < 1) nlines = 1;
+		if (!widthspec)
+		{
+		    while (ncolumns < 3)
+		    {
+		        tempbuf[outchars++] = ' ';
+		        ncolumns++;
+		    }
+		}
+		else ncolumns = widthspec;
+		pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
+		pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
+
+		if (action == SEND_FIRST)
+		    sys_vgui("pdtk_text_new .x%lx.c %s %f %f {%.*s} %d %s\n",
+		        canvas, x->x_tag,
+		        dispx + LMARGIN, dispy + TMARGIN,
+		        outchars, tempbuf, sys_hostfontsize(font),
+		        (glist_isselected(x->x_glist,
+		            &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
+		else if (action == SEND_UPDATE)
+		{
+			/*fprintf(stderr, "SEND_UPDATE canvas_class=%d isgraph=%d goprect=%d\n",
+				(pd_class(&x->x_text->te_pd) == canvas_class ? 1 : 0),
+				((t_glist *)(x->x_text))->gl_isgraph,
+				((t_glist *)(x->x_text))->gl_goprect );*/
+		    sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
+		        canvas, x->x_tag, outchars, tempbuf);
+			/*if ( pd_class(&x->x_text->te_pd) == canvas_class &&
+		    	((t_glist *)(x->x_text))->gl_isgraph &&
+		    	(((t_glist *)(x->x_text))->gl_goprect) ) {
+				fprintf(stderr, "do not update outlets\n");
+			}
+			else */
+			if (pixwide != x->x_drawnwidth || pixhigh != x->x_drawnheight) 
+		        text_drawborder(x->x_text, x->x_glist, x->x_tag,
+		            pixwide, pixhigh, 0);
+		    if (x->x_active)
+		    {
+		        if (selend > selstart)
+		        {
+		            sys_vgui(".x%lx.c select from %s %d\n", canvas, 
+		                x->x_tag, selstart);
+		            sys_vgui(".x%lx.c select to %s %d\n", canvas, 
+		                x->x_tag, selend + (sys_oldtclversion ? 0 : -1));
+		            sys_vgui(".x%lx.c focus \"\"\n", canvas);        
+		        }
+		        else
+		        {
+		            sys_vgui(".x%lx.c select clear\n", canvas);
+		            sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
+		                selstart);
+		            sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
+		        }
+		    }
+		}
+		x->x_drawnwidth = pixwide;
+		x->x_drawnheight = pixhigh;
+		
+		*widthp = pixwide;
+		*heightp = pixhigh;
+		if (tempbuf != smallbuf)
+		    t_freebytes(tempbuf, 2 * x->x_bufsize + 1);
+	}
 }
 
 void rtext_retext(t_rtext *x)
@@ -384,7 +386,8 @@ void rtext_draw(t_rtext *x)
 
 void rtext_erase(t_rtext *x)
 {
-    sys_vgui(".x%lx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
+	if (x && x->x_glist)
+	    sys_vgui(".x%lx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
 }
 
 void rtext_displace(t_rtext *x, int dx, int dy)

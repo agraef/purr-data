@@ -457,7 +457,8 @@ if {$pd_nt == 0} {
     }
 }
 
-set pd_deffont {courier 10}
+#set pd_deffont {courier 10}
+set pd_deffont console_font
 
 set help_top_directory $pd_guidir/doc
 
@@ -2331,23 +2332,30 @@ proc pdtk_array_listview_new {id arrayName page} {
     global fontname fontweight
     set pd_array_listview_page($arrayName) $page
     set pd_array_listview_id($arrayName) $id
-    set windowName [format ".%s Array Window" $arrayName]
+    set windowName [format ".%sArrayWindow" $arrayName]
     if [winfo exists $windowName] then [destroy $windowName]
     toplevel $windowName
+	wm geometry $windowName 220x400
+	wm minsize $windowName 220 400
+	#pdtk_standardkeybindings $windowName
+	bind $windowName <Control-w> {destroy %W}
+	bind $windowName <Control-q> {menu_quit}
+	match_linux_wm [list $windowName configure]
     wm protocol $windowName WM_DELETE_WINDOW \
         "pdtk_array_listview_close $id $arrayName"
     wm title $windowName [concat $arrayName "(list view)"]
     # FIXME
     set font 9
-    set $windowName.lb [listbox $windowName.lb -height 20 -width 25\
+    set $windowName.lb [match_linux_wm [list listbox $windowName.lb \
+							-height 20 -width 25 \
                             -selectmode extended \
-                            -relief solid -background white -borderwidth 1 \
                             -font [format {{%s} %d %s} $fontname $font $fontweight]\
-                            -yscrollcommand "$windowName.lb.sb set"]
+                            -yscrollcommand "$windowName.lb.sb set"]]
     set $windowName.lb.sb [match_linux_wm [list scrollbar $windowName.lb.sb \
                                -command "$windowName.lb yview" -orient vertical]]
-    place configure $windowName.lb.sb -relheight 1 -relx 0.9 -relwidth 0.1
+    #place configure $windowName.lb.sb -relheight 1 -relx 0.9 -relwidth 0.1
     pack $windowName.lb -expand 1 -fill both
+	pack $windowName.lb.sb -side right -fill y
     bind $windowName.lb <Double-ButtonPress-1> \
         "pdtk_array_listview_edit $arrayName $page $font"
     # handle copy/paste
@@ -2360,12 +2368,12 @@ proc pdtk_array_listview_new {id arrayName page} {
                 "pdtk_array_listview_popup $arrayName"
         } 
     }
-    set $windowName.prevBtn [button $windowName.prevBtn -text "<-" \
-                                 -command "pdtk_array_listview_changepage $arrayName -1"]
-    set $windowName.nextBtn [button $windowName.nextBtn -text "->" \
-                                 -command "pdtk_array_listview_changepage $arrayName 1"]
-    pack $windowName.prevBtn -side left -ipadx 20 -pady 10 -anchor s
-    pack $windowName.nextBtn -side right -ipadx 20 -pady 10 -anchor s
+    set $windowName.prevBtn [match_linux_wm [list button $windowName.prevBtn -text "<-" \
+                                 -command "pdtk_array_listview_changepage $arrayName -1"]]
+    set $windowName.nextBtn [match_linux_wm [list button $windowName.nextBtn -text "->" \
+                                 -command "pdtk_array_listview_changepage $arrayName 1"]]
+    pack $windowName.prevBtn -side left -expand 1 -padx 3 -pady 3
+    pack $windowName.nextBtn -side left -expand 1 -padx 3 -pady 3
     focus $windowName
 }
 
@@ -2856,11 +2864,11 @@ proc pdtk_canvas_getscroll {name} {
 		set canvasheight [ expr {abs($ymaxval-$yminval)} ]
 
 		if {$::scroll($parentname) == 1} {
-			if {$winwidth > $canvaswidth} {
+			if {$winwidth >= $canvaswidth} {
 				pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
 			}
-			if {$winheight > $canvasheight} {
+			if {$winheight >= $canvasheight} {
 				pack forget $parentname.scrollvert
 				set ::yscrollable($parentname) 0
 			}
@@ -4491,11 +4499,11 @@ proc pdtk_array_dialog {id name n flags newone canvas} {
         pack $id.deleteme -side top
     }
     # jsarlo
-    # if {$newone == 0} {
-    #    match_linux_wm [list button $id.listview -text {View list}\
-    #        -command "array_viewlist $id $name 0"]
-    #    pack $id.listview -side left
-    #}
+    if {$newone == 0} {
+        match_linux_wm [list button $id.listview -text {View list}\
+           -command "array_viewlist $id"]
+        pack $id.listview -side left -padx 3 -pady 3
+    }
     # end jsarlo
     match_linux_wm [list frame $id.buttonframe]
     pack $id.buttonframe -side bottom -fill x
@@ -4848,15 +4856,15 @@ proc pdtk_data_dialog {name stuff} {
     	-command [concat dodata_send $name]]
 	match_linux_wm [list button $name.buttonframe.ok -text {OK (Ctrl t)}\
     	-command [concat dodata_ok $name]]
-    pack $name.buttonframe.send -side left -expand 1
-    pack $name.buttonframe.ok -side left -expand 1
+    pack $name.buttonframe.ok -side right -expand 0 -pady 3
+    pack $name.buttonframe.send -side right -expand 0 -pady 3
 
     match_linux_wm [list text $name.text -relief sunken -bd 1 -height 40 -width 60 \
         -yscrollcommand "$name.scroll set" -font $pd_deffont \
 		-highlightthickness 0 -takefocus 0]
     match_linux_wm [list scrollbar $name.scroll -command "$name.text yview"]
-    pack $name.scroll -side right -fill y -pady 3
-    pack $name.text -side left -fill both -expand 1 -pady 3
+    pack $name.scroll -side right -fill y
+    pack $name.text -side left -fill both -expand 1
     $name.text insert end $stuff
     focus $name.text
 }
@@ -5096,15 +5104,15 @@ proc pdtk_pd_texteditor {stuff} {
 			-command "texteditor_send $name.text"]
 		match_linux_wm [list button $name.buttons.ok -text {OK (Ctrl t)}\
 			-command "texteditor_ok $name.text"]
-		pack $name.buttons.send -side left -expand 1
-		pack $name.buttons.ok -side left -expand 1
+		pack $name.buttons.ok -side right -expand 0 -padx 3 -pady 3
+		pack $name.buttons.send -side right -expand 0 -padx 3 -pady 3
 
 		match_linux_wm [list text $name.text -relief sunken -bd 1 -height 12 -width 60 \
 		    -yscrollcommand "$name.scroll set" -font $pd_deffont \
 			-highlightthickness 0 -takefocus 0]
 		match_linux_wm [list scrollbar $name.scroll -command "$name.text yview"]
-		pack $name.scroll -side right -fill y -pady 3
-		pack $name.text -side left -fill both -expand 1 -pady 3
+		pack $name.scroll -side right -fill y
+		pack $name.text -side left -fill both -expand 1
 		$name.text insert end $stuff
 		focus $name.text
 	}

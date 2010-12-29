@@ -561,7 +561,7 @@ t_float glist_pixelstoy(t_glist *x, t_float ypix)
     {
         int x1, y1, x2, y2;
         if (!x->gl_owner)
-            bug("glist_pixelstox");
+            bug("glist_pixelstoy");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
         return (x->gl_y1 + (x->gl_y2 - x->gl_y1) * 
             (ypix - y1) / (y2 - y1));
@@ -859,8 +859,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 glist_getfont(x), sys_fontweight, tag);
 
             /* draw contents of graph as glist */
-        for (g = x->gl_list; g; g = g->g_next)
+        for (g = x->gl_list; g; g = g->g_next) {
             gobj_vis(g, x, 1);
+		}
     }
     else
     {
@@ -897,6 +898,7 @@ static void graph_graphrect(t_gobj *z, t_glist *glist,
 static void graph_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
+	//fprintf(stderr,"graph_getrect\n");
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
     t_glist *x = (t_glist *)z;
     if (x->gl_isgraph)
@@ -907,6 +909,12 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
         int x21, y21, x22, y22;
 
         graph_graphrect(z, glist, &x1, &y1, &x2, &y2);
+		/* fix visibility of edge items */
+	    x1 -= 1;
+	    y1 -= 1;
+	    //x2 += 1;
+	    y2 += 1;
+
         if (canvas_showtext(x))
         {
             text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);

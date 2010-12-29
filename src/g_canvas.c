@@ -1004,6 +1004,12 @@ void canvas_closebang(t_canvas *x)
       }
 }
 
+/* needed for readjustment of garrays */
+extern t_array *garray_getarray(t_garray *x);
+extern void garray_fittograph(t_garray *x, int n);
+extern t_rtext *glist_findrtext(t_glist *gl, t_text *who);
+extern void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
+
 static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
     t_symbol *topgeom)
 {
@@ -1017,6 +1023,26 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
     if (cw > 5 && ch > 5)
         canvas_setbounds(x, txpix, typix,
             txpix + cw, typix + ch);
+	/* readjust garrays (if any) */
+	t_gobj *g, *gg = NULL;
+	t_garray *ga = NULL;
+	t_array *a = NULL;
+	int  num_elem = 0;
+
+	for (g = x->gl_list; g; g = g->g_next) {
+		//fprintf(stderr, "searching\n");
+
+		//for subpatch garrays
+		if (pd_class(&g->g_pd) == garray_class) {
+			//fprintf(stderr,"found ya\n");
+			ga = (t_garray *)g;
+			if (ga) {
+				a = garray_getarray(ga);
+				num_elem = a->a_n;
+				garray_fittograph(ga, num_elem);
+			}
+		}
+	}
 }
 
 void canvas_popabstraction(t_canvas *x)
