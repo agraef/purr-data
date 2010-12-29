@@ -405,10 +405,14 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(parent));
 }
 
+extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
+
     /* this is called from the properties dialog window for an existing array */
 void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
     t_floatarg fflags, t_floatarg deleteit)
 {
+	canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
+
     int flags = fflags;
     int saveit = ((flags & 1) != 0);
     int style = ((flags & 6) >> 1);

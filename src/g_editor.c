@@ -1052,7 +1052,11 @@ static t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
 static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y)
 {
     int canprop, canopen, isobject;
-    canprop = (!y || (y && class_getpropertiesfn(pd_class(&y->g_pd))));
+	/* abstractions should only allow for properties inside them 
+	   otherwise they end-up being dirty without visible notification
+	   besides, why would one mess with their properties without
+	   seeing what is inside them? */
+    canprop = (!y || (y && class_getpropertiesfn(pd_class(&y->g_pd))) && !canvas_isabstraction( ((t_glist*)y) ) );
     canopen = (y && zgetfn(&y->g_pd, gensym("menu-open")));
 	if (y) {
 		isobject = 1;
@@ -1341,6 +1345,13 @@ void canvas_properties(t_glist *x)
 static void canvas_donecanvasdialog(t_glist *x,
     t_symbol *s, int argc, t_atom *argv)
 {
+	/* have to figure out how the parent window is stored
+	   in the glist, also how to deal with abstractions,
+	   so until that happens...
+	   for the time being we only accept undo/redos that
+	   apply to objects on the parent window (e.g. GOPs) */
+	if (glist_getcanvas(x) != x && !canvas_isabstraction(x))
+		canvas_apply_setundo(glist_getcanvas(x), (t_gobj *)x);
 
     t_float xperpix, yperpix, x1, y1, x2, y2, xpix, ypix, xmargin, ymargin; 
     int graphme, redraw = 0;
