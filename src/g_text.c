@@ -1054,22 +1054,23 @@ static void text_getrect(t_gobj *z, t_glist *glist,
 
 		/*  now find if we have more inlets or outlets than
 			what can comfortably fit and adjust accordingly
-			but only do so if this is not gop object
+			NB: textless GOPs are unaffected and are treated
+			as GUI objects
 		*/
 
 		//fprintf(stderr,"isgraph %d\n", ((t_glist *)z)->gl_isgraph);
-		if (!((t_glist *)z)->gl_isgraph) {
+		//if (!((t_glist *)z)->gl_isgraph) {
 
-			t_object *ob = pd_checkobject(&x->te_pd);
-			int no = obj_noutlets(ob);
-			int ni = obj_ninlets(ob);
+		t_object *ob = pd_checkobject(&x->te_pd);
+		int no = obj_noutlets(ob);
+		int ni = obj_ninlets(ob);
 
-			int m = ( ni > no ? ni : no);
-			if ( width < IOWIDTH * 2 * m ) {
-				/*	we have to resize the object */
-				width = IOWIDTH * 2 * m;
-			}
+		int m = ( ni > no ? ni : no);
+		if ( width < (IOWIDTH * m) * 2 - IOWIDTH) {
+			/*	we have to resize the object */
+			width = (IOWIDTH * m) * 2 - IOWIDTH;
 		}
+		//}
         height = rtext_height(y) - (iscomment << 1);
     }
     else width = height = 10;
