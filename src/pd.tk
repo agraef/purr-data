@@ -2179,11 +2179,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -command [concat popup_action $name 1] 
     $name.popup add command -label {Help} \
         -command [concat popup_action $name 2]
-	#$name.popup add separator
-    #$name.popup add command -label {To Front} \
-    #    -command [concat popup_action $name 3]
-    #$name.popup add command -label {To Back} \
-    #    -command [concat popup_action $name 4]
+	$name.popup add separator
+    $name.popup add command -label {To Front} \
+        -command [concat popup_action $name 3]
+    $name.popup add command -label {To Back} \
+        -command [concat popup_action $name 4]
 
     # fix menu font size on Windows with tk scaling = 1
     if {$pd_nt == 1} {

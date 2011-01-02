@@ -36,6 +36,8 @@ static void canvas_cut(t_canvas *x);
 static void canvas_undo(t_canvas *x);
 static int paste_xyoffset = 0; /* a counter of pastes to make x,y offsets */
 static void canvas_mouseup_gop(t_canvas *x, t_gobj *g);
+static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float ypos);
+static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *oldy_prev, t_gobj *oldy_next);
 
 // jsarlo
 static char canvas_cnct_inlet_tag[4096];
@@ -916,16 +918,7 @@ static void *canvas_undo_set_apply(t_canvas *x, t_gobj *obj)
     buf->u_objectbuf = canvas_docopy(x);
 
 	/* store index of the currently selected object */
-    t_selection *sel = x->gl_editor->e_selection;
-	t_gobj *tgt = sel->sel_what;
-	int index = 0;
-	for (y = x->gl_list; y; y = y->g_next) {
-		if (y == tgt) {
-			buf->u_index = index;
-			break;
-		}
-		index++;
-	}
+	buf->u_index = glist_getindex(x, obj);
 
     return (buf);
 }
@@ -971,6 +964,153 @@ void canvas_apply_setundo(t_canvas *x, t_gobj *y)
 {
 	canvas_setundo(x, canvas_undo_apply, canvas_undo_set_apply(x, y), "apply");
 }
+
+/* --------- 6. arrange (to front/back)  ----------- */
+
+typedef struct _undo_arrange       
+{
+	int u_previndex;			/* old index */
+	int u_newindex;				/* new index */
+} t_undo_arrange;
+
+static void *canvas_undo_set_arrange(t_canvas *x, t_gobj *obj, int newindex)
+{
+	// newindex tells us is the new index at the beginning (0) or the end (1)
+
+    t_undo_arrange *buf;
+    t_gobj *y;
+	/* enable editor (in case it is disabled) and select the object we are working on */
+	if (!x->gl_edit)
+		canvas_editmode(x, 1);
+
+	// select the object
+	if (!glist_isselected(x, obj))
+		glist_select(x, obj);
+
+    buf = (t_undo_arrange *)getbytes(sizeof(*buf));
+
+	// set the u_newindex appropriately
+	if (newindex == 0) buf->u_newindex = 0;
+	else buf->u_newindex = glist_getindex(x, 0) - 1;
+
+	/* store index of the currently selected object */
+	buf->u_previndex = glist_getindex(x, obj);
+
+	//fprintf(stderr,"undo_set_arrange %d %d\n", buf->u_previndex, buf->u_newindex);		
+
+    return (buf);
+}
+
+static void canvas_undo_arrange(t_canvas *x, void *z, int action)
+{
+    t_undo_arrange *buf = z;
+	t_gobj *y=NULL, *prev=NULL, *next=NULL;
+
+	if (!x->gl_edit)
+		canvas_editmode(x, 1);
+
+    if (action == UNDO_UNDO)
+    {
+		// this is our object
+		y = glist_nth(x, buf->u_newindex);
+
+		//fprintf(stderr,"canvas_undo_arrange UNDO_UNDO %d %d\n", buf->u_previndex, buf->u_newindex);		
+
+		/* select object */
+		glist_noselect(x);
+		glist_select(x, y);
+
+		if (buf->u_newindex) {
+			// if it is the last object
+			
+			// first previous object should point to nothing
+			prev = glist_nth(x, buf->u_newindex - 1);
+			prev->g_next = NULL;	
+
+			/* now we reuse vars for the follwoing:
+			   old index should be right before the object previndex
+			   is pointing to as the object was moved to the end */
+
+			/* old position is not first */
+			if (buf->u_previndex) {
+				prev = glist_nth(x, buf->u_previndex - 1);
+				next = prev->g_next;
+
+				// now readjust pointers
+				prev->g_next = y;
+				y->g_next = next;
+			}
+			/* old position is first */
+			else {
+				prev = NULL;
+				next = x->gl_list;
+
+				// now readjust pointers
+				y->g_next = next;
+				x->gl_list = y;
+			}
+
+			// and finally redraw canvas
+			canvas_redraw(x);
+		}
+		else {
+			// if it is the first object
+
+			/* old index should be right after the object previndex
+			   is pointing to as the object was moved to the end */
+			prev = glist_nth(x, buf->u_previndex);
+
+			// next may be NULL and that is ok
+			next = prev->g_next;
+
+			//first glist pointer needs to point to the second object
+			x->gl_list = y->g_next;
+
+			//now readjust pointers
+			prev->g_next = y;
+			y->g_next = next;
+
+			// and finally redraw canvas
+			canvas_redraw(x);
+		}
+    }
+	else if (action == UNDO_REDO) {
+		// find our object
+		y = glist_nth(x, buf->u_previndex);
+
+		//fprintf(stderr,"canvas_undo_arrange UNDO_REDO %d %d\n", buf->u_previndex, buf->u_newindex);	
+
+		/* select object */
+		glist_noselect(x);
+		glist_select(x, y);
+
+		int action;
+		if (!buf->u_newindex) action = 4;
+		else action = 3;
+
+		t_gobj *oldy_prev=NULL, *oldy_next=NULL;
+
+		// if there is an object before ours (in other words our index is > 0
+		if (glist_getindex(x,y))
+			oldy_prev = glist_nth(x, buf->u_previndex - 1);
+			
+		// if there is an object after ours
+		if (y->g_next)
+			oldy_next = y->g_next;
+
+		canvas_doarrange(x, action, y, oldy_prev, oldy_next);
+	}
+    else if (action == UNDO_FREE)
+    {
+        t_freebytes(buf, sizeof(*buf));
+    }
+}
+
+void canvas_arrange_setundo(t_canvas *x, t_gobj *obj, int newindex)
+{
+	canvas_setundo(x, canvas_undo_arrange, canvas_undo_set_arrange(x, obj, newindex), "arrange");
+}
+
 
 /* ------------------------ event handling ------------------------ */
 
@@ -1433,6 +1573,44 @@ static void canvas_donecanvasdialog(t_glist *x,
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
 }
 
+/* called by undo/redo arrange and done_canvas_popup. only done_canvas_popup
+   checks if it is a valid action and activates undo option */
+static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *oldy_prev, t_gobj *oldy_next)
+{
+	t_gobj *y_begin = x->gl_list;
+	t_gobj *y_end = glist_nth(x, glist_getindex(x,0) - 1);
+
+	if (which == 3) /* to front */
+	{
+		//put the object at the end of the cue
+		y_end->g_next = oldy;
+		oldy->g_next = NULL;
+
+		// now fix links in the hole made in the list due to moving of the oldy
+		// (we know there is oldy_next as y_end != oldy in canvas_done_popup)
+		if (oldy_prev) //there is indeed more before the oldy position
+			oldy_prev->g_next = oldy_next;
+		else x->gl_list = oldy_next;
+
+		// and finally redraw
+		canvas_redraw(x);	
+	}
+	if (which == 4) /* to back */
+	{
+		x->gl_list = oldy; //put it to the beginning of the cue
+		oldy->g_next = y_begin; //make it point to the old beginning
+
+		// now fix links in the hole made in the list due to moving of the oldy
+		// (we know there is oldy_prev as y_begin != oldy in canvas_done_popup)
+		if (oldy_next) //there is indeed more after oldy position
+			oldy_prev->g_next = oldy_next;
+		else oldy_prev->g_next = NULL; //oldy was the last in the cue
+
+		// and finally redraw
+		canvas_redraw(x);
+	}
+}
+
     /* called from the gui when a popup menu comes back with "properties,"
         "open," or "help." */
 	/* Ivica Ico Bukvic <ico@bukvic.net> 2010-11-17
@@ -1440,19 +1618,32 @@ static void canvas_donecanvasdialog(t_glist *x,
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float ypos)
 {
     char pathbuf[FILENAME_MAX], namebuf[FILENAME_MAX];
-    t_gobj *y;
+    t_gobj *y, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL, *y_begin, *y_end=NULL;
+
+	//mark the beginning of the glist for front/back
+	y_begin = x->gl_list;
+	
     for (y = x->gl_list; y; y = y->g_next)
     {
-		/* if we are sending "to back" we need to select all objects
-		   but the one originally selected */
-		if (which == 4) /* to back */
+		if (which == 3 || which == 4) /* to-front or to-back */
 		{
 			if (!x->gl_edit)
-				x->gl_edit = !x->gl_edit;
-			if (glist_isselected(x, y))
-				glist_deselect(x, y);
-			else if (!glist_isselected(x, y))
-				glist_select(x, y);
+				canvas_editmode(x, 1);
+
+			// if next one is the one selected for moving
+			if (y->g_next && glist_isselected(x, y->g_next)) {
+				oldy_prev = y;
+				oldy = y->g_next;
+				//if there is more after the selected object
+				if (oldy->g_next)
+					oldy_next = oldy->g_next;
+			}
+			else if (glist_isselected(x, y) && oldy == NULL) {
+				//selected obj is the first in the cue
+				oldy = y;
+				if (y->g_next)
+					oldy_next = y->g_next;
+			}
 		}
         int x1, y1, x2, y2;
         if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2))
@@ -1502,40 +1693,24 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
                 open_via_helppath(namebuf, dir);
                 return;
             }
-			else if (which == 3) /* to front */
-			{
-				if (!x->gl_edit)
-					x->gl_edit = !x->gl_edit;
-				if (!glist_isselected(x, y))
-					glist_select(x, y);
-			}
-			else if (which == 4) /* to back */
-			{
-				/* if the item we are sending back is selected
-				   deselect it */
-				if (glist_isselected(x, y))
-					glist_deselect(x, y);
-			}
         }
     }
-	if (which == 3) /* to front */
+
+	y_end = glist_nth(x, glist_getindex(x,0) - 1);
+
+	if (which == 3 && y_end != oldy) /* to front */
 	{
-		/* now that all are selected */
-		canvas_cut(x);
-		canvas_undo(x);
+		/* create appropriate undo action */
+		canvas_arrange_setundo(x, oldy, 1);
+
+		canvas_doarrange(x, which, oldy, oldy_prev, oldy_next);
 	}
-	if (which == 4) /* to back */
+	if (which == 4 && y_begin != oldy) /* to back */
 	{
-		/* now that all are selected */
-		canvas_cut(x);
-		canvas_undo(x);
-		/* reselect the originally selected object(s) */
-		for (y = x->gl_list; y; y = y->g_next) {
-			if (glist_isselected(x, y))
-				glist_deselect(x, y);
-			else if (!glist_isselected(x, y))
-				glist_select(x, y);
-		}
+		/* create appropriate undo action */
+		canvas_arrange_setundo(x, oldy, 0);
+
+		canvas_doarrange(x, which, oldy, oldy_prev, oldy_next);
 	}
     if (which == 0)
         canvas_properties(x);
