@@ -326,6 +326,9 @@ set pointer_y_global 0
 # text pasting global
 set copytexttocanvas 0
 
+set global_clipboard 0
+set global_selection 0
+
 # x:y location tooltip during dragging
 set tooltip [toplevel .tooltip -bd 1 -bg black]
 wm attributes $tooltip -topmost 1
@@ -644,6 +647,7 @@ if {[info exists show_console] && $show_console == 1} {
 match_linux_wm [list frame .printout]
 text .printout.text -relief sunken -bd 1 -font console_font \
     -yscrollcommand ".printout.scroll set" -width 70 -highlightthickness 0 -takefocus 0
+
 # .printout.text insert end "\n\n\n\n\n\n\n\n\n\n"
 match_linux_wm [list scrollbar .printout.scroll -command ".printout.text yview"]
 pack .printout.scroll -side right -fill y
@@ -654,6 +658,24 @@ pack .printout -side bottom -fill both -expand 1
 #.controls.switches.console select
 # in the case console should be turned off by default
 pack forget .printout
+
+bind .printout.text <Button> {pdtk_update_root_edit_menu 0}
+bind .printout.text <<Selection>> {pdtk_update_root_edit_menu 1}
+
+proc pdtk_update_root_edit_menu {value} {
+	if {$value} {
+		set range [.printout.text tag ranges sel]
+		#pdtk_post "[lindex $range 0] -- [lindex $range 1]\n"
+		if {[lindex $range 0] != [lindex $range 1]} {
+			.mbar.edit entryconfigure "Cut" -state normal
+			.mbar.edit entryconfigure "Copy" -state normal
+		}
+	} else {
+		#pdtk_post off
+		.mbar.edit entryconfigure "Cut" -state disabled
+		.mbar.edit entryconfigure "Copy" -state disabled
+	}
+}
 
 proc pdtk_post {stuff} {
     .printout.text insert end $stuff
@@ -677,16 +699,18 @@ proc pdtk_panelkeybindings {id panelname} {
 pdtk_standardkeybindings .
 # hacks to add standard key bindings to the Pd window
 bind . <$ctrl_key-Key-a> {.printout.text tag add sel 1.0 end}
-#bind . <$ctrl_key-Key-x> {tk_textCut .printout.text}
-#bind . <$ctrl_key-Key-c> {tk_textCopy .printout.text}
-#bind . <$ctrl_key-Key-v> {tk_textPaste .printout.text}
+bind . <$ctrl_key-Key-x> {tk_textCut .printout.text; \
+	.mbar.edit entryconfigure "Paste" -state normal}
+bind . <$ctrl_key-Key-c> {tk_textCopy .printout.text; \
+	.mbar.edit entryconfigure "Paste" -state normal}
+bind . <$ctrl_key-Key-v> {tk_textPaste .printout.text}
 bind . <$ctrl_key-Key-w> {menu_quit}
 # kludge to add window control bindings to the Pd Window
 if {$pd_nt == 2} {
 	bind . <Mod1-quoteleft>  {menu_raisenextwindow}
 } else {
 	bind . <Control-Next>    {menu_raisenextwindow}
-	#bind . <Control-Prior>   {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
+	bind . <Control-Prior>   {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 }
 
 
@@ -804,8 +828,8 @@ proc pdtk_fixwindowmenu {} {
 	} else {
 		.mbar.windows add command -label "Next Window" -command {menu_raisenextwindow} \
 			-accelerator "Ctrl+PageDown"
-		#.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-		#	-accelerator "Ctrl+PageUp"
+		.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+			-accelerator "Ctrl+PageUp"
 	}
 	.mbar.windows add separator
     .mbar.windows add command -label {parent window} -state disabled
@@ -952,9 +976,9 @@ proc menu_raisenextwindow {} {
 }
 
 # lreverse came along in Tcl 8.5
-#proc menu_raisepreviouswindow {} {
-#	raise [lindex [lreverse [wm stackorder .]] 0]
-#}
+proc menu_raisepreviouswindow {} {
+	raise [lindex [lreverse [wm stackorder .]] 0]
+}
 
 ################## menu commands for console #########################
 
@@ -1216,12 +1240,12 @@ if {$pd_nt != 2} {
 .mbar.edit add separator
 # this should apply to .printout.text
 .mbar.edit add command -label Cut  -accelerator [accel_munge "Ctrl+x"] \
-    -command {tk_textCut .printout.text}
+    -command {tk_textCut .printout.text; .mbar.edit entryconfigure "Paste" -state normal} -state disabled
 # this should apply to .printout.text
 .mbar.edit add command -label Copy -accelerator [accel_munge "Ctrl+c"] \
-    -command {tk_textCopy .printout.text}
+    -command {tk_textCopy .printout.text; .mbar.edit entryconfigure "Paste" -state normal} -state disabled
 .mbar.edit add command -label Paste -accelerator [accel_munge "Ctrl+v"] \
-    -command {tk_textPaste .printout.text}
+    -command {tk_textPaste .printout.text} -state disabled
 .mbar.edit add command -label Duplicate -accelerator [accel_munge "Ctrl+d"] \
     -state disabled
 # this should apply to .printout.text
@@ -1475,6 +1499,7 @@ proc menu_cut {name} {
 	} else {
 		set copytexttocanvas 1
 	}
+	pdtk_canvas_update_paste_menu 1
 }
 
 proc menu_copy {name} {
@@ -1486,6 +1511,7 @@ proc menu_copy {name} {
 	} else {
 		set copytexttocanvas 1
 	}
+	pdtk_canvas_update_paste_menu 1
 }
 
 proc menu_paste {name} {
@@ -1772,6 +1798,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
     global tcl_version
     global canvas_fill
 	global colors
+	global global_clipboard
+	global global_selection
 
 	#retaining window-specific preferences
 	global window_prefs
@@ -1935,18 +1963,30 @@ proc pdtk_canvas_new {name width height geometry editable} {
     $name.m.edit add separator
 
     $name.m.edit add command -label Cut -command [concat menu_cut $name] \
-        -accelerator [accel_munge "Ctrl+x"]
+        -accelerator [accel_munge "Ctrl+x"] -state disabled
 
     $name.m.edit add command -label Copy -command [concat menu_copy $name] \
-        -accelerator [accel_munge "Ctrl+c"]
+        -accelerator [accel_munge "Ctrl+c"] -state disabled
 
     $name.m.edit add command -label Paste \
         -command [concat menu_paste $name] \
         -accelerator [accel_munge "Ctrl+v"]
 
+	if {!$global_clipboard} {
+		$name.m.edit entryconfigure "Paste" -state disabled
+	} else {
+		$name.m.edit entryconfigure "Paste" -state normal
+	}
+
     $name.m.edit add command -label Duplicate \
         -command [concat menu_duplicate $name] \
         -accelerator [accel_munge "Ctrl+d"]
+
+	if {!$global_selection} {
+		$name.m.edit entryconfigure "Duplicate" -state disabled
+	} else {
+		$name.m.edit entryconfigure "Duplicate" -state normal
+	}
 
     $name.m.edit add command -label {Select all} \
         -command [concat menu_selectall $name] \
@@ -1954,21 +1994,21 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
     $name.m.edit add command -label {Reselect} \
         -command [concat menu_reselect $name] \
-        -accelerator "Ctrl+Enter"
+        -accelerator "Ctrl+Enter" -state disabled
 
     $name.m.edit add separator
 
     $name.m.edit add command -label {Tidy Up} \
 		-command [concat menu_tidyup $name] \
-        -accelerator [accel_munge "Ctrl+y"]
+        -accelerator [accel_munge "Ctrl+y"] -state disabled
 
     $name.m.edit add command -label {Bring To Front} \
 		-command [concat popup_action $name 3] \
-        -accelerator [accel_munge "Ctrl+Up"]
+        -accelerator [accel_munge "Ctrl+Up"] -state disabled
 
     $name.m.edit add command -label {Send To Back} \
 		-command [concat popup_action $name 4] \
-        -accelerator [accel_munge "Ctrl+Down"]
+        -accelerator [accel_munge "Ctrl+Down"] -state disabled
 
     $name.m.edit add separator
 
@@ -2140,8 +2180,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	} else {
 		$name.m.windows add command -label "Next Window" -command {menu_raisenextwindow} \
 			-accelerator "Ctrl+PageDown"
-		#$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-		#	-accelerator "Ctrl+PageUp"
+		$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+			-accelerator "Ctrl+PageUp"
 	}
 	$name.m.windows add separator
     $name.m.windows add command -label {parent window}\
@@ -2255,7 +2295,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Mod1-quoteleft> {menu_raisenextwindow}
     } else {
         bind $name.c <Control-Next>   {menu_raisenextwindow}
-        #bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
+        bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 	}
     bind $name.c <Key> {pdtk_canvas_sendkey %W 1 %K %A 0}
     bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1}
@@ -2972,6 +3012,15 @@ proc pdtk_canvas_sendkey {name state key iso shift} {
 	pd [canvastosym $name] key $state $key $shift \;
 }
 
+# only do actions if this is a canvas. if so
+# if so, invoke edit menu option (whcih will work
+# only if the actual option is currently enabled)
+proc pdtk_canvas_edit_menu_actions {name action} {
+	if {[string match .x* $name]} {
+		$name.m.edit invoke "$action"
+	}
+}
+
 proc pdtk_canvas_ctrlkey {name key shift} {
     global pd_nt
 	set ignore 0
@@ -3011,31 +3060,38 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 		    if {$key == "u" || $key == "U"} {menu_vumeter $topname 1}
 		    if {$key == "c" || $key == "C"} {menu_mycnv $topname 1}
 		    if {$key == "t" || $key == "T"} {menu_toggle $topname 1}
-		    if {$key == "z" || $key == "Z"} {menu_redo $topname}
+		    #if {$key == "z" || $key == "Z"} {menu_redo $topname}
+		    if {$key == "z" || $key == "Z"} {pdtk_canvas_edit_menu_actions $topname Redo*}
 		}
     } else {
         if {$key == "q" || $key == "Q"} {menu_quit}
-		if {$key == "y" || $key == "Y"} {menu_tidyup $name}
-		if {$key == "Up"} {popup_action $name 3}
-		if {$key == "Down"} {popup_action $name 4}
-        if {$key == "z" || $key == "Z"} {menu_undo $topname}
+		#if {$key == "y" || $key == "Y"} {menu_tidyup $name}
+		if {$key == "y" || $key == "Y"} {pdtk_canvas_edit_menu_actions $topname "Tidy Up"}
+		#if {$key == "Up"} {popup_action $name 3}
+		if {$key == "Up"} {pdtk_canvas_edit_menu_actions $topname "Bring To Front"}
+		#if {$key == "Down"} {popup_action $name 4}
+		if {$key == "Down"} {pdtk_canvas_edit_menu_actions $topname "Send To Back"}
+        #if {$key == "z" || $key == "Z"} {menu_undo $topname}
+        if {$key == "z" || $key == "Z"} {pdtk_canvas_edit_menu_actions $topname Undo*}
         if {$key == "b" || $key == "B"} {::helpbrowser::open_helpbrowser}
         if {$key == "n" || $key == "N"} {menu_new}
         if {$key == "o" || $key == "O"} {menu_open}
         if {$key == "p" || $key == "P"} {menu_print $topname}
         if {$key == "semicolon"} {menu_raise_console}
-        if {$key == "x" || $key == "X"} {menu_cut $topname}
-        if {$key == "c" || $key == "C"} {menu_copy $topname}
-        if {$key == "v" || $key == "V"} {menu_paste $topname}
+        #if {$key == "x" || $key == "X"} {menu_cut $topname}
+		if {$key == "x" || $key == "X"} {pdtk_canvas_edit_menu_actions $topname Cut}
+        #if {$key == "c" || $key == "C"} {menu_copy $topname}
+		if {$key == "c" || $key == "C"} {pdtk_canvas_edit_menu_actions $topname Copy}
+        #if {$key == "v" || $key == "V"} {menu_paste $topname}
+        if {$key == "v" || $key == "V"} {pdtk_canvas_edit_menu_actions $topname Paste}
         if {$key == "a" || $key == "A"} {menu_selectall $topname}
 		if {!$ignore} {
         	if {$key == "w" || $key == "W"} {menu_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_save $topname}
         	if {$key == "e" || $key == "E"} {menu_editmode $topname}
-        	if {$key == "d" || $key == "D"} {menu_duplicate $topname}
-			## jsarlo
+        	#if {$key == "d" || $key == "D"} {menu_duplicate $topname}
+        	if {$key == "d" || $key == "D"} {pdtk_canvas_edit_menu_actions $topname Duplicate}
 			if {$key == "r" || $key == "R"} {menu_magicglass $topname}
-			## end jsarlo
 		}
         if {$pd_nt == 2} { 
 			# by default, Cmd-T opens the font panel on Mac OS X
@@ -4882,7 +4938,6 @@ proc pdtk_canvas_editval {name value} {
 }
 #####################iemlib#######################
 
-## jsarlo
 proc pdtk_canvas_magicglassval {name value} {
 	#global colors
 
@@ -4892,7 +4947,60 @@ proc pdtk_canvas_magicglassval {name value} {
         $name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background {}
     }                                                 
 }
-## end jsarlo
+
+proc pdtk_canvas_update_edit_menu {name value} {
+	global global_selection
+	global menu_windowlist
+
+	set global_selection $value
+
+    if { $value } {
+		$name.m.edit entryconfigure "Cut" -state normal
+		$name.m.edit entryconfigure "Copy" -state normal
+		#$name.m.edit entryconfigure "Duplicate" -state normal
+		$name.m.edit entryconfigure "Reselect" -state normal
+		$name.m.edit entryconfigure "Bring To Front" -state normal
+		$name.m.edit entryconfigure "Send To Back" -state normal
+		$name.m.edit entryconfigure "Tidy Up" -state normal
+
+		foreach i $menu_windowlist {
+		    [lindex $i 1].m.edit entryconfigure "Duplicate" -state normal
+		}
+
+    } else {                          
+		$name.m.edit entryconfigure "Cut" -state disabled
+		$name.m.edit entryconfigure "Copy" -state disabled
+		#$name.m.edit entryconfigure "Duplicate" -state disabled
+		$name.m.edit entryconfigure "Reselect" -state disabled
+		$name.m.edit entryconfigure "Bring To Front" -state disabled
+		$name.m.edit entryconfigure "Send To Back" -state disabled
+		$name.m.edit entryconfigure "Tidy Up" -state disabled
+
+		foreach i $menu_windowlist {
+		    [lindex $i 1].m.edit entryconfigure "Duplicate" -state disabled
+		}
+    }                                                 
+}
+
+proc pdtk_canvas_update_paste_menu {value} {
+	global global_clipboard
+	global menu_windowlist
+
+	set global_clipboard $value
+
+    if { $value } {
+		foreach i $menu_windowlist {
+		    [lindex $i 1].m.edit entryconfigure "Paste" -state normal
+		}
+		.mbar.edit entryconfigure "Paste" -state normal
+    } else {      
+		# probably unnecessary                    
+		foreach i $menu_windowlist {
+		    [lindex $i 1].m.edit entryconfigure "Paste" -state disabled
+		}
+		.mbar.edit entryconfigure "Paste" -state disabled
+    }                                                 
+}
 
 ############ pdtk_text_new -- create a new text object #2###########
 proc pdtk_text_new {canvasname myname x y text font color} {

@@ -196,7 +196,7 @@ void glist_selectline(t_glist *x, t_outconnect *oc, int index1,
         sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
             glist_getcanvas(x), x->gl_editor->e_selectline_tag);
 		c_selection = x;
-    }    
+    }
 }
 
 void glist_deselectline(t_glist *x)
@@ -249,6 +249,8 @@ void glist_select(t_glist *x, t_gobj *y)
         x->gl_editor->e_selection = sel;
         gobj_select(y, x, 1);
 		c_selection = x;
+
+		sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
     }
 }
 
@@ -331,6 +333,8 @@ void glist_deselect(t_glist *x, t_gobj *y)
         }
         if (fixdsp)
             canvas_resume_dsp(1);
+		if (!x->gl_editor->e_selection)
+			sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
     }
     reenter = 0;
 }
@@ -1618,10 +1622,27 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float ypos)
 {
     char pathbuf[FILENAME_MAX], namebuf[FILENAME_MAX];
-    t_gobj *y, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL, *y_begin, *y_end=NULL;
+    t_gobj *y=NULL, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL, *y_begin, *y_end=NULL;
+	int x1, y1, x2, y2;
 
 	//mark the beginning of the glist for front/back
 	y_begin = x->gl_list;
+
+	if (which == 3 || which == 4) {
+		// if no object has been selected for to-front/back action
+		if (!x->gl_editor->e_selection) {
+			for (y = x->gl_list; y; y = y->g_next) {
+				if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)) {
+					if (!x->gl_edit)
+						canvas_editmode(x, 1);
+					if (!glist_isselected(x, y))
+						glist_select(x, y);
+				}
+			}
+			// this was a bogus call--get me out of here!
+			if (!y) return;
+		}
+	}
 	
     for (y = x->gl_list; y; y = y->g_next)
     {
@@ -1645,7 +1666,6 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 					oldy_next = y->g_next;
 			}
 		}
-        int x1, y1, x2, y2;
         if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2))
         {
             if (which == 0)     /* properties */
@@ -3556,6 +3576,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 			}
             // end jsarlo
         }
+		canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
     }
     sys_vgui("pdtk_canvas_editval .x%lx %d\n",
         glist_getcanvas(x), x->gl_edit);
