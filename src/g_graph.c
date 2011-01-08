@@ -597,7 +597,7 @@ t_float glist_ytopixels(t_glist *x, t_float yval)
     {
         int x1, y1, x2, y2;
         if (!x->gl_owner)
-            bug("glist_pixelstox");
+            bug("glist_pixelstoy");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
         return (y1 + (y2 - y1) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     }
@@ -909,11 +909,6 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
         int x21, y21, x22, y22;
 
         graph_graphrect(z, glist, &x1, &y1, &x2, &y2);
-		/* fix visibility of edge items */
-	    x1 -= 1;
-	    y1 -= 1;
-	    //x2 += 1;
-	    y2 += 1;
 
         if (canvas_showtext(x))
         {
@@ -946,6 +941,19 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
             }
             x->gl_havewindow = hadwindow;
         }
+		/* fix visibility of edge items for garrays */
+		int has_garray = 0;
+        for (g = x->gl_list; g; g = g->g_next) {
+			if (pd_class(&g->g_pd) == garray_class) {
+				has_garray = 1;
+			}
+		}
+		if (has_garray) {
+			x1 -= 1;
+			y1 -= 2;
+			//x2 += 1;
+			y2 += 1;
+		}
     }
     else text_widgetbehavior.w_getrectfn(z, glist, &x1, &y1, &x2, &y2);
     *xp1 = x1;

@@ -130,6 +130,7 @@ void gobj_delete(t_gobj *x, t_glist *glist)
 int gobj_shouldvis(t_gobj *x, struct _glist *glist)
 {
     t_object *ob;
+	//fprintf(stderr,"shouldvis\n");
     if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_goprect &&
         glist->gl_owner && (pd_class(&glist->gl_pd) != garray_class))
     {

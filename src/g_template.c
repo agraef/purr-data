@@ -1715,14 +1715,15 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     minyval = yval;
                 if (i == nelem-1 || inextx != ixpix)
                 {
+					//we subtract 1 from y to keep it in sync with the rest of the types of templates
                     sys_vgui(
 ".x%lx.c create rectangle %d %d %d %d -fill black -width 0  -tags plot%lx\n",
                         glist_getcanvas(glist),
                         ixpix, (int)glist_ytopixels(glist, 
-                            basey + fielddesc_cvttocoord(yfielddesc, minyval)),
+                            basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
                         inextx, (int)(glist_ytopixels(glist, 
                             basey + fielddesc_cvttocoord(yfielddesc, maxyval))
-                                + linewidth), data);
+                                + linewidth) - 1, data);
                     ndrawn++;
                     minyval = 1e20;
                     maxyval = -1e20;

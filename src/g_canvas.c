@@ -613,6 +613,7 @@ t_symbol *canvas_makebindsym(t_symbol *s)
 
 void canvas_reflecttitle(t_canvas *x)
 {
+	//fprintf(stderr,"canvas_reflecttitle\n");
     char namebuf[MAXPDSTRING];
     t_canvasenvironment *env = canvas_getenv(x);
     if (env->ce_argc)
@@ -636,7 +637,7 @@ void canvas_reflecttitle(t_canvas *x)
         x, x->gl_dirty, canvas_getdir(x)->s_name, x->gl_name->s_name);
     sys_vgui("wm title .x%lx {%s%s}\n", x, x->gl_name->s_name, namebuf);
 #else
-	if(glist_istoplevel(x) || !x->gl_isgraph || x->gl_isgraph && x->gl_havewindow)
+	if(glist_istoplevel(x) || !x->gl_isgraph || x->gl_isgraph && x->gl_havewindow || x->gl_loading)
 	    sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
 	        x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
             canvas_getdir(x)->s_name);

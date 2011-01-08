@@ -4506,6 +4506,10 @@ proc pdtk_array_dialog {id name n flags newone canvas} {
     wm protocol $id WM_DELETE_WINDOW [concat array_cancel $id]
 
     pdtk_panelkeybindings $id "array"
+    global pd_nt ctrl_key
+    pdtk_standardkeybindings $id
+	#override panelkeybindings with an unusual ok/apply format
+    bind $id <KeyPress-Return> [format "array_ok $id $canvas"]
 
     match_linux_wm [list frame $id.name]
     pack $id.name -side top -pady 3
