@@ -2067,7 +2067,13 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -command [concat menu_editmode $name] \
         -accelerator [accel_munge "Ctrl+e"]
 
-    $name.m.edit entryconfigure "Edit mode" -background "#7dd37d"
+	if { $editable == 1 } {
+    	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d"
+		#if { $ctrl_l_down == 0  $ctrl_r_down == 0 } {
+		#	$name configure -cursor $cursor_editmode_nothing
+			#pd [concat $name editmode 1 \;]
+		#}
+	}
 
     #if { $editable == 0 } {
     #    $name.m.edit entryconfigure "Edit mode" -indicatoron false 

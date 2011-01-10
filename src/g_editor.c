@@ -1314,6 +1314,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 x->gl_edit);
             canvas_reflecttitle(x);
             x->gl_havewindow = 1;
+
 /*
 			//newly opened arrays created prior to pd-l2ork require fittograph
 			t_gobj *g, *gg = NULL;
@@ -2584,7 +2585,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (x && keynum == 0 && x->gl_edit &&
         !strncmp(gotkeysym->s_name, "Control", 7))
             canvas_setcursor(x, down ?
-                CURSOR_RUNMODE_NOTHING :CURSOR_EDITMODE_NOTHING);
+                CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
 }
 
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
@@ -3543,9 +3544,13 @@ void glob_key(void *dummy, t_symbol *s, int ac, t_atom *av)
 
 void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 {
+	//fprintf(stderr,"canvas_editmode %f\n", fyesplease);
     int yesplease = fyesplease;
-    if (yesplease && x->gl_edit)
+    if (yesplease && x->gl_edit) {
+	    //if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x))
+	    //    canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
         return;
+	}
     x->gl_edit = !x->gl_edit;
     if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x))
         canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);

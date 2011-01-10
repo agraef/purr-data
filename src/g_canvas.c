@@ -677,6 +677,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
     called from the GUI after the fact to "notify" us that we're mapped. */
 void canvas_map(t_canvas *x, t_floatarg f)
 {
+	//fprintf(stderr,"canvas_map\n");
     int flag = (f != 0);
     t_gobj *y;
     if (flag)
@@ -689,6 +690,28 @@ void canvas_map(t_canvas *x, t_floatarg f)
                 bug("canvas_map");
                 canvas_vis(x, 1);
             }
+
+			/* 	if parent has editor enabled and we're a sub-patch,
+				(but not an abstraction) match its edit mode to that
+				of its parent patch. */
+			/*t_glist *parentx;
+			if (!canvas_isabstraction(x)) {
+				if (x->gl_owner) {
+					parentx = x->gl_owner;
+					while (parentx->gl_owner)
+						parentx = parentx->gl_owner;
+					if (parentx->gl_edit)
+						canvas_editmode(x, 1);
+					else if (x->gl_edit)
+						canvas_editmode(x, 0);
+				}
+			}*/
+			/*	for parent windows, let's make sure the cursor is updated
+				as soon as the window is open (if in edit mode) */
+			//else if (x->gl_edit) {
+				//canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+			//}
+
             for (y = x->gl_list; y; y = y->g_next)
                 gobj_vis(y, x, 1);
             for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
@@ -1231,11 +1254,11 @@ static void canvas_dodsp(t_canvas *x, int toplevel, t_signal **sp)
 
         /* find all the "dsp" boxes and add them to the graph */
 
-    // jsarlo
     ob = &x->gl_magic_glass->x_obj;
-    if (ob)
-       ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
-    // end jsarlo
+    if (ob && x->gl_magic_glass->x_connectedObj != NULL) {
+		fprintf(stderr,"adding cord inspector to dsp\n");
+		ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
+	}
     
     for (y = x->gl_list; y; y = y->g_next)
         if ((ob = pd_checkobject(&y->g_pd)) && zgetfn(&y->g_pd, dspsym))

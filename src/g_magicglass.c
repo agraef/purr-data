@@ -39,6 +39,7 @@ void magicGlass_clearText(t_magicGlass *x);
 
 void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 {
+	//fprintf(stderr,"magicglass_bind\n");
     if (x->x_connectedObj != obj)
     {
         if (x->x_connectedObj != NULL)
@@ -58,6 +59,7 @@ void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 
 void magicGlass_unbind(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_unbind\n");
     if (x->x_connectedObj != NULL)
     {
         obj_disconnect(x->x_connectedObj,
@@ -75,6 +77,7 @@ void magicGlass_unbind(t_magicGlass *x)
 
 void magicGlass_updateText(t_magicGlass *x, int moved)
 {
+	//fprintf(stderr,"magicglass_updateText\n");
     int bgSize;
 	/* change second argument (10.0) to provide optimal scaling in the following entry */
 	float font = (float)(sys_hostfontsize(glist_getfont((t_glist *)(x->x_c))))/10.0;
@@ -134,6 +137,7 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 
 void magicGlass_drawNew(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_drawNew\n");
     sys_vgui(".x%x.c create rectangle 0 0 0 0 -outline #ffffff -fill #000000 -tags magicGlassBg\n",
              x->x_c);
     sys_vgui(".x%x.c create polygon 0 0 0 0 0 0 -fill #000000 -width 4 -tags magicGlassLine\n",
@@ -150,6 +154,7 @@ void magicGlass_drawNew(t_magicGlass *x)
 
 void magicGlass_undraw(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_undraw\n");
     sys_vgui(".x%x.c delete magicGlassBg\n", x->x_c);
     sys_vgui(".x%x.c delete magicGlassLine\n", x->x_c);
     sys_vgui(".x%x.c delete magicGlassText\n", x->x_c);
@@ -157,12 +162,14 @@ void magicGlass_undraw(t_magicGlass *x)
 
 void magicGlass_flashText(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_flashText\n");
     sys_vgui(".x%x.c itemconfigure magicGlassText -fill #ffffff\n",
          x->x_c);
 }
 
 void magicGlass_clearText(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_clearText\n");
 	strcpy(x->x_old_string, x->x_string);
     x->x_string[0] = 0;
     magicGlass_updateText(x, 0);
@@ -262,6 +269,7 @@ void magicGlass_setCanvas(t_magicGlass *x, int c)
 
 void magicGlass_show(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_show\n");
     if (!x->x_visible) {
 		x->x_sampleCount = 0;
 		x->x_maxSample = -999999;
@@ -273,16 +281,19 @@ void magicGlass_show(t_magicGlass *x)
 
 void magicGlass_hide(t_magicGlass *x)
 {
-    if (x->x_visible)
+	//fprintf(stderr,"magicglass_hide\n");
+    if (x->x_visible) {
         magicGlass_undraw(x);
-    x->x_sampleCount = 0;
-    x->x_maxSample = -999999;
-    x->x_string[0] = 0;
-    x->x_visible = 0;
+		x->x_sampleCount = 0;
+		x->x_maxSample = -999999;
+		x->x_string[0] = 0;
+		x->x_visible = 0;
+	}
 }
 
 void magicGlass_moveText(t_magicGlass *x, int pX, int pY)
 {
+	//fprintf(stderr,"magicglass_moveText\n");
     int bgSize;
     
     x->x_x = pX;
@@ -292,6 +303,7 @@ void magicGlass_moveText(t_magicGlass *x, int pX, int pY)
 
 int magicGlass_bound(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_bound\n");
     if (x->x_connectedObj)
         return 1;
     else
@@ -300,6 +312,7 @@ int magicGlass_bound(t_magicGlass *x)
 
 int magicGlass_isOn(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_isOn\n");
     if (x->x_viewOn)
         return 1;
     else
@@ -308,6 +321,7 @@ int magicGlass_isOn(t_magicGlass *x)
 
 void magicGlass_setOn(t_magicGlass *x, int i)
 {
+	//fprintf(stderr,"magicglass_setOn\n");
     if (i)
     {
         x->x_viewOn = 1;
@@ -320,6 +334,7 @@ void magicGlass_setOn(t_magicGlass *x, int i)
 
 void magicGlass_setDsp(t_magicGlass *x, int i)
 {
+	//fprintf(stderr,"magicglass_setDsp\n");
 	if (i != x->x_dspOn) {
 		if (i)
 		{
@@ -337,11 +352,12 @@ void magicGlass_setDsp(t_magicGlass *x, int i)
 t_int *magicGlass_perform(t_int *w)
 {
     t_magicGlass *x = (t_magicGlass *)(w[1]);
-    float *in = (float *)(w[2]);
-    int N = (int)(w[3]);
-    int i;
-    if (x->x_dspOn)
+    if (x->x_dspOn && x->x_connectedObj != NULL)
     {
+		fprintf(stderr,"magicglass_perform\n");
+		float *in = (float *)(w[2]);
+		int N = (int)(w[3]);
+		int i;
         for (i = 0; i < N; i++)
         {
             if (in[i] > x->x_maxSample)
@@ -361,12 +377,14 @@ t_int *magicGlass_perform(t_int *w)
 
 void magicGlass_dsp(t_magicGlass *x, t_signal **sp)
 {
+	//fprintf(stderr,"magicglass_dsp\n");
     dsp_add(magicGlass_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 	x->x_issignal = 1;
 }
 
 void *magicGlass_new(int c)
 {
+	//fprintf(stderr,"magicglass_new\n");
     t_magicGlass *x = (t_magicGlass *)pd_new(magicGlass_class);
     x->x_connectedObj= NULL;
     x->x_connectedOutno = 0;
@@ -387,6 +405,7 @@ void *magicGlass_new(int c)
 
 void magicGlass_free(t_magicGlass *x)
 {
+	//fprintf(stderr,"magicglass_free\n");
     x->x_dspOn = 0;
     clock_free(x->x_clearClock);
 }
