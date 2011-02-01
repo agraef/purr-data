@@ -1615,6 +1615,7 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		// and finally redraw
 		canvas_redraw(x);
 	}
+	canvas_dirty(x, 1);
 }
 
     /* called from the gui when a popup menu comes back with "properties,"
@@ -1642,7 +1643,7 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 				}
 			}
 			// this was a bogus call--get me out of here!
-			if (!y) return;
+			if (!x->gl_editor->e_selection) return;
 		}
 	}
 	

@@ -1656,12 +1656,15 @@ proc menu_mycnv {name accel} {
 
 ############iemlib##################
 
-# correct edit menu, enabling or disabling undo/redo
-# LATER also cut/copy/paste
+# correct edit menu, enabling or disabling undo/redo/cut/copy/paste
 proc menu_fixeditmenu {name} {
     global pd_undoaction
     global pd_redoaction
     global pd_undocanvas
+
+	global global_selection
+	global global_clipboard
+
     #    puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
     if {$name == $pd_undocanvas && $pd_undoaction != "no"} {
         $name.m.edit entryconfigure "Undo*" -state normal \
@@ -1674,6 +1677,18 @@ proc menu_fixeditmenu {name} {
             -label [concat "Redo " $pd_redoaction]
     } else {
         $name.m.edit entryconfigure "Redo*" -state disabled
+    }
+
+    if {$global_selection == 1} {
+        $name.m.edit entryconfigure "Duplicate" -state normal
+    } else {
+        $name.m.edit entryconfigure "Duplicate" -state disabled
+    }
+
+    if {$global_clipboard == 1} {
+        $name.m.edit entryconfigure "Paste" -state normal
+    } else {
+        $name.m.edit entryconfigure "Paste" -state disabled
     }
 }
 
@@ -4960,35 +4975,27 @@ proc pdtk_canvas_magicglassval {name value} {
 
 proc pdtk_canvas_update_edit_menu {name value} {
 	global global_selection
-	global menu_windowlist
 
 	set global_selection $value
 
     if { $value } {
 		$name.m.edit entryconfigure "Cut" -state normal
 		$name.m.edit entryconfigure "Copy" -state normal
-		#$name.m.edit entryconfigure "Duplicate" -state normal
+		$name.m.edit entryconfigure "Duplicate" -state normal
 		$name.m.edit entryconfigure "Reselect" -state normal
 		$name.m.edit entryconfigure "Bring To Front" -state normal
 		$name.m.edit entryconfigure "Send To Back" -state normal
 		$name.m.edit entryconfigure "Tidy Up" -state normal
 
-		foreach i $menu_windowlist {
-		    [lindex $i 1].m.edit entryconfigure "Duplicate" -state normal
-		}
-
     } else {                          
 		$name.m.edit entryconfigure "Cut" -state disabled
 		$name.m.edit entryconfigure "Copy" -state disabled
-		#$name.m.edit entryconfigure "Duplicate" -state disabled
+		$name.m.edit entryconfigure "Duplicate" -state disabled
 		$name.m.edit entryconfigure "Reselect" -state disabled
 		$name.m.edit entryconfigure "Bring To Front" -state disabled
 		$name.m.edit entryconfigure "Send To Back" -state disabled
 		$name.m.edit entryconfigure "Tidy Up" -state disabled
 
-		foreach i $menu_windowlist {
-		    [lindex $i 1].m.edit entryconfigure "Duplicate" -state disabled
-		}
     }                                                 
 }
 
@@ -4996,20 +5003,7 @@ proc pdtk_canvas_update_paste_menu {value} {
 	global global_clipboard
 	global menu_windowlist
 
-	set global_clipboard $value
-
-    if { $value } {
-		foreach i $menu_windowlist {
-		    [lindex $i 1].m.edit entryconfigure "Paste" -state normal
-		}
-		.mbar.edit entryconfigure "Paste" -state normal
-    } else {      
-		# probably unnecessary                    
-		foreach i $menu_windowlist {
-		    [lindex $i 1].m.edit entryconfigure "Paste" -state disabled
-		}
-		.mbar.edit entryconfigure "Paste" -state disabled
-    }                                                 
+	set global_clipboard $value                                                
 }
 
 ############ pdtk_text_new -- create a new text object #2###########
