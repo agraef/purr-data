@@ -42,7 +42,7 @@ void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 	//fprintf(stderr,"magicglass_bind\n");
     if (x->x_connectedObj != obj)
     {
-        if (x->x_connectedObj != NULL)
+        if (x->x_connectedObj)
         {
             obj_disconnect(x->x_connectedObj,
                            x->x_connectedOutno,
@@ -60,7 +60,7 @@ void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 void magicGlass_unbind(t_magicGlass *x)
 {
 	//fprintf(stderr,"magicglass_unbind\n");
-    if (x->x_connectedObj != NULL)
+    if (x->x_connectedObj)
     {
         obj_disconnect(x->x_connectedObj,
                        x->x_connectedOutno,
@@ -352,9 +352,9 @@ void magicGlass_setDsp(t_magicGlass *x, int i)
 t_int *magicGlass_perform(t_int *w)
 {
     t_magicGlass *x = (t_magicGlass *)(w[1]);
-    if (x->x_dspOn && x->x_connectedObj != NULL)
+    if (x->x_dspOn && x->x_connectedObj)
     {
-		fprintf(stderr,"magicglass_perform\n");
+		//fprintf(stderr,"magicglass_perform\n");
 		float *in = (float *)(w[2]);
 		int N = (int)(w[3]);
 		int i;

@@ -1255,8 +1255,8 @@ static void canvas_dodsp(t_canvas *x, int toplevel, t_signal **sp)
         /* find all the "dsp" boxes and add them to the graph */
 
     ob = &x->gl_magic_glass->x_obj;
-    if (ob && x->gl_magic_glass->x_connectedObj != NULL) {
-		fprintf(stderr,"adding cord inspector to dsp\n");
+    if (ob && x->gl_magic_glass->x_connectedObj) {
+		//fprintf(stderr,"adding cord inspector to dsp\n");
 		ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
 	}
     
