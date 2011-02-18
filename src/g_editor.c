@@ -240,6 +240,8 @@ void glist_select(t_glist *x, t_gobj *y)
 {
     if (x->gl_editor)
     {
+		if (c_selection && c_selection != x)
+			glist_noselect(c_selection);
         t_selection *sel = (t_selection *)getbytes(sizeof(*sel));
         if (x->gl_editor->e_selectedline)
             glist_deselectline(x);
@@ -3211,7 +3213,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     int dspstate = canvas_suspend_dsp(), nbox, count;
 
     canvas_editmode(x, 1.);
-	if (x != c_selection)
+	if (c_selection && c_selection != x)
 		glist_noselect(c_selection);
 	else
     	glist_noselect(x);
