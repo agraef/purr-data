@@ -2354,6 +2354,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
     #   after 1 [concat raise $name]
     global pdtk_canvas_mouseup_name
     set pdtk_canvas_mouseup_name ""
+
+	bind $name <FocusIn> "menu_fixeditmenu $name"
 }
 
 #### jsarlo #####

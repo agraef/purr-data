@@ -348,7 +348,8 @@ void glist_noselect(t_glist *x)
             glist_deselect(x, x->gl_editor->e_selection->sel_what);
         if (x->gl_editor->e_selectedline)
             glist_deselectline(x);
-		c_selection = NULL;
+		if (c_selection == x)
+			c_selection = NULL;
     }
 }
 
@@ -3210,7 +3211,10 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     int dspstate = canvas_suspend_dsp(), nbox, count;
 
     canvas_editmode(x, 1.);
-    glist_noselect(x);
+	if (x != c_selection)
+		glist_noselect(c_selection);
+	else
+    	glist_noselect(x);
     for (g2 = x->gl_list, nbox = 0; g2; g2 = g2->g_next) nbox++;
     
 	/* found the end of the queue */
@@ -3275,7 +3279,7 @@ static void canvas_paste(t_canvas *x)
 
 static void canvas_duplicate(t_canvas *x)
 {
-    //if (x->gl_editor->e_onmotion == MA_NONE && x->gl_editor->e_selection)
+	//if (x->gl_editor->e_onmotion == MA_NONE && x->gl_editor->e_selection)
 	if (x->gl_editor->e_onmotion == MA_NONE && c_selection && c_selection->gl_editor->e_selection)
     {
         //canvas_copy(x);
