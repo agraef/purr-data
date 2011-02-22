@@ -28,8 +28,8 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b);
 static void canvas_paste(t_canvas *x);
 static void canvas_clearline(t_canvas *x);
 static t_binbuf *copy_binbuf;
-static char *canvas_textcopybuf;
-static int canvas_textcopybufsize;
+//static char *canvas_textcopybuf;
+//static int canvas_textcopybufsize;
 static t_glist *glist_finddirty(t_glist *x);
 static void canvas_reselect(t_canvas *x);
 static void canvas_cut(t_canvas *x);
@@ -1631,7 +1631,10 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
     t_gobj *y=NULL, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL, *y_begin, *y_end=NULL;
 	int x1, y1, x2, y2;
 
-	//mark the beginning of the glist for front/back
+	// first deselect any objects that may be already selected
+	glist_noselect(x);
+
+	// mark the beginning of the glist for front/back
 	y_begin = x->gl_list;
 
 	if (which == 3 || which == 4) {
@@ -3018,6 +3021,10 @@ static void canvas_copy(t_canvas *x)
     binbuf_free(copy_binbuf);
 	//fprintf(stderr, "canvas_copy\n");
     copy_binbuf = canvas_docopy(x);
+	if (!x->gl_editor->e_selection)
+		sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
+	else
+		sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
     paste_xyoffset = 1;
     if (x->gl_editor->e_textedfor)
     {
@@ -3025,21 +3032,21 @@ static void canvas_copy(t_canvas *x)
         int bufsize;
         rtext_getseltext(x->gl_editor->e_textedfor, &buf, &bufsize);
 
-#if defined(MSW) || defined(__APPLE__)
-            /* for Mac or Windows, copy the text to the clipboard here */
+//#if defined(MSW) || defined(__APPLE__)
+//            /* for Mac or Windows, copy the text to the clipboard here */
         sys_vgui("clipboard clear\n", bufsize, buf);
         sys_vgui("clipboard append {%.*s}\n", bufsize, buf);
-#else
+//#else
             /* in X windows the selection already went to the
             clipboard when it was made; here we "copy" it to our own buffer
             as well, because, annoyingly, the clipboard will usually be 
             destroyed by the time the user asks to "paste". */
-        if (canvas_textcopybuf)
+        /*if (canvas_textcopybuf)
             t_freebytes(canvas_textcopybuf, canvas_textcopybufsize);
         canvas_textcopybuf = (char *)getbytes(bufsize);
         memcpy(canvas_textcopybuf, buf, bufsize);
-        canvas_textcopybufsize = bufsize;
-#endif
+        canvas_textcopybufsize = bufsize;*/
+//#endif
     }
 }
 
@@ -3256,18 +3263,18 @@ static void canvas_paste(t_canvas *x)
     if (x->gl_editor->e_textedfor)
     {
             /* simulate keystrokes as if the copy buffer were typed in. */
-#if defined(MSW) || defined(__APPLE__)
+//#if defined(MSW) || defined(__APPLE__)
             /* for Mac or Windows,  ask the GUI to send the clipboard down */
         sys_gui("pdtk_pastetext\n");
-#else
+//#else
             /* in X windows we kept the text in our own copy buffer */
-        int i;
+/*        int i;
         for (i = 0; i < canvas_textcopybufsize; i++)
         {
             pd_vmess(&x->gl_gobj.g_pd, gensym("key"), "iii",
                 1, canvas_textcopybuf[i]&0xff, 0);
-        }
-#endif
+        }*/
+//#endif
     }
     else
     {
