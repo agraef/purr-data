@@ -1113,7 +1113,34 @@ static void text_displace_withtag(t_gobj *z, t_glist *glist,
         text_drawborder_withtag(x, glist, rtext_gettag(y),
             rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
-    }
+		/*if this is a subpatcher in which case we may be possibly moving nlets around
+		  which in turn requires that we redraw parent's nlets */
+/*		if (glist->gl_owner && glist_isvisible(glist->gl_owner)) {
+		    int resortin = 0, resortout = 0;
+		    t_class *cl = pd_class(&z->g_pd);
+		    if (cl == vinlet_class) resortin = 1;
+		    else if (cl == voutlet_class) resortout = 1;
+			fprintf(stderr,"vinlet=%d voutlet=%d\n", resortin, resortout);
+			if (resortin) canvas_resortinlets(glist->gl_owner);
+			if (resortout) canvas_resortoutlets(glist->gl_owner);
+
+			char *buf;
+			char name[6];
+			int bufsize, i;
+			rtext_gettext(y, &buf, &bufsize);
+			for (i = 0; i < 5; i++) {
+				name[i] = buf[i];
+			}
+			name[5] = '\0';
+			//fprintf(stderr,"yes, this is a subpatch with visible parent %s\n", name);
+			if (!strcmp(name, "inlet") ||
+				!strcmp(name, "outle")) {
+				
+				//fprintf(stderr,"yes, we're moving nlets around\n");	
+				glist_redraw(glist->gl_owner);
+			}
+		}*/
+    }	
 }
 
 static void gatom_displace_withtag(t_gobj *z, t_glist *glist,
@@ -1356,6 +1383,7 @@ static t_widgetbehavior gatom_widgetbehavior =
 void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
+	//fprintf(stderr,"glist_drawiofor\n");
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
     int issignal;
@@ -1364,6 +1392,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         int onset = x1 + (width - IOWIDTH) * i / nplus;
         if (firsttime)
         {
+			//fprintf(stderr,"glist_drawiofor o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
                       -fill %s -outline %s -tags %so%d\n",
@@ -1372,7 +1401,8 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                 (issignal ? "$signal_cord" : "$msg_cord"),
                 tag, i);
         }
-        else
+        else {
+			//fprintf(stderr,"glist_drawiofor o redraw\n");
             sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
                 glist_getcanvas(glist), tag, i,
                 onset, y2 - 2,
@@ -1383,6 +1413,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 				         tag,
 				         i);*/
 				// end jsarlo
+		}
     }
     n = obj_ninlets(ob);
     nplus = (n == 1 ? 1 : n-1);
@@ -1391,6 +1422,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         int onset = x1 + (width - IOWIDTH) * i / nplus;
         if (firsttime)
         {
+			//fprintf(stderr,"glist_drawiofor i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
                       -fill %s -outline %s -tags %si%d\n",
@@ -1399,7 +1431,8 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
                 (issignal ? "$signal_cord" : "$msg_cord"),
                 tag, i);
         }
-        else
+        else {
+			//fprintf(stderr,"glist_drawiofor i firsttime\n");
             sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
                 glist_getcanvas(glist), tag, i,
                 onset, y1,
@@ -1410,6 +1443,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 				         tag,
 				         i);*/
 				// end jsarlo
+		}
     }
 }
 
@@ -1417,6 +1451,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
+	//fprintf(stderr,"drawiofor_withtag\n");
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
     int issignal;
@@ -1425,6 +1460,7 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
         int onset = x1 + (width - IOWIDTH) * i / nplus;
         if (firsttime)
         {
+			//fprintf(stderr,"drawiofor_withtag o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
                       -fill %s -outline %s -tags %so%d\n",
@@ -1442,12 +1478,14 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
 */
     }
     n = obj_ninlets(ob);
+	//fprintf(stderr,"drawiofor_withtag n=%d\n", n);
     nplus = (n == 1 ? 1 : n-1);
     for (i = 0; i < n; i++)
     {
         int onset = x1 + (width - IOWIDTH) * i / nplus;
         if (firsttime)
         {
+			//fprintf(stderr,"drawiofor_withtag i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
                       -fill %s -outline %s -tags %si%d\n",
@@ -1456,11 +1494,17 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
                 (issignal ? "$signal_cord" : "$msg_cord"),
                 tag, i);
         }
-/*
-		else
+/*		else
 		{
-			sys_vgui(".x%lx.c addtag selected withtag %si%d \n",
-        	    glist_getcanvas(glist), tag, i);
+			//sys_vgui(".x%lx.c addtag selected withtag %si%d \n",
+        	//    glist_getcanvas(glist), tag, i);
+			fprintf(stderr,"drawiofor_withtag i redraw\n");
+            issignal = obj_issignalinlet(ob,i);
+            sys_vgui(".x%lx.c itemconfigure %si%d \
+                      -fill %s -outline %s\n",
+                glist_getcanvas(glist), tag, i,
+                (issignal ? "$signal_nlet" : "$msg_nlet"),
+                (issignal ? "$signal_cord" : "$msg_cord"));
 		}
 */
     }
@@ -1656,6 +1700,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
 
 void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
 {
+	//fprintf(stderr,"glist_eraseiofor\n");
     int i, n;
     n = obj_noutlets(ob);
     for (i = 0; i < n; i++)

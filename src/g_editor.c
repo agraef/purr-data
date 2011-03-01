@@ -754,6 +754,8 @@ static void *canvas_undo_set_move(t_canvas *x, int selected)
 static void canvas_undo_move(t_canvas *x, void *z, int action)
 {
     t_undo_move *buf = z;
+	t_class *cl;
+	int resortin = 0, resortout = 0;
     if (action == UNDO_UNDO || action == UNDO_REDO)
     {
         int i;
@@ -770,8 +772,13 @@ static void canvas_undo_move(t_canvas *x, void *z, int action)
                 gobj_displace(y, x, newx-x1, newy - y1);
                 buf->u_vec[i].e_xpix = x1;
                 buf->u_vec[i].e_ypix = y1;
+				cl = pd_class(&y->g_pd);
+		        if (cl == vinlet_class) resortin = 1;
+		        else if (cl == voutlet_class) resortout = 1;
             }
         }
+		if (resortin) canvas_resortinlets(x);
+		if (resortout) canvas_resortoutlets(x);
     }
     else if (action == UNDO_FREE)
     {
@@ -1631,8 +1638,12 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
     t_gobj *y=NULL, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL, *y_begin, *y_end=NULL;
 	int x1, y1, x2, y2;
 
-	// first deselect any objects that may be already selected
-	glist_noselect(x);
+	// first deselect any objects that may be already selected if doing action 3 or 4
+	if (which == 3 || which == 4) {
+		if (x->gl_editor->e_selection && x->gl_editor->e_selection->sel_next)
+			glist_noselect(x);
+	}
+	else glist_noselect(x);
 
 	// mark the beginning of the glist for front/back
 	y_begin = x->gl_list;
@@ -1640,6 +1651,7 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 	if (which == 3 || which == 4) {
 		// if no object has been selected for to-front/back action
 		if (!x->gl_editor->e_selection) {
+			//fprintf(stderr,"doing hitbox\n");
 			for (y = x->gl_list; y; y = y->g_next) {
 				if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)) {
 					if (!x->gl_edit)
@@ -1648,8 +1660,11 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 						glist_select(x, y);
 				}
 			}
-			// this was a bogus call--get me out of here!
-			if (!x->gl_editor->e_selection) return;
+			// this was a bogus/unsupported call--get me out of here!
+			if (!x->gl_editor->e_selection) {
+				post("To front/back action could not be performed because multiple items were selected...");
+				return;
+			}
 		}
 	}
 	
@@ -1764,6 +1779,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     t_gobj *y;
     int shiftmod, runmode, altmod, doublemod = 0, rightclick;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
+
+	//fprintf(stderr,"canvas_doclick\n");
     
     if (!x->gl_editor)
     {
@@ -1801,8 +1818,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     }
     /* post("click %d %d %d %d", xpos, ypos, which, mod); */
     
-    if (x->gl_editor->e_onmotion != MA_NONE)
+    if (x->gl_editor->e_onmotion != MA_NONE) {
+		//fprintf(stderr,"onmotion != MA_NONE\n");
         return;
+	}
 
     x->gl_editor->e_xwas = xpos;
     x->gl_editor->e_ywas = ypos;
@@ -2018,7 +2037,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             for (parseOutlet = parseOb->ob_outlet; 
                  parseOutlet && parseOutno; 
                  parseOutlet = parseOutlet->o_next, parseOutno--);
-            if (parseOutlet)
+            if (parseOutlet && magicGlass_isOn(x->gl_magic_glass))
             {
                 magicGlass_bind(x->gl_magic_glass,
                                 t.tr_ob,
@@ -2398,6 +2417,22 @@ void canvas_mouseup(t_canvas *x,
         }
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     }
+
+	if (canvas_cnct_outlet_tag[0] != 0)
+	{
+		sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+		       	x, canvas_cnct_outlet_tag,
+				(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+				(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+	}
+	if (canvas_cnct_inlet_tag[0] != 0)
+	{
+		sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+	   			x, canvas_cnct_inlet_tag,
+				(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+		canvas_cnct_inlet_tag[0] = 0;                  
+	}
     
     x->gl_editor->e_onmotion = MA_NONE;
 }
@@ -2598,7 +2633,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 { 
-    /* post("motion %d %d", (int)xpos, (int)ypos); */
+    //fprintf(stderr,"motion %d %d\n", (int)xpos, (int)ypos);
     int mod = fmod;
     if (!x->gl_editor)
     {
@@ -2615,8 +2650,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     }
     else if (x->gl_editor->e_onmotion == MA_REGION)
         canvas_doregion(x, xpos, ypos, 0);
-    else if (x->gl_editor->e_onmotion == MA_CONNECT)
+    else if (x->gl_editor->e_onmotion == MA_CONNECT) {
+		//fprintf(stderr,"MA_CONNECT\n");
         canvas_doconnect(x, xpos, ypos, 0, 0);
+	}
     else if (x->gl_editor->e_onmotion == MA_PASSOUT)
     {
         if (!x->gl_editor->e_motionfn)
@@ -2643,6 +2680,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
 
 void canvas_startmotion(t_canvas *x)
 {
+	//fprintf(stderr,"canvas_startmotion\n");
     int xval, yval;
     if (!x->gl_editor) return;
     glist_getnextxy(x, &xval, &yval);
@@ -3180,10 +3218,12 @@ static void glist_donewloadbangs(t_glist *x)
 
 static void canvas_paste_xyoffset(t_canvas *x)
 {
-    t_selection *sel;
-    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-        gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
-    paste_xyoffset++;
+    //t_selection *sel;
+    //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+        //gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
+	canvas_displaceselection(x, 10, 10);
+    //paste_xyoffset++;
+	//fprintf(stderr,"xyoffset %d\n",paste_xyoffset);
 }
 
 static void canvas_paste_atmouse(t_canvas *x)
@@ -3656,6 +3696,7 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
         if (pd_class(&y->g_pd) == canvas_class
             && !canvas_isabstraction((t_canvas *)y))
                 canvas_dofont((t_canvas *)y, font, xresize, yresize);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 }
 
     /* canvas_menufont calls up a TK dialog which calls this back */

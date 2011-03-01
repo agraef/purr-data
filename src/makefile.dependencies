@@ -19,7 +19,14 @@ d_array.o: d_array.c m_pd.h \
  /usr/include/bits/sigset.h /usr/include/bits/time.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
 d_delay.o: d_delay.c m_pd.h \
- /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stddef.h
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stddef.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/bits/predefs.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
 d_filter.o: d_filter.c m_pd.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stddef.h /usr/include/math.h \
  /usr/include/features.h /usr/include/bits/predefs.h \

@@ -2794,11 +2794,8 @@ proc pdtk_canvas_getscroll {name} {
 		return
 	}
 
-	# set safe defaults for font scaling in case
-	# non-standard fonts are being used
-	set font 0
-	set mult 1.553
-	set div 59.76
+	#debug
+	#catch { $name delete debug }
 
 	#ico@bukvic.net 5/18/10
 	#bbox all is not accurate when using text
@@ -2810,7 +2807,8 @@ proc pdtk_canvas_getscroll {name} {
 	#borrowed from http://wiki.tcl.tk/4844
 	set x1 1.0e30; set x2 -1.0e30 ;
 	set y1 1.0e30; set y2 -1.0e30 ;
-	foreach item [$name find all] {
+
+	foreach item [$name find withtag {(!noscroll)}] {
 	    switch -exact [$name type $item] {
 			"arc" -
 			"line" -
@@ -2827,102 +2825,15 @@ proc pdtk_canvas_getscroll {name} {
 			}
 			"text" {
 				set size [$name bbox $item]
-				if { $pd_nt == 0 } {
-					#find out what font we're using
-					set fnt [$name itemcget $item -font]
-					#puts stderr $fnt				
-					if { [$name itemcget $item -text] != ""} {
-						if {![string match "*8*" $fnt]} {
-							#puts stderr adjusting
-							#following fixes DejaVu Sans Mono ONLY on Linux w/ Tcl/Tk 8.5
-							#other fonts require different kinds of adjustments (most likely limited
-							#to changing 59.76 to a different ratio.
-							set tempya [lindex $size 1]
-							set tempyb [lindex $size 3]
-							set height [expr ($tempyb -$tempya)]
-							set yctr [expr $tempya + ($tempyb - $tempya)/2]
-							#$name create rectangle $x1 $yctr $x2 $yctr -outline #ff0000
-
-							#YOU MAY HAVE TO CHANGE THESE WHEN PORTING TO OSX AND WINDOWS
-							if {[string match "*DejaVu*" $fnt]} {
-								set font 0
-								set mult 1.553
-								set div 59.76
-							} elseif {[string match "*helvetica*" $fnt]} {
-								set font 1
-								set mult 1.652
-								set div 63.53
-							} elseif {[string match "*times*" $fnt]} {
-								#puts stderr times
-								set font 2
-								set mult 1.7
-								set div 65.38
-							}
-							#END CHANGES
-
-							set yoffset [expr int($height / ($mult * 2))]
-
-							set tempya [expr $yctr - $yoffset]
-							set tempyb [expr $yctr + $yoffset]
-
-							#puts stderr [concat h: $height]
-							#YOU MAY HAVE TO CHANGE THESE WHEN PORTING TO OSX AND WINDOWS
-							if { $height > $div } {
-								if { $font == 0 } {
-									set topfix [expr int($height / $div + 0.5)]
-								} elseif { $font == 1 } {
-									set topfix 0
-								} elseif { $font == 2 } {
-									set topfix 0
-								}
-								if { $topfix < 3 } {
-									if { $font == 0 } {
-										set bottomfix $topfix
-									} elseif { $font == 1 } {
-										set bottomfix [expr - int($height / $div + 0.5) + 1]
-									} elseif { $font == 2 } {
-										set bottomfix [expr - int($height / $div + 0.5) + 1]
-									}
-								} else { 
-									set bottomfix 3
-								}
-							} else {
-								set topfix 0
-								set bottomfix 0
-							}
-							#END CHANGES
-
-							#puts stderr [concat topfix: $topfix bottomfix: $bottomfix]
-							foreach {xa ya xb yb} $size {
-								if { $xa < $x1 } {set x1 $xa}
-								if { $xb > $x2 } {set x2 $xb}
-								if { [expr $tempya - $topfix] < $y1 } {set y1 [expr $tempya - $topfix]}
-								if { [expr $tempyb - $topfix + $bottomfix] > $y2 } {set y2 [expr $tempyb - $topfix + $bottomfix]}
-							}
-						} else {
-							#if there is no text or it is less than 10 pixels which speeds up things
-							#for common objects while ensuring the text is not truncated
-							foreach {xa ya xb yb} $size {
-								if { $xa < $x1 } {set x1 $xa}
-								if { $xb > $x2 } {set x2 $xb}
-								if { $ya < $y1 } {set y1 $ya}
-								if { $yb > $y2 } {set y2 $yb}
-							}
-						}
-					}
-				} else {
-					#Non-Linux OSs use the old-school style
-					#Tested on both Windows and OSX and this does not work
-					#right. Given that this stuff is also font-specific,
-					#it will have to be visited some other time. Chances are
-					#similar approach should work but will also restrict
-					#its applicability to that specific font.
+				if { [$name itemcget $item -text] != ""} {
 					foreach {xa ya xb yb} $size {
 						if { $xa < $x1 } {set x1 $xa}
 						if { $xb > $x2 } {set x2 $xb}
 						if { $ya < $y1 } {set y1 $ya}
 						if { $yb > $y2 } {set y2 $yb}
-					}				
+						#for debugging purposes							
+						#$name create rectangle $x1 $y1 $x2 $y2 -outline #ff0000 -tag debug
+					}
 				}
 			}
 	    }
@@ -3609,7 +3520,7 @@ proc popup_action {name action} {
 	if {[string compare $name .c]} {
 		set name [string trimright $name .c]
 	}
-	set cmd [concat $name done-popup $action $popup_xpix $popup_ypix \;]
+	set cmd [concat $name done-popup $action $popup_xpix $popup_ypix\;]
 	    #puts stderr $cmd
 	pd $cmd
 }

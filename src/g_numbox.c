@@ -233,7 +233,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 		         x->x_gui.x_lcol, x, x);
 		my_numbox_ftoa(x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM}\n",
+		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM noscroll}\n",
 		    canvas, xpos+half+2, ypos+half+d,
 		    x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		    x->x_gui.x_fcol, x, x);

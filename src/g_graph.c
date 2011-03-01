@@ -372,8 +372,13 @@ void canvas_resortinlets(t_canvas *x)
         obj_moveinletfirst(&x->gl_obj, ip);
     }
     freebytes(vec, ninlets * sizeof(*vec));
-    if (x->gl_owner && glist_isvisible(x->gl_owner))
+    if (x->gl_owner && glist_isvisible(x->gl_owner)) {
         canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
+		//fprintf(stderr,"good place to fix redrawing of inlets\n");
+		//fprintf(stderr,"found it\n");
+	    graph_vis(&x->gl_gobj, x->gl_owner, 0); 
+	    graph_vis(&x->gl_gobj, x->gl_owner, 1);
+	}
 }
 
 t_outlet *canvas_addoutlet(t_canvas *x, t_pd *who, t_symbol *s)
@@ -445,8 +450,13 @@ void canvas_resortoutlets(t_canvas *x)
         obj_moveoutletfirst(&x->gl_obj, ip);
     }
     freebytes(vec, noutlets * sizeof(*vec));
-    if (x->gl_owner && glist_isvisible(x->gl_owner))
+    if (x->gl_owner && glist_isvisible(x->gl_owner)) {
         canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
+		//fprintf(stderr,"good place to fix redrawing of outlets\n");
+		//fprintf(stderr,"found it\n");
+        graph_vis(&x->gl_gobj, x->gl_owner, 0); 
+        graph_vis(&x->gl_gobj, x->gl_owner, 1);
+	}
 }
 
 /* ----------calculating coordinates and controlling appearance --------- */
