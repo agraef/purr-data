@@ -931,9 +931,14 @@ static t_class *trigger_class;
 #define TR_LIST 4
 #define TR_ANYTHING 5
 
+#define TR_STATIC_FLOAT 6
+#define TR_STATIC_SYMBOL 7
+
 typedef struct triggerout
 {
     int u_type;         /* outlet type from above */
+	t_symbol u_sym; 	/* static value */
+	t_float u_float;	/* static value */
     t_outlet *u_outlet;
 } t_triggerout;
 
@@ -963,8 +968,13 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
     {
         t_atomtype thistype = ap->a_type;
         char c;
-        if (thistype == TR_SYMBOL) c = ap->a_w.w_symbol->s_name[0];
-        else if (thistype == TR_FLOAT) c = 'f';
+        if (thistype == TR_SYMBOL) {
+			if (strlen(ap->a_w.w_symbol->s_name) == 1)
+				c = ap->a_w.w_symbol->s_name[0];
+			else c = 'S';
+		}
+        else if (thistype == TR_FLOAT)
+			c = 'F';
         else c = 0;
         if (c == 'p')
             u->u_type = TR_POINTER,
@@ -981,8 +991,18 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
         else if (c == 'a')
             u->u_type = TR_ANYTHING,
                 u->u_outlet = outlet_new(&x->x_obj, &s_symbol);
-        else
-        {
+		else if (c == 'F') {
+			//static float
+			u->u_float = ap->a_w.w_float;
+			u->u_type = TR_STATIC_FLOAT;
+			u->u_outlet = outlet_new(&x->x_obj, &s_float);
+		}
+        else if (c == 'S') {
+			//static symbol
+			u->u_sym = *ap->a_w.w_symbol;
+            u->u_type = TR_STATIC_SYMBOL;
+	        u->u_outlet = outlet_new(&x->x_obj, &s_symbol);
+		} else {
             pd_error(x, "trigger: %s: bad type", ap->a_w.w_symbol->s_name);
             u->u_type = TR_FLOAT, u->u_outlet = outlet_new(&x->x_obj, &s_float);
         }
@@ -1009,6 +1029,14 @@ static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
                 pd_error(x, "unpack: bad pointer");
             else outlet_pointer(u->u_outlet, argv->a_w.w_gpointer);
         }
+		else if (u->u_type == TR_STATIC_FLOAT)
+		{
+			outlet_float(u->u_outlet, u->u_float);	
+		}
+		else if (u->u_type == TR_STATIC_SYMBOL)
+		{
+			outlet_symbol(u->u_outlet, &u->u_sym);
+		}
         else outlet_list(u->u_outlet, &s_list, argc, argv);
     }
 }
