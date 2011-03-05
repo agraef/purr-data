@@ -34,6 +34,13 @@ proc ::helpbrowser::open_helpbrowser {} {
         build_references
 #        doc_make_listbox .help_browser.frame $::sys_libdir/doc 0
         make_rootlistbox .help_browser.frame
+
+		bind .help_browser <Control-Next> {menu_raisenextwindow}
+		bind .help_browser <Key> {pdtk_capture_root_window_keys 1 %K %A 0}
+		bind .help_browser <Shift-Key> {pdtk_capture_root_window_keys 1 %K %A 1}
+		bind .help_browser <KeyRelease> {pdtk_capture_root_window_keys 0 %K %A 0}
+		bind .help_browser <Control-Key> {pdtk_canvas_ctrlkey %W %K 0}
+		bind .help_browser <Control-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
     }
 }
 
@@ -55,7 +62,7 @@ proc ::helpbrowser::make_rootlistbox {base} {
 	bind $current_listbox <Button-1> \
         [list ::helpbrowser::root_navigate %W %x %y]
     bind $current_listbox <Key-Return> \
-        [list ::helpbrowser::root_navigate %W %x %y]
+        [list ::helpbrowser::root_key_navigate %W $current_listbox]
 	bind $current_listbox <Double-ButtonRelease-1> \
         [list ::helpbrowser::root_doubleclick %W %x %y]
 	bind $current_listbox <$::modifier-Key-o> \
@@ -66,6 +73,17 @@ proc ::helpbrowser::make_rootlistbox {base} {
 proc ::helpbrowser::root_navigate {window x y} {
     variable reference_paths
     if {[set item [$window get [$window index "@$x,$y"]]] eq {}} {
+        return
+    }
+    set filename $reference_paths($item)
+    if {[file isdirectory $filename]} {
+        make_liblistbox [winfo parent $window] $filename
+    }
+}
+
+proc ::helpbrowser::root_key_navigate {window current_listbox} {
+    variable reference_paths
+    if {[set item [$window get [$window index [$current_listbox curselection]]]] eq {}} {
         return
     }
     set filename $reference_paths($item)

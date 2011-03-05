@@ -17,6 +17,8 @@
 #GUI improvements and dynamic runtime 8.5 widget upgrade for Linux by Ivica Ico Bukvic
 #http://ico.bukvic.net <ico@vt.edu>
 
+#puts stderr [info tclversion]
+
 if { [info tclversion] >= 8.5 } {
 
 	# EDIT THIS PART TO CUSTOMIZE LINUX THEME
@@ -545,12 +547,15 @@ if {$pd_nt == 1} {
 
 proc showhide_printouttext {state} {
     if {$state} {
-        pack .printout -side bottom -fill both -expand 1
-		pack .controls.clr_console -pady 30
+        #pack .printout -side bottom -fill both -expand 1
+		#pack .controls.clr_console -pady 30
+		wm manage .printout
+		wm title .printout "Console"
 	#wm resizable . 1 1
 	#wm minsize . 460 194
     } else {
-        pack forget .printout
+        #pack forget .printout
+		wm forget .printout
 		pack forget .controls.clr_console
 	#wm minsize . 0 0
 	#wm geometry . 355x75
@@ -633,42 +638,65 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 		pd [concat pd audiostatus \;]}
 }
 
-match_linux_wm [list button .controls.clr_console -text "Clear Console" \
-	-command [concat menu_clear_console]]
+#match_linux_wm [list button .controls.clr_console -text "Clear Console" \
+#	-command [concat menu_clear_console]]
 
 pack .controls.inout.in .controls.inout.out -side left -padx 6
 pack .controls.inout -side left -padx 14
 pack .controls.switches -side right
 pack .controls.dio -side right -padx 20
 
-if {[info exists show_console] && $show_console == 1} {
-	pack .controls.clr_console -pady 30
-}
+#if {[info exists show_console] && $show_console == 1} {
+#	pack .controls.clr_console -pady 30
+#}
 
-match_linux_wm [list frame .printout]
-text .printout.text -relief sunken -bd 1 -font console_font \
-    -yscrollcommand ".printout.scroll set" -width 70 \
+toplevel .printout
+wm title .printout "Console"
+# initial location of Pd window (+x+y)
+wm geometry .printout +10+175
+match_linux_wm [list frame .printout.frame]
+text .printout.frame.text -relief sunken -bd 1 -font console_font \
+    -yscrollcommand ".printout.frame.scroll set" -width 70 -height 24 \
 	-highlightthickness 0 -takefocus 0 -fg gray20 -state disabled
-#.printout.text tag configure sel -background $linux_wm_hlcolor
+#.printout.frame.text tag configure sel -background $linux_wm_hlcolor
 
-# .printout.text insert end "\n\n\n\n\n\n\n\n\n\n"
-match_linux_wm [list scrollbar .printout.scroll -command ".printout.text yview"]
-pack .printout.scroll -side right -fill y
-pack .printout.text -side left -fill both -expand 1
-pack .printout -side bottom -fill both -expand 1
+# .printout.frame.text insert end "\n\n\n\n\n\n\n\n\n\n"
+match_linux_wm [list scrollbar .printout.frame.scroll -command ".printout.frame.text yview"]
+match_linux_wm [list frame .printout.bar]
+match_linux_wm [list button .printout.bar.clear -text "CLEAR" \
+	-width 7 -command [concat menu_clear_console]]
+match_linux_wm [list entry .printout.bar.entry \
+	-textvariable send_textvariable]
+bind .printout.bar.entry <KeyPress-Return> {
+    pd [concat $send_textvariable \;]
+}
+#match_linux_wm [list button .printout.bar.x -text "x" \
+#	-width 2 -command [concat .printout.bar.entry delete 0 end]]
+match_linux_wm [list label .printout.bar.label -text "Message to Pd:"]
+
+pack .printout.frame.scroll -side right -fill y
+pack .printout.frame.text -side left -fill both -expand 1
+pack .printout.frame -fill both -expand 1
+pack .printout.bar -side left -fill x -expand 1
+pack .printout.bar.clear -side left -padx 3 -pady 3
+#pack .printout.bar.x -side right -padx 3 -pady 3
+pack .printout.bar.entry -side right -fill x -expand 1 -padx 5 -pady 3
+pack .printout.bar.label -side right -padx 3 -pady 3
 
 # the console is open by default
 #.controls.switches.console select
 # in the case console should be turned off by default
-pack forget .printout
+wm forget .printout
 
-bind .printout.text <Button> {pdtk_update_root_edit_menu 0}
-bind .printout.text <<Selection>> {pdtk_update_root_edit_menu 1}
+bind .printout.frame.text <Button> {pdtk_update_root_edit_menu 0}
+bind .printout.frame.text <<Selection>> {pdtk_update_root_edit_menu 1}
+bind .printout <Control-Next> {menu_raisenextwindow}
+bind .printout <Control-w> { .controls.switches.console invoke }
 
 proc pdtk_update_root_edit_menu {value} {
 	#pdtk_post "update_root_edit_menu $value\n"
 	if {$value} {
-		set range [.printout.text tag ranges sel]
+		set range [.printout.frame.text tag ranges sel]
 		#pdtk_post "[lindex $range 0] -- [lindex $range 1]\n"
 		if {[lindex $range 0] != [lindex $range 1]} {
 			#.mbar.edit entryconfigure "Cut" -state normal
@@ -682,10 +710,10 @@ proc pdtk_update_root_edit_menu {value} {
 }
 
 proc pdtk_post {stuff} {
-	.printout.text configure -state normal
-    .printout.text insert end $stuff
-    .printout.text yview end-2char
-	.printout.text configure -state disabled
+	.printout.frame.text configure -state normal
+    .printout.frame.text insert end $stuff
+    .printout.frame.text yview end-2char
+	.printout.frame.text configure -state disabled
 }
 
 proc pdtk_standardkeybindings {id} {
@@ -704,19 +732,19 @@ proc pdtk_panelkeybindings {id panelname} {
 
 pdtk_standardkeybindings .
 # hacks to add standard key bindings to the Pd window
-bind . <$ctrl_key-Key-a> {.printout.text tag add sel 1.0 end}
-#bind . <$ctrl_key-Key-x> {tk_textCut .printout.text; \
+bind . <$ctrl_key-Key-a> {.printout.frame.text tag add sel 1.0 end}
+#bind . <$ctrl_key-Key-x> {tk_textCut .printout.frame.text; \
 #	.mbar.edit entryconfigure "Paste" -state normal}
-bind . <$ctrl_key-Key-c> {tk_textCopy .printout.text}
+bind . <$ctrl_key-Key-c> {tk_textCopy .printout.frame.text}
 #	.mbar.edit entryconfigure "Paste" -state normal}
-#bind . <$ctrl_key-Key-v> {tk_textPaste .printout.text}
+#bind . <$ctrl_key-Key-v> {tk_textPaste .printout.frame.text}
 bind . <$ctrl_key-Key-w> {menu_quit}
 # kludge to add window control bindings to the Pd Window
 if {$pd_nt == 2} {
 	bind . <Mod1-quoteleft>  {menu_raisenextwindow}
 } else {
 	bind . <Control-Next>    {menu_raisenextwindow}
-	bind . <Control-Prior>   {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
+	#bind . <Control-Prior>   {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 }
 
 # pass key presses inside main window to patch windows
@@ -737,6 +765,11 @@ bind . <KeyRelease> {pdtk_capture_root_window_keys 0 %K %A 0}
 bind . <Control-Key> {pdtk_canvas_ctrlkey %W %K 0}
 bind . <Control-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
 
+bind .printout <Key> {pdtk_capture_root_window_keys 1 %K %A 0}
+bind .printout <Shift-Key> {pdtk_capture_root_window_keys 1 %K %A 1}
+bind .printout <KeyRelease> {pdtk_capture_root_window_keys 0 %K %A 0}
+bind .printout <Control-Key> {pdtk_canvas_ctrlkey %W %K 0}
+bind .printout <Control-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
 
 wm title . "Pure-Data L2Ork"
 # initial location of Pd window (+x+y)
@@ -852,12 +885,12 @@ proc pdtk_fixwindowmenu {} {
 	} else {
 		.mbar.windows add command -label "Next Window" -command {menu_raisenextwindow} \
 			-accelerator "Ctrl+PageDown"
-		.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-			-accelerator "Ctrl+PageUp"
+		#.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+		#	-accelerator "Ctrl+PageUp"
 	}
 	.mbar.windows add separator
     .mbar.windows add command -label {parent window} -state disabled
-    .mbar.windows add command -label {Pd window} -command menu_raise_console \
+    .mbar.windows add command -label {Pd & Console} -command menu_raise_console \
 		-accelerator [accel_munge "Ctrl+;"] -state disabled
 	.mbar.windows add separator
     foreach i $menu_windowlist {
@@ -996,13 +1029,32 @@ proc menu_zoom {window} {
 }
 
 proc menu_raisenextwindow {} {
-	raise [lindex [wm stackorder .] 0]
+	set target [lindex [wm stackorder .] 0]
+	raise $target
+	if { [winfo exists $target.c] } {
+		focus $target.c
+	} else {
+		focus $target
+	}
 }
 
 # lreverse came along in Tcl 8.5
-proc menu_raisepreviouswindow {} {
-	raise [lindex [lreverse [wm stackorder .]] 0]
-}
+#proc menu_raisepreviouswindow {} {
+#	set last [lindex [wm stackorder .] end]
+#	set all [wm stackorder .]
+#	foreach i $all {
+#		if { $i != $last } { 
+#			raise [lindex $i]
+#			set target $i
+#		} else {
+#			if { [winfo exists $target.c] } {
+#				focus $target.c
+#			} else {
+#				focus $target
+#			}
+#		}
+#	}
+#}
 
 ################## menu commands for console #########################
 
@@ -1011,15 +1063,19 @@ proc menu_raise_console {} {
 	set top_window [lindex [wm stackorder $pd_window] end]
 	if {$pd_window eq $top_window} {
 		lower $pd_window
+		catch {lower .printout}
 	} else {
 		wm deiconify $pd_window
 		raise $pd_window
+		catch {wm deiconify .printout}
+		catch {wm manage .prinout}
+		raise .printout
 	}
 }
 
 proc menu_toggle_console {} { .controls.switches.console invoke }
 
-proc menu_clear_console {} {.printout.text configure -state normal; .printout.text delete 0.0 end; .printout.text configure -state disabled}
+proc menu_clear_console {} {.printout.frame.text configure -state normal; .printout.frame.text delete 0.0 end; .printout.frame.text configure -state disabled}
 
 ################## the "Quit" menu command #########################
 proc menu_really_quit {} {pd {pd quit;}}
@@ -1262,19 +1318,19 @@ if {$pd_nt != 2} {
 .mbar.edit add command -label Redo -accelerator [accel_munge "Ctrl+Z"] \
     -state disabled
 .mbar.edit add separator
-# this should apply to .printout.text
+# this should apply to .printout.frame.text
 .mbar.edit add command -label Cut  -accelerator [accel_munge "Ctrl+x"] \
-    -command {tk_textCut .printout.text} -state disabled
-# this should apply to .printout.text
+    -command {tk_textCut .printout.frame.text} -state disabled
+# this should apply to .printout.frame.text
 .mbar.edit add command -label Copy -accelerator [accel_munge "Ctrl+c"] \
-    -command {global copytexttocanvas; tk_textCopy .printout.text; set copytexttocanvas 1; pdtk_canvas_update_paste_menu 1} -state disabled
+    -command {global copytexttocanvas; tk_textCopy .printout.frame.text; set copytexttocanvas 1; pdtk_canvas_update_paste_menu 1} -state disabled
 .mbar.edit add command -label Paste -accelerator [accel_munge "Ctrl+v"] \
-    -command {tk_textPaste .printout.text} -state disabled
+    -command {tk_textPaste .printout.frame.text} -state disabled
 .mbar.edit add command -label Duplicate -accelerator [accel_munge "Ctrl+d"] \
     -state disabled
-# this should apply to .printout.text
+# this should apply to .printout.frame.text
 .mbar.edit add command -label {Select all} -accelerator [accel_munge "Ctrl+a"]\
-    -command {pdtk_post selall; .printout.text tag add sel 1.0 end}
+    -command {pdtk_post selall; .printout.frame.text tag add sel 1.0 end}
 .mbar.edit add command -label {Reselect} \
         -accelerator "Ctrl+Enter" -state disabled
 .mbar.edit add separator
@@ -1309,10 +1365,10 @@ if {$pd_nt == 2} { # no key command for Mac OS X
 .mbar.edit add command -label "Clear console" \
     -accelerator [accel_munge "Shift+Ctrl+l"] -command menu_clear_console
 .mbar.edit add separator
-# this should apply to .printout.text
+# this should apply to .printout.frame.text
 .mbar.edit add command -label {Find...} -accelerator [accel_munge "Ctrl+f"] \
     -state disabled
-# this should apply to .printout.text
+# this should apply to .printout.frame.text
 .mbar.edit add command -label {Find Again} -accelerator [accel_munge "Ctrl+g"] \
     -state disabled
 .mbar.edit add command -label {Find last error}
@@ -1558,9 +1614,9 @@ proc menu_paste {name} {
 	}
 }
 
-#bind . <$ctrl_key-Key-x> {menu_cut .printout.text}
-bind . <$ctrl_key-Key-c> {global copytexttocanvas; tk_textCopy .printout.text; set copytexttocanvas 1; pdtk_canvas_update_paste_menu 1}
-#bind . <$ctrl_key-Key-v> {menu_paste .printout.text}
+#bind . <$ctrl_key-Key-x> {menu_cut .printout.frame.text}
+bind . <$ctrl_key-Key-c> {global copytexttocanvas; tk_textCopy .printout.frame.text; set copytexttocanvas 1; pdtk_canvas_update_paste_menu 1}
+#bind . <$ctrl_key-Key-v> {menu_paste .printout.frame.text}
 
 proc menu_duplicate {name} {
     pd [concat $name duplicate \;]
@@ -1765,7 +1821,7 @@ proc menu_fixwindowmenu {name} {
 		$name.m.windows delete 6 end
 	} else {
 		if $pd_tearoff {
-			$name.m.windows delete 5 end
+			$name.m.windows delete 6 end
 		} else {
 			$name.m.windows delete 5 end
 		}
@@ -2233,13 +2289,13 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	} else {
 		$name.m.windows add command -label "Next Window" -command {menu_raisenextwindow} \
 			-accelerator "Ctrl+PageDown"
-		$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-			-accelerator "Ctrl+PageUp"
+		#$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+		#	-accelerator "Ctrl+PageUp"
 	}
 	$name.m.windows add separator
     $name.m.windows add command -label {parent window}\
         -command [concat menu_windowparent $name] 
-    $name.m.windows add command -label {Pd window} -command menu_raise_console \
+    $name.m.windows add command -label {Pd & Console} -command menu_raise_console \
 		-accelerator [accel_munge "Ctrl+;"]
     $name.m.windows add separator
 
@@ -2348,7 +2404,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Mod1-quoteleft> {menu_raisenextwindow}
     } else {
         bind $name.c <Control-Next>   {menu_raisenextwindow}
-        bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
+        #bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 	}
     bind $name.c <Key> {pdtk_canvas_sendkey %W 1 %K %A 0}
     bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1}
@@ -3008,10 +3064,12 @@ proc pdtk_canvas_ctrlkey {name key shift} {
     set topname [string trimright $name .c]
     # puts stderr [concat ctrl-key $key $topname $name]
 	# puts stderr [string match .controls* $name] 
-	#.printout.text .controls.* .
+	#.printout.frame.text .controls.* .
 	#pdtk_post canvas_ctrlkey
 
-	if {$name == "." || $name == ".printout.text" || [string match .controls* $name] || [string match .gfxstub* $name]} {
+	#puts stderr $name
+
+	if {$name == "." || [string match .printout* $name] || [string match .controls* $name] || [string match .gfxstub* $name]  || [string match .help_browser* $name]} {
 		set ignore 1	
 	}
 
