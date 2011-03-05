@@ -549,17 +549,16 @@ proc showhide_printouttext {state} {
     if {$state} {
         #pack .printout -side bottom -fill both -expand 1
 		#pack .controls.clr_console -pady 30
-		wm manage .printout
-		wm title .printout "Console"
-	#wm resizable . 1 1
-	#wm minsize . 460 194
+		wm deiconify .printout
+		#wm resizable . 1 1
+		#wm minsize . 460 194
     } else {
         #pack forget .printout
-		wm forget .printout
-		pack forget .controls.clr_console
-	#wm minsize . 0 0
-	#wm geometry . 355x75
-	#wm resizable . 0 0
+		wm withdraw .printout
+		#pack forget .controls.clr_console
+		#wm minsize . 0 0
+		#wm geometry . 355x75
+		#wm resizable . 0 0
     }
 }
 
@@ -652,8 +651,9 @@ pack .controls.dio -side right -padx 20
 
 toplevel .printout
 wm title .printout "Console"
-# initial location of Pd window (+x+y)
-wm geometry .printout +10+175
+# initial location of the console window (+x+y)
+wm geometry .printout +10+160
+wm protocol .printout WM_DELETE_WINDOW { .controls.switches.console invoke }
 match_linux_wm [list frame .printout.frame]
 text .printout.frame.text -relief sunken -bd 1 -font console_font \
     -yscrollcommand ".printout.frame.scroll set" -width 70 -height 24 \
@@ -668,11 +668,12 @@ match_linux_wm [list button .printout.bar.clear -text "CLEAR" \
 match_linux_wm [list entry .printout.bar.entry \
 	-textvariable send_textvariable]
 bind .printout.bar.entry <KeyPress-Return> {
+	pdtk_post "\nmessage-to-pd: $send_textvariable"
     pd [concat $send_textvariable \;]
 }
 #match_linux_wm [list button .printout.bar.x -text "x" \
 #	-width 2 -command [concat .printout.bar.entry delete 0 end]]
-match_linux_wm [list label .printout.bar.label -text "Message to Pd:"]
+match_linux_wm [list label .printout.bar.label -text "Send Message to Pd:"]
 
 pack .printout.frame.scroll -side right -fill y
 pack .printout.frame.text -side left -fill both -expand 1
@@ -686,7 +687,10 @@ pack .printout.bar.label -side right -padx 3 -pady 3
 # the console is open by default
 #.controls.switches.console select
 # in the case console should be turned off by default
-wm forget .printout
+wm withdraw .printout
+#wm geometry .printout 1x1+0+0
+#wm overrideredirect .printout 1
+#wm transient .printout
 
 bind .printout.frame.text <Button> {pdtk_update_root_edit_menu 0}
 bind .printout.frame.text <<Selection>> {pdtk_update_root_edit_menu 1}
@@ -774,6 +778,10 @@ bind .printout <Control-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
 wm title . "Pure-Data L2Ork"
 # initial location of Pd window (+x+y)
 wm geometry . +10+35
+catch {
+	set appicon [image create photo -format gif -file "$pd_guidir/pd-48x48.gif"]
+	wm iconphoto . -default $appicon
+}
 . configure -menu .mbar -width 200 -height 150
 if { [info tclversion] >= 8.5 && $pd_nt == 0 } { wm resizable . 0 0 }
 # Intercept closing the main pd window: MP 20060413:
@@ -1007,6 +1015,7 @@ proc menu_send {} {
 		bind .sendpanel <$ctrl_key-Key-w> {destroy .sendpanel}
 		bind .sendpanel <KeyPress-Escape> {destroy .sendpanel}
 		bind .sendpanel.entry <KeyPress-Return> {
+			pdtk_post "\nmessage-to-pd: $send_textvariable"
 		    pd [concat $send_textvariable \;]
 		}
 		focus .sendpanel.entry
