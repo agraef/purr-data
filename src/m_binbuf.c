@@ -146,7 +146,8 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
                     }
                 }
                 if (!lastslash && c == '$' && (textp != etext && 
-                    textp[0] >= '0' && textp[0] <= '9'))
+                	((textp[0] >= '0' && textp[0] <= '9')||
+                	textp[0]=='@'))) /* JMZ: $@ and $# expansion */
                         dollar = 1;
                 if (!slash) bufp++;
             }
@@ -155,7 +156,7 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
                     && *textp != '\t' &&*textp != ',' && *textp != ';')));
             *bufp = 0;
 #if 0
-            post("binbuf_text: buf %s", buf);
+            post("binbuf_text: buf %s, dollar=%d", buf, dollar);
 #endif
             if (floatstate == 2 || floatstate == 4 || floatstate == 5 ||
                 floatstate == 8)
@@ -166,14 +167,27 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
                 was. */
             else if (dollar)
             {
-                if (buf[0] != '$') 
-                    dollar = 0;
-                for (bufp = buf+1; *bufp; bufp++)
-                    if (*bufp < '0' || *bufp > '9')
-                        dollar = 0;
-                if (dollar)
-                    SETDOLLAR(ap, atoi(buf+1));
-                else SETDOLLSYM(ap, gensym(buf));
+                if(buf[1]=='@') /* JMZ: $@ expansion */
+                {
+                	if(buf[2]==0) /* only expand A_DOLLAR $@ */
+                    {
+                    	ap->a_type = A_DOLLAR;
+                    	ap->a_w.w_symbol = gensym("@");
+                    } 
+                  	else /* there is no A_DOLLSYM $@ */
+                    {
+                    	SETSYMBOL(ap, gensym(buf));
+                    }
+                } else {
+		            if (buf[0] != '$') 
+		                dollar = 0;
+		            for (bufp = buf+1; *bufp; bufp++)
+		                if (*bufp < '0' || *bufp > '9')
+		                    dollar = 0;
+		            if (dollar)
+		                SETDOLLAR(ap, atoi(buf+1));
+		            else SETDOLLSYM(ap, gensym(buf));
+				}
             }
             else SETSYMBOL(ap, gensym(buf));
         }
@@ -337,8 +351,12 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
             break;
         case A_DOLLAR:
 			//fprintf(stderr,"addbinbuf: dollar\n");
-            sprintf(tbuf, "$%d", ap->a_w.w_index);
-            SETSYMBOL(ap, gensym(tbuf));
+            if(ap->a_w.w_symbol==gensym("@")){ /* JMZ: $@ expansion */
+            	SETSYMBOL(ap, gensym("$@"));
+            } else {
+            	sprintf(tbuf, "$%d", ap->a_w.w_index);
+            	SETSYMBOL(ap, gensym(tbuf));
+            }
             break;
         case A_DOLLSYM:
 			//fprintf(stderr,"addbinbuf: dollsym\n");
@@ -392,6 +410,11 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
             char *str = argv->a_w.w_symbol->s_name, *str2;
             if (!strcmp(str, ";")) SETSEMI(ap);
             else if (!strcmp(str, ",")) SETCOMMA(ap);
+            else if (!strcmp(str, "$@")) /* JMZ: $@ expansion */
+            {
+                ap->a_type = A_DOLLAR;
+                ap->a_w.w_symbol = gensym("@");
+            }
             else if ((str2 = strchr(str, '$')) && str2[1] >= '0'
                 && str2[1] <= '9')
             {
@@ -585,7 +608,9 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
-    if (ac <= SMALLMSG)
+    //if (ac <= SMALLMSG)
+	//IB added ac > argc check to allow for proper $@ arg (list) allocation
+    if (ac <= SMALLMSG && ac > argc)
         mstack = smallstack;
     else
     {
@@ -597,12 +622,16 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             that the pd_objectmaker target can't come up via a named
             destination in the message, only because the original "target"
             points there. */
-        if (target == &pd_objectmaker)
-            maxnargs = ac;
+        if (target == &pd_objectmaker) {
+			//IB added ac > argc check to allow for proper $@ arg (list) allocation
+            maxnargs = (ac > argc ? ac : argc+1);
+			//if (at && x->b_n) 
+			//	fprintf(stderr,"pd_objectmaker %s %d\n", at[0].a_w.w_symbol->s_name, maxnargs);
+		}
         else
         {
             int i, j = (target ? 0 : -1);
-            for (i = 0; i < ac; i++)
+            for (i = 0; i < (ac > argc ? ac : argc); i++)
             {
                 if (at[i].a_type == A_SEMI)
                     j = -1;
@@ -626,6 +655,8 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
 
     }
     msp = mstack;
+	//fprintf(stderr,"maxnargs=%d argc=%d\n", maxnargs, argc);
+	//static t_atom *ems = mstack+MSTACKSIZE;
     while (1)
     {
         t_pd *nexttarget;
@@ -712,10 +743,27 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                 *msp = *at;
                 break;
             case A_DOLLAR:
-                if (at->a_w.w_index > 0 && at->a_w.w_index <= argc)
-                    *msp = argv[at->a_w.w_index-1];
-                else if (at->a_w.w_index == 0)
-                    SETFLOAT(msp, canvas_getdollarzero());
+                if (at->a_w.w_symbol==gensym("@")) 
+                { /* JMZ: $@ expansion */
+                    int i;
+                    //if(msp+argc >= ems) 
+                    //{
+                    //    error("message stack overflow");
+                    //    goto broken;
+                    //}
+                    for (i=0; i<argc; i++)
+                    {
+                        *msp++=argv[i];
+                        nargs++;
+                    }
+                    msp--;
+                    nargs--;
+					//fprintf(stderr,"x->b_n=%d ac=%d maxnargs=%d nargs=%d argc=%d\n", x->b_n, ac, maxnargs, nargs, argc);
+                }
+                else if (at->a_w.w_index > 0 && at->a_w.w_index <= argc)
+	                *msp = argv[at->a_w.w_index-1];
+	            else if (at->a_w.w_index == 0)
+	                SETFLOAT(msp, canvas_getdollarzero());
                 else
                 {
                     if (target == &pd_objectmaker)

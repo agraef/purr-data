@@ -94,10 +94,13 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
         char *sp;
         unsigned int len;
         int quote;
-        for (sp = a->a_w.w_symbol->s_name, len = 0, quote = 0; *sp; sp++, len++)
-            if (*sp == ';' || *sp == ',' || *sp == '\\' || 
-                (*sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
-                quote = 1;
+        if(!strcmp(a->a_w.w_symbol->s_name, "$@")) /* JMZ: #@ quoting */
+          quote=1;
+        else
+        	for (sp = a->a_w.w_symbol->s_name, len = 0, quote = 0; *sp; sp++, len++)
+           		if (*sp == ';' || *sp == ',' || *sp == '\\' || 
+                	(*sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
+                	quote = 1;
         if (quote)
         {
             char *bp = buf, *ep = buf + (bufsize-2);
@@ -105,7 +108,7 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
             while (bp < ep && *sp)
             {
                 if (*sp == ';' || *sp == ',' || *sp == '\\' ||
-                    (*sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
+                    (*sp == '$' && ((sp[1] >= '0' && sp[1] <= '9')||sp[1]=='@')))
                         *bp++ = '\\';
                 *bp++ = *sp++;
             }
@@ -125,7 +128,11 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
     }
         break;
     case A_DOLLAR:
-        sprintf(buf, "$%d", a->a_w.w_index);
+    	if(a->a_w.w_symbol==gensym("@")) { /* JMZ: $@ expansion */
+    		sprintf(buf, "$@");
+    	} else {
+    		sprintf(buf, "$%d", a->a_w.w_index);
+   		}
         break;
     case A_DOLLSYM:
         strncpy(buf, a->a_w.w_symbol->s_name, bufsize);
