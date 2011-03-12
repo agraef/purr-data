@@ -608,9 +608,16 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
-    //if (ac <= SMALLMSG)
-	//IB added ac > argc check to allow for proper $@ arg (list) allocation
-    if (ac <= SMALLMSG && ac > argc)
+	//first we need to check if the list of arguments has $@
+	int count;
+	for (count = 0; count < ac; count++) {
+		if (at[count].a_type == A_DOLLAR && at[count].a_w.w_symbol==gensym("@")) {
+			//fprintf(stderr,"yes %d %d %d\n", ac, argc, ac+argc-1);
+			ac = ac + argc;
+		}
+	}
+
+    if (ac <= SMALLMSG)
         mstack = smallstack;
     else
     {
@@ -623,15 +630,13 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             destination in the message, only because the original "target"
             points there. */
         if (target == &pd_objectmaker) {
-			//IB added ac > argc check to allow for proper $@ arg (list) allocation
-            maxnargs = (ac > argc ? ac : argc+1);
-			//if (at && x->b_n) 
-			//	fprintf(stderr,"pd_objectmaker %s %d\n", at[0].a_w.w_symbol->s_name, maxnargs);
+            maxnargs = ac;
+			//if (at && x->b_n) fprintf(stderr,"pd_objectmaker %s %d %d %d\n", at[0].a_w.w_symbol->s_name, ac, argc, maxnargs);
 		}
         else
         {
             int i, j = (target ? 0 : -1);
-            for (i = 0; i < (ac > argc ? ac : argc); i++)
+            for (i = 0; i < ac; i++)
             {
                 if (at[i].a_type == A_SEMI)
                     j = -1;
@@ -755,6 +760,7 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                     {
                         *msp++=argv[i];
                         nargs++;
+						ac--;
                     }
                     msp--;
                     nargs--;
