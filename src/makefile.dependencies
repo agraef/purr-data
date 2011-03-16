@@ -118,7 +118,7 @@ g_graph.o: g_graph.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
  /usr/include/bits/sigset.h /usr/include/bits/time.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
- /usr/include/alloca.h m_pd.h t_tk.h g_canvas.h s_stuff.h \
+ /usr/include/alloca.h m_pd.h m_imp.h t_tk.h g_canvas.h s_stuff.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/wchar.h /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \

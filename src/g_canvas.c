@@ -434,6 +434,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     if (strcmp(x->gl_name->s_name, "Pd"))
         pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
     x->gl_loading = 1;
+	//fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", x, x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
         /* cancel "vis" flag if we're a subpatch of an
          abstraction inside another patch.  A separate mechanism prevents
@@ -915,6 +916,7 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
+	//fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
 }
 
 void canvas_objfor(t_glist *gl, t_text *x, int argc, t_atom *argv);
@@ -1073,9 +1075,12 @@ void canvas_popabstraction(t_canvas *x)
 {
     newest = &x->gl_pd;
     pd_popsym(&x->gl_pd);
-    x->gl_loading = 0;
+    //x->gl_loading = 1;
+	//fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", x, x->gl_owner);
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
+    x->gl_loading = 0;
+	//fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
 }
 
 void canvas_logerror(t_object *y)

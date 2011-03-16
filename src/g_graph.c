@@ -8,6 +8,7 @@ to this file... */
 
 #include <stdlib.h>
 #include "m_pd.h"
+#include "m_imp.h"
 #include "t_tk.h"
 #include "g_canvas.h"
 #include "s_stuff.h"    /* for sys_hostfontsize */
@@ -372,12 +373,20 @@ void canvas_resortinlets(t_canvas *x)
         obj_moveinletfirst(&x->gl_obj, ip);
     }
     freebytes(vec, ninlets * sizeof(*vec));
-    if (x->gl_owner && glist_isvisible(x->gl_owner)) {
+    if (x->gl_owner && glist_isvisible(x->gl_owner) && glist_isvisible(x) && !x->gl_owner->gl_loading && !x->gl_loading) {
         canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
-		//fprintf(stderr,"good place to fix redrawing of inlets\n");
-		//fprintf(stderr,"found it\n");
+		//fprintf(stderr,"good place to fix redrawing of inlets .x%lx owner=.x%lx %d (parent)%d\n", x, x->gl_owner, x->gl_loading, x->gl_owner->gl_loading);
+/*		t_object *ob = pd_checkobject(&y->g_pd);
+		t_rtext *rt = glist_findrtext(x->gl_owner, (t_text *)&ob->ob_g);
+		for (i = 0; i < ninlets; i++) {
+            sys_vgui(".x%x.c itemconfigure %si%d -fill %s -width 1\n",
+                     x, rtext_gettag(rt), i, 
+                     (obj_issignalinlet(ob, i) ? "$signal_nlet" : "$msg_nlet"));
+		}
+*/
+		//glist_redraw(x);
 	    graph_vis(&x->gl_gobj, x->gl_owner, 0); 
-	    graph_vis(&x->gl_gobj, x->gl_owner, 1);
+		graph_vis(&x->gl_gobj, x->gl_owner, 1);
 	}
 }
 
@@ -450,10 +459,11 @@ void canvas_resortoutlets(t_canvas *x)
         obj_moveoutletfirst(&x->gl_obj, ip);
     }
     freebytes(vec, noutlets * sizeof(*vec));
-    if (x->gl_owner && glist_isvisible(x->gl_owner)) {
+    if (x->gl_owner && glist_isvisible(x->gl_owner) && glist_isvisible(x) && !x->gl_owner->gl_loading && !x->gl_loading) {
         canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
 		//fprintf(stderr,"good place to fix redrawing of outlets\n");
 		//fprintf(stderr,"found it\n");
+		//glist_redraw(x);
         graph_vis(&x->gl_gobj, x->gl_owner, 0); 
         graph_vis(&x->gl_gobj, x->gl_owner, 1);
 	}

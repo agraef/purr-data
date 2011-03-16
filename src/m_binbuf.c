@@ -608,9 +608,12 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
+
 	//first we need to check if the list of arguments has $@
+	//fprintf(stderr,"ac=%d\n", ac);
 	int count;
 	for (count = 0; count < ac; count++) {
+		//fprintf(stderr, "count %d\n", count);
 		if (at[count].a_type == A_DOLLAR && at[count].a_w.w_symbol==gensym("@")) {
 			//fprintf(stderr,"yes %d %d %d\n", ac, argc, ac+argc-1);
 			ac = ac + argc;
