@@ -129,53 +129,55 @@ static char** jack_get_clients(void)
     jack_client_names[0] = NULL;
 
     /* Build a list of clients from the list of ports */
-    for( i = 0; jack_ports[i] != NULL; i++ )
-    {
-        int client_seen;
-        regmatch_t match_info;
-        char tmp_client_name[100];
+	if (jack_ports != NULL) {
+		for( i = 0; jack_ports[i] != NULL; i++ )
+		{
+		    int client_seen;
+		    regmatch_t match_info;
+		    char tmp_client_name[100];
 
-        /* extract the client name from the port name, using a regex
-         * that parses the clientname:portname syntax */
-        regexec( &port_regex, jack_ports[i], 1, &match_info, 0 );
-        memcpy( tmp_client_name, &jack_ports[i][match_info.rm_so],
-                match_info.rm_eo - match_info.rm_so );
-        tmp_client_name[ match_info.rm_eo - match_info.rm_so ] = '\0';
+		    /* extract the client name from the port name, using a regex
+		     * that parses the clientname:portname syntax */
+		    regexec( &port_regex, jack_ports[i], 1, &match_info, 0 );
+		    memcpy( tmp_client_name, &jack_ports[i][match_info.rm_so],
+		            match_info.rm_eo - match_info.rm_so );
+		    tmp_client_name[ match_info.rm_eo - match_info.rm_so ] = '\0';
 
-        /* do we know about this port's client yet? */
-        client_seen = 0;
+		    /* do we know about this port's client yet? */
+		    client_seen = 0;
 
-        for( j = 0; j < num_clients; j++ )
-            if( strcmp( tmp_client_name, jack_client_names[j] ) == 0 )
-                client_seen = 1;
+		    for( j = 0; j < num_clients; j++ )
+		        if( strcmp( tmp_client_name, jack_client_names[j] ) == 0 )
+		            client_seen = 1;
 
-        if( client_seen == 0 )
-        {
-            jack_client_names[num_clients] = (char*)getbytes(strlen(tmp_client_name) + 1);
+		    if( client_seen == 0 )
+		    {
+		        jack_client_names[num_clients] = (char*)getbytes(strlen(tmp_client_name) + 1);
 
-            /* The alsa_pcm client should go in spot 0.  If this
-             * is the alsa_pcm client AND we are NOT about to put
-             * it in spot 0 put it in spot 0 and move whatever
-             * was already in spot 0 to the end. */
+		        /* The alsa_pcm client should go in spot 0.  If this
+		         * is the alsa_pcm client AND we are NOT about to put
+		         * it in spot 0 put it in spot 0 and move whatever
+		         * was already in spot 0 to the end. */
 
-            if( strcmp( "system", tmp_client_name ) == 0 && num_clients > 0 )
-            {
-              char* tmp;
-                /* alsa_pcm goes in spot 0 */
-              tmp = jack_client_names[ num_clients ];
-              jack_client_names[ num_clients ] = jack_client_names[0];
-              jack_client_names[0] = tmp;
-              strcpy( jack_client_names[0], tmp_client_name);
-            }
-            else
-            {
-                /* put the new client at the end of the client list */
-                strcpy( jack_client_names[ num_clients ], tmp_client_name );
-            }
-            num_clients++;
+		        if( strcmp( "system", tmp_client_name ) == 0 && num_clients > 0 )
+		        {
+		          char* tmp;
+		            /* alsa_pcm goes in spot 0 */
+		          tmp = jack_client_names[ num_clients ];
+		          jack_client_names[ num_clients ] = jack_client_names[0];
+		          jack_client_names[0] = tmp;
+		          strcpy( jack_client_names[0], tmp_client_name);
+		        }
+		        else
+		        {
+		            /* put the new client at the end of the client list */
+		            strcpy( jack_client_names[ num_clients ], tmp_client_name );
+		        }
+		        num_clients++;
 
-        }
-    }
+		    }
+		}
+	}
 
     /*    for (i=0;i<num_clients;i++) post("client: %s",jack_client_names[i]); */
 
