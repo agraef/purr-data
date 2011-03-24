@@ -707,6 +707,7 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
     }
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
         if (m->me_name == s)
+		//if (m && m->me_name == s)
     {
         wp = m->me_arg;
         if (*wp == A_GIMME)

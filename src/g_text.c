@@ -133,8 +133,9 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     if (pd_class(&x->ob_pd) == voutlet_class)
         canvas_resortoutlets(glist_getcanvas(gl));
     canvas_unsetcurrent((t_canvas *)gl);
-	if ( glist_isvisible( ((t_canvas *)gl) ) )
-		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)gl);
+	if ( glist_isvisible( ((t_canvas *)gl) ) ) {
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist_getcanvas(gl));
+	}
 }
 
 extern int sys_noautopatch;

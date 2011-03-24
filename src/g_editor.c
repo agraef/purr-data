@@ -2588,6 +2588,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             }
             rtext_key(x->gl_editor->e_textedfor,
                 (int)keynum, gotkeysym);
+			canvas_fixlinesfor(x, (t_text *)(x->gl_editor->e_selection->sel_what));
             if (x->gl_editor->e_textdirty)
                 canvas_dirty(x, 1);
         }
@@ -3307,7 +3308,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	if (!canvas_undo_name || canvas_undo_name[0] != 'd') {
 		canvas_redraw(x);
 	}
-    //sys_vgui(".x%lx.c create line 0 0 100 100 -width 3 -fill black -tags tcltastic\n", x); 
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     glist_donewloadbangs(x);
 }
@@ -3471,7 +3471,7 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     if (!(oc = obj_connect(objsrc, outno, objsink, inno))) goto bad;
     if (glist_isvisible(x))
     {
-        sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill %s -tags l%lx\n",
+        sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill %s -tags {l%lx all_cords}\n",
             glist_getcanvas(x), 0, 0, 0, 0,
             (obj_issignaloutlet(objsrc, outno) ? 2 : 1),
             (obj_issignaloutlet(objsrc, outno) ? "$signal_cord" : "$msg_cord"), oc);
