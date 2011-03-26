@@ -669,6 +669,8 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
     int narg = 0;
     t_pd *bonzo;
     
+	//fprinf(stderr,"\nstart %s %d\n", s->s_name, c->c_nmethod);
+
         /* check for messages that are handled by fixed slots in the class
         structure.  We don't catch "pointer" though so that sending "pointer"
         to pd_objectmaker doesn't require that we supply a pointer value. */
@@ -709,6 +711,7 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
         if (m->me_name == s)
 		//if (m && m->me_name == s)
     {
+		//fprintf(stderr,"me_name %s\n", m->me_name);
         wp = m->me_arg;
         if (*wp == A_GIMME)
         {

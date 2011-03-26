@@ -716,7 +716,7 @@ void sys_gui(char *s)
     sys_vgui("%s", s);
 }
 
-static int sys_flushtogui( void)
+int sys_flushtogui( void)
 {
     int writesize = sys_guibufhead - sys_guibuftail, nwrote = 0;
     if (writesize > 0)

@@ -2735,17 +2735,13 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     else glob_quit(0);
 }
 
+void canvas_dofree(t_gobj *dummy, t_glist *x)
+{
+	pd_free(&x->gl_pd);
+}
+
     /* close a window (or possibly quit Pd), checking for dirty flags.
     The "force" parameter is interpreted as follows:
-
-		FOR INTERNAL USE (using it explicitly via pd messages induces
-		a crash because pd_free is called before the previous function
-		has run its course and thus you end up with hard-to-trace crash)
-	   -1 - request from GUI to close, no verification
-			(after it returns back from tcl/tk side of things to avoid
-			freeing before the last method has run its course)
-
-		OFFICIAL USE
         0 - request from GUI to close, verifying whether clean or dirty
         1 - request from GUI to close, no verification
         2 - verified - mark this one clean, then continue as in 1
@@ -2755,9 +2751,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
 {
     int force = fforce;
     t_glist *g;
-	if (force == -1)
-		pd_free(&x->gl_pd);
-    else if (x->gl_owner && (force == 0 || force == 1))
+	if (x->gl_owner && (force == 0 || force == 1))
         canvas_vis(x, 0);   /* if subpatch, just invis it */
     else if (force == 0)    
     {
@@ -2790,12 +2784,17 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
                 canvas_getrootfor(x), canvas_getrootfor(x)->gl_name->s_name, x);
         }
 */
-        else //pd_free(&x->gl_pd);
-			sys_vgui("pd {.x%lx menuclose -1;}\n", x);
+        else pd_free(&x->gl_pd);
+			//sys_queuegui(x, x, canvas_dofree);
+			//clock_delay(x->gl_destroy, 0);
     }
-    else if (force == 1)
+    else if (force == 1) {
         //pd_free(&x->gl_pd);
-		sys_vgui("pd {.x%lx menuclose -1;}\n", x);
+		//sys_vgui("pd {.x%lx menuclose -1;}\n", x);
+		//sys_vgui("menu_close .x%lx\n", x);
+		sys_queuegui(x, x, canvas_dofree);
+		//clock_delay(x->gl_destroy, 0);
+	}
     else if (force == 2)
     {
         canvas_dirty(x, 0);
@@ -2817,8 +2816,10 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
             //         canvas_getrootfor(x), g);
             return;
         }
-        else //pd_free(&x->gl_pd);
-			sys_vgui("pd {.x%lx menuclose -1;}\n", x);
+        else pd_free(&x->gl_pd);
+			//sys_vgui("pd {.x%lx menuclose -1;}\n", x);
+			//sys_queuegui(x, x, canvas_dofree);
+			//clock_delay(x->gl_destroy, 0);
     }
     else if (force == 3)
     {

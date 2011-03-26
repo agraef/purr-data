@@ -351,6 +351,11 @@ void linetraverser_skipobject(t_linetraverser *t)
 /* -------------------- the canvas object -------------------------- */
 int glist_valid = 10000;
 
+//static void canvas_manual_pd_free(t_canvas *x) {
+//	sys_flushtogui();
+//	pd_free(&x->gl_pd);
+//}
+
 void glist_init(t_glist *x)
 {
         /* zero out everyone except "pd" field */
@@ -377,6 +382,12 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     // jsarlo
     x->gl_magic_glass = magicGlass_new((int)x);
     // end jsarlo
+
+	//if we are root canvas set the clock for script based destructor of the window
+	//if (!owner) {
+	//	x->gl_destroy = clock_new(x, (t_method)canvas_manual_pd_free);
+	//}
+
     x->gl_obj.te_type = T_OBJECT;
     if (!owner)
         canvas_addtolist(x);
@@ -808,6 +819,10 @@ void canvas_free(t_canvas *x)
     if (x->gl_magic_glass)
       magicGlass_free(x->gl_magic_glass);
     // end jsarlo
+
+	//delete clock for gl_destroy
+	//if (x->gl_destroy) clock_free(x->gl_destroy);
+
     canvas_noundo(x);
     if (canvas_editing == x)
         canvas_editing = 0;

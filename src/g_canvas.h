@@ -193,6 +193,7 @@ struct _glist
     // jsarlo
     t_magicGlass *gl_magic_glass;   /* magic glass object */
     // end jsarlo
+	//t_clock  *gl_destroy;			/* for script-based closing of the patch */
 };
 
 #define gl_gobj gl_obj.te_g

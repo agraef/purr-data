@@ -851,7 +851,7 @@ proc pdtk_check {canvas x message default} {
     if {! [string compare $answer yes]}  {
 		pd $message
 		if {$canvas eq "."} {
-			focus $canvassegfault due to the way iemgui's implementation of universal color
+			focus $canvas
 		} else {
 			menu_close $canvas
 		}
@@ -1545,6 +1545,7 @@ proc menu_print {name} {
 }
 
 proc menu_close {name} {
+	#puts stderr menu_close
 	if {$name == ".texteditor.text"} { 
 		set topname [string trimright $name .text]
 		texteditor_send $name
@@ -1989,7 +1990,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -xscrollcommand "$name.scrollhort set" \
         -scrollregion [concat 0 0 $width $height]
 
-	pdtk_standardkeybindings $name.c
+	#pdtk_standardkeybindings $name.c
 
 	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
 		if {$::menu($name) == 1} {
