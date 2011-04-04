@@ -118,10 +118,6 @@ void glist_delete(t_glist *x, t_gobj *y)
     if (drawcommand)
         canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
             glist_getcanvas(x)->gl_name)), 2);
-	//if(glist_isvisible(canvas)) {
-	//	gobj_select(y, x, 0);
-	//}
-    gobj_delete(y, x);
     if (glist_isvisible(canvas))
         gobj_vis(y, x, 0);
     if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
@@ -133,6 +129,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         g->g_next = y->g_next;
         break;
     }
+    gobj_delete(y, x);
     pd_free(&y->g_pd);
     if (chkdsp) canvas_update_dsp();
     if (drawcommand)
@@ -140,7 +137,6 @@ void glist_delete(t_glist *x, t_gobj *y)
             glist_getcanvas(x)->gl_name)), 1);
     canvas_setdeleting(canvas, wasdeleting);
     x->gl_valid = ++glist_valid;
-	//canvas_redraw(x);
 }
 
     /* remove every object from a glist.  Experimental. */

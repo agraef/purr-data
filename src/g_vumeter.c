@@ -113,6 +113,8 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 
 	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
 	sprintf(sh->h_pathname, ".x%x.h%x", (int)canvas, (int)sh);
+	t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
+	sprintf(lh->h_pathname, ".x%x.h%x", (int)canvas, (int)lh);
 
 	//if (glist_isvisible(canvas)) {
 
@@ -289,6 +291,8 @@ static void vu_draw_erase(t_vu* x,t_glist* glist)
 	if (x->x_gui.x_fsf.x_selected) {
 		t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
 		sys_vgui("destroy %s\n", sh->h_pathname);
+		t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
+		sys_vgui("destroy %s\n", lh->h_pathname);
 	}
 
 /*
@@ -426,6 +430,7 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
     int i;
     t_canvas *canvas=glist_getcanvas(glist);
 	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+	t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
 
 	if (glist_isvisible(canvas)) {
 
@@ -452,8 +457,8 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 			sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 			sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVU}\n",
-				 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 1 - SCALEHANDLE_WIDTH,
-				 x->x_gui.x_obj.te_ypix + x->x_gui.x_h + 2 - SCALEHANDLE_HEIGHT,
+				 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 1 - SCALEHANDLE_WIDTH - 1,
+				 x->x_gui.x_obj.te_ypix + x->x_gui.x_h + 2 - SCALEHANDLE_HEIGHT - 1,
 				 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
 				 sh->h_pathname, x, x);
 			sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
@@ -463,6 +468,26 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 			sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
 				 sh->h_pathname, sh->h_bindsym->s_name);
 			x->x_gui.scale_vis = 1;
+			if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
+			{
+				if (x->x_gui.label_vis)
+					sys_vgui("destroy %s\n", lh->h_pathname);
+
+				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+					lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxVU}\n",
+					canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
+					x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
+					LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
+					lh->h_pathname, x, x);
+				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+					lh->h_pathname, lh->h_bindsym->s_name);
+				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+					lh->h_pathname, lh->h_bindsym->s_name);
+				sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+					lh->h_pathname, lh->h_bindsym->s_name); 
+				x->x_gui.label_vis = 1;
+			}
 
 			sys_vgui(".x%lx.c addtag selected withtag %lxVU\n", canvas, x);
 		}
@@ -485,6 +510,8 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
 			sys_vgui("destroy %s\n", sh->h_pathname);
 			x->x_gui.scale_vis = 0;
+			sys_vgui("destroy %s\n", lh->h_pathname);
+			x->x_gui.label_vis = 0;
 		}
 	}
 }
@@ -494,11 +521,17 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
 	t_vu *x = (t_vu *)(sh->h_master);
 
-	if (xxx) x->x_gui.scale_offset_x = xxx;
-	if (yyy) x->x_gui.scale_offset_y = yyy;
+ 	if (xxx) {
+ 		x->x_gui.scale_offset_x = xxx;
+ 		x->x_gui.label_offset_x = xxx;
+ 	}
+ 	if (yyy) {
+ 		x->x_gui.scale_offset_y = yyy;
+ 		x->x_gui.label_offset_y = yyy;
+ 	}
 
     int newstate = (int)f;
-    if (sh->h_dragon && newstate == 0)
+    if (sh->h_dragon && newstate == 0  && sh->h_scale)
     {
 		/* done dragging */
 
@@ -539,7 +572,7 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
 		}
     }
-    else if (!sh->h_dragon && newstate)
+    else if (!sh->h_dragon && newstate && sh->h_scale)
     {
 		/* dragging */
 		if (glist_isvisible(x->x_gui.x_glist))
@@ -555,13 +588,60 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 		sh->h_dragx = 0;
 		sh->h_dragy = 0;
     }
+	else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
+    {
+		/* done dragging */
+
+		/* first set up the undo apply */
+		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+
+		if (sh->h_dragx || sh->h_dragy) {
+
+			x->x_gui.x_ldx = x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x;
+			x->x_gui.x_ldy = x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y;
+
+			canvas_dirty(x->x_gui.x_glist, 1);
+		}
+
+		int properties = gfxstub_haveproperties((void *)x);
+
+		if (properties) {
+			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
+			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
+		}
+
+		if (glist_isvisible(x->x_gui.x_glist))
+		{
+			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+			vu_draw_move(x, x->x_gui.x_glist);
+			sys_vgui("destroy %s\n", sh->h_pathname);
+			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+		}
+    }
+    else if (!sh->h_dragon && newstate && !sh->h_scale)
+    {
+		/* dragging */
+		if (glist_isvisible(x->x_gui.x_glist)) {
+			sys_vgui("lower %s\n", sh->h_pathname);
+			t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
+			sys_vgui("lower .x%x.h%x\n", (int)glist_getcanvas(x->x_gui.x_glist), (int)othersh);
+		}
+
+		sh->h_dragx = 0;
+		sh->h_dragy = 0;
+    }
+
     sh->h_dragon = newstate;
 }
 
 static void vu__motionhook(t_scalehandle *sh,
 				    t_floatarg f1, t_floatarg f2)
 {
-    if (sh->h_dragon)
+    if (sh->h_dragon && sh->h_scale)
     {
 		t_vu *x = (t_vu *)(sh->h_master);
 		int dx = (int)f1, dy = (int)f2;
@@ -596,6 +676,37 @@ static void vu__motionhook(t_scalehandle *sh,
 			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, new_w);
 			sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
 			sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, new_h);
+		}
+    }
+	if (sh->h_dragon && !sh->h_scale)
+    {
+		t_bng *x = (t_bng *)(sh->h_master);
+		int dx = (int)f1, dy = (int)f2;
+		int newx, newy;
+		newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w - x->x_gui.scale_offset_x + dx;
+		newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h - x->x_gui.scale_offset_y + dy;
+
+		sh->h_dragx = dx;
+		sh->h_dragy = dy;
+
+		int properties = gfxstub_haveproperties((void *)x);
+
+		if (properties) {
+			int new_x = x->x_gui.x_ldx - x->x_gui.label_offset_x + sh->h_dragx;
+			int new_y = x->x_gui.x_ldy - x->x_gui.label_offset_y + sh->h_dragy;
+			sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n", properties, new_x);
+			sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n", properties, new_y);
+		}
+
+		if (glist_isvisible(x->x_gui.x_glist)) {
+			int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+    		int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+    		t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
+			sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+ 		    	canvas, x, xpos+x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x,
+ 		    	ypos+x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y);
 		}
     }
 }
@@ -933,9 +1044,25 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
     sprintf(sh->h_outlinetag, "h%x", (int)sh);
     sh->h_dragon = 0;
+	sh->h_scale = 1;
 	x->x_gui.scale_offset_x = 0;
 	x->x_gui.scale_offset_y = 0;
 	x->x_gui.scale_vis = 0;
+
+	/* label handle init */
+	t_scalehandle *lh;
+	char lhbuf[64];
+	x->x_gui.x_lhandle = pd_new(scalehandle_class);
+	lh = (t_scalehandle *)x->x_gui.x_lhandle;
+	lh->h_master = (t_gobj*)x;
+	sprintf(lhbuf, "_h%x", (int)lh);
+	pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
+	sprintf(lh->h_outlinetag, "h%x", (int)lh);
+	lh->h_dragon = 0;
+	lh->h_scale = 0;
+	x->x_gui.label_offset_x = 0;
+	x->x_gui.label_offset_y = 0;
+	x->x_gui.label_vis = 0;
 
     return (x);
 }
@@ -952,6 +1079,13 @@ static void vu_free(t_vu *x)
 		pd_unbind(x->x_gui.x_handle, ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
 		pd_free(x->x_gui.x_handle);
     }
+
+	/* label handle deconstructor */
+	if (x->x_gui.x_lhandle)
+	{
+		pd_unbind(x->x_gui.x_lhandle, ((t_scalehandle *)x->x_gui.x_lhandle)->h_bindsym);
+		pd_free(x->x_gui.x_lhandle);
+	}
 }
 
 void g_vumeter_setup(void)

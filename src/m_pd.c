@@ -6,6 +6,9 @@
 #include "m_pd.h"
 #include "m_imp.h"
 
+#include "g_canvas.h"
+#include <stdio.h>
+
     /* FIXME no out-of-memory testing yet! */
 
 t_pd *pd_new(t_class *c)
@@ -13,6 +16,67 @@ t_pd *pd_new(t_class *c)
     t_pd *x;
     if (!c) 
         bug ("pd_new: apparently called before setup routine");
+
+	/* 	here we make sure we do not create objects at the same memory address as before
+		to avoid double-entry bug that is invoked when this happens. why? no idea...
+		tcl/tk definitely sends only one command via socket, yet it is activated multiple
+		times inside c code. perhaps class_addmethod is never cleaned out (although this
+		makes no sense either as we use calloc which should zero everything out, yet even
+		that is not entirely guarranteed)
+
+		we do this by comparing the newly allocated address with preexisting list of
+		canvases that were created in the past.
+
+		if a duplicate is triggered, we deallocate memory and reallocate it assigning 
+		a random additional amount of memory and then resize allocation to the original
+		size
+
+		duplicate: -1 initial state
+					0 all is ok
+					1 found a duplicate
+	*/
+
+	int duplicate = -1;
+	int random_extra = 0;
+
+	while (duplicate != 0) {
+
+		if (duplicate == -1) {
+			//fprintf(stderr,"alloc %d %d\n", duplicate, (int)c->c_size);
+			x = (t_pd *)t_getbytes(c->c_size);
+		} else if (duplicate == 1) {
+			random_extra = rand () + 1;
+			//fprintf(stderr,"alloc %d %d %d\n", duplicate, (int)c->c_size, (int)c->c_size + random_extra);
+			x = (t_pd *)t_getbytes(c->c_size + random_extra);
+		}
+		duplicate = 0;
+
+		if (rm_start) {
+			t_redundant_mem *tmp = rm_start;
+			while (tmp->rm_next) {
+				if ((int)tmp->rm_canvas == (int)x) {
+					duplicate = 1;
+					break;
+				}
+				tmp = tmp->rm_next;
+			}
+			if (tmp && (int)tmp->rm_canvas == (int)x)
+				duplicate = 1;
+		}
+		//fprintf(stderr,"done alloc %d\n", duplicate);
+		if (duplicate == 1) {
+			//fprintf(stderr,"duplicate\n");
+			if (!random_extra)
+				t_freebytes(x, sizeof(c->c_size));
+			else
+				t_freebytes(x, sizeof(c->c_size+random_extra));
+		}
+
+		if (!duplicate && random_extra) {
+			x = (t_pd *)t_resizebytes(x, c->c_size+random_extra, c->c_size);
+		}
+	}
+
     x = (t_pd *)t_getbytes(c->c_size);
     *x = c;
     if (c->c_patchable)

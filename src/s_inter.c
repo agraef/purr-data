@@ -1313,6 +1313,24 @@ void sys_bail(int n)
 
 void glob_quit(void *dummy)
 {
+	/* deallocate rendundant memory (see g_canvas.c canvas_new and g_canvas.h for struct declaration */
+	if (rm_start) {
+		while (rm_start->rm_next) {
+			t_redundant_mem *tmp = rm_start;
+			rm_start = rm_start->rm_next;
+			/* 	we can also explicitly look for deallocating per-canvas settings here, if such proves necessary 
+				to do so, look at rm_start->rm_canvas
+			*/
+			//fprintf(stderr,".x%lx\n", tmp->rm_canvas);
+			t_freebytes(tmp,  sizeof(*tmp));
+			//fprintf(stderr,"dealloc\n");
+		}
+		if (rm_start) {
+			t_freebytes(rm_start,  sizeof(*rm_start));
+			//fprintf(stderr,"last dealloc\n");
+		}
+	}
+
     sys_vgui("exit\n");
     if (!sys_nogui)
     {

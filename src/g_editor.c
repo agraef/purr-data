@@ -2313,23 +2313,24 @@ static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
                 x->gl_editor->e_ywas, xpos, ypos);
 }
 
+/*
 static void canvas_mouseup_gop(t_canvas *x, t_gobj *g) {
 
-	/* simulate clearing and recreating object */
+	//simulate clearing and recreating object
 	gobj_activate(g, x, 1);
 	t_object *ob = pd_checkobject(&g->g_pd);
 	t_rtext *yyyy = glist_findrtext(x, (t_text *)&ob->ob_g);
-	/* copy current text */
+	//copy current text
     char *buf;
     int bufsize;
     rtext_gettext(yyyy, &buf, &bufsize);
 	//fprintf(stderr, ">%s<\n", buf);
 	rtext_key(yyyy, 127, NULL);
 
-	/* recreate object with no args */
+	//recreate object with no args
 	glist_deselect(x, g);
 
-	/* object was recreated, so now it is latest in the queue */
+	//object was recreated, so now it is latest in the queue
 	t_gobj *z = x->gl_list;
 
 	while (z->g_next) {
@@ -2341,7 +2342,7 @@ static void canvas_mouseup_gop(t_canvas *x, t_gobj *g) {
 	ob = pd_checkobject(&g->g_pd);
 	yyyy = glist_findrtext(x, (t_text *)&ob->ob_g);
 
-	/* redo the old text */
+	//redo the old text
 	int i;
 	for (i = 0; i < bufsize; i++) {
 		rtext_key(yyyy, (int)buf[i], NULL);
@@ -2349,6 +2350,7 @@ static void canvas_mouseup_gop(t_canvas *x, t_gobj *g) {
 	gobj_activate(z, x, 1);
 	x->gl_editor->e_textdirty = 1;
 }
+*/
 
 void canvas_mouseup(t_canvas *x,
     t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich)
@@ -2397,21 +2399,23 @@ void canvas_mouseup(t_canvas *x,
             }
             /* OK, activate it */
 
-			/* but before we do, check if this is GOP and adjust accordingly */
+			/*
+			// but before we do, check if this is GOP and adjust accordingly
 			//fprintf(stderr,"activate...");
 			if (pd_class(&g->g_pd) == canvas_class && 
 				((t_glist *)g)->gl_isgraph &&
 				canvas_isabstraction((t_glist *)g))
 			{
 				//fprintf(stderr,"gop...");
-				/* if mouse has not moved AND this object does not have its text hidden (otherwise we only translate the selection) */
+				// if mouse has not moved AND this object does not have its text hidden (otherwise we only translate the selection)
 				if (!(((t_glist *)g)->gl_hidetext) && !x->gl_editor->e_lastmoved) {
 					//fprintf(stderr,"yes\n");
 					canvas_mouseup_gop(x, x->gl_editor->e_selection->sel_what);
 				}
 				//else fprintf(stderr,"no\n");
 			}
-			/* else if it is a regular object */
+			// else if it is a regular object
+			*/
 			else {
 				//fprintf(stderr,"reg_obj\n");
 				gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
@@ -3029,11 +3033,11 @@ static t_binbuf *canvas_docopy(t_canvas *x)
     t_linetraverser t;
     t_outconnect *oc;
     t_binbuf *b = binbuf_new();
-	int c = 0;
+	//int c = 0;
     for (y = x->gl_list; y; y = y->g_next)
     {
         if (glist_isselected(x, y)) {
-			c++;
+			//c++;
 			//fprintf(stderr, "saving object num %d\n", c);
 			//fprintf(stderr, "saving object >.x%lx<\n", (t_int)y);
 			/* introduce redundant comment to avoid recreation of old abstractions
@@ -3042,28 +3046,28 @@ static t_binbuf *canvas_docopy(t_canvas *x)
 			   is yet another bug in tcl/tk which means that canvas tries to do some
 			   kind of caching behind the curtains resulting in objects not always
 			   having unique ids, contrary to tcl/tk's canvas man page */
-			if (c==1) {
+			/*if (c==1) {
             	binbuf_addv(b, "ssiis;", gensym("#X"), gensym("text"),
                 (int)((t_text *)y)->te_xpix-30, (int)((t_text *)y)->te_ypix-30, gensym("tcltksucks"));
-			}
+			}*/
             gobj_save(y, b);
 		}
     }
 	//fprintf(stderr,"done saving objects\n");
     linetraverser_start(&t, x);
-	c = 0;
+	//c = 0;
     while (oc = linetraverser_next(&t))
     {
         if (glist_isselected(x, &t.tr_ob->ob_g)
             && glist_isselected(x, &t.tr_ob2->ob_g))
         {
 			//fprintf(stderr, "lines need to be copied\n");
-			c = 1;
+			//c = 1;
             binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
-//                glist_selectionindex(x, &t.tr_ob->ob_g, 1), t.tr_outno,
-//                glist_selectionindex(x, &t.tr_ob2->ob_g, 1), t.tr_inno);
-                glist_selectionindex(x, &t.tr_ob->ob_g, 1)+1, t.tr_outno,
-                glist_selectionindex(x, &t.tr_ob2->ob_g, 1)+1, t.tr_inno);
+                glist_selectionindex(x, &t.tr_ob->ob_g, 1), t.tr_outno,
+                glist_selectionindex(x, &t.tr_ob2->ob_g, 1), t.tr_inno);
+//                glist_selectionindex(x, &t.tr_ob->ob_g, 1)+1, t.tr_outno,
+//                glist_selectionindex(x, &t.tr_ob2->ob_g, 1)+1, t.tr_inno);
         }
     }
 	//if (!c) fprintf(stderr, "no lines copied\n");
@@ -3188,7 +3192,8 @@ static void canvas_doclear(t_canvas *x)
     }
 restore:
     canvas_dirty(x, 1);
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+	canvas_redraw(x);
+	//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     canvas_resume_dsp(dspstate);
 }
 
@@ -3294,11 +3299,11 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
 	/* select newly created objects */
     for (g2 = x->gl_list, count = 0; g2; g2 = g2->g_next, count++)
-        if (count == nbox) {
-			/* delete bogus object we created in canvas_docopy in order to circumvent tcl/tk's failure
-			   to provide "unique" id to every new instance of an object */
+        /*if (count == nbox) {
+			// delete bogus object we created in canvas_docopy in order to circumvent tcl/tk's failure
+			//   to provide "unique" id to every new instance of an object
             glist_delete(x, g2);
-		} else if (count > nbox) {
+		} else*/ if (count >= nbox) {
             glist_select(x, g2);
 			//fprintf(stderr,"object=.x%lx glist_getcanvas(x)=.x%lx\n", (t_int)g2, (t_int)glist_getcanvas((t_glist*)g2) );
 		}

@@ -124,6 +124,9 @@
 #define SCALEHANDLE_WIDTH   5
 #define SCALEHANDLE_HEIGHT  5
 
+#define LABELHANDLE_WIDTH	5
+#define LABELHANDLE_HEIGHT	5
+
 typedef struct _iem_fstyle_flags
 {
     unsigned int x_font_style:6;
@@ -166,6 +169,7 @@ typedef struct _scalehandle
     t_pd       h_pd;
     t_gobj    *h_master;
     t_symbol  *h_bindsym;
+	int		   h_scale;
     char       h_pathname[64];
     char       h_outlinetag[64];
     int        h_dragon;
@@ -204,6 +208,10 @@ typedef struct _iemgui
 	int 			   scale_offset_x;
 	int				   scale_offset_y;
 	int				   scale_vis;
+	t_pd			   *x_lhandle;
+	int				   label_offset_x;
+	int				   label_offset_y;
+	int				   label_vis;
 } t_iemgui;
 
 typedef struct _iemguidummy

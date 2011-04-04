@@ -3079,9 +3079,17 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 
 	#puts stderr $name
 
-	if {$name == "." || [string match .printout* $name] || [string match .controls* $name] || [string match .gfxstub* $name]  || [string match .help_browser* $name]} {
-		set ignore 1	
+	if {[string match *.c $name] || [info exists $name.c]} {
+		set ignore 0
+	} else {
+		set ignore 1
 	}
+
+	#puts stderr "$name $ignore"
+
+	#if {$name == "." || [string match .printout* $name] || [string match .controls* $name] || [string match .gfxstub* $name]  || [string match .help_browser* $name]} {
+	#	set ignore 1	
+	#}
 
 	if {!$ignore} {
 		if {$key == "1"} {menu_object $topname 1}

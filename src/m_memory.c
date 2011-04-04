@@ -17,15 +17,20 @@
 static int totalmem = 0;
 #endif
 
+static int memoffset = 0;
+
 void *getbytes(size_t nbytes)
 {
     void *ret;
+
     if (nbytes < 1) nbytes = 1;
     ret = (void *)calloc(nbytes, 1);
+
 #ifdef LOUD
     fprintf(stderr, "new  %lx %d\n", (int)ret, nbytes);
 #endif /* LOUD */
 #ifdef DEBUGMEM
+	
     totalmem += nbytes;
 #endif
     if (!ret)

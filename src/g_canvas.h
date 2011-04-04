@@ -40,6 +40,20 @@ in future releases.  The public (stable) API is in m_pd.h. */
 extern "C" {
 #endif
 
+/* 	redundant struct queue for maintaining a list of redundantly
+	allocated memory chunks to avoid double-entry bug. these are
+	instantiated inside canvas_new since the bug only affects new
+	canvases/abstractions rather than individual objects. the queue
+	is destructed in m_glob.c quit call (when pd exits) */
+typedef struct _redundant_mem
+{
+    int rm_what;
+	t_canvas *rm_canvas;
+    struct _redundant_mem *rm_next;
+} t_redundant_mem;
+
+t_redundant_mem *rm_start;
+t_redundant_mem *rm_end;
     
 /* --------------------- geometry ---------------------------- */
 #define IOWIDTH 7       /* width of an inlet/outlet in pixels */

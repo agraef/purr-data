@@ -367,11 +367,39 @@ void glist_init(t_glist *x)
 }
 
     /* make a new glist.  It will either be a "root" canvas or else
-    it appears as a "text" object in another window (canvas_getcurrnet() 
+    it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
 t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 {
+	/*	first alloc one byte or redundant memory to prevent creation of objects with the same "name"
+		which leads to double-action invoked from every single action and eventually possible crashes
+
+		we keep a list of these redundant allocations and destroy them when pd quits */
+	//if (x->gl_owner && x->gl_env) {
+		t_redundant_mem *new_rm = (t_redundant_mem *)t_getbytes(sizeof(*new_rm));
+		new_rm->rm_what = (int)getbytes(1);
+		if (rm_start == NULL) {
+			//fprintf(stderr,"first allocation\n");
+			rm_start = new_rm;
+			rm_end = new_rm;
+		}
+		else if (rm_start == rm_end) {
+			//fprintf(stderr,"second allocation\n");
+			rm_end = new_rm;
+			rm_start->rm_next = rm_end;
+		}
+		else {
+			//fprintf(stderr,"allocation\n");
+			rm_end->rm_next = new_rm;
+			rm_end = new_rm;
+		}
+	//}
+
     t_canvas *x = (t_canvas *)pd_new(canvas_class);
+
+	/* now that we've created a new canvas, add canvas info to the new_rm */
+	new_rm->rm_canvas = x;
+
     t_canvas *owner = canvas_getcurrent();
     t_symbol *s = &s_;
     int vis = 0, width = GLIST_DEFCANVASWIDTH, height = GLIST_DEFCANVASHEIGHT;
@@ -463,6 +491,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_edit = !strncmp(x->gl_name->s_name, "Untitled", 8);
     x->gl_font = sys_nearestfontsize(font);
     pd_pushsym(&x->gl_pd);
+
     return(x);
 }
 
