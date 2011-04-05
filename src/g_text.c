@@ -89,6 +89,7 @@ void canvas_getargs(int *argcp, t_atom **argvp);
 static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     t_binbuf *b)
 {
+	//fprintf(stderr,"objtext\n");
     t_text *x;
     int argc;
     t_atom *argv;
@@ -1749,6 +1750,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
         else  /* normally, just destroy the old one and make a new one. */
         {
             int xwas = x->te_xpix, ywas = x->te_ypix;
+			canvas_eraselinesfor(glist, x);
             glist_delete(glist, &x->te_g);
             canvas_objtext(glist, xwas, ywas, 0, b);
                 /* if it's an abstraction loadbang it here */

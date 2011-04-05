@@ -479,6 +479,7 @@ EXTERN t_symbol *canvas_makebindsym(t_symbol *s);
 EXTERN void canvas_vistext(t_canvas *x, t_text *y);
 EXTERN void canvas_fixlinesfor(t_canvas *x, t_text *text);
 EXTERN void canvas_deletelinesfor(t_canvas *x, t_text *text);
+EXTERN void canvas_eraselinesfor(t_canvas *x, t_text *text);
 EXTERN void canvas_stowconnections(t_canvas *x);
 EXTERN void canvas_restoreconnections(t_canvas *x);
 EXTERN void canvas_redraw(t_canvas *x);

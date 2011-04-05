@@ -413,7 +413,7 @@ void magicGlass_free(t_magicGlass *x)
 void magicGlass_setup(void)
 {
     magicGlass_class = class_new(gensym("magicGlass"),
-                                 (t_newmethod)magicGlass_new,
+                                 0,
                                  (t_method)magicGlass_free,
                                  sizeof(t_magicGlass),
                                  0,

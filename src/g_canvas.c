@@ -934,6 +934,27 @@ void canvas_deletelinesfor(t_canvas *x, t_text *text)
     }
 }
 
+    /* 	delete all lines for the object 
+		for efficient redrawing of connections */
+void canvas_eraselinesfor(t_canvas *x, t_text *text)
+{
+    t_linetraverser t;
+    t_outconnect *oc;
+    linetraverser_start(&t, x);
+    while (oc = linetraverser_next(&t))
+    {
+        if (t.tr_ob == text || t.tr_ob2 == text)
+        {
+            if (x->gl_editor)
+            {
+                sys_vgui(".x%lx.c delete l%lx\n",
+                    glist_getcanvas(x), oc);
+            }
+        }
+    }
+}
+
+
     /* kill all lines for one inlet or outlet */
 void canvas_deletelinesforio(t_canvas *x, t_text *text,
     t_inlet *inp, t_outlet *outp)
