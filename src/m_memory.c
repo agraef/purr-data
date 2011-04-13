@@ -82,6 +82,7 @@ void freebytes(void *fatso, size_t nbytes)
     totalmem -= nbytes;
 #endif
     free(fatso);
+	fatso = NULL;
 }
 
 #ifdef DEBUGMEM

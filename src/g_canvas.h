@@ -45,6 +45,8 @@ extern "C" {
 	instantiated inside canvas_new since the bug only affects new
 	canvases/abstractions rather than individual objects. the queue
 	is destructed in m_glob.c quit call (when pd exits) */
+
+/*
 typedef struct _redundant_mem
 {
     int rm_what;
@@ -54,7 +56,8 @@ typedef struct _redundant_mem
 
 t_redundant_mem *rm_start;
 t_redundant_mem *rm_end;
-    
+*/ 
+  
 /* --------------------- geometry ---------------------------- */
 #define IOWIDTH 7       /* width of an inlet/outlet in pixels */
 #define IOMIDDLE ((IOWIDTH-1)/2)

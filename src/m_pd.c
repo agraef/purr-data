@@ -36,7 +36,8 @@ t_pd *pd_new(t_class *c)
 					1 found a duplicate
 	*/
 
-	int duplicate = -1;
+/*
+	int duplicate = 0; //change to -1 to enable redundant_mem resizing
 	int random_extra = 0;
 
 	while (duplicate != 0) {
@@ -76,6 +77,7 @@ t_pd *pd_new(t_class *c)
 			x = (t_pd *)t_resizebytes(x, c->c_size+random_extra, c->c_size);
 		}
 	}
+*/
 
     x = (t_pd *)t_getbytes(c->c_size);
     *x = c;
@@ -101,6 +103,7 @@ void pd_free(t_pd *x)
             binbuf_free(((t_object *)x)->ob_binbuf);
     }
     if (c->c_size) t_freebytes(x, c->c_size);
+	x = NULL;
 }
 
 void gobj_save(t_gobj *x, t_binbuf *b)

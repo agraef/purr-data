@@ -971,6 +971,18 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
         if (thistype == TR_SYMBOL) {
 			if (strlen(ap->a_w.w_symbol->s_name) == 1)
 				c = ap->a_w.w_symbol->s_name[0];
+			else if (strcmp(ap->a_w.w_symbol->s_name, "anything") == 0)
+				c = 'a';
+			else if (strcmp(ap->a_w.w_symbol->s_name, "bang") == 0)
+				c = 'b';
+			else if (strcmp(ap->a_w.w_symbol->s_name, "float") == 0)
+				c = 'f';
+			else if (strcmp(ap->a_w.w_symbol->s_name, "list") == 0)
+				c = 'l';
+			else if (strcmp(ap->a_w.w_symbol->s_name, "pointer") == 0)
+				c = 'p';			
+			else if (strcmp(ap->a_w.w_symbol->s_name, "symbol") == 0)
+				c = 's';
 			else c = 'S';
 		}
         else if (thistype == TR_FLOAT)
@@ -1059,7 +1071,7 @@ static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
 		{
 			outlet_symbol(u->u_outlet, &u->u_sym);
 		}
-        else pd_error(x, "trigger: can only convert 's' to 'b' or 'a'");
+        else pd_error(x, "trigger: can only convert 'a' to 'b' or 'a'");
     }
 }
 

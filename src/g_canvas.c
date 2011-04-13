@@ -376,6 +376,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 
 		we keep a list of these redundant allocations and destroy them when pd quits */
 	//if (x->gl_owner && x->gl_env) {
+/*
 		t_redundant_mem *new_rm = (t_redundant_mem *)t_getbytes(sizeof(*new_rm));
 		new_rm->rm_what = (int)getbytes(1);
 		if (rm_start == NULL) {
@@ -393,12 +394,13 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 			rm_end->rm_next = new_rm;
 			rm_end = new_rm;
 		}
+*/
 	//}
 
     t_canvas *x = (t_canvas *)pd_new(canvas_class);
 
 	/* now that we've created a new canvas, add canvas info to the new_rm */
-	new_rm->rm_canvas = x;
+	//new_rm->rm_canvas = x;
 
     t_canvas *owner = canvas_getcurrent();
     t_symbol *s = &s_;
