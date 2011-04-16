@@ -3275,18 +3275,38 @@ static void canvas_paste_atmouse(t_canvas *x)
 }
 
 extern void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
+extern void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
+    int *indexp, int *totalp);
 
 static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
 	//fprintf(stderr,"start dopaste\n");
+
     t_gobj *newgobj, *last, *g2;
     int dspstate = canvas_suspend_dsp(), nbox, count;
 
+	//autopatching variables
+	int connectme, xpix, ypix, indx, nobj;
+	connectme = 0;
+
     canvas_editmode(x, 1.);
+	/*	abolish potential displacing of object that may have been
+		created with the first new object on canvas, but now we are
+		pasting and therefore MA_MOVE should not apply to new objects
+	*/
+	x->gl_editor->e_onmotion = MA_NONE;
+
+	//if we have something selected in another canvas
 	if (c_selection && c_selection != x)
 		glist_noselect(c_selection);
-	else
-    	glist_noselect(x);
+	//else is we are not duplicating but pasting see if we can autopatch
+	else if (canvas_undo_name[0] != 'd') {
+		canvas_howputnew(x, &connectme, &xpix, &ypix, &indx, &nobj);
+    	//glist_noselect(x);
+	}
+	//else we are duplicating
+	else glist_noselect(x);
+
     for (g2 = x->gl_list, nbox = 0; g2; g2 = g2->g_next) nbox++;
     
 	/* found the end of the queue */
@@ -3310,6 +3330,23 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
     paste_canvas = 0;
     canvas_resume_dsp(dspstate);
+
+	//if we are pasting only one object autoposition it below our selection
+	if (count == nbox+1 && connectme) {
+    	canvas_connect(x, indx, 0, nobj, 0);
+
+		//is this universally safe? I think so
+		t_text *z = (t_text *)x->gl_editor->e_selection->sel_what;
+		z->te_xpix = xpix;
+		z->te_ypix = ypix;
+
+		//this would be an alternative way but how would we then figure out delta?
+		//canvas_displaceselection(x, xpix, ypix);
+	}
+	else if (canvas_undo_name[0] != 'd') {
+		canvas_paste_atmouse(x);
+	}
+
     canvas_dirty(x, 1);
 	if (!canvas_undo_name || canvas_undo_name[0] != 'd') {
 		canvas_redraw(x);
@@ -3344,7 +3381,6 @@ static void canvas_paste(t_canvas *x)
             "paste");
         canvas_dopaste(x, copy_binbuf);
         //canvas_paste_xyoffset(x);
-		canvas_paste_atmouse(x);
     }
 }
 

@@ -142,7 +142,7 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
 extern int sys_noautopatch;
     /* utility routine to figure out where to put a new text box from menu
     and whether to connect to it automatically */
-static void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
+void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     int *indexp, int *totalp)
 {
     int xpix, ypix, indx = 0, nobj = 0, n2, x1, x2, y1, y2;
