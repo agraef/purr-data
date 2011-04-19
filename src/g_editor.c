@@ -1776,6 +1776,12 @@ static int canvas_upx, canvas_upy;
 void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int mod, int doit)
 {
+	/* here we make global array_garray pointer defined in g_canvas.h
+	   point back to nothing--we use this pointer to pass information
+	   to array_motion so that we can update corresponding send when
+	   the array has been changed */
+	array_garray = NULL;
+
     t_gobj *y;
     int shiftmod, runmode, altmod, doublemod = 0, rightclick;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;

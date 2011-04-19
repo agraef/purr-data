@@ -150,6 +150,9 @@ typedef struct _arrayvis
     t_garray *av_garray;            /* owning structure */    
 } t_arrayvis;
 
+t_garray* array_garray;				/* used for sending bangs when
+									   array is changed  via gui */
+
 /* the t_tick structure describes where to draw x and y "ticks" for a glist */
 
 typedef struct _tick    /* where to put ticks on x or y axes */

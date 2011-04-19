@@ -593,6 +593,7 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     /* call glist_addglist from a Pd message */
 void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
 {
+	pd_vmess(&g->gl_pd, gensym("editmode"), "i", 1);
     t_symbol *sym = atom_getsymbolarg(0, argc, argv);
 	/* if we wish to put a graph where the mouse is we need to replace bogus name */
 	if (!strcmp(sym->s_name, "NULL")) sym = &s_;  

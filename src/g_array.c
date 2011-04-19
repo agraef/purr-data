@@ -350,6 +350,7 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *templateargsym,
 void canvas_menuarray(t_glist *canvas)
 {
     t_glist *x = (t_glist *)canvas;
+	pd_vmess(&x->gl_pd, gensym("editmode"), "i", 1);
     char cmdbuf[200];
     sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx\n", gcount+1, (long unsigned int)canvas);
     gfxstub_new(&x->gl_pd, x, cmdbuf);
@@ -652,7 +653,6 @@ static t_float array_motion_xperpix;
 static t_float array_motion_yperpix;
 static int array_motion_lastx;
 static int array_motion_fatten;
-static t_garray* array_garray;
 
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
@@ -662,7 +662,9 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
     array_motion_xcumulative += dx * array_motion_xperpix;
     array_motion_ycumulative += dy * array_motion_yperpix;
 
-	t_glist *graph = array_garray->x_glist;
+	// used to set up boundaries and update sends accordingly
+	t_glist *graph = NULL;
+	if (array_garray != NULL) graph = array_garray->x_glist;
 
     if (array_motion_xfield)
     {
@@ -712,13 +714,15 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
                     (t_word *)(((char *)array_motion_wp) +
                         array_motion_elemsize * array_motion_lastx),
                             1);
-		if (graph->gl_y1 > graph->gl_y2) {
-			if (newy > graph->gl_y1) newy = graph->gl_y1;
-			if (newy < graph->gl_y2) newy = graph->gl_y2;
-		}
-		else {
-			if (newy < graph->gl_y1) newy = graph->gl_y1;
-			if (newy > graph->gl_y2) newy = graph->gl_y2;
+		if (graph) {
+			if (graph->gl_y1 > graph->gl_y2) {
+				if (newy > graph->gl_y1) newy = graph->gl_y1;
+				if (newy < graph->gl_y2) newy = graph->gl_y2;
+			}
+			else {
+				if (newy < graph->gl_y1) newy = graph->gl_y1;
+				if (newy > graph->gl_y2) newy = graph->gl_y2;
+			}
 		}
 		//fprintf(stderr, "y = %f\n", newy);
         t_float ydiff = newy - oldy;
@@ -747,7 +751,7 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
         array_redraw(array_motion_array, array_motion_glist);
 
 	/* send a bang to the associated send to reflect the change via mouse click/drag */
-	if (array_garray->x_send->s_thing) pd_bang(array_garray->x_send->s_thing);
+	if (graph && array_garray->x_send->s_thing) pd_bang(array_garray->x_send->s_thing);
 }
 
 int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
