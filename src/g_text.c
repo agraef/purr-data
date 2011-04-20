@@ -146,8 +146,16 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     int *indexp, int *totalp)
 {
     int xpix, ypix, indx = 0, nobj = 0, n2, x1, x2, y1, y2;
-    int connectme = (x->gl_editor->e_selection &&
-        !x->gl_editor->e_selection->sel_next && !sys_noautopatch);
+	int connectme = 0;
+	t_gobj *selected;
+
+	if (x->gl_editor->e_selection &&
+        !x->gl_editor->e_selection->sel_next &&
+		!sys_noautopatch) {
+			selected = x->gl_editor->e_selection->sel_what;
+			t_object *ob = pd_checkobject(&selected->g_pd);
+    		connectme = (obj_noutlets(ob) ? 1 : 0);
+	}
     if (connectme)
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;

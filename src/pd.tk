@@ -3046,8 +3046,8 @@ proc pdtk_canvas_sendkey {name state key iso shift} {
 	pd [canvastosym $name] key $state $key $shift \;
 }
 
-# only do actions if this is a canvas. if so
-# if so, invoke edit menu option (whcih will work
+# only do actions if this is a canvas.
+# if so, invoke edit menu option (which will work
 # only if the actual option is currently enabled)
 proc pdtk_canvas_edit_menu_actions {name action} {
 	# pdtk_post "edit_menu_actions $name $action\n"

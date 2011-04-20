@@ -610,7 +610,7 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     int nargs, maxnargs = 0;
 
 	//first we need to check if the list of arguments has $@
-	//fprintf(stderr,"ac=%d\n", ac);
+	//fprintf(stderr,"binbuf=%d target=%d argc=%d argv=%d ac=%d\n", (int)x, (int)target, (int)ac, argc, (int)argv);
 	int count;
 	for (count = 0; count < ac; count++) {
 		//fprintf(stderr, "count %d\n", count);

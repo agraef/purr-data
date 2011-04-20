@@ -987,6 +987,12 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     {
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
+		/*char tag[80];
+		sprintf(tag, "%s", rtext_gettag(glist_findrtext((x->gl_owner ? x->gl_owner: x), &x->gl_obj)));
+        sys_vgui(".x%lx.c move %s %d %d\n",
+            glist_getcanvas(x->gl_owner), tag, dx, dy);
+        sys_vgui(".x%lx.c move %sR %d %d\n",
+            glist_getcanvas(x->gl_owner), tag, dx, dy);*/
         glist_redraw(x);
 		gobj_select(z, glist, 1);
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);

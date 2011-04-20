@@ -458,6 +458,7 @@ void canvas_noundo(t_canvas *x)
 
 static void canvas_undo(t_canvas *x)
 {
+	//fprintf(stderr,"canvas_undo\n");
     if (x != canvas_undo_canvas)
         bug("canvas_undo 1");
     else if (canvas_undo_whatnext != UNDO_UNDO)
@@ -635,10 +636,12 @@ static void *canvas_undo_set_cut(t_canvas *x, int mode)
 
 static void canvas_undo_cut(t_canvas *x, void *z, int action)
 {
+	//fprintf(stderr, "canvas_undo_cut canvas=%d buf=%d action=%d\n", (int)x, (int)z, action);
     t_undo_cut *buf = z;
     int mode = buf->u_mode;
     if (action == UNDO_UNDO)
     {
+		//fprintf(stderr,"UNDO_UNDO\n");
         if (mode == UCUT_CUT) {
 			//fprintf(stderr, "UCUT_CUT\n");
             canvas_dopaste(x, copy_binbuf);
@@ -673,6 +676,7 @@ static void canvas_undo_cut(t_canvas *x, void *z, int action)
     }
     else if (action == UNDO_REDO)
     {
+		//fprintf(stderr,"UNDO_REDO\n");
         if (mode == UCUT_CUT || mode == UCUT_CLEAR)
             canvas_doclear(x);
         else if (mode == UCUT_TEXT)
@@ -690,6 +694,7 @@ static void canvas_undo_cut(t_canvas *x, void *z, int action)
     }
     else if (action == UNDO_FREE)
     {
+		//fprintf(stderr,"UNDO_FREE\n");
         if (buf->u_objectbuf)
             binbuf_free(buf->u_objectbuf);
         if (buf->u_reconnectbuf)
@@ -3247,12 +3252,14 @@ static void glist_donewloadbangs(t_glist *x)
 
 static void canvas_paste_xyoffset(t_canvas *x)
 {
-    //t_selection *sel;
-    //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-        //gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
-	canvas_displaceselection(x, 10, 10);
-    //paste_xyoffset++;
-	//fprintf(stderr,"xyoffset %d\n",paste_xyoffset);
+    t_selection *sel;
+    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+        gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
+	// alternative one-line implementation that
+	// replaces the entire function
+	//canvas_displaceselection(x, 10, 10);
+
+    //paste_xyoffset++; //a part of original way
 }
 
 static void canvas_paste_atmouse(t_canvas *x)
@@ -3305,8 +3312,8 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	//if we have something selected in another canvas
 	if (c_selection && c_selection != x)
 		glist_noselect(c_selection);
-	//else is we are not duplicating but pasting see if we can autopatch
-	else if (canvas_undo_name[0] != 'd') {
+	//else is we are pasting see if we can autopatch
+	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste")) {
 		canvas_howputnew(x, &connectme, &xpix, &ypix, &indx, &nobj);
     	//glist_noselect(x);
 	}
@@ -3325,14 +3332,8 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
 	/* select newly created objects */
     for (g2 = x->gl_list, count = 0; g2; g2 = g2->g_next, count++)
-        /*if (count == nbox) {
-			// delete bogus object we created in canvas_docopy in order to circumvent tcl/tk's failure
-			//   to provide "unique" id to every new instance of an object
-            glist_delete(x, g2);
-		} else*/ if (count >= nbox) {
+		if (count >= nbox)
             glist_select(x, g2);
-			//fprintf(stderr,"object=.x%lx glist_getcanvas(x)=.x%lx\n", (t_int)g2, (t_int)glist_getcanvas((t_glist*)g2) );
-		}
 
     paste_canvas = 0;
     canvas_resume_dsp(dspstate);
@@ -3343,20 +3344,28 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
 		//is this universally safe? I think so
 		t_text *z = (t_text *)x->gl_editor->e_selection->sel_what;
-		z->te_xpix = xpix;
-		z->te_ypix = ypix;
+		//fprintf(stderr,"%d %d %d %d\n", z->te_xpix, z->te_ypix, xpix, ypix);
 
-		//this would be an alternative way but how would we then figure out delta?
-		//canvas_displaceselection(x, xpix, ypix);
+		//calculate delta (since displace is always relative)
+		int delta_x = xpix - z->te_xpix;
+		int delta_y = ypix - z->te_ypix;
+
+		//now displace it but without undo
+		//(by spoofing canvas_undo_already_set_move)
+		canvas_undo_already_set_move = 1;
+ 		canvas_displaceselection(x, delta_x, delta_y);
+		//reset canvas_undo_already_set_move
+		canvas_undo_already_set_move = 0;
 	}
-	else if (canvas_undo_name[0] != 'd') {
+	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") ) {
 		canvas_paste_atmouse(x);
+		//fprintf(stderr,"doing a paste\n");
 	}
 
     canvas_dirty(x, 1);
-	if (!canvas_undo_name || canvas_undo_name[0] != 'd') {
+	/*if (!canvas_undo_name || canvas_undo_name[0] != 'd') {
 		canvas_redraw(x);
-	}
+	}*/
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     glist_donewloadbangs(x);
 }
