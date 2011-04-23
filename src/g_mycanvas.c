@@ -111,16 +111,21 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
+	/*
 	char color[64];
 	if (x->x_gui.x_fsf.x_selected)
 		sprintf(color, "$select_color");
 	else
 		sprintf(color, "#%6.6x", x->x_gui.x_bcol);
+	*/
 
     sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -outline #%6.6x\n", canvas, x,
              x->x_gui.x_bcol, x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline %s\n", canvas, x,
-             color);
+	if (x->x_gui.x_fsf.x_selected)
+    	sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+	else
+    	sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x,
+             x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 			 x->x_gui.x_lcol,

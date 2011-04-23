@@ -179,22 +179,40 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
+	/*
 	char color[64];
 	if (x->x_gui.x_fsf.x_selected)
 		sprintf(color, "$select_color");
 	else
 		sprintf(color, "#%6.6x", x->x_gui.x_lcol); 
 
+
     sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill %s -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
              color,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x,
-             x->x_gui.x_bcol);
+	*/
+	if (x->x_gui.x_fsf.x_selected) {
+    	sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n",
+             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+	}
+	else {
+    	sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
+             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+			 x->x_gui.x_lcol,
+             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+	}
+    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n .x%lx.c itemconfigure %lxX1 -fill #%6.6x\n .x%lx.c itemconfigure %lxX2 -fill #%6.6x\n", canvas, x,
+             x->x_gui.x_bcol , canvas, x,
+             x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol, canvas, x,
+             x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
+	/*
     sys_vgui(".x%lx.c itemconfigure %lxX1 -fill #%6.6x\n", canvas, x,
              x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxX2 -fill #%6.6x\n", canvas, x,
              x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
+	*/
 }
 
 void toggle_draw_io(t_toggle* x, t_glist* glist, int old_snd_rcv_flags)
@@ -282,7 +300,7 @@ void toggle_draw_select(t_toggle* x, t_glist* glist)
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
 					lh->h_pathname, lh->h_bindsym->s_name);
 				sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-					lh->h_pathname, lh->h_bindsym->s_name); 
+					lh->h_pathname, lh->h_bindsym->s_name);
 				x->x_gui.label_vis = 1;
 			}
 

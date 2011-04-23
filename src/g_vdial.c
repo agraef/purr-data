@@ -195,23 +195,32 @@ void vradio_draw_config(t_vradio* x, t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
 
+	/*
 	char color[64];
 	if (x->x_gui.x_fsf.x_selected)
 		sprintf(color, "$select_color");
 	else
 		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
+	*/
 
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill %s -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight, 
-             color,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+	if (x->x_gui.x_fsf.x_selected)
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n",
+		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+	else
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
+				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight, 
+				 x->x_gui.x_lcol,
+				 strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
     for(i=0; i<n; i++)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -fill #%6.6x\n", canvas, x, i,
-                 x->x_gui.x_bcol);
-        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n", canvas, x, i,
+        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -fill #%6.6x\n .x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n", 
+				 canvas, x, i, x->x_gui.x_bcol, canvas, x, i,
                  (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
                  (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);
+        /*sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n", canvas, x, i,
+                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
+                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);*/
     }
 }
 

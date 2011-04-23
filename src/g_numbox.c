@@ -335,6 +335,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
+	/*
 	char color[64];
 	char lcolor[64];
 	if (x->x_gui.x_fsf.x_selected) {
@@ -345,18 +346,35 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 		sprintf(color, "#%6.6x", x->x_gui.x_fcol);
 		sprintf(lcolor, "#%6.6x", x->x_gui.x_lcol);
 	}
+	*/
 
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill %s -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             lcolor,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill %s \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             color);
+	if (x->x_gui.x_fsf.x_selected) {
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
+		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+				 canvas,x);
+		/*
+		sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill $select_color \n",
+		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight);
+		sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $select_color\n", canvas,
+		         x);
+		*/
+	}
+	else {
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
+		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+		         x->x_gui.x_lcol, strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+		         x->x_gui.x_fcol, canvas, x, x->x_gui.x_fcol);
+		/*sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill #%6.6x \n",
+		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+		         x->x_gui.x_fcol);
+		sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n", canvas,
+		         x, x->x_gui.x_fcol);*/
+	}
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x\n", canvas,
              x, x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill %s\n", canvas,
-             x, color);
 }
 
 static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_flags)

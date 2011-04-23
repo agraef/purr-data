@@ -173,19 +173,28 @@ void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
+	/*
 	char color[64];
 	if (x->x_gui.x_fsf.x_selected)
 		sprintf(color, "$select_color");
 	else
 		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
+	*/
 
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill %s -text {%s} \n",
+	if (x->x_gui.x_fsf.x_selected)
+	    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             color,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
+	else
+	    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
+             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+             x->x_gui.x_lcol,
+             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n .x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
+			 canvas, x, x->x_gui.x_bcol, canvas, x,
              x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
+    /*sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
+             x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);*/
 }
 
 void bng_draw_io(t_bng* x, t_glist* glist, int old_snd_rcv_flags)
