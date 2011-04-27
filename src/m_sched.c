@@ -284,13 +284,13 @@ static void sched_pollformeters( void)
     }
 #endif
 
-    if (sched_diddsp - sched_nextmeterpolltime < 0)
-        return;
     if (sched_diored && (sched_diddsp - sched_dioredtime > 0))
     {
         sys_vgui("pdtk_pd_dio 0\n");
         sched_diored = 0;
     }
+    if (sched_diddsp - sched_nextmeterpolltime < 0)
+        return;
     if (sched_meterson)
     {
         t_sample inmax, outmax;
