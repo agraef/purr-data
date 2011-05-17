@@ -318,6 +318,9 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 	}
 }
 
+void hslider_check_minmax(t_hslider *x, double min, double max);
+void hslider_check_width(t_hslider *x, int w);
+
 static void hslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
 {
 
@@ -360,6 +363,9 @@ static void hslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, 
 			sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
 			sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
 		}
+
+	    hslider_check_width(x, x->x_gui.x_w);
+	    hslider_check_minmax(x, x->x_min, x->x_max);
 
 		if (glist_isvisible(x->x_gui.x_glist))
 		{

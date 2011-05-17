@@ -309,6 +309,9 @@ static void vslider_draw_select(t_vslider *x, t_glist *glist)
 	}
 }
 
+void vslider_check_minmax(t_vslider *x, double min, double max);
+void vslider_check_height(t_vslider *x, int w);
+
 static void vslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
 {
 
@@ -342,6 +345,9 @@ static void vslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, 
 
 			canvas_dirty(x->x_gui.x_glist, 1);
 		}
+
+	    vslider_check_height(x, x->x_gui.x_h);
+	    vslider_check_minmax(x, x->x_min, x->x_max);
 
 		int properties = gfxstub_haveproperties((void *)x);
 

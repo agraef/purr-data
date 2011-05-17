@@ -183,6 +183,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
             else if (!g->g_next)
                 indx = nobj-1;
         }
+		x->gl_editor->e_onmotion = MA_NONE;
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     }
     else
