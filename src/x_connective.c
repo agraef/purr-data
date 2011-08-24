@@ -776,7 +776,10 @@ static void pack_symbol(t_pack *x, t_symbol *s)
 
 static void pack_list(t_pack *x, t_symbol *s, int ac, t_atom *av)
 {
-    obj_list(&x->x_obj, 0, ac, av);
+	if (ac==0)
+		pack_bang(x);
+	else
+	    obj_list(&x->x_obj, 0, ac, av);
 }
 
 static void pack_anything(t_pack *x, t_symbol *s, int ac, t_atom *av)
