@@ -55,10 +55,10 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
     int w=1, xx=text_xpix(&x->x_gui.x_obj, glist), yy=text_ypix(&x->x_gui.x_obj, glist);
 
 	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
-	sprintf(sh->h_pathname, ".x%x.h%x", (int)canvas, (int)sh);
+	sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)sh);
 
 	t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
-	sprintf(lh->h_pathname, ".x%x.h%x", (int)canvas, (int)lh);
+	sprintf(lh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)lh);
 
 	//if (glist_isvisible(canvas)) {
 
@@ -432,7 +432,7 @@ static void toggle__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t
 		if (glist_isvisible(x->x_gui.x_glist)) {
 			sys_vgui("lower %s\n", sh->h_pathname);
 			t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
-			sys_vgui("lower .x%x.h%x\n", (int)glist_getcanvas(x->x_gui.x_glist), (int)othersh);
+			sys_vgui("lower .x%lx.h%lx\n", (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
 		}
 
 		sh->h_dragx = 0;
@@ -796,9 +796,9 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_handle = pd_new(scalehandle_class);
     sh = (t_scalehandle *)x->x_gui.x_handle;
     sh->h_master = (t_gobj*)x;
-    sprintf(buf, "_h%x", (int)sh);
+    sprintf(buf, "_h%lx", (t_int)sh);
     pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
-    sprintf(sh->h_outlinetag, "h%x", (int)sh);
+    sprintf(sh->h_outlinetag, "h%lx", (t_int)sh);
     sh->h_dragon = 0;
 	sh->h_scale = 1;
 	x->x_gui.scale_offset_x = 0;
@@ -811,9 +811,9 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_gui.x_lhandle = pd_new(scalehandle_class);
 	lh = (t_scalehandle *)x->x_gui.x_lhandle;
 	lh->h_master = (t_gobj*)x;
-	sprintf(lhbuf, "_h%x", (int)lh);
+	sprintf(lhbuf, "_h%lx", (t_int)lh);
 	pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
-	sprintf(lh->h_outlinetag, "h%x", (int)lh);
+	sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
 	lh->h_dragon = 0;
 	lh->h_scale = 0;
 	x->x_gui.label_offset_x = 0;

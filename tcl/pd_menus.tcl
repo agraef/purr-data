@@ -171,10 +171,11 @@ proc ::pd_menus::build_edit_menu {mymenu mytoplevel} {
     $mymenu add command -label [_ "Clear Console"] -accelerator "Shift+$accelerator+L" \
         -command {menu_clear_console}
     $mymenu add  separator
-    #TODO madness! how to do set the state of the check box without invoking the menu!
-    $mymenu add check -label [_ "Edit Mode"] -accelerator "$accelerator+E" \
-        -selectcolor grey85 \
-        -command {pdsend "$::focused_window editmode 0"}
+        #TODO madness! how to set the state of the check box without invoking the menu!
+	# $mymenu add check -label [_ "Edit Mode"] -accelerator "$accelerator+E" \
+        #-selectcolor grey85 -variable ::editmode_button 
+	-command {menu_editmode $::editmode_button}
+#	-command {pdsend "$::focused_window editmode 0"}
     #if { ! [catch {console hide}]} { 
     # TODO set up menu item to show/hide the Tcl/Tk console, if it available
     #}

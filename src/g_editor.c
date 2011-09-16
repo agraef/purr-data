@@ -7,9 +7,9 @@
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
+#include "g_magicglass.h"
 #include "g_canvas.h"
 #include <string.h>
-#include "g_magicglass.h"
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename,
     int selectem);
@@ -38,6 +38,7 @@ static int paste_xyoffset = 0; /* a counter of pastes to make x,y offsets */
 static void canvas_mouseup_gop(t_canvas *x, t_gobj *g);
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float ypos);
 static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *oldy_prev, t_gobj *oldy_next);
+static void canvas_paste_xyoffset(t_canvas *x);
 
 // jsarlo
 static char canvas_cnct_inlet_tag[4096];
@@ -823,8 +824,9 @@ static void canvas_undo_paste(t_canvas *x, void *z, int action)
         canvas_dopaste(x, copy_binbuf);
             /* if it was "duplicate" have to re-enact the displacement. */
         if (canvas_undo_name && canvas_undo_name[0] == 'd')
-            for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-                gobj_displace(sel->sel_what, x, 10, 10);
+            //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+            //    gobj_displace(sel->sel_what, x, 10, 10);
+			canvas_paste_xyoffset(x);
     }
 else if (action == UNDO_FREE)
         t_freebytes(buf, sizeof(*buf));
@@ -1150,7 +1152,7 @@ void canvas_setcursor(t_canvas *x, unsigned int cursornum)
     static unsigned int cursorwas;
     if (cursornum >= sizeof(cursorlist)/sizeof *cursorlist)
     {
-        bug("canvas_setcursor");
+	bug("canvas_setcursor");
         return;
     }
     if (xwas != x || cursorwas != cursornum)
@@ -1452,7 +1454,9 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
             x->gl_pixheight = GLIST_DEFGRAPHHEIGHT;
 
         if (x->gl_owner && !x->gl_loading && glist_isvisible(x->gl_owner))
+		{
             gobj_vis(&x->gl_gobj, x->gl_owner, 0);
+		}
         x->gl_isgraph = 1;
         x->gl_hidetext = !(!(flag&2));
         if (!nogoprect && !x->gl_goprect)
@@ -1460,8 +1464,9 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 			/* Ivica Ico Bukvic 5/16/10 <ico@bukvic.net> */
 			x->gl_goprect = 1;
         }
-        if (glist_isvisible(x) && x->gl_goprect)
+        if (glist_isvisible(x) && x->gl_goprect) {
             glist_redraw(x);
+		}
         if (x->gl_owner && !x->gl_loading && glist_isvisible(x->gl_owner))
         {
             gobj_vis(&x->gl_gobj, x->gl_owner, 1);
@@ -3253,8 +3258,20 @@ static void glist_donewloadbangs(t_glist *x)
 static void canvas_paste_xyoffset(t_canvas *x)
 {
     t_selection *sel;
-    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+	t_class *cl;
+    int resortin = 0;
+    int resortout = 0;
+
+    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
         gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
+		cl = pd_class(&sel->sel_what->g_pd);
+        if (cl == vinlet_class) resortin = 1;
+        if (cl == voutlet_class) resortout = 1;
+	}
+
+    if (resortin) canvas_resortinlets(x);
+    if (resortout) canvas_resortoutlets(x);
+
 	// alternative one-line implementation that
 	// replaces the entire function
 	//canvas_displaceselection(x, 10, 10);
@@ -3680,7 +3697,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 	}
     x->gl_edit = !x->gl_edit;
     if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x))
-        canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+	 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
     else
     {
         glist_noselect(x);

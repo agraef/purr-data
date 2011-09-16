@@ -105,8 +105,8 @@ g_canvas.o: g_canvas.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h m_pd.h \
- m_imp.h s_stuff.h g_canvas.h /usr/include/string.h \
- /usr/include/xlocale.h g_all_guis.h g_magicglass.h
+ m_imp.h s_stuff.h g_magicglass.h g_canvas.h /usr/include/string.h \
+ /usr/include/xlocale.h g_all_guis.h
 g_graph.o: g_graph.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
@@ -264,8 +264,8 @@ g_editor.o: g_editor.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h m_pd.h \
- m_imp.h s_stuff.h g_canvas.h /usr/include/string.h \
- /usr/include/xlocale.h g_magicglass.h
+ m_imp.h s_stuff.h g_magicglass.h g_canvas.h /usr/include/string.h \
+ /usr/include/xlocale.h
 g_all_guis.o: g_all_guis.c config.h /usr/include/stdlib.h \
  /usr/include/features.h /usr/include/bits/predefs.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
@@ -493,7 +493,8 @@ g_magicglass.o: g_magicglass.c m_pd.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h /usr/include/xlocale.h m_imp.h s_stuff.h
+ /usr/include/string.h /usr/include/xlocale.h m_imp.h s_stuff.h \
+ g_magicglass.h
 m_pd.o: m_pd.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \

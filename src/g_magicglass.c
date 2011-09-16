@@ -4,6 +4,8 @@
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
+#include "g_magicglass.h"
+
 #define MG_CLOCK_CLEAR_DELAY 500.5
 #define MG_CLOCK_FLASH_DELAY 50
 #define MG_SAMPLE_COUNT 2205
@@ -11,29 +13,6 @@
 EXTERN int glist_getfont(t_glist *x);
 
 t_class *magicGlass_class;
-
-typedef struct _magicGlass
-{
-    t_object x_obj;
-    t_object *x_connectedObj;
-    int x_connectedOutno;
-    int x_visible;
-    char x_string[4096];
-    char x_old_string[4096];
-    int x_x;
-    int x_y;
-    int x_c;
-    float x_sigF;
-    int x_dspOn;
-    int x_viewOn;
-    float x_maxSample;
-    int x_sampleCount;
-    t_clock *x_clearClock;
-	t_clock *x_flashClock;
-	unsigned int x_maxSize;
-	unsigned int x_issignal;
-	int x_display_font;
-} t_magicGlass;
 
 void magicGlass_clearText(t_magicGlass *x);
 
@@ -80,12 +59,12 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 	//fprintf(stderr,"magicglass_updateText\n");
     int bgSize;
 	/* change second argument (10.0) to provide optimal scaling in the following entry */
-	float font = (float)(sys_hostfontsize(glist_getfont((t_glist *)(x->x_c))))/10.0;
+	float font = (float)(sys_hostfontsize(glist_getfont(x->x_c)))/10.0;
 	if (font <= 1.0) {
 		x->x_display_font = 9;
 		font = 1.0;
 	} else {
-		x->x_display_font = sys_hostfontsize(glist_getfont((t_glist *)(x->x_c)));
+		x->x_display_font = sys_hostfontsize(glist_getfont(x->x_c));
 	}
 
     if (x->x_visible)
@@ -262,7 +241,7 @@ void magicGlass_list(t_magicGlass *x, t_symbol *sym, int argc, t_atom *argv)
     clock_delay(x->x_clearClock, MG_CLOCK_CLEAR_DELAY);
 }
 
-void magicGlass_setCanvas(t_magicGlass *x, int c)
+void magicGlass_setCanvas(t_magicGlass *x, t_glist *c)
 {
     x->x_c = c;
 }
@@ -382,7 +361,7 @@ void magicGlass_dsp(t_magicGlass *x, t_signal **sp)
 	x->x_issignal = 1;
 }
 
-void *magicGlass_new(int c)
+void *magicGlass_new(t_glist *c)
 {
 	//fprintf(stderr,"magicglass_new\n");
     t_magicGlass *x = (t_magicGlass *)pd_new(magicGlass_class);

@@ -10,34 +10,10 @@ to be different but are now unified except for some fossilized names.) */
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
+#include "g_magicglass.h"
 #include "g_canvas.h"
 #include <string.h>
 #include "g_all_guis.h"
-#include "g_magicglass.h"
-
-// jsarlo
-typedef struct _magicGlass
-{
-    t_object x_obj;
-    t_object *x_connectedObj;
-    int x_connectedOutno;
-    int x_visible;
-    char x_string[4096];
-    char x_old_string[4096];
-    int x_x;
-    int x_y;
-    int x_c;
-    float x_sigF;
-    int x_dspOn;
-    int x_viewOn;
-    float x_maxSample;
-    int x_sampleCount;
-    t_clock *x_clearClock;
-	t_clock *x_flashClock;
-	unsigned int x_maxSize;
-	unsigned int x_issignal;
-};
-// end jsarlo
 
     /* LATER consider adding font size to this struct (see glist_getfont()) */
 struct _canvasenvironment
@@ -410,7 +386,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 
     glist_init(x);
     // jsarlo
-    x->gl_magic_glass = magicGlass_new((int)x);
+    x->gl_magic_glass = magicGlass_new(x);
     // end jsarlo
 
 	//if we are root canvas set the clock for script based destructor of the window
