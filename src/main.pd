@@ -1,7 +1,0 @@
-#N canvas 718 319 450 300 10;
-#X floatatom 152 85 5 0 0 0 - - -;
-#N canvas 473 357 450 300 something 0;
-#X floatatom 126 128 5 0 0 0 - - -;
-#X coords 0 -1 1 1 85 60 1 100 100;
-#X restore 232 145 pd something;
-#X obj 235 244;
