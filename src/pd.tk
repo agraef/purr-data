@@ -2821,18 +2821,18 @@ proc pdtk_canvas_mouseup {name x y b} {
             [$name canvasy $y] $b \;]
 }
 
-proc pdtk_canvas_getscroll_ping {name} {
-	set wname [string trimright $name .c]
-	if {![winfo exists $wname]} {
-		set ::update_tick($wname) 0
-		return
-	}
-	if {$::update_tick($wname) == 2} {
-		set ::update_tick($wname) 3		
-		pdtk_canvas_getscroll $name
-	}
-	after 40 [list pdtk_canvas_getscroll_ping $name]
-}
+#proc pdtk_canvas_getscroll_ping {name} {
+#	set wname [string trimright $name .c]
+#	if {![winfo exists $wname]} {
+#		set ::update_tick($wname) 0
+#		return
+#	}
+#	if {$::update_tick($wname) == 2} {
+#		set ::update_tick($wname) 3		
+#		pdtk_canvas_getscroll $name
+#	}
+#	after 40 [list pdtk_canvas_getscroll_ping $name]
+#}
 
 proc pdtk_canvas_getscroll {name} {
 	global pd_nt
@@ -2846,19 +2846,19 @@ proc pdtk_canvas_getscroll {name} {
     if {! [winfo exists $name]} {return}
 
 	# waiting for refresh
-	if {$::update_tick([winfo parent $name]) == 2} {return}
+	# if {$::update_tick([winfo parent $name]) == 2} {return}
 
 	# init
-	if {$::update_tick([winfo parent $name]) == 0} {
-		set ::update_tick([winfo parent $name]) 1
-		pdtk_canvas_getscroll_ping $name		
-	}
+	# if {$::update_tick([winfo parent $name]) == 0} {
+	# 	set ::update_tick([winfo parent $name]) 1
+	#	pdtk_canvas_getscroll_ping $name		
+	# }
 
 	# update
-	if {$::update_tick([winfo parent $name]) == 1} {
-		set ::update_tick([winfo parent $name]) 2
-		return
-	}
+	# if {$::update_tick([winfo parent $name]) == 1} {
+	#	set ::update_tick([winfo parent $name]) 2
+	#	return
+	#}
 
 	#debug
 	#catch { $name delete debug }
@@ -4789,6 +4789,8 @@ proc canvas_checkcommand {id} {
 proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
                              xpix ypix xmargin ymargin} {
     set vid [string trimleft $id .]
+
+    #puts stderr $id
 
     set var_canvas_xscale [concat canvas_xscale_$vid]
     global $var_canvas_xscale

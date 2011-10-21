@@ -668,7 +668,7 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
 	lh->h_master = (t_gobj*)x;
 	sprintf(lhbuf, "_h%lx", (t_int)lh);
 	pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
-	sprintf(lh->h_outlinetag, "h%tx", (t_int)lh);
+	sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
 	lh->h_dragon = 0;
 	lh->h_scale = 0;
 	x->x_gui.label_offset_x = 0;

@@ -10,10 +10,34 @@ to be different but are now unified except for some fossilized names.) */
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
-#include "g_magicglass.h"
 #include "g_canvas.h"
 #include <string.h>
 #include "g_all_guis.h"
+#include "g_magicglass.h"
+
+// jsarlo
+typedef struct _magicGlass
+{
+    t_object x_obj;
+    t_object *x_connectedObj;
+    int x_connectedOutno;
+    int x_visible;
+    char x_string[4096];
+    char x_old_string[4096];
+    int x_x;
+    int x_y;
+    int x_c;
+    float x_sigF;
+    int x_dspOn;
+    int x_viewOn;
+    float x_maxSample;
+    int x_sampleCount;
+    t_clock *x_clearClock;
+	t_clock *x_flashClock;
+	unsigned int x_maxSize;
+	unsigned int x_issignal;
+};
+// end jsarlo
 
     /* LATER consider adding font size to this struct (see glist_getfont()) */
 struct _canvasenvironment
@@ -386,7 +410,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 
     glist_init(x);
     // jsarlo
-    x->gl_magic_glass = magicGlass_new(x);
+    x->gl_magic_glass = magicGlass_new((int)x);
     // end jsarlo
 
 	//if we are root canvas set the clock for script based destructor of the window
@@ -477,9 +501,6 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect);
 
 static void canvas_coords(t_glist *x, t_symbol *s, int argc, t_atom *argv)
 {
-	//IB: first delete the graph in case we are downsizing the object size via script
-	canvas_setgraph(x, 0, 0);
-
     x->gl_x1 = atom_getfloatarg(0, argc, argv);
     x->gl_y1 = atom_getfloatarg(1, argc, argv);
     x->gl_x2 = atom_getfloatarg(2, argc, argv);
@@ -717,8 +738,6 @@ void canvas_map(t_canvas *x, t_floatarg f)
                 bug("canvas_map");
                 canvas_vis(x, 1);
             }
-			else if (x->gl_mapped == 0)
-				canvas_vis(x, 1);
 
 			/* 	if parent has editor enabled and we're a sub-patch,
 				(but not an abstraction) match its edit mode to that
@@ -743,9 +762,8 @@ void canvas_map(t_canvas *x, t_floatarg f)
 
             for (y = x->gl_list; y; y = y->g_next)
                 gobj_vis(y, x, 1);
-			if (x->gl_editor && x->gl_editor->e_selection)
-            	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-                	gobj_select(sel->sel_what, x, 1);
+            for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                gobj_select(sel->sel_what, x, 1);
             x->gl_mapped = 1;
             canvas_drawlines(x);
             if (x->gl_isgraph && x->gl_goprect)
@@ -767,7 +785,6 @@ void canvas_map(t_canvas *x, t_floatarg f)
 
 void canvas_redraw(t_canvas *x)
 {
-	//fprintf(stderr,"canvas_redraw\n");
     if (glist_isvisible(x))
     {
         canvas_map(x, 0);
@@ -775,9 +792,8 @@ void canvas_redraw(t_canvas *x)
 		
 		/* now re-highlight our selection */
 	    t_selection *y;
-		if (x->gl_editor && x->gl_editor->e_selection)
-	    	for (y = x->gl_editor->e_selection; y; y = y->sel_next)		
-				gobj_select(y->sel_what, x, 1);
+    	for (y = x->gl_editor->e_selection; y; y = y->sel_next)		
+			gobj_select(y->sel_what, x, 1);
     }
 }
 

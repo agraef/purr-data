@@ -39,6 +39,7 @@ static void canvas_mouseup_gop(t_canvas *x, t_gobj *g);
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float ypos);
 static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *oldy_prev, t_gobj *oldy_next);
 static void canvas_paste_xyoffset(t_canvas *x);
+void canvas_setgraph(t_glist *x, int flag, int nogoprect);
 
 // jsarlo
 static char canvas_cnct_inlet_tag[4096];
@@ -1112,7 +1113,7 @@ static void canvas_undo_arrange(t_canvas *x, void *z, int action)
 
 		t_gobj *oldy_prev=NULL, *oldy_next=NULL;
 
-		// if there is an object before ours (in other words our index is > 0
+		// if there is an object before ours (in other words our index is > 0)
 		if (glist_getindex(x,y))
 			oldy_prev = glist_nth(x, buf->u_previndex - 1);
 			
@@ -1133,6 +1134,188 @@ void canvas_arrange_setundo(t_canvas *x, t_gobj *obj, int newindex)
 	canvas_setundo(x, canvas_undo_arrange, canvas_undo_set_arrange(x, obj, newindex), "arrange");
 }
 
+/* --------- 7. apply on canvas ----------- */
+
+typedef struct _undo_canvas_properties      
+{
+    int gl_pixwidth;            /* width in pixels (on parent, if a graph) */
+    int gl_pixheight;
+    t_float gl_x1;                /* bounding rectangle in our own coordinates */
+    t_float gl_y1;
+    t_float gl_x2;
+    t_float gl_y2;
+    int gl_screenx1;            /* screen coordinates when toplevel */
+    int gl_screeny1;
+    int gl_screenx2;
+    int gl_screeny2;
+    int gl_xmargin;                /* origin for GOP rectangle */
+    int gl_ymargin;
+
+    unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
+    unsigned int gl_isgraph:1;      /* show as graph on parent */
+    unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
+} t_undo_canvas_properties;
+
+t_undo_canvas_properties *global_buf; /* we need this to avoid redundant undo creation when pressing apply and then ok in the canvas properties menu */
+
+static void *canvas_undo_set_canvas(t_canvas *x)
+{
+    //t_undo_canvas_properties *buf;
+
+	/* enable editor (in case it is disabled) and select the object we are working on */
+	if (!x->gl_edit)
+		canvas_editmode(x, 1);
+
+    if (global_buf == NULL) {
+		global_buf = (t_undo_canvas_properties *)getbytes(sizeof(*global_buf));
+		//fprintf(stderr,"creating a new buffer for canvas properties\n");
+	}
+
+	/*if (
+		global_buf->gl_pixwidth != x->gl_pixwidth ||
+		global_buf->gl_pixheight != x->gl_pixheight ||
+		global_buf->gl_x1 != x->gl_x1 ||
+		global_buf->gl_y1 != x->gl_y1 ||
+		global_buf->gl_x2 != x->gl_x2 ||
+		global_buf->gl_y2 != x->gl_y2 ||
+		global_buf->gl_screenx1 != x->gl_screenx1 ||
+		global_buf->gl_screeny1 != x->gl_screeny1 ||
+		global_buf->gl_screenx2 != x->gl_screenx2 ||
+		global_buf->gl_screeny2 != x->gl_screeny2 ||
+		global_buf->gl_xmargin != x->gl_xmargin ||
+		global_buf->gl_ymargin != x->gl_ymargin ||
+		global_buf->gl_goprect != x->gl_goprect ||
+		global_buf->gl_isgraph != x->gl_isgraph ||
+		global_buf->gl_hidetext != x->gl_hidetext)
+	{*/
+		//fprintf(stderr,"changing values\n");
+		global_buf->gl_pixwidth = x->gl_pixwidth;
+		global_buf->gl_pixheight = x->gl_pixheight;
+		global_buf->gl_x1 = x->gl_x1;
+		global_buf->gl_y1 = x->gl_y1;
+		global_buf->gl_x2 = x->gl_x2;
+		global_buf->gl_y2 = x->gl_y2;
+		global_buf->gl_screenx1 = x->gl_screenx1;
+		global_buf->gl_screeny1 = x->gl_screeny1;
+		global_buf->gl_screenx2 = x->gl_screenx2;
+		global_buf->gl_screeny2 = x->gl_screeny2;
+		global_buf->gl_xmargin = x->gl_xmargin;
+		global_buf->gl_ymargin = x->gl_ymargin;
+		global_buf->gl_goprect = x->gl_goprect;
+		global_buf->gl_isgraph = x->gl_isgraph;
+		global_buf->gl_hidetext = x->gl_hidetext;
+	//}
+	
+    return (global_buf);
+}
+
+extern int gfxstub_haveproperties(void *key);
+
+static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
+{
+    t_undo_canvas_properties *buf = z;
+    t_undo_canvas_properties *tmp;
+
+	if (!x->gl_edit)
+		canvas_editmode(x, 1);
+
+	if (action == UNDO_UNDO || action == UNDO_REDO)
+	{
+		//close properties window first
+		t_int properties = gfxstub_haveproperties((void *)x);
+		if (properties) {
+			//fprintf(stderr,"have it\n");
+			sys_vgui("destroy .gfxstub%lx\n", properties);
+		}
+
+		//create a temporary data holder
+		tmp = (t_undo_canvas_properties *)getbytes(sizeof(*tmp));
+
+		//store current canvas values into temporary data holder
+		tmp->gl_pixwidth = x->gl_pixwidth;
+		tmp->gl_pixheight = x->gl_pixheight;
+		tmp->gl_x1 = x->gl_x1;
+		tmp->gl_y1 = x->gl_y1;
+		tmp->gl_x2 = x->gl_x2;
+		tmp->gl_y2 = x->gl_y2;
+		tmp->gl_screenx1 = x->gl_screenx1;
+		tmp->gl_screeny1 = x->gl_screeny1;
+		tmp->gl_screenx2 = x->gl_screenx2;
+		tmp->gl_screeny2 = x->gl_screeny2;
+		tmp->gl_xmargin = x->gl_xmargin;
+		tmp->gl_ymargin = x->gl_ymargin;
+		tmp->gl_goprect = x->gl_goprect;
+		tmp->gl_isgraph = x->gl_isgraph;
+		tmp->gl_hidetext = x->gl_hidetext;
+
+		//change canvas values with the ones from the undo buffer
+		x->gl_pixwidth = buf->gl_pixwidth;
+		x->gl_pixheight = buf->gl_pixheight;
+		x->gl_x1 = buf->gl_x1;
+		x->gl_y1 = buf->gl_y1;
+		x->gl_x2 = buf->gl_x2;
+		x->gl_y2 = buf->gl_y2;
+		x->gl_screenx1 = buf->gl_screenx1;
+		x->gl_screeny1 = buf->gl_screeny1;
+		x->gl_screenx2 = buf->gl_screenx2;
+		x->gl_screeny2 = buf->gl_screeny2;
+		x->gl_xmargin = buf->gl_xmargin;
+		x->gl_ymargin = buf->gl_ymargin;
+		x->gl_goprect = buf->gl_goprect;
+		x->gl_isgraph = buf->gl_isgraph;
+		x->gl_hidetext = buf->gl_hidetext;
+
+		//copy data values from the temporary data to the undo buffer
+		buf->gl_pixwidth = tmp->gl_pixwidth;
+		buf->gl_pixheight = tmp->gl_pixheight;
+		buf->gl_x1 = tmp->gl_x1;
+		buf->gl_y1 = tmp->gl_y1;
+		buf->gl_x2 = tmp->gl_x2;
+		buf->gl_y2 = tmp->gl_y2;
+		buf->gl_screenx1 = tmp->gl_screenx1;
+		buf->gl_screeny1 = tmp->gl_screeny1;
+		buf->gl_screenx2 = tmp->gl_screenx2;
+		buf->gl_screeny2 = tmp->gl_screeny2;
+		buf->gl_xmargin = tmp->gl_xmargin;
+		buf->gl_ymargin = tmp->gl_ymargin;
+		buf->gl_goprect = tmp->gl_goprect;
+		buf->gl_isgraph = tmp->gl_isgraph;
+		buf->gl_hidetext = tmp->gl_hidetext;
+
+		//delete temporary data holder
+		t_freebytes(tmp, sizeof(*tmp));
+
+		//redraw
+		canvas_setgraph(x, x->gl_isgraph, 0);
+		canvas_dirty(x, 1);
+		if (x->gl_havewindow) {
+		    canvas_redraw(x);
+		}
+		if (x->gl_owner && glist_isvisible(x->gl_owner))
+		{
+			//fprintf(stderr,"we got gop\n");
+			glist_noselect(x);
+		    gobj_vis(&x->gl_gobj, x->gl_owner, 0);
+		    gobj_vis(&x->gl_gobj, x->gl_owner, 1);
+			canvas_redraw(x->gl_owner);
+		}
+		//update scrollbars when GOP potentially exceeds window size
+		t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
+		//if gop is being disabled go one level up
+		if (!x->gl_isgraph) canvas=canvas->gl_owner;
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
+	}
+
+    else if (action == UNDO_FREE)
+    {
+        t_freebytes(buf, sizeof(*buf));
+    }
+}
+
+void canvas_canvas_setundo(t_canvas *x)
+{
+	canvas_setundo(x, canvas_undo_canvas_apply, canvas_undo_set_canvas(x), "apply");
+}
 
 /* ------------------------ event handling ------------------------ */
 
@@ -1324,7 +1507,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         {
 			//fprintf(stderr,"new window\n");
             canvas_create_editor(x);
-            sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
+            sys_vgui("catch {pdtk_canvas_new .x%lx %d %d +%d+%d %d}\n", x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 (int)(x->gl_screenx1), (int)(x->gl_screeny1),
@@ -1511,13 +1694,14 @@ void canvas_properties(t_glist *x)
 static void canvas_donecanvasdialog(t_glist *x,
     t_symbol *s, int argc, t_atom *argv)
 {
-	/* have to figure out how the parent window is stored
-	   in the glist, also how to deal with abstractions,
-	   so until that happens...
-	   for the time being we only accept undo/redos that
-	   apply to objects on the parent window (e.g. GOPs) */
-	if (glist_getcanvas(x) != x && !canvas_isabstraction(x))
+	/* parent windows are treated differently than applies to individual objects */
+	if (glist_getcanvas(x) != x && !canvas_isabstraction(x)) {
 		canvas_apply_setundo(glist_getcanvas(x), (t_gobj *)x);
+	}
+	else {
+		canvas_canvas_setundo(x);
+		//fprintf(stderr,"canvas_apply_undo\n");
+	}
 
     t_float xperpix, yperpix, x1, y1, x2, y2, xpix, ypix, xmargin, ymargin; 
     int graphme, redraw = 0;
@@ -1533,7 +1717,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     ypix = atom_getfloatarg(8, argc, argv);
     xmargin = atom_getfloatarg(9, argc, argv);
     ymargin = atom_getfloatarg(10, argc, argv);
-    
+
     x->gl_pixwidth = xpix;
     x->gl_pixheight = ypix;
     x->gl_xmargin = xmargin;
@@ -1585,7 +1769,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     if (x->gl_havewindow) {
         canvas_redraw(x);
 	}
-    else if (glist_isvisible(x->gl_owner))
+    else if (x->gl_owner && glist_isvisible(x->gl_owner))
     {
 		glist_noselect(x);
         gobj_vis(&x->gl_gobj, x->gl_owner, 0);
@@ -1594,9 +1778,9 @@ static void canvas_donecanvasdialog(t_glist *x,
     }
 	//ico@bukvic.net 100518 update scrollbars when GOP potentially exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
-	//if gop is being disabled go one level up
-	if (!graphme) canvas=canvas->gl_owner;
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+	//if gop is being disabled go one level up (if u can)
+	if (!graphme && canvas->gl_owner) canvas=canvas->gl_owner;
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
 }
 
 /* called by undo/redo arrange and done_canvas_popup. only done_canvas_popup

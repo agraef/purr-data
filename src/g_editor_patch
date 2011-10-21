@@ -1,0 +1,31 @@
+--- g_editor.c.old	2011-02-17 20:02:34.000000000 -0500
++++ g_editor.c	2011-02-18 13:02:41.000000000 -0500
+@@ -240,6 +240,8 @@
+ {
+     if (x->gl_editor)
+     {
++		if (c_selection && c_selection != x)
++			glist_noselect(c_selection);
+         t_selection *sel = (t_selection *)getbytes(sizeof(*sel));
+         if (x->gl_editor->e_selectedline)
+             glist_deselectline(x);
+@@ -3211,7 +3213,10 @@
+     int dspstate = canvas_suspend_dsp(), nbox, count;
+ 
+     canvas_editmode(x, 1.);
+-    glist_noselect(x);
++	if (c_selection && c_selection != x)
++		glist_noselect(c_selection);
++	else
++    	glist_noselect(x);
+     for (g2 = x->gl_list, nbox = 0; g2; g2 = g2->g_next) nbox++;
+     
+ 	/* found the end of the queue */
+@@ -3296,7 +3301,6 @@
+ 		} else {
+ 		    canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
+ 		        "duplicate");
+-			glist_noselect(c_selection);
+ 		    canvas_dopaste(x, copy_binbuf);
+ 		    //canvas_paste_xyoffset(x);
+ 		    canvas_dirty(x, 1);
