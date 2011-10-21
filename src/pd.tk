@@ -330,8 +330,6 @@ set pointer_y_global 0
 set copytexttocanvas 0
 
 set global_clipboard 0
-# used for comparison to avoid redundant copyfromexternalbuffer
-set last_clipboard 0
 set global_selection 0
 
 # x:y location tooltip during dragging
@@ -1600,7 +1598,7 @@ proc menu_copy {name} {
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 	    pd [concat $name copy \;]
 		set copytexttocanvas 0
-		clipboard clear
+		# clipboard clear
 	} else {
 		# pdtk_post "this_is_text\n"
 		set copytexttocanvas 1
@@ -1614,12 +1612,12 @@ proc menu_paste {name} {
 	# pdtk_post "pasting..."
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 		# puts stderr "this is not an entry $copytexttocanvas\n"
-		# if {$copytexttocanvas} {
-		#	pdtk_pastetext
-		#} else {
+		if {$copytexttocanvas} {
+			pdtk_pastetext
+		} else {
 			pd [concat $name paste \;]
 			pdtk_canvas_getscroll $name.c
-		#}
+		}
 	} else {
 		# puts stderr "pasting text..."
 		pdtk_pastetext
@@ -1756,66 +1754,40 @@ proc menu_mycnv {name accel} {
 
 # correct edit menu, enabling or disabling undo/redo/cut/copy/paste
 proc menu_fixeditmenu {name} {
-	catch {
-		# pdtk_post "fixeditmenu $name\n"
+	# pdtk_post "fixeditmenu $name\n"
 
-		global pd_undoaction
-		global pd_redoaction
-		global pd_undocanvas
+    global pd_undoaction
+    global pd_redoaction
+    global pd_undocanvas
 
-		global global_selection
-		global global_clipboard
-		global last_clipboard
+	global global_selection
+	global global_clipboard
 
-		# investigate if we have already something copied from an external source
-		set current_clipboard 0
-		catch {set current_clipboard [clipboard get]}
-		if {$current_clipboard != 0} {
-			# make sure the clipboard contents have not changed
-			if { [string compare $last_clipboard $current_clipboard] } {
-				set data [split $current_clipboard "\n"]
-				set first 0
-				foreach line $data { 
-					if { !$first } {
-						pd [concat $name copyfromexternalbuffer\;]
-						pd [concat $name copyfromexternalbuffer $line\;]
-						set first 1
-					} else {
-						pd [concat $name copyfromexternalbuffer $line\;]
-					}
-				}
-				set global_clipboard 1
-				set last_clipboard $current_clipboard
-				pdtk_canvas_update_edit_menu $name 1
-			}
-		}
+    #    puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
+    if {$name == $pd_undocanvas && $pd_undoaction != "no"} {
+        $name.m.edit entryconfigure "Undo*" -state normal \
+            -label [concat "Undo " $pd_undoaction]
+    } else {
+        $name.m.edit entryconfigure "Undo*" -state disabled -label "Undo"
+    }
+    if {$name == $pd_undocanvas && $pd_redoaction != "no"} {
+        $name.m.edit entryconfigure "Redo*" -state normal\
+            -label [concat "Redo " $pd_redoaction]
+    } else {
+        $name.m.edit entryconfigure "Redo*" -state disabled
+    }
 
-		#    puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
-		if {$name == $pd_undocanvas && $pd_undoaction != "no"} {
-		    $name.m.edit entryconfigure "Undo*" -state normal \
-		        -label [concat "Undo " $pd_undoaction]
-		} else {
-		    $name.m.edit entryconfigure "Undo*" -state disabled -label "Undo"
-		}
-		if {$name == $pd_undocanvas && $pd_redoaction != "no"} {
-		    $name.m.edit entryconfigure "Redo*" -state normal\
-		        -label [concat "Redo " $pd_redoaction]
-		} else {
-		    $name.m.edit entryconfigure "Redo*" -state disabled
-		}
+    if {$global_selection == 1} {
+        $name.m.edit entryconfigure "Duplicate" -state normal
+    } else {
+        $name.m.edit entryconfigure "Duplicate" -state disabled
+    }
 
-		if {$global_selection == 1} {
-		    $name.m.edit entryconfigure "Duplicate" -state normal
-		} else {
-		    $name.m.edit entryconfigure "Duplicate" -state disabled
-		}
-
-		if {$global_clipboard == 1} {
-		    $name.m.edit entryconfigure "Paste" -state normal
-		} else {
-		    $name.m.edit entryconfigure "Paste" -state disabled
-		}
-	}
+    if {$global_clipboard == 1} {
+        $name.m.edit entryconfigure "Paste" -state normal
+    } else {
+        $name.m.edit entryconfigure "Paste" -state disabled
+    }
 }
 
 # message from Pd to update the currently available undo/redo action
@@ -2457,6 +2429,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     }   
     bind $name.c <Map> {pdtk_canvas_map %W}
     bind $name.c <Unmap> {pdtk_canvas_unmap %W}
+    focus $name.c
 
     switch $pd_nt { 0 {
         bind $name.c <Button-4>  "pdtk_canvas_scroll $name.c y -1"
@@ -2481,7 +2454,6 @@ proc pdtk_canvas_new {name width height geometry editable} {
     set pdtk_canvas_mouseup_name ""
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
-    focus $name
 }
 
 #### jsarlo #####

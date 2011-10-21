@@ -29,27 +29,17 @@ void canvas_drawredrect(t_canvas *x, int doit);
 
 void glist_add(t_glist *x, t_gobj *y)
 {
-	//fprintf(stderr,"glist_add %lx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
-	t_object *ob;
+    t_object *ob;
     y->g_next = 0;
-	int index = 0;
-
     if (!x->gl_list) x->gl_list = y;
     else
     {
         t_gobj *y2;
-        for (y2 = x->gl_list; y2->g_next; y2 = y2->g_next)
-			index++;
+        for (y2 = x->gl_list; y2->g_next; y2 = y2->g_next);
         y2->g_next = y;
     }
-    if (x->gl_editor && (ob = pd_checkobject(&y->g_pd))) {
+    if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
         rtext_new(x, ob);
-		//let's now set up create undo
-		//glist_select(x, y);
-		//canvas_setundo(x, canvas_undo_create, canvas_undo_set_create(x, index),
-        //    "create");
-		//glist_noselect(x);
-	}
     if (x->gl_editor && x->gl_isgraph && !x->gl_goprect
         && pd_checkobject(&y->g_pd))
     {
@@ -79,86 +69,74 @@ void canvas_closebang(t_canvas *x);
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
-	if (x->gl_list) {
+    t_gobj *g;
+    t_object *ob;
+    t_gotfn chkdsp = zgetfn(&y->g_pd, gensym("dsp"));
+    t_canvas *canvas = glist_getcanvas(x);
+    int drawcommand = class_isdrawcommand(y->g_pd);
+    int wasdeleting;
 
-		t_gobj *g;
-		t_object *ob;
-		t_gotfn chkdsp = zgetfn(&y->g_pd, gensym("dsp"));
-		t_canvas *canvas = glist_getcanvas(x);
-		int drawcommand = class_isdrawcommand(y->g_pd);
-		int wasdeleting;
+    if (pd_class(&y->g_pd) == canvas_class) {
+      /* JMZ: send a closebang to the canvas */
+      canvas_closebang((t_canvas *)y);
+    }
+ 
+    wasdeleting = canvas_setdeleting(canvas, 1);
+    if (x->gl_editor)
+    {
+        if (x->gl_editor->e_grab == y) x->gl_editor->e_grab = 0;
+        if (glist_isselected(x, y)) glist_deselect(x, y);
 
-		if (pd_class(&y->g_pd) == canvas_class) {
-		  /* JMZ: send a closebang to the canvas */
-		  canvas_closebang((t_canvas *)y);
-		}
-	 
-		wasdeleting = canvas_setdeleting(canvas, 1);
-		if (x->gl_editor)
-		{
-		    if (x->gl_editor->e_grab == y) x->gl_editor->e_grab = 0;
-		    if (glist_isselected(x, y)) glist_deselect(x, y);
-
-		        /* HACK -- we had phantom outlets not getting erased on the
-		        screen because the canvas_setdeleting() mechanism is too
-		        crude.  LATER carefully set up rules for when the rtexts
-		        should exist, so that they stay around until all the
-		        steps of becoming invisible are done.  In the meantime, just
-		        zap the inlets and outlets here... */
-		    if (pd_class(&y->g_pd) == canvas_class)
-		    {
-		        t_glist *gl = (t_glist *)y;
-		        if (gl->gl_isgraph)
-		        {
-		            char tag[80];
-		            //sprintf(tag, "graph%lx", (t_int)gl);
-					//t_glist *yy = (t_glist *)y;
-					sprintf(tag, "%s", rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
-		            glist_eraseiofor(x, &gl->gl_obj, tag);
-		            text_eraseborder(&gl->gl_obj, x,
-		                rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
-		        }
-		        else
-		        {
-		            text_eraseborder(&gl->gl_obj, x,
-		                rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
-		        }
-		    }
-		}
-		    /* if we're a drawing command, erase all scalars now, before deleting
-		    it; we'll redraw them once it's deleted below. */
-		if (drawcommand)
-		    canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
-		        glist_getcanvas(x)->gl_name)), 2);
-		if (glist_isvisible(canvas))
-		    gobj_vis(y, x, 0);
-		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
-		    rtext_new(x, ob);
-		if (x->gl_list == y) {
-			if (y->g_next)		
-				x->gl_list = y->g_next;
-			else
-				x->gl_list = NULL;
-		}
-		else for (g = x->gl_list; g; g = g->g_next)
-		{
-		    if (g->g_next == y)
-			{
-				if (y->g_next)
-				    g->g_next = y->g_next;
-				else g->g_next = NULL;
-		    	break;
-			}
-		}
-		gobj_delete(y, x);
-		pd_free(&y->g_pd);
-		if (chkdsp) canvas_update_dsp();
-		if (drawcommand)
-		    canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
-		        glist_getcanvas(x)->gl_name)), 1);
-		canvas_setdeleting(canvas, wasdeleting);
-		x->gl_valid = ++glist_valid;
-	}
+            /* HACK -- we had phantom outlets not getting erased on the
+            screen because the canvas_setdeleting() mechanism is too
+            crude.  LATER carefully set up rules for when the rtexts
+            should exist, so that they stay around until all the
+            steps of becoming invisible are done.  In the meantime, just
+            zap the inlets and outlets here... */
+        if (pd_class(&y->g_pd) == canvas_class)
+        {
+            t_glist *gl = (t_glist *)y;
+            if (gl->gl_isgraph)
+            {
+                char tag[80];
+                //sprintf(tag, "graph%lx", (t_int)gl);
+				//t_glist *yy = (t_glist *)y;
+				sprintf(tag, "%s", rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+                glist_eraseiofor(x, &gl->gl_obj, tag);
+                text_eraseborder(&gl->gl_obj, x,
+                    rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+            }
+            else
+            {
+                text_eraseborder(&gl->gl_obj, x,
+                    rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
+            }
+        }
+    }
+        /* if we're a drawing command, erase all scalars now, before deleting
+        it; we'll redraw them once it's deleted below. */
+    if (drawcommand)
+        canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
+            glist_getcanvas(x)->gl_name)), 2);
+    if (glist_isvisible(canvas))
+        gobj_vis(y, x, 0);
+    if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
+        rtext_new(x, ob);
+    if (x->gl_list == y) x->gl_list = y->g_next;
+    else for (g = x->gl_list; g; g = g->g_next)
+        if (g->g_next == y)
+    {
+        g->g_next = y->g_next;
+        break;
+    }
+    gobj_delete(y, x);
+    pd_free(&y->g_pd);
+    if (chkdsp) canvas_update_dsp();
+    if (drawcommand)
+        canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
+            glist_getcanvas(x)->gl_name)), 1);
+    canvas_setdeleting(canvas, wasdeleting);
+    x->gl_valid = ++glist_valid;
 }
 
     /* remove every object from a glist.  Experimental. */

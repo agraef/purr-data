@@ -708,8 +708,8 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
-        //if (m->me_name == s)
-		if (m && m->me_name == s)
+        if (m->me_name == s)
+		//if (m && m->me_name == s)
     {
 		//fprintf(stderr,"me_name %s\n", m->me_name);
         wp = m->me_arg;

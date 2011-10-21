@@ -554,11 +554,10 @@ done:
 
 int obj_noutlets(t_object *x)
 {
-    int n = 0;
+    int n;
     t_outlet *o;
-	if (x && x->ob_outlet)
-	    for (o = x->ob_outlet, n = 0; o; o = o->o_next) n++;
-   	return (n);
+    for (o = x->ob_outlet, n = 0; o; o = o->o_next) n++;
+    return (n);
 }
 
 int obj_ninlets(t_object *x)
