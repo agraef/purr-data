@@ -1224,7 +1224,7 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		//close properties window first
 		t_int properties = gfxstub_haveproperties((void *)x);
 		if (properties) {
-			fprintf(stderr,"have it\n");
+			//fprintf(stderr,"have it\n");
 			sys_vgui("destroy .gfxstub%lx\n", properties);
 		}
 
