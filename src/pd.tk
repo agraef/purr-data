@@ -1598,7 +1598,7 @@ proc menu_copy {name} {
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 	    pd [concat $name copy \;]
 		set copytexttocanvas 0
-		# clipboard clear
+		clipboard clear
 	} else {
 		# pdtk_post "this_is_text\n"
 		set copytexttocanvas 1
@@ -1612,12 +1612,12 @@ proc menu_paste {name} {
 	# pdtk_post "pasting..."
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 		# puts stderr "this is not an entry $copytexttocanvas\n"
-		if {$copytexttocanvas} {
-			pdtk_pastetext
-		} else {
+		# if {$copytexttocanvas} {
+		#	pdtk_pastetext
+		#} else {
 			pd [concat $name paste \;]
 			pdtk_canvas_getscroll $name.c
-		}
+		#}
 	} else {
 		# puts stderr "pasting text..."
 		pdtk_pastetext
@@ -1762,6 +1762,25 @@ proc menu_fixeditmenu {name} {
 
 	global global_selection
 	global global_clipboard
+
+	# investigate if we have already something copied from an external source
+	set existing_clipboard 0
+	catch {set existing_clipboard [clipboard get]}
+	if {$existing_clipboard != 0} {
+		set data [split $existing_clipboard "\n"]
+		set first 0
+		foreach line $data { 
+			if { !$first } {
+				pd [concat $name copyfromexternalbuffer\;]
+				pd [concat $name copyfromexternalbuffer $line\;]
+				set first 1
+			} else {
+				pd [concat $name copyfromexternalbuffer $line\;]
+			}
+		}
+		set global_clipboard 1
+		pdtk_canvas_update_edit_menu $name 1
+	}
 
     #    puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
     if {$name == $pd_undocanvas && $pd_undoaction != "no"} {

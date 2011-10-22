@@ -48,6 +48,7 @@ static int outlet_issignal = 0;
 static int inlet_issignal = 0;
 static int last_inlet_filter = 0;
 static int last_outlet_filter = 0;
+static int copyfromexternalbuffer = 0;
 struct _outlet
 {
     t_object *o_owner;
@@ -3274,10 +3275,32 @@ static t_binbuf *canvas_docopy(t_canvas *x)
     return (b);
 }
 
+static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_atom *av)
+{
+	if (!x->gl_editor)
+		return;
+	if (ac == 0) {
+		//fprintf(stderr,"init\n");
+		copyfromexternalbuffer = 1;
+		binbuf_free(copy_binbuf);
+		copy_binbuf = binbuf_new();
+	} else {
+		if (av[0].a_type == A_SYMBOL && strcmp(av[0].a_w.w_symbol->s_name, "#N")) {
+			//fprintf(stderr,"fill %d\n", ac);
+			binbuf_add(copy_binbuf, ac, av);
+			binbuf_addsemi(copy_binbuf);
+		} else {
+			//probably should resize window size here...
+			//fprintf(stderr,"ignoring canvas\n");
+		}
+	}
+}
+
 static void canvas_copy(t_canvas *x)
 {
     if (!x->gl_editor || !x->gl_editor->e_selection)
         return;
+	copyfromexternalbuffer = 0;
     binbuf_free(copy_binbuf);
 	//fprintf(stderr, "canvas_copy\n");
     copy_binbuf = canvas_docopy(x);
@@ -3558,7 +3581,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		//reset canvas_undo_already_set_move
 		canvas_undo_already_set_move = 0;
 	}
-	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") ) {
+	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") && !copyfromexternalbuffer) {
 		canvas_paste_atmouse(x);
 		//fprintf(stderr,"doing a paste\n");
 	}
@@ -4069,6 +4092,8 @@ void g_editor_setup(void)
         gensym("donecanvasdialog"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)glist_arraydialog,
         gensym("arraydialog"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_copyfromexternalbuffer,
+        gensym("copyfromexternalbuffer"), A_GIMME, A_NULL);
 
 /* -------------- connect method used in reading files ------------------ */
     class_addmethod(canvas_class, (t_method)canvas_connect,
