@@ -29,17 +29,27 @@ void canvas_drawredrect(t_canvas *x, int doit);
 
 void glist_add(t_glist *x, t_gobj *y)
 {
-    t_object *ob;
+	//fprintf(stderr,"glist_add %lx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
+	t_object *ob;
     y->g_next = 0;
+	int index = 0;
+
     if (!x->gl_list) x->gl_list = y;
     else
     {
         t_gobj *y2;
-        for (y2 = x->gl_list; y2->g_next; y2 = y2->g_next);
+        for (y2 = x->gl_list; y2->g_next; y2 = y2->g_next)
+			index++;
         y2->g_next = y;
     }
-    if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
+    if (x->gl_editor && (ob = pd_checkobject(&y->g_pd))) {
         rtext_new(x, ob);
+		//let's now set up create undo
+		//glist_select(x, y);
+		//canvas_setundo(x, canvas_undo_create, canvas_undo_set_create(x, index),
+        //    "create");
+		//glist_noselect(x);
+	}
     if (x->gl_editor && x->gl_isgraph && !x->gl_goprect
         && pd_checkobject(&y->g_pd))
     {

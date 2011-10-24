@@ -30,7 +30,10 @@ t_widgetbehavior text_widgetbehavior;
 
 static char *invalid_fill = "\"#ffdddd\"";
 
-EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);
+extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
+extern void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf, const char *name);
+extern void *canvas_undo_set_create(t_canvas *x);
+extern void canvas_undo_create(t_canvas *x, void *z, int action);
 
 /* ----------------- the "text" object.  ------------------ */
 
@@ -89,7 +92,7 @@ void canvas_getargs(int *argcp, t_atom **argvp);
 static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     t_binbuf *b)
 {
-	//fprintf(stderr,"objtext\n");
+	//fprintf(stderr,"canvas_objtext\n");
     t_text *x;
     int argc;
     t_atom *argv;
@@ -202,6 +205,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
 
 void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
+	//fprintf(stderr,"canvas_obj\n");
     t_text *x;
     if (argc >= 2)
     {
@@ -224,6 +228,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (connectme)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
+		canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
     }
 }
 
@@ -265,6 +270,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     //glist_getnextxy(gl, &xpix, &ypix);
     //canvas_objtext(gl, xpix, ypix, 1, b);
     else canvas_startmotion(glist_getcanvas(gl));
+	canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
 }
 
 void canvas_bng(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
@@ -535,6 +541,7 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (connectme)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
+		canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
     }
 }
 
@@ -921,6 +928,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 void canvas_atom(t_glist *gl, t_atomtype type,
     t_symbol *s, int argc, t_atom *argv)
 {
+	//fprintf(stderr,"canvas_atom\n");
     t_gatom *x = (t_gatom *)pd_new(gatom_class);
     t_atom at;
     x->a_text.te_width = 0;                        /* don't know it yet. */
@@ -993,6 +1001,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         if (connectme)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
+		canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
     }
 }
 

@@ -431,6 +431,8 @@ static const char *canvas_undo_name;
 void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
     const char *name)
 {
+	//fprintf(stderr,"canvas_setundo %lx\n", (t_int)x);
+
     int hadone = 0;
         /* blow away the old undo information.  In one special case the
         old undo info is re-used; if so we shouldn't free it here. */
@@ -1316,6 +1318,86 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 void canvas_canvas_setundo(t_canvas *x)
 {
 	canvas_setundo(x, canvas_undo_canvas_apply, canvas_undo_set_canvas(x), "apply");
+}
+
+/* --------- 8. create ----------- */
+
+typedef struct _undo_create      
+{
+    int u_index;    /* index of the created object object */
+    t_binbuf *u_objectbuf;      /* the object cleared or typed into */
+    t_binbuf *u_reconnectbuf;   /* connections into and out of object */
+} t_undo_create;
+
+void *canvas_undo_set_create(t_canvas *x)
+{
+    t_gobj *y, *last;
+    t_linetraverser t;
+    t_outconnect *oc;
+
+    t_undo_create *buf = (t_undo_create *)getbytes(sizeof(*buf));
+    buf->u_index = glist_getindex(x, 0) - 1;
+    int nnotsel= glist_selectionindex(x, 0, 0);
+
+    buf->u_objectbuf = binbuf_new();
+    for (y = x->gl_list; y; y = y->g_next)
+    {
+        if (glist_isselected(x, y)) {
+			//fprintf(stderr,"saving object\n");
+            gobj_save(y, buf->u_objectbuf);
+		}
+    }
+    buf->u_reconnectbuf = binbuf_new();
+    linetraverser_start(&t, x);
+    while (oc = linetraverser_next(&t))
+    {
+        int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
+        int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
+        if (issel1 != issel2)
+        {
+            binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
+                gensym("#X"), gensym("connect"),
+                (issel1 ? nnotsel : 0)
+                    + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
+                t.tr_outno,
+                (issel2 ? nnotsel : 0) +
+                    glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
+                t.tr_inno);
+        }
+    }
+    return (buf);
+}
+
+void canvas_undo_create(t_canvas *x, void *z, int action)
+{
+    t_undo_create *buf = z;
+    t_gobj *y;
+
+	//fprintf(stderr,"canvas = %lx buf->u_index = %d\n", (t_int)x, buf->u_index);
+
+    if (action == UNDO_UNDO)
+    {
+        glist_noselect(x);
+        y = glist_nth(x, buf->u_index);
+        glist_select(x, y);
+        canvas_doclear(x);
+    }
+    else if (action == UNDO_REDO)
+    {
+        pd_bind(&x->gl_pd, gensym("#X"));
+   		binbuf_eval(buf->u_objectbuf, 0, 0, 0);
+    	pd_unbind(&x->gl_pd, gensym("#X"));
+        pd_bind(&x->gl_pd, gensym("#X"));
+   		binbuf_eval(buf->u_reconnectbuf, 0, 0, 0);
+    	pd_unbind(&x->gl_pd, gensym("#X"));
+        y = glist_nth(x, buf->u_index);
+        glist_select(x, y);
+    }
+	else if (action == UNDO_FREE) {
+		binbuf_free(buf->u_objectbuf);
+		binbuf_free(buf->u_reconnectbuf);
+        t_freebytes(buf, sizeof(*buf));
+	}
 }
 
 /* ------------------------ event handling ------------------------ */
@@ -3229,49 +3311,31 @@ void canvas_restoreconnections(t_canvas *x)
 
 static t_binbuf *canvas_docopy(t_canvas *x)
 {
-	//fprintf(stderr,"docopy\n");
+	//fprintf(stderr,"canvas_docopy\n");
     t_gobj *y, *last;
     t_linetraverser t;
     t_outconnect *oc;
     t_binbuf *b = binbuf_new();
-	//int c = 0;
     for (y = x->gl_list; y; y = y->g_next)
     {
         if (glist_isselected(x, y)) {
-			//c++;
-			//fprintf(stderr, "saving object num %d\n", c);
-			//fprintf(stderr, "saving object >.x%lx<\n", (t_int)y);
-			/* introduce redundant comment to avoid recreation of old abstractions
-			   with the same canvas id which results in all commands being registered
-			   multiple times--apparently after much searching it appears that this
-			   is yet another bug in tcl/tk which means that canvas tries to do some
-			   kind of caching behind the curtains resulting in objects not always
-			   having unique ids, contrary to tcl/tk's canvas man page */
-			/*if (c==1) {
-            	binbuf_addv(b, "ssiis;", gensym("#X"), gensym("text"),
-                (int)((t_text *)y)->te_xpix-30, (int)((t_text *)y)->te_ypix-30, gensym("tcltksucks"));
-			}*/
+			//fprintf(stderr,"saving object\n");
             gobj_save(y, b);
 		}
     }
-	//fprintf(stderr,"done saving objects\n");
     linetraverser_start(&t, x);
-	//c = 0;
     while (oc = linetraverser_next(&t))
     {
+		//fprintf(stderr,"found some lines %d %d\n", glist_isselected(x, &t.tr_ob->ob_g), glist_isselected(x, &t.tr_ob2->ob_g));
         if (glist_isselected(x, &t.tr_ob->ob_g)
             && glist_isselected(x, &t.tr_ob2->ob_g))
         {
-			//fprintf(stderr, "lines need to be copied\n");
-			//c = 1;
+			//fprintf(stderr,"saving lines leading into selected object\n");
             binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
                 glist_selectionindex(x, &t.tr_ob->ob_g, 1), t.tr_outno,
                 glist_selectionindex(x, &t.tr_ob2->ob_g, 1), t.tr_inno);
-//                glist_selectionindex(x, &t.tr_ob->ob_g, 1)+1, t.tr_outno,
-//                glist_selectionindex(x, &t.tr_ob2->ob_g, 1)+1, t.tr_inno);
         }
     }
-	//if (!c) fprintf(stderr, "no lines copied\n");
     return (b);
 }
 
@@ -3290,7 +3354,7 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_at
 			binbuf_add(copy_binbuf, ac, av);
 			binbuf_addsemi(copy_binbuf);
 		} else {
-			//probably should resize window size here...
+			//probably should resize window size and position here...
 			//fprintf(stderr,"ignoring canvas\n");
 		}
 	}
