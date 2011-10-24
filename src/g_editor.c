@@ -3788,6 +3788,10 @@ extern t_class *text_class;
 void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     t_floatarg fwhoin, t_floatarg finno)
 {
+	if (!x->gl_list) {
+		post("paste error: no objects to connect, probably incomplete clipboard copy from an external source (e.g. from a text editor)");
+		return;		
+	}
     int whoout = fwhoout, outno = foutno, whoin = fwhoin, inno = finno;
     t_gobj *src = 0, *sink = 0;
     t_object *objsrc, *objsink;
