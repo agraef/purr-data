@@ -39,6 +39,7 @@ void binbuf_free(t_binbuf *x)
 {
     t_freebytes(x->b_vec, x->b_n * sizeof(*x->b_vec));
     t_freebytes(x,  sizeof(*x));
+	x = NULL;
 }
 
 t_binbuf *binbuf_duplicate(t_binbuf *y)
@@ -59,6 +60,7 @@ void binbuf_clear(t_binbuf *x)
     /* convert text to a binbuf */
 void binbuf_text(t_binbuf *x, char *text, size_t size)
 {
+	//fprintf(stderr, "current text: %s ||| %c %c %d %d\n", text, text[size-1], text[size], strlen(text), (int)size);
     char buf[MAXPDSTRING+1], *bufp, *ebuf = buf+MAXPDSTRING;
     const char *textp = text, *etext = text+size;
     t_atom *ap;
@@ -385,6 +387,7 @@ void binbuf_addsemi(t_binbuf *x)
     t_atom a;
     SETSEMI(&a);
     binbuf_add(x, 1, &a);
+    binbuf_add(x, 1, '\0');
 }
 
 /* Supply atoms to a binbuf from a message, making the opposite changes

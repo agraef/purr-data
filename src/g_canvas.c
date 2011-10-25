@@ -709,16 +709,18 @@ void canvas_map(t_canvas *x, t_floatarg f)
     t_gobj *y;
     if (flag)
     {
-        if (!glist_isvisible(x))
-        {
+		//fprintf(stderr,"canvas_map 1\n");
+        //if (!glist_isvisible(x))
+        //{
+			//fprintf(stderr,"canvas_map 1 isvisible\n");
             t_selection *sel;
             if (!x->gl_havewindow)
             {
                 bug("canvas_map");
                 canvas_vis(x, 1);
             }
-			else if (x->gl_mapped == 0)
-				canvas_vis(x, 1);
+			//else if (x->gl_mapped == 0)
+			//	canvas_vis(x, 1);
 
 			/* 	if parent has editor enabled and we're a sub-patch,
 				(but not an abstraction) match its edit mode to that
@@ -741,23 +743,30 @@ void canvas_map(t_canvas *x, t_floatarg f)
 				//canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
 			//}
 
-            for (y = x->gl_list; y; y = y->g_next)
+			if (!x->gl_list) {
+				//if there are no objects on the canvas
+				//fprintf(stderr,"window is empty\n");
+				canvas_create_editor(x);
+			}
+            else for (y = x->gl_list; y; y = y->g_next) {
                 gobj_vis(y, x, 1);
-			if (x->gl_editor && x->gl_editor->e_selection)
-            	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-                	gobj_select(sel->sel_what, x, 1);
+				if (x->gl_editor && x->gl_editor->e_selection)
+		        	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+		            	gobj_select(sel->sel_what, x, 1);
+			}
             x->gl_mapped = 1;
             canvas_drawlines(x);
             if (x->gl_isgraph && x->gl_goprect)
                 canvas_drawredrect(x, 1);
             sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
-        }
+        //}
     }
     else
     {
+		//fprintf(stderr,"canvas_map 0\n");
         if (glist_isvisible(x))
         {
-                /* just clear out the whole canvas */
+            /* just clear out the whole canvas */
 			sys_vgui(".x%lx.c dtag all selected\n", x);
             sys_vgui(".x%lx.c delete all\n", x);
             x->gl_mapped = 0;

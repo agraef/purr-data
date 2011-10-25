@@ -228,7 +228,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (connectme)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
-		canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
+		canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
     }
 }
 
@@ -270,7 +270,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     //glist_getnextxy(gl, &xpix, &ypix);
     //canvas_objtext(gl, xpix, ypix, 1, b);
     else canvas_startmotion(glist_getcanvas(gl));
-	canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
+	canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
 }
 
 void canvas_bng(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
@@ -541,7 +541,7 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (connectme)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
-		canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
+		canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
     }
 }
 
@@ -1001,7 +1001,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         if (connectme)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
-		canvas_setundo(gl, canvas_undo_create, canvas_undo_set_create(gl), "create");
+		canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
     }
 }
 

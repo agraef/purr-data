@@ -349,8 +349,10 @@ void glist_noselect(t_glist *x)
 {
     if (x->gl_editor)
     {
-        while (x->gl_editor->e_selection)
-            glist_deselect(x, x->gl_editor->e_selection->sel_what);
+		if (x->gl_editor->e_selection) {
+		    while (x->gl_editor->e_selection)
+		        glist_deselect(x, x->gl_editor->e_selection->sel_what);
+		}
         if (x->gl_editor->e_selectedline)
             glist_deselectline(x);
 		if (c_selection == x)
@@ -431,13 +433,14 @@ static const char *canvas_undo_name;
 void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
     const char *name)
 {
-	//fprintf(stderr,"canvas_setundo %lx\n", (t_int)x);
+	//fprintf(stderr,"canvas_setundo %s\n", name);
 
     int hadone = 0;
         /* blow away the old undo information.  In one special case the
         old undo info is re-used; if so we shouldn't free it here. */
     if (canvas_undo_fn && canvas_undo_buf && (buf != canvas_undo_buf))
     {
+		//fprintf(stderr,"hadone canvas_setundo\n");
         (*canvas_undo_fn)(canvas_undo_canvas, canvas_undo_buf, UNDO_FREE);
         hadone = 1;
     }
@@ -608,22 +611,24 @@ static void *canvas_undo_set_cut(t_canvas *x, int mode)
         /* store connections into/out of the selection */
     buf->u_reconnectbuf = binbuf_new();
     linetraverser_start(&t, x);
-    while (oc = linetraverser_next(&t))
-    {
-        int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
-        int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
-        if (issel1 != issel2)
-        {
-            binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
-                gensym("#X"), gensym("connect"),
-                (issel1 ? nnotsel : 0)
-                    + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
-                t.tr_outno,
-                (issel2 ? nnotsel : 0) +
-                    glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
-                t.tr_inno);
-        }
-    }
+	if (linetraverser_next(&t)) {
+		while (oc = linetraverser_next(&t))
+		{
+		    int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
+		    int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
+		    if (issel1 != issel2)
+		    {
+		        binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
+		            gensym("#X"), gensym("connect"),
+		            (issel1 ? nnotsel : 0)
+		                + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
+		            t.tr_outno,
+		            (issel2 ? nnotsel : 0) +
+		                glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
+		            t.tr_inno);
+		    }
+		}
+	}
     if (mode == UCUT_TEXT)
     {
         buf->u_objectbuf = canvas_docopy(x);
@@ -706,7 +711,7 @@ static void canvas_undo_cut(t_canvas *x, void *z, int action)
             binbuf_free(buf->u_reconnectbuf);
         if (buf->u_redotextbuf)
             binbuf_free(buf->u_redotextbuf);
-        t_freebytes(buf, sizeof(*buf));
+        if (buf != NULL) t_freebytes(buf, sizeof(*buf));
     }
 }
 
@@ -1159,7 +1164,7 @@ typedef struct _undo_canvas_properties
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
 } t_undo_canvas_properties;
 
-t_undo_canvas_properties *global_buf; /* we need this to avoid redundant undo creation when pressing apply and then ok in the canvas properties menu */
+t_undo_canvas_properties global_buf; /* we need this to avoid redundant undo creation when pressing apply and then ok in the canvas properties menu */
 
 static void *canvas_undo_set_canvas(t_canvas *x)
 {
@@ -1169,10 +1174,10 @@ static void *canvas_undo_set_canvas(t_canvas *x)
 	if (!x->gl_edit)
 		canvas_editmode(x, 1);
 
-    if (global_buf == NULL) {
-		global_buf = (t_undo_canvas_properties *)getbytes(sizeof(*global_buf));
+    //if (global_buf == NULL) {
+	//	global_buf = (t_undo_canvas_properties *)getbytes(sizeof(*global_buf));
 		//fprintf(stderr,"creating a new buffer for canvas properties\n");
-	}
+	//}
 
 	/*if (
 		global_buf->gl_pixwidth != x->gl_pixwidth ||
@@ -1192,24 +1197,24 @@ static void *canvas_undo_set_canvas(t_canvas *x)
 		global_buf->gl_hidetext != x->gl_hidetext)
 	{*/
 		//fprintf(stderr,"changing values\n");
-		global_buf->gl_pixwidth = x->gl_pixwidth;
-		global_buf->gl_pixheight = x->gl_pixheight;
-		global_buf->gl_x1 = x->gl_x1;
-		global_buf->gl_y1 = x->gl_y1;
-		global_buf->gl_x2 = x->gl_x2;
-		global_buf->gl_y2 = x->gl_y2;
-		global_buf->gl_screenx1 = x->gl_screenx1;
-		global_buf->gl_screeny1 = x->gl_screeny1;
-		global_buf->gl_screenx2 = x->gl_screenx2;
-		global_buf->gl_screeny2 = x->gl_screeny2;
-		global_buf->gl_xmargin = x->gl_xmargin;
-		global_buf->gl_ymargin = x->gl_ymargin;
-		global_buf->gl_goprect = x->gl_goprect;
-		global_buf->gl_isgraph = x->gl_isgraph;
-		global_buf->gl_hidetext = x->gl_hidetext;
+		global_buf.gl_pixwidth = x->gl_pixwidth;
+		global_buf.gl_pixheight = x->gl_pixheight;
+		global_buf.gl_x1 = x->gl_x1;
+		global_buf.gl_y1 = x->gl_y1;
+		global_buf.gl_x2 = x->gl_x2;
+		global_buf.gl_y2 = x->gl_y2;
+		global_buf.gl_screenx1 = x->gl_screenx1;
+		global_buf.gl_screeny1 = x->gl_screeny1;
+		global_buf.gl_screenx2 = x->gl_screenx2;
+		global_buf.gl_screeny2 = x->gl_screeny2;
+		global_buf.gl_xmargin = x->gl_xmargin;
+		global_buf.gl_ymargin = x->gl_ymargin;
+		global_buf.gl_goprect = x->gl_goprect;
+		global_buf.gl_isgraph = x->gl_isgraph;
+		global_buf.gl_hidetext = x->gl_hidetext;
 	//}
 	
-    return (global_buf);
+    return (&global_buf);
 }
 
 extern int gfxstub_haveproperties(void *key);
@@ -1217,7 +1222,7 @@ extern int gfxstub_haveproperties(void *key);
 static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 {
     t_undo_canvas_properties *buf = z;
-    t_undo_canvas_properties *tmp;
+    t_undo_canvas_properties tmp;
 
 	if (!x->gl_edit)
 		canvas_editmode(x, 1);
@@ -1232,24 +1237,24 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		}
 
 		//create a temporary data holder
-		tmp = (t_undo_canvas_properties *)getbytes(sizeof(*tmp));
+		//tmp = (t_undo_canvas_properties *)getbytes(sizeof(*tmp));
 
 		//store current canvas values into temporary data holder
-		tmp->gl_pixwidth = x->gl_pixwidth;
-		tmp->gl_pixheight = x->gl_pixheight;
-		tmp->gl_x1 = x->gl_x1;
-		tmp->gl_y1 = x->gl_y1;
-		tmp->gl_x2 = x->gl_x2;
-		tmp->gl_y2 = x->gl_y2;
-		tmp->gl_screenx1 = x->gl_screenx1;
-		tmp->gl_screeny1 = x->gl_screeny1;
-		tmp->gl_screenx2 = x->gl_screenx2;
-		tmp->gl_screeny2 = x->gl_screeny2;
-		tmp->gl_xmargin = x->gl_xmargin;
-		tmp->gl_ymargin = x->gl_ymargin;
-		tmp->gl_goprect = x->gl_goprect;
-		tmp->gl_isgraph = x->gl_isgraph;
-		tmp->gl_hidetext = x->gl_hidetext;
+		tmp.gl_pixwidth = x->gl_pixwidth;
+		tmp.gl_pixheight = x->gl_pixheight;
+		tmp.gl_x1 = x->gl_x1;
+		tmp.gl_y1 = x->gl_y1;
+		tmp.gl_x2 = x->gl_x2;
+		tmp.gl_y2 = x->gl_y2;
+		tmp.gl_screenx1 = x->gl_screenx1;
+		tmp.gl_screeny1 = x->gl_screeny1;
+		tmp.gl_screenx2 = x->gl_screenx2;
+		tmp.gl_screeny2 = x->gl_screeny2;
+		tmp.gl_xmargin = x->gl_xmargin;
+		tmp.gl_ymargin = x->gl_ymargin;
+		tmp.gl_goprect = x->gl_goprect;
+		tmp.gl_isgraph = x->gl_isgraph;
+		tmp.gl_hidetext = x->gl_hidetext;
 
 		//change canvas values with the ones from the undo buffer
 		x->gl_pixwidth = buf->gl_pixwidth;
@@ -1269,24 +1274,24 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		x->gl_hidetext = buf->gl_hidetext;
 
 		//copy data values from the temporary data to the undo buffer
-		buf->gl_pixwidth = tmp->gl_pixwidth;
-		buf->gl_pixheight = tmp->gl_pixheight;
-		buf->gl_x1 = tmp->gl_x1;
-		buf->gl_y1 = tmp->gl_y1;
-		buf->gl_x2 = tmp->gl_x2;
-		buf->gl_y2 = tmp->gl_y2;
-		buf->gl_screenx1 = tmp->gl_screenx1;
-		buf->gl_screeny1 = tmp->gl_screeny1;
-		buf->gl_screenx2 = tmp->gl_screenx2;
-		buf->gl_screeny2 = tmp->gl_screeny2;
-		buf->gl_xmargin = tmp->gl_xmargin;
-		buf->gl_ymargin = tmp->gl_ymargin;
-		buf->gl_goprect = tmp->gl_goprect;
-		buf->gl_isgraph = tmp->gl_isgraph;
-		buf->gl_hidetext = tmp->gl_hidetext;
+		buf->gl_pixwidth = tmp.gl_pixwidth;
+		buf->gl_pixheight = tmp.gl_pixheight;
+		buf->gl_x1 = tmp.gl_x1;
+		buf->gl_y1 = tmp.gl_y1;
+		buf->gl_x2 = tmp.gl_x2;
+		buf->gl_y2 = tmp.gl_y2;
+		buf->gl_screenx1 = tmp.gl_screenx1;
+		buf->gl_screeny1 = tmp.gl_screeny1;
+		buf->gl_screenx2 = tmp.gl_screenx2;
+		buf->gl_screeny2 = tmp.gl_screeny2;
+		buf->gl_xmargin = tmp.gl_xmargin;
+		buf->gl_ymargin = tmp.gl_ymargin;
+		buf->gl_goprect = tmp.gl_goprect;
+		buf->gl_isgraph = tmp.gl_isgraph;
+		buf->gl_hidetext = tmp.gl_hidetext;
 
 		//delete temporary data holder
-		t_freebytes(tmp, sizeof(*tmp));
+		//t_freebytes(tmp, sizeof(*tmp));
 
 		//redraw
 		canvas_setgraph(x, x->gl_isgraph, 0);
@@ -1296,7 +1301,7 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		}
 		if (x->gl_owner && glist_isvisible(x->gl_owner))
 		{
-			//fprintf(stderr,"we got gop\n");
+			fprintf(stderr,"we got gop\n");
 			glist_noselect(x);
 		    gobj_vis(&x->gl_gobj, x->gl_owner, 0);
 		    gobj_vis(&x->gl_gobj, x->gl_owner, 1);
@@ -1305,13 +1310,18 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		//update scrollbars when GOP potentially exceeds window size
 		t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
 		//if gop is being disabled go one level up
-		if (!x->gl_isgraph) canvas=canvas->gl_owner;
+		if (!x->gl_isgraph && x->gl_owner) {
+			canvas=canvas->gl_owner;
+			canvas_redraw(canvas);
+		}
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
 	}
 
     else if (action == UNDO_FREE)
     {
-        t_freebytes(buf, sizeof(*buf));
+		//fprintf(stderr,"free...\n");
+        //if (buf != NULL) t_freebytes(buf, sizeof(*buf));
     }
 }
 
@@ -1340,31 +1350,35 @@ void *canvas_undo_set_create(t_canvas *x)
     int nnotsel= glist_selectionindex(x, 0, 0);
 
     buf->u_objectbuf = binbuf_new();
-    for (y = x->gl_list; y; y = y->g_next)
-    {
-        if (glist_isselected(x, y)) {
-			//fprintf(stderr,"saving object\n");
-            gobj_save(y, buf->u_objectbuf);
+	if (x->gl_list) {
+		for (y = x->gl_list; y; y = y->g_next)
+		{
+		    if (glist_isselected(x, y)) {
+				//fprintf(stderr,"saving object\n");
+		        gobj_save(y, buf->u_objectbuf);
+			}
 		}
-    }
+	}
     buf->u_reconnectbuf = binbuf_new();
     linetraverser_start(&t, x);
-    while (oc = linetraverser_next(&t))
-    {
-        int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
-        int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
-        if (issel1 != issel2)
-        {
-            binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
-                gensym("#X"), gensym("connect"),
-                (issel1 ? nnotsel : 0)
-                    + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
-                t.tr_outno,
-                (issel2 ? nnotsel : 0) +
-                    glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
-                t.tr_inno);
-        }
-    }
+	if (linetraverser_next(&t)) {
+		while (oc = linetraverser_next(&t))
+		{
+		    int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
+		    int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
+		    if (issel1 != issel2)
+		    {
+		        binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
+		            gensym("#X"), gensym("connect"),
+		            (issel1 ? nnotsel : 0)
+		                + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
+		            t.tr_outno,
+		            (issel2 ? nnotsel : 0) +
+		                glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
+		            t.tr_inno);
+		    }
+		}
+	}
     return (buf);
 }
 
@@ -1544,10 +1558,10 @@ void canvas_destroy_editor(t_glist *x)
         	    if (ob = pd_checkobject(&y->g_pd))
         	        rtext_free(glist_findrtext(x, ob));
 		}
-		if (x->gl_editor) {
-			editor_free(x->gl_editor, x);
-			x->gl_editor = 0;
-		}
+		//if (x->gl_editor) {
+		editor_free(x->gl_editor, x);
+		x->gl_editor = 0;
+		//}
 	}
 }
 
@@ -1705,11 +1719,14 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
             canvas_destroy_editor(x);
         x->gl_isgraph = 0;
 		x->gl_hidetext = 0;
+		//x->gl_editor = 0;
         if (x->gl_owner && !x->gl_loading && glist_isvisible(x->gl_owner))
         {
             gobj_vis(&x->gl_gobj, x->gl_owner, 1);
             canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
         }
+		//if (x->gl_havewindow && hadeditor)
+		//	canvas_editmode(x, 1);
     }
     else if (flag)
     {
@@ -1850,6 +1867,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     canvas_setgraph(x, graphme, 0);
     canvas_dirty(x, 1);
     if (x->gl_havewindow) {
+		//fprintf(stderr,"donecanvasdialog canvas_redraw\n");
         canvas_redraw(x);
 	}
     else if (x->gl_owner && glist_isvisible(x->gl_owner))
@@ -3343,6 +3361,7 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_at
 {
 	if (!x->gl_editor)
 		return;
+	/*
 	if (ac == 0) {
 		//fprintf(stderr,"init\n");
 		copyfromexternalbuffer = 1;
@@ -3358,6 +3377,7 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_at
 			//fprintf(stderr,"ignoring canvas\n");
 		}
 	}
+	*/
 }
 
 static void canvas_copy(t_canvas *x)
@@ -3489,7 +3509,7 @@ static void canvas_cut(t_canvas *x)
     if (x->gl_editor && x->gl_editor->e_selectedline)
         canvas_clearline(x);
 	/* if we are cutting text */
-    else if (x->gl_editor->e_textedfor)
+    else if (x->gl_editor && x->gl_editor->e_textedfor)
     {
         char *buf;
         int bufsize;
