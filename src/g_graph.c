@@ -141,12 +141,14 @@ void glist_delete(t_glist *x, t_gobj *y)
 				x->gl_list = NULL;
 		}
 		else for (g = x->gl_list; g; g = g->g_next)
-		    if (g->g_next == y)
 		{
-			if (y->g_next)
-			    g->g_next = y->g_next;
-			else g->g_next = NULL;
-		    break;
+		    if (g->g_next == y)
+			{
+				if (y->g_next)
+				    g->g_next = y->g_next;
+				else g->g_next = NULL;
+		    	break;
+			}
 		}
 		gobj_delete(y, x);
 		pd_free(&y->g_pd);

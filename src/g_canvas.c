@@ -713,52 +713,28 @@ void canvas_map(t_canvas *x, t_floatarg f)
         //if (!glist_isvisible(x))
         //{
 			//fprintf(stderr,"canvas_map 1 isvisible\n");
-            t_selection *sel;
-            if (!x->gl_havewindow)
-            {
-                bug("canvas_map");
-                canvas_vis(x, 1);
-            }
-			//else if (x->gl_mapped == 0)
-			//	canvas_vis(x, 1);
+        t_selection *sel;
+        if (!x->gl_havewindow)
+        {
+            bug("canvas_map");
+            canvas_vis(x, 1);
+        }
 
-			/* 	if parent has editor enabled and we're a sub-patch,
-				(but not an abstraction) match its edit mode to that
-				of its parent patch. */
-			/*t_glist *parentx;
-			if (!canvas_isabstraction(x)) {
-				if (x->gl_owner) {
-					parentx = x->gl_owner;
-					while (parentx->gl_owner)
-						parentx = parentx->gl_owner;
-					if (parentx->gl_edit)
-						canvas_editmode(x, 1);
-					else if (x->gl_edit)
-						canvas_editmode(x, 0);
-				}
-			}*/
-			/*	for parent windows, let's make sure the cursor is updated
-				as soon as the window is open (if in edit mode) */
-			//else if (x->gl_edit) {
-				//canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
-			//}
-
-			if (!x->gl_list) {
-				//if there are no objects on the canvas
-				//fprintf(stderr,"window is empty\n");
-				canvas_create_editor(x);
-			}
-            else for (y = x->gl_list; y; y = y->g_next) {
-                gobj_vis(y, x, 1);
-				if (x->gl_editor && x->gl_editor->e_selection)
-		        	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-		            	gobj_select(sel->sel_what, x, 1);
-			}
-            x->gl_mapped = 1;
-            canvas_drawlines(x);
-            if (x->gl_isgraph && x->gl_goprect)
-                canvas_drawredrect(x, 1);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+		if (!x->gl_list) {
+			//if there are no objects on the canvas
+			canvas_create_editor(x);
+		}
+        else for (y = x->gl_list; y; y = y->g_next) {
+            gobj_vis(y, x, 1);
+			if (x->gl_editor && x->gl_editor->e_selection)
+	        	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+	            	gobj_select(sel->sel_what, x, 1);
+		}
+        x->gl_mapped = 1;
+        canvas_drawlines(x);
+        if (x->gl_isgraph && x->gl_goprect)
+            canvas_drawredrect(x, 1);
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
         //}
     }
     else
@@ -840,13 +816,9 @@ void canvas_free(t_canvas *x)
 {
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
-    // jsarlo
+
     if (x->gl_magic_glass)
       magicGlass_free(x->gl_magic_glass);
-    // end jsarlo
-
-	//delete clock for gl_destroy
-	//if (x->gl_destroy) clock_free(x->gl_destroy);
 
     canvas_noundo(x);
     if (canvas_editing == x)

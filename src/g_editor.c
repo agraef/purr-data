@@ -1164,55 +1164,29 @@ typedef struct _undo_canvas_properties
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
 } t_undo_canvas_properties;
 
-t_undo_canvas_properties global_buf; /* we need this to avoid redundant undo creation when pressing apply and then ok in the canvas properties menu */
+t_undo_canvas_properties global_buf;
 
 static void *canvas_undo_set_canvas(t_canvas *x)
 {
-    //t_undo_canvas_properties *buf;
-
 	/* enable editor (in case it is disabled) and select the object we are working on */
 	if (!x->gl_edit)
 		canvas_editmode(x, 1);
 
-    //if (global_buf == NULL) {
-	//	global_buf = (t_undo_canvas_properties *)getbytes(sizeof(*global_buf));
-		//fprintf(stderr,"creating a new buffer for canvas properties\n");
-	//}
-
-	/*if (
-		global_buf->gl_pixwidth != x->gl_pixwidth ||
-		global_buf->gl_pixheight != x->gl_pixheight ||
-		global_buf->gl_x1 != x->gl_x1 ||
-		global_buf->gl_y1 != x->gl_y1 ||
-		global_buf->gl_x2 != x->gl_x2 ||
-		global_buf->gl_y2 != x->gl_y2 ||
-		global_buf->gl_screenx1 != x->gl_screenx1 ||
-		global_buf->gl_screeny1 != x->gl_screeny1 ||
-		global_buf->gl_screenx2 != x->gl_screenx2 ||
-		global_buf->gl_screeny2 != x->gl_screeny2 ||
-		global_buf->gl_xmargin != x->gl_xmargin ||
-		global_buf->gl_ymargin != x->gl_ymargin ||
-		global_buf->gl_goprect != x->gl_goprect ||
-		global_buf->gl_isgraph != x->gl_isgraph ||
-		global_buf->gl_hidetext != x->gl_hidetext)
-	{*/
-		//fprintf(stderr,"changing values\n");
-		global_buf.gl_pixwidth = x->gl_pixwidth;
-		global_buf.gl_pixheight = x->gl_pixheight;
-		global_buf.gl_x1 = x->gl_x1;
-		global_buf.gl_y1 = x->gl_y1;
-		global_buf.gl_x2 = x->gl_x2;
-		global_buf.gl_y2 = x->gl_y2;
-		global_buf.gl_screenx1 = x->gl_screenx1;
-		global_buf.gl_screeny1 = x->gl_screeny1;
-		global_buf.gl_screenx2 = x->gl_screenx2;
-		global_buf.gl_screeny2 = x->gl_screeny2;
-		global_buf.gl_xmargin = x->gl_xmargin;
-		global_buf.gl_ymargin = x->gl_ymargin;
-		global_buf.gl_goprect = x->gl_goprect;
-		global_buf.gl_isgraph = x->gl_isgraph;
-		global_buf.gl_hidetext = x->gl_hidetext;
-	//}
+	global_buf.gl_pixwidth = x->gl_pixwidth;
+	global_buf.gl_pixheight = x->gl_pixheight;
+	global_buf.gl_x1 = x->gl_x1;
+	global_buf.gl_y1 = x->gl_y1;
+	global_buf.gl_x2 = x->gl_x2;
+	global_buf.gl_y2 = x->gl_y2;
+	global_buf.gl_screenx1 = x->gl_screenx1;
+	global_buf.gl_screeny1 = x->gl_screeny1;
+	global_buf.gl_screenx2 = x->gl_screenx2;
+	global_buf.gl_screeny2 = x->gl_screeny2;
+	global_buf.gl_xmargin = x->gl_xmargin;
+	global_buf.gl_ymargin = x->gl_ymargin;
+	global_buf.gl_goprect = x->gl_goprect;
+	global_buf.gl_isgraph = x->gl_isgraph;
+	global_buf.gl_hidetext = x->gl_hidetext;
 	
     return (&global_buf);
 }
@@ -1232,12 +1206,8 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		//close properties window first
 		t_int properties = gfxstub_haveproperties((void *)x);
 		if (properties) {
-			//fprintf(stderr,"have it\n");
 			sys_vgui("destroy .gfxstub%lx\n", properties);
 		}
-
-		//create a temporary data holder
-		//tmp = (t_undo_canvas_properties *)getbytes(sizeof(*tmp));
 
 		//store current canvas values into temporary data holder
 		tmp.gl_pixwidth = x->gl_pixwidth;
@@ -1290,9 +1260,6 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		buf->gl_isgraph = tmp.gl_isgraph;
 		buf->gl_hidetext = tmp.gl_hidetext;
 
-		//delete temporary data holder
-		//t_freebytes(tmp, sizeof(*tmp));
-
 		//redraw
 		canvas_setgraph(x, x->gl_isgraph, 0);
 		canvas_dirty(x, 1);
@@ -1320,8 +1287,7 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 
     else if (action == UNDO_FREE)
     {
-		//fprintf(stderr,"free...\n");
-        //if (buf != NULL) t_freebytes(buf, sizeof(*buf));
+		//do nothing since undo apply uses a global_buf struct rather than a pointer
     }
 }
 
@@ -1354,7 +1320,6 @@ void *canvas_undo_set_create(t_canvas *x)
 		for (y = x->gl_list; y; y = y->g_next)
 		{
 		    if (glist_isselected(x, y)) {
-				//fprintf(stderr,"saving object\n");
 		        gobj_save(y, buf->u_objectbuf);
 			}
 		}
