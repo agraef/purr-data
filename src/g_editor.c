@@ -1268,7 +1268,6 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		}
 		if (x->gl_owner && glist_isvisible(x->gl_owner))
 		{
-			fprintf(stderr,"we got gop\n");
 			glist_noselect(x);
 		    gobj_vis(&x->gl_gobj, x->gl_owner, 0);
 		    gobj_vis(&x->gl_gobj, x->gl_owner, 1);
