@@ -5,12 +5,18 @@
 /* Pd side of the Pd/Pd-gui interface.  Also, some system interface routines
 that didn't really belong anywhere. */
 
+#include "config.h"
+
 #include "m_pd.h"
 #include "s_stuff.h"
 #include "m_imp.h"
 #include "g_canvas.h"   /* for GUI queueing stuff */
-#ifndef MSW
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -20,11 +26,16 @@ that didn't really belong anywhere. */
 #include <sys/mman.h>
 #include <sys/resource.h>
 #endif
+
 #ifdef HAVE_BSTRING_H
 #include <bstring.h>
 #endif
-#ifdef _WIN32
+
+#ifdef HAVE_IO_H
 #include <io.h>
+#endif 
+
+#ifdef _WIN32
 #include <fcntl.h>
 #include <process.h>
 #include <winsock.h>
@@ -47,6 +58,7 @@ typedef int socklen_t;
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pthread.h>
+#include <glob.h>
 #else
 #include <stdlib.h>
 #endif
@@ -59,7 +71,7 @@ typedef int socklen_t;
 #endif
 
 #ifndef WISHAPP
-#define WISHAPP "wish84.exe"
+#define WISHAPP "wish85.exe"
 #endif
 
 #ifdef __linux__
@@ -206,7 +218,7 @@ void sys_microsleep(int microsec)
     sys_domicrosleep(microsec, 1);
 }
 
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 typedef void (*sighandler_t)(int);
 
 static void sys_signal(int signo, sighandler_t sigfun)
@@ -554,7 +566,7 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
 
 void sys_closesocket(int fd)
 {
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     close(fd);
 #endif
 #ifdef MSW
@@ -872,7 +884,7 @@ int sys_startgui(const char *guidir)
     short version = MAKEWORD(2, 0);
     WSADATA nobby;
 #endif
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     int stdinpipe[2];
 #endif
     /* create an empty FD poll list */
@@ -880,7 +892,7 @@ int sys_startgui(const char *guidir)
     sys_nfdpoll = 0;
     inbinbuf = binbuf_new();
 
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     signal(SIGHUP, sys_huphandler);
     signal(SIGINT, sys_exithandler);
     signal(SIGQUIT, sys_exithandler);
@@ -910,7 +922,7 @@ int sys_startgui(const char *guidir)
         if (GetCurrentDirectory(MAXPDSTRING, cmdbuf) == 0)
             strcpy(cmdbuf, ".");
 #endif
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
         if (!getcwd(cmdbuf, MAXPDSTRING))
             strcpy(cmdbuf, ".");
         
@@ -1019,63 +1031,51 @@ int sys_startgui(const char *guidir)
         if (sys_verbose) fprintf(stderr, "port %d\n", portno);
 
 
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
         if (!sys_guicmd)
         {
 #ifdef __APPLE__
-            char *homedir = getenv("HOME"), filename[250];
+            int i;
             struct stat statbuf;
-                /* first look for Wish bundled with and renamed "Pd" */
-            sprintf(filename, "%s/../../MacOS/Pd", guidir);
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            if (!homedir || strlen(homedir) > 150)
-                goto nohomedir;
-                /* Look for Wish in user's Applications.  Might or might
-                not be names "Wish Shell", and might or might not be
-                in "Utilities" subdir. */
-            sprintf(filename,
-                "%s/Applications/Utilities/Wish shell.app/Contents/MacOS/Wish Shell",
-                    homedir);
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            sprintf(filename,
-                "%s/Applications/Utilities/Wish.app/Contents/MacOS/Wish",
-                    homedir);
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            sprintf(filename,
-                "%s/Applications/Wish shell.app/Contents/MacOS/Wish Shell",
-                    homedir);
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            sprintf(filename,
-                "%s/Applications/Wish.app/Contents/MacOS/Wish",
-                    homedir);
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-        nohomedir:
-                /* Perform the same search among system applications. */
-            strcpy(filename, 
-                "/usr/bin/wish");
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            strcpy(filename, 
-                "/Applications/Utilities/Wish Shell.app/Contents/MacOS/Wish Shell");
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            strcpy(filename, 
-                "/Applications/Utilities/Wish.app/Contents/MacOS/Wish");
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            strcpy(filename, 
-                "/Applications/Wish Shell.app/Contents/MacOS/Wish Shell");
-            if (stat(filename, &statbuf) >= 0)
-                goto foundit;
-            strcpy(filename, 
-                "/Applications/Wish.app/Contents/MacOS/Wish");
-        foundit:
-            sprintf(cmdbuf, "\"%s\" %s/pd.tk %d\n", filename, guidir, portno);
+            glob_t glob_buffer;
+            char *homedir = getenv("HOME");
+            char embed_glob[FILENAME_MAX];
+            char embed_filename[FILENAME_MAX], home_filename[FILENAME_MAX];
+            char *wish_paths[10] = {
+                "(did not find an embedded wish)",
+                "(did not find a home directory)",
+                "/Applications/Utilities/Wish.app/Contents/MacOS/Wish",
+                "/Applications/Utilities/Wish Shell.app/Contents/MacOS/Wish Shell",
+                "/Applications/Wish.app/Contents/MacOS/Wish",
+                "/Applications/Wish Shell.app/Contents/MacOS/Wish Shell",
+                "/usr/local/bin/wish8.4",
+                "/sw/bin/wish8.4"
+                "/opt/bin/wish8.4"
+                "/usr/bin/wish8.4"
+                "/usr/local/bin/wish8.4",
+                "/usr/local/bin/wish",
+                "/usr/bin/wish"
+            };
+            /* this glob is needed so the Wish executable can have the same
+             * filename as the Pd.app, i.e. 'Pd-0.42-3.app' should have a Wish
+             * executable called 'Pd-0.42-3.app/Contents/MacOS/Pd-0.42-3' */
+            sprintf(embed_glob, "%s/../../MacOS/Pd*", guidir);
+            glob_buffer.gl_matchc = 1; /* we only need one match */
+            glob(embed_glob, GLOB_LIMIT, NULL, &glob_buffer);
+            if (glob_buffer.gl_pathc > 0) {
+                strcpy(embed_filename, glob_buffer.gl_pathv[0]);
+                wish_paths[0] = embed_filename;
+            }
+            sprintf(home_filename,
+                    "%s/Applications/Wish.app/Contents/MacOS/Wish",homedir);
+            wish_paths[1] = home_filename;
+            for(i=0;i<10;i++) {
+                if (sys_verbose)
+                    fprintf(stderr, "Trying Wish at \"%s\"\n", wish_paths[i]);
+                if (stat(wish_paths[i], &statbuf) >= 0)
+                    break;
+            }
+            sprintf(cmdbuf,"\"%s\" %s/pd.tk %d\n",wish_paths[i],guidir,portno);
 #else
             sprintf(cmdbuf,
                 "TCL_LIBRARY=\"%s/tcl/library\" TK_LIBRARY=\"%s/tk/library\" \
@@ -1119,7 +1119,7 @@ int sys_startgui(const char *guidir)
             perror("pd: exec");
             _exit(1);
        }
-#endif /* UNISTD */
+#endif /* HAVE_UNISTD_H */
 
 #ifdef MSW
             /* in MSW land "guipath" is unused; we just do everything from

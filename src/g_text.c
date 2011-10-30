@@ -325,6 +325,11 @@ static void messresponder_symbol(t_messresponder *x, t_symbol *s)
     outlet_symbol(x->mr_outlet, s);
 }
 
+static void messresponder_blob(t_messresponder *x, t_blob *st)
+{ /* MP 20070107 blob type */
+    outlet_blob(x->mr_outlet, st);
+}
+
 static void messresponder_list(t_messresponder *x, 
     t_symbol *s, int argc, t_atom *argv)
 {
@@ -353,6 +358,13 @@ static void message_symbol(t_message *x, t_symbol *s)
 {
     t_atom at;
     SETSYMBOL(&at, s);
+    binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
+}
+
+static void message_blob(t_message *x, t_blob *st)
+{
+    t_atom at;
+    SETBLOB(&at, st);
     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
 }
 
@@ -675,7 +687,6 @@ static void gatom_key(void *z, t_floatarg f)
             gatom_retext(x, 1);
         return;
     }
-    else if (c == ' ') return;
     else if (c == '\b')
     {
         if (len > 0)
@@ -793,6 +804,7 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
     x->a_symto = symto;
     x->a_expanded_to = canvas_realizedollar(x->a_glist, x->a_symto);
     gobj_vis(&x->a_text.te_g, x->a_glist, 1);
+    canvas_dirty(x->a_glist, 1);
 
     /* glist_retext(x->a_glist, &x->a_text); */
 }
@@ -852,7 +864,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
                 (double)x1, (double)y1,
                 canvas_realizedollar(x->a_glist, x->a_label)->s_name,
                 sys_hostfontsize(glist_getfont(glist)),
-                "black");
+                "$text_color");
         }
         else sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
     }
@@ -986,7 +998,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         int font = glist_getfont(glist);
         int fontwidth = sys_fontwidth(font), fontheight = sys_fontheight(font);
         width = (x->te_width > 0 ? x->te_width : 6) * fontwidth + 2;
-        height = fontheight + 1; /* borrowed from TMARGIN, etc, in g_rtext.c */
+        height = fontheight + 3; /* borrowed from TMARGIN, etc, in g_rtext.c */
     }
         /* if we're invisible we don't know our size so we just lie about
         it.  This is called on invisible boxes to establish order of inlets
@@ -1034,10 +1046,15 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
 {
     t_text *x = (t_text *)z;
     t_rtext *y = glist_findrtext(glist, x);
+    char *outline;
     rtext_select(y, state);
+    if (pd_class(&x->te_pd) == text_class)
+        outline = "$dash_outline";
+    else
+        outline = "$box_outline";
     if (glist_isvisible(glist) && gobj_shouldvis(&x->te_g, glist))
-        sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", glist, 
-            rtext_gettag(y), (state? "blue" : "black"));
+        sys_vgui(".x%lx.c itemconfigure %sR -outline %s\n", glist, 
+                 rtext_gettag(y), (state? "$select_color" : outline));
 }
 
 static void text_activate(t_gobj *z, t_glist *glist, int state)
@@ -1194,11 +1211,7 @@ static t_widgetbehavior gatom_widgetbehavior =
 
 /* -------------------- the "text" class  ------------ */
 
-#ifdef __APPLE__
 #define EXTRAPIX 2
-#else
-#define EXTRAPIX 1
-#endif
 
     /* draw inlets and outlets for a text object or for a graph. */
 void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
@@ -1206,19 +1219,24 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 {
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
+    int issignal;
     for (i = 0; i < n; i++)
     {
         int onset = x1 + (width - IOWIDTH) * i / nplus;
         if (firsttime)
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
-                glist_getcanvas(glist),
-                onset, y2 - 1,
-                onset + IOWIDTH, y2,
+        {
+            issignal = obj_issignaloutlet(ob,i);
+            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
+                      -fill %s -outline %s -tags %so%d\n",
+                glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
+                (issignal ? "$signal_nlet" : "$msg_nlet"),
+                (issignal ? "$signal_cord" : "$msg_cord"),
                 tag, i);
+        }
         else
             sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
                 glist_getcanvas(glist), tag, i,
-                onset, y2 - 1,
+                onset, y2 - 2,
                 onset + IOWIDTH, y2);
     }
     n = obj_ninlets(ob);
@@ -1227,11 +1245,15 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     {
         int onset = x1 + (width - IOWIDTH) * i / nplus;
         if (firsttime)
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
-                glist_getcanvas(glist),
-                onset, y1,
-                onset + IOWIDTH, y1 + EXTRAPIX,
+        {
+            issignal = obj_issignalinlet(ob,i);
+            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
+                      -fill %s -outline %s -tags %si%d\n",
+                glist_getcanvas(glist), onset, y1, onset + IOWIDTH, y1 + EXTRAPIX,
+                (issignal ? "$signal_nlet" : "$msg_nlet"),
+                (issignal ? "$signal_cord" : "$msg_cord"),
                 tag, i);
+        }
         else
             sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
                 glist_getcanvas(glist), tag, i,
@@ -1244,62 +1266,82 @@ void text_drawborder(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
     t_object *ob;
-    int x1, y1, x2, y2, width, height;
+    int x1, y1, x2, y2, width, height, msg_draw_const, atom_draw_const;
     text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
     width = x2 - x1;
     height = y2 - y1;
     if (x->te_type == T_OBJECT)
     {
-        char *pattern = ((pd_class(&x->te_pd) == text_class) ? "-" : "\"\"");
-        if (firsttime)
-            sys_vgui(".x%lx.c create line\
- %d %d %d %d %d %d %d %d %d %d -dash %s -tags %sR\n",
-                glist_getcanvas(glist),
-                    x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  pattern, tag);
+        char *pattern; char *outline;
+        if (pd_class(&x->te_pd) == text_class)
+        {
+            pattern = "-";
+            outline = "$dash_outline";
+        }
         else
         {
-            sys_vgui(".x%lx.c coords %sR\
- %d %d %d %d %d %d %d %d %d %d\n",
+            pattern = "\"\"";
+            outline = "$box_outline";
+        }
+        if (firsttime)
+            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d \
+                      -dash %s -outline %s -fill $obj_box_fill -tags %sR\n", 
+                glist_getcanvas(glist),
+                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
+                     pattern, outline, tag);
+        else
+        {
+            sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
-            sys_vgui(".x%lx.c itemconfigure %sR -dash %s\n",
-                glist_getcanvas(glist), tag, pattern);
+/* this seems to be totally extraneous  hans@at.or.at
+             sys_vgui(".x%lx.c itemconfigure %sR -dash %s -outline %s\n", 
+                     glist_getcanvas(glist), tag, pattern, outline); */
         }
     }
     else if (x->te_type == T_MESSAGE)
     {
+        msg_draw_const = ((y2-y1)/4);
+        if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
         if (firsttime)
-            sys_vgui(".x%lx.c create line\
- %d %d %d %d %d %d %d %d %d %d %d %d %d %d -tags %sR\n",
+            sys_vgui(".x%lx.c create polygon \
+                     %d %d %d %d %d %d %d %d %d %d %d %d %d %d \
+                     -outline $box_outline -fill $msg_box_fill -tags %sR\n",
                 glist_getcanvas(glist),
-                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
+                     x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
+                     x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
                 x1, y2,  x1, y1,
                     tag);
         else
             sys_vgui(".x%lx.c coords %sR\
  %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
-                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
-                x1, y2,  x1, y1);
+                x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,
+                x2, y2-msg_draw_const, x2+msg_draw_const, y2,  x1, y2,  x1, y1);
     }
     else if (x->te_type == T_ATOM)
     {
+        atom_draw_const = ((y2-y1)/3);
         if (firsttime)
-            sys_vgui(".x%lx.c create line\
- %d %d %d %d %d %d %d %d %d %d %d %d -tags %sR\n",
+            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d \
+                     -outline $box_outline -fill $atom_box_fill -tags %sR\n",
                 glist_getcanvas(glist),
-                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
+                     x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
+                     x2, y2,  x1, y2,  x1, y1, 
                     tag);
         else
             sys_vgui(".x%lx.c coords %sR\
  %d %d %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
-                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
+                x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,
+                x2, y2,  x1, y2,  x1, y1);
     }
         /* draw inlets/outlets */
     
     if (ob = pd_checkobject(&x->te_pd))
         glist_drawiofor(glist, ob, firsttime, tag, x1, y1, x2, y2);
+    if (firsttime) /* raise cords over everything else */
+        sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
 }
 
 void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
@@ -1385,6 +1427,7 @@ void g_text_setup(void)
     class_addbang(message_class, message_bang);
     class_addfloat(message_class, message_float);
     class_addsymbol(message_class, message_symbol);
+    class_addblob(message_class, message_blob);
     class_addlist(message_class, message_list);
     class_addanything(message_class, message_list);
 

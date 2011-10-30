@@ -8,6 +8,7 @@
 #import <mach/mach_error.h>
 #import <mach/mach_time.h>
 #import <mach/clock.h>
+#include <unistd.h>
 
 #include "porttime.h"
 #include "sys/time.h"
@@ -122,3 +123,8 @@ PtTimestamp Pt_Time()
     return (PtTimestamp)(nsec_time / NSEC_PER_MSEC);
 }
 
+
+void Pt_Sleep(long duration)
+{
+    usleep(duration * 1000);
+}

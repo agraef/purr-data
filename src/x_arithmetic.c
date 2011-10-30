@@ -6,20 +6,44 @@
 done on floats; the logical and bitwise binops convert their
 inputs to int and their outputs back to float. */
 
+#include "config.h"
+
 #include "m_pd.h"
 #include <math.h>
 
-
-/* MSW and OSX don't appear to have single-precision ANSI math */
-#if defined(MSW) || defined(__APPLE__)
+#if !defined(HAVE_SINF)
 #define sinf sin
+#endif
+
+#if !defined(HAVE_COSF)
 #define cosf cos
+#endif
+
+#if !defined(HAVE_ATANF)
 #define atanf atan
+#endif
+
+#if !defined(HAVE_ATAN2F)
 #define atan2f atan2
+#endif
+
+#if !defined(HAVE_SQRTF)
 #define sqrtf sqrt
+#endif
+
+#if !defined(HAVE_LOGF)
 #define logf log
+#endif
+
+#if !defined(HAVE_EXPF)
 #define expf exp
+#endif
+
+#if !defined(HAVE_FABSF)
 #define fabsf fabs
+#endif
+
+#if !defined(HAVE_POWF)
 #define powf pow
 #endif
 
@@ -636,9 +660,6 @@ static void *exp_new(void)
 static void exp_float(t_object *x, t_float f)
 {
     t_float g;
-#ifdef MSW
-    char buf[10];
-#endif
     if (f > MAXLOG) f = MAXLOG;
     g = expf(f);
     outlet_float(x->ob_outlet, g);
@@ -664,6 +685,8 @@ static void *wrap_new(void)
 {
     t_object *x = (t_object *)pd_new(wrap_class);
     outlet_new(x, &s_float);
+    pd_error(x, "A new incompatible [wrap] object was introduced in Pd 0.42.");
+    post("\tFor a backwards-compatible version, use [zexy/wrap]");
     return (x);
 }
 

@@ -4,16 +4,25 @@
 
 /* Clock functions (which should move, but where?) and MIDI queueing */
 
+#include "config.h"
+
 #include "m_pd.h"
 #include "s_stuff.h"
 #include "m_imp.h"
-#ifdef UNISTD
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
+/* XXX Hack!  This should be done with a cleaner check. */
 #include <sys/time.h>
+#endif
+
 #ifdef HAVE_BSTRING_H
 #include <bstring.h>
 #endif
-#endif
+
 #ifdef MSW
 #include <winsock.h>
 #include <sys/types.h>

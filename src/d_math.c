@@ -569,6 +569,8 @@ static void *pow_tilde_new(t_symbol *s, int argc, t_atom *argv)
     t_pow_tilde *x = (t_pow_tilde *)pd_new(pow_tilde_class);
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
     outlet_new(&x->x_obj, &s_signal);
+    pd_error(x, "A new incompatible [pow~] object was introduced in Pd 0.42.");
+    post("\tFor a backwards-compatible version, use [cyclone/pow~]");
     x->x_f = 0;
     return (x);
 }

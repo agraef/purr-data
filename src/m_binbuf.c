@@ -2,17 +2,21 @@
 * For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
 
+#include "config.h"
 
 #include <stdlib.h>
 #include "m_pd.h"
 #include "s_stuff.h"
 #include <stdio.h>
-#ifdef UNISTD
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef MSW
+
+#ifdef HAVE_IO_H
 #include <io.h>
 #endif
+
 #include <fcntl.h>
 #include <string.h>
 #include <stdarg.h>
@@ -725,6 +729,10 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                 if (nargs == 1) pd_float(target, mstack->a_w.w_float);
                 else pd_list(target, 0, nargs, mstack);
                 break;
+            case A_BLOB: /* MP 20070106 blob type */
+                if (nargs == 1) pd_blob(target, mstack->a_w.w_blob);
+                else pd_list(target, 0, nargs, mstack);
+                break;
             }
         }
         msp = mstack;
@@ -740,7 +748,7 @@ broken:
 
 static int binbuf_doopen(char *s, int mode)
 {
-    char namebuf[MAXPDSTRING];
+    char namebuf[FILENAME_MAX];
 #ifdef MSW
     mode |= O_BINARY;
 #endif
@@ -750,7 +758,7 @@ static int binbuf_doopen(char *s, int mode)
 
 static FILE *binbuf_dofopen(char *s, char *mode)
 {
-    char namebuf[MAXPDSTRING];
+    char namebuf[FILENAME_MAX];
     sys_bashfilename(s, namebuf);
     return (fopen(namebuf, mode));
 }
@@ -761,7 +769,7 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
     int fd;
     int readret;
     char *buf;
-    char namebuf[MAXPDSTRING];
+    char namebuf[FILENAME_MAX];
     
     namebuf[0] = 0;
     if (*dirname)
@@ -814,9 +822,9 @@ int binbuf_read_via_canvas(t_binbuf *b, char *filename, t_canvas *canvas,
     int crflag)
 {
     int filedesc;
-    char buf[MAXPDSTRING], *bufptr;
+    char buf[FILENAME_MAX], *bufptr;
     if ((filedesc = canvas_open(canvas, filename, "",
-        buf, &bufptr, MAXPDSTRING, 0)) < 0)
+        buf, &bufptr, FILENAME_MAX, 0)) < 0)
     {
         error("%s: can't open", filename);
         return (1);
@@ -832,9 +840,9 @@ int binbuf_read_via_path(t_binbuf *b, char *filename, char *dirname,
     int crflag)
 {
     int filedesc;
-    char buf[MAXPDSTRING], *bufptr;
+    char buf[FILENAME_MAX], *bufptr;
     if ((filedesc = open_via_path(
-        dirname, filename, "", buf, &bufptr, MAXPDSTRING, 0)) < 0)
+        dirname, filename, "", buf, &bufptr, FILENAME_MAX, 0)) < 0)
     {
         error("%s: can't open", filename);
         return (1);
@@ -853,7 +861,7 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd);
 int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
 {
     FILE *f = 0;
-    char sbuf[WBUFSIZE], fbuf[MAXPDSTRING], *bp = sbuf, *ep = sbuf + WBUFSIZE;
+    char sbuf[WBUFSIZE], fbuf[FILENAME_MAX], *bp = sbuf, *ep = sbuf + WBUFSIZE;
     t_atom *ap;
     int indx, deleteit = 0;
     int ncolumn = 0;
@@ -862,7 +870,8 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
     if (*dir)
         strcat(fbuf, dir), strcat(fbuf, "/");
     strcat(fbuf, filename);
-    if (!strcmp(filename + strlen(filename) - 4, ".pat"))
+    if (!strcmp(filename + strlen(filename) - 4, ".pat") ||
+        !strcmp(filename + strlen(filename) - 4, ".mxt"))
     {
         x = binbuf_convert(x, 0);
         deleteit = 1;
@@ -943,14 +952,15 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
     t_binbuf *newb = binbuf_new();
     t_atom *vec = oldb->b_vec;
     t_int n = oldb->b_n, nextindex, stackdepth = 0, stack[MAXSTACK],
-        nobj = 0, i;
+        nobj = 0, i, gotfontsize = 0;
     t_atom outmess[MAXSTACK], *nextmess;
+    t_float fontsize = 10;
     if (!maxtopd)
         binbuf_addv(newb, "ss;", gensym("max"), gensym("v2"));
     for (nextindex = 0; nextindex < n; )
     {
         int endmess, natom;
-        char *first, *second;
+        char *first, *second, *third;
         for (endmess = nextindex; endmess < n && vec[endmess].a_type != A_SEMI;
             endmess++)
                 ;
@@ -1137,11 +1147,49 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                 }
                 else if (!strcmp(second, "user"))
                 {
-                    binbuf_addv(newb, "ssffs;",
-                        gensym("#X"), gensym("obj"),
-                        atom_getfloatarg(3, natom, nextmess),
-                        atom_getfloatarg(4, natom, nextmess),
-                        atom_getsymbolarg(2, natom, nextmess)); 
+                    third = (nextmess+2)->a_w.w_symbol->s_name;
+                    if (!strcmp(third, "hslider"))
+                    {
+                        t_float range = atom_getfloatarg(7, natom, nextmess);
+                        t_float multiplier = atom_getfloatarg(8, natom, nextmess);
+                        t_float offset = atom_getfloatarg(9, natom, nextmess);
+                        binbuf_addv(newb, "ssffsffffffsssfffffffff;",
+                                    gensym("#X"), gensym("obj"),
+                                    atom_getfloatarg(3, natom, nextmess),
+                                    atom_getfloatarg(4, natom, nextmess),
+                                    gensym("hsl"),
+                                    atom_getfloatarg(6, natom, nextmess),
+                                    atom_getfloatarg(5, natom, nextmess),
+                                    offset,
+                                    range + offset,
+                                    0., 0.,
+                                    gensym("empty"), gensym("empty"), gensym("empty"),
+                                    0., -8., 0., 8., -262144., -1., -1., 0., 1.); 
+                   }
+                    else if (!strcmp(third, "uslider"))
+                    {
+                        t_float range = atom_getfloatarg(7, natom, nextmess);
+                        t_float multiplier = atom_getfloatarg(8, natom, nextmess);
+                        t_float offset = atom_getfloatarg(9, natom, nextmess);
+                        binbuf_addv(newb, "ssffsffffffsssfffffffff;",
+                                    gensym("#X"), gensym("obj"),
+                                    atom_getfloatarg(3, natom, nextmess),
+                                    atom_getfloatarg(4, natom, nextmess),
+                                    gensym("vsl"),
+                                    atom_getfloatarg(5, natom, nextmess),
+                                    atom_getfloatarg(6, natom, nextmess),
+                                    offset,
+                                    range + offset,
+                                    0., 0.,
+                                    gensym("empty"), gensym("empty"), gensym("empty"),
+                                    0., -8., 0., 8., -262144., -1., -1., 0., 1.);
+                    }
+                    else
+                        binbuf_addv(newb, "ssffs;",
+                                    gensym("#X"), gensym("obj"),
+                                    atom_getfloatarg(3, natom, nextmess),
+                                    atom_getfloatarg(4, natom, nextmess),
+                                    atom_getsymbolarg(2, natom, nextmess));
                     nobj++;
                 }
                 else if (!strcmp(second, "connect")||
@@ -1170,12 +1218,17 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                     stack[stackdepth] = nobj;
                     stackdepth++;
                     nobj = 0;
+                    if(!gotfontsize) { /* only the first canvas sets the font size */
+                        fontsize = atom_getfloatarg(6, natom, nextmess);
+                        gotfontsize = 1;
+                    }
+                    t_float x = atom_getfloatarg(2, natom, nextmess);
+                    t_float y = atom_getfloatarg(3, natom, nextmess);
                     binbuf_addv(newb, "ssffff;", 
                         gensym("#N"), gensym("vpatcher"),
-                            atom_getfloatarg(2, natom, nextmess),
-                            atom_getfloatarg(3, natom, nextmess),
-                            atom_getfloatarg(4, natom, nextmess),
-                            atom_getfloatarg(5, natom, nextmess));
+                            x, y,
+                            atom_getfloatarg(4, natom, nextmess) + x,
+                            atom_getfloatarg(5, natom, nextmess) + y);
                 }
             }
             if (!strcmp(first, "#X"))
@@ -1184,12 +1237,17 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                     && (ISSYMBOL (&nextmess[4], "pd")))
                 {
                     binbuf_addv(newb, "ss;", gensym("#P"), gensym("pop"));
-                    binbuf_addv(newb, "ssffffss;",
-                        gensym("#P"), gensym("newobj"),
-                        atom_getfloatarg(2, natom, nextmess),
-                        atom_getfloatarg(3, natom, nextmess), 50., 1.,
-                        gensym("patcher"),
-                            atom_getsymbolarg(5, natom, nextmess));
+                    SETSYMBOL(outmess, gensym("#P"));
+                    SETSYMBOL(outmess + 1, gensym("newobj"));
+                    outmess[2] = nextmess[2];
+                    outmess[3] = nextmess[3];
+                    SETFLOAT(outmess + 4, 50.*(natom-5));
+                    SETFLOAT(outmess + 5, fontsize);
+                    SETSYMBOL(outmess + 6, gensym("p"));
+                    for (i = 5; i < natom; i++)
+                        outmess[i+2] = nextmess[i];
+                    SETSEMI(outmess + natom + 2);
+                    binbuf_add(newb, natom + 3, outmess);
                     if (stackdepth) stackdepth--;
                     nobj = stack[stackdepth];
                     nobj++;
@@ -1203,25 +1261,25 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                             gensym("inlet"),
                             atom_getfloatarg(2, natom, nextmess),
                             atom_getfloatarg(3, natom, nextmess),
-                            15.);
+                            10. + fontsize);
                     else if (classname == gensym("inlet~"))
                         binbuf_addv(newb, "ssffff;", gensym("#P"),
                             gensym("inlet"),
                             atom_getfloatarg(2, natom, nextmess),
                             atom_getfloatarg(3, natom, nextmess),
-                            15., 1.);
+                            10. + fontsize, 1.);
                     else if (classname == gensym("outlet"))
                         binbuf_addv(newb, "ssfff;", gensym("#P"),
                             gensym("outlet"),
                             atom_getfloatarg(2, natom, nextmess),
                             atom_getfloatarg(3, natom, nextmess),
-                            15.);
+                            10. + fontsize);
                     else if (classname == gensym("outlet~"))
                         binbuf_addv(newb, "ssffff;", gensym("#P"),
                             gensym("outlet"),
                             atom_getfloatarg(2, natom, nextmess),
                             atom_getfloatarg(3, natom, nextmess),
-                            15., 1.);
+                            10. + fontsize, 1.);
                     else if (classname == gensym("bng"))
                         binbuf_addv(newb, "ssffff;", gensym("#P"),
                             gensym("button"),
@@ -1246,16 +1304,65 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                                     (atom_getfloatarg(6, natom, nextmess) == 1? 1 :
                                          atom_getfloatarg(6, natom, nextmess) - 1),
                             atom_getfloatarg(7, natom, nextmess));
+                    else if (classname == gensym("hsl")) 
+                    {
+                        t_float slmin = atom_getfloatarg(7, natom, nextmess);
+                        t_float slmax = atom_getfloatarg(8, natom, nextmess);
+                        binbuf_addv(newb, "sssffffffff;", gensym("#P"),
+                            gensym("user"),
+                            gensym("hslider"),
+                            atom_getfloatarg(2, natom, nextmess),
+                            atom_getfloatarg(3, natom, nextmess),
+                            atom_getfloatarg(6, natom, nextmess),
+                            atom_getfloatarg(5, natom, nextmess),
+                            slmax - slmin + 1, /* range */
+                            1.,            /* multiplier */
+                            slmin,         /* offset */
+                            0.);
+                    }
+                    else if ( (classname == gensym("trigger")) ||
+                              (classname == gensym("t")) )
+                    {
+                        SETSYMBOL(outmess, gensym("#P"));
+                        SETSYMBOL(outmess + 1, gensym("newex"));
+                        outmess[2] = nextmess[2];
+                        outmess[3] = nextmess[3];
+                        SETFLOAT(outmess + 4, 50.*(natom-4));
+                        SETFLOAT(outmess + 5, fontsize);
+                        outmess[6] = nextmess[4];
+                        t_symbol *arg;
+                        for (i = 5; i < natom; i++) {
+                            arg = atom_getsymbolarg(i, natom, nextmess);
+                            if (arg == gensym("a"))
+                                SETSYMBOL(outmess + i + 2, gensym("l"));
+                            else if (arg == gensym("anything"))
+                                SETSYMBOL(outmess + i + 2, gensym("l"));
+                            else if (arg == gensym("bang"))
+                                SETSYMBOL(outmess + i + 2, gensym("b"));
+                            else if (arg == gensym("float"))
+                                SETSYMBOL(outmess + i + 2, gensym("f"));
+                            else if (arg == gensym("list"))
+                                SETSYMBOL(outmess + i + 2, gensym("l"));
+                            else if (arg == gensym("symbol"))
+                                SETSYMBOL(outmess + i + 2, gensym("s"));
+                            else 
+                                outmess[i+2] = nextmess[i];
+                        }
+                        SETSEMI(outmess + natom + 2);
+                        binbuf_add(newb, natom + 3, outmess);
+                    }
                     else
                     {
                         SETSYMBOL(outmess, gensym("#P"));
                         SETSYMBOL(outmess + 1, gensym("newex"));
                         outmess[2] = nextmess[2];
                         outmess[3] = nextmess[3];
-                        SETFLOAT(outmess + 4, 50);
-                        SETFLOAT(outmess + 5, 1);
+                        SETFLOAT(outmess + 4, 50.*(natom-4));
+                        SETFLOAT(outmess + 5, fontsize);
                         for (i = 4; i < natom; i++)
                             outmess[i+2] = nextmess[i];
+                        if (classname == gensym("osc~"))
+                            SETSYMBOL(outmess + 6, gensym("cycle~"));
                         SETSEMI(outmess + natom + 2);
                         binbuf_add(newb, natom + 3, outmess);
                     }
@@ -1270,8 +1377,8 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                         (strcmp(second, "msg") ? "comment" : "message")));
                     outmess[2] = nextmess[2];
                     outmess[3] = nextmess[3];
-                    SETFLOAT(outmess + 4, 50);
-                    SETFLOAT(outmess + 5, 1);
+                    SETFLOAT(outmess + 4, 50.*(natom-4));
+                    SETFLOAT(outmess + 5, fontsize);
                     for (i = 4; i < natom; i++)
                         outmess[i+2] = nextmess[i];
                     SETSEMI(outmess + natom + 2);
@@ -1280,10 +1387,13 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                 }
                 else if (!strcmp(second, "floatatom"))
                 {
+                    t_float width = atom_getfloatarg(4, natom, nextmess)*fontsize;
+                    if(width<8) width = 150; /* if pd width=0, set it big */
                     binbuf_addv(newb, "ssfff;",
                         gensym("#P"), gensym("flonum"),
                         atom_getfloatarg(2, natom, nextmess),
-                        atom_getfloatarg(3, natom, nextmess), 35);
+                        atom_getfloatarg(3, natom, nextmess),
+                        width);
                     nobj++;
                 }
                 else if (!strcmp(second, "connect"))
@@ -1350,7 +1460,8 @@ void pd_doloadbang(void);
 void binbuf_evalfile(t_symbol *name, t_symbol *dir)
 {
     t_binbuf *b = binbuf_new();
-    int import = !strcmp(name->s_name + strlen(name->s_name) - 4, ".pat");
+    int import = !strcmp(name->s_name + strlen(name->s_name) - 4, ".pat") ||
+        !strcmp(name->s_name + strlen(name->s_name) - 4, ".mxt");
         /* set filename so that new canvases can pick them up */
     int dspstate = canvas_suspend_dsp();
     glob_setfilename(0, name, dir);

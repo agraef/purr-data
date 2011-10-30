@@ -2,17 +2,21 @@
 * For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
 
+#include "config.h"
+
 #include "m_pd.h"
 /* #include <string.h> */
-#ifdef MSW
+
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
-#else
+#endif
+
+#ifdef HAVE_ALLOCA_H
 #include <alloca.h>
 #endif
 
 extern t_pd *newest;
 
-#define HAVE_ALLOCA 1   /* LATER this should be set by configure script! */
 #define LIST_NGETBYTE 100 /* bigger that this we use alloc, not alloca */
 
 /* the "list" object family.

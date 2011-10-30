@@ -17,13 +17,13 @@
 
 #define LMARGIN 2
 #define RMARGIN 2
-/* for some reason, it draws text 1 pixel lower on Mac OS X (& linux too?) */
-#ifndef MSW
-#define TMARGIN 2
-#define BMARGIN 2
-#else
+/* for some reason, it draws text 1 pixel lower on Mac OS X */
+#ifdef __APPLE__
 #define TMARGIN 3
 #define BMARGIN 1
+#else
+#define TMARGIN 4
+#define BMARGIN 0
 #endif
 
 #define SEND_FIRST 1
@@ -248,7 +248,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             dispx + LMARGIN, dispy + TMARGIN,
             outchars, tempbuf, sys_hostfontsize(font),
             (glist_isselected(x->x_glist,
-                &x->x_glist->gl_gobj)? "blue" : "black"));
+                &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
     else if (action == SEND_UPDATE)
     {
         sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
@@ -387,7 +387,7 @@ void rtext_select(t_rtext *x, int state)
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
     sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
-        x->x_tag, (state? "blue" : "black"));
+        x->x_tag, (state? "$select_color" : "$text_color"));
     canvas_editing = canvas;
 }
 

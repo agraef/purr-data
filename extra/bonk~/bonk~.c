@@ -53,7 +53,7 @@ decay and other times in msec
 #include <stdio.h>
 #include <string.h>
 
-#ifdef NT
+#ifdef _MSC_VER
 #pragma warning (disable: 4305 4244)
 #endif
  
@@ -82,7 +82,12 @@ static t_class *bonk_class;
 #endif
 
 #ifndef _MSC_VER
-#include <alloca.h>
+# ifdef __MINGW32__
+/* alloca is in malloc.h in MinGW */
+#  include <malloc.h>
+# else
+#  include <alloca.h>
+# endif
 #endif
 
 /* ------------------------ bonk~ ----------------------------- */

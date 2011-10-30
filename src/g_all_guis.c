@@ -5,6 +5,7 @@
 /* g_7_guis.c written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
 /* thanks to Miller Puckette, Guenther Geiger and Krzystof Czaja */
 
+#include "config.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,10 +17,12 @@
 #include "g_all_guis.h"
 #include <math.h>
 
-#ifdef MSW
-#include <io.h>
-#else
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifdef HAVE_IO_H
+#include <io.h>
 #endif
 
 /*  #define GGEE_HSLIDER_COMPATIBLE  */
@@ -425,8 +428,8 @@ void iemgui_label_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av
     if(glist_isvisible(iemgui->x_glist))
         sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
                  glist_getcanvas(iemgui->x_glist), x,
-                 iemgui->x_obj.te_xpix+iemgui->x_ldx,
-                 iemgui->x_obj.te_ypix+iemgui->x_ldy);
+                 text_xpix((t_object *)x,iemgui->x_glist)+iemgui->x_ldx,
+                 text_ypix((t_object *)x,iemgui->x_glist)+iemgui->x_ldy);
 }
 
 void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
@@ -446,9 +449,9 @@ void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *a
         f = 4;
     iemgui->x_fontsize = f;
     if(glist_isvisible(iemgui->x_glist))
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s}\n",
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s}\n",
                  glist_getcanvas(iemgui->x_glist), x, iemgui->x_font, 
-                 iemgui->x_fontsize, sys_fontweight);
+				 iemgui->x_fontsize, sys_fontweight);
 }
 
 void iemgui_size(void *x, t_iemgui *iemgui)
@@ -630,6 +633,7 @@ int iemgui_dialog(t_iemgui *iemgui, t_symbol **srl, int argc, t_atom *argv)
         fs = 4;
     iemgui->x_fontsize = fs;
     iemgui_verify_snd_ne_rcv(iemgui);
+    canvas_dirty(iemgui->x_glist, 1);
     return(oldsndrcvable);
 }
 

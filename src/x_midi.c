@@ -162,7 +162,6 @@ static void notein_setup(void)
     notein_class = class_new(gensym("notein"), (t_newmethod)notein_new,
         (t_method)notein_free, sizeof(t_notein), CLASS_NOINLET, A_DEFFLOAT, 0);
     class_addlist(notein_class, notein_list);
-    class_sethelpsymbol(notein_class, gensym("midi"));
     notein_sym = gensym("#notein");
 }
 
@@ -236,7 +235,6 @@ static void ctlin_setup(void)
         (t_method)ctlin_free, sizeof(t_ctlin),
             CLASS_NOINLET, A_GIMME, 0);
     class_addlist(ctlin_class, ctlin_list);
-    class_sethelpsymbol(ctlin_class, gensym("midi"));
     ctlin_sym = gensym("#ctlin");
 }
 
@@ -303,7 +301,6 @@ static void pgmin_setup(void)
         (t_method)pgmin_free, sizeof(t_pgmin),
             CLASS_NOINLET, A_DEFFLOAT, 0);
     class_addlist(pgmin_class, pgmin_list);
-    class_sethelpsymbol(pgmin_class, gensym("midi"));
     pgmin_sym = gensym("#pgmin");
 }
 
@@ -368,7 +365,6 @@ static void bendin_setup(void)
     bendin_class = class_new(gensym("bendin"), (t_newmethod)bendin_new,
         (t_method)bendin_free, sizeof(t_bendin), CLASS_NOINLET, A_DEFFLOAT, 0);
     class_addlist(bendin_class, bendin_list);
-    class_sethelpsymbol(bendin_class, gensym("midi"));
     bendin_sym = gensym("#bendin");
 }
 
@@ -727,7 +723,6 @@ static void noteout_setup(void)
     noteout_class = class_new(gensym("noteout"), (t_newmethod)noteout_new, 0,
         sizeof(t_noteout), 0, A_DEFFLOAT, 0);
     class_addfloat(noteout_class, noteout_float);
-    class_sethelpsymbol(noteout_class, gensym("midi"));
 }
 
 
@@ -767,7 +762,6 @@ static void ctlout_setup(void)
     ctlout_class = class_new(gensym("ctlout"), (t_newmethod)ctlout_new, 0,
         sizeof(t_ctlout), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addfloat(ctlout_class, ctlout_float);
-    class_sethelpsymbol(ctlout_class, gensym("midi"));
 }
 
 
@@ -807,7 +801,6 @@ static void pgmout_setup(void)
     pgmout_class = class_new(gensym("pgmout"), (t_newmethod)pgmout_new, 0,
         sizeof(t_pgmout), 0, A_DEFFLOAT, 0);
     class_addfloat(pgmout_class, pgmout_float);
-    class_sethelpsymbol(pgmout_class, gensym("midi"));
 }
 
 
@@ -844,7 +837,6 @@ static void bendout_setup(void)
     bendout_class = class_new(gensym("bendout"), (t_newmethod)bendout_new, 0,
         sizeof(t_bendout), 0, A_DEFFLOAT, 0);
     class_addfloat(bendout_class, bendout_float);
-    class_sethelpsymbol(bendout_class, gensym("midi"));
 }
 
 /* -------------------------- touch -------------------------- */

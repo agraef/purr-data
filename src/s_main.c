@@ -26,8 +26,8 @@
 #endif
 
 char *pd_version;
-char pd_compiletime[] = __TIME__;
-char pd_compiledate[] = __DATE__;
+static const char pd_compiletime[] = __TIME__;
+static const char pd_compiledate[] = __DATE__;
 
 void pd_init(void);
 int sys_argparse(int argc, char **argv);
@@ -62,13 +62,12 @@ int sys_nmidiin = -1;
 int sys_midiindevlist[MAXMIDIINDEV] = {1};
 int sys_midioutdevlist[MAXMIDIOUTDEV] = {1};
 
-char sys_font[100] = 
-#ifdef MSW
-    "Courier";
+#ifdef __APPLE__
+char sys_font[] = "Monaco"; /* tb: font name */
 #else
-    "Courier";
+char sys_font[] = "DejaVu Sans Mono"; /* tb: font name */
 #endif
-char sys_fontweight[] = "bold  "; /* currently only used for iemguis */
+char sys_fontweight[] = "normal"; /* currently only used for iemguis */
 static int sys_main_srate;
 static int sys_main_advance;
 static int sys_main_callback;
@@ -81,7 +80,7 @@ int sys_extraflags;
 char sys_extraflagsstring[MAXPDSTRING];
 int sys_run_scheduler(const char *externalschedlibname,
     const char *sys_extraflagsstring);
-int sys_noautopatch;    /* temporary hack to defeat new 0.42 editing */
+int sys_noautopatch = 1;    /* temporary hack to defeat new 0.42 editing */
 
     /* here the "-1" counts signify that the corresponding vector hasn't been
     specified in command line arguments; sys_set_audio_settings will detect it
@@ -120,8 +119,8 @@ typedef struct _fontinfo
     in the six fonts.  */
 
 static t_fontinfo sys_fontlist[] = {
-    {8, 6, 10, 0, 0, 0}, {10, 7, 13, 0, 0, 0}, {12, 9, 16, 0, 0, 0},
-    {16, 10, 20, 0, 0, 0}, {24, 15, 25, 0, 0, 0}, {36, 25, 45, 0, 0, 0}};
+    {8, 5, 11, 8, 5, 11}, {10, 6, 13, 10, 6, 13}, {12, 7, 16, 12, 7, 16},
+    {16, 10, 19, 16, 10, 19}, {24, 14, 29, 24, 14, 29}, {36, 23, 44, 36, 23, 44}};
 #define NFONT (sizeof(sys_fontlist)/sizeof(*sys_fontlist))
 
 /* here are the actual font size structs on msp's systems:
@@ -172,17 +171,13 @@ int sys_fontheight(int fontsize)
 }
 
 int sys_defaultfont;
-#ifdef MSW
-#define DEFAULTFONT 12
-#else
 #define DEFAULTFONT 10
-#endif
 
 static void openit(const char *dirname, const char *filename)
 {
-    char dirbuf[MAXPDSTRING], *nameptr;
+    char dirbuf[FILENAME_MAX], *nameptr;
     int fd = open_via_path(dirname, filename, "", dirbuf, &nameptr,
-        MAXPDSTRING, 0);
+        FILENAME_MAX, 0);
     if (fd >= 0)
     {
         close (fd);
@@ -220,11 +215,6 @@ void glob_initfromgui(void *dummy, t_symbol *s, int argc, t_atom *argv)
                 atom_getintarg(3 * j + 3, argc, argv) <= wantwidth)
                     best = j;
         }
-            /* best is now the host font index for the desired font index i. */
-        sys_fontlist[i].fi_hostfontsize =
-            atom_getintarg(3 * best + 2, argc, argv);
-        sys_fontlist[i].fi_width = atom_getintarg(3 * best + 3, argc, argv);
-        sys_fontlist[i].fi_height = atom_getintarg(3 * best + 4, argc, argv);
     }
 #if 0
     for (i = 0; i < 6; i++)
@@ -262,10 +252,11 @@ static void sys_afterargparse(void);
 static void pd_makeversion(void)
 {
     char foo[100];
-    sprintf(foo,  "Pd version %d.%d-%d%s\n",PD_MAJOR_VERSION,
-        PD_MINOR_VERSION,PD_BUGFIX_VERSION,PD_TEST_VERSION);
-    pd_version = malloc(strlen(foo)+1);
-    strcpy(pd_version, foo);
+
+    snprintf(foo, sizeof(foo), "Pd version %d.%d-%d%s\n", PD_MAJOR_VERSION,
+        PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);	
+
+    pd_version = strdup(foo);
 }
 
 /* this is called from main() in s_entry.c */
@@ -379,7 +370,7 @@ static char *(usagemessage[]) = {
 "-open <file>     -- open file(s) on startup\n",
 "-lib <file>      -- load object library(s)\n",
 "-font-size <n>     -- specify default font size in points\n",
-"-font-face <name>  -- specify default font\n",
+"-font-face <name>  -- specify default font (default: Bitstream Vera Sans Mono)\n",
 "-font-weight <name>-- specify default font weight (normal or bold)\n",
 "-verbose         -- extra printout on startup and when searching for files\n",
 "-version         -- don't run Pd; just print out which version it is \n",
@@ -399,7 +390,7 @@ static char *(usagemessage[]) = {
 "-schedlib <file> -- plug in external scheduler\n",
 "-extraflags <s>  -- string argument to send schedlib\n",
 "-batch           -- run off-line as a batch process\n",
-"-noautopatch     -- defeat auto-patching new from selected objects\n",
+"-autopatch       -- enable auto-patching new from selected objects\n",
 };
 
 static void sys_parsedevlist(int *np, int *vecp, int max, char *str)
@@ -439,7 +430,7 @@ static int sys_getmultidevchannels(int n, int *devlist)
     INSTALL_PREFIX.  In MSW, we don't try to use INSTALL_PREFIX. */
 void sys_findprogdir(char *progname)
 {
-    char sbuf[MAXPDSTRING], sbuf2[MAXPDSTRING], *sp;
+    char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX], *sp;
     char *lastslash; 
 #ifdef UNISTD
     struct stat statbuf;
@@ -448,12 +439,12 @@ void sys_findprogdir(char *progname)
     /* find out by what string Pd was invoked; put answer in "sbuf". */
 #ifdef MSW
     GetModuleFileName(NULL, sbuf2, sizeof(sbuf2));
-    sbuf2[MAXPDSTRING-1] = 0;
+    sbuf2[FILENAME_MAX-1] = 0;
     sys_unbashfilename(sbuf2, sbuf);
 #endif /* MSW */
 #ifdef UNISTD
-    strncpy(sbuf, progname, MAXPDSTRING);
-    sbuf[MAXPDSTRING-1] = 0;
+    strncpy(sbuf, progname, FILENAME_MAX);
+    sbuf[FILENAME_MAX-1] = 0;
 #endif
     lastslash = strrchr(sbuf, '/');
     if (lastslash)
@@ -487,9 +478,9 @@ void sys_findprogdir(char *progname)
             .../doc
         and in "complicated" unix installations, it's:
             .../bin/pd
-            .../lib/pd/bin/pd-gui
-            .../lib/pd/doc
-        To decide which, we stat .../lib/pd; if that exists, we assume it's
+            .../lib/pd-extended/bin/pd-gui
+            .../lib/pd-extended/doc
+        To decide which, we stat .../lib/pd-extended; if that exists, we assume it's
         the complicated layout.  In MSW, it's the "simple" layout, but
         the gui program is straight wish80:
             .../bin/pd
@@ -500,28 +491,29 @@ void sys_findprogdir(char *progname)
     sys_libdir = gensym(sbuf2);
     sys_guidir = &s_;   /* in MSW the guipath just depends on the libdir */
 #else
-    strncpy(sbuf, sbuf2, MAXPDSTRING-30);
-    sbuf[MAXPDSTRING-30] = 0;
-    strcat(sbuf, "/lib/pd");
-    if (stat(sbuf, &statbuf) >= 0)
+    realpath(sbuf2, sbuf);
+    strncpy(sbuf2, sbuf, FILENAME_MAX-30);
+    sbuf[FILENAME_MAX-30] = 0;
+    strcat(sbuf2, "/lib/pd-extended");
+    if (stat(sbuf2, &statbuf) >= 0)
     {
             /* complicated layout: lib dir is the one we just stat-ed above */
-        sys_libdir = gensym(sbuf);
-            /* gui lives in .../lib/pd/bin */
-        strncpy(sbuf, sbuf2, MAXPDSTRING-30);
-        sbuf[MAXPDSTRING-30] = 0;
-        strcat(sbuf, "/lib/pd/bin");
-        sys_guidir = gensym(sbuf);
+        sys_libdir = gensym(sbuf2);
+            /* gui lives in .../lib/pd-extended/bin */
+        strncpy(sbuf2, sbuf, FILENAME_MAX-30);
+        sbuf[FILENAME_MAX-30] = 0;
+        strcat(sbuf2, "/lib/pd-extended/bin");
+        sys_guidir = gensym(sbuf2);
     }
     else
     {
             /* simple layout: lib dir is the parent */
-        sys_libdir = gensym(sbuf2);
+        sys_libdir = gensym(sbuf);
             /* gui lives in .../bin */
-        strncpy(sbuf, sbuf2, MAXPDSTRING-30);
-        sbuf[MAXPDSTRING-30] = 0;
-        strcat(sbuf, "/bin");
-        sys_guidir = gensym(sbuf);
+        strncpy(sbuf2, sbuf, FILENAME_MAX-30);
+        sbuf[FILENAME_MAX-30] = 0;
+        strcat(sbuf2, "/bin");
+        sys_guidir = gensym(sbuf2);
     }
 #endif
 }
@@ -837,6 +829,11 @@ int sys_argparse(int argc, char **argv)
         else if (!strcmp(*argv, "-noautopatch"))
         {
             sys_noautopatch = 1;
+            argc--; argv++;
+        }
+        else if (!strcmp(*argv, "-autopatch"))
+        {
+            sys_noautopatch = 0;
             argc--; argv++;
         }
 #ifdef UNISTD

@@ -5,6 +5,7 @@
 /* g_7_guis.c written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
 /* thanks to Miller Puckette, Guenther Geiger and Krzystof Czaja */
 
+#include "config.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,10 +17,12 @@
 #include "g_all_guis.h"
 #include <math.h>
 
-#ifdef MSW
-#include <io.h>
-#else
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifdef HAVE_IO_H
+#include <io.h>
 #endif
 
 
@@ -32,13 +35,17 @@ static t_class *hslider_class;
 
 static void hslider_draw_update(t_gobj *client, t_glist *glist)
 {
+    if (!glist) /* BUG this function should not receive null glists */
+    {
+        bug("hslider_draw_update");
+        return;
+    }
     t_hslider *x = (t_hslider *)client;
-    t_canvas *canvas=glist_getcanvas(glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-
     if (glist_isvisible(glist))
     {
+        t_canvas *canvas=glist_getcanvas(glist);
         int r = text_xpix(&x->x_gui.x_obj, glist) + (x->x_val + 50)/100;
+        int ypos=text_ypix(&x->x_gui.x_obj, glist);
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
                  canvas, x, r, ypos+1,
                  r, ypos + x->x_gui.x_h);
@@ -76,12 +83,12 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
              canvas, r, ypos+1, r,
              ypos + x->x_gui.x_h, x->x_gui.x_fcol, x);
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-             -font {{%s} -%d %s} -fill #%6.6x -tags %lxLABEL\n",
+             -font {{%s} %d %s} -fill #%6.6x -tags %lxLABEL\n",
              canvas, xpos+x->x_gui.x_ldx,
              ypos+x->x_gui.x_ldy,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
              x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             x->x_gui.x_lcol, x);
+			 x->x_gui.x_lcol, x);
     if(!x->x_gui.x_fsf.x_snd_able)
         sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxOUT%d\n",
              canvas, xpos-3, ypos + x->x_gui.x_h-1,
@@ -137,7 +144,7 @@ static void hslider_draw_config(t_hslider* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n",
+    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
              x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_lcol,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");

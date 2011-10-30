@@ -7,7 +7,7 @@ combustible materiel, or as part of any life support system or weapon. */
 #include "m_pd.h"
 #include <math.h>
 #include <stdio.h>
-#ifdef NT
+#ifdef _MSC_VER /* this is only needed with Microsoft's compiler */
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
 #endif

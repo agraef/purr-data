@@ -1,6 +1,8 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(d_arithmetic.c)
 
+AC_CONFIG_HEADER(config.h)
+
 AC_SUBST(alsa, yes)
 AC_SUBST(jack, no)
 AC_SUBST(portaudio, no)
@@ -23,6 +25,7 @@ AC_SUBST(OSNUMBER)
 AC_SUBST(EXTERNTARGET)
 AC_SUBST(ASIOSRC)
 AC_SUBST(GUISRC)
+AC_SUBST(PDEXEC)
 
 dnl other defaults
 
@@ -44,10 +47,8 @@ AC_ARG_ENABLE(setuid,   [  --enable-setuid         install as setuid (linux)],
     setuid=$enableval)
 AC_ARG_ENABLE(fftw,     [  --enable-fftw           use FFTW package],
     fftw=$enableval)
-AC_ARG_ENABLE(fat,      [  --disable-fat           build fat binary on Mac OS X], 
+AC_ARG_ENABLE(fat,		[  --disable-fat    build fat binary on Mac OS X], 
     fat=$enableval, fat="yes")
-AC_ARG_ENABLE(tk,       [  --disable-tk            build without tcl/tk-GUI],
-    tk=$enableval)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -63,7 +64,7 @@ AC_HEADER_TIME
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(fcntl.h limits.h malloc.h sys/ioctl.h sys/time.h unistd.h bstring.h)
+AC_CHECK_HEADERS(fcntl.h limits.h malloc.h sys/ioctl.h sys/time.h unistd.h bstring.h io.h)
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
@@ -173,8 +174,13 @@ else
 GUISRC=
 fi
 
+# leave the executable as 'pd' on Mac OS X and Windows, but call it
+# 'pdextended' on GNU/Linux
+PDEXEC=pd
+
 if test `uname -s` = Linux;
 then
+    PDEXEC=pdextended
     dnl Ckecking for ALSA
     echo .................... alsa= $alsa
 dnl This should be fixed so Pd can use ALSA shared libraries where appropriate.
@@ -315,6 +321,8 @@ then
         ../portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.c  \
         ../portmidi/pm_mac/pmmac.c \
         ../portmidi/pm_mac/pmmacosxcm.c \
+        ../portmidi/pm_mac/finddefault.c \
+        ../portmidi/pm_mac/readbinaryplist.c \
         ../portmidi/pm_common/pmutil.c \
         ../portmidi/pm_common/portmidi.c \
         ../portmidi/porttime/ptmacosx_cf.c "
@@ -347,11 +355,11 @@ then
     OSNUMBER=2
     if test x$jack = "xyes";
     then
-        LDFLAGS=$LDFLAGS" -weak_framework Jack"
+    	LDFLAGS=$LDFLAGS" -weak_framework Jackmp"
     fi
     if test x$jack = "xrun";
     then
-        LDFLAGS=$LDFLAGS" -weak_framework Jack"
+        LDFLAGS=$LDFLAGS" -weak_framework Jackmp"
     fi
 fi
 
@@ -447,6 +455,16 @@ if test -d ../bin
 then echo -n
 else mkdir ../bin
 fi
+
+AST_EXT_LIB_CHECK([SINF],   [m], [sinf])
+AST_EXT_LIB_CHECK([COSF],   [m], [cosf])
+AST_EXT_LIB_CHECK([ATANF],  [m], [atanf])
+AST_EXT_LIB_CHECK([ATAN2F], [m], [atan2f])
+AST_EXT_LIB_CHECK([SQRTF],  [m], [sqrtf])
+AST_EXT_LIB_CHECK([LOGF],   [m], [logf])
+AST_EXT_LIB_CHECK([EXPF],   [m], [expf])
+AST_EXT_LIB_CHECK([FABSF],  [m], [fabsf])
+AST_EXT_LIB_CHECK([POWF],   [m], [powf])
 
 AC_OUTPUT(makefile)
 

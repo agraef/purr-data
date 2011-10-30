@@ -100,11 +100,13 @@ jack_srate (jack_nframes_t srate, void *arg)
 static void
 jack_shutdown (void *arg)
 {
-        /* Ignore for now */
-  //    exit (1);
+  verbose(1, "JACK-server shut down");
+  sys_close_audio();
+  jack_client = NULL;
 }
 
 static int jack_xrun(void* arg) {
+  verbose(1, "JACK-server xrun");
   jack_dio_error = 1;
   return 0;
 }
@@ -196,7 +198,7 @@ static int jack_connect_ports(char* client)
   if (jack_ports) 
     for (i=0;jack_ports[i] != NULL && i < sys_inchannels;i++)      
       if (jack_connect (jack_client, jack_ports[i], jack_port_name (input_port[i]))) 
-        fprintf (stderr, "cannot connect input ports %s -> %s\n", jack_ports[i],jack_port_name (input_port[i]));
+        error("JACK: cannot connect input ports %s -> %s", jack_ports[i],jack_port_name (input_port[i]));
       
   
   
@@ -205,7 +207,7 @@ static int jack_connect_ports(char* client)
   if (jack_ports) 
     for (i=0;jack_ports[i] != NULL && i < sys_outchannels;i++)      
       if (jack_connect (jack_client, jack_port_name (output_port[i]), jack_ports[i])) 
-        fprintf (stderr, "cannot connect output ports %s -> %s\n", jack_port_name (output_port[i]),jack_ports[i]);
+        error("JACK: cannot connect output ports %s -> %s", jack_port_name (output_port[i]),jack_ports[i]);
   
   
   
@@ -214,7 +216,8 @@ static int jack_connect_ports(char* client)
 }
 
 
-void pd_jack_error_callback(const char *desc) {
+static void pd_jack_error_callback(const char *desc) {
+  error("JACK error: %s", desc);
   return;
 }
 
@@ -228,28 +231,49 @@ jack_open_audio(int inchans, int outchans, int rate)
         int client_iterator = 0;
         int new_jack = 0;
         int srate;
+        jack_status_t status;
+
+        if(NULL==jack_client_new) {
+            fprintf(stderr,"JACK framework not available\n");
+            return 1;
+        }
 
         jack_dio_error = 0;
         
         if ((inchans == 0) && (outchans == 0)) return 0;
 
         if (outchans > NUM_JACK_PORTS) {
-                fprintf(stderr,"%d output ports not supported, setting to %d\n",outchans, NUM_JACK_PORTS);
+                error("JACK: %d output ports not supported, setting to %d",outchans, NUM_JACK_PORTS);
                 outchans = NUM_JACK_PORTS;
         }
 
         if (inchans > NUM_JACK_PORTS) {
-                fprintf(stderr,"%d input ports not supported, setting to %d\n",inchans, NUM_JACK_PORTS);
+                error("JACK: %d input ports not supported, setting to %d",inchans, NUM_JACK_PORTS);
                 inchans = NUM_JACK_PORTS;
         }
 
-        /* try to become a client of the JACK server (we allow two pd's)*/
+        /* try to become a client of the JACK server */
+        /* if no JACK server exists, start a default one (jack_client_open() does that for us... */
         if (!jack_client) {
           do {
             sprintf(port_name,"pure_data_%d",client_iterator);
             client_iterator++;
-          } while (((jack_client = jack_client_new (port_name)) == 0) && client_iterator < 2);
-        
+            /* do not try to start the jack-server...seems to make problems... */
+            jack_client = jack_client_open (port_name, JackNoStartServer, &status, NULL);
+            if (status & JackServerFailed) {
+              error("JACK: unable to connect to JACK server");
+              jack_client=NULL;
+              break;
+            }
+          } while (status & JackNameNotUnique);
+
+          if(status) {
+            if (status & JackServerStarted) {
+              post("JACK: started JACK server?");
+            } else {
+              post("JACK: jack returned status %d", status);
+            }
+          }
           
           if (!jack_client) { // jack spits out enough messages already, do not warn
             sys_inchannels = sys_outchannels = 0;
@@ -305,11 +329,21 @@ jack_open_audio(int inchans, int outchans, int rate)
         for (j = 0; j < inchans; j++) {
                 sprintf(port_name, "input%d", j);
                 if (!input_port[j]) input_port[j] = jack_port_register (jack_client, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
+                if (!input_port[j]) {
+                  error("JACK: can only register %d input ports (instead of requested %d)", j, inchans);
+                  sys_inchannels = inchans = j;
+                  break;
+                }
         }
 
         for (j = 0; j < outchans; j++) {
                 sprintf(port_name, "output%d", j);
                 if (!output_port[j]) output_port[j] = jack_port_register (jack_client, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+                if (!output_port[j]) {
+                  error("JACK: can only register %d output ports (instead of requested %d)", j, outchans);
+                  sys_outchannels = outchans = j;
+                  break;
+                }
         } 
         outport_count = outchans;
 
@@ -317,7 +351,7 @@ jack_open_audio(int inchans, int outchans, int rate)
  
         if (new_jack) {
           if (jack_activate (jack_client)) {
-            fprintf (stderr, "cannot activate client\n");
+            error("JACK: cannot activate client");
             sys_inchannels = sys_outchannels = 0;
             return 1;
           }
@@ -399,7 +433,7 @@ void jack_getdevs(char *indevlist, int *nindevs,
 
 void jack_listdevs( void)
 {
-    post("device listing not implemented for jack yet\n");
+    error("device listing not implemented for jack yet");
 }
 
 #endif /* JACK */

@@ -1,5 +1,5 @@
 /*
- * $Id: pa_unix_oss.c 1238 2007-07-15 16:58:50Z aknudsen $
+ * $Id: pa_unix_oss.c 1509 2010-06-06 17:36:33Z dmitrykos $
  * PortAudio Portable Real-Time Audio Library
  * Latest Version at: http://www.portaudio.com
  * OSS implementation by:
@@ -65,7 +65,11 @@
 
 #ifdef HAVE_SYS_SOUNDCARD_H
 # include <sys/soundcard.h>
-# define DEVICE_NAME_BASE            "/dev/dsp"
+# ifdef __NetBSD__
+#  define DEVICE_NAME_BASE           "/dev/audio"
+# else
+#  define DEVICE_NAME_BASE           "/dev/dsp"
+# endif
 #elif defined(HAVE_LINUX_SOUNDCARD_H)
 # include <linux/soundcard.h>
 # define DEVICE_NAME_BASE            "/dev/dsp"
@@ -97,7 +101,7 @@ static pthread_t mainThread_;
             /* PaUtil_SetLastHostErrorInfo should only be used in the main thread */ \
             if( (code) == paUnanticipatedHostError && pthread_self() == mainThread_ ) \
             { \
-                PaUtil_SetLastHostErrorInfo( paALSA, sysErr_, strerror( errno ) ); \
+                PaUtil_SetLastHostErrorInfo( paOSS, sysErr_, strerror( errno ) ); \
             } \
             \
             PaUtil_DebugPrint(( "Expression '" #expr "' failed in '" __FILE__ "', line: " STRINGIZE( __LINE__ ) "\n" )); \
@@ -181,7 +185,7 @@ typedef struct PaOssStream
     double sampleRate;
 
     int callbackMode;
-    int callbackStop, callbackAbort;
+    volatile int callbackStop, callbackAbort;
 
     PaOssStreamComponent *capture, *playback;
     unsigned long pollTimeout;
@@ -332,7 +336,11 @@ static PaError QueryDirection( const char *deviceName, StreamMode mode, double *
         }
         else
         {
-            PA_DEBUG(( "%s: Can't access device: %s\n", __FUNCTION__, strerror( errno ) ));
+            /* Ignore ENOENT, which means we've tried a non-existent device */
+            if( errno != ENOENT )
+            {
+                PA_DEBUG(( "%s: Can't access device %s: %s\n", __FUNCTION__, deviceName, strerror( errno ) ));
+            }
         }
 
         return paDeviceUnavailable;
@@ -401,11 +409,7 @@ static PaError QueryDirection( const char *deviceName, StreamMode mode, double *
     if( *defaultSampleRate < 0 )
     {
         sr = 44100;
-        if( ioctl( devHandle, SNDCTL_DSP_SPEED, &sr ) < 0 )
-        {
-            result = paUnanticipatedHostError;
-            goto error;
-        }
+        ENSURE_( ioctl( devHandle, SNDCTL_DSP_SPEED, &sr ), paUnanticipatedHostError );
 
         *defaultSampleRate = sr;
     }
@@ -508,27 +512,20 @@ static PaError BuildDeviceList( PaOSSHostApiRepresentation *ossApi )
     /* Find devices by calling QueryDevice on each
      * potential device names.  When we find a valid one,
      * add it to a linked list.
-     * A: Can there only be 10 devices? */
+     * A: Set an arbitrary of 100 devices, should probably be a smarter way. */
 
-    for( i = 0; i < 10; i++ )
+    for( i = 0; i < 100; i++ )
     {
        char deviceName[32];
        PaDeviceInfo *deviceInfo;
        int testResult;
-       struct stat stbuf;
 
        if( i == 0 )
           snprintf(deviceName, sizeof (deviceName), "%s", DEVICE_NAME_BASE);
        else
           snprintf(deviceName, sizeof (deviceName), "%s%d", DEVICE_NAME_BASE, i);
 
-       /* PA_DEBUG(("PaOSS BuildDeviceList: trying device %s\n", deviceName )); */
-       if( stat( deviceName, &stbuf ) < 0 )
-       {
-           if( ENOENT != errno )
-               PA_DEBUG(( "%s: Error stat'ing %s: %s\n", __FUNCTION__, deviceName, strerror( errno ) ));
-           continue;
-       }
+       /* PA_DEBUG(("%s: trying device %s\n", __FUNCTION__, deviceName )); */
        if( (testResult = QueryDevice( deviceName, ossApi, &deviceInfo )) != paNoError )
        {
            if( testResult != paDeviceUnavailable )
@@ -785,11 +782,15 @@ error:
     return result;
 }
 
+/** Open input and output devices.
+ *
+ * @param idev: Returned input device file descriptor.
+ * @param odev: Returned output device file descriptor.
+ */
 static PaError OpenDevices( const char *idevName, const char *odevName, int *idev, int *odev )
 {
     PaError result = paNoError;
     int flags = O_NONBLOCK, duplex = 0;
-    int enableBits = 0;
     *idev = *odev = -1;
 
     if( idevName && odevName )
@@ -809,10 +810,6 @@ static PaError OpenDevices( const char *idevName, const char *odevName, int *ide
     {
         ENSURE_( *idev = open( idevName, flags ), paDeviceUnavailable );
         PA_ENSURE( ModifyBlocking( *idev, 1 ) ); /* Blocking */
-
-        /* Initially disable */
-        enableBits = ~PCM_ENABLE_INPUT;
-        ENSURE_( ioctl( *idev, SNDCTL_DSP_SETTRIGGER, &enableBits ), paUnanticipatedHostError );
     }
     if( odevName )
     {
@@ -820,10 +817,6 @@ static PaError OpenDevices( const char *idevName, const char *odevName, int *ide
         {
             ENSURE_( *odev = open( odevName, flags ), paDeviceUnavailable );
             PA_ENSURE( ModifyBlocking( *odev, 1 ) ); /* Blocking */
-
-            /* Initially disable */
-            enableBits = ~PCM_ENABLE_OUTPUT;
-            ENSURE_( ioctl( *odev, SNDCTL_DSP_SETTRIGGER, &enableBits ), paUnanticipatedHostError );
         }
         else
         {
@@ -976,8 +969,10 @@ static int CalcHigherLogTwo( int n )
     return log2;
 }
 
-static PaError PaOssStreamComponent_Configure( PaOssStreamComponent *component, double sampleRate, unsigned long framesPerBuffer,
-        StreamMode streamMode, PaOssStreamComponent *master )
+/** Configure stream component device parameters.
+ */
+static PaError PaOssStreamComponent_Configure( PaOssStreamComponent *component, double sampleRate, unsigned long
+        framesPerBuffer, StreamMode streamMode, PaOssStreamComponent *master )
 {
     PaError result = paNoError;
     int temp, nativeFormat;
@@ -1189,6 +1184,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     const PaDeviceInfo *inputDeviceInfo = 0, *outputDeviceInfo = 0;
     int bpInitialized = 0;
     double inLatency = 0., outLatency = 0.;
+    int i = 0;
 
     /* validate platform specific flags */
     if( (streamFlags & paPlatformSpecificFlags) != 0 )
@@ -1223,6 +1219,14 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             if( inputParameters->channelCount != outputParameters->channelCount )
                 return paInvalidChannelCount;
         }
+    }
+
+    /* Round framesPerBuffer to the next power-of-two to make OSS happy. */
+    if( framesPerBuffer != paFramesPerBufferUnspecified )
+    {
+        framesPerBuffer &= INT_MAX;
+        for (i = 1; framesPerBuffer > i; i <<= 1) ;
+        framesPerBuffer = i;
     }
 
     /* allocate and do basic initialization of the stream structure */
@@ -1313,7 +1317,17 @@ static PaError PaOssStream_WaitForFrames( PaOssStream *stream, unsigned long *fr
 
     while( pollPlayback || pollCapture )
     {
+#ifdef PTHREAD_CANCELED
         pthread_testcancel();
+#else
+        /* avoid indefinite waiting on thread not supporting cancelation */
+        if( stream->callbackStop || stream->callbackAbort )
+        {
+            PA_DEBUG(( "Cancelling PaOssStream_WaitForFrames\n" ));
+            (*frames) = 0;
+            return paNoError;
+        }
+#endif
 
         /* select may modify the timeout parameter */
         selectTimeval.tv_usec = timeout;
@@ -1337,8 +1351,17 @@ static PaError PaOssStream_WaitForFrames( PaOssStream *stream, unsigned long *fr
             ENSURE_( -1, paUnanticipatedHostError );
         }
         */
+#ifdef PTHREAD_CANCELED
         pthread_testcancel();
-
+#else
+        /* avoid indefinite waiting on thread not supporting cancelation */
+        if( stream->callbackStop || stream->callbackAbort )
+        {
+            PA_DEBUG(( "Cancelling PaOssStream_WaitForFrames\n" ));
+            (*frames) = 0;
+            return paNoError;
+        }
+#endif
         if( pollCapture )
         {
             if( FD_ISSET( captureFd, &readFds ) )
@@ -1428,6 +1451,12 @@ static PaError PaOssStream_Prepare( PaOssStream *stream )
     if( stream->triggered )
         return result;
 
+    /* The OSS reference instructs us to clear direction bits before setting them.*/
+    if( stream->playback )
+        ENSURE_( ioctl( stream->playback->fd, SNDCTL_DSP_SETTRIGGER, &enableBits ), paUnanticipatedHostError );
+    if( stream->capture )
+        ENSURE_( ioctl( stream->capture->fd, SNDCTL_DSP_SETTRIGGER, &enableBits ), paUnanticipatedHostError );
+
     if( stream->playback )
     {
         size_t bufSz = PaOssStreamComponent_BufferSize( stream->playback );
@@ -1478,17 +1507,29 @@ static PaError PaOssStream_Stop( PaOssStream *stream, int abort )
     PaError result = paNoError;
 
     /* Looks like the only safe way to stop audio without reopening the device is SNDCTL_DSP_POST.
-     * Also disable capture/playback till the stream is started again */
+     * Also disable capture/playback till the stream is started again.
+     */
+    int captureErr = 0, playbackErr = 0;
     if( stream->capture )
     {
-        ENSURE_( ioctl( stream->capture->fd, SNDCTL_DSP_POST, 0 ), paUnanticipatedHostError );
+        if( (captureErr = ioctl( stream->capture->fd, SNDCTL_DSP_POST, 0 )) < 0 )
+        {
+            PA_DEBUG(( "%s: Failed to stop capture device, error: %d\n", __FUNCTION__, captureErr ));
+        }
     }
     if( stream->playback && !stream->sharedDevice )
     {
-        ENSURE_( ioctl( stream->playback->fd, SNDCTL_DSP_POST, 0 ), paUnanticipatedHostError );
+        if( (playbackErr = ioctl( stream->playback->fd, SNDCTL_DSP_POST, 0 )) < 0 )
+        {
+            PA_DEBUG(( "%s: Failed to stop playback device, error: %d\n", __FUNCTION__, playbackErr ));
+        }
     }
 
-error:
+    if( captureErr || playbackErr )
+    {
+        result = paUnanticipatedHostError;
+    }
+
     return result;
 }
 
@@ -1581,8 +1622,15 @@ static void *PaOSS_AudioThreadProc( void *userData )
 
     while( 1 )
     {
+#ifdef PTHREAD_CANCELED
         pthread_testcancel();
-
+#else
+        if( stream->callbackAbort ) /* avoid indefinite waiting on thread not supporting cancelation */
+        {
+            PA_DEBUG(( "Aborting callback thread\n" ));
+            break;
+        }
+#endif
         if( stream->callbackStop && callbackResult == paContinue )
         {
             PA_DEBUG(( "Setting callbackResult to paComplete\n" ));
@@ -1609,8 +1657,21 @@ static void *PaOSS_AudioThreadProc( void *userData )
         {
             unsigned long frames = framesAvail;
 
+#ifdef PTHREAD_CANCELED
             pthread_testcancel();
+#else
+            if( stream->callbackStop )
+            {
+                PA_DEBUG(( "Setting callbackResult to paComplete\n" ));
+                callbackResult = paComplete;
+            }
 
+            if( stream->callbackAbort ) /* avoid indefinite waiting on thread not supporting cancelation */
+            {
+                PA_DEBUG(( "Aborting callback thread\n" ));
+                break;
+            }
+#endif
             PaUtil_BeginCpuLoadMeasurement( &stream->cpuLoadMeasurer );
 
             /* Read data */
@@ -1852,6 +1913,7 @@ static PaError ReadStream( PaStream* s,
                            void *buffer,
                            unsigned long frames )
 {
+    PaError result = paNoError;
     PaOssStream *stream = (PaOssStream*)s;
     int bytesRequested, bytesRead;
     unsigned long framesRequested;
@@ -1872,21 +1934,28 @@ static PaError ReadStream( PaStream* s,
         framesRequested = PA_MIN( frames, stream->capture->hostFrames );
 
 	bytesRequested = framesRequested * PaOssStreamComponent_FrameSize( stream->capture );
-	bytesRead = read( stream->capture->fd, stream->capture->buffer, bytesRequested );
+	ENSURE_( (bytesRead = read( stream->capture->fd, stream->capture->buffer, bytesRequested )),
+                 paUnanticipatedHostError );
 	if ( bytesRequested != bytesRead )
+	{
+	    PA_DEBUG(( "Requested %d bytes, read %d\n", bytesRequested, bytesRead ));
 	    return paUnanticipatedHostError;
+	}
 
 	PaUtil_SetInputFrameCount( &stream->bufferProcessor, stream->capture->hostFrames );
 	PaUtil_SetInterleavedInputChannels( &stream->bufferProcessor, 0, stream->capture->buffer, stream->capture->hostChannelCount );
         PaUtil_CopyInput( &stream->bufferProcessor, &userBuffer, framesRequested );
 	frames -= framesRequested;
     }
-    return paNoError;
+
+error:
+    return result;
 }
 
 
 static PaError WriteStream( PaStream *s, const void *buffer, unsigned long frames )
 {
+    PaError result = paNoError;
     PaOssStream *stream = (PaOssStream*)s;
     int bytesRequested, bytesWritten;
     unsigned long framesConverted;
@@ -1912,35 +1981,50 @@ static PaError WriteStream( PaStream *s, const void *buffer, unsigned long frame
 	frames -= framesConverted;
 
 	bytesRequested = framesConverted * PaOssStreamComponent_FrameSize( stream->playback );
-	bytesWritten = write( stream->playback->fd, stream->playback->buffer, bytesRequested );
+	ENSURE_( (bytesWritten = write( stream->playback->fd, stream->playback->buffer, bytesRequested )),
+                 paUnanticipatedHostError );
 
 	if ( bytesRequested != bytesWritten )
+	{
+	    PA_DEBUG(( "Requested %d bytes, wrote %d\n", bytesRequested, bytesWritten ));
 	    return paUnanticipatedHostError;
+	}
     }
-    return paNoError;
+
+error:
+    return result;
 }
 
 
 static signed long GetStreamReadAvailable( PaStream* s )
 {
+    PaError result = paNoError;
     PaOssStream *stream = (PaOssStream*)s;
     audio_buf_info info;
 
-    if( ioctl( stream->capture->fd, SNDCTL_DSP_GETISPACE, &info ) < 0 )
-        return paUnanticipatedHostError;
+    ENSURE_( ioctl( stream->capture->fd, SNDCTL_DSP_GETISPACE, &info ), paUnanticipatedHostError );
     return info.fragments * stream->capture->hostFrames;
+
+error:
+    return result;
 }
 
 
 /* TODO: Compute number of allocated bytes somewhere else, can we use ODELAY with capture */
 static signed long GetStreamWriteAvailable( PaStream* s )
 {
+    PaError result = paNoError;
     PaOssStream *stream = (PaOssStream*)s;
     int delay = 0;
-
-    if( ioctl( stream->playback->fd, SNDCTL_DSP_GETODELAY, &delay ) < 0 )
-        return paUnanticipatedHostError;
-
+#ifdef SNDCTL_DSP_GETODELAY
+    ENSURE_( ioctl( stream->playback->fd, SNDCTL_DSP_GETODELAY, &delay ), paUnanticipatedHostError );
+#endif
     return (PaOssStreamComponent_BufferSize( stream->playback ) - delay) / PaOssStreamComponent_FrameSize( stream->playback );
+
+/* Conditionally compile this to avoid warning about unused label */
+#ifdef SNDCTL_DSP_GETODELAY
+error:
+    return result;
+#endif
 }
 

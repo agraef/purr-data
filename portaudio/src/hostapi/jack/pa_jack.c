@@ -1,5 +1,5 @@
 /*
- * $Id: pa_jack.c 1238 2007-07-15 16:58:50Z aknudsen $
+ * $Id: pa_jack.c 1530 2010-07-29 06:29:41Z dmitrykos $
  * PortAudio Portable Real-Time Audio Library
  * Latest Version at: http://www.portaudio.com
  * JACK Implementation by Joshua Haberman
@@ -254,7 +254,7 @@ static PaError BlockingInitFIFO( PaUtilRingBuffer *rbuf, long numFrames, long by
     char *buffer = (char *) malloc( numBytes );
     if( buffer == NULL ) return paInsufficientMemory;
     memset( buffer, 0, numBytes );
-    return (PaError) PaUtil_InitializeRingBuffer( rbuf, numBytes, buffer );
+    return (PaError) PaUtil_InitializeRingBuffer( rbuf, 1, numBytes, buffer );
 }
 
 /* Free buffer. */
@@ -717,14 +717,19 @@ PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi,
     ASSERT_CALL( pthread_cond_init( &jackHostApi->cond, NULL ), 0 );
 
     /* Try to become a client of the JACK server.  If we cannot do
-     * this, then this API cannot be used. */
+     * this, then this API cannot be used.
+     *
+     * Without the JackNoStartServer option, the jackd server is started
+     * automatically which we do not want.
+     */
 
-    jackHostApi->jack_client = jack_client_open( clientName_, 0, &jackStatus );
+    jackHostApi->jack_client = jack_client_open( clientName_, JackNoStartServer, &jackStatus );
     if( !jackHostApi->jack_client )
     {
         /* the V19 development docs say that if an implementation
          * detects that it cannot be used, it should return a NULL
          * interface and paNoError */
+        PA_DEBUG(( "%s: Couldn't connect to JACK, status: %d\n", __FUNCTION__, jackStatus ));
         result = paNoError;
         goto error;
     }
@@ -737,7 +742,6 @@ PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi,
     (*hostApi)->info.name = "JACK Audio Connection Kit";
 
     /* Build a device list by querying the JACK server */
-
     ENSURE_PA( BuildDeviceList( jackHostApi ) );
 
     /* Register functions */
@@ -996,7 +1000,7 @@ static PaError WaitCondition( PaJackHostApiRepresentation *hostApi )
     PaTime pt = PaUtil_GetTime();
     struct timespec ts;
 
-    ts.tv_sec = (time_t) floor( pt + 1 );
+    ts.tv_sec = (time_t) floor( pt + 10 * 60 /* 10 minutes */ );
     ts.tv_nsec = (long) ((pt - floor( pt )) * 1000000000);
     /* XXX: Best enclose in loop, in case of spurious wakeups? */
     err = pthread_cond_timedwait( &hostApi->cond, &hostApi->mtx, &ts );
@@ -1173,7 +1177,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             minimum_buffer_frames = jackHostApi->jack_buffer_size * 3;
 
         /* setup blocking API data structures (FIXME: can fail) */
-	BlockingBegin( stream, minimum_buffer_frames );
+        BlockingBegin( stream, minimum_buffer_frames );
 
         /* install our own callback for the blocking API */
         streamCallback = BlockingCallback;
@@ -1272,10 +1276,10 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                   &stream->bufferProcessor,
                   inputChannelCount,
                   inputSampleFormat,
-                  paFloat32,            /* hostInputSampleFormat */
+                  paFloat32 | paNonInterleaved, /* hostInputSampleFormat */
                   outputChannelCount,
                   outputSampleFormat,
-                  paFloat32,            /* hostOutputSampleFormat */
+                  paFloat32 | paNonInterleaved, /* hostOutputSampleFormat */
                   jackSr,
                   streamFlags,
                   framesPerBuffer,
@@ -1748,7 +1752,8 @@ PaError PaJack_GetClientName(const char** clientName)
 {
     PaError result = paNoError;
     PaJackHostApiRepresentation* jackHostApi = NULL;
-    ENSURE_PA( PaUtil_GetHostApiRepresentation( (PaUtilHostApiRepresentation**)&jackHostApi, paJACK ) );
+    PaJackHostApiRepresentation** ref = &jackHostApi;
+    ENSURE_PA( PaUtil_GetHostApiRepresentation( (PaUtilHostApiRepresentation**)ref, paJACK ) );
     *clientName = jack_get_client_name( jackHostApi->jack_client );
 
 error:

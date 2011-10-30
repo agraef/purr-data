@@ -28,6 +28,14 @@ t_symbol *atom_getsymbol(t_atom *a)  /* LATER think about this more carefully */
     else return (&s_float);
 }
 
+t_blob *atom_getblob(t_atom *a)  /* MP 20070108 */
+{
+    static unsigned char c = 0;/* a default blob to avoid null pointers. This should be somewhere else...? */
+    static t_blob st = {1L, &c};
+    if (a->a_type == A_BLOB) return (a->a_w.w_blob);
+    else return (&st);
+}
+
 t_symbol *atom_gensym(t_atom *a)  /* this works  better for graph labels */
 {
     char buf[30];

@@ -5,8 +5,10 @@
 
 /* MIDI I/O for Linux using OSS */
 
+#include "config.h"
+
 #include <stdio.h>
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <stdlib.h>

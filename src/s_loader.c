@@ -88,7 +88,7 @@ void class_set_extern_dir(t_symbol *s);
 
 static int sys_do_load_lib(t_canvas *canvas, char *objectname)
 {
-    char symname[MAXPDSTRING], filename[MAXPDSTRING], dirbuf[MAXPDSTRING],
+    char symname[MAXPDSTRING], filename[FILENAME_MAX], dirbuf[FILENAME_MAX],
         *classname, *nameptr, altsymname[MAXPDSTRING];
     void *dlobj;
     t_xxx makeout = NULL;
@@ -139,23 +139,23 @@ static int sys_do_load_lib(t_canvas *canvas, char *objectname)
 #endif
         /* try looking in the path for (objectname).(sys_dllextent) ... */
     if ((fd = canvas_open(canvas, objectname, sys_dllextent,
-        dirbuf, &nameptr, MAXPDSTRING, 1)) >= 0)
+        dirbuf, &nameptr, FILENAME_MAX, 1)) >= 0)
             goto gotone;
         /* same, with the more generic sys_dllextent2 */
     if ((fd = canvas_open(canvas, objectname, sys_dllextent2,
-        dirbuf, &nameptr, MAXPDSTRING, 1)) >= 0)
+        dirbuf, &nameptr, FILENAME_MAX, 1)) >= 0)
             goto gotone;
         /* next try (objectname)/(classname).(sys_dllextent) ... */
-    strncpy(filename, objectname, MAXPDSTRING);
+    strncpy(filename, objectname, FILENAME_MAX);
     filename[MAXPDSTRING-2] = 0;
     strcat(filename, "/");
-    strncat(filename, classname, MAXPDSTRING-strlen(filename));
-    filename[MAXPDSTRING-1] = 0;
+    strncat(filename, classname, FILENAME_MAX-strlen(filename));
+    filename[FILENAME_MAX-1] = 0;
     if ((fd = canvas_open(canvas, filename, sys_dllextent,
-        dirbuf, &nameptr, MAXPDSTRING, 1)) >= 0)
+        dirbuf, &nameptr, FILENAME_MAX, 1)) >= 0)
             goto gotone;
     if ((fd = canvas_open(canvas, filename, sys_dllextent2,
-        dirbuf, &nameptr, MAXPDSTRING, 1)) >= 0)
+        dirbuf, &nameptr, FILENAME_MAX, 1)) >= 0)
             goto gotone;
     return (0);
 gotone:
@@ -163,11 +163,11 @@ gotone:
     class_set_extern_dir(gensym(dirbuf));
 
         /* rebuild the absolute pathname */
-    strncpy(filename, dirbuf, MAXPDSTRING);
-    filename[MAXPDSTRING-2] = 0;
+    strncpy(filename, dirbuf, FILENAME_MAX);
+    filename[FILENAME_MAX-2] = 0;
     strcat(filename, "/");
-    strncat(filename, nameptr, MAXPDSTRING-strlen(filename));
-    filename[MAXPDSTRING-1] = 0;
+    strncat(filename, nameptr, FILENAME_MAX-strlen(filename));
+    filename[FILENAME_MAX-1] = 0;
 
 #ifdef DL_OPEN
     dlobj = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
@@ -202,7 +202,6 @@ gotone:
     sys_putonloadlist(objectname);
     return (1);
 }
-
 
 /* linked list of loaders */
 typedef struct loader_queue {

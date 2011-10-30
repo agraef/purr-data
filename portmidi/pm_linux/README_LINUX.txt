@@ -24,6 +24,24 @@ check for errors yourself.
 This code has not been carefully tested; however, 
 all test programs in pm_test seem to run properly.
 
+A NOTE ABOUT AMD64:
+
+When compiling portmidi under linux on an AMD64, I had to add the -fPIC
+flag to the gcc flags.
+
+Reason: when trying to build John Harrison's pyPortMidi gcc bailed out
+with this error:
+
+./linux/libportmidi.a(pmlinux.o): relocation R_X86_64_32 against `a local symbol' can not be used when making a shared object; recompile with -fPIC
+./linux/libportmidi.a: could not read symbols: Bad value
+collect2: ld returned 1 exit status
+error: command 'gcc' failed with exit status 1
+
+What they said:
+http://www.gentoo.org/proj/en/base/amd64/howtos/index.xml?part=1&chap=3
+On certain architectures (AMD64 amongst them), shared libraries *must* 
+be "PIC-enabled".
+
 CHANGELOG
 
 29-aug-2006 Roger B. Dannenberg

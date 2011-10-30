@@ -9,9 +9,7 @@
 
 #include "stdlib.h"
 #include "portmidi.h"
-#ifdef NEWBUFFER
 #include "pmutil.h"
-#endif
 #include "pminternal.h"
 #include "pmlinuxalsa.h"
 #include "string.h"

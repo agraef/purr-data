@@ -1103,7 +1103,7 @@ abort();
         case ET_LB:
         default:
                 post_error((fts_object_t *) expr,
-                        "expr: ex_eval: unexpected type %d\n", eptr->ex_type);
+                        "expr: ex_eval: unexpected type %ld\n", eptr->ex_type);
                 return (exNULL);
         }
         if (!eptr[1].ex_type) {
@@ -1185,7 +1185,7 @@ abort();
         case OP_COMMA:
         case OP_SEMI:
         default:
-                post_error((fts_object_t *) expr, "expr: ex_print: bad op 0x%x\n", eptr->ex_op);
+                post_error((fts_object_t *) expr, "expr: ex_print: bad op 0x%lx\n", eptr->ex_op);
                 return (exNULL);
         }
 

@@ -5,10 +5,14 @@
 
 /* MIDI I/O for Linux using ALSA */
 
+#include "config.h"
+
 #include <stdio.h>
-#ifdef UNISTD
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>

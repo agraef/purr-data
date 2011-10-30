@@ -159,7 +159,7 @@ t_canvasenvironment *canvas_getenv(t_canvas *x)
     if (!x) bug("canvas_getenv");
     while (!x->gl_env)
         if (!(x = x->gl_owner))
-            bug("t_canvasenvironment", x);
+            bug("t_canvasenvironment");
     return (x->gl_env);
 }
 
@@ -597,9 +597,15 @@ void canvas_reflecttitle(t_canvas *x)
         strcat(namebuf, ")");
     }
     else namebuf[0] = 0;
+#ifdef __APPLE__
+    sys_vgui("wm attributes .x%lx -modified %d -titlepath {%s/%s}\n",
+        x, x->gl_dirty, canvas_getdir(x)->s_name, x->gl_name->s_name);
+    sys_vgui("wm title .x%lx {%s%s}\n", x, x->gl_name->s_name, namebuf);
+#else
     sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
         x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
             canvas_getdir(x)->s_name);
+#endif
 }
 
     /* mark a glist dirty or clean */
@@ -759,14 +765,17 @@ static void canvas_drawlines(t_canvas *x)
 {
     t_linetraverser t;
     t_outconnect *oc;
-    {
+    int issignal;
+    
         linetraverser_start(&t, x);
         while (oc = linetraverser_next(&t))
-            sys_vgui(".x%lx.c create line %d %d %d %d -width %d -tags l%lx\n",
-                    glist_getcanvas(x),
-                        t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
-                            (outlet_getsymbol(t.tr_outlet) == &s_signal ? 2:1),
-                                oc);
+    {
+        issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
+        sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill %s \
+-tags {l%lx all_cords}\n",
+                 glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
+                 (issignal ? 2:1), (issignal ? "$signal_cord" : "$msg_cord"),
+                 oc);
     }
 }
 
@@ -903,22 +912,52 @@ void canvas_loadbang(t_canvas *x)
     canvas_loadbangabstractions(x);
     canvas_loadbangsubpatches(x);
 }
+/* JMZ:
+ * initbang is emitted after the canvas is done, but before the parent canvas is done
+ * therefore, initbangs cannot reach to the outlets
+ */
+void canvas_initbang(t_canvas *x)
+{
+    t_gobj *y;
+    t_symbol *s = gensym("initbang");
+    /* run "initbang" for all subpatches, but NOT for the child abstractions */
+    for (y = x->gl_list; y; y = y->g_next)
+      if (pd_class(&y->g_pd) == canvas_class)
+        {
+          if (!canvas_isabstraction((t_canvas *)y))
+            canvas_initbang((t_canvas *)y);
+        }
 
-    /* When you ask a canvas its size the result is more than what
-    you gave it to open it; how much bigger apparently depends on the OS. */
+    /* call the initbang()-method for objects that have one */
+    for (y = x->gl_list; y; y = y->g_next)
+      {
+        if ((pd_class(&y->g_pd) != canvas_class) && zgetfn(&y->g_pd, s))
+          {
+            pd_vmess(&y->g_pd, s, "");
+          }
+      }
+}
+/* JMZ:
+ * closebang is emitted before the canvas is destroyed
+ * and BEFORE subpatches/abstractions in this canvas are destroyed
+ */
+void canvas_closebang(t_canvas *x)
+{
+    t_gobj *y;
+    t_symbol *s = gensym("closebang");
 
-#ifdef __unix__
-#define HORIZBORDER 2
-#define VERTBORDER 2
-#else
-#ifdef MACOSX
-#define HORIZBORDER 6
-#define VERTBORDER 6
-#else
-#define HORIZBORDER 4
-#define VERTBORDER 4
-#endif
-#endif
+    /* call the closebang()-method for objects that have one 
+     * but NOT for subpatches/abstractions: these are called separately
+     * from g_graph:glist_delete()
+     */
+    for (y = x->gl_list; y; y = y->g_next)
+      {
+        if ((pd_class(&y->g_pd) != canvas_class) && zgetfn(&y->g_pd, s))
+          {
+            pd_vmess(&y->g_pd, s, "");
+          }
+      }
+}
 
 static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
     t_symbol *topgeom)
@@ -932,7 +971,7 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
             we just suppress that here. */
     if (cw > 5 && ch > 5)
         canvas_setbounds(x, txpix, typix,
-            txpix + cw - HORIZBORDER, typix + ch - VERTBORDER);
+            txpix + cw, typix + ch);
 }
 
 void canvas_popabstraction(t_canvas *x)
@@ -1295,6 +1334,7 @@ saved,  we throw early messages to the canvas to set the environment
 before any objects are created in it. */
 
 static t_class *declare_class;
+extern t_class *import_class;
 
 typedef struct _declare
 {
@@ -1330,6 +1370,21 @@ void canvas_savedeclarationsto(t_canvas *x, t_binbuf *b)
             binbuf_addbinbuf(b, ((t_declare *)y)->x_obj.te_binbuf);
             binbuf_addv(b, ";");
         }
+        else if (pd_class(&y->g_pd) == import_class)
+        {
+            int i, argc;
+            t_atom *argv;
+            binbuf_addv(b, "s", gensym("#X"));
+            binbuf_addv(b, "s", gensym("declare"));
+            argc = binbuf_getnatom(((t_object *)y)->te_binbuf) - 1;
+            argv = binbuf_getvec(((t_object *)y)->te_binbuf) + 1;
+            for(i = 0; i < argc; ++i)
+            {
+                binbuf_addv(b, "s", gensym("-lib"));
+                binbuf_add(b, 1, argv + i);
+            }
+            binbuf_addv(b, ";");
+        }
         else if (pd_class(&y->g_pd) == canvas_class)
             canvas_savedeclarationsto((t_canvas *)y, b);
     }
@@ -1362,7 +1417,7 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 #endif
     for (i = 0; i < argc; i++)
     {
-        char strbuf[MAXPDSTRING];
+        char strbuf[FILENAME_MAX];
         char *flag = atom_getsymbolarg(i, argc, argv)->s_name;
         if ((argc > i+1) && !strcmp(flag, "-path"))
         {
@@ -1373,7 +1428,7 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         else if ((argc > i+1) && !strcmp(flag, "-stdpath"))
         {
             canvas_completepath(atom_getsymbolarg(i+1, argc, argv)->s_name,
-                strbuf, MAXPDSTRING);
+                strbuf, FILENAME_MAX);
             e->ce_path = namelist_append(e->ce_path, strbuf, 0);
             i++;
         }
@@ -1385,7 +1440,7 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         else if ((argc > i+1) && !strcmp(flag, "-stdlib"))
         {
             canvas_completepath(atom_getsymbolarg(i+1, argc, argv)->s_name,
-                strbuf, MAXPDSTRING);
+                strbuf, FILENAME_MAX);
             sys_load_lib(0, strbuf);
             i++;
         }
@@ -1411,7 +1466,6 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
 {
     t_namelist *nl, thislist;
     int fd = -1;
-    char listbuf[MAXPDSTRING];
     t_canvas *y;
 
         /* first check if "name" is absolute (and if so, try to open) */
@@ -1431,19 +1485,19 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
         dir = (x2 ? canvas_getdir(x2)->s_name : ".");
         for (nl = y->gl_env->ce_path; nl; nl = nl->nl_next)
         {
-            char realname[MAXPDSTRING];
+            char realname[FILENAME_MAX];
             if (sys_isabsolutepath(nl->nl_string))
             {
                 realname[0] = '\0';
             }
             else
             {   /* if not absolute path, append Pd lib dir */
-                strncpy(realname, dir, MAXPDSTRING);
-                realname[MAXPDSTRING-3] = 0;
+                strncpy(realname, dir, FILENAME_MAX);
+                realname[FILENAME_MAX-3] = 0;
                 strcat(realname, "/");
             }
-            strncat(realname, nl->nl_string, MAXPDSTRING-strlen(realname));
-            realname[MAXPDSTRING-1] = 0;
+            strncat(realname, nl->nl_string, FILENAME_MAX-strlen(realname));
+            realname[FILENAME_MAX-1] = 0;
             if ((fd = sys_trytoopenone(realname, name, ext,
                 dirresult, nameresult, size, bin)) >= 0)
                     return (fd);

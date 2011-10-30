@@ -1,9 +1,9 @@
 /* pmutil.c -- some helpful utilities for building midi
                applications that use PortMidi
  */
-#include "stdlib.h"
-#include "assert.h"
-#include "memory.h"
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 #include "portmidi.h"
 #include "pmutil.h"
 #include "pminternal.h"
@@ -38,11 +38,10 @@ typedef struct {
 
 PmQueue *Pm_QueueCreate(long num_msgs, long bytes_per_msg)
 {
-    PmQueueRep *queue = (PmQueueRep *) pm_alloc(sizeof(PmQueueRep));
     int int32s_per_msg = ((bytes_per_msg + sizeof(int32) - 1) &
                           ~(sizeof(int32) - 1)) / sizeof(int32);
-    /* arg checking */
-    if (!queue) 
+    PmQueueRep *queue = (PmQueueRep *) pm_alloc(sizeof(PmQueueRep));
+    if (!queue) /* memory allocation failed */
         return NULL;
 
     /* need extra word per message for non-zero encoding */
@@ -77,7 +76,7 @@ PmError Pm_QueueDestroy(PmQueue *q)
 {
     PmQueueRep *queue = (PmQueueRep *) q;
         
-        /* arg checking */
+    /* arg checking */
     if (!queue || !queue->buffer || !queue->peek) 
                 return pmBadPtr;
     
@@ -107,16 +106,9 @@ PmError Pm_Dequeue(PmQueue *q, void *msg)
         return pmBufferOverflow;
     }
     if (queue->peek_flag) {
-#ifdef QUEUE_DEBUG
-        printf("Pm_Dequeue returns peek msg:");
-        for (i = 0; i < queue->msg_size - 1; i++) {
-            printf(" %d", queue->peek[i]);
-        }
-        printf("\n");
-#endif
         memcpy(msg, queue->peek, (queue->msg_size - 1) * sizeof(int32));
         queue->peek_flag = FALSE;
-        return 1;
+        return pmGotData;
     }
 
     head = queue->head;
@@ -148,16 +140,9 @@ PmError Pm_Dequeue(PmQueue *q, void *msg)
      */
     for (i = queue->msg_size - 1; i >= 0; i--) {
         if (!queue->buffer[head + i]) {
-            return 0;
+            return pmNoData;
         }
     }
-#ifdef QUEUE_DEBUG
-    printf("Pm_Dequeue:");
-    for (i = 0; i < queue->msg_size; i++) {
-        printf(" %d", queue->buffer[head + i]);
-    }
-    printf("\n");
-#endif
     memcpy(msg, (char *) &queue->buffer[head + 1], 
            sizeof(int32) * (queue->msg_size - 1));
     /* fix up zeros */
@@ -176,7 +161,7 @@ PmError Pm_Dequeue(PmQueue *q, void *msg)
     head += queue->msg_size;
     if (head == queue->len) head = 0;
     queue->head = head;
-    return 1; /* success */
+    return pmGotData; /* success */
 }
 
 
@@ -185,10 +170,11 @@ PmError Pm_SetOverflow(PmQueue *q)
 {
     PmQueueRep *queue = (PmQueueRep *) q;
     long tail;
-    /* no more enqueue until receiver acknowledges overflow */
-    if (queue->overflow) return pmBufferOverflow;
+    /* arg checking */
     if (!queue)
         return pmBadPtr;
+    /* no more enqueue until receiver acknowledges overflow */
+    if (queue->overflow) return pmBufferOverflow;
     tail = queue->tail;
     queue->overflow = tail + 1;
     return pmBufferOverflow;
@@ -202,12 +188,11 @@ PmError Pm_Enqueue(PmQueue *q, void *msg)
     int i;
     int32 *src = (int32 *) msg;
     int32 *ptr;
-
     int32 *dest;
-
     int rslt;
+    if (!queue) 
+        return pmBadPtr;
     /* no more enqueue until receiver acknowledges overflow */
-    if (!queue) return pmBadPtr;
     if (queue->overflow) return pmBufferOverflow;
     rslt = Pm_QueueFull(q);
     /* already checked above: if (rslt == pmBadPtr) return rslt; */
@@ -231,13 +216,6 @@ PmError Pm_Enqueue(PmQueue *q, void *msg)
         dest++;
     }
     *ptr = i;
-#ifdef QUEUE_DEBUG
-    printf("Pm_Enqueue:");
-    for (i = 0; i < queue->msg_size; i++) {
-        printf(" %d", queue->buffer[tail + i]);
-    }
-    printf("\n");
-#endif
     tail += queue->msg_size;
     if (tail == queue->len) tail = 0;
     queue->tail = tail;
@@ -246,18 +224,18 @@ PmError Pm_Enqueue(PmQueue *q, void *msg)
 
 
 int Pm_QueueEmpty(PmQueue *q)
-{ 
+{
     PmQueueRep *queue = (PmQueueRep *) q;
-    if (!queue) return TRUE;
-    return (queue->buffer[queue->head] == 0);
+    return (!queue) ||  /* null pointer -> return "empty" */
+           (queue->buffer[queue->head] == 0 && !queue->peek_flag);
 }
 
 
 int Pm_QueueFull(PmQueue *q)
 {
-    PmQueueRep *queue = (PmQueueRep *) q;
     int tail;
     int i; 
+    PmQueueRep *queue = (PmQueueRep *) q;
     /* arg checking */
     if (!queue)
         return pmBadPtr;
@@ -271,12 +249,12 @@ int Pm_QueueFull(PmQueue *q)
     return FALSE;
 }
 
+
 void *Pm_QueuePeek(PmQueue *q)
 {
-    PmQueueRep *queue = (PmQueueRep *) q;
     PmError rslt;
     long temp;
-
+    PmQueueRep *queue = (PmQueueRep *) q;
     /* arg checking */
     if (!queue)
         return NULL;

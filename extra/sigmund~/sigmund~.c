@@ -13,7 +13,7 @@
 and usable in other contexts.  The one external requirement is a real
 single-precision FFT, invoked as in the Mayer one: */
 
-#ifdef NT
+#ifdef _MSC_VER /* this is only needed with Microsoft's compiler */
 __declspec(dllimport) extern
 #endif
 void mayer_realfft(int npoints, float *buf);
@@ -26,13 +26,13 @@ for example, defines this in the file d_fft_mayer.c or d_fft_fftsg.c. */
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#ifdef NT
+#ifdef _WIN32
 #include <malloc.h>
 #else
 #include <alloca.h>
 #endif
 #include <stdlib.h>
-#ifdef NT
+#ifdef _MSC_VER /* this is only needed with Microsoft's compiler */
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
 #endif

@@ -704,7 +704,11 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir)
     {
             /* if not an abstraction, reset title bar and directory */ 
         if (!x->gl_owner)
+        {
             canvas_rename(x, filename, dir);
+            /* update window list in case Save As changed the window name */
+            canvas_updatewindowlist(); 
+        }
         post("saved to: %s/%s", dir->s_name, filename->s_name);
         canvas_dirty(x, 0);
         canvas_reload(filename, dir, &x->gl_gobj);
@@ -724,7 +728,8 @@ static void canvas_menusave(t_canvas *x)
     t_canvas *x2 = canvas_getrootfor(x);
     char *name = x2->gl_name->s_name;
     if (*name && strncmp(name, "Untitled", 8)
-            && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")))
+            && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")
+                || strcmp(name + strlen(name)-4, ".mxt")))
             canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2));
     else canvas_menusaveas(x2);
 }

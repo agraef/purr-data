@@ -1,0 +1,19 @@
+#N canvas 121 22 423 338 10;
+#X declare -lib ext13 -lib memento -lib rradical;
+#X msg 21 102 bang;
+#X obj 21 150 import ext13 memento rradical;
+#X symbolatom 32 176 0 0 0 0 - - -;
+#X obj 21 202 print;
+#X text 68 101 get next item in list of loaded libs;
+#X text 80 125 start at the top of the list again;
+#X text 29 239 Sending bangs to [import] makes it output the loaded
+libraries one at a time.;
+#X msg 33 126 rewind;
+#X text 18 22 [import] loads libraries from the patch. On Pd 0.40.
+or greater \, it loads the library into the patch's local namespace.
+On older versions \, it loads the libraries into the global namespace.
+;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 3 0;
+#X connect 7 0 1 0;

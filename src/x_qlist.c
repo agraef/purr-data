@@ -2,12 +2,16 @@
 * For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
 
+#include "config.h"
+
 #include "m_pd.h"
 #include <string.h>
-#ifdef UNISTD
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef MSW
+
+#ifdef HAVE_IO_H
 #include <io.h>
 #endif
 

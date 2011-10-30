@@ -52,7 +52,6 @@ extern t_symbol *sys_libdir;    /* library directory for auxilliary files */
 extern t_symbol *sys_guidir;    /* directory holding pd_gui, u_pdsend, etc */
 
 /* s_loader.c */
-
 typedef int (*loader_t)(t_canvas *canvas, char *classname); /* callback type */
 EXTERN int sys_load_lib(t_canvas *canvas, char *filename);
 EXTERN void sys_register_loader(loader_t loader);
@@ -208,10 +207,14 @@ void sys_setvirtualalarm( void);
 #define DEFMIDIDEV 0
 
 #define DEFAULTSRATE 44100
-#ifdef MSW
-#define DEFAULTADVANCE 70
-#else
+#ifdef _WIN32
+#define DEFAULTADVANCE 100
+#endif
+#ifdef __linux__
 #define DEFAULTADVANCE 50
+#endif
+#ifdef __APPLE__
+#define DEFAULTADVANCE 20
 #endif
 
 typedef void (*t_audiocallback)(void);

@@ -6,11 +6,14 @@
     audio settings from argparse routine and from dialog window. 
 */
 
+#include "config.h"
+
 #include "m_pd.h"
 #include "s_stuff.h"
 #include <stdio.h>
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+/* XXX Hack!!! These should be checked for independently of unistd.h ... */
 #include <sys/time.h>
 #include <sys/resource.h>
 #endif

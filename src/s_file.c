@@ -6,9 +6,11 @@
  * this file implements a mechanism for storing and retrieving preferences.
  * Should later be renamed "preferences.c" or something.
  *
- * In unix this is handled by the "~/.pdsettings" file, in windows by
+ * In unix this is handled by the "~/.pdextended" file, in windows by
  * the registry, and in MacOS by the Preferences system.
  */
+
+#include "config.h"
 
 #include "m_pd.h"
 #include "s_stuff.h"
@@ -16,14 +18,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#ifdef UNISTD
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
+/* XXX Hack!  This should be done with a cleaner check. */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #endif
+
 #ifdef MSW
 #include <windows.h>
 #include <tchar.h>
@@ -43,23 +51,24 @@ static int sys_prefbufsize;
 
 static void sys_initloadpreferences( void)
 {
-    char filenamebuf[MAXPDSTRING], *homedir = getenv("HOME");
+    char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
     int fd, length;
-    char user_prefs_file[MAXPDSTRING]; /* user prefs file */
+	char user_prefs_file[FILENAME_MAX]; /* user prefs file */
         /* default prefs embedded in the package */
-    char default_prefs_file[MAXPDSTRING];
+	char default_prefs_file[FILENAME_MAX];
     struct stat statbuf;
 
-    snprintf(default_prefs_file, MAXPDSTRING, "%s/default.pdsettings", 
-        sys_libdir->s_name);
+	snprintf(default_prefs_file, FILENAME_MAX, "%s/default.pdextended", 
+			 sys_libdir->s_name);
     if (homedir)
-        snprintf(user_prefs_file, MAXPDSTRING, "%s/.pdsettings", homedir);
-    if (stat(user_prefs_file, &statbuf) == 0) 
-        strncpy(filenamebuf, user_prefs_file, MAXPDSTRING);
-    else if (stat(default_prefs_file, &statbuf) == 0)
-        strncpy(filenamebuf, default_prefs_file, MAXPDSTRING);
-    else return;
-    filenamebuf[MAXPDSTRING-1] = 0;
+		snprintf(user_prefs_file, FILENAME_MAX, "%s/.pdextended", homedir);
+	if (stat(user_prefs_file, &statbuf) == 0) 
+		strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
+	else if (stat(default_prefs_file, &statbuf) == 0)
+		strncpy(filenamebuf, default_prefs_file, FILENAME_MAX);
+	else
+        return;
+    filenamebuf[FILENAME_MAX-1] = 0;
     if ((fd = open(filenamebuf, 0)) < 0)
     {
         if (sys_verbose)
@@ -128,17 +137,17 @@ static FILE *sys_prefsavefp;
 
 static void sys_initsavepreferences( void)
 {
-    char filenamebuf[MAXPDSTRING], errbuf[MAXPDSTRING],
+    char filenamebuf[FILENAME_MAX], errbuf[FILENAME_MAX],
         *homedir = getenv("HOME");
     FILE *fp;
 
     if (!homedir)
         return;
-    snprintf(filenamebuf, MAXPDSTRING, "%s/.pdsettings", homedir);
-    filenamebuf[MAXPDSTRING-1] = 0;
+    snprintf(filenamebuf, FILENAME_MAX, "%s/.pdextended", homedir);
+    filenamebuf[FILENAME_MAX-1] = 0;
     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
     {
-        snprintf(errbuf, MAXPDSTRING, "%s: %s",filenamebuf, strerror(errno));
+        snprintf(errbuf, FILENAME_MAX, "%s: %s",filenamebuf, strerror(errno));
         pd_error(0, errbuf);
     }
 }
@@ -172,7 +181,7 @@ static int sys_getpreference(const char *key, char *value, int size)
     HKEY hkey;
     DWORD bigsize = size;
     LONG err = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-        "Software\\Pd", 0,  KEY_QUERY_VALUE, &hkey);
+        "Software\\Pd-extended", 0,  KEY_QUERY_VALUE, &hkey);
     if (err != ERROR_SUCCESS)
     {
         return (0);
@@ -199,14 +208,14 @@ static void sys_putpreference(const char *key, const char *value)
 {
     HKEY hkey;
     LONG err = RegCreateKeyEx(HKEY_LOCAL_MACHINE,
-        "Software\\Pd", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE,
+        "Software\\Pd-extended", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE,
         NULL, &hkey, NULL);
     if (err != ERROR_SUCCESS)
     {
         post("unable to create registry entry: %s\n", key);
         return;
     }
-    err = RegSetValueEx(hkey, key, 0, REG_SZ, value, strlen(value)+1);
+    err = RegSetValueEx(hkey, key, 0, REG_EXPAND_SZ, value, strlen(value)+1);
     if (err != ERROR_SUCCESS)
         post("unable to set registry entry: %s\n", key);
     RegCloseKey(hkey);
@@ -220,6 +229,9 @@ static void sys_donesavepreferences( void)
 
 #ifdef __APPLE__
 
+// prefs file that is currently the one to save to
+static char current_prefs[FILENAME_MAX] = "org.puredata.pdextended"; 
+
 static void sys_initloadpreferences( void)
 {
 }
@@ -228,21 +240,38 @@ static int sys_getpreference(const char *key, char *value, int size)
 {
     char cmdbuf[256];
     int nread = 0, nleft = size;
-    char embedded_prefs[MAXPDSTRING];
-    char user_prefs[MAXPDSTRING];
-    char *homedir = getenv("HOME");
+	char default_prefs[FILENAME_MAX]; // default prefs embedded in the package
+	char embedded_prefs[FILENAME_MAX]; // overrides others for standalone app
+	char embedded_prefs_file[FILENAME_MAX];
+	char user_prefs_file[FILENAME_MAX];
+	char *homedir = getenv("HOME");
     struct stat statbuf;
-   /* the 'defaults' command expects the filename without .plist at the
-        end */
-    snprintf(embedded_prefs, MAXPDSTRING, "%s/../org.puredata.pd",
-        sys_libdir->s_name);
-    snprintf(user_prefs, MAXPDSTRING,
-        "%s/Library/Preferences/org.puredata.pd.plist", homedir);
-    if (stat(user_prefs, &statbuf) == 0)
-        snprintf(cmdbuf, 256, "defaults read org.puredata.pd %s 2> /dev/null\n",
-            key);
-    else snprintf(cmdbuf, 256, "defaults read %s %s 2> /dev/null\n",
-            embedded_prefs, key);
+	/* the 'defaults' command expects the filename without .plist at the end */
+	snprintf(default_prefs, FILENAME_MAX, "%s/../org.puredata.pdextended.default", 
+			 sys_libdir->s_name);
+	snprintf(embedded_prefs, FILENAME_MAX, "%s/../org.puredata.pdextended", 
+			 sys_libdir->s_name);
+	snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
+	snprintf(user_prefs_file, FILENAME_MAX, 
+			 "%s/Library/Preferences/org.puredata.pdextended.plist", homedir);
+	if (stat(embedded_prefs_file, &statbuf) == 0) 
+	{
+		snprintf(cmdbuf, FILENAME_MAX + 20, 
+				 "defaults read '%s' %s 2> /dev/null\n", embedded_prefs, key);
+        strncpy(current_prefs, embedded_prefs, FILENAME_MAX);
+	}
+	else if (stat(user_prefs_file, &statbuf) == 0) 
+	{
+		snprintf(cmdbuf, FILENAME_MAX + 20, 
+				 "defaults read org.puredata.pdextended %s 2> /dev/null\n", key);
+        strcpy(current_prefs, "org.puredata.pdextended");
+	}
+	else 
+	{
+		snprintf(cmdbuf, FILENAME_MAX + 20, 
+				 "defaults read '%s' %s 2> /dev/null\n", default_prefs, key);
+        strcpy(current_prefs, "org.puredata.pdextended");
+	}
     FILE *fp = popen(cmdbuf, "r");
     while (nread < size)
     {
@@ -274,7 +303,8 @@ static void sys_putpreference(const char *key, const char *value)
 {
     char cmdbuf[MAXPDSTRING];
     snprintf(cmdbuf, MAXPDSTRING, 
-        "defaults write org.puredata.pd %s \"%s\" 2> /dev/null\n", key, value);
+             "defaults write '%s' %s \"%s\" 2> /dev/null\n",
+             current_prefs, key, value);
     system(cmdbuf);
 }
 

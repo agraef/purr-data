@@ -11,14 +11,21 @@ readsf~ and writesf~ are defined which confine disk operations to a separate
 thread so that they can be used in real time.  The readsf~ and writesf~
 objects use Posix-like threads.  */
 
-#ifndef MSW
+#include "config.h"
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifndef MSW
 #include <fcntl.h>
 #endif
 #include <pthread.h>
-#ifdef MSW
+
+#ifdef HAVE_IO_H
 #include <io.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -400,9 +407,9 @@ int open_soundfile(const char *dirname, const char *filename, int headersize,
     int *p_bytespersamp, int *p_bigendian, int *p_nchannels, long *p_bytelimit,
     long skipframes)
 {
-    char buf[OBUFSIZE], *bufptr;
+    char buf[FILENAME_MAX], *bufptr;
     int fd;
-    fd = open_via_path(dirname, filename, "", buf, &bufptr, MAXPDSTRING, 1);
+    fd = open_via_path(dirname, filename, "", buf, &bufptr, FILENAME_MAX, 1);
     if (fd < 0)
         return (-1);
     else return (open_soundfile_via_fd(fd, headersize, p_bytespersamp,
@@ -416,9 +423,9 @@ int open_soundfile_via_canvas(t_canvas *canvas, const char *filename, int header
     int *p_bytespersamp, int *p_bigendian, int *p_nchannels, long *p_bytelimit,
     long skipframes)
 {
-    char buf[OBUFSIZE], *bufptr;
+    char buf[FILENAME_MAX], *bufptr;
     int fd;
-    fd = canvas_open(canvas, filename, "", buf, &bufptr, MAXPDSTRING, 1);
+    fd = canvas_open(canvas, filename, "", buf, &bufptr, FILENAME_MAX, 1);
     if (fd < 0)
         return (-1);
     else return (open_soundfile_via_fd(fd, headersize, p_bytespersamp,
@@ -738,15 +745,15 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
     int filetype, int nframes, int bytespersamp,
     int bigendian, int nchannels, int swap, t_float samplerate)
 {
-    char filenamebuf[MAXPDSTRING], buf2[MAXPDSTRING];
+    char filenamebuf[FILENAME_MAX], buf2[FILENAME_MAX];
     char headerbuf[WRITEHDRSIZE];
     t_wave *wavehdr = (t_wave *)headerbuf;
     t_nextstep *nexthdr = (t_nextstep *)headerbuf;
     t_aiff *aiffhdr = (t_aiff *)headerbuf;
     int fd, headersize = 0;
     
-    strncpy(filenamebuf, filename, MAXPDSTRING-10);
-    filenamebuf[MAXPDSTRING-10] = 0;
+    strncpy(filenamebuf, filename, FILENAME_MAX-10);
+    filenamebuf[FILENAME_MAX-10] = 0;
 
     if (filetype == FORMAT_NEXT)
     {
@@ -812,7 +819,7 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
         headersize = sizeof(t_wave);
     }
 
-    canvas_makefilename(canvas, filenamebuf, buf2, MAXPDSTRING);
+    canvas_makefilename(canvas, filenamebuf, buf2, FILENAME_MAX);
     sys_bashfilename(buf2, buf2);
     if ((fd = open(buf2, BINCREATE, 0666)) < 0)
         return (-1);
@@ -831,7 +838,7 @@ static void soundfile_finishwrite(void *obj, char *filename, int fd,
     if (itemswritten < nframes) 
     {
         if (nframes < 0x7fffffff)
-            pd_error(obj, "soundfiler_write: %d out of %d bytes written",
+            pd_error(obj, "soundfiler_write: %ld out of %ld bytes written",
                 itemswritten, nframes);
             /* try to fix size fields in header */
         if (filetype == FORMAT_WAVE)
@@ -1261,7 +1268,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         framesinfile = (eofis - poswas) / (channels * bytespersamp);
         if (framesinfile > maxsize)
         {
-            pd_error(x, "soundfiler_read: truncated to %d elements", maxsize);
+            pd_error(x, "soundfiler_read: truncated to %ld elements", maxsize);
             framesinfile = maxsize;
         }
         if (framesinfile > bytelimit / (channels * bytespersamp))

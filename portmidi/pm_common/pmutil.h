@@ -78,6 +78,9 @@ PmError Pm_Enqueue(PmQueue *queue, void *msg);
     Pm_Dequeue() could still return 0 after Pm_QueueEmpty() returns
     false. On the other hand, Pm_QueueFull() is pessimistic: if it
     returns false, then Pm_Enqueue() is guaranteed to succeed. 
+
+    Error conditions: Pm_QueueFull() returns pmBadPtr if queue is NULL.
+    Pm_QueueEmpty() returns FALSE if queue is NULL.
  */
 int Pm_QueueFull(PmQueue *queue);
 int Pm_QueueEmpty(PmQueue *queue);

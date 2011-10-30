@@ -2,6 +2,8 @@
 * For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.  */
 
+#include "config.h"
+
 #ifndef MSW     /* in unix this only works first; in MSW it only works last. */
 #include "tk.h"
 #endif
@@ -13,8 +15,11 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#ifndef MSW
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifndef MSW
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -26,9 +31,13 @@
 #include <errno.h>
 #include <fcntl.h>
 #endif
+
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
+
 #ifdef MSW
 #include <winsock.h>
-#include <io.h>
 #endif
 
 /* These pragmas are only used for MSVC, not MinGW or Cygwin <hans@at.or.at> */
@@ -371,7 +380,7 @@ static void pd_startfromgui( void)
     if (lastchar)
         snprintf(pdbuf, lastchar - arg0 + 1, "%s", arg0);
     else strcpy(pdbuf, ".");
-    strcat(pdbuf, "/../bin/pd");
+    strcat(pdbuf, "/../bin/pdextended");
 #ifdef DEBUGCONNECT     
     fprintf(stderr, "pdbuf is %s\n", pdbuf);
 #endif
@@ -419,7 +428,7 @@ static void pd_startfromgui( void)
         fflush(debugfd);
 #endif
 
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     sprintf(cmdbuf, "\"%s\" -guiport %d\n", pdbuf, portno);
     childpid = fork();
     if (childpid < 0)
@@ -438,7 +447,7 @@ static void pd_startfromgui( void)
         perror("pd: exec");
         _exit(1);
     }
-#endif /* UNISTD */
+#endif /* HAVE_UNISTD_H */
 
 #ifdef MSW       
 
@@ -500,10 +509,14 @@ static char *pdgui_path;
 
 static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
 {
+    Tcl_DString dstring; /* used to convert the Tcl string to the OS encoding */
+    char *dstring_char;
     if (argc == 2)
     {
         int n = strlen(argv[1]);
-        if (send(sockfd, argv[1], n, 0) < n)
+        /* NULL as first arg means use the current system encoding */
+        dstring_char = Tcl_UtfToExternalDString(NULL, argv[1], -1, &dstring);
+        if (send(sockfd, dstring_char, n, 0) < n)
         {
             perror("stdout");
             tcl_mess("exit\n");
@@ -518,18 +531,22 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
         {
             if (strlen(argv[i]) + strlen(buf) + 2 > MAXWRITE)
             {
-                interp->result = "pd: arg list too long";
+                Tcl_SetObjResult(interp, 
+                                 Tcl_NewStringObj("pd: arg list too long", -1));
                 return (TCL_ERROR);     
             }
             if (i > 1) strcat(buf, " ");
             strcat(buf, argv[i]);
         }
-        if (send(sockfd, buf, strlen(buf), 0) < 0)
+        /* NULL as first arg means use the current system encoding */
+        dstring_char = Tcl_UtfToExternalDString(NULL, buf, -1, &dstring);
+        if (send(sockfd, dstring_char, strlen(dstring_char), 0) < 0)
         {
             perror("stdout");
             tcl_mess("exit\n");
         }
     }
+    Tcl_DStringFree(&dstring);
     return (TCL_OK);
 }
 
@@ -538,10 +555,13 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
 void tcl_mess(char *s)
 {
     int result;
-    result = Tcl_Eval(tk_pdinterp,  s);
+    Tcl_Obj *messageObjPtr = Tcl_NewStringObj(s,-1);
+    Tcl_IncrRefCount(messageObjPtr);
+    result = Tcl_EvalObjEx(tk_pdinterp, messageObjPtr, TCL_EVAL_GLOBAL);
+    Tcl_DecrRefCount(messageObjPtr);
     if (result != TCL_OK)
     {
-        if (*tk_pdinterp->result) printf("%s\n",  tk_pdinterp->result);
+        if (tk_pdinterp) printf("%s\n",  Tcl_GetStringResult(tk_pdinterp));
     }
 }
 
@@ -655,7 +675,7 @@ int Pdtcl_Init(Tcl_Interp *interp)
 #endif
     tk_pdinterp = interp;
     pdgui_startup(interp);
-    interp->result = "loaded pdtcl_init";
+    Tcl_SetObjResult (interp, Tcl_NewStringObj ("loaded pdtcl_init", -1));
 
     return (TCL_OK);
 }

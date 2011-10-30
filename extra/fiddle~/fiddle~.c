@@ -28,7 +28,7 @@
  *
  */
 
-#ifdef NT
+#ifdef _MSC_VER /* this is only needed with Microsoft's compiler */
 #define flog log
 #define fexp exp
 #define fsqrt sqrt

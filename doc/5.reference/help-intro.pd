@@ -291,9 +291,9 @@
 #X obj 18 4338 append;
 #X text 118 4338 - add an element to a list;
 #X obj 18 4368 sublist;
-#X obj 14 4449 scalar;
+#X text 14 4449 scalar;
 #X text 104 4448 - draw a scalar on parent;
-#X obj 15 4479 scope~;
+#X text 15 4479 [scope~];
 #X text 115 4479 (use tabwrite~ now);
 #X obj 15 4509 namecanvas;
 #X obj 15 4539 template;

@@ -20,6 +20,7 @@
 #endif
 #ifdef MSW
 #include <io.h>
+#include <windows.h>
 #endif
 
 #include <string.h>
@@ -67,6 +68,31 @@ void sys_unbashfilename(const char *from, char *to)
         *to++ = c;
     }
     *to = 0;
+}
+
+/* expand env vars and ~ at the beginning of a path and make a copy to return */
+static void sys_expandpath(const char *from, char *to)
+{
+    if ((strlen(from) == 1 && from[0] == '~') || (strncmp(from,"~/", 2) == 0))
+    {
+#ifdef MSW
+        const char *home = getenv("USERPROFILE");
+#else
+        const char *home = getenv("HOME");
+#endif
+        if(home) 
+        {
+            strncpy(to, home, FILENAME_MAX - 1);
+            strncat(to, from + 1, FILENAME_MAX - strlen(from) - 2);
+        }
+    }
+    else
+        strncpy(to, from, FILENAME_MAX - 1);
+#ifdef MSW
+    char buf[FILENAME_MAX];
+    ExpandEnvironmentStrings(to, buf, FILENAME_MAX - 2);
+    strncpy(to, buf, FILENAME_MAX - 1);
+#endif    
 }
 
 /* test if path is absolute or relative, based on leading /, env vars, ~, etc */
@@ -193,8 +219,29 @@ int sys_usestdpath = 1;
 
 void sys_setextrapath(const char *p)
 {
+    char pathbuf[FILENAME_MAX];
     namelist_free(pd_extrapath);
-    pd_extrapath = namelist_append(0, p, 0);
+    /* add standard place for users to install stuff first */
+#ifdef __gnu_linux__
+    sys_expandpath("~/pd-externals", pathbuf);
+    pd_extrapath = namelist_append(0, pathbuf, 0);
+    pd_extrapath = namelist_append(pd_extrapath, "/usr/local/lib/pd-externals", 0);
+#endif
+
+#ifdef __APPLE__
+    sys_expandpath("~/Library/Pd", pathbuf);
+    pd_extrapath = namelist_append(0, pathbuf, 0);
+    pd_extrapath = namelist_append(pd_extrapath, "/Library/Pd", 0);
+#endif
+
+#ifdef _WIN32
+    sys_expandpath("%ProgramFiles%/Common Files/Pd", pathbuf);
+    pd_extrapath = namelist_append(0, pathbuf, 0);
+    sys_expandpath("%UserProfile%/Application Data/Pd", pathbuf);
+    pd_extrapath = namelist_append(pd_extrapath, pathbuf, 0);
+#endif
+    /* add built-in "extra" path last so its checked last */
+    pd_extrapath = namelist_append(pd_extrapath, p, 0);
 }
 
 #ifdef MSW
@@ -214,9 +261,11 @@ int sys_trytoopenone(const char *dir, const char *name, const char* ext,
     char *dirresult, char **nameresult, unsigned int size, int bin)
 {
     int fd;
+    char buf[FILENAME_MAX];
     if (strlen(dir) + strlen(name) + strlen(ext) + 4 > size)
         return (-1);
-    strcpy(dirresult, dir);
+    sys_expandpath(dir, buf);
+    strcpy(dirresult, buf);
     if (*dirresult && dirresult[strlen(dirresult)-1] != '/')
         strcat(dirresult, "/");
     strcat(dirresult, name);
@@ -270,13 +319,13 @@ int sys_open_absolute(const char *name, const char* ext,
 {
     if (sys_isabsolutepath(name))
     {
-        char dirbuf[MAXPDSTRING], *z = strrchr(name, '/');
+        char dirbuf[FILENAME_MAX], *z = strrchr(name, '/');
         int dirlen;
         if (!z)
             return (0);
         dirlen = z - name;
-        if (dirlen > MAXPDSTRING-1) 
-            dirlen = MAXPDSTRING-1;
+        if (dirlen > FILENAME_MAX-1) 
+            dirlen = FILENAME_MAX-1;
         strncpy(dirbuf, name, dirlen);
         dirbuf[dirlen] = 0;
         *fdp = sys_trytoopenone(dirbuf, name+(dirlen+1), ext,
@@ -319,11 +368,12 @@ static int do_open_via_path(const char *dir, const char *name,
             dirresult, nameresult, size, bin)) >= 0)
                 return (fd);
 
-        /* next look in "extra" */
-    if (sys_usestdpath &&
-        (fd = sys_trytoopenone(pd_extrapath->nl_string, name, ext,
-            dirresult, nameresult, size, bin)) >= 0)
-                return (fd);
+        /* next look in built-in paths like "extra" */
+    if (sys_usestdpath)
+        for (nl = pd_extrapath; nl; nl = nl->nl_next)
+            if ((fd = sys_trytoopenone(nl->nl_string, name, ext,
+                dirresult, nameresult, size, bin)) >= 0)
+                    return (fd);
 
     *dirresult = 0;
     *nameresult = dirresult;
@@ -343,35 +393,40 @@ int open_via_path(const char *dir, const char *name, const char *ext,
     search attempts. */
 void open_via_helppath(const char *name, const char *dir)
 {
-    char realname[MAXPDSTRING], dirbuf[MAXPDSTRING], *basename;
+    char realname[FILENAME_MAX], propername[FILENAME_MAX], dirbuf[FILENAME_MAX];
+    char *basename;
         /* make up a silly "dir" if none is supplied */
     const char *usedir = (*dir ? dir : "./");
     int fd;
 
         /* 1. "objectname-help.pd" */
-    strncpy(realname, name, MAXPDSTRING-10);
-    realname[MAXPDSTRING-10] = 0;
+    strncpy(realname, name, FILENAME_MAX-10);
+    realname[FILENAME_MAX-10] = 0;
     if (strlen(realname) > 3 && !strcmp(realname+strlen(realname)-3, ".pd"))
         realname[strlen(realname)-3] = 0;
     strcat(realname, "-help.pd");
+    strncpy(propername, realname, FILENAME_MAX);
     if ((fd = do_open_via_path(dir, realname, "", dirbuf, &basename, 
-        MAXPDSTRING, 0, sys_helppath)) >= 0)
+        FILENAME_MAX, 0, sys_helppath)) >= 0)
             goto gotone;
 
         /* 2. "help-objectname.pd" */
     strcpy(realname, "help-");
-    strncat(realname, name, MAXPDSTRING-10);
-    realname[MAXPDSTRING-1] = 0;
+    strncat(realname, name, FILENAME_MAX-10);
+    realname[FILENAME_MAX-1] = 0;
     if ((fd = do_open_via_path(dir, realname, "", dirbuf, &basename, 
-        MAXPDSTRING, 0, sys_helppath)) >= 0)
-            goto gotone;
+        FILENAME_MAX, 0, sys_helppath)) >= 0)
+            goto gotone_deprecated;
 
         /* 3. "objectname.pd" */
     if ((fd = do_open_via_path(dir, name, "", dirbuf, &basename, 
-        MAXPDSTRING, 0, sys_helppath)) >= 0)
-            goto gotone;
+        FILENAME_MAX, 0, sys_helppath)) >= 0)
+            goto gotone_deprecated;
     post("sorry, couldn't find help patch for \"%s\"", name);
     return;
+gotone_deprecated:
+    error("'%s' is a deprecated name format for a help patch.\n\tPlease rename to '%s'!",
+          basename, propername);
 gotone:
     close (fd);
     glob_evalfile(0, gensym((char*)basename), gensym(dirbuf));
@@ -396,7 +451,7 @@ int sys_rcfile(void)
     int rcargc;
     char* rcargv[NUMARGS];
     char* buffer;
-    char  fname[MAXPDSTRING], buf[1000], *home = getenv("HOME");
+    char  fname[FILENAME_MAX], buf[1000], *home = getenv("HOME");
     int retval = 1; /* that's what we will return at the end; for now, let's think it'll be an error */
  
     /* initialize rc-arg-array so we can safely clean up at the end */
@@ -408,7 +463,7 @@ int sys_rcfile(void)
     
     *fname = '\0'; 
 
-    strncat(fname, home? home : ".", MAXPDSTRING-10);
+    strncat(fname, home? home : ".", FILENAME_MAX-10);
     strcat(fname, "/");
 
     strcat(fname, STARTUPNAME);

@@ -4,17 +4,24 @@
 
 /* misc. */
 
+#include "config.h"
+
 #include "m_pd.h"
 #include "s_stuff.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#ifdef UNISTD
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
+/* XXX Hack! */
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/param.h>
-#include <unistd.h>
 #endif
 #ifdef MSW
 #include <wtypes.h>
@@ -114,6 +121,66 @@ static void loadbang_setup(void)
         gensym("loadbang"), 0);
 }
 
+
+/* -------------------------- JMZ: initbang ------------------------------ */
+static t_class *initbang_class;
+
+typedef struct _initbang
+{
+    t_object x_obj;
+} t_initbang;
+
+static void *initbang_new(void)
+{
+    t_initbang *x = (t_initbang *)pd_new(initbang_class);
+    outlet_new(&x->x_obj, &s_bang);
+    return (x);
+}
+
+static void initbang_initbang(t_initbang *x)
+{
+  if (!sys_noloadbang) /* JMZ: hmm, not sure whether we should respect sys_noloadbang here... */
+        outlet_bang(x->x_obj.ob_outlet);
+}
+
+static void initbang_setup(void)
+{
+  initbang_class = class_new(gensym("initbang"), (t_newmethod)initbang_new, 0,
+        sizeof(t_initbang), CLASS_NOINLET, 0);
+    class_addmethod(initbang_class, (t_method)initbang_initbang,
+        gensym("initbang"), 0);
+}
+
+
+/* -------------------------- JMZ: closebang ------------------------------ */
+static t_class *closebang_class;
+
+typedef struct _closebang
+{
+    t_object x_obj;
+} t_closebang;
+
+static void *closebang_new(void)
+{
+    t_closebang *x = (t_closebang *)pd_new(closebang_class);
+    outlet_new(&x->x_obj, &s_bang);
+    return (x);
+}
+static void closebang_closebang(t_closebang *x)
+{
+  if (!sys_noloadbang) /* JMZ: hmm, not sure whether we should respect sys_noloadbang here... */
+        outlet_bang(x->x_obj.ob_outlet);
+}
+
+static void closebang_setup(void)
+{
+  closebang_class = class_new(gensym("closebang"), (t_newmethod)closebang_new, 0,
+        sizeof(t_closebang), CLASS_NOINLET, 0);
+    class_addmethod(closebang_class, (t_method)closebang_closebang,
+        gensym("closebang"), 0);
+}
+
+
 /* ------------- namecanvas (delete this later) --------------------- */
 static t_class *namecanvas_class;
 
@@ -194,7 +261,7 @@ static t_class *cputime_class;
 typedef struct _cputime
 {
     t_object x_obj;
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     struct tms x_setcputime;
 #endif
 #ifdef MSW
@@ -206,7 +273,7 @@ typedef struct _cputime
 
 static void cputime_bang(t_cputime *x)
 {
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     times(&x->x_setcputime);
 #endif
 #ifdef MSW
@@ -227,7 +294,7 @@ static void cputime_bang(t_cputime *x)
 
 static void cputime_bang2(t_cputime *x)
 {
-#ifdef UNISTD
+#ifdef HAVE_UNISTD_H
     t_float elapsedcpu;
     struct tms newcputime;
     times(&newcputime);
@@ -317,6 +384,8 @@ void x_misc_setup(void)
 {
     random_setup();
     loadbang_setup();
+    initbang_setup();
+    closebang_setup();
     namecanvas_setup();
     serial_setup();
     cputime_setup();
