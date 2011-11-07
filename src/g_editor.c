@@ -2735,12 +2735,14 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
         if (cl == vinlet_class) resortin = 1;
         else if (cl == voutlet_class) resortout = 1;
     }
-	sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
-    if (resortin) canvas_resortinlets(x);
-    if (resortout) canvas_resortoutlets(x);
-    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
-    if (x->gl_editor->e_selection)
-        canvas_dirty(x, 1);
+	if (dx || dy) {
+		sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
+	    if (resortin) canvas_resortinlets(x);
+	    if (resortout) canvas_resortoutlets(x);
+	    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+	    if (x->gl_editor->e_selection)
+	        canvas_dirty(x, 1);
+	}
 }
 
     /* this routine is called whenever a key is pressed or released.  "x"
