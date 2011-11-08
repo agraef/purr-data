@@ -1683,14 +1683,12 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
             canvas_destroy_editor(x);
         x->gl_isgraph = 0;
 		x->gl_hidetext = 0;
-		//x->gl_editor = 0;
         if (x->gl_owner && !x->gl_loading && glist_isvisible(x->gl_owner))
         {
             gobj_vis(&x->gl_gobj, x->gl_owner, 1);
             canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
         }
-		//if (x->gl_havewindow && hadeditor)
-		//	canvas_editmode(x, 1);
+		x->gl_goprect = 0;
     }
     else if (flag)
     {
