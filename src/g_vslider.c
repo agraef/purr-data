@@ -439,7 +439,7 @@ static void vslider__motionhook(t_scalehandle *sh,
 {
     if (sh->h_dragon && sh->h_scale)
     {
-		t_hslider *x = (t_hslider *)(sh->h_master);
+		t_vslider *x = (t_vslider *)(sh->h_master);
 		int dx = (int)f1, dy = (int)f2;
 		int newx, newy;
 		newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w - x->x_gui.scale_offset_x + dx;
