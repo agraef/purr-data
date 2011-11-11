@@ -387,7 +387,7 @@ void binbuf_addsemi(t_binbuf *x)
     t_atom a;
     SETSEMI(&a);
     binbuf_add(x, 1, &a);
-    binbuf_add(x, 1, '\0');
+    //binbuf_add(x, 1, '\0');
 }
 
 /* Supply atoms to a binbuf from a message, making the opposite changes
