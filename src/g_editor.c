@@ -40,8 +40,6 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *oldy_prev, t_gobj *oldy_next);
 static void canvas_paste_xyoffset(t_canvas *x);
 void canvas_setgraph(t_glist *x, int flag, int nogoprect);
-
-// jsarlo
 static char canvas_cnct_inlet_tag[4096];
 static char canvas_cnct_outlet_tag[4096];
 static int outlet_issignal = 0;
@@ -49,6 +47,14 @@ static int inlet_issignal = 0;
 static int last_inlet_filter = 0;
 static int last_outlet_filter = 0;
 static int copyfromexternalbuffer = 0;
+static int screenx1;            /* screen coordinates when doing copyfromexternalbuffer */
+static int screeny1;
+static int screenx2;
+static int screeny2;
+static int copiedfont;
+static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
+    t_floatarg yresize);
+extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 struct _outlet
 {
     t_object *o_owner;
@@ -56,7 +62,6 @@ struct _outlet
     t_outconnect *o_connections;
     t_symbol *o_sym;
 };
-// end jsarlo
 
 /* used for new duplicate behavior where we can "duplicate" into new window */
 static t_canvas *c_selection;
@@ -3325,23 +3330,52 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_at
 {
 	if (!x->gl_editor)
 		return;
-	/*
+
 	if (ac == 0) {
 		//fprintf(stderr,"init\n");
 		copyfromexternalbuffer = 1;
+		screenx1 = 0;
+		screeny1 = 0;
+		screenx2 = 0;
+		screeny2 = 0;
+		copiedfont = 0;
 		binbuf_free(copy_binbuf);
 		copy_binbuf = binbuf_new();
-	} else {
+	} else if (copyfromexternalbuffer) {
+		//fprintf(stderr,"fill %d\n", ac);
 		if (av[0].a_type == A_SYMBOL && strcmp(av[0].a_w.w_symbol->s_name, "#N")) {
-			//fprintf(stderr,"fill %d\n", ac);
 			binbuf_add(copy_binbuf, ac, av);
 			binbuf_addsemi(copy_binbuf);
-		} else {
-			//probably should resize window size and position here...
-			//fprintf(stderr,"ignoring canvas\n");
+		} else if (ac == 7) {
+			int check = 0;
+			//if the canvas is empty resize window size and position here...
+			//fprintf(stderr,"copying canvas properties for copyfromexternalbuffer\n");
+			if (av[2].a_type == A_FLOAT) {
+				screenx1 = av[2].a_w.w_float;
+				check++;
+			}
+			if (av[3].a_type == A_FLOAT) {
+				screeny1 = av[3].a_w.w_float;
+				check++;
+			}
+			if (av[4].a_type == A_FLOAT) {
+				screenx2 = av[4].a_w.w_float;
+				check++;
+			}
+			if (av[5].a_type == A_FLOAT) {
+				screeny2 = av[5].a_w.w_float;
+				check++;
+			}
+			if (av[5].a_type == A_FLOAT) {
+				copiedfont = av[6].a_w.w_float;
+				check++;
+			}
+			if (check != 5) {
+				post("error copying: copyfromexternalbuffer: canvas info has invalid data\n");
+				copyfromexternalbuffer = 0;
+			}
 		}
 	}
-	*/
 }
 
 static void canvas_copy(t_canvas *x)
@@ -3349,6 +3383,11 @@ static void canvas_copy(t_canvas *x)
     if (!x->gl_editor || !x->gl_editor->e_selection)
         return;
 	copyfromexternalbuffer = 0;
+	screenx1 = 0;
+	screeny1 = 0;
+	screenx2 = 0;
+	screeny2 = 0;
+	copiedfont = 0;
     binbuf_free(copy_binbuf);
 	//fprintf(stderr, "canvas_copy\n");
     copy_binbuf = canvas_docopy(x);
@@ -3566,9 +3605,14 @@ extern void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
 static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
 	//fprintf(stderr,"start dopaste\n");
-
+	
     t_gobj *newgobj, *last, *g2;
     int dspstate = canvas_suspend_dsp(), nbox, count;
+	int canvas_empty = 0;
+
+	//first let's see if we are pasting into an empty canvas
+	//this will be used below when pasting from copyfromexternalbuffer, usually text editor
+	if (!x->gl_list) canvas_empty = 1;
 
 	//autopatching variables
 	int connectme, xpix, ypix, indx, nobj;
@@ -3580,6 +3624,24 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		pasting and therefore MA_MOVE should not apply to new objects
 	*/
 	x->gl_editor->e_onmotion = MA_NONE;
+
+	if (copyfromexternalbuffer && canvas_empty) {
+		if (screenx2 && screeny2 && copiedfont) {
+			x->gl_screenx1 = screenx1;
+			x->gl_screenx2 = screenx1 + screenx2;
+			x->gl_screeny1 = screeny1;
+			x->gl_screeny2 = screeny1 + screeny2;
+			//canvas_setbounds(x, screenx1, screeny1, screenx1+screenx2, screeny1+screeny2);
+			sys_vgui("wm geometry .x%lx =%dx%d+%d+%d\n", x,
+                (int)(x->gl_screenx2 - x->gl_screenx1),
+                (int)(x->gl_screeny2 - x->gl_screeny1),
+                (int)(x->gl_screenx1), (int)(x->gl_screeny1));
+			//hardwired stretchval and whichstretch until we figure out proper resizing
+			canvas_dofont(x, copiedfont, 100, 1);
+			//sys_vgui("pdtk_canvas_checkgeometry .x%lx\n", x);
+			canvas_redraw(x);
+		}
+	}
 
 	//if we have something selected in another canvas
 	if (c_selection && c_selection != x)
@@ -3629,7 +3691,10 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		//reset canvas_undo_already_set_move
 		canvas_undo_already_set_move = 0;
 	}
-	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") && !copyfromexternalbuffer) {
+	//if we are pasting into a new window and this is not copied from external buffer OR
+	//if we are copying from external buffer and the current canvas is not empty
+	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") && !copyfromexternalbuffer ||
+		copyfromexternalbuffer && !canvas_empty) {
 		canvas_paste_atmouse(x);
 		//fprintf(stderr,"doing a paste\n");
 	}

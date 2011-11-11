@@ -47,7 +47,7 @@ t_canvas *canvas_list;              /* list of all root canvases */
 static void canvas_start_dsp(void);
 static void canvas_stop_dsp(void);
 static void canvas_drawlines(t_canvas *x);
-static void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
+void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 void canvas_reflecttitle(t_canvas *x);
 static void canvas_addtolist(t_canvas *x);
 static void canvas_takeofflist(t_canvas *x);
@@ -596,8 +596,10 @@ int glist_isgraph(t_glist *x)
 
     /* This is sent from the GUI to inform a toplevel that its window has been
     moved or resized. */
-static void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2)
+void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2)
 {
+	//fprintf(stderr,"canvas_setbounds %d %d %d %d\n", x1, y1, x2, y2);
+
     int heightwas = y2 - y1;
     int heightchange = y2 - y1 - (x->gl_screeny2 - x->gl_screeny1);
     if (x->gl_screenx1 == x1 && x->gl_screeny1 == y1 &&
@@ -755,6 +757,7 @@ void canvas_redraw(t_canvas *x)
 	//fprintf(stderr,"canvas_redraw\n");
     if (glist_isvisible(x))
     {
+		//fprintf(stderr,"canvas_redraw glist_isvisible=true\n");
         canvas_map(x, 0);
         canvas_map(x, 1);
 		
