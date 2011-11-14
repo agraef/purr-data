@@ -454,8 +454,9 @@ void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
     canvas_undo_buf = buf;
     canvas_undo_whatnext = UNDO_UNDO;
     canvas_undo_name = name;
-    if (x && glist_isvisible(x) && glist_istoplevel(x))
-            /* enable undo in menu */
+    //if (x && glist_isvisible(x) && glist_istoplevel(x))
+	if (x)
+    	// enable undo in menu
         sys_vgui("pdtk_undomenu .x%lx %s no\n", x, name);
     else if (hadone)
         sys_vgui("pdtk_undomenu nobody no no\n");
@@ -1173,9 +1174,9 @@ t_undo_canvas_properties global_buf;
 
 static void *canvas_undo_set_canvas(t_canvas *x)
 {
-	/* enable editor (in case it is disabled) and select the object we are working on */
-	if (!x->gl_edit)
-		canvas_editmode(x, 1);
+	/* enable editor (in case it is disabled) */
+	//if (x->gl_havewindow && !x->gl_edit)
+	//	canvas_editmode(x, 1);
 
 	global_buf.gl_pixwidth = x->gl_pixwidth;
 	global_buf.gl_pixheight = x->gl_pixheight;
@@ -1266,7 +1267,7 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		buf->gl_hidetext = tmp.gl_hidetext;
 
 		//redraw
-		canvas_setgraph(x, x->gl_isgraph, 0);
+		canvas_setgraph(x, x->gl_isgraph + 2*x->gl_hidetext, 0);
 		canvas_dirty(x, 1);
 		if (x->gl_havewindow) {
 		    canvas_redraw(x);
@@ -1406,7 +1407,7 @@ void canvas_setcursor(t_canvas *x, unsigned int cursornum)
     }
     if (xwas != x || cursorwas != cursornum)
     {
-        sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
+        sys_vgui("catch {.x%lx configure -cursor %s}\n", x, cursorlist[cursornum]);
         xwas = x;
         cursorwas = cursornum;
     }
@@ -1679,6 +1680,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
     any missing paramters and redraw things if necessary. */
 void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 {
+	//fprintf(stderr,"flag=%d\n",flag);
     if (!flag && glist_isgraph(x))
     {
         int hadeditor = (x->gl_editor != 0);
@@ -1776,6 +1778,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     xperpix = atom_getfloatarg(0, argc, argv);
     yperpix = atom_getfloatarg(1, argc, argv);
     graphme = (int)(atom_getfloatarg(2, argc, argv));
+	//fprintf(stderr,"graphme=%d\n", graphme);
     x1 = atom_getfloatarg(3, argc, argv);
     y1 = atom_getfloatarg(4, argc, argv);
     x2 = atom_getfloatarg(5, argc, argv);
@@ -2999,9 +3002,25 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     for (g = canvas_list; g; g = g->gl_next)
         if (g2 = glist_finddirty(g))
         {
-            canvas_vis(g2, 1);
-            sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;\n}\n",
+			/* first open window */
+			if (!glist_istoplevel(g2) && g2->gl_env) {
+				/* if this is an abstraction */
+            	vmess(&g2->gl_pd, gensym("menu-open"), "");
+			} else {
+				/* is this even necessary? */
+	            canvas_vis(g2, 1);
+			}
+			if (!glist_istoplevel(g2) && g->gl_env) {
+				/* if this is an abstraction */
+            	sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
+                     g2, g2);
+			} else {
+            	sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;}\n",
                      canvas_getrootfor(g2), g2);
+			}
+            //canvas_vis(g2, 1);
+            //sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 3;\n}\n",
+            //         canvas_getrootfor(g2), g2);
         return;
     }
     if (f == 0 && sys_perf)

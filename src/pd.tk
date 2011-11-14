@@ -1790,7 +1790,7 @@ proc menu_fixeditmenu {name} {
 			}
 		}
 
-		#    puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
+		# puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
 		if {$name == $pd_undocanvas && $pd_undoaction != "no"} {
 		    $name.m.edit entryconfigure "Undo*" -state normal \
 		        -label [concat "Undo " $pd_undoaction]
@@ -2481,7 +2481,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     set pdtk_canvas_mouseup_name ""
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
-    focus $name
+    focus $name.c
 }
 
 #### jsarlo #####
@@ -3630,6 +3630,7 @@ proc popup_action {name action} {
 }
 
 proc pdtk_canvas_popup {name xpix ypix canprop canopen isobject} {
+	focus $name.c
     global popup_xpix popup_ypix
 	global tmp_xpix tmp_ypix
 	set popup_xpix $xpix
