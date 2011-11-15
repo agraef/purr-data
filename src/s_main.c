@@ -182,6 +182,7 @@ static void openit(const char *dirname, const char *filename)
     {
         close (fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
+		sys_vgui("pdtk_set_current_dir %s\n", filename);
     }
     else
         error("%s: can't open", filename);

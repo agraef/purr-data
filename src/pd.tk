@@ -958,8 +958,16 @@ proc menu_open {} {
 	}
 }
 
+proc pdtk_set_current_dir {path_and_filename} {
+	global pd_opendir untitled_directory
+	set directory [file dirname $path_and_filename]
+	set pd_opendir $directory
+	set untitled_directory $directory
+}
+
 proc open_file {filename} {
     global pd_opendir pd_guidir pd_nt
+	puts stderr open_file
 	set directory [file dirname $filename]
 	set basename [file tail $filename]
     if {[regexp -nocase -- "\.(pat|mxb|help)$" $basename]} {
@@ -3245,32 +3253,28 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     set filename [tk_getSaveFile -initialfile $initfile -initialdir $initdir \
 					  -defaultextension .pd -filetypes $filetypes]
 
-    if {$filename != ""} {
-        # yes, we need the extent even if we're on a mac.
-        if {$pd_nt == 2} {
-            if {[string last .pd $filename] < 0 && \
-                    [string last .PD $filename] < 0 && \
-                    [string last .pat $filename] < 0 && \
-                    [string last .PAT $filename] < 0} {
-                set filename $filename.pd
-                if {[file exists $filename]} {
-                    set answer [tk_messageBox \
-                    	\-message [concat overwrite $filename "?"] \
-                        \-type yesno \-icon question]
-                    if {! [string compare $answer no]} {return}
-                }
-            }
-        }
+    if {$filename eq ""} return; # they clicked cancel
 
-        set directory [string range $filename 0 \
-                           [expr [string last / $filename ] - 1]]
-        set basename [string range $filename \
-                          [expr [string last / $filename ] + 1] end]
-        pd [concat $name savetofile [pdtk_enquote $basename] \
-                [pdtk_enquote $directory] \;]
-        #       pd [concat $name savetofile $basename $directory \;]
-        set untitled_directory $directory
+    set extension [file extension $filename]
+    set oldfilename $filename
+    set filename [regsub -- "$extension$" $filename [string tolower $extension]]
+    if { ! [regexp -- "\.(pd|pat|mxt)$" $filename]} {
+        # we need the file extention even on Mac OS X
+        set filename $filename.pd
     }
+    # test again after downcasing and maybe adding a ".pd" on the end
+    if {$filename ne $oldfilename && [file exists $filename]} {
+        set answer [tk_messageBox -type okcancel -icon question -default cancel\
+                        -message [_ "\"$filename\" already exists. Do you want to replace it?"]]
+        if {$answer eq "cancel"} return; # they clicked cancel
+    }
+
+    set directory [file dirname $filename]
+    set basename [file tail $filename]
+    pd [concat $name savetofile [pdtk_enquote $basename] \
+            [pdtk_enquote $directory] \;]
+    #       pd [concat $name savetofile $basename $directory \;]
+    set untitled_directory $directory
 }
 
 ############ pdtk_canvas_dofont -- run a font and resize dialog #########
