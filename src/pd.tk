@@ -967,7 +967,7 @@ proc pdtk_set_current_dir {path_and_filename} {
 
 proc open_file {filename} {
     global pd_opendir pd_guidir pd_nt
-	puts stderr open_file
+	#puts stderr open_file
 	set directory [file dirname $filename]
 	set basename [file tail $filename]
     if {[regexp -nocase -- "\.(pat|mxb|help)$" $basename]} {

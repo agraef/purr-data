@@ -3030,7 +3030,10 @@ void glob_verifyquit(void *dummy, t_floatarg f)
 
 void canvas_dofree(t_gobj *dummy, t_glist *x)
 {
+	//int dspstate = canvas_suspend_dsp();
+	//sys_flushqueue();
 	pd_free(&x->gl_pd);
+	//canvas_resume_dsp(dspstate);
 }
 
     /* close a window (or possibly quit Pd), checking for dirty flags.
@@ -3082,10 +3085,13 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
 			//clock_delay(x->gl_destroy, 0);
     }
     else if (force == 1) {
-        //pd_free(&x->gl_pd);
 		//sys_vgui("pd {.x%lx menuclose -1;}\n", x);
 		//sys_vgui("menu_close .x%lx\n", x);
 		sys_queuegui(x, x, canvas_dofree);
+		//canvas_vis(x, 0);
+		//canvas_free(x);
+		//pd_free(&x->gl_pd);
+		//fprintf(stderr,"pd_free queued------------\n");
 		//clock_delay(x->gl_destroy, 0);
 	}
     else if (force == 2)
