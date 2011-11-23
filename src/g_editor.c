@@ -1209,11 +1209,11 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 
 	if (action == UNDO_UNDO || action == UNDO_REDO)
 	{
-		//close properties window first
+		/*//close properties window first
 		t_int properties = gfxstub_haveproperties((void *)x);
 		if (properties) {
 			sys_vgui("destroy .gfxstub%lx\n", properties);
-		}
+		}*/
 
 		//store current canvas values into temporary data holder
 		tmp.gl_pixwidth = x->gl_pixwidth;
@@ -1281,11 +1281,26 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		}
 		//update scrollbars when GOP potentially exceeds window size
 		t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
+
 		//if gop is being disabled go one level up
 		if (!x->gl_isgraph && x->gl_owner) {
 			canvas=canvas->gl_owner;
 			canvas_redraw(canvas);
 		}
+
+		//if properties window is open, update the properties with the previous window properties		
+		t_int properties = gfxstub_haveproperties((void *)x);
+		if (properties) {
+			sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n", properties, x->gl_pixwidth);
+			sys_vgui(".gfxstub%lx.yrange.entry3 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.yrange.entry3 insert 0 %d\n", properties, x->gl_pixheight);
+			sys_vgui(".gfxstub%lx.xrange.entry4 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.xrange.entry4 insert 0 %d\n", properties, x->gl_xmargin);
+			sys_vgui(".gfxstub%lx.yrange.entry4 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.yrange.entry4 insert 0 %d\n", properties, x->gl_ymargin);
+		}
+
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
 	}
@@ -3028,13 +3043,13 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     else glob_quit(0);
 }
 
-void canvas_dofree(t_gobj *dummy, t_glist *x)
-{
+//void canvas_dofree(t_gobj *dummy, t_glist *x)
+//{
 	//int dspstate = canvas_suspend_dsp();
 	//sys_flushqueue();
-	pd_free(&x->gl_pd);
+	//pd_free(&x->gl_pd);
 	//canvas_resume_dsp(dspstate);
-}
+//}
 
     /* close a window (or possibly quit Pd), checking for dirty flags.
     The "force" parameter is interpreted as follows:
@@ -3087,10 +3102,10 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
     else if (force == 1) {
 		//sys_vgui("pd {.x%lx menuclose -1;}\n", x);
 		//sys_vgui("menu_close .x%lx\n", x);
-		sys_queuegui(x, x, canvas_dofree);
+		//sys_queuegui(x, x, canvas_dofree);
 		//canvas_vis(x, 0);
 		//canvas_free(x);
-		//pd_free(&x->gl_pd);
+		pd_free(&x->gl_pd);
 		//fprintf(stderr,"pd_free queued------------\n");
 		//clock_delay(x->gl_destroy, 0);
 	}
@@ -4035,6 +4050,8 @@ void glob_key(void *dummy, t_symbol *s, int ac, t_atom *av)
     canvas_key(canvas_editing, s, ac, av);
 }
 
+extern void canvas_draw_gop_resize_hooks(t_canvas *x);
+
 void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 {
 	//fprintf(stderr,"canvas_editmode %f\n", fyesplease);
@@ -4045,10 +4062,13 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         return;
 	}
     x->gl_edit = !x->gl_edit;
-    if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x))
-	 canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+    if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x)){
+		if (x->gl_goprect)	canvas_draw_gop_resize_hooks(x);								// dpsaha@vt.edu add the resize blobs on GOP
+		canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+	}
     else
     {
+		//fprintf(stderr,"we are out of edit\n");
         glist_noselect(x);
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
@@ -4085,6 +4105,8 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 	else {
 		sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" -indicatoron false -state normal\n", glist_getcanvas(x));
 	}*/
+	//dpsaha@vt.edu called to delete the GOP_blob
+	if (x->gl_goprect)		canvas_draw_gop_resize_hooks(x);
 }
 
 // jsarlo

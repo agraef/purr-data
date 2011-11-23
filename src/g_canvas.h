@@ -214,6 +214,18 @@ struct _glist
     t_magicGlass *gl_magic_glass;   /* magic glass object */
     // end jsarlo
 	//t_clock  *gl_destroy;			/* for script-based closing of the patch */
+
+	//dpsaha@vt.edu for the gop dynamic resizing
+	t_pd	   		   *x_handle;
+	int 			   scale_offset_x;	
+	int				   scale_offset_y;
+	int				   scale_vis;
+	
+	//dpsaha@vt.edu for the move handle
+	t_pd			   *x_mhandle;
+	int				   move_offset_x;
+	int				   move_offset_y;
+	int				   move_vis;
 };
 
 #define gl_gobj gl_obj.te_g

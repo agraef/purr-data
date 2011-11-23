@@ -12,8 +12,9 @@ to be different but are now unified except for some fossilized names.) */
 #include "s_stuff.h"
 #include "g_magicglass.h"
 #include "g_canvas.h"
-#include <string.h>
 #include "g_all_guis.h"
+#include <string.h>
+
 
     /* LATER consider adding font size to this struct (see glist_getfont()) */
 struct _canvasenvironment
@@ -347,7 +348,37 @@ void glist_init(t_glist *x)
     tells us which.) */
 t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 {
+	/*	first alloc one byte or redundant memory to prevent creation of objects with the same "name"
+		which leads to double-action invoked from every single action and eventually possible crashes
+
+		we keep a list of these redundant allocations and destroy them when pd quits */
+	//if (x->gl_owner && x->gl_env) {
+/*
+		t_redundant_mem *new_rm = (t_redundant_mem *)t_getbytes(sizeof(*new_rm));
+		new_rm->rm_what = (int)getbytes(1);
+		if (rm_start == NULL) {
+			//fprintf(stderr,"first allocation\n");
+			rm_start = new_rm;
+			rm_end = new_rm;
+		}
+		else if (rm_start == rm_end) {
+			//fprintf(stderr,"second allocation\n");
+			rm_end = new_rm;
+			rm_start->rm_next = rm_end;
+		}
+		else {
+			//fprintf(stderr,"allocation\n");
+			rm_end->rm_next = new_rm;
+			rm_end = new_rm;
+		}
+*/
+	//}
+
     t_canvas *x = (t_canvas *)pd_new(canvas_class);
+
+	/* now that we've created a new canvas, add canvas info to the new_rm */
+	//new_rm->rm_canvas = x;
+
     t_canvas *owner = canvas_getcurrent();
     t_symbol *s = &s_;
     int vis = 0, width = GLIST_DEFCANVASWIDTH, height = GLIST_DEFCANVASHEIGHT;
@@ -439,6 +470,38 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_edit = !strncmp(x->gl_name->s_name, "Untitled", 8);
     x->gl_font = sys_nearestfontsize(font);
     pd_pushsym(&x->gl_pd);
+
+/* ---------- dpsaha@vt.edu gop resize -------------------------------- */
+	//resize blob	
+	t_scalehandle *sh;
+	char buf[64];
+	x->x_handle = pd_new(scalehandle_class);
+	sh = (t_scalehandle *)x->x_handle;
+	sh->h_master = (t_gobj*)x;
+	sprintf(buf, "_h%lx", (t_int)sh);
+	pd_bind(x->x_handle, sh->h_bindsym = gensym(buf));
+	sprintf(sh->h_outlinetag, "h%lx", (t_int)sh);
+	sh->h_dragon = 0;
+	sh->h_scale = 1;
+	x->scale_offset_x = 0;
+	x->scale_offset_y = 0;
+	x->scale_vis = 0;
+	
+	//move blob	
+	t_scalehandle *mh;
+	char mbuf[64];
+	x->x_mhandle = pd_new(scalehandle_class);
+	mh = (t_scalehandle *)x->x_mhandle;
+	mh->h_master = (t_gobj*)x;
+	sprintf(mbuf, "_h%lx", (t_int)mh);
+	pd_bind(x->x_mhandle, mh->h_bindsym = gensym(mbuf));
+	sprintf(mh->h_outlinetag, "h%lx", (t_int)mh);
+	mh->h_dragon = 0;
+	mh->h_scale = 0;
+	x->move_offset_x = 0;
+	x->move_offset_y = 0;
+	x->move_vis = 0;
+/*------------------------------------------------------------- */
 
     return(x);
 }
@@ -657,9 +720,60 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
     }
 }
 
+/*********** dpsaha@vt.edu resize move hooks ****************/
+void canvas_draw_gop_resize_hooks(t_canvas* x)
+{
+	if(x->gl_edit){
+		
+		//Drawing and Binding Resize_Blob for GOP
+		t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
+		sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
+		sys_vgui("destroy %s\n", sh->h_pathname);		
+		sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+		sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxGOP GOP_resblob}\n",
+				 x, x->gl_xmargin + x->gl_pixwidth - SCALEHANDLE_WIDTH - 1,
+				 x->gl_ymargin + 3 + x->gl_pixheight - SCALEHANDLE_HEIGHT - 4,
+				 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+				 sh->h_pathname, x, x);
+		
+		sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+		sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+		sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+				 sh->h_pathname, sh->h_bindsym->s_name);
+
+		//Drawing and Binding Move_Blob for GOP
+		t_scalehandle *mh = (t_scalehandle *)(x->x_mhandle);
+		sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
+		sys_vgui("destroy %s\n", mh->h_pathname);		
+		sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+				 mh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+		sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxMOVE %lxGOP GOP_movblob}\n",
+				 x, x->gl_xmargin + 2 ,
+				 x->gl_ymargin + 2 ,
+				 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+				 mh->h_pathname, x, x);
+		
+		sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+				 mh->h_pathname, mh->h_bindsym->s_name);
+		sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+				 mh->h_pathname, mh->h_bindsym->s_name);
+		sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+				 mh->h_pathname, mh->h_bindsym->s_name);
+
+	}
+	else{
+		sys_vgui(".x%lx.c delete GOP_resblob\n",x);					//delete the GOP_resblob
+		sys_vgui(".x%lx.c delete GOP_movblob\n",x);					//delete the GOP_movblob	
+	}
+}
+/*****************************************************************************/
+
 void canvas_drawredrect(t_canvas *x, int doit)
 {
-    if (doit)
+    if (doit){
         sys_vgui(".x%lx.c create line\
             %d %d %d %d %d %d %d %d %d %d -fill #ff8080 -tags GOP\n",
             glist_getcanvas(x),
@@ -668,6 +782,10 @@ void canvas_drawredrect(t_canvas *x, int doit)
             x->gl_xmargin + x->gl_pixwidth, x->gl_ymargin + x->gl_pixheight,
             x->gl_xmargin, x->gl_ymargin + x->gl_pixheight,
             x->gl_xmargin, x->gl_ymargin);
+		if (x->gl_goprect && x->gl_edit){
+				canvas_draw_gop_resize_hooks(x);					//dpsaha@vt.edu for drawing the GOP_blobs
+		}	
+	}
     else sys_vgui(".x%lx.c delete GOP\n",  glist_getcanvas(x));
 }
 
@@ -1623,6 +1741,215 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
         dirresult, nameresult, size, bin));
 }
 
+void canvasgop_draw_move(t_canvas *x, int doit)
+{
+	//delete the earlier GOP window so that when dragging 
+	//there is only one GOP window present on parent
+	sys_vgui(".x%lx.c delete GOP\n",  x);
+		
+	//redraw the GOP
+	canvas_setgraph(x, x->gl_isgraph+2*x->gl_hidetext, 0);
+	canvas_dirty(x, 1);
+	if (x->gl_havewindow) {
+	    canvas_redraw(x);
+	}
+	if (x->gl_owner && glist_isvisible(x->gl_owner))
+	{
+		glist_noselect(x);
+	    gobj_vis(&x->gl_gobj, x->gl_owner, 0);
+	    gobj_vis(&x->gl_gobj, x->gl_owner, 1);
+		canvas_redraw(x->gl_owner);
+	}
+	
+	//update scrollbars when GOP potentially exceeds window size
+	t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
+	
+	//if gop is being disabled go one level up
+	if (!x->gl_isgraph && x->gl_owner) {
+		canvas=canvas->gl_owner;
+		canvas_redraw(canvas);
+	}
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
+}
+
+extern int gfxstub_haveproperties(void *key);
+extern void canvas_canvas_setundo(t_canvas *x);
+
+void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+{
+	int x1=0, y1=0, x2=0, y2=0; //for getrect
+
+	t_canvas *x = (t_canvas *)(sh->h_master);
+
+ 	if (xxx) x->scale_offset_x = xxx;
+ 	if (yyy) x->scale_offset_y = yyy;
+
+    int newstate = (int)f;
+    if (sh->h_dragon && newstate == 0)
+    {
+		/* done dragging */
+		if(sh->h_scale)														//enter if resize_gop hook
+		{
+			/* first set up the undo apply */
+			canvas_canvas_setundo(x);
+
+			if (sh->h_dragx || sh->h_dragy) 
+			{
+				x->gl_pixwidth = x->gl_pixwidth + sh->h_dragx - x->scale_offset_x;
+				if (x->gl_pixwidth < SCALE_GOP_MINWIDTH)
+					x->gl_pixwidth = SCALE_GOP_MINWIDTH;
+				x->gl_pixheight = x->gl_pixheight + sh->h_dragy - x->scale_offset_y;
+				if (x->gl_pixheight < SCALE_GOP_MINHEIGHT)
+					x->gl_pixheight = SCALE_GOP_MINHEIGHT;
+
+				// TODO check if the text is not hidden
+				// if so make minimum width and height based retrieved from getrect
+				if (x->gl_hidetext == 0 && x->gl_owner) {
+					gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);
+					if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
+					if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
+				}
+
+				canvas_dirty(x, 1);
+			}
+
+			int properties = gfxstub_haveproperties((void *)x);
+
+			if (properties) {
+				sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n", properties, x->gl_pixwidth);
+				sys_vgui(".gfxstub%lx.yrange.entry3 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.yrange.entry3 insert 0 %d\n", properties, x->gl_pixheight);
+			}
+
+			if (glist_isvisible(x))
+			{
+				sys_vgui(".x%x.c delete %s\n", x, sh->h_outlinetag);
+				canvasgop_draw_move(x,1);
+				canvas_fixlinesfor(x, (t_text *)x);
+				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+			}
+		}
+		else 																//enter if move_gop hook
+		{
+			/* first set up the undo apply */
+			canvas_canvas_setundo(x);
+
+			if (sh->h_dragx || sh->h_dragy) 
+			{
+				x->gl_xmargin = x->gl_xmargin + sh->h_dragx - x->scale_offset_x;
+				x->gl_ymargin = x->gl_ymargin + sh->h_dragy - x->scale_offset_y;
+				
+				canvas_dirty(x, 1);
+			}
+
+			int properties = gfxstub_haveproperties((void *)x);
+			if (properties) {
+				sys_vgui(".gfxstub%lx.xrange.entry4 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.xrange.entry4 insert 0 %d\n", properties, x->gl_xmargin);
+				sys_vgui(".gfxstub%lx.yrange.entry4 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.yrange.entry4 insert 0 %d\n", properties, x->gl_ymargin);
+			}
+		
+			if (glist_isvisible(x))
+			{
+				canvasgop_draw_move(x,1);
+				canvas_fixlinesfor(x, (t_text *)x);
+				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+			}
+		}
+    }
+	else if (!sh->h_dragon && newstate)
+    {
+		if(sh->h_scale)														//enter if resize_gop hook
+		{
+			
+			sys_vgui("lower %s\n", sh->h_pathname);
+			sys_vgui(".x%lx.c delete GOP \n",  x);							//delete GOP rect where it started from
+			sys_vgui(".x%x.c create rectangle %d %d %d %d\
+	 			-outline $select_color -width 1 -tags %s\n",\
+				 x, x->gl_xmargin, x->gl_ymargin,\
+					x->gl_xmargin + x->gl_pixwidth,\
+					x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);
+
+			sh->h_dragx = 0;
+			sh->h_dragy = 0;
+		}
+		else																//enter if move_gop hook
+		{
+			sys_vgui("lower %s\n", sh->h_pathname);
+			sys_vgui(".x%lx.c delete GOP_resblob \n",  x);					//delete GOP_resblob when moving the whole GOP
+
+			sh->h_dragx = 0;
+			sh->h_dragy = 0;
+		}
+    }
+
+	sh->h_dragon = newstate;
+}
+
+void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
+{
+	t_canvas *x = (t_canvas *)(sh->h_master);
+	int dx = (int)f1, dy = (int)f2;
+	int newx, newy;
+	
+	if (sh->h_dragon)
+    {
+		if(sh->h_scale)													//enter if resize_gop hook
+		{			
+			newx = x->gl_xmargin + x->gl_pixwidth - x->scale_offset_x + dx;
+			newy = x->gl_ymargin + x->gl_pixheight - x->scale_offset_y + dy;
+
+			if (newx < x->gl_xmargin + SCALE_GOP_MINWIDTH)
+				newx = x->gl_xmargin + SCALE_GOP_MINWIDTH;
+			if (newy < x->gl_ymargin + SCALE_GOP_MINHEIGHT)
+				newy = x->gl_ymargin + SCALE_GOP_MINHEIGHT;
+
+			sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+				 x, sh->h_outlinetag, x->gl_xmargin,
+				 x->gl_ymargin, newx, newy);
+
+			sh->h_dragx = dx;
+			sh->h_dragy = dy;
+
+			int properties = gfxstub_haveproperties((void *)x);
+			if (properties) {
+				int new_w = x->gl_pixwidth - x->scale_offset_x + sh->h_dragx;
+				int new_h = x->gl_pixheight - x->scale_offset_y + sh->h_dragy;
+				sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n", properties, new_w);
+				sys_vgui(".gfxstub%lx.yrange.entry3 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.yrange.entry3 insert 0 %d\n", properties, new_h);
+			}
+		}
+		else															//enter if move_gop hook
+		{
+			newx = x->gl_xmargin - x->scale_offset_x + dx;
+			newy = x->gl_ymargin - x->scale_offset_y + dy;
+		
+			int properties = gfxstub_haveproperties((void *)x);
+			if (properties) {
+				sys_vgui(".gfxstub%lx.xrange.entry4 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.xrange.entry4 insert 0 %d\n", properties, newx);
+				sys_vgui(".gfxstub%lx.yrange.entry4 delete 0 end\n", properties);
+				sys_vgui(".gfxstub%lx.yrange.entry4 insert 0 %d\n", properties, newy);
+			}
+
+			sys_vgui(".x%x.c coords GOP %d %d %d %d %d %d %d %d %d %d\n",
+						x, newx, newy, newx+x->gl_pixwidth, newy,
+						newx+x->gl_pixwidth, newy+x->gl_pixheight,
+						newx, newy+x->gl_pixheight,
+						newx, newy);
+
+			sh->h_dragx = dx;
+			sh->h_dragy = dy;			
+		}
+    }
+}
+/*------------------------------------------------------------------------*/
+
 /* ------------------------------- setup routine ------------------------ */
 
     /* why are some of these "glist" and others "canvas"? */
@@ -1754,4 +2081,13 @@ void g_canvas_setup(void)
     g_graph_setup();
     g_editor_setup();
     g_readwrite_setup();
+
+/* -------------- dpsaha@vt.edu gop resize move-----------------------*/
+	scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
+				  sizeof(t_scalehandle), CLASS_PD, 0);
+	class_addmethod(scalehandle_class, (t_method)canvasgop__clickhook,
+		    gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(scalehandle_class, (t_method)canvasgop__motionhook,
+		    gensym("_motion"), A_FLOAT, A_FLOAT, 0);
+
 }
