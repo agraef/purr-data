@@ -1089,11 +1089,14 @@ static void text_getrect(t_gobj *z, t_glist *glist,
 		int ni = obj_ninlets(ob);
 
 		int m = ( ni > no ? ni : no);
-		if ( width < (IOWIDTH * m) * 2 - IOWIDTH) {
-			/*	we have to resize the object */
-			width = (IOWIDTH * m) * 2 - IOWIDTH;
+		//let's see if the object has more nlets than its text width and resize them accordingly
+		//UNLESS we are gop in which case it is user's choice how big/small they want the object
+		if (!((t_glist *)z)->gl_isgraph) {
+			if (width < (IOWIDTH * m) * 2 - IOWIDTH) {
+				//we have to resize the object
+				width = (IOWIDTH * m) * 2 - IOWIDTH;
+			}
 		}
-		//}
         height = rtext_height(y) - (iscomment << 1);
     }
     else width = height = 10;
