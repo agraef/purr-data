@@ -1485,7 +1485,7 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y)
 	   seeing what is inside them? CURRENTLY DISABLED */
     canprop = (!y || (y && class_getpropertiesfn(pd_class(&y->g_pd))) /*&& !canvas_isabstraction( ((t_glist*)y) )*/ );
     canopen = (y && zgetfn(&y->g_pd, gensym("menu-open")));
-	if (y) {
+	if (y || x->gl_editor->e_selection) {
 		isobject = 1;
 	}
 	else isobject = 0;
