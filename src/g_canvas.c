@@ -1803,7 +1803,7 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 				if (x->gl_pixheight < SCALE_GOP_MINHEIGHT)
 					x->gl_pixheight = SCALE_GOP_MINHEIGHT;
 
-				// TODO check if the text is not hidden
+				// check if the text is not hidden
 				// if so make minimum width and height based retrieved from getrect
 				if (x->gl_hidetext == 0 && x->gl_owner) {
 					gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);

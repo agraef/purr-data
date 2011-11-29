@@ -1091,7 +1091,8 @@ static void text_getrect(t_gobj *z, t_glist *glist,
 		int m = ( ni > no ? ni : no);
 		//let's see if the object has more nlets than its text width and resize them accordingly
 		//UNLESS we are gop in which case it is user's choice how big/small they want the object
-		if (!((t_glist *)z)->gl_isgraph) {
+		if (pd_class(&z->g_pd) != canvas_class || 
+				pd_class(&z->g_pd) == canvas_class && !((t_glist *)z)->gl_isgraph) {
 			if (width < (IOWIDTH * m) * 2 - IOWIDTH) {
 				//we have to resize the object
 				width = (IOWIDTH * m) * 2 - IOWIDTH;
