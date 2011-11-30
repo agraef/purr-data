@@ -1753,24 +1753,27 @@ void canvasgop_draw_move(t_canvas *x, int doit)
 	if (x->gl_havewindow) {
 	    canvas_redraw(x);
 	}
-	if (x->gl_owner && glist_isvisible(x->gl_owner))
-	{
+	//fprintf(stderr,"%d %d\n", (x->gl_owner ? 1:0), glist_isvisible(x->gl_owner));
+
+	if (x->gl_owner && glist_isvisible(x->gl_owner)) {
 		glist_noselect(x);
+		//vmess(&x->gl_owner->gl_obj.te_pd, gensym("menu-open"), "");
 	    gobj_vis(&x->gl_gobj, x->gl_owner, 0);
 	    gobj_vis(&x->gl_gobj, x->gl_owner, 1);
-		canvas_redraw(x->gl_owner);
+		//canvas_redraw(x->gl_owner);
 	}
 	
 	//update scrollbars when GOP potentially exceeds window size
 	t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
 	
 	//if gop is being disabled go one level up
-	if (!x->gl_isgraph && x->gl_owner) {
+	if (!x->gl_isgraph && x->gl_owner && glist_isvisible(x->gl_owner)) {
 		canvas=canvas->gl_owner;
-		canvas_redraw(canvas);
+		//canvas_redraw(canvas);
 	}
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
+	if (x->gl_owner && glist_isvisible(x->gl_owner))
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->gl_owner);
 }
 
 extern int gfxstub_haveproperties(void *key);
@@ -1805,8 +1808,8 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
 				// check if the text is not hidden
 				// if so make minimum width and height based retrieved from getrect
-				if (x->gl_hidetext == 0 && x->gl_owner) {
-					gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);
+				if (!x->gl_hidetext) {
+					gobj_getrect((t_gobj*)x, (x->gl_owner ? x->gl_owner : x), &x1, &y1, &x2, &y2);
 					if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
 					if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
 				}

@@ -1778,16 +1778,8 @@ void canvas_properties(t_glist *x)
 static void canvas_donecanvasdialog(t_glist *x,
     t_symbol *s, int argc, t_atom *argv)
 {
-	/* parent windows are treated differently than applies to individual objects */
-	if (glist_getcanvas(x) != x && !canvas_isabstraction(x)) {
-		canvas_apply_setundo(glist_getcanvas(x), (t_gobj *)x);
-	}
-	else {
-		canvas_canvas_setundo(x);
-		//fprintf(stderr,"canvas_apply_undo\n");
-	}
-
-    t_float xperpix, yperpix, x1, y1, x2, y2, xpix, ypix, xmargin, ymargin; 
+    t_float xperpix, yperpix, x1, y1, x2, y2, xpix, ypix, xmargin, ymargin;
+	int rx1=0, ry1=0, rx2=0, ry2=0; //for getrect
     int graphme, redraw = 0;
 
     xperpix = atom_getfloatarg(0, argc, argv);
@@ -1802,6 +1794,18 @@ static void canvas_donecanvasdialog(t_glist *x,
     ypix = atom_getfloatarg(8, argc, argv);
     xmargin = atom_getfloatarg(9, argc, argv);
     ymargin = atom_getfloatarg(10, argc, argv);
+
+	/* parent windows are treated differently than applies to individual objects */
+	if (glist_getcanvas(x) != x && !canvas_isabstraction(x)) {
+		canvas_apply_setundo(glist_getcanvas(x), (t_gobj *)x);
+	}
+	else /*if (x1!=x->gl_x1 || x2!=x->gl_x2 || y1!=x->gl_y1 || y2!=x->gl_y2 ||
+			graphme!=(x->gl_isgraph+2*x->gl_hidetext) || x->gl_pixwidth!=xpix ||
+			x->gl_pixheight!=ypix || x->gl_xmargin!=xmargin || x->gl_ymargin!=ymargin) {*/
+	{	
+		canvas_canvas_setundo(x);
+		//fprintf(stderr,"canvas_apply_undo\n");
+	}
 
     x->gl_pixwidth = xpix;
     x->gl_pixheight = ypix;
@@ -1848,9 +1852,27 @@ static void canvas_donecanvasdialog(t_glist *x,
             x->gl_y2 = x->gl_y1 + yperpix;
         }
     }
+
         /* LATER avoid doing 2 redraws here (possibly one inside setgraph) */
     canvas_setgraph(x, graphme, 0);
     canvas_dirty(x, 1);
+
+	// make sure gop is never smaller than its text
+	// if one wants smaller gop window, make sure to disable text
+	if (x->gl_isgraph && !x->gl_hidetext) {
+		//fprintf(stderr, "check size\n");
+		gobj_getrect((t_gobj*)x, (x->gl_owner ? x->gl_owner : x), &rx1, &ry1, &rx2, &ry2);
+		//fprintf(stderr,"%d %d %d %d\n", rx1, rx2, ry1, ry2);
+		if (rx2-rx1 > x->gl_pixwidth) {
+			x->gl_pixwidth = rx2-rx1;
+			//fprintf(stderr,"change width\n");
+		}
+		if (ry2-ry1 > x->gl_pixheight) {
+			x->gl_pixheight = ry2-ry1;
+			//fprintf(stderr,"change height\n");
+		}
+	}
+
     if (x->gl_havewindow) {
 		//fprintf(stderr,"donecanvasdialog canvas_redraw\n");
         canvas_redraw(x);
@@ -4063,7 +4085,8 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 	}
     x->gl_edit = !x->gl_edit;
     if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x)){
-		if (x->gl_goprect)	canvas_draw_gop_resize_hooks(x);								// dpsaha@vt.edu add the resize blobs on GOP
+		//dpsaha@vt.edu add the resize blobs on GOP
+		if (x->gl_goprect)	canvas_draw_gop_resize_hooks(x);
 		canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
 	}
     else

@@ -211,9 +211,12 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
 
 t_canvas *glist_getcanvas(t_glist *x)
 {
+	//fprintf(stderr,"gobj_shouldvis\n");
     while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph &&
-        gobj_shouldvis(&x->gl_gobj, x->gl_owner))
+        gobj_shouldvis(&x->gl_gobj, x->gl_owner)) {
             x = x->gl_owner;
+			//fprintf(stderr,"+\n");
+	}
     return((t_canvas *)x);
 }
 
@@ -734,7 +737,8 @@ int garray_getname(t_garray *x, t_symbol **namep);
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
     t_glist *x = (t_glist *)gr;
-    char tag[50];
+	//fprintf(stderr,"graph_vis gr=.x%lx parent_glist=.x%lx glist_getcanvas(x->gl_owner)=.x%lx vis=%d\n", (t_int)gr, (t_int)parent_glist, (t_int)glist_getcanvas(x->gl_owner), vis);  
+	char tag[50];
     t_gobj *g;
     int x1, y1, x2, y2;
         /* ordinary subpatches: just act like a text object */
@@ -744,9 +748,20 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         return;
     }
 
-    if (vis && canvas_showtext(x))
+	// weird exception
+	//int exception = 0;
+	//t_canvas* tgt = glist_getcanvas(x->gl_owner);
+	//if (parent_glist->gl_owner && !parent_glist->gl_mapped &&
+	//		parent_glist->gl_owner->gl_mapped) {
+	//	tgt = parent_glist;
+	//	exception = 1;
+	//}
+	//fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
+
+    if (vis && canvas_showtext(x) && gobj_shouldvis(gr, parent_glist))
         rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     graph_getrect(gr, parent_glist, &x1, &y1, &x2, &y2);
+	//fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
     if (!vis)
         rtext_erase(glist_findrtext(parent_glist, &x->gl_obj));
 
@@ -761,18 +776,20 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         just show the bounding rectangle */
     if (x->gl_havewindow)
     {
-        if (vis)
-        {
-            sys_vgui(".x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d -tags %s -fill #c0c0c0\n",
-                glist_getcanvas(x->gl_owner),
-                x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
-        }
-        else
-        {
-            sys_vgui(".x%lx.c delete %s\n",
-                glist_getcanvas(x->gl_owner), tag);
-        }
+	    if (vis && gobj_shouldvis(gr, parent_glist))
+	    {
+	        sys_vgui("catch {.x%lx.c create polygon\
+ %d %d %d %d %d %d %d %d %d %d -tags %s -fill #c0c0c0}\n",
+	            glist_getcanvas(x->gl_owner),
+				//parent_glist,
+	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+	    }
+	    else if (gobj_shouldvis(gr, parent_glist))
+	    {
+	        sys_vgui("catch {.x%lx.c delete %s}\n",
+	            glist_getcanvas(x->gl_owner), tag);
+				//parent_glist, tag);
+	    }
         return;
     }
         /* otherwise draw (or erase) us as a graph inside another glist. */
@@ -938,6 +955,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 {
 	//fprintf(stderr,"graph_getrect\n");
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
+    int tx1 = 0x7fffffff, ty1 = 0x7fffffff, tx2 = -0x7fffffff, ty2 = -0x7fffffff;
     t_glist *x = (t_glist *)z;
     if (x->gl_isgraph)
     {
@@ -947,6 +965,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
         int x21, y21, x22, y22;
 
         graph_graphrect(z, glist, &x1, &y1, &x2, &y2);
+		//fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
 
         if (canvas_showtext(x))
         {
@@ -955,6 +974,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
                 x2 = x22;
             if (y22 > y2) 
                 y2 = y22;
+			//fprintf(stderr,"canvas_showtext %d %d %d %d\n", x1, y1, x2, y2);
         }
         if (!x->gl_goprect)
         {
@@ -979,6 +999,34 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
             }
             x->gl_havewindow = hadwindow;
         }
+
+		//fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
+
+		// check if the text is not hidden and if so use that as the limit of the gop's size
+		if (!x->gl_hidetext) {
+			text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);
+		    if (x22 > x2) 
+		        x2 = x22;
+		    if (y22 > y2) 
+		        y2 = y22;
+			// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
+			// later consider instead of hardwiring values pulling these more intelligently from
+			// a common place
+			int fw = sys_fontwidth(x->gl_font);
+			int fh = sys_fontheight(x->gl_font);
+			//fprintf(stderr," fw=%d /=%d mod=%d \n", fw, fw/60, fw%60);
+			//fprintf(stderr,"name=%s\n",x->gl_name->s_name);
+			int tcols = strlen(x->gl_name->s_name) - 3;
+			int th = fh + fh * (tcols/60) + 4;
+			if (tcols > 60) tcols = 60;
+			int tw = fw * tcols + 4;
+			if (tw + x1 > x2)
+				x2 = tw + x1;
+			if (th + y1 > y2)
+				y2 = th + y1;
+			//fprintf(stderr,"graph_getrect->text_getrect %d=%d %d=%d\n", fw, x2, fh, y2);
+		}
+
 		/* fix visibility of edge items for garrays */
 		int has_garray = 0;
         for (g = x->gl_list; g; g = g->g_next) {

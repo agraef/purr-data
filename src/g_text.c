@@ -1041,6 +1041,7 @@ static void gatom_properties(t_gobj *z, t_glist *owner)
 static void text_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
+	//fprintf(stderr,"text_getrect %d %d\n", (glist->gl_editor ? 1 : 0), (glist->gl_editor->e_rtext ? 1:0));
     t_text *x = (t_text *)z;
     int width, height, iscomment = (x->te_type == T_TEXT);
     t_float x1, y1, x2, y2;
@@ -1074,6 +1075,8 @@ static void text_getrect(t_gobj *z, t_glist *glist,
     {
         t_rtext *y = glist_findrtext(glist, x);
         width = rtext_width(y);
+
+		//fprintf(stderr,"width=%d\n", width);
 
 		/*  now find if we have more inlets or outlets than
 			what can comfortably fit and adjust accordingly

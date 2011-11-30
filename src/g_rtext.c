@@ -157,6 +157,7 @@ extern int sys_oldtclversion;
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     int *indexp)
 {
+	//fprintf(stderr,"rtext_senditup\n");
 	if (x) {
 		t_float dispx, dispy;
 		char smallbuf[200], *tempbuf;
@@ -244,13 +245,15 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
 		pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
 
-		if (action == SEND_FIRST)
+		if (action == SEND_FIRST) {
+			//fprintf(stderr,"canvas=.x%lx %s\n", (t_int)canvas, tempbuf);
 		    sys_vgui("pdtk_text_new .x%lx.c %s %f %f {%.*s} %d %s\n",
 		        canvas, x->x_tag,
 		        dispx + LMARGIN, dispy + TMARGIN,
 		        outchars, tempbuf, sys_hostfontsize(font),
 		        (glist_isselected(x->x_glist,
 		            &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
+		}
 		else if (action == SEND_UPDATE)
 		{
 			/*fprintf(stderr, "SEND_UPDATE canvas_class=%d isgraph=%d goprect=%d\n",
@@ -355,7 +358,7 @@ void rtext_retext(t_rtext *x)
 /* find the rtext that goes with a text item */
 t_rtext *glist_findrtext(t_glist *gl, t_text *who)
 {
-    t_rtext *x;
+    t_rtext *x=NULL;
     if (!gl->gl_editor)
         canvas_create_editor(gl);
 	if (gl->gl_editor->e_rtext)
