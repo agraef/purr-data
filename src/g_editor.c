@@ -2058,8 +2058,11 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 
 		canvas_doarrange(x, which, oldy, oldy_prev, oldy_next);
 	}
-    if (which == 0)
+    if (which == 0) {
+		if (!x->gl_edit)
+			canvas_editmode(x, 1);
         canvas_properties(x);
+	}
     else if (which == 2)
         open_via_helppath("intro.pd", canvas_getdir((t_canvas *)x)->s_name);
 }
