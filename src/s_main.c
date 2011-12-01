@@ -47,7 +47,8 @@ int sys_noloadbang;
 int sys_nogui;
 int sys_hipriority = -1;    /* -1 = don't care; 0 = no; 1 = yes */
 int sys_guisetportnumber;   /* if started from the GUI, this is the port # */
-int sys_nosleep = 0;  /* skip all "sleep" calls and spin instead */
+int sys_nosleep = 0;  	/* skip all "sleep" calls and spin instead */
+int sys_console = 0;	/* default settings for the console is off */
 
 char *sys_guicmd;
 t_symbol *sys_libdir;
@@ -298,10 +299,13 @@ int sys_main(int argc, char **argv)
         return (m_batchmain());
     else
     {
-            /* open audio and MIDI */
+        /* open audio and MIDI */
         sys_reopen_midi();
         sys_reopen_audio();
-            /* run scheduler until it quits */
+
+		if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
+
+         /* run scheduler until it quits */
         return (m_mainloop());
     }
 }
@@ -383,6 +387,7 @@ static char *(usagemessage[]) = {
 "-guicmd \"cmd...\" -- start alternatve GUI program (e.g., remote via ssh)\n",
 "-send \"msg...\"   -- send a message at startup, after patches are loaded\n",
 "-noprefs         -- suppress loading preferences on startup\n",
+"-console         -- open the console along with the pd window\n",
 #ifdef UNISTD
 "-rt or -realtime -- use real-time priority\n",
 "-nrt             -- don't use real-time priority\n",
@@ -777,6 +782,11 @@ int sys_argparse(int argc, char **argv)
         else if (!strcmp(*argv, "-nogui"))
         {
             sys_printtostderr = sys_nogui = 1;
+            argc--; argv++;
+        }
+		else if (!strcmp(*argv, "-console"))
+        {
+            sys_console = 1;
             argc--; argv++;
         }
         else if (!strcmp(*argv, "-guiport") && argc > 1 &&
