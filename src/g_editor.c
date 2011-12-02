@@ -1563,11 +1563,13 @@ void canvas_map(t_canvas *x, t_floatarg f);
 
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
-	//fprintf(stderr,"canvas_vis %f\n", f);
+	//fprintf(stderr,"canvas_vis .x%lx %f\n", (t_int)x, f);
     char buf[30];
     int flag = (f != 0);
-    if (x != glist_getcanvas(x))
+    if (x != glist_getcanvas(x) && glist_isvisible(glist_getcanvas(x))) {
         bug("canvas_vis");
+		fprintf(stderr,"canvas_vis .x%lx .x%lx %f\n", (t_int)x, (t_int)glist_getcanvas(x), f);
+	}
     if (flag)
     {
         /* post("havewindow %d, isgraph %d, isvisible %d  editor %d",
@@ -1859,9 +1861,9 @@ static void canvas_donecanvasdialog(t_glist *x,
 
 	// make sure gop is never smaller than its text
 	// if one wants smaller gop window, make sure to disable text
-	if (x->gl_isgraph && !x->gl_hidetext) {
+	if (x->gl_isgraph && !x->gl_hidetext && x->gl_owner) {
 		//fprintf(stderr, "check size\n");
-		gobj_getrect((t_gobj*)x, (x->gl_owner ? x->gl_owner : x), &rx1, &ry1, &rx2, &ry2);
+		gobj_getrect((t_gobj*)x, x->gl_owner, &rx1, &ry1, &rx2, &ry2);
 		//fprintf(stderr,"%d %d %d %d\n", rx1, rx2, ry1, ry2);
 		if (rx2-rx1 > x->gl_pixwidth) {
 			x->gl_pixwidth = rx2-rx1;

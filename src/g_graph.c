@@ -953,10 +953,10 @@ static void graph_graphrect(t_gobj *z, t_glist *glist,
 static void graph_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"graph_getrect\n");
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
     int tx1 = 0x7fffffff, ty1 = 0x7fffffff, tx2 = -0x7fffffff, ty2 = -0x7fffffff;
     t_glist *x = (t_glist *)z;
+	//fprintf(stderr,"graph_getrect %d\n", x->gl_isgraph);
     if (x->gl_isgraph)
     {
         int hadwindow;
