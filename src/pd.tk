@@ -655,10 +655,11 @@ toplevel .printout
 wm title .printout "Console"
 # initial location of the console window (+x+y)
 wm geometry .printout +10+170
+# wm minsize .printout 460 194
 wm protocol .printout WM_DELETE_WINDOW { .controls.switches.console invoke }
 match_linux_wm [list frame .printout.frame]
 text .printout.frame.text -relief sunken -bd 1 -font console_font \
-    -yscrollcommand ".printout.frame.scroll set" -width 70 -height 24 \
+    -yscrollcommand ".printout.frame.scroll set"  -width 70 -height 24 \
 	-highlightthickness 0 -takefocus 0 -fg gray20 -state disabled
 #.printout.frame.text tag configure sel -background $linux_wm_hlcolor
 
@@ -679,11 +680,11 @@ match_linux_wm [list label .printout.bar.label -text "Send Message to Pd:"]
 
 pack .printout.frame.scroll -side right -fill y
 pack .printout.frame.text -side left -fill both -expand 1
+pack .printout.bar -side bottom -fill x -expand 1
 pack .printout.frame -fill both -expand 1
-pack .printout.bar -side left -fill x -expand 1
 pack .printout.bar.clear -side left -padx 3 -pady 3
 #pack .printout.bar.x -side right -padx 3 -pady 3
-pack .printout.bar.entry -side right -fill x -expand 1 -padx 5 -pady 3
+pack .printout.bar.entry -side right -fill both -expand 1 -padx 5 -pady 3
 pack .printout.bar.label -side right -padx 3 -pady 3
 
 # the console is open by default
@@ -696,7 +697,7 @@ wm withdraw .printout
 
 bind .printout.frame.text <Button> {pdtk_update_root_edit_menu 0}
 bind .printout.frame.text <<Selection>> {pdtk_update_root_edit_menu 1}
-bind .printout <Control-Next> {menu_raisenextwindow}
+bind .printout <Control-Next> {menu_raisenextwindow}	
 bind .printout <Control-w> { .controls.switches.console invoke }
 
 proc pdtk_update_root_edit_menu {value} {
