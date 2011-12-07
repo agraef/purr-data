@@ -617,24 +617,24 @@ static void *canvas_undo_set_cut(t_canvas *x, int mode)
         /* store connections into/out of the selection */
     buf->u_reconnectbuf = binbuf_new();
     linetraverser_start(&t, x);
-	if (linetraverser_next(&t)) {
-		while (oc = linetraverser_next(&t))
-		{
-		    int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
-		    int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
-		    if (issel1 != issel2)
-		    {
-		        binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
-		            gensym("#X"), gensym("connect"),
-		            (issel1 ? nnotsel : 0)
-		                + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
-		            t.tr_outno,
-		            (issel2 ? nnotsel : 0) +
-		                glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
-		            t.tr_inno);
-		    }
-		}
+	//if (linetraverser_next(&t)) {
+	while (oc = linetraverser_next(&t))
+	{
+	    int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
+	    int issel2 = glist_isselected(x, &t.tr_ob2->ob_g);
+	    if (issel1 != issel2)
+	    {
+	        binbuf_addv(buf->u_reconnectbuf, "ssiiii;",
+	            gensym("#X"), gensym("connect"),
+	            (issel1 ? nnotsel : 0)
+	                + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
+	            t.tr_outno,
+	            (issel2 ? nnotsel : 0) +
+	                glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
+	            t.tr_inno);
+	    }
 	}
+	//}
     if (mode == UCUT_TEXT)
     {
         buf->u_objectbuf = canvas_docopy(x);
