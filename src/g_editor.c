@@ -601,6 +601,9 @@ typedef struct _undo_cut
     t_binbuf *u_reconnectbuf;   /* connections into and out of object */
     t_binbuf *u_redotextbuf;    /* buffer to paste back for redo if TEXT */
     int u_mode;                 /* from flags above */
+	int n_obj;					/* number of selected objects to be cut */
+	int p_a[1];					/* array of original glist positions of selected objects */
+								/* at least one object is selected, we dynamically resize it later */
 } t_undo_cut;
 
 static void *canvas_undo_set_cut(t_canvas *x, int mode)
@@ -610,7 +613,9 @@ static void *canvas_undo_set_cut(t_canvas *x, int mode)
     t_linetraverser t;
     t_outconnect *oc;
     int nnotsel= glist_selectionindex(x, 0, 0);
-    buf = (t_undo_cut *)getbytes(sizeof(*buf));
+	int nsel = glist_selectionindex(x, 0, 1);
+    buf = (t_undo_cut *)getbytes(sizeof(*buf) + sizeof(buf->p_a[0]) * (nsel - 1));
+	buf->n_obj = nsel;
     buf->u_mode = mode;
     buf->u_redotextbuf = 0;
 
@@ -647,6 +652,25 @@ static void *canvas_undo_set_cut(t_canvas *x, int mode)
     {
         buf->u_objectbuf = canvas_docopy(x);
     }
+
+	//instantiate num_obj and fill array of positions of selected objects
+	if (mode == UCUT_CUT || mode == UCUT_CLEAR)
+	{
+		int i = 0, j = 0;
+		if (x->gl_list) {
+			for (y = x->gl_list; y; y = y->g_next)
+			{
+				if (glist_isselected(x, y)) {
+					buf->p_a[i] = j;
+					i++; 
+				}
+				j++;
+			}
+		}
+		//for (i = 0; i < buf->n_obj; i++)
+		//	fprintf(stderr,"%d position = %d\n", i, buf->p_a[i]);
+	}
+
     return (buf);
 }
 
@@ -689,12 +713,70 @@ static void canvas_undo_cut(t_canvas *x, void *z, int action)
         pd_bind(&x->gl_pd, gensym("#X"));
         binbuf_eval(buf->u_reconnectbuf, 0, 0, 0);
         pd_unbind(&x->gl_pd, gensym("#X"));
+
+		//now reposition objects to their original locations
+		if (mode == UCUT_CUT || mode == UCUT_CLEAR) {
+			//fprintf(stderr,"reordering\n");
+			int i = 0;
+			int paste_pos = glist_getindex(x,0) - buf->n_obj; //location of the first newly pasted object
+			//fprintf(stderr,"paste_pos %d\n", paste_pos);
+			t_gobj *y_prev, *y, *y_next;
+			for (i = 0; i < buf->n_obj; i++) {
+				//first check if we are in the same position already
+				if (paste_pos+i != buf->p_a[i]) {
+					//fprintf(stderr,"not in the right place\n");
+					y_prev = glist_nth(x, paste_pos-1+i);
+					y = glist_nth(x, paste_pos+i);
+					y_next = glist_nth(x, paste_pos+1+i);
+					//if the object is supposed to be first in of gl_list
+					if (buf->p_a[i] == 0) {
+						if (y_prev && y_next) {
+							y_prev->g_next = y_next;
+						}
+						else if (y_prev && !y_next)
+							y_prev->g_next = NULL;
+						//now put the moved object at the beginning of the cue
+						y->g_next = glist_nth(x, 0);
+						x->gl_list = y;
+					}
+					//if the object is supposed to be at the current end of gl_list	
+					//can this ever happen???
+					/*else if (!glist_nth(x,buf->p_a[i])) {
+
+					}*/
+					//if the object is supposed to be in the middle of gl_list
+					else {
+						if (y_prev && y_next) {
+							y_prev->g_next = y_next;
+						}
+						else if (y_prev && !y_next) {
+							y_prev->g_next = NULL;
+						}
+						//now put the moved object in its right place
+						y_prev = glist_nth(x, buf->p_a[i]-1);
+						y_next = glist_nth(x, buf->p_a[i]);
+
+						y_prev->g_next = y;
+						y->g_next = y_next;
+					}
+				}
+				canvas_redraw(x);
+			}
+		}
     }
     else if (action == UNDO_REDO)
     {
 		//fprintf(stderr,"UNDO_REDO\n");
-        if (mode == UCUT_CUT || mode == UCUT_CLEAR)
+        if (mode == UCUT_CUT || mode == UCUT_CLEAR) {
+			//we can't just blindly do clear here when the user may have
+			//unselected things between undo and redo, so first let's select
+			//the right stuff
+			glist_noselect(x);
+			int i = 0;
+			for (i = 0; i < buf->n_obj; i++)
+            	glist_select(x, glist_nth(x, buf->p_a[i]));
             canvas_doclear(x);
+		}
         else if (mode == UCUT_TEXT)
         {
             t_gobj *y1, *y2;
@@ -717,7 +799,7 @@ static void canvas_undo_cut(t_canvas *x, void *z, int action)
             binbuf_free(buf->u_reconnectbuf);
         if (buf->u_redotextbuf)
             binbuf_free(buf->u_redotextbuf);
-        if (buf != NULL) t_freebytes(buf, sizeof(*buf));
+        if (buf != NULL) t_freebytes(buf, sizeof(*buf) + sizeof(buf->p_a[0]) * (buf->n_obj-1));
     }
 }
 
