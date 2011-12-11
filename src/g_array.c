@@ -138,7 +138,8 @@ struct _garray
 	t_symbol *x_send;		/* send_changed hook */
 };
 
-static t_pd *garray_arraytemplatecanvas;
+t_pd *garray_arraytemplatecanvas;
+t_pd *garray_floattemplatecanvas;
 static char garray_arraytemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
 #X obj 43 31 struct _float_array array z float float style\n\
@@ -163,6 +164,7 @@ void garray_init( void)
     glob_setfilename(0, gensym("_float"), gensym("."));
     binbuf_text(b, garray_floattemplatefile, strlen(garray_floattemplatefile));
     binbuf_eval(b, 0, 0, 0);
+    garray_floattemplatecanvas = s__X.s_thing;
     vmess(s__X.s_thing, gensym("pop"), "i", 0);
     
     glob_setfilename(0, gensym("_float_array"), gensym("."));
@@ -172,7 +174,7 @@ void garray_init( void)
     vmess(s__X.s_thing, gensym("pop"), "i", 0);
 
     glob_setfilename(0, &s_, &s_);
-    binbuf_free(b);  
+    binbuf_free(b);
 }
 
 /* create a new scalar attached to a symbol.  Used to make floating-point
