@@ -9,6 +9,7 @@
 #include "s_stuff.h"
 #include "g_magicglass.h"
 #include "g_canvas.h"
+#include "g_undo.h"
 #include <string.h>
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename,

@@ -348,37 +348,7 @@ void glist_init(t_glist *x)
     tells us which.) */
 t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 {
-	/*	first alloc one byte or redundant memory to prevent creation of objects with the same "name"
-		which leads to double-action invoked from every single action and eventually possible crashes
-
-		we keep a list of these redundant allocations and destroy them when pd quits */
-	//if (x->gl_owner && x->gl_env) {
-/*
-		t_redundant_mem *new_rm = (t_redundant_mem *)t_getbytes(sizeof(*new_rm));
-		new_rm->rm_what = (int)getbytes(1);
-		if (rm_start == NULL) {
-			//fprintf(stderr,"first allocation\n");
-			rm_start = new_rm;
-			rm_end = new_rm;
-		}
-		else if (rm_start == rm_end) {
-			//fprintf(stderr,"second allocation\n");
-			rm_end = new_rm;
-			rm_start->rm_next = rm_end;
-		}
-		else {
-			//fprintf(stderr,"allocation\n");
-			rm_end->rm_next = new_rm;
-			rm_end = new_rm;
-		}
-*/
-	//}
-
     t_canvas *x = (t_canvas *)pd_new(canvas_class);
-
-	/* now that we've created a new canvas, add canvas info to the new_rm */
-	//new_rm->rm_canvas = x;
-
     t_canvas *owner = canvas_getcurrent();
     t_symbol *s = &s_;
     int vis = 0, width = GLIST_DEFCANVASWIDTH, height = GLIST_DEFCANVASHEIGHT;
@@ -386,15 +356,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     int font = (owner ? owner->gl_font : sys_defaultfont);
 
     glist_init(x);
-    // jsarlo
     x->gl_magic_glass = magicGlass_new(x);
-    // end jsarlo
-
-	//if we are root canvas set the clock for script based destructor of the window
-	//if (!owner) {
-	//	x->gl_destroy = clock_new(x, (t_method)canvas_manual_pd_free);
-	//}
-
     x->gl_obj.te_type = T_OBJECT;
     if (!owner)
         canvas_addtolist(x);
@@ -452,7 +414,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     if (strcmp(x->gl_name->s_name, "Pd"))
         pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
     x->gl_loading = 1;
-	//fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", x, x->gl_owner);
+	//fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", (t_int)x, (t_int)x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
         /* cancel "vis" flag if we're a subpatch of an
          abstraction inside another patch.  A separate mechanism prevents
@@ -471,7 +433,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_font = sys_nearestfontsize(font);
     pd_pushsym(&x->gl_pd);
 
-/* ---------- dpsaha@vt.edu gop resize -------------------------------- */
+	//dpsaha@vt.edu gop resize
+
 	//resize blob	
 	t_scalehandle *sh;
 	char buf[64];
@@ -501,7 +464,9 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 	x->move_offset_x = 0;
 	x->move_offset_y = 0;
 	x->move_vis = 0;
-/*------------------------------------------------------------- */
+
+	//TODO: figure out why pd creates 2 invisible canvases at start-up
+	x->u_queue = canvas_undo_init(x);
 
     return(x);
 }
@@ -912,6 +877,8 @@ void canvas_free(t_canvas *x)
       magicGlass_free(x->gl_magic_glass);
 
     canvas_noundo(x);
+	canvas_undo_free(x);
+
     if (canvas_editing == x)
         canvas_editing = 0;
     if (canvas_whichfind == x)

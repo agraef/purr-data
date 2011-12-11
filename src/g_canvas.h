@@ -167,6 +167,8 @@ area of a window.
 
 */
 
+#include "g_undo.h"
+
 struct _glist
 {  
     t_object gl_obj;            /* header in case we're a glist */
@@ -210,10 +212,7 @@ struct _glist
     unsigned int gl_isgraph:1;      /* show as graph on parent */
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
 	unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
-    // jsarlo
     t_magicGlass *gl_magic_glass;   /* magic glass object */
-    // end jsarlo
-	//t_clock  *gl_destroy;			/* for script-based closing of the patch */
 
 	//dpsaha@vt.edu for the gop dynamic resizing
 	t_pd	   		   *x_handle;
@@ -226,6 +225,10 @@ struct _glist
 	int				   move_offset_x;
 	int				   move_offset_y;
 	int				   move_vis;
+
+	//infinite undo goodies
+	t_undo_action *u_queue;
+	t_undo_action *u_last;
 };
 
 #define gl_gobj gl_obj.te_g
