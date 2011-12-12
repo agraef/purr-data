@@ -1316,9 +1316,13 @@ extern t_pd *garray_floattemplatecanvas;
 
 void glob_quit(void *dummy)
 {
-	//let's try to cleanly remove invisible template canvases to avoid memory leaks
-	if (garray_arraytemplatecanvas) canvas_free( (t_canvas *)garray_arraytemplatecanvas);
-	if (garray_floattemplatecanvas) canvas_free( (t_canvas *)garray_floattemplatecanvas);
+	//If we're going to try to cleanly close everything here, we should do the same for all open
+	//patches and that is currently not the case, so for the time being, let's just leave OS to deal
+	//with freeing of all memory when the program exits...
+
+	//let's try to cleanly remove invisible template canvases
+	//if (garray_arraytemplatecanvas) canvas_free( (t_canvas *)garray_arraytemplatecanvas);
+	//if (garray_floattemplatecanvas) canvas_free( (t_canvas *)garray_floattemplatecanvas);
     sys_vgui("exit\n");
     if (!sys_nogui)
     {
