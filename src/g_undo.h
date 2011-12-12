@@ -42,6 +42,7 @@ struct _undo_action
 	t_canvas *x;				/* canvas undo is associated with */
 	int type;					/* defines what kind of data container it is */
 	void *data;					/* each action will have a different data container */
+	char *name;					/* name of current action */
 	struct _undo_action *prev;	/* previous undo action */
 	struct _undo_action *next;	/* next undo action */
 } t_undo_action;
@@ -51,12 +52,26 @@ struct _undo_action
 #endif
 
 EXTERN t_undo_action *canvas_undo_init(t_canvas *x);
-EXTERN t_undo_action *canvas_undo_add(t_canvas *x);
+EXTERN t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name);
 EXTERN void canvas_undo_undo(t_canvas *x);
 EXTERN void canvas_undo_redo(t_canvas *x);
 EXTERN void canvas_undo_rebranch(t_undo_action *u);
 EXTERN void canvas_undo_check_canvas_pointers(t_canvas *x);
 EXTERN void canvas_undo_purge_abstraction_actions(t_canvas *x);
 EXTERN void canvas_undo_free(t_canvas *x);
+
+/* --------- 8. create ----------- */
+
+typedef struct _undo_create      
+{
+    int u_index;    			/* index of the created object object */
+    t_binbuf *u_objectbuf;      /* the object cleared or typed into */
+    t_binbuf *u_reconnectbuf;   /* connections into and out of object */
+} t_undo_create;
+
+extern void canvas_undo_create(t_canvas *x, void *z, int action);
+extern void *canvas_undo_set_create(t_canvas *x);
+
+/* ------------------------------- */
 
 #endif /* __g_undo_h_ */

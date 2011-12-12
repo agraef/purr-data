@@ -1401,13 +1401,6 @@ void canvas_canvas_setundo(t_canvas *x)
 
 /* --------- 8. create ----------- */
 
-typedef struct _undo_create      
-{
-    int u_index;    /* index of the created object object */
-    t_binbuf *u_objectbuf;      /* the object cleared or typed into */
-    t_binbuf *u_reconnectbuf;   /* connections into and out of object */
-} t_undo_create;
-
 void *canvas_undo_set_create(t_canvas *x)
 {
     t_gobj *y, *last;
@@ -1429,7 +1422,7 @@ void *canvas_undo_set_create(t_canvas *x)
 	}
     buf->u_reconnectbuf = binbuf_new();
     linetraverser_start(&t, x);
-	if (linetraverser_next(&t)) {
+	//if (linetraverser_next(&t)) {
 		while (oc = linetraverser_next(&t))
 		{
 		    int issel1 = glist_isselected(x, &t.tr_ob->ob_g);
@@ -1446,7 +1439,7 @@ void *canvas_undo_set_create(t_canvas *x)
 		            t.tr_inno);
 		    }
 		}
-	}
+	//}
     return (buf);
 }
 
@@ -4335,9 +4328,9 @@ void g_editor_setup(void)
         gensym("selectall"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_reselect,
         gensym("reselect"), A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_undo,
+    class_addmethod(canvas_class, (t_method)canvas_undo_undo,
         gensym("undo"), A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_redo,
+    class_addmethod(canvas_class, (t_method)canvas_undo_redo,
         gensym("redo"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_tidy,
         gensym("tidy"), A_NULL);
