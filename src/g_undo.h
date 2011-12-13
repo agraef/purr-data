@@ -27,14 +27,15 @@ be purged since abstraction's state will now default to its original (saved) sta
 
 Types of undo data:
 0 - init data (start of the queue)
-1 - connect & disconnect 
-2 - cut, clear & typing into objects
-3 - motion, inclding "tidy up" and stretching
-4 - paste & duplicate
-5 - apply
-6 - arrange (to front/back)
-7 - canvas apply
-8 - create
+1 - connect
+2 - disconnect
+3 - cut, clear & typing into objects
+4 - motion, inclding "tidy up" and stretching
+5 - paste & duplicate
+6 - apply
+7 - arrange (to front/back)
+8 - canvas apply
+9 - create
 */
 
 struct _undo_action
@@ -52,25 +53,46 @@ struct _undo_action
 #endif
 
 EXTERN t_undo_action *canvas_undo_init(t_canvas *x);
-EXTERN t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name);
+EXTERN t_undo_action *canvas_undo_add(t_canvas *x,
+	int type, const char *name, void *data);
 EXTERN void canvas_undo_undo(t_canvas *x);
 EXTERN void canvas_undo_redo(t_canvas *x);
-EXTERN void canvas_undo_rebranch(t_undo_action *u);
+EXTERN void canvas_undo_rebranch(t_canvas *x);
 EXTERN void canvas_undo_check_canvas_pointers(t_canvas *x);
 EXTERN void canvas_undo_purge_abstraction_actions(t_canvas *x);
 EXTERN void canvas_undo_free(t_canvas *x);
 
-/* --------- 8. create ----------- */
+/* --------- 1. connect ---------- */
 
-typedef struct _undo_create      
-{
-    int u_index;    			/* index of the created object object */
-    t_binbuf *u_objectbuf;      /* the object cleared or typed into */
-    t_binbuf *u_reconnectbuf;   /* connections into and out of object */
-} t_undo_create;
+EXTERN void *canvas_undo_set_connect(t_canvas *x,
+    int index1, int outno, int index2, int inno);
+EXTERN void canvas_undo_connect(t_canvas *x, void *z, int action);
 
-extern void canvas_undo_create(t_canvas *x, void *z, int action);
-extern void *canvas_undo_set_create(t_canvas *x);
+/* --------- 2. disconnect ------- */
+
+EXTERN void *canvas_undo_set_disconnect(t_canvas *x,
+    int index1, int outno, int index2, int inno);
+EXTERN void canvas_undo_disconnect(t_canvas *x, void *z, int action);
+
+/* --------- 4. move ------------- */
+
+EXTERN void *canvas_undo_set_move(t_canvas *x, int selected);
+EXTERN void canvas_undo_move(t_canvas *x, void *z, int action);
+
+/* --------- 5. paste ------------ */
+
+EXTERN void *canvas_undo_set_paste(t_canvas *x, int offset);
+EXTERN void canvas_undo_paste(t_canvas *x, void *z, int action);
+
+/* --------- 9. create ----------- */
+
+EXTERN void canvas_undo_create(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_create(t_canvas *x);
+
+/* --------- 10. recreate -------- */
+
+EXTERN void canvas_undo_recreate(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_recreate(t_canvas *x);
 
 /* ------------------------------- */
 

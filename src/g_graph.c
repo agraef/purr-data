@@ -211,7 +211,7 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
 
 t_canvas *glist_getcanvas(t_glist *x)
 {
-	//fprintf(stderr,"gobj_shouldvis\n");
+	//fprintf(stderr,"glist_getcanvas\n");
     while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph &&
         gobj_shouldvis(&x->gl_gobj, x->gl_owner)) {
             x = x->gl_owner;

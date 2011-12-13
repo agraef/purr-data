@@ -88,6 +88,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 
 extern t_pd *newest;
 void canvas_getargs(int *argcp, t_atom **argvp);
+extern int we_are_undoing;
 
 static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     t_binbuf *b)
@@ -117,8 +118,9 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     else x = 0;
     if (!x)
     {
-            /* LATER make the color reflect this */
-        x = (t_text *)pd_new(text_class);
+		/* LATER make the color reflect this */
+		//fprintf(stderr,"creating blank object\n");
+		x = (t_text *)pd_new(text_class);
     }
     x->te_binbuf = b;
     x->te_xpix = xpix;
@@ -137,6 +139,15 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     if (pd_class(&x->ob_pd) == voutlet_class)
         canvas_resortoutlets(glist_getcanvas(gl));
     canvas_unsetcurrent((t_canvas *)gl);
+	// here we recreate data buffer inside previously created undo snapshot
+	//canvas_undo_create(glist_getcanvas(gl), glist_getcanvas(gl)->u_last->data, UNDO_FREE);
+	//glist_getcanvas(gl)->u_last->data = canvas_undo_set_create(glist_getcanvas(gl));
+	/*if (binbuf_getnatom(x->te_binbuf) && !we_are_undoing) {
+		fprintf(stderr,"canvas_objtext calls create undo\n");
+		//glist_select(gl, &x->te_g);
+		canvas_undo_add(glist_getcanvas(gl), 9, "create",
+			(void *)canvas_undo_set_create(glist_getcanvas(gl)));
+	}*/
 	if ( glist_isvisible( ((t_canvas *)gl) ) ) {
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist_getcanvas(gl));
 	}
@@ -225,11 +236,22 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
         canvas_objtext(gl, xpix, ypix, 1, b);
-        if (connectme)
+		//t_undo_create *u_c = (t_undo_create *)glist_getcanvas(gl)->u_last->data;
+        if (connectme) {
+			fprintf(stderr,"canvas_obj calls canvas_connect\n");
+			//u_c->indx = indx;
+			//u_c->nobj = nobj;
             canvas_connect(gl, indx, 0, nobj, 0);
-        else canvas_startmotion(glist_getcanvas(gl));
+		}
+        else {
+			fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
+			//u_c->indx = -1;
+			//u_c->nobj = -1;	
+			canvas_startmotion(glist_getcanvas(gl));
+		}
 		//canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
-		canvas_undo_add(glist_getcanvas(gl), 8, "create");
+		canvas_undo_add(glist_getcanvas(gl), 9, "create",
+			(void *)canvas_undo_set_create(glist_getcanvas(gl)));
     }
 }
 
@@ -238,7 +260,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 /* iemlib */
 void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
 {
-	fprintf(stderr,"canvas_iemguis\n");
+	//fprintf(stderr,"canvas_iemguis\n");
     t_atom at;
     t_binbuf *b = binbuf_new();
     //int xpix, ypix;
@@ -272,7 +294,8 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     //canvas_objtext(gl, xpix, ypix, 1, b);
     else canvas_startmotion(glist_getcanvas(gl));
 	//canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
-	canvas_undo_add(glist_getcanvas(gl), 8, "create");
+	canvas_undo_add(glist_getcanvas(gl), 9, "create",
+		(void *)canvas_undo_set_create(glist_getcanvas(gl)));
 }
 
 void canvas_bng(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
@@ -511,7 +534,7 @@ static void message_free(t_message *x)
 
 void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
-	fprintf(stderr,"canvas_msg\n");
+	//fprintf(stderr,"canvas_msg\n");
     t_message *x = (t_message *)pd_new(message_class);
     x->m_messresponder.mr_pd = messresponder_class;
     x->m_messresponder.mr_outlet = outlet_new(&x->m_text, &s_float);
@@ -545,7 +568,8 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
 		//canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
-		canvas_undo_add(glist_getcanvas(gl), 8, "create");
+		canvas_undo_add(glist_getcanvas(gl), 9, "create",
+			(void *)canvas_undo_set_create(glist_getcanvas(gl)));
     }
 }
 
@@ -932,7 +956,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 void canvas_atom(t_glist *gl, t_atomtype type,
     t_symbol *s, int argc, t_atom *argv)
 {
-	fprintf(stderr,"canvas_atom\n");
+	//fprintf(stderr,"canvas_atom\n");
     t_gatom *x = (t_gatom *)pd_new(gatom_class);
     t_atom at;
     x->a_text.te_width = 0;                        /* don't know it yet. */
@@ -1006,7 +1030,8 @@ void canvas_atom(t_glist *gl, t_atomtype type,
             canvas_connect(gl, indx, 0, nobj, 0);
         else canvas_startmotion(glist_getcanvas(gl));
 		//canvas_setundo(glist_getcanvas(gl), canvas_undo_create, canvas_undo_set_create(gl), "create");
-		canvas_undo_add(glist_getcanvas(gl), 8, "create");
+		canvas_undo_add(glist_getcanvas(gl), 9, "create",
+			(void *)canvas_undo_set_create(glist_getcanvas(gl)));
     }
 }
 
@@ -1790,6 +1815,10 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
             if (newest && pd_class(newest) == canvas_class)
                 canvas_loadbang((t_canvas *)newest);
             canvas_restoreconnections(glist_getcanvas(glist));
+			glist_select(
+			fprintf(stderr,"text_setto calls canvas_undo_add\n");
+			canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
+				(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g));
         }
             /* if we made a new "pd" or changed a window name,
                 update window list */
