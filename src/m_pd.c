@@ -11,10 +11,11 @@
 
     /* FIXME no out-of-memory testing yet! */
 
-int canvas_check_duplicate = 0;
+/*int canvas_check_duplicate = 0;
 
 extern t_redundant_mem *rm_start;
 extern t_redundant_mem *rm_end;
+*/
 
 t_pd *pd_new(t_class *c)
 {
@@ -45,7 +46,7 @@ t_pd *pd_new(t_class *c)
 
 	//int random_extra = 0;
 	//int random_offset = 1;
-
+/*
 	while (canvas_check_duplicate != 0) {
 
 		if (canvas_check_duplicate == -1) {
@@ -78,21 +79,22 @@ t_pd *pd_new(t_class *c)
 		}
 
 		//fprintf(stderr,"done alloc %d\n", canvas_check_duplicate);
-		/*if (canvas_check_duplicate == 1) {
-			//fprintf(stderr,"duplicate\n");
-			if (!random_extra)
-				t_freebytes(x, sizeof(c->c_size));
-			else
-				t_freebytes(x, sizeof(c->c_size+random_extra));
-		}
-
-		if (!canvas_check_duplicate && random_extra) {
-			x = (t_pd *)t_resizebytes(x, c->c_size+random_extra, c->c_size);
-			break;
-		}*/
+		//if (canvas_check_duplicate == 1) {
+		//	//fprintf(stderr,"duplicate\n");
+		//	if (!random_extra)
+		//		t_freebytes(x, sizeof(c->c_size));
+		//	else
+		//		t_freebytes(x, sizeof(c->c_size+random_extra));
+		//}
+		//
+		//if (!canvas_check_duplicate && random_extra) {
+		//	x = (t_pd *)t_resizebytes(x, c->c_size+random_extra, c->c_size);
+		//	break;
+		//}
 	}
 
-    if (!x) x = (t_pd *)t_getbytes(c->c_size);
+    if (!x) x = (t_pd *)t_getbytes(c->c_size);*/
+	x = (t_pd *)t_getbytes(c->c_size);
     *x = c;
     if (c->c_patchable)
     {
