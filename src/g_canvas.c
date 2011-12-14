@@ -343,12 +343,42 @@ void glist_init(t_glist *x)
     x->gl_ylabel = (t_symbol **)t_getbytes(0);
 }
 
+/* global var used by pd_new() to work with redundant memory, originally defined in m_pd.c */
+extern int canvas_check_duplicate;
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
 t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 {
+	/*	first alloc one byte or redundant memory to prevent creation of objects with the same "name"
+		which leads to double-action invoked from every single action and eventually possible crashes
+		we keep a list of these redundant allocations and destroy them when pd quits */
+
+	//if (x->gl_owner && x->gl_env) {
+
+	t_redundant_mem *new_rm = (t_redundant_mem *)t_getbytes(sizeof(*new_rm));
+	//new_rm->rm_what = (int)getbytes(1);
+	if (rm_start == NULL) {
+		//fprintf(stderr,"first allocation\n");
+		rm_start = new_rm;
+		rm_end = new_rm;
+	}
+	else if (rm_start == rm_end) {
+		//fprintf(stderr,"second allocation\n");
+		rm_end = new_rm;
+		rm_start->rm_next = rm_end;
+	}
+	else {
+		//fprintf(stderr,"allocation\n");
+		rm_end->rm_next = new_rm;
+		rm_end = new_rm;
+	}
+	//}
+
+	canvas_check_duplicate = -1;
     t_canvas *x = (t_canvas *)pd_new(canvas_class);
+	rm_end->rm_canvas = x;
     t_canvas *owner = canvas_getcurrent();
     t_symbol *s = &s_;
     int vis = 0, width = GLIST_DEFCANVASWIDTH, height = GLIST_DEFCANVASHEIGHT;
@@ -876,7 +906,7 @@ void canvas_free(t_canvas *x)
     if (x->gl_magic_glass)
       magicGlass_free(x->gl_magic_glass);
 
-    canvas_noundo(x);
+    //canvas_noundo(x);
 	canvas_undo_free(x);
 
     if (canvas_editing == x)
@@ -889,8 +919,10 @@ void canvas_free(t_canvas *x)
     if (x == glist_getcanvas(x))
         canvas_vis(x, 0);
 
-    if (strcmp(x->gl_name->s_name, "Pd"))
+    if (strcmp(x->gl_name->s_name, "Pd")) {
+		//fprintf(stderr,"canvas_free calling pd_unbind\n");
         pd_unbind(&x->gl_pd, canvas_makebindsym(x->gl_name));
+	}
     if (x->gl_env)
     {
         freebytes(x->gl_env->ce_argv, x->gl_env->ce_argc * sizeof(t_atom));

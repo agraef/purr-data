@@ -46,17 +46,17 @@ extern "C" {
 	canvases/abstractions rather than individual objects. the queue
 	is destructed in m_glob.c quit call (when pd exits) */
 
-/*
+
 typedef struct _redundant_mem
 {
-    int rm_what;
+    //int rm_what;
 	t_canvas *rm_canvas;
     struct _redundant_mem *rm_next;
 } t_redundant_mem;
 
 t_redundant_mem *rm_start;
 t_redundant_mem *rm_end;
-*/ 
+
   
 /* --------------------- geometry ---------------------------- */
 #define IOWIDTH 7       /* width of an inlet/outlet in pixels */

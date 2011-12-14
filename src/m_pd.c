@@ -11,9 +11,16 @@
 
     /* FIXME no out-of-memory testing yet! */
 
+int canvas_check_duplicate = 0;
+
+extern t_redundant_mem *rm_start;
+extern t_redundant_mem *rm_end;
+
 t_pd *pd_new(t_class *c)
 {
-    t_pd *x;
+    t_pd *x = NULL;
+	t_pd *y = NULL;
+
     if (!c) 
         bug ("pd_new: apparently called before setup routine");
 
@@ -31,41 +38,47 @@ t_pd *pd_new(t_class *c)
 		a random additional amount of memory and then resize allocation to the original
 		size
 
-		duplicate: -1 initial state
-					0 all is ok
+		duplicate: -1 enable check state
+					0 all is ok (or we are not allocating canvas memory)
 					1 found a duplicate
 	*/
 
-/*
-	int duplicate = 0; //change to -1 to enable redundant_mem resizing
-	int random_extra = 0;
+	//int random_extra = 0;
+	//int random_offset = 1;
 
-	while (duplicate != 0) {
+	while (canvas_check_duplicate != 0) {
 
-		if (duplicate == -1) {
-			//fprintf(stderr,"alloc %d %d\n", duplicate, (int)c->c_size);
+		if (canvas_check_duplicate == -1) {
+			//fprintf(stderr,"alloc %d %d\n", canvas_check_duplicate, (int)c->c_size);
 			x = (t_pd *)t_getbytes(c->c_size);
-		} else if (duplicate == 1) {
-			random_extra = rand () + 1;
-			//fprintf(stderr,"alloc %d %d %d\n", duplicate, (int)c->c_size, (int)c->c_size + random_extra);
-			x = (t_pd *)t_getbytes(c->c_size + random_extra);
+		} else if (canvas_check_duplicate == 1) {
+			//random_extra = rand () + random_offset;
+			//fprintf(stderr,"alloc %d %d %d\n", canvas_check_duplicate, (int)c->c_size, (int)c->c_size + random_extra);
+			//x = (t_pd *)t_getbytes(c->c_size + random_extra);
+			//fprintf(stderr,"duplicate\n");
+			y = x;
+			y = (t_pd *)t_resizebytes(x, c->c_size, 1);
+			x = (t_pd *)t_getbytes(c->c_size);
+			t_freebytes(y, sizeof(1));
 		}
-		duplicate = 0;
 
+		canvas_check_duplicate = 0;
 		if (rm_start) {
 			t_redundant_mem *tmp = rm_start;
 			while (tmp->rm_next) {
-				if ((int)tmp->rm_canvas == (int)x) {
-					duplicate = 1;
+				//fprintf(stderr,"compare %lx %lx\n", (t_int)tmp->rm_canvas, (t_int)x);
+				if ((t_int)tmp->rm_canvas == (t_int)x) {
+					canvas_check_duplicate = 1;
 					break;
 				}
 				tmp = tmp->rm_next;
 			}
-			if (tmp && (int)tmp->rm_canvas == (int)x)
-				duplicate = 1;
+			if (tmp && (t_int)tmp->rm_canvas == (t_int)x)
+				canvas_check_duplicate = 1;
 		}
-		//fprintf(stderr,"done alloc %d\n", duplicate);
-		if (duplicate == 1) {
+
+		//fprintf(stderr,"done alloc %d\n", canvas_check_duplicate);
+		/*if (canvas_check_duplicate == 1) {
 			//fprintf(stderr,"duplicate\n");
 			if (!random_extra)
 				t_freebytes(x, sizeof(c->c_size));
@@ -73,13 +86,13 @@ t_pd *pd_new(t_class *c)
 				t_freebytes(x, sizeof(c->c_size+random_extra));
 		}
 
-		if (!duplicate && random_extra) {
+		if (!canvas_check_duplicate && random_extra) {
 			x = (t_pd *)t_resizebytes(x, c->c_size+random_extra, c->c_size);
-		}
+			break;
+		}*/
 	}
-*/
 
-    x = (t_pd *)t_getbytes(c->c_size);
+    if (!x) x = (t_pd *)t_getbytes(c->c_size);
     *x = c;
     if (c->c_patchable)
     {
@@ -193,6 +206,7 @@ void pd_bind(t_pd *x, t_symbol *s)
     {
         if (*s->s_thing == bindlist_class)
         {
+			//fprintf(stderr,"pd_bind option 1A %lx\n", (t_int)x);
             t_bindlist *b = (t_bindlist *)s->s_thing;
             t_bindelem *e = (t_bindelem *)getbytes(sizeof(t_bindelem));
             e->e_next = b->b_list;
@@ -201,6 +215,7 @@ void pd_bind(t_pd *x, t_symbol *s)
         }
         else
         {
+			//fprintf(stderr,"pd_unbind option 1B %lx\n", (t_int)x);
             t_bindlist *b = (t_bindlist *)pd_new(bindlist_class);
             t_bindelem *e1 = (t_bindelem *)getbytes(sizeof(t_bindelem));
             t_bindelem *e2 = (t_bindelem *)getbytes(sizeof(t_bindelem));
@@ -212,17 +227,25 @@ void pd_bind(t_pd *x, t_symbol *s)
             s->s_thing = &b->b_pd;
         }
     }
-    else s->s_thing = x;
+    else {
+		//fprintf(stderr,"pd_bind option 2 %lx\n", (t_int)x);
+		s->s_thing = x;
+	}
 }
 
 void pd_unbind(t_pd *x, t_symbol *s)
 {
-    if (s->s_thing == x) s->s_thing = 0;
+    if (s->s_thing == x) {
+		//fprintf(stderr,"pd_unbind option A %lx\n", (t_int)x);
+		s->s_thing = 0;
+	}
     else if (s->s_thing && *s->s_thing == bindlist_class)
     {
             /* bindlists always have at least two elements... if the number
             goes down to one, get rid of the bindlist and bind the symbol
             straight to the remaining element. */
+
+		//fprintf(stderr,"pd_unbind option B %lx\n", (t_int)x);
 
         t_bindlist *b = (t_bindlist *)s->s_thing;
         t_bindelem *e, *e2;
@@ -230,12 +253,14 @@ void pd_unbind(t_pd *x, t_symbol *s)
         {
             b->b_list = e->e_next;
             freebytes(e, sizeof(t_bindelem));
+			//fprintf(stderr,"success B1a\n");
         }
         else for (e = b->b_list; e2 = e->e_next; e = e2)
             if (e2->e_who == x)
         {
             e->e_next = e2->e_next;
             freebytes(e2, sizeof(t_bindelem));
+			//fprintf(stderr,"success B1b\n");
             break;
         }
         if (!b->b_list->e_next)
@@ -243,6 +268,7 @@ void pd_unbind(t_pd *x, t_symbol *s)
             s->s_thing = b->b_list->e_who;
             freebytes(b->b_list, sizeof(t_bindelem));
             pd_free(&b->b_pd);
+			///fprintf(stderr,"success B3\n");
         }
     }
     else pd_error(x, "%s: couldn't unbind", s->s_name);
