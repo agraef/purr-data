@@ -801,9 +801,9 @@ if {$pd_nt == 2} {
 }
 set pd_opendir $untitled_directory
 set pd_savedir $untitled_directory
-set pd_undoaction no
-set pd_redoaction no
-set pd_undocanvas no
+#set pd_undoaction no
+#set pd_redoaction no
+#set pd_undocanvas no
 
 ################ utility functions #########################
 
@@ -1573,19 +1573,21 @@ proc menu_really_close {name} {
 }
 
 proc menu_undo {name} {
-    global pd_undoaction
-    global pd_redoaction
-    global pd_undocanvas
-    if {$name == $pd_undocanvas && $pd_undoaction != "no"} {
+	#puts stderr "menu_undo $name\n"
+    #global pd_undoaction
+    #global pd_redoaction
+    #global pd_undocanvas
+    if {$::undo($name) != "no"} {
         pd [concat $name undo \;]
     }
 }
 
 proc menu_redo {name} {
-    global pd_undoaction
-    global pd_redoaction
-    global pd_undocanvas
-    if {$name == $pd_undocanvas && $pd_redoaction != "no"} {
+	#puts stderr "menu_redo $name\n"
+    #global pd_undoaction
+    #global pd_redoaction
+    #global pd_undocanvas
+    if {$::redo($name) != "no"} {
         pd [concat $name redo \;]
     }
 }
@@ -1766,11 +1768,11 @@ proc menu_mycnv {name accel} {
 # correct edit menu, enabling or disabling undo/redo/cut/copy/paste
 proc menu_fixeditmenu {name} {
 	catch {
-		# pdtk_post "fixeditmenu $name\n"
+		#puts stderr "fixeditmenu $name\n"
 
-		global pd_undoaction
-		global pd_redoaction
-		global pd_undocanvas
+		#global pd_undoaction
+		#global pd_redoaction
+		#global pd_undocanvas
 
 		global global_selection
 		global global_clipboard
@@ -1800,15 +1802,15 @@ proc menu_fixeditmenu {name} {
 		}
 
 		# puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
-		if {$name == $pd_undocanvas && $pd_undoaction != "no"} {
+		if {$::undo($name) != "no"} {
 		    $name.m.edit entryconfigure "Undo*" -state normal \
-		        -label [concat "Undo " $pd_undoaction]
+		        -label [concat "Undo " $::undo($name)]
 		} else {
 		    $name.m.edit entryconfigure "Undo*" -state disabled -label "Undo"
 		}
-		if {$name == $pd_undocanvas && $pd_redoaction != "no"} {
+		if {$::redo($name) != "no"} {
 		    $name.m.edit entryconfigure "Redo*" -state normal\
-		        -label [concat "Redo " $pd_redoaction]
+		        -label [concat "Redo " $::redo($name)]
 		} else {
 		    $name.m.edit entryconfigure "Redo*" -state disabled
 		}
@@ -1829,13 +1831,15 @@ proc menu_fixeditmenu {name} {
 
 # message from Pd to update the currently available undo/redo action
 proc pdtk_undomenu {name undoaction redoaction} {
-    global pd_undoaction
-    global pd_redoaction
-    global pd_undocanvas
+    #global pd_undoaction
+    #global pd_redoaction
+    #global pd_undocanvas
     #    puts stderr [concat pdtk_undomenu $name $undoaction $redoaction]
-    set pd_undocanvas $name
-    set pd_undoaction $undoaction
-    set pd_redoaction $redoaction
+    #set pd_undocanvas $name
+    #set pd_undoaction $undoaction
+    #set pd_redoaction $redoaction
+	set ::undo($name) $undoaction
+	set ::redo($name) $redoaction
     if {$name != "nobody"} {
         #    unpleasant way of avoiding a more unpleasant bug situation --atl 2002.11.25
         menu_fixeditmenu $name
@@ -1977,8 +1981,14 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	if {![info exists ::yscrollable($name)]} {
 		set ::yscrollable($name) 0
 	}
-	if {![info exists ::update_tick($name)]} {
-		set ::update_tick($name) 0
+	#if {![info exists ::update_tick($name)]} {
+	#	set ::update_tick($name) 0
+	#}
+	if {![info exists ::undo($name)]} {
+		set ::undo($name) no
+	}
+	if {![info exists ::redo($name)]} {
+		set ::redo($name) no
 	}
 
 	if {$::menu($name) == 1} {
@@ -3015,7 +3025,7 @@ proc pdtk_canvas_getscroll {name} {
 			set ::yscrollable($parentname) 0
 		}
 	}
-	set ::update_tick([winfo parent $name]) 1
+	#set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
 }
 

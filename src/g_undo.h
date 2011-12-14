@@ -26,16 +26,18 @@ by an undo) all undo actions (except for its deletion in the parent window shoul
 be purged since abstraction's state will now default to its original (saved) state.
 
 Types of undo data:
-0 - init data (start of the queue)
-1 - connect
-2 - disconnect
-3 - cut, clear & typing into objects
-4 - motion, inclding "tidy up" and stretching
-5 - paste & duplicate
-6 - apply
-7 - arrange (to front/back)
-8 - canvas apply
-9 - create
+0  - init data (start of the queue)
+1  - connect
+2  - disconnect
+3  - cut, clear & typing into objects
+4  - motion, inclding "tidy up" and stretching
+5  - paste & duplicate
+6  - apply
+7  - arrange (to front/back)
+8  - canvas apply
+9  - create
+10 - recreate
+11 - rename (TODO)
 */
 
 struct _undo_action
@@ -74,6 +76,11 @@ EXTERN void *canvas_undo_set_disconnect(t_canvas *x,
     int index1, int outno, int index2, int inno);
 EXTERN void canvas_undo_disconnect(t_canvas *x, void *z, int action);
 
+/* --------- 3. cut -------------- */
+
+EXTERN void *canvas_undo_set_cut(t_canvas *x, int mode);
+EXTERN void canvas_undo_cut(t_canvas *x, void *z, int action);
+
 /* --------- 4. move ------------- */
 
 EXTERN void *canvas_undo_set_move(t_canvas *x, int selected);
@@ -92,7 +99,7 @@ EXTERN void *canvas_undo_set_create(t_canvas *x);
 /* --------- 10. recreate -------- */
 
 EXTERN void canvas_undo_recreate(t_canvas *x, void *z, int action);
-EXTERN void *canvas_undo_set_recreate(t_canvas *x);
+EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y);
 
 /* ------------------------------- */
 
