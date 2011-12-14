@@ -467,7 +467,7 @@ void outlet_free(t_outlet *x)
 t_outconnect *obj_connect(t_object *source, int outno,
     t_object *sink, int inno)
 {
-	fprintf(stderr,"obj_connect\n");
+	//fprintf(stderr,"obj_connect\n");
     t_inlet *i;
     t_outlet *o;
     t_pd *to;
