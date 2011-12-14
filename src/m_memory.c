@@ -17,7 +17,7 @@
 static int totalmem = 0;
 #endif
 
-static int memoffset = 0;
+//static int memoffset = 0;
 
 void *getbytes(size_t nbytes)
 {
