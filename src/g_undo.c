@@ -83,7 +83,7 @@ void canvas_undo_redo(t_canvas *x)
 	if (x->u_queue && x->u_last->next) {
 		we_are_undoing = 1;
 		x->u_last = x->u_last->next;
-		fprintf(stderr,"canvas_undo_undo %d\n", x->u_last->type);
+		fprintf(stderr,"canvas_undo_redo %d\n", x->u_last->type);
 		glist_noselect(x);
         switch(x->u_last->type)
         {
@@ -153,6 +153,7 @@ void canvas_undo_free(t_canvas *x)
 		    {
 				case 1:	canvas_undo_connect(x, a->data, UNDO_FREE); break; 		//connect
 				case 2:	canvas_undo_disconnect(x, a->data, UNDO_FREE); break; 	//disconnect
+				case 3:	canvas_undo_cut(x, a->data, UNDO_FREE); break; 			//cut
 				case 4:	canvas_undo_move(x, a->data, UNDO_FREE); break;			//move
 				case 5:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//paste
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create

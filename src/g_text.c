@@ -1782,8 +1782,13 @@ void text_eraseborder(t_text *x, t_glist *glist, char *tag)
     /* change text; if T_OBJECT, remake it.  LATER we'll have an undo buffer
     which should be filled in here before making the change. */
 
+EXTERN int check_for_redundant_typed_undo(t_canvas *x, void *data);
+
 void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
 {
+	char *c1, *c2;
+	int i1, i2;
+
     if (x->te_type == T_OBJECT)
     {
         t_binbuf *b = binbuf_new();
@@ -1800,24 +1805,35 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
              vec2[0].a_type == A_SYMBOL
             && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
         {
-			//TODO: add rename undo
-            typedmess(&x->te_pd, gensym("rename"), natom2-1, vec2+1);
-            binbuf_free(x->te_binbuf);
-            x->te_binbuf = b;
+			//first check if the contents have changed to see if there is any point of recreating the object
+			binbuf_gettext(x->te_binbuf, &c1, &i1);
+			binbuf_gettext(b, &c2, &i2);
+			if (strcmp(c1, c2)) {
+				canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
+					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g));
+		        typedmess(&x->te_pd, gensym("rename"), natom2-1, vec2+1);
+		        binbuf_free(x->te_binbuf);
+		        x->te_binbuf = b;
+			}
         }
         else  /* normally, just destroy the old one and make a new one. */
         {
-			//fprintf(stderr,"text_setto calls canvas_undo_add\n");
-			canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
-				(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g));
-            int xwas = x->te_xpix, ywas = x->te_ypix;
-			canvas_eraselinesfor(glist, x);
-            glist_delete(glist, &x->te_g);
-            canvas_objtext(glist, xwas, ywas, 0, b);
-                /* if it's an abstraction loadbang it here */
-            if (newest && pd_class(newest) == canvas_class)
-                canvas_loadbang((t_canvas *)newest);
-            canvas_restoreconnections(glist_getcanvas(glist));
+			//first check if the contents have changed to see if there is any point of recreating the object
+			binbuf_gettext(x->te_binbuf, &c1, &i1);
+			binbuf_gettext(b, &c2, &i2);
+			if (strcmp(c1, c2)) {
+				fprintf(stderr,"text_setto calls canvas_undo_add\n");
+				canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
+					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g));
+		        int xwas = x->te_xpix, ywas = x->te_ypix;
+				canvas_eraselinesfor(glist, x);
+		        glist_delete(glist, &x->te_g);
+		        canvas_objtext(glist, xwas, ywas, 0, b);
+		            /* if it's an abstraction loadbang it here */
+		        if (newest && pd_class(newest) == canvas_class)
+		            canvas_loadbang((t_canvas *)newest);
+		        canvas_restoreconnections(glist_getcanvas(glist));
+			}
         }
             /* if we made a new "pd" or changed a window name,
                 update window list */

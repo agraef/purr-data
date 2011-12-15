@@ -3246,12 +3246,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 			|| !strcmp(gotkeysym->s_name, "End")))
         {
                 /* send the key to the box's editor */
-            if (!x->gl_editor->e_textdirty)
+            /*if (!x->gl_editor->e_textdirty)
             {
                 //canvas_setundo(x, canvas_undo_cut,
                 //    canvas_undo_set_cut(x, UCUT_TEXT), "typing");
 				canvas_undo_add(x, 3, "typing", canvas_undo_set_cut(x, UCUT_TEXT));
-            }
+            }*/
             rtext_key(x->gl_editor->e_textedfor,
                 (int)keynum, gotkeysym);
 			canvas_fixlinesfor(x, (t_text *)(x->gl_editor->e_selection->sel_what));

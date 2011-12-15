@@ -37,7 +37,6 @@ Types of undo data:
 8  - canvas apply
 9  - create
 10 - recreate
-11 - rename (TODO)
 */
 
 struct _undo_action
@@ -104,3 +103,4 @@ EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y);
 /* ------------------------------- */
 
 #endif /* __g_undo_h_ */
+
