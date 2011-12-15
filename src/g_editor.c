@@ -1163,7 +1163,7 @@ typedef struct _undo_arrange
 	int u_newindex;				/* new index */
 } t_undo_arrange;
 
-static void *canvas_undo_set_arrange(t_canvas *x, t_gobj *obj, int newindex)
+void *canvas_undo_set_arrange(t_canvas *x, t_gobj *obj, int newindex)
 {
 	// newindex tells us is the new index at the beginning (0) or the end (1)
 
@@ -1191,7 +1191,7 @@ static void *canvas_undo_set_arrange(t_canvas *x, t_gobj *obj, int newindex)
     return (buf);
 }
 
-static void canvas_undo_arrange(t_canvas *x, void *z, int action)
+void canvas_undo_arrange(t_canvas *x, void *z, int action)
 {
     t_undo_arrange *buf = z;
 	t_gobj *y=NULL, *prev=NULL, *next=NULL;
@@ -1323,38 +1323,40 @@ typedef struct _undo_canvas_properties
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
 } t_undo_canvas_properties;
 
-t_undo_canvas_properties global_buf;
+//t_undo_canvas_properties global_buf;
 
-static void *canvas_undo_set_canvas(t_canvas *x)
+void *canvas_undo_set_canvas(t_canvas *x)
 {
 	/* enable editor (in case it is disabled) */
 	//if (x->gl_havewindow && !x->gl_edit)
 	//	canvas_editmode(x, 1);
 
-	global_buf.gl_pixwidth = x->gl_pixwidth;
-	global_buf.gl_pixheight = x->gl_pixheight;
-	global_buf.gl_x1 = x->gl_x1;
-	global_buf.gl_y1 = x->gl_y1;
-	global_buf.gl_x2 = x->gl_x2;
-	global_buf.gl_y2 = x->gl_y2;
-	global_buf.gl_screenx1 = x->gl_screenx1;
-	global_buf.gl_screeny1 = x->gl_screeny1;
-	global_buf.gl_screenx2 = x->gl_screenx2;
-	global_buf.gl_screeny2 = x->gl_screeny2;
-	global_buf.gl_xmargin = x->gl_xmargin;
-	global_buf.gl_ymargin = x->gl_ymargin;
-	global_buf.gl_goprect = x->gl_goprect;
-	global_buf.gl_isgraph = x->gl_isgraph;
-	global_buf.gl_hidetext = x->gl_hidetext;
+	t_undo_canvas_properties *buf = (t_undo_canvas_properties *)getbytes(sizeof(*buf));
+
+	buf->gl_pixwidth = x->gl_pixwidth;
+	buf->gl_pixheight = x->gl_pixheight;
+	buf->gl_x1 = x->gl_x1;
+	buf->gl_y1 = x->gl_y1;
+	buf->gl_x2 = x->gl_x2;
+	buf->gl_y2 = x->gl_y2;
+	buf->gl_screenx1 = x->gl_screenx1;
+	buf->gl_screeny1 = x->gl_screeny1;
+	buf->gl_screenx2 = x->gl_screenx2;
+	buf->gl_screeny2 = x->gl_screeny2;
+	buf->gl_xmargin = x->gl_xmargin;
+	buf->gl_ymargin = x->gl_ymargin;
+	buf->gl_goprect = x->gl_goprect;
+	buf->gl_isgraph = x->gl_isgraph;
+	buf->gl_hidetext = x->gl_hidetext;
 	
-    return (&global_buf);
+    return (buf);
 }
 
 extern int gfxstub_haveproperties(void *key);
 
-static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
+void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 {
-    t_undo_canvas_properties *buf = z;
+    t_undo_canvas_properties *buf = (t_undo_canvas_properties *)z;
     t_undo_canvas_properties tmp;
 
 	if (!x->gl_edit)
@@ -1362,11 +1364,11 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 
 	if (action == UNDO_UNDO || action == UNDO_REDO)
 	{
-		/*//close properties window first
+		//close properties window first
 		t_int properties = gfxstub_haveproperties((void *)x);
 		if (properties) {
 			sys_vgui("destroy .gfxstub%lx\n", properties);
-		}*/
+		}
 
 		//store current canvas values into temporary data holder
 		tmp.gl_pixwidth = x->gl_pixwidth;
@@ -1442,8 +1444,17 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		}
 
 		//if properties window is open, update the properties with the previous window properties		
-		t_int properties = gfxstub_haveproperties((void *)x);
+		/*t_int properties = gfxstub_haveproperties((void *)x);
 		if (properties) {
+			sys_vgui("pdtk_canvas_dialog_undo_update .gfxstub%lx %d %d\n", properties, x->gl_isgraph, x->gl_hidetext);
+			sys_vgui(".gfxstub%lx.xscale.entry delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.xrange.entry1 insert 0 %d\n", properties, x->gl_x1);
+			sys_vgui(".gfxstub%lx.yrange.entry1 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.yrange.entry1 insert 0 %d\n", properties, x->gl_y1);
+			sys_vgui(".gfxstub%lx.xrange.entry2 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.xrange.entry2 insert 0 %d\n", properties, x->gl_x2);
+			sys_vgui(".gfxstub%lx.yrange.entry2 delete 0 end\n", properties);
+			sys_vgui(".gfxstub%lx.yrange.entry2 insert 0 %d\n", properties, x->gl_y2);
 			sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n", properties);
 			sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n", properties, x->gl_pixwidth);
 			sys_vgui(".gfxstub%lx.yrange.entry3 delete 0 end\n", properties);
@@ -1452,15 +1463,17 @@ static void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 			sys_vgui(".gfxstub%lx.xrange.entry4 insert 0 %d\n", properties, x->gl_xmargin);
 			sys_vgui(".gfxstub%lx.yrange.entry4 delete 0 end\n", properties);
 			sys_vgui(".gfxstub%lx.yrange.entry4 insert 0 %d\n", properties, x->gl_ymargin);
-		}
+		}*/
 
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
-		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
+		if (canvas != x)
+			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
 	}
 
     else if (action == UNDO_FREE)
     {
-		//do nothing since undo apply uses a global_buf struct rather than a pointer
+		if (buf)
+			t_freebytes(buf, sizeof(*buf));
     }
 }
 
@@ -2094,7 +2107,8 @@ static void canvas_donecanvasdialog(t_glist *x,
 			graphme!=(x->gl_isgraph+2*x->gl_hidetext) || x->gl_pixwidth!=xpix ||
 			x->gl_pixheight!=ypix || x->gl_xmargin!=xmargin || x->gl_ymargin!=ymargin) {*/
 	{	
-		canvas_canvas_setundo(x);
+		//canvas_canvas_setundo(x);
+		canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
 		//fprintf(stderr,"canvas_apply_undo\n");
 	}
 
@@ -2338,14 +2352,16 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 	if (which == 3 && y_end != oldy) /* to front */
 	{
 		/* create appropriate undo action */
-		canvas_arrange_setundo(x, oldy, 1);
+		//canvas_arrange_setundo(x, oldy, 1);
+		canvas_undo_add(x, 7, "arrange", canvas_undo_set_arrange(x, oldy, 1));
 
 		canvas_doarrange(x, which, oldy, oldy_prev, oldy_next);
 	}
 	if (which == 4 && y_begin != oldy) /* to back */
 	{
 		/* create appropriate undo action */
-		canvas_arrange_setundo(x, oldy, 0);
+		//canvas_arrange_setundo(x, oldy, 0);
+		canvas_undo_add(x, 7, "arrange", canvas_undo_set_arrange(x, oldy, 0));
 
 		canvas_doarrange(x, which, oldy, oldy_prev, oldy_next);
 	}

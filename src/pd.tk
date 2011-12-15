@@ -4830,6 +4830,28 @@ proc canvas_checkcommand {id} {
     }
 }
 
+proc pdtk_canvas_dialog_undo_update {name x y} {
+	if {$x==0} {
+		$name.graphme instate {selected} {
+			$name.graphme invoke
+		}
+	} elseif {$x==1} {
+		$name.graphme instate {!selected} {
+			$name.graphme invoke
+		}
+	}
+
+	if {$y==0} {
+		$name.hidetext instate {selected} {
+			$name.hidetext invoke
+		}
+	} elseif {$y==1} {
+		$name.hidetext instate {!selected} {
+			$name.hidetext invoke
+		}
+	}
+}
+
 proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
                              xpix ypix xmargin ymargin} {
     set vid [string trimleft $id .]

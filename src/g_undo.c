@@ -39,7 +39,7 @@ t_undo_action *canvas_undo_init(t_canvas *x)
 
 t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name, void *data)
 {
-	fprintf(stderr,"canvas_undo_add %d\n", type);
+	//fprintf(stderr,"canvas_undo_add %d\n", type);
 	t_undo_action *a = canvas_undo_init(x);
 	a->type = type;
 	a->data = (void *)data;
@@ -53,7 +53,7 @@ void canvas_undo_undo(t_canvas *x)
 {
 	if (x->u_queue && x->u_last != x->u_queue) {
 		we_are_undoing = 1;
-		fprintf(stderr,"canvas_undo_undo %d\n", x->u_last->type);
+		//fprintf(stderr,"canvas_undo_undo %d\n", x->u_last->type);
 		glist_noselect(x);
         switch(x->u_last->type)
         {
@@ -63,6 +63,8 @@ void canvas_undo_undo(t_canvas *x)
 		    case 4:	canvas_undo_move(x, x->u_last->data, UNDO_UNDO); break;			//move
 		    case 5:	canvas_undo_paste(x, x->u_last->data, UNDO_UNDO); break;		//paste
 		    case 6:	canvas_undo_apply(x, x->u_last->data, UNDO_UNDO); break;		//apply
+		    case 7:	canvas_undo_arrange(x, x->u_last->data, UNDO_UNDO); break;		//arrange
+		    case 8:	canvas_undo_canvas_apply(x, x->u_last->data, UNDO_UNDO); break;	//canvas apply
 		    case 9:	canvas_undo_create(x, x->u_last->data, UNDO_UNDO); break;		//create
 		    case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_UNDO); break;		//recreate
 		    default:
@@ -84,7 +86,7 @@ void canvas_undo_redo(t_canvas *x)
 	if (x->u_queue && x->u_last->next) {
 		we_are_undoing = 1;
 		x->u_last = x->u_last->next;
-		fprintf(stderr,"canvas_undo_redo %d\n", x->u_last->type);
+		//fprintf(stderr,"canvas_undo_redo %d\n", x->u_last->type);
 		glist_noselect(x);
         switch(x->u_last->type)
         {
@@ -94,6 +96,8 @@ void canvas_undo_redo(t_canvas *x)
 		    case 4:	canvas_undo_move(x, x->u_last->data, UNDO_REDO); break;			//move
 		    case 5:	canvas_undo_paste(x, x->u_last->data, UNDO_REDO); break;		//paste
 		    case 6:	canvas_undo_apply(x, x->u_last->data, UNDO_REDO); break;		//apply
+		    case 7:	canvas_undo_arrange(x, x->u_last->data, UNDO_REDO); break;		//arrange
+		    case 8:	canvas_undo_canvas_apply(x, x->u_last->data, UNDO_REDO); break;	//canvas apply
 		    case 9:	canvas_undo_create(x, x->u_last->data, UNDO_REDO); break;		//create
 		    case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_REDO); break;		//recreate
 		    default:
@@ -111,7 +115,7 @@ void canvas_undo_redo(t_canvas *x)
 
 void canvas_undo_rebranch(t_canvas *x)
 {
-	fprintf(stderr,"canvas_undo_rebranch");
+	//fprintf(stderr,"canvas_undo_rebranch");
 	if (x->u_last->next) {
 		t_undo_action *a;
 		for(a = x->u_last->next; a; a = a->next) {
@@ -124,6 +128,8 @@ void canvas_undo_rebranch(t_canvas *x)
 				case 4:	canvas_undo_move(x, a->data, UNDO_FREE); break;			//move
 				case 5:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//paste
 				case 6:	canvas_undo_apply(x, a->data, UNDO_FREE); break;		//apply
+		    	case 7:	canvas_undo_arrange(x, a->data, UNDO_FREE); break;		//arrange
+			    case 8:	canvas_undo_canvas_apply(x, a->data, UNDO_FREE); break;	//canvas apply
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create
 				case 10:canvas_undo_recreate(x, a->data, UNDO_FREE); break;		//recreate
 				default:
@@ -132,7 +138,7 @@ void canvas_undo_rebranch(t_canvas *x)
 			freebytes(a, sizeof(*a));
 		}
 	}
-	fprintf(stderr,"done!\n");
+	//fprintf(stderr,"done!\n");
 }
 
 void canvas_undo_check_canvas_pointers(t_canvas *x)
@@ -161,6 +167,8 @@ void canvas_undo_free(t_canvas *x)
 				case 4:	canvas_undo_move(x, a->data, UNDO_FREE); break;			//move
 				case 5:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//paste
 				case 6:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//apply
+		    	case 7:	canvas_undo_arrange(x, a->data, UNDO_FREE); break;		//arrange
+			    case 8:	canvas_undo_canvas_apply(x, a->data, UNDO_FREE); break;	//canvas apply
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create
 				case 10:canvas_undo_recreate(x, a->data, UNDO_FREE); break;		//recreate
 				default:
