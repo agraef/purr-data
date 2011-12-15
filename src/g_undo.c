@@ -62,10 +62,11 @@ void canvas_undo_undo(t_canvas *x)
 		    case 3:	canvas_undo_cut(x, x->u_last->data, UNDO_UNDO); break; 			//cut
 		    case 4:	canvas_undo_move(x, x->u_last->data, UNDO_UNDO); break;			//move
 		    case 5:	canvas_undo_paste(x, x->u_last->data, UNDO_UNDO); break;		//paste
+		    case 6:	canvas_undo_apply(x, x->u_last->data, UNDO_UNDO); break;		//apply
 		    case 9:	canvas_undo_create(x, x->u_last->data, UNDO_UNDO); break;		//create
 		    case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_UNDO); break;		//recreate
 		    default:
-		        error("canvas_undo_undo: unsupported undo command");
+		        error("canvas_undo_undo: unsupported undo command %d", x->u_last->type);
         }
 		x->u_last = x->u_last->prev;
 		char *undo_action = x->u_last->name;
@@ -92,10 +93,11 @@ void canvas_undo_redo(t_canvas *x)
 		    case 3:	canvas_undo_cut(x, x->u_last->data, UNDO_REDO); break; 			//cut
 		    case 4:	canvas_undo_move(x, x->u_last->data, UNDO_REDO); break;			//move
 		    case 5:	canvas_undo_paste(x, x->u_last->data, UNDO_REDO); break;		//paste
+		    case 6:	canvas_undo_apply(x, x->u_last->data, UNDO_REDO); break;		//apply
 		    case 9:	canvas_undo_create(x, x->u_last->data, UNDO_REDO); break;		//create
 		    case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_REDO); break;		//recreate
 		    default:
-		        error("canvas_undo_redo: unsupported undo command");
+		        error("canvas_undo_redo: unsupported redo command %d", x->u_last->type);
         }
 		char *undo_action = x->u_last->name;
 		char *redo_action = (x->u_last->next ? x->u_last->next->name : "no");
@@ -113,7 +115,7 @@ void canvas_undo_rebranch(t_canvas *x)
 	if (x->u_last->next) {
 		t_undo_action *a;
 		for(a = x->u_last->next; a; a = a->next) {
-			fprintf(stderr,".");
+			//fprintf(stderr,".");
 		    switch(a->type)
 		    {
 				case 1:	canvas_undo_connect(x, a->data, UNDO_FREE); break; 		//connect
@@ -121,10 +123,11 @@ void canvas_undo_rebranch(t_canvas *x)
 				case 3:	canvas_undo_cut(x, a->data, UNDO_FREE); break; 			//cut
 				case 4:	canvas_undo_move(x, a->data, UNDO_FREE); break;			//move
 				case 5:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//paste
+				case 6:	canvas_undo_apply(x, a->data, UNDO_FREE); break;		//apply
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create
 				case 10:canvas_undo_recreate(x, a->data, UNDO_FREE); break;		//recreate
 				default:
-				    error("canvas_undo_rebranch: unsupported undo command");
+				    error("canvas_undo_rebranch: unsupported undo command %d", a->type);
 		    }
 			freebytes(a, sizeof(*a));
 		}
@@ -151,15 +154,17 @@ void canvas_undo_free(t_canvas *x)
 			//fprintf(stderr,".");
 		    switch(a->type)
 		    {
+				case 0: break;													//init
 				case 1:	canvas_undo_connect(x, a->data, UNDO_FREE); break; 		//connect
 				case 2:	canvas_undo_disconnect(x, a->data, UNDO_FREE); break; 	//disconnect
 				case 3:	canvas_undo_cut(x, a->data, UNDO_FREE); break; 			//cut
 				case 4:	canvas_undo_move(x, a->data, UNDO_FREE); break;			//move
 				case 5:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//paste
+				case 6:	canvas_undo_paste(x, a->data, UNDO_FREE); break;		//apply
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create
 				case 10:canvas_undo_recreate(x, a->data, UNDO_FREE); break;		//recreate
 				default:
-				    error("canvas_undo_rebranch: unsupported undo command");
+				    error("canvas_undo_free: unsupported undo command %d", a->type);
 		    }
 			freebytes(a, sizeof(*a));
 		}

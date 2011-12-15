@@ -90,6 +90,11 @@ EXTERN void canvas_undo_move(t_canvas *x, void *z, int action);
 EXTERN void *canvas_undo_set_paste(t_canvas *x, int offset);
 EXTERN void canvas_undo_paste(t_canvas *x, void *z, int action);
 
+/* --------- 6. apply ------------ */
+
+EXTERN void *canvas_undo_set_apply(t_canvas *x, int n);
+EXTERN void canvas_undo_apply(t_canvas *x, void *z, int action);
+
 /* --------- 9. create ----------- */
 
 EXTERN void canvas_undo_create(t_canvas *x, void *z, int action);
@@ -98,7 +103,7 @@ EXTERN void *canvas_undo_set_create(t_canvas *x);
 /* --------- 10. recreate -------- */
 
 EXTERN void canvas_undo_recreate(t_canvas *x, void *z, int action);
-EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y);
+EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y, int old_pos);
 
 /* ------------------------------- */
 

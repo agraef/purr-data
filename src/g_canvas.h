@@ -455,7 +455,7 @@ void canvas_deletelinesforio(t_canvas *x, t_text *text,
 extern int glist_amreloadingabstractions; /* stop GUI changes while reloading */ 
 
 /* -------------------- functions on texts ------------------------- */
-EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize);
+EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos);
 EXTERN void text_drawborder(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
 EXTERN void text_drawborder_withtag(t_text *x, t_glist *glist, char *tag,

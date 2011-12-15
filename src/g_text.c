@@ -832,6 +832,9 @@ static void gatom_click(t_gatom *x,
     }
 }
 
+EXTERN int glist_getindex(t_glist *x, t_gobj *y);
+EXTERN int canvas_apply_restore_original_position(t_canvas *x, int pos);
+
     /* message back from dialog window */
 static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
 {
@@ -1782,9 +1785,7 @@ void text_eraseborder(t_text *x, t_glist *glist, char *tag)
     /* change text; if T_OBJECT, remake it.  LATER we'll have an undo buffer
     which should be filled in here before making the change. */
 
-EXTERN int check_for_redundant_typed_undo(t_canvas *x, void *data);
-
-void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
+void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 {
 	char *c1, *c2;
 	int i1, i2;
@@ -1810,10 +1811,11 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
 			binbuf_gettext(b, &c2, &i2);
 			if (strcmp(c1, c2)) {
 				canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
-					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g));
+					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g, pos));
 		        typedmess(&x->te_pd, gensym("rename"), natom2-1, vec2+1);
 		        binbuf_free(x->te_binbuf);
 		        x->te_binbuf = b;
+				//canvas_apply_restore_original_position(glist_getcanvas(glist), pos);
 			}
         }
         else  /* normally, just destroy the old one and make a new one. */
@@ -1824,7 +1826,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
 			if (strcmp(c1, c2)) {
 				fprintf(stderr,"text_setto calls canvas_undo_add\n");
 				canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
-					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g));
+					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g, pos));
 		        int xwas = x->te_xpix, ywas = x->te_ypix;
 				canvas_eraselinesfor(glist, x);
 		        glist_delete(glist, &x->te_g);
@@ -1833,6 +1835,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize)
 		        if (newest && pd_class(newest) == canvas_class)
 		            canvas_loadbang((t_canvas *)newest);
 		        canvas_restoreconnections(glist_getcanvas(glist));
+				//canvas_apply_restore_original_position(glist_getcanvas(glist), pos);
 			}
         }
             /* if we made a new "pd" or changed a window name,

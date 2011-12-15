@@ -56,6 +56,8 @@ static int copiedfont;
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     t_floatarg yresize);
 extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
+int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
+
 struct _outlet
 {
     t_object *o_owner;
@@ -281,6 +283,8 @@ static void glist_checkanddeselectall(t_glist *gl, t_gobj *g)
     glist_noselect(gl2);
 }
 
+int glist_getindex(t_glist *x, t_gobj *y);
+
     /* call this for selected objects only */
 void glist_deselect(t_glist *x, t_gobj *y)
 {
@@ -294,6 +298,10 @@ void glist_deselect(t_glist *x, t_gobj *y)
         t_selection *sel, *sel2;
         t_rtext *z = 0;
         if (!glist_isselected(x, y)) bug("glist_deselect");
+		// following information is for undo_apply
+		// we need info on the old object's position
+		// in the gl_list so that we can restore it
+		int pos = glist_getindex(glist_getcanvas(x), y);
         if (x->gl_editor->e_textedfor)
         {
 			//fprintf(stderr, "e_textedfor\n");
@@ -340,7 +348,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
             int bufsize;
 
             rtext_gettext(z, &buf, &bufsize);
-            text_setto((t_text *)y, x, buf, bufsize);
+            text_setto((t_text *)y, x, buf, bufsize, pos);
             canvas_fixlinesfor(glist_getcanvas(x), (t_text *)y);
             x->gl_editor->e_textedfor = 0;
         }
@@ -889,6 +897,7 @@ void canvas_undo_move(t_canvas *x, void *z, int action)
 				cl = pd_class(&y->g_pd);
 		        if (cl == vinlet_class) resortin = 1;
 		        else if (cl == voutlet_class) resortout = 1;
+				glist_select(x, y);
             }
         }
 		if (resortin) canvas_resortinlets(x);
@@ -1030,7 +1039,7 @@ typedef struct _undo_apply
 	int u_index;				/* index of the previous object */
 } t_undo_apply;
 
-static void *canvas_undo_set_apply(t_canvas *x, int n)
+void *canvas_undo_set_apply(t_canvas *x, int n)
 {
     t_undo_apply *buf;
     t_gobj *y, *obj;
@@ -1073,7 +1082,7 @@ static void *canvas_undo_set_apply(t_canvas *x, int n)
     return (buf);
 }
 
-static void canvas_undo_apply(t_canvas *x, void *z, int action)
+void canvas_undo_apply(t_canvas *x, void *z, int action)
 {
     t_undo_apply *buf = z;
     if (action == UNDO_UNDO || action == UNDO_REDO)
@@ -1091,10 +1100,8 @@ static void canvas_undo_apply(t_canvas *x, void *z, int action)
 		/* replace it with previous instance */
         canvas_dopaste(x, buf->u_objectbuf);
 
-		/* change previous instance with current one */
-		//TODO: test this		
+		/* change previous instance with current one */		
 		buf->u_objectbuf = tmp;
-		//buf->u_index = glist_selectionindex(x, 0, 0);
 
 		/* connections should stay the same */
         pd_bind(&x->gl_pd, gensym("#X"));
@@ -1102,48 +1109,8 @@ static void canvas_undo_apply(t_canvas *x, void *z, int action)
         pd_unbind(&x->gl_pd, gensym("#X"));
 
 		//now we need to reposition the object to its original place
-		t_gobj *y, *y_prev, *y_next;
-		//get the last object
-		y = glist_nth(x, glist_getindex(x, 0) - 1);
-		/*for (y = x->gl_list; y; y = y->g_next)
-			if (!y->g_next)
-				break;*/
-		if (glist_getindex(x, y) != buf->u_index) {
-			//fprintf(stderr,"not in the right place\n");
-			y_prev = glist_nth(x, buf->u_index-1);
-			y_next = glist_nth(x, buf->u_index);
-			//if the object is supposed to be first in the gl_list
-			if (buf->u_index == 0) {
-				if (y_prev && y_next) {
-					y_prev->g_next = y_next;
-				}
-				else if (y_prev && !y_next)
-					y_prev->g_next = NULL;
-				//now put the moved object at the beginning of the cue
-				y->g_next = glist_nth(x, 0);
-				x->gl_list = y;
-			}
-			//if the object is supposed to be at the current end of gl_list	
-			//can this ever happen???
-			/*else if (!glist_nth(x,buf->p_a[i])) {
-
-			}*/
-			//if the object is supposed to be in the middle of gl_list
-			else {
-				if (y_prev && y_next) {
-					y_prev->g_next = y_next;
-				}
-				else if (y_prev && !y_next) {
-					y_prev->g_next = NULL;
-				}
-				//now put the moved object in its right place
-				y_prev = glist_nth(x, buf->u_index-1);
-				y_next = glist_nth(x, buf->u_index);
-
-				y_prev->g_next = y;
-				y->g_next = y_next;
-			}
-		}
+		if (canvas_apply_restore_original_position(x, buf->u_index))
+			canvas_redraw(x);
     }
     else if (action == UNDO_FREE)
     {
@@ -1155,9 +1122,37 @@ static void canvas_undo_apply(t_canvas *x, void *z, int action)
     }
 }
 
-void canvas_apply_setundo(t_canvas *x, int n)
+//legacy wrapper
+void canvas_apply_setundo(t_canvas *x, t_gobj *y)
 {
-	canvas_setundo(x, canvas_undo_apply, canvas_undo_set_apply(x, n), "apply");
+	canvas_undo_add(x, 6, "apply", canvas_undo_set_apply(x, glist_getindex(x,y)));
+}
+
+int canvas_apply_restore_original_position(t_canvas *x, int orig_pos)
+{
+	t_gobj *y, *y1, *y_prev, *y_next;
+	//get the last object
+	y = glist_nth(x, glist_getindex(x, 0) - 1);
+	if (glist_getindex(x, y) != orig_pos) {
+		//first make the object prior to the pasted one the end of the list
+		y_prev = glist_nth(x, glist_getindex(x, 0) - 2);
+		if (y_prev)
+			y_prev->g_next = NULL;
+		//if the object is supposed to be first in the gl_list
+		if (orig_pos == 0) {
+			y->g_next = glist_nth(x, 0);
+			x->gl_list = y;
+		}
+		//if the object is supposed to be in the middle of the gl_list
+		else {
+			y_prev = glist_nth(x, orig_pos-1);
+			y_next = y_prev->g_next;
+			y_prev->g_next = y;
+			y->g_next = y_next;
+		}
+		return(1);
+	}
+	return(0);
 }
 
 /* --------- 7. arrange (to front/back)  ----------- */
@@ -1576,14 +1571,14 @@ void canvas_undo_create(t_canvas *x, void *z, int action)
 
 //recreate uses t_undo_create struct
 
-void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y)
+void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y, int pos)
 {
     t_linetraverser t;
     t_outconnect *oc;
 	int issel1, issel2;
 
     t_undo_create *buf = (t_undo_create *)getbytes(sizeof(*buf));
-    buf->u_index = glist_getindex(x, y);
+    buf->u_index = pos;
     int nnotsel= glist_selectionindex(x, 0, 0) - 1; // - 1 is a critical difference from the create
 	//fprintf(stderr,"buf->u_index=%d nnotsel=%d\n", buf->u_index, nnotsel);
     buf->u_objectbuf = binbuf_new();
@@ -1621,7 +1616,11 @@ void canvas_undo_recreate(t_canvas *x, void *z, int action)
 	//fprintf(stderr,"canvas_undo_recreate\n");
 
     t_undo_create *buf = z;
-    t_gobj *y = glist_nth(x, buf->u_index);
+	t_gobj *y = NULL;
+	if (action == UNDO_UNDO)
+		y = glist_nth(x, glist_getindex(x, 0) - 1);
+	else if (action == UNDO_REDO)
+		y = glist_nth(x, buf->u_index);
 
 	//fprintf(stderr,"canvas = %lx buf->u_index = %d\n", (t_int)x, buf->u_index);
 
@@ -1633,35 +1632,17 @@ void canvas_undo_recreate(t_canvas *x, void *z, int action)
 		int issel1, issel2;
 
 		t_undo_create *buf2 = (t_undo_create *)getbytes(sizeof(*buf));
-		buf2->u_index = glist_getindex(x, y);
+		//buf2->u_index = glist_getindex(x, y);
+		buf2->u_index = buf->u_index;
 		int nnotsel= glist_selectionindex(x, 0, 0) - 1; // - 1 is a critical difference from the create
-		//fprintf(stderr,"buf2->u_index=%d nnotsel=%d\n", buf2->u_index, nnotsel);
+		//fprintf(stderr,"buf2->u_index=%d nnotsel=%d y_getindex=%d\n", buf2->u_index, nnotsel, glist_getindex(x, y));
 		buf2->u_objectbuf = binbuf_new();
 		//fprintf(stderr,"undo_set_recreate: gobj_save\n");
 		gobj_save(y, buf2->u_objectbuf);
 
-		buf2->u_reconnectbuf = binbuf_new();
-		linetraverser_start(&t, x);
-		while (oc = linetraverser_next(&t))
-		{
-			issel1 = ( &t.tr_ob->ob_g == y ? 1 : 0);
-			issel2 = ( &t.tr_ob2->ob_g == y ? 1 : 0);
-			//fprintf(stderr,"undo_set_recreate linetraverser %d %d\n", issel1, issel2);
-			if (issel1 != issel2)
-			{
-				//fprintf(stderr,"undo_set_recreate store connection\n");
-				binbuf_addv(buf2->u_reconnectbuf, "ssiiii;",
-				    gensym("#X"), gensym("connect"),
-				    (issel1 ? nnotsel : 0)
-				        + glist_selectionindex(x, &t.tr_ob->ob_g, issel1),
-				    t.tr_outno,
-				    (issel2 ? nnotsel : 0) +
-				        glist_selectionindex(x, &t.tr_ob2->ob_g, issel2),
-				    t.tr_inno);
-			}
-		}
+		buf2->u_reconnectbuf = binbuf_duplicate(buf->u_reconnectbuf);
 
-		// now then cut the existing object
+		// now cut the existing object
 		glist_noselect(x);
         glist_select(x, y);
         canvas_doclear(x);
@@ -1685,56 +1666,19 @@ void canvas_undo_recreate(t_canvas *x, void *z, int action)
 		buf = buf2;
 
 		// reposition object to its original place
-		t_gobj *y_prev, *y_next;
-		//get the last object
-		y = glist_nth(x, glist_getindex(x, 0) - 1);
-		/*for (y = x->gl_list; y; y = y->g_next)
-			if (!y->g_next)
-				break;*/
-		// first check if we are in the same position already
-		if (glist_getindex(x, y) != buf->u_index) {
-			//fprintf(stderr,"not in the right place\n");
-			y_prev = glist_nth(x, buf->u_index-1);
-			y_next = glist_nth(x, buf->u_index);
-			//if the object is supposed to be first in the gl_list
-			if (buf->u_index == 0) {
-				if (y_prev && y_next) {
-					y_prev->g_next = y_next;
-				}
-				else if (y_prev && !y_next)
-					y_prev->g_next = NULL;
-				//now put the moved object at the beginning of the cue
-				y->g_next = glist_nth(x, 0);
-				x->gl_list = y;
-			}
-			//if the object is supposed to be at the current end of gl_list	
-			//can this ever happen???
-			/*else if (!glist_nth(x,buf->p_a[i])) {
-
-			}*/
-			//if the object is supposed to be in the middle of gl_list
-			else {
-				if (y_prev && y_next) {
-					y_prev->g_next = y_next;
-				}
-				else if (y_prev && !y_next) {
-					y_prev->g_next = NULL;
-				}
-				//now put the moved object in its right place
-				y_prev = glist_nth(x, buf->u_index-1);
-				y_next = glist_nth(x, buf->u_index);
-
-				y_prev->g_next = y;
-				y->g_next = y_next;
-			}
-		}
+		if (action == UNDO_UNDO)
+			if (canvas_apply_restore_original_position(x, buf->u_index))
+				canvas_redraw(x);
 
 		// send a loadbang
         if (newest && pd_class(newest) == canvas_class)
         	canvas_loadbang((t_canvas *)newest);
 
 		// select
-        y = glist_nth(x, buf->u_index);
+		if (action == UNDO_REDO)
+			y = glist_nth(x, glist_getindex(x, 0) - 1);
+		else
+	        y = glist_nth(x, buf->u_index);
         glist_select(x, y);
     }
 	else if (action == UNDO_FREE) {
@@ -2144,7 +2088,7 @@ static void canvas_donecanvasdialog(t_glist *x,
 
 	/* parent windows are treated differently than applies to individual objects */
 	if (glist_getcanvas(x) != x && !canvas_isabstraction(x)) {
-		canvas_apply_setundo(glist_getcanvas(x), glist_getindex(glist_getcanvas(x),(t_gobj *)x));
+		canvas_apply_setundo(glist_getcanvas(x), (t_gobj *)x);
 	}
 	else /*if (x1!=x->gl_x1 || x2!=x->gl_x2 || y1!=x->gl_y1 || y2!=x->gl_y2 ||
 			graphme!=(x->gl_isgraph+2*x->gl_hidetext) || x->gl_pixwidth!=xpix ||
@@ -4032,6 +3976,7 @@ static void canvas_paste_atmouse(t_canvas *x)
 extern void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     int *indexp, int *totalp);
+extern int we_are_undoing;
 
 static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
@@ -4126,7 +4071,8 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	//if we are copying from external buffer and the current canvas is not empty
 	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") && !copyfromexternalbuffer ||
 		copyfromexternalbuffer && !canvas_empty) {
-		canvas_paste_atmouse(x);
+		if (!copyfromexternalbuffer) canvas_paste_xyoffset(x);
+		if (!we_are_undoing) canvas_paste_atmouse(x);
 		//fprintf(stderr,"doing a paste\n");
 	}
 	//else let's provide courtesy offset
