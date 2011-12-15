@@ -601,6 +601,9 @@ void canvas_undo_disconnect(t_canvas *x, void *z, int action)
 
 #define UCUT_CUT 1          /* operation was a cut */
 #define UCUT_CLEAR 2        /* .. a clear */
+
+// following action is not needed any more LATER remove any signs of UCUT_TEXT
+// since recreate takes care of this in a more elegant way
 #define UCUT_TEXT 3         /* text typed into a box */
 
 typedef struct _undo_cut        
