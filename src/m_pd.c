@@ -339,9 +339,14 @@ void pd_pushsym(t_pd *x)
     s__X.s_thing = x;
 }
 
+extern int abort_when_pasting_from_external_buffer;
+
 void pd_popsym(t_pd *x)
 {
-    if (!gstack_head || s__X.s_thing != x) bug("gstack_pop");
+    if (!gstack_head || s__X.s_thing != x) {
+		abort_when_pasting_from_external_buffer = 1;
+		bug("gstack_pop");
+	}
     else
     {
         t_gstack *headwas = gstack_head;

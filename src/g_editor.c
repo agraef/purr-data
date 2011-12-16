@@ -3706,12 +3706,19 @@ static t_binbuf *canvas_docopy(t_canvas *x)
     return (b);
 }
 
+static void canvas_reset_copyfromexternalbuffer(t_canvas *x)
+{
+	copyfromexternalbuffer = 0;
+}
+
+int abort_when_pasting_from_external_buffer = 0;
+
 static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
 	if (!x->gl_editor)
 		return;
 
-	if (ac == 0) {
+	if (!ac && !copyfromexternalbuffer) {
 		//fprintf(stderr,"init\n");
 		copyfromexternalbuffer = 1;
 		screenx1 = 0;
@@ -3721,12 +3728,13 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_at
 		copiedfont = 0;
 		binbuf_free(copy_binbuf);
 		copy_binbuf = binbuf_new();
-	} else if (copyfromexternalbuffer) {
+	} else if (ac && copyfromexternalbuffer) {
 		//fprintf(stderr,"fill %d\n", ac);
-		if (av[0].a_type == A_SYMBOL && strcmp(av[0].a_w.w_symbol->s_name, "#N")) {
+		if (av[0].a_type == A_SYMBOL && strcmp(av[0].a_w.w_symbol->s_name, "#N") || copyfromexternalbuffer != 1) {
 			binbuf_add(copy_binbuf, ac, av);
 			binbuf_addsemi(copy_binbuf);
-		} else if (ac == 7) {
+			copyfromexternalbuffer++;
+		} else if (copyfromexternalbuffer == 1 && av[0].a_type == A_SYMBOL && !strcmp(av[0].a_w.w_symbol->s_name, "#N") && ac == 7) {
 			int check = 0;
 			//if the canvas is empty resize window size and position here...
 			//fprintf(stderr,"copying canvas properties for copyfromexternalbuffer\n");
@@ -3746,15 +3754,19 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s, int ac, t_at
 				screeny2 = av[5].a_w.w_float;
 				check++;
 			}
-			if (av[5].a_type == A_FLOAT) {
+			if (av[6].a_type == A_FLOAT) {
 				copiedfont = av[6].a_w.w_float;
 				check++;
 			}
 			if (check != 5) {
 				post("error copying: copyfromexternalbuffer: canvas info has invalid data\n");
 				copyfromexternalbuffer = 0;
+			} else {
+				copyfromexternalbuffer++;
 			}
 		}
+	} else if (!ac && copyfromexternalbuffer) {
+		//here we can do things after the copying process has been completed. currently we don't need this.
 	}
 }
 
@@ -4101,7 +4113,12 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		canvas_redraw(x);
 	}*/
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
-    glist_donewloadbangs(x);
+	if (!abort_when_pasting_from_external_buffer) {
+	    glist_donewloadbangs(x);
+	} else {
+		error("failed pasting correctly from external buffer, likely due to incomplete text selection (a.k.a. user error). hopefully you saved your work... please get ready to crash...");
+	}
+	abort_when_pasting_from_external_buffer = 0;
 }
 
 static void canvas_paste(t_canvas *x)
@@ -4621,6 +4638,8 @@ void g_editor_setup(void)
         gensym("arraydialog"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_copyfromexternalbuffer,
         gensym("copyfromexternalbuffer"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_reset_copyfromexternalbuffer,
+        gensym("reset_copyfromexternalbuffer"), A_NULL);
 
 /* -------------- connect method used in reading files ------------------ */
     class_addmethod(canvas_class, (t_method)canvas_connect,

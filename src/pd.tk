@@ -1786,7 +1786,9 @@ proc menu_fixeditmenu {name} {
 			if { [string compare $last_clipboard $current_clipboard] } {
 				set data [split $current_clipboard "\n"]
 				set first 0
+				pd [concat $name reset_copyfromexternalbuffer\;]
 				foreach line $data { 
+					#puts stderr "pd.tk sends: $line\n"
 					if { !$first } {
 						pd [concat $name copyfromexternalbuffer\;]
 						pd [concat $name copyfromexternalbuffer $line\;]
@@ -1797,6 +1799,7 @@ proc menu_fixeditmenu {name} {
 				}
 				set global_clipboard 1
 				set last_clipboard $current_clipboard
+				pd [concat $name copyfromexternalbuffer\;]
 				pdtk_canvas_update_edit_menu $name 1
 			}
 		}

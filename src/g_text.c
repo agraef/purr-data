@@ -1824,7 +1824,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 			binbuf_gettext(x->te_binbuf, &c1, &i1);
 			binbuf_gettext(b, &c2, &i2);
 			if (strcmp(c1, c2)) {
-				fprintf(stderr,"text_setto calls canvas_undo_add\n");
+				//fprintf(stderr,"text_setto calls canvas_undo_add\n");
 				canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
 					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g, pos));
 		        int xwas = x->te_xpix, ywas = x->te_ypix;
