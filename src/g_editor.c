@@ -926,7 +926,7 @@ void *canvas_undo_set_paste(t_canvas *x, int offset)
 	if (x->gl_editor->e_selection && !x->gl_editor->e_selection->sel_next) {
 		//if only one object is selected which will warrant autopatching
 		buf->u_sel_index = glist_getindex(x, x->gl_editor->e_selection->sel_what);
-		fprintf(stderr,"canvas_undo_set_paste selected object index %d\n", buf->u_sel_index);
+		//fprintf(stderr,"canvas_undo_set_paste selected object index %d\n", buf->u_sel_index);
 	} else {
 		buf->u_sel_index = -1;
 	}
@@ -4013,6 +4013,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     t_gobj *newgobj, *last, *g2;
     int dspstate = canvas_suspend_dsp(), nbox, count;
 	int canvas_empty = 0;
+	int offset = 1;
 
 	//first let's see if we are pasting into an empty canvas
 	//this will be used below when pasting from copyfromexternalbuffer, usually text editor
@@ -4048,8 +4049,10 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	}
 
 	//if we have something selected in another canvas
-	if (c_selection && c_selection != x)
+	if (c_selection && c_selection != x) {
+		offset = 0;
 		glist_noselect(c_selection);
+	}
 	//else is we are pasting see if we can autopatch
 	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste")) {
 		canvas_howputnew(x, &connectme, &xpix, &ypix, &indx, &nobj);
@@ -4104,7 +4107,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		//fprintf(stderr,"doing a paste\n");
 	}
 	//else let's provide courtesy offset
-	else if (!copyfromexternalbuffer) {
+	else if (!copyfromexternalbuffer && offset) {
 		canvas_paste_xyoffset(x);
 	}
 
@@ -4165,18 +4168,17 @@ static void canvas_duplicate(t_canvas *x)
         canvas_copy(c_selection);
 		canvas_undo_add(x, 5, "duplicate", (void *)canvas_undo_set_paste(x, 0));
 		canvas_dopaste(x, copy_binbuf);
-		if (c_selection == x) //{
+		//if (c_selection == x) //{
 			/* we are in the same window */
 		    //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
 		    //    "duplicate");
-		    canvas_paste_xyoffset(x);
+		    //canvas_paste_xyoffset(x);
 		    //canvas_dirty(x, 1);
 		//} else {
 		    //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
 		    //    "duplicate");
 		    //canvas_dopaste(x, copy_binbuf);
-		    //canvas_paste_xyoffset(x);
-		    
+		    //canvas_paste_xyoffset(x);  
 		//}
 		canvas_dirty(x, 1);
     }
