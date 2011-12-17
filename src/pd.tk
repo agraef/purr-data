@@ -1786,15 +1786,27 @@ proc menu_fixeditmenu {name} {
 			if { [string compare $last_clipboard $current_clipboard] } {
 				set data [split $current_clipboard "\n"]
 				set first 0
+				set full_line ""
 				pd [concat $name reset_copyfromexternalbuffer\;]
-				foreach line $data { 
-					#puts stderr "pd.tk sends: $line\n"
-					if { !$first } {
-						pd [concat $name copyfromexternalbuffer\;]
-						pd [concat $name copyfromexternalbuffer $line\;]
-						set first 1
+				foreach line $data {
+					if { [string index $line end] == ";" } {
+						if { $full_line == "" } {
+							set full_line $line
+						} else {
+							append full_line " " $line
+						}
+						#puts stderr "pd.tk sends: |$line| |$full_line|\n"
+						if { !$first } {
+							pd [concat $name copyfromexternalbuffer\;]
+							pd [concat $name copyfromexternalbuffer $full_line\;]
+							set first 1
+						} else {
+							pd [concat $name copyfromexternalbuffer $full_line\;]
+						}
+						set full_line ""
 					} else {
-						pd [concat $name copyfromexternalbuffer $line\;]
+						append full_line " " $line
+						set full_line [string map {"\n" ""} $full_line]
 					}
 				}
 				set global_clipboard 1
