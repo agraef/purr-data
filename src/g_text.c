@@ -1844,7 +1844,19 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
                 canvas_updatewindowlist();
     }
-    else binbuf_text(x->te_binbuf, buf, bufsize);
+    else {
+		binbuf_gettext(x->te_binbuf, &c1, &i1);
+		t_binbuf *b = binbuf_new();
+		binbuf_text(b, buf, bufsize);
+		binbuf_gettext(b, &c2, &i2);
+		if (strcmp(c1, c2)) {
+			canvas_undo_add(glist_getcanvas(glist), 10, "typing",
+				(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g, pos));
+			//fprintf(stderr,"blah |%s| |%s|\n", c1, buf);
+		}
+		binbuf_text(x->te_binbuf, buf, bufsize);
+		binbuf_free(b);
+	}
 }
 
     /* this gets called when amessage gets sent to an object whose creation
