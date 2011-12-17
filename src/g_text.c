@@ -1445,6 +1445,8 @@ static t_widgetbehavior gatom_widgetbehavior =
 void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
+	if (pd_class(&ob->te_pd) == text_class)
+		return;
 	//fprintf(stderr,"glist_drawiofor\n");
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
@@ -1513,6 +1515,8 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
+	if (pd_class(&ob->te_pd) == text_class)
+		return;
 	//fprintf(stderr,"drawiofor_withtag\n");
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
     int width = x2 - x1;
