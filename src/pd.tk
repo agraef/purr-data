@@ -3828,7 +3828,7 @@ proc iemgui_clip_fontsize {id} {
 
     if {[eval concat $$var_iemgui_gn_fs] < $iemgui_define_min_fontsize} {
         set $var_iemgui_gn_fs $iemgui_define_min_fontsize
-        $id.label.fs_ent configure -textvariable $var_iemgui_gn_fs
+        $id.label.fontsize_entry configure -textvariable $var_iemgui_gn_fs
     }
 }
 
