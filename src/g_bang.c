@@ -248,43 +248,48 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 		    sys_vgui(".x%lx.c itemconfigure %lxBUT -outline $select_color\n", canvas, x);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
-			if (x->x_gui.scale_vis)
-				sys_vgui("destroy %s\n", sh->h_pathname);
+			// check if we are drawing inside a gop abstraction visible on parent canvas
+			// if so, disable drawing of the handles
+			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
-			sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
-				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-			sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxBNG}\n",
-				 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w - SCALEHANDLE_WIDTH - 1,
-				 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
-				 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-				 sh->h_pathname, x, x);
-			sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-				 sh->h_pathname, sh->h_bindsym->s_name);
-			sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-				 sh->h_pathname, sh->h_bindsym->s_name);
-			sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-				 sh->h_pathname, sh->h_bindsym->s_name);
-			x->x_gui.scale_vis = 1;
+				if (x->x_gui.scale_vis)
+					sys_vgui("destroy %s\n", sh->h_pathname);
 
-			if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
-			{
-				if (x->x_gui.label_vis)
-					sys_vgui("destroy %s\n", lh->h_pathname);
-
-				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
-					lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxBNG}\n",
-					canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
-					x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
-					LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-					lh->h_pathname, x, x);
+				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxBNG}\n",
+					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w - SCALEHANDLE_WIDTH - 1,
+					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
+					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+					 sh->h_pathname, x, x);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-					lh->h_pathname, lh->h_bindsym->s_name);
+					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-					lh->h_pathname, lh->h_bindsym->s_name);
+					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-					lh->h_pathname, lh->h_bindsym->s_name); 
-				x->x_gui.label_vis = 1;
+					 sh->h_pathname, sh->h_bindsym->s_name);
+				x->x_gui.scale_vis = 1;
+
+				if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
+				{
+					if (x->x_gui.label_vis)
+						sys_vgui("destroy %s\n", lh->h_pathname);
+
+					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxBNG}\n",
+						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
+						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
+						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
+						lh->h_pathname, x, x);
+					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+						lh->h_pathname, lh->h_bindsym->s_name);
+					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+						lh->h_pathname, lh->h_bindsym->s_name);
+					sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+						lh->h_pathname, lh->h_bindsym->s_name); 
+					x->x_gui.label_vis = 1;
+				}
 			}
 
 			sys_vgui(".x%lx.c addtag selected withtag %lxBNG\n", canvas, x);

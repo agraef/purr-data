@@ -1210,8 +1210,8 @@ static void gatom_displace_withtag(t_gobj *z, t_glist *glist,
 {
     t_gatom *x = (t_gatom*)z;
     text_displace_withtag(z, glist, dx, dy);
-    sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
-        x, dx, dy);
+    //sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
+    //    x, dx, dy);
 }
 
 static void text_select(t_gobj *z, t_glist *glist, int state)
@@ -1227,9 +1227,17 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     if (glist_isvisible(glist) && gobj_shouldvis(&x->te_g, glist)) {
         sys_vgui(".x%lx.c itemconfigure %sR -outline %s\n", glist_getcanvas(glist), 
                  rtext_gettag(y), (state? "$select_color" : outline));
+		if (z->g_pd == gatom_class) {
+    		sys_vgui("catch {.x%lx.c itemconfigure %lx.l -fill %s}\n", glist_getcanvas(glist), 
+				x, (state? "$select_color" : "$text_color"));
+		}
 		if (z->g_pd->c_wb && z->g_pd->c_wb->w_displacefnwtag) {
 			int i, ni, no;
 			if (state) {
+				if (z->g_pd == gatom_class) {
+					sys_vgui(".x%lx.c addtag selected withtag %lx.l\n",
+						glist_getcanvas(glist), x);					
+				}
 		    	sys_vgui(".x%lx.c addtag selected withtag %sR \n",
 		    	    glist_getcanvas(glist), rtext_gettag(y));
 
@@ -1250,6 +1258,10 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
         	    		glist_getcanvas(glist), rtext_gettag(y), i);
 				}
 			} else {
+				if (z->g_pd == gatom_class) {
+					sys_vgui(".x%lx.c dtag %lx.l selected\n",
+						glist_getcanvas(glist), x);					
+				}
 		    	sys_vgui(".x%lx.c dtag %sR selected\n",
 		        	glist_getcanvas(glist), rtext_gettag(y));
 
