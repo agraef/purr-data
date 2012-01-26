@@ -1049,7 +1049,7 @@ void *canvas_undo_set_apply(t_canvas *x, int n)
 	if (!x->gl_edit)
 		canvas_editmode(x, 1);
 	obj = glist_nth(x, n);
-	if (!glist_isselected(x, obj))
+	if (obj && !glist_isselected(x, obj))
 		glist_select(x, obj);
     int nnotsel= glist_selectionindex(x, 0, 0); /* get number of all items for the offset below */
     buf = (t_undo_apply *)getbytes(sizeof(*buf));

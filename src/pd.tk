@@ -2897,7 +2897,7 @@ proc pdtk_canvas_mouseup {name x y b} {
 #}
 
 proc pdtk_select_all_gop_widgets {name gop state} {
-	#puts stderr "======================$name"
+	#puts stderr "======================$name $gop"
 	foreach item [$name.c find all] {
 		#puts stderr [$name.c gettags $item]
 		foreach tag [$name.c gettags $item] {

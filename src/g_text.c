@@ -1150,6 +1150,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
 static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
+	//fprintf(stderr,"text_displace\n");
     t_text *x = (t_text *)z;
     x->te_xpix += dx;
     x->te_ypix += dy;
@@ -1166,14 +1167,15 @@ static void text_displace(t_gobj *z, t_glist *glist,
 static void text_displace_withtag(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
+	//fprintf(stderr,"text_displace_withtag\n");
     t_text *x = (t_text *)z;
     x->te_xpix += dx;
     x->te_ypix += dy;
     if (glist_isvisible(glist))
     {
         t_rtext *y = glist_findrtext(glist, x);
-        text_drawborder_withtag(x, glist, rtext_gettag(y),
-            rtext_width(y), rtext_height(y), 0);
+        //text_drawborder_withtag(x, glist, rtext_gettag(y),
+        //    rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
 		/*if this is a subpatcher in which case we may be possibly moving nlets around
 		  which in turn requires that we redraw parent's nlets */

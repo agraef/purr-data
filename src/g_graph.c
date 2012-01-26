@@ -1052,19 +1052,11 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
-        text_widgetbehavior.w_displacefn(z, glist, dx, dy);
+        text_widgetbehavior.w_displacefnwtag(z, glist, dx, dy);
     else
     {
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
-		/*char tag[80];
-		sprintf(tag, "%s", rtext_gettag(glist_findrtext((x->gl_owner ? x->gl_owner: x), &x->gl_obj)));
-        sys_vgui(".x%lx.c move %s %d %d\n",
-            glist_getcanvas(x->gl_owner), tag, dx, dy);
-        sys_vgui(".x%lx.c move %sR %d %d\n",
-            glist_getcanvas(x->gl_owner), tag, dx, dy);*/
-        //glist_redraw(x);
-		//gobj_select(z, glist, 1);
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
     }
 }
@@ -1092,16 +1084,23 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void graph_select(t_gobj *z, t_glist *glist, int state)
 {
-	//fprintf(stderr,"graph_select\n");
+	//fprintf(stderr,"graph_select .x%lx...\n", (t_int)z);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
         text_widgetbehavior.w_selectfn(z, glist, state);
-    else if(glist_istoplevel(glist))
+    else //if(glist_istoplevel(glist))
     {
+		//fprintf(stderr,"...yes\n");
         t_rtext *y = glist_findrtext(glist, &x->gl_obj);
         if (canvas_showtext(x))
             rtext_select(y, state);
-        sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", glist, 
+		t_glist *canvas;
+		if (!glist_istoplevel(glist)) {
+			canvas = glist_getcanvas(glist);
+		} else {
+			canvas = glist;
+		}
+        sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", canvas, 
                  rtext_gettag(y), (state? "$select_color" : "$graph_outline"));
 /*
         sys_vgui(".x%lx.c itemconfigure graph%lx -fill %s\n",
@@ -1109,13 +1108,13 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
                  (state? "$select_color" : "$graph_outline"));
 */
         sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
-                 glist, rtext_gettag(y), 
+                 canvas, rtext_gettag(y), 
                  (state? "$select_color" : "black"));
 		t_gobj *g;
 		if (x->gl_list)
 			for (g = x->gl_list; g; g = g->g_next)
 				gobj_select(g, x, state);
-		sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n", glist, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
+		sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n", canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
 }
 
