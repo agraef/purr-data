@@ -917,6 +917,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         for (g = x->gl_list; g; g = g->g_next) {
             gobj_vis(g, x, 1);
 		}
+		/* reselect it upon redrawing if it was selected before */
+		if (glist_isselected(parent_glist, gr))
+			gobj_select(gr, parent_glist, 1);
     }
     else
     {
@@ -1050,6 +1053,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 
 static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
+	//fprintf(stderr,"graph_displace_withtag %d %d\n", dx, dy);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
         text_widgetbehavior.w_displacefnwtag(z, glist, dx, dy);
@@ -1063,6 +1067,7 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
+	//fprintf(stderr,"graph_displace %d %d\n", dx, dy);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
         text_widgetbehavior.w_displacefn(z, glist, dx, dy);
@@ -1084,7 +1089,7 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void graph_select(t_gobj *z, t_glist *glist, int state)
 {
-	//fprintf(stderr,"graph_select .x%lx...\n", (t_int)z);
+	//fprintf(stderr,"graph_select .x%lx %d...\n", (t_int)z, state);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
         text_widgetbehavior.w_selectfn(z, glist, state);

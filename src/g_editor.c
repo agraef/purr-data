@@ -4474,20 +4474,21 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
             	magicGlass_unbind(x->gl_magic_glass);
             	magicGlass_hide(x->gl_magic_glass);
 			}
-            // end jsarlo
+		        // end jsarlo
+			//dpsaha@vt.edu called to delete the GOP_blob
+			if (x->gl_goprect)		canvas_draw_gop_resize_hooks(x);
         }
 		canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
     }
-    sys_vgui("pdtk_canvas_editval .x%lx %d\n",
-        glist_getcanvas(x), x->gl_edit);
+    if (glist_isvisible(x))
+		sys_vgui("pdtk_canvas_editval .x%lx %d\n",
+        	glist_getcanvas(x), x->gl_edit);
 	/*if (!x->gl_edit) {
 		sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" -indicatoron false -state disabled\n", glist_getcanvas(x));
 	}
 	else {
 		sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" -indicatoron false -state normal\n", glist_getcanvas(x));
 	}*/
-	//dpsaha@vt.edu called to delete the GOP_blob
-	if (x->gl_goprect)		canvas_draw_gop_resize_hooks(x);
 }
 
 // jsarlo

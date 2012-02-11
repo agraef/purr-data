@@ -5091,12 +5091,13 @@ proc pdtk_data_dialog {name stuff} {
 #####################iemlib#######################
 proc pdtk_canvas_editval {name value} {
 	#global colors
-
-    if { $value } {
-        $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d"
-    } else {                          
-        $name.m.edit entryconfigure "Edit mode" -indicatoron false -background {}
-    }                                                 
+	#if {[winfo exists $name]} {
+		if { $value } {
+		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d"
+		} else {                          
+		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background {}
+		}
+	#}                                             
 }
 #####################iemlib#######################
 
