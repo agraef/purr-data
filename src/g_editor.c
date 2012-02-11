@@ -3006,7 +3006,7 @@ void canvas_mouseup(t_canvas *x,
             t_glist *gl2;
                 /* first though, check we aren't an abstraction with a
                 dirty sub-patch that would be discarded if we edit this. */
-            if (pd_class(&g->g_pd) == canvas_class &&
+            /*if (pd_class(&g->g_pd) == canvas_class &&
                 canvas_isabstraction((t_glist *)g) &&
                     (gl2 = glist_finddirty((t_glist *)g)))
             {
@@ -3017,7 +3017,7 @@ void canvas_mouseup(t_canvas *x,
                     canvas_getrootfor(gl2),
                     canvas_getrootfor(gl2)->gl_name->s_name, gl2);
                 return;
-            }
+            }*/
             /* OK, activate it */
 
 			/*
@@ -3037,10 +3037,10 @@ void canvas_mouseup(t_canvas *x,
 			}
 			// else if it is a regular object
 			*/
-			else {
+			//else {
 				//fprintf(stderr,"reg_obj\n");
 				gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
-			}
+			//}
         }
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     }
