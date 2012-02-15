@@ -219,7 +219,7 @@ static void *openpanel_new( void)
 
 static void openpanel_symbol(t_openpanel *x, t_symbol *s)
 {
-    char *path = (s && s->s_name) ? s->s_name : "\"\"";
+    char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
     sys_vgui("pdtk_openpanel {%s} {%s}\n", x->x_s->s_name, path);
 }
 
@@ -275,7 +275,7 @@ static void *savepanel_new( void)
 
 static void savepanel_symbol(t_savepanel *x, t_symbol *s)
 {
-    char *path = (s && s->s_name) ? s->s_name : "\"\"";
+    char *path = (s && s->s_name) ? s->s_name : "$pd_opendir";
     sys_vgui("pdtk_savepanel {%s} {%s}\n", x->x_s->s_name, path);
 }
 
