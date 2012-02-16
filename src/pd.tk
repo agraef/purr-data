@@ -1081,15 +1081,25 @@ proc menu_raisenextwindow {} {
 proc menu_raise_console {} {
 	set pd_window .
 	set top_window [lindex [wm stackorder $pd_window] end]
+	focus .
 	if {$pd_window eq $top_window} {
 		lower $pd_window
-		catch {lower .printout}
+		.controls.switches.console instate {selected} {
+			lower .printout
+		}
+		#catch {lower .printout}
 	} else {
 		wm deiconify $pd_window
 		raise $pd_window
-		catch {wm deiconify .printout}
-		catch {wm manage .prinout}
-		raise .printout
+		.controls.switches.console instate {selected} {
+			wm deiconify .printout
+			wm manage .printout
+			raise .printout
+			#focus .printout
+		}
+		#catch {wm deiconify .printout}
+		#catch {wm manage .prinout}
+		#raise .printout
 	}
 }
 
