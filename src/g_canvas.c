@@ -878,7 +878,6 @@ void glist_menu_open(t_glist *x)
     } else {
         if (x->gl_editor)
             canvas_destroy_editor(x);
-		x->gl_havewindow = 1;
 	}
     canvas_vis(x, 1);
 }
