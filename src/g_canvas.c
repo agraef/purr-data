@@ -875,7 +875,11 @@ void glist_menu_open(t_glist *x)
                     /* redraw ourself in parent window (blanked out this time) */
             gobj_vis(&x->gl_gobj, gl2, 1);
         }
-    }
+    } else {
+        if (x->gl_editor)
+            canvas_destroy_editor(x);
+		x->gl_havewindow = 1;
+	}
     canvas_vis(x, 1);
 }
 
@@ -987,7 +991,7 @@ void canvas_deletelinesfor(t_canvas *x, t_text *text)
     {
         if (t.tr_ob == text || t.tr_ob2 == text)
         {
-            if (x->gl_editor)
+            if (x->gl_editor && glist_isvisible(glist_getcanvas(x)))
             {
                 sys_vgui(".x%lx.c delete l%lx\n",
                     glist_getcanvas(x), oc);

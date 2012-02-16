@@ -3455,7 +3455,14 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
         g = glist_finddirty(x);
         if (g)
         {
-            vmess(&g->gl_pd, gensym("menu-open"), "");
+			if (!glist_istoplevel(g) && g->gl_env) {
+				/* if this is an abstraction */
+            	vmess(&g->gl_pd, gensym("menu-open"), "");
+			} else {
+				/* is this even necessary? */
+	            canvas_vis(g, 1);
+			}
+            //vmess(&g->gl_pd, gensym("menu-open"), "");
 			if (!glist_istoplevel(g) && g->gl_env) {
 				/* if this is an abstraction */
             	sys_vgui("pdtk_canvas_menuclose .x%lx {.x%lx menuclose 2;}\n",
