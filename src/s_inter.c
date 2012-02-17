@@ -1311,8 +1311,9 @@ void sys_bail(int n)
     else _exit(1);
 }
 
-extern t_pd *garray_arraytemplatecanvas;
-extern t_pd *garray_floattemplatecanvas;
+//extern t_pd *garray_arraytemplatecanvas;
+//extern t_pd *garray_floattemplatecanvas;
+extern void glob_closeall(void *dummy, t_floatarg fforce);
 
 void glob_quit(void *dummy)
 {
@@ -1323,6 +1324,7 @@ void glob_quit(void *dummy)
 	//let's try to cleanly remove invisible template canvases
 	//if (garray_arraytemplatecanvas) canvas_free( (t_canvas *)garray_arraytemplatecanvas);
 	//if (garray_floattemplatecanvas) canvas_free( (t_canvas *)garray_floattemplatecanvas);
+	glob_closeall(0, 1);
     sys_vgui("exit\n");
     if (!sys_nogui)
     {

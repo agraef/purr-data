@@ -3346,6 +3346,19 @@ static t_glist *glist_finddirty(t_glist *x)
     return (0);
 }
 
+void canvas_menuclose(t_canvas *x, t_floatarg fforce);
+/* properly close all open root canvases */
+void glob_closeall(void*dummy, t_floatarg fforce)
+{
+  t_canvas*x, *y;
+  for (x = canvas_list; x; )
+    {
+      y=x->gl_next;
+      canvas_menuclose(x, fforce); /* forced closing of this root canvas */
+      x=y;
+    }
+}
+
     /* quit, after calling glist_finddirty() on all toplevels and verifying
     the user really wants to discard changes  */
 void glob_verifyquit(void *dummy, t_floatarg f)
@@ -3579,6 +3592,9 @@ static void canvas_find_parent(t_canvas *x)
 {
     if (x->gl_owner)
         canvas_vis(glist_getcanvas(x->gl_owner), 1);
+	else {
+		sys_gui("menu_raise_console;\n");
+	}
 }
 
 static int glist_dofinderror(t_glist *gl, void *error_object)
