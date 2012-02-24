@@ -420,8 +420,8 @@ static void my_canvas_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1, int
     
     *xp1 = text_xpix(&x->x_gui.x_obj, glist);
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
-    *xp2 = *xp1 + x->x_gui.x_w;
-    *yp2 = *yp1 + x->x_gui.x_h;
+    *xp2 = *xp1 + x->x_vis_w;
+    *yp2 = *yp1 + x->x_vis_h;
 }
 
 static void my_canvas_save(t_gobj *z, t_binbuf *b)
