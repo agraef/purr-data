@@ -509,10 +509,11 @@ static void canvas_undo(t_canvas *x)
 
 static void canvas_redo(t_canvas *x)
 {
+	//fprintf(stderr,"canvas_redo\n");
     if (x != canvas_undo_canvas)
-        bug("canvas_undo 1");
+        bug("canvas_redo 1");
     else if (canvas_undo_whatnext != UNDO_REDO)
-        bug("canvas_undo 2");
+        bug("canvas_redo 2");
     else
     {
         /* post("redo"); */
@@ -1005,7 +1006,7 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
             //    canvas_undo_set_cut(gl, UCUT_CLEAR), "clear");
 			canvas_undo_add(gl, 3, "clear", canvas_undo_set_cut(gl, UCUT_CLEAR));
             canvas_doclear(gl);
-            canvas_undo(gl);
+            canvas_undo_undo(gl);
             glist_noselect(gl);
             g = glist_nth(gl, j);
         }
