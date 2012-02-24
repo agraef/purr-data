@@ -497,7 +497,6 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 	x->move_offset_y = 0;
 	x->move_vis = 0;
 
-	//TODO: figure out why pd creates 2 invisible canvases at start-up
 	x->u_queue = canvas_undo_init(x);
 
     return(x);
@@ -1816,27 +1815,30 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
 				// check if the text is not hidden
 				// if so make minimum width and height based retrieved from getrect
-				if (!x->gl_hidetext && x->gl_owner) {
-					gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);
-					if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
-					if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
-				} else {
-					// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
-					// later consider instead of hardwiring values pulling these more intelligently from
-					// a common place THIS SHOULD BE LATER MERGED WITH GRPAH_GETRECT
-					int fw = sys_fontwidth(x->gl_font);
-					int fh = sys_fontheight(x->gl_font);
-					int tcols = strlen(x->gl_name->s_name) - 3;
-					int th = fh + fh * (tcols/60) + 4;
-					if (tcols > 60) tcols = 60;
-					int tw = fw * tcols + 4;
-					if (tw + x1 > x2)
-						x2 = tw + x1;
-					if (th + y1 > y2)
-						y2 = th + y1;
-					if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
-					if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
-					//fprintf(stderr,"graph_getrect->text_getrect %d=%d %d=%d\n", fw, x2, fh, y2);
+				if (!x->gl_hidetext)
+				{
+					if (x->gl_owner) {
+						gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);
+						if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
+						if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
+					} else {
+						// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
+						// later consider instead of hardwiring values pulling these more intelligently from
+						// a common place THIS SHOULD BE LATER MERGED WITH GRPAH_GETRECT
+						int fw = sys_fontwidth(x->gl_font);
+						int fh = sys_fontheight(x->gl_font);
+						int tcols = strlen(x->gl_name->s_name) - 3;
+						int th = fh + fh * (tcols/60) + 4;
+						if (tcols > 60) tcols = 60;
+						int tw = fw * tcols + 4;
+						if (tw + x1 > x2)
+							x2 = tw + x1;
+						if (th + y1 > y2)
+							y2 = th + y1;
+						if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
+						if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
+						//fprintf(stderr,"graph_getrect->text_getrect %d=%d %d=%d\n", fw, x2, fh, y2);
+					}
 				}
 
 				canvas_dirty(x, 1);
