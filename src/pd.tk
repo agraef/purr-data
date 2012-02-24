@@ -763,7 +763,7 @@ proc pdtk_capture_root_window_keys {state key iso shift} {
 	# pdtk_post "$first_patch_window_name\n"
 
 	if { [string length $first_patch_window_name] > 0 } {
-		pdtk_canvas_sendkey $first_patch_window_name.c $state $key $iso $shift
+		pdtk_canvas_sendkey $first_patch_window_name.c $state $key $iso $shift 0
 	}
 }
 
@@ -2484,15 +2484,15 @@ proc pdtk_canvas_new {name width height geometry editable} {
     if {$pd_nt == 2} {
         bind $name.c <Mod1-Key> {pdtk_canvas_ctrlkey %W %K 0}
         bind $name.c <Mod1-Shift-Key> {pdtk_canvas_ctrlkey %W %K 1}
-        bind $name.c <Mod1-BackSpace> {pdtk_canvas_sendkey %W 1 %K %A 0}
+        bind $name.c <Mod1-BackSpace> {pdtk_canvas_sendkey %W 1 %K %A 0 1}
         bind $name.c <Mod1-quoteleft> {menu_raisenextwindow}
     } else {
         bind $name.c <Control-Next>   {menu_raisenextwindow}
         #bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 	}
-    bind $name.c <Key> {pdtk_canvas_sendkey %W 1 %K %A 0}
-    bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1}
-    bind $name.c <KeyRelease> {pdtk_canvas_sendkey %W 0 %K %A 0}
+    bind $name.c <Key> {pdtk_canvas_sendkey %W 1 %K %A 0 1}
+    bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1 1}
+    bind $name.c <KeyRelease> {pdtk_canvas_sendkey %W 0 %K %A 0 1}
     bind $name.c <Motion> {pdtk_canvas_motion %W %x %y 0}
     bind $name.c <Control-Motion> {pdtk_canvas_motion %W %x %y 2}
 	
@@ -2527,7 +2527,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     set pdtk_canvas_mouseup_name ""
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
-	bind $name <FocusOut> { pdtk_noselect %W }
+	# bind $name <FocusOut> { pdtk_noselect %W }
     focus $name.c
 }
 
@@ -3080,7 +3080,7 @@ proc pdtk_canvas_getscroll {name} {
     pdtk_canvas_checkgeometry [canvastosym $name]
 }
 
-proc pdtk_canvas_sendkey {name state key iso shift} {
+proc pdtk_canvas_sendkey {name state key iso shift focus} {
     global pd_nt
 	global ctrl_l_down
 	global ctrl_r_down
@@ -3141,7 +3141,7 @@ proc pdtk_canvas_sendkey {name state key iso shift} {
 		set state 1
 	}
 
-	pd [canvastosym $name] key $state $key $shift \;
+	pd [canvastosym $name] key $state $key $shift $focus\;
 }
 
 # only do actions if this is a canvas.

@@ -3121,6 +3121,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     t_symbol *gotkeysym;
         
     int down, shift;
+	int focus = 1;
     
     if (ac < 3)
         return;
@@ -3159,6 +3160,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 #if 0
     post("keynum %d, down %d, gotkeysym %s", (int)keynum, down, gotkeysym->s_name);
 #endif
+	if (ac == 4) focus = (int)(av[3].a_w.w_float);
     if (keynum == '\r') keynum = '\n';
     if (av[1].a_type == A_SYMBOL &&
         !strcmp(av[1].a_w.w_symbol->s_name, "Return"))
@@ -3201,12 +3203,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             x->gl_editor->e_onmotion = MA_NONE;
             /* if an object has "grabbed" keys just send them on */
         if (x->gl_editor->e_grab
-            && x->gl_editor->e_keyfn && keynum)
+            && x->gl_editor->e_keyfn && keynum && focus)
                 (* x->gl_editor->e_keyfn)
                     (x->gl_editor->e_grab, (t_float)keynum);
             /* if a text editor is open send the key on, as long as
             it is either "real" (has a key number) or else is an arrow key. */
-        else if (x->gl_editor->e_textedfor && (keynum
+        else if (x->gl_editor->e_textedfor && focus && (keynum
             || !strcmp(gotkeysym->s_name, "Up")
             || !strcmp(gotkeysym->s_name, "Down")
             || !strcmp(gotkeysym->s_name, "Left")
@@ -3230,8 +3232,9 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
                 canvas_dirty(x, 1);
         }
             /* check for backspace or clear */
-        else if (keynum == 8 || keynum == 127)
+        else if ((keynum == 8 || keynum == 127) && focus)
         {
+			//fprintf(stderr,"backspace or clear\n");
             if (x->gl_editor->e_selectedline)
                 canvas_clearline(x);
             else if (x->gl_editor->e_selection)
