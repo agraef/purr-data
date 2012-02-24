@@ -719,7 +719,7 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
 /*********** dpsaha@vt.edu resize move hooks ****************/
 void canvas_draw_gop_resize_hooks(t_canvas* x)
 {
-	if(x->gl_edit){
+	if(x->gl_edit && glist_isvisible(x) && glist_istoplevel(x) && x->gl_goprect && !x->gl_editor->e_selection) {
 		
 		//Drawing and Binding Resize_Blob for GOP
 		t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
@@ -761,8 +761,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 
 	}
 	else{
-		sys_vgui(".x%lx.c delete GOP_resblob\n",x);					//delete the GOP_resblob
-		sys_vgui(".x%lx.c delete GOP_movblob\n",x);					//delete the GOP_movblob	
+		sys_vgui("catch { .x%lx.c delete GOP_resblob ; .x%lx.c delete GOP_movblob ; } \n", x, x);					//delete the GOP_resblob and GOP_movblob	
 	}
 }
 /*****************************************************************************/

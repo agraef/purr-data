@@ -57,6 +57,7 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     t_floatarg yresize);
 extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
+extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 
 struct _outlet
 {
@@ -208,6 +209,7 @@ void glist_selectline(t_glist *x, t_outconnect *oc, int index1,
         sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
             glist_getcanvas(x), x->gl_editor->e_selectline_tag);
 		c_selection = x;
+		canvas_draw_gop_resize_hooks(x);
     }
 }
 
@@ -232,6 +234,7 @@ void glist_deselectline(t_glist *x)
             (issignal ? "$signal_cord" : "$msg_cord"));
         sys_vgui(".x%lx.c dtag l%lx selected\n",
             glist_getcanvas(x), glist_getcanvas(x)->gl_editor->e_selectline_tag);
+		canvas_draw_gop_resize_hooks(x);
     }    
 }
 
@@ -266,6 +269,7 @@ void glist_select(t_glist *x, t_gobj *y)
 		c_selection = x;
 
 		sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
+		canvas_draw_gop_resize_hooks(x);
     }
 }
 
@@ -356,6 +360,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
             canvas_resume_dsp(1);
 		if (!x->gl_editor->e_selection)
 			sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
+		canvas_draw_gop_resize_hooks(x);
     }
     reenter = 0;
 }
@@ -373,6 +378,7 @@ void glist_noselect(t_glist *x)
             glist_deselectline(x);
 		if (c_selection == x)
 			c_selection = NULL;
+		canvas_draw_gop_resize_hooks(x);
     }
 }
 
@@ -399,6 +405,7 @@ void glist_selectall(t_glist *x)
             sel->sel_next = 0;
 			c_selection = x;
         }
+		canvas_draw_gop_resize_hooks(x);
     }
 }
 
@@ -4452,8 +4459,6 @@ void glob_key(void *dummy, t_symbol *s, int ac, t_atom *av)
         /* canvas_editing can be zero; canvas_key checks for that */
     canvas_key(canvas_editing, s, ac, av);
 }
-
-extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 
 void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 {
