@@ -743,6 +743,7 @@ bind . <$ctrl_key-Key-a> {.printout.frame.text tag add sel 1.0 end}
 #bind . <$ctrl_key-Key-x> {tk_textCut .printout.frame.text; \
 #	.mbar.edit entryconfigure "Paste" -state normal}
 bind . <$ctrl_key-Key-c> {tk_textCopy .printout.frame.text}
+bind .printout <$ctrl_key-Key-c> {tk_textCopy .printout.frame.text}
 #	.mbar.edit entryconfigure "Paste" -state normal}
 #bind . <$ctrl_key-Key-v> {tk_textPaste .printout.frame.text}
 bind . <$ctrl_key-Key-w> {menu_quit}
@@ -789,6 +790,7 @@ catch {
 if { [info tclversion] >= 8.5 && $pd_nt == 0 } { wm resizable . 0 0 }
 # Intercept closing the main pd window: MP 20060413:
 wm protocol . WM_DELETE_WINDOW menu_quit
+focus .
 
 
 ############### set up global variables ################################
