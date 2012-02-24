@@ -2527,7 +2527,13 @@ proc pdtk_canvas_new {name width height geometry editable} {
     set pdtk_canvas_mouseup_name ""
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
+	bind $name <FocusOut> { pdtk_noselect %W }
     focus $name.c
+}
+
+proc pdtk_noselect {name} {
+	set topname [string trimright $name .c]
+	pd [concat $topname noselect \;]
 }
 
 #### jsarlo #####
