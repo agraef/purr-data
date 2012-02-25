@@ -435,18 +435,19 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 		        x->x_buf[0] = 0;
 		        sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
 		    }
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline $select_color\n",
-		        canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
-		        canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n",
-		        canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill $select_color\n",
-		        canvas, x);
 
 			// check if we are drawing inside a gop abstraction visible on parent canvas
-			// if so, disable drawing of the handles
+			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
+
+				sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline $select_color\n",
+				    canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
+				    canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n",
+				    canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill $select_color\n",
+				    canvas, x);
 
 				if (x->x_gui.scale_vis)
 					sys_vgui("destroy %s\n", sh->h_pathname);

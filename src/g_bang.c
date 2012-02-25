@@ -244,13 +244,13 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 
 		if(x->x_gui.x_fsf.x_selected)
 		{
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxBUT -outline $select_color\n", canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
-
 			// check if we are drawing inside a gop abstraction visible on parent canvas
-			// if so, disable drawing of the handles
+			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
+
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBUT -outline $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
 				if (x->x_gui.scale_vis)
 					sys_vgui("destroy %s\n", sh->h_pathname);

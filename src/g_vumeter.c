@@ -456,24 +456,24 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 
 		if(x->x_gui.x_fsf.x_selected)
 		{
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
-		    for(i=1; i<=IEM_VU_STEPS; i++)
-		    {
-		        if(((i+2)&3) && (x->x_scale))
-		            sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $select_color\n",
-		                     canvas, x, i);
-		    }
-		    if(x->x_scale)
-		    {
-		        i=IEM_VU_STEPS+1;
-		        sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $select_color\n",
-		                 canvas, x, i);
-		    }
-		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
-
 			// check if we are drawing inside a gop abstraction visible on parent canvas
-			// if so, disable drawing of the handles
+			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
+
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+				for(i=1; i<=IEM_VU_STEPS; i++)
+				{
+				    if(((i+2)&3) && (x->x_scale))
+				        sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $select_color\n",
+				                 canvas, x, i);
+				}
+				if(x->x_scale)
+				{
+				    i=IEM_VU_STEPS+1;
+				    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $select_color\n",
+				             canvas, x, i);
+				}
+				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
 				if (x->x_gui.scale_vis)
 					sys_vgui("destroy %s\n", sh->h_pathname);

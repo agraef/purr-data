@@ -262,12 +262,13 @@ void toggle_draw_select(t_toggle* x, t_glist* glist)
 
 		if(x->x_gui.x_fsf.x_selected)
 		{
+
+			// check if we are drawing inside a gop abstraction visible on parent canvas
+			// if so, disable highlighting
+			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
+
 		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
-
-		// check if we are drawing inside a gop abstraction visible on parent canvas
-		// if so, disable drawing of the handles
-		if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
 				if (x->x_gui.scale_vis)
 					sys_vgui("destroy %s\n", sh->h_pathname);
