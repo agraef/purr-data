@@ -1173,16 +1173,16 @@ static void curve_vis(t_gobj *z, t_glist *glist,
                 fill, outline);
             else sys_vgui("-fill %s\\\n", outline);
             if (flags & BEZ) sys_vgui("-smooth 1\\\n");
-            sys_vgui("-tags .x%lx%s.curve%lx\n", glist_getcanvas(glist), 
-				(glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))),data);
+            sys_vgui("-tags .x%lx.x%lx.curve%lx\n", glist_getcanvas(glist), glist,
+				data);
         }
         else post("warning: curves need at least two points to be graphed");
     }
     else
     {
-        if (n > 1) sys_vgui(".x%lx.c delete .x%lx%s.curve%lx\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), 
-			(glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))),data);      
+        if (n > 1) sys_vgui(".x%lx.c delete .x%lx.x%lx.curve%lx\n",
+            glist_getcanvas(glist), glist_getcanvas(glist), glist,
+			data);      
     }
 }
 
@@ -1648,8 +1648,8 @@ static void plot_vis(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int tovis)
 {
-	//fprintf(stderr,"plot_vis %lx %lx %lx %s\n", (t_int)z, (t_int)glist, (t_int)glist_getcanvas(glist), rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
     t_plot *x = (t_plot *)z;
+	fprintf(stderr,"plot %lx glist %lx glist_getcanvas %lx plot->x_obj %lx plot->x_canvas %lx\n", (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist), (t_int)&x->x_obj, (t_int)x->x_canvas);
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -1720,14 +1720,14 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 {
 					//we subtract 1 from y to keep it in sync with the rest of the types of templates
                     sys_vgui(
-".x%lx.c create rectangle %d %d %d %d -fill black -width 0  -tags .x%lx%s.plot%lx\n",
+".x%lx.c create rectangle %d %d %d %d -fill black -width 0  -tags .x%lx.x%lx.plot%lx\n",
                         glist_getcanvas(glist),
                         ixpix, (int)glist_ytopixels(glist, 
                             basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
                         inextx, (int)(glist_ytopixels(glist, 
                             basey + fielddesc_cvttocoord(yfielddesc, maxyval))
-                                + linewidth) - 1, glist_getcanvas(glist), 
-						(glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))), data);
+                                + linewidth) - 1, glist_getcanvas(glist), glist,
+						 data);
                     ndrawn++;
                     minyval = 1e20;
                     maxyval = -1e20;
@@ -1820,8 +1820,8 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     outline, outline);
                 if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n");
 
-                sys_vgui("-tags .x%lx%s.plot%lx\n", glist_getcanvas(glist), 
-					(glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))), data);
+                sys_vgui("-tags .x%lx.x%lx.plot%lx\n", glist_getcanvas(glist), glist,
+					 data);
             }
             else if (linewidth > 0)
             {
@@ -1864,7 +1864,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 sys_vgui("-fill %s\\\n", outline);
                 if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n");
 
-                sys_vgui("-tags .x%lx%s.plot%lx\n", glist_getcanvas(glist), (glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))), data);
+                sys_vgui("-tags .x%lx.x%lx.plot%lx\n", glist_getcanvas(glist), glist, data);
             }
         }
             /* We're done with the outline; now draw all the points.
@@ -1916,8 +1916,8 @@ static void plot_vis(t_gobj *z, t_glist *glist,
             }
         }
             /* and then the trace */
-        sys_vgui(".x%lx.c delete .x%lx%s.plot%lx\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), (glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))), data);      
+        sys_vgui(".x%lx.c delete .x%lx.x%lx.plot%lx\n",
+            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
 }
 
@@ -2144,11 +2144,11 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} %d %s}", sys_font,
 				 sys_hostfontsize(glist_getfont(glist)), sys_fontweight);
-        sys_vgui(" -tags .x%lx%s.drawnumber%lx\n", 
-			glist_getcanvas(glist), (glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))), data);
+        sys_vgui(" -tags .x%lx.x%lx.drawnumber%lx\n", 
+			glist_getcanvas(glist), glist, data);
     }
-    else sys_vgui(".x%lx.c delete .x%lx%s.drawnumber%lx\n", glist_getcanvas(glist), 
-		glist_getcanvas(glist), (glist_istoplevel(glist) ? "bogus" : rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj))), data);
+    else sys_vgui(".x%lx.c delete .x%lx.x%lx.drawnumber%lx\n", glist_getcanvas(glist), 
+		glist_getcanvas(glist), glist, data);
 }
 
 static t_float drawnumber_motion_ycumulative;

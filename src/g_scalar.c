@@ -203,14 +203,16 @@ static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
        
         scalar_getrect(&x->sc_gobj, glist, &x1, &y1, &x2, &y2);
         x1--; x2++; y1--; y2++;
-        sys_vgui(".x%lx.c create line %d %d %d %d %d %d %d %d %d %d \
-            -width 0 -fill $select_color -tags {select%lx selected}\n",
-                glist_getcanvas(glist), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
-                x);
+		if (glist_istoplevel(glist))
+		    sys_vgui(".x%lx.c create line %d %d %d %d %d %d %d %d %d %d \
+		        -width 0 -fill $select_color -tags {select%lx selected}\n",
+		            glist_getcanvas(glist), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
+		            x);
     }
     else
     {
-        sys_vgui(".x%lx.c delete select%lx\n", glist_getcanvas(glist), x);
+		if (glist_istoplevel(glist))
+        	sys_vgui(".x%lx.c delete select%lx\n", glist_getcanvas(glist), x);
     }
 }
 
@@ -228,6 +230,7 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
         template_notify(tmpl, (state ? gensym("select") : gensym("deselect")),
             1, &at);
     gpointer_unset(&gp);
+	sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
     scalar_drawselectrect(x, owner, state);
 }
 

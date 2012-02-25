@@ -1038,7 +1038,8 @@ static void garray_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void garray_select(t_gobj *z, t_glist *glist, int state)
 {
-    t_garray *x = (t_garray *)z;
+    t_garray *x = (t_garray *)z;	
+	sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), x->x_glist, state);
     /* fill in later */
 }
 

@@ -404,8 +404,9 @@ void rtext_select(t_rtext *x, int state)
 {
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
-    sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
-        x->x_tag, (state? "$select_color" : "$text_color"));
+	if (glist_istoplevel(glist))
+		sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+		    x->x_tag, (state? "$select_color" : "$text_color"));
 	if (x->x_text->te_pd->c_wb && x->x_text->te_pd->c_wb->w_displacefnwtag) {
 		if (state)
 			sys_vgui(".x%lx.c addtag selected withtag %s\n",

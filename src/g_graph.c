@@ -1083,13 +1083,15 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     else
     {
 		//first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
-		t_gobj *g;
+		/*t_gobj *g;
 		for (g = glist->gl_list; g; g = g->g_next) {
-			if (!g->g_pd->c_wb->w_displacefnwtag) {
+			if (g && !g->g_pd->c_wb->w_displacefnwtag) {
+				fprintf(stderr,"     NO fnwtag\n");
 				graph_displace(z, glist, dx, dy);
 				return;
 			}
 		}
+		fprintf(stderr,"fnwtag\n");*/
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
@@ -1114,16 +1116,18 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 		} else {
 			canvas = glist;
 		}
-        sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", canvas, 
+		if(glist_istoplevel(glist)) {
+        	sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", canvas, 
                  rtext_gettag(y), (state? "$select_color" : "$graph_outline"));
 /*
         sys_vgui(".x%lx.c itemconfigure graph%lx -fill %s\n",
                  glist_getcanvas(glist), z, 
                  (state? "$select_color" : "$graph_outline"));
 */
-        sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
+        	sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
                  canvas, rtext_gettag(y), 
                  (state? "$select_color" : "black"));
+		}
 		t_gobj *g;
 		if (x->gl_list)
 			for (g = x->gl_list; g; g = g->g_next)
