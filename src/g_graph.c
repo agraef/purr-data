@@ -1051,20 +1051,6 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
     *yp2 = y2;
 }
 
-static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
-{
-	//fprintf(stderr,"graph_displace_withtag %d %d\n", dx, dy);
-    t_glist *x = (t_glist *)z;
-    if (!x->gl_isgraph)
-        text_widgetbehavior.w_displacefnwtag(z, glist, dx, dy);
-    else
-    {
-        x->gl_obj.te_xpix += dx;
-        x->gl_obj.te_ypix += dy;
-        canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
-    }
-}
-
 static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
 	//fprintf(stderr,"graph_displace %d %d\n", dx, dy);
@@ -1083,6 +1069,29 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
         glist_redraw(x);
 		gobj_select(z, glist, 1);
+        canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
+    }
+}
+
+
+static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+	//fprintf(stderr,"graph_displace_withtag %d %d\n", dx, dy);
+    t_glist *x = (t_glist *)z;
+    if (!x->gl_isgraph)
+        text_widgetbehavior.w_displacefnwtag(z, glist, dx, dy);
+    else
+    {
+		//first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
+		t_gobj *g;
+		for (g = glist->gl_list; g; g = g->g_next) {
+			if (!g->g_pd->c_wb->w_displacefnwtag) {
+				graph_displace(z, glist, dx, dy);
+				return;
+			}
+		}
+        x->gl_obj.te_xpix += dx;
+        x->gl_obj.te_ypix += dy;
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
     }
 }
