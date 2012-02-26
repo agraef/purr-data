@@ -227,6 +227,7 @@ install:  all
 	install -m644 g_canvas.h $(DESTDIR)$(includedir)/pdl2ork/g_canvas.h
 	install -m644 s_stuff.h $(DESTDIR)$(includedir)/pdl2ork/s_stuff.h
 	install -m644 g_all_guis.h $(DESTDIR)$(includedir)/pdl2ork/g_all_guis.h
+	install -m644 g_undo.h $(DESTDIR)$(includedir)/pdl2ork/g_undo.h
 	install -d $(DESTDIR)$(mandir)/man1
 	gzip < ../man/pd.1 >  $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz
 	chmod 644 $(DESTDIR)$(mandir)/man1/@PDEXEC@.1.gz
@@ -270,11 +271,7 @@ uninstall:
 	rm -f $(DESTDIR)$(bindir)/@PDEXEC@
 	rm -f $(DESTDIR)$(bindir)/pdsend
 	rm -f $(DESTDIR)$(bindir)/pdreceive
-	rm -f $(DESTDIR)$(includedir)/m_pd.h
-	rm -f $(DESTDIR)$(includedir)/m_imp.h
-	rm -f $(DESTDIR)$(includedir)/s_stuff.h
-	rm -f $(DESTDIR)$(includedir)/g_all_guis.h
-	rm -f $(DESTDIR)$(includedir)/g_canvas.
+	rm -f -r $(DESTDIR)$(includedir)/pdl2ork/
 	rm -f $(DESTDIR)$(mandir)/man1/pd.1.gz
 	rm -f $(DESTDIR)$(mandir)/man1/pdsend.1.gz
 	rm -f $(DESTDIR)$(mandir)/man1/pdreceive.1.gz
