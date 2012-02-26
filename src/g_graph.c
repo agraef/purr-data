@@ -1082,16 +1082,15 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
         text_widgetbehavior.w_displacefnwtag(z, glist, dx, dy);
     else
     {
-		//first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
-		/*t_gobj *g;
-		for (g = glist->gl_list; g; g = g->g_next) {
-			if (g && !g->g_pd->c_wb->w_displacefnwtag) {
-				fprintf(stderr,"     NO fnwtag\n");
+		// first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
+		t_gobj *g;
+		for (g = x->gl_list; g; g = g->g_next) {
+			if (g && g->g_pd->c_wb->w_displacefnwtag == NULL) {
 				graph_displace(z, glist, dx, dy);
 				return;
 			}
 		}
-		fprintf(stderr,"fnwtag\n");*/
+		// else we do things the new and more elegant way
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
@@ -1131,7 +1130,8 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 		t_gobj *g;
 		if (x->gl_list)
 			for (g = x->gl_list; g; g = g->g_next)
-				gobj_select(g, x, state);
+				if (g && g->g_pd->c_wb->w_displacefnwtag != NULL)
+					gobj_select(g, x, state);
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n", canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
 }
