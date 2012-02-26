@@ -1572,10 +1572,13 @@ proc menu_close {name} {
 	if {$name == ".texteditor.text"} { 
 		set topname [string trimright $name .text]
 		texteditor_send $name
-		destroy $topname   
+		destroy $topname
+		focus . 
 	} else {
+		set parent [menu_windowparent $name]
 		pdtk_canvas_checkgeometry $name
     	pd [concat $name menuclose 0 \;]
+		focus $parent
 	}
 }
 
