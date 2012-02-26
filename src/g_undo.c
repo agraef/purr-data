@@ -67,6 +67,7 @@ void canvas_undo_undo(t_canvas *x)
 		    case 8:	canvas_undo_canvas_apply(x, x->u_last->data, UNDO_UNDO); break;	//canvas apply
 		    case 9:	canvas_undo_create(x, x->u_last->data, UNDO_UNDO); break;		//create
 		    case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_UNDO); break;		//recreate
+			case 11:canvas_undo_selection(x, x->u_last->data, UNDO_UNDO); break;	//selection
 		    default:
 		        error("canvas_undo_undo: unsupported undo command %d", x->u_last->type);
         }
@@ -100,6 +101,7 @@ void canvas_undo_redo(t_canvas *x)
 		    case 8:	canvas_undo_canvas_apply(x, x->u_last->data, UNDO_REDO); break;	//canvas apply
 		    case 9:	canvas_undo_create(x, x->u_last->data, UNDO_REDO); break;		//create
 		    case 10:canvas_undo_recreate(x, x->u_last->data, UNDO_REDO); break;		//recreate
+			case 11:canvas_undo_selection(x, x->u_last->data, UNDO_REDO); break;	//selection
 		    default:
 		        error("canvas_undo_redo: unsupported redo command %d", x->u_last->type);
         }
@@ -132,6 +134,7 @@ void canvas_undo_rebranch(t_canvas *x)
 			    case 8:	canvas_undo_canvas_apply(x, a->data, UNDO_FREE); break;	//canvas apply
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create
 				case 10:canvas_undo_recreate(x, a->data, UNDO_FREE); break;		//recreate
+				case 11:canvas_undo_selection(x, a->data, UNDO_FREE); break;	//selection
 				default:
 				    error("canvas_undo_rebranch: unsupported undo command %d", a->type);
 		    }
@@ -171,6 +174,7 @@ void canvas_undo_free(t_canvas *x)
 			    case 8:	canvas_undo_canvas_apply(x, a->data, UNDO_FREE); break;	//canvas apply
 				case 9:	canvas_undo_create(x, a->data, UNDO_FREE); break;		//create
 				case 10:canvas_undo_recreate(x, a->data, UNDO_FREE); break;		//recreate
+				case 11:canvas_undo_selection(x, a->data, UNDO_FREE); break;	//selection
 				default:
 				    error("canvas_undo_free: unsupported undo command %d", a->type);
 		    }

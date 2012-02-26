@@ -67,6 +67,20 @@ struct _outlet
     t_symbol *o_sym;
 };
 
+/* ----------- 11. selection -------------- */
+typedef struct _undo_sel
+{
+    int u_index;
+    struct _undo_sel *sel_next;
+} t_undo_sel;
+
+typedef struct _undo_redo_sel
+{
+    t_undo_sel *u_undo;
+    t_undo_sel *u_redo;
+} t_undo_redo_sel;
+/* ---------------------------------------- */
+
 /* used for new duplicate behavior where we can "duplicate" into new window */
 static t_canvas *c_selection;
 
@@ -1709,6 +1723,72 @@ void canvas_undo_recreate(t_canvas *x, void *z, int action)
 	}
 }
 
+/* ----------- 11. selection -------------- */
+
+//structs are defined at the top of the file due to unusual undo/redo design of the selection
+
+void *canvas_undo_set_selection(t_canvas *x)
+{
+	t_undo_sel *u_sel = (t_undo_sel *)getbytes(sizeof(*u_sel));
+	u_sel->u_index = -1;
+	if (x->gl_editor->e_selection) {
+		t_gobj *g = x->gl_list;
+		int index = 0;
+		t_undo_sel *tmp = u_sel;
+
+		while (g) {
+			if (glist_isselected(x, g)) {
+				tmp->u_index = index;
+				if (g->g_next) {
+					t_undo_sel *u_sel_next = (t_undo_sel *)getbytes(sizeof(*u_sel_next));
+					u_sel_next->u_index = -1;
+					tmp->sel_next = u_sel_next;
+					tmp = u_sel_next;
+				}
+			}
+			index++;
+			g = g->g_next;
+		}
+	}
+    return (u_sel);
+}
+
+void canvas_undo_selection(t_canvas *x, void *z, int action)
+{
+    t_undo_redo_sel *u_main = z;
+	t_undo_sel *u_sel;
+
+    if (action == UNDO_UNDO || action == UNDO_REDO) 
+    {
+		if (action == UNDO_UNDO) u_sel = u_main->u_undo;
+		else u_sel = u_main->u_redo;
+
+		glist_noselect(x);
+
+		while(u_sel) {
+			if (u_sel->u_index > -1)
+				glist_select(x, glist_nth(x, u_sel->u_index));
+			u_sel = u_sel->sel_next;
+		}
+    }
+    else if (action == UNDO_FREE)
+    {
+		u_sel = u_main->u_undo;
+		while (u_sel) {
+			t_undo_sel *destroy = u_sel;
+			u_sel = u_sel->sel_next;
+		    freebytes(destroy, sizeof(*destroy));
+		}
+		u_sel = u_main->u_redo;
+		while (u_sel) {
+			t_undo_sel *destroy = u_sel;
+			u_sel = u_sel->sel_next;
+		    freebytes(destroy, sizeof(*destroy));
+		}
+		freebytes(u_main, sizeof(*u_main));
+    }
+}
+
 /* ------------------------ event handling ------------------------ */
 
 static char *cursorlist[] = {
@@ -2495,9 +2575,15 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 }
                 else
                 {
+					t_undo_redo_sel *buf = (t_undo_redo_sel *)getbytes(sizeof(*buf));
+					buf->u_undo = (t_undo_sel *)canvas_undo_set_selection(x);
+
                     if (glist_isselected(x, y))
                         glist_deselect(x, y);
                     else glist_select(x, y);
+
+					buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
+					canvas_undo_add(x, 11, "selection", buf);
                 }
             }
         }
@@ -2586,8 +2672,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         /* otherwise select and drag to displace */
                     if (!glist_isselected(x, y))
                     {
+						t_undo_redo_sel *buf = (t_undo_redo_sel *)getbytes(sizeof(*buf));
+						buf->u_undo = (t_undo_sel *)canvas_undo_set_selection(x);
+
                         glist_noselect(x);
                         glist_select(x, y);
+
+						buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
+						canvas_undo_add(x, 11, "selection", buf);
                     }
 					//toggle_moving = 1;
 					//sys_vgui("pdtk_update_xy_tooltip .x%lx %d %d\n", x, (int)xpos, (int)ypos);
@@ -2712,7 +2804,15 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
     if (doit)
     {
-        if (!shiftmod) glist_noselect(x);
+        if (!shiftmod && x->gl_editor->e_selection) {
+			t_undo_redo_sel *buf = (t_undo_redo_sel *)getbytes(sizeof(*buf));
+			buf->u_undo = (t_undo_sel *)canvas_undo_set_selection(x);
+
+			glist_noselect(x);
+
+			buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
+			canvas_undo_add(x, 11, "selection", buf);
+		}
         sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags x -outline $select_color\n",
               x, xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
@@ -2909,17 +3009,29 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 
 void canvas_selectinrect(t_canvas *x, int lox, int loy, int hix, int hiy)
 {
+	//fprintf(stderr,"canvas_selectinrect\n");
     t_gobj *y;
+	t_undo_redo_sel *buf=NULL;
+	int selection_changed = 0;
     for (y = x->gl_list; y; y = y->g_next)
     {
         int x1, y1, x2, y2;
         gobj_getrect(y, x, &x1, &y1, &x2, &y2);
         if (hix >= x1 && lox <= x2 && hiy >= y1 && loy <= y2) {
+			if (!selection_changed) {
+				buf = (t_undo_redo_sel *)getbytes(sizeof(*buf));
+				buf->u_undo = (t_undo_sel *)canvas_undo_set_selection(x);
+				selection_changed = 1;
+			}
 			if (!glist_isselected(x, y))
 		    	glist_select(x, y);
 			else glist_deselect(x, y);
 		}
     }
+	if (buf) {
+		buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
+		canvas_undo_add(x, 11, "selection", buf);
+	}
 }
 
 static void canvas_doregion(t_canvas *x, int xpos, int ypos, int doit)
