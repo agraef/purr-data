@@ -1475,7 +1475,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 			//fprintf(stderr,"glist_drawiofor o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags %so%d\n",
+                      -fill %s -outline %s -tags {%so%d outlet}\n",
                 glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1505,7 +1505,7 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 			//fprintf(stderr,"glist_drawiofor i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags %si%d\n",
+                      -fill %s -outline %s -tags {%si%d inlet}\n",
                 glist_getcanvas(glist), onset, y1, onset + IOWIDTH, y1 + EXTRAPIX,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1545,7 +1545,7 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
 			//fprintf(stderr,"drawiofor_withtag o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags %so%d\n",
+                      -fill %s -outline %s -tags {%so%d outlet}\n",
                 glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1570,7 +1570,7 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
 			//fprintf(stderr,"drawiofor_withtag i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
             sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags %si%d\n",
+                      -fill %s -outline %s -tags {%si%d inlet}\n",
                 glist_getcanvas(glist), onset, y1, onset + IOWIDTH, y1 + EXTRAPIX,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
