@@ -79,27 +79,27 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
 		    w = 2;
 		if(x->x_gui.x_w >= 60)
 		    w = 3;
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxTGL}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxTGL text}\n",
 		         canvas, xx, yy, xx + x->x_gui.x_w, yy + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxX1 %lxTGL}\n",
+		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxX1 %lxTGL text}\n",
 		         canvas, xx+w+1, yy+w+1, xx + x->x_gui.x_w-w, yy + x->x_gui.x_h-w, w,
 		         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxX2 %lxTGL}\n",
+		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxX2 %lxTGL text}\n",
 		         canvas, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w, yy+w, w,
 		         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxTGL}\n",
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxTGL text}\n",
 		         canvas, xx+x->x_gui.x_ldx,
 		         yy+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxTGL}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxTGL outlet}\n",
 		         canvas, xx, yy + x->x_gui.x_h-1, xx + IOWIDTH, yy + x->x_gui.x_h, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxTGL}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxTGL inlet}\n",
 		         canvas, xx, yy, xx + IOWIDTH, yy+1, nlet_tag, 0, x);
 	//}
 }

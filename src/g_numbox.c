@@ -215,7 +215,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 
 		sys_vgui(
 	".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
-	-fill #%6.6x -tags {%lxBASE1 %lxNUM}\n",
+	-fill #%6.6x -tags {%lxBASE1 %lxNUM text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_numwidth-4, ypos,
 		         xpos + x->x_numwidth, ypos+4,
@@ -223,31 +223,31 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 		         xpos, ypos + x->x_gui.x_h,
 		         IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x);
 		sys_vgui(
-		    ".x%lx.c create line %d %d %d %d %d %d -fill #%6.6x -tags {%lxBASE2 %lxNUM}\n",
+		    ".x%lx.c create line %d %d %d %d %d %d -fill #%6.6x -tags {%lxBASE2 %lxNUM text}\n",
 		    canvas, xpos, ypos,
 		    xpos + half, ypos + half,
 		    xpos, ypos + x->x_gui.x_h,
 		    x->x_gui.x_fcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM}\n",
+		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM text}\n",
 		    canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		    strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		    x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		my_numbox_ftoa(x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM noscroll}\n",
+		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM noscroll text}\n",
 		    canvas, xpos+half+2, ypos+half+d,
 		    x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		    x->x_gui.x_fcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxNUM}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxNUM outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
 		         nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxNUM}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxNUM inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+IOWIDTH, ypos+1,

@@ -342,6 +342,7 @@ variable duplicate_tags -1
 variable current_window 0
 variable nlet_color 0
 variable autotips 0
+variable tooltip_visible 0
 
 # x:y location tooltip during dragging
 set tooltip [toplevel .tooltip -bd 1 -bg black]
@@ -2083,6 +2084,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -yscrollcommand "$name.scrollvert set" \
         -xscrollcommand "$name.scrollhort set" \
         -scrollregion [concat 0 0 $width $height]
+	$name.c configure -closeenough 0.0
 
 	#pdtk_standardkeybindings $name.c
 
@@ -3306,7 +3308,7 @@ proc pdtk_canvas_scroll {canvas xy distance} {
 }
 
 proc pdtk_canvas_motion {name x y mods} {
-	global pointer_x_local pointer_y_local pointer_x_global pointer_y_global
+	global pointer_x_local pointer_y_local pointer_x_global pointer_y_global tooltip_visible
 	set pointer_x_local $x
 	set pointer_y_local $y
 	set pointer_x_global [expr $pointer_x_local + [winfo rootx $name]]
@@ -7111,7 +7113,8 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 }
 
  
-proc pdtk_canvas_enteritem_gettags {tkcanvas x y item enterid} {
+proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
+	#puts stderr "gettags $tkcanvas $x $y $item"
 	variable nlet_color
 	variable select_color
     if {[winfo exists $tkcanvas]} {
@@ -7142,6 +7145,7 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item enterid} {
 }
 
 proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
+	#puts stderr "enteritem $tkcanvas $x $y $item $enterid"
     variable afterid
     variable duplicate_tags
     variable current_window
@@ -7158,8 +7162,9 @@ proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
 			after cancel $afterid
 		}
 		set current_window $tkcanvas
+		
 		set afterid [after 250 pdtk_canvas_enteritem_gettags \
-			$tkcanvas $x $y $item $enterid]
+			$tkcanvas $x $y $item]
 	}
 }
 
@@ -7189,12 +7194,15 @@ proc pdtk_canvas_leaveitem {w item} {
 proc pdtk_tip {w fromc show args} {
 	variable select_color
 	variable nlet_color
+	variable tooltip_visible
 	set exists [winfo exists $w.tiplabel]
     if {$show == 0} {
         catch {destroy $w.tiplabel}
         catch {$w delete $w.tipwindow}
 		catch {$w delete tiparrow}
+		set tooltip_visible 0
     } else {
+		set tooltip_visible 1
 		if { $nlet_color == 0 } { set nlet_color $select_color }
 		if { $nlet_color ne $select_color } {
 			set fg "#ffffff"
@@ -7304,6 +7312,7 @@ proc pdtk_tip_mouseover {w} {
 }
 
 proc pdtk_gettip { w item xletno name helpname dir } {
+	#puts stderr "pdtk_gettip $w $item $xletno $name $helpname $dir"
     if {$dir eq {}} {
 		set dir $::sys_libdir/doc/5.reference
     }

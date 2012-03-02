@@ -131,7 +131,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		if (yyyy) nlet_tag = rtext_gettag(yyyy);
 		else nlet_tag = "bogus";
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU text}\n",
 		         canvas, xpos-1, ypos-2,
 		         xpos+x->x_gui.x_w+1,
 		         ypos+x->x_gui.x_h+2, x->x_gui.x_bcol, x, x);
@@ -139,11 +139,11 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		{
 		    led_col = iemgui_vu_col[i];
 		    yyy = k4 + k1*(k2-i);
-		    sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxRLED%d %lxVU}\n",
+		    sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxRLED%d %lxVU text}\n",
 		             canvas, quad1, yyy, quad3, yyy, x->x_led_size, iemgui_color_hex[led_col], x, i, x);
 		    if(((i+2)&3) && (x->x_scale))
 		        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		                 -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
+		                 -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
 		                 canvas, end, yyy+k3, iemgui_vu_scale_str[i], 
 						 x->x_gui.x_font, x->x_gui.x_fontsize,
 		                 sys_fontweight, x->x_gui.x_lcol, x, i, x);
@@ -153,31 +153,31 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		    i=IEM_VU_STEPS+1;
 		    yyy = k4 + k1*(k2-i);
 		    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		             -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
+		             -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
 		             canvas, end, yyy+k3, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight,
 		             x->x_gui.x_lcol, x, i, x);
 		}
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRCOVER %lxVU}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRCOVER %lxVU text}\n",
 		         canvas, quad1, ypos-1, quad3-1,
 		         ypos-1 + k1*IEM_VU_STEPS, x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxPLED %lxVU}\n",
+		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxPLED %lxVU text}\n",
 		         canvas, mid, ypos+10,
 		         mid, ypos+10, x->x_led_size, x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxVU}\n",
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxVU text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVU}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos-1, ypos + x->x_gui.x_h+1,
 		         xpos + IOWIDTH-1, ypos + x->x_gui.x_h+2,
 		         nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVU}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+1-IOWIDTH, ypos + x->x_gui.x_h+1,
 		         xpos+x->x_gui.x_w+1, ypos + x->x_gui.x_h+2,
@@ -185,12 +185,12 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVU}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVU inlet}\n",
 		         canvas,
 		         xpos-1, ypos-2,
 		         xpos + IOWIDTH-1, ypos-1,
 		         nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVU}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVU inlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+1-IOWIDTH, ypos-2,
 		         xpos+x->x_gui.x_w+1, ypos-1,

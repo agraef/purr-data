@@ -72,29 +72,29 @@ void bng_draw_new(t_bng *x, t_glist *glist)
 		else nlet_tag = "bogus";
 
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxBNG}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxBNG text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create oval %d %d %d %d -fill #%6.6x -tags {%lxBUT %lxBNG}\n",
+		sys_vgui(".x%lx.c create oval %d %d %d %d -fill #%6.6x -tags {%lxBUT %lxBNG text}\n",
 		         canvas, xpos+1, ypos+1,
 		         xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1,
 		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxBNG}\n",
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxBNG text}\n",
 		         canvas, xpos+x->x_gui.x_ldx,
 		         ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able) {
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxBNG}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxBNG outlet}\n",
 		         canvas, xpos,
 		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
 		         ypos + x->x_gui.x_h, nlet_tag, 0, x);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able) {
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxBNG}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxBNG inlet}\n",
 		         canvas, xpos, ypos,
 		         xpos + IOWIDTH, ypos+1, nlet_tag, 0, x);
 		}

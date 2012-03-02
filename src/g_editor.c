@@ -4808,18 +4808,17 @@ static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
     t_floatarg ypos, t_floatarg xletno)
 {
 	if (x->gl_editor->e_onmotion == MA_MOVE) { return; }
-	//fprintf(stderr,"canvas_enterobj\n");
     t_symbol *name = 0, *helpname, *dir;
     int yoffset = 0, xoffset = 0;
     if (item == gensym("inlet"))
     {
-	yoffset = 1;
+		yoffset = 1;
         xoffset = xletno==0 ? 1 : -1;
     }
     else if (item == gensym("outlet"))
     {
-	yoffset = -1;
-	xoffset = xletno== 0 ? 1 : -1;
+		yoffset = -1;
+		xoffset = xletno== 0 ? 1 : -1;
     }
     int x1, y1, x2, y2;
     t_gobj *g;
@@ -4827,19 +4826,19 @@ static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
 	&x1, &y1, &x2, &y2))
     {
         if (pd_class((t_pd *)g)==canvas_class ?
-	    canvas_isabstraction((t_canvas *)g) : 0)
-	{
-	    t_canvas *z = (t_canvas *)g;
-	    name = z->gl_name;
-	    helpname = z->gl_name;
-	    dir = canvas_getdir(z);
-	}
-	else
-	{
-	    name = g->g_pd->c_name;
-	    helpname = g->g_pd->c_helpname;
-	    dir = g->g_pd->c_externdir;
-	}
+	    	canvas_isabstraction((t_canvas *)g) : 0)
+		{
+			t_canvas *z = (t_canvas *)g;
+			name = z->gl_name;
+			helpname = z->gl_name;
+			dir = canvas_getdir(z);
+		}
+		else
+		{
+			name = g->g_pd->c_name;
+			helpname = g->g_pd->c_helpname;
+			dir = g->g_pd->c_externdir;
+		}
         sys_vgui("pdtk_gettip .x%lx.c %s %d \
 	    [list %s] [list %s] [list %s]\n",
 	    x, item->s_name, (int)xletno,

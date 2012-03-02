@@ -49,16 +49,16 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
 
 	//if (glist_isvisible(glist)) {
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRECT %lxMYCNV}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRECT %lxMYCNV text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_vis_w, ypos + x->x_vis_h,
 		         x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags {%lxBASE %lxMYCNV}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags {%lxBASE %lxMYCNV text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxMYCNV}\n",
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxMYCNV text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,

@@ -84,10 +84,10 @@ void vradio_draw_new(t_vradio *x, t_glist *glist)
 
 		for(i=0; i<n; i++)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxVRDO}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxVRDO text}\n",
 		             canvas, xx11, yy11, xx12, yy12,
 		             x->x_gui.x_bcol, x, i, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxBUT%d %lxVRDO}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxBUT%d %lxVRDO text}\n",
 		             canvas, xx21, yy21, xx22, yy22,
 		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
 		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x);
@@ -98,16 +98,16 @@ void vradio_draw_new(t_vradio *x, t_glist *glist)
 		    x->x_drawn = x->x_on;
 		}
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxVRDO}\n",
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxVRDO text}\n",
 		         canvas, xx11+x->x_gui.x_ldx, yy11b+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVRDO}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVRDO outlet}\n",
 		         canvas, xx11, yy11-1, xx11 + IOWIDTH, yy11, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVRDO}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVRDO inlet}\n",
 		         canvas, xx11, yy11b, xx11 + IOWIDTH, yy11b+1, nlet_tag, 0, x);
 	//}
 }

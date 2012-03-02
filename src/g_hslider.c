@@ -93,26 +93,26 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 		if (yyyy) nlet_tag = rtext_gettag(yyyy);
 		else nlet_tag = "bogus";
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxHSLDR}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxHSLDR text}\n",
 		         canvas, xpos-3, ypos,
 		         xpos + x->x_gui.x_w+2, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxHSLDR}\n",
+		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxHSLDR text}\n",
 		         canvas, r, ypos+1, r,
 		         ypos + x->x_gui.x_h, x->x_gui.x_fcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR}\n",
+		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR text}\n",
 		         canvas, xpos+x->x_gui.x_ldx,
 		         ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxHSLDR}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxHSLDR outlet}\n",
 		         canvas, xpos-3, ypos + x->x_gui.x_h-1,
 		         xpos+4, ypos + x->x_gui.x_h, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxHSLDR}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxHSLDR inlet}\n",
 		         canvas, xpos-3, ypos,
 		         xpos+4, ypos+1, nlet_tag, 0, x);
 	//}
