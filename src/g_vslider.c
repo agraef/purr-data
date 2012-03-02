@@ -33,6 +33,9 @@ static void vslider_draw_select(t_vslider* x, t_glist* glist);
 t_widgetbehavior vslider_widgetbehavior;
 static t_class *vslider_class;
 
+static double last;
+static int is_last_float = 0;
+
 /* widget helper functions */
 
 static void vslider_draw_update(t_gobj *client, t_glist *glist)
@@ -341,6 +344,9 @@ static void vslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, 
 
 		if (sh->h_dragx || sh->h_dragy) {
 
+			double height_change_ratio = (double)(x->x_gui.x_h + sh->h_dragy - x->x_gui.scale_offset_y)/(double)x->x_gui.x_h;
+			x->x_val = x->x_val * height_change_ratio;
+
 			x->x_gui.x_w = x->x_gui.x_w + sh->h_dragx - x->x_gui.scale_offset_x;
 			if (x->x_gui.x_w < SCALE_VSLD_MINWIDTH)
 				x->x_gui.x_w = SCALE_VSLD_MINWIDTH;
@@ -638,7 +644,10 @@ static void vslider_bang(t_vslider *x)
     if(x->x_lin0_log1)
         out = x->x_min*exp(x->x_k*(double)(x->x_val)*0.01);
     else
-        out = (double)(x->x_val)*0.01*x->x_k + x->x_min;
+		if (is_last_float && last <= x->x_max && last >= x->x_min)
+			out = last;
+		else
+        	out = (double)(x->x_val)*0.01*x->x_k + x->x_min;
     if((out < 1.0e-10)&&(out > -1.0e-10))
         out = 0.0;
 
@@ -668,7 +677,11 @@ static void vslider_dialog(t_vslider *x, t_symbol *s, int argc, t_atom *argv)
         x->x_steady = 0;
     sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
     x->x_gui.x_w = iemgui_clip_size(w);
+	int old_height = x->x_gui.x_h;
     vslider_check_height(x, h);
+	if (x->x_gui.x_h != old_height) {
+		x->x_val = x->x_val * ((double)x->x_gui.x_h/(double)old_height);
+	}
     vslider_check_minmax(x, min, max);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
@@ -687,6 +700,7 @@ static void vslider_dialog(t_vslider *x, t_symbol *s, int argc, t_atom *argv)
 
 static void vslider_motion(t_vslider *x, t_floatarg dx, t_floatarg dy)
 {
+	is_last_float = 0;
     int old = x->x_val;
 
     if(x->x_gui.x_fsf.x_finemoved)
@@ -775,6 +789,8 @@ static void vslider_set(t_vslider *x, t_floatarg f)
 
 static void vslider_float(t_vslider *x, t_floatarg f)
 {
+	is_last_float = 1;
+	last = f;
     vslider_set(x, f);
     if(x->x_gui.x_fsf.x_put_in2out)
         vslider_bang(x);
