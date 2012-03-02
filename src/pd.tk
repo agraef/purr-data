@@ -341,6 +341,7 @@ variable afterid 0
 variable duplicate_tags -1
 variable current_window 0
 variable nlet_color 0
+variable autotips 0
 
 # x:y location tooltip during dragging
 set tooltip [toplevel .tooltip -bd 1 -bg black]
@@ -1401,9 +1402,9 @@ if {$pd_nt == 2} { # no key command for Mac OS X
 .mbar.edit add separator
 
 .mbar.edit add command -label "Toggle console" \
-	-accelerator [accel_munge "Shift+Ctrl+r"] -command menu_toggle_console
+	-accelerator [accel_munge "Ctrl+R"] -command menu_toggle_console
 .mbar.edit add command -label "Clear console" \
-    -accelerator [accel_munge "Shift+Ctrl+l"] -command menu_clear_console
+    -accelerator [accel_munge "Ctrl+L"] -command menu_clear_console
 .mbar.edit add separator
 # this should apply to .printout.frame.text
 .mbar.edit add command -label {Find...} -accelerator [accel_munge "Ctrl+f"] \
@@ -1413,7 +1414,10 @@ if {$pd_nt == 2} { # no key command for Mac OS X
     -state disabled
 .mbar.edit add command -label {Find last error}
 .mbar.edit add separator
-.mbar.edit add checkbutton -label [_ "Autotips"] -variable ::autotips_button
+.mbar.edit add checkbutton -label "Autotips" \
+        -indicatoron false -selectcolor black \
+        -accelerator [accel_munge "Ctrl+E"] \
+    	-state disabled
 .mbar.edit add command -label {Edit mode} -accelerator [accel_munge "Ctrl+e"] \
     -state disabled
 
@@ -1701,6 +1705,10 @@ proc menu_magicglass {name} {
 
 proc menu_editmode {name} {
     pd [concat $name editmode 0 \;]
+}
+
+proc menu_tooltips {name} {
+	pd [concat $name tooltips 0 \;]
 }
 
 proc menu_object {name accel} {
@@ -2236,11 +2244,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 ## end jsarlo
 
     $name.m.edit add command -label "Toggle console" \
-        -accelerator [accel_munge "Shift+Ctrl+r"] \
+        -accelerator [accel_munge "Ctrl+R"] \
         -command [concat .controls.switches.console invoke]
 
     $name.m.edit add command -label "Clear console" \
-        -accelerator [accel_munge "Shift+Ctrl+l"] \
+        -accelerator [accel_munge "Ctrl+L"] \
         -command [concat menu_clear_console]
 
     $name.m.edit add separator
@@ -2261,12 +2269,15 @@ proc pdtk_canvas_new {name width height geometry editable} {
     # instead of "red = #BC3C60" we take "grey85", so there is no difference,
     # if widget is selected or not.
 
-	$name.m.edit add checkbutton -label [_ "Autotips"] -variable ::autotips_button
+    $name.m.edit add checkbutton -label "Autotips" \
+        -indicatoron false -selectcolor black \
+        -command [concat menu_tooltips $name] \
+        -accelerator [accel_munge "Ctrl+E"]
 
     $name.m.edit add checkbutton -label "Edit mode" \
         -indicatoron false -selectcolor black \
         -command [concat menu_editmode $name] \
-        -accelerator [accel_munge "Ctrl+e"] -variable ::editmode($name)
+        -accelerator [accel_munge "Ctrl+e"]
 
 	if { $editable == 1 } {
     	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d"
@@ -3226,6 +3237,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
         if {$key == "q" || $key == "Q"} {menu_really_quit}
         if {$key == "l" || $key == "L"} {menu_clear_console}
         if {$key == "r" || $key == "R"} {menu_toggle_console}
+		if {$key == "E"} {menu_tooltips $topname}
 		if {!$ignore} {
 	        if {$key == "w" || $key == "W"} {menu_really_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_saveas $topname}
@@ -3266,7 +3278,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 		if {!$ignore} {
         	if {$key == "w" || $key == "W"} {menu_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_save $topname}
-        	if {$key == "e" || $key == "E"} {menu_editmode $topname}
+        	if {$key == "e"} {menu_editmode $topname}
         	#if {$key == "d" || $key == "D"} {menu_duplicate $topname}
         	if {$key == "d" || $key == "D"} {pdtk_canvas_edit_menu_actions $topname Duplicate}
 			if {$key == "r" || $key == "R"} {menu_magicglass $topname}
@@ -5140,6 +5152,20 @@ proc pdtk_canvas_editval {name value} {
 		}
 	#}                                             
 }
+
+proc pdtk_canvas_tooltips {name value} {
+	variable autotips
+	#global colors
+	#if {[winfo exists $name]} {
+		if { $value } {
+		    $name.m.edit entryconfigure "Autotips" -indicatoron false -background "#7dd37d"
+			set autotips 1
+		} else {                          
+		    $name.m.edit entryconfigure "Autotips" -indicatoron false -background {}
+			set autotips 0
+		}
+	#}                                             
+}
 #####################iemlib#######################
 
 proc pdtk_canvas_magicglassval {name value} {
@@ -5213,7 +5239,8 @@ proc pdtk_text_new {canvasname myname x y text font color} {
     }
 
     $canvasname create text $x $y -font $typeface \
-        -tags $myname -text $text -fill $color -anchor nw 
+        -tags $myname -text $text -fill $color -anchor nw
+	$canvasname addtag text withtag $myname
 	#$canvasname bind $myname <Home> [concat $canvasname icursor $myname 0]
 	#$canvasname bind $myname <End> [concat $canvasname icursor $myname end]
 	if {$pd_nt == 2} { # emacs bindings for Mac OS X
@@ -7084,8 +7111,9 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 }
 
  
-proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
+proc pdtk_canvas_enteritem_gettags {tkcanvas x y item enterid} {
 	variable nlet_color
+	variable select_color
     if {[winfo exists $tkcanvas]} {
         set mytoplevel [winfo toplevel $tkcanvas]
         set id [$tkcanvas find withtag current]
@@ -7102,7 +7130,11 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 			}
 		}
 
-		set nlet_color [$tkcanvas itemcget [lindex $tags 0] -outline]
+		if { $object ne "text" } {
+			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -outline]
+		} else {
+			set nlet_color $select_color
+		}
 
         pd [concat $mytoplevel enter $object \
             [$tkcanvas canvasx $x] [$tkcanvas canvasy $y] $xletno \;]
@@ -7113,20 +7145,21 @@ proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
     variable afterid
     variable duplicate_tags
     variable current_window
-    #if {$::autotips_button == 0} {return}
-    if {$item != $duplicate_tags} {
+	variable autotips
+    if {$autotips == 0} {return}
+    if {$enterid != $duplicate_tags || $enterid == -1} {
 	    #if {$item eq "inlet" ||
 	    #    $item eq "outlet"} {
         #        $tkcanvas itemconfigure $item -activewidth 5 
 	    #}
 
-	    set duplicate_tags $item
+	    set duplicate_tags $enterid
 		if {$current_window eq $tkcanvas} {
 			after cancel $afterid
 		}
 		set current_window $tkcanvas
 		set afterid [after 250 pdtk_canvas_enteritem_gettags \
-			$tkcanvas $x $y $item]
+			$tkcanvas $x $y $item $enterid]
 	}
 }
 
@@ -7135,7 +7168,8 @@ proc pdtk_canvas_leaveitem {w item} {
     variable afterid
     variable current_window
 	variable duplicate_tags
-    #if {$::autotips_button == 0} {return}
+	variable autotips
+    if {$autotips == 0} {return}
     after cancel $afterid
 	set afterid 0
     if {[lsearch -exact [$w gettags $w.tipwindow] "sticky"] == -1} {
@@ -7145,6 +7179,7 @@ proc pdtk_canvas_leaveitem {w item} {
         #}
 		if {[winfo exists $w.tiplabel]} {
             set afterid [after 50 "pdtk_tip $w 0 0"]
+			#pdtk_tip $w 0 0
             set current_window $w
 		}
     }
@@ -7154,51 +7189,109 @@ proc pdtk_canvas_leaveitem {w item} {
 proc pdtk_tip {w fromc show args} {
 	variable select_color
 	variable nlet_color
-    set exists [winfo exists $w.tiplabel]
+	set exists [winfo exists $w.tiplabel]
     if {$show == 0} {
         catch {destroy $w.tiplabel}
         catch {$w delete $w.tipwindow}
+		catch {$w delete tiparrow}
     } else {
-	if {$exists} {
-	    $w.tiplabel configure -text [join $args]
-	    $w dtag $w.tipwindow "sticky"
-	    if {$fromc == 1} {
-		$w addtag "sticky" withtag $w.tipwindow
-	    }  
-	} else {
-			if { $nlet_color ne $select_color } {
-				set fg "#ffffff"
-			} else {
-				set fg "#000000"
-			}
+		if { $nlet_color == 0 } { set nlet_color $select_color }
+		if { $nlet_color ne $select_color } {
+			set fg "#ffffff"
+		} else {
+			set fg "#000000"
+		}
+		if {$exists} {    	
+			$w.tiplabel configure -text [join $args] -fg $fg -bg $nlet_color
+        	$w itemconfigure tiparrow -fill $nlet_color
+	    	$w dtag $w.tipwindow "sticky"
+	    	if {$fromc == 1} {
+				$w addtag "sticky" withtag $w.tipwindow
+	    	}  
+		} else {
             label $w.tiplabel -text [join $args] -bd 1 \
 	        -wraplength [winfo width $w] -bg $nlet_color -fg $fg -bd 1 \
 	        -padx 2 -pady 2 -relief flat
-	} 
-        set yreal [expr [$w canvasy 0] * -1 + \
-	    [winfo pointery $w]-[winfo rooty $w]]
-        set yoffset 0
-        if {$yreal < [expr [winfo height $w] - \
-	    [winfo reqheight $w.tiplabel]] - 5} {
-	    set yoffset [winfo height $w]
-            set anchor "sw"
-        } else {
+		}
+        set xreal [expr [$w canvasx 0] * -1 + [winfo pointerx $w]-[winfo rootx $w]]
+        set yreal [expr [$w canvasy 0] * -1 + [winfo pointery $w]-[winfo rooty $w]]
+
+		# first figure out default behavior for above/below
+		if { [string match "\{Inlet*" $args] } {
+        	set yoffset 0
 	    	set anchor "nw"
+			set top_bottom [expr -30 - [winfo reqheight $w.tiplabel]]
+			set yreal_offset -5
+        } else {
+			set yoffset [winfo height $w]
+        	set anchor "sw"
+			set top_bottom [expr 30 + [winfo reqheight $w.tiplabel]]
+			set yreal_offset 5
         }
-        set x [$w canvasx 0]
-        set y [expr [$w canvasy 0] + $yoffset]
-	set tags $w.tipwindow
-	if {$fromc == 1} {
-	    lappend tags "sticky"
-	} 
-	if {$exists} {
-	    $w coords $w.tipwindow $x $y
-	    $w itemconfigure $w.tipwindow -anchor $anchor
-	} else {
-            $w create window $x $y -window $w.tiplabel -anchor $anchor \
-	        -tags $tags
-	    $w bind $w.tipwindow <Enter> "pdtk_tip_mouseover $w"
-	}
+		set x [expr $xreal + rand()*10] 
+		set y [expr $yreal + $top_bottom]
+
+		# now check if there is enough room to do the default above/below (if not redo behavior)
+		if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } {
+			set yoffset [winfo height $w]
+        	set anchor "sw"
+			set top_bottom [expr 30 + [winfo reqheight $w.tiplabel]]
+			set yreal_offset 5
+		}
+		if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } {
+        	set yoffset 0
+	    	set anchor "nw"
+			set top_bottom [expr -30 - [winfo reqheight $w.tiplabel]]
+			set yreal_offset -5
+		}
+		set x [expr $xreal + rand()*10] 
+		set y [expr $yreal + $top_bottom]
+
+		# if we still cannot fit things, let's now stick them as close to the side we selected last
+		if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } { set y [expr [$w canvasy 0] + $yoffset] }
+		if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } { set y [expr [$w canvasy 0] + $yoffset] }
+
+		# now check the width
+		set right 0
+		set xarrow [expr $x + 5]
+
+		if { [expr $x + [winfo reqwidth $w.tiplabel]] > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
+			set tmp1 [expr $x - (($x + [winfo reqwidth $w.tiplabel]) - ([$w canvasx 0] + [winfo reqwidth $w]))]
+			set x $tmp1
+			set right 1
+		}
+		if { $x < [$w canvasx 0] } {
+			set x [$w canvasx 0]
+		}
+
+		#now do the arrow
+		if { $right } {
+			if { $xarrow > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
+				set xarrow [expr [$w canvasx 0] + [winfo reqwidth $w] - 12]
+			}
+		}
+
+		if { $top_bottom < 0 } {
+			set yarrow [expr $y + [winfo reqheight $w.tiplabel]]
+		} else {
+			set yarrow [expr $y - [winfo reqheight $w.tiplabel]]
+		}
+
+		$w create polygon 0 0 0 0 0 0 -fill $nlet_color -width 4 -tags tiparrow
+		$w coords tiparrow $xreal [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+7] $yarrow
+
+		set tags $w.tipwindow
+		if {$fromc == 1} {
+			lappend tags "sticky"
+		} 
+		if {$exists} {
+			$w coords $w.tipwindow $x $y
+			$w itemconfigure $w.tipwindow -anchor $anchor
+		} else {
+		       	$w create window $x $y -window $w.tiplabel -anchor $anchor \
+			    -tags $tags
+			$w bind $w.tipwindow <Enter> "pdtk_tip_mouseover $w"
+		}
     }
 }
 
@@ -7212,7 +7305,7 @@ proc pdtk_tip_mouseover {w} {
 
 proc pdtk_gettip { w item xletno name helpname dir } {
     if {$dir eq {}} {
-	set dir $::sys_libdir/doc/5.reference
+		set dir $::sys_libdir/doc/5.reference
     }
     # trim off trailing ".pd" for abstractions
     regexp {^(.*)(?:\.pd)} $name -- name
@@ -7223,11 +7316,11 @@ proc pdtk_gettip { w item xletno name helpname dir } {
     set metatag description
     if {$item eq "inlet" ||
 	$item eq "outlet"} {
-	set varxlet [join [list $item "n"] "_"]
+		set varxlet [join [list $item "n"] "_"]
         set metatag [join [list $item $xletno] "_"]
-	set msg "[string toupper [string map {_ " "} $metatag] 0 0] of $name"
+		set msg "[string toupper [string map {_ " "} $metatag] 0 0] of $name"
     } elseif {$item eq "text"} {
-	set metatag "description"
+		set metatag "description"
         set msg $name
     }
     set filefound 0
@@ -7238,27 +7331,27 @@ proc pdtk_gettip { w item xletno name helpname dir } {
         set filefound 1
     }
     if {$filefound} {
-	set filecontents [read $fp]
-	close $fp
-	# leave in pd's linebreaks-- serendipitously it
-	# makes the tipwindow more compact/easier to read
-	regsub -all {[{}]} $filecontents "" filecontents
-	# turn escaped semicolons into linebreaks
-	regsub -all {[\n\s]\\;[\n\s]} $filecontents "\n" filecontents
-	set match {}
-	# if $varxlet ne {} then the $item is an inlet or outlet
-	if { $varxlet ne {}  &&
-	    [regexp -nocase \
-	    "#X text \[0-9\]+ \[0-9\]+ $varxlet (\[^;\]+)" \
-	    $filecontents] } {
-	    set match "(variable inlet)"
-	}
-        regexp -nocase \
-	    "#X text \[0-9\]+ \[0-9\]+ $metatag (\[^;\]+)" \
-	    $filecontents -- match
-	if { $match ne {} } {
-	    set msg [string trim "$msg: $match"]
-	}
+		set filecontents [read $fp]
+		close $fp
+		# leave in pd's linebreaks-- serendipitously it
+		# makes the tipwindow more compact/easier to read
+		regsub -all {[{}]} $filecontents "" filecontents
+		# turn escaped semicolons into linebreaks
+		regsub -all {[\n\s]\\;[\n\s]} $filecontents "\n" filecontents
+		set match {}
+		# if $varxlet ne {} then the $item is an inlet or outlet
+		if { $varxlet ne {}  &&
+		    [regexp -nocase \
+		    "#X text \[0-9\]+ \[0-9\]+ $varxlet (\[^;\]+)" \
+		    $filecontents] } {
+		    set match "(variable inlet)"
+		}
+    	    regexp -nocase \
+		    "#X text \[0-9\]+ \[0-9\]+ $metatag (\[^;\]+)" \
+		    $filecontents -- match
+		if { $match ne {} } {
+		    set msg [string trim "$msg: $match"]
+		}
     }
     # make Pd's comma atoms look pretty
     regsub -all { \\,} $msg {,} msg

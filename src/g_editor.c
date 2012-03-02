@@ -48,6 +48,7 @@ static int inlet_issignal = 0;
 static int last_inlet_filter = 0;
 static int last_outlet_filter = 0;
 static int copyfromexternalbuffer = 0;
+static int tooltips = 0;
 static int screenx1;            /* screen coordinates when doing copyfromexternalbuffer */
 static int screeny1;
 static int screenx2;
@@ -2728,6 +2729,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 					//sys_vgui("pdtk_update_xy_tooltip .x%lx %d %d\n", x, (int)xpos, (int)ypos);
 					//sys_vgui("pdtk_toggle_xy_tooltip .x%lx %d\n", x, 1);
                     x->gl_editor->e_onmotion = MA_MOVE;
+					sys_vgui("pdtk_tip .x%x.c 0 0\n;", x);
                 }
             }
     	    else
@@ -2838,6 +2840,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             canvas_setcursor(x, CURSOR_EDITMODE_DISCONNECT);
             return;
         }
+    }
+    if (canvas_cnct_inlet_tag[0] != 0)
+    {
+		sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+       			x, canvas_cnct_inlet_tag,
+				(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+        canvas_cnct_inlet_tag[0] = 0;                  
     }
     // jsarlo
     if (canvas_cnct_outlet_tag[0] != 0)
@@ -3036,7 +3046,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                              x,
                              canvas_cnct_inlet_tag);
 					inlet_issignal = obj_issignalinlet(ob2, closest2);
-					//sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s 0\n;", x, xpos, ypos, canvas_cnct_outlet_tag);
+					sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1\n;", x, xpos, ypos, canvas_cnct_outlet_tag);
                 }
                 canvas_setcursor(x, CURSOR_EDITMODE_CONNECT);
             }
@@ -3050,7 +3060,9 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                	x, canvas_cnct_inlet_tag,
 				(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));               
+				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+		sys_vgui("pdtk_canvas_leaveitem .x%x.c %s\n;", x, canvas_cnct_outlet_tag);
+		canvas_cnct_inlet_tag[0] = 0;              
     }
 	if(x->gl_magic_glass) {
     	magicGlass_unbind(x->gl_magic_glass);
@@ -3455,7 +3467,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         canvas_displaceselection(x, 
             xpos - x->gl_editor->e_xwas, ypos - x->gl_editor->e_ywas);
         x->gl_editor->e_xwas = xpos;
-        x->gl_editor->e_ywas = ypos;    
+        x->gl_editor->e_ywas = ypos;   
     }
     else if (x->gl_editor->e_onmotion == MA_REGION)
         canvas_doregion(x, xpos, ypos, 0);
@@ -3496,7 +3508,7 @@ void canvas_startmotion(t_canvas *x)
     if (xval == 0 && yval == 0) return;
     x->gl_editor->e_onmotion = MA_MOVE;
     x->gl_editor->e_xwas = xval;
-    x->gl_editor->e_ywas = yval; 
+    x->gl_editor->e_ywas = yval;
 }
 
 /* ----------------------------- window stuff ----------------------- */
@@ -4711,6 +4723,22 @@ void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
 }
 // end jsarlo
 
+void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
+{
+    int yesplease = fyesplease;
+    if (yesplease && tooltips)
+    	return;
+    if (!tooltips) {
+		canvas_editmode(x, 1.);
+        tooltips = 1;
+    }
+    else {
+        tooltips = 0;
+    }
+	sys_vgui("pdtk_canvas_tooltips .x%lx %d\n",
+        x, tooltips);
+}
+
     /* called by canvas_font below */
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     t_floatarg yresize)
@@ -4779,6 +4807,8 @@ static void glist_setlastxy(t_glist *gl, int xval, int yval)
 static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,
     t_floatarg ypos, t_floatarg xletno)
 {
+	if (x->gl_editor->e_onmotion == MA_MOVE) { return; }
+	//fprintf(stderr,"canvas_enterobj\n");
     t_symbol *name = 0, *helpname, *dir;
     int yoffset = 0, xoffset = 0;
     if (item == gensym("inlet"))
@@ -4887,6 +4917,8 @@ void g_editor_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_magicglass,
         gensym("magicglass"), A_DEFFLOAT, A_NULL);
     //end jsarlo
+    class_addmethod(canvas_class, (t_method)canvas_tooltips,
+        gensym("tooltips"), A_DEFFLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_print,
         gensym("print"), A_SYMBOL, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_menufont,

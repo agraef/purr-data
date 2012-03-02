@@ -1637,7 +1637,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (firsttime)
 		{
             sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d \
-                      -dash %s -outline %s -fill %s -tags %sR\n", 
+                      -dash %s -outline %s -fill %s -tags {%sR text}\n", 
                 glist_getcanvas(glist),
                      x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
                      pattern, outline, fill, tag);
@@ -1661,7 +1661,7 @@ void text_drawborder(t_text *x, t_glist *glist,
 		{
             sys_vgui(".x%lx.c create polygon \
                      %d %d %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $msg_box_fill -tags %sR\n",
+                     -outline $box_outline -fill $msg_box_fill -tags {%sR text}\n",
                 glist_getcanvas(glist),
                      x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
                      x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
@@ -1683,7 +1683,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (firsttime)
 		{
             sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $atom_box_fill -tags %sR\n",
+                     -outline $box_outline -fill $atom_box_fill -tags {%sR text}\n",
                 glist_getcanvas(glist),
                      x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
                      x2, y2,  x1, y2,  x1, y1, 
@@ -1736,7 +1736,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         if (firsttime)
 		{
             sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d \
-                      -dash %s -outline %s -fill %s -tags %sR\n", 
+                      -dash %s -outline %s -fill %s -tags {%sR text}\n", 
                 glist_getcanvas(glist),
                      x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
                      pattern, outline, fill, tag);
@@ -1749,7 +1749,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         if (firsttime)
             sys_vgui(".x%lx.c create polygon \
                      %d %d %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $msg_box_fill -tags %sR\n",
+                     -outline $box_outline -fill $msg_box_fill -tags {%sR text}\n",
                 glist_getcanvas(glist),
                      x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
                      x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
@@ -1761,7 +1761,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         atom_draw_const = ((y2-y1)/3);
         if (firsttime)
             sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $atom_box_fill -tags %sR\n",
+                     -outline $box_outline -fill $atom_box_fill -tags {%sR text}\n",
                 glist_getcanvas(glist),
                      x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
                      x2, y2,  x1, y2,  x1, y1, 

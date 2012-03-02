@@ -1783,6 +1783,8 @@ void canvasgop_draw_move(t_canvas *x, int doit)
 
 extern int gfxstub_haveproperties(void *key);
 extern void canvas_canvas_setundo(t_canvas *x);
+extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
+    int *xp1, int *yp1, int *xp2, int *yp2);
 
 void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
 {
@@ -1821,22 +1823,9 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 						if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
 						if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
 					} else {
-						// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
-						// later consider instead of hardwiring values pulling these more intelligently from
-						// a common place THIS SHOULD BE LATER MERGED WITH GRPAH_GETRECT
-						int fw = sys_fontwidth(x->gl_font);
-						int fh = sys_fontheight(x->gl_font);
-						int tcols = strlen(x->gl_name->s_name) - 3;
-						int th = fh + fh * (tcols/60) + 4;
-						if (tcols > 60) tcols = 60;
-						int tw = fw * tcols + 4;
-						if (tw + x1 > x2)
-							x2 = tw + x1;
-						if (th + y1 > y2)
-							y2 = th + y1;
+						graph_checkgop_rect((t_gobj*)x, x, &x1, &y1, &x2, &y2);
 						if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
 						if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
-						//fprintf(stderr,"graph_getrect->text_getrect %d=%d %d=%d\n", fw, x2, fh, y2);
 					}
 				}
 

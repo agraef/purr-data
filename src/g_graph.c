@@ -22,6 +22,8 @@ static void graph_graphrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 static void graph_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
+void graph_checkgop_rect(t_gobj *z, t_glist *glist,
+    int *xp1, int *yp1, int *xp2, int *yp2);
 
 /* -------------------- maintaining the list -------------------- */
 
@@ -716,6 +718,14 @@ void glist_redraw(t_glist *x)
             if (x->gl_goprect)
             {
                 //post("draw it");
+				/* update gop rect size on toplevel in case font has
+				changed and we are showing text */
+				if (!x->gl_hidetext) {
+					int x1, y1, x2, y2;
+					graph_getrect((t_gobj *)x, x, &x1, &y1, &x2, &y2);
+					if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
+					if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
+				}
                 canvas_drawredrect(x, 1);
             }
         }
@@ -951,6 +961,33 @@ static void graph_graphrect(t_gobj *z, t_glist *glist,
     *yp2 = y2;
 }
 
+	/* check if the gop size needs to change due to gop's text
+	in case hidetext is not enabled */
+void graph_checkgop_rect(t_gobj *z, t_glist *glist,
+    int *xp1, int *yp1, int *xp2, int *yp2) {
+
+	//fprintf(stderr,"graph_checkgop_rect\n");
+	t_glist *x = (t_glist *)z;
+	int x21, y21, x22, y22;
+	text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);
+    if (x22 > *xp2)
+        *xp2 = x22;
+    if (y22 > *yp2) 
+        *yp2 = y22;
+	int fw = sys_fontwidth(x->gl_font);
+	int fh = sys_fontheight(x->gl_font);
+	// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
+	// later consider fixing hardwired values
+	int tcols = strlen(x->gl_name->s_name) - 3;
+	int th = fh + fh * (tcols/60) + 4;
+	if (tcols > 60) tcols = 60;
+	int tw = fw * tcols + 4;
+	if (tw + *xp1 > *xp2)
+		*xp2 = tw + *xp1;
+	if (th + *yp1 > *yp2)
+		*yp2 = th + *yp1;
+}
+
     /* get the rectangle, enlarged to contain all the "contents" --
     meaning their formal bounds rectangles. */
 static void graph_getrect(t_gobj *z, t_glist *glist,
@@ -1007,27 +1044,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 
 		// check if the text is not hidden and if so use that as the limit of the gop's size
 		if (!x->gl_hidetext) {
-			text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);
-		    if (x22 > x2) 
-		        x2 = x22;
-		    if (y22 > y2) 
-		        y2 = y22;
-			// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
-			// later consider instead of hardwiring values pulling these more intelligently from
-			// a common place
-			int fw = sys_fontwidth(x->gl_font);
-			int fh = sys_fontheight(x->gl_font);
-			//fprintf(stderr," fw=%d /=%d mod=%d \n", fw, fw/60, fw%60);
-			//fprintf(stderr,"name=%s\n",x->gl_name->s_name);
-			int tcols = strlen(x->gl_name->s_name) - 3;
-			int th = fh + fh * (tcols/60) + 4;
-			if (tcols > 60) tcols = 60;
-			int tw = fw * tcols + 4;
-			if (tw + x1 > x2)
-				x2 = tw + x1;
-			if (th + y1 > y2)
-				y2 = th + y1;
-			//fprintf(stderr,"graph_getrect->text_getrect %d=%d %d=%d\n", fw, x2, fh, y2);
+			graph_checkgop_rect(z, glist, &x1, &y1, &x2, &y2);
 		}
 
 		/* fix visibility of edge items for garrays */
