@@ -711,7 +711,11 @@ static void hslider_dialog(t_hslider *x, t_symbol *s, int argc, t_atom *argv)
         x->x_steady = 0;
     sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
     x->x_gui.x_h = iemgui_clip_size(h);
+	int old_width = x->x_gui.x_w;
     hslider_check_width(x, w);
+	if (x->x_gui.x_w != old_width) {
+		x->x_val = x->x_val * ((double)x->x_gui.x_w/(double)old_width);
+	}
     hslider_check_minmax(x, min, max);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
