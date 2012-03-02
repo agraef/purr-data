@@ -7221,8 +7221,8 @@ proc pdtk_tip {w fromc show args} {
 	        -wraplength [winfo width $w] -bg $nlet_color -fg $fg -bd 1 \
 	        -padx 2 -pady 2 -relief flat
 		}
-        set xreal [expr [$w canvasx 0] * -1 + [winfo pointerx $w]-[winfo rootx $w]]
-        set yreal [expr [$w canvasy 0] * -1 + [winfo pointery $w]-[winfo rooty $w]]
+        set xreal [expr [$w canvasx 0] + [winfo pointerx $w]-[winfo rootx $w]]
+        set yreal [expr [$w canvasy 0] + [winfo pointery $w]-[winfo rooty $w]]
 
 		# first figure out default behavior for above/below
 		if { [string match "\{Inlet*" $args] } {
