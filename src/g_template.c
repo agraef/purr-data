@@ -1649,7 +1649,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
     int tovis)
 {
     t_plot *x = (t_plot *)z;
-	fprintf(stderr,"plot %lx glist %lx glist_getcanvas %lx plot->x_obj %lx plot->x_canvas %lx\n", (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist), (t_int)&x->x_obj, (t_int)x->x_canvas);
+	//fprintf(stderr,"plot %lx glist %lx glist_getcanvas %lx plot->x_obj %lx plot->x_canvas %lx\n", (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist), (t_int)&x->x_obj, (t_int)x->x_canvas);
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
