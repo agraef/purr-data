@@ -4795,7 +4795,8 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
             gobj_getrect(y, x, &x1, &y1, &x2, &y2);
             nx1 = x1 * xresize + 0.5;
             ny1 = y1 * yresize + 0.5;
-            gobj_displace(y, x, nx1-x1, ny1-y1);
+			if (pd_class(&y->g_pd) != scalar_class)
+            	gobj_displace(y, x, nx1-x1, ny1-y1);
         }
     }
     if (glist_isvisible(x))

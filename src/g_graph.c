@@ -698,7 +698,7 @@ void glist_redraw(t_glist *x)
     if (glist_isvisible(x))
     {
             /* LATER fix the graph_vis() code to handle both cases */
-        if (glist_istoplevel(x))
+        if (glist_istoplevel(x) && x->gl_havewindow)
         {
             t_gobj *g;
             t_linetraverser t;
@@ -1029,7 +1029,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
             {
                     /* don't do this for arrays, just let them hang outside the
                     box. */
-                if (pd_class(&g->g_pd) == garray_class)
+                if (pd_class(&g->g_pd) == garray_class || pd_class(&g->g_pd) == scalar_class)
                     continue;
                 gobj_getrect(g, x, &x21, &y21, &x22, &y22);
                 if (x22 > x2) 
