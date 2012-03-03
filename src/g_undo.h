@@ -115,10 +115,10 @@ EXTERN void *canvas_undo_set_create(t_canvas *x);
 EXTERN void canvas_undo_recreate(t_canvas *x, void *z, int action);
 EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y, int old_pos);
 
-/* --------- 11. selection ------- */
+/* --------- 11. font ------------ */
 
-//EXTERN void canvas_undo_selection(t_canvas *x, void *z, int action);
-//EXTERN void *canvas_undo_set_selection(t_canvas *x);
+EXTERN void canvas_undo_font(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_font(t_canvas *x, int font);
 
 /* ------------------------------- */
 

@@ -55,7 +55,7 @@ static int screenx2;
 static int screeny2;
 static int copiedfont;
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
-    t_floatarg yresize);
+    t_floatarg yresize, int preview);
 extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
@@ -68,7 +68,7 @@ struct _outlet
     t_symbol *o_sym;
 };
 
-/* ----------- 11. selection -------------- */
+/* ----------- ??. selection -------------- */
 /*typedef struct _undo_sel
 {
     int u_index;
@@ -1724,7 +1724,45 @@ void canvas_undo_recreate(t_canvas *x, void *z, int action)
 	}
 }
 
-/* ----------- 11. selection -------------- */
+/* ----------- 11. font -------------- */
+
+typedef struct _undo_font
+{
+    int font;
+} t_undo_font;
+
+void *canvas_undo_set_font(t_canvas *x, int font)
+{
+	t_undo_font *u_f = (t_undo_font *)getbytes(sizeof(*u_f));
+	u_f->font = font;
+    return (u_f);
+}
+
+void canvas_undo_font(t_canvas *x, void *z, int action)
+{
+    t_undo_font *u_f = z;
+
+    if (action == UNDO_UNDO || action == UNDO_REDO) 
+    {
+		int tmp_font = sys_defaultfont;
+		t_canvas *x2 = canvas_getrootfor(x);
+
+		t_float resize = (t_float)sys_fontwidth(u_f->font)/(t_float)sys_fontwidth(x2->gl_font);
+
+		canvas_dofont(x2, u_f->font, resize, resize, 1);
+		sys_defaultfont = u_f->font;
+
+		u_f->font = tmp_font;
+    }
+    else if (action == UNDO_FREE)
+    {
+		if (u_f)
+			freebytes(u_f, sizeof(*u_f));
+    }
+}
+
+
+/* ----------- ??. selection -------------- */
 
 //structs are defined at the top of the file due to unusual undo/redo design of the selection
 
@@ -4253,7 +4291,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 (int)(x->gl_screenx1), (int)(x->gl_screeny1));
 			//hardwired stretchval and whichstretch until we figure out proper resizing
-			canvas_dofont(x, copiedfont, 100, 1);
+			canvas_dofont(x, copiedfont, 100, 1, 1);
 			//sys_vgui("pdtk_canvas_checkgeometry .x%lx\n", x);
 			canvas_redraw(x);
 		}
@@ -4741,7 +4779,7 @@ void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
 
     /* called by canvas_font below */
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
-    t_floatarg yresize)
+    t_floatarg yresize, int preview)
 {
     t_gobj *y;
     x->gl_font = font;
@@ -4749,7 +4787,8 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     {
         //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, 0),
         //    "motion");
-		canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 0));
+		if (!preview)
+			canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 0));
         for (y = x->gl_list; y; y = y->g_next)
         {
             int x1, x2, y1, y2, nx1, ny1;
@@ -4764,27 +4803,34 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == canvas_class
             && !canvas_isabstraction((t_canvas *)y))
-                canvas_dofont((t_canvas *)y, font, xresize, yresize);
+                canvas_dofont((t_canvas *)y, font, xresize, yresize, preview);
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 }
 
     /* canvas_menufont calls up a TK dialog which calls this back */
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg resize,
-    t_floatarg whichresize)
+    t_floatarg whichresize, t_floatarg preview)
 {
     t_float realresize, realresx = 1, realresy = 1;
     t_canvas *x2 = canvas_getrootfor(x);
     if (!resize) realresize = 1;
     else
     {
-        if (resize < 20) resize = 20;
-        if (resize > 500) resize = 500;
-        realresize = resize * 0.01;
+		//fprintf(stderr,"%d %d %d\n", sys_fontwidth(font), sys_fontwidth(x->gl_font), x->gl_font);
+		realresize = (t_float)sys_fontwidth(font)/(t_float)sys_fontwidth(x2->gl_font); //*100.0;
+        //if (resize < 20) resize = 20;
+        //if (resize > 500) resize = 500;
+        //realresize = resize * 0.01;
     }
     if (whichresize != 3) realresx = realresize;
     if (whichresize != 2) realresy = realresize;
-    canvas_dofont(x2, font, realresx, realresy);
-    sys_defaultfont = font;
+
+	if (!preview) {
+		if (sys_defaultfont != font)
+			canvas_undo_add(x, 11, "font", canvas_undo_set_font(x, sys_defaultfont));
+		sys_defaultfont = font;
+	}
+    canvas_dofont(x2, font, realresx, realresy, preview);
 }
 
 static t_glist *canvas_last_glist;
@@ -4923,7 +4969,7 @@ void g_editor_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_menufont,
         gensym("menufont"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_font,
-        gensym("font"), A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+        gensym("font"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_find,
         gensym("find"), A_SYMBOL, A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_find_again,

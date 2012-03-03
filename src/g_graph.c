@@ -720,12 +720,12 @@ void glist_redraw(t_glist *x)
                 //post("draw it");
 				/* update gop rect size on toplevel in case font has
 				changed and we are showing text */
-				if (!x->gl_hidetext) {
+				/*if (!x->gl_hidetext) {
 					int x1, y1, x2, y2;
 					graph_getrect((t_gobj *)x, x, &x1, &y1, &x2, &y2);
 					if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
 					if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
-				}
+				}*/
                 canvas_drawredrect(x, 1);
             }
         }
