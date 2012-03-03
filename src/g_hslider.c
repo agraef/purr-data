@@ -48,8 +48,8 @@ static void hslider_draw_update(t_gobj *client, t_glist *glist)
     {
         int r = text_xpix(&x->x_gui.x_obj, glist) + (x->x_val + 50)/100;
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-                 canvas, x, r, ypos+1,
-                 r, ypos + x->x_gui.x_h);
+                 canvas, x, r, ypos+2,
+                 r, ypos + x->x_gui.x_h-1);
         if(x->x_val == x->x_center)
         {
             if(!x->x_thick)
@@ -101,8 +101,8 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 		         xpos + x->x_gui.x_w+2, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxHSLDR text}\n",
-		         canvas, r, ypos+1, r,
-		         ypos + x->x_gui.x_h, x->x_gui.x_fcol, x, x);
+		         canvas, r, ypos+2, r,
+		         ypos + x->x_gui.x_h-1, x->x_gui.x_fcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR text}\n",
 		         canvas, xpos+x->x_gui.x_ldx,
@@ -148,8 +148,8 @@ static void hslider_draw_move(t_hslider *x, t_glist *glist)
 		         xpos-3, ypos,
 		         xpos + x->x_gui.x_w+2, ypos + x->x_gui.x_h);
 		sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-		         canvas, x, r, ypos+1,
-		         r, ypos + x->x_gui.x_h);
+		         canvas, x, r, ypos+2,
+		         r, ypos + x->x_gui.x_h-1);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able)

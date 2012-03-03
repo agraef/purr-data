@@ -47,8 +47,8 @@ static void vslider_draw_update(t_gobj *client, t_glist *glist)
         int xpos=text_xpix(&x->x_gui.x_obj, glist);
 
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-                 glist_getcanvas(glist), x, xpos+1, r,
-                 xpos + x->x_gui.x_w, r);
+                 glist_getcanvas(glist), x, xpos+2, r,
+                 xpos + x->x_gui.x_w-1, r);
     }
 }
 
@@ -84,8 +84,8 @@ static void vslider_draw_new(t_vslider *x, t_glist *glist)
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h+3,
 		         x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxVSLDR text}\n",
-		         canvas, xpos+1, r,
-		         xpos + x->x_gui.x_w, r, x->x_gui.x_fcol, x, x);
+		         canvas, xpos+2, r,
+		         xpos + x->x_gui.x_w-1, r, x->x_gui.x_fcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxVSLDR text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
@@ -134,8 +134,8 @@ static void vslider_draw_move(t_vslider *x, t_glist *glist)
 		         xpos, ypos-2,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h+3);
 		sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-		         canvas, x, xpos+1, r,
-		         xpos + x->x_gui.x_w, r);
+		         canvas, x, xpos+2, r,
+		         xpos + x->x_gui.x_w-1, r);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able)
