@@ -926,14 +926,18 @@ static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
 static void gatom_displace(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
-    t_gatom *x = (t_gatom*)z;
-    text_displace(z, glist, dx, dy);
-    sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
-        x, dx, dy);
+	//fprintf(stderr,"gatom_displace\n");
+	t_gatom *x = (t_gatom*)z;
+	text_displace(z, glist, dx, dy);
+	if (glist_isvisible(glist)) {
+		sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
+		    x, dx, dy);
+	}
 }
 
 static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 {
+	//fprintf(stderr,"gatom_vis\n");
     t_gatom *x = (t_gatom*)z;
     text_vis(z, glist, vis);
     if (*x->a_label->s_name)
@@ -958,7 +962,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 void canvas_atom(t_glist *gl, t_atomtype type,
     t_symbol *s, int argc, t_atom *argv)
 {
-	//fprintf(stderr,"canvas_atom\n");
+	fprintf(stderr,"canvas_atom\n");
     t_gatom *x = (t_gatom *)pd_new(gatom_class);
     t_atom at;
     x->a_text.te_width = 0;                        /* don't know it yet. */
