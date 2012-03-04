@@ -3242,6 +3242,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
         if {$key == "l" || $key == "L"} {menu_clear_console}
         if {$key == "r" || $key == "R"} {menu_toggle_console}
 		if {$key == "E"} {menu_tooltips $topname}
+		if {$key == "Return"} {pdtk_zoom_reset $topname}
 		if {!$ignore} {
 	        if {$key == "w" || $key == "W"} {menu_really_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_saveas $topname}
@@ -3397,6 +3398,21 @@ proc pdtk_zoom {name direction} {
 # zooming (a subset of dofont)
 set font_array { 8 10 12 16 24 36 }
 set zoom_fontsize 10
+
+proc pdtk_zoom_reset {name} {
+	global font_array
+	global zoom_fontsize
+
+	if { $zoom_fontsize == 10 } { return }
+	
+	if { $zoom_fontsize < 10 } {
+		pdtk_zoom $name 1
+	} else {
+		while { $zoom_fontsize != 10 } {
+			pdtk_zoom $name -1
+		}
+	}
+}
 
 proc pdtk_zoom {name direction} {
 	global font_array
