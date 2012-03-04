@@ -55,12 +55,11 @@ static int screenx2;
 static int screeny2;
 static int copiedfont;
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
-    t_floatarg yresize, int preview);
+    t_floatarg yresize);
 extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
-static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg resize,
-    t_floatarg oldfont, t_floatarg preview);
+static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floatarg resize, t_floatarg preview);
 
 struct _outlet
 {
@@ -1378,7 +1377,8 @@ void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		//close properties window first
 		t_int properties = gfxstub_haveproperties((void *)x);
 		if (properties) {
-			sys_vgui("destroy .gfxstub%lx\n", properties);
+			//sys_vgui("destroy .gfxstub%lx\n", properties);
+			gfxstub_deleteforkey(x);
 		}
 
 		//store current canvas values into temporary data holder
@@ -1735,7 +1735,11 @@ void canvas_undo_font(t_canvas *x, void *z, int action)
 		t_canvas *x2 = canvas_getrootfor(x);
 		int tmp_font = x2->gl_font;
 		t_float resize = (t_float)sys_fontwidth(u_f->font)/(t_float)sys_fontwidth(x2->gl_font);
-		canvas_font(x2, u_f->font, 100.0, (t_floatarg)x2->gl_font, -1);
+		t_int properties = gfxstub_haveproperties((void *)x2);
+		if (properties) {
+			sys_vgui(".gfxstub%lx.radiof.radio%d invoke\n", properties, u_f->font);
+		}	
+		else sys_vgui("dofont_apply .x%lx %d 1\n", x2, u_f->font);
 		u_f->font = tmp_font;
     }
     else if (action == UNDO_FREE)
@@ -3650,7 +3654,7 @@ static void canvas_menufont(t_canvas *x)
     char buf[80];
     t_canvas *x2 = canvas_getrootfor(x);
     gfxstub_deleteforkey(x2);
-    sprintf(buf, "pdtk_canvas_dofont %%s %d\n", x2->gl_font);
+    sprintf(buf, "pdtk_canvas_dofont %%s .x%lx %d\n", (t_int)x2, x2->gl_font);
     gfxstub_new(&x2->gl_pd, &x2->gl_pd, buf);
 }
 
@@ -4209,7 +4213,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 (int)(x->gl_screenx1), (int)(x->gl_screeny1));
 			//hardwired stretchval and whichstretch until we figure out proper resizing
-			canvas_dofont(x, copiedfont, 100, 1, 1);
+			canvas_dofont(x, copiedfont, 1, 1);
 			//sys_vgui("pdtk_canvas_checkgeometry .x%lx\n", x);
 			canvas_redraw(x);
 		}
@@ -4697,16 +4701,12 @@ void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
 
     /* called by canvas_font below */
 static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
-    t_floatarg yresize, int preview)
+    t_floatarg yresize)
 {
     t_gobj *y;
     x->gl_font = font;
     if (xresize != 1 || yresize != 1)
     {
-        //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, 0),
-        //    "motion");
-		//if (!preview)
-		//	canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 0));
         for (y = x->gl_list; y; y = y->g_next)
         {
             int x1, x2, y1, y2, nx1, ny1;
@@ -4722,36 +4722,28 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == canvas_class
             && !canvas_isabstraction((t_canvas *)y))
-                canvas_dofont((t_canvas *)y, font, xresize, yresize, preview);
+                canvas_dofont((t_canvas *)y, font, xresize, yresize);
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 }
 
-    /* canvas_menufont calls up a TK dialog which calls this back (0 for apply, 1 for preview)
-		this is also called by ctrl+mousewheel (0) for faux zoom, as well as undo_font (-1) */
-static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg resize,
-    t_floatarg oldfont, t_floatarg preview)
+    /* canvas_menufont calls up a TK dialog which calls this back */
+static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floatarg resize, t_floatarg noundo)
 {
-    t_float realresize, realresx = 1, realresy = 1;
+    t_float realresize;
     t_canvas *x2 = canvas_getrootfor(x);
     if (!resize) realresize = 1;
     else
-		realresize = (t_float)sys_fontwidth(font)/(t_float)sys_fontwidth(oldfont);
+		realresize = (t_float)sys_fontwidth(font)/(t_float)sys_fontwidth(x2->gl_font);
 
-    realresx = realresize;
-    realresy = realresize;
-
-	if (!preview && font != oldfont) {
-		canvas_undo_add(x, 11, "font", canvas_undo_set_font(x, oldfont));
-		canvas_dirty(x2, 1);
+	if (!noundo) {
+		if (!oldfont && font != x2->gl_font)
+			canvas_undo_add(x, 11, "font", canvas_undo_set_font(x, x2->gl_font));
+		else if (oldfont != font) canvas_undo_add(x, 11, "font", canvas_undo_set_font(x, oldfont));
 	}
 
-	t_int properties = gfxstub_haveproperties((void *)x2);
-	if (preview <= 0 && properties)
-			gfxstub_deleteforkey(x2);
+	canvas_dirty(x2, 1);
 
-	if (x2->gl_font != (int)font) {
-    	canvas_dofont(x2, font, realresx, realresy, preview);
-	}
+    canvas_dofont(x2, font, realresize, realresize);
 }
 
 static t_glist *canvas_last_glist;

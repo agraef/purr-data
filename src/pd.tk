@@ -3390,23 +3390,6 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     set untitled_directory $directory
 }
 
-# zooming
-set font_array { 8 10 12 16 24 36 }
-
-proc pdtk_zoom {name direction} {
-	#puts stderr "pdtk_zoom $name $direction"
-	global font_array
-	global fontsize
-	set fontsize $::font($name)
-	set index [lsearch $font_array $::font($name)]
-	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
-		return
-	} else {
-		set ::font($name) [lindex $font_array [expr $index + $direction]]
-		dofont_apply $name $::font($name) 0
-	}
-}
-
 # zooming (a subset of dofont)
 
 #set zoom_fontsize 10
@@ -3466,46 +3449,78 @@ proc pdtk_zoom {name direction} {
 
 ############ pdtk_canvas_dofont -- run a font and resize dialog #########
 
-set fontsize 10
-set dofont_fontsize 10
-set stretchval 100
-set whichstretch 1
+set oldfontsize 10
+set previewfontsize 10
+set font_array { 8 10 12 16 24 36 }
+set font_properties 0
+set font_canvas 0
 
-proc dofont_apply {name myfontsize preview} {
-    global stretchval
-	global fontsize
-    set cmd [concat $name font $myfontsize $stretchval $fontsize $preview \;]
+# zooming (a subset of dofont)
+proc pdtk_zoom {name direction} {
+
+	global font_array oldfontsize previewfontsize font_properties font_canvas
+
+	set index [lsearch $font_array $::font($name)]
+	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
+		return
+	} else {
+		set previewfontsize $::font($name)
+		set ::font($name) [lindex $font_array [expr $index + $direction]]
+		if { $font_properties != 0 && $font_canvas == $name } {
+			[format "$font_properties.radiof.radio%d" $::font($name)] invoke
+		} else {
+			dofont_apply $name $::font($name) 0
+		}
+	}
+}
+
+proc dofont_apply {name myfontsize noundo} {
+	global oldfontsize
+    set cmd [concat $name font $myfontsize $oldfontsize 100 $noundo \;]
     pd $cmd
+	set oldfontsize $myfontsize
+	set ::font($name) $myfontsize
+}
+
+proc dofont_preview {name myfontsize} {
+	global previewfontsize
+    set cmd [concat $name font $myfontsize 0 100 1 \;]
+    pd $cmd
+	set previewfontsize $myfontsize
 }
 
 proc dofont_close {name} {
+	global font_properties font_canvas
     set cmd [concat $name cancel \;]
     pd $cmd
+	set font_properties 0
+	set font_canvas 0
 }
 
 proc dofont_cancel {name} {
-    global fontsize
-    dofont_apply $name $fontsize 1
+    global oldfontsize
+    dofont_preview $name $oldfontsize
     set cmd [concat $name cancel \;]
     pd $cmd
 }
 
 proc dofont_ok {name} {
-    global fontsize dofont_fontsize
-    dofont_apply $name $dofont_fontsize 0
+    global previewfontsize font_canvas
+    dofont_apply $font_canvas $previewfontsize 0
     dofont_close $name
 }
 
-proc pdtk_canvas_dofont {name initsize} {
-    global fontsize dofont_fontsize pd_nt
-    set fontsize $initsize
-    set dofont_fontsize $initsize
+proc pdtk_canvas_dofont {name canvas initsize} {
+    global oldfontsize previewfontsize pd_nt font_properties font_canvas
+    set oldfontsize $initsize
+    set previewfontsize $initsize
 
-    global stretchval
-    #set stretchval 100
-    
-    global whichstretch
-    #set whichstretch 1
+	if {[winfo exists $font_properties]} {
+		destroy $font_properties
+	}
+
+	set font_properties $name
+	set font_canvas $canvas
     
     toplevel $name
 	match_linux_wm [list $name configure]
@@ -3532,22 +3547,22 @@ proc pdtk_canvas_dofont {name initsize} {
 
     match_linux_wm [list radiobutton $name.radiof.radio8 -value 8 \
 		-variable dofont_fontsize -text "8" \
-        -command [concat dofont_apply $name 8 1]]
+        -command [concat dofont_preview $name 8]]
     match_linux_wm [list radiobutton $name.radiof.radio10 -value 10 \
 		-variable dofont_fontsize -text "10" \
-        -command [concat dofont_apply $name 10 1]]
+        -command [concat dofont_preview $name 10]]
     match_linux_wm [list radiobutton $name.radiof.radio12 -value 12 \
 		-variable dofont_fontsize -text "12" \
-        -command [concat dofont_apply $name 12 1]]
+        -command [concat dofont_preview $name 12]]
     match_linux_wm [list radiobutton $name.radiof.radio16 -value 16 \
 		-variable dofont_fontsize -text "16" \
-        -command [concat dofont_apply $name 16 1]]
+        -command [concat dofont_preview $name 16]]
     match_linux_wm [list radiobutton $name.radiof.radio24 -value 24 \
 		-variable dofont_fontsize -text "24" \
-        -command [concat dofont_apply $name 24 1]]
+        -command [concat dofont_preview $name 24]]
     match_linux_wm [list radiobutton $name.radiof.radio36 -value 36 \
 		-variable dofont_fontsize -text "36" \
-        -command [concat dofont_apply $name 36 1]]
+        -command [concat dofont_preview $name 36]]
     pack $name.radiof.radio8 -side top -anchor w
     pack $name.radiof.radio10 -side top -anchor w
     pack $name.radiof.radio12 -side top -anchor w
@@ -3561,34 +3576,6 @@ proc pdtk_canvas_dofont {name initsize} {
 	} else {
 	    $current_radiobutton select
 	}
-
-#    match_linux_wm [list frame $name.stretchf]
-#    pack $name.stretchf -side left
-#    
-#    match_linux_wm [list label $name.stretchf.label -text {Stretch:}]
-#    pack $name.stretchf.label -side top    
-#    match_linux_wm [list entry $name.stretchf.entry -textvariable stretchval -width 5]
-#    pack $name.stretchf.entry -side left
-#
-#    match_linux_wm [list radiobutton $name.stretchf.radio1 \
-#        -value 1 -variable whichstretc -text "X and Y" \
-#		-command [concat dofont_apply $name $dofont_fontsize 1]]
-#    match_linux_wm [list radiobutton $name.stretchf.radio2 \
-#        -value 2 -variable whichstretch -text "X only" \
-#		-command [concat dofont_apply $name $dofont_fontsize 1]]
-#    match_linux_wm [list radiobutton $name.stretchf.radio3 \
-#        -value 3 -variable whichstretch -text "Y only" \
-#		-command [concat dofont_apply $name $dofont_fontsize 1]]
-#    pack $name.stretchf.radio1 -side top -anchor w
-#    pack $name.stretchf.radio2 -side top -anchor w
-#    pack $name.stretchf.radio3 -side top -anchor w
-#
-#	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-#	    $name.stretchf.radio1 invoke
-#	} else {
-#	    $name.stretchf.radio1 select
-#	}
-
 }
 
 ############ pdtk_gatom_dialog -- run a gatom dialog #########
