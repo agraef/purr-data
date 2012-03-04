@@ -7287,9 +7287,8 @@ proc pdtk_tip {w fromc show args} {
 	variable select_color
 	variable nlet_color
 	variable tooltip_visible
-	variable dofont_fontsize
     global pd_fontlist
-    switch -- $dofont_fontsize {
+    switch -- $::font([string trimright $w .c]) {
         8  { set typeface [lindex $pd_fontlist 0] }
         9  { set typeface [lindex $pd_fontlist 1] }
         10 { set typeface [lindex $pd_fontlist 2] }
