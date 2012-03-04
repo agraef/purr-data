@@ -192,8 +192,8 @@ dnl This should be fixed so Pd can use ALSA shared libraries where appropriate.
 
     if test x$jack = xyes; then
         AC_CHECK_LIB(rt,shm_open,LIBS="$LIBS -lrt")
-        AC_CHECK_LIB(jack,jack_set_xrun_callback,LIBS="$LIBS -ljack";jack=xrun,jack=no)
-        AC_CHECK_LIB(jack,jack_set_error_function,LIBS="$LIBS -ljack";jack=yes,jack=no)
+        AC_CHECK_LIB(jack,jack_set_xrun_callback,PDLIB="$PDLIB -ljack";jack=xrun,jack=no)
+        AC_CHECK_LIB(jack,jack_set_error_function,PDLIB="$PDLIB -ljack";jack=yes,jack=no)
     fi
 
     LDFLAGS="-Wl,-export-dynamic"
