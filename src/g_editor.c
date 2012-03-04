@@ -2025,6 +2025,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 (int)(x->gl_screenx1), (int)(x->gl_screeny1),
                 x->gl_edit);
+			sys_vgui("catch {pdtk_canvas_set_font .x%lx %d}\n", x, x->gl_font);
             canvas_reflecttitle(x);
             x->gl_havewindow = 1;
 
@@ -4830,6 +4831,7 @@ static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg resize,
 		if (sys_defaultfont != font)
 			canvas_undo_add(x, 11, "font", canvas_undo_set_font(x, sys_defaultfont));
 		sys_defaultfont = font;
+		canvas_dirty(x2, 1);
 	}
     canvas_dofont(x2, font, realresx, realresy, preview);
 }

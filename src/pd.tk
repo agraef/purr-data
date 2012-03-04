@@ -1992,6 +1992,11 @@ proc menu_findobject {canvas} {
 	}
 }
 
+proc pdtk_canvas_set_font {name size} {
+	if {[info exists ::font($name)]} {
+		set ::font($name) $size
+	}
+}
 
 ############# pdtk_canvas_new -- create a new canvas ###############
 proc pdtk_canvas_new {name width height geometry editable} {
@@ -2037,6 +2042,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	}
 	if {![info exists ::redo($name)]} {
 		set ::redo($name) no
+	}
+
+	if {![info exists ::font($name)]} {
+		set ::font($name) 10
 	}
 
 	if {$::menu($name) == 1} {
@@ -2545,8 +2554,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Button-5>  "pdtk_canvas_scroll $name.c y +1"
         bind $name.c <Shift-Button-4>  "pdtk_canvas_scroll $name.c x -1"
         bind $name.c <Shift-Button-5>  "pdtk_canvas_scroll $name.c x +1"
-        #bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
-        #bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
+        bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
+        bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
     } default {
         bind $name.c  <MouseWheel> \
             "pdtk_canvas_scroll $name.c y \[expr -abs(%D)/%D\]"
@@ -3242,7 +3251,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
         if {$key == "l" || $key == "L"} {menu_clear_console}
         if {$key == "r" || $key == "R"} {menu_toggle_console}
 		if {$key == "E"} {menu_tooltips $topname}
-		#if {$key == "Return"} {pdtk_zoom_reset $topname}
+		if {$key == "Return"} {pdtk_zoom_reset $topname}
 		if {!$ignore} {
 	        if {$key == "w" || $key == "W"} {menu_really_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_saveas $topname}
@@ -3379,74 +3388,76 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     set untitled_directory $directory
 }
 
-# zooming (a subset of dofont)
-
+# zooming
+set font_array { 8 10 12 16 24 36 }
 
 proc pdtk_zoom {name direction} {
 	#puts stderr "pdtk_zoom $name $direction"
 	global font_array
-	global dofont_fontsize
-	set index [lsearch $font_array $dofont_fontsize]
+	set index [lsearch $font_array $::font($name)]
 	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
 		return
 	} else {
-		set dofont_fontsize [lindex $font_array [expr $index + $direction]]
-		dofont_apply $name $dofont_fontsize 1
+		set ::font($name) [lindex $font_array [expr $index + $direction]]
+		dofont_apply $name $::font($name) 0
 	}
 }
 
 # zooming (a subset of dofont)
-set font_array { 8 10 12 16 24 36 }
-set zoom_fontsize 10
 
-proc pdtk_zoom_reset {name} {
-	global font_array
-	global zoom_fontsize
+#set zoom_fontsize 10
 
-	if { $zoom_fontsize == 10 } { return }
-	
-	if { $zoom_fontsize < 10 } {
-		pdtk_zoom $name 1
-	} else {
-		while { $zoom_fontsize != 10 } {
-			pdtk_zoom $name -1
-		}
-	}
-}
+#proc pdtk_zoom_reset {name} {
+#	global font_array
+#	global zoom_fontsize
+#
+#	if { $zoom_fontsize == 10 } { return }
+#	
+#	if { $zoom_fontsize < 10 } {
+#		pdtk_zoom $name 1
+#	} else {
+#		while { $zoom_fontsize != 10 } {
+#			pdtk_zoom $name -1
+#		}
+#	}
+#}
 
-proc pdtk_zoom {name direction} {
-	global font_array
-	global zoom_fontsize
-	global pd_fontlist
-	set index [lsearch $font_array $zoom_fontsize]
-	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
-		return
-	} else {
-		set scale [expr {double([lindex $font_array [expr $index + $direction]])/($zoom_fontsize)}]
-		set zoom_fontsize [lindex $font_array [expr $index + $direction]]
-
-		switch -- $zoom_fontsize {
-		    8  { set typeface [lindex $pd_fontlist 0] }
-		    9  { set typeface [lindex $pd_fontlist 1] }
-		    10 { set typeface [lindex $pd_fontlist 2] }
-		    12 { set typeface [lindex $pd_fontlist 3] }
-		    14 { set typeface [lindex $pd_fontlist 4] }
-		    16 { set typeface [lindex $pd_fontlist 5] }
-		    18 { set typeface [lindex $pd_fontlist 6] }
-		    24 { set typeface [lindex $pd_fontlist 7] }
-		    30 { set typeface [lindex $pd_fontlist 8] }
-		    36 { set typeface [lindex $pd_fontlist 9] }
-		}
-
-		foreach item [$name.c find all] {
-			if {[$name.c type $item] == "text"} {
-				$name.c itemconfigure $item -font $typeface
-			}
-		}
-		$name.c scale all 0 0 $scale $scale
-	}
-	pdtk_canvas_getscroll $name.c
-}
+#proc pdtk_zoom {name direction} {
+#	global font_array
+#	global zoom_fontsize
+#	global dofont_fontsize
+#	global pd_fontlist
+#	set index [lsearch $font_array $zoom_fontsize]
+#	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
+#		return
+#	} else {
+#		set scale [expr {double([lindex $font_array [expr $index + $direction]])/($zoom_fontsize)}]
+#		set zoom_fontsize [lindex $font_array [expr $index + $direction]]
+#
+#		switch -- $zoom_fontsize {
+#		    8  { set typeface [lindex $pd_fontlist 0] }
+#		    9  { set typeface [lindex $pd_fontlist 1] }
+#		    10 { set typeface [lindex $pd_fontlist 2] }
+#		    12 { set typeface [lindex $pd_fontlist 3] }
+#		    14 { set typeface [lindex $pd_fontlist 4] }
+#		    16 { set typeface [lindex $pd_fontlist 5] }
+#		    18 { set typeface [lindex $pd_fontlist 6] }
+#		    24 { set typeface [lindex $pd_fontlist 7] }
+#		    30 { set typeface [lindex $pd_fontlist 8] }
+#		    36 { set typeface [lindex $pd_fontlist 9] }
+#		}
+#
+#		foreach item [$name.c find all] {
+#			if {[$name.c type $item] == "text"} {
+#				$name.c itemconfigure $item -font $typeface
+#			}
+#		}
+#		$name.c scale all 0 0 $scale $scale
+#	}
+#	pdtk_canvas_getscroll $name.c
+#    set cmd [concat $name font 0 [expr {double ($zoom_fontsize)/($dofont_fontsize)}] 0 2 \;]
+#    pd $cmd
+#}
 # end zooming
 
 ############ pdtk_canvas_dofont -- run a font and resize dialog #########
