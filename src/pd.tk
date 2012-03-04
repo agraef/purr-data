@@ -1676,10 +1676,12 @@ proc menu_duplicate {name} {
 }
 
 proc menu_selectall {name} {
-	if {![string match .gfxstub* $name] && ![string match *entry $name]} {
+	if {![string match .gfxstub* $name] && ![string match *ent* $name]} {
     	pd [concat $name selectall \;]
 	} else {
-		$name selection range 0 end
+		if { [string match *ent* $name] } {
+			$name selection range 0 end
+		}
 	}
 }
 
@@ -3288,7 +3290,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 		if {$key == "c" || $key == "C"} {pdtk_canvas_edit_menu_actions $topname Copy}
         #if {$key == "v" || $key == "V"} {menu_paste $topname}
         if {$key == "v" || $key == "V"} {pdtk_canvas_edit_menu_actions $topname Paste}
-        if {$key == "a" || $key == "A"} {menu_selectall $topname}
+		if {$key == "a" || $key == "A"} {menu_selectall $topname}
 		if {!$ignore} {
         	if {$key == "w" || $key == "W"} {menu_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_save $topname}
@@ -3394,6 +3396,8 @@ set font_array { 8 10 12 16 24 36 }
 proc pdtk_zoom {name direction} {
 	#puts stderr "pdtk_zoom $name $direction"
 	global font_array
+	global fontsize
+	set fontsize $::font($name)
 	set index [lsearch $font_array $::font($name)]
 	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
 		return
@@ -3468,17 +3472,14 @@ set stretchval 100
 set whichstretch 1
 
 proc dofont_apply {name myfontsize preview} {
-	#puts stderr "dofont_apply $name $myfontsize $preview"
     global stretchval
-    global whichstretch
-    set cmd [concat $name font $myfontsize $stretchval $whichstretch $preview \;]
-    #    puts stderr $cmd
+	global fontsize
+    set cmd [concat $name font $myfontsize $stretchval $fontsize $preview \;]
     pd $cmd
 }
 
 proc dofont_close {name} {
     set cmd [concat $name cancel \;]
-    #    puts stderr $cmd
     pd $cmd
 }
 
@@ -3486,14 +3487,12 @@ proc dofont_cancel {name} {
     global fontsize
     dofont_apply $name $fontsize 1
     set cmd [concat $name cancel \;]
-    #    puts stderr $cmd
     pd $cmd
 }
 
 proc dofont_ok {name} {
     global fontsize dofont_fontsize
-    set fontsize $dofont_fontsize
-    dofont_apply $name $fontsize 0
+    dofont_apply $name $dofont_fontsize 0
     dofont_close $name
 }
 
