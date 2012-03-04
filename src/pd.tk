@@ -2545,8 +2545,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Button-5>  "pdtk_canvas_scroll $name.c y +1"
         bind $name.c <Shift-Button-4>  "pdtk_canvas_scroll $name.c x -1"
         bind $name.c <Shift-Button-5>  "pdtk_canvas_scroll $name.c x +1"
-        bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
-        bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
+        #bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
+        #bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
     } default {
         bind $name.c  <MouseWheel> \
             "pdtk_canvas_scroll $name.c y \[expr -abs(%D)/%D\]"
@@ -3242,7 +3242,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
         if {$key == "l" || $key == "L"} {menu_clear_console}
         if {$key == "r" || $key == "R"} {menu_toggle_console}
 		if {$key == "E"} {menu_tooltips $topname}
-		if {$key == "Return"} {pdtk_zoom_reset $topname}
+		#if {$key == "Return"} {pdtk_zoom_reset $topname}
 		if {!$ignore} {
 	        if {$key == "w" || $key == "W"} {menu_really_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_saveas $topname}
