@@ -3378,15 +3378,8 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     set untitled_directory $directory
 }
 
-############ pdtk_canvas_dofont -- run a font and resize dialog #########
-
-set fontsize 10
-set dofont_fontsize 10
-set stretchval 100
-set whichstretch 1
-
 # zooming (a subset of dofont)
-set font_array { 8 10 12 16 24 36 }
+
 
 proc pdtk_zoom {name direction} {
 	#puts stderr "pdtk_zoom $name $direction"
@@ -3400,7 +3393,52 @@ proc pdtk_zoom {name direction} {
 		dofont_apply $name $dofont_fontsize 1
 	}
 }
+
+# zooming (a subset of dofont)
+set font_array { 8 10 12 16 24 36 }
+set zoom_fontsize 10
+
+proc pdtk_zoom {name direction} {
+	global font_array
+	global zoom_fontsize
+	global pd_fontlist
+	set index [lsearch $font_array $zoom_fontsize]
+	if { $index == 5 && $direction == 1 || $index == 0 && $direction == -1 } {
+		return
+	} else {
+		set scale [expr {double([lindex $font_array [expr $index + $direction]])/($zoom_fontsize)}]
+		set zoom_fontsize [lindex $font_array [expr $index + $direction]]
+
+		switch -- $zoom_fontsize {
+		    8  { set typeface [lindex $pd_fontlist 0] }
+		    9  { set typeface [lindex $pd_fontlist 1] }
+		    10 { set typeface [lindex $pd_fontlist 2] }
+		    12 { set typeface [lindex $pd_fontlist 3] }
+		    14 { set typeface [lindex $pd_fontlist 4] }
+		    16 { set typeface [lindex $pd_fontlist 5] }
+		    18 { set typeface [lindex $pd_fontlist 6] }
+		    24 { set typeface [lindex $pd_fontlist 7] }
+		    30 { set typeface [lindex $pd_fontlist 8] }
+		    36 { set typeface [lindex $pd_fontlist 9] }
+		}
+
+		foreach item [$name.c find all] {
+			if {[$name.c type $item] == "text"} {
+				$name.c itemconfigure $item -font $typeface
+			}
+		}
+		$name.c scale all 0 0 $scale $scale
+	}
+	pdtk_canvas_getscroll $name.c
+}
 # end zooming
+
+############ pdtk_canvas_dofont -- run a font and resize dialog #########
+
+set fontsize 10
+set dofont_fontsize 10
+set stretchval 100
+set whichstretch 1
 
 proc dofont_apply {name myfontsize preview} {
 	#puts stderr "dofont_apply $name $myfontsize $preview"
