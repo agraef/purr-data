@@ -2536,12 +2536,12 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
     # canvas bindings ---------------------------------------------------------
     # just for tooltips right now
-    $name.c bind inlet <Enter> "pdtk_canvas_enteritem %W %x %y inlet %#"
-    $name.c bind outlet <Enter> "pdtk_canvas_enteritem %W %x %y outlet %#"
-    $name.c bind text <Enter> "pdtk_canvas_enteritem %W %x %y text %#"
-    $name.c bind inlet <Leave> "pdtk_canvas_leaveitem %W inlet"
-    $name.c bind outlet <Leave> "pdtk_canvas_leaveitem %W outlet"
-    $name.c bind text <Leave> "pdtk_canvas_leaveitem %W text"
+    #$name.c bind inlet <Enter> "pdtk_canvas_enteritem %W %x %y inlet %#"
+    #$name.c bind outlet <Enter> "pdtk_canvas_enteritem %W %x %y outlet %#"
+    #$name.c bind text <Enter> "pdtk_canvas_enteritem %W %x %y text %#"
+    #$name.c bind inlet <Leave> "pdtk_canvas_leaveitem %W inlet 0"
+    #$name.c bind outlet <Leave> "pdtk_canvas_leaveitem %W outlet 0"
+    #$name.c bind text <Leave> "pdtk_canvas_leaveitem %W text 0"
 	
     if {$pd_nt == 2} {
         bind $name.c <Option-Motion> {pdtk_canvas_motion %W %x %y 4}
@@ -7190,7 +7190,8 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 	}
 }
 
- 
+################# Autotips ######################
+
 proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 	#puts stderr "gettags $tkcanvas $x $y $item"
 	variable nlet_color
@@ -7198,7 +7199,7 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
     if {[winfo exists $tkcanvas]} {
         set mytoplevel [winfo toplevel $tkcanvas]
         set id [$tkcanvas find withtag current]
-        set tags [$tkcanvas gettags $id]
+        set tags [$tkcanvas gettags $item]
         set xletno -1 
 		set object text
 		if { [string match *o* $item] } { set object outlet }
@@ -7210,7 +7211,8 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 		        regexp ".*IN(\[0-9\]+)$" $tag -- xletno
 			}
 		}
-
+		#puts stderr "gettags $tags $xletno"
+		if { $xletno == -1 && $object ne "text" } { return }
 		if { $object ne "text" } {
 			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -outline]
 		} else {
@@ -7230,11 +7232,6 @@ proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
 	variable autotips
     if {$autotips == 0} {return}
     if {$enterid != $duplicate_tags || $enterid == -1} {
-	    #if {$item eq "inlet" ||
-	    #    $item eq "outlet"} {
-        #        $tkcanvas itemconfigure $item -activewidth 5 
-	    #}
-
 	    set duplicate_tags $enterid
 		if {$current_window eq $tkcanvas} {
 			after cancel $afterid
@@ -7247,7 +7244,7 @@ proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
 }
 
 # move activewidth to toggle on editmode?
-proc pdtk_canvas_leaveitem {w item} {
+proc pdtk_canvas_leaveitem {w} {
     variable afterid
     variable current_window
 	variable duplicate_tags
@@ -7256,10 +7253,7 @@ proc pdtk_canvas_leaveitem {w item} {
     after cancel $afterid
 	set afterid 0
     if {[lsearch -exact [$w gettags $w.tipwindow] "sticky"] == -1} {
-        #if {$item eq "inlet" ||
-	    #$item eq "outlet"} {
-        #    $w itemconfigure $item -activewidth 0
-        #}
+		#puts stderr "pdtk_canvas_leaveitem $w"
 		if {[winfo exists $w.tiplabel]} {
             set afterid [after 50 "pdtk_tip $w 0 0"]
 			#pdtk_tip $w 0 0
@@ -7268,6 +7262,61 @@ proc pdtk_canvas_leaveitem {w item} {
     }
 	set duplicate_tags -1;
 }
+
+
+
+
+proc pdtk_tip {w fromc show args} {
+	set exists [winfo exists $w.tiplabel]
+	if {$show == 0} {
+		catch {destroy $w.tiplabel}
+		catch {$w delete $w.tipwindow}
+	} else {
+		if {$exists} {
+			$w.tiplabel configure -text [join $args]
+			$w dtag $w.tipwindow "sticky"
+			if {$fromc == 1} {
+				$w addtag "sticky" withtag $w.tipwindow
+			}  
+		} else {
+			label $w.tiplabel -text [join $args] -bd 1 \
+				-wraplength [winfo width $w] -bg "#c4dcdc" -bd 1 \
+				-padx 2 -pady 2 -relief raised
+		} 
+		set yreal [expr [$w canvasy 0] * -1 + \
+			[winfo pointery $w]-[winfo rooty $w]]
+		set yoffset 0
+		if {$yreal < [expr [winfo height $w] - \
+			[winfo reqheight $w.tiplabel]] - 5} {
+				set yoffset [winfo height $w]
+				set anchor "sw"
+		} else {
+			set anchor "nw"
+		}
+		set x [$w canvasx 0]
+		set y [expr [$w canvasy 0] + $yoffset]
+		set tags $w.tipwindow
+		if {$fromc == 1} {
+			lappend tags "sticky"
+		} 
+		if {$exists} {
+			$w coords $w.tipwindow $x $y
+			$w itemconfigure $w.tipwindow -anchor $anchor
+		} else {
+			$w create window $x $y -window $w.tiplabel -anchor $anchor \
+				-tags $tags
+			$w bind $w.tipwindow <Enter> "pdtk_tip_mouseover $w"
+		}
+	}
+}
+
+
+
+
+
+
+
+
 
 proc pdtk_tip {w fromc show args} {
 	variable select_color
@@ -7313,72 +7362,92 @@ proc pdtk_tip {w fromc show args} {
 	        -wraplength [winfo width $w] -bg $nlet_color -fg $fg -bd 1 \
 	        -padx 2 -pady 2 -relief flat -font $typeface
 		}
-        set xreal [expr [$w canvasx 0] + [winfo pointerx $w]-[winfo rootx $w]]
-        set yreal [expr [$w canvasy 0] + [winfo pointery $w]-[winfo rooty $w]]
 
-		# first figure out default behavior for above/below
-		if { [string match "\{Inlet*" $args] } {
-        	set yoffset 0
-	    	set anchor "nw"
-			set top_bottom [expr -30 - [winfo reqheight $w.tiplabel]]
-			set yreal_offset -5
-        } else {
-			set yoffset [winfo height $w]
-        	set anchor "sw"
-			set top_bottom [expr 30 + [winfo reqheight $w.tiplabel]]
-			set yreal_offset 5
-        }
-		set x [expr $xreal + rand()*10] 
-		set y [expr $yreal + $top_bottom]
-
-		# now check if there is enough room to do the default above/below (if not redo behavior)
-		if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } {
-			set yoffset [winfo height $w]
-        	set anchor "sw"
-			set top_bottom [expr 30 + [winfo reqheight $w.tiplabel]]
-			set yreal_offset 5
-		}
-		if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } {
-        	set yoffset 0
-	    	set anchor "nw"
-			set top_bottom [expr -30 - [winfo reqheight $w.tiplabel]]
-			set yreal_offset -5
-		}
-		set x [expr $xreal + rand()*10] 
-		set y [expr $yreal + $top_bottom]
-
-		# if we still cannot fit things, let's now stick them as close to the side we selected last
-		if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } { set y [expr [$w canvasy 0] + $yoffset] }
-		if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } { set y [expr [$w canvasy 0] + $yoffset] }
-
-		# now check the width
-		set right 0
-		set xarrow [expr $x + 5]
-
-		if { [expr $x + [winfo reqwidth $w.tiplabel]] > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
-			set tmp1 [expr $x - (($x + [winfo reqwidth $w.tiplabel]) - ([$w canvasx 0] + [winfo reqwidth $w]))]
-			set x $tmp1
-			set right 1
-		}
-		if { $x < [$w canvasx 0] } {
-			set x [$w canvasx 0]
-		}
-
-		#now do the arrow
-		if { $right } {
-			if { $xarrow > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
-				set xarrow [expr [$w canvasx 0] + [winfo reqwidth $w] - 12]
+		if {$fromc == 1} {
+			set yreal [expr [$w canvasy 0] * -1 + \
+				[winfo pointery $w]-[winfo rooty $w]]
+			set yoffset 0
+			if {$yreal < [expr [winfo height $w] - \
+				[winfo reqheight $w.tiplabel]] - 5} {
+					set yoffset [winfo height $w]
+					set anchor "sw"
+			} else {
+				set anchor "nw"
 			}
-		}
-
-		if { $top_bottom < 0 } {
-			set yarrow [expr $y + [winfo reqheight $w.tiplabel] - 1]
+			set x [$w canvasx 0]
+			set y [expr [$w canvasy 0] + $yoffset]
 		} else {
-			set yarrow [expr $y - [winfo reqheight $w.tiplabel] + 1]
-		}
+		    set xreal [expr [$w canvasx 0] + [winfo pointerx $w]-[winfo rootx $w]]
+		    set yreal [expr [$w canvasy 0] + [winfo pointery $w]-[winfo rooty $w]]
 
-		$w create polygon 0 0 0 0 0 0 -fill $nlet_color -width 4 -tags tiparrow
-		$w coords tiparrow $xreal [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+7] $yarrow
+			# first figure out default behavior for above/below
+			if { [string match "\{Inlet*" $args] } {
+		    	set yoffset 0
+				set anchor "nw"
+				set top_bottom [expr -25 - [winfo reqheight $w.tiplabel]]
+				set yreal_offset -5
+				set xreal_offset 0
+		    } else {
+				set yoffset [winfo height $w]
+		    	set anchor "sw"
+				set top_bottom [expr 35 + [winfo reqheight $w.tiplabel]]
+				set yreal_offset 15
+				set xreal_offset 5
+		    }
+			set x [expr $xreal + rand()*10] 
+			set y [expr $yreal + $top_bottom]
+
+			# now check if there is enough room to do the default above/below (if not redo behavior)
+			if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } {
+				set yoffset [winfo height $w]
+		    	set anchor "sw"
+				set top_bottom [expr 35 + [winfo reqheight $w.tiplabel]]
+				set yreal_offset 15
+				set xreal_offset 5
+			}
+			if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } {
+		    	set yoffset 0
+				set anchor "nw"
+				set top_bottom [expr -25 - [winfo reqheight $w.tiplabel]]
+				set yreal_offset -5
+				set xreal_offset 0
+			}
+			set x [expr $xreal + rand()*10] 
+			set y [expr $yreal + $top_bottom]
+
+			# if we still cannot fit things, let's now stick them as close to the side we selected last
+			if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } { set y [expr [$w canvasy 0] + $yoffset] }
+			if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } { set y [expr [$w canvasy 0] + $yoffset] }
+
+			# now check the width
+			set right 0
+			set xarrow [expr $x + 5]
+
+			if { [expr $x + [winfo reqwidth $w.tiplabel]] > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
+				set tmp1 [expr $x - (($x + [winfo reqwidth $w.tiplabel]) - ([$w canvasx 0] + [winfo reqwidth $w]))]
+				set x $tmp1
+				set right 1
+			}
+			if { $x < [$w canvasx 0] } {
+				set x [$w canvasx 0]
+			}
+
+			#now do the arrow
+			if { $right } {
+				if { $xarrow > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
+					set xarrow [expr [$w canvasx 0] + [winfo reqwidth $w] - 12]
+				}
+			}
+
+			if { $top_bottom < 0 } {
+				set yarrow [expr $y + [winfo reqheight $w.tiplabel] - 1]
+			} else {
+				set yarrow [expr $y - [winfo reqheight $w.tiplabel] + 1]
+			}
+
+			$w create polygon 0 0 0 0 0 0 -fill $nlet_color -width 4 -tags tiparrow
+			$w coords tiparrow [expr $xreal+$xreal_offset] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+7] $yarrow
+		}
 
 		set tags $w.tipwindow
 		if {$fromc == 1} {
