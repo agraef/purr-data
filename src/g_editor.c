@@ -3321,6 +3321,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         
     int down, shift;
 	int focus = 1;
+
+		/* remove stale tooltips, if any */
+	if (objtooltip) {
+		objtooltip = 0;
+		sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+	}
     
     if (ac < 3)
         return;

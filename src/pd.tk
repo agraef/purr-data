@@ -2095,7 +2095,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -yscrollcommand "$name.scrollvert set" \
         -xscrollcommand "$name.scrollhort set" \
         -scrollregion [concat 0 0 $width $height]
-	$name.c configure -closeenough 0.0
+	#$name.c configure -closeenough 0.0
 
 	#pdtk_standardkeybindings $name.c
 
@@ -2536,6 +2536,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
     # canvas bindings ---------------------------------------------------------
     # just for tooltips right now
+	#$name.c bind all <Enter> "puts stderr {%x %y}"
     #$name.c bind inlet <Enter> "pdtk_canvas_enteritem %W %x %y inlet %#"
     #$name.c bind outlet <Enter> "pdtk_canvas_enteritem %W %x %y outlet %#"
     #$name.c bind text <Enter> "pdtk_canvas_enteritem %W %x %y text %#"
@@ -7198,7 +7199,7 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 	variable select_color
     if {[winfo exists $tkcanvas]} {
         set mytoplevel [winfo toplevel $tkcanvas]
-        set id [$tkcanvas find withtag current]
+        #set id [$tkcanvas find withtag current]
         set tags [$tkcanvas gettags $item]
         set xletno -1 
 		set object text
@@ -7211,7 +7212,7 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 		        regexp ".*IN(\[0-9\]+)$" $tag -- xletno
 			}
 		}
-		#puts stderr "gettags $tags $xletno"
+		#puts stderr "gettags $tags $xletno [$tkcanvas canvasx $x] [$tkcanvas canvasy $y]"
 		if { $xletno == -1 && $object ne "text" } { return }
 		if { $object ne "text" } {
 			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -outline]
@@ -7220,16 +7221,18 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 		}
 
         pd [concat $mytoplevel enter $object \
-            [$tkcanvas canvasx $x] [$tkcanvas canvasy $y] $xletno \;]
+           $x $y $xletno \;]
     }
 }
 
 proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
-	#puts stderr "enteritem $tkcanvas $x $y $item $enterid"
+	variable pointer_x_local
+	variable pointer_y_local
     variable afterid
     variable duplicate_tags
     variable current_window
 	variable autotips
+	#puts stderr "enteritem $tkcanvas $x $y $item $enterid $pointer_x_local $pointer_y_local"
     if {$autotips == 0} {return}
     if {$enterid != $duplicate_tags || $enterid == -1} {
 	    set duplicate_tags $enterid
@@ -7262,61 +7265,6 @@ proc pdtk_canvas_leaveitem {w} {
     }
 	set duplicate_tags -1;
 }
-
-
-
-
-proc pdtk_tip {w fromc show args} {
-	set exists [winfo exists $w.tiplabel]
-	if {$show == 0} {
-		catch {destroy $w.tiplabel}
-		catch {$w delete $w.tipwindow}
-	} else {
-		if {$exists} {
-			$w.tiplabel configure -text [join $args]
-			$w dtag $w.tipwindow "sticky"
-			if {$fromc == 1} {
-				$w addtag "sticky" withtag $w.tipwindow
-			}  
-		} else {
-			label $w.tiplabel -text [join $args] -bd 1 \
-				-wraplength [winfo width $w] -bg "#c4dcdc" -bd 1 \
-				-padx 2 -pady 2 -relief raised
-		} 
-		set yreal [expr [$w canvasy 0] * -1 + \
-			[winfo pointery $w]-[winfo rooty $w]]
-		set yoffset 0
-		if {$yreal < [expr [winfo height $w] - \
-			[winfo reqheight $w.tiplabel]] - 5} {
-				set yoffset [winfo height $w]
-				set anchor "sw"
-		} else {
-			set anchor "nw"
-		}
-		set x [$w canvasx 0]
-		set y [expr [$w canvasy 0] + $yoffset]
-		set tags $w.tipwindow
-		if {$fromc == 1} {
-			lappend tags "sticky"
-		} 
-		if {$exists} {
-			$w coords $w.tipwindow $x $y
-			$w itemconfigure $w.tipwindow -anchor $anchor
-		} else {
-			$w create window $x $y -window $w.tiplabel -anchor $anchor \
-				-tags $tags
-			$w bind $w.tipwindow <Enter> "pdtk_tip_mouseover $w"
-		}
-	}
-}
-
-
-
-
-
-
-
-
 
 proc pdtk_tip {w fromc show args} {
 	variable select_color
@@ -7392,7 +7340,7 @@ proc pdtk_tip {w fromc show args} {
 		    	set anchor "sw"
 				set top_bottom [expr 35 + [winfo reqheight $w.tiplabel]]
 				set yreal_offset 15
-				set xreal_offset 5
+				set xreal_offset 0
 		    }
 			set x [expr $xreal + rand()*10] 
 			set y [expr $yreal + $top_bottom]
@@ -7403,7 +7351,7 @@ proc pdtk_tip {w fromc show args} {
 		    	set anchor "sw"
 				set top_bottom [expr 35 + [winfo reqheight $w.tiplabel]]
 				set yreal_offset 15
-				set xreal_offset 5
+				set xreal_offset 0
 			}
 			if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } {
 		    	set yoffset 0
@@ -7434,8 +7382,8 @@ proc pdtk_tip {w fromc show args} {
 
 			#now do the arrow
 			if { $right } {
-				if { $xarrow > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
-					set xarrow [expr [$w canvasx 0] + [winfo reqwidth $w] - 12]
+				if { $xarrow > [expr [$w canvasx 0] + [winfo reqwidth $w] - 13] } {
+					set xarrow [expr [$w canvasx 0] + [winfo reqwidth $w] - 13]
 				}
 			}
 
