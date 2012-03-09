@@ -3246,6 +3246,9 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 		if {$key == "4"} {menu_symbolatom $topname 1}
 		if {$key == "5"} {menu_comment $topname 1}
     	if {$key == "Return"} {menu_reselect $topname}
+		if {$shift == 1} {
+			if {$key == "E"} {menu_tooltips $topname}
+		}
 	}
     if {$key == "slash"} {menu_audio 1}
     if {$key == "period"} {menu_audio 0}
@@ -3253,7 +3256,6 @@ proc pdtk_canvas_ctrlkey {name key shift} {
         if {$key == "q" || $key == "Q"} {menu_really_quit}
         if {$key == "l" || $key == "L"} {menu_clear_console}
         if {$key == "r" || $key == "R"} {menu_toggle_console}
-		if {$key == "E"} {menu_tooltips $topname}
 		if {$key == "Return"} {pdtk_zoom_reset $topname}
 		if {!$ignore} {
 	        if {$key == "w" || $key == "W"} {menu_really_close $topname}
