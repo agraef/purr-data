@@ -199,8 +199,6 @@ void glob_initfromgui(void *dummy, t_symbol *s, int argc, t_atom *argv)
             /* best is now the host font index for the desired font index i. */
         sys_fontlist[i].fi_hostfontsize = atom_getintarg(3 * best + 2, argc, argv);
         sys_fontlist[i].fi_width = atom_getintarg(3 * best + 3, argc, argv);
-			/* workaround for the quirky font size 16 */
-		if (sys_fontlist[i].fi_fontsize == 16) sys_fontlist[i].fi_width -= 1;
         sys_fontlist[i].fi_height = atom_getintarg(3 * best + 4, argc, argv);
 		sys_fontlist[i].fi_maxwidth = sys_fontlist[i].fi_width;
 		sys_fontlist[i].fi_maxheight = sys_fontlist[i].fi_height;
