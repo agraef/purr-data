@@ -66,7 +66,7 @@ int sys_midioutdevlist[MAXMIDIOUTDEV] = {1};
 #ifdef __APPLE__
 char sys_font[] = "Monaco"; /* tb: font name */
 #else
-char sys_font[] = "Ubuntu Mono"; /* tb: font name */
+char sys_font[] = "DejaVu Sans Mono"; /* tb: font name */
 #endif
 char sys_fontweight[] = "normal"; /* currently only used for iemguis */
 static int sys_main_srate;
