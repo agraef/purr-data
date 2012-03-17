@@ -66,7 +66,7 @@ int sys_midioutdevlist[MAXMIDIOUTDEV] = {1};
 #ifdef __APPLE__
 char sys_font[] = "Monaco"; /* tb: font name */
 #else
-char sys_font[] = "DejaVu Sans Mono"; /* tb: font name */
+char sys_font[] = "Ubuntu Mono"; /* tb: font name */
 #endif
 char sys_fontweight[] = "normal"; /* currently only used for iemguis */
 static int sys_main_srate;
@@ -116,31 +116,10 @@ typedef struct _fontinfo
     int fi_height;
 } t_fontinfo;
 
-    /* these give the nominal point size and maximum height of the characters
-    in the six fonts.  */
-
-static t_fontinfo sys_fontlist[] = {
-    {8, 5, 11, 8, 5, 11}, {10, 6, 13, 10, 6, 13}, {12, 7, 16, 12, 7, 16},
-    {16, 10, 19, 16, 10, 19}, {24, 14, 29, 24, 14, 29}, {36, 23, 44, 36, 23, 44}};
+static t_fontinfo sys_fontlist[] = { \
+    {8, 6, 10, 1, 1, 1}, {10, 7, 13, 1, 1, 1}, {12, 9, 16, 1, 1, 1},
+    {16, 10, 20, 1, 1, 1}, {24, 15, 25, 1, 1, 1}, {36, 25, 45, 1, 1, 1}};
 #define NFONT (sizeof(sys_fontlist)/sizeof(*sys_fontlist))
-
-/* here are the actual font size structs on msp's systems:
-MSW:
-font 8 5 9 8 5 11
-font 10 7 13 10 6 13
-font 12 9 16 14 8 16
-font 16 10 20 16 10 18
-font 24 15 25 16 10 18
-font 36 25 42 36 22 41
-
-linux:
-font 8 5 9 8 5 9
-font 10 7 13 12 7 13
-font 12 9 16 14 9 15
-font 16 10 20 16 10 19
-font 24 15 25 24 15 24
-font 36 25 42 36 22 41
-*/
 
 static t_fontinfo *sys_findfont(int fontsize)
 {
@@ -217,6 +196,14 @@ void glob_initfromgui(void *dummy, t_symbol *s, int argc, t_atom *argv)
                 atom_getintarg(3 * j + 3, argc, argv) <= wantwidth)
                     best = j;
         }
+            /* best is now the host font index for the desired font index i. */
+        sys_fontlist[i].fi_hostfontsize = atom_getintarg(3 * best + 2, argc, argv);
+        sys_fontlist[i].fi_width = atom_getintarg(3 * best + 3, argc, argv);
+			/* workaround for the quirky font size 16 */
+		if (sys_fontlist[i].fi_fontsize == 16) sys_fontlist[i].fi_width -= 1;
+        sys_fontlist[i].fi_height = atom_getintarg(3 * best + 4, argc, argv);
+		sys_fontlist[i].fi_maxwidth = sys_fontlist[i].fi_width;
+		sys_fontlist[i].fi_maxheight = sys_fontlist[i].fi_height;
     }
 #if 0
     for (i = 0; i < 6; i++)

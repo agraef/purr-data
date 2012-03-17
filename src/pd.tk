@@ -3503,6 +3503,8 @@ proc dofont_cancel {name} {
     dofont_preview $name $oldfontsize
     set cmd [concat $name cancel \;]
     pd $cmd
+	set font_properties 0
+	set font_canvas 0
 }
 
 proc dofont_ok {name} {
@@ -5306,20 +5308,20 @@ proc pdtk_text_new {canvasname myname x y text font color} {
     #    if {$font >= 13} {set fontname [format -*-courier-----%d-* $font]}
 
     global pd_fontlist pd_nt
-    switch -- $font {
-        8  { set typeface [lindex $pd_fontlist 0] }
-        9  { set typeface [lindex $pd_fontlist 1] }
-        10 { set typeface [lindex $pd_fontlist 2] }
-        12 { set typeface [lindex $pd_fontlist 3] }
-        14 { set typeface [lindex $pd_fontlist 4] }
-        16 { set typeface [lindex $pd_fontlist 5] }
-        18 { set typeface [lindex $pd_fontlist 6] }
-        24 { set typeface [lindex $pd_fontlist 7] }
-        30 { set typeface [lindex $pd_fontlist 8] }
-        36 { set typeface [lindex $pd_fontlist 9] }
-    }
+#    switch -- $font {
+#        8  { set typeface [lindex $pd_fontlist 0] }
+#        9  { set typeface [lindex $pd_fontlist 1] }
+#        10 { set typeface [lindex $pd_fontlist 2] }
+#        12 { set typeface [lindex $pd_fontlist 3] }
+#        14 { set typeface [lindex $pd_fontlist 4] }
+#        16 { set typeface [lindex $pd_fontlist 5] }
+#        18 { set typeface [lindex $pd_fontlist 6] }
+#        24 { set typeface [lindex $pd_fontlist 7] }
+#        30 { set typeface [lindex $pd_fontlist 8] }
+#        36 { set typeface [lindex $pd_fontlist 9] }
+#    }
 
-    $canvasname create text $x $y -font $typeface \
+    $canvasname create text $x $y -font [get_font_for_size $font] \
         -tags $myname -text $text -fill $color -anchor nw
 	$canvasname addtag text withtag $myname
 	#$canvasname bind $myname <Home> [concat $canvasname icursor $myname 0]
@@ -5366,6 +5368,67 @@ proc pdtk_pd_ctrlkey {name key shift} {
 	}
 }
 
+set font_family "courier"
+set font_weight "normal"
+
+set font_fixed_metrics {
+    8 5 11
+    9 6 12
+    10 6 13
+    12 7 16
+    14 8 17
+    16 10 19
+    18 11 22
+    24 14 29
+    30 18 37
+    36 22 44
+}
+
+proc get_font_for_size {size} {
+    return "::pd_font_${size}"
+}
+
+# creates all the base fonts (i.e. pd_font_8 thru pd_font_36) so that they fit
+# into the metrics given by $::font_fixed_metrics for any given font/weight
+proc fit_font_into_metrics {} {
+    foreach {size width height} $::font_fixed_metrics {
+        set pixelheight [expr -1 * $height]
+        font create tmpfont -family $::font_family -weight $::font_weight \
+            -size $pixelheight
+        while {[font measure tmpfont M] > $width || \
+            [font metrics tmpfont -linespace] > $height} {
+            # this actually makes it smaller since pixel heights are negative
+            incr pixelheight 1
+            font configure tmpfont -size $pixelheight
+        }
+        font create [get_font_for_size $size] \
+            -family $::font_family -weight $::font_weight -size $pixelheight
+        font delete tmpfont
+    }
+}
+
+proc find_default_font {} {
+    set testfonts {"DejaVu Sans Mono" "Bitstream Vera Sans Mono" \
+        "Inconsolata" "Courier 10 Pitch" "Andale Mono" "Droid Sans Mono"}
+    foreach family $testfonts {
+        if {[lsearch -exact -nocase [font families] $family] > -1} {
+            set ::font_family $family
+            break
+        }
+    }
+    # ::pdwindow::verbose 0 "Default font: $::font_family\n"
+}
+
+proc set_base_font {family weight} {
+    if {[lsearch -exact [font families] $family] > -1} {
+        set ::font_family $family
+    }
+    if {[lsearch -exact {bold normal} $weight] > -1} {
+        set ::font_weight $weight
+        set using_defaults 0
+    }
+}
+
 ######### startup function.  ##############
 # Tell pd the current directory; this is used in case the command line
 # asked pd to open something.  Also, get character width and height for
@@ -5390,14 +5453,20 @@ proc pdtk_pd_startup {version apilist midiapilist fontname_from_pd fontweight_fr
 	if {$pd_nt == 1} { raise . }
 
     set fontlist ""
-    foreach i {6 6 8 9 10 12 14 18 22 29} {
-        set font [format {{%s} %d %s} $fontname_from_pd $i $fontweight_from_pd]
-        set pd_fontlist [linsert $pd_fontlist 100000 $font] 
-        set width0 [font measure  $font x]
-        set height0 [lindex [font metrics $font] 5]
-        set fontlist [concat $fontlist $i [font measure  $font x] \
-                          [lindex [font metrics $font] 5]]
-    }
+	if {[info tclversion] >= 8.5} {find_default_font}
+	set_base_font $fontname_from_pd $fontweight_from_pd
+	fit_font_into_metrics
+
+    # UBUNTU MONO 6 6 8 10 11 14 14 19 22 30
+	# DEJAVU SANS MONO 6 6 8 9 10 12 14 18 22 29
+#    foreach i {6 6 8 10 11 14 14 19 22 30} {
+#        set font [format {{%s} %d %s} $fontname_from_pd $i $fontweight_from_pd]
+#        set pd_fontlist [linsert $pd_fontlist 100000 $font] 
+#        set width0 [font measure  $font x]
+#        set height0 [lindex [font metrics $font] 5]
+#        set fontlist [concat $fontlist $i [font measure  $font x] \
+#                          [lindex [font metrics $font] 5]]
+#    }
 
     set tclpatch [info patchlevel]
     if {$tclpatch == "8.3.0" || \
@@ -5408,7 +5477,7 @@ proc pdtk_pd_startup {version apilist midiapilist fontname_from_pd fontweight_fr
     } else {
         set oldtclversion 0
     }
-    pd [concat pd init [pdtk_enquote [pwd]] $oldtclversion $fontlist \;];
+    pd [concat pd init [pdtk_enquote [pwd]] $oldtclversion $::font_fixed_metrics \;];
 
     # add the audio and help menus to the Pd window.  We delayed this
     # so that we'd know the value of "apilist".
@@ -7227,18 +7296,19 @@ proc pdtk_tip {w fromc show args} {
 	variable nlet_color
 	variable tooltip_visible
     global pd_fontlist
-    switch -- $::font([string trimright $w .c]) {
-        8  { set typeface [lindex $pd_fontlist 0] }
-        9  { set typeface [lindex $pd_fontlist 1] }
-        10 { set typeface [lindex $pd_fontlist 2] }
-        12 { set typeface [lindex $pd_fontlist 3] }
-        14 { set typeface [lindex $pd_fontlist 4] }
-        16 { set typeface [lindex $pd_fontlist 5] }
-        18 { set typeface [lindex $pd_fontlist 6] }
-        24 { set typeface [lindex $pd_fontlist 7] }
-        30 { set typeface [lindex $pd_fontlist 8] }
-        36 { set typeface [lindex $pd_fontlist 9] }
-    }
+#    switch -- $::font([string trimright $w .c]) {
+#        8  { set typeface [lindex $pd_fontlist 0] }
+#        9  { set typeface [lindex $pd_fontlist 1] }
+#        10 { set typeface [lindex $pd_fontlist 2] }
+#        12 { set typeface [lindex $pd_fontlist 3] }
+#        14 { set typeface [lindex $pd_fontlist 4] }
+#        16 { set typeface [lindex $pd_fontlist 5] }
+#        18 { set typeface [lindex $pd_fontlist 6] }
+#        24 { set typeface [lindex $pd_fontlist 7] }
+#        30 { set typeface [lindex $pd_fontlist 8] }
+#        36 { set typeface [lindex $pd_fontlist 9] }
+#    }
+	set typeface [get_font_for_size $::font([string trimright $w .c])]
 	set exists [winfo exists $w.tiplabel]
     if {$show == 0} {
         catch {destroy $w.tiplabel}
