@@ -3806,8 +3806,13 @@ static void canvas_find_again(t_canvas *x)
 
 static void canvas_find_parent(t_canvas *x)
 {
-    if (x->gl_owner)
-        canvas_vis(glist_getcanvas(x->gl_owner), 1);
+    if (x->gl_owner) {
+		t_glist *owner = x->gl_owner;
+		while (!glist_isvisible(owner) && owner->gl_owner)
+			owner = owner->gl_owner;
+		if (glist_isvisible(owner))
+			canvas_vis(owner, 1);
+	}
 	else {
 		sys_gui("menu_raise_console;\n");
 	}
