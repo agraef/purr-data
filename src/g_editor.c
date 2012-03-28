@@ -3804,6 +3804,8 @@ static void canvas_find_again(t_canvas *x)
     }
 }
 
+/* following function serves mainly as a helper function for tcl/tk
+ and focuses first visible parent (not the immediate parent) */
 static void canvas_find_parent(t_canvas *x)
 {
     if (x->gl_owner) {
