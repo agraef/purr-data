@@ -778,10 +778,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     sprintf(tag, "%s", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)));
     //sprintf(tag, "graph%lx", (t_int)x);
 	//fprintf(stderr, "gettag=%s, tag=graph%lx\n", rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)),(t_int)x);
-    if (vis)
-        glist_drawiofor(parent_glist, &x->gl_obj, 1,
-            tag, x1, y1, x2, y2);
-    else glist_eraseiofor(parent_glist, &x->gl_obj, tag);
         /* if we look like a graph but have been moved to a toplevel,
         just show the bounding rectangle */
     if (x->gl_havewindow)
@@ -930,6 +926,8 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 		/* reselect it upon redrawing if it was selected before */
 		if (glist_isselected(parent_glist, gr))
 			gobj_select(gr, parent_glist, 1);
+        glist_drawiofor(parent_glist, &x->gl_obj, 1,
+            tag, x1, y1, x2, y2);
     }
     else
     {
@@ -937,6 +935,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             glist_getcanvas(x->gl_owner), tag);
         sys_vgui(".x%lx.c delete %sR\n",
             glist_getcanvas(x->gl_owner), tag);
+	glist_eraseiofor(parent_glist, &x->gl_obj, tag);
         for (g = x->gl_list; g; g = g->g_next)
             gobj_vis(g, x, 0);
     }
