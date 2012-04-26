@@ -213,8 +213,6 @@ char *namelist_get(t_namelist *namelist, int n)
     return (nl ? nl->nl_string : 0);
 }
 
-static t_namelist *pd_extrapath;
-
 int sys_usestdpath = 1;
 
 void sys_setextrapath(const char *p)

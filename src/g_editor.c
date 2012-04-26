@@ -2873,7 +2873,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
     if (doit)
     {
-        if (!shiftmod && x->gl_editor->e_selection) {
+        if (!shiftmod && (x->gl_editor->e_selection || x->gl_editor->e_selectedline)) {
 			//t_undo_redo_sel *buf = (t_undo_redo_sel *)getbytes(sizeof(*buf));
 			//buf->u_undo = (t_undo_sel *)canvas_undo_set_selection(x);
 
