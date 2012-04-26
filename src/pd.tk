@@ -309,6 +309,43 @@ font create highlight_font -family $defaultFontFamily -size 9 -weight bold
 
 # end Pd-extended font hacks -----------------------------
 
+# K-12 version global variable (enabled through -k12, disabled by default)
+set k12_mode 0
+
+# Only can be enabled at startup (cannot be toggled afterwards)
+proc pdtk_enable_k12_mode {extra_dir} {
+	global k12_mode
+	global signal_cord_width
+	global autotips
+	global signal_cord_highlight
+	global signal_cord
+
+	set k12_mode 1
+	set signal_cord_width 4
+	set autotips 1
+	set signal_cord_highlight "#474"
+	set signal_cord "#2ca7d4"
+
+	image create photo i.connect -file $extra_dir/K12/buttons/connect-on.png
+	image create photo i.add -file $extra_dir/K12/buttons/add.png
+	image create photo i.buttons -file $extra_dir/K12/buttons/buttons.png
+	image create photo i.delay -file $extra_dir/K12/buttons/delay.png
+	image create photo i.filter -file $extra_dir/K12/buttons/filter.png
+	image create photo i.hit -file $extra_dir/K12/buttons/hit.png
+	image create photo i.mapper -file $extra_dir/K12/buttons/mapper.png
+	image create photo i.multiply -file $extra_dir/K12/buttons/multiply.png
+	image create photo i.output -file $extra_dir/K12/buttons/audio-on.png
+	image create photo i.pitch -file $extra_dir/K12/buttons/pitch.png
+	image create photo i.reverb -file $extra_dir/K12/buttons/reverb.png
+	image create photo i.short1 -file $extra_dir/K12/buttons/short1.png
+	image create photo i.short2 -file $extra_dir/K12/buttons/short2.png
+	image create photo i.sustained1 -file $extra_dir/K12/buttons/sustained1.png
+	image create photo i.sustained2 -file $extra_dir/K12/buttons/sustained2.png
+	image create photo i.speed -file $extra_dir/K12/buttons/speed.png
+	image create photo i.edit -file $extra_dir/K12/buttons/edit.png
+	image create photo i.perform -file $extra_dir/K12/buttons/perform.png
+}
+
 # calculate offset on a movable canvas
 set tmp_xpix 0
 set tmp_ypix 0
@@ -411,10 +448,12 @@ set obj_box_fill "#f6f8f8"
 set signal_cord_highlight "#58a"
 set signal_cord "#808095"
 set signal_nlet $signal_cord
+set signal_cord_width 2
 set msg_cord_highlight "#474"
 set msg_cord "#565"
 set msg_nlet "white"
 set mixed_nlet "#88aaff"
+set msg_cord_width 1
 
 #nlet highlighting stuff
 set select_nlet_color $select_color
@@ -488,6 +527,7 @@ set auto_path [linsert $auto_path 0 [file dirname [info script]]]
 # the pd-gui-rewrite-0.43 help browser is backported to Pd-extended 0.42
 package require helpbrowser
 package require msgcat
+package require tkpng
 
 # official GNU gettext msgcat shortcut
 proc _ {s} {return [::msgcat::mc $s]}
@@ -899,28 +939,30 @@ proc pdtk_canvas_menuclose {window reply} {
 set menu_windowlist {} 
 
 proc pdtk_fixwindowmenu {} {
-    global menu_windowlist pd_nt
-    .mbar.windows delete 0 end
-	if {$pd_nt == 2} {
-		.mbar.windows add command -label {Minimize} -command {menu_minimize .} \
-			-accelerator [accel_munge "Ctrl+m"]
-		.mbar.windows add command -label {Zoom} -command {menu_zoom .}
-	} else {
-		.mbar.windows add command -label "Next Window" -command {menu_raisenextwindow} \
-			-accelerator "Ctrl+PageDown"
-		#.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-		#	-accelerator "Ctrl+PageUp"
+    global menu_windowlist pd_nt k12_mode
+	if { $k12_mode == 0 } {
+		.mbar.windows delete 0 end
+		if {$pd_nt == 2} {
+			.mbar.windows add command -label {Minimize} -command {menu_minimize .} \
+				-accelerator [accel_munge "Ctrl+m"]
+			.mbar.windows add command -label {Zoom} -command {menu_zoom .}
+		} else {
+			.mbar.windows add command -label "Next Window" -command {menu_raisenextwindow} \
+				-accelerator "Ctrl+PageDown"
+			#.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+			#	-accelerator "Ctrl+PageUp"
+		}
+		.mbar.windows add separator
+		.mbar.windows add command -label {parent window} -state disabled
+		.mbar.windows add command -label {Pd & Console} -command menu_raise_console \
+			-accelerator [accel_munge "Ctrl+;"] -state disabled
+		.mbar.windows add separator
+		foreach i $menu_windowlist {
+		    .mbar.windows add command -label [lindex $i 0] \
+		        -command [concat menu_domenuwindow [lindex $i 1]]
+		    menu_fixwindowmenu [lindex $i 1]
+		}
 	}
-	.mbar.windows add separator
-    .mbar.windows add command -label {parent window} -state disabled
-    .mbar.windows add command -label {Pd & Console} -command menu_raise_console \
-		-accelerator [accel_munge "Ctrl+;"] -state disabled
-	.mbar.windows add separator
-    foreach i $menu_windowlist {
-        .mbar.windows add command -label [lindex $i 0] \
-            -command [concat menu_domenuwindow [lindex $i 1]]
-        menu_fixwindowmenu [lindex $i 1]
-    }
 }
 
 ####### Odd little function to make better Mac accelerators #####
@@ -1707,6 +1749,8 @@ proc menu_magicglass {name} {
 ## end jsarlo
 
 proc menu_editmode {name} {
+	global k12_mode
+	if { $k12_mode == 1 } { menu_tooltips $name }
     pd [concat $name editmode 0 \;]
 }
 
@@ -2000,6 +2044,72 @@ proc pdtk_canvas_set_font {name size} {
 	}
 }
 
+proc setTooltip {widget text} {
+	if { $text != "" } {
+		# 2) Adjusted timings and added key and button bindings. These seem to
+		# make artifacts tolerably rare.
+		bind $widget <Any-Enter>    [list after 500 [list showTooltip %W $text]]
+		bind $widget <Any-Leave>    [list after 500 [list destroy %W.tooltip]]
+		bind $widget <Any-KeyPress> [list after 500 [list destroy %W.tooltip]]
+		bind $widget <Any-Button>   [list after 500 [list destroy %W.tooltip]]
+	}
+}
+
+proc showTooltip {widget text} {
+	global tcl_platform
+	if { [string match $widget* [winfo containing  [winfo pointerx .] [winfo pointery .]] ] == 0  } {
+		return
+	}
+
+	catch { destroy $widget.tooltip }
+
+	set scrh [winfo screenheight $widget]    ; # 1) flashing window fix
+	set scrw [winfo screenwidth $widget]     ; # 1) flashing window fix
+	set tooltip [toplevel $widget.tooltip -bd 1 -bg black]
+	wm geometry $tooltip +$scrh+$scrw        ; # 1) flashing window fix
+	wm overrideredirect $tooltip 1
+
+	if {$tcl_platform(platform) == {windows}} { ; # 3) wm attributes...
+		wm attributes $tooltip -topmost 1   ; # 3) assumes...
+	}                                           ; # 3) Windows
+	pack [label $tooltip.label -bg lightyellow -fg black -text $text -justify left]
+
+	set width [winfo reqwidth $tooltip.label]
+	set height [winfo reqheight $tooltip.label]
+
+	set pointer_below_midline [expr [winfo pointery .] > [expr [winfo screenheight .] / 2.0]]                ; # b.) Is the pointer in the bottom half of the screen?
+
+	set positionX [expr [winfo pointerx .] - round($width / 2.0)]    ; # c.) Tooltip is centred horizontally on pointer.
+	set positionY [expr [winfo pointery .] + 35 * ($pointer_below_midline * -2 + 1) - round($height / 2.0)]  ; # b.) Tooltip is displayed above or below depending on pointer Y position.
+
+	# a.) Ad-hockery: Set positionX so the entire tooltip widget will be displayed.
+	# c.) Simplified slightly and modified to handle horizontally-centred tooltips and the left screen edge.
+	if  {[expr $positionX + $width] > [winfo screenwidth .]} {
+		set positionX [expr [winfo screenwidth .] - $width]
+	} elseif {$positionX < 0} {
+		set positionX 0
+	}
+
+	wm geometry $tooltip [join  "$width x $height + $positionX + $positionY" {}]
+	raise $tooltip
+
+	# 2) Kludge: defeat rare artifact by passing mouse over a tooltip to destroy it.
+	bind $widget.tooltip <Any-Enter> {destroy %W}
+	bind $widget.tooltip <Any-Leave> {destroy %W}
+ }
+
+proc put_K12_objects {name object} {
+	global k12_mode
+	global pointer_x_local
+	global pointer_y_local
+
+	if { $k12_mode == 1 } {
+		pd [concat $name dirty 1 \;]
+		pd [concat $name obj $pointer_x_local $pointer_y_local K12/$object \;]
+		pd [concat $name undo_add\;]
+	}
+}
+
 ############# pdtk_canvas_new -- create a new canvas ###############
 proc pdtk_canvas_new {name width height geometry editable} {
     global pd_tearoff put_tearoff
@@ -2009,6 +2119,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	global colors
 	global global_clipboard
 	global global_selection
+	global k12_mode
 
 	#retaining window-specific preferences
 	global window_prefs
@@ -2079,7 +2190,6 @@ proc pdtk_canvas_new {name width height geometry editable} {
         }
         set geometry [join $geometry +] 
     }
-    wm geometry $name $geometry
 
 	#apply window properties
 	wm resizable $name $::resize($name) $::resize($name)
@@ -2090,6 +2200,104 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			ttk::separator $name.eyecandy
 		}
 	}
+
+	if { $k12_mode == 1 } {
+		# K-12 menu
+
+		match_linux_wm [list frame $name.k12frame]
+		pack $name.k12frame -side left -fill y
+
+		match_linux_wm [list frame $name.k12frame.edit -relief flat]
+		if {$editable==1} {
+			match_linux_wm [list button $name.k12frame.edit.b -image i.edit \
+				-command [concat menu_editmode $name]]
+		} else {
+			match_linux_wm [list button $name.k12frame.edit.b -image i.perform \
+				-command [concat menu_editmode $name]]
+		}
+		pack $name.k12frame.edit.b -side left -expand 1 -padx 2 -pady 2
+		setTooltip $name.k12frame.edit.b "Toggle between editing and performing"
+
+		match_linux_wm [list frame $name.k12frame.msgs -relief flat]
+		label $name.k12frame.msgs.label -relief ridge -text "MESSAGES"
+		pack $name.k12frame.msgs.label -fill x -pady 2 -padx 2
+
+		match_linux_wm [list frame $name.k12frame.sound -relief flat]
+		label $name.k12frame.sound.label -relief ridge -text "SOUND"
+		pack $name.k12frame.sound.label -fill x -pady 2 -padx 2
+
+		match_linux_wm [list frame $name.k12frame.5 -relief flat]
+		match_linux_wm [list button $name.k12frame.5.b_wii_connect -image i.connect \
+			-command [concat put_K12_objects $name wii_connect]]
+		pack $name.k12frame.5.b_wii_connect -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.5.b_wii_connect "Wiimote: Use this to connect wiimote to the computer"
+
+		match_linux_wm [list frame $name.k12frame.1 -relief flat]
+		match_linux_wm [list button $name.k12frame.1.b_add -image i.add \
+			-command [concat put_K12_objects $name math_add]]
+		match_linux_wm [list button $name.k12frame.1.b_multiply -image i.multiply \
+			-command [concat put_K12_objects $name math_multiply]]
+		match_linux_wm [list button $name.k12frame.1.b_mapper -image i.mapper \
+			-command [concat put_K12_objects $name mapper]]
+		pack $name.k12frame.1.b_add $name.k12frame.1.b_multiply $name.k12frame.1.b_mapper -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.1.b_add "Add: Use this to add two values together"
+		setTooltip $name.k12frame.1.b_multiply "Multiply: Use this to multiply two values"
+		setTooltip $name.k12frame.1.b_mapper "Mapper: Use this to control two objects in different fashion"
+
+		match_linux_wm [list frame $name.k12frame.2 -relief flat]
+		match_linux_wm [list button $name.k12frame.2.b_buttons -image i.buttons \
+			-command [concat put_K12_objects $name wii_buttons]]
+		match_linux_wm [list button $name.k12frame.2.b_hit -image i.hit \
+			-command [concat put_K12_objects $name wii_hit]]
+		match_linux_wm [list button $name.k12frame.2.b_wii_speed -image i.speed \
+			-command [concat put_K12_objects $name wii_speed]]
+		pack $name.k12frame.2.b_buttons $name.k12frame.2.b_hit $name.k12frame.2.b_wii_speed -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.2.b_buttons "Wiimote Buttons: Use this to select which Wiimote button should activate objects connected to this object"
+		setTooltip $name.k12frame.2.b_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken"
+		setTooltip $name.k12frame.2.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving"
+
+		match_linux_wm [list frame $name.k12frame.3 -relief flat]
+		match_linux_wm [list button $name.k12frame.3.b_reverb -image i.reverb \
+			-command [concat put_K12_objects $name reverb]]
+		match_linux_wm [list button $name.k12frame.3.b_delay -image i.delay \
+			-command [concat put_K12_objects $name multitap]]
+		match_linux_wm [list button $name.k12frame.3.b_filter -image i.filter \
+			-command [concat put_K12_objects $name filter]]
+		pack $name.k12frame.3.b_reverb $name.k12frame.3.b_delay $name.k12frame.3.b_filter -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.3.b_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
+		setTooltip $name.k12frame.3.b_delay "Echo: Use this to make sound echo"
+		setTooltip $name.k12frame.3.b_filter "Filter: Use this to make sound appear muffled or brighter"
+
+		match_linux_wm [list frame $name.k12frame.4 -relief flat]
+		match_linux_wm [list button $name.k12frame.4.b_sustained1 -image i.sustained1 \
+			-command [concat put_K12_objects $name instr_sustained]]
+		match_linux_wm [list button $name.k12frame.4.b_sustained2 -image i.sustained2 \
+			-command [concat put_K12_objects $name instr_sustained2]]
+		match_linux_wm [list button $name.k12frame.4.b_pitch -image i.pitch \
+			-command [concat put_K12_objects $name autopitch]]
+		pack $name.k12frame.4.b_sustained1 $name.k12frame.4.b_sustained2  $name.k12frame.4.b_pitch -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.4.b_sustained1 "Sustained Sound: Use this to produce long sustained sound like a sound of a woodwind instrument"
+		setTooltip $name.k12frame.4.b_sustained2 "Sustained Sound: Use this to produce long sustained sound like a sound of a violin"
+		setTooltip $name.k12frame.4.b_pitch "Autopitch: Use this to make your sounds automatically change pitch"
+
+		match_linux_wm [list frame $name.k12frame.short -relief flat]
+		match_linux_wm [list button $name.k12frame.short.b_short1 -image i.short1 \
+			-command [concat put_K12_objects $name instr_short2]]
+		match_linux_wm [list button $name.k12frame.short.b_short2 -image i.short2 \
+			-command [concat put_K12_objects $name instr_short]]
+		pack $name.k12frame.short.b_short1 $name.k12frame.short.b_short2 -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.short.b_short1 "Short Sound: Use this to produce short sounds like a single snare drum beat"
+		setTooltip $name.k12frame.short.b_short2 "Short Sound: Use this to produce short sounds like a single bass drum beat"
+
+		match_linux_wm [list frame $name.k12frame.6 -relief flat]
+		match_linux_wm [list button $name.k12frame.6.b_output -image i.output \
+			-command [concat put_K12_objects $name output]] 	
+		pack $name.k12frame.6.b_output -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.6.b_output "Output: Use this to send audio from computer into speakers"
+
+		pack $name.k12frame.edit $name.k12frame.msgs $name.k12frame.5 $name.k12frame.2 $name.k12frame.1 $name.k12frame.sound $name.k12frame.4 $name.k12frame.short $name.k12frame.3 $name.k12frame.6 -side top -expand 0 -fill x 
+	}
+
     canvas $name.c -width $width -height $height -background $::canvas_color($name) \
 		-highlightthickness 0 -bd 0 \
         -yscrollcommand "$name.scrollvert set" \
@@ -2112,7 +2320,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	#pack $name.scrollhort -side bottom -fill x
 	#pack $name.scrollvert -side right -fill y
     pack $name.c -side left -expand 1 -fill both
-    wm minsize $name 50 20
+	if { $k12_mode == 0 } {
+    	wm minsize $name 50 20
+	} else {
+		wm minsize $name 580 532
+	}
     wm geometry $name $geometry
     # the file menu
 	
@@ -2140,29 +2352,31 @@ proc pdtk_canvas_new {name width height geometry editable} {
     $name.m.file add command -label "Save as..." \
         -command [concat menu_saveas $name] \
         -accelerator [accel_munge "Ctrl+S"]
-    $name.m.file add  separator
-
-    # arrange menus according to Apple HIG
-    if {$pd_nt != 2 } {
-		$name.m.file add command -label "Message..." -command {menu_send} \
-			-accelerator [accel_munge "Ctrl+m"]
-		# these are now part of Preferences... on Mac OS X
-        $name.m.file add command -label Path... \
-            -command {pd pd start-path-dialog \;} 
-        $name.m.file add command -label Startup... \
-            -command {pd pd start-startup-dialog \;} 
-    } else { 
-		# Cmd-m is minimize window on Mac OS X		
-		$name.m.file add command -label "Message..." -command {menu_send}
+	if { $k12_mode == 0 } {
 		$name.m.file add  separator
-		$name.m.file add command -label "Make app from patch..." \
-			-command {menu_makeapp 0}
-		$name.m.file add command -label "Make app from folder..." \
-			-command {menu_makeapp 1}
+
+		# arrange menus according to Apple HIG
+		if {$pd_nt != 2 } {
+			$name.m.file add command -label "Message..." -command {menu_send} \
+				-accelerator [accel_munge "Ctrl+m"]
+			# these are now part of Preferences... on Mac OS X
+		    $name.m.file add command -label Path... \
+		        -command {pd pd start-path-dialog \;} 
+		    $name.m.file add command -label Startup... \
+		        -command {pd pd start-startup-dialog \;} 
+		} else { 
+			# Cmd-m is minimize window on Mac OS X		
+			$name.m.file add command -label "Message..." -command {menu_send}
+			$name.m.file add  separator
+			$name.m.file add command -label "Make app from patch..." \
+				-command {menu_makeapp 0}
+			$name.m.file add command -label "Make app from folder..." \
+				-command {menu_makeapp 1}
+		}
+		$name.m.file add separator
+		$name.m.file add command -label "Print..." -command [concat menu_print $name] \
+		    -accelerator [accel_munge "Ctrl+p"]
 	}
-    $name.m.file add separator
-    $name.m.file add command -label "Print..." -command [concat menu_print $name] \
-        -accelerator [accel_munge "Ctrl+p"]
 	if {$pd_nt != 2} {
 		# Mac OS X doesn't put Quit on the File menu
 		$name.m.file add separator
@@ -2212,37 +2426,42 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -command [concat menu_selectall $name] \
         -accelerator [accel_munge "Ctrl+a"]
 
-    $name.m.edit add command -label {Reselect} \
-        -command [concat menu_reselect $name] \
-        -accelerator "Ctrl+Enter" -state disabled
-
-    $name.m.edit add separator
-
-    $name.m.edit add command -label {Tidy Up} \
-		-command [concat menu_tidyup $name] \
-        -accelerator [accel_munge "Ctrl+y"] -state disabled
-
-    $name.m.edit add command -label {Bring To Front} \
-		-command [concat popup_action $name 3] \
-        -accelerator [accel_munge "Ctrl+Up"] -state disabled
-
-    $name.m.edit add command -label {Send To Back} \
-		-command [concat popup_action $name 4] \
-        -accelerator [accel_munge "Ctrl+Down"] -state disabled
-
-    $name.m.edit add separator
-
-	if {$pd_nt == 2} { # no key command on Mac OS X, conflicts with standard
-		$name.m.edit add command -label {Text Editor} \
-			-command [concat menu_texteditor $name]
-	} else {
-		$name.m.edit add command -label {Text Editor} \
-			-accelerator [accel_munge "Ctrl+t"] \
-			-command [concat menu_texteditor $name]
+	if { $k12_mode == 0 } {
+		$name.m.edit add command -label {Reselect} \
+		    -command [concat menu_reselect $name] \
+		    -accelerator "Ctrl+Enter" -state disabled
 	}
 
-    $name.m.edit add command -label Font \
-        -command [concat menu_font $name] 
+    $name.m.edit add separator
+
+	if { $k12_mode == 0 } {
+
+		$name.m.edit add command -label {Tidy Up} \
+			-command [concat menu_tidyup $name] \
+		    -accelerator [accel_munge "Ctrl+y"] -state disabled
+
+		$name.m.edit add command -label {Bring To Front} \
+			-command [concat popup_action $name 3] \
+		    -accelerator [accel_munge "Ctrl+Up"] -state disabled
+
+		$name.m.edit add command -label {Send To Back} \
+			-command [concat popup_action $name 4] \
+		    -accelerator [accel_munge "Ctrl+Down"] -state disabled
+
+		$name.m.edit add separator
+
+		if {$pd_nt == 2} { # no key command on Mac OS X, conflicts with standard
+			$name.m.edit add command -label {Text Editor} \
+				-command [concat menu_texteditor $name]
+		} else {
+			$name.m.edit add command -label {Text Editor} \
+				-accelerator [accel_munge "Ctrl+t"] \
+				-command [concat menu_texteditor $name]
+		}
+
+		$name.m.edit add command -label Font \
+		    -command [concat menu_font $name] 
+	}
 
 ## jsarlo
     $name.m.edit add checkbutton -label "Cord Inspector" \
@@ -2256,36 +2475,38 @@ proc pdtk_canvas_new {name width height geometry editable} {
     $name.m.edit add separator
 ## end jsarlo
 
-    $name.m.edit add command -label "Toggle console" \
-        -accelerator [accel_munge "Ctrl+R"] \
-        -command [concat .controls.switches.console invoke]
+	if { $k12_mode == 0 } {
+		$name.m.edit add command -label "Toggle console" \
+		    -accelerator [accel_munge "Ctrl+R"] \
+		    -command [concat .controls.switches.console invoke]
 
-    $name.m.edit add command -label "Clear console" \
-        -accelerator [accel_munge "Ctrl+L"] \
-        -command [concat menu_clear_console]
+		$name.m.edit add command -label "Clear console" \
+		    -accelerator [accel_munge "Ctrl+L"] \
+		    -command [concat menu_clear_console]
 
-    $name.m.edit add separator
+		$name.m.edit add separator
     
-    # Apple, Microsoft, and others put find functions in the Edit menu.
-    $name.m.edit add command -label {Find...} \
-        -accelerator [accel_munge "Ctrl+f"] \
-        -command [concat menu_findobject $name] 
-    $name.m.edit add command -label {Find Again} \
-        -accelerator [accel_munge "Ctrl+g"] \
-        -command [concat menu_findagain $name] 
-    $name.m.edit add command -label {Find last error} \
-        -command [concat menu_finderror] 
+		# Apple, Microsoft, and others put find functions in the Edit menu.
+		$name.m.edit add command -label {Find...} \
+		    -accelerator [accel_munge "Ctrl+f"] \
+		    -command [concat menu_findobject $name] 
+		$name.m.edit add command -label {Find Again} \
+		    -accelerator [accel_munge "Ctrl+g"] \
+		    -command [concat menu_findagain $name] 
+		$name.m.edit add command -label {Find last error} \
+		    -command [concat menu_finderror] 
 
-    $name.m.edit add separator
+		$name.m.edit add separator
 
-    ############iemlib##################
-    # instead of "red = #BC3C60" we take "grey85", so there is no difference,
-    # if widget is selected or not.
+		############iemlib##################
+		# instead of "red = #BC3C60" we take "grey85", so there is no difference,
+		# if widget is selected or not.
 
-    $name.m.edit add checkbutton -label "Autotips" \
-        -indicatoron false -selectcolor black \
-        -command [concat menu_tooltips $name] \
-        -accelerator [accel_munge "Ctrl+E"]
+		$name.m.edit add checkbutton -label "Autotips" \
+		    -indicatoron false -selectcolor black \
+		    -command [concat menu_tooltips $name] \
+		    -accelerator [accel_munge "Ctrl+E"]
+	}
 
     $name.m.edit add checkbutton -label "Edit mode" \
         -indicatoron false -selectcolor black \
@@ -2307,154 +2528,170 @@ proc pdtk_canvas_new {name width height geometry editable} {
     
     ############iemlib##################
 
+	if { $k12_mode == 0 } {
 
-    # the put menu
-    match_linux_wm [list menu $name.m.put -tearoff $put_tearoff]
-    $name.m add cascade -label Put -menu $name.m.put
+		# the put menu
+		match_linux_wm [list menu $name.m.put -tearoff $put_tearoff]
+		$name.m add cascade -label Put -menu $name.m.put
 
-    $name.m.put add command -label Object \
-        -command [concat menu_object $name 0] \
-        -accelerator [accel_munge "Ctrl+1"]
+		$name.m.put add command -label Object \
+		    -command [concat menu_object $name 0] \
+		    -accelerator [accel_munge "Ctrl+1"]
 
-    $name.m.put add command -label Message \
-        -command [concat menu_message $name 0] \
-        -accelerator [accel_munge "Ctrl+2"]
+		$name.m.put add command -label Message \
+		    -command [concat menu_message $name 0] \
+		    -accelerator [accel_munge "Ctrl+2"]
 
-    $name.m.put add command -label Number \
-        -command [concat menu_floatatom $name 0] \
-        -accelerator [accel_munge "Ctrl+3"]
+		$name.m.put add command -label Number \
+		    -command [concat menu_floatatom $name 0] \
+		    -accelerator [accel_munge "Ctrl+3"]
 
-    $name.m.put add command -label Symbol \
-        -command [concat menu_symbolatom $name 0] \
-        -accelerator [accel_munge "Ctrl+4"]
+		$name.m.put add command -label Symbol \
+		    -command [concat menu_symbolatom $name 0] \
+		    -accelerator [accel_munge "Ctrl+4"]
 
-    $name.m.put add command -label Comment \
-        -command [concat menu_comment $name 0] \
-        -accelerator [accel_munge "Ctrl+5"]
+		$name.m.put add command -label Comment \
+		    -command [concat menu_comment $name 0] \
+		    -accelerator [accel_munge "Ctrl+5"]
 
-    $name.m.put add separator
-    
-    ############iemlib##################
+		$name.m.put add separator
+		
+		############iemlib##################
 
-    $name.m.put add command -label Bang \
-        -command [concat menu_bng $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+b"]
-    
-    $name.m.put add command -label Toggle \
-        -command [concat menu_toggle $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+t"]
-    
-    $name.m.put add command -label Number2 \
-        -command [concat menu_numbox $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+n"]
-    
-    $name.m.put add command -label Vslider \
-        -command [concat menu_vslider $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+v"]
-    
-    $name.m.put add command -label Hslider \
-        -command [concat menu_hslider $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+h"]
-    
-    $name.m.put add command -label Vradio \
-        -command [concat menu_vradio $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+d"]
-    
-    $name.m.put add command -label Hradio \
-        -command [concat menu_hradio $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+i"]
-    
-    $name.m.put add command -label VU \
-        -command [concat menu_vumeter $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+u"]
-    
-    $name.m.put add command -label Canvas \
-        -command [concat menu_mycnv $name 0] \
-        -accelerator [accel_munge "Shift+Ctrl+c"]
+		$name.m.put add command -label Bang \
+		    -command [concat menu_bng $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+b"]
+		
+		$name.m.put add command -label Toggle \
+		    -command [concat menu_toggle $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+t"]
+		
+		$name.m.put add command -label Number2 \
+		    -command [concat menu_numbox $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+n"]
+		
+		$name.m.put add command -label Vslider \
+		    -command [concat menu_vslider $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+v"]
+		
+		$name.m.put add command -label Hslider \
+		    -command [concat menu_hslider $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+h"]
+		
+		$name.m.put add command -label Vradio \
+		    -command [concat menu_vradio $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+d"]
+		
+		$name.m.put add command -label Hradio \
+		    -command [concat menu_hradio $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+i"]
+		
+		$name.m.put add command -label VU \
+		    -command [concat menu_vumeter $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+u"]
+		
+		$name.m.put add command -label Canvas \
+		    -command [concat menu_mycnv $name 0] \
+		    -accelerator [accel_munge "Shift+Ctrl+c"]
 
-    ############iemlib##################
-    
-    $name.m.put add separator
-    
-    $name.m.put add command -label Graph \
-        -command [concat menu_graph $name] 
+		############iemlib##################
+		
+		$name.m.put add separator
+		
+		$name.m.put add command -label Graph \
+		    -command [concat menu_graph $name] 
 
-    $name.m.put add command -label Array \
-        -command [concat menu_array $name] 
+		$name.m.put add command -label Array \
+		    -command [concat menu_array $name] 
 
-    # the find menu
-    # Apple, Microsoft, and others put find functions in the Edit menu.
-    # But in order to move these items to the Edit menu, the Find menu
-    # handling needs to be dealt with, including this line in g_canvas.c:
-    #         sys_vgui(".mbar.find delete %d\n", i);
-    # <hans@at.or.at>
-    #match_linux_wm [list menu $name.m.find -tearoff $put_tearoff]
-    #$name.m add cascade -label Find -menu $name.m.find
-	#
-    #$name.m.find add command -label {Find...} \
-    #    -accelerator [accel_munge "Ctrl+f"] \
-    #    -command [concat menu_findobject $name] 
-    #$name.m.find add command -label {Find Again} \
-    #    -accelerator [accel_munge "Ctrl+g"] \
-    #    -command [concat menu_findagain $name] 
-    #$name.m.find add command -label {Find last error} \
-    #    -command [concat menu_finderror] 
-    
-    # the window menu
-    match_linux_wm [list menu $name.m.windows -postcommand \
-		[concat menu_fixwindowmenu $name] -tearoff $pd_tearoff]
+		# the find menu
+		# Apple, Microsoft, and others put find functions in the Edit menu.
+		# But in order to move these items to the Edit menu, the Find menu
+		# handling needs to be dealt with, including this line in g_canvas.c:
+		#         sys_vgui(".mbar.find delete %d\n", i);
+		# <hans@at.or.at>
+		#match_linux_wm [list menu $name.m.find -tearoff $put_tearoff]
+		#$name.m add cascade -label Find -menu $name.m.find
+		#
+		#$name.m.find add command -label {Find...} \
+		#    -accelerator [accel_munge "Ctrl+f"] \
+		#    -command [concat menu_findobject $name] 
+		#$name.m.find add command -label {Find Again} \
+		#    -accelerator [accel_munge "Ctrl+g"] \
+		#    -command [concat menu_findagain $name] 
+		#$name.m.find add command -label {Find last error} \
+		#    -command [concat menu_finderror] 
+		
+		# the window menu
+		match_linux_wm [list menu $name.m.windows -postcommand \
+			[concat menu_fixwindowmenu $name] -tearoff $pd_tearoff]
 
-	if {$pd_nt == 2} {
-		$name.m.windows add command -label {Minimize} \
-			-command "menu_minimize $name" -accelerator [accel_munge "Ctrl+m"]
-		$name.m.windows add command -label {Zoom} -command "menu_zoom $name"
-	} else {
-		$name.m.windows add command -label "Next Window" -command {menu_raisenextwindow} \
-			-accelerator "Ctrl+PageDown"
-		#$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-		#	-accelerator "Ctrl+PageUp"
+		if {$pd_nt == 2} {
+			$name.m.windows add command -label {Minimize} \
+				-command "menu_minimize $name" -accelerator [accel_munge "Ctrl+m"]
+			$name.m.windows add command -label {Zoom} -command "menu_zoom $name"
+		} else {
+			$name.m.windows add command -label "Next Window" -command {menu_raisenextwindow} \
+				-accelerator "Ctrl+PageDown"
+			#$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+			#	-accelerator "Ctrl+PageUp"
+		}
+		$name.m.windows add separator
+		$name.m.windows add command -label {parent window}\
+		    -command [concat menu_windowparent $name] 
+		$name.m.windows add command -label {Pd & Console} -command menu_raise_console \
+			-accelerator [accel_munge "Ctrl+;"]
+		$name.m.windows add separator
+
+		# the audio menu
+		match_linux_wm [list menu $name.m.audio -tearoff $pd_tearoff]
+
+		if {$pd_nt != 2} {
+		    $name.m add cascade -label Windows -menu $name.m.windows
+		    $name.m add cascade -label Media -menu $name.m.audio
+		} else {
+		    $name.m add cascade -label Media -menu $name.m.audio
+		    $name.m add cascade -label Window -menu $name.m.windows
+		    # the MacOS X app menu
+		    menu $name.m.apple -tearoff $pd_tearoff
+		    $name.m add cascade -label "Apple" -menu $name.m.apple 
+		}
+
+		# the help menu
+
+		match_linux_wm [list menu $name.m.help -tearoff $pd_tearoff]
+		$name.m add cascade -label Help -menu $name.m.help
+
+		menu_addstd $name.m
 	}
-	$name.m.windows add separator
-    $name.m.windows add command -label {parent window}\
-        -command [concat menu_windowparent $name] 
-    $name.m.windows add command -label {Pd & Console} -command menu_raise_console \
-		-accelerator [accel_munge "Ctrl+;"]
-    $name.m.windows add separator
-
-    # the audio menu
-    match_linux_wm [list menu $name.m.audio -tearoff $pd_tearoff]
-
-    if {$pd_nt != 2} {
-        $name.m add cascade -label Windows -menu $name.m.windows
-        $name.m add cascade -label Media -menu $name.m.audio
-    } else {
-        $name.m add cascade -label Media -menu $name.m.audio
-        $name.m add cascade -label Window -menu $name.m.windows
-        # the MacOS X app menu
-        menu $name.m.apple -tearoff $pd_tearoff
-        $name.m add cascade -label "Apple" -menu $name.m.apple 
-    }
-
-    # the help menu
-
-    match_linux_wm [list menu $name.m.help -tearoff $pd_tearoff]
-    $name.m add cascade -label Help -menu $name.m.help
-
-    menu_addstd $name.m
 
     # the popup menu
-    match_linux_wm [list menu $name.popup -tearoff false]
-    $name.popup add command -label {Properties} \
-        -command [concat popup_action $name 0] 
-    $name.popup add command -label {Open} \
-        -command [concat popup_action $name 1] 
-    $name.popup add command -label {Help} \
-        -command [concat popup_action $name 2]
-	$name.popup add separator
-    $name.popup add command -label {To Front} \
-        -command [concat popup_action $name 3]
-    $name.popup add command -label {To Back} \
-        -command [concat popup_action $name 4]
+	match_linux_wm [list menu $name.popup -tearoff false]
+	if { $k12_mode == 0 } {
+		$name.popup add command -label {Properties} \
+		    -command [concat popup_action $name 0]
+		$name.popup add command -label {Open} \
+		    -command [concat popup_action $name 1]
+		$name.popup add command -label {Help} \
+		    -command [concat popup_action $name 2]
+		$name.popup add separator
+		$name.popup add command -label {To Front} \
+		    -command [concat popup_action $name 3]
+		$name.popup add command -label {To Back} \
+		    -command [concat popup_action $name 4]
+	} else {
+		$name.popup add command -label {Properties} -state disabled \
+		    -command [concat popup_action $name 0] 
+		$name.popup add command -label {Open} -state disabled \
+		    -command [concat popup_action $name 1]
+		$name.popup add command -label {Help} \
+		    -command [concat popup_action $name 2]
+		$name.popup add separator
+		$name.popup add command -label {To Front} -state disabled \
+		    -command [concat popup_action $name 3]
+		$name.popup add command -label {To Back} -state disabled \
+		    -command [concat popup_action $name 4]
+	}
 
     # fix menu font size on Windows with tk scaling = 1
     if {$pd_nt == 1} {
@@ -2578,6 +2815,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
 	# bind $name <FocusOut> { pdtk_noselect %W }
+	if { $k12_mode == 1 } { menu_tooltips $name }
     focus $name.c
 }
 
@@ -2872,17 +3110,26 @@ proc pdtk_toggle_console {x} {
 
 proc pdtk_canvas_toggle_menu {rootname x} {
     #set rootname [winfo parent $name]
+	global k12_mode
     if {$x == 1} {
 		set ::menu($rootname) 1
 		if {[info exists ::loaded($rootname)]} {
     		$rootname configure -menu $rootname.m
 			pack $rootname.eyecandy -fill x -expand 0 -before $rootname.c
+			if { $k12_mode == 1 } {
+				pack $rootname.k12frame  -side left -fill y -before $rootname.c
+				wm minsize $rootname 580 532
+			}
 		}
     } elseif {$x == 0}  {
 		set ::menu($rootname) 0
 		if {[info exists ::loaded($rootname)]} {
     		$rootname configure -menu ""
 			pack forget $rootname.eyecandy
+			if { $k12_mode == 1 } {
+				pack forget $rootname.k12frame
+				wm minsize $rootname 50 20
+			}
 		}
     }
 }
@@ -3077,8 +3324,8 @@ proc pdtk_canvas_getscroll {name} {
 		#if {$x2 > $xmaxval} {set xmaxval $x2}
 		#if {$y2 > $ymaxval} {set ymaxval $y2}
 
-		set winwidth [winfo width $parentname]
-		set winheight [winfo height $parentname]
+		set winwidth [winfo width $parentname.c]
+		set winheight [winfo height $parentname.c]
 
 		set canvaswidth [ expr {abs($xmaxval-$xminval)} ]
 		set canvasheight [ expr {abs($ymaxval-$yminval)} ]
@@ -3216,7 +3463,7 @@ proc pdtk_canvas_edit_menu_actions {name action} {
 }
 
 proc pdtk_canvas_ctrlkey {name key shift} {
-    global pd_nt
+    global pd_nt k12_mode
 	set ignore 0
     # first get rid of ".c" suffix; we'll refer to the toplevel instead
     set topname [string trimright $name .c]
@@ -3239,7 +3486,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 	#	set ignore 1	
 	#}
 
-	if {!$ignore} {
+	if {!$ignore && $k12_mode == 0} {
 		if {$key == "1"} {menu_object $topname 1}
 		if {$key == "2"} {menu_message $topname 1}
 		if {$key == "3"} {menu_floatatom $topname 1}
@@ -3251,39 +3498,45 @@ proc pdtk_canvas_ctrlkey {name key shift} {
     if {$key == "period"} {menu_audio 0}
     if {$shift == 1} {
         if {$key == "q" || $key == "Q"} {menu_really_quit}
-        if {$key == "l" || $key == "L"} {menu_clear_console}
-        if {$key == "r" || $key == "R"} {menu_toggle_console}
-		if {$key == "E"} {menu_tooltips $topname}
-		if {$key == "Return"} {pdtk_zoom_reset $topname}
+		if { $k12_mode == 0 } {
+		    if {$key == "l" || $key == "L"} {menu_clear_console}
+		    if {$key == "r" || $key == "R"} {menu_toggle_console}
+			if {$key == "E"} {menu_tooltips $topname}
+			if {$key == "Return"} {pdtk_zoom_reset $topname}
+		}
 		if {!$ignore} {
 	        if {$key == "w" || $key == "W"} {menu_really_close $topname}
 	        if {$key == "s" || $key == "S"} {menu_saveas $topname}
-		    if {$key == "b" || $key == "B"} {menu_bng $topname 1}
-		    if {$key == "n" || $key == "N"} {menu_numbox $topname 1}
-		    if {$key == "v" || $key == "V"} {menu_vslider $topname 1}
-		    if {$key == "h" || $key == "H"} {menu_hslider $topname 1}
-		    if {$key == "i" || $key == "I"} {menu_hradio $topname 1}
-		    if {$key == "d" || $key == "D"} {menu_vradio $topname 1}
-		    if {$key == "u" || $key == "U"} {menu_vumeter $topname 1}
-		    if {$key == "c" || $key == "C"} {menu_mycnv $topname 1}
-		    if {$key == "t" || $key == "T"} {menu_toggle $topname 1}
+			if { $k12_mode == 0 } {
+				if {$key == "b" || $key == "B"} {menu_bng $topname 1}
+				if {$key == "n" || $key == "N"} {menu_numbox $topname 1}
+				if {$key == "v" || $key == "V"} {menu_vslider $topname 1}
+				if {$key == "h" || $key == "H"} {menu_hslider $topname 1}
+				if {$key == "i" || $key == "I"} {menu_hradio $topname 1}
+				if {$key == "d" || $key == "D"} {menu_vradio $topname 1}
+				if {$key == "u" || $key == "U"} {menu_vumeter $topname 1}
+				if {$key == "c" || $key == "C"} {menu_mycnv $topname 1}
+				if {$key == "t" || $key == "T"} {menu_toggle $topname 1}
+			}
 		    #if {$key == "z" || $key == "Z"} {menu_redo $topname}
 		    if {$key == "z" || $key == "Z"} {pdtk_canvas_edit_menu_actions $topname Redo*}
 		}
     } else {
+		if { $k12_mode == 0 } {
+			#if {$key == "y" || $key == "Y"} {menu_tidyup $name}
+			if {$key == "y" || $key == "Y"} {pdtk_canvas_edit_menu_actions $topname "Tidy Up"}
+			#if {$key == "Up"} {popup_action $name 3}
+			if {$key == "Up"} {pdtk_canvas_edit_menu_actions $topname "Bring To Front"}
+			#if {$key == "Down"} {popup_action $name 4}
+			if {$key == "Down"} {pdtk_canvas_edit_menu_actions $topname "Send To Back"}
+        	if {$key == "p" || $key == "P"} {menu_print $topname}
+			if {$key == "b" || $key == "B"} {::helpbrowser::open_helpbrowser}
+		}
         if {$key == "q" || $key == "Q"} {menu_quit}
-		#if {$key == "y" || $key == "Y"} {menu_tidyup $name}
-		if {$key == "y" || $key == "Y"} {pdtk_canvas_edit_menu_actions $topname "Tidy Up"}
-		#if {$key == "Up"} {popup_action $name 3}
-		if {$key == "Up"} {pdtk_canvas_edit_menu_actions $topname "Bring To Front"}
-		#if {$key == "Down"} {popup_action $name 4}
-		if {$key == "Down"} {pdtk_canvas_edit_menu_actions $topname "Send To Back"}
         #if {$key == "z" || $key == "Z"} {menu_undo $topname}
         if {$key == "z" || $key == "Z"} {pdtk_canvas_edit_menu_actions $topname Undo*}
-        if {$key == "b" || $key == "B"} {::helpbrowser::open_helpbrowser}
         if {$key == "n" || $key == "N"} {menu_new}
         if {$key == "o" || $key == "O"} {menu_open}
-        if {$key == "p" || $key == "P"} {menu_print $topname}
         if {$key == "semicolon"} {menu_raise_console}
         #if {$key == "x" || $key == "X"} {menu_cut $topname}
 		if {$key == "x" || $key == "X"} {pdtk_canvas_edit_menu_actions $topname Cut}
@@ -3815,7 +4068,7 @@ proc popup_action {name action} {
 
 proc pdtk_canvas_popup {name xpix ypix canprop canopen isobject} {
 	focus $name.c
-    global popup_xpix popup_ypix
+    global popup_xpix popup_ypix k12_mode
 	global tmp_xpix tmp_ypix
 	set popup_xpix $xpix
 	set popup_ypix $ypix
@@ -3824,22 +4077,23 @@ proc pdtk_canvas_popup {name xpix ypix canprop canopen isobject} {
     set tmp_ypix [expr $ypix - [$name.c canvasy 0] + [winfo rooty $name.c]]
 	scan $tmp_ypix %d tmp_ypix
 	#puts stderr $isobject
-    if {$canprop == 0} {$name.popup entryconfigure 0 -state disabled}
-    if {$canprop == 1} {$name.popup entryconfigure 0 -state active}
-    if {$canopen == 0} {$name.popup entryconfigure 1 -state disabled}
-    if {$canopen == 1} {$name.popup entryconfigure 1 -state active}
-    if {$isobject == 0} {
-		$name.popup entryconfigure 4 -state disabled
-		$name.popup entryconfigure 5 -state disabled
-	}
-    if {$isobject == 1} {
-		$name.popup entryconfigure 4 -state active
-		$name.popup entryconfigure 5 -state active
+	if { $k12_mode == 0 } {
+		if {$canprop == 0} {$name.popup entryconfigure 0 -state disabled}
+		if {$canprop == 1} {$name.popup entryconfigure 0 -state active}
+		if {$canopen == 0} {$name.popup entryconfigure 1 -state disabled}
+		if {$canopen == 1} {$name.popup entryconfigure 1 -state active}
+		if {$isobject == 0} {
+			$name.popup entryconfigure 4 -state disabled
+			$name.popup entryconfigure 5 -state disabled
+		}
+		if {$isobject == 1} {
+			$name.popup entryconfigure 4 -state active
+			$name.popup entryconfigure 5 -state active
+		}
 	}
     tk_popup $name.popup $tmp_xpix \
         $tmp_ypix 0
 }
-
 
 # begin of change "iemlib"
 ############ pdtk_iemgui_dialog -- dialog window for iem guis #########
@@ -5226,25 +5480,32 @@ proc pdtk_data_dialog {name stuff} {
 ############ check or uncheck the "edit" menu item ##############
 #####################iemlib#######################
 proc pdtk_canvas_editval {name value} {
-	#global colors
+	global k12_mode
 	#if {[winfo exists $name]} {
 		if { $value } {
 		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d"
+			if { $k12_mode == 1 } { $name.k12frame.edit.b configure -image i.edit }
 		} else {                          
 		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background {}
+			if { $k12_mode == 1 } { $name.k12frame.edit.b configure -image i.perform }
 		}
 	#}                                             
 }
 
 proc pdtk_canvas_tooltips {name value} {
 	variable autotips
+	global k12_mode
 	#global colors
 	#if {[winfo exists $name]} {
 		if { $value } {
-		    $name.m.edit entryconfigure "Autotips" -indicatoron false -background "#7dd37d"
+			if { $k12_mode == 0 } {
+		   		$name.m.edit entryconfigure "Autotips" -indicatoron false -background "#7dd37d"
+			}
 			set autotips 1
-		} else {                          
-		    $name.m.edit entryconfigure "Autotips" -indicatoron false -background {}
+		} else {      
+			if { $k12_mode == 0 } {                    
+		    	$name.m.edit entryconfigure "Autotips" -indicatoron false -background {}
+			}
 			set autotips 0
 		}
 	#}                                             
@@ -5255,14 +5516,14 @@ proc pdtk_canvas_magicglassval {name value} {
 	#global colors
 
     if { $value } {
-	$name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background "#7dd37d"
+		$name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background "#7dd37d"
     } else {                          
         $name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background {}
     }                                                 
 }
 
 proc pdtk_canvas_update_edit_menu {name value} {
-	global global_selection global_clipboard
+	global global_selection global_clipboard k12_mode
 
 	# pdtk_post "update_edit_menu value=$value clipboard=$global_clipboard\n"
 
@@ -5272,19 +5533,23 @@ proc pdtk_canvas_update_edit_menu {name value} {
 		$name.m.edit entryconfigure "Cut" -state normal
 		$name.m.edit entryconfigure "Copy" -state normal
 		$name.m.edit entryconfigure "Duplicate" -state normal
-		$name.m.edit entryconfigure "Reselect" -state normal
-		$name.m.edit entryconfigure "Bring To Front" -state normal
-		$name.m.edit entryconfigure "Send To Back" -state normal
-		$name.m.edit entryconfigure "Tidy Up" -state normal
+		if { $k12_mode == 0 } {
+			$name.m.edit entryconfigure "Reselect" -state normal
+			$name.m.edit entryconfigure "Bring To Front" -state normal
+			$name.m.edit entryconfigure "Send To Back" -state normal
+			$name.m.edit entryconfigure "Tidy Up" -state normal
+		}
 
     } else {                          
 		$name.m.edit entryconfigure "Cut" -state disabled
 		$name.m.edit entryconfigure "Copy" -state disabled
 		$name.m.edit entryconfigure "Duplicate" -state disabled
-		$name.m.edit entryconfigure "Reselect" -state disabled
-		$name.m.edit entryconfigure "Bring To Front" -state disabled
-		$name.m.edit entryconfigure "Send To Back" -state disabled
-		$name.m.edit entryconfigure "Tidy Up" -state disabled
+		if { $k12_mode == 0 } {
+			$name.m.edit entryconfigure "Reselect" -state disabled
+			$name.m.edit entryconfigure "Bring To Front" -state disabled
+			$name.m.edit entryconfigure "Send To Back" -state disabled
+			$name.m.edit entryconfigure "Tidy Up" -state disabled
+		}
     }
 
 	if {!$global_clipboard} {

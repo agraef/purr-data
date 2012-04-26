@@ -295,6 +295,7 @@ void sys_save_audio_params(
 typedef void (*t_printhook)(const char *s);
 extern t_printhook sys_printhook;  /* set this to override printing */
 extern int sys_printtostderr;
+extern int sys_k12_mode;
 
 /* jsarlo { */
 

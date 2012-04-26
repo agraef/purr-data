@@ -916,10 +916,10 @@ static void canvas_drawlines(t_canvas *x)
         while (oc = linetraverser_next(&t))
     {
         issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
-        sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill %s \
+        sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s \
 -tags {l%lx all_cords}\n",
                  glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
-                 (issignal ? 2:1), (issignal ? "$signal_cord" : "$msg_cord"),
+                 (issignal ? "$signal_cord_width" : "$msg_cord_width"), (issignal ? "$signal_cord" : "$msg_cord"),
                  oc);
     }
 }

@@ -49,6 +49,7 @@ int sys_hipriority = -1;    /* -1 = don't care; 0 = no; 1 = yes */
 int sys_guisetportnumber;   /* if started from the GUI, this is the port # */
 int sys_nosleep = 0;  	/* skip all "sleep" calls and spin instead */
 int sys_console = 0;	/* default settings for the console is off */
+int sys_k12_mode = 0;	/* by default k12 mode is off */
 
 char *sys_guicmd;
 t_symbol *sys_libdir;
@@ -289,6 +290,12 @@ int sys_main(int argc, char **argv)
         sys_reopen_audio();
 
 		if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
+		if (sys_k12_mode) {
+			t_namelist *path = pd_extrapath;
+			while (path->nl_next)
+				path = path->nl_next;
+			sys_vgui("pdtk_enable_k12_mode %s\n", path->nl_string);
+		}
 
          /* run scheduler until it quits */
         return (m_mainloop());
@@ -382,6 +389,7 @@ static char *(usagemessage[]) = {
 "-extraflags <s>  -- string argument to send schedlib\n",
 "-batch           -- run off-line as a batch process\n",
 "-autopatch       -- enable auto-patching new from selected objects\n",
+"-k12             -- enable K-12 education mode (requires L2Ork K12 lib)\n",
 };
 
 static void sys_parsedevlist(int *np, int *vecp, int max, char *str)
@@ -772,6 +780,11 @@ int sys_argparse(int argc, char **argv)
 		else if (!strcmp(*argv, "-console"))
         {
             sys_console = 1;
+            argc--; argv++;
+        }
+		else if (!strcmp(*argv, "-k12"))
+        {
+            sys_k12_mode = 1;
             argc--; argv++;
         }
         else if (!strcmp(*argv, "-guiport") && argc > 1 &&

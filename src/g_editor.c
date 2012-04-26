@@ -2578,9 +2578,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         x->gl_editor->e_xwas = xpos;
                         x->gl_editor->e_ywas = ypos;
                         sys_vgui(
-                          ".x%lx.c create line %d %d %d %d -width %d -tags x\n",
+                          ".x%lx.c create line %d %d %d %d -fill %s -width %s -tags x\n",
                                 x, xpos, ypos, xpos, ypos,
-                                    (issignal ? 2 : 1));
+									(issignal ? "$signal_cord" : "$msg_cord"),
+                                    (issignal ? "$signal_cord_width" : "$msg_cord_width"));
                     }   
     	    	    else
                     // jsarlo
@@ -2995,11 +2996,11 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         ((x22-x21-IOWIDTH) * closest2)/(ninlet2-1) : 0)
                             + IOMIDDLE;
                 ly2 = y21;
-                sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %d -tags {l%lx all_cords}\n",
+                sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %s -tags {l%lx all_cords}\n",
                     glist_getcanvas(x),
                         lx1, ly1, lx2, ly2,
                     (issignal ? "$signal_cord" : "$msg_cord"),
-                    (issignal ? 2 : 1), 
+                    (issignal ? "$signal_cord_width" : "$msg_cord_width"), 
                     oc);
                 if (canvas_cnct_inlet_tag[0] != 0)
                 {
@@ -4534,9 +4535,9 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     if (!(oc = obj_connect(objsrc, outno, objsink, inno))) goto bad;
     if (glist_isvisible(x))
     {
-        sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill %s -tags {l%lx all_cords}\n",
+        sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s -tags {l%lx all_cords}\n",
             glist_getcanvas(x), 0, 0, 0, 0,
-            (obj_issignaloutlet(objsrc, outno) ? 2 : 1),
+            (obj_issignaloutlet(objsrc, outno) ? "$signal_cord_width" : "$msg_cord_width"),
             (obj_issignaloutlet(objsrc, outno) ? "$signal_cord" : "$msg_cord"), oc);
         canvas_fixlinesfor(x, objsrc);
     }
@@ -4906,6 +4907,13 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+static void canvas_undo_add_from_tcl(t_canvas *x) {
+	canvas_editmode(x, 1.);
+	canvas_undo_add(glist_getcanvas(x), 9, "create",
+		(void *)canvas_undo_set_create(glist_getcanvas(x)));
+}
+
+
 void g_editor_setup(void)
 {
 /* ------------------------ events ---------------------------------- */
@@ -4978,6 +4986,8 @@ void g_editor_setup(void)
         gensym("copyfromexternalbuffer"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_reset_copyfromexternalbuffer,
         gensym("reset_copyfromexternalbuffer"), A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_undo_add_from_tcl,
+        gensym("undo_add"), A_NULL);
 
 /* -------------- connect method used in reading files ------------------ */
     class_addmethod(canvas_class, (t_method)canvas_connect,
