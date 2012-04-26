@@ -1750,8 +1750,8 @@ proc menu_magicglass {name} {
 
 proc menu_editmode {name} {
 	global k12_mode
-	if { $k12_mode == 1 } { menu_tooltips $name }
     pd [concat $name editmode 0 \;]
+	if { $k12_mode == 1 } { menu_tooltips $name }
 }
 
 proc menu_tooltips {name} {
