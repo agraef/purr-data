@@ -230,7 +230,7 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
         template_notify(tmpl, (state ? gensym("select") : gensym("deselect")),
             1, &at);
     gpointer_unset(&gp);
-	sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
+	//sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
     scalar_drawselectrect(x, owner, state);
 }
 

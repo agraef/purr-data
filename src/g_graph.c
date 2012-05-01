@@ -785,7 +785,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 	    if (vis && gobj_shouldvis(gr, parent_glist))
 	    {
 	        sys_vgui("catch {.x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d -tags %s -fill #c0c0c0}\n",
+ %d %d %d %d %d %d %d %d %d %d -tags %s -fill $graph_outline}\n",
 	            glist_getcanvas(x->gl_owner),
 				//parent_glist,
 	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
@@ -1122,6 +1122,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
     else //if(glist_istoplevel(glist))
     {
 		//fprintf(stderr,"...yes\n");
+		//fprintf(stderr,"%lx %lx %lx\n", glist_getcanvas(glist), glist, x);
         t_rtext *y = glist_findrtext(glist, &x->gl_obj);
         if (canvas_showtext(x))
             rtext_select(y, state);
@@ -1141,7 +1142,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 */
         	sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
                  canvas, rtext_gettag(y), 
-                 (state? "$select_color" : "black"));
+                 (state? "$select_color" : "$graph_outline"));
 		}
 		t_gobj *g;
 		if (x->gl_list)

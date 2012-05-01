@@ -5460,12 +5460,12 @@ proc pdtk_data_dialog {name stuff} {
 
     match_linux_wm [list frame $name.buttonframe]
     pack $name.buttonframe -side bottom -fill x -pady 3
-	match_linux_wm [list button $name.buttonframe.send -text {Send (Ctrl s)}\
+	match_linux_wm [list button $name.buttonframe.send -text {Send (Ctrl+s)}\
     	-command [concat dodata_send $name]]
-	match_linux_wm [list button $name.buttonframe.ok -text {OK (Ctrl t)}\
+	match_linux_wm [list button $name.buttonframe.ok -text {OK (Ctrl+t)}\
     	-command [concat dodata_ok $name]]
-    pack $name.buttonframe.ok -side right -expand 0 -pady 3
-    pack $name.buttonframe.send -side right -expand 0 -pady 3
+    pack $name.buttonframe.ok -side right -expand 0 -pady 3 -padx 3
+    pack $name.buttonframe.send -side right -expand 0 -pady 3 -padx 3
 
     match_linux_wm [list text $name.text -relief sunken -bd 1 -height 40 -width 60 \
         -yscrollcommand "$name.scroll set" -font $pd_deffont \

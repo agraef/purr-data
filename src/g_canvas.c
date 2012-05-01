@@ -820,22 +820,26 @@ void canvas_redraw(t_canvas *x)
     own window. */
 void glist_menu_open(t_glist *x)
 {
-    if (glist_isvisible(x) && !glist_istoplevel(x))
+    if (glist_isvisible(x))
     {
-        t_glist *gl2 = x->gl_owner;
-        if (!gl2) 
-            bug("glist_menu_open");  /* shouldn't happen but not dangerous */
-        else
-        {
-                /* erase ourself in parent window */
-            gobj_vis(&x->gl_gobj, gl2, 0);
-                    /* get rid of our editor (and subeditors) */
-            if (x->gl_editor)
-                canvas_destroy_editor(x);
-            x->gl_havewindow = 1;
-                    /* redraw ourself in parent window (blanked out this time) */
-            gobj_vis(&x->gl_gobj, gl2, 1);
-        }
+		if (!glist_istoplevel(x)) {
+		    t_glist *gl2 = x->gl_owner;
+		    if (!gl2) 
+		        bug("glist_menu_open");  /* shouldn't happen but not dangerous */
+		    else
+		    {
+		            /* erase ourself in parent window */
+		        gobj_vis(&x->gl_gobj, gl2, 0);
+		                /* get rid of our editor (and subeditors) */
+		        if (x->gl_editor)
+		            canvas_destroy_editor(x);
+		        x->gl_havewindow = 1;
+		                /* redraw ourself in parent window (blanked out this time) */
+		        gobj_vis(&x->gl_gobj, gl2, 1);
+		    }
+		} else {
+			sys_vgui("focus .x%lx\n", (t_int)x);
+		}
     } else {
         if (x->gl_editor)
             canvas_destroy_editor(x);
