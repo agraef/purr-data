@@ -888,6 +888,7 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
     gobj_vis(&x->a_text.te_g, x->a_glist, 1);
 	gobj_select(&x->a_text.te_g, x->a_glist, 1);
     canvas_dirty(x->a_glist, 1);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->a_glist);
 
     /* glist_retext(x->a_glist, &x->a_text); */
 }
