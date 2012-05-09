@@ -8,6 +8,7 @@
 
 #include "m_pd.h"
 #include "s_stuff.h"
+#include "g_canvas.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -107,6 +108,13 @@ static void *loadbang_new(void)
     return (x);
 }
 
+static void loadbang_click(t_loadbang *x,
+    t_floatarg xpos, t_floatarg ypos, t_floatarg shift,
+        t_floatarg ctrl, t_floatarg alt)
+{
+    outlet_bang(x->x_obj.ob_outlet);
+}
+
 static void loadbang_loadbang(t_loadbang *x)
 {
     if (!sys_noloadbang)
@@ -119,6 +127,8 @@ static void loadbang_setup(void)
         sizeof(t_loadbang), CLASS_NOINLET, 0);
     class_addmethod(loadbang_class, (t_method)loadbang_loadbang,
         gensym("loadbang"), 0);
+	class_addmethod(loadbang_class, (t_method)loadbang_click, gensym("click"),
+        A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
 }
 
 
