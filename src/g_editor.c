@@ -22,7 +22,7 @@ char *class_gethelpdir(t_class *c);
 
 /* ------------------ forward declarations --------------- */
 static void canvas_doclear(t_canvas *x);
-static void glist_setlastxy(t_glist *gl, int xval, int yval);
+void glist_setlastxy(t_glist *gl, int xval, int yval);
 static void glist_donewloadbangs(t_glist *x);
 static t_binbuf *canvas_docopy(t_canvas *x);
 static void canvas_dopaste(t_canvas *x, t_binbuf *b);
@@ -1808,8 +1808,10 @@ static t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     *x1p = -0x7fffffff;
     for (y = x->gl_list; y; y = y->g_next)
     {
-        if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)
-            && (x1 > *x1p))
+        if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2))
+            //&& (x1 > *x1p))
+			/* commented section looks for whichever is more to the right
+			   which is wrong since we are looking for topmost object */
                 *x1p = x1, *y1p = y1, *x2p = x2, *y2p = y2, rval = y; 
     }
         /* if there are at least two selected objects, we'd prefer
@@ -2606,9 +2608,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                      x,
                                      canvas_cnct_outlet_tag);
 							
-                            sys_vgui(".x%x.c raise %s\n",
-                                     x,
-                                     canvas_cnct_outlet_tag);
+                            //sys_vgui(".x%x.c raise %s\n",
+                            //         x,
+                            //         canvas_cnct_outlet_tag);
 							outlet_issignal = obj_issignaloutlet(ob,closest);
 							if (tooltips) {
 								objtooltip = 1;
@@ -2660,9 +2662,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                                  x,
                                  canvas_cnct_inlet_tag);
 						
-                        sys_vgui(".x%x.c raise %s\n",
-                                 x,
-                                 canvas_cnct_inlet_tag);
+                        //sys_vgui(".x%x.c raise %s\n",
+                        //         x,
+                        //         canvas_cnct_inlet_tag);
 						inlet_issignal = obj_issignalinlet(ob,closest);
 						if (tooltips) {
 							objtooltip = 1;
@@ -3058,9 +3060,9 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     sys_vgui(".x%x.c itemconfigure %s -outline $select_nlet_color -width $highlight_width\n",
                              x,
                              canvas_cnct_inlet_tag);
-                    sys_vgui(".x%x.c raise %s\n",
-                             x,
-                             canvas_cnct_inlet_tag);
+                    //sys_vgui(".x%x.c raise %s\n",
+                    //         x,
+                    //         canvas_cnct_inlet_tag);
 					inlet_issignal = obj_issignalinlet(ob2, closest2);
 					if (tooltips) {
 						objtooltip = 1;
@@ -4836,7 +4838,7 @@ void glist_getnextxy(t_glist *gl, int *xpix, int *ypix)
     else *xpix = *ypix = 40;
 }
 
-static void glist_setlastxy(t_glist *gl, int xval, int yval)
+void glist_setlastxy(t_glist *gl, int xval, int yval)
 {
     canvas_last_glist = gl;
     canvas_last_glist_x = xval;
@@ -4906,13 +4908,6 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 	    sys_gui("\n");
     }
 }
-
-static void canvas_undo_add_from_tcl(t_canvas *x) {
-	canvas_editmode(x, 1.);
-	canvas_undo_add(glist_getcanvas(x), 9, "create",
-		(void *)canvas_undo_set_create(glist_getcanvas(x)));
-}
-
 
 void g_editor_setup(void)
 {
@@ -4986,9 +4981,6 @@ void g_editor_setup(void)
         gensym("copyfromexternalbuffer"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_reset_copyfromexternalbuffer,
         gensym("reset_copyfromexternalbuffer"), A_NULL);
-    class_addmethod(canvas_class, (t_method)canvas_undo_add_from_tcl,
-        gensym("undo_add"), A_NULL);
-
 /* -------------- connect method used in reading files ------------------ */
     class_addmethod(canvas_class, (t_method)canvas_connect,
         gensym("connect"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);

@@ -254,6 +254,32 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+extern void glist_setlastxy(t_glist *gl, int xval, int yval);
+
+/* invoked from tcl/tk: abstraction_name x_offset y_offset */
+void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
+{
+	//fprintf(stderr,"canvas_abstraction_from_menu\n");
+    t_text *x;
+
+    t_binbuf *b = binbuf_new();
+	binbuf_restore(b, 2, argv);
+    int connectme, xpix, ypix, indx, nobj;
+    canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+    pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
+    canvas_objtext(gl, xpix+atom_getintarg(1, argc, argv), ypix+atom_getintarg(2, argc, argv), 1, b);
+
+    if (connectme) {
+        canvas_connect(gl, indx, 0, nobj, 0);
+	}
+    else {
+		canvas_startmotion(glist_getcanvas(gl));
+	}
+	canvas_undo_add(glist_getcanvas(gl), 9, "create",
+		(void *)canvas_undo_set_create(glist_getcanvas(gl)));
+	glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
+}
+
 /* make an object box for an object that's already there. */
 
 /* iemlib */

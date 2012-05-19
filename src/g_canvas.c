@@ -1941,6 +1941,7 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
     /* why are some of these "glist" and others "canvas"? */
 extern void glist_text(t_glist *x, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
+extern void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_bng(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_toggle(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 extern void canvas_vslider(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
@@ -1984,6 +1985,8 @@ void g_canvas_setup(void)
 /* -------------------------- objects ----------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_obj,
         gensym("obj"), A_GIMME, A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_obj_abstraction_from_menu,
+        gensym("obj_abstraction"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_msg,
         gensym("msg"), A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_floatatom,

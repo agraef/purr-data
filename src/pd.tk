@@ -2104,9 +2104,7 @@ proc put_K12_objects {name object} {
 	global pointer_y_local
 
 	if { $k12_mode == 1 } {
-		pd [concat $name dirty 1 \;]
-		pd [concat $name obj $pointer_x_local $pointer_y_local K12/$object \;]
-		pd [concat $name undo_add\;]
+		pd [concat $name obj_abstraction K12/$object 0 20 \;]
 	}
 }
 
