@@ -2104,6 +2104,7 @@ proc put_K12_objects {name object} {
 	global pointer_y_local
 
 	if { $k12_mode == 1 } {
+		pd [concat $name dirty 1 \;]
 		pd [concat $name obj_abstraction K12/$object 0 20 \;]
 	}
 }
@@ -5646,28 +5647,42 @@ set font_fixed_metrics {
     30 18 37
     36 22 44
 }
-
-proc get_font_for_size {size} {
-    return "::pd_font_${size}"
-}
+set font_measured_metrics {}
 
 # creates all the base fonts (i.e. pd_font_8 thru pd_font_36) so that they fit
 # into the metrics given by $::font_fixed_metrics for any given font/weight
 proc fit_font_into_metrics {} {
+# TODO the fonts picked seem too small, probably on fixed width
     foreach {size width height} $::font_fixed_metrics {
-        set pixelheight [expr -1 * $height]
-        font create tmpfont -family $::font_family -weight $::font_weight \
-            -size $pixelheight
-        while {[font measure tmpfont M] > $width || \
-            [font metrics tmpfont -linespace] > $height} {
-            # this actually makes it smaller since pixel heights are negative
-            incr pixelheight 1
-            font configure tmpfont -size $pixelheight
+        set myfont [get_font_for_size $size]
+        font create $myfont -family $::font_family -weight $::font_weight \
+            -size [expr {-$height}]
+        set height2 $height
+        set giveup 0
+        while {[font measure $myfont M] > $width || \
+            [font metrics $myfont -linespace] > $height} {
+            incr height2 -1
+            font configure $myfont -size [expr {-$height2}]
+            if {$height2 * 2 <= $height} {
+                set giveup 1
+                set ::font_measured_metrics $::font_fixed_metrics
+                break
+            }
         }
-        font create [get_font_for_size $size] \
-            -family $::font_family -weight $::font_weight -size $pixelheight
-        font delete tmpfont
+        set ::font_measured_metrics \
+            "$::font_measured_metrics  $size\
+                [font measure $myfont M] [font metrics $myfont -linespace]"
+        if {$giveup} {
+            ::pdwindow::post [format \
+    [_ "WARNING: %s failed to find font size (%s) that fits into %sx%s!\n"]\
+               [lindex [info level 0] 0] $size $width $height]
+            continue
+        }
     }
+}
+
+proc get_font_for_size {size} {
+    return "::pd_font_${size}"
 }
 
 proc find_default_font {} {

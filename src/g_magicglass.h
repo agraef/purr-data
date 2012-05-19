@@ -16,6 +16,7 @@ typedef struct _magicGlass
     float x_sigF;
     int x_dspOn;
     int x_viewOn;
+    float x_minSample;
     float x_maxSample;
     int x_sampleCount;
     t_clock *x_clearClock;

@@ -251,6 +251,7 @@ void magicGlass_show(t_magicGlass *x)
 	//fprintf(stderr,"magicglass_show\n");
     if (!x->x_visible) {
 		x->x_sampleCount = 0;
+		x->x_minSample =  999999;
 		x->x_maxSample = -999999;
 		x->x_string[0] = 0;
         x->x_visible = 1;
@@ -264,6 +265,7 @@ void magicGlass_hide(t_magicGlass *x)
     if (x->x_visible) {
         magicGlass_undraw(x);
 		x->x_sampleCount = 0;
+		x->x_minSample =  999999;
 		x->x_maxSample = -999999;
 		x->x_string[0] = 0;
 		x->x_visible = 0;
@@ -319,6 +321,7 @@ void magicGlass_setDsp(t_magicGlass *x, int i)
 		{
 		    x->x_dspOn = 1;
 		    x->x_sampleCount = 0;
+			x->x_minSample =  999999;
 		    x->x_maxSample = -999999;
 		}
 		else
@@ -341,12 +344,22 @@ t_int *magicGlass_perform(t_int *w)
         {
             if (in[i] > x->x_maxSample)
                 x->x_maxSample = in[i];
+            if (in[i] < x->x_minSample)
+				x->x_minSample = in[i];
             x->x_sampleCount++;
             if (x->x_sampleCount >= MG_SAMPLE_COUNT)
             {
-                sprintf(x->x_string, "~ %g", x->x_maxSample);
+				char l[64], m[64], h[64];
+				sprintf(l, "%s%#g", (x->x_minSample < 0.0f ? "" : " "), x->x_minSample);
+				l[6] = '\0';
+				sprintf(m, "%s%#g", (in[i] < 0.0f ? "" : " "), in[i]);
+				m[6] = '\0';
+				sprintf(h, "%s%#g", (x->x_maxSample < 0.0f ? "" : " "), x->x_maxSample);
+				h[6] = '\0';
+                sprintf(x->x_string, "~ %s %s %s", l, m, h);
                 magicGlass_updateText(x, 0);
-                x->x_maxSample = -999999;
+				//x->x_minSample =  999999;
+                //x->x_maxSample = -999999;
                 x->x_sampleCount = 0;
             }
         }
