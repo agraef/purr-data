@@ -89,7 +89,7 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
 		         canvas, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w, yy+w, w,
 		         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxTGL text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxTGL text}\n",
 		         canvas, xx+x->x_gui.x_ldx,
 		         yy+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
@@ -193,12 +193,12 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 	*/
 	if (x->x_gui.x_fsf.x_selected) {
-    	sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n",
+    	sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 	}
 	else {
-    	sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
+    	sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 			 x->x_gui.x_lcol,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");

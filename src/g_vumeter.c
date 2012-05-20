@@ -143,7 +143,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		             canvas, quad1, yyy, quad3, yyy, x->x_led_size, iemgui_color_hex[led_col], x, i, x);
 		    if(((i+2)&3) && (x->x_scale))
 		        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		                 -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
+		                 -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
 		                 canvas, end, yyy+k3, iemgui_vu_scale_str[i], 
 						 x->x_gui.x_font, x->x_gui.x_fontsize,
 		                 sys_fontweight, x->x_gui.x_lcol, x, i, x);
@@ -153,7 +153,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		    i=IEM_VU_STEPS+1;
 		    yyy = k4 + k1*(k2-i);
 		    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		             -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
+		             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
 		             canvas, end, yyy+k3, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight,
 		             x->x_gui.x_lcol, x, i, x);
@@ -165,7 +165,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		         canvas, mid, ypos+10,
 		         mid, ypos+10, x->x_led_size, x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxVU text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVU text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -343,11 +343,11 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
                  x->x_led_size);
         if(((i+2)&3) && (x->x_scale))
 			if (x->x_gui.x_fsf.x_selected)
-            	sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} %d %s} -fill $select_color\n",
+            	sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill $select_color\n",
                      canvas, x, i, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight);
 			else
-            	sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} %d %s} -fill #%6.6x\n",
+            	sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill #%6.6x\n",
                      canvas, x, i, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight, 
                      x->x_gui.x_lcol);
@@ -356,21 +356,21 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
     {
         i=IEM_VU_STEPS+1;
 		if (x->x_gui.x_fsf.x_selected)
-		    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} %d %s} -fill $select_color\n",
+		    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill $select_color\n",
 		             canvas, x, i, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight);
 		else
-		    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} %d %s} -fill #%6.6x\n",
+		    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill #%6.6x\n",
 		             canvas, x, i, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight,
 		             x->x_gui.x_lcol);
     }
 	if (x->x_gui.x_fsf.x_selected)
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 	else
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
@@ -834,7 +834,7 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 yyy = k4 + k1*(k2-i);
                 if((i+2)&3)
                     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-                             -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
+                             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
                              canvas, end, yyy+k3, iemgui_vu_scale_str[i], 
 							 x->x_gui.x_font, x->x_gui.x_fontsize,
                              sys_fontweight, x->x_gui.x_lcol, x, i, x);
@@ -842,7 +842,7 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
             i=IEM_VU_STEPS+1;
             yyy = k4 + k1*(k2-i);
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-                     -font {{%s} %d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
+                     -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
                      canvas, end, yyy+k3, iemgui_vu_scale_str[i], 
 					 x->x_gui.x_font, x->x_gui.x_fontsize,
                      sys_fontweight, x->x_gui.x_lcol, x, i, x);

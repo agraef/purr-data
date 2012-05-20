@@ -229,14 +229,14 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 		    xpos, ypos + x->x_gui.x_h,
 		    x->x_gui.x_fcol, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM text}\n",
+		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM text}\n",
 		    canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		    strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		    x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		my_numbox_ftoa(x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} %d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM noscroll text}\n",
+		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM noscroll text}\n",
 		    canvas, xpos+half+2, ypos+half+d,
 		    x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		    x->x_gui.x_fcol, x, x);
@@ -349,7 +349,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 	*/
 
 	if (x->x_gui.x_fsf.x_selected) {
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -362,7 +362,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 		*/
 	}
 	else {
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -1145,7 +1145,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     int bflcol[]={-262144, -1, -1};
     int w=5, h=14;
     int lilo=0, f=0, ldx=0, ldy=-8;
-    int fs=11;
+    int fs=10;
     int log_height=256;
     double min=-1.0e+37, max=1.0e+37,v=0.0;
     char str[144];
