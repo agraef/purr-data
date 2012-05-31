@@ -2231,18 +2231,6 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pack $name.k12frame.5.b_wii_connect -side left -expand 0 -padx 2 -pady 2
 		setTooltip $name.k12frame.5.b_wii_connect "Wiimote: Use this to connect wiimote to the computer"
 
-		match_linux_wm [list frame $name.k12frame.1 -relief flat]
-		match_linux_wm [list button $name.k12frame.1.b_add -image i.add \
-			-command [concat put_K12_objects $name math_add]]
-		match_linux_wm [list button $name.k12frame.1.b_multiply -image i.multiply \
-			-command [concat put_K12_objects $name math_multiply]]
-		match_linux_wm [list button $name.k12frame.1.b_mapper -image i.mapper \
-			-command [concat put_K12_objects $name mapper]]
-		pack $name.k12frame.1.b_add $name.k12frame.1.b_multiply $name.k12frame.1.b_mapper -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.1.b_add "Add: Use this to add two values together"
-		setTooltip $name.k12frame.1.b_multiply "Multiply: Use this to multiply two values"
-		setTooltip $name.k12frame.1.b_mapper "Mapper: Use this to control two objects in different fashion"
-
 		match_linux_wm [list frame $name.k12frame.2 -relief flat]
 		match_linux_wm [list button $name.k12frame.2.b_buttons -image i.buttons \
 			-command [concat put_K12_objects $name wii_buttons]]
@@ -2255,22 +2243,22 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.2.b_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken"
 		setTooltip $name.k12frame.2.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving"
 
-		match_linux_wm [list frame $name.k12frame.3 -relief flat]
-		match_linux_wm [list button $name.k12frame.3.b_reverb -image i.reverb \
-			-command [concat put_K12_objects $name reverb]]
-		match_linux_wm [list button $name.k12frame.3.b_delay -image i.delay \
-			-command [concat put_K12_objects $name multitap]]
-		match_linux_wm [list button $name.k12frame.3.b_filter -image i.filter \
-			-command [concat put_K12_objects $name filter]]
-		pack $name.k12frame.3.b_reverb $name.k12frame.3.b_delay $name.k12frame.3.b_filter -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.3.b_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
-		setTooltip $name.k12frame.3.b_delay "Echo: Use this to make sound echo"
-		setTooltip $name.k12frame.3.b_filter "Filter: Use this to make sound appear muffled or brighter"
+		match_linux_wm [list frame $name.k12frame.1 -relief flat]
+		match_linux_wm [list button $name.k12frame.1.b_add -image i.add \
+			-command [concat put_K12_objects $name math_add]]
+		match_linux_wm [list button $name.k12frame.1.b_multiply -image i.multiply \
+			-command [concat put_K12_objects $name math_multiply]]
+		match_linux_wm [list button $name.k12frame.1.b_mapper -image i.mapper \
+			-command [concat put_K12_objects $name mapper]]
+		pack $name.k12frame.1.b_add $name.k12frame.1.b_multiply $name.k12frame.1.b_mapper -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.1.b_add "Add: Use this to add two values together"
+		setTooltip $name.k12frame.1.b_multiply "Multiply: Use this to multiply two values"
+		setTooltip $name.k12frame.1.b_mapper "Mapper: Use this to control two objects in different fashion"
 
 		match_linux_wm [list frame $name.k12frame.4 -relief flat]
-		match_linux_wm [list button $name.k12frame.4.b_sustained1 -image i.sustained1 \
+		match_linux_wm [list button $name.k12frame.4.b_sustained1 -image i.sustained2 \
 			-command [concat put_K12_objects $name instr_sustained]]
-		match_linux_wm [list button $name.k12frame.4.b_sustained2 -image i.sustained2 \
+		match_linux_wm [list button $name.k12frame.4.b_sustained2 -image i.sustained1 \
 			-command [concat put_K12_objects $name instr_sustained2]]
 		match_linux_wm [list button $name.k12frame.4.b_pitch -image i.pitch \
 			-command [concat put_K12_objects $name autopitch]]
@@ -2287,6 +2275,18 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pack $name.k12frame.short.b_short1 $name.k12frame.short.b_short2 -side left -expand 0 -padx 2 -pady 2
 		setTooltip $name.k12frame.short.b_short1 "Short Sound: Use this to produce short sounds like a single snare drum beat"
 		setTooltip $name.k12frame.short.b_short2 "Short Sound: Use this to produce short sounds like a single bass drum beat"
+
+		match_linux_wm [list frame $name.k12frame.3 -relief flat]
+		match_linux_wm [list button $name.k12frame.3.b_reverb -image i.reverb \
+			-command [concat put_K12_objects $name reverb]]
+		match_linux_wm [list button $name.k12frame.3.b_delay -image i.delay \
+			-command [concat put_K12_objects $name multitap]]
+		match_linux_wm [list button $name.k12frame.3.b_filter -image i.filter \
+			-command [concat put_K12_objects $name filter]]
+		pack $name.k12frame.3.b_reverb $name.k12frame.3.b_delay $name.k12frame.3.b_filter -side left -expand 0 -padx 2 -pady 2
+		setTooltip $name.k12frame.3.b_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
+		setTooltip $name.k12frame.3.b_delay "Echo: Use this to make sound echo"
+		setTooltip $name.k12frame.3.b_filter "Filter: Use this to make sound appear muffled or brighter"
 
 		match_linux_wm [list frame $name.k12frame.6 -relief flat]
 		match_linux_wm [list button $name.k12frame.6.b_output -image i.output \
