@@ -180,7 +180,7 @@ static void bindlist_bang(t_bindlist *x)
 	change_bindlist_via_graph = 1;
     t_bindelem *e;
     for (e = x->b_list; e; e = e->e_next)
-        pd_bang(e->e_who);
+        if (e->e_who != NULL) pd_bang(e->e_who);
 	bindlist_cleanup(x);
 	change_bindlist_via_graph = 0;
 }
@@ -190,7 +190,7 @@ static void bindlist_float(t_bindlist *x, t_float f)
 	change_bindlist_via_graph = 1;
     t_bindelem *e;
     for (e = x->b_list; e; e = e->e_next)
-        pd_float(e->e_who, f);
+        if (e->e_who != NULL) pd_float(e->e_who, f);
 	bindlist_cleanup(x);
 	change_bindlist_via_graph = 0;
 }
@@ -200,7 +200,7 @@ static void bindlist_symbol(t_bindlist *x, t_symbol *s)
 	change_bindlist_via_graph = 1;
     t_bindelem *e;
     for (e = x->b_list; e; e = e->e_next)
-        pd_symbol(e->e_who, s);
+        if (e->e_who != NULL) pd_symbol(e->e_who, s);
 	bindlist_cleanup(x);
 	change_bindlist_via_graph = 0;
 }
@@ -210,7 +210,7 @@ static void bindlist_pointer(t_bindlist *x, t_gpointer *gp)
 	change_bindlist_via_graph = 1;
     t_bindelem *e;
     for (e = x->b_list; e; e = e->e_next)
-        pd_pointer(e->e_who, gp);
+        if (e->e_who != NULL) pd_pointer(e->e_who, gp);
 	bindlist_cleanup(x);
 	change_bindlist_via_graph = 0;
 }
@@ -221,7 +221,7 @@ static void bindlist_list(t_bindlist *x, t_symbol *s,
 	change_bindlist_via_graph = 1;
     t_bindelem *e;
     for (e = x->b_list; e; e = e->e_next)
-        pd_list(e->e_who, s, argc, argv);
+        if (e->e_who != NULL) pd_list(e->e_who, s, argc, argv);
 	bindlist_cleanup(x);
 	change_bindlist_via_graph = 0;
 }
@@ -232,7 +232,7 @@ static void bindlist_anything(t_bindlist *x, t_symbol *s,
 	change_bindlist_via_graph = 1;
     t_bindelem *e;
     for (e = x->b_list; e; e = e->e_next)
-        pd_typedmess(e->e_who, s, argc, argv);
+        if (e->e_who != NULL) pd_typedmess(e->e_who, s, argc, argv);
 	bindlist_cleanup(x);
 	change_bindlist_via_graph = 0;
 }
