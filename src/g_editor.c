@@ -61,6 +61,8 @@ extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floatarg resize, t_floatarg preview);
+// for updating preset_node locations in case of operations that alter glist object locations (tofront/back, cut, delete, undo/redo cut/delete)
+extern void glob_preset_node_list_check_loc_and_update(void);
 
 struct _outlet
 {
@@ -800,6 +802,8 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 					}
 				}
 				canvas_redraw(x);
+				glob_preset_node_list_check_loc_and_update();
+
 			}
 		}
     }
@@ -815,6 +819,7 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 			for (i = 0; i < buf->n_obj; i++)
             	glist_select(x, glist_nth(x, buf->p_a[i]));
             canvas_doclear(x);
+			glob_preset_node_list_check_loc_and_update();
 		}
         else if (mode == UCUT_TEXT)
         {
@@ -1282,6 +1287,8 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 
 			// and finally redraw canvas
 			canvas_redraw(x);
+
+			glob_preset_node_list_check_loc_and_update();
 		}
     }
 	else if (action == UNDO_REDO) {
@@ -2294,6 +2301,7 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		canvas_redraw(x);
 	}
 	canvas_dirty(x, 1);
+	glob_preset_node_list_check_loc_and_update();
 }
 
     /* called from the gui when a popup menu comes back with "properties,"
@@ -3501,6 +3509,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
                 //    canvas_undo_set_cut(x, UCUT_CLEAR), "clear");
 				canvas_undo_add(x, 3, "clear", canvas_undo_set_cut(x, UCUT_CLEAR));
                 canvas_doclear(x);
+				glob_preset_node_list_check_loc_and_update();
             }
         }
                 /* check for arrow keys */
@@ -4232,6 +4241,7 @@ static void canvas_cut(t_canvas *x)
 		canvas_undo_add(x, 3, "cut", canvas_undo_set_cut(x, UCUT_CUT));
         canvas_copy(x);
         canvas_doclear(x);
+		glob_preset_node_list_check_loc_and_update();
         paste_xyoffset = 0;
         sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     }
