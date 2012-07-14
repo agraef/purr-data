@@ -920,11 +920,12 @@ static void canvas_drawlines(t_canvas *x)
         while (oc = linetraverser_next(&t))
     {
         issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
-        sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s \
--tags {l%lx all_cords}\n",
-                 glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
-                 (issignal ? "$signal_cord_width" : "$msg_cord_width"), (issignal ? "$signal_cord" : "$msg_cord"),
-                 oc);
+		if (!(pd_class(&t.tr_ob2->ob_g.g_pd) == preset_node_class && pd_class(&t.tr_ob->ob_g.g_pd) != message_class))
+		    sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s \
+	-tags {l%lx all_cords}\n",
+		             glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
+		             (issignal ? "$signal_cord_width" : "$msg_cord_width"), (issignal ? "$signal_cord" : "$msg_cord"),
+		             oc);
     }
 }
 
@@ -1047,29 +1048,29 @@ void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-static void canvas_loadbangabstractions(t_canvas *x)
+static void canvas_loadbangabstractions(t_canvas *x, t_symbol *s)
 {
     t_gobj *y;
-    t_symbol *s = gensym("loadbang");
+    //t_symbol *s = gensym("loadbang");
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == canvas_class)
     {
         if (canvas_isabstraction((t_canvas *)y))
             canvas_loadbang((t_canvas *)y);
         else
-            canvas_loadbangabstractions((t_canvas *)y);
+            canvas_loadbangabstractions((t_canvas *)y, s);
     }
 }
 
-void canvas_loadbangsubpatches(t_canvas *x)
+void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
 {
     t_gobj *y;
-    t_symbol *s = gensym("loadbang");
+    //t_symbol *s = gensym("loadbang");
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == canvas_class)
     {
         if (!canvas_isabstraction((t_canvas *)y))
-            canvas_loadbangsubpatches((t_canvas *)y);
+            canvas_loadbangsubpatches((t_canvas *)y, s);
     }
     for (y = x->gl_list; y; y = y->g_next)
         if ((pd_class(&y->g_pd) != canvas_class) &&
@@ -1079,9 +1080,14 @@ void canvas_loadbangsubpatches(t_canvas *x)
 
 void canvas_loadbang(t_canvas *x)
 {
-    t_gobj *y;
-    canvas_loadbangabstractions(x);
-    canvas_loadbangsubpatches(x);
+    //t_gobj *y;
+	// first loadbang preset hubs and nodes
+    canvas_loadbangabstractions(x, gensym("pre-loadbang"));
+    canvas_loadbangsubpatches(x, gensym("pre-loadbang"));
+
+	// then do the regular loadbang
+    canvas_loadbangabstractions(x, gensym("loadbang"));
+    canvas_loadbangsubpatches(x, gensym("loadbang"));
 }
 /* JMZ:
  * initbang is emitted after the canvas is done, but before the parent canvas is done

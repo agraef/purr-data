@@ -31,7 +31,6 @@ void vradio_draw_select(t_vradio* x, t_glist* glist);
 /* ------------- vdl     gui-vertical radio button ---------------------- */
 
 t_widgetbehavior vradio_widgetbehavior;
-static t_class *vradio_class, *vradio_old_class;
 
 /* widget helper functions */
 

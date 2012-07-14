@@ -31,7 +31,6 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist);
 /* ---------- cnv  my gui-canvas for a window ---------------- */
 
 t_widgetbehavior my_canvas_widgetbehavior;
-static t_class *my_canvas_class;
 
 /* widget helper functions */
 

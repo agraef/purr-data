@@ -47,7 +47,7 @@ struct _undo_action
 	char *name;					/* name of current action */
 	struct _undo_action *prev;	/* previous undo action */
 	struct _undo_action *next;	/* next undo action */
-} t_undo_action;
+};
 
 #ifndef t_undo_action
 #define t_undo_action struct _undo_action

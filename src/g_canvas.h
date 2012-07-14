@@ -39,23 +39,6 @@ in future releases.  The public (stable) API is in m_pd.h. */
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 extern "C" {
 #endif
-
-/* 	redundant struct queue for maintaining a list of redundantly
-	allocated memory chunks to avoid double-entry bug. these are
-	instantiated inside canvas_new since the bug only affects new
-	canvases/abstractions rather than individual objects. the queue
-	is destructed in m_glob.c quit call (when pd exits) */
-/*
-typedef struct _redundant_mem
-{
-    //int rm_what;
-	t_canvas *rm_canvas;
-    struct _redundant_mem *rm_next;
-} t_redundant_mem;
-
-t_redundant_mem *rm_start;
-t_redundant_mem *rm_end;
-*/
   
 /* --------------------- geometry ---------------------------- */
 #define IOWIDTH 7       /* width of an inlet/outlet in pixels */
@@ -97,6 +80,14 @@ EXTERN_STRUCT _fielddesc;
 EXTERN_STRUCT _magicGlass;
 #define t_magicGlass struct _magicGlass
 // end jsarlo
+
+// undo stuff
+EXTERN_STRUCT _undo_action;
+#define t_undo_action struct _undo_action
+
+// preset hub stuff
+EXTERN_STRUCT _preset_hub;
+#define t_preset_hub struct _preset_hub
 
 typedef struct _selection
 {
@@ -166,7 +157,7 @@ area of a window.
 
 */
 
-#include "g_undo.h"
+//#include "g_undo.h"
 
 struct _glist
 {  
@@ -228,10 +219,42 @@ struct _glist
 	//infinite undo goodies
 	t_undo_action *u_queue;
 	t_undo_action *u_last;
+
+	//global preset array pointer
+	t_preset_hub *gl_phub;
 };
 
 #define gl_gobj gl_obj.te_g
 #define gl_pd gl_gobj.g_pd
+
+/*-------------------universal preset stuff---------------------*/
+// for the universal preset_node ability (see g_editor.c doconnect/disconnect functions)
+// this is where all the classes capable of being controlled via preset should be defined
+
+// preset objects
+t_class *preset_hub_class;
+t_class *preset_node_class;
+
+// core gui
+t_class *gatom_class;
+t_class *message_class;
+
+// core text
+extern t_class *pdint_class;
+extern t_class *pdfloat_class;
+extern t_class *pdsymbol_class;
+
+// iemgui
+t_class *bng_class;
+t_class *hradio_class, *hradio_old_class;
+t_class *hslider_class;
+t_class *my_canvas_class;
+t_class *my_numbox_class;
+t_class *toggle_class;
+t_class *vradio_class, *vradio_old_class;
+t_class *vslider_class;
+t_class *vu_class;
+/*-----------------end universal preset stuff-------------------*/
 
 /* a data structure to describe a field in a pure datum */
 
@@ -654,7 +677,6 @@ EXTERN void fielddesc_setcoord(t_fielddesc *f, t_template *tmpl,
 EXTERN t_float fielddesc_cvttocoord(t_fielddesc *f, t_float val);
 EXTERN t_float fielddesc_cvtfromcoord(t_fielddesc *f, t_float coord);
 
-
 /* ----------------------- guiconnects, g_guiconnect.c --------- */
 EXTERN t_guiconnect *guiconnect_new(t_pd *who, t_symbol *sym);
 EXTERN void guiconnect_notarget(t_guiconnect *x, double timedelay);
@@ -662,6 +684,78 @@ EXTERN void guiconnect_notarget(t_guiconnect *x, double timedelay);
 /* ------------- IEMGUI routines used in other g_ files ---------------- */
 EXTERN t_symbol *iemgui_raute2dollar(t_symbol *s);
 EXTERN t_symbol *iemgui_dollar2raute(t_symbol *s);
+
+/* ---------- infinite undo/redo routines found in g_undo.c ------------ */
+
+EXTERN t_undo_action *canvas_undo_init(t_canvas *x);
+EXTERN t_undo_action *canvas_undo_add(t_canvas *x,
+	int type, const char *name, void *data);
+EXTERN void canvas_undo_undo(t_canvas *x);
+EXTERN void canvas_undo_redo(t_canvas *x);
+EXTERN void canvas_undo_rebranch(t_canvas *x);
+EXTERN void canvas_undo_check_canvas_pointers(t_canvas *x);
+EXTERN void canvas_undo_purge_abstraction_actions(t_canvas *x);
+EXTERN void canvas_undo_free(t_canvas *x);
+
+/* --------- 1. connect ---------- */
+
+EXTERN void *canvas_undo_set_connect(t_canvas *x,
+    int index1, int outno, int index2, int inno);
+EXTERN void canvas_undo_connect(t_canvas *x, void *z, int action);
+
+/* --------- 2. disconnect ------- */
+
+EXTERN void *canvas_undo_set_disconnect(t_canvas *x,
+    int index1, int outno, int index2, int inno);
+EXTERN void canvas_undo_disconnect(t_canvas *x, void *z, int action);
+
+/* --------- 3. cut -------------- */
+
+EXTERN void *canvas_undo_set_cut(t_canvas *x, int mode);
+EXTERN void canvas_undo_cut(t_canvas *x, void *z, int action);
+
+/* --------- 4. move ------------- */
+
+EXTERN void *canvas_undo_set_move(t_canvas *x, int selected);
+EXTERN void canvas_undo_move(t_canvas *x, void *z, int action);
+
+/* --------- 5. paste ------------ */
+
+EXTERN void *canvas_undo_set_paste(t_canvas *x, int offset);
+EXTERN void canvas_undo_paste(t_canvas *x, void *z, int action);
+
+/* --------- 6. apply ------------ */
+
+EXTERN void *canvas_undo_set_apply(t_canvas *x, int n);
+EXTERN void canvas_undo_apply(t_canvas *x, void *z, int action);
+
+/* --------- 7. arrange ---------- */
+
+EXTERN void *canvas_undo_set_arrange(t_canvas *x, t_gobj *obj, int newindex);
+EXTERN void canvas_undo_arrange(t_canvas *x, void *z, int action);
+
+/* --------- 8. canvas apply ----- */
+
+EXTERN void *canvas_undo_set_canvas(t_canvas *x);
+EXTERN void canvas_undo_canvas_apply(t_canvas *x, void *z, int action);
+
+/* --------- 9. create ----------- */
+
+EXTERN void canvas_undo_create(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_create(t_canvas *x);
+
+/* --------- 10. recreate -------- */
+
+EXTERN void canvas_undo_recreate(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y, int old_pos);
+
+/* --------- 11. font ------------ */
+
+EXTERN void canvas_undo_font(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_font(t_canvas *x, int font);
+
+/* ------------------------------- */
+
 
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }

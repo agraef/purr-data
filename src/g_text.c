@@ -15,10 +15,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "g_undo.h"
+#include "x_preset.h"
 
 t_class *text_class;
-static t_class *message_class;
-static t_class *gatom_class;
 static void text_vis(t_gobj *z, t_glist *glist, int vis);
 static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy);
@@ -100,6 +100,12 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     t_text *x;
     int argc;
     t_atom *argv;
+
+	// for hiding arguments
+	t_atom *vec;
+	int len, i, hidden;
+	t_binbuf *hide;
+
     newest = 0;
     canvas_setcurrent((t_canvas *)gl);
     canvas_getargs(&argc, &argv);
@@ -125,12 +131,34 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
 		//fprintf(stderr,"creating blank object\n");
 		x = (t_text *)pd_new(text_class);
     }
+	/* special case: an object, like preset_hub, hides its arguments beyond the first n, so
+	   we modify its binbuf here */
+	vec = binbuf_getvec(b);
+	len = binbuf_getnatom(b);
+	hidden = 0;
+	for (i = 0; i < len; i++) {
+		if (!strcmp("%hidden%", atom_getsymbol(&vec[i])->s_name)) {
+			//fprintf(stderr,"found hidden %d %s\n", i, atom_getsymbol(&vec[i])->s_name);
+			hidden = i;
+			break;
+		}
+	}
+	if (hidden) {
+		hide = binbuf_new();
+		binbuf_add(hide, hidden, vec);
+		binbuf_free(b);
+		b = hide;
+	}
+	/* done special case */
+
     x->te_binbuf = b;
+
     x->te_xpix = xpix;
     x->te_ypix = ypix;
     x->te_width = 0;
     x->te_type = T_OBJECT;
     glist_add(gl, &x->te_g);
+
     if (selected)
     {
             /* this is called if we've been created from the menu. */
@@ -407,7 +435,7 @@ typedef struct _message
     t_clock *m_clock;
 } t_message;
 
-static t_class *message_class, *messresponder_class;
+static t_class *messresponder_class;
 
 static void messresponder_bang(t_messresponder *x)
 {
@@ -1337,28 +1365,46 @@ static void text_delete(t_gobj *z, t_glist *glist)
 
 static void text_vis(t_gobj *z, t_glist *glist, int vis)
 {
+	//fprintf(stderr,"text_vis\n");
     t_text *x = (t_text *)z;
-    if (vis)
-    {
-        if (gobj_shouldvis(&x->te_g, glist))
-        {
-            t_rtext *y = glist_findrtext(glist, x);
-            if (x->te_type == T_ATOM)
-                glist_retext(glist, x);
-            text_drawborder(x, glist, rtext_gettag(y),
-                rtext_width(y), rtext_height(y), 1);
-            rtext_draw(y);
-        }
-    }
-    else
-    {
-        t_rtext *y = glist_findrtext(glist, x);
-        if (gobj_shouldvis(&x->te_g, glist))
-        {
-            text_eraseborder(x, glist, rtext_gettag(y));
-            rtext_erase(y);
-        }
-    }
+
+#ifdef PDL2ORK
+	//if we are in k12 mode and this is hub with level 1 (global) don't draw it and make its width/height 0
+	int exception = 0;
+	if (pd_class(&x->te_pd) == preset_hub_class && sys_k12_mode) {
+		fprintf(stderr,"text_vis reports preset_hub_class detected\n");
+		t_preset_hub *h = (t_preset_hub *)z;
+		if (h->ph_invis) {
+			exception = 1;
+			x->te_width = 0;
+		}
+	}
+	if (!exception) {
+#endif
+		if (vis)
+		{
+		    if (gobj_shouldvis(&x->te_g, glist))
+		    {
+		        t_rtext *y = glist_findrtext(glist, x);
+		        if (x->te_type == T_ATOM)
+		            glist_retext(glist, x);
+		        text_drawborder(x, glist, rtext_gettag(y),
+		            rtext_width(y), rtext_height(y), 1);
+		        rtext_draw(y);
+		    }
+		}
+		else
+		{
+		    t_rtext *y = glist_findrtext(glist, x);
+		    if (gobj_shouldvis(&x->te_g, glist))
+		    {
+		        text_eraseborder(x, glist, rtext_gettag(y));
+		        rtext_erase(y);
+		    }
+		}
+#ifdef PDL2ORK
+	}
+#endif
 }
 
 static int text_click(t_gobj *z, struct _glist *glist,
@@ -1841,6 +1887,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 	char *c1, *c2;
 	int i1, i2;
 
+
     if (x->te_type == T_OBJECT)
     {
         t_binbuf *b = binbuf_new();
@@ -1851,16 +1898,18 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         vec1 = binbuf_getvec(x->te_binbuf);
         natom2 = binbuf_getnatom(b);
         vec2 = binbuf_getvec(b);
-            /* special case: if  pd args change just pass the message on. */
-        if (natom1 >= 1 && natom2 >= 1 && vec1[0].a_type == A_SYMBOL
+            /* special case: if pd subpatch is valid and its args change, and its new name is valid, just pass the message on. */
+        if (x->te_pd == canvas_class && (natom1 >= 1 && natom2 >= 1 && vec1[0].a_type == A_SYMBOL
             && !strcmp(vec1[0].a_w.w_symbol->s_name, "pd") &&
              vec2[0].a_type == A_SYMBOL
-            && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
+            && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd") && vec2[1].a_type == A_SYMBOL))
         {
+			//fprintf(stderr,"setto canvas\n");
 			//first check if the contents have changed to see if there is any point of recreating the object
 			binbuf_gettext(x->te_binbuf, &c1, &i1);
 			binbuf_gettext(b, &c2, &i2);
 			if (strcmp(c1, c2)) {
+				//fprintf(stderr,"string differs\n");
 				canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
 					(void *)canvas_undo_set_recreate(glist_getcanvas(glist), &x->te_g, pos));
 		        typedmess(&x->te_pd, gensym("rename"), natom2-1, vec2+1);
@@ -1872,6 +1921,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         else  /* normally, just destroy the old one and make a new one. */
         {
 			//first check if the contents have changed to see if there is any point of recreating the object
+			//fprintf(stderr,"setto not canvas\n");
 			binbuf_gettext(x->te_binbuf, &c1, &i1);
 			binbuf_gettext(b, &c2, &i2);
 			if (strcmp(c1, c2)) {

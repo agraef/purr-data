@@ -576,6 +576,7 @@ void *canvas_undo_set_disconnect(t_canvas *x,
 void canvas_disconnect(t_canvas *x,
     t_float index1, t_float outno, t_float index2, t_float inno)
 {
+	//fprintf(stderr,"canvas_disconnect\n");
     t_linetraverser t;
     t_outconnect *oc;
     linetraverser_start(&t, x);
@@ -594,6 +595,14 @@ void canvas_disconnect(t_canvas *x,
 			}
             // end jsarlo
             obj_disconnect(t.tr_ob, t.tr_outno, t.tr_ob2, t.tr_inno);
+
+			// if we are dealing with a preset_node, make sure to also disconnect its invisible return node
+			// we trust here that the object has been already connected to a valid object so we blindly
+			// disconnect first outlet with the first inlet
+			if (pd_class(&t.tr_ob->ob_g.g_pd) == preset_node_class) {
+				//fprintf(stderr,"gotta disconnect hidden one too...\n");
+				obj_disconnect(t.tr_ob2, 0, t.tr_ob, 0);
+			}
             break;
         }
     }
@@ -2914,6 +2923,7 @@ int canvas_isconnected (t_canvas *x, t_text *ob1, int n1,
 
 void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 {
+	//fprintf(stderr,"canvas_doconnect\n");
     int x11=0, y11=0, x12=0, y12=0;
     t_gobj *y1;
     int x21=0, y21=0, x22=0, y22=0;
@@ -2988,6 +2998,36 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
             }
             if (doit)
             {
+				// if the first object is preset_node, check if the object we are connecting to
+				// is supported. If not, disallow connection
+				if (pd_class(&y1->g_pd) == preset_node_class) {
+					if (pd_class(&y2->g_pd) != gatom_class &&
+						pd_class(&y2->g_pd) != bng_class &&
+						pd_class(&y2->g_pd) != hradio_class &&
+						pd_class(&y2->g_pd) != hradio_old_class &&
+						pd_class(&y2->g_pd) != hslider_class &&
+						pd_class(&y2->g_pd) != my_canvas_class &&
+						pd_class(&y2->g_pd) != my_numbox_class &&
+						pd_class(&y2->g_pd) != toggle_class &&
+						pd_class(&y2->g_pd) != vradio_class &&
+						pd_class(&y2->g_pd) != vradio_old_class &&
+						pd_class(&y2->g_pd) != vslider_class &&
+						pd_class(&y2->g_pd) != vu_class &&
+						pd_class(&y2->g_pd) != pdint_class &&
+						pd_class(&y2->g_pd) != pdfloat_class &&
+						pd_class(&y2->g_pd) != pdsymbol_class) {
+						error("preset node currently works only with gui objects, ints, floats, and symbols...\n");
+						return;
+					}
+				}
+
+				// now check if explicit user-made connection into preset_node if kind other than message
+				// messages may be used to change node's operation
+				if (pd_class(&y2->g_pd) == preset_node_class && pd_class(&y1->g_pd) != message_class) {
+					error("preset node only accepts messages as input to set its destination preset_hub...\n");
+					return;
+				}
+
                 int issignal = obj_issignaloutlet(ob1, closest1);
                 oc = obj_connect(ob1, closest1, ob2, closest2);
                 lx1 = x11 + (noutlet1 > 1 ?
@@ -3038,6 +3078,16 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 				canvas_undo_add(x, 1, "connect", canvas_undo_set_connect(x, 
                         canvas_getindex(x, &ob1->ob_g), closest1,
                         canvas_getindex(x, &ob2->ob_g), closest2));
+
+				// add auto-connect back to preset_node object
+				// (by this time we know we are connecting only to legal objects who have at least one outlet)
+				if (pd_class(&y1->g_pd) == preset_node_class) {
+					//fprintf(stderr,"gotta do auto-connect back to preset_node\n");
+					if (!canvas_isconnected(x, ob2, 0, ob1, 0))
+						obj_connect(ob2, 0, ob1, 0);
+					//else
+					//	fprintf(stderr,"error: already connected (this happens when loading from file and is ok)\n");
+				}
             }
     	    else 
             // jsarlo
@@ -4505,6 +4555,7 @@ extern t_class *text_class;
 void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     t_floatarg fwhoin, t_floatarg finno)
 {
+	//fprintf(stderr,"canvas_connect\n");
 	if (!x->gl_list) {
 		post("paste error: no objects to connect, probably incomplete clipboard copy from an external source (e.g. from a text editor)");
 		return;		
@@ -4534,15 +4585,25 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         while (inno >= obj_ninlets(objsink))
             inlet_new(objsink, &objsink->ob_pd, 0, 0);
 
-    if (!(oc = obj_connect(objsrc, outno, objsink, inno))) goto bad;
-    if (glist_isvisible(x))
-    {
-        sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s -tags {l%lx all_cords}\n",
-            glist_getcanvas(x), 0, 0, 0, 0,
-            (obj_issignaloutlet(objsrc, outno) ? "$signal_cord_width" : "$msg_cord_width"),
-            (obj_issignaloutlet(objsrc, outno) ? "$signal_cord" : "$msg_cord"), oc);
-        canvas_fixlinesfor(x, objsrc);
-    }
+	if (!canvas_isconnected(x, objsrc, outno, objsink, inno)) {
+    	if (!(oc = obj_connect(objsrc, outno, objsink, inno))) goto bad;
+		// add auto-connect back to preset_node object
+		// (by this time we know we are connecting only to legal objects who have at least one outlet)
+		if (pd_class(&objsrc->ob_pd) == preset_node_class) {
+			//fprintf(stderr,"canvas_connect: gotta do auto-connect back to preset_node\n");
+			if (!canvas_isconnected(x, objsink, 0, objsrc, 0))
+				obj_connect(objsink, 0, objsrc, 0);
+		}
+		if (glist_isvisible(x) && (pd_class(&sink->g_pd) != preset_node_class || (pd_class(&sink->g_pd) == preset_node_class && pd_class(&src->g_pd) == message_class)))
+		{
+			//fprintf(stderr,"draw line\n");
+		    sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s -tags {l%lx all_cords}\n",
+		        glist_getcanvas(x), 0, 0, 0, 0,
+		        (obj_issignaloutlet(objsrc, outno) ? "$signal_cord_width" : "$msg_cord_width"),
+		        (obj_issignaloutlet(objsrc, outno) ? "$signal_cord" : "$msg_cord"), oc);
+		    canvas_fixlinesfor(x, objsrc);
+		}
+	}
     return;
 
 bad:

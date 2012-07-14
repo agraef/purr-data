@@ -1,12 +1,14 @@
 #include "m_pd.h"
 #include "g_canvas.h"
 #include <stdio.h>
+#include "g_undo.h"
 
 //used for canvas_objtext to differentiate between objects being created by user
 //vs. those (re)created by the undo/redo actions
 int we_are_undoing = 0;
 
 extern const char *canvas_undo_name;
+extern void glob_preset_node_list_seek_hub(void);
 
 t_undo_action *canvas_undo_init(t_canvas *x)
 {
@@ -75,6 +77,10 @@ void canvas_undo_undo(t_canvas *x)
 		char *undo_action = x->u_last->name;
 		char *redo_action = x->u_last->next->name;
 		we_are_undoing = 0;
+		// here we call updating of all unpaired hubs and nodes since their regular call
+		// will fail in case their position needed to be updated by undo/redo first to 
+		// reflect the old one
+		glob_preset_node_list_seek_hub();
 		if (glist_isvisible(x) && glist_istoplevel(x)) {
 			sys_vgui("pdtk_undomenu .x%lx %s %s\n", x, undo_action, redo_action);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
@@ -108,6 +114,10 @@ void canvas_undo_redo(t_canvas *x)
 		char *undo_action = x->u_last->name;
 		char *redo_action = (x->u_last->next ? x->u_last->next->name : "no");
 		we_are_undoing = 0;
+		// here we call updating of all unpaired hubs and nodes since their regular call
+		// will fail in case their position needed to be updated by undo/redo first to 
+		// reflect the old one
+		glob_preset_node_list_seek_hub();
 		if (glist_isvisible(x) && glist_istoplevel(x)) {
 			sys_vgui("pdtk_undomenu .x%lx %s %s\n", x, undo_action, redo_action);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);

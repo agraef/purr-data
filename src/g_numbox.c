@@ -38,7 +38,6 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist);
 /* ------------ nmx gui-my number box ----------------------- */
 
 t_widgetbehavior my_numbox_widgetbehavior;
-static t_class *my_numbox_class;
 
 /* widget helper functions */
 

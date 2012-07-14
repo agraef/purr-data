@@ -31,7 +31,6 @@ static void vslider_draw_select(t_vslider* x, t_glist* glist);
 /* ------------ vsl gui-vertical  slider ----------------------- */
 
 t_widgetbehavior vslider_widgetbehavior;
-static t_class *vslider_class;
 
 static double last;
 static int is_last_float = 0;
