@@ -988,13 +988,22 @@ proc accel_munge {acc} {
 proc menu_new {} {
     global untitled_number
     global untitled_directory
+	global k12_mode
     if { ! [file isdirectory $untitled_directory]} {set untitled_directory $::env(HOME)}
     pd [concat pd filename Untitled-$untitled_number \
 			[pdtk_enquote $untitled_directory] \;]
-    pd {
-        #N canvas;
-        #X pop 1;
-    }
+	if { $k12_mode == 1 } {
+		pd {
+		    #N canvas;
+			#X obj -9999 -9999 preset_hub k12 1 %hidden%;
+		    #X pop 1;
+		}
+	} else {
+		pd {
+		    #N canvas;
+		    #X pop 1;
+		}
+	}
     set untitled_number [expr $untitled_number + 1]
 }
 
