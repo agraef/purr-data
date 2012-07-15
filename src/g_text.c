@@ -1372,7 +1372,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
 	//if we are in k12 mode and this is hub with level 1 (global) don't draw it and make its width/height 0
 	int exception = 0;
 	if (pd_class(&x->te_pd) == preset_hub_class && sys_k12_mode) {
-		fprintf(stderr,"text_vis reports preset_hub_class detected\n");
+		//fprintf(stderr,"text_vis reports preset_hub_class detected\n");
 		t_preset_hub *h = (t_preset_hub *)z;
 		if (h->ph_invis) {
 			exception = 1;
