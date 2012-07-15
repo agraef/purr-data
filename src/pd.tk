@@ -326,24 +326,24 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	set signal_cord_highlight "#474"
 	set signal_cord "#2ca7d4"
 
-	image create photo i.connect -file $extra_dir/K12/buttons/connect-on.png
-	image create photo i.add -file $extra_dir/K12/buttons/add.png
-	image create photo i.buttons -file $extra_dir/K12/buttons/buttons.png
-	image create photo i.delay -file $extra_dir/K12/buttons/delay.png
-	image create photo i.filter -file $extra_dir/K12/buttons/filter.png
-	image create photo i.hit -file $extra_dir/K12/buttons/hit.png
-	image create photo i.mapper -file $extra_dir/K12/buttons/mapper.png
-	image create photo i.multiply -file $extra_dir/K12/buttons/multiply.png
-	image create photo i.output -file $extra_dir/K12/buttons/audio-on.png
-	image create photo i.pitch -file $extra_dir/K12/buttons/pitch.png
-	image create photo i.reverb -file $extra_dir/K12/buttons/reverb.png
-	image create photo i.short1 -file $extra_dir/K12/buttons/short1.png
-	image create photo i.short2 -file $extra_dir/K12/buttons/short2.png
-	image create photo i.sustained1 -file $extra_dir/K12/buttons/sustained1.png
-	image create photo i.sustained2 -file $extra_dir/K12/buttons/sustained2.png
-	image create photo i.speed -file $extra_dir/K12/buttons/speed.png
-	image create photo i.edit -file $extra_dir/K12/buttons/edit.png
-	image create photo i.perform -file $extra_dir/K12/buttons/perform.png
+	image create photo i.connect -file $extra_dir/K12/icons/connect-on.png
+	image create photo i.add -file $extra_dir/K12/icons/add.png
+	image create photo i.buttons -file $extra_dir/K12/icons/buttons.png
+	image create photo i.delay -file $extra_dir/K12/icons/delay.png
+	image create photo i.filter -file $extra_dir/K12/icons/filter.png
+	image create photo i.hit -file $extra_dir/K12/icons/hit.png
+	image create photo i.mapper -file $extra_dir/K12/icons/mapper.png
+	image create photo i.multiply -file $extra_dir/K12/icons/multiply.png
+	image create photo i.output -file $extra_dir/K12/icons/audio-on.png
+	image create photo i.pitch -file $extra_dir/K12/icons/pitch.png
+	image create photo i.reverb -file $extra_dir/K12/icons/reverb.png
+	image create photo i.short1 -file $extra_dir/K12/icons/short1.png
+	image create photo i.short2 -file $extra_dir/K12/icons/short2.png
+	image create photo i.sustained1 -file $extra_dir/K12/icons/sustained1.png
+	image create photo i.sustained2 -file $extra_dir/K12/icons/sustained2.png
+	image create photo i.speed -file $extra_dir/K12/icons/speed.png
+	image create photo i.edit -file $extra_dir/K12/icons/edit.png
+	image create photo i.perform -file $extra_dir/K12/icons/perform.png
 }
 
 # calculate offset on a movable canvas
@@ -4384,6 +4384,32 @@ proc iemgui_lilo {id} {
     }
 }
 
+proc iemgui_hide_frame {id} {
+    set vid [string trimleft $id .]
+
+    set var_iemgui_hide [concat iemgui_hide_$vid]
+    global $var_iemgui_hide
+
+    switch -- [eval concat $$var_iemgui_hide] {
+        3	{
+				set $var_iemgui_hide 0
+				$id.dim.h configure -text "normal"
+			}
+        0	{
+				set $var_iemgui_hide 1
+				$id.dim.h configure -text "frame"
+			}
+		1	{
+				set $var_iemgui_hide 2
+				$id.dim.h configure -text "arrow"
+			}
+		2	{
+				set $var_iemgui_hide 3
+				$id.dim.h configure -text "none"
+			}
+    }
+}
+
 proc iemgui_toggle_font {id gn_f} {
     set vid [string trimleft $id .]
 
@@ -4458,6 +4484,8 @@ proc iemgui_apply {id} {
 	global $var_iemgui_min_rng
 	set var_iemgui_max_rng [concat iemgui_max_rng_$vid]
 	global $var_iemgui_max_rng
+    set var_iemgui_rng_sch [concat iemgui_rng_sch_$vid]
+    global $var_iemgui_rng_sch
 	set var_iemgui_lin0_log1 [concat iemgui_lin0_log1_$vid]
 	global $var_iemgui_lin0_log1
 	set var_iemgui_lilo0 [concat iemgui_lilo0_$vid]
@@ -4490,6 +4518,8 @@ proc iemgui_apply {id} {
 	global $var_iemgui_fcol
 	set var_iemgui_lcol [concat iemgui_lcol_$vid]
 	global $var_iemgui_lcol
+	set var_iemgui_hide [concat iemgui_hide_$vid]
+	global $var_iemgui_hide
 	
 	iemgui_clip_dim $id
 	iemgui_clip_num $id
@@ -4520,25 +4550,26 @@ proc iemgui_apply {id} {
     if {[eval concat $$var_iemgui_gn_dy] eq ""} {set $var_iemgui_gn_dy 0}
 
 	pd [concat $id dialog \
-	        [eval concat $$var_iemgui_wdt] \
-	        [eval concat $$var_iemgui_hgt] \
-	        [eval concat $$var_iemgui_min_rng] \
-	        [eval concat $$var_iemgui_max_rng] \
-	        [eval concat $$var_iemgui_lin0_log1] \
-	        [eval concat $$var_iemgui_loadbang] \
-	        [eval concat $$var_iemgui_num] \
-	        $hhhsnd \
-	        $hhhrcv \
-	        $hhhgui_nam \
-	        [eval concat $$var_iemgui_gn_dx] \
-	        [eval concat $$var_iemgui_gn_dy] \
-	        [eval concat $$var_iemgui_gn_f] \
-	        [eval concat $$var_iemgui_gn_fs] \
-	        [eval concat $$var_iemgui_bcol] \
-	        [eval concat $$var_iemgui_fcol] \
-	        [eval concat $$var_iemgui_lcol] \
-	        [eval concat $$var_iemgui_steady] \
-	        \;]
+		    [eval concat $$var_iemgui_wdt] \
+		    [eval concat $$var_iemgui_hgt] \
+		    [eval concat $$var_iemgui_min_rng] \
+		    [eval concat $$var_iemgui_max_rng] \
+		    [eval concat $$var_iemgui_lin0_log1] \
+		    [eval concat $$var_iemgui_loadbang] \
+		    [eval concat $$var_iemgui_num] \
+		    $hhhsnd \
+		    $hhhrcv \
+		    $hhhgui_nam \
+		    [eval concat $$var_iemgui_gn_dx] \
+		    [eval concat $$var_iemgui_gn_dy] \
+		    [eval concat $$var_iemgui_gn_f] \
+		    [eval concat $$var_iemgui_gn_fs] \
+		    [eval concat $$var_iemgui_bcol] \
+		    [eval concat $$var_iemgui_fcol] \
+		    [eval concat $$var_iemgui_lcol] \
+		    [eval concat $$var_iemgui_steady] \
+			[eval concat $$var_iemgui_hide] \
+		    \;]
 }
 
 proc iemgui_cancel {id} {
@@ -4618,6 +4649,8 @@ proc pdtk_iemgui_dialog {id mainheader \
     global $var_iemgui_fcol
     set var_iemgui_lcol [concat iemgui_lcol_$vid]
     global $var_iemgui_lcol
+    set var_iemgui_hide [concat iemgui_hide_$vid]
+    global $var_iemgui_hide
 
     set $var_iemgui_wdt $wdt
     set $var_iemgui_min_wdt $min_wdt
@@ -4625,7 +4658,13 @@ proc pdtk_iemgui_dialog {id mainheader \
     set $var_iemgui_min_hgt $min_hgt
     set $var_iemgui_min_rng $min_rng
     set $var_iemgui_max_rng $max_rng
-    set $var_iemgui_rng_sch $rng_sched
+	if ([string compare "|nbx|" $mainheader]) {
+		set $var_iemgui_hide 0
+    	set $var_iemgui_rng_sch $rng_sched
+	} else {
+    	set $var_iemgui_hide $rng_sched
+		set $var_iemgui_rng_sch 0
+	}
     set $var_iemgui_lin0_log1 $lin0_log1
     set $var_iemgui_lilo0 $lilo0_label
     set $var_iemgui_lilo1 $lilo1_label
@@ -4671,11 +4710,30 @@ proc pdtk_iemgui_dialog {id mainheader \
     match_linux_wm [list label $id.dim.head -text $dim_header]
     match_linux_wm [list label $id.dim.w_lab -text $wdt_label -width 6]
     match_linux_wm [list entry $id.dim.w_ent -textvariable $var_iemgui_wdt -width 5]
-    match_linux_wm [list label $id.dim.dummy1 -text " " -width 10]
     match_linux_wm [list label $id.dim.h_lab -text $hgt_label -width 6]
     match_linux_wm [list entry $id.dim.h_ent -textvariable $var_iemgui_hgt -width 5]
     pack $id.dim.head -side top
-    pack $id.dim.w_lab $id.dim.w_ent $id.dim.dummy1 -side left
+	if (![string compare "|nbx|" $mainheader]) {
+		if {[eval concat $$var_iemgui_hide] == 0} {
+			match_linux_wm [list button $id.dim.h -text {normal} -width 7 -command "iemgui_hide_frame $id"]
+		}
+		if {[eval concat $$var_iemgui_hide] == 1} {
+			match_linux_wm [list button $id.dim.h -text {frame} -width 7 -command "iemgui_hide_frame $id"]
+		}
+		if {[eval concat $$var_iemgui_hide] == 2} {
+			match_linux_wm [list button $id.dim.h -text {arrow} -width 7 -command "iemgui_hide_frame $id"]
+		}
+		if {[eval concat $$var_iemgui_hide] == 3} {
+			match_linux_wm [list button $id.dim.h -text {none} -width 7 -command "iemgui_hide_frame $id"]
+		}
+		match_linux_wm [list label $id.dim.dummy1 -text " " -width 1]
+		match_linux_wm [list label $id.dim.dummy2 -text " " -width 1]
+		puts stderr [eval concat $$var_iemgui_hide]
+		pack $id.dim.w_lab $id.dim.w_ent $id.dim.dummy1 $id.dim.h $id.dim.dummy2 -side left
+	} else {
+		match_linux_wm [list label $id.dim.dummy1 -text " " -width 10]
+    	pack $id.dim.w_lab $id.dim.w_ent $id.dim.dummy1 -side left
+	}
     if { $hgt_label != "empty" } {
         pack $id.dim.h_lab $id.dim.h_ent -side left}
 

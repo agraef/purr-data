@@ -318,6 +318,7 @@ typedef struct _my_numbox
 	int		 x_scaleheight; 	/* temporary value when resizing */
     int      x_tmpfontsize; 	/* temporary value when resizing */
     int      x_log_height;
+	int		 x_hide_frame;		/* 0 default, 1 just arrow, 2, just frame, 3 both */
 } t_my_numbox;
 
 typedef struct _vdial
