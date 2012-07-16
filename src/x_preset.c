@@ -10,7 +10,7 @@
 #include "x_preset.h"
 #include "s_stuff.h"
 
-#define PH_DEBUG
+#define PH_DEBUG 0
 
 //		changes in order happen when doing one of the following: cut, 
 //		undo cut, delete, undo delete, to front, and to back.
@@ -69,9 +69,7 @@ t_glob_preset_hub_list *gphl;
 
 int glob_preset_node_list_add(t_preset_node *x)
 {
-#ifdef PH_DEBUG 
-	fprintf(stderr,"glob_preset_node_list_add\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_add\n");
 	t_glob_preset_node_list *n1, *n2;
 
 	if (!gpnl) {
@@ -91,9 +89,7 @@ int glob_preset_node_list_add(t_preset_node *x)
 
 int glob_preset_node_list_delete(t_preset_node *x)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"glob_preset_node_list_delete\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_delete\n");
 	t_glob_preset_node_list *n1, *n2;
 	int found;
 
@@ -118,9 +114,7 @@ int glob_preset_node_list_delete(t_preset_node *x)
 			freebytes(n2, sizeof(*n2));
 		} else {
 			// we should never get here
-#ifdef PH_DEBUG
-			fprintf(stderr,"error, could not find appropriate gpnl to delete\n");
-#endif
+			if(PH_DEBUG) fprintf(stderr,"error, could not find appropriate gpnl to delete\n");
 			return(1);
 		}
 	}
@@ -130,9 +124,7 @@ int glob_preset_node_list_delete(t_preset_node *x)
 
 int glob_preset_node_list_update_paired(t_preset_node *x, int paired)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"glob_preset_node_list_update_paired %d\n", paired);
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_update_paired %d\n", paired);
 	t_glob_preset_node_list *n;
 
 	if (!gpnl)
@@ -148,9 +140,7 @@ int glob_preset_node_list_update_paired(t_preset_node *x, int paired)
 	}
 	else {
 		// we should never get here
-#ifdef PH_DEBUG
-		fprintf(stderr,"error, could not find appropriate gpnl to pair\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"error, could not find appropriate gpnl to pair\n");
 		return(1);
 	}
 	
@@ -159,17 +149,13 @@ int glob_preset_node_list_update_paired(t_preset_node *x, int paired)
 
 void glob_preset_node_list_seek_hub(void)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"glob_preset_node_list_seek_hub\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_seek_hub\n");
 	t_glob_preset_node_list *nl;
 
 	if (gpnl) {
 		nl = gpnl;
 		while(nl) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	seeking\n");
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	seeking\n");
 			if (!nl->gpnl_paired) {
 				preset_node_seek_hub(nl->gpnl_node);
 			}
@@ -181,9 +167,7 @@ void glob_preset_node_list_seek_hub(void)
 // this should be called whenever glist has been changed (tofront/back, cut, delete, undo/redo cut/delete)
 void glob_preset_node_list_check_loc_and_update(void)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"glob_preset_node_list_check_loc_and_update\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_check_loc_and_update\n");
 	t_glob_preset_hub_list *hl;
 	t_preset_hub_data *hd;
 	int i = 0;
@@ -191,29 +175,19 @@ void glob_preset_node_list_check_loc_and_update(void)
 	if (gphl) {
 		hl = gphl;
 		while(hl) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	searching\n");
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	searching\n");
 			hd = hl->gphl_hub->ph_data;
 			while (hd) {
-#ifdef PH_DEBUG
-				fprintf(stderr,"	checking data\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	checking data\n");
 				if (hd->phd_node) {
-#ifdef PH_DEBUG
-					fprintf(stderr,"	node is active\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	node is active\n");
 					preset_node_update_my_glist_location(hd->phd_node);
 					if (preset_node_location_changed(hd->phd_node)) {
-#ifdef PH_DEBUG
-						fprintf(stderr,"	location changed...adjusting length %d to %d\n", hd->phd_pn_gl_loc_length, hd->phd_node->pn_gl_loc_length);
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	location changed...adjusting length %d to %d\n", hd->phd_pn_gl_loc_length, hd->phd_node->pn_gl_loc_length);
 						hd->phd_pn_gl_loc_length = hd->phd_node->pn_gl_loc_length;
 						hd->phd_pn_gl_loc = (int*)realloc(hd->phd_pn_gl_loc, hd->phd_pn_gl_loc_length*sizeof(int));
 						for (i=0; i < hd->phd_pn_gl_loc_length; i++) {
-#ifdef PH_DEBUG
-							fprintf(stderr,"	loc old:%d new:%d\n", hd->phd_pn_gl_loc[i], hd->phd_node->pn_gl_loc[i]);
-#endif
+							if(PH_DEBUG) fprintf(stderr,"	loc old:%d new:%d\n", hd->phd_pn_gl_loc[i], hd->phd_node->pn_gl_loc[i]);
 							hd->phd_pn_gl_loc[i] = hd->phd_node->pn_gl_loc[i];
 						}
 					}
@@ -227,9 +201,7 @@ void glob_preset_node_list_check_loc_and_update(void)
 
 int glob_preset_hub_list_add(t_preset_hub *x)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"glob_preset_hub_list_add\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_hub_list_add\n");
 	t_glob_preset_hub_list *h1, *h2;
 
 	if (!gphl) {
@@ -248,9 +220,7 @@ int glob_preset_hub_list_add(t_preset_hub *x)
 
 int glob_preset_hub_list_delete(t_preset_hub *x)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"glob_preset_hub_list_delete\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"glob_preset_hub_list_delete\n");
 	t_glob_preset_hub_list *h1, *h2;
 	int found;
 
@@ -276,9 +246,7 @@ int glob_preset_hub_list_delete(t_preset_hub *x)
 		}
 		else {
 			// we should never get here
-#ifdef PH_DEBUG
-			fprintf(stderr,"error, could not find appropriate gphl to delete\n");
-#endif
+			if(PH_DEBUG) fprintf(stderr,"error, could not find appropriate gphl to delete\n");
 			return(1);
 		}
 	}	
@@ -294,9 +262,7 @@ int glob_preset_hub_list_delete(t_preset_hub *x)
 
 static void preset_node_update_my_glist_location(t_preset_node *x)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"node_update_glist_location\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"node_update_glist_location\n");
 	// location is calculated in respect to the hub (if any), otherwise it is 0
 	t_preset_hub *h;
 	t_canvas *c = x->pn_canvas;
@@ -316,18 +282,12 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 		int depth = 0;
 		while (!found && c) {
 			if (c->gl_phub) {
-#ifdef PH_DEBUG
-				fprintf(stderr,"	gl_phub != NULL\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	gl_phub != NULL\n");
 				h = c->gl_phub;
 				while (h) {
-#ifdef PH_DEBUG
-					fprintf(stderr,"	analyzing hub\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	analyzing hub\n");
 					if (!strcmp(h->ph_name->s_name, x->pn_hub_name->s_name)) {
-#ifdef PH_DEBUG
-						fprintf(stderr,"	found a match\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	found a match\n");
 						found = 1;
 						break;
 					}
@@ -341,9 +301,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 
 		if (found) {
 
-#ifdef PH_DEBUG
-			fprintf(stderr,"	depth = %d\n", depth);
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	depth = %d\n", depth);
 	
 			// allocate depth array
 			x->pn_gl_loc = (int*)calloc(depth+1, sizeof(int));
@@ -362,15 +320,11 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 				{
 					g = g->g_next;
 					i++;
-#ifdef PH_DEBUG
-					fprintf(stderr,"	searching... %d\n", i);
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	searching... %d\n", i);
 				}
 				// even if the g fails sanity check due to creation time, it will still land on the last created element whose
 				// pointer at this point is still null since this means this is being called at the end of the preset_node_new call
-#ifdef PH_DEBUG
-				fprintf(stderr,"	location = %d %lx %lx\n", i, (t_int)g, (t_int)target);
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	location = %d %lx %lx\n", i, (t_int)g, (t_int)target);
 				x->pn_gl_loc[j] = i;
 
 				// now readjust the target, c, g, and i variables for the next level up
@@ -383,18 +337,14 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 			}
 			x->pn_gl_loc_length = depth+1;
 
-#ifdef PH_DEBUG
-			fprintf(stderr,"	final structure:\n");
+			if(PH_DEBUG) fprintf(stderr,"	final structure:\n");
 			for (j = 0; j < x->pn_gl_loc_length; j++) {
-				fprintf(stderr,"	%d: %d\n", j, x->pn_gl_loc[j]);
+				if(PH_DEBUG) fprintf(stderr,"	%d: %d\n", j, x->pn_gl_loc[j]);
 			}
-#endif
 		}
-#ifdef PH_DEBUG
 		else {
-			fprintf(stderr,"	preset_node: no matching hub %s found\n", x->pn_hub_name->s_name);
+			if(PH_DEBUG) fprintf(stderr,"	preset_node: no matching hub %s found\n", x->pn_hub_name->s_name);
 		}
-#endif
 
 		// finally if this is the first time we are creating the object, old_location should be the same as the current location
 		if (x->pn_old_gl_loc_length == 0) {
@@ -409,24 +359,18 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 // nodes that have not been paired yet. 
 void preset_node_seek_hub(t_preset_node *x)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_node_seek_hub\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_node_seek_hub\n");
 	t_canvas *y = x->pn_canvas;
 	t_preset_hub *h;
 
 	if (!x->pn_hub) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	have to seek\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	have to seek\n");
 		while (!x->pn_hub && y) {
 			h = y->gl_phub;
 			while (h) {
 				if (h->ph_name->s_name == x->pn_hub_name->s_name) {
 					x->pn_hub = h;
-#ifdef PH_DEBUG
-					fprintf(stderr,"	node found hub\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	node found hub\n");
 					// update our location in respect to the newfound hub
 					preset_node_update_my_glist_location(x);
 					// add a node on the hub's list of nodes and copy location to its struct
@@ -517,18 +461,14 @@ void preset_node_clear(t_preset_node *x, t_float f)
 	t_node_preset *np1, *np2;
 	int changed = 0;
 
-#ifdef PH_DEBUG
-		fprintf(stderr,"preset_node_clear %d\n", (int)f);
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_node_clear %d\n", (int)f);
 
 	if (x->pn_hub) {
 		hd2 = x->pn_hub->ph_data;
 
 		// only remove this object's preset
 		if (hd2) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	got ph_data\n");
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	got ph_data\n");
 			while (hd2 && hd2->phd_node != x) {
 				hd2 = hd2->phd_next;
 			}
@@ -539,9 +479,7 @@ void preset_node_clear(t_preset_node *x, t_float f)
 					hd2->phd_npreset = np1->np_next;
 					freebytes(np1, sizeof(*np1));
 					changed = 1;
-#ifdef PH_DEBUG
-					fprintf(stderr,"	found preset to delete (first)\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	found preset to delete (first)\n");
 				} else {
 					while (np1) {
 						np2 = np1->np_next;
@@ -549,9 +487,7 @@ void preset_node_clear(t_preset_node *x, t_float f)
 							np1->np_next = np2->np_next;
 							freebytes(np2, sizeof(*np2));
 							changed = 1;
-#ifdef PH_DEBUG
-							fprintf(stderr,"	found preset to delete\n");
-#endif
+							if(PH_DEBUG) fprintf(stderr,"	found preset to delete\n");
 							break;
 						}
 						np1 = np1->np_next;
@@ -587,9 +523,7 @@ void preset_node_purge(t_preset_node *x) {
 
 static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"===preset_node_new===\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"===preset_node_new===\n");
 	t_glist *glist=(t_glist *)canvas_getcurrent();
 	t_canvas *canvas = (t_canvas *)glist_getcanvas(glist);
 
@@ -711,9 +645,7 @@ typedef enum
 
 void preset_hub_save(t_gobj *z, t_binbuf *b)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_save\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_save\n");
 	int i;
 	t_preset_hub_data *phd;
 	t_node_preset *np;
@@ -730,9 +662,7 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
 
 	phd = x->ph_data;
 	while (phd) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	saving phd\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	saving phd\n");
 		// designate a node and state whether it is active or disabled
 		// (disabled nodes are ones that have presets saved but have been deleted since--
 		// we keep these in the case of undo actions during the session that may go beyond
@@ -757,9 +687,7 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
 
 		phd = phd->phd_next;
 	}
-#ifdef PH_DEBUG
-	fprintf(stderr,"	done\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"	done\n");
 	binbuf_addv(b, ";");
 }
 
@@ -772,9 +700,7 @@ void preset_hub_bang(t_preset_hub *x)
 
 void preset_hub_recall(t_preset_hub *x, t_float f)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"hub_recall\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"hub_recall\n");
 	t_atom ap[2];
 	t_preset_hub_data *hd;
 	t_node_preset *np;
@@ -785,28 +711,18 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 		if (x->ph_data) {
 			hd = x->ph_data;
 			while (hd) {
-#ifdef PH_DEBUG
-				fprintf(stderr,"   searching\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"   searching\n");
 				// now check if the object is active (node pointer is not NULL)
 				if (hd->phd_node) {
-#ifdef PH_DEBUG
-					fprintf(stderr,"	object active\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	object active\n");
 					if (hd->phd_npreset) {
-#ifdef PH_DEBUG
-						fprintf(stderr,"	object has presets\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	object has presets\n");
 						np = hd->phd_npreset;
 						while (np) {
-#ifdef PH_DEBUG
-							fprintf(stderr,"	searching presets\n");
-#endif
+							if(PH_DEBUG) fprintf(stderr,"	searching presets\n");
 							if (np->np_preset == (int)f) {
 								valid = 1;
-#ifdef PH_DEBUG
-								fprintf(stderr,"	valid %d %g\n", (hd->phd_node ? 1:0), np->np_val.a_w.w_float);
-#endif
+								if(PH_DEBUG) fprintf(stderr,"	valid %d %g\n", (hd->phd_node ? 1:0), np->np_val.a_w.w_float);
 								preset_node_set_and_output_value(hd->phd_node, &np->np_val);
 								break;
 							}
@@ -828,9 +744,7 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 
 void preset_hub_store(t_preset_hub *h, t_float f)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_store\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_store\n");
 	t_atom ap[1];
 	t_preset_hub_data *hd1;
 	t_node_preset *np1, *np2;
@@ -847,13 +761,9 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 			changed = 1;
 			hd1 = h->ph_data;
 			while (hd1) {
-#ifdef PH_DEBUG
-				fprintf(stderr,"	analyzing phd\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	analyzing phd\n");
 				if (hd1->phd_node) {
-#ifdef PH_DEBUG
-					fprintf(stderr,"	node is active\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	node is active\n");
 					// only if the node is active (not NULL/disabled)
 					overwrite = 0;
 					if (hd1->phd_npreset) {
@@ -921,9 +831,7 @@ void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x)
 	hd1 = NULL;
 	hd2 = NULL;
 
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_add_a_node\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_add_a_node\n");
 	if (h->ph_data) {
 		// first check for disabled nodes and reenable them if they match location
 		hd1 = h->ph_data;
@@ -933,9 +841,7 @@ void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x)
 				if (!preset_hub_compare_loc(hd1->phd_pn_gl_loc, hd1->phd_pn_gl_loc_length, x->pn_gl_loc, x->pn_gl_loc_length))
 				{
 					// if this hub node data's location matches that of the node
-#ifdef PH_DEBUG
-					fprintf(stderr,"	found disabled -> enabling\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	found disabled -> enabling\n");
 					found = 1;
 					hd1->phd_node = x;
 					break;
@@ -947,18 +853,14 @@ void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x)
 
 	if (!found) {
 		// we have no stored node data (or none that match node's location) so let's create a new one
-#ifdef PH_DEBUG
-		fprintf(stderr,"	creating a new\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	creating a new\n");
 		// create a new data struct
 		hd2 = (t_preset_hub_data *)t_getbytes(sizeof(*hd2));
 		// reconstruct the dynamic location array
 		hd2->phd_pn_gl_loc_length = x->pn_gl_loc_length;
 		hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(int));
 		for (i=0; i < hd2->phd_pn_gl_loc_length; i++) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	loc %d\n", x->pn_gl_loc[i]);
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	loc %d\n", x->pn_gl_loc[i]);
 			hd2->phd_pn_gl_loc[i] = x->pn_gl_loc[i];
 		}
 		// assign node value
@@ -982,18 +884,14 @@ void preset_hub_delete_a_node(t_preset_hub *h, t_preset_node *x)
 	t_preset_hub_data *hd1;
 	hd1 = NULL;
 
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_delete_a_node\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_delete_a_node\n");
 	if (h->ph_data) {
 		// check for enabled nodes only
 		hd1 = h->ph_data;
 		while (hd1) {
 			if (hd1->phd_node && hd1->phd_node == x) {
 				// only if the node is enabled and matches ours
-#ifdef PH_DEBUG
-				fprintf(stderr,"	found enabled -> disabling\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	found enabled -> disabling\n");
 				hd1->phd_node = NULL;
 				break;
 			}
@@ -1011,26 +909,18 @@ void preset_hub_reset(t_preset_hub *h)
 	t_preset_hub *h1, *h2;
 	int changed = 0;
 
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_reset\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_reset\n");
 
 	// inform all nodes that the hub is letting go of them
 	if (gpnl) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	we got gpnl\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	we got gpnl\n");
 		nl = gpnl;
 		while(nl) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	analyzing gpnl entry %d\n", nl->gpnl_paired);
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	analyzing gpnl entry %d\n", nl->gpnl_paired);
 			if (nl->gpnl_paired && nl->gpnl_node->pn_hub == h) {
 				nl->gpnl_paired = 0;
 				nl->gpnl_node->pn_hub = NULL;
-#ifdef PH_DEBUG
-				fprintf(stderr,"	removed gpnl reference\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	removed gpnl reference\n");
 			}
 			nl = nl->gpnl_next;
 		}
@@ -1038,9 +928,7 @@ void preset_hub_reset(t_preset_hub *h)
 
 	// deallocate all the dynamically-allocated memory
 	if (h->ph_data) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	got ph_data\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	got ph_data\n");
 		hd1 = h->ph_data;
 		while (hd1) {
 			if (hd1->phd_npreset) {
@@ -1049,18 +937,14 @@ void preset_hub_reset(t_preset_hub *h)
 					np2 = np1->np_next;
 					freebytes(np1, sizeof(*np1));
 					changed = 1;
-#ifdef PH_DEBUG
-					fprintf(stderr,"	deleting preset\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	deleting preset\n");
 					np1 = np2;
 				}
 			}
 			hd2 = hd1->phd_next;
 			freebytes(hd1, sizeof(*hd1));
 			changed = 1;
-#ifdef PH_DEBUG
-			fprintf(stderr,"	deleting ph_data\n");
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	deleting ph_data\n");
 			hd1 = hd2;
 		}
 	}
@@ -1085,15 +969,11 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 
 	hd2 = h->ph_data;
 
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_clear\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_clear\n");
 
 	// deallocate all the dynamically-allocated memory for disabled nodes
 	if (hd2) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	got ph_data\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	got ph_data\n");
 		hd2 = h->ph_data;
 		while (hd2) {
 			// all nodes will get their preset cleared regardless whether they are active or disabled
@@ -1104,9 +984,7 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 					hd2->phd_npreset = np1->np_next;
 					freebytes(np1, sizeof(*np1));
 					changed = 1;
-#ifdef PH_DEBUG
-							fprintf(stderr,"	found preset to delete (first)\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	found preset to delete (first)\n");
 				} else {
 					while (np1) {
 						np2 = np1->np_next;
@@ -1114,9 +992,7 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 							np1->np_next = np2->np_next;
 							freebytes(np2, sizeof(*np2));
 							changed = 1;
-#ifdef PH_DEBUG
-							fprintf(stderr,"	found preset to delete\n");
-#endif
+							if(PH_DEBUG) fprintf(stderr,"	found preset to delete\n");
 							break;
 						}
 						np1 = np1->np_next;
@@ -1143,15 +1019,11 @@ void preset_hub_purge(t_preset_hub *h)
 	hd1 = NULL;
 	hd2 = NULL;
 
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_purge\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_purge\n");
 
 	// deallocate all the dynamically-allocated memory for disabled nodes
 	if (h->ph_data) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	got ph_data\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	got ph_data\n");
 		hd2 = h->ph_data;
 		while (hd2) {
 			if (!hd2->phd_node) {
@@ -1161,9 +1033,7 @@ void preset_hub_purge(t_preset_hub *h)
 						np2 = np1->np_next;
 						freebytes(np1, sizeof(*np1));
 						changed = 1;
-#ifdef PH_DEBUG
-						fprintf(stderr,"	deleting preset\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	deleting preset\n");
 						np1 = np2;
 					}
 				}
@@ -1176,9 +1046,7 @@ void preset_hub_purge(t_preset_hub *h)
 				hd2 = hd2->phd_next;
 				freebytes(hd1, sizeof(*hd1));
 				changed = 1;
-#ifdef PH_DEBUG
-				fprintf(stderr,"	deleting ph_data\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	deleting ph_data\n");
 			} else {
 				hd1 = hd2;
 				hd2 = hd2->phd_next;
@@ -1193,9 +1061,7 @@ void preset_hub_purge(t_preset_hub *h)
 
 static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"===preset_hub_new===\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"===preset_hub_new===\n");
 	t_glob_preset_node_list *nl;
 	t_glob_preset_hub_list *hl;
 	t_preset_hub_data *hd1, *hd2;
@@ -1245,9 +1111,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 		}*/
 		pos++;
 	}
-#ifdef PH_DEBUG
-	fprintf(stderr,"hub name %s invis %d\n", x->ph_name->s_name, (int)x->ph_invis);
-#endif
+	if(PH_DEBUG) fprintf(stderr,"hub name %s invis %d\n", x->ph_name->s_name, (int)x->ph_invis);
 
 	pos++; // one more time to move ahead of the %hidden% tag
 
@@ -1281,32 +1145,22 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	// load the data from the buffer and build the preset db
 	if (pos < argc) {
 		for (i=pos; i < argc; i++) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	position: %d\n", i);
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	position: %d\n", i);
 			// SYMBOL ANALYSIS
 			if (argv[i].a_type == A_SYMBOL) {
-#ifdef PH_DEBUG
-				fprintf(stderr,"	data = %s\n", atom_getsymbol(&argv[i])->s_name);
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	data = %s\n", atom_getsymbol(&argv[i])->s_name);
 				if (!strcmp(atom_getsymbol(&argv[i])->s_name, "%node%")) {
 					// beginning of a new node
-#ifdef PH_DEBUG
-					fprintf(stderr,"	new node\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	new node\n");
 					hd2 = (t_preset_hub_data *)t_getbytes(sizeof(*hd2));
 					hd2->phd_pn_gl_loc_length = 0;
 					if (hd1) {
 						hd1->phd_next = hd2;
-#ifdef PH_DEBUG
-					fprintf(stderr,"	not first node\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	not first node\n");
 					}
 					else {
 						x->ph_data = hd2;
-#ifdef PH_DEBUG
-						fprintf(stderr,"	first node\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	first node\n");
 					}
 					hd1 = hd2;
 					np1 = NULL; // have to reset it so that new presets are not erroneously appended to previous node
@@ -1314,38 +1168,28 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 				}
 				else if (!strcmp(atom_getsymbol(&argv[i])->s_name, "%preset%")) {
 					// beginning of a new preset
-#ifdef PH_DEBUG
-					fprintf(stderr,"	new preset\n");
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	new preset\n");
 					np2 = (t_node_preset *)t_getbytes(sizeof(*np2));
 					if (np1) {
 						np1->np_next = np2;
-#ifdef PH_DEBUG
-						fprintf(stderr,"	not first preset\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	not first preset\n");
 					}
 					else {
 						hd2->phd_npreset = np2;
-#ifdef PH_DEBUG
-						fprintf(stderr,"	first preset\n");
-#endif
+						if(PH_DEBUG) fprintf(stderr,"	first preset\n");
 					}
 					np1 = np2;
 					h_cur = H_PRESET;
 				}
 				// SYMBOL DATA
 				else if (h_cur == H_PRESET_DATA) {
-#ifdef PH_DEBUG
-					fprintf(stderr,"	sym data %s\n", atom_getsymbol(&argv[i])->s_name);
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	sym data %s\n", atom_getsymbol(&argv[i])->s_name);
 					SETSYMBOL(&np2->np_val, atom_getsymbol(&argv[i]));
 				}
 			}
 			// FLOAT ANALYSIS
 			else if (argv[i].a_type == A_FLOAT) {
-#ifdef PH_DEBUG
-				fprintf(stderr,"	data = %g\n", atom_getfloat(&argv[i]));
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	data = %g\n", atom_getfloat(&argv[i]));
 				if (h_cur == H_NODE) {
 					// node location length
 					hd2->phd_pn_gl_loc_length = (int)atom_getfloat(&argv[i]);
@@ -1353,9 +1197,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 					if (!hd2->phd_pn_gl_loc)
 						hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(int));
 					hd2->phd_pn_gl_loc[hd2->phd_pn_gl_loc_length-1] = (int)atom_getfloat(&argv[i]);
-#ifdef PH_DEBUG
-					fprintf(stderr,"	loc length = %d\n", hd2->phd_pn_gl_loc_length);
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	loc length = %d\n", hd2->phd_pn_gl_loc_length);
 					loc_pos = 0;
 					h_cur = H_LOCATION;
 				}
@@ -1363,22 +1205,16 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 					// node location data
 					hd2->phd_pn_gl_loc[loc_pos] = (int)atom_getfloat(&argv[i]);
 					loc_pos++;
-#ifdef PH_DEBUG
-					fprintf(stderr,"	loc = %d\n", hd2->phd_pn_gl_loc_length);
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	loc = %d\n", hd2->phd_pn_gl_loc_length);
 				}
 				else if (h_cur == H_PRESET) {
 					// preset number
-#ifdef PH_DEBUG
-					fprintf(stderr,"	preset %g\n", atom_getfloat(&argv[i]));
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	preset %g\n", atom_getfloat(&argv[i]));
 					np2->np_preset = (int)atom_getfloat(&argv[i]);
 					h_cur = H_PRESET_DATA;
 				}
 				else if (h_cur == H_PRESET_DATA) {
-#ifdef PH_DEBUG
-					fprintf(stderr,"	preset data %g\n", atom_getfloat(&argv[i]));
-#endif
+					if(PH_DEBUG) fprintf(stderr,"	preset data %g\n", atom_getfloat(&argv[i]));
 					SETFLOAT(&np2->np_val, atom_getfloat(&argv[i]));
 				}
 			}
@@ -1399,9 +1235,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 
 static void preset_hub_free(t_preset_hub* x)
 {
-#ifdef PH_DEBUG
-	fprintf(stderr,"preset_hub_free\n");
-#endif
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_free\n");
 	t_glob_preset_node_list *nl;
 	t_preset_hub_data *hd1, *hd2;
 	t_node_preset *np1, *np2;
@@ -1409,21 +1243,15 @@ static void preset_hub_free(t_preset_hub* x)
 
 	// inform all nodes that the hub is going bye-bye
 	if (gpnl) {
-#ifdef PH_DEBUG
-		fprintf(stderr,"	we got gpnl\n");
-#endif
+		if(PH_DEBUG) fprintf(stderr,"	we got gpnl\n");
 		nl = gpnl;
 		while(nl) {
-#ifdef PH_DEBUG
-			fprintf(stderr,"	analyzing gpnl entry %d\n", nl->gpnl_paired);
-#endif
+			if(PH_DEBUG) fprintf(stderr,"	analyzing gpnl entry %d\n", nl->gpnl_paired);
 			if (nl->gpnl_paired && nl->gpnl_node->pn_hub == x) {
 				// we only make the hub pointer null and leave location for undo/redo/save purposes
 				nl->gpnl_paired = 0;
 				nl->gpnl_node->pn_hub = NULL;
-#ifdef PH_DEBUG
-				fprintf(stderr,"	removed gpnl reference\n");
-#endif
+				if(PH_DEBUG) fprintf(stderr,"	removed gpnl reference\n");
 			}
 			nl = nl->gpnl_next;
 		}
