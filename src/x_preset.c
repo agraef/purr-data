@@ -10,7 +10,7 @@
 #include "x_preset.h"
 #include "s_stuff.h"
 
-//#define PH_DEBUG
+#define PH_DEBUG
 
 //		changes in order happen when doing one of the following: cut, 
 //		undo cut, delete, undo delete, to front, and to back.
@@ -50,6 +50,9 @@ void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x);
 void preset_hub_delete_a_node(t_preset_hub *h, t_preset_node *x);
 void preset_node_seek_hub(t_preset_node *x);
 int  preset_hub_compare_loc(int *h_loc, int h_loc_length, int *n_loc, int n_loc_length);
+void preset_hub_reset(t_preset_hub *h);
+void preset_hub_purge(t_preset_hub *h);
+void preset_hub_clear(t_preset_hub *x, t_float f);
 
 static int preset_node_location_changed(t_preset_node *x);
 static void preset_node_update_my_glist_location(t_preset_node *x);
@@ -257,7 +260,7 @@ int glob_preset_hub_list_delete(t_preset_hub *x)
 	h1 = gphl;
 	h2 = gphl;
 
-	// first check if we are the first gpnl
+	// first check if we are the first gphl
 	if (h2->gphl_hub == x) {
 		gphl = h2->gphl_next;
 		freebytes(h2, sizeof(*h2));
@@ -507,6 +510,79 @@ void preset_node_set_and_output_value(t_preset_node *x, t_atom *val)
 		pd_error(x, "error: preset_node currently supports only floats and symbols");
 }
 
+void preset_node_clear(t_preset_node *x, t_float f)
+{
+	t_atom ap[2];
+	t_preset_hub_data *hd2;
+	t_node_preset *np1, *np2;
+	int changed = 0;
+
+#ifdef PH_DEBUG
+		fprintf(stderr,"preset_node_clear %d\n", (int)f);
+#endif
+
+	if (x->pn_hub) {
+		hd2 = x->pn_hub->ph_data;
+
+		// only remove this object's preset
+		if (hd2) {
+#ifdef PH_DEBUG
+			fprintf(stderr,"	got ph_data\n");
+#endif
+			while (hd2 && hd2->phd_node != x) {
+				hd2 = hd2->phd_next;
+			}
+			if (hd2) {
+				np1 = hd2->phd_npreset;
+				// if it is first one
+				if (np1->np_preset == (int)f) {
+					hd2->phd_npreset = np1->np_next;
+					freebytes(np1, sizeof(*np1));
+					changed = 1;
+#ifdef PH_DEBUG
+					fprintf(stderr,"	found preset to delete (first)\n");
+#endif
+				} else {
+					while (np1) {
+						np2 = np1->np_next;
+						if (np2 && np2->np_preset == (int)f) {
+							np1->np_next = np2->np_next;
+							freebytes(np2, sizeof(*np2));
+							changed = 1;
+#ifdef PH_DEBUG
+							fprintf(stderr,"	found preset to delete\n");
+#endif
+							break;
+						}
+						np1 = np1->np_next;
+					}
+				}
+			}
+		}
+	}
+	if (changed) canvas_dirty(x->pn_hub->ph_canvas, 1);
+
+	SETFLOAT(ap+0, f);
+	SETFLOAT(ap+1, (t_float)changed);
+	outlet_anything(x->pn_outlet, gensym("node_clear"), 2, ap);
+}
+
+
+void preset_node_clearall(t_preset_node *x, t_float f) {
+	if (x->pn_hub)
+		preset_hub_clear(x->pn_hub, f);
+}
+
+void preset_node_reset(t_preset_node *x) {
+	if (x->pn_hub)
+		preset_hub_reset(x->pn_hub);
+}
+
+void preset_node_purge(t_preset_node *x) {
+	if (x->pn_hub)
+		preset_hub_purge(x->pn_hub);
+}
+
 	//==================== end functions are for interaction with the hub =====================//
 
 static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
@@ -584,6 +660,15 @@ void preset_node_setup(void)
     class_addmethod(preset_node_class, (t_method)preset_node_request_hub_store,
         gensym("store"), A_DEFFLOAT, 0);
 
+    class_addmethod(preset_node_class, (t_method)preset_node_clear,
+        gensym("clear"), A_DEFFLOAT, 0);
+    class_addmethod(preset_node_class, (t_method)preset_node_clearall,
+        gensym("clearall"), A_DEFFLOAT, 0);
+    class_addmethod(preset_node_class, (t_method)preset_node_reset,
+        gensym("reset"), A_NULL, 0);
+    class_addmethod(preset_node_class, (t_method)preset_node_purge,
+        gensym("purge"), A_NULL, 0);
+
     class_addbang(preset_node_class, preset_node_bang);
     class_addfloat(preset_node_class, preset_node_float);
     class_addsymbol(preset_node_class, preset_node_symbol);
@@ -602,6 +687,7 @@ typedef enum
 {
 	H_NONE,
     H_NODE,
+	H_LOCATION,
     H_PRESET,
     H_PRESET_DATA
 }  t_hub_parser;
@@ -609,7 +695,7 @@ typedef enum
 /*	syntax for saving a preset hub (all in a single line, here it is
 	separated for legibility sakes):
 	#X obj X Y preset_hub NAME %hidden%
-	%node% LOCATION_ARRAY_(INT) 1 2 3 etc.
+	%node% LOCATION_ARRAY_LENGTH LOCATION_ARRAY_(INT) 1 2 3 etc.
 	%preset% 1 %float%/%symbol% (e.g. number or symbol, later also possibly a list)
 	%preset% 2 4
 	etc
@@ -651,7 +737,7 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
 		// (disabled nodes are ones that have presets saved but have been deleted since--
 		// we keep these in the case of undo actions during the session that may go beyond
 		// saving something into a file)
-		binbuf_addv(b, "s", gensym("%node%"));
+		binbuf_addv(b, "si", gensym("%node%"), phd->phd_pn_gl_loc_length);
 
 		// gather info about the length of the node's location and store it
 		for (i = 0; i < phd->phd_pn_gl_loc_length; i++) {
@@ -733,13 +819,14 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 		}
 		if (valid)
 			x->ph_preset = f;
+
 		SETFLOAT(ap+0, f);
 		SETFLOAT(ap+1, (t_float)valid);
 		outlet_anything(x->ph_outlet, gensym("recall"), 2, ap);
 	}
 }
 
-void preset_hub_store(t_preset_hub *x, t_float f)
+void preset_hub_store(t_preset_hub *h, t_float f)
 {
 #ifdef PH_DEBUG
 	fprintf(stderr,"preset_hub_store\n");
@@ -749,14 +836,16 @@ void preset_hub_store(t_preset_hub *x, t_float f)
 	t_node_preset *np1, *np2;
 	int overwrite;
 	t_atom val;
+	int changed = 0;
 
 	np1 = NULL;
 	np2 = NULL;
 
 	if (f>=0) {
 		//check if there are any existing nodes
-		if (x->ph_data) {
-			hd1 = x->ph_data;
+		if (h->ph_data) {
+			changed = 1;
+			hd1 = h->ph_data;
 			while (hd1) {
 #ifdef PH_DEBUG
 				fprintf(stderr,"	analyzing phd\n");
@@ -804,9 +893,10 @@ void preset_hub_store(t_preset_hub *x, t_float f)
 				hd1 = hd1->phd_next;
 			}
 		}
+		if (changed) canvas_dirty(h->ph_canvas, 1);
+
 		SETFLOAT(ap+0, f);
-		outlet_anything(x->ph_outlet, gensym("store"), 1, ap);
-		canvas_dirty(x->ph_canvas, 1);
+		outlet_anything(h->ph_outlet, gensym("store"), 1, ap);
 	}
 }
 
@@ -912,6 +1002,195 @@ void preset_hub_delete_a_node(t_preset_hub *h, t_preset_node *x)
 	}
 }
 
+void preset_hub_reset(t_preset_hub *h)
+{
+	t_atom ap[1];
+	t_glob_preset_node_list *nl;
+	t_preset_hub_data *hd1, *hd2;
+	t_node_preset *np1, *np2;
+	t_preset_hub *h1, *h2;
+	int changed = 0;
+
+#ifdef PH_DEBUG
+	fprintf(stderr,"preset_hub_reset\n");
+#endif
+
+	// inform all nodes that the hub is letting go of them
+	if (gpnl) {
+#ifdef PH_DEBUG
+		fprintf(stderr,"	we got gpnl\n");
+#endif
+		nl = gpnl;
+		while(nl) {
+#ifdef PH_DEBUG
+			fprintf(stderr,"	analyzing gpnl entry %d\n", nl->gpnl_paired);
+#endif
+			if (nl->gpnl_paired && nl->gpnl_node->pn_hub == h) {
+				nl->gpnl_paired = 0;
+				nl->gpnl_node->pn_hub = NULL;
+#ifdef PH_DEBUG
+				fprintf(stderr,"	removed gpnl reference\n");
+#endif
+			}
+			nl = nl->gpnl_next;
+		}
+	}
+
+	// deallocate all the dynamically-allocated memory
+	if (h->ph_data) {
+#ifdef PH_DEBUG
+		fprintf(stderr,"	got ph_data\n");
+#endif
+		hd1 = h->ph_data;
+		while (hd1) {
+			if (hd1->phd_npreset) {
+				np1 = hd1->phd_npreset;
+				while (np1) {
+					np2 = np1->np_next;
+					freebytes(np1, sizeof(*np1));
+					changed = 1;
+#ifdef PH_DEBUG
+					fprintf(stderr,"	deleting preset\n");
+#endif
+					np1 = np2;
+				}
+			}
+			hd2 = hd1->phd_next;
+			freebytes(hd1, sizeof(*hd1));
+			changed = 1;
+#ifdef PH_DEBUG
+			fprintf(stderr,"	deleting ph_data\n");
+#endif
+			hd1 = hd2;
+		}
+	}
+
+	h->ph_data = NULL;
+
+	// and finally request pairing with nodes (since we deleted all our references)
+	glob_preset_node_list_seek_hub();
+
+	if (changed) canvas_dirty(h->ph_canvas, 1);
+
+	SETFLOAT(ap+0, (t_float)changed);
+	outlet_anything(h->ph_outlet, gensym("reset"), 1, ap);
+}
+
+void preset_hub_clear(t_preset_hub *h, t_float f)
+{
+	t_atom ap[1];
+	t_preset_hub_data *hd2;
+	t_node_preset *np1, *np2;
+	int changed = 0;
+
+	hd2 = h->ph_data;
+
+#ifdef PH_DEBUG
+	fprintf(stderr,"preset_hub_clear\n");
+#endif
+
+	// deallocate all the dynamically-allocated memory for disabled nodes
+	if (hd2) {
+#ifdef PH_DEBUG
+		fprintf(stderr,"	got ph_data\n");
+#endif
+		hd2 = h->ph_data;
+		while (hd2) {
+			// all nodes will get their preset cleared regardless whether they are active or disabled
+			if (hd2->phd_npreset) {
+				np1 = hd2->phd_npreset;
+				// if it is first one
+				if (np1->np_preset == (int)f) {
+					hd2->phd_npreset = np1->np_next;
+					freebytes(np1, sizeof(*np1));
+					changed = 1;
+#ifdef PH_DEBUG
+							fprintf(stderr,"	found preset to delete (first)\n");
+#endif
+				} else {
+					while (np1) {
+						np2 = np1->np_next;
+						if (np2 && np2->np_preset == (int)f) {
+							np1->np_next = np2->np_next;
+							freebytes(np2, sizeof(*np2));
+							changed = 1;
+#ifdef PH_DEBUG
+							fprintf(stderr,"	found preset to delete\n");
+#endif
+							break;
+						}
+						np1 = np1->np_next;
+					}
+				}
+			}
+			hd2 = hd2->phd_next;
+		}
+	}
+	if (changed) canvas_dirty(h->ph_canvas, 1);
+
+	SETFLOAT(ap+0, (t_float)changed);
+	outlet_anything(h->ph_outlet, gensym("clear"), 1, ap);
+}
+
+
+void preset_hub_purge(t_preset_hub *h)
+{
+	t_atom ap[1];
+	t_preset_hub_data *hd1, *hd2;
+	t_node_preset *np1, *np2;
+	int changed = 0;
+
+	hd1 = NULL;
+	hd2 = NULL;
+
+#ifdef PH_DEBUG
+	fprintf(stderr,"preset_hub_purge\n");
+#endif
+
+	// deallocate all the dynamically-allocated memory for disabled nodes
+	if (h->ph_data) {
+#ifdef PH_DEBUG
+		fprintf(stderr,"	got ph_data\n");
+#endif
+		hd2 = h->ph_data;
+		while (hd2) {
+			if (!hd2->phd_node) {
+				if (hd2->phd_npreset) {
+					np1 = hd2->phd_npreset;
+					while (np1) {
+						np2 = np1->np_next;
+						freebytes(np1, sizeof(*np1));
+						changed = 1;
+#ifdef PH_DEBUG
+						fprintf(stderr,"	deleting preset\n");
+#endif
+						np1 = np2;
+					}
+				}
+				if (hd1 && hd1 != hd2) {
+					hd1->phd_next = hd2->phd_next;
+				}
+				hd1 = hd2;
+				if (hd2 == h->ph_data)
+					h->ph_data = hd2->phd_next;
+				hd2 = hd2->phd_next;
+				freebytes(hd1, sizeof(*hd1));
+				changed = 1;
+#ifdef PH_DEBUG
+				fprintf(stderr,"	deleting ph_data\n");
+#endif
+			} else {
+				hd1 = hd2;
+				hd2 = hd2->phd_next;
+			}
+		}
+	}
+	if (changed) canvas_dirty(h->ph_canvas, 1);
+
+	SETFLOAT(ap+0, (t_float)changed);
+	outlet_anything(h->ph_outlet, gensym("purge"), 1, ap);
+}
+
 static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 {
 #ifdef PH_DEBUG
@@ -923,12 +1202,13 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	t_node_preset *np1, *np2;
 	t_hub_parser h_cur = H_NONE;
 
-	t_preset_hub *x;
+	t_preset_hub *x, *check;
 	t_symbol *name;
-	int i, pos;
+	int i, pos, loc_pos;
 	t_glist *glist=(t_glist *)canvas_getcurrent();
 	t_canvas *canvas = (t_canvas *)glist_getcanvas(glist);
 
+	loc_pos = 0;
 	pos = 0; // position within argc
 
 	// first check if the mandatory argument is sane, otherwise bail out
@@ -937,28 +1217,18 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 		return(NULL);
 	}
 
-	/*
-	   NO! WE CAN HAVE MULTIPLE HUBS WITH SAME NAMES, BUT IT IS USER'S RESPONSIBILITY TO KEEP THEM SANE
-	   THIS IS BECAUSE MULTIPLE INSTANCES OF ABSTRACTIONS WILL HAVE IDENTICAL NAMES!!!
-	// now let's check if there is already a pre-existing hub with the same name
-	// if so, fail at creating the object and report an error to the user
-	if (gphl) {
-		hl = gphl;
-		while(hl) {
-			if (!strcmp(hl->gphl_hub->ph_name->s_name, atom_getsymbol(&argv[0])->s_name)) {
-				pd_error(canvas, "preset_hub with the name %s already exists... hub creation failed", atom_getsymbol(&argv[0])->s_name);
+	// now check if there is already another hub on the same canvas with the same name and fail if so
+	check = canvas->gl_phub;
+	if (check) {
+		while (check) {
+			if (!strcmp(atom_getsymbol(&argv[0])->s_name, check->ph_name->s_name)) {
+				pd_error(canvas, "preset_hub with the name %s already exists on this canvas", check->ph_name->s_name);
 				return(NULL);
 			}
-			hl = hl->gphl_next;
+			check = check->ph_next;
 		}
 	}
-	*/
 
-/*#ifdef PDL2Ork
-	if (sys_k12_mode && !strcmp(atom_getsymbol(&argv[0])->s_name,"k12")) {
-		// exception, we are the root preset for k12 that is pre-made for us
-	}
-#endif*/
 	x = (t_preset_hub *)pd_new(preset_hub_class);
 	x->ph_invis = 0;
 
@@ -1077,15 +1347,24 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 				fprintf(stderr,"	data = %g\n", atom_getfloat(&argv[i]));
 #endif
 				if (h_cur == H_NODE) {
-					// node location
-					hd2->phd_pn_gl_loc_length++;
+					// node location length
+					hd2->phd_pn_gl_loc_length = (int)atom_getfloat(&argv[i]);
 					// reconstruct the dynamic location array
 					if (!hd2->phd_pn_gl_loc)
-						hd2->phd_pn_gl_loc = (int*)calloc(1, sizeof(int));
-					else hd2->phd_pn_gl_loc = (int*)realloc(hd2->phd_pn_gl_loc, hd2->phd_pn_gl_loc_length*sizeof(int));
+						hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(int));
 					hd2->phd_pn_gl_loc[hd2->phd_pn_gl_loc_length-1] = (int)atom_getfloat(&argv[i]);
 #ifdef PH_DEBUG
-					fprintf(stderr,"	loc = %d\n", hd2->phd_pn_gl_loc[hd2->phd_pn_gl_loc_length-1]);
+					fprintf(stderr,"	loc length = %d\n", hd2->phd_pn_gl_loc_length);
+#endif
+					loc_pos = 0;
+					h_cur = H_LOCATION;
+				}
+				else if (h_cur == H_LOCATION) {
+					// node location data
+					hd2->phd_pn_gl_loc[loc_pos] = (int)atom_getfloat(&argv[i]);
+					loc_pos++;
+#ifdef PH_DEBUG
+					fprintf(stderr,"	loc = %d\n", hd2->phd_pn_gl_loc_length);
 #endif
 				}
 				else if (h_cur == H_PRESET) {
@@ -1166,7 +1445,12 @@ static void preset_hub_free(t_preset_hub* x)
 			// this should never happen
 			pd_error(x, "preset_hub %s destructor was unable to find its canvas pointer", x->ph_name->s_name);
 		} else {
-			h1->ph_next = h2->ph_next;
+			if (h1 == h2) {
+				// this means we're the first on the multi-element list
+				x->ph_canvas->gl_phub = h1->ph_next;
+			} else {
+				h1->ph_next = h2->ph_next;
+			}
 		}
 	}
 
@@ -1206,6 +1490,13 @@ void preset_hub_setup(void)
         gensym("recall"), A_DEFFLOAT, 0);
     class_addmethod(preset_hub_class, (t_method)preset_hub_store,
         gensym("store"), A_DEFFLOAT, 0);
+
+    class_addmethod(preset_hub_class, (t_method)preset_hub_clear,
+        gensym("clear"), A_DEFFLOAT, 0);
+    class_addmethod(preset_hub_class, (t_method)preset_hub_reset,
+        gensym("reset"), A_NULL, 0);
+    class_addmethod(preset_hub_class, (t_method)preset_hub_purge,
+        gensym("purge"), A_NULL, 0);
 
     class_addbang(preset_hub_class, preset_hub_bang);		// we'll use this to output current preset
 	class_setsavefn(preset_hub_class, preset_hub_save);
