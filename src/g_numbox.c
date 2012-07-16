@@ -1211,7 +1211,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_hide_frame = 0; // default behavior
     if((argc == 19)&&IS_A_FLOAT(argv,18))
     {
-		fprintf(stderr,"blah %d\n", (int)atom_getintarg(18, argc, argv));
+		//fprintf(stderr,"blah %d\n", (int)atom_getintarg(18, argc, argv));
         x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
     }
     x->x_gui.x_draw = (t_iemfunptr)my_numbox_draw;
