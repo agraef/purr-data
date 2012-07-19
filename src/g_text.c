@@ -295,6 +295,10 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom
     int connectme, xpix, ypix, indx, nobj;
     canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
     pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
+#ifdef PDL2ORK
+	if (sys_k12_mode)
+		pd_vmess (&gl->gl_pd, gensym("tooltips"), "i", 1);
+#endif
     canvas_objtext(gl, xpix+atom_getintarg(1, argc, argv), ypix+atom_getintarg(2, argc, argv), 1, b);
 
     if (connectme) {
