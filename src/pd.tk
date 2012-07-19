@@ -326,22 +326,56 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	set signal_cord_highlight "#474"
 	set signal_cord "#2ca7d4"
 
-	image create photo i.connect -file $extra_dir/K12/icons/connect-on.png
-	image create photo i.add -file $extra_dir/K12/icons/add.png
-	image create photo i.buttons -file $extra_dir/K12/icons/buttons.png
-	image create photo i.delay -file $extra_dir/K12/icons/delay.png
-	image create photo i.filter -file $extra_dir/K12/icons/filter.png
-	image create photo i.hit -file $extra_dir/K12/icons/hit.png
-	image create photo i.mapper -file $extra_dir/K12/icons/mapper.png
-	image create photo i.multiply -file $extra_dir/K12/icons/multiply.png
-	image create photo i.output -file $extra_dir/K12/icons/audio-on.png
-	image create photo i.pitch -file $extra_dir/K12/icons/pitch.png
-	image create photo i.reverb -file $extra_dir/K12/icons/reverb.png
-	image create photo i.short1 -file $extra_dir/K12/icons/short1.png
-	image create photo i.short2 -file $extra_dir/K12/icons/short2.png
-	image create photo i.sustained1 -file $extra_dir/K12/icons/sustained1.png
-	image create photo i.sustained2 -file $extra_dir/K12/icons/sustained2.png
-	image create photo i.speed -file $extra_dir/K12/icons/speed.png
+	image create photo i.wii_connect -file $extra_dir/K12/icons/wii_connect_on.png
+	image create photo i.wii_buttons -file $extra_dir/K12/icons/wii_buttons.png
+	image create photo i.wii_speed -file $extra_dir/K12/icons/wii_speed.png
+	image create photo i.wii_hit -file $extra_dir/K12/icons/wii_hit.png
+
+	image create photo i.sarcduino -file $extra_dir/K12/icons/sarcduino_on.png
+	image create photo i.sarcduino_digital -file $extra_dir/K12/icons/sarcduino_digital.png
+	image create photo i.sarcduino_analog -file $extra_dir/K12/icons/sarcduino_analog.png
+	image create photo i.sarcduino_hit -file $extra_dir/K12/icons/sarcduino_hit.png
+
+	image create photo i.math_number -file $extra_dir/K12/icons/math_number.png
+	image create photo i.math_random -file $extra_dir/K12/icons/math_random.png
+
+	image create photo i.math_add -file $extra_dir/K12/icons/math_add.png
+	image create photo i.math_subtract -file $extra_dir/K12/icons/math_subtract.png
+	image create photo i.math_multiply -file $extra_dir/K12/icons/math_multiply.png
+	image create photo i.math_divide -file $extra_dir/K12/icons/math_divide.png
+
+	image create photo i.logic_compare -file $extra_dir/K12/icons/logic_compare.png
+	image create photo i.logic_mapper -file $extra_dir/K12/icons/logic_mapper.png
+	image create photo i.logic_metronome -file $extra_dir/K12/icons/logic_metronome.png
+	image create photo i.logic_counter -file $extra_dir/K12/icons/logic_counter.png
+	image create photo i.logic_sequencer -file $extra_dir/K12/icons/logic_sequencer.png
+
+	image create photo i.signal_microphone -file $extra_dir/K12/icons/signal_microphone.png
+	image create photo i.signal_sampler -file $extra_dir/K12/icons/signal_sampler.png
+	image create photo i.signal_envelope -file $extra_dir/K12/icons/signal_envelope.png
+
+	image create photo i.signal_sine -file $extra_dir/K12/icons/signal_sine.png
+	image create photo i.signal_saw -file $extra_dir/K12/icons/signal_saw.png
+	image create photo i.signal_square -file $extra_dir/K12/icons/signal_square.png
+	image create photo i.signal_triangle -file $extra_dir/K12/icons/signal_triangle.png
+
+	image create photo i.signal_noise -file $extra_dir/K12/icons/signal_noise.png
+	image create photo i.signal_pink -file $extra_dir/K12/icons/signal_pink.png
+	image create photo i.signal_add -file $extra_dir/K12/icons/signal_add.png
+	image create photo i.signal_multiply -file $extra_dir/K12/icons/signal_multiply.png
+
+	image create photo i.instr_short1 -file $extra_dir/K12/icons/instr_short1.png
+	image create photo i.instr_short2 -file $extra_dir/K12/icons/instr_short2.png
+	image create photo i.instr_sustained1 -file $extra_dir/K12/icons/instr_sustained1.png
+	image create photo i.instr_sustained2 -file $extra_dir/K12/icons/instr_sustained2.png
+
+	image create photo i.fx_filter -file $extra_dir/K12/icons/fx_filter.png
+	image create photo i.fx_multitap -file $extra_dir/K12/icons/fx_multitap.png
+	image create photo i.fx_reverb -file $extra_dir/K12/icons/fx_reverb.png
+
+	image create photo i.preset -file $extra_dir/K12/icons/preset.png
+	image create photo i.output -file $extra_dir/K12/icons/audio_on.png
+
 	image create photo i.edit -file $extra_dir/K12/icons/edit.png
 	image create photo i.perform -file $extra_dir/K12/icons/perform.png
 }
@@ -995,7 +1029,7 @@ proc menu_new {} {
 	if { $k12_mode == 1 } {
 		pd {
 		    #N canvas;
-			#X obj -9999 -9999 preset_hub k12 1 %hidden%;
+			#X obj -30 -30 preset_hub k12 1 %hidden%;
 		    #X pop 1;
 		}
 	} else {
@@ -2215,6 +2249,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		match_linux_wm [list frame $name.k12frame]
 		pack $name.k12frame -side left -fill y
 
+		# ---------------------------------- EDIT BUTTON -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.edit -relief flat]
 		if {$editable==1} {
 			match_linux_wm [list button $name.k12frame.edit.b -image i.edit \
@@ -2223,87 +2258,183 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			match_linux_wm [list button $name.k12frame.edit.b -image i.perform \
 				-command [concat menu_editmode $name]]
 		}
-		pack $name.k12frame.edit.b -side left -expand 1 -padx 2 -pady 2
-		setTooltip $name.k12frame.edit.b "Toggle between editing and performing"
+		pack $name.k12frame.edit.b -side left -expand 1 -padx 1 -pady 0
+		setTooltip $name.k12frame.edit.b "Toggle between building and playing an instrument"
 
+		# ---------------------------------- MESSAGES LABEL -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.msgs -relief flat]
-		label $name.k12frame.msgs.label -relief ridge -text "MESSAGES"
-		pack $name.k12frame.msgs.label -fill x -pady 2 -padx 2
+		match_linux_wm [list label $name.k12frame.msgs.label -relief flat -text "MESSAGES"]
+		pack $name.k12frame.msgs.label -fill x -pady 0 -padx 1
 
-		match_linux_wm [list frame $name.k12frame.sound -relief flat]
-		label $name.k12frame.sound.label -relief ridge -text "SOUND"
-		pack $name.k12frame.sound.label -fill x -pady 2 -padx 2
-
-		match_linux_wm [list frame $name.k12frame.5 -relief flat]
-		match_linux_wm [list button $name.k12frame.5.b_wii_connect -image i.connect \
+		# ---------------------------------- WII -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.wii -relief flat]
+		match_linux_wm [list button $name.k12frame.wii.b_wii_connect -image i.wii_connect \
 			-command [concat put_K12_objects $name wii_connect]]
-		pack $name.k12frame.5.b_wii_connect -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.5.b_wii_connect "Wiimote: Use this to connect wiimote to the computer"
-
-		match_linux_wm [list frame $name.k12frame.2 -relief flat]
-		match_linux_wm [list button $name.k12frame.2.b_buttons -image i.buttons \
+		match_linux_wm [list button $name.k12frame.wii.b_wii_buttons -image i.wii_buttons \
 			-command [concat put_K12_objects $name wii_buttons]]
-		match_linux_wm [list button $name.k12frame.2.b_hit -image i.hit \
-			-command [concat put_K12_objects $name wii_hit]]
-		match_linux_wm [list button $name.k12frame.2.b_wii_speed -image i.speed \
+		match_linux_wm [list button $name.k12frame.wii.b_wii_speed -image i.wii_speed \
 			-command [concat put_K12_objects $name wii_speed]]
-		pack $name.k12frame.2.b_buttons $name.k12frame.2.b_hit $name.k12frame.2.b_wii_speed -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.2.b_buttons "Wiimote Buttons: Use this to select which Wiimote button should activate objects connected to this object"
-		setTooltip $name.k12frame.2.b_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken"
-		setTooltip $name.k12frame.2.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving"
+		match_linux_wm [list button $name.k12frame.wii.b_wii_hit -image i.wii_hit \
+			-command [concat put_K12_objects $name wii_hit]]
+		pack $name.k12frame.wii.b_wii_connect $name.k12frame.wii.b_wii_buttons $name.k12frame.wii.b_wii_speed $name.k12frame.wii.b_wii_hit -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.wii.b_wii_connect "Wiimote: Use this to connect wiimote to the computer"
+		setTooltip $name.k12frame.wii.b_wii_buttons "Wiimote Buttons: Use this to select which Wiimote button should activate objects connected to this object"
+		setTooltip $name.k12frame.wii.b_wii_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken"
+		setTooltip $name.k12frame.wii.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving"
 
-		match_linux_wm [list frame $name.k12frame.1 -relief flat]
-		match_linux_wm [list button $name.k12frame.1.b_add -image i.add \
+		# ---------------------------------- ARDUINO -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.arduino -relief flat]
+		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino -image i.sarcduino \
+			-command [concat put_K12_objects $name sarcduino]]
+		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_digital -image i.sarcduino_digital \
+			-command [concat put_K12_objects $name sarcduino_digital]]
+		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_analog -image i.sarcduino_analog \
+			-command [concat put_K12_objects $name sarcduino_analog]]
+		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_hit -image i.sarcduino_hit \
+			-command [concat put_K12_objects $name sarcduino_hit]]
+		pack $name.k12frame.arduino.b_sarcduino $name.k12frame.arduino.b_sarcduino_digital $name.k12frame.arduino.b_sarcduino_analog $name.k12frame.arduino.b_sarcduino_hit -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.arduino.b_sarcduino "Arduino: Use this to arduino to the computer"
+		setTooltip $name.k12frame.arduino.b_sarcduino_digital "Arduino Digital: Use this to detect on/off states of a digital sensor"
+		setTooltip $name.k12frame.arduino.b_sarcduino_analog "Arduino Analog: Use this to monitor analog sensor speed"
+		setTooltip $name.k12frame.arduino.b_sarcduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
+
+		# ---------------------------------- MATH ROW 1 -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
+		match_linux_wm [list button $name.k12frame.math_1.b_math_number -image i.math_number \
+			-command [concat put_K12_objects $name math_number]]
+		match_linux_wm [list button $name.k12frame.math_1.b_math_random -image i.math_random \
+			-command [concat put_K12_objects $name math_random]]
+		pack $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_random -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.math_1.b_math_number "Number: Use this to assign a value to other objects"
+		setTooltip $name.k12frame.math_1.b_math_random "Random: Use this to generate random numbers"
+
+		# ---------------------------------- MATH ROW 2 -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.math_2 -relief flat]
+		match_linux_wm [list button $name.k12frame.math_2.b_math_add -image i.math_add \
 			-command [concat put_K12_objects $name math_add]]
-		match_linux_wm [list button $name.k12frame.1.b_multiply -image i.multiply \
+		match_linux_wm [list button $name.k12frame.math_2.b_math_subtract -image i.math_subtract \
+			-command [concat put_K12_objects $name math_subtract]]
+		match_linux_wm [list button $name.k12frame.math_2.b_math_multiply -image i.math_multiply \
 			-command [concat put_K12_objects $name math_multiply]]
-		match_linux_wm [list button $name.k12frame.1.b_mapper -image i.mapper \
-			-command [concat put_K12_objects $name mapper]]
-		pack $name.k12frame.1.b_add $name.k12frame.1.b_multiply $name.k12frame.1.b_mapper -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.1.b_add "Add: Use this to add two values together"
-		setTooltip $name.k12frame.1.b_multiply "Multiply: Use this to multiply two values"
-		setTooltip $name.k12frame.1.b_mapper "Mapper: Use this to control two objects in different fashion"
+		match_linux_wm [list button $name.k12frame.math_2.b_math_divide -image i.math_divide \
+			-command [concat put_K12_objects $name math_divide]]
+		pack $name.k12frame.math_2.b_math_add $name.k12frame.math_2.b_math_subtract $name.k12frame.math_2.b_math_multiply $name.k12frame.math_2.b_math_divide -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.math_2.b_math_add "Add: Use this to add two values"
+		setTooltip $name.k12frame.math_2.b_math_subtract "Subtract: Use this to subtract two values"
+		setTooltip $name.k12frame.math_2.b_math_multiply "Multiply: Use this to multiply two values"
+		setTooltip $name.k12frame.math_2.b_math_divide "Divide: Use this to divide two values"
 
-		match_linux_wm [list frame $name.k12frame.4 -relief flat]
-		match_linux_wm [list button $name.k12frame.4.b_sustained1 -image i.sustained2 \
-			-command [concat put_K12_objects $name instr_sustained]]
-		match_linux_wm [list button $name.k12frame.4.b_sustained2 -image i.sustained1 \
-			-command [concat put_K12_objects $name instr_sustained2]]
-		match_linux_wm [list button $name.k12frame.4.b_pitch -image i.pitch \
-			-command [concat put_K12_objects $name autopitch]]
-		pack $name.k12frame.4.b_sustained1 $name.k12frame.4.b_sustained2  $name.k12frame.4.b_pitch -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.4.b_sustained1 "Sustained Sound: Use this to produce long sustained sound like a sound of a woodwind instrument"
-		setTooltip $name.k12frame.4.b_sustained2 "Sustained Sound: Use this to produce long sustained sound like a sound of a violin"
-		setTooltip $name.k12frame.4.b_pitch "Autopitch: Use this to make your sounds automatically change pitch"
+		# ---------------------------------- LOGIC -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.logic -relief flat]
+		match_linux_wm [list button $name.k12frame.logic.b_logic_compare -image i.logic_compare \
+			-command [concat put_K12_objects $name logic_compare]]
+		match_linux_wm [list button $name.k12frame.logic.b_logic_mapper -image i.logic_mapper \
+			-command [concat put_K12_objects $name logic_mapper]]
+		match_linux_wm [list button $name.k12frame.logic.b_logic_metronome -image i.logic_metronome \
+			-command [concat put_K12_objects $name logic_metronome]]
+		match_linux_wm [list button $name.k12frame.logic.b_logic_counter -image i.logic_counter \
+			-command [concat put_K12_objects $name logic_counter]]
+		match_linux_wm [list button $name.k12frame.logic.b_logic_sequencer -image i.logic_sequencer \
+			-command [concat put_K12_objects $name logic_sequencer]]
+		pack $name.k12frame.logic.b_logic_compare $name.k12frame.logic.b_logic_mapper $name.k12frame.logic.b_logic_metronome $name.k12frame.logic.b_logic_counter $name.k12frame.logic.b_logic_sequencer -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.logic.b_logic_compare "Compare: Use this to compare two values"
+		setTooltip $name.k12frame.logic.b_logic_mapper "Mapper: Use this to map one value to two different but related values"
+		setTooltip $name.k12frame.logic.b_logic_metronome "Metronome: Use this to create a steady pulse"
+		setTooltip $name.k12frame.logic.b_logic_counter "Counter: Use this to count events"
+		setTooltip $name.k12frame.logic.b_logic_sequencer "Sequencer: Use this to map values to MIDI pitches"
 
-		match_linux_wm [list frame $name.k12frame.short -relief flat]
-		match_linux_wm [list button $name.k12frame.short.b_short1 -image i.short1 \
+		# ---------------------------------- SOUND LABEL -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.sound -relief flat]
+		match_linux_wm [list label $name.k12frame.sound.label -relief flat -text "SOUND"]
+		pack $name.k12frame.sound.label -fill x -pady 0 -padx 1
+
+		# ---------------------------------- SIGNAL ROW 1 -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.signal_1 -relief flat]
+		match_linux_wm [list button $name.k12frame.signal_1.b_signal_microphone -image i.signal_microphone \
+			-command [concat put_K12_objects $name signal_microphone]]
+		match_linux_wm [list button $name.k12frame.signal_1.b_signal_sampler -image i.signal_sampler \
+			-command [concat put_K12_objects $name signal_sampler]]
+		match_linux_wm [list button $name.k12frame.signal_1.b_signal_envelope -image i.signal_envelope \
+			-command [concat put_K12_objects $name signal_envelope]]
+		pack $name.k12frame.signal_1.b_signal_microphone $name.k12frame.signal_1.b_signal_sampler $name.k12frame.signal_1.b_signal_envelope -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.signal_1.b_signal_microphone "Microphone: Use this to capture and monitor microphone input"
+		setTooltip $name.k12frame.signal_1.b_signal_sampler "Sampler: Use this to record audio from microphone and plaly it back in various ways"
+		setTooltip $name.k12frame.signal_1.b_signal_envelope "Envelope: Use this to shape sound loudness"
+
+		# ---------------------------------- SIGNAL ROW 2 -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.signal_2 -relief flat]
+		match_linux_wm [list button $name.k12frame.signal_2.b_signal_sine -image i.signal_sine \
+			-command [concat put_K12_objects $name signal_sine]]
+		match_linux_wm [list button $name.k12frame.signal_2.b_signal_saw -image i.signal_saw \
+			-command [concat put_K12_objects $name signal_saw]]
+		match_linux_wm [list button $name.k12frame.signal_2.b_signal_square -image i.signal_square \
+			-command [concat put_K12_objects $name signal_square]]
+		match_linux_wm [list button $name.k12frame.signal_2.b_signal_triangle -image i.signal_triangle \
+			-command [concat put_K12_objects $name signal_triangle]]
+		pack $name.k12frame.signal_2.b_signal_sine $name.k12frame.signal_2.b_signal_saw $name.k12frame.signal_2.b_signal_square $name.k12frame.signal_2.b_signal_triangle -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.signal_2.b_signal_sine "Sine: Use this to generate sine tone"
+		setTooltip $name.k12frame.signal_2.b_signal_saw "Sawtooth: Use this to generate sawtooth tone"
+		setTooltip $name.k12frame.signal_2.b_signal_square "Square: Use this to generate square tone"
+		setTooltip $name.k12frame.signal_2.b_signal_triangle "Triangle: Use this to generate triangle tone"
+
+		# ---------------------------------- SIGNAL ROW 3 -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.signal_3 -relief flat]
+		match_linux_wm [list button $name.k12frame.signal_3.b_signal_noise -image i.signal_noise \
+			-command [concat put_K12_objects $name signal_noise]]
+		match_linux_wm [list button $name.k12frame.signal_3.b_signal_pink -image i.signal_pink \
+			-command [concat put_K12_objects $name signal_pink]]
+		match_linux_wm [list button $name.k12frame.signal_3.b_signal_add -image i.signal_add \
+			-command [concat put_K12_objects $name signal_add]]
+		match_linux_wm [list button $name.k12frame.signal_3.b_signal_multiply -image i.signal_multiply \
+			-command [concat put_K12_objects $name signal_multiply]]
+		pack $name.k12frame.signal_3.b_signal_noise $name.k12frame.signal_3.b_signal_pink $name.k12frame.signal_3.b_signal_add $name.k12frame.signal_3.b_signal_multiply -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.signal_3.b_signal_noise "Noise: Use this to generate white (harsh) noise"
+		setTooltip $name.k12frame.signal_3.b_signal_pink "Pink: Use this to generate pink (softer) noise"
+		setTooltip $name.k12frame.signal_3.b_signal_add "Signal Add: Use this to add two sounds (signals)"
+		setTooltip $name.k12frame.signal_3.b_signal_multiply "Signal Multiply: Use this to multiply two sounds (signals)"
+
+		# ---------------------------------- INSTRUMENTS -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.instr -relief flat]
+		match_linux_wm [list button $name.k12frame.instr.b_instr_short1 -image i.instr_short1 \
+			-command [concat put_K12_objects $name instr_short1]]
+		match_linux_wm [list button $name.k12frame.instr.b_instr_short2 -image i.instr_short2 \
 			-command [concat put_K12_objects $name instr_short2]]
-		match_linux_wm [list button $name.k12frame.short.b_short2 -image i.short2 \
-			-command [concat put_K12_objects $name instr_short]]
-		pack $name.k12frame.short.b_short1 $name.k12frame.short.b_short2 -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.short.b_short1 "Short Sound: Use this to produce short sounds like a single snare drum beat"
-		setTooltip $name.k12frame.short.b_short2 "Short Sound: Use this to produce short sounds like a single bass drum beat"
+		match_linux_wm [list button $name.k12frame.instr.b_instr_sustained1 -image i.instr_sustained1 \
+			-command [concat put_K12_objects $name instr_sustained1]]
+		match_linux_wm [list button $name.k12frame.instr.b_instr_sustained2 -image i.instr_sustained2 \
+			-command [concat put_K12_objects $name instr_sustained2]]
+		pack $name.k12frame.instr.b_instr_short1 $name.k12frame.instr.b_instr_short2 $name.k12frame.instr.b_instr_sustained1 $name.k12frame.instr.b_instr_sustained2 -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.instr.b_instr_short1 "Short Sound 1: Use this to produce short sounds like a single snare drum beat"
+		setTooltip $name.k12frame.instr.b_instr_short2 "Short Sound 2: Use this to produce short sounds like a single bass drum beat"
+		setTooltip $name.k12frame.instr.b_instr_sustained1 "Sustained Sound 1: Use this to produce long sustained sound like a sound of a woodwind instrument"
+		setTooltip $name.k12frame.instr.b_instr_sustained2 "Sustained Sound 2: Use this to produce long sustained sound like a sound of brass instrument"
 
-		match_linux_wm [list frame $name.k12frame.3 -relief flat]
-		match_linux_wm [list button $name.k12frame.3.b_reverb -image i.reverb \
-			-command [concat put_K12_objects $name reverb]]
-		match_linux_wm [list button $name.k12frame.3.b_delay -image i.delay \
-			-command [concat put_K12_objects $name multitap]]
-		match_linux_wm [list button $name.k12frame.3.b_filter -image i.filter \
-			-command [concat put_K12_objects $name filter]]
-		pack $name.k12frame.3.b_reverb $name.k12frame.3.b_delay $name.k12frame.3.b_filter -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.3.b_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
-		setTooltip $name.k12frame.3.b_delay "Echo: Use this to make sound echo"
-		setTooltip $name.k12frame.3.b_filter "Filter: Use this to make sound appear muffled or brighter"
+		# ---------------------------------- F/X -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.fx -relief flat]
+		match_linux_wm [list button $name.k12frame.fx.b_fx_filter -image i.fx_filter \
+			-command [concat put_K12_objects $name fx_filter]]
+		match_linux_wm [list button $name.k12frame.fx.b_fx_multitap -image i.fx_multitap \
+			-command [concat put_K12_objects $name fx_multitap]]
+		match_linux_wm [list button $name.k12frame.fx.b_fx_reverb -image i.fx_reverb \
+			-command [concat put_K12_objects $name fx_reverb]]
+		pack $name.k12frame.fx.b_fx_filter $name.k12frame.fx.b_fx_multitap $name.k12frame.fx.b_fx_reverb -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.fx.b_fx_filter "Filter: Use this to make sound appear muffled or brighter"
+		setTooltip $name.k12frame.fx.b_fx_multitap "Echo: Use this to make sound echo"
+		setTooltip $name.k12frame.fx.b_fx_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
 
-		match_linux_wm [list frame $name.k12frame.6 -relief flat]
-		match_linux_wm [list button $name.k12frame.6.b_output -image i.output \
+		# ---------------------------------- OUTPUT/OTHER -----------------------------------------
+
+		match_linux_wm [list frame $name.k12frame.output -relief flat]
+		match_linux_wm [list button $name.k12frame.output.b_preset -image i.preset \
+			-command [concat put_K12_objects $name preset]] 
+		match_linux_wm [list button $name.k12frame.output.b_output -image i.output \
 			-command [concat put_K12_objects $name output]] 	
-		pack $name.k12frame.6.b_output -side left -expand 0 -padx 2 -pady 2
-		setTooltip $name.k12frame.6.b_output "Output: Use this to send audio from computer into speakers"
+		pack $name.k12frame.output.b_preset $name.k12frame.output.b_output -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.output.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
+		setTooltip $name.k12frame.output.b_output "Output: Use this to send audio from computer into speakers"
 
-		pack $name.k12frame.edit $name.k12frame.msgs $name.k12frame.5 $name.k12frame.2 $name.k12frame.1 $name.k12frame.sound $name.k12frame.4 $name.k12frame.short $name.k12frame.3 $name.k12frame.6 -side top -expand 0 -fill x 
+		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
+		pack $name.k12frame.edit $name.k12frame.msgs $name.k12frame.wii $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.arduino $name.k12frame.math_2 $name.k12frame.logic $name.k12frame.sound $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.fx $name.k12frame.output -side top -expand 0 -fill x 
 	}
 
     canvas $name.c -width $width -height $height -background $::canvas_color($name) \
