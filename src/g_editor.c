@@ -3335,6 +3335,7 @@ void canvas_mouseup(t_canvas *x,
     /* displace the selection by (dx, dy) pixels */
 static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 {
+	//fprintf(stderr,"canvas_displaceselection %d %d\n", dx, dy);
     t_selection *y;
     int resortin = 0, resortout = 0;
     if (!canvas_undo_already_set_move)
@@ -4295,7 +4296,14 @@ static void canvas_paste_atmouse(t_canvas *x)
 
 	/* find the initial offset--we use leftmost object as our reference */
     for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
+		//fprintf(stderr,"got selection\n");
 		g = (t_glist *)sel->sel_what;
+		if (pd_class(&((t_gobj *)g)->g_pd) == canvas_class && g->gl_isgraph) {
+			// hack: 	if any objects are GOPs redraw them, otherwise we may get stray nlets
+			//			due to networked nature between the gui and the engine, so we select
+			//			it explicitly here once again to prevent that from being a problem
+			gobj_select((t_gobj *)g, x, 1);
+		}
 		t = (t_text *)g;
 		if (!init) {
 			x1 = t->te_xpix;
@@ -4362,6 +4370,8 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		offset = 0;
 		glist_noselect(c_selection);
 	}
+	//if we are undoing, offset should be also 0
+	if (we_are_undoing) offset = 0;
 	//else is we are pasting see if we can autopatch
 	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste")) {
 		canvas_howputnew(x, &connectme, &xpix, &ypix, &indx, &nobj);
@@ -4428,7 +4438,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	if (!abort_when_pasting_from_external_buffer) {
 	    glist_donewloadbangs(x);
 	} else {
-		error("failed pasting correctly from external buffer, likely due to incomplete text selection (a.k.a. user error). hopefully you saved your work... please get ready to crash...");
+		error("failed pasting correctly from external buffer, likely due to incomplete text selection. hopefully you saved your work... please get ready to crash...");
 	}
 	abort_when_pasting_from_external_buffer = 0;
 }

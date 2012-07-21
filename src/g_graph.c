@@ -1101,12 +1101,14 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 		// first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
 		t_gobj *g;
 		for (g = x->gl_list; g; g = g->g_next) {
-			if (g && g->g_pd->c_wb->w_displacefnwtag == NULL) {
+			if (g && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {
+				//fprintf(stderr,"old way\n");
 				graph_displace(z, glist, dx, dy);
 				return;
 			}
 		}
 		// else we do things the new and more elegant way
+		//fprintf(stderr,"new way\n");
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
@@ -1142,12 +1144,13 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 */
         	sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
                  canvas, rtext_gettag(y), 
-                 (state? "$select_color" : "$graph_outline"));
+                 (state? "$select_color" : "$text_color"));
 		}
+
 		t_gobj *g;
 		if (x->gl_list)
 			for (g = x->gl_list; g; g = g->g_next)
-				if (g && g->g_pd->c_wb->w_displacefnwtag != NULL)
+				if (g && (g->g_pd->c_wb->w_displacefnwtag != NULL || pd_class((t_pd *)g) == garray_class))
 					gobj_select(g, x, state);
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n", canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
