@@ -600,8 +600,8 @@ void canvas_disconnect(t_canvas *x,
 
 			// if we are dealing with a preset_node, make sure to also disconnect its invisible return node
 			// we trust here that the object has been already connected to a valid object so we blindly
-			// disconnect first outlet with the first inlet
-			if (pd_class(&t.tr_ob->ob_g.g_pd) == preset_node_class) {
+			// disconnect first outlet with the first inlet (EXCEPTION: print object that cannot be connected back to)
+			if (pd_class(&t.tr_ob->ob_g.g_pd) == preset_node_class && pd_class(&t.tr_ob2->ob_g.g_pd) != print_class) {
 				//fprintf(stderr,"gotta disconnect hidden one too...\n");
 				obj_disconnect(t.tr_ob2, 0, t.tr_ob, 0);
 			}
@@ -3023,8 +3023,9 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 						pd_class(&y2->g_pd) != vu_class &&
 						pd_class(&y2->g_pd) != pdint_class &&
 						pd_class(&y2->g_pd) != pdfloat_class &&
-						pd_class(&y2->g_pd) != pdsymbol_class) {
-						error("preset node currently works only with gui objects, ints, floats, and symbols...\n");
+						pd_class(&y2->g_pd) != pdsymbol_class &&
+						pd_class(&y2->g_pd) != print_class) {
+						error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
 						return;
 					}
 				}
@@ -4609,7 +4610,8 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     	if (!(oc = obj_connect(objsrc, outno, objsink, inno))) goto bad;
 		// add auto-connect back to preset_node object
 		// (by this time we know we are connecting only to legal objects who have at least one outlet)
-		if (pd_class(&objsrc->ob_pd) == preset_node_class) {
+		// EXCEPTION: we do not connect back to the print class
+		if (pd_class(&objsrc->ob_pd) == preset_node_class && pd_class(&sink->g_pd) != print_class) {
 			//fprintf(stderr,"canvas_connect: gotta do auto-connect back to preset_node\n");
 			if (!canvas_isconnected(x, objsink, 0, objsrc, 0))
 				obj_connect(objsink, 0, objsrc, 0);

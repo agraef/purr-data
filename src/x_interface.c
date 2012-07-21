@@ -7,7 +7,7 @@
 #include "m_pd.h"
 
 /* -------------------------- print ------------------------------ */
-static t_class *print_class;
+t_class *print_class;
 
 typedef struct _print
 {

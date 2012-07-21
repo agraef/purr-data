@@ -243,6 +243,7 @@ t_class *message_class;
 extern t_class *pdint_class;
 extern t_class *pdfloat_class;
 extern t_class *pdsymbol_class;
+extern t_class *print_class;
 
 // iemgui
 t_class *bng_class;
