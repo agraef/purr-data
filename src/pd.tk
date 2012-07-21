@@ -3351,7 +3351,7 @@ proc pdtk_canvas_mouseup {name x y b} {
 #}
 
 proc pdtk_select_all_gop_widgets {name gop state} {
-	#puts stderr "======================$name $gop"
+	#puts stderr "======================$name $gop $state"
 	foreach item [$name.c find all] {
 		#puts stderr [$name.c gettags $item]
 		foreach tag [$name.c gettags $item] {
@@ -4859,7 +4859,6 @@ proc pdtk_iemgui_dialog {id mainheader \
 		}
 		match_linux_wm [list label $id.dim.dummy1 -text " " -width 1]
 		match_linux_wm [list label $id.dim.dummy2 -text " " -width 1]
-		puts stderr [eval concat $$var_iemgui_hide]
 		pack $id.dim.w_lab $id.dim.w_ent $id.dim.dummy1 $id.dim.h $id.dim.dummy2 -side left
 	} else {
 		match_linux_wm [list label $id.dim.dummy1 -text " " -width 10]
