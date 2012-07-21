@@ -63,6 +63,8 @@ extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floatarg resize, t_floatarg preview);
 // for updating preset_node locations in case of operations that alter glist object locations (tofront/back, cut, delete, undo/redo cut/delete)
 extern void glob_preset_node_list_check_loc_and_update(void);
+// for preset_node
+extern t_class *text_class;
 
 struct _outlet
 {
@@ -2994,7 +2996,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 !obj_issignalinlet(ob2, closest2))
             {
                 if (doit)
-                    error("can't connect signal outlet to control inlet");
+                    error("cannot connect signal outlet to control inlet");
                 // jsarlo
                	if(x->gl_magic_glass) {
 					magicGlass_unbind(x->gl_magic_glass);
@@ -3024,7 +3026,8 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 						pd_class(&y2->g_pd) != pdint_class &&
 						pd_class(&y2->g_pd) != pdfloat_class &&
 						pd_class(&y2->g_pd) != pdsymbol_class &&
-						pd_class(&y2->g_pd) != print_class) {
+						pd_class(&y2->g_pd) != print_class &&
+						pd_class(&y2->g_pd) != text_class) { // we need also text_class for interactively created objects
 						error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
 						return;
 					}
@@ -4571,8 +4574,6 @@ static void canvas_reselect(t_canvas *x)
             gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
 }
 
-extern t_class *text_class;
-
 void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     t_floatarg fwhoin, t_floatarg finno)
 {
@@ -4596,7 +4597,36 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     if (!(objsrc = pd_checkobject(&src->g_pd)) ||
         !(objsink = pd_checkobject(&sink->g_pd)))
             goto bad;
-    
+
+        /* check signal outlets don't try to connect to non-signal inlets */
+	if (obj_issignaloutlet(objsrc, outno) && !obj_issignalinlet(objsink, inno)) {
+		error("cannot connect signal outlet to control inlet");
+		goto bad;
+    }
+		/* now check for illegal connections between preset_node object and other non-supported objects */
+	if (pd_class(&src->g_pd) == preset_node_class) {
+		if (pd_class(&sink->g_pd) != gatom_class &&
+			pd_class(&sink->g_pd) != bng_class &&
+			pd_class(&sink->g_pd) != hradio_class &&
+			pd_class(&sink->g_pd) != hradio_old_class &&
+			pd_class(&sink->g_pd) != hslider_class &&
+			pd_class(&sink->g_pd) != my_canvas_class &&
+			pd_class(&sink->g_pd) != my_numbox_class &&
+			pd_class(&sink->g_pd) != toggle_class &&
+			pd_class(&sink->g_pd) != vradio_class &&
+			pd_class(&sink->g_pd) != vradio_old_class &&
+			pd_class(&sink->g_pd) != vslider_class &&
+			pd_class(&sink->g_pd) != vu_class &&
+			pd_class(&sink->g_pd) != pdint_class &&
+			pd_class(&sink->g_pd) != pdfloat_class &&
+			pd_class(&sink->g_pd) != pdsymbol_class &&
+			pd_class(&sink->g_pd) != print_class &&
+			pd_class(&sink->g_pd) != text_class) {
+				error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
+				goto bad;
+		}
+	}
+
         /* if object creation failed, make dummy inlets or outlets
         as needed */ 
     if (pd_class(&src->g_pd) == text_class && objsrc->te_type == T_OBJECT)
