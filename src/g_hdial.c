@@ -34,6 +34,7 @@ void hradio_draw_select(t_hradio* x, t_glist* glist);
 /* ------------- hdl     gui-horicontal dial ---------------------- */
 
 t_widgetbehavior hradio_widgetbehavior;
+static t_class *hradio_class, *hradio_old_class;
 
 /* widget helper functions */
 

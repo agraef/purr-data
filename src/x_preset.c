@@ -398,19 +398,21 @@ static int preset_node_location_changed(t_preset_node *x)
 	return(0);
 }
 
-static void preset_node_bang(t_preset_node *x)
+static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom *argv)
 {
-	SETSYMBOL(&x->pn_val, gensym("bang"));
-}
-
-static void preset_node_float(t_preset_node *x, t_float f)
-{
-	SETFLOAT(&x->pn_val, f);
-}
-
-static void preset_node_symbol(t_preset_node *x, t_symbol *s)
-{
-	SETSYMBOL(&x->pn_val, s);
+	if (PH_DEBUG) fprintf(stderr,"preset_node_anything\n");
+	int i;
+	alist_list(&x->pn_val, 0, argc, argv);
+	// check for pointers and warn user presetting them has not been tested
+    for (i = 0; i < x->pn_val.l_n; i++)
+    {
+        if (x->pn_val.l_vec[i].l_a.a_type == A_POINTER)
+        {
+			pd_error(x, "preset_node preset received a pointer as part of a list--this has not been tested, use at your own risk and please report any successes/failures. thank you!");
+			break;
+        }
+    }
+	
 }
 
 	//=============== following functions are for interaction with the hub/pd =================//
@@ -437,21 +439,15 @@ void preset_node_request_hub_store(t_preset_node *x, t_float f)
 		preset_hub_store(x->pn_hub, f);
 }
 
-t_atom preset_node_request_value(t_preset_node *x)
+void preset_node_set_and_output_value(t_preset_node *x, t_alist val)
 {
-    return(x->pn_val);
-}
-
-void preset_node_set_and_output_value(t_preset_node *x, t_atom *val)
-{
-	if (val->a_type == A_FLOAT) {
-		preset_node_float(x, val->a_w.w_float);
-		outlet_float(x->pn_outlet, x->pn_val.a_w.w_float);
-	} else if (val->a_type == A_SYMBOL) {
-		preset_node_symbol(x, val->a_w.w_symbol);
-		outlet_symbol(x->pn_outlet, x->pn_val.a_w.w_symbol);
-	} else
-		pd_error(x, "error: preset_node currently supports only floats and symbols");
+	t_atom *outv;
+	alist_clear(&x->pn_val);
+	alist_clone(&val, &x->pn_val);
+	XL_ATOMS_ALLOCA(outv, x->pn_val.l_n);
+	alist_toatoms(&x->pn_val, outv);
+	outlet_list(x->pn_outlet, &s_list, x->pn_val.l_n, outv);
+	XL_ATOMS_FREEA(outv, x->pn_val.l_n);
 }
 
 void preset_node_clear(t_preset_node *x, t_float f)
@@ -477,6 +473,8 @@ void preset_node_clear(t_preset_node *x, t_float f)
 				// if it is first one
 				if (np1->np_preset == (int)f) {
 					hd2->phd_npreset = np1->np_next;
+					if (np1->np_val.l_n)
+						alist_clear(&np1->np_val);
 					freebytes(np1, sizeof(*np1));
 					changed = 1;
 					if(PH_DEBUG) fprintf(stderr,"	found preset to delete (first)\n");
@@ -485,6 +483,8 @@ void preset_node_clear(t_preset_node *x, t_float f)
 						np2 = np1->np_next;
 						if (np2 && np2->np_preset == (int)f) {
 							np1->np_next = np2->np_next;
+							if (np2->np_val.l_n)
+								alist_clear(&np2->np_val);
 							freebytes(np2, sizeof(*np2));
 							changed = 1;
 							if(PH_DEBUG) fprintf(stderr,"	found preset to delete\n");
@@ -540,7 +540,8 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 
 	x->pn_canvas = canvas;
 	t_canvas *y = x->pn_canvas;
-	t_preset_hub *h;
+	//t_preset_hub *h;
+	alist_init(&x->pn_val);
 
 	x->pn_hub = NULL;
 	x->pn_gl_loc_length = 0;
@@ -565,6 +566,8 @@ static void preset_node_free(t_preset_node* x)
 	if (x->pn_hub)
 		preset_hub_delete_a_node(x->pn_hub, x);
 	glob_preset_node_list_delete(x);
+
+	alist_clear(&x->pn_val);
 
 	// the two arrays can point to same locations so here we prevent double free
 	// (this is only possible initially when the object is first instantiated)
@@ -603,12 +606,8 @@ void preset_node_setup(void)
     class_addmethod(preset_node_class, (t_method)preset_node_purge,
         gensym("purge"), A_NULL, 0);
 
-    class_addbang(preset_node_class, preset_node_bang);
-    class_addfloat(preset_node_class, preset_node_float);
-    class_addsymbol(preset_node_class, preset_node_symbol);
-
-	// TODO: we may add this later if necessary
-    //class_addlist(preset_node_class, preset_node_list);
+	// we use anything to cover virtually all presetable types of data
+	class_addanything(preset_node_class, preset_node_anything);
 }
 
 //====================== end preset_node ===========================//
@@ -630,12 +629,12 @@ typedef enum
 	separated for legibility sakes):
 	#X obj X Y preset_hub NAME %hidden%
 	%node% LOCATION_ARRAY_LENGTH LOCATION_ARRAY_(INT) 1 2 3 etc.
-	%preset% 1 %float%/%symbol% (e.g. number or symbol, later also possibly a list)
+	%preset% 1 data
 	%preset% 2 4
 	etc
 	%node% 2 0
 	%preset% 1 5.561
-	%preset% 3 7.00001
+	%preset% 3 7.00001 anything including lists
 	%preset% 5 some_text
 	;
 
@@ -646,6 +645,7 @@ typedef enum
 void preset_hub_save(t_gobj *z, t_binbuf *b)
 {
 	if(PH_DEBUG) fprintf(stderr,"preset_hub_save\n");
+	t_atom *outv;
 	int i;
 	t_preset_hub_data *phd;
 	t_node_preset *np;
@@ -678,10 +678,12 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
 		np = phd->phd_npreset;
 		while (np) {
 			binbuf_addv(b, "si", gensym("%preset%"), (int)np->np_preset);
-			if (np->np_val.a_type == A_FLOAT)
-				binbuf_addv(b, "f", np->np_val.a_w.w_float);
-			else if (np->np_val.a_type == A_SYMBOL)
-				binbuf_addv(b, "s", np->np_val.a_w.w_symbol);
+			for (i = 0; i < np->np_val.l_n; i++) {
+				if (np->np_val.l_vec[i].l_a.a_type == A_FLOAT)
+					binbuf_addv(b, "f", np->np_val.l_vec[i].l_a.a_w.w_float);
+				else if (np->np_val.l_vec[i].l_a.a_type == A_SYMBOL)
+					binbuf_addv(b, "s", np->np_val.l_vec[i].l_a.a_w.w_symbol);
+			}
 			np = np->np_next;
 		}
 
@@ -722,8 +724,8 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 							if(PH_DEBUG) fprintf(stderr,"	searching presets\n");
 							if (np->np_preset == (int)f) {
 								valid = 1;
-								if(PH_DEBUG) fprintf(stderr,"	valid %d %g\n", (hd->phd_node ? 1:0), np->np_val.a_w.w_float);
-								preset_node_set_and_output_value(hd->phd_node, &np->np_val);
+								if(PH_DEBUG) fprintf(stderr,"	valid %d\n", (hd->phd_node ? 1:0));
+								preset_node_set_and_output_value(hd->phd_node, np->np_val);
 								break;
 							}
 							np = np->np_next;
@@ -772,6 +774,7 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 						np2 = hd1->phd_npreset;
 						while (np2) {
 							if (np2->np_preset == (int)f) {
+								if(PH_DEBUG) fprintf(stderr,"	overwriting\n");
 								overwrite = 1;
 								break;
 							}
@@ -782,6 +785,7 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 
 					if (!overwrite) {
 						// we need to create a new preset (this is also true if hd1->phd_npreset is NULL)
+						if(PH_DEBUG) fprintf(stderr,"	creating new preset\n");
 						np2 = (t_node_preset *)t_getbytes(sizeof(*np2));
 						if (np1)
 							np1->np_next = np2;
@@ -789,11 +793,10 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 						np2->np_preset = (int)f;
 					}
 
-					val = preset_node_request_value(hd1->phd_node);
-					if (val.a_type == A_FLOAT)
-						SETFLOAT(&np2->np_val, atom_getfloat(&val));
-					else if (val.a_type == A_SYMBOL)
-						SETSYMBOL(&np2->np_val, atom_getsymbol(&val));
+					alist_clear(&np2->np_val);
+					if(PH_DEBUG) fprintf(stderr,"	node data len = %d, old hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
+					alist_clone(&hd1->phd_node->pn_val, &np2->np_val);
+					if(PH_DEBUG) fprintf(stderr,"	node data len = %d, NEW hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
 
 					// finally if this is the first preset, hd1->phd_npreset will be NULL so,
 					// let's have it point to the newly created n2
@@ -935,6 +938,8 @@ void preset_hub_reset(t_preset_hub *h)
 				np1 = hd1->phd_npreset;
 				while (np1) {
 					np2 = np1->np_next;
+					if (np1->np_val.l_n)
+						alist_clear(&np1->np_val);
 					freebytes(np1, sizeof(*np1));
 					changed = 1;
 					if(PH_DEBUG) fprintf(stderr,"	deleting preset\n");
@@ -982,6 +987,8 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 				// if it is first one
 				if (np1->np_preset == (int)f) {
 					hd2->phd_npreset = np1->np_next;
+					if (np1->np_val.l_n)
+						alist_clear(&np1->np_val);
 					freebytes(np1, sizeof(*np1));
 					changed = 1;
 					if(PH_DEBUG) fprintf(stderr,"	found preset to delete (first)\n");
@@ -990,6 +997,8 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 						np2 = np1->np_next;
 						if (np2 && np2->np_preset == (int)f) {
 							np1->np_next = np2->np_next;
+							if (np1->np_val.l_n)
+								alist_clear(&np1->np_val);
 							freebytes(np2, sizeof(*np2));
 							changed = 1;
 							if(PH_DEBUG) fprintf(stderr,"	found preset to delete\n");
@@ -1031,6 +1040,8 @@ void preset_hub_purge(t_preset_hub *h)
 					np1 = hd2->phd_npreset;
 					while (np1) {
 						np2 = np1->np_next;
+						if (np1->np_val.l_n)
+							alist_clear(&np1->np_val);
 						freebytes(np1, sizeof(*np1));
 						changed = 1;
 						if(PH_DEBUG) fprintf(stderr,"	deleting preset\n");
@@ -1071,6 +1082,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	t_preset_hub *x, *check;
 	t_symbol *name;
 	int i, pos, loc_pos;
+	int j, data_count; //for lists
 	t_glist *glist=(t_glist *)canvas_getcurrent();
 	t_canvas *canvas = (t_canvas *)glist_getcanvas(glist);
 
@@ -1181,11 +1193,6 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 					np1 = np2;
 					h_cur = H_PRESET;
 				}
-				// SYMBOL DATA
-				else if (h_cur == H_PRESET_DATA) {
-					if(PH_DEBUG) fprintf(stderr,"	sym data %s\n", atom_getsymbol(&argv[i])->s_name);
-					SETSYMBOL(&np2->np_val, atom_getsymbol(&argv[i]));
-				}
 			}
 			// FLOAT ANALYSIS
 			else if (argv[i].a_type == A_FLOAT) {
@@ -1204,18 +1211,25 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 				else if (h_cur == H_LOCATION) {
 					// node location data
 					hd2->phd_pn_gl_loc[loc_pos] = (int)atom_getfloat(&argv[i]);
+					if(PH_DEBUG) fprintf(stderr,"	loc = %d\n", hd2->phd_pn_gl_loc[loc_pos]);
 					loc_pos++;
-					if(PH_DEBUG) fprintf(stderr,"	loc = %d\n", hd2->phd_pn_gl_loc_length);
 				}
 				else if (h_cur == H_PRESET) {
 					// preset number
 					if(PH_DEBUG) fprintf(stderr,"	preset %g\n", atom_getfloat(&argv[i]));
 					np2->np_preset = (int)atom_getfloat(&argv[i]);
+					data_count = i+1;
+					// figure out how long of variable data list follows the preset descriptor
+					while (data_count < argc && strcmp(atom_getsymbol(&argv[data_count])->s_name, "%preset%") && strcmp(atom_getsymbol(&argv[data_count])->s_name, "%node%")) {
+						data_count++;
+					}
+					if(PH_DEBUG) fprintf(stderr,"	found preset? %d found node? %d\n", strcmp(atom_getsymbol(&argv[data_count])->s_name, "%preset%"), strcmp(atom_getsymbol(&argv[data_count])->s_name, "%node%"));
+					data_count = data_count - (i+1);
+					if(PH_DEBUG) fprintf(stderr,"	data_count = %d staring @ %d out of %d\n", data_count, i+1, argc);
+					alist_init(&np2->np_val);
+					alist_list(&np2->np_val, 0, data_count, argv+(i+1));
+					i = i + data_count;
 					h_cur = H_PRESET_DATA;
-				}
-				else if (h_cur == H_PRESET_DATA) {
-					if(PH_DEBUG) fprintf(stderr,"	preset data %g\n", atom_getfloat(&argv[i]));
-					SETFLOAT(&np2->np_val, atom_getfloat(&argv[i]));
 				}
 			}
 		}
@@ -1290,6 +1304,8 @@ static void preset_hub_free(t_preset_hub* x)
 				np1 = hd1->phd_npreset;
 				while (np1) {
 					np2 = np1->np_next;
+					if (np1->np_val.l_n)
+						alist_clear(&np1->np_val);
 					freebytes(np1, sizeof(*np1));
 					np1 = np2;
 				}

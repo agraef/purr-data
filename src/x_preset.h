@@ -6,11 +6,13 @@
 Global preset system by Ivica Ico Bukvic <ico@vt.edu> July, 2012
 */
 
+#include "s_stuff.h"
+
 // each node in the patch
 typedef struct _preset_node
 {
     t_object pn_obj;
-    t_atom pn_val;			// last known value (null if not initialized)
+    t_alist pn_val;	// last known value (null if not initialized)
 
 	t_symbol *pn_hub_name;	// hub name this node is associated with
 	t_preset_hub *pn_hub;	// pointer to the hub (null if none, equiv. to active/disabled)
@@ -31,7 +33,7 @@ typedef struct _preset_node
 typedef struct _node_preset
 {
 	int np_preset;
-	t_atom np_val;
+	t_alist np_val;
 	struct _node_preset *np_next;
 } t_node_preset;
 

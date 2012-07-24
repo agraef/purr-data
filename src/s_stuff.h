@@ -7,6 +7,9 @@
 /* NOTE: this file describes Pd implementation details which may change
 in future releases.  The public (stable) API is in m_pd.h. */  
 
+#ifndef __s_stuff_h_
+#define __s_stuff_h_
+
 /* in s_path.c */
 
 typedef struct _namelist    /* element in a linked list of stored strings */
@@ -336,3 +339,63 @@ EXTERN void inmidi_polyaftertouch(int portno,
                                   int value);
 /* } jsarlo */
 extern t_widgetbehavior text_widgetbehavior;
+
+/* in x_list.c */
+    /* List element for storage.  Keep an atom and, in case it's a pointer,
+        an associated 'gpointer' to protect against stale pointers. */
+typedef struct _listelem
+{
+    t_atom l_a;
+    t_gpointer l_p;
+} t_listelem;
+
+struct _alist
+{
+    t_pd l_pd;          /* object to point inlets to */
+    int l_n;            /* number of items */
+    int l_npointer;     /* number of pointers */
+    t_listelem *l_vec;  /* pointer to items */
+};
+
+#ifndef t_alist
+#define t_alist struct _alist
+#endif
+
+#if 0 /* probably won't use this version... */
+#ifdef HAVE_ALLOCA
+#define LIST_ALLOCA(x, n) ( \
+    (x).l_n = (n), \
+    (x).l_vec = (t_listelem *)((n) < LIST_NGETBYTE ?  \
+        alloca((n) * sizeof(t_listelem)) : getbytes((n) * sizeof(t_listelem))))     \
+#define LIST_FREEA(x) ( \
+    ((x).l_n < LIST_NGETBYTE ||
+        (freebytes((x).l_vec, (x).l_n * sizeof(t_listelem)), 0)))
+
+#else
+#define LIST_ALLOCA(x, n) ( \
+    (x).l_n = (n), \
+    (x).l_vec = (t_listelem *)getbytes((n) * sizeof(t_listelem))) 
+#define LIST_FREEA(x) (freebytes((x).l_vec, (x).l_n * sizeof(t_listelem)))
+#endif
+#endif
+
+#if HAVE_ALLOCA
+#define XL_ATOMS_ALLOCA(x, n) ((x) = (t_atom *)((n) < LIST_NGETBYTE ?  \
+        alloca((n) * sizeof(t_atom)) : getbytes((n) * sizeof(t_atom))))
+#define XL_ATOMS_FREEA(x, n) ( \
+    ((n) < LIST_NGETBYTE || (freebytes((x), (n) * sizeof(t_atom)), 0)))
+#else
+#define XL_ATOMS_ALLOCA(x, n) ((x) = (t_atom *)getbytes((n) * sizeof(t_atom)))
+#define XL_ATOMS_FREEA(x, n) (freebytes((x), (n) * sizeof(t_atom)))
+#endif
+
+EXTERN void atoms_copy(int argc, t_atom *from, t_atom *to);
+EXTERN t_class *alist_class;
+EXTERN void alist_init(t_alist *x);
+EXTERN void alist_clear(t_alist *x);
+EXTERN void alist_list(t_alist *x, t_symbol *s, int argc, t_atom *argv);
+EXTERN void alist_anything(t_alist *x, t_symbol *s, int argc, t_atom *argv);
+EXTERN void alist_toatoms(t_alist *x, t_atom *to);
+EXTERN void alist_clone(t_alist *x, t_alist *y);
+
+#endif /* __s_stuff_h_ */

@@ -31,6 +31,7 @@ void bng_draw_select(t_bng* x, t_glist* glist);
 /* --------------- bng     gui-bang ------------------------- */
 
 t_widgetbehavior bng_widgetbehavior;
+static t_class *bng_class;
 
 /*  widget helper functions  */
 

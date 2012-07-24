@@ -32,6 +32,7 @@ void vu_check_height(t_vu *x, int h);
 /* ----- vu  gui-peak- & rms- vu-meter-display ---------- */
 
 t_widgetbehavior vu_widgetbehavior;
+static t_class *vu_class;
 
 /* widget helper functions */
 

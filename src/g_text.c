@@ -19,6 +19,8 @@
 #include "x_preset.h"
 
 t_class *text_class;
+t_class *message_class;
+static t_class *gatom_class;
 static void text_vis(t_gobj *z, t_glist *glist, int vis);
 static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy);

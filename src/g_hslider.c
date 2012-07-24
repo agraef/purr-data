@@ -31,6 +31,7 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist);
 /* ------------ hsl    gui-horicontal  slider ----------------------- */
 
 t_widgetbehavior hslider_widgetbehavior;
+static t_class *hslider_class;
 
 static double last;
 static int is_last_float = 0;

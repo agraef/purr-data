@@ -235,26 +235,9 @@ struct _glist
 t_class *preset_hub_class;
 t_class *preset_node_class;
 
-// core gui
-t_class *gatom_class;
-t_class *message_class;
-
-// core text
-extern t_class *pdint_class;
-extern t_class *pdfloat_class;
-extern t_class *pdsymbol_class;
+// special case objects
 extern t_class *print_class;
-
-// iemgui
-t_class *bng_class;
-t_class *hradio_class, *hradio_old_class;
-t_class *hslider_class;
-t_class *my_canvas_class;
-t_class *my_numbox_class;
-t_class *toggle_class;
-t_class *vradio_class, *vradio_old_class;
-t_class *vslider_class;
-t_class *vu_class;
+extern t_class *message_class;
 /*-----------------end universal preset stuff-------------------*/
 
 /* a data structure to describe a field in a pure datum */

@@ -11,7 +11,7 @@
 extern t_pd *newest;
 
 /* -------------------------- int ------------------------------ */
-t_class *pdint_class;
+static t_class *pdint_class;
 
 typedef struct _pdint
 {
@@ -48,7 +48,7 @@ void pdint_setup(void)
 }
 
 /* -------------------------- float ------------------------------ */
-t_class *pdfloat_class;
+static t_class *pdfloat_class;
 
 typedef struct _pdfloat
 {
@@ -95,7 +95,7 @@ void pdfloat_setup(void)
 }
 
 /* -------------------------- symbol ------------------------------ */
-t_class *pdsymbol_class;
+static t_class *pdsymbol_class;
 
 typedef struct _pdsymbol
 {

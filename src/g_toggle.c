@@ -32,6 +32,7 @@ void toggle_draw_select(t_toggle* x, t_glist* glist);
 /* --------------- tgl     gui-toggle ------------------------- */
 
 t_widgetbehavior toggle_widgetbehavior;
+static t_class *toggle_class;
 
 /* widget helper functions */
 

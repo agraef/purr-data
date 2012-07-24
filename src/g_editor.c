@@ -3010,6 +3010,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
             {
 				// if the first object is preset_node, check if the object we are connecting to
 				// is supported. If not, disallow connection
+				/*
 				if (pd_class(&y1->g_pd) == preset_node_class) {
 					if (pd_class(&y2->g_pd) != gatom_class &&
 						pd_class(&y2->g_pd) != bng_class &&
@@ -3031,7 +3032,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 						error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
 						return;
 					}
-				}
+				}*/
 
 				// now check if explicit user-made connection into preset_node if kind other than message
 				// messages may be used to change node's operation
@@ -4604,7 +4605,7 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 		goto bad;
     }
 		/* now check for illegal connections between preset_node object and other non-supported objects */
-	if (pd_class(&src->g_pd) == preset_node_class) {
+	/*if (pd_class(&src->g_pd) == preset_node_class) {
 		if (pd_class(&sink->g_pd) != gatom_class &&
 			pd_class(&sink->g_pd) != bng_class &&
 			pd_class(&sink->g_pd) != hradio_class &&
@@ -4625,7 +4626,7 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 				error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
 				goto bad;
 		}
-	}
+	}*/
 
         /* if object creation failed, make dummy inlets or outlets
         as needed */ 
