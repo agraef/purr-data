@@ -1450,7 +1450,8 @@ static void garray_rename(t_garray *x, t_symbol *s)
 	sprintf(buf, "%s_changed", x->x_realname->s_name);
 	x->x_send = gensym(buf);
 
-    garray_redraw(x);
+    //garray_redraw(x);
+	glist_redraw(x->x_glist);
 }
 
 static void garray_read(t_garray *x, t_symbol *filename)
