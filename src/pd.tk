@@ -2962,9 +2962,14 @@ proc pdtk_canvas_new {name width height geometry editable} {
     focus $name.c
 
 	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
-		pd [concat $name menusaveas \;]
-		set k12_saveas_on_new 0
+		after 1000 [concat pdtk_k12_saveas_on_new $name]
 	}
+}
+
+proc pdtk_k12_saveas_on_new {name} {
+	global k12_saveas_on_new
+	pd [concat $name menusaveas \;]
+	set k12_saveas_on_new 0
 }
 
 proc pdtk_noselect {name} {
