@@ -311,6 +311,7 @@ font create highlight_font -family $defaultFontFamily -size 9 -weight bold
 
 # K-12 version global variable (enabled through -k12, disabled by default)
 set k12_mode 0
+set k12_saveas_on_new 0
 
 # Only can be enabled at startup (cannot be toggled afterwards)
 proc pdtk_enable_k12_mode {extra_dir} {
@@ -1023,10 +1024,12 @@ proc menu_new {} {
     global untitled_number
     global untitled_directory
 	global k12_mode
+	global k12_saveas_on_new
     if { ! [file isdirectory $untitled_directory]} {set untitled_directory $::env(HOME)}
     pd [concat pd filename Untitled-$untitled_number \
 			[pdtk_enquote $untitled_directory] \;]
 	if { $k12_mode == 1 } {
+		set k12_saveas_on_new 1
 		pd {
 		    #N canvas;
 			#X obj -30 -30 preset_hub k12 1 %hidden%;
@@ -2162,6 +2165,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	global global_clipboard
 	global global_selection
 	global k12_mode
+	global k12_saveas_on_new
 
 	#retaining window-specific preferences
 	global window_prefs
@@ -2956,6 +2960,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	# bind $name <FocusOut> { pdtk_noselect %W }
 	if { $k12_mode == 1 } { menu_tooltips $name }
     focus $name.c
+
+	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
+		pd [concat $name menusaveas \;]
+		set k12_saveas_on_new 0
+	}
 }
 
 proc pdtk_noselect {name} {
