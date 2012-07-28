@@ -290,7 +290,8 @@ extern void glist_setlastxy(t_glist *gl, int xval, int yval);
 void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
 	//fprintf(stderr,"canvas_abstraction_from_menu\n");
-    t_text *x;
+    //t_text *x;
+	t_gobj *y;
 
     t_binbuf *b = binbuf_new();
 	binbuf_restore(b, 2, argv);
@@ -302,6 +303,13 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom
 		pd_vmess (&gl->gl_pd, gensym("tooltips"), "i", 1);
 #endif
     canvas_objtext(gl, xpix+atom_getintarg(1, argc, argv), ypix+atom_getintarg(2, argc, argv), 1, b);
+
+	// the object is now the last on the glist so we locate it and send it loadbang
+	// we know we have at least one object since we just created one so we don't check for y being valid
+	y = gl->gl_list;
+	while (y->g_next)
+		y = y->g_next;
+	canvas_loadbang((t_canvas *)y);
 
     if (connectme) {
         canvas_connect(gl, indx, 0, nobj, 0);
