@@ -336,8 +336,12 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.sarcduino_digital -file $extra_dir/K12/icons/sarcduino_digital.png
 	image create photo i.sarcduino_analog -file $extra_dir/K12/icons/sarcduino_analog.png
 	image create photo i.sarcduino_hit -file $extra_dir/K12/icons/sarcduino_hit.png
+	image create photo i.sarcduino_piezo -file $extra_dir/K12/icons/sarcduino_piezo.png
 
+	image create photo i.sarcduino_net -file $extra_dir/K12/icons/sarcduino_net.png
+	image create photo i.preset -file $extra_dir/K12/icons/preset.png
 	image create photo i.math_number -file $extra_dir/K12/icons/math_number.png
+	image create photo i.math_average -file $extra_dir/K12/icons/math_average.png
 	image create photo i.math_random -file $extra_dir/K12/icons/math_random.png
 
 	image create photo i.math_add -file $extra_dir/K12/icons/math_add.png
@@ -374,7 +378,6 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.fx_multitap -file $extra_dir/K12/icons/fx_multitap.png
 	image create photo i.fx_reverb -file $extra_dir/K12/icons/fx_reverb.png
 
-	image create photo i.preset -file $extra_dir/K12/icons/preset.png
 	image create photo i.output -file $extra_dir/K12/icons/audio_on.png
 
 	image create photo i.edit -file $extra_dir/K12/icons/edit.png
@@ -2296,20 +2299,32 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-command [concat put_K12_objects $name sarcduino_analog]]
 		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_hit -image i.sarcduino_hit \
 			-command [concat put_K12_objects $name sarcduino_hit]]
-		pack $name.k12frame.arduino.b_sarcduino $name.k12frame.arduino.b_sarcduino_digital $name.k12frame.arduino.b_sarcduino_analog $name.k12frame.arduino.b_sarcduino_hit -side left -expand 0 -padx 1 -pady 1
+		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_piezo -image i.sarcduino_piezo \
+			-command [concat put_K12_objects $name sarcduino_piezo]]
+		pack $name.k12frame.arduino.b_sarcduino $name.k12frame.arduino.b_sarcduino_digital $name.k12frame.arduino.b_sarcduino_analog $name.k12frame.arduino.b_sarcduino_hit $name.k12frame.arduino.b_sarcduino_piezo -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.arduino.b_sarcduino "Arduino: Use this to arduino to the computer"
 		setTooltip $name.k12frame.arduino.b_sarcduino_digital "Arduino Digital: Use this to detect on/off states of a digital sensor"
 		setTooltip $name.k12frame.arduino.b_sarcduino_analog "Arduino Analog: Use this to monitor analog sensor speed"
 		setTooltip $name.k12frame.arduino.b_sarcduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
+		setTooltip $name.k12frame.arduino.b_sarcduino_piezo "Arduino Piezo: Use this to analyze data coming from a piezo microphone sensor"
 
 		# ---------------------------------- MATH ROW 1 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
+		match_linux_wm [list button $name.k12frame.math_1.b_sarcduino_net -image i.sarcduino_net \
+			-command [concat put_K12_objects $name sarcduino_net]]
+		match_linux_wm [list button $name.k12frame.math_1.b_preset -image i.preset \
+			-command [concat put_K12_objects $name preset]] 
 		match_linux_wm [list button $name.k12frame.math_1.b_math_number -image i.math_number \
 			-command [concat put_K12_objects $name math_number]]
+		match_linux_wm [list button $name.k12frame.math_1.b_math_average -image i.math_average \
+			-command [concat put_K12_objects $name math_average]]
 		match_linux_wm [list button $name.k12frame.math_1.b_math_random -image i.math_random \
 			-command [concat put_K12_objects $name math_random]]
-		pack $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_random -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.math_1.b_sarcduino_net $name.k12frame.math_1.b_preset $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_average $name.k12frame.math_1.b_math_random -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.math_1.b_sarcduino_net "Arduino Net: Use this to retrieve data from arduino devices connected via network"
+		setTooltip $name.k12frame.math_1.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
 		setTooltip $name.k12frame.math_1.b_math_number "Number: Use this to assign a value to other objects"
+		setTooltip $name.k12frame.math_1.b_math_average "Average: Use this to calculate average from a stream of numbers"
 		setTooltip $name.k12frame.math_1.b_math_random "Random: Use this to generate random numbers"
 
 		# ---------------------------------- MATH ROW 2 -----------------------------------------
@@ -2429,12 +2444,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		# ---------------------------------- OUTPUT/OTHER -----------------------------------------
 
 		match_linux_wm [list frame $name.k12frame.output -relief flat]
-		match_linux_wm [list button $name.k12frame.output.b_preset -image i.preset \
-			-command [concat put_K12_objects $name preset]] 
 		match_linux_wm [list button $name.k12frame.output.b_output -image i.output \
 			-command [concat put_K12_objects $name output]] 	
-		pack $name.k12frame.output.b_preset $name.k12frame.output.b_output -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.output.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
+		pack $name.k12frame.output.b_output -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.output.b_output "Output: Use this to send audio from computer into speakers"
 
 		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
