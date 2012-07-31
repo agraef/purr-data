@@ -4304,7 +4304,7 @@ static void canvas_paste_atmouse(t_canvas *x)
 		//fprintf(stderr,"got selection\n");
 		g = (t_glist *)sel->sel_what;
 		if (pd_class(&((t_gobj *)g)->g_pd) == canvas_class && g->gl_isgraph) {
-			// hack: 	if any objects are GOPs redraw them, otherwise we may get stray nlets
+			// hack: 	if any objects are GOPs re-select them, otherwise we may get stray nlets
 			//			due to networked nature between the gui and the engine, so we select
 			//			it explicitly here once again to prevent that from being a problem
 			gobj_select((t_gobj *)g, x, 1);
@@ -4489,6 +4489,9 @@ static void canvas_duplicate(t_canvas *x)
         //canvas_dopaste(x, copy_binbuf);
         //canvas_paste_xyoffset(x);
         //canvas_dirty(x, 1);
+		t_gobj *g = x->gl_list;
+		while (g->g_next)
+			g = g->g_next;
         canvas_copy(c_selection);
 		canvas_undo_add(x, 5, "duplicate", (void *)canvas_undo_set_paste(x, 0));
 		canvas_dopaste(x, copy_binbuf);
@@ -4505,6 +4508,16 @@ static void canvas_duplicate(t_canvas *x)
 		    //canvas_paste_xyoffset(x);  
 		//}
 		canvas_dirty(x, 1);
+		g = g->g_next;
+		while (g) {
+			if (pd_class(&g->g_pd) == canvas_class && ((t_canvas *)g)->gl_isgraph) {
+				// hack: 	if any objects are GOPs re-select them, otherwise we may get stray nlets
+				//			due to networked nature between the gui and the engine, so we select
+				//			it explicitly here once again to prevent that from being a problem
+				gobj_select(g, x, 1);
+			}
+			g = g->g_next;
+		}
     }
 }
 
