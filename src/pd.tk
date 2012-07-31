@@ -878,7 +878,6 @@ catch {
 if { [info tclversion] >= 8.5 && $pd_nt == 0 } { wm resizable . 0 0 }
 # Intercept closing the main pd window: MP 20060413:
 wm protocol . WM_DELETE_WINDOW menu_quit
-puts stderr [winfo class .]
 focus .
 
 
