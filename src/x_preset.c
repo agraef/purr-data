@@ -359,7 +359,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 // nodes that have not been paired yet. 
 void preset_node_seek_hub(t_preset_node *x)
 {
-	if(PH_DEBUG) fprintf(stderr,"preset_node_seek_hub\n");
+	if(PH_DEBUG) fprintf(stderr,"preset_node_seek_hub %lx\n", (t_int)x->pn_hub);
 	t_canvas *y = x->pn_canvas;
 	t_preset_hub *h;
 
@@ -762,6 +762,8 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 	np1 = NULL;
 	np2 = NULL;
 
+	int dspstate = canvas_suspend_dsp();
+
 	if (f>=0) {
 		//check if there are any existing nodes
 		if (h->ph_data) {
@@ -787,7 +789,7 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 						}
 					}
 
-					if (!overwrite && np2->np_val.l_n > 0) {
+					if (!overwrite && hd1->phd_node->pn_val.l_n > 0) {
 						// we need to create a new preset (this is also true if hd1->phd_npreset is NULL)
 						changed = 1;
 						if(PH_DEBUG) fprintf(stderr,"	creating new preset\n");
@@ -798,7 +800,7 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 						np2->np_preset = (int)f;
 					}
 
-					if (np2->np_val.l_n > 0) {
+					if (hd1->phd_node->pn_val.l_n > 0) {
 						changed = 1;
 						alist_clear(&np2->np_val);
 						if(PH_DEBUG) fprintf(stderr,"	node data len = %d, old hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
@@ -814,6 +816,8 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 				hd1 = hd1->phd_next;
 			}
 		}
+		canvas_resume_dsp(dspstate);
+
 		if (changed) canvas_dirty(h->ph_canvas, 1);
 
 		SETFLOAT(ap+0, f);
