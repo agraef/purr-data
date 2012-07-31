@@ -4890,11 +4890,12 @@ void canvas_magicglass(t_canvas *x, t_floatarg fyesplease)
 
 void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
 {
+	//fprintf(stderr,"canvas_tooltips %f\n", fyesplease);
     int yesplease = fyesplease;
     if (yesplease && tooltips)
     	return;
     if (!tooltips) {
-		canvas_editmode(x, 1.);
+		if (!sys_k12_mode) canvas_editmode(x, 1.);
         tooltips = 1;
     }
     else {

@@ -1800,7 +1800,7 @@ proc menu_magicglass {name} {
 proc menu_editmode {name} {
 	global k12_mode
     pd [concat $name editmode 0 \;]
-	if { $k12_mode == 1 } { menu_tooltips $name }
+	#if { $k12_mode == 1 } { menu_tooltips $name }
 }
 
 proc menu_tooltips {name} {
@@ -2970,7 +2970,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
 	# bind $name <FocusOut> { pdtk_noselect %W }
-	if { $k12_mode == 1 && $editable } { menu_tooltips $name }
+	if { $k12_mode == 1 } { menu_tooltips $name }
     focus $name.c
 
 	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
