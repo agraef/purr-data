@@ -48,13 +48,13 @@ main(int argc, char **argv)
     {
         pdgui_setsock(atoi(argv[1]));
         argc--; argv++;
-        argv[0] = "Pd";
+        argv[0] = "pd-l2ork";
     }
     if (argc >= 2)
     {
         pdgui_sethost(argv[1]);
         argc--; argv++;
-        argv[0] = "Pd";
+        argv[0] = "pd-l2ork";
     }
     Tk_Main(argc, argv, Tcl_AppInit);
     return 0;                   /* Needed only to prevent compiler warning. */
