@@ -442,12 +442,14 @@ void preset_node_request_hub_store(t_preset_node *x, t_float f)
 void preset_node_set_and_output_value(t_preset_node *x, t_alist val)
 {
 	t_atom *outv;
-	alist_clear(&x->pn_val);
-	alist_clone(&val, &x->pn_val);
-	XL_ATOMS_ALLOCA(outv, x->pn_val.l_n);
-	alist_toatoms(&x->pn_val, outv);
-	outlet_list(x->pn_outlet, &s_list, x->pn_val.l_n, outv);
-	XL_ATOMS_FREEA(outv, x->pn_val.l_n);
+	if (val.l_n > 0) {
+		alist_clear(&x->pn_val);
+		alist_clone(&val, &x->pn_val);
+		XL_ATOMS_ALLOCA(outv, x->pn_val.l_n);
+		alist_toatoms(&x->pn_val, outv);
+		outlet_list(x->pn_outlet, &s_list, x->pn_val.l_n, outv);
+		XL_ATOMS_FREEA(outv, x->pn_val.l_n);
+	}
 }
 
 void preset_node_clear(t_preset_node *x, t_float f)
@@ -677,12 +679,14 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
 		// save preset data
 		np = phd->phd_npreset;
 		while (np) {
-			binbuf_addv(b, "si", gensym("%preset%"), (int)np->np_preset);
-			for (i = 0; i < np->np_val.l_n; i++) {
-				if (np->np_val.l_vec[i].l_a.a_type == A_FLOAT)
-					binbuf_addv(b, "f", np->np_val.l_vec[i].l_a.a_w.w_float);
-				else if (np->np_val.l_vec[i].l_a.a_type == A_SYMBOL)
-					binbuf_addv(b, "s", np->np_val.l_vec[i].l_a.a_w.w_symbol);
+			if (np->np_val.l_n > 0) {
+				binbuf_addv(b, "si", gensym("%preset%"), (int)np->np_preset);
+				for (i = 0; i < np->np_val.l_n; i++) {
+					if (np->np_val.l_vec[i].l_a.a_type == A_FLOAT)
+						binbuf_addv(b, "f", np->np_val.l_vec[i].l_a.a_w.w_float);
+					else if (np->np_val.l_vec[i].l_a.a_type == A_SYMBOL)
+						binbuf_addv(b, "s", np->np_val.l_vec[i].l_a.a_w.w_symbol);	
+				}
 			}
 			np = np->np_next;
 		}
@@ -725,7 +729,8 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 							if (np->np_preset == (int)f) {
 								valid = 1;
 								if(PH_DEBUG) fprintf(stderr,"	valid %d\n", (hd->phd_node ? 1:0));
-								preset_node_set_and_output_value(hd->phd_node, np->np_val);
+								if (np->np_val.l_n > 0)
+									preset_node_set_and_output_value(hd->phd_node, np->np_val);
 								break;
 							}
 							np = np->np_next;
@@ -760,7 +765,6 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 	if (f>=0) {
 		//check if there are any existing nodes
 		if (h->ph_data) {
-			changed = 1;
 			hd1 = h->ph_data;
 			while (hd1) {
 				if(PH_DEBUG) fprintf(stderr,"	analyzing phd\n");
@@ -783,8 +787,9 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 						}
 					}
 
-					if (!overwrite) {
+					if (!overwrite && np2->np_val.l_n > 0) {
 						// we need to create a new preset (this is also true if hd1->phd_npreset is NULL)
+						changed = 1;
 						if(PH_DEBUG) fprintf(stderr,"	creating new preset\n");
 						np2 = (t_node_preset *)t_getbytes(sizeof(*np2));
 						if (np1)
@@ -793,15 +798,18 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 						np2->np_preset = (int)f;
 					}
 
-					alist_clear(&np2->np_val);
-					if(PH_DEBUG) fprintf(stderr,"	node data len = %d, old hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
-					alist_clone(&hd1->phd_node->pn_val, &np2->np_val);
-					if(PH_DEBUG) fprintf(stderr,"	node data len = %d, NEW hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
+					if (np2->np_val.l_n > 0) {
+						changed = 1;
+						alist_clear(&np2->np_val);
+						if(PH_DEBUG) fprintf(stderr,"	node data len = %d, old hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
+						alist_clone(&hd1->phd_node->pn_val, &np2->np_val);
+						if(PH_DEBUG) fprintf(stderr,"	node data len = %d, NEW hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
 
-					// finally if this is the first preset, hd1->phd_npreset will be NULL so,
-					// let's have it point to the newly created n2
-					if (!hd1->phd_npreset)
-						hd1->phd_npreset = np2;
+						// finally if this is the first preset, hd1->phd_npreset will be NULL so,
+						// let's have it point to the newly created n2
+						if (!hd1->phd_npreset)
+							hd1->phd_npreset = np2;
+					}
 				}
 				hd1 = hd1->phd_next;
 			}
