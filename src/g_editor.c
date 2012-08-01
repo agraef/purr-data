@@ -3532,11 +3532,11 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 		        canvas_displaceselection(x, 0, shift ? 10 : 1);
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 			}
-		    else if (!strcmp(gotkeysym->s_name, "Left")) {
+		    else if (!strcmp(gotkeysym->s_name, "Left") || !strcmp(gotkeysym->s_name, "ShiftLeft")) {
 		        canvas_displaceselection(x, shift ? -10 : -1, 0);
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 			}
-		    else if (!strcmp(gotkeysym->s_name, "Right")) {
+		    else if (!strcmp(gotkeysym->s_name, "Right") || !strcmp(gotkeysym->s_name, "ShiftRight")) {
 		        canvas_displaceselection(x, shift ? 10 : 1, 0);
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 			}
