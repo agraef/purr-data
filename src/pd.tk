@@ -230,6 +230,9 @@ if { $tcl_platform(platform) == "windows" }  {
 	set window_prefs {}
     set pd_nt 0
     set ctrl_key "Control"
+	# Shift modifier
+	set shift_l_down 0
+	set shift_r_down 0
 	# Ctrl modifier
 	set ctrl_l_down 0
 	set ctrl_r_down 0
@@ -739,7 +742,7 @@ pack .controls.dio -side right -padx 20
 #	pack .controls.clr_console -pady 30
 #}
 
-toplevel .printout -class pd-l2ork
+toplevel .printout -class [winfo class .]
 wm title .printout "Console"
 # initial location of the console window (+x+y)
 wm geometry .printout +10+170
@@ -1114,7 +1117,7 @@ proc menu_send {} {
     if { [winfo exists .sendpanel.entry] } {
         raise .sendpanel
     } else {
-		toplevel .sendpanel -class pd-l2ork
+		toplevel .sendpanel -class [winfo class .]
 		wm title .sendpanel {Send Message to Pd}
 		wm resizable .sendpanel 0 0
 		match_linux_wm [list .sendpanel configure]
@@ -1235,7 +1238,7 @@ proc menu_opentext {filename} {
         raise .about
     } else {
 		destroy .about
-		toplevel .about -class pd-l2ork
+		toplevel .about -class [winfo class .]
 		wm title .about "About Pd"
 		wm geometry .about 550x480
 		match_linux_wm [list text .about.text -relief sunken -bd 1 -font text_font \
@@ -1606,7 +1609,7 @@ proc makeapp_embedprefs {appdir patch_to_open} {
 }
 
 proc makeapp_busypanel {appdir} {
-	toplevel .makeapp -class pd-l2ork
+	toplevel .makeapp -class [winfo class .]
 	wm title .makeapp "Making App"
 	wm attributes .makeapp -topmost 1
 	wm resizable .makeapp 0 0
@@ -2058,7 +2061,7 @@ proc menu_findobject {canvas} {
 
 		set find_canvas $canvas
 		
-		toplevel .find -class pd-l2ork
+		toplevel .find -class [winfo class .]
 		wm title .find "Find"
 		match_linux_wm [list .find configure]
 		#wm geometry .find =400x125+150+100
@@ -2211,9 +2214,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	}
 
 	if {$::menu($name) == 1} {
-    	toplevel $name -menu $name.m -class pd-l2ork
+    	toplevel $name -menu $name.m -class [winfo class .]
 	} else {
-		toplevel $name -menu "" -class pd-l2ork
+		toplevel $name -menu "" -class [winfo class .]
 	}
 
 	# initialize variable to reflect that this window has been open
@@ -3028,7 +3031,7 @@ proc pdtk_array_listview_new {id arrayName page} {
     set pd_array_listview_id($arrayName) $id
     set windowName [format ".%sArrayWindow" $arrayName]
     if [winfo exists $windowName] then [destroy $windowName]
-    toplevel $windowName -class pd-l2ork
+    toplevel $windowName -class [winfo class .]
 	wm geometry $windowName 220x400
 	wm minsize $windowName 220 400
 	#pdtk_standardkeybindings $windowName
@@ -3546,8 +3549,10 @@ proc pdtk_canvas_sendkey {name state key iso shift focus} {
     global pd_nt
 	global ctrl_l_down
 	global ctrl_r_down
+	global shift_l_down
+	global shift_r_down
 
-	# pdtk_post "key = $name $state $key $iso $shift\n"
+	#puts stderr "key = $name $state $key $iso $shift\n"
 
 	if {$key == "BackSpace"} {
 		set iso ""
@@ -3586,6 +3591,20 @@ proc pdtk_canvas_sendkey {name state key iso shift focus} {
 			set ctrl_r_down 0
 		}
 	}
+	if {$key == "Shift_L"} {
+		if {$state == 1} {
+			set shift_l_down 1
+		} else {
+			set shift_l_down 0
+		}
+	}
+	if {$key == "Shift_R"} {
+		if {$state == 1} {
+			set shift_r_down 1
+		} else {
+			set shift_r_down 0
+		}
+	}
 
 	if {$ctrl_l_down || $ctrl_r_down} {
 		set ctrl 1
@@ -3593,15 +3612,53 @@ proc pdtk_canvas_sendkey {name state key iso shift focus} {
 		set ctrl 0
 	}
 
-	if {[string match Home $key] && $ctrl} {
-		set key "CtrlHome"
-		set state 1
+	if {$shift_l_down || $shift_r_down} {
+		set shift 1
+	} else {
+		set shift 0
 	}
 
-	if {[string match End $key] && $ctrl} {
-		set key "CtrlEnd"
-		set state 1
+	#puts stderr "shift=$shift ctrl=$ctrl key=$key"
+
+	#if {[string match Home $key] && $ctrl} {
+	#	set key "CtrlHome"
+	#	set state 1
+	#}
+
+	#if {[string match End $key] && $ctrl} {
+	#	set key "CtrlEnd"
+	#	set state 1
+	#}
+
+	if {[string match Left $key]} {
+		if {$ctrl == 1 && $shift == 0} {
+			set key "CtrlLeft"
+			set state 1
+		}
+		if {$ctrl == 0 && $shift == 1} {
+			set key "ShiftLeft"
+		}
+		if {$ctrl == 1 && $shift == 1} {
+			set key "CtrlShiftLeft"
+			set state 1
+		}
 	}
+
+	if {[string match Right $key]} {
+		if {$ctrl == 1 && $shift == 0} {
+			set key "CtrlRight"
+			set state 1
+		}
+		if {$ctrl == 0 && $shift == 1} {
+			set key "ShiftRight"
+		}
+		if {$ctrl == 1 && $shift == 1} {
+			set key "CtrlShiftRight"
+			set state 1
+		}
+	}
+
+	#puts stderr "FINAL key=$key"
 
 	pd [canvastosym $name] key $state $key $shift $focus\;
 }
@@ -3943,7 +4000,7 @@ proc pdtk_canvas_dofont {name canvas initsize} {
 	set font_properties $name
 	set font_canvas $canvas
     
-    toplevel $name -class pd-l2ork
+    toplevel $name -class [winfo class .]
 	match_linux_wm [list $name configure]
 	wm resizable $name 0 0
     wm title $name  {Font Settings}
@@ -4112,7 +4169,7 @@ proc pdtk_gatom_dialog {id initwidth initlo inithi \
     set $var_gatomsymfrom [gatom_unescape $symfrom]
     set $var_gatomsymto [gatom_unescape $symto]
 
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
     wm title $id "Atom Box Properties"
 	match_linux_wm [list $id configure] 
     wm resizable $id 0 0
@@ -4852,7 +4909,7 @@ proc pdtk_iemgui_dialog {id mainheader \
     
     set $var_iemgui_l2_f1_b0 0
 
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
     wm title $id [format "%s Properties" $mainheader]
 	match_linux_wm [list $id configure]
     wm resizable $id 0 0
@@ -5242,7 +5299,7 @@ proc pdtk_array_dialog {id name n flags newone canvas} {
     set $var_array_drawasrects [expr ( $flags & 2 ) != 0]
     set $var_array_otherflag 0
 
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
     wm title $id {Edit Array}
 	match_linux_wm [list $id configure]
     wm resizable $id 0 0
@@ -5541,7 +5598,7 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
     set $var_canvas_xmargin $xmargin
     set $var_canvas_ymargin $ymargin
 
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
     wm title $id {Canvas Properties}
 	match_linux_wm [list $id configure]
 	wm resizable $id 0 0
@@ -5671,7 +5728,7 @@ proc dodata_ok {name} {
 proc pdtk_data_dialog {name stuff} {
     global pd_deffont
 	global pd_nt
-    toplevel $name -class pd-l2ork
+    toplevel $name -class [winfo class .]
     match_linux_wm [list $name configure]
     wm title $name {Atom}
     wm protocol $name WM_DELETE_WINDOW [concat dodata_cancel $name]
@@ -6067,7 +6124,7 @@ proc pdtk_pd_texteditor {stuff} {
     } else {
 		set name .texteditor
 
-		toplevel $name -class pd-l2ork
+		toplevel $name -class [winfo class .]
 		match_linux_wm [list $name configure]
 		wm title $name {Text Editor}
 
@@ -6292,7 +6349,7 @@ proc pdtk_audio_dialog {id indev1 indev2 indev3 indev4 \
     set audio_sr $sr
     set audio_advance $advance
     set audio_callback $callback
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
 	match_linux_wm [list $id configure]
     wm title $id {Audio Settings}
 	wm resizable $id 0 0
@@ -6570,7 +6627,7 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
     set midi_alsain [llength $midi_indevlist]
     set midi_alsaout [llength $midi_outdevlist]
 
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
 	match_linux_wm [list $id configure]
 	wm resizable $id 0 0
 	wm title $id {MIDI Settings}
@@ -6765,7 +6822,7 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
     set midi_alsain [llength $midi_indevlist]
     set midi_alsaout [llength $midi_outdevlist]
     
-    toplevel $id -class pd-l2ork
+    toplevel $id -class [winfo class .]
     match_linux_wm [list $id configure]
 	wm resizable $id 0 0
 	wm title $id {MIDI Settings}
@@ -7202,7 +7259,7 @@ namespace eval dlg_ScrollBoxWindow {
     proc make { id listdata add_method edit_method commit_method title width height } {
 		global pd_nt
  
-		toplevel $id -class pd-l2ork
+		toplevel $id -class [winfo class .]
 		match_linux_wm [list $id configure]
         wm title $id $title
 		
@@ -7322,7 +7379,7 @@ namespace eval dlg_Startup {
         global cmd
         set cmd $initialValue
 
-        toplevel .inputBox -class pd-l2ork
+        toplevel .inputBox -class [winfo class .]
         wm title .inputBox $prompt
         wm minsize .inputBox 450 30
         wm resizable .inputBox 1 0
@@ -7479,7 +7536,7 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 		set rgb_g [expr 0x$hex_rgb_g]
 		set rgb_b [expr 0x$hex_rgb_b]
 
-		toplevel $name -class pd-l2ork
+		toplevel $name -class [winfo class .]
 
 		wm resizable $name 0 0
 		#global tmp_xpix tmp_ypix

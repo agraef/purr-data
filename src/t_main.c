@@ -56,6 +56,11 @@ main(int argc, char **argv)
         argc--; argv++;
         argv[0] = "pd-l2ork";
     }
+    if (argc == 2)
+    {
+        //specify root window name
+        argc--; argv++;
+    }
     Tk_Main(argc, argv, Tcl_AppInit);
     return 0;                   /* Needed only to prevent compiler warning. */
 }

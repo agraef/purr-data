@@ -31,6 +31,12 @@
 #define SEND_UPDATE 2
 #define SEND_CHECK 0
 
+// selection for shift+arrow selecting
+// 0 = none;
+// 1 = start;
+// 2 = end;
+static int last_sel = 0;
+
 struct _rtext
 {
     char *x_buf;
@@ -447,7 +453,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 {
     int w = 0, h = 0, indx, i, newsize, ndel;
     char *s1, *s2;
-	//post("keysym=%s", keysym->s_name);
+	//fprintf(stderr,"rtext_key keysym=%s\n", keysym->s_name);
     if (keynum)
     {
         int n = keynum;
@@ -506,6 +512,7 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_selend = x->x_selstart = x->x_selstart + 1;
         else
             x->x_selstart = x->x_selend;
+		last_sel = 0;		
     }
     else if (!strcmp(keysym->s_name, "Left"))
     {
@@ -513,6 +520,30 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_selend = x->x_selstart = x->x_selstart - 1;
         else
             x->x_selend = x->x_selstart;
+		last_sel = 0;
+    }
+    else if (!strcmp(keysym->s_name, "ShiftRight"))
+    {
+		if (!last_sel) last_sel = 2;
+		if (last_sel == 1 && x->x_selstart < x->x_selend) {
+		    if (x->x_selstart < x->x_bufsize)
+		        x->x_selstart =  x->x_selstart + 1;			
+		} else {
+			last_sel = 2;
+		    if (x->x_selend < x->x_bufsize)
+		        x->x_selend =  x->x_selend + 1;
+		}
+    }
+    else if (!strcmp(keysym->s_name, "ShiftLeft"))
+    {
+		if (!last_sel) last_sel = 1;
+        if (last_sel == 2 && x->x_selend > x->x_selstart) {
+            x->x_selend = x->x_selend - 1;
+		} else {
+			last_sel = 1;
+		    if (x->x_selstart > 0)
+		        x->x_selstart = x->x_selstart - 1;
+		}
     }
         /* this should be improved...  life's too short */
     else if (!strcmp(keysym->s_name, "Up") || !strcmp(keysym->s_name, "Home"))
@@ -522,6 +553,7 @@ be printable in whatever 8-bit character set we find ourselves. */
         while (x->x_selstart > 0 && x->x_buf[x->x_selstart] != '\n')
             x->x_selstart--;
         x->x_selend = x->x_selstart;
+		last_sel = 0;
     }
     else if (!strcmp(keysym->s_name, "Down") || !strcmp(keysym->s_name, "End"))
     {
@@ -531,8 +563,9 @@ be printable in whatever 8-bit character set we find ourselves. */
         if (x->x_selend < x->x_bufsize)
             x->x_selend++;
         x->x_selstart = x->x_selend;
+		last_sel = 0;
     }
-    else if (!strcmp(keysym->s_name, "CtrlHome"))
+    else if (!strcmp(keysym->s_name, "CtrlLeft"))
     {
 		/* first find first non-space char going back */
 		while (x->x_selstart > 0 && x->x_buf[x->x_selstart-1] == ' ')
@@ -542,11 +575,15 @@ be printable in whatever 8-bit character set we find ourselves. */
 		  x->x_buf[x->x_selstart] != '\n' &&
 		  x->x_buf[x->x_selstart-1] != ' ')
             x->x_selstart--;
-        x->x_selend = x->x_selstart;
+		if (x->x_buf[x->x_selstart+1] == ' ')
+			x->x_selstart++;
+		x->x_selend = x->x_selstart;
     }
-    else if (!strcmp(keysym->s_name, "CtrlEnd"))
+    else if (!strcmp(keysym->s_name, "CtrlRight"))
     {
 		/* now go forward until you find another space or the end of the buffer */
+		if (x->x_selend < x->x_bufsize - 1)
+			x->x_selend++;
         while (x->x_selend < x->x_bufsize &&
           x->x_buf[x->x_selend] != '\n' &&
 		  x->x_buf[x->x_selend] != ' ')
@@ -554,9 +591,71 @@ be printable in whatever 8-bit character set we find ourselves. */
 		/* now skip all the spaces and land before next word */
         while (x->x_selend < x->x_bufsize &&
 		  x->x_buf[x->x_selend] == ' ')
-            x->x_selend++;		
-        x->x_selstart = x->x_selend;
+            x->x_selend++;
+		if (x->x_selend > 0 && x->x_buf[x->x_selend-1] == ' ')
+			x->x_selend--;
+		x->x_selstart = x->x_selend;
     }
+    else if (!strcmp(keysym->s_name, "CtrlShiftLeft"))
+	{
+		int swap = 0;
+		int *target;
+		if (!last_sel) last_sel = 1;
+		if (last_sel == 2 && x->x_selend > x->x_selstart)
+			target = &x->x_selend;
+		else {
+			last_sel = 1;
+			target = &x->x_selstart;
+		}
+		/* first find first non-space char going back */
+		while (*target > 0 && x->x_buf[*target-1] == ' ')
+			(*target)--;
+		/* now go back until you find another space or the beginning of the buffer */
+        while (*target > 0 &&
+		  x->x_buf[*target] != '\n' &&
+		  x->x_buf[*target-1] != ' ')
+            (*target)--;
+		if (x->x_buf[*target+1] == ' ')
+			(*target)++;
+        if (x->x_selstart > x->x_selend) {
+			swap = x->x_selend;
+			x->x_selend = x->x_selstart;
+			x->x_selstart = swap;
+			last_sel = 1;
+		}
+	}
+    else if (!strcmp(keysym->s_name, "CtrlShiftRight"))
+	{
+		int swap = 0;
+		int *target;
+		if (!last_sel) last_sel = 2;
+		if (last_sel == 1 && x->x_selstart < x->x_selend)
+			target = &x->x_selstart;
+		else {
+			last_sel = 2;
+			target = &x->x_selend;
+		}
+		/* now go forward until you find another space or the end of the buffer */
+		if (*target < x->x_bufsize - 1)
+			(*target)++;
+        while (*target < x->x_bufsize &&
+          x->x_buf[*target] != '\n' &&
+		  x->x_buf[*target] != ' ')
+            (*target)++;
+		/* now skip all the spaces and land before next word */
+        while (*target < x->x_bufsize &&
+		  x->x_buf[*target] == ' ')
+            (*target)++;
+		if (*target > 0 && x->x_buf[*target-1] == ' ')
+			(*target)--;
+        if (x->x_selstart > x->x_selend) {
+			swap = x->x_selend;
+			x->x_selend = x->x_selstart;
+			x->x_selstart = swap;
+			last_sel = 2;
+		}
+	}
+
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
 }
 

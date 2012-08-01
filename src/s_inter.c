@@ -1096,8 +1096,8 @@ int sys_startgui(const char *guidir)
 #else
             sprintf(cmdbuf,
                 "TCL_LIBRARY=\"%s/tcl/library\" TK_LIBRARY=\"%s/tk/library\" \
-                 \"%s/pd-gui\" %d\n",
-                 sys_libdir->s_name, sys_libdir->s_name, guidir, portno);
+                 \"%s/pd-gui\" %d localhost %s\n",
+                 sys_libdir->s_name, sys_libdir->s_name, guidir, portno, (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"));
 #endif
             sys_guicmd = cmdbuf;
         }
