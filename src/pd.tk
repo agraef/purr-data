@@ -3840,7 +3840,8 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     global pd_nt filetypes untitled_directory
     if { ! [file isdirectory $initdir]} {set initdir $::env(HOME)}
     set filename [tk_getSaveFile -initialfile $initfile -initialdir $initdir \
-					  -defaultextension .pd -filetypes $filetypes]
+					  -defaultextension .pd -filetypes $filetypes \
+					  -parent $name]
 
     if {$filename eq ""} return; # they clicked cancel
 
