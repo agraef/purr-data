@@ -155,13 +155,15 @@ void glob_preset_node_list_seek_hub(void)
 	if (gpnl) {
 		nl = gpnl;
 		while(nl) {
-			if(PH_DEBUG) fprintf(stderr,"	seeking\n");
+			if(PH_DEBUG) fprintf(stderr,"	got node\n");
 			if (!nl->gpnl_paired) {
+				if(PH_DEBUG) fprintf(stderr,"	seeking\n");
 				preset_node_seek_hub(nl->gpnl_node);
 			}
 			nl = nl->gpnl_next;
 		}
 	}
+	if(PH_DEBUG) fprintf(stderr,"	done\n");
 }
 
 // this should be called whenever glist has been changed (tofront/back, cut, delete, undo/redo cut/delete)
@@ -271,11 +273,11 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 	// do all this only if we are already paired with a hub
 	if (x->pn_hub) {
 
-		if (x->pn_old_gl_loc) free(x->pn_old_gl_loc);
+		if (x->pn_old_gl_loc && x->pn_old_gl_loc != x->pn_gl_loc) free(x->pn_old_gl_loc);
 		x->pn_old_gl_loc = x->pn_gl_loc;
 		x->pn_old_gl_loc_length = x->pn_gl_loc_length;
 	
-		x->pn_gl_loc = NULL;
+		//x->pn_gl_loc = NULL;
 		x->pn_gl_loc_length = 0;
 
 		// let's try to find our hub (if any)
@@ -304,7 +306,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 			if(PH_DEBUG) fprintf(stderr,"	depth = %d\n", depth);
 	
 			// allocate depth array
-			x->pn_gl_loc = (int*)calloc(depth+1, sizeof(int));
+			x->pn_gl_loc = (int*)calloc(depth+1, sizeof(x->pn_gl_loc));
 
 			// now let's figure out where each of the child gobj's location is
 			// starting from the back
@@ -320,7 +322,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 				{
 					g = g->g_next;
 					i++;
-					if(PH_DEBUG) fprintf(stderr,"	searching... %d\n", i);
+					//if(PH_DEBUG) fprintf(stderr,"	searching... %d\n", i);
 				}
 				// even if the g fails sanity check due to creation time, it will still land on the last created element whose
 				// pointer at this point is still null since this means this is being called at the end of the preset_node_new call
@@ -389,8 +391,9 @@ void preset_node_seek_hub(t_preset_node *x)
 static int preset_node_location_changed(t_preset_node *x)
 {
 	int i;
-	if (x->pn_old_gl_loc_length != x->pn_gl_loc_length)
+	if (x->pn_old_gl_loc_length != x->pn_gl_loc_length) {
 		return(1);
+	}
 	for (i = 0; i < x->pn_gl_loc_length; i++) {
 		if (x->pn_gl_loc[i] != x->pn_old_gl_loc[i])
 			return(1);
@@ -547,7 +550,9 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 
 	x->pn_hub = NULL;
 	x->pn_gl_loc_length = 0;
+	x->pn_gl_loc = NULL;
 	x->pn_old_gl_loc_length = 0;  
+	x->pn_old_gl_loc = NULL;
  	x->pn_outlet = outlet_new(&x->pn_obj, 0);
 
 	glob_preset_node_list_add(x);
@@ -873,13 +878,14 @@ void preset_hub_add_a_node(t_preset_hub *h, t_preset_node *x)
 		hd2 = (t_preset_hub_data *)t_getbytes(sizeof(*hd2));
 		// reconstruct the dynamic location array
 		hd2->phd_pn_gl_loc_length = x->pn_gl_loc_length;
-		hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(int));
+		hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(hd2->phd_pn_gl_loc));
 		for (i=0; i < hd2->phd_pn_gl_loc_length; i++) {
 			if(PH_DEBUG) fprintf(stderr,"	loc %d\n", x->pn_gl_loc[i]);
 			hd2->phd_pn_gl_loc[i] = x->pn_gl_loc[i];
 		}
 		// assign node value
 		hd2->phd_node = x;
+		hd2->phd_next = NULL;
 
 		// adjust pointers
 		if (!h->ph_data) {
@@ -1214,7 +1220,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 					hd2->phd_pn_gl_loc_length = (int)atom_getfloat(&argv[i]);
 					// reconstruct the dynamic location array
 					if (!hd2->phd_pn_gl_loc)
-						hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(int));
+						hd2->phd_pn_gl_loc = (int*)calloc(hd2->phd_pn_gl_loc_length, sizeof(hd2->phd_pn_gl_loc));
 					hd2->phd_pn_gl_loc[hd2->phd_pn_gl_loc_length-1] = (int)atom_getfloat(&argv[i]);
 					if(PH_DEBUG) fprintf(stderr,"	loc length = %d\n", hd2->phd_pn_gl_loc_length);
 					loc_pos = 0;
