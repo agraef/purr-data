@@ -53,6 +53,7 @@ t_undo_action *canvas_undo_add(t_canvas *x, int type, const char *name, void *da
 
 void canvas_undo_undo(t_canvas *x)
 {
+	int dspwas = canvas_suspend_dsp();
 	if (x->u_queue && x->u_last != x->u_queue) {
 		we_are_undoing = 1;
 		//fprintf(stderr,"canvas_undo_undo %d\n", x->u_last->type);
@@ -86,10 +87,12 @@ void canvas_undo_undo(t_canvas *x)
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		}
 	}
+    canvas_resume_dsp(dspwas);
 }
 
 void canvas_undo_redo(t_canvas *x)
 {
+	int dspwas = canvas_suspend_dsp();
 	if (x->u_queue && x->u_last->next) {
 		we_are_undoing = 1;
 		x->u_last = x->u_last->next;
@@ -123,10 +126,12 @@ void canvas_undo_redo(t_canvas *x)
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		}
 	}
+    canvas_resume_dsp(dspwas);
 }
 
 void canvas_undo_rebranch(t_canvas *x)
 {
+	int dspwas = canvas_suspend_dsp();
 	t_undo_action *a1, *a2;
 	//fprintf(stderr,"canvas_undo_rebranch");
 	if (x->u_last->next) {
@@ -154,6 +159,7 @@ void canvas_undo_rebranch(t_canvas *x)
 			a1 = a2;
 		}
 	}
+    canvas_resume_dsp(dspwas);
 	//fprintf(stderr,"done!\n");
 }
 
@@ -169,6 +175,7 @@ void canvas_undo_purge_abstraction_actions(t_canvas *x)
 
 void canvas_undo_free(t_canvas *x)
 {
+	int dspwas = canvas_suspend_dsp();
 	t_undo_action *a1, *a2;
 	//fprintf(stderr,"canvas_undo_free");
 	if (x->u_queue) {
@@ -197,6 +204,7 @@ void canvas_undo_free(t_canvas *x)
 			a1 = a2;
 		}
 	}
+    canvas_resume_dsp(dspwas);
 	//fprintf(stderr,"done!\n");
 }
 
