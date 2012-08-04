@@ -277,7 +277,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 		x->pn_old_gl_loc = x->pn_gl_loc;
 		x->pn_old_gl_loc_length = x->pn_gl_loc_length;
 	
-		//x->pn_gl_loc = NULL;
+		x->pn_gl_loc = NULL;
 		x->pn_gl_loc_length = 0;
 
 		// let's try to find our hub (if any)
