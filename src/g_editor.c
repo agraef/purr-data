@@ -803,10 +803,9 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 						y->g_next = y_next;
 					}
 				}
-				canvas_redraw(x);
-				glob_preset_node_list_check_loc_and_update();
-
 			}
+			canvas_redraw(x);
+			glob_preset_node_list_check_loc_and_update();
 		}
     }
     else if (action == UNDO_REDO)
