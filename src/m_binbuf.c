@@ -60,7 +60,7 @@ void binbuf_clear(t_binbuf *x)
     /* convert text to a binbuf */
 void binbuf_text(t_binbuf *x, char *text, size_t size)
 {
-	//fprintf(stderr, "current text: %s || %c %d %d\n", text, text[size-1], strlen(text), (int)size);
+	//fprintf(stderr, "current text: %s\n", text);
     char buf[MAXPDSTRING+1], *bufp, *ebuf = buf+MAXPDSTRING;
     const char *textp = text, *etext = text+size;
     t_atom *ap;
@@ -71,7 +71,7 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
     x->b_n = 0;
     while (1)
     {
-        int type;
+        //int type;
             /* skip leading space */
         while ((textp != etext) && (*textp == ' ' || *textp == '\n'
             || *textp == '\r' || *textp == '\t')) textp++;
@@ -241,6 +241,7 @@ void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
             length--;
         }
     }
+	//fprintf(stderr,"binbuf_gettext: <%s>\n", buf);
     *bufp = buf;
     *lengthp = length;
 }
