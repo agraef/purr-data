@@ -351,6 +351,7 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.math_subtract -file $extra_dir/K12/icons/math_subtract.png
 	image create photo i.math_multiply -file $extra_dir/K12/icons/math_multiply.png
 	image create photo i.math_divide -file $extra_dir/K12/icons/math_divide.png
+	image create photo i.math_scale -file $extra_dir/K12/icons/math_scale.png
 
 	image create photo i.logic_compare -file $extra_dir/K12/icons/logic_compare.png
 	image create photo i.logic_mapper -file $extra_dir/K12/icons/logic_mapper.png
@@ -2340,11 +2341,14 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-command [concat put_K12_objects $name math_multiply]]
 		match_linux_wm [list button $name.k12frame.math_2.b_math_divide -image i.math_divide \
 			-command [concat put_K12_objects $name math_divide]]
-		pack $name.k12frame.math_2.b_math_add $name.k12frame.math_2.b_math_subtract $name.k12frame.math_2.b_math_multiply $name.k12frame.math_2.b_math_divide -side left -expand 0 -padx 1 -pady 1
+		match_linux_wm [list button $name.k12frame.math_2.b_math_scale -image i.math_scale \
+			-command [concat put_K12_objects $name math_scale]]
+		pack $name.k12frame.math_2.b_math_add $name.k12frame.math_2.b_math_subtract $name.k12frame.math_2.b_math_multiply $name.k12frame.math_2.b_math_divide $name.k12frame.math_2.b_math_scale -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.math_2.b_math_add "Add: Use this to add two values"
 		setTooltip $name.k12frame.math_2.b_math_subtract "Subtract: Use this to subtract two values"
 		setTooltip $name.k12frame.math_2.b_math_multiply "Multiply: Use this to multiply two values"
 		setTooltip $name.k12frame.math_2.b_math_divide "Divide: Use this to divide two values"
+		setTooltip $name.k12frame.math_2.b_math_scale "Scale: Use this to scale incoming values to a new range and direction"
 
 		# ---------------------------------- LOGIC -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.logic -relief flat]
