@@ -2956,8 +2956,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Button-5>  "pdtk_canvas_scroll $name.c y +1"
         bind $name.c <Shift-Button-4>  "pdtk_canvas_scroll $name.c x -1"
         bind $name.c <Shift-Button-5>  "pdtk_canvas_scroll $name.c x +1"
-        bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
-        bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
+		if { $k12_mode == 0 } {
+		    bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
+		    bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
+		}
     } default {
         bind $name.c  <MouseWheel> \
             "pdtk_canvas_scroll $name.c y \[expr -abs(%D)/%D\]"
