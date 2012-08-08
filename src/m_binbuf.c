@@ -448,6 +448,9 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
     x->b_n = newsize;
 }
 
+#define ISSYMBOL(a, b) ((a)->a_type == A_SYMBOL && \
+    !strcmp((a)->a_w.w_symbol->s_name, (b)))
+
 void binbuf_print(t_binbuf *x)
 {
     int i, startedpost = 0, newline = 1;
@@ -459,6 +462,8 @@ void binbuf_print(t_binbuf *x)
             startpost("");
             startedpost = 1;
         }
+		if (ISSYMBOL(x->b_vec + i, "%hidden%"))
+			i = x->b_n - 1;
         postatom(1, x->b_vec + i);
         if (x->b_vec[i].a_type == A_SEMI)
             newline = 1;
@@ -1034,9 +1039,6 @@ abstractions for objects like "gate" which don't exist in Pd.  conversion
 from Pd to Max hasn't been tested for patches with subpatches yet!  */
 
 #define MAXSTACK 1000
-
-#define ISSYMBOL(a, b) ((a)->a_type == A_SYMBOL && \
-    !strcmp((a)->a_w.w_symbol->s_name, (b)))
 
 static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
 {
