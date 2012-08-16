@@ -10,6 +10,7 @@
 #include "g_magicglass.h"
 #include "g_canvas.h"
 #include "g_undo.h"
+#include "x_preset.h"
 #include <string.h>
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename,
@@ -262,6 +263,14 @@ void glist_select(t_glist *x, t_gobj *y)
 	//fprintf(stderr,"glist_select\n");
     if (x->gl_editor)
     {
+#ifdef PDL2ORK
+		// exception: if we are in K12 mode and preset_hub is hidden, do not select it
+		if (sys_k12_mode && y->g_pd == preset_hub_class) {
+			//fprintf(stderr,"glist_select do not select invised preset_hub in K12 mode\n");
+			t_preset_hub *ph = (t_preset_hub *)y;
+			if (ph->ph_invis > 0) return;
+		}
+#endif
 		if (c_selection && c_selection != x)
 			glist_noselect(c_selection);
         t_selection *sel = (t_selection *)getbytes(sizeof(*sel));
@@ -396,21 +405,31 @@ void glist_selectall(t_glist *x)
         glist_noselect(x);
         if (x->gl_list)
         {
-            t_selection *sel = (t_selection *)getbytes(sizeof(*sel));
             t_gobj *y = x->gl_list;
-            x->gl_editor->e_selection = sel;
-            sel->sel_what = y;
-            gobj_select(y, x, 1);
-            while (y = y->g_next)
-            {
-                t_selection *sel2 = (t_selection *)getbytes(sizeof(*sel2));
-                sel->sel_next = sel2;
-                sel = sel2;
-                sel->sel_what = y;
-                gobj_select(y, x, 1);
-            }
-            sel->sel_next = 0;
-			c_selection = x;
+#ifdef PDL2ORK
+			// exception: if we are in K12 mode and preset_hub is hidden, do not select it
+			if (sys_k12_mode && y->g_pd == preset_hub_class) {
+				//fprintf(stderr,"glist_select do not select invised preset_hub in K12 mode\n");
+				t_preset_hub *ph = (t_preset_hub *)y;
+				if (ph->ph_invis > 0) y = y->g_next;
+			}
+#endif
+			if (y) {
+		        t_selection *sel = (t_selection *)getbytes(sizeof(*sel));
+		        x->gl_editor->e_selection = sel;
+		        sel->sel_what = y;
+		        gobj_select(y, x, 1);
+		        while (y = y->g_next)
+		        {
+		            t_selection *sel2 = (t_selection *)getbytes(sizeof(*sel2));
+		            sel->sel_next = sel2;
+		            sel = sel2;
+		            sel->sel_what = y;
+		            gobj_select(y, x, 1);
+		        }
+		        sel->sel_next = 0;
+				c_selection = x;
+			}
         }
 		canvas_draw_gop_resize_hooks(x);
     }
