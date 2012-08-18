@@ -222,14 +222,32 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
     t_template *tmpl;
     t_symbol *templatesym = x->sc_template;
     t_atom at;
+	t_canvas *templatecanvas = NULL;
     t_gpointer gp;
     gpointer_init(&gp);
     gpointer_setglist(&gp, owner, x);
     SETPOINTER(&at, &gp);
-    if (tmpl = template_findbyname(templatesym))
+    if (tmpl = template_findbyname(templatesym)) {
         template_notify(tmpl, (state ? gensym("select") : gensym("deselect")),
             1, &at);
+		templatecanvas = template_findcanvas(tmpl);
+	}
     gpointer_unset(&gp);
+	if (state) {
+		sys_vgui(".x%lx.c addtag selected withtag scalar%lx\n",
+			glist_getcanvas(owner), x);
+		if (templatecanvas) {
+			sys_vgui(".x%lx.c addtag selected withtag %lx\n",
+				glist_getcanvas(owner), x->sc_vec);
+		}
+	} else {
+		sys_vgui(".x%lx.c dtag scalar%lx selected\n",
+			glist_getcanvas(owner), x);
+		if (templatecanvas) {
+			sys_vgui(".x%lx.c dtag %lx selected\n",
+				glist_getcanvas(owner), x->sc_vec);
+		}
+	}
 	//sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
     scalar_drawselectrect(x, owner, state);
 }
@@ -267,6 +285,41 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     SETFLOAT(&at[2], (t_float)dy);
     template_notify(template, gensym("displace"), 2, at);
     scalar_redraw(x, glist);
+}
+
+static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_scalar *x = (t_scalar *)z;
+    t_symbol *templatesym = x->sc_template;
+    t_template *template = template_findbyname(templatesym);
+    t_symbol *zz;
+    t_atom at[3];
+    t_gpointer gp;
+    int xonset, yonset, xtype, ytype, gotx, goty;
+    if (!template)
+    {
+        error("scalar: couldn't find template %s", templatesym->s_name);
+        return;
+    }
+    gotx = template_find_field(template, gensym("x"), &xonset, &xtype, &zz);
+    if (gotx && (xtype != DT_FLOAT))
+        gotx = 0;
+    goty = template_find_field(template, gensym("y"), &yonset, &ytype, &zz);
+    if (goty && (ytype != DT_FLOAT))
+        goty = 0;
+    if (gotx)
+        *(t_float *)(((char *)(x->sc_vec)) + xonset) +=
+            dx * (glist_pixelstox(glist, 1) - glist_pixelstox(glist, 0));
+    if (goty)
+        *(t_float *)(((char *)(x->sc_vec)) + yonset) +=
+            dy * (glist_pixelstoy(glist, 1) - glist_pixelstoy(glist, 0));
+    gpointer_init(&gp);
+    gpointer_setglist(&gp, glist, x);
+    SETPOINTER(&at[0], &gp);
+    SETFLOAT(&at[1], (t_float)dx);
+    SETFLOAT(&at[2], (t_float)dy);
+    template_notify(template, gensym("displace"), 2, at);
+    //scalar_redraw(x, glist);
 }
 
 static void scalar_activate(t_gobj *z, t_glist *owner, int state)
@@ -413,7 +466,7 @@ static t_widgetbehavior scalar_widgetbehavior =
     scalar_delete,
     scalar_vis,
     scalar_click,
-	NULL,
+	scalar_displace_withtag,
 };
 
 static void scalar_free(t_scalar *x)

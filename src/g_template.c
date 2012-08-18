@@ -1173,8 +1173,8 @@ static void curve_vis(t_gobj *z, t_glist *glist,
                 fill, outline);
             else sys_vgui("-fill %s\\\n", outline);
             if (flags & BEZ) sys_vgui("-smooth 1\\\n");
-            sys_vgui("-tags .x%lx.x%lx.curve%lx\n", glist_getcanvas(glist), glist,
-				data);
+            sys_vgui("-tags {.x%lx.x%lx.curve%lx %lx}\n", glist_getcanvas(glist), glist,
+				data, data);
         }
         else post("warning: curves need at least two points to be graphed");
     }
