@@ -4534,8 +4534,8 @@ static void canvas_duplicate(t_canvas *x)
 		g = g->g_next;
 		while (g) {
 			if (pd_class(&g->g_pd) == canvas_class && ((t_canvas *)g)->gl_isgraph) {
-				// hack: 	if any objects are GOPs re-select them, otherwise we may get stray nlets
-				//			due to networked nature between the gui and the engine, so we select
+				// hack: 	if any objects are GOPs re-select them, otherwise we may get stray unselected 
+				//			objects due to networked nature between the gui and the engine, so we select
 				//			it explicitly here once again to prevent that from being a problem
 				gobj_select(g, x, 1);
 			}

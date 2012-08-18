@@ -363,6 +363,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     }
     if (glist_isselected(owner, &x->sc_gobj))
     {
+		scalar_select(z, owner, 1);
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
     }
