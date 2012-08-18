@@ -1304,7 +1304,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
 		    sys_vgui(".x%lx.c itemconfigure %sR -outline %s\n", glist_getcanvas(glist), 
 		             rtext_gettag(y), (state? "$select_color" : outline));
 			if (z->g_pd == gatom_class) {
-				sys_vgui("catch {.x%lx.c itemconfigure %lx.l -fill %s}\n", glist_getcanvas(glist), 
+				sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n", glist_getcanvas(glist), 
 					x, (state? "$select_color" : "$text_color"));
 			}
 		}

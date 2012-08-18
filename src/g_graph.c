@@ -784,15 +784,15 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     {
 	    if (vis && gobj_shouldvis(gr, parent_glist))
 	    {
-	        sys_vgui("catch {.x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d -tags %s -fill $graph_outline}\n",
+	        sys_vgui(".x%lx.c create polygon\
+ %d %d %d %d %d %d %d %d %d %d -tags %s -fill $graph_outline\n",
 	            glist_getcanvas(x->gl_owner),
 				//parent_glist,
 	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
 	    }
 	    else if (gobj_shouldvis(gr, parent_glist))
 	    {
-	        sys_vgui("catch {.x%lx.c delete %s}\n",
+	        sys_vgui(".x%lx.c delete %s\n",
 	            glist_getcanvas(x->gl_owner), tag);
 				//parent_glist, tag);
 	    }

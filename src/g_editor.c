@@ -1809,7 +1809,7 @@ void canvas_setcursor(t_canvas *x, unsigned int cursornum)
     }
     if (xwas != x || cursorwas != cursornum)
     {
-        sys_vgui("catch {.x%lx configure -cursor %s}\n", x, cursorlist[cursornum]);
+        sys_vgui(".x%lx configure -cursor %s\n", x, cursorlist[cursornum]);
         xwas = x;
         cursorwas = cursornum;
     }
@@ -1980,12 +1980,12 @@ void canvas_vis(t_canvas *x, t_floatarg f)
         {
 			//fprintf(stderr,"new window\n");
             canvas_create_editor(x);
-            sys_vgui("catch {pdtk_canvas_new .x%lx %d %d +%d+%d %d}\n", x,
+            sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 (int)(x->gl_screenx1), (int)(x->gl_screeny1),
                 x->gl_edit);
-			sys_vgui("catch {pdtk_canvas_set_font .x%lx %d}\n", x, x->gl_font);
+			sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
             canvas_reflecttitle(x);
             x->gl_havewindow = 1;
 

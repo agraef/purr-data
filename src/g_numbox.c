@@ -355,7 +355,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 	*/
 
 	if (x->x_gui.x_fsf.x_selected) {
-		sys_vgui("catch { .x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -fill $select_color };\n",
+		sys_vgui(" .x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -368,7 +368,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 		*/
 	}
 	else {
-		sys_vgui("catch { .x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -fill #%6.6x };\n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -379,7 +379,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 		sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n", canvas,
 		         x, x->x_gui.x_fcol);*/
 	}
-    sys_vgui("catch {.x%lx.c itemconfigure %lxBASE1 -fill #%6.6x };\n", canvas,
+    sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x;\n", canvas,
              x, x->x_gui.x_bcol);
 }
 
@@ -446,9 +446,9 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
-				sys_vgui("catch { .x%lx.c itemconfigure %lxBASE1 -outline $select_color };\n",
+				sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline $select_color\n",
 			    	canvas, x);
-				sys_vgui("catch { .x%lx.c itemconfigure %lxBASE2 -fill $select_color };\n",
+				sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
 					canvas, x);
 				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n",
 					canvas, x);
@@ -499,9 +499,9 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 		else
 		{
 			sys_vgui(".x%lx.c dtag %lxNUM selected\n", canvas, x);
-		    sys_vgui("catch { .x%lx.c itemconfigure %lxBASE1 -outline #%6.6x };\n",
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline #%6.6x\n",
 		        canvas, x, IEM_GUI_COLOR_NORMAL);
-		    sys_vgui("catch {.x%lx.c itemconfigure %lxBASE2 -fill #%6.6x };\n",
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
 		        canvas, x, x->x_gui.x_fcol);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
 		        canvas, x, x->x_gui.x_lcol);

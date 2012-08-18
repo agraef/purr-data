@@ -658,7 +658,7 @@ void canvas_reflecttitle(t_canvas *x)
 		/*fprintf(stderr,"%d %d %d %d %d\n", glist_istoplevel(x), !x->gl_isgraph,
 			x->gl_isgraph && x->gl_havewindow, x->gl_loading,
 			x->gl_dirty);*/
-	sys_vgui("catch { wm title .x%lx {%s%c%s - %s} }\n", 
+	sys_vgui("wm title .x%lx {%s%c%s - %s}\n", 
 	        x, x->gl_name->s_name, (x->gl_dirty? '*' : ' '), namebuf,
             canvas_getdir(x)->s_name);
 	//}
@@ -724,7 +724,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 
 	}
 	else{
-		sys_vgui("catch { .x%lx.c delete GOP_resblob ; .x%lx.c delete GOP_movblob ; } \n", x, x);					//delete the GOP_resblob and GOP_movblob	
+		sys_vgui(".x%lx.c delete GOP_resblob ; .x%lx.c delete GOP_movblob ;\n", x, x);					//delete the GOP_resblob and GOP_movblob	
 	}
 }
 /*****************************************************************************/
