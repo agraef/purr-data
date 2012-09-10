@@ -7875,10 +7875,10 @@ proc pdtk_tip {w fromc show args} {
 #    }
 	set typeface [get_font_for_size $::font([string trimright $w .c])]
 	set exists [winfo exists $w.tiplabel]
+	catch {$w delete tiparrow}
     if {$show == 0} {
         catch {destroy $w.tiplabel}
         catch {$w delete $w.tipwindow}
-		catch {$w delete tiparrow}
 		set tooltip_visible 0
     } else {
 		set tooltip_visible 1
