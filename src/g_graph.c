@@ -747,6 +747,7 @@ int garray_getname(t_garray *x, t_symbol **namep);
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
     t_glist *x = (t_glist *)gr;
+	//fprintf(stderr,"graph vis gobj=.x%lx %d\n", (t_int)gr, vis);
 	//fprintf(stderr,"graph_vis gr=.x%lx parent_glist=.x%lx glist_getcanvas(x->gl_owner)=.x%lx vis=%d\n", (t_int)gr, (t_int)parent_glist, (t_int)glist_getcanvas(x->gl_owner), vis);  
 	char tag[50];
     t_gobj *g;
@@ -924,10 +925,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             gobj_vis(g, x, 1);
 		}
 		/* reselect it upon redrawing if it was selected before */
-		if (glist_isselected(parent_glist, gr))
-			gobj_select(gr, parent_glist, 1);
         glist_drawiofor(parent_glist, &x->gl_obj, 1,
             tag, x1, y1, x2, y2);
+		if (glist_isselected(parent_glist, gr))
+			gobj_select(gr, parent_glist, 1);
     }
     else
     {
@@ -1083,7 +1084,7 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
             glist_getcanvas(x->gl_owner), tag, dx, dy);
         sys_vgui(".x%lx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
-        glist_redraw(glist_getcanvas(glist));
+        glist_redraw(x);
 		gobj_select(z, glist, 1);
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
     }
