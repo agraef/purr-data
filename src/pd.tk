@@ -2200,9 +2200,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	if {![info exists ::yscrollable($name)]} {
 		set ::yscrollable($name) 0
 	}
-	#if {![info exists ::update_tick($name)]} {
-	#	set ::update_tick($name) 0
-	#}
+	if {![info exists ::update_tick($name)]} {
+		set ::update_tick($name) 0
+	}
 	if {![info exists ::undo($name)]} {
 		set ::undo($name) no
 	}
@@ -2979,7 +2979,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	bind $name <FocusIn> "menu_fixeditmenu $name"
 	# bind $name <FocusOut> { pdtk_noselect %W }
-	if { $k12_mode == 1 } { menu_tooltips $name }
+	if { $k12_mode == 1 } { pd [concat $name tooltips 1 \;] }
     focus $name.c
 
 	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
@@ -3372,18 +3372,18 @@ proc pdtk_canvas_mouseup {name x y b} {
             [$name canvasy $y] $b \;]
 }
 
-#proc pdtk_canvas_getscroll_ping {name} {
-#	set wname [string trimright $name .c]
-#	if {![winfo exists $wname]} {
-#		set ::update_tick($wname) 0
-#		return
-#	}
-#	if {$::update_tick($wname) == 2} {
-#		set ::update_tick($wname) 3		
-#		pdtk_canvas_getscroll $name
-#	}
-#	after 40 [list pdtk_canvas_getscroll_ping $name]
-#}
+proc pdtk_canvas_getscroll_ping {name} {
+	set wname [string trimright $name .c]
+	if {![winfo exists $wname]} {
+		set ::update_tick($wname) 0
+		return
+	}
+	if {$::update_tick($wname) == 2} {
+		set ::update_tick($wname) 3		
+		pdtk_canvas_getscroll $name
+	}
+	after 50 [list pdtk_canvas_getscroll_ping $name]
+}
 
 proc pdtk_select_all_gop_widgets {name gop state} {
 	#puts stderr "======================$name $gop $state"
@@ -3415,19 +3415,19 @@ proc pdtk_canvas_getscroll {name} {
     if {! [winfo exists $name]} {return}
 
 	# waiting for refresh
-	# if {$::update_tick([winfo parent $name]) == 2} {return}
+	if {$::update_tick([winfo parent $name]) == 2} {return}
 
 	# init
-	# if {$::update_tick([winfo parent $name]) == 0} {
-	# 	set ::update_tick([winfo parent $name]) 1
-	#	pdtk_canvas_getscroll_ping $name		
-	# }
+	if {$::update_tick([winfo parent $name]) == 0} {
+	 	set ::update_tick([winfo parent $name]) 1
+		pdtk_canvas_getscroll_ping $name		
+	}
 
 	# update
-	# if {$::update_tick([winfo parent $name]) == 1} {
-	#	set ::update_tick([winfo parent $name]) 2
-	#	return
-	#}
+	if {$::update_tick([winfo parent $name]) == 1} {
+		set ::update_tick([winfo parent $name]) 2
+		return
+	}
 
 	#debug
 	#catch { $name delete debug }
@@ -3504,6 +3504,8 @@ proc pdtk_canvas_getscroll {name} {
 		set canvaswidth [ expr {abs($xmaxval-$xminval)} ]
 		set canvasheight [ expr {abs($ymaxval-$yminval)} ]
 
+		#puts stderr "$winwidth ? $canvaswidth   $winheight ? $canvasheight"
+
 		if {$::scroll($parentname) == 1} {
 			if {$winwidth >= $canvaswidth} {
 				pack forget $parentname.scrollhort
@@ -3547,7 +3549,7 @@ proc pdtk_canvas_getscroll {name} {
 			set ::yscrollable($parentname) 0
 		}
 	}
-	#set ::update_tick([winfo parent $name]) 1
+	set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
 }
 
@@ -8012,7 +8014,11 @@ proc pdtk_tip_mouseover {w} {
 }
 
 proc pdtk_gettip { w item xletno name helpname dir } {
+	variable k12_mode
 	#puts stderr "pdtk_gettip $w $item $xletno $name $helpname $dir"
+	if {$name eq "preset_hub" && $k12_mode == 1} {
+		return
+	}
     if {$dir eq {}} {
 		set dir $::sys_libdir/doc/5.reference
     }
