@@ -4469,6 +4469,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		error("failed pasting correctly from external buffer, likely due to incomplete text selection. hopefully you saved your work... please get ready to crash...");
 	}
 	abort_when_pasting_from_external_buffer = 0;
+	//fprintf(stderr,"end dopaste\n");
 }
 
 static void canvas_paste(t_canvas *x)
