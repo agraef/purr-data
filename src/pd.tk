@@ -7850,8 +7850,8 @@ proc pdtk_canvas_leaveitem {w} {
     if {[lsearch -exact [$w gettags $w.tipwindow] "sticky"] == -1} {
 		#puts stderr "pdtk_canvas_leaveitem $w"
 		if {[winfo exists $w.tiplabel]} {
-            set afterid [after 50 "pdtk_tip $w 0 0"]
-			#pdtk_tip $w 0 0
+            #set afterid [after 50 "pdtk_tip $w 0 0"]
+			pdtk_tip $w 0 0
             set current_window $w
 		}
     }
@@ -7964,8 +7964,8 @@ proc pdtk_tip {w fromc show args} {
 			set right 0
 			set xarrow [expr $x + 5]
 
-			if { [expr $x + [winfo reqwidth $w.tiplabel]] > [expr [$w canvasx 0] + [winfo reqwidth $w]] } {
-				set tmp1 [expr $x - (($x + [winfo reqwidth $w.tiplabel]) - ([$w canvasx 0] + [winfo reqwidth $w]))]
+			if { [expr $x + [winfo reqwidth $w.tiplabel]] > [expr [$w canvasx 0] + [winfo width $w]] } {
+				set tmp1 [expr $x - (($x + [winfo reqwidth $w.tiplabel]) - ([$w canvasx 0] + [winfo width $w]))]
 				set x $tmp1
 				set right 1
 			}
@@ -7975,8 +7975,8 @@ proc pdtk_tip {w fromc show args} {
 
 			#now do the arrow
 			if { $right } {
-				if { $xarrow > [expr [$w canvasx 0] + [winfo reqwidth $w] - 13] } {
-					set xarrow [expr [$w canvasx 0] + [winfo reqwidth $w] - 13]
+				if { $xarrow > [expr [$w canvasx 0] + [winfo width $w] - 13] } {
+					set xarrow [expr [$w canvasx 0] + [winfo width $w] - 13]
 				}
 			}
 
