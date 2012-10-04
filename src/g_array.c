@@ -770,6 +770,7 @@ static int array_doclick_element(t_array *array, t_glist *glist,
     t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//fprintf(stderr,"array_doclick_element %d\n", doit);
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i, incr, hit;
@@ -813,6 +814,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
     t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//fprintf(stderr,"array_doclick %d\n", doit);
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i;
@@ -1146,6 +1148,10 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
         garray_vis(&x->x_gobj, x->x_glist, 0); 
         garray_vis(&x->x_gobj, x->x_glist, 1);
     }
+	if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist)) {
+		//fprintf(stderr,"yes\n");
+		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), glist, 1);
+	}
 }
 
 void garray_redraw(t_garray *x)
