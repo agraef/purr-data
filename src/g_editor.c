@@ -67,6 +67,8 @@ extern void glob_preset_node_list_check_loc_and_update(void);
 // for preset_node
 extern t_class *text_class;
 
+int do_not_redraw = 0;
+
 struct _outlet
 {
     t_object *o_owner;
@@ -185,6 +187,7 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
 
 void gobj_vis(t_gobj *x, struct _glist *glist, int flag)
 {
+	if (do_not_redraw) return;
     if (x->g_pd->c_wb && x->g_pd->c_wb->w_visfn && gobj_shouldvis(x, glist))
         (*x->g_pd->c_wb->w_visfn)(x, glist, flag);
 }
@@ -743,6 +746,7 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
     int mode = buf->u_mode;
     if (action == UNDO_UNDO)
     {
+		do_not_redraw += 1;
 		//fprintf(stderr,"UNDO_UNDO\n");
         if (mode == UCUT_CUT) {
 			//fprintf(stderr, "UCUT_CUT\n");
@@ -823,6 +827,7 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 					}
 				}
 			}
+			do_not_redraw -= 1;
 			canvas_redraw(x);
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -4211,7 +4216,7 @@ static void canvas_doclear(t_canvas *x)
                 if (&y->g_pd == newest) glist_select(x, y);
         }
     }
-    while (1)   /* this is pretty wierd...  should rewrite it */
+    while (1)   /* this is pretty weird...  should rewrite it */
     {
         for (y = x->gl_list; y; y = y2)
         {
@@ -4241,7 +4246,7 @@ static void canvas_doclear(t_canvas *x)
 restore:
     canvas_dirty(x, 1);
 	canvas_redraw(x);
-	//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     canvas_resume_dsp(dspstate);
 }
 
@@ -4354,6 +4359,7 @@ extern int we_are_undoing;
 static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
 	//fprintf(stderr,"start dopaste\n");
+	do_not_redraw += 1;
 	
     t_gobj *newgobj, *last, *g2;
     int dspstate = canvas_suspend_dsp(), nbox, count;
@@ -4462,6 +4468,10 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	/*if (!canvas_undo_name || canvas_undo_name[0] != 'd') {
 		canvas_redraw(x);
 	}*/
+	do_not_redraw -= 1;
+	//fprintf(stderr,"dopaste redraw\n");
+	canvas_redraw(x);
+
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 	if (!abort_when_pasting_from_external_buffer) {
 	    glist_donewloadbangs(x);
