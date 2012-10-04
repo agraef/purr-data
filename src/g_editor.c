@@ -965,21 +965,23 @@ void canvas_undo_move(t_canvas *x, void *z, int action)
 typedef struct _undo_paste      
 {
     int u_index;    		/* index of first object pasted */
-	int u_sel_index; 		/* index of object selected at the time the other object was pasted (for autopatching) */ 
+	int u_sel_index; 		/* index of object selected at the time the other object was pasted (for autopatching) */
+	int u_offset;			/* offset for duplicated items (since it differs when duplicated into same or different canvas */ 
 	t_binbuf *u_objectbuf;	/* here we store actual copied data */
 } t_undo_paste;
 
-void *canvas_undo_set_paste(t_canvas *x, int offset)
+void *canvas_undo_set_paste(t_canvas *x, int offset, int duplicate, int d_offset)
 {
     t_undo_paste *buf =  (t_undo_paste *)getbytes(sizeof(*buf));
     buf->u_index = glist_getindex(x, 0) - offset; //do we need offset at all?
-	if (x->gl_editor->e_selection && !x->gl_editor->e_selection->sel_next) {
+	if (!duplicate && x->gl_editor->e_selection && !x->gl_editor->e_selection->sel_next) {
 		//if only one object is selected which will warrant autopatching
 		buf->u_sel_index = glist_getindex(x, x->gl_editor->e_selection->sel_what);
 		//fprintf(stderr,"canvas_undo_set_paste selected object index %d\n", buf->u_sel_index);
 	} else {
 		buf->u_sel_index = -1;
 	}
+	buf->u_offset = d_offset;
 	buf->u_objectbuf = binbuf_duplicate(copy_binbuf);
     return (buf);
 }
@@ -997,18 +999,24 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
     else if (action == UNDO_REDO)
     {
+		if (buf->u_offset)
+			do_not_redraw += 1;
         t_selection *sel;
 		glist_noselect(x);
 		//if the pasted object is supposed to be autopatched
 		//then select the object it should be autopatched to
-		if (buf->u_sel_index > -1)
+		if (buf->u_sel_index > -1) {
+			//fprintf(stderr,"undo trying autopatch\n");
 			glist_select(x, glist_nth(x, buf->u_sel_index));
+		}
         canvas_dopaste(x, buf->u_objectbuf);
             /* if it was "duplicate" have to re-enact the displacement. */
-        if (canvas_undo_name && canvas_undo_name[0] == 'd')
+        if (buf->u_offset) {
+			do_not_redraw -= 1;
             //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
             //    gobj_displace(sel->sel_what, x, 10, 10);
 			canvas_paste_xyoffset(x);
+		}
     }
 	else if (action == UNDO_FREE) {
         if (buf->u_objectbuf)
@@ -1292,6 +1300,8 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 
 			// and finally redraw canvas
 			canvas_redraw(x);
+
+			glob_preset_node_list_check_loc_and_update();
 		}
 		else {
 			// if it is the first object
@@ -4406,8 +4416,9 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	}
 	//if we are undoing, offset should be also 0
 	if (we_are_undoing) offset = 0;
-	//else is we are pasting see if we can autopatch
-	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste")) {
+
+	//if we are pasting see if we can autopatch
+	if (canvas_undo_name && !strcmp(canvas_undo_name, "paste")) {
 		canvas_howputnew(x, &connectme, &xpix, &ypix, &indx, &nobj);
     	//glist_noselect(x);
 	}
@@ -4431,6 +4442,8 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
     paste_canvas = 0;
     canvas_resume_dsp(dspstate);
+
+	//fprintf(stderr,"dopaste autopatching? %d==%d %d\n", count, nbox, connectme);
 
 	//if we are pasting only one object autoposition it below our selection
 	if (count == nbox+1 && connectme) {
@@ -4506,7 +4519,7 @@ static void canvas_paste(t_canvas *x)
     {
         //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
         //    "paste");
-		canvas_undo_add(x, 5, "paste", (void *)canvas_undo_set_paste(x, 0));
+		canvas_undo_add(x, 5, "paste", (void *)canvas_undo_set_paste(x, 0, 0, 0));
         canvas_dopaste(x, copy_binbuf);
         //canvas_paste_xyoffset(x);
     }
@@ -4524,10 +4537,11 @@ static void canvas_duplicate(t_canvas *x)
         //canvas_paste_xyoffset(x);
         //canvas_dirty(x, 1);
 		t_gobj *g = x->gl_list;
-		while (g->g_next)
-			g = g->g_next;
+		if (g)
+			while (g->g_next)
+				g = g->g_next;
         canvas_copy(c_selection);
-		canvas_undo_add(x, 5, "duplicate", (void *)canvas_undo_set_paste(x, 0));
+		canvas_undo_add(x, 5, "duplicate", (void *)canvas_undo_set_paste(x, 0, 1, (c_selection == x ? 1 : 0)));
 		canvas_dopaste(x, copy_binbuf);
 		//if (c_selection == x) //{
 			/* we are in the same window */
@@ -4542,7 +4556,9 @@ static void canvas_duplicate(t_canvas *x)
 		    //canvas_paste_xyoffset(x);  
 		//}
 		canvas_dirty(x, 1);
-		g = g->g_next;
+		if (g) //if we already have objects on the newly duplicated canvas, this will be invoked
+			g = g->g_next;
+		else g = x->gl_list; //this is if the duplicated object is the first one on the new canvas
 		while (g) {
 			if (pd_class(&g->g_pd) == canvas_class && ((t_canvas *)g)->gl_isgraph) {
 				// hack: 	if any objects are GOPs re-select them, otherwise we may get stray unselected 
