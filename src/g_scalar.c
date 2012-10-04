@@ -374,6 +374,10 @@ static void scalar_doredraw(t_gobj *client, t_glist *glist)
 {
     scalar_vis(client, glist, 0);
     scalar_vis(client, glist, 1);
+	if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist)) {
+		//fprintf(stderr,"yes\n");
+		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), glist, 1);
+	}
 }
 
 void scalar_redraw(t_scalar *x, t_glist *glist)
@@ -416,6 +420,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//fprintf(stderr,"scalar_click\n");
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
     return (scalar_doclick(x->sc_vec, template, x, 0,
