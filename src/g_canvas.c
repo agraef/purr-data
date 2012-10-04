@@ -15,6 +15,7 @@ to be different but are now unified except for some fossilized names.) */
 #include "g_all_guis.h"
 #include <string.h>
 
+extern int do_not_redraw;
 
     /* LATER consider adding font size to this struct (see glist_getfont()) */
 struct _canvasenvironment
@@ -800,6 +801,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
 
 void canvas_redraw(t_canvas *x)
 {
+	if (do_not_redraw) return;
 	//fprintf(stderr,"canvas_redraw\n");
     if (glist_isvisible(x))
     {
@@ -1478,6 +1480,7 @@ void *canvas_getblock(t_class *blockclass, t_canvas **canvasp)
     redraw.   Action = 0 for redraw, 1 for draw only, 2 for erase. */
 static void glist_redrawall(t_glist *gl, int action)
 {
+	//fprintf(stderr,"glist_redrawall\n");
     t_gobj *g;
     int vis = glist_isvisible(gl);
     for (g = gl->gl_list; g; g = g->g_next)
@@ -1500,6 +1503,9 @@ static void glist_redrawall(t_glist *gl, int action)
         else if (g->g_pd == canvas_class)
             glist_redrawall((t_glist *)g, action);
     }
+	if (glist_isselected(glist_getcanvas(gl), (t_gobj *)gl)) {
+		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(gl), gl, 1);
+	}
 }
 
     /* public interface for above. */
@@ -1515,6 +1521,7 @@ void canvas_redrawallfortemplate(t_template *template, int action)
     for that */
 void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
 {
+	//fprintf(stderr,"canvas_redrawallfortemplatecanvas\n");
     t_gobj *g;
     t_template *tmpl;
     t_symbol *s1 = gensym("struct");
