@@ -87,7 +87,7 @@ EXTERN void canvas_undo_move(t_canvas *x, void *z, int action);
 
 /* --------- 5. paste ------------ */
 
-EXTERN void *canvas_undo_set_paste(t_canvas *x, int offset);
+EXTERN void *canvas_undo_set_paste(t_canvas *x, int offset, int duplicate, int d_offset);
 EXTERN void canvas_undo_paste(t_canvas *x, void *z, int action);
 
 /* --------- 6. apply ------------ */
