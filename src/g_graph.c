@@ -25,6 +25,8 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
+extern int do_not_redraw;
+
 /* -------------------- maintaining the list -------------------- */
 
 void canvas_drawredrect(t_canvas *x, int doit);
@@ -200,6 +202,7 @@ void glist_retext(t_glist *glist, t_text *y)
 void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
     t_glistkeyfn keyfn, int xpos, int ypos)
 {
+	//fprintf(stderr,"glist_grab\n");
     t_glist *x2 = glist_getcanvas(x);
     if (motionfn)
         x2->gl_editor->e_onmotion = MA_PASSOUT;
@@ -786,14 +789,14 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 	    if (vis && gobj_shouldvis(gr, parent_glist))
 	    {
 	        sys_vgui(".x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d -tags %s -fill $graph_outline\n",
+ %d %d %d %d %d %d %d %d %d %d -tags %sfill -fill $graph_outline\n",
 	            glist_getcanvas(x->gl_owner),
 				//parent_glist,
 	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
 	    }
 	    else if (gobj_shouldvis(gr, parent_glist))
 	    {
-	        sys_vgui(".x%lx.c delete %s\n",
+	        sys_vgui(".x%lx.c delete %sfill\n",
 	            glist_getcanvas(x->gl_owner), tag);
 				//parent_glist, tag);
 	    }
@@ -1084,9 +1087,11 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
             glist_getcanvas(x->gl_owner), tag, dx, dy);
         sys_vgui(".x%lx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
-        glist_redraw(x);
-		gobj_select(z, glist, 1);
-        canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
+		if (!do_not_redraw) {
+        	glist_redraw(glist_getcanvas(glist));
+			gobj_select(z, glist, 1);
+        	canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
+		}
     }
 }
 
@@ -1146,6 +1151,10 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
         	sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
                  canvas, rtext_gettag(y), 
                  (state? "$select_color" : "$text_color"));
+
+        	sys_vgui(".x%lx.c itemconfigure %sfill -fill %s\n",
+                 canvas, rtext_gettag(y), 
+                 (state? "$select_color" : "$graph_outline"));
 		}
 
 		t_gobj *g;
