@@ -78,12 +78,17 @@ extern int sys_blocksize;       /* audio I/O block size in sample frames */
 extern t_float sys_dacsr;
 extern int sys_schedadvance;
 extern int sys_sleepgrain;
-void sys_set_audio_settings(int naudioindev, int *audioindev,
+EXTERN void sys_set_audio_settings(int naudioindev, int *audioindev,
     int nchindev, int *chindev,
     int naudiooutdev, int *audiooutdev, int nchoutdev, int *choutdev,
-    int srate, int advance, int callback);
-void sys_reopen_audio( void);
-void sys_close_audio(void);
+    int srate, int advance, int callback, int blocksize);
+/* the same as above, but reopens the audio subsystem if needed */
+EXTERN void sys_set_audio_settings_reopen(int naudioindev, int *audioindev,
+    int nchindev, int *chindev,
+    int naudiooutdev, int *audiooutdev, int nchoutdev, int *choutdev,
+    int srate, int advance, int callback, int blocksize);
+EXTERN void sys_reopen_audio( void);
+EXTERN void sys_close_audio(void);
 
 
 int sys_send_dacs(void);
@@ -236,7 +241,7 @@ void pa_getdevs(char *indevlist, int *nindevs,
 
 int oss_open_audio(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
-    int *choutdev, int rate);
+    int *choutdev, int rate, int blocksize);
 void oss_close_audio(void);
 int oss_send_dacs(void);
 void oss_reportidle(void);
@@ -246,7 +251,7 @@ void oss_getdevs(char *indevlist, int *nindevs,
 
 int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
-    int *choutdev, int rate);
+    int *choutdev, int rate, int blocksize);
 void alsa_close_audio(void);
 int alsa_send_dacs(void);
 void alsa_reportidle(void);
@@ -254,7 +259,8 @@ void alsa_getdevs(char *indevlist, int *nindevs,
     char *outdevlist, int *noutdevs, int *canmulti, 
         int maxndev, int devdescsize);
 
-int jack_open_audio(int wantinchans, int wantoutchans, int srate);
+int jack_open_audio(int wantinchans, int wantoutchans, int srate,
+    t_audiocallback callback);
 void jack_close_audio(void);
 int jack_send_dacs(void);
 void jack_reportidle(void);
@@ -265,13 +271,40 @@ void jack_listdevs(void);
 
 int mmio_open_audio(int naudioindev, int *audioindev,
     int nchindev, int *chindev, int naudiooutdev, int *audiooutdev,
-    int nchoutdev, int *choutdev, int rate);
+    int nchoutdev, int *choutdev, int rate, int blocksize);
 void mmio_close_audio( void);
 void mmio_reportidle(void);
 int mmio_send_dacs(void);
 void mmio_getdevs(char *indevlist, int *nindevs,
     char *outdevlist, int *noutdevs, int *canmulti, 
         int maxndev, int devdescsize);
+
+int audiounit_open_audio(int naudioindev, int *audioindev, int nchindev,
+    int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
+    int *choutdev, int rate);
+void audiounit_close_audio(void);
+int audiounit_send_dacs(void);
+void audiounit_listdevs(void);
+void audiounit_getdevs(char *indevlist, int *nindevs,
+    char *outdevlist, int *noutdevs, int *canmulti, 
+        int maxndev, int devdescsize);
+
+int esd_open_audio(int naudioindev, int *audioindev, int nchindev,
+    int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
+    int *choutdev, int rate);
+void esd_close_audio(void);
+int esd_send_dacs(void);
+void esd_listdevs(void);
+void esd_getdevs(char *indevlist, int *nindevs,
+    char *outdevlist, int *noutdevs, int *canmulti, 
+        int maxndev, int devdescsize);
+
+int dummy_open_audio(int nin, int nout, int sr);
+int dummy_close_audio( void);
+int dummy_send_dacs( void);
+void dummy_getdevs(char *indevlist, int *nindevs, char *outdevlist,
+    int *noutdevs, int *canmulti, int maxndev, int devdescsize);
+void dummy_listdevs( void);
 
 void sys_listmididevs(void);
 void sys_set_midi_api(int whichapi);
@@ -284,14 +317,14 @@ void sys_set_audio_state(int onoff);
 void oss_set32bit( void);
 void linux_alsa_devname(char *devname);
 
-void sys_get_audio_params(
+EXTERN void sys_get_audio_params(
     int *pnaudioindev, int *paudioindev, int *chindev,
     int *pnaudiooutdev, int *paudiooutdev, int *choutdev,
-    int *prate, int *padvance, int *callback);
+    int *prate, int *padvance, int *callback, int *blocksize);
 void sys_save_audio_params(
     int naudioindev, int *audioindev, int *chindev,
     int naudiooutdev, int *audiooutdev, int *choutdev,
-    int rate, int advance, int callback);
+    int rate, int advance, int callback, int blocksize);
 
 /* s_file.c */
 
