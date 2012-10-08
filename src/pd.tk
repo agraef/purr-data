@@ -6358,6 +6358,7 @@ proc pdtk_audio_dialog {id indev1 indev2 indev3 indev4 \
     set audio_sr $sr
     set audio_advance $advance
     set audio_callback $callback
+
     toplevel $id -class [winfo class .]
 	match_linux_wm [list $id configure]
     wm title $id {Audio Settings}
@@ -6389,6 +6390,7 @@ proc pdtk_audio_dialog {id indev1 indev2 indev3 indev4 \
     match_linux_wm [list label $id.srf.l2 -text "delay (msec):"]
     match_linux_wm [list entry $id.srf.x2 -textvariable audio_advance -width 4]
     pack $id.srf.l1 $id.srf.x1 $id.srf.l2 $id.srf.x2 -side left -pady 3
+
     if {$audio_callback >= 0} {
         match_linux_wm [list checkbutton $id.srf.x3 -variable audio_callback \
             -text {use callbacks} -anchor e]

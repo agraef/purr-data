@@ -42,8 +42,8 @@ int pd_extern_sched(char *flags)
     t_binbuf *b = binbuf_new();
 
     sys_get_audio_params(&naudioindev, audioindev, chindev,
-        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback,
-            &blocksize);
+        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback); //,
+          //  &blocksize);
 
     chin = (naudioindev < 1 ? 0 : chindev[0]);
     chout = (naudiooutdev < 1 ? 0 : choutdev[0]);

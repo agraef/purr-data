@@ -73,7 +73,6 @@ char sys_fontweight[] = "normal"; /* currently only used for iemguis */
 static int sys_main_srate;
 static int sys_main_advance;
 static int sys_main_callback;
-static int sys_main_blocksize;
 static int sys_listplease;
 
 int sys_externalschedlib;
@@ -583,7 +582,7 @@ int sys_argparse(int argc, char **argv)
         }
         else if (!strcmp(*argv, "-blocksize"))
         {
-            sys_main_blocksize = atoi(argv[1]);
+            sys_setblocksize(atoi(argv[1]));
             argc -= 2; argv += 2;
         }
         else if (!strcmp(*argv, "-sleepgrain") && (argc > 1))
@@ -929,7 +928,7 @@ static void sys_afterargparse(void)
     int i;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
-    int nchindev, nchoutdev, rate, advance, callback, blocksize;
+    int nchindev, nchoutdev, rate, advance, callback;
     int nmidiindev = 0, midiindev[MAXMIDIINDEV];
     int nmidioutdev = 0, midioutdev[MAXMIDIOUTDEV];
             /* add "extra" library to path */
@@ -965,8 +964,7 @@ static void sys_afterargparse(void)
             else are the default.  Overwrite them with any results
             of argument parsing, and store them again. */
     sys_get_audio_params(&naudioindev, audioindev, chindev,
-        &naudiooutdev, audiooutdev, choutdev, &rate, &advance,
-            &callback, &blocksize);
+        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
     if (sys_nchin >= 0)
     {
         nchindev = sys_nchin;
@@ -1014,11 +1012,9 @@ static void sys_afterargparse(void)
         rate = sys_main_srate;
     if (sys_main_callback)
         callback = sys_main_callback;
-	if (sys_main_blocksize)
-        blocksize = sys_main_blocksize;
     sys_set_audio_settings(naudioindev, audioindev, nchindev, chindev,
         naudiooutdev, audiooutdev, nchoutdev, choutdev, rate, advance, 
-        callback, blocksize);
+        callback);
     sys_open_midi(nmidiindev, midiindev, nmidioutdev, midioutdev, 0);
 }
 
