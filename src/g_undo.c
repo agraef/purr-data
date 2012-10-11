@@ -141,14 +141,14 @@ void canvas_undo_rebranch(t_canvas *x)
 		    switch(a1->type)
 		    {
 				case 1:	canvas_undo_connect(x, a1->data, UNDO_FREE); break; 		//connect
-				case 2:	canvas_undo_disconnect(x, a1->data, UNDO_FREE); break; 	//disconnect
+				case 2:	canvas_undo_disconnect(x, a1->data, UNDO_FREE); break; 		//disconnect
 				case 3:	canvas_undo_cut(x, a1->data, UNDO_FREE); break; 			//cut
 				case 4:	canvas_undo_move(x, a1->data, UNDO_FREE); break;			//move
-				case 5:	canvas_undo_paste(x, a1->data, UNDO_FREE); break;		//paste
-				case 6:	canvas_undo_apply(x, a1->data, UNDO_FREE); break;		//apply
-		    	case 7:	canvas_undo_arrange(x, a1->data, UNDO_FREE); break;		//arrange
+				case 5:	canvas_undo_paste(x, a1->data, UNDO_FREE); break;			//paste
+				case 6:	canvas_undo_apply(x, a1->data, UNDO_FREE); break;			//apply
+		    	case 7:	canvas_undo_arrange(x, a1->data, UNDO_FREE); break;			//arrange
 			    case 8:	canvas_undo_canvas_apply(x, a1->data, UNDO_FREE); break;	//canvas apply
-				case 9:	canvas_undo_create(x, a1->data, UNDO_FREE); break;		//create
+				case 9:	canvas_undo_create(x, a1->data, UNDO_FREE); break;			//create
 				case 10:canvas_undo_recreate(x, a1->data, UNDO_FREE); break;		//recreate
 				case 11:canvas_undo_font(x, a1->data, UNDO_FREE); break;			//font
 				default:
@@ -184,16 +184,16 @@ void canvas_undo_free(t_canvas *x)
 			//fprintf(stderr,".");
 		    switch(a1->type)
 		    {
-				case 0: break;													//init
+				case 0: break;														//init
 				case 1:	canvas_undo_connect(x, a1->data, UNDO_FREE); break; 		//connect
-				case 2:	canvas_undo_disconnect(x, a1->data, UNDO_FREE); break; 	//disconnect
+				case 2:	canvas_undo_disconnect(x, a1->data, UNDO_FREE); break; 		//disconnect
 				case 3:	canvas_undo_cut(x, a1->data, UNDO_FREE); break; 			//cut
 				case 4:	canvas_undo_move(x, a1->data, UNDO_FREE); break;			//move
-				case 5:	canvas_undo_paste(x, a1->data, UNDO_FREE); break;		//paste
-				case 6:	canvas_undo_paste(x, a1->data, UNDO_FREE); break;		//apply
-		    	case 7:	canvas_undo_arrange(x, a1->data, UNDO_FREE); break;		//arrange
+				case 5:	canvas_undo_paste(x, a1->data, UNDO_FREE); break;			//paste
+				case 6:	canvas_undo_apply(x, a1->data, UNDO_FREE); break;			//apply
+		    	case 7:	canvas_undo_arrange(x, a1->data, UNDO_FREE); break;			//arrange
 			    case 8:	canvas_undo_canvas_apply(x, a1->data, UNDO_FREE); break;	//canvas apply
-				case 9:	canvas_undo_create(x, a1->data, UNDO_FREE); break;		//create
+				case 9:	canvas_undo_create(x, a1->data, UNDO_FREE); break;			//create
 				case 10:canvas_undo_recreate(x, a1->data, UNDO_FREE); break;		//recreate
 				case 11:canvas_undo_font(x, a1->data, UNDO_FREE); break;			//font
 				default:
