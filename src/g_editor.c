@@ -263,9 +263,10 @@ int glist_isselected(t_glist *x, t_gobj *y)
     /* call this for unselected objects only */
 void glist_select(t_glist *x, t_gobj *y)
 {
-	//fprintf(stderr,"glist_select\n");
+	//fprintf(stderr,"glist_select c_selection=%lx x=%lx\n", (t_int)c_selection, (t_int)x);
     if (x->gl_editor)
     {
+		//fprintf(stderr,"have editor\n");
 #ifdef PDL2ORK
 		// exception: if we are in K12 mode and preset_hub is hidden, do not select it
 		if (sys_k12_mode && y->g_pd == preset_hub_class) {
@@ -274,11 +275,15 @@ void glist_select(t_glist *x, t_gobj *y)
 			if (ph->ph_invis > 0) return;
 		}
 #endif
-		if (c_selection && c_selection != x)
+		if (c_selection && c_selection != x) {
+			//fprintf(stderr,"deselecting\n");
 			glist_noselect(c_selection);
+		}
         t_selection *sel = (t_selection *)getbytes(sizeof(*sel));
-        if (x->gl_editor->e_selectedline)
+        if (x->gl_editor->e_selectedline) {
+			//fprintf(stderr,"deselecting line\n");
             glist_deselectline(x);
+		}
             /* LATER #ifdef out the following check */
         if (glist_isselected(x, y)) bug("glist_select");
         sel->sel_next = x->gl_editor->e_selection;
@@ -290,6 +295,7 @@ void glist_select(t_glist *x, t_gobj *y)
 		sys_vgui("pdtk_canvas_update_edit_menu .x%lx 1\n", x);
 		canvas_draw_gop_resize_hooks(x);
     }
+	//fprintf(stderr,"select done\n");
 }
 
     /* recursively deselect everything in a gobj "g", if it happens to be
@@ -1035,6 +1041,9 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
     t_gobj *g;
     int i, nobj = glist_getindex(gl, 0);  /* number of objects */
     int hadwindow = gl->gl_havewindow;
+	int found = 0;
+	// to optimize redrawing we select all objects that need to be updated and redraw them together
+	// then we look for sub-patches that may have more of the same...
     for (g = gl->gl_list, i = 0; g && i < nobj; i++)
     {
         if (g != except && pd_class(&g->g_pd) == canvas_class &&
@@ -1046,26 +1055,46 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
                 Get its index here, and afterward restore g.  Also, the
                 replacement will be at the end of the list, so we don't
                 do g = g->g_next in this case. */
-			//fprintf(stderr, "rebuildlicious\n");
             int j = glist_getindex(gl, g);
-            if (!gl->gl_havewindow)
+			//fprintf(stderr, "rebuildlicious %d\n", j);
+            if (!gl->gl_havewindow) {
                 canvas_vis(glist_getcanvas(gl), 1);
-            glist_noselect(gl);
+				//fprintf(stderr,"calling canvas_vis\n");
+			}
+			if (!found) {
+				glist_noselect(gl);
+				found = 1;
+			}
             glist_select(gl, g);
             //canvas_setundo(gl, canvas_undo_cut,
             //    canvas_undo_set_cut(gl, UCUT_CLEAR), "clear");
-			canvas_undo_add(gl, 3, "clear", canvas_undo_set_cut(gl, UCUT_CLEAR));
-            canvas_doclear(gl);
-            canvas_undo_undo(gl);
-            glist_noselect(gl);
-            g = glist_nth(gl, j);
+			//canvas_undo_add(gl, 3, "clear", canvas_undo_set_cut(gl, UCUT_CLEAR));
+
+			//canvas_cut(gl);
+			//canvas_undo_undo(gl);
+			//glist_noselect(gl);
+            //g = glist_nth(gl, j+1);
         }
-        else
-        {
-            if (g != except && pd_class(&g->g_pd) == canvas_class)
+		g = g->g_next;
+	}
+	if (found) {
+		canvas_cut(gl);
+		canvas_undo_undo(gl);
+		//canvas_undo_rebranch(gl);
+		glist_noselect(gl);
+	}
+
+	// now look for sub-patches...
+    for (g = gl->gl_list, i = 0; g && i < nobj; i++)
+    {
+        if (g != except && pd_class(&g->g_pd) == canvas_class &&
+
+            (!canvas_isabstraction((t_canvas *)g) ||
+                 ((t_canvas *)g)->gl_name != name ||
+                 canvas_getdir((t_canvas *)g) != dir)
+		   )
                 glist_doreload((t_canvas *)g, name, dir, except);
-             	g = g->g_next;
-        }
+        g = g->g_next;
     }
     if (!hadwindow && gl->gl_havewindow)
         canvas_vis(glist_getcanvas(gl), 0);
