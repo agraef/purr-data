@@ -69,8 +69,8 @@ void clock_unset(t_clock *x)
         else
         {
             t_clock *x2 = clock_setlist;
-            while (x2->c_next != x) x2 = x2->c_next;
-            x2->c_next = x->c_next;
+            while (x2 && x2->c_next != x) x2 = x2->c_next;
+            if (x2) x2->c_next = x->c_next;
         }
         x->c_settime = -1;
     }
