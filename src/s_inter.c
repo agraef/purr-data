@@ -1315,6 +1315,8 @@ void sys_bail(int n)
 //extern t_pd *garray_floattemplatecanvas;
 extern void glob_closeall(void *dummy, t_floatarg fforce);
 
+extern int do_not_redraw;
+
 void glob_quit(void *dummy)
 {
 	//If we're going to try to cleanly close everything here, we should do the same for all open
@@ -1325,6 +1327,7 @@ void glob_quit(void *dummy)
 	//if (garray_arraytemplatecanvas) canvas_free( (t_canvas *)garray_arraytemplatecanvas);
 	//if (garray_floattemplatecanvas) canvas_free( (t_canvas *)garray_floattemplatecanvas);
 	canvas_suspend_dsp();
+	do_not_redraw = 1;
 	glob_closeall(0, 1);
     sys_vgui("exit\n");
     if (!sys_nogui)
