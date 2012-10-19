@@ -1419,17 +1419,19 @@ static void canvas_stop_dsp(void)
     /* DSP can be suspended before, and resumed after, operations which
     might affect the DSP chain.  For example, we suspend before loading and
     resume afterward, so that DSP doesn't get resorted for every DSP object
-    int the patch. */
+    in the patch. */
 
 int canvas_suspend_dsp(void)
 {
     int rval = canvas_dspstate;
+	//fprintf(stderr,"canvas_suspend_dsp %d\n", rval);
     if (rval) canvas_stop_dsp();
     return (rval);
 }
 
 void canvas_resume_dsp(int oldstate)
 {
+	//fprintf(stderr,"canvas_resume_dsp %d\n", oldstate);
     if (oldstate) canvas_start_dsp();
 }
 
