@@ -1,4 +1,4 @@
-#N canvas 138 24 555 516 10;
+#N canvas 138 24 555 517 10;
 #X obj 183 295 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
@@ -95,7 +95,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 474 3 preset_hub;
 #X obj 430 21 pddp/pddplink http://wiki.puredata.info/en/preset_hub
 -text pdpedia: preset_hub;
-#X text 98 376 purge;
+#X text 99 376 purge;
 #X text 98 397 recall;
 #X text 98 438 store;
 #X text 81 515 1) symbol;
@@ -136,11 +136,10 @@ same canvas as the abstraction:;
 #X text 40 171 [preset_hub foo] <-- this won't apply to [bar] because
 ;
 #X restore 461 551 pd More_info;
-#X text 98 356 clearall;
 #X text 168 376 - purge all orphaned/unused nodes;
 #X text 168 418 - reset all preset node data;
-#X text 168 356 - via preset_node \, like hub's "clear" \, clears preset
-n;
+#X text 98 356 clear;
+#X text 168 356 - clears preset n for all nodes;
 #X connect 13 0 19 0;
 #X connect 14 0 13 0;
 #X connect 15 0 13 0;
