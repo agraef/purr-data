@@ -568,7 +568,6 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 	// (the undo check is done inside the preset_node_seek_hub)
 	preset_node_seek_hub(x);
 
-	fprintf(stderr,"constructor DONE\n");
     return(x);
 }
 
