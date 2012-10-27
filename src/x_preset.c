@@ -10,7 +10,7 @@
 #include "x_preset.h"
 #include "s_stuff.h"
 
-#define PH_DEBUG 0
+#define PH_DEBUG 1
 
 //		changes in order happen when doing one of the following: cut, 
 //		undo cut, delete, undo delete, to front, and to back.
@@ -150,6 +150,8 @@ int glob_preset_node_list_update_paired(t_preset_node *x, int paired)
 void glob_preset_node_list_seek_hub(void)
 {
 	if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_seek_hub\n");
+	if (we_are_undoing)
+		return;
 	t_glob_preset_node_list *nl;
 
 	if (gpnl) {
@@ -362,6 +364,8 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 void preset_node_seek_hub(t_preset_node *x)
 {
 	if(PH_DEBUG) fprintf(stderr,"preset_node_seek_hub %lx\n", (t_int)x->pn_hub);
+	if (we_are_undoing)
+		return;
 	t_canvas *y = x->pn_canvas;
 	t_preset_hub *h;
 
@@ -561,9 +565,10 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 	// pre-loadbang if the patch is being loaded (this one is for manually created objects)
 	// do this only if we are not undoing, otherwise, we'll have the undo do it for us
 	// once it has repositioned objects to their original locations
-	if (!we_are_undoing)
-		preset_node_seek_hub(x);
+	// (the undo check is done inside the preset_node_seek_hub)
+	preset_node_seek_hub(x);
 
+	fprintf(stderr,"constructor DONE\n");
     return(x);
 }
 
@@ -1259,8 +1264,8 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	// multiple abstractions with same hubs/nodes do not trip over each other)
 	// do this only if we are not undoing, otherwise, we'll have the undo do it for us
 	// once it has repositioned objects to their original locations
-	if (!we_are_undoing)
-		glob_preset_node_list_seek_hub();
+	// (the undo check is done inside the glob_preset_node_list_seek_hub)
+	glob_preset_node_list_seek_hub();
 
     return(x);
 }
