@@ -10,7 +10,7 @@
 #include "x_preset.h"
 #include "s_stuff.h"
 
-#define PH_DEBUG 1
+#define PH_DEBUG 0
 
 //		changes in order happen when doing one of the following: cut, 
 //		undo cut, delete, undo delete, to front, and to back.
