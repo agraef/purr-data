@@ -308,7 +308,7 @@ void obj_init(void)
 /* --------------------------- outlets ------------------------------ */
 
 static int stackcount = 0; /* iteration counter */
-#define STACKITER 1000 /* maximum iterations allowed */
+#define STACKITER 10000 /* maximum iterations allowed */
 
 static int outlet_eventno;
 
