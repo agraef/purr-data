@@ -386,6 +386,10 @@ proc pdtk_enable_k12_mode {extra_dir} {
 
 	image create photo i.edit -file $extra_dir/K12/icons/edit.png
 	image create photo i.perform -file $extra_dir/K12/icons/perform.png
+
+	pack forget .controls.switches.audiobutton
+	#pack forget .controls.inout
+	.mbar.audio delete 0 2
 }
 
 # calculate offset on a movable canvas
@@ -674,7 +678,7 @@ match_linux_wm [list checkbutton .controls.switches.audiobutton -text {compute a
     -variable ctrls_audio_on \
     -command {pd [concat pd dsp $ctrls_audio_on \;]}]
 
-match_linux_wm [list checkbutton .controls.switches.meterbutton -text {peak meters} \
+match_linux_wm [list checkbutton .controls.switches.meterbutton -text {peak meters  } \
     -variable ctrls_meter_on \
     -command {pd [concat pd meters $ctrls_meter_on \;]}]
 
@@ -1466,8 +1470,8 @@ if {$pd_nt != 2} {
 .mbar.edit add command -label Duplicate -accelerator [accel_munge "Ctrl+d"] \
     -state disabled
 # this should apply to .printout.frame.text
-.mbar.edit add command -label {Select all} -accelerator [accel_munge "Ctrl+a"]\
-    -command {pdtk_post selall; .printout.frame.text tag add sel 1.0 end}
+.mbar.edit add command -label {Select all in console} -accelerator [accel_munge "Ctrl+a"]\
+    -command {.printout.frame.text tag add sel 1.0 end}
 .mbar.edit add command -label {Reselect} \
         -accelerator "Ctrl+Enter" -state disabled
 .mbar.edit add separator
