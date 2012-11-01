@@ -2603,7 +2603,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         }
         return;
     }
-        /* if not a runmode left click, fall here. */
+        /* if in editmode left click, fall here. */
     if (y = canvas_findhitbox(x, xpos, ypos, &x1, &y1, &x2, &y2))
     {
         t_object *ob;
@@ -2613,6 +2613,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             canvas_rightclick(x, xpos, ypos, y);
         else if (shiftmod)
         {
+			//selection
             if (doit)
             {
                 t_rtext *rt;
@@ -2640,7 +2641,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         }
         else
         {
-                /* look for an outlet */
+                /* look for an outlet we just clicked onto */
             int noutlet;
 			int ninlet;
             if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-4)
@@ -2928,7 +2929,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     {
 		sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
        			x, canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+				(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
 				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
 		if (objtooltip) {
 			objtooltip = 0;
