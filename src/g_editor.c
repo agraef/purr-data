@@ -3004,9 +3004,13 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     int xwas = x->gl_editor->e_xwas,
         ywas = x->gl_editor->e_ywas;
     if (doit) sys_vgui(".x%lx.c delete x\n", x);
-    else sys_vgui(".x%lx.c coords x %d %d %d %d\n",
+    else {
+
+		sys_vgui(".x%lx.c coords x %d %d %d %d\n",
             x, x->gl_editor->e_xwas,
                 x->gl_editor->e_ywas, xpos, ypos);
+		sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 0\n", x);
+	}
 
     if ((y1 = canvas_findhitbox(x, xwas, ywas, &x11, &y11, &x12, &y12))
         && (y2 = canvas_findhitbox(x, xpos, ypos, &x21, &y21, &x22, &y22)))
@@ -3100,7 +3104,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 				// now check if explicit user-made connection into preset_node if kind other than message
 				// messages may be used to change node's operation
 				if (pd_class(&y2->g_pd) == preset_node_class && pd_class(&y1->g_pd) != message_class) {
-					error("preset node only accepts messages as input to set its destination preset_hub...\n");
+					error("preset node only accepts messages as input to adjust its settings...\n");
 					return;
 				}
 
@@ -3630,7 +3634,9 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         canvas_displaceselection(x, 
             xpos - x->gl_editor->e_xwas, ypos - x->gl_editor->e_ywas);
         x->gl_editor->e_xwas = xpos;
-        x->gl_editor->e_ywas = ypos;   
+        x->gl_editor->e_ywas = ypos;
+		//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+		//sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 20\n", x);  
     }
     else if (x->gl_editor->e_onmotion == MA_REGION)
         canvas_doregion(x, xpos, ypos, 0);

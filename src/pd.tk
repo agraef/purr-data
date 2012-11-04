@@ -3815,6 +3815,34 @@ proc pdtk_canvas_scroll {canvas xy distance} {
 	}
 }
 
+proc pdtk_check_scroll_on_motion {w threshold} {
+	set x1 [$w canvasx 0]
+	set x2 [expr [$w canvasx 0] + [winfo width $w]]
+	set y1 [$w canvasy 0]
+	set y2 [expr [$w canvasy 0] + [winfo height $w]]
+    set xpointer [expr [$w canvasx 0] + [winfo pointerx $w]-[winfo rootx $w]]
+    set ypointer [expr [$w canvasy 0] + [winfo pointery $w]-[winfo rooty $w]]
+
+	#puts stderr "pdtk_boo x1=$x1 x2=$x2 y1=$y1 y2=$y2 xp=$xpointer yp=$ypointer"
+
+	if { $::xscrollable([winfo parent $w]) == 1 } {
+		if { $xpointer > [expr $x2 + $threshold] } {
+			pdtk_canvas_scroll $w x 1
+		}
+		if { $xpointer < [expr $x1 - $threshold] } {
+			pdtk_canvas_scroll $w x -1
+		}
+	}
+	if { $::yscrollable([winfo parent $w]) == 1 } {
+		if { $ypointer > [expr $y2 + $threshold] } {
+			pdtk_canvas_scroll $w y 1
+		}
+		if { $ypointer < [expr $y1 - $threshold] } {
+			pdtk_canvas_scroll $w y -1
+		}
+	}
+}
+
 proc pdtk_canvas_motion {name x y mods} {
 	global pointer_x_local pointer_y_local pointer_x_global pointer_y_global tooltip_visible
 	set pointer_x_local $x
