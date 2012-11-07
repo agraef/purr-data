@@ -3383,7 +3383,7 @@ proc pdtk_canvas_getscroll_ping {name} {
 		return
 	}
 	if {$::update_tick($wname) == 2} {
-		set ::update_tick($wname) 3		
+		set ::update_tick($wname) 3	
 		pdtk_canvas_getscroll $name
 	}
 	after 50 [list pdtk_canvas_getscroll_ping $name]
@@ -3416,7 +3416,7 @@ proc pdtk_canvas_getscroll {name} {
     global pdtk_canvas_mouseup_ymaxval
 
     # kludge since this gets called sometimes after a canvas is destroyed
-    if {! [winfo exists $name]} {return}
+    if {![winfo exists $name]} {return}
 
 	# waiting for refresh
 	if {$::update_tick([winfo parent $name]) == 2} {return}
@@ -3515,6 +3515,7 @@ proc pdtk_canvas_getscroll {name} {
 				pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
 				update
+				if {![winfo exists $name]} {return}
 				set winwidth [winfo width $parentname.c]
 				set winheight [winfo height $parentname.c]
 			}
@@ -3522,6 +3523,7 @@ proc pdtk_canvas_getscroll {name} {
 				pack forget $parentname.scrollvert
 				set ::yscrollable($parentname) 0
 				update
+				if {![winfo exists $name]} {return}
 				set winwidth [winfo width $parentname.c]
 				set winheight [winfo height $parentname.c]
 			}
