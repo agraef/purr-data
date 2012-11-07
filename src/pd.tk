@@ -3511,19 +3511,15 @@ proc pdtk_canvas_getscroll {name} {
 		#puts stderr "$winwidth ? $canvaswidth   $winheight ? $canvasheight"
 
 		if {$::scroll($parentname) == 1} {
-			if {$winwidth >= $canvaswidth} {
+			if {$winwidth >= $canvaswidth || $::xscrollable($parentname) && [expr $winwidth + 14] >= $canvaswidth} {
 				pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
-				update
-				if {![winfo exists $name]} {return}
 				set winwidth [winfo width $parentname.c]
 				set winheight [winfo height $parentname.c]
 			}
-			if {$winheight >= $canvasheight} {
+			if {$winheight >= $canvasheight || $::yscrollable($parentname) && [expr $winheight + 14] >= $canvasheight} {
 				pack forget $parentname.scrollvert
 				set ::yscrollable($parentname) 0
-				update
-				if {![winfo exists $name]} {return}
 				set winwidth [winfo width $parentname.c]
 				set winheight [winfo height $parentname.c]
 			}
