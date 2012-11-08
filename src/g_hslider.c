@@ -46,7 +46,7 @@ static void hslider_draw_update(t_gobj *client, t_glist *glist)
 
     if (glist_isvisible(glist))
     {
-        int r = text_xpix(&x->x_gui.x_obj, glist) + (x->x_val + 50)/100;
+        int r = text_xpix(&x->x_gui.x_obj, glist) + 3 + (x->x_val + 50)/100;
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
                  canvas, x, r, ypos+2,
                  r, ypos + x->x_gui.x_h-1);
@@ -73,7 +73,7 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 {
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    int r = xpos + (x->x_val + 50)/100;
+    int r = xpos + 3 + (x->x_val + 50)/100;
     t_canvas *canvas=glist_getcanvas(glist);
 
 	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
@@ -97,8 +97,8 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 		else nlet_tag = "bogus";
 
 		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxHSLDR text}\n",
-		         canvas, xpos-3, ypos,
-		         xpos + x->x_gui.x_w+2, ypos + x->x_gui.x_h,
+		         canvas, xpos, ypos,
+		         xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x);
 		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxHSLDR text}\n",
 		         canvas, r, ypos+2, r,
@@ -112,12 +112,12 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 				 x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxHSLDR outlet}\n",
-		         canvas, xpos-3, ypos + x->x_gui.x_h-1,
-		         xpos+4, ypos + x->x_gui.x_h, nlet_tag, 0, x);
+		         canvas, xpos, ypos + x->x_gui.x_h-1,
+		         xpos+7, ypos + x->x_gui.x_h, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxHSLDR inlet}\n",
-		         canvas, xpos-3, ypos,
-		         xpos+4, ypos+1, nlet_tag, 0, x);
+		         canvas, xpos, ypos,
+		         xpos+7, ypos+1, nlet_tag, 0, x);
 	//}
 }
 
@@ -125,7 +125,7 @@ static void hslider_draw_move(t_hslider *x, t_glist *glist)
 {
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    int r = xpos + (x->x_val + 50)/100;
+    int r = xpos + 3 + (x->x_val + 50)/100;
     t_canvas *canvas=glist_getcanvas(glist);
 
 	if (glist_isvisible(canvas)) {
@@ -145,8 +145,8 @@ static void hslider_draw_move(t_hslider *x, t_glist *glist)
 
 		sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
 		         canvas, x,
-		         xpos-3, ypos,
-		         xpos + x->x_gui.x_w+2, ypos + x->x_gui.x_h);
+		         xpos, ypos,
+		         xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h);
 		sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
 		         canvas, x, r, ypos+2,
 		         r, ypos + x->x_gui.x_h-1);
@@ -155,13 +155,13 @@ static void hslider_draw_move(t_hslider *x, t_glist *glist)
 		if(!x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
 		         canvas, nlet_tag, 0,
-		         xpos-3, ypos + x->x_gui.x_h-1,
-		         xpos+4, ypos + x->x_gui.x_h);
+		         xpos, ypos + x->x_gui.x_h-1,
+		         xpos+7, ypos + x->x_gui.x_h);
 		if(!x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
 		         canvas, nlet_tag, 0,
-		         xpos-3, ypos,
-		         xpos+4, ypos+1);
+		         xpos, ypos,
+		         xpos+7, ypos+1);
 		/* redraw scale handle rectangle if selected */
 		if (x->x_gui.x_fsf.x_selected) {
 			hslider_draw_select(x, x->x_gui.x_glist);
@@ -241,14 +241,14 @@ static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
-		         canvas, xpos-3, ypos + x->x_gui.x_h-1,
-		         xpos+4, ypos + x->x_gui.x_h, nlet_tag, 0);
+		         canvas, xpos, ypos + x->x_gui.x_h-1,
+		         xpos+7, ypos + x->x_gui.x_h, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
-		         canvas, xpos-3, ypos,
-		         xpos+4, ypos+1, nlet_tag, 0);
+		         canvas, xpos, ypos,
+		         xpos+7, ypos+1, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 0);
 	}
@@ -277,7 +277,7 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHSLDR}\n",
-					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 2 - SCALEHANDLE_WIDTH - 1,
+					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 5 - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
 					 sh->h_pathname, x, x);
@@ -396,8 +396,8 @@ static void hslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, 
 			sys_vgui("lower %s\n", sh->h_pathname);
 			sys_vgui(".x%x.c create rectangle %d %d %d %d\
 	 -outline $select_color -width 1 -tags %s\n",
-				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix - 3, x->x_gui.x_obj.te_ypix,
-					x->x_gui.x_obj.te_xpix + 2 + x->x_gui.x_w,
+				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
+					x->x_gui.x_obj.te_xpix + 5 + x->x_gui.x_w,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
 		}
 
@@ -471,8 +471,8 @@ static void hslider__motionhook(t_scalehandle *sh,
 
 		if (glist_isvisible(x->x_gui.x_glist)) {
 			sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-				 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix - 3,
-				 x->x_gui.x_obj.te_ypix, newx + 2, newy);
+				 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
+				 x->x_gui.x_obj.te_ypix, newx + 5, newy);
 		}
 		sh->h_dragx = dx;
 		sh->h_dragy = dy;
@@ -547,9 +547,9 @@ static void hslider_getrect(t_gobj *z, t_glist *glist,
 {
     t_hslider* x = (t_hslider*)z;
 
-    *xp1 = text_xpix(&x->x_gui.x_obj, glist) - 3;
+    *xp1 = text_xpix(&x->x_gui.x_obj, glist);
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
-    *xp2 = *xp1 + x->x_gui.x_w + 5;
+    *xp2 = *xp1 + x->x_gui.x_w + 8;
     *yp2 = *yp1 + x->x_gui.x_h;
 }
 
