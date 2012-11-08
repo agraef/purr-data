@@ -338,7 +338,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
 	int connectme, xpix, ypix, indx, nobj;
     canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
 
-	/*compensate for the iemgui sliders' xyoffset in the case of autopatch */
+	/*compensate for the iemgui sliders' xyoffset in case of autopatch */
 	if(connectme) {
 		if(!strcmp(guiobjname->s_name, "hsl"))
 			xpix = xpix + 3;
