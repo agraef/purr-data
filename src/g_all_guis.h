@@ -280,6 +280,8 @@ typedef struct _vslider
     t_iemgui x_gui;
     int      x_pos;
     int      x_val;
+    int      x_center;
+    int      x_thick;
     int      x_lin0_log1;
     int      x_steady;
     double   x_min;
