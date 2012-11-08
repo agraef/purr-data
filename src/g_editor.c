@@ -12,6 +12,7 @@
 #include "g_undo.h"
 #include "x_preset.h"
 #include <string.h>
+#include "g_all_guis.h"
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename,
     int selectem);
@@ -4765,12 +4766,439 @@ bad:
             (sink? class_getname(pd_class(&sink->g_pd)) : "???"));
 }
 
+/* new implementation works in such a way that it first tries to line up all objects in the same line depending on the minimal distance between values (e.g. if objects' y values are closer than x values the alignment will happen vertically and vice-versa). If the objects already exhibit 0 difference across one axis, it will pick the top/left-most two objects and use them as a reference for spatialization between the remaining selected objects. any further tidy calls will be ignored */
+
+// struct for storing spatially aware list of selected gobjects
+typedef struct _sgobj
+{
+    t_gobj *s_g;
+	int s_x1;
+	int s_x2;
+	int s_y1;
+	int s_y2;
+    struct _sgobj *s_next;
+} t_sgobj;
+
+static int sgobj_already_processed(t_gobj *y, t_sgobj *sg) {
+	while (sg) {
+		if (sg->s_g == y)
+			return(1);
+		sg = sg->s_next;
+	}
+	return(0);
+}
+
+static int canvas_tidy_gobj_width(t_canvas *x, t_gobj *y) {
+
+	int w = 0;
+	int x1, y1, x2, y2;
+	gobj_getrect(y, x, &x1, &y1, &x2, &y2);
+	w = x2 - x1;
+	//fprintf(stderr,"width = %d\n", w);
+	return(w);
+}
+
+static int canvas_tidy_gobj_height(t_canvas *x, t_gobj *y) {
+
+	int h = 0;
+	int x1, y1, x2, y2;
+	gobj_getrect(y, x, &x1, &y1, &x2, &y2);
+	h = y2 - y1;
+	//fprintf(stderr,"height = %d\n", h);
+	return(h);
+}
+
+static void canvas_tidy(t_canvas *x)
+{
+	// if we have no editor, no selection, or only one object selected, return
+	if (!x->gl_editor || !x->gl_editor->e_selection || !x->gl_editor->e_selection->sel_next) return;
+
+	//fprintf(stderr,"canvas_tidy\n");
+	t_gobj *y;
+	t_text *yt, *rightmost_t = NULL, *topmost_t = NULL;
+	int h, v, hs, vs; // horizontal, vertical, horizontal respacing, vertical respacing
+	t_gobj *leftmost, *rightmost, *topmost, *bottommost;
+	int x1, x2, y1, y2;
+	int ox1, ox2, oy1, oy2; // object x and y dimensions
+	int cox1, cox2, coy1, coy2; // comparing object x and y dimensions
+	int dx, dy; // displacement variables
+	int i; // generic counter var
+	t_sgobj *sg, *tmpsg; // list of objects ordered spatially
+	int spacing = 0; // spacing between objects on respacing (this is adjustable)
+	int delta = 0;
+
+	dx = dy = h = v = hs = vs = 0;
+
+	t_selection *sel = x->gl_editor->e_selection;
+	y = sel->sel_what;
+	yt = (t_text *)y;
+	x1 = yt->te_xpix;
+	x2 = x1;
+	y1 = yt->te_ypix;
+	y2 = y1;
+
+	leftmost = y;
+	topmost = y;
+	rightmost = y;
+	bottommost = y;
+
+	sel = sel->sel_next;
+
+	// first find out whether we are dealing with horizontal or vertical alignment or spatialization
+	while (sel) {
+		y = sel->sel_what;
+		yt = (t_text *)y;
+
+		if (yt->te_xpix < x1) {
+			x1 = yt->te_xpix;
+		}
+		
+		if (yt->te_xpix > x2) {
+			x2 = yt->te_xpix;
+		}
+
+		if (yt->te_ypix < y1) {
+			y1 = yt->te_ypix;
+		}
+		
+		if (yt->te_ypix > y2) {
+			y2 = yt->te_ypix;
+		}
+
+		sel = sel->sel_next;
+	}
+	if (x2-x1 != 0 && x2-x1 < y2-y1) v = 1; //horizontal
+	else if (y2-y1 != 0 && y2-y1 <= x2-x1) h = 1; //vertical (takes precedence over vertical if two are equal)
+	else if (x2-x1 == 0) vs = 1; //vertically aligned respacing
+	else if (y2-y1 == 0) hs = 1; //horizontally aligned respacing
+
+	//fprintf(stderr,"h=%d v=%d hs=%d vs=%d\n", h, v, hs, vs);
+
+	// now find leftmost, topmost, rightmost, and bottommost object
+	sel = x->gl_editor->e_selection;
+	while (sel) {
+		y = sel->sel_what;
+		yt = (t_text *)y;
+		if(yt->te_xpix == x1) {
+			leftmost = y;
+			//fprintf(stderr,"leftmost %d\n", x1);
+		}
+		if(yt->te_xpix == x2) {
+			rightmost = y;
+			rightmost_t = (t_text *)y;
+			//fprintf(stderr,"rightmost %d\n", x2);
+		}
+		if(yt->te_ypix == y2) {
+			topmost = y;
+			topmost_t = (t_text *)y;
+			//fprintf(stderr,"topmost %d\n", y2);
+		}
+		if(yt->te_ypix == y1) {
+			bottommost = y;
+			//fprintf(stderr,"bottommost %d\n", y1);
+		}
+		sel = sel->sel_next;	
+	}
+
+	if (h == 1) {
+		// horizontal tidy (everyone lines up to the y of the leftmost object)
+		canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 1));
+		sel = x->gl_editor->e_selection;
+		yt = (t_text *)leftmost;
+		dy = yt->te_ypix;
+
+		while (sel) {
+			y = sel->sel_what;
+			yt = (t_text *)y;
+
+			//fprintf(stderr,"displace %d\n", dy - yt->te_ypix);
+			gobj_displace(y, x, 0, dy - yt->te_ypix);
+
+			sel = sel->sel_next;
+		}
+	}
+	else if (v == 1) {
+		// vertical tidy (everyone lines up to the x of the bottommost object, since y axis is inverted)
+		canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 1));
+		sel = x->gl_editor->e_selection;
+		yt = (t_text *)bottommost;
+		dx = yt->te_xpix;
+
+		while (sel) {
+			y = sel->sel_what;
+			yt = (t_text *)y;
+
+			//fprintf(stderr,"displace %d\n", dx - yt->te_xpix);
+			gobj_displace(y, x, dx - yt->te_xpix, 0);
+
+			sel = sel->sel_next;
+		}
+	}
+	else {
+		// first check if we have more than 2 objects selected (otherwise there is no point in doing this
+		sel = x->gl_editor->e_selection;
+		i = 1;
+		while (sel->sel_next) {
+			i++;
+			sel = sel->sel_next;
+		}
+
+		// we now know we will do a respace which means we need to first order objects according to their physical location (horizontal or vertical)
+		if (hs == 1) {
+
+			t_gobj *next_right = NULL;
+			t_text *next_right_t = NULL;
+
+			yt = (t_text *)rightmost;
+			sg = (t_sgobj *)getbytes(sizeof(*sg));
+			sg->s_g = rightmost;
+			sg->s_x1 = yt->te_xpix;
+			sg->s_x2 = yt->te_xpix + canvas_tidy_gobj_width(x, y);
+			sg->s_y1 = yt->te_ypix;
+			sg->s_y2 = yt->te_ypix + canvas_tidy_gobj_height(x, y);
+			sg->s_next = NULL;
+
+			//fprintf(stderr,"%d: x=%d y=%d width=%d height=%d\n", i, yt->te_xpix, yt->te_ypix, canvas_tidy_gobj_width(x, y), canvas_tidy_gobj_height(x, y)); 
+
+			i--;
+
+			while (i) {
+				//fprintf(stderr,"i=%d\n", i);
+				sel = x->gl_editor->e_selection;
+				while (sel) {
+					y = sel->sel_what;
+					yt = (t_text *)y;
+
+					//fprintf(stderr, "already processed ? %d ... x=%d y=%d\n", sgobj_already_processed(y, sg), yt->te_xpix, yt->te_ypix);
+
+					// we need to avoid duplicates
+					if (!sgobj_already_processed(y, sg)) {
+						if (!next_right && yt->te_xpix <= rightmost_t->te_xpix) {
+							next_right = y;
+							next_right_t = yt;
+						}
+						else if (next_right && yt->te_xpix >= next_right_t->te_xpix && yt->te_xpix <= rightmost_t->te_xpix) {
+							next_right = y;
+							next_right_t = yt;
+						}
+					}
+
+					sel = sel->sel_next;
+				}
+
+				tmpsg = (t_sgobj *)getbytes(sizeof(*sg));
+				tmpsg->s_g = next_right;
+				tmpsg->s_x1 = next_right_t->te_xpix;
+				tmpsg->s_x2 = next_right_t->te_xpix + canvas_tidy_gobj_width(x, next_right);
+				tmpsg->s_y1 = next_right_t->te_ypix;
+				tmpsg->s_y2 = next_right_t->te_ypix + canvas_tidy_gobj_height(x, next_right);
+				tmpsg->s_next = sg;
+				sg = tmpsg;
+
+				//fprintf(stderr,"%d: x=%d y=%d width=%d height=%d\n", i, next_right_t->te_xpix, next_right_t->te_ypix, canvas_tidy_gobj_width(x, next_right), canvas_tidy_gobj_height(x, next_right)); 
+
+				rightmost = next_right;
+				rightmost_t = next_right_t;
+				next_right = NULL;	
+
+				i--;
+			}
+
+			//fprintf(stderr,"got this far\n");
+			// now let's traverse the new list and find minimal spacing and use that as our reference
+			// if spacing is anywhere less than 0 (meaning objects overlap), use next legal value
+			// one that is greater than 0. If all values are < 0 then use default value (10).
+			tmpsg = sg;
+			while (tmpsg->s_next) {
+				//fprintf(stderr,"calculating spacing from: %d and %d\n", tmpsg->s_next->s_x1, tmpsg->s_x2);
+				if (tmpsg->s_next->s_x1 > tmpsg->s_x2 && (spacing <= 0 || (spacing > 0 && tmpsg->s_next->s_x1 - tmpsg->s_x2 < spacing)))
+					spacing = tmpsg->s_next->s_x1 - tmpsg->s_x2;
+				//fprintf(stderr,"spacing = %d\n", spacing);
+				tmpsg = tmpsg->s_next;
+			}
+			if (spacing <= 0) {
+#ifdef PDL2ORK
+				if (sys_k12_mode)
+					spacing = 25;
+				else
+#endif
+				spacing = 5;
+			}
+
+			//fprintf(stderr,"final spacing = %d\n", spacing);
+
+			//fprintf(stderr,"0...\n");
+
+			// now change all values in the list to their target values
+			tmpsg = sg;
+			while (tmpsg->s_next) {
+				//fprintf(stderr,"adjusting %d to %d + %d\n", tmpsg->s_next->s_x1, tmpsg->s_x2, spacing);
+				delta = tmpsg->s_next->s_x1 - (tmpsg->s_x2 + spacing);
+				tmpsg->s_next->s_x1 = tmpsg->s_next->s_x1 - delta;
+				tmpsg->s_next->s_x2 = tmpsg->s_next->s_x2 - delta;
+				tmpsg = tmpsg->s_next;
+			}
+
+			//fprintf(stderr,"1...\n");
+
+			// create an undo checkpoint
+			canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 1));
+
+			//fprintf(stderr,"2...\n");
+
+			// reposition all objects
+			tmpsg = sg;
+			while (tmpsg->s_next) {
+				yt = (t_text *)tmpsg->s_next->s_g;
+				//fprintf(stderr,"displace: %d %d\n", tmpsg->s_next->s_x1, yt->te_xpix);
+				gobj_displace(tmpsg->s_next->s_g, x, tmpsg->s_next->s_x1 - yt->te_xpix, 0);
+				tmpsg = tmpsg->s_next;
+			}
+
+			//fprintf(stderr,"3...\n");
+
+			// free the temporary list of spatialized objects
+			while (sg) {
+				tmpsg = sg->s_next;
+				freebytes(sg, sizeof(*sg));
+				sg = tmpsg;
+			}
+		}
+		else if (vs == 1) {
+
+			t_gobj *next_top = NULL;
+			t_text *next_top_t = NULL;
+
+			yt = (t_text *)topmost;
+			sg = (t_sgobj *)getbytes(sizeof(*sg));
+			sg->s_g = topmost;
+			sg->s_x1 = yt->te_xpix;
+			sg->s_x2 = yt->te_xpix + canvas_tidy_gobj_width(x, y);
+			sg->s_y1 = yt->te_ypix;
+			sg->s_y2 = yt->te_ypix + canvas_tidy_gobj_height(x, y);
+			sg->s_next = NULL;
+
+			//fprintf(stderr,"%d: x=%d y=%d width=%d height=%d\n", i, yt->te_xpix, yt->te_ypix, canvas_tidy_gobj_width(x, y), canvas_tidy_gobj_height(x, y)); 
+
+			i--;
+
+			while (i) {
+				//fprintf(stderr,"i=%d\n", i);
+				sel = x->gl_editor->e_selection;
+				while (sel) {
+					y = sel->sel_what;
+					yt = (t_text *)y;
+
+					//fprintf(stderr, "already processed ? %d ... x=%d y=%d\n", sgobj_already_processed(y, sg), yt->te_xpix, yt->te_ypix);
+
+					// we need to avoid duplicates
+					if (!sgobj_already_processed(y, sg)) {
+						if (!next_top && yt->te_ypix <= topmost_t->te_ypix) {
+							next_top = y;
+							next_top_t = yt;
+						}
+						else if (next_top && yt->te_ypix >= next_top_t->te_ypix && yt->te_ypix <= topmost_t->te_ypix) {
+							next_top = y;
+							next_top_t = yt;						
+						}
+					}
+
+					sel = sel->sel_next;
+				}
+
+				tmpsg = (t_sgobj *)getbytes(sizeof(*sg));
+				tmpsg->s_g = next_top;
+				tmpsg->s_x1 = next_top_t->te_xpix;
+				tmpsg->s_x2 = next_top_t->te_xpix + canvas_tidy_gobj_width(x, next_top);
+				tmpsg->s_y1 = next_top_t->te_ypix;
+				tmpsg->s_y2 = next_top_t->te_ypix + canvas_tidy_gobj_height(x, next_top);
+				tmpsg->s_next = sg;
+				sg = tmpsg;
+
+				//fprintf(stderr,"%d: x=%d y=%d width=%d height=%d\n", i, next_top_t->te_xpix, next_top_t->te_ypix, canvas_tidy_gobj_width(x, next_top), canvas_tidy_gobj_height(x, next_top)); 
+
+				topmost = next_top;
+				topmost_t = next_top_t;
+				next_top = NULL;	
+
+				i--;
+			}
+
+			//fprintf(stderr,"got this far\n");
+			// now let's traverse the new list and find minimal spacing and use that as our reference
+			// if spacing is anywhere less than 0 (meaning objects overlap), use next legal value
+			// one that is greater than 0. If all values are < 0 then use default value (10).
+			tmpsg = sg;
+			while (tmpsg->s_next) {
+				//fprintf(stderr,"calculating spacing from: %d and %d\n", tmpsg->s_next->s_y1, tmpsg->s_y2);
+				if (tmpsg->s_next->s_y1 > tmpsg->s_y2 && (spacing <= 0 || (spacing > 0 && tmpsg->s_next->s_y1 - tmpsg->s_y2 < spacing)))
+					spacing = tmpsg->s_next->s_y1 - tmpsg->s_y2;
+				//fprintf(stderr,"spacing = %d\n", spacing);
+				tmpsg = tmpsg->s_next;
+			}
+			if (spacing <= 0) {
+#ifdef PDL2ORK
+				if (sys_k12_mode)
+					spacing = 25;
+				else
+#endif
+				spacing = 5;
+			}
+
+			//fprintf(stderr,"final spacing = %d\n", spacing);
+
+			//fprintf(stderr,"0...\n");
+
+			// now change all values in the list to their target values
+			tmpsg = sg;
+			while (tmpsg->s_next) {
+				//fprintf(stderr,"adjusting %d to %d + %d\n", tmpsg->s_next->s_y1, tmpsg->s_y2, spacing);
+				delta = tmpsg->s_next->s_y1 - (tmpsg->s_y2 + spacing);
+				tmpsg->s_next->s_y1 = tmpsg->s_next->s_y1 - delta;
+				tmpsg->s_next->s_y2 = tmpsg->s_next->s_y2 - delta;
+				tmpsg = tmpsg->s_next;
+			}
+
+			//fprintf(stderr,"1...\n");
+
+			// create an undo checkpoint
+			canvas_undo_add(x, 4, "motion", canvas_undo_set_move(x, 1));
+
+			//fprintf(stderr,"2...\n");
+
+			// reposition all objects
+			tmpsg = sg;
+			while (tmpsg->s_next) {
+				yt = (t_text *)tmpsg->s_next->s_g;
+				//fprintf(stderr,"displace: %d %d\n", tmpsg->s_next->s_y1, yt->te_ypix);
+				gobj_displace(tmpsg->s_next->s_g, x, 0, tmpsg->s_next->s_y1 - yt->te_ypix);
+				tmpsg = tmpsg->s_next;
+			}
+
+			//fprintf(stderr,"3...\n");
+
+			// free the temporary list of spatialized objects
+			while (sg) {
+				tmpsg = sg->s_next;
+				freebytes(sg, sizeof(*sg));
+				sg = tmpsg;
+			}
+		}
+
+	}
+	canvas_dirty(x, 1);
+	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+}
+
+
+/* 	below is deprecated/old version of tidy left here for documentation/reuse purposes
+	currently it is inactive */
 #define XTOLERANCE 20
 #define YTOLERANCE 20
 #define NHIST 15
 
     /* LATER might have to speed this up */
-static void canvas_tidy(t_canvas *x)
+static void canvas_tidyold(t_canvas *x)
 {
     t_gobj *y, *y2, *y3;
     int ax1, ay1, ax2, ay2, bx1, by1, bx2, by2;
