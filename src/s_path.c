@@ -221,9 +221,9 @@ void sys_setextrapath(const char *p)
     namelist_free(pd_extrapath);
     /* add standard place for users to install stuff first */
 #ifdef __gnu_linux__
-    sys_expandpath("~/pd-externals", pathbuf);
+    sys_expandpath("~/pd-l2ork-externals", pathbuf);
     pd_extrapath = namelist_append(0, pathbuf, 0);
-    pd_extrapath = namelist_append(pd_extrapath, "/usr/local/lib/pd-externals", 0);
+    pd_extrapath = namelist_append(pd_extrapath, "/usr/local/lib/pd-l2ork-externals", 0);
 #endif
 
 #ifdef __APPLE__

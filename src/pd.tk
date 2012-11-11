@@ -254,7 +254,7 @@ if { $tcl_platform(platform) == "windows" }  {
 		{{max binary files} {.mxb} }
 		{{max help files}   {.help} }
 	}
-	set externalsdir "$::env(HOME)/pd-externals"
+	set externalsdir "$::env(HOME)/pd-l2ork-externals"
 }        
 
 # make sure the user folder for installing externals exists
@@ -588,7 +588,7 @@ set ::dialog_menubar .mbar
 set ::modifier $ctrl_key
 set ::sys_libdir $pd_guidir
 switch $pd_nt {
-    0 {set ::pd_path [list ~/pd-externals /usr/local/lib/pd-externals]}
+    0 {set ::pd_path [list ~/pd-l2ork-externals /usr/local/lib/pd-l2ork-externals]}
     1 {set ::pd_path [list [file normalize $::env(AppData)/Pd] \
                           [file normalize $::env(CommonProgramFiles)/Pd]]}
     2 {set ::pd_path [list ~/Library/Pd /Library/Pd]}
