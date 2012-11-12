@@ -217,7 +217,7 @@ install:  all
                     $(DESTDIR)$(pddocdir)/7.stuff/$$dir ; \
 	done
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
-	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd version $(PD_VERSION)|' \
+	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd-l2ork version $(PD_TEST_VERSION)|' \
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
 	rsync -ax --exclude=.git --exclude=.svn ../extra $(DESTDIR)$(libpddir)/
