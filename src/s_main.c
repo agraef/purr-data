@@ -244,8 +244,10 @@ static void pd_makeversion(void)
 {
     char foo[100];
 
-    snprintf(foo, sizeof(foo), "Pd version %d.%d-%d%s\n", PD_MAJOR_VERSION,
-        PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);	
+    //snprintf(foo, sizeof(foo), "Pd-l2ork version %d.%d-%d%s\n", PD_MAJOR_VERSION,
+    //    PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);	
+
+    snprintf(foo, sizeof(foo), "Pd-l2ork version %s\n", PD_TEST_VERSION);
 
     pd_version = strdup(foo);
 }
