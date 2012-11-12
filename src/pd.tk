@@ -387,9 +387,9 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.edit -file $extra_dir/K12/icons/edit.png
 	image create photo i.perform -file $extra_dir/K12/icons/perform.png
 
-	pack forget .controls.switches.audiobutton
+	#pack forget .controls.switches.audiobutton
 	#pack forget .controls.inout
-	.mbar.audio delete 0 2
+	#.mbar.audio delete 0 2
 }
 
 # calculate offset on a movable canvas
