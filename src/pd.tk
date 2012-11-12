@@ -2644,16 +2644,17 @@ proc pdtk_canvas_new {name width height geometry editable} {
     $name.m.edit add separator
 ## end jsarlo
 
+	$name.m.edit add command -label "Toggle console" \
+	    -accelerator [accel_munge "Ctrl+R"] \
+	    -command [concat .controls.switches.console invoke]
+
+	$name.m.edit add command -label "Clear console" \
+	    -accelerator [accel_munge "Ctrl+L"] \
+	    -command [concat menu_clear_console]
+
+	$name.m.edit add separator
+
 	if { $k12_mode == 0 } {
-		$name.m.edit add command -label "Toggle console" \
-		    -accelerator [accel_munge "Ctrl+R"] \
-		    -command [concat .controls.switches.console invoke]
-
-		$name.m.edit add command -label "Clear console" \
-		    -accelerator [accel_munge "Ctrl+L"] \
-		    -command [concat menu_clear_console]
-
-		$name.m.edit add separator
     
 		# Apple, Microsoft, and others put find functions in the Edit menu.
 		$name.m.edit add command -label {Find...} \
@@ -3739,9 +3740,9 @@ proc pdtk_canvas_ctrlkey {name key shift} {
     if {$key == "period"} {menu_audio 0}
     if {$shift == 1} {
         if {$key == "q" || $key == "Q"} {menu_really_quit}
+	    if {$key == "l" || $key == "L"} {menu_clear_console}
+	    if {$key == "r" || $key == "R"} {menu_toggle_console}
 		if { $k12_mode == 0 } {
-		    if {$key == "l" || $key == "L"} {menu_clear_console}
-		    if {$key == "r" || $key == "R"} {menu_toggle_console}
 			if {$key == "E"} {menu_tooltips $topname}
 			if {$key == "Return"} {pdtk_zoom_reset $topname}
 		}
