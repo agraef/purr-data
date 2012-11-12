@@ -68,7 +68,10 @@ extern void glob_preset_node_list_check_loc_and_update(void);
 // for preset_node
 extern t_class *text_class;
 
-int do_not_redraw = 0;
+int do_not_redraw = 0;     // used to optimize redrawing
+
+int connect_exception = 0; // used when autopatching to bypass check whether one is trying to connect signal with non-signal nlet
+						   // since this is impossible to figure out when the newly created object is an empty one
 
 struct _outlet
 {
@@ -4699,8 +4702,8 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         !(objsink = pd_checkobject(&sink->g_pd)))
             goto bad;
 
-        /* check signal outlets don't try to connect to non-signal inlets */
-	if (obj_issignaloutlet(objsrc, outno) && !obj_issignalinlet(objsink, inno)) {
+        /* check signal outlets don't try to connect to non-signal inlet, but only do so when there is no exception active due to autopatching */
+	if (!connect_exception && obj_issignaloutlet(objsrc, outno) && !obj_issignalinlet(objsink, inno)) {
 		error("cannot connect signal outlet to control inlet");
 		goto bad;
     }

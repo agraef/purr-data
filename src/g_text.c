@@ -247,6 +247,8 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     they're invoked from the gui; when pasting or restoring from a file, we
     get at least x and y. */
 
+EXTERN int connect_exception;
+
 void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
 	//fprintf(stderr,"canvas_obj\n");
@@ -271,7 +273,9 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         canvas_objtext(gl, xpix, ypix, 1, b);
         if (connectme) {
 			//fprintf(stderr,"canvas_obj calls canvas_connect\n");
+			connect_exception = 1;
             canvas_connect(gl, indx, 0, nobj, 0);
+			connect_exception = 0;
 		}
         else {
 			//fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
