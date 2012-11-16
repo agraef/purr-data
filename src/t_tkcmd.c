@@ -113,7 +113,7 @@ static int sockfd;
 /* The "pd_readsocket" command, which polls the socket. */
 
 #define CHUNKSIZE 20000 /* chunks to allocate memory for reading socket */
-#define READSIZE 2000  /* size of read to issue */
+#define READSIZE 1000  /* size of read to issue */
 
 static char *pd_tkbuf = 0;      /* buffer for reading */
 static int pd_tkbufsize = 0;    /* current buffer size */
