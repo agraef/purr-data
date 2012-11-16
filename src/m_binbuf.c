@@ -21,6 +21,29 @@
 #include <string.h>
 #include <stdarg.h>
 
+/* escape characters for saving */
+static char* strnescape(char *dest, const char *src, size_t outlen)
+{
+    int ptin = 0;
+    unsigned ptout = 0;
+    for(; ptout < outlen; ptin++, ptout++)
+    {
+        int c = src[ptin];
+        if (c == ' ' || c=='\t')
+            dest[ptout++] = '\\';
+        dest[ptout] = src[ptin];
+        if (c==0) break;
+    }
+
+    if(ptout < outlen)
+        dest[ptout]=0;
+    else
+        dest[outlen-1]=0;
+
+    return dest;
+}
+
+
 struct _binbuf
 {
     int b_n;
@@ -1000,7 +1023,9 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             bp > sbuf && bp[-1] == ' ') bp--;
         if (!crflag || ap->a_type != A_SEMI)
         {
-            atom_string(ap, bp, (ep-bp)-2);
+            char bp2[WBUFSIZE];
+            atom_string(ap, bp2, WBUFSIZE);
+            strnescape(bp, bp2, (ep-bp)-2);
             length = strlen(bp);
             bp += length;
             ncolumn += length;
