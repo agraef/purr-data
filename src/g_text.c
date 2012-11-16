@@ -26,6 +26,8 @@ static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy);
 static void text_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
+void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
+    int *indexp, int *totalp);
 
 void canvas_startmotion(t_canvas *x);
 t_widgetbehavior text_widgetbehavior;
@@ -66,13 +68,15 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        int xpix, ypix;
+        //int xpix, ypix;
+		int connectme, xpix, ypix, indx, nobj;
+		canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess((t_pd *)glist_getcanvas(gl), gensym("editmode"), "i", 1);
         SETSYMBOL(&at, gensym("comment"));
         glist_noselect(gl);
-        glist_getnextxy(gl, &xpix, &ypix);
-        x->te_xpix = xpix-1;
-        x->te_ypix = ypix-1;
+        //glist_getnextxy(gl, &xpix, &ypix);
+        x->te_xpix = xpix;
+        x->te_ypix = ypix;
         binbuf_restore(x->te_binbuf, 1, &at);
         glist_add(gl, &x->te_g);
         glist_noselect(gl);
@@ -205,7 +209,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     		connectme = (obj_noutlets(ob) ? 1 : 0);
 	}*/
     int connectme = (x->gl_editor->e_selection &&
-        !x->gl_editor->e_selection->sel_next && !sys_noautopatch);
+        !x->gl_editor->e_selection->sel_next);
     if (connectme)
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;
@@ -238,6 +242,7 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
         glist_getnextxy(x, xpixp, ypixp);
         glist_noselect(x);
     }
+	if (sys_noautopatch) connectme = 0;
     *connectp = connectme;
     *indexp = indx;
     *totalp = nobj;
