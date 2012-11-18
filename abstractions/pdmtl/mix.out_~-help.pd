@@ -1,0 +1,14 @@
+#N canvas 229 361 516 245 10;
+#X obj 149 107 *~;
+#X text 13 14 Description: Controls stereo volume output and displays
+a VU for both channels.;
+#X obj 205 91 osc~ 0.2;
+#X obj 149 75 osc~ 90;
+#X floatatom 315 147 5 0 0 0 - - -;
+#X obj 231 137 adc~;
+#X obj 150 178 mix.out_~ @id mouh @mastervol 100;
+#X connect 0 0 6 0;
+#X connect 2 0 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 6 2;
+#X connect 5 0 6 1;

@@ -1,0 +1,36 @@
+#N canvas 422 71 670 487 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 8 394 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 396 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: None;
+#X obj 184 151 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 97 *Slider:;
+#X obj 184 327 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 327 *Notes:;
+#X text 12 6 pixelTANGO HELP - pt.layerfx - Pixel Based Effects;
+#X text 12 23 Type: Modifier. Effects only pixels/textures of own layer.
+;
+#X text 177 77 Layer Effects Functions:;
+#X text 197 118 fx_amount: Degree of effect;
+#X text 187 151 *Popup:;
+#X text 197 172 None: No pixel effect (inactive slider) \; edge: Edge-detection
+convolution \; emboss: Random bevelling effect (inactive slider) \;
+gain: Change gain/brightness of image \; motionblur: Fast objects become
+less visible \; negative: Reverse colour values (inactive slider) \;
+normalize: Normalize pixels (inactive slider) \; posterize: Reduce
+number of colours \; randomdot: Creates random-dot stereogram (inactive
+slider) \; roll: Shift pixels up with roll-over \; rtx: Transpose Time
+and X axes. BROKEN (inactive slider) \; scanline: Reduce number of
+vertical pixels;
+#X text 197 348 Only effects pixels/textures of layers. Will be a future
+interface to add your own filters.;
+#X obj 24 200 pt.layerfx;

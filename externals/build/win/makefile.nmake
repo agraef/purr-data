@@ -1,0 +1,52 @@
+# ----------------------- NT -----------------------
+
+
+EXTERNALS=\
+#!IF ![f exist filelist.inc del filelist.inc & for %i in (*.c) do @echo %i \>> filelist.inc]
+!INCLUDE filelist.inc
+#!ENDIF
+
+all: filelist.inc link.stamp $(EXTERNALS:.c=.dll)
+
+.SUFFIXES: .dll
+
+PDNTCFLAGS = /W3 /WX /DNT /DPD /nologo
+VC="C:\Program Files\Microsoft Visual Studio\Vc98"
+SRCPATH=..\src
+
+PDNTINCLUDE = /I. /I.. /I..\..\..\pd\src /I$(VC)\include
+
+PDNTLDIR = $(VC)\lib
+PDNTLIB = $(PDNTLDIR)\libc.lib \
+	$(PDNTLDIR)\oldnames.lib \
+	$(PDNTLDIR)\kernel32.lib \
+	$(PDNTLDIR)\wsock32.lib \
+	..\..\..\pd\bin\pd.lib 
+
+.c.dll:
+	cl $(PDNTCFLAGS) $(PDNTINCLUDE) /c $*.c
+	link /dll /export:$(*:~=_tilde)_setup $(*).obj $(PDNTLIB)
+	del $*.obj $*.lib $*.exp
+
+filelist.inc:
+	if exist filelist.inc del filelist.inc
+#	for %i in ($(SRCPATH)\*.c) do @echo %~ni%~xi \>> filelist.inc
+	for %i in ($(SRCPATH)\*.c) do @echo %~ni%~xi \>> filelist.inc
+
+transfer:
+	copy $(SRCPATH)\*.c .
+
+link.stamp: filelist.inc
+	copy $(SRCPATH)\*.c .
+	copy /y nul link.stamp
+	nmake
+
+clean:
+# don't delete filelist.inc at the moment, as some externals can't be compiled
+# on win32
+	-del link.stamp
+	-del *.c	
+	-del *.obj
+	-del *.lib
+	-del *.exp
+	-del *.dll

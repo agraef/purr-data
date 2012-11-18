@@ -1,0 +1,114 @@
+#N canvas 363 49 833 785 10;
+#X text -13 -95 written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+) and Yves Degoyon ( ydegoyon@gmail.com );
+#X obj -17 -55 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 223 -15 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 223 12 metro 40;
+#X msg 313 39 close;
+#X obj 243 110 pdp_v4l;
+#X msg 300 7 open /dev/video0;
+#X obj 412 -20 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 412 7 metro 40;
+#X msg 493 26 close;
+#X msg 489 2 open /dev/video0;
+#X obj 433 106 pdp_v4l2;
+#X msg 498 81 format \$1;
+#X obj 499 59 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj 13 160 pdp_qt;
+#X obj 46 96 metro 40;
+#X msg 46 68 bang;
+#X msg 87 68 stop;
+#X obj 13 -1 openpanel;
+#X msg 13 24 open \$1;
+#X msg 13 -29 bang;
+#X msg 47 123 loop \$1;
+#X obj 127 123 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 127 41 loadbang;
+#X text 56 -26 playing a video file;
+#X text 253 -17 Camera input;
+#X obj 73 161 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj -17 198 cnv 15 621 400 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj 203 409 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 118 407 nightmode \$1;
+#X text 222 410 set nightmode;
+#X floatatom 153 243 5 0 0 0 - - -;
+#X floatatom 140 514 5 0 0 0 - - -;
+#X floatatom 176 515 5 0 0 0 - - -;
+#X obj 140 474 route 1 2 3 4 5 6 7 8 9 10;
+#X text 143 528 X1;
+#X text 179 528 Y1;
+#X floatatom 213 515 5 0 0 0 - - -;
+#X msg 64 240 threshold \$1;
+#X floatatom 183 320 5 0 0 0 - - -;
+#X floatatom 199 357 5 0 0 0 - - -;
+#X obj 13 621 pdp_xv;
+#X floatatom 124 214 5 0 0 0 - - -;
+#X msg 34 213 maxcircles \$1;
+#X text 164 213 maximum nuber of circles detected ( default : 10 )
+;
+#X floatatom 160 271 5 0 0 0 - - -;
+#X msg 71 267 threshold2 \$1;
+#X text 199 283 see documentation of cvHoughCircles for the meaning
+of thresholds;
+#X text -13 -110 pdp_opencv_hough_circles : Hough circles detection
+algorithm;
+#X msg 97 319 mindist \$1;
+#X text 220 318 minimum distance between circles ( default : 30 );
+#X msg 99 355 resolution \$1;
+#X text 242 356 detector resolution ( default 1 );
+#X text 309 474 position of each circle;
+#X text 216 529 radius;
+#X obj 140 495 unpack f f f;
+#X obj 12 442 pdp_opencv_hough_circles;
+#X text 192 239 threshold ( default 100 );
+#X text 199 266 threshold2 ( default 10 );
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 56 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 56 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 56 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 14 0;
+#X connect 20 0 18 0;
+#X connect 21 0 14 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 23 0 16 0;
+#X connect 26 0 14 1;
+#X connect 28 0 29 0;
+#X connect 29 0 56 0;
+#X connect 31 0 38 0;
+#X connect 34 0 55 0;
+#X connect 38 0 56 0;
+#X connect 39 0 49 0;
+#X connect 40 0 51 0;
+#X connect 42 0 43 0;
+#X connect 43 0 56 0;
+#X connect 45 0 46 0;
+#X connect 46 0 56 0;
+#X connect 49 0 56 0;
+#X connect 51 0 56 0;
+#X connect 55 0 32 0;
+#X connect 55 1 33 0;
+#X connect 55 2 37 0;
+#X connect 56 0 41 0;
+#X connect 56 1 34 0;

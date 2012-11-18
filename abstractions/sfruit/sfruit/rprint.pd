@@ -1,0 +1,4 @@
+#N canvas 674 156 132 106 10;
+#X obj 26 24 r \$1;
+#X obj 26 56 print \$1;
+#X connect 0 0 1 0;

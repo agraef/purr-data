@@ -1,0 +1,24 @@
+#N canvas 368 259 583 391 10;
+#X msg 287 266 0 1 2 3 4 5;
+#X obj 194 343 print RESULT;
+#X obj 240 244 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 1;
+#X floatatom 240 265 5 0 0 0 - - -;
+#X obj 194 298 list-replace 2;
+#X text 50 32 list-replace: Replace the list starting at position POS
+with a new list \, overwriting the old elements.;
+#X text 49 92 POS is zerobased and can be negative \, in which case
+it is taken from the end of the orig. list.;
+#X text 49 67 Argument: default POS;
+#X text 49 129 If POS exceeds the length of the original list in whatever
+direction \, is is prepended resp. appended to the orig. list.;
+#X msg 194 190 list aa bb;
+#X msg 194 216 list aa bb cc dd ee ff gg;
+#X msg 194 167 aa;
+#X connect 0 0 4 2;
+#X connect 2 0 3 0;
+#X connect 3 0 4 1;
+#X connect 4 0 1 0;
+#X connect 9 0 4 0;
+#X connect 10 0 4 0;
+#X connect 11 0 4 0;

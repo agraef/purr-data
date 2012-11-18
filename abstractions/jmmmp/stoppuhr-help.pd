@@ -1,0 +1,36 @@
+#N canvas 108 117 718 384 10;
+#X text 12 327 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X text 12 347 Released under the BSD License;
+#X text 476 70 Inlets;
+#X text 476 140 Outlets;
+#X text 12 10 [stoppuhr] - Chronometer with two layers;
+#X floatatom 16 235 5 0 0 0 - - -;
+#X floatatom 109 215 8 0 0 0 - - -;
+#X text 476 110 - offset (secs);
+#X text 476 90 - new section (key m);
+#X text 476 160 - Elapsed time since beginning;
+#X text 476 180 - Elapsed time since last section;
+#X obj 16 142 stoppuhr;
+#X obj 16 114 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 111 125 5 0 0 0 - - -;
+#X text 476 210 GUI;
+#X text 476 230 - Keyboard router indicator;
+#X text 476 250 - Documentation window;
+#X text 476 290 - Elapsed time since last section;
+#X text 476 270 - Elapsed time since beginning;
+#X text 16 96 Trigger chronometer;
+#X text 149 125 Change the offset (secs);
+#X text 53 235 Time since beginning;
+#X text 168 215 Time since last section;
+#X text 12 30 Useful to control both total and partial time durations.
+;
+#X text 124 145 Toggle indicates if keyboard control is on or off.
+;
+#X text 125 165 Click the right button to open the documentation window.
+;
+#X text 12 295 Related objects: [clock] [uhr];
+#X connect 11 0 5 0;
+#X connect 11 1 6 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 1;

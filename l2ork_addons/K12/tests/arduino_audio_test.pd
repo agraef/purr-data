@@ -1,0 +1,22 @@
+#N canvas 0 0 433 530 10;
+#X obj -30 -30 preset_hub k12 1 %hidden% %node% 2 2 5 %node% 2 4 14
+%preset% 0 100 %preset% 1 100 %preset% 2 100 %preset% 3 100 %node%
+2 5 7 %preset% 0 1 %preset% 1 1 %preset% 2 2 %preset% 3 3 %preset%
+0 0 %node% 2 7 7 %node% 2 8 10 %preset% 1 1 %preset% 2 2 %preset% 3
+3 %preset% 0 0 %node% 2 9 8;
+#X obj 252 215 K12/sarcduino;
+#X obj 252 329 K12/sarcduino_analog;
+#X obj 170 545 K12/instr_sustained2;
+#X obj 169 771 K12/output;
+#X obj 141 427 K12/math_number 0;
+#X obj 252 443 K12/math_divide 0;
+#X obj 359 329 K12/math_number 0;
+#X obj 169 661 K12/fx_reverb 0;
+#X obj 29 281 K12/preset 0;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 3 0 8 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 1;
+#X connect 7 0 6 1;
+#X connect 8 0 4 0;

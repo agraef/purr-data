@@ -1,0 +1,6 @@
+#N canvas 0 22 450 300 10;
+#X obj 81 97 r \$1-delegates;
+#X obj 81 125 route \$2;
+#X obj 81 153 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;

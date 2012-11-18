@@ -1,0 +1,14 @@
+#N canvas 815 400 665 344 10;
+#X floatatom 86 61 5 0 0 0 - - -;
+#X obj 82 189 prepend set;
+#X msg 84 212 32 44 51.0196 56 59.8631 63.0196 65.6883 68 70.0391 71.8631
+73.5132 75.0195;
+#X obj 78 162 musical.m2harm 12;
+#X text 72 22 Gets the MIDI notes of the harmonic serie of a MIDI note
+;
+#X floatatom 198 133 5 0 0 0 - - -;
+#X text 241 132 You can change the number of harmonics displayed;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;
+#X connect 5 0 3 1;

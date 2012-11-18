@@ -1,0 +1,48 @@
+#N canvas 2 89 497 597 10;
+#X obj 43 182 noise~;
+#X msg 229 194 angle \$1;
+#X floatatom 229 174 5 0 0 0 - - -;
+#X obj 232 153 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 269 174 Angle is in degrees.;
+#X obj 40 554 dac~ 1 2;
+#X obj 234 481 *~ 0.25;
+#X obj 273 400 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X floatatom 273 458 5 0 0 0 - - -;
+#X obj 38 484 *~ 0.25;
+#X obj 78 403 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X floatatom 78 461 5 0 0 0 - - -;
+#X text 49 33 Description: Encodes a mono sound to third order horizontal
+Ambisonic B-Format.;
+#X text 47 64 tags: ambisonic;
+#X obj 42 218 mtl/ambiMonoToWxyuvpq~ angle 0;
+#X obj 37 371 mtl/ambiWxyuvpqToMono~ angle 90;
+#X obj 248 371 mtl/ambiWxyuvpqToMono~ angle 270;
+#X connect 0 0 14 0;
+#X connect 1 0 14 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 6 0 5 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 1;
+#X connect 9 0 5 0;
+#X connect 10 0 11 0;
+#X connect 11 0 9 1;
+#X connect 14 0 15 0;
+#X connect 14 0 16 0;
+#X connect 14 1 15 1;
+#X connect 14 1 16 1;
+#X connect 14 2 15 2;
+#X connect 14 2 16 2;
+#X connect 14 3 15 3;
+#X connect 14 3 16 3;
+#X connect 14 4 15 4;
+#X connect 14 4 16 4;
+#X connect 14 5 15 5;
+#X connect 14 5 16 5;
+#X connect 14 6 15 6;
+#X connect 14 6 16 6;
+#X connect 15 0 9 0;
+#X connect 16 0 6 0;

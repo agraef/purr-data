@@ -1,0 +1,26 @@
+#N canvas 1024 246 870 437 10;
+#X obj 520 245 pix_data;
+#X obj 520 201 t b a;
+#X obj 563 201 loadbang;
+#X msg 563 222 0.5;
+#X obj 520 180 pix_resize 1 1;
+#X obj 519 159 pix_separator;
+#X text 590 249 the average color of the incoming pixels;
+#X obj 265 17 inlet;
+#X obj 264 84 t a a;
+#X obj 257 408 outlet;
+#X obj 565 345 outlet;
+#X text 60 199 Here \, we are finding out the average color of the
+incoming pixels. We resize the pixels to a single pixel \, and then
+figure out its color value.;
+#X connect 0 1 10 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 2 0 3 0;
+#X connect 3 0 0 2;
+#X connect 3 0 0 3;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 1 5 0;

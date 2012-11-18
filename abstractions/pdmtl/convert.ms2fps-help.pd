@@ -1,0 +1,14 @@
+#N canvas 467 346 492 295 10;
+#X obj 90 177 convert.ms2fps;
+#X floatatom 97 143 5 0 0 0 - - -;
+#X floatatom 87 229 5 0 0 0 - - -;
+#X text 33 20 Description: Converts the amount of miliseconds between
+two frames into the numbers of frames per seconds.;
+#X text 146 143 ms;
+#X text 130 230 fps;
+#X msg 99 63 50;
+#X text 147 64 20 fps in the default Gem rate. It takes 50 ms between
+each frame.;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 6 0 1 0;

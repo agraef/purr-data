@@ -1,0 +1,30 @@
+#N canvas 1471 0 780 574 10;
+#X obj 109 432 list.cog;
+#X msg 109 238 0 1 0;
+#X floatatom 109 500 5 0 0 0 - - -;
+#X msg 171 240 2 0 0;
+#X msg 242 240 1 1 1 6;
+#X msg 334 278 1 1 1 1;
+#X msg 393 288 2 2 2 2 2;
+#X text 379 260 If there is no center \, the middle index is output
+;
+#X msg 329 361 23 23 23 23 23 23 23 25;
+#X msg 334 393 0 0 0 0 0 0 2 0;
+#X msg 341 426 0 1 0 0 0 0 2 0;
+#X text 56 87 Description: Finds the center of gravity of a one dimensional
+list (average of the indexes weighted by their values).;
+#X text 55 150 Works with the following formula:;
+#X text 167 179 COG = (1/(sum of values)) * sum of(value*index);
+#X obj 205 488 number.round;
+#X floatatom 206 521 5 0 0 0 - - -;
+#X connect 0 0 2 0;
+#X connect 0 0 14 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 14 0 15 0;

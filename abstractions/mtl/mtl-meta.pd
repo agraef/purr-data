@@ -1,0 +1,11 @@
+#N canvas 10 47 200 200 10;
+#N canvas 320 267 420 300 META 1;
+#X text 18 125 META this is a prototype of a libdir meta file;
+#X text 15 8 VERSION 2.2;
+#X text 16 23 LICENSE GPL;
+#X text 17 40 NAME mtl;
+#X text 15 60 DESCRIPTION A collection of abstractions made by Montreal
+pd users.;
+#X text 17 90 AUTHOR Thomas Ouellet Fredericks - Alexandre Quessy -
+Patrick Sebastien Coulombe;
+#X restore 10 10 pd META;

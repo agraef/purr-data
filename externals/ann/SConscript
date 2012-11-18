@@ -1,0 +1,19 @@
+import glob
+import os
+import re
+Import('env prefix')
+
+ann = env.SharedLibrary(target='ann', source = glob.glob('src/*.c'))
+env.Alias('install', env.Install(os.path.join(prefix, 'extra'), ann))
+Default(ann)
+
+for subann in glob.glob('src/ann_*.c'):
+    ann = env.SharedLibrary(re.sub("\.c$","",os.path.basename(subann)), source = subann)
+    env.Alias('install', env.Install(os.path.join(prefix, 'extra'), ann))
+    Default(ann)
+
+env.Alias('install', env.Install(os.path.join(prefix, 'doc/ann'), glob.glob('helps/*.pd')))
+
+for example in glob.glob('examples/ann*'):
+    env.Alias('install', env.Install(os.path.join(prefix, 'doc/ann/' + example), glob.glob(example+'/*.*')))
+    

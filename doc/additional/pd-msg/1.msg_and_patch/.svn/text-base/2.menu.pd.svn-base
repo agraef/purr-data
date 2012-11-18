@@ -1,0 +1,46 @@
+#N canvas 0 18 222 544 10;
+#X text 17 121 GUI stuff;
+#X msg 17 145 menusave;
+#X msg 17 171 menusaveas;
+#X msg 17 197 menuclose;
+#X msg 17 223 saveto;
+#X msg 17 249 tidy;
+#X msg 17 275 texteditor;
+#X msg 17 434 editmode \$1;
+#X msg 35 408 0;
+#X msg 69 408 1;
+#X msg 17 460 print;
+#X msg 17 301 menufont;
+#X msg 17 353 findagain;
+#X msg 17 379 findparent;
+#X text 68 222 ?????;
+#X obj 17 496 s pd-2.menu.pd;
+#X text 98 196 Warnning !!!;
+#X text 17 33 what the corresponding;
+#X text 15 14 These messages will do exactly;
+#X text 19 52 menu items do.;
+#X msg 17 327 find +test 1;
+#N canvas 218 113 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 65 DESCRIPTION how to access a patch's menu options by sending
+messages to a canvas;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 44 LICENSE public domain;
+#X restore 169 520 pd META;
+#X connect 1 0 15 0;
+#X connect 2 0 15 0;
+#X connect 3 0 15 0;
+#X connect 4 0 15 0;
+#X connect 5 0 15 0;
+#X connect 6 0 15 0;
+#X connect 7 0 15 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 0;
+#X connect 10 0 15 0;
+#X connect 11 0 15 0;
+#X connect 12 0 15 0;
+#X connect 13 0 15 0;
+#X connect 20 0 15 0;

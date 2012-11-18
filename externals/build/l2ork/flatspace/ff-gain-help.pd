@@ -1,0 +1,17 @@
+#N canvas 607 32 460 364 10;
+#X floatatom 123 231 5 0 0 0 - - -;
+#X obj 126 205 hsl 195 17 0 1 0 0 empty empty gain 25 8 1 12 -261689
+-1 -1 17460 0;
+#X obj 3 3 cnv 15 450 30 empty empty [ff-gain] 4 12 1 18 -261689 -1
+0;
+#X obj 123 254 ff-gain 0 0.5;
+#X obj 320 326 pddp_open all_about_haptics;
+#X text 214 326 For more info:;
+#X msg 123 178 0.9;
+#X text 24 102 Creation arguments are device number (i.e. 0 for /dev/input/event0)
+and gain. This affects all effects for that device.;
+#X text 24 64 Sets the overall gain \, between 0 and 1 \, of the force-feedback
+joystick on the device.;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 6 0 1 0;

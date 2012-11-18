@@ -1,0 +1,76 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header min 3 12 0 18 -204280
+-1 0;
+#X obj 0 369 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 361 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION choose the lesser (minimum) of two values
+;
+#X text 12 65 INLET_0 float bang list;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 487 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 94 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [min] Related Objects;
+#X obj 23 43 max;
+#X obj 53 43 clip;
+#X restore 102 597 pd Related_objects;
+#X obj 78 378 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 431 list;
+#X text 98 495 float;
+#X obj 78 496 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 459 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 458 float;
+#X text 78 544 1) float;
+#X obj 497 3 min;
+#X text 98 377 bang;
+#X text 98 402 float;
+#X text 168 458 - a float to the right inlet is stored.;
+#X text 168 544 - initializes the value of the right inlet.;
+#X obj 469 20 pddp/pddplink http://wiki.puredata.info/en/min -text
+pdpedia: min;
+#X floatatom 186 168 5 0 0 0 - - -;
+#X floatatom 186 222 5 0 0 0 - - -;
+#X obj 186 195 min;
+#X floatatom 228 168 5 0 0 0 - - -;
+#X obj 316 195 min 5;
+#X floatatom 316 168 5 0 0 0 - - -;
+#X floatatom 316 223 5 0 0 0 - - -;
+#X text 168 377 - output the last value.;
+#X text 168 402 - the incoming float is compared to the value at the
+right inlet \, and the greater of the two is output.;
+#X text 168 429 - a pair of floats will be distributed to the inlets.
+;
+#X text 168 495 - the two values at the inlets are compared \, and
+the greater one is output.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X text 11 23 choose the lesser (minimum) of two values;
+#X connect 21 0 23 0;
+#X connect 23 0 22 0;
+#X connect 24 0 23 1;
+#X connect 25 0 27 0;
+#X connect 26 0 25 0;

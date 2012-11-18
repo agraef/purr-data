@@ -1,0 +1,23 @@
+#N canvas 658 155 450 330 10;
+#X obj 13 293 print;
+#X msg 42 227 3 2 1;
+#X msg 13 170 clear \, rule 1 2 3 2 \, rule 2 3 3 1 \, rule 3 2 1;
+#X msg 42 195 1;
+#X floatatom 85 252 5 0 0 0 - - -;
+#X obj 13 270 s-lsystem 2;
+#X text 127 254 Iterations - watch out! Don't go above 5;
+#X text 12 8 s-lsystem is a Lindenmayer System implemented in Pd. See
+Wikipedia for exactly what a Lindenmayer System is. Basically you can
+set up rules (using the 'rule' message with a list) and then send source
+data into the abstraction. The list elements of the source data will
+be replaced by their corresponding rules (the first element of the
+rule list corresponds to the element that will be replaced). e.g. in
+this example \, 1 will be replaced by '2 3 2' because there is a 'rule
+1 2 3 2'. The 'clear' message will clear all rules out. The argument
+specifies the number of replacement iterations. Requires s-ireplace.
+;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 1;
+#X connect 5 0 0 0;

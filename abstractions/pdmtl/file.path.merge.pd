@@ -1,0 +1,18 @@
+#N canvas 0 0 450 300 10;
+#X obj 115 191 mergefilename;
+#X msg 297 115 separator \$1;
+#X obj 115 62 inlet;
+#X text 229 192 iem_lib;
+#X obj 115 265 outlet;
+#X obj 291 10 inlet;
+#X obj 290 86 convert.list2symbol;
+#X obj 290 49 route bang;
+#X msg 209 98 separator;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 5 0 7 0;
+#X connect 6 0 1 0;
+#X connect 7 0 8 0;
+#X connect 7 1 6 0;
+#X connect 8 0 0 0;

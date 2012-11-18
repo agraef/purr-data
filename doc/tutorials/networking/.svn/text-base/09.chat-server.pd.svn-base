@@ -1,0 +1,21 @@
+#N canvas 47 23 620 460 10;
+#X obj 211 231 pack float symbol;
+#X obj 18 20 cnv 15 400 40 empty empty chat_server 20 12 0 24 -228992
+-66577 0;
+#X symbolatom 232 283 30 0 0 1 last_client - -;
+#X floatatom 160 197 5 0 0 1 connections - -;
+#X obj 72 112 list prepend broadcast;
+#X obj 72 132 list trim;
+#X obj 142 284 list prepend;
+#X msg 211 252 symbol client\$1_\$2;
+#X obj 142 172 maxlib/netserver 47292;
+#X connect 0 0 7 0;
+#X connect 4 0 5 0;
+#X connect 5 0 8 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 1;
+#X connect 7 0 2 0;
+#X connect 8 0 6 0;
+#X connect 8 1 3 0;
+#X connect 8 2 0 0;
+#X connect 8 3 0 1;

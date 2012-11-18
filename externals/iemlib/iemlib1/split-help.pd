@@ -1,0 +1,31 @@
+#N canvas 168 213 427 347 10;
+#X obj 21 212 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 58 170 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X text 41 253 (c) miller puckette;
+#X text 7 8 split;
+#X obj 21 130 split 5;
+#X text 35 243 the original object moses;
+#X floatatom 21 65 4 0 0 0 - - -;
+#X floatatom 58 109 4 0 0 0 - - -;
+#X floatatom 21 192 4 0 0 0 - - -;
+#X floatatom 58 150 4 0 0 0 - - -;
+#X text 19 50 input_value <float>;
+#X text 52 8 part <float>-messages into less and greater equal than
+limit;
+#X text 60 94 limit <float>;
+#X text 92 150 output: input greater equal than limit;
+#X text 55 193 output: input less than limit;
+#X text 115 308 IEM KUG;
+#X text 99 296 musil;
+#X text 129 296 @;
+#X text 135 296 iem.at;
+#X text 50 285 (c) Thomas Musil 2000 - 2005;
+#X text 98 318 Graz \, Austria;
+#X connect 4 0 8 0;
+#X connect 4 1 9 0;
+#X connect 6 0 4 0;
+#X connect 7 0 4 1;
+#X connect 8 0 0 0;
+#X connect 9 0 1 0;

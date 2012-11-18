@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3753/trunk/xsample/source
+END
+main.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3752/trunk/xsample/source/main.h
+END
+xgroove~-Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/3607/trunk/xsample/source/xgroove~-Info.plist
+END
+xsample-Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/3508/trunk/xsample/source/xsample-Info.plist
+END
+record.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3753/trunk/xsample/source/record.cpp
+END
+xsample.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3508/trunk/xsample/source/xsample.rsrc
+END
+groove.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3753/trunk/xsample/source/groove.cpp
+END
+inter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3753/trunk/xsample/source/inter.cpp
+END
+prefix.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3752/trunk/xsample/source/prefix.h
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3752/trunk/xsample/source/main.cpp
+END
+play.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3753/trunk/xsample/source/play.cpp
+END
+inter.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3752/trunk/xsample/source/inter.h
+END
+xrecord~-Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/3607/trunk/xsample/source/xrecord~-Info.plist
+END

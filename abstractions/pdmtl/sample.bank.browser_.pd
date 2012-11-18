@@ -1,0 +1,78 @@
+#N canvas 321 202 713 550 10;
+#X obj 314 267 sample.bank.dump;
+#X obj 282 136 vsl 15 115 0 175 0 0 \$0slider_s \$0slider_r empty 0
+-8 0 8 -1 -262144 -1 11400 0;
+#X obj 100 134 hradio 15 1 0 12 \$0hr_0_s \$0hr_0_r empty 2 8 0 8 -1
+-1 -262144 2;
+#X obj 100 149 hradio 15 1 0 12 \$0hr_1_s \$0hr_1_r empty 2 8 0 8 -1
+-1 -262144 3;
+#X obj 100 164 hradio 15 1 0 12 \$0hr_2_s \$0hr_2_r empty 2 8 0 8 -1
+-1 -262144 2;
+#X obj 100 179 hradio 15 1 0 12 \$0hr_3_s \$0hr_3_r empty 2 8 0 8 -1
+-1 -262144 3;
+#X obj 100 194 hradio 15 1 0 12 \$0hr_4_s \$0hr_4_r empty 2 8 0 8 -1
+-1 -262144 2;
+#X obj 100 209 hradio 15 1 0 12 \$0hr_5_s \$0hr_5_r empty 2 8 0 8 -1
+-1 -262144 3;
+#X obj 100 224 hradio 15 1 0 12 \$0hr_6_s \$0hr_6_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 100 239 hradio 15 1 0 12 \$0hr_7_s \$0hr_7_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 100 118 cnv 15 197 15 empty \$0hider empty 3 9 0 8 -128992 -262144
+0;
+#X msg 572 267 clear;
+#X obj 315 404 gui.browser \$0;
+#X obj 355 3 inlet;
+#X obj 192 538 outlet;
+#X obj 311 342 convert.list2symbol _;
+#X obj 503 410 pack s f;
+#X obj 314 303 t a a;
+#X obj 550 369 list.element 1;
+#X msg 466 225 label sample.bank:top_patch;
+#X obj 346 97 route bang;
+#X obj 494 142 list prepend sample.bank;
+#X obj 497 164 convert.list2symbol :;
+#X msg 501 190 label \$1;
+#X obj 382 49 t a b;
+#X obj 643 288 loadbang;
+#X msg 594 323 text.font 0 8;
+#X obj 262 476 demultiplex 0 1;
+#X obj 340 149 t b b b;
+#X msg 453 448 0;
+#X obj 376 505 list prepend;
+#X obj 439 116 t a a a b;
+#X msg 507 488 1;
+#X connect 0 0 17 0;
+#X connect 0 1 12 1;
+#X connect 11 0 12 1;
+#X connect 12 0 27 0;
+#X connect 13 0 24 0;
+#X connect 15 0 16 0;
+#X connect 16 0 12 1;
+#X connect 17 0 15 0;
+#X connect 17 1 18 0;
+#X connect 18 0 16 1;
+#X connect 19 0 12 1;
+#X connect 20 0 28 0;
+#X connect 20 1 31 0;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X connect 23 0 12 1;
+#X connect 24 0 20 0;
+#X connect 24 1 11 0;
+#X connect 25 0 11 0;
+#X connect 25 0 26 0;
+#X connect 26 0 12 1;
+#X connect 27 0 14 0;
+#X connect 27 1 30 0;
+#X connect 28 0 0 0;
+#X connect 28 1 19 0;
+#X connect 28 2 29 0;
+#X connect 29 0 27 1;
+#X connect 30 0 14 0;
+#X connect 31 0 0 0;
+#X connect 31 1 21 0;
+#X connect 31 2 30 1;
+#X connect 31 3 32 0;
+#X connect 32 0 27 1;
+#X coords 0 -1 1 1 197 155 1 100 100;

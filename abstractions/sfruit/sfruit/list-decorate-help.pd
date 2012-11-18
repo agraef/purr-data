@@ -1,0 +1,47 @@
+#N canvas 246 385 587 311 10;
+
+
+
+#X obj 58 181 list-decorate;
+#X msg 58 96 a b c d e f g;
+#X obj 182 181 list-len;
+#X obj 104 130 hradio 15 1 0 8 empty empty POS_(zero-based) 0 -6 0
+8 -262144 -1 -1 0;
+#X floatatom 104 155 5 0 0 0 - - -;
+#X obj 58 216 print NEW_LIST;
+#X text 9 65 Argument: default POS;
+#X text 8 45 POS is zerobased. Negative POS will count from the end.
+;
+#X text 10 268 based on list-insert by frank barknecht;
+#X text 429 268 2008 Luke Iannini;
+#X text 235 122 POS defaults to 0 \, meaning it will prepend the result
+to the original list.;
+#N canvas 0 22 322 281 how_to_append 0;
+#X obj 58 181 list-decorate;
+#X msg 58 66 a b c d e f g;
+#X obj 58 97 t a a;
+#X obj 58 216 print NEW_LIST2;
+#X obj 85 134 list-len;
+#X obj 183 189 f;
+#X obj 213 189 + 1;
+#X obj 183 168 t b;
+#X connect 0 0 3 0;
+#X connect 0 1 7 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 2 1 4 0;
+#X connect 4 0 0 1;
+#X connect 5 0 0 2;
+#X connect 5 0 6 0;
+#X connect 6 0 5 1;
+#X connect 7 0 5 0;
+#X restore 310 185 pd how_to_append;
+#X text 7 6 list-decorate: call user-defined process on incoming
+list and insert result into original list at position POS.;
+#X obj 416 30 import-disabled list-abs;
+#X connect 0 0 5 0;
+#X connect 0 1 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 2;
+#X connect 3 0 4 0;
+#X connect 4 0 0 1;

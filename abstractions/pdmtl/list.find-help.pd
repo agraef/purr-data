@@ -1,0 +1,17 @@
+#N canvas 582 208 542 343 10;
+#X obj 90 148 list.find;
+#X msg 233 106 4 5 6;
+#X obj 93 192 print;
+#X msg 69 100 12 43 23 54 54 4 5 6;
+#X msg 298 162 1 2 3 1 2 3;
+#X msg 401 160 1 2 3;
+#X obj 307 203 list.find;
+#X obj 309 238 print;
+#X text 48 23 Description: Finds ALL the instances of a list inside
+another list.;
+#X connect 0 0 2 0;
+#X connect 1 0 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 1;
+#X connect 6 0 7 0;

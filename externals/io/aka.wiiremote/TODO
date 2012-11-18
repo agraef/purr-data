@@ -1,0 +1,7 @@
+
+
+ - try out IOBluetoothLocalDeviceAvailable(wiiremote->inquiry);  to see if that will set up the event loops (http://lists.apple.com/archives/bluetooth-dev/2006/Dec/msg00001.html)
+
+
+- try CFRunLoopRun(); then CFRunLoopStop(CFRunLoopGetCurrent()); in akawiiremote_clock() and akawiiremote_bang()
+

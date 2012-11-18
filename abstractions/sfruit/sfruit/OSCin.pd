@@ -1,0 +1,16 @@
+#N canvas 237 306 254 272 10;
+#X obj 46 54 udpreceive \$1;
+#X obj 46 80 unpackOSC;
+#X obj 139 190 s OSCIN;
+#X obj 46 105 list;
+#X obj 46 153 routeOSC /accxyz;
+#X obj 46 128 route list;
+#X obj 113 128 s OSCIN.ORPHANS;
+#X obj 46 189 s OSCIN.ACCEL;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 7 0;
+#X connect 4 1 2 0;
+#X connect 5 0 4 0;
+#X connect 5 1 6 0;

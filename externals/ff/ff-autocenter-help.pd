@@ -1,0 +1,17 @@
+#N canvas 120 116 464 364 10;
+#X text 20 66 sets the amount of "autocentering" of the force-feedback
+joystick. Range is [0 \, 1]. 0 is no auto-centering;
+#X floatatom 77 254 5 0 0 0 - - -;
+#X text 19 149 This is affected by the overall gain \, which can be
+controlled used [ff-gain].;
+#X obj 4 4 cnv 15 450 30 empty empty [ff-autocenter] 4 12 1 18 -261689
+-1 0;
+#X text 19 102 creation arguments are device number (i.e. 0 for /dev/input/event0)
+and autocenter amount. This effects all effects for that device;
+#X obj 77 277 ff-autocenter 0 0;
+#X obj 253 323 pddp_open all_about_haptics;
+#X text 140 325 For more info:;
+#X obj 77 211 tgl 30 0 empty empty start 1 15 1 12 -90049 -1 -1 0 1
+;
+#X connect 1 0 5 0;
+#X connect 8 0 1 0;

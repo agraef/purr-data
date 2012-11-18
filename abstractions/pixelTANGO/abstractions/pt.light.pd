@@ -1,0 +1,125 @@
+#N canvas 607 382 130 132 10;
+#X obj 1 1 cnv 5 128 130 empty empty \$1-Light 5 7 1 11 -133153 -1
+0;
+#X obj 113 3 bng 11 250 50 0 \$0-reset \$0- Reset -25 6 1 8 -262144
+-1 -1;
+#X obj 34 39 hsl 60 15 0 1 0 0 \$0-r \$0-sc empty -2 -6 2 8 -258699
+-1 -1 5900 1;
+#X obj 34 56 hsl 60 15 0 1 0 0 \$0-g \$0-sc empty -2 -6 2 8 -24198
+-1 -1 5900 1;
+#X obj 34 73 hsl 60 15 0 1 0 0 \$0-b \$0-sc empty -2 -6 2 8 -62784
+-1 -1 5900 1;
+#X obj 14 111 hsl 100 15 -2 7 0 0 \$0-z \$0-sz empty -2 -6 2 8 -262144
+-1 -1 6600 1;
+#X obj 11 35 vsl 15 70 -4 4 0 0 \$0-y \$0-sxy empty 0 -8 2 8 -262144
+-1 -1 3450 1;
+#X obj 29 18 hsl 70 15 -4 4 0 0 \$0-x \$0-sxy empty -2 -6 2 8 -262144
+-1 -1 3450 1;
+#X obj 101 33 cnv 15 15 75 empty empty empty 20 12 0 14 -166441 -66577
+0;
+#X obj 34 90 hsl 60 15 0 1 0 0 \$0-sc \$0-sb empty -2 -6 2 8 -262144
+-1 -1 5900 1;
+#N canvas 518 270 481 403 interna 0;
+#X obj 19 127 translateXYZ;
+#N canvas 736 91 337 192 defaults 0;
+#X obj 151 25 r \$0-reset;
+#X msg 30 69 1;
+#X obj 30 90 s \$0-sc;
+#X obj 87 90 s \$0-sxy;
+#X msg 87 69 0;
+#X msg 151 69 4;
+#X obj 151 90 s \$0-sz;
+#X obj 15 112 s \$0-sb;
+#X obj 30 26 bang;
+#X obj 30 5 inlet;
+#X connect 0 0 5 0;
+#X connect 0 0 4 0;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 7 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 8 0 1 0;
+#X connect 8 0 4 0;
+#X connect 8 0 5 0;
+#X connect 9 0 8 0;
+#X restore 241 185 pd defaults;
+#X obj 29 86 interp3 \$0-x \$0-y \$0-z;
+#X obj 19 325 light;
+#X obj 49 285 pack f f f;
+#X obj 125 285 bang;
+#X text 7 3 Light;
+#X obj 18 44 gemhead 5;
+#N canvas 632 292 525 452 memento 0;
+#X obj 29 66 t b f;
+#X msg 29 90 set;
+#X msg 59 90 substate \$1;
+#X obj 222 237 route osc;
+#X obj 29 46 r pt.currentPreset;
+#X obj 305 75 inlet;
+#X obj 66 281 originator /pt/light \$0;
+#X obj 84 253 prepend create;
+#X obj 84 225 list2osc;
+#X msg 84 200 pt light \$1;
+#X obj 84 179 f \$1;
+#X obj 69 120 loadbang;
+#X text 16 9 Here we are using the first creation argument to pt.light
+as the instance number. 1-8;
+#X obj 53 150 t b b;
+#X obj 53 328 outlet;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 1;
+#X connect 4 0 0 0;
+#X connect 5 0 3 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 13 0;
+#X connect 13 0 14 0;
+#X connect 13 1 10 0;
+#X restore 241 139 pd memento;
+#X obj 241 117 r pt.osc;
+#X text 210 93 receive OSC on pt.osc;
+#X obj 241 162 delay 25;
+#X text 32 362 Added interpolation for light colours (for state-animation)
+;
+#X obj 49 241 interp3 \$0-r \$0-g \$0-b;
+#X connect 0 0 3 0;
+#X connect 2 0 0 1;
+#X connect 2 1 0 2;
+#X connect 2 2 0 3;
+#X connect 4 0 3 1;
+#X connect 5 0 4 0;
+#X connect 7 0 0 0;
+#X connect 8 0 11 0;
+#X connect 9 0 8 0;
+#X connect 11 0 1 0;
+#X connect 13 0 4 0;
+#X connect 13 1 4 1;
+#X connect 13 1 5 0;
+#X connect 13 2 4 2;
+#X connect 13 2 5 0;
+#X restore 11 141 pd interna;
+#X obj 157 55 commun /r \$0;
+#X obj 157 74 commun /g \$0;
+#X obj 157 93 commun /b \$0;
+#X obj 157 16 commun /x \$0;
+#X obj 157 36 commun /y \$0;
+#X obj 157 112 commun /z \$0;
+#X connect 2 0 11 0;
+#X connect 3 0 12 0;
+#X connect 4 0 13 0;
+#X connect 5 0 16 0;
+#X connect 6 0 15 0;
+#X connect 7 0 14 0;
+#X connect 11 0 2 0;
+#X connect 12 0 3 0;
+#X connect 13 0 4 0;
+#X connect 14 0 7 0;
+#X connect 15 0 6 0;
+#X connect 16 0 5 0;
+#X coords 0 0 0.00214592 0.00316456 130 132 1;

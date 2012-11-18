@@ -1,0 +1,50 @@
+#N canvas 0 0 448 189 10;
+#X obj 1 165 cnv 15 445 20 empty \$0-pddp.cnv.header Nmop~3p!sdn~+no9V~llV
+175 10 1 18 -261106 -33289 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0 14
+-233017 -33289 0;
+#X obj 7 166 pddp/pddplink http://puredata.info/dev/pddp -text dppd
+;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X obj 101 101 cnv 15 45 16 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X text 100 100 VL3W pd;
+#X coords 0 -1 1 1 47 18 2 100 100;
+#X restore 2 3 pd;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X obj 101 101 cnv 15 117 16 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X text 100 100 s+>3(9O~p3+V13J pd;
+#X coords 0 -1 1 1 119 18 2 100 100;
+#X restore 104 3 pd;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X obj 101 91 cnv 15 23 16 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X text 101 100 l +;
+#X obj 65 56 inlet;
+#X obj 131 228 outlet;
+#X text 100 99 T;
+#X coords 0 -1 1 1 25 18 2 100 100;
+#X restore 64 75 pd;
+#X floatatom 64 46 5 0 0 0 - #0-gatom -;
+#N canvas 0 0 450 300 foo 0;
+#X obj 100 100 cnv 10 10 10 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X obj 130 61 inlet;
+#X obj 130 137 s \$0-gatom;
+#X msg 130 115 set \$1;
+#X text 91 26 IT'S A SECRET TO EVERYBODY.;
+#X obj 130 88 + 10000;
+#X connect 1 0 5 0;
+#X connect 3 0 2 0;
+#X connect 5 0 3 0;
+#X coords 0 -1 1 1 10 10 2 100 100;
+#X restore 64 121 pd foo;
+#X msg 64 103 48008;
+#X text 66 133 `pd u! Nmop-3p!sdn H>+Vd o+ ( +|n>!tt!p +n9) 3|9!ssod
+s! +I;
+#X text 109 75 <-- H>+Vd Nmop-3p!sdn;
+#X obj 416 3 pddp/pddplink pddp/help.pd -text d13H;
+#X connect 5 0 8 0;
+#X connect 6 0 5 0;
+#X connect 8 0 7 0;

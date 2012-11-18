@@ -1,0 +1,27 @@
+#N canvas 221 195 631 478 10;
+#X text 56 100 most right outlet: rest (if there is one) of vectors
+in a new vasp \, otherwise: bang;
+#X text 56 70 split a vasp into its vectors;
+#X text 56 85 argument: number of vectors to split;
+#X obj 57 38 cnv 15 15 15 empty empty vasp.split 0 10 1 14 -262144
+-1 0;
+#X obj 130 215 prepend set;
+#X obj 63 310 prepend set;
+#X obj 63 278 vasp.join 2;
+#X msg 241 153 vasp bufsplit1 bufsplit2 bufsplit3;
+#X obj 63 187 vasp.split 2;
+#X msg 63 153 vasp bufsplit1 bufsplit2;
+#X obj 53 410 VASP-HELP;
+#X obj 340 367 table bufsplit1;
+#X obj 340 391 table bufsplit2;
+#X obj 340 413 table bufsplit3;
+#X msg 63 339;
+#X msg 130 239;
+#X connect 4 0 15 0;
+#X connect 5 0 14 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 1 6 1;
+#X connect 8 2 4 0;
+#X connect 9 0 8 0;

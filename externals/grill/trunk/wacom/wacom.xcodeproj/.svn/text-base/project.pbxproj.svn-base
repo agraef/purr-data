@@ -1,0 +1,389 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E9A0427C0A854A740020C468 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9A0427B0A854A740020C468 /* main.cpp */; };
+		E9A0427D0A854A740020C468 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9A0427B0A854A740020C468 /* main.cpp */; };
+		E9A042920A854BD90020C468 /* Wacom.h in Headers */ = {isa = PBXBuildFile; fileRef = E9A0428F0A854BD90020C468 /* Wacom.h */; };
+		E9A042930A854BD90020C468 /* WacomHelperFuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = E9A042900A854BD90020C468 /* WacomHelperFuncs.c */; };
+		E9A042940A854BD90020C468 /* WacomHelperFuncs.h in Headers */ = {isa = PBXBuildFile; fileRef = E9A042910A854BD90020C468 /* WacomHelperFuncs.h */; };
+		E9A042950A854BD90020C468 /* WacomHelperFuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = E9A042900A854BD90020C468 /* WacomHelperFuncs.c */; };
+		E9A043350A8551AD0020C468 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB77AAFE841565C02AAC07 /* Carbon.framework */; };
+		E9A043430A8551F60020C468 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A043420A8551F60020C468 /* vecLib.framework */; };
+		E9A043440A8551F60020C468 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A043420A8551F60020C468 /* vecLib.framework */; };
+		E9C89C000A85FC5B00970B07 /* TAEHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = E9C89BFE0A85FC5B00970B07 /* TAEHelpers.c */; };
+		E9C89C010A85FC5B00970B07 /* TAEHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = E9C89BFF0A85FC5B00970B07 /* TAEHelpers.h */; };
+		E9C89C020A85FC5B00970B07 /* TAEHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = E9C89BFE0A85FC5B00970B07 /* TAEHelpers.c */; };
+		E9C89C170A85FCAB00970B07 /* TabletAEDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = E9C89C160A85FCAB00970B07 /* TabletAEDictionary.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		08FB77AAFE841565C02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		E9A041D50A854A050020C468 /* wacom.mxe.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wacom.mxe.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9A041D60A854A050020C468 /* wacom.mxe-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "wacom.mxe-Info.plist"; sourceTree = "<group>"; };
+		E9A041E00A854A310020C468 /* wacom.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = wacom.pd_darwin; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9A0427B0A854A740020C468 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		E9A0428F0A854BD90020C468 /* Wacom.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wacom.h; sourceTree = "<group>"; };
+		E9A042900A854BD90020C468 /* WacomHelperFuncs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = WacomHelperFuncs.c; sourceTree = "<group>"; };
+		E9A042910A854BD90020C468 /* WacomHelperFuncs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WacomHelperFuncs.h; sourceTree = "<group>"; };
+		E9A043420A8551F60020C468 /* vecLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vecLib.framework; path = /System/Library/Frameworks/vecLib.framework; sourceTree = "<absolute>"; };
+		E9C89BFE0A85FC5B00970B07 /* TAEHelpers.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = TAEHelpers.c; sourceTree = "<group>"; };
+		E9C89BFF0A85FC5B00970B07 /* TAEHelpers.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TAEHelpers.h; sourceTree = "<group>"; };
+		E9C89C160A85FCAB00970B07 /* TabletAEDictionary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TabletAEDictionary.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E9A041D30A854A050020C468 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A043440A8551F60020C468 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9A041DE0A854A310020C468 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A043350A8551AD0020C468 /* Carbon.framework in Frameworks */,
+				E9A043430A8551F60020C468 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E9A041D50A854A050020C468 /* wacom.mxe.bundle */,
+				E9A041E00A854A310020C468 /* wacom.pd_darwin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* wacom */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+				E9A041D60A854A050020C468 /* wacom.mxe-Info.plist */,
+			);
+			name = wacom;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E9A043420A8551F60020C468 /* vecLib.framework */,
+				08FB77AAFE841565C02AAC07 /* Carbon.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E9C89C160A85FCAB00970B07 /* TabletAEDictionary.h */,
+				E9C89BFE0A85FC5B00970B07 /* TAEHelpers.c */,
+				E9C89BFF0A85FC5B00970B07 /* TAEHelpers.h */,
+				E9A0428F0A854BD90020C468 /* Wacom.h */,
+				E9A042900A854BD90020C468 /* WacomHelperFuncs.c */,
+				E9A042910A854BD90020C468 /* WacomHelperFuncs.h */,
+				E9A0427B0A854A740020C468 /* main.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E9A041DC0A854A310020C468 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A042920A854BD90020C468 /* Wacom.h in Headers */,
+				E9A042940A854BD90020C468 /* WacomHelperFuncs.h in Headers */,
+				E9C89C010A85FC5B00970B07 /* TAEHelpers.h in Headers */,
+				E9C89C170A85FCAB00970B07 /* TabletAEDictionary.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E9A041D40A854A050020C468 /* wacom.mxe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A041D70A854A070020C468 /* Build configuration list for PBXNativeTarget "wacom.mxe" */;
+			buildPhases = (
+				E9A041D10A854A050020C468 /* Resources */,
+				E9A041D20A854A050020C468 /* Sources */,
+				E9A041D30A854A050020C468 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = wacom.mxe;
+			productName = wacom.mxe;
+			productReference = E9A041D50A854A050020C468 /* wacom.mxe.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		E9A041DF0A854A310020C468 /* wacom */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A041E30A854A510020C468 /* Build configuration list for PBXNativeTarget "wacom" */;
+			buildPhases = (
+				E9A041DC0A854A310020C468 /* Headers */,
+				E9A041DD0A854A310020C468 /* Sources */,
+				E9A041DE0A854A310020C468 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = wacom;
+			productName = wacom;
+			productReference = E9A041E00A854A310020C468 /* wacom.pd_darwin */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB916408733D950010E9CD /* Build configuration list for PBXProject "wacom" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* wacom */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E9A041D40A854A050020C468 /* wacom.mxe */,
+				E9A041DF0A854A310020C468 /* wacom */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E9A041D10A854A050020C468 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E9A041D20A854A050020C468 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A0427D0A854A740020C468 /* main.cpp in Sources */,
+				E9A042950A854BD90020C468 /* WacomHelperFuncs.c in Sources */,
+				E9C89C020A85FC5B00970B07 /* TAEHelpers.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9A041DD0A854A310020C468 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A0427C0A854A740020C468 /* main.cpp in Sources */,
+				E9A042930A854BD90020C468 /* WacomHelperFuncs.c in Sources */,
+				E9C89C000A85FC5B00970B07 /* TAEHelpers.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB916508733D950010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = stabs;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					"FLEXT_ATTRIBUTES=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(flext)/source",
+					"$(PD-devel)/src",
+				);
+				PRODUCT_NAME = wacom;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB916608733D950010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					"FLEXT_ATTRIBUTES=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(flext)/source",
+					"$(PD)/src",
+				);
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SEPARATE_STRIP = YES;
+			};
+			name = Release;
+		};
+		E9A041D80A854A070020C468 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					$inherited,
+					"FLEXT_SYS=1",
+				);
+				INFOPLIST_FILE = "wacom.mxe-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = wacom;
+				WRAPPER_EXTENSION = mxe;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		E9A041D90A854A070020C468 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					$inherited,
+					"FLEXT_SYS=1",
+				);
+				INFOPLIST_FILE = "wacom.mxe-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Carbon,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = wacom.mxe;
+				WRAPPER_EXTENSION = bundle;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		E9A041E40A854A510020C468 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(PD-devel)/bin/pd";
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					$inherited,
+					"FLEXT_SYS=2",
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = "-lflext-pd_sd";
+				PREBINDING = NO;
+				PRODUCT_NAME = wacom;
+			};
+			name = Debug;
+		};
+		E9A041E50A854A510020C468 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(PD)/bin/pd";
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					$inherited,
+					"FLEXT_SYS=2",
+				);
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = (
+					"-lflext-pd_s",
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = wacom;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB916408733D950010E9CD /* Build configuration list for PBXProject "wacom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB916508733D950010E9CD /* Debug */,
+				1DEB916608733D950010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E9A041D70A854A070020C468 /* Build configuration list for PBXNativeTarget "wacom.mxe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A041D80A854A070020C468 /* Debug */,
+				E9A041D90A854A070020C468 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E9A041E30A854A510020C468 /* Build configuration list for PBXNativeTarget "wacom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A041E40A854A510020C468 /* Debug */,
+				E9A041E50A854A510020C468 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

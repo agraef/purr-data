@@ -1,0 +1,20 @@
+#N canvas 6 6 355 334 10;
+#X floatatom 76 100 9 0 127 0 - - -;
+#X obj 68 158 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 50 150 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 100 128 - 100;
+#X text 139 100 midi-dB;
+#X obj 50 128 dbtofad;
+#X text 10 4 dbtofad;
+#X text 99 5 convert midi-db to fader-scale;
+#X text 184 258 IEM KUG;
+#X text 168 246 musil;
+#X text 198 246 @;
+#X text 204 246 iem.at;
+#X text 119 235 (c) Thomas Musil 2000 - 2005;
+#X text 167 268 Graz \, Austria;
+#X connect 0 0 3 0;
+#X connect 0 0 5 0;
+#X connect 3 0 1 1;
+#X connect 5 0 2 0;

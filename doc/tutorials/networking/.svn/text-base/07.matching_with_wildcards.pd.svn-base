@@ -1,0 +1,45 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib libdir;
+#X obj 477 26 import oscx;
+#X obj 8 10 cnv 15 400 40 empty empty matching_with_wildcards 20 12
+0 24 -228992 -66577 0;
+#X text 10 69 OSC gives you a very useful feature which regular [route]
+does not: wildcards. Wildcards are characters that match any pattern.
+The * is the most common \, it means match any amount of any character:
+;
+#X obj 38 236 bng 15 250 50 0 empty empty match 18 8 0 12 -262144 -1
+-1;
+#X obj 130 236 bng 15 250 50 0 empty empty unmatched 18 8 0 12 -262144
+-1 -1;
+#X msg 30 134 /test/message data;
+#X obj 37 216 OSCroute /*;
+#X msg 56 185 /1/2/3 data;
+#X msg 56 159 /some/other/message 1 2 3;
+#X text 142 214 <-- notice the * in the pattern;
+#X text 320 347 <-- notice the * in the pattern;
+#X msg 212 278 /inst2/note B;
+#X msg 110 279 /inst1/note C;
+#X msg 229 319 /inst3/note F;
+#X obj 202 346 OSCroute /*;
+#X msg 219 298 /player3/note D;
+#X obj 274 366 bng 15 250 50 0 empty empty unmatched 18 8 0 12 -262144
+-1 -1;
+#X obj 294 409 bng 15 250 50 0 empty empty unmatched 18 8 0 12 -262144
+-1 -1;
+#X obj 202 388 OSCroute /note;
+#X obj 202 410 symbol;
+#X symbolatom 202 432 10 0 0 0 - - -;
+#X connect 5 0 6 0;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X connect 11 0 14 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 0;
+#X connect 14 0 18 0;
+#X connect 14 1 16 0;
+#X connect 15 0 14 0;
+#X connect 18 0 19 0;
+#X connect 18 1 17 0;
+#X connect 19 0 20 0;

@@ -1,0 +1,16 @@
+#N canvas 116 68 597 370 10;
+#X text 36 20 Description: Displays a "sample".;
+#X text 35 59 Version: 2006-01-11;
+#X text 36 39 Flags: gui sample_id;
+#X text 162 185 Inlet_1: sample_id signal;
+#X text 161 204 Outlet_1: sample_id signal;
+#X msg 35 142 medias/sounds/loop0.wav;
+#X text 35 119 Click below;
+#X msg 207 142 medias/sounds/loop1.wav;
+#X obj 35 233 sample.display_;
+#X obj 35 208 sample.print 1;
+#X obj 35 185 sample.filer;
+#X connect 5 0 10 0;
+#X connect 7 0 10 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;

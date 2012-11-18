@@ -1,0 +1,68 @@
+threadlib
+C and PD library for threaded patching and threaded PD externals
+heavily based on pd_devel code by Tim Blechmann
+(c) 2005, Georg Holzmann, <grh@mur.at>
+http://grh.mur.at/software/threadlib.html
+
+------------------------------------------------------------------------
+
+PD objects for threaded patching:
+- detach	run part of the patch in a helper thread
+- join		synchronize messages to pd's main thread
+- sleep		blocks the system for a specific time
+- threadedsf	modified threaded soundfiler from pd_devel_0.38
+
+WARNING:
+these objects (especially detach/join) are very experimental and may
+crash your patches if you use them in the wrong way, because some 
+externals/internals are not threadsafe!
+
+Features for PD external programmers:
+- lockfree FIFO from pd_devel
+- callback system like in pd_devel:
+    Instead of the idle callbacks, which are not really useable 
+    in current main pd, it uses clock callbacks
+- USAGE: you have to link your externals against threadlib
+         (see sndfiler as an example)
+- ADVANTAGES: so it's possible to write threaded externals
+         for main and devel pd with the same source code
+         (using the lockfree FIFO and sys_callback)
+
+Many thanks to Tim Blechmann for his code and help!
+
+------------------------------------------------------------------------
+
+detach:
+Detach is working on control objects only, creates a helper thread
+and runs all functions of the following objects in this helper thread.
+If a message from that thread reaches a join object a callback for
+running the outlet function will be placed in the scheduler and run in
+the next scheduler loop - so you can synchronize the message with pd's
+main thread again.
+Detach is useful if you have a control operation that would be too
+CPU-intensive and would disturb dsp.
+
+join:
+The message to the inlet will be sent to the outlet during the
+next clock callback of the scheduler. It doesn't matter, which thread
+the message was coming from. Messages from the main pd thread will be
+rescheduled.
+Join can be used everywhere, where a message has to be rescheduled, this
+is also useful to place behind any threaded external calling the outlet
+functions from the helper thread, to make sure the following messages
+are being run in the main pd thread.
+
+!!! WARNING: !!!
+detach/join provide the possibility of threaded patching.
+beware of the risks:
+- not every pd object is thread-safe (if unsure, look at the source
+code or ask at the pd-list or me)
+- pd is not completely thread-safe itself
+- everything that is triggered by the detached message will be
+detached. don't mix threaded and non-threaded message paths unless you
+know what you are doing. use the join external to synchronize with the
+main pd thread!!!!
+- if detach/join crashes pd during a performance, don't complain ...
+- both detach and join have an overhead ... so only use them, if you
+really need threaded patching, e.g. have a subpatch that has to run for
+quite some time and would interrupt audio or something else

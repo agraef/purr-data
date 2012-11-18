@@ -1,0 +1,47 @@
+#N canvas 285 348 468 386 10;
+#X msg 288 85 list j f g;
+#X msg 51 51 f;
+#X msg 138 51 g;
+#X msg 216 51 r;
+#X msg 257 51 o;
+#X msg 96 51 i;
+#X msg 176 51 a;
+#X text 321 353 2007 Luke Iannini;
+#X obj 111 188 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 141 188 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 171 188 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 201 188 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 288 211 list a r o;
+#X obj 119 125 troute e l o;
+#X text 13 10 troute 0.1;
+#X text 21 247 A seTtable route. A list in the right inlet will change
+the elements that route will react to. (Se)troute can add outlets to
+itself to accomadate longer argument lists \, but it cannot subtract
+them due to limitations in Pure Data. The utility of that is arguable
+\, anyways (since you can just change the actual arguments).;
+#X msg 288 106 list f i g;
+#X msg 288 127 list f o g;
+#X msg 288 148 list r a g;
+#X msg 288 169 list f i r;
+#X msg 288 190 list r i f;
+#X connect 0 0 13 1;
+#X connect 1 0 13 0;
+#X connect 2 0 13 0;
+#X connect 3 0 13 0;
+#X connect 4 0 13 0;
+#X connect 5 0 13 0;
+#X connect 6 0 13 0;
+#X connect 12 0 13 1;
+#X connect 13 0 8 0;
+#X connect 13 1 9 0;
+#X connect 13 2 10 0;
+#X connect 13 3 11 0;
+#X connect 16 0 13 1;
+#X connect 17 0 13 1;
+#X connect 18 0 13 1;
+#X connect 19 0 13 1;
+#X connect 20 0 13 1;

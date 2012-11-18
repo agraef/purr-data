@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/3753/trunk/xsample
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3508/trunk/xsample/readme.txt
+END
+xsample.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3508/trunk/xsample/xsample.vcproj
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3508/trunk/xsample/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3508/trunk/xsample/license.txt
+END
+xsample.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3508/trunk/xsample/xsample.mcp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3508/trunk/xsample/package.txt
+END

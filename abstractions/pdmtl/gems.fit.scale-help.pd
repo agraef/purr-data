@@ -1,0 +1,74 @@
+#N canvas 228 77 966 827 10;
+#X text 50 13 Description: Wraps gems.fit with an additonal internal
+scaleXYZ object.;
+#X obj 86 76 gemhead;
+#X obj 88 165 pix_image;
+#N canvas 0 22 454 304 loadimage 0;
+#X obj 72 149 file.path.top;
+#X msg 74 172 open \$1;
+#X obj 79 85 loadbang;
+#X obj 77 216 outlet;
+#X msg 71 125 medias/images/img0.jpg;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 4 0 0 0;
+#X restore 175 129 pd loadimage;
+#X obj 87 421 pix_texture;
+#X obj 303 107 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 303 128 gems.win;
+#X obj 86 393 gems.fit.scale window;
+#X msg 227 261 window;
+#X obj 195 237 hradio 15 1 0 4 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X msg 251 284 pixsize;
+#X msg 257 305 pixratio;
+#X floatatom 144 327 5 0 0 0 scale - -;
+#X msg 272 338 fill;
+#X text 444 308 Inlet_1 : gemlist.;
+#X text 443 351 Inlet_3 : selects how you want the fitting.;
+#X text 444 331 Inlet_2: Determines the scaling.;
+#X obj 421 108 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 421 129 gems.win 100 320;
+#X text 575 66 Argument_1: Selects how you want the fitting.;
+#X text 577 86 Argument_2: The scale (defaults to 1).;
+#X text 189 200 You can change the fitting by sending the mode name
+or the fittings's number.;
+#X text 277 258 number 0;
+#X text 310 285 number 1;
+#X text 322 309 number 2;
+#X text 309 341 number 3;
+#X text 513 409 pixsize: reproduce the image \, pixel by pixel in the
+gem win.;
+#X text 512 431 pixratio: only send out the normalized ration of the
+image's size.;
+#X text 512 467 fill: fills the whole gemwin;
+#X obj 772 141 gems.fit.scale pixratio;
+#X obj 582 141 gems.fit.scale window 0.5;
+#X floatatom 315 398 5 0 0 1 depth - -;
+#X obj 87 454 square;
+#X text 31 503 WARNING: gems.fit.scale only outputs the fitted width
+(X axis) and height (Y axis). You must manage the depth (Z axis) yourself
+through the fourth inlet.;
+#X text 461 492 Inlet_4 : depth (is also scaled by the scaling \, inlet_2
+\, value);
+#X obj 583 168 gems.fit.scale window 0.5 2;
+#X text 578 109 Argument_3: The depth (defaults to 1).;
+#X text 512 376 window or win: fit to the gem window while maintaining
+the width to height ratio.;
+#X connect 1 0 2 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 32 0;
+#X connect 5 0 6 0;
+#X connect 7 0 4 0;
+#X connect 8 0 7 2;
+#X connect 9 0 7 2;
+#X connect 10 0 7 2;
+#X connect 11 0 7 2;
+#X connect 12 0 7 1;
+#X connect 13 0 7 2;
+#X connect 17 0 18 0;
+#X connect 31 0 7 3;

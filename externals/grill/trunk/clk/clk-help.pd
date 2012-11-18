@@ -1,0 +1,243 @@
+#N canvas 319 296 1125 582 12;
+#X obj 156 230 symbol \$0-int;
+#X obj 156 254 symbol \$0-sync;
+#X obj 156 278 symbol \$0-tap;
+#X obj 136 232 bng 15 250 50 0 empty empty empty 0 -6 0 8 -241291 -1
+-1;
+#X obj 135 256 bng 15 250 50 0 empty empty empty 0 -6 0 8 -241291 -1
+-1;
+#X obj 135 280 bng 15 250 50 0 empty empty empty 0 -6 0 8 -241291 -1
+-1;
+#X obj 28 136 clk.int \$0-int;
+#X msg 185 381 getname;
+#X obj 643 502 print DELAY;
+#X obj 28 168 print INT;
+#X msg 185 354 name \$1;
+#X obj 159 442 clk.time;
+#X obj 809 431 clk.metro \$0-tap;
+#X obj 487 439 clk.delay \$0-sync;
+#X obj 259 500 print TIME;
+#X obj 26 301 bng 25 250 50 0 empty empty get_time 0 -6 0 8 -258699
+-1 -1;
+#X obj 790 91 metro 700;
+#X obj 790 76 tgl 15 0 empty empty empty 0 -6 0 8 -260818 -1 -1 0 1
+;
+#X floatatom 181 484 5 0 0 0 - - -;
+#X floatatom 108 513 8 0 0 0 - - -;
+#X obj 383 91 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#N canvas 0 22 462 181 inc 0;
+#X obj 59 19 inlet;
+#X obj 56 134 outlet;
+#X obj 98 87 + 1;
+#X obj 58 86 f 0;
+#X obj 144 19 inlet reset;
+#X obj 145 45 t b;
+#X msg 77 61 0;
+#X connect 0 0 3 0;
+#X connect 2 0 3 1;
+#X connect 3 0 2 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 1;
+#X restore 383 144 pd inc;
+#X floatatom 822 74 5 0 0 0 - - -;
+#X obj 383 106 metro 200;
+#X msg 876 122 gettaps;
+#X floatatom 556 476 5 0 0 0 - - -;
+#X floatatom 876 474 5 0 0 0 - - -;
+#X msg 514 387 stop;
+#X msg 475 387 10;
+#X msg 841 378 stop;
+#X msg 477 89 reset;
+#X msg 875 98 reset;
+#X msg 24 390 reset;
+#X msg 476 357 reset;
+#X msg 802 348 reset;
+#X obj 313 90 loadbang;
+#X msg 618 354 t3mode \$1;
+#X msg 617 385 dblprec \$1;
+#X obj 601 357 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 600 388 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 926 345 t3mode \$1;
+#X msg 925 376 dblprec \$1;
+#X obj 909 348 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 908 379 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 296 331 t3mode \$1;
+#X msg 295 362 dblprec \$1;
+#X obj 279 334 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 278 365 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 25 344 0.13;
+#X text 62 346 t3 offset;
+#X obj 26 222 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 790 126 bng 50 250 50 0 empty empty tap 0 -6 0 8 -260818 -1
+-1;
+#X obj 26 237 metro 10;
+#X floatatom 50 220 5 0 0 0 - - -;
+#X obj 117 493 unpack;
+#X floatatom 176 513 8 0 0 0 - - -;
+#X obj 91 514 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 478 505 8 0 0 0 - - -;
+#X obj 487 485 unpack;
+#X floatatom 546 505 8 0 0 0 - - -;
+#X obj 461 506 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 805 505 8 0 0 0 - - -;
+#X obj 809 485 unpack;
+#X floatatom 873 505 8 0 0 0 - - -;
+#X obj 788 506 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 477 114 t b a;
+#X text 137 206 choose a clock master;
+#X msg 23 474 offset 0;
+#X text 23 372 set origin to now;
+#X text 22 455 reset to source;
+#X obj 790 204 clk.tap \$0-tap @precision 0.001;
+#X msg 556 121 precision 1e-007;
+#X msg 556 145 getprecision;
+#X text 555 88 precision controls;
+#X text 554 102 client timebase updates;
+#X obj 26 10 cnv 15 1000 45 empty empty clk 10 22 0 24 -260818 -1 0
+;
+#X text 272 33 http://grrrr.org;
+#X msg 28 85 message start;
+#X msg 266 413 message hello;
+#X obj 422 252 print SYNC;
+#X obj 790 233 print TAP;
+#X text 268 436 message to master;
+#X text 138 84 message to clients;
+#X msg 298 299 factor \$1;
+#X obj 298 283 nbx 5 14 0.001 100 1 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256;
+#X msg 926 309 factor \$1;
+#X obj 926 293 nbx 5 14 0.001 100 1 1 empty empty empty 0 -6 0 10 -262144
+-1 -1 1 256;
+#X msg 801 378 5;
+#X obj 625 479 route missed;
+#X obj 625 502 bng 15 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 948 483 route missed;
+#X obj 948 506 bng 15 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 966 506 print TAP;
+#X floatatom 383 174 5 0 0 0 - - -;
+#X obj 404 89 nbx 5 14 10 10000 1 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 10 256;
+#X obj 459 111 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 24 430 reset 1000;
+#X text 23 411 set origin to arg;
+#X obj 422 224 clk.sync \$0-sync @timebase 0.2;
+#X msg 556 199 gettimebase;
+#X text 550 243 preset the timebase;
+#X text 546 258 (necessary if client needs;
+#X text 547 272 time before the first time info);
+#X msg 957 120 weight \$1;
+#X msg 957 144 getweight;
+#X obj 961 97 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X floatatom 138 112 5 0 0 0 - - -;
+#X msg 42 110 interval \$1;
+#X text 185 112 check interval;
+#X text 183 127 (default 0);
+#X text 272 13 syncable clock objects \, (C)2006-2008 Thomas Grill
+;
+#X connect 0 0 10 0;
+#X connect 1 0 10 0;
+#X connect 2 0 10 0;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 2 0;
+#X connect 6 0 9 0;
+#X connect 7 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 54 0;
+#X connect 11 1 18 0;
+#X connect 11 2 14 0;
+#X connect 12 0 62 0;
+#X connect 12 1 26 0;
+#X connect 12 2 90 0;
+#X connect 13 0 58 0;
+#X connect 13 1 25 0;
+#X connect 13 2 88 0;
+#X connect 15 0 11 0;
+#X connect 16 0 51 0;
+#X connect 17 0 16 0;
+#X connect 20 0 23 0;
+#X connect 21 0 93 0;
+#X connect 21 0 98 0;
+#X connect 22 0 16 1;
+#X connect 23 0 21 0;
+#X connect 24 0 70 0;
+#X connect 27 0 13 0;
+#X connect 28 0 13 0;
+#X connect 29 0 12 0;
+#X connect 30 0 65 0;
+#X connect 30 0 95 0;
+#X connect 31 0 70 0;
+#X connect 32 0 11 0;
+#X connect 33 0 13 0;
+#X connect 34 0 12 0;
+#X connect 35 0 20 0;
+#X connect 36 0 13 0;
+#X connect 37 0 13 0;
+#X connect 38 0 36 0;
+#X connect 39 0 37 0;
+#X connect 40 0 12 0;
+#X connect 41 0 12 0;
+#X connect 42 0 40 0;
+#X connect 43 0 41 0;
+#X connect 44 0 11 0;
+#X connect 45 0 11 0;
+#X connect 46 0 44 0;
+#X connect 47 0 45 0;
+#X connect 48 0 11 0;
+#X connect 50 0 52 0;
+#X connect 51 0 70 0;
+#X connect 52 0 15 0;
+#X connect 53 0 52 1;
+#X connect 54 0 19 0;
+#X connect 54 0 56 0;
+#X connect 54 1 55 0;
+#X connect 58 0 57 0;
+#X connect 58 0 60 0;
+#X connect 58 1 59 0;
+#X connect 62 0 61 0;
+#X connect 62 0 64 0;
+#X connect 62 1 63 0;
+#X connect 65 0 21 1;
+#X connect 65 1 98 0;
+#X connect 67 0 11 0;
+#X connect 70 0 80 0;
+#X connect 71 0 98 0;
+#X connect 72 0 98 0;
+#X connect 77 0 6 0;
+#X connect 78 0 11 0;
+#X connect 83 0 11 0;
+#X connect 84 0 83 0;
+#X connect 85 0 12 0;
+#X connect 86 0 85 0;
+#X connect 87 0 12 0;
+#X connect 88 0 89 0;
+#X connect 88 1 8 0;
+#X connect 90 0 91 0;
+#X connect 90 1 92 0;
+#X connect 94 0 23 1;
+#X connect 95 0 23 0;
+#X connect 96 0 11 0;
+#X connect 98 0 79 0;
+#X connect 99 0 98 0;
+#X connect 103 0 70 0;
+#X connect 104 0 70 0;
+#X connect 105 0 103 0;
+#X connect 106 0 107 0;
+#X connect 107 0 6 0;

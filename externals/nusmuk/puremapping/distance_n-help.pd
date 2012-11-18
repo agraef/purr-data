@@ -1,0 +1,34 @@
+#N canvas 443 111 675 756 10;
+#X obj 54 428 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 396 1;
+#X obj 54 96 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4100 1;
+#X obj 76 97 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4000 1;
+#X obj 76 244 t b f;
+#X obj 54 390 distance_n;
+#X msg 119 365 0.3 0.3 0.5 0.4;
+#X obj 119 342 loadbang;
+#X obj 54 279 pack f f f f;
+#X obj 116 97 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 6500 1;
+#X obj 116 244 t b f;
+#X obj 156 97 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 5200 1;
+#X obj 156 244 t b f;
+#X text 126 29 distance from a point and a stream in nd;
+#X text 173 53 n is the min size of the list send on the inlets;
+#X connect 1 0 7 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 3 1 7 1;
+#X connect 4 0 0 0;
+#X connect 5 0 4 1;
+#X connect 6 0 5 0;
+#X connect 7 0 4 0;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X connect 9 1 7 2;
+#X connect 10 0 11 0;
+#X connect 11 0 7 0;
+#X connect 11 1 7 3;

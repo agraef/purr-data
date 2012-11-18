@@ -1,0 +1,68 @@
+#N canvas 365 67 744 695 10;
+#X obj 53 90 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 31 92 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 34 4 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1;
+#X obj 263 13 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 271 89 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 249 91 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 439 231 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 438 155 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 457 156 Get the current shared number.;
+#X text 54 -23 To test: turn one toggle on \, then try the other. Notice
+how there was no output because the shared number did not change.;
+#X obj 222 255 flow.value.change \$0local2;
+#X floatatom 173 151 5 0 0 0 - - -;
+#X obj 52 302 print a;
+#X obj 218 301 print b;
+#X text 103 321 In this example \, only one of the flow.value.change
+will output the value. Break the connection between the number box
+and the flow.value.change that is outputing and voila \, the other
+flow.value.change will print.;
+#X obj 197 217 spigot 1;
+#X obj 267 219 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 267 198 init.lf 1;
+#X obj 174 177 t f f;
+#X text 113 449 Internally \, the actual value name is created by appending
+"_vc" to argument_1.;
+#X text 246 418 -- Notes --;
+#X text 27 -95 Argument_1: The name of the shared value (float).;
+#X obj 34 47 flow.value.change \$0local;
+#X obj 260 48 flow.value.change \$0local;
+#X obj 439 190 flow.value.change \$0local;
+#X obj 37 255 flow.value.change \$0local2;
+#X text 34 -119 Description: Eliminates redundancy in a shared float
+value.;
+#X text 25 -81 Outlet 1: (float) outputs the value if queried with
+a bang or if changed.;
+#X text 25 -58 Outlet 2: (float) outputs 1 if the value change \, 0
+if not);
+#X obj 179 76 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 407 72 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X connect 2 0 22 0;
+#X connect 3 0 23 0;
+#X connect 7 0 24 0;
+#X connect 10 0 13 0;
+#X connect 11 0 18 0;
+#X connect 15 0 10 0;
+#X connect 16 0 15 1;
+#X connect 17 0 16 0;
+#X connect 18 0 25 0;
+#X connect 18 1 15 0;
+#X connect 22 0 1 0;
+#X connect 22 0 0 0;
+#X connect 22 1 29 0;
+#X connect 23 0 5 0;
+#X connect 23 0 4 0;
+#X connect 23 1 30 0;
+#X connect 24 0 6 0;
+#X connect 25 0 12 0;

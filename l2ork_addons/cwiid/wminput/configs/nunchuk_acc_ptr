@@ -1,0 +1,6 @@
+#nunchuk_acc_ptr
+
+include buttons
+
+Plugin.nunchuk_acc.X	= REL_X
+Plugin.nunchuk_acc.Y	= REL_Y

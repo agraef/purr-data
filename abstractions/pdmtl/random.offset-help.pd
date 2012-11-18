@@ -1,0 +1,25 @@
+#N canvas 195 239 638 436 10;
+#X floatatom 71 297 5 0 0 0 - - -;
+#X msg 75 155 1;
+#X msg 127 149 10;
+#X msg 168 149 8;
+#X msg 37 163 0.25;
+#X obj 76 89 loadbang;
+#X obj 76 126 metro 250;
+#X obj 76 109 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 168 198 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X text 243 239 Inlet 2 sets the offset (0.1 = 10%);
+#X text 242 253 ARGUMENT : determines offset percentage.;
+#X obj 73 241 random.offset 0.1;
+#X text 27 30 Description: Outputs a slightly offset number.;
+#X connect 1 0 11 0;
+#X connect 2 0 11 0;
+#X connect 3 0 11 0;
+#X connect 4 0 11 0;
+#X connect 5 0 7 0;
+#X connect 6 0 1 0;
+#X connect 7 0 6 0;
+#X connect 8 0 11 1;
+#X connect 11 0 0 0;

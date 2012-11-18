@@ -1,0 +1,69 @@
+flext - C++ layer for Max/MSP and pd (pure data) externals
+
+Copyright (c) 2001-2005 Thomas Grill (gr@grrrr.org)
+For information on usage and redistribution, and for a DISCLAIMER OF ALL
+WARRANTIES, see the file, "license.txt," in this distribution.  
+
+----------------------------------------------------------------------------
+
+VARIOUS NOTES:
+
+Platform specific:
+- PD does not allow signal and message to go into the same inlet (except leftmost inlet)
+- PD: with DSP objects all float messages to the leftmost inlet are converted to signal
+
+Restrictions in compatibility mode:
+- Max allows only 9 float/int inlets
+
+Porting to new compilers/platforms:
+- enums must be int-sized!!!
+- compiler must support bool type
+- an STL implementation must exist
+- C++ exceptions and RTTI must be enabled
+
+----------------------------------------------------------------------------
+
+KNOWN BUGS:
+- Some few external libraries have troubles with flext's global new and delete overloadings.
+  In these cases one can switch back to the C library memory operators by defining the FLEXT_NOGLOBALNEW macro before
+  inclusion of the flext.h header file (e.g. as a -D compiler option)
+
+- PD: floats into the leftmost inlet of DSP objects can't be used as messages 
+  even if there's no signal inlet at all
+
+----------------------------------------------------------------------------
+
+TODO LIST:
+
+- optimizations for object initialization and messaging
+- speed up message handling (usage of other containers?)
+- SIMD for gcc
+- lock-free code for old AMD 64-bit architectures
+
+- update documentation
+- add log messages for debugging version
+- use PD's t_float and t_int types (or comparable for 32-bit safety)
+
+- add double handlers
+- add signal in/out connection query function
+
+- support for Max qelem style
+
+- flext::post and flext::error should print via a worker thread (and should be unlimited in characters)
+
+- manage running threads individually (stop, isrunning?, priority etc.)
+
+----------------------------------------------------------------------------
+
+TESTS TO DO:
+
+- PD: problems with timed buffer redrawing (takes a lot of cpu time)
+- hard thread termination upon object destruction doesn't seem to work properly -> crash
+- Max rounding bug ... buffer resize could be one sample less!
+
+- PD: figure out what "pointer" messages do and whether they are correctly implemented in flext
+
+- Max buffer~ resize: flext_base::buffer::Frames(): must we use buffer or system sample rate?
+
+- check whether m_dsp gets called upon deletion of a used buffer (PD and MaxMSP may behave differently).
+	-> PD does call m_dsp, Max/MSP does not

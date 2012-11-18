@@ -1,0 +1,30 @@
+#N canvas 0 0 448 189 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header z_order 20 10 1
+18 -261106 -33289 0;
+#X obj 1 167 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 95 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 75 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS GUI needs_work;
+#X text 12 45 DESCRIPTION description of how objects are presented
+graphically in Pd;
+#X restore 392 169 pd META;
+#N canvas 10 196 428 107 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Z Order- Related Objects;
+#X restore 103 169 pd Related_objects;
+#X obj 6 169 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 255 89 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 78 107 This comment was created after the grey [cnv] behind
+it. If you cut and paste the canvas (or delete it then choose "Undo"
+from the "Edit" menu) \, it will cover this comment.;
+#X text 19 36 Z-order refers to the way in which overlapping objects
+are displayed. Pd currently determines z-ordering in the following
+way: The last object created will get put in front.;
+#X obj 417 2 pddp/pddplink Nmop~3pIsdn~tno9V~llV.pd -text dppd;

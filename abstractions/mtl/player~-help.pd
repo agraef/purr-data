@@ -1,0 +1,86 @@
+#N canvas 12 37 972 651 10;
+#X floatatom 300 554 10 0 0 1 samples - -;
+#X obj 423 550 bng 15 250 50 0 empty empty stopped 0 -6 0 10 -262144
+-1 -1;
+#X msg 48 33 1;
+#X msg 92 73 2;
+#X msg 71 52 0;
+#X obj 30 15 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X text 52 12 Play at speed 1;
+#X text 77 29 Play at speed 1;
+#X text 102 48 Stop;
+#X text 120 74 Play at speed 2;
+#X text 207 536 Progress;
+#X msg 136 140 1 0.5;
+#X text 179 134 Play at speed 1 from halfway;
+#X obj 18 566 mtl/out~;
+#X text 13 -23 tags: tables play~;
+#X obj 138 476 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 199 555 mtl/nbx~;
+#X text 157 472 Loop (stops looping when the end is reached);
+#X msg 103 96 -0.5;
+#X text 137 95 Play backwards at speed 0.5;
+#X text 219 169 Play backwards from 1/2 of the table;
+#X text 132 118 ------------ offset ------------;
+#X text 26 -5 ------------ playback ------------;
+#X text 172 248 ------------ table/file management ------------;
+#X text 13 -38 Description: Plays tables and soundfiles.;
+#X text 503 469 Arguments (in any order): The name of the an external
+table and the loop flag.;
+#X msg 194 388 open \$1;
+#X obj 196 367 openpanel;
+#X obj 196 347 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 162 199 1 0.25 0.75;
+#X msg 169 222 1 0.75 0.25;
+#X msg 158 169 -1 0.5;
+#X text 244 196 Play from 1/4 to 3/4 of the table;
+#X text 247 218 Play from 3/4 to 1/4 of the table;
+#X text 240 268 Set a mono table;
+#X text 321 295 Set a mono table \, the length to be played and its
+samplerate;
+#X text 217 346 You can load a sound file in the internal stereo tables
+;
+#X text 309 319 Set stereo tables;
+#X obj 19 491 mtl/player~ 0;
+#X msg 174 271 set table1;
+#X msg 192 320 set table1 table2;
+#X msg 182 295 set table1 10000 44100;
+#X obj 745 277 openpanel;
+#X obj 744 253 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 743 327 list;
+#X obj 743 350 cyclone/prepend set;
+#X obj 770 379 print from:sfIndexer;
+#X text 742 224 Load tables stored in sfIndexer;
+#X obj 743 300 mtl/sfIndexer;
+#X connect 2 0 38 0;
+#X connect 3 0 38 0;
+#X connect 4 0 38 0;
+#X connect 5 0 38 0;
+#X connect 11 0 38 0;
+#X connect 15 0 38 1;
+#X connect 18 0 38 0;
+#X connect 26 0 38 0;
+#X connect 27 0 26 0;
+#X connect 28 0 27 0;
+#X connect 29 0 38 0;
+#X connect 30 0 38 0;
+#X connect 31 0 38 0;
+#X connect 38 0 13 0;
+#X connect 38 1 13 1;
+#X connect 38 2 16 0;
+#X connect 38 3 0 0;
+#X connect 38 4 1 0;
+#X connect 39 0 38 0;
+#X connect 40 0 38 0;
+#X connect 41 0 38 0;
+#X connect 42 0 48 0;
+#X connect 43 0 42 0;
+#X connect 44 0 45 0;
+#X connect 45 0 46 0;
+#X connect 45 0 38 0;
+#X connect 48 0 44 0;
+#X connect 48 1 44 1;

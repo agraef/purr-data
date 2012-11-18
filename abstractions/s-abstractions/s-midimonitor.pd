@@ -1,0 +1,26 @@
+#N canvas 0 0 450 300 10;
+#X obj 66 180 ctlin;
+#X obj 289 175 notein;
+#X obj 5 81 nbx 3 14 0 127 0 0 \$0-value \$0-value value 0 -6 0 8 -260818
+-1 -1 0 256;
+#X obj 49 81 nbx 3 14 0 127 0 0 \$0-controller \$0-controller controller
+0 -6 0 8 -260818 -1 -1 0 256;
+#X obj 29 209 s \$0-value;
+#X obj 51 233 s \$0-controller;
+#X obj 7 24 nbx 3 14 0 127 0 0 \$0-channel \$0-channel channel 0 -6
+0 8 -260818 -1 -1 0 256;
+#X obj 6 53 nbx 3 14 0 127 0 0 \$0-note \$0-note note 0 -6 0 8 -260818
+-1 -1 0 256;
+#X obj 50 53 nbx 3 14 0 127 0 0 \$0-volume \$0-volume volume 0 -6 0
+8 -260818 -1 -1 0 256;
+#X obj 109 208 s \$0-channel;
+#X obj 326 197 s \$0-channel;
+#X obj 272 244 s \$0-note;
+#X obj 299 222 s \$0-volume;
+#X connect 0 0 4 0;
+#X connect 0 1 5 0;
+#X connect 0 2 9 0;
+#X connect 1 0 11 0;
+#X connect 1 1 12 0;
+#X connect 1 2 10 0;
+#X coords 0 -1 1 1 120 100 1 0 0;

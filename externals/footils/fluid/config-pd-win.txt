@@ -1,0 +1,18 @@
+# where is PD?
+PDPATH=c:\programme\audio\pd		
+
+# where do the flext libraries reside?
+FLEXTPATH=$(PDPATH)\flext
+
+# where is MS VC++?
+MSVCPATH=c:\programme\prog\microsoft visual studio\VC98
+
+# where is fluidsynth
+FLUIDPATH=F:\prog\audio\fluidsynth-1.0.0-win32
+
+# where should the external be built?
+OUTPATH=pd-win
+
+# where should the external be installed?
+# (leave blank to omit installation)
+INSTDIR=$(PDPATH)\extra

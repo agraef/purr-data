@@ -1,0 +1,98 @@
+#N canvas 48 55 915 635 10;
+#N canvas 92 108 405 306 inside 0;
+#X obj 66 154 soundfiler;
+#X obj 203 210 s \$0-sample-length;
+#X obj 66 208 s \$0-draw_display;
+#X msg 259 135 resize \$1;
+#X obj 259 88 loadbang;
+#X obj 67 53 loadbang;
+#X msg 259 109 88200;
+#X obj 259 157 s bufre;
+#X obj 269 181 s bufim;
+#X obj 67 101 filelisthandler \$0;
+#X msg 67 79 4;
+#X obj 66 178 t b;
+#X msg 67 133 read \$1 bufre;
+#X connect 0 0 11 0;
+#X connect 3 0 7 0;
+#X connect 3 0 8 0;
+#X connect 4 0 6 0;
+#X connect 5 0 10 0;
+#X connect 6 0 3 0;
+#X connect 6 0 1 0;
+#X connect 9 0 12 0;
+#X connect 10 0 9 0;
+#X connect 11 0 2 0;
+#X connect 12 0 0 0;
+#X restore 781 473 pd inside;
+#X obj 75 32 cnv 15 15 15 empty empty vasp.cfft 0 10 1 14 -262144 -1
+0;
+#X obj 326 113 filelist \$0;
+#X text 75 52 complex fourier transformation (giant);
+#X text 70 68 cfft needs two buffers;
+#X msg 67 113 vasp bufre;
+#X obj 67 136 vasp.noise;
+#X text 151 112 generate white noise or;
+#X obj 67 159 vasp.* 0.5;
+#X obj 67 182 vasp.update;
+#X obj 67 205 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X obj 61 411 vasp.update;
+#X obj 61 434 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X obj 61 388 vasp.c!fft;
+#X obj 61 276 vasp.cfft;
+#X msg 61 253 vasp bufre bufim;
+#X obj 61 299 vasp.update;
+#X obj 61 322 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X msg 61 365 vasp bufre bufim;
+#X text 758 100 real;
+#X text 768 242 imaginary;
+#X text 524 387 0 Hz;
+#X text 660 387 sr/2;
+#X obj 558 117 wavedisplay-select bufre \$0;
+#X obj 559 266 wavedisplay-select bufim \$0;
+#X text 166 472 <-- click to open;
+#X text 789 387 44.1 kHz;
+#X text 145 274 convert a signal from the time domain into the frequency
+domain. each sample now represents a frequency (range from 0 to 44.1
+kHz).;
+#X obj 59 473 filter_example;
+#X obj 352 478 dac~;
+#N canvas 0 0 413 295 clear_buffers 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 486 472 pd clear_buffers;
+#X obj 352 434 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 374 428 play;
+#X text 486 428 clear;
+#X obj 352 455 tabplay~ bufre;
+#X msg 486 449 vasp bufre bufim;
+#X text 67 556 related objects:;
+#X obj 68 596 VASP-HELP;
+#X text 110 595 - vasp overview;
+#X obj 379 557 vasp.r!fft;
+#X obj 296 557 vasp.rfft;
+#X obj 210 557 vasp.c!fft;
+#X connect 5 0 6 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 11 0 12 0;
+#X connect 13 0 11 0;
+#X connect 14 0 16 0;
+#X connect 15 0 14 0;
+#X connect 16 0 17 0;
+#X connect 18 0 13 0;
+#X connect 31 0 34 0;
+#X connect 34 0 29 0;
+#X connect 34 0 29 1;
+#X connect 35 0 30 0;

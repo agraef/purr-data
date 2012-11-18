@@ -1,0 +1,60 @@
+#N canvas 656 22 846 536 10;
+#X obj 21 179 gemhead;
+#X obj 27 38 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 327 159 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 249 73 5 0 0 0 - - -;
+#X obj 24 276 pix_texture;
+#X obj 24 305 rectangle 5.33333 4;
+#X floatatom 187 308 5 0 0 0 - - -;
+#X text 109 22 Description: Multiple images handler. The images do
+not need to be the same dimension.;
+#X obj 329 223 file.path.top;
+#X text 352 155 3rd inlets loads images. You can bang it or send it
+a file name.;
+#X text 292 68 Second inlet allows to go back to a previously entered
+image index. Images indices are sent by the right outlet on every time
+you load an image.;
+#X text 237 305 2nd outlet : number of images loaded;
+#X obj 272 123 r \$0coll;
+#X msg 300 399 read;
+#X text 334 398 opens a dialog;
+#X text 364 445 open a dialog;
+#X msg 318 446 write;
+#X msg 309 423 writeagain;
+#X obj 141 479 s \$0coll;
+#X obj 464 479 coll;
+#C restore;
+#X text 398 482 See also;
+#X text 554 352 writes a file;
+#X text 545 370 reads a file;
+#X obj 24 241 gems.getsize;
+#X obj 115 273 * 4;
+#X text 341 120 You can also send almost any message you would send
+to [coll] with the 2dn inlet.;
+#X obj 27 61 gems.win 640 480;
+#X msg 328 182 medias/images/img1.jpg;
+#X msg 329 202 medias/images/img0.jpg;
+#X msg 297 350 write examples/_data/images.coll;
+#X msg 293 373 read examples/_data/images.coll;
+#X obj 22 210 gems.images;
+#X connect 0 0 31 0;
+#X connect 1 0 26 0;
+#X connect 2 0 31 2;
+#X connect 3 0 31 1;
+#X connect 4 0 5 0;
+#X connect 8 0 31 2;
+#X connect 12 0 31 1;
+#X connect 13 0 18 0;
+#X connect 16 0 18 0;
+#X connect 17 0 18 0;
+#X connect 23 0 4 0;
+#X connect 23 3 24 0;
+#X connect 24 0 5 1;
+#X connect 27 0 8 0;
+#X connect 28 0 8 0;
+#X connect 29 0 18 0;
+#X connect 30 0 18 0;
+#X connect 31 0 23 0;
+#X connect 31 1 6 0;

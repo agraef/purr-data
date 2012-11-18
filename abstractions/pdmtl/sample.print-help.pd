@@ -1,0 +1,19 @@
+#N canvas 431 49 644 322 10;
+#X text 47 32 Description: Prints a sample's details.;
+#X text 46 69 Version: 2;
+#X text 195 212 If you initiate it with a 1 \, it will print everytime
+there is a change in the sample.;
+#X text 46 51 Flags: sample_id;
+#X text 270 128 Inlet_1: sample_id signal;
+#X text 270 146 Outlet_1: sample_id signal;
+#X msg 50 99 medias/sounds/loop0.wav;
+#X msg 226 99 medias/sounds/loop1.wav;
+#X obj 129 194 bng 15 250 50 0 empty empty print 0 -6 0 8 -262144 -1
+-1;
+#X obj 197 187 sample.print 1;
+#X obj 50 218 sample.print;
+#X obj 50 158 sample.filer;
+#X connect 6 0 11 0;
+#X connect 7 0 11 0;
+#X connect 8 0 10 1;
+#X connect 11 0 10 0;

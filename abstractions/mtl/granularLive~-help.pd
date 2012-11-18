@@ -1,0 +1,68 @@
+#N canvas 307 591 560 246 10;
+#X text 17 11 Description: Live granular;
+#X text 18 27 Author: Unknown;
+#X obj 20 123 mtl/granularLive~ /id granule;
+#X obj 21 159 mtl/out~;
+#X text 18 43 tags: fx~;
+#X obj 20 71 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#N canvas 5 185 450 300 generate~ 0;
+#X obj 32 213 osc~ 200;
+#X obj 32 89 metro 400;
+#X obj 32 175 mtof;
+#X obj 104 195 mtof;
+#X obj 32 132 + 20;
+#X obj 32 111 random 70;
+#X floatatom 83 69 5 0 0 0 - - -;
+#X obj 32 261 outlet~;
+#X obj 103 261 outlet~;
+#X obj 30 14 inlet;
+#X obj 104 175 mtl/closestNote 0 2 4 7 9;
+#X obj 104 234 *~;
+#X obj 31 234 *~;
+#X obj 104 214 osc~ 100;
+#X obj 32 155 mtl/closestNote 0 2 4 7 9;
+#X connect 0 0 12 0;
+#X connect 1 0 5 0;
+#X connect 2 0 0 0;
+#X connect 3 0 13 0;
+#X connect 4 0 10 0;
+#X connect 4 0 14 0;
+#X connect 5 0 4 0;
+#X connect 6 0 1 1;
+#X connect 9 0 1 0;
+#X connect 9 0 11 1;
+#X connect 9 0 12 1;
+#X connect 10 0 3 0;
+#X connect 11 0 8 0;
+#X connect 12 0 7 0;
+#X connect 13 0 11 0;
+#X connect 14 0 2 0;
+#X restore 20 96 pd generate~;
+#X obj 280 61 cnv 15 200 20 empty empty /granule/ 2 12 0 8 -258401
+-262144 0;
+#X obj 280 84 hsl 100 15 0 1 0 0 /granule/wet /granule/wet_ wet 105
+7 0 8 -262144 -1 -1 0 1;
+#X obj 280 102 hsl 100 15 0 1 0 0 /granule/feedbackleft /granule/feedbackleft_
+feedbackleft 105 7 0 8 -262144 -1 -1 0 1;
+#X obj 280 120 hsl 100 15 0 1 0 0 /granule/feedbackright /granule/feedbackright_
+feedbackright 105 7 0 8 -262144 -1 -1 0 1;
+#X obj 280 138 nbx 5 14 -1e+37 1e+37 0 0 /granule/transpositionleft
+/granule/transpositionleft_ transpositionleft 50 8 0 8 -262144 -1 -1
+0 256;
+#X obj 280 156 nbx 5 14 -1e+37 1e+37 0 0 /granule/transpositionright
+/granule/transpositionright_ transpositionright 50 8 0 8 -262144 -1
+-1 0 256;
+#X obj 280 174 nbx 5 14 -1e+37 1e+37 0 0 /granule/windowleft /granule/windowleft_
+windowleft 50 8 0 8 -262144 -1 -1 15000 256;
+#X obj 280 192 nbx 5 14 -1e+37 1e+37 0 0 /granule/windowright /granule/windowright_
+windowright 50 8 0 8 -262144 -1 -1 15000 256;
+#X obj 278 12 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 338 13 PARAM ENABLED;
+#X obj 277 36 ../doc/5.reference/tof/param-help;
+#X connect 2 0 3 0;
+#X connect 2 1 3 1;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 6 1 2 1;

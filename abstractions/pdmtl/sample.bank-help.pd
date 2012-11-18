@@ -1,0 +1,85 @@
+#N canvas 343 66 997 716 10;
+#X text 11 21 Description: load many samples and ditribute them dynamically.
+;
+#X msg 108 525 none;
+#X msg 17 446 group_name 0;
+#X msg 74 500 group_name 2;
+#X msg 61 472 group_name 1;
+#X text 204 72 <- Click on the the three messages to load the files.
+;
+#X text 639 22 WARNING: LOADING A BUNCH OF FILES TAKES A LOT OF RESSOURCES.
+PRELOAD ALL YOUR FILES BEFORE PERFORMING.;
+#X msg 98 273 write medias/data/sample.bank2.coll;
+#X msg 10 73 0 medias/sounds/loop0.wav;
+#X msg 26 109 1 medias/sounds/loop1.wav;
+#X text 227 126 Use the full paths if you want them to be stored as
+full paths.;
+#X text 227 90 Use relative paths (to the patch containing sample.bank)
+if you want them to be stored as relative paths.;
+#X msg 36 141 0 medias/sounds/loop1.wav;
+#X obj 451 669 sample.display_;
+#X text 174 316 <- The samples stored inside share a common group name
+(sample.bank's first argument);
+#X msg 440 606 0;
+#X msg 490 606 none;
+#X obj 17 553 sample.r;
+#X obj 450 638 sample.r;
+#X text 544 603 When sample.bank is lined to the top patch \, you simply
+need to use the sample index to receive a sample with a sample.r that
+is also linked to the same top patch.;
+#X msg 401 605 1;
+#X text 78 220 You can also store and reload your sample list.;
+#X obj 17 580 sample.display_;
+#X obj 17 665 sample.pitch_;
+#X obj 17 699 sample.bounds_;
+#X obj 17 752 sample.adsr_;
+#X obj 6 380 cnv 15 420 60 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 10 389 If you modify a sample's parameters and then save the
+sample.bank \, all of the sample's parameters will also be saved.;
+#X obj 485 553 cnv 15 420 30 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 485 553 If you use the "auto" keyword \, the samples will be
+indexed automatically.;
+#X msg 382 472 auto medias/sounds/loop0.wav;
+#X msg 490 494 auto medias/sounds/loop1.wav;
+#X msg 85 246 read medias/data/drum.kit.coll;
+#X obj 9 360 cnv 15 420 15 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X text 11 361 Once the files are loaded you can access them with sample.r
+;
+#X obj 442 397 cnv 15 420 70 empty empty empty 20 12 0 14 -261689 -66577
+0;
+#X text 449 425 BUT: If you de not define an ID (group name) the top
+patch's dollar zero will be used. There can still only be one sample.bank
+linked to the same top patch.;
+#X text 449 398 WARNING: Every sample.bank must have a unique ID (group
+name).;
+#X obj 11 318 sample.bank group_name;
+#X obj 382 551 sample.bank;
+#X obj 508 515 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 531 515 Bang will open an openpanel to add a file with "auto"
+indexing.;
+#X msg 59 176 2 medias/sounds/loop1.wav;
+#X connect 1 0 17 0;
+#X connect 2 0 17 0;
+#X connect 3 0 17 0;
+#X connect 4 0 17 0;
+#X connect 7 0 38 0;
+#X connect 8 0 38 0;
+#X connect 9 0 38 0;
+#X connect 12 0 38 0;
+#X connect 15 0 18 0;
+#X connect 16 0 18 0;
+#X connect 17 0 22 0;
+#X connect 18 0 13 0;
+#X connect 20 0 18 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 30 0 39 0;
+#X connect 31 0 39 0;
+#X connect 32 0 38 0;
+#X connect 40 0 39 0;
+#X connect 42 0 38 0;

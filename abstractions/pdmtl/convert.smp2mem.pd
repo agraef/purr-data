@@ -1,0 +1,8 @@
+#N canvas 199 187 452 302 10;
+#X obj 227 115 inlet;
+#X obj 227 157 * 4e-006;
+#X obj 227 201 outlet;
+#X text 271 202 size in Mb;
+#X text 266 112 number of samples;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;

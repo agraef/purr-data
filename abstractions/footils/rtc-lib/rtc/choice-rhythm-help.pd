@@ -1,0 +1,46 @@
+#N canvas 120 110 867 429 10;
+#X text 53 26 choice-rhythm;
+#X text 51 132 see also:;
+#X msg 120 133 alea;
+#X text 50 362 1993 by Karlheinz Essl;
+#X obj 562 134 loadbang;
+#X obj 94 186 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X obj 592 245 bng 15 250 50 0 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X msg 569 305 1 9 8;
+#X obj 569 266 show;
+#X floatatom 216 262 0 0 0 3 length_of_chosen_list - -;
+#X floatatom 155 264 5 0 0 3 ED - -;
+#X obj 94 227 choice-rhythm 100 1000 12 6;
+#X floatatom 175 172 4 0 0 2 min_ED - -;
+#X floatatom 226 172 4 0 0 2 max_ED - -;
+#X msg 94 266 60;
+#X floatatom 348 172 4 0 0 2 max_list_size - -;
+#X floatatom 278 172 4 0 0 2 ED-values - -;
+#X obj 562 190 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 94 305 QT-PercPlayer;
+#X text 522 323 list of chosen indices;
+#X obj 562 152 t b b;
+#X text 447 188 make new choice:;
+#X text 53 58 First a supply of rhythmical values (ED = entry delays)
+is generated. Whenever a bang is sent to the rightmost inlet \, a choice
+of the indices from this supply is made which serves as a choice list
+for a random ("alea") selection of EDs.;
+#X connect 4 0 20 0;
+#X connect 5 0 11 0;
+#X connect 6 0 8 1;
+#X connect 8 0 7 0;
+#X connect 11 0 14 0;
+#X connect 11 1 10 0;
+#X connect 11 2 9 0;
+#X connect 11 3 8 0;
+#X connect 12 0 11 1;
+#X connect 13 0 11 2;
+#X connect 14 0 18 0;
+#X connect 15 0 11 4;
+#X connect 16 0 11 3;
+#X connect 17 0 11 5;
+#X connect 20 0 17 0;
+#X connect 20 1 6 0;

@@ -1,0 +1,28 @@
+
+[hidio]
+-----
+
+This is the next generation of HID API for Pd and Max/MSP.  The aim is to have
+this object perform the same on Pd on GNU/Linux, Mac OS X, and Windows, and
+Max/MSP on Mac OS X and Windows.
+
+Hans-Christoph Steiner <hans@eds.org>
+Olaf Matthes <olaf@nullmedium.de>
+David Merrill <dmerrill@media.mit.edu>
+
+
+Installation
+---------
+
+Included in this tarball are binaries for i386/32bit GNU/Linux and 32-bit
+Universal Mac OS X.  Uncompress this tarball, rename the "hidio-0.1" folder to
+just "hidio", then drop this whole folder into your Pd path.  See this FAQ
+entry for more info:
+
+http://puredata.info/docs/faq/how-do-i-install-externals-and-help-files-with-pd-extended
+
+
+To build it from source, follow the above, then inside this folder, run:
+
+./configure --with-pd=/path/to/pd
+make

@@ -1,0 +1,2685 @@
+boids boids2d {boids flock generator modelling simulator}
+boids boids3d {boids flock generator modelling simulator}
+bsaylor aenv~ {audio bsaylor}
+bsaylor partconv~ {audio bsaylor}
+bsaylor pvoc~ {audio bsaylor}
+bsaylor susloop~ {audio bsaylor}
+bsaylor svf~ {audio bsaylor}
+bsaylor zhzxh~ {audio bsaylor}
+creb 64k {abstraction audio creb}
+creb abs~ {audio creb}
+creb bdft {abstraction audio creb}
+creb bdfts {abstraction audio creb}
+creb bdiag~ {audio creb}
+creb bfft~ {audio creb}
+creb bhip~ {abstraction audio creb}
+creb biquadseries~ {audio creb}
+creb bitsplit~ {audio creb}
+creb blocknorm~ {audio creb}
+creb blop~ {abstraction audio creb}
+creb blosc~ {audio creb}
+creb bpm {abstraction audio creb}
+creb bwin~ {audio creb}
+creb cadd~ {abstraction audio creb}
+creb ccmap~ {abstraction audio creb}
+creb cconj~ {abstraction audio creb}
+creb cep~ {abstraction audio creb}
+creb cheby~ {audio creb}
+creb cinv~ {abstraction audio creb}
+creb clog~ {audio creb}
+creb cmul~ {abstraction audio creb}
+creb cosc~ {abstraction audio creb}
+creb count {abstraction audio creb}
+creb csub~ {abstraction audio creb}
+creb diag~ {audio creb}
+creb dist~ {audio creb}
+creb dsfosc~ {abstraction audio creb}
+creb dwt~ {audio creb}
+creb dynwav~ {audio creb}
+creb ead~ {audio creb}
+creb eadh~ {abstraction audio creb}
+creb eadsr~ {audio creb}
+creb eadsrh~ {abstraction audio creb}
+creb ear~ {audio creb}
+creb expmap~ {abstraction audio creb}
+creb fblock {abstraction audio creb}
+creb fdn~ {audio creb}
+creb ffpoly {creb math}
+creb filterortho~ {audio creb}
+creb fmod {abstraction audio creb}
+creb fmop~ {abstraction audio creb}
+creb frequor~ {abstraction audio creb}
+creb fwarp {creb math}
+creb icep~ {abstraction audio creb}
+creb idsfosc~ {abstraction audio creb}
+creb idwt~ {audio creb}
+creb inv {abstraction audio creb}
+creb junction~ {audio creb}
+creb lattice~ {audio creb}
+creb lattice3 {abstraction audio creb}
+creb lpfft~ {abstraction audio creb}
+creb matrix~ {audio creb}
+creb pdynwav~ {abstraction audio creb}
+creb permut~ {audio creb}
+creb qmult~ {audio creb}
+creb qnorm~ {audio creb}
+creb ramp~ {audio creb}
+creb ratio {creb math}
+creb resofilt~ {audio creb}
+creb sbosc~ {audio creb}
+creb scale7 {abstraction audio creb}
+creb scrollgrid1D~ {audio creb}
+creb statwav~ {audio creb}
+creb tabreadmix~ {audio creb}
+creb tblock {abstraction audio creb}
+creb ti_hihat {abstraction audio creb}
+creb ti_snare {abstraction audio creb}
+creb ucmod~ {abstraction audio creb}
+creb ucnorm~ {abstraction audio creb}
+creb vol~ {abstraction audio creb}
+creb vols~ {abstraction audio creb}
+creb xfm~ {audio creb}
+cxc ascseq {cxc unsorted}
+cxc ascwave {cxc unsorted}
+cxc bfilt {cxc unsorted}
+cxc bfilt2 {cxc unsorted}
+cxc cxc. {cxc unsorted}
+cxc cxc.pr {cxc unsorted}
+cxc delta~ {cxc unsorted}
+cxc ENV {cxc unsorted}
+cxc proc {cxc unsorted}
+cxc randomix {cxc unsorted}
+cxc reson~ {cxc unsorted}
+cxc serialize {cxc unsorted}
+cxc stati {cxc unsorted}
+cxc utime {cxc unsorted}
+cyclone !- {cyclone math}
+cyclone !-~ {audio cyclone math}
+cyclone !/ {cyclone math}
+cyclone !/~ {audio cyclone math}
+cyclone !=~ {audio cyclone math}
+cyclone %~ {audio cyclone math}
+cyclone +=~ {cyclone math}
+cyclone <=~ {audio cyclone math}
+cyclone <~ {audio cyclone math}
+cyclone ==~ {audio cyclone math}
+cyclone >=~ {audio cyclone math}
+cyclone >~ {audio cyclone math}
+{cyclone (hammer)} accum {cyclone hammer misc}
+{cyclone (hammer)} acos {cyclone hammer math}
+{cyclone (hammer)} active {cyclone gui hammer}
+{cyclone (hammer)} anal {cyclone hammer misc}
+{cyclone (hammer)} Append {control cyclone glue hammer}
+{cyclone (hammer)} asin {cyclone hammer math}
+{cyclone (hammer)} bangbang {control cyclone glue hammer}
+{cyclone (hammer)} bondo {control cyclone glue hammer}
+{cyclone (hammer)} Borax {connectivity cyclone hammer midi}
+{cyclone (hammer)} Bucket {cyclone hammer misc}
+{cyclone (hammer)} buddy {control cyclone glue hammer}
+{cyclone (hammer)} capture {cyclone hammer misc}
+{cyclone (hammer)} cartopol {cyclone hammer math}
+{cyclone (hammer)} Clip {cyclone hammer math}
+{cyclone (hammer)} coll {cyclone hammer misc}
+{cyclone (hammer)} comment {cyclone gui hammer}
+{cyclone (hammer)} cosh {cyclone hammer math}
+{cyclone (hammer)} counter {control cyclone glue hammer}
+{cyclone (hammer)} cycle {control cyclone glue hammer}
+{cyclone (hammer)} decide {cyclone hammer misc}
+{cyclone (hammer)} Decode {control cyclone glue hammer}
+{cyclone (hammer)} drunk {cyclone hammer misc}
+{cyclone (hammer)} flush {connectivity cyclone hammer midi}
+{cyclone (hammer)} forward {control cyclone glue hammer}
+{cyclone (hammer)} fromsymbol {control cyclone glue hammer}
+{cyclone (hammer)} funbuff {control cyclone glue hammer}
+{cyclone (hammer)} funnel {control cyclone glue hammer}
+{cyclone (hammer)} gate {control cyclone glue hammer}
+{cyclone (hammer)} grab {control cyclone glue hammer}
+{cyclone (hammer)} Histo {cyclone hammer misc}
+{cyclone (hammer)} iter {control cyclone glue hammer}
+{cyclone (hammer)} match {control cyclone glue hammer}
+{cyclone (hammer)} maximum {cyclone hammer math}
+{cyclone (hammer)} mean {cyclone hammer math}
+{cyclone (hammer)} midiflush {connectivity cyclone hammer midi}
+{cyclone (hammer)} midiformat {connectivity cyclone hammer midi}
+{cyclone (hammer)} midiparse {connectivity cyclone hammer midi}
+{cyclone (hammer)} minimum {cyclone hammer math}
+{cyclone (hammer)} mousefilter {cyclone gui hammer}
+{cyclone (hammer)} MouseState {cyclone gui hammer}
+{cyclone (hammer)} mtr {cyclone hammer misc}
+{cyclone (hammer)} next {control cyclone glue hammer}
+{cyclone (hammer)} offer {control cyclone glue hammer}
+{cyclone (hammer)} onebang {control cyclone glue hammer}
+{cyclone (hammer)} past {cyclone hammer math}
+{cyclone (hammer)} Peak {cyclone hammer math}
+{cyclone (hammer)} poltocar {cyclone hammer math}
+{cyclone (hammer)} prepend {cyclone hammer math}
+{cyclone (hammer)} prob {cyclone hammer misc}
+{cyclone (hammer)} pv {control cyclone glue hammer}
+{cyclone (hammer)} sinh {cyclone hammer math}
+{cyclone (hammer)} speedlim {control cyclone glue hammer}
+{cyclone (hammer)} spell {cyclone hammer misc}
+{cyclone (hammer)} split {control cyclone glue hammer}
+{cyclone (hammer)} spray {control cyclone glue hammer}
+{cyclone (hammer)} sprintf {control cyclone glue hammer}
+{cyclone (hammer)} substitute {control cyclone glue hammer}
+{cyclone (hammer)} sustain {connectivity cyclone hammer midi}
+{cyclone (hammer)} switch {control cyclone glue hammer}
+{cyclone (hammer)} tanh {cyclone hammer math}
+{cyclone (hammer)} thresh {cyclone hammer math}
+{cyclone (hammer)} TogEdge {cyclone hammer math}
+{cyclone (hammer)} tosymbol {control cyclone glue hammer}
+{cyclone (hammer)} Trough {cyclone hammer math}
+{cyclone (hammer)} universal {control cyclone glue hammer}
+{cyclone (hammer)} urn {cyclone hammer math}
+{cyclone (hammer)} Uzi {control cyclone glue hammer}
+{cyclone (hammer)} xbendin {connectivity cyclone hammer midi}
+{cyclone (hammer)} xbendout {connectivity cyclone hammer midi}
+{cyclone (hammer)} xnotein {connectivity cyclone hammer midi}
+{cyclone (hammer)} xnoteout {connectivity cyclone hammer midi}
+{cyclone (hammer)} zl {cyclone hammer misc}
+{cyclone (sickle)} abs~ {audio cyclone math sickle}
+{cyclone (sickle)} acos~ {audio cyclone math sickle}
+{cyclone (sickle)} allpass~ {audio cyclone filter sickle}
+{cyclone (sickle)} asin~ {audio cyclone math sickle}
+{cyclone (sickle)} asinh~ {audio cyclone math sickle}
+{cyclone (sickle)} atan~ {audio cyclone math sickle}
+{cyclone (sickle)} atan2~ {audio cyclone math sickle}
+{cyclone (sickle)} atanh~ {audio cyclone math sickle}
+{cyclone (sickle)} average~ {audio cyclone math sickle}
+{cyclone (sickle)} avg~ {cyclone math sickle}
+{cyclone (sickle)} bitand~ {audio cyclone math sickle}
+{cyclone (sickle)} bitnot~ {audio cyclone math sickle}
+{cyclone (sickle)} bitor~ {audio cyclone math sickle}
+{cyclone (sickle)} bitshift~ {audio cyclone math sickle}
+{cyclone (sickle)} bitxor~ {audio cyclone math sickle}
+{cyclone (sickle)} buffir~ {audio cyclone filter sickle}
+{cyclone (sickle)} capture~ {control cyclone glue sickle}
+{cyclone (sickle)} cartopol~ {audio cyclone math sickle}
+{cyclone (sickle)} change~ {audio cyclone math sickle}
+{cyclone (sickle)} click~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} Clip~ {audio cyclone math sickle}
+{cyclone (sickle)} comb~ {audio cyclone filter sickle}
+{cyclone (sickle)} cosh~ {audio cyclone math sickle}
+{cyclone (sickle)} cosx~ {audio cyclone math sickle}
+{cyclone (sickle)} count~ {control cyclone glue sickle}
+{cyclone (sickle)} curve~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} cycle~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} delay~ {audio cyclone delay sickle}
+{cyclone (sickle)} delta~ {control cyclone glue sickle}
+{cyclone (sickle)} deltaclip~ {audio cyclone math sickle}
+{cyclone (sickle)} edge~ {audio cyclone math sickle}
+{cyclone (sickle)} frameaccum~ {audio cyclone math sickle}
+{cyclone (sickle)} framedelta~ {audio cyclone math sickle}
+{cyclone (sickle)} index~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} kink~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} Line~ {control cyclone sickle time}
+{cyclone (sickle)} linedrive {cyclone sickle unsorted}
+{cyclone (sickle)} log~ {audio cyclone math sickle}
+{cyclone (sickle)} lookup~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} lores~ {audio cyclone filter sickle}
+{cyclone (sickle)} maximum~ {audio cyclone math sickle}
+{cyclone (sickle)} minimum~ {audio cyclone math sickle}
+{cyclone (sickle)} minmax~ {audio cyclone math sickle}
+{cyclone (sickle)} mstosamps~ {audio cyclone math sickle}
+{cyclone (sickle)} onepole~ {audio cyclone filter sickle}
+{cyclone (sickle)} peakamp~ {audio cyclone math sickle}
+{cyclone (sickle)} peek~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} phasewrap~ {audio cyclone math sickle}
+{cyclone (sickle)} pink~ {audio cyclone sickle}
+{cyclone (sickle)} play~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} poke~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} poltocar~ {audio cyclone math sickle}
+{cyclone (sickle)} pong~ {audio cyclone math sickle}
+{cyclone (sickle)} pow~ {audio cyclone math sickle}
+{cyclone (sickle)} rampsmooth~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} rand~ {cyclone math sickle}
+{cyclone (sickle)} record~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} reson~ {audio cyclone filter sickle}
+{cyclone (sickle)} sah~ {control cyclone glue sickle}
+{cyclone (sickle)} sampstoms~ {audio cyclone math sickle}
+{cyclone (sickle)} Scope~ {cyclone gui sickle}
+{cyclone (sickle)} sinh~ {audio cyclone math sickle}
+{cyclone (sickle)} sinx~ {audio cyclone math sickle}
+{cyclone (sickle)} slide~ {audio cyclone math sickle}
+{cyclone (sickle)} Snapshot~ {control cyclone glue sickle}
+{cyclone (sickle)} spike~ {audio cyclone math sickle}
+{cyclone (sickle)} svf~ {audio cyclone filter sickle}
+{cyclone (sickle)} tanh~ {audio cyclone math sickle}
+{cyclone (sickle)} tanx~ {audio cyclone math sickle}
+{cyclone (sickle)} train~ {audio cyclone sickle}
+{cyclone (sickle)} trapezoid~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} triangle~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} vectral~ {audio cyclone math sickle}
+{cyclone (sickle)} wave~ {and audio cyclone oscillators sickle tables}
+{cyclone (sickle)} zerox~ {audio cyclone math sickle}
+ekext cup {ekext unsorted}
+ekext framescore~ {ekext unsorted}
+ekext framespect~ {ekext unsorted}
+ekext hssc~ {ekext unsorted}
+ekext listmoses {ekext unsorted}
+ekext maskxor {ekext unsorted}
+ekext polymap {ekext unsorted}
+ekext polystat {ekext unsorted}
+ekext sieve {ekext unsorted}
+ekext simile {ekext unsorted}
+ekext simile~ {ekext unsorted}
+ekext steady {ekext unsorted}
+ekext voicing_detector~ {ekext unsorted}
+ekext voicing_detector~test3 {ekext unsorted}
+ekext zeroxpos~ {ekext unsorted}
+fftease bthresher~ {audio fftease glue}
+fftease burrow~ {audio fftease filters}
+fftease cavoc~ {and audio fftease oscillators tables}
+fftease cavoc27~ {and audio fftease oscillators tables}
+fftease centerring~ {audio fftease filters}
+fftease codepend~ {audio fftease filters}
+fftease crossx~ {audio fftease filters}
+fftease dentist~ {audio fftease filters}
+fftease disarrain~ {audio fftease filters}
+fftease disarray~ {audio fftease filters}
+fftease drown~ {audio fftease filters}
+fftease ether~ {audio fftease filters}
+fftease mindwarp~ {audio fftease filters}
+fftease morphine~ {audio fftease filters}
+fftease multyq~ {audio fftease filters}
+fftease presidency~ {audio fftease filters}
+fftease pvcompand~ {audio fftease filters}
+fftease pvgrain~ {audio fftease filters}
+fftease pvharm~ {audio fftease filters}
+fftease pvoc~ {audio fftease filters}
+fftease pvtuner~ {audio fftease filters}
+fftease pvwarp~ {audio fftease filters}
+fftease reanimator~ {audio fftease filters}
+fftease resent~ {audio fftease filters}
+fftease residency~ {audio fftease filters}
+fftease scrape~ {audio fftease filters}
+fftease shapee~ {audio fftease filters}
+fftease swinger~ {audio fftease filters}
+fftease taint~ {audio fftease filters}
+fftease thresher~ {audio fftease glue}
+fftease vacancy~ {audio fftease filters}
+fftease xsyn~ {audio fftease filters}
+flatspace aenv~ {flatspace unsorted}
+flatspace amp~ {flatspace unsorted}
+flatspace arraysize {flatspace unsorted}
+flatspace ascii0x2d0x3eint {flatspace unsorted}
+flatspace atan2~ {flatspace unsorted}
+flatspace attract1 {flatspace unsorted}
+flatspace autoscale {flatspace unsorted}
+flatspace bandpass {flatspace unsorted}
+flatspace base {flatspace unsorted}
+flatspace bdiag~ {flatspace unsorted}
+flatspace beatpipe {flatspace unsorted}
+flatspace bfft~ {flatspace unsorted}
+flatspace biquadseries~ {flatspace unsorted}
+flatspace bird {flatspace unsorted}
+flatspace bitsplit~ {flatspace unsorted}
+flatspace blocknorm~ {flatspace unsorted}
+flatspace blocksize_in_ms {flatspace unsorted}
+flatspace blosc~ {flatspace unsorted}
+flatspace bmatrix~ {flatspace unsorted}
+flatspace bufferoverride~ {flatspace unsorted}
+flatspace button {flatspace unsorted}
+flatspace buttongate {flatspace unsorted}
+flatspace bwin~ {flatspace unsorted}
+flatspace cheby~ {flatspace unsorted}
+flatspace choice {flatspace unsorted}
+flatspace classpath {flatspace unsorted}
+flatspace clog~ {flatspace unsorted}
+flatspace comport {flatspace unsorted}
+flatspace cursor {flatspace unsorted}
+flatspace debounce {flatspace unsorted}
+flatspace deg2hid {flatspace unsorted}
+flatspace deque {flatspace unsorted}
+flatspace dist~ {flatspace unsorted}
+flatspace dwt~ {flatspace unsorted}
+flatspace dynwav~ {flatspace unsorted}
+flatspace ead~ {flatspace unsorted}
+flatspace eadsr~ {flatspace unsorted}
+flatspace ear~ {flatspace unsorted}
+flatspace eblosc~ {flatspace unsorted}
+flatspace entry {flatspace unsorted}
+flatspace envgen {flatspace unsorted}
+flatspace equalizer {flatspace unsorted}
+flatspace ev {flatspace unsorted}
+flatspace ev_abs {flatspace unsorted}
+flatspace ev_ff {flatspace unsorted}
+flatspace ev_ff_status {flatspace unsorted}
+flatspace ev_key {flatspace unsorted}
+flatspace ev_led {flatspace unsorted}
+flatspace ev_msc {flatspace unsorted}
+flatspace ev_rel {flatspace unsorted}
+flatspace ev_rep {flatspace unsorted}
+flatspace ev_snd {flatspace unsorted}
+flatspace ev_syn {flatspace unsorted}
+flatspace failsafe {flatspace unsorted}
+flatspace fdn~ {flatspace unsorted}
+flatspace ff-autocenter {flatspace unsorted}
+flatspace ff-constant {flatspace unsorted}
+flatspace ff-friction {flatspace unsorted}
+flatspace ff-gain {flatspace unsorted}
+flatspace ff-periodic {flatspace unsorted}
+flatspace ff-spring {flatspace unsorted}
+flatspace ffpoly {flatspace unsorted}
+flatspace fiddle~ {flatspace unsorted}
+flatspace file_type {flatspace unsorted}
+flatspace filterortho~ {flatspace unsorted}
+flatspace float0x2d0x3eascii {flatspace unsorted}
+flatspace folder_list {flatspace unsorted}
+flatspace fwarp {flatspace unsorted}
+flatspace gcanvas {flatspace unsorted}
+flatspace getdir {flatspace unsorted}
+flatspace gfsm {flatspace unsorted}
+flatspace gfsm_alphabet {flatspace unsorted}
+flatspace gfsm_automaton {flatspace unsorted}
+flatspace gfsm_markov {flatspace unsorted}
+flatspace gfsm_state {flatspace unsorted}
+flatspace gid0x2d0x3egroup_name {flatspace unsorted}
+flatspace gingerbreadman {flatspace unsorted}
+flatspace group {flatspace unsorted}
+flatspace group_name0x2d0x3egid {flatspace unsorted}
+flatspace henon {flatspace unsorted}
+flatspace hid {flatspace unsorted}
+flatspace hid_average {flatspace unsorted}
+flatspace hid_centered {flatspace unsorted}
+flatspace hid_cube {flatspace unsorted}
+flatspace hid_cuberoot {flatspace unsorted}
+flatspace hid_exp {flatspace unsorted}
+flatspace hid_graph {flatspace unsorted}
+flatspace hid_invert {flatspace unsorted}
+flatspace hid_log {flatspace unsorted}
+flatspace hid_lowpass {flatspace unsorted}
+flatspace hid_menu {flatspace unsorted}
+flatspace hid_one2four {flatspace unsorted}
+flatspace hid_one2three {flatspace unsorted}
+flatspace hid_one2two {flatspace unsorted}
+flatspace hid_polar {flatspace unsorted}
+flatspace hid_rel2abs {flatspace unsorted}
+flatspace hid_smooth {flatspace unsorted}
+flatspace hid_spiral {flatspace unsorted}
+flatspace hid_square {flatspace unsorted}
+flatspace hid_squareroot {flatspace unsorted}
+flatspace hid2deg {flatspace unsorted}
+flatspace hid2rad {flatspace unsorted}
+flatspace highpass {flatspace unsorted}
+flatspace hlshelf {flatspace unsorted}
+flatspace hopalong {flatspace unsorted}
+flatspace hostname {flatspace unsorted}
+flatspace ifeel {flatspace unsorted}
+flatspace ikeda {flatspace unsorted}
+flatspace image {flatspace unsorted}
+flatspace import {flatspace unsorted}
+flatspace ISOdate {flatspace unsorted}
+flatspace ISOtime {flatspace unsorted}
+flatspace joystick {flatspace unsorted}
+flatspace junction~ {flatspace unsorted}
+flatspace keyboard {flatspace unsorted}
+flatspace keygate {flatspace unsorted}
+flatspace latoocarfian {flatspace unsorted}
+flatspace latoomutalpha {flatspace unsorted}
+flatspace latoomutbeta {flatspace unsorted}
+flatspace latoomutgamma {flatspace unsorted}
+flatspace lattice~ {flatspace unsorted}
+flatspace line3 {flatspace unsorted}
+flatspace loop~ {flatspace unsorted}
+flatspace lorenz {flatspace unsorted}
+flatspace lowpass {flatspace unsorted}
+flatspace lowshelf {flatspace unsorted}
+flatspace lrshift~ {flatspace unsorted}
+flatspace martin {flatspace unsorted}
+flatspace martin-test {flatspace unsorted}
+flatspace matrix~ {flatspace unsorted}
+flatspace mixer~ {flatspace unsorted}
+flatspace moog~ {flatspace unsorted}
+flatspace mouse {flatspace unsorted}
+flatspace notch {flatspace unsorted}
+flatspace notescale {flatspace unsorted}
+flatspace oggamp~ {flatspace unsorted}
+flatspace oggcast~ {flatspace unsorted}
+flatspace oggread~ {flatspace unsorted}
+flatspace oggwrite~ {flatspace unsorted}
+flatspace partconv~ {flatspace unsorted}
+flatspace passwd {flatspace unsorted}
+flatspace pdstring {flatspace unsorted}
+flatspace permut~ {flatspace unsorted}
+flatspace pi {flatspace unsorted}
+flatspace pique {flatspace unsorted}
+flatspace plugin~ {flatspace unsorted}
+flatspace popcorn {flatspace unsorted}
+flatspace popcorn-test {flatspace unsorted}
+flatspace popen {flatspace unsorted}
+flatspace popup {flatspace unsorted}
+flatspace popup-gop {flatspace unsorted}
+flatspace pso {flatspace unsorted}
+flatspace pvoc~ {flatspace unsorted}
+flatspace pwm {flatspace unsorted}
+flatspace pwm~ {flatspace unsorted}
+flatspace qmult~ {flatspace unsorted}
+flatspace qnorm~ {flatspace unsorted}
+flatspace quaruptwo {flatspace unsorted}
+flatspace quaruptwo-test {flatspace unsorted}
+flatspace rad2hid {flatspace unsorted}
+flatspace ratio {flatspace unsorted}
+flatspace readdir {flatspace unsorted}
+flatspace resofilt~ {flatspace unsorted}
+flatspace rlshift~ {flatspace unsorted}
+flatspace rossler {flatspace unsorted}
+flatspace sbosc~ {flatspace unsorted}
+flatspace scrollgrid1D~ {flatspace unsorted}
+flatspace serialctl {flatspace unsorted}
+flatspace serialize {flatspace unsorted}
+flatspace sfwrite~ {flatspace unsorted}
+flatspace shell {flatspace unsorted}
+flatspace silderh {flatspace unsorted}
+flatspace ski {flatspace unsorted}
+flatspace slider {flatspace unsorted}
+flatspace split_my_msgs {flatspace unsorted}
+flatspace split_path {flatspace unsorted}
+flatspace sprinkler {flatspace unsorted}
+flatspace standardmap {flatspace unsorted}
+flatspace stat {flatspace unsorted}
+flatspace stk {flatspace unsorted}
+flatspace streamin~ {flatspace unsorted}
+flatspace streamout~ {flatspace unsorted}
+flatspace stripdir {flatspace unsorted}
+flatspace susloop~ {flatspace unsorted}
+flatspace svf~ {flatspace unsorted}
+flatspace tabreadmix~ {flatspace unsorted}
+flatspace ticker {flatspace unsorted}
+flatspace toddle {flatspace unsorted}
+flatspace uid0x2d0x3eusername {flatspace unsorted}
+flatspace uname {flatspace unsorted}
+flatspace username0x2d0x3euid {flatspace unsorted}
+flatspace vbap {flatspace unsorted}
+flatspace version {flatspace unsorted}
+flatspace weightmap {flatspace unsorted}
+flatspace xfm~ {flatspace unsorted}
+flatspace zhzxh~ {flatspace unsorted}
+flib flib {flib unsorted}
+flib mfcc {flib unsorted}
+flib wdv {flib unsorted}
+freeverb~ freeverb~ {audio effects freeverb~}
+gem 6GEMglTexCoord1fv {gem imaging opengl wrapper}
+gem accumrotate {gem imaging manipulators}
+gem alpha {gem imaging manipulators}
+gem ambient {gem imaging manipulators}
+gem ambientRGB {gem imaging manipulators}
+gem camera {gem imaging manipulators}
+gem circle {gem geos imaging}
+gem color {gem imaging manipulators}
+gem colorRGB {gem imaging manipulators}
+gem colorSquare {gem geos imaging}
+gem cone {gem geos imaging}
+gem cube {gem geos imaging}
+gem cuboid {gem geos imaging}
+gem curve {gem geos imaging}
+gem curve3d {gem geos imaging}
+gem cylinder {gem geos imaging}
+gem depth {gem imaging manipulators}
+gem diffuse {gem imaging manipulators}
+gem diffuseRGB {gem imaging manipulators}
+gem disk {gem geos imaging}
+gem emission {gem imaging manipulators}
+gem emissionRGB {gem imaging manipulators}
+gem GEMglAccum {gem imaging opengl wrapper}
+gem GEMglAlphaFunc {gem imaging opengl wrapper}
+gem GEMglBegin {gem imaging opengl wrapper}
+gem GEMglBitmap {gem imaging opengl wrapper}
+gem GEMglBlendFunc {gem imaging opengl wrapper}
+gem GEMglCallList {gem imaging opengl wrapper}
+gem GEMglClear {gem imaging opengl wrapper}
+gem GEMglClearAccum {gem imaging opengl wrapper}
+gem GEMglClearColor {gem imaging opengl wrapper}
+gem GEMglClearDepth {gem imaging opengl wrapper}
+gem GEMglClearIndex {gem imaging opengl wrapper}
+gem GEMglClearStencil {gem imaging opengl wrapper}
+gem GEMglClipPlane {gem imaging opengl wrapper}
+gem GEMglColor3b {gem imaging opengl wrapper}
+gem GEMglColor3bv {gem imaging opengl wrapper}
+gem GEMglColor3d {gem imaging opengl wrapper}
+gem GEMglColor3dv {gem imaging opengl wrapper}
+gem GEMglColor3f {gem imaging opengl wrapper}
+gem GEMglColor3fv {gem imaging opengl wrapper}
+gem GEMglColor3i {gem imaging opengl wrapper}
+gem GEMglColor3iv {gem imaging opengl wrapper}
+gem GEMglColor3s {gem imaging opengl wrapper}
+gem GEMglColor3sv {gem imaging opengl wrapper}
+gem GEMglColor3ub {gem imaging opengl wrapper}
+gem GEMglColor3ubv {gem imaging opengl wrapper}
+gem GEMglColor3ui {gem imaging opengl wrapper}
+gem GEMglColor3uiv {gem imaging opengl wrapper}
+gem GEMglColor3us {gem imaging opengl wrapper}
+gem GEMglColor3usv {gem imaging opengl wrapper}
+gem GEMglColor4b {gem imaging opengl wrapper}
+gem GEMglColor4bv {gem imaging opengl wrapper}
+gem GEMglColor4d {gem imaging opengl wrapper}
+gem GEMglColor4dv {gem imaging opengl wrapper}
+gem GEMglColor4f {gem imaging opengl wrapper}
+gem GEMglColor4fv {gem imaging opengl wrapper}
+gem GEMglColor4i {gem imaging opengl wrapper}
+gem GEMglColor4iv {gem imaging opengl wrapper}
+gem GEMglColor4s {gem imaging opengl wrapper}
+gem GEMglColor4sv {gem imaging opengl wrapper}
+gem GEMglColor4ub {gem imaging opengl wrapper}
+gem GEMglColor4ubv {gem imaging opengl wrapper}
+gem GEMglColor4ui {gem imaging opengl wrapper}
+gem GEMglColor4uiv {gem imaging opengl wrapper}
+gem GEMglColor4us {gem imaging opengl wrapper}
+gem GEMglColor4usv {gem imaging opengl wrapper}
+gem GEMglColorMask {gem imaging opengl wrapper}
+gem GEMglColorMaterial {gem imaging opengl wrapper}
+gem GEMglCopyPixels {gem imaging opengl wrapper}
+gem GEMglCullFace {gem imaging opengl wrapper}
+gem GEMglDepthFunc {gem imaging opengl wrapper}
+gem GEMglDepthMask {gem imaging opengl wrapper}
+gem GEMglDepthRange {gem imaging opengl wrapper}
+gem GEMglDisable {gem imaging opengl wrapper}
+gem GEMglDrawBuffer {gem imaging opengl wrapper}
+gem GEMglEdgeFlag {gem imaging opengl wrapper}
+gem GEMglEnable {gem imaging opengl wrapper}
+gem GEMglEnd {gem imaging opengl wrapper}
+gem GEMglEndList {gem imaging opengl wrapper}
+gem GEMglEvalCoord1d {gem imaging opengl wrapper}
+gem GEMglEvalCoord1dv {gem imaging opengl wrapper}
+gem GEMglEvalCoord1f {gem imaging opengl wrapper}
+gem GEMglEvalCoord1fv {gem imaging opengl wrapper}
+gem GEMglEvalCoord2d {gem imaging opengl wrapper}
+gem GEMglEvalCoord2dv {gem imaging opengl wrapper}
+gem GEMglEvalCoord2f {gem imaging opengl wrapper}
+gem GEMglEvalCoord2fv {gem imaging opengl wrapper}
+gem GEMglEvalMesh1 {gem imaging opengl wrapper}
+gem GEMglEvalMesh2 {gem imaging opengl wrapper}
+gem GEMglEvalPoint1 {gem imaging opengl wrapper}
+gem GEMglEvalPoint2 {gem imaging opengl wrapper}
+gem GEMglFeedbackBuffer {gem imaging opengl wrapper}
+gem GEMglFinish {gem imaging opengl wrapper}
+gem GEMglFlush {gem imaging opengl wrapper}
+gem GEMglFogf {gem imaging opengl wrapper}
+gem GEMglFogfv {gem imaging opengl wrapper}
+gem GEMglFogi {gem imaging opengl wrapper}
+gem GEMglFogiv {gem imaging opengl wrapper}
+gem GEMglFrontFace {gem imaging opengl wrapper}
+gem GEMglFrustum {gem imaging opengl wrapper}
+gem GEMglGenLists {gem imaging opengl wrapper}
+gem GEMglGetError {gem imaging opengl wrapper}
+gem GEMglGetFloatv {gem imaging opengl wrapper}
+gem GEMglGetMapdv {gem imaging opengl wrapper}
+gem GEMglGetMapfv {gem imaging opengl wrapper}
+gem GEMglGetMapiv {gem imaging opengl wrapper}
+gem GEMglGetString {gem imaging opengl wrapper}
+gem GEMglHint {gem imaging opengl wrapper}
+gem GEMglIndexd {gem imaging opengl wrapper}
+gem GEMglIndexdv {gem imaging opengl wrapper}
+gem GEMglIndexf {gem imaging opengl wrapper}
+gem GEMglIndexfv {gem imaging opengl wrapper}
+gem GEMglIndexi {gem imaging opengl wrapper}
+gem GEMglIndexiv {gem imaging opengl wrapper}
+gem GEMglIndexMask {gem imaging opengl wrapper}
+gem GEMglIndexs {gem imaging opengl wrapper}
+gem GEMglIndexsv {gem imaging opengl wrapper}
+gem GEMglInitNames {gem imaging opengl wrapper}
+gem GEMglIsEnabled {gem imaging opengl wrapper}
+gem GEMglIsList {gem imaging opengl wrapper}
+gem GEMglLightf {gem imaging opengl wrapper}
+gem GEMglLighti {gem imaging opengl wrapper}
+gem GEMglLightModelf {gem imaging opengl wrapper}
+gem GEMglLightModeli {gem imaging opengl wrapper}
+gem GEMglLineStipple {gem imaging opengl wrapper}
+gem GEMglLineWidth {gem imaging opengl wrapper}
+gem GEMglLoadIdentity {gem imaging opengl wrapper}
+gem GEMglLoadMatrixd {gem imaging opengl wrapper}
+gem GEMglLoadMatrixf {gem imaging opengl wrapper}
+gem GEMglLoadName {gem imaging opengl wrapper}
+gem GEMglLogicOp {gem imaging opengl wrapper}
+gem GEMglMap1d {gem imaging opengl wrapper}
+gem GEMglMap1f {gem imaging opengl wrapper}
+gem GEMglMap2d {gem imaging opengl wrapper}
+gem GEMglMap2f {gem imaging opengl wrapper}
+gem GEMglMapGrid1d {gem imaging opengl wrapper}
+gem GEMglMapGrid1f {gem imaging opengl wrapper}
+gem GEMglMapGrid2d {gem imaging opengl wrapper}
+gem GEMglMapGrid2f {gem imaging opengl wrapper}
+gem GEMglMaterialf {gem imaging opengl wrapper}
+gem GEMglMateriali {gem imaging opengl wrapper}
+gem GEMglMatrixMode {gem imaging opengl wrapper}
+gem GEMglMultMatrixd {gem imaging opengl wrapper}
+gem GEMglMultMatrixf {gem imaging opengl wrapper}
+gem GEMglNewList {gem imaging opengl wrapper}
+gem GEMglNormal3b {gem imaging opengl wrapper}
+gem GEMglNormal3bv {gem imaging opengl wrapper}
+gem GEMglNormal3d {gem imaging opengl wrapper}
+gem GEMglNormal3dv {gem imaging opengl wrapper}
+gem GEMglNormal3f {gem imaging opengl wrapper}
+gem GEMglNormal3fv {gem imaging opengl wrapper}
+gem GEMglNormal3i {gem imaging opengl wrapper}
+gem GEMglNormal3iv {gem imaging opengl wrapper}
+gem GEMglNormal3s {gem imaging opengl wrapper}
+gem GEMglNormal3sv {gem imaging opengl wrapper}
+gem GEMglOrtho {gem imaging opengl wrapper}
+gem GEMglPassThrough {gem imaging opengl wrapper}
+gem GEMglPixelStoref {gem imaging opengl wrapper}
+gem GEMglPixelStorei {gem imaging opengl wrapper}
+gem GEMglPixelTransferf {gem imaging opengl wrapper}
+gem GEMglPixelTransferi {gem imaging opengl wrapper}
+gem GEMglPixelZoom {gem imaging opengl wrapper}
+gem GEMglPointSize {gem imaging opengl wrapper}
+gem GEMglPolygonMode {gem imaging opengl wrapper}
+gem GEMglPopAttrib {gem imaging opengl wrapper}
+gem GEMglPopMatrix {gem imaging opengl wrapper}
+gem GEMglPopName {gem imaging opengl wrapper}
+gem GEMglPushAttrib {gem imaging opengl wrapper}
+gem GEMglPushMatrix {gem imaging opengl wrapper}
+gem GEMglPushName {gem imaging opengl wrapper}
+gem GEMglRasterPos2d {gem imaging opengl wrapper}
+gem GEMglRasterPos2dv {gem imaging opengl wrapper}
+gem GEMglRasterPos2f {gem imaging opengl wrapper}
+gem GEMglRasterPos2fv {gem imaging opengl wrapper}
+gem GEMglRasterPos2i {gem imaging opengl wrapper}
+gem GEMglRasterPos2iv {gem imaging opengl wrapper}
+gem GEMglRasterPos2s {gem imaging opengl wrapper}
+gem GEMglRasterPos2sv {gem imaging opengl wrapper}
+gem GEMglRasterPos3d {gem imaging opengl wrapper}
+gem GEMglRasterPos3dv {gem imaging opengl wrapper}
+gem GEMglRasterPos3f {gem imaging opengl wrapper}
+gem GEMglRasterPos3fv {gem imaging opengl wrapper}
+gem GEMglRasterPos3i {gem imaging opengl wrapper}
+gem GEMglRasterPos3iv {gem imaging opengl wrapper}
+gem GEMglRasterPos3s {gem imaging opengl wrapper}
+gem GEMglRasterPos3sv {gem imaging opengl wrapper}
+gem GEMglRasterPos4d {gem imaging opengl wrapper}
+gem GEMglRasterPos4dv {gem imaging opengl wrapper}
+gem GEMglRasterPos4f {gem imaging opengl wrapper}
+gem GEMglRasterPos4fv {gem imaging opengl wrapper}
+gem GEMglRasterPos4i {gem imaging opengl wrapper}
+gem GEMglRasterPos4iv {gem imaging opengl wrapper}
+gem GEMglRasterPos4s {gem imaging opengl wrapper}
+gem GEMglRasterPos4sv {gem imaging opengl wrapper}
+gem GEMglRectd {gem imaging opengl wrapper}
+gem GEMglRectf {gem imaging opengl wrapper}
+gem GEMglRecti {gem imaging opengl wrapper}
+gem GEMglRects {gem imaging opengl wrapper}
+gem GEMglRenderMode {gem imaging opengl wrapper}
+gem GEMglRotated {gem imaging opengl wrapper}
+gem GEMglScaled {gem imaging opengl wrapper}
+gem GEMglScalef {gem imaging opengl wrapper}
+gem GEMglScissor {gem imaging opengl wrapper}
+gem GEMglSelectBuffer {gem imaging opengl wrapper}
+gem GEMglShadeModel {gem imaging opengl wrapper}
+gem GEMglStencilFunc {gem imaging opengl wrapper}
+gem GEMglStencilMask {gem imaging opengl wrapper}
+gem GEMglStencilOp {gem imaging opengl wrapper}
+gem GEMglTexCoord1d {gem imaging opengl wrapper}
+gem GEMglTexCoord1dv {gem imaging opengl wrapper}
+gem GEMglTexCoord1f {gem imaging opengl wrapper}
+gem GEMglTexCoord1i {gem imaging opengl wrapper}
+gem GEMglTexCoord1iv {gem imaging opengl wrapper}
+gem GEMglTexCoord1s {gem imaging opengl wrapper}
+gem GEMglTexCoord1sv {gem imaging opengl wrapper}
+gem GEMglTexCoord2d {gem imaging opengl wrapper}
+gem GEMglTexCoord2dv {gem imaging opengl wrapper}
+gem GEMglTexCoord2f {gem imaging opengl wrapper}
+gem GEMglTexCoord2fv {gem imaging opengl wrapper}
+gem GEMglTexCoord2i {gem imaging opengl wrapper}
+gem GEMglTexCoord2iv {gem imaging opengl wrapper}
+gem GEMglTexCoord2s {gem imaging opengl wrapper}
+gem GEMglTexCoord2sv {gem imaging opengl wrapper}
+gem GEMglTexCoord3d {gem imaging opengl wrapper}
+gem GEMglTexCoord3dv {gem imaging opengl wrapper}
+gem GEMglTexCoord3f {gem imaging opengl wrapper}
+gem GEMglTexCoord3fv {gem imaging opengl wrapper}
+gem GEMglTexCoord3i {gem imaging opengl wrapper}
+gem GEMglTexCoord3iv {gem imaging opengl wrapper}
+gem GEMglTexCoord3s {gem imaging opengl wrapper}
+gem GEMglTexCoord3sv {gem imaging opengl wrapper}
+gem GEMglTexCoord4d {gem imaging opengl wrapper}
+gem GEMglTexCoord4dv {gem imaging opengl wrapper}
+gem GEMglTexCoord4f {gem imaging opengl wrapper}
+gem GEMglTexCoord4fv {gem imaging opengl wrapper}
+gem GEMglTexCoord4i {gem imaging opengl wrapper}
+gem GEMglTexCoord4iv {gem imaging opengl wrapper}
+gem GEMglTexCoord4s {gem imaging opengl wrapper}
+gem GEMglTexCoord4sv {gem imaging opengl wrapper}
+gem GEMglTexEnvf {gem imaging opengl wrapper}
+gem GEMglTexEnvi {gem imaging opengl wrapper}
+gem GEMglTexGend {gem imaging opengl wrapper}
+gem GEMglTexGenf {gem imaging opengl wrapper}
+gem GEMglTexGenfv {gem imaging opengl wrapper}
+gem GEMglTexGeni {gem imaging opengl wrapper}
+gem GEMglTexParameterf {gem imaging opengl wrapper}
+gem GEMglTexParameteri {gem imaging opengl wrapper}
+gem GEMglTranslated {gem imaging opengl wrapper}
+gem GEMglTranslatef {gem imaging opengl wrapper}
+gem GEMglVertex2d {gem imaging opengl wrapper}
+gem GEMglVertex2dv {gem imaging opengl wrapper}
+gem GEMglVertex2f {gem imaging opengl wrapper}
+gem GEMglVertex2fv {gem imaging opengl wrapper}
+gem GEMglVertex2i {gem imaging opengl wrapper}
+gem GEMglVertex2iv {gem imaging opengl wrapper}
+gem GEMglVertex2s {gem imaging opengl wrapper}
+gem GEMglVertex2sv {gem imaging opengl wrapper}
+gem GEMglVertex3d {gem imaging opengl wrapper}
+gem GEMglVertex3dv {gem imaging opengl wrapper}
+gem GEMglVertex3f {gem imaging opengl wrapper}
+gem GEMglVertex3fv {gem imaging opengl wrapper}
+gem GEMglVertex3i {gem imaging opengl wrapper}
+gem GEMglVertex3iv {gem imaging opengl wrapper}
+gem GEMglVertex3s {gem imaging opengl wrapper}
+gem GEMglVertex3sv {gem imaging opengl wrapper}
+gem GEMglVertex4d {gem imaging opengl wrapper}
+gem GEMglVertex4dv {gem imaging opengl wrapper}
+gem GEMglVertex4f {gem imaging opengl wrapper}
+gem GEMglVertex4fv {gem imaging opengl wrapper}
+gem GEMglVertex4i {gem imaging opengl wrapper}
+gem GEMglVertex4iv {gem imaging opengl wrapper}
+gem GEMglVertex4s {gem imaging opengl wrapper}
+gem GEMglVertex4sv {gem imaging opengl wrapper}
+gem GEMglViewport {gem imaging opengl wrapper}
+gem gemhead {controls gem imaging}
+gem gemkeyboard {controls gem imaging}
+gem gemkeyname {controls gem imaging}
+gem gemmouse {controls gem imaging}
+gem gemorb {controls gem imaging}
+gem gemtablet {controls gem imaging}
+gem gemwin {controls gem imaging}
+gem imageVert {gem geos imaging}
+gem light {gem imaging nongeos}
+gem linear_path {gem imaging manipulators}
+gem model {gem geos imaging}
+gem multimodel {gem geos imaging}
+gem newWave {gem geos imaging}
+gem ortho {gem imaging manipulators}
+gem part_color {gem imaging particles}
+gem part_damp {gem imaging particles}
+gem part_draw {gem imaging particles}
+gem part_follow {gem imaging particles}
+gem part_gravity {gem imaging particles}
+gem part_head {gem imaging particles}
+gem part_info {gem imaging particles}
+gem part_killold {gem imaging particles}
+gem part_killslow {gem imaging particles}
+gem part_orbitpoint {gem imaging particles}
+gem part_render {gem imaging particles}
+gem part_size {gem imaging particles}
+gem part_source {gem imaging particles}
+gem part_targetcolor {gem imaging particles}
+gem part_targetsize {gem imaging particles}
+gem part_velocity {gem imaging particles}
+gem part_vertex {gem imaging particles}
+gem pix_2grey {gem imaging pixes}
+gem pix_a_2grey {gem imaging pixes}
+gem pix_add {gem imaging pixes}
+gem pix_aging {gem imaging pixes}
+gem pix_alpha {gem imaging pixes}
+gem pix_background {gem imaging pixes}
+gem pix_backlight {gem imaging pixes}
+gem pix_biquad {gem imaging pixes}
+gem pix_bitmask {gem imaging pixes}
+gem pix_blob {gem imaging pixes}
+gem pix_buf {gem imaging pixes}
+gem pix_buffer {gem imaging pixes}
+gem pix_buffer_read {gem imaging pixes}
+gem pix_buffer_write {gem imaging pixes}
+gem pix_chroma_key {gem imaging pixes}
+gem pix_color {gem imaging pixes}
+gem pix_coloralpha {gem imaging pixes}
+gem pix_colormatrix {gem imaging pixes}
+gem pix_colorreduce {gem imaging pixes}
+gem pix_composite {gem imaging pixes}
+gem pix_convolve {gem imaging pixes}
+gem pix_coordinate {gem imaging pixes}
+gem pix_crop {gem imaging pixes}
+gem pix_curve {gem imaging pixes}
+gem pix_data {gem imaging pixes}
+gem pix_delay {gem imaging pixes}
+gem pix_diff {gem imaging pixes}
+gem pix_dot {gem imaging pixes}
+gem pix_draw {gem imaging pixes}
+gem pix_dump {gem imaging pixes}
+gem pix_duotone {gem imaging pixes}
+gem pix_film {gem imaging pixes}
+gem pix_flip {gem imaging pixes}
+gem pix_gain {gem imaging pixes}
+gem pix_grey {gem imaging pixes}
+gem pix_halftone {gem imaging pixes}
+gem pix_histo {gem imaging pixes}
+gem pix_hsv2rgb {gem imaging pixes}
+gem pix_image {gem imaging pixes}
+gem pix_imageInPlace {gem imaging pixes}
+gem pix_info {gem imaging pixes}
+gem pix_invert {gem imaging pixes}
+gem pix_kaleidoscope {gem imaging pixes}
+gem pix_levels {gem imaging pixes}
+gem pix_lumaoffset {gem imaging pixes}
+gem pix_mask {gem imaging pixes}
+gem pix_metaimage {gem imaging pixes}
+gem pix_mix {gem imaging pixes}
+gem pix_motionblur {gem imaging pixes}
+gem pix_movement {gem imaging pixes}
+gem pix_movie {gem imaging pixes}
+gem pix_multiimage {gem imaging pixes}
+gem pix_multiply {gem imaging pixes}
+gem pix_normalize {gem imaging pixes}
+gem pix_offset {gem imaging pixes}
+gem pix_pix2sig~ {gem imaging pixes}
+gem pix_posterize {gem imaging pixes}
+gem pix_puzzle {gem imaging pixes}
+gem pix_rds {gem imaging pixes}
+gem pix_rectangle {gem imaging pixes}
+gem pix_refraction {gem imaging pixes}
+gem pix_resize {gem imaging pixes}
+gem pix_rgb2hsv {gem imaging pixes}
+gem pix_rgba {gem imaging pixes}
+gem pix_roll {gem imaging pixes}
+gem pix_rtx {gem imaging pixes}
+gem pix_scanline {gem imaging pixes}
+gem pix_set {gem imaging pixes}
+gem pix_sig2pix~ {gem imaging pixes}
+gem pix_snap {gem imaging pixes}
+gem pix_snap2tex {gem imaging pixes}
+gem pix_subtract {gem imaging pixes}
+gem pix_takealpha {gem imaging pixes}
+gem pix_texture {gem imaging pixes}
+gem pix_threshold {gem imaging pixes}
+gem pix_tIIR {gem imaging pixes}
+gem pix_video {gem imaging pixes}
+gem pix_write {gem imaging pixes}
+gem pix_zoom {gem imaging pixes}
+gem polygon {gem geos imaging}
+gem polygon_smooth {gem imaging manipulators}
+gem primTri {gem geos imaging}
+gem rectangle {gem geos imaging}
+gem ripple {gem geos imaging}
+gem rotate {gem imaging manipulators}
+gem rotateXYZ {gem imaging manipulators}
+gem rubber {gem geos imaging}
+gem scale {gem imaging manipulators}
+gem scaleXYZ {gem imaging manipulators}
+gem separator {gem imaging manipulators}
+gem shininess {gem imaging manipulators}
+gem slideSquare {gem geos imaging}
+gem specular {gem imaging manipulators}
+gem specularRGB {gem imaging manipulators}
+gem sphere {gem geos imaging}
+gem spline_path {gem imaging manipulators}
+gem square {gem geos imaging}
+gem teapot {gem geos imaging}
+gem text2d {gem geos imaging}
+gem text3d {gem geos imaging}
+gem textextruded {gem geos imaging}
+gem textoutline {gem geos imaging}
+gem translate {gem imaging manipulators}
+gem translateXYZ {gem imaging manipulators}
+gem triangle {gem geos imaging}
+gem world_light {gem imaging nongeos}
+ggee atan2~ {audio ggee math}
+ggee atan2~ {audio ggee math}
+ggee bandpass {ggee unsorted}
+ggee button {ggee unsorted}
+ggee envgen {ggee unsorted}
+ggee envgen {ggee storage tables}
+ggee equalizer {ggee unsorted}
+ggee {exp~ log~} {audio ggee math}
+ggee gcanvas {ggee unsorted}
+ggee getdir {ggee unsorted}
+ggee highpass {ggee unsorted}
+ggee hlshelf {ggee unsorted}
+ggee image {ggee unsorted}
+ggee lowpass {ggee unsorted}
+ggee lowshelf {ggee unsorted}
+ggee mixer~ {ggee unsorted}
+ggee moog~ {ggee unsorted}
+ggee notch {ggee unsorted}
+ggee prepent {control ggee glue shortcut}
+ggee rtout {ggee misc}
+ggee scrolllist {control ggee glue}
+ggee serialctl {ggee unsorted}
+ggee serialize {ggee unsorted}
+ggee serialize {control ggee glue}
+ggee sfwrite~ {ggee unsorted}
+ggee shell {ggee unsorted}
+ggee silderh {ggee unsorted}
+ggee sinh {ggee misc}
+ggee slider {control ggee glue}
+ggee slider {ggee unsorted}
+ggee state {control ggee glue}
+ggee stk {ggee unsorted}
+ggee streamin~ {ggee unsorted}
+ggee streamout~ {ggee unsorted}
+ggee stripdir {ggee misc}
+ggee stripdir {ggee unsorted}
+ggee ticker {control ggee glue}
+ggee ticker {ggee unsorted}
+ggee toddle {control ggee glue}
+ggee toddle {ggee unsorted}
+ggee unwonk {control ggee glue}
+ggee vbap {ggee misc}
+ggee vbap {ggee unsorted}
+ggee wintablet {ggee misc}
+hardware lanbox {hardware unsorted}
+hardware memPIO {hardware unsorted}
+hardware multio {hardware unsorted}
+hcs ascii0x2d0x3eint {hcs unsorted}
+hcs autoscale {hcs unsorted}
+hcs blocksize_in_ms {hcs unsorted}
+hcs classpath {hcs unsorted}
+hcs cursor {hcs unsorted}
+hcs debounce {hcs unsorted}
+hcs file_type {hcs unsorted}
+hcs float0x2d0x3eascii {hcs unsorted}
+hcs folder_list {hcs unsorted}
+hcs gid0x2d0x3egroup_name {hcs unsorted}
+hcs group {hcs unsorted}
+hcs group_name0x2d0x3egid {hcs unsorted}
+hcs hostname {hcs unsorted}
+hcs ifeel {hcs unsorted}
+hcs import {hcs unsorted}
+hcs ISOdate {hcs unsorted}
+hcs ISOtime {hcs unsorted}
+hcs passwd {hcs unsorted}
+hcs pi {hcs unsorted}
+hcs pwm {hcs unsorted}
+hcs pwm~ {hcs unsorted}
+hcs split_my_msgs {hcs unsorted}
+hcs split_path {hcs unsorted}
+hcs stat {hcs unsorted}
+hcs uid0x2d0x3eusername {hcs unsorted}
+hcs uname {hcs unsorted}
+hcs username0x2d0x3euid {hcs unsorted}
+hcs version {hcs unsorted}
+hid buttongate {hid unsorted}
+hid deg2hid {hid unsorted}
+hid ev_ff_status {hid unsorted}
+hid hid {hid unsorted}
+hid hid_average {hid unsorted}
+hid hid_centered {hid unsorted}
+hid hid_cube {hid unsorted}
+hid hid_cuberoot {hid unsorted}
+hid hid_exp {hid unsorted}
+hid hid_graph {hid unsorted}
+hid hid_invert {hid unsorted}
+hid hid_log {hid unsorted}
+hid hid_lowpass {hid unsorted}
+hid hid_menu {hid unsorted}
+hid hid_one2four {hid unsorted}
+hid hid_one2three {hid unsorted}
+hid hid_one2two {hid unsorted}
+hid hid_polar {hid unsorted}
+hid hid_rel2abs {hid unsorted}
+hid hid_smooth {hid unsorted}
+hid hid_spiral {hid unsorted}
+hid hid_square {hid unsorted}
+hid hid_squareroot {hid unsorted}
+hid hid2deg {hid unsorted}
+hid hid2rad {hid unsorted}
+hid joystick {hid unsorted}
+hid keyboard {hid unsorted}
+hid keygate {hid unsorted}
+hid mouse {hid unsorted}
+hid notescale {hid unsorted}
+hid rad2hid {hid unsorted}
+iem_ambi ambi_decode3 {iem_ambi unsorted}
+iem_ambi ambi_encode {iem_ambi unsorted}
+iem_ambi ambi_rot {iem_ambi unsorted}
+iem_bin_ambi ambi_reduced_decode_fft2 {iem_bin_ambi unsorted}
+iem_bin_ambi ambi_reduced_decode_fir2 {iem_bin_ambi unsorted}
+iemgui knob {control glue iemgui}
+iemlib 1p1z {control float glue iemlib operating}
+iemlib add2_comma {iemlib misc}
+iemlib addl~ {arithmetic audio iemlib math signals}
+iemlib any {control glue iemlib}
+iemlib ap1~ {audio filters iemlib}
+iemlib ap2~ {audio filters iemlib}
+iemlib bng {gui iemlib}
+iemlib bpe {iemlib misc}
+iemlib bpq2~ {audio filters iemlib}
+iemlib bpw2~ {audio filters iemlib}
+iemlib bsq2~ {audio filters iemlib}
+iemlib bsw2~ {audio filters iemlib}
+iemlib cnv {gui iemlib}
+iemlib db2v {control float glue iemlib operating}
+iemlib dbtofad {control conversion float glue iemlib operating}
+iemlib default {control iemlib init}
+iemlib divl~ {arithmetic audio iemlib math signals}
+iemlib dollarg {control iemlib init}
+iemlib dsp {control iemlib init}
+iemlib exp_inc {control iemlib time}
+iemlib f2note {iemlib misc}
+iemlib fade~ {audio iemlib misc}
+iemlib fadtodb {control conversion float glue iemlib operating}
+iemlib fadtorms {control conversion float glue iemlib operating}
+iemlib {filter~ } {audio filters iemlib}
+iemlib FIR~ {audio filters iemlib}
+iemlib float24 {control iemlib init}
+iemlib for++ {control iemlib time}
+iemlib gate {iemlib misc}
+iemlib hdl {gui iemlib}
+iemlib hml_shelf~ {audio filters iemlib}
+iemlib hp1~ {audio filters iemlib}
+iemlib hp10_bess~ {audio filters iemlib}
+iemlib hp10_butt~ {audio filters iemlib}
+iemlib hp10_cheb~ {audio filters iemlib}
+iemlib hp10_crit~ {audio filters iemlib}
+iemlib hp2_bess~ {audio filters iemlib}
+iemlib hp2_butt~ {audio filters iemlib}
+iemlib hp2_cheb~ {audio filters iemlib}
+iemlib hp2_crit~ {audio filters iemlib}
+iemlib hp2~ {audio filters iemlib}
+iemlib hp3_bess~ {audio filters iemlib}
+iemlib hp3_butt~ {audio filters iemlib}
+iemlib hp3_cheb~ {audio filters iemlib}
+iemlib hp3_crit~ {audio filters iemlib}
+iemlib hp4_bess~ {audio filters iemlib}
+iemlib hp4_butt~ {audio filters iemlib}
+iemlib hp4_cheb~ {audio filters iemlib}
+iemlib hp4_crit~ {audio filters iemlib}
+iemlib hp5_bess~ {audio filters iemlib}
+iemlib hp5_butt~ {audio filters iemlib}
+iemlib hp5_cheb~ {audio filters iemlib}
+iemlib hp5_crit~ {audio filters iemlib}
+iemlib hp6_bess~ {audio filters iemlib}
+iemlib hp6_butt~ {audio filters iemlib}
+iemlib hp6_cheb~ {audio filters iemlib}
+iemlib hp6_crit~ {audio filters iemlib}
+iemlib hp7_bess~ {audio filters iemlib}
+iemlib hp7_butt~ {audio filters iemlib}
+iemlib hp7_cheb~ {audio filters iemlib}
+iemlib hp7_crit~ {audio filters iemlib}
+iemlib hp8_bess~ {audio filters iemlib}
+iemlib hp8_butt~ {audio filters iemlib}
+iemlib hp8_cheb~ {audio filters iemlib}
+iemlib hp8_crit~ {audio filters iemlib}
+iemlib hp9_bess~ {audio filters iemlib}
+iemlib hp9_butt~ {audio filters iemlib}
+iemlib hp9_cheb~ {audio filters iemlib}
+iemlib hp9_crit~ {audio filters iemlib}
+iemlib hradio {gui iemlib}
+iemlib hsl {gui iemlib}
+iemlib iem_append {control glue iemlib}
+iemlib iem_blocksize~ {audio iemlib misc}
+iemlib iem_i_route {iemlib misc}
+iemlib iem_pbank_csv {control glue handling iemlib parameter}
+iemlib iem_prepend {control glue iemlib}
+iemlib iem_receive {iemlib misc}
+iemlib iem_route {iemlib misc}
+iemlib iem_samplerate~ {audio iemlib misc}
+iemlib iem_sel_any {iemlib misc}
+iemlib iem_send {iemlib misc}
+iemlib init {control iemlib init}
+iemlib int_fract~ {audio iemlib misc}
+iemlib LFO_noise~ {audio iemlib misc}
+iemlib list2send {control glue handling iemlib parameter}
+iemlib lp1_t~ {audio filters iemlib}
+iemlib lp1~ {audio filters iemlib}
+iemlib lp10_bess~ {audio filters iemlib}
+iemlib lp10_butt~ {audio filters iemlib}
+iemlib lp10_cheb~ {audio filters iemlib}
+iemlib lp10_crit~ {audio filters iemlib}
+iemlib lp2_bess~ {audio filters iemlib}
+iemlib lp2_butt~ {audio filters iemlib}
+iemlib lp2_cheb~ {audio filters iemlib}
+iemlib lp2_crit~ {audio filters iemlib}
+iemlib lp2~ {audio filters iemlib}
+iemlib lp3_bess~ {audio filters iemlib}
+iemlib lp3_butt~ {audio filters iemlib}
+iemlib lp3_cheb~ {audio filters iemlib}
+iemlib lp3_crit~ {audio filters iemlib}
+iemlib lp4_bess~ {audio filters iemlib}
+iemlib lp4_butt~ {audio filters iemlib}
+iemlib lp4_cheb~ {audio filters iemlib}
+iemlib lp4_crit~ {audio filters iemlib}
+iemlib lp5_bess~ {audio filters iemlib}
+iemlib lp5_butt~ {audio filters iemlib}
+iemlib lp5_cheb~ {audio filters iemlib}
+iemlib lp5_crit~ {audio filters iemlib}
+iemlib lp6_bess~ {audio filters iemlib}
+iemlib lp6_butt~ {audio filters iemlib}
+iemlib lp6_cheb~ {audio filters iemlib}
+iemlib lp6_crit~ {audio filters iemlib}
+iemlib lp7_bess~ {audio filters iemlib}
+iemlib lp7_butt~ {audio filters iemlib}
+iemlib lp7_cheb~ {audio filters iemlib}
+iemlib lp7_crit~ {audio filters iemlib}
+iemlib lp8_bess~ {audio filters iemlib}
+iemlib lp8_butt~ {audio filters iemlib}
+iemlib lp8_cheb~ {audio filters iemlib}
+iemlib lp8_crit~ {audio filters iemlib}
+iemlib lp9_bess~ {audio filters iemlib}
+iemlib lp9_butt~ {audio filters iemlib}
+iemlib lp9_cheb~ {audio filters iemlib}
+iemlib lp9_crit~ {audio filters iemlib}
+iemlib maverage~ {audio filters iemlib}
+iemlib mergefilename {control glue iemlib operating symbol}
+iemlib modulo_counter {control iemlib time}
+iemlib mp3play~ {audio iemlib misc}
+iemlib mull~ {arithmetic audio iemlib math signals}
+iemlib nbx {gui iemlib}
+iemlib once {control iemlib init}
+iemlib para_bp2~ {audio filters iemlib}
+iemlib peakenv~ {audio iemlib misc}
+iemlib pink~ {audio iemlib misc}
+iemlib post_netreceive {iemlib obsolete}
+iemlib pre_inlet {iemlib misc}
+iemlib pre_netsend {iemlib obsolete}
+iemlib prepend_ascii {iemlib misc}
+iemlib prvu~ {audio converters iemlib}
+iemlib pvu~ {audio converters iemlib}
+iemlib rbpq2~ {audio filters iemlib}
+iemlib rbpw2~ {audio filters iemlib}
+iemlib receive2list {control glue handling iemlib parameter}
+iemlib rmstofad {control conversion float glue iemlib operating}
+iemlib round_zero {control float glue iemlib operating}
+iemlib round~ {audio iemlib misc}
+iemlib rvu~ {audio converters iemlib}
+iemlib sin_phase~ {audio iemlib misc}
+iemlib soundfile_info {iemlib misc}
+iemlib speedlim {control float glue iemlib operating}
+iemlib split {control float glue iemlib operating}
+iemlib split3 {control float glue iemlib operating}
+iemlib splitfilename {control glue iemlib operating symbol}
+iemlib stripfilename {control glue iemlib operating symbol}
+iemlib subl~ {arithmetic audio iemlib math signals}
+iemlib t3_bpe {control iemlib time}
+iemlib t3_delay {control iemlib time}
+iemlib t3_line~ {audio iemlib time trigger}
+iemlib t3_metro {control iemlib time}
+iemlib t3_sig~ {audio iemlib time trigger}
+iemlib t3_timer {control iemlib time}
+iemlib tgl {gui iemlib}
+iemlib toggle_mess {iemlib misc}
+iemlib transf_fader {control float glue iemlib operating}
+iemlib unsig~ {audio converters iemlib}
+iemlib unsymbol {control glue iemlib operating symbol}
+iemlib v2db {control float glue iemlib operating}
+iemlib vcf_bp2~ {audio filters iemlib}
+iemlib vcf_bp4~ {audio filters iemlib}
+iemlib vcf_bp6~ {audio filters iemlib}
+iemlib vcf_bp8~ {audio filters iemlib}
+iemlib vcf_hp2~ {audio filters iemlib}
+iemlib vcf_hp4~ {audio filters iemlib}
+iemlib vcf_hp6~ {audio filters iemlib}
+iemlib vcf_hp8~ {audio filters iemlib}
+iemlib vcf_lp2~ {audio filters iemlib}
+iemlib vcf_lp4~ {audio filters iemlib}
+iemlib vcf_lp6~ {audio filters iemlib}
+iemlib vcf_lp8~ {audio filters iemlib}
+iemlib vcf_rbp2~ {audio filters iemlib}
+iemlib vcf_rbp4~ {audio filters iemlib}
+iemlib vcf_rbp6~ {audio filters iemlib}
+iemlib vcf_rbp8~ {audio filters iemlib}
+iemlib vdl {gui iemlib}
+iemlib vradio {gui iemlib}
+iemlib vsl {gui iemlib}
+iemlib vu {gui iemlib}
+iemlib wrap {control float glue iemlib operating}
+jasch_lib _ {jasch_lib unsorted}
+jasch_lib detox {connectivity html jasch_lib xml}
+jmmmp -dsp {jmmmp unsorted}
+jmmmp bcf2000 {jmmmp unsorted}
+jmmmp clock {jmmmp unsorted}
+jmmmp datei-l {jmmmp unsorted}
+jmmmp datei-o {jmmmp unsorted}
+jmmmp datei-r {jmmmp unsorted}
+jmmmp datei-w {jmmmp unsorted}
+jmmmp dsp01 {jmmmp unsorted}
+jmmmp f+ {jmmmp unsorted}
+jmmmp file {jmmmp unsorted}
+jmmmp lbang {jmmmp unsorted}
+jmmmp m-i {jmmmp unsorted}
+jmmmp maat~ {jmmmp unsorted}
+jmmmp mat~ {jmmmp unsorted}
+jmmmp met~ {jmmmp unsorted}
+jmmmp metrum {jmmmp unsorted}
+jmmmp mk {jmmmp unsorted}
+jmmmp oscD {jmmmp unsorted}
+jmmmp oscS {jmmmp unsorted}
+jmmmp snaps~ {jmmmp unsorted}
+jmmmp stoppuhr {jmmmp unsorted}
+jmmmp tastin {jmmmp unsorted}
+keyboardkeys keybang {keyboardkeys unsorted}
+keyboardkeys keytoggle {keyboardkeys unsorted}
+keyboardkeys keyupdown {keyboardkeys unsorted}
+la-kitchen amplitude_n {la-kitchen unsorted}
+la-kitchen autocal {la-kitchen unsorted}
+la-kitchen catch_extremum {la-kitchen unsorted}
+la-kitchen catch_extremum2 {la-kitchen unsorted}
+la-kitchen change_n {la-kitchen unsorted}
+la-kitchen count_n {la-kitchen unsorted}
+la-kitchen debounce {la-kitchen unsorted}
+la-kitchen debounce_b {la-kitchen unsorted}
+la-kitchen fir_filter {la-kitchen unsorted}
+la-kitchen fir_hip_n {la-kitchen unsorted}
+la-kitchen fir_mean_n {la-kitchen unsorted}
+la-kitchen iir_hip {la-kitchen unsorted}
+la-kitchen iir_lop {la-kitchen unsorted}
+la-kitchen last_n {la-kitchen unsorted}
+la-kitchen last_n_matrix {la-kitchen unsorted}
+la-kitchen list2matcol {la-kitchen unsorted}
+la-kitchen max_n {la-kitchen unsorted}
+la-kitchen min_n {la-kitchen unsorted}
+la-kitchen one_n {la-kitchen unsorted}
+la-kitchen seuil_n {la-kitchen unsorted}
+la-kitchen zero_n {la-kitchen unsorted}
+list-abs compare-any {list-abs unsorted}
+list-abs last-x {list-abs testtag unsorted}
+list-abs list-abs {list-abs unsorted}
+list-abs list-accum {list-abs unsorted}
+list-abs list-add {list-abs unsorted}
+list-abs list-apply {list-abs unsorted}
+list-abs list-centroid {list-abs unsorted}
+list-abs list-clip {list-abs unsorted}
+list-abs list-compare {list-abs unsorted}
+list-abs list-delete {list-abs unsorted}
+list-abs list-dotprod {list-abs unsorted}
+list-abs list-drip {list-abs unsorted}
+list-abs list-dripslow {list-abs unsorted}
+list-abs list-emath {list-abs unsorted}
+list-abs list-enumerate {list-abs unsorted}
+list-abs list-equalize {list-abs unsorted}
+list-abs list-extend {list-abs unsorted}
+list-abs list-fifo {list-abs unsorted}
+list-abs list-filter {list-abs unsorted}
+list-abs list-find {list-abs unsorted}
+list-abs list-geometric-mean {list-abs unsorted}
+list-abs list-harmonic-mean {list-abs unsorted}
+list-abs list-idx {list-abs unsorted}
+list-abs list-insert {list-abs unsorted}
+list-abs list-inter {list-abs unsorted}
+list-abs list-inter-many {list-abs unsorted}
+list-abs list-l2s {list-abs unsorted}
+list-abs list-lastx {list-abs unsorted}
+list-abs list-len {list-abs unsorted}
+list-abs list-lifo {list-abs unsorted}
+list-abs list-makefilename {list-abs unsorted}
+list-abs list-map {list-abs unsorted}
+list-abs list-map2 {list-abs unsorted}
+list-abs list-math {list-abs unsorted}
+list-abs list-mean {list-abs unsorted}
+list-abs list-minmax {list-abs unsorted}
+list-abs list-moses {list-abs unsorted}
+list-abs list-mult {list-abs unsorted}
+list-abs list-normalize {list-abs unsorted}
+list-abs list-onearg {list-abs unsorted}
+list-abs list-reduce {list-abs unsorted}
+list-abs list-replace {list-abs unsorted}
+list-abs list-rev {list-abs unsorted}
+list-abs list-rot {list-abs unsorted}
+list-abs list-round {list-abs unsorted}
+list-abs list-seek {list-abs unsorted}
+list-abs list-sieve {list-abs unsorted}
+list-abs list-splat {list-abs unsorted}
+list-abs list-sub {list-abs unsorted}
+list-abs list-tabdump {list-abs unsorted}
+list-abs list-unitvec {list-abs unsorted}
+list-abs OSCprepend {list-abs unsorted}
+list-abs prepent {list-abs unsorted}
+list-abs sroute {list-abs unsorted}
+list-abs take-two {list-abs unsorted}
+list-abs triple-scale {list-abs unsorted}
+mapping amplitude_n {mapping unsorted}
+mapping autoscale {mapping unsorted}
+mapping breakpoint {mapping unsorted}
+mapping buttongate {mapping unsorted}
+mapping bytemask {mapping unsorted}
+mapping correlation {mapping unsorted}
+mapping curve {mapping unsorted}
+mapping curve_exp {mapping unsorted}
+mapping curve_fade {mapping unsorted}
+mapping curve_graph {mapping unsorted}
+mapping curve_log {mapping unsorted}
+mapping debounce {mapping unsorted}
+mapping debytemask {mapping unsorted}
+mapping degrees0x2d0x3emapping {mapping unsorted}
+mapping delay_n {mapping unsorted}
+mapping desegment {mapping unsorted}
+mapping desegment12 {mapping unsorted}
+mapping desegment3 {mapping unsorted}
+mapping desegment4 {mapping unsorted}
+mapping diff_n {mapping unsorted}
+mapping disjoin {mapping unsorted}
+mapping distance {mapping unsorted}
+mapping distance_n {mapping unsorted}
+mapping distance2d {mapping unsorted}
+mapping downsample {mapping unsorted}
+mapping env {mapping unsorted}
+mapping env- {mapping unsorted}
+mapping env+ {mapping unsorted}
+mapping fir {mapping unsorted}
+mapping gaussian {mapping unsorted}
+mapping hysteresis {mapping unsorted}
+mapping iir {mapping unsorted}
+mapping join {mapping unsorted}
+mapping keygate {mapping unsorted}
+mapping last_n {mapping unsorted}
+mapping listto {mapping unsorted}
+mapping local_max {mapping unsorted}
+mapping local_min {mapping unsorted}
+mapping lop {mapping unsorted}
+mapping mapping0x2d0x3edegrees {mapping unsorted}
+mapping mapping0x2d0x3eradians {mapping unsorted}
+mapping max_n {mapping unsorted}
+mapping mean_n {mapping unsorted}
+mapping median {mapping unsorted}
+mapping median_3 {mapping unsorted}
+mapping median_5 {mapping unsorted}
+mapping median_7 {mapping unsorted}
+mapping median_n {mapping unsorted}
+mapping min_n {mapping unsorted}
+mapping multi_slider {mapping unsorted}
+mapping nl {mapping unsorted}
+mapping notescale {mapping unsorted}
+mapping oscillo {mapping unsorted}
+mapping pmfilter {mapping unsorted}
+mapping pmfilter_2d {mapping unsorted}
+mapping pmfilter_3d {mapping unsorted}
+mapping pmstring_1d {mapping unsorted}
+mapping polar {mapping unsorted}
+mapping radians0x2d0x3emapping {mapping unsorted}
+mapping resample {mapping unsorted}
+mapping reverse {mapping unsorted}
+mapping rnd-stat {mapping unsorted}
+mapping segment {mapping unsorted}
+mapping segment4 {mapping unsorted}
+mapping sinusoid {mapping unsorted}
+mapping spiral {mapping unsorted}
+mapping split_n {mapping unsorted}
+mapping stepper {mapping unsorted}
+mapping stepper12 {mapping unsorted}
+mapping stepper24 {mapping unsorted}
+mapping stream_check {mapping unsorted}
+mapping test_n {mapping unsorted}
+mapping timeroll {mapping unsorted}
+mapping tolist {mapping unsorted}
+mapping upsample {mapping unsorted}
+mapping wave {mapping unsorted}
+mapping wave_loop {mapping unsorted}
+markex abs~ {markex unsorted}
+markex alternate {markex unsorted}
+markex average {markex unsorted}
+markex change {markex unsorted}
+markex counter {markex unsorted}
+markex hsv2rgb {markex unsorted}
+markex invert {markex unsorted}
+markex multiselect {markex unsorted}
+markex oneshot {markex unsorted}
+markex randomF {markex unsorted}
+markex reson~ {markex unsorted}
+markex rgb2hsv {markex unsorted}
+markex strcat {markex unsorted}
+markex tripleLine {markex unsorted}
+markex tripleRand {markex unsorted}
+markex vector- {markex unsorted}
+markex vector* {markex unsorted}
+markex vector/ {markex unsorted}
+markex vector+ {markex unsorted}
+markex vectorpack {markex unsorted}
+maxlib allow {control glue maxlib}
+maxlib arbran {math maxlib}
+maxlib arraycopy {buffer maxlib storage}
+maxlib average {math maxlib}
+maxlib beat {analysis audio maxlib}
+maxlib beta {generators math maxlib number random}
+maxlib bilex {generators math maxlib number random}
+maxlib borax {analysis audio maxlib}
+maxlib cauchy {generators math maxlib number random}
+maxlib chord {analysis audio maxlib}
+maxlib delta {math maxlib}
+maxlib dist {connectivity control maxlib misc network remote}
+maxlib divide {math maxlib}
+maxlib divmod {math maxlib}
+maxlib edge {analysis audio maxlib}
+maxlib expo {generators math maxlib number random}
+maxlib fifo {buffer maxlib storage}
+maxlib gauss {generators math maxlib number random}
+maxlib gestalt {analysis audio maxlib}
+maxlib history {math maxlib}
+maxlib ignore {control maxlib time}
+maxlib iso {control maxlib time}
+maxlib lifo {buffer maxlib storage}
+maxlib limit {maxlib unsorted}
+maxlib linear {generators math maxlib number random}
+maxlib listfifo {buffer maxlib storage}
+maxlib listfunnel {edit list maxlib storage}
+maxlib match {math maxlib}
+maxlib minus {math maxlib}
+maxlib mlife {maxlib misc other/experimental}
+maxlib multi {math maxlib}
+maxlib nchange {control glue maxlib}
+maxlib netclient {connectivity control maxlib misc network remote}
+maxlib netdist {connectivity control maxlib misc network remote}
+maxlib netrec {connectivity control maxlib misc network remote}
+maxlib netserver {connectivity control maxlib misc network remote}
+maxlib nroute {control glue maxlib}
+maxlib pitch {analysis audio maxlib}
+maxlib plus {math maxlib}
+maxlib poisson {generators math maxlib number random}
+maxlib pong {control maxlib time}
+maxlib pulse {control maxlib time}
+maxlib remote {connectivity control maxlib misc network remote}
+maxlib rewrap {math maxlib}
+maxlib rythm {analysis audio maxlib}
+maxlib scale {math maxlib}
+maxlib score {analysis audio maxlib}
+maxlib speedlim {control maxlib time}
+maxlib split {checking control glue maxlib routing}
+maxlib step {control maxlib time}
+maxlib subst {maxlib misc other/experimental}
+maxlib sync {control maxlib time}
+maxlib temperature {control maxlib time}
+maxlib tilt {analysis audio maxlib}
+maxlib timebang {control maxlib time}
+maxlib unroute {control glue maxlib}
+maxlib urn {math maxlib}
+maxlib velocity {control maxlib time}
+maxlib weibull {math maxlib}
+maxlib wrap {math maxlib}
+memento careGUI {memento unsorted}
+memento careOSC {memento unsorted}
+memento commun {memento unsorted}
+memento originator {memento unsorted}
+mjlib {# about} {math mjlib}
+mjlib marimba~ {and audio mjlib oscillators tables}
+mjlib metroplus {control mjlib time}
+mjlib monorhythm {control mjlib time}
+mjlib n2m {math mjlib}
+mjlib pin~ {audio filters mjlib}
+mjlib prob {control mjlib time}
+motex getenv {misc motex}
+motex ln~ {audio math motex}
+motex pan~ {audio filters motex}
+motex pansig~ {audio filters motex}
+motex pol2rec~ {audio math motex}
+motex polygate~ {audio glue motex}
+motex rec2pol~ {audio math motex}
+motex shuffle {math motex}
+motex system {misc motex}
+mrpeach midifile {mrpeach unsorted}
+mrpeach packOSC {mrpeach unsorted}
+mrpeach routeOSC {mrpeach unsorted}
+mrpeach sqosc~ {mrpeach unsorted}
+mrpeach tcpclient {mrpeach unsorted}
+mrpeach tcpreceive {mrpeach unsorted}
+mrpeach tcpsend {mrpeach unsorted}
+mrpeach tcpserver {mrpeach unsorted}
+mrpeach udpreceive {mrpeach unsorted}
+mrpeach udpsend {mrpeach unsorted}
+nqpoly~ nqpoly~ {nqpoly~ unsorted}
+nqpoly4 nqpoly4 {nqpoly4 unsorted}
+nusmuk additive {nusmuk unsorted}
+nusmuk between {nusmuk unsorted}
+nusmuk distortion {nusmuk unsorted}
+nusmuk lfo {nusmuk unsorted}
+nusmuk many_bang {nusmuk unsorted}
+nusmuk oscillo {nusmuk unsorted}
+nusmuk rnd_metro {nusmuk unsorted}
+nusmuk spatialisation {nusmuk unsorted}
+oscx dumpOSC {connectivity osc oscx}
+oscx OSC {connectivity osc oscx}
+oscx OSCroute {connectivity osc oscx}
+oscx sendOSC {connectivity osc oscx}
+pan equal_power_pan~ {pan unsorted}
+pan gogins_pan~ {pan unsorted}
+pan gpan~ {pan unsorted}
+pan linear_pan~ {pan unsorted}
+pan square_root_pan~ {pan unsorted}
+pd-lib - {math pd-lib}
+pd-lib -~ {audio math pd-lib}
+pd-lib != {math pd-lib}
+pd-lib * {math pd-lib}
+pd-lib *~ {audio math pd-lib}
+pd-lib / {math pd-lib}
+pd-lib /~ {audio math pd-lib}
+pd-lib & {math pd-lib}
+pd-lib && {math pd-lib}
+pd-lib % {math pd-lib}
+pd-lib + {math pd-lib}
+pd-lib +~ {audio math pd-lib}
+pd-lib < {math pd-lib}
+pd-lib << {math pd-lib}
+pd-lib <= {math pd-lib}
+pd-lib == {math pd-lib}
+pd-lib > {math pd-lib}
+pd-lib >= {math pd-lib}
+pd-lib >> {math pd-lib}
+pd-lib | {math pd-lib}
+pd-lib || {math pd-lib}
+pd-lib abs {math pd-lib}
+pd-lib adc~ {audio glue pd-lib}
+pd-lib append {accessing data gui pd-lib}
+pd-lib atan {math pd-lib}
+pd-lib atan2 {math pd-lib}
+pd-lib bag {misc pd-lib}
+pd-lib bang {control glue pd-lib}
+pd-lib bang~ {audio glue pd-lib}
+pd-lib bendin {connectivity midi pd-lib}
+pd-lib bendout {connectivity midi pd-lib}
+pd-lib biquad~ {audio filters pd-lib}
+pd-lib block~ {audio glue pd-lib}
+pd-lib bp~ {audio filters pd-lib}
+pd-lib catch~ {audio glue pd-lib}
+pd-lib change {control glue pd-lib}
+pd-lib clip~ {audio math pd-lib}
+pd-lib cos {math pd-lib}
+pd-lib cos~ {and audio oscillators pd-lib tables}
+pd-lib cpole~ {audio filters pd-lib}
+pd-lib cputime {control pd-lib time}
+pd-lib ctlin {connectivity midi pd-lib}
+pd-lib ctlout {connectivity midi pd-lib}
+pd-lib czero_rev~ {audio filters pd-lib}
+pd-lib czero~ {audio filters pd-lib}
+pd-lib dac~ {audio glue pd-lib}
+pd-lib dbtopow {conversion math pd-lib}
+pd-lib dbtopow~ {audio conversion math pd-lib}
+pd-lib dbtorms {conversion math pd-lib}
+pd-lib dbtorms~ {audio conversion math pd-lib}
+pd-lib declare {misc pd-lib}
+pd-lib delay {control pd-lib time}
+pd-lib delread~ {audio delay pd-lib}
+pd-lib delwrite~ {audio delay pd-lib}
+pd-lib div {math pd-lib}
+pd-lib drawcurve {data gui pd-lib templates}
+pd-lib drawnumber {data gui pd-lib templates}
+pd-lib drawpolygon {data gui pd-lib templates}
+pd-lib element {accessing data gui pd-lib}
+pd-lib env~ {audio filters pd-lib}
+pd-lib exp {math pd-lib}
+pd-lib fft~ {audio math pd-lib}
+pd-lib filledcurve {data gui pd-lib templates}
+pd-lib filledpolygon {data gui pd-lib templates}
+pd-lib float {control glue pd-lib}
+pd-lib framp~ {audio math pd-lib}
+pd-lib ftom {conversion math midi pd-lib}
+pd-lib ftom~ {audio conversion math midi pd-lib}
+pd-lib get {accessing data gui pd-lib}
+pd-lib getsize {accessing data gui pd-lib}
+pd-lib hip~ {audio filters pd-lib}
+pd-lib ifft~ {audio math pd-lib}
+pd-lib inlet {control pd-lib subwindows}
+pd-lib inlet~ {control pd-lib subwindows}
+pd-lib int {control glue pd-lib}
+pd-lib key {misc pd-lib}
+pd-lib keyname {misc pd-lib}
+pd-lib keyup {misc pd-lib}
+pd-lib line {control pd-lib time}
+pd-lib line~ {audio glue pd-lib}
+pd-lib {list append} {lists pd-lib storage}
+pd-lib {list prepend} {lists pd-lib storage}
+pd-lib {list split} {lists pd-lib storage}
+pd-lib {list trim} {lists pd-lib storage}
+pd-lib loadbang {misc pd-lib}
+pd-lib log {math pd-lib}
+pd-lib lop~ {audio filters pd-lib}
+pd-lib makefilename {control glue pd-lib}
+pd-lib makenote {connectivity midi pd-lib}
+pd-lib max {math pd-lib}
+pd-lib max~ {audio math pd-lib}
+pd-lib metro {control pd-lib time}
+pd-lib midiin {connectivity midi pd-lib}
+pd-lib midiout {connectivity midi pd-lib}
+pd-lib min {math pd-lib}
+pd-lib min~ {audio math pd-lib}
+pd-lib mod {math pd-lib}
+pd-lib moses {control glue pd-lib}
+pd-lib mtof {conversion math midi pd-lib}
+pd-lib mtof~ {audio conversion math midi pd-lib}
+pd-lib namecanvas {obsolete pd-lib}
+pd-lib netreceive {connectivity network pd-lib}
+pd-lib netsend {connectivity network pd-lib}
+pd-lib noise~ {audio filters pd-lib}
+pd-lib notein {connectivity midi pd-lib}
+pd-lib noteout {connectivity midi pd-lib}
+pd-lib openpanel {misc pd-lib}
+pd-lib osc~ {and audio oscillators pd-lib tables}
+pd-lib outlet {control pd-lib subwindows}
+pd-lib outlet~ {control pd-lib subwindows}
+pd-lib pack {control glue pd-lib}
+pd-lib pd {control pd-lib subwindows}
+pd-lib pgmin {connectivity midi pd-lib}
+pd-lib pgmout {connectivity midi pd-lib}
+pd-lib phasor~ {and audio oscillators pd-lib tables}
+pd-lib pipe {control pd-lib time}
+pd-lib plot {data gui pd-lib templates}
+pd-lib pointer {accessing data gui pd-lib}
+pd-lib poly {misc pd-lib}
+pd-lib polytouchin {connectivity midi pd-lib}
+pd-lib polytouchout {connectivity midi pd-lib}
+pd-lib pow {math pd-lib}
+pd-lib powtodb {conversion math pd-lib}
+pd-lib powtodb~ {audio conversion math pd-lib}
+pd-lib print {control glue pd-lib}
+pd-lib print~ {audio filters pd-lib}
+pd-lib q8_rsqrt~ {audio math pd-lib}
+pd-lib q8_sqrt~ {audio math pd-lib}
+pd-lib qlist {misc pd-lib sequencer storage}
+pd-lib random {math pd-lib}
+pd-lib readsf~ {audio glue pd-lib}
+pd-lib realtime {control pd-lib time}
+pd-lib receive {control glue pd-lib}
+pd-lib receive~ {audio glue pd-lib}
+pd-lib rfft~ {audio math pd-lib}
+pd-lib rifft~ {audio math pd-lib}
+pd-lib rmstodb {conversion math pd-lib}
+pd-lib rmstodb~ {audio conversion math pd-lib}
+pd-lib route {control glue pd-lib}
+pd-lib rpole~ {audio filters pd-lib}
+pd-lib rzero_rev~ {audio filters pd-lib}
+pd-lib rzero~ {audio filters pd-lib}
+pd-lib samphold~ {audio filters pd-lib}
+pd-lib samplerate~ {audio glue pd-lib}
+pd-lib savepanel {misc pd-lib}
+pd-lib scalar {obsolete pd-lib}
+pd-lib scope {obsolete pd-lib}
+pd-lib select {control glue pd-lib}
+pd-lib send {control glue pd-lib}
+pd-lib send~ {audio glue pd-lib}
+pd-lib serial {misc pd-lib}
+pd-lib set {accessing data gui pd-lib}
+pd-lib setsize {accessing data gui pd-lib}
+pd-lib sig~ {audio glue pd-lib}
+pd-lib sin {math pd-lib}
+pd-lib snapshot~ {audio glue pd-lib}
+pd-lib soundfiler {pd-lib storage tables}
+pd-lib spigot {control glue pd-lib}
+pd-lib sqrt {math pd-lib}
+pd-lib stripnote {connectivity midi pd-lib}
+pd-lib struct {data gui pd-lib templates}
+pd-lib sublist {accessing data gui pd-lib}
+pd-lib swap {control glue pd-lib}
+pd-lib switch~ {audio glue pd-lib}
+pd-lib symbol {control glue pd-lib}
+pd-lib sysexin {connectivity midi pd-lib}
+pd-lib table {control pd-lib subwindows}
+pd-lib tabosc4~ {and audio oscillators pd-lib tables}
+pd-lib tabplay~ {and audio oscillators pd-lib tables}
+pd-lib tabread {pd-lib storage tables}
+pd-lib tabread~ {and audio oscillators pd-lib tables}
+pd-lib tabread4 {pd-lib storage tables}
+pd-lib tabread4~ {and audio oscillators pd-lib tables}
+pd-lib tabreceive~ {and audio oscillators pd-lib tables}
+pd-lib tabsend~ {and audio oscillators pd-lib tables}
+pd-lib tabwrite {pd-lib storage tables}
+pd-lib tabwrite~ {and audio oscillators pd-lib tables}
+pd-lib tan {math pd-lib}
+pd-lib template {obsolete pd-lib}
+pd-lib textfile {io pd-lib storage}
+pd-lib threshold~ {audio glue pd-lib}
+pd-lib throw~ {audio glue pd-lib}
+pd-lib timer {control pd-lib time}
+pd-lib touchin {connectivity midi pd-lib}
+pd-lib touchout {connectivity midi pd-lib}
+pd-lib trigger {control glue pd-lib}
+pd-lib unpack {control glue pd-lib}
+pd-lib until {control glue pd-lib}
+pd-lib value {control glue pd-lib}
+pd-lib vcf~ {audio filters pd-lib}
+pd-lib vd~ {audio delay pd-lib}
+pd-lib vsnapshot~ {audio glue pd-lib}
+pd-lib wrap~ {audio math pd-lib}
+pd-lib writesf~ {audio glue pd-lib}
+pddp +pager {pddp unsorted}
+pddp dsp {pddp unsorted}
+pddp open {pddp unsorted}
+pddp print {pddp unsorted}
+pddp print_long {pddp unsorted}
+pdjimmies zerocross~ {audio glue pdjimmies}
+pdjimmies zscale {math pdjimmies}
+{pdmtl abstractions} 2d.angle {2d abstraction edit math pdmtl}
+{pdmtl abstractions} 2d.angle.line {2d abstraction edit math pdmtl}
+{pdmtl abstractions} 2d.distance {2d abstraction edit math pdmtl}
+{pdmtl abstractions} 2d.ratio {2d abstraction edit math pdmtl}
+{pdmtl abstractions} 3d.distance {3d abstraction edit math pdmtl}
+{pdmtl abstractions} 3d.pan.tilt {3d abstraction edit math pdmtl}
+{pdmtl abstractions} anal.center {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} anal.change~ {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} anal.scope_~ {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} anal.sig_~ {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} anal.sign {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} anal.spectrum_~ {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} anal.vu_~ {abstraction anal edit misc pdmtl}
+{pdmtl abstractions} convert.2list {abstraction control convert edit list pdmtl wrapper}
+{pdmtl abstractions} convert.ascii2pd {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.binary2byte {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.bpm2freq {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.bpm2ms {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.byte2binary {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.degree2radiant {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.fps2ms {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.frames2smpte {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.hex2dec {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.hsv2rgb {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.int2digits {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.lightfreq2wave {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.lightwave2freq {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.list2symbol {abstraction control convert edit list2symbol pdmtl wrapper zexy}
+{pdmtl abstractions} convert.m2speed {abstraction control convert edit midi note pdmtl}
+{pdmtl abstractions} convert.ms2bpm {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.ms2fps {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.ms2freq {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.ms2smp {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.ms2time {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.num2rgb {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.pd2ascii {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.rgb2hsv {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.rgb2num {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.sig2float~ {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.smp2bpm {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.smp2freq {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.smp2mem {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.smp2ms {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.smp2time {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.smpte2frames {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.sound.freq2wave {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.sound.wave2freq {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.spaces2 {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.speed2m {abstraction control convert edit midi note pdmtl}
+{pdmtl abstractions} convert.symbol2chars {abstraction control convert edit pdmtl}
+{pdmtl abstractions} convert.symbol2list {abstraction control convert edit iem pdmtl splitfilename symbol2list wrapper zexy}
+{pdmtl abstractions} convert.time2ms {abstraction control convert edit pdmtl}
+{pdmtl abstractions} count.accum {abstraction accum control count edit pdmtl}
+{pdmtl abstractions} count.iter {abstraction control count edit pdmtl}
+{pdmtl abstractions} count.modulo {abstraction control count edit pdmtl}
+{pdmtl abstractions} count.timed {abstraction control count edit pdmtl}
+{pdmtl abstractions} count.up&down {abstraction control count edit pdmtl}
+{pdmtl abstractions} data.floats {abstraction data edit pdmtl storage}
+{pdmtl abstractions} data.matrix {abstraction data edit pdmtl storage}
+{pdmtl abstractions} data.save.msg {abstraction data edit pdmtl storage}
+{pdmtl abstractions} file.audio.info {abstraction edit file pdmtl soundfile_info storage wrapper}
+{pdmtl abstractions} file.browser_ {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.folder {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.folder.dump {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.folder.panel {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.open.msg {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.path.current {absolute abstraction edit file path pdmtl relative storage}
+{pdmtl abstractions} file.path.explode {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.path.merge {abstraction edit file iemlib mergefilename pdmtl storage wrapper}
+{pdmtl abstractions} file.path.parent {absolute abstraction edit file path pdmtl relative storage}
+{pdmtl abstractions} file.path.split {abstraction edit file pdmtl split_path storage wrapper}
+{pdmtl abstractions} file.path.split.extension {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.path.top {absolute abstraction edit file path pdmtl relative storage}
+{pdmtl abstractions} file.path.type {abstraction edit file pdmtl storage}
+{pdmtl abstractions} file.type {abstraction edit file pdmtl storage}
+{pdmtl abstractions} flow.@parse {abstraction control dollarg edit flow pdmtl}
+{pdmtl abstractions} flow.any {abstraction control edit flow iem iem_anything pdmtl wrapper}
+{pdmtl abstractions} flow.ford {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.gun {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.hold~ {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.in.betweens {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.iter {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.once {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.pre.op {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.prepend {abstraction argument conditional control edit flow list pdmtl prepend type wrapper}
+{pdmtl abstractions} flow.receive {abstraction control deprecated edit flow pdmtl}
+{pdmtl abstractions} flow.send {abstraction control deprecated edit flow pdmtl}
+{pdmtl abstractions} flow.smooth {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.smooth~ {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.speed.fixed {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.speed.limit {abstraction control edit flow limit pdmtl speed}
+{pdmtl abstractions} flow.split {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.till.done {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.value.change {abstraction control edit flow pdmtl}
+{pdmtl abstractions} flow.wrap~ {abstraction control edit flow pdmtl}
+{pdmtl abstractions} fx.biquad.reverb~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.body.resonance~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.cm.reverb~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.delay~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.dist~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.echo~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.eq_~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.gain~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.gate.noise_~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.gate.noise~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.limiter~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.material~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} fx.punch~ {abstraction audio edit fx pdmtl}
+{pdmtl abstractions} gems.alpha.mode {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.bars.ntsc {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.color.offset {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.curve.n {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.depth {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.duplicate {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.fit {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.fit.scale {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.get.average.color {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.gl.def {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.glsl.shader {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.i.circle {abstraction edit gems gems.win imaging osxbug pdmtl}
+{pdmtl abstractions} gems.images {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.layer {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.light {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.loop {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.mixmode {abstraction deprecated edit gems imaging pdmtl}
+{pdmtl abstractions} gems.mouse {abstraction edit gems imaging mouse pdmtl wrapper}
+{pdmtl abstractions} gems.movies {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.movies2 {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.multi.crop {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.multi.cube {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.polygon.n {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.scope.geos~ {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.scope~ {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.sobel {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.text {@rguments abstraction edit gem gems imaging pdmtl text3d wrapper}
+{pdmtl abstractions} gems.vu~ {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.win {@rguments abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gems.win.feedback {abstraction edit gems imaging pdmtl}
+{pdmtl abstractions} gui.browser {abstraction edit gui internal pdmtl}
+{pdmtl abstractions} gui.button.color {abstraction edit gui pdmtl}
+{pdmtl abstractions} gui.label {abstraction edit gui pdmtl}
+{pdmtl abstractions} {gui.popup } {abstraction edit gui pdmtl}
+{pdmtl abstractions} init.check.unique {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.df {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.dollar.zero.top {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.ds {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.lb {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.ldf {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.lf {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.ls {abstraction control edit init pdmtl}
+{pdmtl abstractions} init.post.dollarg {abstraction control edit flow.@parse init pdmtl}
+{pdmtl abstractions} input.color.grid_ {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.double.click {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.grid_ {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.hsv_ {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.key.name.learn {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.key.r {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.key.text {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.min.max_ {abstraction edit gui input pdmtl}
+{pdmtl abstractions} input.piano_ {@rguments abstraction edit gop gui input pdmtl}
+{pdmtl abstractions} list.abs {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.avg {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.bool2pos {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.build {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.cog {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.concatenate {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.contains {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.cut.up {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.cycle {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.delay {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.delete {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.element {abstraction edit list negative packel pdmtl storage wrapper zexy}
+{pdmtl abstractions} list.for.each {abstraction alias edit list list.op pdmtl storage}
+{pdmtl abstractions} list.last.x {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.length {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.make {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.min.max {abstraction edit list minmax pdmtl storage wrapper zexy}
+{pdmtl abstractions} list.op {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.op2 {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.q {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.q.man {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.repack.indexed {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.repetitions.count {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.repetitions.remove {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.reverse {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.speed.limit {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.split {abstraction edit list pdmtl storage}
+{pdmtl abstractions} list.sum {abstraction edit list pdmtl storage sum wrapper zexy}
+{pdmtl abstractions} list.trim {abstraction edit list pdmtl storage trim wrapper}
+{pdmtl abstractions} list.unfold {abstraction drip edit list pdmtl storage wrapper zexy}
+{pdmtl abstractions} {list.wait } {abstraction edit list pdmtl storage}
+{pdmtl abstractions} math.f.mod {abstraction edit math pdmtl}
+{pdmtl abstractions} math.power.of {abstraction edit math pdmtl}
+{pdmtl abstractions} midi.chord.guess {abstraction connectivity edit midi pdmtl}
+{pdmtl abstractions} midi.note.close {abstraction connectivity edit float midi monophonic pdmtl trigger}
+{pdmtl abstractions} midi.note.split {abstraction connectivity edit midi pdmtl}
+{pdmtl abstractions} mix.crossfade.stereo~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.crossfade~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.fade~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.nop~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.out_~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.pan.stereo~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.pan~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.switch.nice {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.switch.nice~ {abstraction audio edit mix pdmtl}
+{pdmtl abstractions} mix.wet.stereo~ {abstraction audio edit internal mix pdmtl}
+{pdmtl abstractions} mix.wet~ {abstraction audio edit internal mix pdmtl}
+{pdmtl abstractions} musical.bars {abstraction pdmtl unsorted}
+{pdmtl abstractions} musical.closest_note {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.closest.note {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.cycle5 {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.degree2chord {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.dodeca {abstraction audio edit musical note pdmtl serie}
+{pdmtl abstractions} musical.fit {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.form {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.isosonic~ {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.m2harm {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.note.index {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.octava {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} musical.transpose {abstraction audio edit musical pdmtl}
+{pdmtl abstractions} number.fibonacci {abstraction edit math number pdmtl}
+{pdmtl abstractions} number.phi {abstraction edit math number pdmtl}
+{pdmtl abstractions} number.pi {abstraction edit math number pdmtl}
+{pdmtl abstractions} number.prime {abstraction edit math number pdmtl}
+{pdmtl abstractions} number.round {abstraction edit math number pdmtl}
+{pdmtl abstractions} random.delay {abstraction edit math pdmtl random}
+{pdmtl abstractions} random.drunk {abstraction edit math pdmtl random}
+{pdmtl abstractions} random.f {abstraction edit math pdmtl random}
+{pdmtl abstractions} random.integer {abstraction edit math pdmtl random}
+{pdmtl abstractions} random.markov.chain {abstraction edit math pdmtl random}
+{pdmtl abstractions} random.offset {abstraction edit math pdmtl random}
+{pdmtl abstractions} sample.adsr {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.adsr_ {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.bank {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.bounds {abstraction audio edit pdmtl sample sample_id}
+{pdmtl abstractions} sample.bounds_ {abstraction audio edit gui pdmtl sample sample_id}
+{pdmtl abstractions} sample.display_ {abstraction audio edit gui pdmtl sample sample_id}
+{pdmtl abstractions} sample.drum.machine~ {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.filer {abstraction audio edit pdmtl sample sample_id}
+{pdmtl abstractions} sample.generator {abstraction audio edit internal pdmtl sample sample_id}
+{pdmtl abstractions} sample.groove.poly~ {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.groove~ {abstraction audio edit pdmtl sample sample_id wrapper xgroove~ xsample}
+{pdmtl abstractions} sample.handler {abstraction audio edit internal pdmtl sample sample_id}
+{pdmtl abstractions} sample.particular~ {abstraction audio edit pdmtl sample sample_id}
+{pdmtl abstractions} sample.pitch {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.pitch_ {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.play~ {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.print {abstraction audio edit pdmtl sample sample_id}
+{pdmtl abstractions} sample.r {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} sample.record~ {abstraction audio cyclone edit pdmtl record~ sample sample_id wrapper}
+{pdmtl abstractions} sample.table {abstraction audio edit pdmtl sample}
+{pdmtl abstractions} scale.3point {abstraction control edit pdmtl scale}
+{pdmtl abstractions} scale.adaptive {abstraction control edit pdmtl scale}
+{pdmtl abstractions} scale.linear {abstraction control edit pdmtl scale}
+{pdmtl abstractions} scale.loga {abstraction control edit pdmtl scale}
+{pdmtl abstractions} scale.symbol {abstraction control edit pdmtl scale}
+{pdmtl abstractions} seq.8x8_ {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.biorythm~ {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.chords {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.every {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.liner {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.markov.machine {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.qtrack {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.tgl8_ {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.timing.master {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.timing.slave {abstraction control edit pdmtl seq}
+{pdmtl abstractions} seq.tracker4 {abstraction control edit pdmtl seq}
+{pdmtl abstractions} synth.additive12~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.adsr~ {abstraction audio edit midi.note.close pdmtl synth}
+{pdmtl abstractions} synth.applause~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.beep~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.bell~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.blip~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.clap~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.colored.noise~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.crackles~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.cranks~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.creator~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.drips~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.dtmf.busy~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.dtmf.hand-up~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.dtmf.hurry.up~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.dtmf.number~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.dtmf.ring~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.frying~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.gun.gas~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.gun.shot~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.hissing~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.lightning~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.low.rumble~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.old.record~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.osc.square.pwm~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.rain~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.simple.osc~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.simple.phasor~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.switch~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} synth.wind~ {abstraction audio edit pdmtl synth}
+{pdmtl abstractions} table.play~ {abstraction edit pdmtl storage table}
+{pdmtl abstractions} table.read2 {abstraction edit pdmtl storage table}
+{pdmtl abstractions} table.size {abstraction edit pdmtl storage table}
+{pdmtl abstractions} table.write.next {abstraction edit pdmtl storage table}
+{pdmtl abstractions} timing.chronometer {abstraction control edit pdmtl timing}
+{pdmtl abstractions} timing.clocker {abstraction control edit pdmtl timing}
+{pdmtl abstractions} timing.cues~ {abstraction control edit pdmtl timing}
+{pdmtl abstractions} timing.curve~ {abstraction control curve~ cyclone edit pdmtl timing wrapper}
+{pdmtl abstractions} timing.line~ {abstraction control edit pdmtl timing}
+{pdmtl abstractions} timing.shuffled {abstraction control edit pdmtl timing}
+{pdmtl abstractions} timing.tempo {abstraction control edit max pdmtl tempo timing}
+{pdmtl abstractions} timing.tempo_ {abstraction control edit pdmtl timing}
+pdogg oggamp~ {pdogg unsorted}
+pdogg oggcast~ {pdogg unsorted}
+pdogg oggread~ {pdogg unsorted}
+pdogg oggwrite~ {pdogg unsorted}
+pdp 3dp_blend {3d abstraction imaging opengl pdp}
+pdp 3dp_dlist {3d imaging opengl pdp}
+pdp 3dp_draw {3d imaging opengl pdp}
+pdp 3dp_light {3d imaging opengl pdp}
+pdp 3dp_mode {3d imaging opengl pdp}
+pdp 3dp_mouserotate {3d abstraction imaging opengl pdp}
+pdp 3dp_push {3d imaging opengl pdp}
+pdp 3dp_snap {3d imaging opengl pdp}
+pdp 3dp_toggle {3d imaging opengl pdp}
+pdp 3dp_view {3d imaging opengl pdp}
+pdp 3dp_windowcontext {3d imaging opengl pdp}
+pdp pdp_abs {image imaging pdp processing}
+pdp pdp_add {image imaging pdp processing}
+pdp pdp_agc {abstraction image imaging pdp}
+pdp pdp_alledge {abstraction image imaging pdp}
+pdp pdp_and {image imaging pdp processing}
+pdp pdp_bitdepth {image imaging pdp processing}
+pdp pdp_bitmask {image imaging pdp processing}
+pdp pdp_blur {abstraction image imaging pdp}
+pdp pdp_blur_hor {abstraction image imaging pdp}
+pdp pdp_blur_ver {abstraction image imaging pdp}
+pdp pdp_bq {image imaging pdp processing}
+pdp pdp_bqt {image imaging pdp processing}
+pdp pdp_ca {automata cellular imaging libraries pdp pdp_scaf seperate}
+pdp pdp_ca2image {automata cellular imaging libraries pdp pdp_scaf seperate}
+pdp pdp_cheby {image imaging pdp processing}
+pdp pdp_chrot {image imaging pdp processing}
+pdp pdp_cog {image imaging pdp processing}
+pdp pdp_constant {image imaging pdp processing}
+pdp pdp_contrast {abstraction image imaging pdp}
+pdp pdp_conv {image imaging pdp processing}
+pdp pdp_conv_emboss {abstraction image imaging pdp}
+pdp pdp_conv_sobel_edge {abstraction image imaging pdp}
+pdp pdp_conv_sobel_hor {abstraction image imaging pdp}
+pdp pdp_conv_sobel_ver {abstraction image imaging pdp}
+pdp pdp_convert {imaging misc pdp}
+pdp pdp_del {imaging misc pdp}
+pdp pdp_description {imaging misc pdp}
+pdp pdp_dither {abstraction image imaging pdp}
+pdp pdp_flip_lr {image imaging pdp processing}
+pdp pdp_flip_tb {image imaging pdp processing}
+pdp pdp_gain3 {abstraction image imaging pdp}
+pdp pdp_glx {i/o image imaging pdp}
+pdp pdp_gradient {abstraction image imaging pdp}
+pdp pdp_grey {image imaging pdp processing}
+pdp pdp_grey2mask {image imaging pdp processing}
+pdp pdp_hthresh {image imaging pdp processing}
+pdp pdp_image2ca {automata cellular imaging libraries pdp pdp_scaf seperate}
+pdp pdp_invert {abstraction image imaging pdp}
+pdp pdp_loop {imaging misc pdp}
+pdp pdp_m_+=mm {imaging matrix pdp}
+pdp pdp_m_inverse {abstraction imaging matrix pdp}
+pdp pdp_m_LU {imaging matrix pdp}
+pdp pdp_m_LU_inverse {imaging matrix pdp}
+pdp pdp_m_LU_solve {imaging matrix pdp}
+pdp pdp_m_mm {imaging matrix pdp}
+pdp pdp_m_mv {imaging matrix pdp}
+pdp pdp_mix {image imaging pdp processing}
+pdp pdp_mix2 {image imaging pdp processing}
+pdp pdp_motion_blur {abstraction image imaging pdp}
+pdp pdp_motion_phase {abstraction image imaging pdp}
+pdp pdp_mul {image imaging pdp processing}
+pdp pdp_noise {image imaging pdp processing}
+pdp pdp_not {image imaging pdp processing}
+pdp pdp_offset {abstraction image imaging pdp}
+pdp pdp_or {image imaging pdp processing}
+pdp pdp_phase {abstraction image imaging pdp}
+pdp pdp_phase_hor {abstraction image imaging pdp}
+pdp pdp_phase_ver {abstraction image imaging pdp}
+pdp pdp_plasma {image imaging pdp processing}
+pdp pdp_png_to {abstraction image imaging pdp}
+pdp pdp_pointcloud {image imaging pdp processing}
+pdp pdp_positive {image imaging pdp processing}
+pdp pdp_pps {abstraction imaging pdp utility}
+pdp pdp_qt {i/o image imaging pdp}
+pdp pdp_randmix {image imaging pdp processing}
+pdp pdp_reg {imaging misc pdp}
+pdp pdp_rotate {image imaging pdp processing}
+pdp pdp_route {imaging misc pdp}
+pdp pdp_saturation {abstraction image imaging pdp}
+pdp pdp_scale {image imaging pdp processing}
+pdp pdp_scan~ {dsp imaging pdp}
+pdp pdp_scanxy~ {dsp imaging pdp}
+pdp pdp_scope~ {dsp imaging pdp}
+pdp pdp_sign {image imaging pdp processing}
+pdp pdp_snap {imaging misc pdp}
+pdp pdp_sthresh {image imaging pdp processing}
+pdp pdp_sub {abstraction image imaging pdp}
+pdp pdp_tag {abstraction image imaging pdp}
+pdp pdp_trigger {imaging misc pdp}
+pdp pdp_v4l {i/o image imaging pdp}
+pdp pdp_xor {image imaging pdp processing}
+pdp pdp_xv {i/o image imaging pdp}
+pdp pdp_zoom {image imaging pdp processing}
+pdp pdp_zrot {image imaging pdp processing}
+pdp pdp_zthresh {image imaging pdp processing}
+Percolate bamboo~ {and audio oscillators percolate tables}
+Percolate blotar~ {and audio oscillators percolate tables}
+Percolate bowed~ {and audio oscillators percolate tables}
+Percolate bowedbar~ {and audio oscillators percolate tables}
+Percolate brass~ {and audio oscillators percolate tables}
+Percolate cabasa~ {and audio oscillators percolate tables}
+Percolate chase~ {and audio oscillators percolate tables}
+Percolate dcblock~ {and audio oscillators percolate tables}
+Percolate escalator~ {and audio oscillators percolate tables}
+Percolate flute~ {and audio oscillators percolate tables}
+Percolate formant~ {and audio oscillators percolate tables}
+Percolate gq~ {and audio oscillators percolate tables}
+Percolate guiro~ {and audio oscillators percolate tables}
+Percolate morse {and audio oscillators percolate tables}
+Percolate scrub~ {and audio oscillators percolate tables}
+Percolate sleigh~ {and audio oscillators percolate tables}
+Percolate vibraphone~ {and audio oscillators percolate tables}
+pidip pdp_aging {effectv imaging pdp pidip}
+pidip pdp_ascii {imaging pdp pidip}
+pidip pdp_baltan {effectv imaging pdp pidip}
+pidip pdp_binary {imaging morphology pdp pidip}
+pidip pdp_canvas {imaging pdp pidip}
+pidip pdp_capture {imaging pdp pidip}
+pidip pdp_charcoal {imaging pdp pidip}
+pidip pdp_cmap {imaging pdp pidip}
+pidip pdp_colorgrid {imaging pdp pidip}
+pidip pdp_compose {imaging pdp pidip}
+pidip pdp_ctrack {imaging pdp pidip}
+pidip pdp_cycle {effectv imaging pdp pidip}
+pidip pdp_dice {effectv imaging pdp pidip}
+pidip pdp_dilate {imaging morphology pdp pidip}
+pidip pdp_disintegration {imaging pdp pidip}
+pidip pdp_distance {imaging morphology pdp pidip}
+pidip pdp_edge {effectv imaging pdp pidip}
+pidip pdp_erode {imaging morphology pdp pidip}
+pidip pdp_ffmpeg~ {imaging pdp pidip}
+pidip pdp_form {imaging pdp pidip}
+pidip pdp_hitandmiss {imaging morphology pdp pidip}
+pidip pdp_i {imaging pdp pidip}
+pidip pdp_imgloader {imaging pdp pidip}
+pidip pdp_intrusion {effectv imaging pdp pidip}
+pidip pdp_lens {effectv imaging pdp pidip}
+pidip pdp_live~ {imaging pdp pidip}
+pidip pdp_mgrid {imaging pdp pidip}
+pidip pdp_mosaic {effectv imaging pdp pidip}
+pidip pdp_mp4live~ {imaging pdp pidip}
+pidip pdp_mp4player~ {imaging pdp pidip}
+pidip pdp_nervous {effectv imaging pdp pidip}
+pidip pdp_o {imaging pdp pidip}
+pidip pdp_pen {imaging pdp pidip}
+pidip pdp_puzzle {effectv imaging pdp pidip}
+pidip pdp_qt {imaging pdp pidip}
+pidip pdp_qt {imaging pdp pidip}
+pidip pdp_qt~ {imaging pdp pidip}
+pidip pdp_quark {effectv imaging pdp pidip}
+pidip pdp_radioactiv {effectv imaging pdp pidip}
+pidip pdp_rec~ {imaging pdp pidip}
+pidip pdp_rev {effectv imaging pdp pidip}
+pidip pdp_ripple {effectv imaging pdp pidip}
+pidip pdp_shagadelic {effectv imaging pdp pidip}
+pidip pdp_shape {imaging pdp pidip}
+pidip pdp_simura {effectv imaging pdp pidip}
+pidip pdp_spigot {imaging pdp pidip}
+pidip pdp_spiral {effectv imaging pdp pidip}
+pidip pdp_spotlight {imaging pdp pidip}
+pidip pdp_text {imaging pdp pidip}
+pidip pdp_theorin~ {imaging pdp pidip}
+pidip pdp_theorout~ {imaging pdp pidip}
+pidip pdp_transform {effectv imaging pdp pidip}
+pidip pdp_transition {imaging pdp pidip}
+pidip pdp_underwatch {effectv imaging pdp pidip}
+pidip pdp_vertigo {effectv imaging pdp pidip}
+pidip pdp_warhol {effectv imaging pdp pidip}
+pidip pdp_warp {effectv imaging pdp pidip}
+pidip pdp_yqt {imaging pdp pidip}
+pixeltango pt.animate {pixeltango unsorted}
+pixeltango pt.entry {pixeltango unsorted}
+pixeltango pt.fader {pixeltango unsorted}
+pixeltango pt.feedback {pixeltango unsorted}
+pixeltango pt.file {pixeltango unsorted}
+pixeltango pt.filelist {pixeltango unsorted}
+pixeltango pt.interp {pixeltango unsorted}
+pixeltango pt.layer {pixeltango unsorted}
+pixeltango pt.layerfx {pixeltango unsorted}
+pixeltango pt.light {pixeltango unsorted}
+pixeltango pt.live {pixeltango unsorted}
+pixeltango pt.loop {pixeltango unsorted}
+pixeltango pt.model {pixeltango unsorted}
+pixeltango pt.presets {pixeltango unsorted}
+pixeltango pt.rotate {pixeltango unsorted}
+pixeltango pt.scale {pixeltango unsorted}
+pixeltango pt.source {pixeltango unsorted}
+pixeltango pt.squeeze {pixeltango unsorted}
+pixeltango pt.text {pixeltango unsorted}
+pixeltango pt.translate {pixeltango unsorted}
+pixeltango pt.video {pixeltango unsorted}
+pixeltango pt.whatcolour {pixeltango unsorted}
+pixeltango pt.window {pixeltango unsorted}
+pmpd iAmbient2D {modelling physical pmpd}
+pmpd iAmbient3D {modelling physical pmpd}
+pmpd iCircle2D {modelling physical pmpd}
+pmpd iCircle3D {modelling physical pmpd}
+pmpd iCylinder3D {modelling physical pmpd}
+pmpd iLine2D {modelling physical pmpd}
+pmpd iPlane3D {modelling physical pmpd}
+pmpd iSeg2D {modelling physical pmpd}
+pmpd iSphere3D {modelling physical pmpd}
+pmpd link {modelling physical pmpd}
+pmpd link2D {modelling physical pmpd}
+pmpd link3D {modelling physical pmpd}
+pmpd mass {modelling physical pmpd}
+pmpd mass2D {modelling physical pmpd}
+pmpd mass3D {modelling physical pmpd}
+pmpd pmpd {modelling physical pmpd}
+pmpd tCircle2D {modelling physical pmpd}
+pmpd tCircle3D {modelling physical pmpd}
+pmpd tCube3D {modelling physical pmpd}
+pmpd tCylinder3D {modelling physical pmpd}
+pmpd tLine2D {modelling physical pmpd}
+pmpd tLink2D {modelling physical pmpd}
+pmpd tLink3D {modelling physical pmpd}
+pmpd tPlane3D {modelling physical pmpd}
+pmpd tSeg2D {modelling physical pmpd}
+pmpd tSphere3D {modelling physical pmpd}
+pmpd tSquare2D {modelling physical pmpd}
+rradical memento {rradical unsorted}
+rradical OSCprepend {rradical unsorted}
+rradical rrad.chorus~ {audio rradical}
+rradical rrad.evo33 {rradical unsorted}
+rradical rrad.evo33b {rradical unsorted}
+rradical rrad.nseq {rradical unsorted}
+rradical rrad.pattseq {rradical unsorted}
+rradical rrad.scale {rradical unsorted}
+rradical rrad.split~ {audio rradical}
+rtc 16step-seq {rtc unsorted}
+rtc alea-rhythm {rtc unsorted}
+rtc anti-interval {rtc unsorted}
+rtc anti-octave {rtc unsorted}
+rtc anti-octave&prime {rtc unsorted}
+rtc anti-osc {rtc unsorted}
+rtc between-lin {rtc unsorted}
+rtc between-log {rtc unsorted}
+rtc between-variations {rtc unsorted}
+rtc brown-melody {rtc unsorted}
+rtc brown-rhythm {rtc unsorted}
+rtc brownian {rtc unsorted}
+rtc butfirst {rtc unsorted}
+rtc butlast {rtc unsorted}
+rtc check-octaves {rtc unsorted}
+rtc check-row {rtc unsorted}
+rtc choice-rhythm {rtc unsorted}
+rtc choose {rtc unsorted}
+rtc choose-intervals {rtc unsorted}
+rtc count-bang {rtc unsorted}
+rtc cp-pan~ {rtc unsorted}
+rtc cresc-decresc {rtc unsorted}
+rtc crossfade~ {rtc unsorted}
+rtc ED-rhythm {rtc unsorted}
+rtc ED-trans {rtc unsorted}
+rtc ED2EP {rtc unsorted}
+rtc first {rtc unsorted}
+rtc frq2note {rtc unsorted}
+rtc geom {rtc unsorted}
+rtc grid-rhythm {rtc unsorted}
+rtc group-rhythm {rtc unsorted}
+rtc group-rhythm2 {rtc unsorted}
+rtc groups {rtc unsorted}
+rtc infinity-row {rtc unsorted}
+rtc int-or-float {rtc unsorted}
+rtc intv2ratio {rtc unsorted}
+rtc last {rtc unsorted}
+rtc line2 {rtc unsorted}
+rtc Lround {rtc unsorted}
+rtc make-choice-list {rtc unsorted}
+rtc make-ED-scale {rtc unsorted}
+rtc make-scale {rtc unsorted}
+rtc make-trans-scale {rtc unsorted}
+rtc markov {rtc unsorted}
+rtc markov-harmony {rtc unsorted}
+rtc markov-rhythm {rtc unsorted}
+rtc matrix12 {rtc unsorted}
+rtc metro-dev% {rtc unsorted}
+rtc ms2sec {rtc unsorted}
+rtc multiple {rtc unsorted}
+rtc neutral-harmony {rtc unsorted}
+rtc nname {rtc unsorted}
+rtc normalize-row {rtc unsorted}
+rtc note2cents {rtc unsorted}
+rtc note2frq {rtc unsorted}
+rtc note2pitch {rtc unsorted}
+rtc note2st {rtc unsorted}
+rtc panning {rtc unsorted}
+rtc periodic {rtc unsorted}
+rtc permutate-row {rtc unsorted}
+rtc permute {rtc unsorted}
+rtc pitch-from-intervals {rtc unsorted}
+rtc pitch-from-row {rtc unsorted}
+rtc pitch2note {rtc unsorted}
+rtc play-samp~ {rtc unsorted}
+rtc play2 {rtc unsorted}
+rtc random-ramp {rtc unsorted}
+rtc random-ramp-urn {rtc unsorted}
+rtc random-row {rtc unsorted}
+rtc ratio {rtc unsorted}
+rtc ratio2intv {rtc unsorted}
+rtc repchord-rhythm {rtc unsorted}
+rtc repeat-ED {rtc unsorted}
+rtc rit-acc {rtc unsorted}
+rtc rota {rtc unsorted}
+rtc rotate {rtc unsorted}
+rtc row-modus {rtc unsorted}
+rtc samp10~ {rtc unsorted}
+rtc scale-changer {rtc unsorted}
+rtc schweller {rtc unsorted}
+rtc scramble {rtc unsorted}
+rtc sel-princ {rtc unsorted}
+rtc sequence {rtc unsorted}
+rtc serial-rhythm {rtc unsorted}
+rtc series {rtc unsorted}
+rtc show-pitchclass {rtc unsorted}
+rtc smooth-line {rtc unsorted}
+rtc sneak {rtc unsorted}
+rtc sneak-random {rtc unsorted}
+rtc sneak-rhythm {rtc unsorted}
+rtc sqrt-pan~ {rtc unsorted}
+rtc st2pitch {rtc unsorted}
+rtc super-rhythm {rtc unsorted}
+rtc trans {rtc unsorted}
+rtc trans-exp {rtc unsorted}
+rtc trans-lin {rtc unsorted}
+rtc trans-log {rtc unsorted}
+rtc transp-pitch {rtc unsorted}
+rtc transpose-row {rtc unsorted}
+rtc urne {rtc unsorted}
+rtc VolAmb {rtc unsorted}
+rtc wave-rhythm {rtc unsorted}
+rtc xrandom {rtc unsorted}
+sigpack chop~ {audio generators sigpack}
+sigpack decimate~ {audio generators sigpack}
+sigpack diode~ {audio generators sigpack}
+sigpack foldback~ {audio generators sigpack}
+sigpack foldover~ {audio generators sigpack}
+sigpack freqdiv~ {audio generators sigpack}
+sigpack freqshift~ {audio generators sigpack}
+sigpack harmgen~ {audio generators sigpack}
+sigpack rectify~ {audio generators sigpack}
+sigpack round~ {audio generators sigpack}
+sigpack saturate~ {audio generators sigpack}
+sigpack sieve~ {audio generators sigpack}
+sigpack split~ {audio generators sigpack}
+sigpack ustep~ {audio generators sigpack}
+sigpack vowel~ {audio generators sigpack}
+smlib bp {smlib unsorted}
+smlib deltas {smlib unsorted}
+smlib hip {smlib unsorted}
+smlib hist {smlib unsorted}
+smlib itov {smlib unsorted}
+smlib lavg {smlib unsorted}
+smlib lhist {smlib unsorted}
+smlib lhisti {smlib unsorted}
+smlib linspace {smlib unsorted}
+smlib lmax {smlib unsorted}
+smlib lmin {smlib unsorted}
+smlib lrange {smlib unsorted}
+smlib prevl {smlib unsorted}
+smlib threshold {smlib unsorted}
+smlib vabs {smlib unsorted}
+smlib vclip {smlib unsorted}
+smlib vcog {smlib unsorted}
+smlib vdbtorms {smlib unsorted}
+smlib vdelta {smlib unsorted}
+smlib vfmod {smlib unsorted}
+smlib vftom {smlib unsorted}
+smlib vlavg {smlib unsorted}
+smlib vlmax {smlib unsorted}
+smlib vlmin {smlib unsorted}
+smlib vmax {smlib unsorted}
+smlib vmin {smlib unsorted}
+smlib vmtof {smlib unsorted}
+smlib vpow {smlib unsorted}
+smlib vrms {smlib unsorted}
+smlib vrmstodb {smlib unsorted}
+smlib vstd {smlib unsorted}
+smlib vsum {smlib unsorted}
+smlib vv- {smlib unsorted}
+smlib vv+ {smlib unsorted}
+smlib vvconv {smlib unsorted}
+toxy tot {gui toxy}
+unauthorized audience~ {unauthorized unsorted}
+unauthorized beatify~ {unauthorized unsorted}
+unauthorized blinkenlights {unauthorized unsorted}
+unauthorized compressor~ {unauthorized unsorted}
+unauthorized cooled~ {unauthorized unsorted}
+unauthorized countund {unauthorized unsorted}
+unauthorized disto~ {unauthorized unsorted}
+unauthorized exciter {unauthorized unsorted}
+unauthorized filterbank~ {unauthorized unsorted}
+unauthorized formant~ {unauthorized unsorted}
+unauthorized graphic-mp3amp~ {audio encoding unauthorized}
+unauthorized grid {gui unauthorized}
+unauthorized mp3amp~ {audio encoding unauthorized}
+unauthorized mp3cast~ {audio encoding unauthorized}
+unauthorized mp3live~ {audio encoding unauthorized}
+unauthorized mp3write~ {audio encoding unauthorized}
+unauthorized pianoroll {gui unauthorized}
+unauthorized probalizer {unauthorized unsorted}
+unauthorized randomblock~ {unauthorized unsorted}
+unauthorized samplebox~ {unauthorized unsorted}
+unauthorized scratcher~ {unauthorized unsorted}
+unauthorized sonogram~ {unauthorized unsorted}
+unauthorized sonograph~ {unauthorized unsorted}
+unauthorized speex~ {unauthorized unsorted}
+unauthorized spigot~ {unauthorized unsorted}
+unauthorized stkdrone~ {unauthorized unsorted}
+unauthorized stksitar~ {unauthorized unsorted}
+unauthorized vocoder~ {unauthorized unsorted}
+unauthorized wahwah~ {unauthorized unsorted}
+vasp vasp {declaration vasp}
+vasp vasp.- {arithmetic vasp}
+vasp vasp.-> {basics vasp}
+vasp vasp.! {basics vasp}
+vasp vasp.!- {arithmetic vasp}
+vasp vasp.!/ {arithmetic vasp}
+vasp vasp.!= {arithmetic vasp}
+vasp vasp.!window {functions vasp window}
+vasp vasp.? {basics vasp}
+vasp vasp.?? {basics vasp}
+vasp vasp.* {arithmetic vasp}
+vasp vasp.*!window {functions vasp window}
+vasp vasp.*cosc {generators vasp}
+vasp vasp.*osc {generators vasp}
+vasp vasp.*phasor {generators vasp}
+vasp vasp.*window {functions vasp window}
+vasp vasp.*xwindow {functions vasp window}
+vasp vasp./ {arithmetic vasp}
+vasp vasp.% {arithmetic vasp}
+vasp vasp.+ {arithmetic vasp}
+vasp vasp.< {arithmetic vasp}
+vasp vasp.<= {arithmetic vasp}
+vasp vasp.= {arithmetic vasp}
+vasp vasp.== {arithmetic vasp}
+vasp vasp.> {arithmetic vasp}
+vasp vasp.>= {arithmetic vasp}
+vasp vasp.a< {arithmetic vasp}
+vasp vasp.a<= {arithmetic vasp}
+vasp vasp.a> {arithmetic vasp}
+vasp vasp.a>= {arithmetic vasp}
+vasp vasp.abs {arithmetic vasp}
+vasp vasp.amax? {minmax vasp}
+vasp vasp.amin? {minmax vasp}
+vasp vasp.c- {arithmetic vasp}
+vasp vasp.c-> {basics vasp}
+vasp vasp.c!- {arithmetic vasp}
+vasp vasp.c!/ {arithmetic vasp}
+vasp vasp.c!fft {fft objects vasp}
+vasp vasp.c* {arithmetic vasp}
+vasp vasp.c/ {arithmetic vasp}
+vasp vasp.c+ {arithmetic vasp}
+vasp vasp.c= {arithmetic vasp}
+vasp vasp.cconj {arithmetic vasp}
+vasp vasp.cfft {fft objects vasp}
+vasp vasp.channel {declaration vasp}
+vasp vasp.channel? {declaration vasp}
+vasp vasp.check {basics vasp}
+vasp vasp.cnoise {generators vasp}
+vasp vasp.cnorm {utilities vasp}
+vasp vasp.cosc {generators vasp}
+vasp vasp.cpowi {transcendent vasp}
+vasp vasp.csqr {transcendent vasp}
+vasp vasp.dif {arithmetic vasp}
+vasp vasp.exp {transcendent vasp}
+vasp vasp.fhp {filters vasp}
+vasp vasp.fi {utilities vasp}
+vasp vasp.flp {filters vasp}
+vasp vasp.frames {declaration vasp}
+vasp vasp.frames? {declaration vasp}
+vasp vasp.frames* {declaration vasp}
+vasp vasp.frames/ {declaration vasp}
+vasp vasp.frames+ {declaration vasp}
+vasp vasp.frames= {declaration vasp}
+vasp vasp.gate {utilities vasp}
+vasp vasp.gather {basics vasp}
+vasp vasp.int {arithmetic vasp}
+vasp {vasp.join 2} {basics vasp}
+vasp vasp.log {transcendent vasp}
+vasp vasp.max {minmax vasp}
+vasp vasp.max? {minmax vasp}
+vasp vasp.min {minmax vasp}
+vasp vasp.min? {minmax vasp}
+vasp vasp.minmax? {minmax vasp}
+vasp vasp.mirr {displace vasp}
+vasp vasp.multi {basics vasp}
+vasp vasp.noise {generators vasp}
+vasp vasp.offset {declaration vasp}
+vasp vasp.offset? {declaration vasp}
+vasp vasp.offset+ {declaration vasp}
+vasp vasp.offset= {declaration vasp}
+vasp vasp.opt {utilities vasp}
+vasp vasp.osc {generators vasp}
+vasp vasp.part {basics vasp}
+vasp vasp.peaks {filters vasp}
+vasp vasp.phasor {generators vasp}
+vasp vasp.polar {fft objects vasp}
+vasp vasp.pow {transcendent vasp}
+vasp vasp.pwrap {utilities vasp}
+vasp vasp.r!fft {fft objects vasp}
+vasp vasp.r+ {arithmetic vasp}
+vasp vasp.radio {utilities vasp}
+vasp vasp.rect {fft objects vasp}
+vasp vasp.rfft {fft objects vasp}
+vasp vasp.rgate {utilities vasp}
+vasp vasp.rmax {minmax vasp}
+vasp vasp.rmax? {minmax vasp}
+vasp vasp.rmin {minmax vasp}
+vasp vasp.rmin? {minmax vasp}
+vasp vasp.ropt {utilities vasp}
+vasp vasp.rot {displace vasp}
+vasp vasp.rpeaks {filters vasp}
+vasp vasp.rpow {transcendent vasp}
+vasp vasp.rvalleys {filters vasp}
+vasp vasp.shift {displace vasp}
+vasp vasp.sign {arithmetic vasp}
+vasp vasp.size {declaration vasp}
+vasp vasp.size? {declaration vasp}
+vasp vasp.size* {declaration vasp}
+vasp vasp.size/ {declaration vasp}
+vasp vasp.size+ {declaration vasp}
+vasp vasp.spit {basics vasp}
+vasp {vasp.split 2} {basics vasp}
+vasp vasp.sqr {transcendent vasp}
+vasp vasp.sqrt {transcendent vasp}
+vasp vasp.ssqr {transcendent vasp}
+vasp vasp.ssqrt {transcendent vasp}
+vasp vasp.sum? {arithmetic vasp}
+vasp vasp.sync {basics vasp}
+vasp vasp.tilt {displace vasp}
+vasp vasp.update {basics vasp}
+vasp vasp.valleys {filters vasp}
+vasp vasp.vector {declaration vasp}
+vasp vasp.vectors? {declaration vasp}
+vasp vasp.window {functions vasp window}
+vasp vasp.xmirr {displace vasp}
+vasp vasp.xrot {displace vasp}
+vasp vasp.xshift {displace vasp}
+vasp vasp.xtilt {displace vasp}
+vasp vasp.xwindow {functions vasp window}
+xsample xgroove~ {and audio oscillators tables xsample}
+xsample xplay~ {and audio oscillators tables xsample}
+xsample xrecord~ {and audio oscillators tables xsample}
+zexy . {math zexy}
+zexy &&~ {audio binops logical operators zexy}
+zexy <~ {audio binops logical operators zexy}
+zexy ==~ {audio binops logical operators zexy}
+zexy >~ {audio binops logical operators zexy}
+zexy ||~ {audio binops logical operators zexy}
+zexy abs~ {audio math zexy}
+zexy any2list {control glue zexy}
+zexy atoi {control glue zexy}
+zexy avg~ {analysis audio zexy}
+zexy blockmirror~ {audio processing zexy}
+zexy blockswap~ {audio processing zexy}
+zexy date {control glue zexy}
+zexy deg2rad {math zexy}
+zexy demultiplex {control glue zexy}
+zexy demultiplex~ {audio misc zexy}
+zexy dfreq~ {analysis audio zexy}
+zexy dirac~ {audio generators zexy}
+zexy drip {control glue zexy}
+zexy envrms~ {analysis audio zexy}
+zexy glue {control glue zexy}
+zexy index {control glue zexy}
+zexy length {control glue zexy}
+zexy limiter~ {audio processing zexy}
+zexy list2int {control glue zexy}
+zexy list2symbol {control glue zexy}
+zexy lister {control glue zexy}
+zexy lpt {control glue zexy}
+zexy makesymbol {control glue zexy}
+zexy matrix {matrix storage zexy}
+zexy matrix~ {audio misc zexy}
+zexy mavg {math zexy}
+zexy minmax {math zexy}
+zexy msgfile {control glue zexy}
+zexy mtx_.* {matrix storage zexy}
+zexy mtx_./ {matrix storage zexy}
+zexy mtx_add {matrix storage zexy}
+zexy mtx_check {matrix storage zexy}
+zexy mtx_col {matrix storage zexy}
+zexy mtx_diag {matrix storage zexy}
+zexy mtx_diag {matrix storage zexy}
+zexy mtx_diegg {matrix storage zexy}
+zexy mtx_egg {matrix storage zexy}
+zexy mtx_element {matrix storage zexy}
+zexy mtx_eye {matrix storage zexy}
+zexy mtx_inverse {matrix storage zexy}
+zexy mtx_mean {matrix storage zexy}
+zexy mtx_mul {matrix storage zexy}
+zexy mtx_ones {matrix storage zexy}
+zexy mtx_pivot {matrix storage zexy}
+zexy mtx_print {matrix storage zexy}
+zexy mtx_rand {matrix storage zexy}
+zexy mtx_resize {matrix storage zexy}
+zexy mtx_roll {matrix storage zexy}
+zexy mtx_row {matrix storage zexy}
+zexy mtx_scroll {matrix storage zexy}
+zexy mtx_size {matrix storage zexy}
+zexy mtx_sub {matrix storage zexy}
+zexy mtx_trace {matrix storage zexy}
+zexy mtx_transpose {matrix storage zexy}
+zexy mtx_zeros {matrix storage zexy}
+zexy multiline~ {audio misc zexy}
+zexy multiplex~ {audio misc zexy}
+zexy niagara {control glue zexy}
+zexy noish~ {audio generators zexy}
+zexy noisi~ {audio generators zexy}
+zexy nop {control glue zexy}
+zexy nop~ {audio misc zexy}
+zexy operating_system {control glue zexy}
+zexy pack~ {audio misc zexy}
+zexy packel {control glue zexy}
+zexy pdf~ {analysis audio zexy}
+zexy pol2cart {math zexy}
+zexy pol2sph {math zexy}
+zexy prime {math zexy}
+zexy quantize~ {audio processing zexy}
+zexy rad2deg {math zexy}
+zexy repack {control glue zexy}
+zexy repeat {control glue zexy}
+zexy segregate {control glue zexy}
+zexy sfplay {audio in out zexy}
+zexy sfrecord {audio in out zexy}
+zexy sgn~ {audio math zexy}
+zexy sigzero~ {analysis audio zexy}
+zexy sort {math zexy}
+zexy sph2cart {math zexy}
+zexy sph2pol {math zexy}
+zexy step~ {audio generators zexy}
+zexy strcmp {control glue zexy}
+zexy swap~ {audio processing zexy}
+zexy symbol2list {control glue zexy}
+zexy tabdump {control glue tables zexy}
+zexy tabset {control glue tables zexy}
+zexy tavg~ {analysis audio zexy}
+zexy time {control glue zexy}
+zexy unpack~ {audio misc zexy}
+zexy urn {math zexy}
+zexy wrap {math zexy}
+zexy z~ {audio processing zexy}
+{zexy Abstraction} cart2pol {abstraction math zexy}
+{zexy Abstraction} cart2sph {abstraction math zexy}
+{zexy Abstraction} deg2rad {abstraction math zexy}
+{zexy Abstraction} mean {abstraction math zexy}

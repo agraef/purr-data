@@ -1,0 +1,108 @@
+#N struct string_of_dolls float x float y array dolls doll symbol label
+;
+#N struct doll float y;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header setsize 3 12 0 18
+-204280 -1 0;
+#X obj 0 304 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 247 494 328 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Revised
+by Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS control data_structure array;
+#X text 12 45 DESCRIPTION resize an array;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 INLET_1 pointer;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 397 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 485 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 46 483 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 23 44 get;
+#X obj 83 44 append;
+#X obj 133 44 getsize;
+#X obj 189 44 element;
+#X obj 23 69 sublist;
+#X obj 81 69 struct;
+#X obj 133 69 pointer;
+#X text 8 2 [setsize] Related Objects;
+#X obj 51 44 set;
+#X restore 102 598 pd Related_objects;
+#X obj 78 313 cnv 17 3 50 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 312 float;
+#X text 98 337 list;
+#X obj 78 369 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 11 23 resize an array;
+#X obj 473 3 setsize;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/setsize -text
+pdpedia: setsize;
+#X scalar string_of_dolls 32 110 An_array_of_paper_dolls... \; -3 \;
+0 \; 0 \; 0 \; 0 \; \;;
+#X msg 204 171 traverse pd-setsize-help.pd \, next;
+#X obj 204 196 pointer;
+#X floatatom 33 237 5 0 0 0 - - -;
+#N canvas 90 353 428 173 doll-template 0;
+#X obj 23 43 struct doll float y;
+#X obj 23 65 filledcurve 999 0 1 -10 -1 -10 -1 0 -1 0 -1 0 -4 0 -4
+-5 -9 3 -14 8 -9 5 -4 5 -4 5 -1 5 -1 15 -1 15 -1 15 3 15 3 5 3 5 3
+15 19 15 19 -10 19 -10 19 0 3 0 3 -10 3 -10 3;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [setsize] Data Structure;
+#X text 20 118 These are the drawing instructions for the paper doll.
+This template is used as the element of the array "dolls" in the template
+"string_of_dolls".;
+#X restore 380 241 pd doll-template;
+#N canvas 81 360 428 167 string_of_dolls 0;
+#X obj 23 78 plot dolls 0 1 0 0 30;
+#X obj 23 43 struct string_of_dolls float x float y array dolls doll
+symbol label;
+#X obj 23 101 drawsymbol label -15 -35 145;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [setsize] Template for string_of_dolls;
+#X text 20 124 Here we simply plot the array and give it a label by
+using the [drawsymbol] object;
+#X restore 380 263 pd string_of_dolls;
+#X obj 33 263 setsize string_of_dolls dolls;
+#X text 178 337 - a (float \, pointer) pair is distributed to the two
+inlets. Lists with more than two elements will be truncated.;
+#X text 98 368 pointer;
+#X text 98 400 (none);
+#X text 178 462 - the name of an array contained within the scalar.
+;
+#X text 178 312 - sending a float sets the number of elements of the
+array specified by the 2nd creation argument.;
+#X text 98 489 Sending values smaller than one to [setsize] will resize
+the array to one \, which is the smallest possible size of an array.
+If the array is resized downward (e.g. \, from 20 to 15 elements) the
+extra data are lost. If resized upward \, the new elements are initialized
+to default values.;
+#X text 177 368 - a pointer to a scalar that contains an array.;
+#X text 203 149 1) Click here first...;
+#X text 32 211 2) ...then here.;
+#X text 178 444 - the struct name of a scalar that contains an array.
+;
+#X text 80 444 1) symbol atom;
+#X text 80 462 n) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 557 pddp/pddplink all_about_arrays.pd;
+#X obj 98 572 pddp/pddplink scalar-help.pd;
+#X connect 16 0 17 0;
+#X connect 17 0 21 1;
+#X connect 18 0 21 0;

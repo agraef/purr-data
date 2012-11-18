@@ -1,0 +1,13 @@
+#N canvas 374 432 450 300 12;
+#X obj 21 43 inlet;
+#X obj 78 44 inlet;
+#X text 17 9 value name value;
+#X obj 56 123 \$2;
+#X obj 78 69 s \$1-value;
+#X obj 78 96 r \$1-value;
+#X obj 56 151 outlet;
+#X text 342 264 dh20020401;
+#X connect 0 0 3 0;
+#X connect 1 0 4 0;
+#X connect 3 0 6 0;
+#X connect 5 0 3 1;

@@ -1,0 +1,29 @@
+#N canvas 148 74 522 350 10;
+#X msg 173 107 brown-rhythm;
+#X msg 76 107 serial-rhythm;
+#X text 10 107 see also:;
+#X msg 48 222 60;
+#X floatatom 290 222 4 0 0 3 ED - -;
+#X text 10 62 Sends out rhythm bangs at random times from a geometrical
+time row defined by a a min. and max. entry delay (ED) and a certain
+number of ED-values.;
+#X msg 271 107 sneak-rhythm;
+#X floatatom 169 222 4 0 0 3 row_index - -;
+#X text 10 30 alea-rhythm;
+#X text 183 43 vs. 3;
+#X obj 48 250 QT-PercPlayer;
+#X text 10 300 1993-95 by Karlheinz Essl;
+#X obj 48 193 alea-rhythm 100 1000 12;
+#X floatatom 100 167 4 0 0 2 min_ED - -;
+#X floatatom 152 167 4 0 0 2 max_ED - -;
+#X floatatom 204 167 4 0 0 2 ED-values - -;
+#X obj 48 149 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X connect 3 0 10 0;
+#X connect 12 0 3 0;
+#X connect 12 1 7 0;
+#X connect 12 2 4 0;
+#X connect 13 0 12 1;
+#X connect 14 0 12 2;
+#X connect 15 0 12 3;
+#X connect 16 0 12 0;

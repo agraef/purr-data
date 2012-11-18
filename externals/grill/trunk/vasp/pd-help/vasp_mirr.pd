@@ -1,0 +1,45 @@
+#N canvas 24 75 805 395 10;
+#X obj 75 32 cnv 15 15 15 empty empty vasp.mirr 0 10 1 14 -262144 -1
+0;
+#X text 453 269 clear;
+#N canvas 0 0 413 295 clear_buffer 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 453 313 pd clear_buffer;
+#X msg 453 290 vasp bufmirr;
+#X text 75 52 mirrors a vasp (reverse);
+#X obj 69 204 vasp.update;
+#X msg 69 156 vasp bufmirr;
+#X obj 69 181 vasp.mirr;
+#X obj 68 312 VASP-HELP;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufmirr 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 342 75 graph;
+#N canvas 0 0 390 266 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 45 symbol buflist;
+#X msg 33 73 \; \$1 xticks 0 1 10 \; \$1 xlabel 1.1 0 20 40 60 80 100
+\; \$1 yticks 0 0.25 2 \; \$1 ylabel 105 -1 -0.5 0 0.5 1;
+#X obj 32 227 vasp.u;
+#X msg 32 182 vasp bufmirr;
+#X obj 32 205 vasp.= env 0 0 1 20 -1 100;
+#X obj 32 160 loadbang;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X restore 578 313 pd init;
+#X obj 69 135 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X connect 3 0 2 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 11 0 6 0;

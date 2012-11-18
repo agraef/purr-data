@@ -1,0 +1,32 @@
+#N canvas 1487 463 761 476 10;
+#X obj 277 113 file.path.top;
+#X text 72 81 You can select by index;
+#X text 145 102 or by name.;
+#X msg 15 80 0;
+#X msg 44 78 1;
+#X obj 276 65 loadbang;
+#X msg 70 104 loop0.wav;
+#X msg 91 137 loop1.wav;
+#X msg 116 196 print;
+#X obj 64 421 print WHOLE_PATH;
+#X obj 100 386 print FILE_NAME;
+#X text 26 5 Description: Provides an easy way to access files in a
+folder.;
+#X text 342 54 All the names of the sounds in this folder will be stored
+in file.folder.;
+#X obj 139 311 print index;
+#X obj 262 287 print DONE(#_OF_ENTRIES);
+#X obj 84 256 file.folder;
+#X msg 277 88 medias/sounds;
+#X connect 0 0 15 1;
+#X connect 3 0 15 0;
+#X connect 4 0 15 0;
+#X connect 5 0 16 0;
+#X connect 6 0 15 0;
+#X connect 7 0 15 0;
+#X connect 8 0 15 0;
+#X connect 15 0 9 0;
+#X connect 15 1 10 0;
+#X connect 15 2 13 0;
+#X connect 15 3 14 0;
+#X connect 16 0 0 0;

@@ -1,0 +1,69 @@
+#N canvas 702 30 540 777 10;
+#X obj 29 66 t b f;
+#X msg 29 90 set;
+#X msg 59 90 substate \$1;
+#X obj 222 230 route osc;
+#X msg 338 160 instance \$1;
+#X obj 117 230 prepend create;
+#X obj 29 46 r pt.currentPreset;
+#X text 16 9 Does all the crap for memento naming/collection and abstraction
+registration \$1 is abst-name \$2 is \$0 variable;
+#X obj 305 75 inlet;
+#X obj 305 262 outlet;
+#X text 97 129 Create OSC name here;
+#X obj 117 202 createOscName \$1;
+#X obj 118 252 originator NOTSET \$2;
+#X obj 305 117 register \$1 \$2;
+#X obj 87 149 route createOscName;
+#X obj 87 174 t b b;
+#X obj 50 328 outlet;
+#X text 107 329 output a bang after we have created OSC Name;
+#X obj 44 438 cnv 15 400 300 empty empty EXPERIMENTAL 20 12 0 14 -259544
+-1 0;
+#X obj 216 701 pool OSC;
+#X obj 141 490 r \$0-RRADMIN;
+#X obj 139 668 prepend set;
+#X obj 193 555 symbol \$1;
+#X msg 233 670 mkchdir \$1;
+#X text 48 359 The following section is experimental \, a design-concept
+that will be properly implimented into the next version of memento
+for OSC name collection. "commun" and "originator" are hacked versioned
+from the offical release. We will hopefully be able to remove this
+whole section in the future.;
+#X obj 271 554 symbol;
+#X obj 164 518 t a b b;
+#X obj 223 635 makesymbol %s/%s;
+#X obj 223 588 pack s s;
+#X obj 334 668 print me;
+#X msg 223 611 \$2 \$1;
+#X text 97 508 Cut ->;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 1 0 12 0;
+#X connect 2 0 12 0;
+#X connect 3 0 12 1;
+#X connect 4 0 11 1;
+#X connect 5 0 12 0;
+#X connect 6 0 0 0;
+#X connect 8 0 3 0;
+#X connect 8 0 11 1;
+#X connect 8 0 13 0;
+#X connect 8 0 14 0;
+#X connect 11 0 5 0;
+#X connect 11 0 25 1;
+#X connect 13 0 9 0;
+#X connect 13 1 4 0;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 15 1 11 0;
+#X connect 21 0 19 0;
+#X connect 22 0 28 0;
+#X connect 23 0 19 0;
+#X connect 25 0 28 1;
+#X connect 26 0 21 0;
+#X connect 26 1 22 0;
+#X connect 26 2 25 0;
+#X connect 27 0 23 0;
+#X connect 27 0 29 0;
+#X connect 28 0 30 0;
+#X connect 30 0 27 0;

@@ -1,0 +1,234 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header swap 3 12 0 18 -204280
+-1 0;
+#X obj 0 220 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 275 494 357 META 0;
+#X text 12 165 LIBRARY internal;
+#X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 185 AUTHOR Miller Puckette;
+#X text 12 245 HELP_PATCH_AUTHORS Dave Sabine \, November 12 \, 2002
+. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 25 KEYWORDS control float list bang;
+#X text 12 65 DESCRIPTION swap two numbers \, respecting right-to-left
+order;
+#X text 12 85 INLET_0 float list bang;
+#X text 12 105 INLET_1 float;
+#X text 12 125 OUTLET_0 float;
+#X text 12 145 OUTLET_1 float;
+#X text 12 225 RELEASE_DATE 1997;
+#X text 12 5 ALIAS fswap;
+#X restore 500 597 pd META;
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 485 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 537 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 86 455 428 136 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [swap] Related Objects;
+#X text 20 69 Externals and other object libraries;
+#X obj 23 34 pack;
+#X obj 65 34 unpack;
+#X obj 20 89 pddp/helplink cyclone/split;
+#X restore 102 597 pd Related_objects;
+#X obj 78 229 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 433 float;
+#X obj 78 434 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 380 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 379 float;
+#X obj 443 3 swap;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/swap -text
+pdpedia: swap;
+#X text 98 278 float;
+#X text 168 283 - a float at the left inlet will send the number to
+the right outlet and then send the number at the right inlet to the
+left outlet.;
+#X text 98 229 bang;
+#X text 168 229 - a bang at the left inlet will force [swap] to send
+its values to the outlets \, in reverse order. The value from the left
+inlet will be sent to the right outlet then the value at the right
+inlet will be sent out the left outlet.;
+#X text 98 324 list;
+#X text 168 324 - a list at the left inlet will update the values of
+both of [swap]'s inlets and send the numbers to the outlets in reverse
+order. Note that lists of 3 or more elements will be truncated.;
+#X text 167 379 - a float at the right inlet is stored for later use.
+It will be sent to the left outlet when a float or bang is received
+in the left inlet.;
+#X text 98 456 float;
+#X obj 78 457 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 152 swap;
+#X floatatom 106 79 5 0 0 0 - - -;
+#X floatatom 190 119 5 0 0 0 - - -;
+#X floatatom 118 179 5 0 0 0 - - -;
+#X floatatom 78 179 5 0 0 0 - - -;
+#X msg 149 78 42 7;
+#X obj 78 77 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X msg 191 78 42 7 3 4;
+#X floatatom 333 143 5 0 0 0 - - -;
+#X floatatom 294 142 5 0 0 0 - - -;
+#X msg 294 88 bang;
+#X obj 294 112 swap 12;
+#X text 188 102 float;
+#X text 103 60 float;
+#X text 150 60 list;
+#X text 286 162 creation argument;
+#N canvas 90 38 428 503 More_Info 0;
+#X msg 42 82 42 7;
+#X obj 42 107 swap;
+#X floatatom 42 133 5 0 0 0 - - -;
+#X floatatom 101 133 5 0 0 0 - - -;
+#X obj 42 157 pack f f;
+#X obj 42 181 print;
+#X floatatom 43 347 5 0 0 0 - - -;
+#X floatatom 93 347 5 0 0 0 - - -;
+#X floatatom 142 347 5 0 0 0 - - -;
+#X floatatom 111 468 5 0 0 0 - - -;
+#X floatatom 158 468 5 0 0 0 - - -;
+#X floatatom 212 468 5 0 0 0 - - -;
+#X msg 42 271 2 2500 9 420;
+#X obj 42 317 unpack f f f f;
+#X floatatom 192 347 5 0 0 0 - - -;
+#X text 18 38 [swap] is most commonly used to change the order of a
+list. This trick is best suited for a PAIR of numbers.;
+#X obj 165 373 swap;
+#X obj 138 398 swap;
+#X obj 111 422 swap;
+#X obj 195 406 swap;
+#X obj 168 431 swap;
+#X obj 227 436 swap;
+#X floatatom 263 468 5 0 0 0 - - -;
+#X text 199 373 This could quickly become ridiculous!;
+#X msg 140 271 1 2 3 4;
+#X msg 219 271 0 200 3333 1111;
+#X text 19 213 Lists that are longer than two elements could be sorted
+this way \, but the structure quickly becomes unmanageable. It's probably
+better to find an alternative method.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [swap] More Info;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 1;
+#X connect 4 0 5 0;
+#X connect 6 0 18 0;
+#X connect 7 0 17 0;
+#X connect 8 0 16 0;
+#X connect 12 0 13 0;
+#X connect 13 0 6 0;
+#X connect 13 1 7 0;
+#X connect 13 2 8 0;
+#X connect 13 3 14 0;
+#X connect 14 0 16 1;
+#X connect 16 0 17 1;
+#X connect 16 1 19 1;
+#X connect 17 0 18 1;
+#X connect 17 1 19 0;
+#X connect 18 0 9 0;
+#X connect 18 1 20 0;
+#X connect 19 0 20 1;
+#X connect 19 1 21 1;
+#X connect 20 0 10 0;
+#X connect 20 1 21 0;
+#X connect 21 0 11 0;
+#X connect 21 1 22 0;
+#X connect 24 0 13 0;
+#X connect 25 0 13 0;
+#X restore 102 546 pd More_Info;
+#N canvas 70 19 444 592 Note-off_parser_using_swap 0;
+#X obj 0 346 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X obj 21 109 notein;
+#X text 77 105 [notein] is an object which receives incoming MIDI data
+from a MIDI instrument. The three outlets are PITCH \, VELOCITY \,
+and MIDI CHANNEL from left to right. It is important to note however
+that the data is outputted from right to left. Which means that the
+first piece of information to be sent out the object is the MIDI CHANNEL.
+;
+#X obj 21 183 swap;
+#X obj 21 222 pack;
+#X obj 21 266 route 0;
+#X floatatom 21 294 5 0 0 0 - - -;
+#X text 76 183 Here \, [swap] is used to store the VELOCITY until the
+PITCH information comes from [notein]. The next step will pack the
+two together...but we have to ensure that [pack] receives the two numbers
+in the correct order: PITCH first \, then VELOCITY. This way \, using
+[route] we can determine whether or not this incoming MIDI data is
+a "note-off" signal (i.e. VELOCITY = 0).;
+#X obj 21 316 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 21 386 notein;
+#X obj 22 426 pack;
+#X obj 22 451 route 0;
+#X floatatom 22 476 5 0 0 0 - - -;
+#X obj 22 497 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 45 315 This will "bang" only when velocity = 0;
+#X text 18 37 In some settings \, the [swap] object is useful as a
+timing mechanism to ensure that two numbers arrive at their destination
+in a particular order. Miller Puckette has provided an excellent example
+of [swap] used to build a 'note-off parser':;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 346 Why doesn't the alternative work?;
+#X text 77 382 The goal of the Miller's example above is to retrieve
+"note-off" signals from [notein]. To do that \, we have to test the
+incoming data for pitches with a velocity of zero. So we swap the values
+\, pack up the incoming VELOCITY and PITCH data \, and send them to
+[route]...in effect we achieve the following:;
+#X text 78 463 IF velocity = 0 THEN display the pitch and send a bang
+;
+#X text 77 485 With the [notein] object \, the VELOCITY information
+is sent before the PITCH information. (Remember that in Pd data is
+sent to the outlets in right-to-left order.) In the example at left
+\, the VELOCITY information triggers the output of [pack] BEFORE the
+PITCH information is retrieved. This is why [swap] is used-- it solves
+the problem by making sure that the VELOCITY and PITCH are both received
+before packing them up and sending them to the [route] object.;
+#X text 7 1 [swap] Note-off Parser;
+#X connect 1 0 3 0;
+#X connect 1 1 3 1;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 8 0;
+#X connect 9 0 10 1;
+#X connect 9 1 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X restore 102 568 pd Note-off_parser_using_swap;
+#X text 11 23 swap two numbers \, respecting right-to-left order;
+#X text 168 433 - outputs the value from the right inlet.;
+#X text 168 456 - outputs the value from the left inlet.;
+#X text 80 503 1) float;
+#X text 168 503 - initializes the value of the right inlet.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 503 3 fswap;
+#X text 480 3 or;
+#X connect 24 0 28 0;
+#X connect 24 1 27 0;
+#X connect 25 0 24 0;
+#X connect 26 0 24 1;
+#X connect 29 0 24 0;
+#X connect 30 0 24 0;
+#X connect 31 0 24 0;
+#X connect 34 0 35 0;
+#X connect 35 0 33 0;
+#X connect 35 1 32 0;

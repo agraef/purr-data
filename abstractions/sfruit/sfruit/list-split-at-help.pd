@@ -1,0 +1,36 @@
+#N canvas 741 82 388 382 10;
+
+
+#X obj 49 128 list-split-at /;
+#X msg 161 128 symbol |;
+#X msg 161 158 symbol /;
+#N canvas 0 22 450 300 display 0;
+#X obj 120 112 prepent add;
+#X obj 120 80 inlet;
+#X obj 120 164 outlet;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X restore 49 199 pd display;
+#X msg -1 128 set;
+#X obj 49 100 t a b;
+#X obj 136 203 bng 15 250 50 0 empty empty done 17 7 0 10 -262144 -4034
+-1;
+#X text 8 330 note: due to limitations of [select] \, the type of atom
+sent to the right inlet must be the same as the type of the creation
+argument (i.e. float>float or symbol>symbol);
+#X msg 49 77 a b | c / d | e f g / h i j | k / l m | n o p;
+#X text 11 12 [list-split-at] splits a list into multiple lists upon
+encountering a delimiter;
+#X msg 49 227;
+#X text 271 289 2008 Luke Iannini;
+#X text 271 303 proyekto.net;
+#X obj 256 36 import-disabled list-abs;
+#X connect 0 0 3 0;
+#X connect 0 1 6 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 1;
+#X connect 3 0 10 0;
+#X connect 4 0 10 0;
+#X connect 5 0 0 0;
+#X connect 5 1 4 0;
+#X connect 8 0 5 0;

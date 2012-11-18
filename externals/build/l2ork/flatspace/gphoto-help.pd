@@ -1,0 +1,36 @@
+#N canvas 637 363 569 399 10;
+#X msg 34 120 getconfig model;
+#X obj 23 352 print;
+#X msg 29 95 listconfig;
+#X obj 23 308 gphoto;
+#X msg 23 70 open;
+#X obj 56 331 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 52 274 close;
+#X msg 47 186 capture test.jpg;
+#X text 18 11 gphoto external uses libgphoto2 to control compatible
+PTP cameras. For a list of compatible cameras see \; http://www.gphoto.org/doc/remote/
+;
+#X text 63 69 Autodetect cameras and attempt to open connection.;
+#X text 106 94 List available parameters;
+#X text 142 119 Get value of "model" parameter;
+#X text 173 148 Set value of a capture parameter (needed to do remote
+shutter release on Canon cameras);
+#X text 160 185 Trigger shutter and download image;
+#X text 170 214 Set value of "zoom" parameter to "11" (you can set
+these to values that are NOT campatible with the camera. Make sure
+you are using compatible values with: "gphoto2 --get-config zoom")
+;
+#X text 97 274 Close connection to camera (does not retract lens!)
+;
+#X msg 40 153 setconfig capture 1;
+#X msg 52 229 setconfig zoom 60;
+#X connect 0 0 3 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 1 5 0;
+#X connect 4 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X connect 16 0 3 0;
+#X connect 17 0 3 0;

@@ -1,0 +1,101 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (math_functions)
+3 12 0 18 -204280 -1 0;
+#X obj 0 325 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS This document was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
+#X text 12 65 DESCRIPTION higher math in Pd;
+#X text 12 5 NAME sin cos tan atan atan2 exp log abs sqrt pow;
+#X text 12 145 RELEASE_DATE 1997;
+#X text 12 25 KEYWORDS control trigonometry;
+#X restore 500 597 pd META;
+#X obj 0 448 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 484 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 (math) Related Objects;
+#X obj 22 42 osc~;
+#X obj 58 42 cos~;
+#X obj 96 42 exp~;
+#X obj 134 42 log~;
+#X obj 172 42 abs~;
+#X obj 210 42 sqrt~;
+#X obj 254 42 pow~;
+#X restore 102 598 pd Related_objects;
+#X obj 78 334 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 333 float;
+#X text 98 352 list;
+#X text 98 456 float;
+#X obj 78 457 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 11 23 higher math in Pd;
+#X obj 252 3 sin;
+#X obj 278 3 cos;
+#X obj 304 3 tan;
+#X obj 331 3 atan;
+#X obj 364 3 atan2;
+#X obj 404 3 exp;
+#X obj 432 3 log;
+#X obj 459 3 abs;
+#X obj 487 3 sqrt;
+#X obj 522 3 pow;
+#X obj 464 20 pddp/pddplink http://wiki.puredata.info/en/math -text
+pdpedia: math;
+#X text 123 139 For individual help patches \, follow the links below:
+;
+#X obj 252 87 sin;
+#X floatatom 252 61 5 0 0 0 - - -;
+#X floatatom 252 114 5 0 0 0 - - -;
+#X text 168 333 - the incoming value;
+#X text 168 352 - a list will be truncated.;
+#X obj 124 171 sin;
+#X obj 124 201 cos;
+#X obj 124 231 tan;
+#X obj 124 261 atan;
+#X obj 124 291 atan2;
+#X obj 314 171 exp;
+#X obj 314 201 log;
+#X obj 314 231 abs;
+#X obj 314 261 sqrt;
+#X obj 314 291 pow;
+#X obj 169 171 pddp/pddplink sin-help.pd;
+#X obj 169 201 pddp/pddplink cos-help.pd;
+#X obj 169 231 pddp/pddplink tan-help.pd;
+#X obj 169 261 pddp/pddplink atan-help.pd;
+#X obj 169 291 pddp/pddplink atan2-help.pd;
+#X obj 359 171 pddp/pddplink exp-help.pd;
+#X obj 359 201 pddp/pddplink log-help.pd;
+#X obj 359 231 pddp/pddplink abs-help.pd;
+#X obj 359 261 pddp/pddplink sqrt-help.pd;
+#X obj 359 291 pddp/pddplink pow-help.pd;
+#X text 168 456 - the outgoing value.;
+#X text 98 488 The [pow] object accepts one float argument to initialize
+the right inlet. All other math functions listed here take no arguments.
+;
+#X text 217 551 - binary arithmetic operators;
+#X obj 98 551 pddp/pddplink operators-help.pd;
+#X text 217 571 - relational and logical operators;
+#X obj 98 571 pddp/pddplink otherbinops-help.pd;
+#X text 98 369 (The [pow] object takes a bang \, which will output
+the previous value.);
+#X text 97 403 (Note: The [atan2] and [pow] objects have a right inlet.
+See their respective help patches (links above) for more info.);
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 26 0 28 0;
+#X connect 27 0 26 0;

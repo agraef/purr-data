@@ -1,0 +1,10 @@
+#N canvas 246 184 388 175 10;
+#X obj 40 37 inlet;
+#X obj 245 38 inlet;
+#X obj 40 90 outlet;
+#X obj 142 87 outlet;
+#X obj 40 64 pyext include/freesoundpd fspd;
+#X connect 0 0 4 0;
+#X connect 1 0 4 1;
+#X connect 4 0 2 0;
+#X connect 4 1 3 0;

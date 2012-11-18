@@ -1,0 +1,32 @@
+#N canvas 314 76 305 428 10;
+#X obj 1 21 cnv 15 300 400 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X msg 216 69 set memento;
+#X obj 35 77 hsl 128 15 0 127 0 0 empty empty n1 -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 216 31 bng 32 250 50 0 empty empty restore 0 -6 0 8 -258699
+-1 -1;
+#X obj 216 3 inlet;
+#X msg 130 229 create \$1;
+#X symbolatom 131 206 20 0 0 0 create_Memento - -;
+#X obj 131 256 s \$0-orig;
+#X obj 216 90 s \$0-orig;
+#N canvas 0 0 450 300 guts 0;
+#X obj 121 157 originator \$1 \$0;
+#X obj 122 100 r \$0-orig;
+#X connect 1 0 0 0;
+#X restore 188 359 pd guts;
+#X obj 32 49 commun n1 \$0;
+#X obj 34 140 hsl 128 15 0 127 0 0 empty empty n2 -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 31 115 commun n2 \$0;
+#X connect 1 0 8 0;
+#X connect 2 0 10 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X connect 10 0 2 0;
+#X connect 11 0 12 0;
+#X connect 12 0 11 0;
+#X coords 0 0 1 1 200 140 1;

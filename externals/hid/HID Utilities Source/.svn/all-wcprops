@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source
+END
+HID_Utilities.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Utilities.c
+END
+HIDLib.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HIDLib.h
+END
+HID_Utilities_Internal.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Utilities_Internal.h
+END
+HID_Name_Lookup.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Name_Lookup.h
+END
+ImmrHIDUtilAddOn.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/ImmrHIDUtilAddOn.h
+END
+HID_Queue_Utilities.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Queue_Utilities.c
+END
+IOHIDPowerUsage.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/IOHIDPowerUsage.h
+END
+HID_Transaction_Utilities.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Transaction_Utilities.c
+END
+HID_Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Utilities.h
+END
+HID_Utilities_External.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Utilities_External.h
+END
+HID_Queue_Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Queue_Utilities.h
+END
+HID_Transaction_Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Transaction_Utilities.h
+END
+HID_Error_Handler.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Error_Handler.c
+END
+HID_Error_Handler.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Error_Handler.h
+END
+PID.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/PID.h
+END
+HID_Config_Utilities.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Config_Utilities.c
+END
+HID_APIs.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_APIs.h
+END
+HID Utilities Read Me.rtf
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID%20Utilities%20Read%20Me.rtf
+END
+HID_Config_Utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Config_Utilities.h
+END
+HID_CFM.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_CFM.c
+END
+HID_Utilities_CFM.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Utilities_CFM.h
+END
+HID_Name_Lookup.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/HID_Name_Lookup.c
+END
+ImmrHIDUtilAddOn.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/pure-data/!svn/ver/14359/trunk/externals/hid/HID%20Utilities%20Source/ImmrHIDUtilAddOn.c
+END

@@ -1,0 +1,23 @@
+#N canvas 478 217 416 259 10;
+#X obj 148 114 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 128 186 5 0 0 0 - - -;
+#X obj 128 207 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 167 112 Start(1)/stop(0);
+#X floatatom 233 142 5 0 0 0 - - -;
+#X text 269 140 Interval;
+#X obj 128 92 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 146 91 Reset+start;
+#X obj 128 165 mtl/clocker 1000;
+#X obj 12 8 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 17 12 description: Metronome that reports time since it was
+started.;
+#X text 17 50 tags: timing;
+#X connect 0 0 8 0;
+#X connect 1 0 2 0;
+#X connect 4 0 8 1;
+#X connect 6 0 8 0;
+#X connect 8 0 1 0;

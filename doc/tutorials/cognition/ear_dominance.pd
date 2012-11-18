@@ -1,0 +1,76 @@
+#N canvas 336 40 530 602 10;
+#X obj 0 0 cnv 15 520 40 empty empty ear_dominance 20 12 1 18 -216441
+-66577 0;
+#X text 258 24 'cognition' by Hans-Christoph Steiner;
+#X text 36 166 The original experiment is from:;
+#X text 46 182 Deutsch \, D. (1975). Musical Illusions. Scientific
+American \, 233 \, pp92-104.;
+#X obj 251 550 dac~;
+#X obj 168 496 *~;
+#X obj 184 470 tgl 25 1 empty empty left 0 -6 1 10 -212983 -1 -1 1
+1;
+#X obj 168 431 *~;
+#X obj 168 384 osc~;
+#X obj 212 282 alternate;
+#X obj 146 359 t b f b;
+#X msg 212 391 0 5;
+#X msg 127 391 1 5;
+#X obj 184 412 line~;
+#X msg 16 272 \; pd dsp \$1;
+#X obj 105 230 tgl 35 0 empty empty start 0 -6 1 12 -4033 -1 -1 0 1
+;
+#X obj 212 258 metro 500;
+#X obj 193 256 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 160 322 220;
+#X msg 189 322 440;
+#X msg 279 321 440;
+#X msg 309 321 220;
+#X obj 342 496 *~;
+#X obj 358 470 tgl 25 1 empty empty right 0 -6 1 10 -261364 -1 -1 1
+1;
+#X obj 342 431 *~;
+#X obj 342 384 osc~;
+#X obj 320 359 t b f b;
+#X msg 386 391 0 5;
+#X msg 301 391 1 5;
+#X obj 358 412 line~;
+#X text 35 51 Most listeners perceive this stream as a tone alternating
+back and forth from ear to ear \, while alternating between high and
+low pitches. What is actually happening is that the high and low tones
+are alternating in each ear \, but at opposite times.;
+#X text 35 119 Your dominant ear tells the brain that the pitch of
+the tone is changing \, while both ears track the position of the high
+pitched tone.;
+#X connect 5 0 4 0;
+#X connect 6 0 5 1;
+#X connect 7 0 5 0;
+#X connect 8 0 7 0;
+#X connect 9 0 19 0;
+#X connect 9 0 18 0;
+#X connect 9 1 20 0;
+#X connect 9 1 21 0;
+#X connect 10 0 12 0;
+#X connect 10 1 8 0;
+#X connect 10 2 11 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 0;
+#X connect 13 0 7 1;
+#X connect 15 0 14 0;
+#X connect 15 0 16 0;
+#X connect 16 0 9 0;
+#X connect 16 0 17 0;
+#X connect 18 0 10 0;
+#X connect 19 0 26 0;
+#X connect 20 0 10 0;
+#X connect 21 0 26 0;
+#X connect 22 0 4 1;
+#X connect 23 0 22 1;
+#X connect 24 0 22 0;
+#X connect 25 0 24 0;
+#X connect 26 0 28 0;
+#X connect 26 1 25 0;
+#X connect 26 2 27 0;
+#X connect 27 0 29 0;
+#X connect 28 0 29 0;
+#X connect 29 0 24 1;

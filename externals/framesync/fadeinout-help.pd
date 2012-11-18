@@ -1,0 +1,24 @@
+#N canvas 237 57 404 386 10;
+#X floatatom 80 212 9 0 0 0 - - -;
+#X obj 83 239 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 83 68 frameclock 100;
+#X floatatom 230 212 9 0 0 0 - - -;
+#X obj 233 239 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 80 184 fadeinout 10 20 40 50;
+#X text 33 16 Generate a 0-to-1-to-0 envelope based on frame numbers
+\, outputting once per frame.;
+#X text 31 285 the first argument/inlet sets the start frame of fade-in
+;
+#X obj 230 184 fadeinout 25 40 90 95;
+#X text 31 344 the fourth argument/inlet sets the end frame of fade-out
+;
+#X text 31 325 the third argument/inlet sets the start frame of fade-out
+;
+#X text 31 304 the second argument/inlet sets the end frame of fade-in
+;
+#X connect 0 0 1 0;
+#X connect 3 0 4 0;
+#X connect 5 0 0 0;
+#X connect 8 0 3 0;

@@ -1,0 +1,5474 @@
+[Yamaha DX7 Bank - (32 samples)]
+
+
+
+[Sample 0]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 87
+operator_6_envelope_rate_2 = 29
+operator_6_envelope_rate_3 = 22
+operator_6_envelope_rate_4 = 4
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 95
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 22
+operator_6_keyboard_scaling_left_depth = 2
+operator_6_keyboard_scaling_right_depth = 17
+operator_6_keyboard_scaling_right_curve = 3
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 4
+operator_6_oscilator_detune = 11
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 4
+operator_6_output_level = 93
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 4
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 78
+operator_5_envelope_rate_2 = 42
+operator_5_envelope_rate_3 = 19
+operator_5_envelope_rate_4 = 35
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 94
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 49
+operator_5_keyboard_scaling_left_depth = 8
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 3
+operator_5_oscilator_rate_scale = 4
+operator_5_oscilator_detune = 11
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 5
+operator_5_output_level = 54
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 71
+operator_4_envelope_rate_2 = 32
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 48
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 96
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 49
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 8
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 3
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 80
+operator_3_envelope_rate_2 = 24
+operator_3_envelope_rate_3 = 19
+operator_3_envelope_rate_4 = 4
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 93
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 22
+operator_3_keyboard_scaling_left_depth = 3
+operator_3_keyboard_scaling_right_depth = 32
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 5
+operator_3_oscilator_detune = 3
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 85
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 6
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 85
+operator_2_envelope_rate_2 = 34
+operator_2_envelope_rate_3 = 17
+operator_2_envelope_rate_4 = 35
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 95
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 53
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 59
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 8
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 1
+operator_2_output_level = 80
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 71
+operator_1_envelope_rate_2 = 32
+operator_1_envelope_rate_3 = 20
+operator_1_envelope_rate_4 = 48
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 96
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 49
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 4
+operator_1_oscilator_detune = 3
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 99
+pitch_envelope_rate_2 = 99
+pitch_envelope_rate_3 = 99
+pitch_envelope_rate_4 = 99
+pitch_envelope_level_1 = 51
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 3
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = NicePiano 
+
+
+[Sample 1]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 64
+operator_6_envelope_rate_3 = 44
+operator_6_envelope_rate_4 = 54
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 92
+operator_6_envelope_level_3 = 56
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 25
+operator_6_keyboard_scaling_right_depth = 12
+operator_6_keyboard_scaling_right_curve = 3
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 2
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 2
+operator_6_output_level = 78
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 8
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 98
+operator_5_envelope_rate_2 = 67
+operator_5_envelope_rate_3 = 38
+operator_5_envelope_rate_4 = 54
+operator_5_envelope_level_1 = 86
+operator_5_envelope_level_2 = 92
+operator_5_envelope_level_3 = 74
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 11
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 2
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 1
+operator_5_output_level = 83
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 96
+operator_4_envelope_rate_2 = 19
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 54
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 92
+operator_4_envelope_level_3 = 89
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 2
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 2
+operator_4_output_level = 97
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 52
+operator_3_envelope_rate_3 = 35
+operator_3_envelope_rate_4 = 41
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 91
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 51
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 2
+operator_3_oscilator_detune = 4
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 1
+operator_3_output_level = 56
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 4
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 71
+operator_2_envelope_rate_3 = 35
+operator_2_envelope_rate_4 = 51
+operator_2_envelope_level_1 = 82
+operator_2_envelope_level_2 = 92
+operator_2_envelope_level_3 = 88
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 54
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 1
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 1
+operator_2_output_level = 87
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 30
+operator_1_envelope_rate_3 = 29
+operator_1_envelope_rate_4 = 51
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 92
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 2
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 1
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 15
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 7
+lfo_speed = 99
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 15
+lfo_sync = 0
+lfo_wave = 2
+lfo_pitch_modulation_sens = 0
+transpose = 12
+name = NiceBass  
+
+
+[Sample 2]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 77
+operator_6_envelope_rate_2 = 56
+operator_6_envelope_rate_3 = 20
+operator_6_envelope_rate_4 = 70
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 0
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 7
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 99
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 7
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 48
+operator_5_envelope_rate_2 = 55
+operator_5_envelope_rate_3 = 22
+operator_5_envelope_rate_4 = 50
+operator_5_envelope_level_1 = 98
+operator_5_envelope_level_2 = 61
+operator_5_envelope_level_3 = 62
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 6
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 75
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 66
+operator_4_envelope_rate_2 = 92
+operator_4_envelope_rate_3 = 22
+operator_4_envelope_rate_4 = 50
+operator_4_envelope_level_1 = 53
+operator_4_envelope_level_2 = 61
+operator_4_envelope_level_3 = 62
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 46
+operator_3_envelope_rate_2 = 35
+operator_3_envelope_rate_3 = 22
+operator_3_envelope_rate_4 = 50
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 86
+operator_3_envelope_level_3 = 86
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 1
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 1
+operator_3_output_level = 86
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 67
+operator_2_envelope_rate_2 = 34
+operator_2_envelope_rate_3 = 15
+operator_2_envelope_rate_4 = 70
+operator_2_envelope_level_1 = 85
+operator_2_envelope_level_2 = 0
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 1
+operator_2_output_level = 67
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 55
+operator_1_envelope_rate_2 = 24
+operator_1_envelope_rate_3 = 19
+operator_1_envelope_rate_4 = 55
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 86
+operator_1_envelope_level_3 = 86
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 2
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 17
+feedback_level = 6 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 5
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = BIG BOTTOM
+
+
+[Sample 3]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 95
+operator_6_envelope_rate_2 = 29
+operator_6_envelope_rate_3 = 20
+operator_6_envelope_rate_4 = 50
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 95
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 39
+operator_6_keyboard_scaling_left_depth = 99
+operator_6_keyboard_scaling_right_depth = 99
+operator_6_keyboard_scaling_right_curve = 3
+operator_6_keyboard_scaling_left_curve = 2
+operator_6_oscilator_rate_scale = 3
+operator_6_oscilator_detune = 11
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 7
+operator_6_output_level = 85
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 95
+operator_5_envelope_rate_2 = 20
+operator_5_envelope_rate_3 = 20
+operator_5_envelope_rate_4 = 47
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 95
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 39
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 40
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 1
+operator_5_oscilator_rate_scale = 3
+operator_5_oscilator_detune = 3
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 2
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 95
+operator_4_envelope_rate_2 = 84
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 35
+operator_4_envelope_level_1 = 85
+operator_4_envelope_level_2 = 0
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 46
+operator_4_keyboard_scaling_breakpoint = 39
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 1
+operator_4_keyboard_scaling_left_curve = 2
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 5
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 8
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 96
+operator_3_envelope_rate_2 = 25
+operator_3_envelope_rate_3 = 25
+operator_3_envelope_rate_4 = 55
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 75
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 39
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 1
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 46
+operator_2_envelope_rate_3 = 35
+operator_2_envelope_rate_4 = 35
+operator_2_envelope_level_1 = 80
+operator_2_envelope_level_2 = 75
+operator_2_envelope_level_3 = 55
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 39
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 99
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 2
+operator_2_oscilator_rate_scale = 4
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 4
+operator_2_output_level = 87
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 26
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 95
+operator_1_envelope_rate_2 = 47
+operator_1_envelope_rate_3 = 30
+operator_1_envelope_rate_4 = 51
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 92
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 3
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 4
+feedback_level = 1 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 34
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 0
+lfo_pitch_modulation_sens = 0
+transpose = 24
+name = FM ROADS  
+
+
+[Sample 4]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 29
+operator_6_envelope_rate_3 = 20
+operator_6_envelope_rate_4 = 50
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 95
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 41
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 19
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 3
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 6
+operator_6_output_level = 85
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 95
+operator_5_envelope_rate_2 = 20
+operator_5_envelope_rate_3 = 20
+operator_5_envelope_rate_4 = 50
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 95
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 3
+operator_5_oscilator_detune = 0
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 95
+operator_4_envelope_rate_2 = 29
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 50
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 95
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 6
+operator_4_output_level = 89
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 95
+operator_3_envelope_rate_2 = 20
+operator_3_envelope_rate_3 = 20
+operator_3_envelope_rate_4 = 50
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 95
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 4
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 95
+operator_2_envelope_rate_2 = 50
+operator_2_envelope_rate_3 = 35
+operator_2_envelope_rate_4 = 78
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 75
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 3
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 7
+operator_2_output_level = 65
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 22
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 96
+operator_1_envelope_rate_2 = 25
+operator_1_envelope_rate_3 = 25
+operator_1_envelope_rate_4 = 67
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 75
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 3
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 4
+feedback_level = 4 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 34
+lfo_delay = 33
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = BAD ROAD  
+
+
+[Sample 5]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 57
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 75
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 0
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 39
+operator_6_keyboard_scaling_left_depth = 53
+operator_6_keyboard_scaling_right_depth = 20
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 85
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 14
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 81
+operator_5_envelope_rate_2 = 87
+operator_5_envelope_rate_3 = 22
+operator_5_envelope_rate_4 = 75
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 92
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 15
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 4
+operator_5_oscilator_detune = 14
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 7
+operator_5_output_level = 92
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 3
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 81
+operator_4_envelope_rate_2 = 87
+operator_4_envelope_rate_3 = 22
+operator_4_envelope_rate_4 = 75
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 92
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 14
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 4
+operator_4_oscilator_detune = 0
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 4
+operator_4_output_level = 90
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 3
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 78
+operator_3_envelope_rate_2 = 87
+operator_3_envelope_rate_3 = 22
+operator_3_envelope_rate_4 = 75
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 34
+operator_3_keyboard_scaling_left_depth = 9
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 0
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 7
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 91
+operator_2_envelope_rate_2 = 25
+operator_2_envelope_rate_3 = 39
+operator_2_envelope_rate_4 = 60
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 86
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 65
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 14
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 4
+operator_2_output_level = 97
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 3
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 74
+operator_1_envelope_rate_2 = 85
+operator_1_envelope_rate_3 = 27
+operator_1_envelope_rate_4 = 70
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 4
+operator_1_oscilator_detune = 14
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 75
+pitch_envelope_rate_2 = 80
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 7
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 4
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 1
+lfo_pitch_amplitude_depth = 3
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = JAZZ GUIT1
+
+
+[Sample 6]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 68
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 75
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 0
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 46
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 21
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 4
+operator_6_oscilator_detune = 12
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 6
+operator_6_output_level = 99
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 6
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 35
+operator_5_envelope_rate_3 = 99
+operator_5_envelope_rate_4 = 78
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 0
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 45
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 18
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 5
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 7
+operator_5_output_level = 70
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 8
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 48
+operator_4_envelope_rate_2 = 37
+operator_4_envelope_rate_3 = 99
+operator_4_envelope_rate_4 = 63
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 0
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 99
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 5
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 7
+operator_4_output_level = 89
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 75
+operator_3_envelope_rate_2 = 0
+operator_3_envelope_rate_3 = 0
+operator_3_envelope_rate_4 = 67
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 57
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 99
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 4
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 75
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 78
+operator_2_envelope_rate_2 = 94
+operator_2_envelope_rate_3 = 28
+operator_2_envelope_rate_4 = 66
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 84
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 99
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 3
+operator_2_oscilator_detune = 9
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 5
+operator_2_output_level = 69
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 5
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 97
+operator_1_envelope_rate_2 = 53
+operator_1_envelope_rate_3 = 23
+operator_1_envelope_rate_4 = 64
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 86
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 99
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 3
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 85
+pitch_envelope_rate_2 = 99
+pitch_envelope_rate_3 = 85
+pitch_envelope_rate_4 = 99
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 16
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 0
+lfo_pitch_modulation_sens = 2
+transpose = 12
+name = SLAPPER 2 
+
+
+[Sample 7]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 94
+operator_6_envelope_rate_2 = 56
+operator_6_envelope_rate_3 = 24
+operator_6_envelope_rate_4 = 55
+operator_6_envelope_level_1 = 93
+operator_6_envelope_level_2 = 28
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 1
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 3
+operator_6_output_level = 96
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 4
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 0
+operator_5_envelope_rate_3 = 0
+operator_5_envelope_rate_4 = 0
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 0
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 46
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 7
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 3
+operator_5_output_level = 57
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 5
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 90
+operator_4_envelope_rate_2 = 42
+operator_4_envelope_rate_3 = 7
+operator_4_envelope_rate_4 = 55
+operator_4_envelope_level_1 = 90
+operator_4_envelope_level_2 = 30
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 1
+operator_4_oscilator_rate_scale = 5
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 3
+operator_4_output_level = 97
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 2
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 88
+operator_3_envelope_rate_2 = 96
+operator_3_envelope_rate_3 = 32
+operator_3_envelope_rate_4 = 30
+operator_3_envelope_level_1 = 79
+operator_3_envelope_level_2 = 65
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 24
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 1
+operator_3_oscilator_rate_scale = 6
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 3
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 2
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 20
+operator_2_envelope_rate_3 = 0
+operator_2_envelope_rate_4 = 0
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 0
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 46
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 7
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 61
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 0
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 95
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 17
+operator_1_envelope_rate_4 = 58
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 32
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 75
+operator_1_keyboard_scaling_left_depth = 67
+operator_1_keyboard_scaling_right_depth = 8
+operator_1_keyboard_scaling_right_curve = 3
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 7
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 12
+pitch_envelope_rate_2 = 11
+pitch_envelope_rate_3 = 16
+pitch_envelope_rate_4 = 14
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 17
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = 50GAL BASS
+
+
+[Sample 8]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 98
+operator_6_envelope_rate_2 = 60
+operator_6_envelope_rate_3 = 56
+operator_6_envelope_rate_4 = 71
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 98
+operator_6_envelope_level_3 = 82
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 51
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 99
+operator_6_keyboard_scaling_right_curve = 3
+operator_6_keyboard_scaling_left_curve = 3
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 3
+operator_6_output_level = 99
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 10
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 72
+operator_5_envelope_rate_2 = 39
+operator_5_envelope_rate_3 = 75
+operator_5_envelope_rate_4 = 71
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 98
+operator_5_envelope_level_3 = 94
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 39
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 2
+operator_5_keyboard_scaling_left_curve = 3
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 12
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 0
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 39
+operator_4_envelope_rate_3 = 54
+operator_4_envelope_rate_4 = 67
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 98
+operator_4_envelope_level_3 = 99
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 39
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 3
+operator_4_keyboard_scaling_left_curve = 3
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 0
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 80
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 83
+operator_3_envelope_rate_3 = 42
+operator_3_envelope_rate_4 = 71
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 98
+operator_3_envelope_level_3 = 84
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 22
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 99
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 1
+operator_3_oscilator_rate_scale = 0
+operator_3_oscilator_detune = 11
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 92
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 39
+operator_2_envelope_rate_3 = 32
+operator_2_envelope_rate_4 = 71
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 98
+operator_2_envelope_level_3 = 99
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 99
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 38
+operator_2_keyboard_scaling_right_curve = 1
+operator_2_keyboard_scaling_left_curve = 2
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 2
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 73
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 39
+operator_1_envelope_rate_3 = 72
+operator_1_envelope_rate_4 = 99
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 98
+operator_1_envelope_level_3 = 99
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 14
+operator_1_keyboard_scaling_right_curve = 2
+operator_1_keyboard_scaling_left_curve = 1
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 12
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 84
+pitch_envelope_rate_2 = 95
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 9
+feedback_level = 5 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 33
+lfo_delay = 61
+lfo_pitch_modulation_depth = 3
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = FM BASS   
+
+
+[Sample 9]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 29
+operator_6_envelope_rate_3 = 20
+operator_6_envelope_rate_4 = 50
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 95
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 41
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 19
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 3
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 6
+operator_6_output_level = 85
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 95
+operator_5_envelope_rate_2 = 20
+operator_5_envelope_rate_3 = 20
+operator_5_envelope_rate_4 = 50
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 95
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 3
+operator_5_oscilator_detune = 0
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 95
+operator_4_envelope_rate_2 = 29
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 50
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 95
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 6
+operator_4_output_level = 89
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 95
+operator_3_envelope_rate_2 = 20
+operator_3_envelope_rate_3 = 20
+operator_3_envelope_rate_4 = 50
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 95
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 4
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 95
+operator_2_envelope_rate_2 = 50
+operator_2_envelope_rate_3 = 35
+operator_2_envelope_rate_4 = 78
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 75
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 3
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 7
+operator_2_output_level = 65
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 22
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 96
+operator_1_envelope_rate_2 = 25
+operator_1_envelope_rate_3 = 25
+operator_1_envelope_rate_4 = 67
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 75
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 3
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 4
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 34
+lfo_delay = 33
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = BAD ROAD  
+
+
+[Sample 10]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 99
+operator_6_envelope_rate_3 = 17
+operator_6_envelope_rate_4 = 43
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 99
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 2
+operator_6_oscilator_detune = 10
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 2
+operator_6_output_level = 93
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 0
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 19
+operator_5_envelope_rate_2 = 25
+operator_5_envelope_rate_3 = 35
+operator_5_envelope_rate_4 = 43
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 2
+operator_5_oscilator_detune = 14
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 7
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 2
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 99
+operator_4_envelope_rate_3 = 99
+operator_4_envelope_rate_4 = 43
+operator_4_envelope_level_1 = 43
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 85
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 2
+operator_4_oscilator_detune = 11
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 71
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 99
+operator_3_envelope_rate_3 = 42
+operator_3_envelope_rate_4 = 43
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 99
+operator_3_envelope_level_3 = 99
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 2
+operator_3_oscilator_detune = 3
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 99
+operator_2_envelope_rate_3 = 42
+operator_2_envelope_rate_4 = 49
+operator_2_envelope_level_1 = 55
+operator_2_envelope_level_2 = 82
+operator_2_envelope_level_3 = 69
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 54
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 1
+operator_2_oscilator_detune = 9
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 98
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 99
+operator_1_envelope_rate_3 = 42
+operator_1_envelope_rate_4 = 43
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 94
+operator_1_envelope_level_3 = 93
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 2
+operator_1_oscilator_detune = 0
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 1
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 14
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 11
+lfo_speed = 34
+lfo_delay = 59
+lfo_pitch_modulation_depth = 10
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 1
+transpose = 24
+name = CLOSER    
+
+
+[Sample 11]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 64
+operator_6_envelope_rate_3 = 98
+operator_6_envelope_rate_4 = 61
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 67
+operator_6_envelope_level_3 = 52
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 46
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 99
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 3
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 11
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 2
+operator_6_output_level = 83
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 53
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 65
+operator_5_envelope_rate_2 = 38
+operator_5_envelope_rate_3 = 0
+operator_5_envelope_rate_4 = 61
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 127
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 39
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 99
+operator_5_keyboard_scaling_right_curve = 1
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 80
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 2
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 97
+operator_4_envelope_rate_3 = 62
+operator_4_envelope_rate_4 = 54
+operator_4_envelope_level_1 = 27
+operator_4_envelope_level_2 = 85
+operator_4_envelope_level_3 = 90
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 99
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 4
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 4
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 99
+operator_3_envelope_rate_3 = 72
+operator_3_envelope_rate_4 = 54
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 74
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 46
+operator_3_keyboard_scaling_left_depth = 99
+operator_3_keyboard_scaling_right_depth = 99
+operator_3_keyboard_scaling_right_curve = 2
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 4
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 1
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 97
+operator_2_envelope_rate_3 = 99
+operator_2_envelope_rate_4 = 48
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 69
+operator_2_envelope_level_3 = 84
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 46
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 99
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 4
+operator_2_oscilator_detune = 11
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 2
+operator_2_output_level = 91
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 61
+operator_1_envelope_rate_2 = 67
+operator_1_envelope_rate_3 = 70
+operator_1_envelope_rate_4 = 65
+operator_1_envelope_level_1 = 93
+operator_1_envelope_level_2 = 99
+operator_1_envelope_level_3 = 98
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 46
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 1
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 5
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 98
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 15
+feedback_level = 5 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 32
+lfo_delay = 57
+lfo_pitch_modulation_depth = 28
+lfo_pitch_amplitude_depth = 13
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 1
+transpose = 24
+name = SFLUTE  1 
+
+
+[Sample 12]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 67
+operator_6_envelope_rate_2 = 28
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 99
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 99
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 25
+operator_6_keyboard_scaling_left_depth = 15
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 3
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 78
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 0
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 66
+operator_5_envelope_rate_2 = 39
+operator_5_envelope_rate_3 = 99
+operator_5_envelope_rate_4 = 99
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 99
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 3
+operator_5_keyboard_scaling_left_curve = 3
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 66
+operator_4_envelope_rate_2 = 99
+operator_4_envelope_rate_3 = 99
+operator_4_envelope_rate_4 = 99
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 99
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 99
+operator_4_keyboard_scaling_right_curve = 3
+operator_4_keyboard_scaling_left_curve = 3
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 66
+operator_3_envelope_rate_2 = 99
+operator_3_envelope_rate_3 = 99
+operator_3_envelope_rate_4 = 99
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 99
+operator_3_envelope_level_3 = 99
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 3
+operator_3_oscilator_rate_scale = 0
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 75
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 66
+operator_2_envelope_rate_2 = 99
+operator_2_envelope_rate_3 = 99
+operator_2_envelope_rate_4 = 99
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 99
+operator_2_envelope_level_3 = 99
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 10
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 89
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 0
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 66
+operator_1_envelope_rate_2 = 99
+operator_1_envelope_rate_3 = 99
+operator_1_envelope_rate_4 = 99
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 99
+operator_1_envelope_level_3 = 99
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 99
+operator_1_keyboard_scaling_right_curve = 3
+operator_1_keyboard_scaling_left_curve = 3
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 99
+pitch_envelope_rate_2 = 99
+pitch_envelope_rate_3 = 99
+pitch_envelope_rate_4 = 99
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 18
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 39
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = SAX-1     
+
+
+[Sample 13]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 96
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 3
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 87
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 34
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 2
+operator_6_keyboard_scaling_left_curve = 3
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 3
+operator_6_output_level = 98
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 0
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 57
+operator_5_envelope_rate_3 = 21
+operator_5_envelope_rate_4 = 10
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 97
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 2
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 3
+operator_5_output_level = 77
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 0
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 83
+operator_4_envelope_rate_3 = 34
+operator_4_envelope_rate_4 = 55
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 92
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 71
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 99
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 11
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 3
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 88
+operator_3_envelope_rate_2 = 96
+operator_3_envelope_rate_3 = 32
+operator_3_envelope_rate_4 = 30
+operator_3_envelope_level_1 = 78
+operator_3_envelope_level_2 = 71
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 32
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 2
+operator_3_keyboard_scaling_left_curve = 2
+operator_3_oscilator_rate_scale = 7
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 4
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 20
+operator_2_envelope_rate_3 = 0
+operator_2_envelope_rate_4 = 0
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 0
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 2
+operator_2_oscilator_rate_scale = 7
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 76
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 0
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 95
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 17
+operator_1_envelope_rate_4 = 58
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 32
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 38
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 99
+operator_1_keyboard_scaling_right_curve = 2
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 7
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 2
+feedback_level = 5 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 43
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = BASS-KB-PZ
+
+
+[Sample 14]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 96
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 3
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 87
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 34
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 2
+operator_6_keyboard_scaling_left_curve = 3
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 10
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 50
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 2
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 57
+operator_5_envelope_rate_3 = 21
+operator_5_envelope_rate_4 = 10
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 63
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 99
+operator_5_keyboard_scaling_right_curve = 1
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 1
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 86
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 0
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 83
+operator_4_envelope_rate_3 = 34
+operator_4_envelope_rate_4 = 55
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 92
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 60
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 10
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 88
+operator_3_envelope_rate_2 = 96
+operator_3_envelope_rate_3 = 32
+operator_3_envelope_rate_4 = 30
+operator_3_envelope_level_1 = 78
+operator_3_envelope_level_2 = 71
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 32
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 2
+operator_3_keyboard_scaling_left_curve = 2
+operator_3_oscilator_rate_scale = 7
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 4
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 20
+operator_2_envelope_rate_3 = 0
+operator_2_envelope_rate_4 = 0
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 0
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 2
+operator_2_oscilator_rate_scale = 7
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 76
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 0
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 95
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 17
+operator_1_envelope_rate_4 = 58
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 32
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 38
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 99
+operator_1_keyboard_scaling_right_curve = 2
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 7
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 2
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 43
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = BASS-PIANO
+
+
+[Sample 15]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 74
+operator_6_envelope_rate_3 = 39
+operator_6_envelope_rate_4 = 26
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 94
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 53
+operator_6_keyboard_scaling_left_depth = 99
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 4
+operator_6_output_level = 48
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 8
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 65
+operator_5_envelope_rate_3 = 25
+operator_5_envelope_rate_4 = 10
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 42
+operator_5_keyboard_scaling_left_depth = 99
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 1
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 72
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 0
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 93
+operator_4_envelope_rate_3 = 32
+operator_4_envelope_rate_4 = 55
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 42
+operator_4_keyboard_scaling_left_depth = 99
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 10
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 88
+operator_3_envelope_rate_2 = 96
+operator_3_envelope_rate_3 = 32
+operator_3_envelope_rate_4 = 30
+operator_3_envelope_level_1 = 78
+operator_3_envelope_level_2 = 71
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 32
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 2
+operator_3_keyboard_scaling_left_curve = 2
+operator_3_oscilator_rate_scale = 7
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 4
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 20
+operator_2_envelope_rate_3 = 0
+operator_2_envelope_rate_4 = 0
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 0
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 2
+operator_2_oscilator_rate_scale = 7
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 76
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 0
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 95
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 17
+operator_1_envelope_rate_4 = 58
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 32
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 38
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 99
+operator_1_keyboard_scaling_right_curve = 2
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 7
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 2
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 43
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = BASS-ROADS
+
+
+[Sample 16]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 95
+operator_6_envelope_rate_2 = 29
+operator_6_envelope_rate_3 = 20
+operator_6_envelope_rate_4 = 50
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 95
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 41
+operator_6_keyboard_scaling_left_depth = 99
+operator_6_keyboard_scaling_right_depth = 99
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 3
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 3
+operator_6_output_level = 76
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 95
+operator_5_envelope_rate_2 = 20
+operator_5_envelope_rate_3 = 20
+operator_5_envelope_rate_4 = 50
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 95
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 50
+operator_5_keyboard_scaling_left_depth = 93
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 3
+operator_5_oscilator_detune = 4
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 93
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 91
+operator_4_envelope_rate_2 = 29
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 37
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 95
+operator_4_envelope_level_3 = 61
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 40
+operator_4_keyboard_scaling_left_depth = 68
+operator_4_keyboard_scaling_right_depth = 99
+operator_4_keyboard_scaling_right_curve = 3
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 9
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 1
+operator_4_output_level = 85
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 91
+operator_3_envelope_rate_2 = 20
+operator_3_envelope_rate_3 = 20
+operator_3_envelope_rate_4 = 50
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 95
+operator_3_envelope_level_3 = 75
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 39
+operator_3_keyboard_scaling_left_depth = 57
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 50
+operator_2_envelope_rate_3 = 21
+operator_2_envelope_rate_4 = 78
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 75
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 65
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 3
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 60
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 18
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 96
+operator_1_envelope_rate_2 = 25
+operator_1_envelope_rate_3 = 25
+operator_1_envelope_rate_4 = 67
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 75
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 50
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 3
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 4
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 25
+lfo_delay = 33
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 4
+transpose = 24
+name = BAS-ROADS1
+
+
+[Sample 17]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 37
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 0
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 99
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 52
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 2
+operator_6_oscilator_detune = 9
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 7
+operator_6_output_level = 62
+operator_6_oscilator_mode = 1
+operator_6_freq_coarse_tuning = 31
+operator_6_freq_fine_tuning = 78
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 51
+operator_5_envelope_rate_3 = 90
+operator_5_envelope_rate_4 = 15
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 99
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 46
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 3
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 2
+operator_5_oscilator_detune = 8
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 7
+operator_5_output_level = 67
+operator_5_oscilator_mode = 1
+operator_5_freq_coarse_tuning = 30
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 53
+operator_4_envelope_rate_3 = 90
+operator_4_envelope_rate_4 = 45
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 0
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 46
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 3
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 2
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 1
+operator_4_key_velocity_sensitivity = 7
+operator_4_output_level = 99
+operator_4_oscilator_mode = 1
+operator_4_freq_coarse_tuning = 13
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 53
+operator_3_envelope_rate_3 = 99
+operator_3_envelope_rate_4 = 50
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 0
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 2
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 1
+operator_3_key_velocity_sensitivity = 7
+operator_3_output_level = 68
+operator_3_oscilator_mode = 1
+operator_3_freq_coarse_tuning = 4
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 75
+operator_2_envelope_rate_3 = 99
+operator_2_envelope_rate_4 = 40
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 82
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 39
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 10
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 7
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 46
+operator_1_envelope_rate_3 = 99
+operator_1_envelope_rate_4 = 45
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 0
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 39
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 2
+operator_1_oscilator_detune = 5
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 99
+pitch_envelope_rate_2 = 87
+pitch_envelope_rate_3 = 99
+pitch_envelope_rate_4 = 1
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 0
+pitch_envelope_level_3 = 0
+pitch_envelope_level_4 = 50
+algorithm = 17
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 99
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 1
+lfo_pitch_modulation_sens = 0
+transpose = 24
+name = MICHAEL   
+
+
+[Sample 18]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 95
+operator_6_envelope_rate_2 = 28
+operator_6_envelope_rate_3 = 27
+operator_6_envelope_rate_4 = 47
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 90
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 5
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 1
+operator_6_oscilator_rate_scale = 2
+operator_6_oscilator_detune = 5
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 3
+operator_6_output_level = 0
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 83
+operator_5_envelope_rate_2 = 0
+operator_5_envelope_rate_3 = 27
+operator_5_envelope_rate_4 = 50
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 90
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 49
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 2
+operator_5_oscilator_detune = 9
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 3
+operator_5_output_level = 81
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 4
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 88
+operator_4_envelope_rate_2 = 28
+operator_4_envelope_rate_3 = 27
+operator_4_envelope_rate_4 = 50
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 90
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 49
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 5
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 3
+operator_4_output_level = 55
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 95
+operator_3_envelope_rate_2 = 28
+operator_3_envelope_rate_3 = 27
+operator_3_envelope_rate_4 = 47
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 90
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 5
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 99
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 1
+operator_3_oscilator_rate_scale = 2
+operator_3_oscilator_detune = 9
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 3
+operator_3_output_level = 76
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 5
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 92
+operator_2_envelope_rate_3 = 71
+operator_2_envelope_rate_4 = 63
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 67
+operator_2_envelope_level_3 = 91
+operator_2_envelope_level_4 = 90
+operator_2_keyboard_scaling_breakpoint = 39
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 13
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 5
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 89
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 88
+operator_1_envelope_rate_2 = 28
+operator_1_envelope_rate_3 = 27
+operator_1_envelope_rate_4 = 50
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 90
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 49
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 2
+operator_1_oscilator_detune = 9
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 0
+pitch_envelope_rate_2 = 0
+pitch_envelope_rate_3 = 0
+pitch_envelope_rate_4 = 0
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 3
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 3
+lfo_pitch_modulation_sens = 0
+transpose = 12
+name = JOEBALDWIN
+
+
+[Sample 19]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 75
+operator_6_envelope_rate_2 = 65
+operator_6_envelope_rate_3 = 46
+operator_6_envelope_rate_4 = 48
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 70
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 15
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 10
+operator_6_keyboard_scaling_right_curve = 3
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 7
+operator_6_oscilator_detune = 10
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 6
+operator_6_output_level = 61
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 21
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 75
+operator_5_envelope_rate_2 = 21
+operator_5_envelope_rate_3 = 23
+operator_5_envelope_rate_4 = 43
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 88
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 44
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 31
+operator_5_keyboard_scaling_right_curve = 3
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 5
+operator_5_oscilator_detune = 10
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 3
+operator_5_output_level = 67
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 5
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 75
+operator_4_envelope_rate_2 = 23
+operator_4_envelope_rate_3 = 6
+operator_4_envelope_rate_4 = 45
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 88
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 17
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 17
+operator_4_keyboard_scaling_right_curve = 3
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 10
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 5
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 75
+operator_3_envelope_rate_2 = 22
+operator_3_envelope_rate_3 = 8
+operator_3_envelope_rate_4 = 46
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 91
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 50
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 7
+operator_3_oscilator_detune = 6
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 85
+operator_2_envelope_rate_3 = 38
+operator_2_envelope_rate_4 = 56
+operator_2_envelope_level_1 = 68
+operator_2_envelope_level_2 = 62
+operator_2_envelope_level_3 = 30
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 32
+operator_2_keyboard_scaling_left_depth = 8
+operator_2_keyboard_scaling_right_depth = 50
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 10
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 5
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 12
+operator_2_freq_fine_tuning = 20
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 73
+operator_1_envelope_rate_2 = 27
+operator_1_envelope_rate_3 = 10
+operator_1_envelope_rate_4 = 48
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 0
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 39
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 3
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 2
+operator_1_oscilator_detune = 5
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 2
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 12
+feedback_level = 6 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 0
+transpose = 12
+name = 1985 PIANO
+
+
+[Sample 20]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 95
+operator_6_envelope_rate_2 = 29
+operator_6_envelope_rate_3 = 20
+operator_6_envelope_rate_4 = 50
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 95
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 41
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 19
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 3
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 7
+operator_6_output_level = 81
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 95
+operator_5_envelope_rate_2 = 20
+operator_5_envelope_rate_3 = 20
+operator_5_envelope_rate_4 = 50
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 95
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 29
+operator_5_keyboard_scaling_left_depth = 64
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 3
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 3
+operator_5_oscilator_detune = 8
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 95
+operator_4_envelope_rate_2 = 29
+operator_4_envelope_rate_3 = 20
+operator_4_envelope_rate_4 = 50
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 95
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 3
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 7
+operator_4_output_level = 93
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 95
+operator_3_envelope_rate_2 = 20
+operator_3_envelope_rate_3 = 20
+operator_3_envelope_rate_4 = 50
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 95
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 35
+operator_3_keyboard_scaling_left_depth = 87
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 0
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 95
+operator_2_envelope_rate_2 = 99
+operator_2_envelope_rate_3 = 78
+operator_2_envelope_rate_4 = 78
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 99
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 3
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 82
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 12
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 96
+operator_1_envelope_rate_2 = 25
+operator_1_envelope_rate_3 = 25
+operator_1_envelope_rate_4 = 67
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 75
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 27
+operator_1_keyboard_scaling_left_depth = 71
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 3
+operator_1_oscilator_detune = 11
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 7
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 94
+pitch_envelope_rate_2 = 67
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 5
+feedback_level = 6 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 34
+lfo_delay = 33
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 0
+transpose = 12
+name = BROKEROADS
+
+
+[Sample 21]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 61
+operator_6_envelope_rate_2 = 38
+operator_6_envelope_rate_3 = 5
+operator_6_envelope_rate_4 = 77
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 72
+operator_6_envelope_level_3 = 60
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 39
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 3
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 14
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 76
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 39
+operator_5_envelope_rate_3 = 18
+operator_5_envelope_rate_4 = 71
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 71
+operator_5_envelope_level_3 = 73
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 39
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 3
+operator_5_keyboard_scaling_left_curve = 3
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 14
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 79
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 76
+operator_4_envelope_rate_3 = 99
+operator_4_envelope_rate_4 = 99
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 88
+operator_4_envelope_level_3 = 96
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 39
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 3
+operator_4_keyboard_scaling_left_curve = 3
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 14
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 14
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 39
+operator_3_envelope_rate_3 = 25
+operator_3_envelope_rate_4 = 98
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 71
+operator_3_envelope_level_3 = 69
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 39
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 3
+operator_3_oscilator_rate_scale = 0
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 58
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 97
+operator_2_envelope_rate_2 = 38
+operator_2_envelope_rate_3 = 25
+operator_2_envelope_rate_4 = 47
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 72
+operator_2_envelope_level_3 = 65
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 39
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 3
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 82
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 76
+operator_1_envelope_rate_3 = 99
+operator_1_envelope_rate_4 = 99
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 88
+operator_1_envelope_level_3 = 96
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 29
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 39
+operator_1_keyboard_scaling_right_curve = 3
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 84
+pitch_envelope_rate_2 = 95
+pitch_envelope_rate_3 = 95
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 15
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 37
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 4
+transpose = 12
+name = HERMAN    
+
+
+[Sample 22]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 99
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 99
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 99
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 86
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 99
+operator_5_envelope_rate_3 = 99
+operator_5_envelope_rate_4 = 99
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 99
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 71
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 7
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 99
+operator_4_envelope_rate_3 = 99
+operator_4_envelope_rate_4 = 99
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 99
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 50
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 99
+operator_3_envelope_rate_3 = 99
+operator_3_envelope_rate_4 = 99
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 99
+operator_3_envelope_level_3 = 99
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 0
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 29
+operator_2_envelope_rate_2 = 99
+operator_2_envelope_rate_3 = 99
+operator_2_envelope_rate_4 = 99
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 99
+operator_2_envelope_level_3 = 99
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 0
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 75
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 42
+operator_1_envelope_rate_2 = 99
+operator_1_envelope_rate_3 = 99
+operator_1_envelope_rate_4 = 127
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 99
+operator_1_envelope_level_3 = 99
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 80
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 99
+pitch_envelope_rate_2 = 56
+pitch_envelope_rate_3 = 17
+pitch_envelope_rate_4 = 99
+pitch_envelope_level_1 = 0
+pitch_envelope_level_2 = 1
+pitch_envelope_level_3 = 66
+pitch_envelope_level_4 = 50
+algorithm = 0
+feedback_level = 5 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 0
+lfo_pitch_modulation_sens = 3
+transpose = 24
+name = NEW DRUM  
+
+
+[Sample 23]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 89
+operator_6_envelope_rate_3 = 10
+operator_6_envelope_rate_4 = 90
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 24
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 3
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 80
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 0
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 99
+operator_5_envelope_rate_3 = 10
+operator_5_envelope_rate_4 = 94
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 57
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 11
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 80
+operator_4_envelope_rate_3 = 22
+operator_4_envelope_rate_4 = 86
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 99
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 3
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 2
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 80
+operator_3_envelope_rate_3 = 68
+operator_3_envelope_rate_4 = 67
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 99
+operator_3_envelope_level_3 = 99
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 0
+operator_3_oscilator_detune = 11
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 20
+operator_2_envelope_rate_3 = 22
+operator_2_envelope_rate_4 = 50
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 99
+operator_2_envelope_level_3 = 97
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 10
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 3
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 50
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 99
+operator_1_envelope_rate_3 = 17
+operator_1_envelope_rate_4 = 83
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 99
+operator_1_envelope_level_3 = 99
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 11
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 50
+
+; Common
+
+pitch_envelope_rate_1 = 75
+pitch_envelope_rate_2 = 80
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 30
+feedback_level = 3 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 39
+lfo_delay = 71
+lfo_pitch_modulation_depth = 13
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 4
+transpose = 24
+name = ORGAN  3  
+
+
+[Sample 24]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 45
+operator_6_envelope_rate_3 = 10
+operator_6_envelope_rate_4 = 90
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 91
+operator_6_envelope_level_3 = 24
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 0
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 3
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 71
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 0
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 99
+operator_5_envelope_rate_3 = 10
+operator_5_envelope_rate_4 = 94
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 57
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 0
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 0
+operator_5_oscilator_detune = 11
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 80
+operator_4_envelope_rate_3 = 22
+operator_4_envelope_rate_4 = 86
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 99
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 0
+operator_4_oscilator_detune = 3
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 0
+operator_4_output_level = 99
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 2
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 99
+operator_3_envelope_rate_2 = 80
+operator_3_envelope_rate_3 = 68
+operator_3_envelope_rate_4 = 67
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 99
+operator_3_envelope_level_3 = 99
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 0
+operator_3_oscilator_detune = 11
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 93
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 20
+operator_2_envelope_rate_3 = 22
+operator_2_envelope_rate_4 = 50
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 99
+operator_2_envelope_level_3 = 97
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 10
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 0
+operator_2_oscilator_detune = 3
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 0
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 99
+operator_1_envelope_rate_2 = 99
+operator_1_envelope_rate_3 = 17
+operator_1_envelope_rate_4 = 83
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 99
+operator_1_envelope_level_3 = 99
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 0
+operator_1_oscilator_detune = 11
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 0
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 0
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 75
+pitch_envelope_rate_2 = 80
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 30
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 39
+lfo_delay = 71
+lfo_pitch_modulation_depth = 13
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 0
+lfo_wave = 0
+lfo_pitch_modulation_sens = 4
+transpose = 24
+name = ORGAN  1  
+
+
+[Sample 25]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 26
+operator_6_envelope_rate_3 = 21
+operator_6_envelope_rate_4 = 64
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 38
+operator_6_keyboard_scaling_left_depth = 99
+operator_6_keyboard_scaling_right_depth = 60
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 7
+operator_6_oscilator_detune = 12
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 5
+operator_6_output_level = 76
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 26
+operator_5_envelope_rate_3 = 21
+operator_5_envelope_rate_4 = 40
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 38
+operator_5_keyboard_scaling_left_depth = 99
+operator_5_keyboard_scaling_right_depth = 8
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 5
+operator_5_oscilator_detune = 4
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 3
+operator_5_output_level = 88
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 26
+operator_4_envelope_rate_3 = 21
+operator_4_envelope_rate_4 = 48
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 38
+operator_4_keyboard_scaling_left_depth = 99
+operator_4_keyboard_scaling_right_depth = 8
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 3
+operator_4_oscilator_rate_scale = 4
+operator_4_oscilator_detune = 10
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 3
+operator_4_output_level = 88
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 95
+operator_3_envelope_rate_2 = 31
+operator_3_envelope_rate_3 = 24
+operator_3_envelope_rate_4 = 46
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 90
+operator_3_envelope_level_3 = 58
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 48
+operator_3_keyboard_scaling_left_depth = 35
+operator_3_keyboard_scaling_right_depth = 53
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 0
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 66
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 91
+operator_2_envelope_rate_2 = 86
+operator_2_envelope_rate_3 = 21
+operator_2_envelope_rate_4 = 58
+operator_2_envelope_level_1 = 97
+operator_2_envelope_level_2 = 92
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 38
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 99
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 13
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 2
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 94
+operator_1_envelope_rate_2 = 23
+operator_1_envelope_rate_3 = 24
+operator_1_envelope_rate_4 = 50
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 65
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 34
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 5
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 4
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 71
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 0
+pitch_envelope_rate_2 = 0
+pitch_envelope_rate_3 = 0
+pitch_envelope_rate_4 = 0
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 19
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 31
+lfo_delay = 99
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 0
+lfo_pitch_modulation_sens = 0
+transpose = 12
+name = BAS-EL.PN2
+
+
+[Sample 26]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 26
+operator_6_envelope_rate_3 = 21
+operator_6_envelope_rate_4 = 64
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 99
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 38
+operator_6_keyboard_scaling_left_depth = 99
+operator_6_keyboard_scaling_right_depth = 60
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 7
+operator_6_oscilator_detune = 12
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 5
+operator_6_output_level = 76
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 26
+operator_5_envelope_rate_3 = 21
+operator_5_envelope_rate_4 = 40
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 99
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 38
+operator_5_keyboard_scaling_left_depth = 99
+operator_5_keyboard_scaling_right_depth = 8
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 5
+operator_5_oscilator_detune = 4
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 3
+operator_5_output_level = 88
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 99
+operator_4_envelope_rate_2 = 26
+operator_4_envelope_rate_3 = 21
+operator_4_envelope_rate_4 = 48
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 99
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 38
+operator_4_keyboard_scaling_left_depth = 99
+operator_4_keyboard_scaling_right_depth = 0
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 3
+operator_4_oscilator_rate_scale = 4
+operator_4_oscilator_detune = 10
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 3
+operator_4_output_level = 88
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 95
+operator_3_envelope_rate_2 = 31
+operator_3_envelope_rate_3 = 24
+operator_3_envelope_rate_4 = 46
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 90
+operator_3_envelope_level_3 = 58
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 71
+operator_3_keyboard_scaling_left_depth = 34
+operator_3_keyboard_scaling_right_depth = 52
+operator_3_keyboard_scaling_right_curve = 3
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 2
+operator_3_output_level = 66
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 91
+operator_2_envelope_rate_2 = 86
+operator_2_envelope_rate_3 = 21
+operator_2_envelope_rate_4 = 58
+operator_2_envelope_level_1 = 97
+operator_2_envelope_level_2 = 92
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 99
+operator_2_keyboard_scaling_left_depth = 99
+operator_2_keyboard_scaling_right_depth = 99
+operator_2_keyboard_scaling_right_curve = 3
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 13
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 2
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 1
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 94
+operator_1_envelope_rate_2 = 23
+operator_1_envelope_rate_3 = 24
+operator_1_envelope_rate_4 = 50
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 65
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 35
+operator_1_keyboard_scaling_left_depth = 99
+operator_1_keyboard_scaling_right_depth = 5
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 4
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 71
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 0
+pitch_envelope_rate_2 = 0
+pitch_envelope_rate_3 = 0
+pitch_envelope_rate_4 = 0
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 19
+feedback_level = 0 ; 0 = no feedback
+oscilator_key_sync = 0
+lfo_speed = 31
+lfo_delay = 99
+lfo_pitch_modulation_depth = 0
+lfo_pitch_amplitude_depth = 0
+lfo_sync = 1
+lfo_wave = 0
+lfo_pitch_modulation_sens = 0
+transpose = 12
+name = BAS-EL.PN3
+
+
+[Sample 27]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 70
+operator_6_envelope_rate_3 = 10
+operator_6_envelope_rate_4 = 75
+operator_6_envelope_level_1 = 89
+operator_6_envelope_level_2 = 42
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 39
+operator_6_keyboard_scaling_left_depth = 53
+operator_6_keyboard_scaling_right_depth = 20
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 10
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 99
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 6
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 87
+operator_5_envelope_rate_3 = 22
+operator_5_envelope_rate_4 = 75
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 92
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 15
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 4
+operator_5_oscilator_detune = 10
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 93
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 81
+operator_4_envelope_rate_2 = 87
+operator_4_envelope_rate_3 = 22
+operator_4_envelope_rate_4 = 75
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 92
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 14
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 4
+operator_4_oscilator_detune = 3
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 5
+operator_4_output_level = 87
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 8
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 78
+operator_3_envelope_rate_2 = 87
+operator_3_envelope_rate_3 = 22
+operator_3_envelope_rate_4 = 75
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 34
+operator_3_keyboard_scaling_left_depth = 9
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 11
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 4
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 91
+operator_2_envelope_rate_2 = 25
+operator_2_envelope_rate_3 = 39
+operator_2_envelope_rate_4 = 60
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 86
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 65
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 4
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 97
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 3
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 74
+operator_1_envelope_rate_2 = 85
+operator_1_envelope_rate_3 = 27
+operator_1_envelope_rate_4 = 70
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 4
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 75
+pitch_envelope_rate_2 = 80
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 7
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 4
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 1
+lfo_pitch_amplitude_depth = 3
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = DOWN FUNK 
+
+
+[Sample 28]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 99
+operator_6_envelope_rate_2 = 70
+operator_6_envelope_rate_3 = 99
+operator_6_envelope_rate_4 = 75
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 42
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 39
+operator_6_keyboard_scaling_left_depth = 53
+operator_6_keyboard_scaling_right_depth = 20
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 0
+operator_6_oscilator_detune = 2
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 78
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 14
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 99
+operator_5_envelope_rate_2 = 87
+operator_5_envelope_rate_3 = 22
+operator_5_envelope_rate_4 = 75
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 92
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 15
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 4
+operator_5_oscilator_detune = 12
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 3
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 81
+operator_4_envelope_rate_2 = 87
+operator_4_envelope_rate_3 = 22
+operator_4_envelope_rate_4 = 75
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 92
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 0
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 14
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 0
+operator_4_oscilator_rate_scale = 4
+operator_4_oscilator_detune = 1
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 2
+operator_4_output_level = 82
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 3
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 78
+operator_3_envelope_rate_2 = 87
+operator_3_envelope_rate_3 = 22
+operator_3_envelope_rate_4 = 75
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 34
+operator_3_keyboard_scaling_left_depth = 9
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 3
+operator_3_oscilator_detune = 1
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 4
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 91
+operator_2_envelope_rate_2 = 25
+operator_2_envelope_rate_3 = 39
+operator_2_envelope_rate_4 = 60
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 86
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 65
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 2
+operator_2_oscilator_detune = 13
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 3
+operator_2_output_level = 97
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 3
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 74
+operator_1_envelope_rate_2 = 85
+operator_1_envelope_rate_3 = 27
+operator_1_envelope_rate_4 = 70
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 95
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 4
+operator_1_oscilator_detune = 13
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 3
+operator_1_output_level = 99
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 75
+pitch_envelope_rate_2 = 80
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 60
+pitch_envelope_level_1 = 50
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 7
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 4
+lfo_speed = 35
+lfo_delay = 0
+lfo_pitch_modulation_depth = 1
+lfo_pitch_amplitude_depth = 3
+lfo_sync = 0
+lfo_wave = 4
+lfo_pitch_modulation_sens = 3
+transpose = 12
+name = DYNOGUITAR
+
+
+[Sample 29]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 82
+operator_6_envelope_rate_2 = 53
+operator_6_envelope_rate_3 = 37
+operator_6_envelope_rate_4 = 48
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 81
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 5
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 6
+operator_6_oscilator_detune = 4
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 0
+operator_6_output_level = 89
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 91
+operator_5_envelope_rate_2 = 99
+operator_5_envelope_rate_3 = 98
+operator_5_envelope_rate_4 = 29
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 90
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 5
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 6
+operator_5_oscilator_detune = 11
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 0
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 90
+operator_4_envelope_rate_2 = 28
+operator_4_envelope_rate_3 = 17
+operator_4_envelope_rate_4 = 39
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 76
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 10
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 17
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 1
+operator_4_oscilator_rate_scale = 6
+operator_4_oscilator_detune = 4
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 5
+operator_4_output_level = 95
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 70
+operator_3_envelope_rate_2 = 64
+operator_3_envelope_rate_3 = 7
+operator_3_envelope_rate_4 = 33
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 5
+operator_3_oscilator_detune = 0
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 0
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 68
+operator_2_envelope_rate_3 = 28
+operator_2_envelope_rate_4 = 48
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 83
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 10
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 6
+operator_2_oscilator_detune = 0
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 2
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 4
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 94
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 16
+operator_1_envelope_rate_4 = 34
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 92
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 6
+operator_1_oscilator_detune = 10
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 5
+operator_1_output_level = 90
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 85
+pitch_envelope_rate_2 = 98
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 0
+pitch_envelope_level_1 = 49
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 1
+feedback_level = 3 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 30
+lfo_delay = 40
+lfo_pitch_modulation_depth = 17
+lfo_pitch_amplitude_depth = 15
+lfo_sync = 1
+lfo_wave = 4
+lfo_pitch_modulation_sens = 2
+transpose = 48
+name = KOTO 3    
+
+
+[Sample 30]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 82
+operator_6_envelope_rate_2 = 53
+operator_6_envelope_rate_3 = 37
+operator_6_envelope_rate_4 = 48
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 81
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 5
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 6
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 1
+operator_6_output_level = 89
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 1
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 91
+operator_5_envelope_rate_2 = 99
+operator_5_envelope_rate_3 = 98
+operator_5_envelope_rate_4 = 29
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 90
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 5
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 6
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 1
+operator_5_output_level = 99
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 1
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 90
+operator_4_envelope_rate_2 = 28
+operator_4_envelope_rate_3 = 17
+operator_4_envelope_rate_4 = 39
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 76
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 10
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 17
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 1
+operator_4_oscilator_rate_scale = 6
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 1
+operator_4_output_level = 95
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 0
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 94
+operator_3_envelope_rate_2 = 64
+operator_3_envelope_rate_3 = 7
+operator_3_envelope_rate_4 = 33
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 5
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 4
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 0
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 68
+operator_2_envelope_rate_3 = 28
+operator_2_envelope_rate_4 = 48
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 83
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 10
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 6
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 2
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 4
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 94
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 16
+operator_1_envelope_rate_4 = 34
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 92
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 6
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 4
+operator_1_output_level = 90
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 85
+pitch_envelope_rate_2 = 98
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 0
+pitch_envelope_level_1 = 49
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 1
+feedback_level = 3 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 30
+lfo_delay = 40
+lfo_pitch_modulation_depth = 17
+lfo_pitch_amplitude_depth = 15
+lfo_sync = 1
+lfo_wave = 4
+lfo_pitch_modulation_sens = 2
+transpose = 48
+name = KOTO 2    
+
+
+[Sample 31]
+
+
+; Operator 6
+
+operator_6_envelope_rate_1 = 82
+operator_6_envelope_rate_2 = 53
+operator_6_envelope_rate_3 = 37
+operator_6_envelope_rate_4 = 48
+operator_6_envelope_level_1 = 99
+operator_6_envelope_level_2 = 81
+operator_6_envelope_level_3 = 0
+operator_6_envelope_level_4 = 0
+operator_6_keyboard_scaling_breakpoint = 0
+operator_6_keyboard_scaling_left_depth = 0
+operator_6_keyboard_scaling_right_depth = 5
+operator_6_keyboard_scaling_right_curve = 0
+operator_6_keyboard_scaling_left_curve = 0
+operator_6_oscilator_rate_scale = 6
+operator_6_oscilator_detune = 7
+operator_6_amp_modulation_sens = 0
+operator_6_key_velocity_sensitivity = 1
+operator_6_output_level = 81
+operator_6_oscilator_mode = 0
+operator_6_freq_coarse_tuning = 3
+operator_6_freq_fine_tuning = 0
+
+; Operator 5
+
+operator_5_envelope_rate_1 = 91
+operator_5_envelope_rate_2 = 37
+operator_5_envelope_rate_3 = 29
+operator_5_envelope_rate_4 = 29
+operator_5_envelope_level_1 = 99
+operator_5_envelope_level_2 = 90
+operator_5_envelope_level_3 = 0
+operator_5_envelope_level_4 = 0
+operator_5_keyboard_scaling_breakpoint = 0
+operator_5_keyboard_scaling_left_depth = 0
+operator_5_keyboard_scaling_right_depth = 5
+operator_5_keyboard_scaling_right_curve = 0
+operator_5_keyboard_scaling_left_curve = 0
+operator_5_oscilator_rate_scale = 6
+operator_5_oscilator_detune = 7
+operator_5_amp_modulation_sens = 0
+operator_5_key_velocity_sensitivity = 1
+operator_5_output_level = 71
+operator_5_oscilator_mode = 0
+operator_5_freq_coarse_tuning = 4
+operator_5_freq_fine_tuning = 0
+
+; Operator 4
+
+operator_4_envelope_rate_1 = 90
+operator_4_envelope_rate_2 = 28
+operator_4_envelope_rate_3 = 17
+operator_4_envelope_rate_4 = 39
+operator_4_envelope_level_1 = 99
+operator_4_envelope_level_2 = 76
+operator_4_envelope_level_3 = 0
+operator_4_envelope_level_4 = 0
+operator_4_keyboard_scaling_breakpoint = 10
+operator_4_keyboard_scaling_left_depth = 0
+operator_4_keyboard_scaling_right_depth = 17
+operator_4_keyboard_scaling_right_curve = 0
+operator_4_keyboard_scaling_left_curve = 1
+operator_4_oscilator_rate_scale = 6
+operator_4_oscilator_detune = 7
+operator_4_amp_modulation_sens = 0
+operator_4_key_velocity_sensitivity = 1
+operator_4_output_level = 95
+operator_4_oscilator_mode = 0
+operator_4_freq_coarse_tuning = 1
+operator_4_freq_fine_tuning = 0
+
+; Operator 3
+
+operator_3_envelope_rate_1 = 94
+operator_3_envelope_rate_2 = 64
+operator_3_envelope_rate_3 = 7
+operator_3_envelope_rate_4 = 33
+operator_3_envelope_level_1 = 99
+operator_3_envelope_level_2 = 92
+operator_3_envelope_level_3 = 0
+operator_3_envelope_level_4 = 0
+operator_3_keyboard_scaling_breakpoint = 0
+operator_3_keyboard_scaling_left_depth = 0
+operator_3_keyboard_scaling_right_depth = 0
+operator_3_keyboard_scaling_right_curve = 0
+operator_3_keyboard_scaling_left_curve = 0
+operator_3_oscilator_rate_scale = 5
+operator_3_oscilator_detune = 7
+operator_3_amp_modulation_sens = 0
+operator_3_key_velocity_sensitivity = 4
+operator_3_output_level = 99
+operator_3_oscilator_mode = 0
+operator_3_freq_coarse_tuning = 1
+operator_3_freq_fine_tuning = 0
+
+; Operator 2
+
+operator_2_envelope_rate_1 = 99
+operator_2_envelope_rate_2 = 68
+operator_2_envelope_rate_3 = 28
+operator_2_envelope_rate_4 = 48
+operator_2_envelope_level_1 = 99
+operator_2_envelope_level_2 = 83
+operator_2_envelope_level_3 = 0
+operator_2_envelope_level_4 = 0
+operator_2_keyboard_scaling_breakpoint = 0
+operator_2_keyboard_scaling_left_depth = 0
+operator_2_keyboard_scaling_right_depth = 10
+operator_2_keyboard_scaling_right_curve = 0
+operator_2_keyboard_scaling_left_curve = 0
+operator_2_oscilator_rate_scale = 6
+operator_2_oscilator_detune = 7
+operator_2_amp_modulation_sens = 0
+operator_2_key_velocity_sensitivity = 2
+operator_2_output_level = 99
+operator_2_oscilator_mode = 0
+operator_2_freq_coarse_tuning = 4
+operator_2_freq_fine_tuning = 0
+
+; Operator 1
+
+operator_1_envelope_rate_1 = 94
+operator_1_envelope_rate_2 = 62
+operator_1_envelope_rate_3 = 16
+operator_1_envelope_rate_4 = 34
+operator_1_envelope_level_1 = 99
+operator_1_envelope_level_2 = 92
+operator_1_envelope_level_3 = 0
+operator_1_envelope_level_4 = 0
+operator_1_keyboard_scaling_breakpoint = 0
+operator_1_keyboard_scaling_left_depth = 0
+operator_1_keyboard_scaling_right_depth = 0
+operator_1_keyboard_scaling_right_curve = 0
+operator_1_keyboard_scaling_left_curve = 0
+operator_1_oscilator_rate_scale = 6
+operator_1_oscilator_detune = 7
+operator_1_amp_modulation_sens = 0
+operator_1_key_velocity_sensitivity = 4
+operator_1_output_level = 90
+operator_1_oscilator_mode = 0
+operator_1_freq_coarse_tuning = 1
+operator_1_freq_fine_tuning = 0
+
+; Common
+
+pitch_envelope_rate_1 = 85
+pitch_envelope_rate_2 = 98
+pitch_envelope_rate_3 = 75
+pitch_envelope_rate_4 = 0
+pitch_envelope_level_1 = 49
+pitch_envelope_level_2 = 50
+pitch_envelope_level_3 = 50
+pitch_envelope_level_4 = 50
+algorithm = 1
+feedback_level = 7 ; 0 = no feedback
+oscilator_key_sync = 1
+lfo_speed = 30
+lfo_delay = 40
+lfo_pitch_modulation_depth = 17
+lfo_pitch_amplitude_depth = 15
+lfo_sync = 1
+lfo_wave = 4
+lfo_pitch_modulation_sens = 2
+transpose = 36
+name = KOTO 1    

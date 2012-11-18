@@ -1,0 +1,11 @@
+#N canvas 576 244 478 328 10;
+#X obj 44 230 pix_emboss;
+#X obj 22 48 inlet;
+#X text 64 47 Gemchain;
+#X obj 42 80 arrayRouterIn \$1 \$2;
+#X obj 44 286 arrayRouterOut \$1 \$2;
+#X obj 61 260 outlet;
+#X connect 0 0 4 0;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;

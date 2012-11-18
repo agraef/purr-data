@@ -1,0 +1,31 @@
+#N canvas 413 202 771 528 10;
+#X obj 128 457 print;
+#X msg 122 217 2000 rocky is tougth;
+#X msg 167 244 500 eat fish;
+#X msg 40 216 1000 kurt;
+#X obj 213 297 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 236 295 Stop and clear;
+#X obj 227 459 bng 15 250 50 0 empty empty done 0 -6 0 8 -262144 -1
+-1;
+#X text 32 67 Please note that the message/list delay starts once the
+preceding message is output.;
+#X msg 345 363 seconds;
+#X msg 344 388 milliseconds;
+#X obj 128 404 list.q;
+#X text 32 17 Description: Receives a list and outputs it after a certain
+delay. It can accumulate many lists that are erased when are outputed.
+;
+#X text 35 124 input format : (delay time) (followed by message/list)
+;
+#X text 346 315 You can change the timing scale (the scale is applied
+to all the next and current messages/lists). The timing scale is in
+milliseconds by default.;
+#X connect 1 0 10 0;
+#X connect 2 0 10 0;
+#X connect 3 0 10 0;
+#X connect 4 0 10 1;
+#X connect 8 0 10 1;
+#X connect 9 0 10 1;
+#X connect 10 0 0 0;
+#X connect 10 1 6 0;

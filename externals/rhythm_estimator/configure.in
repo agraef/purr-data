@@ -1,0 +1,48 @@
+dnl Process this file with autoconf to produce a configure script.
+
+dnl Initialize autoconf and automake.  Version number here!
+AC_INIT(rhythm_quantum.c)
+AM_INIT_AUTOMAKE(rhythm_estimator, 0.1)
+AC_CANONICAL_HOST
+AM_MAINTAINER_MODE
+
+# I don't use libtool.  This is only a hack because automake wants
+# libtool, and only for installation...  Works for automake 1.4, BTW.
+LIBTOOL="\$(SHELL) \$(top_builddir)/libtoolkludge"
+AC_SUBST(LIBTOOL)
+
+dnl Look for Pd.
+AC_PREFIX_PROGRAM(pd)
+PDDIR=$prefix/lib/pd
+AC_ARG_WITH(pddir,
+[  --with-pddir=...        enter absolute path to Pd (PDPREFIX/lib/pd by default)],
+   [if expr x"$withval" : "x/" >/dev/null; then
+      PDDIR=$withval
+      AC_MSG_RESULT(Installing Pd files in $PDDIR.)
+   else
+      AC_MSG_ERROR(Illegal value given to --with-pddir.  Give an absolute path.)
+   fi]
+)
+AC_SUBST(PDDIR)
+
+dnl FIXME check that $PDDIR/src/m_pd.h exists!
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_LD
+AC_PROG_INSTALL
+
+dnl Checks for libraries.
+AC_CHECK_LIB(c, printf)
+AC_CHECK_LIB(m, sin)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(string.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+dnl Checks for library functions.
+
+dnl Output the makefile and version information file.
+AC_OUTPUT(Makefile version.h)

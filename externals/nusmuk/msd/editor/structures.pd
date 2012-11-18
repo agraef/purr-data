@@ -1,0 +1,20 @@
+#N canvas 752 10 450 300 10;
+#N canvas 470 500 664 321 mass 0;
+#X obj 62 182 drawnumber mid 0 -18 0 m;
+#X obj 61 136 filledpolygon mob mob 1 -5 0 -4 4 0 5 4 4 5 0 4 -4 0
+-5 -4 -4;
+#X obj 64 72 struct mass float x float y float mid float mob float
+M float sid;
+#X restore 132 125 pd mass;
+#N canvas 73 302 487 201 liaison 0;
+#X obj 23 73 drawpolygon sid 2 x1 y1 x2 y2;
+#X obj 19 25 struct liaison float x1 float y1 float x2 float y2 float
+mid1 float mid2 float lid float K float D float P float Lmin float
+Lmax float sid;
+#X restore 132 147 pd liaison;
+#N canvas 749 676 450 300 hole 0;
+#X obj 79 73 struct hole float x float y;
+#X text 93 162 Green cross;
+#X obj 79 97 drawpolygon 50 2 -5 -5 5 5;
+#X obj 79 122 drawpolygon 50 2 -5 5 5 -5;
+#X restore 132 170 pd hole;

@@ -1,0 +1,53 @@
+#N canvas 270 300 531 297 10;
+#X obj 117 149 tgl 12 0 \$0-onoff \$0-onoff o-x -16 5 1729 7 -26823
+-262131 -1 1 1;
+#X obj 226 149 bng 12 250 50 0 \$0-learn \$0-learn L 4 6 1729 7 -258699
+-241291 -262131;
+#X obj 329 149 cnv 15 20 12 \$0-show1 \$0-show1 10_ 2 6 1729 8 -262144
+-66577 0;
+#X obj 409 149 cnv 15 20 14 \$0-show2 \$0-show2 1_ 2 6 1729 8 -262144
+-66577 0;
+#N canvas 0 0 654 332 innerworkings 0;
+#X obj 69 132 unpack 0 0;
+#X obj 158 131 symbol \$0-show1;
+#X obj 273 129 symbol \$0-show2;
+#X obj 76 160 pack 0 s;
+#X obj 191 163 pack 0 s;
+#X msg 76 184 \; \$2 label \$1_;
+#X msg 192 186 \; \$2 label \$1_;
+#X obj 158 45 loadbang;
+#X obj 69 34 inlet;
+#X obj 69 59 route set;
+#X obj 276 85 f 1;
+#X obj 274 105 s \$0-onoff;
+#X connect 0 0 3 0;
+#X connect 0 1 4 0;
+#X connect 1 0 3 1;
+#X connect 2 0 4 1;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 7 0 1 0;
+#X connect 7 0 2 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 10 0 11 0;
+#X restore 385 55 pd innerworkings;
+#X obj 251 217 outlet;
+#X obj 337 214 outlet;
+#X msg 200 39 learn;
+#X obj 251 88 spigot;
+#X obj 288 61 r \$0-onoff;
+#X obj 251 38 ctlearn \$1 \$2;
+#X obj 337 17 inlet;
+#X obj 251 12 inlet;
+#X connect 1 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 5 0;
+#X connect 9 0 8 1;
+#X connect 10 0 8 0;
+#X connect 10 1 4 0;
+#X connect 10 1 6 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 0;
+#X coords 0 0 1 1 120 40 1;

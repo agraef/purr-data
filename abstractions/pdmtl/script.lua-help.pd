@@ -1,0 +1,45 @@
+#N canvas 691 102 589 665 10;
+#X msg 340 16 view 1;
+#X msg 326 -6 class hello;
+#X msg 316 -32 reload;
+#X msg 221 -65 yahoo 4 5 65 yo;
+#X obj 20 -68 gemhead;
+#X obj 21 -42 spigot;
+#X obj 73 -67 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 66 -37 gems.win 320 240;
+#X msg 408 365 view 1;
+#X msg 155 322 toto 1 2 3;
+#X msg 158 301 yahoo 4 5 65 yo;
+#X obj 110 390 script.lua @class lua_test @args foo 1 2 3 @luax 0;
+#X obj 70 36 script.lua @class luax_test @args foo 1 2 3;
+#X text 74 -141 Description: Wrapper for [luax] and pdlua classes.
+;
+#X text 73 -125 Pdlua allows one to program pd objects in lua scripts.
+;
+#X text 73 -90 Defaults to a file name ending with "pd_luax" (using
+[luax]);
+#X msg 112 453;
+#X text 41 256 One can also use the more efficient [filename]-style
+for loading lua classes without duplicating the classes in RAM. To
+reload a class in this style \, you must restart pd.;
+#X text 404 -9 <-- loads an other class;
+#X text 367 -30 <-- reloads the class;
+#X msg 71 91;
+#X obj 72 63 flow.prepend;
+#X obj 113 425 flow.prepend;
+#X connect 0 0 12 1;
+#X connect 1 0 12 1;
+#X connect 2 0 12 1;
+#X connect 3 0 12 0;
+#X connect 4 0 5 0;
+#X connect 5 0 12 0;
+#X connect 6 0 5 1;
+#X connect 6 0 7 0;
+#X connect 8 0 11 1;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 22 0;
+#X connect 12 0 21 0;
+#X connect 21 0 20 0;
+#X connect 22 0 16 0;

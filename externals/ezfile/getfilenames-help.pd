@@ -1,0 +1,78 @@
+#N canvas 201 48 531 544 10;
+#X msg 19 73 bang;
+#X msg 29 447 bang;
+#X obj 172 363 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 29 469 getfilenames;
+#X obj 85 341 getfilenames /*;
+#X text 234 259 relative paths work;
+#X text 237 210 all files with a dot in your home;
+#X text 309 280 nested wildcards work on UNIX;
+#X text 220 235 patterns default to path that Pd launched from;
+#X text 117 463 With no argument \, it defaults to the contents of
+the folder of the current patch \, i.e. "/path/to/current/patch/*".
+;
+#X text 54 73 get next file;
+#X msg 34 99 rewind;
+#X text 81 98 go back to the beginning of the file list;
+#X obj 51 128 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 3800 1;
+#X text 186 128 or choose by position;
+#X floatatom 62 149 5 0 0 0 - - -;
+#X msg 149 260 symbol ../*;
+#X msg 178 319 symbol /usr/*;
+#X msg 166 281 symbol /var/*/*.log;
+#X msg 144 235 symbol *.pd;
+#X msg 138 208 symbol ~/*.*;
+#X msg 124 185 symbol C:/*;
+#X msg 100 160 symbol %USERPROFILE%/*;
+#X text 8 5 Get a listing of files based on a wildcard pattern. On
+UNIX \, it follows glob rules \, on Windows/ReactOS it follows the
+cmd.exe rules.;
+#X text 211 186 drive letters work on Windows/ReactOS;
+#X text 263 161 Windows/ReactOS environment variables work;
+#X symbolatom 85 412 0 0 0 0 - - -;
+#X obj 170 386 print INFO;
+#X obj 95 385 print FILES;
+#X symbolatom 29 508 0 0 0 0 - - -;
+#X obj 98 488 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 0 22 450 300 INFO 0;
+#X text 41 17 You can also request the meta information that is output
+whenever a new glob pattern is parsed. Use the same symbol to request
+the information as is used when that information is output from the
+info outlet. For example \, if you want to know how many matches there
+are for the current pattern \, send the [matches( message.;
+#X obj 89 250 outlet;
+#X msg 88 140 info;
+#X msg 102 164 matches;
+#X msg 112 189 pattern;
+#X text 132 138 output all meta info from the second info outlet;
+#X text 154 163 output how many matches for the current pattern;
+#X text 166 187 output the currently active pattern;
+#X msg 122 218 position;
+#X text 176 216 output the current position number;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 8 0 1 0;
+#X restore 95 305 pd INFO;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 3 0 29 0;
+#X connect 3 2 30 0;
+#X connect 4 0 26 0;
+#X connect 4 0 28 0;
+#X connect 4 1 27 0;
+#X connect 4 2 2 0;
+#X connect 11 0 4 0;
+#X connect 13 0 4 0;
+#X connect 13 0 15 0;
+#X connect 16 0 4 1;
+#X connect 17 0 4 1;
+#X connect 18 0 4 1;
+#X connect 19 0 4 1;
+#X connect 20 0 4 1;
+#X connect 21 0 4 1;
+#X connect 22 0 4 1;
+#X connect 31 0 4 0;

@@ -1,0 +1,14 @@
+#N canvas 356 487 450 300 10;
+#X obj 90 138 mass 1 10 10 7;
+#X msg 39 42 !mass 2;
+#X msg 58 64 ?mass;
+#X obj 90 163 print;
+#X msg 119 39 !coord 10 10;
+#X msg 124 61 ?coord;
+#X msg 128 86 move 1 1;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;

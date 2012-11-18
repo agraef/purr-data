@@ -1,0 +1,173 @@
+#N canvas 319 0 1050 843 10;
+#N canvas 0 0 450 300 graph1 0;
+#X array pop1 100 float 1;
+#A 0 0.7173 0.4191 0.3337 0.5792 0.615 0.233 0.5085 0.2329 0.2695 0.4994
+0.4409 0.4816 0.2609 0.6508 0.6687 0.4443 0.6549 0.6947 0.2325 0.7254
+0.6687 0.4331 0.6746 0.3324 0.463 0.3028 0.3377 0.2766 0.3946 0.4865
+0.4048 0.3509 0.4751 0.4503 0.6866 0.6687 0.2866 0.3899 0.397 0.6973
+0.3522 0.5653 0.3529 0.3067 0.0877 0.296 0.5321 0.5064 0.408 0.2631
+0.6214 0.349 0.3362 0.2524 0.4922 0.1996 0.2766 0.5568 0.8308 0.6892
+0.2074 0.2048 0.6521 0.5131 0.5122 0.3661 0.1928 0.3226 0.2943 0.446
+0.6965 0.6668 0.5907 0.3637 0.6658 0.6942 0.191 0.4147 0.445 0.5536
+0.6667 0.2692 0.5879 0.5852 0.4976 0.7099 0.7257 0.6857 0.8582 0.419
+0.2759 0.624 0.6144 0.2375 0.2493 0.6749 0.6655 0.8358 0.7917 0.521
+;
+#X coords 0 1 99 0 200 140 1;
+#X restore 70 159 graph;
+#N canvas 0 0 450 300 graph1 0;
+#X array fit1 101 float 1;
+#A 0 0.0480164 0.0551593 0.0623023 0.0623023 0.0694452 0.0908741 0.0980171
+0.112303 0.119446 0.133732 0.140875 0.148018 0.155161 0.162304 0.183732
+0.183732 0.190875 0.198018 0.205161 0.212304 0.219447 0.233733 0.233733
+0.233733 0.240876 0.240876 0.255162 0.262305 0.283734 0.290877 0.305163
+0.319448 0.319448 0.333734 0.340877 0.34802 0.355163 0.376592 0.390878
+0.398021 0.405164 0.41945 0.426593 0.440879 0.455165 0.469451 0.476593
+0.483736 0.498022 0.505165 0.512308 0.526594 0.533737 0.54088 0.548023
+0.562309 0.569452 0.590881 0.598024 0.605167 0.626596 0.626596 0.633739
+0.648024 0.66231 0.66231 0.683739 0.683739 0.698025 0.705168 0.712311
+0.719454 0.740883 0.740883 0.740883 0.755169 0.755169 0.762312 0.762312
+0.776598 0.776598 0.783741 0.783741 0.798027 0.80517 0.812313 0.826599
+0.826599 0.833741 0.848027 0.848027 0.869456 0.869456 0.890885 0.898028
+0.905171 0.919457 0.9266 0.940886 0.948029 0.990887;
+#X coords 0 1 100 0 200 140 1;
+#X restore 427 223 graph;
+#X msg 600 772 getattributes;
+#X obj 958 754 print;
+#X msg 182 672 getmutrange;
+#X msg 301 647 mutprop 0.3;
+#X msg 300 672 getmutprop;
+#X msg 90 646 pairs 5;
+#X msg 89 671 getpairs;
+#X obj 883 727 GApop pop1;
+#X msg 598 647 cross;
+#X floatatom 883 769 5 0 0 0 - - -;
+#X floatatom 883 665 5 0 0 0 - - -;
+#X msg 680 285 getfitbuf;
+#X msg 61 380 getpopbuf;
+#X msg 600 746 help;
+#X msg 658 648 update;
+#X obj 898 699 r GAmessages;
+#X obj 679 311 s GAmessages;
+#X obj 18 13 cnv 15 130 30 empty empty GApop: 7 15 0 16 -217163 -262144
+0;
+#X obj 61 405 s GAmessages;
+#X obj 22 103 cnv 15 30 30 empty empty 1 10 14 0 14 -233017 -1 0;
+#X text 60 105 you have to give in a population:;
+#X text 102 132 - values between 0 and 1;
+#X text 183 326 <- set population;
+#X msg 61 326 set pop1;
+#X msg 61 353 popbuf pop1;
+#X text 184 352 <- set population;
+#X text 183 381 <- get population;
+#X text 425 129 - values between 0 and 1;
+#X text 386 107 give in a fitness function:;
+#N canvas 627 403 307 135 init 0;
+#X msg 46 57 \; pop1 ylabel 107 0 0.5 1 \; fit1 ylabel 108 0 0.5 1
+;
+#X obj 46 27 loadbang;
+#X connect 1 0 0 0;
+#X restore 18 48 pd init;
+#X text 429 369 0;
+#X text 621 371 1;
+#X text 515 370 0.5;
+#X msg 680 258 fitbuf fit1;
+#X text 425 147 - size must be 101 \, because in this array you can
+draw the fitness of the values from pop1 \, for example if a value
+in pop1 is 0.34 \, than the fitness of this value is fit1(0.34*100)
+= fit1(34);
+#X text 784 257 <- set fitfunction;
+#X text 783 285 <- get fitfunction;
+#X text 57 465 set the other parameters:;
+#X text 90 487 - pairs: specifies have much new parameters are generated
+at crossover \, for example if pairs=2 that means that 2 pairs of parents
+(the fittest) generate 4 children and replace the worst fit parameters
+;
+#X obj 89 716 s GAmessages;
+#X msg 183 647 mutrange 0.2;
+#X text 88 550 - mutprop: after crossover mutation occurs. mutprop
+is the probability \, with wich one parameter will mutate;
+#X text 593 488 - cross: with this message you can make the crossover
+and mutation;
+#X text 595 527 - number in inlet0: gives out the parameters: for example
+if you give in 0 \, GApop puts out the value of the fittest parameters
+\, if you give in 1 \, the value of the next fit parameter \, ...;
+#X obj 598 680 s GAmessages;
+#X text 758 665 give in numbers:;
+#X obj 600 799 s GAmessages;
+#X text 619 719 Help:;
+#X text 755 768 get parameters:;
+#N canvas 250 214 851 496 demo 0;
+#X obj 36 40 inlet;
+#X text 32 17 toggle;
+#X obj 36 66 select 1;
+#X obj 36 240 s GAmessages;
+#X msg 37 117 popbuf pop1;
+#X msg 38 140 fitbuf fit1;
+#X msg 35 212 mutprop 0.3;
+#X msg 38 163 pairs 5;
+#X msg 423 177 cross;
+#X msg 423 233 update;
+#X obj 423 207 t b;
+#X msg 394 120 1;
+#X obj 422 151 metro 1000;
+#X obj 394 97 delay 100;
+#X msg 449 124 0;
+#X obj 383 273 s GAmessages;
+#X msg 37 188 mutrange 0.2;
+#X msg 185 168 \; pop1 const 0.07 \;;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 0 5 0;
+#X connect 2 0 7 0;
+#X connect 2 0 16 0;
+#X connect 2 0 6 0;
+#X connect 2 0 13 0;
+#X connect 2 0 17 0;
+#X connect 2 1 14 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X connect 8 0 10 0;
+#X connect 8 0 15 0;
+#X connect 9 0 15 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 8 0;
+#X connect 13 0 11 0;
+#X connect 14 0 12 0;
+#X connect 16 0 3 0;
+#X restore 547 48 pd demo;
+#X obj 547 15 tgl 30 0 empty empty empty 0 -6 0 8 -260818 -1 -1 0 1
+;
+#X text 424 23 demonstration ->;
+#X text 154 29 Vers 0.1 \, Feb 2004;
+#X obj 348 99 cnv 15 30 30 empty empty 2 10 14 0 14 -233017 -1 0;
+#X obj 18 457 cnv 15 30 30 empty empty 3 10 14 0 14 -233017 -1 0;
+#X text 85 592 - mutrange: the parameters will be changed randomly
+in this range (+/- mutrange) if it mutates;
+#X obj 526 450 cnv 15 30 30 empty empty 4 10 14 0 14 -233017 -1 0;
+#X text 566 457 get the data:;
+#X text 152 15 Georg Holzmann <grh@mur.at>;
+#X text 595 591 - update: updates the graphic of the pop1 array (only
+to see the changes);
+#X connect 2 0 48 0;
+#X connect 4 0 41 0;
+#X connect 5 0 41 0;
+#X connect 6 0 41 0;
+#X connect 7 0 41 0;
+#X connect 8 0 41 0;
+#X connect 9 0 11 0;
+#X connect 9 1 3 0;
+#X connect 10 0 46 0;
+#X connect 12 0 9 0;
+#X connect 13 0 18 0;
+#X connect 14 0 20 0;
+#X connect 15 0 48 0;
+#X connect 16 0 46 0;
+#X connect 17 0 9 0;
+#X connect 25 0 20 0;
+#X connect 26 0 20 0;
+#X connect 35 0 18 0;
+#X connect 42 0 41 0;
+#X connect 52 0 51 0;

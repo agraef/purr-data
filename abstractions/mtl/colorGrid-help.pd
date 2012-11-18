@@ -1,0 +1,9 @@
+#N canvas 334 399 317 222 10;
+#X text 20 14 Description: A color selector.;
+#X obj 20 181 print float_RGB;
+#X obj 200 180 print pd_color;
+#X obj 20 86 mtl/colorGrid;
+#X text 18 65 Click and drag!;
+#X text 20 32 tags: ui;
+#X connect 3 0 1 0;
+#X connect 3 1 2 0;

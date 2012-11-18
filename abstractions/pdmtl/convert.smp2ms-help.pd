@@ -1,0 +1,9 @@
+#N canvas 303 224 605 329 10;
+#X text 171 111 samples to milliseconds conversion;
+#X floatatom 64 94 5 0 0 0 - - -;
+#X floatatom 78 200 5 0 0 0 - - -;
+#X obj 65 139 convert.smp2ms;
+#X text 40 20 Description: Converts a number of samples to it's duration
+in milliseconds.;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;

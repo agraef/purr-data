@@ -1,0 +1,276 @@
+// syncgrain~ - part of a flext tutorial by Frank Barknecht
+// 
+// This is a heavily commented port of the syncgrain~ example from the
+// PD-Externals-Howto to illustrate the usage of flext. You can get the
+// original code at http://iem.kug.ac.at/pd/externals-HOWTO/
+
+#include <flext.h>
+#include <errno.h>
+#include <unistd.h>
+#include <SndObj/AudioDefs.h>
+
+#if !defined(FLEXT_VERSION) || (FLEXT_VERSION < 202)
+#error You need at least flext version 0.2.2 
+#endif
+
+
+// A flext dsp external ("tilde object") inherits from the class flext_dsp 
+class syncgrain: 
+	public flext_dsp
+{
+	// Each external that is written in C++ needs to use #defines 
+	// from flbase.h
+	// 
+	// The define
+	// 
+	// FLEXT_HEADER(NEW_CLASS, PARENT_CLASS)
+	// 
+	// should be somewhere in your dsp file.
+	// A good place is here:
+	
+	FLEXT_HEADER(syncgrain, flext_dsp)
+
+	public:
+		syncgrain(int argc, t_atom *argv);
+		~syncgrain()
+		{
+			if (grain)     delete grain;
+			if (envtable)  delete envtable;
+			if (ftable)    delete ftable;
+			if (infile)    delete infile;
+		}
+
+		virtual void m_help()
+		{
+			post("");
+			post("_ _____syncgrain~ help___ _");
+			post("_ _____SyncGrain implements synchronous granular synthesis.\n\nThe source sound for the grains is obtained by reading\na function table containing the samples of the source\nwaveform. The grain generator has full control of frequency (grains/sec),\noverall amplitude, grain pitch (a sampling increment)\nand grain size (in millisecs). An extra parameter is the grain\npointer speed (or rate), which controls which position\nthe generator will start reading samples in the table\nfor each successive grain. It is measured in fractions\nof grain size, so a value of 1 will make\neach successive grain read from where the previous\ngrain should finish. A value of 0.5 will make the next\ngrain start at the midway position from the previous\ngrain start and finish, etc. A value of 0 will make\nthe generator read always from the start of the table.\nThis control gives extra flexibility for creating\ntimescale modifications in the resynthesis.\n");
+			post("_ ___help __ _");
+			post("1. inlet: \"set filename\" message to choose grain source. Wav and Riff files are accepted.");
+			post("2. inlet: Grain Frequency in grains per second");
+			post("3. inlet: Amplitude, default starting value is 1");
+			post("4. inlet: Pitch of the grains");
+			post("5. inlet: GrainSize in milli-seconds! Good values are between 10 and 50 msec.");
+			post("6. inlet: PointerRate. Normally 0-1, but have fun with greater or smaller values!");
+		}
+	
+	protected:
+		// here we declare the virtual DSP function
+		virtual void m_signal(int n, float *const *in, float *const *out);
+	private:
+		HammingTable *envtable;
+		SyncGrain *grain;
+		SndWave *infile;
+		SndTable *ftable;
+		
+		float fr;
+		float amp; 
+		float pitch;
+		float grsize; 
+		float prate; 
+		int olaps; 
+		
+		// size of grain source table 
+		int tablesize;
+		int sr;
+		int blocksize;
+
+		
+		FLEXT_CALLBACK_F(setFreq)
+		void setFreq(float f)
+		{
+			fr = f;
+			grain->SetFreq(f);
+		}
+		
+		FLEXT_CALLBACK_F(setAmp)
+		void setAmp(float f)
+		{
+			amp = f;
+			grain->SetAmp(f);
+		}
+		
+		FLEXT_CALLBACK_F(setPitch)
+		void setPitch(float f)
+		{
+			pitch = f * (float)(tablesize/sr);
+			grain->SetPitch(f);
+		}
+		
+		FLEXT_CALLBACK_F(setGrainSize)
+		void setGrainSize(float f)
+		{
+			grsize = f * 0.001;
+			//post("Grainsize now: %f", grsize);
+			grain->SetGrainSize(grsize);
+		}
+		
+		FLEXT_CALLBACK_F(setPointerRate)
+		void setPointerRate(float f)
+		{
+			prate = f;
+			grain->SetPointerRate(prate);
+		}
+		
+		FLEXT_CALLBACK_G(setFile)
+		int setFile(int argc, t_atom *argv);
+		
+		
+}; // end of class declaration for syncgrain
+
+// GIMME class:
+FLEXT_NEW_TILDE_G("syncgrain~", syncgrain)
+
+
+// _ ___
+
+syncgrain::syncgrain(int argc, t_atom *argv) :
+// init vars
+fr(0.f), amp(1.f), pitch(1.f), grsize (0.f), prate(1.f), olaps(100)  
+{
+	
+	post("_ ____syncgrain~ with flext");
+	if (this->grain) 
+	{
+		post ("Already there, shouldn't happen!!!");
+	}
+	
+	sr = (int) Samplerate();
+	blocksize = Blocksize(); 
+	
+	envtable  = new HammingTable();
+	ftable    = new SndTable();
+	
+	// post("argc: %i", argc);
+	if (argc == 1 && IsSymbol(argv[0]))
+	{
+		char* filename = (char *)GetString(argv[0]);
+		post("Trying to load file '%s'", filename);
+		infile    = new SndWave(filename, READ);
+		
+		// if Status not SFERROR
+		if (infile && (infile->GetStatus() != SFERROR)) 
+		{
+			// Status is WAITOPEN, have to wait a bit
+			while (infile->GetStatus() != SFOPEN) 
+			{ 
+				sleep(1); 
+				post("Waiting for SndFIO");
+			}
+			
+			ftable->SetInput(infile->GetDataFrames(), infile);
+			ftable->MakeTable();
+			tablesize = ftable->GetLen(); // for SndTables
+			grain     = new 
+			SyncGrain(
+				ftable, 
+				envtable, 
+				fr, 
+				amp, 
+				pitch, 
+				grsize, 
+				prate, 
+				0, 0, 0, 0, 
+				olaps, 
+				blocksize, 
+				sr
+				);
+			post("_ ____Using grain table '%s'", filename);
+		}
+	}
+	else
+	{
+		post("_ ___ Please load a soundfile with \"set filename.wav\"!!");
+		grain     = new 
+		SyncGrain(
+			ftable, // no ftable yet...
+			envtable, 
+			fr, 
+			amp, 
+			pitch, 
+			grsize, 
+			prate, 
+			0, 0, 0, 0, 
+			olaps, 
+			blocksize, 
+			sr
+			);
+
+	}
+
+	
+	
+	// The constructor of your class is responsible for
+	// setting up inlets and outlets and for registering
+	// inlet-methods:
+	
+	// AddInSignal();
+	AddInAnything();
+	AddInFloat(5);
+	AddOutSignal();         // 1 audio out [ == AddOutSignal(1) ]
+	
+	SetupInOut();           // set up inlets and outlets. 
+				// Must get called once!
+
+	// Now we need to bind the handler function to our
+	// inlets, 
+	FLEXT_ADDMETHOD_(0,"set",setFile);
+	FLEXT_ADDMETHOD(1,setFreq);
+	FLEXT_ADDMETHOD(2,setAmp);
+	FLEXT_ADDMETHOD(3,setPitch);
+	FLEXT_ADDMETHOD(4,setGrainSize);
+	FLEXT_ADDMETHOD(5,setPointerRate);
+	
+	
+	// We're done constructing:
+	// post("_ ____ ____ _");
+	
+} // end of constructor
+		
+
+int syncgrain::setFile(int argc, t_atom *argv)
+{
+	if (argc == 1 && IsSymbol(argv[0]))
+	{
+		if (infile) delete infile;
+		char* filename = (char *)GetString(argv[0]);
+		post("Trying to load file '%s'", filename);
+		infile    = new SndWave(filename, READ);
+		
+		// if Status not SFERROR
+		if (infile && (infile->GetStatus() != SFERROR)) 
+		{
+			// Status is WAITOPEN, have to wait a bit
+			while (infile->GetStatus() != SFOPEN) 
+			{ 
+				sleep(1); 
+				post("Waiting for SndFIO");
+			}
+			
+			ftable->SetInput(infile->GetDataFrames(), infile);
+			ftable->MakeTable();
+			tablesize = ftable->GetLen(); // for SndTables
+			
+			grain->SetWaveTable(ftable);
+			
+			post("_ ____Using grain table: '%s', size %d", filename, tablesize);
+		}
+
+	}
+	return infile->GetStatus();
+}
+
+
+void syncgrain::m_signal(int n, float *const *in, float *const *out)
+{
+	float *outs          = out[0];
+	
+	grain->DoProcess();
+	
+	// We are now ready for the main signal loop
+	int i = 0;
+	while (n--)
+	{
+		*outs++  = grain->Output(i++);
+	}
+}  // end m_signal

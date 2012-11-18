@@ -1,0 +1,36 @@
+#N canvas 674 142 600 448 10;
+#X floatatom 85 92 5 0 127 0 - - -;
+#X text 86 74 data;
+#X msg 92 117 0;
+#X msg 120 117 127;
+#X obj 224 205 time_roll;
+#X floatatom 86 336 5 0 0 0 - - -;
+#X floatatom 165 338 5 0 0 0 - - -;
+#X msg 153 117 64;
+#X text 480 318 la Kitchen;
+#X text 480 335 Charles Verron;
+#X text 479 302 2004_03_22;
+#X text 480 318 la Kitchen;
+#X text 480 335 Charles Verron;
+#X text 479 302 2004_03_22;
+#X text 480 318 la Kitchen;
+#X text 480 335 Charles Verron;
+#X text 479 302 2004_03_22;
+#X text 51 32 catch_extremum2 return the last locals minimum and maximum
+values;
+#X obj 86 171 f;
+#X obj 96 314 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 177 313 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 86 290 catch_extremum;
+#X connect 0 0 18 0;
+#X connect 2 0 18 0;
+#X connect 3 0 18 0;
+#X connect 7 0 18 0;
+#X connect 18 0 4 0;
+#X connect 18 0 21 0;
+#X connect 21 0 5 0;
+#X connect 21 0 19 0;
+#X connect 21 1 6 0;
+#X connect 21 1 20 0;

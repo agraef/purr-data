@@ -1,0 +1,34 @@
+#N canvas 0 48 424 319 10;
+#X text 25 266 Real Time Composition Library vs. 4.1 for xMAX;
+#X text 25 281 © 1993-2004 by Karlheinz Essl <www.essl.at>;
+#X obj 250 177 BPM2ms;
+#X text 25 177 conversion;
+#X obj 200 177 ED2EP;
+#X obj 141 177 ms2sec;
+#X obj 310 142 countdown;
+#X obj 213 142 make-ED-scale;
+#X obj 213 106 rit-acc;
+#X text 25 107 transitions;
+#X text 25 142 misc;
+#X text 25 212 duration;
+#X text 25 32 READ FIRST >>>;
+#N canvas 0 48 584 242 Nomenclature 0;
+#X text 20 24 - ED (entry delays): relative time between two entry
+points;
+#X text 19 45 - EP (entry points): absolute time when an event takes
+place;
+#X text 19 66 - duration: absolute duration of an event at a given
+entry point;
+#X text 19 108 - duration factor: relative duration between two entries
+determined by a factor. If the factor is 1 \, the event last until
+the next one starts ("legato"). If it is < 1 \, it will end before
+the next events starts ("portato" \, "staccato"). If it is > 1 \, it
+will end after the next events starts \, resulting in an overlapping
+("pedal effect").;
+#X restore 141 30 pd Nomenclature;
+#X obj 141 142 repeat-ED;
+#X obj 141 212 dur-from-ED;
+#X obj 141 106 ED-trans;
+#X text 24 79 generators;
+#X text 23 66 infinite rhythm;
+#X obj 141 67 Rhythm-Generators;

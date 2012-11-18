@@ -1,0 +1,8 @@
+#N canvas 483 451 683 489 10;
+#X obj 65 41 inlet;
+#X obj 65 427 outlet;
+#X obj 65 241 mergefilename;
+#X obj 65 357 fromsymbol;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;

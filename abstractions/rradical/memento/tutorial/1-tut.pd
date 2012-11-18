@@ -1,0 +1,22 @@
+#N canvas 328 363 557 382 10;
+#X obj 9 7 cnv 15 100 20 empty empty The_Caretaker 20 12 1 14 -262144
+-66577 0;
+#X obj 378 34 s part;
+#X msg 378 10 2;
+#X text 406 8 click here \, to go on;
+#X text 44 83 The most comfortable way to use the caretaker object
+is the careGUI GUI patch:;
+#X obj 46 122 careGUI;
+#X text 43 208 It *needs* to know a filename \, before it's functional.
+You either can provide this as an argument \, or click on FILE to select
+a state file.;
+#X obj 434 284 bng 15 250 50 0 empty empty print 0 -6 0 8 -261689 -1
+-1;
+#X text 41 305 Restore also sends a;
+#X msg 191 305 bang;
+#X text 230 306 to the careGUI outlet.;
+#X text 39 332 You can use the bang \, to do housekeeping after a state
+has been loaded from disk.;
+#X text 38 257 Save and Restore do as they say: They move the memory
+data to and from disk. To see the menory data \, you can press;
+#X connect 2 0 1 0;

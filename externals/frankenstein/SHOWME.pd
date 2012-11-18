@@ -1,0 +1,30 @@
+#N canvas 63 95 785 518 12;
+#X obj 513 100 tabwrite src;
+#X obj 644 87 tabwrite dest;
+#N canvas 0 0 450 300 graph25 0;
+#X array src 16 float 1;
+#A 0 53 52 55 53 52 50 48 47 48 55 57 59 60 55 52 48;
+#X array dest 16 float 1;
+#A 0 53 50 52 38 64 46 43 41 48 64 67 67 36 55 53 57;
+#X coords 0 127 15 0 400 250 1;
+#X restore 75 32 graph;
+#X obj 572 38 tgl 15 0 empty empty START 0 -6 0 8 -258699 -1 -1 1 1
+;
+#X floatatom 550 138 5 0 0 0 - - -;
+#X floatatom 596 138 5 0 0 0 - - -;
+#X floatatom 648 137 5 0 0 0 - - -;
+#X obj 591 279 tgl 15 0 toggleSRC empty src 0 -6 0 8 -262144 -1 -1
+0 1;
+#X obj 627 279 tgl 15 0 toggleOUT empty out 0 -6 0 8 -262144 -1 -1
+1 1;
+#X obj 572 56 chord_melo_test3;
+#X floatatom 613 213 5 0 0 0 current_melo - -;
+#X connect 3 0 9 0;
+#X connect 9 0 4 0;
+#X connect 9 0 0 0;
+#X connect 9 1 1 0;
+#X connect 9 1 5 0;
+#X connect 9 2 10 0;
+#X connect 9 3 0 1;
+#X connect 9 3 1 1;
+#X connect 9 3 6 0;

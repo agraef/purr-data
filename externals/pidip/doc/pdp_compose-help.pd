@@ -1,0 +1,142 @@
+#N canvas 226 49 712 664 10;
+#X obj 105 562 pdp_glx;
+#X obj 100 167 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 54 201 loop \$1;
+#X obj 55 179 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1 1
+;
+#X msg 39 146 open \$1;
+#X obj 38 122 openpanel;
+#X obj 23 105 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 144 stop;
+#X obj 121 168 metro 70;
+#X obj 116 200 pdp_yqt;
+#X floatatom 244 273 5 0 0 0 - - -;
+#X floatatom 253 294 5 0 0 0 - - -;
+#X floatatom 270 315 5 0 0 0 - - -;
+#X floatatom 288 339 5 0 0 0 - - -;
+#X text 269 614 written by Yves Degoyon ( ydegoyon@free.fr );
+#X text 290 273 R component;
+#X text 298 293 G component;
+#X text 315 314 B component;
+#X floatatom 299 360 5 0 0 0 - - -;
+#X text 336 338 X coordinate of cursor ( pick );
+#X text 347 359 Y coordinate of cursor ( pick );
+#X msg 34 489 pick;
+#X text 11 422 Pick up the color;
+#X floatatom 309 380 5 0 0 0 - - -;
+#X text 356 380 Tolerance ( default = 50 );
+#X text 269 583 pdp_compose : video compositor;
+#X text 269 599 change all pixels of a given color by a second video
+source;
+#X obj 261 160 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 264 195 loop \$1;
+#X obj 325 196 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 200 139 open \$1;
+#X obj 199 115 openpanel;
+#X obj 184 98 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 284 137 stop;
+#X obj 282 161 metro 70;
+#X obj 185 194 pdp_yqt;
+#X text 39 76 1st video source;
+#X text 182 74 2nd video source;
+#X obj 589 455 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 589 507 pdp_control;
+#X msg 589 480 thread \$1;
+#X floatatom 589 568 5 0 0 0 - - -;
+#X obj 589 539 route pdp_drop;
+#X obj 97 305 pdp_form ---------;
+#X msg 116 246 ellipse 69 124 59 78;
+#X floatatom 130 274 5 0 0 0 - - -;
+#X floatatom 176 274 5 0 0 0 - - -;
+#X msg 317 410 luminosity \$1;
+#X obj 419 411 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 258 544 pdp_v4l;
+#X obj 258 523 metro 70;
+#X obj 362 524 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 322 523 stop;
+#X obj 165 466 pdp_compose ----;
+#X obj 394 132 pdp_v4l;
+#X obj 403 101 metro 70;
+#X obj 448 67 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 405 68 stop;
+#X msg 490 99 open /dev/video;
+#X text 471 67 Live;
+#X floatatom 514 66 5 0 0 0 - - -;
+#X obj 401 437 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 325 436 cursor \$1;
+#X msg 13 393 setcur \$1 \$2;
+#X text 10 372 Set the cursor;
+#X text 441 409 Use luminosity;
+#X text 424 435 Show the cursor;
+#X msg 155 561 cursor \$1;
+#X obj 233 562 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 16 517 route press;
+#X obj 33 464 del 100;
+#X msg 33 442 bang;
+#X connect 0 0 69 0;
+#X connect 1 0 8 0;
+#X connect 2 0 9 0;
+#X connect 3 0 2 0;
+#X connect 4 0 9 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 43 0;
+#X connect 10 0 53 2;
+#X connect 11 0 53 3;
+#X connect 12 0 53 4;
+#X connect 13 0 53 5;
+#X connect 18 0 53 6;
+#X connect 21 0 53 0;
+#X connect 23 0 53 7;
+#X connect 27 0 34 0;
+#X connect 28 0 35 0;
+#X connect 29 0 28 0;
+#X connect 30 0 35 0;
+#X connect 31 0 30 0;
+#X connect 32 0 31 0;
+#X connect 33 0 34 0;
+#X connect 34 0 35 0;
+#X connect 35 0 53 1;
+#X connect 38 0 40 0;
+#X connect 39 0 42 0;
+#X connect 40 0 39 0;
+#X connect 42 0 41 0;
+#X connect 43 0 53 0;
+#X connect 44 0 43 0;
+#X connect 45 0 43 2;
+#X connect 46 0 43 3;
+#X connect 47 0 53 0;
+#X connect 48 0 47 0;
+#X connect 49 0 53 1;
+#X connect 50 0 49 0;
+#X connect 51 0 50 0;
+#X connect 52 0 50 0;
+#X connect 53 0 0 0;
+#X connect 54 0 43 0;
+#X connect 55 0 54 0;
+#X connect 56 0 55 0;
+#X connect 57 0 55 0;
+#X connect 58 0 54 0;
+#X connect 60 0 55 1;
+#X connect 61 0 62 0;
+#X connect 62 0 53 0;
+#X connect 63 0 53 0;
+#X connect 63 0 71 0;
+#X connect 67 0 0 0;
+#X connect 68 0 67 0;
+#X connect 69 0 63 0;
+#X connect 70 0 21 0;
+#X connect 71 0 70 0;

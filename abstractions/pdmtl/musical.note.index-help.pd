@@ -1,0 +1,77 @@
+#N canvas 510 164 808 609 10;
+#X obj 110 399 mtof;
+#X obj 85 496 mix.out_~;
+#X floatatom 144 384 5 0 0 0 - - -;
+#X obj 109 72 metro 250;
+#X obj 109 93 f 0;
+#X obj 177 96 + 1;
+#X floatatom 127 141 5 0 0 0 - - -;
+#X floatatom 309 321 5 0 0 0 - - -;
+#X msg 248 -5 0 2 4 5 7 9 11;
+#X text 359 -4 major;
+#X msg 270 22 0 1 4 5 7 8 11;
+#X msg 282 45 0 2 4 6 7 9 10;
+#X msg 305 78 0 2 3 5 7 8 11;
+#X msg 329 129 0 2 4 6 8 10;
+#X msg 348 153 0 2 3 5 6 8 9 11;
+#X obj 109 43 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X msg 356 233 0 0.5 1 1.5 2 2.5 3 3.5 4;
+#X text 385 23 middle-east-like minor;
+#X text 396 47 lydian-dominant (jazzy);
+#X text 424 79 harmonic minor;
+#X msg 317 107 0 2 3 4 5 6 7 9 10 11;
+#X text 467 107 chromatic blues;
+#X text 437 133 whole-tones scale;
+#X text 471 154 diminished scale;
+#X text 377 276 don't know why semitones dont work yet;
+#X obj 231 414 cnv 15 400 100 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X msg 356 179 0 2 4 7 9;
+#X text 438 182 pentatonic;
+#X text 456 204 pentatonic blues;
+#X msg 352 205 0 2 3 4 7 8 9;
+#X text 351 323 key (0-11);
+#X text 213 376 params: note offset to play \, scale list (any length)
+\, key (0-11);
+#X msg 422 256 0 0.33 0.66 1 1.33 1.66 2;
+#X floatatom 30 452 5 0 0 0 - - -;
+#X obj 14 12 inlet;
+#X obj 109 118 expr $f1 % 14 + 28;
+#X obj 110 423 osc~;
+#X text 235 496 Needs ZEXY;
+#X text 237 477 MUZAQ (fomer lib) is GPL \, copyleft Alexandre Quessy
+(c) 2006;
+#X msg 659 64 \; pd dsp 1;
+#X obj 118 363 musical.note.index;
+#X text 235 411 Of course \, if you use several [musical.note.index]
+objects at a time with the same scale and key \, you will be able to
+compose a realtime symphony. It will always be continuous if you use
+scales with the same number of notes. Also \, it will prevent the notes
+from being too high.;
+#X connect 0 0 33 0;
+#X connect 0 0 36 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 0 35 0;
+#X connect 5 0 4 1;
+#X connect 7 0 40 2;
+#X connect 8 0 40 1;
+#X connect 10 0 40 1;
+#X connect 11 0 40 1;
+#X connect 12 0 40 1;
+#X connect 13 0 40 1;
+#X connect 14 0 40 1;
+#X connect 15 0 3 0;
+#X connect 16 0 40 1;
+#X connect 20 0 40 1;
+#X connect 26 0 40 1;
+#X connect 29 0 40 1;
+#X connect 32 0 40 1;
+#X connect 34 0 40 1;
+#X connect 35 0 6 0;
+#X connect 35 0 40 0;
+#X connect 36 0 1 0;
+#X connect 36 0 1 1;
+#X connect 40 0 2 0;
+#X connect 40 0 0 0;

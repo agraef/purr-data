@@ -1,0 +1,52 @@
+#N canvas 1339 39 954 880 10;
+#X obj 230 45 gems.win;
+#X obj 229 21 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj -115 209 gemhead;
+#X obj -40 439 line;
+#X msg -40 415 0 \, 180 1000;
+#X obj -115 498 rotateXYZ;
+#X obj -40 310 t b l;
+#X obj -13 338 print WHITE_clicked;
+#X text -130 136 - The white moving circle -;
+#X text 401 260 Arguments:;
+#X obj -90 353 unpack f f;
+#X floatatom -90 382 5 0 0 0 - - -;
+#X floatatom -33 383 5 0 0 0 - - -;
+#X text -158 55 Comments: Must be used with gems.win. Might not work
+properly in OS X.;
+#X text 395 63 Inlets:;
+#X text 402 165 Outlets:;
+#X text 421 177 1:(gemlist);
+#X text 421 189 2:(float float) x_position y_position;
+#X text 421 216 4:(float float) outputs x_position and y_position when
+clicked;
+#X text 421 203 3:(float) outputs 1 if dragged \, 0 when released;
+#X text 425 119 2:(bang) forces the output of the current position
+;
+#X text 424 105 2:(draggable 0/1) set's the draggable state off/on
+;
+#X text 424 91 2:(float float) x_position y_position;
+#X text 425 78 1:(gemlist);
+#X text -157 35 Description: An interactive square zone.;
+#X obj -46 204 loadbang;
+#X msg -49 226 draggable 1;
+#X obj -115 527 rectangle;
+#X text 425 133 3:(float float) x_size y_size;
+#X msg 1 248 2 1;
+#X text 419 281 1:(float float) x_size y_size;
+#X obj -115 281 gems.i.rect 1 0.3;
+#X connect 1 0 0 0;
+#X connect 2 0 31 0;
+#X connect 4 0 3 0;
+#X connect 5 0 27 0;
+#X connect 6 0 4 0;
+#X connect 6 1 7 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 25 0 26 0;
+#X connect 26 0 31 1;
+#X connect 29 0 31 2;
+#X connect 31 0 5 0;
+#X connect 31 1 10 0;
+#X connect 31 3 6 0;

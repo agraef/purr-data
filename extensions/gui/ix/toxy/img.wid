@@ -1,0 +1,41 @@
+#console show
+package require Img
+package require tkdnd
+namespace eval ::ix {
+    variable _
+    proc drop_pics {name files x y} {
+	set c 0
+	for {set n 0} {$n < [llength $files]} {incr n} {
+	    if {[regexp {.*/(.+)\.[a-zA-Z0-9]+$} [lindex $files $n] file obj] == 1} {
+		pd [concat $name obj $x [expr $y + ($c * 32)] widget img [pdtk_enquote [string tolower "img_${obj}"]] #src [pdtk_enquote [regsub -- "^file:" [lindex $files $n] ""]] \;]
+		incr c
+	    }
+	} 
+    }
+    proc pic {c p t src mouseover} {
+	variable _
+	image create photo $t
+	$p configure -image $t
+	if {$src ne "none" && [file exists $src]} {
+	    $t configure -file $src
+	    set cb "pd \"$t _cb [lindex [regexp -inline {.*/(.+)\.[a-zA-Z0-9]+$} $src] 1] \;\""
+	    bind $p <Enter> "$t configure -gamma 2"
+	    if {$mouseover != 0} {
+		bind $p <Enter> +$cb
+	    }
+	    bind $p <Leave> "$t configure -gamma 1"
+	    bind $p <ButtonPress-1> "+$t configure -gamma 0.5; $cb"
+	    bind $p <ButtonRelease-> "+$t configure -gamma 1"
+	} else {
+	    $t configure -format gif -data {R0lGODdhDgAQAKIAAICAgP///8DAwAAAAP8AAP///////////ywAAAAADgAQAAADWQi63Bi6HIIDGLocggMYuhyCAxi6HIIDEUFIEUSBIQMRGEFEhKEyoBoQUUQEykBEYBARBUbIQGAEUQQSRcggYOhyCA5g6HIIDmDocggOYOhyCA6g6LLi6HInADs=}
+	    dnd bindtarget $c.c text/uri-list <Drop> "::ix::drop_pics $c %D %x %y"
+	}
+	set _($t:loc) 0
+    }
+}
+#> img label
+#. -borderwidth 0
+#. #src none #mouseover 1
+#. @bang puts "bang"
+::ix::pic .^ .- .| {.#src} .#mouseover
+puts "pic .- .|"

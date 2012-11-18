@@ -1,0 +1,42 @@
+#N canvas 415 228 644 464 10;
+#X obj 541 21 pddp/dsp;
+#X obj 11 8 cnv 15 400 40 empty empty ramping_up_and_down 20 12 0 24
+-228992 -66577 0;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-line 44100 float 0;
+#X coords 0 1 44100 -1 200 140 1;
+#X restore 401 170 graph;
+#X text 403 136 this array shows one second:;
+#X obj 194 231 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 191 369 output~;
+#X obj 226 253 line~;
+#X obj 84 323 tabwrite~ \$0-line;
+#X obj 84 207 trigger bang anything;
+#X obj 226 323 *~;
+#X obj 242 302 osc~ 250;
+#X msg 84 110 1 1000;
+#X msg 103 133 0 1000;
+#X msg 122 156 1 100;
+#X msg 141 179 0 100;
+#X text 159 109 ramp to 1 in 1 second;
+#X text 177 133 ramp to 0 in 1 second;
+#X text 197 155 ramp to 1 in 100 ms;
+#X text 215 179 ramp to 0 in 100 ms;
+#X text 13 54 The [line] and [line~] objects generate ramps. Ramps
+are useful when you want to have a smooth transition from one thing
+to another.;
+#X text 334 378 More on ramping:;
+#X obj 330 425 pddp/open ../../doc/3.audio.examples/A04.line2;
+#X obj 330 404 pddp/open ../../doc/3.audio.examples/A03.line;
+#X connect 6 0 7 0;
+#X connect 6 0 9 0;
+#X connect 8 0 7 0;
+#X connect 8 1 6 0;
+#X connect 9 0 5 1;
+#X connect 9 0 5 0;
+#X connect 10 0 9 1;
+#X connect 11 0 8 0;
+#X connect 12 0 8 0;
+#X connect 13 0 8 0;
+#X connect 14 0 8 0;

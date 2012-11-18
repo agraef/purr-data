@@ -1,0 +1,40 @@
+#N canvas 550 92 572 453 10;
+#X obj 30 274 mix.out_~;
+#X obj 143 273 anal.spectrum_~;
+#X obj 106 154 mtof~;
+#X obj 30 190 fx.filter.peak.sig~;
+#X obj 184 145 sig~ 30;
+#X floatatom 184 120 5 0 0 0 - - -;
+#X obj 108 87 osc~ 2;
+#X obj 108 110 +~ 4;
+#X obj 107 132 *~ 24;
+#X text 423 2 Version: 2007-09-15;
+#X text 423 17 Author: Roman Haefeli;
+#X text 26 3 Description: Peakfilter with signal frequency and Q control
+;
+#X text 183 101 Q;
+#X text 107 69 peakfreq;
+#X obj 266 44 cnv 15 200 100 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 271 49 SYNOPSIS;
+#X text 270 73 inlet0: signal (input);
+#X text 270 90 inlet1: signal (frequency);
+#X text 270 106 inlet2: signal (Q);
+#X text 270 121 outlet0: signal (output);
+#X obj 29 27 sig~ 123;
+#X obj 29 49 synth.osc.saw.bl~;
+#X obj 31 236 *~ 0.1;
+#X text 142 236 Comment: modulate q with a pad-synth as input to get
+nice sounds;
+#X connect 2 0 3 1;
+#X connect 3 0 1 0;
+#X connect 3 0 22 0;
+#X connect 4 0 3 2;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 2 0;
+#X connect 20 0 21 0;
+#X connect 21 0 3 0;
+#X connect 22 0 0 0;
+#X connect 22 0 0 1;

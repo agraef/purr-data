@@ -1,0 +1,17 @@
+#N canvas 817 442 450 300 10;
+#X obj 52 249 outlet;
+#X obj 103 117 loadbang;
+#X obj 52 165 list-find;
+#X obj 52 90 list split 1;
+#X obj 52 220 list append;
+#X obj 141 52 inlet;
+#X obj 103 138 dollarg;
+#X obj 52 53 inlet;
+#X connect 1 0 6 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 3 1 4 1;
+#X connect 4 0 0 0;
+#X connect 5 0 2 1;
+#X connect 6 0 2 1;
+#X connect 7 0 3 0;

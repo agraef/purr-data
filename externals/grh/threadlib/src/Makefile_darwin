@@ -1,0 +1,66 @@
+# -------------------------------------------------
+# adjust the next 2 pathes to your system:
+
+# this should point to the directory which contains
+# m_pd.h and g_canvas.h
+PDSCR=/home/holzi/pd-0.39-1test1/src
+
+# this is the pd directory, here the files will be
+# installed
+PDPATH=/usr/lib/pd
+
+# --------------------------------------------------
+
+TARGET=threadlib.pd_darwin
+
+OBJ=fifo.o callbacks.o threadlib.o \
+    sleep.o detach.o join.o
+
+CC = gcc
+LD = gcc
+INCLUDE=-I$(PDSCR) -I.
+LIB=-lc -lm
+CC_FLAGS = -DPD -c \
+           -Wall -Wno-parentheses -Wno-switch -O3 \
+           -funroll-loops -fomit-frame-pointer -pthread
+LD_FLAGS = -bundle -bundle_loader $(PDPATH)/bin/pd \
+           --export-dynamic -o
+
+# --------------------------------------------------
+
+all: pd_darwin
+
+pd_darwin: $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(LD) $(LD_FLAGS) $(TARGET) $(OBJ) $(LIB)
+	#strip --strip-unneeded $(TARGET)
+	chmod 755 $(TARGET)
+
+threadlib.o: threadlib.h threadlib.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) threadlib.c
+
+fifo.o: threadlib.o fifo.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) fifo.c
+
+callbacks.o: fifo.o threadlib.o callbacks.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) callbacks.c
+
+sleep.o: threadlib.o sleep.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) sleep.c
+
+detach.o: threadlib.o fifo.o detach.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) detach.c
+
+join.o: threadlib.o callbacks.o join.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) join.c
+
+# --------------------------------------------------
+
+clean:
+	rm -f $(OBJ) $(TARGET)
+
+install:
+	@test -d $(PDPATH)/extra || mkdir -p $(PDPATH)/extra
+	install $(TARGET) $(PDPATH)/extra
+	install ../doc/*.pd $(PDPATH)/doc/5.reference

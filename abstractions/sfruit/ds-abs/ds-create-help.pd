@@ -1,0 +1,25 @@
+#N canvas 727 43 450 300 10;
+#N canvas 207 710 450 300 \$0-thing 0;
+#X obj 63 114 struct \$0-thing float x float y symbol name;
+#X obj 62 182 drawpolygon -x 515 5 0 0 50 50;
+#X obj 61 224 drawsymbol name 10 0 151 this=;
+#X restore 316 179 pd \$0-thing;
+#X obj 92 170 ds-create pd-\$0-data \$0-thing;
+#X obj 92 263 set -symbol \$0-thing name;
+#X obj 92 209 t b a;
+#N canvas 0 22 450 300 \$0-data 1;
+#X restore 316 156 pd \$0-data;
+#X msg 92 123 25 80;
+#X text 51 23 [ds-create] creates an instance of a template with default
+x and y float parameters (in the inlet);
+#X obj 62 97 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 93 282 use [set] to set any other parameters;
+#X msg 92 235 symbol a-great-thing;
+#X text 79 97 or just bang for [0 0( (or last coords);
+#X connect 1 0 3 0;
+#X connect 3 0 9 0;
+#X connect 3 1 2 1;
+#X connect 5 0 1 0;
+#X connect 7 0 1 0;
+#X connect 9 0 2 0;

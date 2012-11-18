@@ -1,0 +1,18 @@
+#N canvas 63 54 481 300 10;
+#X obj 12 62 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 12 85 t b b;
+#X obj 12 159 value \$0-count;
+#X floatatom 12 183 5 0 0 0 - - -;
+#X obj 47 108 k_cext 1 0 \; float f = VALUE(" \$0-count") \; SETVALUE("
+\$0-count" \, f+1) \;;
+#X text 70 86 yet another counter;
+#X text 8 17 VALUE returns the content of a value object \, SETVALUE
+sets the content of a value object:;
+#X text 4 218 leading spaces in the receive name will be dropped ...
+this makes $N arguments usable (as long as no receive names with leading
+spaces will be allowed);
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 4 0;
+#X connect 2 0 3 0;

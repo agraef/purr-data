@@ -1,0 +1,23 @@
+#N canvas 649 133 445 646 10;
+#X msg 25 68 4 23 5 6;
+#X msg 229 114 5;
+#X msg 82 98 78 32 67 5 987 32 43;
+#X obj 70 230 print A;
+#X obj 176 230 print B;
+#X text 16 16 Description: splits a list on the first instance of a
+float.;
+#X msg 26 321 4 23 5 6;
+#X msg 91 322 78 32 67 5 987 32 43;
+#X obj 26 442 print A;
+#X obj 113 442 print B;
+#X obj 26 387 list.split.on 5;
+#X obj 86 143 list.split.on;
+#X connect 0 0 11 0;
+#X connect 1 0 11 1;
+#X connect 2 0 11 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 10 0 8 0;
+#X connect 10 1 9 0;
+#X connect 11 0 3 0;
+#X connect 11 1 4 0;

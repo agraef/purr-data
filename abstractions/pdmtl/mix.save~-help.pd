@@ -1,0 +1,16 @@
+#N canvas 264 373 500 180 10;
+#X text 57 8 Description: record your mix in a file (pcm24 - wav);
+#X obj 62 105 mix.save~;
+#X obj 63 50 osc~ 22;
+#X obj 119 50 osc~ 44;
+#X obj 176 92 tgl 15 0 empty empty start/stop 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 177 51 bng 15 250 50 0 empty empty filename 17 7 0 10 -262144
+-1 -1;
+#X symbolatom 177 71 10 0 0 0 - - -;
+#X text 253 71 filename (save in current folder);
+#X connect 2 0 1 0;
+#X connect 3 0 1 1;
+#X connect 4 0 1 4;
+#X connect 5 0 1 2;
+#X connect 6 0 1 3;

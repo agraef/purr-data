@@ -1,0 +1,20 @@
+current: irix5
+
+TARGETS = linux \
+	ann_som
+
+SGI5OBJECTS = $(TARGETS:%=%.pd_irix5)
+
+# ----------------------- IRIX ----------------------------
+.SUFFIXES: .pd_irix5
+SGIINCLUDE = -I../../src
+
+irix5: $(SGIOBJECTS)
+
+.c.pd_irix5:
+	cc -g -w2 -fullwarn -mips2 -DFTS $(SGIINCLUDE) -c $*.c
+	ld -elf -shared -rdata_shared -o $*.pd_irix5 $*.o
+	rm $*.o
+
+clean::
+	rm *.o obj/* *.pd_irix5 so_locations rm *.pd_linux *~

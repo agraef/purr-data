@@ -1,0 +1,6 @@
+gcc -lm -c -o Offt.o Offt.cpp
+gcc -c -o Ooscil.o Ooscil.cpp
+gcc -c -o RandGen.o RandGen.cpp
+gcc -c -o FFTReal.o FFTReal.cpp
+gcc -c -o Obucket.o Obucket.cpp
+gcc -c -o Odelay.o Odelay.cpp

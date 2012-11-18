@@ -1,0 +1,11 @@
+#N canvas 363 333 430 211 10;
+#X floatatom 106 91 5 0 0 0 - - -;
+#X floatatom 106 153 5 0 0 0 - - -;
+#X text 155 90 Interval in milliseconds;
+#X text 155 153 Frequency;
+#X text 21 15 Description: Converts a millisecond interval to a frequency.
+;
+#X obj 106 117 mtl/msToFreq;
+#X text 22 34 tags: conversion;
+#X connect 0 0 5 0;
+#X connect 5 0 1 0;

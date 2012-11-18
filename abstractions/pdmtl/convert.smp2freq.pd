@@ -1,0 +1,15 @@
+#N canvas 396 47 546 392 10;
+#X text 282 77 samples to milliseconds conversion;
+#X obj 37 69 inlet;
+#X obj 129 81 loadbang;
+#X obj 132 110 samplerate~;
+#X obj 58 142 /;
+#X obj 53 266 outlet;
+#X obj 65 207 /;
+#X msg 56 171 1 \$1;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 1;
+#X connect 4 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;

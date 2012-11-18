@@ -1,0 +1,33 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty gem_units 20 12 0 24 -228992
+-66577 0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 179 155 gemhead;
+#X obj 178 127 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 1 1
+;
+#X obj 84 329 gemhead;
+#X obj 83 301 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 1 1
+;
+#X obj 84 387 circle 1;
+#X obj 179 183 circle 1;
+#X text 12 69 Everything in Gem uses the same units for measurement
+of space. First we have here a circle with a radius of 1:;
+#X text 15 235 Here a circle with a radius of one is moved 1 unit on
+the X-axis. You can see that the center points of the circles below
+are at the edge of the above circle.;
+#X obj 263 329 gemhead;
+#X obj 262 301 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 263 387 circle 1;
+#X obj 263 359 translateXYZ 0 1 0;
+#X obj 84 359 translateXYZ 1 0 0;
+#X connect 3 0 8 0;
+#X connect 4 0 3 0;
+#X connect 5 0 15 0;
+#X connect 6 0 5 0;
+#X connect 11 0 14 0;
+#X connect 12 0 11 0;
+#X connect 14 0 13 0;
+#X connect 15 0 7 0;

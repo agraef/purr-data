@@ -1,0 +1,8 @@
+#N canvas 0 0 412 280 10;
+#X msg 101 116 set \$1;
+#X obj 153 117 loadbang;
+#X obj 101 89 inlet;
+#X obj 101 146 outlet;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;

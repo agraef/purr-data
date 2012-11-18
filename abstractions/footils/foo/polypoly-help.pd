@@ -1,0 +1,70 @@
+#N canvas 306 63 695 747 10;
+#X msg 179 185 bang;
+#X obj 179 263 makenote 80 1000;
+#X obj 179 298 pack 0 0;
+#X obj 179 208 random 30;
+#X obj 179 237 + 40;
+#X msg 301 211 40 \, 44 \, 56 \, 60;
+#X obj 232 167 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 232 187 metro 100;
+#X obj 364 380 dbtorms;
+#X obj 367 360 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 180 402 *~ 0;
+#X obj 341 405 *~ 0;
+#X obj 249 443 dac~;
+#X msg 529 235 \; pd dsp \$1;
+#X obj 529 217 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 82 559 inlet for (note \, velocity) pairs;
+#X text 119 600 dsp-out left;
+#X text 428 600 dsp-out right;
+#X text 87 85 Arguments: <max polyphony> <voice stealing 0/1> <poly-abstraction
+name> <arg1> <arg2> <arg3> <arg4>;
+#X text 128 635 Thanks to Cesare Marilungo for inspiration.;
+#X text 87 44 [poly]-clone which automatically creates abstractions
+to be played.;
+#X text 49 20 [polypoly];
+#X text 87 669 Also see:;
+#X obj 159 668 poly;
+#X obj 179 361 polypoly 12 1 voice-poly;
+#X floatatom 260 315 5 0 0 2 decay - -;
+#X floatatom 315 264 5 0 0 0 - - -;
+#X text 450 321 recreate all abstractions;
+#X text 427 560 extra inlet to customize freely;
+#X msg 342 323 12 voice-poly;
+#X text 218 339 custom inlet;
+#X text 85 157 Example:;
+#X text 128 470 Your [polypoly] abstraction needs two inlets and two
+outlet~s. First argument will be the voice index number starting from
+0 \, second argument will be the total number of voices. Four more
+arguments can be passed as arguments to [polypoly] and will be passed
+on to the custom abstraction.;
+#X text 86 121 Inlets: <pair: note velocity> <custom> <pair: num abstraction_name>
+;
+#X obj 161 578 voice-poly 1 8 four more arguments possible;
+#X msg 128 318 clear;
+#X msg 92 318 stop;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 24 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;
+#X connect 8 0 10 1;
+#X connect 8 0 11 1;
+#X connect 9 0 8 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 1;
+#X connect 14 0 13 0;
+#X connect 24 0 10 0;
+#X connect 24 1 11 0;
+#X connect 25 0 24 1;
+#X connect 26 0 1 2;
+#X connect 29 0 24 2;
+#X connect 35 0 24 0;
+#X connect 36 0 24 0;

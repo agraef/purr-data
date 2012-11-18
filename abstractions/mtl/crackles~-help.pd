@@ -1,0 +1,11 @@
+#N canvas 607 109 316 236 10;
+#X text 40 43 Comment: Taken from Andy Farnell's work.;
+#X text 41 26 Description: Generates crackles.;
+#X obj 44 130 mtl/crackles~;
+#X obj 44 162 mtl/out~;
+#X obj 47 110 hsl 128 15 5 20000 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 40 62 tags: synthesize~;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;
+#X connect 4 0 2 0;

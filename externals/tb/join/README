@@ -1,0 +1,6 @@
+the message to the inlet will be sent to the outlet during the
+next idle callback of the scheduler. it doesn't matter, which thread the
+message was coming from. messages from the main pd thread will be
+rescheduled.
+
+requirement: pd>=devel_0_38

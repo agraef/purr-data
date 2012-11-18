@@ -1,0 +1,30 @@
+#N canvas 281 175 684 672 10;
+#X obj 26 9 amplitude_n;
+#X obj 26 29 catch_extremum;
+#X obj 26 49 catch_extremum2;
+#X obj 26 69 change_n;
+#X obj 26 89 count_n;
+#X obj 26 382 debounce_b;
+#X obj 26 362 debounce;
+#X obj 25 248 fir_filter;
+#X obj 25 268 fir_hip_n;
+#X obj 25 288 fir_mean_n;
+#X obj 25 309 iir_hip;
+#X obj 25 329 iir_lop;
+#X obj 26 109 last_n;
+#X obj 27 412 last_n_matrix;
+#X obj 27 433 list2matcol;
+#X obj 26 129 max_n;
+#X obj 26 149 min_n;
+#X obj 26 189 one_n;
+#X obj 26 209 seuil_n;
+#X obj 26 480 time_roll;
+#X obj 26 169 zero_n;
+#X text 239 18 This collection of abstractions is dedicated to data
+treatment using pure data. It provide basic objects for constant rate
+data flow analisys.;
+#X text 243 75 Zexy and cyclone are neaded;
+#X text 239 100 this abstractions was made by charles Verron for La
+kitchen (march 2004).;
+#X text 241 144 Questions / comments / sugestions / ... -> cyrille.henry@la-kitchen.fr
+;

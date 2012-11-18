@@ -1,0 +1,4 @@
+#N canvas 395 418 450 300 10;
+#X obj 54 134 mix.main~;
+#X text 32 19 Description: Reveives a stereo signal routed by mix.channel~
+;

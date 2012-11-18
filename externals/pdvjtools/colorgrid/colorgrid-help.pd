@@ -1,0 +1,47 @@
+#N canvas 26 1 762 514 10;
+#X floatatom 93 434 5 0 0 0 - - -;
+#X floatatom 217 434 5 0 0 0 - - -;
+#X floatatom 430 220 5 0 0 0 - - -;
+#X floatatom 496 220 5 0 0 0 - - -;
+#X obj 430 245 pack f f;
+#X text 471 221 X;
+#X text 537 220 Y;
+#X msg 93 131 bang;
+#X floatatom 342 431 5 0 0 0 - - -;
+#X text 93 451 R;
+#X text 217 450 G;
+#X text 342 445 B;
+#X text 39 12 Grid is a 2-dimensional color picker;
+#X text 39 25 Written by Lluis Gomez i Bigorda ( lluis@artefacte.org
+);
+#X text 39 39 ( inspired by the grid object written by Yves Degoyon
+);
+#X msg 339 246 xgoto \$1 \$2;
+#X text 330 195 Set position without changing output:;
+#X obj 496 246 t b f;
+#X floatatom 430 133 5 0 0 0 - - -;
+#X floatatom 496 133 5 0 0 0 - - -;
+#X obj 430 158 pack f f;
+#X text 471 134 X;
+#X text 537 133 Y;
+#X obj 496 159 t b f;
+#X text 330 108 Set position :;
+#X msg 339 159 goto \$1 \$2;
+#X obj 90 376 colorgrid colorgrid1 256 0 256 50 0 50 0 1 1 10 10 147
+392.06;
+#X connect 2 0 4 0;
+#X connect 3 0 17 0;
+#X connect 4 0 15 0;
+#X connect 7 0 26 0;
+#X connect 15 0 26 0;
+#X connect 17 0 4 0;
+#X connect 17 1 4 1;
+#X connect 18 0 20 0;
+#X connect 19 0 23 0;
+#X connect 20 0 25 0;
+#X connect 23 0 20 0;
+#X connect 23 1 20 1;
+#X connect 25 0 26 0;
+#X connect 26 0 0 0;
+#X connect 26 1 1 0;
+#X connect 26 2 8 0;

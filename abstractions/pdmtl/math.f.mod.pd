@@ -1,0 +1,13 @@
+#N canvas 0 0 450 300 10;
+#X obj 267 23 inlet;
+#X obj 303 77 init.df \$1 1;
+#X obj 305 56 loadbang;
+#X obj 55 29 inlet;
+#X obj 89 266 outlet;
+#X text 254 259 See also creb/f_mod;
+#X obj 108 164 expr fmod($f1 \, $f2);
+#X connect 0 0 6 1;
+#X connect 1 0 6 1;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X connect 6 0 4 0;

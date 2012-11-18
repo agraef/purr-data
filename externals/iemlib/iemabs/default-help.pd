@@ -1,0 +1,18 @@
+#N canvas 361 130 339 249 10;
+#X obj 25 87 default 50;
+#X obj 25 38 loadbang;
+#X obj 25 63 f \$1;
+#X obj 25 137 print default;
+#X floatatom 39 115 5 0 0 0 - - -;
+#X text 10 9 default;
+#X text 78 8 replace inital-argument \, if it is zero;
+#X text 184 184 IEM KUG;
+#X text 168 172 musil;
+#X text 198 172 @;
+#X text 204 172 iem.at;
+#X text 119 161 (c) Thomas Musil 2000 - 2005;
+#X text 167 194 Graz \, Austria;
+#X connect 0 0 3 0;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;

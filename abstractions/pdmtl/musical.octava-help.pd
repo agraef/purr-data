@@ -1,0 +1,19 @@
+#N canvas 0 0 640 453 10;
+#X obj 187 320 musical.octava;
+#X msg 99 122 0 4 7;
+#X obj 352 133 vradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 7;
+#X floatatom 351 292 5 0 0 0 - - -;
+#X obj 188 355 prepend set;
+#X msg 189 380 0 4 7;
+#X obj 352 260 expr 7-$f1;
+#X text 387 139 Choose your octava;
+#X text 149 121 Major chord;
+#X text 83 87 Desription: Transposes a chord to a higher or lower octava
+;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 6 0;
+#X connect 4 0 5 0;
+#X connect 6 0 0 1;
+#X connect 6 0 3 0;

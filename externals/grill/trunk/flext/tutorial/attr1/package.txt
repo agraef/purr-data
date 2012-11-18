@@ -1,0 +1,2 @@
+NAME=attr1
+SRCS=main.cpp

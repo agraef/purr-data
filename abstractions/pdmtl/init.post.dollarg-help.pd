@@ -1,0 +1,16 @@
+#N canvas 317 289 445 227 10;
+#X obj 30 148 init.post.dollarg;
+#X obj 30 120 dollarg;
+#X obj 30 96 loadbang;
+#X obj 30 174 print ARGUMENTS;
+#X obj 129 174 print DONE;
+#X text 26 14 Description: Parses abstraction arguments.;
+#X text 26 50 See examples in the pdmtl/examples/abstraction_arguments
+folder for examples.;
+#X text 26 33 Comments: See flow.@parse for more information.;
+#X obj 314 30 flow.@parse;
+#X connect 0 0 3 0;
+#X connect 0 1 4 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 2 0 1 0;

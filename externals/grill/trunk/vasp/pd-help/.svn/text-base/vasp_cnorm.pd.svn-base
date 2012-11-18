@@ -1,0 +1,94 @@
+#N canvas 36 36 806 582 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.cnorm 0 10 1 14 -262144
+-1 0;
+#X obj 72 113 filelist \$0;
+#N canvas 40 55 281 170 clear_buffers 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X obj 54 108 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 479 494 pd clear_buffers;
+#X obj 59 247 vasp.update;
+#X obj 59 267 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X obj 337 493 dac~;
+#X obj 337 455 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 358 454 play;
+#N canvas 92 108 432 397 inside 0;
+#X obj 66 169 soundfiler;
+#X obj 202 278 s \$0-sample-length;
+#X obj 66 223 s \$0-draw_display;
+#X msg 240 212 resize \$1;
+#X obj 66 47 loadbang;
+#X obj 66 113 filelisthandler \$0;
+#X msg 66 91 4;
+#X obj 240 234 s bufcnorm1;
+#X obj 241 255 s bufcnorm2;
+#X msg 235 92 88200;
+#X obj 66 69 t b b;
+#X obj 66 193 t b;
+#X msg 66 145 read \$1 bufcnorm1;
+#X connect 0 0 11 0;
+#X connect 3 0 7 0;
+#X connect 3 0 8 0;
+#X connect 4 0 10 0;
+#X connect 5 0 12 0;
+#X connect 6 0 5 0;
+#X connect 9 0 3 0;
+#X connect 9 0 1 0;
+#X connect 10 0 6 0;
+#X connect 10 1 9 0;
+#X connect 11 0 2 0;
+#X connect 12 0 0 0;
+#X restore 668 494 pd inside;
+#X obj 397 118 wavedisplay-simple bufcnorm1 \$0;
+#X obj 398 275 wavedisplay-simple bufcnorm2 \$0;
+#X msg 59 207 vasp bufcnorm1 bufcnorm2;
+#X text 235 206 cfft;
+#X obj 59 227 vasp.cfft;
+#X obj 59 343 vasp.update;
+#X obj 59 363 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X msg 59 303 vasp bufcnorm1 bufcnorm2;
+#X obj 59 323 vasp.cnorm;
+#X obj 59 434 vasp.update;
+#X obj 59 454 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X msg 59 394 vasp bufcnorm1 bufcnorm2;
+#X text 235 393 inverse cfft;
+#X obj 59 414 vasp.c!fft;
+#X obj 337 473 tabplay~ bufcnorm2;
+#X obj 202 493 dac~;
+#X obj 202 455 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 223 454 play;
+#X obj 202 473 tabplay~ bufcnorm1;
+#X text 668 97 real;
+#X text 643 253 imaginary;
+#X msg 479 474 vasp bufcnorm1 bufcnorm2;
+#X text 71 66 needs two buffers (or multiple pairs);
+#X text 71 49 sets radius of all complex sample pairs to unity (1)
+;
+#X obj 58 549 VASP-HELP;
+#X text 100 548 - vasp overview;
+#X connect 3 0 4 0;
+#X connect 6 0 23 0;
+#X connect 11 0 13 0;
+#X connect 13 0 3 0;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 18 0 19 0;
+#X connect 20 0 22 0;
+#X connect 22 0 18 0;
+#X connect 23 0 5 0;
+#X connect 23 0 5 1;
+#X connect 25 0 27 0;
+#X connect 27 0 24 0;
+#X connect 27 0 24 1;
+#X connect 30 0 2 0;

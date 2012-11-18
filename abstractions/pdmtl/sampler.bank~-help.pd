@@ -1,0 +1,40 @@
+#N canvas 438 115 964 637 10;
+#X declare -stdpath extra/tof;
+#X obj 16 111 dac~;
+#X obj 16 59 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 521 111 savepanel;
+#X obj 521 90 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 521 134 param.save;
+#X obj 673 93 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 673 115 openpanel;
+#X obj 673 137 param.load;
+#X text 13 136 Outlet_1 (~): Left preview output;
+#X text 13 152 Outlet_2 (~): Right preview output;
+#X obj 415 332 image medias/sample.bank.gui.gif;
+#X text 16 -32 Description: Manage a bank of samples and instruments
+through a graphical interface.;
+#X text 297 176 -- The graphical interface --;
+#X obj 440 -16 cnv 15 500 30 empty empty empty 20 12 0 14 -4034 -66577
+0;
+#X text 16 8 By default \, a sampler.bank~'s ID is SAMPLER.;
+#X text 443 -16 Use sampler.play~ to playback instruments stored in
+a sampler.bank~.;
+#X text 515 54 You can save/load a sampler.bank~'s configuration with
+param.atoms;
+#X obj 214 472 cnv 15 500 45 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X text 239 475 When setting an instrument's name \, make sure the
+name is unique or the wrong instrument may be selected when playing
+back.;
+#X text 15 38 Inlet_1 (bang): Show the graphical interface.;
+#X obj 16 84 sampler.bank~ @id bank;
+#X connect 1 0 20 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 20 0 0 0;
+#X connect 20 1 0 1;

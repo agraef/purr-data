@@ -1,0 +1,8 @@
+#N canvas 746 161 338 200 10;
+#X text 40 33 Comment: Taken from Andy Farnell's work.;
+#X text 41 17 Description: Generates some random hissing.;
+#X obj 44 85 mtl/hissing~;
+#X obj 45 116 mtl/out~;
+#X text 41 49 tags: synthesize~;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;

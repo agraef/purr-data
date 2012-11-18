@@ -1,0 +1,15 @@
+#N canvas 154 126 524 355 10;
+#X declare -lib Gem;
+#X obj 86 198 gemsStretch;
+#X obj 86 161 gemhead;
+#X obj 395 165 mtl/gemsWin;
+#X obj 395 142 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 85 269 square;
+#X obj 86 236 color 1 0 0.4 1;
+#X text 87 59 description: scales to fill the whole Gem window;
+#X text 92 83 tags: gems;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;

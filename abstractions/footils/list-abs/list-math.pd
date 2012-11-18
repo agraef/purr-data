@@ -1,0 +1,16 @@
+#N canvas 424 89 462 324 10;
+#X obj 55 58 inlet;
+#X obj 55 235 outlet;
+#X text 44 16 Use as "list-math operator" where operator is some binary
+operator \, expr can understand.;
+#X obj 55 136 list-map;
+#X obj 152 208 \$1 \$2;
+#X obj 182 134 inlet;
+#X obj 152 97 route float;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 1 6 0;
+#X connect 4 0 3 1;
+#X connect 5 0 4 1;
+#X connect 6 0 4 0;
+#X connect 6 1 3 1;

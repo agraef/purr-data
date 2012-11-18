@@ -1,0 +1,32 @@
+#N canvas 53 86 363 356 10;
+#X text 12 327 Released under the BSD License;
+#X text 206 90 Inlets;
+#X text 206 160 Outlets;
+#X text 206 40 Arguments;
+#X text 206 60 - Initial state (0/1);
+#X text 206 110 - Messages;
+#X text 206 180 - Messages;
+#X text 206 200 - State;
+#X obj 26 159 sguigot 1;
+#X floatatom 26 189 5 0 0 0 - - -;
+#X obj 26 118 f+;
+#X obj 26 98 metrum 1000 1;
+#X text 12 307 (C) 2008 João Pais - jmmmpais@googlemail.com;
+#X obj 113 188 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 112 204 State;
+#X text 206 250 - State;
+#X text 206 230 GUI;
+#X text 206 130 - On / Off (0/1);
+#X text 206 270 - Incoming message;
+#X text 22 10 [sguigot] - Spigot GUI implementation;
+#X obj 103 136 bng 14 250 50 0 empty empty empty 17 7 0 10 -228856
+-1 -1;
+#X obj 123 136 tgl 14 0 empty empty empty 17 7 0 10 -228856 -1 -1 0
+1;
+#X connect 8 0 9 0;
+#X connect 8 1 13 0;
+#X connect 10 0 8 0;
+#X connect 11 0 10 0;
+#X connect 20 0 8 1;
+#X connect 21 0 8 1;

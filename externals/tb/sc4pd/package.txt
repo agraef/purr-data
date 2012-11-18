@@ -1,0 +1,24 @@
+NAME=sc4pd
+
+SRCDIR=source
+
+SRCS=main.cpp  Dust.cpp MantissaMask.cpp Hasher.cpp Median.cpp \
+	BrownNoise.cpp ClipNoise.cpp GrayNoise.cpp WhiteNoise.cpp \
+	PinkNoise.cpp Dust2.cpp Crackle.cpp Rand.cpp TRand.cpp TExpRand.cpp \
+	IRand.cpp TIRand.cpp CoinGate.cpp support.cpp LinRand.cpp NRand.cpp\
+	ExpRand.cpp LFClipNoise.cpp LFNoise0.cpp LFNoise1.cpp LFNoise2.cpp \
+	Logistic.cpp Latoocarfian.cpp LinCong.cpp amclip.cpp scaleneg.cpp \
+	excess.cpp hypot.cpp ring1.cpp ring2.cpp ring3.cpp ring4.cpp \
+	difsqr.cpp sumsqr.cpp sqrdif.cpp sqrsum.cpp absdif.cpp LFSaw.cpp \
+	LFPulse.cpp Impulse.cpp Integrator.cpp Decay.cpp Decay2.cpp Lag.cpp \
+	Lag2.cpp Lag3.cpp LinExp.cpp DelayUnit.cpp DelayN.cpp DelayL.cpp \
+	DelayC.cpp CombN.cpp CombL.cpp CombC.cpp AllpassN.cpp AllpassL.cpp \
+	AllpassC.cpp PitchShift.cpp Resonz.cpp OnePole.cpp OneZero.cpp \
+	TwoPole.cpp TwoZero.cpp FOS.cpp SOS.cpp RLPF.cpp RHPF.cpp LPF.cpp \
+	HPF.cpp BPF.cpp BRF.cpp LPZ1.cpp HPZ1.cpp LPZ2.cpp HPZ2.cpp \
+	BPZ2.cpp BRZ2.cpp LFDNoise0.cpp LFDNoise1.cpp LFDNoise2.cpp \
+	sc+.cpp sc-.cpp scmul.cpp scdiv.cpp Convolution.cpp 
+
+HDRS=DelayUnit.hpp  fftlib.h  sc4pd.hpp  support.hpp
+
+INCPATH=-I./headers/plugin_interface -I./headers/common -I./headers/server

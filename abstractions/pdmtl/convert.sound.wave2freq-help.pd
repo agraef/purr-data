@@ -1,0 +1,7 @@
+#N canvas 0 0 432 384 10;
+#X text 54 74 Sound : Wave length (m) to frequency (Hz);
+#X obj 115 236 convert.sound.wave2freq;
+#X floatatom 102 182 15 0 0 0 - - -;
+#X floatatom 103 297 15 0 0 0 - - -;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;

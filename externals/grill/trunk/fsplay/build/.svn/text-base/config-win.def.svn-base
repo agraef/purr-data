@@ -1,0 +1,8 @@
+# where is the libsndfile installation?
+SNDFILEPATH=c:\data\libs\libsndfile
+
+# where is the Quicktime SDK
+QUICKTIMEPATH="c:\data\libs\QuicktimeSDK"
+
+# where is the boost library
+BOOSTPATH="C:\data\libs\boost_1_33_1"

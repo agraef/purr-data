@@ -1,0 +1,70 @@
+#N canvas 21 60 971 578 10;
+#X obj 62 33 cnv 15 15 15 empty empty vasp.-> 0 10 1 14 -262144 -1
+0;
+#X text 55 81 optional argument/right inlet: value/vasp;
+#X obj 235 402 vasp.update;
+#N canvas 0 0 262 199 clear_buffer 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X restore 380 379 pd clear_buffer;
+#X obj 50 500 VASP-HELP;
+#X text 55 62 copy an array/buffer to a new one;
+#X obj 57 452 vasp.->;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufcopy1 100 float 1;
+#A 0 0 0 0 0.0599997 0.0899995 0.119999 0.179999 0.239999 0.259999
+0.279999 0.299998 0.309998 0.319998 0.323998 0.327998 0.331998 0.335998
+0.339998 0.339998 0.339998 0.339998 0.339998 0.309998 0.279999 0.179999
+0.0799996 -0.0599997 -0.0999995 -0.109999 -0.119999 -0.109999 -0.0999995
+-0.0899995 -0.0799996 -0.0599997 -0.0399998 -0.0199999 2.30968e-008
+0.0199999 0.0799996 0.139999 0.259999 0.239999 0.119999 1.86265e-008
+-0.0299998 -0.0599997 -0.0899995 -0.119999 -0.123333 -0.126666 -0.129999
+-0.133333 -0.136666 -0.139999 -0.133333 -0.126666 -0.119999 -0.113333
+-0.106666 -0.0999995 -0.0533331 -0.00666663 0.0399998 0.0866662 0.133333
+0.179999 0.239999 0.299998 0.379998 0.279999 0.159999 0.189999 0.219999
+0.299998 0.379998 0.459998 0.539997 0.595997 0.651997 0.707996 0.763996
+0.819996 0.379998 0.239999 0.0999995 0.0949996 0.0899996 0.0849996
+0.0799997 0.139999 0.199999 0.0399999 0.0999995 0 0 0 0 0 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 621 72 graph;
+#N canvas 0 0 392 268 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 1 10 \; \$1 xlabel 1.1 0 20 40 60 80 100
+\; \$1 yticks 0 0.25 2 \; \$1 ylabel 105 -1 -0.5 0 0.5 1;
+#X msg 33 45 symbol bufcopy1 \, symbol bufcopy2 \, symbol bufcopy3
+;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 711 457 pd init;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufcopy2 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 621 186 graph;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufcopy3 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 621 301 graph;
+#X text 111 453 abbreviation;
+#X msg 54 169 vasp bufcopy1;
+#X obj 157 281 vasp.update;
+#X msg 380 354 vasp bufcopy2 bufcopy3;
+#X text 53 254 original;
+#X obj 235 379 vasp.= bufcopy1;
+#X msg 235 354 vasp bufcopy2;
+#X obj 54 234 vasp.copy bufcopy2;
+#X msg 178 226 vasp bufcopy3;
+#X msg 178 203 vasp bufcopy2;
+#X text 66 351 or the other way round:;
+#X text 164 254 copy;
+#X text 55 99 left outlet: original \, right outlet: copy !!!;
+#X text 377 330 clear buffer 2 and 3;
+#X connect 12 0 18 0;
+#X connect 14 0 3 0;
+#X connect 16 0 2 0;
+#X connect 17 0 16 0;
+#X connect 18 1 13 0;
+#X connect 19 0 18 1;
+#X connect 20 0 18 1;

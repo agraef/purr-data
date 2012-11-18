@@ -1,0 +1,14 @@
+#N canvas 3 48 400 230 10;
+#X text 86 139 pitch;
+#X msg 40 139 1A;
+#X obj 40 106 show-pitchclass;
+#X text 20 178 2004 by Karlheinz
+Essl;
+#X text 20 23 show-pitchclass;
+#X text 20 55 Shows the pitch class
+of a MIDI note number.;
+#X msg 280 23 Harmony;
+#X floatatom 40 80 0 0 0 0 - - -;
+#X text 86 81 MIDI note number;
+#X connect 2 0 1 0;
+#X connect 7 0 2 0;

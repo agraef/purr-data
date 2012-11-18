@@ -1,0 +1,82 @@
+#N canvas 0 22 696 466 10;
+#X msg 40 59 120;
+#X obj 473 79 bng 40 50 50 0 empty empty empty 17 7 0 10 -33289 -159808
+-1;
+#X obj 472 155 nbx 4 30 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 20
+-262144 -1 -1 0 256;
+#X obj 216 155 nbx 4 30 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 20
+-262144 -1 -1 500 256;
+#X obj 194 125 bng 15 50 50 0 empty empty empty 17 7 0 10 -1 -159808
+-1;
+#X obj 472 225 nbx 4 30 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 20
+-262144 -1 -1 34 256;
+#X obj 216 225 nbx 4 30 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 20
+-262144 -1 -1 2000 256;
+#X obj 194 196 bng 15 50 50 0 empty empty empty 17 7 0 10 -1 -4034
+-1;
+#X obj 41 197 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 40 127 2 0 0 0 - - -;
+#X floatatom 307 371 5 0 0 0 - - -;
+#X obj 39 301 time-next_beat;
+#X obj 39 274 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 39 328 bng 15 50 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 39 364 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 39 418 bng 15 50 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 39 391 time-next_measure;
+#X msg 75 59 90;
+#X msg 108 59 50;
+#X text 57 273 click to get a bang on the next beat;
+#X text 57 363 click to get a bang on the next measure;
+#X obj 473 55 get_delegate time-clock tick;
+#X obj 216 196 get_delegate time-clock next_measure_in;
+#X obj 472 126 get_delegate time-clock beat;
+#X obj 472 196 get_delegate time-clock measure;
+#X obj 216 126 get_delegate time-clock next_beat_in;
+#X obj 41 17 time-clock;
+#X obj 218 55 get_delegate time-clock tempo;
+#X obj 218 83 nbx 4 30 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 20
+-204800 -1 -1 120 256;
+#X obj 307 411 s time-clock-dispatcher;
+#X msg 307 389 seek_measure \$1;
+#X floatatom 307 291 5 0 0 0 - - -;
+#X obj 307 331 s time-clock-dispatcher;
+#X msg 307 309 seek_beat \$1;
+#X obj 41 238 s time-clock-dispatcher;
+#X msg 41 216 sync;
+#X obj 40 170 s time-clock-dispatcher;
+#X msg 40 147 beats_per_measure \$1;
+#X msg 40 80 tempo \$1;
+#X obj 40 100 s time-clock-dispatcher;
+#X text 114 11 a centralized timing system. meant to be one-per-pd-instance
+atm \; this will likely change.;
+#X text 548 425 2009 Luke Iannini;
+#X text 548 439 proyekto.net;
+#X connect 0 0 38 0;
+#X connect 8 0 35 0;
+#X connect 9 0 37 0;
+#X connect 10 0 30 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
+#X connect 17 0 38 0;
+#X connect 18 0 38 0;
+#X connect 21 0 1 0;
+#X connect 22 0 6 0;
+#X connect 22 0 7 0;
+#X connect 23 0 2 0;
+#X connect 24 0 5 0;
+#X connect 25 0 3 0;
+#X connect 25 0 4 0;
+#X connect 27 0 28 0;
+#X connect 30 0 29 0;
+#X connect 31 0 33 0;
+#X connect 33 0 32 0;
+#X connect 35 0 34 0;
+#X connect 37 0 36 0;
+#X connect 38 0 39 0;

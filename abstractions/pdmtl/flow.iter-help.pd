@@ -1,0 +1,27 @@
+#N canvas 370 242 470 320 10;
+#X msg 95 97 10;
+#X msg 137 97 3;
+#X obj 209 208 print done;
+#X obj 141 242 print index;
+#X obj 59 98 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 6 2 cnv 15 400 60 empty empty flow.iter 12 12 1 14 -261681 -1
+0;
+#X obj 251 40 cnv 15 155 22 empty empty Version:01(2004-11-22) 45 12
+1 7 -1 -262144 0;
+#X text 289 209 Bangs when done;
+#X text 227 242 Current index.;
+#X text 167 102 Float: start sending n floats.;
+#X text 222 135 Number of floats to send;
+#X text 227 169 arg1 : number of floats to send.;
+#X floatatom 187 137 5 0 0 0 - - -;
+#X text 167 90 Bang: start sending previous n floats.;
+#X text 16 63 Similar : until uzi kalashnikov;
+#X obj 153 168 flow.iter 2;
+#X text 19 22 Description: Iterates through n serialized floats.;
+#X connect 0 0 15 0;
+#X connect 1 0 15 0;
+#X connect 4 0 15 0;
+#X connect 12 0 15 1;
+#X connect 15 0 3 0;
+#X connect 15 1 2 0;

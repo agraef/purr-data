@@ -1,0 +1,1157 @@
+#N canvas 193 23 626 687 10;
+#X obj 104 47 cnv 15 15 15 empty empty vasp_modular 0 10 1 14 -262144
+-1 0;
+#X obj 61 37 cnv 2 2 2 empty 2-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 37 cnv 2 2 2 empty 2-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 37 cnv 2 2 2 empty 2-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 37 cnv 2 2 2 empty 2-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 37 cnv 2 2 2 empty 2-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 37 cnv 2 2 2 empty 2-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 37 cnv 2 2 2 empty 2-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 37 cnv 2 2 2 empty 2-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 37 cnv 2 2 2 empty 2-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 37 cnv 2 2 2 empty 2-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 37 cnv 2 2 2 empty 2-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 37 cnv 2 2 2 empty 2-12-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 85 37 cnv 2 2 2 empty 2-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 37 cnv 2 2 2 empty 2-14-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 89 37 cnv 2 2 2 empty 2-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 39 cnv 2 2 2 empty 3-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 39 cnv 2 2 2 empty 3-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 39 cnv 2 2 2 empty 3-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 39 cnv 2 2 2 empty 3-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 39 cnv 2 2 2 empty 3-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 39 cnv 2 2 2 empty 3-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 39 cnv 2 2 2 empty 3-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 39 cnv 2 2 2 empty 3-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 39 cnv 2 2 2 empty 3-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 39 cnv 2 2 2 empty 3-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 39 cnv 2 2 2 empty 3-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 39 cnv 2 2 2 empty 3-12-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 85 39 cnv 2 2 2 empty 3-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 39 cnv 2 2 2 empty 3-14-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 89 39 cnv 2 2 2 empty 3-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 41 cnv 2 2 2 empty 4-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 41 cnv 2 2 2 empty 4-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 41 cnv 2 2 2 empty 4-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 41 cnv 2 2 2 empty 4-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 41 cnv 2 2 2 empty 4-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 41 cnv 2 2 2 empty 4-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 41 cnv 2 2 2 empty 4-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 41 cnv 2 2 2 empty 4-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 41 cnv 2 2 2 empty 4-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 41 cnv 2 2 2 empty 4-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 41 cnv 2 2 2 empty 4-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 41 cnv 2 2 2 empty 4-12-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 85 41 cnv 2 2 2 empty 4-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 41 cnv 2 2 2 empty 4-14-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 89 41 cnv 2 2 2 empty 4-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 43 cnv 2 2 2 empty 5-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 43 cnv 2 2 2 empty 5-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 43 cnv 2 2 2 empty 5-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 43 cnv 2 2 2 empty 5-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 43 cnv 2 2 2 empty 5-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 43 cnv 2 2 2 empty 5-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 43 cnv 2 2 2 empty 5-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 43 cnv 2 2 2 empty 5-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 43 cnv 2 2 2 empty 5-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 43 cnv 2 2 2 empty 5-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 43 cnv 2 2 2 empty 5-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 43 cnv 2 2 2 empty 5-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 43 cnv 2 2 2 empty 5-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 43 cnv 2 2 2 empty 5-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 43 cnv 2 2 2 empty 5-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 45 cnv 2 2 2 empty 6-1-r empty 20 12 64 14 -1 -262144 0;
+#X obj 63 45 cnv 2 2 2 empty 6-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 45 cnv 2 2 2 empty 6-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 45 cnv 2 2 2 empty 6-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 45 cnv 2 2 2 empty 6-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 45 cnv 2 2 2 empty 6-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 45 cnv 2 2 2 empty 6-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 45 cnv 2 2 2 empty 6-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 45 cnv 2 2 2 empty 6-9-r empty 20 12 64 14 -1 -262144 0;
+#X obj 79 45 cnv 2 2 2 empty 6-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 45 cnv 2 2 2 empty 6-11-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 83 45 cnv 2 2 2 empty 6-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 45 cnv 2 2 2 empty 6-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 45 cnv 2 2 2 empty 6-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 45 cnv 2 2 2 empty 6-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 47 cnv 2 2 2 empty 7-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 47 cnv 2 2 2 empty 7-2-r empty 20 12 64 14 -1 -262144 0;
+#X obj 65 47 cnv 2 2 2 empty 7-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 47 cnv 2 2 2 empty 7-4-r empty 20 12 64 14 -1 -262144 0;
+#X obj 69 47 cnv 2 2 2 empty 7-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 47 cnv 2 2 2 empty 7-6-r empty 20 12 64 14 -1 -262144 0;
+#X obj 73 47 cnv 2 2 2 empty 7-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 47 cnv 2 2 2 empty 7-8-r empty 20 12 64 14 -1 -262144 0;
+#X obj 77 47 cnv 2 2 2 empty 7-9-r empty 20 12 64 14 -1 -262144 0;
+#X obj 79 47 cnv 2 2 2 empty 7-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 47 cnv 2 2 2 empty 7-11-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 83 47 cnv 2 2 2 empty 7-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 47 cnv 2 2 2 empty 7-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 47 cnv 2 2 2 empty 7-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 47 cnv 2 2 2 empty 7-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 49 cnv 2 2 2 empty 8-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 49 cnv 2 2 2 empty 8-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 49 cnv 2 2 2 empty 8-3-r empty 20 12 64 14 -1 -262144 0;
+#X obj 67 49 cnv 2 2 2 empty 8-4-r empty 20 12 64 14 -1 -262144 0;
+#X obj 69 49 cnv 2 2 2 empty 8-5-r empty 20 12 64 14 -1 -262144 0;
+#X obj 71 49 cnv 2 2 2 empty 8-6-r empty 20 12 64 14 -1 -262144 0;
+#X obj 73 49 cnv 2 2 2 empty 8-7-r empty 20 12 64 14 -1 -262144 0;
+#X obj 75 49 cnv 2 2 2 empty 8-8-r empty 20 12 64 14 -1 -262144 0;
+#X obj 77 49 cnv 2 2 2 empty 8-9-r empty 20 12 64 14 -1 -262144 0;
+#X obj 79 49 cnv 2 2 2 empty 8-10-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 81 49 cnv 2 2 2 empty 8-11-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 83 49 cnv 2 2 2 empty 8-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 49 cnv 2 2 2 empty 8-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 49 cnv 2 2 2 empty 8-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 49 cnv 2 2 2 empty 8-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 51 cnv 2 2 2 empty 9-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 51 cnv 2 2 2 empty 9-2-r empty 20 12 64 14 -1 -262144 0;
+#X obj 65 51 cnv 2 2 2 empty 9-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 51 cnv 2 2 2 empty 9-4-r empty 20 12 64 14 -1 -262144 0;
+#X obj 69 51 cnv 2 2 2 empty 9-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 51 cnv 2 2 2 empty 9-6-r empty 20 12 64 14 -1 -262144 0;
+#X obj 73 51 cnv 2 2 2 empty 9-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 51 cnv 2 2 2 empty 9-8-r empty 20 12 64 14 -1 -262144 0;
+#X obj 77 51 cnv 2 2 2 empty 9-9-r empty 20 12 64 14 -1 -262144 0;
+#X obj 79 51 cnv 2 2 2 empty 9-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 51 cnv 2 2 2 empty 9-11-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 83 51 cnv 2 2 2 empty 9-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 51 cnv 2 2 2 empty 9-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 51 cnv 2 2 2 empty 9-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 51 cnv 2 2 2 empty 9-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 53 cnv 2 2 2 empty 10-1-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 63 53 cnv 2 2 2 empty 10-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 53 cnv 2 2 2 empty 10-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 53 cnv 2 2 2 empty 10-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 53 cnv 2 2 2 empty 10-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 53 cnv 2 2 2 empty 10-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 53 cnv 2 2 2 empty 10-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 53 cnv 2 2 2 empty 10-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 53 cnv 2 2 2 empty 10-9-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 79 53 cnv 2 2 2 empty 10-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 53 cnv 2 2 2 empty 10-11-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 83 53 cnv 2 2 2 empty 10-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 53 cnv 2 2 2 empty 10-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 53 cnv 2 2 2 empty 10-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 53 cnv 2 2 2 empty 10-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 55 cnv 2 2 2 empty 11-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 55 cnv 2 2 2 empty 11-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 55 cnv 2 2 2 empty 11-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 55 cnv 2 2 2 empty 11-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 55 cnv 2 2 2 empty 11-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 55 cnv 2 2 2 empty 11-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 55 cnv 2 2 2 empty 11-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 55 cnv 2 2 2 empty 11-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 55 cnv 2 2 2 empty 11-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 55 cnv 2 2 2 empty 11-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 55 cnv 2 2 2 empty 11-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 55 cnv 2 2 2 empty 11-12-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 85 55 cnv 2 2 2 empty 11-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 55 cnv 2 2 2 empty 11-14-r empty 20 12 64 14 -1 -262144 0
+;
+#X obj 89 55 cnv 2 2 2 empty 11-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 57 cnv 2 2 2 empty 12-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 57 cnv 2 2 2 empty 12-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 57 cnv 2 2 2 empty 12-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 57 cnv 2 2 2 empty 12-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 57 cnv 2 2 2 empty 12-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 57 cnv 2 2 2 empty 12-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 57 cnv 2 2 2 empty 12-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 57 cnv 2 2 2 empty 12-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 57 cnv 2 2 2 empty 12-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 57 cnv 2 2 2 empty 12-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 57 cnv 2 2 2 empty 12-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 57 cnv 2 2 2 empty 12-12-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 85 57 cnv 2 2 2 empty 12-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 57 cnv 2 2 2 empty 12-14-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 89 57 cnv 2 2 2 empty 12-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 59 cnv 2 2 2 empty 13-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 59 cnv 2 2 2 empty 13-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 59 cnv 2 2 2 empty 13-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 59 cnv 2 2 2 empty 13-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 59 cnv 2 2 2 empty 13-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 59 cnv 2 2 2 empty 13-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 59 cnv 2 2 2 empty 13-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 59 cnv 2 2 2 empty 13-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 59 cnv 2 2 2 empty 13-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 59 cnv 2 2 2 empty 13-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 59 cnv 2 2 2 empty 13-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 59 cnv 2 2 2 empty 13-12-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 85 59 cnv 2 2 2 empty 13-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 59 cnv 2 2 2 empty 13-14-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 89 59 cnv 2 2 2 empty 13-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 61 61 cnv 2 2 2 empty 14-1-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 63 61 cnv 2 2 2 empty 14-2-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 65 61 cnv 2 2 2 empty 14-3-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 67 61 cnv 2 2 2 empty 14-4-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 69 61 cnv 2 2 2 empty 14-5-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 71 61 cnv 2 2 2 empty 14-6-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 73 61 cnv 2 2 2 empty 14-7-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 75 61 cnv 2 2 2 empty 14-8-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 77 61 cnv 2 2 2 empty 14-9-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 79 61 cnv 2 2 2 empty 14-10-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 81 61 cnv 2 2 2 empty 14-11-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 83 61 cnv 2 2 2 empty 14-12-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 85 61 cnv 2 2 2 empty 14-13-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 87 61 cnv 2 2 2 empty 14-14-r empty 20 12 64 14 -225271 -262144
+0;
+#X obj 89 61 cnv 2 2 2 empty 14-15-r empty 20 12 64 14 -225271 -262144
+0;
+#X text 54 90 vasp modular - vector assembling signal processor ©2002-2007
+thomas grill;
+#X text 54 123 vasp is a library of objects for max/msp and pd \, containing
+functions to generate and modify vectors as well as buffer content
+in a non-realtime context.;
+#X text 54 169 vasp objects are using a specialized message syntax
+for all objects to refer to a buffer or a part of it.;
+#X text 55 248 some reference patches need the prepend object of the
+IEMlib;
+#X text 55 565 inspired by guenther rabl's fftbox and NMS4. find guenther
+rabl at www.canto-crudo.com;
+#X text 54 602 vasp help patches for MaxMSP by florian bogner and oliver
+grimm - ©2002 patcherboys;
+#X text 55 639 revised & extended version for PD by marius schebella
+- www.parasitaere-kapazitaeten.net/vasp;
+#X text 54 202 the help patches should give you an idea of what is
+possible. feel free to combine different patches to more complex ones.
+;
+#X text 76 291 (very) quick overview;
+#N canvas 131 125 831 564 quickstart 0;
+#X text 86 223 How to use:;
+#X obj 292 270 bng 15 250 50 0 1displays 1displayr empty 0 -6 192 8
+-24198 -1 -1;
+#X text 320 269 1) Have a messagebox with the name of the array.;
+#X obj 292 317 bng 15 250 50 0 2displays 2displayr empty 0 -6 192 8
+-24198 -1 -1;
+#X obj 292 400 bng 15 250 50 0 3displays 3displayr empty 0 -6 192 8
+-24198 -1 -1;
+#N canvas 323 136 534 533 inside 0;
+#X obj 144 38 r 1displays;
+#X obj 176 281 delay 500;
+#X obj 144 156 r 2displays;
+#X obj 144 80 change;
+#X msg 144 59 1;
+#X obj 144 198 change;
+#X msg 144 177 1;
+#X msg 144 101 bang;
+#X msg 144 221 bang;
+#X obj 64 327 change;
+#X msg 64 306 1;
+#X obj 64 284 r 3displays;
+#X obj 64 349 t b b b;
+#X obj 315 37 table buffer1;
+#X text 314 55 (dummy-table);
+#X msg 144 122 \; pd-quickstart msg 130 270 vasp buffer1;
+#X msg 144 244 \; pd-quickstart obj 130 320 vasp.shift 100;
+#X msg 108 374 \; pd-quickstart msg 130 370 vasp buffer1;
+#X msg 82 411 \; pd-quickstart obj 130 400 vasp.update;
+#X msg 176 302 \; pd-quickstart connect 13 0 14 0;
+#X msg 64 452 \; pd-quickstart connect 15 0 16 0;
+#X connect 0 0 4 0;
+#X connect 1 0 19 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 3 0;
+#X connect 5 0 8 0;
+#X connect 6 0 5 0;
+#X connect 7 0 15 0;
+#X connect 8 0 16 0;
+#X connect 8 0 1 0;
+#X connect 9 0 12 0;
+#X connect 10 0 9 0;
+#X connect 11 0 10 0;
+#X connect 12 0 20 0;
+#X connect 12 1 18 0;
+#X connect 12 2 17 0;
+#X restore 716 65 pd inside;
+#X text 87 54 The vasp modular system does calculation on buffers.
+;
+#X text 322 316 2) Connect it to a vasp-object-box that determines
+the processing algorithm.;
+#X text 323 374 3) At that point \, after clicking the message-box
+\, data processing is executed. To display the new vasp in the graph
+you may want to update the graphic display.;
+#X text 86 89 Vasp works "out of time" \, it does not relay on the
+usual blocksizes of Pd. A vasp algorithm can be assigned to any buffer
+size according to your own definition \, for example the whole sound-data
+of an array.;
+#X text 86 156 There is a general help-patch called "VASP-HELP" \,
+and there is a reference-patch for every vasp object.;
+#X text 233 241 (CLICK GREEN BUTTONS);
+#X text 85 481 Have a look at this help for detailed information about
+the syntax and the available objects and features.;
+#X restore 232 292 pd quickstart;
+#X text 108 324 the vasp message;
+#N canvas 10 33 986 670 syntax 0;
+#X text 76 52 the vasp message:;
+#X obj 75 20 cnv 15 15 15 empty empty vasp_syntax 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 405 218 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 99 \; \$1 xticks 0 4410 5 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol buf1 \, symbol buf2 \, sysymbol buf1 \, symbol
+buf2 \, symbol buf3 \, symbol buf4 \, symbol buf5 \, symbol buf6 \,
+symbol buf7 \, symbol buf8 \, symbol buf9;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 827 44 pd init;
+#X obj 73 92 cnv 15 800 450 empty empty empty 20 12 0 14 -241339 -66577
+0;
+#X text 469 241 (default 0);
+#X text 515 185 which does the same.;
+#X msg 462 184 vasp -1;
+#X msg 222 270 vasp 44100 buf1 22050 0;
+#X text 110 271 and the channel;
+#X msg 317 241 vasp 44100 buf1 22050;
+#X text 110 243 an optional offset in samples;
+#X msg 365 214 vasp 44100 buf1;
+#X text 110 216 the name of the buffer it refers to;
+#X msg 347 158 vasp 44100;
+#X text 110 161 followed by the length in samples;
+#X msg 266 132 vasp;
+#X text 89 102 - a vasp message is structured by the following parts:
+;
+#X text 110 135 it always starts with;
+#X text 110 450 set all samples of buf1 to 0;
+#X text 110 384 generate a sine wave at 2Hz;
+#X msg 311 451 vasp buf1;
+#X obj 311 497 vasp.update;
+#X obj 311 473 vasp.= 0;
+#X obj 310 412 vasp.update;
+#X obj 310 383 vasp.osc 22050;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 498 403 graph;
+#X msg 310 323 vasp 44100 buf1 22050 0;
+#X text 110 325 one vectored vasp message:;
+#X obj 73 582 cnv 15 800 480 empty empty empty 20 12 0 14 -241339 -66577
+0;
+#X text 138 890 set all samples of buf1 and buf2 to 0;
+#X msg 275 910 vasp buf2 buf3;
+#X obj 275 956 vasp.update;
+#X obj 275 932 vasp.= 0;
+#X obj 274 846 vasp.update;
+#X obj 274 816 vasp.osc 22050;
+#X text 139 993 a vasp message can contain as many vectors as you like
+\, but all vectors have the same length;
+#X msg 274 714 vasp 44100 buf2 0 0 buf3 22050;
+#X text 110 689 two vectored vasp message:;
+#X text 110 633 all vectors have the same length \, but the vectors
+can differ in the buffers and offsets;
+#X text 89 597 - if a vasp message contains more than one vector:;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf2 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 477 754 graph;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf3 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 478 878 graph;
+#X text 110 184 if missing \, it refers to the whole buffer \, or type
+;
+#X text 139 1028 different vectors of a vasp are processed in parallel
+or as pairs for complex operations respectively.;
+#X obj 860 1077 cnv 15 15 15 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X text 336 339 (CLICK HERE);
+#X text 377 451 (CLICK HERE);
+#X text 326 736 (CLICK HERE);
+#X text 470 683 referring to buffer buf1 from 0 sec to 1 sec on channel
+0 and buffer buf2 from 0.5 sec to 1.5 sec on channel 0;
+#X text 354 934 (CLICK HERE);
+#X text 393 271 (default 0 \, it is only used in Max/MSP);
+#X text 453 342 referring to buffer buf1 from 0.5sec to 1.5sec on channel
+0;
+#X connect 20 0 22 0;
+#X connect 22 0 21 0;
+#X connect 24 0 23 0;
+#X connect 26 0 24 0;
+#X connect 30 0 32 0;
+#X connect 32 0 31 0;
+#X connect 34 0 33 0;
+#X connect 36 0 34 0;
+#X restore 232 325 pd syntax;
+#X text 88 357 additional messages;
+#N canvas 30 20 964 685 moremessages 0;
+#X obj 59 74 cnv 15 800 330 empty empty empty 20 12 0 14 -241339 -66577
+0;
+#X obj 330 342 vasp.* 0.5;
+#X text 128 192 set all samples of buf1 to 0;
+#X obj 330 374 vasp.update;
+#X obj 330 316 vasp.noise;
+#X msg 330 191 vasp buf4;
+#X obj 330 243 vasp.update;
+#X obj 330 217 vasp.= 0;
+#X obj 330 159 vasp.update;
+#X obj 330 133 vasp.osc 22050;
+#X msg 330 290 vasp buf5;
+#X text 470 92 sets the message \, bang triggers the operation;
+#X text 68 29 additional vasp messages:;
+#X msg 330 92 set vasp 44100 buf4;
+#X text 107 92 - set:;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf4 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 503 145 graph;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf5 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 504 269 graph;
+#X obj 286 108 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 107 115 - bang:;
+#X obj 60 662 cnv 15 800 290 empty empty empty 20 12 0 14 -241339 -66577
+0;
+#X text 108 688 - update:;
+#X msg 233 726 update 1;
+#X msg 297 726 update 0;
+#X msg 361 690 vasp buf7;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf7 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 521 699 graph;
+#X obj 651 903 vasp.update;
+#X obj 392 752 random 10;
+#X obj 392 778 * 0.1;
+#X msg 651 877 vasp buf7;
+#X obj 361 716 t a b;
+#X obj 60 975 cnv 15 800 290 empty empty empty 20 12 0 14 -241339 -66577
+0;
+#X text 134 998 - detach:;
+#X text 233 839 with argument 1 or 0 you can turn automatic display-update
+on or off (default is off).;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf8 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 525 1088 graph;
+#X obj 297 1231 vasp.u;
+#X obj 297 1205 vasp.opt;
+#X obj 297 1178 vasp.rfft;
+#X msg 297 1074 vasp buf8;
+#X msg 225 1095 detach 1;
+#X text 238 998 use multithreading;
+#X msg 162 1095 detach 0;
+#X obj 59 1290 cnv 15 800 300 empty empty empty 20 12 0 14 -241339
+-66577 0;
+#X text 127 1321 - radio:;
+#X obj 845 1762 cnv 15 15 15 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X obj 59 430 cnv 15 800 210 empty empty empty 20 12 0 14 -241339 -66577
+0;
+#X text 129 556 set all samples of buf5/6 to 0;
+#X msg 351 559 vasp buf5 buf6;
+#X obj 351 611 vasp.update;
+#X obj 351 585 vasp.= 0;
+#X msg 351 470 to vasp buf6 \, vasp buf5;
+#X obj 351 522 vasp.update;
+#X text 143 474 sets the target buffer buf6;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf6 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 515 515 graph;
+#X text 113 448 - to:;
+#X msg 192 1537 radio update 1;
+#X msg 187 1386 radio detach 1;
+#X text 149 1536 also:;
+#X obj 297 1497 vasp.u;
+#N canvas 0 0 450 300 graph1 0;
+#X array buf9 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 526 1398 graph;
+#X msg 297 1367 vasp buf9;
+#X obj 351 496 vasp.*osc 22100;
+#X text 45 497 and modulate the noise with a 2Hz sine wave;
+#X text 233 875 if automatic update is turned off \, you explicitely
+have to update the display with the object vasp.update;
+#X obj 361 806 vasp.=;
+#X text 237 1019 this very useful switch can put the vasp-calculation
+into the background and (try to) avoid dropouts in the Pd-DSP-processing.
+1 = on \, 0 = off.;
+#X obj 297 1125 vasp.noise;
+#X obj 297 1149 vasp.flp 100;
+#X text 392 1147 low pass filter;
+#X text 383 1125 generate noise;
+#X text 235 1321 radio messages are passed to/through all vasp objects
+of an object chain;
+#X obj 297 1422 vasp.xwindow lin;
+#X obj 297 1466 vasp.sqr;
+#X text 354 1465 square it;
+#X text 355 1439 make linear window;
+#X text 69 45 set \, bang \, to \, update \, detach \, help;
+#X obj 61 1624 cnv 15 800 130 empty empty empty 20 12 0 14 -241339
+-66577 0;
+#X text 127 1636 - help:;
+#X msg 240 1676 help;
+#X obj 240 1709 vasp.??;
+#X msg 323 1676 help;
+#X obj 323 1709 vasp.s/;
+#X text 236 1637 print out a short description of the object;
+#X text 376 1177 real fft;
+#X connect 1 0 3 0;
+#X connect 4 0 1 0;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 9 0 8 0;
+#X connect 10 0 4 0;
+#X connect 13 0 9 0;
+#X connect 17 0 9 0;
+#X connect 21 0 63 0;
+#X connect 22 0 63 0;
+#X connect 23 0 29 0;
+#X connect 26 0 27 0;
+#X connect 27 0 63 1;
+#X connect 28 0 25 0;
+#X connect 29 0 63 0;
+#X connect 29 1 26 0;
+#X connect 35 0 34 0;
+#X connect 36 0 35 0;
+#X connect 37 0 65 0;
+#X connect 38 0 36 0;
+#X connect 38 0 66 0;
+#X connect 38 0 65 0;
+#X connect 40 0 36 0;
+#X connect 40 0 66 0;
+#X connect 40 0 65 0;
+#X connect 46 0 48 0;
+#X connect 48 0 47 0;
+#X connect 49 0 60 0;
+#X connect 55 0 70 0;
+#X connect 59 0 70 0;
+#X connect 60 0 50 0;
+#X connect 65 0 66 0;
+#X connect 66 0 36 0;
+#X connect 70 0 71 0;
+#X connect 71 0 57 0;
+#X connect 77 0 78 0;
+#X connect 79 0 80 0;
+#X restore 232 356 pd moremessages;
+#X text 107 389 the vasp objects;
+#N canvas 57 40 412 447 objects 0;
+#X obj 59 28 cnv 15 15 15 empty empty vasp_objects 0 10 1 14 -262144
+-1 0;
+#N canvas 343 209 509 292 fftobjects 0;
+#X obj 281 103 vasp.r!fft;
+#X obj 281 71 vasp.rfft;
+#X obj 72 160 vasp.polar;
+#X obj 72 103 vasp.c!fft;
+#X obj 72 71 vasp.cfft;
+#X text 145 160 changes between cartesian and polar representation
+;
+#X text 358 103 inverse real fft;
+#X text 145 71 complex fft;
+#X text 145 103 inverse complex fft;
+#X text 358 71 real fft;
+#X text 145 213 changes between polar and cartesian representation
+;
+#X obj 72 212 vasp.rect;
+#X obj 35 22 cnv 15 15 15 empty empty fftobjects 0 10 1 14 -262144
+-1 0;
+#X restore 71 206 pd fftobjects;
+#N canvas 386 9 609 639 arithmetic 0;
+#X obj 354 138 vasp.c!-;
+#X text 149 135 reverse subtraction;
+#X obj 76 136 vasp.!-;
+#X text 437 421 integral function;
+#X text 437 444 differential function;
+#X obj 362 448 vasp.dif;
+#X obj 362 422 vasp.int;
+#X obj 361 346 vasp.r+;
+#X text 414 350 radius offset;
+#X obj 354 216 vasp.c!/;
+#X text 150 213 reverse division;
+#X obj 76 214 vasp.!/;
+#X obj 355 250 vasp.c=;
+#X obj 354 190 vasp.c/;
+#X obj 354 164 vasp.c*;
+#X obj 354 112 vasp.c-;
+#X obj 354 86 vasp.c+;
+#X obj 76 578 vasp.sign;
+#X obj 76 552 vasp.%;
+#X obj 76 526 vasp.abs;
+#X obj 76 500 vasp.!=;
+#X obj 76 474 vasp.==;
+#X obj 76 344 vasp.>=;
+#X obj 76 318 vasp.<=;
+#X obj 76 292 vasp.>;
+#X obj 76 266 vasp.<;
+#X obj 76 240 vasp.=;
+#X obj 76 188 vasp./;
+#X obj 76 162 vasp.*;
+#X obj 76 110 vasp.-;
+#X obj 76 84 vasp.+;
+#X text 150 338 vasp >= x;
+#X text 150 315 vasp >= x;
+#X text 150 292 vasp > x;
+#X text 150 269 vasp < x;
+#X text 151 473 equal to;
+#X text 152 161 multiplication;
+#X text 149 187 division;
+#X text 150 106 subtraction;
+#X text 153 499 not equal to;
+#X text 153 551 modulo (remainder of a division);
+#X text 151 525 absolute value of a vasp;
+#X text 150 83 addition;
+#X text 354 62 complex ....;
+#X text 150 239 vasp = x;
+#X text 152 577 values < 0 become -1 | values > 0 become 1;
+#X text 361 322 radius ....;
+#X obj 35 22 cnv 15 15 15 empty empty arithmetic 0 10 1 14 -262144
+-1 0;
+#X obj 355 276 vasp.cconj;
+#X obj 76 370 vasp.a<;
+#X obj 76 396 vasp.a>;
+#X obj 76 422 vasp.a<=;
+#X obj 76 448 vasp.a>=;
+#X text 149 369 abs(vasp) < abs(x);
+#X text 149 392 abs(vasp) > abs(x);
+#X text 149 444 abs(vasp) >= abs(x);
+#X text 149 421 abs(vasp) <= abs(x);
+#X obj 362 488 vasp.sum?;
+#X text 433 486 sum of samples;
+#X restore 72 128 pd arithmetic;
+#N canvas 197 195 744 308 generators 0;
+#X obj 389 194 vasp.*cosc;
+#X obj 389 138 vasp.*phasor;
+#X obj 389 110 vasp.*osc;
+#X obj 72 222 vasp.cnoise;
+#X obj 72 194 vasp.cosc;
+#X obj 72 166 vasp.noise;
+#X obj 72 138 vasp.phasor;
+#X obj 72 110 vasp.osc;
+#X text 72 67 generate .....;
+#X text 166 165 vasp noise generator;
+#X text 166 134 vasp saw tooth generator;
+#X text 166 109 vasp sine wave generator;
+#X text 166 226 complex noise;
+#X text 166 190 complex sine wave;
+#X obj 35 22 cnv 15 15 15 empty empty generators 0 10 1 14 -262144
+-1 0;
+#X text 366 67 multiply a buffer content with the oscillator functions
+...;
+#X restore 72 179 pd generators;
+#N canvas 510 190 355 349 filters 0;
+#X obj 53 107 vasp.flp;
+#X obj 53 77 vasp.fhp;
+#X text 157 111 low pass;
+#X text 157 80 high pass;
+#X obj 35 22 cnv 15 15 15 empty empty filters 0 10 1 14 -262144 -1
+0;
+#X obj 52 205 vasp.rvalleys;
+#X obj 52 238 vasp.rpeaks;
+#X text 156 205 radius valleys;
+#X text 156 238 radius peaks;
+#X obj 52 173 vasp.peaks;
+#X obj 52 140 vasp.valleys;
+#X text 156 175 local peaks of a vasp;
+#X text 156 142 local minima of a vasp;
+#X restore 71 255 pd filters;
+#N canvas 306 143 560 383 displace 0;
+#X text 158 163 rotate buffer content symmetrically;
+#X obj 80 164 vasp.xrot;
+#X obj 80 232 vasp.xmirr;
+#X obj 80 197 vasp.mirr;
+#X obj 80 132 vasp.rot;
+#X obj 80 97 vasp.xshift;
+#X obj 80 62 vasp.shift;
+#X text 158 231 mirrors a vasp symmetrically;
+#X text 158 196 mirrors a vasp;
+#X text 158 61 shifts the buffer content;
+#X text 158 131 rotate buffer content;
+#X obj 35 22 cnv 15 15 15 empty empty displace 0 10 1 14 -262144 -1
+0;
+#X text 157 96 shifts the buffer content symmetrically;
+#X obj 80 275 vasp.tilt;
+#X obj 80 316 vasp.xtilt;
+#X text 160 274 resamples around a center position;
+#X text 160 310 buffer is divided in two symmetrical halves and each
+one is resampled around a center position;
+#X restore 71 230 pd displace;
+#N canvas 206 180 677 313 transcendent 0;
+#X text 403 97 complex sample^2;
+#X text 403 67 complex integer power function;
+#X text 145 195 square root;
+#X text 145 226 signed sample^2;
+#X obj 329 66 vasp.cpowi;
+#X obj 329 96 vasp.csqr;
+#X obj 73 257 vasp.ssqrt;
+#X obj 73 226 vasp.ssqr;
+#X obj 73 194 vasp.sqrt;
+#X obj 73 164 vasp.sqr;
+#X obj 73 134 vasp.pow;
+#X text 145 257 signed square root;
+#X text 145 135 samps^x;
+#X text 145 165 sample^2;
+#X obj 329 142 vasp.rpow;
+#X text 396 143 radius power function;
+#X obj 73 102 vasp.log;
+#X obj 73 66 vasp.exp;
+#X text 145 102 logarithm;
+#X text 145 66 exponential;
+#X obj 35 22 cnv 15 15 15 empty empty transcendent 0 10 1 14 -262144
+-1 0;
+#X restore 72 153 pd transcendent;
+#N canvas 236 197 682 329 minmax_etc. 0;
+#X obj 422 250 vasp.rmin;
+#X obj 422 218 vasp.rmax;
+#X text 511 250 radius minimum;
+#X text 511 219 radius maximum;
+#X obj 76 250 vasp.min;
+#X obj 76 218 vasp.max;
+#X obj 76 187 vasp.max?;
+#X obj 76 156 vasp.min?;
+#X obj 76 125 vasp.amax?;
+#X obj 76 94 vasp.amin?;
+#X obj 422 187 vasp.rmax?;
+#X obj 422 156 vasp.rmin?;
+#X obj 76 62 vasp.minmax;
+#X text 167 250 minimum of vasp and argument;
+#X text 167 219 maximum of vasp and argument;
+#X text 167 156 output min. value of a vasp;
+#X text 167 187 output max. value of a vasp;
+#X text 167 125 output max. absolute value of a vasp;
+#X text 167 94 output min. absolute value of a vasp;
+#X text 511 187 radius max. value;
+#X text 511 156 radius min. value;
+#X text 167 65 splits a vasp into minimum and maximum values;
+#X obj 35 22 cnv 15 15 15 empty empty minmax 0 10 1 14 -262144 -1 0
+;
+#X restore 71 279 pd minmax_etc.;
+#N canvas 229 139 538 399 window-functions 0;
+#X obj 59 28 cnv 15 15 15 empty empty window-functions 0 10 1 14 -262144
+-1 0;
+#X obj 77 92 vasp.window;
+#X obj 77 125 vasp.xwindow;
+#X obj 77 159 vasp.!window;
+#X obj 116 255 vasp.*window;
+#X obj 116 289 vasp.*xwindow;
+#X obj 116 318 vasp.*!window;
+#X text 188 122 symmetrical window;
+#X text 188 90 left part of symmetrical window;
+#X text 190 160 right part of symmetrical window;
+#X text 77 212 multiply...;
+#X restore 71 303 pd window-functions;
+#N canvas 188 241 512 403 utilities 0;
+#X obj 77 143 vasp.cnorm;
+#X obj 80 321 vasp.pwrap;
+#X obj 80 265 vasp.opt;
+#X obj 77 64 vasp.gate;
+#X text 158 265 optimize buffer content;
+#X text 157 64 gates vasp under a value (amplitude);
+#X text 158 143 sets complex radius of all samples to unity;
+#X obj 80 292 vasp.ropt;
+#X text 157 294 radius optimize;
+#X obj 77 90 vasp.rgate;
+#X text 158 90 radius gate;
+#X text 158 321 wraps value from 0-2 to -1 to 1;
+#X obj 59 28 cnv 15 15 15 empty empty utilities 0 10 1 14 -262144 -1
+0;
+#X obj 77 115 vasp.fix;
+#X obj 76 173 vasp.radio;
+#X text 73 226 abstractions:;
+#X text 158 115 fix NAN (not a number) values;
+#X text 157 172 filter radio messages;
+#X restore 71 326 pd utilities;
+#N canvas 173 0 652 692 declaration 0;
+#X obj 68 42 cnv 15 15 15 empty empty declaration 0 10 1 14 -262144
+-1 0;
+#X text 184 148 get a vector of a vasp;
+#X obj 84 152 vasp.vector;
+#X text 184 179 get the number of vectors of a vasp;
+#X obj 84 180 vasp.vectors?;
+#X text 184 207 set a vasp's offset(s) into the vector buffers;
+#X obj 84 208 vasp.offset;
+#X text 184 235 shift a vasp's offset(s) into the vector buffers;
+#X obj 84 236 vasp.offset+;
+#X text 184 263 get a single vectored vasp's offset(s) into the buffer
+;
+#X obj 84 264 vasp.offset?;
+#X obj 84 292 vasp.offset=;
+#X text 184 319 set a vasps frame count;
+#X obj 84 320 vasp.frames;
+#X text 184 349 raise/lower a vasps frame count;
+#X obj 84 348 vasp.frames+;
+#X text 184 374 get a vasps frame count;
+#X obj 84 376 vasp.frames?;
+#X obj 84 404 vasp.frames*;
+#X obj 84 432 vasp.frames/;
+#X obj 84 460 vasp.frames=;
+#X obj 84 488 vasp.size;
+#X obj 84 516 vasp.size+;
+#X obj 84 544 vasp.size*;
+#X obj 84 600 vasp.size?;
+#X obj 84 572 vasp.size/;
+#X obj 84 628 vasp.channel;
+#X obj 84 656 vasp.channel?;
+#X obj 84 124 vasp;
+#X text 184 123 store and output a vasp;
+#X text 184 405 change a vasps frame count by multiplication;
+#X text 184 430 change a vasps frame count by division;
+#X text 184 486 set the size of an array/buffer;
+#X text 186 517 raise the size of an array/buffer;
+#X text 186 542 change the size of an array/buffer by multiplication
+;
+#X text 185 603 get the size of a vasp;
+#X text 185 578 change the size of an array/buffer by division;
+#X text 186 658 get the channel of a multichannel vasp (MaxMSP only)
+;
+#X text 186 633 define the channel of a multichannel vasp (MAXMSP only)
+;
+#X text 55 84 (get help on right click/help just as usual);
+#X text 184 291 set a vasp's offset by searching for a value;
+#X text 184 461 change a vasp's frame count by searching for a value
+;
+#X restore 72 78 pd declaration;
+#N canvas 238 51 544 560 basics 0;
+#X text 173 122 check vasp dimensions;
+#X obj 73 122 vasp.check;
+#X text 173 162 sync 2 or more vasps;
+#X obj 73 162 vasp.sync;
+#X text 173 142 update the graphics of a patcher (e.g. waveform);
+#X obj 73 142 vasp.update;
+#X text 173 182 output a vasp multiply;
+#X obj 73 182 vasp.multi;
+#X text 173 228 split a vasp into its vectors;
+#X obj 73 228 vasp.split 2;
+#X text 173 248 join several vasps into one;
+#X obj 73 248 vasp.join 2;
+#X text 173 268 spit out vectors of a vasp (one vector after the other)
+;
+#X obj 73 268 vasp.spit;
+#X text 173 288 gather several vasps into one;
+#X obj 73 288 vasp.gather;
+#X text 173 308 output vasps with different lengths and offsets;
+#X obj 73 308 vasp.part;
+#X text 174 412 output the samples of a vasp as list;
+#X obj 74 412 vasp.?;
+#X text 174 431 output all non zero samples of a vasp as list;
+#X obj 74 432 vasp.??;
+#X obj 71 64 cnv 15 15 15 empty empty basics 0 10 1 14 -262144 -1 0
+;
+#X obj 73 328 vasp.->;
+#X text 173 328 copy a vasp into another one;
+#X text 173 348 copy a complex vasp;
+#X obj 73 348 vasp.c->;
+#X obj 75 469 vasp.!;
+#X text 175 469 create a temporary vasp (immediate);
+#X restore 72 103 pd basics;
+#X restore 232 387 pd objects;
+#X text 149 418 envelopes;
+#N canvas 39 33 908 540 envelopes 0;
+#N canvas 40 55 255 173 clear_buffer 0;
+#X obj 59 79 vasp.update;
+#X obj 59 56 vasp.= 0;
+#X obj 59 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 497 300 pd clear_buffer;
+#N canvas 0 0 450 300 graph167 0;
+#X array bufenv1 88200 float 0;
+#X coords 0 1 88199 -1 300 120 1;
+#X restore 513 99 graph;
+#N canvas 431 348 401 213 init 0;
+#X obj 36 19 loadbang;
+#X msg 36 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 36 45 symbol bufenv1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 621 293 pd init;
+#X obj 48 469 vasp.u;
+#X text 43 17 create envelopes from data-pairs;
+#X msg 497 272 vasp bufenv1;
+#X msg 46 103 vasp bufenv1;
+#X obj 46 159 vasp.u;
+#X obj 46 319 vasp.=;
+#X obj 46 263 t b a;
+#X msg 46 291 vasp bufenv1;
+#X obj 46 347 vasp.u;
+#X msg 46 222 env 0 0 0.8 1500 1 4000 0.95 10000 0.5 20000 0.15 55000
+0 88200;
+#X msg 48 397 vasp bufenv1;
+#X obj 48 421 vasp.!window lin;
+#X obj 48 447 vasp.* env 0 0 1 22050;
+#X obj 46 131 vasp.= env 1 0 -0.6 70000;
+#X text 231 129 an envelope as a creation argument;
+#X text 45 199 or sent as message;
+#X text 159 394 used as an argument alternatively to a value or vasp
+;
+#X text 46 85 CLICK HERE!;
+#X text 43 36 value - position in samples \, value2 - position2 \,
+...;
+#X connect 5 0 0 0;
+#X connect 6 0 16 0;
+#X connect 8 0 11 0;
+#X connect 9 0 10 0;
+#X connect 9 1 8 1;
+#X connect 10 0 8 0;
+#X connect 12 0 9 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 15 0 3 0;
+#X connect 16 0 7 0;
+#X restore 232 419 pd envelopes;
+#X text 137 450 vasps units;
+#N canvas 49 240 511 378 units 0;
+#N canvas 442 226 404 340 Hz_to_period_length 0;
+#X text 17 201 current sampling rate;
+#X floatatom 157 241 0 0 0 0 - - -;
+#X obj 157 143 t b f;
+#X text 215 242 period length;
+#X floatatom 157 115 0 0 0 0 - - -;
+#X obj 157 210 / 1;
+#X floatatom 30 180 0 0 0 0 - - -;
+#X text 202 112 frequency in Hz;
+#X obj 30 138 samplerate~;
+#X obj 30 115 loadbang;
+#X obj 39 44 cnv 15 15 15 empty empty Hz_to_period_length 0 10 1 14
+-262144 -1 0;
+#X connect 2 0 5 0;
+#X connect 2 1 5 1;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 8 0 6 0;
+#X connect 8 0 5 0;
+#X connect 9 0 8 0;
+#X restore 150 310 pd Hz_to_period_length;
+#X text 103 281 sample rate/frequency in Hz = frequency in period length
+(float);
+#X text 60 264 - frequencies are always defined in period lengths;
+#X msg 149 227 vasp 44100 buf1 22050 0;
+#X text 103 187 e.g: vasp message with an offset of 0.5 sec. and a
+length of 1 sec. (sr 44100);
+#X text 60 155 - lengths and offsets are always defined in samples
+(depending on sample rate);
+#X msg 150 113 vasp 44100 buf1 22050 0;
+#X text 60 69 - vasp index counting starts from 0;
+#X text 104 81 e.g: channel 0 in a vasp message means first channel
+in the buffer;
+#X obj 51 27 cnv 15 15 15 empty empty vasp_units 0 10 1 14 -262144
+-1 0;
+#X restore 233 451 pd units;
+#X text 112 483 vasp data types;
+#N canvas 218 38 524 621 data_types 0;
+#X text 68 48 vasp \, float \, envelope \, complex number \, double
+;
+#X text 83 84 vasp;
+#X text 83 196 float;
+#X text 96 130 vectors are always processed in parallel;
+#X text 81 280 envelope;
+#X text 95 216 (real) pd-style numbers;
+#X text 100 298 list of pairs setting value and position;
+#X text 79 380 complex numbers;
+#X msg 96 155 vasp buf1 buf2;
+#X floatatom 98 239 5 0 0 0 - - -;
+#X msg 100 323 env 0.5 0 -1 100 34.77 500;
+#X text 100 402 selector "complex" and pair of numbers;
+#X msg 100 427 complex 2.6 5.99;
+#X text 225 428 2.6+5.99i;
+#X text 83 477 double;
+#X msg 105 526 double 1 1e-013;
+#X text 101 501 for double precision of numbers;
+#X text 96 106 a vasp consists of one or more vectors of data;
+#X text 209 520 the two components are added internally;
+#X text 209 532 to represent a double precision number;
+#X restore 233 484 pd data_types;
+#X text 121 515 vasp glossary;
+#N canvas 69 118 655 553 glossary 0;
+#X text 100 84 buffer~ (MaxMSP) / array (Pd);
+#X text 120 100 resident data-field (can be channel-interleaved in
+Max/MSP) in system memory containing a number of frames;
+#X text 100 313 channel;
+#X text 100 379 vector;
+#X text 100 435 vasp;
+#X text 120 397 reference (with an offset and length \, with frames
+as units) to one channel of a buffer~ or array vector;
+#X text 120 452 contains one or more vectors in parallel with one common
+length but in general different offsets/channels per vector;
+#X text 120 330 a buffer~ (in MaxMSP) consists of one or more channels
+\, resulting in 1 \, 2 or 4 data elements per frame \, 0-indexed;
+#X text 121 183 32 bit IEEE floating point value \, typically (but
+not necessarily) normalized to the range -1...1 \;;
+#X text 100 161 data element (representing a sample);
+#X text 120 247 (aka "sample") time unit of sampled data - if multiple
+channels (typically 2 or 4) are sampled \, there are multiple data
+elements per frame;
+#X text 100 227 frame;
+#X obj 82 40 cnv 15 15 15 empty empty glossary 0 10 1 14 -262144 -1
+0;
+#X restore 233 516 pd glossary;

@@ -1,0 +1,292 @@
+#N canvas 209 116 779 549 10;
+#X obj 0 0 cnv 15 750 17 empty empty Mapping 10 9 0 16 -233017 -66577
+0;
+#X obj 305 18 cnv 15 445 15 empty empty Getting_your_message_across
+10 7 0 12 -217069 -33289 0;
+#X obj 305 230 cnv 15 445 15 empty empty Broadcasting_with_sends_and_receives
+10 7 0 12 -217069 -33289 0;
+#X obj 305 18 cnv 5 5 500 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 0 500 cnv 15 750 20 bs br PDDP_Project_2005 10 10 0 14 -217069
+-1 0;
+#N canvas 0 22 454 304 META 0;
+#X restore 151 502 pd META;
+#N canvas 696 168 524 404 PAGES 0;
+#X text 19 9 Put your pages here: (They must be named [pd PAGE1] [pd
+PAGE2]... (PAGE0 is the main patch).;
+#N canvas 93 122 779 548 PAGE4 0;
+#X obj 0 0 cnv 15 750 17 empty empty Mapping 10 9 0 16 -233017 -66577
+0;
+#X obj 6 328 cnv 15 300 15 empty empty Related_Objects 10 7 0 12 -217069
+-33289 0;
+#X obj 0 500 cnv 15 750 20 bs br PDDP_2005 10 10 0 14 -217069 -1 0
+;
+#X obj 624 503 bng 15 250 50 0 \$0-previous \$0- Previous -60 8 0 12
+-262144 -1 -1;
+#X obj 644 503 cnv 15 15 15 empty empty 4 0 8 0 12 -217069 -1 0;
+#X obj 660 503 cnv 15 15 15 empty empty of 0 8 0 12 -217069 -1 0;
+#X obj 676 503 cnv 15 25 15 empty 1000-page_count 4 4 8 0 12 -217069
+-1 0;
+#X obj 692 503 bng 15 250 50 0 \$0-next \$0- Next 20 8 0 12 -262144
+-1 -1;
+#X obj 745 0 cnv 5 5 500 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 0 0 cnv 5 5 500 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 305 16 cnv 5 5 485 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 38 388 LINK: universal-help.pd;
+#X obj 18 361 cnv 15 100 17 empty empty cyclone 3 9 0 12 -233017 -1
+0;
+#X text 39 447 LINK: send13-help.pd;
+#X text 39 467 LINK: receive13-help.pd;
+#X obj 18 421 cnv 15 100 17 empty empty ext13 3 9 0 12 -233017 -1 0
+;
+#X obj 305 378 cnv 15 445 15 empty empty More_Info 10 7 0 12 -217069
+-33289 0;
+#X text 345 401 LINK: spiffy example;
+#X text 345 416 LINK: Scope and Locality;
+#X text 345 432 LINK: pd-msg docs;
+#X obj 305 18 cnv 15 445 15 empty empty Sending_And_Receiving_from_Pd_itself
+10 7 0 12 -217069 -33289 0;
+#X text 358 70 blah blah blah \, no text here yet.;
+#X text 17 123 Or draw your own curve:;
+#X obj 192 72 curve_graph;
+#X restore 158 56 pd PAGE4;
+#N canvas 184 134 785 547 PAGE3 0;
+#X obj -70 0 cnv 15 750 17 empty empty Mapping 10 9 0 16 -233017 -66577
+0;
+#X obj 235 18 cnv 15 445 15 empty empty Internal_sends_and_receives
+10 7 0 12 -217069 -33289 0;
+#X obj 235 18 cnv 5 5 500 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj -70 500 cnv 15 750 20 bs br PDDP_2005 10 10 0 14 -217069 -1
+0;
+#X obj 554 503 bng 15 250 50 0 \$0-previous \$0- Previous -60 8 0 12
+-262144 -1 -1;
+#X obj 574 503 cnv 15 15 15 empty empty 3 0 8 0 12 -217069 -1 0;
+#X obj 590 503 cnv 15 15 15 empty empty of 0 8 0 12 -217069 -1 0;
+#X obj 606 503 cnv 15 25 15 empty 1000-page_count 4 4 8 0 12 -217069
+-1 0;
+#X obj 622 503 bng 15 250 50 0 \$0-next \$0- Next 20 8 0 12 -262144
+-1 -1;
+#X obj 235 200 cnv 15 445 15 empty empty Explicit_vs_hidden 10 7 0
+12 -217069 -33289 0;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0-sin 100 float 0;
+#X coords 0 1 99 -1 100 100 1;
+#X restore 127 98 graph;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0-cos 100 float 0;
+#X coords 0 1 99 -1 100 100 1;
+#X restore 127 217 graph;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0-atan 100 float 0;
+#X coords 0 1 99 -1 100 100 1;
+#X restore 127 337 graph;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0s 100 float 0;
+#X coords 0 1 99 0 100 100 1;
+#X restore -70 98 graph;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0c 100 float 0;
+#X coords 0 1 99 0 100 100 1;
+#X restore -70 217 graph;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0a 100 float 0;
+#X coords 0 1 99 0 100 100 1;
+#X restore -70 337 graph;
+#X text 54 77 range;
+#X text 151 78 -1 to 1;
+#X text -43 77 0 to 1;
+#N canvas 487 55 717 697 draw_arrays 0;
+#X msg 77 62 bang;
+#X obj 77 83 until;
+#X text 108 62 start;
+#X obj 77 105 f;
+#X obj 106 105 + 1;
+#X obj 152 107 sel 0;
+#X obj 106 127 mod 100;
+#X obj 77 23 loadbang;
+#X obj 77 156 trigger float float;
+#X obj 77 217 / 50;
+#X obj 77 191 - 50;
+#X obj 483 211 float;
+#X obj 18 217 / 100;
+#X obj 149 38 metro 5000;
+#X obj 149 19 loadbang;
+#X obj 183 255 tabwrite \$0-sin;
+#X obj 183 300 tabwrite \$0-cos;
+#X obj 183 351 tabwrite \$0-atan;
+#X obj 183 445 tabwrite \$0s;
+#X obj 183 485 tabwrite \$0c;
+#X obj 183 536 tabwrite \$0a;
+#X obj 183 236 sinusoid sin;
+#X obj 183 281 sinusoid cos;
+#X obj 183 332 sinusoid atan;
+#X obj 183 420 sinusoid sin;
+#X obj 183 466 sinusoid cos;
+#X obj 183 517 sinusoid atan;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 8 0;
+#X connect 4 0 6 0;
+#X connect 5 0 1 1;
+#X connect 6 0 3 1;
+#X connect 6 0 5 0;
+#X connect 7 0 0 0;
+#X connect 8 0 10 0;
+#X connect 8 0 12 0;
+#X connect 8 1 11 0;
+#X connect 9 0 21 0;
+#X connect 9 0 22 0;
+#X connect 9 0 23 0;
+#X connect 10 0 9 0;
+#X connect 11 0 15 1;
+#X connect 11 0 16 1;
+#X connect 11 0 17 1;
+#X connect 11 0 18 1;
+#X connect 11 0 19 1;
+#X connect 11 0 20 1;
+#X connect 12 0 24 0;
+#X connect 12 0 25 0;
+#X connect 12 0 26 0;
+#X connect 13 0 0 0;
+#X connect 14 0 13 0;
+#X connect 21 0 15 0;
+#X connect 22 0 16 0;
+#X connect 23 0 17 0;
+#X connect 24 0 18 0;
+#X connect 25 0 19 0;
+#X connect 26 0 20 0;
+#X restore 36 502 pd draw_arrays;
+#X text 151 198 -1 to 1;
+#X text -43 197 0 to 1;
+#X text 151 318 -1 to 1;
+#X text -43 317 0 to 1;
+#X text 151 438 -1 to 1;
+#X text -43 437 0 to 1;
+#X obj 32 98 sinusoid sin;
+#X obj 36 218 sinusoid cos;
+#X obj 32 337 sinusoid atan;
+#X restore 95 56 pd PAGE3;
+#X text 9 109 Don't forget to set \$0 and the number of pages \, including
+the main page.;
+#X obj 26 156 pddp_page \$0 4;
+#N canvas 137 150 787 558 PAGE2 0;
+#X obj 0 0 cnv 15 750 17 empty empty Mapping 10 9 0 16 -233017 -66577
+0;
+#X obj 305 18 cnv 15 445 15 empty empty Getting_your_message_across
+10 7 0 12 -217069 -33289 0;
+#X obj 305 230 cnv 15 445 15 empty empty Broadcasting_with_sends_and_receives
+10 7 0 12 -217069 -33289 0;
+#X obj 305 18 cnv 5 5 500 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 0 500 cnv 15 750 20 bs br PDDP_Project_2005 10 10 0 14 -217069
+-1 0;
+#X obj 624 503 bng 15 250 50 0 \$0-previous \$0- Previous -60 8 0 12
+-262144 -1 -1;
+#X obj 644 503 cnv 15 15 15 empty empty 2 0 8 0 12 -217069 -1 0;
+#X obj 660 503 cnv 15 15 15 empty empty of 0 8 0 12 -217069 -1 0;
+#X obj 676 503 cnv 15 25 15 empty \$0-page_count 4 4 8 0 12 -217069
+-1 0;
+#X obj 692 503 bng 15 250 50 0 \$0-next \$0- Next 20 8 0 12 -262144
+-1 -1;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0-curve 200 float 0;
+#X coords 0 1 199 -1 200 200 1;
+#X restore 87 181 graph;
+#X floatatom 46 58 8 0 0 0 - - -;
+#X floatatom 46 129 8 0 0 0 - - -;
+#X obj 49 146 hsl 200 15 0 1 0 0 empty empty empty 22 8 1 12 -262144
+-1 -1 0 1;
+#X obj 49 38 hsl 200 15 0 1 0 0 empty empty empty 22 8 1 12 -261681
+-1 -1 0 1;
+#N canvas 721 196 411 401 draw_array 0;
+#X msg 54 82 bang;
+#X obj 54 103 until;
+#X text 85 82 start;
+#X obj 54 125 f;
+#X obj 83 125 + 1;
+#X obj 54 43 loadbang;
+#X text 96 257 mapping output range: -1 to 1;
+#X obj 54 180 trigger float float;
+#X obj 127 127 select 0;
+#X obj 53 313 tabwrite \$0-curve;
+#X obj 138 9 inlet;
+#X obj 153 32 send \$0-to-numbox;
+#X obj 139 53 trigger bang float;
+#X obj 53 283 curve;
+#X obj 83 147 mod 200;
+#X obj 53 229 - 100;
+#X obj 54 257 / 100;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 7 0;
+#X connect 4 0 14 0;
+#X connect 5 0 0 0;
+#X connect 7 0 15 0;
+#X connect 7 1 9 1;
+#X connect 8 0 1 1;
+#X connect 10 0 11 0;
+#X connect 10 0 12 0;
+#X connect 12 0 0 0;
+#X connect 12 1 13 1;
+#X connect 13 0 9 0;
+#X connect 14 0 3 1;
+#X connect 14 0 8 0;
+#X connect 15 0 16 0;
+#X connect 16 0 13 0;
+#X restore 116 109 pd draw_array;
+#X obj 74 84 hsl 128 15 -1 1 0 1 empty empty empty -2 -6 0 8 -225271
+-1 -1 3600 0;
+#X floatatom 213 85 7 0 0 0 - #0-to-numbox -;
+#X obj 46 108 curve;
+#X connect 11 0 18 0;
+#X connect 12 0 13 0;
+#X connect 14 0 11 0;
+#X connect 16 0 15 0;
+#X connect 16 0 18 1;
+#X connect 18 0 12 0;
+#X restore 31 56 pd PAGE2;
+#X coords 0 0 1.01598e-05 1.58148e-05 96 15 0;
+#X restore 208 502 pd PAGES;
+#X obj 624 503 bng 15 250 50 0 \$0-previous \$0- Previous -60 8 0 12
+-262144 -1 -1;
+#X obj 644 503 cnv 15 15 15 empty empty 1 0 8 0 12 -217069 -1 0;
+#X obj 660 503 cnv 15 15 15 empty empty of 0 8 0 12 -217069 -1 0;
+#X obj 676 503 cnv 15 25 15 empty \$0-page_count 4 4 8 0 12 -217069
+-1 0;
+#X obj 692 503 bng 15 250 50 0 \$0-next \$0- Next 20 8 0 12 -262144
+-1 -1;
+#X obj 187 69 hid_rel2abs;
+#X obj 17 112 hid_smooth;
+#X obj 17 47 notescale;
+#X obj 95 69 hid_centered;
+#X obj 17 158 buttongate;
+#X obj 96 158 keygate;
+#X obj 96 112 hid_average;
+#X text 9 28 SCALING AND RANGING;
+#X text 9 95 SMOOTHING;
+#X obj 93 47 autoscale;
+#X text 9 141 BASIC CONTROLS;
+#X text 10 182 ONE-TO-MANY MAPPING;
+#X obj 17 207 hid_one2two;
+#X obj 102 207 hid_one2three;
+#X text 9 231 POLAR COORDINATES;
+#X text 9 275 ANGLE CONVERSIONS;
+#X obj 181 112 hid_lowpass;
+#X obj 201 207 hid_one2four;
+#X obj 17 69 reverse;
+#X obj 67 248 polar;
+#X obj 110 248 spiral;
+#X obj 17 248 vector;
+#X text 9 340 CURVES;
+#X obj 18 366 curve;
+#X obj 62 366 sinusoid;
+#X obj 141 295 radians->mapping;
+#X obj 143 315 degrees->mapping;
+#X obj 18 295 mapping->radians;
+#X obj 18 315 mapping->degrees;

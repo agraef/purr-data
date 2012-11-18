@@ -1,0 +1,27 @@
+#N canvas 140 178 568 628 10;
+#X text 19 18 Incorporate images. This is instantiated with;
+#X msg 86 132 open \$1;
+#X obj 86 88 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1 -1
+;
+#X obj 86 109 openpanel;
+#X obj 66 555 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X msg 265 152 size \$1 \$2;
+#X obj 265 129 pack 0 0;
+#X obj 313 106 hsl 128 15 0 127 0 0 empty empty y 7 7 0 10 -203904
+-1 -1 0 1;
+#X obj 263 88 hsl 128 15 0 127 0 0 empty empty x 7 7 0 10 -204800 -1
+-1 0 1;
+#X obj 309 337 photo frosch.gif;
+#X obj 101 336 photo volga.gif;
+#X text 19 34 [photo volga.gif];
+#X text 17 57 [photo] works with .gif \, .ppm \, and .pgm image formats
+only.;
+#X connect 1 0 10 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 5 0 10 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 1;
+#X connect 8 0 6 0;
+#X connect 10 0 4 0;

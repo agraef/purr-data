@@ -1,0 +1,42 @@
+#N canvas 1477 59 767 631 10;
+#X msg 59 187 play;
+#X msg 103 186 stop;
+#X floatatom 108 379 5 0 0 1 bpm - -;
+#X floatatom 62 451 5 0 0 1 note - -;
+#X obj 85 414 tgl 15 0 empty empty play_state 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 131 351 bng 15 250 50 0 empty empty loop 17 7 0 10 -262144 -1
+-1;
+#X floatatom 141 253 5 0 0 0 - - -;
+#X obj 62 314 mtl/clkSlave;
+#X obj 452 59 mtl/clkMaster 120;
+#X text 143 173 Open(click) to read about quantization:;
+#X obj 146 195 mtl/clk-quantization-help;
+#X floatatom 452 83 7 0 0 1 step - -;
+#X obj 552 87 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 145 220 quantization \$1;
+#X floatatom 452 33 5 0 0 0 - - -;
+#X text 56 41 Description: Follows the timing of a [clkMaster];
+#X floatatom 147 288 5 0 0 0 - - -;
+#X text 181 286 loop length;
+#X text 58 63 tags: timing sequencing;
+#X text 176 254 number of notes per beat. Possible values: 1 \, 2 \,
+3 \, 4 \, 6 \, 8 \, 12 \, 24;
+#X text 248 323 Argumments:;
+#X text 275 344 1 float: number of notes per beat.;
+#X text 275 360 2 float: number of notes in loop. If set to 0 \, looping
+is disabled.;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 6 0 7 1;
+#X connect 7 0 3 0;
+#X connect 7 1 4 0;
+#X connect 7 2 2 0;
+#X connect 7 3 5 0;
+#X connect 8 0 11 0;
+#X connect 8 2 12 0;
+#X connect 10 0 13 0;
+#X connect 13 0 7 0;
+#X connect 14 0 8 0;
+#X connect 16 0 7 2;

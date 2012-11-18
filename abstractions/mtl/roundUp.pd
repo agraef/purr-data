@@ -1,0 +1,11 @@
+#N canvas 1230 214 728 446 10;
+#X obj 172 113 inlet;
+#X obj 175 338 outlet;
+#X obj 264 230 expr if ( modf($f1) \, int($f1) + 1 \, int($f1));
+#X obj 172 162 moses 0;
+#X obj -105 222 expr int($f1);
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 3 1 2 0;
+#X connect 4 0 1 0;

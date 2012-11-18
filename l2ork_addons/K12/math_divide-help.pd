@@ -1,0 +1,27 @@
+#N canvas 1042 335 503 457 10;
+#X obj 45 147 cnv 15 466 99 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 1097 412 450 514 META 0;
+#X text 13 36 INLET_0 Connect a non-singal number here;
+#X text 14 7 DESCRIPTION This object divides the two numbers connected
+to the left and right inlets;
+#X text 12 62 INLET_1 Connect a non-signal number here. The left inlet
+number will be divided by this one;
+#X text 14 97 OUTLET_0 This outputs the result of the division;
+#X restore 473 402 pd META;
+#X obj 29 -4 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 29 -32 cnv 15 501 28 empty empty MathDivide 5 14 0 20 -139274
+-262144 0;
+#X obj 500 -1 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 48 23 K12/math_number;
+#X obj 155 23 K12/math_number;
+#X obj 48 275 K12/math_number;
+#X obj 48 153 K12/math_divide;
+#X text 147 164 Math Divide does simple division. The non-signal number
+connected to the left inlet will be divided by the non-signal number
+connected to the right inlet. The result of the division will be sent
+out of the outlet.;
+#X connect 5 0 8 0;
+#X connect 6 0 8 1;
+#X connect 8 0 7 0;

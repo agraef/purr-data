@@ -1,0 +1,11 @@
+#N canvas 0 0 450 300 10;
+#X obj 123 157 synth.switch~;
+#X obj 123 132 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 124 196 mix.out_~;
+#X text 41 54 Comment: Taken from Andy Farnell's work.;
+#X text 43 26 Description: Generates the sound of a switch being turned
+on and off.;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 1 0 0 0;

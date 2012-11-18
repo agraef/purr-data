@@ -1,0 +1,91 @@
+#N canvas 113 27 826 499 10;
+#X obj 18 45 dsp;
+#X obj 18 15 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 18 101 5 0 0 0 - - -;
+#X floatatom 33 75 5 0 0 0 - - -;
+#X obj 33 294 sig~ 1;
+#X obj 117 297 sig~ 2;
+#X obj 202 298 sig~ 4;
+#X obj 34 367 unsig~;
+#X floatatom 34 391 5 0 0 0 - - -;
+#X obj 118 365 unsig~;
+#X floatatom 118 389 5 0 0 0 - - -;
+#X obj 256 321 any;
+#X obj 409 321 pp element;
+#X obj 409 276 f;
+#X floatatom 422 253 4 1 3 0 - - -;
+#X obj 399 254 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 203 367 unsig~;
+#X floatatom 203 391 5 0 0 0 - - -;
+#X floatatom 452 254 5 0 0 0 - - -;
+#X msg 256 102 diag 0 0 0;
+#X msg 256 126 diag 1 1 1;
+#X msg 256 147 diag 1 0 0;
+#X msg 256 168 diag 0 0 2;
+#X msg 256 189 diag 0 -10 0;
+#X obj 409 298 pack 0 0;
+#X text 653 17 SIG_OUT = A * SIG_IN;
+#X text 672 35 A is quadratic;
+#X text 356 96 message "diag";
+#X text 367 117 (nr_rows = nr_columns = n) items <float> elements of
+main-diagonal of matrix;
+#X text 609 52 dim(SIG_OUT) = dim(SIG_IN) = n;
+#X text 215 54 the elements of matrix are all zero except the main-diagonal
+;
+#X text 479 275 message "element";
+#X text 493 292 1.) item <float> row_index = column-index (1 .. n)
+;
+#X text 493 305 2.) item <float> matrix-element at index \, index;
+#X text 256 342 1.arg <float> Nr. of inlets = columns = outlets = rows
+;
+#X text 276 365 from previous state to next state of matrix;
+#X text 256 353 2.arg <float> interpolation-time in ms;
+#X text 70 16 matrix_diag_mul_line8~;
+#X obj 34 338 matrix_diag_mul_line8~ 3 3000;
+#X text 218 67 interpolation of matrix-elements will be done only every
+8 samples;
+#X msg 12 153 time 100;
+#X msg 12 179 time 3000;
+#X msg 14 250 stop;
+#X text 29 197 message "time";
+#X text 36 210 1.) item <float> interpolation-time in ms;
+#X text 53 249 message "stop";
+#X text 53 261 interrupts the interpolation;
+#X text 78 446 IEM KUG;
+#X text 62 434 musil;
+#X text 92 434 @;
+#X text 98 434 iem.at;
+#X text 61 456 Graz \, Austria;
+#X text 13 423 (c) Thomas Musil 2000 - 2006;
+#X text 216 15 multiplies a n-dimensional signal-in-vector with a dynamic
+changeable (like line~) signal-matrix to a n-dimensional signal-out-vector
+;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 0;
+#X connect 4 0 38 0;
+#X connect 5 0 38 1;
+#X connect 6 0 38 2;
+#X connect 7 0 8 0;
+#X connect 9 0 10 0;
+#X connect 11 0 38 0;
+#X connect 12 0 38 0;
+#X connect 13 0 24 0;
+#X connect 14 0 13 1;
+#X connect 15 0 13 0;
+#X connect 16 0 17 0;
+#X connect 18 0 24 1;
+#X connect 19 0 11 0;
+#X connect 20 0 11 0;
+#X connect 21 0 11 0;
+#X connect 22 0 11 0;
+#X connect 23 0 11 0;
+#X connect 24 0 12 0;
+#X connect 38 0 7 0;
+#X connect 38 1 9 0;
+#X connect 38 2 16 0;
+#X connect 40 0 38 0;
+#X connect 41 0 38 0;
+#X connect 42 0 38 0;

@@ -1,0 +1,4 @@
+pd-msg is public domain, so you can do everything you want with pd-msg :-)
+
+Cheers,
+Damien

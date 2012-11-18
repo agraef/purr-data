@@ -1,0 +1,38 @@
+#N canvas 499 134 550 477 10;
+#X msg 195 65 bang;
+#X obj 195 132 print float;
+#X msg 49 65 bang;
+#X msg 51 197 bang;
+#X obj 51 264 print blank;
+#X msg 53 348 bang;
+#X obj 53 415 print blank_with_default;
+#X text 24 173 When there is a blank argument \, there is no output:
+;
+#X text 26 37 This object can take any kind of argument:;
+#X msg 276 349 bang;
+#X obj 276 416 print blank_with_default;
+#X msg 204 195 bang;
+#X obj 204 262 print blank;
+#X obj 49 132 print non-float;
+#X obj 49 101 list-onearg word;
+#X obj 53 384 list-onearg \$1 default;
+#X obj 51 233 list-onearg;
+#X obj 204 231 list-onearg \$1;
+#X obj 195 101 list-onearg 5;
+#X text 13 12 [list-onearg];
+#X obj 276 385 list-onearg 0 256;
+#X text 32 295 If you set a second argument \, it will be used as the
+default when the argument is blank. (0 is treated as no argument \,
+too.);
+#X connect 0 0 18 0;
+#X connect 2 0 14 0;
+#X connect 3 0 16 0;
+#X connect 5 0 15 0;
+#X connect 9 0 20 0;
+#X connect 11 0 17 0;
+#X connect 14 0 13 0;
+#X connect 15 0 6 0;
+#X connect 16 0 4 0;
+#X connect 17 0 12 0;
+#X connect 18 0 1 0;
+#X connect 20 0 10 0;

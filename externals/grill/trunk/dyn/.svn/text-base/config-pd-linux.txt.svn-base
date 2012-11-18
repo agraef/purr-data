@@ -1,0 +1,21 @@
+
+# your c++ compiler (define only if it's different than g++)
+# CXX=g++-3.3
+
+# prefix to install the dyn library and header files
+# (leave blank to omit installation)
+INSTDIR=/usr/local
+
+# where are the PD header files? (m_pd.h, m_imp.h, g_canvas.h)
+PDPATH=/usr/src/pd/src
+
+# where should flext libraries be built?
+TARGDIR=./pd-linux
+
+# where should the dyn library and header be installed?
+# (leave blank to omit installation)
+PREFIX=/usr/local
+
+# additional compiler flags
+# (check if they fit for your system!)
+# UFLAGS=-march=pentium4

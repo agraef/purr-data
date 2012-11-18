@@ -1,0 +1,425 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests
+END
+qmult~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/qmult~.wav
+END
+ratio-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/ratio-unittest.pd
+END
+biquadseries~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/biquadseries~-unittest.pd
+END
+bdiag~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/bdiag~.wav
+END
+fdn~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/fdn~.wav
+END
+sbosc~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/sbosc~.wav
+END
+fwarp.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/fwarp.wav
+END
+eadsr~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/eadsr~-unittest.pd
+END
+clog~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/clog~.wav
+END
+qmult~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/qmult~-unittest.pd
+END
+resofilt~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/resofilt~.wav
+END
+bdiag~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/bdiag~-unittest.pd
+END
+ead~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/ead~.wav
+END
+fdn~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/fdn~-unittest.pd
+END
+junction.wav
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/junction.wav
+END
+sbosc~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/sbosc~-unittest.pd
+END
+ramp~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/ramp~.wav
+END
+bwin~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/bwin~.wav
+END
+filterortho~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/filterortho~.wav
+END
+dist~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/dist~.wav
+END
+fwarp-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/fwarp-unittest.pd
+END
+clog~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/clog~-unittest.pd
+END
+dynwav~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/dynwav~.wav
+END
+resofilt~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/resofilt~-unittest.pd
+END
+ead~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/ead~-unittest.pd
+END
+biquadseries~10.wav
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/biquadseries~10.wav
+END
+bfft~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/bfft~.wav
+END
+ramp~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/ramp~-unittest.pd
+END
+bwin~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/bwin~-unittest.pd
+END
+filterortho~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/filterortho~-unittest.pd
+END
+lattice~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/lattice~.wav
+END
+dist~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/dist~-unittest.pd
+END
+scrollgrid1D~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/scrollgrid1D~.wav
+END
+statwav~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/statwav~.wav
+END
+bitsplit~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/bitsplit~.wav
+END
+cheby~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/cheby~.wav
+END
+xfm~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/xfm~.wav
+END
+dynwav~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/dynwav~-unittest.pd
+END
+qnorm.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/qnorm.wav
+END
+permut~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/permut~-unittest.pd
+END
+ead~subnormal-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/ead~subnormal-unittest.pd
+END
+statwav~unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/statwav~unittest.pd
+END
+bfft~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/bfft~-unittest.pd
+END
+lattice~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/lattice~-unittest.pd
+END
+scrollgrid1D~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/scrollgrid1D~-unittest.pd
+END
+bitsplit~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/bitsplit~-unittest.pd
+END
+cheby~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/cheby~-unittest.pd
+END
+xfm~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/xfm~-unittest.pd
+END
+tabreadmix~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/tabreadmix~.wav
+END
+permute~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/permute~.wav
+END
+blocknorm~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/blocknorm~.wav
+END
+blosc~440.wav
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/blosc~440.wav
+END
+dwt~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/dwt~.wav
+END
+cexp~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/cexp~.wav
+END
+ffpoly.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/ffpoly.wav
+END
+blosc~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/blosc~.wav
+END
+filterortho~subnormal-unittest .pd
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/filterortho~subnormal-unittest%20.pd
+END
+ear~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/ear~.wav
+END
+blocknorm~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/blocknorm~-unittest.pd
+END
+junction~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/junction~-unittest.pd
+END
+qnorm~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/qnorm~-unittest.pd
+END
+ratio.wav
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/ratio.wav
+END
+biquadseries~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/biquadseries~.wav
+END
+dwt~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/dwt~-unittest.pd
+END
+cexp~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/cexp~-unittest.pd
+END
+ffpoly-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/ffpoly-unittest.pd
+END
+blosc~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/blosc~-unittest.pd
+END
+tabreadmix~unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/tabreadmix~unittest.pd
+END
+ear~-unittest.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb/unittests/ear~-unittest.pd
+END
+eadsr~.wav
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15736/trunk/externals/creb/unittests/eadsr~.wav
+END

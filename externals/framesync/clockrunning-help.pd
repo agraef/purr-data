@@ -1,0 +1,9 @@
+#N canvas 116 136 373 298 10;
+#X obj 95 187 clockrunning;
+#X obj 95 87 frameclock;
+#X obj 95 209 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 8 20 track whether the frameclock is running or not (there
+is a 1 frame delay to turn off);
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;

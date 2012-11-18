@@ -1,0 +1,12 @@
+#N canvas 584 581 299 140 10;
+#X text 199 97 dh20020106;
+#X obj 112 36 inlet;
+#X obj 35 36 inlet;
+#X obj 70 95 outlet;
+#X text 10 6 move : convert x1 y1 to a move command;
+#X msg 35 62 move \$1 0;
+#X msg 112 61 move 0 \$1;
+#X connect 1 0 6 0;
+#X connect 2 0 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;

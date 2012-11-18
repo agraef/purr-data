@@ -1,0 +1,23 @@
+#N canvas 389 289 588 432 10;
+#X obj 146 235 list-drip2;
+#X text 72 58 Drips two lists in sync \, as long as the first list
+lasts.;
+#X text 42 25 list-drip2;
+#X msg 213 208 a b c d;
+#X obj 213 258 bng 15 250 50 0 empty empty End_of_1st_list 17 7 1 10
+-262144 -1 -1;
+#X obj 179 306 print 2nd;
+#X obj 146 334 print 1st;
+#X msg 146 122 1 2 3 4;
+#X msg 146 100 1 2 3;
+#X msg 146 145 1 2 3 4 5;
+#X obj 146 199 t a b;
+#X connect 0 0 6 0;
+#X connect 0 1 5 0;
+#X connect 0 2 4 0;
+#X connect 3 0 0 1;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 0 0;
+#X connect 10 1 3 0;

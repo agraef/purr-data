@@ -1,0 +1,124 @@
+#N canvas 0 0 448 248 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header atom_conversion
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 43 80 pddp/pddplink all_about_messages.pd;
+#X obj 1 226 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 65 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION how to convert Pd atoms;
+#X restore 392 228 pd META;
+#N canvas 14 133 428 105 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Atoms- Related Objects;
+#X floatatom 22 43 5 0 0 0 - - -;
+#X symbolatom 22 67 10 0 0 0 - - -;
+#X obj 105 42 makefilename;
+#X obj 200 60 pddp/helplink cyclone/fromsymbol;
+#X obj 200 80 pddp/helplink zexy/symbol2list;
+#X obj 311 59 pddp/helplink zexy/list2symbol;
+#X obj 311 79 pddp/helplink cyclone/tosymbol;
+#X obj 200 40 pddp/pddplink all_about_externals.pd -text _________
+;
+#X obj 200 40 pddp/pddplink all_about_externals.pd -text Externals
+;
+#X restore 103 228 pd Related_objects;
+#X obj 6 228 pddp/pddplink all_about.pd -text All About Pd;
+#X text 208 106 <- give some links to the manual;
+#X obj 43 65 pddp/pddplink all_about_atoms.pd;
+#X text 42 36 Converting between atom types in Pd can be tricky. Make
+sure you have read the following help patches first:;
+#N canvas 11 164 428 140 symbol-atom_to_float 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 From a symbol-atom to a float;
+#X obj 20 70 pddp/helplink cyclone/fromsymbol;
+#X obj 20 90 pddp/helplink zexy/symbol2list;
+#X text 20 37 There are no internal objects to turn a symbol-atom into
+a float. There are two important externals for this \, however:;
+#X restore 43 128 pd symbol-atom_to_float;
+#N canvas 15 77 428 554 float_to_symbol-atom 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Changing a float to a symbol-atom;
+#X obj 45 201 hsl 128 15 0 127 0 0 empty 123 empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X msg 42 353 symbol 123;
+#X obj 42 375 print empty_symbol;
+#X msg 151 457 123;
+#X text 192 456 <- try it;
+#X obj 151 479 makefilename %d;
+#X text 255 479 <- outputs "symbol 123" \,;
+#X text 255 494 where "123" is a real;
+#X text 255 509 symbol-atom;
+#X obj 130 503 send;
+#X floatatom 93 479 5 0 0 0 - - -;
+#X text 19 494 Also see:;
+#X obj 20 514 pddp/helplink zexy/list2symbol;
+#X obj 20 529 pddp/helplink cyclone/tosymbol;
+#X text 19 267 However \, you can send a symbol message to the right
+inlet of [send] to specify the send-name. You might think that using
+a symbol message will convert the float to a symbol-atom. Unfortunately
+\, that doesn't work either-- the message box in Pd silently ignores
+the float and outputs an empty symbol:;
+#X text 19 119 For example \, you can enter a number for the "receive-symbol"
+of the so-called IEMGUIS like the slider below. Since receive-names
+need to be symbol-atoms \, the slider automatically makes "123" a symbol-atom
+after you click "Ok" or "Apply" in the "Properties" dialogue.;
+#X text 181 198 <- [hslider] with receive-symbol "123";
+#X text 19 36 Usually it is easy to distinguish between floats and
+symbol-atoms in Pd. However \, there are times when it can be useful
+to have a symbol-atom that looks like a number. This can quickly get
+confusing because there's no visible difference between the float "123"
+and the symbol-atom "123". The only difference is in how it is understood
+by Pd.;
+#X text 19 225 If I try to send a value to the slider using [send 123]
+\, there will be an error because after I type the argument "123" in
+an object box \, Pd will interpret it as a float.;
+#X text 19 395 Solution: the [makefilename] object. It always outputs
+a symbol message (remember that a symbol message must have a symbol-atom
+as an element) \, and so it will convert an incoming float to a symbol-atom:
+;
+#X connect 3 0 4 0;
+#X connect 5 0 7 0;
+#X connect 7 0 11 1;
+#X connect 12 0 11 0;
+#X restore 43 106 pd float_to_symbol-atom;
+#N canvas 25 220 428 426 multiple_atoms_to_one_symbol-atom 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Concatenate multiple atoms;
+#X msg 42 98 list one 2 3;
+#X msg 140 98 1 2 3;
+#X msg 42 131 symbol \$1\$2\$3;
+#X symbolatom 42 158 10 0 0 0 - - -;
+#X text 19 36 Dollarsign variables can be used to join several atoms
+together to form one atom. The result is always a symbol-atom.;
+#X text 139 131 \$1\$2\$3 is always a symbol-atom \,;
+#X text 139 148 so we can safely use it build a;
+#X text 139 165 symbol message.;
+#X obj 42 277 makefilename Program%cFiles;
+#X symbolatom 42 301 0 0 0 0 - - -;
+#X msg 42 250 32;
+#X obj 41 352 pddp/helplink zexy/list2symbol;
+#X obj 41 372 pddp/helplink cyclone/tosymbol;
+#X text 19 196 There are also times when you may need to create a symbol-atom
+that contains spaces in it. Use the %c argument with [makefilename].
+;
+#X text 19 335 For more complex constructions \, see:;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 10 0 11 0;
+#X connect 12 0 10 0;
+#X restore 43 150 pd multiple_atoms_to_one_symbol-atom;
+#X text 42 171 See also:;
+#X obj 43 187 pddp/pddplink all_about_message_conversion.pd;
+#X obj 43 202 pddp/pddplink all_about_symbol_construction.pd;

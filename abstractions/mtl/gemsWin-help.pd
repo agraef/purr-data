@@ -1,0 +1,79 @@
+#N canvas 282 148 807 512 10;
+#X declare -lib Gem;
+#X declare -lib Gem;
+#X text 6 -12 Description: Controls the Gem window.;
+#X text 7 185 Clicking with the RIGHT mouse button in the Gem window
+will move the camera.;
+#X text 7 220 Double clicking with the RIGHT mouse button will reset
+the camera.;
+#X text 409 92 Outlet_1: Outputs the settings made to the Gem window.
+NOTE that this outlet is COMMON to all gems.win.;
+#X text 412 136 Arguments (use none \, some or all of these):;
+#X text 7 255 Double clicking with the MIDDLE mouse button will destroy
+the window.;
+#X text 408 39 Inlet_1 (float): 1=Create and render. 0=Destroy. All
+of the standard Gem window commands can still be used (see gemwin's
+help for more information).;
+#X text 6 162 -- MOUSE CONTROLS (for Linux and Windows) --;
+#X text 434 196 /fps f: sets the Gem window framerate.;
+#X text 434 217 /border f: set the Gem window border presence.;
+#X text 5 3 tags: gems;
+#X obj 63 408 cube;
+#X obj 63 354 gemhead;
+#X obj 13 50 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X msg 84 48 /dimen 640 480;
+#X text 433 158 /dimen Width Height: sets the Gem window dimension.
+;
+#X text 434 177 /offset Width Height: sets the Gem window offset.;
+#X text 430 238 /lighting f: turns the lighting on/off;
+#X text 432 256 /anti-aliasing f: turns the antialiasing on/of;
+#X obj 183 333 gemhead;
+#X obj 183 364 rotateXYZ 30 30 0;
+#X msg 116 75 /lighting 0;
+#X obj 183 417 light;
+#X obj 235 419 loadbang;
+#X msg 236 443 1 1 0;
+#X obj 329 336 gemhead;
+#X obj 329 420 light;
+#X obj 381 422 loadbang;
+#X msg 382 446 0 1 0;
+#X obj 329 367 rotateXYZ -30 -45 0;
+#X obj 329 393 translateXYZ 0 0 5;
+#X obj 183 390 translateXYZ 0 0 5;
+#X obj 714 -5 import Gem;
+#X obj 8 112 mtl/gemsWin /dimen 320 240 /lighting 1;
+#X obj 580 286 cnv 15 200 20 empty empty /gemsWin/ 2 12 0 8 -258401
+-262144 0;
+#X obj 580 329 nbx 5 14 -1e+37 1e+37 0 0 /gemsWin/w /gemsWin/w_ w 50
+8 0 8 -262144 -1 -1 0 256;
+#X obj 580 347 nbx 5 14 -1e+37 1e+37 0 0 /gemsWin/h /gemsWin/h_ h 50
+8 0 8 -262144 -1 -1 0 256;
+#X obj 580 365 nbx 5 14 -1e+37 1e+37 0 0 /gemsWin/y /gemsWin/y_ y 50
+8 0 8 -262144 -1 -1 0 256;
+#X obj 580 383 nbx 5 14 -1e+37 1e+37 0 0 /gemsWin/x /gemsWin/x_ x 50
+8 0 8 -262144 -1 -1 0 256;
+#X obj 580 401 tgl 15 0 /gemsWin/lighting /gemsWin/lighting_ lighting
+17 7 0 8 -262144 -166441 -1 0 1;
+#X obj 580 419 nbx 5 14 -1e+37 1e+37 0 0 /gemsWin/fps /gemsWin/fps_
+fps 50 8 0 8 -262144 -1 -1 0 256;
+#X obj 580 437 tgl 15 0 /gemsWin/border /gemsWin/border_ border 17
+7 0 8 -262144 -166441 -1 0 1;
+#X obj 580 455 nbx 5 14 -1e+37 1e+37 0 0 /gemsWin/anti-aliasing /gemsWin/anti-aliasing_
+anti-aliasing 50 8 0 8 -262144 -1 -1 0 256;
+#X obj 580 311 tgl 15 0 /gemsWin/create /gemsWin/create_ create 17
+7 0 8 -262144 -166441 -1 0 1;
+#X connect 12 0 11 0;
+#X connect 13 0 33 0;
+#X connect 14 0 33 0;
+#X connect 19 0 20 0;
+#X connect 20 0 31 0;
+#X connect 21 0 33 0;
+#X connect 23 0 24 0;
+#X connect 24 0 22 1;
+#X connect 25 0 29 0;
+#X connect 27 0 28 0;
+#X connect 28 0 26 1;
+#X connect 29 0 30 0;
+#X connect 30 0 26 0;
+#X connect 31 0 22 0;

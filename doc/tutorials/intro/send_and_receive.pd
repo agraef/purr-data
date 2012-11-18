@@ -1,0 +1,132 @@
+#N canvas 433 8 555 660 10;
+#X obj 22 344 cnv 15 500 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 26 518 cnv 15 500 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 24 723 cnv 15 500 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 22 12 cnv 15 500 100 empty empty MESSAGES:send_variables_II
+20 12 0 14 -233017 -66577 0;
+#X obj 39 170 hsl 50 15 0 127 0 0 empty empty empty -2 -6 0 8 -261689
+-258699 -1 0 0;
+#X floatatom 37 369 5 0 0 0 - - -;
+#X floatatom 95 370 5 0 0 0 - - -;
+#N canvas 0 0 392 106 sous-patchs1 0;
+#X floatatom 1 62 5 0 0 0 - - -;
+#X obj 1 39 r A;
+#X text -3 5 Ce sous-patch recevra TOUS les "send A";
+#X connect 1 0 0 0;
+#X restore 38 437 pd sous-patchs1;
+#N canvas 4 159 254 107 sous-patchs2 0;
+#X floatatom 18 59 5 0 0 0 - - -;
+#N canvas 5 328 278 106 sous-patchs3 0;
+#X floatatom 12 70 5 0 0 0 - - -;
+#X obj 12 44 r A;
+#X text 9 4 bien que loin du patch-MERE;
+#X text 8 20 on recoit les "send A";
+#X connect 1 0 0 0;
+#X restore 78 47 pd sous-patchs3;
+#X obj 18 24 r B;
+#X connect 2 0 0 0;
+#X restore 38 463 pd sous-patchs2;
+#X text 32 133 On peut avoir autant de send/receive du meme nom;
+#X obj 36 191 send JeanPaulII;
+#X obj 166 169 hsl 50 15 0 127 0 0 empty empty empty -2 -6 0 8 -261689
+-258699 -1 0 0;
+#X obj 163 190 send JeanPaulII;
+#X obj 304 168 hsl 50 15 0 127 0 0 empty empty empty -2 -6 0 8 -261689
+-258699 -1 0 0;
+#X obj 301 189 send JeanPaulII;
+#X obj 40 253 hsl 50 15 0 127 0 0 empty empty empty -2 -6 0 8 -261689
+-258699 -1 0 0;
+#X obj 37 229 receive JeanPaulII;
+#X obj 193 253 hsl 50 15 0 127 0 0 empty empty empty -2 -6 0 8 -261689
+-258699 -1 0 0;
+#X obj 190 229 receive Poutine;
+#X text 251 249 <- on ne recoit pas;
+#X text 34 345 GLOBAL - envoie et recoie un message dans TOUS LES PATCHS
+;
+#X obj 37 393 s A;
+#X obj 95 393 s B;
+#X floatatom 37 642 5 0 0 0 - - -;
+#X obj 221 604 f \$0;
+#X obj 221 584 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 221 631 5 0 0 0 - - -;
+#X floatatom 38 585 5 0 0 0 - - -;
+#X floatatom 128 611 5 0 0 0 - - -;
+#X obj 38 609 s \$0-foo;
+#X obj 128 585 r \$0-foo;
+#X obj 37 666 s 1012-foo;
+#N canvas 318 78 289 202 sous-patch4 0;
+#X obj 27 33 f \$0;
+#X obj 27 13 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 27 60 5 0 0 0 - - -;
+#X floatatom 117 47 5 0 0 0 - - -;
+#X obj 117 21 r \$0-foo;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 4 0 3 0;
+#X restore 153 666 pd sous-patch4;
+#X text 34 538 \$0 : variable au hasard designee par pd au demarrage
+\, qui certifie que la variable est unique dans tous les patchs;
+#X text 37 516 LOCAL - variable unique/chaque demarrage;
+#X text 34 809 Nous pouvons utiliser les arguments de l'abstraction
+pour envoyer les valeures a ces fils.;
+#X text 33 754 Dans PD \, chaque abstractions et sous-patchs ont des
+parents. Le parent est le patch principal dans lequel est creer l'instance
+de l'abstraction ou du sous-patch.;
+#X floatatom 124 865 5 0 0 0 - - -;
+#X floatatom 198 864 5 0 0 0 - - -;
+#X floatatom 270 864 5 0 0 0 - - -;
+#X obj 198 888 s 2-fils;
+#X obj 270 889 s 3-petit-fils;
+#X floatatom 132 980 5 0 0 0 - - -;
+#X obj 132 1005 s 1-2-fils;
+#X text 33 305 La portee d'un message peut etre GLOBAL/LOCAL/UNIQUE
+:;
+#X text 34 726 UNIQUE - heriter la variable des parents/ message unique
+;
+#X text 41 44 Utilisation des objets send et receive permet d'envoyer
+des messages sans fils. Un peu comme une RADIO \, il faut que ces deux
+objets ait le meme nom pour etre connecte.;
+#X obj 45 864 mere 1;
+#X obj 124 889 s 1-mere;
+#X text 37 946 difficulte : 2 variables composent le nom du send/receive
+;
+#X obj 149 1338 dist;
+#X obj 194 1338 remote;
+#X obj 255 1338 matrix;
+#X obj 21 1304 cnv 15 500 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 34 1306 ROUTING DES MESSAGES;
+#X obj 30 1338 table routing;
+#X obj 317 1338 OSCroute;
+#X text 30 1037 Les signes dollar $ se placent toujours au debut du
+symbol. Pour avoir plusieurs dollars \, on peut utiliser les abstractions
+\, en les imbriquant les unes dans les autres avec \$1-maVariable.
+une autre methode avec makefilename (voir 11-page.pd);
+#X text 28 1366 voir 21-exercices.pd;
+#X obj 29 1141 cnv 15 500 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 40 1142 RESEAU;
+#X obj 44 1182 netreceive;
+#X obj 128 1182 netsend;
+#X obj 44 1219 OSCroute;
+#X connect 4 0 10 0;
+#X connect 5 0 21 0;
+#X connect 6 0 22 0;
+#X connect 11 0 12 0;
+#X connect 13 0 14 0;
+#X connect 16 0 15 0;
+#X connect 18 0 17 0;
+#X connect 23 0 31 0;
+#X connect 24 0 26 0;
+#X connect 25 0 24 0;
+#X connect 27 0 29 0;
+#X connect 30 0 28 0;
+#X connect 37 0 48 0;
+#X connect 38 0 40 0;
+#X connect 39 0 41 0;
+#X connect 42 0 43 0;

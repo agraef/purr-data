@@ -1,0 +1,63 @@
+README for the PureMeasurement collection of patches v28II06
+------------------------------------------------------------
+
+    The patches in this directory are free software; you can redistribute
+    them and/or modify them under the terms of the GNU General Public License 
+    as published by the Free Software Foundation; either version 2 of the 
+    License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+1. Getting it to run
+====================
+1.1. Prerequisites
+------------------
+- PureData >= 0.38 (http://crca.ucsd.edu/~msp/software.html)
+- iemlib >= 1.15 (http://pd.iem.at/iemlib/)
+
+1.2. OS-specific issues
+-----------------------
+1.2.1. Win
+----------
+In order to look nicely, you may have to adjust the font sizes in the patches
+(they are created on linux at a screen resolution of 1400x1050, so there will be
+slight font incompatibilities whenever you use them with another OS and/or
+another screen resolution). 
+The default font (the small black one) is changed via the Edit->Font menu. 
+The GUI fonts are changed by right-clicking on the respective GUI (or on the 
+top left corner of canvases) and choosing "Properties". 
+
+
+2. Using the patches
+====================
+The PureMeasurement Collection of pd patches allows you to perform acoustical
+measurements with your computer (equipped with an audio interface).
+They use the PureData software (supplemented by an additional library: iemlib,
+see 1.1).
+If you are new to PureData, please read the concise introduction by M. Puckette
+(http://crca.ucsd.edu/~msp/Pd_documentation/) and check out the examples in the
+help menu of PureData to get an idea of how it works.
+When launching PureData, there should be messages stating that all parts of 
+iemlib were successfully loaded (like "iemlib1 (R-1.15) library loaded!").
+
+The patches are organized as "tools" (small useful things you could use to 
+build your own patches) or "applications" (more sophisticated patches you can 
+use out-of-the-box).
+
+When using them, there are two main rules to follow:
+- interactive elements usually have a WHITE background 
+- look at the comments or into the "readme" subpatches
+
+
+--HAVE FUN and get your measurement right,
+Matthias
+
+Oldenburg, 28 February 2006 

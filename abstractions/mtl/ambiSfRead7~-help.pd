@@ -1,0 +1,49 @@
+#N canvas 364 170 650 502 10;
+#X msg 39 147 openpanel;
+#X text 38 343 You can find sample Ambisonic B-format sound files on
+http://ambisonia.com;
+#X msg 194 161 loop \$1;
+#X obj 194 142 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 193 111 play;
+#X msg 232 111 stop;
+#X msg 279 114 autostart \$1;
+#X obj 279 95 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 293 223 12 0 0 0 - - -;
+#X obj 439 280 hsl 127 8 0 1 0 0 empty empty empty -2 -8 0 10 -191407
+-1 -1 0 1;
+#X obj 538 219 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 481 249 12 0 0 0 - - -;
+#X obj 292 246 / 1000;
+#X floatatom 291 269 12 0 0 0 - - -;
+#X text 374 223 ms;
+#X text 371 271 seconds;
+#X obj 436 183 route duration elapsed done;
+#X obj 436 254 /;
+#X text 38 384 Important: The sampling rate of the file and the sampling
+rate of Pd must be the same if you want the sound to be played at correct
+speed and pitch.;
+#X text 38 445 See also :;
+#X obj 108 447 readsf~;
+#X text 15 40 tags: ambisonic;
+#X obj 39 191 mtl/ambiSfRead7~ autostart 1 \, loop 0;
+#X text 12 9 Description: Reads a 7-channels first order Ambisonic
+B-format wav sound file.;
+#X connect 0 0 22 0;
+#X connect 2 0 22 0;
+#X connect 3 0 2 0;
+#X connect 4 0 22 0;
+#X connect 5 0 22 0;
+#X connect 6 0 22 0;
+#X connect 7 0 6 0;
+#X connect 8 0 12 0;
+#X connect 12 0 13 0;
+#X connect 16 0 8 0;
+#X connect 16 0 17 1;
+#X connect 16 1 11 0;
+#X connect 16 1 17 0;
+#X connect 16 2 10 0;
+#X connect 17 0 9 0;
+#X connect 22 7 16 0;

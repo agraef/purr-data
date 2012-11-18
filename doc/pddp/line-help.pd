@@ -1,0 +1,254 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header line 3 12 0 18 -204280
+-1 0;
+#X obj 0 267 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 364 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 45 DESCRIPTION ramp generator;
+#X text 12 65 INLET_0 float list stop;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS control time;
+#X restore 500 598 pd META;
+#X obj 0 375 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 439 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 498 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 59 376 428 230 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 line~;
+#X obj 62 43 vline~;
+#X text 8 2 [line] Related Objects;
+#X text 19 102 Externals;
+#X obj 19 142 pddp/helplink markex/tripleLine;
+#X obj 19 162 pddp/helplink iemlib/t3_line~;
+#X obj 19 182 pddp/helplink iemlib/fade~;
+#X obj 19 122 pddp/helplink maxlib/step;
+#X restore 101 598 pd Related_objects;
+#X obj 78 276 cnv 17 3 63 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 275 float;
+#X text 98 301 list;
+#X text 98 383 float;
+#X obj 78 384 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 347 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 346 float;
+#X obj 493 3 line;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/line -text
+pdpedia: line;
+#X obj 137 180 line;
+#X msg 137 87 1000 1000;
+#X floatatom 137 201 5 0 0 0 - - -;
+#X text 203 86 ramp up.;
+#X msg 146 110 0 1000;
+#X text 193 110 ramp down.;
+#X msg 158 154 stop;
+#X msg 154 133 42;
+#X text 180 134 jumps to this value immediately.;
+#X text 195 154 stops the current ramp.;
+#N canvas 106 115 428 446 continuous_ramps 0;
+#X text 19 98 In other words \, if [line] receives a message specifying
+some new target and time before reaching the previous target \, it
+takes off from its current value.;
+#X obj 26 247 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X msg 56 205 stop;
+#X msg 49 185 42;
+#X obj 23 226 line;
+#X msg 23 144 127 5000;
+#X msg 41 165 0 5000;
+#X text 16 271 Due to this unique behavior \, a common construct found
+in Pd patches includes the [pack] object as follows:;
+#X obj 30 392 line;
+#X floatatom 30 413 10 0 0 0 - - -;
+#X floatatom 30 306 5 0 0 0 - - -;
+#X obj 30 372 pack f 500;
+#X msg 41 325 50;
+#X msg 49 346 2000;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [line] Continuous Ramps;
+#X text 21 37 [line] does not schedule its incoming messages. What
+this means is that if you send [line] a new target value mid-way through
+a ramp \, a new ramp is immediately created to the new target value
+starting from the "current" value.;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 8 0 9 0;
+#X connect 10 0 11 0;
+#X connect 11 0 8 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X restore 101 551 pd continuous_ramps;
+#N canvas 107 25 428 516 grain_rate_and_creation_arguments 0;
+#X text 21 39 The "grain rate" of [line] is the rate at which it will
+output its values. The faster the grain is \, the smoother the ramp
+will appear. While slower grain rates will produce a more disjunct
+ramp. Of course this setting will alter the amount of CPU that the
+[line] object will require. Higher rates require more computation.
+;
+#X text 22 145 This means simply that [line] will output a new value
+between its current value and your new value once every 20 milliseconds.
+;
+#X text 22 126 The default grain rate is 20 milliseconds.;
+#X text 19 193 [line]'s optional creation arguments can be used to
+reset the grain rate. However \, the grain rate cannot be reset dynamically.
+;
+#X text 21 248 First creation argument is the initial value: the starting
+point of the first ramp.;
+#X text 20 287 The second creation argument sets the grain rate. Observe
+the following two examples to see how the grain rate effects the output.
+;
+#X obj 33 403 line 0 5;
+#X obj 36 436 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X msg 136 332 127;
+#X msg 168 340 0;
+#X obj 135 368 pack f 5000;
+#X obj 203 436 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 200 403 line 0 500;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [line] Grain Rate;
+#X text 31 469 You can check the default grain rate in the subpatch
+below:;
+#N canvas 398 136 429 326 default_grain_rate 0;
+#X obj 22 87 line;
+#X obj 22 226 timer;
+#X obj 22 111 t b b;
+#X obj 49 137 spigot;
+#X obj 101 169 0;
+#X obj 22 193 spigot;
+#X obj 22 64 t a b;
+#X obj 65 87 1;
+#X obj 71 226 1;
+#X obj 22 251 print Pd's_default_grain_rate;
+#X msg 22 42 0 200;
+#X text 19 274 Here we assume the grain rate is less than 200 ms. For
+a more comprehensive test we could start with a time value of 1 ms
+and step up until the output ceases to increase.;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
+-204280 -1 0;
+#X text 7 1 [line] Pd's Default Grain Rate;
+#X text 60 42 Click here to output pd's default grain rate to the console
+;
+#X connect 0 0 2 0;
+#X connect 1 0 9 0;
+#X connect 2 0 5 0;
+#X connect 2 1 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 1 1;
+#X connect 4 0 3 1;
+#X connect 4 0 5 1;
+#X connect 5 0 1 0;
+#X connect 5 0 8 0;
+#X connect 6 0 0 0;
+#X connect 6 1 7 0;
+#X connect 7 0 5 1;
+#X connect 8 0 3 1;
+#X connect 10 0 6 0;
+#X restore 34 491 pd default_grain_rate;
+#X connect 6 0 7 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 6 0;
+#X connect 10 0 12 0;
+#X connect 12 0 11 0;
+#X restore 101 529 pd grain_rate_and_creation_arguments;
+#X text 11 23 ramp generator;
+#X text 98 325 stop;
+#X text 168 325 - stop the current ramp.;
+#X text 167 346 - time to reach the target value (in milliseconds).
+;
+#X text 168 275 - target value. This value is stored and used as the
+starting value for the next ramp.;
+#X text 168 301 - a (target \, time) pair is distributed between the
+two inlets.;
+#X text 168 474 - grain rate in milliseconds (default: 20 ms).;
+#X text 168 383 - [line] outputs a linear ramp \, reaching the target
+value within the time value specified by the right inlet and at a grain
+rate specified by the second creation argument (default 20 ms).;
+#N canvas 106 32 428 493 tips_on_using_line 0;
+#X text 20 39 [line]'s left inlet defines the "target" value. The right
+inlet defines the "time" value. The "target \, time" pair of numbers
+inform [line] to produce a numeric "ramp" from its current value (whatever
+that might be at any given moment) to the new value within the alloted
+time which is defined at the right inlet.;
+#X obj 25 242 line;
+#X msg 59 218 1000;
+#X msg 25 218 1000;
+#X obj 25 175 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 25 195 t b b;
+#X floatatom 25 264 5 0 0 0 - - -;
+#X obj 150 260 line;
+#X msg 150 236 1000;
+#X obj 150 216 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 150 282 5 0 0 0 - - -;
+#X text 20 309 If [line] receives a new target value without an accompanying
+"time" \, it simply jumps to the new value...as in the example above
+on the right. In the example above on the left \, you'll see that [line]
+will create a numeric ramp from 0 to 1000 over 1000 milliseconds. You
+should also note that if you click that [bng] again a second time \,
+nothing happens. This is because [line] is already at 1000 \, so sending
+it new instructions to ramp to 1000 is meaningless and has no effect.
+;
+#X text 20 425 Having said all of that \, let's just reiterate that
+it's important to send a "time" value to [line] before sending it a
+new "target" value...unless of course you WANT it to jump immediately
+to the new target.;
+#X text 149 182 While this does NOT work unless;
+#X text 149 196 you click "500" first.;
+#X msg 184 236 500;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [line] Tips;
+#X text 20 118 It is important to realize that [line] stores only the
+current value...it does not remember the defined "time" (duration of
+the ramp). Hence \, the example to the left works:;
+#X connect 1 0 6 0;
+#X connect 2 0 1 1;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 0;
+#X connect 7 0 10 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;
+#X connect 15 0 7 1;
+#X restore 101 507 pd tips_on_using_line;
+#X text 80 459 1) float;
+#X text 80 474 2) float;
+#X text 168 459 - initial value \, i.e. \, the starting point of the
+first ramp.;
+#X obj 3 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 571 pddp/pddplink ../3.audio.examples/C03.zipper.noise.pd
+-text doc/3.audio.examples/C03.zipper.noise.pd;
+#X connect 17 0 19 0;
+#X connect 18 0 17 0;
+#X connect 21 0 17 0;
+#X connect 23 0 17 0;
+#X connect 24 0 17 0;

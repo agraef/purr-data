@@ -1,0 +1,26 @@
+
+0.2.5 -> 0.2.6
+-Code to allow space in dll names added. Code made by Thomas Charbonnel.
+ Also updated the help2 patch to use space in dll name.
+
+0.2.4 -> 0.2.5
+-New midicommands: "ctl", "pitchbend", "aftertouch", "prg", "noteon"
+ and "noteoff". Code made by Thomas Charbonnel
+-Made a better help patch.
+
+0.2.3 -> 0.2.4
+- Added support for VST effect/synth programs; these may now be changed with
+  the 'program' message and a program number.  (added by acb)
+  See the help2 example patch.
+
+V0.2.1 -> 0.2.3:
+-Added simple noteon and noteoff messages for vst instruments.
+ See help5-k_vst~.pd.
+
+Changes from v0.2.1 -> 0.2.2:
+-Added opengui and closegui commands.
+
+
+See comment in the top of the file k_vst~ and the
+file org/README.
+

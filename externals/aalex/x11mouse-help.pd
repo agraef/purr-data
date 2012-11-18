@@ -1,0 +1,86 @@
+#N canvas 1 53 997 581 10;
+#X obj 13 10 cnv 15 150 140 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 385 63 cnv 15 100 100 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 521 275 cnv 15 420 230 empty empty x11mouse_object 20 12 0 14
+-258699 -66577 0;
+#X obj 189 152 cnv 15 150 140 empty empty empty 20 12 0 14 -258699
+-66577 0;
+#X obj 569 70 cnv 15 100 100 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 760 23 cnv 15 200 200 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 271 468 x11mouse;
+#X msg 32 107 click;
+#X msg 199 261 press 1 1;
+#X msg 49 339 help;
+#X obj 848 95 f 0;
+#X obj 889 95 + 1;
+#X msg 927 58 0;
+#X obj 802 41 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 810 186 move \$1 \$1;
+#X obj 848 125 > 50;
+#X obj 32 85 delay 500;
+#X msg 32 30 bang;
+#X obj 90 158 print;
+#X obj 199 240 delay 500;
+#X msg 196 189 bang;
+#X obj 587 116 delay 500;
+#X msg 587 76 bang;
+#X msg 587 137 press 3 1;
+#X msg 392 124 move 400 200;
+#X floatatom 763 186 5 0 0 0 - - -;
+#X obj 847 146 sel 1;
+#X obj 848 65 metro 50;
+#X obj 813 123 * 4;
+#X text 542 395 Comments are welcome. The API (the messages for every
+is likely to change.;
+#X text 544 457 )c( Copyleft 2006 Alexandre Quessy;
+#X text 547 472 Released under the GNU Public License;
+#X text 547 441 pureX11;
+#X text 16 -10 1 Click and keep your mouse over the message;
+#X text 197 164 2 Click and keep your mouse over the message;
+#X text 388 48 3 Moves the mouse;
+#X text 766 7 5 Moves the mouse around;
+#X text 548 306 [x11mouse] simulates X11 mouse events.;
+#X text 564 51 4 Right-clicks (button 3);
+#X text 545 337 Try all examples.;
+#X text 221 297 press 1 on;
+#X text 218 320 press 1 off;
+#N canvas 455 314 494 251 META 0;
+#X text 12 125 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2;
+#X text 12 85 AUTHOR Alexandre Quessy;
+#X text 12 105 WEBSITE http://alexandre.quessy.net/;
+#X text 12 5 KEYWORDS control user_input;
+#X text 12 45 DESCRIPTION simulate X11 mouse events;
+#X text 12 65 INLET_0 help click press move;
+#X restore 906 533 pd META;
+#X connect 7 0 6 0;
+#X connect 7 0 18 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 10 0 11 0;
+#X connect 10 0 15 0;
+#X connect 10 0 28 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 1;
+#X connect 12 0 27 0;
+#X connect 13 0 27 0;
+#X connect 14 0 6 0;
+#X connect 15 0 26 0;
+#X connect 16 0 7 0;
+#X connect 17 0 16 0;
+#X connect 19 0 8 0;
+#X connect 20 0 19 0;
+#X connect 21 0 23 0;
+#X connect 22 0 21 0;
+#X connect 23 0 6 0;
+#X connect 24 0 6 0;
+#X connect 26 0 12 0;
+#X connect 27 0 10 0;
+#X connect 28 0 14 0;
+#X connect 28 0 25 0;

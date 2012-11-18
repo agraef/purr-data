@@ -1,0 +1,30 @@
+#N canvas 3 48 446 404 10;
+#X msg 26 217 stop;
+#X text 20 114 vs. 1.2: a stop message sent to the right inlet immediately
+stops the whole process.;
+#X msg 363 23 Rhythm;
+#X msg 85 147 rit-acc;
+#X text 20 149 see also:;
+#X text 21 58 Generates a transition between two entry delays (ED)
+within a certain time span producing either a ritardando or an accelerando.
+A number (= time in ms) sent to the leftmost inlet starts the process.
+;
+#X text 21 26 ED-trans;
+#X msg 116 278 60;
+#X obj 116 245 ED-trans 75 300;
+#X floatatom 116 190 4 0 0 2 transition_time - -;
+#X msg 65 217 5000;
+#X floatatom 216 224 4 0 0 2 end_ED - -;
+#X floatatom 166 210 4 0 0 2 start_ED - -;
+#X floatatom 216 271 4 0 0 1 ED - -;
+#X obj 116 311 QT-PercPlayer;
+#X text 20 356 1993-97 by Karlheinz Essl;
+#X text 153 40 vs. 1.2;
+#X connect 0 0 8 0;
+#X connect 7 0 14 0;
+#X connect 8 0 7 0;
+#X connect 8 1 13 0;
+#X connect 9 0 8 0;
+#X connect 10 0 8 0;
+#X connect 11 0 8 2;
+#X connect 12 0 8 1;

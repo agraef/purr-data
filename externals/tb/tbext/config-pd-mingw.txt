@@ -1,0 +1,35 @@
+# config file for tbext, adapted from Thomas Grill's xsample makefile
+#
+
+# your c++ compiler (define only if it's different than g++)
+# CXX=g++
+
+# where does the PD installation reside?
+PD=c:/programme/audio/pd
+
+# where are the PD header files?
+# leave it blank if it is a system directory (like /usr/local/include), 
+# 	since gcc 3.2 complains about it
+PDINC=${PD}/src
+
+# where do the flext libraries reside?
+FLEXTPATH=${PD}/flext
+
+# where should tbext objects be built?
+TARGDIR=./pd-mingw
+
+# where should tbext be installed?
+# (leave blank to omit installation)
+INSTDIR=${PD}/extra
+
+# where should the tbext help be installed?
+# (leave blank to omit installation)
+HELPDIR=${PD}/doc/5.reference
+
+# additional compiler flags
+# (check whether they fit to your system!)
+UFLAGS=-mcpu=pentium4 -msse -mfpmath=sse # gcc 3.2
+# UFLAGS=-mcpu=pentiumpro  # gcc 2.95
+
+# define to build with shared flext library
+# FLEXT_SHARED=1

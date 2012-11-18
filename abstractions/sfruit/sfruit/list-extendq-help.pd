@@ -1,0 +1,29 @@
+#N canvas 329 163 570 457 10;
+#X msg 102 183 1 2 3;
+#X msg 156 290 bang;
+#X msg 101 215 bang;
+#X msg 102 161 a b c;
+#X msg 102 139 x y z;
+#X msg 154 259 A B C;
+#X text 60 72 Build a list from incoming lists or elements.;
+#X floatatom 101 119 5 0 0 0 - - -;
+#X text 97 97 Add elements or lists and output stored list.;
+#X text 146 219 output stored list;
+#X text 201 261 set complete stored list;
+#X text 201 292 set stored list to empty list (==reset);
+#X text 44 27 list-extendq;
+#X text 141 14 same as [list-extend] \, but doesn't output its contents
+every time you add elements (instead it only outputs when you send
+a bang).;
+#X obj 68 323 list-extendq;
+#X obj 68 363 print LIST-EXTENDQ;
+#X text 163 404 a modification of Frank Barknecht's list-extend (and
+its helpfile) by Luke Iannini 2009;
+#X connect 0 0 14 0;
+#X connect 1 0 14 1;
+#X connect 2 0 14 0;
+#X connect 3 0 14 0;
+#X connect 4 0 14 0;
+#X connect 5 0 14 1;
+#X connect 7 0 14 0;
+#X connect 14 0 15 0;

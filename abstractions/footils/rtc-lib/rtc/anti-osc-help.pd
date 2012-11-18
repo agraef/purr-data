@@ -1,0 +1,45 @@
+#N canvas 4 48 531 439 10;
+#X msg 155 136 anti-bis&osc;
+#X msg 93 136 anti-bis;
+#X floatatom 53 285 0 0 0 0 - - -;
+#X obj 53 252 anti-osc;
+#X obj 53 185 metro 250;
+#X obj 53 161 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 53 218 random 3;
+#X msg 211 22 Chance;
+#X obj 104 283 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 127 283 flashes when an oscillation would have occured;
+#N canvas 63 44 210 190 play-it 0;
+#X obj 38 84 + 60;
+#X obj 38 118 play 127 150;
+#X obj 46 62 inlet;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X restore 53 316 pd play-it;
+#X text 25 347 1992 by IRCAM;
+#X text 25 136 see also:;
+#X text 25 65 Filters out an integer which has occured the penultimate
+time. Right output sends a bang when this occurs. Does not filter out
+immediate repetition as it is done by"anti-bis".;
+#X text 25 33 anti-osc;
+#X msg 123 219 1 \, 2 \, 3 \, 3 \, 2 \, 3;
+#X floatatom 368 214 0 0 0 0 - - -;
+#X obj 368 181 anti-osc;
+#X obj 419 212 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 368 240 print;
+#X msg 368 157 1 \, 2 \, 3 \, 3 \, 2 \, 3;
+#X connect 2 0 10 0;
+#X connect 3 0 2 0;
+#X connect 3 1 6 0;
+#X connect 3 1 8 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 15 0 3 0;
+#X connect 16 0 19 0;
+#X connect 17 0 16 0;
+#X connect 17 1 18 0;
+#X connect 20 0 17 0;

@@ -1,0 +1,146 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (array) 3 12 0 18
+-204280 -1 0;
+#X obj 0 235 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 65 LIBRARY internal;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS signal GUI storage array;
+#X text 12 45 DESCRIPTION graphical array from the "Put" menu;
+#X text 12 125 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 261 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 456 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 (array) Related Objects;
+#X obj 21 43 table;
+#X restore 102 598 pd Related_objects;
+#X text 80 375 1) symbol atom;
+#X text 98 238 (none);
+#X text 98 264 (none);
+#X text 80 390 2) float;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array garray 100 float 3;
+#A 0 -0.425444 -0.481432 -0.535517 -0.587484 -0.637133 -0.684269 -0.728706
+-0.770268 -0.808792 -0.844127 -0.876131 -0.904665 -0.92963 -0.950928
+-0.968475 -0.982202 -0.992055 -0.997994 -0.999998 -0.998043 -0.992148
+-0.982339 -0.968655 -0.95115 -0.929894 -0.90497 -0.876476 -0.844518
+-0.80922 -0.770731 -0.729202 -0.684796 -0.63769 -0.588068 -0.536126
+-0.482068 -0.4261 -0.368453 -0.309353 -0.249032 -0.18773 -0.125687
+-0.0631471 -0.000357709 0.0624333 0.124977 0.187027 0.248339 0.308672
+0.367787 0.425452 0.481439 0.535524 0.587491 0.63714 0.684275 0.728712
+0.770274 0.808797 0.844132 0.876135 0.904668 0.929633 0.95093 0.968477
+0.982203 0.992056 0.997995 0.999998 0.998043 0.992148 0.98234 0.968656
+0.951152 0.929896 0.904973 0.876479 0.844522 0.809224 0.770735 0.729207
+0.684802 0.637696 0.588075 0.536134 0.482076 0.426108 0.368461 0.309361
+0.249041 0.187738 0.125695 0.0631558 0.000366437 -0.0624246 -0.124968
+-0.187019 -0.248331 -0.308664 -0.367779;
+#X coords 0 1 99 -1 40 8 1;
+#X restore 485 13 graph;
+#X obj 331 66 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/garray -text
+pdpedia: garray;
+#X floatatom 382 66 5 0 0 0 - - -;
+#X floatatom 355 136 5 0 0 0 - - -;
+#X obj 331 89 metro 150;
+#X obj 355 158 osc~ 1000;
+#X text 93 557 For help on using graphs \, see:;
+#X obj 93 572 pddp/pddplink graph-help.pd -text graph-help;
+#X obj 93 504 pddp/pddplink all_about_arrays.pd -text all_about_arrays
+;
+#X text 167 375 - the name of the array. (Must be unique.);
+#X text 167 390 - size of the array. (Default is 100.);
+#X text 167 405 - (checkbox) save array contents with patch.;
+#X text 80 405 3) float;
+#X text 80 420 4) float;
+#X text 167 435 - (checkbox) delete the array (but not the graph).
+;
+#X text 80 435 5) float;
+#X text 167 420 - (radio) visual display style of elements.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#N canvas 70 34 428 450 Graphs_and_Garrays 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-graphs-vs-garrays 100 float 3;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.0666666
+-0.0733333 -0.0866666 -0.106667 -0.106667 -0.106667 -0.106667 -0.0999999
+-0.0666666 -0.00666666 -0.00666666 -0.00666666 -0.00999999 -0.0133333
+-0.02 -0.0266666 -0.05 -0.0599999 -0.0733333 -0.0866666 -0.0933332
+-0.0999999 -0.106667 -0.126667 -0.133333 -0.153333 -0.156667 -0.16
+-0.16 -0.16 -0.16 -0.16 -0.16 -0.16 -0.16 -0.146667 -0.133333 -0.106667
+-0.0999999 -0.0833333 -0.0666666 -0.04 -0.0333333 -0.0266666 -0.0133333
+-0.0133333 -0.0133333 -0.0133333 -0.0133333 -0.0133333 -0.0133333 -0.0133333
+-0.0133333 -0.0133333 -0.0133333 -0.0133333 -0.0133333 -0.0133333 -0.0133333
+-0.0133333 -0.02 -0.0333333 -0.0466666 -0.0466666 0 0 0 0 0 0 0 0;
+#X coords 0 1 99 -1 200 140 1 0 0;
+#X restore 23 298 graph;
+#X text 8 2 [pd] Graphs and Graphical Arrays;
+#X text 20 37 So which part is the graph \, and which is the array?
+Below is a graphical array created from the "Put" menu. The graph that
+contains it is just a subcanvas that is partly visible in this subpatch
+(i.e. \, a true "graph on parent"). Even though you can click and drag
+elements of the graphical array \, you're interacting with it through
+the graph itself. Thus \, if you right-click anywhere on the graph
+below and choose "Help" \, you'll be taken to the help patch for graphs
+\, not arrays.;
+#X text 20 157 Now right-click on the graph and choose "Open". Once
+inside the graph you can interact directly with the graphical array
+\, which merely consists of the small black lines that represent each
+element of the array (yep \, that's it). You can click-drag them as
+you could from the parent window \, but now if you right-click on an
+element and choose "Help" \, you'll be taken to the help patch for
+graphical arrays.;
+#X text 20 253 It's hard work finding help on this!;
+#X restore 97 465 pd Graphs_and_Garrays;
+#X text 11 23 graphical array from the "Put" menu;
+#X text 80 307 You can't access "Put" menu array arguments directly
+\, but you can change the properties by right-clicking on the containing
+graph and choosing "Properties". (You can also send messages to the
+array: see "more_info" below.);
+#X text 80 360 "Put" Menu Array Properties;
+#X text 94 486 For more help on arrays in Pd \, see:;
+#X obj 93 522 pddp/pddplink ../2.control.examples/15.array.pd;
+#X obj 455 51 pddp/dsp;
+#X obj 93 540 pddp/pddplink ../2.control.examples/16.more.arrays.pd
+;
+#X text 96 213 A "Put" menu array is created inside a graph.;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 100 float 3;
+#A 0 -0.684486 -0.621979 -0.555232 -0.484682 -0.410829 -0.334176 -0.255242
+-0.174561 -0.0926915 -0.01019 0.0723822 0.154459 0.235482 0.314901
+0.392167 0.466754 0.538161 0.605901 0.669491 0.728515 0.782575 0.8313
+0.87433 0.911401 0.942262 0.96669 0.984505 0.995611 0.999933 0.997419
+0.988092 0.972032 0.949348 0.920163 0.884703 0.843214 0.795976 0.743285
+0.68553 0.623103 0.556422 0.485934 0.412136 0.335528 0.256626 0.175972
+0.0941189 0.0116234 -0.070952 -0.153042 -0.234089 -0.313542 -0.390846
+-0.465486 -0.536954 -0.604758 -0.668423 -0.727533 -0.781686 -0.830496
+-0.873631 -0.910812 -0.941787 -0.966316 -0.984251 -0.995479 -0.999924
+-0.997515 -0.988309 -0.972368 -0.949791 -0.920714 -0.885364 -0.84398
+-0.796828 -0.74423 -0.686562 -0.624215 -0.557595 -0.48717 -0.413427
+-0.336864 -0.257993 -0.177366 -0.095529 -0.0130394 0.0695391 0.151643
+0.232713 0.312195 0.389541 0.464233 0.535762 0.603626 0.667368 0.726563
+0.780808 0.829702 0.87294 0.91023;
+#X coords 0 1 99 -1 200 140 1;
+#X restore 105 62 graph;
+#X obj 331 185 tabwrite~ \$0-array;
+#X connect 13 0 17 0;
+#X connect 15 0 17 1;
+#X connect 16 0 18 0;
+#X connect 17 0 41 0;
+#X connect 18 0 41 0;

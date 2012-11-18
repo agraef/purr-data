@@ -1,0 +1,34 @@
+copy xgui in your pd directory.
+
+[linux]
+  it's better to do a make uninstall with your old version of xgui before installing the new one.
+
+  from a terminal :
+    make
+    make install
+
+  Thats all !!!
+    it will copy the right files @ the rigth places,
+    but only if you have install pd with make install too.
+
+  Test it by running pdx from a terminal
+
+  make uninstall
+    will remove all the files created by "make install"
+
+[windows]
+  extract the xgui_x.xx.tar.gz into your pd-path
+  for ex.: c:/pd/
+
+  Run "install.bat", it will copy the right files @ the rigth places.
+
+  Test it by running pdx.bat
+
+[other & all]
+  Seg is very easy to install just have a look into makefile & install.bat
+  and you'll have all the information to install it manually.
+
+  In fact you d'ont really need to install anything :
+    just extract the archive in your pd directory.
+    Then run xgui & pd with the right options : check pdx.* for details.
+

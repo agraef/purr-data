@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/ext/!svn/ver/3742/trunk/zconf
+END
+zconf_domains.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3541/trunk/zconf/zconf_domains.cpp
+END
+zconf_resolve.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3741/trunk/zconf/zconf_resolve.cpp
+END
+zconf-objectmappings.txt
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/3742/trunk/zconf/zconf-objectmappings.txt
+END
+zconf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3627/trunk/zconf/zconf.cpp
+END
+zconf_service.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3541/trunk/zconf/zconf_service.cpp
+END
+zconf.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3541/trunk/zconf/zconf.vcproj
+END
+zconf_browse.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3541/trunk/zconf/zconf_browse.cpp
+END
+zconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/3627/trunk/zconf/zconf.h
+END
+zconf_meta.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3541/trunk/zconf/zconf_meta.cpp
+END
+zconf-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3541/trunk/zconf/zconf-help.pd
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3541/trunk/zconf/package.txt
+END

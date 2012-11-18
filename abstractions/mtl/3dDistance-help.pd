@@ -1,0 +1,21 @@
+#N canvas 378 442 421 197 10;
+#X msg 19 94 0 1 4;
+#X text 17 76 x y z;
+#X text 152 75 x y z;
+#X msg 154 94 5 -3 4;
+#X floatatom 19 159 5 0 0 0 - - -;
+#X msg 62 94 3 -7 0;
+#X msg 206 94 3 -7 0;
+#X obj 11 6 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 16 48 tags: 3d;
+#X text 113 48 Author: Roman Haefeli;
+#X text 266 48 Version: 2007-12-09;
+#X text 17 9 Description: Returns the distance between two 3d points.
+;
+#X obj 19 135 mtl/3dDistance 3 -7 0;
+#X connect 0 0 12 0;
+#X connect 3 0 12 1;
+#X connect 5 0 12 0;
+#X connect 6 0 12 1;
+#X connect 12 0 4 0;

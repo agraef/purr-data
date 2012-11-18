@@ -1,0 +1,57 @@
+#N canvas 704 151 487 340 10;
+#X floatatom 25 157 8 0 0 0 - - -;
+#X floatatom 25 228 8 0 0 0 - - -;
+#X obj 28 245 hsl 200 15 0 1 0 0 empty empty empty 22 8 1 12 -262144
+-1 -1 0 1;
+#X obj 28 137 hsl 200 15 0 1 0 0 empty empty empty 22 8 1 12 -261681
+-1 -1 0 1;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-curve 200 float 0;
+#X coords 0 1 199 0 200 200 1;
+#X restore 254 92 graph;
+#N canvas 199 25 427 417 draw_array 0;
+#X msg 54 82 bang;
+#X obj 54 103 until;
+#X text 85 82 start;
+#X obj 54 125 f;
+#X obj 83 125 + 1;
+#X obj 54 43 loadbang;
+#X obj 54 180 trigger float float;
+#X obj 127 127 select 0;
+#X obj 53 363 tabwrite \$0-curve;
+#X obj 139 9 inlet;
+#X obj 139 53 trigger bang float;
+#X obj 83 147 mod 200;
+#X text 96 257 mapping output range: 0 to 1;
+#X obj 54 229 / 200;
+#X obj 53 283 curve_circle;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 6 0;
+#X connect 4 0 11 0;
+#X connect 5 0 0 0;
+#X connect 6 0 13 0;
+#X connect 6 1 8 1;
+#X connect 7 0 1 1;
+#X connect 9 0 10 0;
+#X connect 10 0 0 0;
+#X connect 10 1 14 1;
+#X connect 11 0 3 1;
+#X connect 11 0 7 0;
+#X connect 13 0 14 0;
+#X connect 14 0 8 0;
+#X restore 127 206 pd draw_array;
+#X obj 117 166 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 7900 0;
+#X obj 25 207 curve_circle;
+#X text 17 39 This object generates a curve based on a 0 to 1 argument
+range.;
+#X floatatom 142 185 5 0 0 0 - - -;
+#X connect 0 0 7 0;
+#X connect 1 0 2 0;
+#X connect 3 0 0 0;
+#X connect 6 0 5 0;
+#X connect 6 0 7 1;
+#X connect 6 0 9 0;
+#X connect 7 0 1 0;

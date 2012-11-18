@@ -1,0 +1,6 @@
+#N canvas 0 0 450 300 10;
+#X obj 125 77 inlet;
+#X obj 128 211 outlet;
+#X obj 128 137 init.df \$1 100;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

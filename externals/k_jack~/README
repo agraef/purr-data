@@ -1,0 +1,24 @@
+
+
+k_jack~ - General signal in/out external for pure data. Kjetil S. Matheussen.
+V0.0.2
+
+
+This external makes objects with signal inlets and outlets to jack ports. See
+the help patch.
+
+It works by calling functions and using variables in pd/src/s_audio.c that probably
+was not ment to be used for this purpose. But it works. And thats whats important.
+
+Changes
+v0.0.1->v0.0.2:
+-Support for pure_data_1. And also pure_data_2/3/etc. if pd is compiled up with support
+ for more than two simultaniously running pd sessions.
+-Only connect ports once.
+
+
+Kjetil S. Matheussen
+k.s.matheussen@notam02.no
+
+
+

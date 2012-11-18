@@ -1,0 +1,12 @@
+#N canvas 0 0 450 300 10;
+#X obj 51 100 py find_hid find;
+#X obj 51 122 print;
+#X msg 51 65 reload;
+#X text 53 239 (c) Tim Blechmann 2005 \, $Id: find_hid-help.pd 221 2005-12-17 18:31:17Z tim $
+;
+#X text 49 153 find device in linux udevfs;
+#X msg 158 69 "manufacturer=Logitech" "product=USB-PS/2 Optical Mouse"
+;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 5 0 0 1;

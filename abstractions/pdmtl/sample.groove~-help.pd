@@ -1,0 +1,99 @@
+#N struct 4215preview float x float y float p float h;
+#N canvas 1331 34 789 899 10;
+#X msg -225 423 1;
+#X msg -253 412 0;
+#X text -151 648 You can send a signal to sample.groove~'s third inlet
+to modulate the playback rate.;
+#X text 41 217 <- Click and drag up and down to change the playback
+region.;
+#X obj -292 -37 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj -292 -130 cnv 15 430 20 empty empty empty 20 12 0 14 -216438
+-66577 0;
+#X obj -292 -109 cnv 1 430 1 empty empty empty 4 -10 2 12 -66577 -1
+0;
+#X obj -292 -130 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text -276 -97 Description: Groove a sample.;
+#X text -279 -67 Comments: Wraps xgroove~ from the xsample library
+;
+#X text -291 -127 :: sample/groove ::;
+#X msg -23 422 speed \$1;
+#X obj -83 326 vradio 15 1 0 3 empty empty empty 0 -8 0 8 -195568 -262144
+-1 0;
+#X obj -20 377 hsl 50 22 -10 10 0 0 empty empty empty -2 -8 0 8 -33289
+-262144 -33289 0 1;
+#X obj -264 127 sample.display_;
+#X obj -264 214 sample.bounds_;
+#X text -278 -26 WARNING: This abstraction requires the xsample library.
+;
+#X obj -263 53 file.path.top;
+#X floatatom -23 403 5 0 0 0 - - -;
+#X text -2 -126 Version: 2007-06-12;
+#X msg -263 7 medias/sounds/loop0.wav;
+#X msg -155 29 medias/sounds/loop1.wav;
+#X obj -264 97 sample.filer;
+#X msg -39 52 medias/sounds/note0.wav;
+#X floatatom 43 393 5 0 0 0 - - -;
+#X text 81 391 milliseconds;
+#X obj -267 702 mix.out_~;
+#X obj -261 655 sample.groove~;
+#X obj 206 363 vdl 15 0 0 4 empty empty empty 0 -6 0 8 -262144 -1 -1
+0;
+#X text 225 378 keep loop length;
+#X text 225 394 keep fade length;
+#X text 225 409 zone inside loop;
+#X msg 43 422 xfade \$1;
+#X msg 205 428 xfademode \$1;
+#X text 225 362 keep loop pos (default);
+#X obj -264 271 sample.adsr_;
+#X msg -243 345 56 0;
+#X msg -253 321 56 64;
+#X text 41 245 <- Set the sustain loop by changing the loop region.
+;
+#X text -64 342 loop forward;
+#X text -64 357 loop back&forth;
+#X text -64 325 play once (ignore sustain loop);
+#X msg -83 423 loop \$1;
+#X text -278 -82 Flags: sample_id;
+#X msg -173 322 60 127;
+#X msg -145 342 60 0;
+#X msg -250 468 -1;
+#X msg 21 556 realtime.bounds 1;
+#X text 19 575 Usually a change in the bounds of a sample will only
+take effect once you retrigger sample.groove~. But \, if you set realtime.bounds
+to 1 \, the changes to bounds will immediatly affect the the sample
+being played.;
+#X obj -153 73 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj -133 700 anal.sig_~;
+#X text -32 701 Relative progress;
+#X connect 0 0 27 1;
+#X connect 1 0 27 1;
+#X connect 11 0 27 1;
+#X connect 12 0 42 0;
+#X connect 13 0 18 0;
+#X connect 14 0 15 0;
+#X connect 15 0 35 0;
+#X connect 17 0 22 0;
+#X connect 18 0 11 0;
+#X connect 20 0 17 0;
+#X connect 21 0 17 0;
+#X connect 22 0 14 0;
+#X connect 23 0 17 0;
+#X connect 24 0 32 0;
+#X connect 27 0 26 0;
+#X connect 27 1 26 1;
+#X connect 27 2 50 0;
+#X connect 28 0 33 0;
+#X connect 32 0 27 1;
+#X connect 33 0 27 1;
+#X connect 35 0 27 0;
+#X connect 36 0 27 1;
+#X connect 37 0 27 1;
+#X connect 42 0 27 1;
+#X connect 44 0 27 1;
+#X connect 45 0 27 1;
+#X connect 46 0 27 1;
+#X connect 47 0 27 1;
+#X connect 49 0 22 0;

@@ -1,0 +1,10 @@
+#N canvas 640 296 387 142 10;
+#X obj 29 68 sender;
+#X obj 154 16 r sendname;
+#X floatatom 154 39 5 0 0 0 - - -;
+#X msg 29 15 sendname 1;
+#X msg 29 41 sendname 2;
+#X text 23 92 (c) Tim Blechmann 2005 \, $Id: sender-help.pd 221 2005-12-17 18:31:17Z tim $;
+#X connect 1 0 2 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;

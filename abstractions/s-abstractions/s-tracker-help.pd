@@ -1,0 +1,24 @@
+#N canvas 85 72 821 605 10;
+#X obj 278 12 sssad/datastore;
+#N canvas 4 20 605 663 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD track/sequence 60 0 60 0 0 0 48 48 48 60 0 0
+0 0 0 65 \; SSSAD_ADMIN set \;;
+#X connect 0 0 1 0;
+#X restore 278 78 pd datastore;
+#X obj 7 27 metro 100;
+#X obj 7 7 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1;
+#X obj 7 48 f;
+#X obj 35 48 + 1;
+#X msg 32 6 0;
+#X obj 155 12 r track/value;
+#X floatatom 155 35 5 0 0 0 - - -;
+#X obj 7 78 s-tracker track;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 4 0 9 0;
+#X connect 5 0 4 1;
+#X connect 6 0 4 1;
+#X connect 6 0 4 0;
+#X connect 7 0 8 0;

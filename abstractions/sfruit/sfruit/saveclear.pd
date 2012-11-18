@@ -1,0 +1,14 @@
+#N canvas 591 377 210 205 10;
+
+#X msg 26 47 capture 1;
+#X obj 68 97 route menusave;
+#X obj 26 21 loadbang;
+#X obj 26 73 tot .parent;
+#X msg 68 121 clear;
+#X obj 68 147 s \$1;
+#X obj 111 22 import-disabled toxy;
+#X connect 0 0 3 0;
+#X connect 1 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 2 1 0;
+#X connect 4 0 5 0;

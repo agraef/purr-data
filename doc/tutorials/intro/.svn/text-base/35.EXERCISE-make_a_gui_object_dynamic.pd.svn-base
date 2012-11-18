@@ -1,0 +1,5 @@
+#N canvas 10 40 620 460 12;
+#X obj 11 10 cnv 15 600 40 empty empty EXERCISE-make_a_gui_object_dynamic
+20 12 0 24 -262131 -66577 0;
+#X text 26 60 Take any gui object \, and make it change and/or move
+according to your program.;

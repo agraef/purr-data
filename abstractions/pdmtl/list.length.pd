@@ -1,0 +1,8 @@
+#N canvas 0 0 450 300 10;
+#X obj 135 54 inlet;
+#X obj 156 248 outlet;
+#X obj 140 166 length;
+#X text 44 24 Note: if changed \, must automatically convert anything.
+;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

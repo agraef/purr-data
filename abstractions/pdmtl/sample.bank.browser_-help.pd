@@ -1,0 +1,55 @@
+#N canvas 229 47 1031 719 10;
+#X obj 83 346 print;
+#X obj 65 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 63 -3 loadbang;
+#X obj 573 -13 loadbang;
+#X obj 574 118 file.folder.dump;
+#X msg 681 84 wav;
+#X msg 574 85 medias/sounds;
+#X msg 574 152 auto \$1;
+#X obj 574 44 t b b;
+#X text 624 38 This loads all the wavs found in medias/sounds;
+#X text 634 153 All files are automatically indexed.;
+#X obj 573 15 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 574 184 sample.bank OTHER;
+#X msg 559 259 OTHER;
+#X obj 587 464 print;
+#X text 59 -41 Description: browse and select samples from a sample.bank.
+;
+#X obj 63 63 sample.bank;
+#X msg 63 29 read medias/data/loops.coll;
+#X text 554 231 You must send an ID to browse a sample.bank with an
+ID.;
+#X text 85 117 A bang will browse the contents of a sample.bank linked
+to the top patch.;
+#X obj 559 289 sample.bank.browser_;
+#X obj 65 161 sample.bank.browser_;
+#X text 66 538 If you add stuff to the sample.banks \, the browser
+will not update automatically! You must do it manually.;
+#X text 127 333 Outputs the index of the selected sample linked to
+the top patch.;
+#X text 636 463 Outputs the ID and index of the selected sample.;
+#X obj 65 393 sample.r;
+#X obj 65 429 sample.display_;
+#X obj 559 498 sample.r;
+#X obj 559 527 sample.display_;
+#X connect 1 0 21 0;
+#X connect 2 0 17 0;
+#X connect 3 0 11 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 1;
+#X connect 6 0 4 0;
+#X connect 7 0 12 0;
+#X connect 8 0 6 0;
+#X connect 8 1 5 0;
+#X connect 11 0 8 0;
+#X connect 13 0 20 0;
+#X connect 17 0 16 0;
+#X connect 20 0 14 0;
+#X connect 20 0 27 0;
+#X connect 21 0 0 0;
+#X connect 21 0 25 0;
+#X connect 25 0 26 0;
+#X connect 27 0 28 0;

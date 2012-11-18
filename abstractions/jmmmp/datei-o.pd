@@ -1,0 +1,54 @@
+#N canvas 100 131 367 268 10;
+#X obj 31 121 openpanel;
+#X msg 31 141 open \$1;
+#X obj 31 161 outlet;
+#X obj 31 61 hradio 15 1 0 4 empty empty empty 0 6 0 8 -262144 -1 -1
+0;
+#X obj 31 81 bang;
+#X obj 31 61 cnv 15 60 15 empty aa Datei_O 6 8 0 11 -233017 -1 0;
+#X obj 61 81 inlet;
+#X obj 61 101 route bang;
+#X obj 116 121 symbol;
+#X text 12 210 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 228 pd license;
+#X text 210 50 Inlets;
+#X text 210 100 Outlets;
+#X text 210 150 GUI;
+#X text 210 170 - Click on it;
+#X text 210 70 - Bang / File name;
+#X text 210 120 - Message;
+#X text 13 6 [datei-o] - Sends the message "open ../../";
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 7 1 8 0;
+#X connect 8 0 1 0;
+#X coords 0 -1 1 1 62 17 1 30 60;

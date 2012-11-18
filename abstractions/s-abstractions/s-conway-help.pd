@@ -1,0 +1,30 @@
+#N canvas 180 199 660 440 10;
+#X obj 13 175 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 106 198 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 13 330 print;
+#X text 34 174 Bang for a generation;
+#X text 126 198 Bang to output the current CA state;
+#X obj 530 376 sssad/datastore;
+#N canvas 0 0 450 300 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD x/state 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 \; SSSAD_ADMIN set \;;
+#X connect 0 0 1 0;
+#X restore 530 355 pd datastore;
+#X text 87 387 If you have [sssad] you can load the 'glider' configuration
+here.;
+#X text 10 8 This is an implementation of conway's game of life in
+puredata. The arguments are [width] [height] and [name] - you probably
+don't want to create one much bigger than 16x16 as it will slow yr
+computer right down while creating it. Left inlet bangs will advance
+the simulation one generation. Right inlet bangs will print out the
+entire table of all values. You can save the current state of your
+CA with the [sssad] abstractions by Frank Barknecht. See [sssad/datastore]
+and [sssad/panel] for example.;
+#X obj 13 221 s-conway 8 8 x;
+#X connect 0 0 9 0;
+#X connect 1 0 9 1;
+#X connect 9 0 2 0;

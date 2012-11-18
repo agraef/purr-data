@@ -1,0 +1,23 @@
+#N canvas 662 106 422 373 10;
+#X obj 104 312 print;
+#X msg 104 105 0 0;
+#X msg 158 106 0 1;
+#X msg 231 108 255 255;
+#X msg 242 134 0 255;
+#X msg 254 162 130 255;
+#X msg 268 216 127 255;
+#X msg 274 243 126 255;
+#X msg 262 188 128 0;
+#X text 31 15 Description: Converts a high byte and low byte pair to
+a signed integer using two's compliment.;
+#X obj 104 289 mtl/bytesToIntSigned;
+#X text 31 50 tags: conversion;
+#X connect 1 0 10 0;
+#X connect 2 0 10 0;
+#X connect 3 0 10 0;
+#X connect 4 0 10 0;
+#X connect 5 0 10 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 10 0 0 0;

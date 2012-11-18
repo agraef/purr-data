@@ -1,0 +1,7 @@
+#N canvas 0 0 450 300 10;
+#X text 105 205 for help see;
+#X text 87 56 inverse complex FFT using libFFTW;
+#X obj 164 93 ifftw~;
+#X obj 213 204 ifft~;
+#X text 88 136 this object is a drop-in replacement for pd's built-in
+ifft-object;

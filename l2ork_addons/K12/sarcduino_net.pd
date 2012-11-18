@@ -1,0 +1,26 @@
+#N canvas 479 108 455 268 10;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/sarcduino_net.png;
+#X obj 141 72 loadbang;
+#X obj 42 137 disis_netreceive 9000 1;
+#X obj 190 137 disis_netreceive 9001 1;
+#X obj 190 173 preset_node k12;
+#X obj 142 212 hradio 15 1 1 2 \$0-s-null \$0-r-null user: -31 7 0
+10 -262144 -125791 -1 0;
+#X text 144 210 A;
+#X text 160 210 B;
+#X obj 142 232 + 1;
+#X obj 20 272 switch 2;
+#X msg 141 95 open @pd_extra/K12/objects/sarcduino_net.png;
+#X obj 20 295 list;
+#X obj 20 317 outlet;
+#X connect 1 0 10 0;
+#X connect 2 0 9 1;
+#X connect 3 0 9 2;
+#X connect 4 0 5 0;
+#X connect 5 0 4 0;
+#X connect 5 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 11 0;
+#X connect 10 0 0 0;
+#X connect 11 0 12 0;
+#X coords 0 -1 1 1 89 89 2 96 173;

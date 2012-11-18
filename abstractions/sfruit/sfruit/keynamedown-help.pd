@@ -1,0 +1,9 @@
+#N canvas 889 330 358 158 10;
+#X text 11 17 [keynamedown] outputs the [keyname] pressed only on the
+press \, not the release.;
+#X obj 36 111 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 85 keynamedown a;
+#X text 181 122 2008 Luke Iannini;
+#X text 180 137 proyekto.net;
+#X connect 2 0 1 0;

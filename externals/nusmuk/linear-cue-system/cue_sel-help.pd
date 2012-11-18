@@ -1,0 +1,48 @@
+#N canvas 319 47 771 471 10;
+#X obj 10 22 cue_init cue1;
+#X obj 10 233 cue test1a 2000;
+#X obj 10 176 cue initialisation;
+#X obj 10 252 cue test1;
+#X obj 10 271 cue test2;
+#X obj 10 195 cue debut;
+#X obj 10 214 cue foo 1000;
+#X obj 248 272 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X floatatom 491 273 5 0 0 0 - - -;
+#X text 252 135 parametters :;
+#X text 252 96 outlet 1 : 0/1 if cue is between the 1st and last cue
+;
+#X text 252 115 outlet 2 : 0..1 : same as outlet 1 \, but with an envelope
+;
+#X text 281 151 fade in (ms);
+#X text 281 167 fade out (ms);
+#X obj 10 290 cue test3;
+#X obj 248 328 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 491 329 5 0 0 0 - - -;
+#X obj 10 309 cue test4;
+#X obj 10 328 cue test5;
+#X text 280 183 delay before fade in;
+#X text 279 199 delay before fade out;
+#X text 252 25 cue_sel allow to control anything located in a specific
+cue;
+#X text 253 61 inlet 1 : cue;
+#X obj 248 309 cue_sel 100 100 2000 2000;
+#X obj 248 253 cue_sel 1000 1000;
+#X text 250 220 you can force a on/off state \, and jump to the end
+of the fade;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 3 1 24 0;
+#X connect 4 0 14 0;
+#X connect 5 0 6 0;
+#X connect 6 0 1 0;
+#X connect 14 0 17 0;
+#X connect 17 0 18 0;
+#X connect 17 1 23 0;
+#X connect 23 0 15 0;
+#X connect 23 1 16 0;
+#X connect 24 0 7 0;
+#X connect 24 1 8 0;

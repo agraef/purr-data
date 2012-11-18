@@ -1,0 +1,144 @@
+#N canvas 232 93 772 532 10;
+#X text 330 82 The [send] and [receive] objects are useful for linking
+objects and subroutines together in a single canvas or throughout multiple
+patches. Understanding these objects will help 'clean up' your patches
+and allow you to communicate messages between various modules that
+you build or between objects where patch cords are not possible.;
+#X text 328 167 In the [send] and [receive] help files \, you will
+see message sent within a single patch - from a [send] object to a
+[receive] object in the same patch. But the functionality of these
+objects goes far beyond the scope of a single patch.;
+#X obj 20 292 r one_send;
+#X obj 23 224 hsl 67 15 0 127 0 0 empty empty empty -2 -6 0 8 -228989
+-1 -1 0 0;
+#X obj 97 242 s one_send;
+#X obj 178 224 hsl 67 15 0 127 0 0 empty empty empty -2 -6 0 8 -228989
+-1 -1 0 0;
+#X obj 23 313 hsl 67 15 0 127 0 0 empty empty empty -2 -6 0 8 -228989
+-1 -1 0 1;
+#X obj 97 292 r one_send;
+#X obj 178 313 hsl 67 15 0 127 0 0 empty empty empty -2 -6 0 8 -228989
+-1 -1 0 1;
+#X text 327 300 A [send] object is a little like a radio station...it
+broadcasts information throughout Pd \, for all the [receives] to hear!
+A [receive] object is a little like your own AM/FM tuner...it will
+receive messages from all the [send] objects that it is 'tuned' to.
+Hence \, naming your [send] and [receive] objects becomes very important.
+A [receive] object named "dave" (as in [receive dave]) will pick up
+all messages from [send dave] \, regardless of which patch it is in.
+In this manner \, you can get messages across multiple patches \, or
+into abstractions or subpatches -- without patch cords.;
+#X obj 20 243 s one_send;
+#X obj 175 242 send one_send;
+#X obj 175 292 receive one_send;
+#X msg 38 437 \; one_send \$1;
+#X obj 57 414 hsl 67 15 0 127 0 0 empty empty empty -2 -6 0 8 -228989
+-1 -1 0 1;
+#X msg 151 433 \; aSymbol symbol \$1;
+#X msg 151 412 symbol down_below;
+#X floatatom 14 414 5 0 0 0 - - -;
+#X floatatom 98 314 5 0 0 0 - - -;
+#X floatatom 97 224 5 0 0 0 - - -;
+#X text 8 381 (look above at previous examples):;
+#X text 10 368 You can make message boxes into sends;
+#X text 13 272 received by [receive]s of the same name.;
+#X text 8 203 Multiple [send]s with the same name;
+#X obj 8 6 cnv 15 750 30 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 318 47 cnv 15 440 15 empty empty Getting_Your_Message_Across
+3 7 0 13 -261104 -1 0;
+#X text 656 18 LINK:Glossary;
+#X text 656 6 LINK:Contents;
+#X text 12 8 DESCRIPTION: All about communicating without connections
+;
+#X obj 318 277 cnv 15 440 15 empty empty Broadcasting_With_Sends_And_Receives
+3 7 0 13 -261104 -1 0;
+#X obj 8 496 cnv 15 750 20 empty empty empty 20 12 0 14 -261104 -66577
+0;
+#X text 13 499 PDDP Project 2005;
+#X obj 660 499 bng 15 250 50 0 pddpNextPage \$0- < 4 8 0 12 -262144
+-1 -1;
+#X obj 678 499 bng 15 250 50 0 pddpNextPage \$0- > 4 8 0 12 -262144
+-1 -1;
+#X text 561 499 Previous/Next;
+#N canvas 0 22 466 316 META 0;
+#X text 12 5 CATEGORY: about;
+#X text 12 15 KEYWORDS: send receive patch cord wireless connection
+canvas;
+#X restore 160 499 pd META;
+#N canvas 696 168 488 368 PAGES 0;
+#X text 19 9 Put your pages here: (They must be named [pd PAGE1] [pd
+PAGE2]... (PAGE0 is the main patch).;
+#X text 9 109 Don't forget to set the number of pages \, including
+the main page.;
+#N canvas 25 25 775 545 PAGE2 0;
+#X obj 8 6 cnv 15 750 30 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 318 47 cnv 15 440 15 empty empty Getting_Your_Message_Across
+3 7 0 13 -261104 -1 0;
+#X text 656 18 LINK:Glossary;
+#X text 656 6 LINK:Contents;
+#X text 12 8 DESCRIPTION: All about communicating without connections
+;
+#X obj 318 277 cnv 15 440 15 empty empty Broadcasting_With_Sends_And_Receives
+3 7 0 13 -261104 -1 0;
+#X obj 8 496 cnv 15 750 20 empty empty empty 20 12 0 14 -261104 -66577
+0;
+#X text 13 499 PDDP Project 2005;
+#X obj 660 499 bng 15 250 50 0 pddpNextPage \$0- < 4 8 0 12 -262144
+-1 -1;
+#X obj 678 499 bng 15 250 50 0 pddpNextPage \$0- > 4 8 0 12 -262144
+-1 -1;
+#X text 561 499 Previous/Next;
+#X obj 701 499 cnv 15 15 15 empty empty 1 0 8 0 12 -261104 -1 0;
+#X obj 717 499 cnv 15 15 15 empty empty of 0 8 0 12 -261104 -1 0;
+#X obj 733 499 cnv 15 25 15 empty pddpNumPages 3 4 8 0 12 -261104 -1
+0;
+#X obj 305 36 cnv 5 5 460 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 327 300;
+#X text 330 82;
+#X text 328 167;
+#X restore 14 54 pd PAGE2;
+#X text 24 179 BUG: these page-turns need to be local! Add logic for
+back button;
+#X obj 13 146 pddp_page 2;
+#X coords 0 0 1.01598e-05 1.58148e-05 96 15 0;
+#X restore 217 499 pd PAGES;
+#X obj 701 499 cnv 15 15 15 empty empty 1 0 8 0 12 -261104 -1 0;
+#X obj 717 499 cnv 15 15 15 empty empty of 0 8 0 12 -261104 -1 0;
+#X obj 733 499 cnv 15 25 15 empty pddpNumPages 2 4 8 0 12 -261104 -1
+0;
+#X obj 176 55 cnv 10 86 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X floatatom 176 76 5 0 0 0 - - -;
+#X obj 176 55 receive aNum;
+#X obj 44 155 cnv 10 87 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 45 155 send aSymbol;
+#X msg 45 107 symbol hello;
+#X msg 54 130 symbol world!;
+#X obj 179 129 cnv 10 105 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X symbolatom 178 157 0 0 0 0 - - -;
+#X obj 178 129 receive aSymbol;
+#X obj 61 71 cnv 10 65 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X floatatom 62 54 5 0 0 0 - - -;
+#X obj 62 71 send aNum;
+#X obj 305 36 cnv 5 5 460 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X connect 2 0 6 0;
+#X connect 3 0 10 0;
+#X connect 5 0 11 0;
+#X connect 7 0 18 0;
+#X connect 12 0 8 0;
+#X connect 14 0 13 0;
+#X connect 16 0 15 0;
+#X connect 17 0 13 0;
+#X connect 19 0 4 0;
+#X connect 42 0 41 0;
+#X connect 45 0 44 0;
+#X connect 46 0 44 0;
+#X connect 49 0 48 0;
+#X connect 51 0 52 0;

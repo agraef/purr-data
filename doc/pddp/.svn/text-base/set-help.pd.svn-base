@@ -1,0 +1,145 @@
+#N struct set-help-template float x float y float a symbol b;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header set 3 12 0 18 -204280
+-1 0;
+#X obj 0 230 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 245 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Revised
+by Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS control data_structure;
+#X text 12 45 DESCRIPTION set values in a scalar;
+#X text 12 65 INLET_0 float list symbol bang;
+#X text 12 85 INLET_N float symbol;
+#X text 12 105 INLET_R pointer;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 402 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 505 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 76 482 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [set] Related Objects;
+#X obj 23 44 get;
+#X obj 55 44 append;
+#X obj 105 44 getsize;
+#X obj 161 44 setsize;
+#X obj 221 44 element;
+#X obj 23 69 sublist;
+#X obj 81 69 struct;
+#X obj 133 69 pointer;
+#X restore 102 598 pd Related_objects;
+#X obj 78 332 cnv 17 3 35 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 237 float;
+#X text 98 265 list;
+#X obj 78 374 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#X obj 492 3 set;
+#X obj 466 20 pddp/pddplink http://wiki.puredata.info/en/set -text
+pdpedia: set;
+#X text 11 23 set values in a scalar;
+#N canvas 381 200 428 296 set-help-template 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [set] Data Structure Template;
+#X obj 23 124 drawcurve 0 1 60 50 70 50 70 60 60 60 60 50;
+#X obj 23 244 drawcurve 0 1 25 85 50 a 75 85;
+#X obj 23 80 drawcurve 0 1 0 20 100 20 100 120 0 120 0 20;
+#X text 298 79 <- Head;
+#X obj 23 102 drawcurve 0 1 30 50 40 50 40 60 30 60 30 50;
+#X text 298 102 <- Left eye;
+#X text 298 124 <- Right eye;
+#X text 25 198 The following drawing instruction associates the field
+"a" with the midpoint of a curve. Thus you can set the value of a and
+change the arc/direction of the curve.;
+#X text 217 244 <- Mouth;
+#X text 187 152 <- Text;
+#X text 187 175 <- Text;
+#X obj 23 43 struct set-help-template float x float y float a symbol
+b;
+#X obj 25 152 drawsymbol b 25 125 0 b=;
+#X obj 25 175 drawnumber a 40 a 900 a=;
+#X restore 417 153 pd set-help-template;
+#X scalar set-help-template 7 42 111 Comedy \;;
+#X obj 359 126 pointer;
+#X msg 359 73 traverse pd-set-help.pd \, next;
+#X floatatom 224 127 5 0 0 0 - - -;
+#X text 366 56 output first scalar in list;
+#X scalar set-help-template 116 42 61 Tragedy \;;
+#X msg 370 98 next;
+#X text 405 97 output next item;
+#X text 98 373 pointer;
+#X text 168 265 - a list is distributed among the inlets.;
+#X text 98 405 (none);
+#X obj 78 238 cnv 17 3 85 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 332 float;
+#X text 98 283 bang;
+#X text 98 346 symbol;
+#X text 98 310 symbol;
+#X text 168 464 - all subsequent arguments are names of fields. There
+is one inlet created per field (plus the rightmost inlet for the pointer).
+;
+#X text 167 373 - a pointer to a scalar.;
+#X text 168 446 - the template of a scalar.;
+#X text 168 283 - a bang to the leftmost inlet sets the field(s) of
+the scalar with the last stored field value(s).;
+#X text 168 237 - a float to the leftmost inlet updates the value(s)
+for the field(s) specified in the creation arguments.;
+#X text 168 332 - an inlet is added for each additional field specified
+by the creation arguments. All fields must be the same type (i.e. \,
+floats or symbols \, but not a mixture of the two).;
+#X text 98 509 You can't [set] "arrays" or "sublists". Instead \, you
+can get pointers into them using [element] and [sublist] (Note: [sublist]
+not working yet) and set individual items.;
+#X text 168 310 - see the subpatch "Setting_Symbolic_Fields" below.
+;
+#N canvas 98 376 428 215 Setting_Symbolic_Fields 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [set] Setting symbolic fields;
+#X obj 224 124 pointer;
+#X msg 224 71 traverse pd-set-help.pd \, next;
+#X msg 235 96 next;
+#X msg 23 84 symbol Trauermarsch;
+#X msg 48 109 symbol Scherzo;
+#X text 20 37 To set symbolic fields of a scalar \, the "-symbol" flag
+must be used as follows:;
+#X text 20 178 You cannot set symbols and floats using the same [set]
+object.;
+#X obj 23 151 set -symbol set-help-template b;
+#X connect 2 0 9 1;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 9 0;
+#X connect 6 0 9 0;
+#X restore 101 552 pd Setting_Symbolic_Fields;
+#X text 80 446 1) symbol atom;
+#X text 80 464 n) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 572 pddp/pddplink ../4.data.structures/03.setting.data.pd
+-text doc/4.data.structures/03.setting.data.pd;
+#X obj 353 552 pddp/pddplink scalar-help.pd;
+#X obj 224 153 set set-help-template a;
+#X obj 224 201 set -symbol set-help-template b;
+#X symbolatom 224 180 10 0 0 0 - - -;
+#X text 236 73 Click here first->;
+#X connect 17 0 46 1;
+#X connect 17 0 47 1;
+#X connect 18 0 17 0;
+#X connect 19 0 46 0;
+#X connect 22 0 17 0;
+#X connect 48 0 47 0;

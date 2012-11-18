@@ -1,0 +1,9 @@
+#N canvas 349 153 447 132 10;
+#X obj 12 38 fexpr~ if($x1[-1] < $x1 \, $x1[-1] + $f2 \, $x1[-1] -
+$f2);
+#X obj 12 11 inlet~;
+#X obj 385 12 inlet;
+#X obj 12 67 outlet~;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 1;

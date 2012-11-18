@@ -1,0 +1,54 @@
+wiimote for Pd
+==============
+
+[wiimote] is a Pd-object that allows to read data from a Wii Remote Controller
+it depends on libcwiid, which is currently only available on linux
+
+random notes
+============
+
+compiling
+---------
+wiimote uses autoconf:
+% ./configure
+% make
+% make install
+if you are using an svn snapshot, you will first have to run
+% ./autogen.sh
+
+note: autoconf will put the resulting pd-object binary into .libs/
+if you don't want to "make install" the library, just copy the
+./.lib/wiimote.pd_linux to ./
+
+extensions
+----------
+the external is known to support the nunchuck, classic, motionplus extensions
+the balance extension might work, but is currently untested (if it doesn't work
+and you need it, contact me to and send me the hardware)
+
+motionplus
+----------
+the motionplus extension for the wiimote is supported (out of the box, see
+above).
+however, older releases of libcwiid are inaccurate at detecting rotation speed
+(the wii remote reports whether the controller is turned fast or slow; this info
+is missing in libcwiid).
+if you have such a version of libcwiid and need higher precision, you have to
+patch the sources of libcwiid:
+$ cd /path/to/cwiid/libcwiid
+$ patch < /path/to/wiimote/patches/cwiid201_motionplus_sensitivity.patch
+$ cd /path/to/cwiid/
+$ make (read README to see how to patch libcwiid)
+
+then recompile wiimote
+
+multiple bluetooth dongles
+--------------------------
+[LATER describe that]
+
+
+contact
+=======
+get in contact with me either via the pd-list
+(http://lists.puredata.info/listinfo/pd-list) or directly via
+zmoelnig[at]iem[.]at

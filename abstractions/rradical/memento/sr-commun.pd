@@ -1,0 +1,6 @@
+#N canvas 288 268 450 300 10;
+#X obj 132 125 commun \$1 \$4;
+#X obj 132 77 r \$2;
+#X obj 132 173 s \$3;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;

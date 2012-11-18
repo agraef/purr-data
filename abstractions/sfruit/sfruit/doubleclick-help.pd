@@ -1,0 +1,12 @@
+#N canvas 0 22 450 300 10;
+#X text 13 20 [doubleclick] - only outputs a bang when it receives
+two bangs in quick succession (by default \, <200ms apart. change with
+the first argument);
+#X obj 89 104 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 89 124 doubleclick;
+#X obj 89 146 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 305 254 2009 Luke Iannini;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;

@@ -1,0 +1,27 @@
+#N canvas 181 195 296 555 10;
+#X obj 44 44 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 0;
+#X obj 75 43 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 0;
+#X obj 44 211 pack f f f;
+#X obj 44 299 unpack f f f;
+#X obj 109 42 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 0;
+#X msg 86 243 1 0.5 0.3;
+#X floatatom 198 245 5 0 0 0 - - -;
+#X obj 44 184 resample 50;
+#X obj 43 269 pmfilter_3d 0.3 0.3;
+#X obj 44 345 clip 0 1;
+#X obj 44 369 timeroll;
+#X connect 0 0 7 0;
+#X connect 1 0 2 1;
+#X connect 2 0 8 0;
+#X connect 3 0 9 0;
+#X connect 3 1 9 0;
+#X connect 3 2 9 0;
+#X connect 4 0 2 2;
+#X connect 5 0 8 1;
+#X connect 6 0 8 4;
+#X connect 7 0 2 0;
+#X connect 8 0 3 0;
+#X connect 9 0 10 0;

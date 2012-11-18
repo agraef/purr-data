@@ -1,0 +1,18 @@
+#N canvas 474 200 504 362 10;
+#X obj 18 -1 noise~;
+#X msg 309 95 enable 1;
+#X msg 383 97 enable 0;
+#X text 3 -43 Description: 7 VU meters. (in dB);
+#X obj 19 135 mtl/ambiVu7~;
+#X text 5 -28 tags: ambisonic;
+#X obj 18 47 mtl/ambiMonoToWxyuvpq~ angle 95;
+#X connect 0 0 6 0;
+#X connect 1 0 4 7;
+#X connect 2 0 4 7;
+#X connect 6 0 4 0;
+#X connect 6 1 4 1;
+#X connect 6 2 4 2;
+#X connect 6 3 4 3;
+#X connect 6 4 4 4;
+#X connect 6 5 4 5;
+#X connect 6 6 4 6;

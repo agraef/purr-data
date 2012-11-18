@@ -1,0 +1,34 @@
+#N canvas 422 71 666 370 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 100 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 8 315 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 317 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: None;
+#X text 12 6 pixelTANGO HELP - pt.feedback - Copy render window to
+layer;
+#X obj 24 135 pt.feedback;
+#X text 12 23 Type: Modifier. Uses images from all preceeding layers.
+;
+#X text 177 77 Feedback Functions:;
+#X text 187 100 *Number Boxs: (Set feedback cropping box of render
+window);
+#X text 197 121 X_Offset: Distance between left edge of render window
+and the left edge of the copied area.;
+#X text 197 151 Y_Offset: Distance between top edge of render window
+and the top edge of the copied area.;
+#X text 197 181 X_Size: Width of the copied area. (On some platforms
+this needs to be a value of 2^x);
+#X text 197 211 Y_Size: Height of the copied area. (On some platforms
+this needs to be a value of 2^x);
+#X obj 184 243 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 243 *Notes:;
+#X text 197 261 Default values presume a 640x480 render window. For
+a 512x512 window values should be 0 \, 0 \, 512 \, 512 or 0 \, 0 \,
+1024 \, 512 for 1024x512 window.;

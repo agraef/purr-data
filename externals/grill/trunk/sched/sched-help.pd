@@ -1,0 +1,44 @@
+#N canvas 309 22 651 356 12;
+#X obj 265 249 sched;
+#X obj 191 311 print;
+#X obj 174 314 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -258699
+-1;
+#X obj 262 322 nbx 5 14 -1e+37 1e+37 0 0 empty empty pending 0 -6 0
+10 -262131 -1 -1 0 256;
+#X obj 45 114 loadbang;
+#X obj 45 137 metro 10;
+#X obj 343 322 nbx 5 14 -1e+37 1e+37 0 0 empty empty timeout 0 -6 0
+10 -262131 -1 -1 0 256;
+#X obj 262 282 route pending timeout;
+#X msg 45 163 getpending \, gettimeout;
+#X obj 26 10 cnv 15 580 45 empty empty sched 10 22 0 24 -260818 -1
+0;
+#X text 236 33 http://grrrr.org;
+#X msg 295 171 symbol a;
+#X msg 297 196 1 2 3 4;
+#X obj 296 105 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 296 127 5 0 0 0 - - -;
+#X msg 468 178 1000;
+#X msg 468 156 5000;
+#X msg 295 150 list a 1 2 3 4;
+#X text 236 13 message scheduler \, (C)2005-2008 Thomas Grill;
+#X floatatom 469 203 5 0 0 0 - - -;
+#X text 273 76 messages to delay;
+#X text 467 129 delay time(ms);
+#X connect 0 0 2 0;
+#X connect 0 0 1 0;
+#X connect 0 1 7 0;
+#X connect 4 0 5 0;
+#X connect 5 0 8 0;
+#X connect 7 0 3 0;
+#X connect 7 1 6 0;
+#X connect 8 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 1;
+#X connect 16 0 0 1;
+#X connect 17 0 0 0;
+#X connect 19 0 0 1;

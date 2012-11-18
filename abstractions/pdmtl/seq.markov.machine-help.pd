@@ -1,0 +1,55 @@
+#N canvas 290 47 528 547 10;
+#X text 132 380 current state;
+#X msg 221 149 size 4;
+#X obj 138 111 t b b b b b;
+#X msg 221 170 row 1 1 2 3 4;
+#X text 60 9 States are numbered from 1 to n.;
+#X text 283 147 Already implied by argument.;
+#X msg 215 192 row 2 4 3 2 1;
+#X msg 220 215 row 3 200 300 4000 0;
+#X msg 220 238 row 4 1 1 1 1;
+#X text 337 240 Equal chances;
+#X obj 4 153 cnv 15 50 50 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 86 60 cnv 15 50 50 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X msg 18 165 next;
+#X msg 91 66 bang;
+#X obj -34 245 cnv 15 50 50 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X msg -30 257 set 1;
+#X text 92 43 1 Setup;
+#X text 4 133 2 Get state;
+#X text -34 225 3 Set state;
+#X msg 276 294 content;
+#X obj -40 -118 cnv 15 450 125 empty empty empty 20 12 0 14 -258699
+-66577 0;
+#X text -26 -117 )c( Copyleft 2006 Alexandre Quessy http://alexandre.quessy.net/
+;
+#X text 374 -134 ABOUT;
+#X obj 138 87 loadbang;
+#X text 210 331 A four states weighted FSM;
+#X obj 88 364 nbx 1 28 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 24
+-258699 -1 -1 0 256;
+#X obj 88 331 seq.markov.machine 4;
+#X text -26 -86 Description: a weighted finite states machine using
+an adjacency matrix for storing probabilities to obtain every other
+state next.;
+#X text -25 -46 It can be illustrated as an oriented graph. Probabilities
+are calculated on the sum of each numbers or every row.;
+#X connect 1 0 26 0;
+#X connect 2 0 8 0;
+#X connect 2 1 7 0;
+#X connect 2 2 6 0;
+#X connect 2 3 3 0;
+#X connect 2 4 1 0;
+#X connect 3 0 26 0;
+#X connect 6 0 26 0;
+#X connect 7 0 26 0;
+#X connect 8 0 26 0;
+#X connect 12 0 26 0;
+#X connect 13 0 2 0;
+#X connect 15 0 26 0;
+#X connect 19 0 26 0;
+#X connect 23 0 2 0;
+#X connect 26 0 25 0;

@@ -1,0 +1,141 @@
+#N canvas 213 34 995 590 10;
+#X text 515 150 };
+#X text 392 121 supply;
+#X msg 379 146 a b c;
+#X msg 381 169 1 2 3 4 5;
+#X obj 63 234 bng 15 250 50 0 empty empty select_one_element 0 -6 0
+8 -262144 -1 -1;
+#X msg 380 192 7 Shadock 3.14 x;
+#X text 178 86 selection principle;
+#X obj 63 342 collect;
+#X obj 107 319 bng 15 250 50 0 empty empty clear_display 0 -6 0 8 -262144
+-1 -1;
+#X text 30 0 sel-princ;
+#X text 33 18 Changes between the selection principles ALEA \, SERIES
+and SEQUENCE (as defined by G. M. Koenig) and ROTA according to the
+number sent to the middle inlet:;
+#X text 46 426 1993-97 by Karlheinz Essl;
+#X floatatom 241 339 0 0 0 2 idx - -;
+#X msg 63 383;
+#X obj 242 303 bng 15 250 50 0 empty empty last 0 -6 0 8 -262144 -1
+-1;
+#X text 48 442 vs. 4: selection principle ROTA added;
+#X msg 99 70 1 alea;
+#X msg 99 89 2 series;
+#X msg 99 109 3 sequence;
+#X msg 99 131 4 rota;
+#X obj 99 160 list split 1;
+#X obj 379 92 loadbang;
+#N canvas 0 0 450 300 graph1 0;
+#X array \$0-princ 50 float 0;
+#X coords 0 10 49 0 200 140 1;
+#X restore 760 132 graph;
+#X msg 676 325 0 1 2 3 4 5 6 7 8 9;
+#X obj 604 308 until;
+#X msg 568 219 50;
+#N canvas 0 0 408 374 to-array 0;
+#X obj 78 244 s \$0-princ;
+#X msg 230 209 const 0;
+#X obj 78 205 list prepend 0;
+#X obj 101 114 list prepend;
+#X obj 192 113 t a;
+#X obj 78 147 list;
+#X obj 180 81 t b b;
+#X obj 180 56 inlet;
+#X obj 101 56 inlet;
+#X obj 57 56 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 3 0 5 1;
+#X connect 4 0 3 1;
+#X connect 5 0 2 0;
+#X connect 6 0 3 1;
+#X connect 6 1 1 0;
+#X connect 7 0 6 0;
+#X connect 8 0 3 0;
+#X connect 9 0 5 0;
+#X restore 568 424 pd to-array;
+#X obj 568 241 t b a b;
+#X obj 676 296 loadbang;
+#X obj 135 185 cnv 15 80 20 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X symbolatom 138 187 10 0 0 0 - - -;
+#X obj 568 197 t b b b b a;
+#X obj 604 356 sel-princ 3;
+#X obj 63 262 sel-princ 3;
+#X text 274 303 bang \, when supply is exhausted;
+#X text 269 342 index of chosen list element;
+#X obj 517 24 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 517 531 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 532 24 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 532 531 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 511 24 cnv 15 40 15 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X obj 509 531 cnv 15 40 15 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#N canvas 0 0 738 528 sel-princ 0;
+#X msg 184 218 1 alea;
+#X msg 184 237 2 series;
+#X msg 184 257 3 sequence;
+#X msg 184 279 4 rota;
+#X obj 184 308 list split 1;
+#X symbolatom 107 142 10 0 0 0 - - -;
+#X obj 107 127 hradio 15 1 0 4 empty empty sel-princ 0 -6 0 8 -262144
+-1 -1 0;
+#X obj 185 335 outlet;
+#X obj 194 129 + 1;
+#X obj 141 160 select 1 2 3 4;
+#X obj 244 66 inlet;
+#X obj 238 95 - 1;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 4 1 5 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 9 1 1 0;
+#X connect 9 2 2 0;
+#X connect 9 3 3 0;
+#X connect 10 0 11 0;
+#X connect 11 0 6 0;
+#X coords 0 -1 1 1 85 60 1 100 100;
+#X restore 568 125 pd sel-princ;
+#X connect 2 0 33 2;
+#X connect 3 0 33 2;
+#X connect 4 0 33 0;
+#X connect 5 0 33 2;
+#X connect 7 0 13 0;
+#X connect 8 0 7 1;
+#X connect 16 0 20 0;
+#X connect 17 0 20 0;
+#X connect 18 0 20 0;
+#X connect 19 0 20 0;
+#X connect 20 0 33 1;
+#X connect 20 1 30 0;
+#X connect 21 0 2 0;
+#X connect 21 0 18 0;
+#X connect 23 0 32 2;
+#X connect 24 0 32 0;
+#X connect 25 0 27 0;
+#X connect 27 0 26 0;
+#X connect 27 1 24 0;
+#X connect 27 2 26 2;
+#X connect 28 0 23 0;
+#X connect 30 0 8 0;
+#X connect 31 0 25 0;
+#X connect 31 4 32 1;
+#X connect 32 0 26 1;
+#X connect 33 0 7 0;
+#X connect 33 1 12 0;
+#X connect 33 2 14 0;
+#X connect 36 0 37 0;
+#X connect 38 0 39 0;
+#X connect 42 0 31 0;

@@ -1,0 +1,85 @@
+
+  Arbitrary Length FFT
+ ------------------------------------------------------------------------
+  NOTE : This is copyrighted material, NOT public domain. See below.
+ ------------------------------------------------------------------------
+  Contents:
+      This packet contains the C source for a mixed-radix FFT routine. 
+      It performs a fast discrete Fourier transform (FFT) of a complex 
+      sequence, x, of an arbitrary length, n. The output, y, is also a 
+      complex sequence of length n.
+
+      y[k] = sum(x[m]*exp(-i*2*pi*k*m/n), m=0..(n-1)), k=0,...,(n-1)
+
+      The largest prime factor of n must be less than or equal to the
+      constant, maxPrimeFactor defined in mixfft.c. The input/output 
+      variables are each stored in two arrays comprising the real part
+      and the imaginary part respectively. 
+ 
+      The routine is accompanied by a demo program, fftbench.c,  that 
+      demonstrates the numerical capabilities. It measures the execution 
+      time as well. If you wish to test the capabilities of another FFT
+      routine, the fftbench.c is easy to modify.
+ ------------------------------------------------------------------------
+  Filelist:
+      mixfft.c      21.120 001030  The C source for the mixed-radix FFT.
+      fftbench.c     8.724 001030  The C source for FFT benchmark program.
+      fftbench.exe  62.976 001030  The PC executable.
+      readme.txt                   This file.
+ ------------------------------------------------------------------------
+  Platforms:
+  
+  PC:
+      The included fftbench.exe was generated using the Microsoft Visual 
+      C++ compiler with the following compile options:
+      /nologo /Gs /G2 /W4 /AH /Ox /D "NDEBUG" /D "_DOS" /FR
+      It was tested on a 50MHz 486DX. Please refer to fftbench.c for some
+      benchmarks. (jjn, March 1996)
+      
+  Other:
+      Your experience with other platforms are warmly welcomed. Please
+      e-mail me.
+ ------------------------------------------------------------------------
+  Conditions:
+      The source code in this packet is copyrighted material.
+      
+      Non-commercial use of the source code is free.
+      
+      A $100 fee must be paid if used commercially. Please contact me at
+      jjn@get2net.dk and register your copy. The $100 fee includes 
+      up to one hour of assistance related to your use of the code. A 
+      trial period of 14 days is allowed. 
+
+      If the code is used for professional (paid) research and development 
+      for non-profit organisations like universities a reduced fee of $20
+      must be paid.
+      
+      The commercial license allows you to include the compiled code in a
+      product or to use the code on a regular basis. You are however NOT
+      allowed to sell the source code.        
+      
+      Distribution of the complete unaltered package, including this
+      file, is free. This includes commercial CD's.
+ ------------------------------------------------------------------------
+  Author:
+      Jens Joergen Nielsen            For non-commercial use only.
+      Bakkehusene 54                  A $100 fee must be paid if used
+      2970 Hoersholm                  commercially. Please contact.
+      DENMARK
+
+      mailto:jjn@get2net.dk   All rights reserved. October 2000.
+
+      Check my homepage for updates and FAQ's http://home.get2net.dk/jjn
+ ------------------------------------------------------------------------
+  Release notes:
+      V.0.1 950301      Initial MIXFFT release.
+      V.0.3 960317      Input/output variables have separate arrays for
+                        real and imag part. The speed of prime factors
+                        larger than 7 is more than doubled.
+      V.0.4 980103      e-mail address changed.
+      V.0.5 001030      Memory allocation in FFTBench changed, now calloc
+                        is used. Error reporting when primefactor is 
+                        larger than maxPrimeFactor has been corrected.
+
+      
+ ------------------------------------------------------------------------

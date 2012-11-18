@@ -1,0 +1,41 @@
+#N canvas 280 123 649 335 10;
+#X obj 17 64 gemwin;
+#X msg 24 34 create;
+#X obj 12 15 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 155 35 gemhead;
+#X obj 128 266 s petalnum;
+#X obj 156 68 s petalin;
+#X obj 200 267 s petalsize;
+#X obj 280 264 s petaltrans;
+#X obj 110 241 line;
+#X floatatom 141 244 5 0 0 0 - - -;
+#X msg 107 221 \$1 1000;
+#X msg 72 187 35;
+#X msg 101 189 21;
+#X msg 127 190 13;
+#X floatatom 204 167 5 0 0 0 - - -;
+#X floatatom 271 185 5 0 0 0 - - -;
+#X obj 162 106 nqpoly4 35 petal;
+#X msg 157 189 8;
+#X text 234 17 this is a silly gem example \, vaguely inspired by a
+question on the list about drawing flowers in gem. just a proof of
+concept.;
+#X text 277 103 make 35 petal objects waiting for commands;
+#X text 151 293 e send the commands out on global sends. all of the
+petals receive all of the commands \, and act accordingly.;
+#X text 325 183 radius of the flower;
+#X text 247 165 radius of the petals;
+#X text 47 167 number of petals;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 5 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 0;
+#X connect 10 0 8 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 14 0 6 0;
+#X connect 15 0 7 0;
+#X connect 17 0 10 0;

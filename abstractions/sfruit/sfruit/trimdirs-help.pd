@@ -1,0 +1,24 @@
+#N canvas 0 22 496 364 10;
+#X msg 91 47 /Users/Me/Pd/Synths;
+#X obj 91 163 prepent set;
+#X obj 171 163 prepent set;
+#X text 26 251 Trims the last [n] directories from the end of a path.
+;
+#X text 27 265 With [trimdirs 1] \, /Users/Me/Pd/Synths becomes /Users/Me/Pd
+;
+#X text 26 279 Handles spaces just fine.;
+#X text 351 309 Luke Iannini 2008;
+#X text 351 321 proyekto.net;
+#X text 26 293 No/0 argument passes input through unchanged;
+#X obj 91 130 trimdirs 1;
+#X obj 171 130 trimdirs 2;
+#X obj 136 91 symbol;
+#X msg 171 195;
+#X msg 91 195;
+#X connect 0 0 11 0;
+#X connect 1 0 13 0;
+#X connect 2 0 12 0;
+#X connect 9 0 1 0;
+#X connect 10 0 2 0;
+#X connect 11 0 9 0;
+#X connect 11 0 10 0;

@@ -1,0 +1,27 @@
+#N canvas 363 24 502 500 10;
+#X obj 34 139 cnv 15 466 192 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 38 146 K12/wii_buttons;
+#X text 141 215 Select a button by clicking on one of the possibilities.
+Once selected \, only that button will register.;
+#X text 139 257 The wii button object will output a 0 if the button
+is not being pressed \, and a 1 if it is being pressed.;
+#N canvas 574 86 450 514 META 0;
+#X text 8 34 INLET_0 Attach the Wii Connect object here;
+#X text 9 5 DESCRIPTION This object lets you choose which Wiimote button
+to use.;
+#X text 7 51 OUTLET_0 This outputs 0 if the button is not pressed and
+1 if it is pressed.;
+#X restore 469 441 pd META;
+#X text 18 -31 comment;
+#X obj 19 -4 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 19 -32 cnv 15 501 28 empty empty WiiButtons 5 14 0 20 -139274
+-262144 0;
+#X obj 489 0 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X text 140 166 The Wii Buttons object is used to filter the buttons
+from the Wiimote. Connect the Wii Connect object to the inlet.;
+#X obj 38 30 K12/wii_connect;
+#X obj 38 355 K12/math_number;
+#X connect 1 0 11 0;
+#X connect 10 0 1 0;

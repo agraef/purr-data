@@ -1,0 +1,152 @@
+#X obj 460 183 vsl 15 128 0 1000 0 0 \$0-rAtt_1 \$0-sAtt_1 A 0 -8 1728
+#X obj 478 183 vsl 15 128 0 1000 0 0 \$0-rRel_1 \$0-sRel_1 R 0 -8 1728
+#X obj 519 185 vsl 15 128 0 1000 0 0 \$0-rAtt_2 \$0-sAtt_2 A 0 -8 1728
+#X obj 537 185 vsl 15 128 0 1000 0 0 \$0-rRel_2 \$0-sRel_2 R 0 -8 1728
+#X obj 580 184 vsl 15 128 0 1000 0 0 \$0-rAtt_3 \$0-sAtt_3 A 0 -8 1728
+#X obj 598 184 vsl 15 128 0 1000 0 0 \$0-rRel_3 \$0-sRel_3 R 0 -8 1728
+#X obj 180 143 s \$0-NoteVel;
+#X obj 165 164 s \$0-NotePitch;
+#X obj 196 122 s \$0-NoteChnl;
+#X obj 152 422 r \$0-op1->op3;
+#X obj 328 419 r \$0-op2->op3;
+#X obj 503 417 r \$0-op3->op3;
+#X obj 165 256 r \$0-op1->op2;
+#X obj 341 253 r \$0-op2->op2;
+#X obj 516 251 r \$0-op3->op2;
+#X obj 181 106 r \$0-op1->op1;
+#X obj 357 103 r \$0-op2->op1;
+#X obj 532 101 r \$0-op3->op1;
+#X obj 578 146 cnv 10 40 1 \$0-r_Op1OutCanvash \$0-s_Op1OutCanvash
+#X obj 562 140 cnv 12 38 16 empty \$0-s_Op1OutCanvash empty 4 6 576
+#X obj 563 141 nbx 3 14 0 100 0 0 \$0-outAmt_1 \$0-send-outAmt_1 empty
+#X obj 520 98 cnv 15 1 50 \$0-r_Op2OutCanvas \$0-s_Op2OutCanvas empty
+#X obj 522 146 cnv 10 40 1 \$0-r_Op2OutCanvash \$0-s_Op2OutCanvash
+#X obj 510 140 cnv 12 38 16 empty \$0-s_Op2OutCanvas empty 4 6 576
+#X obj 511 141 nbx 3 14 0 100 0 0 \$0-outAmt_2 \$0-send-outAmt_2 empty
+#X obj 470 146 cnv 10 40 1 \$0-r_Op3OutCanvash \$0-s_Op3OutCanvash
+#X obj 467 -2 cnv 12 40 22 empty \$0-s_Op3FBCanvas empty 4 6 576 8
+#X obj 455 -10 cnv 12 34 16 empty \$0-s_Op3FBCanvas empty 4 6 576 8
+#X obj 456 -9 nbx 3 14 0 100 0 0 \$0-op3->op3 \$0-send-op3->op3 empty
+#X obj 467 10 cnv 15 1 50 \$0-r_Op3Op2 \$0-s_Op3Op2 empty 20 12 1728
+#X obj 467 98 cnv 15 1 50 \$0-r_Op3OutCanvas \$0-s_Op3OutCanvas empty
+#X obj 458 140 cnv 12 38 16 empty \$0-s_Op3OutCanvas empty 4 6 576
+#X obj 459 141 nbx 3 14 0 100 0 0 \$0-outAmt_3 \$0-send-outAmt_3 empty
+#X obj 468 55 cnv 10 40 1 \$0-r_Op3Op2h \$0-s_Op3Op2h empty 20 12 1728
+#X obj 470 103 cnv 10 40 1 \$0-r_Op3Op1h \$0-s_Op3Op1h empty 20 12
+#X obj 467 50 cnv 15 1 50 \$0-r_Op3Op2_2 \$0-s_Op3Op2_2 empty 20 12
+#X obj 457 49 cnv 12 38 16 empty \$0-s_Op3Op2Canvas empty 4 6 576 8
+#X obj 458 50 nbx 3 14 0 100 0 0 \$0-op3->op2 \$0-send-op3->op2 empty
+#X obj 457 97 cnv 12 38 16 empty \$0-s_Op3Op1Canvas empty 4 6 576 8
+#X obj 458 98 nbx 3 14 0 100 0 0 \$0-op3->op1 \$0-send-op3->op1 empty
+#X obj 530 103 cnv 10 30 1 \$0-r_Op2Op1h \$0-s_Op2Op1h empty 20 12
+#X obj 510 97 cnv 12 38 16 empty \$0-s_Op2Op1Canvas empty 4 6 576 8
+#X obj 511 98 nbx 3 14 0 100 0 0 \$0-op2->op1 \$0-send-op2->op1 empty
+#X obj 573 49 cnv 15 1 50 \$0-r_Op1Op2 \$0-s_Op1Op2 empty 20 12 1728
+#X obj 562 49 cnv 12 38 16 empty \$0-s_Op1Op2Canvas empty 4 6 576 8
+#X obj 563 50 nbx 3 14 0 100 0 0 \$0-op1->op2 \$0-send-op1->op2 empty
+#X obj 573 99 cnv 15 1 40 \$0-r_Op1OutCanvas \$0-s_Op1OutCanvas empty
+#X obj 573 86 cnv 12 40 22 empty \$0-s_Op1FBCanvas empty 4 6 576 8
+#X obj 561 78 cnv 12 34 16 empty \$0-s_Op1FBCanvas empty 4 6 576 8
+#X obj 562 79 nbx 3 14 0 100 0 0 \$0-op1->op1 \$0-send-op1->op1 empty
+#X obj 520 38 cnv 12 40 22 empty \$0-s_Op2FBCanvas empty 4 6 576 8
+#X obj 508 30 cnv 12 34 16 empty \$0-s_Op2FBCanvas empty 4 6 576 8
+#X obj 509 31 nbx 3 14 0 100 0 0 \$0-op2->op2 \$0-send-op2->op2 empty
+#X obj 520 50 cnv 15 1 46 \$0-r_Op2Op1 \$0-s_Op2Op1 empty 20 12 1728
+#X obj 532 56 cnv 10 30 1 \$0-r_Op1Op2h \$0-s_Op1Op2h empty 20 12 1728
+#X obj 563 5 cnv 12 38 16 empty \$0-s_Op1Op3Canvas empty 4 6 576 8
+#X obj 573 6 cnv 15 1 42 \$0-r_Op1Op3_1 \$0-s_Op1Op3_1 empty 20 12
+#X obj 564 6 nbx 3 14 0 100 0 0 \$0-op1->op3 \$0-send-op1->op3 empty
+#X obj 478 10 cnv 10 32 1 \$0-r_Op2Op3h \$0-s_Op2Op3h empty 20 12 1728
+#X obj 532 10 cnv 10 30 1 \$0-r_Op1Op3h \$0-s_Op1Op3h empty 20 12 1728
+#X obj 510 5 cnv 12 38 16 empty \$0-s_Op2Op3Canvas empty 4 6 576 8
+#X obj 520 5 cnv 15 1 24 \$0-r_Op2Op3 \$0-s_Op2Op3 empty 20 12 1728
+#X obj 511 6 nbx 3 14 0 100 0 0 \$0-op2->op3 \$0-send-op2->op3 empty
+#X obj 621 120 bng 15 250 50 0 \$0-r_RsFB \$0-s_RsFB ResetFeedback
+#X obj 215 122 s \$0-send-op1->op1;
+#X obj 327 122 s \$0-send-op2->op1;
+#X obj 440 123 s \$0-send-op3->op1;
+#X obj 224 187 s \$0-send-op3->op3;
+#X obj 336 188 s \$0-send-op3->op2;
+#X obj 210 260 s \$0-send-op1->op3;
+#X obj 322 261 s \$0-send-op2->op2;
+#X obj 439 263 s \$0-send-op1->op2;
+#X obj 556 264 s \$0-send-op2->op3;
+#X obj 197 320 s \$0-send-outAmt_1;
+#X obj 197 349 s \$0-send-outAmt_2;
+#X obj 207 388 s \$0-send-outAmt_3;
+#X obj 421 48 r \$0-r_RsFB;
+#X obj 30 97 s \$0-s_Op1FBCanvas;
+#X obj 30 9 r \$0-op1->op1;
+#X obj 173 6 r \$0-op2->op2;
+#X obj 173 95 s \$0-s_Op2FBCanvas;
+#X obj 314 4 r \$0-op3->op3;
+#X obj 314 93 s \$0-s_Op3FBCanvas;
+#X obj 727 102 s \$0-s_Op1OutCanvas;
+#X obj 607 102 s \$0-s_Op2OutCanvas;
+#X obj 476 102 s \$0-s_Op3OutCanvas;
+#X obj 476 6 r \$0-outAmt_3;
+#X obj 607 6 r \$0-outAmt_2;
+#X obj 727 5 r \$0-outAmt_1;
+#X obj 315 526 s \$0-s_Op1OutCanvash;
+#X obj 78 201 r \$0-outAmt_3;
+#X obj 204 549 s \$0-s_Op2OutCanvash;
+#X obj 73 576 s \$0-s_Op3OutCanvash;
+#X obj 209 201 r \$0-outAmt_2;
+#X obj 320 200 r \$0-outAmt_1;
+#X obj 560 187 r \$0-outAmt_3;
+#X obj 597 376 s \$0-s_Op3Op2_2;
+#X obj 784 463 s \$0-s_Op3Op2;
+#X obj 675 187 r \$0-op3->op1;
+#X obj 784 184 r \$0-op3->op2;
+#X obj 582 404 s \$0-s_Op3Op2;
+#X obj 883 113 s \$0-s_Op3Op2h;
+#X obj 884 7 r \$0-op3->op2;
+#X obj 882 148 s \$0-s_Op3Op2Canvas;
+#X obj 1013 7 r \$0-op3->op1;
+#X obj 1012 150 s \$0-s_Op3Op1Canvas;
+#X obj 1014 113 s \$0-s_Op3Op1h;
+#X obj 1281 33 r \$0-op2->op3;
+#X obj 1281 151 s \$0-s_Op2Op3Canvas;
+#X obj 406 598 r \$0-op3->op1;
+#X obj 112 596 r \$0-outAmt_2;
+#X obj 112 803 s \$0-s_Op2Op1;
+#X obj 262 596 r \$0-op2->op1;
+#X obj 262 802 s \$0-s_Op2Op1h;
+#X obj 1120 638 s \$0-s_Op2Op1Canvas;
+#X obj 1120 520 r \$0-op2->op1;
+#X obj 1005 551 r \$0-op1->op2;
+#X obj 1005 709 s \$0-s_Op1Op2h;
+#X obj 553 519 r \$0-op1->op3;
+#X obj 766 568 r \$0-op2->op3;
+#X obj 646 518 r \$0-op1->op2;
+#X obj 588 775 s \$0-s_Op1Op2;
+#X obj 1035 679 s \$0-s_Op1Op2Canvas;
+#X obj 875 650 s \$0-s_Op1Op3Canvas;
+#X obj 875 532 r \$0-op1->op3;
+#X obj 901 714 s \$0-s_Op1Op3_1;
+#X obj 764 686 s \$0-s_Op2Op3Canvas;
+#X obj 748 711 s \$0-s_Op2Op3;
+#X obj 1074 461 s \$0-s_Op1Op3h;
+#X obj 931 476 s \$0-s_Op2Op3h;
+#X obj 934 230 r \$0-op2->op3;
+#X obj 1078 237 r \$0-op1->op3;
+#X obj 17 258 s \$0-pitch_Op1;
+#X obj 277 214 s \$0-pitch_Op2;
+#X obj 452 200 s \$0-pitch_Op3;
+#X obj 452 47 r \$0-NoteVel;
+#X obj 283 63 r \$0-NoteVel;
+#X obj 35 16 r \$0-NotePitch;
+#X obj 801 87 s \$0-s_RsFB;
+#X obj 747 252 r \$0-rAtt_1;
+#X obj 760 272 r \$0-rRel_1;
+#X obj 836 251 r \$0-rAtt_2;
+#X obj 849 270 r \$0-rRel_2;
+#X obj 936 256 r \$0-rAtt_3;
+#X obj 949 275 r \$0-rRel_3;
+#X obj 55 76 r \$0-pitch_Op1;
+#X obj 227 82 r \$0-pitch_Op2;
+#X obj 424 80 r \$0-pitch_Op3;
+#X obj 787 148 r \$0-NoteVel;
+#X obj 525 292 r \$0-outAmt_3;
+#X obj 324 289 r \$0-outAmt_2;
+#X obj 127 270 r \$0-outAmt_1;

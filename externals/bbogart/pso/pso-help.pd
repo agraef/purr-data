@@ -1,0 +1,74 @@
+#N canvas 296 264 464 591 10;
+#X obj 12 363 pso 5 1 2;
+#X text 82 364 5 particles \, 1 dimention \, and neightborhood size
+2;
+#X obj 92 151 hsl 128 15 0 127 0 0 empty empty Target 10 8 1 8 -241291
+-1 -1 8400 0;
+#X obj 134 486 hsl 128 15 0 127 0 0 empty empty Particle_1 10 8 1 8
+-44926 -1 -1 8400 1;
+#X obj 134 504 hsl 128 15 0 127 0 0 empty empty Particle_2 10 8 1 8
+-44926 -1 -1 8400 1;
+#X obj 134 522 hsl 128 15 0 127 0 0 empty empty Particle_3 10 8 1 8
+-44926 -1 -1 8400 1;
+#X obj 134 540 hsl 128 15 0 127 0 0 empty empty Particle_4 10 8 1 8
+-44926 -1 -1 8400 1;
+#X obj 134 558 hsl 128 15 0 127 0 0 empty empty Particle_5 10 8 1 8
+-44926 -1 -1 8400 1;
+#X floatatom 41 419 8 0 0 1 Minimization - -;
+#X text 126 452 Route Particle positions;
+#X msg 127 214 target \$1;
+#X msg 147 191 rand_pop 0 127;
+#X text 255 191 #1 initialize the population;
+#X obj 12 452 route 0 1 2 3 4;
+#X msg 108 236 reset;
+#X text 254 213 #2 Set the Target;
+#X text 254 234 #3 Initialize the PSO;
+#X msg 32 155 help;
+#N canvas 0 0 450 300 init 0;
+#X msg 39 218 optim_thresh 0;
+#X obj 33 243 outlet;
+#X text 149 218 Smaller systems like smaller thresholds.;
+#X connect 0 0 1 0;
+#X restore 12 123 pd init;
+#X obj 70 391 print Minimized;
+#X msg 89 305 1;
+#X msg 129 305 0;
+#X obj 89 170 t b b f b;
+#X obj 129 281 bng 20 250 50 0 empty empty Minimized 25 10 1 8 -258699
+-262144 -1;
+#X text 254 306 #4 Start iterating;
+#X text 253 392 #5 Stop iterating;
+#X obj 2 1 cnv 15 460 110 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 231 150 <- Start Here;
+#X text 22 3 PSO - Particle Swarm Optimizer - Copyright Ben Bogart
+2003 A PSO generates a random (or preset) polulation of solutions.
+These particles accellerate towards the neighbors' and global best
+solution. As the PSO iterates the population becomes more and more
+similar to the target. You can specify the number of particles \, dimentions
+and the size of the neighborhoods. If you change the target before
+the PSO has minimized it may not minimize.;
+#X obj 89 335 metro 20;
+#X connect 0 0 13 0;
+#X connect 0 1 8 0;
+#X connect 0 2 23 0;
+#X connect 0 2 19 0;
+#X connect 2 0 22 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 13 0 3 0;
+#X connect 13 1 4 0;
+#X connect 13 2 5 0;
+#X connect 13 3 6 0;
+#X connect 13 4 7 0;
+#X connect 14 0 0 0;
+#X connect 17 0 0 0;
+#X connect 18 0 0 0;
+#X connect 20 0 29 0;
+#X connect 21 0 29 0;
+#X connect 22 0 20 0;
+#X connect 22 1 14 0;
+#X connect 22 2 10 0;
+#X connect 22 3 11 0;
+#X connect 23 0 21 0;
+#X connect 29 0 0 0;

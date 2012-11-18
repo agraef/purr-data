@@ -1,0 +1,8 @@
+DEFS=$(DEFS) /DFLEXT_SYS=1
+CFLAGS=$(CFLAGS) /DWINVER=0x0501 /D_WIN32_WINNT=0x501 /DWIN_VERSION /DWIN_EXT_VERSION
+
+INCPATH=$(INCPATH) /I$(MAXSDKPATH)\max-includes /I$(MAXSDKPATH)\jit-includes /I$(MAXSDKPATH)\msp-includes
+LIBPATH=$(LIBPATH) /LIBPATH:$(MAXSDKPATH)\max-includes /LIBPATH:$(MAXSDKPATH)\jit-includes /LIBPATH:$(MAXSDKPATH)\msp-includes
+
+# these are both in MAXSDKPATH
+LIBS=$(LIBS) maxapi.lib maxaudio.lib

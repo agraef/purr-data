@@ -1,0 +1,31 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty building_lists 20 12 0 24 -228992
+-66577 0;
+#X obj 117 350 pack float float float;
+#X msg 117 381 \$3 \$1 \$2;
+#X floatatom 117 324 5 0 0 0 - - -;
+#X floatatom 224 325 5 0 0 0 - - -;
+#X floatatom 332 326 5 0 0 0 - - -;
+#X text 24 295 You can use arguments to reorder elements:;
+#X obj 19 59 bng 20 250 50 0 empty empty empty 0 -6 0 8 -24198 -1 -1
+;
+#X floatatom 234 108 5 0 0 0 - - -;
+#X floatatom 126 108 5 0 0 0 - - -;
+#X floatatom 19 108 5 0 0 0 - - -;
+#X obj 19 82 trigger bang bang bang;
+#X obj 19 132 pack float float float;
+#X obj 19 165 print;
+#X obj 117 411 print;
+#X connect 1 0 2 0;
+#X connect 2 0 14 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 1;
+#X connect 5 0 1 2;
+#X connect 7 0 11 0;
+#X connect 8 0 12 2;
+#X connect 9 0 12 1;
+#X connect 10 0 12 0;
+#X connect 11 0 10 0;
+#X connect 11 1 9 0;
+#X connect 11 2 8 0;
+#X connect 12 0 13 0;

@@ -1,0 +1,8 @@
+#N canvas 0 0 352 182 10;
+#X floatatom 106 87 9 0 0 0 - - -;
+#X floatatom 106 135 9 0 0 0 - - -;
+#X text 17 20 Description: Gets a number in the Fibonacci serie;
+#X obj 106 111 mtl/fibonacci;
+#X text 18 36 tags: math;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;

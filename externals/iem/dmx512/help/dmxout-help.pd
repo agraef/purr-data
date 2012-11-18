@@ -1,0 +1,36 @@
+#N canvas 0 0 719 485 10;
+#X obj 102 31 dmxout;
+#X text 158 31 control DMX512-devices from within Pd;
+#X text 85 106 DMX512 is a protocol for controlling lights and magic
+\, similar to MIDI;
+#X obj 62 240 dmxout;
+#X floatatom 62 171 5 0 255 1 value - -;
+#X floatatom 101 195 5 0 255 1 channel - -;
+#X floatatom 232 171 5 0 255 1 value - -;
+#X obj 232 240 dmxout 5;
+#X text 232 261 default channel: 5;
+#X obj 402 270 dmxout 5 4;
+#X text 402 291 default channel: 5 6 7 8;
+#X msg 402 169 \$1 100 \$1 100;
+#X text 502 170 4 values \, one for each channel;
+#X floatatom 402 151 5 0 255 1 value - -;
+#X msg 488 239 6;
+#X text 518 241 channels 6 7 ...;
+#X msg 469 202 10 3;
+#X text 504 201 channels 10 11 12;
+#X text 80 336 [dmxout] is currently linux only. ports to other OSs
+are desired but not high priority.;
+#X text 80 378 by default \, [dmxout] will try to open the device /dev/dmx
+;
+#X text 79 401 you can change the default dmx-device globally by setting
+the "DMX" environment variable prior to creating the [dmxout] object
+(e.g. before you start Pd);
+#X text 501 34 (c) 2008 IOhannes m zmölnig;
+#X text 559 53 iem @ KUG;
+#X connect 4 0 3 0;
+#X connect 5 0 3 1;
+#X connect 6 0 7 0;
+#X connect 11 0 9 0;
+#X connect 13 0 11 0;
+#X connect 14 0 9 1;
+#X connect 16 0 9 1;

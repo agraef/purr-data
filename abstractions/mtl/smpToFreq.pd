@@ -1,0 +1,18 @@
+#N canvas 396 47 546 392 10;
+#X text 282 77 samples to milliseconds conversion;
+#X obj 31 25 inlet;
+#X obj 174 167 samplerate~;
+#X obj 55 336 outlet;
+#X obj 64 90 t f b;
+#X obj 55 55 route float;
+#X obj 121 85 unpack f f;
+#X obj 69 267 expr $f2/$f1;
+#X connect 1 0 5 0;
+#X connect 2 0 7 1;
+#X connect 4 0 7 0;
+#X connect 4 1 2 0;
+#X connect 5 0 4 0;
+#X connect 5 1 6 0;
+#X connect 6 0 7 0;
+#X connect 6 1 7 1;
+#X connect 7 0 3 0;

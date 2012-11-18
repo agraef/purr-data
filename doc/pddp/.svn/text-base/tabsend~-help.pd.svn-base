@@ -1,0 +1,93 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabsend~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 464 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 247 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal array block_oriented;
+#X text 12 45 DESCRIPTION write one block of a signal continuously
+to an array;
+#X text 12 75 DATATYPE_IN signal;
+#X text 12 95 DATATYPE_OUT;
+#X text 12 175 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 501 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 76 480 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 103 43 fft~;
+#X text 8 2 [tabsend~] Related Objects;
+#X obj 23 43 tabreceive~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 473 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 466 3 tabsend~;
+#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/tabsend~ -text
+pdpedia: tabsend~;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 64 float 2;
+#X coords 0 1 64 -1 100 70 1;
+#X restore 291 205 graph;
+#X obj 83 169 loadbang;
+#X text 98 505 (none);
+#X text 98 472 signal;
+#N canvas 68 141 428 387 Using_tabsend~_with_block~ 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array2 128 float 0;
+#X coords 0 1 127 -1 128 100 1;
+#X restore 193 117 graph;
+#X msg 24 305 set 128;
+#X msg 24 257 set 64;
+#X obj 194 117 cnv 15 64 20 empty empty 64_samples 0 10 0 10 -257985
+-66577 0;
+#X obj 193 197 cnv 15 128 20 empty empty 128_samples 60 10 0 10 -4034
+-66577 0;
+#X obj 23 117 osc~ 512;
+#X text 73 256 default size;
+#X text 78 303 double size;
+#X obj 24 353 block~;
+#X text 8 2 [tabsend~] Using [tabsend~] with [block~];
+#X text 21 230 Try changing the block size:;
+#X text 20 38 You can use [block~] to change the blocksize and \, consequently
+\, how many samples are send to the specified array by [tabsend~].
+;
+#X obj 24 148 tabsend~ \$0-array2;
+#X connect 2 0 9 0;
+#X connect 3 0 9 0;
+#X connect 6 0 13 0;
+#X restore 83 368 pd Using_tabsend~_with_block~;
+#X text 80 320 By default a block is 64 samples. This can be reset
+using the [block~] object \, as in the subpatch below:;
+#X obj 83 228 osc~;
+#X msg 83 198 512;
+#X text 168 472 - the incoming signal to be sent to the table/array.
+;
+#X text 81 121 The [tabsend~] object writes an audio signal continuously
+to an array.;
+#X text 11 23 write one block of a signal continuously to an array
+;
+#X text 168 543 - the name of an array to write to.;
+#X text 80 543 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 108 570 pddp/pddplink all_about_arrays.pd;
+#X obj 83 258 tabsend~ \$0-array;
+#X connect 12 0 18 0;
+#X connect 17 0 27 0;
+#X connect 18 0 17 0;

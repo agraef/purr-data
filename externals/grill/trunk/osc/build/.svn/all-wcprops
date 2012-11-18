@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/1777/trunk/osc/build
+END
+config-mac.def
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1777/trunk/osc/build/config-mac.def
+END
+config-lnx.def
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1777/trunk/osc/build/config-lnx.def
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1777/trunk/osc/build/nmake-win-msvc.inc
+END
+gnumake-mac-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1777/trunk/osc/build/gnumake-mac-gcc.inc
+END
+gnumake-lnx-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1777/trunk/osc/build/gnumake-lnx-gcc.inc
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1777/trunk/osc/build/config-win.def
+END

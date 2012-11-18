@@ -1,0 +1,34 @@
+#N canvas 1260 312 610 300 10;
+#X obj 137 190 jack-connect;
+#X obj 137 231 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 136 12 connect;
+#X msg 139 39 toggle;
+#X msg 156 89 symbol alsa_pcm;
+#X msg 195 133 symbol pure_data_0;
+#X msg 138 65 query;
+#X msg 317 8 bang;
+#X msg 382 6 0;
+#X obj 346 30 metro 50;
+#X msg 173 113 symbol capture_2;
+#X msg 216 155 symbol input0;
+#X text 307 89 output client;
+#X text 306 111 output port;
+#X text 343 133 input client;
+#X text 344 155 input port;
+#X msg 24 13 disconnect;
+#X text 185 232 output is 1 for connect(ed) 0 for disconnect(ed);
+#X text 199 64 doesn't change the connection only outputs the state
+;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 1;
+#X connect 5 0 0 3;
+#X connect 6 0 0 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 9 0 3 0;
+#X connect 10 0 0 2;
+#X connect 11 0 0 4;
+#X connect 16 0 0 0;

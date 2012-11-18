@@ -1,0 +1,19 @@
+#N canvas 161 215 536 406 10;
+#X text 81 50 Drips two lists in sync \, as long as the first list
+lasts.;
+#X obj 96 273 outlet;
+#X obj 96 87 inlet;
+#X obj 189 270 outlet;
+#X obj 257 272 outlet;
+#X obj 353 125 inlet;
+#X text 304 270 End;
+#X obj 96 163 list-drip;
+#X obj 96 186 t a b;
+#X obj 189 222 list-dripslow;
+#X connect 2 0 7 0;
+#X connect 5 0 9 1;
+#X connect 7 0 8 0;
+#X connect 7 1 4 0;
+#X connect 8 0 1 0;
+#X connect 8 1 9 0;
+#X connect 9 0 3 0;

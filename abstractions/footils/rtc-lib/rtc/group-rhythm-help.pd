@@ -1,0 +1,36 @@
+#N canvas 290 201 486 535 10;
+#X text 15 36 group-rhythm;
+#X msg 336 23 Rhythm-Generators;
+#X text 13 65 Generates a rhythm by choosing elements of a given supply
+(provided by a geometrical row with its parameters: minimum entry delay
+\, maximum entry delay and number of entry delays) and repeating a
+chosen value according to the periodicity parameter. This modules incorporates
+the "Gruppen"-theory of Karlheinz Stockhausen ("...wie die Zeit vergeht..."
+\, in: "die reihe" \, Vol. 3 \, Vienna 1957) and reflects some considerations
+of Gottfried Michael Koenig about serialism and aleatory ("Aleatorische
+und serielle Verfahren in der elektronischen Musik" \, in: Die Sonde
+\, Vol. 5/1 \, Bonn 1965).;
+#X obj 39 269 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X floatatom 230 307 0 0 0 2 periodicity_(0-1) - -;
+#X floatatom 86 289 4 0 0 2 min_ED - -;
+#X floatatom 182 292 4 0 0 2 ED-values - -;
+#X floatatom 134 290 4 0 0 2 max_ED - -;
+#X obj 39 341 group-rhythm 100 1000 12 0.5;
+#X floatatom 230 374 4 0 0 3 ED - -;
+#X floatatom 134 375 4 0 0 3 row_index - -;
+#X text 17 226 see also:;
+#X text 214 50 vs. 2;
+#X obj 39 413 QT-PercPlayer;
+#X text 16 454 1993-94 by Karlheinz Essl;
+#X msg 84 224 group-rhythm2;
+#X msg 39 379 60;
+#X connect 3 0 8 0;
+#X connect 4 0 8 4;
+#X connect 5 0 8 1;
+#X connect 6 0 8 3;
+#X connect 7 0 8 2;
+#X connect 8 0 16 0;
+#X connect 8 1 10 0;
+#X connect 8 2 9 0;
+#X connect 16 0 13 0;

@@ -1,0 +1,12 @@
+max v2;
+#N vpatcher 258 153 655 401;
+#P comment 45 142 118 196617 c \, d ... right operand;
+#P comment 45 127 118 196617 a \, b ... left operand;
+#P comment 45 112 102 196617 e \, f ... target buffers;
+#P newex 239 97 44 196617 vasp.c*;
+#P comment 45 187 300 196617 differences in lengths are adjusted to smaller vector of each pair;
+#P comment 45 80 98 196617 e+if=(a+ib)*(c+id);
+#P comment 45 41 89 196622 vasp.c*;
+#P comment 45 171 302 196617 vasp.c* needs 2 vectors per operand which are treated as pairs;
+#P comment 45 64 109 196617 complex multiplication;
+#P pop;

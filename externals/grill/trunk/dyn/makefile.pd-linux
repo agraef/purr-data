@@ -1,0 +1,72 @@
+# Makefile for gcc @ linux 
+# 
+# usage:
+# to build run "make -f makefile.pd-linux"
+# to install (as root), do "make -f makefile.pd-linux install"
+#
+
+CONFIG=config-pd-linux.txt
+
+include ${CONFIG}
+
+# compiler+linker stuff 
+INCLUDES=${PDPATH}
+FLAGS=${UFLAGS}
+
+# compiler flags for optimized build
+CFLAGS=-O2
+
+# compiler flags for debug build
+CFLAGS_D=-g
+
+# flags for shared linking
+LSHFLAGS= -shared
+
+# ----------------------------------------------
+# the rest can stay untouched
+# ----------------------------------------------
+
+# all the source files from the package
+include make-files.txt
+
+MAKEFILE=makefile.pd-linux
+
+TARGET=$(TARGDIR)/lib$(NAME).so
+TARGET_D=$(TARGDIR)/lib$(NAME)_d.so
+HDRS=$(PHDRS) $(IHDRS)
+
+
+all: $(TARGDIR) $(TARGET) $(TARGET_D)
+
+$(TARGDIR):
+	mkdir $(TARGDIR)
+
+$(patsubst %,$(SRCDIR)/%,$(SRCS)): $(patsubst %,$(SRCDIR)/%,$(HDRS)) $(patsubst %,$(SRCDIR)/%,$(IHDRS)) $(MAKEFILE) $(CONFIG)
+	touch $@
+
+$(TARGDIR)/%.o : $(SRCDIR)/%.cpp
+	$(CXX) -c -shared $(CFLAGS) $(CFLAGS_T)  $(CFLAGS_S) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(SRCDIR)) $< -o $@
+
+$(TARGDIR)/%.do : $(SRCDIR)/%.cpp 
+	$(CXX) -c -shared $(CFLAGS_D) $(CFLAGS_T)  $(CFLAGS_S) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(SRCDIR)) $< -o $@
+
+$(TARGET) : $(patsubst %.cpp,$(TARGDIR)/%.o,$(SRCS))
+	$(CXX) $(LSHFLAGS) -o $@ $^ 
+
+$(TARGET_D) : $(patsubst %.cpp,$(TARGDIR)/%.do,$(SRCS))
+	$(CXX) $(LSHFLAGS) -o $@ $^ 
+
+.PHONY: clean install
+
+clean:
+	rm -f $(TARGDIR)/*.{o,do} $(TARGET) $(TARGET_D)
+	
+ifdef PREFIX
+
+install:: $(PREFIX)
+endif
+
+install:: $(TARGET) $(TARGET_D)
+#	cp $(patsubst %,$(SRCDIR)/%,$(PHDRS)) $(PREFIX)/include
+	cp $(TARGDIR)/lib*.dylib $(PREFIX)/lib
+

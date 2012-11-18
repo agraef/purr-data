@@ -1,0 +1,33 @@
+#N canvas 1 48 575 411 10;
+#X text 128 229 clear display;
+#X obj 108 228 bng 15 250 50 1 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 66 227 show;
+#X text 113 42 (external - OSX);
+#X text 21 30 rotate;
+#X text 22 57 Cyclically rotate a list.;
+#X text 200 207 int in right inlet sets rotation;
+#X msg 85 131 a b c d e;
+#X msg 101 150 2 4 6 8 10;
+#X text 200 175 bang in left inlet retriggers output;
+#X text 200 191 list in left inlet gets rotated;
+#X msg 66 111 1 2 3 4 5 6 7 8 9 10;
+#X obj 46 164 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 66 255;
+#X floatatom 110 175 0 0 0 0 - - -;
+#X text 21 286 by James McCartney;
+#X text 21 299 OSX implementation by Richard Dudas (2003);
+#X text 21 78 See also:;
+#X msg 85 77 rota;
+#X obj 66 199 list-rot 2;
+#X text 49 347 fbar: [rotate] is a Gem-object \, use [list-rot] instead.
+;
+#X connect 1 0 2 1;
+#X connect 2 0 13 0;
+#X connect 7 0 19 0;
+#X connect 8 0 19 0;
+#X connect 11 0 19 0;
+#X connect 12 0 19 0;
+#X connect 14 0 19 1;
+#X connect 19 0 2 0;

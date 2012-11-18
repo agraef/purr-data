@@ -1,0 +1,28 @@
+#N canvas 51 221 474 392 12;
+#X obj 31 10 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 31 114 s n_out;
+#X obj 269 113 s n_out;
+#X obj 150 112 s n_out;
+#X obj 31 238 noteout;
+#X obj 31 161 r n_out;
+#X obj 31 212 makenote 60 100 250;
+#X obj 31 186 unpack;
+#X obj 31 61 selfsimilar 3 7 48 52 59 55;
+#X obj 31 32 metro 250;
+#X obj 31 88 pack 0 125;
+#X obj 150 87 pack 0 400;
+#X obj 269 87 pack 0 1000;
+#X connect 0 0 9 0;
+#X connect 5 0 7 0;
+#X connect 6 0 4 0;
+#X connect 6 1 4 1;
+#X connect 7 0 6 0;
+#X connect 7 1 6 2;
+#X connect 8 0 10 0;
+#X connect 8 1 11 0;
+#X connect 8 2 12 0;
+#X connect 9 0 8 0;
+#X connect 10 0 1 0;
+#X connect 11 0 3 0;
+#X connect 12 0 2 0;

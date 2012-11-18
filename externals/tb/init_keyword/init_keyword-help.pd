@@ -1,0 +1,5 @@
+#N canvas 490 173 354 109 10;
+#X obj 43 32 ./abs hello=world world=200 pi 200;
+#X obj 42 7 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1 -1
+;
+#X connect 1 0 0 0;

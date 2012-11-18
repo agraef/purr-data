@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/cwiid/svn/!svn/ver/182/trunk/wminput/plugins/nunchuk_stick2btn
+END
+nunchuk_stick2btn.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/cwiid/svn/!svn/ver/182/trunk/wminput/plugins/nunchuk_stick2btn/nunchuk_stick2btn.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/cwiid/svn/!svn/ver/182/trunk/wminput/plugins/nunchuk_stick2btn/Makefile.in
+END

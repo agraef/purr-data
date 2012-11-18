@@ -1,0 +1,4 @@
+#N canvas 156 315 466 158 10;
+#X obj 57 78 ambi.wxy2wxyuvpq~;
+#X text 57 37 Description: Converts the 1st order horizontal Ambisonic
+sound format to the 3rd order horizontal.;

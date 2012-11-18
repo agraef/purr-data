@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/cwiid/svn/!svn/ver/201/trunk/libcwiid
+END
+command.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/cwiid/svn/!svn/ver/192/trunk/libcwiid/command.c
+END
+process.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/cwiid/svn/!svn/ver/201/trunk/libcwiid/process.c
+END
+cwiid_internal.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/cwiid/svn/!svn/ver/199/trunk/libcwiid/cwiid_internal.h
+END
+interface.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/cwiid/svn/!svn/ver/199/trunk/libcwiid/interface.c
+END
+state.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/199/trunk/libcwiid/state.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/cwiid/svn/!svn/ver/153/trunk/libcwiid/Makefile.in
+END
+cwiid.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/199/trunk/libcwiid/cwiid.h
+END
+cwiid.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/cwiid/svn/!svn/ver/153/trunk/libcwiid/cwiid.pc.in
+END
+bluetooth.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/cwiid/svn/!svn/ver/188/trunk/libcwiid/bluetooth.c
+END
+thread.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/cwiid/svn/!svn/ver/199/trunk/libcwiid/thread.c
+END
+connect.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/cwiid/svn/!svn/ver/192/trunk/libcwiid/connect.c
+END
+util.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/cwiid/svn/!svn/ver/192/trunk/libcwiid/util.c
+END

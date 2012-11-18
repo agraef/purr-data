@@ -1,0 +1,37 @@
+#N canvas 570 275 788 398 12;
+#X floatatom 202 113 5 0 0 0 - - -;
+#X text 338 286 watch the console output!;
+#X msg 20 115 help;
+#X text 16 69 This demonstrates message handling. See the simple.py
+file.;
+#X msg 19 140 doc;
+#X msg 55 141 doc+;
+#X floatatom 259 113 5 0 0 0 - - -;
+#X msg 169 235 msg 2;
+#X obj 123 289 pyext simple ex2;
+#X floatatom 123 334 5 0 0 0 - - -;
+#X floatatom 240 335 5 0 0 0 - - -;
+#X msg 100 204 msg 1 3;
+#X msg 234 220 msg a b;
+#X msg 120 174 hello;
+#X msg 193 180 hello;
+#X msg 266 179 msg;
+#X obj 16 13 cnv 15 600 40 empty empty py/pyext 10 22 0 24 -260818
+-1 0;
+#X text 213 16 Python script objects \, (C)2003-2005 Thomas Grill;
+#X text 213 32 http://grrrr.org/ext;
+#X msg 333 186 whoopie a b c;
+#X connect 0 0 8 1;
+#X connect 2 0 8 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 0;
+#X connect 6 0 8 2;
+#X connect 7 0 8 2;
+#X connect 8 0 9 0;
+#X connect 8 1 10 0;
+#X connect 11 0 8 1;
+#X connect 12 0 8 3;
+#X connect 13 0 8 1;
+#X connect 14 0 8 3;
+#X connect 15 0 8 2;
+#X connect 19 0 8 3;

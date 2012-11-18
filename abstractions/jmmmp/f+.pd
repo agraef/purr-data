@@ -1,0 +1,62 @@
+#N canvas 627 164 505 304 10;
+#X obj 15 82 inlet;
+#X obj 15 222 outlet;
+#X obj 34 102 inlet;
+#X obj 58 122 inlet;
+#X obj 15 182 f \$1;
+#X obj 45 182 +;
+#X obj 98 122 expr if($f1 == 0 \, 1 \, $f1);
+#X text 12 247 (C) 2006 João Pais - jmmmpais@googlemail.com
+;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, Joã Pais;
+#X restore 15 265 pd license;
+#X text 11 10 [f+] - Counter with variable increment;
+#X text 279 38 Arguments;
+#X text 279 78 - Increment;
+#X text 279 108 Inlets;
+#X text 279 128 - Bang / Float set;
+#X text 278 58 - Initial number;
+#X text 279 168 - Set increment;
+#X text 279 198 Outlets;
+#X text 279 218 - Float;
+#X obj 34 162 \$1;
+#X obj 34 142 route bang;
+#X text 279 148 - Bang reset / Float (next count);
+#X obj 98 102 init \$2;
+#X obj 15 202 t f f;
+#X connect 0 0 4 0;
+#X connect 2 0 19 0;
+#X connect 3 0 5 1;
+#X connect 4 0 22 0;
+#X connect 5 0 4 1;
+#X connect 6 0 5 1;
+#X connect 18 0 4 1;
+#X connect 19 0 18 0;
+#X connect 19 1 18 0;
+#X connect 21 0 6 0;
+#X connect 22 0 1 0;
+#X connect 22 1 5 0;

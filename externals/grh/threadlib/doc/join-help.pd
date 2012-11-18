@@ -1,0 +1,106 @@
+#N canvas 280 37 480 847 10;
+#X obj 29 23 cnv 15 404 54 empty empty empty 22 25 0 18 -1 -66577 0
+;
+#X obj 31 25 cnv 15 400 50 empty empty threadlib 22 25 0 18 -228992
+-66577 0;
+#X text 322 34 help file of;
+#X text 39 783 =%)!(%= threadlib \, by Georg Holzmann <grh@mur.at>
+\, 2005;
+#X text 82 817 htttp://grh.mur.at/software/threadlib.html;
+#X obj 232 717 sleep;
+#X obj 281 717 threadedsf;
+#X text 95 717 see also:;
+#X text 163 324 see the examples:;
+#X text 154 407 !!!!! WARNING !!!!!;
+#X text 30 436 detach/join provide the possibility of threaded patching
+\, beware of the risks:;
+#X text 30 466 - not every pd object is thread-safe (if unsure \, look
+at the source \, ask the pd-list or me);
+#X text 31 497 - pd is not completely thread-safe itself;
+#X text 31 516 - everything that is triggered by the detached message
+will be detached - so don't mix threaded and non-threaded message paths
+unless you know what you are doing. use join to synchronize with the
+main pd thread !;
+#X text 31 575 - if detach/join crashes pd during a performance \,
+don't complain ...;
+#X text 31 607 - both detach and join have an overhead ... so only
+use them if you really need threaded patching \, e.g. have a subpatch
+that has to run for quite some time and would interrupt audio or something
+else;
+#X text 67 800 heavily based on pd_devel code by Tim Blechmann;
+#N canvas 421 0 803 576 detach_join_examples 0;
+#X msg 117 105 5;
+#X obj 117 133 sleep;
+#X text 37 39 1) this will block the system for 5 sec:;
+#X obj 117 161 print EX1_DONE;
+#X text 554 112 (instead of sleep you could;
+#X msg 499 73 5;
+#X obj 499 123 sleep;
+#X text 396 39 2) to avoid this you can run it in a helper thread:
+;
+#X obj 499 97 detach;
+#X obj 499 184 print EX2_DONE;
+#X text 560 127 of course use an other cpu;
+#X text 559 143 intensive object which could;
+#X text 561 158 block the main thread);
+#X text 34 252 3) be aware that each object connected to;
+#X text 55 267 detach will run in the helper thread:;
+#X msg 127 305 5;
+#X obj 127 366 sleep;
+#X obj 127 330 detach;
+#X obj 170 397 print EX3_DONE_1;
+#X msg 127 396 5;
+#X obj 127 433 sleep;
+#X obj 127 514 print EX3_DONE_2;
+#X text 179 436 <- also in helper thread;
+#X text 164 457 (and anything else connected;
+#X text 171 472 to objects which are connected;
+#X text 172 487 to detach !);
+#X text 392 251 4) to synchronize these objects with pd main thread
+;
+#X text 413 268 again you have to use the join object:;
+#X text 58 56 (so you will get e.g. an 5 sec;
+#X text 61 71 audio drop out !);
+#X msg 503 303 5;
+#X obj 503 364 sleep;
+#X obj 503 328 detach;
+#X msg 503 394 5;
+#X obj 546 395 print EX4_DONE_1;
+#X text 579 368 <- in helper thread;
+#X obj 503 431 join;
+#X obj 503 463 sleep;
+#X obj 503 518 print EX4_DONE_2;
+#X text 551 464 <- in main thread again;
+#X text 551 481 (and will so block the system);
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 5 0 8 0;
+#X connect 6 0 9 0;
+#X connect 8 0 6 0;
+#X connect 15 0 17 0;
+#X connect 16 0 18 0;
+#X connect 16 0 19 0;
+#X connect 17 0 16 0;
+#X connect 19 0 20 0;
+#X connect 20 0 21 0;
+#X connect 30 0 32 0;
+#X connect 31 0 33 0;
+#X connect 31 0 34 0;
+#X connect 32 0 31 0;
+#X connect 33 0 36 0;
+#X connect 36 0 37 0;
+#X connect 37 0 38 0;
+#X restore 141 343 pd detach_join_examples;
+#X text 321 50 ::: join :::;
+#X text 176 109 ::: JOIN :::;
+#X obj 175 717 detach;
+#X text 31 150 Join synchronizes messages from all threads to the pd
+main thread. The message to the inlet will be sent to the outlet during
+the next clock callback of the scheduler. It doesn't matter \, which
+thread the message was coming from. Messages from the main pd thread
+will be rescheduled.;
+#X text 30 217 Join can be used everywhere \, where a message has to
+be rescheduled \, this is also useful to place behind any threaded
+external calling the outlet function from a helper thread - so you
+can be sure \, that the following messages are being run in the main
+pd thread.;

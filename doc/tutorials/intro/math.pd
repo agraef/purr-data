@@ -1,0 +1,434 @@
+#N canvas 436 10 551 278 10;
+#X obj 17 11 cnv 15 500 100 empty empty OPERATIONS: 20 12 0 14 -233017
+-66577 0;
+#N canvas 58 106 794 296 operations-logiques-relationnelles 0;
+#X obj 41 146 &;
+#X obj 91 146 |;
+#X obj 143 146 &&;
+#X obj 194 146 ||;
+#X obj 415 146 >;
+#X obj 464 146 >=;
+#X obj 517 146 ==;
+#X obj 618 146 <=;
+#X obj 665 146 <;
+#X obj 569 146 !=;
+#X obj 233 146 <<;
+#X obj 284 146 >>;
+#X floatatom 41 92 5 0 0 0 - - -;
+#X floatatom 303 93 5 0 0 0 - - -;
+#X floatatom 41 183 2 0 0 0 - - -;
+#X floatatom 91 183 2 0 0 0 - - -;
+#X floatatom 143 183 2 0 0 0 - - -;
+#X floatatom 194 183 2 0 0 0 - - -;
+#X floatatom 233 183 2 0 0 0 - - -;
+#X floatatom 284 183 2 0 0 0 - - -;
+#X floatatom 415 183 2 0 0 0 - - -;
+#X floatatom 464 183 2 0 0 0 - - -;
+#X floatatom 517 183 2 0 0 0 - - -;
+#X floatatom 569 183 2 0 0 0 - - -;
+#X floatatom 618 183 2 0 0 0 - - -;
+#X floatatom 665 183 2 0 0 0 - - -;
+#X floatatom 415 93 5 0 0 0 - - -;
+#X floatatom 684 93 5 0 0 0 - - -;
+#X text 38 33 Operateurs Logiques;
+#X text 39 45 -------------------;
+#X text 412 34 Operateurs Relationnelles;
+#X text 413 45 --------------------------;
+#X text 167 238 voir 17-exercices.pd : detecteur d'enveloppe;
+#X text 167 256 voir 19-exercices.pd : sequenceurs;
+#X connect 0 0 14 0;
+#X connect 1 0 15 0;
+#X connect 2 0 16 0;
+#X connect 3 0 17 0;
+#X connect 4 0 20 0;
+#X connect 5 0 21 0;
+#X connect 6 0 22 0;
+#X connect 7 0 24 0;
+#X connect 8 0 25 0;
+#X connect 9 0 23 0;
+#X connect 10 0 18 0;
+#X connect 11 0 19 0;
+#X connect 12 0 0 0;
+#X connect 12 0 1 0;
+#X connect 12 0 2 0;
+#X connect 12 0 3 0;
+#X connect 12 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 1;
+#X connect 13 0 10 1;
+#X connect 13 0 3 1;
+#X connect 13 0 2 1;
+#X connect 13 0 1 1;
+#X connect 13 0 0 1;
+#X connect 26 0 4 0;
+#X connect 26 0 5 0;
+#X connect 26 0 6 0;
+#X connect 26 0 9 0;
+#X connect 26 0 7 0;
+#X connect 26 0 8 0;
+#X connect 27 0 4 1;
+#X connect 27 0 5 1;
+#X connect 27 0 6 1;
+#X connect 27 0 9 1;
+#X connect 27 0 7 1;
+#X connect 27 0 8 1;
+#X restore 18 129 pd operations-logiques-relationnelles;
+#N canvas 0 0 795 354 operations-mathematiques 0;
+#X floatatom 31 72 5 0 0 0 - - -;
+#X obj 160 128 *;
+#X floatatom 238 72 5 0 0 0 - - -;
+#X floatatom 160 197 5 0 0 0 - - -;
+#X obj 31 128 +;
+#X obj 96 128 -;
+#X obj 219 128 /;
+#X floatatom 31 197 5 0 0 0 - - -;
+#X floatatom 96 197 5 0 0 0 - - -;
+#X floatatom 219 197 5 0 0 0 - - -;
+#X obj 375 134 pow 2;
+#X obj 441 133 pow -1;
+#X floatatom 375 80 5 0 0 0 - - -;
+#X floatatom 375 206 5 0 0 0 - - -;
+#X floatatom 441 206 5 0 0 0 - - -;
+#X obj 626 133 % 5;
+#X floatatom 611 81 5 0 0 0 - - -;
+#X floatatom 664 81 5 0 0 0 - - -;
+#X floatatom 626 206 5 0 0 0 - - -;
+#X text 628 242 Modulo;
+#X text 31 24 Operations Mathematiques;
+#X text 30 34 ------------------------;
+#X text 29 243 Operations arithmetiques standards;
+#X obj 691 132 mod 5;
+#X text 667 132 =;
+#X text 364 244 operations puissances;
+#X text 435 299 voir 18-exercices.pd : beat tempo;
+#X connect 0 0 1 0;
+#X connect 0 0 5 0;
+#X connect 0 0 6 0;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X connect 2 0 4 1;
+#X connect 2 0 5 1;
+#X connect 2 0 6 1;
+#X connect 4 0 7 0;
+#X connect 5 0 8 0;
+#X connect 6 0 9 0;
+#X connect 10 0 13 0;
+#X connect 11 0 14 0;
+#X connect 12 0 10 0;
+#X connect 12 0 11 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 1;
+#X restore 18 167 pd operations-mathematiques;
+#N canvas 29 79 932 301 operations-conditionnelles 0;
+#X floatatom 445 74 5 0 0 0 - - -;
+#X floatatom 504 74 5 0 0 0 - - -;
+#X floatatom 445 160 5 0 0 0 - - -;
+#X floatatom 504 160 5 0 0 0 - - -;
+#X obj 445 115 moses 10;
+#X obj 326 112 spigot;
+#X floatatom 22 96 5 0 0 0 - - -;
+#X obj 22 186 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 22 137 select 2 3 4;
+#X obj 52 186 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 82 186 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 113 186 5 0 0 0 - - -;
+#X obj 369 89 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 326 70 5 0 0 0 - - -;
+#X floatatom 326 156 5 0 0 0 - - -;
+#X obj 621 183 print r1;
+#X obj 690 183 print r2;
+#X obj 759 183 print r3;
+#X obj 828 183 print r4;
+#X msg 621 69 1 2 3;
+#X msg 678 70 2 3 4;
+#X obj 621 130 route 1 2 symbol;
+#X msg 731 70 symbol bar;
+#X msg 732 97 who am I?;
+#X text 18 20 Operations Conditionnelles;
+#X text 18 32 --------------------------;
+#X text 18 61 Selectionner certaines entrees;
+#X text 325 36 Porte;
+#X text 438 36 Separer les entrees;
+#X text 619 38 Routage des entrees;
+#X obj 258 233 *;
+#X obj 277 208 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 366 209 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 347 233 *~;
+#X text 257 181 autres Portes :;
+#X obj 449 203 cnv 15 74 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 624 223 cnv 15 107 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 625 243 cnv 15 113 20 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 243 0 636 690 random 0;
+#X msg 103 95 bang;
+#X text 44 19 You can generate weighted random numbers from uniformly
+distributed ones. If you just want two possible outcomes with a varying
+probability for each one \, you can do as shown:;
+#X obj 103 121 random 100;
+#X obj 102 174 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 169 174 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 205 148 3 0 100 0 - - -;
+#X text 250 148 <-- change probablilty;
+#X obj 103 149 moses 80;
+#X text 152 93 <-- click to test;
+#X text 61 219 This outputs a number at left 80% of the time \, otherwise
+at right \, unless you override the "80" using the number box. You
+may extend this to more than two possible outcomes \, for instance
+like this:;
+#X msg 106 305 bang;
+#X obj 106 331 random 100;
+#X obj 105 384 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 195 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 155 303 <-- click to test;
+#X obj 106 359 moses 10;
+#X obj 196 360 moses 30;
+#X obj 263 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 103 409 10%;
+#X text 193 410 20%;
+#X text 265 409 70%;
+#X obj 103 736 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 100 821 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 181 820 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 218 822 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 100 843 1;
+#X msg 181 845 2;
+#X msg 218 846 3;
+#X obj 100 882 s state;
+#X obj 85 658 bng 20 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 121 641 r state;
+#X obj 102 710 sel 1 2 3;
+#X obj 274 738 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 271 823 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 353 825 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 392 828 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 271 846 1;
+#X msg 348 851 2;
+#X msg 392 852 3;
+#X obj 271 882 s state;
+#X obj 438 739 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 438 824 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 518 823 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X obj 557 826 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 438 847 1;
+#X msg 518 848 2;
+#X msg 557 849 3;
+#X obj 438 882 s state;
+#X msg 255 671 \; state 1;
+#X obj 102 684 f 1;
+#X obj 103 764 random 100;
+#X obj 102 793 moses 30;
+#X obj 181 794 moses 60;
+#X obj 274 765 random 100;
+#X obj 274 795 moses 10;
+#X obj 353 796 moses 60;
+#X obj 438 766 random 100;
+#X obj 438 795 moses 70;
+#X obj 518 795 moses 80;
+#X floatatom 133 666 3 0 0 0 - - -;
+#X text 255 651 reset;
+#X text 68 637 STEP;
+#X text 53 505 Here is how to construct a simple \, three-valued Markov
+chain using "random." Each time you click on "step" the previous output
+("state") determines which of three random networks to invoke \, each
+having a different probability distribution for the next value of "state."
+For instance if the state was 3 \, the next state will be 1 70% of
+the time \, state 2 10% \, and state 3 20%.;
+#X connect 0 0 2 0;
+#X connect 2 0 7 0;
+#X connect 5 0 7 1;
+#X connect 7 0 3 0;
+#X connect 7 1 4 0;
+#X connect 10 0 11 0;
+#X connect 11 0 15 0;
+#X connect 15 0 12 0;
+#X connect 15 1 16 0;
+#X connect 16 0 13 0;
+#X connect 16 1 17 0;
+#X connect 21 0 50 0;
+#X connect 22 0 25 0;
+#X connect 23 0 26 0;
+#X connect 24 0 27 0;
+#X connect 25 0 28 0;
+#X connect 26 0 28 0;
+#X connect 27 0 28 0;
+#X connect 29 0 49 0;
+#X connect 30 0 49 1;
+#X connect 30 0 59 0;
+#X connect 31 0 21 0;
+#X connect 31 1 32 0;
+#X connect 31 2 40 0;
+#X connect 32 0 53 0;
+#X connect 33 0 36 0;
+#X connect 34 0 37 0;
+#X connect 35 0 38 0;
+#X connect 36 0 39 0;
+#X connect 37 0 39 0;
+#X connect 38 0 39 0;
+#X connect 40 0 56 0;
+#X connect 41 0 44 0;
+#X connect 42 0 45 0;
+#X connect 43 0 46 0;
+#X connect 44 0 47 0;
+#X connect 45 0 47 0;
+#X connect 46 0 47 0;
+#X connect 49 0 31 0;
+#X connect 50 0 51 0;
+#X connect 51 0 22 0;
+#X connect 51 1 52 0;
+#X connect 52 0 23 0;
+#X connect 52 1 24 0;
+#X connect 53 0 54 0;
+#X connect 54 0 33 0;
+#X connect 54 1 55 0;
+#X connect 55 0 34 0;
+#X connect 55 1 35 0;
+#X connect 56 0 57 0;
+#X connect 57 0 41 0;
+#X connect 57 1 58 0;
+#X connect 58 0 42 0;
+#X connect 58 1 43 0;
+#X restore 448 203 pd random;
+#N canvas 0 0 357 255 route_lists 0;
+#X floatatom 228 32 5 0 0 0 - - -;
+#X obj 228 70 t b f;
+#X obj 228 120 pack s f;
+#X msg 81 30 droite;
+#X msg 17 30 gauche;
+#N canvas 510 50 299 253 test 0;
+#X obj 112 34 inlet;
+#X obj 185 175 outlet;
+#X obj 112 74 route list;
+#X obj 112 176 outlet;
+#X obj 112 116 route gauche droite;
+#X obj 79 166 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 216 152 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 1 4 0;
+#X connect 4 0 3 0;
+#X connect 4 0 5 0;
+#X connect 4 1 1 0;
+#X connect 4 1 6 0;
+#X restore 228 189 pd test;
+#X floatatom 279 217 5 0 0 0 - - -;
+#X floatatom 228 217 5 0 0 0 - - -;
+#X msg 40 151 droite 10 \, gauche 40;
+#X symbolatom 139 32 10 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 7 0;
+#X connect 5 1 6 0;
+#X connect 8 0 5 0;
+#X connect 9 0 2 0;
+#X restore 625 243 pd route_lists;
+#N canvas 385 246 472 322 lists_pack 0;
+#X obj 68 114 pack 0 5 s;
+#X obj 68 160 print;
+#X obj 189 168 unpack 0 0 s;
+#X floatatom 189 204 5 0 0 0 - - -;
+#X floatatom 234 204 5 0 0 0 - - -;
+#X msg 280 236 Hello;
+#X msg 280 204 set \$1;
+#X obj 37 79 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 143 79 symbol Hello;
+#X floatatom 105 79 3 0 0 0 - - -;
+#X floatatom 68 79 3 0 0 0 - - -;
+#X text 35 24 Making lists with pack;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 2 2 6 0;
+#X connect 6 0 5 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 2;
+#X connect 9 0 0 1;
+#X connect 10 0 0 0;
+#X restore 625 223 pd lists_pack;
+#X connect 0 0 4 0;
+#X connect 1 0 4 1;
+#X connect 4 0 2 0;
+#X connect 4 1 3 0;
+#X connect 5 0 14 0;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;
+#X connect 8 1 9 0;
+#X connect 8 2 10 0;
+#X connect 8 3 11 0;
+#X connect 12 0 5 1;
+#X connect 13 0 5 0;
+#X connect 19 0 21 0;
+#X connect 20 0 21 0;
+#X connect 21 0 15 0;
+#X connect 21 1 16 0;
+#X connect 21 2 17 0;
+#X connect 21 3 18 0;
+#X connect 22 0 21 0;
+#X connect 23 0 21 0;
+#X connect 31 0 30 1;
+#X connect 32 0 33 1;
+#X restore 18 205 pd operations-conditionnelles;
+#X text 322 129 > < != >= . . .;
+#X text 36 34 Pour aller plus loin dans les possibilites relationnelles
+:;
+#X text 249 165 - + = / *;
+#X text 270 204 selection \, routage \, porte \, ...;
+#N canvas 0 0 556 312 changementEchelles 0;
+#X text 11 3 But : passer un nombre qui va de 0 a 127 en un nombre
+entre 40 et 3000;
+#X obj 171 43 maxlib/scale 0 127 40 3000;
+#X text 13 43 Un objet fait ca :;
+#X text 9 92 Mais on peut faire tout aussi bien en utilisant les objets
+[expr] qui servent tres bien pour tout calcul.;
+#X floatatom 130 173 5 0 0 0 - - -;
+#X floatatom 130 260 5 0 0 0 - - -;
+#X text 452 124 0 : x1;
+#X text 436 139 127 : x2;
+#X text 444 153 40 : x3;
+#X text 428 168 3000 : x4;
+#X obj 130 202 expr ( (($f1-O)/(127-0))*(3000-40) ) + (40-0);
+#X msg 60 136 0;
+#X msg 94 137 60;
+#X msg 126 138 127;
+#X connect 4 0 10 0;
+#X connect 10 0 5 0;
+#X connect 11 0 4 0;
+#X connect 12 0 4 0;
+#X connect 13 0 4 0;
+#X restore 17 242 pd changementEchelles;
+#X text 204 243 objet [expr];

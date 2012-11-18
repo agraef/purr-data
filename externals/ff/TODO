@@ -1,0 +1,13 @@
+
+-add user definable waveforms for the periodic effects.
+
+-unify all externals into a single forcefeedback external?
+
+I am not sure if this is a good idea.It will make the code 
+cleaner because it is closer to the hardware model, and it 
+would allow intergration with the joystick object. 
+But it will make patching more cumbersome.
+
+-more testing with other iforce compatible devices
+-add rumble,ramp,damper and inertia effects.
+-learn autotools and autotoolize this.

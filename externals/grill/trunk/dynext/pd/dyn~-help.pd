@@ -1,0 +1,169 @@
+#N canvas 50 60 833 552 12;
+#N canvas 71 10 562 569 examples 0;
+#X floatatom 148 239 5 0 0 0 - - -;
+#X floatatom 105 304 5 0 0 0 - - -;
+#X floatatom 113 501 5 0 0 0 - - -;
+#X obj 251 273 +;
+#X floatatom 252 301 5 0 0 0 - - -;
+#X floatatom 155 423 5 0 0 0 - - -;
+#X floatatom 244 424 5 0 0 0 - - -;
+#X floatatom 306 422 5 0 0 0 - - -;
+#X obj 261 468 * 2;
+#X obj 303 469 + 1;
+#X floatatom 270 499 5 0 0 0 - - -;
+#X floatatom 256 238 5 0 0 0 - - -;
+#X floatatom 224 72 5 0 0 0 - - -;
+#X floatatom 98 136 5 0 0 0 - - -;
+#X floatatom 237 133 5 0 0 0 - - -;
+#X obj 236 107 f;
+#X obj 99 107 dyn~ 0 1 0 1;
+#X obj 106 273 dyn~ 0 2 0 1;
+#X obj 113 468 dyn~ 0 3 0 1;
+#X msg 37 36 reset \, newobj . a f \, conn 0 a 0 \, conn a 0 0;
+#X msg 37 197 reset \, newobj . a + \, conn 0 a 0 \, conn 1 a 1 \,
+conn a 0 0;
+#X msg 37 368 reset \, newobj . a * 2 \, newobj . b + 1 \, conn 0 a
+0 \, conn 1 a 1 \, conn a 0 b 0 \, conn 2 b 1 \, conn b 0 0;
+#X connect 0 0 3 0;
+#X connect 0 0 17 1;
+#X connect 3 0 4 0;
+#X connect 5 0 8 0;
+#X connect 5 0 18 1;
+#X connect 6 0 8 1;
+#X connect 6 0 18 2;
+#X connect 7 0 9 1;
+#X connect 7 0 18 3;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 11 0 3 1;
+#X connect 11 0 17 2;
+#X connect 12 0 15 0;
+#X connect 12 0 16 1;
+#X connect 15 0 14 0;
+#X connect 16 0 13 0;
+#X connect 17 0 1 0;
+#X connect 18 0 2 0;
+#X connect 19 0 16 0;
+#X connect 20 0 17 0;
+#X connect 21 0 18 0;
+#X restore 514 459 pd examples;
+#X msg 127 70 reset;
+#X text 184 70 clear all objects and connections;
+#X msg 129 231 conn 0 a 0;
+#X text 224 230 connect dyn-inlet 0 to a-inlet 0;
+#X msg 129 260 conn a 0 0;
+#X text 224 259 connect a-outlet 0 to dyn-outlet 0;
+#X msg 129 293 conn x 2 y 3;
+#X text 234 292 connect x-outlet 2 to y-inlet 3;
+#X msg 129 356 del a;
+#X text 181 358 delete object "a";
+#X obj 11 10 cnv 15 700 40 empty empty dyn~ 10 22 0 24 -260818 -1 0
+;
+#X text 282 387 send "message 1" to a-inlet 0;
+#X obj 54 468 dyn~ 0 1 0 2;
+#X text 156 467 dyn sig/msg inlets sig/msg outlets;
+#X msg 165 421 vis \$1;
+#X obj 129 421 tgl 20 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 222 417 make patch visible/invisible;
+#X msg 129 323 dis x 2 y 3;
+#X text 234 324 disconnect x-outlet 2 to y-inlet 3;
+#X text 187 98 reload all objects (keep connections);
+#X msg 127 98 reload;
+#X text 218 432 (connections are not drawn at the moment!);
+#N canvas 178 192 594 450 dsp-ex 0;
+#X obj 63 357 dac~;
+#X obj 173 234 hsl 128 15 0 1000 0 0 empty empty empty -2 -6 0 8 -261681
+-1 -1 2800 1;
+#X obj 184 259 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -262144 -1 -1 220.472 256;
+#X msg 56 55 reset;
+#X obj 457 300 loadbang;
+#X msg 456 324 \; pd dsp 1;
+#X text 55 33 clear all;
+#X obj 37 255 dyn~ 0 1 2 0;
+#X text 60 84 make an oscillator (left);
+#X text 56 144 add an oscillator (double frq \, right);
+#X text 64 216 select frequency;
+#X obj 47 318 *~ 0.2;
+#X obj 131 317 *~ 0.2;
+#X obj 169 290 hsl 128 15 0.001 1 1 0 empty empty empty -2 -6 0 8 -262131
+-1 -1 3300 1;
+#X text 306 286 gain;
+#X msg 54 106 newobj . o1 osc~ 220 \, conn 0 o1 0 \, conn o1 0 0;
+#X msg 57 164 newobj . m * 1.5 \, newobj . o2 osc~ 330 \, conn 0 m
+0 \, conn m 0 o2 0 \, conn o2 0 1;
+#X connect 1 0 2 0;
+#X connect 1 0 7 1;
+#X connect 3 0 7 0;
+#X connect 4 0 5 0;
+#X connect 7 0 11 0;
+#X connect 7 1 12 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 1;
+#X connect 13 0 11 1;
+#X connect 13 0 12 1;
+#X connect 15 0 7 0;
+#X connect 16 0 7 0;
+#X restore 514 487 pd dsp-ex;
+#X msg 129 156 newmsg . b Hello;
+#X msg 128 124 newobj . a + 1;
+#X text 247 124 make new object [+ 1] with name "a" in root patcher
+(".");
+#X text 269 156 make new message object [Hello( with name "b" in root
+patcher;
+#X msg 128 200 newobj . c pd sub;
+#X text 273 200 make sub patcher;
+#X msg 432 198 newobj c d bang;
+#X text 561 198 make object in sub patcher;
+#X text 133 30 http://grrrr.org/ext;
+#N canvas 132 483 566 544 proxies 0;
+#X text 25 78 Instead you have to create a "real" object that;
+#X text 24 94 gets the message and passes it along to the abstraction.
+;
+#X text 25 123 If you wanted to send float for example you could use
+;
+#X text 24 141 [float] objects as "proxies".;
+#X text 25 29 You can't use send to send directly to an inlet of an
+;
+#X text 24 45 abstraction or subpatcher object you placed inside dyn~.
+;
+#X obj 13 470 dyn~ 0 0 0 0;
+#X text 31 190 create a subpatcher with an inlet and a print object
+in it;
+#X text 35 270 try to send a message to it;
+#X msg 35 290 send mysub 0 Hello!;
+#X msg 30 212 reset \, newobj . mysub pd sub \, newobj mysub in inlet
+\, newobj mysub p print SUB \, conn in 0 p 0;
+#X text 209 289 doesn't work! (watch PD console);
+#X msg 34 360 newobj . proxy symbol \, conn proxy 0 mysub 0;
+#X text 36 388 send to that instead;
+#X msg 33 407 send proxy Hello!;
+#X obj 128 453 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 127 470 vis \$1;
+#X text 37 338 create a proxy ([symbol] object in this case);
+#X connect 9 0 6 0;
+#X connect 10 0 6 0;
+#X connect 12 0 6 0;
+#X connect 14 0 6 0;
+#X connect 15 0 16 0;
+#X connect 16 0 6 0;
+#X restore 626 469 pd proxies;
+#X msg 128 387 send a message 1;
+#X text 133 12 dynamic object management \, (C)2003-2006 Thomas Grill
+;
+#X connect 1 0 13 0;
+#X connect 3 0 13 0;
+#X connect 5 0 13 0;
+#X connect 7 0 13 0;
+#X connect 9 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 15 0;
+#X connect 18 0 13 0;
+#X connect 21 0 13 0;
+#X connect 24 0 13 0;
+#X connect 25 0 13 0;
+#X connect 28 0 13 0;
+#X connect 30 0 13 0;
+#X connect 34 0 13 0;

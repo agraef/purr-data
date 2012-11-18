@@ -1,0 +1,12 @@
+#N canvas 502 180 454 304 10;
+#X obj 304 92 gems.win;
+#X text 51 24 Description: Generates a ntsc cololr bar test pattern.
+;
+#X obj 82 166 gems.bars.ntsc;
+#X obj 304 68 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 82 135 gems.fit.scale fill;
+#X obj 83 99 gemhead;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;

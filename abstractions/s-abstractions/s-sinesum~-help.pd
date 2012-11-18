@@ -1,0 +1,36 @@
+#N canvas 519 220 502 482 10;
+#X obj 10 144 s-sinesum~ sinez;
+#X text 6 63 Signal inlet designates frequency;
+#X floatatom 10 89 5 0 0 0 - - -;
+#X obj 10 107 mtof~;
+#X obj 10 342 s-ezdac~ out;
+#X msg 276 221 \; sinez/harmonic/4 100 \;;
+#X msg 276 256 \; sinez/harmonic/4 20 \;;
+#X msg 117 120 0;
+#X text 155 135 <- Right inlet resets phase (like [phasor~]);
+#X text 8 10 s-sinesum~ makes complex \, harmonically rich sinusoids
+\, with SSSAD state saving.;
+#X obj 373 64 sssad/datastore;
+#N canvas 0 0 450 300 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD sinez/harmonic/12 0 \; SSSAD sinez/harmonic/11
+0 \; SSSAD sinez/harmonic/10 56 \; SSSAD sinez/harmonic/9 0 \; SSSAD
+sinez/harmonic/8 66 \; SSSAD sinez/harmonic/7 1 \; SSSAD sinez/harmonic/6
+1 \; SSSAD sinez/harmonic/5 0 \; SSSAD sinez/harmonic/4 20 \; SSSAD
+sinez/harmonic/3 27 \; SSSAD sinez/harmonic/2 9 \; SSSAD sinez/harmonic/1
+71 \; SSSAD out/volume 127 \; SSSAD out/pan 61.9881 \; SSSAD_ADMIN
+set \;;
+#X connect 0 0 1 0;
+#X restore 373 44 pd datastore;
+#X obj 10 320 *~ 5;
+#X obj 276 316 line;
+#X msg 276 293 127 \, 0 2000 \;;
+#X obj 276 338 s sinez/harmonic/5 \;;
+#X connect 0 0 12 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 7 0 0 1;
+#X connect 12 0 4 0;
+#X connect 12 0 4 1;
+#X connect 13 0 15 0;
+#X connect 14 0 13 0;

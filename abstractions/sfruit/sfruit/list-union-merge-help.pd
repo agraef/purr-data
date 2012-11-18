@@ -1,0 +1,15 @@
+#N canvas 734 402 450 300 10;
+#X obj 104 120 list-union-merge;
+#X msg 197 95 /a /b /c;
+#X msg 104 94 /1 /2 /3;
+#X obj 104 144 prepent set;
+#X text 11 31 for each value in the right inlet \, append each value
+in the left inlet and merge into one symbol. Used for multiplexing
+large numbers of OSC-style addresses.;
+#X msg 104 169;
+#X text 234 265 2008 Luke Iannini;
+#X text 15 8 [list-union-merge];
+#X connect 0 0 3 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 3 0 5 0;

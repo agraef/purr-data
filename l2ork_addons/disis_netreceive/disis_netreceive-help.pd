@@ -1,0 +1,52 @@
+#N canvas 303 49 384 509 10;
+#X floatatom 201 328 0 0 0 0 - - -;
+#X text 11 60 The Netreceive object opens a socket for TCP ("stream")
+or UDP ("datagram") network reception on a specified port. If using
+TCP \, an outlet gives you the number of Netsend objects (or other
+compatible clients) have opened connections here.;
+#X text 12 133 Incoming network messages appear on "receive" objects
+\; it's up to the sender to select which one. Here \, a "receive foo"
+fields messages sent from the Netsend help window \, q.v.;
+#X text 11 275 first argument: portnumber = 3000;
+#X text 12 286 second argument: 0 or none for TCP \, nonzero for UDP
+;
+#X text 216 306 <-- TCP \, port 3000;
+#X text 240 362 <-- UDP \, port 3001;
+#X text 13 345 incoming messages;
+#X obj 78 328 print tcp;
+#X obj 78 384 print udp;
+#X text 12 174 There are some possibilities for intercommunication
+with other programs... see the help for "netsend.";
+#X text 241 494 [netreceive 4567 0 old];
+#X text 14 429 If you set the third argument to the word "old" \, everything
+sent to the specified port is received into the global message space.
+This is the original behavior of [netreceive]. This can be VERY INSECURE
+since it gives someone full access to your computer \, allowing them
+to do anything that Pd can via the network.;
+#X obj 78 307 disis_netreceive 3000;
+#X obj 78 363 disis_netreceive 3001 1;
+#X floatatom 213 411 3 0 0 0 - - -;
+#X floatatom 240 411 3 0 0 0 - - -;
+#X floatatom 267 411 3 0 0 0 - - -;
+#X floatatom 294 411 3 0 0 0 - - -;
+#X text 170 410 from;
+#X floatatom 322 411 5 0 0 0 - - -;
+#X obj 213 385 unpack 0 0 0 0 0;
+#X text 12 234 SECURITY ALERT: the port that netreceive opens has no
+access restrictions \, so anyone can connect to it and send messages.
+;
+#X text 12 204 You can also send and receive messages to Pd from the
+command line using 'pdsend' and 'pdreceive'.;
+#X text 228 329 <--- # of open connections;
+#X text 12 11 disis_netreceive listens for incoming messages from network.
+it uses gui-safe way of dispatching incoming data and also offers sender
+IP/Port info in UDP mode.;
+#X connect 13 0 8 0;
+#X connect 13 1 0 0;
+#X connect 14 0 9 0;
+#X connect 14 1 21 0;
+#X connect 21 0 15 0;
+#X connect 21 1 16 0;
+#X connect 21 2 17 0;
+#X connect 21 3 18 0;
+#X connect 21 4 20 0;

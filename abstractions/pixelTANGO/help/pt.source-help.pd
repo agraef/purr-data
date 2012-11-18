@@ -1,0 +1,30 @@
+#N canvas 422 71 662 347 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 245 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 8 302 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 304 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: None;
+#X text 12 23 Type: Modifier. Effects only its own layer.;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 24 164 pt.source;
+#X text 177 77 Source Functions:;
+#X text 187 97 *Popup: Set source of texture/pixel data;
+#X text 197 118 Image: pix_image is the image source. (This may cause
+crashes in some cases on OSX);
+#X text 197 147 Movie: pix_movie is the image source. (On OSX this
+loads all file types QT supports with the exception of MPEG1 and flash
+files. Other platforms support various file types.);
+#X text 197 187 Network_Stream: pix_dvts is the image source. This
+feature is not yet implimented but will allow receiving a network DV
+stream. In the mean-time try loading a SDP file with "Movie".;
+#X text 187 245 *Notes:;
+#X text 197 267 The middle outlet sends the number of frames in a video
+file.;
+#X text 12 6 pixelTANGO HELP - pt.source - Set texture source;

@@ -1,0 +1,86 @@
+#N canvas 169 47 622 494 10;
+#X obj 20 258 mix.out_~;
+#X obj 323 73 hsl 128 15 0 2000 0 0 empty delay.l empty -2 -8 0 10
+-262144 -1 -1 10700 1;
+#X msg 320 94 delay.l \$1;
+#X obj 323 121 hsl 128 15 0 2000 0 0 empty delay.r empty -2 -8 0 10
+-262144 -1 -1 3800 1;
+#X msg 320 142 delay.r \$1;
+#X obj 323 215 hsl 128 15 0 127 0 0 empty frequency empty -2 -8 0 10
+-262144 -1 -1 8700 1;
+#X msg 320 235 frequency \$1;
+#X obj 324 169 hsl 128 15 0 127 0 0 empty feedback empty -2 -8 0 10
+-262144 -1 -1 5500 1;
+#X msg 321 189 feedback \$1;
+#X obj 323 260 hsl 128 15 0 127 0 0 empty q empty -2 -8 0 10 -262144
+-1 -1 4000 1;
+#X msg 320 280 q \$1;
+#X obj 320 303 tgl 17 0 empty routing empty 17 7 0 10 -262144 -1 -1
+0 1;
+#X msg 320 325 routing \$1;
+#X text 319 37 Author: Roman Haefeli;
+#X text 319 54 Version: 2007-11-04;
+#N canvas 564 204 450 300 synth 0;
+#X obj 28 49 noise~;
+#X obj 27 132 *~;
+#X obj 63 98 z~ 34;
+#X obj 63 132 *~;
+#X obj 118 102 dbtorms~;
+#X obj 118 82 line~;
+#X obj 26 196 outlet~;
+#X obj 64 173 outlet~;
+#X obj 118 35 inlet;
+#X msg 119 58 97 \, 0 1000;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 1 0 6 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 4 0 3 1;
+#X connect 4 0 1 1;
+#X connect 5 0 4 0;
+#X connect 8 0 9 0;
+#X connect 9 0 5 0;
+#X restore 19 107 pd synth;
+#X obj 19 65 tgl 15 0 empty empty empty 17 7 0 10 -24198 -1 -1 0 1
+;
+#X obj 1 -21 cnv 15 690 30 empty empty fx.echo.bp~ 2 12 1 14 -233017
+-66577 0;
+#X text 1 12 Description: stereo delay with a bandpass filter in the
+feedback loop;
+#X obj 15 402 cnv 15 400 40 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X text 17 403 warning:;
+#X text 17 421 high q and high feedback can show unstable behaviour.
+;
+#X obj 162 126 param.gui;
+#X msg 162 102 fbdel;
+#X obj 19 85 metro 2000;
+#X obj 161 76 cnv 15 70 20 empty empty empty 20 12 0 14 -241291 -66577
+0;
+#X text 162 79 Build gui;
+#X obj 323 352 hsl 128 15 0 127 0 0 empty frequency empty -2 -8 0 10
+-262144 -1 -1 6100 1;
+#X obj 20 223 fx.echo.bp~ @id fbdel;
+#X msg 320 372 wet \$1;
+#X connect 1 0 2 0;
+#X connect 2 0 28 2;
+#X connect 3 0 4 0;
+#X connect 4 0 28 2;
+#X connect 5 0 6 0;
+#X connect 6 0 28 2;
+#X connect 7 0 8 0;
+#X connect 8 0 28 2;
+#X connect 9 0 10 0;
+#X connect 10 0 28 2;
+#X connect 11 0 12 0;
+#X connect 12 0 28 2;
+#X connect 15 0 28 0;
+#X connect 15 1 28 1;
+#X connect 16 0 24 0;
+#X connect 23 0 22 0;
+#X connect 24 0 15 0;
+#X connect 27 0 29 0;
+#X connect 28 0 0 0;
+#X connect 28 1 0 1;
+#X connect 29 0 28 2;

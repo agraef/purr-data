@@ -1,0 +1,49 @@
+version history for clone
+
+v 0.0.6 (2002/09/23):
+- added loadbang for abstractions
+- fixed a bug with list input
+- MAC OS X port (Darwin 10.1.5)
+- BUG:: seems to crash Pd after some hours when using DSP obejct 
+  in the abstraction (or when DSP is on in general?)
+
+v 0.0.5 (2002/09/23):
+- increased number of signal inlets / outlets to 8 each
+- fixed a memory leak in clone_connective.c
+- some more bugfixes / error handling
+- updated / corrected help patches
+- PDF readme
+
+v 0.0.4 (2002/09/22):
+- added method for symbol into all control (proxy) inlets
+- rewrote dsp-routine to handle various inlet/outlet combinations
+  more efficiently
+- first signal and control inlet both get their own inlet
+- changed internal in and out names to 'clone*' to avoid an internal
+  nameclash with rabin~
+
+v 0.0.3 (2002/09/22):
+- added support for multiple signal (up to 2) and control outlets
+  (up to 256) and any arbitrary combination of them
+- added method for float: it gets sent to all instances
+- now using unique receive names allowing for multiple instances of
+  clone (format: clone_rcv_<instancenumber>_<outletnumber>)
+- added preppended instance id number for control outlets: data sent
+  to an abstraction's outlet gets preppended with the instance number
+  of that abstraction
+- added support for multiple control inlets (same restrictions as for
+  control outlets apply)
+- added up to two signal inlets
+- BUGS / LIMITATIONS:
+  * order of outlets reflects order of creation, not order in terms 
+    of position on canvas; signal outlets come first
+  * first signal and first control inlet both share the leftmost inlet
+    of clone!
+
+v 0.0.2 (2002/09/21):
+- added one signal outlet
+- cleaned up code
+
+v 0.0.1 (2002/09/20):
+- first implementation based on Krzysztof Czaja's rabin~
+- one control inlet and outlet possible

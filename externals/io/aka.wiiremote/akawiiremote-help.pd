@@ -1,0 +1,82 @@
+#N canvas 287 96 744 626 10;
+#X msg 128 207 connect;
+#X msg 141 228 disconnect;
+#X obj 218 203 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 294 202 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 127 285 metro 100;
+#X obj 127 264 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 89 283 bang;
+#X text 49 49 - Use the Bluetooth Setup Assistant to setup the WiiRemote
+with your computer (only required for the first use).;
+#X text 49 79 - Press the "Sync" button on the WiiRemote \, four LEDs
+will start blinking.;
+#X text 49 109 - Click on the [connect( message \, the LEDs will stop
+blinking once its connected;
+#X text 49 139 - Start the [metro] to get updates from [aka.wiiremote]
+;
+#X obj 399 526 pddp/print;
+#X obj 354 556 pddp/print;
+#X obj 354 410 route remote;
+#X msg 503 290 getbattery;
+#X msg 503 310 getled;
+#X msg 503 330 getexpansion;
+#X obj 489 431 print RIGHT;
+#X obj 253 430 print LEFT;
+#X obj 354 476 route motion buttons ir;
+#X obj 444 497 pddp/print;
+#X msg 294 224 ir \$1;
+#X msg 218 225 motion \$1;
+#X obj 344 202 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 344 224 vibration \$1;
+#X obj 434 202 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 434 224 expansion \$1;
+#X obj 524 202 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 524 223 extraoutput \$1;
+#N canvas 254 342 450 300 address 0;
+#X obj 176 252 outlet;
+#X msg 206 126 getaddress;
+#X msg 176 72 address 00-1e-35-4c-e6-f1;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X restore 25 462 pd address;
+#X msg 503 352 getaddress;
+#X obj 631 536 dac~;
+#X obj 632 408 pddp/dsp;
+#X obj 640 500 osc~ 100;
+#X obj 303 388 akawiiremote;
+#X obj 334 589 print;
+#X connect 0 0 34 0;
+#X connect 1 0 34 0;
+#X connect 2 0 22 0;
+#X connect 3 0 21 0;
+#X connect 4 0 34 0;
+#X connect 5 0 4 0;
+#X connect 6 0 34 0;
+#X connect 13 0 19 0;
+#X connect 13 1 17 0;
+#X connect 14 0 34 0;
+#X connect 15 0 34 0;
+#X connect 16 0 34 0;
+#X connect 19 0 12 0;
+#X connect 19 0 35 0;
+#X connect 19 1 11 0;
+#X connect 19 2 20 0;
+#X connect 21 0 34 0;
+#X connect 22 0 34 0;
+#X connect 23 0 24 0;
+#X connect 24 0 34 0;
+#X connect 25 0 26 0;
+#X connect 26 0 34 0;
+#X connect 27 0 28 0;
+#X connect 28 0 34 0;
+#X connect 30 0 34 0;
+#X connect 33 0 31 0;
+#X connect 33 0 31 1;
+#X connect 34 0 18 0;
+#X connect 34 1 13 0;

@@ -1,0 +1,5 @@
+#N canvas 137 124 450 300 10;
+#X text 60 100 [polypoly~-wrap] is an object used by [polypoly~] to handle
+the voice allocation logic for each patch that [polypoly~] is instantiating.
+It is not a patch that has any use outside of how [polypoly~] uses it
+internally.;

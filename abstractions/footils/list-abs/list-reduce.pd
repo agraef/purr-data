@@ -1,0 +1,33 @@
+#N canvas 238 102 593 526 10;
+#X obj 86 33 inlet;
+#X obj 275 52 inlet;
+#X obj 151 352 outlet;
+#X obj 205 353 outlet;
+#X obj 86 58 route bang;
+#X obj 86 83 b;
+#X obj 151 84 t b a;
+#X obj 151 124 list;
+#X obj 151 233 list split 2;
+#X obj 151 155 t a b;
+#X obj 275 189 list append;
+#X text 53 386 [list-reduce];
+#X text 55 423 [list-reduce] returns a single value constructed by
+calling the user-defined objects connected to the right outlet on the
+first two items of the sequence \, then on the result (if it comes
+in through the right inlet) and the next item \, and so on.;
+#X obj 275 124 list split 1;
+#X connect 0 0 4 0;
+#X connect 1 0 13 0;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X connect 6 1 7 1;
+#X connect 7 0 9 0;
+#X connect 8 0 3 0;
+#X connect 8 1 10 1;
+#X connect 8 2 2 0;
+#X connect 9 0 8 0;
+#X connect 9 1 10 1;
+#X connect 10 0 8 0;
+#X connect 13 0 10 0;

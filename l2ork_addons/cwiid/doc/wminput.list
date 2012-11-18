@@ -1,0 +1,57 @@
+#Note: this is a list of button and axis IDs, and is not a valid configuration
+#file
+
+# Wiimote Buttons
+Wiimote.Up
+Wiimote.Down
+Wiimote.Left
+Wiimote.Right
+Wiimote.A
+Wiimote.B
+Wiimote.Minus
+Wiimote.Plus
+Wiimote.Home
+Wiimote.1
+Wiimote.2
+
+# Wiimote Axes
+Wiimote.Dpad.X
+Wiimote.Dpad.Y
+
+
+# Nunchuk Buttons
+Nunchuk.C
+Nunchuk.Z
+
+# Nunchuk Axes
+Nunchuk.Stick.X
+Nunchuk.Stick.Y
+
+
+# Classic Controller Buttons
+Classic.Up
+Classic.Down
+Classic.Left
+Classic.Right
+Classic.Minus
+Classic.Plus
+Classic.Home
+Classic.A
+Classic.B
+Classic.X
+Classic.Y
+Classic.ZL
+Classic.ZR
+Classic.L
+Classic.R
+
+#Classic Controller Axes
+Classic.Dpad.X
+Classic.Dpad.Y
+Classic.LStick.X
+Classic.LStick.Y
+Classic.RStick.X
+Classic.RStick.Y
+Classic.LAnalog
+Classic.RAnalog
+

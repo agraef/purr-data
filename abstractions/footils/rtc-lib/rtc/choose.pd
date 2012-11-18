@@ -1,0 +1,16 @@
+#N canvas 416 57 348 341 10;
+#X obj 65 62 inlet;
+#X obj 65 97 t b f;
+#X obj 196 62 inlet;
+#X obj 65 217 outlet;
+#X obj 65 127 list;
+#X text 93 251 1996 by Karlheinz Essl;
+#X obj 65 186 list split;
+#X obj 65 159 scramble;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 1 1 6 1;
+#X connect 2 0 4 1;
+#X connect 4 0 7 0;
+#X connect 6 0 3 0;
+#X connect 7 0 6 0;

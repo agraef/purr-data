@@ -1,0 +1,61 @@
+#N canvas 140 138 612 378 12;
+#X obj 17 90 tgl 20 1 empty empty enable_dsp 0 -6 0 10 -225271 -1 -1
+1 1;
+#X msg 17 115 enable \$1;
+#X obj 166 272 *~;
+#X obj 207 277 hsl 128 15 0.001 1000 1 1 empty empty volume -2 -6 0
+10 -261681 -1 -1 9700 1;
+#X obj 155 309 dac~;
+#X obj 16 8 cnv 15 550 40 empty empty drown~ 10 22 0 24 -260818 -1
+0;
+#X text 206 7 FFTease (C)Lyon \, Penrose (for Max/MSP);
+#X text 206 27 Pd port;
+#X obj 294 97 nbx 5 18 -100 0 0 1 empty empty threshold 0 -6 0 10 -225271
+-1 -1 -75 256;
+#X obj 166 88 bng 25 250 50 0 empty empty start 0 -6 0 8 -261689 -1
+-1;
+#N canvas 35 47 456 306 schubert 0;
+#X obj 51 234 outlet~;
+#X obj 51 188 readsf~ 1;
+#X obj 51 19 inlet;
+#X msg 27 80 1;
+#X obj 52 115 t f b;
+#X obj 51 44 route bang 1 0;
+#X msg 86 149 open ../media/schubert.aiff;
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 1 6 0;
+#X connect 5 0 3 0;
+#X connect 5 1 4 0;
+#X connect 5 2 1 0;
+#X connect 6 0 1 0;
+#X restore 166 126 pd schubert;
+#X obj 166 217 drown~;
+#X obj 384 174 sig~ 1;
+#X obj 385 99 nbx 5 18 -100 10 0 1 empty empty multiplication_factor
+0 -6 0 10 -225271 -1 -1 -18 256;
+#X obj 292 175 sig~ 1;
+#X obj 294 125 + 100;
+#X obj 385 125 + 100;
+#X obj 385 148 dbtorms;
+#X obj 293 149 dbtorms;
+#X obj 405 324 denude~;
+#X text 403 345 alternative naming;
+#X connect 0 0 1 0;
+#X connect 1 0 11 0;
+#X connect 2 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 2 1;
+#X connect 8 0 15 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 2 0;
+#X connect 12 0 11 2;
+#X connect 13 0 16 0;
+#X connect 14 0 11 1;
+#X connect 15 0 18 0;
+#X connect 16 0 17 0;
+#X connect 17 0 12 0;
+#X connect 18 0 14 0;

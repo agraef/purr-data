@@ -1,0 +1,10 @@
+#N canvas 158 356 628 323 10;
+#X text 41 32 Description: Receive a timing flow through UDP;
+#X obj 62 212 seq.timing.master @id timingFromUDP;
+#X obj 304 182 seq.timing.udp.receive 3456;
+#X obj 62 154 loadbang;
+#X msg 62 181 external 1;
+#X text 303 158 Only argument: port to listen to;
+#X connect 2 0 1 1;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;

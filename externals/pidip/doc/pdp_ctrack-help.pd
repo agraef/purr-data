@@ -1,0 +1,134 @@
+#N canvas 52 74 781 666 10;
+#X obj 7 614 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 333 153 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 340 122 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X obj 252 167 pdp_yqt;
+#X obj 14 107 pdp_v4l;
+#X obj 23 76 metro 70;
+#X obj 68 42 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 25 43 stop;
+#X msg 110 74 open /dev/video;
+#X floatatom 244 273 5 0 0 0 - - -;
+#X floatatom 253 294 5 0 0 0 - - -;
+#X floatatom 270 315 5 0 0 0 - - -;
+#X floatatom 275 337 5 0 0 0 - - -;
+#X floatatom 164 496 5 0 0 0 - - -;
+#X floatatom 210 496 5 0 0 0 - - -;
+#X text 362 589 written by Yves Degoyon ( ydegoyon@free.fr );
+#X text 363 572 pdp_ctrack : color tracker;
+#X floatatom 123 516 5 0 0 0 - - -;
+#X floatatom 123 537 5 0 0 0 - - -;
+#X text 290 273 R component;
+#X text 298 293 G component;
+#X text 315 314 B component;
+#X floatatom 284 362 5 0 0 0 - - -;
+#X text 323 336 X coordinate of cursor ( pick );
+#X text 332 361 Y coordinate of cursor ( pick );
+#X msg 120 357 pick;
+#X text 10 359 Pick up the color;
+#X floatatom 297 385 5 0 0 0 - - -;
+#X text 343 384 Tolerance ( default = 50 );
+#X msg 312 411 luminosity \$1;
+#X obj 413 413 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 436 414 Use luminosity in color detection;
+#X obj 396 439 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 320 438 steady \$1;
+#X text 425 438 Steady mode ( zone is selected around the cursor )
+;
+#X text 122 554 Coordinates of detected block;
+#X obj 405 466 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 329 465 cursor \$1;
+#X text 428 467 Show cursor or not;
+#X obj 421 490 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 444 491 Show frame or not;
+#X msg 345 489 frame \$1;
+#X obj 594 197 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 594 249 pdp_control;
+#X msg 594 222 thread \$1;
+#X floatatom 594 310 5 0 0 0 - - -;
+#X obj 594 281 route pdp_drop;
+#X msg 84 212 setcur \$1 \$2;
+#X text 80 196 Set the cursor;
+#X msg 52 614 cursor \$1;
+#X obj 116 616 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 218 612 5 0 0 0 - - -;
+#X floatatom 268 613 5 0 0 0 - - -;
+#X floatatom 315 612 5 0 0 0 - - -;
+#X text 234 645 Color components;
+#X text 230 630 R;
+#X text 281 630 G;
+#X text 325 630 B;
+#X obj 110 459 pdp_ctrack ----;
+#X obj 7 646 route press drag release;
+#X msg 108 249 bang;
+#X obj 108 273 del 100;
+#X connect 0 0 67 0;
+#X connect 1 0 10 0;
+#X connect 2 0 11 0;
+#X connect 3 0 2 0;
+#X connect 4 0 11 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 11 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 11 0;
+#X connect 11 0 66 0;
+#X connect 12 0 66 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 12 0;
+#X connect 17 0 66 1;
+#X connect 18 0 66 2;
+#X connect 19 0 66 3;
+#X connect 20 0 66 4;
+#X connect 30 0 66 5;
+#X connect 33 0 66 0;
+#X connect 35 0 66 6;
+#X connect 37 0 66 0;
+#X connect 38 0 37 0;
+#X connect 40 0 41 0;
+#X connect 41 0 66 0;
+#X connect 44 0 45 0;
+#X connect 45 0 66 0;
+#X connect 47 0 49 0;
+#X connect 49 0 66 0;
+#X connect 50 0 52 0;
+#X connect 51 0 54 0;
+#X connect 52 0 51 0;
+#X connect 54 0 53 0;
+#X connect 55 0 66 0;
+#X connect 55 0 68 0;
+#X connect 57 0 0 0;
+#X connect 58 0 57 0;
+#X connect 66 0 0 0;
+#X connect 66 1 21 0;
+#X connect 66 2 25 0;
+#X connect 66 3 22 0;
+#X connect 66 4 26 0;
+#X connect 66 5 59 0;
+#X connect 66 6 60 0;
+#X connect 66 7 61 0;
+#X connect 67 0 55 0;
+#X connect 68 0 69 0;
+#X connect 69 0 33 0;

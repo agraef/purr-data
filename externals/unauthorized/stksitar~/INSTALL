@@ -1,0 +1,13 @@
+install STK in /usr/local/stk
+or change STK paths in the makefile
+to your STK's location.
+
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/stksitar~
+
+make
+
+make install
+
+open help-stksitar~.pd

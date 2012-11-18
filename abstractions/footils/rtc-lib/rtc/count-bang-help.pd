@@ -1,0 +1,15 @@
+#N canvas 3 48 563 356 10;
+#X floatatom 75 177 0 0 0 0 - - -;
+#X obj 75 142 count-bang;
+#X obj 75 103 bng 15 250 50 0 empty empty bangs_to_count 0 -6 0 8 -262144
+-1 -1;
+#X obj 140 118 bng 15 250 50 0 empty empty reset 0 -6 0 8 -262144 -1
+-1;
+#X text 112 179 number of received bangs;
+#X text 35 24 count-bang;
+#X text 99 249 1993 by Karlheinz Essl;
+#X text 63 47 Counts the number of received bangs. (bang-accumulator)
+;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 1;

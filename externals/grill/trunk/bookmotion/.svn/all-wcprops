@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/ext/!svn/ver/3600/trunk/bookmotion
+END
+bookmotion.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3600/trunk/bookmotion/bookmotion.cpp
+END
+unimotion.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3600/trunk/bookmotion/unimotion.c
+END
+unimotion.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3600/trunk/bookmotion/unimotion.h
+END
+bookmotion-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/3600/trunk/bookmotion/bookmotion-help.pd
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3600/trunk/bookmotion/package.txt
+END

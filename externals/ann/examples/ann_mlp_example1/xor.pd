@@ -1,0 +1,89 @@
+#N canvas 438 239 531 379 10;
+#X msg 50 22 create 2 1;
+#X msg 69 64 train-on-file train-xor.txt;
+#X obj 22 306 nbx 5 14 -1e+037 1e+037 0 0 empty empty output 0 -6 0
+10 -262144 -1 -1 0 256;
+#X msg 117 225 0 0;
+#X msg 152 226 0 1;
+#X msg 191 227 1 0;
+#X msg 228 227 1 1;
+#X text 118 262 once saved you can load your nn at load time using
+passing the filename as argument;
+#X msg 111 167 save xor.net;
+#N canvas 180 57 553 390 train 0;
+#X obj 43 283 outlet;
+#X msg 46 17 train;
+#X obj 168 137 tgl 15 0 empty empty in1 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 205 137 tgl 15 0 empty empty in2 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 246 138 tgl 15 0 empty empty out 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 113 137 bng 15 250 50 0 empty empty train! 0 -6 0 8 -262144
+-1 -1;
+#X obj 115 160 pack s f f f;
+#X obj 114 181 unpack s f f f;
+#X obj 136 202 pack f f f;
+#X msg 153 265 run;
+#N canvas 0 0 534 398 auto 0;
+#X obj 210 333 outlet;
+#X text 68 37 auto train OR;
+#X obj 193 35 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 194 63 metro 10;
+#X msg 126 194 0 0 0;
+#X msg 169 194 1 0 1;
+#X msg 212 196 0 1 1;
+#X msg 255 196 1 1 1;
+#X obj 191 124 select 0 1 2 3;
+#X obj 193 96 random 4;
+#X connect 2 0 3 0;
+#X connect 3 0 9 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 4 0;
+#X connect 8 1 5 0;
+#X connect 8 2 6 0;
+#X connect 8 3 7 0;
+#X connect 9 0 8 0;
+#X restore 54 198 pd auto;
+#X text 89 15 1- set train mode;
+#X text 145 108 2- set inputs \, expected output and click "train!"
+;
+#X text 284 135 3- repeat at will;
+#X text 190 263 4- when ready set running mode again;
+#X text 211 176 NOTE: look at the second outlet to know the current
+mse after each training pattern;
+#X connect 1 0 0 0;
+#X connect 2 0 6 1;
+#X connect 3 0 6 2;
+#X connect 4 0 6 3;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 1 8 0;
+#X connect 7 2 8 1;
+#X connect 7 3 8 2;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X restore 95 104 pd train the net;
+#X text 127 21 1- create the net with 2 ins and 1 out;
+#X text 248 63 2a -train it using a train file;
+#X text 201 99 2b- or train it on-the-fly;
+#X text 193 165 3- set the filename and save it;
+#X text 119 206 4- use the net passing a list of floats;
+#X obj 89 305 nbx 8 14 -1e+037 1e+037 0 0 empty empty mse 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 52 259 ann_mlp;
+#X connect 0 0 16 0;
+#X connect 1 0 16 0;
+#X connect 3 0 16 0;
+#X connect 4 0 16 0;
+#X connect 5 0 16 0;
+#X connect 6 0 16 0;
+#X connect 8 0 16 0;
+#X connect 9 0 16 0;
+#X connect 16 0 2 0;
+#X connect 16 1 15 0;

@@ -1,0 +1,28 @@
+#N canvas 252 161 577 340 10;
+#X obj 81 87 loadbang;
+#X obj 81 116 dollarg;
+#X text 171 101 1st inlet: auto route to param.atom abstractions;
+#X text 323 225 <- peek inside here;
+#X text 40 182 A data.group's id is set thought it's parent's @id argument.
+;
+#X obj 44 155 param.group;
+#X obj 39 223 param.template @id param.group.help;
+#X text 48 17 Description: Groups various PARAMS;
+#X text 39 44 Must be connected to a loadbang and a dollarg as illustrated
+in the folloing example:;
+#X text 172 127 param.group's outlet outputs a list of all non @rguments.
+;
+#N canvas 104 171 648 322 default_id(advanced) 0;
+#X obj 250 122 loadbang;
+#X obj 250 151 dollarg;
+#X obj 165 182 param.group default_name;
+#X text 80 42 Do not feed param.group any arguments UNLESS you are
+building a special abstraction that has a default ID (i.e. an automatically
+assigned ID that can be overwrittend by an @id @rgument).;
+#X connect 0 0 1 0;
+#X connect 1 0 2 1;
+#X connect 1 1 2 2;
+#X restore 35 298 pd default_id(advanced);
+#X connect 0 0 1 0;
+#X connect 1 0 5 1;
+#X connect 1 1 5 2;

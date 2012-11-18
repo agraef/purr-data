@@ -1,0 +1,28 @@
+#N canvas 358 179 532 458 10;
+#X obj 112 74 hsl 128 15 0 1 0 0 empty empty factor_(0-1) -2 -6 0 10
+-262144 -1 -1 4800 0;
+#X obj 109 187 triple-scale;
+#X text 61 29 interpolate linearily between two points (x \, y \, z)
+;
+#X obj 109 216 unpack 0 0 0;
+#X obj 109 264 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 7790 1;
+#X obj 148 264 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 1750 1;
+#X obj 188 264 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 7590 1;
+#X floatatom 109 238 5 0 0 0 - - -;
+#X floatatom 148 238 5 0 0 0 - - -;
+#X floatatom 188 238 5 0 0 0 - - -;
+#X msg 148 132 5 1 9;
+#X msg 188 160 8 2 1;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 7 0;
+#X connect 3 1 8 0;
+#X connect 3 2 9 0;
+#X connect 7 0 4 0;
+#X connect 8 0 5 0;
+#X connect 9 0 6 0;
+#X connect 10 0 1 1;
+#X connect 11 0 1 2;

@@ -1,0 +1,25 @@
+#N canvas 439 39 591 371 10;
+
+#X msg 111 152 a b c;
+#X obj 263 156 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 263 199 list-value cheese;
+#X obj 111 200 list-value cheese;
+#X obj 439 23 import-disabled list-abs;
+#X obj 263 272 prepent set;
+#X msg 159 152 e f g;
+#X text 17 22 [list-value] - [v]/[value] for lists \, or anything else.
+;
+#X text 16 48 Works just like [v] - including updating newly instantiated
+[list-value]s with the right data.;
+#X text 397 332 2008 Luke Iannini;
+#X msg 263 305;
+#X text 18 83 Accepts a [clear( message to clear all [list-value] objects
+of the same name;
+#X msg 205 152 clear;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 5 0 10 0;
+#X connect 6 0 3 0;
+#X connect 12 0 3 0;

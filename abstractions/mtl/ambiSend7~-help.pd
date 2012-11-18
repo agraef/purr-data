@@ -1,0 +1,5 @@
+#N canvas 1 57 458 308 10;
+#X text 124 55 Description: Sends 7 signals;
+#X obj 128 144 mtl/ambiReceive7~ foo;
+#X obj 126 115 mtl/ambiSend7~ foo;
+#X text 126 73 tags: ambisonic;

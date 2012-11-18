@@ -1,0 +1,18 @@
+#N canvas 388 416 817 442 12;
+#X obj 133 212 list.wait;
+#X msg 37 130 4 54 3;
+#X msg 110 130 list test;
+#X obj 215 171 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 210 311 print waiting;
+#X obj 84 330 print out;
+#X text 46 34 Descrition: Makes a list wait until the flag is lowered.
+;
+#X text 234 170 wait flag;
+#X text 239 218 When wait is flagged \, it stores the last list. Once
+the flag is changed \, the waiting list is immediatly outputed.;
+#X connect 0 0 5 0;
+#X connect 0 1 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 1;

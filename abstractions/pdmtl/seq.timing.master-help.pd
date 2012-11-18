@@ -1,0 +1,34 @@
+#N canvas 1177 145 620 471 10;
+#X obj 45 234 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 63 233 Beat indicator;
+#X floatatom 31 146 5 0 0 0 - - -;
+#X text 72 145 Bpm (minimum of 30 \, defaults to 120);
+#X text 24 31 Description: synchronizes all seq.timing.slave abstractions
+that share the same "top" patch.;
+#X text 43 314 Incomplete list of abstractions that require a seq.timing.master:
+;
+#X text 281 258 @rguments:;
+#X text 305 277 @bpm: sets the beats per minute. Defaults to 120;
+#X text 25 91 WARNING: You should only have one seq.timing.master with
+a default ID.;
+#X text 27 121 The default ID is: TIMING;
+#X text 26 64 Supported by param.atom.;
+#X text 304 293 @id: sets it's id.;
+#X obj 46 208 seq.timing.master @bpm 120 @id TIMING;
+#X obj 124 354 seq.timing.slave @timing TIMING;
+#X obj 126 384 seq.tracker4 @timing TIMING;
+#X msg 82 182 external \$1;
+#X obj 82 161 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 168 182 Use the external sync signal;
+#X text 311 199 Inlet 2: External sync signal (for an example. see
+seq.timing.udp.receive);
+#X floatatom 173 234 5 0 0 1 step - -;
+#X floatatom 302 234 5 0 0 1 beat_interval(ms) - -;
+#X connect 2 0 12 0;
+#X connect 12 0 0 0;
+#X connect 12 1 19 0;
+#X connect 12 2 20 0;
+#X connect 15 0 12 0;
+#X connect 16 0 15 0;

@@ -1,0 +1,7 @@
+#N canvas 247 316 405 199 10;
+#X text 95 152 know when you have to stop your gig;
+#X obj 133 91 mtl/chronometer;
+#X obj 15 8 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 20 12 description: a very basic gop chronometer;
+#X text 20 49 tags: timing;

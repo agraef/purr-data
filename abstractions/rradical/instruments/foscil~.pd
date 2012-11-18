@@ -1,0 +1,64 @@
+#N canvas 62 230 1119 650 10;
+#X obj 269 352 *~;
+#X obj 181 448 cos~;
+#X obj 181 396 +~;
+#X obj 181 354 phasor~ 0;
+#X obj 269 320 osc~ 0;
+#X text 601 59 PHASE MODULATION ("FM") USING TWO OSCILLATORS;
+#X text 93 314 frequency;
+#X text 93 296 modulation;
+#X text 438 342 <-- signal with smoothed;
+#X text 474 362 modulation index to avoid clicks;
+#X text 269 372 amplitude-controlled modulation;
+#X text 269 390 oscillator output;
+#X text 83 338 carrier;
+#X text 83 356 phase -->;
+#X text 59 378 phase;
+#X text 59 396 modulation-->;
+#X text 269 432 output;
+#X text 475 452 To do phase modulation \, we split a "carrier oscillator"
+into its phase calculation (phasor~) and its waveform lookup (cos~).
+These together would be equivalent to an osc~ object \, but the "+~"
+between them adds anopther oscillator's output to the phase.;
+#X text 475 530 You will get the best graphs by choosing reasonably
+low carrier and modulation frequencies (50-100 \, say). The modulation
+index is usually between 0 and 1 (which means the control will typically
+range from 0-100).;
+#X text 717 616 updated for Pd version 0.33;
+#X obj 297 585 outlet~;
+#X text 267 3 car;
+#X text 332 3 mod;
+#X text 388 7 index;
+#X text 234 447 <-- waveform;
+#X obj 182 492 *~;
+#X obj 49 448 inlet~;
+#X text 42 426 amp (0-1);
+#X text 183 3 basefreq;
+#X obj 388 26 inlet~;
+#X obj 326 26 inlet;
+#X obj 261 26 inlet;
+#X obj 190 26 inlet;
+#X obj 185 145 * 1;
+#X obj 183 262 sig~ 0;
+#X obj 268 218 * 1;
+#X obj 307 71 t b f;
+#X obj 238 62 t b f;
+#X connect 0 0 2 1;
+#X connect 1 0 25 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 0 0;
+#X connect 25 0 20 0;
+#X connect 26 0 25 1;
+#X connect 29 0 0 1;
+#X connect 30 0 36 0;
+#X connect 31 0 37 0;
+#X connect 32 0 33 0;
+#X connect 32 0 35 0;
+#X connect 33 0 34 0;
+#X connect 34 0 3 0;
+#X connect 35 0 4 0;
+#X connect 36 0 35 0;
+#X connect 36 1 35 1;
+#X connect 37 0 33 0;
+#X connect 37 1 33 1;

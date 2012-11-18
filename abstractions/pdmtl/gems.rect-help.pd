@@ -1,0 +1,18 @@
+#N canvas 379 252 462 312 10;
+#X obj 61 33 gemhead;
+#X obj 69 196 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 69 220 gems.win @dimen 200 200 @border 0 @offset 100 100 @FSAA
+0 @fps 20;
+#X text 78 112 Description: Rectangle with a few transformations in
+one object box.;
+#X msg 223 34 color 0 \$1 0 1;
+#X obj 223 14 hsl 100 15 0 1 0 0 empty empty empty -2 -8 0 10 -191407
+-1 -1 0 1;
+#X obj 63 64 gems.rect @scale 1.33333 1 @translate 0 0 @rotate 0 0
+45 @color 0 1 0;
+#X text 72 154 Similar to jit.gl.gridshape as using attributes.;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 4 0 6 1;
+#X connect 5 0 4 0;

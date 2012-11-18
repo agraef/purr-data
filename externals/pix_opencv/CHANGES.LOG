@@ -1,0 +1,14 @@
+version 0.2-rc5 ( codename THANKSIBIT )
+
+* added optical flow objects :
+Block Matching : pix_opencv_of_bm
+Horn and Schunck : pix_opencv_of_hs
+Lucas/Kanade : pix_opencv_of_lk
+
+version 0.2-rc4 ( codename BALTANIK )
+
+* fixed colorspace problems for mac ppc
+* contours detection objects ( hu_compare and pgh_compare )
+now give the posititon of matching contours.
+* a folder of examples have been added,
+they should work with pd-extended.

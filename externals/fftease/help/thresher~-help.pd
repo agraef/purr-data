@@ -1,0 +1,46 @@
+#N canvas 140 138 585 330 12;
+#X obj 17 86 tgl 20 1 empty empty enable_dsp 0 -6 0 10 -225271 -1 -1
+1 1;
+#X msg 17 111 enable \$1;
+#X obj 219 248 *~;
+#X obj 260 253 hsl 128 15 0.001 10 1 1 empty empty volume -2 -6 0 10
+-261681 -1 -1 10300 1;
+#X obj 208 285 dac~;
+#X obj 16 8 cnv 15 550 40 empty empty thresher~ 10 22 0 24 -260818
+-1 0;
+#X text 206 7 FFTease (C)Lyon \, Penrose (for Max/MSP);
+#X text 206 27 Pd port;
+#X obj 327 217 print A;
+#X text 391 216 attributes;
+#X obj 219 92 bng 25 250 50 0 empty empty start 0 -6 0 8 -261689 -1
+-1;
+#N canvas 35 47 460 310 nixon 0;
+#X obj 51 234 outlet~;
+#X obj 51 188 readsf~ 1;
+#X obj 51 19 inlet;
+#X msg 27 80 1;
+#X obj 52 115 t f b;
+#X obj 51 44 route bang 1 0;
+#X msg 86 149 open ../media/nixon.aiff;
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 1 6 0;
+#X connect 5 0 3 0;
+#X connect 5 1 4 0;
+#X connect 5 2 1 0;
+#X connect 6 0 1 0;
+#X restore 219 144 pd nixon;
+#X obj 218 187 thresher~;
+#X obj 18 250 nacho~;
+#X text 17 274 alternative name;
+#X connect 0 0 1 0;
+#X connect 1 0 12 0;
+#X connect 2 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 2 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 2 0;
+#X connect 12 1 8 0;

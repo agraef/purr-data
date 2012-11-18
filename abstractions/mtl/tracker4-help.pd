@@ -1,0 +1,59 @@
+#N canvas 279 135 866 496 10;
+#X obj 69 99 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X msg 161 257 pattern \$1;
+#X floatatom 161 239 5 0 0 0 - - -;
+#X floatatom 509 44 5 0 0 0 bpm - -;
+#X msg 179 278 play;
+#X msg 185 299 stop;
+#X obj 584 86 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 21 11 Description: A scrollable tracker with an unlimited number
+of patterns of any length.;
+#X text 87 100 Show editor;
+#X obj 509 64 mtl/clkMaster;
+#X text 24 47 tags: sequencing;
+#X obj 534 229 bng 15 250 50 0 empty empty save 17 7 0 10 -262144 -1
+-1;
+#X obj 613 228 bng 15 250 50 0 empty empty load 17 7 0 10 -262144 -1
+-1;
+#X obj 407 119 cnv 15 400 80 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 569 121 PARAM ENABLED;
+#X obj 406 16 cnv 15 320 20 empty empty empty 20 12 0 14 -261682 -66577
+0;
+#X text 413 143 All patterns can be saved and restored through the
+param state saving system.;
+#X obj 104 170 mtl/clk-quantization-help;
+#X text 101 149 Open(click) to read about quantization:;
+#X text 410 16 mtl/tracker4 requires a clkMaster in the same patch
+;
+#X floatatom 147 406 5 0 0 1 pattern - -;
+#X obj 186 377 bng 15 250 50 0 empty empty loop 17 7 0 10 -262144 -1
+-1;
+#X obj 69 452 print notes;
+#X obj 108 430 print tracks;
+#X obj 534 252 tof/param file;
+#X obj 276 288 loadbang;
+#X msg 276 310 debug 1;
+#X text 329 309 Print debuging messages.;
+#X msg 103 198 quantization \$1;
+#X obj 480 178 ../doc/5.reference/tof/param-help;
+#X obj 69 351 mtl/tracker4 /id tr4;
+#X connect 0 0 30 0;
+#X connect 1 0 30 0;
+#X connect 2 0 1 0;
+#X connect 3 0 9 0;
+#X connect 4 0 30 0;
+#X connect 5 0 30 0;
+#X connect 9 2 6 0;
+#X connect 11 0 24 0;
+#X connect 12 0 24 1;
+#X connect 17 0 28 0;
+#X connect 25 0 26 0;
+#X connect 26 0 30 0;
+#X connect 28 0 30 0;
+#X connect 30 0 22 0;
+#X connect 30 1 23 0;
+#X connect 30 2 20 0;
+#X connect 30 3 21 0;

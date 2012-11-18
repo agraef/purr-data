@@ -1,0 +1,7 @@
+#N canvas 1532 342 400 240 10;
+#X text 34 21 Description: A parameter that bangs.;
+#X text 33 40 Comments: Must be used with a param.group;
+#X obj 105 134 param.bang parameter_name;
+#X obj 105 108 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X connect 3 0 2 0;

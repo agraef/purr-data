@@ -1,0 +1,13 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+start:
+SEROUT 16, 16468, [DEC 72, CR]        'pin16 is the stamp serial port, 164868 means 9600 bauds, dec means decimal to send to pd
+HIGH 1                                'put a led on pin 1
+PAUSE 1000
+
+LOW 1
+PAUSE 1000
+GOTO start
+
+END

@@ -1,0 +1,216 @@
+#N canvas 0 590 399 160 10;
+#N canvas 217 80 583 520 CODE 0;
+#N canvas 102 310 999 691 patch 0;
+#X obj 289 16 inlet;
+#X obj 249 35 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 396 171 clear \, label pdmtl;
+#X obj 261 440 r \$0abs_sel;
+#X obj 466 252 r \$0cat_sel;
+#X obj 3 507 s \$0categories;
+#X obj 213 91 t b b b b;
+#X msg 579 156 clear \, label abstractions;
+#X obj 745 528 loadbang;
+#X obj 648 761 print pdmtl_help_browser;
+#X obj 617 4 inlet;
+#X msg 49 167 dump.categories;
+#N canvas 547 235 610 533 append_abs_qty 0;
+#X obj 118 253 list prepend;
+#X obj 169 322 convert.list2symbol none;
+#X obj 50 155 makefilename (%d);
+#X obj 244 152 t a a;
+#X obj 169 356 list append;
+#X obj 50 59 inlet;
+#X obj 282 69 inlet;
+#X obj 165 409 outlet;
+#X obj 181 211 scale.symbol -1;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 0 8 0;
+#X connect 3 1 4 1;
+#X connect 4 0 7 0;
+#X connect 5 0 2 0;
+#X connect 6 0 3 0;
+#X connect 8 0 0 1;
+#X restore 7 452 pd append_abs_qty;
+#X msg 518 412 dump.category \$1;
+#X msg 788 333 clear;
+#X msg 664 450 label \$1;
+#X obj 581 485 s \$0abstractions;
+#X obj 553 356 t b a a b;
+#X obj 524 313 symbol;
+#X obj 133 28 loadbang;
+#X obj 252 60 t b b;
+#X obj 661 407 scale.symbol -1;
+#X obj 17 218 t a;
+#X obj 467 282 route *(all);
+#X obj 45 92 t b b;
+#X msg -250 371 symbol *(all);
+#X obj -41 350 demultiplex 0 1;
+#X msg 353 274 1;
+#X msg 310 273 0;
+#X obj 219 383 symbol;
+#X obj 272 321 f;
+#X obj 94 350 demultiplex 0 1;
+#X msg 218 412 dump.category \$1;
+#X obj 421 345 t b b;
+#X msg 475 492 label *(all);
+#X obj 442 323 t b b b b b;
+#X obj 283 558 del 500;
+#X obj 260 474 spigot 1;
+#X msg 398 482 0;
+#X msg 213 578 1;
+#X obj 287 533 t b b a;
+#X obj 7 268 pdmtl.lister;
+#X msg 738 587 Version 12;
+#X connect 0 0 1 0;
+#X connect 1 0 20 0;
+#X connect 2 0 5 0;
+#X connect 3 0 37 0;
+#X connect 4 0 23 0;
+#X connect 6 0 5 0;
+#X connect 6 1 24 0;
+#X connect 6 2 2 0;
+#X connect 6 3 7 0;
+#X connect 7 0 16 0;
+#X connect 8 0 42 0;
+#X connect 10 0 2 0;
+#X connect 10 0 7 0;
+#X connect 11 0 22 0;
+#X connect 12 0 5 0;
+#X connect 13 0 22 0;
+#X connect 14 0 16 0;
+#X connect 15 0 16 0;
+#X connect 17 0 16 0;
+#X connect 17 1 13 0;
+#X connect 17 2 21 0;
+#X connect 17 3 14 0;
+#X connect 18 0 17 0;
+#X connect 19 0 6 0;
+#X connect 20 0 6 0;
+#X connect 20 1 22 0;
+#X connect 21 0 15 0;
+#X connect 22 0 41 0;
+#X connect 23 0 35 0;
+#X connect 23 1 18 0;
+#X connect 24 0 11 0;
+#X connect 24 1 25 0;
+#X connect 25 0 5 0;
+#X connect 26 0 12 0;
+#X connect 27 0 30 0;
+#X connect 28 0 30 0;
+#X connect 29 0 32 0;
+#X connect 30 0 26 1;
+#X connect 30 0 31 1;
+#X connect 31 0 12 1;
+#X connect 31 1 29 0;
+#X connect 32 0 41 0;
+#X connect 33 0 16 0;
+#X connect 33 1 28 0;
+#X connect 34 0 16 0;
+#X connect 35 0 33 0;
+#X connect 35 1 11 0;
+#X connect 35 2 27 0;
+#X connect 35 3 34 0;
+#X connect 35 4 14 0;
+#X connect 36 0 39 0;
+#X connect 37 0 40 0;
+#X connect 38 0 37 1;
+#X connect 39 0 37 1;
+#X connect 40 0 36 0;
+#X connect 40 1 38 0;
+#X connect 40 2 41 1;
+#X connect 41 0 26 0;
+#X connect 41 1 31 0;
+#X connect 41 2 16 0;
+#X connect 42 0 9 0;
+#X restore 143 375 pd patch;
+#X obj 92 76 r \$0categories;
+#X obj 6 140 s \$0cat_sel;
+#X obj 341 43 r \$0abstractions;
+#X obj 259 137 s \$0abs_sel;
+#X msg 194 10 clear;
+#X obj 298 232 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 21 106 gui.browser \$0;
+#X obj 143 255 b;
+#X obj 143 219 r \$0refresh;
+#X obj 251 112 gui.browser \$0_;
+#X msg 391 172 text.font 0 \$1;
+#X obj 450 89 sel 0 1 2;
+#X msg 430 126 8;
+#X msg 465 128 10;
+#X msg 507 130 12;
+#X obj 401 283 loadbang;
+#X obj 491 7 r \$0text.size;
+#X msg 401 305 1;
+#X obj 401 327 s \$0text.sizer;
+#X connect 1 0 7 1;
+#X connect 3 0 10 1;
+#X connect 5 0 7 1;
+#X connect 5 0 10 1;
+#X connect 6 0 0 1;
+#X connect 7 0 2 0;
+#X connect 8 0 0 0;
+#X connect 9 0 8 0;
+#X connect 10 0 4 0;
+#X connect 11 0 10 1;
+#X connect 11 0 7 1;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 12 2 15 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 0;
+#X connect 15 0 11 0;
+#X connect 16 0 18 0;
+#X connect 17 0 12 0;
+#X connect 18 0 19 0;
+#X restore 228 2 pd CODE;
+#X obj 183 24 vsl 15 131 0 175 0 0 \$0slider_s \$0slider_r empty 0
+-8 0 8 -1 -262144 -1 13000 0;
+#X obj 1 38 hradio 15 1 0 12 \$0hr_0_s \$0hr_0_r *(all) 2 8 0 10 -1
+-1 -262140 0;
+#X obj 1 53 hradio 15 1 0 12 \$0hr_1_s \$0hr_1_r 2d(4) 2 8 0 10 -1
+-1 -262140 0;
+#X obj 1 68 hradio 15 1 0 12 \$0hr_2_s \$0hr_2_r 3d(12) 2 8 0 10 -1
+-1 -262140 0;
+#X obj 1 83 hradio 15 1 0 12 \$0hr_3_s \$0hr_3_r ambi(25) 2 8 0 10
+-1 -1 -262140 0;
+#X obj 1 98 hradio 15 1 0 12 \$0hr_4_s \$0hr_4_r anal(7) 2 8 0 10 -1
+-1 -262140 0;
+#X obj 1 113 hradio 15 1 0 12 \$0hr_5_s \$0hr_5_r convert(43) 2 8 0
+10 -1 -1 -262140 0;
+#X obj 1 128 hradio 15 1 0 12 \$0hr_6_s \$0hr_6_r count(5) 2 8 0 10
+-1 -1 -262140 0;
+#X obj 1 143 hradio 15 1 0 12 \$0hr_7_s \$0hr_7_r data(5) 2 8 0 10
+-1 -1 -262140 0;
+#X obj 1 22 cnv 15 180 15 empty \$0hider pdmtl 3 9 0 8 -128992 -262144
+0;
+#X obj 382 24 vsl 15 131 0 175 0 0 \$0_slider_s \$0_slider_r empty
+0 -8 0 8 -1 -262144 -1 0 0;
+#X obj 200 38 hradio 15 1 0 12 \$0_hr_0_s \$0_hr_0_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 53 hradio 15 1 0 12 \$0_hr_1_s \$0_hr_1_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 68 hradio 15 1 0 12 \$0_hr_2_s \$0_hr_2_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 83 hradio 15 1 0 12 \$0_hr_3_s \$0_hr_3_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 98 hradio 15 1 0 12 \$0_hr_4_s \$0_hr_4_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 113 hradio 15 1 0 12 \$0_hr_5_s \$0_hr_5_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 128 hradio 15 1 0 12 \$0_hr_6_s \$0_hr_6_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 143 hradio 15 1 0 12 \$0_hr_7_s \$0_hr_7_r empty 2 8 0 10
+-1 -1 -262144 0;
+#X obj 200 22 cnv 15 180 15 empty \$0_hider abstractions 3 9 0 8 -128992
+-262144 0;
+#X obj 1 0 hradio 20 1 0 9 \$0refresh empty pdmtl.help.browser 4 10
+0 8 -1 -1 -262144 0;
+#X obj 182 0 cnv 15 215 20 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X obj 378 3 nbx 1 14 0 2 0 0 \$0text.size \$0text.sizer text.size
+-48 7 0 8 -1 -262144 -262144 1 256;
+#X coords 0 0 1 1 398 158 0;

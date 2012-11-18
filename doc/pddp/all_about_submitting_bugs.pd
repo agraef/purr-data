@@ -1,0 +1,38 @@
+#N canvas 0 0 448 245 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header submitting_bugs
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 223 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION prerequisites for submitting a bug on Sourceforge
+;
+#X restore 392 225 pd META;
+#N canvas 11 113 428 117 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 All About Submitting Bugs- Related Objects;
+#X obj 22 42 print;
+#X text 19 70 Also \, have a look in the "Find" Menu for the entry
+"Find last error.";
+#X restore 103 225 pd Related_objects;
+#X obj 6 225 pddp/pddplink all_about.pd -text All About Pd;
+#X text 20 62 1) Make sure you can reproduce the bug consistently.
+Include a brief example patch to demonstrate the bug \, using the minimum
+number of objects needed to reproduce it.;
+#X obj 83 194 pddplink http://sourceforge.net/tracker/?func=add&group_id=55736&atid=478070
+-text Beam me up to the Sourceforge bug tracker...;
+#X text 20 32 0) Search the Sourceforge bug tracker to make sure the
+bug hasn't already been reported (click "Browse" to search).;
+#X text 20 106 2) Make a note of the operating system (and OS version)
+you are using \, as well as any hardware that might be relevant to
+the bug (sound card \, camera \, etc).;
+#X text 20 149 3) Specify the version of Pd you are using. You can
+find it under the "Help" menu by choosing "About Pd".;

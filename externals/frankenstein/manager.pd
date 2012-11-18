@@ -1,0 +1,14 @@
+#N canvas 494 138 557 435 12;
+#X obj 136 186 select 0;
+#X obj 124 266 random 2;
+#X obj 137 211 t a a a;
+#X obj 137 235 bang;
+#X obj 140 130 inlet;
+#X obj 133 304 outlet;
+#X msg 250 143 0;
+#X connect 0 0 2 0;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 6 0 0 0;

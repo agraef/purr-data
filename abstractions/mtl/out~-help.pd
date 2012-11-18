@@ -1,0 +1,19 @@
+#N canvas 162 421 583 258 10;
+#X text 13 46 tags: mix~;
+#X obj 18 86 osc~ 400;
+#X obj 18 148 *~;
+#X obj 162 151 *~;
+#X text 12 14 Description: Controls the output volume and displays
+a VU for both channels.;
+#X obj 33 123 osc~ 0.1;
+#X obj 177 127 osc~ 0.1;
+#X text 180 175 The square next to the volume slider glows green when
+DSP is ON and input is detected. It goes red if the input peak.;
+#X obj 17 180 mtl/out~;
+#X text 181 208 Argument: volume ie: [mtl/out~ 90] default 50;
+#X connect 1 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 8 0;
+#X connect 3 0 8 1;
+#X connect 5 0 2 1;
+#X connect 6 0 3 1;

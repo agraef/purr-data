@@ -1,0 +1,94 @@
+# makefile adapted from thomas grill's xsample makefile
+#
+# Makefile for gcc @ linux
+#
+# usage:
+# to build run "make -f makefile.pd-linux"
+# to install (as root), do "make -f makefile.pd-linux install"
+#
+
+CONFIG=config-pd-linux.txt
+
+include ${CONFIG}
+
+FLEXTLIB=$(FLEXTPATH)/flext.a
+
+# compiler stuff
+INCLUDES=$(PDINC) ./headers/plugin_interface ./headers/common \
+	./headers/server ./headers/app ./headers/lang
+FLAGS=-DFLEXT_SYS=2
+CFLAGS=${UFLAGS} -O3 -funroll-loops -fmove-all-movables -frerun-loop-opt -finline-functions -fno-rtti -fno-exceptions
+
+LIBS=m
+
+ifdef FLEXT_SHARED
+CFLAGS+=-DFLEXT_SHARED -DFLEXT_THREADS
+LDFLAGS+=-Bdynamic
+LINKFLEXT=-lflext_d
+else
+LINKFLEXT=$(FLEXTLIB)
+endif
+
+
+# ----------------------------------------------
+# the rest can stay untouched
+# ----------------------------------------------
+
+NAME=GApop
+
+include make-files.txt
+
+MAKEFILE=makefile.pd-linux
+TARGET=$(TARGDIR)/$(NAME).pd_linux
+
+# default target
+all: $(TARGDIR) $(TARGET) 
+
+$(patsubst %,$(SRCDIR)/%,$(SRCS)): $(patsubst %,$(SRCDIR)/%,$(HDRS)) $(MAKEFILE) $(CONFIG)
+#	touch $(patsubst %,$(SRCDIR)/%,$(SRCS))
+
+$(TARGDIR):
+	-mkdir $(TARGDIR)
+
+$(TARGDIR)/%.o : $(SRCDIR)/%.cpp 
+	$(CXX) -c $(CFLAGS) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(FLEXTPATH)) $< -o $@
+
+$(TARGET) : $(patsubst %.cpp,$(TARGDIR)/%.o,$(SRCS))  
+	$(CXX) $(LDFLAGS) -shared $^ $(patsubst %,-l%,$(LIBS)) -L$(FLEXTPATH) $(LINKFLEXT) -o $@ 
+		strip --strip-unneeded $@
+	chmod 755 $@
+
+$(INSTDIR):
+	-mkdir $(INSTDIR)
+
+install:: $(INSTDIR)
+
+install:: $(TARGET) 
+	cp $^ $(INSTDIR)
+	chown root.root $(patsubst %,$(INSTDIR)/%,$(notdir $^))
+
+$(HELPDIR):
+	-mkdir $(HELPDIR)
+
+install-help:: $(HELPDIR)
+
+install-help:: ./pd
+	chmod 644 $^/*.*
+	cp $^/*.* $(HELPDIR)
+
+
+.PHONY: clean
+clean:
+	rm -f $(TARGDIR)/*.o $(TARGET)
+	
+
+
+
+
+
+
+
+
+
+
+

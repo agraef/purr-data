@@ -1,0 +1,2 @@
+NAME=sms_guide_comb
+SRCS=main.cpp

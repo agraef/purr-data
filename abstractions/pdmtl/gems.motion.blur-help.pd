@@ -1,0 +1,31 @@
+#N canvas 688 260 442 389 10;
+#X obj 44 246 gems.motion.blur 0.4;
+#X obj 44 109 gemhead;
+#X obj 44 270 pix_texture;
+#X obj 68 165 file.path.top;
+#X obj 183 179 bng 15 250 50 0 empty empty load_your_own_movie 0 -6
+0 8 -262144 -1 -1;
+#X obj 132 81 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 44 220 gems.movies;
+#X msg 68 140 medias/movies/mov0.mov;
+#X text 29 12 Description: Motion blur effect.;
+#X obj 203 197 vsl 30 60 0 1 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X floatatom 203 268 5 0 0 0 - - -;
+#X obj 44 295 rectangle 4 3;
+#X obj 132 109 gems.win 320 320;
+#X obj 95 332 pix_motionblur;
+#X text 48 331 Uses :;
+#X text 30 32 Argument_1: Motion blur ratio (out of 1.0);
+#X text 245 223 <-- change the ratio;
+#X connect 0 0 2 0;
+#X connect 1 0 6 0;
+#X connect 2 0 11 0;
+#X connect 3 0 6 1;
+#X connect 4 0 6 1;
+#X connect 5 0 12 0;
+#X connect 6 0 0 0;
+#X connect 7 0 3 0;
+#X connect 9 0 0 1;
+#X connect 9 0 10 0;

@@ -1,0 +1,24 @@
+
+[sndfiler]
+
+a threaded soundfiler for PD using libsndfile
+
+
+REQUIREMENTS: 
+  - pd >= 0.39
+  - libsndfile
+  - for main PD you will also need threadlib:
+    http://grh.mur.at/software/threadlib.html
+
+FEATURES:
+  - threaded reading of multichannel soundfiles into arrays
+  - threaded resize of arrays
+
+
+For more information look at the help patch !
+
+See the file INSTALL for installation instructions.
+
+
+(C) 2005, Tim Blechmann <TimBlechmann@gmx.de>,
+          Georg Holzmann <grh@mur.at>

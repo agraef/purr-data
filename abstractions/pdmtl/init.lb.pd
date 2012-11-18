@@ -1,0 +1,7 @@
+#N canvas 0 0 456 306 12;
+#X obj 249 119 loadbang;
+#X obj 130 242 outlet;
+#X text 220 84 SHORT FOR LOADBANG;
+#X obj 142 105 inlet;
+#X connect 0 0 1 0;
+#X connect 3 0 1 0;

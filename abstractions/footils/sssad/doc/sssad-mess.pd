@@ -1,0 +1,43 @@
+#N canvas 0 0 1000 523 10;
+#X obj 487 95 r SSSAD_ADMIN;
+#X obj 487 282 route persist;
+#X obj 487 258 list trim;
+#X obj 487 354 list trim;
+#X obj 353 340 s SSSAD_ADMIN;
+#X obj 487 330 list prepend add SSSAD;
+#X msg 389 213 set \, addsemi;
+#X msg 317 378 add SSSAD_ADMIN set;
+#X obj 107 116 bng 20 250 50 0 empty empty save 25 10 0 8 -262144 -1
+-1;
+#X obj 487 415 outlet;
+#X msg 353 321 save;
+#X obj 317 99 t b b b b b;
+#X obj 487 211 spigot;
+#X msg 524 179 0;
+#X msg 557 179 1;
+#X obj 159 116 bng 20 250 50 0 empty empty load 25 10 0 8 -262144 -1
+-1;
+#X text 591 179 only open while we're saving.;
+#X text 592 283 filter our messages starting with "persist";
+#X text 400 194 reset msg;
+#X text 572 354 "add" the persist messages properly to our message
+box.;
+#X connect 0 0 12 0;
+#X connect 1 0 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 9 0;
+#X connect 5 0 3 0;
+#X connect 6 0 9 0;
+#X connect 7 0 9 0;
+#X connect 8 0 11 0;
+#X connect 10 0 4 0;
+#X connect 11 0 7 0;
+#X connect 11 1 13 0;
+#X connect 11 2 10 0;
+#X connect 11 3 14 0;
+#X connect 11 4 6 0;
+#X connect 12 0 2 0;
+#X connect 13 0 12 1;
+#X connect 14 0 12 1;
+#X connect 15 0 9 0;
+#X coords 0 -1 1 1 115 40 1 100 100;

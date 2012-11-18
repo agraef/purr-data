@@ -1,0 +1,70 @@
+#N canvas 89 138 848 612 10;
+#X obj 44 170 noise~;
+#X msg 229 194 angle \$1;
+#X floatatom 229 174 5 0 0 0 - - -;
+#X obj 232 153 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 2900 1;
+#X text 269 174 Angle is in degrees.;
+#X obj 41 554 dac~ 1 2;
+#X obj 42 218 ambi.mono2wxyuvpq~ @angle 0;
+#X obj 37 371 ambi.wxyuvpq2mono~ @angle 90;
+#X obj 234 371 ambi.wxyuvpq2mono~ @angle 270;
+#X msg 475 254 angle \$1;
+#X floatatom 475 234 5 0 0 0 - - -;
+#X obj 478 213 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 1200 1;
+#X text 515 234 Angle is in degrees.;
+#X msg 476 190 angle \$1;
+#X floatatom 476 170 5 0 0 0 - - -;
+#X obj 479 149 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 1000 1;
+#X text 516 170 Angle is in degrees.;
+#X text 471 109 If you change the angle dynamically you will hear clicks.
+;
+#X text 470 125 Usually \, a speaker doesn't move.;
+#X text 49 33 Description: Decodes third order horizontal Ambisonic
+B-Format to a mono sound intended for a speaker.;
+#X obj 234 481 *~ 0.25;
+#X obj 273 400 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 300 1;
+#X floatatom 273 458 5 0 0 0 - - -;
+#X obj 39 484 *~ 0.25;
+#X obj 78 403 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X floatatom 78 461 5 0 0 0 - - -;
+#X obj 289 252 r ambi.angle;
+#X obj 290 228 s ambi.angle;
+#X text 74 97 See anbisonic_gems_viz in the examples/ directory.;
+#X connect 0 0 6 0;
+#X connect 1 0 6 1;
+#X connect 2 0 1 0;
+#X connect 2 0 27 0;
+#X connect 3 0 2 0;
+#X connect 6 0 7 0;
+#X connect 6 0 8 0;
+#X connect 6 1 7 1;
+#X connect 6 1 8 1;
+#X connect 6 2 7 2;
+#X connect 6 2 8 2;
+#X connect 6 3 7 3;
+#X connect 6 3 8 3;
+#X connect 6 4 7 4;
+#X connect 6 4 8 4;
+#X connect 6 5 7 5;
+#X connect 6 5 8 5;
+#X connect 6 6 7 6;
+#X connect 6 6 8 6;
+#X connect 7 0 23 0;
+#X connect 8 0 20 0;
+#X connect 9 0 8 7;
+#X connect 10 0 9 0;
+#X connect 11 0 10 0;
+#X connect 13 0 7 7;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 20 0 5 1;
+#X connect 21 0 22 0;
+#X connect 22 0 20 1;
+#X connect 23 0 5 0;
+#X connect 24 0 25 0;
+#X connect 25 0 23 1;

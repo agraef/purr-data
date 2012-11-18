@@ -1,0 +1,171 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header switch~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 225 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 247 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.4. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION block size and on/off control for DSP;
+#X text 12 5 ALIAS block~;
+#X text 12 85 INLET_0 set float bang;
+#X text 12 25 KEYWORDS signal canvas_op;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 347 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 370 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 499 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 91 484 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [switch~] Related Objects;
+#X obj 22 43 fft~;
+#X obj 69 43 block~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 234 cnv 17 3 105 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/switch~ -text
+pdpedia: switch~;
+#X text 98 233 bang;
+#X text 168 233 - a "bang" message causes one block of DSP to be computed.
+This might be useful for pre-computing waveforms or window functions
+\, or also for video processing.;
+#X text 98 295 set;
+#X text 98 351 (none);
+#N canvas 65 117 428 374 messages-to-switch 0;
+#X obj 23 238 bang~;
+#X obj 23 264 t b b;
+#X obj 23 290 timer;
+#X floatatom 23 319 5 0 0 0 - - -;
+#X obj 23 38 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 52 63 set 4096 1 1;
+#X msg 52 121 set 4096 2 1;
+#X msg 52 92 set 8192 1 1;
+#X msg 52 151 set 4096 1 0.5;
+#X msg 52 178 set 4096 1 2;
+#X obj 23 205 switch~ 4096 1 1;
+#X obj 23 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 128 220 (args are blocksize \, overlap \, up/downsampling)
+;
+#X text 141 62 block size 4096 \, no overlap \, no resampling;
+#X text 141 91 bigger block size;
+#X text 140 120 double overlap;
+#X text 148 150 downsampled by factor of 2;
+#X text 148 179 upsampled by factor of 2;
+#X text 128 205 creation arguments (if any) initialize blocking;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [switch~] The "set" Message;
+#X text 65 319 <- measured time (msec) between blocks;
+#X text 50 37 <- switch this subpatch on and off;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 11 0;
+#X connect 4 0 10 0;
+#X connect 5 0 10 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X restore 171 325 pd messages-to-switch;
+#X text 168 295 - the "set" message can be used to change the blocksize
+\, overlap \, and up/downsampling.;
+#N canvas 82 247 428 234 switched 0;
+#X floatatom 140 95 1 0 0 0 - - -;
+#X floatatom 23 159 7 0 0 0 - - -;
+#X obj 23 95 noise~;
+#X obj 23 127 env~ 512;
+#X text 20 37 DSP in this subwindow is turned on and off by the [switch~]
+object. Any subwindows of this window can also be switched off here.
+If a patch and a superpatch both have switches \, both must be "on"
+for DSP to run in the patch.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [switch~] A simple example;
+#X obj 140 122 switch~;
+#X text 20 183 [switch~] takes optional arguments the same as block~.
+If you supply arguments to switch \, the patch will be switched AND
+reblocked.;
+#X connect 0 0 7 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X restore 78 183 pd switched;
+#X text 237 204 interactions with other objects;
+#X text 75 103 The [switch~] object also allows you to set the block
+size \, overlap \, and up/down-sampling ratio for the window. (The
+overlap and resampling ratio are relative to the super-patch.);
+#X text 76 39 The [switch~] object allows you to switch DSP on and
+off for the window. All subwindows are also switched. (If a subwindow
+of a switched window is also switched \, both switches must be on for
+the subwindow's audio DSP to run. Pd's global DSP must also be on.)
+;
+#X text 75 151 You may have at most one block~/switch~ object in any
+window \, so the examples are in subpatches below:;
+#X text 162 183 a simple example;
+#X text 99 503 BUG! [dac~] and [adc~] work only with a blocksize of
+64 . If you want to reblock audio computation \, do so in a sub-patch
+and keep the [adc~] and [dac~] objects in a super-patch. Only the [inlet~]
+and [outlet~] objects know how to reblock signals. In this example
+\, you could put a [dac~] in this \, outer window \, or in the switched
+subwindow \, but not the blocked one.;
+#N canvas 114 316 428 159 more_about_blocksize 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [switch~] Block Size;
+#X text 20 38 Pd's default block size is 64 samples. The [inlet~] and
+[outlet~] objects reblock signals to adjust for differences between
+parent and subpatch \, but only power-of-two adjustments are possible.
+So for "normal" audio computations \, all blocaks should also be power-of-two
+in size. HOWEVER \, if you have no [inlet~] or [outlet~] you may specify
+any other block size. This is intended for later use in video processing.
+;
+#X restore 170 476 pd more_about_blocksize;
+#X text 11 23 block size and on/off control for DSP;
+#X text 168 418 - up/downsampling;
+#X text 168 403 - overlap;
+#X text 168 388 - blocksize;
+#X text 167 434 [switch~] with no arguments does not reblock audio
+computation -- in other words \, block size and sample rate are as
+in the parent patch.;
+#X text 298 389 (See the "messages_to_switch" subpatch;
+#X text 298 404 above for more details.);
+#X text 98 270 float;
+#X text 467 3 [switch~];
+#N canvas 80 270 428 229 [switch~]-interactions 0;
+#X text 20 98 If using send~ or delwrite~ from a switched-off patch
+\, the output of corresponding receive~ and delread~ objects in other
+\, running patches will cycle old input (and sound like garbage). Throw~
+may be switched with impunity \, but not catch~.;
+#X text 20 38 dac~ and adc~ don't work correctly if reblocked \, nor
+if a parent window is reblocked \, even if the window containing the
+dac~ or adc~ is reblocked back to the default block size and sample
+rate.;
+#X text 20 168 Patches using send~/receive~ or throw~/catch~ to intercommunicate
+must have the same blocking -- and if their parents are blocked bigger
+than they are \, there might be weirdness.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [switch~] Interactions between [switch~] and other objects
+;
+#X restore 78 204 pd [switch~]-interactions;
+#X text 168 270 - "0" turns DSP off for the window \, "1" (or any nonzero
+value) turns it on.;
+#X text 80 388 1) float;
+#X text 80 403 2) float;
+#X text 80 418 3) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;

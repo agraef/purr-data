@@ -1,0 +1,72 @@
+#N canvas 84 12 763 664 10;
+#X obj 191 444 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X obj 346 203 pdp_v4l;
+#X obj 355 172 metro 70;
+#X obj 400 138 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 357 139 stop;
+#X msg 442 170 open /dev/video;
+#X obj 252 167 pdp_yqt;
+#X obj 606 530 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 606 582 pdp_control;
+#X msg 606 555 thread \$1;
+#X floatatom 606 643 5 0 0;
+#X obj 606 614 route pdp_drop;
+#X text 224 632 written by Yves Degoyon (ydegoyon@free.fr);
+#X msg 445 203 dim 800 600;
+#X text 223 618 ( http://aa-project.sourceforge.net/aalib );
+#X text 224 603 it makes use of aalib;
+#X obj 191 411 pdp_aa -----------------;
+#X msg 318 287 driver X11;
+#X msg 420 287 driver slang;
+#X msg 419 309 driver stdout;
+#X msg 318 309 driver stderr;
+#X text 523 285 Set the driver;
+#X msg 319 356 render \$1;
+#X obj 396 356 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 418 356 Activate/Deactivate rendering;
+#X text 225 589 pdp_aa : output images in ASCII art;
+#X connect 1 0 10 0;
+#X connect 2 0 16 0;
+#X connect 3 0 2 0;
+#X connect 4 0 16 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 16 0;
+#X connect 11 0 26 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 0;
+#X connect 16 0 26 0;
+#X connect 17 0 19 0;
+#X connect 18 0 21 0;
+#X connect 19 0 18 0;
+#X connect 21 0 20 0;
+#X connect 23 0 11 0;
+#X connect 26 0 0 0;
+#X connect 27 0 26 0;
+#X connect 28 0 26 0;
+#X connect 29 0 26 0;
+#X connect 30 0 26 0;
+#X connect 32 0 26 0;
+#X connect 33 0 32 0;

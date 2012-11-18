@@ -1,0 +1,12 @@
+This small example show an easy way to use pd without the classical gui.
+
+
+0) run pd -open recv.pd -nogui
+1) run 2.nogui (use wish83 if you are under win xx)
+2) chose an abstraction to open, for example test.pd (in this folder)
+3) turn the dsp on
+4) here you can listen to your abstraction !!!
+
+Enjoy !!!
+
+Damien HENRY.

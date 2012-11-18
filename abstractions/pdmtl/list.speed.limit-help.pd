@@ -1,0 +1,12 @@
+#N canvas 338 204 450 300 10;
+#X obj 150 185 list.speed.limit 1000;
+#X msg 162 118 \$1 10 32;
+#X floatatom 170 80 5 0 0 0 - - -;
+#X obj 153 237 print;
+#X text 41 23 Description: Speed limit for incomming lists.;
+#X floatatom 287 152 5 0 0 0 - - -;
+#X text 326 151 Limit time(ms);
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 5 0 0 1;

@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+sysconfdir=${prefix}/etc
+cwiid_config_dir=${sysconfdir}/cwiid
+cwiid_plugins_dir=${libdir}/cwiid/plugins
+
+Name: CWiid
+Description: CWiid Wiimote Interface
+Version: 0.6.00
+Requires: bluez
+Libs: -L${libdir} -lcwiid
+Cflags: -I${includedir}

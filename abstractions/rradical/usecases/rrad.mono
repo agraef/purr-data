@@ -1,0 +1,11 @@
+#N canvas 322 381 874 375 10;
+#X obj 103 77 inlet;
+#X obj 161 77 inlet;
+#X obj 66 116 f;
+#X obj 161 108 select 0;
+#X text 323 49 When a new note arrives \, we have to send a Zero to
+the velocity outlet together with the last not we got. Immediatly following
+that we need to send the new note with the new velocity and store the
+new note for the next onset.;
+#X connect 0 0 2 1;
+#X connect 1 0 3 0;

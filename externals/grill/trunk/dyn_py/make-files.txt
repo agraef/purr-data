@@ -1,0 +1,4 @@
+NAME=dyn
+SRCDIR=.
+
+SRCS= dyn_py.cpp

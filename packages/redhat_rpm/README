@@ -1,0 +1,18 @@
+
+----------
+2005-11-10
+----------
+
+This is the pd.spec file that Fernando Lopez-Lezcano aka nando uses to build
+his Pd RPMS for PlanetCCRMA.  I just stuck it here in the hopes that someone
+will maintain the RedHat packages.  I personally never use RedHat.
+
+-Hans
+
+----------
+2006-08-01
+----------
+
+pd-extended.spec is a work-in-progress from nando.  I just thought I'd check it in to make it publically available.  I don't know if it works yet.
+
+-Hans

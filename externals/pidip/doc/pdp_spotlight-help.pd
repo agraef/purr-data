@@ -1,0 +1,76 @@
+#N canvas 126 7 818 664 10;
+#X obj 221 458 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X floatatom 344 229 5 0 0 0 - - -;
+#X floatatom 358 251 5 0 0 0 - - -;
+#X floatatom 371 272 5 0 0 0 - - -;
+#X obj 252 167 pdp_yqt;
+#X obj 390 163 pdp_v4l;
+#X obj 399 132 metro 70;
+#X obj 444 98 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 401 99 stop;
+#X msg 486 130 open /dev/video;
+#X obj 547 426 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 547 478 pdp_control;
+#X msg 547 451 thread \$1;
+#X floatatom 547 539 5 0 0 0 - - -;
+#X obj 547 510 route pdp_drop;
+#X text 421 271 Spotlight Size;
+#X text 401 250 Y coordinate of spotlight upper left corner;
+#X text 389 227 X coordinate of spotlight upper left corner;
+#X text 100 508 pdp_spotlight : specially made for cabaret and pep'
+;
+#X text 100 522 author : Yves Degoyon ( ydegoyon@free.fr );
+#X floatatom 385 293 5 0 0 0 - - -;
+#X text 435 292 Red component of the color;
+#X floatatom 398 316 5 0 0 0 - - -;
+#X floatatom 409 337 5 0 0 0 - - -;
+#X text 448 315 Green component of the color;
+#X text 459 336 Blue component of the color;
+#X text 424 381 Strength (0<=s<=1) ( default : 0.5 );
+#X obj 429 363 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 220 390 pdp_spotlight;
+#X connect 1 0 10 0;
+#X connect 2 0 14 0;
+#X connect 3 0 2 0;
+#X connect 4 0 14 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 14 0;
+#X connect 11 0 38 1;
+#X connect 12 0 38 2;
+#X connect 13 0 38 3;
+#X connect 14 0 38 0;
+#X connect 15 0 38 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 15 0;
+#X connect 20 0 22 0;
+#X connect 21 0 24 0;
+#X connect 22 0 21 0;
+#X connect 24 0 23 0;
+#X connect 30 0 38 4;
+#X connect 32 0 38 5;
+#X connect 33 0 38 6;
+#X connect 37 0 38 7;
+#X connect 38 0 0 0;

@@ -1,0 +1,27 @@
+# config file for tbext, adapted from Thomas Grill's xsample makefile
+#
+
+# where is the Max SDK?
+# you should have the latest version!
+MAXSDKPATH="F:\prog\audio\MaxWinSDK\c74support"	
+
+# where do the flext libraries reside?
+FLEXTPATH="%CommonProgramFiles%\Cycling '74\flext"
+
+# where is MS VC++?
+# (need not be defined if the build is started with the compiler environment set)
+# MSVCPATH="c:\programme\prog\microsoft visual studio\VC98"
+
+
+# where should the external be built?
+# (path for temporary files)
+OUTPATH=max-msvc
+
+# where should the external be installed?
+# (leave blank to omit installation)
+INSTPATH="%CommonProgramFiles%\Cycling '74\externals\flext"
+
+
+# some user-definable flags
+# (check if they match your system!)
+UFLAGS=/G6 /arch:SSE

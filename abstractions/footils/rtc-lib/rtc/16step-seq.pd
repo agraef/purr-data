@@ -1,0 +1,139 @@
+#N canvas 379 262 807 386 10;
+#X obj 631 70 sel 1;
+#X obj 673 124 * 4;
+#X obj 161 312 outlet;
+#X obj 117 342 outlet;
+#X obj 673 70 inlet;
+#X obj 117 24 inlet;
+#X obj 147 80 inlet;
+#X obj 417 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 446 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 503 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 474 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 589 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 618 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 561 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 532 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 302 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 331 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 388 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 359 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 244 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 273 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 216 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 187 137 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 187 106 unpack 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X obj 673 106 int \$1;
+#N canvas 254 475 361 306 core 0;
+#X obj 168 250 outlet;
+#X obj 117 105 metro 500;
+#X obj 117 79 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 117 54 inlet;
+#X obj 175 30 inlet;
+#X obj 117 135 f;
+#X obj 143 136 + 1;
+#X obj 170 136 mod 16;
+#X obj 117 188 tabread \$0-seq;
+#N canvas 0 0 450 300 BPM2ms 0;
+#X obj 36 101 outlet;
+#X obj 36 46 inlet;
+#X text 60 102 1998 by Karlheinz Essl;
+#X obj 36 73 expr 60000/$f1;
+#X connect 1 0 3 0;
+#X connect 3 0 0 0;
+#X restore 175 53 pd BPM2ms;
+#X obj 239 250 outlet;
+#X obj 239 174 select 15;
+#X obj 117 157 t a a;
+#X obj 117 210 select 0;
+#X obj 168 230 b;
+#X connect 1 0 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 9 0;
+#X connect 5 0 6 0;
+#X connect 5 0 12 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 1;
+#X connect 8 0 13 0;
+#X connect 9 0 1 1;
+#X connect 11 0 10 0;
+#X connect 12 0 8 0;
+#X connect 12 1 11 0;
+#X connect 13 1 14 0;
+#X connect 14 0 0 0;
+#X restore 117 286 pd core;
+#X obj 187 165 pack 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X obj 147 222 list prepend 0;
+#X obj 256 190 table \$0-seq 16;
+#X obj 147 251 s \$0-seq;
+#X obj 117 52 t a a;
+#X text 361 318 1998 by Karlheinz Essel \, Pd version 2006 by Frank
+Barknecht;
+#X text 676 147 BPM;
+#X obj 187 78 spigot;
+#X obj 237 83 tgl 15 0 empty empty show_pattern 0 -6 0 8 -262144 -1
+-1 0 1;
+#X connect 0 0 24 0;
+#X connect 1 0 25 1;
+#X connect 4 0 24 0;
+#X connect 5 0 30 0;
+#X connect 6 0 33 0;
+#X connect 6 0 27 0;
+#X connect 7 0 26 8;
+#X connect 8 0 26 9;
+#X connect 9 0 26 11;
+#X connect 10 0 26 10;
+#X connect 11 0 26 14;
+#X connect 12 0 26 15;
+#X connect 13 0 26 13;
+#X connect 14 0 26 12;
+#X connect 15 0 26 4;
+#X connect 16 0 26 5;
+#X connect 17 0 26 7;
+#X connect 18 0 26 6;
+#X connect 19 0 26 2;
+#X connect 20 0 26 3;
+#X connect 21 0 26 1;
+#X connect 22 0 26 0;
+#X connect 23 0 22 0;
+#X connect 23 1 21 0;
+#X connect 23 2 19 0;
+#X connect 23 3 20 0;
+#X connect 23 4 15 0;
+#X connect 23 5 16 0;
+#X connect 23 6 18 0;
+#X connect 23 7 17 0;
+#X connect 23 8 7 0;
+#X connect 23 9 8 0;
+#X connect 23 10 10 0;
+#X connect 23 11 9 0;
+#X connect 23 12 14 0;
+#X connect 23 13 13 0;
+#X connect 23 14 11 0;
+#X connect 23 15 12 0;
+#X connect 24 0 1 0;
+#X connect 25 0 3 0;
+#X connect 25 1 2 0;
+#X connect 27 0 29 0;
+#X connect 30 0 25 0;
+#X connect 30 1 0 0;
+#X connect 33 0 23 0;
+#X connect 34 0 33 1;

@@ -1,0 +1,46 @@
+#N canvas 0 22 622 415 10;
+
+
+
+#X obj 451 20 import-disabled list-abs;
+#X obj 47 208 prepent set;
+#X msg 47 124 a b c;
+#X msg 91 124 d e f;
+#X msg 136 124 bang;
+#X msg 47 231;
+#X obj 283 208 prepent set;
+#X obj 283 127 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 139 345 prepent set;
+#X obj 139 294 metro 100;
+#X obj 139 252 loadbang;
+#X obj 139 274 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 275 313 uses [list-value] internally \; exploit that if you
+like;
+#X text 460 370 2008 Luke Iannini;
+#X msg 283 231;
+#X msg 139 370;
+#X obj 139 316 list-value \$0.my-list;
+#X obj 47 172 list-value-extend \$0.my-list;
+#X obj 283 172 list-value-extend \$0.my-list;
+#X text 15 24 [list-value-extend] - append new input to the current
+value \, then replace the current value with the result. Outputs current
+value when [bang(ed \, just like vanilla [list-value]. Use [clear(
+to clear all [list-value-extend]s and [list-value]s of the same name.
+;
+#X msg 173 124 clear;
+#X connect 1 0 5 0;
+#X connect 2 0 17 0;
+#X connect 3 0 17 0;
+#X connect 4 0 17 0;
+#X connect 6 0 14 0;
+#X connect 7 0 18 0;
+#X connect 8 0 15 0;
+#X connect 9 0 16 0;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 16 0 8 0;
+#X connect 17 0 1 0;
+#X connect 18 0 6 0;
+#X connect 20 0 17 0;

@@ -1,0 +1,7 @@
+#N canvas 372 279 450 300 10;
+#X obj 32 48 s-obiwanbd~ bee;
+#X obj 32 186 s-ezdac~ out;
+#X msg 32 25 50 127;
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 2 0 0 0;

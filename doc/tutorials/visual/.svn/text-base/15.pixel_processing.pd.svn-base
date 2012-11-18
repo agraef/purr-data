@@ -1,0 +1,45 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty pixel_processing 20 12 0 24 -228992
+-66577 0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X text 13 65 There is a very wide range of pixel-based effects in
+Gem. These objects start with the "pix_" prefix. You can see a list
+of them in the Help Browser \, in "5.reference->Gem" \, then scroll
+down to the objects starting with "pix_".;
+#X obj 92 170 gemhead;
+#X obj 92 379 square 3;
+#X obj 92 357 pix_texture;
+#X obj 92 249 pix_film;
+#X obj 156 249 t f;
+#X obj 105 192 bng 25 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#N canvas 10 40 620 460 open 0;
+#X obj 85 49 inlet;
+#X obj 85 237 outlet;
+#X obj 85 145 openpanel;
+#X msg 85 179 open \$1;
+#X msg 259 213 auto 1;
+#X obj 268 179 loadbang;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X restore 105 221 pd open;
+#X obj 92 325 pix_motionblur;
+#X text 14 132 Here's an example of one effect:;
+#X obj 190 299 hsl 128 15 0 1 0 0 empty empty amount 8 8 1 12 -262144
+-1 -1 0 1;
+#X floatatom 203 323 5 0 0 0 - - -;
+#X connect 4 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 11 0;
+#X connect 7 2 8 0;
+#X connect 8 0 7 1;
+#X connect 9 0 10 0;
+#X connect 10 0 7 0;
+#X connect 11 0 6 0;
+#X connect 13 0 11 1;
+#X connect 13 0 14 0;

@@ -1,0 +1,184 @@
+package require treectrl
+package require tkdnd
+namespace eval ::ix {
+    variable _
+    proc tree {t target title auto echo path delim} {
+	variable _
+	puts "$t $target $title $echo $path $delim"
+	if {[$t element names] != "el1"} {
+	    $t column create -text $title
+	    $t element create el1 text -fill [list green {selected focus}]
+	    $t style create s1
+	    $t style elements s1 el1
+	}
+	bind $t <Button1-Leave> {dnd drag %W}
+	bind $t <ButtonPress-1> {
+	    set id [lindex [%W identify %x %y] 1]
+	    if {$id ne "" && $id ne "tail"} {
+		%W activate $id
+		::ix::tree_click %W [winfo name %W]
+	    }
+	}
+
+	dnd bindsource $t text/plain "return \[::ix::tree_get $t $target -1 -1\]"
+	bind $t <Tab> "::ix::tree_out $t $target -1"
+	bind $t <KeyPress-Right> "::ix::tree_out $t $target -1"
+	bind $t <Double-1> "::ix::tree_out $t $target -1"
+	bind $t <ButtonPress-3> {}
+	bind $t <ButtonPress-3> {
+	    variable _
+	    focus %W
+	    set target [winfo name %W]
+	    set id [lindex [%W identify %x %y] 1]
+	    if {$id ne ""} {
+		%W activate $id
+		%W selection clear all
+		%W selection add $id
+		set path [::ix::tree_get %W $target 1 -1]
+		if {[winfo exists %W.rc] != 1} {
+		    set m [menu %W.rc -tearoff no]
+		    $m add command -label "path [::ix::tree_get %W $target -1 $id]" -state disabled
+		    $m add command -label delete -command {
+			::ix::tree_msg $target "delete [pdtk_enquote $path]"
+			set p [%W item parent $id]
+			%W item delete $id		      
+			if {[%W item numchildren $p] < 1} {
+			    %W item configure $p -button no
+			}
+		    }
+		    $m add command -label new -command {
+			::ix::tree_nameitem %W $target $path $id
+		    }
+		    $m add command -label copy -command {::ix::tree_msg $target "copy [pdtk_enquote $path]"}
+		    $m add command -label cut -command {::ix::tree_msg $target "cut [pdtk_enquote $path]"}
+		    $m add command -label paste -command {::ix::tree_msg $target "paste [pdtk_enquote $path]"}
+		} else {
+		    %W.rc entryconfigure 0 -label "path [::ix::tree_get %W $target -1 $id]"
+		}
+		tk_popup %W.rc %X %Y
+	    } else {
+		if {[winfo exists %W.rroot] != 1} {
+		    set m [menu %W.rroot -tearoff no]
+		    $m add command -label "new root" -command {
+			::ix::tree_nameitem %W $target "" 0
+		    }
+		}
+		tk_popup %W.rroot %X %Y
+	    }
+	}
+	set _($target:parentList) [list root {} {} {} {} {} {}]
+	set _($target:auto) $auto
+	set _($target:echo) $echo
+	set _($target:path) $path
+	set _($target:delim) $delim
+    }
+    proc tree_nameitem {t target path id} {
+	set path "$path/"
+	destroy .$path
+	toplevel .$path
+	entry .$path.entry -textvariable send_textvariable
+	.$path.entry delete 0 end
+	.$path.entry insert 0 [::ix::random_txt 6]
+	.$path.entry select from 0
+	.$path.entry select adjust end
+#	if {$path == "/"} {set pathname ""} else {set pathname path}
+	set submit "::ix::tree_msg $target \"new \[pdtk_enquote \"$path\$send_textvariable\"\]\";::ix::tree_item $t $id \$send_textvariable;destroy .$path"
+	bind .$path.entry <KeyPress-Return> $submit
+	button .$path.ok -text "OK" -command $submit
+	button .$path.cancel -text cancel -command "destroy .$path"
+	pdtk_standardkeybindings .$path.entry
+	grid .$path.entry -sticky news -columnspan 2
+	grid .$path.ok .$path.cancel -sticky news
+	grid columnconfigure .$path 1 -weight 1
+	focus .$path.entry	
+    }
+    proc random_txt {n} {
+	set i 0
+	set text ""
+	while {$i < $n} {
+	    set int [expr "int(floor(rand()*62))"]
+	    if {$int < 10} {incr int 48} elseif {$int < 36} {incr int 55} else {incr int 61}
+	    set text "$text[format %c $int]"
+	    incr i
+	}
+	return $text
+    }
+    proc tree_item {t p text} {
+	set ti [$t item create]
+	$t item style set $ti 0 s1
+	$t item text $ti 0 $text
+	$t item lastchild $p $ti
+	$t item configure $p -button yes
+	return $ti
+    }
+    proc tree_add {t target args} {
+	variable _
+	set depth [lindex $args 0]
+	set text [lrange $args 1 end]
+	set p [lindex $_($target:parentList) $depth]
+	set ti [tree_item $t $p $text]
+	incr depth
+	set _($target:parentList) [lreplace $_($target:parentList) $depth $depth $ti]
+# 	if {$_($target:auto) == 1} {
+# 	    tree_msg $target "new [tree_get $t $target -1 $ti]"
+# 	}
+    }
+    proc tree_click {t target} { 
+	variable _
+	if {$_($target:auto) == 1} {tree_out $t $target -1}
+    }
+    proc tree_cmd {t target args} {
+	variable _
+	puts "$t $args"
+	set r [eval "$t $args"]
+	if {$_($target:echo) == 1} {pd "$target.rp _cb $r;"}
+    }
+    proc tree_out {t target rec} { 
+        tree_msg $target [tree_get $t $target $rec -1]
+    }
+    proc tree_msg {target msg} {
+	pd "$target.rp _cb $msg;"
+    }
+    proc tree_get {t target rec it} { 
+	variable _
+	if {$it < 0} {set it [$t index active]}
+	if {$rec < 0} {set rec $_($target:path)}
+	if {$rec > 0} {return [tree_getrec $t $target $it ""]} else {
+	    set item [$t item text $it 0]
+	    return $item
+	}
+    }
+    proc tree_getrec {t target tr dl} { 
+	variable _
+	if {$tr > 0} {
+	    lappend dl $tr	 
+	    tree_getrec $t $target [$t item parent $tr] $dl
+	} else {
+	    set tr ""
+	    for {set i [expr [llength $dl] - 1]} {0 <= $i} {incr i -1} {
+		set tr "$tr$_($target:delim)[$t item text [lindex $dl $i] 0]"
+	    }
+	    return $tr
+	}
+    }
+    proc tree_cfg {target item arg} {
+	variable _
+	set _($target:$item) $arg
+    }
+
+}
+
+#> tree treectrl
+#. -height 400 -width 200
+#. #title 1 #auto 1 #echo 0 #path 1 #delim "/"
+#. -font {tahoma 8} -showroot yes -showrootbutton no -selectmode single
+#. @list ::ix::tree_list .- .| .#args
+#. @clear .- item delete all
+#. @add ::ix::tree_add .- .| .#args
+#. @cmd ::ix::tree_cmd .- .| .#args
+#. @auto ::ix::tree_cfg .| auto .#1
+#. @echo ::ix::tree_cfg .| echo .#1
+#. @path ::ix::tree_cfg .| path .#1
+#. @delim ::ix::tree_cfg .| delim .#1
+
+::ix::tree .- .| .#title .#auto .#echo .#path .#delim

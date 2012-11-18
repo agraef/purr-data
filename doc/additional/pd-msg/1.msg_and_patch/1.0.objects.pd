@@ -1,0 +1,73 @@
+#N canvas 0 18 543 545 10;
+#X msg 39 481 restore;
+#X text 23 48 objects;
+#X msg 39 71 obj 300 10 r test;
+#X msg 39 93 msg 300 40 bang;
+#X msg 39 115 floatatom 300 70 symbol;
+#X msg 39 137 symbolatom 300 100 symbol;
+#X msg 39 159 text 300 130 comment;
+#X obj 39 510 s pd-1.0.objects.pd;
+#X text 110 481 ??????;
+#N canvas 478 329 385 188 ds-example 0;
+#X text 27 119 An example struct to show how the "scalar" msg works
+;
+#X obj 18 23 struct ds-example float x float y symbol desc;
+#X obj 52 56 filledpolygon 900 0 1 0 0 10 0 10 10 0 10;
+#X obj 53 83 drawsymbol desc 20 0 0;
+#X text 28 146 usage: scalar <struct name> <arg1 arg2 arg3 etc.>;
+#X restore 69 213 pd ds-example;
+#X msg 39 191 scalar ds-example 300 160 this-is-a-ds-instance;
+#X obj 69 349 s pd-my_graph;
+#X msg 69 283 pop;
+#X text 24 259 1;
+#X text 54 284 2;
+#X text 54 320 3;
+#N canvas 34 396 417 187 connections 0;
+#X obj 14 8 inlet;
+#X obj 14 107 outlet;
+#X text 61 29 Object and inlet numbers start at 0;
+#X text 73 83 "connect"-ing multiple times will create duplicate;
+#X text 74 63 Warnings: cutting and pasting changes object order!;
+#X text 59 9 usage: connect obj# outlet# obj# inlet#;
+#X text 73 103 connections! (try it \, then scroll the number box and
+;
+#X text 73 124 watch the console);
+#X restore 204 413 pd connections;
+#X obj 69 439 s pd-connections;
+#X msg 69 388 connect 0 0 1 0;
+#X msg 69 413 disconnect 0 0 1 0;
+#X floatatom 204 388 5 0 0 0 - - -;
+#X obj 254 439 print;
+#X floatatom 204 439 5 0 0 0 - - -;
+#X text 43 238 graph name xfrom yfrom xto yto xtopl ytopl xbtmr ybtmr
+;
+#X msg 39 259 graph my_graph 0 1 99 -1 300 280 500 420;
+#X text 72 301 array name size float style;
+#X msg 69 321 array my_array 100 float 2;
+#X text 17 24 that deal with objects:;
+#X text 16 7 Here's a list of all messages;
+#N canvas 218 113 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 65 DESCRIPTION list of canvas messages that can be used
+to dynamically instantiate objects and connections.;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 45 LICENSE public domain;
+#X restore 481 514 pd META;
+#X connect 0 0 7 0;
+#X connect 2 0 7 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X connect 10 0 7 0;
+#X connect 12 0 11 0;
+#X connect 16 0 21 0;
+#X connect 16 0 22 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 20 0 16 0;
+#X connect 24 0 7 0;
+#X connect 26 0 11 0;

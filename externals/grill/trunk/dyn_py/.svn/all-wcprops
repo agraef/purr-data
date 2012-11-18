@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/ext/!svn/ver/1478/trunk/dyn_py
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1478/trunk/dyn_py/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1478/trunk/dyn_py/license.txt
+END
+makefile.pd-darwin
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/1478/trunk/dyn_py/makefile.pd-darwin
+END
+dyn_py.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1478/trunk/dyn_py/dyn_py.cpp
+END
+dyn_py.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/1478/trunk/dyn_py/dyn_py.vcproj
+END
+config-pd-darwin.txt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/1478/trunk/dyn_py/config-pd-darwin.txt
+END
+build-pd-darwin.sh
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/1478/trunk/dyn_py/build-pd-darwin.sh
+END
+make-files.txt
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1478/trunk/dyn_py/make-files.txt
+END

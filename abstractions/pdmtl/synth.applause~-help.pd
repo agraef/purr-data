@@ -1,0 +1,28 @@
+#N canvas 204 343 465 439 10;
+#X obj 128 349 mix.out_~;
+#X obj 50 105 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 12700 1;
+#X obj 160 143 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3300 1;
+#X obj 275 196 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1500 1;
+#X text 41 44 Comment: Taken from Andy Farnell's work.;
+#X text 41 25 Description: Generates some crunchy clapping.;
+#X text 45 88 applaud (0-127);
+#X text 186 123 grain (0-127);
+#X text 305 176 density (0-127);
+#X obj 128 248 synth.applause~ @id applause;
+#X msg 158 165 grain \$1;
+#X msg 272 217 density \$1;
+#X msg 47 131 applaud \$1;
+#X obj 321 324 param.gui;
+#X msg 321 302 applause;
+#X connect 1 0 12 0;
+#X connect 2 0 10 0;
+#X connect 3 0 11 0;
+#X connect 9 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 9 0;
+#X connect 14 0 13 0;

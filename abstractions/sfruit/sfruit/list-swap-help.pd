@@ -1,0 +1,21 @@
+#N canvas 123 502 452 313 10;
+#X msg 79 125 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15;
+#X msg 43 70 doodle doddle deedle;
+#X obj 43 189 list-swap 2;
+#X obj 43 258 print Swapped;
+#X text 78 108 List you'd like altered;
+#X text 43 54 Replacement items;
+#X obj 115 154 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 115 173 5 0 0 0 - - -;
+#X text 156 173 Position to begin writing;
+#X text 18 13 List-swap: overwrite a portion of a list with another
+list.;
+#X text 101 208 Argument is default position;
+#X text 315 287 2007 Luke Iannini;
+#X text 3 293 Built on list-insert by Frank Barknecht;
+#X connect 0 0 2 1;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 2 2;

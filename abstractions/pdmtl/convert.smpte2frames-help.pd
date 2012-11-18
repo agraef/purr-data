@@ -1,0 +1,32 @@
+#N canvas 315 418 895 418 10;
+#X obj 97 219 convert.smpte2frames;
+#X floatatom 85 52 5 0 0 0 - - -;
+#X obj 84 99 convert.frames2smpte;
+#X floatatom 322 57 5 0 0 0 framerate - -;
+#X floatatom 77 148 5 0 0 0 - - -;
+#X floatatom 129 151 5 0 0 0 - - -;
+#X floatatom 175 149 5 0 0 0 - - -;
+#X floatatom 220 148 5 0 0 0 - - -;
+#X floatatom 97 258 5 0 0 0 - - -;
+#X obj 394 62 cnv 15 300 250 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 402 189 Left outlet: duration in frames;
+#X text 402 112 Inlets from left to right: duration in hours:minutes:seconds:frames
+;
+#X text 402 74 Description: SMPTE to FRAMES time CONVERTER;
+#X text 399 282 Author: February 2006 by oli44 (Tulle). Modified by
+Tof.;
+#X text 399 245 Comments: Only works with integer frame rates.;
+#X text 401 151 Rightmost inlet: frame rate (defaults to 25).;
+#X connect 0 0 8 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 1 5 0;
+#X connect 2 2 6 0;
+#X connect 2 3 7 0;
+#X connect 3 0 2 1;
+#X connect 3 0 0 4;
+#X connect 4 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 0 2;
+#X connect 7 0 0 3;

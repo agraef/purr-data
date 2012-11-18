@@ -1,0 +1,8 @@
+#N canvas 430 275 240 143 10;
+#X obj 34 34 inlet;
+#X obj 34 89 outlet;
+#X text 60 91 1992 by Gerhard Eckel
+;
+#X obj 34 61 expr 20*log10($f1);
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;

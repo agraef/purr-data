@@ -1,0 +1,11 @@
+#N canvas 0 0 450 300 10;
+#X obj 96 130 dac~;
+#X floatatom 264 119 5 0 0 0 - - -;
+#X obj 123 109 Median~ 20;
+#X obj 72 51 Dust~ 600;
+#X obj 123 82 Dust~ 1000;
+#X obj 264 82 Dust 1;
+#X connect 2 0 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;

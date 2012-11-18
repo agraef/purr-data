@@ -1,0 +1,14 @@
+#N canvas 204 154 602 360 10;
+#X text 32 214 inlet for (note \, velocity) pairs;
+#X text 69 255 dsp-out left;
+#X text 378 255 dsp-out right;
+#X text 377 215 extra inlet to customize freely;
+#X text 96 131 Your [polypoly~] abstraction needs two inlets and two
+outlet~s. First argument will be the voice index number starting from
+0 \, second argument will be the total number of voices. Four more
+arguments can be passed as arguments to [polypoly~] and will be passed
+on to the custom abstraction.;
+#X text 98 36 polypoly-voice~ is a basic patch here only to illustrate
+what a patch designed for [polypoly~] looks like. Feel free to use
+it as a template for your own voice patches.;
+#X obj 111 234 polypoly-voice~ 1 8 four more arguments possible;

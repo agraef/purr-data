@@ -1,0 +1,15 @@
+#!/bin/sh
+# this was is stolen from audacity.postrm and audacity-data.postrm
+set -e
+
+if [ -x "`which update-menus 2>/dev/null`" ]; then update-menus ; fi
+
+if which update-mime >/dev/null 2>&1; then update-mime; fi
+
+if [ "$1" = "remove" ] && which update-desktop-database >/dev/null 2>&1 ; then
+	update-desktop-database -q
+fi
+
+if [ -x "`which update-mime-database 2>/dev/null`" ]; then
+	update-mime-database /usr/share/mime
+fi

@@ -1,0 +1,65 @@
+#N canvas 246 28 678 727 10;
+#X floatatom 225 223 5 0 1;
+#X floatatom 239 239 5 -3 6;
+#X floatatom 252 255 5 0 1;
+#X floatatom 212 161 5 1 3000;
+#X floatatom 266 271 5 0 1;
+#X floatatom 279 321 5 0 1;
+#X floatatom 293 337 5 -3 6;
+#X floatatom 306 353 5 0 1;
+#X floatatom 320 369 5 0 1;
+#X obj 164 532 dac~ 1 2;
+#X obj 164 486 *~;
+#X obj 215 486 *~;
+#X obj 270 437 vsl 15 128 0 100 0 0 empty empty volume 0 -8 1 8 -143491
+-262144 -1 0 1;
+#X obj 199 93 readsf~ 2;
+#X msg 232 54 1;
+#X msg 453 16 0;
+#X msg 236 17 open ../../dresscode/0/3.wav;
+#X obj 338 54 t b;
+#X obj 336 80 delay 100;
+#X obj 266 53 delay 100;
+#X text 234 203 mix speed feed dist;
+#X text 290 303 mix speed feed dist;
+#X obj 199 393 transverb~ 0 1 0 1;
+#X obj 80 337 *~;
+#X obj 80 277 osc~ 14000;
+#X obj 96 245 osc~ 5;
+#X text 210 138 buffer size 1~3000;
+#X text 288 238 tape 1;
+#X text 340 336 tape 2;
+#X text 13 625 dfx_transverb is originally a VST plugin by destroy
+fx [ http://www.smartelectronix.com/~destroyfx ] ported to linux by
+martin pi 2002;
+#X text 343 393 creation arguments tomsound | quality | drymix | replacing
+;
+#X text 491 18 stop this shit;
+#X text 14 12 ____ _ dfx transverb _ by ____ destroy fx ___ _ and martin
+pi;
+#X connect 0 0 22 2;
+#X connect 1 0 22 3;
+#X connect 2 0 22 4;
+#X connect 3 0 22 1;
+#X connect 4 0 22 5;
+#X connect 5 0 22 6;
+#X connect 6 0 22 7;
+#X connect 7 0 22 8;
+#X connect 8 0 22 9;
+#X connect 10 0 9 0;
+#X connect 11 0 9 1;
+#X connect 12 0 11 1;
+#X connect 12 0 10 1;
+#X connect 13 0 22 0;
+#X connect 13 2 19 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 14 0;
+#X connect 19 0 16 0;
+#X connect 22 0 10 0;
+#X connect 22 0 11 0;
+#X connect 24 0 23 0;
+#X connect 25 0 23 1;

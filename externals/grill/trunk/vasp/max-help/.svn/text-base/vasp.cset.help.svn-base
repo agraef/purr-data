@@ -1,0 +1,11 @@
+max v2;
+#N vpatcher 228 183 631 425;
+#P newex 234 82 43 196617 vasp.c/;
+#P comment 48 169 300 196617 differences in lengths are adjusted to smaller vector of each pair;
+#P comment 48 124 118 196617 c \, d is the target;
+#P comment 48 109 118 196617 a \, b is the source;
+#P comment 48 84 98 196617 (a+ib)=(c+id);
+#P comment 48 45 89 196622 vasp.c=;
+#P comment 48 153 302 196617 vasp.c= needs 2 vectors per operand which are treated as pairs;
+#P comment 48 68 59 196617 complex =;
+#P pop;

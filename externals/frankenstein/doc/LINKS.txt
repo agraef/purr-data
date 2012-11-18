@@ -1,0 +1,26 @@
+
+open source libs ready to be used...
+
+AthenaCL:
+is a python software for algorithmic composition
+we could use some code through pyext
+http://www.flexatone.net/athena.html
+this is specific for post tonal theory
+http://www.flexatone.net/athenaDocs/www/ch-analysis.htm
+
+AIMA Python code, working agents, etc.
+http://aima.cs.berkeley.edu/python/readme.html
+
+BEAGLE, implements co-evolution, open source, C++
+beagle.gel.ulaval.ca
+
+open source c++ genetic algorithm: 
+http://lancet.mit.edu/ga/
+
+plain ansi C (multi platform?):
+http://sourceforge.net/projects/ga-lib
+
+another in c++:
+http://sourceforge.net/projects/ga2
+
+

@@ -1,0 +1,4 @@
+#N canvas 105 399 450 300 10;
+#X obj 111 145 convert.2list;
+#X text 89 22 Description: Converts anything to a list.;
+#X text 89 39 Comments: Wraps [list].;

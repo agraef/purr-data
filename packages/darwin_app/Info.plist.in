@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>pd</string>
+				<string>pat</string>
+				<string>mxt</string>
+				<string>mxb</string>
+				<string>help</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>pd-file.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Pure Data Patch</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>PD_APP_NAME</string>
+	<key>CFBundleIconFile</key>
+	<string>pd.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.puredata.pd.wish</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>PD_APP_NAME</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>CFBUNDLESHORTVERSIONSTRING</string>
+	<key>CFBundleSignature</key>
+	<string>PdPd</string>
+	<key>CFBundleVersion</key>
+	<string>CFBUNDLEVERSION</string>
+	<key>LSBackgroundOnly</key>
+	<false/>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>EXAMPLE_ENVIRONMENT_VARIABLE</key>
+		<string>this is just a test</string>
+	</dict>
+	<key>LSUIElement</key>
+	<integer>0</integer>
+	<key>LSUIPresentationMode</key>
+	<integer>0</integer>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<string>public.plain-text</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.puredata.pd-patch</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<string>public.plain-text</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.puredata.max-patch</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pat</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

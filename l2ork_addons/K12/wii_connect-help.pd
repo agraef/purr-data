@@ -1,0 +1,28 @@
+#N canvas 1146 324 503 307 10;
+#X obj 29 39 cnv 15 467 165 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 32 44 K12/wii_connect;
+#X text 136 91 2 On the wiimote \, simultaneously press buttons 1 &
+2;
+#X text 134 38 The Wii Connect object is the first step in setting
+up a new instrument. To connect the wiimote \, follow these steps:
+;
+#N canvas 1229 456 450 514 META 0;
+#X text 10 6 DESCRIPTION Press the "Connect" button to connect the
+wiimote to the computer;
+#X text 10 34 OUTLET_0 Connect this to any of the light blue wiimote
+objects;
+#X restore 455 244 pd META;
+#X text 136 74 1 Click the red connect button;
+#X text 136 108 3 When the wiimote vibrates and the button turns green
+\, it is connected.;
+#X text 135 140 To disconnect \, simply press the same button. When
+it turns red \, it has disconnnected.;
+#X text 13 -32 comment;
+#X obj 14 -5 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 14 -33 cnv 15 501 28 empty empty WiiConnect 5 14 0 20 -139274
+-262144 0;
+#X obj 484 -1 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X text 134 176 Connect the outlet to any of the blue wiimote objects.
+;

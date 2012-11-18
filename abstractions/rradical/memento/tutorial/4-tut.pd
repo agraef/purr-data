@@ -1,0 +1,41 @@
+#N canvas 318 284 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Commun 20 12 1 14 -262144 -66577
+0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X msg 378 10 5;
+#X obj 156 192 commun number 10;
+#X text 63 82 'commun' objects are responsible for communication between
+the 'originator' and the things you want to set. They also accept a
+symbolic argument as first and a float as second argument. The symbolic
+argument is used to uniquely identify the 'thing' that is managed.
+The second \, float arg serves the communication with the 'originator'.
+Normally you use \$0 here.;
+#X text 60 214 X-lets;
+#X floatatom 272 296 5 0 0 0 - - -;
+#X obj 139 321 commun aRadio \$0;
+#X obj 139 296 commun aFloat \$0;
+#X obj 271 322 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X text 73 346 Of course you also can use send/receives for this \,
+to keep things more readable:;
+#X obj 92 430 s \$0-something-in;
+#X obj 92 385 r \$0-something-out;
+#X obj 92 406 commun aThing 10;
+#X obj 263 432 s \$0-something-out;
+#X obj 263 387 r \$0-something-in;
+#X obj 266 410 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text 69 230 The inlet of commun reads \, what should be saved \,
+continuosly. The outlet sets the managed 'thing' to the value \, that
+is currently stored in the 'originator' state. So you normally 'cross-wrap'
+things like this:;
+#X connect 3 0 1 0;
+#X connect 7 0 9 0;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;
+#X connect 13 0 14 0;
+#X connect 14 0 12 0;
+#X connect 16 0 17 0;
+#X connect 17 0 15 0;

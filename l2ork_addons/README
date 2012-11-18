@@ -1,0 +1,22 @@
+Place this folder in your pd-extended/ sources folder (where you have abstractions, externals, packages, Gem, pd, etc. folders).
+
+default.pdl2ork goes to /usr/local/lib/pd-l2ork/ (necessary only if you've installed the core Pd package)
+
+externals/ contents go to /usr/local/lib/pd/
+
+see patches/ README for more info on the patches/ folder
+
+register_mimes.sh is used to register Pd mimes with Gnome desktop. You need to run it with sudo privileges like so:
+
+sudo ./register_mimes.sh
+
+to remove mimes you can simply run:
+
+sudo pd-l2ork.postrm remove
+
+tar_em_up.sh and remove_svn.sh are dev scripts, so please ignore them.
+
+Questions?
+http://l2ork.music.vt.edu
+
+Cheers!

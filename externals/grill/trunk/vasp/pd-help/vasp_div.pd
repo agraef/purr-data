@@ -1,0 +1,42 @@
+#N canvas 193 184 764 384 10;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 45 79 vasp.update;
+#X obj 45 56 vasp.= 0;
+#X obj 45 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 522 282 pd clear_buffer;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufdiv 88200 float 0;
+#X coords 0 1 88199 -1 300 120 1;
+#X restore 401 42 graph;
+#N canvas 0 0 398 274 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufdiv;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 655 282 pd init;
+#X obj 51 19 cnv 15 15 15 empty empty vasp./ 0 10 1 14 -262144 -1 0
+;
+#X text 127 122 generate a sine wave at 1Hz;
+#X text 44 82 optional argument/right inlet: divisor;
+#X text 44 67 vasp division;
+#X msg 522 262 vasp bufdiv;
+#X obj 51 271 vasp.update;
+#X obj 51 204 vasp.osc 44100;
+#X obj 51 231 vasp./ 2;
+#X msg 51 175 vasp bufdiv;
+#X obj 51 334 VASP-HELP;
+#X obj 51 144 t b f;
+#X obj 51 123 nbx 5 14 -1e+037 1e+037 0 1 empty empty empty 0 -6 0
+10 -24198 -1 -1 2 256;
+#X connect 7 0 0 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X connect 11 0 9 0;
+#X connect 13 0 11 0;
+#X connect 13 1 10 1;
+#X connect 14 0 13 0;

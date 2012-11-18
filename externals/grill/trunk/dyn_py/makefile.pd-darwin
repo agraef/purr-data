@@ -1,0 +1,75 @@
+# Makefile for gcc @ darwin
+# 
+# usage:
+# to build run "make -f makefile.pd-darwin"
+# to install (as root), do "make -f makefile.pd-darwin install"
+#
+
+CONFIG=config-pd-darwin.txt
+
+include ${CONFIG}
+
+# compiler+linker stuff 
+INCLUDES=${PDPATH} $(DYN) $(PYTHON) $(PYCXX)
+FLAGS=${UFLAGS} -fexceptions -frtti
+
+# compiler flags for optimized build
+CFLAGS=-O2
+
+# compiler flags for debug build
+CFLAGS_D=-g
+
+# flags for shared linking
+LSHFLAGS= -bundle -bundle_loader $(PD)/pd
+
+# frameworks
+FRAMEWORKS=Python System
+LIBS=pycxx dyn
+
+
+# ----------------------------------------------
+# the rest can stay untouched
+# ----------------------------------------------
+
+# all the source files from the package
+include make-files.txt
+
+MAKEFILE=makefile.pd-darwin
+
+TARGET=$(TARGDIR)/$(NAME).so
+TARGET_D=$(TARGDIR)/$(NAME)_d.so
+
+HDRS=$(PHDRS) $(IHDRS)
+
+
+all: $(TARGDIR) $(TARGET) $(TARGET_D)
+
+$(TARGDIR):
+	mkdir $(TARGDIR)
+
+$(patsubst %,$(SRCDIR)/%,$(SRCS)): $(patsubst %,$(SRCDIR)/%,$(HDRS)) $(patsubst %,$(SRCDIR)/%,$(IHDRS)) $(MAKEFILE) $(CONFIG)
+	touch $@
+
+$(TARGDIR)/%.o : $(SRCDIR)/%.cpp
+	$(CXX) -c $(CFLAGS) $(CFLAGS_T)  $(CFLAGS_S) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(SRCDIR)) $< -o $@
+
+$(TARGDIR)/%.do : $(SRCDIR)/%.cpp 
+	$(CXX) -c $(CFLAGS_D) $(CFLAGS_T)  $(CFLAGS_S) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(SRCDIR)) $< -o $@
+
+$(TARGET) : $(patsubst %.cpp,$(TARGDIR)/%.o,$(SRCS))
+	g++ $(LSHFLAGS) -o $@ $^ $(patsubst %,-l%,$(LIBS)) $(patsubst %,-framework %,$(FRAMEWORKS)) 
+
+$(TARGET_D) : $(patsubst %.cpp,$(TARGDIR)/%.do,$(SRCS))
+	g++ $(LSHFLAGS) -o $@ $^ $(patsubst %,-l%,$(LIBS)) $(patsubst %,-framework %,$(FRAMEWORKS)) 
+
+.PHONY: clean install
+
+clean:
+	rm -f $(TARGDIR)/*.{o,do} $(TARGET) $(TARGET_D)
+	
+ifdef INSTDIR 
+install:: $(INSTDIR)
+
+install:: $(TARGET) $(TARGET_D)
+	install $< $(INSTDIR)
+endif

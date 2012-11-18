@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+sysconfdir=@sysconfdir@
+cwiid_config_dir=@CWIID_CONFIG_DIR@
+cwiid_plugins_dir=@CWIID_PLUGINS_DIR@
+
+Name: CWiid
+Description: CWiid Wiimote Interface
+Version: @PACKAGE_VERSION@
+Requires: bluez
+Libs: -L${libdir} -lcwiid
+Cflags: -I${includedir}

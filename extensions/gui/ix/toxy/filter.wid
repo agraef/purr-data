@@ -1,0 +1,286 @@
+namespace eval ::ix {
+    proc random_int {} {
+	return [expr "int(floor(rand()*16))"]
+    }
+    proc random_clr {} {
+        return [format "\#%1X%1X%1X%1X%1X%1X" [random_int] [random_int] [random_int] [random_int] [random_int] [random_int]]
+    }
+    variable _
+    proc filter_update {path target n} {
+	set type [$path.filter itemcget type_$n -text]
+	set q [$path.filter itemcget q_$n -text]
+	set loc [$path.filter coords sqr_$n]
+	set x [expr 5 + [lindex $loc 0]]
+	set y [expr 5 + [lindex $loc 1]]
+	set inv [filter_invtr $path $target $x $y]
+	set freq [lindex $inv 0]
+	set mag [lindex $inv 1]
+	filter_bqp $path $target $n $type $freq $mag $q
+    }
+    proc filter_bqp {path target n type f0 dBgain Q} {
+	variable _
+	set A [expr pow(10,($dBgain/40.0))]
+	set Fs $_($target:rate)
+	set pi [expr {atan(1) * 4}]
+	set w0 [expr 2 * $pi * $f0 / $Fs]
+	set alpha [expr sin($w0) / (2 * $Q)]
+	switch $type {
+	    notch {
+		set b0 1
+		set b1 [expr -2 * cos($w0)]
+		set b2 1
+		set a0 [expr 1 + $alpha]
+		set a1 $b1
+		set a2 [expr 1 - $alpha]
+	    }
+	    lowpass {
+		set b0 [expr (1 - cos($w0))/2]
+		set b1 [expr 1 - cos($w0)]
+		set b2 $b0
+		set a0 [expr 1 + $alpha]
+		set a1 [expr -2 * cos($w0)]
+		set a2 [expr 1 - $alpha]
+	    }
+	    highpass {
+		set b0 [expr (1 + cos($w0))/2]
+		set b1 [expr -(1 + cos($w0))]
+		set b2 $b0
+		set a0 [expr 1 + $alpha]
+		set a1 [expr -2 * cos($w0)]
+		set a2 [expr 1 - $alpha]
+	    }
+	    qbandpass {
+		set b0 [expr sin($w0)/2]
+		set b1 0
+		set b2 [expr -$b0]
+		set a0 [expr 1 + $alpha]
+		set a1 [expr -2 * cos($w0)]
+		set a2 [expr 1 - $alpha]
+	    }
+	    bandpass {
+		set b0 $alpha
+		set b1 0
+		set b2 [expr -$alpha]
+		set a0 [expr 1 + $alpha]
+		set a1 [expr -2 * cos($w0)]
+		set a2 [expr 1 - $alpha]
+	    }
+	    allpass {
+		set b0 [expr 1 - $alpha]
+		set b1 [expr -2 * cos($w0)]
+		set b2 [expr 1 + $alpha]
+		set a0 $b2
+		set a1 $b1
+		set a2 $b0
+	    }
+	    peakingEQ {
+		set b0 [expr 1 + $alpha * $A]
+		set b1 [expr -2 * cos($w0)]
+		set b2 [expr 1 - $alpha * $A]
+		set a0 [expr 1 + $alpha / $A]
+		set a1 $b1
+		set a2 [expr 1 - $alpha / $A]
+	    }
+	    lowShelf {
+		set b0 [expr   $A*(($A+1)-($A-1)*cos($w0)+2*sqrt($A)*$alpha)]
+		set b1 [expr 2*$A*(($A-1)-($A+1)*cos($w0))]
+		set b2 [expr   $A*(($A+1)-($A-1)*cos($w0)-2*sqrt($A)*$alpha)]
+		set a0 [expr       ($A+1)+($A-1)*cos($w0)+2*sqrt($A)*$alpha]
+		set a1 [expr   -2*(($A-1)+($A+1)*cos($w0))]
+		set a2 [expr       ($A+1)+($A-1)*cos($w0) - 2*sqrt($A)*$alpha ]
+	    }
+	    highShelf {
+		set b0 [expr    $A*(($A+1)+($A-1)*cos($w0)+2*sqrt($A)*$alpha)]
+		set b1 [expr -2*$A*(($A-1)+($A+1)*cos($w0))]
+		set b2 [expr    $A*(($A+1)+($A-1)*cos($w0)-2*sqrt($A)*$alpha)]
+		set a0 [expr        ($A+1)-($A-1)*cos($w0)+2*sqrt($A)*$alpha]
+		set a1 [expr     2*(($A-1)-($A+1)*cos($w0))]
+		set a2 [expr        ($A+1)-($A-1)*cos($w0) - 2*sqrt($A)*$alpha ]
+	    }
+	}
+	set f 0
+	set fr {}
+	set _($target:fmag_$n) {1}
+	set h [winfo height $path.filter]
+	set h2 [expr $h / 2]
+	while {$f < [winfo width $path.filter]} {
+	    incr f
+	    set w [expr $pi * [filter_invtr_x $path $target $f] / $_($target:nyquist)]
+	    set mag [expr sqrt(pow(($b0+$b1*cos($w)+$b2*cos(2*$w)),2)+pow(($b1*sin($w)+$b2*sin(2*$w)),2))/sqrt(pow(($a0+$a1*cos($w)+$a2*cos(2*$w)),2)+pow(($a1*sin($w)+$a2*sin(2*$w)),2))]
+	    lappend fr $f [expr $h - $h2 * $mag]
+	    lappend _($target:fmag_$n) $mag
+	}
+	$path.filter coords resp_$n $fr
+	pd [concat $target.rp _cb params $n [expr -1 * $a1 / $a0] [expr -1 * $a2 / $a0] [expr $b0 / $a0] [expr $b1 / $a0] [expr $b2 / $a0] \;]
+	filter_resp $path $target
+    }
+    proc filter_resp {path target} {
+	variable _
+	if {$_($target:init) == 1} {
+	    set f 0
+	    set fr {}
+	    set h [winfo height $path.filter]
+	    set h2 [expr $h / 2]
+	    while {$f < [winfo width $path.filter]} {
+		incr f
+		set cx 0
+		set ci 1
+		while {$cx < $_($target:n)} {
+		    incr cx
+		    set ci [expr $ci * [lindex $_($target:fmag_$cx) $f]]
+		}
+		lappend fr $f [expr $h - $h2 * $ci]
+	    }
+	    $path.filter coords resp $fr
+	}
+    }
+    proc filter_motion {path target x y} {
+	set v [filter_invtr $path $target $x $y]
+	$path itemconfigure freq -text "[expr int([lindex $v 0])] hz"
+# 	$path itemconfigure dB -text "[expr int([lindex $v 1])] dB"
+    }
+    proc filter_invtr {path target x y} {
+	return [list [filter_invtr_x $path $target $x] [filter_invtr_y $path $target $y]]
+    }
+    proc filter_invtr_x {path target x} {
+	variable _
+	set gw [winfo width $path]
+	if {$_($target:log) > 0} {
+	    return [expr $_($target:scale) * exp($_($target:log) * $x / $gw.0)]
+	} else {
+	    return freq [expr $_($target:nyquist) * $x / $gw.0]
+	}
+    }
+    proc filter_invtr_y {path target y} {
+	set gh [winfo height $path]
+	return [expr (12 * ($y / $gh.0 - 0.5) * - 1.0)]
+    }
+    proc filter_new {path target w h bg div log rate n} {
+	variable _
+	set _($target:init) 0
+	set _($target:n) $n
+	set _($target:log) $log
+	set _($target:rate) $rate
+	set _($target:nyquist) [expr $rate / 2]
+	set _($target:scale) [expr $_($target:nyquist) / exp($_($target:log))]
+	if {[winfo exists $path.filter] != 1} {
+	    canvas $path.filter -bg $bg -width $w -height $h
+	    pack $path.filter -side left
+	    bind $path.filter <Motion> "::ix::filter_motion %W $target %x %y"
+#	    bind $path.filter <ButtonRelease> "::ix::filter_resp $path $target"
+	    bind $path.filter <Leave> {
+		%W itemconfigure freq -text ""
+		%W itemconfigure dB -text ""
+	    }
+	    bind $path.filter <1> "::ix::filter_click $path $target %x %y"
+	    bind $path.filter <B1-Motion> [bind $path.filter <1>]
+	    filter_gridlines $path $target $div
+	    filter_filters $path $target $n
+	    $path.filter create text 2 1 -tags freq -text "" -anchor nw -justify left -font {{Bitstream Vera Sans} 9}
+#	    $path.filter create text 96 1 -tags dB -text "" -anchor ne -justify right -font {{Bitstream Vera Sans} 9}
+	    $path.filter create line 0 0 0 0 -tags resp -fill grey44 -width 1.6
+	    set fn 0 
+	    while {$fn < $n} {
+		incr fn	 
+		foreach a [list sqr_$fn type_$fn q_$fn] {$path.filter raise $a}
+	    }
+	    set bd [expr {[$path cget -bd] * 2}]
+	    $path configure -bg $bg -width [expr [winfo width $path.filter] + $bd] -height [expr [winfo height $path.filter] + $bd]
+	}
+	pd "$target.rp _cb n $n;"
+	set _($target:init) 1
+    }
+    proc filter_filters {path target n} {
+	set gh [winfo height $path.filter]
+	set gw [winfo width $path.filter]
+	set fn 0 
+	while {$fn < $n} {
+	    incr fn
+	    set px [expr $gw.0 * $fn.0 / $n.0]
+	    set py [expr $gh.0 / 2.0]
+	    set fill [random_clr]
+	    $path.filter create rectangle 0 0 0 0 -tags sqr_$fn -fill $fill
+	    $path.filter create line 0 0 0 0 -tags resp_$fn -fill $fill
+	    $path.filter create text 0 0 -tags type_$fn -fill grey33 -font {{Bitstream Vera Sans} 8} -text "peakingEQ" -anchor e -justify right
+	    $path.filter create text 0 0 -tags q_$fn -fill white -font {{Bitstream Vera Sans} 8} -text "1.0" -anchor w -justify left
+	    set b1 "::ix::filter_move $path $target $fn %x %y"
+	    set b2 "::ix::filter_menu $path $target $fn %X %Y"
+	    set b3 "::ix::filter_move_q $path $target $fn %x %y"
+	    set b4 "::ix::filter_locus $path $target $fn %x %y"
+	    foreach a [list sqr_$fn type_$fn q_$fn] {
+		$path.filter bind $a <1> $b1
+		$path.filter bind $a <2> $b2
+		$path.filter bind $a <3> $b4
+		$path.filter bind $a <B3-Motion> $b3
+		$path.filter bind $a <B1-Motion> $b1
+	    }
+	    filter_move $path $target $fn $px $py
+	}	
+    }
+    proc filter_menu {path target n x y} {
+	if {[winfo exists $path.ft] == 1} { destroy $path.ft}
+	set m [menu $path.ft -tearoff no]
+	foreach ft {lowpass highpass qbandpass bandpass notch allpass peakingEQ lowShelf highShelf} {
+	    $m add command -label $ft -command "::ix::filter_type $path $target $n $ft"
+	}
+	tk_popup $path.ft $x $y
+    }
+    proc filter_type {path target n type} {
+	$path.filter itemconfigure type_$n -text "$type"
+	filter_update $path $target $n
+    }
+    proc filter_click {path target x y} {
+	variable _
+	filter_move $path $target $_($target:recent) $x $y
+    }
+    proc filter_move {path target n px py} {
+	variable _
+	$path.filter coords sqr_$n [expr $px - 5] [expr $py - 5] [expr $px + 5] [expr $py + 5]	
+	$path.filter coords type_$n [expr $px - 9] [expr $py]
+	$path.filter coords q_$n [expr $px + 9] [expr $py]
+	filter_motion $path.filter $target $px $py
+	set _($target:recent) $n
+	filter_update $path $target $n
+    }
+    proc filter_locus {path target n px py} {
+	variable _
+	set _($target:lx) $px
+    }
+    proc filter_move_q {path target n px py} {
+	variable _
+	set delta [expr ($px.0 - $_($target:lx).0) / 25]
+	set move [expr [$path.filter itemcget q_$n -text] + $delta]
+	if {$move > 0} {
+	    $path.filter itemconfigure q_$n -text $move
+	}
+	filter_update $path $target $n
+	set _($target:lx) $px
+    }
+    proc filter_gridlines {path target lines} {
+	variable _
+	puts "gridlines"
+	set color white
+	set w $path.filter
+	$w delete gridlines
+	set gh [winfo height $w]
+	set gw [winfo width $w]
+	for {set x 1} {$x <= $lines} {incr x} {
+	    if {$lines < 16 && $lines > 0} {
+		set oh [expr $gh.0 * $x.0 / $lines.0]
+		set ow [expr $gw.0 * $x.0 / $lines.0]
+	      	$w create line $ow 0 $ow $gh -fill $color -tags gridlines
+	      	$w create line 0 $oh $gw $oh -fill $color -tags gridlines
+		set fontsize [expr int(80.0/$lines.0)]
+		$w create text $ow [expr $gh - $fontsize] -font [list {Bitstream Vera Sans} $fontsize] -tags gridlines -text [expr int([filter_invtr_x $path $target $ow])]
+	    }
+	}
+	$w raise ${target}sqr
+    }
+}
+#> filter frame
+#. -bd 3 #w 384 #h 144 #bg gray90 #div 6 #n 3
+#. #log 1 #rate 44100
+#. @div  ::ix::filter_gridlines .- .| .#1
+#. @params ::ix::filter_lp .- .| .#args
+puts "filter .- .|"
+::ix::filter_new .- .| .#w .#h .#bg .#div .#log .#rate .#n

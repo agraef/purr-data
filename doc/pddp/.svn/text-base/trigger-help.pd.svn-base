@@ -1,0 +1,380 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header trigger 3 12 0 18
+-204280 -1 0;
+#X obj 0 219 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 242 494 358 META 0;
+#X text 12 135 LIBRARY internal;
+#X text 12 175 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 155 AUTHOR Miller Puckette;
+#X text 12 215 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 26 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 65 DESCRIPTION sequence message in right-to-left order/
+convert data types;
+#X text 12 95 INLET_0 anything;
+#X text 12 115 OUTLET_N anything;
+#X text 12 5 ALIAS t;
+#X text 12 25 KEYWORDS control needs_work list_op bang_op;
+#X text 12 195 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 256 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 309 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 497 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 49 301 428 283 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [trigger] Related Objects;
+#X obj 103 43 route;
+#X obj 23 43 unpack;
+#X obj 69 43 pack;
+#X obj 144 43 delay;
+#X obj 186 43 pipe;
+#X obj 221 43 float;
+#X obj 261 43 int;
+#X obj 290 43 symbol;
+#X text 20 77 Externals;
+#X text 20 128 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 20 187 The best places to find information about Pd's libraries
+is:;
+#X text 21 208 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 21 223 or;
+#X text 21 238 iem.kug.ac.at/pdb/;
+#X obj 20 104 pddp/helplink unauthorized/exciter;
+#X restore 102 597 pd Related_objects;
+#X obj 78 228 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 265 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 447 3 trigger;
+#X obj 517 3 t;
+#X text 497 3 or;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/trigger -text
+pdpedia: trigger;
+#X text 98 64 The [trigger] object outputs its input from right to
+left \, converting to the types indicated by its creation arguments.
+There is also a "pointer" argument type (see the [pointer] object.)
+;
+#X obj 339 518 pddp/pddplink all_about_lists_vs_anythings.pd -text
+all_about_lists_vs_anythings;
+#X text 98 227 anything;
+#X text 168 227 - the inlet to [trigger] takes any type of message.
+;
+#X text 98 264 variable;
+#X text 168 328 - for each creation argument \, a new outlet is created.
+If no arguments are supplied \, trigger defaults to two outlets that
+output bang messages.;
+#X text 98 371 The [trigger] object can be abbreviated as "t" and the
+creation arguments can be abbreviated as follows:;
+#X obj 214 413 trigger float bang symbol list pointer anything;
+#X text 315 432 is the same as;
+#X obj 318 452 t f b s l p a;
+#X text 97 408 "float" = f;
+#X text 97 420 "bang" = b;
+#X text 96 432 "symbol" = s;
+#X text 97 446 "list" = l;
+#X text 97 474 "anything" = a;
+#X text 97 460 "pointer" = p;
+#X floatatom 230 114 5 0 0 0 - - -;
+#X obj 230 160 +;
+#X floatatom 230 185 5 0 0 0 - - -;
+#X obj 230 136 t a a;
+#X text 11 23 sequence messages in right-to-left order/ convert data
+types;
+#X text 168 264 - upon receiving a message to its inlet \, [trigger]
+outputs messages specified by the creation arguments. (Like nearly
+all Pd objects \, messages are sent out from right to left.);
+#N canvas 73 80 428 469 trigger_oddities 0;
+#X obj 25 325 trigger anything bang float list pointer symbol;
+#X obj 25 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 87 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 144 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 210 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 248 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 316 347 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 216 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 273 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 114 413 route float;
+#X obj 114 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 177 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 304 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 373 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 28 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 85 435 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 28 413 route bang;
+#X obj 304 413 route symbol;
+#X obj 216 413 route list;
+#X msg 54 201 1 2 3;
+#X msg 25 104 1;
+#X msg 32 129 float 2;
+#X msg 39 153 test;
+#X msg 46 178 symbol this;
+#X msg 68 247 list 1 two 3;
+#X msg 77 294 list one 2 three;
+#X obj 221 390 print LIST;
+#X obj 136 390 print FLOAT;
+#X msg 59 226 1 two 3;
+#X msg 72 271 one 2 three;
+#X text 20 39 "float" is interpreted;
+#X text 21 59 "symbol" is not interpreted;
+#X text 22 78 "list" is interpreted \, and outputted;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [trigger] Oddities;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 0 1 16 0;
+#X connect 0 2 3 0;
+#X connect 0 2 9 0;
+#X connect 0 2 27 0;
+#X connect 0 3 4 0;
+#X connect 0 3 18 0;
+#X connect 0 3 26 0;
+#X connect 0 4 5 0;
+#X connect 0 5 6 0;
+#X connect 0 5 17 0;
+#X connect 9 0 10 0;
+#X connect 9 1 11 0;
+#X connect 16 0 14 0;
+#X connect 16 1 15 0;
+#X connect 17 0 12 0;
+#X connect 17 1 13 0;
+#X connect 18 0 7 0;
+#X connect 18 1 8 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;
+#X connect 21 0 0 0;
+#X connect 22 0 0 0;
+#X connect 23 0 0 0;
+#X connect 24 0 0 0;
+#X connect 25 0 0 0;
+#X connect 28 0 0 0;
+#X connect 29 0 0 0;
+#X restore 102 572 pd trigger_oddities;
+#N canvas 60 35 428 560 Converting_data_types_with_trigger 0;
+#X text 21 38 All sophisticated programming environments provide tools
+to convert data types. For instance \, Visual Basic has:;
+#X text 27 69 - VarType: to check the data type.;
+#X text 27 84 - CStr: to convert a variable to a string.;
+#X text 27 99 - CDate: to convert a variable to a date.;
+#X text 27 114 - isNumeric: to test whether the variable is a number.
+;
+#X text 27 129 - etc.;
+#X text 20 151 [trigger] is one object in Pd which can convert an incoming
+atom to a different type of atom.;
+#X text 20 182 To prove this \, click on each of the messages below
+and watch your terminal window for the output.;
+#X msg 23 215 bang;
+#X msg 60 215 1;
+#X floatatom 94 215 5 0 0 0 - - -;
+#X msg 133 215 symbol cat;
+#X msg 207 215 this is anything;
+#X obj 23 264 print all_messages_are_converted_to_bangs;
+#X text 20 293 Another example showing floats and symbols.;
+#X msg 23 317 bang;
+#X floatatom 93 317 5 0 0 0 - - -;
+#X msg 135 317 symbol cat;
+#X msg 209 317 this is anything;
+#X obj 23 345 t f s;
+#X msg 60 317 1 0;
+#X obj 50 390 print converted_to_symbols;
+#X obj 23 413 print converted_to_floats;
+#X text 65 344 Note that "this is anything" causes an error. That is
+because 'anythings' don't conform to floats \, symbols \, lists \,
+pointers. They can only be converted to "bang".;
+#X text 21 435 In the example above \, note that the trigger object
+does not split a list among the outlets like [unpack] does. Instead
+it sends all list elements through all outlets and converts them as
+necessary.;
+#X text 22 487 Also note that some messages don't convert as nicely
+as others. Hence \, the symbol "cat" converts to a ZERO when [trigger]
+converts that symbol into a float. Likewise \, all numbers will convert
+to a symbol called "float" when sent through [trigger]'s right-most
+outlet.;
+#X obj 23 244 t b;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [trigger] Converting data types;
+#X connect 8 0 26 0;
+#X connect 9 0 26 0;
+#X connect 10 0 26 0;
+#X connect 11 0 26 0;
+#X connect 12 0 26 0;
+#X connect 15 0 19 0;
+#X connect 16 0 19 0;
+#X connect 17 0 19 0;
+#X connect 18 0 19 0;
+#X connect 19 0 22 0;
+#X connect 19 1 21 0;
+#X connect 20 0 19 0;
+#X connect 26 0 13 0;
+#X restore 102 528 pd Converting_data_types_with_trigger;
+#N canvas 29 67 459 506 Triggering_messages_with_trigger 0;
+#X text 21 77 1 Sequence a series of bangs - or triggers for symbols
+and/or other messages. In the example below \, you should see that
+it is important that it is important that [metro] gets a tempo setting
+before it is started - but let's assume for a moment that you wanted
+to start the [metro] with only a single click.;
+#X obj 23 269 metro;
+#X msg 50 247 1000;
+#X obj 23 289 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 23 194 tgl 15 0 empty empty On/Off 0 -6 0 7 -262144 -1 -1 0
+1;
+#X obj 23 212 t f b;
+#X text 21 151 Click the toggle to set the tempo and start the [metro]
+simultaneously.;
+#X text 64 203 Triggers are sent from right to left...so our tempo
+messages gets sent to [metro] immediately before the numbers from the
+toggle to start and stop the [metro].;
+#X text 20 310 This example is simple \, and may not be very practical
+in most situations \, but it clearly shows how [trigger] can be used
+to create a simple sequence of events. It is important to note however
+that the messages sent from [trigger]'s outlets occur in ZERO time
+with no delay between the events...more at the top right of the page...
+;
+#X obj 23 438 t b b;
+#X msg 23 416 bang;
+#X obj 23 468 timer;
+#X floatatom 23 490 5 0 0 0 - - -;
+#X text 57 416 Click here.;
+#X text 62 489 Watch here.;
+#X text 20 511 Now \, to prove that I'm not crazy...click here >;
+#X obj 319 560 timer;
+#X floatatom 319 581 5 0 0 0 - - -;
+#X obj 346 538 delay 2000;
+#X text 136 430 any delay between the first bang and the second bang
+;
+#X text 137 446 from the trigger.;
+#X text 20 540 object to force a 2 second delay between the;
+#X text 138 416 In this case \, the [timer] object does not perceive
+;
+#X obj 319 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 403 518 5 0 0 0 - - -;
+#X text 19 588 at the top-right to clearly see "logical time";
+#X text 19 601 as measured by [timer].;
+#X obj 319 513 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 20 384 Below is a simple structure which will measure the "logical
+time" between "bangs" from the [trigger] object.;
+#X text 20 526 In this case \, I've simply patched a [delay];
+#X text 20 554 first and second "bangs" sent to the [timer].;
+#X text 19 574 You can reset the [delay] with the number box;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [trigger] Uses;
+#X text 19 623 Click on the other subpatches in the main window to
+read about [trigger]'s second great purpose...;
+#X text 21 38 The [trigger] object serves two great purposes which
+aren't really related - but they might be on some level that I don't
+fully understand yet.;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 5 1 2 0;
+#X connect 9 0 11 1;
+#X connect 9 1 11 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 16 0 17 0;
+#X connect 17 0 23 0;
+#X connect 18 0 16 1;
+#X connect 24 0 18 1;
+#X connect 27 0 18 0;
+#X connect 27 0 16 0;
+#X restore 102 506 pd Triggering_messages_with_trigger;
+#N canvas 73 48 428 558 Converting_data_types_(cont.) 0;
+#X msg 23 131 2.5;
+#X msg 110 131 bang;
+#X msg 60 131 23 64;
+#X msg 153 131 symbol dog;
+#X obj 23 256 trigger float bang symbol list anything;
+#X text 20 38 In the example below \, you can see that this [trigger]
+has creation arguments which specify what data type the object should
+output through each outlet. Messages which are sent to the first outlet
+will be floats \; the second outlet will send bangs \; the third \,
+symbols \; etc.;
+#X floatatom 23 278 5 0 0 0 - - -;
+#X obj 80 278 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X symbolatom 138 322 10 0 0 0 - - -;
+#X floatatom 192 187 5 0 0 0 - - -;
+#X obj 192 228 pack f s;
+#X msg 237 187 symbol earth;
+#X msg 250 209 symbol jupiter;
+#X obj 196 300 print a_list;
+#X floatatom 23 463 5 0 0 0 - - -;
+#X symbolatom 68 463 10 0 0 0 - - -;
+#X obj 113 441 print another_list;
+#X text 228 159 Click on all these.;
+#X obj 23 398 r anythings;
+#X text 20 346 Note how each of the messages sent to this trigger are
+converted appropriately for their receiving atoms boxes. Also note
+that "anythings" are sent to the example below.;
+#X obj 254 278 s anythings;
+#X obj 23 418 route float symbol list;
+#X msg 233 131 symbol cat;
+#X text 20 487 I've used the [route] object to show how "anythings"
+are converted as they pass through the above [trigger]. Note that all
+messages converted to floats are displayed here in the number box \,
+all symbols are displayed in the symbol box \, and all lists are printed
+to the terminal window.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [trigger] Converting data types (cont.);
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 4 1 7 0;
+#X connect 4 2 8 0;
+#X connect 4 3 13 0;
+#X connect 4 4 20 0;
+#X connect 9 0 10 0;
+#X connect 10 0 4 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 1;
+#X connect 18 0 21 0;
+#X connect 21 0 14 0;
+#X connect 21 1 15 0;
+#X connect 21 2 16 0;
+#X connect 22 0 4 0;
+#X restore 102 550 pd Converting_data_types_(cont.);
+#X text 80 328 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 339 501 pddp/pddplink all_about_messages.pd -text all_about_messages
+;
+#X obj 291 574 pddp/pddplink ../2.control.examples/03.connections.pd
+;
+#X connect 30 0 33 0;
+#X connect 31 0 32 0;
+#X connect 33 0 31 0;
+#X connect 33 1 31 1;

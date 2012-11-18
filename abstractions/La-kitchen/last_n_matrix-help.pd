@@ -1,0 +1,15 @@
+#N canvas 523 311 463 284 10;
+#X floatatom 198 116 5 0 0 0 - - -;
+#X floatatom 107 104 5 0 0 0 - - -;
+#X obj 107 146 last_n_matrix 12;
+#X obj 107 186 mtx_print;
+#X text 42 15 This abstraction save the n last incoming datas;
+#X text 43 34 into a colon matrix;
+#X text 103 80 data;
+#X text 193 93 size: n;
+#X text 293 202 la Kitchen;
+#X text 293 219 Charles Verron;
+#X text 292 187 2004_03_18;
+#X connect 0 0 2 1;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;

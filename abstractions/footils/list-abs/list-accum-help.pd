@@ -1,0 +1,11 @@
+#N canvas 247 182 450 300 10;
+#X obj 164 160 list-accum;
+#X floatatom 164 199 5 0 0 0 - - -;
+#X msg 164 119 1 2 3;
+#X obj 120 197 print;
+#X msg 217 120 1 2 3 and 4;
+#X text 94 61 list-accum: add all floats in a list;
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 2 0 0 0;
+#X connect 4 0 0 0;

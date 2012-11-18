@@ -1,0 +1,18 @@
+#!/usr/bin/wish -f
+
+#damien HENRY le 2001 07 14
+
+puts "***********************************************"
+puts "* This will create a patch in pure-data       *"
+puts "* be sure that the recv.pd file is loadded    *"
+puts "***********************************************"
+
+set to_pd [socket localhost 3006]
+
+puts $to_pd "pd-recv.pd obj 10 10 pd new_patch;"
+puts $to_pd "pd-new_patch msg 10 10 bang;"
+puts $to_pd "pd-new_patch msg 10 30 message;"
+puts $to_pd "pd-new_patch connect 0 0 1 0;"
+
+exit
+

@@ -1,0 +1,37 @@
+#N canvas 1 48 789 443 10;
+#X text 95 242 clear display;
+#X obj 75 241 bng 15 250 50 1 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 34 240 show;
+#X text 11 23 permute;
+#X text 11 56 Returns the nth permutation of a list.;
+#X text 11 73 See also:;
+#X text 11 315 OSX implementation by Richard Dudas (2003);
+#X text 11 301 by James McCartney;
+#X msg 46 147 orange green purple mildred;
+#X msg 78 167 0 1 2 3 4 5 6 7;
+#X obj 14 158 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 98 208 Optional list argument to set the default list.;
+#X floatatom 34 117 0 0 0 0 - - -;
+#X msg 34 272;
+#X obj 34 207 permute;
+#X text 238 232 list in right inlet is stored;
+#X text 238 263 bang in left inlet retriggers the last permutation
+;
+#X text 238 248 int in left inlet triggers a permutation of the stored
+list;
+#X text 252 143 permute generates an indexed series of permutations
+of a list. The permutations repeat after the factorial of the list
+size. Note that the largest list for which a 32-bit number can enumerate
+all the permutations has 12 elements.;
+#X text 78 118 index;
+#X msg 74 72 permutate;
+#X text 126 36 (external - OSX);
+#X connect 1 0 2 1;
+#X connect 2 0 13 0;
+#X connect 8 0 14 1;
+#X connect 9 0 14 1;
+#X connect 10 0 14 0;
+#X connect 12 0 14 0;
+#X connect 14 0 2 0;

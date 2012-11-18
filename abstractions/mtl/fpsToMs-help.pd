@@ -1,0 +1,11 @@
+#N canvas 30 122 422 224 10;
+#X floatatom 144 111 5 0 0 0 - - -;
+#X floatatom 144 163 5 0 0 0 - - -;
+#X text 198 109 ms;
+#X text 195 166 fps;
+#X text 34 20 Description: Converts the number frames per seconds into
+the number of milliseconds between each frame.;
+#X obj 144 137 mtl/fpsToMs;
+#X text 34 58 tags: conversion;
+#X connect 0 0 5 0;
+#X connect 5 0 1 0;

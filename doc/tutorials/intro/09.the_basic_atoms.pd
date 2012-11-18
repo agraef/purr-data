@@ -1,0 +1,38 @@
+#N canvas 10 40 620 460 12;
+#X obj 12 211 cnv 15 600 70 empty empty empty 20 12 0 14 -262134 -66577
+0;
+#X obj 10 12 cnv 15 400 40 empty empty the_basic_atoms 20 12 0 24 -228992
+-66577 0;
+#X text 56 209 1;
+#X text 81 240 0;
+#X text 138 213 1.14234e+34;
+#X text 429 244 3.14159;
+#X text 333 211 -999999;
+#X text 335 244 45;
+#X text 195 243 -12;
+#X text 512 221 1824.53;
+#X text 28 237 3;
+#X obj 13 377 cnv 15 600 70 empty empty empty 20 12 0 14 -262134 -66577
+0;
+#X text 33 377 word;
+#X text 94 409 number5;
+#X text 204 380 3..2;
+#X text 558 414 --44;
+#X text 240 412 label;
+#X text 486 375 reset;
+#X text 337 375 5++;
+#X text 404 407 trigger;
+#X text 11 68 The essential data types of Pd are called "atoms". An
+atom is a piece of data that cannot be broken down into smaller parts.
+The two most basic atom types are numeric and symbol \, also known
+as "float" and "symbol".;
+#X obj 12 151 cnv 15 15 15 empty empty numeric_atom 0 8 0 14 -262144
+-66577 0;
+#X obj 12 301 cnv 15 15 15 empty empty symbolic_atom 0 8 0 14 -262144
+-66577 0;
+#X text 30 332 A symbolic atom is any element that is not a functional
+representation of a number \, usually in the form of words:;
+#X text 124 300 = anything that is not a number;
+#X text 24 170 A numeric atom is any element that can be interpreted
+as a number;
+#X text 114 150 = a number;

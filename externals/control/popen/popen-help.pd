@@ -1,0 +1,41 @@
+#N canvas 458 385 649 268 10;
+#X msg 121 28 echo lol;
+#X obj 121 48 popen;
+#X symbolatom 111 85 10 0 0 0 - - -;
+#X obj 168 75 bng 15 163840 50 0 empty empty empty 0 0 0 8 -62784 -237312
+-237312;
+#X obj 168 93 tgl 15 0 empty empty empty 0 0 0 8 -62784 -237312 -237312
+0 1;
+#X msg 170 29 echo roffl | sed s/fl/lmao/;
+#X obj 111 114 select roflmao;
+#X obj 189 88 tgl 42 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 16 10 popen();
+#X text 41 159 so simple it should work on most any platform;
+#X text 39 176 always outputs a symbol;
+#X text 42 199 non-threaded to maintain right to left execution order
+;
+#X text 41 218 always executes in a real shell (sh on linux \, cmd
+on win (add a bash -c if you want it to run in a minGW/cygwin bash))
+so stuff like || and < can be used..;
+#X obj 258 97 popen;
+#X msg 258 117 add2 \$1;
+#X msg 303 103 Linux a 2.6.11-gentoo-r1 #4 Sun Mar 6 16:43:59 GMT 2005 x86_64 AMD Athlon(tm) 64 Processor 3000+ AuthenticAMD GNU/Linux
+;
+#X msg 303 65 cat /proc/cpuinfo;
+#X msg 303 82 set;
+#X msg 253 65 uname -a;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 6 0;
+#X connect 3 0 4 0;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 16 0 13 0;
+#X connect 17 0 15 0;
+#X connect 18 0 17 0;
+#X connect 18 0 13 0;

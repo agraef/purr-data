@@ -1,0 +1,159 @@
+#N canvas 403 333 642 445 10;
+#X text 14 92 originator requires two arguments: arg1 must start with
+a slash and will be the general name of a state. arg2 is used to communicate
+with commun objects.;
+#N canvas 121 22 1029 567 originator-help 0;
+#X obj 42 182 originator /name \$0;
+#X text 168 238 OSC-outlet;
+#X obj 170 212 print OSC-out;
+#X text 36 337 Outlet 0: value outlet;
+#X obj 170 146 r \$0-OSC;
+#X text 40 96 Inlet 0: main method inlet;
+#X text 167 125 Inlet 1: OSC-inlet;
+#X obj 42 313 print value;
+#X text 384 190 set: sets all commun-ized state variable to the values
+stored in the originator's active state;
+#X text 385 257 setsub SUBSTATE: shortcut for "substate SUBSTATE \,
+set";
+#X text 384 377 copy/paste: copies and pastes a substate.;
+#X obj 42 122 r \$0-or;
+#X obj 849 112 s \$0-or;
+#X msg 389 95 create /othername;
+#X text 385 30 ======================;
+#X text 385 14 Methods of originator;
+#X obj 850 177 s \$0-or;
+#X msg 390 160 substate 2;
+#X text 384 123 substate SUBSTATE: sets originator to operate on substate
+SUBSTATE. Currently has to be a float.;
+#X obj 850 247 s \$0-or;
+#X obj 852 292 s \$0-or;
+#X obj 850 367 s \$0-or;
+#X msg 387 350 get /something;
+#X msg 387 403 copy;
+#X msg 433 403 paste;
+#X obj 850 420 s \$0-or;
+#X obj 847 481 s \$0-or;
+#X msg 386 464 svxdir /tmp/saved.xml;
+#X msg 559 464 ldxdir /tmp/saved.xml;
+#X msg 390 230 set;
+#X msg 470 160 substate 0;
+#X obj 106 272 print key/value;
+#X text 103 292 Outlet 1: outlet for "key value(s)";
+#X text 385 298 get /VARNAME: prints out value of /VARNAME in the current
+substate to the value and key/value outlets. Will print error \, if
+/VARNAME wasn't set.;
+#X obj 79 495 s SET_ALL_RRADICALS;
+#X text 16 514 This is a global receiver in every [originator] \, that
+accepts everything \, the method inlet accepts. Use with care.;
+#X text 13 461 Tip:;
+#X msg 598 350 get /alist;
+#X msg 499 350 get /asymbol;
+#X msg 475 275 setsub 2;
+#X msg 388 275 setsub 0;
+#X text 382 427 svxdir/ldxdir PATH: saves or restores the contents
+of a substate to an xml file in PATH. Bound to be buggy!;
+#X msg 79 470 setsub 0;
+#X text 385 49 create /NAME: will create a (new) state called /NAME.
+Beware of the slash! Also note \, that states created using this will
+*not* be OSC-targets!;
+#X connect 0 0 7 0;
+#X connect 0 1 31 0;
+#X connect 0 2 2 0;
+#X connect 4 0 0 1;
+#X connect 11 0 0 0;
+#X connect 13 0 12 0;
+#X connect 17 0 16 0;
+#X connect 22 0 21 0;
+#X connect 23 0 25 0;
+#X connect 24 0 25 0;
+#X connect 27 0 26 0;
+#X connect 28 0 26 0;
+#X connect 29 0 19 0;
+#X connect 30 0 16 0;
+#X connect 37 0 21 0;
+#X connect 38 0 21 0;
+#X connect 39 0 20 0;
+#X connect 40 0 20 0;
+#X connect 42 0 34 0;
+#X restore 17 318 pd originator-help;
+#N canvas 83 654 517 308 commun-help 0;
+#X obj 61 65 commun /something \$0;
+#X floatatom 99 32 5 0 0 0 - - -;
+#X obj 65 184 commun /alist \$0;
+#X obj 65 217 unpack 0 0;
+#X obj 65 164 pack 0 0;
+#X floatatom 97 116 5 0 0 0 - - -;
+#X floatatom 141 116 5 0 0 0 - - -;
+#X obj 233 186 commun /asymbol \$0;
+#X symbolatom 233 159 10 0 0 0 - - -;
+#X text 248 64 Some typical uses of [commun];
+#X obj 141 137 t b f;
+#X obj 233 127 r \$0-thesymbol;
+#X obj 233 238 s \$0-thesymbol;
+#X connect 0 0 1 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 3 1 6 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 10 0;
+#X connect 7 0 12 0;
+#X connect 8 0 7 0;
+#X connect 10 0 4 0;
+#X connect 10 1 4 1;
+#X connect 11 0 8 0;
+#X restore 16 379 pd commun-help;
+#X text 14 278 Detailed help on [originator];
+#X text 12 350 Detailed help on [commun];
+#X obj 322 314 careGUI;
+#N canvas 449 91 628 618 OSC-in-originator 0;
+#X obj 28 366 s \$0-OSC;
+#X text 18 19 OSC in [originator];
+#X text 16 170 Setting commun-watched elements;
+#X text 19 33 ==================;
+#X text 15 184 --------------------------------;
+#X text 22 204 OSC messages are build by concatenating the originator's
+arg1 with the intended commun's arg1.;
+#X text 24 244 In this help patch \, originator's arg1 is: "/name"
+\, and there are three communs: /something \, /alist \, /asymbol. So
+we have three possible OSC targets:;
+#X msg 28 337 /name/alist 1 2;
+#X msg 27 317 /name/asymbol puredata;
+#X msg 27 295 /name/something 300;
+#X text 24 385 sends to originator in "pd originator-help". Watch "pd
+commun-help" for changes!;
+#X text 25 440 Substate changing through OSC;
+#X text 24 454 -----------------------------;
+#X obj 34 564 s \$0-OSC;
+#X msg 191 349 /name/*symbol wildcards_are_possible_too;
+#X msg 34 529 /name/preset 0;
+#X msg 154 529 /name/substate 2;
+#X text 21 471 An OSC-message using "/preset" or "substate" as final
+target will generate a "setsub" message:;
+#X text 21 51 The OSC-outlet of originator will print out OSC formatted
+messages of any change you do to the commun-watched elements. Substate
+changes will let the OSC-outlet print a "/NAME/preset preset#" message.
+(/NAME being arg1 in originator.);
+#X text 21 125 The OSC-inlet of originator accepts OSC formatted messages
+to remotely set all commun-watched elements and do a basic substate
+management.;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 14 0 0 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;
+#X restore 158 317 pd OSC-in-originator;
+#X text 324 284 Select a FILE to SAVE to or RESTORE from.;
+#X obj 1 2 cnv 15 640 30 empty empty Memento_-_Flexible_State_Saving_For_Pure_data
+20 12 0 14 -260818 -123526 0;
+#X text 13 54 Memento consists of three abstractions: [originator]
+\, [commun] \, [care*] (care* can be careGUI \, careOSC \, ...);
+#X text 14 146 commun requires two args: arg1 must start with a slash
+and will be the variable name of one "thing" to save inside the state
+specified by originator's arg1. arg2 will select the originator to
+use: communs will talk to all originators \, whose arg2 equals its
+own arg2.;
+#X text 10 225 caretakers are independent of these: They can collect
+all currently active states and save them.;

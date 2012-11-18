@@ -1,0 +1,33 @@
+#N canvas 1 57 545 398 10;
+#X declare -lib Gem;
+#X declare -lib Gem;
+#X obj 17 91 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X msg 17 350 -4.63333 2.33333;
+#X msg 71 297 0 1.06667 -0.166667;
+#X msg 118 235 0 1.3 0.533333;
+#X msg 150 182 0 1.3 0.533333;
+#X text 195 265 left button: state(up/down) X Y;
+#X text 240 209 middle button: state(up/down) X Y;
+#X text 281 156 right button: state(up/down) X Y;
+#X obj 16 109 mtl/gemsWin;
+#X obj 17 320 cyclone/prepend set;
+#X obj 71 267 cyclone/prepend set;
+#X obj 118 209 cyclone/prepend set;
+#X obj 150 156 cyclone/prepend set;
+#X text 143 320 X Y;
+#X text 16 55 tags: gems;
+#X text 17 14 Description: sends out mouse events which occur in the
+GEM window. The coordinates match the coordinates of the GEM world.
+;
+#X obj 441 17 import Gem;
+#X obj 17 133 mtl/gemsMouse;
+#X connect 0 0 8 0;
+#X connect 9 0 1 0;
+#X connect 10 0 2 0;
+#X connect 11 0 3 0;
+#X connect 12 0 4 0;
+#X connect 17 0 9 0;
+#X connect 17 1 10 0;
+#X connect 17 2 11 0;
+#X connect 17 3 12 0;

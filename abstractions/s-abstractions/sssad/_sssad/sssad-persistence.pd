@@ -1,0 +1,17 @@
+#N canvas 411 241 354 407 10;
+#X obj 73 159 list;
+#X obj 73 219 list prepend \$1;
+#X obj 73 246 list prepend persist;
+#X obj 73 269 s SSSAD_ADMIN;
+#X obj 73 67 r SSSAD_ADMIN;
+#X obj 73 93 route save;
+#X obj 73 115 b;
+#X text 51 28 args: SSAD-name \$0;
+#X obj 96 136 r \$2-sssad-data;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 8 0 0 1;

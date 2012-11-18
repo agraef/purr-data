@@ -1,0 +1,8 @@
+#N canvas 271 151 450 300 10;
+#X obj 107 24 s-controlsurface;
+#X floatatom 107 5 5 0 0 0 - - -;
+#X floatatom 107 260 5 0 0 0 - - -;
+#X floatatom 316 260 5 0 0 0 - - -;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 0;

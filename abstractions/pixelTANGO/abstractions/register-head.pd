@@ -1,0 +1,50 @@
+#N canvas 257 138 873 497 10;
+#X obj 203 383 outlet;
+#X msg 203 298 register-head 0;
+#X obj 10 165 loadbang;
+#X msg 10 298 layerNum \$1;
+#X obj 10 277 f \$1;
+#X text 49 278 Layer Number Argument;
+#X text 9 5 Register-head (starts the abstraction registration process.)
+;
+#X obj 203 165 r pt.layerNumDone;
+#X obj 203 193 select \$1;
+#X obj 219 264 r pt.register;
+#X obj 9 453 delay 250;
+#X msg 72 165 bang;
+#X text 9 140 1 Send LayerNum;
+#X text 155 140 2 when layerNum gets to end send register-head;
+#X text 347 163 3 When register-head gets to end then send createOscName
+;
+#X obj 357 212 select \$1;
+#X obj 357 184 r pt.registerDone;
+#X obj 373 283 r pt.createOsc;
+#X msg 357 317 createOscName;
+#X text 10 30 When layerNum reacher the footer it sends a signal here
+to register layer which in turn sends a signal to generate OSC names
+;
+#X obj 217 227 delay 250;
+#X obj 379 246 delay 250;
+#X text 83 452 This is really ugly... May cause problems later... what
+to do about it? short answer for future problems is to increase the
+delay! 250 is pretty long though...;
+#X obj 474 306 r pt.loopBack;
+#X text 10 87 Added pt.loopBack to send misc messages from tail to
+head.;
+#X obj 474 331 route \$1;
+#X connect 1 0 0 0;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 7 0 8 0;
+#X connect 8 0 20 0;
+#X connect 9 0 1 0;
+#X connect 11 0 4 0;
+#X connect 15 0 21 0;
+#X connect 16 0 15 0;
+#X connect 17 0 18 0;
+#X connect 18 0 0 0;
+#X connect 20 0 1 0;
+#X connect 21 0 18 0;
+#X connect 23 0 25 0;
+#X connect 25 0 0 0;

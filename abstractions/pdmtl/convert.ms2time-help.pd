@@ -1,0 +1,24 @@
+#N canvas 380 290 576 396 10;
+#X obj 138 220 timer;
+#X obj 163 162 loadbang;
+#X floatatom 138 247 10 0 0 0 - - -;
+#X obj 163 186 metro 50;
+#X floatatom 138 372 5 0 0 0 - - -;
+#X floatatom 156 350 5 0 0 0 - - -;
+#X floatatom 203 326 5 0 0 0 - - -;
+#X text 238 324 seconds;
+#X text 193 350 minutes;
+#X text 175 372 hours;
+#X floatatom 240 300 5 0 0 0 - - -;
+#X text 277 297 msec;
+#X obj 138 279 convert.ms2time;
+#X text 83 57 Description: Converts a millisecond duration to a easier
+read format.;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 12 0;
+#X connect 3 0 0 1;
+#X connect 12 0 4 0;
+#X connect 12 1 5 0;
+#X connect 12 2 6 0;
+#X connect 12 3 10 0;

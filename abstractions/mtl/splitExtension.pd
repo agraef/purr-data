@@ -1,0 +1,8 @@
+#N canvas 1556 639 450 300 10;
+#X obj 91 36 inlet;
+#X obj 120 267 outlet;
+#X obj 109 130 iemlib/splitfilename .;
+#X obj 274 258 outlet;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 2 1 3 0;

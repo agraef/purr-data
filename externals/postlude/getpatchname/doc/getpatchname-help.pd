@@ -1,0 +1,31 @@
+#N canvas 0 22 426 546 10;
+#X obj 160 101 loadbang;
+#X symbolatom 160 170 20 0 0 0 - - -;
+#X obj 239 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 22 16 getpatchname: This external returns the name of the current
+patch as a symbol when sent a 'bang' message;
+#X obj 160 131 getpatchname;
+#X text 26 236 Note: at the moment it retains the name of the patch
+returned when the object was instantiated. This will be revised in
+future versions;
+#X msg 87 359 bang;
+#X obj 87 435 print;
+#X msg 282 356 bang;
+#X obj 282 432 print;
+#X text 26 468 If there is no parent at that level \, it returns the
+directory as if there was no argument \, i.e. level 0;
+#X text 26 302 You can also get the name of the parent patch \, if
+this patch is an object embedded in another patch. You use the argument
+to set how many levels up to go:;
+#X obj 87 397 getpatchname 1;
+#X obj 282 394 getpatchname 2;
+#X text 27 509 (thanks to Gunter Geiger for "parent" code and helptext)
+;
+#X connect 0 0 4 0;
+#X connect 2 0 4 0;
+#X connect 4 0 1 0;
+#X connect 6 0 12 0;
+#X connect 8 0 13 0;
+#X connect 12 0 7 0;
+#X connect 13 0 9 0;

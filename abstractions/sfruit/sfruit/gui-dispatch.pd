@@ -1,0 +1,9 @@
+#N canvas 485 553 237 262 10;
+#X obj 46 146 list trim;
+#X obj 46 173 s \$1-dispatcher;
+#X obj 46 95 r \$2-\$3-s;
+#X text 32 35 [gui-dispatch \$1 \$0 message];
+#X obj 46 121 list prepend \$3;
+#X connect 0 0 1 0;
+#X connect 2 0 4 0;
+#X connect 4 0 0 0;

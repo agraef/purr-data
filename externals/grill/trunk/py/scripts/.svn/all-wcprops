@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/ext/!svn/ver/3638/trunk/py/scripts
+END
+buffer.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3638/trunk/py/scripts/buffer.py
+END
+sendrecv.py
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/2391/trunk/py/scripts/sendrecv.py
+END
+simple.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2391/trunk/py/scripts/simple.py
+END
+threads.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2391/trunk/py/scripts/threads.py
+END
+pak.py
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/scripts/pak.py
+END
+tcltk.py
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2391/trunk/py/scripts/tcltk.py
+END
+sig.py
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/scripts/sig.py
+END
+script.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2391/trunk/py/scripts/script.py
+END

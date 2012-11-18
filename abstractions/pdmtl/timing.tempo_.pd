@@ -1,0 +1,54 @@
+#N canvas 0 0 652 348 10;
+#X obj 100 117 cnv 15 170 25 empty empty empty 2 7 0 8 -1 -262144 0
+;
+#X obj 112 204 timing.tempo \$1 \$2 \$3;
+#X obj 60 169 inlet;
+#X obj 101 275 outlet;
+#X obj 103 127 tgl 14 0 empty empty empty 20 7 0 8 -262144 -1 -1 0
+1;
+#X obj 124 128 nbx 5 14 0.001 1e+037 0 0 empty empty bpm 0 -5 0 8 -1
+-262144 -262144 120 256;
+#X obj 171 49 inlet;
+#X obj 118 45 inlet;
+#X obj 217 47 inlet;
+#X obj 173 128 nbx 5 14 1 1e+037 0 0 empty empty beat_* 0 -5 0 8 -1
+-262144 -262144 1 256;
+#X obj 223 128 nbx 5 14 1 1e+037 0 0 empty empty div 0 -5 0 8 -1 -262144
+-262144 8 256;
+#X obj 333 91 loadbang;
+#X obj 330 120 t b b b;
+#X obj 473 157 f \$3;
+#X obj 396 168 f \$2;
+#X obj 309 166 f \$1;
+#X obj 309 198 sel 0;
+#X msg 311 226 120;
+#X obj 470 196 sel 0;
+#X obj 392 195 sel 0;
+#X msg 386 219 1;
+#X msg 474 229 16;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 1;
+#X connect 6 0 14 0;
+#X connect 7 0 15 0;
+#X connect 8 0 13 0;
+#X connect 9 0 1 2;
+#X connect 10 0 1 3;
+#X connect 11 0 12 0;
+#X connect 12 0 15 0;
+#X connect 12 1 14 0;
+#X connect 12 2 13 0;
+#X connect 13 0 18 0;
+#X connect 14 0 19 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 16 1 5 0;
+#X connect 17 0 5 0;
+#X connect 18 0 21 0;
+#X connect 18 1 10 0;
+#X connect 19 0 20 0;
+#X connect 19 1 9 0;
+#X connect 20 0 9 0;
+#X connect 21 0 10 0;
+#X coords 0 -1 1 1 170 42 1 100 100;

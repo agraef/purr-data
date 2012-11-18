@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/ext/!svn/ver/3746/trunk/vasp/pd-ex
+END
+convolve.pd
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/2997/trunk/vasp/pd-ex/convolve.pd
+END
+loudness.pd
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/2997/trunk/vasp/pd-ex/loudness.pd
+END
+wedit.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/pd-ex/wedit.pd
+END
+frqmax.pd
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/pd-ex/frqmax.pd
+END
+freeze.pd
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3736/trunk/vasp/pd-ex/freeze.pd
+END
+enhance.pd
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3746/trunk/vasp/pd-ex/enhance.pd
+END

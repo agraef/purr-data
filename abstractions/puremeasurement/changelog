@@ -1,0 +1,25 @@
+changelog for the PureMeasurement collection of patches
+-------------------------------------------------------
+
+v28II06
+-------
+new applications:
+- pm_decayrecorder: record decay curves in third octave bands, in order to
+  estimate reverberation times.
+
+modifications:
+- pm_tfsiso.pd: dsp is now switched off when a new test signal file is loaded.
+- pm_slm.pd, pm_tfsiso.pd, pm_scope.pd: changed names of global variables. 
+  They now feature the $0- prefix such that concurrently open patches do not 
+  interfere (thanks to Frank Barknecht for pointing me to this one).
+- pm_filters.pd: now don't use global variables anymore.  
+
+bugfixes:
+- pm_filters_44100Hz.pd, pm_slm.pd: fixed missing connection in the 8000Hz 
+  third octave band. 
+
+
+
+v07IX05
+-------
+first WWW release

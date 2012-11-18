@@ -1,0 +1,186 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header receive 3 12 0 18
+-204280 -1 0;
+#X obj 0 271 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 244 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Dave Sabine \, September 9 \, 2003
+. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 25 KEYWORDS control nonlocal;
+#X text 12 65 DESCRIPTION receive messages without patch cords;
+#X text 12 85 OUTLET_0 anything;
+#X text 12 5 ALIAS r;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 331 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 373 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 434 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 93 310 428 292 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [receive] Related Objects;
+#X text 20 109 Externals and other object libraries;
+#X obj 115 43 receive~;
+#X obj 177 43 send~;
+#X obj 23 43 send;
+#X obj 278 43 throw~;
+#X obj 333 43 catch~;
+#X obj 23 73 tabreceive~;
+#X obj 121 73 tabsend~;
+#X obj 193 73 netsend;
+#X obj 259 73 netreceive;
+#X obj 225 43 value;
+#X obj 70 43 qlist;
+#X obj 20 128 pddp/helplink ggee/streamin~;
+#X obj 20 148 pddp/helplink ext13/receive13~;
+#X obj 20 168 pddp/helplink maxlib/remote;
+#X obj 20 188 pddp/helplink receivelocal;
+#X obj 20 208 pddp/helplink maxlib/dist;
+#X text 106 188 <- which library? (No help patch exists);
+#X obj 20 228 pddp/helplink receiveOSC;
+#X text 106 227 <- which library?;
+#X text 106 247 <- which library?;
+#X obj 20 248 pddp/helplink shoutamp~;
+#X obj 20 268 pddp/helplink maxlib/netdist;
+#X restore 102 597 pd Related_objects;
+#X obj 78 340 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 516 3 r;
+#X obj 442 3 receive;
+#X text 492 3 or;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/receive -text
+pdpedia: receive;
+#X obj 47 107 s;
+#X floatatom 47 83 5 0 0 0 - - -;
+#X floatatom 149 112 5 0 0 0 - - -;
+#X obj 149 83 r;
+#X floatatom 204 112 5 0 0 0 - - -;
+#X obj 204 83 r;
+#X floatatom 255 112 5 0 0 0 - - -;
+#X obj 255 83 r;
+#X floatatom 51 166 5 0 0 0 - - -;
+#X floatatom 306 192 5 0 0 0 - - -;
+#X floatatom 377 192 5 0 0 0 - - -;
+#X floatatom 452 192 5 0 0 0 - - -;
+#X text 50 146 with creation argument;
+#X obj 51 190 s dave;
+#X obj 306 163 r dave;
+#X obj 377 163 r dave;
+#X floatatom 151 167 5 0 0 0 - - -;
+#X floatatom 383 82 5 0 0 0 - - -;
+#X msg 383 105 \; dave \$1;
+#X floatatom 461 80 5 0 0 0 - - -;
+#X msg 461 105 \; hans \$1;
+#X obj 452 163 r hans;
+#X obj 151 191 s hans;
+#X text 98 275 (none);
+#X text 98 339 anything;
+#X text 168 339 - [receive] outputs the message(s) sent from a corresponding
+[send] of the same name.;
+#N canvas 100 55 428 469 Messages_and_Data_Types 0;
+#X floatatom 23 177 5 0 0 0 - - -;
+#X floatatom 22 288 5 0 0 0 - - -;
+#X obj 23 234 s a_float;
+#X obj 22 262 r a_float;
+#X obj 33 205 s whatever;
+#X obj 170 204 s whatever;
+#X obj 158 233 s a_symbol;
+#X obj 158 262 r a_symbol;
+#X symbolatom 158 176 10 0 0 0 - - -;
+#X text 62 176 click-n-drag;
+#X text 228 176 type something;
+#X text 318 200 click this;
+#X obj 305 307 s whatever;
+#X obj 295 277 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 295 336 s a_bang;
+#X text 317 275 click this too;
+#X obj 295 379 r a_bang;
+#X obj 295 407 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 72 313 r whatever;
+#X floatatom 72 443 5 0 0 0 - - -;
+#X symbolatom 113 424 10 0 0 0 - - -;
+#X obj 161 381 print;
+#X obj 195 363 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X symbolatom 158 291 10 0 0 0 - - -;
+#X obj 154 404 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 295 217 \; whatever 1 2 3 4 \;;
+#X obj 72 338 route float symbol list bang;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [receive] More Info;
+#X text 20 38 Pd's [send] and [receive] objects can communicate any
+message that is supported by Pd: floats \, anythings \, lists \, symbols
+\, and bangs. However \, you will need to plan ahead in your patch
+to ensure that a symbol doesn't accidently arrive at a [float] object
+\, or that a list doesn't arrive at a [symbol] object. Consider the
+following: I have been very careful to keep [send] and [receive] groups
+isolated to specific data types - and in the last case \, I have incorporated
+a [route] object to properly receive the various data types at a single
+[receive] object.;
+#X connect 0 0 2 0;
+#X connect 0 0 4 0;
+#X connect 3 0 1 0;
+#X connect 7 0 23 0;
+#X connect 8 0 6 0;
+#X connect 8 0 5 0;
+#X connect 13 0 12 0;
+#X connect 13 0 14 0;
+#X connect 16 0 17 0;
+#X connect 18 0 26 0;
+#X connect 26 0 19 0;
+#X connect 26 1 20 0;
+#X connect 26 2 21 0;
+#X connect 26 2 24 0;
+#X connect 26 3 22 0;
+#X restore 101 569 pd Messages_and_Data_Types;
+#X text 11 23 receive messages without patch cords;
+#X text 168 391 - [receive] accepts a single argument which is a 'name'.
+All [receive]s of the same name correspond to a [send] object of that
+name.;
+#X text 168 275 - data can be inputted to the [receive] object using
+the [send] object or by using the nonlocal send functionality of a
+message box. The [receive] object accepts any message as input.;
+#X text 334 99 Using;
+#X text 334 110 message;
+#X text 334 122 boxes;
+#X text 80 391 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 439 pddp/pddplink all_about_send_n_receive.pd -text all_about_send_n_receive
+;
+#X obj 98 454 pddp/pddplink all_about_scope_and_locality.pd -text all_about_scope_and_locality
+;
+#X obj 97 512 pddp/pddplink ../2.control.examples/09.send_receive.pd
+-text doc/2.control.examples/09.send_receive.pd;
+#X obj 97 527 pddp/pddplink ../2.control.examples/10.more.messages.pd
+-text doc/2.control.examples/10.more.messages.pd;
+#X obj 97 542 pddp/pddplink ../2.control.examples/13.locality.pd -text
+doc/2.control.examples/13.locality.pd;
+#X obj 98 475 pddp/pddplink ../1.manual/x2.htm -text doc/1.manual/x2.htm
+;
+#X obj 98 490 pddp/pddplink ../1.manual/x5.htm -text doc/1.manual/x5.htm
+;
+#X connect 14 0 13 0;
+#X connect 16 0 15 0;
+#X connect 18 0 17 0;
+#X connect 20 0 19 0;
+#X connect 21 0 26 0;
+#X connect 27 0 22 0;
+#X connect 28 0 23 0;
+#X connect 29 0 35 0;
+#X connect 30 0 31 0;
+#X connect 32 0 33 0;
+#X connect 34 0 24 0;

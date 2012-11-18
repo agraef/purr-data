@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3722/trunk/flext/buildsys/mac/pd
+END
+config-gcc.def
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/3722/trunk/flext/buildsys/mac/pd/config-gcc.def
+END
+gnumake-gcc-ext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/ext/!svn/ver/1247/trunk/flext/buildsys/mac/pd/gnumake-gcc-ext.inc
+END
+gnumake-gcc-flext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/ext/!svn/ver/1247/trunk/flext/buildsys/mac/pd/gnumake-gcc-flext.inc
+END
+gnumake-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/ext/!svn/ver/1247/trunk/flext/buildsys/mac/pd/gnumake-gcc.inc
+END

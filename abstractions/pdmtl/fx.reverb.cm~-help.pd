@@ -1,0 +1,32 @@
+#N canvas 276 121 404 349 10;
+#X floatatom 95 6 5 0 0 0 - - -;
+#X obj 58 129 mix.out_~;
+#X obj 98 -18 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 9500 1;
+#X obj 117 31 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 12700 1;
+#X text 26 -52 Comment: Original patch by Claude H.;
+#X text 27 -65 Description: A simple stereo reverb.;
+#X floatatom 114 52 5 0 0 0 - - -;
+#X obj 170 81 nbx 5 14 0 127 0 0 empty empty wetness(0-127) 0 -6 0
+10 -262144 -1 -1 127 256;
+#X text 235 -17 feedback (0-127);
+#X text 250 31 delay (0-127);
+#X obj 58 95 fx.reverb.cm~;
+#X obj 58 58 adc~;
+#X obj 19 28 synth.blip~;
+#X msg 19 6 120;
+#X obj 152 50 init.lf 127;
+#X connect 0 0 10 2;
+#X connect 2 0 0 0;
+#X connect 3 0 6 0;
+#X connect 6 0 10 3;
+#X connect 7 0 10 4;
+#X connect 10 0 1 0;
+#X connect 10 1 1 1;
+#X connect 11 0 10 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 0;
+#X connect 12 0 10 1;
+#X connect 13 0 12 0;
+#X connect 14 0 7 0;

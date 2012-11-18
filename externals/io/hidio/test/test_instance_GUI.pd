@@ -1,0 +1,26 @@
+#N canvas 115 434 475 227 10;
+#X obj 96 93 send test_control;
+#X obj 156 25 tgl 35 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X msg 89 44 clear;
+#X msg 38 44 write;
+#X msg 273 166 \; pd open \$1 \$2;
+#X obj 394 119 getdir;
+#X obj 273 119 symbol;
+#X msg 273 69 test_instance.pd;
+#X obj 273 95 trigger anything bang;
+#X obj 273 138 pack symbol symbol;
+#X obj 275 43 until;
+#X msg 275 20 4;
+#X msg 32 166 \; pd-test_instance.pd menuclose;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 5 0 9 1;
+#X connect 6 0 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 1 5 0;
+#X connect 9 0 4 0;
+#X connect 10 0 7 0;
+#X connect 11 0 10 0;

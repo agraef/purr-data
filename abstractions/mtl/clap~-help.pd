@@ -1,0 +1,15 @@
+#N canvas 591 70 317 220 10;
+#X text 18 10 Description: Generates a kind of clap sound.;
+#X text 18 26 Comment: Based on Andy Farnell's work.;
+#X obj 26 143 mtl/out~;
+#X obj 26 111 mtl/clap~;
+#X obj 26 87 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 113 74 hsl 128 15 0 5000 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 73 72 decay;
+#X text 19 45 tags: synthesize~;
+#X connect 3 0 2 0;
+#X connect 3 0 2 1;
+#X connect 4 0 3 0;
+#X connect 5 0 3 1;

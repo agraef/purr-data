@@ -1,0 +1,65 @@
+#N canvas 110 194 130 71 10;
+#X obj 1 1 cnv 5 128 70 empty empty Parameter_Presets 5 6 1 9 -133153
+-1 0;
+#N canvas 390 164 447 548 interna 0;
+#X obj 10 24 cnv 15 280 340 empty empty empty 5 8 1 10 -260390 -1 0
+;
+#X text 10 7 Manage Memento Presets;
+#X obj 43 39 inlet;
+#X obj 106 230 r \$0-save;
+#X obj 65 93 r \$0-load;
+#X text 89 38 care-taker commands;
+#X obj 43 327 caretaker RRADICAL;
+#X obj 65 113 openpanel;
+#X obj 106 250 savepanel;
+#X msg 106 270 file \$1 \, save RRADICAL;
+#X text 21 394 Recreate pt.presets with a "symbol" to store the preset
+name. The default name should be [patchname-presets.dat] saved to the
+same folder as the main patch. Need externas (toxy?) to get the directory
+of the main patch \, and also the name of the main patch. You know
+what is better? Leave it like this and add a space for a custom name
+for each preset state.;
+#X msg 65 133 file \$1 \, load RRADICAL;
+#X connect 2 0 6 0;
+#X connect 3 0 8 0;
+#X connect 4 0 7 0;
+#X connect 7 0 11 0;
+#X connect 8 0 9 0;
+#X connect 9 0 6 0;
+#X connect 11 0 6 0;
+#X restore 7 168 pd interna;
+#X obj 10 46 bng 15 250 50 0 \$0-save \$0 Save 20 8 1 9 -237178 -1
+-1;
+#X text 218 76 The file Management here is a little ugly...;
+#X obj 60 46 bng 15 250 50 0 \$0-load \$0 Load 20 8 1 9 -237178 -1
+-1;
+#X text 4 124 Preset Control;
+#X text 233 399 TODO: Add "append" functionality to popup so that each
+of the presets can be named.;
+#X text 239 115 What is the easiest and most simple way to create this
+object? On loadbang it could load the pool \, and this way you would
+not really have to worry about it \, unless you need to manage the
+files \, ie sets of sets... This would be most useful for the animation
+stuff... maybe only the "save" bang should be available? Other methods
+can be accessed via messages? open \, save and file can be accessed
+by sending messages to inlet;
+#X obj 52 144 inlet;
+#X obj 4 79 inlet;
+#X text 48 80 Set Preset;
+#X obj 3 14 popup 124 25 grey50 Presets Preset-01 Preset-02 Preset-03
+Preset-04 Preset-05 Preset-06 Preset-07 Preset-08 Preset-09 Preset-10
+;
+#X obj 140 35 s pt.currentPreset;
+#X text 237 230 After discussion on mailinglist you decided that both
+"load" and "save" would actually set the filename explicitly first.
+[file \$1 \, load] [file \$1 \, save];
+#X text 236 295 Recreate pt.presets with a "symbol" to store the preset
+name. The default name should be [patchname-presets.dat] saved to the
+same folder as the main patch. Need externas (toxy?) to get the directory
+of the main patch \, and also the name of the main patch. You know
+what is better? Leave it like this and add a space for a custom name
+for each preset state.;
+#X connect 8 0 1 0;
+#X connect 9 0 11 0;
+#X connect 11 0 12 0;
+#X coords 0 0 1 1 130 72 1;

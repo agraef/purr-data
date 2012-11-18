@@ -1,0 +1,54 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty selecting_events 20 12 0 24
+-228992 -66577 0;
+#X floatatom 370 178 5 0 0 0 - - -;
+#X obj 370 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 391 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 370 211 select 2 3 4 5 6 10;
+#X obj 413 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 435 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 456 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 478 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 500 235 5 0 0 0 - - -;
+#X obj 58 341 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 95 342 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 133 342 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 171 342 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 61 105 symbol dog;
+#X msg 66 134 symbol cat;
+#X msg 74 162 symbol foo;
+#X msg 81 192 symbol earth;
+#X msg 90 221 symbol 400;
+#X obj 58 315 select dog cat foo 400;
+#X msg 86 251 400;
+#X text 97 297 FIRST CREATION ARGUMENT IS A SYMBOL;
+#X obj 209 341 pddp/print;
+#X connect 1 0 4 0;
+#X connect 4 0 2 0;
+#X connect 4 1 3 0;
+#X connect 4 2 5 0;
+#X connect 4 3 6 0;
+#X connect 4 4 7 0;
+#X connect 4 5 8 0;
+#X connect 4 6 9 0;
+#X connect 14 0 19 0;
+#X connect 15 0 19 0;
+#X connect 16 0 19 0;
+#X connect 17 0 19 0;
+#X connect 18 0 19 0;
+#X connect 19 0 10 0;
+#X connect 19 1 11 0;
+#X connect 19 2 12 0;
+#X connect 19 3 13 0;
+#X connect 19 4 22 0;
+#X connect 20 0 19 0;

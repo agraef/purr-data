@@ -1,0 +1,15 @@
+#N canvas 0 0 450 300 10;
+#X obj 88 222 s SAVING-SEND;
+#X obj 88 40 r SAVING-REC;
+#X text 169 89 filter by TAG;
+#X text 209 200 add TAG;
+#X obj 88 119 outlet;
+#X obj 88 172 inlet;
+#X obj 88 88 route \$1;
+#X obj 88 198 list prepend \$1;
+#X obj 88 64 list trim;
+#X connect 1 0 8 0;
+#X connect 5 0 7 0;
+#X connect 6 0 4 0;
+#X connect 7 0 0 0;
+#X connect 8 0 6 0;

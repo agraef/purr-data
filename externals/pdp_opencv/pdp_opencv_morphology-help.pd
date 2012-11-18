@@ -1,0 +1,99 @@
+#N canvas 471 76 685 626 10;
+#X obj -22 -6 cnv 15 621 250 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X obj 218 34 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 218 61 metro 40;
+#X msg 308 88 close;
+#X obj 238 159 pdp_v4l;
+#X msg 295 56 open /dev/video0;
+#X obj 407 29 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 407 56 metro 40;
+#X msg 488 75 close;
+#X msg 484 51 open /dev/video0;
+#X obj 428 155 pdp_v4l2;
+#X msg 493 130 format \$1;
+#X obj 494 108 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 8 209 pdp_qt;
+#X obj 41 145 metro 40;
+#X msg 41 117 bang;
+#X msg 82 117 stop;
+#X obj 8 48 openpanel;
+#X msg 8 73 open \$1;
+#X msg 8 20 bang;
+#X msg 42 172 loop \$1;
+#X obj 122 172 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 122 90 loadbang;
+#X text 51 23 playing a video file;
+#X text 248 32 Camera input;
+#X obj 68 210 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text -20 -33 written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+);
+#X text -19 -71 pdp_opencv_morphology : morphology filter ( erosion
+/ dilatation );
+#X text -19 -46 used as a filter to focus on bright or dark zones;
+#X obj -18 327 cnv 15 621 200 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj 9 537 pdp_xv;
+#X floatatom 184 471 5 0 0 0 - - -;
+#X obj 218 363 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 172 421 shape 2;
+#X msg 162 401 shape 1;
+#X msg 182 440 shape 3;
+#X msg 159 363 mode \$1;
+#X text 219 402 use rectangle structuring element;
+#X text 237 437 use cross-shaped structuring element;
+#X text 231 419 use elliptic structuring element;
+#X obj 9 464 pdp_opencv_morphology;
+#X text 237 363 switch open/close and erode/dilate modes;
+#X text 223 472 number of iterations -10/+10 be careful \, might freeze
+your CPU );
+#X text 237 451 ( default rectangle );
+#X text 239 376 default open/close;
+#X obj -21 248 cnv 15 621 73 empty empty empty 20 12 0 14 -260801 -66577
+0;
+#X msg 161 271 set;
+#X floatatom 161 295 5 0 0 0 - - -;
+#X text 199 294 threshold (default 13) to use when comparing pixel
+colors;
+#X text 196 270 set the background reference;
+#X obj 10 295 pdp_opencv_bgsubstract;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 50 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 50 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 50 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
+#X connect 19 0 17 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 22 0 15 0;
+#X connect 25 0 13 1;
+#X connect 31 0 40 1;
+#X connect 32 0 36 0;
+#X connect 33 0 40 0;
+#X connect 34 0 40 0;
+#X connect 35 0 40 0;
+#X connect 36 0 40 0;
+#X connect 40 0 30 0;
+#X connect 46 0 50 0;
+#X connect 47 0 50 1;
+#X connect 50 0 40 0;

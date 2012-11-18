@@ -1,0 +1,60 @@
+#N canvas 160 22 783 798 10;
+#X obj 332 115 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X symbolatom 99 337 80 0 0 0 - - -;
+#X obj 99 361 print;
+#X text 75 24 Description: Nice file browser.;
+#X text 313 300 <- Drag the slider to display all the contents of a
+folder.;
+#X text 321 224 - Click on the grey bar to select the folder (you might
+have to select a file in the target folder).;
+#X text 321 258 - Files are white \, folders are grey!;
+#X text 364 111 <- click the bang (or click on the grey label below)
+to select the folder to be browsed.;
+#X floatatom 58 112 5 0 0 0 - - -;
+#X text 45 91 You can select files by index.;
+#X msg 278 57 medias/;
+#X text 340 51 <- Send a folder's full or relative path to display
+it's contents.;
+#X msg 232 130 clear;
+#X obj 328 459 loadbang;
+#X msg 328 486 patterns mov avi mpg mpeg folders;
+#X msg 303 431 medias/movies;
+#X text 203 402 You can use patterns to only display certain files.
+;
+#X text 402 425 See folder.dump's help for more info on patterns.;
+#X text 320 208 - Click on the white square to go back one folder.
+;
+#X floatatom 455 590 5 0 0 1 size - -;
+#X obj 379 640 pack 0 10;
+#X obj 455 610 t b a;
+#X floatatom 376 593 5 0 2 1 font - -;
+#X msg 379 663 text.font \$1 \$2;
+#X msg 381 696 select.colorRGB 125 125 125;
+#X text 579 699 Change the select color;
+#X text 354 558 to modify the browser's display;
+#X msg 381 722 select.colorRGB 0 125 125;
+#X text 354 543 You can use any of gui.browser right inlet's options
+;
+#X text 393 747 See gui.browser's help for more;
+#X obj 100 169 file.browser_ medias;
+#X text 318 165 First argument: determines send target;
+#X text 318 179 Second argument: determines receive target;
+#X obj 70 567 file.browser_;
+#X connect 0 0 30 1;
+#X connect 1 0 2 0;
+#X connect 8 0 30 0;
+#X connect 10 0 30 1;
+#X connect 12 0 30 1;
+#X connect 13 0 14 0;
+#X connect 14 0 33 1;
+#X connect 15 0 33 1;
+#X connect 19 0 21 0;
+#X connect 20 0 23 0;
+#X connect 21 0 20 0;
+#X connect 21 1 20 1;
+#X connect 22 0 20 0;
+#X connect 23 0 33 2;
+#X connect 24 0 33 2;
+#X connect 27 0 33 2;
+#X connect 30 0 1 0;

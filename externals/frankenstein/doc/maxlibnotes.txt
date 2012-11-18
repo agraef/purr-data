@@ -1,0 +1,16 @@
+081005
+
+-the most universally useful maxlib object has to be [borax], since it not only gives us velocity, pitch, duration, but also can detect the number of voices currently playing, various delta values, can count note-ons (incrementally), amongst other things. It's like a swiss army knife of music analysis, and I suspect this is where our live input (in davide's diagram) needs to make use of maxlib in order to derive what we will feed the chord extractor, then graph. 
+
+-[gestalt] is for monophonic melodies only, but with [tilt], will detect the onset of melodies
+
+-[chord] is based on Robert Rowe's Machine Musicianship algorithms for chord detection, and will successfully detect most chords, but most importantly will give us the MIDI note number of the bass note, and its -class-.
+
+-[history] is interesting, because while it calculates the average value fed into its first inlet over N millisecond periods, it can also tell us the general tendency (up = 1, down = -1), which may be useful somewhere in the agent, to build more musical output. Also, [edge] is interesting because it detects falling and rising 'edges' in a sequence.
+
+-[iso] is interesting, because it can store and play sequences of MIDI notes -and- onsets in milliseconds, but of course we're once again talking about monophonic melodies, unless we run several in parallel somehow, but they'd have to 'know' about each other.
+
+-interestingly, [subst] performs what I see as the bit-shifting part of our current GA construction, and may actually help in understanding how we'd build a solderer agent.
+
+-[match] could be useful, because it matches incoming data against up to 16 creation arguments, and outputs a list; this might help in determining how closely the live player is playing against generated output or suggestions? just a thought.
+

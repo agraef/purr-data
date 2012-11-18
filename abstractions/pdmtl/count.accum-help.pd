@@ -1,0 +1,49 @@
+#N canvas 391 38 856 615 12;
+#X floatatom 81 470 5 0 0 0 - - -;
+#X obj 235 268 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 114 196 1;
+#X obj 81 166 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 114 175 float: add float to current count and output stored
+number.;
+#X text 80 149 bang: output stored number.;
+#X msg 173 235 set 2;
+#X msg 263 301 -1;
+#X text 259 280 float: add float to stored number (do not output).
+;
+#X msg 156 195 -1;
+#X obj 80 493 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 81 418 count.accum;
+#X floatatom 384 558 5 0 0 0 - - -;
+#X msg 384 482 1;
+#X obj 508 485 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 379 452 Arg sets initial value.;
+#X msg 304 334 set -4;
+#X text 171 217 set float: set stored number.;
+#X obj 384 515 count.accum -10;
+#X text 233 251 bang: reset stored number to initial value (do not
+output).;
+#X text 366 333 set float: sets the reset value but does not change
+the store number.;
+#X text 67 48 Version: 2;
+#X text 68 68 Changes: Added 2 new behaviors (set and reset to initial
+value).;
+#X text 69 104 Comment: Behavior is different than cyclone's accum.
+;
+#X text 67 27 Description: Store and "add to" and "subtract to" a number.
+;
+#X connect 0 0 10 0;
+#X connect 1 0 11 1;
+#X connect 2 0 11 0;
+#X connect 3 0 11 0;
+#X connect 6 0 11 0;
+#X connect 7 0 11 1;
+#X connect 9 0 11 0;
+#X connect 11 0 0 0;
+#X connect 13 0 18 0;
+#X connect 14 0 18 1;
+#X connect 16 0 11 1;
+#X connect 18 0 12 0;

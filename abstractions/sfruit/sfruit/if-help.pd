@@ -1,0 +1,37 @@
+#N canvas 623 253 399 403 10;
+#X text 19 20 [if f x] - if f(x) is true \, output from left outlet
+\, else output from right outlet.;
+#X text 19 60 ...where ["f"] is an object that outputs 0 or 1 (like
+[<] or [==]) \, and x is an argument for f.;
+#X text 19 99 Example: to recreate [moses]:;
+#X obj 20 152 if < 5;
+#X floatatom 20 122 5 0 0 0 - - -;
+#X floatatom 20 192 5 0 0 0 - - -;
+#X floatatom 53 192 5 0 0 0 - - -;
+#X obj 20 216 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 53 216 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 17 240 Or route (for floats only):;
+#X floatatom 20 342 5 0 0 0 - - -;
+#X floatatom 65 342 5 0 0 0 - - -;
+#X obj 20 366 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 65 366 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 20 302 if == 11;
+#X msg 20 264 11;
+#X msg 51 264 12;
+#X text 254 370 2008 Luke Iannini;
+#X text 254 385 proyekto.net;
+#X connect 3 0 5 0;
+#X connect 3 1 6 0;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 10 0 12 0;
+#X connect 11 0 13 0;
+#X connect 14 0 10 0;
+#X connect 14 1 11 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;

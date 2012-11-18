@@ -1,0 +1,14 @@
+#N canvas 386 218 450 300 10;
+#X msg 25 95 a 1 2 3;
+#X obj 229 111 r a;
+#X obj 229 138 print A;
+#X obj 326 135 print A;
+#X obj 326 108 r b;
+#X msg 77 116 b ti to tum;
+#X obj 25 154 flow.send.any;
+#X text 41 39 Description: sends a message to a target defined by the
+first element of the list.;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;

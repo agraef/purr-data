@@ -1,0 +1,59 @@
+#N canvas 93 123 591 508 10;
+#X obj 28 283 mix.out_~;
+#X obj 20 -11 cnv 15 430 22 empty empty empty 20 12 0 14 -241404 -66577
+0;
+#X obj 20 10 cnv 6 430 1 empty empty ::mix.switch.nice:: 0 -10 0 12
+-66577 -1 0;
+#X obj 20 -11 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 10 82 osc~ 440;
+#X obj 39 103 osc~ 660;
+#X obj 20 63 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 21 58 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#N canvas 0 0 474 324 volumes 0;
+#X obj 364 32 inlet switch;
+#X obj 35 24 inlet~;
+#X obj 135 25 inlet~;
+#X obj 37 261 outlet~;
+#X obj 180 263 outlet~;
+#X obj 96 123 *~;
+#X obj 126 123 *~;
+#X obj 235 25 inlet~;
+#X obj 358 81 switch~;
+#X connect 0 0 8 0;
+#X connect 1 0 5 0;
+#X connect 2 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 1;
+#X connect 7 0 5 1;
+#X restore 55 258 pd volumes;
+#X text 25 29 Author: ClaudiusMaximus. Modified by Thomas Ouellet Fredericks
+;
+#X text 140 259 <- Put the [switch~] object inside a subpatch!;
+#X text 376 -7 Version: 1;
+#X text 26 14 Description: Simpler version of a switch~ without glitches.
+;
+#X text 304 141 Outlet 1: to switch~;
+#X obj 125 80 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 10 -262144
+-1 -1 0 1;
+#X floatatom 119 101 5 0 0 0 - - -;
+#X text 305 124 Inlet 1: volume (0-1);
+#X obj 172 140 mix.switch.nice 10;
+#X text 216 166 Argument 1: Delay time. Defaults to the minimum value
+of 10ms. You usually want the delay time to be higher than the volume
+line time.;
+#X msg 100 132 \$1 9;
+#X obj 100 155 line~;
+#X connect 4 0 8 0;
+#X connect 5 0 8 1;
+#X connect 8 0 0 0;
+#X connect 8 1 0 1;
+#X connect 14 0 15 0;
+#X connect 15 0 17 0;
+#X connect 15 0 19 0;
+#X connect 17 0 8 3;
+#X connect 19 0 20 0;
+#X connect 20 0 8 2;

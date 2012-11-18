@@ -1,0 +1,71 @@
+#N canvas 340 94 619 459 10;
+#X text 17 38 markov;
+#X text 84 20 Interface built around the prob-object of David Zicarelli.
+A table of transition probabilities (cf. prob.help) is sent to the
+right-most inlet and the start value into the middle. A bang into the
+left inlet outputs an element chosen from a one-dimensional markov
+matrix.;
+#X msg 297 174 clear;
+#X msg 255 174 dump;
+#X obj 150 245 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 35 168 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 102 160 4 0 0 2 start_value - -;
+#N canvas 231 56 462 467 markov-matrix 0;
+#X msg 131 148 5 4 1;
+#X msg 131 173 4 3 1;
+#X msg 131 205 3 2 1;
+#X msg 131 237 2 1 1;
+#X msg 192 237 1 2 1;
+#X msg 192 205 2 3 1;
+#X msg 192 173 3 4 1;
+#X msg 192 148 4 5 1;
+#X obj 37 332 outlet;
+#X msg 131 267 1 0 1;
+#X msg 192 267 0 1 1;
+#X obj 50 53 inlet;
+#X obj 50 86 t b b b b b b b b b b;
+#X connect 0 0 8 0;
+#X connect 1 0 8 0;
+#X connect 2 0 8 0;
+#X connect 3 0 8 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 9 0 8 0;
+#X connect 10 0 8 0;
+#X connect 11 0 12 0;
+#X connect 12 0 9 0;
+#X connect 12 1 3 0;
+#X connect 12 2 2 0;
+#X connect 12 3 1 0;
+#X connect 12 4 0 0;
+#X connect 12 5 10 0;
+#X connect 12 6 4 0;
+#X connect 12 7 5 0;
+#X connect 12 8 6 0;
+#X connect 12 9 7 0;
+#X restore 250 154 pd markov-matrix;
+#X obj 250 123 loadbang;
+#X obj 35 243 collect;
+#X obj 91 243 bng 15 250 50 1 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 35 271;
+#X text 171 245 bang \, when there is no transition possible ("I am
+stuck!");
+#X text 389 406 1994 by Karlheinz Essl;
+#X msg 315 122 bang;
+#X obj 35 210 markov 5;
+#X connect 2 0 15 2;
+#X connect 3 0 15 2;
+#X connect 5 0 15 0;
+#X connect 6 0 15 1;
+#X connect 7 0 15 2;
+#X connect 8 0 7 0;
+#X connect 9 0 11 0;
+#X connect 10 0 9 1;
+#X connect 14 0 7 0;
+#X connect 15 0 9 0;
+#X connect 15 1 4 0;

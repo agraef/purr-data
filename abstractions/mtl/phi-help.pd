@@ -1,0 +1,10 @@
+#N canvas 535 339 406 181 10;
+#X obj 172 85 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 172 137 print;
+#X text 47 16 Description: Outputs the constant phi ((1+sqrt(5))/2).
+;
+#X obj 172 112 mtl/phi;
+#X text 48 33 tags: math;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;

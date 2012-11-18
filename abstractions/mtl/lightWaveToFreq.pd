@@ -1,0 +1,9 @@
+#N canvas 0 0 450 300 10;
+#X obj 125 70 inlet;
+#X obj 131 176 /;
+#X msg 132 127 3e+08 \$1;
+#X obj 132 237 outlet;
+#X text 82 26 Light : Wave length (m) to frequency (Hz);
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;

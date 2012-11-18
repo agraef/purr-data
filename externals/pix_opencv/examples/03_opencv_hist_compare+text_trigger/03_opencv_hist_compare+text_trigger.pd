@@ -1,0 +1,101 @@
+#N canvas 513 25 1257 685 10;
+#X obj 354 406 pix_texture;
+#X obj 354 425 rectangle 4 3;
+#X obj 478 0 pix_separator;
+#X obj 354 1 pix_separator;
+#X obj 624 325 gemhead;
+#X obj 624 359 translateXYZ;
+#X msg 634 429 justify center center;
+#X obj 624 396 colorRGB 1 0 0;
+#X msg 545 261 text \$1;
+#X obj 9 -324 cnv 15 600 90 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X text 32 -285 1.- Create the Gem Window;
+#X msg 517 -289 0 \, destroy;
+#X msg 483 -314 reset \, create \, 1;
+#X obj 483 -261 gemwin;
+#X text 618 -313 <- 1;
+#X obj 11 -217 cnv 15 600 180 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X text 34 -178 2.- Setup your camera;
+#X obj 478 -74 pix_video;
+#X obj 478 -190 gemhead;
+#X msg 369 -126 colorspace RGBA;
+#X msg 621 -187 dialog;
+#X msg 621 -122 device /dev/dv1394-0;
+#X msg 621 -145 driver 1;
+#X text 618 -162 only linuxDV;
+#X text 620 -203 MACOSX;
+#X text 619 -102 video 4 linux;
+#X msg 622 -85 driver 0;
+#X msg 622 -62 device /dev/video0;
+#X obj 14 44 cnv 15 700 80 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X obj 613 60 hradio 15 1 0 6 empty empty empty 0 -8 0 10 -262144 -1
+-1 2;
+#X text 705 57 save an histogram at position nth ( 0 <= n <= 80 );
+#X obj 478 87 pix_opencv_hist_compare;
+#X text 34 57 3.- Save some gestures with your hands in front of the
+camera. for example save one for each number of extended fingers ::
+0-1-2-3-4-5;
+#X obj 14 132 cnv 15 700 100 empty empty empty 20 12 0 14 -261234 -66577
+0;
+#X floatatom 545 208 5 0 0 0 - - -;
+#X obj 613 131 unpack f f f f f;
+#X text 706 166 nearest to 1 is the winner;
+#X text 593 214 closest histogram (winner);
+#X obj 613 159 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 2967 1;
+#X obj 636 159 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 662 1;
+#X obj 659 159 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 591 1;
+#X obj 682 159 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 878 1;
+#X text 705 155 matching measure with stored histograms;
+#X text 366 259 write s text with the winner;
+#X text 29 138 When you have saved patterns you'll get the results
+of the comparison as indexes of matching measure.;
+#X text 29 180 Histogram comparison is using color information of the
+saved images \, so for the trick to work you must use color video input
+and try to put your hand allways in the same distance from the camera.
+;
+#X text 27 304 This example is a very simple one. It can be extended
+for better results.;
+#X msg 641 473 font ./vera.ttf;
+#X obj 662 454 loadbang;
+#X floatatom 685 506 0 0 0 0 - - -;
+#X text 691 524 size;
+#X obj 624 506 text3d -;
+#X obj 355 371 translateXYZ 0 0 -0.2;
+#X connect 0 0 1 0;
+#X connect 2 0 31 0;
+#X connect 3 0 52 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 6 0 51 0;
+#X connect 7 0 51 0;
+#X connect 8 0 51 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 0;
+#X connect 17 0 2 0;
+#X connect 17 0 3 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 20 0 17 0;
+#X connect 21 0 17 0;
+#X connect 22 0 17 0;
+#X connect 26 0 17 0;
+#X connect 27 0 17 0;
+#X connect 29 0 31 1;
+#X connect 31 1 34 0;
+#X connect 31 2 35 0;
+#X connect 34 0 8 0;
+#X connect 35 0 38 0;
+#X connect 35 1 39 0;
+#X connect 35 2 40 0;
+#X connect 35 3 41 0;
+#X connect 47 0 51 0;
+#X connect 48 0 47 0;
+#X connect 49 0 51 1;
+#X connect 52 0 0 0;

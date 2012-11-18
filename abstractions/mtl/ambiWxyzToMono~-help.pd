@@ -1,0 +1,92 @@
+#N canvas 610 278 756 504 10;
+#X obj -9 50 noise~;
+#X msg 123 74 angle \$1;
+#X floatatom 123 54 5 0 0 0 - - -;
+#X obj 126 33 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 163 54 Angle is in degrees.;
+#X obj -9 305 dac~ 1 2;
+#X text 11 -2 Encodes a mono sound to first order Ambisonics B-Format.
+;
+#X floatatom 291 55 5 0 0 0 - - -;
+#X obj 294 34 hsl 120 15 0 90 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X msg 291 75 elevation \$1;
+#X floatatom 462 57 5 0 0 0 - - -;
+#X obj 465 36 hsl 120 15 0 1 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 331 55 In degrees.;
+#X text 502 57 Directivity [0 \, 1];
+#X msg 462 77 directivity \$1;
+#X msg 296 336 angle \$1;
+#X floatatom 296 316 5 0 0 0 - - -;
+#X obj 299 295 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 336 316 Angle is in degrees.;
+#X floatatom 296 447 5 0 0 0 - - -;
+#X obj 299 426 hsl 120 15 0 1 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 336 447 Directivity [0 \, 1];
+#X msg 296 467 directivity \$1;
+#X floatatom 297 381 5 0 0 0 - - -;
+#X obj 300 360 hsl 120 15 0 90 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X msg 297 401 elevation \$1;
+#X text 337 381 In degrees.;
+#X msg 129 336 angle \$1;
+#X floatatom 129 316 5 0 0 0 - - -;
+#X obj 132 295 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 169 316 Angle is in degrees.;
+#X floatatom 128 378 5 0 0 0 - - -;
+#X obj 131 357 hsl 120 15 0 90 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X msg 128 398 elevation \$1;
+#X text 168 378 In degrees.;
+#X floatatom 128 442 5 0 0 0 - - -;
+#X obj 131 421 hsl 120 15 0 1 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 168 442 Directivity [0 \, 1];
+#X msg 128 462 directivity \$1;
+#X text 10 10 tags: ambisonic;
+#X obj -11 98 mtl/ambiMonoToWxyz~ angle 0;
+#X obj 171 250 mtl/ambiWxyzToMono~ angle 270;
+#X obj -16 251 mtl/ambiWxyzToMono~ angle 90;
+#X connect 0 0 40 0;
+#X connect 1 0 40 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 0;
+#X connect 9 0 40 1;
+#X connect 10 0 14 0;
+#X connect 11 0 10 0;
+#X connect 14 0 40 1;
+#X connect 15 0 41 4;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 19 0 22 0;
+#X connect 20 0 19 0;
+#X connect 22 0 41 4;
+#X connect 23 0 25 0;
+#X connect 24 0 23 0;
+#X connect 25 0 41 4;
+#X connect 27 0 42 4;
+#X connect 28 0 27 0;
+#X connect 29 0 28 0;
+#X connect 31 0 33 0;
+#X connect 32 0 31 0;
+#X connect 33 0 42 4;
+#X connect 35 0 38 0;
+#X connect 36 0 35 0;
+#X connect 38 0 42 4;
+#X connect 40 0 41 0;
+#X connect 40 0 42 0;
+#X connect 40 1 41 1;
+#X connect 40 1 42 1;
+#X connect 40 2 41 2;
+#X connect 40 2 42 2;
+#X connect 40 3 41 3;
+#X connect 40 3 42 3;
+#X connect 41 0 5 1;
+#X connect 42 0 5 0;

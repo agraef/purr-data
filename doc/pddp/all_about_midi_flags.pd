@@ -1,0 +1,94 @@
+#N canvas 0 0 448 643 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header midi_flags 20 10
+1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 40 79 pd -midiindev 1 -midioutdev 2;
+#X text 39 201 pd -mididev 1;
+#X text 19 223 This will use the first port for both MIDI input and
+output.;
+#X text 19 291 There is also a little bit of confusion about OSS midi
+(which uses the raw midi - /dev/midi* - devices by default) and ALSA
+(which is becoming very popular). ALSA uses /dev/snd/midiC*D* as their
+raw midi devices. The C* (* = some number) is the device number while
+D* (* = some number) is the port number. Normally the ALSA driver links
+its raw devices to the corresponding /dev/midi* automatically (i.e.:
+/dev/snd/midiC0d0 -> /dev/midi00 \, /dev/snd/midiC0D1 -> /dev/midi01
+etc).;
+#X text 19 411 MIDI objects in Pd (the ones that read and write to
+MIDI ports) take a MIDI channel as an argument. Channels 1-16 use the
+first MIDI device \, 17-32 use the second MIDI device and so on. For
+this to work one must specify which devices Pd is supposed to use:
+;
+#X text 38 478 -midiindev 1 \, 2 -- use devices 1 and 2 for input;
+#X text 38 493 -midioutdev 1 \, 2 -- use devices 1 and 2 for output
+;
+#X text 38 508 -mididev 1 \, 2 -- use devices 1 and 2 for input and
+output;
+#X text 19 526 NOTE (Windows): -listdev command line option lists all
+available MIDI and audio devices.;
+#X text 19 558 A couple more useful command line options (related to
+MIDI):;
+#X text 39 573 -nomidiin -- do not listen to any midi input;
+#X text 39 588 -nomidiout -- do not send any midi output;
+#X text 39 603 -nomidi -- do not use any MIDI;
+#X text 20 36 MIDI in Pd is handled through the 'raw' midi devices
+(such as /dev/midi*). Specify which MIDI port Pd is supposed to use
+through a command line switch when starting Pd \, i.e.:;
+#X text 19 101 The above will use the first MIDI device for MIDI input
+(it could be a MIDI controller such as a keyboard \, midi-guitar \,
+midi knob box \, etc.) and device #2 will be used for outputting the
+MIDI (re)generated or sent by Pd.;
+#X text 19 158 To use the same device for MIDI input AND output (e.g.
+\, a MIDI keyboard which is also a synthesizer) use the following command
+line switch:;
+#X text 19 238 NOTE (Linux): Pd counts the MIDI devices starting from
+one. Usually \, the operating system counts them starting with 0 (zero)
+so if you want to use /dev/midi00 \, start Pd with "-mididev 1". Always
+add 1 to the device number.;
+#X obj 1 621 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS MIDI;
+#X text 12 45 DESCRIPTION list of command line flags relating to MIDI
+;
+#X restore 392 623 pd META;
+#N canvas 10 196 428 342 Related_objects 0;
+#X obj 22 41 dbtopow~;
+#X obj 76 41 dbtorms~;
+#X obj 131 41 rmstodb~;
+#X obj 186 41 powtodb~;
+#X obj 241 41 mtof~;
+#X obj 278 41 ftom~;
+#X obj 22 68 expr;
+#X obj 57 68 expr~;
+#X obj 97 68 sig~;
+#X obj 131 68 snapshot~;
+#X text 19 98 [rmstopow~];
+#X text 99 98 [powtorms~];
+#X obj 22 169 db2v;
+#X obj 60 169 f2note;
+#X obj 108 169 t3_sig~;
+#X obj 164 169 m2f~;
+#X text 19 226 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 19 266 The best places to find information about Pd's libraries
+is:;
+#X text 20 286 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 20 301 or;
+#X text 19 316 iem.kug.ac.at/pdb/;
+#X text 18 198 [b2db];
+#X text 61 198 [tmtof];
+#X text 20 142 Externals;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 MIDI flags- Related Objects;
+#X restore 103 623 pd Related_objects;
+#X obj 6 623 pddp/pddplink all_about.pd -text All About Pd;

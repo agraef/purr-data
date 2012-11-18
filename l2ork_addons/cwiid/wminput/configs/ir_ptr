@@ -1,0 +1,6 @@
+#ir_ptr
+
+include buttons
+
+Plugin.ir_ptr.X	= ~ABS_X
+Plugin.ir_ptr.Y	= ~ABS_Y

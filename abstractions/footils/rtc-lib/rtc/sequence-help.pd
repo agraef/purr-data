@@ -1,0 +1,13 @@
+#N canvas 584 415 450 300 10;
+#X obj 111 125 sequence;
+#X msg 162 99 a b c d;
+#X msg 111 95 bang;
+#X obj 162 148 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X symbolatom 111 168 10 0 0 0 - - -;
+#X msg 228 99 x y z;
+#X connect 0 0 4 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 5 0 0 1;

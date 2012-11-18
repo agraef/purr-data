@@ -1,0 +1,23 @@
+#N canvas 425 78 664 201 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 157 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 159 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 23 Type: Footer. Effects only its own layer;
+#X text 12 39 Creation Arguments: None;
+#X obj 24 124 pt.model;
+#X text 177 77 3D Model Functions:;
+#X obj 184 101 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 101 *Notes:;
+#X text 12 6 pixelTANGO HELP - pt.model - Load an 3D Model as layer
+;
+#X obj 24 77 pt.file;
+#X text 197 122 To load a model use an immediatly preceeding pt.file.
+Support Alias|Wavefront obj models.;
+#X connect 11 0 6 0;
+#X connect 11 1 6 1;

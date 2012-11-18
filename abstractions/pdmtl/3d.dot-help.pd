@@ -1,0 +1,26 @@
+#N canvas 144 191 482 404 10;
+#X msg 9 89 1 0 0;
+#X msg 127 92 1 0 0;
+#X msg 130 114 0 0 1;
+#X text 195 81 args: <X> <Y> <Z>;
+#X text 193 111 1st inlet: accepts list of 3 floats;
+#X text 193 131 2nd inlet: accepts list of 3 floats;
+#X text 68 27 - computes the dot product of two vectors;
+#X text 192 169 outlet: float <dot product>;
+#X floatatom 24 185 5 0 0 0 - - -;
+#X msg 50 67 0 -1 0;
+#X msg 62 92 0 0 -1;
+#X text 22 228 the dot product is the same as: |A|*|B|*cos(rho);
+#X text 25 248 where rho is the angle between the vectors A and B;
+#X text 314 354 Version: 2007-12-09;
+#X text 315 373 Author: Roman Haefeli;
+#X obj 17 27 3d.dot;
+#X obj 24 139 3d.dot 0 1 0;
+#X text 23 277 don't know for what it could be useful besides computing
+the angle.;
+#X connect 0 0 16 0;
+#X connect 1 0 16 1;
+#X connect 2 0 16 1;
+#X connect 9 0 16 0;
+#X connect 10 0 16 0;
+#X connect 16 0 8 0;

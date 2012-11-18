@@ -1,0 +1,122 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header atan2 3 12 0 18
+-204280 -1 0;
+#X obj 0 405 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 243 494 362 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control trigonometry;
+#X text 12 45 DESCRIPTION arctangent of two variables;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 185 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 492 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 528 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 557 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 533 (none);
+#N canvas 54 480 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 149 43 exp;
+#X obj 177 43 log;
+#X obj 204 43 abs;
+#X obj 232 43 sqrt;
+#X obj 267 43 pow;
+#X obj 57 76 cos~;
+#X obj 89 76 osc~;
+#X obj 23 76 expr;
+#X obj 23 43 sin;
+#X obj 49 43 cos;
+#X obj 76 43 tan;
+#X obj 109 43 atan;
+#X text 8 2 [atan2] Related Objects;
+#X restore 101 598 pd Related_objects;
+#X obj 78 414 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 413 float;
+#X text 98 433 list;
+#X text 98 500 float;
+#X obj 78 501 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 484 3 atan2;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/atan2 -text
+pdpedia: atan2;
+#X text 92 97 The [atan2] object produces the arctangent of the quotient
+of its two arguments. The number produced is a value between Pi and
+-Pi and represents the counterclockwise angle in radians (not degrees)
+between the positive X axis and the point (x \, y). Note that the X
+coordinate is passed to the right inlet and the Y coordinate is passed
+to the left inlet.;
+#X text 11 23 arctangent of two variables;
+#N canvas 92 356 428 204 atan2_vs_atan 0;
+#X floatatom 321 97 0 0 0 0 - - -;
+#X floatatom 112 66 0 0 0 0 - - -;
+#X floatatom 35 153 0 0 0 0 - - -;
+#X floatatom 35 65 0 0 0 0 - - -;
+#X obj 35 133 atan2;
+#X text 20 65 Y;
+#X text 101 65 X;
+#X floatatom 321 170 0 0 0 0 - - -;
+#X obj 321 130 /;
+#X obj 321 150 atan;
+#X text 147 62 This example on the;
+#X text 146 78 right is an alternative;
+#X text 146 96 of finding the arctangent;
+#X text 146 113 of two coordinates \, but;
+#X text 147 146 than [atan2].;
+#X text 344 131 Y;
+#X text 308 131 X;
+#X floatatom 352 97 0 0 0 0 - - -;
+#X text 147 130 it runs slightly slower;
+#X obj 352 43 r X;
+#X obj 321 43 r Y;
+#X obj 50 97 s Y;
+#X obj 112 97 s X;
+#X obj 321 70 swap;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [atan2] Build Your Own [atan2] with [atan];
+#X connect 0 0 8 0;
+#X connect 1 0 4 1;
+#X connect 1 0 22 0;
+#X connect 3 0 4 0;
+#X connect 3 0 21 0;
+#X connect 4 0 2 0;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X connect 17 0 8 1;
+#X connect 19 0 23 1;
+#X connect 20 0 23 0;
+#X connect 23 0 0 0;
+#X connect 23 1 17 0;
+#X restore 101 566 pd atan2_vs_atan;
+#X floatatom 224 217 5 0 0 0 - - -;
+#X floatatom 261 217 5 0 0 0 - - -;
+#X obj 224 241 atan2;
+#X floatatom 224 268 5 0 0 0 - - -;
+#X obj 78 464 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 463 float;
+#X text 168 413 - Y coordinate;
+#X text 168 463 - X coordinate;
+#X text 168 433 - a list will be distributed between the two inlets
+of [atan2].;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 19 0 21 0;
+#X connect 20 0 21 1;
+#X connect 21 0 22 0;

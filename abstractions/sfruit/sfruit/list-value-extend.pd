@@ -1,0 +1,21 @@
+#N canvas 355 364 450 300 10;
+
+#X obj 153 85 t a b;
+#X obj 281 42 import-disabled list-abs;
+#X obj 153 165 list-extend;
+#X obj 60 36 inlet;
+#X obj 60 195 list-value \$1;
+#X obj 60 218 outlet;
+#X obj 180 135 list-value \$1;
+#X obj 60 59 route bang clear;
+#X msg 106 104 clear;
+#X connect 0 0 2 0;
+#X connect 0 1 6 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 5 0;
+#X connect 6 0 2 1;
+#X connect 7 0 4 0;
+#X connect 7 1 8 0;
+#X connect 7 2 0 0;
+#X connect 8 0 4 0;

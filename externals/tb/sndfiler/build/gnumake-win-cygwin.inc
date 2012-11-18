@@ -1,0 +1,3 @@
+INCPATH += -I$(SNDFILEINC)
+LIBPATH += -L$(SNDFILELIB)
+LIBS += -lsndfile

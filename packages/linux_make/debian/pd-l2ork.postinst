@@ -1,0 +1,19 @@
+#!/bin/sh
+# this was is copied from audacity.postinst and audacity-data.postinst
+set -e
+
+if [ "$1" = "configure" ] && [ -x "`which update-menus 2>/dev/null`" ]; then
+	update-menus
+fi
+
+if [ "$1" = "configure" ] && [ -x "`which update-mime 2>/dev/null`" ]; then
+	update-mime
+fi
+
+if [ "$1" = "configure" ] && which update-desktop-database >/dev/null 2>&1 ; then
+	update-desktop-database -q
+fi
+
+if [ "$1" = "configure" ] && [ -x "`which update-mime-database 2>/dev/null`" ]; then
+	update-mime-database /usr/share/mime
+fi

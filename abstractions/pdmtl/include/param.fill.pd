@@ -1,0 +1,14 @@
+#N canvas 2 70 450 300 10;
+#X obj 36 4 inlet;
+#X obj 330 18 inlet id_of_target;
+#X obj 36 55 list prepend fill;
+#X obj 248 170 loadbang;
+#X obj 246 193 dollarg;
+#X obj 36 86 pdmtl/list.trim;
+#X obj 36 258 pdmtl/flow.send;
+#X connect 0 0 2 0;
+#X connect 1 0 6 1;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 1;
+#X connect 5 0 6 0;

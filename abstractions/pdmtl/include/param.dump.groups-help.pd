@@ -1,0 +1,16 @@
+#N canvas 603 319 557 298 10;
+#X obj 85 125 param.dump.groups;
+#X text 36 15 Description: Dumps the id's of all the parameter groups.
+;
+#X msg 85 87 top;
+#X msg 116 87 global;
+#X obj 85 152 print;
+#X obj 317 167 param.group one;
+#X obj 317 228 param.group two;
+#X obj 432 135 loadbang;
+#X obj 435 198 loadbang;
+#X connect 0 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 7 0 5 2;
+#X connect 8 0 6 2;

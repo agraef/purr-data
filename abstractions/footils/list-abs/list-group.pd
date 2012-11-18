@@ -1,0 +1,38 @@
+#N canvas 172 34 832 393 10;
+#X floatatom 385 85 5 0 0 2 change-size - -;
+#X obj 341 40 inlet;
+#X obj 180 60 inlet;
+#X obj 180 302 outlet;
+#X obj 341 84 f \$1;
+#X obj 180 183 list prepend;
+#X obj 180 111 t b a;
+#X obj 180 138 until;
+#X obj 261 270 t b a;
+#X obj 261 153 list prepend;
+#X obj 341 118 t b b f;
+#X text 393 116 reset (b) and set new length (f).;
+#X text 369 225 Lists shorter than group size are stored for next list.
+Lists longer get split at group size \, shorter part is put out \,
+longer part is re-evaluated.;
+#X obj 395 40 loadbang;
+#X obj 180 228 list split 1;
+#X obj 387 154 max 1;
+#X connect 0 0 10 0;
+#X connect 1 0 4 0;
+#X connect 2 0 6 0;
+#X connect 4 0 10 0;
+#X connect 5 0 14 0;
+#X connect 6 0 7 0;
+#X connect 6 1 9 0;
+#X connect 7 0 5 0;
+#X connect 8 0 7 1;
+#X connect 8 1 9 1;
+#X connect 9 0 5 1;
+#X connect 10 0 5 1;
+#X connect 10 1 9 1;
+#X connect 10 2 15 0;
+#X connect 13 0 4 0;
+#X connect 14 0 3 0;
+#X connect 14 1 5 1;
+#X connect 14 2 8 0;
+#X connect 15 0 14 1;

@@ -1,0 +1,72 @@
+# -------------------------------------------------
+# adjust the next 3 pathes to your system:
+
+# this should point to the directory which contains
+# m_pd.h and g_canvas.h
+PD_SCR = C:\pd\src
+
+# this is the pd directory, here the files will be
+# installed
+PD_PATH = C:\pd
+
+# path of the microsoft compiler
+VIS_CPP_PATH = "C:\Programme\Microsoft Visual Studio\Vc98"
+
+# --------------------------------------------------
+
+TARGET=threadlib.dll
+
+OBJ=fifo.obj callbacks.obj threadlib.obj \
+    sleep.obj detach.obj join.obj threadedsf.obj
+
+CC = cl.exe
+LD = link.exe
+INCLUDE = /I. /I$(PD_SCR) /I$(VIS_CPP_PATH)\include
+CC_FLAGS = /W3 /WX /DMSW /DPD /nologo /D_WINDOWS
+LD_FLAGS = /nologo /dll /export:threadlib_setup
+
+#LDIR = $(VIS_CPP_PATH)\lib
+LIB = /NODEFAULTLIB:libc /NODEFAULTLIB:oldnames \
+      /NODEFAULTLIB:kernel /NODEFAULTLIB:uuid \
+      $(VIS_CPP_PATH)\lib\libc.lib \
+      $(VIS_CPP_PATH)\lib\oldnames.lib \
+      $(VIS_CPP_PATH)\lib\kernel32.lib \
+      $(PD_PATH)\bin\pd.lib \
+      $(PD_PATH)\bin\pthreadVC.lib
+
+# --------------------------------------------------
+
+all: dll
+
+dll: $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(LD) $(LD_FLAGS) /out:$(TARGET) $(OBJ) $(LIB)
+
+
+threadlib.obj: threadlib.h threadlib.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) /c threadlib.c
+
+fifo.obj: threadlib.obj fifo.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) /c fifo.c
+
+callbacks.obj: fifo.obj threadlib.obj callbacks.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) /c callbacks.c
+
+sleep.obj: threadlib.obj sleep.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) /c sleep.c
+
+detach.obj: threadlib.obj fifo.obj detach.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) /c detach.c
+
+join.obj: threadlib.obj callbacks.obj join.c
+	$(CC) $(CC_FLAGS) $(INCLUDE) /c join.c
+
+# --------------------------------------------------
+
+clean:
+	del $(OBJ) $(TARGET) *.lib *.exp
+
+install:
+	copy $(TARGET) $(PD_PATH)\extra
+	copy help\*.pd $(PD_PATH)\doc\5.reference

@@ -1,0 +1,10 @@
+#N canvas 525 571 229 169 10;
+#X text 120 114 dh20020106;
+#X obj 35 36 inlet;
+#X obj 35 111 outlet;
+#X obj 35 63 route coord;
+#X msg 35 87 coord \$1 \$2 \$3 \$4;
+#X text 10 6 coord : filter coord command;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;

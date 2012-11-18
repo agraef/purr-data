@@ -1,0 +1,43 @@
+#N canvas 365 52 528 565 10;
+#X msg 119 140 127;
+#X msg 119 199 12;
+#X obj 46 133 tagged x;
+#X obj 154 140 store-save-tag x/tag;
+#X obj 154 199 store-save-tag y/tag;
+#X obj 46 192 tagged y;
+#X text 33 25 Now let me point out one very useful side effect of our
+current system: It is possible to remote control all "watched" GUI
+elements by sending tagged messages to the global saving receiver.
+;
+#X obj 48 362 s SAVING-REC;
+#X msg 48 295 x/tag 1 \, y/tag 2;
+#X text 40 257 Then we can make presets using static messages like
+this:;
+#X text 38 91 Assume this is our setup:;
+#X msg 48 316 x/tag 10 \, y/tag 100;
+#X msg 48 338 x/tag 127 \, y/tag 12;
+#N canvas 0 0 478 198 sidenote 0;
+#X obj 145 104 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1000 1;
+#X obj 36 125 s SAVING-REC;
+#X text 35 33 Note that the remote control even works without having
+a saver-abstraction:;
+#X msg 36 78 myfoo 60;
+#X msg 36 99 myfoo 10;
+#X obj 142 125 store-collect-tag myfoo;
+#X connect 0 0 5 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X restore 326 320 pd sidenote;
+#X text 45 409 Wouldn't it be nice to be able to automatically generate
+such messages that describe the complete state of our patch and without
+even knowing the tag-names of all our variables in advance? Read on.
+;
+#X connect 0 0 3 0;
+#X connect 1 0 4 0;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 8 0 7 0;
+#X connect 11 0 7 0;
+#X connect 12 0 7 0;

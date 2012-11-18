@@ -1,0 +1,24 @@
+#N canvas 823 22 414 444 10;
+#X obj 141 76 pdsvndir;
+#X text 30 25 pdsvndir allows you to add \, diff-to-console and commit
+changes to the current patch's directory \, or an arbitrary directory
+above the current patches directory.*;
+#X text 29 123 By default \, pdsvndir looks at the patches in the same
+directory as the patch it is created in. You can use the number box
+to have it look at folders above that (e.g. \, if the current patch
+is in /PdAbs/DStructs \, change the number to 1 to work with /PdAbs)
+;
+#X text 33 244 The "s" button will bring up a list of all changed files
+in the directory \, and will allow you to add unversioned files before
+you commit.;
+#X text 34 292 The "ci" or Commit button will allow you to enter a
+log message and commit your changes.;
+#X text 10 386 *The next version will allow you to manually pass in
+a directory to override this auto-discovery feature.;
+#X text 31 204 "Diff" will print all changes \, line by line in all
+your files to the Pd console.;
+#X text 33 333 Click the Subversion logo to manually refresh [pdsvndir]'s
+status.;
+#X text 13 2 WARNING: pdsvndir is experimental and may be unstable.
+;
+#X text 284 423 2008 Luke Iannini;

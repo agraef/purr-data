@@ -1,0 +1,13 @@
+Makefile
+
+.*~
+*~
+*.o
+*.lo
+*.a
+*.la
+*.so
+
+orig
+.libs
+alloca.h

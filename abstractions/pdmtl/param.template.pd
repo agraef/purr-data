@@ -1,0 +1,37 @@
+#N canvas 0 0 722 489 10;
+#X obj 52 145 param.atom number 0;
+#X obj 260 149 param.atom range 0 0 127;
+#X obj 46 234 param.atom text blabla;
+#X obj 251 231 param.atom choices lin exp log lin;
+#X obj 48 346 param.atom toggle1 true;
+#X obj 262 349 param.atom toggle2 false;
+#X floatatom 52 170 5 0 0 0 - - -;
+#X floatatom 260 173 5 0 0 0 - - -;
+#X obj 46 256 symbol;
+#X symbolatom 47 280 10 0 0 0 - - -;
+#X obj 52 376 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 263 372 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 251 257 symbol;
+#X symbolatom 252 281 10 0 0 0 - - -;
+#X obj 299 62 param.group;
+#X obj 327 7 loadbang;
+#X obj 328 36 dollarg;
+#X obj 154 13 inlet;
+#X obj 266 424 param.bang bang1;
+#X obj 266 453 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X connect 0 0 6 0;
+#X connect 1 0 7 0;
+#X connect 2 0 8 0;
+#X connect 3 0 12 0;
+#X connect 4 0 10 0;
+#X connect 5 0 11 0;
+#X connect 8 0 9 0;
+#X connect 12 0 13 0;
+#X connect 15 0 16 0;
+#X connect 16 0 14 1;
+#X connect 16 1 14 2;
+#X connect 17 0 14 0;
+#X connect 18 0 19 0;

@@ -1,0 +1,27 @@
+GOP Sizes $Revision: 1.1 $ $Date: 2005-11-26 22:21:06 $
+
+Abstraction:		Canvas Size:		GOP Size:
+---------------------------------------------------------
+pt.window		128x210			130x212
+pt.layer		128x20			130x22
+pt.file			128x40			130x42
+pt.loop			128x136			130x138
+pt.source		128x30			130x32
+pt.layerfx		128x47			130x49
+pt.fader		128x70			130x72
+pt.translate		128x66			130x68
+pt.rotate		128x66			130x68
+pt.scale		128x40			130x42
+pt.video		128x16			130x18
+pt.light		128x130			130x132
+pt.interp		128x47			130x49
+pt.entry		128x140			130x142
+pt.text			128x14			130x16
+pt.model		128x14			130x16
+pt.live			128x23			130x25		
+pt.feedback		128x130			130x132
+pt.squeeze		128x66			130x68
+pt.presets		128x70			130x72
+pt.animate		528x80			530x82
+pt.filelist		128x110			130x112
+pt.whatcolour		128x40			130x42

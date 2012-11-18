@@ -1,0 +1,13 @@
+#N canvas 132 173 450 300 10;
+#X obj 310 73 s-metro time;
+#X text 12 10 This abstraction 'blocks out' the outlet (sends a zero)
+for the period of one tick length (or however many specified) when
+the inlet changes. Useful if you want a midi knob to shut down something
+else while it's operating.;
+#X floatatom 37 87 5 0 127 0 - - -;
+#X floatatom 37 140 5 0 0 0 - - -;
+#X obj 130 86 r time/ticksize;
+#X obj 37 114 s-blockout 100;
+#X connect 2 0 5 0;
+#X connect 4 0 5 1;
+#X connect 5 0 3 0;

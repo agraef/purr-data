@@ -1,0 +1,27 @@
+prefix=../..
+
+EXTERNALS = popen.c
+
+all: $(EXTERNALS:.c=.dll)
+
+.SUFFIXES: .dll
+
+CFLAGS = -g -DPD -DNT -Wall -W -Wshadow -Wstrict-prototypes \
+    -Wno-unused -Wno-parentheses -Wno-switch
+
+INCLUDE = -I. -I.. -I$(prefix)/src
+
+%.dll: %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -o "$*.o" -c "$*.c"
+	gcc -shared -o "$*.dll" "$*.o" $(prefix)/bin/pd.dll \
+	`test -f $*.libs && cat $*.libs`
+clean:
+	-rm *.dll *.o
+
+install-doc:
+	@test -d $(prefix)/doc/5.reference || mkdir -p $(prefix)/doc/5.reference
+	install *.pd $(prefix)/doc/5.reference
+
+install: install-doc
+	@test -d $(prefix)/extra || mkdir -p $(prefix)/extra
+	install *.dll $(prefix)/extra

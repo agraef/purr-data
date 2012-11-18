@@ -1,0 +1,17 @@
+# which major python version?
+PYTHONVER=24
+
+# where is the Python installation?
+PYTHONPATH=%programfiles%/python$(PYTHONVER)
+
+# uncomment if numpy/numarray/numeric support should be compiled in
+# for info see http://numeric.scipy.org
+PY_NUMPY=1
+# PY_NUMARRAY=1
+# PY_NUMERIC=1
+
+# use thread-safe GIL functionality (do this for python version >= 2.3!)
+PY_USE_GIL=1
+
+# use inofficial (pure data) functionality
+# PY_USE_INOFFICIAL=1

@@ -1,0 +1,53 @@
+#N canvas 554 62 607 624 10;
+#X obj 29 365 prepend list;
+#X msg 29 391 mkdir \$1 \$2 \, chsub \$1 \$2 \, set \$3 \$4 \, updir
+2;
+#X obj 29 112 inlet;
+#X msg 63 500 save register.dat;
+#X text 63 468 Since the contents of this pool may change on boot-up
+there is really no reason to save it. Temporary storage only.;
+#X obj 346 161 outlet;
+#X obj 29 528 pool register;
+#X msg 55 448 reset;
+#X text 25 8 This abstraction routes the data from register and puts
+it in a pool. Sent a "registerReset" message to clear abstractions.
+(when you modify a patch);
+#X obj 55 425 r pt.registerReset;
+#X text 120 366 when we get the layerNum signal \, then register THIS
+layer;
+#X obj 43 327 s pt.layerNumDone;
+#X obj 187 216 s pt.registerDone;
+#X obj 166 187 f;
+#X text 133 532 This pool is not functionally required. It may be useful
+in the future though (rewritten to store OSC names for all params?
+Or could this be generated from the memento pool? Better place is probably
+inside the "register" abstraction. using the state-saving pool?;
+#X text 100 188 layerNum;
+#X obj 166 162 bang;
+#X text 198 186 when we get register-head then send layerNum to pt.registerDone
+;
+#X obj 166 327 outlet;
+#X obj 266 260 prepend N;
+#X msg 108 231 set \$1;
+#X obj 266 285 s pt.loopBack;
+#X obj 29 137 route register layerNum register-head loopBack;
+#X text 32 68 Added loopBack to send messages from tail to head;
+#X text 236 306 on getting loopBack message \, add layerNum and send
+to global receive;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 2 0 22 0;
+#X connect 3 0 6 0;
+#X connect 7 0 6 0;
+#X connect 9 0 7 0;
+#X connect 13 0 12 0;
+#X connect 13 0 18 0;
+#X connect 16 0 13 0;
+#X connect 19 0 21 0;
+#X connect 20 0 19 0;
+#X connect 22 1 11 0;
+#X connect 22 1 13 1;
+#X connect 22 1 20 0;
+#X connect 22 2 16 0;
+#X connect 22 3 19 0;
+#X connect 22 4 5 0;

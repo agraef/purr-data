@@ -1,0 +1,160 @@
+#N struct drawsymbol-help-template float x float y symbol cat symbol
+dog float dog-vis;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header drawsymbol 3 12
+0 18 -204280 -1 0;
+#X obj 0 113 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 245 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 165 RELEASE_DATE 2009-06-12;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 INLET_0 float;
+#X text 12 65 DESCRIPTION display a symbolic field of a template;
+#X text 12 25 KEYWORDS control data_structure symbol_op;
+#X text 12 5 ALIAS drawnumber;
+#X restore 500 597 pd META;
+#X obj 0 188 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 216 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 440 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 55 423 428 169 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 192 42 drawpolygon;
+#X obj 273 42 plot;
+#X obj 312 42 drawcurve;
+#X text 7 78 Other Data Structure Objects;
+#X obj 245 112 element;
+#X obj 76 112 get;
+#X obj 107 112 set;
+#X obj 136 112 getsize;
+#X obj 190 112 setsize;
+#X obj 22 112 pointer;
+#X obj 17 42 drawnumber;
+#X obj 92 42 struct example;
+#X text 7 1 [drawsymbol] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 122 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 121 float;
+#X text 98 161 list;
+#X text 98 192 (none);
+#X text 179 60 <- subpatch to display the data structures;
+#X obj 458 3 drawsymbol;
+#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/drawsymbol
+-text pdpedia: drawsymbol;
+#X text 98 444 Keyboard entry is not yet supported for drawsymbol.
+;
+#N canvas 32 180 428 164 drawsymbol-help-data 0;
+#X scalar drawsymbol-help-template 101 61 whiskers rex 1 \;;
+#X scalar drawsymbol-help-template 251 61 converse tinker 1 \;;
+#X obj 1 1 cnv 15 425 20 empty empty empty 20 12 2 14 -204280 -195568
+0;
+#X text 21 91 Each dog/cat pair is one scalar. You can click each in
+editmode to get a bounding blue box and move them around. You can also
+right-click on the scalar and choose "Properties" to change its field
+values (remember to click "Ok" when you are finished).;
+#X text 6 1 Window to Display Data Structures;
+#X restore 28 62 pd drawsymbol-help-data;
+#N canvas 123 102 428 537 drawsymbol-help-template 0;
+#X obj 23 101 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#N canvas 441 67 465 142 init 0;
+#X obj 24 96 outlet;
+#X obj 24 30 loadbang;
+#X msg 24 52 traverse pd-drawsymbol-help-data \, next;
+#X obj 24 74 pointer;
+#X text 88 75 This just sends a pointer to the [set] object in the
+parent patch.;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X restore 235 339 pd init;
+#X obj 22 322 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 363 set drawsymbol-help-template dog-vis;
+#X obj 22 457 struct drawsymbol-help-template float x float y symbol
+cat symbol dog float dog-vis;
+#X obj 23 200 drawsymbol -v dog-vis dog 0 -15 900 dog=;
+#X text 20 38 [drawsymbol] is used below to display the values of two
+fields- dog and cat. These two fields are defined in the template "drawnumber-help-template"
+located at the bottom of this subpatch.;
+#X text 42 100 "0" makes both "cat" fields invisible;
+#X text 20 148 This [drawsymbol] object displays the field "cat". A
+toggle is connected to the inlet- this toggles visibility globally
+(i.e. \, for all instances of the data structure).;
+#X text 40 319 "0" makes a single instance of a "dog" field invisible
+;
+#X text 19 490 This object defines the fields for this template. Their
+values were initialized when the help patch was created.;
+#X text 19 219 The [drawsymbol] object for "dog" instead uses the -v
+flag. This controls visilibility of the "dog" field for only one instance
+of the data structure. "-v dog-vis" means the value of the field "dog-vis"
+determines whether "dog" will be visible. If you use the -v flag you
+can no longer use the inlet of this [drawsymbol] object to control
+visibility globally.;
+#X text 19 382 Using the [set] object \, we can turn visibility on
+and off for an instance of the data structure by changing the value
+of "dog-vis". Notice when you click the toggle \, visibility only changes
+for one "dog"- the one which the [set] object is currently pointing
+to.;
+#X text 7 1 [drawsymbol] subpatch for data structure template;
+#X obj 23 130 drawsymbol cat 0 0 0 cat=;
+#X connect 0 0 15 0;
+#X connect 1 0 4 1;
+#X connect 2 0 4 0;
+#X restore 28 84 pd drawsymbol-help-template;
+#X text 201 84 <- click this subpatch to see how [drawsymbol] is used.
+;
+#X text 11 23 display a symbolic field of a template;
+#X text 98 460 Note: Attempting to scroll a symbol like a number will
+output the following message to the console (for each pixel scrolled!):
+drawnumber_motion: symbol;
+#X text 98 503 Unfortunately \, [append] does not accept symbols. Currently
+\, you must use [set] with the "-symbol" flag to set symbolic fields
+like those shown in the "drawsymbol-help-template" subpatch above.
+;
+#X text 168 161 - a list will be truncated to the first element.;
+#X text 98 420 Note: you cannot use both the -n and -v flag.;
+#X text 80 236 0-2 flags;
+#X text 168 341 - RGB color (0=black \, 999=white \, 900=red \, 90=green
+\, 9=blue \, 555=grey \, etc.).;
+#X text 168 369 - (optional) label ("cat=" for instance).;
+#X text 168 309 - relative x coordinate.;
+#X text 168 325 - relative y coordinate.;
+#X text 80 309 2) *;
+#X text 80 325 3) *;
+#X text 80 341 4) *;
+#X text 168 292 - the field name of the symbol to draw.;
+#X text 168 236 - "-n" flag to make the symbol invisible initially.
+;
+#X text 168 253 - a "-v [variable]" flag to assign a variable to make
+the symbol visible/invisible.;
+#X text 168 121 - [drawsymbol] has a single inlet to toggle visibility
+of the number. A zero makes it invisible. Any nonzero value makes it
+visible.;
+#X text 79 253 (symbol atoms);
+#X text 80 292 1) symbol atom;
+#X text 80 369 5) symbol atom;
+#X text 98 388 * Any of these can be numbers (float) or field names
+(symbol atom).;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 326 556 pddp/pddplink ../4.data.structures/09.scaling.pd -text
+doc/4.data.structure/09.scaling.pd;
+#X obj 326 571 pddp/pddplink ../4.data.structures/10.onoff.pd -text
+doc/4.data.structures/10.onoff.pd;
+#X obj 98 571 pddp/pddplink all_about_z_order.pd;
+#X obj 98 556 pddp/pddplink scalar-help.pd;

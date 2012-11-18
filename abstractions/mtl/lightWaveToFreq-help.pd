@@ -1,0 +1,8 @@
+#N canvas 0 0 361 190 10;
+#X floatatom 104 84 5 0 0 0 - - -;
+#X floatatom 104 131 5 0 0 0 - - -;
+#X obj 104 106 mtl/lightWaveToFreq;
+#X text 27 14 Description: Wave length (m) to frequency (Hz);
+#X text 27 32 tags: conversion;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

@@ -1,0 +1,38 @@
+#N canvas 0 22 630 440 10;
+
+#X obj 33 221 list-idx-list in the town where I was born lived a man
+who sailed to sea;
+#X obj 33 98 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 33 78 loadbang;
+#X obj 33 145 f;
+#X obj 60 145 + 1;
+#X obj 86 145 mod 14;
+#X msg 242 140 and he told us of his life in the land of sub ma rines
+;
+#X obj 33 260 list prepend label;
+#X obj 33 283 list trim;
+#X obj 33 307 s \$0.canvas;
+#X obj 37 340 cnv 15 200 60 empty \$0.canvas sailed 70 28 0 20 -257985
+-66577 0;
+#X msg 242 119 in the town where I was born lived a man who sailed
+to sea;
+#X text 26 14 [list-idx-list] a wrapper for list-idx that makes building
+simple "arrays" easier;
+#X text 481 404 2008 Luke Iannini;
+#X obj 33 116 metro 500;
+#X obj 33 176 nbx 2 25 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 20
+-262144 -1 -1 11 256;
+#X connect 0 0 7 0;
+#X connect 1 0 14 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 3 0 15 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 1;
+#X connect 6 0 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 11 0 0 1;
+#X connect 14 0 3 0;
+#X connect 15 0 0 0;

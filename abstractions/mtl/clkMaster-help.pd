@@ -1,0 +1,36 @@
+#N canvas 1066 151 868 436 10;
+#X obj 270 225 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 288 224 Beat indicator;
+#X floatatom 46 164 5 0 0 0 - - -;
+#X text 87 163 Bpm (minimum of 30 \, defaults to 120);
+#X floatatom 46 262 8 0 0 1 step - -;
+#X floatatom 104 237 5 0 0 1 beat_interval(ms) - -;
+#X msg 472 147 external 1;
+#X text 45 282 24 steps ber beat (as in MIDI);
+#X text 469 112 You use an external sync signal by sending an "external
+1" message to [clkMaster]'s left inlet.;
+#X text 24 31 Description: synchronizes all [clkSlave] abstractions
+that share the same "top" patch.;
+#X obj 46 208 mtl/clkMaster 120;
+#X floatatom 56 393 5 0 0 0 - - -;
+#X obj 56 330 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 362 394 5 0 0 0 - - -;
+#X obj 362 331 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 57 360 mtl/clkSlave 4 16;
+#X text 74 328 <- Bang to start playing a 4/4 16 beat loop;
+#X text 387 326 <- Bang to start playing a 4/4 32 beat loop;
+#X obj 362 358 mtl/clkSlave 4 32;
+#X text 27 59 tags: timing sequencing;
+#X text 466 165 You must then send the external sync signal to [clkMaster]'s
+right inlet. See [clkUPDin]'s help for an example.;
+#X connect 2 0 10 0;
+#X connect 10 0 4 0;
+#X connect 10 1 5 0;
+#X connect 10 2 0 0;
+#X connect 12 0 15 0;
+#X connect 14 0 18 0;
+#X connect 15 0 11 0;
+#X connect 18 0 13 0;

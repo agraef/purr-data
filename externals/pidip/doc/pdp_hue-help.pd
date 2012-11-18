@@ -1,0 +1,74 @@
+#N canvas 237 21 712 664 10;
+#X obj 326 307 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 130 73 open \$1;
+#X obj 129 49 openpanel;
+#X obj 114 32 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 257 135 metro 70;
+#X obj 252 167 pdp_yqt;
+#X obj 328 197 metro 70;
+#X obj 373 163 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 330 164 stop;
+#X obj 413 465 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 413 517 pdp_control;
+#X msg 413 490 thread \$1;
+#X floatatom 413 578 5 0 0 0 - - -;
+#X obj 413 549 route pdp_drop;
+#X obj 328 231 pdp_background;
+#X floatatom 402 204 5 0 0 0 - - -;
+#X text 409 187 Red;
+#X floatatom 458 203 5 0 0 0 - - -;
+#X floatatom 510 203 5 0 0 0 - - -;
+#X text 458 186 Green;
+#X text 513 187 Blue;
+#X obj 423 108 pdp_colorgrid pdp_colorgrid1 256 0 256 50 0 50 0 1 1
+10 10 494 141;
+#X floatatom 224 362 10 0 0 0 - - -;
+#X floatatom 247 383 10 0 0 0 - - -;
+#X floatatom 270 404 10 0 0 0 - - -;
+#X text 319 361 Mean R value;
+#X text 338 381 Mean G value;
+#X text 358 404 Mean B value;
+#X text 65 469 pdp_hue : a frame hue estimator;
+#X text 64 486 Written by ydegoyon@free.fr;
+#X obj 218 330 pdp_hue;
+#X obj 328 259 pdp_convert image/YCrCb/*;
+#X connect 1 0 9 0;
+#X connect 2 0 10 0;
+#X connect 3 0 2 0;
+#X connect 4 0 10 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 9 1;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 35 0;
+#X connect 10 0 0 0;
+#X connect 11 0 19 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 16 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;
+#X connect 18 0 17 0;
+#X connect 19 0 36 0;
+#X connect 20 0 19 1;
+#X connect 22 0 19 2;
+#X connect 23 0 19 3;
+#X connect 26 0 20 0;
+#X connect 26 1 22 0;
+#X connect 26 2 23 0;
+#X connect 35 0 27 0;
+#X connect 35 1 28 0;
+#X connect 35 2 29 0;
+#X connect 36 0 35 0;
+#X connect 36 0 0 0;

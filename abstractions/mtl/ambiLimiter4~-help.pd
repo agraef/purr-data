@@ -1,0 +1,29 @@
+#N canvas 460 142 564 279 10;
+#X obj 29 211 dac~ 1 2 3 4;
+#X obj 29 70 noise~;
+#X text 27 -18 Description: A 4-channels limiter.;
+#X text 25 16 Comments: A limiter limits the gain of all its channel
+to the maximum allowed. This one limits to the unit of the DAC. (0dB)
+;
+#X text 185 128 <-- See how this VERY loud signal is lowered to the
+unit gain (0dB) by the limiter.;
+#X text 27 -3 tags: ambisonic;
+#X obj 29 155 mtl/ambiWxyToQuad~;
+#X obj 28 183 mtl/ambiLimiter4~;
+#X obj 28 100 mtl/ambiMonoToWxy~ angle 0;
+#X obj 28 127 mtl/ambiGain4~ gain 24;
+#X connect 1 0 8 0;
+#X connect 6 0 7 0;
+#X connect 6 1 7 1;
+#X connect 6 2 7 2;
+#X connect 6 3 7 3;
+#X connect 7 0 0 0;
+#X connect 7 1 0 1;
+#X connect 7 2 0 2;
+#X connect 7 3 0 3;
+#X connect 8 0 9 0;
+#X connect 8 1 9 1;
+#X connect 8 2 9 2;
+#X connect 9 0 6 0;
+#X connect 9 1 6 1;
+#X connect 9 2 6 2;

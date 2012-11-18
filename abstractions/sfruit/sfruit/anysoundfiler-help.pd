@@ -1,0 +1,23 @@
+#N canvas 284 196 450 300 10;
+#X obj 161 81 anysoundfiler;
+#X floatatom 161 110 10 0 0 0 - - -;
+#X obj 161 13 openpanel;
+#X obj 161 35 list append \$0;
+#X obj 137 14 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 0 22 450 300 tables 0;
+#X restore 326 104 pd tables;
+#X msg 161 57 read -resize \$1 \$2-test-ch1 \$2-test-ch2;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-test-ch1 7497 float 2;
+#X coords 0 1 7497 -1 200 140 1;
+#X restore 23 146 graph;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-test-ch2 7497 float 2;
+#X coords 0 1 7497 -1 200 140 1;
+#X restore 233 146 graph;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 6 0;
+#X connect 4 0 2 0;
+#X connect 6 0 0 0;

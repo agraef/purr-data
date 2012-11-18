@@ -1,0 +1,47 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty messages 20 12 0 24 -228992
+-66577 0;
+#X obj 112 249 + 1;
+#X msg 111 161 1;
+#X floatatom 111 306 5 0 0 0 - - -;
+#X text 183 161 <-- messages -->;
+#X text 187 250 <-- objects -->;
+#X obj 201 434 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3
+;
+#X text 20 64 Objects respond to messages received on their inlets
+\, and output messages on their outlets. These messages can be anything
+from data to commands.;
+#X text 104 128 data;
+#X text 359 127 commands;
+#X text 19 341 All communication within Pd is in the form of messages
+\, including when the user is controlling the program.;
+#X msg 123 189 2;
+#X text 169 415 For more info:;
+#X obj 424 250 readsf~;
+#X obj 424 282 dac~;
+#X msg 437 189 1;
+#X msg 424 161 open ../../sound/voice.wav;
+#X text 187 303 <-- number box;
+#X obj 327 250 metro 500;
+#X obj 327 282 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X msg 327 161 bang;
+#X msg 340 189 stop;
+#X obj 8 249 print;
+#X msg 9 161 word;
+#X msg 23 189 another;
+#X obj 527 250 send pd;
+#X msg 527 189 dsp 1;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 11 0 1 0;
+#X connect 13 0 14 0;
+#X connect 13 0 14 1;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;
+#X connect 18 0 19 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 0;
+#X connect 23 0 22 0;
+#X connect 24 0 22 0;
+#X connect 26 0 25 0;

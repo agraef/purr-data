@@ -1,0 +1,12 @@
+#N canvas 1 57 279 246 10;
+#X text 17 9 Description: DTMF telephone sound;
+#X text 16 24 Author: Alexandre Quessy;
+#X text 16 42 Version: 1;
+#X obj 25 99 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 25 120 mtl/dtmfHandUp~;
+#X obj 26 145 mtl/out~;
+#X text 17 57 tags: synthesize~;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 1 5 1;

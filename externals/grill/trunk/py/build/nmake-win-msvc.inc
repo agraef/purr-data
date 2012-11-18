@@ -1,0 +1,23 @@
+DEFS = $(DEFS) /DPY_EXPORTS
+INCPATH=/I$(PYTHONPATH)\include
+LIBPATH=/LIBPATH:$(PYTHONPATH)\libs
+LIBS=$(LIBS) shell32.lib
+
+!ifdef PY_NUMARRAY
+DEFS = $(DEFS) /DPY_NUMARRAY
+!endif
+!ifdef PY_NUMPY
+INCPATH=$(INCPATH) /I$(PYTHONPATH)\Lib\site-packages\numpy\core\include
+DEFS = $(DEFS) /DPY_NUMPY
+!endif
+!ifdef PY_NUMERIC
+DEFS = $(DEFS) /DPY_NUMERIC
+!endif
+
+!ifdef PY_USE_GIL
+DEFS = $(DEFS) /DPY_USE_GIL
+!endif
+
+!ifdef PY_USE_INOFFICIAL
+DEFS = $(DEFS) /DPY_USE_INOFFICIAL
+!endif

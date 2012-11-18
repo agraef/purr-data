@@ -1,0 +1,13 @@
+#N canvas 0 0 450 300 12;
+#X obj 46 173 init.make.unique;
+#X text 46 56 Description: Makes sure a symbol is unique and appends
+integers if necessary.;
+#X msg 47 138 test;
+#X obj 223 170 init.make.unique;
+#X msg 224 135 test;
+#X symbolatom 49 205 10 0 0 0 - - -;
+#X symbolatom 226 202 10 0 0 0 - - -;
+#X connect 0 0 5 0;
+#X connect 2 0 0 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;

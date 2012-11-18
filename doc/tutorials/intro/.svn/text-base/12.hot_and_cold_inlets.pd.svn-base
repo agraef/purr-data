@@ -1,0 +1,54 @@
+#N canvas 10 40 620 460 12;
+#X obj 99 238 +;
+#X floatatom 99 267 5 0 0 0 - - -;
+#X msg 99 184 1;
+#X msg 117 215 5;
+#X text 11 54 For most objects in Pd \, the leftmost inlet is the "hot"
+inlet. This means that it will output something whenever it receives
+data on the "hot" inlet.;
+#X text 145 215 2) click this and there will be no new output;
+#X obj 181 350 +;
+#X floatatom 181 374 5 0 0 0 - - -;
+#X msg 84 315 1;
+#X text 15 291 Try a number of different combinations to see for yourself:
+;
+#X text 215 343 <-- "cold" inlet;
+#X text 49 343 "hot" inlet -->;
+#X msg 124 315 2;
+#X msg 164 315 3;
+#X msg 234 315 4;
+#X msg 274 315 5;
+#X msg 314 315 6;
+#X text 145 184 1) click this first \, and [+ ] immediately outputs
+a 1;
+#X obj 6 8 cnv 15 400 40 empty empty hot_and_cold_inlets 20 12 0 24
+-228992 -66577 0;
+#X text 10 111 All other inlets are generally "cold" inlets \, which
+just store the data. When the object receives input on the "hot" inlet
+\, the object with read the data from all the inlets and do its thing.
+;
+#X text 145 242 3) now click the [1( message box;
+#X obj 516 97 +;
+#X msg 534 73 1;
+#X msg 502 73 1;
+#X text 17 395 Notice that the number is stored in the "cold" inlet
+until you change it. For example \, if you click [4( \, then click
+[1( \, [2( \, and [3( \, you will see that 1 \, 2 \, and 3 are all
+added to 4;
+#X floatatom 516 120 5 0 0 0 - - -;
+#X obj 516 140 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 1;
+#X connect 6 0 7 0;
+#X connect 8 0 6 0;
+#X connect 12 0 6 0;
+#X connect 13 0 6 0;
+#X connect 14 0 6 1;
+#X connect 15 0 6 1;
+#X connect 16 0 6 1;
+#X connect 21 0 25 0;
+#X connect 22 0 21 1;
+#X connect 23 0 21 0;
+#X connect 25 0 26 0;

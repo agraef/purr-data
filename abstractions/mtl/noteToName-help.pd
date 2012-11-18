@@ -1,0 +1,12 @@
+#N canvas 5 49 448 276 10;
+#X obj 20 62 mtl/piano 1;
+#X obj 20 214 cyclone/prepend set;
+#X obj 20 170 unpack;
+#X text 17 12 Description: Convert note number to note name.;
+#X text 17 34 tags: musical;
+#X obj 20 193 mtl/noteToName;
+#X msg 20 235;
+#X connect 0 0 2 0;
+#X connect 1 0 6 0;
+#X connect 2 0 5 0;
+#X connect 5 0 1 0;

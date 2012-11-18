@@ -1,0 +1,88 @@
+#N struct 1003-symarray float x array symbols 1003-sym;
+#N struct 1003-sym symbol name;
+#N struct 1004-symarray float x array symbols 1004-sym;
+#N struct 1004-sym symbol name;
+#N canvas 235 104 753 580 10;
+#X floatatom 113 193 5 0 0 0 - - -;
+#X msg 187 155 0 zero;
+#X msg 244 187 1 one \, 2 two \, 4 four;
+#X msg 244 155 0 null;
+#X obj 113 129 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 240 129 lookup data by index;
+#X text 26 18 symbolarray - store symbols in an array accessible by
+index number.;
+#X obj 271 342 hradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X symbolatom 271 535 10 0 0 0 - - -;
+#N canvas 473 338 450 300 count 0;
+#X obj 131 154 f 0;
+#X obj 156 153 + 1;
+#X msg 147 133 0;
+#X obj 131 183 outlet;
+#X obj 131 59 inlet;
+#X obj 131 96 b;
+#X obj 178 61 inlet;
+#X obj 178 98 b;
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 1;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 7 0;
+#X connect 7 0 2 0;
+#X restore 426 458 pd count;
+#X msg 345 405 c \, c# \, d \, d# \, e \, f \, f# \, g \, g# \, a \,
+a# \, b;
+#X obj 345 427 t a b;
+#X obj 345 484 list prepend;
+#X symbolatom 113 293 10 0 0 0 - - -;
+#X msg 61 222 reset;
+#X obj 113 315 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 283 485 reset;
+#X obj 345 361 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 345 381 t b b b;
+#X text 101 59 Indices range from 0 to the number of elements minus
+one \; indices out of range are quietly replaced by the nearest endpoint.
+;
+#X text 418 189 arrays can have "holes";
+#X msg 244 265 0 1;
+#X text 108 402 Notes example:;
+#X text 310 154 add or change data. syntax: <index> <symbol to store>
+;
+#X text 280 265 error;
+#X msg 244 242 3;
+#X msg 61 202 print;
+#X msg 224 483 print;
+#X obj 113 265 symbolarray;
+#X msg 243 216 10 long lists are truncated;
+#X obj 271 508 symbolarray;
+#X text 280 239 messages with missing symbol are ignored;
+#X connect 0 0 28 0;
+#X connect 1 0 28 1;
+#X connect 2 0 28 1;
+#X connect 3 0 28 1;
+#X connect 4 0 0 0;
+#X connect 7 0 30 0;
+#X connect 9 0 12 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 1 9 0;
+#X connect 12 0 30 1;
+#X connect 13 0 15 0;
+#X connect 14 0 28 0;
+#X connect 16 0 30 0;
+#X connect 17 0 18 0;
+#X connect 18 0 10 0;
+#X connect 18 1 16 0;
+#X connect 18 2 9 1;
+#X connect 21 0 28 1;
+#X connect 25 0 28 1;
+#X connect 26 0 28 0;
+#X connect 27 0 30 0;
+#X connect 28 0 13 0;
+#X connect 29 0 28 1;
+#X connect 30 0 8 0;

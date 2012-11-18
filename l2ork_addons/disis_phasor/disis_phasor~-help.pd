@@ -1,0 +1,26 @@
+#N canvas 291 152 450 388 10;
+#X obj 173 188 dac~;
+#X floatatom 266 92 5 0 0 0 - - -;
+#X msg 86 79 \; pd dsp 1;
+#X msg 22 79 \; pd dsp 0;
+#X obj 179 116 disis_phasor~ 2;
+#X floatatom 179 92 5 0 0 0 - - -;
+#X obj 266 169 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 41 218 DISIS version of phasor~ by Ivica Ico Bukvic <ico@vt.edu>
+(c) 2009 http://disis.music.vt.edu. Code released under the same BSD
+license as the rest of the Pd.;
+#X text 40 262 The main difference between the disis_phasor~ and phasor~
+is that DISIS version also outputs bangs every time the phasor completes
+one period (this is however not exactly sample accurate due to the
+internal Pd engine's minimum buffer size. Therefore \, we calculate
+period completion between such buffers. This is typically good enough
+for enveloping needs.;
+#X text 20 15 click on "dsp 1" message to "hear" the sound (chances
+are you won't hear it as a sound but rather as a click as it is running
+at 2Hz but upping the frequency would obviously fix that part).;
+#X connect 1 0 4 1;
+#X connect 4 0 0 0;
+#X connect 4 0 0 1;
+#X connect 4 1 6 0;
+#X connect 5 0 4 0;

@@ -1,0 +1,47 @@
+#N canvas 10 40 624 464 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty movies 20 12 0 24 -228992 -66577
+0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 118 90 gemhead;
+#X obj 130 120 bng 25 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X text 173 95 movie-clip;
+#X obj 145 325 unpack 0 0 0;
+#X floatatom 131 348 5 0 0 3 length - -;
+#X floatatom 180 348 5 0 0 3 width - -;
+#X obj 185 306 bng 15 250 50 0 empty empty end_reached 20 7 0 10 -262144
+-1 -1;
+#X floatatom 176 260 5 0 10000 1 frame# - -;
+#X obj 130 149 openpanel;
+#X msg 130 169 open \$1;
+#X msg 136 212 auto \$1;
+#X obj 136 194 tgl 15 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X msg 147 236 colorspace Grey;
+#X floatatom 227 349 5 0 0 0 - - -;
+#X obj 118 278 pix_film;
+#X obj 118 385 pix_texture;
+#X text 14 58 You can also uses videos as textures:;
+#X obj 118 435 cuboid 4 3 3;
+#X obj 118 410 translateXYZ 0 0 -3;
+#X msg 182 278 0;
+#X connect 3 0 17 0;
+#X connect 4 0 11 0;
+#X connect 6 0 7 0;
+#X connect 6 1 8 0;
+#X connect 6 2 16 0;
+#X connect 10 0 17 1;
+#X connect 11 0 12 0;
+#X connect 12 0 17 0;
+#X connect 13 0 17 0;
+#X connect 14 0 13 0;
+#X connect 15 0 17 0;
+#X connect 17 0 18 0;
+#X connect 17 1 6 0;
+#X connect 17 2 9 0;
+#X connect 17 2 22 0;
+#X connect 18 0 21 0;
+#X connect 21 0 20 0;
+#X connect 22 0 17 1;

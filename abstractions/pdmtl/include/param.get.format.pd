@@ -1,0 +1,14 @@
+#N canvas 0 0 450 300 10;
+#X obj 38 22 inlet param;
+#X obj 52 199 pdmtl/flow.send \$1;
+#X obj 41 71 t b a;
+#X obj 11 114 symbol \$0R;
+#X obj 38 238 r \$0R;
+#X obj 38 269 outlet;
+#X msg 14 145 format \$1;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 1 1;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 6 0 1 0;

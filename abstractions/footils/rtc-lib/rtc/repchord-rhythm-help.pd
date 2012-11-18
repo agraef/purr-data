@@ -1,0 +1,55 @@
+#N canvas 346 75 903 677 10;
+#X text 101 193 periodicity of min.ED/max.ED <float between 0 and 1>:
+determines the probability of repetition of a chosen entry delay whereas
+0 means "no repetition" ("aperiodic") and 1 means "permanent repetition"
+("periodic").;
+#X text 101 118 min.ED \, max.ED \, (number of) ED-values <ints>: parameters
+for generating a geometrical row of entry delays which serves as a
+material list.;
+#X text 101 162 max.chord size <int> of longest entry delay value (the
+shortest is always 1);
+#X text 77 52 Generates a rhythm which repetition rate and chord size
+are depending on the index of the chosen ED. The following parameters
+allow you to model a lot of different musical situations:;
+#X text 85 193 -;
+#X text 85 162 -;
+#X text 86 118 -;
+#X text 70 20 repchord-rhythm;
+#X text 81 257 see also:;
+#X msg 146 258 super-rhythm;
+#X obj 126 300 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1
+-1 1 1;
+#X text 403 299 periodicity of min.ED;
+#X text 563 297 periodicity of max.ED;
+#X floatatom 562 325 4 0 0 0 - - -;
+#X floatatom 407 322 4 0 0 0 - - -;
+#X floatatom 290 327 4 0 0 2 max_chord_size - -;
+#X floatatom 249 314 4 0 0 2 ED-values - -;
+#X floatatom 208 327 4 0 0 2 max_ED - -;
+#X floatatom 167 317 4 0 0 2 min_ED - -;
+#X obj 126 452 brown-melody 36 84 0.25;
+#X text 237 257 - the most powerful and general rhythm generator;
+#X floatatom 187 407 4 0 0 3 chord_size - -;
+#X obj 249 402 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 311 407 5 0 0 3 ED - -;
+#X floatatom 373 407 4 0 0 3 ED_index - -;
+#X msg 384 19 Rhythm-Generators;
+#X text 76 553 1993-96 by Karlheinz Essl;
+#X obj 126 499 play2 127 500 1 1;
+#X text 76 571 vs. 2: new implementation \, rightmost outlet added
+\, bug fixes \, surpresses repetitions of already used EDs;
+#X obj 126 366 repchord-rhythm 50 2000 12 6 0.8 0.2;
+#X connect 10 0 29 0;
+#X connect 13 0 29 6;
+#X connect 14 0 29 5;
+#X connect 15 0 29 4;
+#X connect 16 0 29 3;
+#X connect 17 0 29 2;
+#X connect 18 0 29 1;
+#X connect 19 0 27 0;
+#X connect 29 0 19 0;
+#X connect 29 1 21 0;
+#X connect 29 2 22 0;
+#X connect 29 3 23 0;
+#X connect 29 4 24 0;

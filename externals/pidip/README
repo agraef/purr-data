@@ -1,0 +1,28 @@
+*****************************************************************************
+copyleft 2002 by Yves Degoyon ( ydegoyon@free.fr )
+
+contributors :
+
+Lluis Gomez i Bigorda ( http://www.artefacte.org/pd )
+Tatiana de la O.
+
+tarballs and updates available @ http://ydegoyon.free.fr
+
+pidip : additional video objects for Pure Data Packet
+some of them are adapted from EffecTV
+(http://effectv.sourceforge.net/)
+or other source mentionned
+
+To install pidip, follow the steps from INSTALL
+
+This software is published under GPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+

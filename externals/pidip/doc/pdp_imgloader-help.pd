@@ -1,0 +1,136 @@
+#N canvas 157 22 787 658 10;
+#X obj 375 116 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 221 148 loop \$1;
+#X obj 222 126 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 249 95 open \$1;
+#X obj 248 71 openpanel;
+#X obj 249 45 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 338 114 stop;
+#X obj 355 147 metro 70;
+#X obj 488 158 pdp_v4l;
+#X obj 497 127 metro 70;
+#X obj 542 93 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 499 94 stop;
+#X msg 584 125 open /dev/video;
+#X obj 350 179 pdp_yqt;
+#X obj 488 441 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 488 466 thread \$1;
+#X floatatom 488 554 5 0 0 0 - - -;
+#X obj 488 525 route pdp_drop;
+#X floatatom 345 279 5 0 0 0 - - -;
+#X text 345 261 X Offset;
+#X floatatom 403 279 5 0 0 0 - - -;
+#X text 403 261 Y Offset;
+#X obj 185 299 openpanel;
+#X obj 185 272 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 345 615 pdp_imgloader : load an image and blend it with a video
+;
+#X obj 191 438 pdp_glx;
+#X msg 187 361 clear;
+#X msg 185 323 load \$1 64 32;
+#X text 27 241 load <name> <x offset> <y offset>;
+#X text 28 228 Load an image ( types supported by imlib2 );
+#X obj 469 279 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text 468 262 Blending factor;
+#X text 491 364 Unhide <index>;
+#X text 439 340 Hide <x1> <y1> <x2> <y2> <x3> <y3>;
+#X text 439 329 Hide a triangular zone :;
+#X text 491 353 Unhide a triangular zone :;
+#X obj 191 401 pdp_imgloader;
+#X msg 420 313 hide 0 23 250 25 67 235;
+#X text 438 399 Same as hide but with percentages;
+#X msg 418 358 unhide 1;
+#X msg 419 384 rawhide 0 0.823 0.15 0.234 0.892 0.678;
+#X obj 191 467 route press;
+#X obj 191 489 handle-clicks;
+#X obj 191 535 s rawhide;
+#X obj 292 401 r rawhide;
+#X msg 277 438 cursor 1;
+#X msg 739 734 estirar \$1;
+#X obj 754 695 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 739 734 estirar \$1;
+#X obj 754 695 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 22 394 cnv 15 150 180 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X msg 27 484 operation add;
+#X msg 27 444 operation substract;
+#X msg 27 463 operation reshade;
+#X msg 27 424 operation copy;
+#X obj 28 528 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 17 287 cnv 15 160 100 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X msg 34 335 quality 0;
+#X msg 34 355 quality 1;
+#X text 23 403 with quality mode;
+#X text 23 391 these only work;
+#X text 19 292 quality sets a slower;
+#X text 21 315 more possibilities;
+#X text 20 303 draw method with;
+#X floatatom 407 116 5 0 0 0 - - -;
+#X text 607 313 (only if quality = 0 );
+#X obj 488 493 pdp_control;
+#X text 344 627 written by Yves Degoyon ( ydegoyon@free.fr ) \, improved
+by Pablo Martin Caedes ( caedes@sindominio.net );
+#X msg 48 527 fit \$1;
+#X text 24 499 operation: blend;
+#X text 24 511 mode for the image;
+#X text 23 555 to the video size;
+#X text 23 545 fit: fit the image;
+#X obj 191 512 route 0;
+#X connect 0 0 7 0;
+#X connect 1 0 13 0;
+#X connect 2 0 1 0;
+#X connect 3 0 13 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 13 0;
+#X connect 8 0 36 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 8 0;
+#X connect 13 0 36 0;
+#X connect 14 0 15 0;
+#X connect 15 0 66 0;
+#X connect 17 0 16 0;
+#X connect 18 0 36 1;
+#X connect 20 0 36 2;
+#X connect 22 0 27 0;
+#X connect 23 0 22 0;
+#X connect 25 0 41 0;
+#X connect 26 0 36 0;
+#X connect 27 0 36 0;
+#X connect 30 0 36 3;
+#X connect 36 0 45 0;
+#X connect 36 0 25 0;
+#X connect 37 0 36 0;
+#X connect 39 0 36 0;
+#X connect 40 0 36 0;
+#X connect 41 0 42 0;
+#X connect 42 0 73 0;
+#X connect 44 0 36 0;
+#X connect 45 0 25 0;
+#X connect 47 0 46 0;
+#X connect 49 0 48 0;
+#X connect 51 0 36 0;
+#X connect 52 0 36 0;
+#X connect 53 0 36 0;
+#X connect 54 0 36 0;
+#X connect 55 0 68 0;
+#X connect 57 0 36 0;
+#X connect 58 0 36 0;
+#X connect 64 0 7 1;
+#X connect 66 0 17 0;
+#X connect 68 0 36 0;
+#X connect 73 0 43 0;

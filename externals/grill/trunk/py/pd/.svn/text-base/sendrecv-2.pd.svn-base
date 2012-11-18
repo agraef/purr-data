@@ -1,0 +1,12 @@
+#N canvas 133 322 647 189 12;
+#X obj 152 98 pyext sendrecv ex2 huha;
+#X floatatom 152 128 5 0 0 0 - - -;
+#X floatatom 33 96 5 0 0 0 - - -;
+#X obj 32 123 s huha;
+#X text 20 77 scroll here;
+#X obj 16 13 cnv 15 600 40 empty empty py/pyext 10 22 0 24 -260818
+-1 0;
+#X text 213 16 Python script objects \, (C)2003-2005 Thomas Grill;
+#X text 213 32 http://grrrr.org/ext;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;

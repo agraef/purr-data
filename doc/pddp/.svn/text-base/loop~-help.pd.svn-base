@@ -1,0 +1,168 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header loop~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 343 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 243 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS signal;
+#X text 12 45 DESCRIPTION phase generator for looping samplers;
+#X text 12 65 INLET_0 float signal bang set;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 85 INLET_1 signal float;
+#X text 12 125 OUTLET_1 signal;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 497 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 544 cnv 3 550 3 empty \$0-pddp.cnv.argument argument 8 12
+0 13 -228856 -1 0;
+#X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 352 cnv 17 3 95 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 548 (none);
+#N canvas 81 440 428 149 Related_objects 0;
+#X obj 253 43 powtodb~;
+#X obj 23 102 mtof;
+#X obj 68 102 ftom;
+#X obj 111 102 dbtorms;
+#X obj 176 102 rmstodb;
+#X obj 242 102 dbtopow;
+#X obj 304 102 powtodb;
+#X text 20 79 Control objects for conversion:;
+#X obj 23 43 mtof~;
+#X obj 70 43 ftom~;
+#X obj 118 43 dbtorms~;
+#X obj 187 43 rmstodb~;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [loop~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X text 98 351 signal;
+#X obj 78 504 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 504 signal;
+#X obj 481 3 loop~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/loop~ -text
+pdpedia: loop~;
+#X obj 78 456 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 379 float;
+#X text 98 407 bang;
+#X text 98 425 set;
+#X text 98 455 signal;
+#X text 98 475 float;
+#X text 11 23 phase generator for looping samplers;
+#X text 168 351 - signal input sets the transposition level (1 is normal
+\, 2 is up an octave \, etc.).;
+#X text 168 379 - a float sets the transposition level (1 is normal
+\, 2 is up an octave \, etc.).;
+#X text 168 407 - reset the phase to zero.;
+#X text 168 425 - the set message followed by a number sets the phase
+(e.g. \, "set 0.5").;
+#X text 168 455 - set the window size in samples.;
+#X text 168 475 - set the window size in samples.;
+#X floatatom 33 46 0 0 0 0 - - -;
+#X obj 270 210 print~;
+#X msg 270 180 bang;
+#X obj 33 171 loop~;
+#X floatatom 60 117 0 0 0 0 - - -;
+#X msg 47 93 bang;
+#X obj 199 210 print~;
+#X msg 199 180 bang;
+#X obj 32 210 *~;
+#X obj 32 321 dac~;
+#X obj 32 298 hip~ 5;
+#X obj 78 214 samphold~;
+#X obj 32 233 +~;
+#X floatatom 78 139 0 0 0 0 - - -;
+#X obj 78 162 *~ 1000;
+#X msg 39 70 set 0.5;
+#X text 96 69 set phase (0 to 1);
+#X text 96 94 reset phase to 0;
+#X text 96 116 right signal input is window size in samples;
+#X text 116 138 here's how to handle onsets;
+#X obj 32 277 *~;
+#X floatatom 158 244 0 0 0 0 - - -;
+#X obj 158 313 line~;
+#X obj 158 267 dbtorms;
+#X obj 158 290 pack 0 50;
+#X text 184 243 output level 0-100;
+#X text 203 159 print outputs;
+#X text 61 45 transposition (1 is normal \, 2 is up an octave \, etc)
+;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 150000 float 0;
+#X coords 0 1 150000 -1 100 75 1;
+#X restore 390 127 graph;
+#X obj 308 321 soundfiler;
+#N canvas 100 385 428 186 About_[loop~] 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [loop~] More info;
+#X text 20 108 You can send "bang" or "set" message to force the phase
+to zero--you should mute the output before doing so. This may be desirable
+if you've set a large window size but then want to decrease it without
+waiting for the next phase crossing.;
+#X text 20 38 [loop~] takes input signals to set a window size and
+transposition \, and outputs a phase and a sampled window size. The
+window size only changes at phase zero crossings and the phase output
+is adjusted so that changing window size doesn't change the transposition.
+;
+#X restore 102 575 pd About_[loop~];
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X obj 78 524 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 524 signal;
+#X obj 32 256 tabread4~ \$0-array;
+#X msg 390 210 resize 150000;
+#X obj 390 232 s \$0-array;
+#X obj 308 235 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 308 255 f \$0;
+#X msg 308 277 read ../doc/sound/bell.aiff \$1-array;
+#X obj 338 235 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 338 255 f \$0;
+#X msg 318 299 read ../doc/sound/vocal.aiff \$1-array;
+#X connect 28 0 31 0;
+#X connect 30 0 29 0;
+#X connect 31 0 34 0;
+#X connect 31 0 36 0;
+#X connect 31 0 39 1;
+#X connect 31 1 29 0;
+#X connect 31 1 36 1;
+#X connect 32 0 31 1;
+#X connect 33 0 31 0;
+#X connect 35 0 34 0;
+#X connect 36 0 40 0;
+#X connect 38 0 37 0;
+#X connect 38 0 37 1;
+#X connect 39 0 40 1;
+#X connect 40 0 63 0;
+#X connect 41 0 42 0;
+#X connect 42 0 39 0;
+#X connect 43 0 31 0;
+#X connect 48 0 38 0;
+#X connect 49 0 51 0;
+#X connect 50 0 48 1;
+#X connect 51 0 52 0;
+#X connect 52 0 50 0;
+#X connect 63 0 48 0;
+#X connect 64 0 65 0;
+#X connect 66 0 67 0;
+#X connect 67 0 68 0;
+#X connect 68 0 57 0;
+#X connect 69 0 70 0;
+#X connect 70 0 71 0;
+#X connect 71 0 57 0;

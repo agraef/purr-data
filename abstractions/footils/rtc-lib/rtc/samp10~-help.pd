@@ -1,0 +1,29 @@
+#N canvas 219 146 650 427 10;
+#X text 226 170 reversed \, attenuated;
+#X text 209 149 transposed \, attenuated;
+#X text 24 295 1999-2003 by Karlheinz Essl;
+#X text 24 29 samp10~;
+#X obj 48 196 samp10~;
+#X text 151 127 original pitch \, original gain;
+#X text 24 61 Allows a polyphony of up to 10 samples at the same time.
+;
+#X text 168 42 vs. 1.1;
+#X text 24 309 vs. 1.1: voice allocation bug fixed;
+#X obj 48 227 ezdac~;
+#X obj 332 253 openpanel;
+#X obj 332 300 soundfiler;
+#X obj 332 226 bng 20 250 50 0 empty empty open-sample 0 -6 0 8 -262144
+-1 -1;
+#X obj 331 328 table samp10;
+#X msg 48 129 1 samp10 1;
+#X msg 63 151 0.5 samp10 0.5;
+#X msg 83 172 -1 samp10 1;
+#X msg 332 274 read -resize \$1 samp10;
+#X connect 4 0 9 0;
+#X connect 4 0 9 1;
+#X connect 10 0 17 0;
+#X connect 12 0 10 0;
+#X connect 14 0 4 0;
+#X connect 15 0 4 0;
+#X connect 16 0 4 0;
+#X connect 17 0 11 0;

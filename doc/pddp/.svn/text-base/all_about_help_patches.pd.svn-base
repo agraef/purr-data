@@ -1,0 +1,246 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 168 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 507 26 494 625 META 0;
+#X text 12 95 RELEASE_VERSION 0.41.4;
+#X text 158 96 Keywords:;
+#X text 12 5 GENRE help;
+#X text 12 65 DESCRIPTION using help patches in Pure Data;
+#X text 12 25 KEYWORDS needs_work (mention how pd finds help files
+and replace 'common_terminology' subpatch with link to glossary);
+#X text 117 111 control- control rate objects \; signal- audiorate
+objects \; data_structure- objects for creating and managing data structures
+\; nonlocal- objects that can make nonlocal connections to other objects
+(i.e. \, communicate with other objects without using wires) \; storage-
+objects whose main function is to store a value \; array- objects for
+creating and editing arrays \; GUI- objects that provide a graphical
+user interface \; MIDI- objects that provide MIDI functionality \;
+time- objects that measure time or which the user can use to manipulate
+time \; unfinished- help patches under construction \; orphan- help
+patches that can't get accessed by right clicking on the corresponding
+object (like [drawsymbol]) \; block-oriented- see Matju's definition
+\; analysis- object that does analysis \; conversion- convert from
+one set of units to another \; filter \; network \; trigonometry \;
+soundfile- object that can play \, manipulate \, and/or save a sound
+file (wav \, ogg \, mp3 \, etc.). \; random- object outputs a random
+value \, list \, or signal \; symbol_op- object that manipulates or
+stores a symbol \; list_op- object that manipulates or stores a list
+\; canvas_op- object whose behavior only makes sense in terms of a
+canvas \; patchfile_op- object whose behavior only makes sense in terms
+of a patchfile \; ramp - a ramp \; bandlimited \; pd-op - object that
+can report on or manipulate global Pd operation \; anything_op - store
+or manipulate an anything \; abstraction_op - object that only makes
+sense in terms of abstractions;
+#X restore 500 597 pd META;
+#X obj 0 390 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 427 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 78 483 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 19 57 pddp/helplink pddp/pddplink;
+#X obj 19 83 pddp/helplink pddp/helplink;
+#X obj 21 33 pddp/pddplink all_about_externals.pd -text _________;
+#X obj 21 33 pddp/pddplink all_about_externals.pd -text Externals;
+#X restore 101 597 pd Related_objects;
+#X obj 78 177 cnv 17 3 42 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 399 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 298 cnv 17 3 35 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 344 cnv 17 3 35 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#N canvas 117 160 428 384 More_about_creation_arguments 0;
+#X obj 110 143 float 6.5;
+#X obj 110 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 110 175 5 0 0 0 - - -;
+#X obj 260 143 symbol foo;
+#X obj 260 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X symbolatom 260 175 10 0 0 0 - - -;
+#X text 40 143 Examples:;
+#X obj 22 292 delwrite~ help-delay 500;
+#X obj 0 210 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 7 211 Creation Argument Numbers;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 More About Creation Arguments;
+#X text 20 332 Arguments: 1 symbol atom "help-delay";
+#X text 86 347 2 float "500";
+#X text 19 246 For most objects in Pd \, the zeroth argument is the
+class name (i.e. \, the name of the object itself) \, so it isn't written
+explicitly.;
+#X text 80 317 (0 symbol atom "delwrite~");
+#X text 19 37 Creation arguments initialize an object's behavior. They
+can be numbers or symbols. Some objects \, like [route] \, can take
+an arbitrary number of arguments. In the example below \, the arguments
+"6.5" and "foo" specify initial values for [float] and [symbol] objects
+\, respectively.;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X restore 101 527 pd More_about_creation_arguments;
+#N canvas 70 265 428 280 Message_types 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 Message types;
+#X text 19 108 float;
+#X text 19 128 list;
+#X text 69 108 - floating point number;
+#X text 19 78 bang;
+#X text 19 199 symbol;
+#X text 19 179 pointer;
+#X text 19 218 signal;
+#X text 19 35 anything;
+#X text 69 218 - audio signal;
+#X text 69 179 - the so-called "gpointer" (used with data-structures)
+;
+#X text 69 78 - the single selector "bang". Usually it is used to trigger
+the object to perform an action.;
+#X text 69 128 - message with the "list" selector plus two or more
+elements. Also includes implicit lists-- messages made up of two or
+more atoms in which the first atom is a float atom.;
+#X text 69 199 - selector "symbol" \, followed by a symbol atom;
+#X text 69 35 - any message (including messages with custom selectors)
+;
+#N canvas 95 140 428 253 about_custom_selectors 0;
+#X msg 24 90 set 20;
+#X msg 24 117 clear;
+#X text 111 61 Documented as:;
+#X text 19 61 Message:;
+#X text 112 90 "set" message or "set";
+#X text 111 117 "clear" message or "clear";
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -33289 0;
+#X msg 168 162 set 20;
+#X floatatom 131 196 5 0 0 0 - - -;
+#X obj 131 215 print OUTPUT;
+#X floatatom 131 164 5 0 0 0 - - -;
+#X text 19 37 Many objects accept custom messages like:;
+#X text 7 1 [help] Messages with Custom Selectors;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 10 0 8 0;
+#X restore 84 56 pd about_custom_selectors;
+#X text 19 238 (inactive);
+#X text 79 238 - some objects like [noise~] will draw an inlet that
+accepts no messages. These xlets are labeled (inactive).;
+#X restore 101 202 pd Message_types;
+#X text 98 507 mention how pd finds help files;
+#X text 98 176 message type;
+#X text 178 176 - description of behavior;
+#X msg 151 125 42;
+#X floatatom 151 147 5 0 0 0 - - -;
+#X text 180 125 <-- Click the message box;
+#X obj 455 51 pddp/dsp;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header help_patches 3
+12 0 18 -204280 -1 0;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/help -text
+pdpedia: help;
+#X obj 426 89 cnv 15 122 44 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 423 86 cnv 15 122 44 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 424 87 cnv 15 120 42 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X text 426 110 that produce sound.;
+#X text 426 98 appears in patches;
+#X obj 120 301 cnv 15 352 31 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 117 298 cnv 15 352 31 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 118 299 cnv 15 350 29 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X obj 78 229 cnv 17 3 57 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 120 347 cnv 15 352 31 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 117 344 cnv 15 352 31 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 118 345 cnv 15 350 29 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X text 120 344 Some objects have a final \, rightmost inlet that has
+a specific behavior. This is identified by the letter "r".;
+#X obj 120 231 cnv 15 355 54 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 117 228 cnv 15 355 54 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 118 229 cnv 15 353 52 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X obj 44 64 cnv 15 356 55 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 41 61 cnv 15 356 55 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 42 62 cnv 15 354 53 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X text 44 60 Help patches start with a short example that demonstrates
+the object being used. Most are interactive \, like the one below.
+Help patches are read-only by default \, so you can't accidentally
+overwrite anything in them.;
+#X text 98 398 message type;
+#X text 178 398 - description of behavior;
+#X obj 269 4 cnv 15 172 33 empty 411-cnv65 empty 20 12 0 10 -191407
+-1 0;
+#X obj 265 0 cnv 15 172 33 empty 411-cnv66 empty 20 12 0 10 -1 -1 0
+;
+#X obj 266 1 cnv 15 170 31 empty 411-cnv67 empty 20 12 0 10 -261106
+-1 0;
+#X text 268 12 it's shown at the right -->;
+#X text 269 1 If the object has an alias;
+#X obj 454 4 trigger;
+#X obj 523 4 t;
+#X text 502 4 or;
+#X text 80 445 1) atom type;
+#X text 167 445 - description of behavior;
+#X obj 336 439 cnv 15 198 53 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 333 436 cnv 15 198 53 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 334 437 cnv 15 196 51 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X text 337 448 after the object name to define;
+#X text 337 470 initialize its value(s).;
+#X text 337 437 Many objects accept arguments;
+#N canvas 71 285 428 178 Argument_types 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 Argument types;
+#X text 19 35 float;
+#X text 89 35 - a float atom;
+#X text 19 55 symbol atom;
+#X text 89 55 - symbol atom;
+#X text 19 75 comma;
+#X text 19 95 semicolon;
+#X text 19 125 Note: dollar atoms ("\$1") and dollsym atoms ("\$1-foo")
+are automatically expanded by Pd. They therefore may be used in any
+object box.;
+#X text 89 75 - comma atom (used in objects like [expr] \, msg box)
+;
+#X text 89 95 - semicolon atom (also used in [expr] \, msg box);
+#X restore 101 467 pd Argument_types;
+#X obj 336 525 cnv 15 169 55 empty empty empty 20 12 0 10 -191407 -1
+0;
+#X obj 333 522 cnv 15 169 55 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 334 523 cnv 15 167 53 empty empty empty 20 12 0 10 -261106 -1
+0;
+#X text 336 534 as well as links to;
+#X text 336 546 tutorials or other help;
+#X text 336 557 patches \, may be found here.;
+#X text 336 523 Important object behavior \,;
+#X text 121 227 Inlet numbers are listed \, starting from zero and
+in left-to-right order. The same goes for the outlets. Additional information
+may sometimes appear in a subpatch \, like the one above-- click it
+with the mouse to open it.;
+#X obj 99 572 pddp/pddplink all_about_messages.pd;
+#X text 337 459 the object's behavior or to;
+#X text 120 298 "n" means there is a variable number of inlets \, the
+exact number of which is determined by creation argument(s).;
+#X text 11 23 usage guide for internal help patches;
+#X obj 99 552 pddp/pddplink glossary.pd;
+#X obj 5 597 pddp/pddplink all_about.pd -text All About Pd;
+#X text 426 87 The 'dsp' button;
+#X connect 16 0 17 0;

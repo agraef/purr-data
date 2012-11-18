@@ -1,0 +1,173 @@
+#N struct drawpolygon-help-template float x float y float weasel float
+dog float cat float vis;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header drawpolygon 3 12
+0 18 -204280 -1 0;
+#X obj 0 147 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 246 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 145 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control data_structure;
+#X text 12 45 DESCRIPTION display a polygon in a data structure instance
+;
+#X text 12 65 INLET_0 float;
+#X restore 500 597 pd META;
+#X obj 0 222 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 250 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 516 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 71 454 428 156 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 92 42 struct;
+#X obj 142 42 drawpolygon;
+#X obj 223 42 plot;
+#X obj 17 42 drawsymbol;
+#X obj 262 42 drawcurve;
+#X text 7 78 Other Data Structure Objects;
+#X obj 245 112 element;
+#X obj 76 112 get;
+#X obj 107 112 set;
+#X obj 136 112 getsize;
+#X obj 190 112 setsize;
+#X obj 22 112 pointer;
+#X text 7 1 [drawpolygon] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 156 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 99 157 float;
+#X text 168 154 - [drawnumber] has a single inlet to toggle visibility
+of the number. A zero makes it invisible. Any nonzero value makes it
+visible.;
+#X text 98 226 (none);
+#X text 179 80 <- subpatch to display the data structures;
+#X obj 449 3 drawpolygon;
+#X obj 420 20 pddp/pddplink http://wiki.puredata.info/en/drawpolygon
+-text pdpedia: drawpolygon;
+#N canvas 23 258 428 340 drawpolygon-help-data 0;
+#X scalar drawpolygon-help-template 101 41 0 60 100 1 \;;
+#X scalar drawpolygon-help-template 301 44 1 80 100 1 \;;
+#X obj 1 1 cnv 15 425 20 empty empty empty 20 12 2 14 -204280 -195568
+0;
+#X text 21 156 Three field values are used to draw these polygons.
+The field "weasel" is used for the y-value of the top of the triangle
+and the y-value of the top two points of the red "v". Fields "dog"
+and "cat" are the top left and right x-values for the red "v".;
+#X text 6 1 Window to Display Data Structures;
+#X text 21 111 Each scalar consists of a set of numbers \, one triangle
+\, and one red "v". In editmode you can click on a polygon to get a
+blue bounding box around the scalar.;
+#X text 21 226 In runmode you can click on each of these regions of
+the polygons to alter their appearance. You may also scroll the displayed
+values with the mouse to change them.;
+#X text 21 276 Additionally \, you can right-click a scalar and select
+"Properties" and edit the data in the text window that pops up.;
+#X restore 28 82 pd drawpolygon-help-data;
+#N canvas 102 75 428 563 drawpolygon-help-template 0;
+#X obj 23 115 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#N canvas 69 268 428 162 init 0;
+#X obj 20 75 pointer;
+#X obj 20 99 outlet;
+#X obj 20 30 loadbang;
+#X msg 20 53 traverse pd-drawpolygon-help-data \, next;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [drawpolygon] Initialization subpatch;
+#X text 81 80 This just locates the first scalar in the subpatch "drawpolygon-help-data"
+and outputs a pointer to it.;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X restore 217 316 pd init;
+#X obj 22 298 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [drawpolygon] subpatch;
+#X obj 23 141 drawpolygon 0 4 0 40 40 40 20 weasel 0 40;
+#X obj 22 27 struct drawpolygon-help-template float x float y float
+weasel float dog float cat float vis;
+#X text 42 114 "0" in inlet makes all instances of this polygon invisible
+;
+#X text 40 295 "0" in inlet makes a single instance of this polygon
+invisible;
+#X obj 22 340 set drawpolygon-help-template vis;
+#X obj 23 491 drawnumber weasel -60 0 0 weasel=;
+#X obj 23 511 drawnumber dog -60 15 0 dog=;
+#X obj 23 532 drawnumber cat -60 30 0 cat=;
+#X obj 23 199 drawpolygon -v vis 900 3 dog weasel 80 40 cat weasel
+;
+#X text 19 218 The next [drawpolygon] object uses the -v flag. This
+flag controls visilibility of the polygon for only one instance of
+a data structure. "-v vis" means that the value of field "vis" determines
+whether the red "v" polygon is visible or not.;
+#X text 19 360 Using the [set] object \, we can turn visibility on
+and off for an instance of this polygon by changing the value of the
+field "vis". Notice when you click the toggle above \, visibility only
+changes for the red "v" furthest to the right. Once you use the -v
+flag \, however \, you can no longer use the inlet to [drawpolygon]
+to set visibility globally.;
+#X text 19 447 Finally \, for convenience \, the following [drawnumber]
+objects display the values of each field used in the drawing instructions
+above:;
+#X text 20 159 [drawpolygon] is used above to display a black triangle
+and a red "v".;
+#X text 19 60 The [struct] object defines the fields for this template.
+You can see and edit the values by right-clicking the scalar in the
+"data" subpatch and selecting "Properties.";
+#X connect 0 0 5 0;
+#X connect 1 0 9 1;
+#X connect 2 0 9 0;
+#X restore 28 109 pd drawpolygon-help-template;
+#X text 98 471 Note: you cannot use the -n and -v flag together. When
+using the -v flag \, the polygon is initially invisible by default.
+;
+#X text 99 519 When not in "edit" mode \, you can click on regions
+of the polygon defined by template fields to stretch or alter the polygon's
+shape.;
+#X text 201 109 <- click this subpatch to see how [drawpolygon] is
+used.;
+#X text 11 23 display a polygon in a data structure instance;
+#X text 168 195 - a list will be truncated to the first element.;
+#X text 168 363 - RGB color (0=black \, 999=white \, 900=red \, 90=green
+\, 9=blue \, 555=grey \, etc.);
+#X text 168 390 - line width.;
+#X text 168 414 - two or more (x \, y) pairs giving coordinates.;
+#X text 168 270 - "-n" flag to make the polygon initially invisible.
+;
+#X text 168 289 - a "-v [variable]" flag to assign a variable to make
+the polygon visible/invisible.;
+#X text 80 390 2) *;
+#X text 80 364 1) *;
+#X text 80 414 n) *;
+#X text 98 442 * Any of these can be numbers (float) or field names
+(symbol atom).;
+#X text 98 195 list;
+#X text 80 309 (symbol atoms);
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 316 557 pddp/pddplink ../4.data.structures/09.scaling.pd -text
+doc/4.data.structure/09.scaling.pd;
+#X obj 316 572 pddp/pddplink ../4.data.structures/10.onoff.pd -text
+doc/4.data.structures/10.onoff.pd;
+#X obj 99 572 pddp/pddplink all_about_z_order.pd;
+#X obj 99 557 pddp/pddplink scalar-help.pd;
+#X text 80 270 0-3 flags;
+#X text 80 290 (optional);
+#X text 168 318 - "-x" flag to inhibit selecting the object when the
+shape is clicked on in "edit" mode or clicked-and-dragged in "run mode".
+;

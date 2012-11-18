@@ -1,0 +1,9 @@
+#N canvas 976 723 373 150 10;
+#X obj 102 90 savebang;
+#X obj 102 116 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 8 8 [savebang] outputs a bang when its containing patch is
+saved. The bang is output before the file is saved \, making it useful
+for clearing temporary data. Original idea by Hans-Christoph Steiner
+\; requires [tot];
+#X connect 0 0 1 0;

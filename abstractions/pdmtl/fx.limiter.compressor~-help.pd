@@ -1,0 +1,16 @@
+#N canvas 619 218 450 300 10;
+#X text 35 12 Description: zcomplim is a combination of a compressor
+with a following limiter based on zexy's [limiter~].Description: zcomplim
+is a combination of a compressor with a following limiter based on
+zexy's [limiter~].;
+#X obj 36 164 mix.out_~;
+#X text 36 60 From www.netpd.org;
+#X obj 230 117 param.gui;
+#X msg 230 95 compressor;
+#X obj 36 116 adc~ 1 2;
+#X obj 37 139 fx.limiter.compressor~ @id compressor;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 5 1 6 1;
+#X connect 6 0 1 0;
+#X connect 6 1 1 1;

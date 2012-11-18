@@ -1,0 +1,16 @@
+# Fps config for wminput by kyrlian
+# needs plugins ir_fps and nunchuk_kb
+# available from http://kyrlian.free.fr/binaries/cwiid/latest/
+# wminput source and info at http://abstrakraft.org/cwiid/
+
+include buttons
+
+Nunchuk.C               = KEY_C
+Nunchuk.Z               = KEY_SPACE
+
+#plugin for nunchuk stick
+Plugin.nunchuk_stick2btn.Up	= KEY_UP
+Plugin.nunchuk_stick2btn.Down	= KEY_DOWN
+Plugin.nunchuk_stick2btn.Left	= KEY_LEFT
+Plugin.nunchuk_stick2btn.Right	= KEY_RIGHT
+

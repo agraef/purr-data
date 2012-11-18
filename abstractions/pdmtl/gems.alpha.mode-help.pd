@@ -1,0 +1,132 @@
+#N canvas 1426 220 983 624 10;
+#X obj 161 252 gems.alpha.mode;
+#X obj 162 436 square 4;
+#X obj 268 313 vsl 15 50 0 1 0 0 empty empty empty 0 -8 0 8 -258699
+-262144 -1 1407 1;
+#X obj 161 371 colorRGB 1 1 1 1;
+#X obj 171 574 square 4;
+#X floatatom 251 183 5 0 0 0 - - -;
+#X floatatom 332 220 5 0 0 0 - - -;
+#X msg 522 243 GL_ONE_MINUS_SRC_ALPHA;
+#X msg 521 125 GL_ONE;
+#X msg 520 107 GL_ZERO;
+#X msg 523 184 GL_ONE_MINUS_DST_COLOR;
+#X msg 523 203 GL_ONE_MINUS_SRC_COLOR;
+#X msg 523 163 GL_DST_COLOR;
+#X text 594 109 0;
+#X text 594 124 1;
+#X text 619 145 2;
+#X text 620 165 3;
+#X text 685 187 4;
+#X text 687 205 5;
+#X msg 523 224 GL_SRC_ALPHA;
+#X text 619 227 6;
+#X text 687 244 7;
+#X msg 524 265 GL_DST_ALPHA;
+#X msg 524 286 GL_ONE_MINUS_DST_ALPHA;
+#X text 621 267 8;
+#X text 685 289 9;
+#X msg 523 308 GL_SRC_ALPHA_SATURATE;
+#X text 680 310 10;
+#X msg 522 143 GL_SRC_COLOR;
+#X obj 170 463 gemhead 55;
+#X obj 151 162 gemhead 56;
+#X text 514 80 OpenGL Alpha modes :;
+#X text 28 37 Arguments and 2-3 inlets : source mode number \, destination
+mode number;
+#X text 302 247 Change the alpha to see.;
+#X text 523 342 See the documentation for the C function glBlendFunc
+in the OpenGL documentation. Defaults to 6 7 for best results.;
+#X obj 151 201 pix_image;
+#X obj 161 395 pix_texture;
+#X obj 170 512 pix_image;
+#X obj 171 540 pix_texture;
+#X text 32 9 Description: Allows to easily change the alpha blending
+mode for the current gemchain.;
+#X obj 252 164 hradio 15 1 0 11 empty empty empty 0 -6 0 8 -258699
+-262144 -1 0;
+#X text 251 150 source;
+#X obj 328 197 hradio 15 1 0 11 empty empty empty 0 -6 0 8 -258699
+-262144 -1 0;
+#X text 327 183 destination;
+#N canvas 0 0 450 300 auto 0;
+#X obj 129 227 line;
+#X obj 140 169 sel 0 1;
+#X obj 139 60 inlet;
+#X obj 163 108 metro 1000;
+#X obj 138 266 outlet;
+#X obj 158 137 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 123 194 0.01 \, 1 1000;
+#X msg 230 196 1 \, 0.01 1000;
+#X connect 0 0 4 0;
+#X connect 1 0 6 0;
+#X connect 1 1 7 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 5 0 1 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X restore 329 361 pd auto;
+#X obj 327 338 tgl 15 0 empty empty empty 0 -6 0 8 -258699 -262144
+-1 1 1;
+#X symbolatom 186 291 20 0 0 0 - - -;
+#X symbolatom 335 289 20 0 0 0 - - -;
+#X obj 328 314 loadbang;
+#X obj 210 95 gems.win;
+#X obj 210 70 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#N canvas 0 0 450 300 loadimage 0;
+#X obj 166 140 file.path.top;
+#X msg 166 163 open \$1;
+#X obj 166 91 loadbang;
+#X obj 161 215 outlet;
+#X msg 166 115 medias/images/img0.jpg;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 4 0 0 0;
+#X restore 54 184 pd loadimage;
+#N canvas 0 0 450 300 loadimage 0;
+#X obj 166 140 file.path.top;
+#X msg 166 163 open \$1;
+#X obj 166 91 loadbang;
+#X obj 161 215 outlet;
+#X msg 166 115 medias/images/img1.jpg;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 4 0 0 0;
+#X restore 40 496 pd loadimage;
+#X text 230 66 1) Create Gem window.;
+#X text 251 133 2) Play with the controls below:;
+#X obj 161 416 translateXYZ 0 0 0.01;
+#X text 317 414 <- Do not forget that for blending to work \, the blending
+image must be in front of other images.;
+#X text 44 133 Blending image:;
+#X text 31 468 Background image:;
+#X text 254 462 <- Do not also forget that for blending to work \,
+the blending image must have a higher render number (the gemhead argument)
+than the background image.;
+#X connect 0 0 3 0;
+#X connect 0 1 46 0;
+#X connect 0 2 47 0;
+#X connect 2 0 3 4;
+#X connect 3 0 36 0;
+#X connect 5 0 0 1;
+#X connect 6 0 0 2;
+#X connect 29 0 37 0;
+#X connect 30 0 35 0;
+#X connect 35 0 0 0;
+#X connect 36 0 55 0;
+#X connect 37 0 38 0;
+#X connect 38 0 4 0;
+#X connect 40 0 5 0;
+#X connect 42 0 6 0;
+#X connect 44 0 2 0;
+#X connect 45 0 44 0;
+#X connect 48 0 45 0;
+#X connect 50 0 49 0;
+#X connect 51 0 35 0;
+#X connect 52 0 37 0;
+#X connect 55 0 1 0;

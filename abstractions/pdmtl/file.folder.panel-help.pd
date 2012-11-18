@@ -1,0 +1,10 @@
+#N canvas 435 58 510 353 10;
+#X declare -stdpath extra/tof;
+#X obj 93 145 file.folder.panel;
+#X obj 93 107 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 93 183 print;
+#X text 49 29 Description: Pops up an panel for selecting a directory.
+;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;

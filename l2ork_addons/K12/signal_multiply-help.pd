@@ -1,0 +1,37 @@
+#N canvas 228 31 502 510 10;
+#X obj 470 -236 preset_hub k12 %hidden% %node% 2 1 16 %preset% 0 0
+%node% 2 8 8 %preset% 0 440 %node% 2 10 8 %preset% 0 2 %node% 2 13
+9 %preset% 0 %node% 2 2 14 %preset% 0 100 %preset% 1 0 %node% 2 7 7
+%preset% 0 79 %preset% 1 79 %node% 2 8 4 %preset% 0 783.991 %preset%
+1 783.991 %node% 2 9 7 %preset% 0 0 %preset% 1 0 %node% 2 10 4 %preset%
+0 8.1758 %preset% 1 8.1758 %node% 2 11 8 %preset% 0 %preset% 1;
+#X obj 215 36 cnv 15 466 97 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 219 150 K12/output;
+#N canvas 710 434 450 514 META 0;
+#X text 10 55 INLET_1 Send any audio signal here;
+#X text 11 30 INLET_0 Send any audio signal here;
+#X text 11 5 DESCRIPTION This multiplies two signals together;
+#X text 10 84 OUTLET_0 This outputs the product of the two audio signals
+;
+#X restore 653 220 pd META;
+#X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 209 -243 cnv 15 501 28 empty empty SignalMultiply 5 14 0 20
+-139274 -262144 0;
+#X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 217 -202 K12/math_number;
+#X obj 218 -81 K12/signal_sine;
+#X obj 327 -200 K12/math_number;
+#X obj 322 -81 K12/signal_sine;
+#X obj 600 -164 K12/preset;
+#X obj 218 40 K12/signal_multiply;
+#X text 316 53 The Signal Multiply object multiplies two signals together.
+One way to think of it is that the wave at the right inlet controls
+the loudness of the wave at the left inlet. The result is the multiplication
+of the two signals. Recall preset 1 for an example.;
+#X connect 7 0 8 0;
+#X connect 8 0 12 0;
+#X connect 9 0 10 0;
+#X connect 10 0 12 1;
+#X connect 12 0 2 0;

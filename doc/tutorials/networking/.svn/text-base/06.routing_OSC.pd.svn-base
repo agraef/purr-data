@@ -1,0 +1,53 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib libdir;
+#X obj 470 51 import oscx;
+#X obj 8 10 cnv 15 400 40 empty empty routing_OSC 20 12 0 24 -228992
+-66577 0;
+#X text 13 61 OSC messages have two parts \, the identifier and the
+data. The idenifier is made up of symbols separated by slashes ("/").
+[OSCroute] is similar to [route] but is specifically for OSC messages.
+;
+#X obj 24 168 OSCroute /test;
+#X obj 24 223 OSCroute /message;
+#X obj 35 193 print first;
+#X obj 23 272 symbol;
+#X symbolatom 23 296 0 0 0 0 - - -;
+#X obj 362 272 symbol;
+#X symbolatom 362 296 0 0 0 0 - - -;
+#X obj 363 168 route test;
+#X obj 363 223 route message;
+#X obj 35 246 print second;
+#X msg 25 123 /test/message OSCdata;
+#X msg 363 124 test message pddata;
+#X obj 374 193 print 1st;
+#X obj 374 247 print 2nd;
+#X msg 33 145 /test/message otherOSCdata;
+#X msg 378 145 test message otherpddata;
+#X text 17 321 Like [route] \, [OSCroute] outputs anything that didn't
+match out of the right-most outlet. This includes patterns not starting
+with a / and patterns starting with a number.;
+#X obj 165 435 bng 15 250 50 0 empty empty match 18 8 0 12 -262144
+-1 -1;
+#X obj 257 435 bng 15 250 50 0 empty empty unmatched 18 8 0 12 -262144
+-1 -1;
+#X msg 204 375 test/message data;
+#X msg 42 376 /test/message data;
+#X obj 165 413 OSCroute /test;
+#X connect 3 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 4 0 12 0;
+#X connect 6 0 7 0;
+#X connect 8 0 9 0;
+#X connect 10 0 11 0;
+#X connect 10 0 15 0;
+#X connect 11 0 8 0;
+#X connect 11 0 16 0;
+#X connect 13 0 3 0;
+#X connect 14 0 10 0;
+#X connect 17 0 3 0;
+#X connect 18 0 10 0;
+#X connect 22 0 24 0;
+#X connect 23 0 24 0;
+#X connect 24 0 20 0;
+#X connect 24 1 21 0;

@@ -1,0 +1,10 @@
+#N canvas 449 655 450 300 10;
+#X msg 46 70 97 32 98 32 99;
+#X msg 61 92 97 0 98 0 99;
+#X obj 46 200 print MSG;
+#X obj 46 156 convert.int2ascii;
+#X text 38 25 Description: convert lists of integers to an ascii message
+;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;

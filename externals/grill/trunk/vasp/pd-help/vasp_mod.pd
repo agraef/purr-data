@@ -1,0 +1,48 @@
+#N canvas 35 127 922 431 10;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 613 298 pd clear_buffer;
+#X text 366 125 ramp from 0-1;
+#X obj 286 174 vasp.update;
+#X obj 51 173 vasp.update;
+#X text 132 126 a sine wave at 1Hz or;
+#X obj 51 149 vasp.osc 44100;
+#X text 54 77 optional argument/right inlet: divisor;
+#X text 54 60 modulo function / remainder of a division;
+#X obj 62 31 cnv 15 15 15 empty empty vasp.% 0 10 1 14 -262144 -1 0
+;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufmod 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 485 110 graph;
+#N canvas 0 0 394 270 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufmod;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 760 300 pd init;
+#X msg 51 126 vasp bufmod;
+#X msg 613 273 vasp bufmod;
+#X msg 286 127 vasp bufmod;
+#X obj 100 292 vasp.update;
+#X floatatom 161 245 0 0 0;
+#X obj 100 268 vasp.% 0.25;
+#X text 187 260 modulo;
+#X msg 100 219 vasp bufmod;
+#X obj 53 388 VASP-HELP;
+#X obj 286 148 vasp.window lin;
+#X connect 5 0 3 0;
+#X connect 11 0 5 0;
+#X connect 12 0 0 0;
+#X connect 13 0 20 0;
+#X connect 15 0 16 1;
+#X connect 16 0 14 0;
+#X connect 18 0 16 0;
+#X connect 20 0 2 0;

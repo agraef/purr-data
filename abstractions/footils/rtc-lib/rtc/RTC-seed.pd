@@ -1,0 +1,6 @@
+#N canvas 63 44 169 167 10;
+#X obj 26 100 s RTC-rs;
+#X obj 26 47 inlet;
+#X floatatom 26 75 5 0 0 0 - - -;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;

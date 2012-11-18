@@ -1,0 +1,102 @@
+namespace eval ::ix {
+    variable _
+    proc nobfloat {path t num} {
+	variable _
+	$path itemconfigure $t:num -text $num
+	pd [concat $t.rp _cb $num \;]
+	set _($t:num) $num
+    }
+    proc nob_mover {w t f x y} {
+	variable _
+	if {$::ix::_($t:clickd) > 0} {
+	    set move [expr (($x - $::ix::_($t:lx)) + (-1 * ($y - $::ix::_($t:ly)))) / ([winfo width $w].0 + [winfo height $w].0) * $f]
+	    nob_move $w $t $move
+	}
+	set ::ix::_($t:clickd) 1
+	set ::ix::_($t:lx) $x
+	set ::ix::_($t:ly) $y	
+    }
+    proc nob_move {w t move} {
+	variable _
+	set on [$w itemcget $t:num -text]
+	set no [expr $on + $_($t:range) * $move * 2]
+	if {$_($t:min) != $_($t:max)} {
+	    if {$no > $_($t:max)} {set no $_($t:max);set move 0}
+	    if {$no < $_($t:min)} {set no $_($t:min);set move 0}
+	}
+	nobfloat $w $t $no
+	foreach e {1 10 100} {
+	    set a [expr [$w itemcget $t:nob$e -start] + int($move * $e * 90)]
+	    $w itemconfigure $t:nob$e -start $a
+	    set _($t:a$e) $a
+	}	
+    }
+
+    proc nob {path t w h range bg c1 c2 c3 cn th nx ny max min} {
+	variable _
+	set _($t:lx) 32
+	set _($t:clickd) -1
+	set _($t:max) $max
+	set _($t:min) $min
+	if {$_($t:min) != $_($t:max)} {
+	    set _($t:range) [expr abs($min - $max)]
+	} else {
+	    set _($t:range) $range
+	}
+	if {[winfo exists $path.nob] != 1} {
+	    canvas $path.nob -width $w -height $h -borderwidth 1 -bg $bg
+	    $path configure -width $w -height $h
+	    place $path.nob -anchor nw -relwidth 1 -relheight 1
+	    $path.nob delete *
+	    set i 0
+	    set colors [list $c1 $c2 $c3]
+	    set ratios {1 10 0.1}
+	    set edge 10
+	    $path.nob create rectangle {1 1 8 4} -fill "#555555"
+	    $path.nob create rectangle "1 $h 8 [expr $h - 5]" -fill "#555555"
+	    foreach e {1 10 100} {
+		$path.nob create arc \
+		    "[expr $w / $edge / ($i + 1) + ($edge / 2)] [expr $h / $edge / ($i + 1) + ($edge / 2)] [expr $w - $w / $edge / ($i + 1) - ($edge / 2)] [expr $h - $h / $edge / ($i + 1) - ($edge / 2)]" \
+		    -extent [expr int(300 / $e)] -start 90 \
+		    -outline "[lindex $colors $i]" \
+		    -style arc \
+		    -width [expr int($h / $th)] \
+		    -tags $t:nob$e
+		bind $path.nob <B[expr $i + 1]-Motion> \
+		    "::ix::nob_mover $path.nob $t [lindex $ratios $i] %x %y"
+		incr i
+		bind $path.nob <ButtonRelease-$i> "set ::ix::_($t:clickd) -1"
+	    }
+	    bind $path <MouseWheel> {::ix::nob_move %W.nob [winfo name %W] [expr %D / 2400.]}
+	    bind $path <Shift-MouseWheel> {::ix::nob_move %W.nob [winfo name %W] [expr %D / 24000.]}
+	    bind $path <Control-MouseWheel> {::ix::nob_move %W.nob [winfo name %W] [expr %D / 240.]}
+	    bind $path.nob <Shift-B1-Motion> "::ix::nob_mover $path.nob $t 10 %x %y"
+	    bind $path.nob <Control-B1-Motion> "::ix::nob_mover $path.nob $t 0.1 %x %y"
+	    if {$nx == 0} {
+		set nx [expr $w / 2]
+		set ny [expr $h - 20]
+	    }
+	    $path.nob create text $nx $ny -text "0.0" -tags $t:num -fill "$cn" -font {{Bitstream Vera Sans} 8}
+	}
+	if {[info exists _($t:num)]} {
+	    $path.nob itemconfigure $t:num -text $_($t:num)
+	    foreach e {1 10 100} {
+		$path.nob itemconfigure $t:nob$e -start $_($t:a$e)
+	    }
+	} else {
+	    foreach e {1 10 100} {set _($t:a$e) 90}
+	    set _($t:num) 0.0}
+
+    }
+}
+#> knob frame
+#. -bd 1 -bg "#cccccc"
+#. -highlightbackground red
+#. #max 0 #min 0
+#. #w 128 #h 128 #th 5 #range 100 #nx 0 #ny 0
+#. #bg purple #ca blue #cb yellow #cc green #cn orange
+#. @float ::ix::nobfloat .-.nob .| .#1
+#. @cmd eval ".-.nob .#args"
+bind .- <Enter> {focus .-}
+bind .- <Leave> {focus .^.c}
+::ix::nob .- .| .#w .#h .#range .#bg .#ca .#cb .#cc .#cn .#th .#nx .#ny .#max .#min

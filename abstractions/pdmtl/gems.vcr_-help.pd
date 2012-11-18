@@ -1,0 +1,79 @@
+#N canvas 1440 0 812 802 10;
+#X obj 19 677 pix_texture;
+#X obj 19 648 gems.movies;
+#X obj 19 718 gems.fit window;
+#X obj 19 740 rectangle 4 3;
+#X msg 327 437 autostart \$1;
+#X obj 327 420 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 277 354 play;
+#X msg 236 354 stop;
+#X msg 182 354 rewind;
+#X msg 100 354 fastrewind;
+#X msg 318 354 fastforward;
+#X obj 19 30 gemhead;
+#X obj 424 60 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#N canvas 235 546 450 300 loadmovie 0;
+#X obj 68 54 loadbang;
+#X obj 68 176 outlet;
+#X obj 68 133 file.path.parent;
+#X msg 68 102 medias/movies/;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X restore 234 138 pd loadmovie;
+#X obj 43 159 file.browser_ medias/movies;
+#X floatatom 43 74 5 0 0 0 - - -;
+#X msg 330 510 smooth \$1;
+#X floatatom 330 487 5 0 0 0 - - -;
+#X text 51 116 once they are loaded.;
+#X text 51 102 Recall movies by their index number;
+#X obj 424 86 gems.win 320 240;
+#X obj 327 399 init.lf 1;
+#X text 333 549 Floats will be rounded on the fly. See number.round
+;
+#X text 333 533 Smooth accepts any integer from 1 up as an argument.
+;
+#X text 328 462 Autostart accepts a boolean (0 or 1) as an argument.
+;
+#X text 259 579 All these commands are accessible from the Graph-On-Parent.
+;
+#X obj 488 141 cnv 15 270 180 empty empty gems.vcr_ 20 12 1 12 -233017
+-66577 0;
+#X text 496 211 SUMMARY:;
+#X text 496 225 Inlet_1: File management;
+#X text 496 297 Outlet_2: Playback speed;
+#X text 496 249 Inlet_2: VCR commands;
+#X text 496 273 Outlet_1: File management;
+#X text 564 284 forwarding;
+#X text 425 353 You may send the following messages:;
+#X floatatom 236 611 5 0 0 1 Playback_rate - -;
+#X text 501 195 Author: oli44 Sept. 2007;
+#X text 426 391 and fastforward;
+#X text 426 374 fastrewind \, rewind \, stop \, play;
+#X text 495 171 Description: Old-school VCR commands;
+#X obj 43 527 gems.vcr_;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 2 1 3 1;
+#X connect 2 2 3 2;
+#X connect 4 0 39 1;
+#X connect 5 0 4 0;
+#X connect 6 0 39 1;
+#X connect 7 0 39 1;
+#X connect 8 0 39 1;
+#X connect 9 0 39 1;
+#X connect 10 0 39 1;
+#X connect 11 0 1 0;
+#X connect 12 0 20 0;
+#X connect 13 0 14 1;
+#X connect 14 0 39 0;
+#X connect 15 0 14 0;
+#X connect 16 0 39 1;
+#X connect 17 0 16 0;
+#X connect 21 0 5 0;
+#X connect 34 0 1 2;
+#X connect 39 0 1 1;
+#X connect 39 1 34 0;

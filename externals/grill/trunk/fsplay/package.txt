@@ -1,0 +1,9 @@
+NAME=fsplay~
+
+BUILDDIR=build
+BUILDTYPE=multi
+
+SRCDIR=.
+
+SRCS=main.cpp fsp_libsndfile.cpp fsp_quicktime.cpp
+HDRS=fsplay.h resample.hpp

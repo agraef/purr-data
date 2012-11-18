@@ -1,0 +1,8 @@
+#N canvas 2 89 332 258 10;
+#X text 19 28 Author: Chun Lee (sonicvariable.goto10.org);
+#X text 19 9 Description: Bubbles drone.;
+#X obj 21 151 mtl/out~;
+#X text 19 46 tags: synthesize~;
+#X obj 22 117 mtl/bubbles~;
+#X connect 4 0 2 0;
+#X connect 4 1 2 1;

@@ -1,0 +1,22 @@
+#N canvas 95 471 555 395 10;
+#X msg 191 167 list 1 2 3;
+#X obj 92 192 bng 15 250 50 0 empty empty output 0 -6 0 8 -262144 -1
+-1;
+#X obj 117 298 print;
+#X obj 193 290 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 213 210 list a b c;
+#X text 213 291 Nothing to output;
+#X text 267 187 Store lists;
+#X obj 213 245 bng 15 250 50 0 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X text 9 21 Description: Accumultate lists and outputs them on bangs
+(first in first out). Lists are erased once they are outputed.;
+#X obj 108 251 list.q.man;
+#X obj 59 392 examples/abstraction_arguments/abs_clipper;
+#X connect 0 0 9 1;
+#X connect 1 0 9 0;
+#X connect 4 0 9 1;
+#X connect 7 0 9 1;
+#X connect 9 0 2 0;
+#X connect 9 1 3 0;

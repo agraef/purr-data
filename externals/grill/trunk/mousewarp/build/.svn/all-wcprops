@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3600/trunk/mousewarp/build
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/3600/trunk/mousewarp/build/nmake-win-msvc.inc
+END
+gnumake-mac-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/ext/!svn/ver/3600/trunk/mousewarp/build/gnumake-mac-gcc.inc
+END
+gnumake-lnx-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/ext/!svn/ver/3600/trunk/mousewarp/build/gnumake-lnx-gcc.inc
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/3600/trunk/mousewarp/build/config-win.def
+END
+config-mac.def
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/3600/trunk/mousewarp/build/config-mac.def
+END
+config-lnx.def
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/3600/trunk/mousewarp/build/config-lnx.def
+END

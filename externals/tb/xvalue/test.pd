@@ -1,0 +1,14 @@
+#N canvas 0 0 450 300 10;
+#X obj 39 133 xvalue test1;
+#X obj 220 139 value test;
+#X floatatom 254 115 5 0 0 0 - - -;
+#X floatatom 32 192 5 0 0 0 - - -;
+#X obj 34 72 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 68 63 5 0 0 0 - - -;
+#X msg 94 96 set test;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;

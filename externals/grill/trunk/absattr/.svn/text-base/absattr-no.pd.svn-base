@@ -1,0 +1,21 @@
+#N canvas 307 422 585 525 12;
+#X obj 405 38 inlet;
+#X obj 32 187 print ARGS;
+#X obj 224 190 print ATTR;
+#X obj 377 189 outlet;
+#X text 453 38 extern;
+#X text 446 191 extern;
+#X obj 84 146 t a b;
+#X obj 95 112 absattr @loadbang 0;
+#X text 274 111 loadbang disabled;
+#X obj 82 49 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 109 48 dump manually;
+#X obj 31 225 print -----------------------;
+#X connect 0 0 7 1;
+#X connect 6 0 1 0;
+#X connect 6 1 11 0;
+#X connect 7 0 6 0;
+#X connect 7 1 2 0;
+#X connect 7 2 3 0;
+#X connect 9 0 7 0;

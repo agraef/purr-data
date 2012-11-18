@@ -1,0 +1,117 @@
+#N struct liaison float x1 float y1 float x2 float y2 float mid1 float
+mid2 float lid;
+#N struct mass float x float y float mid float mob;
+#N struct fixmass float x float y float mid;
+#N canvas 241 22 630 524 10;
+#X obj 15 58 structures;
+#X obj 16 96 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X msg 16 153 forceY mob 8;
+#X obj 16 125 metro 10;
+#N canvas 0 22 307 306 \$0-anim 0;
+#X scalar liaison 90.3805 300 139.692 181.359 0 0 0 \;;
+#X scalar liaison 89.4172 189.783 104.878 200.197 0 0 0 \;;
+#X scalar liaison 89.4172 189.783 139.692 181.359 0 0 0 \;;
+#X scalar liaison 145.861 231.953 90.3805 300 0 0 0 \;;
+#X scalar liaison 81.2748 184.111 102.254 162.589 0 0 0 \;;
+#X scalar liaison 89.4172 189.783 52.423 226.527 0 0 0 \;;
+#X scalar liaison 156.503 300 89.4172 189.783 0 0 0 \;;
+#X scalar liaison 104.878 200.197 121.885 186.762 0 0 0 \;;
+#X scalar liaison 145.861 231.953 89.4172 189.783 0 0 0 \;;
+#X scalar liaison 156.503 300 145.861 231.953 0 0 0 \;;
+#X scalar liaison 121.885 186.762 81.2748 184.111 0 0 0 \;;
+#X scalar liaison 52.423 226.527 139.692 181.359 0 0 0 \;;
+#X scalar liaison 156.503 300 97.1881 236.113 0 0 0 \;;
+#X scalar liaison 139.692 181.359 121.885 186.762 0 0 0 \;;
+#X scalar liaison 139.692 181.359 145.861 231.953 0 0 0 \;;
+#X scalar liaison 90.3805 300 97.1881 236.113 0 0 0 \;;
+#X scalar liaison 102.254 162.589 121.885 186.762 0 0 0 \;;
+#X scalar liaison 139.692 181.359 187.622 200.002 0 0 0 \;;
+#X scalar liaison 97.1881 236.113 145.861 231.953 0 0 0 \;;
+#X scalar liaison 104.878 200.197 81.2748 184.111 0 0 0 \;;
+#X scalar liaison 97.1881 236.113 139.692 181.359 0 0 0 \;;
+#X scalar liaison 97.1881 236.113 89.4172 189.783 0 0 0 \;;
+#X scalar liaison 104.878 200.197 102.254 162.589 0 0 0 \;;
+#X scalar liaison 89.4172 189.783 187.622 200.002 0 0 0 \;;
+#X scalar mass 90.3805 300 0 0 \;;
+#X scalar mass 104.878 200.197 8 0 \;;
+#X scalar mass 89.4172 189.783 4 0 \;;
+#X scalar mass 97.1881 236.113 2 0 \;;
+#X scalar mass 81.2748 184.111 10 0 \;;
+#X scalar mass 52.423 226.527 6 0 \;;
+#X scalar mass 156.503 300 1 0 \;;
+#X scalar mass 121.885 186.762 9 0 \;;
+#X scalar mass 139.692 181.359 5 0 \;;
+#X scalar mass 145.861 231.953 3 0 \;;
+#X scalar mass 102.254 162.589 11 0 \;;
+#X scalar mass 187.622 200.002 7 0 \;;
+#X coords 0 0 300 300 300 300 1;
+#X restore 255 92 pd \$0-anim;
+#X obj 16 212 make_anim \$0-anim;
+#X msg 15 358 forceY mob -200;
+#X msg 15 380 forceY mob 200;
+#X msg 15 316 forceX mob 200;
+#X msg 15 337 forceX mob -200;
+#X msg 15 400 forceX 0 -200 \, forceX 1 200;
+#X msg 15 442 forceY 0 -200 \, forceY 1 -200 \, forceX 0 -200 \, forceX
+1 200;
+#X msg 15 421 forceY 6 -200 \, forceY 7 -200;
+#X obj 15 182 r \$0-msdin;
+#N canvas 0 22 450 300 creation 0;
+#X obj 45 20 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262131 -1
+-1;
+#X msg 117 71 reset;
+#X text 83 21 reset;
+#X obj 45 42 t b b b b b;
+#X msg 63 181 Xmax 300 \, Xmin 0 \, Ymax 300 \, Ymin 0;
+#X msg 81 113 100 300 \, 150 300 \, 100 230 \, 150 230 \, 100 180 \,
+150 180 \, 50 180 \, 200 180 \, 115 180 \, 135 180 \, 110 150 \, 140
+150;
+#X msg 45 205 0 5 \, 1 2 \, 1 4 \, 2 3 \, 3 0 \, 0 2 \, 1 3 \, 2 4
+\, 4 5 \, 5 3 \, 3 4 \, 2 5 \, 4 6 \, 5 7 \, 6 5 \, 4 7 \, 4 8 \, 5
+9 \, 8 9 \, 8 10 \, 10 11 \, 11 9 \, 9 10 \, 8 11;
+#X msg 45 252 link souple \$1 \$2 12 20;
+#X msg 81 146 mass mob 1 100 \$1 \$2;
+#X obj 45 274 s \$0-msdin;
+#X obj 69 6 inlet;
+#X obj 141 26 loadbang;
+#X connect 0 0 3 0;
+#X connect 1 0 9 0;
+#X connect 3 0 6 0;
+#X connect 3 1 4 0;
+#X connect 3 2 5 0;
+#X connect 3 4 1 0;
+#X connect 4 0 9 0;
+#X connect 5 0 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 10 0 3 0;
+#X connect 11 0 3 0;
+#X restore 15 37 pd creation;
+#X obj 15 14 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 36 14 reset;
+#X obj 15 467 s \$0-msdin;
+#X obj 15 286 msd2D;
+#X text 38 95 compute;
+#X text 252 28 1 - notch the "poll" case to set DS to actual model
+state;
+#X text 252 47 2 - compute ON;
+#X text 252 64 3 - "force" the dancer to move;
+#X connect 1 0 3 0;
+#X connect 2 0 18 0;
+#X connect 3 0 2 0;
+#X connect 3 0 18 0;
+#X connect 5 0 18 0;
+#X connect 6 0 17 0;
+#X connect 7 0 17 0;
+#X connect 8 0 17 0;
+#X connect 9 0 17 0;
+#X connect 10 0 17 0;
+#X connect 11 0 17 0;
+#X connect 12 0 17 0;
+#X connect 13 0 18 0;
+#X connect 15 0 14 0;
+#X connect 18 0 5 0;
+#X connect 18 1 5 0;

@@ -1,0 +1,74 @@
+#N canvas 679 22 502 640 10;
+#X obj 90 205 cnv 15 100 100 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 239 336 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 239 223 record;
+#X msg 241 245 stop;
+#X msg 239 202 play;
+#X msg 241 265 print;
+#X msg 241 285 write chart.txt;
+#X msg 242 305 read chart.txt;
+#X msg 238 179 tempo \$1;
+#X floatatom 238 162 5 0 0 0 - - -;
+#X text 29 397 This one is an interface to qlist.;
+#X msg 236 143 loop \$1;
+#X obj 236 125 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 97 164 5 0 0 0 - - -;
+#X msg 97 181 a \$1;
+#X floatatom 135 165 5 0 0 0 - - -;
+#X floatatom 137 342 5 0 0 0 - - -;
+#X floatatom 95 341 5 0 0 0 - - -;
+#X msg 135 182 b \$1;
+#X text 26 465 If you want to save your chart \, you will need the
+unique id to be the same when you open your patch again and read the
+file. Therefore \, I recommend using a symbol or a number as a unique
+id \, instead of a dollar-0.;
+#X text 308 181 1 is the original speed;
+#X text 261 336 Banged when done;
+#X text 204 96 GNU public license v2.0;
+#X obj 45 145 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 185 356 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text 40 128 Messages to be recorded;
+#X obj 188 -5 cnv 15 15 15 empty empty seq.qtrack 20 12 0 24 -262144
+-66577 0;
+#X obj 41 78 cnv 15 400 1 empty empty empty 20 12 0 14 -66577 -66577
+0;
+#X text 27 418 You can record a sequence of any list. It will be played
+back with the same timing. You can use arbitrary selectors and lists
+of any length.;
+#X msg 42 164 foo \$1;
+#X obj 96 316 route a b foo;
+#X obj 92 241 seq.qtrack id;
+#X text 39 26 seq.qtrack <unique id>;
+#X text 40 40 Description: Can record any stream of messages and play
+it back at different speeds in loop or not.;
+#X text 29 532 Comments: This patch is quite powerful and you should
+really think about using it if you want to play back complex rhythms
+and such. It wraps qlist.;
+#X text 30 580 Todo: create a multitrack version;
+#X text 203 81 Author: Alexandre Quessy 2006;
+#X connect 2 0 31 1;
+#X connect 3 0 31 1;
+#X connect 4 0 31 1;
+#X connect 5 0 31 1;
+#X connect 6 0 31 1;
+#X connect 7 0 31 1;
+#X connect 8 0 31 1;
+#X connect 9 0 8 0;
+#X connect 11 0 31 1;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 14 0 31 0;
+#X connect 15 0 18 0;
+#X connect 18 0 31 0;
+#X connect 23 0 29 0;
+#X connect 29 0 31 0;
+#X connect 30 0 17 0;
+#X connect 30 1 16 0;
+#X connect 30 2 24 0;
+#X connect 31 0 30 0;
+#X connect 31 1 1 0;

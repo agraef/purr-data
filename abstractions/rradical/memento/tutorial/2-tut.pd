@@ -1,0 +1,22 @@
+#N canvas 322 395 557 382 10;
+#X obj 9 7 cnv 15 100 20 empty empty The_Originator 20 12 1 14 -262144
+-66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X msg 378 10 3;
+#X text 41 68 The originator object wraps access to the data stored
+in memory. The object takes two creating argument: a symbol and a float.
+;
+#X obj 141 128 originator TheState 10;
+#X text 45 160 The first \, symbolic argument will be the name of the
+state \, that is managed. The second \, float argument is used for
+communication with the commun objects. Normally it should be unique
+to a patch \, because then you get only local communcation inside a
+patch's borders. To make it unique use \$0:;
+#X obj 139 256 originator AnotherState \$0;
+#X text 48 282 If you intend to use your patch several times \, it's
+possible to use \$1 as argument to originator \, so that the surrounding
+patch will specify the state name. So in the end \, you'll probably
+always use this:;
+#X obj 139 353 originator \$1 \$0;
+#X connect 3 0 1 0;

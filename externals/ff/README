@@ -1,0 +1,19 @@
+This is a small library that implements force feedback effects for pd.
+It is BETA.
+I might completely change this (see the TODO)
+To compile:
+make sure that m_pd.h is in your include path
+
+patch your kernel with ff-patches from Johann Deneux: 
+--( http://user.it.uu.se/~johannd/projects/ff/index.shtml)
+
+He also has a standalone iforce driver available
+
+
+type make.
+Manually install everything :)
+
+have fun
+
+Gerard van Dongen
+gml@xs4all.nl

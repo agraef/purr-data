@@ -1,0 +1,158 @@
+#N canvas 213 155 903 653 10;
+#X obj 190 155 rrad.nseq /id;
+#X floatatom 190 519 5 0 0 0 - - -;
+#X obj 190 61 metro 250;
+#X obj 190 83 int 0;
+#X obj 234 84 + 1;
+#X floatatom 147 154 5 0 0 0 - - -;
+#X obj 190 39 tgl 15 0 empty \$0-start empty 0 -6 0 8 -24198 -1 -1
+0 1;
+#X obj 190 129 mod 16;
+#X text 468 49 rrad.nseq: 16-step number box sequencer;
+#X text 422 133 nseq supports alphanumerical keyboard control. Clicking
+the toggle labeled "edit" will switch on receiving of keyboard events.
+With the "TAB" key you can navigate focus to the next row \, which
+will be highlighted. To input a note just use your alnum keyboard in
+a piano mode. Default is a quertz-keyboard \, you can change this by
+loading the qwerty2midi.xml file into the kbd2midi abstraction. The
+letter "y" on qwertz rsp. z on qwerty keyboards will input a note value
+of 60 (== note C) into the currently highlighted row. PageUp and PageDown
+(Prior and Next) will change octave from -5 to 5 To leave keyboard
+input mode press Esc or deactivate the "edit" toggle.;
+#X obj 424 311 bng 15 250 50 0 \$0-copy empty copy 0 -6 0 8 -225271
+-1 -1;
+#X obj 485 311 bng 15 250 50 0 \$0-paste empty paste 0 -6 0 8 -257472
+-1 -1;
+#X obj 424 347 bng 15 250 50 0 \$0-reset empty reset 0 -6 0 8 -258699
+-1 -1;
+#X text 451 309 and;
+#X text 514 310 will copy or paste the current pattern.;
+#X text 457 347 sets every number to zero. Press this first if you
+get "argument out of range" errors in the console.;
+#X obj 425 413 nbx 2 14 0 1000 0 0 \$0-substate \$0-substate pre 0
+-6 0 8 -261689 -1 -1 0 256;
+#X text 463 412 switches between patterns.;
+#X obj 393 148 tgl 15 0 \$0-tab-enabled \$0-tab-enabled edit 0 -6 0
+8 -262144 -1 -1 0 1;
+#X text 428 441 inlets:;
+#X text 440 457 1 inlet accepts ints ranging from 0-15. They specify
+the step to play;
+#X text 439 493 The rightmost inlet is OSC inlet. See the main RRADical
+documentation for details.;
+#X text 427 526 outlets:;
+#X text 440 545 1 outlet will output the value of the currently active
+step or the keyboard input.;
+#X text 74 436 rrad.shuffler;
+#X text 74 452 rrad.metro;
+#X text 55 419 Related:;
+#N canvas 598 329 231 193 ed 0;
+#X floatatom 84 42 5 100 1000 0 - - -;
+#X floatatom 146 63 4 10 500 0 height - -;
+#X obj 68 87 pack 0 0;
+#X text 129 42 width;
+#X obj 69 134 s \$0-title;
+#X msg 68 112 vis_size \$1 \$2;
+#X obj 142 82 t b f;
+#X connect 0 0 2 0;
+#X connect 1 0 6 0;
+#X connect 2 0 5 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 6 1 2 1;
+#X restore 853 1 pd ed;
+#X obj 1 -8 cnv 15 900 30 empty \$0-title rrad.nseq 20 12 0 20 -257472
+-262144 0;
+#X obj 156 570 ezdac~;
+#N canvas 0 0 450 300 testtone 0;
+#X obj 115 25 inlet;
+#X obj 89 264 outlet~;
+#X obj 171 110 mtof;
+#X obj 115 48 select 0;
+#X obj 166 80 t b f;
+#X obj 90 240 *~;
+#X obj 53 156 vline~;
+#X obj 53 184 *~;
+#X obj 55 207 *~;
+#X obj 171 158 osc~ 0;
+#X obj 235 159 osc~ 0;
+#X floatatom 279 101 5 0 0 0 - - -;
+#X msg 52 134 0.8 10 \, 0 150 80;
+#X obj 237 133 + 11;
+#X connect 0 0 3 0;
+#X connect 2 0 9 0;
+#X connect 2 0 13 0;
+#X connect 3 1 4 0;
+#X connect 4 0 12 0;
+#X connect 4 1 2 0;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 6 0 7 1;
+#X connect 7 0 8 0;
+#X connect 7 0 8 1;
+#X connect 8 0 5 0;
+#X connect 9 0 5 1;
+#X connect 10 0 5 1;
+#X connect 11 0 13 1;
+#X connect 12 0 6 0;
+#X connect 13 0 10 0;
+#X restore 190 540 pd testtone;
+#X msg 291 64 /id/preset \$1;
+#X obj 291 39 tgl 15 0 empty empty switch_presets 20 10 0 8 -24198
+-1 -1 0 1;
+#N canvas 340 97 594 666 init 0;
+#X obj 66 303 bng 15 250 50 0 empty empty click_first 20 10 0 8 -24198
+-1 -1;
+#X obj 130 467 s \$0-start;
+#X msg 130 441 1;
+#X obj 272 40 r setmess;
+#X obj 270 86 prepend add;
+#X obj 275 64 prepend nseq;
+#X msg 387 76 \; nseq /id/preset 0 \; nseq /id/n0 83 \; nseq /id/n14
+0 \; nseq /id/n15 55 \; nseq /id/n10 93 \; nseq /id/n11 40 \; nseq
+/id/n12 76 \; nseq /id/n13 0 \; nseq /id/n6 41 \; nseq /id/n7 88 \;
+nseq /id/n8 91 \; nseq /id/n9 89 \; nseq /id/n2 76 \; nseq /id/n1 74
+\; nseq /id/n5 79 \; nseq /id/n4 79 \; nseq /id/n3 43 \; nseq /id/preset
+1 \; nseq /id/n0 83 \; nseq /id/n14 0 \; nseq /id/n15 55 \; nseq /id/n10
+93 \; nseq /id/n11 40 \; nseq /id/n12 96 \; nseq /id/n13 0 \; nseq
+/id/n6 41 \; nseq /id/n7 88 \; nseq /id/n8 45 \; nseq /id/n9 100 \;
+nseq /id/n2 95 \; nseq /id/n1 37 \; nseq /id/n5 41 \; nseq /id/n4 91
+\; nseq /id/n3 93 \;;
+#X connect 0 0 6 0;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 5 0;
+#X connect 5 0 4 0;
+#X coords 0 0 1 1 100 40 1;
+#X restore 22 43 pd init;
+#X obj 316 105 r nseq;
+#X obj 439 379 bng 15 250 50 0 \$0-forward empty v 3 7 1 12 -262131
+-225271 -1;
+#X obj 420 379 bng 15 250 50 0 \$0-backward empty ^ 3 9 1 12 -262131
+-225271 -1;
+#X text 465 380 shift pattern up or down.;
+#X obj 241 109 mod 32;
+#X obj 241 129 sel 31;
+#X text 439 584 The rightmost outlet is OSC outlet. See the main RRADical
+documentation for details.;
+#X text 423 76 rrad.nseq (called nseq for now) is a sequencer for numberboxes
+carrying values from -1 to 127 . Arranged from top to bottom nseq is
+similar to old-fashioned tracker interfaces. Only values of 0-127 are
+sent to the outlet.;
+#X connect 0 0 1 0;
+#X connect 1 0 30 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 3 0 38 0;
+#X connect 3 0 4 0;
+#X connect 4 0 3 1;
+#X connect 6 0 2 0;
+#X connect 6 0 3 1;
+#X connect 7 0 5 0;
+#X connect 7 0 0 0;
+#X connect 30 0 29 0;
+#X connect 30 0 29 1;
+#X connect 31 0 0 1;
+#X connect 32 0 31 0;
+#X connect 34 0 0 1;
+#X connect 38 0 39 0;
+#X connect 39 0 32 0;

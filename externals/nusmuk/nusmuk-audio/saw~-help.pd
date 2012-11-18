@@ -1,0 +1,16 @@
+#N canvas 340 204 450 293 10;
+#X obj 42 137 saw~;
+#X obj 43 110 sig~ 333;
+#X obj 43 194 dac~;
+#X floatatom 43 63 5 0 0 0 - - -;
+#X obj 43 86 mtof;
+#X text 30 17 saw~ is a band-limited sawtooth oscillator.;
+#X obj 137 197 oscillo~;
+#X obj 43 162 *~ 0.1;
+#X connect 0 0 7 0;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 7 0 2 0;
+#X connect 7 0 2 1;

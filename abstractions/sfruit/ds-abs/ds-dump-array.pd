@@ -1,0 +1,20 @@
+#N canvas 1004 477 263 225 10;
+
+
+#X obj 81 29 inlet;
+#X obj 81 78 getsize \$1 \$2;
+#X obj 81 50 t p p;
+#X obj 81 156 element \$1 \$2;
+#X obj 81 185 outlet;
+#X obj 81 106 list-range;
+#X obj 81 131 list-drip;
+#X obj 132 185 outlet;
+#X obj 140 33 import-disabled list-abs;
+#X connect 0 0 2 0;
+#X connect 1 0 5 0;
+#X connect 2 0 1 0;
+#X connect 2 1 3 1;
+#X connect 3 0 4 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 0;
+#X connect 6 1 7 0;

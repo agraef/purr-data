@@ -1,0 +1,188 @@
+#N canvas 0 0 448 395 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header scope_and_locality
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 20 36 Depending on the complexity of your patches \, you may
+need to control whether or not messages will be used by only ONE patch
+\, or throughout all open patches. The scope of a message is considered
+either 'local' or 'global'.;
+#N canvas 16 214 428 369 Global_scope 0;
+#N canvas 1 1 254 169 example_a 0;
+#X obj 18 19 r foo;
+#X floatatom 18 44 5 0 0 0 - - -;
+#X obj 18 96 r a-foo;
+#X floatatom 18 116 5 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X restore 14 56 pd example_a;
+#N canvas 121 2 256 168 example_b 0;
+#X obj 18 19 r foo;
+#X floatatom 18 44 5 0 0 0 - - -;
+#X obj 18 96 r a-foo;
+#X floatatom 18 116 5 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X restore 14 81 pd example_b;
+#N canvas 215 2 263 169 example_c 0;
+#X obj 18 19 r foo;
+#X floatatom 18 44 5 0 0 0 - - -;
+#X obj 18 96 r a-foo;
+#X floatatom 18 116 5 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X restore 14 106 pd example_c;
+#X text 17 38 Open these subpatches.;
+#X obj 23 187 s foo;
+#X floatatom 23 166 5 0 0 0 - - -;
+#X text 13 125 Click-n-drag these number boxes and notice the appropriate
+receive objects in each open sub-patch.;
+#X floatatom 82 166 5 0 0 0 - - -;
+#X floatatom 159 166 5 0 0 0 - - -;
+#X floatatom 232 166 5 0 0 0 - - -;
+#X obj 82 187 s a-foo;
+#X obj 159 187 s b-foo;
+#X obj 232 187 s c-foo;
+#X text 18 23 GLOBAL SCOPE - send and receive messages in ALL OPEN
+PATCHES;
+#X text 15 217 Send objects simply post their information to the cyberspace
+within your computer (that's one way to look at it!) Receive objects
+simply keep their ears open for all messages floating through that
+cyberspace from send objects of the same name! Hence \, if you name
+a [send] something like "foo" \, then all [receive] objects in open
+patches named "foo" will 'hear' those messages. Also note that the
+term 'open patches' includes all sub-patches \, abstractions and patches
+that are currently open in Pd - they don't have to be VISIBLE...they
+only have to be active.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Global Scope;
+#X connect 5 0 4 0;
+#X connect 7 0 10 0;
+#X connect 8 0 11 0;
+#X connect 9 0 12 0;
+#X restore 23 94 pd Global_scope;
+#N canvas 146 22 618 662 Local_scope 0;
+#X text 4 9 LOCAL SCOPE -send and receive messages within a SINGLE
+PATCH;
+#X text 13 37 There are many cases where you may want messages to be
+sent within a single patch. For example \, you might have designed
+many modules with a receive object called [r number] but you want that
+'number' to be passed to only the objects within a single module so
+that they don't effect the performance of the other modules.;
+#X obj 84 222 r \$1;
+#X obj 18 245 s \$1;
+#X floatatom 18 221 5 0 0 0 - - -;
+#X floatatom 84 248 5 0 0 0 - - -;
+#X floatatom 189 224 5 0 0 0 - - -;
+#X floatatom 278 250 5 0 0 0 - - -;
+#X obj 278 224 r \$1-foo;
+#X obj 189 248 s \$1-foo;
+#X floatatom 367 224 5 0 0 0 - - -;
+#X floatatom 456 250 5 0 0 0 - - -;
+#X text 62 513 LOCAL_SCOPE (and inheritance);
+#X obj 456 224 r \$2-dave;
+#X obj 367 248 s \$2-dave;
+#X text 14 541 The words "and" and "inheritance" are arguments that
+I used when I created the abstraction called "all_about_scope_and_locality".
+These two agruments are now available in this patch by using \$1 or
+\$2 variables. There's more information about this in the section called
+'Inheritance'.;
+#X text 13 267 In the examples above I have used a variable (\$1) to
+name these [send] and [receive] objects. The value of this variable
+is assigned either by Pd (randomly for each abstraction or patch) \,
+or by me with the use of arguments.;
+#X text 11 335 If you would like Pd to assign the value of your local
+variable at random \, use \$0. This will ensure that your local variables
+will always be 'local' and won't ever correspond with variables in
+other open patches or abstractions.;
+#X text 12 138 In these cases \, you should use "local variables" ...as
+in [r \$0-number] to name your send and receive objects. Local variables
+are assigned using dollar signs and numbers. There is more documentation
+about this in 2.control.examples/locality.pd;
+#X text 13 424 If you want to define the value of the local variables
+\, you can use 'arguments' when you create the abstraction and then
+refer to those arguments by using \$1 (for the first agrument) or \$2
+(for the second) and so on. Notice in the 'title' of this patch \,
+you should see:;
+#X connect 2 0 5 0;
+#X connect 4 0 3 0;
+#X connect 6 0 9 0;
+#X connect 8 0 7 0;
+#X connect 10 0 14 0;
+#X connect 13 0 11 0;
+#X restore 23 119 pd Local_scope;
+#N canvas 145 31 610 615 Inheritance 0;
+#X text 20 18 The word "Inherit" means to "receive a characteristic
+from one's parent".;
+#X text 19 59 In Pd \, all abstracions and subpatches have 'parents'
+-- the parent is the main patch which created the instance of the abstraction
+or subpatch.;
+#X text 18 117 We can use 'arguments' when creating an abstraction
+in a patch to send values to those 'children'. For example \, this
+help document contains a number of different subpatches and abstractions.
+One abstraction is called "all_about_scope_and_locality" -- you are
+currently reading a subpatch in that abstraction. When I created that
+abstraction in the parent patch \, I defined two arguments: "and" and
+"inheritance". So \, those two values are now available throughout
+this abstraction and all of its subpatches!;
+#X obj 49 327 symbol \$1;
+#X symbolatom 49 356 0 0 0 0 - - -;
+#X obj 49 305 bng 15 250 50 0 empty empty click_here_to_see 0 -6 0
+8 -262144 -1 -1;
+#X symbolatom 146 356 0 0 0 0 - - -;
+#X obj 146 327 symbol \$2;
+#X text 24 388 So \, if a [send] object is named "\$1-foo" or "\$2-foo"
+inside this abstraction \, Pd identifies that [send] object as "and-foo"
+or "inheritance-foo".;
+#X obj 47 466 s and-foo;
+#X obj 47 516 s \$1-foo;
+#X obj 47 445 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 47 493 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 163 495 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 163 462 r and-foo;
+#X obj 280 443 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 280 491 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 431 497 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 280 464 s inheritance-foo;
+#X obj 431 464 r inheritance-foo;
+#X obj 280 514 s \$2-foo;
+#X connect 3 0 4 0;
+#X connect 5 0 3 0;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
+#X connect 14 0 13 0;
+#X connect 15 0 18 0;
+#X connect 16 0 20 0;
+#X connect 19 0 17 0;
+#X restore 23 144 pd Inheritance;
+#X text 115 119 <- confusing \, clean it up;
+#X obj 1 373 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS nonlocal needs_work;
+#X text 12 45 DESCRIPTION notions of scope in Pd;
+#X restore 392 375 pd META;
+#N canvas 11 243 428 121 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Scope and Locality- Related Objects;
+#X restore 103 375 pd Related_objects;
+#X obj 6 375 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 59 349 pddp/pddplink ../2.control.examples/14.dollarsigns.pd
+-text doc/2.control.examples/14.dollarsigns.pd;
+#X obj 59 334 pddp/pddplink all_about_dollarsign_zero.pd;
+#X text 52 209 This help file is unfinished.;

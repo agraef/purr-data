@@ -1,0 +1,107 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header line~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 271 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 245 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal time conversion;
+#X text 12 45 DESCRIPTION audio ramp generator;
+#X text 12 85 INLET_1 list;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 65 INLET_0 float list stop;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 452 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 489 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 516 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 493 (none);
+#N canvas 62 373 428 230 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 vline~;
+#X obj 82 43 line;
+#X text 8 2 [line~] Related Objects;
+#X text 20 100 Externals;
+#X obj 20 180 pddp/helplink markex/tripleLine;
+#X obj 20 120 pddp/helplink iemlib/t3_line~;
+#X obj 20 140 pddp/helplink iemlib/fade~;
+#X obj 20 160 pddp/helplink maxlib/step;
+#X restore 101 597 pd Related_objects;
+#X obj 78 280 cnv 17 3 90 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 279 float;
+#X text 98 305 list;
+#X obj 78 461 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 381 cnv 17 3 65 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 380 float;
+#X obj 478 3 line~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/line~ -text
+pdpedia: line~;
+#X obj 66 210 snapshot~;
+#X obj 66 164 line~;
+#X floatatom 66 233 0 0 0 0 - - -;
+#X obj 108 187 metro 100;
+#X msg 66 66 1 1000;
+#X text 121 65 a pair of numbers starts a ramp;
+#X msg 126 113 2;
+#X text 158 113 a single number jumps to value;
+#X msg 124 138 stop;
+#X text 167 137 "stop" message freezes line~ at its current value;
+#X msg 93 113 0;
+#X msg 76 88 0 5000;
+#X obj 108 164 loadbang;
+#X text 98 359 stop;
+#X text 98 460 signal;
+#X text 167 380 - stores a duration in milliseconds until the next
+target value is sent to the left inlet. Unlike most other objects in
+Pd \, the value is only stored until it is used with this target value
+to start the ramp-- after that point the right inlet is reset (to zero).
+;
+#X text 11 23 audio ramp generator;
+#X text 168 305 - [line~] takes a two-element list to start a new ramp.
+The first element specifies the target value \, and the second one
+sets the duration in milliseconds. (Lists with more than two elements
+will be truncated.);
+#X text 168 279 - a float to the left inlet of [line~] will cause the
+output to jump immediately to the target value.;
+#X text 168 359 - the stop message freezes [line~] at its current value.
+;
+#X text 168 460 - the outgoing signal is the linear ramp.;
+#X text 179 191 The [line~] object generates linear ramps whose levels
+and timing are determined by messages you send it. The messages may
+be a single target value (causing the output to jump to the target)
+or a target and a time in milliseconds (to start a new ramp).;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X obj 98 547 pddp/pddplink ../3.audio.examples/A03.line.pd/ -text
+doc/3.audio.examples/A03.line.pd;
+#X obj 98 562 pddp/pddplink ../3.audio.examples/A04.line2.pd/ -text
+doc/3.audio.examples/A04.line2.pd;
+#X text 98 521 More information about [line] can be found in the Pure
+Documentation folder doc/3.audio.examples:;
+#X obj 98 577 pddp/pddplink ../3.audio.examples/C05.sampler.oneshot.pd
+-text doc/3.audio.examples/C05.sampler.oneshot.pd;
+#X connect 17 0 19 0;
+#X connect 18 0 17 0;
+#X connect 20 0 17 0;
+#X connect 21 0 18 0;
+#X connect 23 0 18 0;
+#X connect 25 0 18 0;
+#X connect 27 0 18 0;
+#X connect 28 0 18 0;
+#X connect 29 0 20 0;

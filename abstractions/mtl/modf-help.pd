@@ -1,0 +1,17 @@
+#N canvas 1128 0 778 541 10;
+#X text 63 37 tags: math;
+#X text 66 20 description: modulo for floats;
+#X floatatom 89 93 5 0 0 0 - - -;
+#X floatatom 89 201 5 0 0 0 - - -;
+#X floatatom 189 105 5 0 0 0 - - -;
+#X text 167 152 Argument and inlet 2: modulo;
+#X floatatom 91 316 5 0 0 0 - - -;
+#X obj 92 288 maxlib/wrap 5;
+#X obj 89 154 mtl/modf 5;
+#X floatatom 92 261 5 0 0 0 - - -;
+#X text 156 255 You can also just use maxlib/wrap or fmod;
+#X connect 2 0 8 0;
+#X connect 4 0 8 1;
+#X connect 7 0 6 0;
+#X connect 8 0 3 0;
+#X connect 9 0 7 0;

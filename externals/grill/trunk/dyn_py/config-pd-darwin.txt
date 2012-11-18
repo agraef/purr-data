@@ -1,0 +1,32 @@
+
+# your c++ compiler (define only if it's different than g++)
+# CXX=g++-3.3
+
+# where are the PD header files? (m_pd.h, m_imp.h, g_canvas.h)
+PDPATH=/Volumes/Daten/Prog/pd-0.37-4/src
+
+# where is the PD executable
+PD=/usr/local/bin
+
+# where should flext libraries be built?
+TARGDIR=./pd-darwin
+
+# where should the dyn library and header be installed?
+# (leave blank to omit installation)
+PREFIX=/usr/local
+
+# path to Python header
+PYTHON=/System/Library/Frameworks/Python.framework/Headers
+
+# path to dyn
+DYN=../dyn
+
+# path to pycxx
+PYCXX=/Volumes/Daten/Prog/packs/pycxx_5_2_2
+
+# folder to install modules to
+INSTDIR=/Users/thomas/Library/Python/2.3/site-packages
+
+# additional compiler flags
+# (check if they fit for your system!)
+UFLAGS=-malign-power -maltivec -faltivec

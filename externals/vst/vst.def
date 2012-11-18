@@ -1,0 +1,7 @@
+; vst.def : Declares the module parameters for the DLL.
+
+LIBRARY      "vst"
+DESCRIPTION  'vst Windows Dynamic Link Library'
+
+EXPORTS
+    vst_setup

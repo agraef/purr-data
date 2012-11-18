@@ -1,0 +1,8 @@
+#N canvas 0 0 333 197 10;
+#X obj 82 98 dollarg;
+#X obj 84 69 loadbang;
+#X obj 85 170 outlet;
+#X obj 107 143 list.trim;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;

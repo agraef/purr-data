@@ -1,0 +1,4 @@
+#N canvas 303 394 496 308 10;
+#X obj 181 151 memento-help;
+#X text 47 80 Please see this help patch for explanation on the memento
+systen \, originator \, commun and caretakers:;

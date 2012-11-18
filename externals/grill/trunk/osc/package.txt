@@ -1,0 +1,7 @@
+BUILDDIR=build
+NAME=osc
+SRCS=osc_main.cpp osc_udprecv.cpp osc_udpsend.cpp osc_now.cpp osc_route.cpp \
+	oscpack/osc/OscOutboundPacketStream.cpp oscpack/osc/OscPrintReceivedElements.cpp \
+	oscpack/osc/OscReceivedElements.cpp oscpack/osc/OscTypes.cpp \
+	oscpack/ip/IpEndpointName.cpp oscpack/ip/NetworkingUtils.cpp oscpack/ip/UdpSocket.cpp
+HDRS=osc.h 

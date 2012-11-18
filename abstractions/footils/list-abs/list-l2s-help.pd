@@ -1,0 +1,21 @@
+#N canvas 333 384 543 295 10;
+#X msg 52 90 a b c d 1 2;
+#X msg 165 90 a b c d 1 2;
+#X msg 288 91 a b c d 1 2;
+#X symbolatom 165 154 15 0 0 0 - - -;
+#X symbolatom 52 155 10 0 0 0 - - -;
+#X symbolatom 288 154 25 0 0 0 - - -;
+#X obj 52 127 list-l2s;
+#X obj 165 126 list-l2s -;
+#X obj 288 124 list-l2s _|_;
+#X msg 395 90 symbol PD;
+#X text 54 42 Concatenate a list into a single symbol using ARG1 as
+delimiter. Delimiter can be set through second inlet.;
+#X text 55 20 list-l2s;
+#X connect 0 0 6 0;
+#X connect 1 0 7 0;
+#X connect 2 0 8 0;
+#X connect 6 0 4 0;
+#X connect 7 0 3 0;
+#X connect 8 0 5 0;
+#X connect 9 0 8 1;

@@ -1,0 +1,15 @@
+#N canvas 434 167 270 224 10;
+#X text 56 173 1992 by Gerhard Eckel
+;
+#X obj 26 75 t f b;
+#X obj 26 43 inlet;
+#X obj 26 172 outlet;
+#X obj 26 140 expr int($f1/$f2)*$f2;
+#X obj 191 47 inlet;
+#X obj 168 108 f \$1;
+#X connect 1 0 4 0;
+#X connect 1 1 6 0;
+#X connect 2 0 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 1;
+#X connect 6 0 4 1;

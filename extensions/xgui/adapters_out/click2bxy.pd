@@ -1,0 +1,16 @@
+#N canvas 31 132 308 276 12;
+#X text 15 7 click filter;
+#X obj 21 34 inlet;
+#X obj 21 63 route click;
+#X obj 21 91 unpack f f;
+#X obj 96 122 outlet;
+#X obj 56 150 outlet;
+#X text 93 177 dh20020111;
+#X obj 21 119 t b f;
+#X obj 21 177 outlet;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 3 1 4 0;
+#X connect 7 0 8 0;
+#X connect 7 1 5 0;

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/3713/trunk/audiocube
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3700/trunk/audiocube/Info.plist
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3712/trunk/audiocube/main.cpp
+END
+audiocube-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3709/trunk/audiocube/audiocube-help.pd
+END
+audiocube-sub.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/3709/trunk/audiocube/audiocube-sub.pd
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3710/trunk/audiocube/package.txt
+END
+audiocube.maxhelp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3712/trunk/audiocube/audiocube.maxhelp
+END
+audiocube-test.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3709/trunk/audiocube/audiocube-test.pd
+END

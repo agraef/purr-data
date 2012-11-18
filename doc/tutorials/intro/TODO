@@ -1,0 +1,68 @@
+
+- finish up 17.atomic_messages.pd
+
+- make new exercise in 26.EXERCISE.hmmmm
+
+- in pure_data_files.pd, make the patch create [pd clone] dynamically,
+  probably like how send_messages_to_pd.pd does it.
+
+- in pure_data_files.pd, make the patch reset itself once it finishes the
+  clone. (remember that [pd clone] has to be the last object.)
+
+- make looping sequence
+
+- 20.inlets_and_outlets: explain the message building, prepend, add2, set,
+     etc.  probalby, I should make a patch or two before that about message
+     buildling
+
+
+
+---------------
+Unsorted topics
+---------------
+
+- math
+- init to 0
+- comparing numbers
+- expr
+- creation arguments
+
+
+- selecting events ([select])
+- sorting_messages_by_selectors ([route])
+- sorting_messages_by_atom ([route])
+
+- storing a number globally ([value])
+
+- building lists (pack and unpack, arguments)
+- list2symbol
+
+- trigger conversions
+- symbol conversion
+
+- keywords
+
+- number limitations
+
+- more on timing
+
+- building lists
+- using lists (unpack, lists replacing inlets)
+
+- writing objects in Pd (abstractions)
+
+- loading libraries
+- namespaces
+- import
+
+- multiple messages
+- sends and receives
+- sends in a message box
+
+- Example: parazit
+- send messages to Pd
+- pure data files
+
+
+
+data structures tutorial?

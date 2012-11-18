@@ -1,0 +1,9 @@
+#N canvas 73 329 428 119 10;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheader empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [closebang-abs] Abstraction used in [closebang] help patch
+;
+#X text 19 37 This abstraction gets used in closebang-help.pd.;
+#X obj 22 62 closebang;
+#X obj 22 89 s from-closebang-abs;
+#X connect 3 0 4 0;

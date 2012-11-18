@@ -1,0 +1,16 @@
+#N canvas 0 0 450 300 10;
+#X obj 71 190 mix.out_~;
+#X floatatom 170 128 5 0 127 0 - - -;
+#X obj 72 124 synth.blip~;
+#X msg 72 102 120;
+#X text 27 23 Description: A reverb that adds more character than reverb.
+;
+#X text 211 126 0 to 127;
+#X text 27 40 Comment: Taken from Andy Farnell's work.;
+#X text 168 111 wetness;
+#X obj 71 155 fx.reverb.biquad~;
+#X connect 1 0 8 1;
+#X connect 2 0 8 0;
+#X connect 3 0 2 0;
+#X connect 8 0 0 0;
+#X connect 8 0 0 1;

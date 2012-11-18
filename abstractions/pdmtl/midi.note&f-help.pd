@@ -1,0 +1,25 @@
+#N canvas 501 262 746 438 10;
+#X obj 181 292 midi.note&f;
+#X floatatom 130 149 5 0 0 0 - - -;
+#X obj 180 151 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 237 190 60 127;
+#X msg 182 353 60 0;
+#X obj 181 319 flow.prepend set;
+#X msg 110 194 2;
+#X msg 105 238 0;
+#X msg 287 241 0 57 65;
+#X msg 305 266 0 57 0;
+#X msg 266 216 60 0;
+#X text 45 9 Description: Converts float inputs to midi notes. Removes
+any channel information. Ignores regular midi notes.;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;

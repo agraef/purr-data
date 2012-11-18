@@ -1,0 +1,21 @@
+#N canvas 0 22 441 317 10;
+#X text 16 18 [dialog.yes-no] will spawn a dialog box under the user's
+cursor when banged \, outputting "1" if the user clicks "Yes" and "0"
+if the user clicks "No". The message in the dialog box can be given
+as the first argument. Due to limitations in Pd \, the message must
+use _ in place of spaces. If no argument is given \, the message will
+simply be "Are_you_sure?".;
+#X text 312 276 2008 Luke Iannini;
+#X obj 118 124 bng 30 250 50 0 empty empty empty 17 7 0 10 -261234
+-1 -1;
+#X obj 118 189 sel 1 0;
+#X msg 118 215 set YES;
+#X msg 169 215 set NO;
+#X obj 118 166 dialog.yes-no Activate_soulsonic_mantronic_force?;
+#X msg 118 241;
+#X connect 2 0 6 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 4 0 7 0;
+#X connect 5 0 7 0;
+#X connect 6 0 3 0;

@@ -1,0 +1,36 @@
+#N canvas 706 141 134 46 10;
+#X obj 1 1 cnv 5 128 40 empty empty File_Management 5 6 1 9 -249661
+-66577 0;
+#X text 8 133 Facility to choose and select files;
+#N canvas 0 22 489 278 interna 0;
+#X text 9 4 Facility to choose and select files;
+#X obj 115 20 cnv 15 350 240 empty empty empty 5 8 1 10 -260390 -1
+0;
+#X obj 293 156 prepend file;
+#X obj 417 27 inlet;
+#X obj 415 234 outlet;
+#X obj 8 20 cnv 15 100 240 empty empty empty 5 8 1 10 -3121 -1 0;
+#X obj 21 34 inlet;
+#X obj 21 234 outlet;
+#X obj 293 134 prepend open;
+#X obj 293 112 openpanel;
+#X obj 293 92 r \$0-open;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 6 0 7 0;
+#X connect 8 0 2 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X restore 10 185 pd interna;
+#X obj 10 163 inlet;
+#X obj 75 164 inlet;
+#X obj 10 207 outlet;
+#X obj 75 208 outlet;
+#X obj 143 110 s \$0-path;
+#X obj 7 18 bng 15 250 50 0 \$0-open \$0 Open 20 8 1 9 -262144 -1 -1
+;
+#X connect 2 0 5 0;
+#X connect 2 1 6 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 1;
+#X coords 0 0 1 1 130 42 1;

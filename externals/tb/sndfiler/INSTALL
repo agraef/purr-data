@@ -1,0 +1,55 @@
+
+[sndfiler] installation instructions:
+
+-------------------------------------------------------
+                      MAIN PD
+-------------------------------------------------------
+
+- INSTALLATION:
+
+1) first install threadlib, get it from
+   http://grh.mur.at/software/threadlib.html
+
+2) download binaries for your platform at
+   http://grh.mur.at/software/sndfiler.html
+
+3) WIN: copy sndfiler.dll to path\to\pd\extra
+        copy libsndfile.dll to windows\system
+
+   LINUX: copy sndfiler.pd_linux to path/to/pd/extra
+          install libsndfile (via apt-get or something
+          similar)
+
+   MAC: copy sndfiler.pd_darwin to path/to/pd/extra
+        install libsndfile
+
+4) copy helpfile to path/to/pd/doc/5.reference
+
+- COMPILATION:
+
+1) install libsndfile on your platform
+
+2) adapt the pathes in src/Makefile.pd_main to fit into 
+   your system
+
+3) make -f Makefile.pd_main pd_linux/pd_darwin/pd_win
+   (windows: you will need MinGW !)
+
+4) make -f Makefile.pd_main install
+
+-------------------------------------------------------
+                      PD DEVEL
+-------------------------------------------------------
+
+- COMPILATION:
+
+1) install libsndfile on your platform
+
+2) adapt src/Makefile to fit into your system
+
+3) make pd_linux/pd_darwin/pd_nt
+
+-------------------------------------------------------
+
+in case of problems:
+grh@mur.at

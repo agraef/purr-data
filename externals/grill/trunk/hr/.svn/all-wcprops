@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 27
+/ext/!svn/ver/3743/trunk/hr
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1746/trunk/hr/package.txt
+END
+hr-objectmappings.txt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3743/trunk/hr/hr-objectmappings.txt
+END
+hr.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/1746/trunk/hr/hr.vcproj
+END
+hr_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3743/trunk/hr/hr_main.cpp
+END
+hr.h
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/1746/trunk/hr/hr.h
+END
+hr_ops.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/3743/trunk/hr/hr_ops.h
+END
+hr-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/1746/trunk/hr/hr-help.pd
+END
+hr_sig.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/1746/trunk/hr/hr_sig.h
+END
+hr_msg.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/1746/trunk/hr/hr_msg.h
+END

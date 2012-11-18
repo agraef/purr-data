@@ -1,0 +1,18 @@
+#N canvas 82 160 413 225 10;
+#X obj 27 180 originator \$1 \$0;
+#X obj 27 130 t b f;
+#X msg 27 155 set;
+#X msg 57 153 substate \$1;
+#X floatatom 27 90 5 0 0 3 presets - -;
+#X obj 150 65 inlet OSC;
+#X obj 211 124 commun /myFloat \$0;
+#X floatatom 249 91 5 0 0 3 myFloat - -;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 1;
+#X connect 6 0 7 0;
+#X connect 7 0 6 0;
+#X coords 0 0 1 1 140 50 1;

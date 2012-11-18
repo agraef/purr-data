@@ -1,0 +1,29 @@
+#N canvas 897 724 526 351 10;
+#X floatatom 136 196 5 0 0 0 - - -;
+#X obj 25 295 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 62 261 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 99 232 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 25 140 metro 250;
+#X obj 25 118 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 21 9 countseq - count beats in a measure with accents on specific
+notes;
+#X text 21 41 First arg - notes per measure.;
+#X text 22 64 Rest of args - beat numbers you'd like a separate bang
+for (2nd outlet) or an "accented" bang (3rd outlet). Prefix "accented"
+beats with the letter "a" \, like "a4";
+#X text 141 291 Coming soon - a helper object to generate lists of
+common beat definitions \, like "16 beats with separate bangs every
+4 and accented bangs every 8";
+#X text 170 198 index;
+#X text 166 130 All counts start at 1;
+#X obj 25 174 countseq 16 5 a9 13;
+#X connect 4 0 12 0;
+#X connect 5 0 4 0;
+#X connect 12 0 1 0;
+#X connect 12 1 2 0;
+#X connect 12 2 3 0;
+#X connect 12 3 0 0;

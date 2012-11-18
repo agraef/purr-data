@@ -1,0 +1,9 @@
+#N canvas 0 22 450 300 10;
+#X obj 70 115 bb \$0.googly-moogly;
+#X obj 243 181 r \$0.googly-moogly;
+#X obj 243 205 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 16 20 [bb] - Simply \, a bang with a set send destination.
+Handy for rapid prototyping. Use like [bb receiver-name].;
+#X text 284 274 2008 Luke Iannini;
+#X connect 1 0 2 0;

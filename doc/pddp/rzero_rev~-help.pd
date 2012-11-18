@@ -1,0 +1,137 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header rzero_rev~ 3 12
+0 18 -204280 -1 0;
+#X obj 0 335 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 247 494 344 META 0;
+#X text 12 135 LIBRARY internal;
+#X text 12 175 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 155 AUTHOR Miller Puckette;
+#X text 12 215 HELP_PATCH_AUTHORS Updated for Pd version-0.38. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 45 DESCRIPTION real one-zero (non-recursive) "reverse" filter
+\, raw;
+#X text 12 75 INLET_0 signal clear set;
+#X text 12 95 INLET_1 float signal;
+#X text 12 115 OUTLET_0 signal;
+#X text 12 195 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 465 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 502 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 543 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 344 cnv 17 3 65 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 474 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 419 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 418 float;
+#X obj 459 3 rzero_rev~;
+#X obj 431 20 pddp/pddplink http://wiki.puredata.info/en/rzero_rev~
+-text pdpedia: rzero_rev~;
+#X floatatom 283 190 0 0 0 0 - - -;
+#X obj 215 116 osc~ 100;
+#X msg 230 148 clear;
+#X msg 232 174 set 1;
+#X obj 214 216 rzero_rev~ 1;
+#X text 11 23 real one-zero (non-recursive) "reverse" filter \, raw
+;
+#X text 98 343 signal;
+#X text 98 363 clear;
+#X text 98 393 set;
+#X text 168 363 - clear internal state to zero.;
+#X text 168 343 - the incoming signal to be filtered.;
+#X text 168 393 - set internal state.;
+#X text 167 418 - filter coefficient.;
+#X text 167 438 - filter coefficient.;
+#X text 98 473 signal;
+#X text 168 473 - the outgoing \, filtered signal.;
+#X text 80 520 1) float;
+#X text 167 520 - (optional) initializes the filter coefficient.;
+#X text 69 49 [rzero_rev~] filters an audio signal (left inlet) via
+a one-zero real filter \, whose coefficient is controlled by a creation
+argument or by an audio signal (right inlet). The impulse response
+is that of "rzero" reversed in time.;
+#N canvas 27 280 428 309 Related_objects 0;
+#X obj 74 60 rzero~;
+#X obj 25 80 cpole~;
+#X obj 25 60 rpole~;
+#X obj 123 60 rzero_rev~;
+#X obj 74 80 czero~;
+#X obj 123 80 czero_rev~;
+#X text 201 60 real;
+#X text 200 81 complex;
+#X text 22 44 1-pole;
+#X text 71 44 1-zero;
+#X text 121 44 1-zero \, reversed;
+#X text 47 29 summary of raw filters:;
+#X text 18 184 User-friendly Filters;
+#X obj 21 213 lop~;
+#X obj 72 212 hip~;
+#X obj 124 213 bp~;
+#X obj 169 214 vcf~;
+#X obj 22 274 biquad~;
+#X text 18 250 Other Objects;
+#X text 18 113 Pd also provides a suite of user-friendly filters. This
+and other raw filters are provided for situations which the user-friendly
+ones can't handle. See Chapter 8 of http://crca.ucsd.edu/~msp/techniques
+for an introduction to the necessary theory.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [rzero_rev~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#N canvas 80 271 326 287 test 0;
+#X obj 76 78 osc~;
+#X floatatom 76 55 5 0 0 0 - - -;
+#X obj 77 219 env~ 16384;
+#X floatatom 77 243 5 0 0 0 - - -;
+#X obj 104 107 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 76 105 *~;
+#X msg 97 137 set 1;
+#X floatatom 172 157 4 -100 100 0 - - -;
+#X obj 172 182 / 100;
+#X obj 214 256 dac~;
+#X obj 228 177 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 214 220 *~;
+#X obj 230 197 / 10;
+#X text 80 18 Stuff to test it:;
+#X obj 76 168 rzero_rev~;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 4 0 5 1;
+#X connect 5 0 14 0;
+#X connect 6 0 14 0;
+#X connect 7 0 8 0;
+#X connect 8 0 14 1;
+#X connect 10 0 12 0;
+#X connect 11 0 9 0;
+#X connect 11 0 9 1;
+#X connect 12 0 11 1;
+#X connect 14 0 2 0;
+#X connect 14 0 11 0;
+#X restore 102 552 pd test;
+#X text 70 281 where y[n] is the output \, x[n] the input \, and a[n]
+the filter coefficient. The filter is always stable.;
+#X text 126 261 y[n] = -a[n] * x[n] + x[n-1];
+#X text 70 312 The transfer function is H(Z) = -a + Z^-1.;
+#X text 69 240 The action of [rzero_rev~] is:;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 99 572 pddp/pddplink ../3.audio.examples/H14.all.pass.pd -text
+doc/3.audio.examples/H14.all.pass.pd;
+#X text 98 438 signal;
+#X connect 13 0 17 1;
+#X connect 14 0 17 0;
+#X connect 15 0 17 0;
+#X connect 16 0 17 0;

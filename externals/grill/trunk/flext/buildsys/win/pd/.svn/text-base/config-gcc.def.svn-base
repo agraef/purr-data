@@ -1,0 +1,75 @@
+# where is the PD installation including source code?
+# (this should point to the main folder, which has a "src" subfolder)
+PDPATH=/Applications/Pd-0.40-2.app/Contents/Resources
+
+# where is the PD executable?
+PDBIN=$(PDPATH)/bin/pd
+
+###############################################################
+
+# prefix for flext installation
+# headers are in $(FLEXTPREFIX)/include/flext
+# libraries are in $(FLEXTPREFIX)/lib
+# build system is in $(FLEXTPREFIX)/lib/flext
+
+FLEXTPREFIX=/usr/local
+
+###############################################################
+
+# where should the external be built?
+OUTPATH=pd-darwin
+
+# where should the external be installed?
+INSTPATH=$(PDPATH)/extra
+
+###############################################################
+
+# STK (synthesis tool kit) support
+# http://ccrma.stanford.edu/software/stk
+
+# where to find the STK header files (e.g. stk.h)
+STK_INC=/usr/local/include/stk
+
+# where to find the STK library (normally libstk.a)
+# (comment out STK_LIB if you don't use STK)
+#STK_LIB=/usr/local/lib/libstk.a
+
+###############################################################
+
+# SndObj support
+# http://music.nuim.ie//musictec/SndObj
+
+# where to find the SndObj header files (e.g. sndobj.h)
+SNDOBJ_INC=/usr/local/include/sndobj
+
+# where to find the SndObj library (normally libsndobj.a)
+# (comment out STK_LIB if you don't use SndObj)
+#SNDOBJ_LIB=/usr/local/lib/libsndobj.a
+
+###############################################################
+
+# make flags (e.g. use multiprocessor)
+#MFLAGS=-j 2
+
+# user defined compiler flags
+UFLAGS += -ffast-math
+
+# user defined optimization flags
+OFLAGS += -Os -ftree-vectorize
+
+# user defined debugging flags
+DFLAGS +=
+
+# architecture-specific flags (optional)
+UFLAGS_ppc += -maltivec -faltivec
+OFLAGS_ppc += -mtune=G4
+DFLAGS_ppc +=
+
+UFLAGS_i386 += -mmmx -msse -msse2 -msse3
+OFLAGS_i386 += -mtune=prescott
+DFLAGS_i386 +=
+
+# cross-compilation (optional)
+#ARCH=i386 ppc
+#OSXSDK=/Developer/SDKs/MacOSX10.4u.sdk
+

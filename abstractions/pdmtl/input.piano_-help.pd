@@ -1,0 +1,35 @@
+#N canvas 90 66 897 734 10;
+#X floatatom 465 525 5 0 0 0 - - -;
+#X floatatom 595 559 5 0 0 0 - - -;
+#X obj 483 645 noteout;
+#X text 639 559 velocity (0/127);
+#X text 502 523 pitch (48 to 84);
+#X text 117 107 To change these associations \, click on the LEARN
+toggle in the piano window \, select the midi key with the mouse and
+press the corresponding key on the keyboard. If it worked \, the toggle
+previously checked with the mouse will automatically uncheck. To leave
+the LEARN mode \, just uncheck the LEARN button.;
+#X text 62 5 Description: Transform your computer keyboard into a midi
+piano.;
+#X obj 183 532 unpack;
+#X floatatom 164 573 5 0 0 0 - - -;
+#X floatatom 234 574 5 0 0 0 - - -;
+#X text 97 473 Outlet 1 simply groups the outputs of outlets 2 and
+3;
+#X text 59 33 Flags: gop @rguments;
+#X text 117 200 You can create input.piano_ with the different following
+argument options:;
+#X text 128 249 2) @on float @keys relative_path_to_keys_file;
+#X text 116 58 When this abstraction loads \, it automaticaly reads
+include/default.keys and triggers midi values following keypresses
+on a QWERTY keyboard.;
+#X obj 186 298 input.piano_ 1;
+#X text 127 231 1) float(on/off) symbol(relative path to keys file)
+;
+#X connect 0 0 2 0;
+#X connect 1 0 2 1;
+#X connect 7 0 8 0;
+#X connect 7 1 9 0;
+#X connect 15 0 7 0;
+#X connect 15 1 0 0;
+#X connect 15 2 1 0;

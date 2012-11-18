@@ -1,0 +1,96 @@
+#N canvas 733 24 707 627 10;
+#X obj 23 411 mtof;
+#X obj 22 459 mix.out_~;
+#X floatatom 57 411 5 0 0 0 - - -;
+#X msg 200 53 0 2 4 5 7 9 11;
+#X text 297 54 major;
+#X msg 211 76 0 1 4 5 7 8 11;
+#X msg 223 99 0 2 4 6 7 9 10;
+#X msg 234 121 0 2 3 5 7 8 11;
+#X msg 257 166 0 2 4 6 8 10;
+#X msg 267 188 0 2 3 5 6 8 9 11;
+#X obj 23 283 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 287 254 0 0.5 1 1.5 2 2.5 3 3.5 4;
+#X text 309 76 middle-east-like minor;
+#X text 320 100 lydian-dominant (jazzy);
+#X text 332 123 harmonic minor;
+#X msg 245 144 0 2 3 4 5 6 7 9 10 11;
+#X text 383 145 chromatic blues;
+#X text 343 168 whole-tones scale;
+#X text 375 190 diminished scale;
+#X msg 275 210 0 2 4 7 9;
+#X text 343 211 pentatonic;
+#X text 375 232 pentatonic blues;
+#X msg 283 232 0 2 3 4 7 8 9;
+#X msg 292 276 0 0.33 0.66 1 1.33 1.66 2;
+#X obj 200 343 musical.transpose;
+#X floatatom 311 366 5 0 0 0 - - -;
+#X text 352 366 Change tonic;
+#X obj 311 384 musical.cycle5;
+#X floatatom 23 367 5 0 0 0 - - -;
+#X obj 23 304 metro 180;
+#X text 22 529 Of course \, if you use several [musical.closest.note]
+objects at a time with the same scale and key \, you will be able to
+compose a realtime symphony. It will always be continuous if you use
+scales with the same number of notes. Also \, it will prevent the notes
+from being too high.;
+#X obj 404 521 musical.closest.note 0 2 4 7 9;
+#X msg 405 455 60 61 62 63 64 65 66 67 68 69 70 71 72;
+#X obj 404 477 t a b;
+#X msg 456 543 set;
+#X msg 404 565 60 62 62 63.1 65 65 67 67 69 69 70 72 72;
+#X msg 404 542 add2 \$1;
+#X obj 404 499 drip;
+#X msg 581 499 0 2 3.1 5 7 9 10;
+#X msg 298 299 0 1.5 3 4.5 6 7.5 9 10.5;
+#X text 101 428 Argument: the list of the current chord.;
+#X text 20 7 Description: Rounds an incoming MIDI note to a note listed
+in a given chord or scale.;
+#X text 105 417 inlets: note offset to play \, scale/chord list (any
+length);
+#X text 444 6 Author: Alexandre Quessy (c) 2006;
+#X text 451 256 tests;
+#X floatatom 299 324 5 0 0 0 - - -;
+#X obj 23 387 musical.closest.note 0 2 4 7 9;
+#X obj 23 433 osc~;
+#X msg 66 39 22 20 25 22 18 17 22 18 10 13 17 15;
+#X obj 23 326 count.modulo 12;
+#X obj 23 347 + 60;
+#X obj 35 116 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 300 1;
+#X connect 0 0 47 0;
+#X connect 3 0 24 0;
+#X connect 5 0 24 0;
+#X connect 6 0 24 0;
+#X connect 7 0 24 0;
+#X connect 8 0 24 0;
+#X connect 9 0 24 0;
+#X connect 10 0 29 0;
+#X connect 11 0 24 0;
+#X connect 15 0 24 0;
+#X connect 19 0 24 0;
+#X connect 22 0 24 0;
+#X connect 23 0 24 0;
+#X connect 24 0 46 1;
+#X connect 25 0 27 0;
+#X connect 29 0 49 0;
+#X connect 31 0 36 0;
+#X connect 32 0 33 0;
+#X connect 33 0 37 0;
+#X connect 33 1 34 0;
+#X connect 34 0 35 0;
+#X connect 36 0 35 0;
+#X connect 37 0 31 0;
+#X connect 38 0 31 1;
+#X connect 39 0 24 0;
+#X connect 45 0 24 1;
+#X connect 46 0 2 0;
+#X connect 46 0 0 0;
+#X connect 47 0 1 0;
+#X connect 47 0 1 1;
+#X connect 48 0 24 0;
+#X connect 49 0 50 0;
+#X connect 50 0 28 0;
+#X connect 50 0 46 0;
+#X connect 51 0 50 0;

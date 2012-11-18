@@ -1,0 +1,392 @@
+;
+;
+; This file is a template with packages/win32_inno/Makefile turns
+; into a proper .iss ISTool/Inno Setup file.  <hans@at.or.at>
+;
+;
+
+[Setup]
+AppName=pd
+AppVerName=Pd-PD_VERSION
+AppPublisher=puredata.info
+AppPublisherURL=http://puredata.org
+AppSupportURL=http://puredata.org/community/lists/
+AppUpdatesURL=http://puredata.org/downloads/
+DefaultDirName={pf}\pd
+DefaultGroupName=Pd-extended
+LicenseFile=..\gpl-3.0.txt
+
+Compression=lzma/ultra
+ChangesAssociations=true
+OutputBaseFilename=PACKAGE_NAME
+AppCopyright=GNU GPL
+[Tasks]
+; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required.
+Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
+; NOTE: The following entry contains English phrases ("Create a Quick Launch icon" and "Additional icons"). You are free to translate them into another language if required.
+Name: quicklaunchicon; Description: Create a &Quick Launch icon; GroupDescription: Additional icons:; Flags: unchecked
+Name: fileassociations; Description: Reset File Associations
+Name: libs; Description: Reset Libraries and Paths
+
+[INI]
+Filename: {app}\pd.url; Section: InternetShortcut; Key: URL; String: http://puredata.info
+Filename: {app}\asio4all.url; Section: InternetShortcut; Key: URL; String: http://asio4all.com
+Filename: {app}\puredata.url; Section: InternetShortcut; Key: URL; String: http://en.flossmanuals.net/puredata
+Filename: {app}\techniques.url; Section: InternetShortcut; Key: URL; String: http://crca.ucsd.edu/~msp/techniques.htm
+Filename: {app}\pd-tutorial.url; Section: InternetShortcut; Key: URL; String: http://www.pd-tutorial.com/
+
+[Icons]
+Name: {group}\Pd-extended; Filename: {app}\bin\pd.exe; IconFilename: {app}\lib\pd.ico; IconIndex: 0; WorkingDir: {app}
+Name: {group}\puredata.org; Filename: {app}\pd.url
+Name: {group}\ASIO4ALL; Filename: {app}\asio4all.url
+Name: {group}\Uninstall Pd-extended; Filename: {uninstallexe}
+Name: {userdesktop}\Pd-extended; Filename: {app}\bin\pd.exe; Tasks: desktopicon; IconFilename: {app}\lib\pd.ico; IconIndex: 0; WorkingDir: {app}
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Pd-extended; Filename: {app}\bin\pd.exe; Tasks: quicklaunchicon; WorkingDir: {app}; IconFilename: {app}\lib\pd.ico; IconIndex: 0
+Name: {group}\Documentation\Pd Manual; Filename: {app}\doc\1.manual\index.htm
+Name: {group}\Documentation\Pd Drums Tutorial; Filename: {app}\doc\tutorials\footils\pddrums\pddrums.html
+Name: {group}\Documentation\Pure Data FLOSSmanual; Filename: {app}\puredata.url
+Name: {group}\Documentation\Programming Electronic Music in Pd; Filename: {app}\pd-tutorial.url
+Name: {group}\Documentation\Theory and Techniques of Electronic Music; Filename: {app}\techniques.url
+;-----------------------------------------------------------------------------
+; GRIPD
+#ifexist "build\gripd\gripd.exe"
+Name: {group}\GrIPD; Filename: {app}\gripd\gripd.exe
+#endif
+
+
+[Run]
+; NOTE: The following entry contains an English phrase ("Launch"). You are free to translate it into another language if required.
+;Filename: {app}\bin\pd.exe; Description: Launch Pd-extended; Flags: nowait postinstall skipifsilent
+; failed attempt at getting this url to open after the install is complete
+;Filename: rundll32 url.dll,FileProtocolHandler http://asio4all.com; Description: open ASIO4ALL website; Flags: nowait postinstall skipifsilent
+
+[UninstallDelete]
+Type: files; Name: {app}\pd.url
+Type: files; Name: {app}\asio4all.url
+Type: files; Name: {app}\puredata.url
+Type: files; Name: {app}\pd-tutorial.url
+Type: files; Name: {app}\techniques.url
+
+[Registry]
+Root: HKCR; SubKey: Pure.Data; ValueType: dword; ValueName: EditFlags; ValueData: $00000000; Flags: noerror uninsdeletekey; Tasks: fileassociations
+Root: HKCR; SubKey: Pure.Data; ValueType: dword; ValueName: BrowserFlags; ValueData: $00000008; Flags: uninsdeletekey noerror; Tasks: fileassociations
+Root: HKCR; SubKey: Pure.Data; ValueType: string; ValueData: Pure Data; Flags: uninsdeletekey noerror; Tasks: fileassociations
+Root: HKCR; SubKey: Pure.Data\DefaultIcon; ValueType: string; ValueData: {app}\lib\pdpatch.ico,0; Flags: createvalueifdoesntexist noerror; Tasks: fileassociations
+Root: HKCR; SubKey: Pure.Data\shell; ValueType: string; ValueData: open; Flags: noerror uninsdeletekey; Tasks: fileassociations
+Root: HKCR; SubKey: Pure.Data\shell\open\command; ValueType: string; ValueData: """{app}\bin\pd.exe"" -listdev ""%1"""; Flags: uninsdeletekey noerror; Tasks: fileassociations
+Root: HKCR; SubKey: .pd; ValueType: string; ValueData: Pure.Data; Flags: noerror uninsdeletekey; Tasks: fileassociations
+Root: HKCR; SubKey: .pd; ValueType: string; ValueName: Content Type; ValueData: text/plain; Flags: noerror uninsdeletekey; Tasks: fileassociations
+;
+; STARTHERE: add pd-inno_registry after this comment:
+
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: flags; ValueData: ; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib1; ValueData: libdir; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib2; ValueData: Gem; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib3; ValueData: cyclone; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib4; ValueData: zexy; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib5; ValueData: creb; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib6; ValueData: cxc; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib7; ValueData: iemlib; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib8; ValueData: list-abs; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib9; ValueData: mapping; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib10; ValueData: markex; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib11; ValueData: maxlib; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib12; ValueData: memento; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib13; ValueData: mjlib; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib14; ValueData: motex; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib15; ValueData: oscx; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib16; ValueData: pddp; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib17; ValueData: pdogg; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib18; ValueData: pixeltango; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib19; ValueData: pmpd; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib20; ValueData: rradical; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib21; ValueData: sigpack; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib22; ValueData: smlib; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib23; ValueData: toxy; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib24; ValueData: unauthorized; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib25; ValueData: vbap; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib26; ValueData: pan; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib27; ValueData: hcs; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib28; ValueData: jmmmp; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib29; ValueData: ext13; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib30; ValueData: ggee; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib31; ValueData: iem_anything; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib32; ValueData: flib; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib33; ValueData: ekext; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: loadlib34; ValueData: flatspace; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: nloadlib; ValueData: 34; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib35; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib36; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib37; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib38; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib39; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib40; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib41; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib42; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib43; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib44; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib45; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib46; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib47; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib48; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib49; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib50; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib51; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib52; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib53; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib54; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib55; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib56; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib57; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib58; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib59; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib60; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib61; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib62; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib63; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib64; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib65; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib66; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib67; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib68; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib69; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib70; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib71; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib72; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib73; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib74; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib75; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib76; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib77; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib78; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib79; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib80; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib81; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib82; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib83; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib84; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib85; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib86; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib87; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib88; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib89; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib90; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib91; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib92; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib93; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib94; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib95; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib96; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib97; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib98; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib99; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: loadlib100; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: expandsz; ValueName: path1; ValueData: %SystemRoot%/Fonts; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: string; ValueName: npath; ValueData: 1; Tasks: libs; Flags: uninsdeletekey
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path2; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path3; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path4; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path5; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path6; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path7; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path8; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path9; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path10; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path11; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path12; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path13; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path14; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path15; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path16; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path17; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path18; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path19; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path20; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path21; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path22; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path23; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path24; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path25; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path26; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path27; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path28; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path29; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path30; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path31; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path32; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path33; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path34; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path35; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path36; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path37; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path38; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path39; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path40; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path41; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path42; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path43; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path44; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path45; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path46; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path47; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path48; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path49; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path50; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path51; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path52; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path53; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path54; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path55; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path56; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path57; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path58; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path59; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path60; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path61; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path62; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path63; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path64; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path65; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path66; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path67; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path68; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path69; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path70; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path71; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path72; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path73; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path74; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path75; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path76; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path77; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path78; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path79; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path80; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path81; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path82; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path83; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path84; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path85; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path86; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path87; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path88; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path89; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path90; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path91; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path92; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path93; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path94; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path95; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path96; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path97; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path98; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path99; Flags: deletevalue; Tasks: libs
+Root: HKLM; SubKey: SOFTWARE\Pd-extended; ValueType: none; ValueName: path100; Flags: deletevalue; Tasks: libs
+; ENDHERE: add pd-inno_registry before this comment:
+
+[_ISTool]
+Use7zip=true
+OutputExeFilename=Output\PACKAGE_NAME.exe
+
+[Files]
+; commented out lines have no files, so they give an error
+; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+;
+;
+;-----------------------------------------------------------------------------
+; packages\win32_inno
+Source: pdpatch.ico; DestDir: {app}\lib
+Source: pd.ico; DestDir: {app}\lib
+;
+;
+;-----------------------------------------------------------------------------
+; put pdsend and pdreceive in the System dir so that they are in the path
+;
+Source: build\bin\pdsend.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+Source: build\bin\pdreceive.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+; add Cyclone's cyclist.exe if it is present
+#ifexist "build\bin\cyclist.exe"
+Source: build\bin\cyclist.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+#endif
+;
+;
+;-----------------------------------------------------------------------------
+; MinGW Files
+; these are some helpful utilities from MinGW
+;
+; start.exe - like Mac OS X's 'open' command, allows you to open files and
+; URLs from the command line
+;Source: C:\msys\1.0\bin\start.exe; DestDir: {sys}; Flags: confirmoverwrite
+;
+;
+;-----------------------------------------------------------------------------
+; DejaVu Sans Mono Font Files
+; the files needed for the Pd-0.39.2-extended default font
+Source: C:\WINDOWS\Fonts\DejaVuSans.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans
+Source: C:\WINDOWS\Fonts\DejaVuSans-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Bold
+Source: C:\WINDOWS\Fonts\DejaVuSans-BoldOblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Bold Oblique
+Source: C:\WINDOWS\Fonts\DejaVuSansMono.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono
+Source: C:\WINDOWS\Fonts\DejaVuSansMono-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Bold
+Source: C:\WINDOWS\Fonts\DejaVuSansMono-BoldOblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Bold Oblique
+Source: C:\WINDOWS\Fonts\DejaVuSansMono-Oblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Mono Oblique
+Source: C:\WINDOWS\Fonts\DejaVuSans-Oblique.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Sans Oblique
+Source: C:\WINDOWS\Fonts\DejaVuSerif.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Serif
+Source: C:\WINDOWS\Fonts\DejaVuSerif-Bold.ttf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: DejaVu Serif Bold
+; Inconsolata font
+Source: C:\WINDOWS\Fonts\Inconsolata.otf; DestDir: {fonts}; Flags: onlyifdoesntexist uninsneveruninstall; FontInstall: Inconsolata
+;
+;
+;-----------------------------------------------------------------------------
+; build system files
+;
+;Source: build\doc\manuals\Pd\Welcome.html; DestDir: {app}; Flags: isreadme; Tasks:
+Source: build\doc\manuals\Pd\ReadMe.html; DestDir: {app}; Flags: isreadme
+;Source: build\doc\manuals\Pd\License.html; DestDir: {app}; Flags: isreadme
+;Source: build\doc\manuals\Pd\Pd-LICENSE.txt; DestDir: {app}; Flags: isreadme
+Source: build\pd-settings.reg; DestDir: {app}; Flags: ignoreversion
+Source: build\bin\*.*; DestDir: {app}\bin; Flags: ignoreversion confirmoverwrite recursesubdirs uninsremovereadonly
+Source: build\doc\*.*; DestDir: {app}\doc; Flags: ignoreversion confirmoverwrite recursesubdirs uninsremovereadonly; Attribs: readonly
+Source: build\extra\*.*; DestDir: {app}\extra; Flags: ignoreversion recursesubdirs uninsremovereadonly promptifolder; Attribs: readonly
+Source: build\include\*.*; DestDir: {app}\include; Flags: ignoreversion confirmoverwrite recursesubdirs uninsremovereadonly
+Source: build\lib\*.*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
+#ifexist "build\gripd"
+Source: build\gripd\*.*; DestDir: {app}\gripd; Flags: ignoreversion
+#endif
+;
+; DLLs
+;
+Source: build\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
+Source: build\pthread*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
+#ifexist "build\msvcp71.dll"
+Source: build\msvcp71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
+#endif
+#ifexist "build\msvcr71.dll"
+Source: build\msvcr71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
+#endif
+;; build stuff is not included now
+;Source: build\portaudio\*.*; DestDir: {app}\portaudio; Flags: ignoreversion recursesubdirs
+;Source: build\src\*.*; DestDir: {app}\src; Flags: ignoreversion recursesubdirs
+;Source: build\tcl\*.*; DestDir: {app}\tcl; Flags: ignoreversion recursesubdirs
+
+[Code]
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  ResultCode: Integer;
+begin
+  case CurPageID of
+    wpReady:
+      begin
+		if(FileExists(ExpandConstant('{app}\unins000.exe')) AND FileExists(ExpandConstant('{app}\bin\pd.exe'))) then begin
+			if MsgBox('Found a previous Version of Pure Data at ' + ExpandConstant('{app} ') + #13#13 'Do you want to uninstall it first? (recommended)', mbConfirmation, MB_YESNO) = idYes then begin
+			if not Exec(ExpandConstant('{app}\unins000.exe'), '', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) then
+            MsgBox('NextButtonClick:' #13#13 'The uninstall file could not be executed. ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
+			end;
+		end;
+        BringToFrontAndRestore();
+        MsgBox('NextButtonClick:' #13#13 'The normal installation will now start.', mbInformation, MB_OK);
+      end;
+  end;
+
+  Result := True;
+end;
+

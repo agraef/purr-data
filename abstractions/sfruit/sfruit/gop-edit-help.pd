@@ -1,0 +1,9 @@
+#N canvas 0 22 450 300 10;
+#X obj 49 154 gop-edit;
+#X text 35 29 gop-edit - use the mouse or the numboxes to adjust the
+GOP rectangle rather than the fiddly dialog!;
+#X text 33 67 Hold down the letters "GOP" on your keyboard \, then
+click and drag to drag the red rectangle. You can do manual tweaks
+with the numboxes. Requires toxy.;
+#X text 322 264 2009 Luke Iannini;
+#X text 326 280 proyekto.net;

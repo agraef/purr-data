@@ -1,0 +1,29 @@
+shabby~	- waveshaping PD external, probably running on Max as well
+
+* Who is shabby~?
+
+shabby~ is a waveshaper using 11 Chebyshev polynoms to generate harmonics from an
+incoming sinewave. Each polynom will have a signal
+inlet to specify its amplitude in the signal. You can use shabby~ to have a
+decent additive synth that allows control over the harmonics in the course
+of a note at signal rate. But beware: it's not very fast.
+
+shabby~ was written by Frank Barknecht <barknech@ph-cip.uni-koeln.de> after
+finally getting his copy of Dodge/Jerse's "Computer Music" ;)
+
+shabby~ uses the flext C++ layer for Max/MSP and pd (pure data) externals available at 
+http://www.parasitaere-kapazitaeten.net/Pd/ext/
+
+You need at least flext version 0.2.0. The included binary for linux was compiled
+using g++-3.0. If you don't have g++ 3.0 installed, you will have to edit the
+makefile, where I selected g++ 3.0.
+
+* Who is shaffy~?
+
+shaffy~ is shabby~'s little brother. He uses float inlets to scale the
+amplitudes of only 9 polynom harmonics because of Max compatibility.  This
+makes it a lot faster than shabby~, but you can only update the polynome
+factors at message rate, that might be to slow for some applications. 
+
+You need at least flext version 0.2.2 for shaffy~ because it includes a needed
+workaround for g++.

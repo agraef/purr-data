@@ -1,0 +1,17 @@
+#N struct 1005template float x0 float y0 float id float c;
+#N canvas 343 233 503 400 10;
+#X msg 113 95 bang;
+#X obj 113 116 s-controlsurface;
+#X obj 113 351 unpack f f;
+#X floatatom 113 372 5 0 0 0 - - -;
+#X floatatom 178 372 5 0 0 0 - - -;
+#X obj 113 51 loadbang;
+#X obj 113 73 metro 100;
+#X text 10 12 s-controlsurface is like a 2d virtual kaospad with the
+ability to add multiple points.;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;

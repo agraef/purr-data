@@ -1,0 +1,64 @@
+#N canvas 366 31 565 405 10;
+#X msg 168 46 anything 1 two three;
+#X msg 180 66 one 2 3;
+#X obj 167 308 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 362 305 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 190 114 list one 2 3;
+#X msg 191 136 1 2 3;
+#X obj 167 285 trigger anything bang float list pointer symbol;
+#X obj 424 306 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 491 307 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 296 305 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 230 305 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 35 362 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 111 362 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 137 362 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 164 362 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 85 362 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 59 362 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 35 340 trigger a b f l p s;
+#X text 48 20 how [trigger] interprets and converts data can be tricky:
+;
+#X text 315 59 "undefined lists";
+#X text 288 127 lists;
+#X msg 199 175 4;
+#X msg 202 196 float 234;
+#X text 280 181 floats;
+#X msg 208 229 symbol blah;
+#X text 303 242 symbols;
+#X msg 188 84 asdf;
+#X msg 208 251 symbol four;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 6 0 17 0;
+#X connect 6 1 10 0;
+#X connect 6 2 9 0;
+#X connect 6 3 3 0;
+#X connect 6 4 7 0;
+#X connect 6 5 8 0;
+#X connect 17 0 11 0;
+#X connect 17 1 16 0;
+#X connect 17 2 15 0;
+#X connect 17 3 12 0;
+#X connect 17 4 13 0;
+#X connect 17 5 14 0;
+#X connect 21 0 6 0;
+#X connect 22 0 6 0;
+#X connect 24 0 6 0;
+#X connect 26 0 6 0;
+#X connect 27 0 6 0;

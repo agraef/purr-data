@@ -1,0 +1,53 @@
+#N canvas 28 91 940 545 10;
+#X obj 62 41 cnv 15 15 15 empty empty vasp.== 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufequ 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 512 119 graph;
+#N canvas 0 0 402 278 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufequ \, symbol bufequ1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 766 421 pd init;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufequ1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 512 248 graph;
+#X text 60 104 argument/right inlet: value;
+#X text 166 293 copy to new buffer;
+#N canvas 0 0 413 295 clear_buffers 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 564 426 pd clear_buffers;
+#X text 60 80 equal;
+#X msg 564 399 vasp bufequ bufequ1;
+#X text 173 149 generate a function;
+#X msg 61 150 vasp bufequ;
+#X text 406 248 1/true;
+#X text 405 288 0/false;
+#X text 164 359 test if a part of the function is equal to -1;
+#X obj 58 431 VASP-HELP;
+#X obj 60 384 vasp.update;
+#X msg 60 294 vasp bufequ1;
+#X obj 60 326 vasp.= bufequ;
+#X obj 60 357 vasp.== -1;
+#X obj 61 218 vasp.update;
+#X obj 61 178 vasp.= env 0 0 1 22049 0.3 22050 0.3 44099 -1 44100 -1
+66149 1 66150 0 88200;
+#X connect 8 0 6 0;
+#X connect 10 0 20 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 15 0;
+#X connect 20 0 19 0;

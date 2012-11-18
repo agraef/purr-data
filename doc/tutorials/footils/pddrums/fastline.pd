@@ -1,0 +1,47 @@
+#N canvas 15 38 859 491 10;
+#N canvas 0 0 450 300 graph1 0;
+#X array line 441 float 0;
+#X coords 0 1 440 -1 200 140 1;
+#X restore 319 322 graph;
+#X obj 151 306 line~;
+#X obj 100 352 tabwrite~ line;
+#X obj 186 217 t b;
+#X msg 151 186 1 2.1542;
+#X floatatom 216 122 5 0 0 0 - - -;
+#X msg 151 158 set 1 \$1;
+#X obj 100 107 t b;
+#X obj 472 56 loadbang;
+#X obj 216 90 / 44.1;
+#X obj 364 73 samplerate~;
+#X text 268 121 msecs;
+#X text 315 270 See how the [delay]ed peak always lands on a blocksize
+boundary?;
+#X msg 186 270 0 2;
+#X obj 363 96 / 1000;
+#X msg 100 158 bang;
+#X obj 186 246 del 1;
+#X msg 472 79 \; line resize 441 \; line xticks 0 64 8 \; line xlabel
+1.1 0 64 128 192 256 320 384 \; pd dsp 1;
+#X obj 216 68 nbx 5 16 -1e+37 1e+37 0 0 empty empty Samples 0 -8 1
+10 -260818 -1 -1 95 256;
+#X text 72 31 If we set Samples to small (< 64) \, line~ generates
+no output anymore;
+#X connect 1 0 2 0;
+#X connect 3 0 16 0;
+#X connect 4 0 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 5 0 16 1;
+#X connect 6 0 4 0;
+#X connect 7 0 15 0;
+#X connect 8 0 17 0;
+#X connect 8 0 10 0;
+#X connect 9 0 5 0;
+#X connect 9 0 7 0;
+#X connect 10 0 14 0;
+#X connect 13 0 1 0;
+#X connect 14 0 9 1;
+#X connect 15 0 4 0;
+#X connect 15 0 2 0;
+#X connect 16 0 13 0;
+#X connect 18 0 9 0;

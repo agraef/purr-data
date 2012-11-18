@@ -1,0 +1,23 @@
+#N canvas 0 22 450 300 10;
+#X text 16 11 ds-idx-only;
+#X text 274 254 2008 Luke Iannini;
+#X obj 105 89 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 123 88 bang for last used index;
+#X msg 54 88 10;
+#X obj 54 126 ds-idx-only pd-\$0data datatemplate5 3;
+#X obj 273 153 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 16 35 outputs the nth pointer of a certain template type \,
+or a bang from the right outlet if the nth pointer does not exist.
+;
+#X obj 54 170 get datatemplate5 x;
+#X obj 70 198 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 54 223 5 0 0 0 - - -;
+#X connect 2 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 8 0;
+#X connect 5 1 6 0;
+#X connect 8 0 9 0;
+#X connect 8 0 10 0;

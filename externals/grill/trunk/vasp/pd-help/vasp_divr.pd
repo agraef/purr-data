@@ -1,0 +1,37 @@
+#N canvas 193 184 768 388 10;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 45 79 vasp.update;
+#X obj 45 56 vasp.= 0;
+#X obj 45 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 403 225 pd clear_buffer;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufrdiv 88200 float 0;
+#X coords 0 1 88199 -1 300 120 1;
+#X restore 401 42 graph;
+#N canvas 0 0 400 276 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufrdiv;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 668 245 pd init;
+#X obj 51 19 cnv 15 15 15 empty empty vasp.!/ 0 10 1 14 -262144 -1
+0;
+#X msg 403 205 vasp bufrdiv;
+#X text 44 67 vasp reverse division (value/sample);
+#X text 44 82 optional argument/right inlet: denominator;
+#X obj 49 219 vasp.update;
+#X msg 49 124 vasp bufrdiv;
+#X text 137 124 generate a ramp from 1 to 2;
+#X obj 49 186 vasp.!/ 1;
+#X text 136 185 1/x;
+#X obj 48 298 VASP-HELP;
+#X obj 49 151 vasp.= env 1 0 2 88200;
+#X connect 4 0 0 0;
+#X connect 8 0 13 0;
+#X connect 10 0 7 0;
+#X connect 13 0 10 0;

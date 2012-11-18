@@ -1,0 +1,27 @@
+#N canvas 271 139 465 448 10;
+#X obj 30 141 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 9 256;
+#X obj 30 231 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 -0.929412 256;
+#X text 87 156 Input floats between 0 and 255 is scaled and output
+between -1 and 1;
+#X text 206 200 arg1 is input low value \;;
+#X text 206 217 arg2 is input high value \;;
+#X text 206 235 arg3 is output low value \;;
+#X text 208 252 arg4 is output high value \;;
+#X text 210 270 All arguments are necessary.;
+#X obj 32 306 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 32 396 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X text 85 330 hi and low can be reversed to invert mapping!;
+#X text 15 17 Description: maps a range of input values to different
+range of output values.;
+#X obj 30 186 scale.linear 0 255 -1 1;
+#X obj 32 351 scale.linear 0 255 255 0;
+#X text 15 71 Comments: fixed by Jamie Bullock 2007;
+#X text 16 52 Version: 2007/06/07;
+#X connect 0 0 12 0;
+#X connect 8 0 13 0;
+#X connect 12 0 1 0;
+#X connect 13 0 9 0;

@@ -1,0 +1,10 @@
+#N canvas 321 268 867 416 12;
+#X msg 52 94 1 2 3 4 5 6 7 8 9 10 11 12;
+#X obj 86 173 list.repack.indexed 3;
+#X obj 50 262 print all;
+#X msg 182 122 list big r e f g r rer tuy abc toomany;
+#X text 47 29 Description: Repacks a big list into sub lists of X+1
+size. Every sub list is preceded by an index number.;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;

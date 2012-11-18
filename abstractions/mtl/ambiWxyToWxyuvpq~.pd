@@ -1,0 +1,18 @@
+#N canvas 156 315 771 350 10;
+#X obj 30 93 inlet~ w;
+#X obj 150 93 inlet~ x;
+#X obj 240 93 inlet~ y;
+#X obj 28 217 outlet~ w;
+#X obj 150 244 outlet~ x;
+#X obj 227 243 outlet~ y;
+#X obj 322 239 outlet~ u;
+#X obj 401 246 outlet~ v;
+#X obj 488 247 outlet~ p;
+#X obj 572 248 outlet~ q;
+#X obj 21 147 *~ 1.5;
+#X text 180 40 Amplitude correction to go from 1st order to 3rd order
+horizontal Ambisonic.;
+#X connect 0 0 10 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 10 0 3 0;

@@ -1,0 +1,14 @@
+#N canvas 639 241 454 304 10;
+#X obj 291 195 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 154 134 5 0 0 0 - - -;
+#X msg 154 165 egg spam bacon \$1;
+#X symbolatom 104 106 10 0 0 0 - - -;
+#X text 41 12 Description: Prints when enabled;
+#X text 31 26 First argument is what is to be prepent in the pd text
+console;
+#X obj 108 219 debug.print MY_PRINT @enable 1;
+#X connect 0 0 6 1;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;

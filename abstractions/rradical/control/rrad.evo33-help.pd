@@ -1,0 +1,65 @@
+#N canvas 240 44 764 661 10;
+#X obj 7 245 s EVO-OSC;
+#X obj 191 245 s EVO-OSC;
+#X obj 375 245 s EVO-OSC;
+#X obj 559 245 s EVO-OSC;
+#X obj 7 467 s EVO-OSC;
+#X obj 191 467 s EVO-OSC;
+#X obj 376 467 s EVO-OSC;
+#X obj 559 467 s EVO-OSC;
+#X obj 169 584 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -261689 -1
+-1 0;
+#X text 324 493 rrad.evo33 is a bridge between a midi controller and
+OSC. It was designed with the author's Evolution UC-33 in mind \, which
+has 8 columns of 3 knobs and one slider each. Orange bang initiates
+a midi learn. You have some seconds to move a controller after banging
+it. The target symbols let you set the OSC string to be prepended to
+each controller. Default strings are \$1/k1 \, \$1/k2 \, \$1/k3 for
+the three top knobs and \$1/s for the vertical slider.;
+#X text 326 606 All controllers are expected to be in the range 0-127.
+Rescaling can be done using the scaling dialog (red bang);
+#X obj 191 40 rrad.evo33 /evo33-2;
+#X obj 432 23 r \$0-set;
+#X obj 7 40 rrad.evo33 /evo33-1;
+#X obj 375 40 rrad.evo33 /evo33-3;
+#X obj 559 40 rrad.evo33 /evo33-4;
+#X obj 7 262 rrad.evo33 /evo33-5;
+#X obj 191 262 rrad.evo33 /evo33-6;
+#X obj 375 262 rrad.evo33 /evo33-7;
+#X obj 559 262 rrad.evo33 /evo33-8;
+#X obj 449 245 r \$0-set;
+#X obj 23 555 careOSC;
+#X obj 23 618 s \$0-set;
+#X msg 23 507 symbol evo33.osc;
+#X text 31 487 load presets;
+#X obj 199 508 ctlin;
+#X floatatom 171 544 5 0 0 3 value - -;
+#X floatatom 214 544 5 0 0 3 cc-num - -;
+#X floatatom 267 544 5 0 0 3 chan - -;
+#X msg 23 532 symbol evo33_2.osc;
+#X msg 169 608 /evo33-?/preset \$1;
+#X obj 169 632 s \$0-set;
+#X connect 8 0 30 0;
+#X connect 11 0 1 0;
+#X connect 12 0 15 0;
+#X connect 12 0 14 0;
+#X connect 12 0 11 0;
+#X connect 12 0 13 0;
+#X connect 13 0 0 0;
+#X connect 14 0 2 0;
+#X connect 15 0 3 0;
+#X connect 16 0 4 0;
+#X connect 17 0 5 0;
+#X connect 18 0 6 0;
+#X connect 19 0 7 0;
+#X connect 20 0 19 0;
+#X connect 20 0 18 0;
+#X connect 20 0 17 0;
+#X connect 20 0 16 0;
+#X connect 21 0 22 0;
+#X connect 23 0 21 0;
+#X connect 25 0 26 0;
+#X connect 25 1 27 0;
+#X connect 25 2 28 0;
+#X connect 29 0 21 0;
+#X connect 30 0 31 0;

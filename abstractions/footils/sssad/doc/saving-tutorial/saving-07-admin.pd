@@ -1,0 +1,72 @@
+#N canvas 329 6 532 662 10;
+#X floatatom 106 194 5 0 0 0 - - -;
+#X obj 106 100 r SAVING-REC;
+#X obj 106 137 list trim;
+#X text 47 21 We need to find a way to make all tagged variables output
+their current values on demand. We will do this by delaying the sending
+of a state variable through a temporary storage using the cold inlet
+of an additional [list] object:;
+#X text 54 377 Now we have to bang the final list object to make the
+change of the number box visible in our storage message box.;
+#X obj 55 290 cnv 15 350 80 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 83 351 s SAVING-SEND;
+#X obj 83 326 list;
+#X obj 83 295 r SAVING-ADMIN;
+#X obj 245 312 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 245 333 s SAVING-ADMIN;
+#X obj 292 102 r SAVING-SEND;
+#X obj 292 263 s SAVING-REC;
+#X msg 292 199 142;
+#X obj 400 182 loadbang;
+#X msg 292 172 set \$1;
+#X obj 292 124 list trim;
+#X floatatom 181 481 5 0 0 0 - - -;
+#X obj 106 162 route TAG2;
+#X obj 106 218 list prepend TAG2;
+#X obj 292 145 route TAG2;
+#X obj 292 233 list prepend TAG2;
+#X text 419 234 add TAG2;
+#X text 372 146 filter by TAG2;
+#X text 187 163 filter by TAG2;
+#X text 230 220 add TAG2;
+#X obj 228 480 store-collect-delayed deltag1;
+#X obj 213 505 store-save-tag deltag1;
+#X msg 181 505 166;
+#X obj 70 480 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 70 507 s SAVING-ADMIN;
+#X floatatom 182 531 5 0 0 0 - - -;
+#X msg 182 555 121;
+#X obj 229 530 store-collect-delayed deltag2;
+#X obj 214 555 store-save-tag deltag2;
+#X text 54 418 Instead of directly connecting the GUI bang we will
+use another global receiver. By this \, we can put all the stuff on
+the left side into another abstraction again.;
+#X text 57 598 The next step will be to remove the need for different
+[store-save-tag TAG] objects for every variable.;
+#X connect 0 0 19 0;
+#X connect 1 0 2 0;
+#X connect 2 0 18 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 10 0;
+#X connect 11 0 16 0;
+#X connect 13 0 21 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 20 0;
+#X connect 17 0 26 0;
+#X connect 18 0 0 0;
+#X connect 19 0 7 1;
+#X connect 20 0 15 0;
+#X connect 21 0 12 0;
+#X connect 26 0 17 0;
+#X connect 27 0 28 0;
+#X connect 28 0 27 0;
+#X connect 29 0 30 0;
+#X connect 31 0 33 0;
+#X connect 32 0 34 0;
+#X connect 33 0 31 0;
+#X connect 34 0 32 0;

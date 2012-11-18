@@ -1,0 +1,47 @@
+#N struct 1236rect float x float y float w float x0 float y0 float
+t;
+#N struct 1236cursor float x;
+#N struct 1236lines float x;
+#N canvas 23 142 951 464 10;
+#X floatatom 9 91 5 0 0 0 - - -;
+#X obj 763 116 sssad/datastore;
+#N canvas 23 85 835 601 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD blah/blocks 178 29 4 3 52 48 3 2 144 108 3 3
+104 52 3 1 97 32 0 2 48 0 3 1 20 0 0 1 37 8 1 2 110 24 2 6 \; SSSAD_ADMIN
+set \;;
+#X connect 0 0 1 0;
+#X restore 763 182 pd datastore;
+#X obj 9 42 metro 100;
+#X obj 9 64 f;
+#X obj 38 64 + 1;
+#X obj 9 21 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1;
+#X msg 39 21 0;
+#X floatatom 9 380 5 0 0 0 - - -;
+#X floatatom 29 399 5 0 0 0 - - -;
+#X floatatom 49 380 5 0 0 0 - - -;
+#X floatatom 69 399 5 0 0 0 - - -;
+#X floatatom 89 380 5 0 0 0 - - -;
+#X obj 9 346 route 0 1 2 3 4;
+#X text 137 10 You can arrange parts of your tune using this simple
+mechanism. Each 'track' down the left hand side will output the number
+of the block that is currently being traversed \, or zero if there
+is none. Add blocks or clear all blocks using the buttons at the bottom.
+;
+#X text 136 81 args: [name] [length of the arrangement] [distance between
+grey markers] [ticker name] [ticks per bar];
+#X obj 9 115 s-arranger blah 200 4 time/tick 16;
+#X text 770 36 Click load!;
+#X connect 0 0 16 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 1;
+#X connect 6 0 3 0;
+#X connect 7 0 4 1;
+#X connect 13 0 8 0;
+#X connect 13 1 9 0;
+#X connect 13 2 10 0;
+#X connect 13 3 11 0;
+#X connect 13 4 12 0;
+#X connect 16 0 13 0;

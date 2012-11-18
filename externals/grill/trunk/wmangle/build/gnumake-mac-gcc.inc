@@ -1,0 +1,2 @@
+LDFLAGS+=-framework Carbon
+

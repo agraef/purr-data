@@ -1,0 +1,10 @@
+#N canvas 301 154 450 300 10;
+#X obj 104 145 mtl/concat;
+#X msg 104 105 a b c d;
+#X text 29 32 tags: lists;
+#X text 35 10 description: concatenates the elements of a list.;
+#X msg 177 112 1 2 3 4;
+#X obj 105 179 print;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 4 0 0 0;

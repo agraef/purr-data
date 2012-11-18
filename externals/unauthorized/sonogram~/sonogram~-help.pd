@@ -1,0 +1,10 @@
+#N canvas 0 1 450 300 10;
+#X obj 134 93 rs-sonogram~;
+#X text 193 27 To work properly \, the block size;
+#X text 193 39 has to be redefined.;
+#X msg 291 89 \; pd dsp 1;
+#X msg 356 90 \; pd dsp 0;
+#X text 193 51 that's why everything is in the subpatch.;
+#X obj 132 130 dac~;
+#X connect 0 0 6 0;
+#X connect 0 0 6 1;

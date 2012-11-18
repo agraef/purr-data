@@ -1,0 +1,25 @@
+#N canvas 468 219 647 458 12;
+#X obj -29 10 cnv 15 400 40 empty empty typing_conventions 20 12 0
+24 -228992 -66577 0;
+#X text 17 160 an object is a word surrounded by two square brackets
+;
+#X text -18 135 [route] ==;
+#X obj 95 136 route;
+#X msg 106 203 my msg;
+#X text -18 202 [my msg( ==;
+#X text -18 290 You can even make ASCII patches:;
+#X msg 344 310 bang;
+#X obj 344 349 delay 500;
+#X text -1 318 [bang(;
+#X text 2 335 |;
+#X text -1 351 [delay 500];
+#X text 2 371 |;
+#X text 204 350 ==;
+#X text -1 388 [print why?];
+#X obj 344 388 print why?;
+#X text -26 72 When typing out various Pd elements \, there are a couple
+conventions:;
+#X text 17 230 an message is a word preceeded by an open square bracket
+and terminated by an open parenthesis;
+#X connect 7 0 8 0;
+#X connect 8 0 15 0;

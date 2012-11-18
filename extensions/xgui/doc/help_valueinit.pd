@@ -1,0 +1,8 @@
+#N canvas 472 575 450 300 12;
+#X obj 59 146 value test;
+#X obj 40 40 valueinit test 10;
+#X msg 60 117 bang;
+#X obj 53 180 print;
+#X text 180 189 comment;
+#X connect 0 0 3 0;
+#X connect 2 0 0 0;

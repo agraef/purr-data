@@ -1,0 +1,98 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header osc~ 3 12 0 18 -204280
+-1 0;
+#X obj 0 358 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 245 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal trigonometry;
+#X text 12 45 DESCRIPTION cosine wave oscillator;
+#X text 12 65 INLET_0 signal float;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 456 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 493 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 107 477 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [osc~] Related Objects;
+#X obj 83 42 cos~;
+#X obj 127 42 tabread4~;
+#X obj 23 42 phasor~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 367 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 366 float;
+#X obj 78 465 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 410 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 409 float;
+#X obj 492 3 osc~;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/osc~ -text
+pdpedia: osc~;
+#X obj 229 253 dac~ 1;
+#X obj 229 223 *~;
+#X floatatom 65 126 0 0 0 0 - - -;
+#X obj 243 195 line~;
+#X msg 243 139 0.1 100;
+#X msg 262 164 0 100;
+#X text 314 134 on;
+#X text 311 163 off;
+#X text 280 188 envelope;
+#X text 280 201 generator;
+#X text 227 114 amplitude controls:;
+#X text 226 270 audio output;
+#X obj 83 228 metro 500;
+#X text 65 270 graph the output;
+#X text 89 132 change frequency;
+#X text 91 120 incoming numbers;
+#X obj 65 155 osc~ 1000;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 100 float 0;
+#X coords 0 -1 100 1 150 100 1;
+#X restore 374 172 graph;
+#X text 98 386 signal;
+#X text 98 464 signal;
+#X obj 83 203 loadbang;
+#X text 98 429 list;
+#X text 11 23 cosine wave oscillator;
+#X text 168 511 - sets the initial frequency. If the argument is supplied
+\, [osc~] takes floating-point messages to change frequency. If no
+argument is supplied \, the input is taken to be an audio signal.;
+#X text 168 366 - an incoming float changes the frequency.;
+#X text 168 386 - an incoming signal changes the frequency.;
+#X text 167 409 - a float to the right inlet resets the phase.;
+#X text 167 429 - a list will be truncated to the first element.;
+#X text 80 511 1) float;
+#X text 167 464 - the outgoing cosine wave.;
+#X text 22 60 The [osc~] object outputs a cosine wave. With a floating-point
+argument \, [osc~] takes floating-point messages to change frequency.
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 66 253 tabwrite~ \$0-array;
+#X connect 16 0 15 0;
+#X connect 17 0 31 0;
+#X connect 18 0 16 1;
+#X connect 19 0 18 0;
+#X connect 20 0 18 0;
+#X connect 27 0 48 0;
+#X connect 31 0 16 0;
+#X connect 31 0 48 0;
+#X connect 35 0 27 0;
+#X connect 35 0 27 0;

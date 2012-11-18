@@ -1,0 +1,10 @@
+#N canvas 123 431 787 361 10;
+#X obj 241 236 print DESTROYED;
+#X obj 241 203 receive test;
+#X text 280 131 <- Create and destroy this abstraction. It will send
+a bang to [receive test] everythime it is destroyed.;
+#X obj 75 131 flow.send.destroy test;
+#X text 173 303 You can set the target through the right inlet.;
+#X text 92 28 Description: Sends a bang when it is destroyed.;
+#X obj 51 303 tof/destroysend;
+#X connect 1 0 0 0;

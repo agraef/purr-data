@@ -1,0 +1,88 @@
+#N canvas 293 91 803 616 10;
+#X obj 57 73 bng 15 250 50 0 \$1 \$1 empty 20 8 0 8 -262144 -1 -1;
+#X obj 57 105 tgl 15 1.04858e+06 \$2 \$2 empty 20 8 0 8 -262144 -1
+-1 0 1;
+#X obj 56 137 vsl 15 128 0 127 0 1.04858e+06 \$3 \$3 empty 20 8 0 8
+-262144 -1 -1 0 1;
+#X obj 99 72 hsl 128 15 0 127 0 0 \$4 \$4 empty 20 8 0 8 -262144 -1
+-1 0 1;
+#X obj 97 105 hdl 15 1 2.6624e+06 8 \$5 \$5 empty 20 8 192 8 -262144
+-1 -1 0;
+#X obj 96 141 vu 15 120 \$6 empty 35 8 0 8 -66577 -1 1 0;
+#X obj 149 141 cnv 15 100 60 \$7 \$7 \$7 20 12 0 14 -233017 -66577
+1.04858e+06;
+#X obj 261 72 vdl 15 1 4.79232e+06 8 \$9 \$9 empty 20 8 192 8 -262144
+-1 -1 0;
+#X obj 150 218 nbx 5 14 -1e+37 1e+37 0 0 \$8 \$8 empty 45 7 0 10 -262144
+-1 -1 0 256;
+#X text 8 22 Pd comes with a standard \, built-in set of GUI elements
+\, which you can select from the "Put" menu.;
+#X text 16 332 There are also some OS-native GUI elements available
+;
+#X text 403 521 Graph-On-Parent aka GOP is an essential element for
+building elaborate GUIs in Pd.;
+#X obj 44 372 button OK;
+#X obj 142 376 popup 124 25 #ffffff popup option;
+#X text 23 348 [button]:;
+#X text 129 350 [popup]:;
+#X text 424 22 [unauthorized/playlist]:;
+#X text 605 28 [unauthorized/grid]:;
+#X obj 78 303 cnv-edit;
+#X text 16 283 You can edit the look of the above GUI elements with
+this editor:;
+#X text 412 464 toxy's [tot] \, [tow] \, and [widget];
+#X obj 463 53 playlist all 100 100 {Helvetica 10 bold} #457782 yellow
+black red;
+#X obj 632 47 grid grid1 100 0 199 100 0 199 1 1 1 10 10 710 57;
+#X text 17 427 cyclone has some clones of Max GUI objects:;
+#X obj 53 456 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X text 19 440 [cyclone/Scope~]:;
+#N canvas 308 82 645 525 More 0;
+#X text 440 185 [gcanvas]:;
+#X obj 452 218 gcanvas 80 80;
+#X obj 64 208 probalizer 100 100 100 100 1 0 10 1 10 2 10 3 10 4 10
+5 10 6 10 7 10 8 10 9 10 10 10 11 10 12 10 13 10 14 10 15 10 16 10
+17 10 18 10 19 10 20 10 21 10 22 10 23 10 24 10 25 10 26 10 27 10 28
+10 29 10 30 50 31 50 32 10 33 10 34 10 35 10 36 10 37 10 38 10 39 10
+40 10 41 10 42 10 43 10 44 10 45 10 46 10 47 10 48 10 49 10 50 10 51
+10 52 10 53 10 54 10 55 10 56 10 57 10 58 10 59 10 60 10 61 10 62 10
+63 10 64 54 65 10 66 10 67 55 68 10 69 10 70 10 71 10 72 10 73 10 74
+10 75 10 76 76 77 10 78 10 79 10 80 10 81 10 82 10 83 10 84 10 85 10
+86 10 87 10 88 10 89 10 90 10 91 10 92 10 93 10 94 10 95 10 96 10 97
+10 98 10 99 32;
+#X text 17 188 [unauthorized/probalizer]:;
+#X obj 319 265 image logo100.gif;
+#X text 257 189 [image]:;
+#X obj 443 41 entry 124 100 grey70 yellow;
+#X text 438 6 [entry]:;
+#X text 31 26 [unauthorized_scratcher~]:;
+#X text 222 28 [unauthorized/audience~]:;
+#X obj 75 45 scratcher~ 88200 100 100 25 2 0.01;
+#X obj 261 47 audience~ 100 100 4 2 0.01 0 48 10 97 10 146 10 195 10
+0 190 195 190;
+#X obj -1 -1 cooled~ 1024 300 100 1;
+#X text 292 363 [unauthorized/cooled~]:;
+#X text 8 361 LINK: [unauthorized/pianoroll]:;
+#X text 6 343 Some are crash-prone:;
+#X restore 487 495 pd More GUI elements;
+#X obj 298 372 ticker ;
+#X obj 516 347 state;
+#X text 412 347 State saving:;
+#X text 565 344 memento!;
+#X obj 521 187 envgen 200 140 1 0  ;
+#X text 404 440 libraries: cyclone \, ggee \, unauthorized;
+#X text 398 567 data structures!;
+#X obj 247 479 comment 0 10 helvetica ? 0 0 0 0 this is a comment;
+#X text 195 462 [cyclone/comment]:;
+#X obj 440 223 knob 32 32 0 127 0 0 empty empty empty 0 -8 32 8 -262144
+-1 -1 0 1;
+#X text 434 197 [knob];
+#X obj 569 397 sliderh 127 0 15;
+#X text 591 374 [ggee/sliderh];
+#X text 281 349 [ggee/ticker]:;
+#X text 501 163 [env/envgen]:;
+#X obj 744 326 slider 127 0 15;
+#X text 699 480 [ggee/slider];
+#X text 412 371 [ggee/toddle];
+#X obj 446 401 toddle black 15 15;

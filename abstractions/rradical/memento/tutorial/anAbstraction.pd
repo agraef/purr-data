@@ -1,0 +1,29 @@
+#N canvas 128 135 527 326 10;
+#X floatatom 58 189 5 0 0 0 - - -;
+#X obj 54 270 commun aRadio \$0;
+#X obj 53 218 commun aFloat \$0;
+#X obj 60 242 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X msg 52 137 set;
+#X msg 89 137 substate \$1;
+#X obj 59 86 tgl 24 0 empty empty Toggles_Between_2_Substates 0 -6
+0 10 -225280 -1 -1 0 1;
+#X obj 59 113 t b f;
+#X symbolatom 305 202 10 0 0 2 type_something_here - -;
+#X obj 232 171 commun aSymbol \$0;
+#X obj 232 195 symbol;
+#X text 193 216 Symbols need another 'symbol' object!;
+#X obj 52 162 originator \$1 \$0;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 4 0 12 0;
+#X connect 5 0 12 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 7 1 5 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X coords 0 0 1 1 400 140 1;

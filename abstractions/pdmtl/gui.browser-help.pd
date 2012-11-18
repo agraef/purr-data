@@ -1,0 +1,125 @@
+#N canvas 1024 68 1022 700 10;
+#X obj 299 97 print;
+#X msg 553 -27 clear;
+#X msg 543 -127 label put_your_label;
+#X msg 543 -98 label labelizer;
+#X text 34 -144 Flags: internal;
+#X obj 422 134 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 200 18 5 0 0 0 - - -;
+#X obj 234 210 vsl 15 115 0 175 0 0 \$0slider_s \$0slider_r empty 0
+-8 0 8 -1 -262144 -1 0 0;
+#X obj 52 208 hradio 15 1 0 12 \$0hr_0_s \$0hr_0_r empty 2 8 0 15 -1
+-1 -258049 0;
+#X obj 52 223 hradio 15 1 0 12 \$0hr_1_s \$0hr_1_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 238 hradio 15 1 0 12 \$0hr_2_s \$0hr_2_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 253 hradio 15 1 0 12 \$0hr_3_s \$0hr_3_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 268 hradio 15 1 0 12 \$0hr_4_s \$0hr_4_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 283 hradio 15 1 0 12 \$0hr_5_s \$0hr_5_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 298 hradio 15 1 0 12 \$0hr_6_s \$0hr_6_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 313 hradio 15 1 0 12 \$0hr_7_s \$0hr_7_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 52 192 cnv 15 197 15 empty \$0hider empty 3 9 0 8 -128992 -262144
+0;
+#X text 36 -175 Description: A little browser GUI (version to include
+in your own GOP abstractions).;
+#X text 547 -146 Change the label;
+#X text 552 -42 Clear the browser;
+#X msg 567 -68 will_be_shown will_be_output \, bang;
+#X text 534 358 If the file mode is selected \, all spaces in symbols
+will be displayed as to "/".;
+#X text 532 390 Also \, all file paths will be split. Only the file
+name will be displayed BUT the whole path will still be output!;
+#X floatatom 655 7 5 0 0 1 size - -;
+#X msg 563 134 colorRGB 0 255 0;
+#X text 667 110 Change the color of the next entry;
+#X msg 560 111 colorRGB 0 0 255;
+#X obj 562 51 pack 0 10;
+#X obj 616 26 t b a;
+#X floatatom 540 24 5 0 2 1 font - -;
+#X msg 562 74 text.font \$1 \$2;
+#X text 46 409 Clicking on the grey bar will output a bang at gui.browser's
+right outlet.;
+#X msg 567 172 select.colorRGB 125 125 125;
+#X text 748 170 Change the select color;
+#X text 45 335 To include this browser GUI in your own GOP abstraction
+\, copy the above graphical objects to your patch. Then create a [gui.browser
+\$0]. You may modify the graphical details \, but do not change the
+number of elements or the names of the internal sends and receives
+of the gui objects.;
+#N canvas 186 67 665 512 ADDING_CONTENT 0;
+#X msg 159 15 bob;
+#X obj 153 271 bng 15 250 50 0 empty empty empty 0 -6 0 8 -4034 -1
+-1;
+#X msg 200 17 mom;
+#X obj 31 2 openpanel;
+#X obj 31 -35 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 53 -37 Add a file;
+#X text 18 -147 There are three modes to adding content:;
+#X obj 182 263 cnv 15 400 30 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X text 22 -125 FILE MODE;
+#X msg 31 52 file \$1;
+#X text 195 264 Everytime you change the content \, you must send a
+bang to update the display!;
+#X text 156 -35 PLAIN MODE;
+#X text 20 -110 In file mode \, only the name of the file and not the
+full path is displayed. BUT \, when you select an item \, it will still
+output the full path!;
+#X msg 244 17 tom;
+#X text 246 69 TAG MODE;
+#X text 22 -73 To use file mode \, prepend the word file to the file
+path to be added.;
+#X text 157 -16 In plain mode \, the message displayed and outputed
+are the same.;
+#X text 247 83 In tag mode \, the first element (the tag) is displayed
+and the rest is outputed.;
+#X msg 252 113 item_displayed items outputed;
+#X msg 288 142 shown hidden;
+#X obj 31 327 outlet;
+#X obj 30 217 t b a;
+#X connect 0 0 21 0;
+#X connect 1 0 20 0;
+#X connect 2 0 21 0;
+#X connect 3 0 9 0;
+#X connect 4 0 3 0;
+#X connect 9 0 21 0;
+#X connect 13 0 21 0;
+#X connect 18 0 21 0;
+#X connect 19 0 21 0;
+#X connect 21 0 1 0;
+#X connect 21 1 20 0;
+#X restore 370 -86 pd ADDING_CONTENT;
+#X text 16 -13 Select items to be outputed by clicking on the gui or
+by selecting by index with the left inlet.;
+#X text 258 239 <- Use the scroll bar when there are too many items!
+;
+#X obj 342 -69 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 301 32 gui.browser \$0;
+#X connect 1 0 39 1;
+#X connect 2 0 39 1;
+#X connect 3 0 39 1;
+#X connect 6 0 39 0;
+#X connect 20 0 39 1;
+#X connect 23 0 28 0;
+#X connect 24 0 39 1;
+#X connect 26 0 39 1;
+#X connect 27 0 30 0;
+#X connect 28 0 27 0;
+#X connect 28 1 27 1;
+#X connect 29 0 27 0;
+#X connect 30 0 39 1;
+#X connect 32 0 39 1;
+#X connect 35 0 39 1;
+#X connect 38 0 39 1;
+#X connect 39 0 0 0;
+#X connect 39 1 5 0;
+#X coords 0 0 1 1 285 215 0;

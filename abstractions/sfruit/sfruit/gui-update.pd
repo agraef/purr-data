@@ -1,0 +1,14 @@
+#N canvas 367 554 450 300 10;
+#X obj 78 94 tgl 42 0 \$0.updating?.s \$0.updating?.r G 8 22 0 40 -260097
+-159788 -1 0 1;
+#X obj 78 168 s GUI_UPDATING?;
+#X obj 180 168 s GUI_UPDATE;
+#X obj 107 123 bng 13 250 50 0 \$0.gui.update.s \$0.gui.update.r U
+4 7 0 10 -261594 -1 -1;
+#X obj 80 27 loadbang;
+#X msg 79 50 1;
+#X connect 0 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X coords 0 -1 1 1 44 44 2 77 93;

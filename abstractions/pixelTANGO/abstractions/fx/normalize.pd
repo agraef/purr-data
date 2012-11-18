@@ -1,0 +1,12 @@
+#N canvas 0 22 458 308 10;
+#X obj 46 138 inlet;
+#X text 25 54 Gemchain;
+#X obj 32 168 pix_normalize;
+#X text 28 16 Normalize pixels;
+#X obj 24 81 arrayRouterIn \$1 \$2;
+#X obj 32 220 arrayRouterOut \$1 \$2;
+#X obj 47 193 outlet;
+#X connect 0 0 2 0;
+#X connect 2 0 5 0;
+#X connect 2 0 6 0;
+#X connect 4 0 2 0;

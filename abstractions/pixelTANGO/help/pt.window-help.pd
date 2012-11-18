@@ -1,0 +1,43 @@
+#N canvas 443 192 654 468 10;
+#X obj 24 105 pt.window 60;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 310 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 267 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 197 178 Window: Create the render window and start rendering
+;
+#X text 197 196 Light: Turn on lighting;
+#X text 177 77 Window Management Functions:;
+#X text 187 267 *Sliders:;
+#X text 187 310 *Popup:;
+#X obj 8 431 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 433 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: pt.window [frame-rate];
+#X text 187 97 *Toggles: (All of these functions can be turned on and
+off);
+#X text 197 118 Fullscreen: Expand render window to full-screen on
+primary display. Only has effect before creating render window.;
+#X text 197 148 FSAA(6): Turn on Full-Scene Anti-Aliasing. Only has
+effect before creating render window.;
+#X text 12 23 Type: General. Effects all layers in patch.;
+#X text 12 6 pixelTANGO HELP - pt.window - Window Management;
+#X text 197 288 Render window background colour;
+#X text 197 214 Cursor: Show or hide cursor in window. (not OSX compliant)
+;
+#X text 197 232 Border: Show or hide window titlebar. Only has effect
+before creating render window.;
+#X text 197 331 Resolution: Pixel resolution of render window \, pt.video
+layers and pt.feedback dimentions;
+#X text 197 361 Offset: X & Y distance from the upper-left corner of
+the primary display. Only has effect before creating the render window.
+;
+#X text 197 401 Frame-Rate: How many frames to render in one second.
+;

@@ -1,0 +1,31 @@
+#N canvas 647 100 500 401 10;
+#X obj 27 38 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 27 61 gems.win 640 480;
+#X obj 39 137 gemhead;
+#X obj 37 297 rectangle 3 2;
+#X obj 36 272 translateXYZ 3 0 0;
+#X text 146 50 Description: Displays a texture that is stored in a
+gems.texture.storage;
+#X text 99 93 See;
+#X obj 149 91 gems.texture.storage;
+#X obj 38 247 gems.texture @name fooo;
+#X msg 209 210 name spam;
+#X msg 140 208 name egg;
+#X obj 145 159 t b;
+#X obj 144 139 spigot;
+#X obj 146 182 alternate;
+#X obj 184 120 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X connect 0 0 1 0;
+#X connect 2 0 8 0;
+#X connect 2 0 12 0;
+#X connect 4 0 3 0;
+#X connect 8 0 4 0;
+#X connect 9 0 8 1;
+#X connect 10 0 8 1;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 13 0 10 0;
+#X connect 13 1 9 0;
+#X connect 14 0 12 1;

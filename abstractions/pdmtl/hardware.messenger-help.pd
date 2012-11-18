@@ -1,0 +1,38 @@
+#N canvas 113 63 837 392 10;
+#X text 55 22 Description: interface to the Messenger library for Arduino.
+;
+#X text 54 40 http://www.arduino.cc/playground/Code/Messenger;
+#X msg 455 160 baud 115200;
+#X msg 536 160 open 2;
+#X msg 591 159 ports;
+#X msg 636 158 devices;
+#X msg 702 159 info;
+#X obj 423 307 print INFO;
+#X msg 90 175 hello world;
+#X msg 117 201 1 0 0 0 0 1 0 0 0 0 1 1 0 1;
+#X msg 128 222 1 0 0 0 0 1 0 0 0 0 1 1 0 0;
+#X obj 90 294 print RECEIVED;
+#X msg 412 159 close;
+#X msg 538 235 reopen;
+#X obj 92 251 hardware.messenger @baud 115200 @devicename /dev/ttyUSB0
+;
+#X text 41 135 Inlet 1: messages to send. Every list is a separate
+message.;
+#X text 403 130 You can use all of [comport]'s messages through inlet
+2;
+#X text 437 252 The new message "reopen" opens the previously opened
+port.;
+#X text 92 316 Outlet 1: Messages received.;
+#X text 492 306 Outlet 2: Debug info \, port listing.;
+#X connect 2 0 14 1;
+#X connect 3 0 14 1;
+#X connect 4 0 14 1;
+#X connect 5 0 14 1;
+#X connect 6 0 14 1;
+#X connect 8 0 14 0;
+#X connect 9 0 14 0;
+#X connect 10 0 14 0;
+#X connect 12 0 14 1;
+#X connect 13 0 14 1;
+#X connect 14 0 11 0;
+#X connect 14 1 7 0;

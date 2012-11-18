@@ -1,0 +1,36 @@
+#N canvas 213 175 703 499 10;
+#X msg 62 292 vasp bufup;
+#X obj 62 313 vasp.= 0;
+#X text 145 226 update the graphics;
+#X text 136 125 generate a sine wave;
+#X obj 62 185 vasp.osc 22050;
+#X obj 58 41 cnv 15 15 15 empty empty vasp.update 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufup 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 347 141 graph;
+#N canvas 0 0 396 272 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufup;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 607 383 pd init;
+#X obj 62 227 vasp.update;
+#X msg 62 125 vasp bufup;
+#X obj 62 374 vasp.u;
+#X msg 62 351 vasp bufup;
+#X obj 57 424 VASP-HELP;
+#X text 58 92 use vasp.update at the end of a chain of vasp operations
+;
+#X text 57 69 updates the graphic display of the array;
+#X text 145 291 set the buffer to zero;
+#X text 147 345 and display the changes;
+#X text 114 374 (abbreviation);
+#X connect 0 0 1 0;
+#X connect 4 0 8 0;
+#X connect 9 0 4 0;
+#X connect 11 0 10 0;

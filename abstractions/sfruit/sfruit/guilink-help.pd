@@ -1,0 +1,20 @@
+#N canvas 36 238 445 366 10;
+#X obj 241 61 vsl 15 128 1 20000 1 0 \$0.frequency.s \$0.frequency.r
+empty 0 -9 0 10 -203904 -1 -1 8858 1;
+#X obj 269 114 nbx 5 14 1 20000 1 0 \$0.frequency.display.s \$0.frequency.display.r
+empty 0 -8 0 10 -203904 -1 -1 1000 256;
+#X text 18 9 guilink: link two gui elements so that they reflect each
+other's settings;
+#X floatatom 71 177 6 0 0 0 - - -;
+#X obj 54 95 guilink \$0.frequency;
+#X obj 71 146 r \$0.frequency.s;
+#X text 14 217 Uses a uniform naming scheme. The "master" control is
+uses parameter.s as its sendname and parameter.r as its receivename.
+The "slave" control uses parameter.display.s as its sendname and parameter.display.r
+as its receivename;
+#X text 13 275 guilink also intercepts "set" messages to the master's
+reciever and relays them to the slave.;
+#X msg 168 318 set 1000;
+#X obj 168 341 s \$0.frequency.r;
+#X connect 5 0 3 0;
+#X connect 8 0 9 0;

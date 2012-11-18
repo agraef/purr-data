@@ -1,0 +1,19 @@
+#N canvas 428 216 685 445 12;
+#X floatatom 150 78 5 0 0 0 - - -;
+#X floatatom 150 220 5 0 0 0 - - -;
+#X text 148 246 frequency;
+#X obj 150 134 convert.bpm2freq;
+#X obj 396 179 convert.bpm2freq;
+#X msg 396 146 120;
+#X text 10 33 Description: Converts beats per minute to a frequency
+(times per second).;
+#X floatatom 397 217 5 0 0 0 - - -;
+#X text 446 217 Frequency;
+#X obj 400 246 phasor~;
+#X obj 397 282 anal.scope_~ 1;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 0;
+#X connect 7 0 9 0;
+#X connect 9 0 10 0;

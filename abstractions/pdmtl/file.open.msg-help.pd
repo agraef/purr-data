@@ -1,0 +1,13 @@
+#N canvas 0 0 488 395 10;
+#X obj 42 31 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 37 310 print to-player;
+#X obj 69 162 print to-message-box;
+#X text 67 184 Needs a message box under;
+#X text 138 30 Description: dialog to open a file.;
+#X msg 38 209;
+#X obj 39 103 file.open.msg;
+#X connect 0 0 6 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 0;
+#X connect 6 0 2 0;

@@ -1,0 +1,77 @@
+#N canvas 181 61 560 570 10;
+#X obj 16 272 inlet~;
+#X obj 26 322 rfft~;
+#X obj 26 355 *~;
+#X obj 57 355 *~;
+#X obj 26 385 sqrt~;
+#X obj 26 292 hip~ 3;
+#X obj 39 455 metrum 100 1;
+#X obj 59 246 hsl 100 10 1 50 0 0 \$0a \$0b Zoom -36 5 0 12 -228856
+-1 -1 0 1;
+#X obj 27 475 tabwrite~ \$0-spectrum;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-spectrum 512 float 0;
+#X coords 0 1 511 0 512 180 1;
+#X restore 24 46 graph;
+#X obj 167 339 loadbang;
+#X obj 26 415 *~ 1;
+#X obj 167 399 s \$0-spectrum;
+#X obj 167 419 block~ 1024 1;
+#X text 167 299 Spectrum analyser based on M. Puckette's tutorial patch.
+Harmonic content is analysed in 512 bins resolution.;
+#X obj 17 495 outlet~;
+#X msg 167 359 xticks 0 64 1 \, yticks 0 0.25 1 \, xlabel -0.045 0
+128 256 384 512 \, ylabel -6 0 1;
+#X obj 26 435 /~ 511;
+#X text 416 465 Outlets;
+#X text 416 415 Inlets;
+#X text 415 435 - Audio to analyse;
+#X text 416 515 GUI;
+#X text 416 535 - Zoom control;
+#X text 416 485 - Same as inlet;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 16 542 pd license;
+#X text 13 524 (C) 2009 João Pais - jmmmpais@googlemail.com;
+#X text 166 269 [spectrogram~] - Spectrogram with 512 bins resolution
+;
+#X connect 0 0 5 0;
+#X connect 0 0 15 0;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 1 1 3 0;
+#X connect 1 1 3 1;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 11 0;
+#X connect 5 0 1 0;
+#X connect 6 0 8 0;
+#X connect 7 0 11 1;
+#X connect 10 0 16 0;
+#X connect 11 0 17 0;
+#X connect 16 0 12 0;
+#X connect 17 0 8 0;
+#X coords 0 -1 1 1 540 250 1 10 10;

@@ -1,0 +1,17 @@
+#N canvas 0 0 450 300 10;
+#X obj 159 205 dac~;
+#X obj 239 198 print~;
+#X obj 244 171 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 257 82 hsl 128 15 1e-04 1 1 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X msg 254 102 lagTime \$1;
+#X obj 155 61 WhiteNoise~;
+#X obj 156 130 Lag2~ 0.0004;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 6 0 0 1;
+#X connect 6 0 1 0;

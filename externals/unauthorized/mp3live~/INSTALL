@@ -1,0 +1,21 @@
+You need to get lame > v3.90 installed first.
+libmp3lame.so is searched in /usr/local/lib
+( no time to write configure scripts ).
+if it's installed elsewhere, change the Makefile,
+you won't die from that.
+
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/mp3live~
+
+make clean 
+
+make
+
+make install
+
+open help-mp3live~.pd
+
+Thanx for getting here.
+
+Yves/

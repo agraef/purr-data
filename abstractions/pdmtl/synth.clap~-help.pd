@@ -1,0 +1,16 @@
+#N canvas 641 492 521 312 10;
+#X obj 139 247 mix.out_~;
+#X text 41 25 Description: Generates a kind of clap sound.;
+#X text 39 53 Comment: Based on Andy Farnell's work.;
+#X msg 88 107 trigger;
+#X msg 193 120 decay \$1;
+#X floatatom 199 92 5 10 4000 0 - - -;
+#X obj 305 189 param.gui;
+#X obj 151 157 synth.clap~ @id clap;
+#X msg 305 158 clap;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 0;
+#X connect 7 0 0 0;
+#X connect 7 0 0 1;
+#X connect 8 0 6 0;

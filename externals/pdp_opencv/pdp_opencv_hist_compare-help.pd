@@ -1,0 +1,102 @@
+#N canvas 674 88 757 669 10;
+#X obj -147 -72 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 93 -32 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 93 -5 metro 40;
+#X msg 183 22 close;
+#X obj 113 93 pdp_v4l;
+#X msg 170 -10 open /dev/video0;
+#X obj 294 -30 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 294 -3 metro 40;
+#X msg 375 16 close;
+#X msg 371 -8 open /dev/video0;
+#X obj 315 96 pdp_v4l2;
+#X msg 380 71 format \$1;
+#X obj 381 49 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj -117 143 pdp_qt;
+#X obj -84 79 metro 40;
+#X msg -84 51 bang;
+#X msg -43 51 stop;
+#X obj -117 -18 openpanel;
+#X msg -117 7 open \$1;
+#X msg -117 -46 bang;
+#X msg -83 106 loop \$1;
+#X obj -3 106 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj -3 24 loadbang;
+#X text -74 -43 playing a video file;
+#X text 123 -34 Camera input;
+#X obj -57 144 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text -149 -124 record histograms of specific situations;
+#X text -147 -112 the object will recognize the situations if they
+occur again;
+#X obj -146 186 cnv 15 621 300 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj -118 208 pdp_scale 320 240;
+#X obj -120 380 pdp_xv;
+#X obj -66 340 pdp_xv;
+#X floatatom 1 420 5 0 0 0 - - -;
+#X obj -12 262 hradio 15 1 0 5 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text -1 207 <- this scaling saves memmory;
+#X text 71 261 save an histogram at position nth ( 0 <= n <= 80 );
+#X text -147 -98 Written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+);
+#X obj -66 300 pdp_opencv_hist_compare;
+#X obj 69 319 unpack f f f f f;
+#X obj 391 97 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X msg 390 119 input \$1;
+#X text 162 354 nearest to 1 is the winner;
+#X text 37 421 closest histogram (winner);
+#X obj 69 347 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 92 347 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 115 347 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 138 347 vsl 15 37 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X text -148 -150 pdp_opencv_hist_compare : rapid patern recognition
+using HS histograms;
+#X text 161 343 matching measure with stored histograms;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 29 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 29 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 29 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
+#X connect 19 0 17 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 22 0 15 0;
+#X connect 25 0 13 1;
+#X connect 29 0 30 0;
+#X connect 29 0 37 0;
+#X connect 33 0 37 1;
+#X connect 37 0 31 0;
+#X connect 37 1 32 0;
+#X connect 37 2 38 0;
+#X connect 38 0 43 0;
+#X connect 38 1 44 0;
+#X connect 38 2 45 0;
+#X connect 38 3 46 0;
+#X connect 39 0 40 0;
+#X connect 40 0 10 0;

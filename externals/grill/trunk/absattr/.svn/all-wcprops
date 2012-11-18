@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/3706/trunk/absattr
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3619/trunk/absattr/Info.plist
+END
+absattr-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3619/trunk/absattr/absattr-help.pd
+END
+absattr-sub.pd
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3619/trunk/absattr/absattr-sub.pd
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1268/trunk/absattr/package.txt
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3619/trunk/absattr/readme.txt
+END
+absattr-no.pd
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1268/trunk/absattr/absattr-no.pd
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1268/trunk/absattr/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1268/trunk/absattr/license.txt
+END
+absattr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3706/trunk/absattr/absattr.cpp
+END
+absattr.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/1268/trunk/absattr/absattr.vcproj
+END

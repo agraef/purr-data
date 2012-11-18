@@ -1,0 +1,8 @@
+#N canvas 318 193 231 152 10;
+#X obj 30 99 outlet;
+#X obj 30 35 inlet;
+#X text 53 100 1993 by Gerhard Eckel
+;
+#X obj 30 66 expr pow(10 \, ($f1/20));
+#X connect 1 0 3 0;
+#X connect 3 0 0 0;

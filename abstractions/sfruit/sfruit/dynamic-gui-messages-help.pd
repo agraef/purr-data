@@ -1,0 +1,10 @@
+#N canvas 986 26 450 300 10;
+#X msg 39 77 obj 10 10 vsl width height bottom top log/lin init send
+receive label l-offsetX l-offsetY font fontsize bgcolor frontcolor
+labelcolor init-to jumponclick \;;
+#X msg 39 127 obj 10 10 vradio size 1(?) init number send receive label
+l-offsetX l-offsetY font fontsize bgcolor frontcolor labelcolor init-to
+\;;
+#X msg 39 27 obj 10 10 tgl size init send receive label l-offsetX l-offsetY
+font fontsize bgcolor frontcolor labelcolor init-to non-zero-value
+\;;

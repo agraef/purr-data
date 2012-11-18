@@ -1,0 +1,19 @@
+#N canvas 295 28 654 500 10;
+#X msg 272 171 connect localhost 3333;
+#X obj 40 281 fx.template~ @id bob;
+#X floatatom 118 317 5 0 0 0 - - -;
+#X floatatom 302 215 5 0 0 0 - - -;
+#X obj 272 329 sendOSC;
+#X msg 303 264 send /bob/param1 \$1;
+#X obj 18 70 param.map.osc 3333;
+#X text 24 15 Description: Links params to OSC commands.;
+#X text 20 51 Argument 1: the port for incomming OSC messages;
+#X text 18 102 param.map.osc simply converts an OSC type messsage (/id/param
+value) to a param message (id@param value);
+#X text 268 155 1) Connect to this patch;
+#X text 347 215 2) Change bob@param1's value;
+#X text 345 283 Maps to bob@param1 value;
+#X connect 0 0 4 0;
+#X connect 1 4 2 0;
+#X connect 3 0 5 0;
+#X connect 5 0 4 0;

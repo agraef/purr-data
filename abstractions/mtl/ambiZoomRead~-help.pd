@@ -1,0 +1,100 @@
+#N canvas 116 100 734 740 10;
+#X obj 160 431 vsl 20 50 -100 0 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X obj 38 167 openpanel;
+#X obj 38 111 bng 50 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X text 14 12 Description: Reads two wave files from the Zoom H2 recorder/microphone.
+;
+#X text 14 61 Open one of the two files to read both if they are in
+the same directory. (rear and front);
+#X msg 417 191 savepanel;
+#X msg 490 213 start;
+#X msg 498 259 stop;
+#X obj 350 404 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 374 405 recording status;
+#X obj 338 293 print DONE;
+#X obj 219 257 hsl 127 8 0 1 0 0 empty empty empty -2 -8 0 10 -191407
+-1 -1 0 1;
+#X obj 369 254 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 261 226 12 0 0 0 - - -;
+#X obj 230 198 route duration elapsed done;
+#X obj 215 228 /;
+#X obj 353 230 t b;
+#X floatatom 230 277 12 0 0 0 - - -;
+#X obj 439 131 print INFO;
+#X obj 37 552 dac~ 1 2 3 4;
+#X msg 123 379 angle \$1;
+#X obj 123 357 hsl 128 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X msg 173 149 stop;
+#X msg 172 127 autoplay \$1;
+#X obj 173 107 tgl 15 0 empty empty empty 17 7 0 10 -260097 -1 -1 0
+1;
+#X msg 173 172 play;
+#X obj 501 239 spigot;
+#X obj 537 219 tgl 15 0 empty empty empty 17 7 0 10 -260097 -1 -1 0
+1;
+#X msg 37 191 open \$1;
+#X obj 38 218 mtl/ambiZoomRead~;
+#X obj 349 371 mtl/ambiSfWrite4~;
+#X obj 26 400 mtl/ambiRotateWxy~;
+#X obj 33 457 mtl/ambiWxyToQuad~;
+#X obj 124 550 mtl/ambiVu4~;
+#X text 15 42 tags: ambisonic;
+#X obj 30 492 mtl/ambiGain4~ gain -20;
+#X obj 37 284 mtl/ambiZoomToWxy~;
+#X connect 0 0 35 4;
+#X connect 1 0 28 0;
+#X connect 2 0 1 0;
+#X connect 5 0 30 4;
+#X connect 6 0 30 4;
+#X connect 7 0 30 4;
+#X connect 12 0 26 0;
+#X connect 14 0 15 1;
+#X connect 14 0 17 0;
+#X connect 14 1 13 0;
+#X connect 14 1 15 0;
+#X connect 14 2 10 0;
+#X connect 14 2 16 0;
+#X connect 14 3 18 0;
+#X connect 15 0 11 0;
+#X connect 16 0 12 0;
+#X connect 20 0 31 3;
+#X connect 21 0 20 0;
+#X connect 22 0 29 0;
+#X connect 23 0 29 0;
+#X connect 24 0 23 0;
+#X connect 25 0 29 0;
+#X connect 26 0 7 0;
+#X connect 27 0 26 1;
+#X connect 28 0 29 0;
+#X connect 29 0 36 0;
+#X connect 29 1 36 1;
+#X connect 29 2 36 2;
+#X connect 29 3 36 3;
+#X connect 29 4 14 0;
+#X connect 30 0 8 0;
+#X connect 31 0 32 0;
+#X connect 31 1 32 1;
+#X connect 31 2 32 2;
+#X connect 32 0 35 0;
+#X connect 32 1 35 1;
+#X connect 32 2 35 2;
+#X connect 32 3 35 3;
+#X connect 35 0 19 0;
+#X connect 35 0 33 0;
+#X connect 35 1 19 1;
+#X connect 35 1 33 1;
+#X connect 35 2 19 2;
+#X connect 35 2 33 2;
+#X connect 35 3 19 3;
+#X connect 35 3 33 3;
+#X connect 36 0 30 0;
+#X connect 36 0 31 0;
+#X connect 36 1 30 1;
+#X connect 36 1 31 1;
+#X connect 36 2 30 2;
+#X connect 36 2 31 2;

@@ -1,0 +1,80 @@
+#N canvas 451 49 734 841 10;
+#X obj 39 -180 cnv 15 621 223 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X msg 146 -123 open /dev/dv1394/0;
+#X obj 69 -148 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 71 -123 metro 40;
+#X msg 189 -57 norm PAL;
+#X msg 159 -94 close;
+#X obj 279 -142 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1
+0 1;
+#X obj 279 -115 metro 40;
+#X msg 369 -88 close;
+#X obj 299 -17 pdp_v4l;
+#X msg 356 -120 open /dev/video0;
+#X obj 480 -140 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1
+0 1;
+#X obj 480 -113 metro 40;
+#X msg 557 -118 open /dev/video0;
+#X obj 500 -15 pdp_v4l2;
+#X obj 39 54 cnv 15 621 200 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X obj 90 283 pdp_xv;
+#X obj 89 -23 pdp_ieee1394;
+#X text 45 -326 pdp_opencv_bgstats : background and foreground extraction
+using a statitical method.;
+#X text 69 -177 Camera input;
+#X obj 89 196 pdp_opencv_bgstats;
+#X obj 229 74 / 100;
+#X floatatom 270 76 5 0 0 0 - - -;
+#X floatatom 234 110 5 0 0 0 - - -;
+#X msg 173 109 erode \$1;
+#X floatatom 257 147 5 0 0 0 - - -;
+#X msg 187 145 minarea \$1;
+#X text 301 152 ( default : 10x10 );
+#X msg 224 172 reset;
+#X text 273 101 number of iterations of the erode-dilate filter;
+#X text 274 111 to eliminate small forms and noise;
+#X text 304 141 minimum size of foreground objects;
+#X text 268 173 resetting the background;
+#X text 274 122 ( default : 2 );
+#X msg 168 73 alpha \$1;
+#X text 312 69 amount of time after which an object is deleted from
+the background ( default : 0.1 seconds );
+#X text 49 301 foreground ( binary );
+#X obj 191 281 pdp_xv;
+#X text 189 300 background;
+#X text 44 -299 Objects disappear from the background after a certain
+amount of time of presence ( alpha ) \, they are then considered as
+background.;
+#X text 46 -259 This object does noise filtering using erosion and
+dilation steps ( erode paramater ). It also eliminates from the foreground
+object that are less than a minumum size ( minarea parameter ).;
+#X text 45 -210 comments to ydegoyon@gmail.com;
+#X connect 1 0 17 0;
+#X connect 2 0 3 0;
+#X connect 3 0 17 0;
+#X connect 4 0 17 0;
+#X connect 5 0 17 0;
+#X connect 6 0 7 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 9 0 20 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 0;
+#X connect 14 0 20 0;
+#X connect 17 0 20 0;
+#X connect 20 0 16 0;
+#X connect 20 1 37 0;
+#X connect 21 0 34 0;
+#X connect 22 0 21 0;
+#X connect 22 0 21 1;
+#X connect 23 0 24 0;
+#X connect 24 0 20 0;
+#X connect 25 0 26 0;
+#X connect 26 0 20 0;
+#X connect 28 0 20 0;
+#X connect 34 0 20 0;

@@ -1,0 +1,9 @@
+#N canvas 522 261 568 382 12;
+#X obj 219 89 loadbang;
+#X obj 214 254 outlet;
+#X obj 224 134 symbol \$1;
+#X text 136 33 LOADBANGS A DEFAULT SYMBOL;
+#X obj 117 84 inlet;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 4 0 2 0;

@@ -1,0 +1,871 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E98C3077078D948800EC0264 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98C3076078D948800EC0264 /* vecLib.framework */; };
+		E98C3078078D948800EC0264 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98C3076078D948800EC0264 /* vecLib.framework */; };
+		E9974DF30770749400206F68 /* groove.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE50770749400206F68 /* groove.cpp */; };
+		E9974DF40770749400206F68 /* inter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE60770749400206F68 /* inter.cpp */; };
+		E9974DF50770749400206F68 /* inter.h in Headers */ = {isa = PBXBuildFile; fileRef = E9974DE70770749400206F68 /* inter.h */; };
+		E9974DF60770749400206F68 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE80770749400206F68 /* main.cpp */; };
+		E9974DF70770749400206F68 /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = E9974DE90770749400206F68 /* main.h */; };
+		E9974DF80770749400206F68 /* play.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DEA0770749400206F68 /* play.cpp */; };
+		E9974DF90770749400206F68 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DEB0770749400206F68 /* record.cpp */; };
+		E9974E2D07707D1400206F68 /* prefix.h in Headers */ = {isa = PBXBuildFile; fileRef = E9974E2B07707D1400206F68 /* prefix.h */; };
+		E9974E59077084DA00206F68 /* xsample-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9974E58077084DA00206F68 /* xsample-Info.plist */; };
+		E9974E5B0770851500206F68 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFA0770750400206F68 /* MaxAPI.framework */; };
+		E9974E5C0770851700206F68 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFB0770750400206F68 /* MaxAudioAPI.framework */; };
+		E9974E5E0770852000206F68 /* prefix.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974E2B07707D1400206F68 /* prefix.h */; };
+		E9974E5F0770852000206F68 /* groove.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE50770749400206F68 /* groove.cpp */; };
+		E9974E600770852000206F68 /* inter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE60770749400206F68 /* inter.cpp */; };
+		E9974E610770852000206F68 /* inter.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE70770749400206F68 /* inter.h */; };
+		E9974E620770852000206F68 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE80770749400206F68 /* main.cpp */; };
+		E9974E630770852000206F68 /* main.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE90770749400206F68 /* main.h */; };
+		E9974E640770852000206F68 /* play.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DEA0770749400206F68 /* play.cpp */; };
+		E9974E650770852000206F68 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DEB0770749400206F68 /* record.cpp */; };
+		E9974EB007708BF700206F68 /* xsample.rsrc in Resources */ = {isa = PBXBuildFile; fileRef = E9974EAF07708BF700206F68 /* xsample.rsrc */; };
+		E9974EC607708D0C00206F68 /* xsample-objectmappings.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9974EC307708CED00206F68 /* xsample-objectmappings.txt */; };
+		E9F6F20B0DC4DB5400244EE5 /* prefix.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974E2B07707D1400206F68 /* prefix.h */; };
+		E9F6F20C0DC4DB5400244EE5 /* groove.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE50770749400206F68 /* groove.cpp */; };
+		E9F6F20D0DC4DB5400244EE5 /* inter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE60770749400206F68 /* inter.cpp */; };
+		E9F6F20E0DC4DB5400244EE5 /* inter.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE70770749400206F68 /* inter.h */; };
+		E9F6F20F0DC4DB5400244EE5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE80770749400206F68 /* main.cpp */; };
+		E9F6F2100DC4DB5400244EE5 /* main.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE90770749400206F68 /* main.h */; };
+		E9F6F2140DC4DB5400244EE5 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFB0770750400206F68 /* MaxAudioAPI.framework */; };
+		E9F6F2150DC4DB5400244EE5 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFA0770750400206F68 /* MaxAPI.framework */; };
+		E9F6F2160DC4DB5400244EE5 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98C3076078D948800EC0264 /* vecLib.framework */; };
+		E9F6F23C0DC4DC2800244EE5 /* prefix.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974E2B07707D1400206F68 /* prefix.h */; };
+		E9F6F23E0DC4DC2800244EE5 /* inter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE60770749400206F68 /* inter.cpp */; };
+		E9F6F23F0DC4DC2800244EE5 /* inter.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE70770749400206F68 /* inter.h */; };
+		E9F6F2400DC4DC2800244EE5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE80770749400206F68 /* main.cpp */; };
+		E9F6F2410DC4DC2800244EE5 /* main.h in Sources */ = {isa = PBXBuildFile; fileRef = E9974DE90770749400206F68 /* main.h */; };
+		E9F6F2430DC4DC2800244EE5 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9974DEB0770749400206F68 /* record.cpp */; };
+		E9F6F2450DC4DC2800244EE5 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFB0770750400206F68 /* MaxAudioAPI.framework */; };
+		E9F6F2460DC4DC2800244EE5 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFA0770750400206F68 /* MaxAPI.framework */; };
+		E9F6F2470DC4DC2800244EE5 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98C3076078D948800EC0264 /* vecLib.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E9974EC207708C9300206F68 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "/Library/Application Support/Cycling '74/init";
+			dstSubfolderSpec = 0;
+			files = (
+				E9974EC607708D0C00206F68 /* xsample-objectmappings.txt in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D2AAC09D05546B4700DB518D /* xsample.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = xsample.pd_darwin; sourceTree = BUILT_PRODUCTS_DIR; };
+		E98C3076078D948800EC0264 /* vecLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vecLib.framework; path = /System/Library/Frameworks/vecLib.framework; sourceTree = "<absolute>"; };
+		E9974DE50770749400206F68 /* groove.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = groove.cpp; path = source/groove.cpp; sourceTree = "<group>"; };
+		E9974DE60770749400206F68 /* inter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = inter.cpp; path = source/inter.cpp; sourceTree = "<group>"; };
+		E9974DE70770749400206F68 /* inter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = inter.h; path = source/inter.h; sourceTree = "<group>"; };
+		E9974DE80770749400206F68 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = source/main.cpp; sourceTree = "<group>"; };
+		E9974DE90770749400206F68 /* main.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = main.h; path = source/main.h; sourceTree = "<group>"; };
+		E9974DEA0770749400206F68 /* play.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = play.cpp; path = source/play.cpp; sourceTree = "<group>"; };
+		E9974DEB0770749400206F68 /* record.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = record.cpp; path = source/record.cpp; sourceTree = "<group>"; };
+		E9974DFA0770750400206F68 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
+		E9974DFB0770750400206F68 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = /Library/Frameworks/MaxAudioAPI.framework; sourceTree = "<absolute>"; };
+		E9974E2B07707D1400206F68 /* prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = prefix.h; path = source/prefix.h; sourceTree = "<group>"; };
+		E9974E53077083C700206F68 /* xsample.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xsample.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9974E58077084DA00206F68 /* xsample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = "xsample-Info.plist"; path = "source/xsample-Info.plist"; sourceTree = "<group>"; };
+		E9974EAF07708BF700206F68 /* xsample.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; name = xsample.rsrc; path = source/xsample.rsrc; sourceTree = "<group>"; };
+		E9974EC307708CED00206F68 /* xsample-objectmappings.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = "xsample-objectmappings.txt"; path = "maxmsp/xsample-objectmappings.txt"; sourceTree = "<group>"; };
+		E9F6F21D0DC4DB5400244EE5 /* xgroove~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xgroove~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9F6F21E0DC4DB5400244EE5 /* xgroove~-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "xgroove~-Info.plist"; path = "source/xgroove~-Info.plist"; sourceTree = "<group>"; };
+		E9F6F24E0DC4DC2800244EE5 /* xrecord~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xrecord~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9F6F24F0DC4DC2800244EE5 /* xrecord~-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "xrecord~-Info.plist"; path = "source/xrecord~-Info.plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC09B05546B4700DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98C3077078D948800EC0264 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974E51077083C700206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974E5C0770851700206F68 /* MaxAudioAPI.framework in Frameworks */,
+				E9974E5B0770851500206F68 /* MaxAPI.framework in Frameworks */,
+				E98C3078078D948800EC0264 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9F6F2130DC4DB5400244EE5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9F6F2140DC4DB5400244EE5 /* MaxAudioAPI.framework in Frameworks */,
+				E9F6F2150DC4DB5400244EE5 /* MaxAPI.framework in Frameworks */,
+				E9F6F2160DC4DB5400244EE5 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9F6F2440DC4DC2800244EE5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9F6F2450DC4DC2800244EE5 /* MaxAudioAPI.framework in Frameworks */,
+				E9F6F2460DC4DC2800244EE5 /* MaxAPI.framework in Frameworks */,
+				E9F6F2470DC4DC2800244EE5 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC09D05546B4700DB518D /* xsample.pd_darwin */,
+				E9974E53077083C700206F68 /* xsample.mxo */,
+				E9F6F21D0DC4DB5400244EE5 /* xgroove~.mxo */,
+				E9F6F24E0DC4DC2800244EE5 /* xrecord~.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* xsample */ = {
+			isa = PBXGroup;
+			children = (
+				E9974EC507708CFA00206F68 /* Max */,
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+			);
+			name = xsample;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E98C3076078D948800EC0264 /* vecLib.framework */,
+				E9974DFA0770750400206F68 /* MaxAPI.framework */,
+				E9974DFB0770750400206F68 /* MaxAudioAPI.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E9974E2B07707D1400206F68 /* prefix.h */,
+				E9974DE80770749400206F68 /* main.cpp */,
+				E9974DE90770749400206F68 /* main.h */,
+				E9974DE60770749400206F68 /* inter.cpp */,
+				E9974DE70770749400206F68 /* inter.h */,
+				E9974DE50770749400206F68 /* groove.cpp */,
+				E9974DEA0770749400206F68 /* play.cpp */,
+				E9974DEB0770749400206F68 /* record.cpp */,
+				E9974EAF07708BF700206F68 /* xsample.rsrc */,
+				E9974E58077084DA00206F68 /* xsample-Info.plist */,
+				E9F6F21E0DC4DB5400244EE5 /* xgroove~-Info.plist */,
+				E9F6F24F0DC4DC2800244EE5 /* xrecord~-Info.plist */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		E9974EC507708CFA00206F68 /* Max */ = {
+			isa = PBXGroup;
+			children = (
+				E9974EC307708CED00206F68 /* xsample-objectmappings.txt */,
+			);
+			name = Max;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC09905546B4700DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974DF50770749400206F68 /* inter.h in Headers */,
+				E9974DF70770749400206F68 /* main.h in Headers */,
+				E9974E2D07707D1400206F68 /* prefix.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC09C05546B4700DB518D /* xsample pd static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BC8A0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "xsample pd static" */;
+			buildPhases = (
+				D2AAC09905546B4700DB518D /* Headers */,
+				D2AAC09B05546B4700DB518D /* Frameworks */,
+				D2AAC09A05546B4700DB518D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xsample pd static";
+			productName = xsample;
+			productReference = D2AAC09D05546B4700DB518D /* xsample.pd_darwin */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		E9974E52077083C700206F68 /* xsample max static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BC8E0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "xsample max static" */;
+			buildPhases = (
+				E9974E4F077083C700206F68 /* Resources */,
+				E9974E50077083C700206F68 /* Sources */,
+				E9974E51077083C700206F68 /* Frameworks */,
+				E9974EC207708C9300206F68 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xsample max static";
+			productName = "Max xsample static";
+			productReference = E9974E53077083C700206F68 /* xsample.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		E9F6F2060DC4DB5400244EE5 /* xgroove~ max static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9F6F2190DC4DB5400244EE5 /* Build configuration list for PBXNativeTarget "xgroove~ max static" */;
+			buildPhases = (
+				E9F6F20A0DC4DB5400244EE5 /* Sources */,
+				E9F6F2130DC4DB5400244EE5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xgroove~ max static";
+			productName = "Max xsample static";
+			productReference = E9F6F21D0DC4DB5400244EE5 /* xgroove~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		E9F6F2370DC4DC2800244EE5 /* xrecord~ max static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9F6F24A0DC4DC2800244EE5 /* Build configuration list for PBXNativeTarget "xrecord~ max static" */;
+			buildPhases = (
+				E9F6F23B0DC4DC2800244EE5 /* Sources */,
+				E9F6F2440DC4DC2800244EE5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xrecord~ max static";
+			productName = "Max xsample static";
+			productReference = E9F6F24E0DC4DC2800244EE5 /* xrecord~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = E9A5BC920A33819900AD9F03 /* Build configuration list for PBXProject "xsample" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* xsample */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC09C05546B4700DB518D /* xsample pd static */,
+				E9974E52077083C700206F68 /* xsample max static */,
+				E9F6F2060DC4DB5400244EE5 /* xgroove~ max static */,
+				E9F6F2370DC4DC2800244EE5 /* xrecord~ max static */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E9974E4F077083C700206F68 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974E59077084DA00206F68 /* xsample-Info.plist in Resources */,
+				E9974EB007708BF700206F68 /* xsample.rsrc in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC09A05546B4700DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974DF30770749400206F68 /* groove.cpp in Sources */,
+				E9974DF40770749400206F68 /* inter.cpp in Sources */,
+				E9974DF60770749400206F68 /* main.cpp in Sources */,
+				E9974DF80770749400206F68 /* play.cpp in Sources */,
+				E9974DF90770749400206F68 /* record.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974E50077083C700206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974E5E0770852000206F68 /* prefix.h in Sources */,
+				E9974E5F0770852000206F68 /* groove.cpp in Sources */,
+				E9974E600770852000206F68 /* inter.cpp in Sources */,
+				E9974E610770852000206F68 /* inter.h in Sources */,
+				E9974E620770852000206F68 /* main.cpp in Sources */,
+				E9974E630770852000206F68 /* main.h in Sources */,
+				E9974E640770852000206F68 /* play.cpp in Sources */,
+				E9974E650770852000206F68 /* record.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9F6F20A0DC4DB5400244EE5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9F6F20B0DC4DB5400244EE5 /* prefix.h in Sources */,
+				E9F6F20C0DC4DB5400244EE5 /* groove.cpp in Sources */,
+				E9F6F20D0DC4DB5400244EE5 /* inter.cpp in Sources */,
+				E9F6F20E0DC4DB5400244EE5 /* inter.h in Sources */,
+				E9F6F20F0DC4DB5400244EE5 /* main.cpp in Sources */,
+				E9F6F2100DC4DB5400244EE5 /* main.h in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9F6F23B0DC4DC2800244EE5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9F6F23C0DC4DC2800244EE5 /* prefix.h in Sources */,
+				E9F6F23E0DC4DC2800244EE5 /* inter.cpp in Sources */,
+				E9F6F23F0DC4DC2800244EE5 /* inter.h in Sources */,
+				E9F6F2400DC4DC2800244EE5 /* main.cpp in Sources */,
+				E9F6F2410DC4DC2800244EE5 /* main.h in Sources */,
+				E9F6F2430DC4DC2800244EE5 /* record.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E9A5BC8B0A33819900AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PD-devel)/src",
+				);
+				INSTALL_PATH = "$(PD)/extra";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-lflext-pd_sd",
+					"-undefined",
+					dynamic_lookup,
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9A5BC8C0A33819900AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+				);
+				HEADER_SEARCH_PATHS = (
+					"/Applications/Pd-0.40-2.app/Contents/Resources/src",
+					/usr/local/include/flext,
+				);
+				INSTALL_PATH = /Applications/pdext;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-lflext-pd_s",
+					"-undefined",
+					dynamic_lookup,
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9A5BC8D0A33819900AD9F03 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=2";
+				HEADER_SEARCH_PATHS = (
+					"$(PDApp)/src",
+					"$(flext)/source",
+				);
+				INSTALL_PATH = "$(PD)/extra";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = (
+					"-bundle_loader",
+					"$(PDApp)/bin/pd",
+				);
+				PRODUCT_NAME = xsample;
+			};
+			name = Default;
+		};
+		E9A5BC8F0A33819900AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xsample-Info.plist";
+				INSTALL_PATH = "/Library/Application\\ Support/Cycling\\ '74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_sd";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = xsample;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9A5BC900A33819900AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = NO;
+				FLEXT_SYS = "1 NDEBUG FLEXT_USESIMD";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+				);
+				GCC_VERSION = 4.2;
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xsample-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling '74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_s";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = xsample;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9A5BC910A33819900AD9F03 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=1";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xsample-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = xsample;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Default;
+		};
+		E9A5BC930A33819900AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					FLEXT_USESIMD,
+				);
+				HEADER_SEARCH_PATHS = /usr/local/include/flext;
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+			};
+			name = Development;
+		};
+		E9A5BC940A33819900AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_FAST_MATH = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					FLEXT_USESIMD,
+				);
+				GCC_STRICT_ALIASING = YES;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = /usr/local/include/flext;
+				INSTALL_PATH = /Applications/pdext;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+			};
+			name = Deployment;
+		};
+		E9A5BC950A33819900AD9F03 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(flext)/source";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+			};
+			name = Default;
+		};
+		E9F6F21A0DC4DB5400244EE5 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					XGROOVE_STANDALONE,
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xgroove~-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_sd";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "xgroove~";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9F6F21B0DC4DB5400244EE5 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = YES;
+				FLEXT_SYS = "1 NDEBUG FLEXT_USESIMD";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					XGROOVE_STANDALONE,
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xgroove~-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_s";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "xgroove~";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9F6F21C0DC4DB5400244EE5 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=1";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xgroove~-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "xgroove~";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Default;
+		};
+		E9F6F24B0DC4DC2800244EE5 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					XRECORD_STANDALONE,
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xrecord~-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_sd";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "xrecord~";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9F6F24C0DC4DC2800244EE5 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COPY_PHASE_STRIP = YES;
+				FLEXT_SYS = "1 NDEBUG FLEXT_USESIMD";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/prefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					XRECORD_STANDALONE,
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xrecord~-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_s";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "xrecord~";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9F6F24D0DC4DC2800244EE5 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=1";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/xrecord~-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "xrecord~";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E9A5BC8A0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "xsample pd static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BC8B0A33819900AD9F03 /* Development */,
+				E9A5BC8C0A33819900AD9F03 /* Deployment */,
+				E9A5BC8D0A33819900AD9F03 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9A5BC8E0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "xsample max static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BC8F0A33819900AD9F03 /* Development */,
+				E9A5BC900A33819900AD9F03 /* Deployment */,
+				E9A5BC910A33819900AD9F03 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9A5BC920A33819900AD9F03 /* Build configuration list for PBXProject "xsample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BC930A33819900AD9F03 /* Development */,
+				E9A5BC940A33819900AD9F03 /* Deployment */,
+				E9A5BC950A33819900AD9F03 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9F6F2190DC4DB5400244EE5 /* Build configuration list for PBXNativeTarget "xgroove~ max static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9F6F21A0DC4DB5400244EE5 /* Development */,
+				E9F6F21B0DC4DB5400244EE5 /* Deployment */,
+				E9F6F21C0DC4DB5400244EE5 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9F6F24A0DC4DC2800244EE5 /* Build configuration list for PBXNativeTarget "xrecord~ max static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9F6F24B0DC4DC2800244EE5 /* Development */,
+				E9F6F24C0DC4DC2800244EE5 /* Deployment */,
+				E9F6F24D0DC4DC2800244EE5 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

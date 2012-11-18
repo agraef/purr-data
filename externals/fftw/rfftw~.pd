@@ -1,0 +1,10 @@
+#N canvas 0 0 450 300 10;
+#X obj 163 69 inlet~;
+#X obj 163 159 outlet~;
+#X obj 198 179 outlet~;
+#X obj 162 127 rfft~;
+#X text 1 29 fall-back abstraction when there is no libFFTW installed
+;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 1 2 0;

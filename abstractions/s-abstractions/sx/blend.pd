@@ -1,0 +1,17 @@
+#N canvas 0 0 450 300 10;
+#X msg 168 64 snap;
+#X obj 168 35 t b a;
+#X obj 168 11 inlet;
+#X obj 168 130 separator;
+#X obj 168 195 rectangle 6 3;
+#X obj 168 152 alpha 1;
+#X obj 168 97 pix_snap2tex 0 0 512 512;
+#X obj 168 174 colorRGB 1 1 1 0.5;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 1 1 6 0;
+#X connect 2 0 1 0;
+#X connect 3 0 5 0;
+#X connect 5 0 7 0;
+#X connect 6 0 3 0;
+#X connect 7 0 4 0;

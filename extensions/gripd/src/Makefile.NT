@@ -1,0 +1,86 @@
+!INCLUDE makefile
+
+current: all
+all: gripd.dll joystick.dll midi.dll
+
+PDNTCFLAGS = /W3 /WX /DNT /DPD /nologo
+
+PDNTINCLUDE = /I. /I\tcl\include /I$(PDNTSRCDIR) /I$(VC)\include
+JOYINCLUDE = /I$(PYTHONHOME)\include /I$(VC)\INCLUDE
+MIDIINCLUDE = /I$(PYTHONHOME)\include /I$(VC)\INCLUDE /I.\midiio\include
+PDNTLIB = $(VC)\lib\libc.lib \
+	$(VC)\lib\oldnames.lib \
+	$(VC)\lib\kernel32.lib \
+	$(VC)\lib\wsock32.lib \
+	$(VC)\lib\uuid.lib \
+	$(PDNTLDIR)\pd.lib
+JOYLIBS = $(VC)\LIB\kernel32.lib \
+	$(VC)\LIB\advapi32.lib \
+	$(VC)\LIB\user32.lib \
+	$(VC)\LIB\gdi32.lib \
+	$(VC)\LIB\libcmt.lib \
+	$(VC)\LIB\comdlg32.lib \
+	$(VC)\LIB\oldnames.lib \
+	$(VC)\LIB\winmm.lib \
+	$(VC)\LIB\winspool.lib \
+	$(PYTHONHOME)\libs\python$(PYTHONVER).lib
+MIDILIBS = midiio\lib\midiio.lib \
+	$(PYTHONHOME)\libs\python$(PYTHONVER).lib \
+	$(VC)\lib\kernel32.lib \
+	$(VC)\lib\advapi32.lib \
+	$(VC)\lib\user32.lib \
+	$(VC)\lib\gdi32.lib \
+	$(VC)\lib\comdlg32.lib \
+	$(VC)\lib\oldnames.lib \
+	$(VC)\lib\winmm.lib \
+	$(VC)\lib\winspool.lib
+JOYLOPT = -debug:full -debugtype:cv /NODEFAULTLIB /RELEASE /NOLOGO \
+	/MACHINE:IX86 -entry:_DllMainCRTStartup@12 -dll
+MIDILOPT = -debug:full -debugtype:cv /RELEASE /NOLOGO /NODEFAULTLIB:msvcrt.lib \
+	/MACHINE:IX86 -entry:_DllMainCRTStartup@12 -dll
+
+gripd.dll:
+	cl $(PDNTCFLAGS) $(PDNTINCLUDE) /c gripd.c
+	link /dll /export:gripd_setup gripd.obj $(PDNTLIB)
+	copy gripd.dll ..
+
+joystick.dll:
+!IF "$(JOYSTICK)" == "TRUE"
+	cl /TP /DNT /c $(JOYINCLUDE) joystick.c
+	cl /Z7 /Od /c /nologo /D__WIN32__ $(JOYINCLUDE) joystick_wrap.c
+	link $(JOYLOPT) -out:joystick.dll $(JOYLIBS) joystick_wrap.obj \
+                                                     joystick.obj
+	copy joystick.dll ..
+!ENDIF
+	echo joystick = $(JOYSTICK) > ..\gripd.opt
+        
+midi.dll:
+!IF "$(MIDI)" == "TRUE"
+	nmake -f Makefile.midiioLibrary.NT
+	cl /DVISUAL /TP /DNT /c /GX $(MIDIINCLUDE) midi.cpp
+	cl /TP /DVISUAL /Z7 /Od /c /nologo /D__WIN32__ $(MIDIINCLUDE) midi_wrap.c
+	link $(MIDILOPT) -out:midi.dll $(MIDILIBS) midi_wrap.obj midi.obj
+	copy midi.dll ..
+!ENDIF
+	echo midi = $(MIDI) >> ..\gripd.opt
+        
+nt_clean:
+	del gripd.obj
+	del gripd.exp
+	del gripd.lib
+	del joystick.pdb
+	del joystick.obj
+	del joystick.lib
+	del joystick.exp
+	del joystick_wrap.obj
+	del midi.pdb
+	del midi.obj
+	del midi.lib
+	del midi.exp
+	del midi_wrap.obj
+	del gripd.dll
+	del joystick.dll
+	del midi.dll
+	nmake -f Makefile.midiioLibrary.NT CLEAN
+
+

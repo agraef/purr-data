@@ -1,0 +1,8 @@
+#N canvas 0 0 450 300 10;
+#X obj 103 97 p;
+#X floatatom 103 76 5 0 0 0 - - -;
+#X floatatom 145 77 5 0 0 0 - - -;
+#X obj 145 98 p foo;
+#X text 100 20 p is a shortcut to print;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;

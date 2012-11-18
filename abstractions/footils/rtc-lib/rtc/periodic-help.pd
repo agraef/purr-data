@@ -1,0 +1,62 @@
+#N canvas 222 211 647 533 10;
+#X obj 153 255 bng 15 250 50 1 empty empty reset 0 -6 0 8 -261689 -1
+-1;
+#X msg 42 316;
+#X obj 42 270 collect;
+#X text 27 -26 periodic;
+#X text 27 6 Random number generator. The periodicity factor (float
+between 0 and 1) determines the "periodicity" of the output \, i.e.
+the probability of repetitions. A periodicity factor of 1 will result
+in a completely periodic output (= constant repetition of a single
+value) \, whereas a periodicity factor of 0 will result into a completely
+unperiodic behaviour.;
+#X obj 42 206 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 92 205 0 0 0 2 upper_limit - -;
+#X floatatom 142 205 0 0 0 0 - - -;
+#X text 185 437 1995-98 by Karlheinz Essl;
+#X text 144 -12 vs. 1.1;
+#X obj 42 246 periodic 10 0.5;
+#X obj 42 374 list prepend 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array \$0-period 67 float 0;
+#X coords 0 10 66 -1 300 100 1;
+#X restore 301 159 graph;
+#X obj 42 410 s \$0-period;
+#X msg 153 374 const 0;
+#X obj 142 121 vsl 15 64 0 1 0 0 empty empty periodicity_factor 0 -8
+0 8 -262144 -1 -1 0 1;
+#X obj 42 174 until;
+#X obj 42 150 t a b;
+#X text 600 245 - 0;
+#X text 601 154 - 10;
+#X obj 42 290 t b a;
+#X msg 42 115 67;
+#X obj 483 314 tabosc4~ \$0-period;
+#X floatatom 483 295 5 0 0 0 - - -;
+#X obj 483 336 -~ 5;
+#X obj 482 390 dac~;
+#X obj 482 360 *~ 0.01;
+#X text 185 453 vs. 1.1: seedable by the RTC-seed object;
+#X connect 0 0 2 1;
+#X connect 0 0 14 0;
+#X connect 1 0 11 0;
+#X connect 2 0 20 0;
+#X connect 5 0 10 0;
+#X connect 6 0 10 1;
+#X connect 7 0 10 2;
+#X connect 10 0 2 0;
+#X connect 11 0 13 0;
+#X connect 14 0 13 0;
+#X connect 15 0 7 0;
+#X connect 16 0 10 0;
+#X connect 17 0 16 0;
+#X connect 17 1 0 0;
+#X connect 20 0 1 0;
+#X connect 20 1 1 0;
+#X connect 21 0 17 0;
+#X connect 22 0 24 0;
+#X connect 23 0 22 0;
+#X connect 24 0 26 0;
+#X connect 26 0 25 1;
+#X connect 26 0 25 0;

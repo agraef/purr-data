@@ -1,0 +1,28 @@
+flashserver 0.2 - Pure Data server external for Flash clients
+copyright (c) 2002 - 2003 by Olaf Matthes
+
+flashserver is a server external for pd (by Miller Puckette). It allows 
+multiple Flash clients to connect to it and to communicate with Pd in both 
+directions. It can be used to control Pd using one or more  Flash frontends 
+over the internet.
+
+This object has been inspired by work done by 
+Eric Skogen (http://www.audionerd.com/) and 
+Oliver Thuns (http://www.radiostudio.org/streaps/).
+It is based on my netserver object which is part of the maxlib library for
+Pd (http://www.akustische-kunst.org/puredata/maxlib/).
+
+flashserver supports the FUDI and the XML protocol. Have a look at the Flash
+files to see how data transfer works. Flash version 5.0 or later is required.
+
+KNOWN BUG:
+In case the other end (i.e. the Flash client) drops the connection flashserver
+only recognises this when it attempts to send data to that client. It then 
+kicks the client. Otherwise the client would remain there forever. Thus it is
+a good idea to sporadically send data back (even if not needed) just to see if
+clients are still alive!
+
+
+flashserver is published under GPL terms. See file LICENSE for details.
+Get latest version at http://www.akustische-kunst.org/puredata/flash/
+Send bugs to info@akustische-kunst.org

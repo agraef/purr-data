@@ -1,0 +1,36 @@
+#N canvas 71 124 523 398 10;
+#X obj 85 210 hradio 15 1 0 8 empty empty POS_(zero-based) 0 -6 0 8
+-262144 -1 -1 0;
+#X floatatom 85 230 5 0 0 0 - - -;
+#X msg 49 180 0 1 2 3 4;
+#X text 36 65 Negative POS counts from the end of the list.;
+#X floatatom 121 259 5 0 0 1 how_many - -;
+#X msg 293 190 0 1 2 3 4;
+#X text 322 231 arguments: <pos> <bodycount>;
+#X text 38 99 Arguments;
+#X text 51 122 1: Default POS to delete.;
+#X floatatom 343 259 5 0 0 0 - - -;
+#X floatatom 393 260 5 0 0 0 - - -;
+#X obj 49 278 list-extract;
+#X obj 293 279 list-extract 2 3;
+#X text 51 143 2: How many items to extract (cannot be less than 1)
+;
+#X obj 49 328 print extracted;
+#X obj 118 306 print remaining;
+#X text 35 26 list-extract: grab NUM elements at position POS from
+list \, and output the remaining items from the right outlet.;
+#X obj 293 328 print extracted;
+#X obj 386 306 print remaining;
+#X text 273 357 2009 Luke Iannini;
+#X text 273 374 Helpfile based on list-delete by fbar;
+#X connect 0 0 1 0;
+#X connect 1 0 11 1;
+#X connect 2 0 11 0;
+#X connect 4 0 11 2;
+#X connect 5 0 12 0;
+#X connect 9 0 12 1;
+#X connect 10 0 12 2;
+#X connect 11 0 14 0;
+#X connect 11 1 15 0;
+#X connect 12 0 17 0;
+#X connect 12 1 18 0;

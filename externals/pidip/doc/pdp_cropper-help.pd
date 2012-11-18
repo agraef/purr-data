@@ -1,0 +1,64 @@
+#N canvas 237 21 712 664 10;
+#X obj 217 367 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 150 62 open \$1;
+#X obj 149 38 openpanel;
+#X obj 134 21 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 257 135 metro 70;
+#X obj 252 167 pdp_yqt;
+#X obj 369 162 pdp_v4l;
+#X obj 378 131 metro 70;
+#X obj 423 97 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 380 98 stop;
+#X msg 465 129 open /dev/video;
+#X obj 414 352 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 414 404 pdp_control;
+#X msg 414 377 thread \$1;
+#X floatatom 414 465 5 0 0 0 - - -;
+#X obj 414 436 route pdp_drop;
+#X obj 217 299 pdp_cropper;
+#X text 187 505 pdp_cropper : crop a video;
+#X text 185 520 ( useful for cut and paste : see the cutandpaste.pd
+patch );
+#X text 186 534 written by Yves Degoyon ( ydegoyon@free.fr );
+#X floatatom 378 218 5 0 0 0 - - -;
+#X text 387 201 X1;
+#X floatatom 423 217 5 0 0 0 - - -;
+#X text 432 200 X2;
+#X floatatom 337 239 5 0 0 0 - - -;
+#X text 315 239 Y1;
+#X floatatom 338 259 5 0 0 0 - - -;
+#X text 316 259 Y2;
+#X connect 1 0 9 0;
+#X connect 2 0 10 0;
+#X connect 3 0 2 0;
+#X connect 4 0 10 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 9 1;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 21 0;
+#X connect 11 0 21 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 0;
+#X connect 16 0 18 0;
+#X connect 17 0 20 0;
+#X connect 18 0 17 0;
+#X connect 20 0 19 0;
+#X connect 21 0 0 0;
+#X connect 25 0 21 1;
+#X connect 27 0 21 2;
+#X connect 29 0 21 3;
+#X connect 31 0 21 4;

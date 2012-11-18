@@ -1,0 +1,42 @@
+#N canvas 535 182 419 359 10;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_envelope.png
+;
+#X obj 141 91 loadbang;
+#X msg 141 114 open @pd_extra/K12/objects/signal_envelope.png;
+#X obj 59 370 vline~;
+#X obj 99 203 hsl 78 19 5 2000 0 0 \$0-s-null \$0-r-null attack 21
+10 0 10 -262144 -1 -1 0 1;
+#X text 97 186 short;
+#X text 156 185 long;
+#X obj 99 225 hsl 78 19 5 2000 0 0 \$0-s-null \$0-r-null decay 24 9
+0 10 -262144 -1 -1 0 1;
+#X obj 59 327 pack 0 0 0;
+#X obj 59 226 sel 1;
+#X obj 59 128 inlet;
+#X obj 14 412 outlet~;
+#X obj 14 391 *~;
+#X obj 14 128 inlet~;
+#X msg 59 348 0 \, 1 \$2 \, 0 \$3 \$2;
+#X obj 204 174 preset_node k12;
+#X obj 204 150 preset_node k12;
+#X obj 99 70 loadbang;
+#X obj 99 91 t b b;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 12 1;
+#X connect 4 0 8 1;
+#X connect 4 0 16 0;
+#X connect 7 0 8 2;
+#X connect 7 0 15 0;
+#X connect 8 0 14 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 3 0;
+#X connect 15 0 7 0;
+#X connect 16 0 4 0;
+#X connect 17 0 18 0;
+#X connect 18 0 4 0;
+#X connect 18 1 7 0;
+#X coords 0 -1 1 1 89 89 2 96 173;

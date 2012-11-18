@@ -1,0 +1,33 @@
+#N canvas 481 289 510 411 10;
+#X obj 64 126 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 113 203 5 0 0 0 - - -;
+#X floatatom 238 141 5 0 0 0 - - -;
+#X floatatom 178 130 5 0 0 0 - - -;
+#X floatatom 127 88 5 0 0 0 - - -;
+#X text 171 110 Beat multiplier (default 1).;
+#X text 275 138 Divisions of a whole note (default 16).;
+#X text 128 70 Tempo in beats per minute (default 120).;
+#X text 44 107 Start/Stop;
+#X obj 113 229 hradio 15 1 0 16 empty empty empty 0 -6 0 8 -262144
+-1 -1 0;
+#X msg 261 156 8;
+#X msg 270 179 16;
+#X obj 117 268 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 118 318 hradio 15 1 0 16 empty empty empty 0 -6 0 8 -262144
+-1 -1 0;
+#X obj 113 173 timing.tempo 120 1 8;
+#X obj 118 294 timing.tempo;
+#X text 65 22 Comment: A clone of the Max/Msp object.;
+#X text 63 2 Description: A tempo generator.;
+#X connect 0 0 14 0;
+#X connect 1 0 9 0;
+#X connect 2 0 14 3;
+#X connect 3 0 14 2;
+#X connect 4 0 14 1;
+#X connect 10 0 14 3;
+#X connect 11 0 14 3;
+#X connect 12 0 15 0;
+#X connect 14 0 1 0;
+#X connect 15 0 13 0;

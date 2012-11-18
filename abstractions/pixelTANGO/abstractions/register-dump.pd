@@ -1,0 +1,16 @@
+#N canvas 599 155 280 253 10;
+#X msg 24 51 getrec;
+#X obj 24 88 pool register;
+#X obj 45 187 print pt.register;
+#X obj 67 112 prepend Directory;
+#X obj 45 134 prepend Key;
+#X obj 24 157 prepend Value;
+#X obj 24 28 inlet;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 1 1 4 0;
+#X connect 1 2 3 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 0 0;

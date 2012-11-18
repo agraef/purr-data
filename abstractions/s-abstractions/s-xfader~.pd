@@ -1,0 +1,28 @@
+#N canvas 422 332 450 300 10;
+#X obj 8 29 hsl 64 16 0 127 0 0 \$0-fader \$0-fader fader -2 -6 0 8
+-260818 -1 -1 30 1;
+#X obj 216 43 inlet~;
+#X obj 292 42 inlet~;
+#X obj 217 157 *~;
+#X obj 293 151 *~;
+#X obj 233 135 * -1;
+#X obj 276 237 outlet~;
+#X obj 280 209 +~;
+#X obj 233 111 - 1;
+#X obj 309 89 / 127;
+#X obj 233 89 / 127;
+#X obj 309 66 r \$0-fader;
+#X obj 233 66 r \$0-fader;
+#X obj 6 253 s-connect \$1-fader \$0-fader;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 5 0 3 1;
+#X connect 7 0 6 0;
+#X connect 8 0 5 0;
+#X connect 9 0 4 1;
+#X connect 10 0 8 0;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
+#X coords 0 0 1 1 90 50 1 0 0;

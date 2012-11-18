@@ -1,0 +1,6 @@
+#N canvas 151 173 450 300 10;
+#X text 9 10 s-midibuddy is the all round nice-guy for helping you
+manage your midi devices. SSSAD enabled \, you can train a s-midibuddy
+instance once \, SSSAD save it \, and then forget about it - it will
+recall the correct midi listening configuration next time.;
+#X obj 132 155 s-midictlbuddy;

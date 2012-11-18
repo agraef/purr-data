@@ -1,0 +1,99 @@
+#N canvas 205 58 722 694 10;
+#X obj 177 20 cnv 15 450 25 empty empty empty 10 12 1 12 -1 -262144
+0;
+#X obj 174 17 cnv 15 450 25 empty empty empty 10 12 1 12 -176779 -262144
+0;
+#X obj 171 14 cnv 15 450 25 empty empty sssad_-_Stupidsupersimplistic-State-Saving_ADVANCED
+10 12 1 12 -258699 -262144 0;
+#X text 170 73 [sssad] is used for saving and restoring state data
+spread around in a patch to a textfile composed of "tagged" messages.
+;
+#X obj 32 77 sssad key;
+#N canvas 489 130 587 611 SSAD-globals 0;
+#X obj 24 25 r SSSAD;
+#X obj 24 49 spigot;
+#X obj 72 47 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 24 71 print SSSAD;
+#X obj 22 316 spigot;
+#X obj 70 314 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 22 292 r SSSAD_ADMIN;
+#X obj 22 338 print SSSAD_ADMIN;
+#X text 137 289 SSSAD_ADMIN is used to send administrative messages
+to all [sssad] objects.;
+#X obj 23 554 s SSSAD_ADMIN;
+#X msg 23 464 save;
+#X msg 23 415 set;
+#X text 21 375 SSSAD_ADMIN accepts the following meta-messages:;
+#X text 134 414 set: make all [sssad] objects output their current
+values to their outlets.;
+#X text 134 464 save: let exactly one [ssssad] object per tag-key send
+a message composed of the word "persist" \, the current tag-key and
+the values to the receiver called SSSAD_ADMIN.;
+#X text 135 514 You may use this to save key/value-data to a [textfile].
+;
+#X obj 23 145 s SSSAD;
+#X msg 23 120 key 5 6 7 8;
+#X obj 24 198 s SSSAD;
+#X msg 24 173 list key a b c;
+#X text 137 118 It is possible to remotely set a sssad-value through
+the SSSAD-receiver;
+#X text 135 40 SSSAD is a bus where the current sssad-data is communicated
+between [sssad] instances:;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X connect 4 0 7 0;
+#X connect 5 0 4 1;
+#X connect 6 0 4 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 17 0 16 0;
+#X connect 19 0 18 0;
+#X restore 28 562 pd SSAD-globals;
+#X text 172 233 Using [ssssad];
+#X text 171 247 ==============;
+#X text 173 274 Using [ssssad] is very simple: [sssad] requires an
+obligatory argument to name the key to store data at.;
+#X text 169 321 The left inlet will accept a bang and make [sssad]
+output the value currently stored at the key used in this [sssad].
+;
+#X obj 29 238 sssad key;
+#X floatatom 87 211 5 0 0 0 - - -;
+#X msg 29 212 bang;
+#X obj 29 322 sssad key;
+#X msg 29 296 bang;
+#X symbolatom 87 297 10 0 0 0 - - -;
+#X obj 29 423 sssad key;
+#X obj 29 400 t b a;
+#X msg 29 375 1 2 3 4;
+#X obj 29 264 print @key_1;
+#X obj 29 349 print @key_2;
+#X obj 29 450 print @key_3;
+#X text 171 358 The right inlet will accept anything and will store
+that anything in all [sssad] objects of the same key. The right inlet
+is *cold* and will not generate any output. Use a [trigger bang anything]
+if you want direct output.;
+#X obj 29 524 r SSSAD_ADMIN;
+#X obj 30 500 r SSSAD;
+#X text 173 498 [sssad] uses two global senders and receivers \, which
+you can intercept to use for saving data to a file: SSSAD and SSSAD_ADMIN.
+;
+#X text 173 563 Detailed explanation inside.;
+#X obj 29 634 sssad-example;
+#X text 170 130 A tagged message in this context is a list-message
+of elements whose first element denotes the key of the data \, while
+the rest of the message are the values stored under that key.;
+#X text 174 632 See [sssad-example] to get inspired for how to use
+[sssad] in real life.;
+#X connect 10 0 19 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 0;
+#X connect 13 0 20 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 1;
+#X connect 16 0 21 0;
+#X connect 17 0 16 0;
+#X connect 17 1 16 1;
+#X connect 18 0 17 0;

@@ -1,0 +1,24 @@
+#N canvas 167 267 525 297 10;
+#X msg 27 97 bang;
+#X floatatom 75 164 5 0 0 0 - - -;
+#X floatatom 75 72 5 1 100 0 - - -;
+#X floatatom 203 76 5 0 99 0 - - -;
+#X obj 75 135 modulo_counter 10 5;
+#X text 261 195 (optional) default 0;
+#X text 161 182 2.arg: <float> initial-value (0 .. max - 1);
+#X text 161 168 1.arg: <float> maximum;
+#X text 36 54 <float> maximum;
+#X text 202 56 <float> initial-value (0 .. max - 1);
+#X text 115 238 IEM KUG;
+#X text 99 226 musil;
+#X text 129 226 @;
+#X text 135 226 iem.at;
+#X text 50 215 (c) Thomas Musil 2000 - 2005;
+#X text 98 248 Graz \, Austria;
+#X text 13 12 modulo_counter;
+#X text 137 11 increments counter-number from 0 to max-1 by a bang
+;
+#X connect 0 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 1;
+#X connect 4 0 1 0;

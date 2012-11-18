@@ -1,0 +1,13 @@
+#N canvas 632 290 450 300 10;
+#X obj 9 71 s-serialize;
+#X text 9 7 Takes a list and serialises it (outputs one value from
+the list every time it's banged.;
+#X msg 81 47 10 9 8 7 hello mr pants 3 2 1;
+#X obj 9 100 print;
+#X obj 81 96 print done;
+#X obj 9 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1 -1
+;
+#X connect 0 0 3 0;
+#X connect 0 1 4 0;
+#X connect 2 0 0 1;
+#X connect 5 0 0 0;

@@ -1,0 +1,7 @@
+#N canvas 0 0 450 300 10;
+#X obj 6 8 sx/gemwin;
+#X obj 101 9 gemhead 99;
+#X obj 101 32 sx/props;
+#X obj 101 141 sx/vibber;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;

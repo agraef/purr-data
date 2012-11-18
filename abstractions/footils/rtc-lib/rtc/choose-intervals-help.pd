@@ -1,0 +1,110 @@
+#N canvas 3 48 619 394 10;
+#X obj 95 241 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X text 29 312 1993-99 by Karlheinz Essl;
+#X msg 293 23 Harmony;
+#X text 28 138 see also:;
+#X text 28 66 Chooses a supply between one to five different intervals.
+This set fullfills certain requirements: the sum of the chosen intervals
+will never be an octave \, any pairs of intervals of that supply will
+never be an octave and there will never occur diminished chords from
+these intervals.;
+#X text 28 34 choose-intervals;
+#X text 201 232 flashes when the sum of the chosen intervals would
+have been an octave;
+#X obj 176 240 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 176 176 4 0 0 0 - - -;
+#X obj 55 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 55 274 5 -4 -2 -5;
+#X obj 55 240 show;
+#X obj 55 205 choose-intervals 1;
+#N canvas 231 94 569 441 musical-example 0;
+#X obj 49 59 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 84 66 start / stop;
+#X obj 49 285 pitch2note;
+#X floatatom 49 320 0 0 0 0 - - -;
+#X text 274 253 register;
+#X floatatom 243 252 0 0 0 0 - - -;
+#X obj 243 216 brownian 2 9 0.25;
+#X floatatom 357 185 0 0 0 0 - - -;
+#X text 391 182 brown factor;
+#X msg 173 102 3;
+#X text 279 132 chosen intervals;
+#X msg 246 153 -6 -1 -4;
+#X obj 219 29 loadbang;
+#X obj 219 58 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 240 54 new interval selection;
+#X text 367 76 number of intervals;
+#X floatatom 340 74 0 0 0 0 - - -;
+#X obj 49 100 metro 250;
+#X obj 246 133 show;
+#X text 60 117 rhythm bangs;
+#X obj 49 351 play2 127 500 0 1;
+#X text 96 321 note;
+#X obj 49 132 t b b;
+#X obj 219 100 choose-intervals 3;
+#N canvas 0 0 738 528 sel-princ 0;
+#X msg 184 218 1 alea;
+#X msg 184 237 2 series;
+#X msg 184 257 3 sequence;
+#X msg 184 279 4 rota;
+#X obj 184 308 list split 1;
+#X symbolatom 107 142 10 0 0 0 - - -;
+#X obj 107 127 hradio 15 1 0 4 empty empty sel-princ 0 -6 0 8 -262144
+-1 -1 2;
+#X obj 185 335 outlet;
+#X obj 194 129 + 1;
+#X obj 141 160 select 1 2 3 4;
+#X obj 244 66 inlet;
+#X obj 238 95 - 1;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 4 1 5 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 9 1 1 0;
+#X connect 9 2 2 0;
+#X connect 9 3 3 0;
+#X connect 10 0 11 0;
+#X connect 11 0 6 0;
+#X coords 0 -1 1 1 85 60 1 100 100;
+#X restore 123 140 pd sel-princ;
+#X obj 49 216 pitch-from-intervals 3;
+#X connect 0 0 17 0;
+#X connect 2 0 3 0;
+#X connect 3 0 20 0;
+#X connect 5 0 2 1;
+#X connect 6 0 5 0;
+#X connect 7 0 6 3;
+#X connect 9 0 24 0;
+#X connect 12 0 13 0;
+#X connect 13 0 9 0;
+#X connect 13 0 23 0;
+#X connect 16 0 23 1;
+#X connect 17 0 22 0;
+#X connect 18 0 11 0;
+#X connect 22 0 25 0;
+#X connect 22 1 6 0;
+#X connect 23 0 18 0;
+#X connect 23 0 25 2;
+#X connect 24 0 25 1;
+#X connect 25 0 2 0;
+#X restore 94 135 pd musical-example;
+#X text 215 174 number of intervals to be chosen;
+#X text 248 46 vs. 1.1;
+#X text 76 177 generate!;
+#X text 230 135 << click;
+#X connect 0 0 11 1;
+#X connect 8 0 12 1;
+#X connect 9 0 12 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 12 1 7 0;

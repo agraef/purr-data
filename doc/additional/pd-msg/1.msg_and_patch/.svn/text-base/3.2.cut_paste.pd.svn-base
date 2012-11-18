@@ -1,0 +1,55 @@
+#N canvas 0 18 425 489 10;
+#N canvas 438 18 368 330 testing 1;
+#X obj 95 10 loadbang;
+#X msg 95 35 0;
+#X obj 12 37 random 127;
+#X floatatom 68 91 0 0 0 0 - - -;
+#X msg 12 11 bang;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;
+#X restore 315 409 pd testing;
+#X obj 20 438 s pd-testing;
+#X obj 248 211 pack f f;
+#X text 7 40 Start here;
+#X floatatom 279 149 0 0 0 0 - - -;
+#X floatatom 248 148 0 0 0 0 - - -;
+#X obj 259 183 t b f;
+#X text 38 355 Stop here;
+#X text 17 11 This example will show you how to use the motion msg.
+;
+#X msg 194 307 cut;
+#X msg 194 333 duplicate;
+#X text 50 81 show and select what's in the patch;
+#X text 171 409 close all;
+#X text 231 306 you can try thoses too.;
+#X msg 248 235 motion \$1 \$2 0;
+#X msg 20 60 vis 1 \, editmode 1 \, mouse 5 5 0 0 \, mouseup 200 200
+0;
+#X msg 194 359 selectall;
+#X msg 40 389 motion 15 15 0 \, editmode 0 \, vis 0;
+#X msg 37 146 copy \, paste \, mouse 25 25 0 0;
+#X text 50 125 and then here to copy \, paste ... and move;
+#N canvas 458 158 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 64 DESCRIPTION simulating mouse selections and cut \, copy
+\, and paste by sending messages to a canvas;
+#X text 12 42 LICENSE public domain;
+#X restore 373 458 pd META;
+#X connect 2 0 14 0;
+#X connect 4 0 6 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 6 1 2 1;
+#X connect 9 0 1 0;
+#X connect 10 0 1 0;
+#X connect 14 0 1 0;
+#X connect 15 0 1 0;
+#X connect 16 0 1 0;
+#X connect 17 0 1 0;
+#X connect 18 0 1 0;

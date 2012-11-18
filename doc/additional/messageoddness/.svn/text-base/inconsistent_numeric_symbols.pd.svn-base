@@ -1,0 +1,46 @@
+#N canvas 279 119 474 393 10;
+#X obj 82 96 makefilename %c;
+#X msg 81 75 55;
+#X floatatom 142 303 5 0 0 0 - - -;
+#X symbolatom 190 302 10 0 0 0 - - -;
+#X obj 95 323 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
+-1;
+#X obj 95 279 route bang float symbol list;
+#X obj 142 323 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 190 323 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 238 323 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 286 323 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
+-1 -1;
+#X text 195 93 makes a symbol of the ascii char '7';
+#X msg 108 136 symbol 7;
+#X msg 132 222 7;
+#X obj 132 243 symbol;
+#X text 184 243 makes a symbol of the word 'float';
+#X obj 31 279 print;
+#X obj 124 176 symbol 7;
+#X msg 123 157 bang;
+#X text 197 157 these both make a blank symbol;
+#X text 11 11 All of these create a symbol \, but they create totally
+different symbols. It seems that only [makefilename] does the correct
+thing.;
+#X connect 0 0 5 0;
+#X connect 0 0 15 0;
+#X connect 1 0 0 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 5 0 4 0;
+#X connect 5 1 2 0;
+#X connect 5 2 3 0;
+#X connect 5 3 8 0;
+#X connect 5 4 9 0;
+#X connect 11 0 5 0;
+#X connect 11 0 15 0;
+#X connect 12 0 13 0;
+#X connect 13 0 5 0;
+#X connect 13 0 15 0;
+#X connect 16 0 5 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;

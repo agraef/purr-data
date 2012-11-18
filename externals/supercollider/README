@@ -1,0 +1,45 @@
+
+
+Here are some programs and stuff to make using SuperCollider more
+convenient to use within PD.
+
+If you have never used SuperCollider together with PD before, here
+is a quick start:
+
+-Go to supercollider.sf.net and install supercollider. Make sure
+ you get it to work.
+
+-Replace the linux/extMain.sc file with the one in this directory.
+ Usually found in /usr/share/supercollider/linux/ or something.
+ The standard distribution of the supercollider language does this
+ crazy thing about shutting down the server. Stop that madness.
+
+-Go to the k_sc~ directory and compile up the k_sc~ external.
+ This external automates the jack routing so that you get the
+ jack output from the supercollider server into an object called
+ "sc_in~". There is also an object called "sc_from~" that sends
+ audio signals to the jack input on the supercollider server.
+
+-Go to the python directory, and copy the files in there to
+ your python site-packages directory. Usually placed here:
+ /usr/lib/python2.x/site-packages/
+
+-Change directory to the example directory and try to run the
+ help-sc.pd patch. Make sure you have at least PD v0.37, and
+ the latest version of the pyext external. (Earlier versions
+ than cvs from 22.2.2004 should not be used.)
+
+
+If you have a general questions (compiling it up, error messages),
+don't ask me directly; ask on the pd-list or on the supercollider 
+list.
+
+
+
+Enjoy!
+
+Kjetil S. Matheussen
+k.s.matheussen@notam02.no
+
+
+

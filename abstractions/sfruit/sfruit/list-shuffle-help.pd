@@ -1,0 +1,12 @@
+#N canvas 0 22 408 277 10;
+#X obj 50 108 list-shuffle;
+#X msg 50 71 a b c d e f g h i j k l m n o p q r s t u v w x y z;
+#X obj 50 134 prepent set;
+#X msg 50 173;
+#X text 30 17 list-shuffle: reorder the incoming list in a random fashion
+;
+#X text 28 33 (see list-sample to grab just a few items randomly);
+#X text 251 241 2008 Luke Iannini;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;

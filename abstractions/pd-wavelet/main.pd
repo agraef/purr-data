@@ -1,0 +1,686 @@
+#N canvas 0 0 927 271 10;
+#X obj 9 11 cnv 15 500 230 empty empty controls 195 15 0 16 -233017
+-260818 0;
+#X obj 360 105 nbx 15 14 -1e+37 1e+37 0 0 empty nsamples nsamples 0
+-6 0 9 -166441 -260818 -99865 0 256;
+#X obj 360 136 nbx 15 14 -1e+37 1e+37 0 0 empty nblocks nblocks 0 -6
+0 9 -166441 -260818 -99865 0 256;
+#X obj 361 186 hradio 15 1 0 6 wavelet_type wavelet_type wavelet_type
+3 -7 0 9 -166441 -260818 -99865 3;
+#X symbolatom 354 206 23 0 0 0 - wavelet_symbol -;
+#X obj 128 73 vsl 24 125 1 100 0 0 gain gain gain -1 -8 0 9 -166441
+-260818 -99865 11774 0;
+#X obj 123 204 nbx 3 16 -1e+37 1e+37 0 0 empty gain empty 0 -6 0 9
+-166441 -260818 -1 95 256;
+#X obj 360 73 nbx 15 14 -1e+37 1e+37 0 0 empty duration duration(sg)
+0 -6 0 9 -166441 -260818 -99865 0 256;
+#X obj 198 119 bng 30 250 50 0 loadfile empty load_file -16 -7 0 9
+-166441 -260818 -1;
+#X obj 198 191 bng 30 250 50 0 on_bang empty on_bang -9 -7 0 9 -260818
+-166441 -1;
+#X obj 521 11 cnv 15 390 230 empty empty program 155 15 0 16 -233017
+-260818 0;
+#N canvas 504 52 324 510 index2level 0;
+#X obj 151 283 t f f;
+#X obj 176 309 * 0.5;
+#X text 187 257 jump;
+#X text 190 282 init;
+#X obj 55 235 -;
+#X text 86 259 end;
+#X obj 55 338 *;
+#X obj 55 364 +;
+#X obj 55 389 t b f;
+#X obj 26 439 f;
+#X obj 55 283 t b f;
+#X obj 39 418 + 1;
+#X obj 230 283 t f f;
+#X obj 26 471 tabwrite index2level;
+#X obj 151 259 pow2;
+#X obj 55 259 pow2;
+#X obj 191 470 table index2level;
+#X msg 143 141 \; index2level resize 2048 \;;
+#X obj 39 52 loadbang;
+#X msg 55 211 11 \$1;
+#X obj 39 74 t b b;
+#X obj 39 120 t b f;
+#X msg 230 259 0;
+#X obj 39 184 t f f f b;
+#X msg 39 97 12;
+#X text 15 9 generate a table which relate each dwtcoef index;
+#X text 99 21 and its related level;
+#X obj 55 310 until_counter;
+#X obj 39 149 until_counter;
+#X connect 0 0 6 1;
+#X connect 0 1 1 0;
+#X connect 1 0 7 1;
+#X connect 4 0 15 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 1 13 1;
+#X connect 9 0 13 0;
+#X connect 10 0 27 0;
+#X connect 10 1 27 1;
+#X connect 11 0 9 1;
+#X connect 12 0 13 0;
+#X connect 12 1 13 1;
+#X connect 14 0 0 0;
+#X connect 15 0 10 0;
+#X connect 18 0 20 0;
+#X connect 19 0 4 0;
+#X connect 20 0 24 0;
+#X connect 20 1 17 0;
+#X connect 21 0 28 0;
+#X connect 21 1 28 1;
+#X connect 22 0 12 0;
+#X connect 23 0 11 0;
+#X connect 23 1 19 0;
+#X connect 23 2 14 0;
+#X connect 23 3 22 0;
+#X connect 24 0 21 0;
+#X connect 27 0 6 0;
+#X connect 28 0 23 0;
+#X restore 543 212 pd index2level;
+#N canvas 228 6 240 121 init 0;
+#N canvas 417 115 502 214 parameters 0;
+#X obj 15 13 r nsamples;
+#X obj 15 44 / 2048;
+#X obj 15 69 i;
+#X obj 15 94 + 1;
+#X obj 15 123 s nblocks;
+#X obj 91 44 /;
+#X obj 104 14 r sr_khz;
+#X obj 91 70 / 1000;
+#X obj 91 123 s duration;
+#X obj 189 14 r time_stretch_control;
+#X obj 189 70 pow2;
+#X obj 189 99 s time_stretch;
+#X obj 340 14 r time_stretch;
+#X obj 189 43 - 3;
+#X obj 189 154 - 5;
+#X obj 340 72 *;
+#X msg 340 44 2048 \$1;
+#X obj 189 180 s pitch;
+#X obj 189 130 r pitch_control;
+#X msg 340 100 \; idwtcoef resize \$1 \; outputsignal resize \$1 \;
+;
+#X connect 0 0 1 0;
+#X connect 0 0 5 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 1;
+#X connect 7 0 8 0;
+#X connect 9 0 13 0;
+#X connect 10 0 11 0;
+#X connect 12 0 16 0;
+#X connect 13 0 10 0;
+#X connect 14 0 17 0;
+#X connect 15 0 19 0;
+#X connect 16 0 15 0;
+#X connect 18 0 14 0;
+#X restore 79 71 pd parameters;
+#N canvas 0 0 352 238 loadbang 0;
+#X obj 91 16 loadbang;
+#X obj 261 78 samplerate~;
+#X obj 261 105 / 1000;
+#X obj 261 130 s sr_khz;
+#X msg 91 78 \; dwtcoef resize 2048 \; idwtcoef resize 2048 \; outputsignal
+resize 2048 \; wavelet_type 3 \; reset_equalization bang \; reset_randomization
+bang \; reset_modifications bang \; gain 95 \; pd dsp 1 \;;
+#X obj 14 78 list trim;
+#X msg 14 52 list Raul Diaz Poblete [IEM] 2005-2006 :::;
+#X obj 14 100 print ::;
+#X connect 0 0 4 0;
+#X connect 0 0 1 0;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X restore 79 22 pd loadbang;
+#N canvas 0 0 455 376 resets 0;
+#X obj 157 15 r reset_equalization;
+#X obj 18 15 r reset_randomization;
+#X msg 157 52 \; 1_level 1 \; 2_level 1 \; 3_level 1 \; 4_level 1 \;
+5_level 1 \; 6_level 1 \; 7_level 1 \; 8_level 1 \; 9_level 1 \; 10_level
+1 \; 11_level 1 \;;
+#X obj 290 15 r reset_modifications;
+#X msg 18 52 \; 1_freq 0 \; 1_range 20 \; 2_freq 0 \; 2_range 20 \;
+3_freq 0 \; 3_range 20 \; 4_freq 0 \; 4_range 20 \; 5_freq 0 \; 5_range
+20 \; 6_freq 0 \; 6_range 20 \; 7_freq 0 \; 7_range 20 \; 8_freq 0
+\; 8_range 20 \; 9_freq 0 \; 9_range 20 \; 10_freq 0 \; 10_range 20
+\; 11_freq 0 \; 11_range 20 \;;
+#X msg 290 52 \; pitch_control 5 \; time_stretch_control 3 \;;
+#X connect 0 0 2 0;
+#X connect 1 0 4 0;
+#X connect 3 0 5 0;
+#X restore 79 46 pd resets;
+#X restore 543 189 pd init;
+#N canvas 576 130 404 264 dwt_analysis 0;
+#X obj 23 117 dwt~;
+#X obj 44 79 wavelet_type;
+#X obj 155 121 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 221 90 0;
+#X obj 295 219 table dwtcoef;
+#X obj 155 47 r on_bang;
+#X obj 221 48 r off_bang;
+#X msg 155 92 1;
+#X obj 155 148 switch~ 2048 1;
+#X obj 24 47 inlet~;
+#X msg 252 135 \; dwtcoef resize 2048 \;;
+#X obj 155 69 t b b;
+#X obj 22 148 tabsend~ dwtcoef;
+#X obj 21 190 bang~;
+#X obj 21 216 s block_bang;
+#X text 24 13 make dwt analysis and store dwt coefficients into dwtcoef
+;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 8 0;
+#X connect 3 0 2 0;
+#X connect 5 0 11 0;
+#X connect 6 0 3 0;
+#X connect 7 0 2 0;
+#X connect 9 0 0 0;
+#X connect 11 0 7 0;
+#X connect 11 1 10 0;
+#X connect 13 0 14 0;
+#X restore 544 83 pd dwt_analysis;
+#X obj 735 189 table soundfile;
+#N canvas 73 175 425 240 dwt_resynthesis 0;
+#X obj 22 121 idwt~;
+#X obj 79 203 tabwrite~ outputsignal;
+#X msg 193 75 1;
+#X obj 254 142 switch~ 2048 1;
+#X obj 21 203 outlet~;
+#X obj 254 110 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 254 75 0;
+#X obj 316 203 table idwtcoef;
+#X obj 44 82 wavelet_type;
+#X obj 193 48 r on_bang;
+#X obj 21 47 tabreceive~ idwtcoef;
+#X obj 254 48 r off_bang;
+#X obj 322 48 r time_stretch;
+#X msg 322 107 set \$1 1;
+#X obj 322 75 * 2048;
+#X obj 79 164 r block_bang;
+#X text 70 11 make idwt from coefficients stored in idwt table;
+#X connect 0 0 1 0;
+#X connect 0 0 4 0;
+#X connect 2 0 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 5 0;
+#X connect 8 0 0 0;
+#X connect 9 0 2 0;
+#X connect 10 0 0 0;
+#X connect 11 0 6 0;
+#X connect 12 0 14 0;
+#X connect 13 0 3 0;
+#X connect 14 0 13 0;
+#X connect 15 0 1 0;
+#X restore 544 113 pd dwt_resynthesis;
+#X obj 734 212 table outputsignal;
+#N canvas 429 66 368 392 list_generator 0;
+#X obj 246 216 tabread dwtcoef;
+#X obj 21 216 tabread index2level;
+#X obj 130 141 until_counter;
+#X obj 130 43 r block_bang;
+#X msg 155 106 2048;
+#X obj 121 348 outlet;
+#X obj 121 314 pack f f f;
+#X obj 130 72 t b b;
+#X obj 130 169 t f b f;
+#X obj 148 275 +;
+#X obj 161 243 r pitch;
+#X text 16 9 coefficient list generator (level \, index \, coefficient)
+;
+#X obj 148 216 index_counter;
+#X connect 0 0 6 2;
+#X connect 1 0 6 0;
+#X connect 2 0 8 0;
+#X connect 3 0 7 0;
+#X connect 4 0 2 1;
+#X connect 6 0 5 0;
+#X connect 7 0 2 0;
+#X connect 7 1 4 0;
+#X connect 8 0 1 0;
+#X connect 8 1 12 0;
+#X connect 8 2 0 0;
+#X connect 9 0 6 1;
+#X connect 10 0 9 1;
+#X connect 12 0 9 0;
+#X restore 732 56 pd list_generator;
+#X obj 544 139 out_volume~;
+#N canvas 363 329 406 290 loadfile 0;
+#X obj 28 59 openpanel;
+#X obj 214 115 tabplay~ soundfile;
+#X obj 214 247 outlet~;
+#X obj 317 246 s off_bang;
+#X msg 28 83 read -resize \$1 soundfile;
+#X obj 28 106 soundfiler;
+#X obj 28 132 s nsamples;
+#X obj 28 27 r loadfile;
+#X text 26 5 load soundfile;
+#X text 212 4 start analysis;
+#X obj 214 26 r on_bang;
+#X obj 214 54 t b b;
+#X msg 239 78 \; idwtcoef const 0;
+#X obj 232 145 r live_signal;
+#X obj 232 170 select 1;
+#X msg 232 194 0;
+#X msg 275 194 1;
+#X obj 213 224 *~ 1;
+#X obj 317 223 spigot;
+#X connect 0 0 4 0;
+#X connect 1 0 17 0;
+#X connect 1 1 18 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 7 0 0 0;
+#X connect 10 0 11 0;
+#X connect 11 0 1 0;
+#X connect 11 1 12 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 1 16 0;
+#X connect 15 0 17 1;
+#X connect 15 0 18 1;
+#X connect 16 0 17 1;
+#X connect 16 0 18 1;
+#X connect 17 0 2 0;
+#X connect 18 0 3 0;
+#X restore 543 56 pd loadfile;
+#N canvas 138 227 251 259 live_signal 0;
+#X obj 52 37 adc~;
+#X obj 52 214 outlet~;
+#X obj 112 37 r live_signal;
+#X obj 93 86 *~ 0;
+#X obj 53 86 *~ 0;
+#X obj 124 181 pack 0 0;
+#X obj 124 127 env~;
+#X obj 167 127 env~;
+#X obj 124 215 s in_level;
+#X obj 124 153 - 100;
+#X obj 167 153 - 100;
+#X obj 137 86 s on_bang;
+#X obj 137 62 t b;
+#X text 35 8 active a live signal from adc;
+#X connect 0 0 4 0;
+#X connect 0 1 3 0;
+#X connect 2 0 3 1;
+#X connect 2 0 4 1;
+#X connect 2 0 12 0;
+#X connect 3 0 1 0;
+#X connect 3 0 7 0;
+#X connect 4 0 1 0;
+#X connect 4 0 6 0;
+#X connect 5 0 8 0;
+#X connect 6 0 9 0;
+#X connect 7 0 10 0;
+#X connect 9 0 5 0;
+#X connect 10 0 5 1;
+#X connect 12 0 11 0;
+#X restore 620 56 pd live_signal;
+#X text 541 168 ----- initializations -----;
+#X text 731 168 ----- visualizations -----;
+#N canvas 78 108 718 398 data_modifications 0;
+#X obj 22 39 inlet;
+#X obj 68 39 inlet;
+#X obj 118 39 inlet;
+#X obj 168 39 inlet;
+#X obj 218 39 inlet;
+#X obj 268 39 inlet;
+#X obj 318 39 inlet;
+#X obj 368 39 inlet;
+#X obj 418 39 inlet;
+#X obj 468 39 inlet;
+#X obj 518 39 inlet;
+#X obj 568 39 inlet;
+#X obj 68 360 write_coef;
+#X obj 68 73 modification_level 1;
+#X text 194 4 coefficients and index modifications for each level;
+#X obj 118 93 modification_level 2;
+#X obj 168 113 modification_level 3;
+#X obj 218 133 modification_level 4;
+#X obj 268 153 modification_level 5;
+#X obj 318 173 modification_level 6;
+#X obj 368 194 modification_level 7;
+#X obj 418 214 modification_level 8;
+#X obj 468 234 modification_level 9;
+#X obj 518 254 modification_level 10;
+#X obj 568 274 modification_level 11;
+#X connect 0 0 12 0;
+#X connect 1 0 13 0;
+#X connect 2 0 15 0;
+#X connect 3 0 16 0;
+#X connect 4 0 17 0;
+#X connect 5 0 18 0;
+#X connect 6 0 19 0;
+#X connect 7 0 20 0;
+#X connect 8 0 21 0;
+#X connect 9 0 22 0;
+#X connect 10 0 23 0;
+#X connect 11 0 24 0;
+#X connect 13 0 12 0;
+#X connect 15 0 12 0;
+#X connect 16 0 12 0;
+#X connect 17 0 12 0;
+#X connect 18 0 12 0;
+#X connect 19 0 12 0;
+#X connect 20 0 12 0;
+#X connect 21 0 12 0;
+#X connect 22 0 12 0;
+#X connect 23 0 12 0;
+#X connect 24 0 12 0;
+#X restore 732 134 pd data_modifications ----;
+#N canvas 159 62 633 205 split_levels 0;
+#X obj 135 39 inlet;
+#X obj 21 164 outlet;
+#X obj 71 164 outlet;
+#X obj 121 164 outlet;
+#X obj 171 164 outlet;
+#X obj 221 164 outlet;
+#X obj 271 164 outlet;
+#X obj 321 164 outlet;
+#X obj 371 164 outlet;
+#X obj 421 164 outlet;
+#X obj 471 164 outlet;
+#X obj 521 164 outlet;
+#X obj 571 164 outlet;
+#X obj 135 72 route 0 1 2 3 4 5 6 7 8 9 10 11 ----------------------------
+;
+#X text 168 6 split coefficient lists in its different levels;
+#X connect 0 0 13 0;
+#X connect 13 0 1 0;
+#X connect 13 1 2 0;
+#X connect 13 2 3 0;
+#X connect 13 3 4 0;
+#X connect 13 4 5 0;
+#X connect 13 5 6 0;
+#X connect 13 6 7 0;
+#X connect 13 7 8 0;
+#X connect 13 8 9 0;
+#X connect 13 9 10 0;
+#X connect 13 10 11 0;
+#X connect 13 11 12 0;
+#X restore 732 95 pd split_levels ----------;
+#X obj 278 190 bng 30 250 50 0 off_bang empty off_bang -13 -7 0 9 -260818
+-166441 -1;
+#X obj 278 118 tgl 30 0 live_signal empty live_signal -22 -7 0 9 -166441
+-260818 -1 0 1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 160 60 1;
+#X restore 177 99 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 160 60 1;
+#X restore 177 170 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 150 105 1;
+#X restore 349 54 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 50 175 1;
+#X restore 115 54 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 160 35 1;
+#X restore 177 54 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 150 60 1;
+#X restore 349 170 graph;
+#N canvas 176 314 300 221 modifications 0;
+#X obj 8 7 cnv 15 280 200 empty empty modifications 60 20 0 16 -233017
+-128992 0;
+#X obj 24 52 bng 20 250 50 0 reset_modifications reset_modifications
+reset 25 10 0 10 -166441 -260818 -260818;
+#X obj 23 136 nbx 4 18 -1e+37 1e+37 0 0 empty pitch empty 0 -6 0 10
+-166441 -260818 -1 0 256;
+#X obj 23 94 nbx 4 18 -1e+37 1e+37 0 0 empty time_stretch empty 0 -6
+0 10 -166441 -260818 -1 1 256;
+#X obj 74 92 hradio 20 1 0 6 time_stretch_control time_stretch_control
+stretch 0 -6 0 8 -166441 -260818 -1 3;
+#X obj 74 134 hradio 20 1 0 10 pitch_control pitch_control pitch 0
+-6 0 8 -166441 -260818 -1 5;
+#N canvas 75 109 650 343 equalization 0;
+#X obj 7 7 cnv 15 630 325 empty empty equalization 260 20 0 14 -233017
+-128992 0;
+#X obj 580 308 nbx 4 14 -1e+37 1e+37 0 0 empty 1_level empty 0 -6 0
+10 -166441 -1 -1 1 256;
+#X obj 524 308 nbx 4 14 -1e+37 1e+37 0 0 empty 2_level empty 0 -6 0
+10 -128992 -1 -1 1 256;
+#X obj 467 308 nbx 4 14 -1e+37 1e+37 0 0 empty 3_level empty 0 -6 0
+10 -166441 -1 -1 1 256;
+#X obj 412 308 nbx 4 14 -1e+37 1e+37 0 0 empty 4_level empty 0 -6 0
+10 -128992 -1 -1 1 256;
+#X obj 355 308 nbx 4 14 -1e+37 1e+37 0 0 empty 5_level empty 0 -6 0
+10 -166441 -1 -1 1 256;
+#X obj 300 308 nbx 4 14 -1e+37 1e+37 0 0 empty 6_level empty 0 -6 0
+10 -128992 -1 -1 1 256;
+#X obj 243 308 nbx 4 14 -1e+37 1e+37 0 0 empty 7_level empty 0 -6 0
+10 -166441 -33289 -1 1 256;
+#X obj 188 308 nbx 4 14 -1e+37 1e+37 0 0 empty 8_level empty 0 -6 0
+10 -128992 -1 -1 1 256;
+#X obj 132 308 nbx 4 14 -1e+37 1e+37 0 0 empty 9_level empty 0 -6 0
+10 -166441 -1 -1 1 256;
+#X obj 77 308 nbx 4 14 -1e+37 1e+37 0 0 empty 10_level empty 0 -6 0
+10 -128992 -1 -1 1 256;
+#X obj 20 79 vsl 45 220 0 2 0 0 11_level 11_level empty 8 -8 0 9 -166441
+-260818 -1 10950 1;
+#X obj 77 80 vsl 45 220 0 2 0 0 10_level 10_level empty 8 -8 0 9 -128992
+-260818 -1 10950 1;
+#X obj 132 79 vsl 45 220 0 2 0 0 9_level 9_level empty 8 -8 0 9 -166441
+-260818 -1 10950 1;
+#X obj 188 80 vsl 45 220 0 2 0 0 8_level 8_level empty 8 -8 0 9 -128992
+-260818 -1 10950 1;
+#X obj 243 79 vsl 45 220 0 2 0 0 7_level 7_level empty 8 -8 0 9 -166441
+-260818 -1 10950 1;
+#X obj 300 80 vsl 45 220 0 2 0 0 6_level 6_level empty 8 -8 0 9 -128992
+-260818 -1 10950 1;
+#X obj 355 79 vsl 45 220 0 2 0 0 5_level 5_level empty 8 -8 0 9 -166441
+-260818 -1 10950 1;
+#X obj 412 80 vsl 45 220 0 2 0 0 4_level 4_level empty 8 -8 0 9 -128992
+-260818 -1 10950 1;
+#X obj 467 79 vsl 45 220 0 2 0 0 3_level 3_level empty 8 -8 0 9 -166441
+-260818 -1 10950 1;
+#X obj 524 80 vsl 45 220 0 2 0 0 2_level 2_level empty 8 -8 0 9 -128992
+-260818 -1 10950 1;
+#X obj 579 79 vsl 45 220 0 2 0 0 1_level 1_level empty 8 -8 0 9 -166441
+-260818 -1 10950 1;
+#X obj 20 308 nbx 4 14 -1e+37 1e+37 0 0 empty 11_level empty 0 -6 0
+10 -166441 -1 -1 1 256;
+#X text 32 50 l11;
+#X text 24 61 [21Hz];
+#X text 89 50 l10;
+#X text 135 61 [86Hz];
+#X text 80 61 [43Hz];
+#X text 147 50 l9;
+#X text 204 50 l8;
+#X text 259 50 l7;
+#X text 189 61 [172Hz];
+#X text 244 61 [344Hz];
+#X text 300 61 [689Hz];
+#X text 315 50 l6;
+#X text 353 61 [1378Hz];
+#X text 410 61 [2756Hz];
+#X text 370 50 l5;
+#X text 428 50 l4;
+#X text 482 50 l3;
+#X text 540 50 l2;
+#X text 594 50 l1;
+#X text 465 61 [5512Hz];
+#X text 520 61 [11025Hz];
+#X text 574 61 [22050Hz];
+#X obj 20 17 bng 20 250 50 0 reset_equalization reset_equalization
+reset 25 10 0 8 -166441 -260818 -260818;
+#X restore 23 176 pd equalization;
+#N canvas 553 0 335 649 randomization 0;
+#X obj 6 7 cnv 15 315 630 empty empty randomization 118 40 0 14 -233017
+-128992 0;
+#X obj 21 20 tgl 20 0 random_toggle random_toggle on/off 28 10 0 8
+-166441 -260818 -260818 0 1;
+#X obj 76 87 nbx 3 15 -1e+37 1e+37 0 0 empty 11_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 107 nbx 3 15 -1e+37 1e+37 0 0 empty 11_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 119 87 hsl 180 15 0 1000 0 0 11_freq 11_freq freq -75 8 0 8
+-166441 -260818 -1 0 1;
+#X obj 119 107 hsl 180 15 5 80 0 0 11_range 11_range range -81 8 0
+8 -99865 -260818 -1 3580 1;
+#X obj 76 136 nbx 3 15 -1e+37 1e+37 0 0 empty 10_freq empty 0 -6 0
+10 -166441 -1 -1 0 256;
+#X obj 76 157 nbx 3 15 -1e+37 1e+37 0 0 empty 10_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 187 nbx 3 15 -1e+37 1e+37 0 0 empty 9_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 207 nbx 3 15 -1e+37 1e+37 0 0 empty 9_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 237 nbx 3 15 -1e+37 1e+37 0 0 empty 8_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 257 nbx 3 15 -1e+37 1e+37 0 0 empty 8_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 287 nbx 3 15 -1e+37 1e+37 0 0 empty 7_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 307 nbx 3 15 -1e+37 1e+37 0 0 empty 7_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 337 nbx 3 15 -1e+37 1e+37 0 0 empty 6_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 357 nbx 3 15 -1e+37 1e+37 0 0 empty 6_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 387 nbx 3 15 -1e+37 1e+37 0 0 empty 5_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 407 nbx 3 15 -1e+37 1e+37 0 0 empty 5_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 437 nbx 3 15 -1e+37 1e+37 0 0 empty 4_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 457 nbx 3 15 -1e+37 1e+37 0 0 empty 4_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X obj 76 487 nbx 3 15 -1e+37 1e+37 0 0 empty 3_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 507 nbx 3 15 -1e+37 1e+37 0 0 empty 3_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X text 20 82 |;
+#X text 20 109 |;
+#X obj 119 137 hsl 180 15 0 1000 0 0 10_freq 10_freq freq -75 8 0 8
+-166441 -260818 -1 0 1;
+#X obj 119 157 hsl 180 15 5 80 0 0 10_range 10_range range -81 8 0
+8 -99865 -260818 -1 3580 1;
+#X text 16 96 l11;
+#X text 20 131 |;
+#X text 20 158 |;
+#X text 16 145 l10;
+#X obj 119 187 hsl 180 15 0 1000 0 0 9_freq 9_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 207 hsl 180 15 5 80 0 0 9_range 9_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X text 20 182 |;
+#X text 20 209 |;
+#X text 17 196 l9;
+#X obj 119 237 hsl 180 15 0 1000 0 0 8_freq 8_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 257 hsl 180 15 5 80 0 0 8_range 8_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X text 20 232 |;
+#X text 20 259 |;
+#X text 17 246 l8;
+#X obj 119 287 hsl 180 15 0 1000 0 0 7_freq 7_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 307 hsl 180 15 5 80 0 0 7_range 7_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X text 20 282 |;
+#X text 20 309 |;
+#X text 17 296 l7;
+#X obj 119 337 hsl 180 15 0 1000 0 0 6_freq 6_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 357 hsl 180 15 5 80 0 0 6_range 6_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X text 20 332 |;
+#X text 20 359 |;
+#X text 17 346 l6;
+#X obj 119 387 hsl 180 15 0 1000 0 0 5_freq 5_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 407 hsl 180 15 5 80 0 0 5_range 5_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X text 20 382 |;
+#X text 20 409 |;
+#X text 17 396 l5;
+#X obj 119 437 hsl 180 15 0 1000 0 0 4_freq 4_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 457 hsl 180 15 5 80 0 0 4_range 4_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X obj 119 487 hsl 180 15 0 1000 0 0 3_freq 3_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 507 hsl 180 15 5 80 0 0 3_range 3_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X obj 119 537 hsl 180 15 0 1000 0 0 2_freq 2_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 557 hsl 180 15 5 80 0 0 2_range 2_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X obj 76 537 nbx 3 15 -1e+37 1e+37 0 0 empty 2_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 557 nbx 3 15 -1e+37 1e+37 0 0 empty 2_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X text 20 432 |;
+#X text 20 459 |;
+#X text 20 482 |;
+#X text 20 509 |;
+#X text 20 532 |;
+#X text 20 559 |;
+#X text 17 446 l4;
+#X text 17 496 l3;
+#X text 17 546 l2;
+#X obj 119 587 hsl 180 15 0 1000 0 0 1_freq 1_freq freq -75 8 0 8 -166441
+-260818 -1 0 1;
+#X obj 119 607 hsl 180 15 5 80 0 0 1_range 1_range range -81 8 0 8
+-99865 -260818 -1 3580 1;
+#X obj 76 587 nbx 3 15 -1e+37 1e+37 0 0 empty 1_freq empty 0 -6 0 10
+-166441 -1 -1 0 256;
+#X obj 76 607 nbx 3 15 -1e+37 1e+37 0 0 empty 1_range empty 0 -6 0
+10 -128992 -1 -1 20 256;
+#X text 20 582 |;
+#X text 20 609 |;
+#X text 17 596 l1;
+#X obj 21 50 bng 20 250 50 0 reset_randomization reset_randomization
+reset 25 10 0 8 -166441 -260818 -260818;
+#X restore 175 177 pd randomization;
+#X restore 184 63 pd modifications -------;
+#X obj 27 97 vu 15 120 in_level in -1 -8 0 8 -66577 -1 1 0;
+#X obj 78 97 vu 15 120 out_level out -1 -8 0 8 -66577 -1 0 0;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 87 175 1;
+#X restore 17 54 graph;
+#X text 43 55 signal;
+#X text 46 66 level;
+#X text 741 248 Raul Diaz [IEM] 2005/06;
+#N canvas 83 368 500 377 README 0;
+#X text 34 100 That's a software for audio modification in real time
+with Miller Puckette's Pure Data (PD) (http://crca.ucsd.edu/~msp/software.html)
+\, based on wavelet analysis-resynthesis using externals dwt~ and idwt~
+from Tom Schouten's creb library (http://zwizwa.fartit.com/pd/creb/).
+;
+#X text 36 32 MANIPULATION OF AUDIO IN THE WAVELET DOMAIN;
+#X text 36 54 Raul Diaz Poblete [IEM] 2005-2006;
+#X text 35 234 Do use the software you need the creb external from
+Tom Schouten !;
+#X text 35 281 More Information:;
+#X text 61 311 http://iem.at/projekte/dsp/wavelet/project_view or https://puredata.org/Members/raul/project_patch/view
+;
+#X restore 13 247 pd README;
+#X connect 15 0 18 1;
+#X connect 15 0 18 0;
+#X connect 17 0 24 0;
+#X connect 19 0 13 0;
+#X connect 20 0 13 0;
+#X connect 24 0 23 0;
+#X connect 24 1 23 1;
+#X connect 24 2 23 2;
+#X connect 24 3 23 3;
+#X connect 24 4 23 4;
+#X connect 24 5 23 5;
+#X connect 24 6 23 6;
+#X connect 24 7 23 7;
+#X connect 24 8 23 8;
+#X connect 24 9 23 9;
+#X connect 24 10 23 10;
+#X connect 24 11 23 11;

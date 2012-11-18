@@ -1,0 +1,27 @@
+#N canvas 207 210 709 402 10;
+#X obj 58 31 cnv 15 15 15 empty empty vasp.frames? 0 10 1 14 -262144
+-1 0;
+#X text 372 130 get the maximum vasp length of both buffers;
+#X floatatom 372 211 0 0 0;
+#X obj 372 181 vasp.frames?;
+#X floatatom 212 211 0 0 0;
+#X obj 212 181 vasp.frames?;
+#X text 212 130 get the buffer length;
+#X msg 372 155 vasp bufframq bufframq1;
+#X msg 212 155 vasp bufframq;
+#X obj 418 273 table bufframq 88200;
+#X obj 418 296 table bufframq1 44100;
+#X floatatom 45 210 0 0 0;
+#X obj 45 180 vasp.frames?;
+#X msg 45 154 vasp 400 bufframq 300;
+#X text 106 312 abbreviation;
+#X obj 49 312 vasp.f?;
+#X obj 41 357 VASP-HELP;
+#X text 44 64 get a vasp's frame count (length) in frames;
+#X text 45 129 get the vasp's length;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;
+#X connect 7 0 3 0;
+#X connect 8 0 5 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;

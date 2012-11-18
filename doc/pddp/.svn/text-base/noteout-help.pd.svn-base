@@ -1,0 +1,118 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header noteout 3 12 0 18
+-204280 -1 0;
+#X obj 0 352 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 244 494 369 META 0;
+#X text 12 65 PLATFORM windows macosx gnulinux;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 by Michal Seta as part of a project called pddp proposed
+by Krzysztof Czaja \, managed and edited by Dave Sabine \, to build
+comprehensive documentation for Pd. Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 45 DESCRIPTION transmit MIDI notes;
+#X text 12 85 INLET_0 float list;
+#X text 12 125 INLET_2 float;
+#X text 12 105 INLET_1 float;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 475 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 107 157 428 430 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [noteout] Related Objects;
+#X obj 74 80 ctlin;
+#X obj 217 80 pgmin;
+#X obj 24 80 bendin;
+#X obj 79 107 touchin;
+#X obj 261 80 polytouchin;
+#X obj 118 80 midiin;
+#X obj 23 107 sysexin;
+#X obj 179 167 noteout;
+#X obj 76 167 ctlout;
+#X obj 24 167 bendout;
+#X obj 366 167 touchout;
+#X obj 280 167 polytouchout;
+#X obj 123 167 midiout;
+#X obj 231 167 pgmout;
+#X obj 24 221 makenote;
+#X text 21 198 MIDI note construction:;
+#X text 21 140 MIDI output:;
+#X text 21 57 MIDI input:;
+#X obj 184 221 stripnote;
+#X obj 24 33 notein;
+#X text 181 198 MIDI note deconstruction:;
+#X text 22 265 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 21 344 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 22 246 Externals;
+#X obj 22 295 pddp/helplink maxlib/pitch;
+#X obj 22 310 pddp/helplink maxlib/score;
+#X obj 22 325 pddp/helplink maxlib/chord;
+#X obj 22 360 pddp/helplink cyclone/midiformat;
+#X obj 22 375 pddp/helplink cyclone/midiparse;
+#X obj 22 390 pddp/helplink cyclone/midiflush;
+#X restore 102 597 pd Related_objects;
+#X obj 78 361 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 360 float;
+#X text 98 380 list;
+#X obj 78 422 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 421 float;
+#X obj 473 3 noteout;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/noteout -text
+pdpedia: noteout;
+#X obj 78 447 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 446 float;
+#X text 98 479 (none);
+#X obj 123 197 noteout;
+#X msg 123 176 60 100 2;
+#X obj 215 197 noteout 2;
+#X msg 215 176 60 100;
+#X obj 338 123 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 338 174 60;
+#X msg 372 174 100;
+#X obj 338 142 t b b b;
+#X obj 338 200 noteout;
+#X msg 405 174 2;
+#X text 108 228 (all three above) middle-c with velocity 100 sent to
+channel 2;
+#X obj 367 571 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
+;
+#X text 98 570 for an explanation of MIDI usage in Pd see:;
+#X text 11 23 transmit MIDI notes;
+#X text 168 380 - a three-element list (MIDI note \, velocity \, channel)
+is distributed among the three inlets. Lists with more than two elements
+will be truncated.;
+#X text 168 521 - the MIDI channel number to which a note-on message
+is to be sent. If no argument is provided [noteout] transmits on channel
+1 (default).;
+#X text 168 360 - (integer) MIDI note number (0-127).;
+#X text 167 421 - (integer) velocity.;
+#X text 167 446 - (integer) channel number.;
+#X text 80 521 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 19 0 18 0;
+#X connect 21 0 20 0;
+#X connect 22 0 25 0;
+#X connect 23 0 26 0;
+#X connect 24 0 26 1;
+#X connect 25 0 23 0;
+#X connect 25 1 24 0;
+#X connect 25 2 27 0;
+#X connect 27 0 26 2;

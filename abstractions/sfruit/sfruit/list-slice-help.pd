@@ -1,0 +1,24 @@
+#N canvas 620 339 431 350 10;
+
+#X obj 107 307 print;
+#X msg 107 154 0 1 2 3 4 5 6 7 8 9 10 11;
+#X text 6 12 [list-slice]: grab a slice from the interior of a list.
+First arg is the start-index (inclusive) \, second arg is the end index
+(not inclusive).;
+#X text 5 59 Added coolness: negative indices work for both arguments.
+;
+#X text 12 73 e.g.: 2 -2 removes the first two and last two items;
+#X obj 107 262 list-slice 3 8;
+#X msg 148 186 2 -2;
+#X msg 158 211 -5 -2;
+#X obj 148 240 unpack f f;
+#X text 257 309 2008 Luke Iannini;
+#X text 257 325 proyekto.net sndrft;
+#X text 43 88 -5 -2 gives the fifth-to-last through third-to-last items
+;
+#X connect 1 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 5 1;
+#X connect 8 1 5 2;

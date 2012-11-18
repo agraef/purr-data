@@ -1,0 +1,308 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E91C4A8A07ECD9EA00062063 /* editor.h in Headers */ = {isa = PBXBuildFile; fileRef = E91C4A8207ECD9EA00062063 /* editor.h */; };
+		E91C4A8B07ECD9EA00062063 /* editormac.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E91C4A8307ECD9EA00062063 /* editormac.hpp */; };
+		E91C4A8C07ECD9EA00062063 /* vstedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E91C4A8407ECD9EA00062063 /* vstedit.cpp */; };
+		E91C4A8D07ECD9EA00062063 /* vsthost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E91C4A8507ECD9EA00062063 /* vsthost.cpp */; };
+		E91C4A8E07ECD9EA00062063 /* vsthost.h in Headers */ = {isa = PBXBuildFile; fileRef = E91C4A8607ECD9EA00062063 /* vsthost.h */; };
+		E91C4A8F07ECD9EA00062063 /* vstmaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E91C4A8707ECD9EA00062063 /* vstmaster.cpp */; };
+		E91C4A9007ECD9EA00062063 /* vstmidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E91C4A8807ECD9EA00062063 /* vstmidi.cpp */; };
+		E91C4A9107ECD9EA00062063 /* vstparam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E91C4A8907ECD9EA00062063 /* vstparam.cpp */; };
+		E9304A6007732F1F00EE7812 /* editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9304A5F07732F1F00EE7812 /* editor.cpp */; };
+		E9C0C57F07461746002B8D0A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9C0C57907461746002B8D0A /* main.cpp */; };
+		E9C0C58007461746002B8D0A /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = E9C0C57A07461746002B8D0A /* main.h */; };
+		E9E87711074673590035356B /* System.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9E87710074673590035356B /* System.framework */; };
+		E9E87714074673750035356B /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9E87713074673750035356B /* ApplicationServices.framework */; };
+		E9E87846074674560035356B /* libflext-pd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9E87845074674560035356B /* libflext-pd.dylib */; };
+		E9E87849074674890035356B /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9E87848074674890035356B /* vecLib.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D2AAC0C705546C1D00DB518D /* vst~.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "vst~.pd_darwin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E91C4A8207ECD9EA00062063 /* editor.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = editor.h; path = src/editor.h; sourceTree = "<group>"; };
+		E91C4A8307ECD9EA00062063 /* editormac.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; name = editormac.hpp; path = src/editormac.hpp; sourceTree = "<group>"; };
+		E91C4A8407ECD9EA00062063 /* vstedit.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = vstedit.cpp; path = src/vstedit.cpp; sourceTree = "<group>"; };
+		E91C4A8507ECD9EA00062063 /* vsthost.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = vsthost.cpp; path = src/vsthost.cpp; sourceTree = "<group>"; };
+		E91C4A8607ECD9EA00062063 /* vsthost.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = vsthost.h; path = src/vsthost.h; sourceTree = "<group>"; };
+		E91C4A8707ECD9EA00062063 /* vstmaster.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = vstmaster.cpp; path = src/vstmaster.cpp; sourceTree = "<group>"; };
+		E91C4A8807ECD9EA00062063 /* vstmidi.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = vstmidi.cpp; path = src/vstmidi.cpp; sourceTree = "<group>"; };
+		E91C4A8907ECD9EA00062063 /* vstparam.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = vstparam.cpp; path = src/vstparam.cpp; sourceTree = "<group>"; };
+		E9304A5F07732F1F00EE7812 /* editor.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = editor.cpp; path = src/editor.cpp; sourceTree = "<group>"; };
+		E9C0C57907461746002B8D0A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = "<group>"; };
+		E9C0C57A07461746002B8D0A /* main.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = main.h; path = src/main.h; sourceTree = "<group>"; };
+		E9DB03BC0A93B8A600F0A096 /* editorwin.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; name = editorwin.hpp; path = src/editorwin.hpp; sourceTree = "<group>"; };
+		E9E87710074673590035356B /* System.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = System.framework; path = /System/Library/Frameworks/System.framework; sourceTree = "<absolute>"; };
+		E9E87713074673750035356B /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		E9E87845074674560035356B /* libflext-pd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libflext-pd.dylib"; path = "/usr/local/lib/libflext-pd.dylib"; sourceTree = "<absolute>"; };
+		E9E87848074674890035356B /* vecLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vecLib.framework; path = /System/Library/Frameworks/vecLib.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC0C505546C1D00DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9E87711074673590035356B /* System.framework in Frameworks */,
+				E9E87714074673750035356B /* ApplicationServices.framework in Frameworks */,
+				E9E87846074674560035356B /* libflext-pd.dylib in Frameworks */,
+				E9E87849074674890035356B /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC0C705546C1D00DB518D /* vst~.pd_darwin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* vst */ = {
+			isa = PBXGroup;
+			children = (
+				E9DB03BC0A93B8A600F0A096 /* editorwin.hpp */,
+				E91C4A8207ECD9EA00062063 /* editor.h */,
+				E91C4A8307ECD9EA00062063 /* editormac.hpp */,
+				E91C4A8407ECD9EA00062063 /* vstedit.cpp */,
+				E91C4A8507ECD9EA00062063 /* vsthost.cpp */,
+				E91C4A8607ECD9EA00062063 /* vsthost.h */,
+				E91C4A8707ECD9EA00062063 /* vstmaster.cpp */,
+				E91C4A8807ECD9EA00062063 /* vstmidi.cpp */,
+				E91C4A8907ECD9EA00062063 /* vstparam.cpp */,
+				E9304A5F07732F1F00EE7812 /* editor.cpp */,
+				E9E87848074674890035356B /* vecLib.framework */,
+				E9E87845074674560035356B /* libflext-pd.dylib */,
+				E9E87713074673750035356B /* ApplicationServices.framework */,
+				E9E87710074673590035356B /* System.framework */,
+				E9C0C57907461746002B8D0A /* main.cpp */,
+				E9C0C57A07461746002B8D0A /* main.h */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = vst;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC0C305546C1D00DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9C0C58007461746002B8D0A /* main.h in Headers */,
+				E91C4A8A07ECD9EA00062063 /* editor.h in Headers */,
+				E91C4A8B07ECD9EA00062063 /* editormac.hpp in Headers */,
+				E91C4A8E07ECD9EA00062063 /* vsthost.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC0C605546C1D00DB518D /* vst */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9DB03B10A93B87600F0A096 /* Build configuration list for PBXNativeTarget "vst" */;
+			buildPhases = (
+				D2AAC0C305546C1D00DB518D /* Headers */,
+				D2AAC0C405546C1D00DB518D /* Sources */,
+				D2AAC0C505546C1D00DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = vst;
+			productName = vst;
+			productReference = D2AAC0C705546C1D00DB518D /* vst~.pd_darwin */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = E9DB03B50A93B87600F0A096 /* Build configuration list for PBXProject "vst" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* vst */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				D2AAC0C605546C1D00DB518D /* vst */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC0C405546C1D00DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9C0C57F07461746002B8D0A /* main.cpp in Sources */,
+				E9304A6007732F1F00EE7812 /* editor.cpp in Sources */,
+				E91C4A8C07ECD9EA00062063 /* vstedit.cpp in Sources */,
+				E91C4A8D07ECD9EA00062063 /* vsthost.cpp in Sources */,
+				E91C4A8F07ECD9EA00062063 /* vstmaster.cpp in Sources */,
+				E91C4A9007ECD9EA00062063 /* vstmidi.cpp in Sources */,
+				E91C4A9107ECD9EA00062063 /* vstparam.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E9DB03B20A93B87600F0A096 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/flext,
+					$PD/src,
+					/Volumes/Daten/Prog/packs/vstsdk2.3/source/common,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = (
+					"-bundle_loader",
+					"/Applications/audio/Pd-0.38-3.app/Contents/Resources/bin/pd",
+				);
+				PRODUCT_NAME = "vst~";
+				SKIP_INSTALL = YES;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9DB03B30A93B87600F0A096 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/flext,
+					$PD/src,
+					/Volumes/Daten/Prog/packs/vstsdk2.3/source/common,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = (
+					"-bundle_loader",
+					"/Applications/audio/Pd-0.38-3.app/Contents/Resources/bin/pd",
+				);
+				PRODUCT_NAME = "vst~";
+				SKIP_INSTALL = YES;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9DB03B40A93B87600F0A096 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/flext,
+					$PD/src,
+					/Volumes/Daten/Prog/packs/vstsdk2.3/source/common,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = (
+					"-bundle_loader",
+					"/Applications/audio/Pd-0.38-3.app/Contents/Resources/bin/pd",
+				);
+				PRODUCT_NAME = "vst~";
+				SKIP_INSTALL = YES;
+			};
+			name = Default;
+		};
+		E9DB03B60A93B87600F0A096 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Development;
+		};
+		E9DB03B70A93B87600F0A096 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+		E9DB03B80A93B87600F0A096 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E9DB03B10A93B87600F0A096 /* Build configuration list for PBXNativeTarget "vst" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9DB03B20A93B87600F0A096 /* Development */,
+				E9DB03B30A93B87600F0A096 /* Deployment */,
+				E9DB03B40A93B87600F0A096 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9DB03B50A93B87600F0A096 /* Build configuration list for PBXProject "vst" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9DB03B60A93B87600F0A096 /* Development */,
+				E9DB03B70A93B87600F0A096 /* Deployment */,
+				E9DB03B80A93B87600F0A096 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

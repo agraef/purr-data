@@ -1,0 +1,36 @@
+#N canvas 162 213 450 300 10;
+#X obj 129 107 inlet;
+#X obj 129 270 outlet;
+#X obj 129 215 pix_sig2pix~ 128 128;
+#X obj 173 61 noise~;
+#X obj 51 31 tgl 14 0 \$0/onoff \$1/onoff onoff 0 -6 0 8 -233017 -128992
+-1 1 1;
+#X obj 5 31 nbx 4 14 0 1 0 1 \$0/rage \$1/rage rage 0 -6 0 8 -233017
+-128992 -1 0.36 256;
+#X obj 309 106 r \$0/onoff;
+#X obj 173 84 abs~;
+#X obj 174 128 *~;
+#X obj 190 105 r \$0/rage;
+#X obj 129 245 pix_texture;
+#X obj 309 128 switch~ 16384;
+#X obj 174 172 +~ 1;
+#X obj 174 150 *~ -1;
+#X obj 43 147 r \$0/smooth;
+#X obj 5 60 tgl 14 1 \$0/smooth \$1/smooth smooth 0 -6 0 8 -233017
+-128992 -1 0 1;
+#X msg 43 175 quality \$1;
+#X connect 0 0 2 0;
+#X connect 2 0 10 0;
+#X connect 3 0 7 0;
+#X connect 6 0 11 0;
+#X connect 7 0 8 0;
+#X connect 8 0 13 0;
+#X connect 9 0 8 1;
+#X connect 10 0 1 0;
+#X connect 12 0 2 1;
+#X connect 12 0 2 2;
+#X connect 12 0 2 0;
+#X connect 13 0 12 0;
+#X connect 14 0 16 0;
+#X connect 16 0 10 0;
+#X coords 0 -1 1 1 85 80 1 0 0;

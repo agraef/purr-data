@@ -1,0 +1,140 @@
+#N canvas 356 25 814 683 10;
+#X obj 101 101 cnv 15 185 20 empty \$0label colorGrid 4 11 0 8 -1 -262144
+0;
+#X obj 105 143 hsl 179 20 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X obj 105 122 hsl 179 20 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X msg 719 273 nopoll;
+#X obj 725 233 sel 0;
+#X msg 610 260 zero \, poll;
+#X msg 769 260 1;
+#X obj 607 162 spigot 1;
+#X msg 692 192 0;
+#X obj 625 386 +;
+#X obj 608 227 t b b f;
+#X obj 450 706 s \$0label;
+#X obj 101 143 cnv 15 20 20 empty empty empty 20 12 0 14 -258049 -66577
+0;
+#X obj 101 122 cnv 15 20 20 \$0cnv_s \$0cnv_r empty 20 12 0 14 -131073
+-66577 0;
+#X obj 158 143 cnv 15 35 20 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X obj 158 122 cnv 15 35 20 empty empty empty 20 12 0 14 -22726 -66577
+0;
+#X obj 266 143 cnv 15 20 20 empty empty empty 20 12 0 14 -258049 -66577
+0;
+#X obj 266 122 cnv 15 20 20 empty empty empty 20 12 0 14 -131073 -66577
+0;
+#X obj 122 143 cnv 15 35 20 empty empty empty 20 12 0 14 -241291 -66577
+0;
+#X obj 122 122 cnv 15 35 20 empty empty empty 20 12 0 14 -166411 -66577
+0;
+#X obj 194 122 cnv 15 35 20 empty empty empty 20 12 0 14 -32 -66577
+0;
+#X obj 194 143 cnv 15 35 20 empty empty empty 20 12 0 14 -64 -66577
+0;
+#X obj 230 143 cnv 15 35 20 empty empty empty 20 12 0 14 -258112 -66577
+0;
+#X obj 230 122 cnv 15 35 20 empty empty empty 20 12 0 14 -135202 -66577
+0;
+#X obj 511 349 f;
+#X obj 481 126 t f b f;
+#X obj 446 195 t f b f;
+#X msg 563 165 20;
+#X obj 104 164 hsl 179 20 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X obj 101 164 cnv 15 20 20 empty empty empty 20 12 0 14 -261689 -66577
+0;
+#X obj 158 164 cnv 15 35 20 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X obj 266 164 cnv 15 20 20 empty empty empty 20 12 0 14 -261689 -66577
+0;
+#X obj 122 164 cnv 15 35 20 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X obj 194 164 cnv 15 35 20 empty empty empty 20 12 0 14 -228992 -66577
+0;
+#X obj 230 164 cnv 15 35 20 empty empty empty 20 12 0 14 -257472 -66577
+0;
+#X msg 544 258 30;
+#X obj 332 264 t b f;
+#X obj 628 429 moses 30;
+#X obj 623 470 / 30;
+#X obj 511 375 pack f f f;
+#X obj 552 336 unpack;
+#X obj 542 308 t b a;
+#X obj 680 489 / 30;
+#X obj 627 407 clip 0 60;
+#X msg 621 498 1 \$1;
+#X msg 681 522 \$1 1;
+#X obj 720 560 -;
+#X msg 752 562 2 \$1;
+#X obj 431 653 pack;
+#X msg 424 681 color \$1 \$2;
+#X obj 468 536 * -1;
+#X msg 392 325 50;
+#X obj 11 708 outlet float_RGB;
+#X obj 319 705 outlet pd_color;
+#X obj 302 629 t a a;
+#X obj 146 496 t a a a a;
+#X obj 468 510 - 1;
+#X obj 689 299 cyclone/MouseState;
+#X obj 396 513 ./listOp;
+#X obj 397 588 ./rgbToNum;
+#X obj 234 574 ./rgbToNum;
+#X obj 94 430 ./hsvToRgb;
+#X connect 1 0 26 0;
+#X connect 2 0 25 0;
+#X connect 3 0 57 0;
+#X connect 4 0 3 0;
+#X connect 4 0 6 0;
+#X connect 5 0 57 0;
+#X connect 6 0 7 1;
+#X connect 7 0 10 0;
+#X connect 8 0 7 1;
+#X connect 9 0 43 0;
+#X connect 10 0 5 0;
+#X connect 10 1 8 0;
+#X connect 10 2 9 1;
+#X connect 24 0 39 0;
+#X connect 25 1 27 0;
+#X connect 25 2 24 1;
+#X connect 26 1 35 0;
+#X connect 26 2 24 1;
+#X connect 27 0 7 0;
+#X connect 28 0 36 0;
+#X connect 35 0 7 0;
+#X connect 36 0 51 0;
+#X connect 36 1 24 1;
+#X connect 37 0 38 0;
+#X connect 37 1 42 0;
+#X connect 38 0 44 0;
+#X connect 39 0 61 0;
+#X connect 40 0 39 1;
+#X connect 40 1 39 2;
+#X connect 41 0 24 0;
+#X connect 41 1 40 0;
+#X connect 42 0 47 0;
+#X connect 43 0 37 0;
+#X connect 44 0 41 0;
+#X connect 45 0 41 0;
+#X connect 46 0 45 0;
+#X connect 47 0 46 0;
+#X connect 48 0 49 0;
+#X connect 49 0 11 0;
+#X connect 50 0 58 1;
+#X connect 51 0 7 0;
+#X connect 54 0 53 0;
+#X connect 54 1 48 0;
+#X connect 55 0 52 0;
+#X connect 55 2 60 0;
+#X connect 55 3 58 0;
+#X connect 56 0 50 0;
+#X connect 57 0 4 0;
+#X connect 57 2 9 0;
+#X connect 58 0 59 0;
+#X connect 58 1 56 0;
+#X connect 59 0 48 1;
+#X connect 60 0 54 0;
+#X connect 61 0 55 0;
+#X coords 0 -1 1 1 187 85 1 100 100;

@@ -1,0 +1,33 @@
+#N canvas 122 81 821 476 10;
+#X obj 51 19 cnv 15 15 15 empty empty vasp.cconj 0 10 1 14 -262144
+-1 0;
+#X obj 51 208 vasp.update;
+#X obj 53 367 VASP-HELP;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufconre 21 float 1;
+#A 0 0.619999 0.639999 0.4 0.18 0.3 0.32 0.0599999 -0.28 -0.26 -0.14
+0.22 0.46 0.26 -0.24 -0.719999 -0.619999 -0.26 -0.02 -0.26 -0.48 -0.5
+;
+#X coords 0 1 20 -1 300 100 1;
+#X restore 410 100 graph;
+#N canvas 0 0 396 272 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 45 symbol bufconre \, symbol bufconim;
+#X msg 33 73 \; \$1 xticks 0 1 5 \; \$1 xlabel 1.1 0 5 10 15 20 \;
+\$1 yticks 0 0.25 2 \; \$1 ylabel 21.3 -1 -0.5 0 0.5 1;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 670 381 pd init;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufconim 21 float 1;
+#A 0 0.900005 0.820005 0.720004 0.640004 0.580003 0.460003 0.360002
+0.240002 0.120001 0.0600005 -0.0600002 -0.180001 -0.300002 -0.300002
+-0.400002 -0.480003 -0.500003 -0.500003 -0.560003 -0.420002 -0.380002
+;
+#X coords 0 1 20 -1 300 100 1;
+#X restore 411 232 graph;
+#X text 44 59 conjugates the imaginary part of a complex vasp;
+#X obj 51 177 vasp.cconj;
+#X msg 51 142 vasp bufconre bufconim;
+#X connect 7 0 1 0;
+#X connect 8 0 7 0;

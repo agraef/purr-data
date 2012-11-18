@@ -1,0 +1,34 @@
+#N canvas 283 203 492 445 10;
+#X text 297 220 group list;
+#X text 50 52 Another implementation of a group-rhythm. A material
+list of ED-values is sent to the middle inlet \, a list of desired
+group sizes is sent to the right-most inlet. A randomly chosen ED-value
+from the ED-material list will be repeated according to a randomly
+chosen group size from group-list.;
+#X obj 60 270 group-rhythm2;
+#X msg 60 303 60;
+#X obj 60 231 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 50 125 see also:;
+#X msg 115 125 group-rhythm;
+#X msg 180 238 100 200 400 800;
+#X obj 180 162 loadbang;
+#X msg 300 238 8 5 3 2;
+#X floatatom 103 301 0 0 0 3 ED - -;
+#X floatatom 146 302 4 0 0 3 group_size - -;
+#X text 50 21 group-rhythm2;
+#X text 89 230 start stop;
+#X obj 60 352 QT-PercPlayer;
+#X text 57 396 1994 by Karlheinz Essl;
+#X text 177 220 ED material;
+#X obj 180 183 t b b;
+#X connect 2 0 3 0;
+#X connect 2 1 10 0;
+#X connect 2 2 11 0;
+#X connect 3 0 14 0;
+#X connect 4 0 2 0;
+#X connect 7 0 2 1;
+#X connect 8 0 17 0;
+#X connect 9 0 2 2;
+#X connect 17 0 7 0;
+#X connect 17 1 9 0;

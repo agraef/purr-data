@@ -1,0 +1,33 @@
+#N canvas 1376 266 1184 679 10;
+#X obj 100 122 t f f;
+#X obj 297 123 t f f;
+#X msg 297 149 set \$1;
+#X msg 127 155 set \$1;
+#X obj 297 100 nbx 5 15 0 100 0 0 empty empty empty 0 -8 0 10 -1 -262144
+-262144 34 256;
+#X obj 173 -83 r \$2;
+#X obj 316 213 s \$3;
+#X obj 103 100 hsl 193 15 0 100 0 0 empty empty \$1 3 8 0 10 -1 -262144
+-262144 6528 1;
+#X msg 23 0 range \$1 \$2;
+#X msg 106 -1 range \$1 \$2;
+#X obj 173 -49 route range set;
+#X msg 193 -2 set \$1;
+#X connect 0 0 6 0;
+#X connect 0 1 3 0;
+#X connect 1 0 2 0;
+#X connect 1 1 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 10 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X connect 9 0 4 0;
+#X connect 10 0 8 0;
+#X connect 10 0 9 0;
+#X connect 10 1 11 0;
+#X connect 10 2 4 0;
+#X connect 11 0 7 0;
+#X connect 11 0 4 0;
+#X coords 0 -1 1 1 251 15 2 100 100;

@@ -1,0 +1,18 @@
+first, you need to install Speex library,
+i used v0.6.0 available from http://speex.sourceforge.net
+
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/speex~
+
+make clean 
+
+make
+
+make install
+
+open help-speex~.pd
+
+Thanx for getting here.
+
+Yves/

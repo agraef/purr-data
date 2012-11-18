@@ -1,0 +1,13 @@
+K 10
+svn:ignore
+V 64
+max-os9
+max-osx
+pd-darwin
+pd-msvc
+doc
+build
+flext
+Data
+.DS_Store
+END

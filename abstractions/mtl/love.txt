@@ -1,0 +1,163 @@
+abs~ control~
+boids/boids2d behavior
+boids/boids3d behavior
+choice behavior
+creb/dist~ fx~
+creb/ead~ control~
+creb/ear~ control~
+creb/fdn~ fx~
+cyclone/active patch
+cyclone/Append lists symbols routing
+cyclone/Borax midi
+cyclone/Bucket lists routing
+cyclone/capture~ info~ data
+cyclone/capture info data
+cyclone/Clip lists
+cyclone/coll data file
+cyclone/curve~ control~
+cyclone/cycle routing
+cyclone/decide random
+cyclone/delay~ fx~
+cyclone/drunk random
+cyclone/funnel routing
+cyclone/Histo data
+cyclone/match lists
+cyclone/midiformat midi
+cyclone/midiparse midi
+cyclone/mousefilter ui
+cyclone/MouseState ui
+cyclone/mtr sequencing
+cyclone/onebang initialization routing
+cyclone/overdrive~ fx~
+cyclone/pong~ control~
+cyclone/prepend lists symbols routing
+cyclone/prob behavior
+cyclone/record~ file~ record~
+cyclone/Scope~ info~
+cyclone/seq midi
+cyclone/Snapshot~ info~ conversion
+cyclone/sprintf symbols
+cyclone/substitute symbols
+cyclone/sustain midi
+cyclone/thresh lists
+cyclone/TogEdge routing
+cyclone/tosymbol symbols conversion
+cyclone/trapezoid~ control~
+cyclone/urn random
+cyclone/zl lists
+ekext/cup counter
+ekext/cupd counter
+flashserver/flashserver network
+flatspace/arraysize tables
+flatspace/entry ui symbols
+ggee/image ui
+ggee/moog~ fx~
+hcs/canvas_name tools
+hcs/colorpanel ui
+hcs/file_type file
+hcs/folder_list file
+hcs/ISOdate timing
+hcs/ISOtime timing
+hcs/noquit patch
+hcs/screensize tools
+hcs/split_path file
+hcs/sys_gui tools
+hcs/version tools
+hcs/window_name tools
+iemguts/canvasargs tools
+iemguts/canvasindex tools
+iemguts/canvasobjectposition tools
+iemguts/canvasposition tools
+iemguts/propertybang patch
+iemlib/dollarg initialization patch
+iemlib/fade~ control~
+iemlib/iem_anything data
+iemlib/iem_receive routing 
+iemlib/iem_send routing 
+iemlib/init initialization
+iemlib/modulo_counter counter
+iemlib/mp3play~ play~
+iemlib/soundfile_info file~ info~
+line~ control~
+list-abs/list-abs lists
+list-abs/list-accum lists
+list-abs/list-centroid lists
+list-abs/list-compare lists
+list-abs/list-delete lists
+list-abs/list-fifo lists
+list-abs/list-mean lists
+list-abs/list-rev lists
+list lists 
+mapping/breakpoint math
+mapping/exponential_curve math
+mapping/smooth math
+mapping/timeroll info
+markex/counter counter
+maxlib/arbran random
+maxlib/arraycopy tables
+maxlib/average math
+maxlib/delta math
+maxlib/mlife behavior
+maxlib/nchange routing
+maxlib/nroute routing
+maxlib/remote routing
+maxlib/scale math
+maxlib/speedlim timing
+maxlib/split routing
+maxlib/sync lists
+maxlib/temperature info
+maxlib/timebang timing
+maxlib/wrap math
+mjlib/morse conversion
+mjlib/n2m midi
+moocow/any2string conversion
+moocow/string2any conversion
+moonlib/tabreadl tables
+motex/pansig~ mix~
+mrpeach/midifile midi file
+mrpeach/pipelist lists timing
+netreceive network
+netsend network
+pdogg/oggread~ file~ play~
+pdogg/oggwrite~ file~ record~
+pdvjtools/colorgrid ui
+qlist sequencing
+receive routing
+send routing
+sigpack/vowel~ fx~
+smlib/threshold routing
+tof/argument initialization patch
+tof/arguments initialization patch
+tof/breakpoints~ ui control~
+tof/breakpoints ui timing
+tof/common~ mix~
+tof/crossfade~ mix~
+tof/folderpanel file
+tof/getdollarzero patch
+tof/increment counter
+tof/iterate looping
+tof/listUnfold lists
+tof/onlyone initialization symbols
+tof/openHelp tools patch
+tof/param state routing
+tof/path patch file
+tof/phasorshot~ control~
+tof/streamMinMax math
+unauthorized/grid ui
+unauthorized/wahwah~ fx~
+until looping
+writesf~ file~ record~
+zexy/list2symbol conversion symbols lists
+zexy/makesymbol symbols
+zexy/minmax lists
+zexy/msgfile file data
+zexy/packel lists
+zexy/prime math
+zexy/relay routing
+zexy/repeat looping
+zexy/sort lists
+zexy/sum lists
+zexy/symbol2list conversion symbols lists
+zexy/tabdump tables
+zexy/tabset tables
+zexy/uniqsym symbols

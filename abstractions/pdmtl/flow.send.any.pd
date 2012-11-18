@@ -1,0 +1,5 @@
+#N canvas 185 87 450 300 10;
+#X obj 39 27 inlet;
+#X obj 42 106 remote;
+#X text 90 106 maxlib;
+#X connect 0 0 1 0;

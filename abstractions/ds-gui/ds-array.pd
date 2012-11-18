@@ -1,0 +1,189 @@
+#N struct 17885.ds-array float x float y float l-width float l-color
+float x-spacing array ds-array 17885.ds-element;
+#N struct 17885.ds-element float y;
+#N canvas 286 22 768 776 10;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0.soundfile 500000 float 2;
+#X coords 0 1 500000 -1 200 140 1;
+#X restore 29 34 graph;
+#N canvas 893 26 450 300 \$0.ds-array 0;
+#X obj 59 73 struct \$0.ds-array float x float y float l-width float
+l-color float x-spacing array ds-array \$0.ds-element;
+#X obj 88 195 plot ds-array l-color 1 0 0 x-spacing;
+#X restore 538 276 pd \$0.ds-array;
+#N canvas 890 355 450 300 \$0.element 0;
+#X obj 98 59 struct \$0.ds-element float y;
+#X restore 538 302 pd \$0.element;
+#N canvas 40 484 212 121 \$0.data 1;
+#X scalar 17885.ds-array 0 50 1 0 1 \; -0 \; -0 \; 0.0335693 \; -0.0915527
+\; -0.012207 \; -0.0488281 \; 0.0823975 \; -0.00610352 \; -0.0183105
+\; -0.0305176 \; 0.0152588 \; -8.13293 \; -8.56323 \; -3.60107 \; -10.2112
+\; -1.24512 \; -7.08008 \; -7.25708 \; -6.28967 \; -3.8208 \; -4.15955
+\; 0.354004 \; 10.5072 \; 1.24207 \; -0.00610352 \; -0.149536 \; -1.42517
+\; -13.6505 \; 3.23792 \; -9.94568 \; 0.183105 \; 0.149536 \; -14.1541
+\; -11.4349 \; 15.4083 \; 0.646973 \; -0.469971 \; 3.77197 \; 2.14844
+\; -1.22986 \; -0.476074 \; -0.195312 \; 0.45166 \; -4.83704 \; 4.80347
+\; 4.03442 \; -1.49536 \; 1.88904 \; 0.564575 \; -0.354004 \; 2.17896
+\; 4.10156 \; -1.96838 \; -4.01917 \; 0.195312 \; -0.250244 \; 0.0854492
+\; 3.10364 \; -13.6353 \; 8.10242 \; 0.976562 \; 0.180054 \; 0.253296
+\; 7.27234 \; -6.32019 \; -0.0946045 \; -0.494385 \; 1.3031 \; -0.741577
+\; -1.77612 \; 0.140381 \; 0.012207 \; -2.15149 \; 2.18506 \; 0.219727
+\; 5.3894 \; 3.08228 \; 3.31116 \; -1.14136 \; 0.827026 \; 2.71606
+\; 0.106812 \; 0.259399 \; 0.088501 \; 0.00305176 \; -0.0427246 \;
+-0.137329 \; -5.98145 \; -1.59607 \; -5.95398 \; 0.695801 \; 2.05383
+\; -15.7074 \; 9.43604 \; 2.91138 \; -0.271606 \; 0.500488 \; 1.01624
+\; -7.93457 \; 1.48621 \; -0.0457764 \; -0.0976562 \; -1.33057 \; 0.549316
+\; 1.75476 \; 0.369263 \; -0.164795 \; 6.32935 \; 6.38733 \; -7.07397
+\; 0.20752 \; 0.262451 \; -1.23291 \; 4.38232 \; 1.40076 \; 1.20239
+\; 0.0793457 \; 3.72009 \; -6.17981 \; 3.82385 \; -0.494385 \; -0.0854492
+\; -0.592041 \; -7.43408 \; -7.24182 \; 6.26831 \; 0.808716 \; 0.616455
+\; -5.68848 \; 1.43127 \; 6.22559 \; -3.88489 \; -0.146484 \; 0.0579834
+\; 0.0457764 \; -0.00305176 \; -0.0335693 \; -0.00610352 \; -0.0213623
+\; 0.00610352 \; 0.0305176 \; -0.012207 \; -0.00915527 \; -0.00610352
+\; -0.00915527 \; -0.00610352 \; 0.00610352 \; 0.00305176 \; -0.00305176
+\; 0.00915527 \; 0.00305176 \; 0.0183105 \; 0.0244141 \; 0.0305176
+\; 0.00305176 \; 0.00610352 \; -0.00305176 \; -0.00610352 \; -0.00305176
+\; 0.012207 \; -0.00305176 \; -0.00915527 \; 0.012207 \; 0.012207 \;
+-0 \; 0.00610352 \; -0.00915527 \; 0.00915527 \; 0.0152588 \; -0.00610352
+\; -0.012207 \; -0.0274658 \; 0.0152588 \; 0.0152588 \; 0.0183105 \;
+0.0183105 \; 0.012207 \; -0.00610352 \; -0.00305176 \; -0.0274658 \;
+-0.012207 \; -0 \; -0.0213623 \; 0.00305176 \; -0 \; 0.00610352 \;
+0.00610352 \; 0.00915527 \; -0.00305176 \; -0.00915527 \; -0.0244141
+\; -0.00305176 \; -0.0335693 \; 0.0152588 \; 0.0183105 \; 0.00915527
+\; 0.00915527 \; 0.012207 \; 0.0183105 \; 0.00915527 \; \;;
+#X restore 540 233 pd \$0.data;
+#X obj 459 417 ds-begin pd-\$0.data;
+#X obj 237 356 list length;
+#X obj 237 396 expr $f2 / $f1;
+#X msg 318 373 200;
+#X obj 174 585 list;
+#X obj 174 421 list append;
+#X msg 318 354 determine graph pixel width;
+#X obj 231 692 element \$0.ds-array ds-array;
+#X obj 201 511 f;
+#X obj 201 490 t b a;
+#X obj 174 468 t a a;
+#X obj 200 533 setsize \$0.ds-array ds-array;
+#X obj 237 376 t a a;
+#X obj 174 612 list-enumerate;
+#X obj 174 560 t b a;
+#X obj 174 635 list-rev;
+#X obj 174 661 unpack f f;
+#X obj 174 743 set \$0.ds-element y;
+#X obj 174 443 append \$0.ds-array x y l-width l-color x-spacing;
+#X msg 174 377 0 50 1 0;
+#X text 56 372 middle of y-height;
+#X text 47 713 half y-height \, flip;
+#X obj 174 280 t b a a b b b;
+#X msg 262 281 clear;
+#X obj 306 281 s pd-\$0.data;
+#X obj 435 131 soundfiler;
+#X obj 436 80 list append \$0;
+#X obj 436 55 openpanel;
+#X obj 436 30 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 435 102 read -resize \$1 \$2.soundfile;
+#N canvas 0 22 452 378 tabdump-resample 1;
+#X obj 159 63 inlet;
+#X obj 159 310 list-extendq;
+#X obj 199 268 tabread \$0.soundfile;
+#X obj 199 119 /;
+#X obj 199 145 t b a;
+#X obj 199 186 f;
+#X obj 199 213 until;
+#X obj 199 240 f;
+#X obj 227 240 +;
+#X obj 199 91 t a b;
+#X msg 243 91 0;
+#X obj 159 86 t b a;
+#X obj 159 340 outlet;
+#X obj 159 268 t b b;
+#X obj 229 186 r \$0.samples;
+#X obj 228 119 r \$0.samples;
+#X connect 0 0 11 0;
+#X connect 1 0 12 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 1 8 1;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 7 0 2 0;
+#X connect 8 0 7 1;
+#X connect 9 0 3 0;
+#X connect 9 1 10 0;
+#X connect 10 0 7 1;
+#X connect 11 0 13 0;
+#X connect 11 1 9 0;
+#X connect 13 0 1 1;
+#X connect 13 1 1 0;
+#X connect 14 0 5 1;
+#X connect 15 0 3 1;
+#X restore 174 254 pd tabdump-resample;
+#X obj 435 170 s \$0.arraysize;
+#X obj 174 201 r \$0.arraysize;
+#X obj 505 340 loadbang;
+#X obj 100 254 list length;
+#X floatatom 100 277 5 0 0 0 - - -;
+#X obj 174 714 * -100;
+#X obj 474 527 set \$0.ds-array l-width;
+#X obj 474 547 set \$0.ds-array l-color;
+#X obj 287 475 s \$0.array-pointer;
+#X obj 626 518 r \$0.array-pointer;
+#X floatatom 474 497 5 0 0 0 - - -;
+#X floatatom 530 487 5 0 0 0 - - -;
+#X obj 505 385 s \$0.samples;
+#X obj 174 228 f;
+#X obj 139 228 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 505 362 200;
+#X connect 4 0 22 5;
+#X connect 5 0 16 0;
+#X connect 6 0 9 1;
+#X connect 7 0 6 1;
+#X connect 8 0 17 0;
+#X connect 9 0 22 0;
+#X connect 10 0 7 0;
+#X connect 11 0 21 1;
+#X connect 12 0 15 0;
+#X connect 13 0 12 0;
+#X connect 13 1 15 1;
+#X connect 14 0 18 0;
+#X connect 14 1 13 0;
+#X connect 16 0 6 0;
+#X connect 16 1 12 1;
+#X connect 17 0 19 0;
+#X connect 18 0 8 0;
+#X connect 18 1 11 1;
+#X connect 19 0 20 0;
+#X connect 20 0 40 0;
+#X connect 20 1 11 0;
+#X connect 22 0 14 0;
+#X connect 22 0 43 0;
+#X connect 23 0 9 0;
+#X connect 26 0 23 0;
+#X connect 26 1 5 0;
+#X connect 26 2 8 1;
+#X connect 26 3 10 0;
+#X connect 26 4 4 0;
+#X connect 26 5 27 0;
+#X connect 27 0 28 0;
+#X connect 29 0 35 0;
+#X connect 30 0 33 0;
+#X connect 31 0 30 0;
+#X connect 32 0 31 0;
+#X connect 33 0 29 0;
+#X connect 34 0 26 0;
+#X connect 34 0 38 0;
+#X connect 36 0 48 0;
+#X connect 37 0 50 0;
+#X connect 38 0 39 0;
+#X connect 40 0 21 0;
+#X connect 44 0 41 1;
+#X connect 44 0 42 1;
+#X connect 45 0 41 0;
+#X connect 46 0 42 0;
+#X connect 48 0 34 0;
+#X connect 49 0 48 0;
+#X connect 50 0 47 0;

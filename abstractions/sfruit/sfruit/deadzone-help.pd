@@ -1,0 +1,14 @@
+#N canvas 686 25 450 300 10;
+#X obj 129 123 deadzone 5;
+#X obj 116 79 hsl 128 15 -20 20 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X obj 116 169 hsl 128 15 -20 20 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X floatatom 140 148 5 0 0 0 - - -;
+#X text 16 18 [deadzone] converts all input within the range -N...0...N
+to 0 Useful with joysticks.;
+#X text 252 240 2009 Luke Iannini;
+#X text 252 260 proyekto.net;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;

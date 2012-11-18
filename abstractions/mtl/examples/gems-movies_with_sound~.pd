@@ -1,0 +1,44 @@
+#N canvas 1108 267 509 574 10;
+#X declare -lib Gem;
+#X declare -lib Gem;
+#X obj 23 39 gemhead;
+#X obj 23 398 pix_texture;
+#X obj 23 466 square;
+#X obj 236 60 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X obj 236 84 mtl/gemsWin /dimen 320 320;
+#X obj 180 295 mtl/out~;
+#X obj 43 91 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 43 175 openpanel;
+#X obj 23 362 mtl/gemsMovies;
+#X obj 179 131 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 84 309 snapshot~;
+#X obj 23 249 t a b;
+#X obj 180 175 mtl/sfIndexer;
+#X obj 179 154 openpanel;
+#X text 63 88 1) Load movie here;
+#X text 201 128 2) Load soundfile here;
+#X msg 180 199 set \$1 \, bang;
+#X text 22 10 How to play a movie synchronized to a soundfile.;
+#X obj 180 228 mtl/player~ 1;
+#X obj 328 61 import Gem;
+#X obj 23 64 mtl/gemsStretch;
+#X connect 0 0 20 0;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 1;
+#X connect 8 0 1 0;
+#X connect 9 0 13 0;
+#X connect 10 0 8 3;
+#X connect 11 0 8 0;
+#X connect 11 1 10 0;
+#X connect 12 0 16 0;
+#X connect 13 0 12 0;
+#X connect 16 0 18 0;
+#X connect 18 0 5 0;
+#X connect 18 1 5 1;
+#X connect 18 2 10 0;
+#X connect 20 0 11 0;

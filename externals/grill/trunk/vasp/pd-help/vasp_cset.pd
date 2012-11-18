@@ -1,0 +1,20 @@
+#N canvas 232 203 575 403 10;
+#X text 57 188 differences in lengths are adjusted to smaller vector
+of each pair;
+#X text 58 124 c \, d is the target;
+#X text 58 109 a \, b is the source;
+#X text 58 84 (a+ib)=(c+id);
+#X text 58 153 vasp.c= needs 2 vectors per operand which are treated
+as pairs;
+#X text 58 68 complex =;
+#X obj 55 34 cnv 15 15 15 empty empty vasp.c= 0 10 1 14 -262144 -1
+0;
+#X obj 291 90 vasp.c=;
+#X text 58 265 related objects:;
+#X obj 194 308 vasp.c!-;
+#X obj 277 308 vasp.c!/;
+#X obj 277 287 vasp.c/;
+#X obj 277 266 vasp.c*;
+#X obj 194 287 vasp.c-;
+#X obj 57 352 VASP-HELP;
+#X obj 194 266 vasp.c+;

@@ -1,0 +1,31 @@
+#N canvas 436 446 728 408 12;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array 789twn2 200 float 2;
+#X coords 0 100 200 0 200 140 1;
+#X restore 292 236 graph;
+#X floatatom 56 57 5 0 100 0 - - -;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array 789twn1 200 float 2;
+#X coords 0 100 200 0 200 140 1;
+#X restore 55 236 graph;
+#X text 104 53 Write Y value. The X index automatically increments.
+;
+#X text 98 80 Set the table;
+#X text 306 128 Set the X index.;
+#X floatatom 249 127 5 0 0 0 - - -;
+#X obj 13 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 30 126 reset;
+#X text 65 3 Description: Automatically write the incomming value at
+the next index.;
+#X floatatom 55 186 5 0 0 0 - - -;
+#X text 110 188 Current X index.;
+#X obj 56 155 table.write.next;
+#X msg 101 100 set 789twn1;
+#X msg 216 100 set 789twn2;
+#X connect 1 0 12 0;
+#X connect 6 0 12 1;
+#X connect 7 0 12 0;
+#X connect 12 0 10 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;

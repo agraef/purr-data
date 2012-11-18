@@ -1,0 +1,7 @@
+#N canvas 0 0 450 300 10;
+#X obj 62 194 print;
+#X obj 45 77 init.mess foo bar 1 2;
+#X obj 119 121 init.mess 5;
+#X text 57 43 Description: Loads any message at loadbang;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;

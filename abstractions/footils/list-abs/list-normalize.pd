@@ -1,0 +1,14 @@
+#N canvas 306 264 642 393 10;
+#X obj 209 202 list-minmax;
+#X obj 209 170 list-abs;
+#X obj 179 77 inlet;
+#X obj 179 99 t a a;
+#X obj 209 286 list-math /;
+#X obj 209 319 outlet;
+#X text 135 41 list-normalize: normalize a list inside (-1 \, 1);
+#X connect 0 1 4 1;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 1 0;
+#X connect 4 0 5 0;

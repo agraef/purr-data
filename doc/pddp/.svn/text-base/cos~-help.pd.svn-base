@@ -1,0 +1,142 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header cos~ 3 12 0 18 -204280
+-1 0;
+#X obj 0 440 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 247 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.41. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal trigonometry;
+#X text 12 45 DESCRIPTION cosine waveshaper;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 OUTLET_0 signal;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 598 pd META;
+#X obj 0 477 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 532 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 560 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 105 486 428 103 Related_objects 0;
+#X obj 19 33 osc~;
+#X obj 68 33 tabread4~;
+#X obj 138 33 phasor~;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [cos~] Related Objects;
+#X restore 102 598 pd Related_objects;
+#X obj 78 486 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 449 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 449 signal;
+#X text 98 486 signal;
+#X text 158 486 - [cos~] outputs the cosine of two pi times its signal
+input. So -1 \, 0 \, 1 and 2 give 1 out \, 0.5 gives -1 \, and so on.
+;
+#X text 98 536 (none);
+#X obj 486 3 cos~;
+#X obj 460 20 pddp/pddplink http://wiki.puredata.info/en/cos~ -text
+pdpedia: cos~;
+#X obj 131 240 cos~;
+#X obj 131 289 snapshot~;
+#X obj 131 192 sig~;
+#X floatatom 131 315 7 0 0 0 - - -;
+#X obj 131 165 * 0.01;
+#X floatatom 131 138 0 0 0 0 - - -;
+#X obj 198 255 metro 500;
+#X obj 198 229 r metro;
+#X text 194 165 Divide by 100;
+#X text 179 193 convert to audio;
+#X text 186 140 <-- Scroll to set input value;
+#X text 205 315 <-- output of the cos~ object;
+#X obj 459 127 loadbang;
+#X obj 459 151 s metro;
+#N canvas 107 147 428 410 cos~_vs_osc~ 0;
+#X obj 63 164 cos~;
+#X obj 63 136 phasor~;
+#X text 16 146 this:;
+#X text 165 139 is the same;
+#X text 166 158 as this:;
+#X obj 251 140 osc~;
+#X text 18 28 ( from audio tutorial E08.phase.mod.pd );
+#X obj 111 206 tgl 20 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 136 206 click to visualize;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array cos~-array1 100 float 3;
+#A 0 -0.753024 -0.792766 -0.829394 -0.862767 -0.892751 -0.919226 -0.94208
+-0.961235 -0.976614 -0.988159 -0.995823 -0.999576 -0.999404 -0.995308
+-0.987303 -0.975405 -0.959676 -0.94018 -0.916991 -0.890202 -0.859916
+-0.826254 -0.789346 -0.749339 -0.70638 -0.660644 -0.612314 -0.561581
+-0.508642 -0.453706 -0.396988 -0.33871 -0.279102 -0.218395 -0.156829
+-0.0946478 -0.0320953 0.0305825 0.0931407 0.155333 0.216916 0.277648
+0.337288 0.3956 0.452358 0.507339 0.560328 0.611116 0.659504 0.705303
+0.748333 0.788423 0.825405 0.859146 0.889513 0.916386 0.939661 0.959246
+0.975064 0.987053 0.995167 0.999358 0.999623 0.995963 0.988392 0.97694
+0.961651 0.942586 0.91982 0.893441 0.863544 0.830252 0.793699 0.75403
+0.7114 0.665977 0.617938 0.567472 0.514777 0.460057 0.403526 0.345411
+0.28594 0.225346 0.163868 0.101745 0.0392234 -0.0234532 -0.0860385
+-0.148284 -0.209948 -0.270786 -0.33056 -0.389036 -0.445985 -0.501182
+-0.554412 -0.605466 -0.654132 -0.700229;
+#X coords 0 1 99 -1 100 60 1;
+#X restore 64 328 graph;
+#X obj 64 278 tabwrite~ cos~-array1;
+#X msg 63 70 440;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array osc~-array1 100 float 3;
+#A 0 0.779374 0.738588 0.694902 0.648488 0.599526 0.548211 0.494742
+0.43933 0.382189 0.323544 0.263629 0.202679 0.140933 0.0786344 0.0160266
+-0.0466445 -0.109133 -0.171193 -0.232579 -0.293051 -0.352371 -0.410307
+-0.466632 -0.521125 -0.573571 -0.623766 -0.671511 -0.71661 -0.758893
+-0.798196 -0.834364 -0.867255 -0.896741 -0.922705 -0.945047 -0.963677
+-0.978512 -0.9895 -0.996602 -0.99979 -0.999052 -0.994391 -0.985825
+-0.973388 -0.957129 -0.937102 -0.913388 -0.886088 -0.855309 -0.82117
+-0.783807 -0.743366 -0.700006 -0.653896 -0.605216 -0.554151 -0.500911
+-0.445704 -0.388748 -0.330265 -0.270485 -0.209642 -0.147975 -0.085727
+-0.0231406 0.0395359 0.102057 0.164176 0.225651 0.28624 0.345705 0.403812
+0.460335 0.515044 0.567729 0.618184 0.66621 0.711621 0.754237 0.793891
+0.830428 0.863704 0.893581 0.919942 0.942691 0.961737 0.977007 0.98844
+0.995992 0.999633 0.999348 0.995134 0.987001 0.974993 0.959156 0.939553
+0.91626 0.889369 0.858986 0.825229;
+#X coords 0 1 99 -1 100 60 1;
+#X restore 250 328 graph;
+#X floatatom 63 101 5 0 0 0 - - -;
+#X obj 250 278 tabwrite~ osc~-array1;
+#X obj 111 236 metro 250;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [cos~] What's the difference between [cos~] and [osc~]?
+;
+#X text 18 48 [phasor~] and [cos~] together are equivalent to [osc~]
+;
+#X connect 0 0 10 0;
+#X connect 1 0 0 0;
+#X connect 5 0 14 0;
+#X connect 7 0 15 0;
+#X connect 11 0 13 0;
+#X connect 13 0 1 0;
+#X connect 13 0 5 0;
+#X connect 15 0 10 0;
+#X connect 15 0 14 0;
+#X restore 102 568 pd cos~_vs_osc~;
+#X text 11 23 cosine waveshaper;
+#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 16 0 17 0;
+#X connect 17 0 19 0;
+#X connect 17 0 19 0;
+#X connect 18 0 16 0;
+#X connect 20 0 18 0;
+#X connect 21 0 20 0;
+#X connect 22 0 17 0;
+#X connect 23 0 22 0;
+#X connect 28 0 29 0;

@@ -1,0 +1,93 @@
+#N canvas 206 337 543 94 10;
+#X obj 170 172 plugin~ tap_reverb;
+#X msg 208 114 control #8 \$1;
+#X obj 231 149 inlet~;
+#X obj 282 147 inlet~;
+#X obj 226 204 outlet~;
+#X obj 285 206 outlet~;
+#X obj 118 205 print tap.rev;
+#X obj 398 149 inlet OSC;
+#N canvas 0 0 981 424 saves 0;
+#X msg 15 103 set;
+#X msg 45 104 substate \$1;
+#X obj 15 78 t b f;
+#X obj 45 160 originator \$1 \$0;
+#X obj 152 132 inlet OSC;
+#X obj 507 86 r \$0-s1;
+#X obj 507 135 s \$0-s1-r;
+#X obj 47 55 r \$0-substate;
+#X obj 15 13 inlet substate;
+#X obj 15 35 route substate;
+#X obj 159 55 r \$0-copy;
+#X msg 159 76 copy;
+#X obj 243 50 r \$0-paste;
+#X msg 241 71 paste;
+#X text 154 15 This is the originator \, including some ready to use
+standard functionality.;
+#X text 507 56 Put your commun sends here \, if you like.;
+#X obj 507 107 commun /reverb \$0;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 2 1 1 0;
+#X connect 4 0 3 1;
+#X connect 5 0 16 0;
+#X connect 7 0 2 0;
+#X connect 8 0 9 0;
+#X connect 9 0 2 0;
+#X connect 9 1 3 0;
+#X connect 10 0 11 0;
+#X connect 11 0 3 0;
+#X connect 12 0 13 0;
+#X connect 13 0 3 0;
+#X connect 16 0 6 0;
+#X restore 336 148 pd saves;
+#X obj 202 94 r \$0-reverb;
+#X msg 125 124 print;
+#X msg 5 95 control #2 \$1;
+#X msg 324 101 control #3 \$1;
+#X obj 43 71 hsl 128 15 -70 10 0 0 \$0-dry \$0-dry dry -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 328 70 hsl 128 15 -70 10 0 0 \$0-wet \$0-wet wet -2 -6 0 8 -262144
+-1 -1 12100 1;
+#X obj 220 69 nbx 5 14 0 37 0 0 \$0-reverb \$0-reverb reverb 0 -6 0
+10 -262144 -1 -1 23 256;
+#X msg 372 206 control #1 \$1;
+#X msg 369 229 control #4 \$1;
+#X msg 371 252 control #5 \$1;
+#X msg 375 277 control #6 \$1;
+#X msg 372 299 control #7 \$1;
+#X obj 46 42 nbx 5 14 0 100 0 0 empty empty decay 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 108 40 nbx 5 14 0 20 0 0 empty empty combs 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 174 40 nbx 5 14 0 20 0 0 empty empty allpass 0 -6 0 10 -262144
+-1 -1 6 256;
+#X obj 248 42 nbx 5 14 0 20 0 0 empty empty bandpass 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 327 43 tgl 15 0 empty empty stereo-enhance 0 -6 0 8 -262144
+-1 -1 0 1;
+#X connect 0 0 6 0;
+#X connect 0 1 4 0;
+#X connect 0 2 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 1;
+#X connect 3 0 0 2;
+#X connect 7 0 8 1;
+#X connect 9 0 1 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 0;
+#X connect 13 0 11 0;
+#X connect 14 0 12 0;
+#X connect 16 0 0 0;
+#X connect 17 0 0 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;
+#X connect 21 0 16 0;
+#X connect 22 0 17 0;
+#X connect 23 0 18 0;
+#X connect 24 0 19 0;
+#X connect 25 0 20 0;
+#X coords 0 0 1 1 530 100 1;

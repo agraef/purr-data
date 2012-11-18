@@ -1,0 +1,71 @@
+#N canvas 0 0 571 451 10;
+#X obj 179 391 mix.out_~;
+#X obj 182 354 *~ 0.2;
+#X msg 102 235 60 \$1;
+#X obj 98 215 * 127;
+#X obj 102 196 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 142 217 * 127;
+#X obj 146 198 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X msg 146 237 62 \$1;
+#X obj 187 216 * 127;
+#X obj 191 197 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 231 218 * 127;
+#X obj 235 199 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X msg 191 236 64 \$1;
+#X msg 235 238 65 \$1;
+#X obj 176 303 synth.creator~ synth.simple.osc~ 1;
+#X obj 276 220 * 127;
+#X obj 280 201 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 320 222 * 127;
+#X obj 324 203 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 365 221 * 127;
+#X obj 369 202 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 414 221 * 127;
+#X obj 418 202 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X msg 280 240 67 \$1;
+#X msg 324 242 69 \$1;
+#X msg 418 241 72 \$1;
+#X msg 369 241 71 \$1;
+#X text 74 31 Desription: 12 voices wrapper for any synth that is in
+the synth/ directory. It works with direclty MIDI notes.;
+#X text 72 75 The second arguments enable/disable voice stealing.;
+#X text 76 95 The second inlet is sent to the second inlet of every
+synth voice.;
+#X text 81 131 The second argument is the name of the synth abstraction
+to be used for every voice. This has 10 voices. (for the ten fingers)
+;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;
+#X connect 2 0 14 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 14 0;
+#X connect 8 0 12 0;
+#X connect 9 0 8 0;
+#X connect 10 0 13 0;
+#X connect 11 0 10 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 0;
+#X connect 14 0 1 0;
+#X connect 15 0 23 0;
+#X connect 16 0 15 0;
+#X connect 17 0 24 0;
+#X connect 18 0 17 0;
+#X connect 19 0 26 0;
+#X connect 20 0 19 0;
+#X connect 21 0 25 0;
+#X connect 22 0 21 0;
+#X connect 23 0 14 0;
+#X connect 24 0 14 0;
+#X connect 25 0 14 0;
+#X connect 26 0 14 0;

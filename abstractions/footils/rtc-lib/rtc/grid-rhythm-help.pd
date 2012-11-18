@@ -1,0 +1,65 @@
+#N canvas 240 163 567 482 10;
+#X text 155 141 selection principle;
+#X msg 306 12 Rhythm-Generators;
+#X obj 66 268 grid-rhythm 125 10 3;
+#X obj 66 212 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X text 337 225 multiple list;
+#X obj 277 197 loadbang;
+#X msg 277 224 3 1 1 1;
+#X floatatom 133 226 4 0 0 2 dev% - -;
+#X floatatom 99 226 4 0 0 2 grid - -;
+#X floatatom 201 298 4 0 0 1 ED - -;
+#X text 21 43 Outputs a rhythm determined by multiples of a given rhythmic
+grid \, which is the first argument. The second is the deviation from
+this grid (in %) \, the third the desired selections principle (after
+Gottfried Michael Koenig: 1 = alea \, 2 = series \, 3 = sequence).
+A list of multiples of the rhythmical grid has to be sent into the
+rightmost inlet first.;
+#X text 21 11 grid-rhythm;
+#X obj 66 335 QT-PercPlayer;
+#X text 18 384 1993-2001 by Karlheinz Essl;
+#X floatatom 167 226 4 0 0 1 sel-princ - -;
+#N canvas 556 269 497 418 sel_princ 0;
+#X msg 231 228 1 alea;
+#X msg 231 247 2 series;
+#X msg 231 267 3 sequence;
+#X msg 231 289 4 rota;
+#X obj 231 318 list split 1;
+#X obj 231 373 outlet;
+#X obj 112 61 loadbang;
+#X obj 112 192 select 1 2 3 4;
+#X obj 112 171 + 1;
+#X obj 112 123 hradio 15 1 0 4 empty empty empty 0 -6 0 8 -262144 -1
+-1 1;
+#X msg 112 82 2;
+#X symbolatom 108 143 10 0 0 0 - - -;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 1 11 0;
+#X connect 6 0 10 0;
+#X connect 7 0 0 0;
+#X connect 7 1 1 0;
+#X connect 7 2 2 0;
+#X connect 7 3 3 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X coords 0 -1 1 1 90 65 1 100 100;
+#X restore 168 159 pd sel_princ;
+#X msg 277 251 2 2 1 2 2 2 1;
+#X msg 66 301 60;
+#X connect 2 0 17 0;
+#X connect 2 1 9 0;
+#X connect 3 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 2 4;
+#X connect 7 0 2 2;
+#X connect 8 0 2 1;
+#X connect 14 0 2 3;
+#X connect 15 0 14 0;
+#X connect 16 0 2 4;
+#X connect 17 0 12 0;

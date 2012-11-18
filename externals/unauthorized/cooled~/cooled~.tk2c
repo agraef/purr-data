@@ -1,0 +1,65 @@
+// ########### cooled procedures -- ydegoyon@free.fr #########
+sys_gui("proc cooled_apply {id} {\n");
+// strip "." from the TK id to make a variable name suffix
+sys_gui("set vid [string trimleft $id .]\n");
+// for each variable, make a local variable to hold its name...
+sys_gui("set var_graph_width [concat graph_width_$vid]\n");
+sys_gui("global $var_graph_width\n");
+sys_gui("set var_graph_height [concat graph_height_$vid]\n");
+sys_gui("global $var_graph_height\n");
+sys_gui("set var_graph_draw [concat graph_draw_$vid]\n");
+sys_gui("global $var_graph_draw\n");
+sys_gui("set cmd [concat $id dialog [eval concat $$var_graph_width] [eval concat $$var_graph_height] [eval concat $$var_graph_draw] \\;]\n");
+// puts stderr $cmd
+sys_gui("pd $cmd\n");
+sys_gui("}\n");
+sys_gui("proc cooled_cancel {id} {\n");
+sys_gui("set cmd [concat $id cancel \\;]\n");
+// puts stderr $cmd
+sys_gui("pd $cmd\n");
+sys_gui("}\n");
+sys_gui("proc cooled_ok {id} {\n");
+sys_gui("cooled_apply $id\n");
+sys_gui("cooled_cancel $id\n");
+sys_gui("}\n");
+sys_gui("proc pdtk_cooled_dialog {id width height draw} {\n");
+sys_gui("set vid [string trimleft $id .]\n");
+sys_gui("set var_graph_width [concat graph_width_$vid]\n");
+sys_gui("global $var_graph_width\n");
+sys_gui("set var_graph_height [concat graph_height_$vid]\n");
+sys_gui("global $var_graph_height\n");
+sys_gui("set var_graph_draw [concat graph_draw_$vid]\n");
+sys_gui("global $var_graph_draw\n");
+sys_gui("set $var_graph_width $width\n");
+sys_gui("set $var_graph_height $height\n");
+sys_gui("set $var_graph_draw $draw\n");
+sys_gui("toplevel $id -class [winfo class .]\n");
+sys_gui("wm title $id {cooled}\n");
+sys_gui("wm protocol $id WM_DELETE_WINDOW [concat cooled_cancel $id]\n");
+sys_gui("label $id.label -text {EDITOR PROPERTIES}\n");
+sys_gui("pack $id.label -side top\n");
+sys_gui("frame $id.buttonframe\n");
+sys_gui("pack $id.buttonframe -side bottom -fill x -pady 2m\n");
+sys_gui("button $id.buttonframe.cancel -text {Cancel} -command \"cooled_cancel $id\"\n");
+sys_gui("button $id.buttonframe.apply -text {Apply} -command \"cooled_apply $id\"\n");
+sys_gui("button $id.buttonframe.ok -text {OK} -command \"cooled_ok $id\"\n");
+sys_gui("pack $id.buttonframe.cancel -side left -expand 1\n");
+sys_gui("pack $id.buttonframe.apply -side left -expand 1\n");
+sys_gui("pack $id.buttonframe.ok -side left -expand 1\n");
+sys_gui("frame $id.1rangef\n");
+sys_gui("pack $id.1rangef -side top\n");
+sys_gui("label $id.1rangef.lwidth -text \"Width :\"\n");
+sys_gui("entry $id.1rangef.width -textvariable $var_graph_width -width 7\n");
+sys_gui("pack $id.1rangef.lwidth $id.1rangef.width -side left\n");
+sys_gui("frame $id.2rangef\n");
+sys_gui("pack $id.2rangef -side top\n");
+sys_gui("label $id.2rangef.lheight -text \"Height :\"\n");
+sys_gui("entry $id.2rangef.height -textvariable $var_graph_height -width 7\n");
+sys_gui("pack $id.2rangef.lheight $id.2rangef.height -side left\n");
+sys_gui("checkbutton $id.draw -text {Draw Sample} -variable $var_graph_draw -anchor w\n");
+sys_gui("pack $id.draw -side top\n");
+sys_gui("bind $id.1rangef.width <KeyPress-Return> [concat cooled_ok $id]\n");
+sys_gui("bind $id.2rangef.height <KeyPress-Return> [concat cooled_ok $id]\n");
+sys_gui("focus $id.1rangef.width\n");
+sys_gui("}\n");
+// ########### cooled procedures END -- ydegoyon@free.fr #########

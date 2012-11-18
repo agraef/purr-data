@@ -1,0 +1,26 @@
+#N canvas 219 135 653 496 10;
+#X text 250 113 buffer length = 88200 samples;
+#X text 67 72 checks the dimensions of a vasp and corrects them;
+#X obj 70 32 cnv 15 15 15 empty empty vasp.check 0 10 1 14 -262144
+-1 0;
+#X obj 69 114 table bufchk 88200;
+#X text 250 253 corrected vasp with maximum length at offset 44100
+;
+#X obj 69 227 prepend set;
+#X msg 69 159 vasp 88200 bufchk 44100 0;
+#X text 250 158 vasp with impossible dimensions;
+#X msg 69 254 vasp 44100 bufchk 44100 0;
+#X obj 69 186 vasp.check;
+#X obj 65 334 vasp.chk;
+#X text 139 333 abbreviation;
+#X text 64 363 related objects:;
+#X obj 67 393 VASP-HELP;
+#X text 52 226 *;
+#X text 62 432 * prepend-object from iemlib2 (http://pd.iem.at/iemlib)
+;
+#X obj 337 362 vasp.frames?;
+#X obj 187 362 vasp.n?;
+#X obj 245 362 vasp.offset?;
+#X connect 5 0 8 0;
+#X connect 6 0 9 0;
+#X connect 9 0 5 0;

@@ -1,0 +1,12 @@
+#N canvas 85 178 594 230 12;
+#X obj 40 129 simple1;
+#X obj 16 8 cnv 15 550 40 empty empty simple1 10 22 0 24 -260818 -1
+0;
+#X text 167 30 http://grrrr.org;
+#X obj 41 94 nbx 4 16 -999 999 0 0 empty empty input 0 -6 0 12 -261681
+-1 -1 35 256;
+#X obj 39 171 nbx 7 16 -1e+37 1e+37 0 0 empty empty inverse 0 -6 0
+12 -228992 -1 -1 0.0285714 256;
+#X text 167 10 flext tutorial \, (C)2002-2006 Thomas Grill;
+#X connect 0 0 4 0;
+#X connect 3 0 0 0;

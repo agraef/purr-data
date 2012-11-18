@@ -1,0 +1,15 @@
+#N canvas 440 304 450 300 10;
+#X obj 124 153 hradio 15 0 0 8 part empty Goto_part 0 -6 128 8 -262144
+-1 -1 0;
+#X obj 9 7 cnv 15 100 20 empty empty Using_Memento 20 12 1 14 -262144
+-66577 0;
+#N canvas 0 0 450 300 nav 0;
+#X obj 82 38 r part;
+#X msg 79 75 \; pd open \$1-tut.pd .;
+#X connect 0 0 1 0;
+#X restore 317 15 pd nav;
+#X text 19 65 This is a tutorial explaing the Memento preset system.
+To use it \, make sure \, the directory containing the memento patches
+is in you pd-path \, then navigate through the tutorial parts with
+the following radio button:;
+#X floatatom 158 192 5 0 0 0 currently_viewing part -;

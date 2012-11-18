@@ -1,0 +1,13 @@
+#N canvas 725 149 450 300 10;
+#X obj 53 140 print value;
+#X text 41 13 Description: Gets the format of one parameter.;
+#X obj 53 114 param.get.format;
+#X obj 51 206 medias/param.atom.template @id dpgetf @param1 18 @param2
+lol @param3 exp;
+#X msg 53 46 dpgetf@param1;
+#X msg 83 66 dpgetf@param2;
+#X msg 93 85 dpgetf@param3;
+#X connect 2 0 0 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;

@@ -1,0 +1,473 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "adv1", "adv1\adv1.vcproj", "{A90E248D-52FD-458F-90A5-F20F7ED1D564}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "adv2", "adv2\adv2.vcproj", "{B0C13353-9F2E-4714-A85C-6904B75B4345}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "adv3", "adv3\adv3.vcproj", "{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attr1", "attr1\attr1.vcproj", "{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attr2", "attr2\attr2.vcproj", "{D891041F-303E-4E99-868F-11FF58E0C779}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attr3", "attr3\attr3.vcproj", "{EA839AFE-95F0-47CF-9A78-72EF51CB9940}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bind1", "bind1\bind1.vcproj", "{C568D327-EA97-49C8-AF05-5FD7D35B6191}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "buffer1", "buffer1\buffer1.vcproj", "{723071BA-FE33-4C29-AB7B-6AB30B6057F7}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flext", "..\flext.vcproj", "{A0882797-7925-4AA3-93EA-7241487CECC5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib1", "lib1\lib1.vcproj", "{4560EF26-304A-424F-B882-1F65A1F4DC67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "signal1", "signal1\signal1.vcproj", "{5F58157D-ABB1-4066-A143-C14515A3D7F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "signal2", "signal2\signal2.vcproj", "{B6D40688-2D3E-4DAA-8004-706FAA731F18}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple1", "simple1\simple1.vcproj", "{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple2", "simple2\simple2.vcproj", "{4880ABD9-1598-4D5E-B4D3-558E8648405D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple3", "simple3\simple3.vcproj", "{325D0FC7-AED9-487E-9FE5-4DEC305C2799}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sndobj1", "sndobj1\sndobj1.vcproj", "{A9B22491-39A4-4010-ABDF-5C8EF80432D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stk1", "stk1\stk1.vcproj", "{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stk2", "stk2\stk2.vcproj", "{18A3D222-AC98-4CFF-82C0-E5421AB39981}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thread1", "thread1\thread1.vcproj", "{702908EB-47A9-45D0-BCC5-3448C98C73E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thread2", "thread2\thread2.vcproj", "{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timer1", "timer1\timer1.vcproj", "{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0882797-7925-4AA3-93EA-7241487CECC5} = {A0882797-7925-4AA3-93EA-7241487CECC5}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 21
+		SccProjectUniqueName0 = adv1\\adv1.vcproj
+		SccProjectName0 = adv1
+		SccLocalPath0 = adv1
+		SccProvider0 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName1 = adv2\\adv2.vcproj
+		SccProjectName1 = adv2
+		SccLocalPath1 = adv2
+		SccProvider1 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName2 = adv3\\adv3.vcproj
+		SccProjectName2 = adv3
+		SccLocalPath2 = adv3
+		SccProvider2 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName3 = attr1\\attr1.vcproj
+		SccProjectName3 = attr1
+		SccLocalPath3 = attr1
+		SccProvider3 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName4 = attr2\\attr2.vcproj
+		SccProjectName4 = attr2
+		SccLocalPath4 = attr2
+		SccProvider4 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName5 = attr3\\attr3.vcproj
+		SccProjectName5 = attr3
+		SccLocalPath5 = attr3
+		SccProvider5 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName6 = bind1\\bind1.vcproj
+		SccProjectName6 = max/flext/tutorial/bind1
+		SccLocalPath6 = bind1
+		SccProvider6 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName7 = buffer1\\buffer1.vcproj
+		SccProjectName7 = max/flext/tutorial/buffer1
+		SccLocalPath7 = buffer1
+		SccProvider7 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName8 = ..\\flext.vcproj
+		SccProjectName8 = max/flext
+		SccLocalPath8 = ..
+		SccProvider8 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName9 = lib1\\lib1.vcproj
+		SccProjectName9 = lib1
+		SccLocalPath9 = lib1
+		SccProvider9 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName10 = signal1\\signal1.vcproj
+		SccProjectName10 = max/flext/tutorial/signal1
+		SccLocalPath10 = signal1
+		SccProvider10 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName11 = signal2\\signal2.vcproj
+		SccProjectName11 = max/flext/tutorial/signal2
+		SccLocalPath11 = signal2
+		SccProvider11 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName12 = simple1\\simple1.vcproj
+		SccProjectName12 = simple1
+		SccLocalPath12 = simple1
+		SccProvider12 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName13 = simple2\\simple2.vcproj
+		SccProjectName13 = simple2
+		SccLocalPath13 = simple2
+		SccProvider13 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName14 = simple3\\simple3.vcproj
+		SccProjectName14 = simple3
+		SccLocalPath14 = simple3
+		SccProvider14 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName15 = sndobj1\\sndobj1.vcproj
+		SccProjectName15 = sndobj1
+		SccLocalPath15 = sndobj1
+		SccProvider15 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName16 = stk1\\stk1.vcproj
+		SccProjectName16 = stk1
+		SccLocalPath16 = stk1
+		SccProvider16 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName17 = stk2\\stk2.vcproj
+		SccProjectName17 = stk2
+		SccLocalPath17 = stk2
+		SccProvider17 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName18 = thread1\\thread1.vcproj
+		SccProjectName18 = thread1
+		SccLocalPath18 = thread1
+		SccProvider18 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName19 = thread2\\thread2.vcproj
+		SccProjectName19 = max/flext/tutorial/thread2
+		SccLocalPath19 = thread2
+		SccProvider19 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SccProjectUniqueName20 = timer1\\timer1.vcproj
+		SccProjectName20 = timer1
+		SccLocalPath20 = timer1
+		SccProvider20 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+		Threads Debug = Threads Debug
+		Threads DLL Debug = Threads DLL Debug
+		Threads DLL Release = Threads DLL Release
+		Threads Release = Threads Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Debug.ActiveCfg = Debug|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Debug.Build.0 = Debug|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Release.ActiveCfg = Release|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Release.Build.0 = Release|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads Debug.ActiveCfg = Debug|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads Debug.Build.0 = Debug|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads DLL Debug.Build.0 = Debug|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads DLL Release.ActiveCfg = Release|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads DLL Release.Build.0 = Release|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads Release.ActiveCfg = Release|Win32
+		{A90E248D-52FD-458F-90A5-F20F7ED1D564}.Threads Release.Build.0 = Release|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Debug.ActiveCfg = Debug|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Debug.Build.0 = Debug|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Release.ActiveCfg = Release|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Release.Build.0 = Release|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads Debug.ActiveCfg = Debug|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads Debug.Build.0 = Debug|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads DLL Debug.Build.0 = Debug|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads DLL Release.ActiveCfg = Release|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads DLL Release.Build.0 = Release|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads Release.ActiveCfg = Release|Win32
+		{B0C13353-9F2E-4714-A85C-6904B75B4345}.Threads Release.Build.0 = Release|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Debug.ActiveCfg = Debug|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Debug.Build.0 = Debug|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Release.ActiveCfg = Release|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Release.Build.0 = Release|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads Debug.ActiveCfg = Debug|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads Debug.Build.0 = Debug|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads DLL Debug.Build.0 = Debug|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads DLL Release.ActiveCfg = Release|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads DLL Release.Build.0 = Release|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads Release.ActiveCfg = Release|Win32
+		{3F3FDEA7-90CC-43CF-A2C5-2BF345705B02}.Threads Release.Build.0 = Release|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Debug.ActiveCfg = Debug|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Debug.Build.0 = Debug|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Release.ActiveCfg = Release|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Release.Build.0 = Release|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads Debug.ActiveCfg = Debug|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads Debug.Build.0 = Debug|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads DLL Debug.Build.0 = Debug|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads DLL Release.ActiveCfg = Release|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads DLL Release.Build.0 = Release|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads Release.ActiveCfg = Release|Win32
+		{9A54D435-A3E6-4AA6-ACE3-702D7C411E4E}.Threads Release.Build.0 = Release|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Debug.ActiveCfg = Debug|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Debug.Build.0 = Debug|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Release.ActiveCfg = Release|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Release.Build.0 = Release|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads Debug.ActiveCfg = Debug|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads Debug.Build.0 = Debug|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads DLL Debug.Build.0 = Debug|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads DLL Release.ActiveCfg = Release|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads DLL Release.Build.0 = Release|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads Release.ActiveCfg = Release|Win32
+		{D891041F-303E-4E99-868F-11FF58E0C779}.Threads Release.Build.0 = Release|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Debug.ActiveCfg = Debug|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Debug.Build.0 = Debug|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Release.ActiveCfg = Release|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Release.Build.0 = Release|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads Debug.ActiveCfg = Debug|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads Debug.Build.0 = Debug|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads DLL Debug.Build.0 = Debug|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads DLL Release.ActiveCfg = Release|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads DLL Release.Build.0 = Release|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads Release.ActiveCfg = Release|Win32
+		{EA839AFE-95F0-47CF-9A78-72EF51CB9940}.Threads Release.Build.0 = Release|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Debug.ActiveCfg = Debug|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Debug.Build.0 = Debug|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Release.ActiveCfg = Release|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Release.Build.0 = Release|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads Debug.ActiveCfg = Debug|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads Debug.Build.0 = Debug|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads DLL Debug.Build.0 = Debug|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads DLL Release.ActiveCfg = Release|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads DLL Release.Build.0 = Release|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads Release.ActiveCfg = Release|Win32
+		{C568D327-EA97-49C8-AF05-5FD7D35B6191}.Threads Release.Build.0 = Release|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Debug.ActiveCfg = Debug|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Debug.Build.0 = Debug|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Release.ActiveCfg = Release|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Release.Build.0 = Release|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads Debug.ActiveCfg = Debug|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads Debug.Build.0 = Debug|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads DLL Debug.Build.0 = Debug|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads DLL Release.ActiveCfg = Release|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads DLL Release.Build.0 = Release|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads Release.ActiveCfg = Release|Win32
+		{723071BA-FE33-4C29-AB7B-6AB30B6057F7}.Threads Release.Build.0 = Release|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Debug.ActiveCfg = Debug|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Debug.Build.0 = Debug|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Release.ActiveCfg = Release|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Release.Build.0 = Release|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads Debug.ActiveCfg = Threads Debug|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads Debug.Build.0 = Threads Debug|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads DLL Debug.ActiveCfg = Threads DLL Debug|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads DLL Debug.Build.0 = Threads DLL Debug|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads DLL Release.ActiveCfg = Threads DLL Release|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads DLL Release.Build.0 = Threads DLL Release|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads Release.ActiveCfg = Threads Release|Win32
+		{A0882797-7925-4AA3-93EA-7241487CECC5}.Threads Release.Build.0 = Threads Release|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Debug.ActiveCfg = Debug|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Debug.Build.0 = Debug|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Release.ActiveCfg = Release|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Release.Build.0 = Release|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads Debug.ActiveCfg = Debug|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads Debug.Build.0 = Debug|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads DLL Debug.Build.0 = Debug|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads DLL Release.ActiveCfg = Release|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads DLL Release.Build.0 = Release|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads Release.ActiveCfg = Release|Win32
+		{4560EF26-304A-424F-B882-1F65A1F4DC67}.Threads Release.Build.0 = Release|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Debug.ActiveCfg = Debug|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Debug.Build.0 = Debug|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Release.ActiveCfg = Release|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Release.Build.0 = Release|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads Debug.ActiveCfg = Debug|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads Debug.Build.0 = Debug|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads DLL Debug.Build.0 = Debug|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads DLL Release.ActiveCfg = Release|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads DLL Release.Build.0 = Release|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads Release.ActiveCfg = Release|Win32
+		{5F58157D-ABB1-4066-A143-C14515A3D7F9}.Threads Release.Build.0 = Release|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Debug.ActiveCfg = Debug|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Debug.Build.0 = Debug|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Release.ActiveCfg = Release|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Release.Build.0 = Release|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads Debug.ActiveCfg = Debug|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads Debug.Build.0 = Debug|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads DLL Debug.Build.0 = Debug|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads DLL Release.ActiveCfg = Release|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads DLL Release.Build.0 = Release|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads Release.ActiveCfg = Release|Win32
+		{B6D40688-2D3E-4DAA-8004-706FAA731F18}.Threads Release.Build.0 = Release|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Debug.ActiveCfg = Debug|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Debug.Build.0 = Debug|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Release.ActiveCfg = Release|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Release.Build.0 = Release|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads Debug.ActiveCfg = Debug|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads Debug.Build.0 = Debug|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads DLL Debug.Build.0 = Debug|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads DLL Release.ActiveCfg = Release|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads DLL Release.Build.0 = Release|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads Release.ActiveCfg = Release|Win32
+		{CF5E59F3-2AEE-40DD-8D59-8E8C407864F9}.Threads Release.Build.0 = Release|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Debug.ActiveCfg = Debug|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Debug.Build.0 = Debug|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Release.ActiveCfg = Release|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Release.Build.0 = Release|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads Debug.ActiveCfg = Debug|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads Debug.Build.0 = Debug|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads DLL Debug.Build.0 = Debug|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads DLL Release.ActiveCfg = Release|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads DLL Release.Build.0 = Release|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads Release.ActiveCfg = Release|Win32
+		{4880ABD9-1598-4D5E-B4D3-558E8648405D}.Threads Release.Build.0 = Release|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Debug.ActiveCfg = Debug|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Debug.Build.0 = Debug|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Release.ActiveCfg = Release|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Release.Build.0 = Release|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads Debug.ActiveCfg = Debug|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads Debug.Build.0 = Debug|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads DLL Debug.Build.0 = Debug|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads DLL Release.ActiveCfg = Release|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads DLL Release.Build.0 = Release|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads Release.ActiveCfg = Release|Win32
+		{325D0FC7-AED9-487E-9FE5-4DEC305C2799}.Threads Release.Build.0 = Release|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Debug.ActiveCfg = Debug|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Debug.Build.0 = Debug|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Release.ActiveCfg = Release|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Release.Build.0 = Release|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads Debug.ActiveCfg = Debug|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads Debug.Build.0 = Debug|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads DLL Debug.Build.0 = Debug|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads DLL Release.ActiveCfg = Release|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads DLL Release.Build.0 = Release|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads Release.ActiveCfg = Release|Win32
+		{A9B22491-39A4-4010-ABDF-5C8EF80432D7}.Threads Release.Build.0 = Release|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Debug.ActiveCfg = Debug|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Debug.Build.0 = Debug|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Release.ActiveCfg = Release|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Release.Build.0 = Release|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads Debug.ActiveCfg = Debug|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads Debug.Build.0 = Debug|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads DLL Debug.Build.0 = Debug|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads DLL Release.ActiveCfg = Release|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads DLL Release.Build.0 = Release|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads Release.ActiveCfg = Release|Win32
+		{AD7C94F9-BB76-4588-BF89-491D7C6D40EC}.Threads Release.Build.0 = Release|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Debug.ActiveCfg = Debug|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Debug.Build.0 = Debug|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Release.ActiveCfg = Release|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Release.Build.0 = Release|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads Debug.ActiveCfg = Debug|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads Debug.Build.0 = Debug|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads DLL Debug.Build.0 = Debug|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads DLL Release.ActiveCfg = Release|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads DLL Release.Build.0 = Release|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads Release.ActiveCfg = Release|Win32
+		{18A3D222-AC98-4CFF-82C0-E5421AB39981}.Threads Release.Build.0 = Release|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Debug.ActiveCfg = Debug|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Debug.Build.0 = Debug|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Release.ActiveCfg = Release|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Release.Build.0 = Release|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads Debug.ActiveCfg = Debug|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads Debug.Build.0 = Debug|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads DLL Debug.Build.0 = Debug|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads DLL Release.ActiveCfg = Release|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads DLL Release.Build.0 = Release|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads Release.ActiveCfg = Release|Win32
+		{702908EB-47A9-45D0-BCC5-3448C98C73E6}.Threads Release.Build.0 = Release|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Debug.ActiveCfg = Debug|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Debug.Build.0 = Debug|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Release.ActiveCfg = Release|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Release.Build.0 = Release|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads Debug.ActiveCfg = Debug|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads Debug.Build.0 = Debug|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads DLL Debug.Build.0 = Debug|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads DLL Release.ActiveCfg = Release|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads DLL Release.Build.0 = Release|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads Release.ActiveCfg = Release|Win32
+		{4CC4B09F-1D36-46C7-A1DE-3C4DC366F485}.Threads Release.Build.0 = Release|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Debug.ActiveCfg = Debug|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Debug.Build.0 = Debug|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Release.ActiveCfg = Release|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Release.Build.0 = Release|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads Debug.ActiveCfg = Debug|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads Debug.Build.0 = Debug|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads DLL Debug.ActiveCfg = Debug|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads DLL Debug.Build.0 = Debug|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads DLL Release.ActiveCfg = Release|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads DLL Release.Build.0 = Release|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads Release.ActiveCfg = Release|Win32
+		{EAA8D47B-CFD7-40AC-92A8-189BEF3E8C64}.Threads Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,45 @@
+#N canvas 358 149 657 499 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 8 458 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 460 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: None;
+#X text 12 23 Type: Modifier. Effects only its own layer.;
+#X text 187 97 *Bang:;
+#X obj 24 200 pt.filelist;
+#X text 197 118 Open: Popup requester to choose a directory.;
+#X obj 184 137 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 137 *Symbol:;
+#X text 197 158 The first Symbol box shows the directory chosen via
+the bang above. You can also type a path-name in manually here by clicking
+once and typing. Press enter to send path-name.;
+#X text 12 6 pixelTANGO HELP - pt.filelist - Choose files from directory
+;
+#X text 177 77 Functions:;
+#X obj 184 292 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 292 *Popup:;
+#X text 197 313 This popup lists all files matching the pattern. You
+can load a file by selecting.;
+#X obj 184 344 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 344 *Notes:;
+#X text 197 201 The second Symbol box labbeled "Pattern" is the glob
+style pattern for choosing files in the directory. For example to list
+all quicktime movies you can use the pattern "*.mov" Where "*" is expanded
+to refer to anything. The pattern "*" will list all files in the directory
+(including sub-directories!) The popup is updated when this value is
+sent.;
+#X text 197 365 Only the directory and pattern values are state-saved.
+The directory listing is not updated on load \, but only when a preset
+is selected \, or a new pattern has been entered.;
+#X text 197 405 The popup box saves a copy of the file-list when the
+patch is saved. If the files have not changed you can use the popup
+without updating the directory listing.;

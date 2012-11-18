@@ -1,0 +1,59 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty lighting 20 12 0 24 -228992 -66577
+0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 83 173 gemwin;
+#X msg 83 152 lighting \$1;
+#X obj 83 134 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 1 1
+;
+#X obj 465 121 gemhead;
+#X obj 465 162 sphere 1 35;
+#X obj 22 233 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 22 253 world_light;
+#X text 465 103 example sphere;
+#X text 11 54 No world would be complete without lighting. Gem provides
+three different kinds of light sources. Like rendering \, the calculation
+of lighting needs to be turned on by sending a message to [gemwin]
+\, since lighting is a GPU-intensive operation.;
+#X obj 2 194 gemhead;
+#X obj 22 304 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 22 354 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 1 1
+;
+#X obj 22 424 spot_light;
+#X obj 22 324 light;
+#X msg 54 403 0 0 1;
+#X msg 52 301 0 1 0;
+#X msg 62 231 1 0 0;
+#X text 125 225 A [world_light] is a light that is infinitely far away
+\, basically like sunlight. The rays coming from a [world_light] are
+always parallel.;
+#X text 124 306 [light] generates a point-light that is part of the
+scene. It is basically like a lamp. You can place the lamp directly
+in your scene.;
+#X msg 30 384 debug \$1;
+#X obj 46 365 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 124 386 A [spot_light] generates a spot light which you can
+move around. It can be used for pinpoint light or widened to cover
+a larger area. If you turn on the debug feature \, you will see a little
+cone where the light source is.;
+#X obj 465 142 translateXYZ 0 0 -2;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 25 0;
+#X connect 8 0 9 0;
+#X connect 12 0 9 0;
+#X connect 12 0 16 0;
+#X connect 12 0 15 0;
+#X connect 13 0 16 0;
+#X connect 14 0 15 0;
+#X connect 17 0 15 1;
+#X connect 18 0 16 1;
+#X connect 19 0 9 1;
+#X connect 22 0 15 0;
+#X connect 23 0 22 0;
+#X connect 25 0 7 0;

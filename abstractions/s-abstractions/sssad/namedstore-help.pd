@@ -1,0 +1,30 @@
+#N canvas 210 191 682 468 10;
+#N canvas 0 0 450 300 datastore 1;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD z 1 \; SSSAD y 2 \; SSSAD x 104 \; SSSAD_ADMIN
+set \;;
+#X connect 0 0 1 0;
+#X restore 11 86 pd datastore;
+#X obj 11 113 sssad/datastore;
+#X floatatom 57 279 5 0 0 0 - - -;
+#X obj 57 331 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 1;
+#X obj 60 212 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 10400 1;
+#X obj 13 305 sssad/sssad y;
+#X obj 13 355 sssad/sssad z;
+#X text 10 9 The datastore abstraction allows you to save sssad data
+into a message box that gets saved with the patch \, instead of writing
+it into a text file.;
+#X text 9 53 It requires that you first create an empty sub patch called
+"datastore" as below:;
+#X obj 13 236 sssad/sssad x;
+#X text 163 147 Use these GUIs to test it out \, and check the contents
+of the 'datastore' subpatch to see the data being written as you change
+it.;
+#X connect 2 0 5 1;
+#X connect 3 0 6 1;
+#X connect 4 0 9 1;
+#X connect 5 0 2 0;
+#X connect 6 0 3 0;
+#X connect 9 0 4 0;

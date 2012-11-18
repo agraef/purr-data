@@ -1,0 +1,47 @@
+#N canvas 374 22 791 605 10;
+#X obj 84 102 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 240 1;
+#X obj 85 363 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 111 362 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 12033 1;
+#X obj 187 362 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 5750 1;
+#X obj 214 362 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 6142 1;
+#X obj 283 362 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 126 1;
+#X obj 310 362 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 7655 1;
+#X obj 85 244 filtered_random 127 0 0.3 20 0;
+#X obj 84 79 filtered_random 127 0 0 20 0;
+#X obj 187 282 filtered_random 127 0 0 20 500;
+#X obj 310 339 filtered_random 127 0 0 20 100;
+#X obj 111 263 filtered_random 127 0 -0.3 20 0;
+#X obj 283 320 filtered_random 1000 0 0.5 20 100;
+#X floatatom 84 12 5 0 0 0 - - -;
+#X floatatom 220 12 5 0 0 0 - - -;
+#X floatatom 344 12 5 0 0 0 - - -;
+#X floatatom 470 12 5 0 0 0 - - -;
+#X floatatom 612 12 5 0 0 0 - - -;
+#X text 446 450 related to :;
+#X text 345 28 courbe (-1 1);
+#X text 470 26 metro (20 5000..);
+#X text 610 27 line (0 5000..);
+#X text 89 28 amplitude (0 1..);
+#X text 223 29 offset (0 1..);
+#X text 82 -36 generate stream of number \, based on random;
+#X obj 448 471 rnd_flow;
+#X obj 214 301 filtered_random 127 0 0 20 1500;
+#X connect 7 0 1 0;
+#X connect 8 0 0 0;
+#X connect 9 0 3 0;
+#X connect 10 0 6 0;
+#X connect 11 0 2 0;
+#X connect 12 0 5 0;
+#X connect 13 0 8 0;
+#X connect 14 0 8 1;
+#X connect 15 0 8 2;
+#X connect 16 0 8 3;
+#X connect 17 0 8 4;
+#X connect 26 0 4 0;

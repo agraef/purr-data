@@ -1,0 +1,17 @@
+#N canvas 489 406 539 307 10;
+#X obj 9 7 cnv 15 100 20 empty empty Overview 20 12 1 14 -262144 -66577
+0;
+#X text 44 168 The caretaker exists only once \, the originator exists
+for every abstraction \, that needs to save something \, and commun
+objects exists for every bit of a save.;
+#X text 46 221 Let's look at the caretaker first.;
+#X obj 349 32 s part;
+#X msg 349 8 1;
+#X text 377 7 click here \, to go on;
+#X text 44 83 Memento is divided in various parts \, where each part
+has a well defined responsibility. A single caretaker is responsible
+for saving and loading state to rsp. from disk \, [originator]s wrap
+all access to change or read out the state. The originator uses commun
+objects to communicate with the things \, that represent the state.
+;
+#X connect 4 0 3 0;

@@ -1,0 +1,35 @@
+#N canvas 382 29 604 536 10;
+#X text 55 -144 Description: Cues events to a signal.;
+#X obj 106 53 anal.sig_~;
+#X obj 80 163 print cue_number;
+#X obj 78 16 line~;
+#X obj 115 -48 t b b;
+#X obj 120 -85 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 304 12 bng 15 250 50 0 empty empty Reset 0 -6 0 10 -262144 -1
+-1;
+#X msg 76 -14 0 \, 1000 10000;
+#X text 65 -121 Comments: Can be used to cue subtitles to a sound file.
+;
+#X msg 366 38 medias/data/flow.cues.txt;
+#X obj 364 9 loadbang;
+#X obj 364 61 file.path.top;
+#X msg 366 88 read \$1;
+#X obj 80 101 timing.cues~;
+#X obj 293 159 print cue_details;
+#X text 67 214 In the cue file (medias/data/flow.cues.txt in this example)
+\, every cue must be on a sperate line. A cue must start with a float
+value that determines when the cue will be triggered.;
+#X connect 3 0 1 0;
+#X connect 3 0 13 0;
+#X connect 4 0 7 0;
+#X connect 4 1 13 1;
+#X connect 5 0 4 0;
+#X connect 6 0 13 1;
+#X connect 7 0 3 0;
+#X connect 9 0 11 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 1;
+#X connect 13 0 2 0;
+#X connect 13 1 14 0;

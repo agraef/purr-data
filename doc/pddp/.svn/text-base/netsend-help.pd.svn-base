@@ -1,0 +1,111 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header netsend 3 12 0 18
+-204280 -1 0;
+#X obj 0 348 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS control network;
+#X text 12 45 DESCRIPTION send Pd messages over a network;
+#X text 12 65 INLET_0 connect disconnect send;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 478 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 515 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [netsend] Related Objects;
+#X restore 102 598 pd Related_objects;
+#X obj 78 357 cnv 17 3 110 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 486 float;
+#X obj 78 487 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 11 23 send Pd messages over a network;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/netsend -text
+pdpedia: netsend;
+#X obj 473 3 netsend;
+#X obj 15 238 netsend;
+#X msg 15 79 connect localhost 3000;
+#X msg 23 213 send foo \$1;
+#X floatatom 23 186 0 0 0 0 - - -;
+#X msg 15 160 disconnect;
+#X msg 186 213 send foo \$1;
+#X floatatom 186 186 0 0 0 0 - - -;
+#X msg 178 160 disconnect;
+#X obj 178 238 netsend 1;
+#X msg 178 79 connect localhost 3001;
+#X floatatom 15 265 0 0 0 0 - - -;
+#X floatatom 178 265 0 0 0 0 - - -;
+#X text 66 58 TCP;
+#X text 253 55 UDP;
+#X text 325 79 Connect to "localhost" port 3000/3001;
+#X text 253 161 Close the connection;
+#X text 215 188 Send messages to "foo" on remote machine;
+#X text 12 294 Outlet is nonzero if connection is open \, zero otherwise.
+;
+#X msg 15 106 connect molloy 3000;
+#X msg 178 106 connect molloy 3001;
+#X msg 15 133 connect bug 3000;
+#X msg 178 133 connect bug 3000;
+#X text 98 356 connect;
+#X text 98 413 disconnect;
+#X text 98 443 send;
+#X text 168 486 - nonzero if the connection is open \, zero otherwise.
+;
+#N canvas 57 331 428 233 About_netsend 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 20 132 Opt@web.fm has made compatible objects for Max so that
+Pd and Max can intercommunicate: see ftp://fals.ch/pub/pdnets/.;
+#X text 8 2 [netsend] More Info;
+#X text 20 39 The [netsend] object connects to another machine over
+the network for sending TCP ("stream") or UDP ("datagram") messages.
+An outlet reports whether the connection is open or not. A connection
+request should specify the name or IP address of the other host and
+the port number. There should be a [netreceive] object on the remote
+host with a matching port number.;
+#X text 20 168 The Linux version of Pd comes with "pdsend" and "pdreceive"
+standalone programs. These haven't been tested in Windows yet (but
+the source is included in the Pd distribution).;
+#X restore 102 567 pd About_netsend;
+#X text 80 535 1) float;
+#X text 168 535 - (optional) 0 for TCP \, nonzero for UDP. (Default
+is TCP.);
+#X text 168 413 - disconnect from the remote machine. When it is disconnected
+\, a "0" is sent to the outlet.;
+#X text 168 443 - after successfully connecting \, use the "send" message
+to forward data to the remote machine.;
+#X text 168 356 - use the "connect" message to connect to the specified
+remote machine-- providing its name or IP address-- on the specified
+port (e.g. \, "connect localhost 3000"). A "1" is output if the connection
+is successful.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 14 0 24 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 16 0;
+#X connect 18 0 14 0;
+#X connect 19 0 22 0;
+#X connect 20 0 19 0;
+#X connect 21 0 22 0;
+#X connect 22 0 25 0;
+#X connect 23 0 22 0;
+#X connect 32 0 14 0;
+#X connect 33 0 22 0;
+#X connect 34 0 14 0;
+#X connect 35 0 22 0;

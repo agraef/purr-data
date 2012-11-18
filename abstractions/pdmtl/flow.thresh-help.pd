@@ -1,0 +1,19 @@
+#N canvas 0 22 477 340 10;
+#X obj 59 98 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 48 283 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 58 8 Description: Bangs when float input is bigger than the
+argument value;
+#X text 61 46 Only resets when input value gets back to under the target
+value;
+#X obj 223 101 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 700 1;
+#X obj 212 286 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 57 236 flow.thresh @thresh 64;
+#X obj 221 239 flow.thresh @thresh 64 @direction -1;
+#X connect 0 0 6 0;
+#X connect 4 0 7 0;
+#X connect 6 0 1 0;
+#X connect 7 0 5 0;

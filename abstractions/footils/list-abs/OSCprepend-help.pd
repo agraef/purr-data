@@ -1,0 +1,29 @@
+#N canvas 417 189 565 469 10;
+#X msg 121 238 /a 1 c 3;
+#X obj 121 350 print OSC;
+#X text 52 262 ignored:;
+#X text 72 238 okay:;
+#X obj 121 323 OSCprepend /synth/ha;
+#X msg 256 231 /osc;
+#X text 304 230 change OSC-messages;
+#X msg 256 257 /freq/1;
+#X obj 104 31 cnv 15 220 30 empty empty OSCprepend 20 12 0 14 -233017
+-66577 0;
+#X text 98 76 "Prepends" first argument to an OSC message list.;
+#X text 106 140 Right inlet lets you change the prepended argument
+;
+#X msg 121 262 900 2 3 4 a b c;
+#X text 104 103 Example: with ARG_1 being "/synth" the message "/set
+x 1 2" will become "/synth/set x 1 2".;
+#X text 107 166 Lists not starting with a symbol are filtered out.
+;
+#X msg 325 285 1;
+#X text 359 287 oops...;
+#X symbolatom 324 260 10 0 0 1 type-here - -;
+#X connect 0 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 1;
+#X connect 7 0 4 1;
+#X connect 11 0 4 0;
+#X connect 14 0 4 1;
+#X connect 16 0 4 1;

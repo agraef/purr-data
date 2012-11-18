@@ -1,0 +1,611 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/2997/trunk/vasp/max-help
+END
+vasp.rfft.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rfft.help
+END
+vasp.rvalleys.help
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rvalleys.help
+END
+vasp.help
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.help
+END
+vasp.vector.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.vector.help
+END
+vasp.peaks.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.peaks.help
+END
+vasp.lwr.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.lwr.help
+END
+vasp.rot.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rot.help
+END
+vasp.offsetq.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.offsetq.help
+END
+vasp.rifft.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rifft.help
+END
+vasp.radd.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.radd.help
+END
+vasp.sync.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.sync.help
+END
+vasp.noise.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.noise.help
+END
+vasp.polar.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.polar.help
+END
+vasp.frames.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.frames.help
+END
+vasp.crsub.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.crsub.help
+END
+vasp.spit.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.spit.help
+END
+vasp.mod.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mod.help
+END
+vasp.beveldn.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.beveldn.help
+END
+vasp.cnoise.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cnoise.help
+END
+vasp.log.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.log.help
+END
+vasp.framesd.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.framesd.help
+END
+vasp.update.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.update.help
+END
+vasp.neq.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.neq.help
+END
+vasp.max.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.max.help
+END
+vasp.vectors.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.vectors.help
+END
+vasp.cplus.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cplus.help
+END
+vasp.pwrap.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.pwrap.help
+END
+vasp.sub.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.sub.help
+END
+vasp.cifft.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cifft.help
+END
+vasp.mul.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mul.help
+END
+vasp.cset.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cset.help
+END
+vasp.sign.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.sign.help
+END
+vasp.opt.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.opt.help
+END
+vasp.bevelup.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.bevelup.help
+END
+vasp.rmin.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rmin.help
+END
+vasp.abs.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.abs.help
+END
+vasp.pow.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.pow.help
+END
+vasp.sqr.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.sqr.help
+END
+vasp.aminq.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.aminq.help
+END
+vasp.xshift.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.xshift.help
+END
+vasp.part.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.part.help
+END
+vasp.amaxq.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.amaxq.help
+END
+vasp.mphasor.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mphasor.help
+END
+vasp.gather.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.gather.help
+END
+vasp.tilt.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.tilt.help
+END
+vasp.fhp.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.fhp.help
+END
+vasp.cnorm.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cnorm.help
+END
+vasp.valleys.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.valleys.help
+END
+vasp.gate.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.gate.help
+END
+vasp.flp.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.flp.help
+END
+vasp.osc.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.osc.help
+END
+vasp.cdiv.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cdiv.help
+END
+vasp.offset.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.offset.help
+END
+vasp.add.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.add.help
+END
+vasp.sqrt.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.sqrt.help
+END
+vasp.nonzero.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.nonzero.help
+END
+vasp.equ.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.equ.help
+END
+vasp.split.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.split.help
+END
+vasp.framesq.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.framesq.help
+END
+vasp.xmirr.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.xmirr.help
+END
+vasp.rgate.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rgate.help
+END
+vasp.minq.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.minq.help
+END
+vasp.maxq.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.maxq.help
+END
+vasp.shift.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.shift.help
+END
+vasp.leq.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.leq.help
+END
+vasp.min.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.min.help
+END
+vasp.rpeaks.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rpeaks.help
+END
+vasp.rminq.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rminq.help
+END
+vasp.rmaxq.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rmaxq.help
+END
+vasp.minmax.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.minmax.help
+END
+vasp.offsetd.help
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.offsetd.help
+END
+vasp.int.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.int.help
+END
+vasp.multi.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.multi.help
+END
+vasp.set.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.set.help
+END
+vasp.gtr.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.gtr.help
+END
+vasp.exp.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.exp.help
+END
+vasp.mbeveldn.help
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mbeveldn.help
+END
+vasp.csub.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.csub.help
+END
+vasp.xrot.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.xrot.help
+END
+vasp.rect.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rect.help
+END
+vasp.join.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.join.help
+END
+vasp.cmul.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cmul.help
+END
+vasp.dif.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.dif.help
+END
+vasp.mcosc.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mcosc.help
+END
+vasp.chk.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.chk.help
+END
+vasp.rmax.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rmax.help
+END
+vasp.csqr.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.csqr.help
+END
+vasp.mirr.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mirr.help
+END
+vasp.list.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.list.help
+END
+vasp.rsub.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rsub.help
+END
+vasp.ssqrt.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.ssqrt.help
+END
+vasp.geq.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.geq.help
+END
+vasp.mbevelup.help
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.mbevelup.help
+END
+vasp.cpowi.help
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cpowi.help
+END
+vasp.cfft.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cfft.help
+END
+vasp.div.help
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.div.help
+END
+vasp.ropt.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.ropt.help
+END
+vasp.cosc.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.cosc.help
+END
+vasp.rpow.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.rpow.help
+END
+vasp.ssqr.help
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.ssqr.help
+END
+vasp.phasor.help
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/2997/trunk/vasp/max-help/vasp.phasor.help
+END

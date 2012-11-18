@@ -1,0 +1,76 @@
+#N canvas 466 113 470 441 10;
+#X text 1 58 Author: Roman Haefeli;
+#X text 2 72 Version: 2007-11-04;
+#X obj 1 -21 cnv 15 690 30 empty empty echoBp~ 2 12 1 14 -233017 -66577
+0;
+#X obj 5 352 cnv 15 400 40 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X text 7 353 warning:;
+#X text 7 371 high q and high feedback can show unstable behaviour.
+;
+#X obj 10 188 mtl/out~;
+#X obj 10 153 mtl/echoBp~ /id fbdel;
+#X obj 10 101 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#N canvas 5 185 450 300 generate~ 0;
+#X obj 32 213 osc~ 200;
+#X obj 32 89 metro 400;
+#X obj 32 175 mtof;
+#X obj 104 195 mtof;
+#X obj 32 132 + 20;
+#X obj 32 111 random 70;
+#X floatatom 83 69 5 0 0 0 - - -;
+#X obj 32 261 outlet~;
+#X obj 103 261 outlet~;
+#X obj 30 14 inlet;
+#X obj 104 175 mtl/closestNote 0 2 4 7 9;
+#X obj 104 234 *~;
+#X obj 31 234 *~;
+#X obj 104 214 osc~ 100;
+#X obj 32 155 mtl/closestNote 0 2 4 7 9;
+#X connect 0 0 12 0;
+#X connect 1 0 5 0;
+#X connect 2 0 0 0;
+#X connect 3 0 13 0;
+#X connect 4 0 10 0;
+#X connect 4 0 14 0;
+#X connect 5 0 4 0;
+#X connect 6 0 1 1;
+#X connect 9 0 1 0;
+#X connect 9 0 11 1;
+#X connect 9 0 12 1;
+#X connect 10 0 3 0;
+#X connect 11 0 8 0;
+#X connect 12 0 7 0;
+#X connect 13 0 11 0;
+#X connect 14 0 2 0;
+#X restore 10 126 pd generate~;
+#X text 1 12 Description: stereo delay with a bandpass filter in the
+feedback loop.;
+#X obj 238 54 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 298 55 PARAM ENABLED;
+#X obj 235 181 cnv 15 200 20 empty empty /fbdel/ 2 12 0 8 -258401 -262144
+0;
+#X obj 235 204 hsl 100 15 1 10000 0 0 /fbdel/delayl /fbdel/delayl_
+delayl 105 7 0 8 -262144 -1 -1 98 1;
+#X obj 235 222 hsl 100 15 1 10000 0 0 /fbdel/delayr /fbdel/delayr_
+delayr 105 7 0 8 -262144 -1 -1 98 1;
+#X obj 235 240 hsl 100 15 0 127 0 0 /fbdel/feedback /fbdel/feedback_
+feedback 105 7 0 8 -262144 -1 -1 0 1;
+#X obj 235 258 tgl 15 0 /fbdel/routing /fbdel/routing_ routing 17 7
+0 8 -262144 -166441 -1 0 1;
+#X obj 235 276 hsl 100 15 0 127 0 0 /fbdel/frequency /fbdel/frequency_
+frequency 105 7 0 8 -262144 -1 -1 7795 1;
+#X obj 235 294 hsl 100 15 0 127 0 0 /fbdel/q /fbdel/q_ q 105 7 0 8
+-262144 -1 -1 0 1;
+#X obj 235 312 hsl 100 15 0 1 0 0 /fbdel/wet /fbdel/wet_ wet 105 7
+0 8 -262144 -1 -1 0 1;
+#X text 149 151 <-Click on the propeties menu to display params;
+#X text 2 41 tags: fx~;
+#X obj 237 77 ../doc/5.reference/tof/param-help;
+#X connect 7 0 6 0;
+#X connect 7 1 6 1;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X connect 9 1 7 1;

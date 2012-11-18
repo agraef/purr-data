@@ -1,0 +1,19 @@
+#N canvas 1 48 570 353 10;
+#X text 86 25 Int in left(*) inlet outputs the nth member of a geometrical
+row. The other parameters are reference value <int \, float> and the
+proportional factor q <float>.;
+#X floatatom 98 197 5 0 0 1 nth_element_of_geometrical_row - -;
+#X floatatom 98 114 4 0 0 2 row_index_n - -;
+#X floatatom 191 114 4 0 0 2 value - -;
+#X floatatom 258 114 4 0 0 2 proportional_factor_q - -;
+#X obj 98 163 geom 20 1.25;
+#X text 101 268 1993 by Karlheinz Essl;
+#X text 25 35 geom;
+#N canvas 0 0 445 125 (*) 0;
+#X text 21 28 (*) older docs mentioned the "right" inlet here \, but
+of course it's the leftmost inlet.;
+#X restore 321 268 pd (*);
+#X connect 2 0 5 0;
+#X connect 3 0 5 1;
+#X connect 4 0 5 2;
+#X connect 5 0 1 0;

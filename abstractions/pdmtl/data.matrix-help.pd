@@ -1,0 +1,111 @@
+#N canvas 611 85 730 713 10;
+#X declare -lib iemmatrix;
+#X declare -lib iemmatrix;
+#X declare -lib iemmatrix;
+#X declare -lib iemmatrix;
+#X msg 137 81 dump;
+#X obj 42 538 print single_query;
+#X floatatom 142 485 5 0 0 0 - - -;
+#X floatatom 160 460 5 0 0 0 - - -;
+#X msg 57 -4 create 10 10;
+#X msg 77 27 create 10 10 -1;
+#X msg 104 56 create 3 3 1;
+#X msg 151 115 resize 11 10 -2;
+#X text 138 -4 Creates a 10x10 matrix filled with zeros;
+#X text 183 56 Creates a 3x3 matrix filled with 1s;
+#X text 176 26 Creates a 10x10 matrix filled with -1s;
+#X text 179 78 Dumps the matrix out the 3rd outlet;
+#X text 256 107 Resizes a matrix to 11x10. Fills the NEW elements with
+the number -2;
+#X msg 159 145 resize 5 13;
+#X text 281 176 Sets the matrix;
+#X msg 198 201 print;
+#X text 245 200 Prints the matrix;
+#X obj 119 512 print dump;
+#X msg 271 304 copy;
+#X msg 274 353 paste;
+#X msg 275 328 copy 1 1 5 5;
+#X msg 271 379 paste 5 5;
+#X msg 337 494 paste;
+#X msg 383 497 print;
+#X msg 517 494 print;
+#X text 239 145 Resizes a matrix to 5x3. Fills the NEW elements with
+zeros;
+#X text 254 567 By default \, the data.matrix's internal matrix is
+of size 1x1. You can change it's initial size with creation arguments
+(rows cols initial_value).;
+#X text 308 303 Copies the whole matrix in a buffer;
+#X text 360 326 Copies elements 1 1 to 5 5 in a buffer;
+#X text 317 355 Pastes a buffered matrix into the start of the target
+matrix;
+#X text 343 381 Pastes a buffered matrix into element 5 5 and onward
+;
+#X text 179 485 rows;
+#X text 201 458 cols;
+#X obj 60 709 print multi_query;
+#X obj 44 588 loadbang;
+#X msg 172 641 print;
+#X msg 237 641 rows 4 6;
+#N canvas 342 184 1024 730 random_matrix 0;
+#X msg 64 63 10 10;
+#X obj 64 27 inlet;
+#X obj 66 179 outlet;
+#X obj 64 88 iemmatrix/mtx_rand;
+#X obj 71 120 iemmatrix/mtx_mul 100;
+#X obj 63 152 iemmatrix/mtx_int;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 2 0;
+#X restore 45 620 pd random_matrix;
+#X msg 236 663 cols 9 10;
+#X text 304 640 Dumps the rows 4 through 6 out the second outlet;
+#X text 308 661 Dumps the columns 9 through 10 out the second outlet
+;
+#X msg 231 232 element 1 1 100;
+#X text 341 230 Sets element 1x1 to the value 100;
+#X msg 244 254 element 1 1;
+#X text 326 254 Gets the value of element 1x1;
+#X msg 250 275 row 3;
+#X msg 302 275 col 2;
+#X text 344 277 Gets the whole row or column;
+#X obj 49 437 data.matrix 10 10;
+#X text 282 408 With the paste command \, the target matrix keeps it's
+size. Extra data is automatically removed.;
+#X text 277 439 Also \, the copy and paste buffer is common to all
+data.matrix abstractions (you can copy and paste between the abstractions
+as long as the data.matrix from which you copied still exists).;
+#X msg 159 175 matrix 2 2 1 2 3 4;
+#X obj 320 534 data.matrix 2 2;
+#X obj 45 681 data.matrix;
+#X obj 517 526 data.matrix 3 3 -2;
+#X connect 0 0 48 0;
+#X connect 4 0 48 0;
+#X connect 5 0 48 0;
+#X connect 6 0 48 0;
+#X connect 7 0 48 0;
+#X connect 13 0 48 0;
+#X connect 15 0 48 0;
+#X connect 18 0 48 0;
+#X connect 19 0 48 0;
+#X connect 20 0 48 0;
+#X connect 21 0 48 0;
+#X connect 22 0 52 0;
+#X connect 23 0 52 0;
+#X connect 24 0 54 0;
+#X connect 34 0 37 0;
+#X connect 35 0 53 0;
+#X connect 36 0 53 0;
+#X connect 37 0 53 0;
+#X connect 38 0 53 0;
+#X connect 41 0 48 0;
+#X connect 43 0 48 0;
+#X connect 45 0 48 0;
+#X connect 46 0 48 0;
+#X connect 48 0 1 0;
+#X connect 48 2 17 0;
+#X connect 48 3 2 0;
+#X connect 48 4 3 0;
+#X connect 51 0 48 0;
+#X connect 53 1 33 0;

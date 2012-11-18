@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1247/trunk/flext/tutorial/adv3
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/adv3/Makefile.am
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/adv3/package.txt
+END
+adv3.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/adv3/adv3.mcp
+END
+adv3.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/adv3/adv3.vcproj
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/adv3/main.cpp
+END

@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/ext/!svn/ver/2412/trunk/rpn
+END
+rpn_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2412/trunk/rpn/rpn_function.h
+END
+rpn_cmds.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2412/trunk/rpn/rpn_cmds.h
+END
+rpn_operand.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2412/trunk/rpn/rpn_operand.h
+END
+rpn.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2412/trunk/rpn/rpn.vcproj
+END
+rpn_op_input.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2412/trunk/rpn/rpn_op_input.h
+END
+rpn_ops.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/2412/trunk/rpn/rpn_ops.h
+END
+rpn_op_stack.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2412/trunk/rpn/rpn_op_stack.h
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2412/trunk/rpn/package.txt
+END
+rpn_stack.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2412/trunk/rpn/rpn_stack.h
+END
+rpn_memory.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2412/trunk/rpn/rpn_memory.h
+END
+rpn_opcode.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2412/trunk/rpn/rpn_opcode.h
+END
+rpn_op_vec.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2412/trunk/rpn/rpn_op_vec.h
+END
+rpn_op_mem.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2412/trunk/rpn/rpn_op_mem.h
+END
+rpn_command.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2412/trunk/rpn/rpn_command.h
+END
+rpn_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2412/trunk/rpn/rpn_main.cpp
+END
+rpn.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/2412/trunk/rpn/rpn.h
+END
+rpn-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2412/trunk/rpn/rpn-help.pd
+END
+rpn_op_meta.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2412/trunk/rpn/rpn_op_meta.h
+END
+rpn_op_debug.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2412/trunk/rpn/rpn_op_debug.h
+END
+rpn_opimp.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2412/trunk/rpn/rpn_opimp.h
+END

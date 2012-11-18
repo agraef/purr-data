@@ -1,0 +1,3 @@
+#N canvas 519 115 450 300 10;
+#X text 64 35 list-partslow: Serialize a delimited list on demand;
+#X obj 65 115 list-partslow;

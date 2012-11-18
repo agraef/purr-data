@@ -1,0 +1,51 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty basic_2d_objects 20 12 0 24 -228992
+-66577 0;
+#X obj 168 196 gemhead;
+#X obj 167 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 168 224 square;
+#X obj 28 196 gemhead;
+#X obj 27 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 98 196 gemhead;
+#X obj 97 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 28 224 circle;
+#X obj 98 224 triangle;
+#X text 8 147 two-dimensional (2D);
+#X obj 230 196 gemhead;
+#X obj 229 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 230 224 rectangle;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 306 196 gemhead;
+#X obj 305 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 306 224 colorSquare;
+#X obj 396 196 gemhead;
+#X obj 395 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 396 224 curve 5;
+#X obj 466 196 gemhead;
+#X obj 465 168 tgl 15 1 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 466 224 text2d;
+#X text 17 430 If you click and drag in the gemwin \, you can change
+your view perspective \, and see that these objects are only 2D.;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 9 0;
+#X connect 7 0 6 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 19 0 21 0;
+#X connect 20 0 19 0;
+#X connect 22 0 24 0;
+#X connect 23 0 22 0;

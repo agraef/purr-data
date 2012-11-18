@@ -1,0 +1,12 @@
+#N canvas 93 45 472 358 10;
+#X obj 116 147 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262131
+-1 -1 5300 1;
+#X text 339 191 from 0 to 1;
+#X obj 21 188 resample 50;
+#X obj 133 133 timeroll;
+#X obj 21 211 clip 0 1;
+#X text 73 54 Display a changing value over time.;
+#X text 99 110 (move the slider to see it in action);
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;

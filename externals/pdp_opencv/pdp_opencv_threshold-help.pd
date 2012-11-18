@@ -1,0 +1,91 @@
+#N canvas 15 96 1039 729 10;
+#X obj 11 -57 cnv 15 621 250 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X obj 251 -17 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 251 10 metro 40;
+#X msg 341 37 close;
+#X obj 271 108 pdp_v4l;
+#X msg 328 5 open /dev/video0;
+#X obj 440 -22 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 440 5 metro 40;
+#X msg 521 24 close;
+#X msg 517 0 open /dev/video0;
+#X obj 461 104 pdp_v4l2;
+#X msg 526 79 format \$1;
+#X obj 527 57 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj 41 158 pdp_qt;
+#X obj 74 94 metro 40;
+#X msg 74 66 bang;
+#X msg 115 66 stop;
+#X obj 41 -3 openpanel;
+#X msg 41 22 open \$1;
+#X msg 41 -31 bang;
+#X msg 75 121 loop \$1;
+#X obj 155 121 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 155 39 loadbang;
+#X text 84 -28 playing a video file;
+#X text 281 -19 Camera input;
+#X obj 101 159 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 14 -122 pdp_opencv_threshold : pixel thresholding;
+#X text 14 -97 written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+);
+#X obj 12 201 cnv 15 621 150 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X obj 39 396 pdp_xv;
+#X floatatom 155 289 5 0 0 0 - - -;
+#X obj 40 316 pdp_opencv_threshold;
+#X msg 332 325 mode \$1;
+#X floatatom 109 270 5 0 0 0 - - -;
+#X text 109 253 Max value used in some modes;
+#X msg 309 213 0;
+#X msg 330 236 1;
+#X msg 353 259 2;
+#X msg 377 280 3;
+#X msg 404 303 4;
+#X text 152 273 threshold value;
+#X text 188 290 ( default 50 );
+#X text 383 325 thresholding mode ( default 0 );
+#X text 13 -109 used as a filter to detect bright or dark piksels;
+#X text 341 211 pixel >= threshold;
+#X text 381 258 pixel >= threshold set to threshold;
+#X text 359 235 pixel <= threshold;
+#X text 408 279 pixel <= threshold set to 0;
+#X text 432 301 pixel >= threshold set to 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 31 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 31 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 31 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
+#X connect 19 0 17 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 22 0 15 0;
+#X connect 25 0 13 1;
+#X connect 30 0 31 2;
+#X connect 31 0 29 0;
+#X connect 32 0 31 0;
+#X connect 33 0 31 1;
+#X connect 35 0 32 0;
+#X connect 36 0 32 0;
+#X connect 37 0 32 0;
+#X connect 38 0 32 0;
+#X connect 39 0 32 0;

@@ -1,0 +1,21 @@
+#N canvas 0 22 465 428 10;
+#X obj 206 18 nqpoly~;
+#X text 102 18 not-quite-poly;
+#X obj 205 398 nqpoly4;
+#X text 139 398 see also:;
+#X obj 177 247 nqpoly~-test;
+#X obj 177 267 tgrain~-test;
+#X text 101 230 examples:;
+#X text 35 304 The voice allocation is handled automatically \, provided
+that the patches for each voice is written properly. This patch should
+accept the control messages on its left inlet \, and when it completes
+its task and is available for reallocation \, it should send a bang
+out of its outlet.;
+#X text 29 72 (not quite poly) is an abstraction that uses various
+voodoo to fake the functionality of the [poly~] object in max.;
+#X text 30 109 in short \, [nqpoly4] can take abstractions that obey
+certain requirements and can link them together to make a polyphonic
+instrument.;
+#X text 31 157 since it automates the normally painful task of making
+a patch polyphonic \, it is very easy to do things like 60-nite polyphonism
+\, which really starts becoming granular synthesis.;

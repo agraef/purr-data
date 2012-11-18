@@ -1,0 +1,98 @@
+# the ANN-EXTERNAL-makefile
+# everything is GnuGPL that should come with the ann.tgz
+# NO WARRANTIES FOR ANYTHING
+# et cetera
+# (l) forum::für::umläute 2001
+
+# make sure that the "m_pd.h" is somehow available either by putting it into this
+# directory, by adding it's path to the INCLUDE-path or by putting it into an
+# already included path, e.g. "/usr/local/include/"
+# download fann libraries from http://fann.sourceforge.net
+# and install from source
+# make sure that fann.h is available
+
+#these are the user adjustables : adjust them to fit into your system
+# PD will install to $(DESTDIR)$(INSTALLL_PREFIX)$(PDLIBDIR), which is /usr/local/lib/pd
+# by default
+DESTDIR =
+INSTALL_PREFIX = /usr/local
+PDLIBDIR = /lib/pd
+
+# the *.dll-files go into $(DESTDIR)$(INSTALLL_PREFIX)$(PDLIBDIR)$(LIBRARY_DIR)
+LIBRARY_DIR=/extra
+# the reference-files go into $(DESTDIR)$(INSTALLL_PREFIX)$(PDLIBDIR)$(REFERENCE_DIR)
+#REFERENCE_DIR=/doc/5.reference/ann
+REFERENCE_DIR=/extra/help-ann
+
+#these were the user adjustables
+#---------------------------------
+
+
+TARGETS = ann_som.c \
+	ann_mlp.c   \
+	ann_td.c    \
+
+# ----------------------- LINUX ----------------------------
+.SUFFIXES: .pd_linux
+
+
+LINUXOBJECTS = $(TARGETS:%=%.o)
+ARCH = $(shell uname --machine)
+
+PD_DIR = $(DESTDIR)$(INSTALL_PREFIX)$(PDLIBDIR)
+PD_INSTALLDIR_LIB = $(PD_DIR)$(LIBRARY_DIR)
+PD_INSTALLDIR_REF = $(PD_DIR)$(REFERENCE_DIR)
+
+ifeq (${ARCH},alpha)
+AFLAGS = -mieee	 -mcpu=ev56
+endif
+
+
+STRIP=strip
+STRIPFLAGS=--strip-unneeded
+
+
+LINCLUDE =
+
+OPTIMIZE_FLAGS = -O2 -O6 -funroll-loops -march=pentium3
+DEFS = -DPD
+
+#CFLAGS = -O2 -g -Wall $(LINCLUDE) $(UCFLAGS) $(AFLAGS)
+CFLAGS = $(OPTIMIZE_FLAGS) -fomit-frame-pointer -fPIC -Wall $(LINCLUDE) $(UCFLAGS) $(AFLAGS) $(DEFS)
+
+LDFLAGS = -Wl,--export-dynamic -shared
+LIBS = -lc -lm -lfann
+
+# here come the targets
+
+all: $(TARGETS:%.c=%.pd_linux)
+
+%.pd_linux: %.c
+	$(CC) $(CFLAGS) $(INCLUDE) $(LDFLAGS) -o "$*.pd_linux" "$*.c" $(LIBS)
+	$(STRIP) $(STRIPFLAGS) "$*.pd_linux"
+
+
+ann: $(TARGETS:%.c=%.o)
+	$(CC) $(CFLAGS) $(INCLUDE) -o ann.o -c ann.c
+	$(CC) $(LDFLAGS) -o ann.pd_linux *.o $(LIBS)
+	$(STRIP) $(STRIPFLAGS) ann.pd_linux
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -o "$*.o" -c "$*.c"
+
+
+
+everything: clean all install distclean
+
+distclean:
+	-rm *.o *.pd_linux *~
+
+clean:
+	-rm *.o *.pd_linux
+
+install: installdocs
+	install -m 644 ann*.pd_linux $(PD_INSTALLDIR_LIB)
+
+installdocs:
+	install -d $(PD_INSTALLDIR_REF)
+	install -m644 ../examples/* $(PD_INSTALLDIR_REF)

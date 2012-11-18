@@ -1,0 +1,64 @@
+#N canvas 393 81 487 319 10;
+#X obj 19 135 outlet;
+#X obj 19 54 ctlin \$1;
+#X obj 99 54 inlet midi-sim;
+#X obj 136 104 hsl 50 8 0 127 0 0 empty empty empty -2 -6 0 8 -233017
+-1 -1 2662 0;
+#X msg 133 83 set \$1;
+#X text 12 10 [m-i] - Automatic conversion of MIDI controller;
+#X text 236 150 Inlets;
+#X text 236 200 Outlets;
+#X text 236 40 Arguments;
+#X text 236 80 - Lower range;
+#X text 236 220 - Scaled float;
+#X text 236 100 - Upper range;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 289 pd license;
+#X obj 19 115 expr_scale 0 127 \$2 \$3;
+#X obj 109 165 outlet;
+#X text 236 240 - Direct MIDI input;
+#X obj 133 145 i;
+#X obj 99 225 ctlout \$1;
+#X obj 99 205 spigot \$4;
+#X text 235 121 - MIDI feedback on/off (1/0);
+#X text 236 60 - Controller channel;
+#X text 12 271 (C) 2009 João Pais - jmmmpais@googlemail.com;
+#X text 236 170 - Controller simulation (0-127);
+#X connect 1 0 4 0;
+#X connect 1 0 13 0;
+#X connect 1 0 14 0;
+#X connect 2 0 4 0;
+#X connect 2 0 13 0;
+#X connect 2 0 14 0;
+#X connect 2 0 18 0;
+#X connect 3 0 13 0;
+#X connect 3 0 16 0;
+#X connect 4 0 3 0;
+#X connect 13 0 0 0;
+#X connect 16 0 14 0;
+#X connect 18 0 17 0;
+#X coords 0 -1 1 1 59 26 1 131 89;

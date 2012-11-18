@@ -1,0 +1,11 @@
+#N canvas 0 0 450 300 10;
+#X floatatom 96 124 5 0 0 0 - - -;
+#X floatatom 106 212 5 0 0 0 - - -;
+#X text 21 21 Definition: Get one of the 1000 first prime numbers;
+#X text 156 123 Inlet: number from 0 to 999;
+#X text 165 212 Outlet: prime number;
+#X text 21 35 Author: Alexandre Quessy;
+#X text 19 49 Version: 2007-01-07;
+#X obj 103 175 number.prime;
+#X connect 0 0 7 0;
+#X connect 7 0 1 0;

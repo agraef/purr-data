@@ -1,0 +1,23 @@
+#N canvas 183 103 450 300 10;
+#X obj 100 132 fps_ms;
+#X text 30 34 get the Frames-Per-Second (FPS) in milliseconds (ms)
+to use with [metro] \, [delay] \, etc.;
+#X obj 73 170 metro;
+#X floatatom 117 158 8 0 0 0 - - -;
+#X obj 56 140 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 73 203 float;
+#X obj 111 203 + 1;
+#X floatatom 73 230 5 0 0 0 - - -;
+#X text 152 77 set the global FPS here:;
+#X text 207 270 (the default framerate is 30 fps);
+#X obj 100 110 loadbang;
+#X obj 300 77 framesync/fps 30;
+#X connect 0 0 2 1;
+#X connect 0 0 3 0;
+#X connect 2 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 1;
+#X connect 10 0 0 0;

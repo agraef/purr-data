@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/pure-data/!svn/ver/16018/trunk/doc/pddp/templates
+END
+template-help_elements.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/8737/trunk/doc/pddp/templates/template-help_elements.pd
+END
+colour-guide.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/4814/trunk/doc/pddp/templates/colour-guide.pd
+END
+example-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/8761/trunk/doc/pddp/templates/example-help.pd
+END
+template-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/8761/trunk/doc/pddp/templates/template-help.pd
+END
+example-about.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/4814/trunk/doc/pddp/templates/example-about.pd
+END
+template-about.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/4814/trunk/doc/pddp/templates/template-about.pd
+END
++pager.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/16018/trunk/doc/pddp/templates/+pager.pd
+END

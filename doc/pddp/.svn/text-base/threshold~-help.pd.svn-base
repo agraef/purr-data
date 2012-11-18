@@ -1,0 +1,94 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header threshold~ 3 12
+0 18 -204280 -1 0;
+#X obj 0 295 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 365 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for Pd version 0.32. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal;
+#X text 12 45 DESCRIPTION trigger from audio signal;
+#X text 12 65 INLET_0 set signal;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 bang;
+#X text 12 125 OUTLET_1 bang;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 396 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 468 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 101 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [threshold~] Related Objects;
+#X obj 22 43 env~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 304 cnv 17 3 40 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 405 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 352 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 351 float;
+#X obj 453 3 threshold~;
+#X obj 425 20 pddp/pddplink http://wiki.puredata.info/en/threshold~
+-text pdpedia: threshold~;
+#X text 11 23 trigger from audio signal;
+#X obj 140 168 sig~;
+#X obj 140 226 threshold~ 10 100 0 100;
+#X floatatom 140 141 5 0 0 0 - - -;
+#X obj 140 254 print trigger;
+#X obj 275 254 print rest;
+#X msg 296 196 1;
+#X msg 327 196 0;
+#X msg 222 146 set 0 2000 1 2000;
+#X msg 222 169 set 10 100 0 100;
+#X text 98 303 signal;
+#X text 98 324 set;
+#X text 167 351 - a zero to the right inlet sets the object's state
+to "high." A nonzero value sets it to "low." There is no debounce period
+after this.;
+#X text 98 404 bang;
+#X obj 78 435 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 434 bang;
+#X text 168 404 - a bang is sent to the left outlet when the incoming
+signal is greater than or equal to the "trigger" value.;
+#X text 168 434 - a bang is sent to the right outlet when the incoming
+signal is less than or equal to the "rest" value.;
+#X text 168 324 - the "set" message can be used to change the parameters
+(i.e. \, the values set by the creation arguments).;
+#X text 168 303 - the incoming signal.;
+#X text 80 486 1) float;
+#X text 79 506 2) float;
+#X text 168 486 - (optional) trigger threshold.;
+#X text 167 526 - (optional) rest threshold.;
+#X text 167 506 - (optional) trigger debounce time (ms).;
+#X text 167 546 - (optional) rest debounce time (ms).;
+#X text 88 56 [threshold~] monitors its input signal and outputs bangs
+when the signal equals or exceeds a specified "trigger" value \, and
+also when the signal equals or recedes below a "rest" value. You can
+specify debounce times in milliseconds \, for the [threshold~] to wait
+after the two event types before triggering again.;
+#X text 79 526 3) float;
+#X text 79 546 4) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 15 0 16 0;
+#X connect 16 0 18 0;
+#X connect 16 1 19 0;
+#X connect 17 0 15 0;
+#X connect 20 0 16 1;
+#X connect 21 0 16 1;
+#X connect 22 0 16 0;
+#X connect 23 0 16 0;

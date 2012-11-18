@@ -1,0 +1,15 @@
+#N canvas 5 49 648 276 10;
+#X msg 48 125 1 2 3 4 5 6;
+#X obj 112 222 print;
+#X msg 191 130 list a b c d e f g;
+#X text 37 11 Description: Cuts up a list into sublists. Leftovers
+are also output.;
+#X text 188 95 Note that with this second list \, the leftover 'g'
+is output by itself.;
+#X text 294 184 Argument_1: Size of cuts.;
+#X text 292 168 Inlet_1: Size if cuts.;
+#X text 44 49 tags: lists;
+#X obj 112 186 mtl/listCutUp 3;
+#X connect 0 0 8 0;
+#X connect 2 0 8 0;
+#X connect 8 0 1 0;

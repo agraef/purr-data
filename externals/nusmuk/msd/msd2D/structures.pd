@@ -1,0 +1,27 @@
+#N canvas 752 10 450 300 10;
+#N canvas 389 332 664 321 mass 0;
+#X obj 62 182 drawnumber mid 0 -18 0 m;
+#X obj 64 72 struct mass float x float y float mid float mob;
+#X obj 61 136 filledpolygon mob mob 1 -5 0 -4 4 0 5 4 4 5 0 4 -4 0
+-5 -4 -4;
+#X restore 132 125 pd mass;
+#N canvas 73 302 487 201 liaison 0;
+#X obj 19 25 struct liaison float x1 float y1 float x2 float y2 float
+mid1 float mid2 float lid;
+#X obj 23 73 drawpolygon lid 2 x1 y1 x2 y2;
+#X restore 132 169 pd liaison;
+#N canvas 0 0 450 300 model 0;
+#X obj 50 102 plot m 0 0 0 0;
+#X obj 51 135 plot l 0 0 0 0;
+#X obj 45 72 struct model float x1 array m mass array l liaison;
+#X restore 132 147 pd model;
+#N canvas 389 332 664 321 fixmass 0;
+#X obj 64 72 struct fixmass float x float y float mid;
+#X obj 61 136 filledpolygon 900 900 1 -5 0 -4 4 0 5 4 4 5 0 4 -4 0
+-5 -4 -4;
+#X obj 51 203 drawnumber mid 0 -18 900 m;
+#X restore 132 191 pd fixmass;
+#N canvas 0 0 450 300 fixed 0;
+#X obj 50 97 plot f 0 0 0 0;
+#X obj 49 56 struct fixed float x float y array f fixmass;
+#X restore 132 213 pd fixed;

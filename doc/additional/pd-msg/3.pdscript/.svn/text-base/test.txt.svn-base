@@ -1,0 +1,83 @@
+
+// create a new canvas with name "new";
+// important to terminate each command to pd with a ";";
+pd filename new ./;
+#N canvas;
+#X pop 1;
+
+// now we create a osc~ i, *~ and a dac~;
+// the first word is the name of the canvas where the objects;
+// are put (with "pd-" prepended .. hence pd-new);
+// then the "obj" keyword;
+// then comes the position x y,  propose to increment y for each;
+// object by 30, then the patch can still be read with the gui ;
+// then comes the object name and eventual parameters;
+// object number 0 and 1 and 2;
+
+pd-new obj 10 0 osc~ 220;
+pd-new obj 10 30 *~ 0.1;
+pd-new obj 10 60 dac~;
+
+// we connect them together; 
+// we kept track of the objects we have created and can;
+// access them via numbers;
+// pd-new same as above, message connect, then the four parameters;
+// <number-of object> <outlet number> <number of 2nd object> <inlet number>; 
+
+pd-new connect 0 0 1 0;
+pd-new connect 1 0 2 0;
+pd-new connect 1 0 2 1;
+
+// we put a comment;
+// object number 3;
+pd-new text 80 0 This is a comment;
+
+// a Message object;
+// object number 4;
+
+pd-new msg 10 90 440;
+
+// connect it to the osc~;
+
+pd-new connect 4 0 0 0;
+
+// and a number object;
+// nr 5;
+
+pd-new floatatom 10 120;
+
+// connect it;
+
+pd-new connect 5 0 0 0;
+
+// put a communication channel for the frequency (a "receive");
+// nr 6;
+
+pd-new obj 10 150 r freq;
+// a line;
+// nr 7;
+pd-new obj 10 180 line;
+
+// connect receive to the line; 
+
+pd-new connect 6 0 7 0;
+
+// line to the osc~;
+
+pd-new connect 7 0 0 0;
+
+// turn on audio;
+
+pd dsp 1;
+
+// and ... control it the first word is the name of the receive above;
+
+freq 500 4000;
+
+// that's it, there will be several things to figure out, but by writing;
+// this patch down in ascii I get the feeling that coding pd in lisp;
+// will be a killer ... defininitely.;
+// we will be able to automate lots of things I had to do by hand here;
+
+
+

@@ -1,0 +1,27 @@
+#N canvas 63 44 330 265 10;
+#X obj 30 46 inlet;
+#X obj 30 174 sel 1;
+#X obj 30 210 outlet;
+#X obj 120 25 inlet;
+#X obj 120 118 - 1;
+#X text 159 113 Leave it! Filters
+out ints < 1;
+#X text 58 213 vs. 1.1: 1994-95
+by Karlheinz Essl;
+#X obj 30 145 == \$1;
+#X obj 120 46 t a b;
+#X obj 30 104 f 0;
+#X obj 59 104 + 1;
+#X msg 46 78 0;
+#X connect 0 0 9 0;
+#X connect 1 0 2 0;
+#X connect 1 0 11 0;
+#X connect 3 0 8 0;
+#X connect 4 0 7 1;
+#X connect 7 0 1 0;
+#X connect 8 0 4 0;
+#X connect 8 1 11 0;
+#X connect 9 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 9 1;
+#X connect 11 0 9 1;

@@ -1,0 +1,16 @@
+#N struct 1004-clickpoint float x float y float vis;
+#N struct 1004-slider float x float y float x0 float vis;
+#N struct 1005-mute float x float y float c;
+#N struct 1006-expand float x float y float max float max-shadow;
+#N struct 1007-save float x float y float border float vis;
+#N struct 1008-stop float x float y float border float vis;
+#N struct 1009-rec float x float y float border float vis;
+#N struct 1010-filetype float x float y float vis symbol ext;
+#N canvas 366 173 450 300 12;
+#X obj 157 60 osc~ 440;
+#X floatatom 248 40 5 0 100 0 - - -;
+#X msg 299 76 mute;
+#X obj 158 96 compactidac~;
+#X connect 0 0 3 0;
+#X connect 1 0 3 2;
+#X connect 2 0 3 2;

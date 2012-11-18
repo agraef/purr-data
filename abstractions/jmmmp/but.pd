@@ -1,0 +1,70 @@
+#N canvas 547 159 527 335 10;
+#X obj 20 238 outlet;
+#X obj 20 80 inlet;
+#X obj 129 44 init \$1;
+#X msg 187 114 size \$1;
+#X obj 247 164 s \$0-cnv;
+#X msg 247 104 vis_size \$1 \$1 \, size \$1;
+#X obj 257 124 init \$2;
+#X msg 257 144 color \$1 \$1;
+#X obj 168 84 t f f f;
+#X obj 20 110 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 20 110 cnv 12 12 12 empty \$0-cnv empty 20 12 0 14 -262144 -262144
+0;
+#X text 424 79 Inlets;
+#X text 424 139 Outlets;
+#X text 424 9 Arguments;
+#X text 424 29 - Size;
+#X text 424 49 - TCL Color;
+#X text 424 99 - Bang;
+#X text 424 159 - Bang;
+#X text 22 10 [but] - Monochrome Bang Button;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 295 pd license;
+#X obj 168 214 s \$0-button;
+#X obj 168 234 namecanvas \$0-button;
+#X msg 168 194 donecanvasdialog 1 -1 2 0 -1 1 1 \$1 \$1 20 110 \, dirty
+0;
+#X text 12 275 (C) 2010 João Pais - jmmmpais@googlemail.com;
+#X obj 129 64 sel 0;
+#X msg 129 84 12;
+#X connect 1 0 9 0;
+#X connect 2 0 24 0;
+#X connect 3 0 9 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 8 0 22 0;
+#X connect 8 1 3 0;
+#X connect 8 2 5 0;
+#X connect 9 0 0 0;
+#X connect 22 0 20 0;
+#X connect 24 0 25 0;
+#X connect 24 1 8 0;
+#X connect 25 0 22 0;
+#X coords 0 -1 1 1 11 11 2 20 110;

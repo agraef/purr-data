@@ -1,0 +1,63 @@
+#N canvas 319 47 694 514 10;
+#X obj 281 426 cue_between;
+#X obj 236 377 cue_sel 3000 1000 10000;
+#X obj 235 356 cue_sel 1000 1000 1000 1000;
+#X obj 237 302 cue_sel 1000 2000;
+#X obj 236 397 cue_sel 30000 1000;
+#X obj 10 22 cue_init cue1;
+#X obj 281 453 cue_between 1000 1000;
+#X obj 10 283 cue test1a 2000;
+#X obj 10 435 cue test1;
+#X obj 10 226 cue initialisation;
+#X obj 10 302 cue test1;
+#X obj 10 321 cue test2;
+#X obj 10 245 cue debut;
+#X obj 10 264 cue foo 1000;
+#X obj 10 340 cue bar;
+#X obj 10 454 cue test2;
+#X obj 10 378 cue debut;
+#X obj 10 397 cue foo;
+#X obj 10 416 cue test1a;
+#X obj 10 359 cue toto;
+#X floatatom 480 322 5 0 0 0 - - -;
+#X obj 237 325 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 242 33 organize whatever in diferent step;
+#X text 241 59 this system is design to be robust. all the object should
+work without initialization.;
+#X text 246 98 This system is made to be adapted to specific project.
+You really need to fork this system if you plan to use it : it will
+change if i find better way to work...;
+#X obj 237 245 cue_sel 10000 10000;
+#X obj 237 265 cue_sel 100 100;
+#X text 34 166 reset env : to jump to the end of a transition;
+#X text 33 181 autogo : enable or disable automatic jump to next cue
+;
+#X text 35 197 key control : use the space bar to jump to next cue
+;
+#X text 34 149 reset : initialize everything;
+#X connect 3 0 21 0;
+#X connect 3 1 20 0;
+#X connect 5 0 9 0;
+#X connect 7 0 10 0;
+#X connect 8 0 15 0;
+#X connect 8 1 6 0;
+#X connect 9 0 12 0;
+#X connect 10 0 11 0;
+#X connect 10 1 3 0;
+#X connect 11 0 14 0;
+#X connect 12 0 13 0;
+#X connect 12 1 25 0;
+#X connect 13 0 7 0;
+#X connect 13 1 26 0;
+#X connect 14 0 19 0;
+#X connect 16 0 17 0;
+#X connect 16 1 1 0;
+#X connect 16 1 6 1;
+#X connect 17 0 18 0;
+#X connect 17 1 4 0;
+#X connect 17 1 0 0;
+#X connect 18 0 8 0;
+#X connect 19 0 16 0;
+#X connect 19 1 2 0;
+#X connect 19 1 0 1;

@@ -1,0 +1,17 @@
+#N canvas 114 117 407 326 10;
+#X text 12 277 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X text 12 297 Released under the BSD License;
+#X text 12 10 [oscD] - Counts received OSC messages;
+#X text 196 110 Outlets;
+#X text 196 40 Arguments;
+#X text 196 60 - OSC port;
+#X text 196 130 - OSC message;
+#X text 196 160 GUI;
+#X text 196 180 - Bang when message arrives;
+#X text 196 200 - Message count (0 - 999);
+#X text 196 220 - Print messages on console;
+#X text 196 80 - Printing on / off;
+#X obj 26 105 oscD 5000 1;
+#X obj 26 138 print oscD-extern;
+#X text 12 248 Related objects: [oscS];
+#X connect 12 0 13 0;

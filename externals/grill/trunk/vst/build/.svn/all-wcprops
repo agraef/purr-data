@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/3102/trunk/vst/build
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3102/trunk/vst/build/config-win.def
+END
+config-mac.def
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3102/trunk/vst/build/config-mac.def
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/3102/trunk/vst/build/nmake-win-msvc.inc
+END
+gnumake-mac-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/3102/trunk/vst/build/gnumake-mac-gcc.inc
+END

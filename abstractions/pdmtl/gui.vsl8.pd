@@ -1,0 +1,79 @@
+#N canvas 0 22 592 638 10;
+#X obj 205 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 220 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 235 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 250 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X msg 281 -17 log;
+#X msg 327 -19 lin;
+#X msg 363 -20 color \$1 \$2 \$3;
+#X msg 220 9 range \$1 \$2;
+#X obj 366 30 t a;
+#X obj 265 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 280 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 295 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 310 172 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 1;
+#X obj 47 -97 inlet;
+#X obj 116 102 unpack f f f f f f f f;
+#X obj 100 325 outlet;
+#X obj 142 326 outlet;
+#X obj 185 327 outlet;
+#X obj 227 328 outlet;
+#X obj 271 328 outlet;
+#X obj 313 329 outlet;
+#X obj 356 330 outlet;
+#X obj 398 331 outlet;
+#X obj 259 -183 inlet;
+#X obj 366 -129 loadbang;
+#X obj 366 -109 dollarg;
+#X obj 366 -88 init.post.dollarg;
+#X obj 237 -45 route range log linear color enable;
+#X obj 94 3 spigot;
+#X connect 0 0 15 0;
+#X connect 1 0 16 0;
+#X connect 2 0 17 0;
+#X connect 3 0 18 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X connect 8 0 1 0;
+#X connect 8 0 2 0;
+#X connect 8 0 3 0;
+#X connect 8 0 9 0;
+#X connect 8 0 10 0;
+#X connect 8 0 11 0;
+#X connect 8 0 12 0;
+#X connect 9 0 19 0;
+#X connect 10 0 20 0;
+#X connect 11 0 21 0;
+#X connect 12 0 22 0;
+#X connect 13 0 28 0;
+#X connect 14 0 0 0;
+#X connect 14 1 1 0;
+#X connect 14 2 2 0;
+#X connect 14 3 3 0;
+#X connect 14 4 9 0;
+#X connect 14 5 10 0;
+#X connect 14 6 11 0;
+#X connect 14 7 12 0;
+#X connect 23 0 27 0;
+#X connect 24 0 25 0;
+#X connect 25 0 26 0;
+#X connect 25 1 26 1;
+#X connect 26 0 27 0;
+#X connect 27 0 7 0;
+#X connect 27 1 4 0;
+#X connect 27 2 5 0;
+#X connect 27 3 6 0;
+#X connect 27 4 28 1;
+#X connect 28 0 14 0;
+#X coords 0 -1 1 1 130 155 1 200 150;

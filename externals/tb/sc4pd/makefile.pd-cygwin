@@ -1,0 +1,86 @@
+# makefile adapted from thomas grill's xsample makefile
+#
+# Makefile for gcc @ cygwin
+#
+# usage:
+# to build run "make -f makefile.pd-cygwin"
+# to install (as root), do "make -f makefile.pd-cygwin install"
+#
+
+CONFIG=config-pd-cygwin.txt
+MAKEFILE=makefile.pd-cygwin
+
+include ${CONFIG}
+
+
+# compiler stuff
+# /usr/include holds the cygwin pthread headers and must be first!
+INCLUDES=/usr/include $(PDINC) ./headers/plugin_interface ./headers/common ./headers/server ./headers/app ./headers/lang
+
+FLAGS=-DFLEXT_SYS=2
+CFLAGS=-O2 -funroll-loops -fmove-all-movables -frerun-loop-opt -finline-functions -fno-rtti -fno-exceptions ${UFLAGS} 
+
+PDLIBS=$(PD)/bin/pd.dll $(PD)/bin/pthreadVC.dll
+
+
+ifdef FLEXT_SHARED
+
+CFLAGS+=-DFLEXT_SHARED
+FLEXTLIB=$(FLEXTPATH)/flext.dll
+
+else
+
+FLEXTLIB=$(FLEXTPATH)/flext-pdwin.lib
+
+endif
+
+
+# ----------------------------------------------
+# the rest can stay untouched
+# ----------------------------------------------
+
+NAME=sc4pd
+
+include make-files.txt
+
+TARGET=$(TARGDIR)/$(NAME).dll
+
+# default target
+all: $(TARGDIR) $(TARGET) 
+
+$(patsubst %,$(SRCDIR)/%,$(SRCS)): $(patsubst %,$(SRCDIR)/%,$(HDRS)) $(MAKEFILE) $(CONFIG)
+	touch $(patsubst %,$(SRCDIR)/%,$(SRCS))
+
+$(TARGDIR):
+	-mkdir $(TARGDIR)
+
+$(TARGDIR)/%.o : $(SRCDIR)/%.cpp 
+	$(CXX) -c $(CFLAGS) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(FLEXTPATH)) $< -o $@
+
+$(TARGET) : $(patsubst %.cpp,$(TARGDIR)/%.o,$(SRCS)) $(FLEXTLIB) 
+	$(CXX) -shared $(LDFLAGS) $^ ${PDLIBS} $(patsubst %,-l%,$(LIBS)) -o $@ 
+	strip --strip-unneeded $@
+	chmod 755 $@
+
+$(INSTDIR):
+	-mkdir $(INSTDIR)
+
+install:: $(INSTDIR)
+
+install:: $(TARGET) 
+	cp $^ $(INSTDIR)
+#	chown root.root $(patsubst %,$(INSTDIR)/%,$(notdir $^))
+
+$(HELPDIR):
+	-mkdir $(HELPDIR)
+
+install-help:: $(HELPDIR)
+
+install-help:: ./pd
+	chmod 644 $^/*.*
+	cp $^/*.* $(HELPDIR)
+
+
+.PHONY: clean
+clean:
+	rm -f $(TARGDIR)/*.o $(TARGET)

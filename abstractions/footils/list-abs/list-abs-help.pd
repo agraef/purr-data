@@ -1,0 +1,7 @@
+#N canvas 349 434 450 300 10;
+#X obj 147 158 list-abs;
+#X obj 147 204 print;
+#X msg 147 109 1 2 -3 -4 5 and -6;
+#X text 55 66 list-abs: apply abs() on float elements of a list.;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;

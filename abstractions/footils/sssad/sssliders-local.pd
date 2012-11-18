@@ -1,0 +1,26 @@
+#N canvas 0 0 450 300 10;
+#X obj 127 122 hsl 60 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1800 1;
+#X obj 127 137 hsl 60 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 2400 1;
+#X obj 127 152 hsl 60 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 2200 1;
+#X obj 124 209 sssad \$1/s1 \$0;
+#X obj 124 231 sssad \$1/s2 \$0;
+#X obj 124 251 sssad \$1/s3 \$0;
+#X obj 289 106 r \$0-SSSAD_ADMIN;
+#X obj 289 133 outlet;
+#X obj 200 122 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 267 184 save;
+#X obj 267 210 s \$0-SSSAD_ADMIN;
+#X connect 0 0 3 1;
+#X connect 1 0 4 1;
+#X connect 2 0 5 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 2 0;
+#X connect 6 0 7 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X coords 0 -1 1 1 120 70 1 110 100;

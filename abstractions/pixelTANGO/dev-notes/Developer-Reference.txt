@@ -1,0 +1,113 @@
+pixelTANGO Developer Reference:
+CVS: $Revision: 1.1 $ $Date: 2005-11-26 22:21:06 $
+
+Required Externals:
+entry, Gem, OSC, pool, popup, prepend, pwd, tosymbol, tot, zexy, py
+
+Memento Note: (Put this in the pt.abstraction how-to)
+DO NOT USE a $0-in send or receive in any pt compatible abstraction. This s/r is reserved for memento functions. 
+
+Creating .app using tcl/tk 8.4.9 standalone:
+1. Duplicate Miller's pd.app
+2. replace frameworks with those from tcl/tk standalone
+3. copy the "Wish Shell.rsrc" file as "Pd.rsrc" to Resources
+4. Copy the "Wish Shell" exec from tcl/tk standalone/MacOS to MacOS as "Pd"
+5. Add set tk::mac::CGAntialiasLimit 0 in pd.tk (aka AppMain.tcl) OPTIONAL for Antialiasing
+6. cd Resource/src then ./configure && make OPTIONAL perhaps for s_inter.c hack
+
+HACKS: (bad programming that is there just to make things work and need to be replaced by a better system!)
+
+delay 250 in register-head.pd is used to make sure that all abstractions have gotten the layerNum before sending the "register-head 0" message. 
+
+Internal (Helper) Abstractions:
+
+Global Receives:
+
+Receive Name:		Value:		Notes:
+pt.loopBack		layerNum [list] This receive is used to send data from a lower abstraction to an upper through bus. Only when the head matches is it sent.
+pt.layerNumDone		layerNum	When all abstractions in a layer get the layerNum, through control-bus, send this signal back to header to start abstraction registration by sending signal "register-head 0" through control-bus.
+pt.registerDone		layerNum	When the register-tail gets the register signal then send the layer number of the done layer and use this signal to generate the OSC names. 
+pt.currentPreset	float		Set the current preset Value
+pt.videoPlaneSize	2 float list	Sends the current gemwindow size to pt.video for filling screen
+pt.windowResolution	2 float list	Sends the current gemwindow resolution to pt.feedback for good responce
+pt.osc			osc message	All modules not in layers get OSC messages from this receive. 
+pt.updateArrays		bang		Updates dir2abstractionArray arrays
+
+OSC Names:
+
+General:
+pt.window	/pt/window/fullscreen			Fullscreen on Primary (0/1 for On/Off)
+		/pt/window/fsaa				Full Scene Anti-Aliasing (6) (0/1 for On/Off)
+		/pt/window/light			Render Lighting Effects (0/1 for On/Off)
+		/pt/window/cursor			Cursor Visibility (0/1 for On/Off)
+		/pt/window/r				Background Red Component (0 to 1)
+		/pt/window/g				Background Green Component (0 to 1)
+		/pt/window/b				Background Blue Component (0 to 1)
+		/pt/window/resolution			Window Resolution (0:640x480,1:1024x512,2:512x512)
+                /pt/window/framerate			Render Framerate (0:15fps,1:30fps,2:60fps,3:100fps)
+
+pt.interp	/pt/interp/smoothness			How fast to interpolate (1 Slow to 100 for Fast)
+		/pt/interp/type				Interpolation Type (0-Low-Pass, 1-Linear, 2-None)
+
+pt.light	/pt/light/[i]/x				X position of Light (? to ?)
+		/pt/light/[i]/y				Y position of Light (? to ?)
+		/pt/light/[i]/z				Z position of Light (? to ?)
+		/pt/light/[i]/r				Amount of red Light (0 to 1)
+		/pt/light/[i]/g				Amount of green Light (0 to 1)
+		/pt/light/[i]/b				Amount of blue Light (0 to 1)
+
+pt.animate	/pt/animate/frame			Set the Keyframe (0 to NumberOfKeyFrames)
+							(This is NOT state-saved)
+				
+Headers:
+pt.layer	/pt/[l]/vis				Layer Visibility (0/1, turn on/off gemhead(s) )
+
+Modifiers:
+[l] for Layer Num (pt.layer creation argument)
+[i] for abstraction Instance name (starting with 1)
+
+pt.fader	/pt/[l]/pt.fader/[i]/r			Red Value (0 to 1)
+		/pt/[l]/pt.fader/[i]/g			Green Value (0 to 1)
+		/pt/[l]/pt.fader/[i]/b			Blue Value (0 to 1)
+		/pt/[l]/pt.fader/[i]/a			Alpha Value (0 to 1)
+                /pt/[l]/pt.fader/[i]/alpha		Turn Alpha Belending on/off (0/1)
+
+pt.translate	/pt/[l]/pt.translate/[i]/x		X Translation (-4 to 4)
+		/pt/[l]/pt.translate/[i]/y		Y Translation (-4 to 4)
+		/pt/[l]/pt.translate/[i]/z		Z Translation (-4 to 4)
+
+pt.rotate	/pt/[l]/pt.rotate/[i]/x			X Rotation (-180 to 180 Degrees)
+		/pt/[l]/pt.rotate/[i]/y			Y Rotation (-180 to 180 Degrees)
+		/pt/[l]/pt.rotate/[i]/z			Z Rotation (-180 to 180 Degrees)
+
+pt.scale	/pt/[l]/pt.scale/[i]/s			XYZ Scale (0.1 to 7)
+
+pt.squeeze	/pt/[l]/pt.squeeze/[i]/x		X Scale (0.1 to 4)
+		/pt/[l]/pt.squeeze/[i]/y		Y Scale (0.1 to 4)
+		/pt/[l]/pt.squeeze/[i]/z		Z Scale (0.1 to 4)
+
+pt.feedback	/pt/[l]/pt.feedback/[i]/x_off		Left Edge of Capture Area
+		/pt/[l]/pt.feedback/[i]/y_off		Top Edge of Capture Area
+		/pt/[l]/pt.feedback/[i]/x_size		Width of Capture Area
+		/pt/[l]/pt.feedback/[i]/y_size		Height of Capture Area
+                /pt/[l]/pt.feedback/[i]/type		Type of feedback: 0:snap,1:snap2tex
+
+pt.entry	/pt/[l]/pt.entry/[i]/text		List defining text
+		/pt/[l]/pt.entry/[i]/font-index		Index # for font. (change to symbol in future?)
+		/pt/[l]/pt.entry/[i]/font-size		Point size for font
+
+pt.layerfx	/pt/[l]/pt.layerfx/[i]/amount		Amount of effect (0 to 1)
+		/pt/[l]/pt.layerfx/[i]/fx-index		Index # for effect (now 0 to 11)
+
+
+pt.live		/pt/[l]/pt.live/[i]/width		Pixel Width of Captured Frames (DO NOT change while render window is open!)
+		/pt/[l]/pt.live/[i]/height		Pixel Height of Captured Frames "
+
+pt.loop		/pt/[l]/pt.loop/[i]/loop		Loop on/off (1/0)
+		/pt/[l]/pt.loop/[i]/in-point		Loop in point (0-100%)
+		/pt/[l]/pt.loop/[i]/out-point		Loop out point (0-100%)
+		/pt/[l]/pt.loop/[i]/rate		playback speed in ms/frame
+		/pt/[l]/pt.loop/[i]/direction		Loop direction (0-forward, 1-reverse, 2-ping-pong)
+
+pt.filelist	/pt/[l]/pt.filelist/[i]/directory	Directory in which to look for files
+		/pt/[l]/pt.filelist/[i]/pattern		Glob pattern to select files eg *.mov

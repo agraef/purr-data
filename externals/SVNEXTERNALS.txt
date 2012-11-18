@@ -1,0 +1,22 @@
+# svn:external references to pd-externals hosted in other repositories
+#
+# adding external-references:
+#       - add a new line below with the format: <directory-name> <external link>
+#       - the directory must not exist yet
+#       - if possible use an external link that would allow commits (for authorized)
+#         e.g. "https://" instead of "http://"
+#
+#       - finally run:
+# 		% svn propset svn:externals -F SVNEXTERNALS.txt .
+# 		% svn commit
+#
+# deleting external-references:
+# 	- just delete the offending reference and re-run:
+# 		% svn propset svn:externals -F SVNEXTERNALS.txt .
+# 		% svn commit
+#
+# you should be able to retrieve this file by running
+# 		svn propget svn:externals .
+
+## example:
+gridflow https://gridflow.ca/svn/trunk/

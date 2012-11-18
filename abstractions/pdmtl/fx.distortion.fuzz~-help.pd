@@ -1,0 +1,23 @@
+#N canvas 522 93 642 505 10;
+#X obj 207 209 mix.out_~;
+#X obj 379 138 param.gui;
+#X obj 207 109 osc~ 30;
+#X obj 18 179 anal.scope_~ 1;
+#X obj 176 328 anal.scope_~ 1;
+#X obj 206 133 *~ 0.5;
+#X obj 301 132 *~ 0.5;
+#X obj 301 108 osc~ 80;
+#X text 20 57 Author: netpd;
+#X text 20 42 Description: a lofi distortion with frequency control
+;
+#X obj 207 176 fx.distortion.fuzz~ @id fuzz;
+#X msg 379 116 fuzz;
+#X connect 2 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 0 10 0;
+#X connect 6 0 10 1;
+#X connect 7 0 6 0;
+#X connect 10 0 0 0;
+#X connect 10 0 4 0;
+#X connect 10 1 0 1;
+#X connect 11 0 1 0;

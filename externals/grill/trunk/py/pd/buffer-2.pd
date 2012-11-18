@@ -1,0 +1,37 @@
+#N canvas 608 159 694 442 12;
+#X obj 16 13 cnv 15 650 40 empty empty py/pyext 10 22 0 24 -260818
+-1 0;
+#X text 235 16 Python script objects \, (C)2003-2005 Thomas Grill;
+#X text 235 32 http://grrrr.org/ext;
+#X text 17 67 This demonstrates how to resize buffers;
+#N canvas 0 0 450 300 graph1 0;
+#X array array1 42 float 3;
+#A 0 0 0 0 0 0.0285715 0.0857145 0.128572 0.171429 0.257144 0.314287
+0.385715 0.385715 0.385715 0.385715 0.385715 0.37143 0.342858 0.314287
+0.228572 0.128572 0.0428573 -0.0857145 -0.200001 -0.285715 -0.328572
+-0.357144 -0.400001 -0.428573 -0.428573 -0.457144 -0.457144 -0.457144
+-0.457144 -0.457144 -0.457144 -0.457144 -0.457144 -0.457144 -0.414287
+-0.342858 -0.314287 1.02445e-007;
+#X coords 0 1 42 -1 200 140 1;
+#X restore 413 259 graph;
+#X msg 40 148 symbol array1;
+#X obj 40 194 py pyext.Buffer @py 1;
+#X obj 143 238 nbx 5 14 0 100 0 1 empty empty empty 0 -6 0 10 -260818
+-1 -1 42 256;
+#X obj 143 260 t b f;
+#X obj 39 287 pym 2 resize @py 1;
+#X obj 40 120 loadbang;
+#X text 37 310 returns buffer object;
+#X obj 41 361 py .len;
+#X text 111 361 call __builtin__.len;
+#X text 222 192 create Buffer object;
+#X obj 41 394 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -261681 -1 -1 0 256;
+#X connect 5 0 6 1;
+#X connect 6 0 9 1;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 1 9 2;
+#X connect 9 0 12 1;
+#X connect 10 0 5 0;
+#X connect 12 0 15 0;

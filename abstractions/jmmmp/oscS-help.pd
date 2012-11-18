@@ -1,0 +1,32 @@
+#N canvas 114 117 403 333 10;
+#X text 12 287 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X text 12 307 Released under the BSD License;
+#X text 239 39 Arguments;
+#X obj 13 177 oscS localhost 5000 1;
+#X text 12 10 [oscS] - Interface for sendOSC;
+#X msg 37 147 for example a list;
+#X floatatom 13 110 5 0 0 0 - - -;
+#X msg 27 127 symbol a.symbol;
+#X obj 13 197 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 239 59 - IP;
+#X text 239 79 - Port;
+#X text 239 99 - State;
+#X text 239 209 Outlets;
+#X text 239 229 - State;
+#X text 239 129 Inlets;
+#X text 239 149 - Message to send;
+#X text 251 163 without "send" prefix;
+#X text 241 183 - On / Off;
+#X obj 192 159 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 17 86 without the 'send' prefix.;
+#X text 17 73 Send any kind of message here \,;
+#X text 35 197 State;
+#X text 171 140 On / Off;
+#X text 12 258 Related objects: [oscD];
+#X connect 3 0 8 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X connect 18 0 3 1;

@@ -1,0 +1,48 @@
+#N canvas 193 184 770 390 10;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 45 79 vasp.update;
+#X obj 45 56 vasp.= 0;
+#X obj 45 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 514 282 pd clear_buffer;
+#X text 49 91 optional argument/right inlet: right operand;
+#X text 49 76 subtracts a value or a vasp from a vasp;
+#X text 49 60 reverse subtraction;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufsubr 88200 float 0;
+#X coords 0 1 88199 -1 300 120 1;
+#X restore 370 102 graph;
+#N canvas 0 0 396 272 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufsubr;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 647 283 pd init;
+#X msg 514 262 vasp bufsubr;
+#X obj 51 19 cnv 15 15 15 empty empty vasp.!- 0 10 1 14 -262144 -1
+0;
+#X obj 52 236 vasp.update;
+#X msg 52 136 vasp bufsubr;
+#X obj 50 321 VASP-HELP;
+#X obj 52 168 vasp.osc 4410;
+#X obj 182 135 nbx 5 14 -50 50 0 1 empty empty empty 0 -6 0 10 -24198
+-1 -1 0 256;
+#X obj 182 154 * 0.01;
+#X obj 182 193 t b f;
+#X obj 52 213 vasp.!-;
+#X floatatom 182 175 5 0 0;
+#X obj 52 191 vasp.* 0.5;
+#X connect 6 0 0 0;
+#X connect 9 0 11 0;
+#X connect 11 0 17 0;
+#X connect 12 0 13 0;
+#X connect 13 0 16 0;
+#X connect 14 0 9 0;
+#X connect 14 1 15 1;
+#X connect 15 0 8 0;
+#X connect 16 0 14 0;
+#X connect 17 0 15 0;

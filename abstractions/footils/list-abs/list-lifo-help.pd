@@ -1,0 +1,39 @@
+#N canvas 256 47 587 530 10;
+#X msg 247 186 1 2 3 4 5;
+#X symbolatom 260 207 10 0 0 0 - - -;
+#X floatatom 273 224 5 0 0 0 - - -;
+#X obj 198 339 bng 15 250 50 0 empty empty EOL 17 7 1 10 -262144 -1
+-1;
+#X msg 295 274 bang;
+#X msg 238 166 a b c;
+#X msg 140 149 bang;
+#X text 230 147 store lists or elements ("push");
+#X text 111 125 trigger output ("pop");
+#X text 277 255 clear stored list ("reset");
+#X obj 140 305 list-lifo;
+#X text 60 38 [list-lifo];
+#X text 97 64 [list-lifo] stores incoming (list-)messages and outputs
+them one by one on incoming bangs in the opposite order of arrival
+like a LIFO: Last in \, first out.;
+#N canvas 0 0 450 300 show 0;
+#X obj 60 48 inlet;
+#X obj 60 72 list prepend set;
+#X obj 60 97 list trim;
+#X obj 60 126 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X restore 140 364 pd show;
+#X msg 140 390;
+#X msg 74 262 clear;
+#X text 82 439 2007 Frank Barknecht;
+#X connect 0 0 10 1;
+#X connect 1 0 10 1;
+#X connect 2 0 10 1;
+#X connect 4 0 10 2;
+#X connect 5 0 10 1;
+#X connect 6 0 10 0;
+#X connect 10 0 13 0;
+#X connect 10 1 3 0;
+#X connect 13 0 14 0;
+#X connect 15 0 10 0;

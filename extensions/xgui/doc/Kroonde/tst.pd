@@ -1,0 +1,18 @@
+#N canvas 0 0 452 302 12;
+#X obj 155 143 calibration;
+#X obj 109 75 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 258 44 5 0 0;
+#X obj 265 98 change;
+#X floatatom 151 191 5 0 0;
+#X msg 330 2 2;
+#X obj 223 196 bang;
+#X obj 224 226 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 0 0 4 0;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 1;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;

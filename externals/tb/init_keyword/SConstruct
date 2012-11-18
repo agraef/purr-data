@@ -1,0 +1,55 @@
+sources = ['init_keyword.cpp']
+
+env = Environment(CCFLAGS = '-DFLEXT_SYS_PD -DFLEXT_THREADS -DFLEXT_SHARED')
+
+env.SConsignFile()
+env.CacheDir('./obj')
+
+opt = Options(['options.cache', 'custom.py'])
+opt.AddOptions(
+	BoolOption('debug', 'Build with debugging symbols', False),
+	('optimize', 'Optimize for specific architecture', None),
+	BoolOption('simd', 'build with simd instructions', False),
+	BoolOption('icc', 'Use intel c compiler', False),
+	('prefix', 'install prefix', '/usr/local'),
+	('flext_path', 'flext path', None),
+	('pd_path', 'pd path', None),
+	)
+
+opt.Update(env)
+
+opt.Save('options.cache',env)
+Help(opt.GenerateHelpText(env))
+
+	
+if env.Dictionary().has_key('flext_path'):
+	env.Append(CPPPATH=[env['flext_path']])
+
+if env.Dictionary().has_key('pd_path'):
+	env.Append(CPPPATH=[env['pd_path']])
+
+if env.Dictionary().has_key('optimize'):
+	if env['optimize']:
+		env.Append(CCFLAGS=' -O3 '+env['optimize'])
+
+if env.Dictionary().has_key('simd') and env['simd']:
+	env.Append(CCFLAGS=' -mfpmath=sse -msse -mmmx -msse2')
+			   
+if env.Dictionary().has_key('debug') and env['debug']:
+	env.Append(CCFLAGS=' -g')
+	env.Append(LIBS = 'flext-pd_d')
+else:
+	env.Append(LIBS = 'flext-pd')
+
+if env.Dictionary().has_key('icc') and env['icc']:
+	env['CC']='icc'
+	env['CXX']='icc'
+	env['LD']='xild'
+	env.Append(CCFLAGS=' -ip ')
+	env.Append(LINKFLAGS=' -i-static '+env['CCFLAGS'])
+
+
+ik = env.SharedLibrary('init_keyword', sources, SHLIBPREFIX='', SHLIBSUFFIX='.pd_linux')
+
+env.Install('/usr/local/lib/pd/extra',ik)
+env.Alias('install', '/usr/local/lib/pd/extra')

@@ -1,0 +1,25 @@
+#N canvas 510 222 590 494 10;
+#X obj 83 371 print M;
+#X obj 83 334 list-makefilename %s-blabla;
+#X obj 82 33 cnv 15 220 30 empty empty list-makefilename 20 12 0 14
+-233017 -66577 0;
+#X msg 267 220 xyz-%s-abc;
+#X msg 267 200 /help/%s;
+#X text 80 76 Change symbols in a list \, pass floats unchanged.;
+#X msg 83 200 1 2 3 4 SYMBOL;
+#X msg 83 222 list FREQ 440 AMP 1;
+#X msg 267 287 const;
+#X msg 314 286 You-probably-%don't-want-this;
+#X text 301 250 pass unchanged;
+#X msg 267 249 %s;
+#X text 78 111 Use as "list-makefilename makefilename-arg". Right inlet
+can be used to change the arg to makefilename. Please only use symbol
+placeholders (== "%s");
+#X connect 1 0 0 0;
+#X connect 3 0 1 1;
+#X connect 4 0 1 1;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 1;
+#X connect 9 0 1 1;
+#X connect 11 0 1 1;

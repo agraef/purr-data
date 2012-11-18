@@ -1,0 +1,38 @@
+import glob
+import os
+import re
+
+env = Environment(CPPPATH = Split('/usr/include /usr/local/include . ../../pd/src ../../src src'), CPPDEFINES=['PD'], SHLIBPREFIX = '', CCFLAGS = '-pipe -O2')
+
+opt = Options(['options.cache', 'custom.py'])
+opt.AddOptions(('prefix', 'install prefix', '/usr/local/lib/pd'))
+opt.Update(env)
+opt.Save('options.cache',env)
+prefix = env['prefix']
+
+if env['PLATFORM'] == 'win32':
+    env.Append(CPPDEFINES='NT')
+    env.Append(LINKFLAGS=prefix+'bin/pd.dll')
+    env['SHLIBSUFFIX']='.dll'
+elif env['PLATFORM'] == 'darwin':
+    env.Append(CPPDEFINES='UNIX')
+    env['SHLIBSUFFIX']='.pd_darwin'
+elif env['PLATFORM'] == 'posix':
+    env.Append(CPPDEFINES='UNIX')
+    env['SHLIBSUFFIX']='.pd_linux'
+
+#remove one-off externals that are also in cyclone
+print os.popen("""cd src && rm urn.* match.* sinh.c delta~.c reson~.c abs~.c svf~.c matrix~.c atan2~.c avg~.c pmpd.c && echo "poof...no more conflicting externals..!!" """).read()
+
+# C sources in src/
+for extra in glob.glob('src/*.c'):
+    name = re.sub("\.c$","",os.path.basename(extra))
+    external = env.SharedLibrary(name,'src/'+name+'.c')
+    env.Alias('install', env.Install(os.path.join(prefix, 'extra'), external))
+    Default(external)
+env.Alias('install', env.Install(os.path.join(prefix, 'doc/5.reference'), glob.glob('doc/*.pd')))
+
+# libraries
+Export('env prefix')
+for subdir in Split('ann miXed OSCx pmpd signal/expr~ unauthorized zexy'):
+    SConscript ('../' + subdir + '/SConscript')

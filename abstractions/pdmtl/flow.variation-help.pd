@@ -1,0 +1,8 @@
+#N canvas 0 22 617 326 10;
+#X obj 152 124 flow.variation;
+#X floatatom 103 50 5 0 0 0 - - -;
+#X floatatom 197 225 5 0 0 0 - - -;
+#X text 185 32 Description: Converts a flow of numbers into its delta.
+;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;

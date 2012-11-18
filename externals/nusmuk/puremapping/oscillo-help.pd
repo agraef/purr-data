@@ -1,0 +1,10 @@
+#N canvas 0 0 293 276 10;
+#X obj 5 6 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144 -1
+-1 11900 1;
+#X floatatom 43 -78 5 0 0 0 - - -;
+#X text 89 -80 from 0 to 1;
+#X obj 43 -60 resample 30;
+#X obj 43 -10 oscillo;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;

@@ -1,0 +1,42 @@
+#N canvas 262 113 738 360 10;
+#X obj 148 228 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 13 88 trigger;
+#X obj 13 66 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 165 105 gain \$1;
+#X obj 168 67 hsl 128 15 0 127 0 0 empty \$0-gain empty -2 -8 0 10
+-262144 -1 -1 9600 1;
+#X floatatom 176 87 5 0 0 0 - - -;
+#N canvas 602 327 190 227 INIT 0;
+#X obj 7 16 loadbang;
+#X obj 57 75 s \$0-gain;
+#X text 6 114 loading default values;
+#X msg 57 52 100;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X restore 15 322 pd INIT;
+#X text 44 66 <- play it;
+#X text 349 285 Author: Roman Haefeli;
+#X text 175 228 <- can be used to switch~ dsp off;
+#X obj 13 159 synth.drum.808.clap~;
+#X obj 13 228 mix.out_~;
+#X text 348 307 Version: 2007-09-13;
+#X text 12 12 Description: Emulation of the clap from the fancy tr808
+beatmachine;
+#X obj 335 64 cnv 15 370 130 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 341 68 SYNOPSIS;
+#X text 340 91 inlet0: accepts methods 'bang' \, 'trigger' and 'gain'
+;
+#X text 338 110 outlet0: signal;
+#X text 339 130 outlet1: float (0/1) \, switch~ outlet;
+#X text 340 161 arg1: gain (0-127) / default = 100;
+#X connect 1 0 10 0;
+#X connect 2 0 1 0;
+#X connect 3 0 10 0;
+#X connect 4 0 5 0;
+#X connect 4 0 3 0;
+#X connect 10 0 11 0;
+#X connect 10 0 11 1;
+#X connect 10 1 0 0;

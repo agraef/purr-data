@@ -1,0 +1,25 @@
+#N canvas 328 143 130 16 10;
+#N canvas 665 93 406 418 interna 0;
+#X obj 172 37 cnv 15 200 340 empty empty empty 5 8 1 10 -260390 -1
+0;
+#X obj 9 37 cnv 15 150 340 empty empty empty 5 8 1 10 -3121 -1 0;
+#X text 12 5 Text (size \, type \, font etc..);
+#X obj 16 58 inlet;
+#X obj 322 51 inlet;
+#X obj 257 131 route text;
+#X obj 216 175 route size;
+#X obj 16 350 text3d pixelTANGO;
+#X obj 241 295 register-tail;
+#X connect 3 0 7 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 1 8 0;
+#X connect 6 0 7 1;
+#X connect 6 1 7 0;
+#X restore 12 54 pd interna;
+#X obj 77 33 inlet;
+#X obj 12 33 inlet;
+#X obj 1 1 cnv 5 128 16 empty empty Text 5 9 1 12 -128992 -1 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X coords 0 0 1 1 130 16 1;

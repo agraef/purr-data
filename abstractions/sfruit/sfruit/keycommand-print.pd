@@ -1,0 +1,9 @@
+#N canvas 744 130 450 300 10;
+#X obj 101 101 bng 15 250 50 0 \$0.nullS \$0.nullR print-keys! 17 7
+0 10 -261894 -1 -1;
+#X obj 101 123 s ACTIVE_KEYCOMMANDS?;
+#X obj 101 151 r ACTIVE_KEYCOMMAND;
+#X obj 101 174 print;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X coords 0 -1 1 1 85 17 2 100 100;

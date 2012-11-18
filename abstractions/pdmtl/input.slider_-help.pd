@@ -1,0 +1,14 @@
+#N canvas 31 604 743 183 10;
+#X text 27 15 Description: 2 ways of sliding;
+#X obj 410 68 s \$0r;
+#X obj 410 97 r \$0s;
+#X obj 410 120 print number;
+#X text 28 70 The input.slidenum_ below was created with the following:
+;
+#X obj 410 23 loadbang;
+#X obj 31 115 input.slider_ name \$0r \$0s 4 100;
+#X text 27 86 input.slider_ name \$0r \$0s;
+#X msg 410 45 range 0 100 \, 34;
+#X connect 2 0 3 0;
+#X connect 5 0 8 0;
+#X connect 8 0 1 0;

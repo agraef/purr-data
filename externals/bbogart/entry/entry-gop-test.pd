@@ -1,0 +1,6 @@
+#N canvas 249 374 516 408 10;
+#N canvas 180 104 454 304 entry 0;
+#X obj 133 128 entry 124 100 grey70 black;
+#X coords 0 -1 1 1 200 160 1 100 100;
+#X restore 135 105 pd entry gop;
+#X coords 0 0 1 1 200 140 0;

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/cwiid/svn/!svn/ver/199/trunk/wmgui
+END
+wmgui.glade.bak
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/cwiid/svn/!svn/ver/14/trunk/wmgui/wmgui.glade.bak
+END
+wmgui.gladep.bak
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/cwiid/svn/!svn/ver/14/trunk/wmgui/wmgui.gladep.bak
+END
+callbacks.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/14/trunk/wmgui/callbacks.c
+END
+interface.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/14/trunk/wmgui/interface.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/cwiid/svn/!svn/ver/137/trunk/wmgui/Makefile.in
+END
+support.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/14/trunk/wmgui/support.h
+END
+wmgui.glade
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/14/trunk/wmgui/wmgui.glade
+END
+wmgui.gladep
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/cwiid/svn/!svn/ver/14/trunk/wmgui/wmgui.gladep
+END
+callbacks.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/14/trunk/wmgui/callbacks.h
+END
+main.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/cwiid/svn/!svn/ver/199/trunk/wmgui/main.c
+END
+interface.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/14/trunk/wmgui/interface.h
+END
+support.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/14/trunk/wmgui/support.c
+END

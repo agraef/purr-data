@@ -1,0 +1,58 @@
+#N canvas 133 55 641 509 10;
+#X msg 12 314 connect localhost 3000;
+#X msg 21 446 send foo \$1;
+#X floatatom 21 419 0 0 0 0 - - -;
+#X msg 12 395 disconnect;
+#X msg 200 446 send foo \$1;
+#X floatatom 200 419 0 0 0 0 - - -;
+#X msg 183 395 disconnect;
+#X msg 183 314 connect localhost 3001;
+#X floatatom 12 499 0 0 0 0 - - -;
+#X floatatom 183 498 0 0 0 0 - - -;
+#X text 300 471 creation argument: 0 or none for TCP \, nonzero for
+UDP;
+#X text 63 295 TCP;
+#X text 258 295 UDP;
+#X text 390 312 Connect to "localhost" port 3000/3001;
+#X text 288 396 Close the connection;
+#X text 240 421 Send messages to "foo" on remote machine;
+#X text 212 500 Outlet is nonzero if connection is open \, zero otherwise.
+;
+#X text 13 114 The Netsend object connects to another machine over
+the network for sending TCP ("stream") or UDP ("datagram") messages.
+An outlet reports whether the connection is open or not. A connection
+request should specify the name or IP address of the other host and
+the port number. There should be a "Netreceive" on the remote host
+with a matching port number.;
+#X text 530 102 see also:;
+#X msg 12 341 connect molloy 3000;
+#X msg 183 341 connect molloy 3001;
+#X msg 12 368 connect bug 3000;
+#X msg 183 368 connect bug 3000;
+#X obj 12 472 disis_netsend;
+#X obj 183 471 disis_netsend 1;
+#X obj 513 125 disis_netreceive;
+#X text 12 17 disis_netsend -- send/broadcast Pd messages over a network
+(essentially a hybrid between netsend and udpsend);
+#X text 12 52 disis_netsend by Ivica Ico Bukvic <ico@vt.edu> and Michael
+Matthews <matthem5@vt.edu> (c) 2009/10 http://disis.music.vt.edu. Code
+released under the same BSD license as the rest of the Pd.;
+#X text 13 214 disis_netsend/netreceive objects are fully compatible
+with pd's vanilla netsend/receive. In addition they allow broadcasting
+of packets as well as parsing udp packet's IP address. There is also
+a way to enqueue multiple messages (by prepending "enqueue") and then
+output them with a single bang.;
+#X connect 0 0 23 0;
+#X connect 1 0 23 0;
+#X connect 2 0 1 0;
+#X connect 3 0 23 0;
+#X connect 4 0 24 0;
+#X connect 5 0 4 0;
+#X connect 6 0 24 0;
+#X connect 7 0 24 0;
+#X connect 19 0 23 0;
+#X connect 20 0 24 0;
+#X connect 21 0 23 0;
+#X connect 22 0 24 0;
+#X connect 23 0 8 0;
+#X connect 24 0 9 0;

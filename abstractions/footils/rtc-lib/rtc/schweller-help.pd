@@ -1,0 +1,38 @@
+#N canvas 308 99 592 520 10;
+#X text 29 36 schweller;
+#X msg 350 18 Envelopes;
+#X text 29 478 vs. 3: new inlet added (fraction factor);
+#X floatatom 369 263 4 0 0 2 fraction_factor - -;
+#X obj 53 203 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X text 29 464 1993-96 by Karlheinz Essl;
+#X floatatom 314 243 4 0 0 2 duration - -;
+#X floatatom 256 223 4 0 0 2 middle_velocity - -;
+#X floatatom 190 203 4 0 0 2 start/end_velocity - -;
+#X msg 45 345 60;
+#X floatatom 83 351 0 0 0 1 velocity - -;
+#X msg 75 203 0;
+#X text 168 50 vs. 3;
+#X obj 53 266 t b b;
+#X text 29 68 Generates a transition between a start velocity \, a
+middle velocity and an end velocity (which the same as start velocity).
+By this you can create crescendo-decrescendo resp. decrescendo-crescendo
+envelopes ("hairpins" - in german: "Schweller"). A fraction factor
+(float between 0 and 1) send in the rightmost inlet determines the
+proportion between crescendo and decrescendo part.;
+#X obj 45 398 play2 127 90 0 1;
+#X obj 53 239 metro 100;
+#X obj 83 316 schweller 15 127 3000 0.25;
+#X connect 3 0 17 4;
+#X connect 4 0 16 0;
+#X connect 6 0 17 3;
+#X connect 7 0 17 2;
+#X connect 8 0 17 1;
+#X connect 9 0 15 0;
+#X connect 10 0 15 1;
+#X connect 11 0 4 0;
+#X connect 13 0 9 0;
+#X connect 13 1 17 0;
+#X connect 16 0 13 0;
+#X connect 17 0 10 0;
+#X connect 17 1 11 0;

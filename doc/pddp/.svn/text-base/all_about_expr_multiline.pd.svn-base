@@ -1,0 +1,44 @@
+#N canvas 0 0 448 282 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_multiline 20
+10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X floatatom 23 196 5 0 0 0 - - -;
+#X floatatom 102 196 5 0 0 0 - - -;
+#X floatatom 23 93 5 0 0 0 - - -;
+#X floatatom 181 196 0 0 0 0 - - -;
+#X floatatom 260 196 5 0 0 0 - - -;
+#X obj 23 119 expr $f1 \; $f1 * 2 \; pow($f1 \, 2) \; if($f1%128 <
+64 \, $f1%128 \, 128 - $f1%128);
+#X text 260 227 back down;
+#X text 259 213 count to 64 \, then;
+#X text 20 37 A semicolon can be used to enter multiple expressions
+in [expr] \, [expr~] \, and [fexpr~]. For each new statement \, an
+extra outlet is added to the object.;
+#X text 273 174 semicolon;
+#X text 272 165 doesn't require a;
+#X text 272 155 the last statement;
+#X obj 1 260 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 KEYWORDS conversion;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 NAME expr fexpr~ expr~;
+#X text 12 65 DESCRIPTION Like to enter multiple expressions inside
+expr? You can if you want \, and this patch tells you how...;
+#X restore 392 262 pd META;
+#N canvas 10 196 428 129 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 [expr] Multiline- Related Objects;
+#X restore 103 262 pd Related_objects;
+#X obj 6 262 pddp/pddplink all_about.pd -text All About Pd;
+#X connect 4 0 7 0;
+#X connect 7 0 2 0;
+#X connect 7 1 3 0;
+#X connect 7 2 5 0;
+#X connect 7 3 6 0;

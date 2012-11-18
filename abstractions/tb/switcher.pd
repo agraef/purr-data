@@ -1,0 +1,14 @@
+#N canvas 567 330 438 173 10;
+#X obj 36 15 inlet switch;
+#X obj 36 79 outlet factor;
+#X obj 66 118 outlet switch~;
+#X obj 36 60 t f f;
+#X text 220 18 \$1: switch delay;
+#X obj 36 38 change;
+#X obj 66 99 pre_switch \$1;
+#X text 42 155 (c) Tim Blechmann 2005 \, $Id: switcher.pd 221 2005-12-17 18:31:17Z tim $;
+#X connect 0 0 5 0;
+#X connect 3 0 1 0;
+#X connect 3 1 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 2 0;

@@ -1,0 +1,51 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib libdir;
+#X obj 468 43 import oscx;
+#X obj 8 10 cnv 15 400 40 empty empty wildcard_messages 20 12 0 24
+-228992 -66577 0;
+#X text 300 212 <-- notice the * in the pattern;
+#X msg 162 154 /inst2/note B;
+#X msg 151 135 /inst1/note C;
+#X msg 172 175 /inst3/note F;
+#X obj 355 309 bng 15 250 50 0 empty empty unmatched 18 8 0 12 -262144
+-1 -1;
+#X obj 64 378 symbol;
+#X symbolatom 64 400 10 0 0 0 - - -;
+#X obj 157 288 OSCroute /inst1 /inst2 /inst3;
+#X msg 199 213 /inst*/note F;
+#X obj 64 355 OSCroute /note;
+#X obj 172 379 symbol;
+#X symbolatom 172 401 10 0 0 0 - - -;
+#X obj 172 356 OSCroute /note;
+#X obj 282 379 symbol;
+#X symbolatom 282 401 10 0 0 0 - - -;
+#X obj 282 356 OSCroute /note;
+#X obj 64 418 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 172 418 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 282 418 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 11 70 With OSC \, its much more useful to put the wildcards
+in the messages that you are sending. In this example \, the wildcard
+allows one message to reach three instruments:;
+#X msg 220 250 /inst4/note F;
+#X text 322 249 <-- there is no /inst4 in [OSCroute];
+#X connect 3 0 9 0;
+#X connect 4 0 9 0;
+#X connect 5 0 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 18 0;
+#X connect 9 0 11 0;
+#X connect 9 1 14 0;
+#X connect 9 2 17 0;
+#X connect 9 3 6 0;
+#X connect 10 0 9 0;
+#X connect 11 0 7 0;
+#X connect 12 0 13 0;
+#X connect 13 0 19 0;
+#X connect 14 0 12 0;
+#X connect 15 0 16 0;
+#X connect 16 0 20 0;
+#X connect 17 0 15 0;
+#X connect 22 0 9 0;

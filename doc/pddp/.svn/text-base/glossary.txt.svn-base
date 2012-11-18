@@ -1,0 +1,117 @@
+@TERM abstraction @DEF n. a patch created as an object within another patch
+(optionally with creation arguments). @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s7.1
+;
+@TERM anything @DEF 1) n. any message in Pd that has a valid selector \, or is an implicit float or list message. @DEF 2) a keyword in certain objects which matches any valid Pd message \, sometimes written as 'a' or 'any'. @DEF 3) any message other than Pd's built-in messages (float \, symbol \, list \, bang \, or pointer) @OBJECTS list iemlib/iem_anything
+cyclone/prepend @LINKS all_about_lists_vs_anythings.pd all_about_messages.pd
+;
+@TERM array @DEF 1) n. a collection of data that can be selected and stored by indices. @DEF 2) a graphical array created by choosing
+'Array' from the 'Put' menu. @DEF 3) a field of a data structure that
+may be used to plot/store values. @OBJECTS array @LINKS all_about_arrays.pd
+;
+@TERM atom @DEF n. the most basic element of data in Pd. @OBJECTS gatom float
+symbol @LINKS all_about_atoms.pd;
+@TERM canvas @DEF 1) n. the blank area of the window where you write your
+patches. @DEF 2) the object [my_canvas]. @OBJECTS my_canvas pd @LINKS all_about_canvas_properties.pd
+;
+@TERM cold_inlet @DEF n. an inlet on an object that does not trigger output
+when it receives a message. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.3
+;
+@TERM control_object @DEF n. objects which carry out their function sporadically
+\, as a result of one or more type of event. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.2
+;
+@TERM creation_arguments @DEF n. atoms that follow the selector in an object
+box that are used to initialize the object upon creation. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.2
+;
+@TERM data_structure @DEF n. not sure yet... @OBJECTS struct pointer;
+@TERM edit_mode @DEF n. patch state in which you can creat \, edit \, move
+\, and delete objects. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s2.1
+;
+@TERM float @DEF 1) n. a special selector to tell an object to receive a numeric
+atom as data. @DEF 2) the object [float]. @OBJECTS float gatom value list @LINKS all_about_atoms.pd
+all_about_messages.pd;
+@TERM gop @DEF see 'graph on parent'.;
+@TERM graph_on_parent @DEF a. an attribute of an abstraction or subpatch
+that allows part of a patch to be displayed on the parent patch. @LINKS
+all_about_canvas_properties.pd;
+@TERM gui @DEF acronym for 'graphical user interface'. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.3
+;
+@TERM hot_inlet @DEF n. an inlet on an object that triggers output when
+it receives a message. (Usually this is the leftmost inlet.) @LINKS
+http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.3;
+@TERM main_Pd_window @DEF n. the window that pops up
+when you start Pd. It includes the peak level and clip indicators \,
+as well as the audio processing checkbutton and the printout area. Synonyms: console window.
+@OBJECTS print @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.1
+;
+@TERM message @DEF 1) n. data in any form sent to an object which causes
+the object to do something specific. @DEF 2) n. short name for 'message
+box'-- see 'message' object. @OBJECTS message @LINKS all_about_messages.pd
+;
+@TERM message_box @DEF n. a GUI object in which you can type text and trigger
+output with the mouse. @OBJECTS message flatspace/entry @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.4
+;
+@TERM nonlocal_connection @DEF n. a connection between two objects without
+using wires. @OBJECTS send receive send~ receive~ bng;
+@TERM number_box @DEF aka numbox \, gatom. GUI object that displays a
+single numeric value. @OBJECTS gatom nbx @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.3
+;
+@TERM numeric_atom @DEF n. any atom which functions as a number \, i.e.
+53 \, 3.1 \, 1e-25 @OBJECTS float int value list @LINKS all_about_atoms.pd
+;
+@TERM object_box @DEF n. rectangle in which Pd objects get created. @LINKS
+http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.2;
+@TERM patch @DEF 1) n. a program written in Pd. @DEF 2) v. the act of writing a Pd program;
+@TERM pointer @DEF n. a reference to a position in a scalar used to manipulate
+and read data from it. @OBJECTS pointer;
+@TERM properties_dialogue @DEF n. dialogue window (usually accessed by right-clicking
+a GUI object) used to set the object's attributes. @OBJECTS bng cnv hradio hslider nbx tgl vradio vslider vu
+@LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s2.7;
+@TERM run_mode @DEF n. patch mode in which
+number boxes \, message boxes \, and other GUI objects can be used
+as controls and objects/text cannot be moved \, changed \, or deleted. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s2.1
+;
+@TERM runmode @DEF see 'run mode'.;
+@TERM non_editmode @DEF see 'run mode'.;
+@TERM scalar @DEF n. a graphical instance of a struct @OBJECTS scalar;
+@TERM selector @DEF n. a symbolic atom that serves as an instruction to
+the receiving object as how to handle the message @LINKS all_about_messages.pd
+;
+@TERM selector_series @DEF 1) n. a series of 2 or more atoms whose first
+atom is neither the selector 'list' \, 'symbol' \, nor a numeric atom.
+@DEF 2) n. see 'anything'. @OBJECTS list @LINKS all_about_lists_vs_anythings.pd
+;
+@TERM series @DEF n. a collection of zero or more atoms;
+@TERM signal_object @DEF n. an object that computes audio samples. Also
+referred to as 'tilde objects' because they usually have a tilde (
+'~' ) after the name of the object. @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.2
+;
+@TERM subpatch @DEF n. a patch contained within another patch. @OBJECTS pd table
+graph @LINKS http://www.crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s7
+;
+@TERM symbol @DEF n. a special selector to tell an object to receive a symbolic
+atom as data. @OBJECTS symbol makefilename @LINKS all_about_messages.pd
+;
+@TERM symbolic_atom @DEF n. any atom that is not a numeric atom \, i.e.
+\, word \, 3.1.1 \, 1two. Synonym: symbol atom. @OBJECTS gatom symbol makefilename @LINKS all_about_atoms.pd
+;
+@TERM tilde_object @DEF see 'signal object'.;
+@TERM inlet @DEF 1) n. a small rectangle drawn at the top of an object that allows the object to receive data through a connection from another object. Note: in Pd \, the leftmost inlet is often synonymous with the object itself-- only subsidiary inlets are referred to explicitly in the source code and \, consequently \, in error messages. For example \, if the left inlet of object [foo] doesn't accept the message 'bar' \, Pd will respond with 'error: foo: no method for 'bar''. However \, if the right inlet of [foo] doesn't accept 'bar' Pd will respond \, 'error: inlet: no method for 'bar''. @DEF 2) The object named [inlet]. See also: 'outlet' \, 'signal inlet'. @OBJECTS inlet outlet inlet~ outlet~ receive
+;
+@TERM xlet @DEF n. an abbreviation for 'inlet or outlet'.
+;
+@TERM outlet @DEF 1) n. a small rectangle drawn at the bottom of an object that allows the object to send data somewhere else. @DEF 2) the object [outlet]. @OBJECTS inlet outlet inlet~ outlet~ send
+;
+@TERM connection @DEF n. the thin line that connects the outlet of one object to the inlet of another. @OBJECTS inlet outlet
+;
+@TERM wire @DEF see 'connection'.
+;
+@TERM cord @DEF see 'connection'.
+;
+@TERM patch_cord @DEF see 'connection'.
+;
+@TERM implicit_float @DEF a message that consists of a single float atom and can be understood as having an implicit selector 'float'. @OBJECTS float @LINKS all_about_messages.pd
+;
+@TERM implicit_list @DEF  a multi-element message that starts with a float and can be understood as having an implicit selector 'list'. @OBJECTS list @LINKS all_about_messages.pd
+;
+@TERM iolet @DEF an abbreviation for 'inlet or outlet'.
+;

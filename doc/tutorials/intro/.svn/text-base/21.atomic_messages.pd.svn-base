@@ -1,0 +1,24 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 12 cnv 15 400 40 empty empty atomic_messages 20 12 0 24 -228992
+-66577 0;
+#X msg 69 191 symbol atom;
+#X msg 47 343 float 1.234;
+#X text 15 76 To send one piece of data to an object \, send an atomic
+message. There are atomic messages to match each of the atom types.
+;
+#X symbolatom 61 233 10 0 0 0 - - -;
+#X msg 54 165 atom;
+#X text 172 232 <-- the symbol box expects a symbol message;
+#X text 106 165 <-- this gives an error (check the Pd window);
+#X text 196 190 <-- this works;
+#X text 14 134 When using symbolic atoms \, the symbol message is essential:
+;
+#X floatatom 74 410 5 0 0 0 - - -;
+#X msg 84 374 362;
+#X text 17 273 When using numeric atoms \, the float message is optional.
+This is because the float message is automatically implied when sending
+a numeric atom:;
+#X connect 1 0 4 0;
+#X connect 2 0 10 0;
+#X connect 5 0 4 0;
+#X connect 11 0 10 0;

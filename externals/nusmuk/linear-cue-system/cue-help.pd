@@ -1,0 +1,21 @@
+#N canvas 317 84 610 278 10;
+#X obj 10 22 cue_init cue1;
+#X obj 10 163 cue test1a 2000;
+#X obj 10 106 cue initialisation;
+#X obj 10 182 cue test1;
+#X obj 10 125 cue debut;
+#X obj 10 144 cue foo 1000;
+#X text 242 33 organize whatever in diferent step;
+#X text 243 95 cue parametters :;
+#X text 261 113 1 : name of the cue;
+#X text 261 129 2 : autogo;
+#X text 258 146 if not zero \, time before jumpimg to next go;
+#X obj 247 185 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 274 186 jump to that cue;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 11 0 3 1;

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/ext/!svn/ver/3675/trunk/vst
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3102/trunk/vst/package.txt
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3102/trunk/vst/readme.txt
+END
+vst.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3102/trunk/vst/vst.vcproj
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/3102/trunk/vst/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3102/trunk/vst/license.txt
+END

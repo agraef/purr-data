@@ -1,0 +1,324 @@
+#N canvas 38 34 768 485 10;
+#X msg 29 89 getmethods;
+#X msg 29 111 getattributes;
+#X obj 31 409 dac~;
+#X obj 28 358 *~;
+#X obj 57 358 *~;
+#X obj 100 398 line~;
+#X obj 137 109 openpanel;
+#X obj 137 89 bng 15 250 50 0 empty empty empty 0 -6 0 8 -225271 -1
+-1;
+#X msg 136 131 file \$1;
+#X obj 102 358 hsl 128 15 0.0001 2 1 0 empty empty gain -2 -6 0 8 -225271
+-1 -1 3300 1;
+#X msg 100 379 \$1 20;
+#X obj 322 90 tgl 15 0 empty empty loop 0 -6 0 8 -225271 -1 -1 0 1
+;
+#X msg 322 131 loop \$1;
+#X msg 136 154 getfile;
+#X msg 323 154 getloop;
+#X msg 382 130 pos \$1;
+#X obj 382 92 nbx 8 14 0 1e+037 0 0 empty empty pos 0 -6 0 10 -225271
+-1 -1 0 256;
+#X obj 422 201 nbx 7 14 0 1e+037 0 0 empty empty minbuf 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 422 221 minbuf \$1;
+#X msg 422 248 getminbuf;
+#X obj 497 201 nbx 7 14 0 1e+037 0 0 empty empty maxbuf 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 497 221 maxbuf \$1;
+#X msg 497 248 getmaxbuf;
+#X obj 572 201 nbx 7 14 0 1e+037 0 0 empty empty safety 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 572 221 safety \$1;
+#X msg 572 248 getsafety;
+#X obj 26 13 cnv 15 700 45 empty empty fsplay~ 10 22 0 24 -260818 -1
+0;
+#X text 189 36 http://grrrr.org;
+#X obj 494 91 loadbang;
+#X obj 102 323 nbx 12 14 0 1e+037 0 0 empty empty fpos 0 -6 0 10 -225271
+-1 -1 83.5154 256;
+#X obj 197 284 bng 20 250 50 0 empty empty loop 0 -6 0 8 -225271 -1
+-1;
+#X obj 229 284 bng 20 250 50 0 empty empty eof 0 -6 0 8 -225271 -1
+-1;
+#X obj 649 375 loadbang;
+#X msg 649 399 \; pd dsp 1;
+#X obj 225 323 hsl 128 15 0 10000 0 0 empty empty buffer -2 -6 0 8
+-225271 -1 -1 10467 1;
+#X obj 648 201 nbx 5 14 0 1e+037 0 0 empty empty grain 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 648 221 grain \$1;
+#X msg 648 248 getgrain;
+#X obj 493 127 metro 30;
+#X obj 256 284 bng 20 250 50 0 empty empty underflow 0 -6 0 8 -261689
+-1 -1;
+#X obj 399 276 print A;
+#X obj 306 365 nbx 8 14 0 1e+037 0 0 empty empty pos 0 -6 0 10 -225271
+-1 -1 83.3437 256;
+#X obj 304 404 nbx 8 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0.1717 256;
+#X msg 493 145 getpos \, getfpos \, getbuffer;
+#X obj 306 384 -;
+#N canvas 887 332 508 449 web 0;
+#X obj 23 372 outlet;
+#X msg 23 33 file http://images.apple.com/movies/fox/the_simpsons_movie/the_simpsons_movie-tlrk_h.640.mov
+;
+#X msg 23 96 file http://www.dradio.de/streaming/dlf.m3u;
+#X msg 35 161 file http://cba.fro.at/m3u.php?eintrag_id=8194;
+#X msg 57 196 file http://www.shoutcast.com/sbin/shoutcast-playlist.pls?rn=1403&file=filename.pls
+;
+#X msg 38 124 file http://www.fro.at:8008/fro-128.ogg;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X restore 77 157 pd web;
+#X obj 29 219 fsplay~ 2;
+#X obj 89 252 route fpos buffer loop eof underflow pos file;
+#X symbolatom 379 323 10 0 0 0 - - -;
+#X floatatom 456 323 5 0 0 0 - - -;
+#X floatatom 495 323 5 0 0 0 - - -;
+#X floatatom 536 323 8 0 0 0 - - -;
+#X obj 379 304 unpack s 0 0 0 0;
+#X floatatom 596 323 8 0 0 0 - - -;
+#X obj 493 109 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 10 249 env~;
+#X obj 40 249 env~;
+#X floatatom 10 274 5 0 0 0 - - -;
+#X floatatom 45 275 5 0 0 0 - - -;
+#X obj 385 65 hsl 300 15 0 300 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X text 567 90 TODO: pos wrapping with loop;
+#X text 567 104 TODO: match pos and fpos;
+#X msg 40 157 file;
+#X text 189 16 file and stream player \, (C)2004-2008 Thomas Grill
+;
+#X obj 364 92 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 247 91 nbx 7 14 0.01 100 1 1 empty empty speed 0 -6 0 10 -225271
+-1 -1 1 256;
+#X msg 246 131 speed \$1;
+#X msg 245 154 getspeed;
+#X obj 503 374 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 534 274 774 424 signal 0;
+#X msg 39 60 getmethods;
+#X msg 39 82 getattributes;
+#X obj 41 380 dac~;
+#X obj 38 329 *~;
+#X obj 67 329 *~;
+#X obj 110 369 line~;
+#X obj 139 76 openpanel;
+#X obj 139 56 bng 15 250 50 0 empty empty empty 0 -6 0 8 -225271 -1
+-1;
+#X msg 138 98 file \$1;
+#X obj 112 329 hsl 128 15 0.0001 2 1 0 empty empty gain -2 -6 0 8 -225271
+-1 -1 10100 1;
+#X msg 110 350 \$1 20;
+#X obj 332 61 tgl 15 0 empty empty loop 0 -6 0 8 -225271 -1 -1 0 1
+;
+#X msg 332 102 loop \$1;
+#X msg 138 121 getfile;
+#X msg 333 125 getloop;
+#X msg 392 101 pos \$1;
+#X obj 392 63 nbx 8 14 0 1e+037 0 0 empty empty pos 0 -6 0 10 -225271
+-1 -1 0 256;
+#X obj 432 172 nbx 7 14 0 1e+037 0 0 empty empty minbuf 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 432 192 minbuf \$1;
+#X msg 432 219 getminbuf;
+#X obj 507 172 nbx 7 14 0 1e+037 0 0 empty empty maxbuf 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 507 192 maxbuf \$1;
+#X msg 507 219 getmaxbuf;
+#X obj 582 172 nbx 7 14 0 1e+037 0 0 empty empty safety 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 582 192 safety \$1;
+#X msg 582 219 getsafety;
+#X obj 504 62 loadbang;
+#X obj 98 294 nbx 12 14 0 1e+037 0 0 empty empty fpos 0 -6 0 10 -225271
+-1 -1 63.2226 256;
+#X obj 207 255 bng 20 250 50 0 empty empty loop 0 -6 0 8 -225271 -1
+-1;
+#X obj 239 255 bng 20 250 50 0 empty empty eof 0 -6 0 8 -225271 -1
+-1;
+#X obj 235 294 hsl 128 15 0 10000 0 0 empty empty buffer -2 -6 0 8
+-225271 -1 -1 10556 1;
+#X obj 658 172 nbx 5 14 0 1e+037 0 0 empty empty grain 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 658 192 grain \$1;
+#X msg 658 219 getgrain;
+#X obj 503 98 metro 30;
+#X obj 266 255 bng 20 250 50 0 empty empty underflow 0 -6 0 8 -261689
+-1 -1;
+#X msg 503 116 getpos \, getfpos \, getbuffer;
+#N canvas 887 332 508 449 web 0;
+#X obj 23 372 outlet;
+#X msg 23 33 file http://images.apple.com/movies/fox/the_simpsons_movie/the_simpsons_movie-tlrk_h.640.mov
+;
+#X msg 23 96 file http://www.dradio.de/streaming/dlf.m3u;
+#X msg 35 161 file http://cba.fro.at/m3u.php?eintrag_id=8194;
+#X msg 57 196 file http://www.shoutcast.com/sbin/shoutcast-playlist.pls?rn=1403&file=filename.pls
+;
+#X msg 38 124 file http://www.fro.at:8008/fro-128.ogg;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X restore 87 128 pd web;
+#X obj 99 223 route fpos buffer loop eof underflow pos file;
+#X obj 503 80 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 20 220 env~;
+#X obj 50 220 env~;
+#X floatatom 20 245 5 0 0 0 - - -;
+#X floatatom 55 246 5 0 0 0 - - -;
+#X obj 395 36 hsl 300 15 0 300 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X msg 50 128 file;
+#X obj 374 63 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 252 61 nbx 7 14 0.01 100 1 1 empty empty speed 0 -6 0 10 -225271
+-1 -1 1 256;
+#X obj 39 190 fsplay~ 2 1;
+#X obj 255 104 sig~;
+#X obj 365 251 print A~;
+#X msg 209 104 run \$1;
+#X obj 209 62 tgl 15 0 empty empty run 0 -6 0 8 -225271 -1 -1 1 1;
+#X obj 376 295 nbx 12 14 0 1e+037 0 0 empty empty pos 0 -6 0 10 -225271
+-1 -1 63.0494 256;
+#X obj 376 340 nbx 8 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0.173149 256;
+#X obj 378 320 -;
+#X connect 0 0 48 0;
+#X connect 1 0 48 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 1;
+#X connect 5 0 3 1;
+#X connect 5 0 4 1;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 48 0;
+#X connect 9 0 10 0;
+#X connect 10 0 5 0;
+#X connect 11 0 12 0;
+#X connect 12 0 48 0;
+#X connect 13 0 48 0;
+#X connect 14 0 48 0;
+#X connect 15 0 48 0;
+#X connect 16 0 15 0;
+#X connect 17 0 18 0;
+#X connect 18 0 48 0;
+#X connect 19 0 48 0;
+#X connect 20 0 21 0;
+#X connect 21 0 48 0;
+#X connect 22 0 48 0;
+#X connect 23 0 24 0;
+#X connect 24 0 48 0;
+#X connect 25 0 48 0;
+#X connect 26 0 39 0;
+#X connect 27 0 55 0;
+#X connect 31 0 32 0;
+#X connect 32 0 48 0;
+#X connect 33 0 48 0;
+#X connect 34 0 36 0;
+#X connect 36 0 48 0;
+#X connect 37 0 48 0;
+#X connect 38 0 27 0;
+#X connect 38 1 30 0;
+#X connect 38 2 28 0;
+#X connect 38 3 29 0;
+#X connect 38 4 35 0;
+#X connect 38 5 53 0;
+#X connect 38 7 50 0;
+#X connect 39 0 34 0;
+#X connect 40 0 42 0;
+#X connect 41 0 43 0;
+#X connect 44 0 16 0;
+#X connect 45 0 48 0;
+#X connect 46 0 16 0;
+#X connect 47 0 49 0;
+#X connect 48 0 3 0;
+#X connect 48 0 40 0;
+#X connect 48 1 4 0;
+#X connect 48 1 41 0;
+#X connect 48 2 38 0;
+#X connect 49 0 48 0;
+#X connect 51 0 48 0;
+#X connect 52 0 51 0;
+#X connect 53 0 55 1;
+#X connect 55 0 54 0;
+#X restore 519 402 pd signal;
+#X text 518 384 signal based;
+#X msg 214 111 run \$1;
+#X obj 214 90 tgl 15 0 empty empty run 0 -6 0 8 -225271 -1 -1 1 1;
+#X connect 0 0 46 0;
+#X connect 1 0 46 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 1;
+#X connect 5 0 3 1;
+#X connect 5 0 4 1;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 46 0;
+#X connect 9 0 10 0;
+#X connect 10 0 5 0;
+#X connect 11 0 12 0;
+#X connect 12 0 46 0;
+#X connect 13 0 46 0;
+#X connect 14 0 46 0;
+#X connect 15 0 46 0;
+#X connect 16 0 15 0;
+#X connect 17 0 18 0;
+#X connect 18 0 46 0;
+#X connect 19 0 46 0;
+#X connect 20 0 21 0;
+#X connect 21 0 46 0;
+#X connect 22 0 46 0;
+#X connect 23 0 24 0;
+#X connect 24 0 46 0;
+#X connect 25 0 46 0;
+#X connect 28 0 54 0;
+#X connect 29 0 44 0;
+#X connect 32 0 33 0;
+#X connect 35 0 36 0;
+#X connect 36 0 46 0;
+#X connect 37 0 46 0;
+#X connect 38 0 43 0;
+#X connect 41 0 44 1;
+#X connect 43 0 46 0;
+#X connect 44 0 42 0;
+#X connect 45 0 46 0;
+#X connect 46 0 3 0;
+#X connect 46 0 55 0;
+#X connect 46 1 4 0;
+#X connect 46 1 56 0;
+#X connect 46 2 47 0;
+#X connect 47 0 29 0;
+#X connect 47 1 34 0;
+#X connect 47 2 30 0;
+#X connect 47 3 31 0;
+#X connect 47 4 39 0;
+#X connect 47 5 41 0;
+#X connect 47 6 52 0;
+#X connect 47 7 40 0;
+#X connect 52 0 48 0;
+#X connect 52 1 49 0;
+#X connect 52 2 50 0;
+#X connect 52 3 51 0;
+#X connect 52 4 53 0;
+#X connect 54 0 38 0;
+#X connect 55 0 57 0;
+#X connect 56 0 58 0;
+#X connect 59 0 16 0;
+#X connect 62 0 46 0;
+#X connect 64 0 16 0;
+#X connect 65 0 66 0;
+#X connect 66 0 46 0;
+#X connect 67 0 46 0;
+#X connect 71 0 46 0;
+#X connect 72 0 71 0;

@@ -1,0 +1,91 @@
+#N canvas 331 120 783 579 10;
+#X obj 118 233 list-inter;
+#X obj 118 166 list split 1;
+#X obj 201 234 t l;
+#X obj 118 193 expr 1-$f1;
+#X obj 461 377 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 9377 1;
+#X obj 118 303 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 6198 1;
+#X obj 157 303 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 3953 1;
+#X obj 197 303 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4387 1;
+#X floatatom 118 277 5 0 0 0 - - -;
+#X floatatom 157 277 5 0 0 0 - - -;
+#X floatatom 197 277 5 0 0 0 - - -;
+#X obj 118 255 unpack 0 0 0;
+#X obj 461 400 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 2363 1;
+#X obj 461 423 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 960 1;
+#X obj 447 143 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 12700 1;
+#X obj 447 166 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3200 1;
+#X obj 447 189 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1300 1;
+#X msg 459 107 1;
+#X msg 118 136 \$1 5 2 3 \, \$2 4 5 6 \, \$3 6 7 1;
+#N canvas 0 0 753 456 normalize 0;
+#X obj 369 105 pack 0 0 0;
+#X obj 332 175 list-math /;
+#X obj 438 76 t b f;
+#X obj 391 78 t b f;
+#X obj 403 154 list-accum;
+#X obj 361 135 t a a;
+#X obj 330 202 unpack 0 0 0;
+#X msg 305 259 set \$1;
+#X msg 365 260 set \$1;
+#X msg 437 269 set \$1;
+#X obj 360 47 inlet;
+#X obj 403 48 inlet;
+#X obj 450 49 inlet;
+#X obj 328 327 outlet;
+#X obj 380 328 outlet;
+#X obj 438 324 outlet;
+#X obj 190 246 outlet;
+#X connect 0 0 5 0;
+#X connect 1 0 6 0;
+#X connect 1 0 16 0;
+#X connect 2 0 0 0;
+#X connect 2 1 0 2;
+#X connect 3 0 0 0;
+#X connect 3 1 0 1;
+#X connect 4 0 1 1;
+#X connect 5 0 1 0;
+#X connect 5 1 4 0;
+#X connect 6 0 7 0;
+#X connect 6 1 8 0;
+#X connect 6 2 9 0;
+#X connect 7 0 13 0;
+#X connect 8 0 14 0;
+#X connect 9 0 15 0;
+#X connect 10 0 0 0;
+#X connect 11 0 3 0;
+#X connect 12 0 2 0;
+#X restore 342 339 pd normalize;
+#X obj 342 369 s \$0-list;
+#X obj 118 107 r \$0-list;
+#X connect 0 0 11 0;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 1 1 0 1;
+#X connect 2 0 0 2;
+#X connect 3 0 0 0;
+#X connect 8 0 5 0;
+#X connect 9 0 6 0;
+#X connect 10 0 7 0;
+#X connect 11 0 8 0;
+#X connect 11 1 9 0;
+#X connect 11 2 10 0;
+#X connect 14 0 19 0;
+#X connect 15 0 19 1;
+#X connect 16 0 19 2;
+#X connect 17 0 14 0;
+#X connect 18 0 1 0;
+#X connect 19 0 20 0;
+#X connect 19 1 4 0;
+#X connect 19 2 12 0;
+#X connect 19 3 13 0;
+#X connect 21 0 18 0;

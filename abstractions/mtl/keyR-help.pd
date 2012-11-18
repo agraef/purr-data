@@ -1,0 +1,23 @@
+#N canvas 267 162 340 212 10;
+#X obj 17 109 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 15 64 The "a" key.;
+#X obj 99 107 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 96 63 The "2" key.;
+#X obj 179 109 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X text 177 64 The left control key.;
+#X obj 16 179 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 14 134 The right control key.;
+#X text 15 13 Description: Receive a computer key's status.;
+#X obj 99 81 mtl/keyR 2;
+#X obj 16 152 mtl/keyR Shift_L;
+#X obj 17 81 mtl/keyR a;
+#X obj 179 82 mtl/keyR Control_L;
+#X text 17 33 tags: ui;
+#X connect 9 0 2 0;
+#X connect 10 0 6 0;
+#X connect 11 0 0 0;
+#X connect 12 0 4 0;

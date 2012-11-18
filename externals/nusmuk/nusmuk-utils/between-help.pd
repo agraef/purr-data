@@ -1,0 +1,14 @@
+#N canvas 0 0 450 300 10;
+#X obj 29 91 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 29 183 5 0 0 0 - - -;
+#X floatatom 68 131 5 0 0 0 - - -;
+#X floatatom 108 131 5 0 0 0 - - -;
+#X obj 29 156 between 2 15;
+#X text 164 129 input range;
+#X text 62 20 output a float that is between a min and a max;
+#X text 52 90 <-- bang;
+#X connect 0 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 4 2;
+#X connect 4 0 1 0;

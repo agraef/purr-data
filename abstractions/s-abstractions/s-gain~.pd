@@ -1,0 +1,22 @@
+#N canvas 514 165 293 375 10;
+#X obj 148 78 inlet~;
+#X obj 148 277 outlet~;
+#X obj 8 34 hsl 64 16 0 127 0 0 \$0/gain \$1/gain gain -2 -6 0 8 -260818
+-1 -1 0 1;
+#X msg 171 173 \$1 10;
+#X obj 171 198 line~;
+#X obj 148 221 *~;
+#X obj 148 250 s-jail;
+#X obj 171 131 / 127;
+#X obj 171 153 * 3;
+#X obj 6 350 sssad/auto \$0/gain \$1/gain;
+#X obj 171 109 r \$0/gain;
+#X connect 0 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 1;
+#X connect 5 0 6 0;
+#X connect 6 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 10 0 7 0;
+#X coords 0 0 1 1 90 55 1 0 0;

@@ -1,0 +1,28 @@
+#N canvas 323 157 503 508 12;
+#X obj 72 455 print from_seg;
+#X text 18 12 This example show how to use seg using the low level
+interface.;
+#X text 73 406 The events from seg arrives there;
+#X text 553 471 dh20020317;
+#X obj 79 346 send to_node;
+#X msg 79 84 do */ add_canvas */test;
+#X msg 79 111 do */test add_seg foo;
+#X obj 72 428 r */test/foo;
+#X msg 79 137 do */test size 100 100;
+#X msg 79 163 do */test/foo width 10;
+#X msg 79 194 do */test/foo move 10 10;
+#X msg 79 221 do */test/foo color blue;
+#X msg 79 252 do */test/foo caps butt;
+#X msg 79 279 do */test/foo coord 10 10 20 20;
+#X msg 79 303 do */test color white;
+#X text 385 469 dh20020530;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 0 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 0;
+#X connect 10 0 4 0;
+#X connect 11 0 4 0;
+#X connect 12 0 4 0;
+#X connect 13 0 4 0;
+#X connect 14 0 4 0;

@@ -1,0 +1,26 @@
+#N canvas 330 306 711 366 10;
+#X obj 39 105 notein;
+#X obj 39 141 pack f f;
+#X obj 36 252 midi.chord.guess;
+#X obj 188 239 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 209 237 clear notes that might be stuck on.;
+#X msg 102 327 4;
+#X obj 36 277 route none;
+#X obj 36 305 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 101 302 flow.prepend set;
+#X obj 287 76 input.piano_ 1;
+#X text 17 17 Description: Processes a stream of midi notes so that
+we only keep the notes that are currently on. Furthermore \, it rounds
+them all to the same octave so that we can use them as a chord in musical
+computations.;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 3 0 2 1;
+#X connect 6 0 7 0;
+#X connect 6 1 8 0;
+#X connect 8 0 5 0;
+#X connect 9 0 1 0;

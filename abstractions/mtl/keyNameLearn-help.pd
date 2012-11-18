@@ -1,0 +1,15 @@
+#N canvas 663 196 309 206 10;
+#X obj 32 74 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 32 147 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X symbolatom 125 145 10 0 0 0 - - -;
+#X text 52 145 Key press.;
+#X text 200 146 Key learned.;
+#X text 51 72 Learn.;
+#X obj 32 105 mtl/keyNameLearn;
+#X text 12 8 Description: Choose a key that toggle.;
+#X text 13 24 tags: ui;
+#X connect 0 0 6 0;
+#X connect 6 0 1 0;
+#X connect 6 1 2 0;

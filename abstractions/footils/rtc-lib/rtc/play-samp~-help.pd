@@ -1,0 +1,37 @@
+#N canvas 424 240 594 423 10;
+#X text 205 201 reversed \, attenuated;
+#X obj 125 226 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 212 178 transposed \, attenuated;
+#X msg 365 23 MSP-RTC;
+#X text 24 325 1999 by Karlheinz Essl;
+#X text 24 56 Plays one sample. The object requires a list sent to
+its input with the following elements: transposition factor (float
+between -N and N) - buffer name - gain factor (float between 0 an 1).
+If 1 is sent to the right input \, the sample would loop until a 0
+is sent.;
+#X text 24 29 play-samp~;
+#X text 154 156 original pitch \, original gain;
+#X text 148 229 loop on/off;
+#X text 25 127 NB: a negative transposition factor plays back the sample
+backwards;
+#X obj 48 226 play-samp~;
+#X obj 266 283 openpanel;
+#X obj 265 358 table play-samp;
+#X msg 266 304 read -resize \$1 play-samp;
+#X obj 266 330 soundfiler;
+#X msg 48 159 1 play-samp 1;
+#X msg 63 181 2.5 play-samp 0.25;
+#X obj 266 256 bng 20 250 50 0 empty empty open-sample 0 -6 0 8 -262144
+-1 -1;
+#X obj 48 257 ezdac~;
+#X msg 83 202 -1 play-samp 0.8;
+#X connect 1 0 10 1;
+#X connect 10 0 18 0;
+#X connect 10 0 18 1;
+#X connect 11 0 13 0;
+#X connect 13 0 14 0;
+#X connect 15 0 10 0;
+#X connect 16 0 10 0;
+#X connect 17 0 11 0;
+#X connect 19 0 10 0;

@@ -1,0 +1,32 @@
+#N canvas 466 67 574 515 10;
+#X obj 174 141 loadbang;
+#X floatatom 175 264 0 0 0 3 chosen_group_size - -;
+#X msg 175 196 1 2 3 4;
+#X obj 46 190 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 46 291 collect;
+#X msg 46 344;
+#X obj 90 272 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 176 299 0 0 0 3 choosen_index_of_supply - -;
+#X text 267 170 supply;
+#X text 248 195 group list;
+#X text 195 426 vs. 2.1: seedable by the RTC-seed;
+#X text 195 404 1994-98 by Karlheinz Essl after G.M. Koenig;
+#X text 38 24 groups;
+#X text 47 49 Chooses elements from a supply (int list) sent to the
+middle inlet and repeats them according to values chosen from a group
+list (rightmost inlet). The values from the two parameter lists are
+chosen by random (using the selection principle "series");
+#X msg 174 171 0 1 2 3 4 5;
+#X obj 46 228 groups;
+#X connect 0 0 14 0;
+#X connect 0 0 2 0;
+#X connect 2 0 15 2;
+#X connect 3 0 15 0;
+#X connect 4 0 5 0;
+#X connect 6 0 4 1;
+#X connect 14 0 15 1;
+#X connect 15 0 4 0;
+#X connect 15 1 7 0;
+#X connect 15 2 1 0;

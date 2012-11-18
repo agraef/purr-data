@@ -1,0 +1,44 @@
+#N canvas 10 40 620 460 12;
+#X obj 311 314 cnv 15 300 60 empty empty not_selectors 5 12 0 14 -261234
+-66577 0;
+#X obj 6 314 cnv 15 300 60 empty empty possible_selectors 5 12 0 14
+-204786 -66577 0;
+#X obj 8 -29 cnv 15 400 40 empty empty selectors 20 12 0 24 -228992
+-66577 0;
+#N canvas 10 40 620 460 object 0;
+#X obj 79 36 inlet;
+#X obj 86 270 outlet;
+#X obj 308 267 outlet;
+#X obj 71 131 route output-left output-right;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 1 2 0;
+#X restore 51 201 pd object;
+#X floatatom 51 244 5 0 0 0 - - -;
+#X floatatom 136 244 5 0 0 0 - - -;
+#X msg 83 155 output-right 309;
+#X msg 50 105 output-left 8675;
+#X text 9 28 Every message has a selector. The selector is the first
+element in the message. It tells the object which receives that message
+what to do with it. A selector is basically like a command or a function.
+;
+#X text 220 106 <-- "output-left" is the selector;
+#X text 250 156 <-- "output-right" is the selector;
+#X text 205 377 For more info:;
+#X obj 223 394 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.1
+;
+#X text 19 348 symbol;
+#X text 179 320 list;
+#X text 159 349 my23;
+#X text 217 338 output-left;
+#X text 340 338 2523;
+#X text 466 320 -134.4;
+#X text 536 347 is \; next;
+#X text 8 272 The selector has a specific format. It needs to be a
+symbolic atom with no spaces \, semicolons \, or commas.;
+#X text 91 337 fl--^;
+#X text 403 351 my \, 23;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;

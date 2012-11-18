@@ -1,0 +1,503 @@
+#N canvas 0 0 448 545 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_operators_and_functions
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X floatatom 140 881 5 0 0 0 - - -;
+#X floatatom 188 880 5 0 0 0 - - -;
+#X obj 140 901 v a;
+#X obj 188 901 v b;
+#X obj 36 794 expr max(a \, b);
+#X obj 22 774 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 795 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 711 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 732 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 753 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 36 880 0 0 0 0 - - -;
+#X obj 22 990 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 1010 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1030 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1050 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1070 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1090 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1110 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1130 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1150 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 816 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 1171 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 837 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 858 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 36 1200 0 0 0 0 - - -;
+#X obj 36 773 expr min(a \, b);
+#X obj 36 710 expr int(a);
+#X obj 36 731 expr rint(a);
+#X obj 36 752 expr float(a);
+#X obj 36 1129 expr tanh(a);
+#X obj 36 1149 expr fact(a);
+#X obj 36 815 expr abs(a);
+#X obj 36 857 expr modf(a);
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array expr_array 11 float 3;
+#A 0 -0.707106 0 0.707106 1 0.707108 2.65359e-006 -0.707104 -1 -0.70711
+-5.30718e-006 0.707103;
+#X coords 0 1 11 -1 80 60 1;
+#X restore 22 1757 graph;
+#X obj 22 1844 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1864 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1884 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1904 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1924 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1944 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 36 1971 0 0 0 0 - - -;
+#X text 185 1842 size of an array;
+#X text 24 1620 * Bug: floor and ceiling must take two values to initialize
+properly. You can just put a zero as the second value.;
+#X text 9 1171 *;
+#X text 9 837 *;
+#X text 185 1861 sum of all elements in an array;
+#X text 206 1903 average of all elements;
+#X text 138 772 minimum;
+#X text 138 793 maximum;
+#X text 138 709 convert to integer;
+#X text 138 730 round a float to a nearby integer;
+#X text 138 751 convert to float;
+#X text 4 753 **;
+#X text 24 1646 ** Bug: float(a) converts a to an integer;
+#X text 149 1127 hyperbolic tangent;
+#X text 149 1147 factorial;
+#X text 127 835 get signed integer value from floating point number
+;
+#X floatatom 120 504 5 0 0 0 - - -;
+#X floatatom 168 503 5 0 0 0 - - -;
+#X obj 120 524 v a;
+#X obj 168 524 v b;
+#X floatatom 36 503 0 0 0 0 - - -;
+#X text 117 123 One's complement;
+#X text 117 143 Multiply;
+#X text 117 183 Modulo;
+#X text 117 203 Add;
+#X text 117 223 Subtract;
+#X text 117 243 Shift Left;
+#X text 117 263 Shift Right;
+#X text 117 283 Less than (boolean);
+#X text 117 303 Less than or equal (boolean);
+#X text 117 323 Greater than (boolean);
+#X text 117 343 Greater than or equal (boolean);
+#X text 117 363 Equal (boolean);
+#X text 117 383 Not equal (boolean);
+#X text 117 403 Bitwise And;
+#X text 117 423 Exclusive Or;
+#X text 117 443 Bitwise Or;
+#X text 117 463 Logical And (boolean);
+#X text 117 483 Logical Or (boolean);
+#X text 117 163 Divide (division by zero detected);
+#X text 138 815 absolute value;
+#X obj 22 613 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 612 expr if(a \, b \, c);
+#X floatatom 238 880 5 0 0 0 - - -;
+#X obj 238 901 v c;
+#X text 147 637 (See expr-if subpatch for more details);
+#X text 117 855 get signed fractional value from floating point number
+;
+#X floatatom 152 1201 5 0 0 0 - - -;
+#X floatatom 200 1200 5 0 0 0 - - -;
+#X obj 152 1221 v a;
+#X obj 200 1221 v b;
+#X obj 22 664 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 663 expr random(a \, b);
+#X obj 36 989 expr pow(a \, b);
+#X text 149 987 raise a to the power of b;
+#X obj 36 1009 expr sqrt(a);
+#X text 149 1007 square root;
+#X obj 36 1029 expr exp(a);
+#X text 149 1027 e raised to the power of a;
+#X obj 36 1049 expr ln(a);
+#X text 149 1047 natural log;
+#X obj 36 1069 expr log(a);
+#X text 149 1067 natural log (same as above);
+#X obj 36 1089 expr log10(a);
+#X text 149 1087 log base 10;
+#X obj 36 1109 expr fact(a);
+#X text 149 1107 factorial;
+#X obj 36 1170 expr ldexp(a);
+#X obj 22 1310 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1330 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1350 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1370 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1390 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1410 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1430 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1450 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1470 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1491 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 36 1575 0 0 0 0 - - -;
+#X text 9 1511 *;
+#X floatatom 152 1575 5 0 0 0 - - -;
+#X floatatom 200 1574 5 0 0 0 - - -;
+#X obj 152 1595 v a;
+#X obj 200 1595 v b;
+#X obj 36 1309 expr sin(a);
+#X text 149 1307 sine;
+#X obj 36 1329 expr cos(a);
+#X text 149 1327 cosine;
+#X obj 36 1349 expr tan(a);
+#X text 149 1347 tangent;
+#X obj 36 1369 expr asin(a);
+#X text 149 1367 arc sine;
+#X obj 36 1389 expr acos(a);
+#X text 149 1387 arc cosine;
+#X obj 36 1409 expr atan(a);
+#X text 149 1407 arc tangent;
+#X obj 36 1429 expr atan2(a \, b);
+#X text 149 1427 arc tangent of 2 variables;
+#X obj 36 1449 expr sinh(a);
+#X text 149 1447 hyperbolic sine;
+#X obj 36 1469 expr cosh(a);
+#X text 149 1467 hyperbolic cosine;
+#X obj 22 1512 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1532 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 22 1552 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 36 1490 expr tanh(a);
+#X text 149 1487 hyperbolic tangent;
+#X obj 36 1511 expr floor(a \, 0);
+#X text 149 1509 largest integral value not greater than argument;
+#X obj 36 1531 expr ceil(a \, 0);
+#X text 149 1529 smallest integral value not less than argument;
+#X text 149 1549 floating-point remainder function;
+#X obj 36 1551 expr fmod(a \, b);
+#X text 9 1531 *;
+#X obj 22 144 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 164 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 184 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 204 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 224 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 264 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 284 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 304 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 324 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 344 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 364 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 384 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 404 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 424 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 143 expr a * b;
+#X obj 36 163 expr a / b;
+#X obj 36 183 expr a % b;
+#X obj 36 203 expr a + b;
+#X obj 36 223 expr a - b;
+#X obj 36 243 expr a << b;
+#X obj 36 263 expr a >> b;
+#X obj 36 283 expr a < b;
+#X obj 36 303 expr a <= b;
+#X obj 36 323 expr a > b;
+#X obj 36 343 expr a >= b;
+#X obj 36 363 expr a == b;
+#X obj 36 383 expr a != b;
+#X obj 36 403 expr a & b;
+#X obj 36 423 expr a ^ b;
+#X obj 22 444 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 443 expr a | b;
+#X obj 22 464 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 463 expr a && b;
+#X obj 22 484 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 483 expr a || b;
+#X obj 22 124 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 36 123 expr a ~ b;
+#X obj 36 836 expr imodf(a);
+#X floatatom 131 1971 5 0 0 0 - - -;
+#X floatatom 179 1970 5 0 0 0 - - -;
+#X obj 131 1991 v a;
+#X obj 179 1991 v b;
+#X text 18 2277 cbrt(a);
+#X text 18 2297 erf(a);
+#X text 18 2317 erfc(a);
+#X text 18 2357 loglp(a);
+#X text 18 2377 isinf(a);
+#X text 18 2397 finite(a);
+#X text 18 2417 isnan(a);
+#X text 18 2457 drem(a);
+#X text 18 2477 asinh(a);
+#X text 18 2497 acosh(a);
+#X text 18 2517 atanh(a);
+#X text 98 2277 cube root;
+#X text 98 2297 error function;
+#X text 98 2317 complementary error function;
+#X text 18 2337 expm1(a);
+#X text 98 2337 exponential minus 1;
+#X text 98 2357 logarithm of 1 plus;
+#X text 98 2377 is the value infinite;
+#X text 98 2397 is the value finite;
+#X text 98 2417 is the value not a number;
+#X text 98 2437 copy the sign of a number;
+#X text 98 2457 floating-point remainder function;
+#X text 98 2477 inverse hyperbolic sine;
+#X text 98 2497 inverse hyperbolic cosine;
+#X text 98 2517 inverse hyperbolic tangent;
+#X obj 36 1843 expr size("expr_array");
+#X text 242 524 ***Scroll Down for more***;
+#X obj 1 572 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X obj 1 949 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X obj 1 1269 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X text 7 1269 Trigonometric Functions;
+#X text 7 949 Power Functions;
+#X text 7 572 General Purpose Functions;
+#X obj 1 1705 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X text 7 1705 Array/Table Functions;
+#X obj 1 2241 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X text 7 2241 Functions Not Available in Windows;
+#X text 148 612 conditional \; if (condition \, ifTrue-expr \, ifFalse-expr)
+;
+#X text 147 663 random number between a and b. The value will;
+#X text 148 676 be less than the upper boundary and greater;
+#X text 148 688 than or equal to the lower boundary.;
+#X text 149 1180 power of 2;
+#X text 149 1167 multiply floating-point number by integral;
+#X text 217 1882 sum of an array within boundaries;
+#X text 219 1922 average of elements within boundaries;
+#X text 239 1942 store a value in an array;
+#X text 239 1955 ("array_name" \, index \, value);
+#X text 19 2032 Note: the quotation marks inside the parentheses are
+also required when using a variable \, like "$s2". When using array/table
+names like "array-name" or "\$0-table" \, use a variable-- otherwise
+the dash and the \$0 will get interpreted as an operator and a value
+\, respectively.;
+#X obj 35 2131 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 35 2195 5 0 0 0 - - -;
+#X obj 35 2150 symbol \$0-expr-array;
+#X obj 35 2172 expr size("$s1");
+#X obj 36 1863 expr sum("expr_array");
+#X text 19 2096 For a table name like "\$0-array2" \, send the array
+name as a message:;
+#X text 239 1981 than the size of the table \,;
+#X text 239 1968 If the index is greater;
+#X text 240 1994 a modulo the size of the;
+#X text 240 2007 table is made.;
+#X text 109 1790 Note: The array name in [expr] must be in quotes;
+#X text 146 1803 when using these functions.;
+#X text 109 1816 (even when for a variable like "$s2");
+#X obj 36 1883 expr Sum("expr_array" \, 6 \, 0);
+#X obj 36 1903 expr avg("expr_array");
+#X obj 36 1923 expr Avg("expr_array" \, 1 \, 3);
+#X obj 36 1943 expr store("expr_array" \, 0 \, 3);
+#X text 254 2439 ***;
+#X text 17 2540 *** bug: copysign is spelled "copysig" in the source
+;
+#X text 18 2437 copysign(a);
+#X obj 1 82 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X text 19 37 The following operators and functions are available as
+arguments to the [expr] \, [expr~] \, and [fexpr~] objects.;
+#X text 7 82 Operators (from highest to lowest precedence);
+#X obj 1 2568 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 45 KEYWORDS;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 NAME expr expr~ fexpr~;
+#X text 12 65 DESCRIPTION complete list of functions and operators
+for expr family objects;
+#X restore 392 2570 pd META;
+#N canvas 10 380 428 140 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 6 1 [expr] Functions and Operators- Related Objects;
+#X restore 103 2570 pd Related_objects;
+#X obj 6 2570 pddp/pddplink all_about.pd -text All About Pd;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 6 0 12 0;
+#X connect 7 0 27 0;
+#X connect 8 0 6 0;
+#X connect 9 0 28 0;
+#X connect 10 0 29 0;
+#X connect 11 0 30 0;
+#X connect 13 0 96 0;
+#X connect 14 0 98 0;
+#X connect 15 0 100 0;
+#X connect 16 0 102 0;
+#X connect 17 0 104 0;
+#X connect 18 0 106 0;
+#X connect 19 0 108 0;
+#X connect 20 0 31 0;
+#X connect 21 0 32 0;
+#X connect 22 0 33 0;
+#X connect 23 0 110 0;
+#X connect 24 0 195 0;
+#X connect 25 0 34 0;
+#X connect 27 0 12 0;
+#X connect 28 0 12 0;
+#X connect 29 0 12 0;
+#X connect 30 0 12 0;
+#X connect 31 0 26 0;
+#X connect 32 0 26 0;
+#X connect 33 0 12 0;
+#X connect 34 0 12 0;
+#X connect 36 0 225 0;
+#X connect 37 0 252 0;
+#X connect 38 0 261 0;
+#X connect 39 0 262 0;
+#X connect 40 0 263 0;
+#X connect 41 0 264 0;
+#X connect 59 0 61 0;
+#X connect 60 0 62 0;
+#X connect 84 0 85 0;
+#X connect 85 0 12 0;
+#X connect 86 0 87 0;
+#X connect 90 0 92 0;
+#X connect 91 0 93 0;
+#X connect 94 0 95 0;
+#X connect 96 0 26 0;
+#X connect 98 0 26 0;
+#X connect 100 0 26 0;
+#X connect 102 0 26 0;
+#X connect 104 0 26 0;
+#X connect 106 0 26 0;
+#X connect 108 0 26 0;
+#X connect 110 0 26 0;
+#X connect 111 0 127 0;
+#X connect 112 0 129 0;
+#X connect 113 0 131 0;
+#X connect 114 0 133 0;
+#X connect 115 0 135 0;
+#X connect 116 0 137 0;
+#X connect 117 0 139 0;
+#X connect 118 0 141 0;
+#X connect 119 0 143 0;
+#X connect 120 0 148 0;
+#X connect 123 0 125 0;
+#X connect 124 0 126 0;
+#X connect 127 0 121 0;
+#X connect 129 0 121 0;
+#X connect 131 0 121 0;
+#X connect 133 0 121 0;
+#X connect 135 0 121 0;
+#X connect 137 0 121 0;
+#X connect 139 0 121 0;
+#X connect 141 0 121 0;
+#X connect 143 0 121 0;
+#X connect 145 0 150 0;
+#X connect 146 0 152 0;
+#X connect 147 0 155 0;
+#X connect 148 0 121 0;
+#X connect 150 0 121 0;
+#X connect 152 0 121 0;
+#X connect 155 0 121 0;
+#X connect 157 0 172 0;
+#X connect 158 0 173 0;
+#X connect 159 0 174 0;
+#X connect 160 0 175 0;
+#X connect 161 0 176 0;
+#X connect 162 0 177 0;
+#X connect 163 0 178 0;
+#X connect 164 0 179 0;
+#X connect 165 0 180 0;
+#X connect 166 0 181 0;
+#X connect 167 0 182 0;
+#X connect 168 0 183 0;
+#X connect 169 0 184 0;
+#X connect 170 0 185 0;
+#X connect 171 0 186 0;
+#X connect 172 0 63 0;
+#X connect 173 0 63 0;
+#X connect 174 0 63 0;
+#X connect 175 0 63 0;
+#X connect 176 0 63 0;
+#X connect 177 0 63 0;
+#X connect 178 0 63 0;
+#X connect 179 0 63 0;
+#X connect 180 0 63 0;
+#X connect 181 0 63 0;
+#X connect 182 0 63 0;
+#X connect 183 0 63 0;
+#X connect 184 0 63 0;
+#X connect 185 0 63 0;
+#X connect 186 0 63 0;
+#X connect 187 0 188 0;
+#X connect 188 0 63 0;
+#X connect 189 0 190 0;
+#X connect 190 0 63 0;
+#X connect 191 0 192 0;
+#X connect 192 0 63 0;
+#X connect 193 0 194 0;
+#X connect 194 0 63 0;
+#X connect 195 0 12 0;
+#X connect 196 0 198 0;
+#X connect 197 0 199 0;
+#X connect 225 0 42 0;
+#X connect 248 0 250 0;
+#X connect 250 0 251 0;
+#X connect 251 0 249 0;
+#X connect 252 0 42 0;
+#X connect 261 0 42 0;
+#X connect 262 0 42 0;
+#X connect 263 0 42 0;
+#X connect 264 0 42 0;

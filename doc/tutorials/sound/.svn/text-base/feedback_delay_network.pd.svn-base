@@ -1,0 +1,63 @@
+#N canvas 319 233 653 482 10;
+#X obj 541 21 pddp/dsp;
+#X obj 10 7 cnv 15 400 40 empty empty feedback_delay_network 20 12
+0 24 -228992 -66577 0;
+#X obj 274 374 output~;
+#X obj 23 106 noise~;
+#X obj 23 165 *~;
+#X obj 39 146 tgl 15 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 273 342 fdn~ 64 40000;
+#X obj 53 187 +~;
+#X obj 98 146 readsf~;
+#X msg 128 123 open ../../sound/voice.wav \, 1;
+#X obj 128 105 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X msg 382 266 exponential 32 10 5000;
+#X msg 385 153 linear 8 75 100;
+#X msg 385 130 linear 32 50 2175;
+#X msg 384 313 exponential 8 50 175;
+#X msg 382 290 exponential 64 1000 10;
+#X obj 169 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 84 441 pddp/pddplink http://www-ccrma.stanford.edu/~jos/pasp/FDN_Reverberation.html
+;
+#X msg 97 123 0;
+#X obj 97 105 bng 15 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X text 17 53 Feedback delay networks were originally introduced to
+Pd for creating reverberation. But they also have a lot of possibilities
+when you abuse them:;
+#X msg 231 264 reset;
+#X text 20 426 For more info \, click the link:;
+#X text 329 105 try clicking different parameters sets:;
+#X msg 385 177 linear 32 100 105;
+#X text 41 348 WATCH OUT! THIS GETS LOUD!;
+#X msg 384 200 linear 64 10 15;
+#X obj 23 126 lop~ 1000;
+#X msg 384 221 linear 8 1 5;
+#X msg 384 241 linear 64 4 5;
+#X connect 3 0 27 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 1;
+#X connect 6 0 2 0;
+#X connect 6 1 2 1;
+#X connect 7 0 6 0;
+#X connect 8 0 7 1;
+#X connect 8 1 16 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 6 0;
+#X connect 12 0 6 0;
+#X connect 13 0 6 0;
+#X connect 14 0 6 0;
+#X connect 15 0 6 0;
+#X connect 16 0 9 0;
+#X connect 18 0 8 0;
+#X connect 19 0 18 0;
+#X connect 21 0 6 0;
+#X connect 24 0 6 0;
+#X connect 26 0 6 0;
+#X connect 27 0 4 0;
+#X connect 28 0 6 0;
+#X connect 29 0 6 0;

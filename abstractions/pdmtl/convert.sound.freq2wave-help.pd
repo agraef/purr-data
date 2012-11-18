@@ -1,0 +1,14 @@
+#N canvas 129 367 579 503 10;
+#X obj 120 185 convert.sound.freq2wave;
+#X floatatom 303 130 5 0 0 0 - - -;
+#X text 314 148 Air temperature (celcius);
+#X text 317 166 Defaults to 18 celsius;
+#X text 132 45 Sound: Frequency (Hz) to wave length (m);
+#X floatatom 136 66 5 0 0 0 - - -;
+#X obj 134 88 mtof;
+#X floatatom 116 272 5 0 0 0 - - -;
+#X text 216 273 wave length (in meters);
+#X connect 0 0 7 0;
+#X connect 1 0 0 1;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;

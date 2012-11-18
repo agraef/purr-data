@@ -1,0 +1,16 @@
+#N canvas 572 515 450 300 10;
+#X obj 128 132 madsr ------;
+#X obj 122 62 route level adsr;
+#X obj 131 32 inlet;
+#X obj 157 91 unpack 0 0 0 0;
+#X obj 127 169 outlet~;
+#X obj 276 152 print adsr;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;
+#X connect 1 1 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 2;
+#X connect 3 1 0 3;
+#X connect 3 2 0 4;
+#X connect 3 3 0 5;

@@ -1,0 +1,196 @@
+diff -Naur dmx4linux-2.6.1/configure dmx4linux-2.6.1.new/configure
+--- dmx4linux-2.6.1/configure	2008-04-25 02:13:31.000000000 +0200
++++ dmx4linux-2.6.1.new/configure	2008-06-14 16:56:21.000000000 +0200
+@@ -43,7 +43,7 @@
+ 
+ echo "AS31=$DMXROOT/tools/as31-unix" >> /tmp/dmxconfig.mk
+ 
+-echo "CFLAGS+=-Wall -O2 -I$DMXROOT/include" >> /tmp/dmxconfig.mk
++echo "DMX_CFLAGS+=-Wall -O2 -I$DMXROOT/include" >> /tmp/dmxconfig.mk
+ echo "LDFLAGS+=-L$DMXROOT/libs" >> /tmp/dmxconfig.mk
+ 
+ if [ -f /usr/include/gpm.h -o -f /usr/local/include/gpm.h ] ; then
+diff -Naur dmx4linux-2.6.1/drivers/devices/dgm/Makefile dmx4linux-2.6.1.new/drivers/devices/dgm/Makefile
+--- dmx4linux-2.6.1/drivers/devices/dgm/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/dgm/Makefile	2008-06-14 16:53:25.000000000 +0200
+@@ -17,7 +17,7 @@
+ endif
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/devices/isa/Makefile dmx4linux-2.6.1.new/drivers/devices/isa/Makefile
+--- dmx4linux-2.6.1/drivers/devices/isa/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/isa/Makefile	2008-06-14 16:54:02.000000000 +0200
+@@ -5,7 +5,7 @@
+ obj-m	:= dmxenlight.o
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/devices/isa/soundlight/Makefile dmx4linux-2.6.1.new/drivers/devices/isa/soundlight/Makefile
+--- dmx4linux-2.6.1/drivers/devices/isa/soundlight/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/isa/soundlight/Makefile	2008-06-14 16:53:57.000000000 +0200
+@@ -4,7 +4,7 @@
+ 
+ ifneq ($(KERNELRELEASE),)
+ dmxsoundlight-objs=soundlight.o autoprobe.o slh_general.o slh1512a.o slh1512b.o slh1512c.o card_access.o
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ 
+ $(src)/%.h : $(src)/%.asm
+ 	$(AS31)/as31 -Fbin -s $< | sh $(src)/bin2hex.sh $< > $@
+diff -Naur dmx4linux-2.6.1/drivers/devices/Makefile dmx4linux-2.6.1.new/drivers/devices/Makefile
+--- dmx4linux-2.6.1/drivers/devices/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/Makefile	2008-06-14 16:58:50.000000000 +0200
+@@ -5,15 +5,15 @@
+ ifneq	($(CONFIG_USB),)
+ 	$(MAKE) -C usb $@
+ endif
+-ifneq	($(CONFIG_ISA),)
+-	$(MAKE) -C isa $@
+-endif
+-ifneq	($(CONFIG_PCI),)
+-	$(MAKE) -C pci $@
+-endif
+-ifneq	($(CONFIG_PARPORT),)
+-	$(MAKE) -C parport $@
+-endif
++#ifneq	($(CONFIG_ISA),)
++#	$(MAKE) -C isa $@
++#endif
++#ifneq	($(CONFIG_PCI),)
++#	$(MAKE) -C pci $@
++#endif
++#ifneq	($(CONFIG_PARPORT),)
++#	$(MAKE) -C parport $@
++#endif
+ 
+ # PCMCIA dmx drivers are currently not supported on 2.6 kernels
+ #ifneq	($(CONFIG_PCMCIA),)
+diff -Naur dmx4linux-2.6.1/drivers/devices/misc/Makefile dmx4linux-2.6.1.new/drivers/devices/misc/Makefile
+--- dmx4linux-2.6.1/drivers/devices/misc/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/misc/Makefile	2008-06-14 16:54:07.000000000 +0200
+@@ -3,7 +3,7 @@
+ obj-m	:= dmxdummy.o
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/devices/parport/Makefile dmx4linux-2.6.1.new/drivers/devices/parport/Makefile
+--- dmx4linux-2.6.1/drivers/devices/parport/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/parport/Makefile	2008-06-14 16:53:52.000000000 +0200
+@@ -5,7 +5,7 @@
+ obj-m	:= avrdmx.o dmx30.o dmx43.o dmxpcp.o okddmx.o lpr2dmx.o
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/devices/pci/Makefile dmx4linux-2.6.1.new/drivers/devices/pci/Makefile
+--- dmx4linux-2.6.1/drivers/devices/pci/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/pci/Makefile	2008-06-14 16:53:47.000000000 +0200
+@@ -5,7 +5,7 @@
+ obj-m += slh1514pci.o
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" -DDMXPCI_DMX4LINUX=1
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" -DDMXPCI_DMX4LINUX=1 $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/devices/pcmcia/Makefile dmx4linux-2.6.1.new/drivers/devices/pcmcia/Makefile
+--- dmx4linux-2.6.1/drivers/devices/pcmcia/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/pcmcia/Makefile	2008-06-14 16:53:38.000000000 +0200
+@@ -5,7 +5,7 @@
+ obj-m += digimedia_cs.o
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/devices/usb/Makefile dmx4linux-2.6.1.new/drivers/devices/usb/Makefile
+--- dmx4linux-2.6.1/drivers/devices/usb/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/devices/usb/Makefile	2008-06-14 16:53:14.000000000 +0200
+@@ -5,7 +5,7 @@
+ obj-m	:= usb2dmx.o ftdi2dmx.o sunlite.o
+ 
+ ifneq ($(KERNELRELEASE),)
+-EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\"
++EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" $(DMX_CFLAGS)
+ else
+ 
+ PWD	:= $(shell pwd)
+diff -Naur dmx4linux-2.6.1/drivers/dmxdev/Makefile dmx4linux-2.6.1.new/drivers/dmxdev/Makefile
+--- dmx4linux-2.6.1/drivers/dmxdev/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/drivers/dmxdev/Makefile	2008-06-14 16:54:22.000000000 +0200
+@@ -8,7 +8,8 @@
+ dmxdev-objs:=dmx_dev.o dmx_proc.o dmx_props.o dmx_family.o dmx_driver.o dmx_interface.o dmx_universe.o dmx_fileinfo.o
+ EXTRA_CFLAGS:=-DDMXVERSION=\"${DMXVERSION}\" \
+ 	-DDMXOUTMINOR=$(DMXOUTMINOR) -DDMXINMINOR=$(DMXINMINOR) \
+-	-DVERSIONMAJOR=$(VERSIONMAJOR) -DVERSIONMINOR=$(VERSIONMINOR)
++	-DVERSIONMAJOR=$(VERSIONMAJOR) -DVERSIONMINOR=$(VERSIONMINOR) \
++	$(DMX_CFLAGS)
+ 
+ else
+ 
+diff -Naur dmx4linux-2.6.1/examples/htmlexamples/Makefile dmx4linux-2.6.1.new/examples/htmlexamples/Makefile
+--- dmx4linux-2.6.1/examples/htmlexamples/Makefile	2008-04-25 02:13:31.000000000 +0200
++++ dmx4linux-2.6.1.new/examples/htmlexamples/Makefile	2008-06-14 16:54:42.000000000 +0200
+@@ -2,7 +2,7 @@
+ 
+ TARGETS=	nonblockread selectread simpleread simplewrite
+ 
+-CFLAGS+=	-Wall
++CFLAGS+=	$(DMX_CFLAGS) -Wall
+ 
+ all:	$(TARGETS)
+ 
+diff -Naur dmx4linux-2.6.1/examples/Makefile dmx4linux-2.6.1.new/examples/Makefile
+--- dmx4linux-2.6.1/examples/Makefile	2008-04-25 02:13:31.000000000 +0200
++++ dmx4linux-2.6.1.new/examples/Makefile	2008-06-14 17:00:15.000000000 +0200
+@@ -6,6 +6,8 @@
+ 
+ -include /tmp/dmxconfig.mk
+ 
++CFLAGS += $(DMX_CFLAGS)
++
+ TARGETS=	pingdmx setdmx dmxinfo dmxdump
+ 
+ all:	$(TARGETS)
+diff -Naur dmx4linux-2.6.1/tools/Makefile dmx4linux-2.6.1.new/tools/Makefile
+--- dmx4linux-2.6.1/tools/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/tools/Makefile	2008-06-14 16:55:16.000000000 +0200
+@@ -4,7 +4,7 @@
+ MANINSTALLPATH=$(DMXPREFIX)/man/man1
+ 
+ DMXCONSOLELIBS+= -Lpointer pointer/pointer.a
+-CFLAGS+= -Ipointer
++CFLAGS+= -Ipointer $(DMX_CFLAGS)
+ 
+ ifdef CONFIG_HAVE_LIRC
+ CFLAGS+=	-DHAVE_LIRC=1
+diff -Naur dmx4linux-2.6.1/tools/pointer/Makefile dmx4linux-2.6.1.new/tools/pointer/Makefile
+--- dmx4linux-2.6.1/tools/pointer/Makefile	2008-04-25 02:13:32.000000000 +0200
++++ dmx4linux-2.6.1.new/tools/pointer/Makefile	2008-06-14 16:59:35.000000000 +0200
+@@ -1,5 +1,7 @@
+ -include /tmp/dmxconfig.mk
+ 
++CFLAGS+=$(DMX_CFLAGS)
++
+ C=	js.c pointer.c ps2.c serial.c
+ ifdef CONFIG_HAVE_GPM
+ C+=	gpm.c

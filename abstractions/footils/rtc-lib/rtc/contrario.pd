@@ -1,0 +1,14 @@
+#N canvas 51 325 320 289 10;
+#X obj 119 43 inlet;
+#X obj 40 42 inlet;
+#X obj 40 196 outlet;
+#X obj 40 73 t f b;
+#X obj 119 128 f \$1;
+#X obj 40 165 expr $f2-$f1;
+#X text 112 203 1993-2004 by Karlheinz Essl;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 3 0 5 0;
+#X connect 3 1 4 0;
+#X connect 4 0 5 1;
+#X connect 5 0 2 0;

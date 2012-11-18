@@ -1,0 +1,32 @@
+#N canvas 45 442 370 233 10;
+#X msg 190 127 clear;
+#X symbolatom 187 203 10 0 0 0 - - -;
+#X obj 187 155 widget dm dm1 #items .( zero one two three four five
+six seven eight nine ten eleven twelve thirteen i14 i15 i16 i17 i18
+i19 i20 i21 i22 i23 i24 i25 i26 i27 i28 i29 i30.) #arrows 0;
+#X obj 140 17 widget dm dm1 #items .(0 1 2 3 4 5 6 7 8 9 10 11 12.)
+-bg gray;
+#X obj 187 185 l2s;
+#X obj 56 119 l2s;
+#X msg 56 76 zero one two three four five six seven eight nine ten
+eleven twelve thirteen i14 i15 i16 i17 i18 i19 i20 i21 i22 i23 i24
+i25 i26 i27 i28 i29 i30;
+#X msg 4 60 list ichi ni san chi;
+#X msg 56 136 #items .( \$1.);
+#X msg 92 25 5;
+#X msg 89 8 12;
+#X msg 259 138 #arrows \$1;
+#X obj 258 122 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 8 0;
+#X connect 6 0 5 0;
+#X connect 7 0 2 0;
+#X connect 8 0 2 0;
+#X connect 9 0 3 0;
+#X connect 10 0 3 0;
+#X connect 11 0 2 0;
+#X connect 12 0 11 0;

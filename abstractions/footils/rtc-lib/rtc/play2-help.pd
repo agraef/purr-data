@@ -1,0 +1,98 @@
+#N canvas 278 93 745 606 10;
+#X text 98 472 vs.3: instrument menu for Quicktime 3 added;
+#X text 97 25 play2;
+#X msg 425 31 Toolbox;
+#X msg 166 152 play;
+#X text 97 152 see also:;
+#N canvas 50 61 615 217 generate-notes 0;
+#X obj 38 134 outlet;
+#X obj 38 103 brown-melody 36 84 0.2;
+#X obj 38 30 inlet;
+#X obj 38 56 repchord-rhythm 100 1000 12 6 0.8 0.2;
+#X obj 446 134 outlet;
+#N canvas 50 61 268 257 dur 0;
+#X obj 54 21 inlet;
+#X obj 54 144 dur-from-ED;
+#X obj 54 175 outlet;
+#X obj 100 20 inlet;
+#N canvas 38 77 245 265 dur-fact 0;
+#X obj 31 213 outlet;
+#X obj 31 112 pass 25;
+#X obj 31 151 between 0 13;
+#X obj 31 182 trans-log 0.25 4 12;
+#X obj 31 43 inlet;
+#X obj 91 112 between 10 100;
+#X obj 31 131 t a a;
+#X connect 1 0 6 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 1;
+#X connect 6 0 2 0;
+#X connect 6 1 5 0;
+#X restore 126 91 pd dur-fact;
+#X obj 54 45 t a a;
+#X connect 0 0 5 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 1;
+#X connect 4 0 1 2;
+#X connect 5 0 1 0;
+#X connect 5 1 4 0;
+#X restore 446 103 pd dur;
+#X obj 213 134 outlet;
+#X obj 213 103 random-ramp 30 127 5 250 2000 12;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 2 7 0;
+#X connect 3 2 5 0;
+#X connect 3 3 5 1;
+#X connect 5 0 4 0;
+#X connect 7 0 6 0;
+#X restore 122 188 pd generate-notes;
+#X obj 100 188 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X floatatom 122 240 4 0 0 2 note - -;
+#X obj 122 319 play2 127 500 0 1;
+#X floatatom 430 193 4 0 0 2 midi_channel/fluid_control - -;
+#X floatatom 236 240 5 0 0 2 dur - -;
+#X floatatom 179 241 4 0 0 2 vel - -;
+#X text 95 437 vs.2: fifth inlet added (QT Musical Instrument resp.
+MIDI channel);
+#X text 94 427 1992-2002 by Karlheinz Essl;
+#X text 181 39 vs. 3.2;
+#X msg 206 152 QT-PercPlayer;
+#X obj 262 270 hradio 15 1 0 2 empty empty nouteout/fluid~ 0 -6 0 8
+-262144 -1 -1 1;
+#X msg 431 278 load \$1;
+#X obj 431 253 openpanel;
+#X obj 431 228 bng 20 250 50 0 empty empty load_soundfont 0 -6 0 8
+-262144 -1 -1;
+#X text 97 57 Plays a note whenever a key number is sent to the left
+inlet. The other parameters (velocity and duration) are optional and
+can change at any time. - Routes the MIDI-out either to specified serial
+port (argument: 0) or to the MIDI-synthesizer external object [fluid~]
+(argument 1).;
+#X text 96 493 Pd version: use [fluid~] instead of Quicktime \, volume
+slider added.;
+#X msg 432 389 prog 1 \$1;
+#X obj 432 349 hradio 15 1 0 8 empty empty program_change 0 -6 0 8
+-262144 -1 -1 0;
+#X obj 432 368 + 1;
+#X msg 432 302 load GortMiniPiano.sf2;
+#X connect 5 0 7 0;
+#X connect 5 1 11 0;
+#X connect 5 2 10 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 9 0 8 4;
+#X connect 10 0 8 2;
+#X connect 11 0 8 1;
+#X connect 16 0 8 3;
+#X connect 17 0 8 4;
+#X connect 18 0 17 0;
+#X connect 19 0 18 0;
+#X connect 22 0 8 4;
+#X connect 23 0 24 0;
+#X connect 24 0 22 0;
+#X connect 25 0 8 4;

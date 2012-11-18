@@ -1,0 +1,15 @@
+NAME=fftease
+
+SRCDIR=src
+PRECOMPILE=main.h
+
+SRCS= \
+	makewindows.c fold.c convert.c leanconvert.c fft4.c fft.c \
+	main.cpp fftease.cpp \
+	burrow~.cpp cross~.cpp dentist~.cpp disarray~.cpp drown~.cpp ether~.cpp \
+	morphine~.cpp scrape~.cpp shapee~.cpp swinger~.cpp taint~.cpp \
+	thresher~.cpp vacancy~.cpp xsyn~.cpp
+              
+HDRS= \
+	pv.h main.h 
+

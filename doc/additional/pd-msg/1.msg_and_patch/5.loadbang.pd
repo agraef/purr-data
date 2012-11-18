@@ -1,0 +1,56 @@
+#N canvas 0 18 845 545 10;
+#X msg 39 266 loadbang;
+#X obj 62 152 loadbang;
+#X msg 62 178 1;
+#X floatatom 62 204 0 0 0 0 - - -;
+#X obj 29 123 random 127;
+#X msg 29 98 bang;
+#X text 23 12 The loadbang message;
+#X text 81 98 <= click here first;
+#X text 118 264 <= then click here;
+#X obj 39 292 s pd-5.loadbang.pd;
+#X msg 375 442 loadbang;
+#X msg 450 442 clear;
+#N canvas 448 72 536 411 \$0-dynamic 0;
+#X restore 642 443 pd \$0-dynamic;
+#X obj 328 479 s pd-\$0-dynamic;
+#X text 23 37 Sending a message "loadbang" to a subpatch or abstraction
+receiver will fire all loadbangs in that (sub-)patch.;
+#X msg 328 302 clear \, obj 131 117 lb-abs \, msg 131 153 10 \, obj
+113 178 + \, obj 113 65 loadbang \, msg 113 88 10 \, floatatom 113
+209 5 0 0 0 - - - \, msg 245 154 10 \, obj 227 179 + \, msg 227 89
+10 \, floatatom 227 210 5 0 0 0 - - - \, obj 227 66 lb-abs \, obj 245
+118 loadbang \, connect 0 0 1 0 \, connect 1 0 2 1 \, connect 2 0 5
+0 \, connect 3 0 4 0 \, connect 4 0 2 0 \, connect 6 0 7 1 \, connect
+7 0 9 0 \, connect 8 0 7 0 \, connect 10 0 8 0 \, connect 11 0 6 0
+;
+#X text 325 87 A "loadbang" message is important \, if you create instances
+of abstractions dynamically \, that have loadbangs inside. These loadbangs
+DO NOT FIRE AUTOMATICALLY in dynamically created abstractions!;
+#X text 324 148 Loadbangs in abstractions normally fire before loadbangs
+in the surrounding patch and their loadbangs may propagate to the abstraction's
+outlet. But with dynamic patching \, outlets are not yet connected
+when the object has been created \, which would make such loadbangs
+useless.;
+#X text 327 222 So in the case of dynamic patching \, you're supposed
+to know when you're finished "instantiating" \, and then call "loadbang"
+by yourself by sending a "loadbang" message at the appropriate time.
+;
+#N canvas 458 158 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 64 DESCRIPTION how to fire a loadbang inside a dynamically
+instantiating abstraction;
+#X text 12 42 LICENSE public domain;
+#X restore 782 518 pd META;
+#X connect 0 0 9 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 10 0 13 0;
+#X connect 11 0 13 0;
+#X connect 15 0 13 0;

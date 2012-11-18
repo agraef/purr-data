@@ -1,0 +1,26 @@
+#N canvas 346 116 686 528 10;
+#X obj 253 359 timeroll;
+#X obj 46 162 random 1000;
+#X obj 46 136 metro 30;
+#X obj 46 112 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 46 363 timeroll;
+#X obj 72 112 loadbang;
+#X obj 253 253 env+ 110;
+#X text 131 26 positiv envelope follower;
+#X floatatom 279 173 5 0 0 0 - - -;
+#X msg 306 227 0;
+#X text 343 227 reset to this value (in case of overflow);
+#X obj 46 187 / 1000;
+#X obj 46 220 pow 4;
+#X text 327 172 time coef;
+#X connect 1 0 11 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 0 0;
+#X connect 8 0 6 1;
+#X connect 9 0 6 2;
+#X connect 11 0 12 0;
+#X connect 12 0 4 0;
+#X connect 12 0 6 0;

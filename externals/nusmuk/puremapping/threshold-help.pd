@@ -1,0 +1,12 @@
+#N canvas 696 98 600 234 10;
+#X floatatom 25 34 5 0 0 0 - - -;
+#X floatatom 25 124 5 0 0 0 - - -;
+#X floatatom 90 63 5 0 0 0 - - -;
+#X text 107 131 output a new value only if the difenrence between the
+input and last output is superior to \$1;
+#X text 111 174 (usefull to reduce the flow controling pd event...)
+;
+#X obj 25 84 threshold 0.2;
+#X connect 0 0 5 0;
+#X connect 2 0 5 1;
+#X connect 5 0 1 0;

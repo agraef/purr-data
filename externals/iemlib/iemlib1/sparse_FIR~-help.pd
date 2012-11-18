@@ -1,0 +1,121 @@
+#N canvas 125 49 971 642 10;
+#X floatatom 4 133 5 0 0 0 - - -;
+#X text 32 96 % cpu;
+#X obj 4 93 dsp;
+#X obj 4 73 tgl 15 0 empty empty dsp_ON/OFF 2 -8 0 10 -225271 -42246
+-90881 1 1;
+#X floatatom 183 494 7 0 0 0 - - -;
+#X obj 112 373 dac~;
+#X obj 112 347 gainvu~ 300;
+#X obj 174 369 vu 15 120 empty empty 8 -8 0 10 -66577 -1 1 0;
+#X obj 294 216 vsl 15 128 0 127 0 0 empty empty gain -7 -8 0 10 -225271
+-42246 -90881 7300 1;
+#X obj 113 95 noise~;
+#X floatatom 173 512 7 0 0 0 - - -;
+#X floatatom 17 113 5 0 0 0 - - -;
+#X text 170 567 IEM KUG;
+#X text 146 555 musil;
+#X text 182 555 @;
+#X text 190 555 iem.at;
+#X text 153 577 Graz \, Austria;
+#X floatatom 142 323 5 0 0 0 - - -;
+#X msg 353 118 size 256;
+#X msg 370 523 0 1 1 1;
+#X msg 366 321 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80 1;
+#X obj 707 38 t b b;
+#X msg 767 101 set;
+#X msg 668 101 add2 \$1 \$2;
+#X obj 707 18 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 354 140 order 384;
+#X msg 366 342 matrix 9 2 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80
+1;
+#X msg 366 363 matrix 2 9 0 1 10 1 20 1 30 1 40 1 50 1 60 1 70 1 80
+1;
+#X text 17 16 sparse_FIR~;
+#X msg 370 581 0 0;
+#X msg 370 489 0 -0.1 1 -0.18 2 -0.1 3 0.15 4 0.4 5 0.7 6 0.4 7 0.15
+8 -0.1 9 -0.18 10 -0.1;
+#X msg 510 126 0 0.04 1 0.04 2 0.04 3 0.04 4 0.04 5 0.04 6 0.04 7 0.04
+8 0.04 9 0.04 10 0.04 11 0.04 12 0.04 13 0.04 14 0.04 15 0.04 16 0.04
+17 0.04 18 0.04 19 0.04 20 0.04 21 0.04 22 0.04 23 0.04 24 0.04 25
+0.04 26 0.04 27 0.04 28 0.04 29 0.04;
+#X obj 668 81 pack 0 0.04;
+#X obj 668 59 for++ 0 29;
+#X text 366 217 A list of alternating index- and value- doubles will
+change the coefficients of convolution. The number of pairs should
+be less than the order of FIR.;
+#X text 365 291 A matrix message will do the same.;
+#X obj 568 93 loadbang;
+#X text 134 16 convolve a signal with a coefficent list of non zero
+index/value pairs. All values between the determined values will be
+set to zero and won't be calculated (sparse).;
+#X text 227 182 1.arg: <float> convolution-length (FIR order or size)
+;
+#X text 175 60 will change the max. order of FIR filter (or size).
+;
+#X text 366 263 Each pair or double begins with an index followed by
+its value.;
+#X obj 113 180 sparse_FIR~ 256;
+#X msg 286 97 size 16;
+#X obj 327 198 init 60;
+#X text 103 543 (c) Thomas Musil 2000 - 2011;
+#X msg 370 544 0 1 40 -1 80 1 120 -1 160 1 200 -1 240 1 280 -1 320
+1 360 -1 400 1;
+#X msg 353 97 size 128;
+#X msg 287 141 size 64;
+#X msg 287 119 size 32;
+#X msg 221 139 size 8;
+#X msg 222 117 size 4;
+#X text 770 318 same as;
+#X text 771 341 same as;
+#X text 770 363 same as;
+#X msg 35 236 size 0;
+#X msg 223 97 size 3;
+#X msg 163 142 size 2;
+#X msg 165 120 size 1;
+#X text 847 104 sparse list;
+#X text 680 470 sparse list;
+#X text 490 384 sparse matrix;
+#X text 29 219 ignored;
+#X connect 2 0 0 0;
+#X connect 2 1 11 0;
+#X connect 3 0 2 0;
+#X connect 6 0 5 0;
+#X connect 6 0 5 1;
+#X connect 6 1 17 0;
+#X connect 6 2 7 0;
+#X connect 7 0 10 0;
+#X connect 7 1 4 0;
+#X connect 8 0 6 1;
+#X connect 9 0 41 0;
+#X connect 18 0 41 0;
+#X connect 19 0 41 0;
+#X connect 20 0 41 0;
+#X connect 21 0 33 0;
+#X connect 21 1 22 0;
+#X connect 22 0 31 0;
+#X connect 23 0 31 0;
+#X connect 24 0 21 0;
+#X connect 25 0 41 0;
+#X connect 26 0 41 0;
+#X connect 27 0 41 0;
+#X connect 29 0 41 0;
+#X connect 30 0 41 0;
+#X connect 31 0 41 0;
+#X connect 32 0 23 0;
+#X connect 33 0 32 0;
+#X connect 36 0 31 0;
+#X connect 41 0 6 0;
+#X connect 42 0 41 0;
+#X connect 43 0 8 0;
+#X connect 45 0 41 0;
+#X connect 46 0 41 0;
+#X connect 47 0 41 0;
+#X connect 48 0 41 0;
+#X connect 49 0 41 0;
+#X connect 50 0 41 0;
+#X connect 54 0 41 0;
+#X connect 55 0 41 0;
+#X connect 56 0 41 0;
+#X connect 57 0 41 0;

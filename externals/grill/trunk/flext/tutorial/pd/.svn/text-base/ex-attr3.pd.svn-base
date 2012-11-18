@@ -1,0 +1,60 @@
+#N canvas 175 139 607 457 12;
+#X obj 16 7 cnv 15 550 40 empty empty attr3 10 22 0 24 -260818 -1 0
+;
+#X text 174 28 http://grrrr.org;
+#X obj 293 364 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 196 361 nbx 5 18 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 12
+-228992 -1 -1 2 256;
+#X msg 296 126 1 10;
+#X msg 419 127 1;
+#X msg 459 127 -1;
+#X msg 498 127 2;
+#X obj 36 128 bng 25 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X msg 344 126 7 2;
+#X obj 173 119 nbx 5 18 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 12
+-228992 -1 -1 20 256;
+#X msg 174 142 set \$1;
+#X text 20 107 trigger;
+#X text 163 100 set counter;
+#X text 291 105 set bounds;
+#X text 420 105 set step size;
+#X msg 97 135 reset;
+#X text 100 115 reset;
+#X text 21 64 with attributes;
+#X obj 197 327 attr3 @bounds 2 5 @step 1;
+#X msg 32 195 getattributes;
+#X obj 392 363 print;
+#X text 385 381 attributes;
+#X msg 32 237 getcount;
+#X msg 388 232 getstep;
+#X text 22 178 list all attributes;
+#X msg 32 266 count 3;
+#X text 117 238 get count;
+#X text 112 266 set count;
+#X msg 387 259 step 3;
+#X text 21 49 this is a port of IOhannes Zmoelnigs "counter" example
+;
+#X msg 258 234 getbounds;
+#X msg 257 261 bounds 5 15;
+#X text 174 8 flext tutorial \, (C)2002-2006 Thomas Grill;
+#X connect 4 0 19 1;
+#X connect 5 0 19 2;
+#X connect 6 0 19 2;
+#X connect 7 0 19 2;
+#X connect 8 0 19 0;
+#X connect 9 0 19 1;
+#X connect 10 0 11 0;
+#X connect 11 0 19 0;
+#X connect 16 0 19 0;
+#X connect 19 0 3 0;
+#X connect 19 1 2 0;
+#X connect 19 2 21 0;
+#X connect 20 0 19 0;
+#X connect 23 0 19 0;
+#X connect 24 0 19 0;
+#X connect 26 0 19 0;
+#X connect 29 0 19 0;
+#X connect 31 0 19 0;
+#X connect 32 0 19 0;

@@ -1,0 +1,15 @@
+#N canvas 1943 405 554 354 10;
+#X obj 235 87 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 173 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 41 23 Description: Detects double clicks.;
+#X text 37 44 Argument 1 & Inlet 2: Determines the double click interval
+(defaults to 175).;
+#X msg 303 93 175;
+#X msg 348 92 300;
+#X obj 180 139 input.double.click 300;
+#X connect 0 0 6 0;
+#X connect 4 0 6 1;
+#X connect 5 0 6 1;
+#X connect 6 0 1 0;

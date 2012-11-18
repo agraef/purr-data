@@ -1,0 +1,6 @@
+#N canvas 442 153 378 217 10;
+#X text 56 48 See;
+#X obj 155 115 ambi.throw.7~ bar;
+#X obj 151 149 ambi.catch.7~ bar;
+#X obj 85 49 throw~;
+#X text 56 32 Description: Throws 7 signals.;

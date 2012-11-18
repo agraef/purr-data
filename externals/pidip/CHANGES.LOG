@@ -1,0 +1,313 @@
+0.12.25 ( codename Dangerous Modules )
+   added pdp_vloopback : some say it's dangerous, but it works smooth
+
+0.12.25 ( codename CrunchyBits )
+   fixed default font for pdp_text, pdp_qtext
+   fixed crash in pdp_theonice~
+
+0.12.24 ( codename Baltanik )
+   fixed color selection bugs and help patches 
+   in pdp_binary, pdp_ctrack, pdp_cmap, pdp_shape, pdp_compose
+
+0.12.23 ( codename My Mum's Cam )
+  added pdp_v4l2 : video 4 linux 2 object
+    code template from pdp_v4l and xawtv ( v4l2 driver ),
+    thanks to Tom Schouten & Gerd Knorr <kraxel@bytesex.org>
+  added pdp_ieee1394 : finally, the firewire camera object for linux 
+    written by Lluis Gomez i Bigorda ( <lluisgomez@hangar.org> )
+
+0.12.22 ( codename Visual Junk )
+  added pdp_dot : matrix printer effect
+
+0.12.21 ( codename Sa'ha Pidip )
+  fixed synchronisation in pdp_theonice~
+
+0.12.20 ( codename Lavapies )
+  added contributions from Pablo Martin Caedes ( caedes@sindominio.net ) :
+  pdp_qtext : a layered texts object, based on pdp_text and using imlib2
+  pdp_imgloader : improved version from PMC, different ways of blending images ( in quality mode ) 
+
+0.12.19 ( codename GISS action force )
+  addapted to newer Image Magick ( > 6.1.9 ) 
+  modified pdp_icedthe~ : added a framerate control
+  modified pdp_shape : added isolate option
+  added pdp_hue : a frame hue estimator
+  added pdp_fdiff : a frame difference estimator
+
+0.12.18 ( codename Benisensi )
+  added pdp_icedthe~  : a threaded theora stream reader ( from flumotion or icecast )
+  added pdp_theonice~ : a theora a/v streamer ( to flumotion or icecast )
+        the icecast server can be found here : http://mediacast1.com/~karl/
+  added pdp_mapper : a pixel mapper ( copying regions and single pixels )
+
+  modified pdp_theorin~ : removed loop option ( was crashing ), added mutexes
+  modified pdp_live~ : added mutexes
+  modified pdp_ascii : added T. de la O. charmaps  
+
+  fixed pdp_ffmpeg~ : fixed framerate control
+  fixed pdp_binary : fixed wrong diff calculation
+
+0.12.17 ( codename No pasa nada )
+  fixed pdp_shape : a unitializded cursor caused some crashes
+  added pdp_theorout~ : theora file recorder
+  fixed pdp_theorin~ : fixed buggy end of file detection
+  fixed pdp_theorin~ : now, it's able to read files without sound
+  added pdp_cropper : a video cropper for image compositing 
+  ( see patch cutandpaste.pd )
+  added pdp_background : a simple background generator
+  modified pdp_ocanvas : added an alpha channel for each source
+  modified pdp_text, pdp_form, pdp_pen : added an alpha channel ( global )
+
+0.12.16 ( codename Fadaiat )
+  added pdp_theorin~ : threaded theora file reader
+  ( warning : requires theora, ogg & vorbis static libs )
+
+  modified pdp_live~ : added an autoplay option ( default = true )
+  modified pdp_live~ : made the files seekable 
+                       ( added an input for the frame number, works with ffmpeg >= 0.4.9 )
+  modified pdp_live~ : better disconnection mechanism
+  modified pdp_live~ : reworked on a/v synchronisation
+
+  fixed pdp_i/pdp_o : fixed huffman encoding and freezings
+  fixed pdp_i/pdp_o : fix communication between macs and pcs ( endianness problem )
+
+  added --with-ffmpeg=PATH and --with-mpeg4ip=PATH configure options
+  ( --enable-ffmpeg and --enable-mpeg4ip are dead )
+
+0.12.15 ( codename Technologia Del Sur  )
+  added morphology patches : patches/morphology : opening, closing, thinning, thickening, skeletization
+  added morphology operator : distance transform 
+  ( inspired by Paul Rosin, 91, http://www.cs.cf.ac.uk/User/Paul.Rosin/resources/sdt/ )
+  added morphology operators : erosion ( pdp_erode ), dilation ( pdp_dilate ), hit and miss ( pdp_hitandmiss )
+  added pdp_binary : transform an image to a binary image ( using yuv settings, a filter for morphology )
+  ( for all the theory on morphology, thanx to the excellent site : http://homepages.inf.ed.ac.uk/rbf/HIPR2 )
+  added pdp_disintegration : a new effect based on piksels summing and averaging
+
+0.12.14 ( codename Naveen's Ethiopian Cafe )
+  added pdp_mp4player~ : a quicktime stream reader ( compiled against meg4ip v1.0, needs some testing )
+  fixed pdp_mp4live~ : fixed audio encoding
+  pdp_ascii : added loadable character maps support ( added two maps : default and arabic )
+  fixed pdp_canvas : fixed a huge memory leak ( reported by Ian Smith Heisters )
+  added colorgrid : a color picker written by Lluis Gomez i Bigorda ( http://www.artefacte.org/pd )
+  added help_pdp-tatiana.pd : a more simple to use help patch for effects, contribution from Tatiana de la O.
+
+0.12.13 ( codename Gollum Club Riereta )
+  improved decoding in pdp_live~, in particular for audio/video synchronization
+  added a "end of stream" outlet in pdp_live~ ( when reaching the end of a file )
+  added frame rates in pdp_ffmpeg~, pdp_live~
+  added pdp_spotlight : a spotlight, for cabaret (for pep')
+  added pdp_cabaret patch : a patch to track someone with a spotlight ( poursuite )
+  added pdp_ieee1394 : firewire capture object for OSX based on pix_video ( OSX only )
+
+0.12.12
+  added pdp_mp4live~ : mpeg4ip streaming object to stream to a darwin server
+  note : now, building of streaming objects is optional 
+         ( with --enable-ffmpeg OR --enable-mpeg4ip : warning, you can't enable both, they are conflicting )
+  fixed some crashes when objects like pdp_ctrack, pdp_cmap, pdp_compose were in a sub-patch 
+         ( problem reported by Mark Widmer )
+  added offsets messages in pdp_pen
+
+0.12.11
+  added pdp_charcoal to the effect rack : charcoal effect using edge detection, blur, normalization and negate
+  ( it's an abstraction using basic pdp_objects )
+  fixed compilation problem with latest ffmpeg ( AVFMT_NOHEADER --> AVFMTCTX_NOHEADER )
+  commented pdp_aa : it introduces useless dependencies ( aalib ) and is not very good
+  added pdp_ocanvas : canvas with some overlay
+
+0.12.10
+  fixed crashes and 'resize' bug in pdp_text
+  added pdp_xcanvas : pdp_canvas + pdp_xv in one ( for performances reasons )
+  optimized pdp_canvas ( but overlapping has disappeared )
+  added pdp_fqt : fast quicktime reader ( frames are cached in memory and no audio decoding )
+  added pdp_fcqt : fast quicktime reader ( same as pdp_fqt but frames are compressed )
+  added help patches for pdp_yqt, pdp_fqt and pdp_fcqt
+  adaptations for newer autoconfs
+
+0.12.9
+  fixed pdp_ripple
+  added pdp_shape : a shape recognition object (based on color, similar to color tracker ) 
+  added "fill" in pdp_pen 
+  ( on request from ben )
+
+0.12.8
+  added pdp_pen : a free hand drawing object 
+  ( on request from patrick/11h11.com )
+
+0.12.7
+  added pdp_canvas : a canvas to display several video sources
+
+0.12.6
+  fix conflict between pdp_text and pdp_imgloader ( and the likes using Imlib2 )
+  fix successive loading of images in pdp_imgloader
+  set help patches for all objects and install them in PD's doc folder ( compliant with 0.37 )
+
+0.12.5
+  pdp_cache : hiding triangular zones from a video stream to let you do some collage 
+  ( see collage.pd patch )
+  pdp_imgloader : added "hide" method for triangles to let you do some collage 
+  ( see collage.pd patch )
+  pdp_transition : added "page" transitions
+
+0.12.4
+  added pdp_imgsaver : save an image from the current video stream
+  pdp_transition : added "melt" and "blend" transitions
+
+0.12.3
+  added pdp_imgloader : load an image and blend it with a video
+  added pdp_transition : some funky transitions, "circle", "wipe" and "random"
+  added pdp_lumafilt : lumosity filter, useful to isolate some objects
+  added pdp_smuck : same as pdp_transform ( mode 5 ) but setable, ported from veejay
+
+0.12.2
+  Fixed problems with Image Magick includes
+
+0.12.1
+  Added color components output in pdp_ctrack
+
+0.12.0
+  Compatibility with PDP 0.12
+
+0.11.3
+  Nicolas Lhommet added scroll parameter in pdp_text 
+
+0.11.2
+  added pdp_capture : capture a portion of screen : lets you import browser data, etc ....
+  fixed pdp_compose
+
+0.11.1
+  added pdp_juxta : allow juxtaposition of frames
+
+0.11.0
+  change some packet allocation policies to comply with PDP 0.11
+  no new object
+
+0.10.1
+  added pdp_noquark object : moving object are clear, the background is noisy
+  added tolerance input in pdp_quark
+
+0.10.0
+  added pdp_segsnd~ : produces sound from a segment of the video ( similar to pdp_scanxy~ )
+  binary compatible with pdp v.0.10
+  improved installation instructions
+
+0.9.2
+  fixed disconnection phase in pdp_live~
+
+0.9.1
+  remove synchronization proposed by martin pi : it lead to some deadlocks sometimes
+
+0.9.0
+  fixed audio encoding/decoding in pdp_ffmpeg~/pdp_live~ ( which caused a lot of crashes )
+  add synchronization in pdp_live~ and other nice features ( thanks to martin pi )
+  made the audio decoding in pdp_live~ optional 
+  add "set cursor" message in pdp_cmap, pdp_ctrack, pdp_compose 
+  ( used in conjonction with coordinates output of pdp_xv v0.9 )
+
+0.8.4
+  added pdp_live~ : receive a video feed, at least from a ffmpeg server ( ffserver )
+  fixed resampling in pdp_ffmpeg~ : resizing to a bigger image used to crash PD 
+  ( now, you can't resize to a bigger scale, blame it on libavcodec )
+
+0.8.3
+  pdp_rec became pdp_rec~ : it can record audio now
+  fix crash in pdp_ascii, pdp_nervous, pdp_quark
+
+0.8.2
+  added pdp_ffmpeg : stream to a ffmpeg server with possibly several formats ( mpeg, asf, ... )
+  NOTE : although there is an experimental audio streaming possibility,
+  there are BIG synchronization issues and it's recommended to use mp3cast~ for audio streaming.
+  added a ratio action in pdp_ascii
+  added a planes number action in pdp_quark and pdp_nervous ( plays on speed of switching )
+  fixed index bug in pdp_ctrack, pdp_cmap
+
+0.8.1
+  fixed colors in pdp_warhol
+
+0.8.0
+  added pdp_ascii : rendering of videos in ASCII art using character maps
+
+0.7.7
+  added pdp_aa : rendering of videos in ASCII art using aalib
+
+0.7.6
+  added pdp_cmap : color mapper ( thanx to liz for the suggestion )
+  added actions in color tracker ( steady mode, cursor on/off, frame on/off ), generally improved
+  fixed colors in pdp_spiral, pdp_dice
+
+0.7.5
+  added pdp_form : addition of geometric forms 
+  added pdp_compose : color-based video compositor ( thanx to liz for the suggestion )
+  added actions in pdp_text ( rotations, font, resize, dither, blend )
+  fixed colors in pdp_transform, pdp_warp
+  fix install stage
+
+0.7.4
+  added pdp_text : text addition on videos ( requires imlib2 )
+  use the automake/autoconf system
+  optimized streaming again (pdp_i/pdp_o)
+  fixed colors in pdp_puzzle
+
+0.7.3
+  fixed streaming objects pdp_i/pdp_o
+  added "smoothing" and "framerate" controls to act on the bandwidth
+
+0.7.2
+  added shagadelic, dice and puzzle from effecTV
+  modified objects to use PDP queue
+
+0.7.1
+  added cycle and transform : first effetTV objects using PDP queue
+  ( i know i changed my mind )
+  all other objects must be modified to use PDP queue
+
+0.7.0
+  compatibility with PDP 0.7
+
+0.6.2
+  added pdp_ctrack : color tracker : lets you follow an object
+
+0.6.1
+  added pdp_i/pdp_o : PDP packets streaming objects using bz2
+  added pdp_mgrid : motion grid detects movement within a grid
+
+0.6.0
+  added pdp_rec : a video recording object
+  fixed a bug in pdp_edge                      
+  incremented PDP release number : it's now 0.6
+  set proper credits for each effecTV plugin
+
+0.5.8
+  added pdp_spigot : a video signal routing utility
+
+0.5.7
+  added nervous and quark objects
+  these will be the last effecTV objects added
+  some effectv have been left aside ( fireTV, ... )
+  because they are just clones of some other effects
+  or because i simply wasn't interested in porting them
+
+0.5.6
+  added radioactiv and warhol objects
+
+0.5.5
+  added edge and spiral objects
+  happy new year 2003
+
+0.5.4
+  renamed to PiDiP
+  added rev and mosaic objects
+
+0.5.3
+  added parameter "increment" to ripple
+  fix "threshold" in ripple
+  added warp and mosaic object
+
+0.5.2
+  remove buggy support of GREY packets
+
+0.5.1
+  added aging and ripple effects
+
+0.5
+  initial release
+  it is called 0.5 because it should be used with PDP 0.5

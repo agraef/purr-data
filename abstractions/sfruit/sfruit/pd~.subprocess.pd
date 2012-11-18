@@ -1,0 +1,35 @@
+#N canvas 0 22 267 226 10;
+#N canvas 566 22 423 241 \$0.subprocess 0;
+#X obj 30 29 inlet;
+#X obj 110 29 inlet~;
+#X obj 180 29 inlet~;
+#X obj 30 179 outlet;
+#X obj 110 179 outlet~;
+#X obj 180 179 outlet~;
+#X restore 73 73 pd \$0.subprocess;
+#X obj 132 39 adc~;
+#X obj 131 111 dac~;
+#N canvas 463 357 459 206 init 0;
+#X obj 30 180 s pd-\$0.subprocess;
+#X obj 30 25 r ARGS;
+#X obj 57 141 list trim;
+#X obj 57 78 list prepend obj 30 100;
+#X obj 30 52 t b a;
+#X msg 30 104 connect 0 0 6 0 \, connect 1 0 6 1 \, connect 2 0 6 2
+\, connect 6 0 3 0 \, connect 6 1 4 0 \, connect 6 2 5 0 \, loadbang
+;
+#X connect 1 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 4 1 3 0;
+#X connect 5 0 0 0;
+#X restore 97 182 pd init;
+#X obj 73 111 stdout;
+#X obj 73 39 r INLET;
+#X connect 0 0 4 0;
+#X connect 0 1 2 0;
+#X connect 0 2 2 1;
+#X connect 1 0 0 1;
+#X connect 1 1 0 2;
+#X connect 5 0 0 0;

@@ -1,0 +1,9 @@
+# all the source files from the package
+SRCDIR = source
+SRCS= \
+        main.cpp tbroute.cpp tbsig~.cpp tbsroute~.cpp  \
+	tbpow~.cpp tbfft1.cpp tbfft2.cpp fftbuf.cpp fftgrsort.cpp \
+	fftgrshuf.cpp fftgrrev.cpp him.cpp
+
+#HDRS= \
+	main.h 

@@ -1,0 +1,19 @@
+# config file for tbext, adapted from Thomas Grill's xsample makefile
+#
+
+# where is PD?
+PDPATH=c:\programme\audio\pd		
+
+# where do the flext libraries reside?
+FLEXTPATH=$(PDPATH)\flext
+
+# where is MS VC++?
+# (not necessary if the build started with the compiler environment)
+# MSVCPATH=c:\programme\prog\microsoft visual studio\VC98
+
+# where should the external be built?
+OUTPATH=pd-msvc
+
+# where should the external be installed?
+# (leave blank to omit installation)
+INSTDIR=$(PDPATH)\extra

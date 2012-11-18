@@ -1,0 +1,96 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header inlet 3 12 0 18
+-204280 -1 0;
+#X obj 0 397 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 145 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 DESCRIPTION control inlet for a subpatch;
+#X text 12 65 OUTLET_0 anything;
+#X text 12 5 KEYWORDS control nonlocal canvas_op;
+#X restore 500 597 pd META;
+#X obj 0 426 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 511 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 55 507 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 inlet;
+#X obj 67 43 outlet;
+#X obj 118 43 inlet~;
+#X obj 168 43 outlet;
+#X text 8 2 [inlet] Related Objects;
+#X obj 217 43 block~;
+#X text 266 43 [switch~];
+#X restore 102 598 pd Related_objects;
+#X obj 78 435 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 434 anything;
+#X obj 493 3 inlet;
+#X obj 461 20 pddp/pddplink http://wiki.puredata.info/en/inlet -text
+pdpedia: inlet;
+#X text 11 23 control inlet for a subpatch;
+#X obj 373 259 print~;
+#X obj 373 199 sig~ 12;
+#X floatatom 130 203 0 0 0 0 - - -;
+#X floatatom 130 255 0 0 0 0 - - -;
+#X text 100 182 messages in and out;
+#X text 343 176 audio in and out;
+#X obj 373 237 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#N canvas 50 247 428 293 subpatch-with-inlets-and-outlets 0;
+#X obj 68 68 inlet;
+#X text 20 38 control inlet for receiving messages;
+#X floatatom 68 96 0 0 0 0 - - -;
+#X floatatom 68 218 0 0 0 0 - - -;
+#X obj 68 250 outlet;
+#X text 20 188 control outlet for sending message;
+#X obj 340 84 inlet~;
+#X obj 340 135 print~;
+#X msg 355 109 bang;
+#X obj 340 243 outlet~;
+#X obj 340 217 sig~ 34;
+#X text 333 38 same for;
+#X text 334 57 signals.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [inlet] Creating Inlets/Outlets on Subpatches;
+#X connect 0 0 2 0;
+#X connect 3 0 4 0;
+#X connect 6 0 7 0;
+#X connect 8 0 7 0;
+#X connect 10 0 9 0;
+#X restore 130 229 pd subpatch-with-inlets-and-outlets;
+#X text 98 402 (none);
+#X text 98 515 (none);
+#X text 167 515 - a symbolic argument to an [inlet] object which will
+be ignored. However \, [inlet] will not create if you give it a float
+argument.;
+#X text 98 127 The subpatch below shows how to use [inlet] \, [inlet~]
+\, [outlet] \, and [outlet~] objects to get data into and out of a
+subpatch:;
+#X text 98 77 The [inlet] object allows messages to be sent to a subpatch
+from an object on the parent canvas.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 168 434 - passes any message that is sent to the subpatch's
+inlet in the parent patch. When multiple [inlet~] or [inlet] objects
+are in one subpatch \, their horizontal order corresponds with the
+inlets drawn on the containing object in the parent patch.;
+#X connect 14 0 20 1;
+#X connect 15 0 20 0;
+#X connect 19 0 13 0;
+#X connect 20 0 16 0;
+#X connect 20 1 13 0;

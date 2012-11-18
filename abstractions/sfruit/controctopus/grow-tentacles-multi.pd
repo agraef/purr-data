@@ -1,0 +1,86 @@
+#N canvas 719 217 501 444 10;
+#X msg 35 269 obj \$1 \$2 midi-tentacle-multi \$3 \$4;
+#X obj 35 84 r \$1/controlsList;
+#X obj 35 110 list prepend \$1;
+#X obj 35 243 list prepend;
+#X obj 114 218 r \$0x;
+#X obj 35 195 list prepend;
+#X obj 114 171 r \$0y;
+#X obj 35 136 t a b;
+#X obj 251 71 f 0;
+#X obj 251 146 s \$0y;
+#X obj 283 71 + 1;
+#X obj 251 274 f 0;
+#X obj 283 274 + 1;
+#X obj 251 329 s \$0x;
+#X obj 79 136 s \$0count;
+#X obj 251 42 r \$0count;
+#X obj 251 243 r \$0count;
+#X obj 251 96 div 8;
+#X obj 315 274 mod 8;
+#N canvas 50 247 1320 500 \$0controls 0;
+#X restore 148 10 pd \$0controls;
+#X obj 339 311 loadbang;
+#X msg 339 338 clear;
+#X obj 339 362 s pd-\$0controls;
+#X obj 251 303 * 160;
+#X obj 251 120 * 80;
+#X msg 359 211 vis 1;
+#X obj 359 236 s pd-\$0controls;
+#X obj 182 219 s \$1/getControls;
+#X obj 359 189 r \$0show;
+#X obj 182 187 r \$0getControls;
+#X obj 35 295 list append \$2;
+#X obj 35 317 list trim;
+#X obj 35 340 s pd-\$0controls;
+#X obj 301 101 cnv 15 15 15 empty empty O 2 7 0 14 -231960 -66577 0
+;
+#X obj 312 101 cnv 15 15 15 empty empty C 2 7 0 14 -181753 -66577 0
+;
+#X obj 323 101 cnv 15 15 15 empty empty T 2 7 0 14 -232778 -66577 0
+;
+#X obj 334 101 cnv 15 15 15 empty empty O 2 7 0 14 -36361 -66577 0
+;
+#X obj 345 101 cnv 15 15 15 empty empty M 2 7 0 14 -32312 -66577 0
+;
+#X obj 356 101 cnv 15 15 15 empty empty O 2 7 0 14 -230614 -66577 0
+;
+#X obj 367 101 cnv 15 15 15 empty empty M 2 7 0 14 -230961 -66577 0
+;
+#X obj 378 101 cnv 14 14 15 empty empty empty 2 7 0 14 -221241 -66577
+0;
+#X obj 301 114 cnv 15 91 45 empty empty \$1 2 7 0 11 -20537 -150464
+0;
+#X obj 303 143 bng 15 250 50 0 \$0show \$0showR Show 17 7 0 11 -174336
+-1 -183899;
+#X obj 303 126 bng 15 250 50 0 \$0getControls \$0getControlsR Generate
+17 7 0 11 -49136 -1 -239456;
+#X connect 0 0 30 0;
+#X connect 1 0 2 0;
+#X connect 2 0 7 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 1;
+#X connect 5 0 3 0;
+#X connect 6 0 5 1;
+#X connect 7 0 5 0;
+#X connect 7 1 14 0;
+#X connect 8 0 10 0;
+#X connect 8 0 17 0;
+#X connect 10 0 8 1;
+#X connect 11 0 12 0;
+#X connect 11 0 23 0;
+#X connect 12 0 18 0;
+#X connect 15 0 8 0;
+#X connect 16 0 11 0;
+#X connect 17 0 24 0;
+#X connect 18 0 11 1;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 23 0 13 0;
+#X connect 24 0 9 0;
+#X connect 25 0 26 0;
+#X connect 28 0 25 0;
+#X connect 29 0 27 0;
+#X connect 30 0 31 0;
+#X connect 31 0 32 0;
+#X coords 0 -1 1 1 93 60 2 300 100;

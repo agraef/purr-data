@@ -1,0 +1,23 @@
+#N canvas 422 71 664 256 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 147 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 8 205 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 207 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: None;
+#X text 12 23 Type: Modifier. Effects only its own layer.;
+#X text 187 147 *Sliders:;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 97 *Bangs:;
+#X text 197 118 Reset: Reset controls to defaults w/ interpolation.
+;
+#X text 12 6 pixelTANGO HELP - pt.translate - Move layer in space;
+#X obj 24 95 pt.translate;
+#X text 197 171 X/Y/Z: Control translation on X \, Y and Z axes.;
+#X text 177 77 Translate Functions:;

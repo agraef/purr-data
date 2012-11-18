@@ -1,0 +1,54 @@
+#N canvas 601 131 839 649 10;
+#X obj 81 187 sampler.instrument.set;
+#X obj 467 331 sampler.instrument \$0i;
+#X obj 586 184 sampler.sample \$0s;
+#X obj 469 105 loadbang;
+#X text 466 72 This dataflow loads a sample and assigns it to an instrument.
+;
+#X obj 469 133 t b b b;
+#X msg 598 259 \$1i;
+#X obj 598 230 f \$0;
+#X obj 469 199 f \$0;
+#X msg 469 223 sample \$1s;
+#X text 28 124 Inlet_2: (float or symbol) instrument's name. Floats
+are reserved to reference instruments inside a sample.manage abstraction.
+;
+#X text 114 227 -- KEYS AND VALUES --;
+#X text 19 261 start (0-1): Sets playback start point;
+#X text 19 275 end (0-1): Sets playback end point;
+#X text 20 291 pitch (float): Sets playback speed;
+#X text 21 305 loop (0/1): Toggles loop playback;
+#X text 22 320 sample (symbol): Assigns a sampler.sample to the instrument
+;
+#X text 22 338 vol (envelope): Assigns a volume envelope \, x range=100
+\, y range=1.;
+#X text 24 365 pan (envelope): Assigns a pan envelope \, x range=100
+\, y range=1;
+#X text 25 393 lookup (envelope): Assigns a lookup envelope \, x range=100
+\, y range=1;
+#X obj 112 512 envgen 100 60 1 0  ;
+#X msg 110 486 dump;
+#X obj 212 585 print envelope;
+#X text 122 429 -- ENVELOPES --;
+#X text 45 33 Description: Changes a sampler.instrument's settings.
+;
+#X text 28 98 Inlet_1: (key value) See the possible key and value pairs
+below.;
+#X text 24 444 To create envelopes compatible with a sampler.instrument
+\, use the envgen external with the following creation arguments: envgen
+100 60 1 0;
+#X text 32 162 Inlet_3: (symbol) default sampler. Defaults to SAMPLER
+;
+#X obj 469 292 sampler.instrument.set;
+#X msg 586 150 load medias/sounds/loop0.wav;
+#X connect 3 0 5 0;
+#X connect 5 0 8 0;
+#X connect 5 1 7 0;
+#X connect 5 2 29 0;
+#X connect 6 0 28 1;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 9 0 28 0;
+#X connect 20 1 22 0;
+#X connect 21 0 20 0;
+#X connect 29 0 2 0;

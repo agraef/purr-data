@@ -1,0 +1,14 @@
+version history for shoutamp~
+
+v0.5 (2003/04/02)
+- added a small fix to empty buffer for incoming mp3 data
+  when doing a reconnect
+- probably fixed the bug that lead to repeated audio frag-
+  ments and droputs: the input buffer was too small (thanks
+  Alex for pointing me to that!)
+
+
+v0.5 beta (2002/09/08)
+- BUG: short audio dropout (they happen more often if the Pd
+  console window is the foreground window)
+- error handling not correctly implemented

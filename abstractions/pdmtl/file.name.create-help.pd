@@ -1,0 +1,12 @@
+#N canvas 1032 402 473 224 10;
+#X text 21 10 Description: create a filename on bang using prefix -
+date time;
+#X obj 130 72 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 130 117 flow.prepend set;
+#X text 281 91 argument=prefix;
+#X obj 130 92 file.name.create rec;
+#X msg 130 142;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 4 0 2 0;

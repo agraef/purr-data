@@ -1,0 +1,23 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty texturing 20 12 0 24 -228992
+-66577 0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 80 144 gemhead;
+#X obj 80 256 pix_image;
+#X obj 96 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 80 293 pix_texture;
+#X text 9 66 You can write images to surfaces of objects. This is known
+as texturing. You use the [pix_texture] object followed by the shape
+to write to:;
+#X obj 81 351 cuboid 4 3 3;
+#X obj 96 197 openpanel;
+#X msg 96 225 open \$1;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 9 0;
+#X connect 6 0 8 0;
+#X connect 9 0 10 0;
+#X connect 10 0 4 0;

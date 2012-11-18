@@ -1,0 +1,55 @@
+#N canvas 375 160 367 344 10;
+#X obj 61 246 outlet~;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 10 315 pd license;
+#X text 7 297 (C) 2008 João Pais - jmmmpais@googlemail.com;
+#X text 200 157 Inlets;
+#X text 200 227 Outlets;
+#X text 11 9 [liner~] - Practical implementation of [line~];
+#X text 200 177 - Float;
+#X text 200 247 - Signal;
+#X text 200 92 Arguments;
+#X text 200 112 - Ramp duration (ms);
+#X text 212 127 Standard: 20ms;
+#X text 200 197 - Ramp duration (ms);
+#X text 12 38 Send a float to create a ramp with [line~]. Duration
+is decided through a parameter.;
+#X obj 61 96 inlet;
+#X obj 61 226 line~;
+#X obj 87 116 init \$1;
+#X msg 87 176 20;
+#X obj 87 156 moses 1;
+#X obj 61 206 pack f f;
+#X obj 97 136 inlet;
+#X connect 13 0 18 0;
+#X connect 14 0 0 0;
+#X connect 15 0 17 0;
+#X connect 16 0 18 1;
+#X connect 17 0 16 0;
+#X connect 17 1 18 1;
+#X connect 18 0 14 0;
+#X connect 19 0 17 0;

@@ -1,0 +1,20 @@
+#N canvas 68 53 638 461 12;
+#X obj 10 -38 cnv 15 400 40 empty empty symbol_conversion 20 12 0 24
+-228992 -66577 0;
+#X symbolatom 73 319 10 0 0 0 - - -;
+#X text 12 27 A symbolic atom is not the same thing as a symbol message.
+This is a key distinction which becomes especially relevant when processing
+more complicated messages.;
+#X msg 32 169 nope;
+#X obj 90 272 symbol;
+#X msg 90 226 yes;
+#X text 90 169 <-- click and look at Pd window;
+#X text 11 95 In addition to being a storage object \, [symbol] also
+serves as a conversion object. Many objects only receive symbolic data
+in the form of a symbol message.;
+#X text 186 319 <-- expects a symbol message;
+#X text 159 274 <-- converts symbolic input to symbol message;
+#X text 139 225 <-- click to see this one get converted;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;

@@ -1,0 +1,28 @@
+#N canvas 304 280 450 300 10;
+#X obj 224 205 dac~;
+#X obj 224 82 inlet~;
+#X obj 259 110 inlet~;
+#X obj 259 180 *~ 0;
+#X obj 224 180 *~ 0;
+#X obj 318 65 tgl 20 0 \$0-d \$0-d DSP 0 -6 1728 8 -260818 -123526
+-33289 0 1;
+#X msg 318 93 \; pd dsp \$1;
+#X obj 89 186 hsl 64 10 0 1 0 0 \$0-v \$0-v volume -2 -6 1728 8 -260818
+-123526 -1 0 1;
+#X obj 282 146 r \$0-v;
+#X obj 262 206 outlet~;
+#X obj 166 206 outlet~;
+#X obj 357 24 r pd;
+#X obj 357 48 route dsp;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 1;
+#X connect 3 0 9 0;
+#X connect 4 0 0 0;
+#X connect 4 0 10 0;
+#X connect 5 0 6 0;
+#X connect 8 0 3 1;
+#X connect 8 0 4 1;
+#X connect 11 0 12 0;
+#X connect 12 0 5 0;
+#X coords 0 0 1 1 90 55 1;

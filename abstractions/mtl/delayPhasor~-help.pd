@@ -1,0 +1,61 @@
+#N canvas 419 83 540 306 10;
+#X text 14 29 Author: Chun Lee (sonicvariable.goto10.org);
+#X text 15 8 Description: Delay controlled by a phasor;
+#X obj 20 171 mtl/out~;
+#X obj 20 138 mtl/delayPhasor~ /id delayPhasor;
+#X text 15 50 tags: fx~;
+#X obj 19 90 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#N canvas 5 185 450 300 generate~ 0;
+#X obj 32 213 osc~ 200;
+#X obj 32 89 metro 400;
+#X obj 32 175 mtof;
+#X obj 104 195 mtof;
+#X obj 32 132 + 20;
+#X obj 32 111 random 70;
+#X floatatom 83 69 5 0 0 0 - - -;
+#X obj 32 261 outlet~;
+#X obj 103 261 outlet~;
+#X obj 30 14 inlet;
+#X obj 104 175 mtl/closestNote 0 2 4 7 9;
+#X obj 104 234 *~;
+#X obj 31 234 *~;
+#X obj 104 214 osc~ 100;
+#X obj 32 155 mtl/closestNote 0 2 4 7 9;
+#X connect 0 0 12 0;
+#X connect 1 0 5 0;
+#X connect 2 0 0 0;
+#X connect 3 0 13 0;
+#X connect 4 0 10 0;
+#X connect 4 0 14 0;
+#X connect 5 0 4 0;
+#X connect 6 0 1 1;
+#X connect 9 0 1 0;
+#X connect 9 0 11 1;
+#X connect 9 0 12 1;
+#X connect 10 0 3 0;
+#X connect 11 0 8 0;
+#X connect 12 0 7 0;
+#X connect 13 0 11 0;
+#X connect 14 0 2 0;
+#X restore 19 115 pd generate~;
+#X text 223 135 <-Click on the propeties menu to display params;
+#X obj 307 18 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 367 19 PARAM ENABLED;
+#X obj 276 191 cnv 15 200 20 empty empty /delayPhasor/ 2 12 0 8 -258401
+-262144 0;
+#X obj 276 214 hsl 100 15 0 1 0 0 /delayPhasor/wet /delayPhasor/wet_
+wet 105 7 0 8 -262144 -1 -1 0 1;
+#X obj 276 232 hsl 100 15 1 20000 0 0 /delayPhasor/delay2 /delayPhasor/delay2_
+delay2 105 7 0 8 -262144 -1 -1 4 1;
+#X obj 276 250 hsl 100 15 1 20000 0 0 /delayPhasor/delay1 /delayPhasor/delay1_
+delay1 105 7 0 8 -262144 -1 -1 49 1;
+#X obj 276 268 hsl 100 15 0.01 10 0 0 /delayPhasor/phasor /delayPhasor/phasor_
+phasor 105 7 0 8 -262144 -1 -1 287 1;
+#X obj 306 41 ../doc/5.reference/tof/param-help;
+#X connect 3 0 2 0;
+#X connect 3 1 2 1;
+#X connect 5 0 6 0;
+#X connect 6 0 3 0;
+#X connect 6 1 3 1;

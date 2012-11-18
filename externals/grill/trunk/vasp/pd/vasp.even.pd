@@ -1,0 +1,12 @@
+#N canvas 0 0 247 229 12;
+#X obj 40 15 inlet;
+#X obj 40 48 vasp.frames?;
+#X obj 40 80 % 2;
+#X obj 40 110 == 0;
+#X obj 40 142 outlet;
+#X text 130 106 1 if even;
+#X text 131 131 0 if odd;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;

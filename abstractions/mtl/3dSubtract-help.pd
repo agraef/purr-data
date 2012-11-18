@@ -1,0 +1,26 @@
+#N canvas 146 129 446 252 10;
+#X msg 50 116 2 1 0;
+#X msg 153 114 3 4 5;
+#X obj 24 173 unpack f f f;
+#X floatatom 24 196 5 0 0 0 - - -;
+#X floatatom 63 196 5 0 0 0 - - -;
+#X floatatom 103 197 5 0 0 0 - - -;
+#X msg 24 93 1 2 3;
+#X text 205 112 args: <X> <Y> <Z>;
+#X text 203 142 1st inlet: accepts list of 3 floats;
+#X text 203 162 2nd inlet: accepts list of 3 floats;
+#X text 201 197 outlet: list of 3 floats;
+#X obj 24 139 mtl/3dSubtract 0 1 2;
+#X obj 24 17 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 29 59 tags: 3d;
+#X text 126 59 Author: Roman Haefeli;
+#X text 279 59 Version: 2007-12-09;
+#X text 29 22 Description: Subtracts a vector from another.;
+#X connect 0 0 11 0;
+#X connect 1 0 11 1;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 2 2 5 0;
+#X connect 6 0 11 0;
+#X connect 11 0 2 0;

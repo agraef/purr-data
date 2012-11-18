@@ -1,0 +1,51 @@
+#N canvas 391 85 515 557 10;
+#X msg 289 125 a a b a;
+#X obj 132 98 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X msg 145 244 set \$1;
+#X msg 145 269 b;
+#X obj 290 99 loadbang;
+#X msg 282 212 a b a c a b a;
+#X obj 132 124 metro 350;
+#X text 22 -40 States machine looping through a sequence of states
+;
+#X text 23 -27 Mainly for musical forms;
+#X text 25 -5 Does not use arguments \, but the right inlet;
+#X msg 288 264 a b;
+#X text 25 16 2nd inlet : list representing the form;
+#X msg 287 289 a a b b;
+#X msg 290 149 a b a;
+#X msg 285 333 a b a c a d a;
+#X text 399 333 Rondo;
+#X text 390 125 Ternary;
+#X text 391 212 Arch form;
+#X text 395 266 Binary;
+#X msg 58 134 reset;
+#X msg 52 226 behave \$1;
+#X obj 50 201 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 25 37 behave : (1 0) reset when the moment you change the form.
+Defaults to false;
+#X text 25 70 reset : resets to the first part of the form (0);
+#X obj 143 196 musical.form;
+#X text 42 409 For instance \, you could have a set of chords for each
+part of the form. You could bang this to get the current part \, looping
+through all the parts of the form you set it to use. You might want
+to use a sequencer with this \, with a different use of it in each
+part.;
+#X msg 284 355 1 2 1 3 1 4 1;
+#X connect 0 0 24 1;
+#X connect 1 0 6 0;
+#X connect 2 0 3 0;
+#X connect 4 0 0 0;
+#X connect 5 0 24 1;
+#X connect 6 0 24 0;
+#X connect 10 0 24 1;
+#X connect 12 0 24 1;
+#X connect 13 0 24 1;
+#X connect 14 0 24 1;
+#X connect 19 0 24 0;
+#X connect 20 0 24 0;
+#X connect 21 0 20 0;
+#X connect 24 0 2 0;
+#X connect 26 0 24 1;

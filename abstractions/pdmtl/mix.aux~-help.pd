@@ -1,0 +1,7 @@
+#N canvas 0 0 814 528 10;
+#X obj 94 121 mix.aux~;
+#X text 67 26 Description: Receives an aux stereo signal routed by
+mix.channel~;
+#X text 175 115 Argument 1: The aux number. Can be an integer number
+between 0 and 127;
+#X coords 0 0 1 1 133 33 0;

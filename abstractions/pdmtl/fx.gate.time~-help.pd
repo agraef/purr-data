@@ -1,0 +1,25 @@
+#N canvas 455 230 349 282 10;
+#X text 24 5 Description: a time base gate;
+#X obj 33 155 fx.gate.time~;
+#X obj 32 183 mix.out_~;
+#X obj 152 69 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X floatatom 203 71 5 0 0 0 - - -;
+#X obj 153 125 hsl 128 15 5 100 0 0 empty empty release -2 -6 0 10
+-262144 -1 -1 0 1;
+#X obj 152 165 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X text 148 148 dry;
+#X text 261 149 wet;
+#X obj 152 89 metro 250;
+#X obj 80 88 osc~ 444;
+#X obj 23 89 osc~ 222;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 3 0 9 0;
+#X connect 4 0 9 1;
+#X connect 5 0 1 3;
+#X connect 6 0 1 4;
+#X connect 9 0 1 2;
+#X connect 10 0 1 1;
+#X connect 11 0 1 0;

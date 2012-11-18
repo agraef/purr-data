@@ -1,0 +1,19 @@
+#N canvas 425 51 372 241 10;
+#X obj 69 93 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 190 94 bng 15 250 50 0 empty empty reset 0 -6 0 10 -33289 -262144
+-33289;
+#X obj 69 138 nbx 2 20 -1e+37 1e+37 0 0 empty empty : 45 9 0 18 -233017
+-33289 -33289 0 256;
+#X obj 129 138 nbx 2 20 -1e+37 1e+37 0 0 empty empty : 45 9 0 18 -233017
+-33289 -33289 0 256;
+#X obj 190 138 nbx 2 20 -1e+37 1e+37 0 0 empty empty empty 45 9 0 18
+-233017 -33289 -33289 0 256;
+#X text 66 170 know when you have to stop your gig;
+#X obj 69 113 timing.chronometer;
+#X text 66 55 Description: a very basic chronometer;
+#X connect 0 0 6 0;
+#X connect 1 0 6 1;
+#X connect 6 0 2 0;
+#X connect 6 1 3 0;
+#X connect 6 2 4 0;

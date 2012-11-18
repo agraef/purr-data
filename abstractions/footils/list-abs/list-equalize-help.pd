@@ -1,0 +1,48 @@
+#N canvas 485 298 612 548 10;
+#X obj 93 283 list-equalize;
+#X obj 93 71 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 2400 1;
+#X obj 93 248 pack 0 0 0;
+#X obj 115 209 t b f;
+#X obj 161 212 t b f;
+#X obj 93 310 unpack 0 0 0;
+#X obj 128 71 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 7300 1;
+#X obj 161 71 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 2500 1;
+#X floatatom 93 341 5 0 0 0 - - -;
+#X floatatom 132 341 5 0 0 0 - - -;
+#X floatatom 172 341 5 0 0 0 - - -;
+#X obj 93 367 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 2498 1;
+#X obj 132 367 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 7599 1;
+#X obj 172 367 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 2602 1;
+#X text 207 34 list-equalize:;
+#X text 227 53 scale a list so that all float elements sum up to 1
+;
+#X text 227 77 L_result = L_input / sum(L_input);
+#X obj 306 253 list-equalize;
+#X obj 306 280 print;
+#X text 258 177 Also handles non-float elements gracefully.;
+#X msg 306 226 90 plus 10 is 100;
+#X text 40 138 0-127;
+#X text 42 427 0-1;
+#X connect 0 0 5 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 3 1 2 1;
+#X connect 4 0 2 0;
+#X connect 4 1 2 2;
+#X connect 5 0 8 0;
+#X connect 5 1 9 0;
+#X connect 5 2 10 0;
+#X connect 6 0 3 0;
+#X connect 7 0 4 0;
+#X connect 8 0 11 0;
+#X connect 9 0 12 0;
+#X connect 10 0 13 0;
+#X connect 17 0 18 0;
+#X connect 20 0 17 0;

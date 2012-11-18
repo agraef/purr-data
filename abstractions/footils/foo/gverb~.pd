@@ -1,0 +1,70 @@
+#N canvas 568 363 600 302 10;
+#X obj -3 -2 cnv 15 600 300 empty empty empty 20 12 0 14 -260818 -66577
+0;
+#X obj 58 40 vsl 15 80 1 300 0 1 \$0-c1 \$0-c1 room_size 0 -8 1728
+8 -123526 -261681 -1 5258 1;
+#X obj 117 40 vsl 15 80 0.1 100 0 1 \$0-c2 \$0-c2 rvb_time 0 -8 1728
+8 -123526 -261681 -1 95 1;
+#X obj 181 40 vsl 15 80 0.01 1 0 1 \$0-c3 \$0-c3 damping 0 -8 1728
+8 -123526 -261681 -1 7012 1;
+#X obj 248 40 vsl 15 80 0 1 0 1 \$0-c4 \$0-c4 in_bandwidth 0 -8 1728
+8 -123526 -261681 -1 3950 1;
+#X obj 387 40 vsl 15 80 -70 0 0 1 \$0-c5 \$0-c5 dry_lvl 0 -8 1728 8
+-123526 -261681 -1 7900 1;
+#X obj 453 40 vsl 15 80 -70 0 0 1 \$0-c6 \$0-c6 early_refl 0 -8 1728
+8 -123526 -261681 -1 3746 1;
+#X obj 522 40 vsl 15 80 -70 0 0 1 \$0-c7 \$0-c7 tail_lvl 0 -8 1728
+8 -123526 -261681 -1 7900 1;
+#X obj 307 224 inlet~;
+#X obj 307 268 outlet~;
+#X obj 222 268 outlet~;
+#N canvas 0 0 437 432 controls 0;
+#X msg 178 49 control #1 \$1;
+#X msg 178 102 control #2 \$1;
+#X msg 180 149 control #3 \$1;
+#X msg 177 200 control #4 \$1;
+#X msg 178 246 control #5 \$1;
+#X msg 177 293 control #6 \$1;
+#X msg 175 341 control #7 \$1;
+#X obj 178 26 r \$0-c1;
+#X obj 180 81 r \$0-c2;
+#X obj 180 125 r \$0-c3;
+#X obj 177 175 r \$0-c4;
+#X obj 176 224 r \$0-c5;
+#X obj 178 268 r \$0-c6;
+#X obj 175 315 r \$0-c7;
+#X obj 64 301 outlet;
+#X connect 0 0 14 0;
+#X connect 1 0 14 0;
+#X connect 2 0 14 0;
+#X connect 3 0 14 0;
+#X connect 4 0 14 0;
+#X connect 5 0 14 0;
+#X connect 6 0 14 0;
+#X connect 7 0 0 0;
+#X connect 8 0 1 0;
+#X connect 9 0 2 0;
+#X connect 10 0 3 0;
+#X connect 11 0 4 0;
+#X connect 12 0 5 0;
+#X connect 13 0 6 0;
+#X restore 221 224 pd controls;
+#X obj 58 126 nbx 4 10 1 300 0 0 \$0-c1 \$0-c1 empty 45 7 1728 8 -123526
+-261681 -1 200.005 256;
+#X obj 117 126 nbx 4 10 1 100 0 0 \$0-c2 \$0-c2 empty 45 7 1728 8 -123526
+-261681 -1 1.30133 256;
+#X obj 181 126 nbx 4 12 0.01 1 0 0 \$0-c3 \$0-c3 empty 45 7 1728 8
+-123526 -261681 -1 0.888719 256;
+#X obj 248 126 nbx 4 12 0 1 0 0 \$0-c4 \$0-c4 empty 45 7 1728 8 -123526
+-261681 -1 0.5 256;
+#X obj 387 126 nbx 4 12 -70 0 0 0 \$0-c5 \$0-c5 empty 45 7 1728 8 -123526
+-261681 -1 0 256;
+#X obj 453 126 nbx 4 12 -70 0 0 0 \$0-c6 \$0-c6 empty 45 7 1728 8 -123526
+-261681 -1 -36.8076 256;
+#X obj 522 126 nbx 4 12 -70 0 0 0 \$0-c7 \$0-c7 empty 45 7 1728 8 -123526
+-261681 -1 0 256;
+#X obj 221 245 plugin~ gverb;
+#X connect 8 0 19 1;
+#X connect 11 0 19 0;
+#X connect 19 1 10 0;
+#X connect 19 2 9 0;

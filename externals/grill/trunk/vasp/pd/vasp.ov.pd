@@ -1,0 +1,10 @@
+#N canvas 38 67 456 306 12;
+#X obj 28 23 inlet;
+#X obj 26 80 vasp.update;
+#X obj 29 111 outlet;
+#X obj 27 51 vasp.opt;
+#X obj 98 112 outlet;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;
+#X connect 3 1 4 0;

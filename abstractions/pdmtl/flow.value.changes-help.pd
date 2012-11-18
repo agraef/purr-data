@@ -1,0 +1,25 @@
+#N canvas 182 310 1053 408 10;
+#X text 41 14 Description: Outputs if a shared value is changed.;
+#X floatatom 50 162 5 0 0 0 - - -;
+#X floatatom 49 248 5 0 0 0 - - -;
+#X floatatom 193 247 5 0 0 0 - - -;
+#X floatatom 522 229 5 0 0 0 - - -;
+#X floatatom 374 231 5 0 0 0 - - -;
+#X text 51 104 If the value is changed by another abstraction \, the
+value is outputed through the right outlet.;
+#X text 49 70 If the value is changed by the abstraction receiving
+the input \, the value is outputed through the left outlet.;
+#X floatatom 372 158 5 0 0 0 - - -;
+#X obj 101 164 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 126 153 A bang forces the output (left outlet);
+#X text 39 30 Comments: similar to flow.value.change;
+#X obj 50 195 flow.value.changes \$0help;
+#X obj 375 201 flow.value.changes \$0help;
+#X connect 1 0 12 0;
+#X connect 8 0 13 0;
+#X connect 9 0 12 0;
+#X connect 12 0 2 0;
+#X connect 12 1 3 0;
+#X connect 13 0 5 0;
+#X connect 13 1 4 0;

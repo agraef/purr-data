@@ -1,0 +1,9 @@
+#N canvas 0 0 454 304 12;
+#X obj 10 9 inlet;
+#X obj 10 90 outlet;
+#X text 77 93 dh20020215;
+#X text 95 7 alias an existing object;
+#X obj 10 36 s \$1-in;
+#X obj 10 63 r \$1-out;
+#X connect 0 0 4 0;
+#X connect 5 0 1 0;

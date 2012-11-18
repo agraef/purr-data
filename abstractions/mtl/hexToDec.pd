@@ -1,0 +1,8 @@
+#N canvas 1248 92 592 550 10;
+#X obj 102 -128 inlet;
+#X obj 102 78 outlet;
+#X obj 102 2 zexy/atoi;
+#X obj 102 -58 cyclone/tosymbol;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;

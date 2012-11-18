@@ -1,0 +1,9 @@
+#N canvas 6 57 382 198 10;
+#X text 13 24 Comment: Taken from Andy Farnell's work.;
+#X text 15 7 Description: Simulates the crackling of an old record.
+;
+#X obj 18 79 mtl/oldRecord~;
+#X obj 18 107 mtl/out~;
+#X text 19 48 tags: synthesize~;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;

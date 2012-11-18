@@ -1,0 +1,39 @@
+#N canvas 1 53 450 377 10;
+#X obj 52 180 dac~;
+#X obj 53 143 *~;
+#X obj 53 79 tgl 15 0 empty empty empty 17 7 0 10 -4034 -13381 -1 0
+1;
+#X obj 80 79 nbx 5 14 0 1e+37 0 1 empty empty seconds 60 8 0 10 -4034
+-13381 -13381 0.73 256;
+#X obj 53 57 metro 1000;
+#X obj 53 36 tgl 15 0 empty empty empty 17 7 0 10 -4034 -13381 -1 0
+1;
+#X obj 53 99 rc~ 1;
+#X text 191 167 Author: Martin Peach;
+#X text 191 186 2010/03/15;
+#X obj 67 121 noise~;
+#X obj 136 230 lop~;
+#X text 63 230 similar to:;
+#X text 49 -22 rc~ emulates a capacitor charging through a resistor.
+The creation argument can be overriden by the right inlet \, and represents
+a charging time constant in seconds.;
+#N canvas 453 86 494 344 META 0;
+#X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2 or later;
+#X text 12 125 AUTHOR Martin Peach;
+#X text 12 46 DESCRIPTION emulate a capacitor charging through a resistor
+;
+#X text 12 65 INLET_0 float;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 5 KEYWORDS signal;
+#X restore 379 329 pd META;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;
+#X connect 2 0 6 0;
+#X connect 3 0 6 1;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 1 0;
+#X connect 9 0 1 1;

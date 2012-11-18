@@ -1,0 +1,318 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header select 3 12 0 18
+-204280 -1 0;
+#X obj 0 163 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 171 494 420 META 0;
+#X text 12 165 LIBRARY internal;
+#X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 185 AUTHOR Miller Puckette;
+#X text 12 245 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 24 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 65 DESCRIPTION compare numbers or symbols;
+#X text 12 5 ALIAS sel;
+#X text 12 85 INLET_0 float symbol list;
+#X text 12 105 INLET_1 float symbol;
+#X text 12 125 OUTLET_N bang;
+#X text 12 145 OUTLET_R float symbol;
+#X text 12 25 KEYWORDS control symbol_op;
+#X text 12 225 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 359 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 458 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 540 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 100 340 428 250 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [select] Related Objects;
+#X obj 22 43 route;
+#X obj 62 43 spigot;
+#X obj 107 43 symbol;
+#X obj 155 43 float;
+#X text 18 123 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 17 165 The best places to find information about Pd's libraries
+is:;
+#X text 18 185 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 18 200 or;
+#X text 18 215 iem.kug.ac.at/pdb/;
+#X text 19 83 Externals;
+#X obj 19 103 pddp/helplink markex/multiselect;
+#X restore 102 597 pd Related_objects;
+#X obj 78 172 cnv 17 3 115 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 171 float;
+#X text 98 210 list;
+#X obj 78 368 cnv 17 3 40 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 306 cnv 17 3 45 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 305 float;
+#X obj 446 3 select;
+#X text 493 3 or;
+#X obj 518 3 sel;
+#X obj 448 20 pddp/pddplink http://wiki.puredata.info/en/select -text
+pdpedia: select;
+#X msg 62 50 6;
+#X obj 29 99 select 6;
+#X msg 29 49 234;
+#X floatatom 29 76 0 0 0 0 - - -;
+#X obj 29 127 print match;
+#X obj 108 127 print NO_match;
+#X text 202 115 Note that when the input to [select] matches one of
+its creation arguments \, then a "bang" is sent to the outlet \, NOT
+the original message.;
+#X text 11 23 compare numbers or symbols;
+#N canvas 57 54 428 548 A_Word_About_Conditional_Objects 0;
+#X text 20 38 Using the [select] object \, and others listed below
+\, Pd users can emulate the "conditional" statements of other programming
+environments.;
+#X text 20 79 Consider the following: (Visual Basic Script);
+#X text 59 97 IF input = 1 THEN;
+#X text 58 108 response.write("Hello");
+#X text 58 121 ELSEIF input = 2 THEN;
+#X text 58 133 response.write("GoodBye");
+#X text 58 170 ELSE;
+#X text 57 194 END IF;
+#X text 22 217 Now the Pd equivalent:;
+#X msg 60 242 1;
+#X msg 92 242 2;
+#X floatatom 138 242 5 0 0 0 - - -;
+#X obj 60 280 sel 1 2;
+#X msg 60 426 symbol Hello;
+#X msg 79 399 symbol GoodBye;
+#X symbolatom 181 452 21 0 0 0 - - -;
+#X obj 27 517 ==;
+#X obj 55 517 !=;
+#X obj 82 517 >;
+#X obj 108 517 <;
+#X obj 135 517 >=;
+#X obj 162 517 <=;
+#X text 22 494 OTHER CONDITIONAL/RELATIONAL OBJECTS IN Pd;
+#X text 57 181 response.write("No_match_for_me..."& input);
+#X text 58 159 response.write("This_is_cool.");
+#X obj 99 303 moses 3;
+#X msg 136 371 symbol This_is_cool.;
+#X obj 136 322 moses 10;
+#X obj 181 344 makefilename No_match_for_me...%d;
+#X text 58 147 ELSEIF (input < 3 AND input < 10) THEN;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [select] Conditional Statements in Pd;
+#X connect 9 0 12 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 12 2 25 0;
+#X connect 13 0 15 0;
+#X connect 14 0 15 0;
+#X connect 25 1 27 0;
+#X connect 26 0 15 0;
+#X connect 27 0 26 0;
+#X connect 27 1 28 0;
+#X connect 28 0 15 0;
+#X restore 102 549 pd A_Word_About_Conditional_Objects;
+#N canvas 79 52 428 289 second_inlet 0;
+#X obj 23 154 sel 42;
+#X msg 23 108 42;
+#X obj 23 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 56 176 5 0 0 0 - - -;
+#X floatatom 31 130 5 0 0 0 - - -;
+#X floatatom 80 132 5 0 0 0 - - -;
+#X obj 197 195 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 183 110 symbol word;
+#X msg 197 132 symbol other;
+#X msg 295 134 symbol other;
+#X obj 197 170 select word;
+#X obj 260 195 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 292 110 symbol word;
+#X text 20 38 The right inlet is used to reset the argument's value
+as in the patch below. This feature is available only on [select] objects
+with only ONE creation argument (or no creation arguments). In the
+other examples with multiple creation arguments \, you'll notice that
+this second inlet is absent.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [select] The Second Inlet;
+#X text 20 226 Note: A given [select] object will match floats or symbols
+\, but not both. See the subpatch titled "matching_symbols" for more
+details.;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 1;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 1;
+#X connect 10 0 6 0;
+#X connect 10 1 11 0;
+#X connect 12 0 10 1;
+#X restore 171 335 pd second_inlet;
+#N canvas 52 20 491 603 matching_symbols 0;
+#X obj 151 304 print NO_match;
+#X obj 22 304 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 54 304 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 86 304 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 118 304 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 22 102 symbol dog;
+#X msg 30 124 symbol cat;
+#X msg 38 146 symbol foo;
+#X msg 45 168 symbol earth;
+#X msg 54 190 symbol 400;
+#X obj 22 282 select dog cat foo 400;
+#X msg 50 233 400;
+#X obj 152 571 print NO_match;
+#X obj 23 571 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 55 571 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 87 571 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 119 571 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 23 385 symbol dog;
+#X msg 31 407 symbol cat;
+#X msg 39 429 symbol foo;
+#X msg 46 451 symbol earth;
+#X msg 54 473 symbol 400;
+#X msg 75 506 400;
+#X obj 23 549 select 400 dog cat foo;
+#X text 126 182 Notice that "400" here is defined as a symbol data
+type and the [select] object can successfully match it to the creation
+argment.;
+#X text 77 221 Notice that "400" here is a number and the [select]
+object cannot successfully match it to the creation argument. That
+is because this [select] expects symbols - not numbers.;
+#X text 61 264 FIRST CREATION ARGUMENT IS A SYMBOL;
+#X text 66 532 FIRST CREATION ARGUMENT IS A NUMBER;
+#X text 103 500 Notice that "400" here is a number and the [select]
+object can successfully match it to the creation argument.;
+#X text 123 467 Notice that "400" here is a symbol and the [select]
+object cannot successfully match it to the creation argument.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [select] Matching Symbols;
+#X text 19 329 However \, in the case below \, you'll notice that the
+FIRST creation argument is a number. Therefore \, this [select] object
+expects numbers and will ignore the "symbol" data type.;
+#X text 19 38 [select] can be used to match symbols. It important to
+note that the FIRST creation argument indicates to the [select] object
+which data type to expect. If your first creation argument is a symbol
+\, like "dog" \, then the object will test only symbols \, and numbers
+will be ignored!;
+#X connect 5 0 10 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X connect 10 1 2 0;
+#X connect 10 2 3 0;
+#X connect 10 3 4 0;
+#X connect 10 4 0 0;
+#X connect 11 0 10 0;
+#X connect 17 0 23 0;
+#X connect 18 0 23 0;
+#X connect 19 0 23 0;
+#X connect 20 0 23 0;
+#X connect 21 0 23 0;
+#X connect 22 0 23 0;
+#X connect 23 0 13 0;
+#X connect 23 1 14 0;
+#X connect 23 2 15 0;
+#X connect 23 3 16 0;
+#X connect 23 4 12 0;
+#X restore 102 571 pd matching_symbols;
+#X text 98 265 symbol;
+#X text 98 319 symbol;
+#X text 98 367 bang;
+#X text 168 367 - for each creation argument \, a corresponding outlet
+is created. When the value at the left inlet matches a creation argument
+\, a bang is sent to the corresponding outlet.;
+#X text 168 171 - if an incoming float matches a creation argument
+\, a bang is sent to the corresponding outlet. If it does not match
+\, the float is sent to the rightmost outlet.;
+#X obj 78 421 cnv 17 3 30 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#X text 98 420 float;
+#X text 98 435 symbol;
+#X text 168 420 - if there is no match \, the float or symbol is sent
+to the rightmost outlet.;
+#X text 168 476 - [select] creates an outlet for each creation argument
+(plus one outlet at the right). Floats and symbols may not be mixed.
+See the subpatch below for more details:;
+#N canvas 105 267 428 240 creation_arguments 0;
+#X floatatom 23 152 0 0 0 0 - - -;
+#X msg 87 110 1;
+#X msg 53 110 54;
+#X msg 23 110 23;
+#X obj 23 182 select 23 54 1;
+#X obj 23 209 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 50 209 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 77 209 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 104 209 5 0 0 0 - - -;
+#X text 61 139 If you click-n-drag this number box \, you'll notice
+how all numbers except "23" \, "54" \, and "1" are simply sent through
+to the rightmost outlet.;
+#X text 20 38 Several creation arguments can be defined. In effect
+you can use [select] to test the input for many different values. You
+will see an outlet for each test value and finally an outlet for values
+which match none of them (the rightmost outlet).;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [select] Creation Arguments;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 4 2 7 0;
+#X connect 4 3 8 0;
+#X restore 171 517 pd creation_arguments;
+#X text 97 47 In its simplest form shown here \, [select] checks its
+input against the constant "6" (which is defined by the creation argument).
+If they match \, the first outlet gives "bang" \; otherwise the input
+is simply sent through to the second outlet.;
+#X text 168 262 - if an incoming symbol matches a creation argument
+\, a bang is sent to the corresponding outlet. If it does not match
+\, the symbol is sent to the rightmost outlet.;
+#X text 168 210 - if there is only one creation argument (or none)
+\, the first and second element of the list will be distributed to
+the two inlets of [select]. If there is more than one creation argument
+the list will be truncated.;
+#X text 167 305 - the right inlet is available if there is only one
+creation argument. See the subpatch below for details:;
+#X text 80 476 n) float;
+#X text 98 491 symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 296 572 pddp/pddplink ../2.control.examples/18.conditional.pd
+-text doc/2.control.examples/18.conditional.pd;
+#X connect 18 0 21 0;
+#X connect 19 0 22 0;
+#X connect 19 1 23 0;
+#X connect 20 0 21 0;
+#X connect 21 0 19 0;

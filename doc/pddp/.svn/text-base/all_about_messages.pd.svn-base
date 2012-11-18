@@ -1,0 +1,381 @@
+#N canvas 0 0 448 248 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header messages 20 10 1
+18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#N canvas 14 48 428 289 What_is_a_message_in_Pd? 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 What is a message in Pd?;
+#X text 19 126 1) A selector \, which must be a symbol atom.[1];
+#X text 19 243 [1] The exceptions to this are implicit float and list
+messages. See the next subpatch for details.;
+#X text 19 106 Messages in Pd are made up of the following components:
+;
+#X text 19 183 Messages divide into two groups: those with selectors
+that have a predefined meaning and behavior in Pd \, and everything
+else. See the other subpatches for more on how Pd processes messages.
+;
+#X text 19 36 Objects in Pd send each other various data in the form
+of messages. Messages can transport all kinds of information: float
+\, symbol \, and pointer atoms \, groups of floats and symbols \, etc.
+Understanding how to build and work with messages is a key to understanding
+Pd.;
+#X text 19 146 2) Zero or more arguments \, which may be any atom type
+that Pd can understand.;
+#X restore 43 42 pd What_is_a_message_in_Pd?;
+#X obj 43 183 pddp/pddplink all_about_atoms.pd;
+#N canvas 19 160 428 264 User_defined_messages_in_Pd 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 User-defined messages in Pd;
+#X text 20 79 1) single selector messages - these are messages made
+up of a single symbol atom \, like "set" \, "clear" \, or "flush".
+;
+#X text 20 37 User defined messages \, also referred to as "anythings"
+\, are messages with selectors other than those predefined by Pd (listed
+in the previous subpatch). These include:;
+#X obj 20 231 pddp/pddplink all_about_lists_vs_anythings.pd;
+#X text 20 212 For more information about "anythings" \, see:;
+#X text 20 110 2) custom selector + 1 or more arguments - messages
+with a custom selector followed by one or more atoms of any type. Examples
+include "set 3 4 5" \, "threshold 30 74" \, and "foo bar 3 four".;
+#X text 20 165 These messages are also referred to as meta-messages
+\, selector series \, and anythings. (Additionally \, a message like
+"foo 1 2 3" could be called a "foo message").;
+#X restore 43 94 pd User_defined_messages_in_Pd;
+#X obj 1 226 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS needs_work;
+#X text 12 25 NAME list float symbol;
+#X text 12 65 DESCRIPTION message syntax in Pd;
+#X restore 392 228 pd META;
+#X obj 6 228 pddp/pddplink all_about.pd -text All About Pd;
+#X text 42 153 Messages are made up of atoms. Make sure you understand
+atoms before reading about messages.;
+#N canvas 20 104 428 468 Distinguishing_Message_Types 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X msg 23 72 foo;
+#X msg 23 140 symbol foo;
+#X symbolatom 22 378 10 0 0 0 - - -;
+#X msg 22 254 symbol clear;
+#X msg 46 310 clear;
+#X text 109 260 like this one and pass it to the outlet after;
+#X text 108 246 The [pipe] object will take a symbol message;
+#X text 91 297 On the other hand \, the "clear" message tells the;
+#X text 19 403 It's helpful to consider the following: if Pd didn't
+make a distinction between "symbol clear" and "clear" \, how would
+[pipe] know whether you want to send the word "clear" to the outlet
+\, or trigger the "clear" function described above?;
+#X text 90 312 [pipe] object to forget all stored message and;
+#X text 90 327 refrain from outputting anything.;
+#X obj 22 351 pipe s 3000;
+#X text 95 351 <-- wait 3 seconds \, then output the message;
+#X text 7 1 Understanding Message Types;
+#X text 20 35 Remember that messages in Pd can consist of a single
+symbol atom. Consider the following:;
+#X text 19 201 This distinction is important: some objects \, for example
+\, have one behavior for symbol messages \, and a different behavior
+for custom messages.;
+#X text 109 274 the specified duration (3 seconds).;
+#X text 19 93 Above is a message with the selector "foo". You might
+also refer to this as a custom message \, the symbol atom "foo" \,
+or even a "foo message". The message has no arguments.;
+#X text 19 159 Above is a message with the selector "symbol". The first
+(and only) argument is "foo". This is a "symbol message" \, one of
+Pd's built-in message types.;
+#X connect 4 0 12 0;
+#X connect 5 0 12 0;
+#X connect 12 0 3 0;
+#X restore 43 120 pd Distinguishing_Message_Types;
+#N canvas 24 124 428 150 Quick_Quiz! 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Messages- Related Objects;
+#X msg 22 43 list quiz: What type of message is this?;
+#X obj 22 99 bng 15 250 50 0 empty empty list 0 25 0 8 -262144 -1 -1
+;
+#X obj 63 99 bng 15 250 50 0 empty empty bang 0 25 0 8 -262144 -1 -1
+;
+#X obj 104 99 bng 15 250 50 0 empty empty float 0 25 0 8 -262144 -1
+-1;
+#X obj 146 99 bng 15 250 50 0 empty empty symbol 0 25 0 8 -262144 -1
+-1;
+#X obj 187 99 bng 15 250 50 0 empty empty secret 0 25 0 8 -262144 -1
+-1;
+#X obj 229 99 bng 15 250 50 0 empty empty none_of_the_above 0 25 0
+8 -262144 -1 -1;
+#X obj 22 70 route list bang float symbol secret;
+#X text 276 42 <- Click to find out;
+#X connect 2 0 9 0;
+#X connect 9 0 3 0;
+#X connect 9 1 4 0;
+#X connect 9 2 5 0;
+#X connect 9 3 6 0;
+#X connect 9 4 7 0;
+#X connect 9 5 8 0;
+#X restore 103 228 pd Quick_Quiz!;
+#N canvas 0 0 878 627 old 0;
+#X obj 433 459 route;
+#X floatatom 113 135 5 0 0 1 "float" - -;
+#X symbolatom 204 135 10 0 0 1 "symbol" - -;
+#X obj 116 231 symbol;
+#X symbolatom 116 278 0 0 0 0 - - -;
+#X msg 125 255 word;
+#X msg 116 213 test;
+#X msg 99 191 symbol this;
+#X text 190 190 set type directly;
+#X text 157 255 does not work (check console messages);
+#X floatatom 35 253 5 0 0 0 - - -;
+#X msg 40 232 12;
+#X msg 23 212 float 83;
+#N canvas 534 126 490 340 Related_Objects 0;
+#X obj 32 54 ftos;
+#X obj 68 54 list2symbol;
+#X text 23 22 data type conversion;
+#X obj 155 55 tosymbol;
+#X obj 219 55 fromsymbol;
+#X obj 36 252 lister;
+#X obj 34 98 atoi;
+#X obj 30 138 list2int;
+#X obj 94 137 l2i;
+#X obj 96 163 a2l;
+#X obj 29 164 any2list;
+#X obj 158 138 list2symbol;
+#X obj 158 159 symbol2list;
+#X obj 247 138 l2s;
+#X obj 247 158 s2l;
+#X obj 123 252 list;
+#X restore 447 604 pd Related_Objects;
+#X text 407 245 Many objects cast the data they receive when they output
+it:;
+#X text 526 326 Some objects do not cast the data:;
+#X obj 424 297 trigger anything;
+#X msg 424 272 this is a list without a cast;
+#X obj 424 320 print;
+#X text 410 360 Some objects need to have the data explicitly declared
+in order to handle it. These are mostly symbol handling objects.;
+#X text 410 426 Objects which route data generally can handle explicitly
+or implicitly defined data.;
+#X obj 480 459 trigger;
+#X obj 538 459 niagara;
+#X obj 426 403 select;
+#X obj 15 18 cnv 15 750 20 empty empty all_about_data_types 20 10 1
+18 -233017 -66577 0;
+#X obj 731 19 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 11 311 "anything";
+#X text 11 427 "list";
+#X text 11 413 "float";
+#X text 11 454 "symbol";
+#X text 11 400 "bang";
+#X msg 111 359 anything 1 two three;
+#X msg 262 359 one 2 3;
+#X obj 167 442 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 171 416 t a b f l p s;
+#X obj 201 443 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 264 393 list one 2 3;
+#X msg 303 423 1 2 3;
+#X text 17 55 atoms (basic data types):;
+#X text 17 80 The basic data types are known as 'atoms' in Pd. "float"
+and "symbol" atoms have 'atom boxes' for realtime display and control
+from within a patch. "pointer" atoms are used for accessing data stored
+in graphical data structures.;
+#X obj 421 197 int;
+#X obj 429 177 / 5.23;
+#X floatatom 429 149 5 0 0 0 - - -;
+#X floatatom 462 217 5 0 0 0 - - -;
+#X floatatom 421 217 5 0 0 0 - - -;
+#X obj 511 147 tosymbol;
+#X obj 575 148 fromsymbol;
+#X obj 658 147 list2symbol;
+#X obj 662 189 ftos;
+#X obj 617 56 symbol;
+#X obj 580 100 int;
+#X obj 699 56 pointer;
+#X obj 440 100 bang;
+#X obj 478 101 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 499 56 float;
+#X text 21 547 There a number of objects which are used for storing
+messages \, or casting messages as a specific data type \, sometimes
+converting from one data type to another. The right inlet on these
+objects is stores that value \, which can be later output using a bang.
+;
+#X obj 608 100 lister;
+#X text 540 57 aka;
+#X obj 566 56 f;
+#X obj 470 531 pddp/pddplink all_about_lists_vs_anythings.pd -text
+all_about_lists_vs_anythings;
+#X obj 470 552 pddp/pddplink all_about_symbol_construction.pd -text
+all_about_symbol_construction;
+#X obj 470 573 pddp/pddplink all_about_data_structures.pd -text all_about_data_structures
+;
+#X text 495 101 (aka [bng]);
+#X text 23 324 "anything" allows anything to pass through unchanged.
+It is not a data type tho.;
+#X text 14 163 "symbols" need to be declared explicitly. "floats" do
+not need to be declared explicitly \, but can be:;
+#X text 173 232 casting as a "symbol";
+#X text 21 529 CASTING AND STORAGE OBJECTS;
+#X text 411 487 FOR MORE INFO:;
+#X text 410 127 EXAMPLES OF CASTING;
+#X text 405 56 atom objects:;
+#X text 412 78 other data types:;
+#X text 11 440 "pointer";
+#X obj 44 480 trigger anything bang float list pointer symbol;
+#X obj 44 500 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 98 500 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 154 499 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 211 500 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 267 499 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 323 500 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 213 55 "float" \, "symbol" \, "pointer";
+#N canvas 0 22 505 381 float/list 0;
+#X msg 75 133 float 1 2 3;
+#X text 34 22 FLOAT CONVERSION;
+#X msg 95 187 list 1 2 3;
+#X text 92 164 A list with multiple elements remains a list.;
+#X text 43 59 A float with one element remains a float.;
+#X text 72 106 A float with multiple elements remains a float but is
+cut to one element.;
+#X text 99 218 A list with one float element is converted to a float.
+;
+#X obj 58 308 bng 15 250 50 0 empty empty bang 0 20 1 9 -262144 -1
+-1;
+#X obj 105 308 bng 15 250 50 0 empty empty float 0 21 1 9 -262144 -1
+-1;
+#X obj 152 308 bng 15 250 50 0 empty empty symbol 0 21 1 9 -262144
+-1 -1;
+#X obj 200 308 bng 15 250 50 0 empty empty list 0 21 1 9 -262144 -1
+-1;
+#X obj 248 308 bng 15 250 50 0 empty empty UNDEFINED 0 21 1 9 -262144
+-1 -1;
+#X obj 57 286 route bang float symbol list;
+#X obj 92 349 print FLOAT;
+#X msg 50 81 float 3;
+#X msg 106 239 list 2;
+#X obj 188 349 print LIST;
+#X connect 0 0 12 0;
+#X connect 2 0 12 0;
+#X connect 12 0 7 0;
+#X connect 12 1 8 0;
+#X connect 12 1 13 0;
+#X connect 12 2 9 0;
+#X connect 12 3 10 0;
+#X connect 12 3 16 0;
+#X connect 12 4 11 0;
+#X connect 14 0 12 0;
+#X connect 15 0 12 0;
+#X restore 445 506 pd float/list conversion;
+#N canvas 0 22 479 361 empty 0;
+#X obj 78 268 bng 15 250 50 0 empty empty bang 0 20 1 9 -262144 -1
+-1;
+#X obj 125 268 bng 15 250 50 0 empty empty float 0 21 1 9 -262144 -1
+-1;
+#X obj 172 268 bng 15 250 50 0 empty empty symbol 0 21 1 9 -262144
+-1 -1;
+#X obj 220 268 bng 15 250 50 0 empty empty list 0 21 1 9 -262144 -1
+-1;
+#X obj 268 268 bng 15 250 50 0 empty empty UNDEFINED 0 21 1 9 -262144
+-1 -1;
+#X msg 127 205 list;
+#X msg 50 75 float;
+#X msg 97 134 symbol;
+#X text 31 21 EMPTY DATA TYPES;
+#X obj 77 246 route bang float symbol list;
+#X obj 73 326 print FLOAT;
+#X obj 155 326 print SYMBOL;
+#X text 120 184 An empty list is converted to a bang;
+#X text 85 114 An empty "symbol" remains a empty "symbol".;
+#X text 46 55 An empty "float" remains a "float" and is initialized
+to 0;
+#X connect 5 0 9 0;
+#X connect 6 0 9 0;
+#X connect 7 0 9 0;
+#X connect 9 0 0 0;
+#X connect 9 1 1 0;
+#X connect 9 1 10 0;
+#X connect 9 2 2 0;
+#X connect 9 2 11 0;
+#X connect 9 3 3 0;
+#X connect 9 4 4 0;
+#X restore 636 506 pd empty data types;
+#X text 568 604 updated for Pd version 0.38.4;
+#X connect 3 0 4 0;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 7 0 4 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 31 0 34 0;
+#X connect 32 0 34 0;
+#X connect 34 0 33 0;
+#X connect 34 3 35 0;
+#X connect 36 0 34 0;
+#X connect 37 0 34 0;
+#X connect 40 0 44 0;
+#X connect 41 0 40 0;
+#X connect 41 0 43 0;
+#X connect 42 0 41 0;
+#X connect 72 0 73 0;
+#X connect 72 1 74 0;
+#X connect 72 2 75 0;
+#X connect 72 3 76 0;
+#X connect 72 4 77 0;
+#X connect 72 5 78 0;
+#X restore 290 119 pd old;
+#X obj 43 203 pddp/pddplink ../1.manual/x2.htm#s3.1;
+#X text 194 202 <- fix this;
+#N canvas 18 112 428 500 Predefined_and_implicit_messages_in_Pd 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Predefined messages in Pd;
+#X text 20 131 2) symbol message - the selector "symbol" \, followed
+by a single symbol atom.;
+#X obj 1 274 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 20 216 5) pointer message - the selector "pointer" \, followed
+by a pointer atom.;
+#X text 20 186 4) list - the selector "list" \, followed by two or
+more atoms of any type (these are the elements of the list).;
+#X text 20 166 3) bang message - the single selector "bang".;
+#X text 20 246 6) signal - an audio signal;
+#X text 7 274 Implicit float and list Messages;
+#X text 20 37 In Pd \, when an object receives a message to an inlet
+\, it looks at the selector to figure out what to do next. So that
+objects can easily communicate with one another \, Pd has several predefined
+messages:;
+#X text 20 344 1) A single float atom has an implicit "float" selector.
+;
+#X msg 41 370 1;
+#X msg 181 370 float 1;
+#X text 71 370 is the same as...;
+#X text 20 394 1) a message that starts with a float atom and is followed
+by one or more atoms has an implicit "list" selector. Thus "1 2 3"
+or "1 4 63" \, and even "1 foo fee four" are list messages.;
+#X text 81 460 is the same as...;
+#X msg 41 460 2 3 4;
+#X msg 191 460 list 2 3 4;
+#X text 20 97 1) float message - this message has the selector "float"
+\, followed by a single float atom like 12 \, -4 \, or 1.8.;
+#X text 20 309 Since numbers are used so often in Pd \, two shortcuts
+are provided to make it easier to type and read them:;
+#X restore 43 69 pd Predefined_and_implicit_messages_in_Pd;

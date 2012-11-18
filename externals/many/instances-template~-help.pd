@@ -1,0 +1,15 @@
+#N canvas 204 154 602 360 10;
+#X obj 110 254 instances-template~ 1 8 four more arguments possible
+;
+#X text 72 274 dsp-out left;
+#X text 381 274 dsp-out right;
+#X text 35 233 inlet for messages routed to instances;
+#X text 380 234 inlet for audio to all instances;
+#X text 80 35 instances-template~ is a basic patch here only to illustrate
+what a patch designed for [instances~] looks like. Feel free to use
+it as a template for your own patches for [instances~].;
+#X text 76 100 Your [instances~] abstraction needs one [inlet] and
+one [inlet~] and two [outlet~]s. First argument will be the voice index
+number starting from 0 \, second argument will be the total number
+of voices. Four more arguments can be passed as arguments to [instances~]
+and will be passed on to the custom abstraction.;

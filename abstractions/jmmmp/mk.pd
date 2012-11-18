@@ -1,0 +1,41 @@
+#N canvas 0 0 359 161 10;
+#X obj 18 51 ctlin;
+#X obj 30 71 nbx 2 15 -1e+037 1e+037 0 0 empty empty empty 0 -6 0 10
+-233017 -1 -1 0 256;
+#X obj 59 71 nbx 3 15 -1e+037 1e+037 0 0 empty empty empty 0 -6 0 10
+-233017 -1 -1 0 256;
+#X text 12 111 (C) 2006 João Pais - jmmmpais@googlemail.com
+;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 129 pd license;
+#X text 12 10 [mk] - Fast control of MIDI inputs;
+#X text 146 40 GUI;
+#X text 146 60 - Controller number;
+#X text 146 80 - MIDI value;
+#X connect 0 0 2 0;
+#X connect 0 1 1 0;
+#X coords 0 -1 1 1 65 17 1 30 70;

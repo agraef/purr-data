@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/5742/trunk/externals/creb/configure.ac
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/pure-data/!svn/ver/5607/trunk/externals/creb/TODO
+END
+Makefile.config.in
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/Makefile.config.in
+END
+CHANGES.LOG
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/955/trunk/externals/creb/CHANGES.LOG
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/COPYING
+END
+README.darcs
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/README.darcs
+END
+README.extcvs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/README.extcvs
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/Makefile
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/README
+END
+bootstrap
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/bootstrap
+END

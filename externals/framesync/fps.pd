@@ -1,0 +1,12 @@
+#N canvas 763 479 535 318 10;
+#X obj 112 189 value framesync/fps;
+#X text 279 100 default to 30fps;
+#X obj 112 79 initbang;
+#X obj 243 160 print [framesync/fps];
+#X msg 243 137 setting FPS to \$1;
+#X obj 112 100 purepd/float_argument \$1 30;
+#X text 97 235 TODO make it an actual singleton;
+#X connect 2 0 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
+#X connect 5 0 4 0;

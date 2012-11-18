@@ -1,0 +1,4 @@
+#N canvas 0 0 450 300 10;
+#X obj 66 169 flow.receive;
+#X text 64 65 Description: Receive data from any send.;
+#X text 63 82 Comments: Will soon be deprecated by PD 0.4;

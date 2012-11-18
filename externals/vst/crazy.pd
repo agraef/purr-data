@@ -1,0 +1,16 @@
+#N canvas 297 500 460 310 12;
+#X msg 152 115 print;
+#X floatatom 236 37 5 0 0;
+#X obj 243 129 makenote 100 1000;
+#X obj 211 260 dac~;
+#X obj 190 198 vst~ craxzy diamonds;
+#X floatatom 363 29 5 0 0;
+#X msg 96 140 edit;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 1;
+#X connect 2 1 4 2;
+#X connect 4 1 3 0;
+#X connect 4 2 3 1;
+#X connect 5 0 2 2;
+#X connect 6 0 4 0;

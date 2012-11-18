@@ -1,0 +1,127 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header ctlout 3 12 0 18
+-204280 -1 0;
+#X obj 0 353 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 29 246 494 362 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 by Michal Seta as part of a project called pddp proposed
+by Krzysztof Czaja \, managed and edited by Dave Sabine \, to build
+comprehensive documentation for Pd. Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 45 DESCRIPTION send MIDI control messages to the MIDI port
+;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 OUTLET_0 float;
+#X text 12 105 OUTLET_1 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 471 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 499 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 361 float;
+#N canvas 43 183 441 412 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [ctlout] Related Objects;
+#X obj 23 32 ctlin;
+#X obj 216 79 pgmin;
+#X obj 23 79 bendin;
+#X obj 78 106 touchin;
+#X obj 260 79 polytouchin;
+#X obj 117 79 midiin;
+#X obj 22 106 sysexin;
+#X obj 178 166 noteout;
+#X obj 75 166 ctlout;
+#X obj 23 166 bendout;
+#X obj 365 166 touchout;
+#X obj 279 166 polytouchout;
+#X obj 122 166 midiout;
+#X obj 230 166 pgmout;
+#X obj 23 220 makenote;
+#X text 20 197 MIDI note construction:;
+#X text 20 139 MIDI output:;
+#X text 20 56 MIDI input:;
+#X obj 183 220 stripnote;
+#X obj 167 79 notein;
+#X text 180 197 MIDI note deconstruction:;
+#X text 19 263 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 18 342 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 19 244 Externals;
+#X obj 19 293 pddp/helplink maxlib/pitch;
+#X obj 19 308 pddp/helplink maxlib/score;
+#X obj 19 323 pddp/helplink maxlib/chord;
+#X obj 19 358 pddp/helplink cyclone/midiformat;
+#X obj 19 373 pddp/helplink cyclone/midiparse;
+#X obj 19 388 pddp/helplink cyclone/midiflush;
+#X restore 101 597 pd Related_objects;
+#X text 98 475 (none);
+#X obj 78 362 cnv 17 3 45 empty \$0-pddp.cnv.let.1 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 417 float;
+#X obj 78 418 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 442 float;
+#X obj 78 443 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X obj 362 571 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
+;
+#X text 100 571 for an explanation of MIDI usage in Pd see:;
+#X obj 483 3 ctlout;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/ctlout -text
+pdpedia: ctlout;
+#X floatatom 42 114 5 0 0 0 - - -;
+#X obj 42 180 ctlout;
+#X floatatom 58 135 5 0 0 0 - - -;
+#X floatatom 75 156 5 0 0 0 - - -;
+#X text 131 110 The [ctlout] objects sends control messages to the
+MIDI port. See a MIDI specification chart for various controller numbers/values
+descriptions.;
+#X text 98 381 list;
+#X obj 129 236 ctlout;
+#X obj 221 236 ctlout 64;
+#X obj 323 236 ctlout 64 2;
+#X obj 422 225 ctlout;
+#X msg 145 212 64;
+#X msg 176 213 2;
+#X msg 422 203 67 64 2;
+#X floatatom 323 192 5 0 0 0 - - -;
+#X floatatom 221 191 5 0 0 0 - - -;
+#X floatatom 129 191 5 0 0 0 - - -;
+#X msg 272 213 2;
+#X text 128 259 All these examples will transmit control no 64 on channel
+2 (remember to click the message boxes to initialize).;
+#X text 11 23 send MIDI control messages to the MIDI port;
+#X text 168 533 - (optional) channel number to transmit on. If the
+second argument is left off \, [ctlout] transmits on channel 1 .;
+#X text 168 361 - (int) control value (0-127).;
+#X text 168 417 - (int) controller number.;
+#X text 168 442 - (int) channel number.;
+#X text 168 475 - [ctlin] transmits directly to the MIDI port.;
+#X text 168 518 - (optional) controller number to transmit to.;
+#X text 80 518 1) float;
+#X text 80 533 2) float;
+#X text 168 381 - a list to the left inlet is distributed among the
+inlets of [ctlout].;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 19 0 20 0;
+#X connect 21 0 20 1;
+#X connect 22 0 20 2;
+#X connect 29 0 25 1;
+#X connect 30 0 25 2;
+#X connect 31 0 28 0;
+#X connect 32 0 27 0;
+#X connect 33 0 26 0;
+#X connect 34 0 25 0;
+#X connect 35 0 26 2;

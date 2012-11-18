@@ -1,0 +1,11 @@
+#N canvas 10 40 620 460 12;
+#X obj 8 10 cnv 15 600 40 empty empty EXERCISE-make_your_first_patch
+20 12 0 24 -262131 -66577 0;
+#X text 15 71 Its time to make your first patch. Follow the instructions
+on the right:;
+#X text 166 196 2- make a new object box \, in it \, type: symbol;
+#X text 166 235 3- make a new symbol box;
+#X text 166 275 4- connect the message box to the object box;
+#X text 166 315 5- connect the object box to the symbol box;
+#X text 165 353 6- click the message box \, and viola!;
+#X text 166 159 1- make a message box \, in it \, type: servus;

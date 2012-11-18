@@ -1,0 +1,19 @@
+#N canvas 350 97 446 345 10;
+#X text 30 10 Description: Saves a param.atom configuration.;
+#X obj 50 171 savepanel;
+#X obj 50 147 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 161 145 top;
+#X msg 176 170 global;
+#X msg 185 197 dps1;
+#X msg 196 218 dps2;
+#X text 40 82 Inlet 2 \, global/top/ID(symbol): The scope of the parameters
+to be saved.;
+#X text 41 63 Inlet 1 \, configuration_file(symbol);
+#X obj 50 208 param.save;
+#X connect 1 0 9 0;
+#X connect 2 0 1 0;
+#X connect 3 0 9 1;
+#X connect 4 0 9 1;
+#X connect 5 0 9 1;
+#X connect 6 0 9 1;

@@ -1,0 +1,11 @@
+#N canvas 402 283 553 376 10;
+#X obj 4 5 r \$1;
+#X text 142 5 Adds this cell's value to it's neighbour's accumulation
+buffer;
+#X obj 97 70 \$2;
+#X obj 4 43 t f b;
+#X obj 4 91 tabwrite \$3cur;
+#X connect 0 0 3 0;
+#X connect 2 0 4 1;
+#X connect 3 0 4 0;
+#X connect 3 1 2 0;

@@ -1,0 +1,11 @@
+#N canvas 496 468 450 300 10;
+#X text 272 256 2008 Luke Iannini;
+#X floatatom 115 107 5 0 0 0 - - -;
+#X floatatom 115 188 5 0 0 0 - - -;
+#X obj 115 145 quantize 16;
+#X text 22 20 [quantize] rounds a number to the next multiple of its
+argument;
+#X msg 193 145 0.333;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;
+#X connect 5 0 3 1;

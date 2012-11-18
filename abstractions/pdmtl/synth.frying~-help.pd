@@ -1,0 +1,15 @@
+#N canvas 0 0 450 300 10;
+#X obj 40 181 mix.out_~;
+#X text 40 42 Comment: Taken from Andy Farnell's work.;
+#X text 41 25 Description: Generates a frying sound.;
+#X obj 41 146 synth.frying~ @id frying;
+#X obj 229 147 param.gui;
+#X msg 229 125 frying;
+#X msg 41 119 switch \$1;
+#X obj 41 95 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X connect 3 0 0 0;
+#X connect 3 0 0 1;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 7 0 6 0;

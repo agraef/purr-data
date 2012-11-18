@@ -1,0 +1,43 @@
+#N canvas 0 0 663 340 10;
+#X floatatom 110 244 5 0 0 0 - - -;
+#X obj 104 114 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 134 152 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 158 149 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 186 148 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 214 149 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 243 150 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 268 152 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 301 150 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 54 87 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 141 206 convert.binary2byte;
+#X text 46 24 Description: Converts an 8 bit binary number into it's
+decimal value.;
+#X text 125 110 This is the hot inlet!;
+#X text 74 85 Output;
+#X obj 357 264 convert.binary2byte;
+#X floatatom 358 297 5 0 0 0 - - -;
+#X msg 362 214 0 1 0 0 1 1 0 1;
+#X msg 388 238 1 0 0 0 0 0 0 0;
+#X text 374 195 Lists work too!;
+#X connect 1 0 10 0;
+#X connect 2 0 10 1;
+#X connect 3 0 10 2;
+#X connect 4 0 10 3;
+#X connect 5 0 10 4;
+#X connect 6 0 10 5;
+#X connect 7 0 10 6;
+#X connect 8 0 10 7;
+#X connect 9 0 10 0;
+#X connect 10 0 0 0;
+#X connect 14 0 15 0;
+#X connect 16 0 14 0;
+#X connect 17 0 14 0;

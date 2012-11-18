@@ -1,0 +1,66 @@
+#N canvas 218 177 879 641 10;
+#X obj 131 58 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X msg 134 222 1 \, 0 150;
+#X obj 29 198 noise~;
+#X obj 34 290 *~;
+#X obj 90 259 line~;
+#X obj 298 31 loadbang;
+#X msg 248 54 0 100;
+#X obj 42 331 *~ 0.1;
+#X obj 103 334 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 44 370 mix.out_~;
+#X msg 216 53 0;
+#X msg 299 56 0 500;
+#X obj 299 93 unpack f f;
+#X text 163 373 Works also with floats \, symbol \, anything.;
+#X text 163 318 Descrition: Generates a random delay of the incoming
+data.;
+#X text 163 332 See: random.f;
+#X obj 280 418 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 279 442 metro 500;
+#X obj 132 23 loadbang;
+#X obj 277 480 random 1000;
+#X floatatom 278 566 5 0 0 0 - - -;
+#X obj 127 92 metro 501;
+#X floatatom 278 505 5 0 0 0 - - -;
+#X obj 491 421 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 490 445 metro 500;
+#X obj 488 483 symbol test;
+#X symbolatom 490 564 10 0 0 0 - - -;
+#X msg 572 432 symbol test;
+#X msg 666 431 symbol bird;
+#X obj 130 167 random.delay 0 500;
+#X obj 278 530 random.delay 0 500;
+#X obj 489 533 random.delay 200 500;
+#X connect 0 0 21 0;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 4 0 3 1;
+#X connect 5 0 11 0;
+#X connect 6 0 12 0;
+#X connect 7 0 9 0;
+#X connect 7 0 9 1;
+#X connect 8 0 7 1;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 29 1;
+#X connect 12 1 29 2;
+#X connect 16 0 17 0;
+#X connect 17 0 19 0;
+#X connect 18 0 0 0;
+#X connect 19 0 22 0;
+#X connect 21 0 29 0;
+#X connect 22 0 30 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 25 0 31 0;
+#X connect 27 0 25 1;
+#X connect 28 0 25 1;
+#X connect 29 0 1 0;
+#X connect 30 0 20 0;
+#X connect 31 0 26 0;

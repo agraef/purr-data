@@ -1,0 +1,21 @@
+
+0.93
+
+- Fixed control in bug and a few others
+
+0.91
+
+-Fixed bugs created by adding LADSPA support
+
+0.89
+
+-Added support for LADSPA plugins mostly using code from plugin~
+-Reorganised inlet/outlet structure
+
+0.83
+
+-Added FluidSynth-DSSI patch load support (i.e. soundfonts)
+
+0.82
+
+-Added hexter6 patch load support

@@ -1,0 +1,58 @@
+#N canvas 130 308 390 295 10;
+#X obj 65 183 snapshot~;
+#X obj 75 63 loadbang;
+#X obj 65 43 inlet~;
+#X obj 65 223 nbx 7 13 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -233017 -1 -1 0 256;
+#X obj 75 203 outlet;
+#X obj 102 103 \$1;
+#X obj 75 83 t b b;
+#X obj 132 103 inlet;
+#X obj 75 163 metro 50;
+#X text 196 100 Inlets;
+#X text 196 170 Outlets;
+#X text 196 50 Arguments;
+#X text 196 70 - Meter speed (ms);
+#X text 196 120 - Signal;
+#X text 196 140 - Meter speed (ms);
+#X text 196 190 - Signal level;
+#X text 7 247 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 10 265 pd license;
+#X text 12 10 [snaps~] - snapshot~ GUI implementation;
+#X obj 102 133 sel 0;
+#X connect 0 0 3 0;
+#X connect 0 0 4 0;
+#X connect 1 0 6 0;
+#X connect 2 0 0 0;
+#X connect 5 0 19 0;
+#X connect 6 0 8 0;
+#X connect 6 1 5 0;
+#X connect 7 0 19 0;
+#X connect 8 0 0 0;
+#X connect 19 1 8 1;
+#X coords 0 -1 1 1 117 17 1 20 221;

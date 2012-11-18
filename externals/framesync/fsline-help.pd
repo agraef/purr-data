@@ -1,0 +1,24 @@
+#N canvas 256 115 588 378 10;
+#X obj 80 184 fsline 10 20;
+#X floatatom 80 212 9 0 0 0 - - -;
+#X obj 83 239 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X obj 83 68 frameclock 100;
+#X floatatom 230 212 9 0 0 0 - - -;
+#X obj 233 239 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X floatatom 380 212 9 0 0 0 - - -;
+#X obj 383 239 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X text 33 16 Generate a 0-to-1 line based on frame numbers \, outputting
+once per frame.;
+#X obj 230 184 fsline 30 40;
+#X obj 380 184 fsline 50 60;
+#X text 31 285 the first argument/inlet sets the start frame;
+#X text 31 304 the second argument/inlet sets the end frame;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 4 0 5 0;
+#X connect 6 0 7 0;
+#X connect 9 0 4 0;
+#X connect 10 0 6 0;

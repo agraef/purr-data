@@ -1,0 +1,84 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header lrshift~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 374 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd 0.31. Jonathan Wilkes
+revised the patch to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS signal block_oriented;
+#X text 12 45 DESCRIPTION shift signal vector elements left or right
+;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 OUTLET_0 signal;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 411 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 496 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 110 480 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [lrshift~] Related Objects;
+#X obj 21 41 fft~;
+#X restore 101 597 pd Related_objects;
+#X obj 78 383 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 420 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 469 3 lrshift~;
+#X obj 441 20 pddp/pddplink http://wiki.puredata.info/en/lrshift~ -text
+pdpedia: lrshift~;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-shiftin 64 float 0;
+#X coords 0 1 63 0 100 70 1;
+#X restore 418 158 graph;
+#X msg 418 264 1 1;
+#X obj 418 241 loadbang;
+#X msg 270 275 bang;
+#X obj 246 301 print~;
+#X msg 187 276 bang;
+#X obj 163 302 print~;
+#X msg 94 265 bang;
+#X obj 74 302 print~;
+#X text 167 210 shift left;
+#X text 247 210 shift right;
+#X obj 163 250 lrshift~ 1;
+#X obj 246 249 lrshift~ -1;
+#X text 98 382 signal;
+#X text 98 419 signal;
+#X text 168 419 - acting at whatever vector size the window is running
+at \, lrshift~ shifts samples to the left (toward the beginning sample)
+or to the right. The argument gives the direction and the amount of
+the shift. The rightmost (or leftmost) samples are set to zero.;
+#X text 11 23 shift signal vector elements left or right;
+#X text 168 382 - an incoming signal.;
+#X text 80 514 1) float;
+#X text 168 514 - (integer) sets the direction and amount to shift
+the samples. Negative numbers shift samples the left \, and positive
+numbers shift to the right.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X obj 73 182 tabreceive~ \$0-shiftin;
+#X obj 418 286 s \$0-shiftin;
+#X connect 13 0 35 0;
+#X connect 14 0 13 0;
+#X connect 15 0 16 0;
+#X connect 17 0 18 0;
+#X connect 19 0 20 0;
+#X connect 23 0 18 0;
+#X connect 24 0 16 0;
+#X connect 34 0 20 0;
+#X connect 34 0 23 0;
+#X connect 34 0 24 0;

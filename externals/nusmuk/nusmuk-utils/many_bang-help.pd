@@ -1,0 +1,47 @@
+#N canvas 0 0 742 777 10;
+#X obj 40 91 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 112 155 print done;
+#X obj 40 155 print;
+#X msg 69 92 stop;
+#X obj 40 125 many_bang 5;
+#X text 163 126 output 5 bangs;
+#X obj 45 236 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 138 299 print done;
+#X obj 45 300 print;
+#X msg 74 237 stop;
+#X text 168 271 output between 2 and 15 bangs;
+#X obj 47 381 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 161 445 print done;
+#X obj 47 445 print;
+#X msg 76 382 stop;
+#X text 174 416 output between 2 and 3 bangs \, with 500ms delay between
+bangs;
+#X obj 48 497 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 204 561 print done;
+#X obj 48 561 print;
+#X msg 77 498 stop;
+#X text 231 532 50 to 1500ms delay between 10 bangs;
+#X text 288 6 many_bang;
+#X obj 47 415 many_bang 2 3 500;
+#X obj 48 531 many_bang 10 10 50 1500;
+#X obj 45 271 many_bang 2 15;
+#X connect 0 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 4 1 1 0;
+#X connect 6 0 24 0;
+#X connect 9 0 24 0;
+#X connect 11 0 22 0;
+#X connect 14 0 22 0;
+#X connect 16 0 23 0;
+#X connect 19 0 23 0;
+#X connect 22 0 13 0;
+#X connect 22 1 12 0;
+#X connect 23 0 18 0;
+#X connect 23 1 17 0;
+#X connect 24 0 8 0;
+#X connect 24 1 7 0;

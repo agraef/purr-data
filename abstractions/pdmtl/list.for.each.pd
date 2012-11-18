@@ -1,0 +1,10 @@
+#N canvas 0 0 450 300 10;
+#X obj 139 52 inlet;
+#X obj 193 157 list.op;
+#X obj 287 82 inlet;
+#X obj 139 210 outlet;
+#X obj 277 207 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 4 0;
+#X connect 2 0 1 1;

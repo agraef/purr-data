@@ -1,0 +1,24 @@
+#N canvas 180 430 907 477 10;
+#X text 51 20 Description: Can be used to parse arguments like in Max/Msp's
+Jitter (@agument_name argument_value).;
+#X obj 193 199 flow.@parse;
+#X msg 193 117 @size 30 @color 35 83 140;
+#X text 50 51 Comments: Best used with dollarg.;
+#X obj 194 312 route size color;
+#X obj 181 345 print SIZE;
+#X obj 260 344 print COLOR;
+#X msg 368 117 1 2 3 @size 555 @color 9 9 9;
+#X obj 353 340 print OTHER;
+#X obj 256 230 print DONE;
+#X msg 567 116 @color r@g@b;
+#X msg 464 329 ---;
+#X obj 464 357 print;
+#X connect 1 0 4 0;
+#X connect 1 1 9 0;
+#X connect 2 0 1 0;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 4 2 8 0;
+#X connect 7 0 1 0;
+#X connect 10 0 1 0;
+#X connect 11 0 12 0;

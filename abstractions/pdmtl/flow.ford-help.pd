@@ -1,0 +1,28 @@
+#N canvas 77 114 1064 421 10;
+#X obj 99 182 print;
+#X obj 99 92 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 470 232 WARNING: There is a protection mechanism against infinite
+for loops. flow.ford will stop outputing after 10000 elements.;
+#X text 478 65 Argument_2: Conditional comparator.;
+#X text 476 82 Argument_3: Conditional value.;
+#X text 476 98 Argument_4: Iteration operator.;
+#X text 477 117 Argument_5: Iteration value.;
+#X text 265 145 == for(i=2 \; i<10 \; i=i+1);
+#X text 77 15 Description: A more dynamic FOR loop thingy.;
+#X obj 102 297 print;
+#X obj 103 230 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 280 259 == for(i=0 \; i<=30 \; i=i+4);
+#X text 478 47 Argument_1: Initial value.;
+#X text 473 150 Inlet_1: bang to execute. Float to execute with that
+inital value.;
+#X text 476 28 ALL ARGUMENTS ARE REQUIRED!;
+#X text 470 182 Inlet_2: Conditional value.;
+#X text 469 201 Inlet_5: Iteration value.;
+#X obj 99 145 flow.ford 2 < 10 + 1;
+#X obj 102 260 flow.ford 0 <= 30 + 4;
+#X connect 1 0 17 0;
+#X connect 10 0 18 0;
+#X connect 17 0 0 0;
+#X connect 18 0 9 0;

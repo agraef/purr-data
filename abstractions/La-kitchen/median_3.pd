@@ -1,0 +1,34 @@
+#N canvas 28 3 711 500 12;
+#X obj 88 113 t f b b;
+#X obj 74 53 inlet;
+#X obj 111 295 outlet;
+#X obj 140 174 max;
+#X obj 114 174 min;
+#X obj 95 201 max;
+#X obj 111 228 min;
+#X text 177 174 on classe les 2 plus vieux nombres;
+#X text 175 191 du plus petit au plus grand;
+#X obj 85 141 f;
+#X obj 112 141 f;
+#X obj 139 141 f;
+#X text 197 43 principe du median 3 : classer les 3 dernieres mesures
+de la plus petite valeur a la plus grande valeur et renvoyer la 2 ieme
+valeur (appelee mediane) de la liste (dans cette liste classee de 3
+elements \, 1 est plus petit que la mediane et 1 est plus grand);
+#X text 332 300 Francis Bras;
+#X text 334 329 interface-z.com;
+#X connect 0 0 9 0;
+#X connect 0 1 10 0;
+#X connect 0 2 11 0;
+#X connect 1 0 0 0;
+#X connect 3 0 6 1;
+#X connect 4 0 5 1;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 9 0 5 0;
+#X connect 9 0 10 1;
+#X connect 10 0 4 0;
+#X connect 10 0 3 0;
+#X connect 10 0 11 1;
+#X connect 11 0 4 1;
+#X connect 11 0 3 1;

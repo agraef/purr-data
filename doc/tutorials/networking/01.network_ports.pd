@@ -1,0 +1,24 @@
+#N canvas 10 40 620 460 10;
+#X obj 8 10 cnv 15 400 40 empty empty network_ports 20 12 0 24 -228992
+-66577 0;
+#X obj 49 418 pddp/pddplink http://en.wikipedia.org/wiki/TCP_and_UDP_port
+;
+#X text 10 63 In computer speak \, a "port" is an interface thru which
+data is sent and received. Network ports are numbered \, and can be
+1-65535. Network services are usually registered to use a specific
+network port. HTTP uses port 80 \, sending email uses port 25 \, IMAP
+uses port 143;
+#X text 10 140 Before using a network port for your application \,
+you should check to make sure that it isn't already used. You can see
+a list of registered ports in a file called "services". On UNIX-based
+systems \, its located in /etc/services. On Windows \, its located
+in C:/WINDOWS/system32/drivers/etc/services;
+#X text 10 231 On UNIX-based systems \, ports 0-1024 can only be used
+by the administrator account "root". Windows does not have this restriction.
+Most of the ports below 1024 are claimed anyway \, so its best to use
+port numbers higher than 1024;
+#X text 9 331 root-only;
+#X text 101 330 often used;
+#X text 255 330 mostly available;
+#X text 6 348 0.......1024............10000..........................65535
+;

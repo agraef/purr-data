@@ -1,0 +1,6 @@
+#N canvas 46 221 689 376 12;
+#X obj 148 1 inlet;
+#X obj 166 233 outlet;
+#X obj 166 132 expr rint($f1);
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

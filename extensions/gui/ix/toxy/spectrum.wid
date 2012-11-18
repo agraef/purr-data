@@ -1,0 +1,42 @@
+#console show
+package require Tkzinc 3.3
+package require zincGraphics
+namespace eval ::ix {
+    variable _
+    proc spectrum_sub {t sub} {
+	variable _
+	set _($t:use) $sub
+    }
+    proc spectrum_floats {path t w h args} {
+	variable _
+	set coords "0 $h"
+	set i 0
+	foreach num $args {
+	    incr i
+	    lappend coords $i $num
+	}
+	lappend coords $w $h
+	$path coords $t:sub$_($t:use) $coords
+
+    }
+    proc spectrum {path t w h bg c1 c2 t1 t2} {
+	if {[winfo exists $path.nob] != 1} {
+	    zinc $path.nob -render 1 -width $w -height $h -borderwidth 1 -lightangle 140 -backcolor $bg
+	    $path configure -width $w -height $h
+	    place $path.nob -anchor nw -relwidth 1 -relheight 1
+	    $path.nob remove *
+	    $path.nob add curve 1 {1 1 8 4} -filled 1 -linewidth 0 -fillcolor "$c1;$t1" -closed 1 -tags $t:sub1
+	    $path.nob add curve 1 {1 1 8 4} -filled 1 -linewidth 0 -fillcolor "$c2;$t2" -closed 1 -tags $t:sub2
+	}
+    }
+}
+#> spectrum frame
+#. -height 160 -width 480 -bd 1 -bg "#cccccc"
+#. #h 160 #w 480 #bg gray20 #ca yellow #cb red #ta 100 #tb 50
+#. @list ::ix::spectrum_floats .-.nob .| .#w .#h .#args
+#. @use ::ix::spectrum_sub .| .#1
+#. @cmd eval ".-.nob .#args"
+bind .- <Enter> {focus .-}
+bind .- <Leave> {focus .^.c}
+::ix::spectrum .- .| .#w .#h .#bg .#ca .#cb .#ta .#tb
+puts "spectrum .- .|"

@@ -1,0 +1,24 @@
+#N canvas 695 316 450 300 10;
+#X obj 147 192 list-in;
+#X obj 203 163 loadbang;
+#X msg 204 192 a b c d e f;
+#X obj 147 243 tgl 30 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 123 75 a;
+#X msg 158 73 c;
+#X msg 196 75 e;
+#X msg 234 75 g;
+#X msg 273 76 x;
+#X msg 88 115 1;
+#X text 12 19 [list-in] - checks for the existence of an item in a
+list;
+#X text 321 275 2009 Luke Iannini;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 1;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;

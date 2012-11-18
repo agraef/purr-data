@@ -1,0 +1,176 @@
+#N canvas 307 31 798 766 10;
+#X floatatom 83 224 5 0 0 0 - - -;
+#X floatatom 124 301 5 0 0 0 - - -;
+#X floatatom 143 336 5 0 0 0 - - -;
+#X msg 143 352 rel \$1;
+#X floatatom 31 700 5 0 0 0 - - -;
+#X floatatom 89 659 5 0 0 0 - - -;
+#X symbolatom 143 620 40 0 0 0 - - -;
+#X text 124 653 width;
+#X text 150 639 height;
+#X floatatom 112 641 5 0 0 0 - - -;
+#X floatatom 67 678 5 0 0 0 - - -;
+#X text 109 676 #frames;
+#X obj 146 321 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 0;
+#X text 129 222 Playback speed;
+#X obj 91 530 print enfoffile;
+#X text 189 352 Relative frame (0-1);
+#X text 233 448 Loop bounds;
+#X text 16 16 Description: A movie file manager and player.;
+#X msg 152 448 loop \$1 \$2;
+#X text 72 698 current frame;
+#X text 203 524 This outlet outputs a bang when the end of the file
+is reached.;
+#X obj 152 383 input.min.max_ 0 1;
+#X text 352 220 SUMMARY:;
+#X text 352 240 Inlet_1: Gemlist;
+#X text 353 254 Inlet_2: File managment;
+#X text 353 270 Inlet_3: PLayback rate;
+#X text 357 310 Outlet_1: Gemlist;
+#X text 352 285 Inlet_4: Frame select + loop bounds;
+#X text 357 325 Outlet_2: Current frame;
+#X text 358 341 Outlet_3: Movie info;
+#X text 358 355 Outlet_4: End of file (loop bang);
+#X msg 98 278 b&f \$1;
+#X obj 98 259 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 127 257 Play back & forth;
+#X obj 125 56 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X text 16 30 Version: 6;
+#N canvas 174 298 638 524 adding&getting_movie_files 0;
+#X obj 42 17 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 63 14 Bang will open a panel.;
+#X obj 120 274 file.path.top;
+#X msg 120 300 id crab \$1;
+#X msg 143 345 crab;
+#X text 196 199 Autogeneration of IDs: Once you load both videos above
+you can select them with the file names instead of the file paths!
+;
+#X text 181 343 Once the file is loaded with an ID \, simply send that
+ID to recall the file.;
+#X text 65 32 Also \, to add a video file \, you can simply send the
+file path. Once a video is loaded \, you can select that video by sending
+the full file path or simply the file name.;
+#X obj 42 477 outlet;
+#X text 248 277 ID METHOD: If you don't like the auto-creation of id's
+matching the file name \, you can add files with a custom id like the
+example on the left. Note that in this case \, you need to use the
+absolute path.;
+#X msg 69 124 medias/movies/mov0.mov;
+#X msg 93 154 medias/movies/sync00.mov;
+#X msg 108 201 mov0.mov;
+#X msg 108 224 sync00.mov;
+#X msg 120 250 medias/movies/mov0.mov;
+#X connect 0 0 8 0;
+#X connect 2 0 3 0;
+#X connect 3 0 8 0;
+#X connect 4 0 8 0;
+#X connect 10 0 8 0;
+#X connect 11 0 8 0;
+#X connect 12 0 8 0;
+#X connect 13 0 8 0;
+#X connect 14 0 2 0;
+#X restore 37 121 pd adding&getting_movie_files;
+#X text 166 299 Frame;
+#N canvas 444 462 622 303 loading_a_folder 0;
+#X obj 47 256 outlet;
+#X obj 48 139 file.folder.dump mov mpg mpeg avi;
+#X msg 49 88 medias/movies;
+#X text 148 87 <- This will add all the contents of medias/movies;
+#X text 118 165 You can then either recall movies by their short names
+or index numbers.;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 53 156 pd loading_a_folder;
+#X floatatom 63 185 5 0 0 0 - - -;
+#X text 105 177 You can also recall movies by their index number once
+they are loaded.;
+#X text 362 392 WARNING: The only way to load movies with the same
+name is by using the id method (i.e. id id_name absolute_file_path).
+See the adding&getting_movie_files subpatch for more info);
+#X text 463 618 --- AUTO MODE ---;
+#X obj 334 750 gemhead 51;
+#N canvas 235 546 450 300 loadmovie 0;
+#X msg 68 102 medias/movies/mov0.mov;
+#X obj 71 54 loadbang;
+#X obj 67 126 outlet;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X restore 418 748 pd loadmovie;
+#X obj 335 858 translateXYZ 2 -2 0;
+#X obj 336 881 square 1.5;
+#X obj 334 720 tgl 15 0 empty empty display 17 7 0 10 -262144 -1 -1
+0 1;
+#X obj 333 674 loadbang;
+#X msg 334 697 0;
+#X obj 334 837 pix_texture;
+#X floatatom 520 749 5 0 0 1 speed - -;
+#X obj 486 819 print auto-end_of_file;
+#X obj 490 847 print auto-info;
+#X floatatom 524 772 5 0 0 1 goto_frame - -;
+#X text 399 642 Auto mode decodes movies faster but you loose the following
+options:;
+#X text 427 670 - No back and forth.;
+#X text 429 683 - No relative frame selection.;
+#X text 428 697 - No loop bounds selection (loops the whole video).
+;
+#X text 430 712 - No current frame output.;
+#X obj 66 591 unpack f f f s f;
+#X floatatom 189 593 5 0 0 0 - - -;
+#X text 225 591 frame rate(fps) \, defaults to 20 with old versions
+of Gem;
+#X obj 334 802 gems.movies auto;
+#X obj 10 494 gems.movies;
+#X obj 23 156 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 10 815 rectangle;
+#X obj 125 80 gems.win 640 480 @fps 29.97;
+#X obj 10 89 gemhead;
+#X obj 360 775 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 10 769 gems.fit fill;
+#X obj 10 732 pix_texture;
+#X connect 0 0 64 2;
+#X connect 1 0 64 3;
+#X connect 2 0 3 0;
+#X connect 3 0 64 3;
+#X connect 12 0 2 0;
+#X connect 18 0 64 3;
+#X connect 21 0 18 0;
+#X connect 31 0 64 2;
+#X connect 32 0 31 0;
+#X connect 34 0 67 0;
+#X connect 36 0 64 1;
+#X connect 38 0 64 1;
+#X connect 39 0 64 1;
+#X connect 43 0 63 0;
+#X connect 44 0 63 1;
+#X connect 45 0 46 0;
+#X connect 47 0 43 0;
+#X connect 48 0 49 0;
+#X connect 49 0 47 0;
+#X connect 50 0 45 0;
+#X connect 51 0 63 2;
+#X connect 54 0 63 3;
+#X connect 60 0 10 0;
+#X connect 60 1 5 0;
+#X connect 60 2 9 0;
+#X connect 60 3 6 0;
+#X connect 60 4 61 0;
+#X connect 63 0 50 0;
+#X connect 63 2 53 0;
+#X connect 63 3 52 0;
+#X connect 64 0 71 0;
+#X connect 64 1 4 0;
+#X connect 64 2 60 0;
+#X connect 64 3 14 0;
+#X connect 65 0 64 1;
+#X connect 68 0 64 0;
+#X connect 69 0 63 1;
+#X connect 70 0 66 0;
+#X connect 70 1 66 1;
+#X connect 70 2 66 2;
+#X connect 71 0 70 0;

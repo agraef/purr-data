@@ -1,0 +1,7 @@
+NAME=pso
+
+SRCDIR=.
+
+PRECOMPILE=
+
+SRCS=main.cpp

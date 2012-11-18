@@ -1,0 +1,53 @@
+#N canvas 143 59 794 664 10;
+#X text 45 13 [aconnects] is [aconnect] with symbolic identifiers;
+#X obj 694 594 zexy;
+#X text 617 594 depends on;
+#X text 54 553 copyright (C) IOhannes m zmoelnig 2005;
+#X text 152 574 forum::fuer::umlaeute;
+#X text 152 591 institute of electronic music and acoustics \, IEM
+;
+#X text 154 607 university of music and dramatic arts \, graz \, austria
+;
+#X text 62 627 published under the GnuGPL v2.0;
+#X msg 212 347 reset;
+#X obj 116 233 l2s;
+#X obj 193 232 l2s;
+#X msg 193 209 Midi Through;
+#X msg 116 292 connect \$1 \$2 \$3 \$4;
+#X msg 116 210 Pure Data;
+#X obj 116 260 pack s s s 0;
+#X obj 142 190 l2s;
+#X msg 142 167 Pure Data Midi-Out 1;
+#X obj 116 131 t b b b;
+#X msg 205 400 devices;
+#X obj 199 460 print error-code;
+#X obj 116 483 print aconnect;
+#X msg 116 97 bang;
+#X text 159 86 connect "Pure Data" \, port "Pure Data Midi-Out 1" with
+"Midi Through" \, port 0;
+#X text 256 348 re-read the symbolic identifiers;
+#X text 265 401 normal messages to [aconnect] work as expected;
+#X obj 116 432 aconnects;
+#X text 258 295 this is the "connect" message with symbolic identifiers
+;
+#X obj 116 324 t a a;
+#X obj 156 324 print;
+#X text 315 237 i use [l2s] to make symbols with spaces;
+#X connect 8 0 25 0;
+#X connect 9 0 14 0;
+#X connect 10 0 14 2;
+#X connect 11 0 10 0;
+#X connect 12 0 27 0;
+#X connect 13 0 9 0;
+#X connect 14 0 12 0;
+#X connect 15 0 14 1;
+#X connect 16 0 15 0;
+#X connect 17 0 13 0;
+#X connect 17 1 16 0;
+#X connect 17 2 11 0;
+#X connect 18 0 25 0;
+#X connect 21 0 17 0;
+#X connect 25 0 20 0;
+#X connect 25 1 19 0;
+#X connect 27 0 25 0;
+#X connect 27 1 28 0;

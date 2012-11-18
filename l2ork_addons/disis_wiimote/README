@@ -1,0 +1,29 @@
+disis_wiimote by Ivica Ico Bukvic for L2Ork (2009-11) l2ork.music.vt.edu
+wiimote external for Pure-Data (Linux-only due to platform-specific bluetooth stack)
+Based on wiimote external by Mike Wozniewki (Feb 2007)
+
+Requires SVN snapshot of the CWiid library (version 0.6.00) by L. Donnie Smith
+- Snapshot used by L2Ork is available on L2Ork's software download page
+- This is available at http://www.abstrakraft.org/
+- Documentation is available at http://www.wiili.org/index.php/CWiid
+
+You must have the appropriate bluetooth packages installed and working on your system in order to connect to the Wiimote.
+
+To test this, type the following in a terminal:
+> hcitool scan | grep Nintendo
+
+you should get a response that looks something like:
+  00:19:1D:70:CE:72    Nintendo RVL-CNT-01
+
+you can also use 'lswm':
+
+> lswm -l
+
+you should get a response that looks something like:
+
+  Put Wiimotes in discoverable mode now (press 1+2)...
+  00:21:47:C6:4A:1A 0x002504 Nintendo RVL-CNT-01
+
+currently there are no known issues with using this external.
+
+NB: cwiid in its current state does not support all peripherals. Consequently, disis_wiimote comes with same limitations.

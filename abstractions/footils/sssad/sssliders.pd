@@ -1,0 +1,17 @@
+#N canvas 0 0 450 300 10;
+#X obj 127 122 hsl 60 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 5900 1;
+#X obj 127 137 hsl 60 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1700 1;
+#X obj 127 152 hsl 60 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 2400 1;
+#X obj 124 209 sssad \$1/s1;
+#X obj 124 231 sssad \$1/s2;
+#X obj 124 251 sssad \$1/s3;
+#X connect 0 0 3 1;
+#X connect 1 0 4 1;
+#X connect 2 0 5 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 2 0;
+#X coords 0 -1 1 1 95 70 1 110 100;

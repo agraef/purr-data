@@ -1,0 +1,129 @@
+#N canvas 146 67 812 610 10;
+#X msg 48 49 symbol pie;
+#X msg 67 101 pie;
+#X text 127 49 a symbol;
+#X floatatom 96 297 5 0 0 0 - - -;
+#X symbolatom 144 296 10 0 0 0 - - -;
+#X obj 49 317 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
+-1;
+#X obj 49 273 route bang float symbol list;
+#X obj 96 317 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 144 317 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 192 317 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 240 317 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
+-1 -1;
+#X msg 86 220 lots of pie;
+#X obj 142 538 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 233 538 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 370 96 symbol pie;
+#X msg 387 142 pie;
+#X text 449 96 a symbol;
+#X floatatom 438 299 5 0 0 0 - - -;
+#X symbolatom 504 298 10 0 0 0 - - -;
+#X obj 371 319 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144
+-1 -1;
+#X obj 438 319 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 504 319 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 572 319 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X text 28 566 [select] requires a atom type selector in order to understand
+the data (the float selector is implied);
+#X text 54 79 [route] says these are not symbols:;
+#X msg 74 121 word;
+#X msg 91 241 is this a list 2?;
+#X text 79 198 [route] says these are not lists:;
+#X msg 82 166 list lots of pie;
+#X text 203 167 a list;
+#X msg 397 161 word;
+#X msg 414 189 list lots of pie;
+#X text 541 189 a list;
+#X msg 415 214 lots of pie;
+#X msg 416 238 is this a list 2?;
+#X msg 474 444 symbol pie;
+#X msg 505 497 pie;
+#X msg 541 497 word;
+#X symbolatom 473 554 10 0 0 0 - - -;
+#X obj 473 571 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 616 486 (check Pd Window):;
+#X text 482 474 symbolatom says these are not symbols;
+#X obj 370 275 trigger bang float symbol list anything;
+#X obj 639 319 bng 15 250 50 0 empty empty anything -15 23 1 12 -262144
+-1 -1;
+#X text 390 122 [trigger] says these are not symbols:;
+#X text 360 16 The Pd window reports that it 'can only convert "s"
+to "b" or "a"'. So it considers the non-symbols of type "s" since they
+are converted only to "bang" and "anything". But type "s" is not the
+same as "symbol" because the symbol is converted to all of the types.
+;
+#X msg 132 473 element;
+#X msg 140 492 symbol element;
+#X obj 141 517 select element;
+#X obj 71 538 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 119 538 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 70 517 select 1;
+#X text 190 472 not a symbol or a float;
+#X text 15 444 [select] considers [element( as something other than
+a symbol or a float:;
+#X msg 433 512 bang;
+#X symbolatom 60 417 10 0 0 0 - - -;
+#X msg 60 367 symbol bang;
+#X text 148 368 this is a symbol \, not a bang;
+#X msg 76 390 symbol 5;
+#X text 145 391 this is a blank symbol;
+#X msg 377 365 symbol bang;
+#X text 465 366 this is a symbol \, not a bang;
+#X msg 393 388 symbol 5;
+#X text 462 389 this is a blank symbol;
+#X obj 376 416 print;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 8 0;
+#X connect 6 0 5 0;
+#X connect 6 1 3 0;
+#X connect 6 2 4 0;
+#X connect 6 3 9 0;
+#X connect 6 4 10 0;
+#X connect 11 0 6 0;
+#X connect 14 0 42 0;
+#X connect 15 0 42 0;
+#X connect 17 0 20 0;
+#X connect 18 0 21 0;
+#X connect 25 0 6 0;
+#X connect 26 0 6 0;
+#X connect 28 0 6 0;
+#X connect 30 0 42 0;
+#X connect 31 0 42 0;
+#X connect 33 0 42 0;
+#X connect 34 0 42 0;
+#X connect 35 0 38 0;
+#X connect 36 0 38 0;
+#X connect 37 0 38 0;
+#X connect 38 0 39 0;
+#X connect 42 0 19 0;
+#X connect 42 1 17 0;
+#X connect 42 2 18 0;
+#X connect 42 3 22 0;
+#X connect 42 4 43 0;
+#X connect 46 0 48 0;
+#X connect 46 0 51 0;
+#X connect 47 0 48 0;
+#X connect 48 0 12 0;
+#X connect 48 1 13 0;
+#X connect 51 0 49 0;
+#X connect 51 1 50 0;
+#X connect 54 0 38 0;
+#X connect 56 0 55 0;
+#X connect 58 0 55 0;
+#X connect 60 0 64 0;
+#X connect 62 0 64 0;

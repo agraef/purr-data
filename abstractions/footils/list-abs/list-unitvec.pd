@@ -1,0 +1,19 @@
+#N canvas 344 49 431 402 10;
+#X obj 221 167 s \$0-reset;
+#X obj 213 296 expr 1/sqrt($f1);
+#X obj 141 366 outlet;
+#X obj 141 145 inlet;
+#X obj 141 334 list-math *;
+#X obj 213 261 list-dotprod;
+#X obj 141 168 t a a a b;
+#X text 20 58 list-unitvec;
+#X text 38 78 make a unit vector out of any list \, ignoring non-float
+elements (i.e. normalize a list geometrically);
+#X connect 1 0 4 1;
+#X connect 3 0 6 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 6 0 4 0;
+#X connect 6 1 5 0;
+#X connect 6 2 5 1;
+#X connect 6 3 0 0;

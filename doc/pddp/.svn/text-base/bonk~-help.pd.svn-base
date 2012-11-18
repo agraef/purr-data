@@ -1,0 +1,285 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bonk~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 235 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 208 227 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS signal analysis;
+#X text 12 45 DESCRIPTION an attack detector for small percussion instruments
+;
+#X text 12 75 INLET_0 signal thresh minvel mask bang debug print debounce
+learn forget write read;
+#X text 12 105 OUTLET_0 list;
+#X text 12 125 OUTLET_1 list;
+#X text 12 205 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 300 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 460 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 559 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 244 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 45 491 428 101 Related_objects 0;
+#X obj 21 42 env~;
+#X obj 59 42 threshold~;
+#X obj 135 42 fiddle~;
+#X obj 191 42 sigmund~;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [bonk~] Related Objects;
+#X restore 100 597 pd Related_objects;
+#X obj 78 308 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 483 3 bonk~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/bonk~ -text
+pdpedia: bonk~;
+#X obj 234 135 spigot;
+#X obj 151 79 bonk~;
+#X obj 151 135 spigot;
+#X obj 200 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 283 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 234 165 print cooked;
+#X obj 151 165 print raw;
+#X text 47 133 enable printout:;
+#X obj 234 109 s bonk-cooked;
+#N canvas 36 80 458 532 Messenges_to_bonk~ 0;
+#X msg 11 222 bang;
+#X msg 11 355 learn 1;
+#X msg 11 401 learn 0;
+#X msg 11 276 print;
+#X msg 11 378 learn 10;
+#X msg 11 30 thresh 6 50;
+#X msg 11 180 mask 4 0.7;
+#X msg 11 121 minvel 10;
+#X msg 11 252 debug 0;
+#X obj 11 509 outlet;
+#X obj -1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 6 1 Sending Messages to [bonk~];
+#X msg 11 424 forget;
+#X msg 11 457 write templates.txt;
+#X msg 11 484 read templates.txt;
+#X msg 11 330 debounce 0;
+#X obj 0 300 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 6 300 Messages for Managing Templates;
+#X text 94 179 - describes how energy in each frequency band masks
+later energy in the band. Here the masking is total for 4 analysis
+periods and then drops by 0.7 each period.;
+#X text 72 221 - poll the current spectrum via "raw" outlet \, You
+can set a very high threshold if you don't want attacks mixed in.;
+#X text 72 252 - turn debugging on or off.;
+#X text 72 276 - print out all settings and templates.;
+#X text 92 330 - minimum time (msec) between attacks in learn mode
+;
+#X text 92 355 - forget all templates and start learning new ones.
+The argument gives the number of times you will hit each instrument
+(10 recommended.) Turn on the output volume above for audible feedback
+as you train Bonk. "Learn 0" exits learn mode.;
+#X text 92 423 - forget the last template. In Learn mode \, use "forget"
+to erase and record over a template.;
+#X text 136 457 - write templates to a file in text-editable format.
+;
+#X text 136 484 - read templates from a file.;
+#N canvas 49 297 428 101 minvel_units 0;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [bonk~] What units are used for "minvel"?;
+#X text 17 36 "minvel" is in the units of the velocity output \, which
+is the sum of the square roots of the amplitudes of the bands \, normalized
+so that 100 is an attack of amplitude about one.;
+#X restore 97 154 pd minvel_units;
+#N canvas 56 241 428 102 thresh_units 0;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [bonk~] What units are used for "thresh"?;
+#X text 17 36 "thresh" is in "growth" units \, which is the sum of
+the proportional growth in the 11 filter bands. Proportional growth
+is essentially the logarithmic time derivative.;
+#X restore 97 96 pd thresh_units;
+#X text 94 29 - set low and high thresholds. Signal growth must exceed
+the high one and then fall to the low one to make an attack. The unit
+is the sum of the proportional growth in the 11 filter bands. Proportional
+growth is essentially the logarithmic time derivative. (See subpatch
+below for units.);
+#X text 95 121 - minimum "velocity" to output (quieter notes are ignored).
+(See subpatch below for units.);
+#X connect 0 0 9 0;
+#X connect 1 0 9 0;
+#X connect 2 0 9 0;
+#X connect 3 0 9 0;
+#X connect 4 0 9 0;
+#X connect 5 0 9 0;
+#X connect 6 0 9 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 12 0 9 0;
+#X connect 13 0 9 0;
+#X connect 14 0 9 0;
+#X connect 15 0 9 0;
+#X restore 151 52 pd Messenges_to_bonk~;
+#N canvas 122 160 428 404 synth 0;
+#X obj 92 44 r bonk-cooked;
+#X obj 92 69 unpack;
+#X obj 92 119 * 12;
+#X obj 92 144 div 7;
+#X obj 92 94 + 1;
+#X obj 92 194 mtof;
+#X obj 92 244 osc~;
+#X obj 92 269 cos~;
+#X obj 92 169 + 47;
+#X obj 189 267 line~;
+#X obj 189 292 *~;
+#X obj 189 317 lop~ 500;
+#X obj 92 294 *~;
+#X obj 83 381 dac~;
+#X obj 233 185 dbtorms;
+#X obj 233 135 * 0.5;
+#X obj 233 160 + 50;
+#X obj 191 209 f;
+#X msg 153 179 bang;
+#X obj 238 103 inlet;
+#X obj 91 327 hip~ 5;
+#X msg 14 44 0 60;
+#X obj 92 219 sig~;
+#X msg 189 242 \$1 \, 0 200;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [bonk~] Demo Synthesizer;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 8 0;
+#X connect 4 0 2 0;
+#X connect 5 0 18 0;
+#X connect 5 0 22 0;
+#X connect 6 0 7 0;
+#X connect 7 0 12 0;
+#X connect 8 0 5 0;
+#X connect 9 0 10 0;
+#X connect 9 0 10 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 1;
+#X connect 12 0 20 0;
+#X connect 14 0 17 1;
+#X connect 15 0 16 0;
+#X connect 16 0 14 0;
+#X connect 17 0 23 0;
+#X connect 18 0 17 0;
+#X connect 19 0 15 0;
+#X connect 20 0 13 1;
+#X connect 20 0 13 0;
+#X connect 21 0 1 0;
+#X connect 22 0 6 0;
+#X connect 23 0 9 0;
+#X restore 359 145 pd synth;
+#X floatatom 359 122 0 0 0 0 - - -;
+#X msg 359 89 0;
+#X msg 390 89 90;
+#X text 392 108 output volume;
+#X text 406 123 (0-100);
+#X obj 78 350 cnv 17 3 100 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 308 list;
+#X text 98 350 list;
+#X text 147 187 In this patch \, after starting DSP \, you can print
+out the raw or cooked output using the two "spigots" or listen to a
+synthesizer output by raising its volume.;
+#X text 11 23 an attack detector for small percussion instruments;
+#X obj 114 52 adc~;
+#N canvas 96 417 428 145 more_info 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 10 33 The [bonk~] object takes an audio signal input and looks
+for "attacks" defined as sharp changes in the spectral envelope of
+the incoming sound. Optionally \, and less reliably \, you can have
+[bonk~] check the attack against a collection of stored templates to
+try to guess which of two or more instruments was hit. [bonk~] is described
+theoretically in the 1998 ICMC proceedings \, reprinted on crca.ucsd.edu/~msp
+.;
+#X text 7 1 [bonk~] More Info;
+#X restore 100 568 pd more_info;
+#X text 80 478 0-7;
+#X text 98 244 signal;
+#X text 168 244 - the incoming signal to analyize.;
+#X text 98 264 For all other messages see the the subpatch titled "Messenges_to_bonk~"
+in the example above.;
+#X text 168 308 - the raw spectrum of the attack \, provided as a list
+of 11 numbers giving the signal "loudness" in the 11 frequency bands
+used.;
+#X text 169 477 By default [bonk~]'s analysis is carried out on a 256-point
+window (6 msec at 44.1 kHz) and the analysis period is 128 samples.
+These and other parameters may be overridden using creation arguments
+as shown in the subpatch below:;
+#N canvas 29 64 507 520 creation_arguments 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 15 250 -npts 256;
+#X text 15 270 -hop 128;
+#X text 15 290 -nfilters 11;
+#X text 15 310 -halftones 6;
+#X text 15 430 -overlap 1;
+#X text 18 483 -firstbin 1;
+#X text 15 370 -minbandwidth 1.5;
+#X text 16 135 All frequency parameters are specified in 'bins'. One
+bin is the sample rate divided by the window size. The minimum possible
+bandwidth is 1.5 bins. Higher bandwidths give numerically more robust
+outputs.;
+#X text 17 37 [bonk~] uses a filterbank whose center frequencies are
+spaced equally at low frequencies and proportionally at high ones -
+i.e. \, they increase linearly \, then exponentially. They are determined
+by the filters' bandwidths and overlap. The bandwidths are specified
+proportionally to frequency but bounded below by a specified minimum.
+;
+#X text 7 2 [bonk~] Creation Arguments;
+#X text 16 202 Below are the creation arguments and their default values.
+Notice that all are specified as (flag \, value) pairs which may be
+given in any order:;
+#X text 137 248 - window size in points.;
+#X text 136 268 - analysis period ("hop size") in points.;
+#X text 137 288 - number of filters to use.;
+#X text 136 309 - desired bandwidth of filters in halftones \, effective
+in the exponentially spaced region. (At lower center frequencies the
+bandwidth is supported by the "minbandwidth" parameter below).;
+#X text 136 370 - minimum bandwidth in bins. If the bandwidth specified
+by "halftones" is smaller than this \, this value is used. This must
+be at least 1.5.;
+#X text 135 430 - overlap factor between filters. If 1 \, the filters
+are spaced to line up at their half-power points. Other values specify
+more or fewer filters proportionally.;
+#X text 135 483 - center frequency \, in bins \, of the lowest filter.
+The others are computed from this.;
+#X restore 100 534 pd creation_arguments;
+#X text 168 350 - the "cooked" output which gives an instrument number
+(counting up from zero) \, a "velocity" \, and a "brightness" value
+(the balancing point of the loudness distribution over the filter bank--
+nominally 11 filters). This "velocity" is the sum of the square roots
+of the amplitudes of the bands \, normalized so that 100 is an attack
+of amplitude of about 1 . The instrument number is significant only
+if [bonk~] has a "template set" in memory.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 12 0 17 0;
+#X connect 13 0 14 0;
+#X connect 13 1 12 0;
+#X connect 13 1 20 0;
+#X connect 14 0 18 0;
+#X connect 15 0 14 1;
+#X connect 16 0 12 1;
+#X connect 21 0 13 0;
+#X connect 23 0 22 0;
+#X connect 24 0 23 0;
+#X connect 25 0 23 0;
+#X connect 33 0 13 0;

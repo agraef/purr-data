@@ -1,0 +1,66 @@
+#N canvas 0 0 680 378 10;
+#X obj 48 338 dac~;
+#X msg 125 144 regtime \$1;
+#X obj 125 122 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 51 15 hsl 128 15 1e-04 1 1 0 empty empty dt -2 -6 0 8 -262144
+-1 -1 5100 0;
+#X msg 48 37 dt \$1;
+#X msg 80 84 e \$1;
+#X obj 83 65 hsl 128 15 -1 0 0 0 empty empty etilde -2 -6 0 8 -262144
+-1 -1 7800 0;
+#X floatatom 122 85 5 0 0 0 - - -;
+#X floatatom 106 40 5 0 0 0 - - -;
+#X msg 158 177 reset;
+#X msg 179 211 state;
+#X obj 48 309 him~ -0.3;
+#X text 194 13 set the timesteps for the 4th order runge-kutta approximation
+;
+#X text 215 143 use the real or the regulated time;
+#X text 218 176 randomize new values (warning! this may click!!!);
+#X text 231 210 returns the state of the system;
+#X text 224 66 set the etilde of the system if it's positive \, the
+electron will leave the atom (if you change it during dsp computation
+\, it will click);
+#X text 128 308 the optional argument is the etilde of the system returns
+mu \, mu velocity \, nu \, nu velocity \, x and y. Based on physical
+models of an atom in a magnetic field...;
+#X obj 608 207 loadbang;
+#X msg 608 271 muv 1.22293;
+#X msg 608 292 nu -0.065661 \;;
+#X msg 607 252 mu -1.43572 \;;
+#X obj 608 228 t b b;
+#X msg 608 318 \; pd dsp 1;
+#X obj 14 347 print~;
+#X obj 14 292 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 262 236 fiddle~;
+#X floatatom 263 273 5 0 0 0 - - -;
+#X connect 1 0 11 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 3 0 8 0;
+#X connect 4 0 11 0;
+#X connect 5 0 11 0;
+#X connect 6 0 5 0;
+#X connect 6 0 7 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 0 0;
+#X connect 11 0 24 0;
+#X connect 11 0 26 0;
+#X connect 11 1 0 1;
+#X connect 11 2 0 0;
+#X connect 11 3 0 1;
+#X connect 11 4 0 0;
+#X connect 11 5 0 1;
+#X connect 18 0 22 0;
+#X connect 19 0 11 0;
+#X connect 20 0 11 0;
+#X connect 21 0 11 0;
+#X connect 22 0 23 0;
+#X connect 22 1 21 0;
+#X connect 22 1 19 0;
+#X connect 22 1 20 0;
+#X connect 25 0 24 0;
+#X connect 26 3 27 0;

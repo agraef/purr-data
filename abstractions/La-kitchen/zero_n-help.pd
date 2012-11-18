@@ -1,0 +1,21 @@
+#N canvas 576 391 468 303 10;
+#X floatatom 138 140 5 0 0 0 - - -;
+#X floatatom 95 192 5 0 0 0 - - -;
+#X obj 95 166 zero_n 5;
+#X msg 95 108 0;
+#X msg 126 108 1;
+#X text 184 137 size: n;
+#X text 54 238 see:;
+#X obj 170 237 change_n;
+#X obj 101 237 one_n;
+#X text 46 19 This abstraction returns 1 if the last n datas were 0
+\,;
+#X text 46 41 else 0;
+#X text 100 85 input : boolean (0 or 1);
+#X text 338 235 la Kitchen;
+#X text 338 252 Charles Verron;
+#X text 337 220 2004_03_18;
+#X connect 0 0 2 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;

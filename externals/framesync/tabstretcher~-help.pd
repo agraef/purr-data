@@ -1,0 +1,34 @@
+#N canvas 232 120 595 379 10;
+#X text 165 227 frame;
+#X text 71 265 audio out;
+#X text 96 216 array;
+#X text 96 227 name;
+#X text 164 216 start;
+#X obj 357 279 soundfiler;
+#X obj 357 232 symbol \$0-array;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-array 20756 float 2;
+#X coords 0 1 20756 -1 200 140 1;
+#X restore 376 38 graph;
+#X obj 94 113 frameclock 400;
+#X obj 76 322 output~;
+#X msg 108 82 78;
+#X msg 77 82 55;
+#X text 134 80 <-- try jumping to a frame;
+#X obj 357 211 loadbang;
+#X obj 95 243 tabstretcher~ \$0-array 10 44;
+#X text 176 316 arguments: arrayname startframe# endframe#;
+#X msg 357 254 read -resize examples/sdf.wav \$1;
+#X text 246 227 frame;
+#X text 252 216 end;
+#X text 5 20 Plays a complete sound file til it ends \, synced up to
+the frame clock. The sound is stretched or shrunk based on the end
+frame number. It stays in sync when randomly accessing different frame
+numbers.;
+#X connect 6 0 16 0;
+#X connect 10 0 8 0;
+#X connect 11 0 8 0;
+#X connect 13 0 6 0;
+#X connect 14 0 9 0;
+#X connect 14 0 9 1;
+#X connect 16 0 5 0;

@@ -1,0 +1,87 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bag 3 12 0 18 -204280
+-1 0;
+#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 367 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 DESCRIPTION collection of numbers;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 65 INLET_0 float list flush clear;
+#X text 12 5 KEYWORDS control storage list_op;
+#X text 12 185 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 495 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 542 (none);
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 62 43 makenote;
+#X obj 22 43 poly;
+#X obj 123 43 list;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [bag] Related Objects;
+#X restore 102 598 pd Related_objects;
+#X obj 79 297 cnv 17 3 130 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 296 float;
+#X text 98 353 list;
+#X text 98 503 float;
+#X obj 79 504 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 440 cnv 17 3 45 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 439 float;
+#X text 98 383 flush;
+#X text 98 413 clear;
+#X text 168 383 - output all values one by one \, in the order they
+were received \, and clear the collection.;
+#X text 168 503 - upon sending the "flush" message to the left inlet
+\, [bag] will output each value in the order it was received.;
+#X text 99 570 You can use [bag] to mimic a sustain pedal \, for example.
+;
+#X msg 162 88 60 64;
+#X msg 213 88 60 0;
+#X msg 257 88 62 64;
+#X msg 304 88 62 0;
+#X obj 162 215 print;
+#X text 207 216 Output is in the printout window.;
+#X msg 304 134 clear;
+#X msg 303 111 flush;
+#X obj 162 185 bag;
+#X text 168 353 - a (value \, flag) pair is distributed to the two
+inlets. Lists with more than two elements will be truncated.;
+#X text 11 23 collection of numbers;
+#X obj 493 3 bag;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bag -text
+pdpedia: bag;
+#X text 168 413 - clear the collection.;
+#X text 167 439 - a float to the right inlet sets the "flag": if zero
+\, values to the left inlet will not be added to the collection. If
+nonzero \, values to the right inlet will be added to the collection.
+;
+#X text 168 296 - a float to the left inlet will be added to the collection
+if the last value the right inlet received was nonzero. If the last
+value the right inlet received was zero \, the float sent to the right
+inlet will be removed from the collection.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 21 0 29 0;
+#X connect 22 0 29 0;
+#X connect 23 0 29 0;
+#X connect 24 0 29 0;
+#X connect 27 0 29 0;
+#X connect 28 0 29 0;
+#X connect 29 0 25 0;

@@ -1,0 +1,132 @@
+#N canvas 587 49 833 785 10;
+#X text -13 -95 written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+) and Yves Degoyon ( ydegoyon@gmail.com );
+#X obj -17 -55 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 223 -15 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 223 12 metro 40;
+#X msg 313 39 close;
+#X obj 243 110 pdp_v4l;
+#X msg 300 7 open /dev/video0;
+#X obj 412 -20 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 412 7 metro 40;
+#X msg 493 26 close;
+#X msg 489 2 open /dev/video0;
+#X obj 433 106 pdp_v4l2;
+#X msg 498 81 format \$1;
+#X obj 499 59 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj 13 160 pdp_qt;
+#X obj 46 96 metro 40;
+#X msg 46 68 bang;
+#X msg 87 68 stop;
+#X obj 13 -1 openpanel;
+#X msg 13 24 open \$1;
+#X msg 13 -29 bang;
+#X msg 47 123 loop \$1;
+#X obj 127 123 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 127 41 loadbang;
+#X text 56 -26 playing a video file;
+#X text 253 -17 Camera input;
+#X obj 73 161 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj -17 198 cnv 15 621 400 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj 214 470 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 129 468 nightmode \$1;
+#X text 233 471 set nightmode;
+#X floatatom 160 318 5 0 0 0 - - -;
+#X floatatom 153 564 5 0 0 0 - - -;
+#X floatatom 189 565 5 0 0 0 - - -;
+#X obj 153 524 route 1 2 3 4 5 6 7 8 9 10;
+#X obj 14 494 pdp_opencv_hough_lines;
+#X text 322 523 position of each line;
+#X obj 153 544 unpack f f f f;
+#X text 156 578 X1;
+#X text 192 578 Y1;
+#X floatatom 226 565 5 0 0 0 - - -;
+#X floatatom 262 566 5 0 0 0 - - -;
+#X text 229 579 X2;
+#X text 265 579 Y2;
+#X msg 59 282 mode \$1;
+#X obj 155 253 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 1;
+#X text 176 253 CV_HOUGH_STANDARD;
+#X text 176 267 CV_HOUGH_PROBABILISTIC;
+#X text 177 283 CV_HOUGN_MULTI_SCALE;
+#X msg 71 315 threshold \$1;
+#X msg 85 345 minlength \$1;
+#X floatatom 171 346 5 0 0 0 - - -;
+#X floatatom 151 372 5 0 0 0 - - -;
+#X msg 100 371 gap \$1;
+#X text 194 372 gap betwwen lines ( default 10 \, for mode CV_HOUGH_PROBABILISTIC
+);
+#X text 208 343 minimum length ( default 30 \, for mode CV_HOUGH_PROBABILISTIC
+);
+#X floatatom 205 410 5 0 0 0 - - -;
+#X floatatom 227 442 5 0 0 0 - - -;
+#X msg 104 408 aresolution \$1;
+#X msg 122 440 dresolutyion \$1;
+#X text 271 438 distance resolution ( default 1 \, for mode CV_HOUGH_MULTI_SCALE
+);
+#X text 243 407 angle resolution ( default 1 \, for mode CV_HOUGH_MULTI_SCALE
+);
+#X obj 13 621 pdp_xv;
+#X msg 34 213 maxlines \$1;
+#X floatatom 113 214 5 0 0 0 - - -;
+#X text 154 210 maximum nuber of lines detected ( default : 10 );
+#X text -14 -110 pdp_opencv_hough_lines : Hough lines algorithm;
+#X text 199 314 threshold ( default 50 );
+#X text 64 235 Detection mode ( default : CV_HOUGH_PROBABILISTIC )
+;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 35 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 35 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 35 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 14 0;
+#X connect 20 0 18 0;
+#X connect 21 0 14 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 23 0 16 0;
+#X connect 26 0 14 1;
+#X connect 28 0 29 0;
+#X connect 29 0 35 0;
+#X connect 31 0 49 0;
+#X connect 34 0 37 0;
+#X connect 35 0 62 0;
+#X connect 35 1 34 0;
+#X connect 37 0 32 0;
+#X connect 37 1 33 0;
+#X connect 37 2 40 0;
+#X connect 37 3 41 0;
+#X connect 44 0 35 0;
+#X connect 45 0 44 0;
+#X connect 49 0 35 0;
+#X connect 50 0 35 0;
+#X connect 51 0 50 0;
+#X connect 52 0 53 0;
+#X connect 53 0 35 0;
+#X connect 56 0 58 0;
+#X connect 57 0 59 0;
+#X connect 58 0 35 0;
+#X connect 59 0 35 0;
+#X connect 63 0 35 0;
+#X connect 64 0 63 0;

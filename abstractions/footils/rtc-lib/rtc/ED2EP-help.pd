@@ -1,0 +1,49 @@
+#N canvas 319 164 519 501 10;
+#X obj 110 266 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X text 60 384 EP;
+#X msg 87 385;
+#X msg 87 325;
+#X obj 87 289 show;
+#X obj 87 149 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#N canvas 50 61 261 246 make-ED 0;
+#X obj 95 68 loadbang;
+#X obj 49 132 scramble;
+#X obj 49 184 outlet;
+#X obj 49 68 inlet;
+#X obj 49 157 list-apply round;
+#X obj 49 102 make-ED-scale 250 1000 6;
+#X connect 0 0 5 0;
+#X connect 1 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X restore 87 175 pd make-ED;
+#X obj 87 356 show;
+#X msg 301 26 Rhythm;
+#X obj 161 257 ED2EP 0;
+#X floatatom 205 236 4 0 0 1 offset - -;
+#X text 44 64 Converts ED (= entry delays) into EP (= entry points).
+Argument = offset (can be negative).;
+#X text 44 31 ED2EP;
+#X text 255 286 1997 by Karlheinz Essl;
+#X text 66 324 ED;
+#X text 107 150 generate a random series of ED's...;
+#X text 142 42 vs. 2;
+#X text 255 301 vs. 2: improved implementation;
+#X obj 87 224 t a a;
+#X text 47 100 NB: Only works with integers in Max \, but with floats
+as well in Pd.;
+#X msg 116 199 200 100 300 150.5 400;
+#X connect 0 0 4 1;
+#X connect 0 0 7 1;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 18 0;
+#X connect 7 0 2 0;
+#X connect 9 0 7 0;
+#X connect 10 0 9 1;
+#X connect 18 0 4 0;
+#X connect 18 1 9 0;
+#X connect 20 0 18 0;

@@ -1,0 +1,8 @@
+pd-l2ork TODO:
+*add names to preset_nodes and ability to dump current data in col/text? format
+*backport recent documents
+*implement zenity-like framework for GTK dialogs and color picker
+*filter and merge 0.43 branch improvements once the 0.43 branch solidifies
+
+pd-l2ork BOUNTIES:
+*Jonathan: variable message size

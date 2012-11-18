@@ -1,0 +1,15 @@
+#N canvas 0 0 549 398 10;
+#X text 50 66 Description: splits a path into a list.;
+#X obj 156 336 print;
+#X msg 166 232 2d/test/me;
+#X msg 325 253 .;
+#X msg 297 224 /;
+#X text 83 133 Inlet_1: Path.;
+#X text 83 151 Inlet_2: Separator(/ by default).;
+#X msg 54 232 2d.test.me;
+#X obj 150 285 file.path.explode /;
+#X connect 2 0 8 0;
+#X connect 3 0 8 1;
+#X connect 4 0 8 1;
+#X connect 7 0 8 0;
+#X connect 8 0 1 0;

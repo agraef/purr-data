@@ -1,0 +1,12 @@
+#N canvas 0 0 450 300 10;
+#X obj 249 210 dac~;
+#X obj 253 160 *~ 0.01;
+#X obj 119 179 print~;
+#X obj 113 129 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 127 112 Buzz~ @frequency 10 @amp 1 @harm 100;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 4 0 2 0;

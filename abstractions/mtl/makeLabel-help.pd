@@ -1,0 +1,19 @@
+#N canvas 332 188 556 399 10;
+#X obj 54 213 hsl 128 15 0 127 0 0 \$0s \$0r low:0dB -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 5 97 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 5 -12 cnv 15 430 20 empty empty empty 20 12 0 14 -216438 -66577
+0;
+#X obj 5 9 cnv 1 430 1 empty empty empty 4 -10 2 12 -66577 -1 0;
+#X obj 5 -12 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text 18 49 Contact: patrick ( at ) 11h11.com;
+#X text 18 33 Author: patrick s coulombe;
+#X text 19 15 Description: write gui value to label;
+#X text 23 120 Arguments: gui's send \, gui's receive \, loadbangvalue
+\, label \, typeofvalue;
+#X text 295 -8 Version: 2009;
+#X text 6 -9 :: makeLabel ::;
+#X obj 251 211 mtl/makeLabel \$0s \$0r 0 low dB;
+#X text 18 64 tags: ui;

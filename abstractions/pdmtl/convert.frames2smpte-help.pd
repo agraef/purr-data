@@ -1,0 +1,40 @@
+#N canvas 234 6 882 564 10;
+#X obj 433 39 cnv 15 420 250 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 441 88 Left inlet: duration in frames;
+#X text 445 147 Outlets from left to right: duration in hours:minutes:seconds:frames
+;
+#X text 443 118 Right inlet: frame rate (defaults to 25);
+#X text 441 54 Description: Converts a duration of frames into smpte
+time code.;
+#X floatatom 112 116 10 0 0 0 - - -;
+#X floatatom 134 252 5 0 0 1 Minutes - -;
+#X floatatom 24 253 5 0 0 1 Hours - -;
+#X floatatom 240 252 5 0 0 1 Seconds - -;
+#X floatatom 335 252 5 0 0 1 Frames - -;
+#X symbolatom 147 385 15 0 0 0 - - -;
+#X msg 231 145 24;
+#X obj 121 62 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 442 193 Author: February 2006 by oli44 (Tulle). Modified by
+Tof.;
+#X msg 282 164 30;
+#X text 441 223 Comments: Only works with integer frame rates for now.
+;
+#X obj 89 199 convert.frames2smpte;
+#X obj 147 347 convert.list2symbol;
+#X obj 155 301 pack f f f f;
+#X connect 5 0 16 0;
+#X connect 6 0 18 1;
+#X connect 7 0 18 0;
+#X connect 8 0 18 2;
+#X connect 9 0 18 3;
+#X connect 11 0 16 1;
+#X connect 12 0 5 0;
+#X connect 14 0 16 1;
+#X connect 16 0 7 0;
+#X connect 16 1 6 0;
+#X connect 16 2 8 0;
+#X connect 16 3 9 0;
+#X connect 17 0 10 0;
+#X connect 18 0 17 0;

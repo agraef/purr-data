@@ -1,0 +1,23 @@
+#N canvas 738 533 450 300 10;
+#X obj 106 109 openpanel;
+#X obj 111 71 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 100 227 print PATH;
+#X obj 215 219 print FILE;
+#X text 43 16 Description: Splits a file name from it's path.;
+#X msg 240 117 /;
+#X text 269 117 Separator (/ by default);
+#X msg 265 142 .;
+#X obj 100 169 file.path.split /;
+#X msg 40 108 /test;
+#X msg 32 146 /;
+#X msg 41 68 test;
+#X connect 0 0 8 0;
+#X connect 1 0 0 0;
+#X connect 5 0 8 1;
+#X connect 7 0 8 1;
+#X connect 8 0 2 0;
+#X connect 8 1 3 0;
+#X connect 9 0 8 0;
+#X connect 10 0 8 0;
+#X connect 11 0 8 0;

@@ -1,0 +1,224 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pipe 3 12 0 18 -204280
+-1 0;
+#X obj 0 148 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 202 494 386 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control time;
+#X text 12 45 DESCRIPTION delay a message - a message "delay line"
+;
+#X text 12 65 INLET_0 float list symbol pointer bang flush clear;
+#X text 12 105 INLET_R float;
+#X text 12 85 INLET_N float list symbol pointer bang;
+#X text 12 125 OUTLET_N float symbol pointer;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 401 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 456 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 104 322 428 267 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 23 43 delay;
+#X obj 67 43 timer;
+#X text 8 2 [pipe] Related Objects;
+#X text 20 181 The best places to find information about Pd's libraries
+is:;
+#X text 21 203 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 22 218 or;
+#X text 21 233 iem.kug.ac.at/pdb/;
+#X text 20 132 This object is offered in Pd only if you have downloaded
+and properly installed the appropriate library. It may or may not exist
+in a single library.;
+#X obj 17 105 pddp/helplink iemlib/t3_delay;
+#X restore 102 597 pd Related_objects;
+#X obj 78 157 cnv 17 3 160 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 181 float;
+#X obj 78 410 cnv 17 3 40 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 374 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#X obj 492 3 pipe;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/pipe -text
+pdpedia: pipe;
+#X text 98 206 symbol;
+#X text 98 232 pointer;
+#X text 98 259 list;
+#X text 98 156 bang;
+#X text 98 286 flush;
+#X text 98 304 clear;
+#X obj 78 328 cnv 17 3 40 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 373 float;
+#N canvas 78 30 428 522 Creation_arguments 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pipe] Related Objects;
+#X obj 23 61 pipe 1000;
+#X obj 20 189 pipe s 1000;
+#X text 93 189 A pipe for symbols.;
+#X obj 20 282 pipe f s 1000;
+#X text 115 282 A pipe for one float \, and one symbol.;
+#X msg 20 159 symbol cat;
+#X msg 92 159 symbol dog;
+#X symbolatom 20 210 10 0 0 0 - - -;
+#X symbolatom 95 303 10 0 0 0 - - -;
+#X floatatom 20 303 5 0 0 0 - - -;
+#X msg 31 261 100 dog;
+#X msg 20 240 42 cat;
+#X floatatom 21 386 0 0 0 0 - - -;
+#X floatatom 21 494 0 0 0 0 - - -;
+#X obj 21 412 t f f f;
+#X obj 49 443 + 1;
+#X obj 77 443 + 2;
+#X floatatom 64 493 0 0 0 0 - - -;
+#X floatatom 108 494 0 0 0 0 - - -;
+#X obj 21 469 pipe f f f 1000;
+#X text 19 329 Miller's original example shows how a list of floats
+can be delayed by [pipe]. Note that the [trigger] object is used to
+ensure that [pipe] receives the messages from right to left order.
+;
+#X text 18 25 1) If only one creation argument is used \, it defines
+the initial length of delay. [pipe] will then expect a float.;
+#X text 17 87 2) If two or more arguments are provided \, then all
+except for the last will define the data type to be expected at the
+corresponding inlet. The delay time is initialized by the LAST creation
+argument \, which can be changed by sending a new delay time to the
+rightmost inlet.;
+#X text 72 240 Messages can be sent as lists like this example.;
+#X connect 3 0 9 0;
+#X connect 5 0 11 0;
+#X connect 5 1 10 0;
+#X connect 7 0 3 0;
+#X connect 8 0 3 0;
+#X connect 12 0 5 0;
+#X connect 13 0 5 0;
+#X connect 14 0 16 0;
+#X connect 16 0 21 0;
+#X connect 16 1 17 0;
+#X connect 16 2 18 0;
+#X connect 17 0 21 1;
+#X connect 18 0 21 2;
+#X connect 21 0 15 0;
+#X connect 21 1 19 0;
+#X connect 21 2 20 0;
+#X restore 170 543 pd Creation_arguments;
+#X text 168 304 - forces [pipe] to forget all stored messages.;
+#X text 168 259 - a list to the left inlet will be distributed among
+[pipe]'s inlets.;
+#X obj 95 104 pipe 1000;
+#X floatatom 126 53 5 0 0 0 - - -;
+#X msg 95 53 1;
+#X floatatom 95 126 5 0 0 0 - - -;
+#X floatatom 162 53 5 0 0 0 - - -;
+#N canvas 80 25 428 536 More_info 0;
+#X obj 1 451 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 20 80 Like water running through a pipe \, it goes in one end...runs
+the length of the pipe...then comes out the other end.;
+#X floatatom 23 127 5 0 0 0 - - -;
+#X obj 23 148 pipe 20;
+#X floatatom 23 170 5 0 0 0 - - -;
+#X text 20 38 The left inlet accepts numbers \, symbols \, pointers
+\, messages \, and lists. The right inlet adjusts the delay time (the
+length of the pipe).;
+#X floatatom 69 127 5 0 0 0 - - -;
+#X text 111 126 Adjust the length of the pipe.;
+#X floatatom 23 298 0 0 0 0 - - -;
+#X obj 23 391 pipe 2000;
+#X text 62 296 numbers to store and output later;
+#X text 88 319 output all stored messages immediately;
+#X msg 34 323 flush;
+#X msg 51 369 clear;
+#X text 99 369 forget all stored messages;
+#X text 19 199 [pipe] accepts two very important methods.;
+#X text 20 219 1 "flush": forces [pipe] to output all stored messages
+immediately.;
+#X text 20 248 2 "clear": forces [pipe] to forget all stored messages.
+;
+#X obj 23 412 print;
+#X msg 44 344 bang;
+#X text 80 344 output the most recently stored message;
+#X text 20 267 3 "bang": repeat the most recently stored message again.
+;
+#X text 20 473 [pipe] schedules its output immediately after storing
+the incoming messages. This means that the delay time can be changed
+at runtime without effecting the messages that have already been scheduled
+for output.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 449 Rescheduling;
+#X text 8 2 [pipe] More Info;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 6 0 3 1;
+#X connect 8 0 9 0;
+#X connect 9 0 18 0;
+#X connect 12 0 9 0;
+#X connect 13 0 9 0;
+#X connect 19 0 9 0;
+#X restore 101 572 pd More_info;
+#X text 11 23 delay a message - a message "delay line";
+#X text 169 93 The [pipe] object stores a sequence of messages and
+outputs them after a specified delay time in milliseconds. You can
+change the delay time as you wish. The outputs are sorted automatically.
+;
+#X text 80 475 1) float;
+#X text 98 490 symbol atom;
+#X text 168 156 - a bang will send the most recently stored message
+to the outlet after the specified delay time.;
+#X text 168 181 - a float to the left inlet will be stored \, then
+sent to the outlet after the specified delay.;
+#X text 168 232 - if the first argument to [pipe] is "p" \, an incoming
+pointer will be output after the specified delay.;
+#X text 168 206 - if the first argument to [pipe] is "s" \, an incoming
+symbol will be output after the specified delay.;
+#X msg 51 53 flush;
+#X msg 9 53 clear;
+#X text 168 286 - forces [pipe] to immediately output all stored messages.
+;
+#X text 168 373 - the rightmost inlet takes a float value that specifies
+the length of the delay (in milliseconds).;
+#X text 168 327 - an additional inlet is created for each argument
+provided to [pipe] besides the delay time. This makes it possible to
+send lists through [pipe].;
+#X text 98 422 symbol;
+#X text 98 409 float;
+#X text 98 435 pointer;
+#X text 168 409 - pipe can output symbols \, floats \, pointers. One
+outlet is created for each argument provided (besides the final argument
+to specify delay time).;
+#X text 167 475 - (optional) creation arguments define the data type
+to be expected at each inlet: "f" for float (or a float \, like "41"
+\, to initialize the value) \, "s" for symbol \, and "p" for pointer.
+The final argument defines the initial length of delay. See the subpatch
+below for more about the arguments:;
+#X obj 9 79 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 98 327 float;
+#X text 98 340 symbol;
+#X text 98 353 pointer;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 25 0 28 0;
+#X connect 26 0 25 0;
+#X connect 27 0 25 0;
+#X connect 29 0 25 1;
+#X connect 39 0 25 0;
+#X connect 40 0 25 0;
+#X connect 49 0 25 0;

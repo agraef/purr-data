@@ -1,0 +1,11 @@
+#N canvas 356 218 450 300 10;
+#X msg 34 29 move 2 3;
+#X obj 42 132 print;
+#X msg 53 53 ?coord;
+#X text 325 257 dh20020401;
+#X msg 15 8 !coord 10 10;
+#X obj 42 107 atom my_first_atom 10 10;
+#X connect 0 0 5 0;
+#X connect 2 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;

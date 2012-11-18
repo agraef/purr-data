@@ -1,0 +1,8 @@
+#N canvas 10 40 624 464 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty exercise 20 12 0 24 -228992 -66577
+0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X text 11 63 Start with a image \, movie \, or live video and add
+some pixel effects of your choosing.;

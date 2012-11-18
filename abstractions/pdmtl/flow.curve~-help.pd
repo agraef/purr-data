@@ -1,0 +1,27 @@
+#N canvas 708 57 534 552 10;
+#X msg 419 169 _lin;
+#X msg 419 190 _linsqrt;
+#X msg 419 211 _sqrt;
+#X msg 419 231 _sin;
+#X msg 420 252 _sinhann;
+#X msg 421 274 _hann;
+#X obj 256 409 anal.scope_~ 1;
+#X obj 49 327 anal.scope_~ 1;
+#X obj 173 146 phasor~ 14.89;
+#X obj 48 280 -~ 0.5;
+#X obj 257 369 -~ 0.5;
+#X text 66 20 Description: Transforms a linear signal into a curve.
+;
+#X text 67 39 Comments: Wraps fade~ from iemlib.;
+#X obj 257 326 flow.curve~ _hann;
+#X connect 0 0 13 1;
+#X connect 1 0 13 1;
+#X connect 2 0 13 1;
+#X connect 3 0 13 1;
+#X connect 4 0 13 1;
+#X connect 5 0 13 1;
+#X connect 8 0 9 0;
+#X connect 8 0 13 0;
+#X connect 9 0 7 0;
+#X connect 10 0 6 0;
+#X connect 13 0 10 0;

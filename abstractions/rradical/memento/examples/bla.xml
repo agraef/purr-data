@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE pool SYSTEM "pool.dtd">
+<pool>
+<dir key="temp">
+<dir key="0">
+<value key="list1">105 183 62 67</value>
+</dir>
+</dir>
+<dir key="0">
+<value key="list1">0 0 0 0</value>
+</dir>
+<dir key="">
+<dir key="0">
+<value key="list1">0 0 0 0</value>
+</dir>
+</dir>
+<dir key="mydir">
+<dir key="0">
+</dir>
+</dir>
+</pool>

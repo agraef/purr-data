@@ -1,0 +1,12 @@
+#N canvas 616 200 562 345 10;
+#X obj 34 116 list.substitute 32 44;
+#X msg 34 62 76 32 99;
+#X obj 34 165 print;
+#X text 29 15 Description: Substitutes an element in a list for another.
+;
+#X msg 96 77 32;
+#X msg 151 75 44;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 4 0 0 1;
+#X connect 5 0 0 2;

@@ -1,0 +1,191 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header czero~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 206 491 389 META 0;
+#X text 12 185 LIBRARY internal;
+#X text 12 225 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 205 AUTHOR Miller Puckette;
+#X text 12 265 HELP_PATCH_AUTHORS Updated for Pd version-0.38. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 45 DESCRIPTION complex one-zero (non-recursive) filter \,
+raw;
+#X text 12 65 INLET_0 signal clear set;
+#X text 12 85 INLET_1 signal;
+#X text 12 105 INLET_2 signal;
+#X text 12 125 INLET_3 signal;
+#X text 12 145 OUTLET_0 signal;
+#X text 12 165 OUTLET_1 signal;
+#X text 12 245 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 487 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 543 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 63 281 428 309 Related_objects 0;
+#X obj 75 61 rzero~;
+#X obj 26 81 cpole~;
+#X obj 26 61 rpole~;
+#X obj 124 61 rzero_rev~;
+#X obj 75 81 czero~;
+#X obj 124 81 czero_rev~;
+#X text 202 61 real;
+#X text 201 82 complex;
+#X text 23 45 1-pole;
+#X text 72 45 1-zero;
+#X text 122 45 1-zero \, reversed;
+#X text 48 30 summary of raw filters:;
+#X text 22 185 User-friendly Filters;
+#X obj 25 214 lop~;
+#X obj 76 213 hip~;
+#X obj 128 214 bp~;
+#X obj 173 215 vcf~;
+#X obj 26 275 biquad~;
+#X text 22 251 Other Objects;
+#X text 22 114 Pd also provides a suite of user-friendly filters. This
+and other raw filters are provided for situations which the user-friendly
+ones can't handle. See Chapter 8 of http://crca.ucsd.edu/~msp/techniques
+for an introduction to the necessary theory.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [czero~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 434 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 297 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 297 signal;
+#X text 98 434 signal;
+#N canvas 21 185 498 375 test 0;
+#X obj 88 282 env~ 16384;
+#X floatatom 88 306 5 0 0 0 - - -;
+#X floatatom 420 107 4 -1000 1000 0 - - -;
+#X obj 285 310 dac~;
+#X obj 285 274 *~;
+#X obj 311 101 cos~;
+#X floatatom 237 46 5 0 0 0 - - -;
+#X obj 265 98 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 237 96 *~;
+#X obj 237 69 phasor~;
+#X floatatom 318 52 5 0 0 0 - - -;
+#X obj 318 75 / 1000;
+#X obj 344 102 -~ 0.25;
+#X obj 344 124 cos~;
+#X obj 420 126 / 1000;
+#X obj 310 152 *~;
+#X obj 344 152 *~;
+#X obj 164 282 env~ 16384;
+#X floatatom 164 306 5 0 0 0 - - -;
+#X obj 317 270 dbtorms;
+#X floatatom 318 250 5 0 0 0 - - -;
+#X obj 181 206 czero~;
+#X floatatom 137 118 4 -1000 1000 0 - - -;
+#X obj 28 112 cos~;
+#X obj 48 71 phasor~;
+#X floatatom 51 46 5 0 0 0 - - -;
+#X obj 61 113 -~ 0.25;
+#X obj 61 135 cos~;
+#X obj 137 137 / 1000;
+#X obj 27 163 *~;
+#X obj 61 163 *~;
+#X text 150 13 Stuff to test it:;
+#X connect 0 0 1 0;
+#X connect 2 0 14 0;
+#X connect 4 0 3 0;
+#X connect 4 0 3 1;
+#X connect 5 0 15 0;
+#X connect 6 0 9 0;
+#X connect 7 0 8 1;
+#X connect 8 0 21 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 11 0 5 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 16 0;
+#X connect 14 0 16 1;
+#X connect 14 0 15 1;
+#X connect 15 0 21 2;
+#X connect 16 0 21 3;
+#X connect 17 0 18 0;
+#X connect 19 0 4 1;
+#X connect 20 0 19 0;
+#X connect 21 0 0 0;
+#X connect 21 0 4 0;
+#X connect 21 1 17 0;
+#X connect 22 0 28 0;
+#X connect 23 0 29 0;
+#X connect 24 0 26 0;
+#X connect 24 0 23 0;
+#X connect 25 0 24 0;
+#X connect 26 0 27 0;
+#X connect 27 0 30 0;
+#X connect 28 0 30 1;
+#X connect 28 0 29 1;
+#X connect 29 0 21 0;
+#X connect 30 0 21 1;
+#X restore 102 552 pd test;
+#X text 98 312 clear;
+#X text 98 327 set;
+#X obj 78 347 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 347 signal;
+#X obj 78 372 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 372 signal;
+#X obj 78 397 cnv 17 3 17 empty \$0-pddp.cnv.let.3 3 5 9 0 16 -228856
+-162280 0;
+#X text 98 397 signal;
+#X obj 78 459 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 459 signal;
+#X obj 42 111 osc~ 100;
+#X msg 50 136 clear;
+#X obj 69 187 sig~;
+#X obj 96 209 sig~;
+#X obj 126 229 sig~;
+#X msg 57 162 set 0.6 0.8;
+#X obj 41 252 czero~ 0.9 0.4;
+#X obj 477 3 czero~;
+#X obj 450 20 pddp/pddplink http://wiki.puredata.info/en/czero~ -text
+pdpedia: czero~;
+#X text 179 152 The action of czero~ is:;
+#X text 238 173 y[n] = x[n] - a[n] * x[n-1];
+#X text 176 193 where y[n] is the output \, x[n] the input \, and a[n]
+the filter coefficient (all complex numbers). The filter is always
+stable.;
+#X text 175 248 The transfer function is H(Z) = 1 - aZ^-1.;
+#X text 11 23 complex one-zero (non-recursive) filter \, raw;
+#X text 168 297 - signal to filter (real part).;
+#X text 168 312 - clear internal state to zero.;
+#X text 168 327 - set internal state (real & imaginary parts).;
+#X text 168 347 - signal to filter ( imaginary part ).;
+#X text 168 372 - filter coefficient ( real part ).;
+#X text 168 397 - filter coefficient ( imaginary part ).;
+#X text 167 506 - (optional) filter coefficient (real part).;
+#X text 167 521 - (optional) filter coefficient (imaginary part).;
+#X text 80 506 1) float;
+#X text 80 521 2) float;
+#X text 84 53 [czero~] filters a complex audio signal (first two inlets)
+via a one-zero filter \, whose coefficients are controlled by creation
+arguments or by another complex audio signal (remaining two inlets).
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 100 572 pddp/pddplink ../3.audio.examples/H12.peaking.pd -text
+doc/3.audio.examples/H12.peaking.pd;
+#X connect 23 0 29 0;
+#X connect 24 0 29 0;
+#X connect 25 0 29 1;
+#X connect 26 0 29 2;
+#X connect 27 0 29 3;
+#X connect 28 0 29 0;

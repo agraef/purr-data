@@ -1,0 +1,52 @@
+# Makefile for MSVC++ 6
+#
+# usage:
+# to build run "make -f makefile.pd_win"
+#
+
+!include config-pd-win.txt
+
+# includes
+INCPATH=/I"$(MSVCPATH)\include" /I"$(PDPATH)\src" /I"$(FLEXTPATH)" /I"$(FLUIDPATH)\include"
+LIBPATH=/LIBPATH:"$(MSVCPATH)\lib" /LIBPATH:"$(PDPATH)\bin" /LIBPATH:"$(FLEXTPATH)"  /LIBPATH:"$(FLUIDPATH)"
+LIBS=pd.lib pthreadVC.lib flext-pdwin.lib fluidsynth.lib
+
+# compiler definitions and flags
+DEFS=/DFLEXT_SYS=2
+
+CFLAGS=/GR- /GX- /GD /G6 /Ox /ML
+
+# the rest can stay untouched
+# ----------------------------------------------
+
+NAME=fluid~
+
+SRCDIR=fluid
+SRCS=main.cpp
+
+
+all: $(OUTPATH) $(OUTPATH)\$(NAME).dll
+
+# remove build
+clean:
+	-del /q $(OUTPATH) > nul
+	-rmdir $(OUTPATH) > nul
+
+OBJS= $(SRCS:.cpp=.obj)
+
+$(OUTPATH):
+	-mkdir $(OUTPATH) > nul
+
+{$(SRCDIR)}.cpp{}.obj:
+	cl /c /LD $(CFLAGS) $(DEFS) $(INCPATH) $** /Fo$(OUTPATH)\$@
+
+$(OUTPATH)\$(NAME).dll: $(OBJS)
+	cd $(OUTPATH)
+	link /DLL /out:$(NAME).dll /INCREMENTAL:NO $** $(LIBS) $(LIBPATH)
+	@-del *.exp
+	@-del *.lib
+	cd ..
+!ifdef INSTPATH
+	@-if not exist $(INSTPATH) mkdir $(INSTPATH)
+	copy $@ $(INSTPATH) > nul
+!endif

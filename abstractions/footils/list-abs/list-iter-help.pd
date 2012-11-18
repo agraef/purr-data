@@ -1,0 +1,25 @@
+#N canvas 314 178 696 459 10;
+#X msg 118 97 list a b;
+#X msg 132 122 list c d e f;
+#X msg 192 225 3;
+#X msg 152 155 list a b c d e;
+#X msg 152 176 list f g;
+#X floatatom 202 245 5 0 0 0 - - -;
+#X floatatom 73 230 5 0 0 0 - - -;
+#X text 55 45 list-iter - group lists into sub-lists with size-limit
+;
+#X text 63 353 It's a clone of [zl iter];
+#X text 94 382 Also see;
+#X obj 161 382 list-group;
+#X obj 118 296 print list-iter;
+#X obj 118 268 list-iter 2;
+#X text 241 224 change size limit (must be at least 1);
+#X text 233 267 argument sets size limit. Default: 1;
+#X connect 0 0 12 0;
+#X connect 1 0 12 0;
+#X connect 2 0 12 1;
+#X connect 3 0 12 0;
+#X connect 4 0 12 0;
+#X connect 5 0 12 1;
+#X connect 6 0 12 0;
+#X connect 12 0 11 0;

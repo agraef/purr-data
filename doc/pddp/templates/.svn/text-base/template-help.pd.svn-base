@@ -1,0 +1,67 @@
+#N canvas 41 22 564 619 10;
+#X obj 4 569 cnv 15 550 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 4 -17 cnv 15 550 40 empty \$0-pddp.cnv.header myobjectclass
+3 12 0 18 -204280 -1 0;
+#X obj 3 239 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 15 12 0 13
+-228856 -1 0;
+#N canvas 779 22 494 344 META 0;
+#X text 12 25 KEYWORDS control number float store;
+#X text 12 45 LICENSE GPL;
+#X text 12 65 TEMPLATE template-help.pd v0.1;
+#X text 12 85 PLATFORM windows macosx gnulinux;
+#X text 12 105 DATATYPE float list;
+#X text 12 5 GENRE storage;
+#X text 12 125 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 165 RELEASE_DATE 2007-08-24;
+#X text 12 185 RELEASE_VERSION 0.40-test05;
+#X restore 504 571 pd META;
+#X obj 3 389 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlet 15 12 0
+13 -228856 -1 0;
+#X obj 3 439 cnv 3 550 3 empty \$0-pddp.cnv.argument argument 15 12
+0 13 -228856 -1 0;
+#X obj 3 489 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 15
+12 0 13 -228856 -1 0;
+#X obj 72 345 cnv 17 3 40 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 72 259 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 102 457 [float] accepts a single number as a creation argument
+which sets value that is stored.;
+#N canvas 309 454 609 478 guts 0;
+#X obj 117 95 textfile;
+#X msg 116 24 symbol template-HCS.pd;
+#X msg 116 54 read \$1 \, rewind \, bang;
+#X obj 117 141 trigger bang anything;
+#X obj 58 117 bang;
+#X obj 240 162 route #X;
+#X obj 240 183 route text;
+#X obj 240 250 route DESCRIPTION;
+#X obj 239 276 print;
+#X obj 140 277 print TEXT;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 7 0 8 0;
+#X restore 453 571 pd guts;
+#X obj 470 -14 myobjectclass;
+#X obj 419 6 pddp/pddplink http://wiki.puredata.info/en/myobjectclass
+-text pdpedia: myobjectclass;
+#X text 203 118 (put working examples here);
+#X text 15 6 description: short desription of what this objectclass
+does;
+#X text 102 258 BANG - bang means do it!;
+#X text 102 278 FLOAT - what does a number do?;
+#X text 102 298 LIST - what does a list do?;
+#X text 102 345 FLOAT - how about a float on the cold inlet?;
+#X text 102 318 POINTER - does this object handle pointers;
+#X text 103 407 FLOAT - what kind of output comes out of here?;
+#X text 58 524 (put links to other help patches \, about patches \,
+links to the HTML manual \, and/or external links);
+#X text 146 363 (if you want longer lines \, you can use [cyclone/comment])
+;

@@ -1,0 +1,32 @@
+#N canvas 366 106 751 365 10;
+#X obj 80 271 translateXYZ;
+#X obj 80 315 rectangle;
+#X obj 119 236 unpack f f f f;
+#X obj 81 116 gemhead;
+#X obj 310 88 gems.win @dimen 320 320;
+#X obj 310 66 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 74 14 Description: Collection of data for dynamic Gem shapes
+generation;
+#X text 74 45 Wraps cyclone's [coll];
+#X text 72 66 @author Alexandre Quessy;
+#X msg 313 158 1 0 0 1 1 \, 2 1 1 0.5 0.5 \, 3 -3 3 0.25 0.25;
+#X obj 80 150 gems.alpha.mode 6 1;
+#X obj 80 177 colorRGB 1 0.8 0.2 1;
+#X msg 313 180 delete 1;
+#X obj 80 205 gems.coll @file your.coll;
+#X obj 313 135 loadbang;
+#X connect 0 0 1 0;
+#X connect 2 0 0 1;
+#X connect 2 1 0 2;
+#X connect 2 2 1 1;
+#X connect 2 3 1 2;
+#X connect 3 0 10 0;
+#X connect 5 0 4 0;
+#X connect 9 0 13 1;
+#X connect 10 0 11 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 1;
+#X connect 13 0 0 0;
+#X connect 13 1 2 0;
+#X connect 14 0 9 0;

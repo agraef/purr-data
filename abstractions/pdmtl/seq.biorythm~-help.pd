@@ -1,0 +1,48 @@
+#N canvas 318 45 641 808 10;
+#X obj 28 178 *~;
+#X obj 13 61 noise~;
+#X obj 48 278 mix.out_~;
+#X obj 124 138 seq.biorythm~ 0.1 0 2;
+#X obj 256 542 snapshot~;
+#X obj 254 618 line;
+#X floatatom 232 670 5 0 0 0 - - -;
+#X obj 285 671 hsl 128 15 0 2 0 0 empty empty empty -2 -6 0 8 -260818
+-1 -1 0 1;
+#X obj 352 498 gemhead;
+#X obj 402 577 circle 2 80;
+#X msg 258 583 \$1 50;
+#X text 44 -73 Arguments : frequency \, minimum \, maximum;
+#X text 257 399 You can also use it as for data \, not sounds.;
+#X obj 132 94 convert.ms2freq;
+#X floatatom 134 49 5 0 0 0 - - -;
+#X obj 13 83 lop~ 1200;
+#X text 51 -45 Inlets : frequency \, minimum \, maximum \, reset phase
+(bang);
+#X obj 131 72 * 1000;
+#X text 176 47 seconds;
+#X text 159 169 Here \, we use it to control an amplitude.;
+#X obj 417 501 gems.win;
+#X obj 411 476 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 360 536 t b a;
+#X text 52 -24 Description: Generates a long lasting cycle that is
+inspired by biological rythms. Biological rythms are characterized
+by a duration (the period) a minimum and a maximum.;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 1 0 15 0;
+#X connect 3 0 0 1;
+#X connect 3 0 4 0;
+#X connect 4 0 10 0;
+#X connect 5 0 6 0;
+#X connect 5 0 7 0;
+#X connect 5 0 9 1;
+#X connect 8 0 22 0;
+#X connect 10 0 5 0;
+#X connect 13 0 3 0;
+#X connect 14 0 17 0;
+#X connect 15 0 0 0;
+#X connect 17 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 4 0;
+#X connect 22 1 9 0;

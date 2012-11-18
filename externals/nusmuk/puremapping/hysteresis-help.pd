@@ -1,0 +1,9 @@
+#N canvas 456 266 382 458 10;
+#X obj 30 61 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4200 1;
+#X obj 30 255 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4840 1;
+#X obj 30 218 hysteresis 0.2;
+#X text 84 28 add hysteresys to input data;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

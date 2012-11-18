@@ -1,0 +1,10 @@
+#N struct 1088template float x float y float z float q;
+#N canvas 249 214 444 162 10;
+#X floatatom 7 72 5 0 0 0 - - -;
+#X floatatom 7 124 5 0 0 0 - - -;
+#X text 7 3 Make some triangles by dragging the little vertical lines.
+Then loop through the sequence by changing the first number box. The
+lengths of the triangles will appear in the second number box.;
+#X obj 7 90 s-varseq 2 4;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;

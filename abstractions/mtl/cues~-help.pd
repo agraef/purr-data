@@ -1,0 +1,48 @@
+#N canvas 422 241 626 315 10;
+#X obj 25 1 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X msg 123 64 read \$1;
+#X text 281 9 You can also add messages manually;
+#X msg 284 50 clear \, add 10 AYE AYE \, add 3750 POPEYE \, add 6000
+is a sailor man;
+#X obj 123 41 openpanel;
+#X obj 123 19 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 284 28 loadbang;
+#X obj 25 122 print index;
+#X obj 105 123 print cue;
+#X text 385 151 Example: 10 AYE AYE;
+#X text 439 167 3750 POPEYE;
+#X text 439 182 6000 IS A SAILOR MAN;
+#X text 23 151 You can provide a cue file. Each line can contain one
+cue and must end with a carriage return.;
+#X obj 25 91 mtl/cues~;
+#X obj 25 64 line~;
+#X obj 25 21 t b b;
+#X obj 144 99 bng 15 250 50 0 empty empty Reset 0 -6 0 10 -262144 -1
+-1;
+#X msg 25 42 0 \, 10000 10000;
+#X obj 17 -70 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 22 -28 tags: timing;
+#X text 23 -68 description: Cues events to a number stream.;
+#X obj 193 19 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 193 41 savepanel;
+#X msg 193 64 write \$1;
+#X connect 0 0 15 0;
+#X connect 1 0 13 1;
+#X connect 3 0 13 1;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 13 0 7 0;
+#X connect 13 1 8 0;
+#X connect 14 0 13 0;
+#X connect 15 0 17 0;
+#X connect 15 1 13 1;
+#X connect 16 0 13 1;
+#X connect 17 0 14 0;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X connect 23 0 13 1;

@@ -1,0 +1,36 @@
+#console show
+namespace eval ::ix {
+    variable _
+    proc sp {p t} {
+	variable _
+	image create photo $t
+	$p configure -image $t
+	set _($t:loc) 0
+    }
+    proc spl {t args} {
+	variable _
+	incr _($t:loc)
+	if {$_($t:loc) > 511} {set _($t:loc) 0}
+	set draw {}
+	foreach pixel $args {
+	    set pixel [expr int($pixel)]
+	    lappend draw [format #%02x%02x%02x $pixel $pixel $pixel]
+	}
+	$t put $draw -to $_($t:loc) 0
+    }
+    proc spd {t args} {
+	variable _
+	incr _($t:loc)
+	if {$_($t:loc) > 511} {set _($t:loc) 0}
+	$t put $args -to $_($t:loc) 0
+    }
+}
+#> sp label
+#. @list ::ix::spl .| .#args
+#. @draw ::ix::spd .| .#args
+#. @clear .- delete 0 end
+#. @img eval ".| .#args"
+#. @cmd eval ".- .#args"
+bind .- <B1-Motion> {.| put #eeeeee -to %x %y}
+::ix::sp .- .|
+puts "setup"

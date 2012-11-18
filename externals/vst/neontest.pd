@@ -1,0 +1,14 @@
+#N canvas 297 500 458 308 12;
+#X msg 152 115 print;
+#X floatatom 235 37 5 0 0;
+#X obj 189 196 vst~ pro-52;
+#X obj 243 129 makenote 100 1000;
+#X obj 211 260 dac~;
+#X msg 89 138 edit;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 1 4 0;
+#X connect 2 2 4 1;
+#X connect 3 0 2 1;
+#X connect 3 1 2 2;
+#X connect 5 0 2 0;

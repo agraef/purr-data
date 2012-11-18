@@ -1,0 +1,64 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty inlets_and_outlets 20 12 0 24
+-228992 -66577 0;
+#N canvas 10 40 620 460 look 0;
+#X obj 24 34 inlet;
+#X obj 238 47 inlet;
+#X obj 469 41 inlet;
+#X obj 251 304 outlet;
+#X msg 469 175 I am the third inlet;
+#X msg 242 145 I am the second inlet;
+#X msg 24 94 I am the first inlet;
+#X connect 0 0 6 0;
+#X connect 1 0 5 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X restore 32 162 pd look inside me;
+#X obj 31 202 pddp/print_long;
+#X obj 32 129 bng 20 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 114 129 bng 20 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 197 129 bng 20 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#N canvas 10 40 620 460 look 0;
+#X obj 20 34 inlet;
+#X obj 334 33 inlet;
+#X obj 528 35 inlet;
+#X obj 20 120 trigger bang anything;
+#X obj 224 404 outlet;
+#X obj 224 266 mapping/tolist;
+#X connect 0 0 3 0;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 1;
+#X connect 3 1 5 0;
+#X connect 5 0 4 0;
+#X restore 199 376 pd look inside me;
+#X obj 198 416 pddp/print_long;
+#X msg 200 327 smokin!;
+#X msg 281 327 are;
+#X msg 363 327 you;
+#X text 17 259 The first inlet should be the hot inlet \, even in your
+own patches. There are times when you need to make other inlets hot
+\, but in general \, its a good rule to stick with.;
+#X obj 332 126 cnv 15 220 120 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 347 132 inlet;
+#X obj 348 218 outlet;
+#X text 402 132 take in data;
+#X text 361 173 do some stuff here;
+#X text 418 217 output data;
+#X text 14 72 When making your own objects and subpatches \, you can
+create inlets and outlets using [inlet] and [outlet].;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 1;
+#X connect 5 0 1 2;
+#X connect 6 0 7 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 1;
+#X connect 10 0 6 2;
+#X connect 13 0 14 0;

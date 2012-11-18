@@ -1,0 +1,7 @@
+#N canvas 1 57 403 148 10;
+#X text 14 9 Description: Catches 7 signals.;
+#X text 317 4 See;
+#X obj 320 21 catch~;
+#X text 14 24 tags: ambisonic;
+#X obj 16 103 mtl/ambiThrow7~ bar;
+#X obj 15 73 mtl/ambiCatch7~ bar;

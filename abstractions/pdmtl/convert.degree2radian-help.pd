@@ -1,0 +1,9 @@
+#N canvas 242 154 426 292 10;
+#X text 76 1 Description: Converts degrees into radians.;
+#X obj 88 140 convert.degree2radian;
+#X floatatom 88 74 5 0 0 0 - - -;
+#X floatatom 88 203 0 0 0 0 - - -;
+#X msg 135 75 180;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 4 0 1 0;

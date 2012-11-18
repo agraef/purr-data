@@ -1,0 +1,16 @@
+#N canvas 220 136 605 423 10;
+#X obj 190 245 print message;
+#X msg 190 58 list x.wav 44100;
+#X msg 223 118 x.wav 44100;
+#X msg 189 159 read \$1 \$2;
+#X msg 202 79 44100 x.wav;
+#X text 119 33 message arguments only work with lists.;
+#X text 318 56 declared list;
+#X text 314 79 implied list;
+#X text 307 118 undefined list;
+#X text 77 68 these work -->;
+#X text 68 120 this does not -->;
+#X connect 1 0 3 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;

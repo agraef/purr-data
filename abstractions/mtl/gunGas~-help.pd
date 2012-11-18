@@ -1,0 +1,18 @@
+#N canvas 117 420 308 258 10;
+#X obj 25 78 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 105 101 5 0 0 0 - - -;
+#X text 141 100 Reverb time;
+#X msg 73 101 5;
+#X msg 43 101 50;
+#X text 20 29 Comment: Taken from Andy Farnell's work.;
+#X text 21 14 Description: Generates part of a gun sound.;
+#X obj 25 139 mtl/gunGas~;
+#X obj 25 175 mtl/out~;
+#X text 21 44 tags: synthesize~;
+#X connect 0 0 7 0;
+#X connect 1 0 7 1;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 7 0 8 0;
+#X connect 7 0 8 1;

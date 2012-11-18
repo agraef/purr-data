@@ -1,0 +1,41 @@
+#N canvas 450 207 751 562 10;
+#X floatatom 107 426 5 0 0 0 - - -;
+#X floatatom 26 417 5 0 0 0 - - -;
+#X floatatom 48 280 10 0 0 0 - - -;
+#X text 15 437 BPM;
+#X msg 158 338 44100;
+#X text 95 442 Number of beats;
+#X obj 27 181 openpanel;
+#X obj 28 136 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X floatatom 244 426 10 0 0 0 - - -;
+#X text 238 445 frames per beat;
+#X text 50 -6 Description: Outputs the bpm and beat count of a loop.
+;
+#X obj 48 370 convert.smp2bpm;
+#X text 199 336 File samplerate (defaults to pd's samplerate);
+#X obj 48 252 soundfiler;
+#X obj 214 233 table \$0data;
+#X msg 48 232 read -resize \$1 \$2data;
+#X obj 48 212 pack s \$0;
+#X msg 459 41 patterns wav \, medias/sounds;
+#X obj 457 20 loadbang;
+#X text 319 213 BUGS: Outputs strange data when the sample is smaller
+than a beat.;
+#X text 320 254 WARNING: Sometimes the outputed bpm and number of beats
+will be twice or half the real values. That is because convert.smp2bpm
+can't make the difference between 80 bpm and 160 bpm for example.;
+#X obj 229 26 file.browser_;
+#X connect 2 0 11 0;
+#X connect 4 0 11 1;
+#X connect 6 0 16 0;
+#X connect 7 0 6 0;
+#X connect 11 0 1 0;
+#X connect 11 1 0 0;
+#X connect 11 2 8 0;
+#X connect 13 0 2 0;
+#X connect 15 0 13 0;
+#X connect 16 0 15 0;
+#X connect 17 0 21 1;
+#X connect 18 0 17 0;
+#X connect 21 0 16 0;

@@ -1,0 +1,59 @@
+#N canvas 217 86 800 557 10;
+#X obj -78 116 inlet;
+#X obj -59 266 + 1;
+#X obj 166 177 loadbang;
+#X obj 115 437 prepend register;
+#X obj -24 240 spigot;
+#X msg 25 216 1;
+#X obj -4 194 bang;
+#X msg -4 216 0;
+#X text -75 13 This is the abstraction registration system.;
+#X text -75 33 Usage: [register abstraction-name \$0];
+#X obj -59 340 prepend \$1;
+#X obj -78 364 prepend register-head;
+#X obj 166 293 f \$2;
+#X text -75 53 Start the registration process by sending register-head
+0 message.;
+#X text 241 215 For some reason four abstractions seem to send 5 register
+messages! This is because each sends out a value in the process of
+it counting! how to avoid this? Of course the newer value will over-write
+the older one \, but this is a bit ugly.;
+#X obj -78 139 route register-head \$1 layerNum;
+#X obj 81 260 f;
+#X obj 115 320 pack f f;
+#X obj 115 346 prepend \$1;
+#X msg 81 284 set \$1;
+#X text 240 155 Once this abstraction has been counted ignore "register-head"
+messages.;
+#X obj 63 402 prepend layerNum;
+#X obj 115 372 prepend N;
+#X obj 120 498 outlet;
+#X obj -78 474 outlet;
+#X text -18 474 how to Make sure that messages pass in order??;
+#X connect 0 0 15 0;
+#X connect 1 0 10 0;
+#X connect 1 0 17 0;
+#X connect 1 0 23 0;
+#X connect 2 0 5 0;
+#X connect 2 0 12 0;
+#X connect 3 0 24 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 1;
+#X connect 6 0 7 0;
+#X connect 7 0 4 1;
+#X connect 10 0 24 0;
+#X connect 11 0 24 0;
+#X connect 12 0 17 1;
+#X connect 15 0 4 0;
+#X connect 15 0 11 0;
+#X connect 15 1 6 0;
+#X connect 15 1 1 0;
+#X connect 15 2 16 0;
+#X connect 15 2 21 0;
+#X connect 15 3 24 0;
+#X connect 16 0 19 0;
+#X connect 17 0 18 0;
+#X connect 18 0 22 0;
+#X connect 19 0 22 0;
+#X connect 21 0 24 0;
+#X connect 22 0 3 0;

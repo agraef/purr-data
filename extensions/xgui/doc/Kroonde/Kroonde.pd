@@ -1,0 +1,8 @@
+#N canvas 24 49 665 135 12;
+#X obj 11 11 K_send;
+#X obj 11 41 K_panel;
+#X text 94 10 <- reception des informations udp;
+#X text 94 37 <- panneau de control des informations venant du kroonde
+;
+#X obj 11 71 K_konfig;
+#X text 95 70 <- configuration de l'addresse IP du kroonde;

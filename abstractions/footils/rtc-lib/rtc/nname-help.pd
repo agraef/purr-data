@@ -1,0 +1,78 @@
+#N canvas 8 46 726 445 10;
+#X obj 405 198 umenu 1 64;
+#X text 24 44 'nname' turns an int in its inlet into a symbol representing
+the note name of the corresponding MIDI note. Note that nname even
+works for i > 127! The argument allows you to choose the display mode:
+;
+#X text 24 17 nname;
+#X msg 499 19 Harmony;
+#N canvas 184 47 391 221 how-to-customize... 0;
+#X text 31 43 The appearance of the note names can be customized. For
+this reason \, you have to open the nname-object with ResEdit. Then
+you click on the STR# icon and select the resource with ID 128 The
+first 12 strings label the capital note names \, the second 12 their
+lower-case representation.;
+#X text 31 131 By this it is possible to change the note names e.g.
+to french or italian conventions: do re mi fa so... with dièse/diesis
+and bémol/bemolle.;
+#X restore 315 123 pd how-to-customize...;
+#X text 40 131 2 - displays MIDI note names;
+#X text 40 117 1 - displays note names C4;
+#X text 40 102 0 - displays pitch classes;
+#X text 40 145 3 - displays german note names;
+#X text 24 166 see also:;
+#X msg 159 166 showchord;
+#X text 24 382 1993 by Orm Finnendahl;
+#X text 91 339 pitch class;
+#X text 179 339 note names C4;
+#X text 270 339 MIDI note names;
+#X text 358 339 german note names;
+#X obj 179 288 show;
+#X obj 179 260 nname 1;
+#X obj 270 288 show;
+#X obj 270 260 nname 2;
+#X obj 358 260 nname 3;
+#X obj 358 288 show;
+#X msg 36 224 about;
+#X text 139 226 MIDI key number;
+#X floatatom 90 224 0 0 0 0 - - -;
+#X obj 90 260 nname 0;
+#X obj 90 288 show;
+#X msg 90 199 60;
+#X msg 90 166 shownote;
+#X msg 90 318;
+#X msg 179 318;
+#X msg 358 318;
+#X msg 270 318;
+#X obj 131 289 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 220 289 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 311 289 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 399 289 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 405 224 0 0 0 0 - - -;
+#X text 434 226 display mode;
+#X text 131 24 (external - FAT);
+#X text 24 396 FAT implementation by Richard Dudas (IRCAM \, Paris)
+;
+#X connect 16 0 30 0;
+#X connect 17 0 16 0;
+#X connect 18 0 32 0;
+#X connect 19 0 18 0;
+#X connect 20 0 21 0;
+#X connect 21 0 31 0;
+#X connect 22 0 25 0;
+#X connect 24 0 25 0;
+#X connect 24 0 17 0;
+#X connect 24 0 19 0;
+#X connect 24 0 20 0;
+#X connect 25 0 26 0;
+#X connect 26 0 29 0;
+#X connect 27 0 24 0;
+#X connect 33 0 26 1;
+#X connect 34 0 16 1;
+#X connect 35 0 18 1;
+#X connect 36 0 21 1;
+#X connect 37 0 20 1;

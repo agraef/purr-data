@@ -1,0 +1,72 @@
+2005-05-00	Carmen Rocco	<user@whats-your.name>
+
+	* VST support is gone, actually, it was never here, but removed some stuff to clean it up, VST? detour to /externals/grill/vst/
+	* you can create the plugin without arguments, it will default to 2 channels
+	
+	new methods:
+	* active: enable or disable the plugin
+	* listplugins: lists all your LADSPA plugins...
+	* info: info on the current plugin, like assignable params, etc.
+	* plug: load a new plug
+	
+2001-04-04  Jarno Seppänen  <jams@cs.tut.fi (Jarno Seppanen)>
+
+	* Released version 0.2
+
+	* plugin~_ladspa.c (plugin_tilde_ladspa_set_control_input_by_name):
+	control port name search bug fix
+
+2001-03-10  Jarno Seppänen  <jams@cs.tut.fi>
+
+	* plugin~_ladspa.c (plugin_tilde_ladspa_set_control_input_by_index):
+	implemented control port value bounding
+
+	* plugin~*.[ch]: added possibility to set control values by number
+	in addition to setting then by name; this effectively enables a
+	way around the problems Pd has with spaces
+
+2001-03-05  Jarno Seppänen  <jams@cs.tut.fi>
+
+	* Makefile.am: made plugin~ to install to "extra/plugin~" under
+	the Pd installation tree
+
+	* win: added new subdirectory "win" for MSVC-related files
+
+2001-02-27  Jarno Seppänen  <jams@cs.tut.fi>
+
+	* plugin~_vst.[ch]: implemented VST plug-in hosting
+
+	* plugin~_ladspa.[ch]: separated LADSPA plug-in hosting
+
+2001-02-26  Jarno Seppänen  <jams@cs.tut.fi>
+
+	* vst: added new subdirectory "vst" for VST SDK files
+
+	* ladspa: moved LADSPA SDK header "ladspa.h" to subdirectory "ladspa"
+
+2000-06-15  Jarno Seppänen  <jams@cs.tut.fi>
+
+	* Released initial release 0.1
+plugin~ NEWS --- history of changes.
+
+Overview of changes in version 0.2, released April 4 2001
+=========================================================
+* control/parameter value setting by parameter number (starting with a
+  '#' character) in addition to using parameter name
+* LADSPA: Implemented control value bounding
+* Support for VST 1.0 (processReplacing()) plug-ins under Windows
+* LADSPA bug fixes under Linux (huge thanks to Linium <intent@club-internet.fr>
+  for quality assurance, merci! :)
+
+Overview of changes in version 0.1, released June 15 2000
+=========================================================
+* Initial release
+* Control ports mapped to Pd asynchronous messages.  Input controls
+  are changed on incoming messages and outgoing messages are sent on
+  changes in output control values.
+* Audio ports mapped to Pd signal in/outlets
+* Searching for plug-ins in all LADSPA libraries
+* Resetting the plug-in's internal state on incoming "reset" messages
+* Printing plug-in information on incoming "print" messages
+* Supports out-of-place processing for plug-ins that need this
+* Distributed under the GNU General Public License

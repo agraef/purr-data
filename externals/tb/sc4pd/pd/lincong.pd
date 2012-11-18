@@ -1,0 +1,17 @@
+#N canvas 257 167 708 300 10;
+#X obj 132 247 dac~;
+#X obj 228 253 print~;
+#X obj 309 229 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 286 73 LinCong 100 103 140 120002;
+#X obj 267 32 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 295 110 10 0 0 0 - - -;
+#X obj 577 226 block~ 64;
+#X obj 22 142 LinCong~ 13437 1433.34 1.34233e+06 4.33243e+09;
+#X connect 2 0 1 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 7 0 0 0;
+#X connect 7 0 0 1;
+#X connect 7 0 1 0;

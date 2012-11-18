@@ -1,0 +1,23 @@
+#N canvas 0 18 378 475 10;
+#X text 20 51 turn DSP calculation off & on;
+#X msg 98 94 \; pd dsp 0 \;;
+#X msg 172 94 \; pd dsp 1 \;;
+#X msg 24 301 \; pd quit \;;
+#X floatatom 26 73 1 0 1 0 - - -;
+#X obj 26 123 s pd;
+#X msg 26 97 dsp \$1;
+#X msg 25 218 \; pd audiostatus \;;
+#X text 22 194 same as "DIO errors";
+#X text 21 356 There are many more that i don't know :-(;
+#X text 25 12 Here are some messages we can send to pd.;
+#X text 21 275 Quit pd (WARNING);
+#N canvas 437 191 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 65 DESCRIPTION sending messages to a pd instance;
+#X text 12 25 KEYWORDS control pd_op nonlocal;
+#X text 12 45 LICENSE public domain;
+#X restore 317 443 pd META;
+#X connect 4 0 6 0;
+#X connect 6 0 5 0;

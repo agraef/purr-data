@@ -1,0 +1,18 @@
+#N canvas 428 278 641 354 10;
+#X obj 164 188 rota;
+#X msg 164 130 bang;
+#X floatatom 194 214 5 0 0 0 - - -;
+#X msg 204 130 a b c d e f;
+#X obj 292 151 b;
+#X msg 292 130 restart;
+#X text 97 76 On every bang into first inlet cycle up and down through
+the list sent into the second inlet. Third inlet resets.;
+#X text 249 214 Outlet 2: current index (zero-based);
+#X obj 164 238 print ROTA;
+#X text 162 260 Outlet 1: current list element.;
+#X connect 0 0 8 0;
+#X connect 0 1 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 1;
+#X connect 4 0 0 2;
+#X connect 5 0 4 0;

@@ -1,0 +1,23 @@
+# xsample - extended sample objects for Max/MSP and PD (pure data)
+#
+# Copyright (c)2001-2005 Thomas Grill (gr@grrrr.org)
+# For information on usage and redistribution, and for a DISCLAIMER OF ALL
+# WARRANTIES, see the file, "license.txt," in this distribution.  
+#
+# more information on http://grrrr.org/ext
+# ------------------------------------------------------------------------
+#
+# This file contains information for the building process
+#
+# DO NOT EDIT!!
+#
+# ------------------------------------------------------------------------
+
+NAME=xsample
+
+SRCDIR=source
+
+PRECOMPILE=prefix.h
+
+SRCS=main.cpp play.cpp groove.cpp record.cpp inter.cpp
+HDRS=prefix.h main.h inter.h

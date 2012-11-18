@@ -1,0 +1,474 @@
+#N canvas 37 32 559 673 10;
+#X obj 0 640 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header route 3 12 0 18
+-204280 -1 0;
+#X obj 0 240 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 229 494 392 META 0;
+#X text 12 85 PLATFORM windows macosx gnulinux;
+#X text 12 165 LIBRARY internal;
+#X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 35 LICENSE SIBSD;
+#X text 12 185 AUTHOR Miller Puckette;
+#X text 12 245 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.38.4 by Dave Sabine and Hans-Christoph Steiner as part of
+a project called pddp proposed by Krzysztof Czaja to build comprehensive
+documentation for Pd. Jonathan Wilkes revised the patch to conform
+to the PDDP template for Pd version 0.42.;
+#X text 12 105 INLET_0 anything;
+#X text 12 125 OUTLET_N anything;
+#X text 12 145 OUTLET_R anything;
+#X text 12 5 KEYWORDS control needs_work list_op symbol_op list_op
+anything_op;
+#X text 12 225 RELEASE_DATE 1997;
+#X text 12 55 DESCRIPTION route a message according to the selector
+or first element;
+#X restore 500 642 pd META;
+#X obj 0 387 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 516 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 612 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 74 482 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [route] Related Objects;
+#X obj 22 43 select;
+#X obj 72 43 spigot;
+#X obj 123 43 moses;
+#X restore 102 642 pd Related_objects;
+#X obj 78 249 cnv 17 3 125 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 396 cnv 17 3 17 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
+-162280 0;
+#X obj 482 3 route;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/route -text
+pdpedia: route;
+#X obj 187 113 route 0 1;
+#X msg 187 61 0 12;
+#X msg 225 61 1 13;
+#X msg 263 61 2 14;
+#X obj 238 156 print rejection_outlet;
+#X obj 187 200 print left_outlet;
+#X obj 238 136 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 212 178 print middle_outlet;
+#X obj 212 136 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 187 136 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 300 61 7 17;
+#N canvas 11 63 516 509 float_mode 0;
+#X text 89 271 float;
+#X text 89 365 list;
+#X text 89 325 symbol;
+#X text 89 455 pointer;
+#X text 139 455 - a pointer is always sent to the rightmost outlet.
+;
+#X text 89 438 bang;
+#X text 139 271 - the incoming value is compared to the creation argument(s).
+If there is a match \, a bang is sent to the outlet corresponding to
+the matching creation argument. If there is no match the input is sent
+to the rightmost outlet.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [route] Message Handling in "Float Mode";
+#X obj 1 261 cnv 3 500 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 70 270 cnv 17 3 225 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 138 438 - a bang will be sent to the rightmost inlet.;
+#X text 88 481 All other messages will be sent to the rightmost outlet.
+;
+#X msg 141 50 2;
+#X msg 148 72 1 2 3;
+#X obj 141 167 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 162 167 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 169 116 something else;
+#X obj 204 167 print rejection_outlet;
+#X obj 141 233 print out0;
+#X obj 162 211 print out1;
+#X text 50 26 For "float mode" \, the first argument must be a float.
+;
+#X obj 141 142 route 1 2 3;
+#X obj 183 189 print out2;
+#X obj 183 167 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 158 94 3 dog night;
+#X text 139 325 - the symbol is compared to the creation arguments
+\, and a bang is sent to the corresponding outlet if there is a match.
+;
+#X text 139 365 - the first element of the list is compared to the
+creation argument(s). If there is a match \, the first element is removed
+from the list \, and the remaining list is sent to the outlet corresponding
+to the matching creation argument. If there is no match the input is
+sent to the rightmost outlet.;
+#X connect 13 0 22 0;
+#X connect 14 0 22 0;
+#X connect 17 0 22 0;
+#X connect 22 0 15 0;
+#X connect 22 0 19 0;
+#X connect 22 1 16 0;
+#X connect 22 1 20 0;
+#X connect 22 2 23 0;
+#X connect 22 2 24 0;
+#X connect 22 3 18 0;
+#X connect 25 0 22 0;
+#X restore 171 306 pd float_mode;
+#X text 98 249 anything;
+#X text 168 249 - [route] handles its input in 3 different "modes"
+\, depending on what the creation arguments are. Click the subpatches
+below to see how message types are handled under each mode.;
+#N canvas 15 22 516 599 selector_mode 0;
+#X text 88 548 pointer;
+#X text 138 548 - a pointer is always sent to the rightmost outlet.
+;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 0 389 cnv 3 500 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 69 398 cnv 17 3 255 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 68 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 101 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 203 262 print rejection_outlet;
+#X msg 68 59 der;
+#X obj 68 349 print out0;
+#X obj 101 327 print out1;
+#X text 7 1 [route] Message Handling in "Selector Mode";
+#X msg 92 690 foo;
+#X msg 101 718 symbol foo;
+#X obj 169 283 print out3;
+#X obj 92 840 print out0;
+#X obj 133 818 print out1;
+#X text 120 690 the selector "foo" matches the first argument;
+#X text 171 718 the selector "symbol" matches the second argument;
+#X text 88 398 bang;
+#X text 138 398 - if one of the creation arguments is "bang" \, then
+a bang will be sent out the corresponding outlet.;
+#X text 138 428 - if one of the creation arguments is "float" \, then
+an incoming float will be sent out the corresponding outlet.;
+#X text 88 428 float;
+#X text 88 458 list;
+#X text 138 458 - if one of the creation arguments is "list" \, then
+two behaviors are possible:;
+#X text 138 484 a) if the first element is a float \, the list is sent
+out the corresponding outlet.;
+#X text 138 509 b) if the first element is a symbol \, the "list" selector
+is removed \, and the remaining message is sent out the corresponding
+outlet.;
+#X text 88 568 symbol;
+#X text 138 568 - if one of the creation arguments is "symbol" \, then
+an incoming symbol will be sent out the corresponding outlet.;
+#X text 87 596 All other messages - the selector of the incoming message
+is compared to the creation argument(s). If there is a match \, the
+selector is stripped and the remaining message is sent to the corresponding
+outlet. If there is no match the input is sent to the rightmost outlet.
+;
+#X text 91 667 Beware! All this can be confusing at times...;
+#X msg 84 103 das;
+#X obj 135 305 print out2;
+#X obj 135 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 169 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 108 182 doh;
+#X obj 203 244 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 74 81 die 41;
+#X text 49 36 In selector mode \, all creation arguments should be
+symbols.;
+#X obj 68 221 route der die das float;
+#X msg 93 125 float 41;
+#X msg 103 153 41;
+#X text 135 147 (Remember: a single float "n" in a message or object
+box is shorthand for "float n");
+#X text 134 181 sent to the rightmost outlet (the "rejection outlet")
+;
+#X obj 92 774 route foo symbol list;
+#X obj 174 796 print out2;
+#X msg 128 744 2 3 four;
+#X text 189 744 an implicit list-- matches the third argument;
+#X connect 8 0 39 0;
+#X connect 12 0 44 0;
+#X connect 13 0 44 0;
+#X connect 31 0 39 0;
+#X connect 35 0 39 0;
+#X connect 37 0 39 0;
+#X connect 39 0 5 0;
+#X connect 39 0 9 0;
+#X connect 39 1 6 0;
+#X connect 39 1 10 0;
+#X connect 39 2 32 0;
+#X connect 39 2 33 0;
+#X connect 39 3 14 0;
+#X connect 39 3 34 0;
+#X connect 39 4 7 0;
+#X connect 39 4 36 0;
+#X connect 40 0 39 0;
+#X connect 41 0 39 0;
+#X connect 44 0 15 0;
+#X connect 44 1 16 0;
+#X connect 44 2 45 0;
+#X connect 46 0 44 0;
+#X restore 171 331 pd selector_mode;
+#X obj 78 436 cnv 17 3 17 empty \$0-pddp.cnv.let.0 r 5 9 0 16 -228856
+-162280 0;
+#X text 98 437 anything;
+#X text 80 534 1) float;
+#X text 168 534 - [route] can take symbols or floats as arguments.
+(Note: the first argument determines which "mode" below.) If floats
+are used \, [route] operates in "float mode"-- if symbols are used
+\, float operates in "selector mode." See the subpatches above to see
+how incoming data is handled in each mode.;
+#X obj 4 642 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 100 617 pddp/pddplink ../2.control.examples/18.conditional.pd
+-text doc/2.control.examples/18.conditional.pd;
+#X msg 300 85 Grizabella;
+#X text 11 23 route a message according to the selector or first element
+;
+#N canvas 592 32 442 587 type_mode 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [route] Message Handling in "Type Mode";
+#X msg 84 304 bang;
+#X msg 96 348 symbol pie;
+#X msg 99 368 pie;
+#X msg 78 265 1 2 3;
+#X text 102 225 a float;
+#X text 126 264 a list (of floats);
+#X text 121 304 a bang;
+#X text 175 348 a symbol;
+#X text 133 369 none of the above!;
+#X text 196 285 a list of symbols;
+#X floatatom 109 425 5 0 0 0 - - -;
+#X symbolatom 157 424 10 0 0 0 - - -;
+#X obj 62 445 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
+-1;
+#X msg 72 225 89;
+#X msg 75 245 float 7;
+#X obj 62 401 route bang float symbol list;
+#X obj 109 445 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 157 445 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 205 445 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 253 445 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
+-1 -1;
+#X msg 81 285 list moon earth;
+#X text 130 245 definitely a float!;
+#X text 49 482 [trigger]-style shortcuts don't work:;
+#X text 162 501 !=;
+#X obj 63 502 route b f s l;
+#X obj 184 502 route bang float symbol list;
+#N canvas 0 22 466 633 routing_data_types 0;
+#X obj 334 314 route symbol;
+#X obj 336 334 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 413 335 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 331 361 route symbol;
+#X obj 333 381 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 410 382 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 318 269 test;
+#X msg 357 269 symbol test;
+#X obj 58 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 135 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 55 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 132 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 89 266 bang;
+#X obj 56 311 route bang;
+#X obj 53 358 route bang;
+#X text 14 5 routing based on reserved words:;
+#X obj 188 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 265 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 185 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 262 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 186 311 route float;
+#X obj 183 358 route float;
+#X msg 170 266 1;
+#X msg 209 266 float 12;
+#X obj 181 542 route list;
+#X obj 181 561 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 249 562 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 168 580 route list;
+#X obj 168 599 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 236 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 184 493 list 1 two 3;
+#X msg 167 473 1 two 3;
+#X msg 200 513 list one 2 three;
+#X msg 365 289 symbol;
+#X msg 113 484 list;
+#X msg 224 287 float test;
+#X text 26 245 These all output the as same atom type that is routed:
+;
+#X msg 15 266 bang test;
+#X obj 71 131 route 1;
+#X msg 71 183 2 3 4;
+#X obj 71 164 prepend set;
+#X msg 71 100 1 2 3 4;
+#X msg 218 183 is not a list;
+#X obj 218 164 prepend set;
+#X obj 218 131 route this;
+#X msg 218 100 this is not a list;
+#X text 21 50 [route] has three modes \, first is float \, second is
+symbol \, and third is data type. In the first two modes \, the first
+element of the set is stripped off by [route].;
+#X text 26 206 In the third mode \, [route] outputs the same atom type
+(bang->bang \, float->float \, symbol->symbol).;
+#X text 26 419 Lists do not behave the same with [route list] even
+though it is interpreting incoming lists \, not just routing by keyword
+\, as in the second symbol mode.;
+#X msg 174 164 set;
+#X text 157 164 re;
+#X text 164 24 "bang" \, "float" \, "symbol" \, and "list";
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 0 1 2 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 12 0 13 0;
+#X connect 13 0 8 0;
+#X connect 13 0 14 0;
+#X connect 13 1 9 0;
+#X connect 14 0 10 0;
+#X connect 14 1 11 0;
+#X connect 20 0 16 0;
+#X connect 20 0 21 0;
+#X connect 20 1 17 0;
+#X connect 21 0 18 0;
+#X connect 21 1 19 0;
+#X connect 22 0 20 0;
+#X connect 23 0 20 0;
+#X connect 24 0 25 0;
+#X connect 24 0 27 0;
+#X connect 24 1 26 0;
+#X connect 27 0 28 0;
+#X connect 27 1 29 0;
+#X connect 30 0 24 0;
+#X connect 31 0 24 0;
+#X connect 32 0 24 0;
+#X connect 33 0 0 0;
+#X connect 34 0 24 0;
+#X connect 35 0 20 0;
+#X connect 37 0 13 0;
+#X connect 38 0 40 0;
+#X connect 40 0 39 0;
+#X connect 41 0 38 0;
+#X connect 43 0 42 0;
+#X connect 44 0 43 0;
+#X connect 45 0 44 0;
+#X connect 49 0 42 0;
+#X connect 49 0 39 0;
+#X restore 71 549 pd routing_data_types;
+#X text 47 529 More info:;
+#X text 20 37 In type mode \, the arguments are zero or one of the
+four reserved words: "bang" \, "float" \, "symbol" \, and "list". Instead
+of matching the 'value' of a message \, the [route] object will match
+'data type': i.e. lists will be sent through the first outlet \, floats
+will be sent through the second outlet \, symbols through the third
+outlet \, bangs through the fourth outlet. The fifth outlet will then
+output anything that does not match one of the previously defined data
+types (i.e. the "pie" message below is a text message that hasn't been
+defined as a 'symbol' - hence \, Pd cannot determine which data type
+it is and it will be output through the right-most outlet).;
+#N canvas 0 22 450 300 special_cases_of_lists 0;
+#X msg 87 54 list;
+#X msg 88 87 list 5;
+#X text 65 23 SPECIAL CASES OF LISTS.;
+#X floatatom 107 188 5 0 0 0 - - -;
+#X symbolatom 155 187 10 0 0 0 - - -;
+#X obj 60 208 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
+-1;
+#X msg 88 124 list not-a-list;
+#X obj 60 164 route bang float symbol list;
+#X obj 107 208 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 155 208 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 203 208 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 251 208 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
+-1 -1;
+#X text 86 40 An empty list is translated into a bang;
+#X text 86 73 A list with only one float is translated to a float;
+#X text 86 109 A list with only one symbol is translated to a symbol
+;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 3 0 8 0;
+#X connect 4 0 9 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 7 1 3 0;
+#X connect 7 2 4 0;
+#X connect 7 3 10 0;
+#X connect 7 4 11 0;
+#X restore 211 549 pd special_cases_of_lists;
+#X obj 91 328 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 108 326 also a bang;
+#X connect 2 0 17 0;
+#X connect 3 0 17 0;
+#X connect 4 0 17 0;
+#X connect 5 0 17 0;
+#X connect 12 0 18 0;
+#X connect 13 0 19 0;
+#X connect 15 0 17 0;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 17 1 12 0;
+#X connect 17 2 13 0;
+#X connect 17 3 20 0;
+#X connect 17 4 21 0;
+#X connect 22 0 17 0;
+#X connect 32 0 17 0;
+#X restore 171 356 pd type_mode;
+#X text 277 356 match the type of the message;
+#X text 277 331 match first symbol in the message;
+#X text 261 306 match first float in the message;
+#X text 98 397 anything;
+#X text 168 480 An incoming pointer will never match and so will always
+be sent to the rejection outlet.;
+#X text 168 396 - an outlet is added for each argument. Messages that
+match are output from the respective outlet with its first element
+stripped off.;
+#X text 168 437 - the rightmost outlet of [route] is always the "rejection
+outlet." Incoming messages which do not match any of the arguments
+are sent to the rightmost outlet unchanged.;
+#X text 97 548 symbol;
+#X connect 12 0 17 0;
+#X connect 12 0 21 0;
+#X connect 12 1 19 0;
+#X connect 12 1 20 0;
+#X connect 12 2 16 0;
+#X connect 12 2 18 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 12 0;
+#X connect 22 0 12 0;
+#X connect 33 0 12 0;

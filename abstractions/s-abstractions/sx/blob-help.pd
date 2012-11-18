@@ -1,0 +1,19 @@
+#N canvas 398 36 562 420 10;
+#X obj 20 42 sx/gemwin;
+#X obj 161 323 sx/blob;
+#X obj 161 27 gemhead;
+#X obj 161 52 sx/props;
+#X text 19 6 the blob takes a list of verticies of triangular faces
+in the right inlet.;
+#X obj 214 167 loadbang;
+#X msg 214 188 -1 0 0 0 -1 0 1 0 0 -1 0 1 0 -1 1 1 0 1;
+#X obj 191 281 list;
+#X obj 161 167 t a b;
+#X text 17 355 You can use the blender export script in the;
+#X connect 2 0 3 0;
+#X connect 3 0 8 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 1;
+#X connect 7 0 1 1;
+#X connect 8 0 1 0;
+#X connect 8 1 7 0;

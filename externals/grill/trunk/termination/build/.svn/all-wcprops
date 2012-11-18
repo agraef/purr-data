@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3606/trunk/termination/build
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/3606/trunk/termination/build/config-win.def
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/3606/trunk/termination/build/nmake-win-msvc.inc
+END

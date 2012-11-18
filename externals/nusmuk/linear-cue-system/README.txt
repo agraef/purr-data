@@ -1,0 +1,1 @@
+"Linear Cue System" is an abstraction's collection for Pure Data. This system was developed to simplify the use of Pd for the living arts, during the creation of a linear show. It allows an easily control and modification the temporal evolution of various parts of a Pd patch.

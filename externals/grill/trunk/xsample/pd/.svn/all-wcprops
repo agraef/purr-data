@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/ext/!svn/ver/3508/trunk/xsample/pd
+END
+xgroove~-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3508/trunk/xsample/pd/xgroove~-help.pd
+END
+xplay~-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3508/trunk/xsample/pd/xplay~-help.pd
+END
+xrecord~-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3508/trunk/xsample/pd/xrecord~-help.pd
+END

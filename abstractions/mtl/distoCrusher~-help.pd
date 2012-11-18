@@ -1,0 +1,33 @@
+#N canvas 217 271 568 405 10;
+#X text 15 32 Author: Enrique Erne;
+#X text 15 14 Description: a bit crusher;
+#X obj 46 112 *~ 0.5;
+#X obj 141 112 *~ 0.5;
+#X obj 47 188 mtl/out~;
+#X obj 235 250 cyclone/Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255
+51 135 135 135 0;
+#X obj 20 249 cyclone/Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255
+51 135 135 135 0;
+#X text 16 51 tags: fx~;
+#X obj 47 88 osc~ 110;
+#X obj 141 88 osc~ 110;
+#X obj 47 154 mtl/distoCrusher~ /id crush;
+#X text 223 154 <-Click on the propeties menu to display params;
+#X obj 317 18 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 377 19 PARAM ENABLED;
+#X obj 319 84 cnv 15 200 20 empty empty /crush/ 2 12 0 8 -258401 -262144
+0;
+#X obj 319 107 hsl 100 15 0 1 0 0 /crush/wet /crush/wet_ wet 105 7
+0 8 -262144 -1 -1 0 1;
+#X obj 319 125 hsl 100 15 0 1 0 0 /crush/gain /crush/gain_ gain 105
+7 0 8 -262144 -1 -1 0 1;
+#X obj 316 45 ../doc/5.reference/tof/param-help;
+#X connect 2 0 6 0;
+#X connect 2 0 10 0;
+#X connect 3 0 10 1;
+#X connect 8 0 2 0;
+#X connect 9 0 3 0;
+#X connect 10 0 4 0;
+#X connect 10 1 4 1;
+#X connect 10 1 5 0;

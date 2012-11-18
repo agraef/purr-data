@@ -1,0 +1,6 @@
+#N canvas 0 0 300 389 10;
+#X obj 99 71 K12/sarcduino;
+#X obj 99 179 K12/sarcduino_analog;
+#X obj 99 288 K12/sarcduino_hit;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;

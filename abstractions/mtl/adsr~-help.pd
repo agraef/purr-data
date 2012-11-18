@@ -1,0 +1,63 @@
+#N canvas 264 25 741 655 10;
+#X obj 32 406 osc~ 440;
+#X obj 32 435 *~;
+#X obj 31 460 *~ 0.3;
+#X text 28 -4 Description: Simple ADSR enveloppe generator.;
+#X text 28 26 Arguments: Attack time \, Decay time \, Sustain level
+\, Release time;
+#N canvas 117 168 450 300 (subpatch) 0;
+#X array \$0curve 44100 float 2;
+#X coords 0 1 44100 -1 200 140 1;
+#X restore 504 314 graph;
+#X obj 199 537 tabwrite~ \$0curve;
+#X obj 146 234 bng 15 250 50 0 empty empty empty 17 7 0 10 -258699
+-1 -1;
+#X msg 201 287 127;
+#X msg 146 311 0;
+#X obj 146 258 t b b b;
+#X text 166 231 Click to generate a 700 ms full volume trigger.;
+#X obj 146 286 del 700;
+#X floatatom 233 319 5 1 1000 1 attack_time - -;
+#X floatatom 267 343 5 1 1000 1 decay_time - -;
+#X floatatom 301 365 5 0 1 1 sustain_level(0-1) - -;
+#X floatatom 335 387 5 1 1000 1 release_time - -;
+#X obj 233 288 s \$0draw;
+#X obj 229 506 r \$0draw;
+#X obj 245 486 print attack_started;
+#X obj 335 448 print release_done;
+#X obj 290 467 print attack+decay_done;
+#X text 320 521 Arguments: attack_time decay_time sustain_level release_time
+;
+#X text 320 537 Defaults: 250 250 1 250;
+#X text 145 193 MODIFY THESE PARAMETERS AND CLICK THE RED BUTTON TO
+DISPLAY THE ADSR CURVE.;
+#X text 26 56 Inlets: MIDI note velocity \, A \, D \, S \, R;
+#X text 26 73 Outlet_1: Line level.;
+#X obj 200 417 mtl/adsr~ 70 50 0.5 100;
+#X obj 30 485 mtl/out~;
+#X text 40 571 synth.adsr~ does not retrigger the ATTACK if it has
+not been RELEASed before. This is to ensure better compatibility when
+switching between sources or moving the playback head.;
+#X text 27 11 Comments: Works best with noteClose;
+#X text 26 97 tags: control~;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 28 0;
+#X connect 2 0 28 1;
+#X connect 7 0 10 0;
+#X connect 8 0 27 0;
+#X connect 9 0 27 0;
+#X connect 10 0 12 0;
+#X connect 10 1 8 0;
+#X connect 10 2 17 0;
+#X connect 12 0 9 0;
+#X connect 13 0 27 1;
+#X connect 14 0 27 2;
+#X connect 15 0 27 3;
+#X connect 16 0 27 4;
+#X connect 18 0 6 0;
+#X connect 27 0 1 1;
+#X connect 27 0 6 0;
+#X connect 27 1 19 0;
+#X connect 27 2 21 0;
+#X connect 27 3 20 0;

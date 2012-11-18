@@ -1,0 +1,17 @@
+#N canvas 360 176 286 239 10;
+#X obj 31 124 st2pitch;
+#X obj 31 149 outlet;
+#X obj 110 149 outlet;
+#X obj 125 52 inlet;
+#X obj 219 52 inlet;
+#X obj 31 52 inlet;
+#X text 30 186 1993 by Karlheinz Essl;
+#X obj 31 81 sel-princ \$1;
+#X obj 31 101 t a a;
+#X connect 0 0 1 0;
+#X connect 3 0 7 1;
+#X connect 4 0 7 2;
+#X connect 5 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X connect 8 1 2 0;

@@ -1,0 +1,46 @@
+munger1~
+
+CHANGELOG
+=========
+
+1.3.2 (re-released February 26 2009)
+Now includes Win32 Pd binary
+
+1.3.2 (January 27 2009)
+Rebuilt external for Max5
+
+1.3.1 (May 15 2007)
+Fixed Windows issue with modular ADSR instances
+Build fixes for Linux
+Are we done yet?
+
+1.3.0 (May 9 2007)
+More MSVC+flext oddities--forced to use static array of ADSRs
+Memory leakage finally fixed?
+Tons of tiny bug-fixes
+Added versioning system
+Built against latest flext CVS checkout
+Fixed OSX UB (please test)
+
+1.2.0 (May 4 2007)
+Destructor clean-up
+Resolved ADSR/MSVC mess
+More documentation improvements
+Max channels set to 64 and max voices to 1000 (for the sake of setting some kind of a limit)
+Memory allocation is now fully optimized and modular
+Added OSX UB (please test it on PPC)
+
+1.1.0 (May 2 2007)
+Memory allocation fix
+Code clean-up
+Fix Pd crash when buffer forcefully deleted
+Updated documentation
+New option to dynamically alter max voices
+Fixed bucketload of memory leaks
+
+1.0.1 (March 13 2007)
+Some documentation clarifications added re: install.
+Added changelog.
+
+1.0.0 (March 12 2007)
+Initial release

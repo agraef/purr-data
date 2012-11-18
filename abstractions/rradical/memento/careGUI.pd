@@ -1,0 +1,69 @@
+#N canvas 241 224 305 88 10;
+#X obj 2 15 cnv 15 300 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 35 30 bng 40 250 50 0 empty empty SAVE 0 -6 0 8 -24198 -1 -1
+;
+#X obj 121 31 bng 40 250 50 0 empty empty RESTORE 0 -6 0 8 -258699
+-1 -1;
+#X obj 19 1 inlet;
+#X obj 187 30 bng 40 250 50 0 empty empty FILE 0 -6 0 8 -262131 -1
+-1;
+#N canvas 497 329 693 405 guts 0;
+#X obj 68 51 inlet;
+#X obj 227 43 inlet;
+#X obj 353 58 inlet;
+#X msg 77 85 save RRADICAL;
+#X msg 210 121 load RRADICAL;
+#X text 207 100 load/save file into/from pool by name;
+#X obj 196 147 t b a;
+#X text 11 131 set filename;
+#X obj 170 209 caretaker \$1;
+#X obj 105 237 outlet;
+#X text 116 255 bang after restore;
+#X obj 472 54 inlet;
+#X msg 349 172 file \$1;
+#X obj 351 139 savepanel;
+#X msg 350 242 savex bla.xml;
+#X msg 198 306 set;
+#X obj 191 337 s SET_ALL_RRADICALS;
+#X obj 261 282 spigot;
+#X obj 287 260 r \$0-auto;
+#X obj 172 277 r \$0-set;
+#X connect 0 0 3 0;
+#X connect 1 0 4 0;
+#X connect 2 0 13 0;
+#X connect 3 0 8 0;
+#X connect 4 0 6 0;
+#X connect 6 0 9 0;
+#X connect 6 0 17 0;
+#X connect 6 1 8 0;
+#X connect 11 0 8 0;
+#X connect 12 0 8 0;
+#X connect 13 0 12 0;
+#X connect 14 0 8 0;
+#X connect 15 0 16 0;
+#X connect 17 0 15 0;
+#X connect 18 0 17 1;
+#X connect 19 0 15 0;
+#X restore 78 0 pd guts;
+#X obj 169 0 outlet;
+#X obj 243 57 bng 12 250 50 0 empty empty reset 0 -6 0 8 -250685 -1
+-1;
+#X msg 258 75 reset;
+#X obj 84 25 bng 15 250 50 0 empty empty print 0 -6 0 8 -261689 -1
+-1;
+#X msg 103 72 print;
+#X obj 244 24 tgl 15 1 \$0-auto \$0-auto autoload 0 -6 0 8 -260818
+-1 -1 1 1;
+#X obj 84 58 bng 15 250 50 0 \$0-set \$0-set set 0 -6 0 8 -258699 -1
+-1;
+#X connect 1 0 5 0;
+#X connect 2 0 5 1;
+#X connect 3 0 5 3;
+#X connect 4 0 5 2;
+#X connect 5 0 6 0;
+#X connect 7 0 8 0;
+#X connect 8 0 5 3;
+#X connect 9 0 10 0;
+#X connect 10 0 5 3;
+#X coords 0 0 1 1 304 75 1;

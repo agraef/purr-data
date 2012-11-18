@@ -1,0 +1,7 @@
+#!/bin/sh
+
+version=`svn info | grep Revision | cut -f2 -d" "`
+export CVSROOT=:ext:chr15m@pure-data.cvs.sourceforge.net:/cvsroot/pure-data
+export CVS_RSH=ssh
+cvs import abstractions/s-abstractions CHR15M S-ABSTRACTIONS_0_$version
+

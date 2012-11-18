@@ -1,0 +1,31 @@
+#N canvas 91 39 450 300 12;
+#X obj 88 163 select one 2;
+#X msg 87 93 symbol one;
+#X obj 89 198 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 131 195 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 170 195 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 102 122 2;
+#X msg 228 91 symbol one;
+#X obj 230 196 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 272 193 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 311 193 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 243 120 2;
+#X obj 229 161 select 2 one;
+#X text 24 25 [select] doesn't let you mix symbols and floats \, and
+behaves oddly when you do:;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 0 2 4 0;
+#X connect 1 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 7 0;
+#X connect 11 1 8 0;
+#X connect 11 2 9 0;

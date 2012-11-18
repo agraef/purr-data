@@ -1,0 +1,15 @@
+#N canvas 0 0 450 300 10;
+#X obj 124 220 dac~;
+#X floatatom 224 81 5 0 0 0 - - -;
+#X obj 130 89 WhiteNoise~;
+#X msg 201 121 kfreq \$1;
+#X floatatom 294 81 5 0 0 0 - - -;
+#X obj 130 147 BPF~ 440 0.5;
+#X msg 271 121 krq \$1;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 5 0;

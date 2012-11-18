@@ -1,0 +1,18 @@
+#N canvas 0 0 450 300 10;
+#X obj 89 115 print~;
+#X obj 141 88 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 128 161 dac~;
+#X obj 89 48 Latoocarfian~ 0.88 1.8 1.2 1.3;
+#X obj 231 125 Latoocarfian 0.88 1.8 1.2 1.3;
+#X floatatom 247 154 5 0 0 0 - - -;
+#X floatatom 410 152 5 0 0 0 - - -;
+#X obj 275 97 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X connect 3 0 2 0;
+#X connect 3 1 2 1;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 7 0 4 0;

@@ -1,0 +1,16 @@
+#N canvas 4 22 450 300 10;
+#X text 12 20 saveclear - send a "clear" message to a subpatch before
+the patch is saved.;
+#X obj 16 246 saveclear pd-\$0.my-subpatch;
+#X text 12 59 This is useful for dynamically generated subpatches whose
+contents should not be saved along with the patch.;
+#N canvas 0 22 450 300 \$0.my-subpatch 1;
+#X restore 201 246 pd \$0.my-subpatch;
+#X obj 40 104 loadbang;
+#X obj 40 189 s pd-\$0.my-subpatch;
+#X msg 40 128 msg 10 10 This content was dynamically generated on load
+- but it will be cleared before the patch is saved so that it does
+not exist in saveclear-help.pd \, obj 50 150 bng \, obj 100 100 vslider
+\, obj 150 150 hradio;
+#X connect 4 0 6 0;
+#X connect 6 0 5 0;

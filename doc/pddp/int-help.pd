@@ -1,0 +1,139 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 550 21 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X obj 0 0 cnv 15 550 40 empty empty int 3 12 0 18 -204280 -1 0;
+#X obj 0 234 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
+;
+#N canvas 49 212 482 395 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 24 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 25 KEYWORDS control storage;
+#X text 12 65 DESCRIPTION store an integer;
+#X text 12 5 ALIAS i;
+#X text 12 85 INLET_0 bang float;
+#X text 12 105 INLET_1 float;
+#X text 12 125 OUTLET_0 float;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 375 cnv 3 550 3 empty empty outlets 8 12 0 13 -228856 -1 0
+;
+#X obj 0 412 cnv 3 550 3 empty empty arguments 8 12 0 13 -228856 -1
+0;
+#X obj 0 475 cnv 3 550 3 empty empty more_info 8 12 0 13 -228856 -1
+0;
+#X obj 78 334 cnv 17 3 30 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 243 cnv 17 3 82 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 501 4 or;
+#X obj 100 524 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.1
+-text Pd manual 2.3.1: anatomy of a message;
+#N canvas 107 165 428 375 More_Info 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 19 36 Integers are "whole" numbers - numbers which do not contain
+fractions. The following are examples of whole numbers:;
+#X text 20 66 1;
+#X text 20 81 -544;
+#X text 20 110 10024;
+#X text 19 95 420;
+#X obj 1 161 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 7 1 [int] What is an integer;
+#X text 7 161 [int] Note;
+#X text 21 231 -8 \,;
+#X text 39 231 388 \,;
+#X text 63 231 608;
+#X text 22 248 and:;
+#X text 33 267 388 \,;
+#X text 57 267 608;
+#X text 22 267 8 \,;
+#X text 21 290 Hence \, the [int] object takes about as much CPU as
+the [float] object \; but is useful when numbers need to be truncated
+and/or when patches are being designed to be compatible with Pd and
+MAX/MSP.;
+#X text 21 206 All numbers in Pd are kept in 32-bit floating point
+and can represent real numbers between:;
+#X restore 102 545 pd More_Info;
+#X text 101 508 all_about_data-types.pd;
+#X text 98 242 bang;
+#X text 98 262 float;
+#X text 98 302 list;
+#X text 98 334 float;
+#N canvas 93 484 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 64 36 value;
+#X obj 111 36 list;
+#X floatatom 152 37 5 0 0 0 - - -;
+#X msg 195 36;
+#X obj 22 36 float;
+#X obj 22 66 symbol;
+#X obj 71 66 random;
+#X text 7 1 [int] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 99 382 float;
+#X obj 474 3 int;
+#X obj 522 3 i;
+#X obj 470 21 pddp/pddplink http://wiki.puredata.info/en/int -text
+pdpedia: int;
+#X msg 115 122 bang;
+#X floatatom 105 205 0 0 0 0 - - -;
+#X floatatom 105 100 0 0 0 0 - - -;
+#X floatatom 144 153 0 0 0 0 - - -;
+#X text 153 122 You can force the object to output the stored number.
+;
+#X text 150 100 You can set and output the value simoultaneously.;
+#X text 172 153 You can store the number \, without outputting it.
+;
+#X text 100 52 Tip: Press and hold SHIFT while click-n-dragging these
+number boxes to see how the [int] object truncates the number - drops
+decimal places.;
+#X obj 105 179 int 6.5;
+#X text 100 479 Note: [int] does not 'rounded off' floats. It discards
+everything to the right of the decimal point.;
+#X obj 78 384 cnv 17 3 17 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#N canvas 108 391 428 173 Building_a_counter 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 19 37 The [int] object can be used as a basis for building
+simple counter mechanisms in Pd. In the example below \, the [int]
+object's stored value is incremented by 1 with each "bang".;
+#X msg 164 84 bang;
+#X obj 164 113 int;
+#X obj 192 113 + 1;
+#X floatatom 164 139 5 0 0 0 - - -;
+#X text 7 1 [int] Example: Building a Counter;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 1;
+#X restore 102 567 pd Building_a_counter;
+#X text 11 20 store an integer;
+#X text 169 430 - initializes the object and stores the number until
+the value is reset. The creation argument is optional. If no creation
+argument is provided \, the object defaults to zero.;
+#X text 169 382 - outputs the stored value as a float message.;
+#X text 168 242 - output the currently stored integer.;
+#X text 168 262 - [int] will convert an incoming float to an integer--
+all numerals to the right of the decimal place are truncated (dropped).
+This value is then sent to the outlet.;
+#X text 168 302 - a list is truncated to the first element \, which
+is then output and stored.;
+#X text 168 334 - a float received at the right inlet is converted
+to an integer and stored for later use.;
+#X text 81 430 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 22 0 30 0;
+#X connect 24 0 30 0;
+#X connect 25 0 30 1;
+#X connect 30 0 23 0;

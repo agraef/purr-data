@@ -1,0 +1,17 @@
+#N canvas 3 48 493 333 10;
+#X msg 259 27 Harmony;
+#X text 235 114 transposition interval;
+#X floatatom 116 114 4 0 0 0 - - -;
+#X obj 116 143 transp-pitch;
+#X floatatom 195 114 4 0 0 0 - - -;
+#X obj 116 172 show-pitchclass;
+#X msg 116 201;
+#X text 150 202 transposed pitch class;
+#X text 43 245 1994 by Karlheinz Essl;
+#X text 30 112 pitch class;
+#X text 27 72 Transposes pitch classes by a certain interval.;
+#X text 27 40 transp-pitch;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 1;
+#X connect 5 0 6 0;

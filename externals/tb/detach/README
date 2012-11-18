@@ -1,0 +1,4 @@
+the message to the inlet will be sent to the outlet, but all
+functions called as result of this message run in a helper thread.
+
+requirement: pd>=devel_0_38

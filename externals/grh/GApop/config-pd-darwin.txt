@@ -1,0 +1,35 @@
+# config file for GApop, adapted from Thomas Grill's xsample makefile
+#
+
+# your c++ compiler (if not g++)
+#CXX=g++-3.3
+
+# where does the PD installation reside?
+PD=/usr/local/lib/pd
+
+# where are the PD header files?
+# leave it blank if it is a system directory (like /usr/local/include), 
+# 	since gcc 3.2 complains about it
+PDINC=${PD}/src
+
+# where is the PD executable?
+PDBIN=/usr/local/bin/pd
+
+# where do the flext libraries reside?
+FLEXTPATH=${PD}/flext
+
+# where should the GApop objects be built?
+TARGDIR=./pd-darwin
+
+# where should GApop be installed?
+# (leave blank to omit installation)
+INSTDIR=${PD}/extra
+
+# where should the GApop help be installed?
+# (leave blank to omit installation)
+HELPDIR=${PD}/doc/5.reference
+
+# additional compiler flags
+# (check whether they fit your system!)
+UFLAGS=-malign-power -maltivec -faltivec
+

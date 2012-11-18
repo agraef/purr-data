@@ -1,0 +1,125 @@
+
+***read README.txt before this file***
+
+this ideas are related to shostakovich prelude n.2 in a minor
+
+
+how do we map notes <--> genome ?
+
+
+
+--------------- 1st idea: whole MIDI, absolute values
+
+keep all the chromatic values, all midi notes
+
+the fitness functions and crossover functions will manage the thing
+(no notes outside current chord, etc..)
+
+each gene is a byte, 
+- first 7 bits for midi note (unsigned char, 0-127)
+- last bit for rest (1=play, 0=rest)
+
+why yes: 
+-not restricted to prelude n.2 musical space
+-not restricted to tonal music space
+
+why not:
+-huge transition table, intervals table
+-we don't want values we don't need
+-difficult to write fitness functions that check for tonality, chords, etc..
+
+---------------- 2nd idea: chromatic scale, chord relative
+
+notes are relative to current chord but still in a chromatic space.
+the critics must choose the diatonic ones and discard atonal ones
+
+each gene is a byte, 
+- first 7 bits for midi note (unsigned char, 0-127)
+- last bit for rest (1=play, 0=rest)
+
+
+why yes:
+-we can use the same melody to different chords
+-not restricted to prelude n.2 musical space
+-not restricted to tonal music space
+
+why not:
+-still huge tables
+-difficult to write fitness functions that check for tonality, chords, etc..
+
+---------------- 3rd idea: diatonic scale, chord relative
+
+the musical space is diatonic, no more chromatic. critics need to work much less, 
+they only have to know if a note is in the chord or not.
+
+problem: how to use chromatic passing notes this way?
+
+possibile notes are 7*4=28 (7 notes per octave) + passing notes
+we could use : 1 byte for each gene
+- 5 bits for note (0-32)
+- 2 bit for cromatic passing note (0=no, 1=descending, 2=ascending, 4=not used)
+- 1 bit for rests
+
+
+why yes:
+-we can use the same melody to different chords
+-quick fitness functions
+-we don't have notes we don't want
+
+why not:
+-restricted to tonal music space
+
+---------------- 4th idea: chord notes
+
+
+the musical space are the chord notes, not even the diatonic scale. 
+critics don't have to check anything! 
+
+problem: how to use (chromatic or diatonic) passing notes?
+
+possibile notes are 3*4=12 (3 notes per octave) + passing notes
+we should use a struct for the gene:
+{
+	- note (from 0 to 16)
+	- rest (0/1)
+	- passing_note (from -4 to +4)
+}
+
+possible passing notes are 9: 
+no passing, from -4 semitones to +4 semitones
+
+the fitness functions and crossover functions will have to care sbout rules for passing notes:
++3 and +4 are allowed only for the 3rd note of the chord
+-4 and -3 are allowed only for the 1st note of the chord
+every passing note can exist only if the note before was next to it and proceeding in the same direction
+each passing note must resolve on the nearer chord note in the right direction
+
+why yes:
+-we can use the same melody to different chords
+-quickest fitness functions
+-we don't have notes we don't want
+
+why not:
+-restricted to tonal music space
+-restricted to 3-notes-chords-based harmonies (jazz is 4 notes based)
+
+
+
+
+
+common problems:
+
+i can think a way to rule passing notes (a passing note must come from a consonant note and go to a consonant note)
+but what can we do if a passing not is at the very end of the melody? (i don't know what will the next note be)
+...we should have to know what will be the next chord...
+
+
+
+
+
+
+
+
+
+Davide Morelli
+17.09.05

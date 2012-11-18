@@ -1,0 +1,31 @@
+#N canvas 450 128 525 385 10;
+#X msg 28 90 symbol abcdefghikl;
+#X obj 75 160 mtl/shrinkSymbol 3;
+#X msg 155 91 symbol ABCDEF;
+#X floatatom 196 130 5 0 0 0 - - -;
+#X text 63 46 tags: symbols;
+#X text 66 12 Description: Shrinks the length of a symbol to a specific
+size.;
+#X text 231 130 target size;
+#X msg 22 256 symbol abcdefghikl;
+#X msg 158 257 symbol ABCDEF;
+#X obj 75 197 print SHRUNK;
+#X obj 21 331 print SHRUNK;
+#X text 156 291 You can use a negative size in which case the shrinking
+starts from the end of the symbol.;
+#X obj 180 193 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 200 193 Outlet 2 outputs a 1 if the symbol has been shrunk.
+;
+#X obj 131 336 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 21 299 mtl/shrinkSymbol -3;
+#X connect 0 0 1 0;
+#X connect 1 0 9 0;
+#X connect 1 1 12 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 1;
+#X connect 7 0 15 0;
+#X connect 8 0 15 0;
+#X connect 15 0 10 0;
+#X connect 15 1 14 0;

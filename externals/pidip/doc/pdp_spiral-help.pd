@@ -1,0 +1,82 @@
+#N canvas 237 21 712 664 10;
+#X obj 193 497 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X floatatom 391 277 5 0 0 0 - - -;
+#X obj 346 203 pdp_v4l;
+#X obj 355 172 metro 70;
+#X obj 400 138 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 357 139 stop;
+#X msg 442 170 open /dev/video;
+#X obj 194 453 pdp_spiral ---------------------;
+#X obj 358 252 hdl 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1 -1
+0;
+#X text 488 252 Mode;
+#X obj 252 167 pdp_yqt;
+#X text 438 277 Focus X;
+#X floatatom 425 299 5 0 0 0 - - -;
+#X text 472 299 Focus Y;
+#X floatatom 442 326 5 0 0 0 - - -;
+#X text 489 326 Depth Shift;
+#X floatatom 453 354 5 0 0 0 - - -;
+#X text 499 355 Focus interval;
+#X text 511 384 Focus increment;
+#X floatatom 463 383 5 0 0 0 - - -;
+#X text 511 384 Focus increment;
+#X obj 481 407 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 495 430 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 508 409 Toggle XOR;
+#X text 519 431 Animate Focus;
+#X obj 282 214 dac~;
+#X obj 410 486 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 410 538 pdp_control;
+#X msg 410 511 thread \$1;
+#X floatatom 410 599 5 0 0 0 - - -;
+#X obj 410 570 route pdp_drop;
+#X connect 1 0 10 0;
+#X connect 2 0 20 0;
+#X connect 3 0 2 0;
+#X connect 4 0 20 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 20 0;
+#X connect 11 0 17 2;
+#X connect 12 0 17 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 12 0;
+#X connect 17 0 0 0;
+#X connect 18 0 17 1;
+#X connect 20 0 17 0;
+#X connect 20 4 35 0;
+#X connect 20 5 35 1;
+#X connect 22 0 17 3;
+#X connect 24 0 17 4;
+#X connect 26 0 17 5;
+#X connect 29 0 17 6;
+#X connect 31 0 17 7;
+#X connect 32 0 17 8;
+#X connect 36 0 38 0;
+#X connect 37 0 40 0;
+#X connect 38 0 37 0;
+#X connect 40 0 39 0;

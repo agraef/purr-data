@@ -1,0 +1,5 @@
+#N canvas 584 136 494 414 10;
+#X declare -lib Gem;
+#X text 55 51 control the gemwin and rendering \, and see status;
+#X obj 67 130 gemwin_control;
+#X obj 241 129 gemwin_control;

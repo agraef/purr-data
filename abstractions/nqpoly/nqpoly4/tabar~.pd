@@ -1,0 +1,63 @@
+#N canvas 222 268 460 352 10;
+#X obj 22 121 inlet~;
+#X text 68 119 indexing input \, expects a line from 0-1;
+#X obj 74 282 sig~ 1;
+#X obj 88 311 -~;
+#X obj 134 139 inlet;
+#X obj 264 160 inlet;
+#X text 174 139 attack time factor (0 \, 1];
+#X text 303 160 decay time factor (0 \, 1];
+#X obj 157 319 /;
+#X msg 147 293 1;
+#X obj 139 241 t b f;
+#X obj 176 267 moses 1e-29;
+#X msg 176 291 1e-29;
+#X obj 283 323 /;
+#X msg 273 297 1;
+#X obj 265 245 t b f;
+#X obj 302 271 moses 1e-29;
+#X msg 302 295 1e-29;
+#X obj 36 408 *~;
+#X obj 35 430 outlet~;
+#X obj 27 368 clip~ 0 1;
+#X obj 86 370 clip~ 0 1;
+#X obj 23 342 *~ 0;
+#X obj 94 341 *~ 0;
+#X obj 153 215 f \$1;
+#X obj 275 219 f \$2;
+#X obj 205 186 loadbang;
+#X text 19 8 silly name. acts like a TABle \, that contains an Attack
+Release envelope. it expects a line~ that starts and 0 and ends at
+1 \, with the duration of the envelope. the attack and decay factors
+are the fraction (between 0 \, 1) of the note length which should be
+attack/decay. if attack and decay factor sum to more than 1 \, you
+will get decreased volume.;
+#X connect 0 0 3 1;
+#X connect 0 0 22 0;
+#X connect 2 0 3 0;
+#X connect 3 0 23 0;
+#X connect 4 0 10 0;
+#X connect 5 0 15 0;
+#X connect 8 0 22 1;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 10 1 11 0;
+#X connect 11 0 12 0;
+#X connect 11 1 8 1;
+#X connect 12 0 8 1;
+#X connect 13 0 23 1;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 15 1 16 0;
+#X connect 16 0 17 0;
+#X connect 16 1 13 1;
+#X connect 17 0 13 1;
+#X connect 18 0 19 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 1;
+#X connect 22 0 20 0;
+#X connect 23 0 21 0;
+#X connect 24 0 10 0;
+#X connect 25 0 15 0;
+#X connect 26 0 24 0;
+#X connect 26 0 25 0;

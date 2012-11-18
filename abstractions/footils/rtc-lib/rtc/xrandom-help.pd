@@ -1,0 +1,32 @@
+#N canvas 0 48 659 477 10;
+#X text 258 322 object;
+#X text 19 322 vs. 2.2: seedable by the;
+#X msg 193 322 RTC-seed;
+#X text 20 132 see also:;
+#X text 20 59 Outputs random numbers <int> that are never repeated
+unless all numbers have been generated (series-principle). The random
+numbers are produced within an interval between 0 and a given maximum
+(minus one) which can be the argument of the function or being sent
+to the right inlet.;
+#X text 20 28 xrandom;
+#X floatatom 53 265 4 0 0 0 - - -;
+#X obj 53 206 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 53 234 xrandom 4;
+#X text 19 306 1994-98 by Karlheinz Essl;
+#X msg 86 132 random;
+#X msg 310 23 Chance;
+#X msg 86 154 periodic;
+#X msg 148 132 random-norep;
+#X msg 148 154 sneak-random;
+#X floatatom 111 206 4 0 0 0 - - -;
+#X text 147 206 maximum range of random numbers (must be bigger than
+1);
+#X text 139 267 flashes when all numbers have been generated;
+#X obj 111 265 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 140 41 vs. 2.2;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 1 18 0;
+#X connect 15 0 8 1;

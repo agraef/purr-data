@@ -1,0 +1,46 @@
+#N canvas 915 215 635 570 10;
+#X obj 89 174 GEMglBegin;
+#X obj 89 130 GEMglEnable;
+#X obj 161 110 gems.gl.def GL_LINE_STIPPLE;
+#X obj 89 84 GEMglLineStipple 2 2;
+#X obj 89 246 GEMglEnd;
+#X obj 29 -264 tgl 30 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X msg 89 -243 reset \, offset 0 0 \, dimen 320 240 \, frame 60 \,
+border 0;
+#X obj 89 -98 gemhead;
+#X obj 154 153 gems.gl.def GL_LINES;
+#X floatatom 224 7 5 0 0 0 - - -;
+#X floatatom 156 67 5 0 0 0 - - -;
+#X obj 114 201 GEMglVertex2f 4 1 0;
+#X obj 89 -57 GEMglColor3f 1 0.8 0.2;
+#X obj 89 -77 GEMglLineWidth 15;
+#X obj 116 224 GEMglVertex2f -4 1 0;
+#X floatatom 203 -94 5 0 0 0 - - -;
+#X text 155 50 factor;
+#X obj 224 47 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 224 64 clip 0 65535;
+#X text 268 9 pattern;
+#X text 50 -177 Description: Outputs an OpenGL constant value supplied
+as argument. Outputs it on startup as well as on demand.;
+#X text 279 -95 In this example \, we draw a stippled line.;
+#X text 280 -80 See the OpenGL Programming guide (the Red Book);
+#X obj 29 -209 gems.win;
+#X connect 0 0 11 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 1;
+#X connect 3 0 1 0;
+#X connect 5 0 23 0;
+#X connect 6 0 23 0;
+#X connect 7 0 13 0;
+#X connect 8 0 0 1;
+#X connect 9 0 17 0;
+#X connect 10 0 3 1;
+#X connect 11 0 14 0;
+#X connect 12 0 3 0;
+#X connect 13 0 12 0;
+#X connect 14 0 4 0;
+#X connect 15 0 13 1;
+#X connect 17 0 18 0;
+#X connect 18 0 3 2;

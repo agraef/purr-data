@@ -1,0 +1,94 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header netreceive 3 12
+0 18 -204280 -1 0;
+#X obj 0 311 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS control network;
+#X text 12 45 DESCRIPTION listen for incoming messages from a network
+;
+#X text 12 65 OUTLET_0 anything;
+#X text 12 85 OUTLET_1 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 419 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [netreceive] Related Objects;
+#X obj 22 43 netsend;
+#X restore 102 598 pd Related_objects;
+#X obj 78 347 cnv 17 3 25 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 80 439 1) float;
+#X obj 463 3 netreceive;
+#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/netreceive
+-text pdpedia: netreceive;
+#X floatatom 226 82 0 0 0 0 - - -;
+#X obj 139 145 netreceive 3001 1;
+#X obj 139 82 print tcp;
+#X obj 139 166 print udp;
+#N canvas 57 331 428 261 About_netreceive 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [netreceive] More Info;
+#X text 21 38 The [netreceive] object opens a socket for TCP ("stream")
+or UDP ("datagram") network reception on a specified port. If using
+TCP \, an outlet gives you the number of [netsend] objects (or other
+compatible clients) have opened connections here.;
+#X text 20 170 There are some possibilities for intercommunication
+with other programs... see the help for [netsend].;
+#X text 19 104 Incoming network messages appear at the left inlet of
+the [netreceive] object. (They used to be received by [receive] objects
+\, in which case it was up to the sender to select which one). To test
+the object you can send messages from the [netsend] help window.;
+#X text 18 208 SECURITY ALERT: the port that netreceive opens has no
+access restrictions \, so anyone can connect to it and send messages.
+;
+#X restore 102 567 pd About_netreceive;
+#X text 11 23 listen for incoming messages from a network;
+#X text 168 454 - (optional) 0 for TCP \, nonzero for UDP. (Default
+is TCP.);
+#X text 168 439 - (optional) port number.;
+#X text 80 454 2) float;
+#X text 168 469 - if you set the third argument to the word "old" \,
+everything sent to the specified port is received into the global message
+space. This is the original behavior of [netreceive]. This can be VERY
+INSECURE since it gives someone full access to your computer \, allowing
+them to do anything that Pd can via the network.;
+#X text 98 270 Old behavior: [netreceive 4567 0 old] (see argument
+3 below);
+#X text 80 469 3) symbol atom;
+#X text 98 346 anything;
+#X obj 78 383 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 382 float;
+#X text 264 60 <- TCP \, port 3000;
+#X text 261 144 <- UDP \, port 3001;
+#X text 98 205 You can send messages from the [netsend] objects in
+the help patch for [netsend].;
+#X text 168 346 - any message received by this [netreceive] object
+will be sent to the left outlet.;
+#X text 98 314 (none);
+#X obj 139 61 netreceive 3000;
+#X text 168 382 - when using TCP \, the [netreceive] object has a right
+inlet which shows the number of open connections.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 13 0 15 0;
+#X connect 32 0 14 0;
+#X connect 32 1 12 0;

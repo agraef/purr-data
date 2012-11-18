@@ -1,0 +1,22 @@
+#!/bin/sh
+# Winfried Ritsch, Institute of Electronic Music and Acoustics, 2003
+# GPL see Licence.txt
+
+# drive hdspm_mixer programm with bash
+# all channels in and playback to alternate channel 63 or 64, which are analog out
+# be sure to have enabled analog out in control (use amixer)
+#
+# script in same folder as hdspm_mixer
+
+cd `dirname $0`
+
+echo set mixer even to out 0 and odd to 1 as monitor
+
+for i in $(seq 64 2 126)
+do
+ 	./hdspm_mixer 0 $i 62 $1
+done
+for i in $(seq 65 2 127)
+do
+ 	./hdspm_mixer 0 $i 63 $1
+done

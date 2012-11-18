@@ -1,0 +1,17 @@
+#N canvas 274 79 534 578 10;
+#X obj 49 137 wrong;
+#X obj 182 137 wrong;
+#X text 22 26 But first lets think about another problem: What happens
+\, if we want to use our state saving enabled patch itself as an abstraction
+and we want to use this abstraction several times \, each time with
+its own state. wrong.pd shows \, that this won't work: For one \, we
+cannot save this abstraction without opening it \, and second: We can
+still only save one set of state variables:;
+#X text 33 280 As soon as you save one of the "wrong" instances \,
+the other one will take over its values.;
+#X text 32 328 Now we could again move out our message boxes \, place
+them in the parent patch connected through an inlet and outlet \, but
+this would just be a temporary fix: As soon as we wanted to use the
+parent as an abstraction again \, we would face the same issue again!
+;
+#X text 31 415 So we need a different strategy. Read on.;

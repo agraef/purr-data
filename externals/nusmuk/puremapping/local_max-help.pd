@@ -1,0 +1,8 @@
+#N canvas 552 108 525 298 10;
+#X floatatom 22 86 5 0 0 0 - - -;
+#X floatatom 22 133 5 0 0 0 - - -;
+#X obj 22 109 local_max;
+#X text 49 27 give the value of every local maximum whenever there
+is a change in direction.;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

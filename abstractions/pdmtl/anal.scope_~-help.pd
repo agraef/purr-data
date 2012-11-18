@@ -1,0 +1,22 @@
+#N canvas 8 80 597 360 10;
+#X obj 85 30 loadbang;
+#X msg 85 54 \; pd dsp 1;
+#X floatatom 41 122 5 0 0 0 - - -;
+#X text 310 144 INLETS;
+#X obj 41 140 osc~ 1;
+#X text 49 157 Click the toggle to activate.;
+#X text 309 158 1) signal to display.;
+#X text 210 214 Toggle: on/off;
+#X text 213 233 Number box: hundreds of samples to display (10 = 1000
+samples);
+#X text 323 195 -- GUI --;
+#X text 178 44 Description: Realtime display of a signal's waveform.
+;
+#X obj 41 178 anal.scope_~;
+#X text 301 95 Argument_1: On/off at start.;
+#X obj 225 179 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X connect 0 0 1 0;
+#X connect 2 0 4 0;
+#X connect 4 0 11 0;
+#X connect 13 0 11 1;

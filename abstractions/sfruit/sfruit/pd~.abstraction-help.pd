@@ -1,0 +1,48 @@
+#N canvas 760 30 409 562 10;
+#X obj 107 202 pd~.abstraction pd~.triple-ringmod 440;
+#X obj 259 122 osc~ 1000;
+#X obj 251 335 dac~;
+#X obj 259 62 osc~ 0.25;
+#X obj 259 82 *~ 500;
+#X obj 259 102 +~ 1000;
+#X msg 125 173 pd dsp \$1;
+#X floatatom 107 66 5 0 0 0 ringmod-freq - -;
+#X obj 207 258 *~ 0;
+#X obj 308 258 *~ 0;
+#X obj 83 303 tgl 15 0 \$0.on.s \$0.on.r On 17 7 0 10 -204786 -1 -1
+0 1;
+#X obj 125 153 r \$0.on.s;
+#X obj 329 230 r \$0.on.s;
+#X text 49 272 Turn it on here;
+#X obj 308 301 *~ 0.1;
+#X obj 207 300 *~ 0.1;
+#X msg 107 119 INLET \$1;
+#X text 32 380 pd~.abstraction tries to make using pd~ more like using
+abstractions in Pd. You can make use of any abstraction with up to
+9 arguments.;
+#X text 31 477 The only limitation is the abstraction must have 1 inlet/inlet~
+and 2 outlet/outlet~s \, but you should have no trouble modifying it
+if you have different needs.;
+#X text 287 536 2009 Luke Iannini;
+#X text 17 9 [pd~.abstraction] - call like [pd~.abstraction myabstraction
+arg1 arg2...arg9] (all args optional);
+#X text 31 429 Messages prepended with INLET will go to the inlet of
+your abstraction. Messages sent to the outlet of your abstraction will
+appear at the outlet of [pd~.abstraction].;
+#X connect 0 1 8 0;
+#X connect 0 2 9 0;
+#X connect 1 0 0 2;
+#X connect 1 0 0 1;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 6 0 0 0;
+#X connect 7 0 16 0;
+#X connect 8 0 15 0;
+#X connect 9 0 14 0;
+#X connect 11 0 6 0;
+#X connect 12 0 8 1;
+#X connect 12 0 9 1;
+#X connect 14 0 2 1;
+#X connect 15 0 2 0;
+#X connect 16 0 0 0;

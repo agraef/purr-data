@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/ext/!svn/ver/3621/trunk/idelay
+END
+delay.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3621/trunk/idelay/delay.cpp
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3621/trunk/idelay/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3621/trunk/idelay/license.txt
+END
+delay.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3621/trunk/idelay/delay.h
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3621/trunk/idelay/Info.plist
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3621/trunk/idelay/package.txt
+END
+idelay~-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3621/trunk/idelay/idelay~-help.pd
+END

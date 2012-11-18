@@ -1,0 +1,62 @@
+#N canvas 309 69 360 302 10;
+#X obj 15 41 key;
+#X obj 48 122 spigot;
+#X obj 15 62 sel 27;
+#X obj 112 102 tgl 13 0 \$0-bogus \$0-bogus-i empty 0 -6 0 8 -233017
+-1 -1 0 1;
+#X obj 112 62 loadbang;
+#X obj 48 152 outlet;
+#X obj 112 152 outlet;
+#X obj 112 82 \$1;
+#X text 12 10 [tastin] - Gate for keyboard input;
+#X text 236 85 Outlets;
+#X text 236 35 Arguments;
+#X text 236 55 - State (0 / 1);
+#X text 236 105 - key number;
+#X text 236 125 - state;
+#X text 236 155 Key control;
+#X text 236 175 - Esc on / off;
+#X text 12 251 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 269 pd license;
+#X obj 73 102 cnv 13 37 13 empty \$0-label 0 4 8 0 12 -195568 -1 0
+;
+#X obj 18 222 s \$0-label;
+#X msg 18 202 label \$1;
+#X obj 18 182 makesymbol;
+#X connect 0 0 2 0;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 2 1 1 0;
+#X connect 2 1 21 0;
+#X connect 3 0 1 1;
+#X connect 3 0 6 0;
+#X connect 4 0 7 0;
+#X connect 7 0 3 0;
+#X connect 20 0 19 0;
+#X connect 21 0 20 0;
+#X coords 0 -1 1 1 94 17 1 33 100;

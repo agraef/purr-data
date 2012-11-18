@@ -1,0 +1,39 @@
+#N canvas 382 29 661 402 10;
+#X obj 62 -80 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X msg 159 -51 medias/data/flow.cues.txt;
+#X obj 159 -75 loadbang;
+#X obj 159 -27 file.path.top;
+#X msg 159 -4 read \$1;
+#X obj 62 40 timing.cues;
+#X obj 62 -27 metro 1;
+#X obj 62 -6 count.iter;
+#X floatatom 62 18 5 0 0 0 - - -;
+#X text 58 -111 Description: Cues events to a stream.;
+#X obj 62 -55 t b b b;
+#X obj 62 64 flow.prepend set;
+#X obj 137 87 flow.prepend set;
+#X msg 208 41 clear \, add 3750 POPEYE \, add 6000 is a sailor man
+;
+#X text 205 23 You can also add messages manually;
+#X text 59 175 In the cue file (medias/data/flow.cues.txt in this example)
+\, every cue must be on a sperate line. A cue must start with a float
+value that determines when the cue will be triggered.;
+#X msg 62 116;
+#X msg 137 116;
+#X connect 0 0 10 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 1;
+#X connect 5 0 11 0;
+#X connect 5 1 12 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 5 0;
+#X connect 10 0 6 0;
+#X connect 10 1 7 1;
+#X connect 10 2 5 1;
+#X connect 11 0 16 0;
+#X connect 12 0 17 0;
+#X connect 13 0 5 1;

@@ -1,0 +1,62 @@
+#N canvas 72 189 352 334 10;
+#X obj 72 102 tgl 13 0 empty empty empty 0 -6 0 8 -233017 -1 -1 0 1
+;
+#X obj 8 140 outlet;
+#X obj 8 82 inlet;
+#X obj 72 140 outlet;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 305 pd license;
+#X obj 88 102 bng 13 250 50 0 empty empty empty 0 -6 0 8 -233017 -1
+-1;
+#X obj 88 82 bang;
+#X obj 72 42 loadbang;
+#X obj 72 62 \$1;
+#X obj 8 120 spigot;
+#X text 12 285 (C) 2008 João Pais - jmmmpais@googlemail.com;
+#X obj 32 62 inlet;
+#X text 206 80 Inlets;
+#X text 206 150 Outlets;
+#X text 206 30 Arguments;
+#X text 206 50 - Initial state (0/1);
+#X text 206 100 - Messages;
+#X text 206 170 - Messages;
+#X text 206 190 - State;
+#X text 206 240 - State;
+#X text 206 220 GUI;
+#X text 206 120 - On / Off (0/1);
+#X text 206 260 - Incoming message;
+#X text 22 10 [sguigot] - Spigot GUI implementation;
+#X connect 0 0 9 1;
+#X connect 0 0 3 0;
+#X connect 2 0 6 0;
+#X connect 2 0 9 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X connect 9 0 1 0;
+#X connect 11 0 0 0;
+#X coords 0 -1 1 1 94 17 1 10 100;

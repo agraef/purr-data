@@ -1,0 +1,77 @@
+# makefile adapted from thomas grill's xsample makefile
+#
+# Makefile for MSVC++ 6 and .NET
+#
+# usage:
+# to build run "make -f makefile.max-msvc"
+#
+
+!include config-max-msvc.txt
+
+# includes
+INCPATH=/I$(MAXSDKPATH)\max-includes /I$(MAXSDKPATH)\msp-includes /I$(FLEXTPATH) /I./headers/plugin_interface /I./headers/common /I./headers/server /I./headers/app /I./headers/lang
+LDFLAGS=/LIBPATH:$(FLEXTPATH)
+
+!ifdef MSVCPATH
+INCPATH=$(INCPATH) /I$(MSVCPATH)\include 
+LDFLAGS=$(LDFLAGS) /LIBPATH:$(MSVCPATH)\lib
+!endif
+
+!ifdef _DEBUG
+LIBS=flext_d-maxwin.lib 
+!else
+LIBS=flext-maxwin.lib 
+!endif
+
+LDFLAGS=$(LDFLAGS) /LIBPATH:$(MAXSDKPATH)\max-includes /LIBPATH:$(MAXSDKPATH)\msp-includes
+
+LIBS=$(LIBS) maxapi.lib maxaudio.lib
+
+# compiler definitions and flags
+DEFS=/DFLEXT_SYS=1 $(UFLAGS)
+
+CFLAGS=/ML /GR- /GD /Ox /GX /Zp2
+
+# the rest can stay untouched
+# ----------------------------------------------
+
+# all the source files from the package
+!include make-files.txt
+
+# -----------------------------------------------
+
+NAME=sc4pd
+EXT=mxe
+DIR=source
+
+all: $(OUTPATH) $(OUTPATH)\$(NAME).$(EXT)
+
+# remove build
+clean:
+	-del /q $(OUTPATH) > nul
+	-rmdir $(OUTPATH) > nul
+
+OBJS= $(SRCS:.c=.obj)
+OBJS= $(OBJS:.objpp=.obj)
+
+
+$(OUTPATH):
+	-mkdir $(OUTPATH) > nul
+
+{$(DIR)}.cpp{}.obj:
+	cl /c /LD $(CFLAGS) $(DEFS) $(INCPATH) $** /Fo$(OUTPATH)/$@
+
+{$(DIR)}.c{}.obj:
+	cl /c /LD $(CFLAGS) $(DEFS) $(INCPATH) $** /Fo$(OUTPATH)/$@
+
+
+$(OUTPATH)\$(NAME).$(EXT): $(OBJS)
+	cd $(OUTPATH)
+	link /DLL $(LDFLAGS) /out:$(NAME).$(EXT) /INCREMENTAL:NO $** $(LIBS) $(LIBPATH)
+	@-del *.exp
+	@-del *.lib
+	cd ..
+!ifdef INSTPATH
+	@-if not exist $(INSTPATH) mkdir $(INSTPATH)
+	copy $@ $(INSTPATH) > nul
+!endif

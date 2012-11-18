@@ -1,0 +1,20 @@
+#N canvas 0 22 450 300 10;
+#X text 35 28 [myifspigot] - choose your own comparison operator;
+#X text 36 52 if "receiver" (\$1) is "==/>=/</>/whatever" (\$2) than
+\$3 then spigot is on. \$4 sets initial state of spigot.;
+#X obj 76 165 myifspigot \$0test > 3;
+#X obj 76 88 loadbang;
+#X obj 76 114 metro 250;
+#X obj 76 214 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 266 169 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 266 209 s \$0test;
+#X text 296 275 2008 Luke Iannini;
+#X text 229 152 Set higher than 3 to turn on spigot;
+#X floatatom 276 189 5 0 0 0 - - -;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 6 0 7 0;
+#X connect 6 0 10 0;

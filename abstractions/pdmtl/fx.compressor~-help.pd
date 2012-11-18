@@ -1,0 +1,14 @@
+#N canvas 0 0 492 247 10;
+#X obj 60 157 mix.out_~;
+#X text 60 67 From www.netpd.org;
+#X text 59 36 Description: rcomp is a basic downward compressor. its
+control chain is processed in audio rate.;
+#X obj 237 129 param.gui;
+#X obj 60 128 fx.compressor~ @id rcomp;
+#X msg 237 107 rcomp;
+#X obj 61 98 adc~ 1 2;
+#X connect 4 0 0 0;
+#X connect 4 1 0 1;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 6 1 4 1;

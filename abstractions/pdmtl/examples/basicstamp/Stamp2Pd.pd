@@ -1,0 +1,23 @@
+#N canvas 381 30 882 735 10;
+#X msg 153 338 close;
+#X obj 54 407 convert.ascii2pd CR;
+#X text 195 402 ascii2pd is configured here to output a message when
+it receives a carriage return (CR).;
+#X floatatom 158 486 5 0 0 0 - - -;
+#X obj 158 517 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 211 359;
+#X text 210 345;
+#X obj 87 451 print serialIN:;
+#X obj 91 367 comport 0 9600;
+#X text 198 337 Closes serial communication;
+#X text 199 450 Print the serial input;
+#X text 198 485 This is the transfered number;
+#X text 199 366 To reopen serial port \, edit the comport object (replace
+a char with the same char);
+#X text 199 514 Bangs on every income;
+#X connect 0 0 8 0;
+#X connect 1 0 3 0;
+#X connect 1 0 7 0;
+#X connect 3 0 4 0;
+#X connect 8 0 1 0;

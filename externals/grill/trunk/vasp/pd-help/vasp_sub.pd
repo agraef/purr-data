@@ -1,0 +1,54 @@
+#N canvas 28 239 963 381 10;
+#N canvas 44 75 276 122 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 738 292 pd clear_buffer;
+#X text 376 62 optional argument/right inlet: right operand;
+#X text 376 45 subtracts a value or a vasp from a vasp;
+#X text 62 62 optional argument/right inlet: right operand;
+#X text 62 45 adds a value or a vasp to a vasp;
+#X obj 62 19 cnv 15 15 15 empty empty vasp.+ 0 10 1 14 -262144 -1 0
+;
+#X obj 378 20 cnv 15 15 15 empty empty vasp.- 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 450 300 graph167 0;
+#X array bufsub 88200 float 0;
+#X coords 0 1 88199 -1 300 120 1;
+#X restore 629 93 graph;
+#X text 139 190 shift all values + 0.5;
+#X text 141 167 half the amplitude;
+#X obj 65 212 vasp.update;
+#X obj 65 189 vasp.+ 0.5;
+#X obj 65 144 vasp.osc 44100;
+#X obj 65 166 vasp.* 0.5;
+#X text 169 145 generate a 1Hz sine wave;
+#X msg 65 112 vasp bufsub;
+#X msg 738 271 vasp bufsub;
+#N canvas 0 0 396 272 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufsub;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 881 291 pd init;
+#X text 455 189 shift all values - 0.5;
+#X obj 380 212 vasp.update;
+#X obj 380 189 vasp.- 0.5;
+#X obj 380 144 vasp.osc 44100;
+#X obj 380 166 vasp.* 0.5;
+#X msg 380 112 vasp bufsub;
+#X obj 61 313 VASP-HELP;
+#X connect 11 0 10 0;
+#X connect 12 0 13 0;
+#X connect 13 0 11 0;
+#X connect 15 0 12 0;
+#X connect 16 0 0 0;
+#X connect 20 0 19 0;
+#X connect 21 0 22 0;
+#X connect 22 0 20 0;
+#X connect 23 0 21 0;

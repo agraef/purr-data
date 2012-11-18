@@ -1,0 +1,23 @@
+# config file for tbext, adapted from Thomas Grill's xsample makefile
+#
+
+# where is PD?
+PDPATH=c:\programme\audio\pd		
+
+# where do the flext libraries reside?
+FLEXTPATH=$(PDPATH)\flext
+
+# where is BorlandC++?
+BCCPATH=c:\programme\prog\bcc55		
+
+# where should the external(s) be built?
+OUTPATH=.\pd-bcc
+
+# should the external be installed? (yes/no)
+INSTALL=yes
+
+# where should the external be installed?
+INSTDIR=$(PDPATH)\extra
+
+# additional compiler flags
+UFLAGS=-6 -O2 -OS -ff 

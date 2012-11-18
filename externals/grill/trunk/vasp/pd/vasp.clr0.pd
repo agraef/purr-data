@@ -1,0 +1,12 @@
+#N canvas 371 329 454 304 12;
+#X obj 47 36 inlet;
+#X obj 48 181 outlet;
+#X obj 48 149 vasp.sync 2;
+#X obj 110 82 vasp.frames 1;
+#X obj 110 109 vasp.= 0;
+#X text 44 1 clears the sample 0;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 1;

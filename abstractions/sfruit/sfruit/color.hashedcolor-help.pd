@@ -1,0 +1,21 @@
+#N canvas 611 22 448 384 10;
+#X obj 106 170 color.hashedcolor;
+#X msg 87 70 telescope;
+#X msg 58 108 spyglass;
+#X msg 132 108 binoculars;
+#X text 8 10 [color.hashedcolor] - generate a random but consistent
+color based on any input string.;
+#X obj 106 192 color.rgb2pd24;
+#X obj 106 274 bng 50 250 50 0 empty empty empty 17 7 0 10 -198190
+-1 -262144;
+#X msg 106 242 color \$1;
+#X text 294 332 2009 Luke Iannini;
+#X text 310 349 proyekto.net;
+#X msg 160 134 microscope;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 10 0 0 0;

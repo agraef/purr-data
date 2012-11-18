@@ -1,0 +1,25 @@
+Version 0.01 
+copyleft 2001 by Yves Degoyon
+tarballs and updates available @ http://ydegoyon.free.fr
+
+sonogram~.dll : displays, plays back and lets you modify a recorded sonogram.
+
+The real and imaginery part of an fft~ is stored in a sonogram~
+and, then, you can apply modifications to it
+or do mouse-based graphic modifications.
+The set of modifications provided for now consists of 
+matrix operations but it will be improved soon.
+
+To install sonogram~, follow the steps from INSTALL
+
+This software is published under GPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+

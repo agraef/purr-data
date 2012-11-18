@@ -1,0 +1,24 @@
+#N canvas 0 0 552 425 10;
+#X text 23 44 Description: returns the size of a table.;
+#X obj 268 148 table \$0test 483;
+#X obj 271 195 table \$0test1 26;
+#X obj 60 173 table.size \$0test;
+#X floatatom 61 210 5 0 0 0 - - -;
+#X obj 44 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 87 118 \$1test;
+#X obj 90 95 f \$0;
+#X obj 91 74 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 193 96 f \$0;
+#X obj 194 75 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 190 119 \$1test1;
+#X connect 3 0 4 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 11 0;
+#X connect 10 0 9 0;
+#X connect 11 0 3 0;

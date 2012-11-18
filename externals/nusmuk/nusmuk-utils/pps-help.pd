@@ -1,0 +1,13 @@
+#N canvas 0 0 450 300 10;
+#X obj 40 28 pps;
+#X text 85 27 shortcut for :;
+#X obj 209 29 list prepend set;
+#X obj 209 50 list trim;
+#X obj 45 163 pps;
+#X msg 45 190 41 0;
+#X obj 45 137 pack f foo;
+#X floatatom 45 118 5 0 0 0 - - -;
+#X connect 2 0 3 0;
+#X connect 4 0 5 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 0;

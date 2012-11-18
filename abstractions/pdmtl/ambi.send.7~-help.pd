@@ -1,0 +1,4 @@
+#N canvas 0 22 458 308 10;
+#X obj 151 149 ambi.receive.7~ foo;
+#X obj 155 115 ambi.send.7~ foo;
+#X text 124 55 Description: Sends 7 signals;

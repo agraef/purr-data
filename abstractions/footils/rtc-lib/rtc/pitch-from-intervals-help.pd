@@ -1,0 +1,86 @@
+#N canvas 0 48 696 472 10;
+#X text 43 68 Generates pitch classes (i.e. notes without register
+information) by selecting intervals from a given supply sent to the
+rightmost inlet. The selection principle (after Gottfried Michael Koenig)
+sent to the middle inlet determines how the intervals are chosen.;
+#X text 43 36 pitch-from-intervals;
+#X msg 328 35 Harmony;
+#X obj 41 299 pitch-from-intervals 3;
+#X obj 41 273 bng 15 50 50 0 empty empty rhythm_bangs 0 -6 0 8 -262144
+-1 -1;
+#X obj 41 206 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X msg 297 293 1 -4 -2;
+#X obj 264 168 loadbang;
+#X obj 297 272 show;
+#X text 285 201 change interval list;
+#X obj 264 243 choose-intervals 3;
+#X obj 264 207 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 385 218 4 0 0 1 length_of_interval_list - -;
+#X text 336 273 randomly selected interval supply;
+#X msg 152 185 3;
+#X text 284 362 1993 by Karlheinz Essl;
+#X msg 41 354;
+#X text 71 355 pitch class;
+#X floatatom 190 323 4 0 0 1 chosen_interval - -;
+#N canvas 616 354 455 230 play-it 0;
+#X obj 59 33 inlet;
+#X obj 59 62 + 60;
+#X text 101 56 map into middle octave;
+#X obj 59 99 show-pitchclass;
+#X obj 59 131 outlet;
+#X obj 169 99 play2 127 500 1 1;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 0 5 0;
+#X connect 3 0 4 0;
+#X restore 41 327 pd play-it;
+#X obj 41 243 metro 250;
+#X floatatom 99 220 5 0 0 0 - - -;
+#N canvas 0 0 738 528 sel-princ 0;
+#X msg 184 218 1 alea;
+#X msg 184 237 2 series;
+#X msg 184 257 3 sequence;
+#X msg 184 279 4 rota;
+#X obj 184 308 list split 1;
+#X symbolatom 107 142 10 0 0 0 - - -;
+#X obj 107 127 hradio 15 1 0 4 empty empty sel-princ 0 -6 0 8 -262144
+-1 -1 1;
+#X obj 185 335 outlet;
+#X obj 194 129 + 1;
+#X obj 141 160 select 1 2 3 4;
+#X obj 244 66 inlet;
+#X obj 238 95 - 1;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 4 1 5 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 9 1 1 0;
+#X connect 9 2 2 0;
+#X connect 9 3 3 0;
+#X connect 10 0 11 0;
+#X connect 11 0 6 0;
+#X coords 0 -1 1 1 85 60 1 100 100;
+#X restore 152 205 pd sel-princ;
+#X connect 3 0 19 0;
+#X connect 3 1 18 0;
+#X connect 4 0 3 0;
+#X connect 5 0 20 0;
+#X connect 7 0 14 0;
+#X connect 7 0 11 0;
+#X connect 8 0 6 0;
+#X connect 10 0 8 0;
+#X connect 10 0 3 2;
+#X connect 11 0 10 0;
+#X connect 12 0 10 1;
+#X connect 14 0 22 0;
+#X connect 19 0 16 0;
+#X connect 20 0 4 0;
+#X connect 21 0 20 1;
+#X connect 22 0 3 1;

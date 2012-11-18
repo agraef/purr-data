@@ -1,0 +1,51 @@
+#N canvas 471 60 704 592 10;
+#X text 166 177 set the internal value;
+#X msg 165 193 set 0;
+#X floatatom 76 338 5 0 0 0 - - -;
+#X text 158 58 Arg 1: The smooth factor. A value of: 1 does no smoothing
+\, 2 smooths in halves \, 10 smooths in tenths \, etc....;
+#X msg 10 182 4;
+#X msg 43 183 10;
+#X floatatom 152 238 5 0 0 0 - - -;
+#X text 191 236 Smooth factor.;
+#X floatatom 181 266 5 0 0 0 - - -;
+#X text 221 268 Minimum difference.;
+#X text 453 172 set the internal value;
+#X msg 452 188 set 0;
+#X floatatom 371 326 5 0 0 0 - - -;
+#X msg 353 181 4;
+#X msg 391 180 10;
+#X obj 76 300 flow.smooth 2;
+#X text 225 359 If you do not set a minimum difference \, the input
+value will never be reached by the output!;
+#X text 159 93 Arg 2 (optional): If set \, deternines the minimum difference
+between the input value and the output value.;
+#X text 40 29 Description: Smooths changing values.;
+#X text 8 164 Click many times.;
+#X obj 372 288 flow.smooth 2 0.1;
+#X obj 76 510 flow.smooth 10;
+#X msg 115 452 0;
+#X msg 156 450 10;
+#X floatatom 77 556 5 0 0 0 - - -;
+#X obj 29 444 metro 100;
+#X obj 29 419 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 29 395 loadbang;
+#X text 217 462 If you bang the first inlet \, it will keep updating
+flow.smooth with the last sent number.;
+#X connect 1 0 15 0;
+#X connect 4 0 15 0;
+#X connect 5 0 15 0;
+#X connect 6 0 15 1;
+#X connect 8 0 15 2;
+#X connect 11 0 20 0;
+#X connect 13 0 20 0;
+#X connect 14 0 20 0;
+#X connect 15 0 2 0;
+#X connect 20 0 12 0;
+#X connect 21 0 24 0;
+#X connect 22 0 21 0;
+#X connect 23 0 21 0;
+#X connect 25 0 21 0;
+#X connect 26 0 25 0;
+#X connect 27 0 26 0;

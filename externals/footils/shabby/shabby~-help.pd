@@ -1,0 +1,254 @@
+#N canvas 19 174 928 634 10;
+#X obj 269 174 sig~ 0;
+#X obj 198 282 sig~ 0;
+#X obj 198 258 r t2fac;
+#X obj 269 148 r t3fac;
+#X obj 136 502 dac~;
+#X obj 144 414 *~ 0.5;
+#X obj 26 185 r distindex;
+#N canvas 204 17 358 238 fft 0;
+#X obj 46 48 inlet~;
+#X obj 159 145 inlet;
+#X obj 46 78 rfft~;
+#X obj 46 111 *~;
+#X obj 77 111 *~;
+#X obj 46 141 sqrt~;
+#X obj 191 45 block~ 1024 1;
+#X obj 159 181 tabwrite~ spec;
+#X connect 0 0 2 0;
+#X connect 1 0 7 0;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;
+#X connect 2 1 4 0;
+#X connect 2 1 4 1;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X restore 184 500 pd fft;
+#X obj 243 499 tabwrite~ scope;
+#X obj 343 172 sig~ 0;
+#X obj 430 172 sig~ 0;
+#X obj 343 146 r t4fac;
+#X obj 430 146 r t5fac;
+#X obj 126 307 sig~ 0;
+#X floatatom 126 282 0 0 0;
+#X obj 126 257 r t1fac;
+#N canvas 529 116 620 566 controls 1;
+#X obj 47 144 hsl 200 15 0 1 0 1 t1fac empty t1fac -2 -6 128 8 -262144
+-1 -1 6600 1;
+#X obj 48 211 hsl 200 15 0 1 0 1 t3fac empty t3fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X obj 47 247 hsl 200 15 0 1 0 1 t4fac empty t4fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X obj 48 283 hsl 200 15 0 1 0 1 t5fac empty t5fac -2 -6 128 8 -262144
+-1 -1 4600 1;
+#X obj 47 175 hsl 200 15 0 1 0 1 t2fac empty t2fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X obj 46 64 hsl 200 15 0 1 0 1 vol empty outgoing_volume -2 -6 128
+8 -262144 -1 -1 12200 1;
+#X obj 46 28 hsl 200 15 0 1 0 1 distindex distindex distindex-Amplitude_of_Osc
+-2 -6 192 8 -262144 -1 -1 13006 1;
+#X obj 46 317 hsl 200 15 0 1 0 1 t6fac empty t6fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X msg 267 55 \; pd dsp \$1;
+#X obj 269 27 tgl 25 0 dsp dsp DSP 0 -6 192 8 -262144 -1 -1 1 1;
+#X obj 372 23 tgl 15 0 metro-onoff metro-onoff scope-onoff 0 -6 192
+8 -262144 -1 -1 0 1;
+#X text 509 184 Spectrum;
+#X text 531 25 Scope;
+#N canvas 0 0 450 300 graph3 0;
+#X array spec 128 float 0;
+#X coords 0 200 127 0 200 140 1;
+#X restore 369 203 graph;
+#N canvas 0 0 450 300 graph4 0;
+#X array scope 800 float 0;
+#X coords 0 -1 799 1 200 140 1;
+#X restore 370 45 graph;
+#X obj 46 459 hsl 200 15 0 1 0 1 t10fac empty t10fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X obj 48 427 hsl 200 15 0 1 0 1 t9fac empty t9fac -2 -6 128 8 -262144
+-1 -1 6300 1;
+#X obj 47 394 hsl 200 15 0 1 0 1 t8fac empty t8fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X obj 48 356 hsl 200 15 0 1 0 1 t7fac empty t7fac -2 -6 128 8 -262144
+-1 -1 0 1;
+#X text 77 113 HARMONICS;
+#X obj 254 144 nbx 5 14 -1e+37 1e+37 0 0 empty t1fac empty 0 -6 64
+10 -262144 -1 -1 0.331658 256;
+#X obj 256 176 nbx 5 14 -1e+37 1e+37 0 0 empty t2fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 257 211 nbx 5 14 -1e+37 1e+37 0 0 empty t3fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 257 248 nbx 5 14 -1e+37 1e+37 0 0 empty t4fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 259 284 nbx 5 14 -1e+37 1e+37 0 0 empty t5fac empty 0 -6 64
+10 -262144 -1 -1 0.231156 256;
+#X obj 257 315 nbx 5 14 -1e+37 1e+37 0 0 empty t6fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 259 356 nbx 5 14 -1e+37 1e+37 0 0 empty t7fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 260 395 nbx 5 14 -1e+37 1e+37 0 0 empty t8fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 260 427 nbx 5 14 -1e+37 1e+37 0 0 empty t9fac empty 0 -6 64
+10 -262144 -1 -1 0.316583 256;
+#X obj 260 457 nbx 5 14 -1e+37 1e+37 0 0 empty t10fac empty 0 -6 64
+10 -262144 -1 -1 0 256;
+#X obj 391 398 hdl 15 1 1 2 empty empty empty 0 -6 0 8 -262144 -1 -1
+1;
+#X obj 391 422 route 0 1;
+#X obj 391 449 s note;
+#X obj 448 449 s file;
+#X text 382 380 Autoplay;
+#X obj 47 494 hsl 200 15 0 1 0 1 t11fac empty t11fac -2 -6 128 8 -262144
+-1 -1 4100 1;
+#X obj 261 492 nbx 5 14 -1e+37 1e+37 0 0 empty t11fac empty 0 -6 64
+10 -262144 -1 -1 0.20603 256;
+#X connect 9 0 8 0;
+#X connect 30 0 31 0;
+#X connect 31 0 32 0;
+#X connect 31 1 33 0;
+#X restore 640 398 pd controls;
+#X obj 182 389 r vol;
+#X msg 250 469 bang;
+#X obj 722 31 loadbang;
+#X floatatom 10 53 5 0 0;
+#X obj 10 77 mtof;
+#X obj 26 250 line~;
+#X msg 26 219 \$1 10;
+#X obj 10 344 *~;
+#X obj 249 424 r metro-onoff;
+#X msg 580 64 \; pd dsp \$1;
+#X obj 582 36 tgl 25 0 dsp dsp DSP 0 -6 192 8 -262144 -1 -1 1 1;
+#X obj 532 172 sig~ 0;
+#X obj 532 146 r t6fac;
+#X msg 722 65 \; spec bounds 0 200 128 0 \; spec resize 128 \; scope
+bounds 0 -1 800 1 \; scope resize 800 \;;
+#X obj 250 445 metro 300;
+#X text 636 440 Who is shabby~?;
+#X obj 611 173 sig~ 0;
+#X obj 610 231 sig~ 0;
+#X obj 611 147 r t7fac;
+#X obj 610 205 r t8fac;
+#X obj 677 233 sig~ 0;
+#X obj 677 207 r t9fac;
+#X obj 746 233 sig~ 0;
+#X obj 746 207 r t10fac;
+#X msg 10 32 50;
+#X obj 144 366 shabby~ ____________________________________________
+;
+#X obj 10 106 osc~ 440;
+#X text 618 376 OPEN CONTROLS HERE!;
+#X obj 108 184 gadsr 1 10 50 0.6 300;
+#X obj 108 97 t b;
+#X obj 108 122 del 100;
+#X obj 108 147 f 0;
+#X obj 384 26 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 210 40 textfile;
+#X msg 277 39 rewind;
+#X obj 210 65 unpack 0 0;
+#X floatatom 441 19 5 0 0;
+#X obj 26 281 *~ 0;
+#X obj 108 227 *~ 1;
+#X obj 64 269 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 384 3 r file;
+#X obj 66 247 r note;
+#X obj 153 206 r file;
+#X obj 147 230 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 275 92 s distindex;
+#X obj 151 10 loadbang;
+#X obj 811 236 sig~ 0;
+#X obj 811 210 r t11fac;
+#X text 492 465 shabby~ is a waveshaper using 11 Chebychev polynoms
+to generate harmonics from an incoming sinewave. Each polynom has a
+signal inlet to specify its amplitude in the output signal. You can
+use shabby~ to have a decent additive synth that allows control over
+the harmonics in the course of a note at signal rate.;
+#X obj 385 44 metro 80;
+#X msg 217 10 read silly;
+#X obj 72 36 notein 1;
+#X obj 121 59 / 127;
+#X obj 217 546 bendin 1;
+#X obj 215 571 * 1;
+#X floatatom 239 600 5 0 0;
+#X obj 303 566 - 8192;
+#X obj 306 596 / 8192;
+#X connect 0 0 42 3;
+#X connect 1 0 42 2;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 5 0 4 0;
+#X connect 5 0 4 1;
+#X connect 5 0 7 0;
+#X connect 5 0 8 0;
+#X connect 6 0 23 0;
+#X connect 9 0 42 4;
+#X connect 10 0 42 5;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
+#X connect 13 0 42 1;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 17 0 5 1;
+#X connect 18 0 7 1;
+#X connect 18 0 8 0;
+#X connect 19 0 30 0;
+#X connect 20 0 21 0;
+#X connect 20 0 46 0;
+#X connect 20 0 45 0;
+#X connect 21 0 43 0;
+#X connect 22 0 54 0;
+#X connect 23 0 22 0;
+#X connect 24 0 42 0;
+#X connect 25 0 31 0;
+#X connect 27 0 26 0;
+#X connect 28 0 42 6;
+#X connect 29 0 28 0;
+#X connect 31 0 18 0;
+#X connect 33 0 42 7;
+#X connect 34 0 42 8;
+#X connect 35 0 33 0;
+#X connect 36 0 34 0;
+#X connect 37 0 42 9;
+#X connect 38 0 37 0;
+#X connect 39 0 42 10;
+#X connect 40 0 39 0;
+#X connect 41 0 20 0;
+#X connect 42 0 5 0;
+#X connect 43 0 24 0;
+#X connect 45 0 55 0;
+#X connect 46 0 47 0;
+#X connect 47 0 48 0;
+#X connect 48 0 45 0;
+#X connect 49 0 66 0;
+#X connect 50 0 52 0;
+#X connect 50 1 51 0;
+#X connect 51 0 50 0;
+#X connect 52 0 20 0;
+#X connect 52 1 46 0;
+#X connect 52 1 45 1;
+#X connect 52 1 61 0;
+#X connect 52 1 45 0;
+#X connect 53 0 66 1;
+#X connect 54 0 24 1;
+#X connect 55 0 24 1;
+#X connect 56 0 54 1;
+#X connect 57 0 49 0;
+#X connect 58 0 56 0;
+#X connect 59 0 60 0;
+#X connect 60 0 55 1;
+#X connect 62 0 67 0;
+#X connect 63 0 42 11;
+#X connect 64 0 63 0;
+#X connect 66 0 50 0;
+#X connect 67 0 50 0;
+#X connect 68 0 21 0;
+#X connect 68 1 69 0;
+#X connect 69 0 45 0;
+#X connect 69 0 45 1;
+#X connect 70 0 71 0;
+#X connect 70 0 73 0;
+#X connect 73 0 74 0;
+#X connect 74 0 72 0;

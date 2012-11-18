@@ -1,0 +1,15 @@
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/exciter
+
+make clean 
+
+make
+
+make install
+
+open help-exciter.pd
+
+Thanx for getting here.
+Yves/
+comments and bugs @ ydegoyon@free.fr

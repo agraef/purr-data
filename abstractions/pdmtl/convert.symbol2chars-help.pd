@@ -1,0 +1,14 @@
+#N canvas 515 339 666 433 12;
+#X msg 138 69 test;
+#X obj 49 198 print character_list;
+#X obj 240 198 print character_count;
+#X obj 138 119 convert.symbol2chars;
+#X text 30 16 Description: Converts a symbol to a list of characters.
+;
+#X obj 449 185 print last;
+#X obj 349 144 list.element 4;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 0 6 0;
+#X connect 3 1 2 0;
+#X connect 6 0 5 0;

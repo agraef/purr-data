@@ -1,0 +1,6 @@
+NAME=fluid~
+
+BUILDDIR=build
+
+SRCDIR=fluid
+SRCS=main.cpp

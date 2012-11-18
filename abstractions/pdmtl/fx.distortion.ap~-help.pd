@@ -1,0 +1,51 @@
+#N canvas 473 92 660 431 10;
+#X text 97 67 See: http://www.acoustics.hut.fi/~jpekonen/Papers/dafx08/
+;
+#X text 97 84 Frank Barknecht \, 2008;
+#X obj 424 165 param.gui;
+#X msg 424 143 ap;
+#X obj 123 255 fx.distortion.ap~ @id ap;
+#X text 96 13 Description: "Coefficient Modulated Allpass Filter as
+Distortion Effect" as in the DAFx 2008 paper by Jussi Pekonen;
+#X obj 122 297 mix.out_~;
+#X obj 240 192 input.slider_ drive ap@driveR ap@drive;
+#X obj 240 209 input.slider_ lop ap@lopR ap@lop;
+#X obj 240 226 input.slider_ wet ap@wetR ap@wet;
+#N canvas 0 0 450 300 generate 0;
+#X obj 32 213 osc~ 200;
+#X obj 104 214 phasor~ 100;
+#X obj 32 89 metro 400;
+#X obj 32 69 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0 1
+;
+#X obj 32 155 musical.closest.note 0 2 4 7 9;
+#X obj 104 175 musical.closest.note 0 2 4 7 9;
+#X obj 32 175 mtof;
+#X obj 104 195 mtof;
+#X obj 32 132 + 20;
+#X obj 32 111 random 70;
+#X floatatom 83 69 5 0 0 0 - - -;
+#X obj 33 261 outlet~;
+#X obj 103 261 outlet~;
+#X obj 30 14 inlet;
+#X connect 0 0 11 0;
+#X connect 1 0 12 0;
+#X connect 2 0 9 0;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 0 0;
+#X connect 7 0 1 0;
+#X connect 8 0 4 0;
+#X connect 8 0 5 0;
+#X connect 9 0 8 0;
+#X connect 10 0 2 1;
+#X connect 13 0 2 0;
+#X restore 122 218 pd generate;
+#X obj 122 193 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 4 1 6 1;
+#X connect 10 0 4 0;
+#X connect 10 1 4 1;
+#X connect 11 0 10 0;

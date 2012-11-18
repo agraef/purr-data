@@ -1,0 +1,86 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (canvas) 3 12 0
+18 -204280 -1 0;
+#X obj 0 293 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 280 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION Pure Data document window;
+#X text 12 5 NAME pd table graph;
+#X text 12 145 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 508 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 556 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 1 (canvas) Related Objects;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X restore 22 42 pd;
+#X obj 52 42 table;
+#X restore 102 598 pd Related_objects;
+#X obj 78 302 cnv 17 3 85 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 328 3 (This help patch itself is a canvas);
+#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/canvas -text
+pdpedia: canvas;
+#X obj 101 560 pddp/pddplink all_about_canvas_properties.pd -text all_about_canvas_properties
+;
+#X text 72 56 This help patch is associated with several related objects:
+;
+#X text 73 142 4) root canvas (i.e. \, pd document);
+#X text 93 157 Also known simply as a "patch" \, a canvas is a window
+that contains a list of pd objects. A canvas can either be a root canvas--
+created from the "File" menu by choosing "new"-- or a subcanvas (like
+one of the objects listed above).;
+#X text 98 301 anything;
+#X obj 377 76 pddp/pddplink pd-help.pd -text See pd-help;
+#X text 73 76 1) [pd] - subcanvas \, a.k.a. subpatch or subwindow.
+;
+#X text 73 98 2) [table] - array of numbers.;
+#X obj 257 98 pddp/pddplink table-help.pd -text See table-help;
+#X text 73 120 3) graph (available from the "Put" menu).;
+#X obj 322 120 pddp/pddplink graph-help.pd -text See graph-help;
+#X text 62 122 *;
+#X text 62 229 * If you're new to Pd \, it's easy to get graphs mixed
+up with garrays (i.e. \, "Array" from the "Put" menu). For help on
+garrays \, click below:;
+#X obj 170 328 pddp/pddplink inlet-help.pd -text inlet-help;
+#X text 98 347 signal;
+#X obj 170 374 pddp/pddplink inlet~-help.pd -text inlet~-help;
+#X obj 0 398 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 78 407 cnv 17 3 90 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 406 anything;
+#X obj 170 433 pddp/pddplink outlet-help.pd -text outlet-help;
+#X text 98 453 signal;
+#X obj 170 480 pddp/pddplink outlet~-help.pd -text outlet~-help;
+#X text 168 453 - outlets for signals can be created by using [outlet~]
+objects on the canvas. See the links below for more details:;
+#X text 168 347 - inlets for signals can be created by using [inlet~]
+objects on the canvas. See the links below for more details:;
+#X text 98 512 (5);
+#X text 168 512 - canvas arguments are 5 floats which are not directly
+accessible: topLeftX topLeftY canvasWidth canvasHeight fontSize.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 101 575 pddp/pddplink ../3.audio.examples/G05.execution.order.pd
+-text doc/3.audio.examples/G05.execution.order.pd;
+#X text 11 23 Pure Data document window;
+#X text 168 301 - control inlets can be created by using [inlet] objects
+on the canvas. See the links below for more details:;
+#X text 168 406 - control outlets can be created by using [outlet]
+objects on the canvas. See the links below for more details:;
+#X obj 62 270 pddp/pddplink array-help.pd -text Help patch for "Put"
+menu array;

@@ -1,0 +1,94 @@
+#N canvas 91 38 913 531 12;
+#X obj 126 256 rhythms_memory;
+#X msg 126 212 measure;
+#X msg 232 220 0;
+#X obj 123 48 metro 500;
+#X obj 85 86 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 123 25 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 124 71 int 0;
+#X obj 175 72 + 1;
+#X obj 124 94 % 4;
+#X obj 127 155 sel 0;
+#X obj 125 185 bang;
+#X obj 232 185 bng 30 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 231 363 unpack f f f f f;
+#X floatatom 229 390 5 0 0 1 is_this_a_new_rhythm - -;
+#X floatatom 258 408 5 0 0 1 id - -;
+#X floatatom 291 426 5 0 0 1 subid - -;
+#X floatatom 323 446 5 0 0 1 root_closeness - -;
+#X floatatom 355 469 5 0 0 1 sub_closeness - -;
+#X text 442 392 (0=known \, 1=new root \, 2=new sub);
+#X obj 124 117 t f f;
+#X msg 568 247 crash;
+#N canvas 0 0 454 304 drum 0;
+#X obj 108 27 inlet;
+#X obj 108 212 outlet~;
+#X obj 139 93 noise~;
+#X obj 122 159 *~;
+#X obj 207 155 line;
+#X msg 224 101 1 10;
+#X obj 311 89 delay 50;
+#X msg 314 112 0 100;
+#X obj 245 56 t b b;
+#X connect 0 0 8 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 1;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 8 0 6 0;
+#X connect 8 1 5 0;
+#X restore 276 155 pd drum;
+#X obj 274 124 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 270 187 dac~;
+#X floatatom 180 155 5 0 0 0 - - -;
+#X obj 126 294 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 489 133 1 0 0.5;
+#X text 381 17 you can ask it to play a stored rhythm;
+#X text 559 227 (crash me! for debugging);
+#X text 405 98 you will be able to send rhythms in the form of list
+of floats (TODO);
+#X obj 180 319 print;
+#X text 152 294 here you get the wanted rhythms played in realtime
+;
+#X text 235 315 here you'll get the wanted rhythms in the form of lists
+of floats (TODO);
+#X text 373 361 here you get info on the last detected rhythm;
+#X msg 384 39 rhythm_out 6 0;
+#X connect 0 0 25 0;
+#X connect 0 0 21 0;
+#X connect 0 1 30 0;
+#X connect 0 2 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 3 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 1;
+#X connect 8 0 19 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X connect 11 0 2 0;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 12 2 15 0;
+#X connect 12 3 16 0;
+#X connect 12 4 17 0;
+#X connect 19 0 21 0;
+#X connect 19 0 24 0;
+#X connect 19 1 9 0;
+#X connect 20 0 0 0;
+#X connect 21 0 23 0;
+#X connect 21 0 23 1;
+#X connect 22 0 21 0;
+#X connect 22 0 11 0;
+#X connect 26 0 0 1;
+#X connect 34 0 0 0;

@@ -1,0 +1,17 @@
+#N canvas 288 431 530 336 10;
+#X obj 51 183 outlet~;
+#X obj 187 187 outlet~;
+#X obj 260 3 loadbang;
+#X obj 260 42 init.dollar.zero.top;
+#X msg 232 77 set \$1ML;
+#X msg 309 77 set \$1MR;
+#X obj 50 126 catch13~;
+#X text 60 21 Needs: ext13;
+#X obj 184 124 catch13~;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 8 0;
+#X connect 6 0 0 0;
+#X connect 8 0 1 0;

@@ -1,0 +1,10 @@
+#N canvas 298 205 450 300 10;
+#X text 22 10 drag2move;
+#X obj 24 35 inlet;
+#X obj 24 110 outlet;
+#X obj 24 62 route move;
+#X msg 24 86 move \$1 \$2;
+#X text 97 115 dh20020401;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;

@@ -1,0 +1,5 @@
+# where is the libsndfile installation?
+SNDFILEPATH=%programfiles%\libsndfile
+
+SNDFILEINC=$(SNDFILEPATH)\src
+SNDFILELIB=$(SNDFILEPATH)

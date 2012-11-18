@@ -1,0 +1,67 @@
+#N canvas 500 29 557 562 10;
+#X obj 38 343 osc~ 440;
+#X obj 39 403 *~;
+#X msg 41 194 64 127;
+#X msg 94 194 64 0;
+#X msg 133 194 67 127;
+#X msg 184 194 67 0;
+#X text 2 0 Description: Closes an opened note before opening a new
+one.;
+#X obj 38 317 mtof;
+#X obj 289 314 osc~ 440;
+#X obj 289 289 mtof;
+#X obj 290 357 *~;
+#X msg 289 197 64 127;
+#X msg 345 197 64 0;
+#X msg 386 196 67 127;
+#X msg 439 196 67 0;
+#X text 1 46 Argument_1: The delay time (must match the release time
+of synth.adsr~);
+#X text 0 15 Comments: This abstraction is monophonic. Understands
+float triggers.;
+#X msg 153 221 1;
+#X msg 189 221 0;
+#X msg 406 226 1;
+#X msg 443 226 0;
+#X text 39 174 Try only triggerind note_ons;
+#X text 286 174 Try only triggerind note_ons;
+#X text 140 292 NO GLITCHING!;
+#X text 394 261 GLITCHING!;
+#X obj 41 264 mtl/noteClose 5;
+#X text 2 77 tags: midi;
+#X text 1 109 COMPARE TRIGGERING NOTES WITH mtl/noteClose TO THE LEFT
+AND WITHOUT mtl/noteClose ON THE RIGHT.;
+#X text 15 498 WARNING mtl/noteClose's argument (the close delay) must
+be the same value as the release time!;
+#X obj 38 291 mtl/noteSplit;
+#X obj 289 262 mtl/noteSplit;
+#X obj 40 431 mtl/out~;
+#X obj 96 360 mtl/adsr~ 5 5 0.5 5;
+#X obj 351 334 mtl/adsr~ 5 5 0.5 5;
+#X connect 0 0 1 0;
+#X connect 1 0 31 0;
+#X connect 2 0 25 0;
+#X connect 3 0 25 0;
+#X connect 4 0 25 0;
+#X connect 5 0 25 0;
+#X connect 7 0 0 0;
+#X connect 8 0 10 0;
+#X connect 9 0 8 0;
+#X connect 10 0 31 1;
+#X connect 11 0 30 0;
+#X connect 12 0 30 0;
+#X connect 13 0 30 0;
+#X connect 14 0 30 0;
+#X connect 17 0 25 0;
+#X connect 18 0 25 0;
+#X connect 19 0 30 0;
+#X connect 20 0 30 0;
+#X connect 25 0 29 0;
+#X connect 29 0 7 0;
+#X connect 29 1 32 0;
+#X connect 29 2 32 0;
+#X connect 30 0 9 0;
+#X connect 30 1 33 0;
+#X connect 30 2 33 0;
+#X connect 32 0 1 1;
+#X connect 33 0 10 1;

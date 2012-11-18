@@ -1,0 +1,37 @@
+#N canvas 691 24 666 505 10;
+#X msg 141 243 list one two three four;
+#X obj 141 335 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X text 162 336 bang when done or index out of range;
+#X floatatom 98 127 5 0 0 0 - - -;
+#X msg 81 80 bang;
+#X msg 167 288 0 1 2 3 4 5 6 7 8 9;
+#X msg 153 266 twenty three 23;
+#X text 141 126 output item by index number (zero-based \, only positive)
+;
+#X text 321 466 2007 Hans-Christoph Steiner \, Frank Barknecht;
+#X msg 129 197 set;
+#X msg 121 176 set \$1;
+#X floatatom 121 156 5 0 0 0 - - -;
+#X text 163 197 just "set" is "set 0" (rewind);
+#X text 173 176 set start position without output;
+#X text 122 79 output one item and move to the next (takes off \, where
+the last float \, set or bang message was);
+#X obj 81 366 flow.prepend set;
+#X text 78 18 Description: walk through a list element by element -
+similar to textfile and qlist;
+#X obj 141 223 init.lb;
+#X obj 81 310 list.walk;
+#X msg 81 395;
+#X connect 0 0 18 1;
+#X connect 3 0 18 0;
+#X connect 4 0 18 0;
+#X connect 5 0 18 1;
+#X connect 6 0 18 1;
+#X connect 9 0 18 0;
+#X connect 10 0 18 0;
+#X connect 11 0 10 0;
+#X connect 15 0 19 0;
+#X connect 17 0 0 0;
+#X connect 18 0 15 0;
+#X connect 18 1 1 0;

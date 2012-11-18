@@ -1,0 +1,69 @@
+#N canvas 361 266 709 441 12;
+#X obj 88 210 pack 0 0;
+#X floatatom 151 352 7 0 0 0 - - -;
+#X floatatom 200 351 7 0 0 0 - - -;
+#X obj 151 331 unpack;
+#X obj 151 228 widget grid g5a #bg white #fg purple #div 5 #shape rectangle
+#w 95 #h 95 #ln pink #x 0.889764 #size 56 -width 55 -height 55;
+#X obj 270 184 widget grid g3;
+#X obj 402 154 widget grid g4 #fg orange #bg black #w 264 #h 159 #div
+0;
+#X obj 269 53 widget grid gg #shape oval #bg orange #fg pink #ln white
+#div 2 #size 67;
+#X obj 136 53 widget grid bllldie #bg red #fg white #ln gray #shape
+arc #size 44 #div 22;
+#X floatatom 131 12 5 0 0 0 - - -;
+#X msg 131 30 #div \$1;
+#X msg 269 31 #size \$1;
+#X floatatom 269 13 5 0 0 0 - - -;
+#X floatatom 403 110 5 0 0 0 - - -;
+#X msg 403 129 #w \$1;
+#X floatatom 442 110 5 0 0 0 - - -;
+#X msg 442 129 #h \$1;
+#X obj 66 174 random 100;
+#X obj 43 133 t b b;
+#X obj 29 157 random 100;
+#X obj 44 198 * 0.01;
+#X obj 43 97 bng 33 250 50 0 empty empty empty 0 -6 0 8 -225271 -1
+-1;
+#X obj 135 186 / 100;
+#X text 426 25 #w #h #bg #fg #ln #div #shape #size;
+#X obj 530 81 tot .;
+#X msg 529 57 tot console show;
+#X obj 199 370 * 200;
+#X obj 339 315 widget grid g3902 #bg green #fg gray #ln yellow #div
+3 #w 97 #h 97;
+#X obj 456 376 widget grid #bg #fg gray #w 32 #h 32;
+#X obj 149 395 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0.66 256;
+#X obj 35 71 metro 333;
+#X obj 40 46 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X connect 0 0 4 0;
+#X connect 2 0 26 0;
+#X connect 3 0 1 0;
+#X connect 3 0 29 0;
+#X connect 3 1 2 0;
+#X connect 4 0 3 0;
+#X connect 5 0 8 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X connect 11 0 7 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 14 0 6 0;
+#X connect 15 0 16 0;
+#X connect 16 0 6 0;
+#X connect 17 0 22 0;
+#X connect 18 0 19 0;
+#X connect 18 1 17 0;
+#X connect 19 0 20 0;
+#X connect 20 0 0 0;
+#X connect 21 0 18 0;
+#X connect 22 0 0 1;
+#X connect 25 0 24 0;
+#X connect 30 0 21 0;
+#X connect 31 0 30 0;
+#X coords 0 0 1 1 200 140 1;

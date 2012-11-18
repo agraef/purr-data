@@ -1,0 +1,114 @@
+#N canvas 189 161 915 602 10;
+#X obj 14 128 gemhead;
+#X obj 26 481 rectangle;
+#X obj 454 87 gems.win 320 240;
+#X obj 111 85 bng 15 250 50 0 empty empty LOAD_ANOTHER_IMAGE 0 -6 0
+8 -262144 -1 -1;
+#X obj 25 245 pix_texture;
+#X text 444 29 Switch between these two window sizes and notice the
+image is always displayed with the same size.;
+#N canvas 0 0 450 300 custom_image 0;
+#X obj 54 53 inlet;
+#X obj 54 78 t b;
+#X obj 54 97 openpanel;
+#X msg 54 122 open \$1;
+#X obj 69 201 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X restore 112 107 pd custom_image;
+#X obj 25 203 pix_image;
+#X text 25 11 Description: Displays an image or movie in Gem window
+at it's original size.;
+#X floatatom 121 410 5 0 0 0 - - -;
+#X floatatom 64 407 5 0 0 0 - - -;
+#X text 160 138 (All of these images are 256x256 pixels);
+#X msg 456 66 1;
+#X msg 584 66 1;
+#X msg 161 301 window;
+#X obj 129 277 hradio 15 1 0 4 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X msg 191 327 pixsize;
+#X msg 197 348 pixratio;
+#X text 410 386 pixsize: reproduce the image \, pixel by pixel in the
+gem win.;
+#X text 409 408 pixratio: only send out the normalized ration of the
+image's size.;
+#X obj 126 136 hradio 15 1 0 2 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#N canvas 0 0 450 300 small_images 0;
+#X obj 194 163 file.path.top;
+#X msg 194 186 open \$1;
+#X obj 70 8 loadbang;
+#X obj 189 238 outlet;
+#X obj 270 40 inlet;
+#X msg 76 32 0;
+#X obj 116 100 makesymbol medias/images/img%s.jpg;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X restore 126 159 pd small_images;
+#N canvas 0 0 450 300 big_image 0;
+#X obj 194 163 file.path.top;
+#X msg 194 186 open \$1;
+#X obj 189 238 outlet;
+#X obj 107 40 inlet;
+#X obj 116 100 makesymbol medias/images/bigimg%s.jpg;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X restore 127 203 pd big_image;
+#X obj 127 181 hradio 15 1 0 2 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X text 358 289 Inlet_1 : gemlist.;
+#X text 441 118 Argument_1: Selects how you want the fitting.;
+#X obj 26 366 gems.fit window;
+#X msg 326 65 1;
+#X obj 324 86 gems.win 320 320;
+#X floatatom 83 328 5 0 0 0 scale - -;
+#X obj 586 88 gems.win 240 320;
+#X msg 212 381 fill;
+#X text 409 444 fill: fills the whole gemwin;
+#X text 357 332 Inlet_3 : selects how you want the fitting.;
+#X text 358 312 Inlet_2: Determines the scaling.;
+#X text 128 241 You can change the fitting by sending the mode name
+or the fittings's number.;
+#X text 216 299 number 0;
+#X text 249 326 number 1;
+#X text 261 350 number 2;
+#X text 248 382 number 3;
+#X text 444 165 Argument_2: The scale (defaults to 1).;
+#X text 99 484 WARNING: gems.fit only outputs the fitted width (X axis)
+and height (Y axis). You must manage the depth (Z axis yourself);
+#X text 409 353 window or win: fit to the gem window while maintaining
+the widht to height ratio.;
+#X obj 445 139 gems.fit window;
+#X obj 563 139 gems.fit pixratio;
+#X connect 0 0 7 0;
+#X connect 3 0 6 0;
+#X connect 4 0 26 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 9 0 1 2;
+#X connect 10 0 1 1;
+#X connect 12 0 2 0;
+#X connect 13 0 30 0;
+#X connect 14 0 26 2;
+#X connect 15 0 26 2;
+#X connect 16 0 26 2;
+#X connect 17 0 26 2;
+#X connect 20 0 21 0;
+#X connect 21 0 7 0;
+#X connect 22 0 7 0;
+#X connect 23 0 22 0;
+#X connect 26 0 1 0;
+#X connect 26 1 10 0;
+#X connect 26 2 9 0;
+#X connect 27 0 28 0;
+#X connect 29 0 26 1;
+#X connect 31 0 26 2;

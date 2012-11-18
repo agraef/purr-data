@@ -1,0 +1,32 @@
+#N struct 1318template float x array 1318arrayvals 1318arraytemplate
+;
+#N struct 1318arraytemplate float x;
+#N canvas 14 21 450 300 10;
+#X obj 33 175 s-beat nubeat;
+#X floatatom 33 222 5 0 0 0 - - -;
+#X floatatom 33 153 5 0 0 0 - - -;
+#X obj 33 106 metro;
+#X obj 33 130 f;
+#X obj 70 131 + 1;
+#X msg 33 61 600;
+#X obj 33 85 t b f;
+#X msg 226 153 nubeat/beatsize \$1;
+#X text 30 12 add some points to the beat as per the instructions below
+;
+#X text 31 36 then bang here to start with 600ms beats;
+#X msg 91 85 0;
+#X text 124 84 reset beat to zero;
+#X text 86 223 hold down the ctrl key to add/delete tick points;
+#X obj 340 58 sssad/panel;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 1;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;
+#X connect 7 1 3 1;
+#X connect 7 1 8 0;
+#X connect 8 0 0 1;
+#X connect 11 0 4 1;

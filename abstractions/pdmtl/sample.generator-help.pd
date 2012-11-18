@@ -1,0 +1,52 @@
+#N canvas 0 0 1028 734 10;
+#X floatatom 177 553 5 0 0 1 sample_id - -;
+#X msg 229 295 -1;
+#X msg 261 295 0;
+#X msg 300 296 1;
+#X text 329 295 Status;
+#X obj 148 251 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 176 247 on/off (on by default);
+#X text 44 81 Flags: internal sample_id;
+#X text 40 109 WARNING: This is an abstraction to help the development
+of sample_id abstractions. It will be further documented in pdmtls
+next release).;
+#X obj 45 28 cnv 10 200 10 empty empty sample.generator 0 -10 0 16
+-33289 -66577 0;
+#X text 43 47 Description: Generates a sample_id. It is to be used
+inside the "sample_id" abstractions. Works with sample.handler.;
+#X text 317 24 Version: 2007-06-12;
+#X text 504 211 -1: Nothing loaded or invalid sample.;
+#X text 457 193 Status values (second inlet of sample.generator):;
+#X text 456 154 A sample_id stream must start with ONE sample.generator
+nested inside your abstraction.;
+#X text 472 280 Sample properties that can be set:;
+#X msg 22 455 clear;
+#X text 20 435 clear(and set status to -1);
+#X obj 177 492 sample.generator ---;
+#X text 503 407 inlet 8: sample format (frames samplerate channels)
+;
+#X text 510 227 1: Annouces that the sample is loaded and ready to
+play.;
+#X text 511 244 0: Announces the sample is loading or being changed.
+;
+#X text 173 583 Note: The sample_id is output every 50 milliseconds.
+;
+#X text 496 302 inlet 3: progress;
+#X text 499 319 inlet 4: file name;
+#X text 500 335 inlet 5: gadsr (gain attack decay sustain release)
+;
+#X text 501 352 inlet 6: bounds (loop_in loop_out start length);
+#X text 502 372 inlet 6: preview_state;
+#X text 503 388 inlet 7: table_id;
+#X text 500 426 inlet 9: playback;
+#X msg 33 505 dump;
+#X obj 204 520 print dump;
+#X connect 1 0 18 1;
+#X connect 2 0 18 1;
+#X connect 3 0 18 1;
+#X connect 5 0 18 0;
+#X connect 16 0 18 0;
+#X connect 18 0 0 0;
+#X connect 18 1 31 0;
+#X connect 30 0 18 0;

@@ -1,0 +1,54 @@
+#N canvas 135 0 465 772 10;
+#X obj 29 23 cnv 15 404 54 empty empty empty 22 25 0 18 -1 -66577 0
+;
+#X obj 31 25 cnv 15 400 50 empty empty sndfiler 22 25 0 18 -228992
+-66577 0;
+#X obj 55 667 print THREADED_SF;
+#X obj 55 622 r \$0-tsf;
+#X obj 48 440 openpanel;
+#X obj 48 484 s \$0-tsf;
+#X obj 48 420 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 241 645 table array1;
+#X text 69 419 <- read;
+#X obj 239 566 s \$0-tsf;
+#X msg 239 540 resize array1 4410;
+#X text 46 386 for mono files:;
+#X obj 239 442 openpanel;
+#X obj 239 486 s \$0-tsf;
+#X obj 239 422 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 260 421 <- read;
+#X text 235 386 for multichannel specify;
+#X text 237 399 more arrays:;
+#X msg 239 464 read \$1 array1 array2;
+#X obj 241 667 table array2;
+#X obj 55 645 sndfiler;
+#X text 288 34 threaded soundfiler;
+#X text 161 113 ::: SNDFILER :::;
+#X text 65 182 REQUIREMENTS:;
+#X text 118 199 - pd >= 0.39;
+#X text 118 231 - threadlib (for main pd);
+#X text 48 539 threaded resize of arrays:;
+#X text 33 267 read a file: read [flags] filename array1 array2 ...
+;
+#X msg 48 462 read -resize \$1 array1;
+#X text 32 287 FLAGS:;
+#X text 32 305 -resize: resize the array(s) to the size of the soundfile
+;
+#X text 33 324 -skip <sample>: skip nr. of samples in soundfile \,
+if negative \, it will be counted from the end of the file !;
+#X text 82 722 (c) 2005 \, Tim Blechmann \, Georg Holzmann;
+#X text 184 53 using libsndfile and libvorbisfile;
+#X text 53 140 A threaded soundfiler for PD using libsndfile and libvorbisfile
+(for ogg files).;
+#X text 118 215 - libsndfile + libvorbisfile;
+#X connect 3 0 20 0;
+#X connect 4 0 28 0;
+#X connect 6 0 4 0;
+#X connect 10 0 9 0;
+#X connect 12 0 18 0;
+#X connect 14 0 12 0;
+#X connect 18 0 13 0;
+#X connect 20 0 2 0;
+#X connect 28 0 5 0;

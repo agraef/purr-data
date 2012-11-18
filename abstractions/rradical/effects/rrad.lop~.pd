@@ -1,0 +1,124 @@
+#N canvas 398 161 164 112 10;
+#X obj 2 19 cnv 15 160 89 empty \$0-background-cnv empty 20 12 1 14
+-228992 -66577 0;
+#X obj 352 1 inlet OSC;
+#N canvas 0 0 981 424 saves 0;
+#X msg 15 103 set;
+#X msg 45 104 substate \$1;
+#X obj 15 78 t b f;
+#X obj 45 160 originator \$1 \$0;
+#X obj 152 132 inlet OSC;
+#X obj 47 55 r \$0-substate;
+#X obj 15 13 inlet substate;
+#X obj 15 35 route substate;
+#X obj 159 55 r \$0-copy;
+#X msg 159 76 copy;
+#X obj 243 50 r \$0-paste;
+#X msg 241 71 paste;
+#X text 154 15 This is the originator \, including some ready to use
+standard functionality.;
+#X text 541 22 Put your commun sends here \, if you like.;
+#X obj 437 84 r \$0-freq;
+#X obj 437 108 commun /freq \$0;
+#X obj 437 131 s \$0-freq;
+#X obj 552 43 r \$0-Q;
+#X obj 554 111 commun /Q \$0;
+#X obj 555 164 s \$0-Q;
+#X obj 648 87 r \$0-interp;
+#X obj 648 112 commun /interp \$0;
+#X obj 648 134 s \$0-interp;
+#X obj 238 187 bng 15 250 50 0 \$0-copy empty copy 0 -6 0 8 -225271
+-1 -1;
+#X obj 238 215 bng 15 250 50 0 \$0-paste empty paste 0 -6 0 8 -257472
+-1 -1;
+#X obj 152 190 outlet OSC;
+#X obj 556 80 moses 0.01;
+#X obj 554 136 moses 0.01;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 2 1 1 0;
+#X connect 3 2 25 0;
+#X connect 4 0 3 1;
+#X connect 5 0 2 0;
+#X connect 6 0 7 0;
+#X connect 7 0 2 0;
+#X connect 7 1 3 0;
+#X connect 8 0 9 0;
+#X connect 9 0 3 0;
+#X connect 10 0 11 0;
+#X connect 11 0 3 0;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 17 0 26 0;
+#X connect 18 0 27 0;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 26 0 18 0;
+#X connect 27 1 19 0;
+#X restore 290 0 pd saves;
+#N canvas 609 68 450 300 cnv.ctl 0;
+#X obj 90 188 s \$0-background-cnv;
+#X floatatom 108 59 5 100 1000 0 width - -;
+#X floatatom 112 83 4 50 500 0 height - -;
+#X obj 92 132 pack 0 0;
+#X msg 92 159 vis_size \$1 \$2;
+#X obj 110 106 t b f;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 3 0;
+#X connect 5 1 3 1;
+#X restore 215 0 pd cnv.ctl;
+#X obj 23 30 hsl 80 15 0 127 0 0 \$0-freq \$0-freq freq -2 -6 0 8 -261689
+-1 -1 4914 1;
+#X text 94 -1 look! ==>;
+#N canvas 547 322 450 300 effect 0;
+#X obj 66 206 outlet~;
+#X obj 70 154 lp2~ 440 0.707 200;
+#X obj 61 48 inlet~;
+#X obj 110 97 r \$0-freq;
+#X obj 188 99 r \$0-Q;
+#X obj 240 97 r \$0-interp;
+#X obj 110 125 mtof;
+#X obj 172 198 s \$0-realQ;
+#X obj 262 199 s \$0-realint;
+#X text 279 122 scale;
+#X obj 239 124 * 5;
+#X obj 173 130 * 0.3;
+#X obj 148 250 s \$0-realfreq;
+#X obj 141 220 int;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X connect 4 0 11 0;
+#X connect 5 0 10 0;
+#X connect 6 0 1 1;
+#X connect 6 0 13 0;
+#X connect 10 0 1 3;
+#X connect 10 0 8 0;
+#X connect 11 0 1 2;
+#X connect 11 0 7 0;
+#X connect 13 0 12 0;
+#X restore 173 40 pd effect;
+#X obj 172 66 outlet~;
+#X obj 173 1 inlet~;
+#X obj 290 22 outlet OSC;
+#X obj 22 60 vsl 15 32 0.01 127 0 0 \$0-Q \$0-Q Q 0 -8 0 8 -195568
+-258699 -1 400 1;
+#X obj 121 61 vsl 15 32 0 127 0 0 \$0-interp \$0-interp interp 0 -8
+0 8 -195568 -355 -1 0 1;
+#X obj 46 57 nbx 5 14 0 1e+37 0 0 \$0-substate \$0-parentstate preset
+0 -6 0 8 -233017 -1 -1 0 256;
+#X obj 47 84 nbx 3 12 -1e+37 1e+37 0 0 empty \$0-realQ Q 0 -6 0 8 -233017
+-258699 -1 4.91874 256;
+#X obj 81 84 nbx 3 12 -1e+37 1e+37 0 0 empty \$0-realint interp 0 -6
+0 8 -233017 -355 -1 0 256;
+#X obj 113 31 nbx 5 12 -1e+37 1e+37 0 0 empty \$0-realfreq freq 0 -6
+0 8 -261689 -258699 -1 783 256;
+#X connect 1 0 2 1;
+#X connect 2 0 9 0;
+#X connect 6 0 7 0;
+#X connect 8 0 6 0;
+#X coords 0 0 1 1 162 110 1;

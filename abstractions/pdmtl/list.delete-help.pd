@@ -1,0 +1,10 @@
+#N canvas 78 171 450 300 10;
+#X text 73 34 Description: Delete an index from a list.;
+#X obj 94 187 print;
+#X floatatom 190 91 5 0 0 0 - - -;
+#X msg 85 81 list a b c d;
+#X text 252 91 1 = first index;
+#X obj 88 134 list.delete 0;
+#X connect 2 0 5 1;
+#X connect 3 0 5 0;
+#X connect 5 0 1 0;

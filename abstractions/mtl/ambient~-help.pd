@@ -1,0 +1,12 @@
+#N canvas 533 428 346 257 10;
+#X text 41 25 Description: Ambient drone.;
+#X text 41 44 Author: Chun Lee (sonicvariable.goto10.org);
+#X obj 46 170 mtl/out~;
+#X text 43 91 delay;
+#X obj 49 111 hsl 128 15 1 1000 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 44 63 tags: synthesize~;
+#X obj 46 135 mtl/ambient~;
+#X connect 4 0 6 0;
+#X connect 6 0 2 0;
+#X connect 6 1 2 1;

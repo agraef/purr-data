@@ -1,0 +1,74 @@
+#N canvas 368 295 491 332 10;
+#X obj 84 191 s pd;
+#X msg 84 171 dsp \$1;
+#X obj 84 41 r pd;
+#X obj 84 61 route dsp;
+#X obj 84 151 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 14 111 hradio 15 1 0 4 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X obj 14 111 cnv 15 60 15 empty \$0-dsp DSP_OFF 6 8 0 12 -233017 -1
+0;
+#X msg 84 81 set \$1;
+#X obj 146 228 s \$0-dsp;
+#X obj 146 168 sel 0;
+#X obj 94 110 inlet;
+#X text 12 260 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 298 pd license;
+#X obj 136 111 init \$1;
+#X text 350 100 Inlets;
+#X text 350 120 - Bang / Number;
+#X text 350 50 Arguments;
+#X text 350 70 - DSP state (1/0);
+#X obj 14 131 bang;
+#X text 12 10 [dsp01] - DSP switch;
+#X text 16 277 Adapted from H-C Steiner's dsp abstraction;
+#X msg 146 188 label DSP_OFF \, color 10 22;
+#X msg 173 208 label DSP_ON \, color 22 0;
+#X obj 34 191 outlet;
+#X text 350 200 GUI;
+#X text 350 220 - Click on it;
+#X text 350 150 Outlets;
+#X text 350 170 - Number (0 / x);
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 3 0 9 0;
+#X connect 4 0 1 0;
+#X connect 4 0 9 0;
+#X connect 4 0 23 0;
+#X connect 5 0 18 0;
+#X connect 7 0 4 0;
+#X connect 9 0 21 0;
+#X connect 9 1 22 0;
+#X connect 10 0 4 0;
+#X connect 13 0 4 0;
+#X connect 18 0 4 0;
+#X connect 21 0 8 0;
+#X connect 22 0 8 0;
+#X coords 0 -1 1 1 62 17 1 13 110;

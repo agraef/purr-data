@@ -1,0 +1,20 @@
+#N canvas 160 304 587 350 10;
+#X obj 259 234 outlet;
+#X text 83 259 If the argument is not equal to 0 \, use it. Pd init
+arguments to 0 so unused arguments will be 0;
+#X obj 143 116 select 0;
+#X text 82 296 This is useful to have internals inited \, but not reset
+if there is no argument specified.;
+#X obj 143 190 select 0;
+#X text 275 172 if 2nd arg \, then use as default value;
+#X obj 143 20 inlet;
+#X obj 143 96 list append \$1;
+#X obj 143 169 list append \$2;
+#X obj 143 55 bang;
+#X connect 2 0 8 0;
+#X connect 2 1 0 0;
+#X connect 4 1 0 0;
+#X connect 6 0 9 0;
+#X connect 7 0 2 0;
+#X connect 8 0 4 0;
+#X connect 9 0 7 0;

@@ -1,0 +1,39 @@
+#N canvas 443 111 675 756 10;
+#X obj 54 541 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4348 1;
+#X obj 54 96 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 1900 1;
+#X floatatom 175 457 5 0 0 0 - - -;
+#X obj 54 503 distance2d 0.3 0.5;
+#X obj 175 478 pack f f;
+#X floatatom 226 457 5 0 0 0 - - -;
+#X text 126 29 distance from a point and a stream in 2d;
+#X obj 75 96 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4400 1;
+#X obj 54 278 pack f f;
+#X obj 75 243 t b f;
+#X obj 121 69 gcanvas 100 100;
+#X obj 121 179 / 100;
+#X obj 214 181 / 100;
+#X obj 121 205 pack f f;
+#X obj 175 317 gcanvas 100 100;
+#X obj 175 427 / 100;
+#X obj 268 429 / 100;
+#X connect 1 0 8 0;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 1;
+#X connect 5 0 4 1;
+#X connect 7 0 9 0;
+#X connect 8 0 3 0;
+#X connect 9 0 8 0;
+#X connect 9 1 8 1;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 1;
+#X connect 13 0 3 0;
+#X connect 14 0 15 0;
+#X connect 14 1 16 0;
+#X connect 15 0 2 0;
+#X connect 16 0 5 0;

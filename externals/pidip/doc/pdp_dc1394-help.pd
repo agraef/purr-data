@@ -1,0 +1,16 @@
+#N canvas 0 0 1039 352 10;
+#X obj -81 101 pdp_dc1394;
+#X obj -79 50 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj -81 177 pdp_xv;
+#X obj -18 57 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 5 73 metro 20;
+#X text 141 24 pdp_dc1394 is a first implementation of using DC1394
+cameras in pdp. For now its only tested with a Monochrome camera but
+there is lot of work to do :: handling errors \, adding control messages
+and to suport other colorspaces.;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;

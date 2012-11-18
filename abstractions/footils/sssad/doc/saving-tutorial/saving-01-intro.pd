@@ -1,0 +1,78 @@
+#N canvas 296 70 583 730 10;
+#X obj 105 254 hsl 128 15 0 127 0 1 empty empty empty -2 -6 0 8 -262144
+-1 -1 5600 1;
+#X text 78 200 This slider will recall the value it had when this patch
+was saved:;
+#X floatatom 82 327 5 0 0 0 - - -;
+#X msg 125 348 set \$1;
+#X msg 125 369 5;
+#X obj 177 349 loadbang;
+#X text 82 410 Here you already see a typical "idiom" to state saving:
+We kind of eavesdrop the messages flowing along connections and store
+this somewhere (a message box in this case) \, and we have a feedback
+connection going back to the number box. This kind of cross-connection
+is something we will see all the time later on.;
+#X obj 95 577 phasor~;
+#X obj 157 628 bp~;
+#X floatatom 95 556 5 0 0 2 freq - -;
+#X floatatom 165 591 5 0 0 2 cutoff - -;
+#X floatatom 293 588 5 0 0 2 Q - -;
+#N canvas 0 0 242 205 store 0;
+#X msg 28 69 set \$1;
+#X msg 77 105 5;
+#X obj 77 43 loadbang;
+#X obj 28 45 inlet;
+#X obj 77 128 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X restore 293 611 pd store;
+#N canvas 0 0 242 205 store 0;
+#X msg 28 69 set \$1;
+#X msg 77 105 18;
+#X obj 77 43 loadbang;
+#X obj 28 45 inlet;
+#X obj 77 128 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X restore 212 589 pd store;
+#N canvas 0 0 242 205 store 0;
+#X msg 28 69 set \$1;
+#X msg 77 105 174;
+#X obj 77 43 loadbang;
+#X obj 28 45 inlet;
+#X obj 77 128 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X restore 139 556 pd store;
+#X text 80 496 Next is a real-life example: The set/loadbang construct
+is inside the [pd store] subpatches:;
+#X text 78 55 Saving the state of a patch in Pd can be done in various
+ways. First lets think a bit about what should be saved. A natural
+candidate for this is the current state of GUI elements like number
+boxes or sliders \, though later we will see \, that we may want to
+save different things as well.;
+#X text 78 145 Sliders have a button labeled "init" in their Properties
+dialog \, which is like a builtin "loadbang" and makes them recall
+the last value they had \, when the patch was saved.;
+#X text 79 292 Standard number boxes lack this feature \, but it is
+easily built by hand using two message boxes and loadbangs:;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;
+#X connect 7 0 8 0;
+#X connect 9 0 7 0;
+#X connect 9 0 14 0;
+#X connect 10 0 8 1;
+#X connect 10 0 13 0;
+#X connect 11 0 8 2;
+#X connect 11 0 12 0;
+#X connect 12 0 11 0;
+#X connect 13 0 10 0;
+#X connect 14 0 9 0;

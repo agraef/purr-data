@@ -1,0 +1,68 @@
+#N canvas 242 109 742 690 12;
+#X text 13 3 xsample~ demo;
+#N canvas 0 22 452 302 graph5 0;
+#X array loop1 440000 float 0;
+#X coords 0 0.2 439999 -0.2 200 140 1;
+#X restore 516 184 graph;
+#X obj 244 262 xrecord~ loop1;
+#X msg 74 233 start;
+#X msg 75 265 stop;
+#X obj 111 108 adc~;
+#X msg 225 158 help;
+#X msg 237 184 print;
+#X msg 165 122 append 0;
+#X obj 246 297 snapshot~;
+#X obj 165 96 loadbang;
+#X floatatom 245 328 10 0 0 1 looplength - -;
+#X text 4 214 Click to start recording;
+#X text 273 156 Click help prints info;
+#X text 236 98 start from the beginning of the array each time;
+#X obj 147 579 xgroove~ loop1;
+#X msg 121 449 print;
+#X msg 135 472 help;
+#X msg 15 536 start;
+#X msg 16 565 stop;
+#X floatatom 172 526 8 0 0 2 speed - -;
+#X floatatom 208 624 8 0 0 3 startsample - -;
+#X floatatom 311 623 10 0 0 3 endsample - -;
+#X obj 134 631 dac~;
+#X obj 185 448 loadbang;
+#X msg 188 470 1;
+#X text 2 515 play the loop;
+#X text 244 525 negative numbers play sample backwards;
+#X text 259 356 The xrecord object puts out the current position so
+we take a snapshot of it when we stop recording to get the number of
+samples we have recorded.;
+#X text 262 556 use the last sample number as the max position so loop
+is played the right length;
+#X text 78 23 This demo records sound coming from your sound card input
+(e.g. microphone). It stores the sample in the array "loop1". The array
+has 440000 elements so it can store a max of 10 seconds \, recording
+at 44khz.;
+#X text 285 182 print current status;
+#X text 25 428 Playback of the sample stored in loop1 using the xgroove
+object:;
+#X text 136 4 (by Glenn Meader);
+#X text 20 314;
+#X connect 2 0 9 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 2 0;
+#X connect 8 0 2 0;
+#X connect 9 0 11 0;
+#X connect 10 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 15 2;
+#X connect 15 0 23 0;
+#X connect 15 0 23 1;
+#X connect 15 2 21 0;
+#X connect 15 3 22 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 0;
+#X connect 18 0 15 0;
+#X connect 19 0 15 0;
+#X connect 20 0 15 0;
+#X connect 24 0 25 0;
+#X connect 25 0 20 0;

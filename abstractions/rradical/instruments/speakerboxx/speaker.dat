@@ -1,0 +1,92 @@
+/speak 4 , /s3 , da
+/speak 4 , /speed , 5
+/speak 4 , /s5 , goon
+/speak 4 , /s7 , da
+/speak 4 , /s1 , goon
+/speak 5 , /s6 , iii
+/speak 5 , /s2 , auod
+/speak 5 , /s4 , oooo
+/speak 0 , /s3 , yipp
+/speak 0 , /s8 , 
+/speak 0 , /s6 , 
+/speak 0 , /s2 , 
+/speak 0 , /s4 , 
+/speak 0 , /speed , 3
+/speak 0 , /s5 , 
+/speak 0 , /s7 , 
+/speak 0 , /s1 , pow
+/speak 2 , /s3 , o
+/speak 2 , /s2 , 
+/speak 2 , /s4 , 
+/speak 2 , /s5 , 
+/speak 2 , /s1 , pow
+/speak 3 , /s2 , 
+/speak 1 , /s3 , o
+/outkast 4 , /s3 , da
+/outkast 4 , /s8 , 
+/outkast 4 , /s6 , 
+/outkast 4 , /s2 , 
+/outkast 4 , /s4 , 
+/outkast 4 , /speed , 5
+/outkast 4 , /s5 , goon
+/outkast 4 , /s7 , ah
+/outkast 4 , /s1 , goon
+/outkast 5 , /s3 , di
+/outkast 5 , /s8 , high
+/outkast 5 , /s6 , high
+/outkast 5 , /s2 , high
+/outkast 5 , /s4 , high
+/outkast 0 , /s3 , ck
+/outkast 0 , /s6 , pow
+/outkast 0 , /s2 , clack
+/outkast 0 , /s4 , clap
+/outkast 0 , /speed , 3
+/outkast 0 , /s5 , bow
+/outkast 0 , /s7 , ck
+/outkast 0 , /s1 , bow
+/outkast 2 , /s8 , 
+/outkast 2 , /s2 , 
+/outkast 2 , /s4 , 
+/outkast 2 , /s7 , ck
+/outkast 1 , /s8 , u
+/outkast 1 , /s2 , list
+/outkast 1 , /speed , 3
+/outkast 1 , /s7 , a
+/outkast 1 , /s1 , pow
+/speak2 4 , /s3 , 
+/speak2 4 , /s8 , dah
+/speak2 4 , /s6 , 
+/speak2 4 , /s2 , dah
+/speak2 4 , /s4 , goon
+/speak2 4 , /speed , 5
+/speak2 4 , /s5 , dah
+/speak2 4 , /s7 , goon
+/speak2 4 , /s1 , goon
+/speak2 5 , /s3 , eeee
+/speak2 5 , /s6 , eeee
+/speak2 0 , /s3 , 
+/speak2 0 , /s8 , ss
+/speak2 0 , /s6 , 
+/speak2 0 , /s2 , ss
+/speak2 0 , /s4 , 
+/speak2 0 , /speed , 3
+/speak2 0 , /s5 , ss
+/speak2 0 , /s7 , 
+/speak2 0 , /s1 , 
+/speak2 2 , /s8 , gee
+/speak2 2 , /s6 , poo
+/speak2 2 , /s2 , 
+/speak2 2 , /s5 , pee
+/speak2 2 , /s1 , buing
+/speak2 3 , /s3 , 
+/speak2 3 , /s8 , ss
+/speak2 3 , /s6 , 
+/speak2 3 , /s2 , ss
+/speak2 3 , /s4 , 
+/speak2 3 , /speed , 3
+/speak2 3 , /s5 , ss
+/speak2 3 , /s7 , 
+/speak2 3 , /s1 , 
+/speak2 1 , /s8 , gee
+/speak2 1 , /s2 , 
+/speak2 1 , /s5 , pee

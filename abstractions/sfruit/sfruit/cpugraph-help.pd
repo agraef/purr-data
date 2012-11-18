@@ -1,0 +1,6 @@
+#N canvas 0 22 370 270 10;
+#X obj 115 94 cpugraph;
+#X text 16 11 [cpugraph] - A nice GOP widget for monitoring CPU usage.
+Use the "Mark" button to note down the current value to compare to
+later.;
+#X text 231 237 2008 Luke Iannini;

@@ -1,0 +1,41 @@
+#N struct 1635datatemplate float x float y;
+#N canvas 0 22 450 300 10;
+#N canvas 0 22 450 300 \$0datatemplate 0;
+#X obj 99 58 drawpolygon 90 3 0 0 0 10 10 10 10 0 0 0;
+#X obj 112 95 loadbang;
+#X obj 112 124 t b b b;
+#X msg 188 127 clear;
+#X obj 188 149 s pd-\$0mydata;
+#X msg 112 182 0 0 \, 20 0 \, 40 0;
+#X obj 131 213 ds-begin pd-\$0mydata;
+#X obj 90 247 append \$0datatemplate x y;
+#X obj 94 96 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 99 32 struct \$0datatemplate float x float y;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 2 1 6 0;
+#X connect 2 2 3 0;
+#X connect 3 0 4 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 2;
+#X connect 8 0 2 0;
+#X restore 293 88 pd \$0datatemplate;
+#N canvas 3 345 126 108 \$0mydata 1;
+#X scalar 1635datatemplate 0 0 \;;
+#X scalar 1635datatemplate 20 0 \;;
+#X scalar 1635datatemplate 40 0 \;;
+#X restore 293 110 pd \$0mydata;
+#X obj 50 177 append \$0datatemplate x y;
+#X obj 50 99 t b b;
+#X obj 50 68 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 127 140 ds-end pd-\$0mydata;
+#X msg 50 140 60 0;
+#X text 8 4 Outputs the last pointer in a data structure so that one
+can append after it.;
+#X connect 3 0 6 0;
+#X connect 3 1 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 2;
+#X connect 6 0 2 0;

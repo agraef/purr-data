@@ -1,0 +1,12 @@
+#N canvas 301 154 450 300 10;
+#X msg 233 110 symbol;
+#X obj 234 88 loadbang;
+#X obj 159 37 inlet;
+#X obj 170 138 zexy/list2symbol;
+#X obj 162 217 outlet;
+#X obj 164 173 cyclone/fromsymbol;
+#X connect 0 0 3 1;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 5 0 4 0;

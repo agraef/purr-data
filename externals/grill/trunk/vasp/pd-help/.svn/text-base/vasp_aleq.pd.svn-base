@@ -1,0 +1,52 @@
+#N canvas 56 200 881 464 10;
+#X obj 62 41 cnv 15 15 15 empty empty vasp.a<= 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufaleq 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 489 91 graph;
+#N canvas 0 0 402 278 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufaleq \, symbol bufaleq1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 743 395 pd init;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufaleq1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 489 220 graph;
+#N canvas 0 0 413 295 clear_buffers 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 541 397 pd clear_buffers;
+#X text 389 220 1/true;
+#X text 388 260 0/false;
+#X text 60 94 argument/right inlet: value;
+#X obj 61 172 vasp.osc 44100;
+#X obj 61 194 vasp.update;
+#X obj 58 366 vasp.update;
+#X floatatom 125 308 5 0 0;
+#X text 164 230 copy to new buffer;
+#X obj 57 418 VASP-HELP;
+#X msg 541 371 vasp bufaleq bufaleq1;
+#X msg 61 150 vasp bufaleq;
+#X msg 58 236 vasp bufaleq1;
+#X obj 58 262 vasp.= bufaleq;
+#X obj 58 335 vasp.<= -0.4;
+#X text 60 80 abs(sample) <= abs(value);
+#X connect 8 0 9 0;
+#X connect 11 0 18 1;
+#X connect 14 0 4 0;
+#X connect 15 0 8 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 10 0;

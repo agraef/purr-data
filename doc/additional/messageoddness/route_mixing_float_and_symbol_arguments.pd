@@ -1,0 +1,26 @@
+#N canvas 793 278 453 550 10;
+#X obj 122 255 route 1 bla;
+#X msg 118 113 list bla hu;
+#X obj 114 293 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 149 297 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 197 296 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 86 85 bla hu;
+#X msg 159 147 1 two;
+#X msg 203 147 list 1 two;
+#X text 32 22 mixing different data types in one route object is not
+supported and thus leads to unexpected behaviour.;
+#X msg 169 220 0;
+#X text 197 218 <- unexpectedly matches 'bla';
+#X text 134 83 <- unexpectedly not matching;
+#X text 200 113 unexpectedly matches 'bla';
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 0 2 4 0;
+#X connect 1 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 0;

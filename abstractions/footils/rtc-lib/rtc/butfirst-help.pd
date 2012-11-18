@@ -1,0 +1,16 @@
+#N canvas 546 193 456 374 10;
+#X obj 106 208 bng 15 250 50 1 empty empty clear_display 0 -6 0 8 -262144
+-1 -1;
+#X obj 65 207 show;
+#X msg 65 114 1 2 3 4 5;
+#X msg 85 140 a b c d e f g h i;
+#X msg 65 240;
+#X text 25 277 1994 by Karlheinz Essl;
+#X obj 65 175 butfirst;
+#X text 25 61 Outputs the input list without its first element.;
+#X text 25 29 butfirst;
+#X connect 0 0 1 1;
+#X connect 1 0 4 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 6 0 1 0;

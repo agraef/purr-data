@@ -1,0 +1,9 @@
+#N canvas 0 0 450 300 10;
+#X obj 100 129 list.reverse;
+#X text 48 24 Description: Reverses the elements in a list.;
+#X msg 118 75 c b a;
+#X msg 213 76 3 2 1 0;
+#X obj 102 174 print;
+#X connect 0 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;

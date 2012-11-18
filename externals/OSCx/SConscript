@@ -1,0 +1,17 @@
+import glob
+import os
+import re
+Import('env prefix')
+
+libOSC = glob.glob('libOSC/OSC*.c')
+miscOSC = Split('src/htmsocket.c src/OSC-pattern-match.c src/OSC-system-dependent.c')
+
+for OSCexternal in Split('dumpOSC sendOSC OSC OSCroute'):
+    src = ["src/" + OSCexternal + ".c", libOSC, miscOSC]
+    if (OSCexternal == 'OSC'):
+        src.extend(Split('src/dumpOSC.c src/sendOSC.c src/OSCroute.c'))
+    OSCx = env.SharedLibrary(target = re.sub("\.c$","",os.path.basename(OSCexternal)), source = src, CCFLAGS = ['$CCFLAGS' , '-Wall', '-Wno-unused'],CPPPATH = ['$CPPPATH', 'libOSC'])
+    env.Alias('install', env.Install(os.path.join(prefix, 'extra'), OSCx))
+    Default(OSCx)
+
+env.Alias('install', env.Install(os.path.join(prefix, 'doc/OSCx'), glob.glob('doc/*.pd')))

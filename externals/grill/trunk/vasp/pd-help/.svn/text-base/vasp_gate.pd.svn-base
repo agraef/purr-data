@@ -1,0 +1,74 @@
+#N canvas 36 36 808 584 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.gate 0 10 1 14 -262144 -1
+0;
+#X obj 71 131 filelist \$0;
+#N canvas 92 108 418 383 inside 0;
+#X obj 66 169 soundfiler;
+#X obj 84 253 s \$0-sample-length;
+#X obj 66 223 s \$0-draw_display;
+#X msg 214 221 resize \$1;
+#X obj 66 60 loadbang;
+#X obj 66 193 t b f f;
+#X obj 66 113 filelisthandler \$0;
+#X msg 66 91 1;
+#X obj 214 243 s bufgate1;
+#X obj 225 264 s bufgate2;
+#X msg 66 145 read -resize \$1 bufgate1;
+#X connect 0 0 5 0;
+#X connect 3 0 8 0;
+#X connect 3 0 9 0;
+#X connect 4 0 7 0;
+#X connect 5 0 2 0;
+#X connect 5 1 1 0;
+#X connect 5 2 3 0;
+#X connect 6 0 10 0;
+#X connect 7 0 6 0;
+#X connect 10 0 0 0;
+#X restore 668 495 pd inside;
+#N canvas 40 55 281 170 clear_buffers 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X obj 54 108 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 479 495 pd clear_buffers;
+#X obj 60 272 vasp.update;
+#X obj 60 292 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X text 69 52 gate buffer content with a value;
+#X obj 419 261 wavedisplay-simple bufgate2 \$0;
+#X obj 419 112 wavedisplay-simple bufgate1 \$0;
+#X msg 60 232 vasp bufgate2;
+#X obj 60 252 vasp.= bufgate1;
+#X msg 479 475 vasp bufgate1 bufgate2;
+#X text 161 229 copy from bufgate1 to bufgate2;
+#X obj 337 495 dac~;
+#X obj 337 457 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 358 455 play;
+#X obj 337 475 tabplay~ bufgate2;
+#X text 71 66 optional argument/right inlet: value (usually from 0-1
+to gate the soundfile sample for sample (not like a compressor!);
+#X obj 58 497 VASP-HELP;
+#X obj 60 391 vasp.update;
+#X floatatom 133 349 5 0 0;
+#X obj 60 411 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X msg 60 324 vasp bufgate2;
+#X obj 60 371 vasp.gate 0.2;
+#X text 177 348 value;
+#X text 159 321 gate the buffer content;
+#X connect 4 0 5 0;
+#X connect 9 0 10 0;
+#X connect 10 0 4 0;
+#X connect 11 0 3 0;
+#X connect 14 0 16 0;
+#X connect 16 0 13 0;
+#X connect 16 0 13 1;
+#X connect 19 0 21 0;
+#X connect 20 0 23 1;
+#X connect 22 0 23 0;
+#X connect 23 0 19 0;

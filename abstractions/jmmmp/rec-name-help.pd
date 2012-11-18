@@ -1,0 +1,52 @@
+#N canvas 0 0 765 492 10;
+#X obj 36 199 rec-name;
+#X text 410 230 Inlets;
+#X text 410 300 Outlets;
+#X text 410 370 GUI;
+#X text 410 250 - Bang / Toggle (Recording);
+#X text 410 320 - message to writesf~;
+#X text 410 340 - message to readsf~;
+#X text 410 390 - Click on the either toggle to start/stop recording
+or playback;
+#X obj 36 155 bng 13 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 52 155 tgl 13 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 119 175 bng 13 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 135 175 tgl 13 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 36 229 print REC;
+#X obj 119 249 print PLAY;
+#X obj 36 366 writesf~ 2;
+#X obj 119 366 readsf~ 2;
+#X obj 119 386 dac~;
+#X obj 36 336 rec-name;
+#X text 13 6 [rec-name] - Automatic naming for a record/playback engine.
+;
+#X text 12 437 (C) 2007 João Pais - jmmmpais@googlemail.com;
+#X text 70 152 Bang or Toggle: creates a file and starts recording
+;
+#X text 153 173 Bang or Toggle: playback the file that was just recorded
+;
+#X text 13 36 [rec-name] automatically creates the string *DATE*_*TIME*.wav.
+This string can be connected with the writesf~ and readsf~ objects.
+;
+#X text 37 296 One example of a complete recording / playback circuit.
+(only the audio inputs are missing);
+#X text 410 270 - Bang / Toggle (Playback) / Sample playback index
+;
+#X text 13 76 This abstraction can be quite useful when making several
+recordings (or takes) one after the other. The files are named automatically
+\, avoiding the constant inputting of a filename.;
+#X text 12 457 Released under the BSD License;
+#X connect 0 0 12 0;
+#X connect 0 1 13 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 1;
+#X connect 11 0 0 1;
+#X connect 15 0 16 0;
+#X connect 15 1 16 1;
+#X connect 17 0 14 0;
+#X connect 17 1 15 0;

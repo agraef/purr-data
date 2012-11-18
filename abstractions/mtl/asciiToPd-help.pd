@@ -1,0 +1,25 @@
+#N canvas 760 121 569 441 10;
+#X text 28 38 tags: conversion;
+#X obj 54 212 print;
+#X msg 54 109 97 32 98 32 99;
+#X obj 56 185 mtl/asciiToPd;
+#X text 157 130 0 is a special value that forces the end of the message
+;
+#X msg 69 132 65 0 66 0 67;
+#X floatatom 89 153 5 48 126 0 - - -;
+#X text 27 17 Description: Converts ASCII bytes to Pd messages.;
+#X obj 55 367 print;
+#X text 167 340 If you specify an ASCII code argument \, the object
+will store all incomming data. The data will be converted and outputed
+only when the specified ASCII code is encountered. In this case \,
+code 13 (carriage return).;
+#X msg 56 285 104 101 108 108 111 32;
+#X msg 81 307 119 111 114 108 100 13;
+#X obj 56 343 mtl/asciiToPd 13;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 8 0;

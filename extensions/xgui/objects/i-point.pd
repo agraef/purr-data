@@ -1,0 +1,6 @@
+#N canvas 371 189 536 425 10;
+#X obj 55 297 move;
+#X obj 24 268 seg le \$0-point */;
+#X obj 87 164 make_object_name \$1;
+#X connect 0 0 1 0;
+#X connect 1 0 0 0;

@@ -1,0 +1,457 @@
+#N canvas 645 477 866 567 12;
+#X obj 26 94 noise~;
+#X obj 240 189 print A;
+#X obj 27 393 tgl 15 0 empty empty empty 0 -6 0 8 -261689 -1 -1 1 1
+;
+#X msg 27 435 edit \$1;
+#X msg 97 435 getedit;
+#N canvas 367 122 570 368 info 0;
+#X msg 92 160 getversion;
+#X msg 92 105 getname;
+#X msg 93 183 getvendor;
+#X msg 92 218 getsynth;
+#X msg 92 248 getins;
+#X msg 153 250 getouts;
+#X msg 93 134 getdll;
+#X obj 24 290 s \$0-vst;
+#X msg 98 323 print;
+#X text 169 220 is synth?;
+#X text 177 183 get vendor string;
+#X text 179 161 get version;
+#X text 152 134 get shared lib name;
+#X text 157 109 get internal (official) plug name;
+#X text 217 251 number of plug inlets and outlets;
+#X msg 93 41 getattributes;
+#X msg 266 219 geteditor;
+#X text 346 219 has editor?;
+#X msg 22 41 help;
+#X text 213 38 list all attributes;
+#X msg 93 64 getmethods;
+#X text 213 65 list all methods;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 2 0 7 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X connect 8 0 7 0;
+#X connect 15 0 7 0;
+#X connect 16 0 7 0;
+#X connect 18 0 7 0;
+#X connect 20 0 7 0;
+#X restore 521 97 pd info;
+#X obj 96 94 r \$0-vst;
+#X obj 27 462 s \$0-vst;
+#X text 52 392 display edit window;
+#X msg 104 309 getplug;
+#X obj 26 337 s \$0-vst;
+#X text 64 263 set/get plugin;
+#X text 587 97 further information;
+#X obj 23 15 cnv 15 800 58 empty empty vst~ 10 32 0 24 -260818 -1 0
+;
+#X text 237 170 attribute outlet;
+#X text 190 134 inlets outlets [plugname];
+#N canvas 351 2 638 593 win 0;
+#X obj 23 202 s \$0-vst;
+#X msg 122 83 getx;
+#X msg 181 85 gety;
+#X obj 122 37 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X msg 123 55 x \$1;
+#X obj 192 37 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X msg 193 53 y \$1;
+#X text 264 74 (position of the actual VST interface);
+#X obj 117 208 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 1
+1;
+#X msg 116 227 caption \$1;
+#X msg 211 227 getcaption;
+#X text 119 251 set/get window caption and borders;
+#X text 118 316 set/get window title;
+#X msg 218 292 gettitle;
+#X msg 115 292 title KARL;
+#X obj 120 124 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X obj 190 124 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X msg 121 142 w \$1;
+#X msg 120 170 getw;
+#X msg 191 140 h \$1;
+#X msg 175 170 geth;
+#X text 265 144 set and get editor window size;
+#X text 267 59 set and get editor position;
+#X obj 122 458 bng 15 250 50 0 empty empty empty 0 -6 0 8 -225271 -1
+-1;
+#X text 280 457 send editor window to front;
+#X msg 223 457 front;
+#X obj 145 457 delay 100;
+#X obj 123 545 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0
+1;
+#X msg 145 542 handle \$1;
+#X text 230 543 set/unset handle for window (taskbar button);
+#X obj 118 374 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0
+1;
+#X msg 117 396 vis \$1;
+#X msg 186 396 getvis;
+#X text 141 372 make edit window (in)visible;
+#X obj 122 490 bng 15 250 50 0 empty empty empty 0 -6 0 8 -225271 -1
+-1;
+#X obj 145 489 delay 100;
+#X msg 223 489 below;
+#X text 280 489 send editor window below front window;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 0 0;
+#X connect 15 0 17 0;
+#X connect 16 0 19 0;
+#X connect 17 0 0 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;
+#X connect 23 0 26 0;
+#X connect 25 0 0 0;
+#X connect 26 0 25 0;
+#X connect 27 0 28 0;
+#X connect 28 0 0 0;
+#X connect 30 0 31 0;
+#X connect 31 0 0 0;
+#X connect 32 0 0 0;
+#X connect 34 0 35 0;
+#X connect 35 0 36 0;
+#X connect 36 0 0 0;
+#X restore 520 227 pd win;
+#X text 586 227 manipulating the edit window;
+#X msg 26 310 plug \$1;
+#X obj 26 254 bng 25 250 50 0 empty empty empty 0 -6 0 8 -261689 -1
+-1;
+#X obj 26 285 openpanel;
+#N canvas 294 23 534 663 midi 0;
+#X obj 16 256 s \$0-vst;
+#X msg 198 201 ctlchg 3 123;
+#X text 204 70 note on;
+#X text 375 71 note off;
+#X text 308 200 control change;
+#X text 272 287 pitch bend;
+#X text 279 228 program change;
+#X msg 197 229 progchg 2;
+#X msg 285 72 noteoff 10;
+#X text 275 336 after touch;
+#X obj 198 267 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X obj 198 318 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X msg 197 287 pbend \$1;
+#X msg 196 337 atouch \$1;
+#X obj 109 136 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X msg 108 71 note 10 100;
+#X msg 108 152 note \$1 100;
+#X msg 284 126 noteoff \$1;
+#X obj 285 109 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -225271 -1 -1 0 256;
+#X text 25 520 MIDI messages have the following format:;
+#X text 23 544 [event midi subtype chn b2 b3 delta note-length note-offset
+detune off-velocity(;
+#X obj 90 371 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0 1
+;
+#X msg 90 390 events \$1;
+#X msg 90 415 getevents;
+#X text 177 393 enable event processing;
+#X text 25 463 if enabled vst~ will output events generated by the
+plugin as [event ...( messages through the dump outlet;
+#X msg 108 93 note 10 0;
+#X text 188 93 "note off";
+#X obj 107 12 nbx 5 14 0 15 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 106 28 channel \$1;
+#X msg 207 28 getchannel;
+#X text 305 20 set/get MIDI channel;
+#X text 25 585 subtypes are note \, noteoff \, atouch \, patouch \,
+ctlchg \, progchg \, pbend;
+#X connect 1 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 10 0 12 0;
+#X connect 11 0 13 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 16 0;
+#X connect 15 0 0 0;
+#X connect 16 0 0 0;
+#X connect 17 0 0 0;
+#X connect 18 0 17 0;
+#X connect 21 0 22 0;
+#X connect 22 0 0 0;
+#X connect 23 0 0 0;
+#X connect 26 0 0 0;
+#X connect 28 0 29 0;
+#X connect 29 0 0 0;
+#X connect 30 0 0 0;
+#X restore 521 195 pd midi;
+#X text 134 33 based on the work of Jarno Seppanen and Mark Williamson
+;
+#X obj 742 424 loadbang;
+#X obj 520 449 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0
+1;
+#X obj 520 498 s \$0-vst;
+#X msg 520 471 bypass \$1;
+#X msg 602 471 getbypass;
+#X text 545 448 bypass plugin;
+#X obj 520 357 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0
+1;
+#X obj 520 405 s \$0-vst;
+#X text 545 356 mute output;
+#X msg 520 378 mute \$1;
+#X msg 602 378 getmute;
+#N canvas 200 110 497 448 parameters 0;
+#X obj 114 125 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -225271
+-1 -1 0 1;
+#X msg 111 142 param 2 \$1;
+#X obj 21 195 s \$0-vst;
+#X msg 113 26 getparams;
+#X text 191 26 get number of parameters;
+#X msg 213 143 getparam 2;
+#X msg 107 202 param gain 0;
+#X text 203 84 get parameter name;
+#X text 120 277 get value in textual representation;
+#X text 136 164 set/get parameter (0-based);
+#X msg 107 255 getptext \$1;
+#X obj 107 238 nbx 5 14 0 10000 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X obj 111 68 nbx 5 14 0 10000 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 111 86 getpname \$1;
+#X msg 212 255 getptext gain;
+#X msg 214 202 getparam gain;
+#X text 116 293 (may be ambigous!);
+#X obj 106 335 tgl 15 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0
+1;
+#X msg 108 356 feedback \$1;
+#X msg 213 356 getfeedback;
+#X text 108 378 get parameter feedback through dump outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 10 0 2 0;
+#X connect 11 0 10 0;
+#X connect 12 0 13 0;
+#X connect 13 0 2 0;
+#X connect 14 0 2 0;
+#X connect 15 0 2 0;
+#X connect 17 0 18 0;
+#X connect 18 0 2 0;
+#X connect 19 0 2 0;
+#X restore 520 130 pd parameters;
+#N canvas 0 0 466 316 programs 0;
+#X obj 39 245 s \$0-vst;
+#X msg 162 106 getprogram;
+#X text 134 34 get number of programs;
+#X msg 39 37 getprograms;
+#X text 93 125 set/get program (0-based);
+#X msg 39 62 getprogcats;
+#X text 134 59 get number of program categories;
+#X msg 59 106 program \$1;
+#X obj 60 90 nbx 5 14 0 10000 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X obj 64 144 nbx 5 14 0 10000 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 62 161 getprogname \$1;
+#X text 182 158 get program name;
+#X obj 63 195 nbx 5 14 0 10000 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X text 199 210 get program name;
+#X msg 61 212 getprogname 2 \$1;
+#X text 201 224 (with category);
+#X text 198 172 (no category);
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X connect 5 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X connect 9 0 10 0;
+#X connect 10 0 0 0;
+#X connect 12 0 14 0;
+#X connect 14 0 0 0;
+#X restore 521 162 pd programs;
+#X text 637 131 VST parameters;
+#X text 638 162 VST programs;
+#X text 134 53 http://grrrr.org;
+#X text 589 196 midi messages for VST synths;
+#X msg 269 316 subplug AudioTrack;
+#X obj 249 441 s \$0-vst;
+#X msg 269 401 getsubplug;
+#X obj 26 135 vst~ 2 2 @pnames 100;
+#X msg 249 283 getpluglist;
+#X text 585 254 sequencer stuff;
+#X msg 269 341 subplug X-Noise;
+#N canvas 0 0 466 316 out 0;
+#X obj 79 164 *~;
+#X obj 79 194 dac~ 1 2 3 4;
+#X obj 109 164 *~;
+#X obj 139 164 *~;
+#X obj 169 164 *~;
+#X obj 266 26 inlet;
+#X obj 49 26 inlet~;
+#X obj 102 26 inlet~;
+#X obj 154 26 inlet~;
+#X obj 206 26 inlet~;
+#X obj 265 108 line~;
+#X msg 266 82 \$1 1 20;
+#X connect 0 0 1 0;
+#X connect 2 0 1 1;
+#X connect 3 0 1 2;
+#X connect 4 0 1 3;
+#X connect 5 0 11 0;
+#X connect 6 0 0 0;
+#X connect 7 0 2 0;
+#X connect 8 0 3 0;
+#X connect 9 0 4 0;
+#X connect 10 0 4 1;
+#X connect 10 0 3 1;
+#X connect 10 0 2 1;
+#X connect 10 0 0 1;
+#X connect 11 0 10 0;
+#X restore 26 192 pd out;
+#X obj 72 175 hsl 128 15 0.001 1 1 1 empty empty gain -2 -6 0 8 -261689
+-1 -1 6400 1;
+#N canvas 105 36 498 655 seq 0;
+#X obj 17 225 s \$0-vst;
+#X msg 112 78 samplepos \$1;
+#X obj 111 60 nbx 5 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 224 77 getsamplepos;
+#X obj 111 108 nbx 5 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 112 126 ppqpos \$1;
+#X msg 199 127 getppqpos;
+#X obj 111 153 nbx 5 14 5 400 0 1 empty empty empty 0 -6 0 10 -225271
+-1 -1 120 256;
+#X msg 112 171 tempo \$1;
+#X msg 199 172 gettempo;
+#X msg 113 28 playing \$1;
+#X msg 203 28 getplaying;
+#X obj 112 -1 tgl 25 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0 1
+;
+#X obj 109 218 tgl 25 0 empty empty empty 0 -6 0 8 -225271 -1 -1 0
+1;
+#X msg 110 247 looping \$1;
+#X msg 200 247 getlooping;
+#X obj 111 275 nbx 5 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 112 293 loopstart \$1;
+#X msg 222 293 getloopstart;
+#X obj 111 319 nbx 5 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 112 337 loopend \$1;
+#X msg 222 337 getloopend;
+#X obj 111 363 nbx 5 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 112 379 looplength \$1;
+#X msg 227 379 getlooplength;
+#X obj 115 521 nbx 5 14 0 1e+037 0 0 empty empty empty 0 -6 0 10 -225271
+-1 -1 0 256;
+#X msg 116 537 smpteoffset \$1;
+#X msg 238 537 getsmpteoffset;
+#X msg 116 579 smpterate \$1;
+#X msg 230 579 getsmpterate;
+#X obj 116 562 hradio 15 1 0 6 empty empty empty 0 -6 0 8 -225271 -1
+-1 0;
+#X text 230 561 24/25/24/30/29.97df/30df;
+#X obj 112 415 nbx 5 14 1 128 0 1 empty empty empty 0 -6 0 10 -225271
+-1 -1 4 256;
+#X msg 113 433 timenom \$1;
+#X msg 205 434 gettimenom;
+#X obj 113 455 nbx 5 14 1 128 0 1 empty empty empty 0 -6 0 10 -225271
+-1 -1 4 256;
+#X msg 114 473 timeden \$1;
+#X msg 206 474 gettimeden;
+#X text 300 423 time signature;
+#X text 302 438 nominator;
+#X text 302 476 denominator;
+#X text 284 161 tempo in quarters per minute;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 10 0;
+#X connect 13 0 14 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 0;
+#X connect 16 0 17 0;
+#X connect 17 0 0 0;
+#X connect 18 0 0 0;
+#X connect 19 0 20 0;
+#X connect 20 0 0 0;
+#X connect 21 0 0 0;
+#X connect 22 0 23 0;
+#X connect 23 0 0 0;
+#X connect 24 0 0 0;
+#X connect 25 0 26 0;
+#X connect 26 0 0 0;
+#X connect 27 0 0 0;
+#X connect 28 0 0 0;
+#X connect 29 0 0 0;
+#X connect 30 0 28 0;
+#X connect 32 0 33 0;
+#X connect 33 0 0 0;
+#X connect 34 0 0 0;
+#X connect 35 0 36 0;
+#X connect 36 0 0 0;
+#X connect 37 0 0 0;
+#X restore 520 256 pd seq;
+#X text 23 508 on the vst~ object box;
+#X obj 27 413 pipe 100;
+#X text 249 244 functions for plugin shells;
+#X text 247 260 (like Waves);
+#X msg 269 366 subplug;
+#X obj 742 462 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X text 24 491 you can also shift-click;
+#X msg 742 483 \; pd dsp \$1;
+#X text 133 14 VST plugins for PD \, (C)2003-2006 Thomas Grill;
+#X connect 0 0 43 0;
+#X connect 0 0 43 1;
+#X connect 2 0 51 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 6 0 43 0;
+#X connect 9 0 10 0;
+#X connect 18 0 10 0;
+#X connect 19 0 20 0;
+#X connect 20 0 18 0;
+#X connect 23 0 55 0;
+#X connect 24 0 26 0;
+#X connect 26 0 25 0;
+#X connect 27 0 25 0;
+#X connect 29 0 32 0;
+#X connect 32 0 30 0;
+#X connect 33 0 30 0;
+#X connect 40 0 41 0;
+#X connect 42 0 41 0;
+#X connect 43 0 47 0;
+#X connect 43 1 47 1;
+#X connect 43 2 1 0;
+#X connect 44 0 41 0;
+#X connect 46 0 41 0;
+#X connect 48 0 47 4;
+#X connect 51 0 3 0;
+#X connect 54 0 41 0;
+#X connect 55 0 57 0;

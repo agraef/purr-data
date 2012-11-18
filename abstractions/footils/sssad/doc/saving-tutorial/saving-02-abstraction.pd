@@ -1,0 +1,82 @@
+#N canvas 269 73 557 780 10;
+#X text 31 29 Now you may want to make the [pd store] subpatch into
+an abstraction \, to make it easier to reuse it many times \, but then
+you have a problem. First: Abstractions don't get saved again \, if
+you save their parent patch. And even then \, you would only be able
+to save a single value into the *single* abstraction file "store.pd".
+This is useless.;
+#X obj 80 178 store;
+#X msg 80 198 9;
+#X floatatom 39 179 5 0 0 0 - - -;
+#X obj 186 223 phasor~;
+#X obj 248 314 bp~;
+#X floatatom 186 182 5 0 0 2 freq - -;
+#X floatatom 256 237 5 0 0 2 cutoff - -;
+#X floatatom 384 234 5 0 0 2 Q - -;
+#X obj 230 182 store;
+#X obj 303 235 store;
+#X obj 384 257 store;
+#X msg 384 279 9;
+#X msg 303 255 25;
+#X msg 230 202 179;
+#X text 31 122 One way out would be to remove the storing message box
+from store.pd and connect that to an outlet of store.pd as shown here:
+;
+#X msg 110 451 27 27 18;
+#X obj 110 431 anystore;
+#X obj 100 408 pack 1 2 3;
+#X obj 100 475 unpack 1 2 3;
+#X floatatom 50 387 5 0 0 0 - - -;
+#X floatatom 90 387 5 0 0 0 - - -;
+#X floatatom 132 387 5 0 0 0 - - -;
+#X text 42 341 With a little change inside our abstraction we can also
+store lists instead of just a single value:;
+#X msg 419 497 35 27 18;
+#X obj 419 477 anystore;
+#X obj 409 454 pack 1 2 3;
+#X obj 409 521 unpack 1 2 3;
+#X obj 215 554 phasor~;
+#X obj 277 605 bp~;
+#X floatatom 215 513 5 0 0 2 freq - -;
+#X floatatom 285 568 5 0 0 2 cutoff - -;
+#X floatatom 413 565 5 0 0 2 Q - -;
+#X text 39 692 But now it gets ugly \, which should be enough motivation
+to think of possible improvements. Ugly always is wrong.;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 6 0 4 0;
+#X connect 6 0 9 0;
+#X connect 7 0 5 1;
+#X connect 7 0 10 0;
+#X connect 8 0 11 0;
+#X connect 8 0 5 2;
+#X connect 9 0 14 0;
+#X connect 10 0 13 0;
+#X connect 11 0 12 0;
+#X connect 12 0 8 0;
+#X connect 13 0 7 0;
+#X connect 14 0 6 0;
+#X connect 16 0 19 0;
+#X connect 17 0 16 0;
+#X connect 18 0 17 0;
+#X connect 19 0 20 0;
+#X connect 19 1 21 0;
+#X connect 19 2 22 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 1;
+#X connect 22 0 18 2;
+#X connect 24 0 27 0;
+#X connect 25 0 24 0;
+#X connect 26 0 25 0;
+#X connect 27 0 30 0;
+#X connect 27 1 31 0;
+#X connect 27 2 32 0;
+#X connect 28 0 29 0;
+#X connect 30 0 28 0;
+#X connect 30 0 26 0;
+#X connect 31 0 29 1;
+#X connect 31 0 26 1;
+#X connect 32 0 29 2;
+#X connect 32 0 26 2;

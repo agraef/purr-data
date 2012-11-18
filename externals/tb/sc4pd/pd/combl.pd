@@ -1,0 +1,20 @@
+#N canvas 0 0 450 300 10;
+#X floatatom 188 40 5 0 0 0 - - -;
+#X obj 67 187 dac~;
+#X msg 185 88 delaytime \$1;
+#X obj 111 190 print~;
+#X obj 128 170 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 316 83 5 0 0 0 - - -;
+#X msg 316 107 decaytime \$1;
+#X obj 79 57 WhiteNoise~;
+#X obj 77 138 CombL~ 1 0.001 0.2;
+#X connect 0 0 2 0;
+#X connect 2 0 8 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 1 0;
+#X connect 8 0 1 1;
+#X connect 8 0 3 0;

@@ -1,0 +1,21 @@
+#N canvas 558 452 463 332 10;
+#X obj 201 141 hradio 15 1 0 8 empty empty POS_(zero-based) 0 -6 0
+8 -262144 -1 -1 1;
+#X floatatom 201 161 5 0 0 0 - - -;
+#X msg 151 109 0 1 2 3 4;
+#X obj 151 227 print;
+#X text 36 51 Negative POS counts from the end of the list.;
+#X text 35 26 list-remove: remove (n) elements at position POS from
+list.;
+#X text 36 72 Arguments: POS to begin removal \, number of elements
+to remove.;
+#X floatatom 251 176 5 0 0 0 - - -;
+#X text 290 176 # of elements;
+#X obj 151 197 list-remove 2 2;
+#X text 235 304 list-remove 2007 Luke Iannini;
+#X text 5 276 helpfile based on list-abs by Frank Barknecht;
+#X connect 0 0 1 0;
+#X connect 1 0 9 1;
+#X connect 2 0 9 0;
+#X connect 7 0 9 2;
+#X connect 9 0 3 0;

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/ext/!svn/ver/1777/trunk/osc
+END
+osc_route.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1777/trunk/osc/osc_route.cpp
+END
+osc.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1777/trunk/osc/osc.vcproj
+END
+osc_udpsend.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1777/trunk/osc/osc_udpsend.cpp
+END
+osc_now.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1777/trunk/osc/osc_now.cpp
+END
+osc_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1777/trunk/osc/osc_main.cpp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1777/trunk/osc/package.txt
+END
+osc.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/1777/trunk/osc/osc.h
+END
+osc-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1777/trunk/osc/osc-help.pd
+END
+osc_udprecv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1777/trunk/osc/osc_udprecv.cpp
+END

@@ -1,0 +1,64 @@
+
+- replace [comment] with #X text
+
+- wavetable
+  - link to playnow/draw_sound
+
+- Load a sound file (high-level, no tables, no soundfiler)
+
+- Play sound file back with phasor~?
+
+- Scrub sound file with numberbox
+
+- Create sound (high-level FM abstraction?)
+
+- Change sound quality with numberbox
+
+- ggkarman has some very nice MIDI tuts
+
+File Order:
+
+- hello world
+    quick sine wave patch
+- audio data
+    differences between audio and message data
+- signal network
+    when the DSP is on, audio processing is always running
+- dsp processing
+    controlling the DSP
+- oscillators
+    [osc~], [cos~], [phasor~]
+- amplitude modulation
+    super simple AM
+- AM synthesis
+    nice AM example
+- frequency modulation
+- FM synthesis  
+    (80's keyboard sound!)
+- click
+    graph click and play it
+	 a click contains all frequencies
+- ramping up and down
+    [line~], [line]
+- 3.audio.examples/A04.line2.pd
+- filtering
+    removing audio by frequency
+	 working in the frequency domain rather than amplitude
+- filter types 
+    lowpass, highpass, bandpass, bandreject/notch
+- filter order
+- filter shapes
+- resonant frequency
+- filter Q
+- equalizer
+- reverb (rev1, rev2, freeverb~)
+- feedback delay network reverb (fbn~)
+- convolution reverb (partconv~)
+
+
+
+digital audio tutorial
+- digital audio
+    samples represent the amplitude at the slice of time
+- aliasing
+- the samples 

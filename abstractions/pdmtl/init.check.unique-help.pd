@@ -1,0 +1,50 @@
+#N canvas 0 6 897 675 10;
+#X obj 107 212 init.dollar.zero.top;
+#X msg 105 421 symbol bird;
+#X obj 342 522 init.check.unique;
+#X msg 342 479 symbol cow;
+#X msg 501 440 symbol cow;
+#X text 262 209 This example checks that it is the only abstraction
+or the first abstraction to be linked to the top patch.;
+#X obj 105 464 init.check.unique;
+#X obj 107 245 init.check.unique;
+#X obj 501 483 init.check.unique;
+#X obj 105 392 loadbang;
+#X obj 343 452 loadbang;
+#X obj 503 415 loadbang;
+#X obj 501 513 print COW2;
+#X obj 342 552 print COW1;
+#X obj 105 494 print BIRD;
+#X obj 107 186 loadbang;
+#X obj 286 275 init.dollar.zero.top;
+#X obj 286 308 init.check.unique;
+#X obj 286 249 loadbang;
+#X obj 108 275 print TOP1;
+#X obj 286 338 print TOP2;
+#X text 440 264 TOP1 is the first to be linked to the top patch and
+returns 1 The other top returns a zero because it is not the first
+or unique.;
+#X text 202 390 BIRD returns true because it is unique.;
+#X text 451 567 COW1 is the first to use the name COW and returns 1
+The other COW returns a zero because it is not the first to use that
+name.;
+#X text 106 96 WARNING: init.check.unique must be used with a loadbang
+or it will return wrong results.;
+#X obj 84 103 cnv 15 15 15 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X text 59 26 Description: checks that a symbol name is unique.;
+#X connect 0 0 7 0;
+#X connect 1 0 6 0;
+#X connect 2 0 13 0;
+#X connect 3 0 2 0;
+#X connect 4 0 8 0;
+#X connect 6 0 14 0;
+#X connect 7 0 19 0;
+#X connect 8 0 12 0;
+#X connect 9 0 1 0;
+#X connect 10 0 3 0;
+#X connect 11 0 4 0;
+#X connect 15 0 0 0;
+#X connect 16 0 17 0;
+#X connect 17 0 20 0;
+#X connect 18 0 16 0;

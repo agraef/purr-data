@@ -1,0 +1,7 @@
+#N canvas 0 0 450 300 10;
+#X obj 171 95 input.hsv_;
+#X obj 174 173 flow.prepend set;
+#X msg 173 195;
+#X text 43 23 Description: Hue saturation value (HSV) sliders;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;

@@ -1,0 +1,20 @@
+#N canvas 1378 496 740 433 10;
+#X obj 123 295 print <=5;
+#X obj 225 295 print >5;
+#X msg 141 196 symbol abcd;
+#X msg 93 154 symbol abcdefghikl;
+#X msg 334 171 symbol test.help;
+#X obj 332 284 print A;
+#X obj 405 282 print B;
+#X text 45 19 Description: Resizes a symbol to a limited number of
+characters.;
+#X text 454 249 <- You can start chopping from the end.;
+#X obj 122 250 scale.symbol 5;
+#X obj 340 251 scale.symbol -5;
+#X connect 2 0 9 0;
+#X connect 3 0 9 0;
+#X connect 4 0 10 0;
+#X connect 9 0 0 0;
+#X connect 9 1 1 0;
+#X connect 10 0 5 0;
+#X connect 10 1 6 0;

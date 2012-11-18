@@ -1,0 +1,7 @@
+#N canvas 15 49 200 200 10;
+#N canvas 25 49 420 300 META 1;
+#X text 13 41 NAME framesync;
+#X text 10 25 AUTHOR Hans-Christoph Steiner <hans@eds.org>;
+#X text 10 10 VERSION 0.0;
+#X text 10 10 DESCRIPTION framesync is a library for syncing sounds to video using frame numbers as the unit of time;
+#X restore 10 10 pd META;

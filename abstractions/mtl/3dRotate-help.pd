@@ -1,0 +1,38 @@
+#N canvas 727 261 654 345 10;
+#X obj 27 210 unpack f f f;
+#X floatatom 27 235 5 0 0 0 - - -;
+#X floatatom 66 235 5 0 0 0 - - -;
+#X floatatom 106 235 5 0 0 0 - - -;
+#X text 373 195 2nd inlet: accepts list of 3 floats;
+#X text 372 301 outlet: list of 3 floats;
+#X floatatom 93 94 5 0 0 0 - - -;
+#X text 138 94 degree;
+#X msg 106 162 0 1 0;
+#X text 375 110 args: <X> <Y> <Z> <angle>;
+#X text 22 260 !!! uses [expr]-external !!!;
+#X msg 27 162 3 1 4;
+#X obj 93 120 t b f;
+#X text 374 159 1st inlet: accepts lists of 3 floats;
+#X text 430 128 rotation axis and angle;
+#X text 450 214 sets the rotation axis;
+#X text 448 260 sets the angle (in radian format);
+#X text 372 240 3rd inlet: accepts floats;
+#X obj 27 185 mtl/3dRotate 0 0 1 1.5708;
+#X obj 17 9 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 22 51 tags: 3d;
+#X text 119 51 Author: Roman Haefeli;
+#X text 272 51 Version: 2007-12-09;
+#X text 22 11 Description: rotates the incoming vector around a specified
+axis by a specified angle (using a rotation matrix);
+#X obj 186 161 mtl/degreeToRadian;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 0 2 3 0;
+#X connect 6 0 12 0;
+#X connect 8 0 18 1;
+#X connect 11 0 18 0;
+#X connect 12 0 11 0;
+#X connect 12 1 24 0;
+#X connect 18 0 0 0;
+#X connect 24 0 18 2;

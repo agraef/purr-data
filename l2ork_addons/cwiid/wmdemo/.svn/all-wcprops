@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/cwiid/svn/!svn/ver/199/trunk/wmdemo
+END
+wmdemo.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/199/trunk/wmdemo/wmdemo.py
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/cwiid/svn/!svn/ver/83/trunk/wmdemo/Makefile.in
+END
+wmdemo.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/cwiid/svn/!svn/ver/199/trunk/wmdemo/wmdemo.c
+END

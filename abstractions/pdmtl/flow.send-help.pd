@@ -1,0 +1,16 @@
+#N canvas 0 0 454 304 10;
+#X obj 85 180 flow.send;
+#X text 64 65 Description: Send data to any receive.;
+#X text 63 82 Comments: Will soon be deprecated by PD 0.4;
+#X floatatom 298 168 5 0 0 0 - - -;
+#X msg 152 145 foo;
+#X floatatom 57 111 5 0 0 0 - - -;
+#X obj 303 122 r foo;
+#X floatatom 364 174 5 0 0 0 - - -;
+#X obj 369 128 r bar;
+#X msg 183 165 bar;
+#X connect 4 0 0 1;
+#X connect 5 0 0 0;
+#X connect 6 0 3 0;
+#X connect 8 0 7 0;
+#X connect 9 0 0 1;

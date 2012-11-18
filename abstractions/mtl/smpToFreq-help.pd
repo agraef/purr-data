@@ -1,0 +1,15 @@
+#N canvas 1210 517 657 293 12;
+#X floatatom 51 92 5 0 0 0 - - -;
+#X floatatom 51 201 5 0 0 0 - - -;
+#X text 101 89 Number of samples;
+#X text 107 203 Frequency to play samples at normal speed;
+#X text 21 10 Description: Converts a number of samples to a frequency.
+;
+#X obj 51 157 mtl/smpToFreq;
+#X text 21 30 tags: conversion;
+#X msg 133 119 5000 48000;
+#X text 237 109 By default \, the conversion is done with Pd's samplerate.
+You can override this by sending a list: samples samplerate;
+#X connect 0 0 5 0;
+#X connect 5 0 1 0;
+#X connect 7 0 5 0;

@@ -1,0 +1,16 @@
+#N canvas 548 176 381 256 10;
+#X text 41 25 Description: Drone with rand~ control and delay.;
+#X text 40 44 Author: Chun Lee (sonicvariable.goto10.org);
+#X obj 41 173 mtl/out~;
+#X obj 44 97 hsl 128 15 1 40 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 137 121 hsl 128 15 10 2000 0 0 empty empty empty -2 -8 0 10
+-262144 -1 -1 0 1;
+#X text 273 119 delay;
+#X text 180 94 random;
+#X text 41 63 tags: synthesize~;
+#X obj 41 146 mtl/bounce~;
+#X connect 3 0 8 0;
+#X connect 4 0 8 1;
+#X connect 8 0 2 0;
+#X connect 8 0 2 1;

@@ -1,0 +1,14 @@
+#N canvas 465 252 450 300 10;
+#X text 62 34 Description: splits the extension (whatever follows after
+the last ".") of a filename.;
+#X obj 124 135 mtl/splitExtension;
+#X obj 124 111 openpanel;
+#X obj 123 89 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 86 195 print without_extension;
+#X obj 262 194 print extension;
+#X text 65 62 tags: file;
+#X connect 1 0 4 0;
+#X connect 1 1 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;

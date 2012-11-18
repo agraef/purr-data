@@ -1,0 +1,20 @@
+/* quicktime library minor version */
+#undef QUICKTIME_NEWER
+
+/* Define to 1 if you have image magick */
+#undef HAVE_IMAGE_MAGICK
+
+/* Define to 1 if you have ffmpeg source tree */
+#undef HAVE_PIDIP_FFMPEG
+
+/* Define to 1 if you have mpeg4ip source tree */
+#undef HAVE_PIDIP_MPEG4IP
+
+/* Define to 1 if you have video 4 linux 2 */
+#undef HAVE_V4L2
+
+/* Define to 1 if you have libdv for firewire camera */
+#undef HAVE_LIBDV
+
+/* Define to 1 if you have libdc1394 for dc camera */
+#undef HAVE_DC1394

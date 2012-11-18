@@ -1,0 +1,37 @@
+#N canvas 1079 646 553 411 10;
+
+#X obj 285 34 import-disabled iemlib list-abs;
+#X obj 133 61 dollarg;
+#X obj 112 153 list;
+#X obj 133 40 loadbang;
+#X obj 203 40 inlet;
+#X obj 64 154 list;
+#X obj 64 252 list-idx;
+#X obj 112 183 list-drip;
+#X obj 112 211 t b a;
+#X obj 85 40 inlet;
+#X obj 64 287 list-extend;
+#X obj 85 79 t b a b;
+#X obj 203 183 t b;
+#X obj 163 349 list;
+#X obj 163 374 outlet;
+#X text 182 60 can remove the dollarg with no harm except that the
+index-list must be put in the right inlet rather than as arguments
+;
+#X connect 1 0 2 1;
+#X connect 2 0 7 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 1;
+#X connect 5 0 6 0;
+#X connect 6 0 10 0;
+#X connect 7 0 8 0;
+#X connect 7 1 13 0;
+#X connect 8 0 5 0;
+#X connect 8 1 6 1;
+#X connect 9 0 11 0;
+#X connect 10 0 13 1;
+#X connect 11 0 2 0;
+#X connect 11 1 5 1;
+#X connect 11 2 12 0;
+#X connect 12 0 10 1;
+#X connect 13 0 14 0;

@@ -1,0 +1,101 @@
+#N canvas 235 299 385 151 10;
+#X obj 2 14 cnv 15 382 130 empty empty empty 20 12 0 14 -195568 -66577
+0;
+#N canvas 37 548 782 304 interna 0;
+#X obj 528 241 originator \$1 \$0;
+#X obj 425 143 inlet;
+#X msg 487 189 substate \$1;
+#X obj 424 165 t b f;
+#X msg 424 189 set mem;
+#X obj 29 105 + 1;
+#X obj 424 244 outlet;
+#X obj 307 86 commun /inst \$0;
+#X obj 628 114 s \$0-OSC;
+#X obj 628 39 inlet;
+#X obj 628 88 OSCroute \$1;
+#X obj 625 194 OSCroute /preset;
+#X obj 625 167 r \$0-OSC;
+#X obj 625 218 s \$0-preset;
+#X text 392 265 Preset the ADSR \, too;
+#X obj 174 86 commun /warm \$0;
+#X obj 54 85 commun /wave \$0;
+#X obj 134 196 pack 0 0 0;
+#X obj 157 162 t b f;
+#X obj 204 163 t b f;
+#X msg 116 217 analosc \$1 \$2 \$3;
+#X obj 98 250 outlet;
+#X obj 433 59 r \$0-lfo;
+#X obj 433 113 s \$0-lfo;
+#X msg 293 217 lfo \$1;
+#X obj 433 86 commun /lfo \$0;
+#X obj 172 42 r \$0-warm;
+#X obj 55 35 r \$0-wave;
+#X obj 57 108 s \$0-wave;
+#X obj 177 109 s \$0-warm;
+#X obj 310 61 r \$0-inst;
+#X obj 310 109 s \$0-inst;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 2 0 6 0;
+#X connect 3 0 4 0;
+#X connect 3 1 2 0;
+#X connect 4 0 0 0;
+#X connect 4 0 6 0;
+#X connect 5 0 17 0;
+#X connect 7 0 31 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 15 0 29 0;
+#X connect 16 0 28 0;
+#X connect 17 0 20 0;
+#X connect 18 0 17 0;
+#X connect 18 1 17 1;
+#X connect 19 0 17 0;
+#X connect 19 1 17 2;
+#X connect 20 0 21 0;
+#X connect 22 0 24 0;
+#X connect 22 0 25 0;
+#X connect 24 0 21 0;
+#X connect 25 0 23 0;
+#X connect 26 0 15 0;
+#X connect 26 0 18 0;
+#X connect 27 0 5 0;
+#X connect 27 0 16 0;
+#X connect 30 0 7 0;
+#X connect 30 0 19 0;
+#X restore 191 2 pd interna;
+#X obj 10 33 cnv 15 105 100 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 24 52 vradio 18 0 0 4 \$0-wave-out \$0-wave-in Wave. 10 -10
+1 10 -166441 -1 -1 0;
+#X obj 44 51 cnv 15 40 16 empty empty Sin 9 10 1 10 -233017 -66577
+0;
+#X obj 44 69 cnv 15 40 16 empty empty Tri 9 10 1 10 -233017 -66577
+0;
+#X obj 44 87 cnv 15 40 16 empty empty Square 9 10 1 10 -233017 -66577
+0;
+#X obj 43 105 cnv 15 40 16 empty empty Saw 9 10 1 10 -233017 -66577
+0;
+#X obj 330 44 vradio 10 0 0 8 empty \$0-preset preset 0 -6 0 8 -261681
+-1 -1 0;
+#X obj 345 46 nbx 3 14 -1e+37 1e+37 0 0 empty \$0-preset empty 0 -6
+0 10 -261681 -1 -1 0 256;
+#X obj 222 40 mgadsr \$1-adsr;
+#X obj 307 2 inlet OSC;
+#X obj 329 127 outlet;
+#X obj 146 42 hsl 48 15 0 127 0 0 \$0-warm \$0-warm warm -2 -6 1 8
+-261689 -258699 -1 0 1;
+#X obj 147 80 hsl 48 15 0 127 0 0 \$0-inst \$0-inst inst -2 -6 1 8
+-261689 -62784 -1 700 1;
+#X obj 147 116 hsl 48 15 0 127 0 0 \$0-lfo \$0-lfo lfo -2 -6 1 8 -261689
+-35591 -1 4600 1;
+#X connect 1 0 12 0;
+#X connect 1 1 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 1 0;
+#X connect 10 0 12 0;
+#X connect 11 0 1 1;
+#X connect 11 0 10 1;
+#X coords 0 0 1 1 384 145 1;

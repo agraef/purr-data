@@ -1,0 +1,124 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header ctlin 3 12 0 18
+-204280 -1 0;
+#X obj 0 301 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 245 494 358 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 by Michal Seta as part of a project called pddp proposed
+by Krzysztof Czaja \, managed and edited by Dave Sabine \, to build
+comprehensive documentation for Pd. Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 45 DESCRIPTION read incoming Control Change messages;
+#X text 12 85 OUTLET_1 float;
+#X text 12 65 OUTLET_0 float;
+#X text 12 105 OUTLET_n float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 329 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 462 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 337 float;
+#N canvas 50 160 441 439 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [ctlin] Related Objects;
+#X obj 75 79 ctlin;
+#X obj 25 106 pgmin;
+#X obj 25 79 bendin;
+#X obj 205 106 touchin;
+#X obj 69 106 polytouchin;
+#X obj 119 79 midiin;
+#X obj 149 106 sysexin;
+#X obj 183 166 noteout;
+#X obj 25 166 bendout;
+#X obj 161 193 touchout;
+#X obj 75 193 polytouchout;
+#X obj 127 166 midiout;
+#X obj 25 193 pgmout;
+#X obj 25 248 makenote;
+#X text 22 225 MIDI note construction:;
+#X text 22 139 MIDI output:;
+#X text 22 56 MIDI input:;
+#X obj 185 248 stripnote;
+#X obj 169 79 notein;
+#X text 182 225 MIDI note deconstruction:;
+#X obj 25 32 ctlout;
+#X text 22 290 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 21 369 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 22 271 Externals;
+#X obj 22 320 pddp/helplink maxlib/pitch;
+#X obj 22 335 pddp/helplink maxlib/score;
+#X obj 22 350 pddp/helplink maxlib/chord;
+#X obj 22 385 pddp/helplink cyclone/midiformat;
+#X obj 22 400 pddp/helplink cyclone/midiparse;
+#X obj 22 415 pddp/helplink cyclone/midiflush;
+#X restore 101 597 pd Related_objects;
+#X obj 483 3 ctlin;
+#X text 109 66 The [ctlin] object reads control change messages directly
+from the MIDI port. See a MIDI-specification chart near you for control
+change message numbers and their meannings (MIDI implementation documents
+are freely available on the internet in c=various forms).;
+#X text 98 305 (none);
+#X obj 78 338 cnv 17 3 17 empty \$0-pddp.cnv.let.1 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 362 float;
+#X obj 78 363 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 387 float;
+#X obj 78 388 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X obj 24 69 ctlin;
+#X floatatom 24 133 5 0 0 0 - - -;
+#X floatatom 37 112 5 0 0 0 - - -;
+#X floatatom 51 91 5 0 0 0 - - -;
+#X text 168 305 - [ctlin] reads data directly from the MIDI port;
+#X obj 120 136 ctlin 64;
+#X floatatom 120 177 5 0 0 0 - - -;
+#X floatatom 165 161 5 0 0 0 - - -;
+#X text 187 134 Process only controller no. 64 on all channels;
+#X text 103 193 ctl. value;
+#X text 172 176 Chan. no.;
+#X obj 116 223 ctlin 64 1;
+#X text 193 224 Process only controller 64 on channel 1;
+#X floatatom 116 249 5 0 0 0 - - -;
+#X text 113 264 ctl. value;
+#X obj 362 570 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
+;
+#X text 100 570 for an explanation of MIDI usage in Pd see:;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/ctlin -text
+pdpedia: ctlin;
+#X text 11 23 read incoming Control Change messages;
+#X text 168 481 - (optional) controller number to process. If no arguments
+are present [ctlin] reads all controller data on all channels.;
+#X text 168 521 - (optional) channel number on which the controller
+is to be processed. If the second argument is absent [ctlin] reads
+all channels.;
+#X text 168 406 If only one argument is given \, [ctlin] provides the
+user with only 2 outlets: ctl. value and channel no. If 2 arguments
+are given (ctl. no. & chan. no.) only one outlet (ctl. value) is given.
+;
+#X text 168 337 - controller value.;
+#X text 168 362 - controller number.;
+#X text 168 387 - channel number.;
+#X text 80 481 1) float;
+#X text 80 521 2) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 17 0 18 0;
+#X connect 17 1 19 0;
+#X connect 17 2 20 0;
+#X connect 22 0 23 0;
+#X connect 22 1 24 0;
+#X connect 28 0 30 0;

@@ -1,0 +1,45 @@
+#N canvas 378 98 697 610 10;
+#X obj 93 117 int;
+#X obj 93 219 !=;
+#X obj 93 138 t a a a;
+#X obj 93 358 int;
+#X obj 93 302 &&;
+#X obj 123 412 outlet;
+#X obj 93 325 select 1 0;
+#X obj 175 392 outlet;
+#X obj 115 275 !=;
+#X obj 197 166 t f b;
+#X obj 198 191 f;
+#X obj 93 73 inlet;
+#X obj 167 144 t a a;
+#X obj 93 379 t a a;
+#X text 194 250 If input number is different from the two previously
+passed input numbers \, then pass it along. Otherwise block it and
+bang the second outlet.;
+#X text 257 74 Filters out direct repetitions and when a number has
+occured the penultimate time.;
+#X obj 93 465 s \$0-passed;
+#X obj 167 28 r \$0-passed;
+#X obj 175 367 delay;
+#X text 242 374 delay is necessary to come out of the depth-first message
+passing;
+#X connect 0 0 2 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 2 1 8 0;
+#X connect 2 2 3 1;
+#X connect 3 0 13 0;
+#X connect 4 0 6 0;
+#X connect 6 0 3 0;
+#X connect 6 1 18 0;
+#X connect 8 0 4 1;
+#X connect 9 0 10 1;
+#X connect 9 1 10 0;
+#X connect 10 0 8 1;
+#X connect 11 0 0 0;
+#X connect 12 0 1 1;
+#X connect 12 1 9 0;
+#X connect 13 0 16 0;
+#X connect 13 1 5 0;
+#X connect 17 0 12 0;
+#X connect 18 0 7 0;

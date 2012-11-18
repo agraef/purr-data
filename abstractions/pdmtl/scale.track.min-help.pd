@@ -1,0 +1,31 @@
+#N canvas 706 97 486 352 10;
+#X floatatom 97 79 5 0 0 0 - - -;
+#X msg 216 61 bang;
+#X floatatom 97 142 5 0 0 0 - - -;
+#X text 251 62 <-- bang to reset;
+#X obj 227 86 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 247 86 <-- stop/start tracking;
+#X floatatom 97 229 5 0 0 0 - - -;
+#X msg 238 205 bang;
+#X floatatom 97 292 5 0 0 0 - - -;
+#X text 273 206 <-- bang to reset;
+#X obj 249 230 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X text 269 230 <-- stop/start tracking;
+#X text 50 181 The argument and/or the second inlet set the initial
+minimum value.;
+#X floatatom 143 229 5 0 0 0 - - -;
+#X obj 97 262 scale.track.min -234;
+#X text 7 26 Description: Tracks minimum value;
+#X text 79 320 Based on track_min from the mapping library;
+#X obj 97 112 scale.track.min;
+#X connect 0 0 17 0;
+#X connect 1 0 17 2;
+#X connect 4 0 17 2;
+#X connect 6 0 14 0;
+#X connect 7 0 14 2;
+#X connect 10 0 14 2;
+#X connect 13 0 14 1;
+#X connect 14 0 8 0;
+#X connect 17 0 2 0;

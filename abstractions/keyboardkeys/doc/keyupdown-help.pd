@@ -1,0 +1,29 @@
+#N canvas 224 52 527 427 10;
+#X obj 25 20 loadbang;
+#X obj 25 42 s ldbng;
+#X obj 193 247 keyboardkeys/keyupdown;
+#X obj 193 269 vsl 15 128 0 100 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 10287 1;
+#X msg 193 222 a;
+#X msg 251 220 z;
+#X obj 174 13 cnv 15 60 60 empty keyca a 20 12 0 14 -228801 -262144
+0;
+#X obj 250 13 cnv 15 60 60 empty keycz z 20 12 0 14 -228801 -262144
+0;
+#X obj 193 196 r ldbng;
+#X obj 81 21 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 164 124 for increase/descrease of any value;
+#X obj 164 142 keyboardkeys/keyupdown;
+#X obj 10 72 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 33 241 send down key here -->;
+#X text 351 241 <-- send up key here;
+#X connect 0 0 1 0;
+#X connect 0 0 12 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 1;
+#X connect 8 0 4 0;
+#X connect 8 0 5 0;
+#X connect 9 0 1 0;

@@ -1,0 +1,23 @@
+#N canvas 323 299 852 494 10;
+#X obj 295 250 file.type;
+#X msg 151 431 fifo;
+#X msg 188 431 character;
+#X msg 262 431 folder;
+#X msg 316 431 block;
+#X msg 367 431 file;
+#X msg 409 431 symlink;
+#X msg 470 431 socket;
+#X msg 525 431 whiteout;
+#X text 151 410 Known types:;
+#X obj 247 151 openpanel;
+#X obj 221 328 print type;
+#X obj 354 295 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 382 295 unknown type;
+#X obj 245 115 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 86 44 Description: Returns the type of a file.;
+#X connect 0 0 11 0;
+#X connect 0 1 12 0;
+#X connect 10 0 0 0;
+#X connect 14 0 10 0;

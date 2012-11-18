@@ -1,0 +1,16 @@
+#N canvas 326 160 542 476 10;
+#X obj 20 42 sx/gemwin;
+#X obj 161 341 sx/blob;
+#X obj 161 27 gemhead;
+#X obj 161 52 sx/props;
+#X text 19 6 the blob takes a list of verticies of triangular faces
+in the right inlet.;
+#X obj 205 268 sx/explode;
+#X obj 161 162 t a b;
+#X msg 205 185 -1 0 0 0 -1 0 1 0 0 1 0 1 0 -1 1 -1 0 1;
+#X connect 2 0 3 0;
+#X connect 3 0 6 0;
+#X connect 5 0 1 1;
+#X connect 6 0 1 0;
+#X connect 6 1 7 0;
+#X connect 7 0 5 0;

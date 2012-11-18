@@ -1,0 +1,131 @@
+#N canvas 179 28 789 601 10;
+#X obj 209 99 print;
+#X msg 422 21 clear;
+#X msg 423 -36 label put_your_label;
+#X msg 423 -7 label labelizer;
+#X obj 252 77 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 209 26 5 0 0 0 - - -;
+#X obj 199 216 vsl 15 115 0 175 0 0 \$0slider_s \$0slider_r empty 0
+-8 0 8 -1 -262144 -1 0 0;
+#X obj 17 214 hradio 15 1 0 12 \$0hr_0_s \$0hr_0_r empty 2 8 0 7 -1
+-1 -258049 0;
+#X obj 17 229 hradio 15 1 0 12 \$0hr_1_s \$0hr_1_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X obj 17 244 hradio 15 1 0 12 \$0hr_2_s \$0hr_2_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X obj 17 259 hradio 15 1 0 12 \$0hr_3_s \$0hr_3_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X obj 17 274 hradio 15 1 0 12 \$0hr_4_s \$0hr_4_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X obj 17 289 hradio 15 1 0 12 \$0hr_5_s \$0hr_5_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X obj 17 304 hradio 15 1 0 12 \$0hr_6_s \$0hr_6_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X obj 17 319 hradio 15 1 0 12 \$0hr_7_s \$0hr_7_r empty 2 8 0 7 -1
+-1 -262144 0;
+#X text 555 -36 Change the label;
+#X text 465 21 Clear the browser;
+#X msg 309 -90 will_be_shown will_be_output \, bang;
+#X floatatom 488 60 5 0 0 1 size - -;
+#X msg 424 175 colorRGB 0 255 0;
+#X text 531 152 Change the color of the next entry;
+#X msg 424 153 colorRGB 0 0 255;
+#X obj 424 106 pack 0 10;
+#X obj 488 82 t b a;
+#X floatatom 424 60 5 0 2 1 font - -;
+#X msg 424 129 text.font \$1 \$2;
+#X msg 424 197 select.colorRGB 125 125 125;
+#X text 599 197 Change the select color;
+#N canvas 57 37 924 659 ADDING_CONTENT 0;
+#X msg 34 -68 bob;
+#X obj 29 363 bng 15 250 50 0 empty empty empty 0 -6 0 8 -4034 -1 -1
+;
+#X msg 75 -66 mom;
+#X obj 221 289 openpanel;
+#X obj 221 262 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 243 260 Add a file;
+#X text 18 -147 There are three modes to adding content:;
+#X obj 29 406 cnv 15 400 30 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X text 127 133 FILE MODE;
+#X msg 221 319 file \$1;
+#X text 42 407 Everytime you change the content \, you must send a
+bang to update the display!;
+#X text 31 -118 PLAIN MODE;
+#X text 118 152 In file mode \, only the name of the file and not the
+full path is displayed. BUT \, when you select an item \, it will still
+output the full path!;
+#X msg 119 -66 tom;
+#X text 121 -14 TAG MODE;
+#X text 120 189 To use file mode \, prepend the word file to the file
+path to be added.;
+#X text 32 -99 In plain mode \, the message displayed and outputed
+are the same.;
+#X text 122 0 In tag mode \, the first element (the tag) is displayed
+and the rest is outputed.;
+#X msg 127 30 item_displayed items outputed;
+#X msg 163 59 shown hidden;
+#X obj 72 383 outlet;
+#X obj 30 217 t b a;
+#X text 497 181 Also \, all file paths will be split. Only the file
+name will be displayed BUT the whole path will still be output!;
+#X text 499 149 If the file mode is selected \, all spaces in symbols
+will be displayed as "_".;
+#X connect 0 0 21 0;
+#X connect 1 0 20 0;
+#X connect 2 0 21 0;
+#X connect 3 0 9 0;
+#X connect 4 0 3 0;
+#X connect 9 0 21 0;
+#X connect 13 0 21 0;
+#X connect 18 0 21 0;
+#X connect 19 0 21 0;
+#X connect 21 0 1 0;
+#X connect 21 1 20 0;
+#X restore 296 -113 pd ADDING_CONTENT;
+#X text 17 166 Select items to be outputed by clicking on the gui or
+by selecting by index with the left inlet.;
+#X obj 422 -58 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 223 245 <- Use the scroll bar when there are too many items
+;
+#X text 20 -159 description: A little browser GUI (version to include
+in your own GOP abstractions).;
+#X text 14 337 To include a browser GUI in your own GOP abstraction
+\, copy the above graphical objects to your patch. Then create a [mtl/gBrowser
+\$0]. You may modify the graphical details \, but do not change the
+number of elements or the send and receive symbols.;
+#X text 15 401 Clicking on the grey bar will output a bang at mtl/gBrowser's
+right outlet.;
+#X obj 209 52 mtl/gBrowser \$0;
+#X obj 17 198 hradio 15 1 0 11 \$0label_radio_s \$0label_radio_r empty
+2 8 0 8 -1 -1 -262144 0;
+#X obj 17 198 cnv 15 197 15 empty \$0hider empty 3 9 0 8 -128992 -262144
+0;
+#X text 20 -131 tags: ui;
+#X floatatom 296 114 5 0 0 0 - - -;
+#X text 293 131 index outlet;
+#X text 443 -60 slider up;
+#X text 222 198 <- Click this (bang outlet 2);
+#X connect 1 0 35 1;
+#X connect 2 0 35 1;
+#X connect 3 0 35 1;
+#X connect 5 0 35 0;
+#X connect 17 0 35 1;
+#X connect 18 0 23 0;
+#X connect 19 0 35 1;
+#X connect 21 0 35 1;
+#X connect 22 0 25 0;
+#X connect 23 0 22 0;
+#X connect 23 1 22 1;
+#X connect 24 0 22 0;
+#X connect 25 0 35 1;
+#X connect 26 0 35 1;
+#X connect 28 0 35 1;
+#X connect 30 0 35 1;
+#X connect 35 0 0 0;
+#X connect 35 1 4 0;
+#X connect 35 2 39 0;
+#X coords 0 0 1 1 285 215 0;

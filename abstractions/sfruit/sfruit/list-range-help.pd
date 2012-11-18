@@ -1,0 +1,84 @@
+#N canvas 198 58 783 493 10;
+#X obj 22 194 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 317 prepent set;
+#X text 10 2 list-range: create a list of all numbers from x to y \,
+with interval of z;
+#X text 11 37 Takes 1 \, 2 or 3 args:;
+#X text 388 65 With creation arguments \, only outputs on bang. Bang
+also outputs a list with the last input parameters. Newly input parameters
+will cause immediate output.;
+#X obj 206 317 prepent set;
+#X msg 187 200 -12;
+#X msg 224 200 12;
+#X obj 496 317 prepent set;
+#X obj 496 243 list-range;
+#X msg 467 200 -12 32 7;
+#X msg 530 200 1 100 50;
+#X text 11 86 2 args: output [n1 to (n2-1)] \, with interval 1 if n1
+is less than n2 \, or interval -1 if n2 is less than n1;
+#X text 11 56 1 arg: output [0 to (n-1)] with interval 1 if n is positive
+\, or interval -1 if N is negative.;
+#X text 11 116 3 args: output [n1 to (n2-1)] with interval n3.;
+#X msg 330 200 5 20;
+#X msg 369 200 5 -3;
+#X obj 346 317 prepent set;
+#X text 19 376 Creation args;
+#X text 361 268 Two args;
+#X text 509 267 Three args;
+#X msg 595 202 1 99 11;
+#X msg 22 349;
+#X text 615 441 2008 Luke Iannini;
+#X obj 615 456 pddplink http://proyekto.net;
+#X obj 206 243 list-range;
+#X obj 346 243 list-range;
+#X obj 22 243 list-range 0 9 2;
+#X text 213 272 One arg;
+#X msg 496 353;
+#X msg 346 388;
+#X msg 206 428;
+#N canvas 823 429 453 357 getting_the_full_range 0;
+#X obj 169 155 t a a;
+#X obj 169 121 inlet;
+#X obj 196 189 <;
+#X obj 196 214 expr ($f1 * 2) - 1;
+#X obj 169 269 list-add;
+#X msg 196 244 0 \$1;
+#X obj 169 314 outlet;
+#X msg 213 122 5 10;
+#X msg 250 122 10 -7;
+#X text 51 12 You may find it annoying that list-range stops just short
+of the destination - I'm copying Python's implementation and trusting
+they've got a good reason for that (maybe I even know it but I haven't
+had my coffee). In any case \, here's a little patch to "fix" that
+annoyance if it hits you (place it just before [list-range]).;
+#X obj 242 294 prepent set;
+#X msg 242 316;
+#X connect 0 0 4 0;
+#X connect 0 1 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 4 0 10 0;
+#X connect 5 0 4 1;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 10 0 11 0;
+#X restore 471 23 pd getting_the_full_range;
+#X connect 0 0 27 0;
+#X connect 1 0 22 0;
+#X connect 5 0 31 0;
+#X connect 6 0 25 0;
+#X connect 7 0 25 0;
+#X connect 8 0 29 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 15 0 26 0;
+#X connect 16 0 26 0;
+#X connect 17 0 30 0;
+#X connect 21 0 9 0;
+#X connect 25 0 5 0;
+#X connect 26 0 17 0;
+#X connect 27 0 1 0;

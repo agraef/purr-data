@@ -1,0 +1,10 @@
+#N canvas 323 275 701 361 12;
+#X floatatom 74 143 5 0 0 0 - - -;
+#X floatatom 74 222 5 0 0 0 - - -;
+#X text 124 140 Number of samples;
+#X text 130 224 Frequency to play samples at normal speed;
+#X obj 74 178 convert.smp2freq;
+#X text 100 16 Description: Converts a number of samples to a frequency.
+;
+#X connect 0 0 4 0;
+#X connect 4 0 1 0;

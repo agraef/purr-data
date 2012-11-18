@@ -1,0 +1,21 @@
+#N canvas 1379 379 506 560 10;
+#X obj 117 199 list.element;
+#X msg 117 164 list a b c d e f g;
+#X floatatom 315 97 5 0 0 0 - - -;
+#X obj 297 126 t b f;
+#X obj 117 249 print ELEMENT;
+#X text 44 32 Description: Returns the nth element of a list.;
+#X msg 124 413 list a b c d e f g;
+#X obj 124 490 print LAST_ELEMENT;
+#X obj 124 455 list.element -1;
+#X text 61 365 If you use negative element numbers \, it will count
+from the end of the list.;
+#X text 43 48 Comment: Also works with negative values. Wraps zexy's
+packel.;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 1 0 1;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;

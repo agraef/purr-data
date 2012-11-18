@@ -1,0 +1,40 @@
+#N canvas 3 48 673 414 10;
+#X msg 293 22 Rhythm-Generators;
+#X text 18 51 Generates a rhythm which "sneaks" between neigboured
+ED of a scale - this will result in a sort of continuous ritardando/accelerando/rubato
+etc.;
+#X text 18 19 sneak-rhythm;
+#X text 18 104 see also:;
+#X msg 83 102 rit-acc;
+#X msg 139 102 ED-trans;
+#X obj 35 185 sneak-rhythm 100 1000 12;
+#X obj 35 145 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X text 411 136 display;
+#X text 446 153 max. ED;
+#X text 446 259 min. ED;
+#X obj 420 153 vsl 12 128 0 12 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 9525 1;
+#X msg 35 220 60;
+#X msg 205 102 brown-rhythm;
+#X obj 420 92 lb 12;
+#X text 18 297 1994 by Karlheinz Essl;
+#X obj 35 249 QT-PercPlayer;
+#X msg 420 113 range 0 \$1;
+#X floatatom 89 162 4 0 0 2 min_ED - -;
+#X floatatom 143 162 4 0 0 2 max_ED - -;
+#X floatatom 198 163 4 0 0 2 ED-values - -;
+#X floatatom 116 214 4 0 0 3 row_index - -;
+#X floatatom 198 216 4 0 0 3 chosen_ED - -;
+#X connect 6 0 12 0;
+#X connect 6 1 21 0;
+#X connect 6 2 22 0;
+#X connect 7 0 6 0;
+#X connect 12 0 16 0;
+#X connect 14 0 17 0;
+#X connect 17 0 11 0;
+#X connect 18 0 6 1;
+#X connect 19 0 6 2;
+#X connect 20 0 6 3;
+#X connect 20 0 17 0;
+#X connect 21 0 11 0;

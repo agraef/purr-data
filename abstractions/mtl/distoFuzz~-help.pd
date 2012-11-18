@@ -1,0 +1,44 @@
+#N canvas 207 261 620 423 10;
+#X obj 50 109 *~ 0.5;
+#X obj 134 110 *~ 0.5;
+#X text 10 28 Author: netpd;
+#X text 10 13 Description: a lofi distortion with frequency control
+;
+#X obj 51 179 mtl/out~;
+#X obj 51 85 osc~ 110;
+#X obj 134 85 osc~ 110;
+#X obj 24 233 cyclone/Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255
+51 135 135 135 0;
+#X obj 215 233 cyclone/Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255
+51 135 135 135 0;
+#X text 11 43 tags: fx~;
+#X obj 51 146 mtl/distoFuzz~ /id fuzz;
+#X text 199 144 <-Click on the propeties menu to display params;
+#X obj 310 59 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 370 60 PARAM ENABLED;
+#X obj 377 213 cnv 15 200 20 empty empty /fuzz/ 2 12 0 8 -258401 -262144
+0;
+#X obj 377 236 hsl 100 15 0 1 0 0 /fuzz/wet /fuzz/wet_ wet 105 7 0
+8 -262144 -1 -1 0 1;
+#X obj 377 254 hsl 100 15 0 1 0 0 /fuzz/pregain /fuzz/pregain_ pregain
+105 7 0 8 -262144 -1 -1 4950 1;
+#X obj 377 272 hsl 100 15 0 1 0 0 /fuzz/clip /fuzz/clip_ clip 105 7
+0 8 -262144 -1 -1 4950 1;
+#X obj 374 346 tgl 15 0 /fuzz/difference /fuzz/difference_ difference
+17 7 0 8 -262144 -166441 -1 0 1;
+#X obj 377 290 hsl 100 15 0 1 0 0 /fuzz/fuzz /fuzz/fuzz_ fuzz 105 7
+0 8 -262144 -1 -1 4950 1;
+#X obj 377 308 hsl 100 15 0 1 0 0 /fuzz/lowpass /fuzz/lowpass_ lowpass
+105 7 0 8 -262144 -1 -1 4950 1;
+#X obj 377 326 hsl 100 15 0 1 0 0 /fuzz/postgain /fuzz/postgain_ postgain
+105 7 0 8 -262144 -1 -1 4950 1;
+#X obj 309 84 ../doc/5.reference/tof/param-help;
+#X connect 0 0 7 0;
+#X connect 0 0 10 0;
+#X connect 1 0 10 1;
+#X connect 5 0 0 0;
+#X connect 6 0 1 0;
+#X connect 10 0 4 0;
+#X connect 10 1 4 1;
+#X connect 10 1 8 0;

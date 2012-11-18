@@ -1,0 +1,115 @@
+#N canvas 414 90 494 642 10;
+#X obj 334 314 route symbol;
+#X obj 336 334 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 413 335 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 331 361 route symbol;
+#X obj 333 381 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 410 382 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 318 269 test;
+#X msg 357 269 symbol test;
+#X obj 58 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 135 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 55 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 132 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 89 266 bang;
+#X obj 56 311 route bang;
+#X obj 53 358 route bang;
+#X text 14 5 routing based on reserved words:;
+#X obj 188 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 265 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 185 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 262 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 186 311 route float;
+#X obj 183 358 route float;
+#X msg 170 266 1;
+#X msg 209 266 float 12;
+#X obj 181 542 route list;
+#X obj 181 561 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 249 562 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 168 580 route list;
+#X obj 168 599 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 236 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 184 493 list 1 two 3;
+#X msg 167 473 1 two 3;
+#X msg 200 513 list one 2 three;
+#X msg 365 289 symbol;
+#X msg 113 484 list;
+#X msg 224 287 float test;
+#X text 26 245 These all output the as same atom type that is routed:
+;
+#X msg 15 266 bang test;
+#X obj 71 131 route 1;
+#X msg 71 183 2 3 4;
+#X obj 71 164 prepend set;
+#X msg 71 100 1 2 3 4;
+#X msg 218 183 is not a list;
+#X obj 218 164 prepend set;
+#X obj 218 131 route this;
+#X msg 218 100 this is not a list;
+#X text 21 50 [route] has three modes \, first is float \, second is
+symbol \, and third is data type. In the first two modes \, the first
+element of the set is stripped off by [route].;
+#X text 26 206 In the third mode \, [route] outputs the same atom type
+(bang->bang \, float->float \, symbol->symbol).;
+#X text 26 419 Lists do not behave the same with [route list] even
+though it is interpreting incoming lists \, not just routing by keyword
+\, as in the second symbol mode.;
+#X msg 174 164 set;
+#X text 157 164 re;
+#X text 164 24 "bang" \, "float" \, "symbol" \, and "list";
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 0 1 2 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 12 0 13 0;
+#X connect 13 0 8 0;
+#X connect 13 0 14 0;
+#X connect 13 1 9 0;
+#X connect 14 0 10 0;
+#X connect 14 1 11 0;
+#X connect 20 0 16 0;
+#X connect 20 0 21 0;
+#X connect 20 1 17 0;
+#X connect 21 0 18 0;
+#X connect 21 1 19 0;
+#X connect 22 0 20 0;
+#X connect 23 0 20 0;
+#X connect 24 0 25 0;
+#X connect 24 0 27 0;
+#X connect 24 1 26 0;
+#X connect 27 0 28 0;
+#X connect 27 1 29 0;
+#X connect 30 0 24 0;
+#X connect 31 0 24 0;
+#X connect 32 0 24 0;
+#X connect 33 0 0 0;
+#X connect 34 0 24 0;
+#X connect 35 0 20 0;
+#X connect 37 0 13 0;
+#X connect 38 0 40 0;
+#X connect 40 0 39 0;
+#X connect 41 0 38 0;
+#X connect 43 0 42 0;
+#X connect 44 0 43 0;
+#X connect 45 0 44 0;
+#X connect 49 0 42 0;
+#X connect 49 0 39 0;

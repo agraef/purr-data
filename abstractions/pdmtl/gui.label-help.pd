@@ -1,0 +1,22 @@
+#N canvas 525 312 445 257 10;
+#X obj 85 162 hsl 128 15 0 127 0 0 empty empty low -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 215 161 gui.label 0 low dB;
+#X obj 5 140 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 5 -12 cnv 15 430 20 empty empty empty 20 12 0 14 -216438 -66577
+0;
+#X obj 5 9 cnv 1 430 1 empty empty empty 4 -10 2 12 -66577 -1 0;
+#X obj 5 -12 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text 18 113 Contact: patrick ( at ) 11h11.com;
+#X text 18 97 Author: patrick s coulombe;
+#X text 295 -8 Version: 2007-01-07;
+#X text 6 -9 :: gui.label ::;
+#X text 18 22 Flags: gui;
+#X text 19 36 Description: write gui value to label;
+#X text 18 68 Comments: do not save the patch if the label changed
+you will lost the properties;
+#X text 18 52 Arguments: loadbangvalue label typeofvalue;
+#X connect 0 0 1 0;
+#X connect 1 0 0 0;

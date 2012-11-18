@@ -1,0 +1,39 @@
+#N canvas 711 130 586 632 10;
+#X text 198 23 ::::_gen_trainfile_::::;
+#X text 46 68 This abstraction generates a trainig file for ann_mlp
+and ann_td;
+#X obj 351 443 gen_trainfile;
+#X msg 437 154 test.txt;
+#X text 313 153 1) set filename:;
+#X msg 394 215 4 2 1;
+#X text 249 217 2) set file header:;
+#X text 183 241 4 = nr. of training datasets;
+#X text 184 255 2 = inputs of the neural net;
+#X text 184 269 1 = output of the neural net;
+#X msg 150 393 0 0 0;
+#X msg 197 393 0 1 1;
+#X msg 247 393 1 0 1;
+#X msg 293 393 1 1 0;
+#X text 46 116 Example:;
+#X text 36 311 3) send training data (first inputs \, then output)
+;
+#X text 58 327 because you have now 4 training datasets you;
+#X text 57 342 must pass 4 lists !!!;
+#X text 162 374 a;
+#X text 209 374 b;
+#X text 259 375 c;
+#X text 302 374 d;
+#X floatatom 351 469 5 0 0 0 - - -;
+#X obj 437 501 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 332 502 file is ready:;
+#X text 238 468 added datasets:;
+#X text 150 573 (c) 2005 \, Georg Holzmann <grh@mur.at>;
+#X connect 2 0 22 0;
+#X connect 2 1 23 0;
+#X connect 3 0 2 2;
+#X connect 5 0 2 1;
+#X connect 10 0 2 0;
+#X connect 11 0 2 0;
+#X connect 12 0 2 0;
+#X connect 13 0 2 0;

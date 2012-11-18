@@ -1,0 +1,30 @@
+#N canvas 440 304 450 300 10;
+#X obj 124 153 hradio 15 0 0 13 part empty Goto_part 0 -6 128 8 -262144
+-1 -1 0;
+#X obj 9 7 cnv 15 100 20 empty empty Using_Memento 20 12 1 14 -262144
+-66577 0;
+#N canvas 0 0 504 355 nav 0;
+#X obj 82 38 r part;
+#X msg 99 83 \; pd open \$1-tut.pd .;
+#X obj 65 120 - 1;
+#X obj 68 168 del 10;
+#X obj 66 143 t b f;
+#X obj 71 190 f;
+#X obj 68 248 makefilename pd-%s;
+#X msg 67 219 symbol \$1-tut.pd;
+#X msg 68 280 \; pd \$1 menu_close \;;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 4 1 5 1;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X restore 317 15 pd nav;
+#X text 19 65 This is a tutorial explaing the Memento preset system.
+To use it \, make sure \, the directory containing the memento patches
+is in you pd-path \, then navigate through the tutorial parts with
+the following radio button:;
+#X floatatom 158 192 5 0 0 0 currently_viewing part -;

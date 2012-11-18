@@ -1,0 +1,54 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header namecanvas 3 12
+0 18 -204280 -1 0;
+#X obj 0 450 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 245 494 344 META 0;
+#X text 12 65 LIBRARY internal;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for Pd version 0.40. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION attach a canvas to a name;
+#X text 12 5 KEYWORDS control canvas_op;
+#X text 12 125 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 478 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 505 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 102 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [namecanvas] Related Objects;
+#X obj 19 43 pddp/helplink iemguts/sendcanvas;
+#X restore 102 597 pd Related_objects;
+#X obj 455 3 namecanvas;
+#X obj 425 20 pddp/pddplink http://wiki.puredata.info/en/namecanvas
+-text pdpedia: namecanvas;
+#X obj 120 153 namecanvas \$0-bonzo;
+#X obj 120 210 s \$0-bonzo;
+#X text 98 454 (none);
+#X text 98 482 (none);
+#X obj 120 366 s pd-namecanvas-help.pd;
+#X text 11 23 attach a canvas to a name;
+#X text 168 523 - sets the name to associate with this canvas. Any
+messages sent to this name will be forwarded to the canvas containing
+this [namecanvas] object.;
+#X msg 120 186 msg 50 50 Hi there. This works locally.;
+#X msg 120 338 msg 50 70 This works globally.;
+#X text 78 523 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X text 120 240 If you open another instance of this help patch \,
+you'll see that clicking the message box above will create an object
+on the canvas where you click.;
+#X text 119 294 The following is similar \, but it will create an object
+in each "namecanvas-help.pd" patch that you have open:;
+#X connect 17 0 11 0;
+#X connect 18 0 14 0;

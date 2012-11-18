@@ -1,0 +1,40 @@
+#N canvas 670 384 769 384 10;
+#X declare -lib pdmtl;
+#X declare -lib pdmtl;
+#X declare -lib pdmtl;
+#X declare -lib pdmtl;
+#X declare -lib pdmtl;
+#X declare -lib pdmtl;
+#X declare -lib pdmtl;
+#X obj 60 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 73 14 Description: Maps a parameter to MIDI controllers.;
+#X text 87 99 Send a bang \, move a MIDI controller then change a parameter.
+They will be linked. These associations are saved with param.save;
+#X obj 523 137 param.gui;
+#X msg 524 108 top;
+#X obj 316 250 savepanel;
+#X obj 316 226 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 427 224 top;
+#X msg 442 249 global;
+#X msg 451 276 dps1;
+#X msg 462 297 dps2;
+#X obj 316 287 param.save;
+#X obj 537 284 param.load;
+#X obj 58 149 param.map.midi;
+#X obj 77 285 fx.template~ @id test;
+#X obj 535 254 openpanel;
+#X obj 537 220 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 575 37 import pdmtl;
+#X connect 0 0 13 0;
+#X connect 4 0 3 0;
+#X connect 5 0 11 0;
+#X connect 6 0 5 0;
+#X connect 7 0 11 1;
+#X connect 8 0 11 1;
+#X connect 9 0 11 1;
+#X connect 10 0 11 1;
+#X connect 15 0 12 0;
+#X connect 16 0 15 0;

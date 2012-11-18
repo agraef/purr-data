@@ -1,0 +1,77 @@
+vst~ - VST plugin object for PD
+based on the work of Jarno Seppänen and Mark Williamson
+Copyright (C) 2003-2005 Thomas Grill
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+In the official vst~ distribution, the GNU General Public License is
+in the file gpl.txt
+
+---------------------------------------------------------
+
+             OTHER COPYRIGHT NOTICES
+
+---------------------------------------------------------
+This package uses the flext C++ layer - See its license text below:
+
+
+--- VST technology -------------------------------------
+VST is a trademark of Steinberg Media Technologies GmbH
+
+--- plugin~ by Jarno Seppänen --------------------------
+
+This is a Pd [1] tilde object for hosting LADSPA [2] and VST [3] audio
+plug-ins on Linux and Windows systems, respectively.  The LADSPA
+plug-in interface is supported completely on Linux, while the VST 1.0
+audio processing plug-in interface (without plug-in graphics) is
+supported on Windows.
+
+This text corresponds to release 0.2 of plugin~ as of 4th April, 2001.
+This release of plugin~ has been tested with Pd 0.32P1.
+
+plugin~ is distributed under the GNU General Public License.  For more
+information, please read the accompanying file "COPYING".
+
+
+--- vst by mark@junklight.com --------------------------
+
+reference: http://iem.kug.ac.at/~jams/
+this plugin uses a tiny amount of code from the plugin~
+object mentioned above. It also tries to replicate the 
+syntax
+
+
+--- flext ----------------------------------------------
+flext - C++ layer for Max/MSP and pd (pure data) externals
+Copyright (C) 2001-2005 Thomas Grill
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+In the official flext distribution, the GNU General Public License is
+in the file gpl.txt
+
+

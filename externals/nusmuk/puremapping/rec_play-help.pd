@@ -1,0 +1,32 @@
+#N canvas 729 51 701 508 10;
+#X obj 41 41 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 41 327 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 41 179 / 127;
+#X obj 41 303 * 127;
+#X obj 76 202 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 96 202 rec;
+#X obj 112 219 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 148 238 write test;
+#X msg 161 258 read test;
+#X text 346 152 arg1 : number of sample to record;
+#X text 346 172 arg2 : time between sample (ms);
+#X text 190 16 record and play stream of float;
+#X text 141 45 Warning : the save fonctionality work only if data are
+:;
+#X text 478 69 -1 < data < 1;
+#X text 255 242 write and load in a wave file;
+#X text 132 219 play (loop);
+#X obj 41 279 rec_play 1000 10;
+#X text 168 280 10s at 100 samples/s;
+#X connect 0 0 2 0;
+#X connect 2 0 16 0;
+#X connect 3 0 1 0;
+#X connect 4 0 16 1;
+#X connect 6 0 16 2;
+#X connect 7 0 16 3;
+#X connect 8 0 16 3;
+#X connect 16 0 3 0;

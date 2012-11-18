@@ -1,0 +1,64 @@
+#N canvas 112 58 831 625 10;
+#X text 403 160 gather as many vasps as you want and put them out (bang)
+;
+#X text 71 74 gather several vasps into one;
+#X text 70 90 argument: vasps to gather before output;
+#X text 71 143 right inlet: stores the different vasps;
+#X text 70 110 left inlet: outputs a vasp immediately \, causes output
+of vasps gathered in right inlet (bang);
+#X text 72 163 use vasp.gather like the int/float object;
+#X text 398 444 !vasps can have more vectors \, but just one length!
+;
+#X text 398 464 gather will always take the length from the shortest
+of all gathered vasps for the new one!;
+#X obj 71 37 cnv 15 15 15 empty empty vasp.gather 0 10 1 14 -262144
+-1 0;
+#X msg 486 242 vasp bufgather4;
+#X msg 471 221 vasp bufgather3;
+#X msg 410 178 bang;
+#X msg 456 201 vasp bufgather2;
+#X msg 410 314;
+#X obj 410 291 prepend set;
+#X obj 410 268 vasp.gather;
+#X msg 447 178 vasp bufgather1;
+#X msg 167 450 vasp bufgather4;
+#X msg 233 200 vasp bufgather2;
+#X msg 78 200 bang;
+#X obj 78 291 prepend set;
+#X msg 117 200 vasp bufgather1;
+#X msg 151 429 vasp bufgather3;
+#X msg 78 386 bang;
+#X msg 137 409 vasp bufgather2;
+#X msg 78 520;
+#X obj 78 497 prepend set;
+#X obj 78 474 vasp.gather 2;
+#X msg 125 386 vasp bufgather1;
+#X text 71 366 gather two vasps (opt. argument) an put them out;
+#X obj 77 561 VASP-HELP;
+#N canvas 274 433 336 148 tables 0;
+#X obj 105 39 table bufgather1;
+#X obj 105 61 table bufgather2;
+#X obj 105 84 table bufgather3;
+#X obj 105 106 table bufgather4;
+#X restore 422 552 pd tables;
+#X obj 78 268 vasp.gather;
+#X msg 78 314;
+#X connect 9 0 15 1;
+#X connect 10 0 15 1;
+#X connect 11 0 15 0;
+#X connect 12 0 15 1;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 1;
+#X connect 17 0 27 1;
+#X connect 18 0 32 1;
+#X connect 19 0 32 0;
+#X connect 20 0 33 0;
+#X connect 21 0 32 0;
+#X connect 22 0 27 1;
+#X connect 23 0 27 0;
+#X connect 24 0 27 1;
+#X connect 26 0 25 0;
+#X connect 27 0 26 0;
+#X connect 28 0 27 1;
+#X connect 32 0 20 0;

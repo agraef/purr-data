@@ -1,0 +1,38 @@
+#N canvas 20 172 541 359 10;
+#X floatatom 152 164 5 0 0 0 - - -;
+#X floatatom 90 300 5 0 0 0 - - -;
+#X msg 188 126 4500;
+#X msg 230 126 2500;
+#X msg 278 128 2000;
+#X msg 150 124 250;
+#X floatatom 122 273 5 0 0 0 - - -;
+#X floatatom 144 249 5 0 0 0 - - -;
+#X text 134 309 Fitted length.;
+#X text 223 229 Ratio of fitted length / reference length.;
+#X text 195 248 Ratio of reference length / fitted length.;
+#X floatatom 174 224 5 0 0 0 - - -;
+#X text 176 272 Multiplier of original length to fit reference length.
+;
+#X text 190 164 Lenght base.;
+#X msg 16 104 300;
+#X msg 52 103 1000;
+#X msg 101 102 3000;
+#X text 11 11 Description: Tries to fit a length with an another based
+on musical 4/4 divisions.;
+#X text 15 81 Length to fit.;
+#X obj 150 101 loadbang;
+#X obj 90 188 mtl/fit;
+#X text 12 43 tags: musical;
+#X connect 0 0 20 1;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 14 0 20 0;
+#X connect 15 0 20 0;
+#X connect 16 0 20 0;
+#X connect 19 0 5 0;
+#X connect 20 0 1 0;
+#X connect 20 1 6 0;
+#X connect 20 2 7 0;
+#X connect 20 3 11 0;

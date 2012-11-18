@@ -1,0 +1,107 @@
+#N canvas 21 60 881 576 10;
+#X obj 55 36 cnv 15 15 15 empty empty vasp.xtilt 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 261 214 clear_buffer 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 575 494 pd clear_buffer;
+#X text 177 472 <-- click to open more examples;
+#X obj 51 533 VASP-HELP;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufxtilt1 100 float 1;
+#A 0 1 -0.113512 0.171341 0.733251 -0.444804 0.13461 0.0181519 0.0751111
+-0.291489 -0.0661841 0.0808672 0.10525 -0.0372648 0.00712331 0.0321534
+0.00104712 -0.0797996 -0.0100332 0.038871 -0.00962814 -0.00245443 -0.0208043
+0.0418052 -0.0442626 -0.010092 -0.000713352 0.0310329 -0.0158379 -0.0325648
+0.0180381 -0.0174225 -0.0255639 -0.0137052 0.0219752 -0.00454053 -0.0387019
+-0.00129492 -0.00332361 -6.52102e-005 -0.0333087 0.00495665 0.00179575
+-0.0311061 -0.0221767 -0.00117427 0.000104884 -0.033587 -0.00918416
+0.00931789 -0.0172503 -0.0146257 0.0200174 0.00741167 -9.19656e-005
+-0.0248526 0.0180017 0.0184785 -0.000738001 0.00187258 0.0148586 0.0289194
+-0.0124819 0.000630443 0.0266685 0.0156491 0.0058523 0.0141721 0.0336186
+-0.00179237 -0.00582341 0.0232202 0.0428296 0.0249123 -0.00400539 0.0269429
+0.0367591 0.000278026 0.0241991 0.039058 0.0259654 -0.015077 0.0321762
+0.0799587 -0.035893 0.038519 0.024746 0.189796 -0.054207 -0.0128485
+-0.0301806 0.0762237 0.106943 0.0307454 0.226911 -0.221356 0.172835
+0.0519878 0.4068 -0.293863 -0.035514;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 481 75 graph;
+#N canvas 0 0 435 217 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 1 10 \; \$1 xlabel 1.1 0 20 40 60 80 100
+\; \$1 yticks 0 0.25 2 \; \$1 ylabel 105 -1 -0.5 0 0.5 1;
+#X obj 295 27 loadbang;
+#X obj 295 71 s \$0-ratio;
+#X msg 33 45 symbol bufxtilt1 \, symbol bufxtilt2;
+#X msg 295 49 1.5;
+#X connect 0 0 4 0;
+#X connect 2 0 5 0;
+#X connect 4 0 1 0;
+#X connect 5 0 3 0;
+#X restore 712 492 pd init;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufxtilt2 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 483 205 graph;
+#X text 420 58 SOURCE;
+#X obj 344 357 pack;
+#X obj 344 331 t b f;
+#X text 281 284 ratio;
+#X text 201 404 needs one or two args;
+#X text 201 427 ratio \, center;
+#X text 236 264 edge;
+#X text 243 144 none;
+#X text 243 173 linear;
+#X text 236 241 zero (default);
+#X text 242 199 4 point (default);
+#X text 243 121 in place (dirty);
+#X obj 128 435 vasp.u;
+#X obj 344 308 nbx 5 14 -1000 1000 0 0 empty empty empty 0 -6 0 10
+-24198 -1 -1 0 256;
+#X obj 281 308 nbx 5 14 -3 3 0 0 empty \$0-ratio empty 0 -6 576 10
+-24198 -1 -1 1.5 256;
+#X text 344 284 center sample;
+#X msg 181 242 fill 0;
+#X msg 181 268 fill 1;
+#X msg 183 122 inter 0;
+#X msg 183 148 inter 1;
+#X msg 183 174 inter 2;
+#X msg 183 200 inter 3;
+#X obj 36 135 bng 15 250 50 0 empty \$0-trigger empty 0 -6 576 8 -262144
+-1 -1;
+#X obj 344 401 bng 15 250 50 0 \$0-trigger empty empty 0 -6 1152 8
+-262144 -1 -1;
+#X text 55 82 optional argument/right inlet: list of ratio and center
+sample;
+#X obj 53 473 xtilt_example;
+#X text 575 444 clear;
+#X msg 575 468 vasp bufxtilt2;
+#X text 55 59 resample buffer data symmetrically;
+#X msg 36 159 vasp bufxtilt1;
+#X obj 36 185 vasp.-> bufxtilt2;
+#X obj 128 409 vasp.xtilt;
+#X obj 344 379 t b l;
+#X connect 8 0 39 0;
+#X connect 9 0 8 0;
+#X connect 9 1 8 1;
+#X connect 20 0 9 0;
+#X connect 21 0 8 0;
+#X connect 23 0 38 0;
+#X connect 24 0 38 0;
+#X connect 25 0 38 0;
+#X connect 26 0 38 0;
+#X connect 27 0 38 0;
+#X connect 28 0 38 0;
+#X connect 29 0 36 0;
+#X connect 34 0 1 0;
+#X connect 36 0 37 0;
+#X connect 37 1 38 0;
+#X connect 38 0 19 0;
+#X connect 39 0 30 0;
+#X connect 39 1 38 1;

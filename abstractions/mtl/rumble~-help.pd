@@ -1,0 +1,8 @@
+#N canvas 1 57 287 208 10;
+#X text 16 29 Comment: Taken from Andy Farnell's work.;
+#X text 17 10 Description: Generates a distant rumble.;
+#X obj 21 85 mtl/rumble~;
+#X obj 21 123 mtl/out~;
+#X text 21 50 tags: synthesize~;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;

@@ -1,0 +1,18 @@
+#N canvas 1131 447 450 300 10;
+#X obj 111 154 list-change;
+#X text 30 30 [list-change] [change] for lists: only output a list
+if it's different than the last list received.;
+#X obj 111 222 bng 15 250 50 0 empty empty output! 17 7 0 10 -262144
+-1 -1;
+#X msg 90 110 a b c;
+#X obj 129 195 print got_new_list;
+#X msg 130 110 a b c;
+#X msg 170 110 def;
+#X msg 200 110 1 2 3;
+#X text 282 277 2009 Luke Iannini;
+#X connect 0 0 2 0;
+#X connect 0 0 4 0;
+#X connect 3 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;

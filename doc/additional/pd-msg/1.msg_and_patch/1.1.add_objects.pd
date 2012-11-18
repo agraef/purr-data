@@ -1,0 +1,70 @@
+#N canvas 0 18 711 648 10;
+#X msg 42 49 msg 500 10 bang;
+#X text 224 53 <= Click here first;
+#X text 207 232 <= and here;
+#X text 42 456 And now the end of this exemple :;
+#X text 42 143 The next 2 numbers are X & Y position in the canvas.
+Then it's a symbol for the name of the obj \, the content of the msg
+\, etc... and some additionals parameters.;
+#X msg 42 205 floatatom 600 10 7 50 5000;
+#X msg 42 230 obj 500 40 metro 500;
+#X msg 42 482 obj 500 70 random 127;
+#X msg 42 532 floatatom 500 100 5;
+#X msg 42 582 text 500 130 That's it !;
+#X text 16 53 1;
+#X text 20 204 2;
+#X text 20 226 3;
+#X text 18 348 4;
+#X text 18 370 5;
+#X text 20 483 6;
+#X text 20 509 7;
+#X text 20 532 8;
+#X text 19 556 9;
+#X text 14 582 10;
+#X text 42 13 To add an object into a patch just send a message to
+the patch itself :;
+#X obj 42 74 s pd-1.1.add_objects.pd;
+#X obj 42 255 s pd-1.1.add_objects.pd;
+#X obj 43 399 s pd-1.1.add_objects.pd;
+#X obj 42 612 s pd-1.1.add_objects.pd;
+#X text 42 98 The selector should be "msg" \, "floatatom" \, "obj"
+\, "text" \, "array" \, "symbolatom" \, "scalar" or "graph";
+#X text 236 204 <= Then click here (and have a look at the properties
+of the object created);
+#X text 42 279 For connecting objects use the selector "connect". It
+takes 4 arguments : the number of the first object \, the number of
+the outlet \, the number of the second object \, and the number of
+the inlet :;
+#X text 193 375 <= and here;
+#X text 193 348 <= click here;
+#X msg 43 349 connect 35 0 37 0;
+#X msg 43 374 connect 36 0 37 1;
+#X msg 42 507 connect 37 0 38 0;
+#X msg 42 557 connect 38 0 39 0;
+#X text 276 530 !!! W A R N N I N G !!! It's very important to respect
+the order in which objects are created. If you don't the "connect"
+selector won't work correctly. If you get stuck \, reload this patch
+and try again.;
+#N canvas 218 113 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 65 DESCRIPTION how to dynamically instantiate objects and
+connections.;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 44 LICENSE public domain;
+#X restore 654 623 pd META;
+#X connect 0 0 21 0;
+#X connect 5 0 22 0;
+#X connect 6 0 22 0;
+#X connect 7 0 24 0;
+#X connect 8 0 24 0;
+#X connect 9 0 24 0;
+#X connect 30 0 23 0;
+#X connect 31 0 23 0;
+#X connect 31 0 23 0;
+#X connect 31 0 23 0;
+#X connect 31 0 23 0;
+#X connect 32 0 24 0;
+#X connect 33 0 24 0;

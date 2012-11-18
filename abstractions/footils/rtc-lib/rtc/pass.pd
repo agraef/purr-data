@@ -1,0 +1,17 @@
+#N canvas 246 109 289 278 10;
+#X obj 35 53 r RTC-rs;
+#X msg 35 95 seed \$1;
+#X obj 104 112 random 100;
+#X obj 104 182 sel 1;
+#X obj 104 226 outlet;
+#X obj 104 53 inlet;
+#X obj 209 53 inlet;
+#X text 137 245 vs. 1.1;
+#X obj 104 135 < \$1;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 8 0;
+#X connect 3 0 4 0;
+#X connect 5 0 2 0;
+#X connect 6 0 8 1;
+#X connect 8 0 3 0;

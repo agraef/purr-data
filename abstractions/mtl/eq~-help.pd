@@ -1,0 +1,31 @@
+#N canvas 468 290 526 326 10;
+#X text 20 1 Description: equalizer using hml_shelf;
+#X obj 23 63 noise~;
+#X obj 22 131 mtl/out~;
+#X obj 23 98 mtl/eq~ /id eq;
+#X text 20 18 tags: mix~;
+#X text 127 99 <-Click on the propeties menu to display params;
+#X obj 284 5 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 344 6 PARAM ENABLED;
+#X obj 289 143 cnv 15 200 20 empty empty /eq/ 2 12 0 8 -258401 -262144
+0;
+#X obj 289 166 tgl 15 0 /eq/switch /eq/switch_ switch 17 7 0 8 -262144
+-166441 -1 0 1;
+#X obj 289 184 hsl 100 15 880 14080 0 0 /eq/hfreq /eq/hfreq_ hfreq
+105 7 0 8 -262144 -1 -1 5266 1;
+#X obj 289 202 hsl 100 15 22.5 440 0 0 /eq/lfreq /eq/lfreq_ lfreq 105
+7 0 8 -262144 -1 -1 771 1;
+#X obj 289 220 hsl 100 15 -40 40 0 0 /eq/low /eq/low_ low 105 7 0 8
+-262144 -1 -1 4950 1;
+#X obj 289 238 hsl 100 15 -40 40 0 0 /eq/mid /eq/mid_ mid 105 7 0 8
+-262144 -1 -1 4950 1;
+#X obj 289 256 hsl 100 15 -40 40 0 0 /eq/high /eq/high_ high 105 7
+0 8 -262144 -1 -1 4950 1;
+#X obj 289 274 hsl 100 15 0 5000 0 0 /eq/release /eq/release_ release
+105 7 0 8 -262144 -1 -1 198 1;
+#X obj 283 28 ../doc/5.reference/tof/param-help;
+#X connect 1 0 3 0;
+#X connect 1 0 3 1;
+#X connect 3 0 2 0;
+#X connect 3 1 2 1;

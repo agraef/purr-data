@@ -1,0 +1,32 @@
+# set PY_DEFAULT=0 if you manually installed Python on your system 
+# (overriding the one that came with OS X by default)
+PY_DEFAULT=1
+
+#########################################################################
+
+# which Python version are you building for?
+# Mac OSX 10.3 -> default Python version (major.minor) = 2.3
+# Mac OSX 10.4 -> default Python version (major.minor) = 2.3
+# Mac OSX 10.5 -> default Python version (major.minor) = 2.5
+# Mac OSX 10.6 -> default Python version (major.minor) = 2.6
+
+PY_MAJOR_VERSION=2
+PY_MINOR_VERSION=6
+
+#########################################################################
+
+# uncomment if numpy/numarray/numeric support should be compiled in
+# for info see http://numeric.scipy.org
+# numarray and numeric are outdated
+
+# PY_NUMPY=1
+# PY_NUMARRAY=1
+# PY_NUMERIC=1
+
+#########################################################################
+
+# use thread-safe GIL functionality (do this only if python version >= 2.3!)
+PY_USE_GIL=1
+
+# use inofficial (pure data) functionality
+# PY_USE_INOFFICIAL=1

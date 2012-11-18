@@ -1,0 +1,91 @@
+#N canvas 488 174 619 331 10;
+#X floatatom 211 241 5 0 0 0 - - -;
+#X obj 31 122 cnv 15 127 127 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 39 130 cnv 15 15 15 empty c1 empty 20 12 0 14 -258699 -66577
+0;
+#X obj 102 213 cnv 15 15 15 empty c2 empty 20 12 0 14 -62784 -66577
+0;
+#X obj 13 120 vsl 15 128 0 112 0 1 rv empty empty 0 -8 0 8 -258699
+-1 -1 10400 1;
+#X obj 31 103 hsl 128 15 0 112 0 1 rh empty empty -2 -6 0 8 -258699
+-1 -1 4500 1;
+#X obj 162 121 vsl 15 128 0 112 0 1 bv empty empty 0 -8 0 8 -62784
+-1 -1 1000 1;
+#X obj 31 252 hsl 128 15 0 112 0 1 bh empty empty -2 -6 0 8 -62784
+-1 -1 11600 1;
+#N canvas 0 22 482 332 graphics.guts 0;
+#X obj 100 157 pack;
+#X obj 84 130 t b f;
+#X msg 79 186 \; c1 pos \$1 \$2;
+#X msg 246 185 \; c2 pos \$1 \$2;
+#X obj 248 166 pack;
+#X obj 54 121 -;
+#X obj 241 80 -;
+#X msg 55 99 112 \$1;
+#X msg 240 61 112 \$1;
+#X obj 242 137 t b b f;
+#X obj 190 133 t b f;
+#X obj 192 114 r bh;
+#X obj 264 38 r bv;
+#X obj 122 116 r rh;
+#X obj 58 46 r rv;
+#X obj 94 231 s red_position;
+#X obj 242 236 s blue_position;
+#X obj 241 105 + 100;
+#X obj 36 148 + 100;
+#X connect 0 0 2 0;
+#X connect 0 0 15 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 4 0 3 0;
+#X connect 4 0 16 0;
+#X connect 5 0 18 0;
+#X connect 6 0 17 0;
+#X connect 7 0 5 0;
+#X connect 8 0 6 0;
+#X connect 9 0 0 0;
+#X connect 9 1 4 0;
+#X connect 9 2 4 1;
+#X connect 10 0 0 0;
+#X connect 10 1 4 0;
+#X connect 11 0 10 0;
+#X connect 12 0 8 0;
+#X connect 13 0 0 0;
+#X connect 14 0 7 0;
+#X connect 17 0 9 0;
+#X connect 18 0 1 0;
+#X restore 46 276 pd graphics.guts;
+#X obj 211 120 r red_position;
+#X obj 338 122 r blue_position;
+#X obj 338 143 unpack;
+#X obj 338 183 pack;
+#X floatatom 338 164 5 0 0 0 - - -;
+#X floatatom 375 164 5 0 0 0 - - -;
+#X obj 211 141 unpack;
+#X obj 211 181 pack;
+#X floatatom 211 162 5 0 0 0 - - -;
+#X floatatom 249 162 5 0 0 0 - - -;
+#X text 10 79 Drag the sliders to move the squares.;
+#X text 314 207 Both inlets expect a pair of x y coordinates.;
+#X text 245 242 Distance in pixels between the blue and red square.
+;
+#X obj 211 207 mtl/2dDistance;
+#X obj 11 7 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 16 49 tags: 2d;
+#X text 16 11 Description: Calculates the 2d distance between 2 points.
+;
+#X connect 9 0 15 0;
+#X connect 10 0 11 0;
+#X connect 11 0 13 0;
+#X connect 11 1 14 0;
+#X connect 12 0 22 1;
+#X connect 13 0 12 0;
+#X connect 14 0 12 1;
+#X connect 15 0 17 0;
+#X connect 15 1 18 0;
+#X connect 16 0 22 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 1;
+#X connect 22 0 0 0;

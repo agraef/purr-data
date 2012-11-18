@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf330
+\readonlydoc1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10780\viewh15400\viewkind0
+\pard\tx360\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+
+\b\fs36 jg.spectdelay~ reference
+\fs24 \
+
+\b0 \
+
+\b\fs26 Arguments
+\b0\fs24 \
+\
+\pard\tx360\tx1820\li1800\fi-1800\ql\qnatural\pardirnatural
+\cf0 	
+\b int
+\b0 	Optional. FFT length (power of 2, usually 1024)\
+\pard\tx360\tx1820\li1800\fi20\ql\qnatural\pardirnatural
+\cf0 [if missing, fftlen=1024, windowlen=2048, overlap=2, maxdel=6]\
+\pard\tx360\tx1820\li1800\fi-1800\ql\qnatural\pardirnatural
+\cf0 \
+	
+\b int
+\b0 	Optional. Window length (power of 2, usually FFT length * 2)\
+\pard\tx360\tx1820\li1800\ql\qnatural\pardirnatural
+\cf0 [if missing, windowlen=2048, overlap=2, maxdel=6]\
+\pard\tx360\tx1820\li1800\fi-1800\ql\qnatural\pardirnatural
+\cf0 \
+	
+\b int
+\b0  	Optional. FFT window overlap (positive power of 2)\
+\pard\tx360\tx1820\li1800\ql\qnatural\pardirnatural
+\cf0 1: no overlap, 2: hopsize=FFTlen/2, 4: hopsize=FFTlen/4, etc. 2 or 4 is usually fine; 1 is fluttery; 4 gives fewer artifacts; higher overlaps use more CPU.\
+[if missing, overlap=2, maxdel=6]\
+\pard\tx360\tx1820\li1800\fi-1800\ql\qnatural\pardirnatural
+\cf0 \
+	
+\b float
+\b0  	Optional. Maximum delay time (seconds)\
+\pard\tx360\tx1820\li1800\ql\qnatural\pardirnatural
+\cf0 [if missing, maxdel=6]\
+\pard\tx360\tx1820\li1800\fi-1800\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx360\tx1820\li1800\fi-1800\ql\qnatural\pardirnatural
+
+\b\fs26 \cf0 Input
+\b0\fs24 \
+\
+	
+\b signal
+\b0 	Audio signal in left inlet to be processed by jg.spectdelay~.\
+\
+	
+\b binmap
+\b0 	In left inlet: The word binmap, followed by a list of ints, which gives the number of adjacent FFT bins to affect for each of the elements of the EQ table. The binmap table and the EQ table must be the same size. Giving the word binmap alone cancels the use of a binmap table. For example, the message "binmap 1 2 10 20 50" assumes a previous eq message of five floats and treats the first of those floats as the gain of the lowest FFT bin, the second as the gain of the next two FFT bins, the third as the gain of the next ten FFT bins, the fourth as the gain of the next 20 FFT bins, and the fifth as the gain of the next 50 FFT bins (and any leftover bins above these).\
+\
+	
+\b clear
+\b0 	In left inlet: The word clear. This fills all the spectral delay lines with zero, resulting in silence.\
+\
+	
+\b dbinmap
+\b0 	In left inlet: The word dbinmap, followed by a list of ints, which gives the number of adjacent FFT bins to affect for each of the elements of the delay time and feedback tables. The delay binmap table and these tables must be the same size. Giving the word dbinmap alone cancels the use of a delay binmap table. The mapping scheme functions in the way described for the binmap message.\
+\
+	
+\b drange
+\b0 	In left inlet: The word drange, followed by two floats (min and max), which define the frequency range within which the delay time (del) and feedback (feed) tables function. Giving 0 for max sets the maximum frequency to Nyquist. By default, the range is 0 Hz to Nyquist. Note that this range is ignored when using the dbinmap table.\
+\
+	
+\b dt
+\b0 	In left inlet: The word dt, followed by a list of floats, which define the delay times (in seconds) for individual frequency bands. Effect depends on delay frequency range or dbinmap table. If the list contains just one number, then that is applied to all bands.\
+\
+	
+\b dx
+\b0 	In left inlet: The word dx, followed by an index (int) and delay time (float) to replace the value at that index in the currently defined delay time table. The table must already have at least index + 1 values.\
+\
+	
+\b eq
+\b0 	In left inlet: The word eq, followed by a list of floats, which define the amplitude scaling for individual frequency bands, in decibels. (0 dB means no change, + dB boost, - dB cut.) Effect depends on EQ frequency range or binmap table. If the list contains just one number, then that is applied to all bands.\
+\
+	
+\b ex
+\b0 	In left inlet: The word ex, followed by an index (int) and EQ amplitude in dB (float) to replace the value at that index in the currently defined EQ table. The table must already have at least index + 1 values.\
+\
+	
+\b fb
+\b0 	In left inlet: The word fb, followed by a list of floats, which define the delay feedback multiplier (-1 to 1, inclusive) for individual frequency bands. Effect depends on delay frequency range or dbinmap table. If the list contains just one number, then that is applied to all bands. If the feedback list has more than one item, the size of the list must match the size of the delay time (dt) list. If changing both list sizes, change the delay time list first.\
+\
+	
+\b fx
+\b0 	In left inlet: The word fx, followed by an index (int) and delay feedback (float) to replace the value at that index in the currently defined delay feedback table. The table must already have at least index + 1 values.\
+\
+	
+\b fft
+\b0 	In left inlet: The word fft, followed by three ints, gives the FFT length, window length, and overlap (respectively). (See explanation above in Arguments secion.) Note: sending this message will halt processing while object reconfigures itself and will cause an audio glitch.\
+\
+	
+\b hold
+\b0 	In left inlet: The word hold, followed by a 0 or a 1.  If 0, play normally.  If 1, stop accepting input and allow the sound already in delay lines to recirculate.  (If instead you let the input decay to zeros, without holding, you may hear the delay lines resonate pitches corresponding to the fundamental frequency of analysis and its harmonic partials.)\
+\
+	
+\b maxdel
+\b0 	In left inlet: The word maxdel, followed by a float giving the maximum number of seconds for the delay lines.\
+\
+	
+\b posteq
+\b0 	In left inlet: The word posteq, followed by a 0 or a 1.  If 0, EQ is applied before delay.  If 1, EQ is applied after delay, which means it affects sound that's feeding back through the delay lines.\
+\
+	
+\b range
+\b0 	In left inlet: The word range, followed by two floats (min and max), which define the frequency range within which the EQ table functions. Giving 0 for max sets the maximum frequency to Nyquist. By default, the range is 0 Hz to Nyquist. Note that this range is ignored when using the binmap table.\
+\pard\tx360\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 \
+NOTE: It takes a certain, fixed amount of time for the sound to enter jg.spectdelay~ and emerge processed. If you want to delay your dry signal so that it synchronizes with the processed signal, delay it by the window length (i.e., the second argument to jg.spectdelay~).\
+\
+}

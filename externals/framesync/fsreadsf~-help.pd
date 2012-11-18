@@ -1,0 +1,24 @@
+#N canvas 285 106 438 400 10;
+#X text 272 227 frame;
+#X text 71 265 audio out;
+#X text 25 20 Plays a sound file til it ends \, synced up to the frame
+clock. Should stay in sync when randomly accessing different frame
+numbers.;
+#X text 96 227 name;
+#X text 271 216 start;
+#X obj 95 112 frameclock 400;
+#X obj 76 322 output~;
+#X msg 108 82 78;
+#X msg 77 82 55;
+#X text 134 80 <-- try jumping to a frame;
+#X obj 95 243 fsreadsf~ examples/sdf.wav 40;
+#X text 177 328 arguments: soundfile startframe#;
+#X text 96 216 file;
+#X obj 266 264 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 283 264 bang when done;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;
+#X connect 10 0 6 0;
+#X connect 10 0 6 1;
+#X connect 10 1 13 0;

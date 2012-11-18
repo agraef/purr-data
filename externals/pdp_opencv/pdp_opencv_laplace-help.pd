@@ -1,0 +1,75 @@
+#N canvas 310 159 693 598 10;
+#X obj -110 -117 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 130 -77 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 130 -50 metro 40;
+#X msg 220 -23 close;
+#X obj 150 48 pdp_v4l;
+#X msg 207 -55 open /dev/video0;
+#X obj 319 -82 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 319 -55 metro 40;
+#X msg 400 -36 close;
+#X msg 396 -60 open /dev/video0;
+#X obj 340 44 pdp_v4l2;
+#X msg 405 19 format \$1;
+#X obj 406 -3 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj -80 98 pdp_qt;
+#X obj -47 34 metro 40;
+#X msg -47 6 bang;
+#X msg -6 6 stop;
+#X obj -80 -63 openpanel;
+#X msg -80 -38 open \$1;
+#X msg -80 -91 bang;
+#X msg -46 61 loop \$1;
+#X obj 34 61 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 34 -21 loadbang;
+#X text -37 -88 playing a video file;
+#X text 160 -79 Camera input;
+#X obj -20 99 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text -107 -148 Written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+);
+#X text -107 -172 pdp_opencv_laplace : laplace filter;
+#X text -107 -159 used as an edge detector;
+#X obj -108 139 cnv 15 621 80 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj -53 230 pdp_xv;
+#X obj -53 171 pdp_opencv_laplace;
+#X msg 97 146 1;
+#X msg 131 146 3;
+#X msg 164 146 5;
+#X msg 196 146 7;
+#X text 231 146 aperture size ( default 3 );
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 31 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 31 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 31 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
+#X connect 19 0 17 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 22 0 15 0;
+#X connect 25 0 13 1;
+#X connect 31 0 30 0;
+#X connect 32 0 31 1;
+#X connect 33 0 31 1;
+#X connect 34 0 31 1;
+#X connect 35 0 31 1;

@@ -1,0 +1,24 @@
+#N canvas 515 468 496 403 10;
+#X obj 125 251 list-insert 2;
+#X obj 168 172 hradio 15 1 0 8 empty empty POS_(zero-based) 0 -6 0
+8 -262144 -1 -1 3;
+#X msg 233 222 0 1 2 3 4 5 6;
+#X text 231 203 original list;
+#X floatatom 168 197 5 0 0 0 - - -;
+#X text 68 69 Argument: default POS;
+#X text 67 49 POS is zerobased. Negative POS will count from the end.
+;
+#X msg 125 132 list SOME ELEMENTS;
+#X msg 125 162 INS;
+#X text 65 12 list-insert: insert LIST before element at position POS
+in original list.;
+#X obj 125 280 print NEW_LIST;
+#X floatatom 125 190 5 0 0 0 - - -;
+#X text 125 113 LIST or element to insert;
+#X connect 0 0 10 0;
+#X connect 1 0 4 0;
+#X connect 2 0 0 2;
+#X connect 4 0 0 1;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 11 0 0 0;

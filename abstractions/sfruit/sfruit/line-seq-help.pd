@@ -1,0 +1,39 @@
+#N canvas 393 102 571 427 10;
+#X text 125 212 arg1 initializes lag time;
+#X text 40 23 line-seq: like [line] but outputs integers and never
+ever skips a number on the way to its destination.;
+#X obj 42 80 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X msg 58 132 150;
+#X msg 68 152 275;
+#X text 100 150 and then this to see that all 125 numbers in between
+are output;
+#X obj 39 212 line-seq 250;
+#X floatatom 119 192 5 0 0 0 - - -;
+#X text 153 192 change lag time;
+#X obj 59 107 bng 15 250 50 0 \$0-reset-s \$0-reset-r empty 17 7 0
+10 -262144 -1 -1;
+#X text 88 130 then click this;
+#X text 76 105 reset the counter;
+#X obj 42 400 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 86 314 f;
+#X obj 116 314 + 1;
+#X obj 101 270 r \$0-reset-s;
+#X msg 101 292 0;
+#X floatatom 86 336 5 0 0 0 - - -;
+#X obj 59 257 t b;
+#X floatatom 56 378 5 0 0 0 - - -;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 4 0 6 0;
+#X connect 6 0 12 0;
+#X connect 6 0 18 0;
+#X connect 6 0 19 0;
+#X connect 7 0 6 1;
+#X connect 13 0 14 0;
+#X connect 13 0 17 0;
+#X connect 14 0 13 1;
+#X connect 15 0 16 0;
+#X connect 16 0 13 0;
+#X connect 18 0 13 0;

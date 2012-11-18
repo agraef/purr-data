@@ -1,0 +1,23 @@
+#N canvas 1367 11 658 473 10;
+#X obj 93 356 print RESULT;
+#X obj 93 65 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 163 136 samples/;
+#X obj 93 329 file.path.top;
+#X msg 234 211 C:/Documents and Settings/tom/My Documents/pd/parent.test.pd
+;
+#X msg 234 237 /bypasses/because/of/the/slash/at/the/start;
+#X msg 235 264 C:/bypasses/because/of/the/:/as/second/char;
+#X text 88 -5 Description: Returns or prepends the path of the top
+level parent of this patch.;
+#X text 92 25 Comments: Understands relative and absolute paths.;
+#X text 118 61 <- a bang will output the path.;
+#X text 233 188 Absolute paths are ignored.;
+#X text 229 132 <- If you send a relative path (a path that does not
+start with a / or C:) \, it will be appended to the path.;
+#X connect 1 0 3 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;

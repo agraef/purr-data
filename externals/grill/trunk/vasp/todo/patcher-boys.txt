@@ -1,0 +1,3 @@
+- Hinzufügen der neuen Objekte
+- Hilfen mit PD-Version vergleichen
+- vasp.minmax .... Hilfe ist sehr missverständlich 

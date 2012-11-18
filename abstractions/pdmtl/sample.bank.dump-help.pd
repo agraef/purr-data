@@ -1,0 +1,50 @@
+#N canvas 583 126 559 447 10;
+#X obj 210 121 sample.bank;
+#X obj 66 153 print;
+#X obj 66 56 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 342 186 sample.bank.dump;
+#X obj 342 133 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 249 244 vsl 15 115 0 175 0 0 \$0slider_s \$0slider_r empty 0
+-8 0 8 -1 -262144 -1 0 0;
+#X obj 67 242 hradio 15 1 0 12 \$0hr_0_s \$0hr_0_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 257 hradio 15 1 0 12 \$0hr_1_s \$0hr_1_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 272 hradio 15 1 0 12 \$0hr_2_s \$0hr_2_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 287 hradio 15 1 0 12 \$0hr_3_s \$0hr_3_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 302 hradio 15 1 0 12 \$0hr_4_s \$0hr_4_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 317 hradio 15 1 0 12 \$0hr_5_s \$0hr_5_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 332 hradio 15 1 0 12 \$0hr_6_s \$0hr_6_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 347 hradio 15 1 0 12 \$0hr_7_s \$0hr_7_r empty 2 8 0 15 -1
+-1 -262144 0;
+#X obj 67 226 cnv 15 197 15 empty \$0hider empty 3 9 0 8 -128992 -262144
+0;
+#X obj 66 99 sample.bank.dump;
+#X obj 342 157 t b b;
+#X msg 392 157 clear;
+#X obj 311 252 gui.browser \$0;
+#X obj 310 292 flow.prepend set;
+#X obj 342 216 convert.list2symbol -;
+#X msg 210 88 read medias/data/drum.kit.coll;
+#X obj 210 55 loadbang;
+#X msg 310 324;
+#X connect 2 0 15 0;
+#X connect 3 0 20 0;
+#X connect 3 1 18 1;
+#X connect 4 0 16 0;
+#X connect 15 0 1 0;
+#X connect 16 0 3 0;
+#X connect 16 1 17 0;
+#X connect 17 0 18 1;
+#X connect 18 0 19 0;
+#X connect 19 0 23 0;
+#X connect 20 0 18 1;
+#X connect 21 0 0 0;
+#X connect 22 0 21 0;

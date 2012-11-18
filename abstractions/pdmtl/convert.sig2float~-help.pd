@@ -1,0 +1,9 @@
+#N canvas 0 0 607 333 10;
+#X text 75 18 Description: converts a signal to floats.;
+#X msg 360 74 \; pd dsp 1;
+#X floatatom 121 222 5 0 0 0 - - -;
+#X obj 120 168 convert.sig2float~;
+#X obj 121 105 osc~ 0.01;
+#X text 133 138 Argument_1:update time (ms). Defaults to 100 ms.;
+#X connect 3 0 2 0;
+#X connect 4 0 3 0;

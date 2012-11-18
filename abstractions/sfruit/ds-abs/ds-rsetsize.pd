@@ -1,0 +1,16 @@
+#N canvas 149 310 450 300 10;
+#X obj 80 99 inlet;
+#X obj 158 25 loadbang;
+#X obj 185 158 iem_receive;
+#X msg 185 133 set \$1;
+#X obj 185 109 list-onearg \$3 \$1-pointer;
+#X obj 80 154 setsize \$1 \$2;
+#X obj 158 51 t b b;
+#X obj 158 76 s \$1-get-pointer;
+#X connect 0 0 5 0;
+#X connect 1 0 6 0;
+#X connect 2 0 5 1;
+#X connect 3 0 2 0;
+#X connect 4 0 3 0;
+#X connect 6 0 7 0;
+#X connect 6 1 4 0;

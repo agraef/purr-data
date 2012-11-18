@@ -1,0 +1,12 @@
+#N canvas 1905 275 450 300 10;
+#X obj 85 52 inlet list;
+#X obj 100 272 outlet;
+#X obj 100 137 list.op;
+#X obj 243 166 abs;
+#X obj 183 125 route symbol;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 2 1 4 0;
+#X connect 3 0 2 1;
+#X connect 4 0 2 1;
+#X connect 4 1 3 0;

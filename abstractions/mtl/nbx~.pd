@@ -1,0 +1,19 @@
+#N canvas 78 314 710 382 10;
+#X obj 102 28 inlet~;
+#X obj 99 218 outlet;
+#X obj 368 19 inlet;
+#X obj 101 55 snapshot~;
+#X obj 199 83 metro 100;
+#X obj 249 12 loadbang;
+#X msg 249 32 1;
+#X obj 101 101 nbx 8 16 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-1 -262144 -1 0 256;
+#X obj 177 101 cnv 16 15 16 empty empty ~ 3 6 0 14 -1 -262144 0;
+#X connect 0 0 3 0;
+#X connect 2 0 4 1;
+#X connect 3 0 7 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X connect 7 0 1 0;
+#X coords 0 -1 1 1 94 18 1 100 100;

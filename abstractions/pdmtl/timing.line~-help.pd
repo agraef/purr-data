@@ -1,0 +1,14 @@
+#N canvas 0 0 458 308 10;
+#X obj 63 149 timing.line~;
+#X text 29 25 Description: A line~ that bangs when it's done.;
+#X obj 62 234 anal.sig_~;
+#X obj 137 182 print done;
+#X msg 63 55 0 \, 1000 1000;
+#X msg 150 74 5;
+#X text 180 73 If you send single floats \, it will not bang.;
+#X msg 172 104 stop;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 7 0 0 0;

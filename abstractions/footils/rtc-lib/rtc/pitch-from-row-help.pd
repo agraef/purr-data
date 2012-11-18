@@ -1,0 +1,95 @@
+#N canvas 262 108 782 562 10;
+#X text 28 22 pitch-from-row;
+#X text 28 54 Generates pitch classes from a material row according
+to the row form (prime \, retrograd \, inversion or retro-inversion)
+and the start note of the row.;
+#X text 207 389 normalized row modus;
+#X text 382 361 flashes when end of row is reached;
+#X msg 200 404 0 11 2 1 5 6 3 4 8 7 10 9;
+#X floatatom 401 218 4 0 0 1 modus - -;
+#X text 74 251 rhythm bangs;
+#X obj 50 293 pitch-from-row;
+#X msg 195 248 0 8 4 10 5 1 2 6 9 7 11 3;
+#X obj 50 259 bng 15 50 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 50 224 metro 250;
+#X obj 50 186 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 28 105 see also:;
+#X msg 100 105 pitch-from-row-mod;
+#X msg 444 44 Dodecaphonics;
+#X msg 474 23 Harmony;
+#X obj 241 363 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 360 363 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 200 361 show;
+#X msg 50 405 E;
+#N canvas 74 114 324 201 play-it 0;
+#X obj 151 106 play2 127 500 1 1;
+#X obj 43 141 outlet;
+#X obj 43 106 show-pitchclass;
+#X obj 43 39 inlet;
+#X obj 43 68 + 60;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 4 0 0 0;
+#X restore 50 372 pd play-it;
+#X text 79 406 pitch class name;
+#X text 83 193 start/stop;
+#X obj 173 190 random-row;
+#X obj 195 218 show;
+#X text 196 165 Generates new row by random;
+#X obj 173 164 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 173 139 loadbang;
+#X text 430 459 1994-97 by Karlheinz Essl;
+#X obj 234 219 bng 15 250 50 0 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#N canvas 568 179 568 488 row-modus 0;
+#X obj 234 337 list split 1;
+#X symbolatom 144 142 16 0 0 0 - - -;
+#X obj 144 127 hradio 15 1 0 4 empty empty row_modus 0 -6 0 8 -262144
+-1 -1 0;
+#X obj 234 364 outlet;
+#X obj 144 60 inlet;
+#X obj 145 169 select 0 1 2 3;
+#X msg 234 227 0 prime;
+#X msg 234 251 1 retrograde;
+#X msg 234 276 2 inversion;
+#X msg 234 301 3 retro-inversion;
+#X connect 0 0 3 0;
+#X connect 0 1 1 0;
+#X connect 2 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 5 1 7 0;
+#X connect 5 2 8 0;
+#X connect 5 3 9 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X coords 0 -1 1 1 125 60 1 140 100;
+#X restore 401 141 pd row-modus;
+#X obj 401 247 hradio 15 1 0 12 empty empty start_note 0 -8 1 10 -262144
+-1 -1 0;
+#X connect 5 0 7 2;
+#X connect 7 0 20 0;
+#X connect 7 1 18 0;
+#X connect 7 2 17 0;
+#X connect 9 0 7 0;
+#X connect 10 0 9 0;
+#X connect 11 0 10 0;
+#X connect 16 0 18 1;
+#X connect 18 0 4 0;
+#X connect 20 0 19 0;
+#X connect 23 0 24 0;
+#X connect 23 0 7 1;
+#X connect 24 0 8 0;
+#X connect 26 0 23 0;
+#X connect 27 0 26 0;
+#X connect 29 0 24 1;
+#X connect 30 0 5 0;
+#X connect 31 0 7 3;

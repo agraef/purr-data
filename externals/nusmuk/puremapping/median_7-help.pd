@@ -1,0 +1,7 @@
+#N canvas 28 3 711 500 12;
+#X floatatom 88 202 5 0 0 0 - - -;
+#X floatatom 94 264 5 0 0 0 - - -;
+#X obj 95 234 median_7;
+#X text 131 39 output median value of the last 7 samples;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

@@ -1,0 +1,2 @@
+NAME=StringFlt~
+SRCS=StringFlt~.cpp

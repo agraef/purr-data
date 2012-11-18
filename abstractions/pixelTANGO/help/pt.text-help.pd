@@ -1,0 +1,21 @@
+#N canvas 177 256 662 311 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 265 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 267 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 24 75 pt.entry;
+#X text 12 39 Creation Arguments: None;
+#X obj 24 223 pt.text;
+#X text 12 6 pixelTANGO HELP - pt.text - Text;
+#X text 12 23 Type: Footer. Needs to be controlled by pt.entry.;
+#X text 177 77 Text Functions: None. This is a footer module.;
+#X text 194 122 Right or Control click to get help on pt.entry;
+#X obj 184 100 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 100 *Notes:;
+#X connect 4 0 6 0;
+#X connect 4 1 6 1;

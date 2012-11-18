@@ -1,0 +1,16 @@
+#N canvas 2 89 334 241 10;
+#X text 20 28 Comment: Taken from Andy Farnell's work.;
+#X text 21 11 Description: Generates a frying sound.;
+#X obj 21 132 mtl/frying~;
+#X obj 24 91 hsl 128 15 10 10000 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 87 112 hsl 128 15 10 4000 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 223 110 base;
+#X text 159 89 range;
+#X obj 20 167 mtl/out~;
+#X text 22 44 tags: synthesize~;
+#X connect 2 0 7 0;
+#X connect 2 0 7 1;
+#X connect 3 0 2 0;
+#X connect 4 0 2 1;

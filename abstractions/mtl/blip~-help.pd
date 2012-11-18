@@ -1,0 +1,20 @@
+#N canvas 594 40 392 321 10;
+#X obj 157 128 hsl 128 15 5 10 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text 27 79 Useful for percussion;
+#X text 27 11 Description: Self scaling time/amplitude blips without
+redundancy.;
+#X text 25 61 Comment: By ajf2006.;
+#X obj 29 203 mtl/blip~;
+#X obj 30 255 mtl/out~;
+#X text 128 106 decay;
+#X msg 29 127 55 127;
+#X msg 87 156 76 127;
+#X msg 84 129 60 127;
+#X text 26 39 tags: synthesize~;
+#X connect 0 0 4 1;
+#X connect 4 0 5 0;
+#X connect 4 0 5 1;
+#X connect 7 0 4 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 0;

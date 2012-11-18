@@ -1,0 +1,43 @@
+#N canvas 85 111 842 540 10;
+#X obj 58 31 cnv 15 15 15 empty empty vasp.size 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 406 282 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 45 symbol bufsize;
+#X msg 33 73 \; \$1 xticks 0 2 5 \; \$1 xlabel 1.1 0 10 20 30 40 50
+\; \$1 yticks 0 0.25 2;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 714 408 pd init;
+#X text 119 392 abbreviation;
+#X obj 62 335 vasp.update;
+#X obj 90 258 prepend set;
+#X msg 62 196 vasp bufsize;
+#X obj 62 225 vasp.size 100;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufsize 133 float 0;
+#X coords 0 1 132 -1 300 100 1;
+#X restore 453 153 graph;
+#X text 57 69 change the size of a buffer/array;
+#X obj 62 303 vasp.osc 16;
+#X obj 63 392 vasp.s;
+#X text 62 433 related objects:;
+#X obj 343 460 vasp.frames;
+#X obj 183 460 vasp.size?;
+#X obj 183 436 vasp.s+;
+#X obj 259 460 vasp.size*;
+#X obj 259 437 vasp.size/;
+#X obj 62 504 VASP-HELP;
+#X obj 62 157 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -24198 -1 -1 133 256;
+#X obj 62 175 t b f;
+#X msg 90 280;
+#X text 58 83 argument/right inlet: value in frames;
+#X connect 4 0 20 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X connect 6 0 9 0;
+#X connect 9 0 3 0;
+#X connect 18 0 19 0;
+#X connect 19 0 5 0;
+#X connect 19 1 6 1;

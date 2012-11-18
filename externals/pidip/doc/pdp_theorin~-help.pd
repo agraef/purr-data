@@ -1,0 +1,14 @@
+#N canvas 259 178 509 391 10;
+#X obj 156 158 dac~;
+#X text 51 309 written by Yves Degoyon (ydegoyon@free.fr);
+#X text 236 112 <-- everything is in this box;
+#X text 265 127 where the block size is redefined;
+#X text 265 141 this is necessary for an;
+#X text 266 154 ( acceptable? ) audio decoding;
+#X obj 395 221 loadbang;
+#X msg 395 251 \; pd dsp 1;
+#X text 51 295 pdp_theorin~ : theora threaded file reader;
+#X obj 128 113 rs_pdp_theorin~;
+#X connect 6 0 7 0;
+#X connect 9 0 0 0;
+#X connect 9 1 0 1;

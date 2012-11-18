@@ -1,0 +1,18 @@
+#N canvas 417 128 564 397 10;
+#X obj 7 7 inlet;
+#X obj 7 30 unpack f f;
+#X obj 7 52 t b f;
+#X msg 7 135 bang;
+#X obj 37 106 outlet;
+#X obj 72 52 / 127;
+#X text 120 8 takes a midi note pair and outputs a trigger \, the midi
+note \, and the normalised volume.;
+#X obj 72 74 outlet;
+#X obj 7 157 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 5 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 3 0 8 0;
+#X connect 5 0 7 0;

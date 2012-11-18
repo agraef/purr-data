@@ -1,0 +1,26 @@
+#N canvas 326 150 563 478 10;
+#X obj 54 332 sample.play~;
+#X obj 56 395 mix.out_~;
+#X obj 54 135 sample.filer;
+#X msg 55 85 medias/sounds/loop1.wav;
+#X obj 54 272 sample.print;
+#X msg 147 283 1;
+#X msg 153 322 0;
+#X obj 141 247 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X text 181 285 <- By changing the pitch with sample.pitch \, the sample
+will play at the new pitch when trigged.;
+#X msg 184 357 60 126;
+#X msg 184 384 60 0;
+#X obj 54 190 sample.pitch_;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 2 0 11 0;
+#X connect 3 0 2 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 0 1;
+#X connect 7 0 4 1;
+#X connect 9 0 0 1;
+#X connect 10 0 0 1;
+#X connect 11 0 4 0;

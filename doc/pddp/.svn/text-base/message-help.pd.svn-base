@@ -1,0 +1,264 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header message 3 12 0 18
+-204280 -1 0;
+#X obj 0 191 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 244 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 35 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 75 INLET_0 anything set add add2 addcomma addsemi adddollar
+adddollsym;
+#X text 12 105 OUTLET_0 anything;
+#X text 12 55 DESCRIPTION clickable message box;
+#X text 12 5 KEYWORDS control GUI nonlocal symbol_op list_op anything_op
+bang_op;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 336 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 387 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 555 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 100 481 428 109 Related_objects 0;
+#X obj 116 43 list;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X msg 12 3;
+#X text 40 2 Related Objects;
+#X obj 22 43 symbol;
+#X obj 72 43 float;
+#X restore 102 597 pd Related_objects;
+#X obj 78 200 cnv 17 3 130 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 345 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X msg 512 3;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/message -text
+pdpedia: message;
+#X text 98 57 Message boxes hold one or more message. Anytime the message
+box receives any message at all \, the messages in the box are all
+sent to their destinations.;
+#X msg 101 141 walk the dog;
+#X obj 101 164 print;
+#N canvas 85 15 428 600 dollarsign_variables 0;
+#X obj 23 156 print;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X msg 12 3;
+#X text 40 2 Dollarsign Variables in Message Boxes;
+#X text 20 38 You can use "dollarsign variables" to make variable messages.
+Just use a dollarsign followed by a number-- "\$1" \, "\$2" \, etc.
+The numbers (starting from one) specify which element of the incoming
+message should replace the variable in the outgoing message.;
+#X msg 23 131 pitch \$3;
+#X text 115 106 a list with three numbers;
+#X msg 23 106 list 24 48 72;
+#X text 83 131 replace "\$3" with the third element;
+#X text 84 145 of the incoming message ("72");
+#X msg 23 236 24 48 72;
+#X text 83 236 implicit list with three numbers;
+#X msg 23 259 pitch \$3;
+#X obj 23 281 print;
+#X text 83 259 third element is still "72";
+#X text 20 303 It's important to note that you can't access the selector
+of the message using the dollarsign variables. (In the patch above
+\, "list" is the selector \, "24" is the first element \, and so on.)
+Keep this in mind when using custom selectors \, as in the following:
+;
+#X msg 23 373 melody 67 67 67 63;
+#X text 153 374 In this message \, "melody" is the selector \,;
+#X text 153 389 and there are four elements (not five).;
+#X msg 23 407 pitch \$4;
+#X obj 23 490 print;
+#X text 85 407 replace "\$4" with the fourth element ("63");
+#X msg 41 459 pitch \$5;
+#X msg 41 433 melody 65 65 65 62;
+#X text 163 438 this will output an error--;
+#X text 163 452 there is no 5th element!;
+#X text 20 180 Remember that the selectors "list" and "float" can be
+omitted when the first atom in a message is a float. For example \,
+the following still works exactly as the patch above:;
+#X text 21 514 Multiple dollarsign variables may be used together:
+;
+#X obj 25 576 print;
+#X msg 25 533 22 8 1791;
+#X msg 25 555 \$1-\$2-\$3.wav;
+#X connect 5 0 0 0;
+#X connect 7 0 5 0;
+#X connect 10 0 12 0;
+#X connect 12 0 13 0;
+#X connect 16 0 19 0;
+#X connect 19 0 20 0;
+#X connect 22 0 20 0;
+#X connect 23 0 22 0;
+#X connect 29 0 30 0;
+#X connect 30 0 28 0;
+#X restore 171 463 pd dollarsign_variables;
+#X text 11 23 clickable message box;
+#X text 98 199 bang;
+#X text 98 213 float;
+#X text 98 227 symbol;
+#X text 98 241 pointer;
+#X text 98 256 anything;
+#X text 168 199 - these message types will cause the message box to
+send its message as output.;
+#N canvas 52 81 428 405 messages_for_changing_the_content_of_a_message_box
+0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X msg 12 3;
+#X text 40 2 Changing Messages;
+#X msg 23 76 set dog;
+#X msg 43 150 add monkey;
+#X msg 48 195 add2 bird;
+#X msg 37 124 set;
+#X msg 31 99 set 1 2 3 skidoo;
+#X text 71 124 "set" with no arguments clears it;
+#X text 85 77 "set" to set contents (numbers and/or symbols);
+#X msg 52 229 addcomma;
+#X msg 56 255 addsemi;
+#X msg 60 312 adddollsym 4-foo;
+#X msg 59 282 adddollar 3;
+#X text 118 229 add a comma;
+#X text 118 254 add a semicolon;
+#X text 137 282 add a dollar-sign argument;
+#X text 167 312 add a dollar-sign-plus-symbol argument;
+#X text 20 37 The following messages may be used to change contents
+of messages boxes:;
+#X text 118 165 plus a terminating semicolon;
+#X text 117 151 "add" to add numbers and/or symbols \,;
+#X text 118 209 the terminating semicolon;
+#X text 117 195 "add2" to add contents without;
+#X msg 23 357;
+#X connect 3 0 23 0;
+#X connect 4 0 23 0;
+#X connect 5 0 23 0;
+#X connect 6 0 23 0;
+#X connect 7 0 23 0;
+#X connect 10 0 23 0;
+#X connect 11 0 23 0;
+#X connect 12 0 23 0;
+#X connect 13 0 23 0;
+#X restore 101 313 pd messages_for_changing_the_content_of_a_message_box
+;
+#X text 98 344 anything;
+#X text 168 344 - a message box will output its message (replacing
+any dollar-sign variables with the relevant elements of the incoming
+message).;
+#X text 81 406 n) float;
+#X text 100 480 comma;
+#X text 100 515 semicolon;
+#N canvas 88 49 428 453 Using_Commas_in_Message_Boxes 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X msg 12 3;
+#X text 40 2 About Commas and Semicolons;
+#X obj 23 136 list length;
+#X floatatom 23 164 5 0 0 3 No_of_atoms - -;
+#X obj 23 94 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 23 114 list append one \, 3;
+#X text 141 115 This list actually contains three atoms:;
+#X text 141 135 1) The symbol "one";
+#X text 141 165 3) The float "3";
+#X text 20 37 Even though they are not be separated by whitespace \,
+semicolons and commas are actually atoms in Pd-- just like float- and
+symbol-atoms. You can see this clearly in the example below:;
+#X text 43 92 <- Click to test;
+#X msg 22 281 Because I do not hope to turn again \, Because I do not
+hope;
+#X obj 22 303 print from_Ash_Wednesday;
+#X text 20 210 In message boxes \, commas and semicolons are used to
+separate one message from another. For example \, there are two messages
+in the message box below. Each is sent separately to the [print] object
+(in the order they were written):;
+#X msg 23 376 1 \, 2 \, 3;
+#X obj 23 398 + 10;
+#X obj 23 422 print sum;
+#X text 20 329 Notice that the comma itself is not included as part
+of the message-- it simply tells Pd where one message ends \, and the
+next begins.;
+#X text 141 150 2) A comma;
+#X connect 3 0 4 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 0;
+#X connect 12 0 13 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X restore 172 497 pd Using_Commas_in_Message_Boxes;
+#N canvas 82 29 428 495 Using_Semicolons_In_Message_Boxes 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X msg 12 3;
+#X obj 24 362 print;
+#X obj 228 291 receive my-receiver-name;
+#X floatatom 228 315 0 0 0 0 - - -;
+#X floatatom 227 362 0 0 0 0 - - -;
+#X obj 227 338 receive another-receiver;
+#X obj 23 191 receive msg2r;
+#X obj 23 217 print after_semi;
+#X obj 23 159 print before_semi;
+#X msg 24 291 \; my-receiver-name 858 \; another-receiver -45;
+#X text 40 2 About Semicolons and Nonlocal Sends;
+#X msg 23 118 this msg comes out the outlet \; msg2r this msg comes
+out of [receive msg2r];
+#X msg 201 441 \; pd dsp 1;
+#X msg 25 441 dsp 1;
+#X obj 25 468 s dsp;
+#X text 85 451 is the same as;
+#X text 22 396 For messages to a single named-object \, however \,
+it is probably clearer to use a message box and a [send] object \,
+but you can judge for yourself:;
+#X text 20 37 Like commas \, semicolons may be used to send multiple
+messages from a single message box. When using a semicolon \, however
+\, the message following the semicolon is re-routed to a named object
+\, such as [receive] \, an array \, or a canvas. The named object is
+specified by the selector of the message ("msg2r" in this example):
+;
+#X text 22 246 To send messages to named objects without first sending
+a message to the outlet \, put an initial semicolon in the message
+box:;
+#X connect 3 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 10 0 2 0;
+#X connect 12 0 9 0;
+#X connect 14 0 15 0;
+#X restore 172 533 pd Using_Semicolons_In_Message_Boxes;
+#X text 168 256 - other messages will cause the message box to send
+its message as output \, except for the "special messages" that are
+used to change the content of a message box. Click the subpatch below
+to view these "special messages":;
+#X text 168 480 - a comma may be used to separate multiple messages:
+;
+#X text 178 515 - a semicolon may be used to send messages nonlocally:
+;
+#X text 168 406 - message boxes can contain any number of float and/or
+symbol arguments. Message boxes may also contain special "dollar-sign
+variables" \, used to grab data from an incoming message. Click the
+subpatch below for more info:;
+#X text 188 141 <- message;
+#X text 141 164 <- object (notice the different border);
+#X text 98 97 Clicking on a message also sends it \, so you can use
+messsage boxes as push buttons. For instance \, click here while watching
+the printout window:;
+#X text 100 421 symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 100 559 pddp/pddplink all_about_messages.pd -text all_about_messages
+;
+#X obj 100 574 pddp/pddplink all_about_symbol_construction.pd -text
+all_about_symbol_construction;
+#X obj 286 559 pddp/pddplink ../2.control.examples/04.messages.pd -text
+doc/2.control.examples/04.messages.pd;
+#X obj 286 574 pddp/pddplink ../2.control.examples/10.more.messages.pd
+-text doc/2.control.examples/10.more.messages.pd;
+#X text 329 2 To create \, click <Control-2>;
+#X connect 13 0 14 0;

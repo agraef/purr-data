@@ -1,0 +1,3 @@
+Damien HENRY	:	Main contributor
+Olaff Matthes	:	The sendto object + good ideas
+

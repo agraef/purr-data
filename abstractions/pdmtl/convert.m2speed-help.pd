@@ -1,0 +1,19 @@
+#N canvas 375 105 499 499 10;
+#X msg 268 225 60;
+#X floatatom 67 238 5 0 0 0 - - -;
+#X msg 300 225 72;
+#X text 50 213 Current note;
+#X floatatom 126 376 5 0 0 0 - - -;
+#X obj 144 310 convert.m2speed 72;
+#X text 160 376 Play speed ratio (on 1);
+#X text 20 46 convert.m2speed;
+#X text 277 195 MIDI base note;
+#X text 15 166 Argument : the MIDI base note of the original sound.
+;
+#X text 19 73 Description: Converts a MIDI note to the speed you must
+play the sample.;
+#X text 18 105 Comments: The default MIDI base note is 60;
+#X connect 0 0 5 1;
+#X connect 1 0 5 0;
+#X connect 2 0 5 1;
+#X connect 5 0 4 0;

@@ -1,0 +1,104 @@
+#N canvas 632 12 847 912 10;
+#X obj 166 117 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 210 228 5 0 0 0 - - -;
+#X floatatom 271 78 5 0 0 0 - - -;
+#X floatatom 316 107 5 0 0 0 - - -;
+#X text 315 76 min random value;
+#X text 359 106 max random value;
+#X text 7 96 Bang to output random.f value;
+#X floatatom 44 464 10 0 0 0 - - -;
+#X obj 91 365 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 107 3 Description: Outputs a random number in a moving range.
+;
+#N canvas 0 0 450 300 graph4 0;
+#X array \$0test 200 float 0;
+#X coords 0 1 199 0 200 140 1;
+#X restore 358 342 graph;
+#X obj 122 460 table.write.next \$0test;
+#X obj 90 341 loadbang;
+#X obj 94 399 metro 50;
+#X text 141 293 COMPARE THE OUTPUT OF A RANDOM DRUNK TO A REGULAR RANDOM
+;
+#X text 253 338 RANDOM DRUNK;
+#X floatatom 110 662 5 0 0 0 - - -;
+#X obj 129 573 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#N canvas 0 0 450 300 graph4 0;
+#X array \$0test2 200 float 0;
+#X coords 0 1 199 0 200 140 1;
+#X restore 341 550 graph;
+#X obj 128 549 loadbang;
+#X obj 128 598 metro 50;
+#X obj 157 660 table.write.next \$0test2;
+#X obj 129 623 random.f 0 1;
+#X floatatom 365 132 5 0 0 0 - - -;
+#X text 396 181 Argument_1: Minimum value.;
+#X text 396 199 Argument_2: Maximum value.;
+#X text 243 503 NORMAL RANDOM;
+#X obj 84 868 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 85 890 metro 500;
+#X text 109 21 The min and max values are included in the values that
+can be output.;
+#X floatatom 84 940 5 0 0 0 - - -;
+#X text 396 220 Argument_3: step size (default 0.1).;
+#X text 394 239 Argument_4: lock to step size.;
+#X text 35 802 random.drunk can also only be limited to integers by
+setting the third argument to an integer and the last argument to 1
+;
+#N canvas 0 0 450 300 graph4 0;
+#X array \$0test1 200 float 0;
+#X coords 0 1 199 0 200 140 1;
+#X restore 597 858 graph;
+#X obj 83 846 loadbang;
+#X text 226 743 LOCKING TO STEP SIZE (set with the last argument or
+inlet);
+#X floatatom 352 978 10 0 0 0 - - -;
+#X obj 399 879 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 398 855 loadbang;
+#X obj 402 913 metro 50;
+#X obj 430 974 table.write.next \$0test1;
+#X text 453 816 In this example \, the output is locked to the step
+size.;
+#X obj 364 157 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 408 132 step size;
+#X text 387 155 lock to step size;
+#X msg 49 179 set 5;
+#X text 10 155 Sets the internal value;
+#X msg 60 225 set 0;
+#X text 12 206 Sets the internal value;
+#X obj 211 172 random.drunk 0 10;
+#X obj 404 942 random.drunk 0 1 0.25 1;
+#X obj 96 427 random.drunk 0 1 0.1;
+#X obj 86 913 random.drunk 0 10 1 1;
+#X connect 0 0 50 0;
+#X connect 2 0 50 1;
+#X connect 3 0 50 2;
+#X connect 8 0 13 0;
+#X connect 12 0 8 0;
+#X connect 13 0 52 0;
+#X connect 17 0 20 0;
+#X connect 19 0 17 0;
+#X connect 20 0 22 0;
+#X connect 22 0 16 0;
+#X connect 22 0 21 0;
+#X connect 23 0 50 3;
+#X connect 27 0 28 0;
+#X connect 28 0 53 0;
+#X connect 35 0 27 0;
+#X connect 38 0 40 0;
+#X connect 39 0 38 0;
+#X connect 40 0 51 0;
+#X connect 43 0 50 4;
+#X connect 46 0 50 0;
+#X connect 48 0 50 0;
+#X connect 50 0 1 0;
+#X connect 51 0 37 0;
+#X connect 51 0 41 0;
+#X connect 52 0 7 0;
+#X connect 52 0 11 0;
+#X connect 53 0 30 0;

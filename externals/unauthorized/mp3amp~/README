@@ -1,0 +1,45 @@
+Version 0.01 
+copyright (c) 2001 by Olaf Matthes & Yves Degoyon
+
+mp3amp~ is a MPEG I Layer III (mp3) icecast/shoutcast client for Pure Data
+
+To install mp3amp~, follow the steps from INSTALL
+
+This software is published under GPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+mp3amp~ has been compiled for Linux using LAME 3.92.
+The newest version of LAME can be found at sourceforge.net
+
+COPYING: you may use this source under GPL terms!
+
+PLEASE NOTE: This software may contain patented alogrithm (at least
+  patented in some countries). It may be not allowed to sell/use products
+  based on this source code in these countries. Check this out first!
+
+COPYRIGHT of MP3 music:
+  Please note, that the duplicating of copyrighted music without explicit
+  permission violates the rights of the owner.
+
+*****************************************************************************
+
+	using mp3amp~ external for Pure Data
+
+Open the help-mp3amp~.pd to understand how it works.
+Open the help-graphic-mp3amp~.pd if you want to see the status of the incoming stream.
+
+BUGS :
+
+a/ certainly, not all bitrates will work,
+that's too tedious to test, 128, 256, 320 are ok.
+
+b/ cannot instantiate more than 10 decoders, if needed change MAX_DECODERS in the code
+
+c/ this is beta, be patient !!! bugs report welcome !!!

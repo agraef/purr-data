@@ -1,0 +1,8 @@
+import glob
+import os
+Import('env prefix')
+
+for expr in Split('expr expr~ fexpr~'):
+    e = env.SharedLibrary(target=expr, source = glob.glob('*.c'))
+    env.Alias('install', env.Install(os.path.join(prefix, 'extra'), e))
+    Default(e)

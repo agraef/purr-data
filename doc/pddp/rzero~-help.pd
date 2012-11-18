@@ -1,0 +1,135 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header rzero~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 349 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 247 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version-0.38. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 45 DESCRIPTION real one-zero (non-recursive) filter \, raw
+;
+#X text 12 65 INLET_0 signal clear set;
+#X text 12 85 INLET_1 float signal;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 465 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 502 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 544 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 358 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 474 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 424 cnv 17 3 30 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 423 float;
+#X obj 479 3 rzero~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/rzero~ -text
+pdpedia: rzero~;
+#X floatatom 241 193 0 0 0 0 - - -;
+#X obj 197 108 osc~ 100;
+#X msg 212 140 clear;
+#X msg 214 166 set 1;
+#X obj 196 218 rzero~ 1;
+#X text 11 23 real one-zero (non-recursive) filter \, raw;
+#X text 98 357 signal;
+#X text 168 357 - the incoming signal to filter.;
+#X text 74 52 [rzero~] filters an audio signal (left inlet) via a one-zero
+real filter \, whose coefficient is controlled by a creation argument
+or by an audio signal (right inlet).;
+#X text 98 377 clear;
+#X text 168 377 - clear internal state to zero.;
+#X text 98 397 set;
+#X text 168 397 - set internal state (e.g. \, "set 1").;
+#X text 167 423 - filter coefficient.;
+#X text 167 438 - filter coefficient.;
+#X text 98 438 signal;
+#X text 80 521 1) float;
+#X text 167 521 - (optional) initializes the filter coefficient.;
+#X text 98 473 signal;
+#X text 168 473 - the outgoing \, filtered signal.;
+#N canvas 74 275 326 287 test 0;
+#X obj 76 78 osc~;
+#X floatatom 76 55 5 0 0 0 - - -;
+#X obj 77 219 env~ 16384;
+#X floatatom 77 243 5 0 0 0 - - -;
+#X obj 104 107 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 76 105 *~;
+#X msg 97 137 set 1;
+#X floatatom 172 157 4 -100 100 0 - - -;
+#X obj 172 182 / 100;
+#X obj 214 256 dac~;
+#X obj 228 177 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 214 220 *~;
+#X obj 230 197 / 10;
+#X text 80 18 Stuff to test it:;
+#X obj 76 168 rzero~;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 4 0 5 1;
+#X connect 5 0 14 0;
+#X connect 6 0 14 0;
+#X connect 7 0 8 0;
+#X connect 8 0 14 1;
+#X connect 10 0 12 0;
+#X connect 11 0 9 0;
+#X connect 11 0 9 1;
+#X connect 12 0 11 1;
+#X connect 14 0 2 0;
+#X connect 14 0 11 0;
+#X restore 101 553 pd test;
+#N canvas 27 280 428 309 Related_objects 0;
+#X obj 74 60 rzero~;
+#X obj 25 80 cpole~;
+#X obj 25 60 rpole~;
+#X obj 123 60 rzero_rev~;
+#X obj 74 80 czero~;
+#X obj 123 80 czero_rev~;
+#X text 201 60 real;
+#X text 200 81 complex;
+#X text 22 44 1-pole;
+#X text 71 44 1-zero;
+#X text 121 44 1-zero \, reversed;
+#X text 47 29 summary of raw filters:;
+#X text 18 184 User-friendly Filters;
+#X obj 21 213 lop~;
+#X obj 72 212 hip~;
+#X obj 124 213 bp~;
+#X obj 169 214 vcf~;
+#X obj 22 274 biquad~;
+#X text 18 250 Other Objects;
+#X text 18 113 Pd also provides a suite of user-friendly filters. This
+and other raw filters are provided for situations which the user-friendly
+ones can't handle. See Chapter 8 of http://crca.ucsd.edu/~msp/techniques
+for an introduction to the necessary theory.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [rzero~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 74 290 where y[n] is the output \, x[n] the input \, and a[n]
+the filter coefficient. The filter is always stable.;
+#X text 74 320 The transfer function is H(Z) = 1 - aZ^-1.;
+#X text 128 269 y[n] = x[n] - a[n] * x[n-1];
+#X text 74 249 The action of [rzero~] is:;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 98 573 pddp/pddplink ../3.audio.examples/H11.shelving.pd -text
+doc/3.audio.examples/H11.shelving.pd;
+#X connect 13 0 17 1;
+#X connect 14 0 17 0;
+#X connect 15 0 17 0;
+#X connect 16 0 17 0;

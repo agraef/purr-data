@@ -1,0 +1,21 @@
+
+_ __ test __ _
+
+This is a test of network-transparent self-control in the new Memento.
+It works. 
+
+Start one Pd with: 
+
+pd -realtime -nogui rrad-rec.pd noguiOSC.pd
+
+and the other with
+
+pd -noaudio rrad-rec.pd guiOSC.pd
+
+Turn volume up in guiOSC.pd, and you proably need to select your own samples.
+
+Then you get one Pd running with dsp on, but no GUI to disturb audio
+computation, and the other Pd runs with GUI but without audio to disturb. 
+
+You (almost) can now use the GUI-Pd as if it was a normal, audio-enabled Pd,
+although that one is running (crash-protected) in another process.

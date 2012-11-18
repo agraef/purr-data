@@ -1,0 +1,3 @@
+LIBS += -lsndobj
+INCPATH += -I/usr/include/SndObj
+CFLAGS += -DFLEXT_USE_CMEM -DFLEXT_NOGLOBALNEW

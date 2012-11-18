@@ -1,0 +1,16 @@
+#N canvas 0 48 676 306 10;
+#X floatatom 157 108 5 0 0 1 smooth_interval_(ms) - -;
+#X obj 50 131 smooth-line 1000;
+#X floatatom 50 158 5 0 0 1 smooth_output - -;
+#X text 23 51 Interpolates smoothly between successive input values.
+;
+#X text 23 19 smooth-line;
+#X msg 269 21 Envelopes;
+#X floatatom 50 97 5 0 0 0 - - -;
+#X msg 94 97 stop;
+#X text 33 197 1999 by Karlheinz Essl;
+#X text 34 217 Pd: 2006 Frank Barknecht;
+#X connect 0 0 1 1;
+#X connect 1 0 2 0;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;

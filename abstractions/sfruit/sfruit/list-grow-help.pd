@@ -1,0 +1,26 @@
+#N canvas 0 22 428 331 10;
+#X text 44 22 [list-grow] grow a list by appending each new item in
+the right inlet to all previous items in the right inlet. Bang the
+left inlet to output the grown list and clear the object.;
+#X obj 119 182 list-grow;
+#X msg 172 131 a;
+#X msg 206 139 b;
+#X msg 205 166 fcd;
+#X msg 213 213 x y;
+#X obj 48 140 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 48 102 clear;
+#X text 86 101 to clear without output;
+#X obj 119 249 prepent set;
+#X text 252 155 1: click these a few times;
+#X text 10 160 2: click to output;
+#X msg 119 290;
+#X text 301 304 2009 Luke Iannini;
+#X connect 1 0 9 0;
+#X connect 2 0 1 1;
+#X connect 3 0 1 1;
+#X connect 4 0 1 1;
+#X connect 5 0 1 1;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;
+#X connect 9 0 12 0;

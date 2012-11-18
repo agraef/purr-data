@@ -1,0 +1,16 @@
+#N canvas 270 238 447 421 12;
+#X obj 35 118 vasp.!;
+#X obj 35 163 vasp.sqr;
+#X obj 35 272 sqrt;
+#X obj 35 63 inlet;
+#X obj 35 330 outlet;
+#X text 98 119 make temporary buffer;
+#X text 92 332 RMS;
+#X obj 35 201 vasp.qmean;
+#X text 125 203 mean value;
+#X text 32 12 calculate RMS value of a vasp;
+#X connect 0 0 1 0;
+#X connect 1 0 7 0;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 7 0 2 0;

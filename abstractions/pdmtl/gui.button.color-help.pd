@@ -1,0 +1,17 @@
+#N canvas 66 59 459 421 10;
+#X obj 79 123 hradio 15 1 0 3 empty empty button 3 7 0 10 -1 -1 -258053
+1;
+#X text 31 171 Arguments 1 to 3: color of background \, front and label
+when unpressed;
+#X text 30 200 Arguments 4 to 6: color of background \, front and label
+when pressed;
+#X text 32 225 Argument 7: release time;
+#X obj 30 257 hradio 15 1 0 3 empty empty empty 3 7 0 10 -1 -13184
+-1 2;
+#X obj 74 292 gui.button.color -1 -800000 -1 -1.67117e+007 -1 -1 250
+;
+#X obj 36 149 gui.button.color -1 -1 -1.67117e+007 -1 -1 -1 250;
+#X connect 0 0 6 0;
+#X connect 4 0 5 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;

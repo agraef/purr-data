@@ -1,0 +1,162 @@
+#N canvas 121 0 828 668 10;
+#X obj 234 469 pdp_glx;
+#X obj 227 100 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 139 loop \$1;
+#X obj 124 117 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 119 80 open \$1;
+#X obj 118 56 openpanel;
+#X obj 103 39 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 184 101 stop;
+#X obj 36 177 pdp_v4l;
+#X obj 36 145 metro 70;
+#X obj 83 104 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 40 105 stop;
+#X obj 716 529 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 716 581 pdp_control;
+#X msg 716 554 thread \$1;
+#X floatatom 716 642 5 0 0 0 - - -;
+#X obj 716 613 route pdp_drop;
+#X text 35 641 written by Yves Degoyon ( ydegoyon@free.fr );
+#X floatatom 189 169 5 0 0 0 - - -;
+#X text 35 577 pdp_canvas : displaying several video sources;
+#X text 34 591 constructor : pdp_canvas <width> <height> <nb inputs>
+;
+#X text 419 495 <-- you can move video sources by dragging them around
+;
+#X obj 470 99 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 366 138 loop \$1;
+#X obj 367 116 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 362 79 open \$1;
+#X obj 361 55 openpanel;
+#X obj 346 38 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 427 100 stop;
+#X obj 283 178 pdp_v4l;
+#X obj 290 154 metro 70;
+#X obj 337 113 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 294 114 stop;
+#X floatatom 432 168 5 0 0 0 - - -;
+#X obj 735 96 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 631 135 loop \$1;
+#X obj 632 113 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 627 76 open \$1;
+#X obj 626 52 openpanel;
+#X obj 611 35 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 692 97 stop;
+#X obj 695 134 metro 70;
+#X obj 548 176 pdp_v4l;
+#X obj 548 152 metro 70;
+#X obj 595 111 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 552 112 stop;
+#X floatatom 697 165 5 0 0 0 - - -;
+#X text 36 605 note : the maximum number of inputs is 10;
+#X text 36 618 ( easily hackable in the code );
+#X text 544 397 Change offsets of first video source;
+#X obj 548 351 pack f f;
+#X floatatom 549 312 5 0 0 0 - - -;
+#X floatatom 599 312 5 0 0 0 - - -;
+#X obj 589 331 t b f;
+#X text 564 294 X;
+#X text 609 293 Y;
+#X msg 548 375 offset 1 \$1 \$2;
+#X obj 81 315 loadbang;
+#X msg 173 540 select \$1 \$2;
+#X msg 279 539 drag \$1 \$2;
+#X msg 367 538 unselect;
+#X msg 154 432 cursor 1;
+#X msg 82 341 offset 2 320 0;
+#X msg 81 365 offset 3 256 240;
+#X obj 134 258 pdp_scale 320 240;
+#X obj 307 255 pdp_scale 320 240;
+#X obj 496 254 pdp_scale 320 240;
+#X msg 83 393 dim 640 480;
+#X obj 234 432 pdp_canvas 640 480 3;
+#X obj 234 497 route press drag release;
+#X obj 187 138 metro 40;
+#X obj 431 137 metro 40;
+#X obj 121 177 pdp_yqt;
+#X obj 367 177 pdp_yqt;
+#X obj 632 174 pdp_yqt;
+#X connect 0 0 69 0;
+#X connect 1 0 70 0;
+#X connect 2 0 72 0;
+#X connect 3 0 2 0;
+#X connect 4 0 72 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 70 0;
+#X connect 8 0 64 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 14 0;
+#X connect 13 0 16 0;
+#X connect 14 0 13 0;
+#X connect 16 0 15 0;
+#X connect 18 0 72 1;
+#X connect 22 0 71 0;
+#X connect 23 0 73 0;
+#X connect 24 0 23 0;
+#X connect 25 0 73 0;
+#X connect 26 0 25 0;
+#X connect 27 0 26 0;
+#X connect 28 0 71 0;
+#X connect 29 0 65 0;
+#X connect 30 0 29 0;
+#X connect 31 0 30 0;
+#X connect 32 0 30 0;
+#X connect 33 0 73 1;
+#X connect 34 0 41 0;
+#X connect 35 0 74 0;
+#X connect 36 0 35 0;
+#X connect 37 0 74 0;
+#X connect 38 0 37 0;
+#X connect 39 0 38 0;
+#X connect 40 0 41 0;
+#X connect 41 0 74 0;
+#X connect 42 0 66 0;
+#X connect 43 0 42 0;
+#X connect 44 0 43 0;
+#X connect 45 0 43 0;
+#X connect 46 0 74 1;
+#X connect 50 0 56 0;
+#X connect 51 0 50 0;
+#X connect 52 0 53 0;
+#X connect 53 0 50 0;
+#X connect 53 1 50 1;
+#X connect 56 0 68 0;
+#X connect 57 0 62 0;
+#X connect 57 0 63 0;
+#X connect 57 0 67 0;
+#X connect 58 0 68 0;
+#X connect 59 0 68 0;
+#X connect 60 0 68 0;
+#X connect 61 0 0 0;
+#X connect 62 0 68 0;
+#X connect 63 0 68 0;
+#X connect 64 0 68 1;
+#X connect 65 0 68 2;
+#X connect 66 0 68 3;
+#X connect 67 0 0 0;
+#X connect 68 0 61 0;
+#X connect 68 0 0 0;
+#X connect 69 0 58 0;
+#X connect 69 1 59 0;
+#X connect 69 2 60 0;
+#X connect 70 0 72 0;
+#X connect 71 0 73 0;
+#X connect 72 0 64 0;
+#X connect 73 0 65 0;
+#X connect 74 0 66 0;

@@ -1,0 +1,14 @@
+#N canvas 424 183 450 300 10;
+#X obj 70 77 inlet;
+#X obj 70 231 outlet;
+#X obj 207 85 inlet;
+#X obj 76 99 b;
+#X obj 79 129 markex/randomF 1;
+#X obj 80 187 sel 0;
+#X obj 79 163 >= \$1;
+#X connect 0 0 3 0;
+#X connect 2 0 6 1;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 0;

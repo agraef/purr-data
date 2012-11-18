@@ -1,0 +1,461 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/3732/trunk/vasp/source
+END
+env.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2997/trunk/vasp/source/env.h
+END
+classes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3668/trunk/vasp/source/classes.cpp
+END
+opvecs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3732/trunk/vasp/source/opvecs.cpp
+END
+opparam.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/opparam.cpp
+END
+ops_cmp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3668/trunk/vasp/source/ops_cmp.cpp
+END
+obj_vasp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/obj_vasp.cpp
+END
+vbuffer.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3725/trunk/vasp/source/vbuffer.h
+END
+ops_assign.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/source/ops_assign.cpp
+END
+ops.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2997/trunk/vasp/source/ops.h
+END
+vecblk.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3668/trunk/vasp/source/vecblk.cpp
+END
+vasp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/source/vasp.cpp
+END
+arg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3668/trunk/vasp/source/arg.cpp
+END
+ops_flt.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3732/trunk/vasp/source/ops_flt.h
+END
+vasp-Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3668/trunk/vasp/source/vasp-Info.plist
+END
+opbase.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/source/opbase.h
+END
+ops_trnsc.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/ops_trnsc.h
+END
+oppermute.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2997/trunk/vasp/source/oppermute.h
+END
+obj_split.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/source/obj_split.cpp
+END
+env.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3668/trunk/vasp/source/env.cpp
+END
+ops_search.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/ops_search.h
+END
+ops_cplx.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3732/trunk/vasp/source/ops_cplx.h
+END
+vasp.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2997/trunk/vasp/source/vasp.rsrc
+END
+ops_carith.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3732/trunk/vasp/source/ops_carith.h
+END
+obj_part.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3668/trunk/vasp/source/obj_part.cpp
+END
+ops_gate.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3668/trunk/vasp/source/ops_gate.cpp
+END
+classes.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2997/trunk/vasp/source/classes.h
+END
+opparam.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3732/trunk/vasp/source/opparam.h
+END
+ops_flt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/ops_flt.cpp
+END
+obj_frames.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/source/obj_frames.cpp
+END
+ops_wnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/ops_wnd.cpp
+END
+ops_trnsc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3668/trunk/vasp/source/ops_trnsc.cpp
+END
+ops_assign.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3732/trunk/vasp/source/ops_assign.h
+END
+obj_imm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/obj_imm.cpp
+END
+oploop.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/source/oploop.h
+END
+util.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3668/trunk/vasp/source/util.cpp
+END
+arg.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2997/trunk/vasp/source/arg.h
+END
+vasp.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2997/trunk/vasp/source/vasp.h
+END
+ops_search.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/source/ops_search.cpp
+END
+main.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3732/trunk/vasp/source/main.h
+END
+obj_q.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3732/trunk/vasp/source/obj_q.cpp
+END
+ops_rearr.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2997/trunk/vasp/source/ops_rearr.h
+END
+buflib.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3725/trunk/vasp/source/buflib.cpp
+END
+ops_dft.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2997/trunk/vasp/source/ops_dft.h
+END
+obj_size.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/obj_size.cpp
+END
+obj_sync.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/obj_sync.cpp
+END
+ops_resmp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3732/trunk/vasp/source/ops_resmp.cpp
+END
+ops_wnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2997/trunk/vasp/source/ops_wnd.h
+END
+opfuns.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3732/trunk/vasp/source/opfuns.h
+END
+ops_feature.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/source/ops_feature.h
+END
+util.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3668/trunk/vasp/source/util.h
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3668/trunk/vasp/source/main.cpp
+END
+rdx2fft.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/rdx2fft.hpp
+END
+obj_radio.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/source/obj_radio.cpp
+END
+ops_qminmax.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3668/trunk/vasp/source/ops_qminmax.cpp
+END
+ops_rearr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3732/trunk/vasp/source/ops_rearr.cpp
+END
+obj_peaks.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3725/trunk/vasp/source/obj_peaks.cpp
+END
+ops_arith.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/ops_arith.h
+END
+ops_dft.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3732/trunk/vasp/source/ops_dft.cpp
+END
+ops_gen.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2997/trunk/vasp/source/ops_gen.h
+END
+vbuffer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2997/trunk/vasp/source/vbuffer.cpp
+END
+mixfft.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3732/trunk/vasp/source/mixfft.hpp
+END
+ops_cmp.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3732/trunk/vasp/source/ops_cmp.h
+END
+buflib.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/source/buflib.h
+END
+opbase.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3668/trunk/vasp/source/opbase.cpp
+END
+vecblk.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/source/vecblk.h
+END
+ops_resmp.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2997/trunk/vasp/source/ops_resmp.h
+END
+ops_feature.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3732/trunk/vasp/source/ops_feature.cpp
+END
+obj_chns.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/obj_chns.cpp
+END
+opdefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3732/trunk/vasp/source/opdefs.h
+END
+ops_cplx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3668/trunk/vasp/source/ops_cplx.cpp
+END
+obj_offs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/obj_offs.cpp
+END
+ops_arith.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3668/trunk/vasp/source/ops_arith.cpp
+END
+ops_gen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3668/trunk/vasp/source/ops_gen.cpp
+END
+obj_vecs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/source/obj_vecs.cpp
+END
+ops_carith.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/3668/trunk/vasp/source/ops_carith.cpp
+END
+rvfft.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3732/trunk/vasp/source/rvfft.hpp
+END

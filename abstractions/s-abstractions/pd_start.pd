@@ -1,0 +1,116 @@
+#N struct 1078template float x float y float z;
+#N struct 1089template float x float y array 1089arrayvals 1089arraytemplate
+;
+#N struct 1089arraytemplate float x float y;
+#N struct 1090template float x float y array 1090arrayvals 1090arraytemplate
+;
+#N struct 1090arraytemplate float x float y;
+#N canvas 4 22 197 416 10;
+#X obj 7 346 s-recorder~;
+#X obj 9 9 s-metro time;
+#N canvas 227 22 766 663 all-abstractions 0;
+#X obj 12 91 s-ezdac~ [name];
+#X text 606 56 crush your sound;
+#X obj 9 635 s-connect [source] [destination];
+#X text 7 617 connect a receive to a send;
+#X obj 608 6 s-bitcrusher~ [name];
+#X obj 613 203 s-filter~ [name];
+#X text 612 287 a regular old vcf;
+#X text 10 175 audio output (stereo);
+#X text 609 178 a digital delay unit;
+#X obj 612 94 s-delayunit~ [name];
+#X text 11 313 simple sinewave percussion;
+#X obj 13 351 s-pluck~ [name];
+#X floatatom 197 103 5 0 127 0 example - -;
+#X obj 197 123 s [name]-volume;
+#X text 11 434 karplus-strong string pluck;
+#X text 11 7 here are all the abstractions in this library. Note that
+almost all of them can be assigned an optional [name]. This can be
+used to send and receive on. For example if you give ez-dac~ a [name]
+of 'output' you can change the volume using a [s output-volume] object.
+see the example below.;
+#X obj 13 224 s-perc~ [name];
+#X text 14 556 make snappy sounds;
+#N canvas 227 21 768 664 midi-stuff 0;
+#X text 7 6 This collection of abstractions can help you with managing
+midi inputs and data streams.;
+#X obj 27 248 s-midimemory;
+#X text 26 89 This guy listens on midi channel label 1 \, for midi
+controller label 2 and sends the output to the receive called [name].
+It also outputs that midi controller at the left outlet.;
+#X obj 26 153 s-midinote 1 [name];
+#X text 27 175 This fellow listens for notes on channel 1 and sends
+packed note/volume pairs to [name] and out of the left inlet. You can
+link it into all the abstractions in this library which take note pairs.
+;
+#X text 28 267 Listens to a stream of numbers between 0 and 127 on
+the left inlet and remembers them.;
+#X obj 26 69 s-midictl 2 1 [name];
+#X restore 328 124 pd midi-stuff;
+#X text 327 145 open this for midi helpers;
+#X text 13 570 takes midi note pairs;
+#X text 10 448 takes midi note pairs;
+#X obj 14 472 s-snare~ [name];
+#N canvas 227 22 770 665 sequencer-stuff 0;
+#X obj 9 9 s-togs;
+#X floatatom 362 131 5 0 0 0 - - -;
+#X text 14 39 [s-togs] = produces codes suitable for m-seq;
+#X floatatom 9 60 5 0 0 0 - - -;
+#X text 8 146 [s-seq16] = produces codes for [s-mseq 2 16 0] from the
+right outlet. given an argument of 'time' it produces beat triggers
+from the left outlet.;
+#X obj 9 91 s-seq16 time;
+#X obj 9 128 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 388 550 timer - the name of the s-metro [eg 'time'];
+#X text 389 578 the left inlet is to retrive tick n of the sequence
+;
+#X text 389 608 set the right inlet to 1 to invert the sequence;
+#X text 387 461 this is a mathematical sequencer. you can construct
+sequences using a single number decoded in the base specified.;
+#X text 388 505 arg 1 - the base in which the sequence is specified
+;
+#X text 388 520 arg 2 - the length in ticks of the sequence;
+#X text 388 535 arg 3 - the code which designates the sequence;
+#X text 389 593 the middle inlet takes a new code;
+#X text 391 635 bases higher than 2 with long sequences are expensive
+;
+#X obj 388 441 s-mseq 1 2 3 [timer];
+#X floatatom 9 213 5 0 0 0 - - -;
+#X floatatom 9 280 5 0 0 0 - - -;
+#X obj 9 231 s-varseq 6 3;
+#X connect 0 0 3 0;
+#X connect 5 0 6 0;
+#X connect 5 1 1 0;
+#X connect 17 0 19 0;
+#X connect 19 0 18 0;
+#X restore 329 170 pd sequencer-stuff;
+#X text 327 192 open this for sequence helpers;
+#X text 10 328 takes midi note pairs like;
+#X msg 197 328 60 127;
+#X obj 453 19 s-reverb~ [name];
+#N canvas 229 20 766 667 envelopes 0;
+#X text 13 125 This is a quick little envelope of four fixed points.
+Send in a number of milliseconds - outputs a signal in the shape of
+the envelope.;
+#X obj 15 19 s-microenv q;
+#X obj 11 174 s-varenv;
+#X text 11 275 this is a variable-size envelope filter. Send a number
+of milliseconds into the left inlet and the envelope signal will be
+sent out of the left outlet~ stretched over that number of milliseconds
+\, and normalised. send a number to the right inlet and pairs of position/time
+values will be sent out of the right inlet corresponding to the point
+number you specify at the inlet.;
+#X restore 179 208 pd envelopes;
+#X text 178 229 open this to view the different types of envelopes
+in this library.;
+#X obj 196 473 s-adsynth~ [name];
+#X text 195 562 takes midi note pairs;
+#X text 196 548 basic FM synthesis;
+#X text 452 120 simple stereo reverb;
+#X connect 12 0 13 0;
+#X restore 7 136 pd all-abstractions;
+#X text 6 102 open this;
+#X obj 7 240 s-midimonitor;
+#X text 6 118 for a list of abstractions;
+#X obj 7 157 sssad/panel;

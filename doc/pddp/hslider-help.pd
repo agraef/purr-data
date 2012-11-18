@@ -1,0 +1,440 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header hslider 3 12 0 18
+-204280 -1 0;
+#X obj 0 291 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 344 META 0;
+#X text 12 135 LIBRARY internal;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 155 AUTHOR Thomas Musil;
+#X text 12 175 WEBSITE;
+#X text 12 215 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS control storage GUI nonlocal;
+#X text 12 65 DESCRIPTION horizontal gui-slider;
+#X text 12 5 ALIAS hsl;
+#X text 12 85 INLET_0 float bang size range log init steady receive
+send label label_pos label_font color pos delta;
+#X text 12 115 OUTLET_0 float;
+#X text 12 195 RELEASE_DATE 2002;
+#X restore 500 597 pd META;
+#X obj 0 410 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 461 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 546 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 300 cnv 17 3 105 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 90 479 428 112 Related_objects 0;
+#X obj 19 52 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
+#X text 17 28 All iem-gui objects:;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [hslider] Related Objects;
+#X restore 100 597 pd Related_objects;
+#X obj 78 419 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 291 175 and receive names. Right-;
+#X text 291 190 click and choose;
+#X text 290 206 "Properties" to set them \,;
+#X text 98 299 float;
+#X text 98 340 list;
+#X text 98 419 float;
+#X text 291 220 or change them with messages (see below);
+#X text 430 3 abbreviation: [hsl];
+#X obj 414 45 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/hsl -text
+pdpedia: hsl;
+#X floatatom 135 116 4 0 0 0 - - -;
+#X msg 199 69 set \$1;
+#X floatatom 155 48 4 0 0 0 - - -;
+#X obj 135 138 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144
+-1 -1;
+#X obj 135 49 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 138 94 hsl 101 15 25 75 0 1 foo1_snd foo1_rcv empty 8 -8 0 10
+-225280 -1109 -1 3900 1;
+#X floatatom 199 48 4 0 0 0 - - -;
+#X floatatom 292 141 4 0 0 0 - - -;
+#X floatatom 292 48 4 0 0 0 - - -;
+#X obj 179 140 print;
+#N canvas 276 200 290 224 once 0;
+#X obj 38 47 t b b f;
+#X msg 56 85 1;
+#X obj 31 108 f 0;
+#X obj 31 131 pack 0 0;
+#X obj 31 156 route 0;
+#X obj 38 24 inlet;
+#X obj 31 180 outlet;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 0 2 3 1;
+#X connect 1 0 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 0 0;
+#X restore 179 116 pd once;
+#X obj 59 177 hsl 73 15 55 3520 1 1 goo2_snd goo2_rcv log.freq. 8 7
+0 10 -204800 -260818 -90133 1618 1;
+#X obj 56 203 ftom;
+#X floatatom 56 227 4 0 0 0 - - -;
+#X floatatom 143 215 9 0 0 0 - - -;
+#X floatatom 56 132 4 0 0 0 - - -;
+#X obj 56 153 mtof;
+#X obj 292 92 s foo1_rcv;
+#X obj 292 117 r foo1_snd;
+#X msg 292 68 set \$1;
+#X text 139 193 (0.01 pixels);
+#X text 142 163 shift-click & drag;
+#X text 142 178 for fine-tuning;
+#X text 54 248 Use the UP- \, DOWN- \, LEFT- or RIGHT-key to move a
+selected gui-object. Right-click and choose "Properties" to modify
+its appearance.;
+#X text 290 159 hslider has settable send;
+#X text 98 356 Special messages can be sent to [hslider] to change
+its properties:;
+#X text 168 419 - when the slider value is changed by clicking \, dragging
+\, or sending a float to the inlet \, the new slider value is sent
+to the outlet.;
+#N canvas 94 219 428 370 hsl-creation-arguments 0;
+#X obj 22 289 s pd-hsl-creation-arguments;
+#X text 20 37 "hsl" can be called with 18 creation arguments. These
+are not "optional" - all parameters must be filled or the gui-bng will
+not instantiate correctly.;
+#X text 21 225 For example \, click the msg-box to dynamically create
+a hsl:;
+#X text 20 84 hsl creation arguments: xSize ySize rangeBtm rangeTop
+Logarithmic Init sendName receiveName Label labelXOff labelYOff Font#
+fontSize bgColor foregroundColor lblColor sliderPosition steadyOnClick
+;
+#X text 21 142 note: sliderPosition is not the same as the initialization
+value. To dynamically instantiate an hsl that initializes with a desired
+value \, save an hsl in a patch and view it in a text editor to get
+the right value for sliderPosition. Or \, refer to hslider_set in g_hslider.c
+for conversion between sliderPosition and slider value.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [hslider] Creation Arguments and Dynamic Patching;
+#X msg 22 247 obj 150 335 hsl 75 20 -1 1 0 1 send receive Celaeno 12
+-9 0 12 7 13 21 4400 0;
+#X connect 7 0 0 0;
+#X restore 170 521 pd hsl-creation-arguments;
+#N canvas 66 11 463 602 Setting_slider_properties_through_messages
+0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X floatatom 11 188 1 0 1 0 - #0-soc -;
+#X text 323 34 no init;
+#X text 8 169 steady-on-click;
+#X text 339 169 label;
+#X msg 339 191 label blabla;
+#X msg 323 53 init 0;
+#X msg 11 221 steady \$1;
+#X msg 234 73 lin;
+#X msg 244 105 log;
+#X text 230 34 linear/;
+#X text 230 49 logarithmical;
+#X text 332 73 init value;
+#X text 333 88 on loadbang;
+#X text 231 169 change send name;
+#X text 106 169 change receive name;
+#X obj 120 244 s z_rcv;
+#X msg 108 191 receive z_rcv;
+#X msg 347 243 label mySlider;
+#X obj 234 134 s hsl_rcv;
+#X obj 323 134 s hsl_rcv;
+#X obj 11 269 s hsl_rcv;
+#X obj 233 269 s hsl_rcv;
+#X obj 108 269 s hsl_rcv;
+#X msg 120 221 receive hsl_rcv;
+#X msg 233 192 send hsl1_snd;
+#X msg 242 221 send hsl_snd;
+#X obj 339 271 s hsl_rcv;
+#N canvas 382 136 161 310 init 0;
+#X obj 16 11 loadbang;
+#X obj 16 42 f \$0;
+#X msg 16 73 \; \$1-xpos 300 \; \$1-ypos 350 \; \$1-xlabel -2 \; \$1-ylabel
+-8 \; \$1-soc 1 \; \$1-font-size 10 \; \$1-width 128 \; \$1-height
+15 \; \$1-bottom 0 \; \$1-top 127 \; \$1-bg 0 \; \$1-front 12 \; \$1-label
+12;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 384 415 pd init;
+#X msg 333 109 init 1;
+#X msg 11 105 size \$1 \$2;
+#X text 60 56 1.width;
+#X text 60 77 2.height;
+#X obj 11 134 s hsl_rcv;
+#X obj 123 134 s hsl_rcv;
+#X text 172 56 1.bottom;
+#X text 172 77 2.top;
+#X text 120 34 output-range;
+#X msg 123 105 range \$1 \$2;
+#X text 136 307 font properties;
+#X msg 138 379 label_font \$1 \$2;
+#X text 187 329 1.font(0-2);
+#X text 187 350 2.height;
+#X text 9 308 label position;
+#X msg 11 380 label_pos \$1 \$2;
+#X text 60 330 1.x-offset;
+#X text 60 351 2.y-offset;
+#X obj 11 405 s hsl_rcv;
+#X obj 138 404 s hsl_rcv;
+#X obj 273 325 cnv 15 157 82 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X obj 274 326 cnv 15 155 80 empty empty empty 20 12 0 14 -261682 -66577
+0;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-width empty
+0 -8 0 12 -262144 -1 -1 128 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-height empty
+0 -8 0 12 -262144 -1 -1 15 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 11 55 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-bottom empty
+0 -8 0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-top empty 0
+-8 0 12 -262144 -1 -1 127 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 123 55 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
+0 -8 0 12 -262144 -1 -1 -2 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
+0 -8 0 12 -262144 -1 -1 -8 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 11 329 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
+0 -8 0 12 -262144 -1 -1 10 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 138 328 pd flash-time;
+#X text 8 448 preset-colors;
+#X text 104 448 RGB-colors;
+#X msg 11 554 color \$1 \$2 \$3;
+#N canvas 364 205 306 317 flash-time 0;
+#X obj 69 196 t b a;
+#X obj 33 262 outlet;
+#X obj 33 237 pack 0 0 0;
+#X obj 120 197 t b a;
+#X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
+-1 -1 0 256;
+#X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X connect 0 0 2 0;
+#X connect 0 1 2 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 3 1 2 2;
+#X connect 4 0 2 0;
+#X connect 5 0 0 0;
+#X connect 6 0 3 0;
+#X coords 0 -1 1 1 48 62 2 100 100;
+#X restore 11 469 pd flash-time;
+#N canvas 0 0 306 317 flash-time 0;
+#X obj 96 521 outlet;
+#X obj 162 230 t b f;
+#X obj 96 268 +;
+#X obj 96 293 t b f;
+#X obj 96 324 +;
+#X obj 19 208 * -65536;
+#X obj 96 208 * -256;
+#X obj 162 208 * -1;
+#X obj 96 355 - 1;
+#X obj 96 385 list prepend 0;
+#X obj 96 410 route 0 1 2;
+#X obj 96 497 pack 0 0 0;
+#X obj 115 456 t b a;
+#X obj 168 455 t b a;
+#X obj 104 124 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 120 120 1.bg;
+#X text 120 137 2.front;
+#X text 120 153 3.label;
+#X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
+-258113 -1 0 256;
+#X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
+-13381 -1 0 256;
+#X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
+-4160 -1 0 256;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 10 2 13 0;
+#X connect 11 0 0 0;
+#X connect 12 0 11 0;
+#X connect 12 1 11 1;
+#X connect 13 0 11 0;
+#X connect 13 1 11 2;
+#X connect 14 0 9 1;
+#X connect 18 0 5 0;
+#X connect 19 0 6 0;
+#X connect 20 0 7 0;
+#X coords 0 -1 1 1 102 74 2 100 100;
+#X restore 108 469 pd flash-time;
+#X text 60 471 1.bg;
+#X text 60 491 2.front;
+#X text 60 512 3.label;
+#X text 317 448 delta;
+#X text 217 448 position;
+#X msg 218 540 pos \$1 \$2;
+#X msg 318 540 delta \$1 \$2;
+#X obj 318 517 list;
+#X obj 318 470 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 397 469 1.x-delta;
+#X text 397 491 2.y-delta;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
+-8 0 12 -262144 -1 -1 300 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
+-8 0 12 -262144 -1 -1 350 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 218 470 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 347 470 pd flash-time;
+#X floatatom 329 384 5 0 0 0 - - -;
+#X obj 11 579 s hsl_rcv;
+#X obj 318 565 s hsl_rcv;
+#X obj 218 565 s hsl_rcv;
+#X text 10 35 dimensions;
+#X text 7 1 [hslider] Set Properties through Messages;
+#X text 266 469 1.x-pos;
+#X text 266 491 2.y-pos;
+#X obj 289 356 hsl 128 15 0 127 0 0 hsl-snd hsl-rcv mySlider -2 -8
+0 10 -262144 -1 -1 0 1;
+#X connect 1 0 7 0;
+#X connect 5 0 27 0;
+#X connect 6 0 20 0;
+#X connect 7 0 21 0;
+#X connect 8 0 19 0;
+#X connect 9 0 19 0;
+#X connect 17 0 23 0;
+#X connect 18 0 27 0;
+#X connect 24 0 16 0;
+#X connect 25 0 22 0;
+#X connect 26 0 22 0;
+#X connect 29 0 20 0;
+#X connect 30 0 33 0;
+#X connect 38 0 34 0;
+#X connect 40 0 48 0;
+#X connect 44 0 47 0;
+#X connect 51 0 30 0;
+#X connect 52 0 38 0;
+#X connect 53 0 44 0;
+#X connect 54 0 40 0;
+#X connect 57 0 74 0;
+#X connect 58 0 57 0;
+#X connect 59 0 57 0;
+#X connect 65 0 76 0;
+#X connect 66 0 75 0;
+#X connect 67 0 66 0;
+#X connect 68 0 67 0;
+#X connect 71 0 65 0;
+#X connect 72 0 67 1;
+#X connect 81 0 73 0;
+#X restore 101 388 pd Setting_slider_properties_through_messages;
+#X text 11 21 horizontal gui-slider;
+#X text 98 466 18;
+#X text 168 466 - creating an [hslider] object without arguments sets
+default values for its gui-properties. See the subpatch below to learn
+how to dynamically instantiate a [bng] object with custom properties:
+;
+#X text 215 551 (c) musil@iem.kug.ac.at;
+#X text 257 564 IEM KUG;
+#X text 232 576 graz \, austria 2002;
+#X text 168 299 - a float updates the slider value and is sent to the
+outlet.;
+#X text 168 340 - a list is truncated to the first element.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X text 98 323 bang;
+#X text 168 323 - output the current slider value.;
+#X connect 20 0 23 0;
+#X connect 21 0 25 0;
+#X connect 22 0 25 0;
+#X connect 24 0 25 0;
+#X connect 25 0 20 0;
+#X connect 25 0 30 0;
+#X connect 26 0 21 0;
+#X connect 28 0 39 0;
+#X connect 30 0 29 0;
+#X connect 31 0 34 0;
+#X connect 31 0 32 0;
+#X connect 32 0 33 0;
+#X connect 35 0 36 0;
+#X connect 36 0 31 0;
+#X connect 38 0 27 0;
+#X connect 39 0 37 0;

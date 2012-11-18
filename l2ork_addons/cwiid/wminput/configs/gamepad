@@ -1,0 +1,19 @@
+# gameport
+
+Classic.Dpad.X = ABS_X
+Classic.Dpad.Y = ABS_Y
+Classic.LStick.X = ABS_HAT0X
+Classic.LStick.Y = ABS_HAT0Y
+Classic.RStick.X = ABS_HAT1X
+Classic.RStick.Y = ABS_HAT1Y
+Classic.A = BTN_A
+Classic.B = BTN_B
+Classic.X = BTN_X
+Classic.Y = BTN_Y
+Classic.Minus = BTN_SELECT
+Classic.Plus  = BTN_START
+Classic.Home  = BTN_MODE
+Classic.L  = BTN_TL
+Classic.R  = BTN_TR
+Classic.ZL = BTN_TL2
+Classic.ZR = BTN_TR2

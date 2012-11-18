@@ -1,0 +1,8 @@
+NAME=rpn
+SRCS=rpn_main.cpp
+HDRS=\
+	rpn.h rpn_ops.h rpn_operand.h rpn_opcode.h rpn_opimp.h \
+	rpn_cmds.h rpn_commands.h rpn_stack.h rpn_function.h rpn_memory.h \
+	rpn_op_debug.h rpn_op_input.h rpn_op_mem.h rpn_op_meta.h \
+	rpn_op_stack.h rpn_op_vec.h
+

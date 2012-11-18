@@ -1,0 +1,8 @@
+TODO:
+- PD could destroy present connections of objects connected to a sub-patcher when deleting inlet objects therein.
+    -> how to deal with that?
+
+- what happens if an error occurs during object creation (as it is only scheduled, not immediately executed).... callback with error message?
+
+- define search path for objects/abstractions
+

@@ -1,0 +1,24 @@
+#N canvas 1083 45 723 488 10;
+#X obj -186 358 DMXUSBPro;
+#X msg -185 176 devices;
+#X msg -146 198 devicename /dev/ttyUSB0;
+#X text -200 77 tags: hardware;
+#X text -200 100 contact/bugs/comments: mrtoftrash@gmail.com;
+#X text -201 43 description: DMXUSBPro is an abstraction for the control
+of the DMX USB Pro by Enttec.;
+#X msg -40 310 132 543 237 174;
+#X text 67 308 Sending a list will output that DMX value to the channel
+matching the position of the element in the list. So the first element
+is mapped to channel 1 \, the second to channel 2 and son on.;
+#X msg -102 233 close;
+#X msg -81 254 open 1;
+#X text -63 232 Close Serial port;
+#X text -34 253 Open serial port by number;
+#X text 6 197 open the serial port by name;
+#X text -129 173 print available devices (wait for it...);
+#X text -191 131 For now \, only DMX output is supported.;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 6 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;

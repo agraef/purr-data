@@ -1,0 +1,32 @@
+*****************************************************************************
+Version 0.01 
+copyleft (c) 2001 by Yves Degoyon
+
+speex~ is a voice quality streamer using Speex library 
+consisting of two objects : speexin~ and speexout~.
+
+To install speex~, follow the steps from INSTALL
+
+This software is published under GPL terms.
+
+A big thanx to Jean-Marc Valin, author of Speex
+who helped me fixing encoding/decoding problems.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+speex~ has been compiled for Linux using Speex library v0.6.0
+( http://speex.sourceforge.net ).
+
+COPYING: you may use this source under GPL terms!
+
+PLEASE NOTE: The speex codec is patent free unlike GSM codecs.
+	that's the main reason why it's been choosen.
+	( + it allows very low throughputs like 8kbits/s ).
+
+*****************************************************************************

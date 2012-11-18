@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/2428/trunk/rstream
+END
+streamogg.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2428/trunk/rstream/streamogg.h
+END
+socket.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2428/trunk/rstream/socket.h
+END
+rstream.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/2428/trunk/rstream/rstream.vcproj
+END
+stream.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2428/trunk/rstream/stream.h
+END
+resample.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2428/trunk/rstream/resample.cpp
+END
+resample.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2428/trunk/rstream/resample.h
+END
+resamplesrc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2428/trunk/rstream/resamplesrc.cpp
+END
+rstream~.help
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2428/trunk/rstream/rstream~.help
+END
+rstream~-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2428/trunk/rstream/rstream~-help.pd
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2428/trunk/rstream/main.cpp
+END
+resamplesrc.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2428/trunk/rstream/resamplesrc.h
+END
+streamogg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2428/trunk/rstream/streamogg.cpp
+END
+socket.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2428/trunk/rstream/socket.cpp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2428/trunk/rstream/package.txt
+END
+fifo.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2428/trunk/rstream/fifo.h
+END
+stream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2428/trunk/rstream/stream.cpp
+END

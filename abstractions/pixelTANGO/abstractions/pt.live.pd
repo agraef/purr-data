@@ -1,0 +1,58 @@
+#N canvas 774 401 130 25 10;
+#X obj 1 1 cnv 5 128 23 empty empty live 5 10 1 9 -249661 -66577 0
+;
+#N canvas 659 355 538 319 interna 0;
+#X obj 20 38 inlet;
+#X obj 22 266 outlet;
+#X obj 225 32 cnv 15 300 250 empty empty empty 5 8 1 10 -260390 -1
+0;
+#X obj 441 46 inlet;
+#X obj 442 259 outlet;
+#X text 23 9 Live Video;
+#X obj 32 191 pix_video \$1 \$2;
+#X msg 100 112 dimen \$1 \$2;
+#X obj 102 48 r \$0-x;
+#X obj 152 48 r \$0-y;
+#X obj 110 82 pack f f;
+#X obj 172 82 bang;
+#N canvas 0 22 466 316 defaults 0;
+#X obj 17 75 f \$1;
+#X obj 57 75 f \$2;
+#X obj 17 104 s \$0-xs;
+#X obj 57 129 s \$0-ys;
+#X obj 17 17 inlet;
+#X text 42 203 Do these make any sense as defaults???;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 4 0 0 0;
+#X connect 4 0 1 0;
+#X restore 286 167 pd defaults;
+#X obj 286 142 delay 25;
+#X obj 286 115 mementoSetup pt.live \$0;
+#X connect 0 0 6 0;
+#X connect 3 0 14 0;
+#X connect 6 0 1 0;
+#X connect 7 0 6 0;
+#X connect 8 0 10 0;
+#X connect 9 0 11 0;
+#X connect 9 0 10 1;
+#X connect 10 0 7 0;
+#X connect 11 0 10 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 14 1 4 0;
+#X restore 10 103 pd interna;
+#X obj 10 81 inlet;
+#X obj 75 81 inlet;
+#X obj 10 125 outlet;
+#X obj 75 125 outlet;
+#X obj 27 4 nbx 4 14 -1e+37 1e+37 0 0 \$0-x \$0-xs empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 77 4 nbx 4 14 -1e+37 1e+37 0 0 \$0-y \$0-ys empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X text 6 52 live video;
+#X connect 1 0 4 0;
+#X connect 1 1 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 1;
+#X coords 0 0 1 1 130 25 1;

@@ -1,0 +1,79 @@
+#N canvas 207 18 712 664 10;
+#X obj 218 367 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X floatatom 340 264 5 0 0;
+#X text 393 265 Strip size 0 \, <height> default=10;
+#X obj 217 299 pdp_underwatch;
+#X obj 257 135 metro 50;
+#X obj 582 161 pdp_control;
+#X msg 582 134 thread \$1;
+#X floatatom 582 222 5 0 0;
+#X obj 582 193 route pdp_drop;
+#X obj 582 161 pdp_control;
+#X msg 582 134 thread \$1;
+#X floatatom 582 222 5 0 0;
+#X obj 582 193 route pdp_drop;
+#X obj 582 161 pdp_control;
+#X msg 582 134 thread \$1;
+#X floatatom 582 222 5 0 0;
+#X obj 582 193 route pdp_drop;
+#X text 262 226 Set the rate so that no packets are lost -->;
+#X obj 583 108 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 252 167 pdp_yqt;
+#X obj 376 173 pdp_v4l;
+#X obj 385 142 metro 70;
+#X obj 430 108 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 387 109 stop;
+#X msg 433 172 open /dev/video;
+#X obj 445 321 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 445 373 pdp_control;
+#X msg 445 346 thread \$1;
+#X floatatom 445 434 5 0 0;
+#X obj 445 405 route pdp_drop;
+#X connect 1 0 13 0;
+#X connect 2 0 28 0;
+#X connect 3 0 2 0;
+#X connect 4 0 28 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 13 1;
+#X connect 8 0 13 0;
+#X connect 9 0 7 0;
+#X connect 10 0 12 1;
+#X connect 12 0 0 0;
+#X connect 13 0 28 0;
+#X connect 14 0 17 0;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X connect 18 0 21 0;
+#X connect 19 0 18 0;
+#X connect 21 0 20 0;
+#X connect 22 0 25 0;
+#X connect 23 0 22 0;
+#X connect 25 0 24 0;
+#X connect 27 0 23 0;
+#X connect 28 0 12 0;
+#X connect 29 0 12 0;
+#X connect 30 0 29 0;
+#X connect 31 0 30 0;
+#X connect 32 0 30 0;
+#X connect 33 0 29 0;
+#X connect 34 0 36 0;
+#X connect 35 0 38 0;
+#X connect 36 0 35 0;
+#X connect 38 0 37 0;

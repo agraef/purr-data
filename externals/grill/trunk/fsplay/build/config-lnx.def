@@ -1,0 +1,6 @@
+# Where is the libsndfile header file sndfile.h?
+# (leave blank if it is on a standard include path like /usr/include)
+SNDFILEPATH=
+
+BOOSTPATH=
+

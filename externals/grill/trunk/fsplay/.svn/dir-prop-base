@@ -1,0 +1,11 @@
+K 10
+svn:ignore
+V 50
+config.txt
+Debug
+max-msvc
+pd-msvc
+pd-test
+Release
+
+END

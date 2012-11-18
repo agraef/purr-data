@@ -1,0 +1,52 @@
+#N canvas 0 0 712 746 10;
+#X obj 43 263 line;
+#X obj 39 316 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 8890 1;
+#X msg 135 430 0 \, 1 25 0.6 1000 0 500;
+#X obj 122 529 line~;
+#X obj 118 598 *~;
+#X obj 22 527 phasor~ 440;
+#X obj 128 631 *~ 0.5;
+#X obj 117 692 mix.out_~;
+#X msg 149 458 1 \, 0.6 100 0.6 1000 0 50;
+#X msg 112 394 0 \, 1 1000 0 0;
+#X msg 258 546 \; pd dsp 1;
+#X text 260 390 Can be used to synth an ADSR enveloppe.;
+#X text 35 -15 seq.liner;
+#X text 36 1 Sequential controls for the [line] object.;
+#X text 37 20 The messages you send it can be the same form than the
+line object \, or can be a list of pairs of targets and values. The
+targets are reached sequentially. When a target is reached \, the seq.liner
+sends the next target-value pair to the [line] or [line~] you attach
+it.;
+#X text 42 94 Allows to send several targets to [line] that will be
+reached sequentially.;
+#X text 284 145 <-- usual messages for [line];
+#X text 282 173 <-- These 3 messages will be sent to [line] sequentially.
+;
+#X text 285 218 <-- you can combine them \, as usual;
+#X msg 48 150 60;
+#X msg 93 152 127 1000;
+#X msg 117 198 0 \, 127 1000 0 500;
+#X msg 113 177 60 1000 127 100 0 1000;
+#X obj 41 223 seq.liner;
+#X text 335 296 The right inlet stops it.;
+#X obj 313 297 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 124 491 seq.liner;
+#X connect 0 0 1 0;
+#X connect 2 0 26 0;
+#X connect 3 0 4 1;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 6 0 7 1;
+#X connect 8 0 26 0;
+#X connect 9 0 26 0;
+#X connect 19 0 23 0;
+#X connect 20 0 23 0;
+#X connect 21 0 23 0;
+#X connect 22 0 23 0;
+#X connect 23 0 0 0;
+#X connect 25 0 23 1;
+#X connect 26 0 3 0;

@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/pure-data/!svn/ver/11150/trunk/doc/additional/messageoddness
+END
+inconsistent_numeric_symbols.pd
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/pure-data/!svn/ver/4642/trunk/doc/additional/messageoddness/inconsistent_numeric_symbols.pd
+END
+undefined_series.pd
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/pure-data/!svn/ver/4554/trunk/doc/additional/messageoddness/undefined_series.pd
+END
+select_mixing_float_and_symbol_arguments.pd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/pure-data/!svn/ver/11150/trunk/doc/additional/messageoddness/select_mixing_float_and_symbol_arguments.pd
+END
+print_oddness.pd
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/pure-data/!svn/ver/5525/trunk/doc/additional/messageoddness/print_oddness.pd
+END
+pack_mixed_up_symbols.pd
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/pure-data/!svn/ver/8699/trunk/doc/additional/messageoddness/pack_mixed_up_symbols.pd
+END
+message_arguments_need_lists.pd
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/pure-data/!svn/ver/4548/trunk/doc/additional/messageoddness/message_arguments_need_lists.pd
+END
+what_is_a_symbol.pd
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/pure-data/!svn/ver/4559/trunk/doc/additional/messageoddness/what_is_a_symbol.pd
+END
+what_is_a_bang.pd
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/pure-data/!svn/ver/5524/trunk/doc/additional/messageoddness/what_is_a_bang.pd
+END
+list_must_have_2_or_more_elements.pd
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svnroot/pure-data/!svn/ver/10429/trunk/doc/additional/messageoddness/list_must_have_2_or_more_elements.pd
+END
+route_mixing_float_and_symbol_arguments.pd
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svnroot/pure-data/!svn/ver/10429/trunk/doc/additional/messageoddness/route_mixing_float_and_symbol_arguments.pd
+END
+multiple_delay_bang_weird.pd
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/pure-data/!svn/ver/8698/trunk/doc/additional/messageoddness/multiple_delay_bang_weird.pd
+END
+routing_by_data_types.pd
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/pure-data/!svn/ver/4554/trunk/doc/additional/messageoddness/routing_by_data_types.pd
+END
+mystery_type_after_conversion.pd
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/pure-data/!svn/ver/6176/trunk/doc/additional/messageoddness/mystery_type_after_conversion.pd
+END
+select_creation_argument.pd
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/pure-data/!svn/ver/4543/trunk/doc/additional/messageoddness/select_creation_argument.pd
+END
+float-precision-misrepresentation.pd
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svnroot/pure-data/!svn/ver/10242/trunk/doc/additional/messageoddness/float-precision-misrepresentation.pd
+END
+trigger_type_handling.pd
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/pure-data/!svn/ver/4543/trunk/doc/additional/messageoddness/trigger_type_handling.pd
+END

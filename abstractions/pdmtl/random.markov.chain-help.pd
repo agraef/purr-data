@@ -1,0 +1,13 @@
+#N canvas 262 190 425 381 10;
+#X obj 94 113 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 104 241 5 0 0 0 - - -;
+#X msg 249 133 5 0 0 0;
+#X text 59 25 Description: A variable length markov chain. For weighted
+random.;
+#X text 58 54 Author: Alexandre Quessy 2007;
+#X obj 89 209 random.markov.chain 3 54 9;
+#X text 77 297 See also seq.markov.machine;
+#X connect 0 0 5 0;
+#X connect 2 0 5 1;
+#X connect 5 0 1 0;

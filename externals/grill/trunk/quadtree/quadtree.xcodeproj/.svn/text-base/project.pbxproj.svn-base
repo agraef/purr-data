@@ -1,0 +1,479 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E98573340D9E51A800682171 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E98573330D9E51A800682171 /* main.cpp */; };
+		E98573350D9E51A800682171 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E98573330D9E51A800682171 /* main.cpp */; };
+		E98C3077078D948800EC0264 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98C3076078D948800EC0264 /* vecLib.framework */; };
+		E98C3078078D948800EC0264 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98C3076078D948800EC0264 /* vecLib.framework */; };
+		E9974E5B0770851500206F68 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFA0770750400206F68 /* MaxAPI.framework */; };
+		E9974E5C0770851700206F68 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9974DFB0770750400206F68 /* MaxAudioAPI.framework */; };
+		E99A3B770D35508600E692EF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E99A3B760D35508600E692EF /* Info.plist */; };
+		E9CE88960DCFDAB1002D3DA4 /* quadtree.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E9CE88950DCFDAB1002D3DA4 /* quadtree.hpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E9974EC207708C9300206F68 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "/Library/Application Support/Cycling '74/init";
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D2AAC09D05546B4700DB518D /* quadtree.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = quadtree.pd_darwin; sourceTree = BUILT_PRODUCTS_DIR; };
+		E98573330D9E51A800682171 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		E98C3076078D948800EC0264 /* vecLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vecLib.framework; path = /System/Library/Frameworks/vecLib.framework; sourceTree = "<absolute>"; };
+		E9974DFA0770750400206F68 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
+		E9974DFB0770750400206F68 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = /Library/Frameworks/MaxAudioAPI.framework; sourceTree = "<absolute>"; };
+		E9974E53077083C700206F68 /* quadtree.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = quadtree.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		E99A3B760D35508600E692EF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E9CE88950DCFDAB1002D3DA4 /* quadtree.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = quadtree.hpp; path = ../../projects/quadtree/quadtree.hpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC09B05546B4700DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98C3077078D948800EC0264 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974E51077083C700206F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9974E5C0770851700206F68 /* MaxAudioAPI.framework in Frameworks */,
+				E9974E5B0770851500206F68 /* MaxAPI.framework in Frameworks */,
+				E98C3078078D948800EC0264 /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC09D05546B4700DB518D /* quadtree.pd_darwin */,
+				E9974E53077083C700206F68 /* quadtree.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* xsample */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+			);
+			name = xsample;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E98C3076078D948800EC0264 /* vecLib.framework */,
+				E9974DFA0770750400206F68 /* MaxAPI.framework */,
+				E9974DFB0770750400206F68 /* MaxAudioAPI.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E9CE88950DCFDAB1002D3DA4 /* quadtree.hpp */,
+				E99A3B760D35508600E692EF /* Info.plist */,
+				E98573330D9E51A800682171 /* main.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC09905546B4700DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9CE88960DCFDAB1002D3DA4 /* quadtree.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC09C05546B4700DB518D /* pd static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BC8A0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "pd static" */;
+			buildPhases = (
+				D2AAC09905546B4700DB518D /* Headers */,
+				D2AAC09B05546B4700DB518D /* Frameworks */,
+				D2AAC09A05546B4700DB518D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "pd static";
+			productName = xsample;
+			productReference = D2AAC09D05546B4700DB518D /* quadtree.pd_darwin */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		E9974E52077083C700206F68 /* max static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A5BC8E0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "max static" */;
+			buildPhases = (
+				E9974E4F077083C700206F68 /* Resources */,
+				E9974E50077083C700206F68 /* Sources */,
+				E9974E51077083C700206F68 /* Frameworks */,
+				E9974EC207708C9300206F68 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "max static";
+			productName = "Max xsample static";
+			productReference = E9974E53077083C700206F68 /* quadtree.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = E9A5BC920A33819900AD9F03 /* Build configuration list for PBXProject "quadtree" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* xsample */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC09C05546B4700DB518D /* pd static */,
+				E9974E52077083C700206F68 /* max static */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E9974E4F077083C700206F68 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99A3B770D35508600E692EF /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC09A05546B4700DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98573340D9E51A800682171 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9974E50077083C700206F68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98573350D9E51A800682171 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E9A5BC8B0A33819900AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PD-devel)/src",
+					/usr/local/include/flext,
+				);
+				INSTALL_PATH = "$(PD)/extra";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_LDFLAGS = (
+					"-lflext-pd_sd",
+					"-undefined",
+					dynamic_lookup,
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9A5BC8C0A33819900AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PD)/src",
+					"$(flext)/source",
+				);
+				INSTALL_PATH = /Applications/pdext;
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_LDFLAGS = (
+					"-lflext-pd_s",
+					"-undefined",
+					dynamic_lookup,
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9A5BC8D0A33819900AD9F03 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.cpp;
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=2";
+				HEADER_SEARCH_PATHS = (
+					"$(PDApp)/src",
+					"$(flext)/source",
+				);
+				INSTALL_PATH = "$(PD)/extra";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				OTHER_LDFLAGS = (
+					"-bundle_loader",
+					"$(PDApp)/bin/pd",
+				);
+				PRODUCT_NAME = xsample;
+			};
+			name = Default;
+		};
+		E9A5BC8F0A33819900AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+					"$(flext)/source",
+				);
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_PREPROCESS = YES;
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = DYNAMIC;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_LDFLAGS = "-lflext-max_sd";
+				OTHER_REZFLAGS = "";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E9A5BC900A33819900AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+					"$(flext)/source",
+				);
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_PREPROCESS = YES;
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_LDFLAGS = "-lflext-max_s";
+				OTHER_REZFLAGS = "";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E9A5BC910A33819900AD9F03 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=1";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+					"$(flext)/source",
+				);
+				INFOPLIST_FILE = "source/xsample-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Cycling 74/externals/flext";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = xsample;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Default;
+		};
+		E9A5BC930A33819900AD9F03 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					"FLEXT_ATTRIBUTES=1",
+					FLEXT_USE_SIMD,
+					FLEXT_USE_CMEM,
+				);
+				HEADER_SEARCH_PATHS = (
+					"/Users/thomas/Develop/projects/audiofeatures++",
+					/Users/thomas/Develop/projects/quadtree,
+				);
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+			};
+			name = Development;
+		};
+		E9A5BC940A33819900AD9F03 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					FLEXT_USE_SIMD,
+					FLEXT_USE_CMEM,
+					"FLEXT_ATTRIBUTES=1",
+				);
+				GCC_STRICT_ALIASING = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/thomas/Develop/projects/audiofeatures++",
+					/Users/thomas/Develop/projects/quadtree,
+				);
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+			};
+			name = Deployment;
+		};
+		E9A5BC950A33819900AD9F03 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"/Users/thomas/Develop/projects/audiofeatures++",
+					/Users/thomas/Develop/projects/quadtree,
+				);
+				OTHER_LDFLAGS = "-lfftwf3";
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E9A5BC8A0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "pd static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BC8B0A33819900AD9F03 /* Development */,
+				E9A5BC8C0A33819900AD9F03 /* Deployment */,
+				E9A5BC8D0A33819900AD9F03 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9A5BC8E0A33819900AD9F03 /* Build configuration list for PBXNativeTarget "max static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BC8F0A33819900AD9F03 /* Development */,
+				E9A5BC900A33819900AD9F03 /* Deployment */,
+				E9A5BC910A33819900AD9F03 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E9A5BC920A33819900AD9F03 /* Build configuration list for PBXProject "quadtree" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A5BC930A33819900AD9F03 /* Development */,
+				E9A5BC940A33819900AD9F03 /* Deployment */,
+				E9A5BC950A33819900AD9F03 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

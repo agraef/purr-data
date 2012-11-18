@@ -1,0 +1,22 @@
+#N canvas 360 198 873 558 10;
+#X obj 166 227 mix.out_~;
+#X obj 168 76 osc~ 30;
+#X text -39 22 Description: A simple distortion. Positive and negative
+distortion can be set independently.;
+#X obj -51 155 anal.scope_~ 1;
+#X obj 88 346 anal.scope_~ 1;
+#X obj 336 142 param.gui;
+#X msg 336 120 distortion;
+#X obj 167 163 fx.distortion~ @id distortion;
+#X obj 166 100 *~ 0.5;
+#X obj 251 99 *~ 0.5;
+#X obj 251 75 osc~ 80;
+#X connect 1 0 8 0;
+#X connect 6 0 5 0;
+#X connect 7 0 4 0;
+#X connect 7 0 0 0;
+#X connect 7 1 0 1;
+#X connect 8 0 3 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 1;
+#X connect 10 0 9 0;

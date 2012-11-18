@@ -1,0 +1,26 @@
+#N canvas 458 137 566 430 12;
+#X floatatom 56 57 5 0 100 0 - - -;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0table 200 float 2;
+#X coords 0 100 200 0 200 140 1;
+#X restore 55 236 graph;
+#X text 104 53 Write Y value. The X index automatically increments.
+;
+#X floatatom 249 127 5 0 0 0 - - -;
+#X obj 13 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 30 126 reset;
+#X floatatom 55 186 5 0 0 0 - - -;
+#X text 110 188 Current X index.;
+#X text 58 -7 Description: Automatically writes the incomming value
+at the next index in a table.;
+#X text 293 123 Force an X index.;
+#X msg 125 96 set table;
+#X text 200 95 You can change the table with a set message.;
+#X text 59 29 tags: tables;
+#X obj 56 156 mtl/tabwriteAuto \$0table;
+#X connect 0 0 13 0;
+#X connect 3 0 13 1;
+#X connect 4 0 13 0;
+#X connect 10 0 13 0;
+#X connect 13 0 6 0;

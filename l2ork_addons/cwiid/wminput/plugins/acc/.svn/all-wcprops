@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/cwiid/svn/!svn/ver/125/trunk/wminput/plugins/acc
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/cwiid/svn/!svn/ver/83/trunk/wminput/plugins/acc/Makefile.in
+END
+acc.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/cwiid/svn/!svn/ver/125/trunk/wminput/plugins/acc/acc.c
+END
+acc.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/cwiid/svn/!svn/ver/125/trunk/wminput/plugins/acc/acc.py
+END

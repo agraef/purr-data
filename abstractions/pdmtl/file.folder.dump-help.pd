@@ -1,0 +1,37 @@
+#N canvas 224 504 1029 416 10;
+#X obj 32 162 print;
+#X obj 32 81 file.path.top;
+#X obj 134 151 print DONE;
+#X text 32 10 Description: Dumps the contents of a folder.;
+#X obj 453 84 file.path.top;
+#X msg 578 122 mov avi mpg mpeg;
+#X obj 477 256 file.path.top;
+#X obj 453 174 print MOVIES;
+#X msg 453 52 medias/movies;
+#X obj 578 95 loadbang;
+#X text 560 0 ---- PATTERNS ----;
+#X text 18 28 List what's in the media folder as this help file.;
+#X msg 32 53 medias;
+#X text 573 63 This will only display files and folders that end with
+mov \, avi \, mpg or mpeg.;
+#X msg 477 224 bang;
+#X text 555 222 This will display ALL FOLDERS and all files that end
+with txt.;
+#X obj 478 358 print TEXTS+FOLDERS;
+#X text 481 21 Arguments: Any arguments will be treated as patterns.
+;
+#X obj 453 139 file.folder.dump;
+#X obj 32 117 file.folder.dump;
+#X obj 479 315 file.folder.dump txt folders;
+#X connect 1 0 19 0;
+#X connect 4 0 18 0;
+#X connect 5 0 18 1;
+#X connect 6 0 20 0;
+#X connect 8 0 4 0;
+#X connect 9 0 5 0;
+#X connect 12 0 1 0;
+#X connect 14 0 6 0;
+#X connect 18 0 7 0;
+#X connect 19 0 0 0;
+#X connect 19 1 2 0;
+#X connect 20 0 16 0;

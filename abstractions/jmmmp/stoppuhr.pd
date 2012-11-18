@@ -1,0 +1,128 @@
+#N canvas 340 87 581 451 10;
+#X obj 11 41 cnv 15 100 69 empty empty Stoppuhr 6 10 0 9 -195568 -1
+0;
+#X obj 85 374 textfile;
+#X msg 27 327 print;
+#X msg 27 347 clear;
+#X obj 159 211 realtime;
+#X obj 15 211 realtime;
+#X obj 159 179 t b b b;
+#X obj 85 347 prepent add;
+#X obj 12 179 t b b b b;
+#X msg 159 251 label \$1;
+#X obj 159 271 s \$0-sekt;
+#X msg 15 251 label \$1;
+#X obj 15 271 s \$0-tot;
+#X obj 15 86 cnv 15 92 20 empty \$0-sekt empty 6 11 0 10 -233017 -1
+0;
+#X obj 15 61 cnv 15 92 20 empty \$0-tot empty 6 11 0 10 -233017 -1
+0;
+#N canvas 530 20 265 164 Kontrolle 0;
+#X text 10 55 Space - Reset;
+#X text 12 75 m - new section;
+#X text 12 115 s - save as text file;
+#X text 12 135 c - delete memory;
+#X text 10 34 Esc - keyboard control on / off;
+#X text 12 95 p - print;
+#X text 10 5 STOPPUHR KEYBOARD CONTROLS;
+#X restore 118 90 pd Kontrolle;
+#X obj 79 45 tgl 12 0 empty empty empty 0 -6 0 8 -233017 -1 -1 0 1
+;
+#X obj 159 159 inlet;
+#X obj 12 129 tastin;
+#X obj 15 231 stoppuhr-clock;
+#X obj 96 271 outlet;
+#X obj 96 251 * 0.001;
+#X obj 159 231 stoppuhr-clock;
+#X obj 240 271 outlet;
+#X obj 240 251 * 0.001;
+#X obj 229 159 inlet offset;
+#X text 346 100 Inlets;
+#X text 346 170 Outlets;
+#X text 12 10 [stoppuhr] - Chronometer with two layers;
+#X text 346 140 - offset (secs);
+#X text 346 120 - new section (key m);
+#X text 346 190 - Elapsed time since beginning;
+#X text 346 210 - Elapsed time since last section;
+#X text 346 240 GUI;
+#X text 346 260 - Keyboard router indicator;
+#X text 346 280 - Documentation window;
+#X text 346 320 - Elapsed time since last section;
+#X text 346 300 - Elapsed time since beginning;
+#X text 12 401 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 419 pd license;
+#X obj 12 149 sel 32 109 99 112 115;
+#X obj 85 327 pack f f;
+#X obj 128 307 * 0.001;
+#X obj 78 307 * 0.001;
+#X obj 165 347 datei-w;
+#X msg 118 57 \; pd-Kontrolle vis \$1;
+#X obj 95 45 tgl 12 0 empty empty empty 0 -6 0 8 -166441 -1 -1 0 1
+;
+#X msg 270 321 label;
+#X obj 270 301 loadbang;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 22 0;
+#X connect 4 0 42 0;
+#X connect 5 0 19 0;
+#X connect 5 0 43 0;
+#X connect 6 0 5 1;
+#X connect 6 1 4 0;
+#X connect 6 2 4 1;
+#X connect 7 0 1 0;
+#X connect 8 0 5 1;
+#X connect 8 1 5 0;
+#X connect 8 2 4 1;
+#X connect 8 3 4 0;
+#X connect 9 0 10 0;
+#X connect 11 0 12 0;
+#X connect 17 0 6 0;
+#X connect 18 0 40 0;
+#X connect 18 1 16 0;
+#X connect 19 0 11 0;
+#X connect 19 1 21 0;
+#X connect 21 0 20 0;
+#X connect 22 0 9 0;
+#X connect 22 1 24 0;
+#X connect 24 0 23 0;
+#X connect 25 0 19 1;
+#X connect 40 0 8 0;
+#X connect 40 1 6 0;
+#X connect 40 2 3 0;
+#X connect 40 3 2 0;
+#X connect 40 4 44 0;
+#X connect 41 0 7 0;
+#X connect 42 0 41 1;
+#X connect 43 0 41 0;
+#X connect 44 0 1 0;
+#X connect 46 0 45 0;
+#X connect 47 0 10 0;
+#X connect 47 0 12 0;
+#X connect 48 0 47 0;
+#X coords 0 -1 1 1 100 69 1 11 41;

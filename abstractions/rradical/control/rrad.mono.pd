@@ -1,0 +1,54 @@
+#N canvas 322 381 874 375 10;
+#X obj 105 43 inlet;
+#X obj 208 58 inlet;
+#X obj 208 83 select 0;
+#X text 442 96 When a noteoff arrives \, we have to do only send it
+along \, if it matches the note we stored. Take care of the first note
+we got.;
+#X obj 113 300 outlet;
+#X obj 233 306 outlet;
+#X obj 107 209 ==;
+#X obj 148 250 select 0 1;
+#X obj 105 180 f;
+#X obj 131 181 f;
+#X text 445 28 When a new note arrives \, we have to send a Zero to
+the velocity outlet together with the last note we got. Immediatly
+following that we need to send the new note with the new velocity and
+store the new note for the next onset.;
+#X text 334 192 Vel = 0: ignore \, unless it matches the stored previous
+note. If match \, send through.;
+#X obj 133 134 f;
+#X obj 66 234 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 92 244 spigot;
+#X obj 72 179 f;
+#X obj 105 69 t f f f b;
+#X obj 247 253 spigot;
+#X text 333 241 Vel > 0: send 0 for stored note \, send new pair.;
+#X obj 185 180 f;
+#X msg 245 176 0;
+#X obj 201 123 t f b b;
+#X obj 184 202 f;
+#X connect 0 0 16 0;
+#X connect 1 0 2 0;
+#X connect 2 1 21 0;
+#X connect 6 0 7 0;
+#X connect 6 0 13 0;
+#X connect 6 0 14 1;
+#X connect 6 0 17 1;
+#X connect 8 0 6 0;
+#X connect 9 0 6 1;
+#X connect 12 0 9 0;
+#X connect 14 0 4 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 16 1 8 0;
+#X connect 16 2 12 1;
+#X connect 16 2 19 1;
+#X connect 16 3 12 0;
+#X connect 17 0 5 0;
+#X connect 19 0 22 0;
+#X connect 20 0 5 0;
+#X connect 21 1 19 0;
+#X connect 21 2 20 0;
+#X connect 22 0 4 0;

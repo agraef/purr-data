@@ -1,0 +1,38 @@
+, 0 , AfterBurn (Short)
+, 1 , AfterBurn (Long) 
+, 2 , Drum Chamber
+, 3 , Garage               
+, 4 , Garage (Bright)
+, 5 , Gymnasium      
+, 6 , Gymnasium (Bright)
+, 7 , Gymnasium (Bright) - HD  
+, 8 , Hall (Small)
+, 9 ,  Hall (Medium)
+, 10 , Hall (Large)
+, 11 , Hall (Large) - HD 
+, 12 , Plate (Small)
+, 13 , Plate (Medium)
+, 14 , Plate (Large)
+, 15 , Plate (Large) - HD
+, 16 , Pulse Chamber
+, 17 , Pulse Chamber (Reverse)
+, 18 , Resonator (96 ms)
+, 19 , Resonator (152 ms)                           
+, 20 , Resonator (208 ms)
+, 21 , Room (Small)           
+, 22 , Room (Medium)
+, 23 , Room (Large)     
+, 24 , Room (Large) - HD
+, 25 , Slap Chamber        
+, 26 , Slap Chamber - HD
+, 27 , Slap Chamber (Bright) 
+, 28 , Slap Chamber (Bright) - HD
+, 29 , Smooth Hall (Small)             
+, 30 , Smooth Hall (Medium)
+, 31 , Smooth Hall (Large)     
+, 32 , Smooth Hall (Large) - HD
+, 33 , Vocal Plate                       
+, 34 , Vocal Plate - HD
+, 35 , Warble Chamber 
+, 36 , Warehouse
+, 37 , Warehouse - HD

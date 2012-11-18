@@ -1,0 +1,28 @@
+#N canvas 381 30 894 747 10;
+#X text 210 345 On my Debian machine \, port 54 maps to the Arduino
+(ttyUSB0);
+#X msg 141 338 close;
+#X obj 91 278 convert.pd2ascii CR;
+#X text 87 147 Start your messages with the list prefix (or pd2ascii
+will try to send special characters)!;
+#X text 236 276 pd2ascii is configured here to automatically append
+a carriage return (CR) at the end of messages.;
+#X text 101 11 This example uses version 3 of ascii4pd abstractions
+(included with the SimpleMessageSystem download)!;
+#X msg 15 361;
+#X obj 11 333 prepend set;
+#X msg 230 322 open com1 9600;
+#X msg 18 130 list 8;
+#X obj 91 367 comport 0 9600;
+#X obj 38 62 metro 100;
+#X obj 37 18 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 81 133 do not go over 9 on win32 \, use letters (pd will crash
+!);
+#X connect 1 0 10 0;
+#X connect 2 0 7 0;
+#X connect 2 0 10 0;
+#X connect 7 0 6 0;
+#X connect 9 0 2 0;
+#X connect 11 0 9 0;
+#X connect 12 0 11 0;

@@ -1,0 +1,90 @@
+#N canvas 82 26 741 565 10;
+#X text 56 41 Description: Follows the timing of seq.timing.master.
+;
+#X obj 475 114 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 59 187 play;
+#X msg 103 186 stop;
+#X floatatom 210 400 5 0 0 1 bpm - -;
+#X floatatom 129 433 5 0 0 1 event - -;
+#X obj 292 370 tgl 15 0 empty empty play_state 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 374 347 bng 15 250 50 0 empty empty looping 17 7 0 10 -262144
+-1 -1;
+#X text 159 173 Read the manual on the different trigger methods:;
+#X obj 456 322 bng 15 250 50 0 empty empty play_triggered 17 7 0 10
+-262144 -1 -1;
+#X floatatom 247 229 5 0 0 0 - - -;
+#X floatatom 387 251 5 0 0 0 - - -;
+#X text 290 227 events per beat (minimum of 1 \, maximum of 24 \, defaults
+to 4);
+#X text 429 251 events in a loop (disable with 0 \, defaults to 0)
+;
+#N canvas 380 95 644 573 trigger 0;
+#X msg 42 103 trigger onbeat;
+#X msg 135 302 tigger onloop;
+#X msg 96 197 tigger onevent;
+#X msg 149 399 tigger follow;
+#X text 34 29 There are many ways of triggering and synchronizing seq.timing.slave
+enabled abstractions to seq.timing.master. Here are the available four
+modes (each mode is always prepended by the trigger message):;
+#X obj 42 469 outlet;
+#X text 156 145 That means that the abstraction can start playing on
+each beat (every 24 steps).;
+#X text 206 219 If you set seq.timing.slave's events/beat to 4 \, the
+abstraction can start playing at any quarter beat.;
+#X text 226 318 If you set seq.timing.slave's length to 16 events and
+the events/beat to 4 \, the abstraction can start playing every 4 beats.
+;
+#X text 156 103 Next time you press play \, the abstraction will start
+playing from event 0 (restarts the pattern) once it receives a new
+beat.;
+#X text 251 390 The abstraction will start playing immediatly the next
+time you press play. It will try to match seq.timing.master's current
+event (does not restart the pattern).;
+#X msg 200 469 trigger now;
+#X text 278 463 Triggers right away;
+#X text 207 192 Waits for the next master event then starts playing.
+;
+#X text 235 295 Waits for the next master loop then starts playing.
+;
+#X connect 0 0 5 0;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 11 0 5 0;
+#X restore 160 192 pd trigger types;
+#X text 284 193 <-- Open me!;
+#X obj 132 490 timer;
+#X obj 133 460 t b b;
+#X floatatom 134 520 5 0 0 0 - - -;
+#X obj 496 167 timer;
+#X obj 497 137 t b b;
+#X floatatom 498 197 5 0 0 0 - - -;
+#X floatatom 480 30 5 0 0 0 - - -;
+#X obj 29 346 anal.sig_~;
+#X obj 257 504 send~;
+#X obj 474 68 seq.timing.master @id STSTIMING;
+#X obj 60 273 seq.timing.slave~ @events/beat 4 @events/loop 16 @timing
+STSTIMING @trigger onbeat;
+#X connect 1 0 20 0;
+#X connect 2 0 26 0;
+#X connect 3 0 26 0;
+#X connect 5 0 17 0;
+#X connect 10 0 26 1;
+#X connect 11 0 26 2;
+#X connect 14 0 26 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 17 1 16 1;
+#X connect 19 0 21 0;
+#X connect 20 0 19 0;
+#X connect 20 1 19 1;
+#X connect 22 0 25 0;
+#X connect 25 0 1 0;
+#X connect 26 0 23 0;
+#X connect 26 1 5 0;
+#X connect 26 2 4 0;
+#X connect 26 3 6 0;
+#X connect 26 4 7 0;
+#X connect 26 5 9 0;

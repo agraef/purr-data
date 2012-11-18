@@ -1,0 +1,14 @@
+#N canvas 740 194 362 172 10;
+#X floatatom 39 45 5 0 0 0 - - -;
+#X floatatom 39 94 12 0 0 0 - - -;
+#X floatatom 188 45 5 0 0 0 - - -;
+#X floatatom 188 93 9 0 0 0 - - -;
+#X floatatom 126 44 5 0 0 0 - - -;
+#X text 35 14 Description: Power of a certain number.;
+#X obj 188 67 math.power.of 3;
+#X obj 39 67 math.power.of 2;
+#X connect 0 0 7 0;
+#X connect 2 0 6 0;
+#X connect 4 0 7 1;
+#X connect 6 0 3 0;
+#X connect 7 0 1 0;

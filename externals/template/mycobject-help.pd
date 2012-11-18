@@ -1,0 +1,17 @@
+#N canvas 1 53 450 300 10;
+#X text 94 36 this is an example help file;
+#X obj 121 123 mycobject;
+#X obj 169 87 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X msg 93 79 rats;
+#N canvas 347 176 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2;
+#X text 12 85 AUTHOR Hans Christoph Steiner;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION example libdir object class;
+#X text 12 65 INLET_0 float rats;
+#X restore 370 250 pd META;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;

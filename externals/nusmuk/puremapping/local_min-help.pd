@@ -1,0 +1,11 @@
+#N canvas 552 108 535 356 10;
+#X floatatom 48 102 5 0 0 0 - - -;
+#X floatatom 48 151 5 0 0 0 - - -;
+#X obj 48 125 local_min;
+#X obj 30 151 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 54 39 gives the value of every local minimum whenever there
+is a change in direction;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 2 0 3 0;

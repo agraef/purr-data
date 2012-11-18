@@ -1,0 +1,18 @@
+#N canvas 338 146 667 319 10;
+#X obj 52 144 sample.filer;
+#X obj 52 113 file.path.top;
+#X msg 52 82 medias/sounds/loop0.wav;
+#X msg 209 82 medias/sounds/loop1.wav;
+#X obj 52 208 sample.adsr_;
+#X text 252 190 The greyed number boxes indicate that the actual stored
+and sent value is divided by 100 So \, if a grey box display 50 \,
+the actual value is 0.5. This is done to simplify the user input of
+values with decimal ranges.;
+#X text 253 136 Controls the gain (g \, 0-1.27) \, attack (a \, ms)
+\, decay (d \, ms) \, sustain (s \, 0-1.27) and release (r \, ms) of
+a sample.;
+#X text 51 40 Description: Adsr for sample (gui);
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;

@@ -1,0 +1,17 @@
+#N canvas 0 0 257 308 10;
+#X obj 65 102 zl len;
+#X obj 65 48 inlet;
+#X obj 65 74 t a a;
+#X obj 65 187 matrix;
+#X msg 65 131 matrix \$1 1;
+#X obj 65 158 zl join;
+#X obj 65 216 outlet;
+#X text 132 218 matrix n 1;
+#X text 121 48 liste n;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 2 1 5 1;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;

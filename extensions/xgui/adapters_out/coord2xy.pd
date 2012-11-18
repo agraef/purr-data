@@ -1,0 +1,16 @@
+#N canvas 349 396 294 247 10;
+#X text 16 10 coords2xy;
+#X obj 16 30 inlet;
+#X obj 108 133 outlet;
+#X obj 15 103 unpack f f f f;
+#X obj 77 158 outlet;
+#X obj 46 133 outlet;
+#X obj 15 158 outlet;
+#X text 104 9 dh2002106;
+#X obj 15 81 route coord;
+#X connect 1 0 8 0;
+#X connect 3 0 6 0;
+#X connect 3 1 5 0;
+#X connect 3 2 4 0;
+#X connect 3 3 2 0;
+#X connect 8 0 3 0;

@@ -1,0 +1,30 @@
+#N canvas 136 275 657 369 12;
+#X msg 73 266 help;
+#X text 17 80 This demonstrates message handling. See the simple.py
+file.;
+#X msg 72 291 doc;
+#X msg 108 292 doc+;
+#X floatatom 258 305 5 0 0 0 - - -;
+#X floatatom 316 119 5 0 0 0 - - -;
+#X floatatom 399 119 5 0 0 0 - - -;
+#X msg 24 182 reload.;
+#X msg 24 210 reload -10;
+#X text 95 181 reload script and keep arguments;
+#X text 113 211 reload script with new arguments;
+#X text 281 140 triggers;
+#X text 310 304 result;
+#X text 410 140 sets argument;
+#X obj 16 13 cnv 15 600 40 empty empty py/pyext 10 22 0 24 -260818
+-1 0;
+#X text 213 16 Python script objects \, (C)2003-2005 Thomas Grill;
+#X text 213 32 http://grrrr.org/ext;
+#X obj 210 266 pyext simple.ex3 1;
+#X text 369 258 the name can also be given in dotted Python style;
+#X connect 0 0 17 0;
+#X connect 2 0 17 0;
+#X connect 3 0 17 0;
+#X connect 5 0 17 1;
+#X connect 6 0 17 2;
+#X connect 7 0 17 0;
+#X connect 8 0 17 0;
+#X connect 17 0 4 0;

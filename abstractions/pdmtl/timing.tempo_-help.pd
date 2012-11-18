@@ -1,0 +1,8 @@
+#N canvas 598 274 623 479 10;
+#X text 69 62 Description: Graphical version of timing.tempo.;
+#X floatatom 84 191 5 0 0 0 - - -;
+#X obj 84 217 hradio 15 1 0 16 empty empty empty 0 -6 0 8 -262144 -1
+-1 7;
+#X obj 84 140 timing.tempo_;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;

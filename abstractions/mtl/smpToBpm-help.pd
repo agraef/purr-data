@@ -1,0 +1,34 @@
+#N canvas 249 157 583 441 10;
+#X floatatom 147 269 5 0 0 0 - - -;
+#X floatatom 113 268 5 0 0 0 - - -;
+#X text 109 286 BPM;
+#X text 143 286 Number of beats;
+#X floatatom 182 268 10 0 0 0 - - -;
+#X obj 113 243 mtl/smpToBpm;
+#X text 249 269 Frames per beat;
+#X obj 22 10 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 22 44 openpanel;
+#X obj 22 99 iemlib/soundfile_info;
+#X msg 22 69 read \$1;
+#X text 19 -56 Description: Tries to guess the bpm and beat count of
+a loop.;
+#X text 41 7 <- Load a prepared loop.;
+#X text 17 -27 tags: conversion musical;
+#X text 54 309 Sometimes the outputed bpm and number of beats will
+be twice or half the real values.;
+#X msg 22 152 \$3 \$1;
+#X text 70 150 <-samples samplerate;
+#X floatatom 198 180 5 0 0 0 - - -;
+#X text 218 139 By default \, the conversion is done with Pd's samplerate.
+You can override this by sending a list: samples samplerate;
+#X text 238 177 Samples;
+#X connect 5 0 1 0;
+#X connect 5 1 0 0;
+#X connect 5 2 4 0;
+#X connect 7 0 8 0;
+#X connect 8 0 10 0;
+#X connect 9 0 15 0;
+#X connect 10 0 9 0;
+#X connect 15 0 5 0;
+#X connect 17 0 5 0;

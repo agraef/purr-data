@@ -1,0 +1,31 @@
+#N canvas 10 40 620 460 12;
+#X obj 28 151 float;
+#X text 10 61 The fundamental building block of a Pd program is the
+object. Each object is itself like a tiny program that does a very
+specific thing.;
+#X text 11 124 These are all objects which store data:;
+#X obj 96 151 symbol;
+#X obj 174 151 list;
+#X text 13 188 With most objects \, you can read the name of the object
+in the object box:;
+#X obj 16 230 moses;
+#X obj 92 230 select;
+#X obj 176 230 route;
+#X obj 251 230 trigger;
+#X text 11 264 GUI objects convert themselves into a GUI element \,
+usually some kind of control. In the process \, they often hide the
+text name of the object:;
+#X obj 27 358 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 15 329 [bng];
+#X obj 108 355 vsl 15 80 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X text 85 329 [vslider];
+#X text 227 331 [hslider];
+#X obj 197 353 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 393 351 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 382 326 [tgl];
+#X obj 8 10 cnv 15 400 40 empty empty objects 20 12 0 24 -228992 -66577
+0;

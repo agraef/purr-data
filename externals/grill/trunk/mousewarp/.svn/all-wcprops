@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/3600/trunk/mousewarp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3600/trunk/mousewarp/main.cpp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3600/trunk/mousewarp/package.txt
+END
+mousewarp-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/3600/trunk/mousewarp/mousewarp-help.pd
+END

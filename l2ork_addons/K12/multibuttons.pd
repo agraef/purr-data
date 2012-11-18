@@ -1,0 +1,80 @@
+#N canvas 185 64 829 454 10;
+#X obj 54 56 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 66 70 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 54 86 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 41 71 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 50 112 bng 21 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 81 113 bng 19 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 55 145 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 55 161 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj -161 -54 loadbang;
+#X msg -50 226 1;
+#X msg 8 226 3;
+#X msg 38 226 4;
+#X msg 69 226 5;
+#X msg 100 226 6;
+#X msg 130 226 7;
+#X msg -21 226 2;
+#X msg 160 226 8;
+#X obj 62 97 ggee/image @pd_extra/K12/objects/wii_button_inactive.png;
+#X msg 131 -93 open @pd_extra/K12/objects/wii_button_b.png;
+#X msg 131 -72 open @pd_extra/K12/objects/wii_button_a.png;
+#X msg 377 -93 open @pd_extra/K12/objects/wii_button_up.png;
+#X msg 131 -51 open @pd_extra/K12/objects/wii_button_1.png;
+#X msg 376 -51 open @pd_extra/K12/objects/wii_button_2.png;
+#X msg 376 -72 open @pd_extra/K12/objects/wii_button_down.png;
+#X msg 131 -30 open @pd_extra/K12/objects/wii_button_right.png;
+#X msg 401 -30 open @pd_extra/K12/objects/wii_button_left.png;
+#X msg -161 -31 open @pd_extra/K12/objects/wii_button_inactive.png;
+#X obj 212 282 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X obj 212 302 outlet;
+#X obj 212 258 preset_node k12;
+#X obj 212 -131 select 1 2 3 4 5 6 7 8;
+#X connect 0 0 10 0;
+#X connect 1 0 12 0;
+#X connect 2 0 11 0;
+#X connect 3 0 13 0;
+#X connect 4 0 9 0;
+#X connect 5 0 15 0;
+#X connect 6 0 14 0;
+#X connect 7 0 16 0;
+#X connect 8 0 26 0;
+#X connect 9 0 27 0;
+#X connect 10 0 27 0;
+#X connect 11 0 27 0;
+#X connect 12 0 27 0;
+#X connect 13 0 27 0;
+#X connect 14 0 27 0;
+#X connect 15 0 27 0;
+#X connect 16 0 27 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 20 0 17 0;
+#X connect 21 0 17 0;
+#X connect 22 0 17 0;
+#X connect 23 0 17 0;
+#X connect 24 0 17 0;
+#X connect 25 0 17 0;
+#X connect 26 0 17 0;
+#X connect 27 0 28 0;
+#X connect 27 0 29 0;
+#X connect 27 0 30 0;
+#X connect 29 0 27 0;
+#X connect 30 0 19 0;
+#X connect 30 1 18 0;
+#X connect 30 2 20 0;
+#X connect 30 3 23 0;
+#X connect 30 4 24 0;
+#X connect 30 5 25 0;
+#X connect 30 6 21 0;
+#X connect 30 7 22 0;
+#X coords 0 -1 1 1 89 180 2 17 20;

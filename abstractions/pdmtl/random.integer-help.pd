@@ -1,0 +1,44 @@
+#N canvas 815 290 690 703 10;
+#X obj 115 128 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 115 192 5 0 0 0 - - -;
+#X obj 74 453 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 74 516 10 0 0 0 - - -;
+#X text 78 16 Description: Generates a random integer included in a
+certain range.;
+#X obj 162 261 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 162 345 5 0 0 0 - - -;
+#X floatatom 226 260 5 0 0 0 - - -;
+#X floatatom 290 288 5 0 0 0 - - -;
+#X text 268 258 min random value;
+#X text 333 287 max random value;
+#X text 110 101 Bang to output one of the numbers 5 \, 6 \, 7 \, 8
+\, 9 OR 10;
+#X text 316 345 Argument_1: Minimum value.;
+#X text 316 366 Argument_2: Maximum value (included in the possible
+outputs).;
+#X text 189 487 If you do not set any arguments \, it defaults to min=0
+and max=1.;
+#X obj 76 552 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 76 615 10 0 0 0 - - -;
+#X text 202 579 If you set one argument \, min=0 and max=argument.
+;
+#X text 80 59 WARNING: VALUES OUTPUTED INCLUDED THE MIN AN MAX VALUES.
+;
+#X obj 116 161 random.integer 5 10;
+#X obj 162 317 random.integer 0 10;
+#X obj 74 486 random.integer;
+#X obj 76 585 random.integer 10;
+#X connect 0 0 19 0;
+#X connect 2 0 21 0;
+#X connect 5 0 20 0;
+#X connect 7 0 20 1;
+#X connect 8 0 20 2;
+#X connect 15 0 22 0;
+#X connect 19 0 1 0;
+#X connect 20 0 6 0;
+#X connect 21 0 3 0;
+#X connect 22 0 16 0;

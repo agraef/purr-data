@@ -1,0 +1,21 @@
+#N canvas 1478 55 658 321 10;
+#X text 49 125 clear: Resets the contents.;
+#X text 48 107 load filename(symbol): Loads a sound file.;
+#X text 36 25 Description: Stores a sound sample for use with sampler.instruments.
+;
+#X text 33 85 Inlet 1 messages:;
+#X text 32 66 Argument 1: sampler.sample's name;
+#X msg 432 88 load medias/sounds/loop1.wav;
+#X obj 432 56 loadbang;
+#X text 33 181 A sampler.sample stores the following data:;
+#X text 47 214 The samplerate.;
+#X text 47 226 The number of channels (only mono or stereo files are
+supported).;
+#X text 47 249 The size of the sample.;
+#X text 47 202 The filename.;
+#X obj 432 142 sampler.sample \$0s;
+#X text 51 141 dump target(symbol): Sends a list containing the sample's
+format to the designated target. The list has the following format:
+frames samplerate channels;
+#X connect 5 0 12 0;
+#X connect 6 0 5 0;

@@ -1,0 +1,146 @@
+#N canvas 0 26 773 596 10;
+#X text 5 29 "HID" stands for "Human Interface Device". A HID is any
+device that is meant to allow humans to interact with a computer. Usually
+\, HIDs are mice \, keyboards \, joysticks \, tablets \, gamepads \,
+etc. There a number of unusual HIDs \, like the Griffin PowerMate on
+the low end \, or the SensAble PHANTOM 6DOF on the high end.;
+#X obj 545 437 gemmouse;
+#X text 0 214 KEYBOARDS;
+#X obj 11 233 key;
+#X obj 43 233 keyup;
+#X obj 381 437 gemkeyboard;
+#X obj 467 437 gemkeyname;
+#X obj 88 233 keyname;
+#N canvas 0 22 671 475 deprecated 0;
+#X text 35 38 The use of these objects is deprecated since the functionality
+that they provide is available in the [hid] object \, which is a unified
+\, cross-platform approach.;
+#X text 23 14 DEPRECATED HID OBJECTS;
+#X text 22 148 CYCLONE;
+#X text 22 346 J. SARLO'S [joystick];
+#X text 31 374 only works with Windows and GNU/Linux;
+#X text 26 163 meant for porting Max/MSP patches to Pd.;
+#X text 21 218 RAWHID;
+#X text 28 230 incomplete \, first stab at creating [hid];
+#X text 26 293 These have been replaced by [linuxhid] and [joystick]
+;
+#X text 22 278 LINUXEVENT;
+#X text 108 181 [mousefilter];
+#X text 27 181 [MouseState];
+#X text 26 250 [rawmouse];
+#X text 103 250 [rawjoystick];
+#X text 158 312 [linuxevent];
+#X text 32 312 [linuxjoystick];
+#X text 26 97 GEM;
+#X obj 33 117 gemtablet;
+#X obj 104 117 gemorb;
+#X restore 388 533 pd deprecated HID objects;
+#X text 375 415 USING HIDs WITH GEM;
+#X text 385 478 There are quite a few objects that support HIDs from
+many different sources. Here are a bunch whose functionality is available
+in the [hid] object \, so it is recommended that you do not use these
+objects any more.;
+#X text 386 176 device type;
+#X text 624 160 latency;
+#X text 715 176 (Hz);
+#X text 635 176 (ms);
+#X text 385 186 --------------------------------------------------------
+;
+#X text 635 201 15.5;
+#X text 715 201 64;
+#X text 635 216 8-10;
+#X text 715 216 100-125;
+#X text 385 231 USB mice on GNU/Linux;
+#X text 635 231 1-10;
+#X text 715 231 100-1000;
+#X text 385 246 USB wireless mice;
+#X text 635 246 12-20;
+#X text 715 246 50-80;
+#X text 384 334 While it does not make sense to use a poll rate that
+is much faster than the refresh rate of the device \, it does make
+sense to make the poll rate somewhat faster. If you poll at the same
+rate as the device refreshes \, you could get up to double the latency
+\, i.e. if [hid] polls right before the event is reported.;
+#X text 375 461 DEPRECATED OBJECTS;
+#X text 5 117 When talking about HIDs \, "DOF" is often mentioned.
+"DOF" stands for "degrees of freedom". A degree of freedom is one dimension
+in which that HID can give information. A mouse generally had 2DOFs:
+X-axis and Y-axis \, though a wheel could be considered another DOF.
+The PHANTOM 6DOF device has six degrees of freedom: X \, Y \, Z movement
+\; X \, Y \, Z rotation.;
+#X text 0 325 GENERAL HIDs;
+#X text 96 424 [mouse];
+#X text 159 424 [joystick];
+#X text 243 424 [tablet];
+#X text 313 424 [gamepad];
+#X text 385 201 ADB (Apple Desktop Bus) devices;
+#X text 385 303 P5 Glove;
+#X text 635 303 22;
+#X text 715 303 45;
+#X text 715 289 40;
+#X text 635 289 25;
+#X text 12 424 [keyboard];
+#X text 635 275 5-25;
+#X text 715 275 40-200;
+#X text 385 261 Generic USB Devices;
+#X text 635 261 10;
+#X text 715 261 100;
+#X text 385 275 PS/2 mice;
+#X text 385 289 Serial mice;
+#X text 375 25 LATENCY AND POLLING;
+#X text 375 156 REFRESH RATES OF VARIOUS DEVICES;
+#X text 11 369 Basically any device that is supported by the various
+HID layers on each OS is supported by the [hid] object. So any of those
+devices can be used as controllers with Pd. There already exists a
+number of objects for more common HIDs:;
+#X text 384 39 An essential detail to making an usable instrument is
+the latency between when you perform an action and the sound it produces.
+If the latency is too large \, it will make the instrument annoying
+to play \, or even unplayable. So the aim is to have as low latency
+as possible. To put it into perspective \, if you were playing an electric
+guitar and the amp was 3m (10ft) away from you \, there would be a
+9ms delay between when you plucked the string and when you heard the
+sound.;
+#X text 385 314 --------------------------------------------------------
+;
+#X text 3 453 PLATFORM-SPECIFIC HID OBJECTS;
+#X text 15 470 To get full access to some devices \, you need to use
+the platform-specific objects. The objects have dummy versions on the
+other platforms so that you open the patches on other platforms and
+edit them without breaking them.;
+#X text 5 254 These objects are quite simple to use \, but are limited.
+They only receive key events when Pd has focus \; they output alternating
+1s and 0s to represent auto-repeat \; [key] and [heyup] are limited
+to the 'printing' characters. [keyname] reports Shift \, Ctrl \, Alt
+\, Meta \, etc.;
+#X text 385 216 USB mice on Windows or MacOS X;
+#X text 85 527 [darwinhid];
+#X text 166 527 [windowshid];
+#X text 692 160 refresh rate;
+#X text 12 527 [linuxhid];
+#X obj 11 347 hid;
+#X obj 1 1 cnv 15 770 20 empty \$0-pddp.cnv.header hid 20 10 1 18 -261106
+-33289 0;
+#X obj 737 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 566 cnv 15 770 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION definition of haptics;
+#X restore 722 568 pd META;
+#N canvas 151 430 428 155 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 hid - Related Objects;
+#X obj 19 38 key;
+#X obj 19 69 keyname;
+#X obj 19 99 keyup;
+#X restore 303 568 pd Related_objects;
+#X obj 6 568 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 209 332 linuxhid;

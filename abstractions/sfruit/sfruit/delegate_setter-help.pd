@@ -1,0 +1,126 @@
+#N canvas 305 22 1097 656 10;
+#X obj 53 170 delegate_setter -this crankiness;
+#X obj 56 89 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6100 1;
+#X text 23 50 delegate_setter can be placed in a stream to send delegate
+messages before and after the stream passes through it.;
+#X text 82 108 the first argument;
+#X obj 53 339 get_delegate -this will_set_crankiness;
+#X obj 53 509 get_delegate -this did_set_crankiness;
+#X text 15 13 [delegate_setter -unique *name];
+#X text 202 13 *optional;
+#X obj 56 289 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6100 1;
+#X obj 53 136 t a b;
+#X floatatom 176 258 5 0 0 0 - - -;
+#X obj 56 458 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6100 1;
+#X obj 56 637 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6100 1;
+#X text 210 258 we prove this is the second thing called;
+#N canvas 615 437 450 300 when_was_i_called? 1;
+#X obj 102 68 s \$0-increment;
+#X obj 85 89 r \$0-order;
+#X obj 70 110 f;
+#X obj 51 68 t a b b;
+#X obj 51 42 inlet;
+#X obj 51 175 outlet;
+#X obj 134 179 outlet;
+#X connect 1 0 2 1;
+#X connect 2 0 6 0;
+#X connect 3 0 5 0;
+#X connect 3 1 2 0;
+#X connect 3 2 0 0;
+#X connect 4 0 3 0;
+#X restore 53 230 pd when_was_i_called?;
+#X text 64 190 the slider value comes out after [will_set_crankiness(
+is dispatched;
+#X floatatom 176 406 5 0 0 0 - - -;
+#N canvas 615 437 450 300 when_was_i_called? 0;
+#X obj 102 68 s \$0-increment;
+#X obj 85 89 r \$0-order;
+#X obj 70 110 f;
+#X obj 51 68 t a b b;
+#X obj 51 42 inlet;
+#X obj 51 175 outlet;
+#X obj 134 179 outlet;
+#X connect 1 0 2 1;
+#X connect 2 0 6 0;
+#X connect 3 0 5 0;
+#X connect 3 1 2 0;
+#X connect 3 2 0 0;
+#X connect 4 0 3 0;
+#X restore 53 378 pd when_was_i_called?;
+#X text 210 406 we prove this is the first thing called;
+#X obj 92 136 s \$0-reset_call_order;
+#N canvas 0 22 450 300 calc_call_order 0;
+#X obj 141 74 r \$0-increment;
+#X obj 141 152 s \$0-order;
+#X obj 141 110 f;
+#X obj 167 110 + 1;
+#X msg 204 120 1;
+#X obj 204 99 r \$0-reset_call_order;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 1;
+#X connect 4 0 2 1;
+#X connect 5 0 4 0;
+#X restore 500 62 pd calc_call_order;
+#X text 292 338 this will get called before the slider value comes
+out of [delegate_setter];
+#X text 286 508 finally \, this will get called after the slider value
+comes out of [delegate_setter];
+#X floatatom 176 583 5 0 0 0 - - -;
+#N canvas 615 437 450 300 when_was_i_called? 0;
+#X obj 102 68 s \$0-increment;
+#X obj 85 89 r \$0-order;
+#X obj 70 110 f;
+#X obj 51 68 t a b b;
+#X obj 51 42 inlet;
+#X obj 51 175 outlet;
+#X obj 134 179 outlet;
+#X connect 1 0 2 1;
+#X connect 2 0 6 0;
+#X connect 3 0 5 0;
+#X connect 3 1 2 0;
+#X connect 3 2 0 0;
+#X connect 4 0 3 0;
+#X restore 53 555 pd when_was_i_called?;
+#X text 210 583 we prove this is the last thing called;
+#X obj 726 323 delegate_setter -this;
+#X text 724 420 if you do not provide a name for this delegate variable
+\, you can provide a selector instead and delegate_setter will use
+it;
+#X obj 729 263 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 3600 1;
+#X msg 726 290 my_variable \$1;
+#X obj 729 397 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 3600 1;
+#X obj 726 479 get_delegate -this did_set_my_variable;
+#X obj 729 507 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 3600 1;
+#X obj 726 358 list split 1;
+#X obj 684 166 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 684 596 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 726 203 using selectors:;
+#X connect 0 0 14 0;
+#X connect 1 0 9 0;
+#X connect 4 0 17 0;
+#X connect 5 0 24 0;
+#X connect 9 0 0 0;
+#X connect 9 1 19 0;
+#X connect 14 0 8 0;
+#X connect 14 1 10 0;
+#X connect 17 0 11 0;
+#X connect 17 1 16 0;
+#X connect 24 0 12 0;
+#X connect 24 1 23 0;
+#X connect 26 0 33 0;
+#X connect 28 0 29 0;
+#X connect 29 0 26 0;
+#X connect 31 0 32 0;
+#X connect 33 1 30 0;
+#X connect 34 0 35 0;

@@ -1,0 +1,8 @@
+#N canvas 0 0 454 304 10;
+#X obj 103 15 inlet;
+#X obj 107 244 outlet;
+#X obj 136 66 / 60;
+#X text 154 247 beat freq;
+#X text 143 13 bpm;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

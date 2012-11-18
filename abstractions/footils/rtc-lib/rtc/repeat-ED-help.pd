@@ -1,0 +1,26 @@
+#N canvas 329 227 604 477 10;
+#X msg 269 28 Rhythm;
+#X msg 56 135 stop;
+#X obj 225 200 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 97 200 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 97 226 60;
+#X obj 97 170 repeat-ED 300;
+#X text 44 118 number of rhythm bangs;
+#X floatatom 225 135 4 0 0 2 speed - -;
+#X floatatom 97 135 0 0 0 0 - - -;
+#X text 52 66 Int in left inlet sends out a certain number of rhythm
+bangs with an entry delay (ED) given in right inlet.;
+#X text 197 47 vs.2;
+#X text 52 33 repeat-ED;
+#X obj 97 255 QT-PercPlayer;
+#X text 251 195 bang when finished;
+#X text 100 352 1993-95 by Karlheinz Essl;
+#X connect 1 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 12 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 0;
+#X connect 7 0 5 1;
+#X connect 8 0 5 0;

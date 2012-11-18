@@ -1,0 +1,9 @@
+NAME=rstream~
+
+BUILDDIR=build
+BUILDTYPE=multi
+
+SRCDIR=.
+
+SRCS=main.cpp stream.cpp streamogg.cpp socket.cpp resample.cpp resampleSRC.cpp
+HDRS=stream.h streamogg.h socket.h fifo.h resample.h resampleSRC.h

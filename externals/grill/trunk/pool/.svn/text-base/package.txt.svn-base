@@ -1,0 +1,7 @@
+NAME=pool
+
+SRCDIR=source
+PRECOMPILE=pool.h
+
+SRCS= main.cpp data.cpp pool.cpp
+HDRS= pool.h

@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/ext/!svn/ver/3728/trunk/clk
+END
+clk_sync.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1315/trunk/clk/clk_sync.cpp
+END
+clk_client.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3727/trunk/clk/clk_client.cpp
+END
+clk-objectmappings.txt
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/3613/trunk/clk/clk-objectmappings.txt
+END
+clk_client.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1315/trunk/clk/clk_client.h
+END
+clk_tap.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1315/trunk/clk/clk_tap.cpp
+END
+clk_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1315/trunk/clk/clk_main.cpp
+END
+clk.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/3600/trunk/clk/clk.h
+END
+clk_metro.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1315/trunk/clk/clk_metro.cpp
+END
+clk-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1315/trunk/clk/clk-help.pd
+END
+clk_int.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1315/trunk/clk/clk_int.cpp
+END
+clk_master.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3728/trunk/clk/clk_master.cpp
+END
+clk_clock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1315/trunk/clk/clk_clock.cpp
+END
+clk_time.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1315/trunk/clk/clk_time.cpp
+END
+clk_delay.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1315/trunk/clk/clk_delay.cpp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1315/trunk/clk/package.txt
+END
+clk_master.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1315/trunk/clk/clk_master.h
+END
+clk.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1315/trunk/clk/clk.vcproj
+END

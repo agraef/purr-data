@@ -1,0 +1,40 @@
+version history of shoutcast~
+
+v0.3h (2003/05/29)
+- added 'lame_encoding_flush()' on disconnect
+- changed send() options to MSG_DONTWAIT|MSG_NOSIGNAL on Linux to avoid
+  calling Pd's signal handler on errors
+
+v0.3g (2003/02/09)
+- changed the way comment tags can be entered, now accepts spaces
+- added printout for lame settings
+- fixed a bug that made it impossible to connect to a port different 
+  than 8000
+
+v0.3f (2003/01/17)
+- fixed a bug that made shoutcast~ or Pd crash when server crashed
+  or network connection was interrupted 
+- corrected the 'public flag' in the server login routine 
+
+v0.3e (2002/11/04)
+- added method to set stream name and the like using messages
+
+v0.3d (2002/09/07)
+- BUGFIX: first creation argument (inchannels) now works correctly
+- updated Lame library to version 3.92
+
+v0.3c (2002/08/30)
+- BUGFIX: resampling works now
+- BUGFIX: ringbuffer gets only filled when we're streaming
+- binary release for OS X (10.1.5)
+
+v0.3b (2002/08/03)
+- first stable release with POSIX multithreading
+- archive function no longer supported (for savety reasons)
+
+v0.2 (2002/02/02)
+- added archive functionallity to write mp3 to disk
+- win only: use of libmp3lame.lib instead of lame.dll
+
+v0.1 (2001/11/??)
+- first release

@@ -1,0 +1,46 @@
+#N canvas 0 0 448 374 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header all_about_pd 20
+10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 352 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION general info for Pure Data;
+#X restore 392 354 pd META;
+#N canvas 10 196 428 105 Related_objects 0;
+#X text 31 37 Hm...what to put here?;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 All About Pd- Related Objects;
+#X restore 103 354 pd Related_objects;
+#X obj 6 354 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 24 254 pddp/pddplink cyclone/all_about_cyclone.pd;
+#X text 20 32 The "All About Pd" collection is a detailed reference
+for key concepts \, objects \, and settings in Pure Data.;
+#X obj 23 161 pddp/pddplink all_about_atoms.pd -text 1) All About Atoms
+;
+#X obj 23 181 pddp/pddplink all_about_messages.pd -text 2) All About
+Messages;
+#X obj 23 201 pddp/pddplink all_about_arrays.pd -text 3) All About
+Arrays;
+#X text 20 67 If you're just getting started \, it may be helpful to
+take a few minutes to read the following patches:;
+#X text 20 222 If you're coming from Max/MSP/Jitter \, have a look
+at the cyclone library for compatible objects:;
+#X text 5 315 All PDDP help patches have a link to a general help file
+in the bottom left-hand corner.;
+#X text 20 277 There are many more "All About..." patches:;
+#X obj 20 294 pddp/pddplink all_about_index.pd;
+#X text 20 142 For a brief introduction to data and messages in Pd
+\, see:;
+#X obj 23 99 pddp/pddplink all_about_getting_help.pd -text Pure Data
+Tutorials and Resources;
+#X obj 23 119 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+for Internal Pd Objects;

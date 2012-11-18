@@ -1,0 +1,205 @@
+## midiio library GNU makefile for linux.
+##
+## Programmer:    Craig Stuart Sapp <craig@ccrma.stanford.edu>
+## Creation Date: Sat Nov  2 19:49:57 PST 2002
+## Last Modified: Sat Nov  2 19:50:00 PST 2002
+## Filename:      ...midiio/Makefile.library
+##
+## Description: This Makefile creates the midiio library lib/libmidiio.a
+##              for linux, using gcc 2.7.2.1 or higher
+##
+## To run this makefile, type (without quotes) "make -f Makefile.library"
+##
+
+###########################################################################
+#                                                                         #
+#                                                                         #
+#  Operating System OSTYPEs available in the midiio library compilation:  #
+#
+#      LINUX  = Linux running on intel computers
+#      VISUAL = Windows 95/NT using Microsoft Visual C++ 5/6
+#      OSX    = Apple Mac OS X (10.2 or higher when it is ready)
+#
+# The file "sigConfiguration.h" in the include directory contains additional
+# defines which will be activated by the OS given by the OSTYPE variable 
+# below.  Look at the sigConfiguration.h file for various things which need 
+# to be defined specifically for each OS.
+#
+OSTYPE = LINUX
+
+# The OSSUBTYPE is for determining which type of sound drivers
+# are being used in linux.  There are three possibilities:
+# OSSUBTYPE = ALSA    # ALSA 0.9 interface (http://www.alsa-project.org)
+# OSSUBTYPE = ALSA05  # ALSA 0.5 interface (http://www.alsa-project.org)
+# OSSUBTYPE = OSS     # OSS interface      (http://www.4front-tech.com)
+# Note: The Improv library accesses the internal/external MIDI devices
+# in OSS, but only the external MIDI devices in ALSA.  OSS can be
+# emulated in ALSA 0.9.
+#
+OSSUBTYPE = ALSA
+
+OBJDIR    = ./midiio/obj
+SRCDIR    = ./midiio/src
+INCDIR    = ./midiio/include
+LIBDIR    = ./midiio/lib
+LIBFILE   = libmidiio.a
+
+COMPILER = g++
+# MAC OSX 10.2 needs this compiler:
+# COMPILER = g++2
+
+DEFINES   = $(addprefix -D,$(OSTYPE)) $(addprefix -D,$(OSSUBTYPE))
+FLAGS     = -Wall -c -O3 $(DEFINES) -I$(INCDIR)
+
+#                                                                         #
+# End of user-modifiable variables.                                       #
+#                                                                         #
+###########################################################################
+
+
+# setting up the directory paths to search for dependency files
+vpath %.h   $(INCDIR):$(SRCDIR)
+vpath %.cpp $(SRCDIR):$(INCDIR)
+vpath %.o   $(OBJDIR)
+
+# generating a list of the object files
+OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard $(SRCDIR)/*.cpp)))
+
+# targets which don't actually refer to files
+.PHONY : all linux makeobjdir
+
+
+###########################################################################
+#                                                                         #
+# Hardware Configurations:                                                #
+#                                                                         #
+
+all: makeobjdir $(OBJS)
+
+   ifeq ($(OSTYPE),LINUX)
+	@echo Making midiio library file for linux ...
+	-mkdir -p $(LIBDIR)
+	-rm -f $(LIBDIR)/$(LIBFILE)
+	ar r $(LIBDIR)/$(LIBFILE) $(OBJDIR)/*.o 
+	ranlib $(LIBDIR)/$(LIBFILE)
+   endif
+
+   ifeq ($(OSTYPE),VISUAL)
+	echo "this makefile doesn't work with Visual C++."
+   endif
+
+clean:
+	@echo Erasing object files:
+	-rm -f $(OBJDIR)/*.o
+	@echo Erasing obj directory:
+	-rmdir $(OBJDIR)
+
+makeobjdir: 
+	-mkdir -p $(OBJDIR)
+
+# defining an explicit rule for object file dependencies
+%.o : %.cpp 
+	$(COMPILER) $(FLAGS) -o $(OBJDIR)/$(notdir $@) $<
+
+
+#                                                                         #
+###########################################################################
+
+
+
+###########################################################################
+#                                                                         #
+# Dependencies -- generated with the following command in                 #
+#      the src directory (in csh shell):                                  #
+#                                                                         #
+#   foreach i (*.cpp)                                                     #
+#      cc -I../include -MM $i | sed 's/\.\.\/include\///g'                #
+#      echo ""                                                            #
+#   end                                                                   #
+#                                                                         #
+
+FileIO.o: FileIO.cpp FileIO.h sigConfiguration.h
+
+MidiFile.o: MidiFile.cpp MidiFile.h FileIO.h Array.h Collection.h \
+  Collection.cpp Array.cpp
+
+MidiFileWrite.o: MidiFileWrite.cpp MidiFileWrite.h FileIO.h SigTimer.h
+
+MidiIO.o: MidiIO.cpp MidiIO.h MidiInput.h MidiInPort.h MidiMessage.h \
+  MidiInPort_unsupported.h CircularBuffer.h CircularBuffer.cpp \
+  Array.h Collection.h Collection.cpp Array.cpp MidiOutput.h MidiOutPort.h \
+  MidiOutPort_unsupported.h FileIO.h SigTimer.h
+
+MidiInPort_alsa.o: MidiInPort_alsa.cpp
+
+MidiInPort_alsa05.o: MidiInPort_alsa05.cpp
+
+MidiInPort_linux.o: MidiInPort_linux.cpp
+
+MidiInPort_oss.o: MidiInPort_oss.cpp
+
+MidiInPort_unsupported.o: MidiInPort_unsupported.cpp \
+  MidiInPort_unsupported.h MidiMessage.h CircularBuffer.h \
+  CircularBuffer.cpp Array.h Collection.h Collection.cpp \
+  Array.cpp
+
+MidiInPort_visual.o: MidiInPort_visual.cpp
+
+MidiInput.o: MidiInput.cpp MidiInput.h MidiInPort.h MidiMessage.h \
+  MidiInPort_unsupported.h CircularBuffer.h CircularBuffer.cpp \
+  Array.h Collection.h Collection.cpp Array.cpp
+
+MidiMessage.o: MidiMessage.cpp MidiMessage.h
+
+MidiOutPort_alsa.o: MidiOutPort_alsa.cpp
+
+MidiOutPort_linux.o: MidiOutPort_linux.cpp
+
+MidiOutPort_oss.o: MidiOutPort_oss.cpp
+
+MidiOutPort_unsupported.o: MidiOutPort_unsupported.cpp \
+  MidiOutPort_unsupported.h
+
+MidiOutPort_visual.o: MidiOutPort_visual.cpp
+
+MidiOutput.o: MidiOutput.cpp MidiOutput.h MidiOutPort.h \
+  MidiOutPort_unsupported.h FileIO.h SigTimer.h Array.h Collection.h  \
+  Collection.cpp Array.cpp
+
+MidiPerform.o: MidiPerform.cpp MidiPerform.h MidiFile.h FileIO.h Array.h \
+  Collection.h Collection.cpp Array.cpp CircularBuffer.h \
+  CircularBuffer.cpp SigTimer.h MidiOutput.h MidiOutPort.h \
+  MidiOutPort_unsupported.h
+
+MidiPort.o: MidiPort.cpp MidiPort.h MidiInPort.h MidiMessage.h \
+  MidiInPort_unsupported.h CircularBuffer.h CircularBuffer.cpp \
+  Array.h Collection.h Collection.cpp Array.cpp MidiOutPort.h \
+  MidiOutPort_unsupported.h
+
+MultiStageEvent.o: MultiStageEvent.cpp MultiStageEvent.h Event.h \
+  OneStageEvent.h MidiEvent.h TwoStageEvent.h NoteEvent.h \
+  EventBuffer.h CircularBuffer.h CircularBuffer.cpp MidiOutput.h \
+  MidiOutPort.h MidiOutPort_unsupported.h FileIO.h SigTimer.h Array.h \
+  Collection.h Collection.cpp Array.cpp FunctionEvent.h
+
+Options.o: Options.cpp Options.h Array.h Collection.h Collection.cpp \
+  Array.cpp Options_private.h
+
+Options_private.o: Options_private.cpp Options_private.h
+
+Sequencer_alsa.o: Sequencer_alsa.cpp
+
+Sequencer_alsa05.o: Sequencer_alsa05.cpp
+
+Sequencer_oss.o: Sequencer_oss.cpp
+
+SigTimer.o: SigTimer.cpp SigTimer.h
+
+Voice.o: Voice.cpp Voice.h MidiOutput.h MidiOutPort.h \
+  MidiOutPort_unsupported.h FileIO.h SigTimer.h Array.h Collection.h \
+  Collection.cpp Array.cpp
+
+
+
+
+

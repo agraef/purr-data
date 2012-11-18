@@ -1,0 +1,11 @@
+#N canvas 353 34 588 299 10;
+#X msg 100 79 1 2 3 a b c;
+#X obj 100 137 print;
+#X obj 181 133 bng 15 250 50 0 empty empty end 0 -6 0 8 -262144 -1
+-1;
+#X text 70 18 list-rdrip: drips or serializes a list in reverse.;
+#X obj 100 106 list-rdrip;
+#X text 141 44 Last element will be first to output.;
+#X connect 0 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 1 2 0;

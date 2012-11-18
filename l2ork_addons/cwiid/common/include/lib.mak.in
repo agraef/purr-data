@@ -1,0 +1,60 @@
+#Copyright (C) 2007 L. Donnie Smith
+
+LDCONFIG = @LDCONFIG@
+
+HEADER	   = $(LIB_NAME).h
+STATIC_LIB = lib$(LIB_NAME).a
+LINK_NAME  = lib$(LIB_NAME).so
+SO_NAME    = $(LINK_NAME).$(MAJOR_VER)
+SHARED_LIB = $(SO_NAME).$(MINOR_VER)
+DEST_INC_INST_DIR = $(ROOTDIR)$(INC_INST_DIR)
+DEST_LIB_INST_DIR = $(ROOTDIR)$(LIB_INST_DIR)
+
+OBJECTS = $(SOURCES:.c=.o)
+DEPS    = $(SOURCES:.c=.d)
+
+CFLAGS += -fpic
+
+all: static shared
+
+static: $(STATIC_LIB)
+
+shared: $(SHARED_LIB)
+
+$(STATIC_LIB): $(OBJECTS)
+	ar rcs $(STATIC_LIB) $(OBJECTS)
+
+$(SHARED_LIB): $(OBJECTS)
+	$(CC) -shared -Wl,-soname,$(SO_NAME) $(LDFLAGS) $(LDLIBS) \
+	      -o $(SHARED_LIB) $(OBJECTS)
+
+install: install_header install_static install_shared
+
+install_header:
+	install -D $(LIB_NAME).h $(DEST_INC_INST_DIR)/$(LIB_NAME).h
+
+install_static: static
+	install -D $(STATIC_LIB) $(DEST_LIB_INST_DIR)/$(STATIC_LIB)
+
+install_shared: shared
+	install -D $(SHARED_LIB) $(DEST_LIB_INST_DIR)/$(SHARED_LIB)
+	ln -sf $(SHARED_LIB) $(DEST_LIB_INST_DIR)/$(SO_NAME)
+	ln -sf $(SO_NAME) $(DEST_LIB_INST_DIR)/$(LINK_NAME)
+	$(LDCONFIG)
+
+clean:
+	rm -f $(STATIC_LIB) $(SHARED_LIB) $(OBJECTS) $(DEPS)
+
+uninstall:
+	rm -f $(DEST_INC_INST_DIR)/$(LIB_NAME).h \
+		$(DEST_LIB_INST_DIR)/$(STATIC_LIB) \
+		$(DEST_LIB_INST_DIR)/$(LINK_NAME)*
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),distclean)
+include $(COMMON)/include/dep.mak
+-include $(DEPS)
+endif
+endif
+
+.PHONY: all static shared install install_header install_static install_shared clean uninstall

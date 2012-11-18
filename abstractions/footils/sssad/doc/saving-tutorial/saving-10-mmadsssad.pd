@@ -1,0 +1,158 @@
+#N canvas 385 54 503 659 10;
+#X text 41 25 SSSAD and MMMAD;
+#X obj 51 444 mmmad mmmany1;
+#X obj 214 444 mmmad mmmany2;
+#X obj 50 493 sssad mmmany3;
+#X obj 213 493 sssad mmmany4;
+#X obj 140 425 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 303 425 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 139 471 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 302 471 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 45 568 cnv 15 150 40 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 657 130 430 629 state-saving 0;
+#X obj 13 315 cnv 15 400 300 empty empty Restore 300 12 0 14 -233017
+-123526 0;
+#X obj 13 12 cnv 15 400 300 empty empty Save 300 12 0 14 -233017 -123526
+0;
+#X obj 239 237 textfile;
+#X msg 128 138 clear;
+#X msg 313 220 print;
+#X obj 239 161 list prepend add;
+#X obj 239 187 list trim;
+#X obj 86 520 textfile;
+#X obj 86 550 s SSSAD;
+#X obj 86 462 until;
+#X msg 86 441 100;
+#X msg 30 503 print;
+#X text 81 572 also received inside sssad;
+#X obj 106 238 s SSSAD_ADMIN;
+#X obj 239 93 r SSSAD_ADMIN;
+#X obj 239 137 route persist;
+#X obj 239 115 list trim;
+#X msg 106 172 save;
+#X msg 120 211 set;
+#X obj 154 547 s SSSAD_ADMIN;
+#X msg 154 522 set;
+#X obj 84 59 savepanel;
+#X obj 84 102 t a b b;
+#X msg 84 285 write \$1;
+#X obj 84 31 bng 24 250 50 0 empty empty save 0 -6 0 8 -262144 -1 -1
+;
+#X obj 86 418 t b a;
+#X msg 133 463 read \$1 \, rewind;
+#X obj 86 337 bng 24 250 50 0 empty empty load 0 -6 0 8 -262144 -1
+-1;
+#X obj 86 365 openpanel;
+#X text 118 441 Avoid loops. A bang normally also works.;
+#X obj 84 81 symbol;
+#X msg 27 63 bang;
+#X text 25 43 again;
+#X obj 86 395 symbol;
+#X msg 29 378 bang;
+#X text 27 358 again;
+#X text 40 597 Hint: get creative with the [OSCroute] external!;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 7 1 9 1;
+#X connect 7 1 20 0;
+#X connect 9 0 7 0;
+#X connect 10 0 9 0;
+#X connect 11 0 7 0;
+#X connect 14 0 16 0;
+#X connect 15 0 5 0;
+#X connect 16 0 15 0;
+#X connect 17 0 13 0;
+#X connect 18 0 13 0;
+#X connect 20 0 19 0;
+#X connect 21 0 30 0;
+#X connect 22 0 23 0;
+#X connect 22 1 17 0;
+#X connect 22 2 3 0;
+#X connect 23 0 2 0;
+#X connect 24 0 21 0;
+#X connect 25 0 10 0;
+#X connect 25 1 26 0;
+#X connect 26 0 7 0;
+#X connect 27 0 28 0;
+#X connect 28 0 33 0;
+#X connect 30 0 22 0;
+#X connect 31 0 30 0;
+#X connect 33 0 25 0;
+#X connect 34 0 33 0;
+#X restore 59 580 pd state-saving;
+#X text 47 544 State saving with mmmad/sssad is shown in this subpatch
+;
+#X text 45 246 "set" will update all state variables to the value that
+was last loaded into memory \, and "save" is equivalent to the "bang"
+we used before. It will make all state variables output their current
+values prepended with the word "persist" to SSSAD_ADMIN.;
+#X text 48 320 Also the connections have to be made to the second \,
+cold inlet of [mmmad] rsp. [sssad]. The hot inlet accepts a "bang"
+to send out the stored value to the outlet of mmmad/sssad. This way
+you can use the same tag more than once without generating feedback
+loops \, which is handy for polyphony.;
+#N canvas 395 78 519 576 why 0;
+#X text 38 45 You may wonder what's the difference between [mmmad]
+and [sssad]?;
+#X text 38 91 If you use two [mmmad] objects sharing the same tag \,
+they will generate two persist messages:;
+#X obj 48 166 mmmad double;
+#X floatatom 143 166 5 0 0 0 - - -;
+#X obj 203 166 mmmad double;
+#X floatatom 298 166 5 0 0 0 - - -;
+#X obj 47 223 s SSSAD_ADMIN;
+#X obj 202 198 r SSSAD_ADMIN;
+#X obj 202 220 print SSSAD_ADMIN;
+#X msg 47 201 save;
+#X text 199 244 "double NUM" will be printed twice!;
+#X text 49 288 [sssad] however uses a singleton inside which will only
+generate one persist message even when the same tag is used twice:
+;
+#X floatatom 165 353 5 0 0 0 - - -;
+#X obj 54 352 sssad nodouble;
+#X floatatom 331 352 5 0 0 0 - - -;
+#X obj 220 351 sssad nodouble;
+#X text 50 394 This is useful for adding values to a message box \,
+because then they won't show up twice or more in the message box or
+in the textfile.;
+#X text 50 461 The disadvantage is \, that if you delete the first
+[sssad nodouble] here \, the second won't get saved at all anymore
+\, until you reload the patch. Just try it. Delete the left [sssad
+nodouble] and press save again: Now nodouble is missing...;
+#X connect 2 0 3 0;
+#X connect 3 0 2 1;
+#X connect 4 0 5 0;
+#X connect 5 0 4 1;
+#X connect 7 0 8 0;
+#X connect 9 0 6 0;
+#X connect 12 0 13 1;
+#X connect 13 0 12 0;
+#X connect 14 0 15 1;
+#X connect 15 0 14 0;
+#X restore 57 622 pd why mmmad and sssad?;
+#X text 43 60 [sssad] and [mmmad] are ready-made objects that use the
+principles you have learned in this tutorial to make state saving as
+simple as cross-connecting what you want to save using tagged [sssad]
+or [mmmad] objects.;
+#X text 43 140 Instead of three receivers SAVING-REC \, SAVING-SEND
+and SAVING-ADMIN only two are used. They are called SSSAD and SSSAD_ADMIN.
+The admin-receiver SSAD_ADMIN instead of a simple "bang" message accepts
+"set" and "save" messages and it also functions as the collector for
+state values. These are prepended with the word "persist" \, so you
+need one additional [route persist] object when saving.;
+#X connect 1 0 5 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 8 0;
+#X connect 5 0 1 1;
+#X connect 6 0 2 1;
+#X connect 7 0 3 1;
+#X connect 8 0 4 1;

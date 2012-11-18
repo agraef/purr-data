@@ -1,0 +1,25 @@
+#N canvas 243 134 633 339 10;
+#X obj 56 30 cnv 15 15 15 empty empty vasp.offset? 0 10 1 14 -262144
+-1 0;
+#X text 42 59 get a single vectored vasp's offset;
+#X obj 45 131 cnv 15 74 17 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 226 132 cnv 15 74 17 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X floatatom 226 163 0 0 0;
+#X floatatom 45 162 0 0 0;
+#X obj 226 132 vasp.offset?;
+#X obj 45 131 vasp.offset?;
+#X msg 226 107 vasp buffoffsetq 220 buffoffsetq 300;
+#X msg 45 106 vasp 200 buffoffsetq 300;
+#X text 228 89 more than 1 vector. watch pd window!;
+#X text 52 278 abbreviation;
+#X obj 148 275 vasp.o;
+#X obj 148 275 cnv 15 44 17 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 148 275 vasp.o?;
+#X obj 278 221 table buffoffsetq 88200;
+#X connect 6 0 4 0;
+#X connect 7 0 5 0;
+#X connect 8 0 6 0;
+#X connect 9 0 7 0;

@@ -1,0 +1,70 @@
+TODO list:
+
+features:
+---------------------
+- introduce attributes!!
+
+- introduce several log levels (for warning posts)
+- grab (and recompose) signals for granular vasp usage
+- vasp~s for realtime-capable vasp objects
+
+- complex power operations - delta phase
+
+- optimize (c)osc with table lookup, phasor with Höldrichs code (in pd)
+
+- how to handle beyond buffer-domain:
+warning, treat as 0, calculate unit operation, loop, mirror on buffer end, stay on last frame
+
+- better algorithm for vasp.fix
+
+- make loops interruptible ("stop" message?)
+- make in place rotation more efficient (use temporary space)
+
+
+- introduce "groups" for attribute organisation (e.g. detach etc.)
+
+- reduce number of warnings for wrong offset, frame size etc.
+
+- review vasp.f=, vasp.o= for quasi-constant envelopes
+
+
+objects:
+---------------------
+- wave object for table-lookup oscs.
+- various random distributions for noise
+
+- vasp.window: one should be able to use just a portion of the windowing envelope
+
+- slope: frequency distortion with given exponent
+
+- vasp.expr
+
+- vasp.state.... current vasp, operation, progress meter
+
+- vasp.ahead (vasp.a): abstraction head - set/bang/to handling, radio outlet, attribute processing (?)
+- vasp.print (vasp.p): print vasp messages
+
+- vasp.resmp: resampling with vasp argument, instead of vasp.tilt (?)
+
+bugs:
+---------------------
+
+
+tests:
+---------------------
+- in-place operation (src == dst), test if strides are equal!
+- should frame count always be pre-evaluated (e.g. in vasp.f+ etc. ?)
+- test DFT objects on strided buffers
+- check for odd remainder frame on symmetric operations!!
+
+premature thoughts:
+---------------------
+- interface to scripting language (python)
+
+
+documentation:
+---------------------
+- have all the objects written in their full names
+- no special characters!
+
+

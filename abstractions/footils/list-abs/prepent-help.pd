@@ -1,0 +1,44 @@
+#N canvas 262 329 608 369 10;
+#X obj 429 170 prepent set;
+#X msg 429 225;
+#X floatatom 429 92 5 0 0 0 - - -;
+#X msg 501 142 set;
+#X msg 531 142 add2;
+#X msg 439 204 set;
+#X floatatom 49 67 5 0 0 0 - - -;
+#X obj 49 127 prepent x;
+#X obj 233 131 list prepend x;
+#X obj 233 240 print prepend_x;
+#X obj 49 241 print prepent_x;
+#X text 43 15 [prepent] is a shortcut for [list prepend]--[list trim]
+;
+#X obj 233 267 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 49 267 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 231 105 Without trim:;
+#X obj 233 167 route x list;
+#X obj 272 196 print prepend_list;
+#X obj 49 168 route x list;
+#X obj 88 198 print prepent_list;
+#X obj 272 216 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 88 218 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 1;
+#X connect 4 0 0 1;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 17 0;
+#X connect 8 0 15 0;
+#X connect 15 0 9 0;
+#X connect 15 0 12 0;
+#X connect 15 1 16 0;
+#X connect 15 1 19 0;
+#X connect 17 0 10 0;
+#X connect 17 0 13 0;
+#X connect 17 1 18 0;
+#X connect 17 1 20 0;

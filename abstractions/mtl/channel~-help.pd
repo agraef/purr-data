@@ -1,0 +1,41 @@
+#N canvas 431 331 716 270 10;
+#X text 13 15 Description: Controls the panning and volume of a stereo
+signal.;
+#X obj 13 92 adc~;
+#X text 16 47 tags: mix~;
+#X obj 12 126 mtl/channel~ /id chan0;
+#X obj 172 160 mtl/aux~ 0;
+#X obj 172 202 mtl/vu~;
+#X obj 311 202 mtl/vu~;
+#X obj 311 160 mtl/aux~ 1;
+#X obj 12 158 mtl/main~;
+#X obj 12 202 mtl/out~;
+#X obj 483 21 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 543 22 PARAM ENABLED;
+#X text 152 125 <-Click on the propeties menu to display params;
+#X obj 484 71 cnv 15 200 20 empty empty /chan0/ 2 12 0 8 -258401 -262144
+0;
+#X obj 484 94 hsl 100 15 -20 20 0 0 /chan0/hi /chan0/hi_ hi 105 7 0
+8 -262144 -1 -1 4950 1;
+#X obj 484 112 hsl 100 15 -20 20 0 0 /chan0/mid /chan0/mid_ mid 105
+7 0 8 -262144 -1 -1 4950 1;
+#X obj 484 130 hsl 100 15 -20 20 0 0 /chan0/low /chan0/low_ low 105
+7 0 8 -262144 -1 -1 4950 1;
+#X obj 484 148 hsl 100 15 -1 1 0 0 /chan0/pan /chan0/pan_ pan 105 7
+0 8 -262144 -1 -1 4950 1;
+#X obj 484 166 hsl 100 15 0 1 0 0 /chan0/aux /chan0/aux_ aux 105 7
+0 8 -262144 -1 -1 0 1;
+#X obj 484 184 hsl 100 15 0 1 0 0 /chan0/main /chan0/main_ main 105
+7 0 8 -262144 -1 -1 0 1;
+#X obj 484 202 nbx 5 14 -1e+37 1e+37 0 0 /chan0/auxn /chan0/auxn_ auxn
+50 8 0 8 -262144 -1 -1 0 256;
+#X obj 482 46 ../doc/5.reference/tof/param-help;
+#X connect 1 0 3 0;
+#X connect 1 1 3 1;
+#X connect 4 0 5 0;
+#X connect 4 1 5 1;
+#X connect 7 0 6 0;
+#X connect 7 1 6 1;
+#X connect 8 0 9 0;
+#X connect 8 1 9 1;

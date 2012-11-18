@@ -1,0 +1,108 @@
+
+
+k_guile PD external
+--------------------------------------------
+V0.0.2
+
+-This external makes you able to use guile as an extension language for
+ PD. Guile is a scheme interpreter. The API is inspired by
+ the python pyext external made by Thomas Grill, and a small part of
+ the code is made by looking at the flext source.
+
+-To be able to use it, you should first know the lisp programming language,
+ then check out the help-k_guile.pd example patch and read the small
+ example-scripts that the patch loads.
+
+
+API
+-------------------------------------------
+k_guile provides the following functions:
+
+* (pd-inlets num-inlets)
+    - Sets number of inlets for the object.
+    - add.scm, inout.scm
+    - Local function.
+
+* (pd-outlets num-outlets)
+    - Sets number of outlets for the object.
+    - add.scm, inout.scm
+    - Local function.
+
+* (pd-inlet inlet-num type func)
+    - "func" is a function that is called when the object
+      receives a message to the inlet "inlet-num" of type
+      "type". Normal values for "type" are 'float, 'list,
+      'bang, etc.
+    - add.scm, inout.scm
+    - Local function.
+
+* (pd-outlet outlet-num arg0 arg1 ...)
+    - Sends value(s) to outlet "outlet-num". 
+      The argument(s) can be of any kind.
+    - add.scm, inout.scm
+    - Local function.
+
+* (pd-bind symbol func)
+    - Pd messages sent to "symbol" arrives at the "func" function.
+    - send_receive.scm
+    - Both local and global
+
+* (pd-unbind symbol)
+    - Stop receiving messages sent to "symbol".
+    - Both local and global. For the local version, all bindings
+      are automatically unbinded when the object is destroyed or
+      reloaded.
+
+* (pd-send symbol arg0 arg1 ...)
+    - Sends value(s) to receivers for "symbol". "Symbol" can either
+      be a scheme or a pd symbol.
+    - send_receive.scm
+    - Global function.
+
+* (pd-get-symbol symbol)
+    - Returns the pd symbol for the scheme symbol "symbol".
+      pd-send works faster when a pd symbol is used instead of a scheme symbol.
+    - send_receive.scm
+    - Global function.
+
+* (pd-set-destroy-func thunk)
+    - "thunk" is called before the object is destroyed or reloaded.
+    - Local function.
+
+
+
+Scheme programming with the k_guile object.
+--------------------------------------------------
+-The code executed lives in its own local namespace
+ spesific for the pd object. If you need or want to
+ break out of the local namespace, simply just use
+ (load ) to let another script run in the global
+ namespace.
+-If you need to call pd-inlets or pd-outlets, they
+ should/must be the first functions to call in the
+ script. The default number of inlets is 1,
+ and the default number of outlets is 0.
+-Some global debugging options are set at the top
+ of the global.scm file. You might want to edit
+ those values _before compiling_ the k_guile external.
+-None of the functions have been made with
+ thread-safety in mind.
+-Backtracing doesn't work properly. Don't know why.
+
+
+Changes
+--------------------------------------------------
+v0.0.1->v0.0.2:
+-Loads /etc/.k_guile.scm and $HOME/.k_guile.scm at
+ startup.
+-An inlet can specify 'any as type, and will then
+ receive anything.
+-The k_guile object can receive "eval" messages to evaluate
+ scheme code.
+
+
+--------------------------------------------------
+Kjetil S. Matheussen, k.s.matheussen@notam02.no
+last updated 21.1.2004
+
+

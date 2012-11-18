@@ -1,0 +1,102 @@
+# 
+# bash_completion file for Pd. 
+# 
+# Save as: /etc/bash_completion.d/pd or ~/.bash_completion and enjoy never
+# having to type any full command line option anymore. Instead you can press
+# <TAB>.
+#
+# If you want to help, these are fine introductions to bash's completion
+# feature:
+# 
+# http://www.debian-administration.org/articles/316
+# http://www.debian-administration.org/articles/317
+#
+# First version written by Frank Barknecht <fbar AT footils.org> Dec 26 2005
+
+have pd && 
+_pd() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    # Pd's options:
+    opts="-help \
+    -r \
+    -audioindev \
+    -audiooutdev \
+    -audiodev \
+    -inchannels \
+    -outchannels \
+    -channels \
+    -audiobuf \
+    -blocksize \
+    -sleepgrain \
+    -nodac \
+    -noadc \
+    -noaudio \
+    -listdev \
+    -oss \
+    -32bit \
+    -alsa \
+    -alsaadd \
+    -jack \
+    -midiindev \
+    -midioutdev \
+    -mididev \
+    -nomidiin \
+    -nomidiout \
+    -nomidi \
+    -alsamidi \
+    -path \
+    -nostdpath \
+    -stdpath \
+    -helppath \
+    -open \
+    -lib \
+    -font \
+    -typeface \
+    -verbose \
+    -version \
+    -d \
+    -noloadbang \
+    -stderr \
+    -nogui \
+    -guiport \
+    -guicmd \
+    -send \
+    -noprefs \
+    -rt \
+    -realtime \
+    -nrt"
+
+
+    # options that require an argument:
+    case "${prev}" in
+        # directory argument:
+        # TODO: colon-separated paths as in "/usr/lib/pd/extra:/home/user/pd"
+        -path)
+            COMPREPLY=( $(compgen -d ${cur}) )
+            return 0
+            ;;
+        -helppath)
+            COMPREPLY=( $(compgen -d ${cur}) )
+            return 0
+            ;;
+        # patch file argument:
+        -open)
+            _filedir '@(pd|pat)'
+            return 0
+            ;;
+        *)
+            ;;
+    esac
+
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    else
+        _filedir '@(pd|pat)'
+    fi
+}
+[ "${have:-}" ] &&  complete -F _pd $filenames pd

@@ -1,0 +1,201 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header float 3 12 0 18
+-204280 -1 0;
+#X obj 0 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 63 256 482 332 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS control storage;
+#X text 12 5 ALIAS f;
+#X text 12 85 INLET_0 float bang;
+#X text 12 105 INLET_1 float;
+#X text 12 125 OUTLET_0 float;
+#X text 12 65 DESCRIPTION store a number;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 78 144 cnv 10 50 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 341 145 cnv 10 23 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X floatatom 379 117 5 0 0 0 - - -;
+#X floatatom 340 169 5 0 0 0 - - -;
+#X obj 359 117 bng 15 250 50 0 empty empty empty 20 7 0 12 -4034 -1
+-1;
+#X floatatom 80 169 5 0 0 0 - - -;
+#X msg 80 61 bang;
+#X msg 320 61 7 3 4;
+#X obj 340 144 f;
+#X obj 80 144 float 7;
+#X obj 0 436 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 473 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 523 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 408 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 347 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 460 21 pddp/pddplink http://wiki.puredata.info/en/float -text
+pdpedia: float;
+#X obj 462 3 float;
+#X obj 522 3 f;
+#X text 501 4 or;
+#X msg 119 115 12;
+#X msg 152 115 -0.02;
+#X msg 94 90 555;
+#X msg 340 84 list one 2 3;
+#X text 424 83 does not work!;
+#X obj 100 543 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.1
+-text Pd manual 2.3.1: anatomy of a message;
+#N canvas 106 185 428 374 float/list 0;
+#X msg 51 111 float 1 2 3;
+#X msg 71 165 list 1 2 3;
+#X text 68 142 A list with multiple elements remains a list.;
+#X text 19 37 A float with one element remains a float.;
+#X text 75 196 A list with one float element is converted to a float.
+;
+#X obj 27 286 bng 15 250 50 0 empty empty bang 0 20 1 9 -262144 -1
+-1;
+#X obj 76 286 bng 15 250 50 0 empty empty float 0 21 1 9 -262144 -1
+-1;
+#X obj 118 286 bng 15 250 50 0 empty empty symbol 0 21 1 9 -262144
+-1 -1;
+#X obj 166 286 bng 15 250 50 0 empty empty list 0 21 1 9 -262144 -1
+-1;
+#X obj 211 286 bng 15 250 50 0 empty empty UNDEFINED 0 21 1 9 -262144
+-1 -1;
+#X obj 26 264 route bang float symbol list;
+#X obj 67 327 print FLOAT;
+#X msg 26 59 float 3;
+#X msg 82 217 list 2;
+#X obj 149 327 print LIST;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [float] Conversion To/From a List;
+#X text 48 81 A float with multiple elements remains a float but is
+truncated to one element.;
+#X connect 0 0 10 0;
+#X connect 1 0 10 0;
+#X connect 10 0 5 0;
+#X connect 10 1 6 0;
+#X connect 10 1 11 0;
+#X connect 10 2 7 0;
+#X connect 10 3 8 0;
+#X connect 10 3 14 0;
+#X connect 10 4 9 0;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X restore 386 556 pd float/list conversion;
+#N canvas 111 59 428 526 More_Info 0;
+#X text 19 37 All numbers in Pd are kept in 32-bit floating point and
+can represent real numbers between -8 \, 388608 and 8.388.608.00;
+#X text 19 233 The following are examples of floating point numbers:
+;
+#X text 49 253 3;
+#X text 50 294 -111.5;
+#X text 49 273 0.5;
+#X text 20 126 According to Webopedia.com \, "computers are integer
+machines and are capable of representing real numbers only by using
+complex codes." Hence \, real numbers must be 'approximated' by computers
+using the "floating point standard". In such a number \, the decimal
+point can "float" meaning that there is no fixed number of digits preceding
+or following the decimal. A floating point number is therefore a computer's
+approximation of a real number.;
+#X text 50 318 10000 to 1e-16;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [float] More Info;
+#X obj 1 91 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 7 91 What is a floating point number?;
+#X obj 1 411 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 7 411 An Interesting Side-Note;
+#X text 19 443 In the early 1990's \, the Intel 80486 was shipped with
+a math coprocessor to help accelerate the process of computing floating
+point numbers (which previously required a considerable amount of CPU
+power). Math coprocessors have since found there way into nearly every
+graphics card and CPU available today.;
+#X text 49 343 3e-05 : This example is a computer shorthand for scientific
+notation. It means 3*10^-5 (or 10 to the negative 5th power multiplied
+by 3).;
+#X restore 385 532 pd More_Info;
+#X text 115 60 outputs argument;
+#X text 123 89 overrides argument;
+#X text 133 145 stores value;
+#X text 98 346 bang;
+#X text 98 366 float;
+#X text 98 386 list;
+#X text 98 408 float;
+#N canvas 102 481 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [float] Related Objects;
+#X obj 22 36 int;
+#X obj 54 36 value;
+#X obj 101 36 list;
+#X floatatom 142 37 5 0 0 0 - - -;
+#X msg 185 36;
+#X restore 101 597 pd Related_objects;
+#X text 99 445 float;
+#X text 11 20 store a number;
+#X obj 78 445 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 168 386 - truncates to the first element \, outputs it \, and
+stores it.;
+#X text 168 408 - a float received on the right inlet is stored.;
+#X text 169 445 - outputs the stored value as a float message.;
+#X text 81 490 1) float;
+#X text 168 346 - outputs the currently stored value.;
+#X text 168 366 - outputs the incoming number and stores it.;
+#X text 171 490 - [float] accepts a single number as a creation argument
+which sets the value that is stored.;
+#X obj 80 226 21;
+#X obj 80 206 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 80 248 5 0 0 0 - - -;
+#X text 122 204 As an additional shortcut \, you can leave off the
+class name "float" altogether and just use a single number in an object
+box to create a [float] object (with the value initialized to that
+number).;
+#X text 20 225 [float];
+#X text 21 239 object;
+#X text 21 210 implicit;
+#X obj 441 280 1 2 3;
+#X obj 441 260 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 441 302 print;
+#X text 483 264 implicit;
+#X text 482 293 object;
+#X text 482 279 [list];
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 100 575 pddp/pddplink http://en.wikipedia.org/wiki/Floating_point
+;
+#X obj 99 527 pddp/pddplink all_about_messages.pd;
+#X obj 100 560 pddp/pddplink ../2.control.examples/05.counter.pd -text
+doc/2.control.examples/05.counter.pd;
+#X text 77 277 (If you add additional arguments after this number you
+will create an implicit [list] object.);
+#X connect 6 0 12 1;
+#X connect 8 0 12 0;
+#X connect 10 0 13 0;
+#X connect 11 0 12 0;
+#X connect 12 0 7 0;
+#X connect 13 0 9 0;
+#X connect 23 0 13 1;
+#X connect 24 0 13 1;
+#X connect 25 0 13 0;
+#X connect 26 0 12 0;
+#X connect 49 0 51 0;
+#X connect 50 0 49 0;
+#X connect 56 0 58 0;
+#X connect 57 0 56 0;

@@ -1,0 +1,14 @@
+msd-editor
+------------
+
+patched by Frank Barknecht <fbar@footils.org> with a big hand from Nicolas
+Montgermont <montgermont@la-kitchen.fr> who wrote the msd2D and msd3D externals
+required for using this patch. GEM is used to provide an alternative
+visualization, but it is not required for the patch to work. 
+
+If you want to export the messages to msd2d, that are created, you also need a
+[prepend] external, preferably the one from the Cyclone library.
+
+Thanks Nicolas for a great external colletion.
+
+msd-editor.pd is the patch to open, further documentation is inside.

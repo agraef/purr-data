@@ -1,0 +1,136 @@
+#N canvas 491 56 833 785 10;
+#X text -6 -88 written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+) and Yves Degoyon ( ydegoyon@gmail.com );
+#X obj -17 -55 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 223 -15 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 223 12 metro 40;
+#X msg 313 39 close;
+#X obj 243 110 pdp_v4l;
+#X msg 300 7 open /dev/video0;
+#X obj 412 -20 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 412 7 metro 40;
+#X msg 493 26 close;
+#X msg 489 2 open /dev/video0;
+#X obj 433 106 pdp_v4l2;
+#X msg 498 81 format \$1;
+#X obj 499 59 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj 13 160 pdp_qt;
+#X obj 46 96 metro 40;
+#X msg 46 68 bang;
+#X msg 87 68 stop;
+#X obj 13 -1 openpanel;
+#X msg 13 24 open \$1;
+#X msg 13 -29 bang;
+#X msg 47 123 loop \$1;
+#X obj 127 123 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 127 41 loadbang;
+#X text 56 -26 playing a video file;
+#X text 253 -17 Camera input;
+#X obj 73 161 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj -15 203 cnv 15 621 400 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj 15 621 pdp_xv;
+#X obj 135 237 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 50 238 nightmode \$1;
+#X text 154 241 set nightmode;
+#X msg 66 621 cursor 1;
+#X obj 15 647 route press;
+#X msg 97 301 mark \$1 \$2;
+#X msg 103 324 delete \$1;
+#X text 296 325 delete a marker;
+#X msg 114 347 clear;
+#X text 162 348 delete all markers;
+#X msg 129 377 maxmove \$1;
+#X floatatom 205 379 5 0 0 0 - - -;
+#X text 170 301 mark %x %y : mark a point to track ( max points : 10
+);
+#X obj 112 546 unpack f f;
+#X floatatom 113 571 5 0 0 0 - - -;
+#X floatatom 171 572 5 0 0 0 - - -;
+#X text 114 587 X;
+#X text 169 588 Y;
+#X obj 112 525 route 1 2 3 4 5 6 7 8 9 10;
+#X text 144 623 <-- mark the points you want to track in the video
+window;
+#X text 280 527 position of each marked point;
+#X text 214 426 make a delaunay with all points;
+#X msg 133 424 delaunay on;
+#X msg 135 445 delaunay off;
+#X text 245 456 make a delaunay with point 1 and a tolerance of 50
+( all points which color is in that range will be included in the delaunay)
+;
+#X obj 168 324 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X msg 141 468 pdelaunay 1 50;
+#X obj 20 499 pdp_opencv_surf;
+#X text -6 -112 pdp_opencv_surf : SURF ( Speed Up Robust Features )
+points detection and tracking;
+#X msg 31 209 hessian \$1;
+#X floatatom 106 210 5 0 0 0 - - -;
+#X text 146 209 hessian threshold ( default 500 );
+#X floatatom 214 401 5 0 0 0 - - -;
+#X msg 132 400 ftolerance \$1;
+#X text 257 401 frame tolerance for point recognition ( default : 5
+);
+#X msg 74 257 mark all;
+#X text 144 258 mark all points;
+#X msg 84 278 mark none;
+#X text 154 279 suppress all marks;
+#X text 244 378 max movement of a marker ( default 20 pixels );
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 56 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 56 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 56 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 14 0;
+#X connect 20 0 18 0;
+#X connect 21 0 14 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 23 0 16 0;
+#X connect 26 0 14 1;
+#X connect 28 0 33 0;
+#X connect 29 0 30 0;
+#X connect 30 0 56 0;
+#X connect 32 0 28 0;
+#X connect 33 0 34 0;
+#X connect 34 0 56 0;
+#X connect 35 0 56 0;
+#X connect 37 0 56 0;
+#X connect 39 0 56 0;
+#X connect 40 0 39 0;
+#X connect 42 0 43 0;
+#X connect 42 1 44 0;
+#X connect 47 0 42 0;
+#X connect 51 0 56 0;
+#X connect 52 0 56 0;
+#X connect 54 0 35 0;
+#X connect 55 0 56 0;
+#X connect 56 0 28 0;
+#X connect 56 0 32 0;
+#X connect 56 1 47 0;
+#X connect 58 0 56 0;
+#X connect 59 0 58 0;
+#X connect 61 0 62 0;
+#X connect 62 0 56 0;
+#X connect 64 0 56 0;
+#X connect 66 0 56 0;

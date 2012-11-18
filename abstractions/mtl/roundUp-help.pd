@@ -1,0 +1,8 @@
+#N canvas 272 173 233 166 10;
+#X floatatom 75 73 5 0 0 0 - - -;
+#X floatatom 75 117 5 0 0 0 - - -;
+#X text 17 8 Description: Rounds a float up.;
+#X obj 75 94 mtl/roundUp;
+#X text 19 26 tags: math;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;

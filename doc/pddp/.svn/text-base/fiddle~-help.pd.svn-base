@@ -1,0 +1,234 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header fiddle~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 313 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 180 494 407 META 0;
+#X text 12 195 LIBRARY internal;
+#X text 12 235 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 255 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 215 AUTHOR Miller Puckette;
+#X text 12 275 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS signal analysis;
+#X text 12 65 INLET_0 signal amp-range vibrato reattack npartial auto
+npoints bang print;
+#X text 12 95 OUTLET_0 float;
+#X text 12 115 OUTLET_1 bang;
+#X text 12 135 OUTLET_2 list;
+#X text 12 155 OUTLET_3 float;
+#X text 12 175 OUTLET_4 list;
+#X text 12 45 DESCRIPTION pitch estimator and sinusoidal peak finder
+;
+#X restore 500 597 pd META;
+#X obj 0 363 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 479 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 562 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 322 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 104 488 428 103 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 21 42 sigmund~;
+#X obj 88 42 bonk~;
+#X text 7 1 [fiddle~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 98 321 signal;
+#X obj 78 372 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 472 3 fiddle~;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/fiddle~ -text
+pdpedia: fiddle~;
+#N canvas 62 43 489 501 Messages_to_fiddle~ 0;
+#X msg 22 416 print;
+#X msg 22 54 amp-range 40 50;
+#X msg 22 174 reattack 100 10;
+#X msg 22 229 npartial 7;
+#X msg 22 117 vibrato 50 0.5;
+#X text 125 38 a low and high amplitude threshold: if signal amplitude
+is below the low threshold \, no pitches or peaks are output. The high
+threshold is a minimum at which "cooked" outputs may appear.;
+#X text 125 99 A period in milliseconds (50) over which the raw pitch
+may not deviate more than an interval in half-tones (0.5) from the
+average pitch to report it as a note to the "cooked" pitch outlet.
+;
+#X text 125 160 A period in milliseconds (100) over which a re-attack
+is reported if the amplitude rises more than (1) dB. The re-attack
+will result in a "bang" in the attack outlet and may give rise to repeated
+notes in the cooked pitch output.;
+#X msg 22 278 auto 1;
+#X msg 22 300 auto 0;
+#X msg 22 385 bang;
+#X text 126 383 poll current values --- useful if not in auto mode
+\,;
+#X text 125 221 Higher partials are weighed less strongly than lower
+ones in determining the pitch. This specifies the number of the partial
+(7) which will be weighted half as strongly as the fundamental.;
+#X text 125 282 start and stop "auto" mode (on by default.) If off
+\, output only appears on "bang" (poll mode).;
+#X text 126 415 print out all settings;
+#X msg 22 332 npoints 2048;
+#X text 127 341 number of points in analysis window (power of 2 \,
+128-2048);
+#X msg 22 353 npoints 1024;
+#X obj 22 462 outlet;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 Messages to [fiddle~];
+#X connect 0 0 18 0;
+#X connect 1 0 18 0;
+#X connect 2 0 18 0;
+#X connect 3 0 18 0;
+#X connect 4 0 18 0;
+#X connect 8 0 18 0;
+#X connect 9 0 18 0;
+#X connect 10 0 18 0;
+#X connect 15 0 18 0;
+#X connect 17 0 18 0;
+#X restore 133 116 pd Messages_to_fiddle~;
+#X obj 324 203 unpack;
+#X floatatom 324 253 0 0 0 0 - - -;
+#X floatatom 338 230 0 0 0 0 - - -;
+#X obj 324 173 route 1 2 3 4;
+#X obj 387 203 unpack;
+#X floatatom 387 253 0 0 0 0 - - -;
+#X floatatom 401 230 0 0 0 0 - - -;
+#X obj 451 203 unpack;
+#X floatatom 451 253 0 0 0 0 - - -;
+#X floatatom 465 230 0 0 0 0 - - -;
+#X obj 192 203 unpack;
+#X floatatom 192 253 0 0 0 0 - - -;
+#X floatatom 205 230 0 0 0 0 - - -;
+#X floatatom 259 253 0 0 0 0 - - -;
+#X obj 104 253 print attack;
+#X obj 23 253 print pitch;
+#X obj 123 142 fiddle~ 1024 1 20 3;
+#X text 331 277 individual sinusoidal components;
+#X text 259 275 amplitude;
+#X text 269 290 (dB);
+#X text 192 273 raw pitch;
+#X text 110 273 bang on;
+#X text 110 288 attack;
+#X text 18 273 cooked pitch;
+#X text 18 288 output;
+#N canvas 54 154 428 270 test_input_pitch 0;
+#X obj 77 168 phasor~;
+#X obj 77 146 sig~;
+#X floatatom 77 124 0 0 0 0 - - -;
+#X obj 77 102 mtof;
+#X obj 149 191 *~;
+#X obj 137 40 loadbang;
+#X obj 168 168 sig~;
+#X msg 137 124 1;
+#X msg 77 58 57;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 6 58 inlet;
+#X obj 213 70 inlet;
+#X text 7 1 Test Input for [fiddle~];
+#X obj 150 225 outlet~;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 13 0;
+#X connect 5 0 8 0;
+#X connect 5 0 7 0;
+#X connect 6 0 4 1;
+#X connect 7 0 6 0;
+#X connect 8 0 3 0;
+#X connect 10 0 3 0;
+#X connect 11 0 6 0;
+#X restore 124 90 pd test_input_pitch;
+#X text 272 64 test input;
+#X text 272 77 amplitude;
+#X floatatom 124 65 5 0 0 0 - - -;
+#X msg 170 65 1;
+#X msg 201 65 0;
+#X floatatom 235 65 5 0 0 0 - - -;
+#X text 20 64 test input pitch;
+#X obj 78 392 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 412 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X obj 78 432 cnv 17 3 17 empty \$0-pddp.cnv.let.3 3 5 9 0 16 -228856
+-162280 0;
+#X obj 78 452 cnv 17 3 17 empty \$0-pddp.cnv.let.4 4 5 9 0 16 -228856
+-162280 0;
+#N canvas 89 215 428 349 More_info 0;
+#X text 19 38 The Fiddle object estimates the pitch and amplitude of
+an incoming sound \, both continuously and as a stream of discrete
+"note" events. Fiddle optionally outputs a list of detected sinusoidal
+peaks used to make the pitch determination. Fiddle is described theoretically
+in the 1998 ICMC proceedings \, reprinted on http://man104nfs.ucsd.edu/~mpuckett.
+;
+#X text 19 138 Fiddle's creation arguments specify an analysis window
+size \, the maximum polyphony (i.e. \, the number of simultaneous "pitches"
+to try to find) \, the number of peaks in the spectrum to consider
+\, and the number of peaks \, if any \, to output "raw." The outlets
+give discrete pitch (a number) \, detected attacks in the amplitude
+envelope (a bang) \, one or more voices of continuous pitch and amplitude
+\, overall amplitude \, and optionally a sequence of messages with
+the peaks.;
+#X text 18 253 The analysis hop size is half the window size so in
+the example shown here \, one analysis is done every 512 samples (11.6
+msec at 44K1) \, and the analysis uses the most recent 1024 samples
+(23.2 msec at 44K1). The minimum frequency that Fiddle will report
+is 2-1/2 cycles per analysis windows \, or about 108 Hz. (just below
+MIDI 45.);
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [fiddle~] More Info;
+#X restore 101 571 pd More_info;
+#X text 98 372 float;
+#X text 98 392 bang;
+#X text 98 412 list;
+#X text 98 432 float;
+#X text 98 452 list;
+#X text 11 23 pitch estimator and sinusoidal peak finder;
+#X text 168 372 - cooked pitch output.;
+#X text 168 392 - bang on attack.;
+#X text 168 412 - raw pitch.;
+#X text 168 432 - amplitude (dB).;
+#X text 168 452 - individual sinusoidal components.;
+#X text 167 497 - window size (128-2048 \, default 1024).;
+#X text 167 511 - number of pitch outlets (1-3 \, default 1).;
+#X text 167 525 - number of peaks to find (1-100 \, default 20).;
+#X text 167 539 - number of peaks to output (default 0.).;
+#X text 80 497 1) float;
+#X text 80 511 2) float;
+#X text 80 525 3) float;
+#X text 80 539 4) float;
+#X text 98 338 See "Messages_to_fiddle~" subpatch in the example above.
+;
+#X text 168 321 - the incoming signal.;
+#X obj 5 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 13 0 30 0;
+#X connect 14 0 15 0;
+#X connect 14 1 16 0;
+#X connect 17 0 14 0;
+#X connect 17 1 18 0;
+#X connect 17 2 21 0;
+#X connect 18 0 19 0;
+#X connect 18 1 20 0;
+#X connect 21 0 22 0;
+#X connect 21 1 23 0;
+#X connect 24 0 25 0;
+#X connect 24 1 26 0;
+#X connect 30 0 29 0;
+#X connect 30 1 28 0;
+#X connect 30 2 24 0;
+#X connect 30 3 27 0;
+#X connect 30 4 17 0;
+#X connect 39 0 30 0;
+#X connect 42 0 39 0;
+#X connect 43 0 39 1;
+#X connect 44 0 39 1;
+#X connect 45 0 39 1;

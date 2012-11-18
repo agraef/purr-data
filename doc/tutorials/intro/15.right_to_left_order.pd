@@ -1,0 +1,27 @@
+#N canvas 10 40 620 460 12;
+#X obj 165 185 bng 25 250 50 0 empty empty empty -2 -8 1 10 -24198
+-1 -1;
+#X obj 165 225 trigger bang bang bang;
+#X msg 381 264 1;
+#X msg 273 264 2;
+#X msg 165 264 3;
+#X obj 273 340 print ORDER;
+#X obj 8 10 cnv 15 400 40 empty empty right_to_left_order 20 12 0 24
+-228992 -66577 0;
+#X text 212 188 <-- click here \,;
+#X text 10 65 In Pd \, you read a patch from right to left \, from
+top to bottom. Objects also output from right to left;
+#X obj 222 422 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.3
+;
+#X text 97 369 then check the Pd window to see the order;
+#X text 11 119 The [trigger] object is used to enforce execution order.
+If you need things to run in a certain sequence \, then use a [trigger].
+;
+#X text 206 403 For more info:;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 1 1 3 0;
+#X connect 1 2 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;

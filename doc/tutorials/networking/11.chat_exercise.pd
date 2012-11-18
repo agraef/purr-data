@@ -1,0 +1,26 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib libdir;
+#X obj 437 59 import maxlib cyclone zexy;
+#X obj 8 10 cnv 15 400 40 empty empty chat_exercise 20 12 0 24 -225271
+-66577 0;
+#X obj 129 89 prepend broadcast;
+#X obj 202 191 prepend;
+#X obj 246 169 makesymbol client%s_%s;
+#X obj 246 148 pack float symbol;
+#X obj 202 118 netserver 47292;
+#X text 434 118 useful objects:;
+#X text 463 159 [entry];
+#X text 463 138 [prepend];
+#X text 11 60 Here is a basic chat room server:;
+#X text 14 218 Implement a client to send and receive messages using
+this server. Connect to the server "pdbox.at.or.at" on the same port
+\, 47292;
+#X msg 115 271 connect pdbox.at.or.at 47292;
+#X text 463 179 [netclient];
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 1;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 6 2 5 0;
+#X connect 6 3 5 1;

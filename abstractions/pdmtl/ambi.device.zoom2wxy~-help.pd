@@ -1,0 +1,34 @@
+#N canvas 0 22 703 399 10;
+#X obj 91 220 ambi.device.zoom2wxy~;
+#X obj 130 170 readsf~ 4;
+#X msg 143 97 1;
+#X msg 143 118 0;
+#X msg 144 140 print;
+#X msg 130 72 open \$1;
+#X obj 130 48 openpanel;
+#X obj 131 23 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 177 97 Send it "1" to play once a file is opened.;
+#X obj 93 270 ambi.wxy2mono~ @angle 90;
+#X obj 252 272 ambi.wxy2mono~ @angle 270;
+#X obj 93 308 dac~ 1 2;
+#X text 249 22 Description: Encodes a quadraphonic sound from a Zoom
+H2 microphone to first order Ambisonics horizontal B-Format.;
+#X connect 0 0 9 0;
+#X connect 0 0 10 0;
+#X connect 0 1 9 1;
+#X connect 0 1 10 1;
+#X connect 0 2 9 2;
+#X connect 0 2 10 2;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 1 2 0 2;
+#X connect 1 3 0 3;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 1;

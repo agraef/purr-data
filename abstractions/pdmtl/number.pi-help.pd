@@ -1,0 +1,8 @@
+#N canvas 862 207 450 300 10;
+#X obj 111 124 number.pi;
+#X obj 111 83 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 117 170 print;
+#X text 46 16 Description: Outputs the constant pi (3.14159).;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;

@@ -1,0 +1,96 @@
+#N canvas 33 413 1015 502 10;
+#X floatatom 389 469 8 0 0 0 - - -;
+#X floatatom 486 314 5 0 0 0 - - -;
+#X obj 450 443 list trim;
+#X msg 486 161 info;
+#X msg 486 195 types loris.STYP;
+#X obj 332 420 sdiflists 4;
+#X obj 487 291 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 486 351 time \$1;
+#X floatatom 487 334 5 0 0 0 - - -;
+#N canvas 0 0 450 300 printcols 0;
+#X obj 38 46 inlet;
+#X obj 38 120 spigot;
+#X obj 38 142 print COLUMN-1;
+#X obj 98 96 inlet;
+#X obj 98 170 spigot;
+#X obj 168 46 inlet;
+#X obj 168 120 spigot;
+#X obj 228 96 inlet;
+#X obj 228 170 spigot;
+#X obj 98 192 print COLUMN-2;
+#X obj 168 142 print COLUMN-3;
+#X obj 228 192 print COLUMN-4;
+#X obj 324 42 inlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 9 0;
+#X connect 5 0 6 0;
+#X connect 6 0 10 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 12 0 1 1;
+#X connect 12 0 4 1;
+#X connect 12 0 6 1;
+#X connect 12 0 8 1;
+#X restore 296 467 pd printcols;
+#X obj 375 449 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 486 255 about;
+#X text 609 191 Specify a custom types definition file;
+#X text 647 206 (ex. Loris's RBEP format);
+#X text 524 156 sends info out the rightmost outlet in list tuples
+;
+#X text 524 168 Info also sends out 1NVT and 1IDS data;
+#X obj 450 467 print INFO_OUTLET;
+#X msg 486 113 open 2 test/richiepooSMS.sdif;
+#X msg 486 375 timerange 0.009;
+#X text 488 396 default timerange = 0.01;
+#X text 532 255 nothing really important here;
+#X obj 19 27 cnv 15 204 45 empty empty [sdiflists] 20 22 0 14 -62784
+-241291 0;
+#X text 226 30 v.01;
+#X text 226 50 Author: Richie Eakin;
+#X text 16 99 this external uses the SDIF IRCAM library to read sdif
+files and output the matrices in the form of one lists per column.
+Only one stream can be read per external \, use more if you need to.
+The number of columns of all the combines matrices should be specified
+at creation time. The SDIF specification is very open \, but you have
+to use frame and matrix types that are declared in the standard library
+(found at www.ircam.fr/sdif) or with the inclusion of you own *.STYP
+file. I have included one that defines Loris' RBEP filetype \, along
+with the rest of the standard definitions.;
+#X msg 486 54 open test/pianoSpear.sdif;
+#X text 485 77 If you don't want the first stream in the file \, specify
+the number of the stream you want BEFORE the filename.;
+#X text 485 31 open a .sdif file first.;
+#X msg 486 138 open test/orgue.sdif;
+#X text 635 137 (this file has a 1NVT table);
+#X msg 486 229 open 1 test/meowLoris.sdif;
+#X text 677 232 RBEP is in stream 1;
+#X text 518 287 bang outputs the next frame in time;
+#X text 533 312 float outputs a specific frame;
+#X text 546 349 use timestamp instead of frame number;
+#X text 601 375 specify the time range (use with time message);
+#X connect 1 0 5 0;
+#X connect 2 0 16 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 9 0;
+#X connect 5 1 9 1;
+#X connect 5 2 9 2;
+#X connect 5 3 9 3;
+#X connect 5 4 0 0;
+#X connect 5 5 2 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 7 0;
+#X connect 10 0 9 4;
+#X connect 11 0 5 0;
+#X connect 17 0 5 0;
+#X connect 18 0 5 0;
+#X connect 25 0 5 0;
+#X connect 28 0 5 0;
+#X connect 30 0 5 0;

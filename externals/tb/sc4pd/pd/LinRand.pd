@@ -1,0 +1,4 @@
+#N canvas 0 0 450 300 10;
+#X obj 226 70 LinRand 1 2 3;
+#X floatatom 226 95 5 0 0 0 - - -;
+#X connect 0 0 1 0;

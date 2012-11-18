@@ -1,0 +1,4 @@
+#N canvas 425 51 372 241 10;
+#X text 87 146 know when you have to stop your gig;
+#X obj 88 102 timing.chronometer_;
+#X text 85 77 Description: a very basic gop chronometer;

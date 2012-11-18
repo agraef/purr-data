@@ -1,0 +1,18 @@
+#N canvas 232 249 409 284 10;
+#X obj 159 99 loadbang;
+#X obj 159 122 metro 500;
+#X floatatom 159 235 5 0 0 0 - - -;
+#X obj 159 166 timer;
+#X obj 159 144 t b b;
+#X text 31 14 Description: Converts a millisecond interval to beats
+per minute.;
+#X floatatom 159 187 5 0 0 0 - - -;
+#X obj 159 209 mtl/msToBpm;
+#X text 32 47 tags: conversion;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;
+#X connect 4 1 3 1;
+#X connect 6 0 7 0;
+#X connect 7 0 2 0;

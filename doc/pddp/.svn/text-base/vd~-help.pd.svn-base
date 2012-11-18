@@ -1,0 +1,93 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header vd~ 3 12 0 18 -204280
+-1 0;
+#X obj 0 369 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 244 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal nonlocal time;
+#X text 12 45 DESCRIPTION read a signal from a delay line at a variable
+delay time;
+#X text 12 75 INLET_0 signal;
+#X text 12 95 OUTLET_0 signal;
+#X text 12 175 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 444 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 497 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 108 477 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 delwrite~;
+#X obj 92 43 delread~;
+#X text 8 2 [vd~] Related Objects;
+#X obj 159 44 delay;
+#X restore 102 597 pd Related_objects;
+#X obj 78 378 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 453 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/vd~ -text
+pdpedia: vd~;
+#X obj 324 138 sig~;
+#X text 98 377 signal;
+#X text 98 397 float;
+#X text 98 416 list;
+#X text 11 23 reads a signal from a delay line at a variable delay
+time;
+#X text 165 343 NOTE: [vd~] uses 4-point-interpolation;
+#X text 98 452 signal;
+#X text 168 452 - the signal from the corresponding [delwrite~] object
+is interpolated and output after the delay specified by the incoming
+signal.;
+#X text 168 515 - the name of the corresponding [delwrite~] object
+;
+#X text 484 5 [vd~];
+#X text 168 416 - a list is truncated to the first element.;
+#X text 168 377 - incoming signal (delay time in ms).;
+#X text 168 397 - delay time in ms.;
+#X text 80 515 1) symbol atom;
+#X obj 101 160 delwrite~ vd~help_example 1000;
+#X obj 324 160 vd~ vd~help_example;
+#X text 98 67 [vd~] implements a 4-point interpolating delay tap from
+a corresponding delwrite~ object. The delay in milliseconds of the
+tap is specified by the incoming signal.;
+#X floatatom 324 115 5 0 0 0 - - -;
+#X obj 324 230 snapshot~;
+#X obj 333 204 metro 150;
+#X obj 333 182 loadbang;
+#X floatatom 324 252 5 0 0 0 - - -;
+#X floatatom 101 139 5 0 0 0 - - -;
+#X msg 369 115 1000;
+#X text 98 274 The delay time is always at least one sample and at
+most the length of the delay line (specified by [delwrite~]). In addition
+\, in case the [delwrite~] runs later in the DSP loop than the [vd~]
+\, the delay is constrained below by one vector length (64 samples.)
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 98 543 pddp/pddplink ../3.audio.examples/G03.delay.variable.pd
+-text doc/3.audio.examples/G03.delay.variable.pd;
+#X obj 98 558 pddp/pddplink ../3.audio.examples/G04.control.blocksize.pd
+-text doc/3.audio.examples/G04.control.blocksize.pd;
+#X obj 98 573 pddp/pddplink ../3.audio.examples/G05.execution.order.pd
+-text doc/3.audio.examples/G05.execution.order.pd;
+#X connect 11 0 26 0;
+#X connect 26 0 29 0;
+#X connect 28 0 11 0;
+#X connect 29 0 32 0;
+#X connect 30 0 29 0;
+#X connect 31 0 30 0;
+#X connect 33 0 25 0;
+#X connect 34 0 11 0;

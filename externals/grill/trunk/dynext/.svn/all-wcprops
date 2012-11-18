@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/ext/!svn/ver/1557/trunk/dynext
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1557/trunk/dynext/package.txt
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1557/trunk/dynext/readme.txt
+END
+dynext.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/1557/trunk/dynext/dynext.vcproj
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1557/trunk/dynext/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1557/trunk/dynext/license.txt
+END

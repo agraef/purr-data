@@ -1,0 +1,50 @@
+rx7~ - DX7 emulator external for PD based on RX/Saturno
+
+PD-external written by Frank Barknecht <barknech@ph-cip.uni-koeln.de>
+RX/Saturno written by Juan Linietsky.
+
+
+USAGE
+-----
+
+If you start "pd help-rx7~.pd" in this directory, the rx7~ object should be
+created. Don't bother if [dsp] has no patch cords, it's part of IEMLIB and the
+help-patch works anyway.
+
+To install the external systemwide, copy rx7~.pd_linux to your favourite
+external path, for example /usr/lib/pd/externs/ - and copy help-rx7~.pd into
+the refernence  directory of the PD distribution, e.g.
+/usr/lib/pd/doc/5.reference/
+
+rx7~ needs to load a bank file, before operation. Just send it a message "load
+/path/to/bank.bnk".
+
+After that you can select which bank to use with programm change messages:
+"prog bank channel".
+Example: "prog 28 2" loads programm 28 into channel 2
+
+Play note with note-messages. Syntax: "note midinote velocity channel". 
+Example: "note 60 64 1" plays a C (midi number "60") with velocity "64" on
+channel 1
+
+
+
+HOWTO compile rx7~.pd_linux?
+----------------------------
+
+First download rx-saturno-0.0.1 from
+http://www.reduz.com.ar/rx_saturno/rx-saturno-0.0.1.tar.gz
+
+Unpack the tarball, configure and make rx_saturno.
+
+Now change to the "lib" directory inside the rx-saturno-0.0.1 source.
+
+Unpack the rx7~.tar.gz attached to this mail. It will create a directory called
+"pd" in "lib". 
+
+Change directory again, this time to "pd" and run the little shell script
+"./build-ext"
+
+Now all's done. 
+
+

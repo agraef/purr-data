@@ -1,0 +1,13 @@
+#N canvas 472 136 399 360 10;
+#X obj 18 -1 noise~;
+#X msg 186 60 enable 1;
+#X msg 260 62 enable 0;
+#X obj 18 136 ambi.vu.3_~;
+#X obj 18 47 ambi.mono2wxy~ @angle 95;
+#X text 3 -43 Description: 3 VU meters. (in dB);
+#X connect 0 0 4 0;
+#X connect 1 0 3 3;
+#X connect 2 0 3 3;
+#X connect 4 0 3 0;
+#X connect 4 1 3 1;
+#X connect 4 2 3 2;

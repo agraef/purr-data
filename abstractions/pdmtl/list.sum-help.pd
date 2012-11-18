@@ -1,0 +1,10 @@
+#N canvas 477 324 587 497 10;
+#X msg 144 116 1 2 3 4;
+#X obj 164 291 print;
+#X msg 225 119 4 2 6;
+#X text 100 17 Description: Returns the total of a list.;
+#X text 101 36 Comments: Wraps zexy's [sum].;
+#X obj 169 192 list.sum;
+#X connect 0 0 5 0;
+#X connect 2 0 5 0;
+#X connect 5 0 1 0;

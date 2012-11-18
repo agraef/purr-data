@@ -1,0 +1,15 @@
+#N canvas 398 162 633 352 10;
+#X obj 27 112 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 27 178 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 27 146 rnd_metro 100 2000;
+#X text 163 9 metronome with random delay between bang;
+#X text 162 197 2 : maximum time between 2 bang;
+#X text 127 175 args 1 : minimum time between 2 bang;
+#X floatatom 87 123 5 0 0 0 - - -;
+#X floatatom 148 123 5 0 0 0 - - -;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 6 0 2 1;
+#X connect 7 0 2 2;

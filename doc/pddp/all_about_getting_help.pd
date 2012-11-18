@@ -1,0 +1,76 @@
+#N canvas 0 0 448 570 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header getting_help_in_Pure_Data
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 548 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 323 229 494 344 META 0;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 DESCRIPTION Table of Contents for Pd documentation;
+#X text 12 85 HELP_PATCH_AUTHORS Jonathan Wilkes.;
+#X text 12 25 KEYWORDS;
+#X restore 392 550 pd META;
+#N canvas 12 355 428 212 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Help - Related Objects;
+#X restore 103 550 pd Related_objects;
+#X text 18 218 Control Examples;
+#X text 18 238 Audio Examples;
+#X text 18 258 Data Structures;
+#X text 18 358 Dynamic Patching;
+#X text 18 278 Intro to Pd;
+#X text 18 298 Audio Basics;
+#X text 18 318 Intro to Gem;
+#X text 18 338 Networking;
+#X obj 18 148 pddp/pddplink http://www.crca.ucsd.edu/~msp/Pd_documentation/index.htm
+;
+#X text 18 199 All About Pd;
+#X text 18 77 Document Browser;
+#X text 126 77 click <ctrl>-b or look under the "Help" menu;
+#X obj 18 128 pddp/pddplink ../../1.manual/index.htm -text doc/1.manual/index.htm
+;
+#X text 158 128 (Or use the "Help" menu and choose "Html ...");
+#X text 18 448 Click the "Help" menu for FAQ \, IRC Channel \, Pd webpage
+\, etc.;
+#X obj 18 518 pddp/pddplink all_about_writing_help_patches.pd -text
+Writing Help Patches for Pd Objects;
+#X text 18 108 Manual;
+#X text 18 108 ______;
+#X text 18 38 Using Pure Data's Help System;
+#X text 18 38 _____________________________;
+#X obj 18 57 pddp/pddplink all_about_help_patches.pd -text Using the
+Help Patches for Pd's Internal Objects;
+#X text 18 178 Tutorials;
+#X text 19 177 _________;
+#X text 18 388 Tools;
+#X text 19 387 _____;
+#X obj 18 408 pddp/pddplink all_about_finding_objects.pd -text Search
+for Pd Objects;
+#X text 18 428 Right-click an empty area in a patch and choose "Help"
+;
+#X text 18 478 Developer Docs;
+#X text 19 477 ______________;
+#X obj 6 550 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 126 199 pddp/pddplink all_about.pd -text doc/5.reference/all_about.pd
+;
+#X obj 126 218 pddp/pddplink ../2.control.examples/01.PART1.hello.pd
+-text doc/2.control.examples/01.PART1.hello.pd;
+#X obj 126 238 pddp/pddplink ../3.audio.examples/A00.intro.pd -text
+doc/2.audio.examples/A00.intro.pd;
+#X obj 126 258 pddp/pddplink ../4.data.structures/01.scalars.pd -text
+doc/4.data.structures/01.scalars.pd;
+#X obj 126 278 pddp/pddplink ../manuals/0.Intro/01.hello_world.pd -text
+doc/manuals/0.Intro/01.hello_world.pd;
+#X obj 126 298 pddp/pddplink ../manuals/1.Sound/00.controlling_dsp_processing.pd
+-text doc/manuals/1.Sound/00.controlling_dsp_processing.pd;
+#X obj 126 318 pddp/pddplink ../manuals/2.Image/01.gemwin.pd -text
+doc/manuals/2.Image/01.gemwin.pd;
+#X obj 126 338 pddp/pddplink ../manuals/3.Networking/01.network_ports.pd
+-text doc/manuals/3.Networking/01.network_ports.pd;
+#X obj 126 358 pddp/pddplink ../manuals/pd-msg/msg_and_patch/0.all_msg.pd
+-text doc/manuals/pd-msg/msg_and_patch/0.all_msg.pd;
+#X obj 18 498 pddp/pddplink ../manuals/Externals-HOWTO/HOWTO-externals-en.html
+-text Writing External Objects for Pure Data;

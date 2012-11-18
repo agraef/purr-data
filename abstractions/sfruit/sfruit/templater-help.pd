@@ -1,0 +1,44 @@
+#N canvas 657 235 658 370 10;
+#X obj 17 329 sendcanvas;
+#X msg 17 251 obj 10 10 templater modcount \, loadbang;
+#X text 270 69 arguments:;
+#X text 284 88 my_template_name - this will be expanded to "my_template_name-template.pd"
+and searched for in your Pd path.;
+#X text 282 140 absolute/relative - by default \, templater will start
+building the objects in the template file 20 pixels South of the point
+where you instantiated [templater]. Give "1" (or anything) as the second
+argument for templater to instead create the objects exactly as they
+are defined in the template file \, with no offset.;
+#X text 522 320 2008 Luke Iannini;
+#X text 522 335 proyekto.net;
+#X msg 17 281 obj 10 10 templater tmetro \, loadbang;
+#X text 89 229 try me!;
+#X text 40 301 (delete existing to try another);
+#N canvas 514 43 411 356 creating-templates 0;
+#X obj 10 35 metro 250;
+#X obj 10 10 tgl 20 0 empty empty empty 17 7 0 10 -200676 -1 -1 0 1
+;
+#X obj 30 58 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 29 287 As an aside \, an easy way to edit templates is to simply
+spawn them as [modcount-template] or similar - they're just Pd patches
+in your Pd path.;
+#X text 25 140 To make a template \, simply create a patch and save
+it as <myname>-template.pd somewhere in your Pd path.;
+#X text 26 178 The top-left object should be in the upper-left corner
+of the canvas if you plan to use the relative positioning feature of
+[templater].;
+#X text 28 226 Or \, position objects just as you'd like them to appear
+if you plan to use the absolute mode of [templater]. The example above
+shows the placement of objects within the "modcount" template.;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X restore 301 323 pd creating-templates;
+#X text 266 32 [templater] - create and connect a set of pd objects
+in the current patch based on a template file.;
+#X text 282 244 thanks to the new canvasdelete \, templater will disappear
+after creating its template.;
+#X text 283 291 subpatches are not yet supported (and may be impossible)
+;
+#X connect 1 0 0 0;
+#X connect 7 0 0 0;

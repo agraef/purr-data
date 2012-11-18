@@ -1,0 +1,125 @@
+#N canvas 210 39 717 724 10;
+#X obj 177 20 cnv 15 450 25 empty empty empty 10 12 1 12 -1 -262144
+0;
+#X obj 174 17 cnv 15 450 25 empty empty empty 10 12 1 12 -176779 -262144
+0;
+#X obj 171 14 cnv 15 450 25 empty empty sssad_-_Stupidsupersimplistic-State-Saving_ADVANCED
+10 12 1 12 -258699 -262144 0;
+#X text 170 73 [sssad] is used for saving and restoring state data
+spread around in a patch to a textfile composed of "tagged" messages.
+;
+#X obj 31 77 sssad key;
+#X text 172 233 Using [sssad];
+#X text 171 247 ==============;
+#X text 171 339 The left inlet will accept a bang and make [sssad]
+output the value currently stored at the key used in this [sssad].
+;
+#X obj 29 238 sssad key;
+#X floatatom 89 211 5 0 0 0 - - -;
+#X msg 29 212 bang;
+#X obj 29 322 sssad key;
+#X msg 29 296 bang;
+#X symbolatom 89 297 10 0 0 0 - - -;
+#X obj 29 423 sssad key;
+#X obj 29 400 t b a;
+#X msg 29 375 1 2 3 4;
+#X obj 29 264 print @key_1;
+#X obj 29 349 print @key_2;
+#X obj 29 450 print @key_3;
+#X text 173 376 The right inlet will accept anything and will store
+that anything in all [sssad] objects of the same key. The right inlet
+is *cold* and will not generate any output. Use a [trigger bang anything]
+if you want direct output.;
+#X obj 29 514 r SSSAD_ADMIN;
+#X obj 30 490 r SSSAD;
+#X text 173 603 Detailed explanation inside.;
+#X obj 29 654 sssad-example;
+#X text 170 130 A tagged message in this context is a list-message
+of elements whose first element denotes the key of the data \, while
+the rest of the message are the values stored under that key.;
+#X text 174 652 See [sssad-example] to get inspired for how to use
+[sssad] in real life.;
+#N canvas 476 40 597 728 SSSAD-globals 0;
+#X obj 24 25 r SSSAD;
+#X obj 24 49 spigot;
+#X obj 72 47 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 24 71 print SSSAD;
+#X obj 22 266 spigot;
+#X obj 70 264 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 22 242 r SSSAD_ADMIN;
+#X obj 22 288 print SSSAD_ADMIN;
+#X text 137 239 SSSAD_ADMIN is used to send administrative messages
+to all [sssad] objects.;
+#X obj 23 504 s SSSAD_ADMIN;
+#X msg 23 414 save;
+#X msg 23 365 set;
+#X text 21 325 SSSAD_ADMIN accepts the following meta-messages:;
+#X text 134 364 set: make all [sssad] objects output their current
+values to their outlets.;
+#X text 134 414 save: let exactly one [sssad] object per tag-key send
+a message composed of the word "persist" \, the current tag-key and
+the values to the receiver called SSSAD_ADMIN.;
+#X text 135 464 You may use this to save key/value-data to a [textfile].
+;
+#X obj 23 145 s SSSAD;
+#X msg 23 120 key 5 6 7 8;
+#X obj 24 198 s SSSAD;
+#X msg 24 173 list key a b c;
+#X text 137 118 It is possible to remotely set a sssad-value through
+the SSSAD-receiver;
+#X text 135 40 SSSAD is a bus where the current sssad-data is communicated
+between [sssad] instances:;
+#X obj 22 672 s \$0-SSSAD_ADMIN;
+#X text 153 544 LOCAL SEND/RECEIVE PAIRS;
+#X text 151 576 If the second argument of a sssad-key is different
+from 0 \, e.g. \$0 \, the send/receive pair from above gets the second
+argument prepended with a dash in between. Use this for local saving.
+;
+#X floatatom 83 553 5 0 0 0 - - -;
+#X obj 24 553 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 24 575 sssad loc \$0;
+#X msg 22 651 set;
+#X obj 22 625 s \$0-SSSAD;
+#X msg 22 601 loc 100;
+#X text 150 641 The global senders SSSAD and SSSAD_ADMIN are disabled
+for sssad-instances with a second argument not 0!;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X connect 4 0 7 0;
+#X connect 5 0 4 1;
+#X connect 6 0 4 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 17 0 16 0;
+#X connect 19 0 18 0;
+#X connect 25 0 27 1;
+#X connect 26 0 27 0;
+#X connect 27 0 25 0;
+#X connect 28 0 22 0;
+#X connect 30 0 29 0;
+#X restore 28 602 pd SSSAD-globals;
+#X text 173 498 [sssad] uses two pairs of senders and receivers \,
+which you can intercept to use for saving data to a file: SSSAD and
+SSSAD_ADMIN \, if the second argument is missing or 0 \, and \$2-SSSAD
+and \$2-SSSAD_ADMIN if the second argument is different from 0;
+#X text 173 274 Using [sssad] is very simple: [sssad] requires an obligatory
+argument to name the key to store data at. Optionally you can provide
+a second argument for non-global persistence.;
+#X obj 178 461 sssad key \$0;
+#X text 283 461 non-global sssad instance.;
+#X obj 30 540 r \$0-SSSAD;
+#X obj 29 564 r \$0-SSSAD_ADMIN;
+#X connect 8 0 17 0;
+#X connect 9 0 8 1;
+#X connect 10 0 8 0;
+#X connect 11 0 18 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 1;
+#X connect 14 0 19 0;
+#X connect 15 0 14 0;
+#X connect 15 1 14 1;
+#X connect 16 0 15 0;

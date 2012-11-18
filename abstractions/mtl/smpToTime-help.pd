@@ -1,0 +1,17 @@
+#N canvas 1479 104 717 333 10;
+#X floatatom 137 102 5 0 0 0 - - -;
+#X obj 137 122 * 1000;
+#X floatatom 137 145 10 0 0 0 - - -;
+#X text 19 13 Description: Converts a number of samples into an easier
+representation of it's duration.;
+#X obj 137 166 mtl/smpToTime;
+#X text 21 49 tags: conversion;
+#X text 235 161 By default \, the conversion is done with Pd's samplerate.
+You can override this by sending a list: samples samplerate;
+#X msg 249 125 96000 48000;
+#X symbolatom 137 201 10 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 4 0 8 0;
+#X connect 7 0 4 0;

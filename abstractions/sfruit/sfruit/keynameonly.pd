@@ -1,0 +1,14 @@
+#N canvas 0 22 195 224 10;
+#X obj 47 65 keyname;
+#X obj 86 89 sel \$1;
+#X obj 47 172 outlet;
+#X obj 47 146 spigot;
+#X msg 86 113 1;
+#X msg 119 113 0;
+#X connect 0 0 3 0;
+#X connect 0 1 1 0;
+#X connect 1 0 4 0;
+#X connect 1 1 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 1;
+#X connect 5 0 3 1;

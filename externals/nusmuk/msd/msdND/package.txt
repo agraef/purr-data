@@ -1,0 +1,4 @@
+NAME=msdND
+SRCS=main.cpp
+HDRS=../src/msd.h
+

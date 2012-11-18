@@ -1,0 +1,20 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+value VAR Word       'declare your variable
+value = 0
+
+start:
+SERIN 16, 16468, [DEC value]  'pin16 is the stamp serial port, 164868 means 9600 bauds, dec means decimal
+IF value > 7 THEN GOSUB light
+GOTO start
+
+light:
+HIGH 1              'put a led on pin 1
+PAUSE 500
+LOW 1
+PAUSE 20
+value = 0           'reset variable
+GOTO start
+
+END

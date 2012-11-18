@@ -1,0 +1,8 @@
+#N canvas 16 114 200 200 10;
+#N canvas 488 184 420 300 META 1;
+#X text 13 41 NAME wiimote;
+#X text 10 25 AUTHOR Mike Wozniewski + Florian Krebs + IOhannes m zmoelnig
+;
+#X text 10 10 VERSION 0.3.1;
+#X obj 163 144 wiimote;
+#X restore 10 10 pd META;

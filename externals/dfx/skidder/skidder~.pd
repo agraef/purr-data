@@ -1,0 +1,51 @@
+#N canvas 234 140 957 522 10;
+#X obj 335 373 skidder~;
+#X obj 335 105 osc~ 440;
+#X obj 335 400 dac~ 1 2;
+#X msg 135 356 help;
+#X obj 342 133 osc~ 1000;
+#X floatatom 356 212 5 0 0;
+#X floatatom 371 269 5 0 0;
+#X floatatom 386 303 5 0 0;
+#X floatatom 364 250 5 0 0;
+#X floatatom 378 287 5 0 0;
+#X floatatom 349 195 5 0 0;
+#X floatatom 342 234 12 0 0;
+#X msg 209 196 temposync 1;
+#X msg 209 166 rrf 0.1;
+#X msg 209 258 pwrm 50;
+#X msg 209 288 frm 2000;
+#X msg 210 229 noise 0;
+#X msg 432 163 200000;
+#X text 6 4 dfx skidder ___ _;
+#X text 35 19 by destruct fx;
+#X text 35 33 linux port by martin pi;
+#X text 556 5 more from dfx :: http://smartelectronix.com/~destroyfx
+;
+#X text 648 20 more from pi :: http://attacksyour.net/pi;
+#X text 13 465 turn on temposync and frm to make it work in pd ( i
+did not want to change the internals \, so it is a bit trickyy). besides
+this is not finished at all ....;
+#X text 482 421 Skidder turns your sound on & off. While that may not
+sound very rewarding \, you have a great deal of control over the rate
+\, pulsewidth \, on/off slope \, panning width \, etc. You can also
+relinquish some control to randomization. Skidder can also sync with
+your song tempo & can be triggered by MIDI notes.;
+#X connect 0 0 2 0;
+#X connect 0 1 2 1;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 1;
+#X connect 5 0 0 3;
+#X connect 6 0 0 5;
+#X connect 7 0 0 7;
+#X connect 8 0 0 4;
+#X connect 9 0 0 6;
+#X connect 10 0 0 2;
+#X connect 11 0 0 1;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 0;
+#X connect 16 0 0 0;
+#X connect 17 0 11 0;

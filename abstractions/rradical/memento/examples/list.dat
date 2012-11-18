@@ -1,0 +1,24 @@
+temp1 4 , list1 , 100 100 100 100
+temp1 5 , list1 , -100 100 100 100
+temp1 6 , list1 , -100 100 100 -100
+temp1 7 , list1 , -100 100 -100 -100
+temp1 0 , list1 , 100 0 0 0
+temp1 2 , list1 , 0 100 100 0
+temp1 3 , list1 , 0 100 100 100
+temp1 1 , list1 , 0 100 0 0
+temp 4 , list1 , 0 1 0 1
+temp 4 , name , five
+temp 5 , list1 , 0 1 1 0
+temp 5 , name , six
+temp 6 , list1 , 0 1 1 1
+temp 6 , name , seven
+temp 7 , list1 , 1 0 0 0
+temp 7 , name , eight
+temp 0 , list1 , 0 0 0 1
+temp 0 , name , one
+temp 2 , list1 , 0 0 1 1
+temp 2 , name , three
+temp 3 , list1 , 0 1 0 0
+temp 3 , name , four
+temp 1 , list1 , 0 0 1 0
+temp 1 , name , two

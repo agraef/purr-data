@@ -1,0 +1,22 @@
+#N canvas 684 385 150 42 10;
+#N canvas 594 292 458 308 interna 0;
+#X obj 16 33 inlet;
+#X obj 18 228 model;
+#X text 12 5 Obj Model;
+#X obj 159 5 cnv 15 200 250 empty empty empty 5 8 1 10 -260390 -1 0
+;
+#X obj 311 15 inlet;
+#X obj 195 109 route file;
+#X obj 232 185 register-tail;
+#X connect 0 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 5 1 6 0;
+#X restore 13 52 pd interna;
+#X obj 13 29 inlet;
+#X obj 78 30 inlet;
+#X obj 2 1 cnv 5 128 16 empty empty 3D_Model 5 9 1 12 -128992 -1 0
+;
+#X connect 1 0 0 0;
+#X connect 2 0 0 1;
+#X coords 0 0 1 1 130 16 1;

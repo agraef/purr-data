@@ -1,0 +1,50 @@
+#N canvas 44 85 957 492 10;
+#X obj 58 31 cnv 15 15 15 empty empty vasp 0 10 1 14 -262144 -1 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufvasp1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 594 161 graph;
+#N canvas 0 0 396 220 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufvasp1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 818 420 pd init;
+#X obj 57 375 vasp.update;
+#X obj 57 354 vasp.noise;
+#X text 57 66 stores and outputs a vasp;
+#X obj 58 231 vasp.update;
+#X obj 58 205 vasp.= 0.35;
+#X obj 58 174 vasp 50000 bufvasp1 10000;
+#X obj 57 332 vasp;
+#X msg 101 287 set vasp 2000 bufvasp1 66666;
+#X msg 125 310 vasp 2000 bufvasp1 11111;
+#X text 58 83 syntax: vasp [length] [name] [offset] [channel] \, etc.
+;
+#X obj 58 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 57 286 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X text 231 169 output vasp referencing a buffer region;
+#X text 231 183 with length of 50000 and starting at frame 10000;
+#X text 231 208 set region to value 0.35;
+#X text 230 232 update graphics;
+#X text 231 149 <-- click to start command chain;
+#X text 292 287 1 use "set" to define region non triggering \, then
+bang;
+#X text 291 307 2 right inlet: alternatively to set message;
+#X text 230 362 bang triggers output of predefined vasp;
+#X text 56 101 (see syntax description of vasp message in VASP-HELP)
+;
+#X obj 59 429 VASP-HELP;
+#X connect 4 0 3 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 4 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 1;
+#X connect 13 0 8 0;
+#X connect 14 0 9 0;

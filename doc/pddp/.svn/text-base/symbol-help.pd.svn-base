@@ -1,0 +1,129 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header symbol 3 12 0 18
+-204280 -1 0;
+#X obj 0 317 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 246 494 363 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 45 DESCRIPTION store a symbol;
+#X text 12 65 INLET_0 anything;
+#X text 12 85 INLET_1 symbol;
+#X text 12 105 OUTLET_0 symbol;
+#X text 12 5 KEYWORDS control storage symbol_op;
+#X text 12 185 RELEASE_DATE 1997;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 24 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X restore 500 597 pd META;
+#X obj 0 475 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 517 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 74 346 428 238 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [symbol] Related Objects;
+#X obj 23 67 list;
+#X obj 63 67 int;
+#X obj 94 67 float;
+#X obj 137 67 select;
+#X obj 187 67 makefilename;
+#X text 21 38 Native Pd Objects;
+#X text 21 108 Externals;
+#X obj 19 188 pddp/helplink ext13/ftos;
+#X obj 19 208 pddp/helplink iemlib/unsymbol;
+#X obj 20 168 pddp/helplink zexy/index;
+#X obj 20 148 pddp/helplink zexy/makesymbol;
+#X obj 20 128 pddp/helplink zexy/lister;
+#X restore 102 597 pd Related_objects;
+#X obj 78 326 cnv 17 3 110 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 484 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 442 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 481 3 symbol;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/symbol -text
+pdpedia: symbol;
+#X text 11 23 store a symbol;
+#X text 98 325 bang;
+#X text 98 350 symbol;
+#X text 98 441 symbol;
+#X text 98 483 symbol;
+#X text 168 483 - the symbol is output when a message is received at
+the left inlet of [symbol].;
+#X obj 51 220 symbol;
+#X symbolatom 51 279 10 0 0 0 - - -;
+#X obj 60 256 print;
+#X msg 63 82 dog;
+#X msg 71 105 cat;
+#X msg 84 132 symbol horse;
+#X msg 98 154 symbol wolf;
+#X msg 107 177 symbol pig;
+#X text 168 325 - sending a bang will force [symbol] to output its
+stored stored value.;
+#X text 275 120 IMPORTANT NOTE;
+#X obj 302 156 symbol;
+#X symbolatom 302 195 10 0 0 0 - - -;
+#X text 270 213 Careful not to get them confused.;
+#X text 270 175 is very different than the symbol box:;
+#X text 270 136 the [symbol] object:;
+#X msg 51 57 bang;
+#N canvas 78 344 428 194 Symbol_vs_Symbol_Box 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [symbol] vs. the Symbol Box;
+#X obj 23 125 symbol;
+#X msg 23 103 list 12;
+#X text 68 125 outputs "symbol list";
+#X msg 217 103 list 12;
+#X text 283 125 outputs "symbol float";
+#X symbolatom 217 125 10 0 0 0 - - -;
+#X text 20 38 The [symbol] object and the symbol box handle the "list"
+selector inconsistently.;
+#X text 23 76 [symbol] output;
+#X obj 23 147 print from_[symbol];
+#X obj 217 147 print from_symbol_box;
+#X text 216 76 symbol box output;
+#X connect 2 0 10 0;
+#X connect 3 0 2 0;
+#X connect 5 0 7 0;
+#X connect 7 0 11 0;
+#X restore 102 567 pd Symbol_vs_Symbol_Box;
+#X text 168 535 - (optional) initializes the stored symbol.;
+#X text 80 535 1) symbol atom;
+#X text 121 259 For this example \, I have used the symbol box to display
+the value that was stored in the [symbol] object \, as well as printing
+the value to the console.;
+#X text 167 441 - a symbol to the right inlet is stored. (Note: symbol
+atoms like "foo" will not be accepted.);
+#X text 105 49 The [symbol] object stores a symbol (which is set either
+by its creation argument or by the right inlet) and then outputs that
+symbol when it receives a "bang" message or a new symbol in its left
+inlet.;
+#X text 168 391 - all other messages to the left inlet of symbol will
+store and output the selector. E.g. \, a float will output the word
+"float" \, a list will output "list" \, a pointer will output "pointer"
+\, "foo bar" will output "foo" \, and so forth.;
+#X text 168 350 - a symbol sent to the left inlet will be stored and
+output. Symbol atoms (e.g. \, "foo") are accepted and given the "symbol"
+selector.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X text 98 391 anything;
+#X connect 19 0 20 0;
+#X connect 19 0 21 0;
+#X connect 22 0 19 0;
+#X connect 23 0 19 0;
+#X connect 24 0 19 1;
+#X connect 25 0 19 1;
+#X connect 26 0 19 1;
+#X connect 34 0 19 0;

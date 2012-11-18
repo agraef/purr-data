@@ -1,0 +1,16 @@
+#N canvas 407 321 520 293 10;
+#X msg 62 144 1 0 1 0 1 1 0 1 0 1 0 1;
+#X obj 61 118 loadbang;
+#X msg 62 223 1 3 5 6 8 10 12;
+#X text 39 26 Description: Converts a list of boolean values to a list
+containing the index of values that are TRUE (1) in the first list
+;
+#X msg 185 116 0 0 0 0 1 1 1 1;
+#X obj 62 198 cyclone/prepend set;
+#X text 44 75 tags: lists;
+#X obj 62 173 mtl/listBoolToPos;
+#X connect 0 0 7 0;
+#X connect 1 0 0 0;
+#X connect 4 0 7 0;
+#X connect 5 0 2 0;
+#X connect 7 0 5 0;

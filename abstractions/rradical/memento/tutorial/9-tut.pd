@@ -1,0 +1,20 @@
+#N canvas 393 272 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Remote_Control_with_OSC 20 12
+1 14 -262144 -66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X text 98 476 First select a FILE \, then SAVE or RESTORE!!!;
+#X obj 96 392 careGUI MoreStates.dat;
+#X obj 47 163 OSCAbstraction /OSCState;
+#X text 45 62 THere even is a remote control built into Memento. It
+is done using Open Sound Control OSC. OSC requires \, that send- and
+receive-names start with a slash '/'. So now our state name (the argument
+of OSCAbstration) has a slash \, and if you look inside \, you'll see
+\, that all commun objects now also start with a slash.;
+#X msg 378 10 10;
+#X text 44 314 Also the abstraction now has gotten an inlet which accepts
+OSC-messages. This needs to be connected to the originator's right
+inlet \, its 'OSC-inlet'. Those messages are always send to a receive
+called \$0-OSC. Just always use it that way. See the next part for
+an example useage.;
+#X connect 7 0 1 0;

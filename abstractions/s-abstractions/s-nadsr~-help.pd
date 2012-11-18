@@ -1,0 +1,38 @@
+#N struct 1363template float x float y array 1363arrayvals 1363arraytemplate
+;
+#N struct 1363arraytemplate float x float y;
+#N struct 1363template-marker float pos;
+#N canvas 215 178 742 458 10;
+#N canvas 457 385 450 300 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD t/length 250 \; SSSAD t/pos 80 \; SSSAD t/envelope
+3 18 21 72 51 33 92 48 131 43 195 83 \; SSSAD_ADMIN set \;;
+#X connect 0 0 1 0;
+#X restore 628 52 pd datastore;
+#X obj 628 73 sssad/datastore;
+#X msg 112 151 60 127;
+#X msg 167 151 60 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array output 11025 float 2;
+#X coords 0 127 11024 0 198 86 1;
+#X restore 352 223 graph;
+#X obj 112 340 tabwrite~ output;
+#X obj 112 181 t b l;
+#X obj 318 341 nbx 5 14 0 195 0 0 t/pos empty pos_send 0 -6 0 10 -262144
+-1 -1 140 256;
+#X obj 142 204 s-nadsr~ t;
+#X text 387 342 Control the sustain marker with a send.;
+#X text 34 151 Note on ->;
+#X text 203 151 <- Note off;
+#X text 350 112 Click me to load one created earlier ->;
+#X text 13 5 s-nadsr~ is not an ADSR envelope. It's a customiseable
+envelope which stops and starts from the sustain marker when sent midi
+pairs. A note-on midi message will play the start of the envelope up
+to the marker \, and the note-off midi message will play the end of
+the envelope. The output from the envelope will be scaled by the input
+midi volume (e.g. 0 to 127 for the loudest midi note possible).;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 6 0 5 0;
+#X connect 6 1 8 0;
+#X connect 8 0 5 0;

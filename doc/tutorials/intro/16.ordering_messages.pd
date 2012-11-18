@@ -1,0 +1,44 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty ordering_messages 20 12 0 24
+-228992 -66577 0;
+#X text 10 62 Officially \, the execution order in Pd is undefined.
+;
+#X text 10 88 The [trigger] object allows you to specify the order
+of messages are sent. If you need to make sure that one thing runs
+before another \, use [trigger]:;
+#X obj 61 149 cnv 15 50 25 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X obj 242 149 cnv 15 50 25 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X msg 395 259 now;
+#X msg 316 260 this;
+#X msg 237 260 makes;
+#X msg 158 260 sense;
+#X msg 249 151 bang;
+#X msg 69 151 bang;
+#X obj 250 178 trigger bang bang bang bang bang bang;
+#X obj 157 325 mapping/tolist;
+#X obj 157 372 pddp/print;
+#X msg 478 258 bang;
+#X msg 80 260 bang;
+#X connect 5 0 12 0;
+#X connect 6 0 12 0;
+#X connect 7 0 12 0;
+#X connect 8 0 12 0;
+#X connect 9 0 11 0;
+#X connect 10 0 14 0;
+#X connect 10 0 15 0;
+#X connect 10 0 6 0;
+#X connect 10 0 5 0;
+#X connect 10 0 8 0;
+#X connect 10 0 7 0;
+#X connect 11 0 15 0;
+#X connect 11 1 8 0;
+#X connect 11 2 7 0;
+#X connect 11 3 6 0;
+#X connect 11 4 5 0;
+#X connect 11 5 14 0;
+#X connect 12 0 13 0;
+#X connect 14 0 12 1;
+#X connect 14 0 12 0;
+#X connect 15 0 12 1;

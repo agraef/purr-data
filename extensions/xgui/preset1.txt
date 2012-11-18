@@ -1,0 +1,12 @@
+~/sliders/sl1 coord 20 20 35 147
+~/sliders/sl1sdl coord 20 30 35 30
+~/sliders/sl2 coord 50 20 65 147
+~/sliders/sl2sdl coord 50 47 65 47
+~/sliders/sl3 coord 80 20 95 147
+~/sliders/sl3sdl coord 80 56 95 56
+~/sliders/sl4 coord 110 20 125 147
+~/sliders/sl4sdl coord 110 35 125 35
+~/sliders/o1074 coord 140 20 210 40
+~/sliders/o1092 coord 140 50 210 70
+~/sliders/o1110 coord 140 80 210 100
+~/sliders/o1128 coord 140 110 210 130

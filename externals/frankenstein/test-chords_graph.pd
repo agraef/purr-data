@@ -1,0 +1,46 @@
+#N canvas 241 61 710 346 12;
+#X msg 63 130 write test.graph;
+#X msg 93 158 read test.graph;
+#X obj 389 33 notein;
+#X obj 389 68 chord 59;
+#X msg 293 151 add \$1;
+#X obj 71 255 chords_graph;
+#X obj 293 123 symbol;
+#X obj 294 96 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 285 234 next 1;
+#X obj 366 165 symbol;
+#X obj 367 138 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 366 193 set \$1;
+#X msg 123 188 init 1;
+#X symbolatom 71 281 20 0 0 0 - - -;
+#X symbolatom 429 103 25 0 0 0 - - -;
+#N canvas 39 349 531 328 readme 0;
+#X text 59 31 howto populate the graph: play the chord \, when the
+output of [chord] is ok bang the "add" message. bang it each time you
+change chord \, it will store the transitions;
+#X text 56 120 howto ask for the next chord: play the chord \, bang
+the "set" message \, this will set the current chord without adding
+it to the graph's memory \, now bang the next 1 message. this chord_graph
+will respond with the chord you played most of the times after the
+current chord. you can send "next x" where x is from 0 to 1 \, 0 =
+max novelty \, 1= min novelty;
+#X text 56 259 you can save graph state sending the write message;
+#X restore 385 252 pd readme;
+#X connect 0 0 5 0;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 2 1 3 1;
+#X connect 3 2 6 1;
+#X connect 3 2 9 1;
+#X connect 3 2 14 0;
+#X connect 4 0 5 0;
+#X connect 5 0 13 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 0;
+#X connect 8 0 5 0;
+#X connect 9 0 11 0;
+#X connect 10 0 9 0;
+#X connect 11 0 5 0;
+#X connect 12 0 5 0;

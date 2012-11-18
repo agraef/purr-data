@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/cwiid/svn/!svn/ver/180/trunk/wminput/plugins/ir_ptr
+END
+ir_ptr.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/cwiid/svn/!svn/ver/180/trunk/wminput/plugins/ir_ptr/ir_ptr.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/cwiid/svn/!svn/ver/83/trunk/wminput/plugins/ir_ptr/Makefile.in
+END

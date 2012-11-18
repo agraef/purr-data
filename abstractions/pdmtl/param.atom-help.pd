@@ -1,0 +1,52 @@
+#N canvas 479 47 960 686 10;
+#X text 37 84 Inlet 2: Set but do not output.;
+#X text 34 123 Outlet 2: Parameter format.;
+#X text 649 217 -- CHOICE LIST --;
+#X text 42 33 Comments: Must be used with param.group;
+#X text 37 67 Inlet 1: Set and output.;
+#X text 31 108 Outlet 1: Value output.;
+#X text 42 7 Description: The basic PARAM element for floats \, symbols
+\, choice lists and toggles.;
+#X floatatom 42 188 5 0 0 0 - - -;
+#X text 679 145 argument 1: name;
+#X text 678 157 argument 2: start float value;
+#X text 677 169 argument 3: minimum value;
+#X text 676 181 argument 4: maximum value;
+#X text 215 228 argument 1: name;
+#X text 214 240 argument 2: start symbol value;
+#X obj 380 49 cnv 15 500 30 empty empty empty 20 12 0 14 -4034 -66577
+0;
+#X text 199 158 argument 1: name;
+#X text 198 170 argument 2: start float value;
+#X text 406 50 The type of parameter stored through a param.atom depends
+on the quantity and the type of its arguments.;
+#X text 247 140 -- FLOAT --;
+#X text 236 203 -- SYMBOL --;
+#X text 625 130 -- FLOAT IN A FIXED RANGED --;
+#X text 714 236 argument 1: name;
+#X text 227 271 -- TOGGLE (0/1) --;
+#X text 243 311 argument 1: name;
+#X text 716 248 argument 2: start symbol choice;
+#X text 639 265 argument 3 and more: the different choices;
+#X obj 468 532 param.gui;
+#X msg 468 476 param.atom.help;
+#X obj 528 510 bng 15 250 50 0 empty empty clear_gui 17 7 0 10 -262144
+-1 -1;
+#X text 242 351 In this special case \, a true is translated as a 1
+\, and a false as a 0;
+#X text 245 326 argument 2: true or false keyword that determines the
+start value.;
+#X text 143 415 The abstraction below contains an example of all the
+different types of param.atoms:;
+#X text 466 441 Click the message below to create and display the param.atom
+guis;
+#X obj 177 453 param.template @id param.atom.help;
+#X obj 462 161 param.atom range 0 0 127;
+#X obj 43 165 param.atom number 0;
+#X obj 46 234 param.atom text blabla;
+#X obj 466 243 param.atom choices lin exp log lin;
+#X obj 54 309 param.atom toggle1 true;
+#X obj 52 331 param.atom toggle2 false;
+#X connect 27 0 26 0;
+#X connect 28 0 26 1;
+#X connect 35 0 7 0;

@@ -1,0 +1,86 @@
+#N canvas 221 33 736 547 10;
+#X text 146 13 Generates randomly fluctuating envelope shapes of a
+given dynamic scale (defined by a min and a max velocity and a certain
+number of values) within a time scale (defined by a min and a max ramp
+time and a certain number of values). A rhythm bang set to the left
+inlet outputs a velocity value. A stop message sent to the same inlet
+will stop the whole process.;
+#X text 408 329 randomly chosen ramp time;
+#X floatatom 367 330 5 0 0 1 - - -;
+#X text 277 360 randomly chosen velocity destination;
+#X floatatom 243 360 4 0 0 1 - - -;
+#X floatatom 265 268 4 0 0 2 nr._of_values - -;
+#X floatatom 432 214 0 0 0 2 min_ramp_time - -;
+#X floatatom 432 247 0 0 0 2 max_ramp_time - -;
+#X floatatom 265 240 4 0 0 2 max_velocity - -;
+#X floatatom 265 210 4 0 0 2 min_veloc. - -;
+#X obj 120 191 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 120 401 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X text 262 177 dynamic scale - - -;
+#X text 427 177 ramp durations - - -;
+#X floatatom 120 336 4 0 0 1 velocity - -;
+#X text 501 518 1994 by Karlheinz Essl;
+#X obj 39 239 sel 0;
+#X msg 39 265 stop;
+#N canvas 380 246 576 346 musical 0;
+#X floatatom 140 224 0 0 0 0 - - -;
+#X floatatom 44 224 0 0 0 0 - - -;
+#X obj 44 140 brown-rhythm 50 1000 12 0.2;
+#X obj 44 188 brown-melody 21 104 0.25;
+#X msg 251 140 stop;
+#X obj 251 112 sel 0;
+#X obj 44 66 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 74 66 start stop;
+#X obj 44 252 play2 127 500 1 1;
+#X text 20 294 1994 by Karlheinz Essl;
+#X text 89 227 note;
+#X text 185 227 velocity;
+#X obj 44 162 t a a;
+#X obj 251 186 random-ramp-urn 10 127 5 250 2000 12;
+#X text 20 33 This is a very simple musical example for using the random-ramp-urn
+object:;
+#X connect 0 0 8 1;
+#X connect 1 0 8 0;
+#X connect 2 0 12 0;
+#X connect 3 0 1 0;
+#X connect 4 0 13 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 6 0 5 0;
+#X connect 12 0 3 0;
+#X connect 12 1 13 0;
+#X connect 13 0 0 0;
+#X restore 438 405 pd musical;
+#X text 153 191 start stop;
+#X obj 120 239 metro 150;
+#X obj 112 401 vsl 8 128 0 127 0 0 empty empty min_vel -30 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 135 401 vsl 8 128 0 127 0 0 empty empty max_vel 0 -8 0 8 -262144
+-1 -1 0 1;
+#X floatatom 432 280 4 0 0 2 nr._of_values - -;
+#X msg 210 141 random-ramp;
+#X text 144 109 As opposed to "random-ramp" \, this version performs
+a repetition check of the randomly chosen paramters.;
+#X text 145 142 See also:;
+#X obj 120 300 random-ramp-urn 10 127 5 250 2000 12;
+#X text 15 29 random-ramp-urn;
+#X connect 5 0 27 3;
+#X connect 6 0 27 4;
+#X connect 7 0 27 5;
+#X connect 8 0 22 0;
+#X connect 8 0 27 2;
+#X connect 9 0 21 0;
+#X connect 9 0 27 1;
+#X connect 10 0 16 0;
+#X connect 10 0 20 0;
+#X connect 14 0 11 0;
+#X connect 16 0 17 0;
+#X connect 17 0 27 0;
+#X connect 20 0 27 0;
+#X connect 23 0 27 6;
+#X connect 27 0 14 0;
+#X connect 27 1 4 0;
+#X connect 27 2 2 0;

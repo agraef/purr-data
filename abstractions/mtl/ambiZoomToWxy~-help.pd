@@ -1,0 +1,35 @@
+#N canvas 2 89 477 379 10;
+#X obj 50 220 readsf~ 4;
+#X msg 63 147 1;
+#X msg 63 168 0;
+#X msg 64 190 print;
+#X msg 50 122 open \$1;
+#X obj 50 98 openpanel;
+#X obj 50 77 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 97 147 Send it "1" to play once a file is opened.;
+#X obj 50 325 dac~ 1 2;
+#X text 19 3 Description: Encodes a quadraphonic sound from a Zoom
+H2 microphone to first order Ambisonics horizontal B-Format.;
+#X obj 50 252 mtl/ambiZoomToWxy~;
+#X text 20 37 tags: ambisonic;
+#X obj 50 287 mtl/ambiWxyToMono~ angle 90;
+#X obj 231 287 mtl/ambiWxyToMono~ angle 270;
+#X connect 0 0 10 0;
+#X connect 0 1 10 1;
+#X connect 0 2 10 2;
+#X connect 0 3 10 3;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 10 0 12 0;
+#X connect 10 0 13 0;
+#X connect 10 1 12 1;
+#X connect 10 1 13 1;
+#X connect 10 2 12 2;
+#X connect 10 2 13 2;
+#X connect 12 0 8 0;
+#X connect 13 0 8 1;

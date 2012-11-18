@@ -1,0 +1,37 @@
+#N canvas 269 180 515 460 12;
+#X obj 42 287 abstraction 1;
+#X obj 42 260 route 1 2;
+#X obj 75 314 abstraction 2;
+#X msg 141 338 1 \$1;
+#X obj 141 414 print handcode;
+#X text 41 19 this is - in short - the hand coded alternative to using
+[clone abstraction 2]. It looks rather easy but imagine this for 256
+instances of the abstraction...;
+#X floatatom 42 93 5 0 0;
+#X msg 42 207 \$1 \$2;
+#X floatatom 54 126 5 0 0;
+#X obj 54 153 t b f;
+#X obj 42 180 pack f f;
+#X text 107 124 input data;
+#X text 36 236 -----------------------------------------------;
+#X text 36 386 -----------------------------------------------;
+#X text 206 283 all this is inside clone;
+#X obj 42 409 dac~;
+#X text 98 93 number of instance;
+#X msg 174 361 2 \$1;
+#X connect 0 0 15 0;
+#X connect 0 0 15 1;
+#X connect 0 1 3 0;
+#X connect 1 0 0 0;
+#X connect 1 1 2 0;
+#X connect 2 0 15 0;
+#X connect 2 0 15 1;
+#X connect 2 1 17 0;
+#X connect 3 0 4 0;
+#X connect 6 0 10 0;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 1 10 1;
+#X connect 10 0 7 0;
+#X connect 17 0 4 0;

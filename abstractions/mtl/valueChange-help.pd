@@ -1,0 +1,36 @@
+#N canvas 365 67 557 348 10;
+#X text 27 -173 Description: Eliminates redundancy in a shared float
+value.;
+#X obj 181 96 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 387 87 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 25 -152 tags: routing;
+#X text 26 -106 Outlet 1:;
+#X text 81 -91 float: outputs the value if value changed locally.;
+#X text 85 -75 bang: outputs the current value.;
+#X obj 36 67 mtl/valueChange \$0local;
+#X obj 240 71 mtl/valueChange \$0local;
+#X obj 80 45 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 292 43 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 35 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 36 95 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 240 45 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 241 102 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 26 -125 Argument 1: The name of the shared float.;
+#X text 23 -50 Outlet 2: float outputs 1 if the value changed \, 0
+if not.;
+#X connect 7 0 12 0;
+#X connect 7 1 1 0;
+#X connect 8 0 14 0;
+#X connect 8 1 2 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;
+#X connect 11 0 7 0;
+#X connect 13 0 8 0;

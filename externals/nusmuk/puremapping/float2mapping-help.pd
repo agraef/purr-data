@@ -1,0 +1,26 @@
+#N canvas 92 136 319 447 10;
+#X obj 90 90 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 51 38 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 5900 1;
+#X floatatom 104 229 5 0 0 0 - - -;
+#X obj 51 234 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 4180 1;
+#X floatatom 158 230 5 0 0 0 - - -;
+#X text 108 249 min;
+#X text 165 250 max;
+#X floatatom 122 171 5 0 0 0 - - -;
+#X floatatom 176 172 5 0 0 0 - - -;
+#X text 126 151 min;
+#X text 183 152 max;
+#X text 112 90 learn;
+#X msg 90 112 calibrate \$1;
+#X obj 51 195 float2mapping 0.3 0.8;
+#X connect 0 0 12 0;
+#X connect 1 0 13 0;
+#X connect 7 0 13 1;
+#X connect 8 0 13 2;
+#X connect 12 0 13 0;
+#X connect 13 0 3 0;
+#X connect 13 1 2 0;
+#X connect 13 2 4 0;

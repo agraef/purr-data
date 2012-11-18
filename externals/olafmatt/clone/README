@@ -1,0 +1,40 @@
+clone 0.0.6 - Pure Data 'abstraction cloner' external
+copyright (c) 2002 by Olaf Matthes
+
+clone is an 'abstraction cloning' external for pd (by Miller Puckette). It allows 
+to have several instances of one abstraction being executed in one object. Input 
+data gets routed to the independent instances according to the first element.
+
+This object is based on 'rabin~' written by Krzysztof Czaja.
+
+
+Compilation:
+
+In the makefile adjust the path to where your m_pd.h can be found (on Win: additionally
+change the path to MS VC++). 
+Linux: type 'make pd_linux' & (optionally) 'make install'
+MAC OS X: type 'make pd_darwin' & (optionally) 'make install'
+WinNT: type 'nmake pd_nt'
+
+
+Restrictions:
+
+- a maximum of 8 signal outlets/inlets and a maximum of 256 control 
+  outlets/inlets allowed
+- order of outlets reflects order of creation, not order in terms 
+  of position on canvas; signal outlets (if any) come first
+- deleting or adding any inlets / outlets from abstraction crashes Pd -> build your 
+  abstraction before loading it into clone!!!
+- externals have to be loaded using -lib flag, otherwise clone will not recognise
+  any externals in your abstraction
+- no abstractions in the abstraction allowed
+- changing font size in abstraction crashes Pd
+- there are probably more things that crash Pd
+
+For a detailed description how to use clone see the file readme.pdf and the help
+patches supplied.
+
+
+clone is published under GPL terms. See file LICENSE for details.
+Get latest version at http://www.akustische-kunst.org/puredata/clone/
+Send bugs to info@akustische-kunst.org

@@ -1,0 +1,18 @@
+#N canvas 410 111 454 304 12;
+#X obj 9 205 netsend;
+#X msg 9 7 connect localhost 4877;
+#X floatatom 8 235 5 0 0;
+#X msg 9 34 disconnect;
+#X msg 110 35 send pd/ ~/ add_canvas my_canvas;
+#X msg 110 62 send pd/ ~/my_canvas add_seg my_seg;
+#X msg 110 90 send pd/ ~/my_canvas/my_seg move 2 2;
+#X msg 132 145 send pd/ ~/my_canvas/my_seg width \$1;
+#X floatatom 132 119 5 0 0;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;

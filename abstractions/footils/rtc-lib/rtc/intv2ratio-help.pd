@@ -1,0 +1,14 @@
+#N canvas 3 48 373 313 10;
+#X floatatom 55 128 4 0 0 1 interval - -;
+#X obj 55 158 intv2ratio;
+#X text 20 234 1994 by Karlheinz Essl;
+#X text 20 58 Converts an interval (int = tempered or float = any mirco-interval)
+into a ratio.;
+#X text 20 26 intv2ratio;
+#X floatatom 55 194 4 0 0 1 ratoi - -;
+#X text 130 195 ratio;
+#X msg 86 90 ratio2intv;
+#X text 20 90 see also:;
+#X msg 195 23 Harmony;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;

@@ -1,0 +1,13 @@
+#N canvas 120 81 750 330 10;
+#X floatatom 93 91 5 0 0 0 - - -;
+#X floatatom 93 169 5 0 0 0 - - -;
+#X text 144 89 Length in milliseconds;
+#X text 145 169 Number of samples;
+#X text 17 8 Description: Converts a millisecond interval to a it's
+corresponding number of samples.;
+#X obj 93 130 mtl/msToSmp;
+#X text 18 42 tags: conversion;
+#X text 208 120 By default \, the conversion is done with Pd's samplerate.
+You can override this by sending a list: ms samplerate;
+#X connect 0 0 5 0;
+#X connect 5 0 1 0;

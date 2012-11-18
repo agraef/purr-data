@@ -1,0 +1,91 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header clip~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 357 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 245 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 45 DESCRIPTION restrict a signal to lie between two limits
+;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 float;
+#X text 12 105 INLET_2 float;
+#X text 12 205 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 449 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 366 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 69 480 428 108 Related_objects 0;
+#X obj 23 36 min~;
+#X obj 70 36 max~;
+#X obj 118 36 clip;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [clip~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 98 365 signal;
+#X obj 78 458 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 458 signal;
+#X obj 486 3 clip~;
+#X obj 460 20 pddp/pddplink http://wiki.puredata.info/en/clip~ -text
+pdpedia: clip~;
+#X obj 41 177 clip~ -0.5 0.5;
+#X obj 41 117 osc~ 1000;
+#X obj 57 226 metro 500;
+#X text 209 149 inlets to reset clip range;
+#X floatatom 101 149 4 0 0 0 - - -;
+#X floatatom 162 150 4 0 0 0 - - -;
+#X text 176 177 creation arguments initialize clip range;
+#X text 183 250 <- graph the output;
+#X obj 78 396 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 395 float;
+#X obj 78 421 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 420 float;
+#X obj 57 203 loadbang;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 100 float 0;
+#X coords 0 1 100 -1 200 100 1 0 0;
+#X restore 343 238 graph;
+#X text 11 23 restrict a signal to lie between two limits;
+#X text 168 365 - an incoming signal at the left inlet will be clipped
+to lie between the two limits.;
+#X text 168 458 - outputs the clipped signal.;
+#X text 168 505 - (optional) initial minimum value beyond which to
+clip the signal.;
+#X text 168 535 - (optional) initial maximum value beyond which to
+clip the signal.;
+#X text 80 505 1) float;
+#X text 80 535 2) float;
+#X text 81 67 The [clip~] object passes its signal input to its output
+\, clipping it to lie between two limits.;
+#X text 168 395 - minimum value below which the incoming signal is
+clipped.;
+#X text 168 420 - maximum value above which the incoming signal is
+clipped.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 41 250 tabwrite~ \$0-array;
+#X connect 14 0 40 0;
+#X connect 15 0 14 0;
+#X connect 16 0 40 0;
+#X connect 18 0 14 1;
+#X connect 19 0 14 2;
+#X connect 26 0 16 0;

@@ -1,0 +1,9 @@
+#N canvas 63 44 284 223 10;
+#X obj 31 125 outlet;
+#X obj 31 44 inlet;
+#X obj 31 68 expr cos($f1/127.*3.14159);
+#X obj 31 98 expr_scale 1 -1 0 127;
+#X text 33 160 1998 by Karlheinz Essl;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;

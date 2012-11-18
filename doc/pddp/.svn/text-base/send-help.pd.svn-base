@@ -1,0 +1,186 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header send 3 12 0 18 -204280
+-1 0;
+#X obj 0 240 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 54 246 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Dave Sabine \, September 12 \, 2003
+. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 25 KEYWORDS control nonlocal;
+#X text 12 65 DESCRIPTION send messages without patch cords;
+#X text 12 5 ALIAS s;
+#X text 12 85 INLET_0 anything;
+#X text 12 105 INLET_1 symbol;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 333 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 375 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 438 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 95 291 428 315 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [send] Related Objects;
+#X obj 23 43 receive~;
+#X obj 88 43 send~;
+#X obj 194 43 throw~;
+#X obj 249 43 catch~;
+#X obj 23 74 tabreceive~;
+#X obj 111 74 tabsend~;
+#X obj 180 74 netsend;
+#X obj 247 74 netreceive;
+#X obj 304 43 value;
+#X obj 134 43 receive;
+#X text 20 109 Externals and other object libraries;
+#X obj 20 168 pddp/helplink maxlib/remote;
+#X obj 20 208 pddp/helplink maxlib/dist;
+#X text 106 188 <- which library? (No help patch exists);
+#X text 106 227 <- which library?;
+#X text 106 247 <- which library?;
+#X obj 20 268 pddp/helplink maxlib/netdist;
+#X obj 20 128 pddp/helplink ggee/streamout~;
+#X obj 20 148 pddp/helplink ext13/send13~;
+#X obj 20 188 pddp/helplink sendlocal;
+#X obj 20 228 pddp/helplink sendOSC;
+#X obj 20 248 pddp/helplink shoutcast~;
+#X obj 20 288 pddp/helplink motex/system;
+#X restore 102 597 pd Related_objects;
+#X obj 78 342 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 466 3 send;
+#X text 498 3 or;
+#X obj 521 3 s;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/send -text
+pdpedia: send;
+#X obj 52 124 s;
+#X floatatom 52 100 5 0 0 0 - - -;
+#X floatatom 284 95 5 0 0 0 - - -;
+#X obj 284 66 r;
+#X floatatom 339 95 5 0 0 0 - - -;
+#X obj 339 66 r;
+#X floatatom 390 95 5 0 0 0 - - -;
+#X obj 390 66 r;
+#X floatatom 52 167 5 0 0 0 - - -;
+#X floatatom 277 177 5 0 0 0 - - -;
+#X floatatom 348 177 5 0 0 0 - - -;
+#X floatatom 423 177 5 0 0 0 - - -;
+#X text 51 147 with creation argument;
+#X obj 52 191 s dave;
+#X obj 277 148 r dave;
+#X obj 348 148 r dave;
+#X floatatom 152 168 5 0 0 0 - - -;
+#X obj 423 148 r hans;
+#X obj 152 192 s hans;
+#X obj 78 249 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 247 anything;
+#X obj 78 291 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 289 symbol;
+#X text 168 289 - if [send] is created without an argument \, the right
+inlet can be used to dynamically change the send/receive name. (See
+example above).;
+#X obj 112 124 s;
+#X floatatom 112 66 5 0 0 0 - - -;
+#X msg 157 66 symbol dave;
+#X msg 157 94 symbol hans;
+#X text 98 341 (none);
+#X text 168 341 - all messages are sent to a corresponding [receive]
+object with the same name.;
+#X obj 98 442 pddp/pddplink all_about_send_n_receive.pd -text all_about_send_n_receive
+;
+#N canvas 64 68 428 493 Dynamic_send_vs_messages 0;
+#X text 20 42 Consider this:;
+#X floatatom 115 43 5 0 0 0 - - -;
+#X floatatom 171 43 5 0 0 0 - - -;
+#X obj 115 69 s dave;
+#X obj 171 69 s hans;
+#X obj 264 43 r dave;
+#X obj 320 43 r hans;
+#X floatatom 264 67 5 0 0 0 - - -;
+#X floatatom 320 67 5 0 0 0 - - -;
+#X text 20 112 Now consider this:;
+#X floatatom 139 114 5 0 0 0 - - -;
+#X floatatom 208 115 5 0 0 0 - - -;
+#X msg 139 142 \; dave \$1;
+#X msg 208 142 \; hans \$1;
+#X text 20 232 And to complicate things a little more \, and offer
+some interesting functionality \, consider the following:;
+#X obj 264 90 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 320 90 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 23 312 \; \$1 42;
+#X text 20 184 In this example \, the message box contains a Pd command
+which effectively sends the value of the variable (\$1) to either 'dave'
+or 'hans'.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [send] Send using [send] of message? Dynamic [send]?;
+#X msg 23 274 symbol dave;
+#X msg 107 274 symbol hans;
+#X text 66 302 In this example \, I have created a single routine which
+acts as a 'dynamic' send object. The variable (\$1) in this message
+box is replaced by the incoming symbol. The two patches below do the
+same thing but with the [send] object:;
+#X msg 162 364 symbol dave;
+#X msg 171 386 symbol hans;
+#X obj 162 467 send;
+#X obj 162 440 42;
+#X obj 162 413 t b a;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 15 0;
+#X connect 8 0 16 0;
+#X connect 10 0 12 0;
+#X connect 11 0 13 0;
+#X connect 21 0 17 0;
+#X connect 22 0 17 0;
+#X connect 24 0 28 0;
+#X connect 25 0 28 0;
+#X connect 27 0 26 0;
+#X connect 28 0 27 0;
+#X connect 28 1 26 1;
+#X restore 101 567 pd Dynamic_send_vs_messages;
+#X text 11 23 send messages without patch cords;
+#X text 168 393 - specifies the send/receive name. If no arguments
+are provided \, an extra inlet is available to dynamically set the
+send/receive name.;
+#X text 168 247 - when [send] is created with an argument \, it has
+a single inlet which accepts any message as input. The input is sent
+to all [receive] objects with the same name (argument).;
+#X text 80 393 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 457 pddp/pddplink all_about_scope_and_locality.pd -text all_about_scope_and_locality
+;
+#X text 98 493 doc/1.manual/x5.htm;
+#X text 98 478 doc/1.manual/x2.htm;
+#X obj 97 515 pddp/pddplink ../2.control.examples/09.send_receive.pd
+-text doc/2.control.examples/09.send_receive.pd;
+#X obj 97 530 pddp/pddplink ../2.control.examples/10.more.messages.pd
+-text doc/2.control.examples/10.more.messages.pd;
+#X obj 97 545 pddp/pddplink ../2.control.examples/13.locality.pd -text
+doc/2.control.examples/13.locality.pd;
+#X connect 14 0 13 0;
+#X connect 16 0 15 0;
+#X connect 18 0 17 0;
+#X connect 20 0 19 0;
+#X connect 21 0 26 0;
+#X connect 27 0 22 0;
+#X connect 28 0 23 0;
+#X connect 29 0 31 0;
+#X connect 30 0 24 0;
+#X connect 38 0 37 0;
+#X connect 39 0 37 1;
+#X connect 40 0 37 1;

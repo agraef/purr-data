@@ -1,0 +1,34 @@
+#N canvas 452 388 367 355 10;
+#X text 7 4 [beat2frac];
+#X text 8 27 Given a beat division \, outputs the length as a fraction
+of a quarter note \, so that multiplied by 60secs/BPM gives length
+in seconds of a beat of that division.;
+#X msg 24 75 1/4;
+#X floatatom 174 180 5 0 0 0 - - -;
+#X msg 174 149 90;
+#X obj 64 255 *;
+#X obj 174 217 expr 60000 / $f1;
+#X floatatom 64 294 8 0 0 0 ms - -;
+#X msg 207 149 120;
+#X msg 43 96 1/4T;
+#X obj 64 146 beat2frac;
+#X obj 64 234 f;
+#X obj 89 234 t b a;
+#X text 251 309 2008 Luke Iannini;
+#X text 251 323 proyekto.net;
+#X text 75 95 also accepts triplets (T or t);
+#X text 211 171 Tempo;
+#X text 97 116 accepts any arbitrary division;
+#X msg 64 117 9/17;
+#X connect 2 0 10 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 12 0;
+#X connect 8 0 3 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 5 0;
+#X connect 12 0 11 0;
+#X connect 12 1 5 1;
+#X connect 18 0 10 0;

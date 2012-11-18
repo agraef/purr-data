@@ -1,0 +1,20 @@
+#N canvas 407 257 429 268 10;
+#X obj 79 123 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 79 166 debounce_b 3000;
+#X floatatom 164 124 5 0 0 0 - - -;
+#X obj 79 189 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 164 188 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 145 98 duration (ms);
+#X text 303 208 la Kitchen;
+#X text 303 225 Charles Verron;
+#X text 302 192 2004_03_18;
+#X text 29 43 until the specified duration in ms;
+#X text 29 19 Debounce_b : after receiving a bang \, it blocks the
+input;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 4 0;
+#X connect 2 0 1 1;

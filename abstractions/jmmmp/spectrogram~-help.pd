@@ -1,0 +1,17 @@
+#N canvas 53 147 704 415 10;
+#X text 12 387 Released under the BSD License;
+#X text 576 155 Outlets;
+#X text 576 105 Inlets;
+#X text 575 125 - Audio to analyse;
+#X text 576 205 GUI;
+#X text 576 225 - Zoom control;
+#X text 576 175 - Same as inlet;
+#X text 12 367 (C) 2009 João Pais - jmmmpais@googlemail.com;
+#X obj 18 106 spectrogram~;
+#X text 11 11 [spectrogram~] - Spectrogram with 512 bins resolution
+;
+#X text 12 30 Spectrum analyser based on M. Puckette's tutorial patch.
+Harmonic content is analysed in 512 bins resolution \, 20 times a second.
+Tested on 44.1KHz.;
+#X obj 18 76 noise~;
+#X connect 11 0 8 0;

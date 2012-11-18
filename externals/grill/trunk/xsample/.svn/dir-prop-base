@@ -1,0 +1,12 @@
+K 10
+svn:ignore
+V 64
+pd-msvc
+max-cygwin
+max-mingw
+max-msvc
+pd-bcc
+pd-cygwin
+pd-mingw
+
+END

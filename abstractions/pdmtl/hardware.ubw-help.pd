@@ -1,0 +1,87 @@
+#N canvas 0 0 1001 710 10;
+#X msg 39 799 0 0 0 1 0 0 0 0;
+#X obj 39 766 flow.prepend set;
+#X obj 148 607 flow.prepend set;
+#X msg 107 74 connect /dev/ttyACM0;
+#X obj 109 692 route A B C D E;
+#X obj 163 764 flow.prepend set;
+#X obj 285 765 flow.prepend set;
+#X obj 406 766 flow.prepend set;
+#X obj 531 768 flow.prepend set;
+#X msg 406 799 0 0 0 0 0 0 0 0;
+#X msg 163 797 0 0 0 0 0 0 0 0;
+#X msg 198 104 R;
+#X msg 209 129 V;
+#X text 258 244 Configure pic18f4550 (portA all inputs \, portB all
+outputs \, portC all inputs \, portD all outputs \, portE all inputs
+\, 12 analog inputs);
+#X text 257 185 Configure pic18f2550 or pic18f2455 (portA all inputs
+\, portB all outputs \, portC all inputs \, 12 analog inputs);
+#X text 228 103 Reset;
+#X text 236 126 Version;
+#X obj 175 579 print UBW;
+#X msg 275 331 PO B 0 1&PO B 1 1;
+#X text 385 330 Set pin 0 & 1 of portB HIGH (when sending multiple
+commands \, there must be no spaces before or after the '&').;
+#X msg 234 158 CU 1 0;
+#X text 281 157 Turns of the UBW's OK response.;
+#X msg 531 801 0 0 0 0 0 0 0 0;
+#X msg 284 401 T 50 1;
+#X msg 288 371 T 100 0;
+#X msg 285 427 T 20 0&T 20 1;
+#X msg 252 216 configuration 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1
+1 1 1 1 1 12;
+#X msg 261 284 configuration 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1
+1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 12;
+#X msg 292 452 T 0 0&T 0 1;
+#X text 411 592 You can use all of the UBW's commands as long as you
+replace all commas by spaces instead. See the UBW's firmware D documentation
+for more commands.;
+#X msg 291 529 T 20 0;
+#X msg 338 529 T 20 1;
+#X obj 292 502 t b b;
+#X obj 343 509 delay 10;
+#X obj 292 482 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 286 798 1 1 0 0 0 1 0 0;
+#X text 339 369 Auto-polls digitals every 100 ms;
+#X text 336 397 Auto-polls analogs every 50 ms;
+#X text 376 425 Auto-polls analogs and digitals every 20 ms;
+#X text 372 451 Turn off auto-polling.;
+#X text 399 505 Sometimes it is better to activate the auto-polling
+of the digitals and analogs with a delay in between.;
+#X msg 148 657;
+#X obj 107 555 hardware.ubw;
+#X text 77 20 Description: Interface for the UBW(http://greta.dhs.org)
+;
+#X connect 1 0 0 0;
+#X connect 2 0 41 0;
+#X connect 3 0 42 0;
+#X connect 4 0 1 0;
+#X connect 4 1 5 0;
+#X connect 4 2 6 0;
+#X connect 4 3 7 0;
+#X connect 4 4 8 0;
+#X connect 5 0 10 0;
+#X connect 6 0 35 0;
+#X connect 7 0 9 0;
+#X connect 8 0 22 0;
+#X connect 11 0 42 0;
+#X connect 12 0 42 0;
+#X connect 18 0 42 0;
+#X connect 20 0 42 0;
+#X connect 23 0 42 0;
+#X connect 24 0 42 0;
+#X connect 25 0 42 0;
+#X connect 26 0 42 0;
+#X connect 27 0 42 0;
+#X connect 28 0 42 0;
+#X connect 30 0 42 0;
+#X connect 31 0 42 0;
+#X connect 32 0 30 0;
+#X connect 32 1 33 0;
+#X connect 33 0 31 0;
+#X connect 34 0 32 0;
+#X connect 42 0 4 0;
+#X connect 42 1 2 0;
+#X connect 42 2 17 0;

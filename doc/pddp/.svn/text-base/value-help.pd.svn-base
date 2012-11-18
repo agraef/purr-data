@@ -1,0 +1,143 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header value 3 12 0 18
+-204280 -1 0;
+#X obj 0 284 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 45 219 494 391 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 26 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 25 KEYWORDS control storage nonlocal;
+#X text 12 65 DESCRIPTION nonlocal shared value (named variable);
+#X text 12 5 ALIAS v;
+#X text 12 85 INLET_0 float bang;
+#X text 12 105 OUTLET_0 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 379 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 421 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 66 452 428 139 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [value] Related Objects;
+#X obj 23 43 send;
+#X obj 56 43 receive;
+#X text 20 76 External Objects;
+#X obj 110 43 expr;
+#X obj 20 96 pddp/helplink motex/getenv;
+#X restore 102 597 pd Related_objects;
+#X obj 78 293 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 322 float;
+#X text 98 352 list;
+#X text 98 387 float;
+#X obj 78 388 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/value -text
+pdpedia: value;
+#X obj 456 3 value;
+#X obj 516 3 v;
+#X text 494 3 or;
+#X text 11 23 nonlocal shared value (named variable);
+#N canvas 57 148 428 418 scope 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 20 38 Understanding "scope" is important while developing programmatic
+applications. In Pd there are three levels of "scope":;
+#X text 31 81 1 Local Scope: all objects \, subroutines \, data \,
+and variables which exist within a single patch on a single computer
+and do not communicate with other active Pd patches.;
+#X text 29 137 2 Global Scope: all objects \, subroutines \, data and
+variables which exist within single or multiple patches on a single
+computer which communicate with other active Pd patches.;
+#X text 20 260 As a general rule \, all things are considered "local"
+in Pd and if communication between Pd windows is necessary \, then
+[send]/[receive] \, or [throw]/[catch] objects are used. Likewise \,
+if communication is necessary between many computers running Pd \,
+then objects such as [netsend]/[netreceive] are used.;
+#X text 20 347 The exception to the above rule is [value]. This object
+is a container which makes its data known to all [value] objects of
+the same name in all active Pd windows on a single computer: hence
+\, GLOBAL scope.;
+#X text 30 199 3 Network (Universal) Scope: all objects \, subroutines
+\, data and variables which exist within single or multiple patches
+on two or more computers which communicate with other active Pd patches
+via a network.;
+#X text 8 2 [value] Scope in Pd;
+#X restore 102 574 pd scope;
+#X text 98 47 [value] is a container. It holds a global variable numeric
+value and can be "polled" at any time with a "bang" message. In other
+words \, [value] is a place where numbers can be stored and then accessed
+by all active Pd windows.;
+#N canvas 73 60 428 231 global_values 0;
+#X obj 173 168 v my_variable;
+#X floatatom 173 190 5 0 0 0 - - -;
+#X obj 173 127 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 191 145 5 0 0 0 - - -;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [value] Sub-patch to demonstrate global values;
+#X text 20 38 To show how global scope works \, "bang" the [value]
+object to retreive the current number. While you're in the sub-patch
+\, change the number and then return to the main patch window and click
+the "bang". You'll quickly see how this variable can be retreived or
+reset in any active Pd window.;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X restore 101 261 pd global_values;
+#X text 16 102 To assign a numeric value to that variable \, a number
+box or message can be used \, as follows:;
+#X obj 19 179 value my_variable;
+#X msg 37 156 42;
+#X floatatom 19 203 5 0 0 0 - - -;
+#X floatatom 19 136 5 0 0 0 - - -;
+#X obj 271 188 value my_variable;
+#X floatatom 271 212 5 0 0 0 - - -;
+#X obj 271 168 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 63 135 play with me;
+#X text 62 155 or click me;
+#X text 186 133 Notice that the number is not outputted to the outlet
+\; it is merely stored. To retreive the number \, send a "bang" \,
+like below:;
+#X text 168 322 - a float to the inlet sets all [value] objects that
+share the same name to the incoming value.;
+#X text 168 352 - a list is truncated to the first element.;
+#X text 98 292 bang;
+#X text 168 292 - sending a bang to a particular [value] object will
+cause it to output its current value.;
+#X text 168 387 - the current value is output when a bang is received
+at the inlet.;
+#X text 98 229 All [value] objects with the same name receive the value
+(see subpatch below):;
+#X text 168 491 If no creation argument is given \, then the object
+will communicate with all other [value] objects with no name.;
+#X text 99 529 [value] variables may be used within all [expr] family
+objects. See the help patches for [expr] \, [expr~] and [fexpr~] for
+more information.;
+#X text 80 439 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X text 168 439 - [value] takes one argument (a symbol) that is the
+name of the object. All [value] objects that share this name will have
+their values updated when a float is sent to the inlet of any of them.
+;
+#X obj 193 574 pddp/pddplink all_about_expr_and_value.pd;
+#X connect 22 0 24 0;
+#X connect 23 0 22 0;
+#X connect 25 0 22 0;
+#X connect 26 0 27 0;
+#X connect 28 0 26 0;

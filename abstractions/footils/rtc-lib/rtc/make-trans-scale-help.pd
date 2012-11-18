@@ -1,0 +1,57 @@
+#N canvas 271 85 685 496 10;
+#X obj 106 345 bng 15 250 50 0 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 65 345 show;
+#X text 14 28 make-trans-scale;
+#X text 14 59 Generates a transition scale between a start and an end
+value with a certain number of elements. The typ of transition is determined
+by the int sent to the leftmost inlet which also triggers the calculation.
+;
+#X floatatom 345 261 4 0 0 2 number_of_elements - -;
+#X floatatom 276 260 4 0 0 2 end - -;
+#X floatatom 202 260 4 0 0 2 start - -;
+#X text 24 376 scale;
+#X msg 269 180 make-ED-scale;
+#X text 15 182 see also:;
+#X msg 78 180 make-scale;
+#X msg 158 180 make-choice-list;
+#X msg 65 376 2 1.88775 1.7818 1.68179 1.5874 1.49831 1.41421 1.33484
+1.25992 1.18921 1.12246 1.05946 1;
+#X text 368 328 1995 by Karlheinz Essl;
+#X text 165 120 };
+#X text 196 138 transition;
+#X text 60 121 0 = logarithmical;
+#X text 60 135 1 = linear;
+#X text 60 150 2 = exponential;
+#X msg 344 24 Lists;
+#N canvas 0 0 738 528 trans-type 0;
+#X obj 107 393 list split 1;
+#X symbolatom 107 142 14 0 0 0 - - -;
+#X obj 107 127 hradio 15 1 0 3 empty empty transition 0 -6 0 8 -262144
+-1 -1 0;
+#X obj 107 419 outlet;
+#X obj 244 66 inlet;
+#X obj 107 247 select 0 1 2;
+#X msg 107 304 0 logarithmical;
+#X msg 235 303 1 linear;
+#X msg 317 306 2 exponential;
+#X connect 0 0 3 0;
+#X connect 0 1 1 0;
+#X connect 2 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 5 1 7 0;
+#X connect 5 2 8 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X coords 0 -1 1 1 125 60 1 100 100;
+#X restore 65 213 pd trans-type;
+#X obj 65 314 make-trans-scale 2 1 13;
+#X connect 0 0 1 1;
+#X connect 1 0 12 0;
+#X connect 4 0 21 3;
+#X connect 5 0 21 2;
+#X connect 6 0 21 1;
+#X connect 20 0 21 0;
+#X connect 21 0 1 0;

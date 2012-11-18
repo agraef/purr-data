@@ -1,0 +1,43 @@
+#N canvas 0 0 455 394 10;
+#X obj 99 158 route \$1;
+#X obj 16 355 list;
+#X obj 16 137 inlet;
+#X msg 16 158 bang;
+#X obj 16 376 outlet;
+#X obj 99 133 inlet;
+#X obj 227 309 t l;
+#X text 13 4 args: [blender object name \; e.g. Cube];
+#X obj 99 309 list append;
+#X obj 129 203 list split 1;
+#X obj 99 179 t a a;
+#X obj 99 286 spigot;
+#X msg 208 249 1;
+#X msg 129 250 0;
+#X obj 129 224 select clear;
+#X text 13 36 copy the blender export script into .blender/scripts/
+folder and start blender. Make the argument of this be the same name
+as a blender object. Go file.. Export... Raw Triangle Across the net
+... and it will arrive as a list of verticies of triangles here. This
+can be used with other objects such as sx/explode and sx/blob. The
+shape list will be retained between sessions if you use a sssad/panel
+save.;
+#X obj 99 333 s \$1/geomdata;
+#X obj 194 167 sssad/auto \$0/geomdata \$1/geomdata;
+#X connect 0 0 10 0;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 5 0 0 0;
+#X connect 6 0 8 1;
+#X connect 8 0 6 0;
+#X connect 8 0 1 1;
+#X connect 8 0 16 0;
+#X connect 9 0 14 0;
+#X connect 10 0 11 0;
+#X connect 10 1 9 0;
+#X connect 11 0 8 0;
+#X connect 12 0 11 1;
+#X connect 13 0 11 1;
+#X connect 14 0 8 1;
+#X connect 14 0 13 0;
+#X connect 14 1 12 0;

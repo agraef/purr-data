@@ -1,0 +1,50 @@
+#N canvas 291 70 495 680 10;
+#X declare -lib iemmatrix;
+#X floatatom -13 195 5 0 0 0 - - -;
+#X obj -13 261 mtof;
+#X obj -12 287 osc~;
+#X obj -12 406 *~;
+#X obj -11 450 mix.out_~;
+#X obj -13 237 t f f;
+#X obj -13 57 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 137 178 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X text -18 8 Description: Amplitude correction according to the MIDI
+note of the original sound in order to obtain an equal perceptual loudness
+for every pitch;
+#X text -13 573 Of course \, it created distorsion on very low notes
+\, because the amplification is too important and it clips.;
+#X obj 2 315 musical.isosonic~ 60 50;
+#X obj -25 -22 cnv 15 430 20 empty empty empty 20 12 0 14 -216438 -66577
+0;
+#X obj -25 -1 cnv 1 430 1 empty empty empty 4 -10 2 12 -66577 -1 0
+;
+#X obj -25 -22 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text 265 -18 Version: 2007-02-12;
+#X text -24 -19 :: musical.isosonic~ ::;
+#X obj -13 214 clip 23 127;
+#X obj 2 358 line~;
+#X obj 2 337 pack f 50;
+#X obj 2 379 dbtorms~;
+#X text 76 341 You simply need to pass the dB correction factor into
+[dbtorms] and then [*~] the audio source to be corrected;
+#X text 22 193 MIDI note;
+#X text 158 173 Estimated output loudness (dB);
+#X obj 101 420 anal.scope_~ 1;
+#X connect 0 0 16 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 23 0;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;
+#X connect 5 0 1 0;
+#X connect 5 1 10 0;
+#X connect 6 0 0 0;
+#X connect 7 0 10 1;
+#X connect 10 0 18 0;
+#X connect 16 0 5 0;
+#X connect 17 0 19 0;
+#X connect 18 0 17 0;
+#X connect 19 0 3 1;

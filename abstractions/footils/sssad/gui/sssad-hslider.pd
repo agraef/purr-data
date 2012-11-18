@@ -1,0 +1,11 @@
+#N canvas 0 0 496 356 10;
+#X obj 103 100 hsl 128 15 0 1 0 0 empty empty \$1 40 8 1 10 -262144
+-1 -1 300 1;
+#X obj 145 29 sssad \$1;
+#X obj 100 129 outlet;
+#X obj 100 76 inlet;
+#X connect 0 0 1 1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 0;
+#X coords 0 -1 1 1 133 15 2 100 100;

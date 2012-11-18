@@ -1,0 +1,16 @@
+#N struct 1006.vertex.array.template float x float y array vertex.array
+1006.vertex.template;
+#N struct 1006.vertex.template float x float y float vert.x float vert.y
+;
+#N struct 1006.intersection.template float x float y float vert.x float
+vert.y;
+#N struct 1006.grid.y.template float y;
+#N struct 1006.grid.x.template float x;
+#N canvas 35 257 450 300 10;
+#X obj 48 133 ds-designer;
+#X text 9 20 ds-designer: a tool for drawing complex shapes with [drawpolygon]/[filledpolygon]/[drawcurve]/[filledcurve]
+;
+#X text 252 252 2009 Luke Iannini;
+#X text 257 267 proyekto.net;
+#X msg 48 166 1 0 0 1 1 2 0 3 1 4 2 3 3 4 4 3 3 2 4 1 3 0 2 1 1 0;
+#X connect 0 0 4 0;

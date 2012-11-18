@@ -1,0 +1,25 @@
+#N canvas 185 195 580 429 10;
+#X obj 44 166 noise~;
+#X obj 43 264 ezdac~ 0;
+#X floatatom 99 196 5 0 0 0 - - -;
+#X obj 99 166 / 127;
+#X text 23 80 See also:;
+#X msg 89 79 sqrt-pan~;
+#X obj 43 226 cp-pan~;
+#X text 23 51 Constant power panner;
+#X text 23 21 cp-pan~;
+#X msg 260 21 Envelopes;
+#X msg 264 316 Overview;
+#X obj 102 141 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 105 123 L < < < M > > > R;
+#X text 188 159 controller value;
+#X text 20 334 2004 by Chris Dobrian;
+#X obj 43 196 *~ 0.3;
+#X connect 0 0 15 0;
+#X connect 2 0 6 1;
+#X connect 3 0 2 0;
+#X connect 6 0 1 0;
+#X connect 6 1 1 1;
+#X connect 11 0 3 0;
+#X connect 15 0 6 0;

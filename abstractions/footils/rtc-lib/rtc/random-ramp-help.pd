@@ -1,0 +1,82 @@
+#N canvas 112 128 736 547 10;
+#X text 15 29 random-ramp;
+#X text 118 13 Generates randomly fluctuating envelope shapes of a
+given dynamic scale (defined by a min and a max velocity and a certain
+number of values) within a time scale (defined by a min and a max ramp
+time and a certain number of values). A rhythm bang set to the left
+inlet outputs a velocity value. A stop message sent to the same inlet
+will stop the whole process.;
+#X text 380 282 randomly chosen ramp time;
+#X floatatom 339 283 5 0 0 1 - - -;
+#X text 263 310 randomly chosen velocity destination;
+#X floatatom 229 310 4 0 0 1 - - -;
+#X floatatom 265 218 4 0 0 2 nr._of_values - -;
+#X floatatom 432 164 0 0 0 2 min_ramp_time - -;
+#X floatatom 432 197 0 0 0 2 max_ramp_time - -;
+#X floatatom 265 190 4 0 0 2 max_velocity - -;
+#X floatatom 265 160 4 0 0 2 min_veloc. - -;
+#X obj 120 141 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 120 250 random-ramp 10 127 5 250 2000 12;
+#X obj 120 351 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X text 262 127 dynamic scale - - -;
+#X text 427 127 ramp durations - - -;
+#X floatatom 120 286 4 0 0 1 velocity - -;
+#X text 501 468 1994 by Karlheinz Essl;
+#X obj 39 189 sel 0;
+#X msg 39 215 stop;
+#N canvas 380 246 505 336 musical 0;
+#X floatatom 140 224 0 0 0 0 - - -;
+#X floatatom 44 224 0 0 0 0 - - -;
+#X obj 44 140 brown-rhythm 50 1000 12 0.2;
+#X obj 44 188 brown-melody 21 104 0.25;
+#X msg 251 140 stop;
+#X obj 251 112 sel 0;
+#X obj 44 66 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 20 33 This is a very simple musical example for using the random-ramp
+object:;
+#X text 74 66 start stop;
+#X obj 44 252 play2 127 500 1 1;
+#X text 20 294 1994 by Karlheinz Essl;
+#X text 89 227 note;
+#X text 185 227 velocity;
+#X obj 221 188 random-ramp 10 127 5 250 2000 12;
+#X obj 44 162 t a a;
+#X connect 0 0 9 1;
+#X connect 1 0 9 0;
+#X connect 2 0 14 0;
+#X connect 3 0 1 0;
+#X connect 4 0 13 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 6 0 5 0;
+#X connect 13 0 0 0;
+#X connect 14 0 3 0;
+#X connect 14 1 13 0;
+#X restore 438 355 pd musical;
+#X text 153 141 start stop;
+#X obj 120 189 metro 150;
+#X obj 112 351 vsl 8 128 0 127 0 0 empty empty min_vel -30 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 135 351 vsl 8 128 0 127 0 0 empty empty max_vel 0 -8 0 8 -262144
+-1 -1 0 1;
+#X floatatom 432 230 4 0 0 2 nr._of_values - -;
+#X connect 6 0 12 3;
+#X connect 7 0 12 4;
+#X connect 8 0 12 5;
+#X connect 9 0 12 2;
+#X connect 9 0 24 0;
+#X connect 10 0 12 1;
+#X connect 10 0 23 0;
+#X connect 11 0 18 0;
+#X connect 11 0 22 0;
+#X connect 12 0 16 0;
+#X connect 12 1 5 0;
+#X connect 12 2 3 0;
+#X connect 16 0 13 0;
+#X connect 18 0 19 0;
+#X connect 19 0 12 0;
+#X connect 22 0 12 0;
+#X connect 25 0 12 6;

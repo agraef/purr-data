@@ -1,0 +1,44 @@
+#N canvas 47 54 867 462 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.pow 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 410 286 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufpow;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 608 330 pd init;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 463 330 pd clear_buffer;
+#X obj 77 197 vasp.update;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufpow 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 341 144 graph;
+#X text 72 81 vasp power function;
+#X text 71 93 argument/right inlet: exponent;
+#X msg 77 127 vasp bufpow;
+#X msg 463 308 vasp bufpow;
+#X obj 77 150 vasp.osc 44100;
+#X obj 77 172 vasp.* 0.2;
+#X text 71 63 sample ^ x;
+#X obj 77 329 vasp.update;
+#X msg 77 246 vasp bufpow;
+#X obj 77 303 vasp.pow 0.1;
+#X floatatom 144 279 5 0 0;
+#X text 202 278 exponent;
+#X obj 79 397 VASP-HELP;
+#X connect 7 0 9 0;
+#X connect 8 0 2 0;
+#X connect 9 0 10 0;
+#X connect 10 0 3 0;
+#X connect 13 0 14 0;
+#X connect 14 0 12 0;
+#X connect 15 0 14 1;

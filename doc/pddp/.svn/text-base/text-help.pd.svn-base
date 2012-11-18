@@ -1,0 +1,75 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header text 3 12 0 18 -204280
+-1 0;
+#X obj 0 458 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 42 282 494 344 META 0;
+#X text 12 65 LIBRARY internal;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for Pd version 0.26. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 125 RELEASE_DATE 1997;
+#X text 12 45 DESCRIPTION box with text for an object or comment;
+#X restore 500 597 pd META;
+#X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 514 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 542 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 518 (none);
+#N canvas 98 495 428 119 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 comment Related Objects;
+#X obj 21 28 pddp/pddplink all_about_externals.pd -text _________;
+#X obj 21 28 pddp/pddplink all_about_externals.pd -text Externals;
+#X obj 21 48 pddp/helplink cyclone/comment;
+#X obj 21 68 pddp/helplink pddp/pddplink;
+#X obj 21 88 pddp/helplink pddp/helplink;
+#X restore 102 597 pd Related_objects;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/comment -text
+pdpedia: comment;
+#X text 104 387 Phone number with hyphens: 555-555-5555;
+#X text 104 407 Same phone number without hyphens: 5.55556e+09;
+#X text 98 462 (none);
+#X text 98 491 (none);
+#N canvas 100 383 428 181 Some_Comments_On_Comments 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 20 29 semicolons in comments cause the text \; following them
+to \; start \; on a \; new \; line;
+#X text 19 110 Try adding a period at the end of this sentence \, which
+ends with the number 1;
+#X text 19 140 If you close this subwindow \, then open it again \,
+the period you added will be gone.;
+#X text 8 2 comment Commentary: Additional Comments About Comments
+;
+#X restore 102 551 pd Some_Comments_On_Comments;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 99 571 pddp/pddplink all_about_ascii_art.pd;
+#X text 377 2 To create \, click <Control-5>;
+#X text 11 23 box with text for an object or comment;
+#X text 85 144 Comments don't actually "do" anything \, but you can
+use them to annotate your patch \, explain how something works \, add
+a copyright notice \, or anything else.;
+#X text 85 74 All text in Pure Data is just a series of symbol and/or
+float atoms. You create Pd objects by typing text into an object box
+\, but you can also write text as a comment for your patch (like this
+one).;
+#X text 85 224 To create a comment \, use the "Put" menu or click <Control-5>.
+;
+#X text 55 267 ***;
+#X text 85 347 Otherwise your phone number will interpreted as a float
+atom and you will lose some rather important precision!;
+#X text 85 267 Remember: text inside a comment is just a series of
+atoms \, and will be formatted accordingly. For example: if you want
+to jot down a large value like a phone number in pd \, use hyphens
+or multiple dots so that pd will interpret it as a symbol atom.;

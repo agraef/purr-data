@@ -1,0 +1,6 @@
+#N canvas 1 57 432 228 10;
+#X text 24 45 Description: Rotates a 1st order horizontal ambisonic
+sound.;
+#X text 26 58 Attributes: @angle <degrees> @duration <ms>;
+#X text 17 77 tags: ambisonic;
+#X obj 50 109 mtl/ambiRotateWxy~;

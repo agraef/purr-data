@@ -1,0 +1,18 @@
+#N canvas 373 62 364 212 10;
+#X obj 46 77 unpack f f f;
+#X obj 46 48 inlet;
+#X obj 46 173 outlet;
+#X obj 46 109 * 63;
+#X obj 155 109 * 63;
+#X obj 265 109 * 63;
+#X text 296 110 2^6;
+#X obj 46 141 expr -4096 * $i1 - 64 * $i2 - $i3 -1 \;;
+#X text 80 156 2^12 (18-6);
+#X connect 0 0 3 0;
+#X connect 0 1 4 0;
+#X connect 0 2 5 0;
+#X connect 1 0 0 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 1;
+#X connect 5 0 7 2;
+#X connect 7 0 2 0;

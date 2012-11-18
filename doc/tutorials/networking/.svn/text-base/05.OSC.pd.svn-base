@@ -1,0 +1,45 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib libdir;
+#X obj 493 25 import oscx;
+#X obj 8 10 cnv 15 400 40 empty empty OSC 20 12 0 24 -228992 -66577
+0;
+#X obj 80 298 sendOSC;
+#X floatatom 79 323 5 0 0 0 - - -;
+#X msg 113 271 disconnect;
+#X floatatom 123 322 5 0 0 0 - - -;
+#X msg 21 164 send /kuva \$1;
+#X floatatom 22 149 5 0 0 0 - - -;
+#X floatatom 122 148 5 0 0 0 - - -;
+#X floatatom 342 295 5 0 0 0 - - -;
+#X obj 338 312 print kuva;
+#X msg 122 164 send /space \$1;
+#X obj 340 231 dumpOSC 30200;
+#X msg 109 249 connect localhost 30200;
+#X floatatom 231 147 5 0 0 0 - - -;
+#X msg 231 163 send /asdf \$1;
+#X obj 339 259 OSCroute /kuva /space;
+#X obj 414 312 print space;
+#X obj 498 312 print other;
+#X floatatom 421 295 5 0 0 0 - - -;
+#X text 10 65 OSC is a protocol for sharing data across networks and
+applications. OSC stands for Open Sound Control. It was originally
+designed to replace MIDI \, but it has caught on instead for inter-application
+communication.;
+#X text 21 361 On the most basic level \, it works very similarly to
+[netsend] and [netreceive].;
+#X connect 2 0 3 0;
+#X connect 2 1 5 0;
+#X connect 4 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 6 0;
+#X connect 8 0 11 0;
+#X connect 11 0 2 0;
+#X connect 12 0 16 0;
+#X connect 13 0 2 0;
+#X connect 14 0 15 0;
+#X connect 15 0 2 0;
+#X connect 16 0 9 0;
+#X connect 16 0 10 0;
+#X connect 16 1 17 0;
+#X connect 16 1 19 0;
+#X connect 16 2 18 0;

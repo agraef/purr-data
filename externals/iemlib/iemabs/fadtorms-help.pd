@@ -1,0 +1,20 @@
+#N canvas 157 156 393 282 10;
+#X floatatom 53 215 9 0 0 0 - - -;
+#X obj 71 69 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 53 61 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 157 125 v2db;
+#X obj 53 195 fadtorms;
+#X text 116 215 linear values;
+#X text 7 8 fadtorms;
+#X text 80 9 convert fader-scale to rms-value;
+#X text 244 194 IEM KUG;
+#X text 228 182 musil;
+#X text 258 182 @;
+#X text 264 182 iem.at;
+#X text 179 171 (c) Thomas Musil 2000 - 2005;
+#X text 227 204 Graz \, Austria;
+#X connect 0 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 1 1;
+#X connect 4 0 0 0;

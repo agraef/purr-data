@@ -1,0 +1,18 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty render_chains 20 12 0 24 -228992
+-66577 0;
+#X obj 208 217 gemhead;
+#X obj 209 172 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 207 266 square;
+#X text 31 74 Gem operates on "render chains". Render chains define
+the flow and ordering of the rendering of graphics to the Gem world
+that you see in the [gemwin].;
+#X text 29 353 Every render chain must start with a [gemhead] \, or
+it will not be generated. Render chains generally end with an shape
+object (sometimes called a "geo").;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;

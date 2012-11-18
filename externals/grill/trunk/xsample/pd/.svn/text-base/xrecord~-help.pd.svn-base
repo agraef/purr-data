@@ -1,0 +1,168 @@
+#N canvas 58 17 877 659 12;
+#X obj 18 83 bng 15 250 50 0 empty empty empty 20 8 0 8 -258699 -1
+-1;
+#X msg 17 103 stop;
+#N canvas 0 0 450 300 graph7 0;
+#X array \$0-buf 10000 float 0;
+#X coords 0 1 9999 -1 200 140 1;
+#X restore 61 477 graph;
+#X msg 15 137 reset;
+#X obj 74 355 snapshot~;
+#X floatatom 76 380 7 0 0 0 - - -;
+#X obj 22 288 loadbang;
+#X msg 14 167 help;
+#X obj 179 164 tgl 15 1 empty empty empty 20 8 0 8 -225271 -1 -1 1
+1;
+#X msg 197 161 loop \$1;
+#X msg 177 104 0;
+#X msg 213 104 200;
+#X msg 176 132 draw \$1;
+#X obj 427 332 bng 15 250 50 0 empty empty empty 20 8 0 8 -258699 -1
+-1;
+#X msg 426 352 stop;
+#X msg 425 391 reset;
+#X obj 516 575 snapshot~;
+#X floatatom 516 605 7 0 0 0 - - -;
+#X obj 427 503 loadbang;
+#X obj 553 299 tgl 15 1 empty empty empty 20 8 0 8 -225271 -1 -1 1
+1;
+#X msg 572 296 loop \$1;
+#X msg 468 263 0;
+#X msg 467 291 draw \$1;
+#X obj 554 322 tgl 15 1 empty empty empty 20 8 0 8 -225271 -1 -1 1
+1;
+#X msg 572 320 sigmode \$1;
+#X msg 425 417 print;
+#X obj 579 425 hsl 128 15 -0.001 1 0 1 empty empty empty 20 8 0 8 -225271
+-1 -1 2800 1;
+#X msg 601 347 mixmode \$1;
+#X floatatom 645 443 8 0 0 0 - - -;
+#X obj 427 530 metro 30;
+#X obj 22 315 metro 30;
+#X obj 681 86 osc~ 10;
+#X obj 90 146 r~ rec;
+#X obj 498 396 r~ rec;
+#X obj 667 149 s~ rec;
+#X obj 664 113 *~ 1;
+#X obj 663 90 tgl 15 1 empty empty empty 20 8 0 8 -225271 -1 -1 1 1
+;
+#X obj 760 115 *~ 1;
+#X obj 759 92 tgl 15 0 empty empty empty 20 8 0 8 -225271 -1 -1 0 1
+;
+#X obj 777 88 adc~;
+#X text 266 164 looping on/off;
+#X text 241 133 display refresh;
+#X text 56 81 start;
+#X text 57 103 stop;
+#X text 30 338 position signal;
+#X text 635 295 looping on/off;
+#X text 660 321 signal mode on/off;
+#X text 714 436 trigger signal;
+#X text 383 189 <----- message triggered;
+#X text 187 439 signal triggered ------->;
+#X text 509 242 click to activate auto update;
+#X text 448 328 start;
+#X text 466 352 stop;
+#X msg 152 239 all;
+#X msg 504 263 100;
+#X obj 554 497 line~;
+#X msg 554 472 \$1 20;
+#X msg 13 203 getattributes;
+#X obj 236 281 print A;
+#X msg 14 231 getbuffer;
+#X obj 583 116 *~ 1;
+#X obj 582 93 tgl 15 1 empty empty empty 20 8 0 8 -225271 -1 -1 0 1
+;
+#X obj 602 89 noise~;
+#X obj 554 349 hradio 15 1 0 3 empty empty empty 0 -6 0 8 -225271 -1
+-1 0;
+#X text 575 366 mixmode (off \, mix-in \, add);
+#X text 582 396 by the trigger signal;
+#X text 581 383 the amount of mixing-in is given;
+#X obj 95 280 xrecord~ \$0-buf;
+#X obj 516 529 xrecord~ \$0-buf;
+#X obj 18 12 cnv 15 800 40 empty empty xrecord~ 10 22 0 24 -260818
+-1 0;
+#X text 202 253 min/max points;
+#X obj 201 241 nbx 5 14 0 1e+037 0 1 empty empty min 0 -6 0 10 -225271
+-1 -1 0 256;
+#X obj 258 241 nbx 5 14 0 1e+037 0 1 empty empty max 0 -6 0 10 -225271
+-1 -1 10002 256;
+#X obj 190 365 nbx 5 14 0 1e+037 0 1 empty empty min 0 -6 0 10 -262131
+-1 -1 0 256;
+#X obj 247 365 nbx 5 14 0 1e+037 0 1 empty empty max 0 -6 0 10 -262131
+-1 -1 10000 256;
+#X text 192 378 min/max points;
+#X obj 224 321 bng 15 250 50 0 empty empty loop_bang 0 -6 0 8 -262131
+-1 -1;
+#X text 294 284 print attributes;
+#X obj 617 574 nbx 5 14 0 1e+037 0 1 empty empty min 0 -6 0 10 -262131
+-1 -1 0 256;
+#X obj 674 574 nbx 5 14 0 1e+037 0 1 empty empty max 0 -6 0 10 -262131
+-1 -1 10000 256;
+#X obj 618 500 nbx 5 14 0 1e+037 0 1 empty empty min 0 -6 0 10 -225271
+-1 -1 0 256;
+#X obj 675 500 nbx 5 14 0 1e+037 0 1 empty empty max 0 -6 0 10 -225271
+-1 -1 10000 256;
+#X text 224 31 http://grrrr.org/ext;
+#X text 224 12 buffer-based signal recorder \, (C)2001-2005 Thomas
+Grill;
+#X connect 0 0 67 0;
+#X connect 1 0 67 0;
+#X connect 3 0 67 0;
+#X connect 4 0 5 0;
+#X connect 6 0 30 0;
+#X connect 7 0 67 0;
+#X connect 8 0 9 0;
+#X connect 9 0 67 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 67 0;
+#X connect 13 0 68 0;
+#X connect 14 0 68 0;
+#X connect 15 0 68 0;
+#X connect 16 0 17 0;
+#X connect 18 0 29 0;
+#X connect 19 0 20 0;
+#X connect 20 0 68 0;
+#X connect 21 0 22 0;
+#X connect 22 0 68 0;
+#X connect 23 0 24 0;
+#X connect 24 0 68 0;
+#X connect 25 0 68 0;
+#X connect 26 0 28 0;
+#X connect 26 0 56 0;
+#X connect 27 0 68 0;
+#X connect 29 0 16 0;
+#X connect 30 0 4 0;
+#X connect 31 0 35 0;
+#X connect 32 0 67 0;
+#X connect 33 0 68 0;
+#X connect 35 0 34 0;
+#X connect 36 0 35 1;
+#X connect 37 0 34 0;
+#X connect 38 0 37 1;
+#X connect 39 0 37 0;
+#X connect 39 1 37 0;
+#X connect 53 0 67 0;
+#X connect 54 0 22 0;
+#X connect 55 0 68 1;
+#X connect 56 0 55 0;
+#X connect 57 0 67 0;
+#X connect 59 0 67 0;
+#X connect 60 0 34 0;
+#X connect 61 0 60 1;
+#X connect 62 0 60 0;
+#X connect 63 0 27 0;
+#X connect 67 0 4 0;
+#X connect 67 1 73 0;
+#X connect 67 2 74 0;
+#X connect 67 3 76 0;
+#X connect 67 4 58 0;
+#X connect 68 0 16 0;
+#X connect 68 1 78 0;
+#X connect 68 2 79 0;
+#X connect 71 0 67 2;
+#X connect 72 0 67 3;
+#X connect 80 0 68 2;
+#X connect 81 0 68 3;

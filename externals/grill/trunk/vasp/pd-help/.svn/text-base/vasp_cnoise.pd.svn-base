@@ -1,0 +1,53 @@
+#N canvas 47 54 881 559 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.cnoise 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufcnoise1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 500 96 graph;
+#N canvas 0 0 402 278 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufcnoise1 \, symbol bufcnoise2;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 775 366 pd init;
+#X obj 65 217 vasp.update;
+#X obj 65 194 vasp.* 0.5;
+#N canvas 40 55 247 122 clear_buffers 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 504 389 pd clear_buffers;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufcnoise2 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 501 228 graph;
+#X text 71 63 vasp complex noise generator;
+#X text 71 83 needs 2 buffers;
+#X msg 65 127 vasp bufcnoise1 bufcnoise2;
+#X text 267 140 into two buffers;
+#X obj 65 171 vasp.cnoise;
+#X obj 324 411 dac~;
+#X obj 324 345 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 346 344 play;
+#X msg 504 366 vasp bufcnoise1 bufcnoise2;
+#X obj 324 366 tabplay~ bufcnoise1;
+#X obj 343 388 tabplay~ bufcnoise2;
+#X obj 64 505 VASP-HELP;
+#X obj 189 472 vasp.noise;
+#X text 64 471 related object:;
+#X text 265 126 generate complex noise;
+#X connect 4 0 3 0;
+#X connect 9 0 11 0;
+#X connect 11 0 4 0;
+#X connect 13 0 16 0;
+#X connect 13 0 17 0;
+#X connect 15 0 5 0;
+#X connect 16 0 12 0;
+#X connect 17 0 12 1;

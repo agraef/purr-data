@@ -1,0 +1,186 @@
+diff -Naur src.org/g_canvas.c src/g_canvas.c
+--- g_canvas.c	2006-08-15 21:50:14.000000000 +0200
++++ g_canvas.c	2006-08-22 16:19:17.000000000 +0200
+@@ -1040,6 +1040,52 @@
+     canvas_loadbangabstractions(x);
+     canvas_loadbangsubpatches(x);
+ }
++/* JMZ:
++ * initbang is emitted after the canvas is done, but before the parent canvas is done
++ * therefore, initbangs cannot reach to the outlets
++ */
++void canvas_initbang(t_canvas *x)
++{
++    t_gobj *y;
++    t_symbol *s = gensym("initbang");
++    /* run "initbang" for all subpatches, but NOT for the child abstractions */
++    for (y = x->gl_list; y; y = y->g_next)
++      if (pd_class(&y->g_pd) == canvas_class)
++        {
++          if (!canvas_isabstraction((t_canvas *)y))
++            canvas_initbang((t_canvas *)y);
++        }
++
++    /* call the initbang()-method for objects that have one */
++    for (y = x->gl_list; y; y = y->g_next)
++      {
++        if ((pd_class(&y->g_pd) != canvas_class) && zgetfn(&y->g_pd, s))
++          {
++            pd_vmess(&y->g_pd, s, "");
++          }
++      }
++}
++/* JMZ:
++ * closebang is emitted before the canvas is destroyed
++ * and BEFORE subpatches/abstractions in this canvas are destroyed
++ */
++void canvas_closebang(t_canvas *x)
++{
++    t_gobj *y;
++    t_symbol *s = gensym("closebang");
++
++    /* call the closebang()-method for objects that have one 
++     * but NOT for subpatches/abstractions: these are called separately
++     * from g_graph:glist_delete()
++     */
++    for (y = x->gl_list; y; y = y->g_next)
++      {
++        if ((pd_class(&y->g_pd) != canvas_class) && zgetfn(&y->g_pd, s))
++          {
++            pd_vmess(&y->g_pd, s, "");
++          }
++      }
++}
+ 
+     /* When you ask a canvas its size the result is 2 pixels more than what
+     you gave it to open it; perhaps there's a 1-pixel border all around it
+diff -Naur src.org/g_graph.c src/g_graph.c
+--- g_graph.c	2006-03-01 03:00:13.000000000 +0100
++++ g_graph.c	2006-08-22 16:20:55.000000000 +0200
+@@ -62,6 +62,9 @@
+     return (ret);
+ }
+ 
++/* JMZ: emit a closebang message */
++void canvas_closebang(t_canvas *x);
++
+     /* delete an object from a glist and free it */
+ void glist_delete(t_glist *x, t_gobj *y)
+ {
+@@ -71,7 +74,12 @@
+     t_canvas *canvas = glist_getcanvas(x);
+     int drawcommand = class_isdrawcommand(y->g_pd);
+     int wasdeleting;
+-    
++
++    if (pd_class(&y->g_pd) == canvas_class) {
++      /* JMZ: send a closebang to the canvas */
++      canvas_closebang((t_canvas *)y);
++    }
++ 
+     wasdeleting = canvas_setdeleting(canvas, 1);
+     if (x->gl_editor)
+     {
+diff -Naur src.org/m_class.c src/m_class.c
+--- m_class.c	2006-08-12 07:06:47.000000000 +0200
++++ m_class.c	2006-08-22 16:19:17.000000000 +0200
+@@ -509,6 +509,8 @@
+ static int tryingalready;
+ 
+ void canvas_popabstraction(t_canvas *x);
++void canvas_initbang(t_canvas *x);
++
+ extern t_pd *newest;
+ 
+ t_symbol* pathsearch(t_symbol *s,char* ext);
+@@ -543,9 +545,11 @@
+         {
+             canvas_setargs(argc, argv);
+             binbuf_evalfile(gensym(nameptr), gensym(dirbuf));
++            canvas_initbang((t_canvas *)(s__X.s_thing));/* JMZ*/
+             if (s__X.s_thing != current)
+                 canvas_popabstraction((t_canvas *)(s__X.s_thing));
+             canvas_setargs(0, 0);
++
+         }
+         else error("%s: can't load abstraction within itself\n", s->s_name);
+     }
+diff -Naur src.org/x_misc.c src/x_misc.c
+--- x_misc.c	2005-12-31 21:08:38.000000000 +0100
++++ x_misc.c	2006-08-22 16:19:17.000000000 +0200
+@@ -111,6 +111,66 @@
+         gensym("loadbang"), 0);
+ }
+ 
++
++/* -------------------------- JMZ: initbang ------------------------------ */
++static t_class *initbang_class;
++
++typedef struct _initbang
++{
++    t_object x_obj;
++} t_initbang;
++
++static void *initbang_new(void)
++{
++    t_initbang *x = (t_initbang *)pd_new(initbang_class);
++    outlet_new(&x->x_obj, &s_bang);
++    return (x);
++}
++
++static void initbang_initbang(t_initbang *x)
++{
++  if (!sys_noloadbang) /* JMZ: hmm, not sure whether we should respect sys_noloadbang here... */
++        outlet_bang(x->x_obj.ob_outlet);
++}
++
++static void initbang_setup(void)
++{
++  initbang_class = class_new(gensym("initbang"), (t_newmethod)initbang_new, 0,
++        sizeof(t_initbang), CLASS_NOINLET, 0);
++    class_addmethod(initbang_class, (t_method)initbang_initbang,
++        gensym("initbang"), 0);
++}
++
++
++/* -------------------------- JMZ: closebang ------------------------------ */
++static t_class *closebang_class;
++
++typedef struct _closebang
++{
++    t_object x_obj;
++} t_closebang;
++
++static void *closebang_new(void)
++{
++    t_closebang *x = (t_closebang *)pd_new(closebang_class);
++    outlet_new(&x->x_obj, &s_bang);
++    return (x);
++}
++static void closebang_closebang(t_closebang *x)
++{
++  if (!sys_noloadbang) /* JMZ: hmm, not sure whether we should respect sys_noloadbang here... */
++        outlet_bang(x->x_obj.ob_outlet);
++}
++
++static void closebang_setup(void)
++{
++  closebang_class = class_new(gensym("closebang"), (t_newmethod)closebang_new, 0,
++        sizeof(t_closebang), CLASS_NOINLET, 0);
++    class_addmethod(closebang_class, (t_method)closebang_closebang,
++        gensym("closebang"), 0);
++}
++
++
+ /* ------------- namecanvas (delete this later) --------------------- */
+ static t_class *namecanvas_class;
+ 
+@@ -314,6 +374,8 @@
+ {
+     random_setup();
+     loadbang_setup();
++    initbang_setup();
++    closebang_setup();
+     namecanvas_setup();
+     serial_setup();
+     cputime_setup();

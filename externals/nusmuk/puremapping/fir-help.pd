@@ -1,0 +1,27 @@
+#N canvas 390 53 630 490 10;
+#X obj 174 76 loadbang;
+#X text 97 58 data;
+#X obj 93 161 t f f;
+#X msg 102 128 0;
+#X msg 185 127 0.2 0.2 0.2 0.2 0.2;
+#X msg 132 128 1;
+#X msg 174 98 0.4 0.3 0.1 0.1 0.1;
+#X obj 93 248 timeroll 10;
+#X obj 345 247 timeroll 10;
+#X obj 77 10 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 300 1;
+#X obj 116 423 pddp/pddplink http://www.dspguru.com/info/faqs/firfaq.htm
+;
+#X text 67 407 For more info on FIR:;
+#X obj 123 188 fir;
+#X text 168 188 filter order is set regarding list lenght size;
+#X text 328 113 these are a list of coefficients;
+#X connect 0 0 6 0;
+#X connect 2 0 7 0;
+#X connect 2 1 12 0;
+#X connect 3 0 2 0;
+#X connect 4 0 12 1;
+#X connect 5 0 2 0;
+#X connect 6 0 12 1;
+#X connect 9 0 2 0;
+#X connect 12 0 8 0;

@@ -1,0 +1,19 @@
+#N canvas 590 325 471 275 10;
+#X obj 72 100 mix.out_~;
+#X text 66 -30 Description: A reverb that adds more character than
+reverb.;
+#X text 66 -16 Comment: Taken from Andy Farnell's work.;
+#X obj 277 41 param.gui;
+#X obj 73 67 fx.reverb.resonance~ @id reverbreso;
+#X msg 277 19 reverbreso;
+#X obj 156 38 synth.blip~;
+#X msg 156 16 120;
+#X obj 71 38 adc~ 15 16;
+#X connect 4 0 0 0;
+#X connect 4 0 0 1;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 6 0 4 1;
+#X connect 7 0 6 0;
+#X connect 8 0 4 0;
+#X connect 8 1 4 1;

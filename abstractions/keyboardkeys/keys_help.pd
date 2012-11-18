@@ -1,0 +1,49 @@
+#N canvas 139 159 653 425 10;
+#X obj 239 18 cnv 15 60 60 empty keycf f 20 12 0 14 -228801 -262144
+0;
+#X obj 165 18 cnv 15 60 60 empty keycq q 20 12 0 14 -228801 -262144
+0;
+#X obj 25 20 loadbang;
+#X obj 25 42 s ldbng;
+#X obj 28 273 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 413 252 keyboardkeys/keyupdown;
+#X obj 413 274 vsl 15 128 0 100 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X msg 27 227 q;
+#X msg 413 227 a;
+#X msg 471 225 z;
+#X obj 27 248 keyboardkeys/keybang;
+#X obj 314 18 cnv 15 60 60 empty keyca a 20 12 0 14 -228801 -262144
+0;
+#X obj 390 18 cnv 15 60 60 empty keycz z 20 12 0 14 -228801 -262144
+0;
+#X obj 27 205 r ldbng;
+#X obj 413 201 r ldbng;
+#X obj 81 21 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 25 105 for assignment of actions for keys use;
+#X obj 26 146 keyboardkeys/keybang;
+#X text 26 127 for bang;
+#X text 202 128 for toggle;
+#X text 384 129 for increase/descrease of any value;
+#X obj 384 147 keyboardkeys/keyupdown;
+#X obj 210 272 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 208 248 keyboardkeys/keytoggle;
+#X msg 208 227 f;
+#X obj 207 205 r ldbng;
+#X obj 201 147 keyboardkeys/keytoggle;
+#X connect 2 0 3 0;
+#X connect 5 0 6 0;
+#X connect 7 0 10 0;
+#X connect 8 0 5 0;
+#X connect 9 0 5 1;
+#X connect 10 0 4 0;
+#X connect 13 0 7 0;
+#X connect 14 0 8 0;
+#X connect 14 0 9 0;
+#X connect 15 0 3 0;
+#X connect 23 0 22 0;
+#X connect 24 0 23 0;
+#X connect 25 0 24 0;

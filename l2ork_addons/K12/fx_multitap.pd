@@ -1,0 +1,36 @@
+#N canvas 49 137 425 388 10;
+#X obj 13 207 inlet~;
+#X obj 12 500 outlet~;
+#X obj 43 422 *~ 0.85;
+#X obj 12 469 *~ 0.5;
+#X obj 375 259 ggee/image @pd_extra/K12/objects/fx_multitap.png;
+#X obj 44 255 delwrite~ \$0-delread_ex 2000;
+#X obj 59 389 delread~ \$0-delread_ex 2000;
+#X obj 76 163 loadbang;
+#X obj 230 206 preset_node k12;
+#X obj 335 257 hsl 74 14 5 2000 0 1 \$0-s-null \$0-r-null empty -2
+-8 0 10 -262144 -1 -1 300 1;
+#X msg 76 184 open @pd_extra/K12/objects/fx_multitap.png;
+#X text 334 267 short;
+#X text 387 267 long;
+#X obj 335 284 hsl 74 14 0 900 0 1 \$0-s-null \$0-r-null empty -2 -8
+0 10 -262144 -1 -1 3700 1;
+#X text 349 281 feedback;
+#X obj 335 352 / 1000;
+#X obj 230 228 preset_node k12;
+#X connect 0 0 3 0;
+#X connect 0 0 5 0;
+#X connect 2 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 6 0 2 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 8 0;
+#X connect 9 0 6 0;
+#X connect 10 0 4 0;
+#X connect 13 0 15 0;
+#X connect 13 0 16 0;
+#X connect 15 0 2 1;
+#X connect 16 0 13 0;
+#X coords 0 -1 1 1 89 89 2 330 227;

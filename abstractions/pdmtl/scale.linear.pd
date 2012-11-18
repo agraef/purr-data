@@ -1,0 +1,32 @@
+#N canvas 268 116 473 379 10;
+#X text 7 6 Made by Thomas Ouellet Fredericks for the ID collective
+;
+#X text 9 26 tom@danslchamp.org;
+#X text 238 29 21 novembre 2004;
+#X obj 19 124 inlet;
+#X obj 19 326 outlet;
+#X text 204 111 max input;
+#X text 111 110 min input;
+#X text 389 110 max output;
+#X text 296 109 min output;
+#X obj 112 125 inlet;
+#X obj 205 128 inlet;
+#X obj 298 127 inlet;
+#X obj 392 129 inlet;
+#X obj 112 163 init.lf \$1;
+#X obj 205 162 init.lf \$2;
+#X obj 298 162 init.lf \$3;
+#X obj 392 162 init.lf \$4;
+#X obj 19 234 expr ((($f1 - $f2) / ($f2 - $f3)) * ($f4 - $f5)) + $f4
+;
+#X text 6 50 fixed by Jamie Bullock 2007;
+#X connect 3 0 17 0;
+#X connect 9 0 13 0;
+#X connect 10 0 14 0;
+#X connect 11 0 15 0;
+#X connect 12 0 16 0;
+#X connect 13 0 17 1;
+#X connect 14 0 17 2;
+#X connect 15 0 17 3;
+#X connect 16 0 17 4;
+#X connect 17 0 4 0;

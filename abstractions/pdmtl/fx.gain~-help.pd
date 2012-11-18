@@ -1,0 +1,44 @@
+#N canvas 113 71 871 571 10;
+#X obj -43 -33 nbx 6 14 -100 20 0 0 empty empty dB 0 -8 0 10 -33289
+-262144 -1 0 256;
+#X obj -109 233 dac~;
+#X obj -17 72 vsl 25 50 -100 0 0 0 empty empty empty 3 -8 0 8 -33289
+-262144 -1 0 1;
+#X obj -91 165 anal.sig_~;
+#X obj -94 50 anal.sig_~;
+#X text 27 103 You should use the range from -100 to 0 dB \, and up
+to about 20dB \, maybe.;
+#X text -141 -244 Description: Applies a gain in dB to an incoming
+signal;
+#X obj -144 -271 cnv 15 430 20 empty empty empty 20 12 0 14 -216438
+-66577 0;
+#X obj -144 -250 cnv 1 430 1 empty empty empty 4 -10 2 12 -66577 -1
+0;
+#X obj -144 -271 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text -143 -268 :: transfom/gain~ ::;
+#X text 146 -267 Version: 2007-02-12;
+#X obj -107 -35 noise~;
+#X obj -20 -215 vradio 8 1 0 20 empty empty empty 0 -8 0 8 -195568
+-262144 -1 0;
+#X obj -6 -61 expr ($f1*6)-100;
+#X obj -7 -80 expr 20-$f1;
+#X text -3 -194 About 0 db (original);
+#X text 5 -139 We don't hear much pretty quickly;
+#X obj -107 23 fx.gain~ -6 50;
+#X text 0 -172 Every 6 dB gap sounds twice as loud.;
+#X obj -110 144 fx.gain~ -60;
+#X obj -14 2 nbx 6 14 -100 20 0 0 empty empty ramp_time 0 -8 0 10 -33289
+-262144 -1 0 256;
+#X connect 0 0 18 1;
+#X connect 2 0 20 1;
+#X connect 12 0 18 0;
+#X connect 13 0 15 0;
+#X connect 14 0 0 0;
+#X connect 15 0 14 0;
+#X connect 18 0 4 0;
+#X connect 18 0 20 0;
+#X connect 20 0 1 0;
+#X connect 20 0 3 0;
+#X connect 20 0 1 1;
+#X connect 21 0 18 2;

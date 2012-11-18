@@ -1,0 +1,44 @@
+#N canvas 164 101 450 300 10;
+#X obj 324 57 s-metro time;
+#X obj 227 64 r time/tick;
+#X obj 227 86 / 4;
+#X obj 227 107 int;
+#X obj 227 128 change;
+#X text 227 44 Hi Hat;
+#N canvas 0 0 450 300 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD d/pulsewidth 64 \; SSSAD d/wave 1 \; SSSAD out/volume
+122.968 \; SSSAD out/pan 61.9881 \; SSSAD out2/volume 8.06349 \; SSSAD
+out2/pan 61.9881 \; SSSAD loop1/data 47 81.4671 41 78 51 70.3106 41
+0 60 34.3242 43 78 63 28.1337 43 0 84 10.9228 46 92 87 13.4398 46 0
+92 3.12229 46 68 103 21.0588 43 75 103 36.2812 46 0 106 51.1495 43
+0 117 5.23107 41 88 120 51.2855 41 0 0 62.3512 43 86 4 0.401096 43
+0 20 25.4351 46 88 22 24.2106 46 0 27 60.333 48 74 31 11.4441 48 0
+\; SSSAD time/ticksperbeat 4 \; SSSAD time/bpm 180 \; SSSAD_ADMIN set
+\;;
+#X connect 0 0 1 0;
+#X restore 358 152 pd datastore;
+#X obj 337 173 sssad/datastore;
+#X obj 8 89 s-midiloop loop1 time/tick 128;
+#X obj 227 170 line~;
+#X obj 273 170 noise~;
+#X obj 227 214 s-ezdac~ out2;
+#X obj 227 192 *~;
+#X msg 227 150 1 \, 0 50;
+#X obj 8 156 s-synth~ d;
+#X obj 8 213 s-ezdac~ out;
+#X text 5 1 First hit load to hear a bad loop recorded earlier. Then
+start the timer.;
+#X text 8 69 Hit record and play around.;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 13 0;
+#X connect 8 0 14 0;
+#X connect 9 0 12 0;
+#X connect 10 0 12 1;
+#X connect 12 0 11 0;
+#X connect 12 0 11 1;
+#X connect 13 0 9 0;
+#X connect 14 0 15 0;
+#X connect 14 0 15 1;

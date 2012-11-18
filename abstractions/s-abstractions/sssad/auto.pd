@@ -1,0 +1,6 @@
+#N canvas 209 159 450 300 10;
+#X obj 5 47 s \$2;
+#X obj 98 3 r \$1;
+#X obj 5 24 sssad/sssad \$2;
+#X connect 1 0 2 1;
+#X connect 2 0 0 0;

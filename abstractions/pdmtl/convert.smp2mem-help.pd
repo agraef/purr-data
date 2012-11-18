@@ -1,0 +1,10 @@
+#N canvas 296 348 662 332 12;
+#X text 117 121 number of samples;
+#X floatatom 72 119 5 0 0 0 - - -;
+#X floatatom 71 208 10 0 0 0 - - -;
+#X text 157 209 size in Megabytes;
+#X obj 71 165 convert.smp2mem;
+#X text 40 8 Description: Converts a number of samples into it's memory
+size.;
+#X connect 1 0 4 0;
+#X connect 4 0 2 0;

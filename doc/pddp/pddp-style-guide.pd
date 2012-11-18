@@ -1,0 +1,36 @@
+#N canvas 102 76 462 561 10;
+#X text 15 30 design principles;
+#X text 50 50 - Make states visible and visibly distinguished;
+#X text 50 65 - Teach by example \, not by formalism;
+#X text 50 80 - Communicate visually;
+#X text 50 95 - Offer informative feedback;
+#X text 50 110 - Strive for consistency;
+#X text 50 125 - Avoid arbitrary syntax;
+#X text 50 140 - Use standard language;
+#X text 50 155 - Use the application's terminology;
+#X text 50 170 - Support clear conceptual models for documentation
+;
+#X text 50 185 - Respect the rules of human conversation;
+#X text 50 200 - Respond with an appropriate amount of information
+;
+#X obj 2 2 cnv 15 450 20 empty empty pddp-style-guide 2 11 1 18 -233017
+-66577 0;
+#X obj 418 3 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 101 522 pddp/pddplink standard_gui_elements.pd -text standard_gui_elements
+;
+#X text 15 230 Here are various text conventions for discussing various
+aspects of Pd in text:;
+#X text 30 300 "anything" \, "bang" \, "float" \, "list" \, "pointer"
+\, "symbol";
+#X text 15 330 objects:;
+#X text 30 349 [route] \, [set] \, [float] \, [symbol] \, [trigger]
+\, etc.;
+#X text 15 383 messages:;
+#X text 30 406 [send 1( \, [set 0( \,;
+#X text 17 280 reserved words:;
+#X text 15 441 Though an old term in the realm of the Max family of
+languages \, "abstraction" is a misleading term. Pd patches are either
+applications or objects. If a Pd patch is meant to be reused in other
+patches \, it is an object just like any other.;
+#X text 12 521 For more info:;

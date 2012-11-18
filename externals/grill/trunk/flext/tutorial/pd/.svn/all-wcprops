@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd
+END
+ex-lib1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-lib1.pd
+END
+ex-thread1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-thread1.pd
+END
+ex-thread2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-thread2.pd
+END
+ex-buffer1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-buffer1.pd
+END
+ex-attr1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-attr1.pd
+END
+ex-adv1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-adv1.pd
+END
+ex-attr2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-attr2.pd
+END
+ex-adv2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-adv2.pd
+END
+ex-bind1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-bind1.pd
+END
+ex-attr3.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-attr3.pd
+END
+ex-adv3.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-adv3.pd
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/Makefile.am
+END
+ex-signal1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-signal1.pd
+END
+ex-signal2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-signal2.pd
+END
+ex-sndobj1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-sndobj1.pd
+END
+ex-timer1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-timer1.pd
+END
+ex-simple1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-simple1.pd
+END
+ex-simple2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-simple2.pd
+END
+ex-simple3.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-simple3.pd
+END
+ex-stk1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-stk1.pd
+END
+ex-stk2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/tutorial/pd/ex-stk2.pd
+END

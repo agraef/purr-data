@@ -1,0 +1,24 @@
+#N canvas 1245 199 744 386 10;
+#X obj 161 197 jack-ports;
+#X msg 160 1 bang;
+#X obj 146 239 print output;
+#X obj 253 238 print input;
+#X text 41 267 output is in the form of a pairs client - port. outputs
+on the left \, inputs on the right.;
+#X text 200 5 will give all ports registered;
+#X text 181 25 Input is a regular expression for the client/port plus
+one or more of the following keywords: virtual: a port that is _not_
+a physical hw interface physical: a port that _is_ a hw interface output:a
+port that is a jack output input: a port that is a jack input;
+#X msg 184 123 virtual input .*3.*;
+#X text 340 123 will give all software inputs with a 3 in the name
+;
+#X msg 182 153 physical ouput .*[34].*;
+#X text 356 152 will give the hw jack outputs with either a 3 or a
+4 in the name;
+#X text 354 181 notice that these are soundcard _inputs_!!;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 0;

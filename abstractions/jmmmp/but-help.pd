@@ -1,0 +1,34 @@
+#N struct 1431-color float x float y float farbe float ynpos;
+#N canvas 188 69 399 419 10;
+#X text 12 387 Released under the BSD License;
+#X text 198 160 Inlets;
+#X text 198 220 Outlets;
+#X text 198 90 Arguments;
+#X text 12 367 (C) 2008 João Pais - jmmmpais@googlemail.com;
+#X text 198 130 - TCL Color;
+#X text 198 180 - Bang;
+#X text 198 240 - Bang;
+#X obj 22 122 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 82 162 print;
+#X text 24 183 Always the same output;
+#X text 22 10 [but] - Monochrome Bang Button;
+#X obj 52 122 but 15 31;
+#X obj 82 122 but 15 22;
+#X obj 112 122 but 15 16;
+#X obj 142 122 but 15 13;
+#X text 22 40 [but] is a monochrome button that outputs a bang. It
+serves only to have a different graphic presentation.;
+#X text 12 337 Done following the concept of [Tot] by J. Kreidler.
+;
+#X text 12 268 To know which colors to use \, have a look at;
+#X obj 279 268 pd-colors;
+#X text 198 110 - Size (points);
+#X text 12 288 Unfortunately \, until Pd gets a "clean" flag \, everytime
+you use this abstraction you'll be asked to save the patch (which you
+can if you want).;
+#X connect 8 0 9 0;
+#X connect 12 0 9 0;
+#X connect 13 0 9 0;
+#X connect 14 0 9 0;
+#X connect 15 0 9 0;

@@ -1,0 +1,66 @@
+#N canvas 84 12 712 664 10;
+#X obj 197 398 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X obj 346 203 pdp_v4l;
+#X obj 355 172 metro 70;
+#X obj 400 138 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 357 139 stop;
+#X msg 442 170 open /dev/video;
+#X obj 252 167 pdp_yqt;
+#X obj 280 217 dac~;
+#X obj 198 354 pdp_puzzle;
+#X obj 469 381 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 469 433 pdp_control;
+#X msg 469 406 thread \$1;
+#X floatatom 469 494 5 0 0 0 - - -;
+#X obj 469 465 route pdp_drop;
+#X msg 49 276 up;
+#X msg 84 276 down;
+#X msg 125 277 left;
+#X msg 168 278 right;
+#X floatatom 327 278 5 0 0 0 - - -;
+#X text 104 257 Movement;
+#X text 327 260 Number of blocks;
+#X connect 1 0 10 0;
+#X connect 2 0 16 0;
+#X connect 3 0 2 0;
+#X connect 4 0 16 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 16 0;
+#X connect 11 0 18 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 0;
+#X connect 16 0 18 0;
+#X connect 16 4 17 0;
+#X connect 16 5 17 1;
+#X connect 18 0 0 0;
+#X connect 19 0 21 0;
+#X connect 20 0 23 0;
+#X connect 21 0 20 0;
+#X connect 23 0 22 0;
+#X connect 24 0 18 0;
+#X connect 25 0 18 0;
+#X connect 26 0 18 0;
+#X connect 27 0 18 0;
+#X connect 28 0 18 1;

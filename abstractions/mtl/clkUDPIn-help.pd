@@ -1,0 +1,15 @@
+#N canvas 1361 372 628 323 10;
+#X text 41 32 Description: Receive a timing flow through UDP;
+#X obj 106 127 loadbang;
+#X msg 106 154 external 1;
+#X text 211 123 Argument: port to listen to;
+#X obj 106 185 mtl/clkMaster;
+#X obj 193 213 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 212 147 mtl/clkUDPIn 8247;
+#X text 51 245 open clkUDPOut's help for a working example.;
+#X text 41 53 tags: timing network;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 4 2 5 0;
+#X connect 6 0 4 1;

@@ -1,0 +1,25 @@
+#N canvas 411 24 502 489 10;
+#X obj 218 31 cnv 15 466 97 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 222 -188 K12/wii_connect;
+#X obj 222 145 K12/output;
+#X obj 222 -78 K12/wii_hit;
+#N canvas 832 145 450 514 META 0;
+#X text 11 5 DESCRIPTION Creates a sound like a bass drum;
+#X text 10 50 OUTLET_0 Connect this to a yellow effect or the green
+sound object.;
+#X text 11 30 INLET_0 Send a 1 here to trigger the sound.;
+#X restore 653 220 pd META;
+#X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 209 -243 cnv 15 501 28 empty empty ShortInstrument1 5 14 0 20
+-139274 -262144 0;
+#X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 222 34 K12/instr_short1;
+#X text 324 43 The Short Instrument creates a sound like a bass drum.
+Connect any input device object to the left inlet. In this example
+we are using Wii Hit. Connect the outlet to an effect object or to
+the sound object as shown.;
+#X connect 1 0 3 0;
+#X connect 3 0 8 0;
+#X connect 8 0 2 0;

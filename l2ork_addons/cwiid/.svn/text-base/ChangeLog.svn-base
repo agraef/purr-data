@@ -1,0 +1,485 @@
+2007-08-26 L. Donnie Smith <cwiid@abstrakraft.org>
+	docs
+	* updated wminput man page
+
+2007-08-23 L. Donnie Smith <cwiid@abstrakraft.org>
+	python
+	* fixed libdir install bug
+
+2007-08-14 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* make cwiid_err_default public
+
+	wminput
+	* added {c,py}_wiimote_deinit functions
+	* added daemon, quiet, and reconnect options
+
+2007-07-29 L. Donnie Smith <cwiid@abstrakraft.org>
+	wminput
+	* fixed wait forever logic
+
+2007-07-28 L. Donnie Smith <cwiid@abstrakraft.org>
+	configure.ac
+	* added config.h header
+	* added with-python argument and associated logic
+
+	lswm
+	* added config.h include for sources requiring defs
+
+	wmgui
+	* added config.h include for sources requiring defs
+
+	wminput
+	* added config.h include for sources requiring defs
+	* added HAVE_PYTHON tests around all python code
+
+2007-06-28 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* changed version
+
+	python
+	* implemented uninstall
+
+	wminput
+	* rewrote ir_ptr plugin
+	* supress error for nonexistent python plugins
+
+2007-06-18 L. Donnie Smith <cwiid@abstrakraft.org>
+	wminput
+	* revised error messages
+
+	python
+	* revised error messages and doc strings
+
+2007-06-14 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* added sleep after cwiid_find_wiimote call
+
+	python
+	* added --prefix option to install script
+
+2007-06-05 L. Donnie Smith <cwiid@abstrakraft.org>
+	python
+	* removed Wiimote_FromC function
+	* added bdaddr argument to Wiimote.init
+	* overloaded Wiimote.init to accept CObject (existing wiimote),
+	  and logic to avoid closing it on dealloc
+
+	wminput
+	* refactored to isolate plugin logic
+	* now imports python plugins without changing directories
+
+2007-06-01 Nick <nickishappy@gmail.com>
+	lswm
+	* reworked command-line options (added standard options, long options)
+
+	wminput
+	* reworked command-line options (added standard options, long options)
+
+2007-06-01 L. Donnie Smith <cwiid@abstrakraft.org>
+	python
+	* added Wiimote_FromC
+	* exported Wiimote_FromC and ConvertMesgArray as CObjects
+	* added get_acc_cal
+
+	wminput
+	* added pyplugin.c, pyplugin.h
+	* changed wmplugin_exec prototype (&mesg->mesg)
+	* changed param format (pass pointers)
+	* added python plugin support (experimental)
+
+2007-05-30 L. Donnie Smith <cwiid@abstrakraft.org>
+	configure.ac
+	* added python/Makefile and PYTHON_VERSION variable
+
+	build system
+	* added ROOTDIR (massaged DESTDIR)
+
+	python
+	* added directory
+
+2007-05-27 Arthur Peters <amp@singingwizard.org>
+	python
+	* removed set_mesg_callback from methods table
+
+2007-05-16 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* removed error_pipe
+	* fixed error message reporting
+	* changed cwiid_connect, cwiid_disconnect to cwiid_open, cwiid_close
+	  (added macros for backward compatibility)
+	* split cwiid_command into cwiid_request_status, cwiid_set_led,
+	  cwiid_set_rumble, cwiid_set_rpt_mode (kept cwiid_command for backward
+	  compatibility)
+
+	wmdemo
+	* updated for function name changes
+
+	wmgui
+	* updated for function name changes
+
+	wminput
+	* updated for function name changes
+
+2007-05-14 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* added timestamp to message interfaces
+	* added cwiid_get_acc_cal
+
+	wmdemo
+	* updated for timestamp addition
+
+	wmgui
+	* updated for timestamp addition
+	* use cwiid_get_acc_cal to get acc calibration values
+
+	wminput
+	* updated for timestamp addition
+	* use cwiid_get_acc_cal to get acc calibration values (acc plugins)
+
+2007-04-24 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* rewrite (API overhaul)
+
+	wmdemo
+	* updated for API overhaul
+
+	wmgui
+	* updated for API overhaul
+
+	wminput
+	* updated for API overhaul
+
+2007-04-15 <work.eric@gmail.com>
+	wminput
+	* fixed classic controller configuration bug
+
+2007-04-12 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* streamlined wiimote filter
+
+2007-04-12 Petter Reinholdtsen <pere@hungry.com>
+	wmdemo
+	* added command-line WIIMOTE_BDADDR
+
+2007-04-09 L. Donnie Smith <cwiid@abstrakraft.org>
+	libcwiid
+	* renamed from libwiimote
+	* renamed external data structures
+
+	lswm
+	* updated for libcwiid rename
+
+	wmdemo
+	* updated for libcwiid rename
+
+	wmgui
+	* updated for libcwiid rename
+
+	wminput
+	* updated for libcwiid rename
+
+2007-04-08 Arthur Peters <amp@singingwizard.org>
+	wminput
+	* added debounce and low-pass filter to ir_ptr plugin
+	* added low-pass filter to acc plugin
+
+2007-04-08 L. Donnie Smith <cwiid@abstrakraft.org>
+	defs.mak
+	* added DEBUGFLAGS variable
+
+	wiimote
+	* fixed incompatible pointer warning in process_error
+
+	wmgui
+	* fixed signed/unsigned comparison warning in btnRead_clicked
+
+	wminput
+	* fixed signed/unsigned comparison warning in uinput_open and get_plugin
+	* copied acc low-pass filter to nunchuk_acc
+	* removed path from default config symlink target
+	* added plugins parameters (added lex and parse rules, conf functions,
+	  wmplugin_param_info struct, updated README)
+	* initialized param info in ir_ptr, nunchuk_acc, and acc plugins
+	* created Scale params in nunchuk_acc and acc plugins
+	* set Scale params for neverball config
+
+2007-04-08 Petter Reinholdtsen <pere@hungry.com>
+	defs.mak
+	* created WARNFLAGS variable
+	* added -W to WARNFLAGS
+
+	wiimote
+	* fixed signed/unsigned comparison warning in int_listen, send_report, and
+	  exec_write_seq
+
+2007-04-07 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* changed wiimote_info.class to btclass
+
+2007-04-03 L. Donnie Smith <cwiid@abstrakraft.org>
+	configure.ac
+	* removed --noyywrap from lex
+
+	wiimote
+	* added queue_flush
+	* reimplemented queue_queue with queue_flush
+	* added wiimote_mesg_error message type
+	* moved RW error state to separate wiimote member
+	* updated wiimote_read and wiimote_write to trigger and detect rw_error
+	* cancel rw operations from wiimote_disconnect
+	* implemented process_error to handle socket read errors
+	* added rw_status triggers to read and write handlers
+
+	wmdemo
+	* made wiimote handle global
+	* disconnect and exit on wiimote_mesg_error
+
+	wmgui
+	* disconnect on wiimote_mesg_error
+
+	wminput
+	* exit on wiimote_mesg_error
+
+2007-04-03 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* fixed wiimote_find_wiimote seg fault
+
+	wmgui
+	* commented custom wiimote_err (causing Xlib errors)
+
+	wminput
+	* added stdio.h include to conf.h
+
+2007-04-02 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* fixed exception handling bugs in bluetooth.c
+
+	wminput
+	* added wait option
+
+2007-04-01 L. Donnie Smith <cwiid@abstrakraft.org>
+	* Moved defs.mak.in to top level directory
+	* Added directories to defs.mak.in
+	* Moved CFLAGS directories from defs.mak to Makefiles
+	* simplified make install deps
+
+	lswm
+	* created app
+
+	wmdemo
+	* renamed main.c to wmdemo.c
+	* updated for wiimote_connect change
+	* clarified status output menu item, added status request
+
+	wmgui
+	* updated for wiimote_connect change
+
+	wminput
+	* updated for wiimote_connect change
+
+	wiimote
+	* created bluetooth.c
+	* moved wiimote_findfirst to bluetooth.c, renamed to wiimote_find_wiimote,
+	  added timeout argument
+	* defined struct wiimote_info
+	* wrote wiimote_get_info_array
+	* wiimote_connect now takes a pointer to bdaddr_t
+
+2007-03-27 L. Donnie Smith <cwiid@abstrakraft.org>
+	* Added DESTDIR variable to make system
+
+2007-03-23 L. Donnie Smith <cwiid@abstrakraft.org>
+	* Corrected installation directory creation logic
+	* Added .NOTPARALLEL to top level Makefile
+
+2007-03-19 L. Donnie Smith <cwiid@abstrakraft.org>
+	* Added --disable-ldconfig option to configure
+	* Makefiles - append to rather than set compiler options
+
+2007-03-15 L. Donnie Smith <cwiid@abstrakraft.org>
+	wminput
+		* action_enum.awk - explicitly call awk rather than #! /usr/bin/awk
+
+2007-03-14 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+		* audited error checking (coda and error handler sections)
+		* updated comments
+		* event.c - moved int_listen read/write code to process_read and
+		  process_write, reorganized file
+		* wiimote_read - changed to obey decode flag only for register read
+		* wiimote_connect - changed memcpy to bacmp
+
+2007-03-08 L. Donnie Smith <cwiid@abstrakraft.org>
+	* added explicit creation of installation directories to prevent
+	  installation errors
+
+	wiimote
+		* created wiimote_err_t function type
+		* created wiimote_set_err function
+		* added wiimote parameter to wiimote_err calls
+
+	wmdemo
+		* added implementation of wiimote_err_t, wiimote_set_err
+
+2007-03-05 L. Donnie Smith <cwiid@abstrakraft.org>
+	* Type audit - boolean ints, const strings where appropriate, stdint.h
+	  wiimote types
+	* Changed email addresses to cwiid@abstrakraft.org
+	* Added file ChangeLogs
+	* Fixed GTK_{CFLAGS,LIBS} in configure.ac and wmgui/Makefile.in
+
+2007-03-01 L. Donnie Smith <cwiid@abstrakraft.org>
+	* configure.ac - check for stdint.h
+
+2007-02-26 L. Donnie Smith <cwiid@abstrakraft.org>
+	* Changed installation directories to comply with FHS standard
+	* Added check for yypop_buffer_state in flex
+	* Various minor documentation changes
+	* Lowercased "cwiid" in filenames
+
+	wiimote
+	* added 'static' to local function declarations
+
+	wminput
+	* added filenames and correct location tracking to parser error messages
+	* added 'static' to local function declarations (plugins)
+
+2007-02-21 Romain Beauxis <toots@rastageeks.org>
+	wminput
+	* fixed help message
+
+2007-02-18 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* fixed wiimote_status_mesg allocation size
+	* changed wiimote_log to wiimote_err with format string and args
+	* reworked event/callback system to pass arrays of (simultaneous) messages
+	* added extern "C" declaration to wiimote.h for c++ programs
+	* added wiimote_t * to wiimote_mesg_t callback prototype (to facilitate
+	  using the same callback for multiple wiimotes)
+
+	wmdemo
+	* added
+
+	wmgui
+	* Added parent argument to message function
+
+	wminput
+	* rewrite: new configuration syntax, plugin architecture
+
+2007-01-25 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* added rpt_mode_flag lock to prevent race condition
+	* extended write sequences to simplify multi-part operations
+
+	wmgui
+	* added status request at connect to populate status boxes
+
+2007-01-24 L. Donnie Smith <cwiid@abstrakraft.org>
+	Added uninstall make target
+
+	wiimote
+	* macros renamed (should be last rename of public macros)
+	* added status, nunchuk, and classic controller messages
+	* added intelligent report mode selection
+
+	wmgui
+	* changed button widgets
+	* added nunchuk and classic controller support
+
+	wminput
+	* fixed command-line bug
+	* updated for wiimote updates
+	* changes to plugin architecture - gives greater access to plugin
+	* added LED indicators to default (IR) tracking
+
+2007-01-16 L. Donnie Smith <cwiid@abstrakraft.org>
+	wminput
+	* fixed build error in plugins directory
+
+2007-01-15 L. Donnie Smith <cwiid@abstrakraft.org>
+	reworked build system, now using autoconf
+
+	wiimote
+	* fixed bug in IR report data extraction
+	* created acc_ir client message
+	* make install now installs library and header to /usr/local
+
+	wmif
+	* removed
+
+	wmgui
+	* reworked GUI
+	* added force, roll and pitch displays
+	* removed AutoMake
+	* split wiimote_callback into separate functions
+	* rewrote command-line parsing
+	* added WIIMOTE_BDADDR environment variable lookup
+
+	wminput
+	* split wiimote_callback into separate functions
+	* cleaned up cursor tracking
+	* renamed wminput.c to main.c
+	* rewrote command-line parsing
+	* added WIIMOTE_BDADDR environment variable lookup
+	* created plugin architecture and acc plugin
+
+2007-01-09 L. Donnie Smith <cwiid@abstrakraft.org>
+	reworked top-level Makefile
+	bins install to /usr/local/bin on make install
+	wiimote
+	* Changes to message dispatch thread to isolate main thread from dispatch
+	  timing issues (especially GTK apps)
+
+	wmif
+	* fixed --help bug
+
+	wmgui
+	* fixed --help bug
+	* added g_thread_support test before g_thread_init
+
+	wminput
+	* fixed --help bug
+	* added #ifdef tests around KEY_ macros in key_enum.{c,awk}
+
+2007-01-04 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* put mesg callback data in a union
+	* fixed write flood error (wait for ACK after each packet)
+	* added IR reporting (mode 0x33 only)
+	* moved internal definitions from wiimote.h into wiimote_internal.h
+	  (struct wiimote is now opaque)
+	* wiimote_connect now returns a wiimote_t *
+	* sends button message only when button status changes
+
+	wmif
+	* updated for wiimote changes
+
+	wmgui
+	* updated for wiimote changes
+	* enabled IR widgets
+
+	wminput
+	* added to package
+
+2006-12-31 L. Donnie Smith <cwiid@abstrakraft.org>
+	wiimote
+	* changed various macro names and parameter types (mostly signed to unsigned)
+	* cleaned up LED & RUMBLE command logic
+	* added ACC reporting
+	* added data read/write
+	* created dispatch thread (isolates bluetooth read from app callbacks)
+	* reset report mode after receive status report
+
+	wmif
+	* updated for wiimote changes
+	* added EEPROM read menu option
+
+	wmgui
+	* updated for wiimote changes
+	* added ACC output
+	* added data read/write
+	* added IR data widgets (not yet enabled)
+
+2006-12-28 L. Donnie Smith <cwiid@abstrakraft.org>
+	Initial release

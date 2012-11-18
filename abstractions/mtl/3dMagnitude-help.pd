@@ -1,0 +1,19 @@
+#N canvas 56 27 411 191 10;
+#X text 145 112 args: none;
+#X text 144 127 inlet: accepts list of 3 floats;
+#X text 144 142 outlet: float <magnitude>;
+#X floatatom 19 138 5 0 0 0 - - -;
+#X msg 63 90 3 1 2;
+#X msg 106 90 0 0 7;
+#X msg 19 90 1 1 0;
+#X obj 12 6 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 17 48 tags: 3d;
+#X text 114 48 Author: Roman Haefeli;
+#X text 267 48 Version: 2007-12-09;
+#X obj 19 115 mtl/3dMagnitude;
+#X text 17 8 Description: Computes the magnitude of a vector.;
+#X connect 4 0 11 0;
+#X connect 5 0 11 0;
+#X connect 6 0 11 0;
+#X connect 11 0 3 0;

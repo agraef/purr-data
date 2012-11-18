@@ -1,0 +1,39 @@
+#N canvas 253 47 600 558 10;
+#X obj 28 -81 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 26 -165 cnv 15 430 22 empty empty empty 20 12 0 14 -241404 -66577
+0;
+#X text 39 -119 Author: Thomas Ouellet Fredericks;
+#X text 39 -134 Description: [soundfiler] adapted for the "sample"
+format.;
+#X obj 26 -144 cnv 6 430 1 empty empty ::sample.filer:: 0 -10 0 12
+-66577 -66577 0;
+#X text 382 -161 Version: 1;
+#X obj 26 -165 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 39 289 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 38 -102 Flags: sample_id;
+#X obj 36 87 file.path.top;
+#X obj 165 93 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 188 92 <- Try with one of your own sound files!;
+#X text 33 21 Click below to watch the sample load in the sample.table.
+;
+#X text 37 259 -- OTHER MESSAGES --;
+#X text 58 289 turn on/off the sample_id signal.;
+#X msg 36 41 medias/sounds/loop0.wav;
+#X msg 215 41 medias/sounds/loop1.wav;
+#X text 33 -58 This method can load any file Pure Data's soundfiler
+object can read BUT it will not be capable of extracting information
+(number of channels \, samplerate \, etc) if the file is not a 16 bit
+WAV file.;
+#X obj 36 148 sample.display_;
+#X obj 39 326 sample.filer;
+#X obj 36 121 sample.filer;
+#X connect 7 0 19 0;
+#X connect 9 0 20 0;
+#X connect 10 0 20 0;
+#X connect 15 0 9 0;
+#X connect 16 0 9 0;
+#X connect 20 0 18 0;

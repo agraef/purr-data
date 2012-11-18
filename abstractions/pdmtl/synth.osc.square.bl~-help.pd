@@ -1,0 +1,67 @@
+#N canvas 257 21 642 552 10;
+#X obj 271 195 cnv 15 350 130 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X obj 173 340 cnv 15 450 120 empty empty empty 20 12 0 14 -241291
+-66577 0;
+#N canvas 573 67 190 308 compute_bandlimited_range 0;
+#X msg 21 34 get_num_of_tables;
+#X obj 21 56 s BLSQUARE;
+#X obj 21 76 r BLSQUARE;
+#X obj 21 97 route num_of_tables;
+#X obj 21 12 loadbang;
+#X obj 21 128 t b f;
+#X obj 21 152 samplerate~;
+#X obj 21 174 / 2;
+#X obj 51 194 * 2;
+#X obj 51 217 + 1;
+#X obj 21 238 /;
+#X obj 21 264 outlet;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 5 1 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 1;
+#X connect 10 0 11 0;
+#X restore 251 369 pd compute_bandlimited_range;
+#X floatatom 251 394 7 0 0 0 - - -;
+#X text 304 396 Hz;
+#X text 249 417 if frequency above border -> bandlimited square;
+#X text 249 433 if frequency below border -> raw square;
+#X text 183 394 border @;
+#X obj 234 476 cnv 15 390 25 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X text 242 482 due to bandlimitation peaks above/below +/-1 may occur
+;
+#X obj 11 38 hsl 128 15 20 17000 1 0 empty empty frequency -2 -8 0
+10 -262144 -1 -1 0 1;
+#X obj 8 60 pack f 100;
+#X obj 8 81 line~;
+#X text 250 347 try different values for <number of tables>:;
+#X text 18 502 Author: Roman Haefeli;
+#X text 217 53 if [synth.osc.square.bl~] is instantiated more than
+once \, only the first instance creates the tables. if the argument
+value differs \, the biggest is taken.;
+#X text 217 112 the number of tables is at the same time the number
+of harmonics of the table with the highest number of harmonics. this
+value defines also the frequency \, below which [synth.square.bl~]
+switches to a raw square.;
+#X obj 8 240 mix.out_~;
+#X text 278 206 SYNOPSIS;
+#X text 218 24 Description: Generates a bandlimited square signal;
+#X text 277 248 inlet1: signal (frequency);
+#X text 277 265 inlet2: float (set phase);
+#X text 277 281 outlet1: signal (bandlimited square at given f);
+#X obj 9 128 synth.osc.square.bl~ 30;
+#X text 276 299 arg1: int (number of tables \, default 40);
+#X text 17 520 Version: 2007-09-13;
+#X connect 2 0 3 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 23 0;
+#X connect 23 0 17 0;
+#X connect 23 0 17 1;

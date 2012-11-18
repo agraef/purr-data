@@ -1,0 +1,41 @@
+#N canvas 326 150 559 474 10;
+#X obj 55 209 sample.pitch;
+#X obj 54 358 sample.play~;
+#X obj 56 421 mix.out_~;
+#X obj 55 91 sample.filer;
+#X msg 56 41 medias/sounds/loop1.wav;
+#X obj 54 298 sample.print;
+#X msg 147 309 1;
+#X msg 153 348 0;
+#X obj 141 273 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X floatatom 184 185 5 0 0 0 - - -;
+#X floatatom 160 154 5 0 0 0 - - -;
+#X text 213 167 OR;
+#X text 227 181 MIDI base note;
+#X floatatom 91 258 5 0 0 0 - - -;
+#X floatatom 131 235 5 0 0 0 - - -;
+#X text 174 231 MIDI base note;
+#X text 154 126 You can change the base pitch of a sample by either
+of these two inlets:;
+#X text 195 151 base pitch (for note 60);
+#X text 125 255 base pitch (for note 60);
+#X text 181 311 <- By changing the pitch with sample.pitch \, the sample
+will play at the new pitch when trigged.;
+#X msg 184 383 60 126;
+#X msg 184 410 60 0;
+#X connect 0 0 5 0;
+#X connect 0 1 13 0;
+#X connect 0 2 14 0;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 1 0;
+#X connect 6 0 1 1;
+#X connect 7 0 1 1;
+#X connect 8 0 5 1;
+#X connect 9 0 0 2;
+#X connect 10 0 0 1;
+#X connect 20 0 1 1;
+#X connect 21 0 1 1;

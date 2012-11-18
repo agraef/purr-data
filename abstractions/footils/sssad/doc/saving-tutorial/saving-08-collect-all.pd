@@ -1,0 +1,75 @@
+#N canvas 373 10 570 698 10;
+#X floatatom 169 56 5 0 0 0 - - -;
+#X obj 51 56 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 51 76 s SAVING-ADMIN;
+#X floatatom 169 75 5 0 0 0 - - -;
+#X obj 216 56 store-collect-delayed many1;
+#X obj 216 78 store-collect-delayed many2;
+#X floatatom 169 94 5 0 0 0 - - -;
+#X obj 216 100 store-collect-delayed many3;
+#X obj 52 191 r SAVING-SEND;
+#X obj 52 211 print SAVING-SEND;
+#X text 53 252 You get three lists containing things like "list many2
+129". We can store all these into a message box by first resetting
+the message box and then "add"ing the lists.;
+#X obj 59 442 s SAVING-ADMIN;
+#X msg 335 425;
+#X obj 335 397 list trim;
+#X obj 335 324 r SAVING-SEND;
+#X msg 89 384 set;
+#X obj 59 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 122 386 first empty the msg.box ...;
+#X text 41 464 ... and then collect the state variables;
+#X text 51 22 Lets say we have this setup:;
+#X msg 278 626 \; SAVING-REC many3 15 \; SAVING-REC many2 169 \; SAVING-REC
+many1 141 \;;
+#X obj 278 598 list trim;
+#X obj 278 535 r SAVING-SEND;
+#X obj 278 579 list prepend add SAVING-REC;
+#X obj 335 377 list prepend add;
+#X text 55 499 However the saver-messagebox doesn't have the correct
+format yet to restore the state. Thankfully the fix is easy:;
+#X text 108 635 Press this to restore:;
+#X msg 103 583 set \, addsemi;
+#X obj 335 353 spigot;
+#X obj 384 354 tgl 15 0 empty empty open-to-test 20 8 0 8 -262144 -1
+-1 0 1;
+#X obj 278 559 spigot;
+#X obj 327 560 tgl 15 0 empty empty open-to-test 20 8 0 8 -262144 -1
+-1 0 1;
+#X obj 59 354 t b b;
+#X obj 73 661 s SAVING-ADMIN;
+#X obj 73 538 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 73 561 t b b;
+#X text 49 139 Now watch closely what gets send over our SAVING-SEND
+lines in the console if you press the saving-bang \, after you have
+played with the number boxes above:;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 3 0 5 0;
+#X connect 4 0 0 0;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 13 0 12 0;
+#X connect 14 0 28 0;
+#X connect 15 0 12 0;
+#X connect 16 0 32 0;
+#X connect 21 0 20 0;
+#X connect 22 0 30 0;
+#X connect 23 0 21 0;
+#X connect 24 0 13 0;
+#X connect 27 0 20 0;
+#X connect 28 0 24 0;
+#X connect 29 0 28 1;
+#X connect 30 0 23 0;
+#X connect 31 0 30 1;
+#X connect 32 0 11 0;
+#X connect 32 1 15 0;
+#X connect 34 0 35 0;
+#X connect 35 0 33 0;
+#X connect 35 1 27 0;

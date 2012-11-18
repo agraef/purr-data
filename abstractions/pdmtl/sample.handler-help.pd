@@ -1,0 +1,46 @@
+#N canvas 113 21 915 734 10;
+#X obj 29 19 cnv 10 200 10 empty empty sample.handler 0 -10 0 16 -33289
+-66577 0;
+#X text 29 83 Author: Thomas Ouellet Fredericks;
+#X text 29 68 Flags: internal sample_id;
+#X obj 48 253 file.path.top;
+#X floatatom 20 657 5 0 0 1 status - -;
+#X obj 96 604 print name;
+#X obj 51 402 sample.handler;
+#X text 453 202 -1: Nothing loaded or invalid sample.;
+#X text 459 218 1: Sample loaded and ready to play.;
+#X text 406 184 How to decode the status (first outlet of sample.handler):
+;
+#X text 28 34 Description: Handles the data of a synthd "sample_id"
+stream.;
+#X text 493 10 Version: 2007-06-12;
+#X obj 20 681 print status;
+#X text 460 235 0: Sample changing/loading.;
+#X msg 31 193 medias/sounds/loop0.wav;
+#X msg 80 219 medias/sounds/loop1.wav;
+#X obj 68 335 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 89 331 Force output;
+#X obj 117 579 print gadsr;
+#X obj 198 491 print format;
+#X obj 226 469 print playback;
+#X obj 46 626 print progress;
+#X obj 49 296 sample.filer;
+#X obj 158 534 print preview_state;
+#X obj 136 557 print bounds;
+#X obj 181 513 print table_id;
+#X connect 3 0 22 0;
+#X connect 4 0 12 0;
+#X connect 6 0 4 0;
+#X connect 6 1 21 0;
+#X connect 6 2 5 0;
+#X connect 6 3 18 0;
+#X connect 6 4 24 0;
+#X connect 6 5 23 0;
+#X connect 6 6 25 0;
+#X connect 6 7 19 0;
+#X connect 6 8 20 0;
+#X connect 14 0 3 0;
+#X connect 15 0 3 0;
+#X connect 16 0 6 1;
+#X connect 22 0 6 0;

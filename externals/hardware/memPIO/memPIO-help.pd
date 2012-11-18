@@ -1,0 +1,52 @@
+#N canvas 0 0 963 494 12;
+#X msg 49 90 bang;
+#X obj 49 40 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 92 243 5 0 0 1 port3 - -;
+#X msg 303 87 mode \$1;
+#X obj 303 68 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 635 107 set \$1;
+#X floatatom 635 167 3 0 255 1 8bit - -;
+#X msg 635 190 set 255 \$1 0;
+#X msg 303 129 mode 0 1 1;
+#X obj 49 210 memPIO;
+#X floatatom 70 264 5 0 0 1 port2 - -;
+#X floatatom 49 285 5 0 0 1 port1 - -;
+#X obj 49 64 metro 50;
+#X text 57 109 read readable ports;
+#X text 59 7 reading;
+#X text 633 23 writing;
+#X text 307 4 set port-direction:;
+#X text 302 23 0__readable (default);
+#X text 302 39 1__writeable;
+#X text 325 64 set all ports;
+#X text 306 113 set ports independently;
+#X floatatom 635 85 3 0 255 1 8bit - -;
+#X text 604 41 mode must be set to "writable";
+#X text 592 69 set all writable ports to the same value;
+#X text 617 150 write ports independently;
+#X text 238 325 note: to understand the values \, you will need some
+knowledge about bits.;
+#X floatatom 49 341 1 0 0 0 - - -;
+#X obj 49 318 & 1;
+#X text 65 342 line1 of port1;
+#X text 89 418 IMPORTANT NOTE: do not (un)plug the device while using
+[memPIO] !!;
+#X msg 251 242 help;
+#X connect 0 0 9 0;
+#X connect 1 0 12 0;
+#X connect 3 0 9 0;
+#X connect 4 0 3 0;
+#X connect 5 0 9 0;
+#X connect 6 0 7 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 9 0 11 0;
+#X connect 9 1 10 0;
+#X connect 9 2 2 0;
+#X connect 11 0 27 0;
+#X connect 12 0 0 0;
+#X connect 21 0 5 0;
+#X connect 27 0 26 0;
+#X connect 30 0 9 0;

@@ -1,0 +1,18 @@
+#N canvas 0 0 541 553 10;
+#X obj 93 115 inlet;
+#X obj 69 476 outlet;
+#X obj 321 247 +;
+#X obj 355 158 inlet;
+#X obj 321 282 % 12;
+#X text 327 342 Todo: use creb's;
+#X text 325 389 instead of %;
+#X obj 137 201 list append;
+#X obj 140 250 list.op;
+#X obj 330 364 fmod 12;
+#X connect 0 0 7 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 1;
+#X connect 4 0 8 1;
+#X connect 7 0 8 0;
+#X connect 8 0 1 0;
+#X connect 8 1 2 0;

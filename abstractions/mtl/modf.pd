@@ -1,0 +1,12 @@
+#N canvas 1354 223 450 300 10;
+#X obj 121 81 inlet;
+#X obj 115 249 outlet;
+#X obj 259 76 inlet;
+#X obj 305 125 tof/argument 1 1;
+#X obj 313 79 loadbang;
+#X obj 117 191 maxlib/wrap 1;
+#X connect 0 0 5 0;
+#X connect 2 0 5 2;
+#X connect 3 0 5 2;
+#X connect 4 0 3 0;
+#X connect 5 0 1 0;

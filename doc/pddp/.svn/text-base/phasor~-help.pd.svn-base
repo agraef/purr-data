@@ -1,0 +1,86 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header phasor~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal;
+#X text 12 45 DESCRIPTION sawtooth generator;
+#X text 12 65 INLET_0 float signal;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 438 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 474 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 109 480 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 osc~;
+#X obj 62 43 cos~;
+#X obj 103 43 tabread4~;
+#X text 8 2 [phasor~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 348 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 447 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 392 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 391 float;
+#X obj 471 3 phasor~;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/phasor~ -text
+pdpedia: phasor~;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 100 float 0;
+#X coords 0 1 100 -1 200 100 1;
+#X restore 279 200 graph;
+#X obj 84 197 metro 500;
+#X floatatom 68 114 0 0 0 0 - - -;
+#X text 86 238 graph the output;
+#X text 97 114 <- specify frequency;
+#X obj 68 142 phasor~ 440;
+#X text 145 136 invoked with argument for non-signal input. Incoming
+messages override the initial value.;
+#X obj 84 172 loadbang;
+#X text 98 347 float;
+#X text 98 367 signal;
+#X text 98 411 list;
+#X text 98 446 signal;
+#X text 11 23 sawtooth generator;
+#X text 168 347 - a float sets the frequency of the sawtooth.;
+#X text 168 367 - incoming signal sets the frequency of the sawtooth.
+;
+#X text 167 391 - resets the phase (range is 0 to 1).;
+#X text 167 411 - a list will be truncated to the first element.;
+#X text 80 492 1) float;
+#X text 63 66 The [phasor~] object outputs a sawtooth signal \, traditionally
+used for table lookup via [cos~] or [tabread4~].;
+#X text 168 492 - (optional) with a floating-point argument \, [phasor~]
+takes floating-point messages to change frequency. If no argument is
+supplied \, the input is taken to be an audio signal.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 98 551 pddp/pddplink ../3.audio.examples/C02.sawtooth-foldover.pd
+-text doc/3.audio.exampmles/C02.sawtooth-foldover.pd;
+#X obj 98 566 pddp/pddplink ../3.audio.examples/J09.bandlimited.pd
+-text doc/3.audio.exampmles/J09.bandlimited.pd;
+#X obj 68 221 tabwrite~ \$0-array;
+#X connect 15 0 38 0;
+#X connect 16 0 19 0;
+#X connect 19 0 38 0;
+#X connect 21 0 15 0;
+#X connect 21 0 15 0;

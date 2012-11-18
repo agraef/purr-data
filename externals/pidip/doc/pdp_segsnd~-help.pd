@@ -1,0 +1,13 @@
+#N canvas 259 178 509 391 10;
+#X text 51 321 written by Yves Degoyon (ydegoyon@free.fr);
+#X text 236 112 <-- everything is in this box;
+#X text 265 127 where the block size is redefined;
+#X obj 395 221 loadbang;
+#X msg 395 251 \; pd dsp 1;
+#X obj 128 113 rs_pdp_segsnd~;
+#X text 51 295 pdp_segsnd~ : turns a segment into sound;
+#X text 51 308 ( only use luminosity );
+#X obj 126 158 dac~;
+#X connect 3 0 4 0;
+#X connect 5 0 8 0;
+#X connect 5 0 8 1;

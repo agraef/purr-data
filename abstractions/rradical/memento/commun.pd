@@ -1,0 +1,23 @@
+#N canvas 329 264 504 374 10;
+#X obj 162 41 inlet;
+#X obj 161 270 outlet;
+#X obj 161 158 r \$2-in;
+#X obj 161 208 route \$1;
+#X obj 69 207 OSCroute \$1;
+#X text 22 292 Read \$2-OSC (== \$0-OSC) \, filter by argument \$1
+;
+#X obj 162 109 s \$2-RRADICAL-MEMENTO;
+#X text 95 133 RRADICAL_MEMENTO is also in originator;
+#X obj 69 183 r \$2-RRADICAL-OSC;
+#X obj 162 62 list prepend \$1;
+#X obj 162 84 list trim;
+#X obj 161 244 list;
+#X text 202 246 convert according to Pd's type rules;
+#X connect 0 0 9 0;
+#X connect 2 0 3 0;
+#X connect 3 0 11 0;
+#X connect 4 0 11 0;
+#X connect 8 0 4 0;
+#X connect 9 0 10 0;
+#X connect 10 0 6 0;
+#X connect 11 0 1 0;

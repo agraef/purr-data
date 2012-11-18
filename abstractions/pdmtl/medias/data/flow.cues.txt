@@ -1,0 +1,4 @@
+1000 Bing
+3000 Bang
+5000 Boum
+9000 Yippy

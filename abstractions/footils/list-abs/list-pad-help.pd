@@ -1,0 +1,30 @@
+#N canvas 272 125 544 509 10;
+#X obj 159 285 list-pad;
+#X obj 159 335 list trim;
+#X obj 159 313 list prepend set;
+#X msg 62 209 bang;
+#X msg 212 253 a b c d e f;
+#X msg 159 211 1 2 3;
+#X msg 206 210 1 2 3 4 5 6 7 8 9;
+#X text 111 417 Using an idiom by Michal Seta;
+#X msg 125 211 1;
+#X text 97 53 Use [list-pad] when you want to complete a list with
+more values \, if the incoming list is too short. Longer lists get
+passed unchanged.;
+#X obj 50 29 list-pad;
+#X text 315 256 <= pad to these values;
+#X obj 212 233 loadbang;
+#X msg 159 380;
+#X text 97 105 The list of padding values is provided through the second
+inlet.;
+#X text 96 149 The result list consists of the first list padded with
+the respective values of the second list.;
+#X connect 0 0 2 0;
+#X connect 1 0 13 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 1;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 8 0 0 0;
+#X connect 12 0 4 0;

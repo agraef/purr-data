@@ -1,0 +1,18 @@
+#N canvas 460 246 450 300 10;
+#X obj 123 162 list-len;
+#X msg 160 132 1 2 3 4 5 6;
+#X obj 123 232 print Length;
+#X floatatom 141 197 5 0 0 0 - - -;
+#X msg 123 77 bang;
+#X text 47 20 list-len: calculate length of a list.;
+#X msg 136 101 1;
+#X text 182 74 empty list;
+#X text 218 102 convert atom to 1-elem list;
+#X text 262 133 "real" lists;
+#X msg 167 101 dog;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 4 0 0 0;
+#X connect 6 0 0 0;
+#X connect 10 0 0 0;

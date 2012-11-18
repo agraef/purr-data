@@ -1,0 +1,25 @@
+#N canvas 230 214 664 370 10;
+#X text 89 80 Comments: Wraps zexy's drip.;
+#X text 84 51 Description: Unfolds a list into it's individual elements.
+;
+#X obj 39 226 print;
+#X msg 42 115 list a short list;
+#X msg 129 141 1 84 32 3;
+#X text 263 193 creation:;
+#X text 255 229 <n> is the initial drop-delay in [ms];
+#X text 255 262 n==0 will DO scheduling (and is therefore somewhat
+"slower" than without arguments;
+#X text 253 247 default is NO scheduling;
+#X text 254 297 negative values for <n> turn off scheduling;
+#X text 327 193 drip <n>;
+#X obj 39 167 list.unfold;
+#X obj 204 228 print;
+#X msg 207 117 list a short list;
+#X msg 294 143 1 84 32 3;
+#X obj 206 170 list.unfold 100;
+#X connect 3 0 11 0;
+#X connect 4 0 11 0;
+#X connect 11 0 2 0;
+#X connect 13 0 15 0;
+#X connect 14 0 15 0;
+#X connect 15 0 12 0;

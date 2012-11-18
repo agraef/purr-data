@@ -1,0 +1,23 @@
+#N canvas 222 16 582 378 10;
+#X obj 295 100 sx/gemwin;
+#X obj 14 7 gemhead;
+#X obj 14 32 sx/props;
+#X obj 65 142 netreceive 3142 1;
+#X obj 65 189 sx/netgeom Cube;
+#X text 115 287 sx/netgeom can receive a list of triangle data for
+use with sx/blob. Copy the blender script in utils/net_triangle.py
+into your blender scripts directory (./blender/scripts/) and then run
+blender and choose File... Export... Raw Triangle over the net... to
+send here. Big complicated meshes will probably make things chug.;
+#X obj 14 282 sx/blob2;
+#X obj 65 165 t b a;
+#X obj 295 14 sx/wander;
+#X obj 65 216 sx/explode e;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 9 0;
+#X connect 7 0 4 0;
+#X connect 7 1 4 1;
+#X connect 8 0 0 0;
+#X connect 9 0 6 1;

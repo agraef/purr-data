@@ -1,0 +1,64 @@
+VASP modular - vector assembling signal processor
+Object library for Max/MSP and PD
+Copyright (C) 2002-2005 Thomas Grill
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+There is one exception though, concerning the usage of the 
+mixfft code by Jens Joergen Nielsen. See the file mixfft.txt
+for the respective licensing details.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+In the official VASP distribution, the GNU General Public License is
+in the file gpl.txt
+
+
+Excluded from this license is the source code file of MixFFT. 
+See the mixfft.txt file of the VASP package for the respective license text. 
+
+---------------------------------------------------------
+
+             OTHER COPYRIGHT NOTICES
+
+---------------------------------------------------------
+
+The package is based on ideas originally conceived and 
+programmed in FORTRAN by Guenther Rabl. 
+
+VASP modular uses some code - see the license texts below.
+
+--- flext ----------------------------------------------
+flext - C++ layer for Max/MSP and pd (pure data) externals
+Copyright (C) 2001-2005 Thomas Grill
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+In the official flext distribution, the GNU General Public License is
+in the file gpl.txt
+
+--- mixfft ----------------------------------------------
+See the file mixfft.txt included with the VASP distribution.
+

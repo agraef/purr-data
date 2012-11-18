@@ -1,0 +1,10 @@
+#N canvas 638 544 450 300 10;
+#X obj 63 137 param.load;
+#X text 39 23 Description: Loads a previously saved param.atom configuration.
+;
+#X text 45 66 Inlet 1 \, configuration_file(symbol);
+#X obj 63 107 openpanel;
+#X obj 63 85 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;

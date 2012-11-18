@@ -1,0 +1,36 @@
+#N canvas 301 56 621 460 10;
+#X text 35 62 Generates a brownian-mouvement-like melody within a given
+ambitus. The distance between two notes is determined by the brownian
+factor <0-1>. When this factor is 1 \, each note of the given range
+can be choosen. When the rate is O \, the same note will be always
+repeated. The right outlet shows the chosen interval.;
+#X text 35 31 brown-melody;
+#X msg 475 52 Harmony;
+#X obj 68 298 brown-melody 24 108 0.1;
+#X floatatom 240 264 4 0 0 2 highest_note - -;
+#X floatatom 153 264 4 0 0 2 lowest_note - -;
+#X floatatom 332 262 4 0 0 2 brown_factor - -;
+#X obj 68 230 metro 200;
+#X obj 68 194 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X floatatom 68 335 4 0 0 1 note - -;
+#X floatatom 224 329 4 0 0 1 interval - -;
+#X text 330 381 1993 by Karlheinz Essl;
+#X obj 68 263 bng 15 250 50 0 empty empty rhythm_bangs 0 -6 0 8 -262144
+-1 -1;
+#X text 330 395 vs.2: right outlet shows interval;
+#X text 35 152 see also:;
+#X msg 100 152 brownian;
+#X text 240 41 (vs. 2);
+#X floatatom 126 202 5 50 2000 2 speed - -;
+#X obj 68 388 play2 127 500 0 1;
+#X connect 3 0 9 0;
+#X connect 3 1 10 0;
+#X connect 4 0 3 2;
+#X connect 5 0 3 1;
+#X connect 6 0 3 3;
+#X connect 7 0 12 0;
+#X connect 8 0 7 0;
+#X connect 9 0 18 0;
+#X connect 12 0 3 0;
+#X connect 17 0 7 1;

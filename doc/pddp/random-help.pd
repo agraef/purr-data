@@ -1,0 +1,577 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header random 3 12 0 18
+-204280 -1 0;
+#X obj 0 252 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 247 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 29 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 45 DESCRIPTION pseudorandom integer generator;
+#X text 12 5 KEYWORDS control random;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 65 INLET_0 bang seed;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 389 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 426 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 476 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 87 265 428 374 Related_objects 0;
+#X text 20 255 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 20 297 The best places to find information about Pd's libraries
+is:;
+#X text 21 314 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 23 328 or;
+#X text 20 343 iem.kug.ac.at/pdb/;
+#X obj 20 95 pddp/helplink markex/randomF;
+#X obj 20 115 pddp/helplink markex/tripleRand;
+#X obj 20 135 pddp/helplink motex/shuffle;
+#X obj 20 155 pddp/helplink cxc/utime;
+#X obj 20 175 pddp/helplink mjlib/pin~;
+#X obj 20 195 pddp/helplink iemmatrix/mtx_rand;
+#X obj 20 215 pddp/helplink iemlib/randomblock~;
+#X obj 20 235 pddp/helplink cyclone/drunk;
+#X text 20 75 Externals;
+#N canvas 404 60 483 507 (subpatch) 0;
+#X msg 144 296 bang;
+#X msg 144 321 1 30;
+#X obj 144 409 line~;
+#X obj 202 301 del 30;
+#X obj 61 433 *~;
+#X obj 62 485 dac~;
+#X obj 62 359 osc~ 880;
+#X obj 62 403 clip~ -1 1;
+#X obj 35 220 list split 1;
+#X obj 15 311 list;
+#X obj 35 244 t b a;
+#X obj 62 334 mtof;
+#X obj 62 457 *~ 0.07;
+#X obj 207 128 metro 50;
+#X obj 207 202 s \$0-cnv;
+#X obj 207 106 0;
+#X obj 207 84 del 3000;
+#X obj 310 170 f;
+#X obj 342 170 + 1;
+#X obj 35 12 r \$0-bng;
+#X obj 106 14 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 310 197 div 13;
+#X msg 310 314 color \$1 0;
+#X obj 242 105 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 279 86 sel 0;
+#X obj 279 107 -1;
+#X obj 279 130 t a;
+#X obj 207 155 f -1;
+#X msg 207 180 delta 0 \$1;
+#X obj 35 44 spigot 1;
+#X obj 35 76 t a b;
+#X obj 96 55 0;
+#X obj 130 55 1;
+#X obj 310 220 sel 3 4;
+#X msg 371 246 5 \$1;
+#X obj 371 268 -;
+#X msg 310 246 1;
+#X obj 340 245 f 2;
+#X obj 383 170 sel 1;
+#X msg 377 198 0;
+#X msg 411 199 2;
+#X obj 62 311 + 68;
+#X obj 15 284 del 170;
+#X text 167 14 IT'S A SECRET TO EVERYBODY.;
+#X obj 100 100 cnv 15 15 15 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X obj 56 106 loadbang;
+#X obj 35 174 list;
+#X obj 114 217 s \$0-randomize;
+#X obj 71 149 r \$0-new-secret;
+#X msg 56 128 7 1 0 8 12 16;
+#X obj 35 197 list prepend 11 10;
+#X obj 62 381 *~ 1.4;
+#X msg 202 323 0 400;
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 1;
+#X connect 3 0 52 0;
+#X connect 4 0 12 0;
+#X connect 6 0 51 0;
+#X connect 7 0 4 0;
+#X connect 8 0 10 0;
+#X connect 8 1 9 1;
+#X connect 9 0 8 0;
+#X connect 10 0 42 0;
+#X connect 10 1 0 0;
+#X connect 10 1 41 0;
+#X connect 11 0 6 0;
+#X connect 12 0 5 0;
+#X connect 12 0 5 1;
+#X connect 13 0 17 0;
+#X connect 13 0 27 0;
+#X connect 15 0 13 0;
+#X connect 15 0 17 1;
+#X connect 16 0 15 0;
+#X connect 16 0 23 0;
+#X connect 16 0 32 0;
+#X connect 17 0 18 0;
+#X connect 17 0 21 0;
+#X connect 18 0 17 1;
+#X connect 19 0 29 0;
+#X connect 20 0 29 0;
+#X connect 21 0 33 0;
+#X connect 22 0 14 0;
+#X connect 23 0 24 0;
+#X connect 23 0 38 0;
+#X connect 24 0 25 0;
+#X connect 24 1 26 0;
+#X connect 25 0 26 0;
+#X connect 26 0 27 1;
+#X connect 27 0 28 0;
+#X connect 28 0 14 0;
+#X connect 29 0 30 0;
+#X connect 30 0 13 0;
+#X connect 30 0 16 0;
+#X connect 30 0 46 0;
+#X connect 30 1 31 0;
+#X connect 31 0 29 1;
+#X connect 32 0 29 1;
+#X connect 33 0 36 0;
+#X connect 33 1 37 0;
+#X connect 33 2 34 0;
+#X connect 34 0 35 0;
+#X connect 35 0 22 0;
+#X connect 36 0 22 0;
+#X connect 37 0 22 0;
+#X connect 38 0 39 0;
+#X connect 38 1 40 0;
+#X connect 39 0 37 1;
+#X connect 40 0 37 1;
+#X connect 41 0 11 0;
+#X connect 42 0 9 0;
+#X connect 45 0 49 0;
+#X connect 46 0 47 0;
+#X connect 46 0 50 0;
+#X connect 48 0 46 1;
+#X connect 49 0 46 1;
+#X connect 50 0 8 0;
+#X connect 51 0 7 0;
+#X connect 52 0 2 0;
+#X coords 0 -1 1 1 15 15 2 100 100;
+#X restore 266 222 pd;
+#X obj 8 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 23 42 noise~;
+#X obj 23 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 38 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 53 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 68 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 83 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 98 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 113 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 128 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 173 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 254 180 cnv 15 40 24 empty empty empty 20 12 0 14 -179689 -66577
+0;
+#N canvas 271 87 451 558 (subpatch) 0;
+#X obj 27 181 t a b;
+#X obj 54 203 f;
+#X obj 54 228 + 1;
+#X obj 27 282 list prepend;
+#X obj 84 203 mod 3;
+#X msg 27 255 \$1\$2\$3\$4\$5\$6;
+#X obj 179 115 0;
+#X obj 27 358 list append;
+#X obj 48 331 list append;
+#X obj 27 40 t a b;
+#X obj 27 304 route 3 2 1;
+#X obj 24 119 cnv 15 110 24 empty empty empty 20 12 0 14 -179689 -66577
+0;
+#N canvas 222 70 378 565 list-scramble 0;
+#X obj 148 213 list;
+#X obj 205 294 sel;
+#X obj 148 181 t b a;
+#X obj 104 372 f;
+#X obj 205 267 list split 1;
+#X obj 294 267 t a;
+#X obj 77 318 spigot;
+#X obj 116 291 1;
+#X obj 128 318 0;
+#X obj 77 98 t b b b;
+#X obj 148 240 route bang;
+#X msg 152 415 adddollar \$1;
+#X msg 152 479 list \$2 \$4 \$1 \$3 \$6 \$5;
+#X obj 104 415 s \$0-l;
+#X obj 274 153 r \$0-l;
+#X obj 77 345 t b b;
+#X obj 40 373 f;
+#X obj 68 372 + 1;
+#X obj 18 442 moses;
+#X obj 45 415 r \$0-len;
+#X obj 159 -31 inlet;
+#X obj 193 60 list length;
+#X obj 236 95 s \$0-len;
+#X obj 45 468 b;
+#X obj 45 495 s \$0-end;
+#X obj 77 71 until;
+#X obj 120 71 r \$0-end;
+#X obj 210 38 s \$0-r;
+#X obj 25 318 r \$0-r;
+#X obj 223 138 r \$0-r;
+#X obj 25 345 0;
+#X obj 148 158 + 1;
+#X obj 252 395 r \$0-r;
+#X obj 159 -4 t a b a b;
+#X obj 3 73 s \$0-in;
+#X obj 96 450 r \$0-in;
+#X obj 152 506 outlet;
+#X obj 3 46 list;
+#X msg 252 417 set list;
+#X obj 274 190 list;
+#X obj 274 215 t a;
+#X obj 134 131 cnv 15 70 24 empty empty empty 20 12 0 14 -179689 -66577
+0;
+#X obj 148 134 random;
+#X connect 0 0 10 0;
+#X connect 1 0 8 0;
+#X connect 2 0 0 0;
+#X connect 2 1 1 1;
+#X connect 2 1 3 1;
+#X connect 3 0 11 0;
+#X connect 3 0 13 0;
+#X connect 4 0 1 0;
+#X connect 4 1 5 0;
+#X connect 5 0 4 0;
+#X connect 6 0 15 0;
+#X connect 7 0 6 1;
+#X connect 8 0 6 1;
+#X connect 9 0 6 0;
+#X connect 9 1 42 0;
+#X connect 9 2 7 0;
+#X connect 10 1 4 0;
+#X connect 11 0 12 0;
+#X connect 12 0 36 0;
+#X connect 14 0 39 0;
+#X connect 15 0 16 0;
+#X connect 15 1 3 0;
+#X connect 16 0 17 0;
+#X connect 17 0 16 1;
+#X connect 17 0 18 0;
+#X connect 18 1 23 0;
+#X connect 19 0 18 1;
+#X connect 20 0 33 0;
+#X connect 21 0 22 0;
+#X connect 21 0 42 1;
+#X connect 23 0 24 0;
+#X connect 25 0 9 0;
+#X connect 26 0 25 1;
+#X connect 28 0 30 0;
+#X connect 29 0 0 1;
+#X connect 29 0 39 1;
+#X connect 30 0 16 1;
+#X connect 31 0 2 0;
+#X connect 32 0 38 0;
+#X connect 33 0 37 0;
+#X connect 33 1 25 0;
+#X connect 33 2 21 0;
+#X connect 33 3 27 0;
+#X connect 35 0 12 0;
+#X connect 37 0 34 0;
+#X connect 38 0 12 0;
+#X connect 39 0 40 0;
+#X connect 39 0 0 1;
+#X connect 40 0 39 1;
+#X connect 42 0 31 0;
+#X restore 27 121 pd list-scramble;
+#X obj 27 464 t a b;
+#X obj 27 539 s pd-\$0-random-header;
+#X msg 72 489 clear \, donecanvasdialog 0 0 2 0 -1 1 1 200 18 0 0 \,
+obj 0 0 cnv 15 200 18 empty \$0-pddp.cnv.random-subheading empty 3
+12 0 14 -204280 -1 0;
+#X obj 112 20 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 27 67 b j e c t s \, e l a t e d \, r a n d o m;
+#X obj 27 17 r \$0-bng;
+#X obj 43 409 loadbang;
+#X msg 43 436 text 8 0 [random] Related Objects;
+#X msg 27 381 text 8 0 [\$1] R\$2 O\$3;
+#X text 98 408 <- triggers a dirty flag;
+#X obj 56 90 r \$0-randomize;
+#N canvas 0 0 450 300 filter-numbers 0;
+#X obj 121 55 inlet;
+#X obj 121 82 list trim;
+#X obj 121 109 route list;
+#X obj 178 136 list;
+#X obj 178 163 outlet;
+#X obj 121 190 s \$0-new-secret;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 2 1 3 0;
+#X connect 3 0 4 0;
+#X restore 27 153 pd filter-numbers;
+#X connect 0 0 5 0;
+#X connect 0 1 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 0 3 1;
+#X connect 3 0 10 0;
+#X connect 4 0 1 1;
+#X connect 5 0 3 0;
+#X connect 6 0 1 1;
+#X connect 7 0 21 0;
+#X connect 8 0 7 1;
+#X connect 9 0 17 0;
+#X connect 9 1 6 0;
+#X connect 10 0 7 0;
+#X connect 10 1 8 0;
+#X connect 10 2 8 1;
+#X connect 12 0 24 0;
+#X connect 13 0 14 0;
+#X connect 13 1 15 0;
+#X connect 15 0 14 0;
+#X connect 16 0 9 0;
+#X connect 17 0 12 0;
+#X connect 18 0 9 0;
+#X connect 20 0 13 0;
+#X connect 21 0 13 0;
+#X connect 23 0 12 0;
+#X connect 24 0 0 0;
+#X restore 263 183 pd;
+#X obj 158 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 143 3 bng 15 250 50 0 \$0-bng empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#N canvas 0 0 450 300 \$0-random-header 0;
+#X obj 0 0 cnv 15 200 18 empty 0-pddp.cnv.random-subheading empty 3
+12 0 14 -204280 -1 0;
+#X text 8 0 [random] Related Objects;
+#X coords 0 -1 1 1 200 18 2 0 0;
+#X restore 11 1 pd \$0-random-header;
+#X obj 180 171 cnv 3 210 60 empty \$0-cnv empty 20 12 0 14 -262144
+-262144 0;
+#X restore 102 597 pd Related_objects;
+#X obj 78 261 cnv 17 3 85 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 397 float;
+#X obj 78 398 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 356 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 355 float;
+#X obj 481 3 random;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/random -text
+pdpedia: random;
+#X text 81 56 [random] outputs pseudorandom integers between 0 and
+N-1 where N is the creation argument or the value of the right inlet.
+;
+#X obj 84 122 random 100;
+#X obj 84 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 84 144 3 0 0 0 - - -;
+#X text 154 122 Generates random numbers between 0 and 99;
+#X obj 84 187 random 100;
+#X obj 84 167 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 84 210 3 0 0 0 - - -;
+#X floatatom 141 162 5 0 0 0 - - -;
+#X text 181 162 Changes the 'range' of random numbers.;
+#X text 98 260 bang;
+#X text 98 299 seed;
+#X text 168 299 - to specify the seed \, use the seed message followed
+by a float ( "seed 42" ).;
+#N canvas 65 83 428 454 About_seeds 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [random] About seeds;
+#X text 21 158 However \, "seeds" can be inputted into [random] by
+sending a message \, like below:;
+#X msg 24 221 seed 42;
+#X obj 90 227 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 90 245 random 1000;
+#X floatatom 90 265 3 0 0 0 - - -;
+#X obj 24 201 loadbang;
+#X text 21 294 Seeds are kept locally so that if two [random]s are
+seeded the same \, they will have the same output - as demonstrated
+below. Furthermore \, you can seed the same one twice to repeat the
+output.;
+#X msg 180 363 seed 42;
+#X obj 106 366 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 106 398 random 1000;
+#X floatatom 106 418 3 0 0 0 - - -;
+#X obj 180 343 loadbang;
+#X obj 180 398 random 1000;
+#X floatatom 180 418 3 0 0 0 - - -;
+#X text 233 363 Click again to repeat output.;
+#X text 20 38 Random numbers are generated via a complex equation which
+produces a pseudo-predictable sequence of numbers. Each [random] object's
+equation is provided with a "seed" which is really just one of the
+variables in the equation which produces the sequence. The "seed" is
+generated by Pd based on specific parameters in each patch which contains
+a [random] object. If more than one [random] object is contained within
+a single patch \, each gets a different "seed".;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 7 0 3 0;
+#X connect 9 0 11 0;
+#X connect 9 0 14 0;
+#X connect 10 0 11 0;
+#X connect 10 0 14 0;
+#X connect 11 0 12 0;
+#X connect 13 0 9 0;
+#X connect 14 0 15 0;
+#X restore 171 332 pd About_seeds;
+#N canvas 91 66 428 441 More_about_seeds 0;
+#X text 20 39 While the "default" seed for each [random] is usually
+very effective \, it may be necessary to find better - more unpredictable
+- more indeterminate ways to seed the object to produce a more pleasing
+result.;
+#X text 20 96 Here are some ideas that may improve the implementation
+of [random]:;
+#X floatatom 202 211 0 0 0 0 - - -;
+#X obj 44 138 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 202 182 / 100;
+#X floatatom 44 208 0 0 0 0 - - -;
+#X text 64 137 Both methods here produce random numbers between 0 and
+5;
+#X obj 202 157 random 501;
+#X obj 44 179 random 6;
+#X text 269 157 0 - 500;
+#X text 41 239 between 0 and 5;
+#X text 41 226 Produces whole numbers;
+#X text 20 136 1;
+#X text 20 283 2;
+#X obj 44 284 loadbang;
+#X obj 44 317 timer;
+#X obj 106 297 bng 15 250 50 0 empty empty Click_to_seed 0 -8 0 10
+-262144 -1 -1;
+#X msg 44 343 seed \$1;
+#X obj 106 381 bng 15 250 50 0 empty empty Click_for_output 0 -8 0
+10 -262144 -1 -1;
+#X floatatom 106 421 5 0 0 0 - - -;
+#X obj 106 400 random 42;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 240 226 between 0 and 5;
+#X text 240 212 produces fractional results;
+#X text 240 195 within range.;
+#X text 240 182 divide by 100 to keep output;
+#X text 206 298 "Time is on your side". Using the;
+#X text 206 314 [timer] object here (which is;
+#X text 206 343 interesting trick.;
+#X text 207 329 started via loadbang) is an;
+#X text 8 2 [random] More Info on Seeds;
+#X connect 3 0 7 0;
+#X connect 3 0 8 0;
+#X connect 4 0 2 0;
+#X connect 7 0 4 0;
+#X connect 8 0 5 0;
+#X connect 14 0 15 0;
+#X connect 15 0 17 0;
+#X connect 16 0 15 1;
+#X connect 17 0 20 0;
+#X connect 18 0 20 0;
+#X connect 20 0 19 0;
+#X restore 102 485 pd More_about_seeds;
+#N canvas 107 145 428 418 weighted_random_numbers 0;
+#X msg 23 118 bang;
+#X text 20 58 You can generate weighted random numbers from uniformly
+distributed ones. If you just want two possible outcomes with a varying
+probability for each one \, you can do as shown:;
+#X obj 23 144 random 100;
+#X obj 23 202 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 89 202 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 125 151 3 0 100 0 - - -;
+#X obj 23 177 moses 80;
+#X text 20 230 This outputs a number at left 80% of the time \, otherwise
+at right \, unless you override the "80" using the number box. You
+may extend this to more than two possible outcomes \, for instance
+like this:;
+#X msg 24 293 bang;
+#X obj 24 319 random 100;
+#X obj 24 372 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 114 373 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 24 347 moses 10;
+#X obj 114 348 moses 30;
+#X obj 182 373 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 22 388 10%;
+#X text 112 389 20%;
+#X text 184 388 70%;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [random] Weighted Random Numbers;
+#X text 62 117 <- click to test;
+#X text 156 150 <- change probablilty;
+#X text 64 293 <- click to test;
+#X text 20 25 There are many ways that [random] can be incorporated
+into other structures that change the qualities of the results.;
+#X connect 0 0 2 0;
+#X connect 2 0 6 0;
+#X connect 5 0 6 1;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 12 0 10 0;
+#X connect 12 1 13 0;
+#X connect 13 0 11 0;
+#X connect 13 1 14 0;
+#X restore 102 507 pd weighted_random_numbers;
+#X text 11 23 pseudorandom integer generator;
+#X text 168 397 - the output is an integer between 0 and N-1.;
+#X text 168 442 - sets the initial value of N \, where the output ranges
+between 0 and N-1.;
+#X text 168 260 - a bang to [random] will output an integer between
+0 and N-1 \, where N is the creation argument or the value to the right
+inlet.;
+#X text 167 355 - a float to the right inlet sets N \, where the output
+ranges between 0 and N-1.;
+#X text 78 442 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 102 527 pddp/pddplink ../2.control.examples/19.random.pd -text
+doc/2.control.examples/19.random.pd;
+#X obj 102 542 pddp/pddplink ../2.control.examples/20.weighted-random.pd
+-text doc/2.control.examples/20.weighted-random.pd;
+#X obj 102 557 pddp/pddplink ../2.control.examples/21.markov.chain.pd
+-text doc/2.control.examples/21.markov.chain.pd;
+#X obj 102 572 pddp/pddplink ../2.control.examples/22.random-walk.pd
+-text doc/2.control.examples/22.random-walk.pd;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 20 0 22 0;
+#X connect 21 0 20 0;
+#X connect 23 0 20 1;

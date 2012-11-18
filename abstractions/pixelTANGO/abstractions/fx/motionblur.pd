@@ -1,0 +1,18 @@
+#N canvas 0 22 474 324 10;
+#X obj 133 131 inlet;
+#X obj 39 154 inlet;
+#X text 6 67 Gemchain;
+#X text 82 66 fxAmount 0-1;
+#X obj 28 181 pix_motionblur;
+#X text 21 18 Motion Blur;
+#X obj 8 89 arrayRouterIn \$1 \$2;
+#X obj 28 229 arrayRouterOut \$1 \$2;
+#X obj 121 155 interp1;
+#X obj 41 206 outlet;
+#X connect 0 0 8 0;
+#X connect 1 0 4 0;
+#X connect 4 0 7 0;
+#X connect 4 0 9 0;
+#X connect 6 0 4 0;
+#X connect 6 1 8 0;
+#X connect 8 0 4 1;

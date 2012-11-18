@@ -1,0 +1,1 @@
+VERSION = $(shell svnversion | grep -e "[0-9]")

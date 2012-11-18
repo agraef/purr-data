@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip
+END
+TimerListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/TimerListener.h
+END
+NetworkingUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/NetworkingUtils.h
+END
+IpEndpointName.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/IpEndpointName.h
+END
+UdpSocket.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/UdpSocket.cpp
+END
+PacketListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/PacketListener.h
+END
+UdpSocket.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/UdpSocket.h
+END
+NetworkingUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/NetworkingUtils.cpp
+END
+IpEndpointName.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1777/trunk/osc/oscpack/ip/IpEndpointName.cpp
+END

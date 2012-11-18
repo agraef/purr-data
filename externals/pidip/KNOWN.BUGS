@@ -1,0 +1,2 @@
+pdp_live~ : requires a huge block size to operate ( otherwise, sound is shitty )
+pdp_capture : does not capture certain types of windows ( xvideo, frame buffers ) + crashes when changing values dynamically

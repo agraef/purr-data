@@ -1,0 +1,18 @@
+#ifndef CONFIG_H_
+#define CONFIG_H_
+
+/* do we have fftw3 installed? */
+#undef HAVE_FFTW3_H
+
+/* do we have libsndfile installed? */
+#undef HAVE_SNDFILE_H
+
+/* do we have libgsl installed? */
+#undef HAVE_LIBGSL
+
+/* can libgsl compute complex eigenvalues? */
+#undef HAVE_GSL_EIGEN_NONSYMM
+
+
+
+#endif /* CONFIG_H_ */

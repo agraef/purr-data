@@ -1,0 +1,43 @@
+#Copyright (C) 2006 L. Donnie Smith
+
+include @top_builddir@/defs.mak
+
+LIB_NAME = cwiid
+MAJOR_VER = 1
+MINOR_VER = 0
+SOURCES = bluetooth.c command.c connect.c interface.c process.c state.c \
+          thread.c util.c
+LDLIBS += -lbluetooth -lpthread -lrt
+LIB_INST_DIR = @libdir@
+INC_INST_DIR = @includedir@
+DEST_PKG_CONFIG_INST_DIR = $(ROOTDIR)@libdir@/pkgconfig
+
+include $(COMMON)/include/lib.mak
+
+$(SHARED_LIB): $(SO_NAME) $(LINK_NAME)
+
+$(SO_NAME):
+	ln -sf $(SHARED_LIB) $(SO_NAME)
+
+$(LINK_NAME):
+	ln -sf $(SO_NAME) $(LINK_NAME)
+
+install: install_pkgconfig
+
+uninstall: uninstall_pkgconfig
+
+install_pkgconfig:
+	install -D -m 644 cwiid.pc $(DEST_PKG_CONFIG_INST_DIR)/cwiid.pc
+
+uninstall_pkgconfig:
+	rm -f $(DEST_PKG_CONFIG_INST_DIR)/cwiid.pc
+
+clean: remove_links
+
+remove_links:
+	rm -f $(SO_NAME) $(LINK_NAME)
+
+distclean: clean
+	rm Makefile cwiid.pc
+
+.PHONY: distclean clean make_links remove_links

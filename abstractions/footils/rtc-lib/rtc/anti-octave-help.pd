@@ -1,0 +1,22 @@
+#N canvas 3 48 600 434 10;
+#X text 29 107 see also:;
+#X text 29 25 anti-octave;
+#X text 29 57 Filters out octaves between two consecutive notes and
+outputs a bang from right outlet whenever an octave has occured.;
+#X msg 99 129 check-octaves;
+#X msg 99 106 anti-octave&prime;
+#X msg 224 106 anti-interval;
+#X obj 43 211 anti-octave;
+#X msg 326 23 Harmony;
+#X obj 43 287 play2 127 500 0 1;
+#X floatatom 43 255 0 0 0 0 - - -;
+#X text 78 256 note name;
+#X text 29 339 1993 by Karlheinz Essl;
+#X obj 137 209 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 161 206 Flashes when an octave would have occured;
+#X msg 43 173 10 \, 11 \, 12 \, 24;
+#X connect 6 0 9 0;
+#X connect 6 1 12 0;
+#X connect 9 0 8 0;
+#X connect 14 0 6 0;

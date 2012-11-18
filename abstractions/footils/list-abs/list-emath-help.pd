@@ -1,0 +1,38 @@
+#N canvas 380 217 603 436 10;
+#X obj 87 209 print add;
+#X msg 87 138 5 5 5 5 x;
+#X text 79 22 list-emath: Do math on lists element by element;
+#X msg 350 141 0 1 2 3 4;
+#X msg 271 140 5 5 5 5 x;
+#X msg 88 256 5 5 5 5 x;
+#X msg 269 262 5 5 5 5 x;
+#X obj 271 211 print mult;
+#X obj 88 327 print sub;
+#X obj 269 333 print div;
+#X obj 269 294 list-emath /;
+#X obj 87 171 list-emath +;
+#X obj 271 173 list-emath *;
+#X obj 88 289 list-emath -;
+#X msg 348 263 0 1 x 3 4;
+#X msg 167 257 0 1 2 x 4;
+#X msg 166 139 0 1 2 x 4;
+#X text 80 55 Non-floats in second list will be replaced by 0 for +
+and - \, and by 1 for * and /.;
+#X msg 430 262 0 0 0 0 0;
+#X text 428 243 Just say no!;
+#X text 80 91 Symbols in first list will pass unchanged.;
+#X text 83 376 Also see list-add \, list-mult \, list-sub for shortcuts.
+;
+#X connect 1 0 11 0;
+#X connect 3 0 12 1;
+#X connect 4 0 12 0;
+#X connect 5 0 13 0;
+#X connect 6 0 10 0;
+#X connect 10 0 9 0;
+#X connect 11 0 0 0;
+#X connect 12 0 7 0;
+#X connect 13 0 8 0;
+#X connect 14 0 10 1;
+#X connect 15 0 13 1;
+#X connect 16 0 11 1;
+#X connect 18 0 10 1;

@@ -1,0 +1,75 @@
+#N canvas 182 36 657 763 10;
+#X obj 196 452 s \$0polaroid;
+#X msg 35 85 saveas;
+#X msg 84 85 load;
+#X msg 121 85 save;
+#X msg 158 85 restore;
+#X msg 130 410 saveas;
+#X msg 179 410 load;
+#X msg 216 410 save;
+#X msg 253 410 restore;
+#X msg 267 193 SetAFileFirst!;
+#X obj 292 309 bng 8 250 50 0 \$0restore \$0nullS empty 17 7 0 10 -258177
+-1 -1;
+#X obj 282 309 bng 8 250 50 0 \$0save \$0nullS empty 17 7 0 10 -4062
+-1 -1;
+#X obj 287 319 bng 8 250 50 0 \$0makeDefault \$0nullS empty 17 7 0
+10 -228742 -1 -1;
+#X text 307 305 Restores from currently selected file;
+#X text 129 327 Sets the selected file as this patch's "default" \,
+via a cross-connected messagebox (as shown);
+#X obj -2 8 cnv 15 430 50 empty empty Polaroid 20 12 0 16 -204352 -66577
+0;
+#X text 16 27 for Memento;
+#X text -61 305 Saves local state to the currently selected file;
+#X obj 33 247 bng 13 250 50 0 \$0saveLocalFile \$0saveLocalFileR SaveTo
+15 8 0 8 -1988 -1 -1;
+#X obj 33 270 bng 13 250 50 0 \$0loadLocalFile \$0loadLocalFileR Load
+15 8 0 8 -155777 -1 -1;
+#X text 85 246 Choose a file \, and save local state to it immediately
+;
+#X text 85 269 Choose a file \, and load a local state from it immediately
+;
+#X text 247 41 Local state saving device;
+#X obj -52 373 bng 8 250 50 0 \$0copy \$0copyR empty 17 7 0 10 -159808
+-1 -1;
+#X obj 238 374 bng 8 250 50 0 \$0paste \$0pasteR empty 17 7 0 10 -260097
+-1 -1;
+#X text -43 370 Copies local state to a temporary file;
+#X text 247 371 Pastes a local state from that temporary file;
+#X obj 136 177 polaroid \$1 \$0;
+#X msg 212 85 copy;
+#X msg 248 85 paste;
+#X text -5 509 Polaroid requires a "group" and \$0 as its arguments.
+These are required for communication with both originator and the \$0polaroid
+receiver.;
+#X text 87 467 Polaroid also has a built-in receiver \, for use without
+the GUI.;
+#X text -2 639 If you have multiple copies of a child abstraction \,
+give it a second argument like "/A" or "/B" \, then prepend its [commun]s
+with \$2 \, like [commun \$2-envelopeAttack \$0];
+#X text -1 687 Important: OSC routes can and must have (only) one slash
+in them \, meaning the "/A" and \$2-envelopeAttack above was deliberate.
+Using \$2/envelopeAttack will not work \, nor will just "A".;
+#X text 64 387 (works across all patches in the same "group" \, or
+\$1);
+#X text -3 559 The so called "group" is a common originator name among
+all of your abstractions. This is typically the first argument. If
+your rradical abstractions are all children of a parent abstraction
+\, it is convenient to use "\$1" for all of their first arguments \,
+and then define that globally in the first argument of your parent
+abstraction.;
+#X text 441 724 Luke Iannini \, 2008;
+#X text 441 738 proyekto.net tag sndrft;
+#X connect 1 0 27 0;
+#X connect 2 0 27 0;
+#X connect 3 0 27 0;
+#X connect 4 0 27 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 27 1;
+#X connect 27 1 9 0;
+#X connect 28 0 27 0;
+#X connect 29 0 27 0;

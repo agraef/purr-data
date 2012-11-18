@@ -1,0 +1,22 @@
+#N canvas 0 22 450 300 10;
+#X obj 48 108 meta-connect;
+#X obj 338 150 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 211 143 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 297 142 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 262 137 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 188 229 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 310 232 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 381 243 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 242 249 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 10 17 [meta-connect] alpha 0.1 - select any number of the bangs
+above and press [ \, then select any number of the bangs below and
+press ]. The first group will automatically connect themselves to the
+second group.;

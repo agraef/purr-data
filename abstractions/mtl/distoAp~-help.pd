@@ -1,0 +1,54 @@
+#N canvas 336 283 590 372 10;
+#X text 10 50 See: http://www.acoustics.hut.fi/~jpekonen/Papers/dafx08/
+;
+#X text 11 5 Description: "Coefficient Modulated Allpass Filter as
+Distortion Effect" as in the DAFx 2008 paper by Jussi Pekonen;
+#X obj 15 211 mtl/out~;
+#X text 9 68 Author: Frank Barknecht \, 2008;
+#X text 10 85 tags: fx~;
+#X text 22 261 presets;
+#X msg 35 302 /disAp/lop 30 \, /disAp/drive 110 \, /disAp/wet 1;
+#X msg 145 160 /wet \$1;
+#X floatatom 145 139 5 0 1 0 - - -;
+#X obj 16 187 mtl/distoAp~ /id disAp;
+#X obj 24 323 tof/param route;
+#X text 166 185 <-Click on the propeties menu to display params;
+#X obj 338 111 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 398 112 PARAM ENABLED;
+#X obj 343 268 cnv 15 200 20 empty empty /disAp/ 2 12 0 8 -258401 -262144
+0;
+#X obj 343 291 hsl 100 15 0 127 0 0 /disAp/lop /disAp/lop_ lop 105
+7 0 8 -262144 -1 -1 6236 1;
+#X obj 343 309 hsl 100 15 0 500 0 0 /disAp/drive /disAp/drive_ drive
+105 7 0 8 -262144 -1 -1 1386 1;
+#X obj 343 327 hsl 100 15 0 1 0 0 /disAp/wet /disAp/wet_ wet 105 7
+0 8 -262144 -1 -1 9900 1;
+#X obj 17 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 129 192 582 409 loop_sample 0;
+#X obj 47 313 outlet~;
+#X obj 43 9 inlet;
+#X obj 193 319 outlet~;
+#X obj 46 94 openpanel;
+#X obj 46 60 b;
+#X msg 49 133 open \$1 \, bang;
+#X obj 47 200 mtl/player~ 1;
+#X connect 1 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 6 1 2 0;
+#X restore 17 163 pd loop_sample;
+#X obj 337 135 ../doc/5.reference/tof/param-help;
+#X msg 24 282 /disAp/lop 80 \, /disAp/drive 70 \, /disAp/wet 1;
+#X connect 6 0 10 0;
+#X connect 7 0 9 2;
+#X connect 8 0 7 0;
+#X connect 9 0 2 0;
+#X connect 9 1 2 1;
+#X connect 18 0 19 0;
+#X connect 19 0 9 0;
+#X connect 19 1 9 1;
+#X connect 21 0 10 0;

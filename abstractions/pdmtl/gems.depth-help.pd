@@ -1,0 +1,64 @@
+#N canvas 654 271 649 601 10;
+#X obj 376 -62 gems.win 640 480;
+#X obj 376 -90 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 36 -106 gemhead;
+#X obj 36 377 rectangle 4 3;
+#X obj 56 -20 file.path.top;
+#X obj 36 25 pix_texture;
+#X floatatom 71 279 5 0 0 0 - - -;
+#X obj 71 142 vsl 15 128 -20 4 0 0 empty empty empty 0 -8 0 8 -241291
+-1 -1 10200 1;
+#X floatatom 270 255 5 0 0 0 - - -;
+#X obj 270 118 vsl 15 128 -20 4 0 0 empty empty empty 0 -8 0 8 -241291
+-1 -1 12700 1;
+#X obj 231 -4 gemhead;
+#X obj 56 -85 loadbang;
+#X obj 235 299 colorRGB 1 0.9 0.1;
+#X obj 381 212 gemhead;
+#X floatatom 508 256 5 0 0 0 - - -;
+#X obj 508 119 vsl 15 128 -20 4 0 0 empty empty empty 0 -8 0 8 -241291
+-1 -1 11400 1;
+#X obj 381 277 translateXYZ;
+#X obj 380 302 colorRGB 1 0 0;
+#X text 374 172 Without it:;
+#X obj 379 329 square 1;
+#X obj 234 326 rectangle 1 3.66666;
+#X obj 36 352 translateXYZ;
+#X floatatom 59 328 5 0 0 0 - - -;
+#X floatatom 102 327 5 0 0 0 - - -;
+#X floatatom 143 329 5 0 0 0 - - -;
+#X text 140 352 For testing;
+#X text 62 -166 Description: Translates an object on the Z axis without
+altering its effective XY dimensions.;
+#X obj 235 275 gems.depth;
+#X obj 36 299 gems.depth;
+#X text 282 43 Todo: Provide support for render ordering;
+#X text 292 13 Rotate the gem window to see how it works ! (with right
+mouse button);
+#X obj 36 3 gems.movies;
+#X msg 56 -55 medias/movies/mov0.mov;
+#X connect 1 0 0 0;
+#X connect 2 0 31 0;
+#X connect 4 0 31 1;
+#X connect 5 0 28 0;
+#X connect 6 0 28 1;
+#X connect 7 0 6 0;
+#X connect 8 0 27 1;
+#X connect 9 0 8 0;
+#X connect 10 0 27 0;
+#X connect 11 0 32 0;
+#X connect 12 0 20 0;
+#X connect 13 0 16 0;
+#X connect 14 0 16 3;
+#X connect 15 0 14 0;
+#X connect 16 0 17 0;
+#X connect 17 0 19 0;
+#X connect 21 0 3 0;
+#X connect 22 0 21 1;
+#X connect 23 0 21 2;
+#X connect 24 0 21 3;
+#X connect 27 0 12 0;
+#X connect 28 0 21 0;
+#X connect 31 0 5 0;
+#X connect 32 0 4 0;

@@ -1,0 +1,32 @@
+#N canvas 0 22 685 335 10;
+#X obj 64 130 gems.display.list;
+#X obj 64 67 gemhead;
+#X obj 53 315 triangle;
+#X obj 51 292 colorRGB 1 0 0 1;
+#X obj 456 68 gems.win 320 240;
+#X obj 456 46 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 52 234 spigot 1;
+#X obj 179 221 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 69 170 <-- even if you cut this patch chord \, it still draws
+a triangle \, since it has recorded the vertices in an OpenGL display
+list;
+#X text 200 218 <-- Try turning off the spigot;
+#X text 61 20 Description: Records and plays back an OpenGL display
+list;
+#X msg 127 63 recompile;
+#X floatatom 200 53 5 0 0 0 - - -;
+#X obj 199 74 t b f;
+#X text 258 100 <-- sending "recompile" to its right inlet recompiles
+the display list. Also works with bang;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 7 0 6 1;
+#X connect 11 0 0 1;
+#X connect 12 0 13 0;
+#X connect 13 0 0 1;
+#X connect 13 1 3 3;

@@ -1,0 +1,17 @@
+#N canvas 0 0 763 395 10;
+#X obj 83 52 inlet;
+#X obj 207 51 inlet;
+#X obj 248 136 sel 0;
+#X obj 215 263 outlet done;
+#X obj 96 256 outlet args;
+#X obj 64 191 list.trim;
+#X obj 251 165 t b b;
+#X obj 100 137 flow.@parse;
+#X connect 0 0 7 0;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 7 0 5 0;
+#X connect 7 1 3 0;

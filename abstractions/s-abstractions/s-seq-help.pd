@@ -1,0 +1,23 @@
+#N canvas 140 154 598 448 10;
+#X obj 225 184 sssad/panel;
+#X obj 40 202 s-seq deepak 24;
+#X obj 40 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 40 155 metro 100;
+#X floatatom 40 364 5 0 0 0 - - -;
+#X obj 40 178 f;
+#X obj 69 178 + 1;
+#X text 38 55 the number boxes are the value for that row - use the
+shift key and click on the box to edit the number by hand.;
+#X text 37 34 the leftmost column signifies the row number.;
+#X text 223 165 use this panel to save your sequence/state;
+#X text 63 135 click me to start cycling through;
+#X text 39 -7 args: [name] [sequence length];
+#X text 37 89 the vslider is a scrollbar to scroll through the sequence
+- it wraps at the end.;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 1;

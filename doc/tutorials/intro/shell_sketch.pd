@@ -1,0 +1,16 @@
+#N canvas 369 214 524 457 10;
+#X obj 92 138 soundfiler;
+#X obj 228 139 getdir;
+#X obj 168 319 shell;
+#X obj 169 373 print;
+#X obj 233 98 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 191 253 t a a;
+#X obj 225 275 print;
+#X msg 169 220 ls -1 "$1";
+#X connect 1 0 7 0;
+#X connect 2 0 3 0;
+#X connect 4 0 1 0;
+#X connect 5 0 2 0;
+#X connect 5 1 6 0;
+#X connect 7 0 5 0;

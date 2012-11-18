@@ -1,0 +1,26 @@
+#N canvas 0 0 716 354 10;
+#X obj 85 110 line;
+#X obj 134 183 outlet;
+#X obj 85 183 outlet;
+#X obj 134 157 del;
+#X obj 85 57 t a a;
+#X obj 134 83 list split 1;
+#X obj 85 30 inlet;
+#X obj 181 32 inlet;
+#X obj 181 60 t a a;
+#X obj 134 110 b;
+#X text 295 55 line2: line which sends a bang to its 2nd outlet \,
+when finished.;
+#X obj 173 134 route float;
+#X connect 0 0 2 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 4 1 5 0;
+#X connect 5 0 9 0;
+#X connect 5 1 11 0;
+#X connect 6 0 4 0;
+#X connect 7 0 8 0;
+#X connect 8 0 0 1;
+#X connect 8 1 11 0;
+#X connect 9 0 3 0;
+#X connect 11 0 3 1;

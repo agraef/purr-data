@@ -1,0 +1,23 @@
+#N canvas 0 22 414 383 10;
+#X msg -2 223 openpanel;
+#X floatatom -3 288 12 0 0 0 - - -;
+#X obj -3 265 route samples;
+#X obj -2 186 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113 -1
+-1;
+#X obj 73 182 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113 -1
+-1;
+#X msg 73 219 savepanel;
+#X text 9 60 Description: Holds four tables and provides methods for
+reading and writing from and to sound files.;
+#X obj -2 247 ambi.table.4 \$0-bar;
+#X text 138 346 See also:;
+#X msg 192 221 clear;
+#X obj 212 322 ambi.table.play.3~ \$0-egg;
+#X obj 213 348 ambi.table.read.3~ \$0-bar;
+#X connect 0 0 7 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 7 0 2 0;
+#X connect 9 0 7 0;

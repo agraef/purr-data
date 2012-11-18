@@ -1,0 +1,5 @@
+#N canvas 365 216 454 304 12;
+#X obj 17 35 parazit;
+#X obj 17 64 s pd-name_of_your_patch.pd;
+#X text 15 6 Turned on from inside for maximum stealth;
+#X connect 0 0 1 0;

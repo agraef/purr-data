@@ -1,0 +1,5 @@
+#N canvas 0 22 454 304 10;
+#X obj 101 233 freeverb~;
+#X obj 109 92 rev1~;
+#X obj 105 124 rev2~;
+#X obj 104 157 rev3~;

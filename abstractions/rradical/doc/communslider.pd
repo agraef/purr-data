@@ -1,0 +1,8 @@
+#N canvas 186 212 371 285 10;
+#X obj 35 25 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 3800 1;
+#X obj 129 76 commun /volume \$0;
+#X obj 127 131 originator /mypatch \$0;
+#X obj 21 174 careGUI;
+#X connect 0 0 1 0;
+#X connect 1 0 0 0;

@@ -1,0 +1,65 @@
+#N canvas 97 138 905 512 10;
+#X obj 62 303 vasp.osc 22050;
+#X obj 58 31 cnv 15 15 15 empty empty vasp.frames+ 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufdfram1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 530 149 graph;
+#N canvas 0 0 402 278 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufdfram1;
+#X msg 140 45 symbol bufdfram2;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X restore 714 408 pd init;
+#X obj 62 335 vasp.update;
+#X text 119 397 abbreviation;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufdfram2 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 530 268 graph;
+#X text 56 98 !!!all vectors of a vasp have the same framesize/length!!!
+;
+#X obj 77 252 prepend set;
+#X obj 62 220 vasp.frames+ 30000;
+#X obj 63 396 vasp.f+;
+#X obj 63 452 VASP-HELP;
+#X text 57 69 adds a value to the frames of a vasp;
+#X text 58 83 argument/right inlet: value in frames;
+#X obj 278 432 vasp.osc 22050;
+#X obj 278 455 vasp.update;
+#X obj 278 258 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+10 -24198 -1 -1 -161 256;
+#X obj 278 277 * 100;
+#X floatatom 313 280 12 0 0;
+#X msg 62 192 vasp 0 bufdfram1;
+#X text 62 164 add 30000 frames to a buffer with length 0;
+#X obj 296 351 vasp.= 0;
+#X obj 278 306 t b b f;
+#X obj 278 408 vasp.frames+ 0;
+#X msg 278 380 vasp 30000 bufdfram2;
+#X msg 296 330 vasp bufdfram2;
+#X text 278 217 add an amount \, to subtract;
+#X text 278 231 try negative values;
+#X msg 77 274;
+#X connect 0 0 4 0;
+#X connect 8 0 28 0;
+#X connect 9 0 8 0;
+#X connect 9 0 0 0;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 17 0 22 0;
+#X connect 19 0 9 0;
+#X connect 22 0 24 0;
+#X connect 22 1 25 0;
+#X connect 22 2 23 1;
+#X connect 23 0 14 0;
+#X connect 24 0 23 0;
+#X connect 25 0 21 0;

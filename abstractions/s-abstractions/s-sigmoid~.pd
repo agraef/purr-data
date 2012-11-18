@@ -1,0 +1,8 @@
+#N canvas 164 202 307 105 10;
+#X obj 8 31 expr~ 2 / (1 + pow($v2 \, -$v1)) - 1;
+#X obj 8 54 outlet~;
+#X obj 240 8 inlet~;
+#X obj 8 8 inlet~;
+#X connect 0 0 1 0;
+#X connect 2 0 0 1;
+#X connect 3 0 0 0;

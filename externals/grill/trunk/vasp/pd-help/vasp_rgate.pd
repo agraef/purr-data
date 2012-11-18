@@ -1,0 +1,86 @@
+#N canvas 36 36 808 624 10;
+#X obj 72 26 cnv 15 15 15 empty empty vasp.rgate 0 10 1 14 -262144
+-1 0;
+#X obj 76 157 filelist \$0;
+#N canvas 40 55 281 170 clear_buffers 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X obj 54 108 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 481 518 pd clear_buffers;
+#X obj 63 291 vasp.update;
+#X obj 63 311 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X obj 401 162 wavedisplay-simple bufrgate1 \$0;
+#X obj 402 319 wavedisplay-simple bufrgate2 \$0;
+#X msg 63 251 vasp bufrgate1 bufrgate2;
+#X obj 63 271 vasp.cfft;
+#X obj 63 504 vasp.update;
+#X obj 63 524 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X msg 63 464 vasp bufrgate1 bufrgate2;
+#X obj 63 484 vasp.c!fft;
+#X obj 296 518 dac~;
+#X obj 296 480 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 317 483 play;
+#X obj 296 498 tabplay~ bufrgate1;
+#X msg 481 498 vasp bufrgate1 bufrgate2;
+#X text 71 49 gate the radius of a complex buffer content with a value
+;
+#X text 72 96 needs two buffers (real/imaginary);
+#X text 71 66 argument/right inlet: value (usually from 0-1) to gate
+the radius;
+#N canvas 384 183 438 403 inside 0;
+#X obj 66 169 soundfiler;
+#X obj 184 290 s \$0-sample-length;
+#X obj 66 223 s \$0-draw_display;
+#X msg 214 221 resize \$1;
+#X obj 66 47 loadbang;
+#X obj 66 113 filelisthandler \$0;
+#X obj 214 243 s bufrgate1;
+#X obj 225 264 s bufrgate2;
+#X msg 66 91 2;
+#X msg 95 91 88200;
+#X obj 66 68 t b b;
+#X msg 66 145 read \$1 bufrgate1;
+#X obj 66 193 t b;
+#X connect 0 0 12 0;
+#X connect 3 0 6 0;
+#X connect 3 0 7 0;
+#X connect 3 0 1 0;
+#X connect 4 0 10 0;
+#X connect 5 0 11 0;
+#X connect 8 0 5 0;
+#X connect 9 0 3 0;
+#X connect 10 0 8 0;
+#X connect 10 1 9 0;
+#X connect 11 0 0 0;
+#X connect 12 0 2 0;
+#X restore 670 518 pd inside;
+#X obj 63 413 vasp.update;
+#X obj 63 433 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X msg 63 329 vasp bufrgate1 bufrgate2;
+#X obj 63 393 vasp.rgate 0.2;
+#X floatatom 142 367 5 0 0;
+#X text 192 366 value;
+#X obj 56 582 VASP-HELP;
+#X connect 3 0 4 0;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 9 0 10 0;
+#X connect 11 0 12 0;
+#X connect 12 0 9 0;
+#X connect 14 0 16 0;
+#X connect 16 0 13 0;
+#X connect 16 0 13 1;
+#X connect 17 0 2 0;
+#X connect 22 0 23 0;
+#X connect 24 0 25 0;
+#X connect 25 0 22 0;
+#X connect 26 0 25 1;

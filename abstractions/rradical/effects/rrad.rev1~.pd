@@ -1,0 +1,40 @@
+#N canvas 0 0 141 64 10;
+#X obj 138 25 rev1~;
+#X obj 138 3 inlet~;
+#X obj 138 47 outlet~;
+#X obj 3 14 cnv 15 130 40 empty empty rev_after_1_sec 20 8 0 8 -233017
+-66577 0;
+#X obj 13 36 hsl 64 15 0 100 0 0 \$0-rev \$0-rev-sl rev -2 -6 1 8 -233017
+-143491 -1 1176 1;
+#X obj 89 36 nbx 3 14 0 100 0 0 \$0-rev \$0-rev-n empty 0 -6 0 10 -233017
+-123526 -1 18.6667 256;
+#N canvas 256 227 450 300 settings 0;
+#X msg 66 165 set \$1;
+#X obj 196 67 originator \$1 \$0;
+#X obj 236 265 s \$0-rev;
+#X obj 162 167 r \$0-rev;
+#X obj 161 190 commun /rev \$0;
+#X obj 307 28 inlet;
+#X obj 307 102 outlet;
+#X obj 60 265 s \$0-rev-sl;
+#X obj 146 263 s \$0-rev-n;
+#X obj 65 144 r \$0-rev;
+#X connect 0 0 7 0;
+#X connect 0 0 8 0;
+#X connect 1 2 6 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 4 0 7 0;
+#X connect 4 0 8 0;
+#X connect 5 0 1 1;
+#X connect 9 0 0 0;
+#X restore 291 24 pd settings;
+#X obj 291 1 inlet;
+#X obj 291 47 outlet;
+#X obj 189 5 r \$0-rev;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 9 0 0 1;
+#X coords 0 0 1 1 135 55 1;

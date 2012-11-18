@@ -1,0 +1,20 @@
+NAME=vasp
+
+BUILDTYPE=multi
+
+PRECOMPILE=main.h
+
+SRCDIR=source
+
+SRCS= \
+arg.cpp      obj_part.cpp   obj_split.cpp  opparam.cpp     ops_cplx.cpp     ops_gen.cpp      ops_trnsc.cpp  util.cpp \
+buflib.cpp   obj_chns.cpp    obj_peaks.cpp  obj_sync.cpp   ops_arith.cpp   ops_dft.cpp      ops_qminmax.cpp  ops_wnd.cpp    vasp.cpp \
+classes.cpp  obj_frames.cpp  obj_q.cpp      obj_vasp.cpp   ops_assign.cpp  ops_feature.cpp  ops_rearr.cpp    opvecs.cpp     vbuffer.cpp \
+env.cpp      obj_imm.cpp     obj_radio.cpp  obj_vecs.cpp   ops_carith.cpp  ops_flt.cpp      ops_resmp.cpp    vecblk.cpp \
+main.cpp     obj_offs.cpp    obj_size.cpp   opbase.cpp     ops_cmp.cpp     ops_gate.cpp     ops_search.cpp 
+              
+HDRS= \
+arg.h      env.h     opdefs.h   oppermute.h  ops_assign.h  ops_cplx.h     ops_flt.h    ops_resmp.h   ops_wnd.h  vbuffer.h \
+buflib.h   main.h    opfuns.h 	oploop.h   ops.h        ops_carith.h  ops_dft.h      ops_gen.h    ops_search.h  util.h     vecblk.h \
+classes.h  opbase.h  opparam.h  ops_arith.h  ops_cmp.h     ops_feature.h  ops_rearr.h  ops_trnsc.h   vasp.h rdx2fft.hpp mixfft.hpp  rvfft.hpp
+

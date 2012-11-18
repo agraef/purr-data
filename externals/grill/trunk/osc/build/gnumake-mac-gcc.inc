@@ -1,0 +1,1 @@
+INCPATH=-I./oscpack

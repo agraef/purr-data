@@ -1,0 +1,103 @@
+#N canvas 207 22 705 549 10;
+#X obj 14 64 cnv 15 270 210 empty empty empty 20 12 0 14 -196506 -66577
+0;
+#X obj 12 290 cnv 15 270 210 empty empty empty 20 12 0 14 -196506 -66577
+0;
+#X obj 326 62 cnv 15 270 210 empty empty empty 20 12 0 14 -196506 -66577
+0;
+#X obj 328 288 cnv 15 320 210 empty empty empty 20 12 0 14 -196506
+-66577 0;
+#X msg 45 325 bang;
+#X obj 45 351 random 100;
+#X obj 44 404 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 181 405 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 45 379 moses 10;
+#X obj 231 409 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 42 429 10%;
+#X text 112 428 20%;
+#X obj 181 379 moses 60;
+#X text 231 434 40%;
+#X text 179 429 30%;
+#X obj 112 402 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 113 380 moses 20;
+#X msg 360 116 bang;
+#X obj 360 142 random 100;
+#X obj 359 195 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 449 198 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 360 170 moses 10;
+#X obj 450 171 moses 30;
+#X obj 502 198 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 359 223 10%;
+#X text 449 224 20%;
+#X text 501 225 70%;
+#X msg 67 113 bang;
+#X obj 67 139 random 100;
+#X obj 66 195 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 117 193 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 66 167 moses 10;
+#X text 112 220 %90;
+#X text 66 222 %10;
+#X text 34 90 with two possible outcomes;
+#X text 344 87 with three possible outcomes;
+#X text 41 299 with four possible outcomes;
+#X msg 358 318 bang;
+#X obj 358 344 random 100;
+#X obj 357 397 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 494 398 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 425 421 20%;
+#X obj 494 372 moses 60;
+#X obj 425 395 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 358 372 moses 20;
+#X obj 425 373 moses 40;
+#X obj 563 398 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 613 398 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 562 372 moses 80;
+#X text 355 422 20%;
+#X text 492 422 20%;
+#X text 561 421 20%;
+#X text 615 422 20%;
+#X text 353 296 with five possible outcomes;
+#X text 35 10 weighted random possiblity patches;
+#X text 512 518 2006_Koray Tahiroglu;
+#X connect 4 0 5 0;
+#X connect 5 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 1 16 0;
+#X connect 12 0 7 0;
+#X connect 12 1 9 0;
+#X connect 16 0 15 0;
+#X connect 16 1 12 0;
+#X connect 17 0 18 0;
+#X connect 18 0 21 0;
+#X connect 21 0 19 0;
+#X connect 21 1 22 0;
+#X connect 22 0 20 0;
+#X connect 22 1 23 0;
+#X connect 27 0 28 0;
+#X connect 28 0 31 0;
+#X connect 31 0 29 0;
+#X connect 31 1 30 0;
+#X connect 37 0 38 0;
+#X connect 38 0 44 0;
+#X connect 42 0 40 0;
+#X connect 42 1 48 0;
+#X connect 44 0 39 0;
+#X connect 44 1 45 0;
+#X connect 45 0 43 0;
+#X connect 45 1 42 0;
+#X connect 48 0 46 0;
+#X connect 48 1 47 0;

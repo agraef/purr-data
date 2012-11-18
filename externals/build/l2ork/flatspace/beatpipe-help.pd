@@ -1,0 +1,54 @@
+#N canvas 1197 112 488 497 10;
+#X obj 162 461 beatpipe 120 16;
+#X msg 242 341 1 one;
+#X msg 242 392 3.75 and almost four;
+#X obj 244 305 bng 30 250 50 0 empty empty click-me! 0 -6 0 12 -233017
+-1 -33289;
+#X obj 162 509 print;
+#X obj 408 305 vsl 25 128 30 300 0 0 empty empty tempo-in-BPM -40 -8
+0 12 -262144 -1 -1 0 1;
+#X floatatom 408 446 5 0 0 0 - - -;
+#X msg 22 281 set-tpq 4;
+#X msg 162 379 bang;
+#X msg 26 382 sync;
+#X msg 27 412 sync-beat;
+#X msg 162 347 freeze;
+#X msg 30 442 clear;
+#X msg 87 380 continue;
+#X text 147 384 =;
+#X obj 265 508 print done;
+#X text 20 101 After the last list in the pipe \, a bang is sent to
+the right outlet.;
+#X text 20 134 A freeze message will suspend scheduling until a continue/bang
+or sync/sync-beat message A sync message will immediatly call the next
+tick. A sync-beat message will immediatly call the next whole beat.
+A clear message will clear the pipe \, but not sent a done message.
+Lists starting with 0 (or less) or a symbol will be output immediatly
+and will not be quantized.;
+#X text 20 -10 a event scheduler/quantizer Any list starting with a
+number T sent to the left inlet \, will be sent to the output after
+T beats \, quantized with tpq (tick per quarter) and stripped of the
+leading beat number. The tempo can be changed dynamically on the right
+inlet The quantification can be set at any time with a set-tpq message.
+;
+#X msg 242 416 16 and after sixteen;
+#X msg 242 369 2 and two 3.14159;
+#X connect 0 0 4 0;
+#X connect 0 1 15 0;
+#X connect 1 0 20 0;
+#X connect 1 0 2 0;
+#X connect 1 0 19 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 1;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;

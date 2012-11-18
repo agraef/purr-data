@@ -1,0 +1,49 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty metro 20 12 0 24 -228992 -66577
+0;
+#X obj 30 321 metro;
+#X text 12 72 The timing of events is an essential function of Pd.
+For example: in a piece of music \, each note is played at a specific
+time of the whole piece.;
+#X text 12 132 The [metro] object provides a method for making things
+happen at a regular time interval. "metro" comes from metronome. A
+metronome makes repeating clicks and the time between each click can
+be set.;
+#X msg 16 263 bang;
+#X msg 55 263 stop;
+#X obj 63 299 nbx 3 18 100 999 0 1 empty empty empty 0 -6 0 16 -262144
+-1 -1 500 256;
+#X obj 30 359 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X text 120 297 <-- change the time between bangs here;
+#X msg 483 96 bang;
+#X obj 483 147 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 326 422 pddp/pddplink http://en.wikipedia.org/wiki/Metronome
+;
+#X text 304 397 For more info:;
+#X msg 458 271 bang;
+#X msg 497 271 stop;
+#X obj 472 377 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 472 349 metro 500;
+#X obj 483 122 metro 500;
+#X text 12 206 The same is true of [metro] \, using a number to represent
+the time in milliseconds (ms):;
+#X msg 500 300 1;
+#X msg 533 300 0;
+#X obj 445 323 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X text 413 243 Ways to start/stop [metro]:;
+#X connect 1 0 7 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 6 0 1 1;
+#X connect 9 0 17 0;
+#X connect 13 0 16 0;
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
+#X connect 17 0 10 0;
+#X connect 19 0 16 0;
+#X connect 20 0 16 0;
+#X connect 21 0 16 0;

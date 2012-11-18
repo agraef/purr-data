@@ -1,0 +1,14 @@
+#N canvas 522 116 432 310 10;
+#X obj 54 63 gems.line.width 7;
+#X obj 20 -69 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X floatatom 153 31 5 0 0 0 - - -;
+#X obj 20 -45 gems.win @dimen 200 200 @border 0 @offset 100 100 @FSAA
+0 @fps 20;
+#X obj 54 19 gemhead;
+#X text 72 84 Description: Changes the line width;
+#X obj 55 147 gems.line @from -2 -2 @to 2 2;
+#X connect 0 0 6 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 1;
+#X connect 4 0 0 0;

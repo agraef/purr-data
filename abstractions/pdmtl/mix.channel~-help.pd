@@ -1,0 +1,7 @@
+#N canvas 659 40 450 300 10;
+#X text 35 22 Description: Controls the panning and volume of a stereo
+signal.;
+#X obj 252 140 param.gui;
+#X msg 252 109 mch;
+#X obj 46 143 mix.channel~ @id mch;
+#X connect 2 0 1 0;

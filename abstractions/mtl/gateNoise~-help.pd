@@ -1,0 +1,90 @@
+#N canvas 469 177 588 450 10;
+#X obj 128 196 nbx 5 14 -1e+37 1e+37 0 0 empty empty right 0 -8 0 10
+-262144 -1 -1 96.9143 256;
+#X obj 16 135 *~;
+#X obj 33 114 osc~ 2;
+#X obj 104 135 *~;
+#X obj 104 92 osc~ 240;
+#X obj 121 114 osc~ 4;
+#N canvas 172 333 450 300 env 0;
+#X obj 279 93 env~ 16384 8192;
+#X obj 279 49 inlet~;
+#X obj 279 177 outlet;
+#X text 294 123 don't know why;
+#X obj 279 144 + 2.94;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 4 0 2 0;
+#X restore 114 161 pd env;
+#N canvas 173 365 450 300 env 0;
+#X obj 279 93 env~ 16384 8192;
+#X obj 279 49 inlet~;
+#X obj 279 177 outlet;
+#X text 294 123 don't know why;
+#X obj 279 144 + 2.4;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 4 0 2 0;
+#X restore 28 163 pd env;
+#X obj 40 197 nbx 5 14 -1e+37 1e+37 0 0 empty empty left 0 -8 0 10
+-262144 -1 -1 95.5452 256;
+#X obj 43 256 bonk~;
+#X obj 143 255 bonk~;
+#X text 189 255 only an idea;
+#X msg 70 279 trigger;
+#X msg 170 278 trigger;
+#X obj 15 92 osc~ 160;
+#X obj 16 223 mtl/gateNoise~ /id gatenoise;
+#X obj 170 299 mtl/clap~;
+#X obj 70 299 mtl/clap~;
+#X obj 16 380 mtl/out~;
+#X text 13 10 Description: a noise gate (cut off volume below the threshold).
+useful for removing noise from an incoming signal or making breakbeat.
+;
+#X text 13 53 tags: mix~;
+#X obj 69 320 mtl/out~ 30;
+#X obj 301 252 cnv 15 200 20 empty empty /gatenoise/ 2 12 0 8 -258401
+-262144 0;
+#X obj 301 275 hsl 100 15 0 1 0 0 /gatenoise/wet /gatenoise/wet_ wet
+105 7 0 8 -262144 -1 -1 0 1;
+#X obj 301 293 hsl 100 15 0 100 0 0 /gatenoise/thresholdleft /gatenoise/thresholdleft_
+thresholdleft 105 7 0 8 -262144 -1 -1 0 1;
+#X obj 301 311 hsl 100 15 0 100 0 0 /gatenoise/thresholdright /gatenoise/thresholdright_
+thresholdright 105 7 0 8 -262144 -1 -1 0 1;
+#X obj 301 329 hsl 100 15 0 500 0 0 /gatenoise/attackleft /gatenoise/attackleft_
+attackleft 105 7 0 8 -262144 -1 -1 20 1;
+#X obj 301 347 hsl 100 15 0 500 0 0 /gatenoise/attackright /gatenoise/attackright_
+attackright 105 7 0 8 -262144 -1 -1 20 1;
+#X obj 301 365 hsl 100 15 0 5000 0 0 /gatenoise/releaseleft /gatenoise/releaseleft_
+releaseleft 105 7 0 8 -262144 -1 -1 396 1;
+#X obj 301 383 hsl 100 15 0 5000 0 0 /gatenoise/releaseright /gatenoise/releaseright_
+releaseright 105 7 0 8 -262144 -1 -1 396 1;
+#X obj 301 401 tgl 15 0 /gatenoise/automatic /gatenoise/automatic_
+automatic 17 7 0 8 -262144 -166441 -1 0 1;
+#X obj 301 419 hsl 100 15 0 100 0 0 /gatenoise/automatic+- /gatenoise/automatic+-_
+automatic+- 105 7 0 8 -262144 -1 -1 4950 1;
+#X text 194 221 <-Click on the propeties menu to display params;
+#X obj 298 168 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 358 169 PARAM ENABLED;
+#X obj 297 192 ../doc/5.reference/tof/param-help;
+#X connect 1 0 7 0;
+#X connect 1 0 15 0;
+#X connect 2 0 1 1;
+#X connect 3 0 6 0;
+#X connect 3 0 15 1;
+#X connect 4 0 3 0;
+#X connect 5 0 3 1;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 9 1 12 0;
+#X connect 10 1 13 0;
+#X connect 12 0 17 0;
+#X connect 13 0 16 0;
+#X connect 14 0 1 0;
+#X connect 15 0 9 0;
+#X connect 15 0 18 0;
+#X connect 15 1 10 0;
+#X connect 15 1 18 1;
+#X connect 16 0 21 1;
+#X connect 17 0 21 0;

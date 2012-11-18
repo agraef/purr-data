@@ -1,0 +1,43 @@
+#N canvas 110 24 503 501 10;
+#X obj 20 293 cnv 15 486 220 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 25 184 K12/wii_speed;
+#X obj 123 530 K12/instr_sustained2;
+#X obj 25 755 output;
+#N canvas 521 27 450 514 META 0;
+#X text 9 66 OUTLET_0 Connect this to an instrument or another math
+object;
+#X text 9 43 INLET_0 Connect any input device object here;
+#X text 10 6 DESCRIPTION This lets you make 2 sounds interact with
+each other;
+#X text 9 104 OUTLET_1 Connect this to an instrument or another math
+object;
+#X restore 458 819 pd META;
+#X obj 13 43 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 13 14 cnv 15 501 28 empty empty Mapper 5 14 0 20 -139274 -262144
+0;
+#X obj 484 46 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 25 69 K12/wii_connect;
+#X text 133 339 With the top toggle option selected \, the outlets
+will always be zero.;
+#X text 133 305 There are four different functions that the Mapper
+object will do.;
+#X text 133 373 With the second toggle option selected \, the right
+outlet will be the opposite of the left outlet (in other words \, when
+one is 0 the other is 1).;
+#X text 134 457 With the fourth toggle option selected \, as the left
+slider increases from 0 to 1 the right slider increases slowly at first
+and then quickly \, also from 0 to 1;
+#X text 133 420 With the third toggle option selected \, the left slider
+ranges from 0 to 1 and the right slider ranges from 0 to 0.5;
+#X obj 25 298 K12/logic_mapper;
+#X obj 25 530 K12/instr_sustained1;
+#X obj 124 640 K12/fx_reverb;
+#X connect 1 0 14 0;
+#X connect 2 0 16 0;
+#X connect 8 0 1 0;
+#X connect 14 0 15 0;
+#X connect 14 1 2 0;
+#X connect 15 0 3 0;
+#X connect 16 0 3 0;

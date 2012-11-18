@@ -1,0 +1,39 @@
+#N canvas 269 332 634 472 10;
+#X obj 80 284 cnv 15 150 50 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X msg 194 303 13;
+#X floatatom 75 178 5 0 0 0 - - -;
+#X text 56 54 Saves data in a message box. This does not work within
+an abstraction. You have to put it in your main patch and save it every
+time you want to save the settings you have set. Every reminder object
+need to be connected to a message box with its right inlet and outlet.
+The data will be stored in that message box in the parent patch. New
+data changes the message box.;
+#X msg 86 418 13;
+#X obj 126 181 symbol;
+#X msg 126 159 toto;
+#X msg 207 377 set;
+#X text 247 378 Erases the message;
+#X text 242 305 You save the data in this message box.;
+#X text 184 174 Inputs. Send it several values \, then save this help
+patch \, close it and open it again.;
+#X obj 87 303 data.save.msg;
+#X obj 167 227 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 201 231 Bang outputs the current value.;
+#X msg 276 267 set \$1;
+#X floatatom 273 248 5 0 0 0 - - -;
+#X text 334 270 set : changes the content without output;
+#X obj 87 377 flow.prepend set;
+#X text 54 21 Description: Simplest possible memory system in Pd.;
+#X connect 1 0 11 1;
+#X connect 2 0 11 0;
+#X connect 5 0 11 0;
+#X connect 6 0 5 0;
+#X connect 7 0 4 0;
+#X connect 11 0 17 0;
+#X connect 11 1 1 0;
+#X connect 12 0 11 0;
+#X connect 14 0 11 0;
+#X connect 15 0 14 0;
+#X connect 17 0 4 0;

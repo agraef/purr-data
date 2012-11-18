@@ -1,0 +1,36 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib libdir;
+#X obj 440 65 import maxlib oscx mrpeach;
+#X obj 10 10 cnv 15 400 40 empty empty tcp_and_udp 20 12 0 24 -228992
+-66577 0;
+#X text 11 66 There are two main protocols for transmitting data over
+networks: TCP and UDP.;
+#X text 35 119 TCP is the most common \, it stands for Transmission
+Control Protocol. Basically \, that means that the protocol manages
+the transmission of the data. With TCP \, when you send a packet of
+data \, its guaranteed to arrive.;
+#X text 34 202 By default \, most networking objects in Pd use TCP:
+;
+#X obj 54 223 netsend;
+#X obj 266 224 netclient;
+#X obj 359 224 netserver;
+#X text 178 265 UDP stands for User Datagram Protocol. It is a lightweight
+\, simple protocol that is meant to be as quick and small as possible.
+The downside is that the data packets are not guaranteed to arrive.
+;
+#X obj 35 180 pddp/pddplink http://en.wikipedia.org/wiki/Transmission_Control_Protocol
+;
+#X obj 177 325 pddp/pddplink http://en.wikipedia.org/wiki/User_Datagram_Protocol
+;
+#X obj 132 224 netreceive 32194;
+#X obj 305 356 netreceive 32194 1;
+#X obj 227 356 netsend 1;
+#X obj 447 356 sendOSC;
+#X obj 518 356 dumpOSC 32192;
+#X text 180 399 One advantage to UDP is that you do not need to maintain
+a connection to receive data. Whenever you open a UDP port \, you will
+start receiving data.;
+#X obj 442 224 tcpclient;
+#X obj 525 224 tcpserver;
+#X obj 143 356 udpreceive;
+#X obj 70 356 udpsend;

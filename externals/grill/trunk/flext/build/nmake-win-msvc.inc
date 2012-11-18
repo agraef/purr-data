@@ -1,0 +1,13 @@
+!ifdef SIMD
+DEFS=$(DEFS) /DFLEXT_USE_SIMD
+!endif
+
+!ifdef SNDOBJ_LIB
+SRCS=$(SRCS) $(SRCS_SNDOBJ)
+HDRS=$(HDRS) $(HDRS_SNDOBJ)
+!endif
+
+!ifdef STK_LIB
+SRCS=$(SRCS) $(SRCS_STK)
+HDRS=$(HDRS) $(HDRS_STK)
+!endif

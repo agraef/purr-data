@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/ext/!svn/ver/3746/trunk/vasp
+END
+vasp.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/2997/trunk/vasp/vasp.mcp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3732/trunk/vasp/package.txt
+END
+vasp.doxy
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2997/trunk/vasp/vasp.doxy
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3668/trunk/vasp/readme.txt
+END
+mixfft.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2997/trunk/vasp/mixfft.txt
+END
+vasp.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3650/trunk/vasp/vasp.vcproj
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/2997/trunk/vasp/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2997/trunk/vasp/license.txt
+END
+todo.txt
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/2997/trunk/vasp/todo.txt
+END
+changes.txt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3732/trunk/vasp/changes.txt
+END

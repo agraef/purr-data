@@ -1,0 +1,31 @@
+#N canvas 630 80 450 300 10;
+#N canvas 0 0 551 310 example 0;
+#N canvas 70 477 605 273 1002-1 0;
+#X text 77 25 This is the popup subpatch;
+#X obj 144 136 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 70 167 Click here to close it.;
+#X text 66 189 Or click on the toggle of the master patch.;
+#X obj 137 82 tgl 15 0 \$0-1-close-tgl \$0-1-close-tgl empty 0 -6 0
+8 -262144 -1 -1 0 1;
+#X text 168 81 You can as well use the send symbol <unique id>-close-tgl
+;
+#X obj 246 142 gui.popup.close \$0-1;
+#X connect 1 0 6 0;
+#X connect 6 0 1 0;
+#X restore 292 201 pd \$0-1;
+#X obj 110 133 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 130 133 more;
+#X text 83 203 It will open this subpatch :;
+#X obj 217 133 gui.popup \$0-1;
+#X connect 1 0 4 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 85 60 1 100 100;
+#X restore 135 111 pd example;
+#X obj 181 243 tgl 15 0 \$0-1-tgl \$0-1-tgl empty 0 -6 0 8 -262144
+-1 -1 0 1;
+#X text 41 227 You can also use the send/receive symbols <unique id>-tgl
+instead of wires :;
+#X text 51 6 Several way to pop up a subpatch.;
+#X text 54 25 Argument: unique id;

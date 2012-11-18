@@ -1,0 +1,8 @@
+#N canvas 275 219 606 444 10;
+#X obj 94 14 phasor~ 440;
+#X obj 475 14 sssad/panel;
+#X obj 95 337 s-ezdac~ x;
+#X obj 94 42 s-freqnoise~ mytest;
+#X connect 0 0 3 0;
+#X connect 3 0 2 0;
+#X connect 3 0 2 1;

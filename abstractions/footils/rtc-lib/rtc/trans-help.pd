@@ -1,0 +1,60 @@
+#N canvas 242 65 640 495 10;
+#X text 20 69 Int in left inlet outputs the nth member of a transition
+between a start value <int \, float> and an end value <int \, float>
+in n steps <int> \, whereas "steps" is the number of row elements (between
+start and end value) minus one. The mode of transition is determined
+by the int sent to the rightmost inlet:;
+#X text 20 38 trans;
+#X text 54 186 2 = exponential;
+#X text 54 172 1 = linear;
+#X text 54 158 0 = logarithmical;
+#X text 21 220 see also:;
+#X msg 293 219 geom;
+#X msg 88 219 trans-lin;
+#X msg 220 219 trans-exp;
+#X msg 151 219 trans-log;
+#X text 21 385 1995 by Karlheinz Essl;
+#X floatatom 45 348 0 0 0 0 - - -;
+#X obj 45 307 trans 500 2000 12 0;
+#X text 183 257 end.value;
+#X text 111 257 start.value;
+#X text 250 257 steps;
+#X floatatom 45 278 0 0 0 0 - - -;
+#X text 41 257 row index;
+#X floatatom 183 278 0 0 0 0 - - -;
+#X floatatom 114 278 0 0 0 0 - - -;
+#X floatatom 251 278 0 0 0 0 - - -;
+#X msg 355 33 Toolbox;
+#X msg 326 385 RTC-Overview;
+#X text 110 349 nth member of transition row;
+#X text 160 153 };
+#X text 190 174 transition functions;
+#N canvas 0 0 738 528 trans-type 0;
+#X obj 107 393 list split 1;
+#X symbolatom 107 142 14 0 0 0 - - -;
+#X obj 107 127 hradio 15 1 0 3 empty empty transition 0 -6 0 8 -262144
+-1 -1 2;
+#X obj 107 419 outlet;
+#X obj 244 66 inlet;
+#X obj 107 247 select 0 1 2;
+#X msg 107 304 0 logarithmical;
+#X msg 235 303 1 linear;
+#X msg 317 306 2 exponential;
+#X connect 0 0 3 0;
+#X connect 0 1 1 0;
+#X connect 2 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 5 1 7 0;
+#X connect 5 2 8 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X coords 0 -1 1 1 125 60 1 100 100;
+#X restore 320 250 pd trans-type;
+#X connect 12 0 11 0;
+#X connect 16 0 12 0;
+#X connect 18 0 12 2;
+#X connect 19 0 12 1;
+#X connect 20 0 12 3;
+#X connect 26 0 12 4;

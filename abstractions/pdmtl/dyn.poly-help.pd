@@ -1,0 +1,86 @@
+#N canvas 421 94 866 736 10;
+#X obj 144 259 cnv 15 100 100 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X text 124 -7 Description: Simple dynamic patching;
+#X text 125 5 Author: Alexandre Quessy;
+#X msg 487 118 num \$1;
+#X floatatom 486 97 5 0 0 0 - - -;
+#X msg 490 163 class \$1;
+#X symbolatom 489 141 30 0 0 0 - - -;
+#X floatatom 121 152 5 0 0 0 - - -;
+#X msg 132 225 hello potato;
+#X obj 368 355 print INFO;
+#X obj 493 190 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 495 210 verbose \$1;
+#X obj 512 428 debug.clear;
+#X obj 513 407 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 126 22 Will create <num> instances of the <class> abstraction
+name. You must create your own abstraction in order to instanciate
+many using [dyn.poly];
+#X text 126 67 We choose the index of the instance using the 2nd inlet
+;
+#X text 130 403 Each instance (object) of the chosen class (object
+name) has a number. Each has the following arguments : number \, receive
+symbol \, send symbol.;
+#X text 406 480 Look in this abstraction to see how we implemented
+it :;
+#X obj 412 501 dyn.example 3 3-XXXX-in XXXX-out;
+#X text 405 518 Of course \, the XXXX are replaced by a unique ID.
+;
+#X text 190 337 common output;
+#X text 58 177 Input to only one instance;
+#X text 535 118 Changes the number of instances to create;
+#X text 554 163 Class name (abstraction name) to create;
+#X floatatom 94 223 5 0 0 0 - - -;
+#X text 60 190 Send it some message and look the pd text console;
+#X text 99 594 Dollar two is a receive symbol for this instance only
+;
+#X text 100 612 Dollar three is the common receive for all the instances
+created in this [dyn.poly] \, which is the object left outlet.;
+#X text 93 547 This is just an example patch for dyn.poly which does
+not much;
+#X text 93 578 Dollar one is replaced by the instance number;
+#X text 161 149 index of the instance to send to;
+#X text 133 86 Third inlet is for @rguments;
+#X obj 74 359 route 0 1 2 3;
+#X obj 71 381 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 92 383 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 111 382 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 131 382 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 170 369 print :;
+#X text 101 652 [<class> <num> <receive just me> <send> <receive all>
+...];
+#X text 137 108 4th inlet : broadcast messages to all instances.;
+#X text 139 444 Warning: Dynamic patching creates a lot of symbols
+;
+#X text 138 458 Dynamic patching is very slow. Should be done only
+once \, at startup.;
+#X obj 170 301 dyn.poly @class dyn.example @num 7 @flags egg bacon
+spam;
+#X msg 496 237 flags ham sausage;
+#X text 101 672 You can add flags after. A flag can be any list \,
+except arguments;
+#X connect 3 0 42 2;
+#X connect 4 0 3 0;
+#X connect 5 0 42 2;
+#X connect 6 0 5 0;
+#X connect 7 0 42 1;
+#X connect 8 0 42 0;
+#X connect 10 0 11 0;
+#X connect 11 0 42 2;
+#X connect 13 0 12 0;
+#X connect 24 0 42 0;
+#X connect 32 0 33 0;
+#X connect 32 1 34 0;
+#X connect 32 2 35 0;
+#X connect 32 3 36 0;
+#X connect 42 0 32 0;
+#X connect 42 0 37 0;
+#X connect 42 1 9 0;
+#X connect 43 0 42 2;

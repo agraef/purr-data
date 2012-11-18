@@ -1,0 +1,89 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header output~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 307 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 246 494 368 META 0;
+#X text 12 225 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 265 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 12 205 AUTHOR Hans Christoph Steiner;
+#X text 12 5 KEYWORDS signal abstraction;
+#X text 12 25 LICENSE GPL;
+#X text 12 45 DESCRIPTION gui volume and DSP control;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 signal;
+#X text 12 105 INLET_2 float;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 145 OUTLET_1 signal;
+#X text 12 165 OUTLET_2 float;
+#X text 12 245 RELEASE_DATE 2009;
+#X text 12 185 LIBRARY PDDP;
+#X restore 500 597 pd META;
+#X obj 0 401 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 498 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 502 (none);
+#N canvas 103 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 29 38 dac~;
+#X text 8 2 [output~] Related Objects;
+#X obj 26 61 pddp/helplink pddp/dsp;
+#X restore 102 597 pd Related_objects;
+#X obj 78 316 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 410 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 342 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/output~ -text
+pdpedia: output~;
+#X obj 107 167 osc~ 200;
+#X obj 377 170 noise~;
+#X obj 106 205 output~;
+#X obj 376 205 output~;
+#X text 174 227 <- mute;
+#X text 176 208 <- dsp toggle (green = on );
+#X text 98 315 signal;
+#X text 98 341 signal;
+#X obj 78 367 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 366 float;
+#X text 167 366 - the right inlet can be used to set the volume (range
+is 0-1).;
+#X text 98 409 signal;
+#X obj 78 440 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 439 signal;
+#X obj 78 470 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 469 float;
+#X text 90 101 The [output~] abstraction is a user-friendly GUI substitute
+for [dac~] \, with controls for "compute audio" \, volume \, and a
+mute button.;
+#X text 99 530 This object is used in the audio tutorials \, and can
+be used in any patch to quickly hear and control the level of an audio
+signal.;
+#X text 11 23 GUI- volume and DSP control;
+#X text 168 315 - incoming signal which will be routed to the left
+channel.;
+#X text 167 341 - incoming signal which will be routed to the right
+channel.;
+#X text 168 469 - current volume level (range is from 0-1).;
+#X text 168 439 - the incoming signal from the middle inlet filtered
+and passed unchanged to this outlet.;
+#X text 168 409 - the incoming signal from the leftmost inlet is filtered
+and passed to this outlet.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 99 572 pddp/pddplink ../3.audio.examples/A05.output.subpatch.pd
+-text doc/3.audio.examples/A05.output.subpatch.pd;
+#X connect 13 0 15 0;
+#X connect 13 0 15 1;
+#X connect 14 0 16 1;
+#X connect 14 0 16 0;

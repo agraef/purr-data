@@ -1,0 +1,12 @@
+#N canvas 0 0 450 300 10;
+#X obj 47 141 init_keyword hello world 2 3;
+#X obj 202 176 print world;
+#X obj 44 168 print hello;
+#X obj 48 118 inlet;
+#X obj 174 204 print two;
+#X obj 248 204 print dr3i;
+#X connect 0 0 2 0;
+#X connect 0 1 1 0;
+#X connect 0 2 4 0;
+#X connect 0 3 5 0;
+#X connect 3 0 0 0;

@@ -1,0 +1,34 @@
+#N canvas 0 0 448 395 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header externals 20 10
+1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 373 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 DESCRIPTION notions of scope in Pd;
+#X text 12 25 KEYWORDS needs_work;
+#X restore 392 375 pd META;
+#N canvas 11 243 428 121 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Externals - Related Objects;
+#X restore 103 375 pd Related_objects;
+#X obj 6 375 pddp/pddplink all_about.pd -text All About Pd;
+#X text 20 36 Externals are objects that can be used in addition to
+the core Pd objects \, or vanilla objects. Externals can be created
+with other programming languages like C \, C++ \, or Python \, as well
+as being programmed directly in Pd.;
+#X obj 59 347 pddp/pddplink all_about_libraries.pd;
+#N canvas 16 214 428 369 Subpatch 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Subpatch;
+#X text 18 23 Subpatch;
+#X restore 23 164 pd Subpatch;
+#X text 20 116 This help file is unfinished;

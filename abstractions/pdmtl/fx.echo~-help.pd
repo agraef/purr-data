@@ -1,0 +1,15 @@
+#N canvas 498 230 260 229 10;
+#X obj 25 126 mix.out_~;
+#X text 23 20 Description: Echos.;
+#X obj 121 77 param.gui;
+#X msg 121 55 echo;
+#X obj 24 101 fx.echo~ @id echo;
+#X obj 194 55 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 25 71 adc~ 1 2;
+#X connect 3 0 2 0;
+#X connect 4 0 0 0;
+#X connect 4 1 0 1;
+#X connect 5 0 2 1;
+#X connect 6 0 4 0;
+#X connect 6 1 4 1;

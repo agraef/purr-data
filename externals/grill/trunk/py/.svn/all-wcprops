@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 27
+/ext/!svn/ver/3746/trunk/py
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/ext/!svn/ver/2391/trunk/py/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2391/trunk/py/license.txt
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2391/trunk/py/package.txt
+END
+py.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/2391/trunk/py/py.vcproj
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/3744/trunk/py/readme.txt
+END

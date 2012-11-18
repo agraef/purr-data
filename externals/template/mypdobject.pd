@@ -1,0 +1,6 @@
+#N canvas 382 214 450 300 10;
+#X obj 85 93 inlet;
+#X obj 85 253 outlet;
+#X msg 88 169 this is an example pd object;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

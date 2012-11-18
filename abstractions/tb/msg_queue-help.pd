@@ -1,0 +1,14 @@
+#N canvas 0 0 386 215 10;
+#X obj 28 98 msg_queue;
+#X obj 28 131 print;
+#X msg 86 23 123;
+#X msg 86 43 234;
+#X msg 86 63 345;
+#X obj 28 59 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 30 169 (c) Tim Blechmann 2005 \, $Id: msg_queue-help.pd 221 2005-12-17 18:31:17Z tim $;
+#X connect 0 0 1 0;
+#X connect 2 0 0 1;
+#X connect 3 0 0 1;
+#X connect 4 0 0 1;
+#X connect 5 0 0 0;

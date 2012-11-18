@@ -1,0 +1,28 @@
+#N canvas 512 50 426 312 10;
+#X obj 72 41 inlet;
+#X obj 162 62 loadbang;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/math_number.png;
+#X msg 170 252 \$1 10;
+#X obj 170 275 line~;
+#X obj 169 326 outlet~;
+#X obj 121 147 nbx 5 19 -1e+37 1e+37 0 0 \$0-s-null \$0-r-null empty
+0 -8 0 16 -262144 -1 -1 0 256 1;
+#X obj 11 100 preset_node k12;
+#X obj 121 326 outlet;
+#X msg 162 85 open @pd_extra/K12/objects/math_number.png;
+#X obj 110 41 inlet;
+#X obj 110 85 t b;
+#X obj 110 63 moses 1;
+#X connect 0 0 6 0;
+#X connect 1 0 9 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 6 0 7 0;
+#X connect 6 0 8 0;
+#X connect 6 0 3 0;
+#X connect 7 0 6 0;
+#X connect 9 0 2 0;
+#X connect 10 0 12 0;
+#X connect 11 0 6 0;
+#X connect 12 1 11 0;
+#X coords 0 -1 1 1 89 60 2 117 127;

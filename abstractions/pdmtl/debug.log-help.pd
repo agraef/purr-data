@@ -1,0 +1,12 @@
+#N canvas 683 196 454 304 10;
+#X msg 65 118 egg \$1;
+#X floatatom 62 84 5 0 0 0 - - -;
+#X msg 133 132 bacon ham \$1;
+#X floatatom 135 107 5 0 0 0 - - -;
+#X text 55 53 Will work together with debug.log.file;
+#X text 62 24 Logs some data in a log file;
+#X obj 73 178 debug.log @group spam @prefix CHECK THIS;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;

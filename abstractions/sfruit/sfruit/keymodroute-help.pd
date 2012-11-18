@@ -1,0 +1,15 @@
+#N canvas 260 402 450 300 10;
+#X obj 125 130 keymodroute Alt_L;
+#X obj 125 97 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 125 175 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 224 176 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 13 12 keymodroute - divert a message stream to the right outlet
+when a modifier key is held down.;
+#X text 145 96 click with and without "Alt" held down;
+#X text 301 274 2008 Luke Iannini;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 0;

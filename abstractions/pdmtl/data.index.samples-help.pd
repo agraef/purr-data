@@ -1,0 +1,19 @@
+#N canvas 236 103 832 380 10;
+#X obj 67 139 data.index.samples;
+#X obj 70 104 openpanel;
+#X obj 70 63 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 44 187 print index;
+#X obj 127 188 print tableL;
+#X obj 213 188 print tableR;
+#X obj 306 189 print size;
+#X obj 387 187 print size_of_sample_just_loaded;
+#X text 72 11 Description: Automatically loads a sound file if it is
+new. Returns it's tables and size if it has already been loaded.;
+#X connect 0 0 3 0;
+#X connect 0 1 4 0;
+#X connect 0 2 5 0;
+#X connect 0 3 6 0;
+#X connect 0 4 7 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;

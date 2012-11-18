@@ -1,0 +1,9 @@
+#N canvas 203 263 450 300 10;
+#X floatatom 24 46 5 0 127 0 - - -;
+#X text 22 8 Maps the integers 0 -> 127 to 0 -> X where X is one larger
+than your maximum.;
+#X floatatom 24 91 5 0 0 0 - - -;
+#X text 67 91 Output goes from 0 to 16;
+#X obj 24 67 s-midirange 17;
+#X connect 0 0 4 0;
+#X connect 4 0 2 0;

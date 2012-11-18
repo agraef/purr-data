@@ -1,0 +1,10 @@
+#Currently it is not recommended to use build.sh method on Win32 platform
+
+#Some of this may be deprecated. Please make sure to check flext
+#documentation if you are trying to build your own binary
+
+#Finally, please do not forget to send me a binary if it is not already
+#included in the tarball. Your help is most appreciated!
+
+NAME=disis_munger~
+SRCS=disis_munger.cpp

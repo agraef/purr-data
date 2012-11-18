@@ -1,0 +1,42 @@
+#N canvas 379 170 739 501 10;
+#X obj 22 326 mix.out_~;
+#X text 58 218 Output signal;
+#X text 309 16 Description: Generates a pulse width modulated square
+signal.;
+#X obj 289 323 anal.scope_~;
+#X floatatom 36 106 5 0 0 0 - - -;
+#X obj 170 82 hsl 128 15 -1 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 197 114 5 0 0 0 - - -;
+#X obj 167 138 sig~;
+#X floatatom 329 81 5 0 0 0 - - -;
+#X text 21 62 frequency;
+#X text 170 59 pulse width;
+#X text 328 58 phase;
+#X obj 23 190 synth.osc.square.pwm~;
+#X obj 311 157 cnv 15 400 130 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 311 179 inlet1: frequency (sig~ or float);
+#X text 311 210 inlet3: phase (float) 0 - 1;
+#X text 310 230 outlet1: pulse width modulated square signal (dc free)
+;
+#X text 312 161 SYNOPSIS;
+#X text 311 259 arg1: frequency (float);
+#X text 563 462 Author: Roman Haefeli;
+#X text 563 438 Version: 2007-09-13;
+#X text 311 194 inlet2: pulse width (sig~ or float) -1 - 1;
+#X obj 26 81 hsl 128 15 20 20000 1 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 23 151 line~;
+#X obj 23 130 pack 0 20;
+#X connect 5 0 6 0;
+#X connect 5 0 7 0;
+#X connect 7 0 12 1;
+#X connect 8 0 12 2;
+#X connect 12 0 3 0;
+#X connect 12 0 0 0;
+#X connect 12 0 0 1;
+#X connect 22 0 4 0;
+#X connect 22 0 24 0;
+#X connect 23 0 12 0;
+#X connect 24 0 23 0;

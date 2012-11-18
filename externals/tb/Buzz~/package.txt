@@ -1,0 +1,2 @@
+NAME=Buzz~
+SRCS=Buzz~.cpp

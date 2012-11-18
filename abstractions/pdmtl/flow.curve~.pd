@@ -1,0 +1,17 @@
+#N canvas 660 480 658 457 10;
+#X obj 44 221 fade~;
+#X text 97 222 <-iemlib;
+#X obj 45 17 inlet~;
+#X obj 198 18 inlet MODE;
+#X obj 43 327 outlet~;
+#X obj 187 105 symbol;
+#X msg 189 151 set \$1;
+#X obj 330 21 loadbang;
+#X obj 330 58 init.check.symbol \$1;
+#X connect 0 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;

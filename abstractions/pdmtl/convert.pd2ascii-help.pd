@@ -1,0 +1,101 @@
+#N canvas 104 52 1066 797 10;
+#X obj 5 311 print ascii_codes;
+#X obj 153 312 print ERROR;
+#X text 142 90 <-- spaces are treated (ascii code 32);
+#X msg 105 155 CR;
+#X text 135 156 <-- cariage return;
+#X msg 113 182 LF CR;
+#X msg 116 213 SPACE;
+#X text 156 213 <-- space character;
+#X obj 12 -91 cnv 15 15 15 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X obj 576 -125 cnv 15 15 15 empty empty empty 20 12 0 14 -128992 -66577
+0;
+#X obj 579 46 cnv 15 15 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 580 71 cnv 15 15 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 601 69 OUTLET 2: Outputs errors.;
+#X text 601 44 OUTLET 1: Outputs ascii codes.;
+#X text 32 -92 Mode 0 converts pd atoms (floats \, lists and symbols)
+into ascii codes (integers). You can also use special characters (carriage
+return \, line feed \, spaces \, etc...) with the 2nd "special character"
+inlet).;
+#X obj 10 -28 cnv 15 15 15 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X obj 69 48 cnv 5 300 5 empty empty empty 20 12 0 14 -1 -66577 0;
+#X obj 13 -174 cnv 15 15 15 empty empty empty 20 12 0 14 -258699 -66577
+0;
+#X obj 78 357 cnv 5 300 5 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X obj 579 19 cnv 15 15 15 empty empty empty 20 12 0 14 -128992 -66577
+0;
+#X obj 3 613 print ascii_codes;
+#X obj 143 613 print ERROR;
+#X msg 133 444 COMMA;
+#X text 31 -174 Argument 1 determines the mode:;
+#X text 28 -129 - Any special character (see list below) selects message
+mode with that special character as an "end of message".;
+#X text 597 21 INLET 2: Change mode.;
+#X text 589 -69 - A "bang" will output a carriage return (code 13/special
+character CR) by default or the selected "end of messsage" special
+character.;
+#X text 590 -102 - If a float \, list or symbol is sent \, pd2ascii
+will convert it to it's ascii code(s).;
+#X text 595 -127 INLET 1:;
+#X text 589 -22 - pd2ascii will try to convert any other type to a
+special character.;
+#X obj 642 102 cnv 5 300 5 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X msg 19 90 list hello world;
+#X text 65 58 Mode 0 does not append any special characters;
+#X text 646 160 CR: carriage return/code 13;
+#X text 645 176 SPACE: space/code 32;
+#X text 647 192 LF: line feed/code 10;
+#X text 647 209 NULL: code 0;
+#X msg 13 420 list hello world;
+#X text 139 420 Note that a 13 (CR) is appended at the end of the output.
+;
+#X text 180 447 13 (CR) is not appended to special characters.;
+#X msg 134 472 SPACE;
+#X text 40 371 Message mode appends the selected "end of messsage"
+special character;
+#X text 174 533 The selected "end of message" special character is
+a carriage return (CR/code 13).;
+#X text 153 181 <-- cariage return + line feed (spaces are ignored
+for special characters);
+#X msg 56 117 1024;
+#X text 95 117 <-- converts this float to it's ascii codes (49 48 50
+52);
+#X msg 146 502 LF;
+#X text 175 503 Inlet 2 changes the "end of message" special character.
+;
+#X text 587 133 Common special characters:;
+#X obj 643 249 cnv 5 300 5 empty empty empty 20 12 0 14 -1 -66577 0
+;
+#X text 588 279 See "ascii4pd.txt for the whole list of special characters"
+;
+#X obj 576 -158 cnv 15 15 15 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X text 596 -159 version 3;
+#X text 14 -203 Description: Converts a pd message into an ASCII stream.
+;
+#X obj 46 256 convert.pd2ascii;
+#X obj 29 534 convert.pd2ascii CR;
+#X text 27 -151 - 0 or no argument selects mode 0;
+#X text 32 -31 Message mode is equivalent to mode 0 but automatically
+adds an "end of message" special character (determined by arg 1) at
+the end of the ASCII stream.;
+#X connect 3 0 54 0;
+#X connect 5 0 54 0;
+#X connect 6 0 54 0;
+#X connect 22 0 55 0;
+#X connect 31 0 54 0;
+#X connect 37 0 55 0;
+#X connect 40 0 55 0;
+#X connect 44 0 54 0;
+#X connect 46 0 55 1;
+#X connect 54 0 0 0;
+#X connect 54 1 1 0;
+#X connect 55 0 20 0;
+#X connect 55 1 21 0;

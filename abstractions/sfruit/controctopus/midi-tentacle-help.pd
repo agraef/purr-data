@@ -1,0 +1,12 @@
+#N canvas 811 181 409 348 10;
+#X text 9 11 [midi-tentacle /controller /control /system-name];
+#X obj 19 55 midi-tentacle /uc33 /Knob1 /drummr;
+#X text 26 172 Receives floats (0-1) from [s /uc33/Knob1] (omni) or
+(e.g.) [s /uc33/Knob1/Ch1] (specific MIDI channel) and relays them
+to /drummr/module/parameter. Parameters can be chosen in the dropdown
+menu \, and parameters can be queried and repopulated using the yellow
+"get" button.;
+#X text 294 324 2008 Luke Iannini;
+#X text 27 251 See [controctopus-help] for an example.;
+#X text 27 287 TIP: use [tentacle-pager] to switch the midi channels
+of multiple [midi-tentacle]s at once;

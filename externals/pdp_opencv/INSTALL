@@ -1,0 +1,78 @@
+
+Download the package here : [[http://hangar.org/wikis/lab/pd/pdp_opencv-0.2.tar.gz|pdp_opencv-0.2.tar.gz]]
+
+or get the latest version through svn :
+
+svn co https://pure-data.svn.sourceforge.net/svnroot/pure-data pure-data
+cd pure-data/trunk/externals/pdp_opencv
+
+===== GNU/Linux =====
+
+(actually only tested in GNU/Linux Ubuntu Gutsy)
+
+first install opencv development packages,
+on ubuntu :
+
+apt-get install libcv-dev
+apt-get install libcvaux-dev
+apt-get install libhighgui-dev
+
+then get the _SOURCES_ of the pd you are using
+and of the PDP that you are loading
+( it might not work if the version 
+is different )
+
+then compile the externals :
+
+  cd pdp_opencv
+
+configure the package with the appropriate command for your system :
+
+  ./configure --with-pd=<path to pd _sources_> --with-pdp=<path to pdp _sources_>
+
+for example :
+
+  ./configure --with-pd=/usr/local/pd --with-pdp=/usr/local/pd/pdp
+
+then, compile it :
+
+  make clean
+  make
+
+and copy the .pd_linux to your externals folder :
+
+  cp *.pd_linux /usr/local/lib/pd/extra/
+
+===== MAC OSX (intel and powerPC) =====
+
+first install openCV MacOS framework
+   download openCV private framework from http://www.ient.rwth-aachen.de/cms/software/opencv/
+   copy the provided OpenCV.framework folder in your /Library/Frameworks/ directory ::
+        cp -Rf /Volumes/OpenCV\ Private\ Framework/OpenCV.framework /Library/Frameworks/
+
+then get the _SOURCES_ of the pd you are using
+and of the PDP that you are loading
+( it might not work if the version 
+is different )
+
+cd into the library folder ::
+
+  cd pdp_opencv
+
+configure the package with the appropriate command for your system :
+
+  ./configure --with-pd=<path to pd _sources_> --with-pdp=<path to pdp _sources_>
+
+for example :
+
+  ./configure --with-pd=/usr/local/pd --with-pdp=/usr/local/pd/pdp
+
+then, compile it ::
+
+  make clean
+  make
+
+and copy the .pd_darwin to your externals folder ::
+
+  cp *.pd_darwin /Applications/Pd-0.40.3-extended-20080315.app/Contents/Resources/extra/ for example
+

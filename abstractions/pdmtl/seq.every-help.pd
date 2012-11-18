@@ -1,0 +1,23 @@
+#N canvas 0 0 570 364 10;
+#X obj 214 224 seq.every 5;
+#X obj 187 159 f 0;
+#X obj 224 159 + 1;
+#X floatatom 294 157 5 0 0 0 - - -;
+#X text 337 153 Change the modulo;
+#X obj 224 292 bng 15 50 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 181 78 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X floatatom 137 212 5 0 0 0 - - -;
+#X obj 306 288 bng 15 50 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 189 103 metro 250;
+#X connect 0 0 5 0;
+#X connect 0 1 8 0;
+#X connect 1 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 0 7 0;
+#X connect 2 0 1 1;
+#X connect 3 0 0 1;
+#X connect 6 0 9 0;
+#X connect 9 0 1 0;

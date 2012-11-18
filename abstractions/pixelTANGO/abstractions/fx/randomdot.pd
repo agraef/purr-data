@@ -1,0 +1,12 @@
+#N canvas 336 435 466 316 10;
+#X text 15 9 randomdot;
+#X obj 46 113 inlet;
+#X text 64 47 Gemchain;
+#X obj 32 144 pix_rds;
+#X obj 24 81 arrayRouterIn \$1 \$2;
+#X obj 32 206 arrayRouterOut \$1 \$2;
+#X obj 56 171 outlet;
+#X connect 1 0 3 0;
+#X connect 3 0 5 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;

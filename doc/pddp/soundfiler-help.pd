@@ -1,0 +1,123 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header soundfiler 3 12
+0 18 -204280 -1 0;
+#X obj 0 387 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 247 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION read and write soundfiles to arrays;
+#X text 12 65 INLET_0 read write;
+#X text 12 85 OUTLET_0 float;
+#X text 12 5 KEYWORDS control array filesystem;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 487 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 529 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 554 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 533 (none);
+#N canvas 76 485 428 106 Related_objects 0;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [soundfiler] Related Objects;
+#X obj 22 43 tabwrite~;
+#X obj 22 69 tabread4~;
+#X obj 88 43 tabplay~;
+#X obj 143 69 writesf~;
+#X obj 87 69 readsf~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 396 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 495 float;
+#X obj 78 496 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 457 3 soundfiler;
+#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/soundfiler
+-text pdpedia: soundfiler;
+#X text 11 23 read and write soundfiles to arrays;
+#X text 98 395 read;
+#X text 98 412 write;
+#X text 168 495 - the output specifies the total number of samples
+that have been read or written.;
+#X obj 20 293 soundfiler;
+#X floatatom 20 317 0 0 0 0 - - -;
+#X text 231 137 read a file;
+#X text 287 159 ...optionally resize;
+#X text 322 224 write a file;
+#X text 358 268 write stereo;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array sf-array1 77971 float 0;
+#X coords 0 1 77971 -1 130 70 1;
+#X restore 135 306 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array sf-array2 77971 float 0;
+#X coords 0 1 77971 -1 130 70 1;
+#X restore 288 306 graph;
+#N canvas 110 93 428 434 flags 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 19 37 When reading you can leave soundfiler to figure out which
+of the three known soundfile formats the file belongs to or override
+all header information using the "-raw" flag.;
+#X text 136 79 Flags for reading:;
+#X text 45 99 -skip <sample frames to skip in file>;
+#X text 45 159 -raw <headersize> <channels> <bytespersample> <endianness>
+;
+#X text 64 177 This causes all header information to be ignored. Endianness
+is "l" ("little") for Intel machines or "b" ("big") for Macintoshes
+and SGIs. You can give "n" (natural) to take the byte order your machine
+prefers.;
+#X text 45 119 -resize;
+#X text 45 139 -maxsize <maximum number of samples we can resize to>
+;
+#X text 19 230 Flags for writing:;
+#X text 37 251 -wave \, -nextstep \, -aiff;
+#X text 37 271 -big \, -little (nextstep only!);
+#X text 37 291 -skip <number of sample frames to skip in array>;
+#X text 37 311 -nframes <maximum number to write>;
+#X text 37 351 -normalize;
+#X text 37 331 -bytes <2 \, 3 \, or 4>;
+#X text 17 400 The number of channels is limited to 64;
+#X text 37 371 -rate <sample rate>;
+#X text 7 1 [soundfiler] Flags;
+#X restore 172 459 pd flags;
+#X text 168 412 - write a soundfile.;
+#X text 169 428 The "read" and "write" messages accept flags. See the
+subpatch below for details:;
+#X msg 20 138 read ../sound/bell.aiff sf-array2;
+#X msg 20 161 read -resize ../sound/bell.aiff sf-array2;
+#X msg 20 185 read -raw 128 2 2 b ../sound/bell.aiff sf-array1 sf-array2
+;
+#X msg 20 214 write -aiff /tmp/foo1 sf-array2;
+#X msg 20 238 write -wave -nframes 10000 /tmp/foo2 sf-array2;
+#X msg 20 268 write -nextstep -bytes 4 /tmp/foo3 sf-array1 sf-array2
+;
+#X text 399 197 overriding everything;
+#X text 398 183 ...or even;
+#X text 168 395 - read a soundfile.;
+#X text 18 47 The [soundfiler] object reads and writes floating point
+arrays to binary soundfiles which may contain 2 or 3 byte fixed point
+or 4 byte floating point samples in wave \, aiff \, or next formats
+(no floating point aiff \, though.). The number of channels of the
+soundfile need not match the number of arrays given (extras are dropped
+and unsupplied channels are zeroed out).;
+#X text 98 558 Note: The number of channels is limited to 64 .;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 575 pddp/pddplink all_about_arrays.pd;
+#X connect 18 0 19 0;
+#X connect 29 0 18 0;
+#X connect 30 0 18 0;
+#X connect 31 0 18 0;
+#X connect 32 0 18 0;
+#X connect 33 0 18 0;
+#X connect 34 0 18 0;

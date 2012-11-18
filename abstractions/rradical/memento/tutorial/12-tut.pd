@@ -1,0 +1,61 @@
+#N canvas 339 60 576 798 10;
+#X obj 9 7 cnv 15 100 20 empty empty Summary_and_Conclusion 20 12 1
+14 -262144 -66577 0;
+#X text 36 95 a) Things to do inside abstractions;
+#X obj 71 240 originator \$1 \$0;
+#X obj 125 183 commun /myFloat \$0;
+#X floatatom 215 157 5 0 0 0 - - -;
+#X obj 73 367 originator \$1 \$0;
+#X obj 73 317 t b f;
+#X msg 73 342 set;
+#X msg 103 343 substate \$1;
+#X floatatom 73 299 5 0 0 1 presets - -;
+#X obj 234 300 inlet OSC;
+#X text 45 397 b) Things to do in the parent patch;
+#X text 72 419 1 create a single careGUI:;
+#X obj 73 443 careGUI;
+#X obj 74 582 miniab /one;
+#X text 70 639 3 Use the OSC-inlet for remote control as you like.
+;
+#X text 151 717 Now have fun and: Please share your patches.;
+#X text 39 37 Now you've seen in detail \, how to add a preset mechanism
+and remote control with OSC to a patch using Memento. I'd like to end
+this tutorial with a summary of what to do to memento-ize your work:
+;
+#X text 72 534 2 use your abstractions with unique identifiers as arguments
+\, starting with a slash for OSC:;
+#X text 66 124 1 X-wrap (cross-wrap) all things \, that you want to
+save \, with 'commun' objects. Use names starting with slashes for
+OSC:;
+#X text 69 220 2 create a single [originator \$1 \$0] object per abstraction
+;
+#X text 71 278 3 Create a substate selector and OSC-inlet (optional):
+;
+#N canvas 0 0 450 300 OSC 0;
+#X obj 114 56 loadbang;
+#X obj 114 124 sendOSC;
+#X msg 114 86 connect localhost 3001;
+#X obj 62 62 inlet;
+#X msg 228 107 disconnect;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X restore 75 715 pd OSC;
+#X obj 377 564 dumpOSC 3001;
+#X obj 227 581 miniab /two;
+#X obj 75 660 netcontrol /* myFloat;
+#X text 150 736 (c) Frank Barknecht <fbar@footils.org> \, free to use
+as you like.;
+#X text 286 671 (See the /*? OSC knows wildcards!);
+#X connect 3 0 4 0;
+#X connect 4 0 3 0;
+#X connect 6 0 7 0;
+#X connect 6 1 8 0;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;
+#X connect 9 0 6 0;
+#X connect 10 0 5 1;
+#X connect 23 0 14 0;
+#X connect 23 0 24 0;
+#X connect 25 0 22 0;

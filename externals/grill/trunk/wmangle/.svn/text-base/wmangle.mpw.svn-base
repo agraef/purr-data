@@ -1,0 +1,81 @@
+# wmangle - a window mangler
+# Copyright (c) 2002 Thomas Grill (xovo@gmx.net)
+#
+# Makefile for Apple MPW-PR 
+#
+# usage: make -f wmangle.mpw
+#
+# ---------------------------------------------
+
+MAKEFILE        = wmangle.mpw
+¥MondoBuild¥    = {MAKEFILE}  # Make blank to avoid rebuilds when makefile is modified
+
+Name			= wmangle
+
+ObjDir          = :MPW:
+MaxSDK			= HD Daten:Prog Stuff:Max/MSP SDK:SDK Examples
+flext			= ::flext:
+Includes        = -i :,"{flext}source","{MaxSDK}:Max Includes","{MaxSDK}:MSP Includes"
+Defines			= -d MAXMSP
+
+Sym-PPC         = -sym off
+Flags			= -bool on -enum int -includes unix -opt speed,unroll,unswitch  
+
+
+PPCCPlusOptions = {Includes} {Sym-PPC} {Defines} {Flags} 
+
+
+### Source Files ###
+
+SrcFiles        =  main.cpp
+Headers			=  
+
+
+### Object Files ###
+
+Obj-PPC    =  		¶
+				  "{ObjDir}main.cpp.x" 
+
+LibFiles-Ext    =  ¶
+				  "{flext}MPW:flext.o" ¶
+				  "{MaxSDK}:Max Includes:MaxLib" ¶
+				  "{MaxSDK}:MSP Includes:MaxAudioLib"
+
+### Libraries ###
+
+LibFiles-PPC    =  ¶
+				  "{SharedLibraries}StdCLib" ¶
+				  "{SharedLibraries}MathLib" ¶
+				  "{PPCLibraries}StdCRuntime.o" ¶
+				  "{PPCLibraries}PPCCRuntime.o" ¶
+				  "{PPCLibraries}MrCPlusLib.o" ¶
+
+
+### Default Rules ###
+
+{ObjDir} Ä :
+
+.cpp.x  Ä  .cpp  {¥MondoBuild¥} {Headers}
+	{PPCCPlus} {depDir}{default}.cpp -o {targDir}{default}.cpp.x {PPCCPlusOptions}
+
+
+### Build Rules ###
+
+all Ä Folder {¥MondoBuild¥} {ObjDir}{Name}
+
+Folder ÄÄ
+	if !`Exists {ObjDir}` ; NewFolder {ObjDir} ; end
+
+{ObjDir}{Name}  Ä {Obj-PPC} 
+	PPCLink ¶
+		-o {Targ} ¶
+		{deps} ¶
+		{LibFiles-Ext}  ¶
+		{LibFiles-PPC} ¶
+		{Sym-PPC} ¶
+		-mf -d ¶
+		-t 'iLaF' ¶
+		-c 'max2' ¶
+		-xm s ¶
+		-export main ¶
+		-main main

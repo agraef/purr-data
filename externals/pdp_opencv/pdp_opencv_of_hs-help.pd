@@ -1,0 +1,128 @@
+#N canvas 587 49 833 785 10;
+#X obj -11 57 cnv 15 621 250 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X obj 229 97 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 229 124 metro 40;
+#X msg 310 146 close;
+#X obj 249 222 pdp_v4l;
+#X msg 306 119 open /dev/video0;
+#X obj 423 95 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 423 122 metro 40;
+#X msg 500 145 close;
+#X msg 493 121 open /dev/video0;
+#X obj 423 223 pdp_v4l2;
+#X msg 501 192 format \$1;
+#X obj 502 170 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 19 272 pdp_qt;
+#X obj 52 208 metro 40;
+#X msg 52 180 bang;
+#X msg 93 180 stop;
+#X obj 19 111 openpanel;
+#X msg 19 136 open \$1;
+#X msg 19 83 bang;
+#X msg 53 235 loop \$1;
+#X obj 133 235 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 133 153 loadbang;
+#X text 62 86 playing a video file;
+#X text 259 95 Camera input;
+#X obj 79 273 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj -10 311 cnv 15 621 400 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj 17 718 pdp_xv;
+#X obj 163 464 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 78 462 nightmode \$1;
+#X floatatom 124 385 5 0 0 0 - - -;
+#X floatatom 152 409 5 0 0 0 - - -;
+#X msg 65 407 threshold \$1;
+#X obj 187 495 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 87 494 useprevious \$1;
+#X text -10 0 with a great help from Mateu Batle & Alberto de Rodrigo
+from the iBit foundation.;
+#X floatatom 66 663 5 0 0 0 - - -;
+#X obj 120 603 unpack f f;
+#X floatatom 206 603 5 0 0 0 - - -;
+#X floatatom 208 623 5 0 0 0 - - -;
+#X text 248 602 largest amplitude of movement;
+#X text 209 493 use previous results ( default : 0 \, surprising results
+when on );
+#X msg 68 436 minblocks \$1;
+#X floatatom 155 437 5 0 0 0 - - -;
+#X text 182 465 set nightmode;
+#X text -11 -36 the main purpose of this object is to calculate the
+average direction and the intensity of the movement in a video stream.
+;
+#X text 199 431 minimum nuber of blocks to detect the movement;
+#X msg 32 156 bang;
+#X text 108 684 marked with a white arrow on the stream;
+#X obj 21 350 pdp_scale 320 240;
+#X text 137 345 this object can work on small frames unless you have
+a very powerful machine;
+#X msg 435 150 bang;
+#X text 108 660 average angle of the blocks movement;
+#X text 248 623 angle of the block with the maximum movement;
+#X text 246 635 ( in degrees [-180 \, 180]);
+#X text 107 672 ( in degrees [-180 \, 180]);
+#X obj 20 320 pdp_rotate;
+#X floatatom 89 322 5 0 0 0 - - -;
+#X text 127 314 you can rotate the object to check that the main direction
+of movement is detected;
+#X text -10 24 comments to ydegoyon@gmail.com;
+#X obj 19 534 pdp_opencv_of_hs;
+#X msg 54 382 lambda \$1;
+#X text 167 382 set Lagragian multiplier ( default 1 );
+#X text -11 -52 pdp_opencv_of_hs : Haron and Schunck optical flow algorithm.
+;
+#X text 196 444 ( default 10 );
+#X text 194 406 threshold value for the detection of movement ( default
+100 );
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 56 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 56 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 56 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
+#X connect 19 0 17 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 22 0 15 0;
+#X connect 25 0 13 1;
+#X connect 28 0 29 0;
+#X connect 29 0 60 0;
+#X connect 30 0 61 0;
+#X connect 31 0 32 0;
+#X connect 32 0 60 0;
+#X connect 33 0 34 0;
+#X connect 34 0 60 0;
+#X connect 37 0 38 0;
+#X connect 37 1 39 0;
+#X connect 42 0 60 0;
+#X connect 43 0 42 0;
+#X connect 47 0 13 0;
+#X connect 49 0 60 0;
+#X connect 51 0 10 0;
+#X connect 56 0 49 0;
+#X connect 57 0 56 1;
+#X connect 60 0 27 0;
+#X connect 60 1 36 0;
+#X connect 60 2 37 0;
+#X connect 61 0 60 0;

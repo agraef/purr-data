@@ -1,0 +1,19 @@
+
+msd can be compiled in other dimension than 1D, 2D or 3D.
+
+To do that, edit the main.cpp and the package.txt files in the msdND folder and replace "N" with the dimension you want.
+
+For example, in 13D :
+
+main.cpp file:
+ 
+#include "../msd.h"
+MSD("msd13D",msd13D,13)
+
+package.txt file:
+
+NAME=msd13D
+SRCS=main.cpp
+HDRS=../msd.h
+
+And then compile using flext as usual. You call it in Max/PD using the name you entered, "msd13D" here.

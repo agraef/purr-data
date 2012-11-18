@@ -1,0 +1,40 @@
+#N canvas 10 40 620 460 10;
+#X obj 541 21 pddp/dsp;
+#X obj 11 8 cnv 15 400 40 empty empty dsp_processing 20 12 0 24 -228992
+-66577 0;
+#X text 13 69 Unlike message processing \, which is always running
+\, audio processing can be switched on and off. This is also known
+as "DSP" or Digital Signal Processing.;
+#X text 12 122 There are many ways to control the DSP: There is a checkbox
+in the Pd window \; you can send Pd a dsp message \; there are key
+commands \; and there are high-level objects \, like [pddp/dsp].;
+#X text 15 189 The dsp message:;
+#X msg 28 238 \; pd dsp 0;
+#X msg 119 238 \; pd dsp 1;
+#X text 34 218 off (0);
+#X text 123 217 on (1);
+#X msg 218 238 \; pd dsp \$1;
+#X obj 218 214 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 243 213 use a toggle;
+#X text 355 209 receive the message;
+#X obj 357 227 receive pd;
+#X obj 357 248 route dsp;
+#X obj 357 269 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 22 303 Key commands:;
+#X text 57 328 GNU/Linux and Windows:;
+#X text 148 314 Mac OS X:;
+#X text 227 299 (off);
+#X text 328 300 (on);
+#X text 224 328 Ctrl-.;
+#X text 224 314 Cmd-.;
+#X text 324 328 Ctrl-/;
+#X text 324 314 Cmd-/;
+#X text 21 361 Objects:;
+#X text 55 383 [pddp/dsp];
+#X obj 132 383 pddp/dsp;
+#X obj 331 383 output~;
+#X connect 10 0 9 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;

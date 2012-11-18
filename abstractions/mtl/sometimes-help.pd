@@ -1,0 +1,24 @@
+#N canvas 386 159 450 300 10;
+#X obj 79 194 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 265 133 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 39 71 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 39 260 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 39 90 metro 500;
+#X obj 40 49 iemlib/init 1;
+#X text 11 10 Description: let a bang pass sometimes.;
+#X text 166 229 Bangs pass 20% of the time;
+#X text 205 166 Bangs pass 50% of the time;
+#X obj 79 165 mtl/sometimes 0.5;
+#X text 9 25 tags: random;
+#X obj 39 230 mtl/sometimes 0.2;
+#X connect 2 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 0 9 0;
+#X connect 4 0 11 0;
+#X connect 5 0 2 0;
+#X connect 9 0 0 0;
+#X connect 11 0 3 0;

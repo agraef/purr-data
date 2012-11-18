@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3746/trunk/flext/buildsys
+END
+gnumake.inc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/1247/trunk/flext/buildsys/gnumake.inc
+END
+nmake-ext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/buildsys/nmake-ext.inc
+END
+targets-flext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/1247/trunk/flext/buildsys/targets-flext.inc
+END
+build-gcc.sh
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/1247/trunk/flext/buildsys/build-gcc.sh
+END
+nmake-shlib.inc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/nmake-shlib.inc
+END
+nmake.mak
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1247/trunk/flext/buildsys/nmake.mak
+END
+nmake.inc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1247/trunk/flext/buildsys/nmake.inc
+END
+build-icc.sh
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/1247/trunk/flext/buildsys/build-icc.sh
+END
+build-cygwin.sh
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/build-cygwin.sh
+END
+bmake-flext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/bmake-flext.inc
+END
+build-msvc.bat
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/3654/trunk/flext/buildsys/build-msvc.bat
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/1247/trunk/flext/buildsys/readme.txt
+END
+bmake-sub.mak
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/buildsys/bmake-sub.mak
+END
+gnumake-flext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/1247/trunk/flext/buildsys/gnumake-flext.inc
+END
+targets-ext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/targets-ext.inc
+END
+targets-shlib.inc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/1247/trunk/flext/buildsys/targets-shlib.inc
+END
+targets.inc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/1247/trunk/flext/buildsys/targets.inc
+END
+build-mingw.bat
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/build-mingw.bat
+END
+nmake-flext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/nmake-flext.inc
+END
+gnumake-sub.mak
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/gnumake-sub.mak
+END
+bmake-ext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/buildsys/bmake-ext.inc
+END
+bmake.mak
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1247/trunk/flext/buildsys/bmake.mak
+END
+bmake.inc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1247/trunk/flext/buildsys/bmake.inc
+END
+build-bcc.bat
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/buildsys/build-bcc.bat
+END
+nmake-sub.mak
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/1247/trunk/flext/buildsys/nmake-sub.mak
+END
+gnumake-ext.inc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/buildsys/gnumake-ext.inc
+END
+version.inc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/3720/trunk/flext/buildsys/version.inc
+END
+gnumake.mak
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/1247/trunk/flext/buildsys/gnumake.mak
+END

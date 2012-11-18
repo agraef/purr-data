@@ -1,0 +1,7 @@
+#N canvas 0 0 450 300 10;
+#X text 60 39 Light : Frequency (Hz) to wave length (m);
+#X obj 143 136 convert.lightfreq2wave;
+#X floatatom 134 210 15 0 0 0 - - -;
+#X floatatom 145 92 15 0 0 0 - - -;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;

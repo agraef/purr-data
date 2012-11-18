@@ -1,0 +1,33 @@
+#N canvas 447 274 517 469 10;
+#X obj 157 188 readanysf~;
+#X msg 131 106 open \$1;
+#X obj 129 77 openpanel;
+#X obj 128 52 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 160 215 outlet~;
+#X obj 217 215 outlet~;
+#X msg 182 130 play;
+#X obj 58 212 bonk~;
+#X obj 92 234 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 92 262 beat;
+#X floatatom 95 283 5 0 0 0 - - -;
+#X obj 162 273 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 142 245 100 100;
+#X msg 234 125 stop;
+#X obj 213 261 throw~ play;
+#X connect 0 0 4 0;
+#X connect 0 0 7 0;
+#X connect 0 0 14 0;
+#X connect 0 1 5 0;
+#X connect 0 1 14 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 6 0 0 0;
+#X connect 8 0 12 0;
+#X connect 9 0 10 0;
+#X connect 9 2 11 0;
+#X connect 12 0 9 0;
+#X connect 13 0 0 0;

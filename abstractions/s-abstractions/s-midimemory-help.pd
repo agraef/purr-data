@@ -1,0 +1,9 @@
+#N canvas 0 0 450 300 10;
+#X obj 318 8 s-metro time;
+#X floatatom 75 132 5 0 127 0 data_in - -;
+#X floatatom 75 184 5 0 127 0 data_out - -;
+#X text 119 132 Turn to 127 to loop;
+#X obj 75 159 s-midimemory 32 time;
+#X text 207 76 Start timer ->;
+#X connect 1 0 4 0;
+#X connect 4 0 2 0;

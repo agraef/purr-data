@@ -1,0 +1,15 @@
+#N canvas 745 129 450 300 10;
+#X obj 46 183 mix.out_~;
+#X text 39 45 Comment: Taken from Andy Farnell's work.;
+#X text 41 17 Description: Generates some random hissing.;
+#X obj 242 152 param.gui;
+#X msg 242 130 hissing;
+#X obj 45 152 synth.hissing~ @id hissing;
+#X msg 45 126 switch \$1;
+#X obj 45 102 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;

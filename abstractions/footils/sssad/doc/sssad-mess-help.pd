@@ -1,0 +1,35 @@
+#N canvas 134 65 724 490 10;
+#X msg 563 109 \; SSSAD y -55 \; SSSAD z 7 \; SSSAD x 14 \; SSSAD_ADMIN
+set \;;
+#X msg 420 109 \; SSSAD y 59 \; SSSAD z 5 \; SSSAD x 67 \; SSSAD_ADMIN
+set \;;
+#X obj 285 64 sssad-mess;
+#X msg 285 109 \; SSSAD y -70 \; SSSAD z 2 \; SSSAD x 85 \; SSSAD_ADMIN
+set \;;
+#X obj 72 175 sssad x;
+#X floatatom 115 249 5 0 0 0 - - -;
+#X obj 71 275 sssad y;
+#X obj 71 325 sssad z;
+#X obj 119 151 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1400 1;
+#X obj 115 301 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 7;
+#X obj 72 117 sssad x;
+#X obj 119 93 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1400 1;
+#X obj 563 64 sssad-mess;
+#X obj 420 64 sssad-mess;
+#X obj 283 190 sssad-text;
+#X obj 420 190 sssad-text;
+#X obj 563 191 sssad-text;
+#X connect 2 0 3 0;
+#X connect 4 0 8 0;
+#X connect 5 0 6 1;
+#X connect 6 0 5 0;
+#X connect 7 0 9 0;
+#X connect 8 0 4 1;
+#X connect 9 0 7 1;
+#X connect 10 0 11 0;
+#X connect 11 0 10 1;
+#X connect 12 0 0 0;
+#X connect 13 0 1 0;

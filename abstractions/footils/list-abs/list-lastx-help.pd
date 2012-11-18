@@ -1,0 +1,12 @@
+#N canvas 625 327 569 323 10;
+#X floatatom 188 118 5 0 0 0 - - -;
+#X obj 188 174 print last_x;
+#X floatatom 267 119 5 0 0 2 change-size - -;
+#X text 124 52 list-lastx: make a list of the last x floats.;
+#X obj 188 143 list-lastx 4;
+#X msg 286 143 bang;
+#X text 328 142 reset stored list;
+#X connect 0 0 4 0;
+#X connect 2 0 4 1;
+#X connect 4 0 1 0;
+#X connect 5 0 4 1;

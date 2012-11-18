@@ -1,0 +1,19 @@
+#N canvas 786 220 494 450 10;
+#X floatatom 33 87 5 0 0 0 - - -;
+#X floatatom 131 194 5 0 0 0 - - -;
+#X text 184 192 Length of list;
+#X obj 186 244 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 207 238 Reset;
+#X msg 65 116 symbol youppi;
+#X text 81 86 Float stream;
+#X obj 47 323 print Result;
+#X text 166 118 Symbols work too;
+#X obj 77 249 list.last.x 4;
+#X text 15 25 Description: Make a list out of the last X elements in
+time.;
+#X connect 0 0 9 0;
+#X connect 1 0 9 1;
+#X connect 3 0 9 2;
+#X connect 5 0 9 0;
+#X connect 9 0 7 0;

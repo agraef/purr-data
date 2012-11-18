@@ -1,0 +1,20 @@
+#N canvas 50 61 437 286 10;
+#X obj 63 52 inlet;
+#X obj 63 85 markov #1;
+#X obj 63 143 st2pitch;
+#X obj 63 174 outlet;
+#X obj 183 53 inlet;
+#X obj 123 52 inlet;
+#X obj 130 145 outlet;
+#X obj 184 145 outlet;
+#X text 109 211 1994 by Karlheinz
+Essl;
+#X obj 63 114 t a a;
+#X connect 0 0 1 0;
+#X connect 1 0 9 0;
+#X connect 1 1 7 0;
+#X connect 2 0 3 0;
+#X connect 4 0 1 2;
+#X connect 5 0 1 1;
+#X connect 9 0 2 0;
+#X connect 9 1 6 0;

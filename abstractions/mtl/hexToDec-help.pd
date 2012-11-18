@@ -1,0 +1,16 @@
+#N canvas 364 98 626 444 10;
+#X floatatom 177 350 30 0 0 0 - - -;
+#X text 20 11 Description: Hexadecimal to decimal conversion.;
+#X msg 268 134 0x11;
+#X msg 291 190 0xa1;
+#X text 20 25 tags: conversion;
+#X obj 177 322 mtl/hexToDec;
+#X msg 101 137 0xffaa;
+#X msg 83 184 0xf0;
+#X msg 175 110 0xffcc33;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;

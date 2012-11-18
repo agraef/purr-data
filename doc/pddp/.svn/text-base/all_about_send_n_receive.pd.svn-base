@@ -1,0 +1,153 @@
+#N canvas 0 0 448 523 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header send_and_receive
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 501 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS nonlocal;
+#X text 12 25 NAME send receive vsl hsl vradio hradio;
+#X text 12 65 DESCRIPTION additional information for send and receive
+;
+#X restore 392 503 pd META;
+#N canvas 14 368 428 126 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X obj 22 42 pddp/helplink cyclone/universal;
+#X text 7 2 send and receive - Related objects;
+#X obj 22 62 pddp/helplink ext13/send13;
+#X obj 22 82 pddp/helplink ext13/receive13;
+#X obj 21 23 pddp/pddplink all_about_externals.pd -text _________;
+#X obj 21 23 pddp/pddplink all_about_externals.pd -text Externals;
+#X restore 103 503 pd Related_objects;
+#X obj 6 503 pddp/pddplink all_about.pd -text All About Pd;
+#X text 19 27 The [send] and [receive] objects are useful for linking
+objects and subroutines together in a single canvas or throughout multiple
+patches. Understanding these objects will help 'clean up' your patches
+and allow you to communicate messages between various modules that
+you build or between objects where patch cords are not possible.;
+#X text 18 162 In the [send] and [receive] help files \, you will see
+message sent within a single patch - from a [send] object to a [receive]
+object in the same patch. But the functionality of these objects goes
+far beyond the scope of a single patch.;
+#X floatatom 42 110 5 0 0 0 - - -;
+#X floatatom 96 136 5 0 0 0 - - -;
+#X obj 42 136 s aNum;
+#X obj 96 110 r aNum;
+#X obj 170 135 s aSymbol;
+#X msg 170 110 symbol hello;
+#X obj 267 110 r aSymbol;
+#X symbolatom 267 137 10 0 0 0 - - -;
+#X obj 16 262 send one_send;
+#X obj 16 306 receive one_send;
+#X obj 19 244 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3800 0;
+#X obj 153 262 send one_send;
+#X obj 156 244 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 1200 0;
+#X obj 291 262 send one_send;
+#X obj 294 244 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3200 0;
+#X obj 19 327 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3200 1;
+#X obj 153 306 receive one_send;
+#X obj 156 327 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3200 1;
+#X obj 291 306 receive one_send;
+#X obj 294 327 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3200 1;
+#X text 17 289 All [receive]s of the same name will receive the "messages":
+;
+#X text 17 224 You can have multiple [send]s with the same name:;
+#N canvas 7 324 428 153 scope_and_inheritance 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Send and receive - scope and inheritance;
+#X obj 85 107 pddp/pddplink all_about_scope_and_locality.pd;
+#X text 20 107 See also:;
+#X text 19 36 However \, controlling the 'scope' of a [send] or [receive]
+object is important if you want to ensure that a message is only transmitted
+within a single patch \, or within a single abstraction. Check out
+the following information about 'scope' and 'locality'.;
+#X restore 21 483 pd scope_and_inheritance;
+#N canvas 0 123 684 434 special-send-and-receives 0;
+#X text 19 10 SPECIAL OBJECTS;
+#X obj 28 41 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 28 66 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 28 91 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 28 117 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 21 386 hdl 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1 -1
+0;
+#X obj 162 119 vdl 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1 -1
+0;
+#X obj 24 343 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 59 208 vu 15 120 empty empty -1 -8 0 8 -66577 -1 1 0;
+#X obj 135 20 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 46 40 bng;
+#X text 46 65 toggle;
+#X text 85 89 number 2;
+#X text 45 167 Vertical Slider;
+#X text 177 166 Vertical Dial;
+#X text 40 356 Horizontal Slider;
+#X text 42 401 Horizontal Dial;
+#X text 101 260 VU Meter;
+#X text 162 39 canvas;
+#X text 256 55 The objects in this patch \, and likely many more which
+I have not included \, include their own send and receive functionality.
+This functionality can be accessed by right-clicking on the object
+and choosing "Properties" from the menu that appears.;
+#X text 269 149 EXAMPLE;
+#X text 283 170 In other words \, these objects can send and/or receive
+messages without attaching a separate [send] or [receive] object to
+them with a patch cord.;
+#X text 230 242 THE OL'FASHION WAY;
+#X floatatom 236 266 5 0 0 0 - - -;
+#X floatatom 290 293 5 0 0 0 - - -;
+#X obj 236 290 s a;
+#X obj 290 265 r a;
+#X text 230 325 USING THESE OBJECTS' INTERNAL SEND AND RECEIVE FUNCTIONALITY
+;
+#X text 335 269 As you see here \, these number boxes are linked together
+with send and receives objects.;
+#X obj 241 347 nbx 5 14 -1e+37 1e+37 0 0 b empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 303 347 nbx 5 14 -1e+37 1e+37 0 0 empty b empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X text 250 370 These number boxes are linked together via their 'send'
+or 'receive' property.;
+#X text 258 8 Some objects in Pd contain their own internal send and
+receive functionality.;
+#X connect 23 0 25 0;
+#X connect 26 0 24 0;
+#X restore 204 483 pd special-send-and-receives;
+#X text 18 348 A [send] object is a bit like a radio station-- it broadcasts
+information throughout Pd for all the [receive]s to hear! A [receive]
+object is a little like your own AM/FM tuner-- it will receive messages
+from all the [send] objects that it is 'tuned' to. Hence \, naming
+your [send] and [receive] objects becomes very important. A [receive]
+object named "dave" (as in [receive dave]) will pick up all messages
+from [send dave] \, regardless of which patch it is in. Thus \, you
+can get messages across multiple patches \, or into abstractions or
+subpatches \, without patch cords.;
+#X connect 8 0 10 0;
+#X connect 11 0 9 0;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 17 0 23 0;
+#X connect 18 0 16 0;
+#X connect 20 0 19 0;
+#X connect 22 0 21 0;
+#X connect 24 0 25 0;
+#X connect 26 0 27 0;

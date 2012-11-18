@@ -1,0 +1,7 @@
+untar in /my/pd/dir/extra
+
+cd /my/pd/dir/extra/randomblock~
+
+make
+
+you're set !!

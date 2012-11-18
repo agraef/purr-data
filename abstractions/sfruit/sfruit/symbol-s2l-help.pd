@@ -1,0 +1,10 @@
+#N canvas 854 366 442 210 10;
+#X obj 44 81 symbol-s2l;
+#X text 2 6 [symbol-s2l] splits a symbol into individual characters
+;
+#X msg 44 52 Supercalifragilisticexpialidocious;
+#X obj 44 107 prepent set;
+#X msg 44 142;
+#X connect 0 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;

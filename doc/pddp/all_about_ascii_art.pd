@@ -1,0 +1,99 @@
+#N canvas 0 0 448 528 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header ascii_art 20 10
+1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 506 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 45 KEYWORDS;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 65 DESCRIPTION how to draw pd patches in a textfile;
+#X text 12 25 NAME text;
+#X restore 392 508 pd META;
+#N canvas 10 418 428 105 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 ASCII Art- Related Objects;
+#X obj 31 37 pddp/pddplink ../manuals/0.Intro/typing_conventions.pd
+;
+#X restore 103 508 pd Related_objects;
+#X obj 6 508 pddp/pddplink all_about.pd -text All About Pd;
+#X text 180 36 Meaning;
+#X text 40 36 Text;
+#X text 270 36 Example;
+#X text 40 68 [];
+#X text 180 68 object box;
+#X obj 336 68 osc~;
+#X text 40 118 [(;
+#X text 180 118 message box;
+#X msg 336 118 foo;
+#X text 180 168 connection;
+#X text 270 183 |;
+#X text 270 198 [*~];
+#X obj 336 168 osc~;
+#X obj 336 198 *~;
+#X text 270 248 [f]X[+ 1];
+#X text 270 168 [osc~];
+#X text 270 118 [foo(;
+#X text 270 68 [osc~];
+#X obj 336 248 f;
+#X obj 368 248 + 1;
+#X text 100 36 ASCII Codes;
+#X text 100 68 91 \, 93;
+#X text 100 118 91 \, 40;
+#X text 100 168 124 \, 47 \, 92*;
+#X text 100 248 88 \, 120;
+#X text 180 248 crossed;
+#X text 180 263 connections;
+#X text 40 188 - or _;
+#X text 40 168 | or /;
+#X text 100 188 45 \, 95;
+#X text 40 208 +;
+#X text 40 248 x or X;
+#X text 40 43 ____________________________________________________________
+;
+#X text 100 208 43**;
+#X text 333 36 In Pd;
+#N canvas 10 249 428 252 segmented_patch_cord_rant 0;
+#X text 19 206 -Jonathan Wilkes;
+#X text 19 36 What's interesting is that while some people argue against
+segmented patch cords as a future feature in Pd \, on the grounds that
+it would lead to "sloppy" patching habits and unreadable patches \,
+I have yet to read a negative response to an email that used them in
+ASCII art. That is \, no one to my knowledge has said: "Excuse me but
+I can't ready your ASCII art \, could you please remove the 90-degree
+angles?" Evidently segmented connections are not themselves a problem--
+it's unclear to me then how their use on a Pd canvas would lead an
+otherwise lucid mind down a path of chaos and confusion.;
+#X text 19 186 Thank you for your time.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 ASCII Art- A Rant;
+#X restore 43 469 pd segmented_patch_cord_rant;
+#X text 39 377 [osc~];
+#X text 39 392 |;
+#X text 39 412 |;
+#X text 39 422 |;
+#X text 39 435 [dac~];
+#X text 39 402 +---------;
+#X text 94 412 |;
+#X text 94 422 |;
+#X obj 171 377 osc~;
+#X obj 170 435 dac~;
+#X text 93 435 [writesf~];
+#X obj 212 435 writesf~;
+#X text 40 325 ** People use + in Pd ASCII art to show a segmented
+connection (e.g. \, a connection with at least one 90-degree angle
+in it) \, which isn't currently possible in Pd.;
+#X text 40 295 * ASCII code 92 (backslash) cannot be displayed in Pd
+(at least not without a lot of trouble)!;
+#X connect 18 0 19 0;
+#X connect 24 0 25 0;
+#X connect 25 0 24 1;
+#X connect 50 0 51 0;
+#X connect 50 0 53 0;

@@ -1,0 +1,24 @@
+#N canvas 550 235 496 571 10;
+#X floatatom 185 173 5 0 0 0 - - -;
+#X text 201 153 Number of notes in the chord;
+#X floatatom 97 107 5 0 0 0 - - -;
+#X text 145 108 Degree of the chord in the major scale;
+#X obj 92 336 musical.transpose;
+#X floatatom 239 311 5 0 0 0 - - -;
+#X obj 90 391 prepend set;
+#X msg 91 423 2 5 9 0;
+#X text 138 288 You might want to transpose as well;
+#X obj 237 334 musical.cycle5;
+#X floatatom 237 358 5 0 0 0 - - -;
+#X text 53 22 Description: Cycles through the chords of n notes in
+a scale \, the major scale by default;
+#X text 154 121 1 is the first degree \, not 0;
+#X obj 107 236 musical.degree2chord;
+#X connect 0 0 13 1;
+#X connect 2 0 13 0;
+#X connect 4 0 6 0;
+#X connect 5 0 9 0;
+#X connect 6 0 7 0;
+#X connect 9 0 4 1;
+#X connect 9 0 10 0;
+#X connect 13 0 4 0;

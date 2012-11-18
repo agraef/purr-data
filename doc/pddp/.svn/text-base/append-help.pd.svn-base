@@ -1,0 +1,116 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header append 3 12 0 18
+-204280 -1 0;
+#X obj 0 226 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 56 334 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for Pd version 0.4. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control data_structure;
+#X text 12 105 INLET_R pointer;
+#X text 12 125 OUTLET_0 pointer;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 INLET_N float;
+#X text 12 205 RELEASE_DATE 1997;
+#X text 12 45 DESCRIPTION add a scalar to a canvas;
+#X restore 500 597 pd META;
+#X obj 0 392 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 436 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 527 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 319 cnv 17 3 35 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 235 cnv 17 3 78 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 319 float;
+#N canvas 62 491 428 101 Related_objects 0;
+#X obj 14 38 get;
+#X obj 46 38 set;
+#X obj 136 38 getsize;
+#X obj 193 38 setsize;
+#X obj 121 63 element;
+#X obj 13 64 sublist;
+#X obj 79 38 pointer;
+#X obj 69 63 struct;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [append] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 484 3 append;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/append -text
+pdpedia: append;
+#N canvas 116 162 428 109 help-append-template1 0;
+#X obj 22 69 filledpolygon z z 0 0 0 20 0 20 30 0 30;
+#X obj 22 42 struct help-append-template1 float x float y float z;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [append] Template for "help-append-template1";
+#X restore 372 196 pd help-append-template1;
+#N canvas 554 168 428 207 help-append-data 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [append] Data Window;
+#X restore 372 174 pd help-append-data;
+#X obj 281 104 pointer;
+#X msg 281 80 traverse pd-help-append-data \, bang;
+#X obj 80 152 append help-append-template1 x y z;
+#X floatatom 80 95 5 26 400 0 - - -;
+#X obj 80 115 t f f;
+#X msg 372 138 \; pd-help-append-data clear;
+#X text 98 234 float;
+#X text 98 264 list;
+#X obj 78 401 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 401 pointer;
+#X obj 78 360 cnv 17 3 27 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#X text 98 360 pointer;
+#X text 98 531 You may append objects of different templates using
+different [append] objects.;
+#X text 168 360 - the final inlet takes a pointer to a scalar (or to
+the head of a list).;
+#X text 168 234 - a float to the left inlet initializes the field(s)
+of a scalar and appends the scalar to a glist.;
+#X text 168 264 - a list to the first inlet is distributed among the
+inlets of [append]. In the example above \, you can use the message
+box to assign the values "5" \, "6" \, and "7" to fields "x" \, "y"
+\, and "z" \, respectively.;
+#X text 168 319 - an additional inlet is created for each field specified
+by the creation arguments. A float sent to one of these inlets will
+be stored for later use.;
+#X text 168 401 - after [append] receives a value at its left inlet
+\, it outputs a pointer to the new scalar that has been created.;
+#X text 15 74 2) ...then here;
+#X text 224 174 3) result is in here ->;
+#X text 279 56 1) go to (and output) "head" of the list;
+#X text 168 482 - all subsequent arguments are names of fields to initialize.
+At least one field must be specified in order to append a new scalar.
+;
+#X text 80 455 1) symbol atom;
+#X text 80 482 n) symbol atom;
+#X text 168 455 - a [struct] name that specifies the template of a
+new scalar to append.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 572 pddp/pddplink ../4.data.structures/04.append.pd -text
+doc/4.data.structures/04.append.pd;
+#X obj 98 557 pddp/pddplink all_about_z_order.pd;
+#X obj 325 557 pddp/pddplink scalar-help.pd;
+#X text 11 23 add a scalar to a canvas;
+#X msg 18 95 10 75 2;
+#X connect 15 0 17 3;
+#X connect 16 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 17 0;
+#X connect 19 1 17 1;
+#X connect 19 1 17 2;
+#X connect 45 0 17 0;

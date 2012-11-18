@@ -1,0 +1,21 @@
+#N canvas 175 75 592 408 10;
+#X obj 120 186 choose;
+#X floatatom 120 124 4 0 0 0 - - -;
+#X obj 299 114 loadbang;
+#X msg 299 146 1 2 3 4 5 6.9 0.31 -10;
+#X obj 160 220 bng 15 250 50 0 empty empty clear_display 0 -6 0 8 -262144
+-1 -1;
+#X msg 120 253;
+#X text 29 106 number of elements to be chosen;
+#X text 104 38 An int n sent to the left inlet outputs randomly chosen
+numbers from a given supply.;
+#X text 40 42 choose;
+#X text 125 330 1996 by Karlheinz Essl;
+#X obj 120 220 show;
+#X text 241 145 supply:;
+#X connect 0 0 10 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 1;
+#X connect 4 0 10 1;
+#X connect 10 0 5 0;

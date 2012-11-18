@@ -1,0 +1,89 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header touchin 3 12 0 18
+-204280 -1 0;
+#X obj 0 431 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 220 494 375 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS This help patch was created for Pd
+version 0.35 by Michal Seta as part of a project called pddp proposed
+by Krzysztof Czaja \, managed and edited by Dave Sabine \, to build
+comprehensive documentation for Pd. Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 45 DESCRIPTION needs a description;
+#X text 12 65 INLET_0 float;
+#X text 12 85 INLET_1 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 459 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 90 178 428 421 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 78 80 ctlin;
+#X obj 221 80 pgmin;
+#X obj 28 80 bendin;
+#X obj 83 107 touchin;
+#X obj 28 33 polytouchin;
+#X obj 122 80 midiin;
+#X obj 27 107 sysexin;
+#X obj 183 167 noteout;
+#X obj 80 167 ctlout;
+#X obj 28 167 bendout;
+#X obj 103 33 touchout;
+#X obj 161 33 polytouchout;
+#X obj 127 167 midiout;
+#X obj 235 167 pgmout;
+#X obj 28 221 makenote;
+#X text 25 198 MIDI note construction:;
+#X text 25 140 MIDI output:;
+#X text 25 57 MIDI input:;
+#X obj 188 221 stripnote;
+#X obj 172 80 notein;
+#X text 185 198 MIDI note deconstruction:;
+#X text 8 2 [touchin] Related Objects;
+#X text 26 270 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 25 349 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 26 251 Externals;
+#X obj 26 300 pddp/helplink maxlib/pitch;
+#X obj 26 315 pddp/helplink maxlib/score;
+#X obj 26 330 pddp/helplink maxlib/chord;
+#X obj 26 365 pddp/helplink cyclone/midiformat;
+#X obj 26 380 pddp/helplink cyclone/midiparse;
+#X obj 26 395 pddp/helplink cyclone/midiflush;
+#X restore 102 597 pd Related_objects;
+#X text 98 467 float;
+#X obj 78 468 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 435 (none);
+#X text 98 492 float;
+#X obj 78 493 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 364 572 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
+;
+#X text 98 572 for an explanation of MIDI usage in Pd see:;
+#X text 80 545 1) float;
+#X text 11 23 needs a description;
+#X floatatom 275 218 0 0 0 0 - - -;
+#X floatatom 236 218 0 0 0 0 - - -;
+#X text 168 467 - MIDI channel.;
+#X text 168 492 - ???;
+#X text 168 545 - ???;
+#X obj 472 3 touchin;
+#X obj 443 20 pddp/pddplink http://wiki.puredata.info/en/touchin -text
+pdpedia: touchin;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 236 192 touchin;
+#X connect 25 0 18 0;
+#X connect 25 1 17 0;

@@ -1,0 +1,38 @@
+#N canvas 229 99 425 453 10;
+#X msg 316 24 Harmony;
+#X text 128 31 vs. 2;
+#X obj 155 312 play2 127 500 1 1;
+#X text 8 394 vs.2: newly added second outlet shows the note (i.e.
+pitch class with register);
+#X text 64 344 pitch class;
+#X msg 30 343;
+#X text 8 378 1993-94 by Karlheinz Essl;
+#X obj 30 312 show-pitchclass;
+#X obj 155 246 bng 15 250 50 0 empty empty reset 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 155 219 4 0 0 1 key_number - -;
+#X floatatom 155 198 4 0 0 1 start_note - -;
+#X obj 30 251 st2pitch 60;
+#X floatatom 30 283 4 0 0 1 pitch_class - -;
+#X floatatom 30 215 4 0 0 1 interval - -;
+#X obj 30 179 between -6 6;
+#X obj 30 141 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 155 283 4 0 0 1 note - -;
+#X text 10 114 see also:;
+#X msg 76 114 note2st;
+#X text 10 17 st2pitch;
+#X text 10 50 Accumulates incoming intervals and outputs pitch classes
+(i.e. notes without register information) at the left outlet resp.
+notes (= MIDI note numbers) at the right outlet.;
+#X connect 7 0 5 0;
+#X connect 8 0 11 1;
+#X connect 9 0 11 1;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 11 1 16 0;
+#X connect 12 0 7 0;
+#X connect 13 0 11 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 2 0;

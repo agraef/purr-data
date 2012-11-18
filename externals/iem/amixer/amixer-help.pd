@@ -1,0 +1,8 @@
+#N canvas 244 186 450 300 10;
+#X obj 159 199 amixer;
+#X msg 159 60 card 0;
+#X msg 166 82 card CK804;
+#X msg 184 135 set;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;

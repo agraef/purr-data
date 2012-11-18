@@ -1,0 +1,33 @@
+#!/usr/bin/wish -f
+
+#Here a small exemple that show how to send msg to pd from TCL.
+#damien HENRY
+#dh20010806
+
+puts "*********************"
+puts "* pd -nogui example *"
+puts "* (c) Damien HENRY  *"
+puts "*    This is GPL... *"
+puts "*********************"
+puts ""
+puts "WARNING : you need to run pd -open and load recv.pd first"
+
+#definition of the procedure that send msg to pd
+proc pd_send {string2send} {
+  set to_pd [socket localhost 3006]
+  puts $to_pd $string2send
+  .lmsg configure -text $string2send
+  close $to_pd
+}
+
+#create the gui
+wm title . "a simple tcl/tk gui msg-sender to pd"
+button .bsend -text "send to pd" -width 20  -command {pd_send "$pd_rcv $text2send;"}
+button .bq -text "quit" -width 20  -command {exit}
+entry .msg -textvariable text2send -width 30
+entry .pd_rcv -textvariable pd_rcv -width 10
+label .l1 -text "destination"
+label .l2 -text "msg to send"
+label .lmsg
+
+pack .l1 .pd_rcv .l2 .msg .lmsg .bsend .bq

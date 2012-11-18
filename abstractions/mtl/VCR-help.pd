@@ -1,0 +1,65 @@
+#N canvas 1221 0 812 711 10;
+#X obj 23 660 pix_texture;
+#X msg 327 437 autostart \$1;
+#X obj 327 420 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 277 354 play;
+#X msg 236 354 stop;
+#X msg 182 354 rewind;
+#X msg 100 354 fastrewind;
+#X msg 318 354 fastforward;
+#X obj 19 30 gemhead;
+#X obj 424 60 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X floatatom 61 167 5 0 0 0 - - -;
+#X msg 330 510 smooth \$1;
+#X floatatom 330 487 5 0 0 0 - - -;
+#X text 69 209 once they are loaded.;
+#X text 69 195 Recall movies by their index number;
+#X text 328 462 Autostart accepts a boolean (0 or 1) as an argument.
+;
+#X text 259 579 All these commands are accessible from the Graph-On-Parent.
+;
+#X obj 488 141 cnv 15 270 180 empty empty VCR 20 12 1 12 -233017 -66577
+0;
+#X text 496 211 SUMMARY:;
+#X text 496 225 Inlet_1: File management;
+#X text 496 297 Outlet_2: Playback speed;
+#X text 496 249 Inlet_2: VCR commands;
+#X text 496 273 Outlet_1: File management;
+#X text 564 284 forwarding;
+#X text 425 353 You may send the following messages:;
+#X floatatom 236 611 10 0 0 1 Playback_rate - -;
+#X text 501 195 Author: oli44 Sept. 2007;
+#X text 426 391 and fastforward;
+#X text 426 374 fastrewind \, rewind \, stop \, play;
+#X text 495 171 Description: Old-school VCR commands;
+#X obj 43 527 mtl/VCR;
+#X obj 44 123 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 23 684 mtl/gemsFit;
+#X obj 25 708 rectangle;
+#X obj 424 86 mtl/gemsWin /dimen 320 240;
+#X obj 327 399 iemlib/init 1;
+#X obj 23 632 mtl/gemsMovies;
+#X text 333 533 Smooth: 0-1;
+#X connect 0 0 32 0;
+#X connect 1 0 30 1;
+#X connect 2 0 1 0;
+#X connect 3 0 30 1;
+#X connect 4 0 30 1;
+#X connect 5 0 30 1;
+#X connect 6 0 30 1;
+#X connect 7 0 30 1;
+#X connect 8 0 36 0;
+#X connect 9 0 34 0;
+#X connect 10 0 30 0;
+#X connect 11 0 30 1;
+#X connect 12 0 11 0;
+#X connect 25 0 36 2;
+#X connect 30 0 36 1;
+#X connect 30 1 25 0;
+#X connect 31 0 30 0;
+#X connect 32 0 33 0;
+#X connect 35 0 2 0;
+#X connect 36 0 0 0;

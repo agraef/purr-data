@@ -1,0 +1,20 @@
+Source: pd-list-abs
+Section: sound
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+Uploaders: Hans-Christoph Steiner <hans@eds.org>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Homepage: http://puredata.info
+
+Package: pd-list-abs
+Architecture: all
+Depends: ${shlibs:Depends},
+         pd,
+         ${misc:Depends},
+         pd-libdir
+Description: a library of list operations for Pd
+ list-abs is a Pd library of all sorts of operations for lists of data,
+ ranging from mathematics, sorting, ranging, etc.  All of the objects are
+ implemented using Pd, and for the most part only using objects included in
+ Pd-vanilla. 

@@ -1,0 +1,73 @@
+#N canvas 420 51 695 867 10;
+#X obj 22 747 gripd;
+#X msg 23 40 connect;
+#X msg 38 75 disconnect;
+#X msg 117 445 poll_send 5;
+#X msg 124 470 poll_receive 5;
+#X msg 126 501 set_path ../gripd;
+#X msg 89 631 set_python_path c:/program files/python;
+#X text 369 661 "c:/program files/python" by default.;
+#X text 372 678 Linux: Does nothing.;
+#X text 229 471 Time in ms to poll for info from GUI.;
+#X text 199 446 Time in ms to poll for sending info to GUI.;
+#X text 62 747 Takes one optional argument to specify a port.;
+#X text 82 15 all backslashes must be "/".;
+#X text 19 2 Windows: For paths \, spaces are ok \, but;
+#X text 120 67 Set gripd object to stop waiting for a connection.;
+#X text 121 80 Also closes gripd GUI opened by "open <filename>".;
+#X text 86 34 Set gripd object to wait for a connection (Not needed
+with "open" message.);
+#X floatatom 22 802 5 0 0 0 - - -;
+#X msg 105 376 lock;
+#X msg 115 407 unlock;
+#X msg 49 112 open ../gripd/examples/gripd.gpd;
+#X msg 52 219 open_locked ../gripd/examples/gripd.gpd;
+#X text 144 376 Set GUI to lock mode;
+#X text 164 407 Set GUI to normal (editable) mode;
+#X text 283 168 Relative paths are relative to the directory;
+#X text 283 180 containing PD executable.;
+#X text 255 568 Relative paths are relative to the directory;
+#X text 254 583 containing PD executable.;
+#X text 68 803 left outlet: 1 on connect \, 0 on disconnect;
+#X floatatom 52 780 5 0 0 0 - - -;
+#X text 96 781 right outlet: 1 when shown \, 0 when hidden;
+#X msg 59 248 show;
+#X msg 68 276 hide;
+#X text 96 249 show GUI window when hidden;
+#X text 106 275 hide GUI window when shown;
+#X text 372 645 Normally not needed (used for gripd.py);
+#X text 371 629 Windows: Path to directory containing python.exe.;
+#X text 283 108 Open gripd GUI and optional .gpd file \, and connect.
+;
+#X text 330 219 Open gripd GUI in locked mode;
+#X text 348 135 If it fails tries gripd.py via python.exe.;
+#X text 284 121 Windows: first tries to execute gripd.exe.;
+#X text 255 503 Path to directory containing gripd executable;
+#X text 255 519 "../gripd" by default;
+#X text 254 535 Windows: sets path to file gripd.exe (and gripd.py).
+;
+#X text 255 552 Linux: sets path to file gripd (symlink to gripd.py).
+;
+#X text 284 155 Linux: executes file gripd;
+#X msg 79 309 openpanel;
+#X msg 89 340 savepanel;
+#X text 156 340 open a save file dialog and send file to savepanel
+receive symbol;
+#X text 152 303 open an open file dialog and send file to openpanel
+receive symbol;
+#X connect 0 0 17 0;
+#X connect 0 1 29 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;
+#X connect 21 0 0 0;
+#X connect 31 0 0 0;
+#X connect 32 0 0 0;
+#X connect 46 0 0 0;
+#X connect 47 0 0 0;

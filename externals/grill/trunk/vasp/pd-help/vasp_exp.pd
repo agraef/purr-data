@@ -1,0 +1,42 @@
+#N canvas 51 74 827 464 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.exp 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 408 284 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufexp;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 608 330 pd init;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 463 330 pd clear_buffer;
+#X obj 77 197 vasp.update;
+#X text 71 63 e ^ sample;
+#X text 72 81 exponential function;
+#X obj 77 150 vasp.osc 22050;
+#X obj 77 172 vasp.* 0.5;
+#X msg 77 127 vasp bufexp;
+#X msg 463 307 vasp bufexp;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufexp 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 341 144 graph;
+#X obj 78 372 VASP-HELP;
+#X obj 77 316 vasp.update;
+#X msg 77 246 vasp bufexp;
+#X obj 77 291 vasp.opt;
+#X obj 77 269 vasp.exp;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;
+#X connect 8 0 6 0;
+#X connect 9 0 2 0;
+#X connect 13 0 15 0;
+#X connect 14 0 12 0;
+#X connect 15 0 14 0;

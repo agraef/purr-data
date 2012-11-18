@@ -1,0 +1,12 @@
+#N canvas 1951 268 565 308 10;
+#X obj 80 209 list.abs;
+#X msg 80 121 0.5 -0.3 5.3 -100;
+#X msg 207 157 abs value of -100;
+#X obj 80 257 print;
+#X text 44 23 Description: Returns the absolute value of all floats
+in a list.;
+#X text 206 180 All elements that are not floats are simply ignored.
+;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;

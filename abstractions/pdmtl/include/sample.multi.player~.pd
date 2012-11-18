@@ -1,0 +1,14 @@
+#N canvas 0 0 450 300 10;
+#X obj 113 130 sample.r;
+#X obj 113 169 sample.play~;
+#X obj 182 128 midi.note.close;
+#X obj 113 101 r \$1_\$2s;
+#X obj 182 101 r \$1_\$2n;
+#X obj 81 250 throw~ \$2l;
+#X obj 162 248 throw~ \$2r;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 1 1 6 0;
+#X connect 2 0 1 1;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;

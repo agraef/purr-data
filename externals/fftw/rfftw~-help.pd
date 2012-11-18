@@ -1,0 +1,7 @@
+#N canvas 0 0 605 326 10;
+#X text 105 205 for help see;
+#X text 85 56 forward real FFT using libFFTW;
+#X obj 164 93 rfftw~;
+#X obj 213 204 rfft~;
+#X text 88 136 this object is a drop-in replacement for pd's built-in
+rfft-object;

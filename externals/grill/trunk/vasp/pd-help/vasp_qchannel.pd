@@ -1,0 +1,10 @@
+#N canvas 35 145 460 376 10;
+#X obj 58 31 cnv 15 15 15 empty empty vasp.channel? 0 10 1 14 -262144
+-1 0;
+#X text 58 212 related object;
+#X text 53 125 (MaxMSP version of vasp);
+#X obj 60 165 vasp.channel?;
+#X text 58 71 get channel index of 0th vector in vasp;
+#X text 55 107 only useful for interleaved stereo-files;
+#X obj 162 211 vasp.channel;
+#X obj 61 280 VASP-HELP;

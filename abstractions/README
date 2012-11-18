@@ -1,0 +1,148 @@
+
+Collection of abstractions for Pd
+=================================
+
+This is a collection of abstractions for Pd. Pd is a language that is very
+low-level. There are several concepts that need a certain amount of work in
+order to be implemented. Instead of reimplementing these higher level concepts
+again and again, this collection of abstractions try to establish a layer of
+Pd abstractions that are reusable libraries that can be shared by Pd users.
+
+
+What kind of abstractions?
+==========================
+
+One of the problems with organizing all this is the vague definition of
+"abstraction" and "external".  "application" and "object" are much more useful
+distinctions.  Therefore, there are two sections to the build system, one for
+Pd patches which are objects, and another for Pd patches that are
+"applications" (also examples, demos, etc.).
+
+
+Criteria for Adding Patches
+===========================
+
+Patches that are added to this section ideally should be written using only
+core Pd objects, without using externals whenever possible.  If that if not
+possible, then it should work with the externals included with the Pd-extended
+builds.
+
+You can either send your abstraction with the request for adding it to the
+pd-dev list, or if you are a member of the SourceForge project already, you
+can add them by yourself.
+
+If you have questions, please post them to the pd-dev list.  You can find all
+of the mailing lists here:  http://puredata.org/community/lists
+
+We are working on a style guide, you can see the current rendition in CVS in
+doc/pddp/pddp_style_guide.pd
+
+
+How to add your library of patches
+==================================
+
+
+For the most up-to-date version of these instructions, see:
+
+   http://puredata.org/docs/developer/build
+
+The best way to start is to copy the complete section of an existing library,
+like memento.  Then do a case-preserving search-and-replace, replacing
+"memento" with the name of your library.  Editors such as emacs will make the
+replacements will preversing the case of the text it is replacing.  For
+example, replacing "memento" with "mylibrary" will make these changes:
+
+MEMENTO_NAME = memento
+objects_memento:
+
+to this:
+
+MYLIBRARY_NAME = mylibrary
+objects_mylibrary:
+
+If your editor does not do this, you will need to do two separate
+search-and-replace actions, one for all lowercase, and another for all
+uppercase.
+
+Once you have your section setup after the search-and-replace, you need to
+edit the paths of the files that you want to include.  The paths will be the
+only text written out.  All of the installation paths will be Makefile
+variables.  Check the below example:
+
+	install -d $(helpdir)/$(MEMENTO_NAME)
+	install -p $(abstractions_src)/rradical/memento/*-help.pd \
+		$(helpdir)/$(MEMENTO_NAME)
+
+becomes:
+
+	install -d $(helpdir)/$(MYLIBRARY_NAME)
+	install -p $(abstractions_src)/mylibrary/*-help.pd \
+		$(helpdir)/$(MYLIBRARY_NAME)
+
+
+Also, since it is common to store the help patches in the same directory as
+the object patchs, you can use this pattern to exclude the help patches from
+being copied to $(objectsdir):
+
+	install -p $(shell ls -1 $(abstractions_src)/mylibrary/*.pd | \
+		grep -v '\-help.pd')  $(objectsdir)/$(MYLIBRARY_NAME)
+
+
+
+
+Explanations of Terms
+=====================
+
+MYLIBRARY_NAME = mylibrary
+
+    At the top of each library's section in the Makefile, you will see a
+	 variable MYLIBRARY_NAME.  This variable is the name used to install the
+	 abstractions.  This should be all lowercase since its used in the loading
+	 of objects within Pd (e.g. [mylibrary/myobject]).
+
+
+$(examplesdir): 
+
+	 If your project is an application or patch that is meant to be run
+	 directly, then it should go into this directory in its own subdirectory.
+	 This directory is a browsable collection of applications.  If your
+	 application has a lot of files associated with it, put a main patch and
+	 have the extra files in a subdirectory.  rradical/usecases/showcase is a
+	 good example of this.  This is the only place were mixed or upper case is
+	 appropriate in directory names.
+
+
+$(pddocdir):
+    All help patches should go into this directory in a subdirectory with the
+    same nameas the subdirectory for your objects.  For example, for
+    [mylibrary/myobject] above, the helpfile would be "mylibrary/myobject-help.pd".
+
+	 The subdirectory name (e.g. mylibrary) should always be all lowercase.
+
+
+$(manualsdir): 
+
+    If you have any other kinds of documentation, like a text or HTML manual,
+	 or a Pd-based tutorial, then it should go into this directory, again in a
+	 subdirectory with the same name as the library or application.  Using the
+	 previous example again, the "mylibrary" manual would be
+	 "mylibrary/mylibrary.html".
+
+	 The subdirectory name (e.g. mylibrary) should always be all lowercase.
+
+
+$(objectsdir):
+
+    If your project consists of objects that are meant to be reused in other
+    patches rather than used as a application, then they should go into this
+    directory.  
+
+	 They should be in a directory with a distinct name.  This will be the name
+    of your library of objects, which can be added to the path, or called
+    directly (e.g. [mylibrary/myobject]).
+
+	 The subdirectory name (e.g. mylibrary) should always be all lowercase.
+
+
+
+

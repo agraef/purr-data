@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/ext/!svn/ver/3671/trunk/delsplit
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1398/trunk/delsplit/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/1398/trunk/delsplit/license.txt
+END
+delsplit.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1398/trunk/delsplit/delsplit.vcproj
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3671/trunk/delsplit/main.cpp
+END
+delsplit.help
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/1398/trunk/delsplit/delsplit.help
+END
+delsplit-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/1398/trunk/delsplit/delsplit-help.pd
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/1398/trunk/delsplit/package.txt
+END
+delsplit.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1398/trunk/delsplit/delsplit.mcp
+END

@@ -1,0 +1,67 @@
+local modes = {"alea", "series", "sequence", "rota"}
+
+local function contains(t,x)
+    for k,v in pairs(t) do
+        if v == x then return true end
+    end
+    return false
+end
+
+
+return function(self, sel, atoms)
+  self.inlets = 1
+  self.outlets = 1
+  pd.post("lua: selector:"..sel)
+  pd.post("lua: atoms:")
+  for i,v in ipairs(atoms) do
+    pd.post("lua: attr  " .. i .. " = " .. v)
+  end
+  
+  --[[
+  function self:in_1(sel,atoms) 
+    --pd.post("float: "  .. f) 
+    local ret ={}
+    if (sel=="toto") then
+      pd.post("sel is toto")
+    end
+    for i,v in ipairs(atoms) do
+      if type(v) == "number" then
+        pd.post("number!")
+      elseif type(v) == "string" then
+        pd.post("str!")
+      end
+      pd.post("  " .. i .. " = " .. v)
+    end
+    self:outlet(1, "selecto", {3,"fdsfd"}) --?
+  end
+  ]]--
+  function self:in_1_yahoo(atoms)
+    pd.post("lua: sel is yahoo")
+    for i,v in ipairs(atoms) do
+      pd.post("lua:   " .. i .. " = " .. v)
+    end
+    self:outlet(1, "got", atoms) -- 2nd arg is an array
+  end
+  
+  function self:in_1_gem_state(atoms)
+    pd.post("lua: script.lua:gem_state renders!")
+  end
+  
+  return true
+end
+
+
+--if type(atoms[1]) == "number" then
+--        self.mode = modes[atoms[1]]
+--        if self.mode == "series" then
+--            self.u = urn.new(#self.periods)
+--        end
+--        self.i = 1
+--    elseif type(atoms[1]) == "string" then
+--        if contains(modes, atoms[1]) then
+--            self.mode = atoms[1]
+--        else 
+--            self:error("no such mode: " .. atoms[1])
+--        end
+--
+

@@ -1,0 +1,139 @@
+#N canvas 161 76 790 548 12;
+#X obj 65 417 textfile;
+#X msg 190 337 clear;
+#N canvas 0 0 462 312 alternate 0;
+#X obj 103 117 + 1;
+#X obj 70 119 f 0;
+#X obj 70 171 sel 0 1;
+#X obj 70 146 mod 2;
+#X msg 95 90 0;
+#X obj 68 31 inlet;
+#X obj 140 40 inlet;
+#X obj 140 63 bang;
+#X obj 68 55 bang;
+#X obj 65 205 outlet;
+#X obj 125 206 outlet;
+#X text 59 6 bang;
+#X text 139 18 reset to 0 without bang;
+#X connect 0 0 1 1;
+#X connect 1 0 0 0;
+#X connect 1 0 3 0;
+#X connect 2 0 9 0;
+#X connect 2 1 10 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 1;
+#X connect 5 0 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 8 0 1 0;
+#X restore 58 227 pd alternate;
+#X obj 24 81 bng 15 250 50 0 empty empty write-once 0 -6 0 8 -262144
+-1 -1;
+#X obj 506 106 bng 15 250 50 0 empty empty reset 0 -6 0 8 -262144 -1
+-1;
+#N canvas 0 0 466 316 inputs 0;
+#X obj 61 153 pack s f f;
+#X obj 63 200 pack f f;
+#X obj 61 176 unpack s f f;
+#X msg 66 223 add \$1 \$2;
+#X obj 66 257 outlet;
+#X text 120 258 to textfile;
+#X obj 24 42 inlet;
+#X text 23 22 bang;
+#X text 66 77 here go the inputs;
+#X obj 94 52 r input1;
+#X obj 163 52 r input2;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 1 1 0;
+#X connect 2 2 1 1;
+#X connect 3 0 4 0;
+#X connect 6 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 0 2;
+#X restore 58 306 pd inputs;
+#N canvas 0 0 466 316 outputs 0;
+#X obj 61 153 pack s f f;
+#X obj 63 200 pack f f;
+#X obj 61 176 unpack s f f;
+#X msg 66 223 add \$1 \$2;
+#X obj 66 257 outlet;
+#X text 120 258 to textfile;
+#X obj 24 42 inlet;
+#X text 23 22 bang;
+#X text 66 77 here go the outputs;
+#X obj 91 51 r output1;
+#X obj 166 51 r output2;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 1 1 0;
+#X connect 2 2 1 1;
+#X connect 3 0 4 0;
+#X connect 6 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 0 2;
+#X restore 149 284 pd outputs;
+#X obj 230 223 f 0;
+#X obj 260 223 + 1;
+#X obj 239 257 nbx 5 14 -1e+037 1e+037 0 0 empty empty how_many_patterns
+0 -6 0 10 -262144 -1 -1 0 256;
+#X text 156 406 todo: write header (a line at the beginning of file
+with 3 int: how many tests \, num_input \, num_output);
+#X obj 122 190 delay 50;
+#X obj 115 159 metro 100;
+#X floatatom 346 70 5 100 5000 2 msec_between_snapshots - -;
+#X obj 127 80 tgl 15 0 empty empty toggle_on-off 0 -6 0 8 -262144 -1
+-1 0 1;
+#X obj 219 189 / 2;
+#X obj 347 14 loadbang;
+#X msg 347 34 100;
+#X msg 385 314 write test.txt cr;
+#X text 293 224 comment;
+#N canvas 262 68 639 595 README 0;
+#X text 67 432 please help me getting this patch more usable: - how
+to add a line at the very beginning of a text file after i have filled
+it? - how to manage inputs and outputs of different sized without forcing
+the user to edit the patch?;
+#X text 9 7 this tricky patch is usefull to write a file to train ann
+and is intended to be used with the nn external;
+#X text 9 63 how to use: 1) modify [pd inputs] and [ps outputs] inserting
+[r] objects to receive input data \, and modify [pack]s to handle the
+right number of inputs 2) do the same with [pd outputs] 3) click on
+reset 4) toggle ON and start collecting data 5) when you are ready
+toggle OFF 6) edit [write filename cr( with the actual filename you
+want for your training data (always keep the cr after the filename)
+7) open the file with training data 8) add a line at the beginning
+and write 3 integers: the 1st is the number of training patterns written
+(see "how many patterns" number box) \, the 2nd is how many inputs
+your ann has \, the 3th is how many outputs e.g. i collected 100 training
+snapshots \, for a ann with 10 ins and 2 outs I write: 100 10 2 at
+the very beginning of the file now the training file is ready and can
+be read from nn via train-on-file command;
+#X restore 25 16 pd README;
+#X text 479 210 by davide morelli info@davidemorelli.it;
+#X text 106 14 <--readme!;
+#X text 242 283 <--edit here!;
+#X text 142 308 <--edit here!;
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 2 1 6 0;
+#X connect 2 1 7 0;
+#X connect 3 0 11 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 1;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 1;
+#X connect 11 0 2 0;
+#X connect 12 0 11 0;
+#X connect 12 0 2 0;
+#X connect 13 0 12 1;
+#X connect 13 0 15 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 1;
+#X connect 16 0 17 0;
+#X connect 17 0 13 0;
+#X connect 18 0 0 0;

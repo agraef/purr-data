@@ -1,0 +1,21 @@
+#N canvas 384 36 780 428 10;
+#X obj 22 122 cc-learner /uc33 /Knob1;
+#X obj 113 121 cc-learner /uc33 /Knob2;
+#X obj 200 121 cc-learner /uc33 /Knob3;
+#X obj 644 406 pddplink http://proyekto.net;
+#X text 584 393 2008 Luke Iannini \, tag sndrft;
+#X obj 288 121 cc-learner /uc33 /Knob4;
+#X obj 22 207 cc-learner /uc33 /Slider1;
+#X obj 112 207 cc-learner /uc33 /Slider2;
+#X obj 200 207 cc-learner /uc33 /Slider3;
+#X obj 288 207 cc-learner /uc33 /Slider4;
+#X text 14 319 use [grow-tentacles-multi] to build [midi-tentacle-multi]s
+instead.;
+#X text 14 302 call like [grow-tentacles /uc33 /modular];
+#X text 8 8 [grow-tentacles] generates a set of midi-tentacles automatically
+from a set of already-defined cc-learners.;
+#X text 24 91 So \, if you've built your virtual controller like so:
+;
+#X text 410 93 Then you can in a [grow-tentacles /controller /targetparent]
+to build companion midi-tentacles for each:;
+#X obj 515 171 grow-tentacles /uc33 /modular;

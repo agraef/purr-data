@@ -1,0 +1,99 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bendin 3 12 0 18
+-204280 -1 0;
+#X obj 0 395 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 245 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS This document was updated for Pd
+version 0.35 by Michal Seta as part of a project called pddp proposed
+by Krzysztof Czaja \, managed and edited by Dave Sabine \, to build
+comprehensive documentation for Pd. Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 45 DESCRIPTION read incoming pitch bend values;
+#X text 12 65 OUTLET_0 float;
+#X text 12 85 OUTLET_1 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 430 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 495 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 560 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 439 float;
+#N canvas 50 112 428 456 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [bendin] Related Objects;
+#X obj 75 89 ctlin;
+#X obj 25 116 pgmin;
+#X obj 25 89 bendin;
+#X obj 205 116 touchin;
+#X obj 69 116 polytouchin;
+#X obj 119 89 midiin;
+#X obj 149 116 sysexin;
+#X obj 131 176 noteout;
+#X obj 25 176 ctlout;
+#X obj 25 36 bendout;
+#X obj 161 203 touchout;
+#X obj 75 203 polytouchout;
+#X obj 75 176 midiout;
+#X obj 25 203 pgmout;
+#X obj 25 258 makenote;
+#X text 22 235 MIDI note construction:;
+#X text 22 149 MIDI output:;
+#X text 22 66 MIDI input:;
+#X obj 185 258 stripnote;
+#X text 22 305 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 21 384 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X obj 169 89 notein;
+#X text 182 235 MIDI note deconstruction:;
+#X text 22 286 Externals;
+#X obj 22 335 pddp/helplink maxlib/pitch;
+#X obj 22 350 pddp/helplink maxlib/score;
+#X obj 22 365 pddp/helplink maxlib/chord;
+#X obj 22 400 pddp/helplink cyclone/midiformat;
+#X obj 22 415 pddp/helplink cyclone/midiparse;
+#X obj 22 430 pddp/helplink cyclone/midiflush;
+#X restore 101 597 pd Related_objects;
+#X obj 482 3 bendin;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/bendin -text
+pdpedia: bendin;
+#X text 98 405 (none);
+#X obj 78 439 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 467 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 467 float;
+#X floatatom 148 171 5 0 0 0 - - -;
+#X floatatom 191 171 5 0 0 0 - - -;
+#X obj 148 144 bendin;
+#X text 85 221 The [bendin] object reads incoming pitch bend values
+and reports them. If started with no arguments it reports the channel
+number through the right outlet.;
+#X obj 260 144 bendin 2;
+#X floatatom 260 171 5 0 0 0 - - -;
+#X text 311 171 <-- pitch bend values on channel 2;
+#X obj 99 564 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
+;
+#X text 11 23 read incoming pitch bend values;
+#X text 167 514 - (optional) a single MIDI channel number from which
+to read. If the argument is present \, the [bendin] object does not
+show the second (right) outlet.;
+#X text 168 405 - [bendin] reads directly from the MIDI port.;
+#X text 168 439 - pitchbend value (a 14-bit integer).;
+#X text 168 467 - MIDI channel number (available unless argument is
+given).;
+#X text 80 514 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 17 0 15 0;
+#X connect 17 1 16 0;
+#X connect 19 0 20 0;

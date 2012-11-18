@@ -1,0 +1,3 @@
+NAME=clk
+SRCS=clk_main.cpp clk_clock.cpp clk_master.cpp clk_client.cpp clk_int.cpp clk_sync.cpp clk_tap.cpp clk_time.cpp clk_metro.cpp clk_delay.cpp
+HDRS=clk.h clk_master.h clk_client.h 

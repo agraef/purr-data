@@ -1,0 +1,8 @@
+
+- check out rjlib's u_makepoly and u_robinpoly
+
+- use loadbang instead of initbang
+
+- many polypoly be like u_makepoly with
+
+- make round-robin based on voices~

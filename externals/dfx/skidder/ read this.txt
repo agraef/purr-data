@@ -1,0 +1,28 @@
+These are the source code files files for the Destroy FX VST plugins pack.  
+More information about them, as well as ready-to-use plugins, can be found 
+at our web page:  
+	http://www.smartelectronix.com/~destroyfx/
+Also included in this package are CodeWarrior 6 project files & Visual 
+Studio 6 project files which will hopefully make compiling the plugins a 
+little easier for you.
+
+All of the plugins use the VST standard, & should be (nearly) 
+source-portable to any platform which supports VST.  Some advanced 
+features may not work on all platforms or in all hosts.
+
+These plugins are Copyright (c) Marc Poirier & Tom Murphy 7.  You can use 
+them in your music however you like, without royalties.  You can also 
+modify them to your liking.  However, if you distribute them (or 
+derivative/modifed versions of them), then you must also distribute the 
+source package in order to be in compliance with the license.  This 
+software is distributed under the terms of the Gnu Public License; see the 
+file COPYING for details.
+
+This software comes with no warranty (see the file COPYING).
+
+
+
+
+If you make any nice modifications or fix anything, please let us know:  
+	destroyfx@smartelectronix.com
+	pi@attacksyour.net

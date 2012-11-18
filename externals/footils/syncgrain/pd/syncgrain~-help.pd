@@ -1,0 +1,96 @@
+#N canvas 161 195 786 576 10;
+#X obj 67 217 syncgrain~;
+#X floatatom 80 102 5 0 0 1 - - -;
+#X floatatom 92 125 5 0 0 1 - - -;
+#X floatatom 106 148 5 0 0 1 - - -;
+#X floatatom 118 171 5 0 0 1 - - -;
+#X floatatom 132 192 5 0 0 1 - - -;
+#X text 12 350 The sound source for the grains is obtained by reading
+from an array containing the source waveform. The grain generator has
+full control of frequency (grains/sec) \, overall amplitude \, grain
+pitch (a sampling increment) and grain size (in millisecs). An extra
+parameter is the grain pointer speed (or rate) \, which controls which
+position the generator will start reading samples in the table for
+each successive grain. It is measured in fractions of grain size \,
+so a value of 1 will make each successive grain read from where the
+previous grain should finish. A value of 0.5 will make the next grain
+start at the midway position from the previous grain start and finish
+\, etc. A value of 0 will make the generator read always from the start
+of the table. This control gives extra flexibility for creating timescale
+modifications in the resynthesis.;
+#N canvas 0 22 458 308 graph1 0;
+#X array source_array 62079 float 0;
+#X coords 0 1 62078 -1 200 140 1;
+#X restore 519 118 graph;
+#X msg 22 46 help;
+#X msg 66 66 set source_array;
+#X obj 175 190 hsl 150 17 0.012 1.2 1 0 empty empty PointerRate_(0-1)
+5 9 1 11 -262144 -1 -1 0 0;
+#X obj 162 168 hsl 150 17 5 500 1 0 empty empty GrainSize 5 9 1 11
+-262144 -1 -1 0 0;
+#X obj 149 146 hsl 150 17 0.1 100 1 0 empty empty GrainPitch 5 9 1
+11 -262144 -1 -1 0 0;
+#X obj 136 123 hsl 150 17 0 1.2 0 0 empty empty Amplitude 5 9 1 11
+-262144 -1 -1 0 0;
+#X obj 124 100 hsl 150 17 1 1000 1 0 empty empty GrainFrequency_(per_sec)
+5 9 1 11 -262144 -1 -1 0 0;
+#X obj 68 263 *~;
+#X obj 88 242 hsl 150 17 0 1.2 0 0 empty empty master_level 5 9 1 11
+-241655 -1 -1 0 0;
+#X obj 56 298 dac~;
+#X msg 403 84 \; pd dsp \$1;
+#X obj 66 43 loadbang;
+#X obj 518 286 bng 25 250 50 0 empty empty empty 0 -6 0 8 -155622 -1
+-1;
+#X text 552 290 <-- choose your own sample;
+#X floatatom 518 342 9 0 0 1 number_of_samples - -;
+#N canvas 0 22 677 410 load_sound_file 0;
+#X obj 95 91 openpanel;
+#X msg 97 300 read -resize \$1 source_array;
+#X obj 97 326 soundfiler;
+#X obj 96 17 inlet;
+#X obj 97 375 outlet;
+#X obj 114 133 loadbang;
+#X msg 287 244 symbol ../../../pd/doc/sound/voice.wav;
+#X msg 292 263 symbol ../../../pd/doc/sound/voice2.wav;
+#X msg 282 225 symbol ../../../pd/doc/sound/bell.aiff;
+#X msg 177 191 symbol ../sound/voice2.wav;
+#X msg 172 172 symbol ../sound/voice.wav;
+#X msg 167 153 symbol ../sound/bell.aiff;
+#X text 367 208 for working from CVS:;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 5 0 10 0;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;
+#X connect 10 0 1 0;
+#X connect 11 0 1 0;
+#X restore 518 319 pd load_sound_file;
+#X obj 1 2 cnv 15 450 20 empty empty [syncgrain~] 2 11 1 18 -233017
+-66577 0;
+#X obj 403 46 tgl 35 0 empty empty Start 0 -6 1 12 -114652 -1 -1 0
+1;
+#X connect 0 0 15 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 2;
+#X connect 3 0 0 3;
+#X connect 4 0 0 4;
+#X connect 5 0 0 5;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 5 0;
+#X connect 11 0 4 0;
+#X connect 12 0 3 0;
+#X connect 13 0 2 0;
+#X connect 14 0 1 0;
+#X connect 15 0 17 0;
+#X connect 15 0 17 1;
+#X connect 16 0 15 1;
+#X connect 19 0 9 0;
+#X connect 20 0 23 0;
+#X connect 23 0 22 0;
+#X connect 25 0 18 0;

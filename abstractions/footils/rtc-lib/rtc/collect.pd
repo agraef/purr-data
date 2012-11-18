@@ -1,0 +1,14 @@
+#N canvas 663 237 419 281 10;
+#X obj 195 37 inlet;
+#X obj 41 37 inlet;
+#X obj 41 144 outlet;
+#X msg 195 74 set;
+#X text 143 140 1993-2004 by Karlheinz Essl;
+#X text 143 160 vs. 1.1;
+#X obj 41 99 list trim;
+#X obj 41 74 list prepend add2;
+#X connect 0 0 3 0;
+#X connect 1 0 7 0;
+#X connect 3 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 6 0;

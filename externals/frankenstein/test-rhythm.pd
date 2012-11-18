@@ -1,0 +1,5 @@
+#N canvas 0 0 458 308 12;
+#X obj 140 162 test;
+#X obj 140 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 1 0 0 0;

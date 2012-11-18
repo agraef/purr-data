@@ -1,0 +1,60 @@
+#N canvas 0 0 818 675 12;
+#X obj 134 121 widget img i1;
+#X obj 328 135 widget img img__guns #src /var/www/_/_i/p/_guns.gif
+;
+#X obj 328 167 widget img img__lunch #src /var/www/_/_i/p/_lunch.gif
+;
+#X obj 308 205 widget img img__roast #src /var/www/_/_i/p/_roast.gif
+;
+#X obj 328 231 widget img img__door #src /var/www/_/_i/p/_door.gif
+;
+#X obj 328 263 widget img img__fruit #src /var/www/_/_i/p/_fruit.gif
+;
+#X obj 328 295 widget img img__crop #src /var/www/_/_i/p/_crop.gif
+;
+#X obj 328 327 widget img img__twogirls #src /var/www/_/_i/p/_twogirls.gif
+#mouseover 1;
+#X obj 328 359 widget img img__345 #src /var/www/_/_i/p/_345.gif;
+#X obj 328 391 widget img img__machinery #src /var/www/_/_i/p/_machinery.gif
+;
+#X obj 175 252 route _roast _guns;
+#X obj 175 280 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 224 275 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 170 222 a2l;
+#X obj 172 174 print wtf;
+#X obj 189 131 a2l;
+#X obj 381 -297 widget img img_guns #src /var/www/_/_i/p/guns.jpg;
+#X obj 96 132 widget img img__pissers #src /var/www/_/_i/p/_pissers.gif
+;
+#X obj 96 164 widget img img__w3 #src /var/www/_/_i/p/_w3.gif;
+#X obj 96 196 widget img img__w1 #src /var/www/_/_i/p/_w1.gif;
+#X obj 96 228 widget img img__db #src /var/www/_/_i/p/_db.gif;
+#X obj 96 260 widget img img__w4 #src /var/www/_/_i/p/_w4.gif;
+#X obj 96 292 widget img img__scream #src /var/www/_/_i/p/_scream.gif
+;
+#X obj 96 324 widget img img__chair #src /var/www/_/_i/p/_chair.gif
+;
+#X obj 96 356 widget img img__dog #src /var/www/_/_i/p/_dog.gif;
+#X obj 96 388 widget img img__w2 #src /var/www/_/_i/p/_w2.gif;
+#X obj 96 420 widget img img__h #src /var/www/_/_i/p/_h.gif;
+#X obj 96 452 widget img img__shitters #src /var/www/_/_i/p/_shitters.gif
+;
+#X obj 96 484 widget img img__violation #src /var/www/_/_i/p/_violation.gif
+;
+#X obj 96 516 widget img img__melt #src /var/www/_/_i/p/_melt.gif;
+#X msg 206 326 #mouseover \$1;
+#X obj 209 303 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X connect 1 0 13 0;
+#X connect 3 0 13 0;
+#X connect 3 0 15 0;
+#X connect 7 0 14 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 13 0 10 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 30 0 7 0;
+#X connect 31 0 30 0;

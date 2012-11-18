@@ -1,0 +1,7 @@
+#N canvas 0 0 450 300 10;
+#X obj 174 121 rs-scratcher~;
+#X text 201 77 Playing with the block size \,;
+#X text 201 87 so everything's in the subpatch;
+#X obj 171 160 dac~;
+#X connect 0 0 3 0;
+#X connect 0 0 3 1;

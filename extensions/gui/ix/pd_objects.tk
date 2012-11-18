@@ -1,0 +1,730 @@
+variable obj
+set obj {
+
+    rect {
+	tags {
+	    box img
+	}
+	attributes {
+	    x 1 y 1
+	    color {123 232 4}
+	    zero_x 0
+	    zero_y 1
+	    zs_x 0.5
+	    zs_y 0.5
+	    img ""
+	}
+	hints {
+	    color rgb
+	    zero_x bool
+	    zero_y bool
+	    zs_x float 0.1 10
+	    zs_y float 0.1 10
+	}
+	init {
+	    $_ create rect $x $y $xx $yy -tags [concat $tags box]
+	    if {$img ne ""} {
+		package require Img
+		image create photo photo$id
+		$_ create image 0 0 -tags [concat $tags img]
+	    }
+	}
+	redraw {
+	    if {[expr $zero_x == 1]} {set zs_x [tr $_ x id $zs_x]; set xx [expr $x + $zs_x]; set x [expr $x - $zs_x]}
+	    if {[expr $zero_y == 1]} {set zs_y [tr $_ y id $zs_y]; set yy [expr $y + $zs_y]; set y [expr $y - $zs_y]}
+	    $_ coords $box $x $y $xx $yy
+	    $_ coords $img $x $y
+	    if {$img ne ""} {
+		photo$id configure -file $img
+		set photo photo$id
+	    } {set photo ""}
+	    $_ itemconfigure $img -image $photo
+	    $_ itemconfigure $box -fill $color -outline [color [lighten $rgb 0.3]] -width [expr $selected + 1]
+	}
+    }
+
+    colors {
+	attributes {ins 1 out 1 x 1 y 3}
+	tags {box subwin}
+	init {
+	    $_ create rect 0 0 0 0 -tags [concat $tags box]
+	    set p [frame $_.$id]
+	    $_ create window 0 0 -tags [concat $tags subwin] -window $_.$id -anchor nw
+	    set picker {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}
+	    image create photo colorpicker$id
+	    colorpicker$id configure -data $picker
+	    label $p.colors -bd 0
+	    entry $p.rgb -bd 0 -width 10 -font {{bitstream vera sans mono} 8}
+	    bind $p.colors <B1-Motion> "::pd::colors:pick $_ $id %x %y"
+	    bind $p.colors <1> "::pd::colors:pick $_ $id %x %y"
+	    grid $p.colors -sticky nsew
+	    grid $p.rgb -stick nsew
+	    $p.colors configure -image colorpicker$id
+	}
+	
+	redraw {
+	    $_ coords $box [expr $x - 10] $y $xx $yy
+	    $_ itemconfigure $box -fill $color
+	    $_ coords $subwin $x $y
+	    set w [expr $xx - $x]
+	    set h [expr $yy - $y]
+	    if {[expr abs($w - [$_.$id cget -width]) >= 1 || abs($h - [$_.$id cget -height]) >= 1]} {
+		$_.$id configure -width $w -height $h
+	    }
+	}
+
+	destroy {
+	    destroy $_.$id
+	}
+	methods {
+	    proc colors:pick {_ id x y} {
+		if {![expr $y <= 255 && $y >= 0 && $x >= 0 && $x <= 50]} {return}
+		set p $_.$id
+		set rgb [hsvToRgb [expr (255 - $y) / 255.] [expr $x <= 25 ? 1. : ($x - 50) / -25.] [expr $x <= 25 ? $x / 25. : 1.]]
+		$p.rgb delete 0 end
+		$p.rgb insert 0 $rgb
+		$p.rgb configure -bg [color $rgb]
+	    }
+
+	}
+    }
+
+    canvas {
+	attributes {
+	    color {222 222 222}
+	    sc orange
+	    mode edit
+	    sel {}
+	    xa 0 xb 100 ya 0 yb 100 xao 0 xbo 100 yao 0 ybo 100
+	}
+	init {
+	    canvas $_
+	    place $_ -relwidth 1 -relheight 1
+	    #	    bind $_ <Configure> "::pd::redraw $_ all"
+	    bind $_ <Enter> "focus $_"
+	    bind $_ <Key> "::pd::key $_ %k 1"
+	    bind $_ <KeyRelease> "::pd::key $_ %k 0"
+	    bind $_ <Motion> "::pd::hover $_ %x %y"
+	    bind $_ <4> "::pd::viewpoint $_ {action scroll units 1 axis x}"
+	    bind $_ <5> "::pd::viewpoint $_ {action scroll units -1 axis x}"
+	    bind $_ <Control-4> "::pd::viewpoint $_ {action zoom dir in axe x x %x y %y}"
+	    bind $_ <Control-5> "::pd::viewpoint $_ {action zoom dir out axe x x %x y %y}"
+	    bind $_ <Alt-4> "::pd::viewpoint $_ {action zoom dir in axe {x y} x %x y %y}"
+	    bind $_ <Alt-5> "::pd::viewpoint $_ {action zoom dir out axe {x  y} x %x y %y}"
+	    bind $_ <Control-Shift-4> "::pd::viewpoint $_ {action zoom dir in axe y x %x y %y}"
+	    bind $_ <Control-Shift-5> "::pd::viewpoint $_ {action zoom dir out axe y x %x y %y}"
+	    bind $_ <Shift-4> "::pd::viewpoint $_ {action scroll units -1 axis y}"
+	    bind $_ <Shift-5> "::pd::viewpoint $_ {action scroll units 1 axis y}"
+	    foreach m {"Control-" "" "Shift-" "Double-"} {
+		foreach bn {1 2 3} {
+		    set b [list [concat $bn first] [concat B${bn}-Motion motion] [concat ButtonRelease-$bn release]]
+		    foreach ba {0 1 2} {
+			bind $_ <$m[lindex [lindex $b $ba] 0]> "::pd::click [list [string tolower [string trimright $m -1]]] $bn [lindex [lindex $b $ba] 1] $_ %x %y %X %Y"}}}
+	    if {$::has_tkdnd == 1} {dnd bindtarget $_ text/plain <Drop> "::pd::drop $_ %D %x %y"}
+	}
+	redraw {
+	    set bd [expr {[$_ cget -bd] * 2}]
+	    $_ configure -bg $color -width [expr {[winfo width $_] + $bd}] -height [expr {[winfo height $_] + $bd}]
+	}
+	methods {
+	    proc item_pos {_ item r x y xx yy} {
+		update $_ $item $r [dict create x $x y $y xx $xx yy $yy] 1}
+
+	    proc pencil {_ a x y} {
+		variable ""
+		switch $a {
+		    motion {
+			item_pos $_ $($_:ci) abs [tr $_ x i $x] [tr $_ y i $y] [tr $_ x i $($_:fx)] [tr $_ y i $y]
+		    }
+		    first {set ($_:ci) [item_new $_ [dict create type rect id -]]}}}
+
+	    proc resize_canvas {_ a x y} {viewpoint $_ [dict create action resize x $x y $y]}
+
+	    proc item_v {_ a x y} {
+		variable ""
+		variable obj
+		foreach id [getsel $_] {
+		    set type [dict get $($_) $id type]
+		    if {[dict exists $obj $type defaults]} {
+			foreach local [dict keys [dict get $obj $type defaults]] {
+			    set $local [dict get $obj $type defaults $local]}}
+		    if {[dict exists $obj $type control Button-1]} {eval [dict get $obj $type control Button-1]}
+		}
+	    }
+
+	    proc move_canvas {_ a x y} {viewpoint $_ [dict create action move x $x y $y]}
+
+	    proc move_object {_ a x y} {
+		variable ""
+		set mx [tr $_ x d [expr {$x - $($_:cx)}]]
+		set my [tr $_ y d [expr {$y - $($_:cy)}]]
+		foreach item [getsel $_] {item_pos $_ $item rel $mx $my $mx $my}
+	    }
+
+	    proc resize_left {_ a x y} {item_resize $_ x $x $y}
+	    proc resize_right {_ a x y} {item_resize $_ xx $x $y}    
+	    proc resize_top {_ a x y} {item_resize $_ y $x $y}
+	    proc resize_bottom {_ a x y} {item_resize $_ yy $x $y}  
+	    proc resize_tl {_ a x y} {item_resize $_ x $x $y; item_resize $_ y $x $y}
+	    proc resize_tr {_ a x y} {item_resize $_ x $x $y; item_resize $_ yy $x $y}
+	    proc resize_bl {_ a x y} {item_resize $_ xx $x $y; item_resize $_ y $x $y}
+	    proc resize_br {_ a x y} {item_resize $_ xx $x $y; item_resize $_ yy $x $y}
+
+	    proc item_resize {_ e x y} {
+		variable ""
+		array set ax {x x xx x y y yy y}
+		set m [tr $_ $ax($e) d [expr $$ax($e) - $($_:c$ax($e))]]
+		item_mua $_ rel [dict create $e $m] 1
+	    }
+
+
+	    proc item_scale {_ a x y} {
+
+
+	    }
+
+	    proc click {m button action _ x y X Y} {
+		variable ""
+		set clicked [cleansel $_ [$_ find overlapping $x $y $x $y]]
+		set a $($_:submode)
+		switch $action {
+		    first {
+			foreach xy {x y}  {set ($_:f$xy) [set $xy]}
+			switch $button {
+			    1 {if {$m eq "control"} {
+				mode $_ pencil; pencil $_ $action $x $y
+			    } elseif {$m eq "double" || $m eq "shift"} {
+				if {[llength $clicked] > 0} {
+				    togglesel $_ $clicked 
+				} else {
+				    item_new $_ [dict create type sel id sel xa $x ya $y xb $x yb $y]
+				}
+			    } elseif {[$_ find withtag sel] ne ""} {
+				item_delete $_ sel
+			    } elseif {[llength [getsel $_]] > 1 && [llength $clicked] > 0 && [lsearch [getsel $_] $clicked] == -1} {
+				updatesel $_ $clicked} elseif {$a eq "cabledraw"} {eval $a $_ $action $x $y}}
+			    2 {if {$clicked ne ""} {mode $_ item_scale} {mode $_ resize_canvas}}
+			    3 {if {$clicked ne ""} {mode $_ item_v} {rmenu $_ $x $y $X $Y}}}}
+		    motion {
+#			puts "$a $_ $action $x $y"
+			eval $a $_ $action $x $y
+#			catch {eval $a $_ $action $x $y}
+		    }
+		    release {
+			switch $button {
+			    1 {if {$a eq "draw" || $a eq "cabledraw"} {eval $a $_ $action $x $y}}
+			    2 {mode $_ move_canvas}
+			    3 {mode $_ move_canvas}
+			}
+		    }
+		}
+		if {$clicked ne ""} {inspect $_ [lindex $clicked end]}
+		foreach xy {x y}  {set ($_:c$xy) [set $xy]}
+	    }
+
+	    proc hover {_ x y} {
+		variable ""
+		if {[$_ find withtag sel] ne ""} {
+		    update $_ sel abs [dict create xa $x ya $y] 1
+		} else {
+		    set clicked [$_ find overlapping [expr $x - 2]  [expr $y - 2] [expr $x + 2] [expr $y + 2]]
+		    set out 0
+		    foreach id $clicked {
+			if {[lindex [$_ itemcget $id -tags] 3] eq "out"} {
+			    set out 1
+			    set ($_:cable) [$_ itemcget $id -tags]
+			    break
+			}
+		    }
+		    if {$out == 1} {mode $_ cabledraw} else {
+			set clicked [cleansel $_ $clicked]
+			if {$clicked ne ""} {
+			    set c [lindex $clicked end]
+			    resize_modes $_ $x $y $c
+			    if {[llength [getsel $_]] <= 1} {updatesel $_ $c}
+			    inspect $_ $c
+			} else {
+			    mode $_ move_canvas
+			}
+		    }
+		}
+	    }
+	    
+	    proc resize_modes {_ x y id} {
+		variable ""
+		set d 3
+		set bbox [$_ bbox [$_ find withtag "i$id && box"]]
+		if {$bbox eq ""} {set bbox {0 0 0 0}}
+		lassign $bbox bx by bxx byy
+		set dx [expr {abs($bx - $x)}]
+		set dxx [expr {abs($bxx - $x)}]
+		set dy [expr {abs($by - $y)}]
+		set dyy [expr {abs($byy - $y)}]
+		if {$dx < $d && $dy < $d} {
+		    mode $_ resize_tl
+		} elseif {$dxx < $d && $dy < $d} {
+		    mode $_ resize_tr
+		} elseif {$dx < $d && $dyy < $d} {
+		    mode $_ resize_bl
+		} elseif {$dxx < $d && $dyy < $d} {
+		    mode $_ resize_br
+		} elseif {$dx < 5} {
+		    mode $_ resize_left
+		} elseif {$dxx < 5} {
+		    mode $_ resize_right
+		} elseif {$dy < 1} {
+		    mode $_ resize_top
+		} elseif {$dyy < 1} {
+		    mode $_ resize_bottom
+		} else {
+		    mode $_ move_object
+		}
+	    }
+
+	    proc mode {_ m} {
+		variable ""
+		array set cursor {pencil pencil move_canvas fleur move_object dotbox item_v box_spiral resize_canvas bogosity sel cross_reverse item_scale sizing resize_left left_side cabledraw circle resize_right right_side resize_top top_side resize_bottom bottom_side resize_tl top_left_corner resize_tr top_right_corner resize_bl bottom_left_corner resize_br bottom_right_corner}
+		set ($_:submode) $m
+		$_ configure -cursor $cursor($m)
+	    }
+	    proc mode_flip {_} {
+		variable ""
+		l $_ canvas mode
+		if {$mode eq "edit"} {set mode forward} {set mode edit}
+		up $_ canvas mode
+		redraw $_ {canvas grid}
+	    }
+
+	    proc drop {_ dropped x y} {
+		foreach d [split $dropped "\n"] {
+		    set x [tr $_ x i $x] 
+		    set y [tr $_ y i $y] 
+		    item_new $_ [dict create type sound id - g 1 v 1 x $x y $y xx $x yy $y filename [regsub -- {^file:[/]+} $d "/"]]
+		}
+	    }
+
+
+	    proc key {_ k b} {
+		#	puts $k
+		switch $b {
+		    1 {
+			switch $k {
+			    9 {mode_flip $_}
+			    22 {item_delete $_}
+			    38 {clip $_ selecta}
+			    53 {clip $_ cut}
+			    54 {clip $_ copy}
+			    55 {clip $_ paste}
+			    97 {viewpoint $_ {action reset}}
+			    98 {viewpoint $_ {action scroll units -1 axis y}}
+			    100 {viewpoint $_ {action scroll units -1 axis x}}
+			    102 {viewpoint $_ {action scroll units 1 axis x}}
+			    104 {viewpoint $_ {action scroll units 1 axis y}}
+			    107 {item_delete $_}
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+    sel {
+	attributes {
+	    class selrect
+	    outline {255 255 0}
+	    fill {255 128 0}
+	    width 0
+	    stipple gray12
+	}
+	init {
+	    $_ create rect $xa $xb $ya $yb -tags $tags
+	    mode $_ sel
+	}
+	redraw {
+	    updatesel $_ [cleansel $_ [$_ find overlapping $xa $ya $xb $yb]]
+	    $_ coords $item $xa $ya $xb $yb
+	    $_ itemconfigure $item -fill [color $fill] -stipple $stipple -outline [color $outline] -width $width
+	}
+	methods {
+	    proc sel {_ a x y} {
+		update $_ sel abs [dict create xb $x yb $y] 1
+	    }
+
+	    proc getsel {_} {
+		return [set [l $_ canvas sel]]
+	    }
+
+	    proc cleansel {_ sel} {
+		set clean {}
+		foreach item $sel {
+		    set class [lindex [$_ itemcget $item -tags] 0]
+		    if {$class eq "item" || $class eq "cable"} {lappend clean [lindex [$_ itemcget $item -tags] 2]}}
+		set clean [lsort -unique $clean]
+		return $clean
+	    }
+
+	    proc togglesel {_ d} {
+		variable ""
+		if {[lsearch [getsel $_] $d] < 0} {
+		    set sel [concat [getsel $_] $d]
+		} else {
+		    set sel [lsearch -inline -not -all [getsel $_] $d]
+		}
+		up $_ canvas sel
+		redraw $_ $d
+	    }
+
+	    proc updatesel {_ sel} {
+		variable ""
+		set os [getsel $_]
+		up $_ canvas sel
+		redraw $_  [lsort -unique [concat $os $sel]]
+	    }
+
+	}
+    }
+
+    gridlines {
+	attributes {
+	    class gridlines
+	    stipple gray50
+	    xq 10 yq 10 xm 15 ym 15
+	}
+	redraw {
+	    foreach items $item {$_ delete $items}
+	    array set ta {x n y w}
+	    array set tj {x center y left}
+	    array set igx {y width x height}
+	    l $_ canvas xa xb ya yb
+	    foreach xy {x y} {
+		set range [expr abs($${xy}b - $${xy}a)]
+		set nSlices [expr $range / $${xy}q]
+		if {$nSlices > [set ${xy}m]} {set factor [expr int($nSlices / ($${xy}m + 0.0) + 1)]} else {
+		    set factor [expr 1. / (int(1./($nSlices / ($${xy}m + 0.0) + 0.0)) + 0.0)]
+		}
+		set increment [expr $${xy}q * $factor]
+		for {set x [expr int($${xy}a / ($increment + 0.0) + 1)*($increment + 0.0)]} {[expr $${xy}a > $${xy}b ? $x >=  $${xy}b : $x <=  $${xy}b]} {set x [expr $${xy}a > $${xy}b ? $x - $increment : $x + $increment]} {
+		    set og [tr $_ $xy t $x]
+		    set invgeo [winfo $igx($xy) $_]
+		    switch $xy {
+			y {set coords [concat 0 $og $invgeo $og]}
+			x {set coords [concat $og 0 $og $invgeo]}}
+		    $_ lower [$_ create text [lrange $coords 0 1] -font {{Bitstream Vera Sans} 8} -fill [rc] -anchor $ta($xy) -text [string range $x 0 7] -justify $tj($xy) -tags $atags]
+		    $_ lower [$_ create line $coords -fill $color -stipple $stipple -tags $atags]
+		}
+	    }
+	}
+    }
+    subwin {
+	tags {
+	    box subwin
+	}
+	attributes {
+	    x 32 y 24
+	    ins 1
+	    outs 1
+	}
+	init {
+	    $_ create rect 0 0 0 0 -tags [concat $tags box]
+	    new $_.$id
+	    $_ create window 0 0 -tags [concat $tags subwin] -window $_.$id -anchor nw
+	}
+	redraw {
+	    $_ coords $box [expr $x - 10] $y $xx $yy
+	    $_ coords $subwin $x $y
+	    set w [expr $xx - $x]
+	    set h [expr $yy - $y]
+	    if {[expr abs($w - [$_.$id cget -width]) >= 1 || abs($h - [$_.$id cget -height]) >= 1]} {
+		$_.$id configure -width $w -height $h
+	    }
+	    $_ itemconfigure $box -fill $color
+	}
+    }
+    kbd {
+	attributes {
+	    ins 1 outs 1
+	    x 60
+	    y 12
+	    octaves 5
+	    color {0 0 0}
+	    color_bg {255 255 255}
+	    lp -1
+	}
+	tags {box subwin}
+	init {
+	    $_ create rect 0 0 0 0 -tags [concat $tags box]
+	    set path [frame $_.$id]
+	    $_ create window 0 0 -tags [concat $tags subwin] -window $_.$id -anchor nw
+	    set bw {0 1 0 1 0 0 1 0 1 0 1 0} ; set npl {0 1 1 2 2 3 4 4 5 5 6 6}
+	    set keys [dict create 1 [dict create fg $color_bg bg $rgb rw 0.1 rh 0.6 an "-anchor n"] 0 [dict create fg $rgb bg $color_bg rw [expr 1 / 7.] rh 1. an "; lower \$wk"]]
+	    for {set o 0} {$o < $octaves} {incr o} {
+		set w $path.f$o ; frame $w -bd 0 -height 66 -width 66
+		for {set on 0} {$on < 12} {incr on} {
+		    set wk $w.[expr $o * 12 + $on] ; set n [lindex $bw $on]
+		    eval "label $wk -bg [color [dict get $keys $n bg]] -fg [color [dict get $keys $n bg]] -bd 1 -relief raised;place $wk -relx [expr [lindex $npl $on] / 7.] -y 0 -relwidth [dict get $keys $n rw] -relheight [dict get $keys $n rh] [dict get $keys $n an]"
+		    bind $wk <1> "::pd::kbd_play $_ $id 0 1 %X %Y"; bind $wk <B1-Motion> [bind $wk <1>];bind $wk <ButtonRelease-1> "::pd::kbd_play $_ $id 0 0 %X %Y"; bind $wk <Enter> "::pd::kbd_play $_ $id 1 0 %X %Y"; bind $wk <3> "::pd::kbd_play $_ $id 1 1 %X %Y"; bind $wk <B3-Motion> [bind $wk <3>]; bind $wk <2> "::pd::kbd_off $_ $id $octaves"
+		}
+		place $w -y 0 -relheight 1.0 -relx [expr $o / $octaves.0] -relwidth [expr 1 / $octaves.0]	  
+	    }
+	}
+	redraw {
+	    $_ coords $box [expr $x - 10] $y $xx $yy
+	    $_ itemconfigure $box -fill $color
+	    $_ coords $subwin $x $y
+	    set w [expr $xx - $x]
+	    set h [expr $yy - $y]
+	    if {[expr abs($w - [$_.$id cget -width]) >= 1 || abs($h - [$_.$id cget -height]) >= 1]} {
+		$_.$id configure -width $w -height $h
+	    }
+	}
+	methods {
+	    proc kbd_play {_ id m b x y} {
+		l $_ $id lp
+		foreach a {{rs {0 sunken 1 raised}} {v {0 0 1 {($y - [winfo rooty $w]) / ([winfo height $w] + 0.0)}}}} {array set [lindex $a 0] [lindex $a 1]}
+		set w [winfo containing $x $y]
+		if {$m != 1 && $lp != -1 && $lp ne $w} {kbd_action $_ $id $lp 0}
+		if {[$w cget -relief] eq $rs($b)} {kbd_action $_ $id $w [eval expr $v($b)]}
+		set lp $w
+		up $_ $id lp
+	    }
+
+	    proc kbd_action {_ id w v} {
+		if {$v == 0} {set relief raised} {set relief sunken}
+		$w config -relief $relief
+#		pd [concat $t.rp _cb [winfo name $w] $v \;]
+	    }
+
+	    proc kbd_off {_ id octaves} {
+		for {set o 0} {$o < $octaves} {incr o} {	
+		    for {set on 0} {$on < 12} {incr on} {
+			set w $_.$id.f$o.[expr $o * 12 + $on]
+			if {[$w cget -relief] eq "sunken"} {kbd_action $_ $id $w 0}}}}
+	}
+    }
+    
+    xy {
+	tags {
+	    box loc
+	}
+	attributes {
+	    x 10 y 10
+	    ins 1
+	    outs 1
+	}
+	init {
+	    $_ create rect 0 0 0 0 -tags [concat $tags box] -fill gray90
+	    $_ create rect 0 0 0 0 -tags [concat $tags loc] -fill red
+	}
+	redraw {
+	    $_ coords $box $x $y $xx $yy
+	    $_ coords $loc $x $y [expr $x + ($xx - $x) / 12.] [expr $y + ($yy - $y)/12.]
+	    $_ itemconfigure $box -outline $color
+	}
+    }
+
+    cable {
+	attributes {
+	    class cable
+	    x 0 y 0
+	    from ""
+	    to ""
+	    arrow last
+	    width 1
+	}
+	init {
+	    $_ create line 0 0 0 0 -tags $tags -fill green -arrow $arrow -width $width
+	}
+	redraw {
+	    if {[llength $from] == 2 } {
+		lassign [ioloc $_ [lindex $from 0] [lindex $from 1] outs] x y
+	    }
+	    if {[llength $to] == 2 } {
+		lassign [ioloc $_ [lindex $to 0] [lindex $to 1] ins] xx yy
+	    }
+	    $_ coords $item $x $y $xx $yy
+	}
+	control {
+	    
+	}
+	methods {
+	    proc cabledraw {_ a x y} {
+		variable ""
+		lassign $($_:cable) class iid id io ioid ionum cur
+		switch $a {
+		    first {
+			set ($_:cable:id) [item_new $_ [dict create type cable id - from [list $id $ionum]]]
+		    }
+		    motion {
+			update $_ $($_:cable:id) abs [dict create xx [tr $_ x i $x] yy [tr $_ y i $y]] 1
+		    }
+		    release {}
+		}
+	    }
+	}
+    }
+
+    io {
+	attributes {
+	    class io
+	    width 1
+	    height 0.3
+	    incolor {255 0 0}
+	    outcolor {0 0 255}
+	}
+	init {
+	    l $_ $id ins outs
+	    foreach io {in out} {
+		for {set i 0} {$i < [set ${io}s]} {incr i} {
+		    set port [$_ create rect $x $y $x $y -tags [concat $tags $io $io$i $i] -width 0 -fill [color [dict get $obj io attributes ${io}color]]]
+#		    $_ bind $port <1> "puts lolport"
+		}
+	    }
+	}
+	redraw {
+	    set w [tr $_ x id [dict get $obj io attributes width]]
+	    set h [tr $_ x id [dict get $obj io attributes height]]
+	    foreach io {in out} {
+		for {set i 0} {$i < [set ${io}s]} {incr i} {
+		    lassign [ioloc $_ $id $i ${io}s] x y
+		    $_ coords [$_ find withtag "$tags && $io$i"]  [expr $x - $w] [expr $y - $h] [expr $x + $w] [expr $y + $h]
+		}
+	    }
+	}
+	methods {
+	    proc ioloc {_ id n io} {
+		variable ""
+		foreach c {x xx y yy} {
+		    set $c [tr $_ [string range $c 0 0] t [dict get $($_) $id $c]]}
+		if {$io eq "ins"} {set py $y} {set py $yy}
+		set px [expr ($n / ([dict get $($_) $id $io] + 0.0)) * ($xx - $x + 0.0) + $x]
+		return [list $px $py]
+	    }
+	}
+    }
+
+    button {
+	tags {box button}
+	attributes {x 3 y 3 ins 1 outs 1}
+	init {
+	    $_ create rect 0 0 0 0 -tags [concat $tags box] -width 0
+	    $_ create oval 0 0 0 0 -tags [concat $tags button]
+	}
+	redraw {
+	    $_ itemconfigure $box -fill $color -width $selected -outline [color $rgb]
+	    $_ coords $box $x $y $xx $yy
+	    $_ coords $button $x $y $xx $yy
+	}
+	methods {
+	    proc button:flash {} {
+		
+	    }
+	}
+    }
+
+     msg {
+	tags {
+	    box txt
+	}
+	attributes {
+	    x 2 y 2
+	    ins 1
+	    outs 1
+	    msg msg
+	}
+	init {
+	    $_ create polygon 0 0 0 0 -tags [concat $tags box]
+	    $_ create text 0 0 -tags [concat $tags txt] -fill white -anchor nw -justify left
+	}
+	redraw {
+	    $_ coords $txt $x $y
+	    $_ itemconfigure $box -fill $color	  
+	    $_ itemconfigure $txt -font [list {bitstream vera sans} [expr int($sy)]] -text $msg
+	    lassign [$_ bbox $txt] x y xx yy
+	    set flare [expr $xx + ($xx - $x) / 12.]
+	    $_ coords $box $x $y $flare $y $xx [expr $y + ($yy - $y)/2.] $flare $yy $x $yy 
+#	    foreach z {x xx y yy} {set $z [tr $_ [string range $z 0 0] i [set $z]]}
+#	    up $_ $id x y xx yy
+	}
+	 methods {
+	     proc msg_updatetext {_} {
+		 
+	     }
+	 }
+    }
+
+    slider {
+	tags {
+	    pos box
+	}
+	attributes {
+	    x 2 y 10
+	    min 1
+	    v 48
+	    max 69
+	    ins 1
+	    outs 1
+	}
+	init {
+	    $_ create rect 0 0 0 0 -tags [concat $tags box] -fill $color
+	    $_ create rect 0 0 0 0 -tags [concat $tags pos] -fill green -width 0
+	}
+	redraw {
+	    $_ coords $box $x $y $xx $yy
+	    if {[expr ($xx - $x) > ($yy - $y)]} {set orient h} {set orient v}
+	    set v [expr ($v - $min + 0.) / ($max - $min + 0.)]
+	    switch $orient {
+		v {
+		    set loc [expr $y + ($yy - $y) * $v]
+		    set coords [concat $x $loc $xx $loc]
+		}
+		h {
+		    set loc [expr $x + ($xx - $x) * $v]
+		    set coords [concat $loc $y $loc $yy]
+		}
+	    }
+	    $_ coords $pos $coords
+	}
+	control {
+	    Button-1 {
+	        update $_ $id rel [dict create v [expr {($x - $($_:cx)) / 100.0 * ($max - $min + 0.)}]] 1
+	    }
+	}
+    }
+
+    sound {
+	tags {
+	    tl tlr tf tfr r w
+	}
+	attributes {
+	    ins 0
+	    outs 0
+	}
+	init {
+	    snack::sound s$id
+	    set filename [dict get $($_) $id filename]
+	    s$id read $filename
+	    $_ create path [::tkpath::coords rect 0 0 0 0 -rx 3 -ry 3] -tags [concat $tags r] -strokewidth 0 -fill $color -fillopacity 0.08
+	    $_ create waveform 0 0 -tags [concat $tags w] -sound s$id -fill white
+	    set length [expr [s$id length] / ($($_:samplerate) + 0.0) * 1000]
+	    update $_ $id abs [dict create xx [expr [dict get $($_) $id x] + $length]] 0
+	    $_ create text 0 0 -tags [concat $tags tl] -font {{bitstream vera sans} 8} -fill HotPink -anchor nw -justify left -text "[string range $length 0 10] s"
+	    $_ create rectangle 0 0 0 0 -tags [concat $tags tlr] -fill LightGreen -width 0
+	    $_ raise $tl
+	    $_ create text 0 0 -tags [concat $tags tf] -font {{bitstream vera sans} 8} -fill NavyBlue -anchor ne -justify right -text $filename
+	    $_ create rectangle 0 0 0 0 -tags [concat $tags tfr] -fill gray90 -width 0
+	    $_ raise $tf
+	}
+	redraw {
+	    set ro 6
+	    $_ coords $r [::tkpath::coords rect $x $y $sx $sy -rx $ro -ry $ro]
+	    $_ itemconfigure $r -fillopacity [dict get $($_) $id v] -fill $color
+	    $_ coords $w $x $y
+	    $_ itemconfigure $w -width $sx -height [expr int($sy)]
+	    $_ coords $tl [expr $x + 4] [expr $y + 4]
+	    $_ coords $tlr [$_ bbox $tl]
+	    $_ coords $tf [expr $x + $sx] [expr $y + 4]
+	    $_ coords $tfr [$_ bbox $tf]
+	}
+    }
+
+}

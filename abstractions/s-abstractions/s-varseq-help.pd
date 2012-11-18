@@ -1,0 +1,25 @@
+#N struct 2302template float x float y float z;
+#N struct 2302puck float x;
+#N canvas 0 0 450 300 10;
+#X floatatom 20 188 5 0 0 0 - - -;
+#X floatatom 20 276 5 0 0 0 - - -;
+#X obj 20 145 loadbang;
+#X msg 20 166 0;
+#X text 48 167 Click me to reset the canvas (for some reason);
+#X text 13 7 varseq is short for 'variable sequencer' because it's
+a simple sequencer with a variable length. Creation arguments are [name]
+[sections] [section length] [timer name]. Name is the SSSAD name and
+unique identifier. Sections indicates how many sections there are in
+the whole loop \, and section length indicates how many beats in each
+section. To set a value click on an orange rectangle and drag it upwards.
+The value can be set between zero and one. To select a beat in the
+loop send a number in the left inlet \, or send a number to the third
+argument (timer name) if supplied.;
+#X floatatom 318 208 5 0 0 0 - - -;
+#X obj 318 227 s tick;
+#X obj 20 210 s-varseq teh 4 5 tick;
+#X connect 0 0 8 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 6 0 7 0;
+#X connect 8 0 1 0;

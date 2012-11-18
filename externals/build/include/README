@@ -1,0 +1,9 @@
+
+The complete headers need to be here.  "externals/build/include" is
+mostly there for building the debian package.  All of the source code for
+building the externals package needs to be included within the "externals"
+directory in order for the Debian auto-builders to build properly.
+
+The other option would be to make a debian source package for Pd, then we
+could get rid of "externals/build/include".
+ 

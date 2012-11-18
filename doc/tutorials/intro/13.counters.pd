@@ -1,0 +1,42 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty counters 20 12 0 24 -228992
+-66577 0;
+#X obj 156 362 cnv 15 100 60 empty empty empty 20 12 0 14 -261039 -66577
+0;
+#X obj 174 382 f;
+#X obj 209 382 + 1;
+#X obj 157 219 float;
+#X floatatom 120 246 5 0 0 0 - - -;
+#X msg 121 137 1;
+#X obj 120 219 +;
+#X msg 157 189 0;
+#X msg 133 160 -1;
+#X text 167 138 increment;
+#X text 172 161 decrement;
+#X text 195 187 reset;
+#X floatatom 346 244 5 0 0 0 - - -;
+#X msg 378 180 0;
+#X text 395 137 increment;
+#X obj 346 216 float;
+#X obj 404 216 + 1;
+#X msg 347 138 bang;
+#X text 278 377 DANGER! infinite loop!;
+#X text 20 78 Counters are used a lot when programming Pd. Here are
+two examples of simple counters that you will see frequently.;
+#X text 416 180 reset;
+#X text 20 277 Pd is designed to be as flexible and open as possible.
+This means that it will let you crash your computer. For example \,
+never start a counter like this \, it could crash your computer!;
+#X connect 2 0 3 0;
+#X connect 3 0 2 0;
+#X connect 4 0 7 1;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 7 0 5 0;
+#X connect 8 0 4 0;
+#X connect 9 0 7 0;
+#X connect 14 0 16 1;
+#X connect 16 0 13 0;
+#X connect 16 0 17 0;
+#X connect 17 0 16 1;
+#X connect 18 0 16 0;

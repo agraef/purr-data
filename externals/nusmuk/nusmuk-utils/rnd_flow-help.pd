@@ -1,0 +1,27 @@
+#N canvas 579 67 428 392 10;
+#X obj 27 70 metro 20;
+#X obj 27 53 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X floatatom 68 92 5 0 0 0 - - -;
+#X floatatom 109 108 5 0 0 0 - - -;
+#X floatatom 150 124 5 0 0 0 - - -;
+#X obj 27 211 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 6171 1;
+#X obj 27 171 + 1;
+#X obj 27 190 * 64;
+#X obj 27 33 loadbang;
+#X obj 242 308 filtered_random;
+#X text 241 287 related to :;
+#X text 113 90 amplitude max of each step;
+#X text 155 107 low pass filter of the output;
+#X text 195 124 high pass filter of the output;
+#X obj 27 152 rnd_flow 0.1 20 20;
+#X connect 0 0 14 0;
+#X connect 1 0 0 0;
+#X connect 2 0 14 1;
+#X connect 3 0 14 2;
+#X connect 4 0 14 3;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 8 0 1 0;
+#X connect 14 0 6 0;

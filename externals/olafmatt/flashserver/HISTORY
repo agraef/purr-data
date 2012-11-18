@@ -1,0 +1,58 @@
+version history of 'flashserver' 
+
+v 0.2h (2003/05/21):
+- changed includes to compile with Pd 0.37-test4
+
+v 0.2g (2003/04/21):
+- added 'clientXML' to send XML data to client number
+- added 'broadcastXML' to send XML data to all clients
+- now sending with MSG_DONTWAIT|MSG_NOSIGNAL option on UNIX to avoid triggering
+  Pd's error handling in case other end drops connection
+- moved send stuff into seperate routine to avoid having code dublicated
+
+v 0.2f (2003/04/17):
+- fixed a bug in 'broadcast' function
+- some code optimizations
+
+v 0.2e (2003/04/15):
+- added 'kick' function to remove clients
+- now checking for open connections on exit (and closing them)
+- fixed a bug in open function when used with openpanel
+- deleted some unused code
+
+v 0.2d (2002/09/15):
+- fixed a bug in 'broadcast' method
+- cleaned up code to avoid compilation warnings on OS X
+- added some more inludes for Linux
+
+v 0.2c (2002/08/26):
+- 'prepend mode' can be set using third creation argument
+- BUGFIX: if number of clients exceeds max. client number specified, flashserver
+  refuses to accept connections from new clients and _closes_the_socket_
+- makefile and binary for Mac OS X
+
+v 0.2b (2002/08/25):
+- added "prepend" method: if turned on the client allocation number will be
+  prepended to the data output. use [route] to get data from individual clients.
+
+v 0.2a (not released):
+- maximum number of clients can be limited using second creation argument,
+  default is 256
+- added outlet for client allocation number: every client get's a unique number
+  assigned that is between 1 and the maximum number of clients
+
+v 0.1c (2002/08/09):
+- added full XML support for send and receive, the supported XML data format 
+  looks like this: <data symbol="<symbol>" value="<float>" />
+- changed message passing from type binbuf to string
+- FUDI-type messages no longer need the leading ';'
+- better validity checking of input type (HTTP requests, XML, FUDI)
+
+v 0.1b (2002/08/09):
+- opens *.exe files (e.g. Flash Projektors) and searches for them
+  in several directories
+- ignores 'empty' data pakets (i.e. semi-only messages)
+- KNOWN BUGS: 'open' function not jet tested under LINUX
+
+v 0.1 (2002/08/07):
+- initial release

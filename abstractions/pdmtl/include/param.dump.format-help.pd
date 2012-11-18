@@ -1,0 +1,43 @@
+#N canvas 51 136 607 394 10;
+#X msg 82 95 top;
+#X msg 80 122 global;
+#X obj 42 196 print;
+#X text 80 195 <- You can parse the output with [flow.@parse];
+#X floatatom 347 239 5 0 0 0 - - -;
+#X msg 347 258 param1 \$1;
+#X floatatom 346 305 5 0 0 0 - - -;
+#X msg 346 324 param1 \$1;
+#X msg 8 162 ---;
+#X text 41 13 Description: Dumps the format of the values of a param.group
+or multiple param.groups;
+#X text 132 62 Sending a group's id will only output that group's parameter
+formats;
+#X text 116 90 Sending top will output the parameter formats of all
+the groups that have the same "top" patch as param.dump;
+#X text 128 119 Sending global will output the parameter formats of
+ALL the groups;
+#X obj 42 162 param.dump.format;
+#X msg 42 70 dpdf1;
+#X msg 88 70 dpdf2;
+#X obj 347 283 medias/param.atom.template @id dpdf1;
+#X obj 346 346 medias/param.atom.template @id dpdf2;
+#X text 69 236 -- The param.atom.format --;
+#X text 10 253 The format is identified by the last character:;
+#X text 18 267 f: single float;
+#X text 19 280 s: symbol;
+#X text 18 293 c: choice list;
+#X text 20 307 a: anything else (unsuported);
+#X connect 0 0 8 0;
+#X connect 0 0 13 0;
+#X connect 1 0 8 0;
+#X connect 1 0 13 0;
+#X connect 4 0 5 0;
+#X connect 5 0 16 0;
+#X connect 6 0 7 0;
+#X connect 7 0 17 0;
+#X connect 8 0 2 0;
+#X connect 13 0 2 0;
+#X connect 14 0 8 0;
+#X connect 14 0 13 0;
+#X connect 15 0 8 0;
+#X connect 15 0 13 0;

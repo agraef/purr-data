@@ -1,0 +1,48 @@
+Index: process.c
+===================================================================
+--- process.c	(revision 201)
++++ process.c	(working copy)
+@@ -249,6 +249,9 @@
+ 			                                            (uint16_t)data[1];
+ 			motionplus_mesg->angle_rate[CWIID_PSI]   = ((uint16_t)data[3] & 0xFC)<<6 |
+ 			                                            (uint16_t)data[0];
++			motionplus_mesg->low_speed[CWIID_PHI]    = ((uint8_t)data[3] & 0x01);
++			motionplus_mesg->low_speed[CWIID_THETA]  = ((uint8_t)data[4] & 0x02)>>1;
++			motionplus_mesg->low_speed[CWIID_PSI]    = ((uint8_t)data[3] & 0x02)>>1;
+ 		}
+ 		break;
+ 	}
+Index: state.c
+===================================================================
+--- state.c	(revision 201)
++++ state.c	(working copy)
+@@ -85,6 +85,9 @@
+ 			memcpy(wiimote->state.ext.motionplus.angle_rate,
+ 			       mesg->motionplus_mesg.angle_rate,
+ 			       sizeof wiimote->state.ext.motionplus.angle_rate);
++			memcpy(wiimote->state.ext.motionplus.low_speed,
++			       mesg->motionplus_mesg.low_speed,
++			       sizeof wiimote->state.ext.motionplus.low_speed);
+ 			break;
+ 		case CWIID_MESG_ERROR:
+ 			wiimote->state.error = mesg->error_mesg.error;
+Index: cwiid.h
+===================================================================
+--- cwiid.h	(revision 201)
++++ cwiid.h	(working copy)
+@@ -263,6 +263,7 @@
+ struct cwiid_motionplus_mesg {
+ 	enum cwiid_mesg_type type;
+ 	uint16_t angle_rate[3];
++	uint8_t low_speed[3];
+ };
+ 
+ struct cwiid_error_mesg {
+@@ -307,6 +308,7 @@
+ 
+ struct motionplus_state {
+ 	uint16_t angle_rate[3];
++	uint8_t low_speed[3];
+ };
+ 
+ union ext_state {

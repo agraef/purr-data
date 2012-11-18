@@ -1,0 +1,299 @@
+#N canvas 1 48 871 545 10;
+#X text 196 136 change harmony;
+#X msg 278 330 1 0 1 1 0 1 0 1 1 0 1 0;
+#X msg 283 284 0 2 3 5 7 8 10;
+#X text 287 307 active/inactive pitch classes;
+#X text 288 263 current pitch classes;
+#X msg 379 25 Harmony;
+#X text 53 159 select rhythm;
+#N canvas 63 44 340 273 register 0;
+#X floatatom 131 141 0 0 0 0 - - -;
+#X obj 38 207 outlet;
+#X obj 38 171 brownian 3 8 0.3;
+#X text 179 142 brown factor;
+#X msg 131 107 0.3;
+#X msg 163 107 0;
+#X msg 194 107 1;
+#X obj 131 76 sel 0 1;
+#X obj 131 46 inlet;
+#X obj 38 46 inlet;
+#X connect 0 0 2 3;
+#X connect 2 0 1 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 4 0;
+#X connect 7 1 5 0;
+#X connect 7 2 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 2 0;
+#X restore 143 312 pd register;
+#X floatatom 143 340 0 0 0 0 - - -;
+#X obj 75 394 pitch2note 4;
+#X text 482 134 < open to construct a specific start scale.;
+#X obj 171 136 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 278 203 show;
+#X obj 75 263 permutate;
+#X obj 171 173 scale-changer;
+#X obj 75 234 bng 15 50 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#N canvas 101 87 506 367 rhythm 0;
+#N canvas 203 143 578 209 chords 0;
+#X obj 23 95 repchord-rhythm 100 1000 12 6 0.8 0.2;
+#X obj 23 37 inlet;
+#X obj 23 131 outlet;
+#X floatatom 458 68 0 0 0 0 - - -;
+#X floatatom 385 68 0 0 0 0 - - -;
+#X floatatom 313 68 0 0 0 0 - - -;
+#X floatatom 240 68 0 0 0 0 - - -;
+#X floatatom 168 68 0 0 0 0 - - -;
+#X floatatom 95 68 0 0 0 0 - - -;
+#X obj 23 68 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 95 52 min.ED;
+#X text 168 52 max.ED;
+#X text 239 52 ED-values;
+#X text 451 39 periodicity of max.ED;
+#X text 379 39 periodicity of min.ED;
+#X text 306 39 max. chord size;
+#X connect 0 0 2 0;
+#X connect 1 0 9 0;
+#X connect 3 0 0 6;
+#X connect 4 0 0 5;
+#X connect 5 0 0 4;
+#X connect 6 0 0 3;
+#X connect 7 0 0 2;
+#X connect 8 0 0 1;
+#X connect 9 0 0 0;
+#X restore 265 136 pd chords;
+#X obj 151 108 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#N canvas 106 198 524 257 rubato 0;
+#X obj 35 150 outlet;
+#X text 406 150 chosen ED;
+#X text 234 150 row index;
+#X floatatom 196 150 0 0 0 0 - - -;
+#X floatatom 358 150 0 0 0 0 - - -;
+#X obj 35 53 inlet;
+#X obj 35 87 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 275 91 0 0 0 0 - - -;
+#X floatatom 355 91 0 0 0 0 - - -;
+#X floatatom 195 91 0 0 0 0 - - -;
+#X floatatom 115 91 0 0 0 0 - - -;
+#X text 194 76 max. ED;
+#X text 115 76 min. ED;
+#X text 355 76 brownian factor;
+#X text 275 76 ED-values;
+#X text 325 201 max. ED;
+#X text 193 201 min. ED;
+#X obj 196 180 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 35 116 brown-rhythm 75 1000 24 0.07;
+#X connect 3 0 17 0;
+#X connect 5 0 6 0;
+#X connect 6 0 18 0;
+#X connect 7 0 18 3;
+#X connect 8 0 18 4;
+#X connect 9 0 18 2;
+#X connect 10 0 18 1;
+#X connect 18 0 0 0;
+#X connect 18 1 3 0;
+#X connect 18 2 4 0;
+#X restore 151 136 pd rubato;
+#X obj 38 108 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#N canvas 63 44 278 222 pulsation 0;
+#X obj 39 53 inlet;
+#X text 158 86 speed;
+#X obj 39 147 outlet;
+#X obj 39 112 metro 250;
+#X floatatom 109 85 0 0 0 0 - - -;
+#X obj 39 85 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X connect 0 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 1;
+#X connect 5 0 3 0;
+#X restore 38 136 pd pulsation;
+#X obj 38 178 outlet;
+#X obj 38 42 inlet;
+#X obj 265 108 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 135 88 unpack 0 0 0;
+#X msg 145 23 1 0 0;
+#X msg 146 64 0 0 1;
+#X msg 146 43 0 1 0;
+#X msg 195 65 0 0 0;
+#X obj 38 70 select 1 2 3;
+#X connect 0 0 5 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 6 0 13 0;
+#X connect 7 0 0 0;
+#X connect 8 0 3 0;
+#X connect 8 1 1 0;
+#X connect 8 2 7 0;
+#X connect 9 0 8 0;
+#X connect 10 0 8 0;
+#X connect 11 0 8 0;
+#X connect 12 0 8 0;
+#X connect 13 0 9 0;
+#X connect 13 1 11 0;
+#X connect 13 2 10 0;
+#X connect 13 3 12 0;
+#X restore 75 205 pd rhythm;
+#N canvas 63 44 363 294 start-scale 0;
+#X obj 44 36 inlet;
+#X obj 44 63 sel 0 1 2 3 4 5;
+#X msg 44 96 0 1 0 1 0 0 1 0 1 0 1 0;
+#X msg 60 117 1 0 1 0 1 1 0 1 0 1 0 1;
+#X msg 76 140 1 0 1 1 0 1 0 1 1 0 1 0;
+#X msg 94 162 1 1 1 1 1 1 1 1 1 1 1 1;
+#X obj 246 36 inlet;
+#X msg 109 189 1 0 1 1 0 1 1 0 1 1 0 1;
+#X obj 44 232 outlet;
+#X msg 124 213 1 0 0 1 1 0 0 1 1 0 0 1;
+#X msg 179 59 0;
+#X obj 179 36 loadbang;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 1 2 4 0;
+#X connect 1 3 5 0;
+#X connect 1 4 7 0;
+#X connect 1 5 9 0;
+#X connect 2 0 8 0;
+#X connect 3 0 8 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 9 0 8 0;
+#X connect 10 0 1 0;
+#X connect 11 0 10 0;
+#X restore 341 143 pd start-scale;
+#X obj 171 211 show;
+#N canvas 396 226 538 308 construct-scale 0;
+#X msg 410 153 0;
+#X msg 410 103 clear;
+#X obj 79 231 outlet;
+#X obj 79 200 pack 0 0 0 0 0 0 0 0 0 0 0 0;
+#X obj 249 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 79 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 100 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 121 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 142 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 185 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 206 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 227 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 312 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 291 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 164 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 270 170 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X text 52 25 Type in the desired scale...;
+#X text 134 117 pitch class;
+#X obj 49 116 t b a;
+#X floatatom 49 97 5 0 0 0 - - -;
+#X text 397 84 clear scale;
+#X obj 79 141 sel 0 1 2 3 4 5 6 7 8 9 10 11;
+#X obj 49 74 hradio 15 1 0 12 empty empty empty 0 -6 0 8 -262144 -1
+-1 7;
+#X connect 0 0 5 0;
+#X connect 0 0 6 0;
+#X connect 0 0 7 0;
+#X connect 0 0 8 0;
+#X connect 0 0 14 0;
+#X connect 0 0 9 0;
+#X connect 0 0 10 0;
+#X connect 0 0 11 0;
+#X connect 0 0 4 0;
+#X connect 0 0 15 0;
+#X connect 0 0 13 0;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 8;
+#X connect 5 0 3 0;
+#X connect 6 0 3 1;
+#X connect 7 0 3 2;
+#X connect 8 0 3 3;
+#X connect 9 0 3 5;
+#X connect 10 0 3 6;
+#X connect 11 0 3 7;
+#X connect 12 0 3 11;
+#X connect 13 0 3 10;
+#X connect 14 0 3 4;
+#X connect 15 0 3 9;
+#X connect 18 0 3 0;
+#X connect 18 1 21 0;
+#X connect 19 0 18 0;
+#X connect 21 0 5 0;
+#X connect 21 1 6 0;
+#X connect 21 2 7 0;
+#X connect 21 3 8 0;
+#X connect 21 4 14 0;
+#X connect 21 5 9 0;
+#X connect 21 6 10 0;
+#X connect 21 7 11 0;
+#X connect 21 8 4 0;
+#X connect 21 9 15 0;
+#X connect 21 11 13 0;
+#X connect 21 12 12 0;
+#X connect 22 0 19 0;
+#X restore 466 116 pd construct-scale;
+#X text 19 53 Changes one single pitch of a given scale whenever you
+send a bang to the left inlet. A start scale must be sent to the right
+inlet frist - note its special format: a list of size 12 consisting
+only of 0 and 1 where 1 means an active pitch class and 0 a inactive
+one.;
+#X text 18 24 scale-changer;
+#X text 15 477 1996 by Karlheinz Essl;
+#X obj 75 179 hradio 15 1 0 4 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X obj 341 124 hradio 15 1 0 6 empty empty select_start_scale 0 -6
+0 8 -262144 -1 -1 2;
+#X obj 215 292 hradio 15 1 0 3 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X obj 75 434 play2 127 500 1 1;
+#X obj 75 286 t a a;
+#X floatatom 183 403 5 0 0 0 - - -;
+#X obj 143 365 + 0;
+#X floatatom 173 367 5 0 0 1 octave - -;
+#X connect 7 0 8 0;
+#X connect 8 0 29 0;
+#X connect 9 0 26 0;
+#X connect 11 0 14 0;
+#X connect 12 0 1 0;
+#X connect 13 0 27 0;
+#X connect 14 0 18 0;
+#X connect 14 0 13 1;
+#X connect 14 1 12 0;
+#X connect 15 0 13 0;
+#X connect 16 0 15 0;
+#X connect 17 0 14 1;
+#X connect 18 0 2 0;
+#X connect 19 0 17 1;
+#X connect 23 0 16 0;
+#X connect 24 0 17 0;
+#X connect 25 0 7 1;
+#X connect 27 0 9 0;
+#X connect 27 1 7 0;
+#X connect 28 0 26 2;
+#X connect 29 0 9 1;
+#X connect 30 0 29 1;

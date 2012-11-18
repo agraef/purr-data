@@ -1,0 +1,49 @@
+#N canvas 366 312 576 432 10;
+#X text 78 26 list-sect;
+#N canvas 269 263 450 300 sbow 0;
+#X obj 120 85 list prepend set;
+#X obj 120 109 list trim;
+#X obj 120 63 inlet;
+#X obj 120 131 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X restore 114 236 pd sbow;
+#X msg 114 261;
+#X obj 114 120 t b b;
+#X obj 114 101 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 114 196 list-sect;
+#X obj 123 218 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 172 167 5 4 foo 3 2;
+#X msg 114 144 1 2 3 4 foo bar 2;
+#X obj 114 318 list-unique;
+#N canvas 269 263 450 300 sbow 0;
+#X obj 120 85 list prepend set;
+#X obj 120 109 list trim;
+#X obj 120 63 inlet;
+#X obj 120 131 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X restore 114 361 pd sbow;
+#X obj 123 343 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 114 382;
+#X text 113 49 outputs the elements that are common to both input lists.
+Left inlet determines order and number of items in result. Duplicates
+are kept!;
+#X text 127 292 To remove duplicates use [list-unique];
+#X connect 1 0 2 0;
+#X connect 2 0 9 0;
+#X connect 3 0 8 0;
+#X connect 3 1 7 0;
+#X connect 4 0 3 0;
+#X connect 5 0 1 0;
+#X connect 6 0 1 0;
+#X connect 7 0 5 1;
+#X connect 8 0 5 0;
+#X connect 9 0 10 0;
+#X connect 10 0 12 0;
+#X connect 11 0 10 0;

@@ -1,0 +1,28 @@
+#N canvas 191 100 545 439 10;
+#X text 55 80 argument/right inlet: value;
+#X text 55 63 change the offset to a vasp (relatively);
+#X obj 41 11 cnv 15 15 15 empty empty vasp.offset+ 0 10 1 14 -262144
+-1 0;
+#X text 57 323 abbreviation;
+#X floatatom 149 151 0 0 0;
+#X msg 58 234 vasp -1 bufoffsd1 300 0;
+#X obj 58 201 prepend set;
+#X obj 58 177 vasp.offset+ 300;
+#X msg 58 128 vasp bufoffsd1;
+#X floatatom 336 151 0 0 0;
+#X msg 245 234 vasp -1 bufoffs+1 520 0 bufoffsd2 400 0;
+#X obj 245 201 prepend set;
+#X obj 245 174 vasp.offset+ 300;
+#X obj 138 324 vasp.o+;
+#X msg 245 128 vasp bufoffsd1 220 bufoffsd2 100;
+#X obj 359 284 table bufoffsd1 88200;
+#X obj 359 305 table bufoffsd2 88200;
+#X obj 57 386 VASP-HELP;
+#X connect 4 0 7 1;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 12 1;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 14 0 12 0;

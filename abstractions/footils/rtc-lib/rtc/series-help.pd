@@ -1,0 +1,20 @@
+#N canvas 358 313 516 413 10;
+#X msg 110 102 a b c d;
+#X msg 73 66 bang;
+#X obj 73 166 series;
+#X obj 73 282 print Random_Element;
+#X obj 91 240 print Refill_Urn;
+#X msg 134 149 1 2 3 4 5 6 7 8;
+#X obj 97 223 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 110 199 print Current_Index;
+#X text 256 199 zero-based!;
+#X msg 129 128 list x y z;
+#X connect 0 0 2 1;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 2 1 6 0;
+#X connect 2 2 7 0;
+#X connect 5 0 2 1;
+#X connect 9 0 2 1;

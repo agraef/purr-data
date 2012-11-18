@@ -1,0 +1,18 @@
+#N canvas 156 192 614 333 12;
+#X obj 328 118 bng 25 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X msg 94 128 help;
+#X msg 139 127 doc;
+#X text 14 49 This demonstrates a tcl/tk dialog. See the tcltk.py file.
+;
+#X text 10 263 Note: When used concurrently with audio \, you will
+notice clicks. This Tk window is NOT called over a net socket \, like
+PD is;
+#X obj 206 169 pyext tcltk myapp;
+#X obj 206 200 print tcltk;
+#X text 16 15 py/pyext - Python script objects \, (C)2002-2005 Thomas
+Grill;
+#X connect 0 0 5 1;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 5 0 6 0;

@@ -1,0 +1,30 @@
+#N canvas 1072 106 733 447 10;
+#X obj 62 90 notein;
+#X obj 128 43 mtl/piano 1;
+#X obj 36 358 mtl/out~;
+#X msg 348 217 0.5 0.2 0 0 0 0.3 0.9;
+#X msg 342 261 0 0.9 0 0 0.9 0 0.9;
+#X msg 331 296 1 0.9 1 0 0 0 0;
+#X msg 310 324 0 1 2 3 4 5 6;
+#X msg 226 249 6 5 4 3 2 1 0;
+#X obj 66 118 pack;
+#X obj 40 301 mtl/additive~ 0.6 0.4 0.7 0.8 0.4 0.2 0.3;
+#X text 40 0 Description: Midi instrument using additive synthesis
+with an unlimited number of oscillators.;
+#X text 147 167 Arguments: The number of arguments determines the number
+of oscillators created. The values of the arguments determines the
+volume of each oscillator.;
+#X text 322 351 The right inlet changes the volumes of each oscillator.
+;
+#X text 43 23 tags: instrument~;
+#X connect 0 0 8 0;
+#X connect 0 1 8 1;
+#X connect 1 0 9 0;
+#X connect 3 0 9 1;
+#X connect 4 0 9 1;
+#X connect 5 0 9 1;
+#X connect 6 0 9 1;
+#X connect 7 0 9 1;
+#X connect 8 0 9 0;
+#X connect 9 0 2 0;
+#X connect 9 0 2 1;

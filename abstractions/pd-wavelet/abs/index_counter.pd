@@ -1,0 +1,18 @@
+#N canvas 214 249 242 219 10;
+#X obj 58 140 f;
+#X obj 96 140 + 1;
+#X obj 58 51 inlet;
+#X text 60 34 bang;
+#X obj 58 175 outlet;
+#X msg 71 109 0;
+#X obj 71 86 r on_bang;
+#X obj 134 176 select 2047;
+#X text 33 9 index counter from 0 to 2047;
+#X connect 0 0 1 0;
+#X connect 0 0 4 0;
+#X connect 0 0 7 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;

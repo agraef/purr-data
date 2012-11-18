@@ -1,0 +1,6 @@
+#N canvas 0 0 526 248 10;
+#X floatatom 86 102 5 0 0 0 - - -;
+#X obj 86 63 init.ldf 3 4;
+#X text 83 30 Description: Same as init.df but with a built-in loadbang.
+;
+#X connect 1 0 0 0;

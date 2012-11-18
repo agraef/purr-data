@@ -1,0 +1,415 @@
+#N canvas 1 53 717 456 12;
+#N canvas 160 189 627 328 creation 0;
+#X obj 52 235 outlet;
+#X msg 49 10 create;
+#X msg 72 68 create 2 1;
+#X msg 81 97 create 3 1;
+#X msg 93 128 create 3 2;
+#X msg 59 38 create 3 2 3 3 1 0.7;
+#X text 121 7 create with default values;
+#X text 236 38 specifying all;
+#X text 166 68 2 inputs 1 output;
+#X text 176 99 3 inputs 1 output;
+#X text 189 128 3 inputs 2 output;
+#X text 159 222 TIP:don't set the layers param too high;
+#X text 158 179 params: num_input \, num_output \, num_layers \, num_neurons_hidden
+\, connection_rate \, learning_rate;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X restore 52 68 pd creation examples;
+#N canvas 83 141 728 356 run 0;
+#X obj 90 219 outlet;
+#X msg 123 69 0 1;
+#X msg 124 92 1 0;
+#X msg 125 115 1 1;
+#X msg 126 140 0 0;
+#X text 40 17 now you can run your nn passing it a list with inputs
+;
+#X text 169 70 send a list of data and watch the console for output
+;
+#X text 39 35 the output is sent as a list of float;
+#X text 184 134 these inputs are good for a nn like the one in example1
+directory;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X restore 86 180 pd run the net;
+#N canvas 1 53 619 610 other 0;
+#X obj 43 401 outlet;
+#X msg 102 37 train;
+#X msg 103 63 run;
+#X msg 152 37 setmode 0;
+#X msg 153 63 setmode 1;
+#X text 249 40 set training/running mode;
+#X text 247 63 training mode currently not implemented;
+#N canvas 113 201 690 335 training 0;
+#X obj 71 288 outlet;
+#X msg 82 195 FANN_TRAIN_INCREMENTAL;
+#X msg 82 216 FANN_TRAIN_BATCH;
+#X msg 81 238 FANN_TRAIN_RPROP;
+#X msg 81 258 FANN_TRAIN_QUICKPROP;
+#X text 40 28 you can set the training algorithm simply sending a message
+with the name of the algorithm chosen. possible values are: FANN_TRAIN_INCREMENTAL
+FANN_TRAIN_BATCH FANN_TRAIN_RPROP FANN_TRAIN_QUICKPROP the default
+is: FANN_TRAIN_RPROP see the FANN manual for details on each algorithm:
+http://fann.sourceforge.net/html/r1996.html;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X restore 150 153 pd training algorithm;
+#X text 360 175 some advanced param;
+#N canvas 34 162 698 395 training 0;
+#X obj 52 230 outlet;
+#X msg 69 118 desired_error 0.01;
+#X msg 79 146 max_iterations 500000;
+#X msg 90 178 iterations_between_reports 1000;
+#X text 58 28 you can change training parameters. see FANN manual for
+details (http://fann.sourceforge.net);
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X restore 151 179 pd training params;
+#N canvas 329 121 694 391 activation 0;
+#X obj 49 335 outlet;
+#X text 40 28 you can set ti output activation algorithm passing a
+message to nn. see the FANN manual for description of the algorithms
+;
+#X msg 69 118 set_activation_function_output FANN_THRESHOLD;
+#X msg 83 139 set_activation_function_output FANN_THRESHOLD_SYMMETRIC
+;
+#X msg 95 163 set_activation_function_output FANN_LINEAR;
+#X msg 98 184 set_activation_function_output FANN_SIGMOID;
+#X msg 106 206 set_activation_function_output FANN_SIGMOID_STEPWISE
+;
+#X msg 108 233 set_activation_function_output FANN_SIGMOID_SYMMETRIC
+;
+#X msg 115 256 set_activation_function_output FANN_SIGMOID_SYMMETRIC_STEPWISE
+;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X restore 150 203 pd activation algorithm;
+#X msg 151 287 details;
+#X text 229 285 details on the current nn;
+#X msg 145 333 help;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 13 0 0 0;
+#X restore 107 258 pd other commands;
+#N canvas 2 82 653 513 save 0;
+#X obj 39 264 outlet;
+#X msg 64 20 filename test.net;
+#X msg 66 46 save;
+#X msg 82 103 load;
+#X text 221 19 set the filename;
+#X text 214 42 save the net to the file;
+#X text 138 104 you can reload it too;
+#X text 144 182 nn can be loaded from a file at creation time simply
+passing the filename as argument;
+#X msg 68 71 save test.net;
+#X msg 93 130 load test.net;
+#X text 144 217 like [ann_mlp test.net];
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X restore 97 218 pd save the net;
+#X text 229 66 create a nn;
+#X text 223 179 run your net;
+#X text 237 215 save your net;
+#N canvas 2 82 712 542 tips 0;
+#X text 51 84 for better performances inputs value should be normalized
+\, all input should have the same range (if one input has a larger
+range it will be more "important"). the range of each input should
+be 0 centered. so [-1 \, 1] is good [-2 \, 2] is good \, [0 \, 1] not
+so good [1 \, 2] is bad. the range sould not be too small ([-0.1 \,
+0.1] is bad).;
+#X text 41 19 TIPS;
+#X text 41 56 inputs;
+#X text 39 211 outputs;
+#X text 50 235 each class of outputs should have its own output value:
+don't use the same output for 2 meanings \, use 2 outputs intead \,
+1 for each.;
+#X restore 156 303 pd tips;
+#X text 270 333 an interface to fann classes (http://fann.sourceforge.net)
+;
+#X text 272 351 by Davide Morelli - info@davidemorelli.it;
+#N canvas 146 200 580 411 train 0;
+#X obj 32 241 outlet;
+#N canvas 0 0 458 308 train 0;
+#N canvas 8 48 990 509 build 0;
+#X obj 65 417 textfile;
+#X msg 190 337 clear;
+#N canvas 0 0 462 312 alternate 0;
+#X obj 103 117 + 1;
+#X obj 70 119 f 0;
+#X obj 70 171 sel 0 1;
+#X obj 70 146 mod 2;
+#X msg 95 90 0;
+#X obj 68 31 inlet;
+#X obj 140 40 inlet;
+#X obj 140 63 bang;
+#X obj 68 55 bang;
+#X obj 65 205 outlet;
+#X obj 125 206 outlet;
+#X text 59 6 bang;
+#X text 139 18 reset to 0 without bang;
+#X connect 0 0 1 1;
+#X connect 1 0 0 0;
+#X connect 1 0 3 0;
+#X connect 2 0 9 0;
+#X connect 2 1 10 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 1;
+#X connect 5 0 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;
+#X connect 8 0 1 0;
+#X restore 58 227 pd alternate;
+#X obj 24 81 bng 15 250 50 0 empty empty write-once 0 -6 0 8 -262144
+-1 -1;
+#X obj 341 183 bng 15 250 50 0 empty empty reset 0 -6 0 8 -262144 -1
+-1;
+#N canvas 0 0 466 316 inputs 0;
+#X obj 61 153 pack s f f;
+#X obj 63 200 pack f f;
+#X obj 61 176 unpack s f f;
+#X msg 66 223 add \$1 \$2;
+#X obj 66 257 outlet;
+#X text 120 258 to textfile;
+#X obj 24 42 inlet;
+#X text 23 22 bang;
+#X text 66 77 here go the inputs;
+#X obj 94 52 r input1;
+#X obj 163 52 r input2;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 1 1 0;
+#X connect 2 2 1 1;
+#X connect 3 0 4 0;
+#X connect 6 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 0 2;
+#X restore 58 306 pd inputs;
+#N canvas 0 0 466 316 outputs 0;
+#X obj 61 153 pack s f f;
+#X obj 63 200 pack f f;
+#X obj 61 176 unpack s f f;
+#X msg 66 223 add \$1 \$2;
+#X obj 66 257 outlet;
+#X text 120 258 to textfile;
+#X obj 24 42 inlet;
+#X text 23 22 bang;
+#X text 66 77 here go the outputs;
+#X obj 91 51 r output1;
+#X obj 166 51 r output2;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 1 1 0;
+#X connect 2 2 1 1;
+#X connect 3 0 4 0;
+#X connect 6 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 0 2;
+#X restore 149 284 pd outputs;
+#X obj 230 223 f 0;
+#X obj 260 223 + 1;
+#X obj 239 257 nbx 5 14 -1e+37 1e+37 0 0 empty empty how_many_patterns
+0 -6 0 10 -262144 -1 -1 0 256;
+#X text 156 406 todo: write header (a line at the beginning of file
+with 3 int: how many tests \, num_input \, num_output);
+#X obj 122 190 delay 50;
+#X obj 115 159 metro 100;
+#X floatatom 259 72 5 100 5000 2 msec_between_snapshots - -;
+#X obj 127 80 tgl 15 0 empty empty toggle_on-off 0 -6 0 8 -262144 -1
+-1 0 1;
+#X obj 219 189 / 2;
+#X obj 260 16 loadbang;
+#X msg 260 36 100;
+#X msg 326 342 write test.txt cr;
+#X text 293 224 comment;
+#N canvas 262 68 647 603 README 0;
+#X text 67 432 please help me getting this patch more usable: - how
+to add a line at the very beginning of a text file after i have filled
+it? - how to manage inputs and outputs of different sized without forcing
+the user to edit the patch?;
+#X text 9 63 how to use: 1) modify [pd inputs] and [ps outputs] inserting
+[r] objects to receive input data \, and modify [pack]s to handle the
+right number of inputs 2) do the same with [pd outputs] 3) click on
+reset 4) toggle ON and start collecting data 5) when you are ready
+toggle OFF 6) edit [write filename cr( with the actual filename you
+want for your training data (always keep the cr after the filename)
+7) open the file with training data 8) add a line at the beginning
+and write 3 integers: the 1st is the number of training patterns written
+(see "how many patterns" number box) \, the 2nd is how many inputs
+your ann has \, the 3th is how many outputs e.g. i collected 100 training
+snapshots \, for a ann with 10 ins and 2 outs I write: 100 10 2 at
+the very beginning of the file now the training file is ready and can
+be read from nn via train-on-file command;
+#X text 9 7 this tricky sub-patch is usefull to write a file to train
+ann and is intended to be used with the nn external;
+#X restore 25 16 pd README;
+#X text 479 210 by davide morelli info@davidemorelli.it;
+#X text 106 14 <--readme!;
+#X text 242 283 <--edit here!;
+#X text 142 308 <--edit here!;
+#X text 429 86 usage: read [pd README] \, edit [pd inputs] and [pd
+outputs] \, toggle on and record inputs and outputs \, toggle off when
+ready \, write to a file \, edit the file adding a line at the beginning
+(see REAMDE);
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 2 1 6 0;
+#X connect 2 1 7 0;
+#X connect 3 0 11 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 1;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 1;
+#X connect 11 0 2 0;
+#X connect 12 0 11 0;
+#X connect 12 0 2 0;
+#X connect 13 0 12 1;
+#X connect 13 0 15 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 1;
+#X connect 16 0 17 0;
+#X connect 17 0 13 0;
+#X connect 18 0 0 0;
+#X restore 86 42 pd build training file;
+#X msg 88 74 train-on-file test.txt;
+#X text 285 45 build a training file;
+#X text 287 74 train the nn with the training file;
+#X obj 56 139 outlet;
+#X connect 1 0 4 0;
+#X restore 79 103 pd train you net using a train file;
+#N canvas 120 72 892 558 train 0;
+#X obj 55 487 outlet;
+#X msg 60 31 train;
+#X text 126 33 1- set the train mode;
+#X text 192 120 be shure you provide the correct numbers of inputs
+and outputs;
+#X obj 168 202 pack s f f f;
+#X obj 197 248 pack f f f;
+#X obj 168 225 unpack s f f f;
+#X msg 190 464 run;
+#X obj 198 170 tgl 15 0 empty empty in1 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 228 170 tgl 15 0 empty empty in2 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 259 170 tgl 15 0 empty empty output 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 148 169 bng 15 250 50 0 empty empty train! 0 -6 0 8 -262144
+-1 -1;
+#X text 312 160 set inputs and output value \, then send the list clicking
+on the "train!" bang;
+#X msg 316 261 create 2 1;
+#X text 227 464 3- when you are ready switch again to run mode before
+exiting;
+#X text 315 226 NOTE1: before training with this example you should
+have created a nn with 2 ins and 1 out with a command like:;
+#N canvas 255 158 517 436 autotrain 0;
+#X obj 89 286 outlet;
+#X obj 85 87 metro 10;
+#X obj 85 38 tgl 15 0 empty empty toggle_training 0 -6 0 8 -262144
+-1 -1 0 1;
+#X msg 101 192 0 0 0;
+#X msg 126 215 0 1 1;
+#X msg 82 168 1 0 1;
+#X msg 150 244 1 1 1;
+#X obj 82 112 random 4;
+#X obj 83 138 sel 0 1 2 3;
+#X obj 226 125 f 0;
+#X obj 256 124 + 1;
+#X floatatom 226 149 8 0 0 0 - - -;
+#X text 113 36 <--train OR untile mse is low enough;
+#X text 143 51 (you must be in train mode);
+#X connect 1 0 7 0;
+#X connect 1 0 9 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 8 0;
+#X connect 8 0 5 0;
+#X connect 8 1 3 0;
+#X connect 8 2 4 0;
+#X connect 8 3 6 0;
+#X connect 9 0 10 0;
+#X connect 9 0 11 0;
+#X connect 10 0 9 1;
+#X restore 224 363 pd autotrain OR;
+#X text 172 101 2a)- build a list with inputs and desired output;
+#X text 336 291 NOTE2: while training the right outlet gives you the
+mean square error after each training pattern. continue training until
+mse is low enough.;
+#X text 221 383 2b) use autotrain for the OR function;
+#X connect 1 0 0 0;
+#X connect 4 0 6 0;
+#X connect 5 0 0 0;
+#X connect 6 1 5 0;
+#X connect 6 2 5 1;
+#X connect 6 3 5 2;
+#X connect 7 0 0 0;
+#X connect 8 0 4 1;
+#X connect 9 0 4 2;
+#X connect 10 0 4 3;
+#X connect 11 0 4 0;
+#X connect 13 0 0 0;
+#X connect 16 0 0 0;
+#X restore 68 50 pd train it on the fly;
+#X text 62 5 there are 2 ways to train your net;
+#X text 253 47 on the fly is simpler;
+#X text 88 128 with a trainfile the net could be more accurate;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X restore 74 119 pd train;
+#X text 149 118 train a nn;
+#X obj 103 345 print mse;
+#X obj 52 373 print out;
+#X obj 52 313 ann_mlp;
+#X text 9 2 ann_mlp: multi layer perceptrons neural networks in PD
+;
+#N canvas 405 166 494 332 META 0;
+#X text 12 190 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION multi layer perceptrons neural networks in
+PD;
+#X text 12 130 OUTLET_0;
+#X text 12 150 OUTLET_1;
+#X text 12 170 AUTHOR Davide Morelli - info@davidemorelli.it;
+#X text 12 65 INLET_0 list create train filename save load setmode
+FANN_TRAIN_INCREMENTAL FANN_TRAIN_BATCH FANN_TRAIN_RPROP FANN_TRAIN_QUICKPROP
+desired_error max_iterations iterations_between_reports set_activation_function_output
+;
+#X restore 646 402 pd META;
+#X connect 0 0 14 0;
+#X connect 1 0 14 0;
+#X connect 2 0 14 0;
+#X connect 3 0 14 0;
+#X connect 10 0 14 0;
+#X connect 14 0 13 0;
+#X connect 14 1 12 0;

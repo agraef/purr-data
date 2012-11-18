@@ -1,0 +1,207 @@
+#N canvas 258 35 637 398 12;
+#N canvas 0 0 450 300 graph1 0;
+#X array filter 1024 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#A 1000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 10 1023 -10 200 140 1;
+#X restore 412 91 graph;
+#X obj 171 129 table buf 10;
+#X obj 37 128 wedit buf;
+#X obj 44 203 bng 25 250 50 0 empty empty start 0 -6 0 8 -24198 -1
+-1;
+#N canvas 289 57 385 501 do 0;
+#X obj 40 20 inlet;
+#X obj 38 452 outlet;
+#X obj 38 175 vasp.parts;
+#X msg 40 91 vasp buf;
+#N canvas 0 0 256 335 accum 0;
+#X obj 31 158 +;
+#X obj 65 159 f;
+#X obj 32 95 t f b;
+#X obj 64 229 /;
+#X obj 111 158 1;
+#X obj 112 183 +;
+#X obj 146 184 f;
+#X obj 32 53 inlet;
+#X obj 64 276 outlet;
+#X obj 169 53 inlet;
+#X text 171 28 reset;
+#X text 31 31 value;
+#X obj 169 79 t b;
+#X obj 167 106 0;
+#X connect 0 0 1 0;
+#X connect 1 0 0 1;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 2 1 4 0;
+#X connect 3 0 8 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 5 1;
+#X connect 6 0 3 1;
+#X connect 7 0 2 0;
+#X connect 9 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 1 1;
+#X connect 13 0 6 1;
+#X restore 37 382 pd accum;
+#X text 129 174 loop over fragments;
+#X text 112 380 make average of fragments;
+#X msg 122 212 radio detach 1;
+#X obj 190 125 vasp.f?;
+#X obj 188 90 vasp.! @ref filter;
+#X obj 138 261 vasp.db2pow;
+#X obj 40 52 t b b;
+#N canvas 0 0 257 314 frag 0;
+#X obj 40 210 vasp.rms;
+#X obj 40 92 vasp.rfft;
+#X obj 40 176 vasp.r!fft;
+#X obj 40 136 vasp.*;
+#X obj 41 65 vasp.!;
+#X obj 44 25 inlet;
+#X obj 39 248 outlet;
+#X obj 152 22 inlet;
+#X connect 0 0 6 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;
+#X connect 7 0 3 1;
+#X restore 37 319 pd frag;
+#X text 107 315 filter fragment and calc rms;
+#X connect 0 0 11 0;
+#X connect 2 0 12 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 7 0 12 0;
+#X connect 8 0 2 1;
+#X connect 9 0 8 0;
+#X connect 9 0 10 0;
+#X connect 10 0 12 1;
+#X connect 11 0 3 0;
+#X connect 11 1 4 1;
+#X connect 11 1 7 0;
+#X connect 11 1 9 0;
+#X connect 12 0 4 0;
+#X restore 44 284 pd do;
+#X obj 44 348 nbx 5 18 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 14
+-261689 -1 -1 0 256;
+#N canvas 277 107 454 304 2db 0;
+#X obj 38 19 inlet;
+#X obj 40 58 powtodb;
+#X obj 40 88 - 100;
+#X obj 41 124 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X restore 44 311 pd 2db;
+#X text 36 101 load/play buffer;
+#X msg 44 246 vasp buf;
+#X text 129 347 weighted loudness (decibels);
+#N canvas 312 40 678 619 filter 0;
+#X obj 46 26 inlet;
+#X obj 46 544 vasp.= @ref filter;
+#X obj 46 508 t b a;
+#X obj 45 572 vasp.u;
+#X msg 44 104 0;
+#X obj 43 60 route flat dbA dbB dbC;
+#X msg 87 102 env -77.8 8 -56.7 16 -39.4 31.5 -26.2 63 -16.1 125 -8.6
+250 -3.2 500 0 1000 1.2 2000 1 4000 -1.1 8000 -6.6 16000 -15.8 31500
+;
+#X obj 392 11 loadbang;
+#X obj 392 36 samplerate~;
+#X obj 45 476 vasp.tilt;
+#X obj 107 448 /;
+#X text 156 336 large enough temporary buffer;
+#X obj 44 338 vasp.! 100000;
+#X obj 296 66 / 2;
+#X obj 462 14 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 295 38 r smpfrq;
+#X obj 43 365 vasp.=;
+#X obj 44 309 t b a;
+#X obj 67 422 vasp.f?;
+#X obj 44 394 t a a b;
+#X obj 134 421 vasp.s? @ref filter;
+#X msg 129 158 env -43.6 8 -28.5 16 -17.1 31.5 -9.3 63 -4.2 125 -1.3
+250 -0.3 500 0 1000 -0.1 2000 -0.7 4000 -2.9 8000 -8.4 16000 -17.6
+31500;
+#X msg 170 221 env -17.7 8 -8.5 16 -3 31.5 -0.8 63 -0.2 125 0 250 0
+500 0 1000 -0.2 2000 -0.8 4000 -3 8000 -8.5 16000 -17.7 31500;
+#X text 124 476 resample;
+#X connect 0 0 5 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 2 1 1 1;
+#X connect 4 0 17 0;
+#X connect 5 0 4 0;
+#X connect 5 1 6 0;
+#X connect 5 2 21 0;
+#X connect 5 3 22 0;
+#X connect 6 0 17 0;
+#X connect 7 0 8 0;
+#X connect 8 0 13 0;
+#X connect 9 0 2 0;
+#X connect 10 0 9 1;
+#X connect 12 0 16 0;
+#X connect 13 0 12 1;
+#X connect 14 0 8 0;
+#X connect 15 0 13 0;
+#X connect 16 0 19 0;
+#X connect 17 0 12 0;
+#X connect 17 1 16 1;
+#X connect 18 0 10 0;
+#X connect 19 0 9 0;
+#X connect 19 1 18 0;
+#X connect 19 2 20 0;
+#X connect 20 0 10 1;
+#X connect 21 0 17 0;
+#X connect 22 0 17 0;
+#X restore 471 344 pd filter;
+#X msg 416 300 flat;
+#X msg 464 299 dbA;
+#X obj 11 10 cnv 15 600 50 empty empty loudness 10 22 0 24 -260818
+-1 0;
+#X text 202 41 http://www.parasitaere-kapazitaeten.net;
+#X text 203 25 needs vasp and wedit;
+#X text 203 10 get weighted loudness \, (C)2003 Thomas Grill;
+#X msg 499 299 dbB;
+#X msg 536 300 dbC;
+#X connect 3 0 8 0;
+#X connect 4 0 6 0;
+#X connect 6 0 5 0;
+#X connect 8 0 4 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 17 0 10 0;
+#X connect 18 0 10 0;

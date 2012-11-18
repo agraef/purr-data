@@ -1,0 +1,30 @@
+#N canvas 871 193 484 396 10;
+
+
+#X obj 57 226 list append \$1;
+#X obj 57 251 s \$2;
+#X obj 101 101 bng 15 250 50 0 \$0.storebang-s \$0.storebang-r empty
+17 7 0 10 -249828 -1 -1;
+#X obj 57 202 r \$0.storebang-s;
+#X obj 117 101 cnv 15 94 15 empty \$0.cnv \$1 3 8 0 10 -229120 -66577
+0;
+#X obj 189 232 list length;
+#X obj 189 137 loadbang;
+#X obj 189 319 s \$0.cnv;
+#X msg 189 288 vis_size \$1 15;
+#X obj 189 158 list append \$1 \$2;
+#X text 225 261 letter width;
+#X obj 189 261 * 4.5;
+#X obj 189 184 list2symbol;
+#X obj 189 211 symbol-s2l;
+#X obj 329 170 import-disabled zexy;
+#X connect 0 0 1 0;
+#X connect 3 0 0 0;
+#X connect 5 0 11 0;
+#X connect 6 0 9 0;
+#X connect 8 0 7 0;
+#X connect 9 0 12 0;
+#X connect 11 0 8 0;
+#X connect 12 0 13 0;
+#X connect 13 0 5 0;
+#X coords 0 -1 1 1 34 17 2 100 100;

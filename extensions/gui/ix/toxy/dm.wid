@@ -1,0 +1,84 @@
+#console show
+namespace eval ::ix {
+    variable _
+    proc spin_resize {w} {
+#	update
+	$w config -height [winfo height $w] -width [winfo width $w]
+    }
+    proc spin {c w t bg fg font items arrows} {
+	if {[winfo exists $w.m] != 1} {
+	    variable _
+	    set _($t:p) 0
+	    array set arrow "up \u25b2 dn \u25bc"; array set anchor "up n dn s"
+	    menubutton $w.m -menu $w.m.m -textvariable _($t:t) -relief raised \
+		-bg $bg -fg $fg -font $font -padx 0 -pady 0
+	    menu $w.m.m -bd 0 -bg $bg -fg $fg; pack $w.m -side left -fill y
+	    if {$arrows == 1} {
+		foreach i {up dn} {
+		    button $w.$i -padx 0 -pady 0 -text $arrow($i) \
+			-command "::ix::spinclick $w $t $i" \
+			-bd 0 -bg $bg -fg $fg -font {Times 6}
+		    pack $w.$i -anchor $anchor($i)
+		}
+	    }
+	    spin_resize $w
+	    foreach item $items {spinitem $w $t $item}
+	    $w.m.m activate 0; $w.m.m invoke 0
+	}
+    }
+    proc spinitem {w t item} {
+	variable _
+	set len [$w.m.m index end];
+	if {$len ne "none"} {set n [expr $len + 1]} else {set n 0}
+	$w.m.m add radiobutton -selectcolor green -font {Tahoma 8} -label $item -variable _($t:t) -command "::ix::spinout $w $t $n"
+	set wider [string length $item]; set wide [$w.m cget -width]
+	if {$wide < $wider && $wider <= 31 } {
+	    $w.m configure -width $wider
+	    spin_resize $w
+	}
+	$w.m.m activate $n
+    }
+    proc spinout {w t i} {
+	set sym [$w.m.m entrycget $i -label]
+	pd [concat $t.rp _cb $sym \;]
+	$w.m.m activate $i
+    }
+    proc spinclick {w t d} {
+	variable _
+	array set shift "up -1 dn 1"
+	set len [$w.m.m index end];
+	set pos $_($t:p)
+	if {$pos != "none"} {
+	    incr pos $shift($d)
+	    if {$pos > $len} {set pos 0}
+	    if {$pos < 0} {set pos $len}
+	    $w.m.m activate $pos
+	    $w.m.m invoke $pos
+	}
+	set _($t:p) $pos
+    }
+    proc spinclear {w} {
+	$w.m.m delete 0 end
+	$w.m configure -width 0
+    }
+}
+#> dm frame
+#. -bg green -padx 4 -pady 4 -height 40 -width 86 #arrows 1
+#. #bg black #fg "#8888ff" #items {} #font {Tahoma 10}
+#. @list foreach x [list .#args] {::ix::spinitem .- .| $x}
+#. @symbol ::ix::spinitem .- .| {.#1}
+#. @float .-.m.m invoke .#1 .: set ::ix::_(.|:p) .#1
+#. @clear ::ix::spinclear .-
+puts "dm .- .|"
+::ix::spin .^ .- .| .#bg .#fg .#font .#items .#arrows
+bind .- <Enter> {focus .-}
+bind .- <Leave> {focus .^.c}
+bind .- <<spin-dn>> {::ix::spinclick .- .| dn}
+bind .- <<spin-up>> {::ix::spinclick .- .| up}
+event add <<spin-dn>> <Key-space> <Key-Down> <Key-Right>
+event add <<spin-up>> <Key-Up> <Key-Left>
+foreach el {.- .-.m} {
+    bind $el <MouseWheel> {if {%D > 0} {::ix::spinclick .- .| up} else {::ix::spinclick .- .| dn}}
+    bind $el <Button-4> {::ix::spinclick .- .| up}
+    bind $el <Button-5> {::ix::spinclick .- .| dn}
+}

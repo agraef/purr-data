@@ -1,0 +1,23 @@
+#N canvas 6 7 683 424 10;
+#X obj 242 234 time_roll;
+#X floatatom 291 143 5 0 0 0 - - -;
+#X obj 27 234 time_roll;
+#X floatatom 27 79 5 0 127 0 - - -;
+#X text 29 59 data;
+#X obj 27 172 t f f;
+#X msg 47 100 0;
+#X msg 48 121 127;
+#X text 530 352 la Kitchen;
+#X text 530 369 Charles Verron;
+#X text 529 336 2004_03_22;
+#X text 89 27 iir_lop computes a infinite impulse response low-pass
+filter of order one;
+#X obj 242 210 iir_lop 5;
+#X text 353 140 "cut-off frequency";
+#X connect 1 0 12 1;
+#X connect 3 0 5 0;
+#X connect 5 0 2 0;
+#X connect 5 1 12 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 12 0 0 0;

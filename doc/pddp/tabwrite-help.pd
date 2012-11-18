@@ -1,0 +1,134 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabwrite 3 12 0
+18 -204280 -1 0;
+#X obj 0 300 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 244 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Dave Sabine \, April 29 \, 2003 .
+Jonathan Wilkes revised the patch to conform to the PDDP template for
+Pd version 0.42.;
+#X text 12 5 KEYWORDS control array;
+#X text 12 45 DESCRIPTION write numbers to a table;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 INLET_1 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 456 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 481 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 540 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 77 311 428 300 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [tabwrite] Related Objects;
+#X text 20 38 Native Pd Objects;
+#X obj 23 63 tabread~;
+#X obj 97 63 tabread4;
+#X obj 247 63 tabwrite~;
+#X obj 23 89 tabsend~;
+#X obj 99 89 tabreceive~;
+#X obj 199 89 tabplay~;
+#X obj 276 89 table;
+#X text 22 146 [array];
+#X obj 23 116 soundfiler;
+#X text 85 146 and fft objects.;
+#X obj 119 116 tabread4~;
+#X obj 210 116 getsize;
+#X obj 281 116 setsize;
+#X obj 172 63 tabread;
+#X text 20 170 Externals and other object libraries;
+#X obj 20 190 pddp/helplink zexy/tabdump;
+#X obj 20 210 pddp/helplink linear_path;
+#X text 101 210 <-- which library is this in?;
+#X text 101 230 <-- which library is this in?;
+#X obj 20 230 pddp/helplink score;
+#X text 101 250 <-- which library is this in?;
+#X obj 20 250 pddp/helplink tabenv;
+#X obj 20 270 pddp/helplink arraysize;
+#X restore 102 597 pd Related_objects;
+#X obj 78 309 cnv 17 3 115 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 308 float;
+#X text 98 348 list;
+#X obj 78 435 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 434 float;
+#X obj 472 3 tabwrite;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/tabwrite -text
+pdpedia: tabwrite;
+#X floatatom 174 251 0 0 99 1 index - -;
+#X obj 51 276 tabwrite davids_array;
+#X floatatom 51 84 0 0 0 0 value - -;
+#X text 168 308 - a float at the left inlet will become the new value
+of the chosen index (whichever index is currently selected at the right
+inlet).;
+#X text 168 348 - the left inlet also accepts pairs of floats (longer
+lists will be truncated). A number pair represents "value" and "index"
+- corresponding to "left" and "right" inlets.;
+#X text 98 388 set;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-davids_array 100 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0;
+#X coords 0 1 99 -1 100 70 1;
+#X restore 278 94 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-another_array 100 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 -0.67 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0;
+#X coords 0 1 99 -1 100 70 1;
+#X restore 408 94 graph;
+#X text 11 23 write numbers to a table;
+#X text 167 434 - selects index in which to write the new value.;
+#X text 98 460 (none);
+#X obj 98 543 pddp/pddplink all_about_arrays.pd -text all_about_arrays
+;
+#X text 276 181 Click below to view the table:;
+#X text 168 498 - the name of the array or table to which [tabwrite]
+will write data. The array must exist in an open Pd patch/canvas or
+an error message will appear in the console.;
+#X text 168 388 - the "set" message \, followed by the name of an array
+\, permits you to switch between arrays (e.g. \, "set another_array")
+;
+#X text 80 498 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 90 117 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X obj 90 137 f \$0;
+#X obj 95 186 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X obj 95 206 f \$0;
+#X obj 84 47 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1 -1
+;
+#X obj 84 67 f \$0;
+#X msg 84 89 set \$1-davids_array;
+#X obj 278 202 table \$0-tabwrite_table;
+#X msg 90 159 set \$1-another_array;
+#X msg 95 228 set \$1-tabwrite_table;
+#X obj 96 558 pddp/pddplink ../2.control.examples/15.arrays.pd;
+#X obj 95 573 pddp/pddplink ../2.control.examples/16.more.arrays.pd
+;
+#X connect 15 0 16 1;
+#X connect 17 0 16 0;
+#X connect 32 0 33 0;
+#X connect 33 0 40 0;
+#X connect 34 0 35 0;
+#X connect 35 0 41 0;
+#X connect 36 0 37 0;
+#X connect 37 0 38 0;
+#X connect 38 0 16 0;
+#X connect 40 0 16 0;
+#X connect 41 0 16 0;

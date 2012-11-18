@@ -1,0 +1,17 @@
+Source: pd-ezfile
+Section: sound
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+Uploaders: Hans-Christoph Steiner <hans@eds.org>
+Build-Depends: debhelper (>= 7.0.50~),
+               puredata (>= 0.42.5-3.1~)
+Standards-Version: 3.9.1
+Homepage: http://puredata.info
+
+Package: pd-ezfile
+Architecture: any
+Depends: ${shlibs:Depends},
+         pd,
+         ${misc:Depends},
+         pd-libdir
+Description: 

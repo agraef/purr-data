@@ -1,0 +1,32 @@
+#N canvas 10 40 620 460 10;
+#X obj 541 21 pddp/dsp;
+#X obj 11 8 cnv 15 400 40 empty empty TEMPLATE 20 12 0 24 -228992 -66577
+0;
+#X text 14 271 To see whether the DSP is on or off \, look at the checkbox
+on the main Pd window. You can also turn the DSP on and off using that
+checkbox.;
+#X text 13 106 You can turn the processing of audio data on and off.
+In order for your patch to run \, you need to make sure that "compute
+audio" is turned on. This is also known as the "DSP". There are a couple
+ways of turning the "DSP" on and off.;
+#X text 14 68 In Pd message processing is always running \, but audio
+processing can be turned on and off.;
+#X msg 51 227 \; pd dsp 1;
+#X msg 118 227 \; pd dsp 0;
+#X text 14 182 As with most programming languages \, in Pd "1" means
+on \, and "0" means off.;
+#X text 15 366 There are also keyboard shortcuts:;
+#X text 26 418 (On MacOS X \, you can also use Cmd-. and Cmd-/);
+#X text 37 385 off: Ctrl-.;
+#X text 44 400 on: Ctrl-/;
+#X obj 269 238 pddp/dsp;
+#X text 263 217 [pddp/dsp];
+#X obj 507 234 osc~ 250;
+#X obj 507 262 *~ 0.2;
+#X obj 499 292 dac~;
+#X text 463 205 (sine wave generator);
+#X text 13 323 You can also use the menu options: from the "Media"
+menu \, select "audio ON" or "audio OFF".;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 15 0 16 1;

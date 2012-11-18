@@ -1,0 +1,5 @@
+#N canvas 10 40 620 460 10;
+#X obj 8 10 cnv 15 400 40 empty empty TEMPLATE 20 12 0 24 -228992 -66577
+0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;

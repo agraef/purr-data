@@ -1,0 +1,71 @@
+OSCprepend -  "Prepends" first argument to an OSC message list.
+compare-any -  Test if two anythings are the same. Out: 1 if equal  
+last-x -  last-x: make a list of the last x floats (deprecated: use [list-lastx] instead
+list-abs -  apply abs() on float elements of a list.
+list-accum -  add all floats in a list
+list-add -  Add two lists element by element
+list-apply -  apply the object created by [arg1 arg2] on
+list-centroid -  Calculates the centroid or center of mass of a list of
+list-clip -  clip for lists
+list-compare -  Compare two lists element by element.
+list-delete -  delete element at position POS from list.
+list-dotprod -  dot-product of two lists: res = sum(Xi*Yi)
+list-drip -  list-drip: drips or serializes a list
+list-drip2 -  Drips two lists in sync   as long as the first list
+list-dripslow -  Serialize a list on demand.
+list-emath -  Do math on lists element by element
+list-enumerate -  serialize a list and put numbers in front of every element
+list-equalize -  scale a list so that all float elements sum up to 1
+list-extend -  Build a list from incoming lists or elements.
+list-fifo-delim -  This object is obsolete! Use [list-fifo] instead!
+list-fifo -  stores incoming (list-)messages
+list-filter -  filter out list elemnent by a condition
+list-find -  Find position(s) of a value in a list.
+list-group - group items into lists of the same size
+list-geometric-mean -  Calculates the geometric mean of a list (of floats)
+list-harmonic-mean -  Calculates the harmonic mean of a list (of floats)
+list-idx -  Get element at position idx.
+list-insert -  insert LIST before element at position POS
+list-inter -  elementwise linear interpolation between
+list-inter-many -  Elementwise linear interpolation between several float lists
+list-iter - group lists into sub-lists with size-limit
+list-l2s -  Concatenate a list into a single symbol using ARG1 as delimiter
+list-lastx -  make a list of the last x floats.
+list-len -  calculate length of a list (use [list length] if available)
+list-lifo -  stores incoming (list-)messages
+list-makefilename -  Change symbols in a list   pass floats unchanged.
+list-map -  Calls a user-defined operation for each of the incoming list elements
+list-map2 -  Calls a user-defined operation for each pair of elements of two lists
+list-math -  simple mathematical operations on lists.
+list-mean -  Calculates the arithmetric mean of a list (of floats)
+list-minmax -  find minimum and maximum float in a list.
+list-moses -  [moses] for lists
+list-mult -  Substract two lists element by element
+list-normalize -  normalize a list
+list-nth -  look up the nth element in a list. n has to be positive
+list-onearg - defaults for abstractions arguments
+list-pad -  pad a list with elements from a longer list 
+list-random -  generate lists of pseudorandom integers
+list-rdrip -  drips or serializes a list in reverse.
+list-reduce -  apply a function of two arguments cumulatively to the items of a list
+list-replace -  replace a list starting at position POS with another list
+list-rev -  reverse a list
+list-rot -  Rotate a list (move ROT# elements from front to back)
+list-round -  round all numbers in a list
+list-sect -  outputs the elements that are common to both input lists.
+list-seek -  walk through a list element by element - similar to [textfile]
+list-shellsort -  Sort a list of floats into ascending order using a Shell sort
+list-sieve -  Look up occurence of incoming floats in a list
+list-sort -  Sort an incoming list of values 
+list-splat -  like [list split] which also accepts negative split locations
+list-stddev - calculate the standard deviation of a float
+list-sub -  Substract two lists element by element
+list-swap -  swap two elements of a list at given indices.
+list-tabdump - dump a [table] into a list
+list-unique - remove duplicates from a list
+list-unitvec -  make a unit vector out of any list 
+list-wrandom -  Use a list as a probability table for weighted random values
+prepent -  shortcut for [list prepend]--[list trim]
+sroute -  settable [route]
+take-two -  take a list as input and print all combinations of
+triple-scale -  interpolate linearily between two points (x   y   z)

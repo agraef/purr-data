@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/ext/!svn/ver/3740/trunk/fsplay
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3599/trunk/fsplay/package.txt
+END
+resample.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3684/trunk/fsplay/resample.hpp
+END
+fsplay.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3599/trunk/fsplay/fsplay.vcproj
+END
+fsplay-Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1725/trunk/fsplay/fsplay-Info.plist
+END
+fsp_libsndfile.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3599/trunk/fsplay/fsp_libsndfile.cpp
+END
+fsp_quicktime.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3599/trunk/fsplay/fsp_quicktime.cpp
+END
+fsplay.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3599/trunk/fsplay/fsplay.h
+END
+fsplay~-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3599/trunk/fsplay/fsplay~-help.pd
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3740/trunk/fsplay/main.cpp
+END

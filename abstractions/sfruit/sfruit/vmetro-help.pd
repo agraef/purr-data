@@ -1,0 +1,23 @@
+#N canvas 803 193 370 290 10;
+#X obj 71 115 vmetro;
+#X obj 71 74 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X floatatom 122 48 5 0 0 0 - - -;
+#X obj 122 69 / 100;
+#X floatatom 122 91 5 0 0 0 - - -;
+#X text 15 5 [vmetro] works just like [metro] \, except that it can
+take fractional values to go faster than 1 millisecond.;
+#X text 15 215 original idea by IOhannes M Zmoelnig \, I think.;
+#X obj 71 137 t b b;
+#X obj 71 160 timer;
+#X floatatom 71 183 5 0 0 0 - - -;
+#X text 253 244 2008 Luke Iannini;
+#X text 254 259 proyekto.net;
+#X connect 0 0 7 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 1;
+#X connect 7 0 8 0;
+#X connect 7 1 8 1;
+#X connect 8 0 9 0;

@@ -1,0 +1,15 @@
+#N canvas 41 129 245 217 10;
+#X obj 38 46 inlet;
+#X obj 38 157 outlet;
+#X obj 95 46 inlet;
+#X text 63 158 1993 by Gerhard Eckel
+;
+#X obj 66 114 f 0;
+#X obj 38 114 +;
+#X msg 95 79 0;
+#X connect 0 0 5 0;
+#X connect 2 0 6 0;
+#X connect 4 0 5 1;
+#X connect 5 0 4 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 1;

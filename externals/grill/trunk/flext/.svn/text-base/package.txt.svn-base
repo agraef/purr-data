@@ -1,0 +1,57 @@
+#
+# flext - C++ layer for Max/MSP and pd (pure data) externals
+#
+# Copyright (c) 2001-2008 Thomas Grill (gr@grrrr.org)
+#
+# $LastChangedRevision$
+# $LastChangedDate$
+# $LastChangedBy$
+#
+# For information on usage and redistribution, and for a DISCLAIMER OF ALL
+# WARRANTIES, see the file, "license.txt," in this distribution.  
+#
+# more information on http://grrrr.org/ext
+# ------------------------------------------------------------------------
+#
+# This file contains information for the building process
+#
+# DO NOT EDIT!!
+#
+# ------------------------------------------------------------------------
+
+NAME=flext
+
+BUILDCLASS=flext
+BUILDMODE=all
+BUILDTYPE=all
+
+BUILDDIR=build
+
+SRCDIR=source
+
+PRECOMPILE=flext.h
+
+SRCS= \
+	flbase.cpp flext.cpp flbuf.cpp fldsp.cpp fllib.cpp \
+	flxlet.cpp flattr.cpp flattr_ed.cpp flsupport.cpp \
+	flutil.cpp flatom.cpp flatom_pr.cpp flthr.cpp fltimer.cpp flsimd.cpp flout.cpp \
+	flatom_part.cpp flitem.cpp flmeth.cpp flmsg.cpp \
+	flproxy.cpp flqueue.cpp flbind.cpp flmap.cpp
+HDRS= \
+	flext.h flprefix.h flstdc.h flinternal.h flfeatures.h \
+	flpushns.h flpopns.h \
+	flbase.h flclass.h flsupport.h fldsp.h \
+	flmap.h flcontainers.h \
+	fldefs.h fldefs_hdr.h fldefs_setup.h \
+	fldefs_methcb.h fldefs_meththr.h fldefs_methadd.h fldefs_methbind.h fldefs_methcall.h \
+	fldefs_attrcb.h fldefs_attrvar.h fldefs_attradd.h \
+    lockfree/prefix.hpp lockfree/cas.hpp lockfree/branch_hints.hpp \
+    lockfree/atomic_int.hpp lockfree/atomic_ptr.hpp \
+    lockfree/fifo.hpp lockfree/stack.hpp
+
+
+SRCS_SNDOBJ=flsndobj.cpp
+HDRS_SNDOBJ=flsndobj.h
+
+SRCS_STK=flstk.cpp
+HDRS_STK=flstk.h

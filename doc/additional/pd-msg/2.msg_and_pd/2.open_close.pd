@@ -1,0 +1,47 @@
+#N canvas 0 18 525 543 10;
+#X text 10 4 open and close an abstraction;
+#X msg 25 205 \; pd-abstraction.pd menuclose \;;
+#X text 25 141 Sometimes you can get relative paths (./ \, ../ \, etc.)
+to work \, but usually not. I don't know why...;
+#X msg 176 434 \; pd open \$1 \$2;
+#X obj 221 369 getdir;
+#X msg 25 63 \; pd open abstraction.pd /usr/local/lib/pd/doc/7.stuff/additional/pd-msg/2.msg_and_pd
+;
+#X text 25 41 OPEN;
+#X text 24 184 CLOSE;
+#X obj 51 418 makefilename pd-%s;
+#X msg 51 441 \; \$1 menuclose \;;
+#X obj 51 396 symbol;
+#X msg 51 310 abstraction.pd;
+#X obj 51 335 trigger bang anything bang;
+#X obj 127 369 symbol;
+#X obj 51 369 del 2000;
+#X obj 176 411 pack s s;
+#X obj 176 369 symbol;
+#X text 27 288 OPEN \, THEN CLOSE AFTER 2 SECONDS;
+#X text 25 109 You have to put the name of the patch to open and its
+complete path;
+#X text 22 241 (you have to put the correct name & a valid path);
+#X text 47 481 you have to put the name of the patch to open (\$1)
+and the complete path to it (\$2);
+#N canvas 437 191 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 25 KEYWORDS control pd_op nonlocal;
+#X text 12 65 DESCRIPTION opening and closing a patch by sending messages
+to Pd;
+#X text 12 45 LICENSE public domain;
+#X restore 445 516 pd META;
+#X connect 4 0 15 1;
+#X connect 8 0 9 0;
+#X connect 10 0 8 0;
+#X connect 11 0 12 0;
+#X connect 12 0 14 0;
+#X connect 12 1 13 0;
+#X connect 12 1 16 0;
+#X connect 12 2 4 0;
+#X connect 13 0 10 1;
+#X connect 14 0 10 0;
+#X connect 15 0 3 0;
+#X connect 16 0 15 0;

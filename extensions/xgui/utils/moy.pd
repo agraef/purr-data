@@ -1,0 +1,13 @@
+#N canvas 176 223 452 302 12;
+#X text 11 7 Moy;
+#X obj 34 44 inlet;
+#X obj 86 44 inlet;
+#X obj 51 115 / 2;
+#X obj 48 80 +;
+#X obj 53 142 outlet;
+#X text 51 177 dh20020428;
+#X text 80 193 ethanol = 2g/l;
+#X connect 1 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;

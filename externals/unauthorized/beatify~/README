@@ -1,0 +1,24 @@
+Version 0.01 
+copyright 2002 by Yves Degoyon.
+
+tarballs and updates available @ http://ydegoyon.free.fr
+
+beatify~ : modulate amplitude of a sound
+
+the idea was borrowed from musicscript,
+an excellent sound generation tool.
+( http://musicscript.sourceforge.net, author : David Piott )
+
+To install beatify~, follow the steps from INSTALL
+
+This software is published under GPL terms, see COPYING 
+for rights restrictions.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+

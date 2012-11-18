@@ -1,0 +1,21 @@
+OSC protocol inventory for OSC4PD
+
+sendOSC, dumpOSC, OSCroute
+==========================
+  INCLUDES
+    * typed and untyped packing of OSC messages
+    * #bundle packing
+    * transmission of OSC messages via UDP socket
+
+    * receive OSC messages on UDP socket
+    * unpacking of typed and untyped OSC messages
+    * #bundle unpacking
+
+    * static address resolution
+    * pattern matching
+
+  OMITS
+    * working with timetags
+    * all advanced protocol features of documentation, typesigs, etc
+    * connection oriented communication
+

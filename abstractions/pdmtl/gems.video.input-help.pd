@@ -1,0 +1,32 @@
+#N canvas 0 0 1049 323 10;
+#X obj 84 192 gems.video.input @driver 0 @device 0 @mode NTSC @dimen
+256 256 @colorspace RGBA;
+#X obj 82 159 gemhead;
+#X obj 79 53 gems.win @dimen 320 240;
+#X obj 79 29 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X msg 486 161 reset;
+#X obj 87 255 rectangle 2.66666 2;
+#X obj 87 230 translateXYZ -2.66666 0 0;
+#X obj 550 162 gemhead;
+#X msg 954 164 reset;
+#X obj 555 258 rectangle 2.66666 2;
+#X obj 551 195 gems.video.input @driver 0 @device 1 @mode NTSC @dimen
+256 256 @colorspace RGBA;
+#X obj 555 233 translateXYZ 2.66666 0 0;
+#X text 75 133 DEVICE 0;
+#X text 549 132 DEVICE 1;
+#X text 74 99 Using video4linux :;
+#X msg 140 20 dimen 640 480;
+#X msg 241 21 dimen 320 240;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 0 1;
+#X connect 6 0 5 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 1;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 15 0 2 0;
+#X connect 16 0 2 0;

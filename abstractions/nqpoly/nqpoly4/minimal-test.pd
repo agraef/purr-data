@@ -1,0 +1,10 @@
+#N canvas 350 285 454 304 10;
+#X msg 97 81 foo bar;
+#X obj 134 178 nqpoly4 5 minimal param_1 param_2;
+#X text 39 8 Try sending different messages and watch the output in
+the Pd window.;
+#X msg 155 142 fa so la ti;
+#X msg 134 111 do fe mi;
+#X connect 0 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;

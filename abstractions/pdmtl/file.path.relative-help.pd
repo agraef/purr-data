@@ -1,0 +1,37 @@
+#N canvas 123 70 816 499 10;
+#X declare -stdpath extra/tof;
+#X obj 198 505 file.path.relative;
+#X obj 393 287 openpanel;
+#X obj 393 260 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 379 426 openpanel;
+#X obj 379 396 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 198 594 flow.prepend set;
+#X obj 275 256 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 275 288 file.folder.panel;
+#X msg 198 618 ../../.gnome2/sound/events;
+#X obj 408 481 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 304 591 The relative path;
+#X text 442 427 Select the base path to which you want to make the
+relative path.;
+#X text 398 392 The base path must be a path to a folder and not a
+file!;
+#X text 267 229 These paths will become relative to the base path UNLESS
+they are relative paths themselves!;
+#X msg 23 328 symbol will/bypass/because/relative;
+#X text 429 480 Use the top patch's path as base path(default behavior)
+;
+#X text 86 175 Description: Makes absolute paths relative.;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 1;
+#X connect 4 0 3 0;
+#X connect 5 0 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 1;
+#X connect 14 0 0 0;

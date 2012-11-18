@@ -1,0 +1,26 @@
+#N canvas 37 238 680 440 10;
+#X floatatom 333 150 5 0 0 0 - - -;
+#X obj 65 226 * 120;
+#X msg 65 117 0;
+#X msg 93 116 1;
+#X obj 278 225 * 120;
+#X obj 278 189 debounce 3;
+#X obj 65 249 time_roll;
+#X obj 278 249 time_roll;
+#X obj 65 145 f;
+#X text 64 92 input : boolean (0 or 1);
+#X text 376 148 size: n;
+#X text 36 31 Debounce : it blocks the value of the incoming data for
+the;
+#X text 525 347 la Kitchen;
+#X text 525 364 Charles Verron;
+#X text 524 331 2004_03_18;
+#X text 399 31 n further samples \, after each change.;
+#X connect 0 0 5 1;
+#X connect 1 0 6 0;
+#X connect 2 0 8 0;
+#X connect 3 0 8 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 0;
+#X connect 8 0 1 0;
+#X connect 8 0 5 0;

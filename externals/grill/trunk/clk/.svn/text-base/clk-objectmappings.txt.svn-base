@@ -1,0 +1,13 @@
+max objectfile clk.int clk;
+max objectfile clk.sync clk;
+max objectfile clk.tap clk;
+max objectfile clk.time clk;
+max objectfile clk.metro clk;
+max objectfile clk.delay clk;
+
+max oblist clock clk.int;
+max oblist clock clk.sync;
+max oblist clock clk.tap;
+max oblist clock clk.time;
+max oblist clock clk.metro;
+max oblist clock clk.delay;

@@ -1,0 +1,40 @@
+#N canvas 88 88 766 472 10;
+#N canvas 0 0 450 300 graph1 0;
+#X array tr2array 16 float 1;
+#A 0 0 0 -0.414285 -0.242857 -0.114285 -0.228571 -0.62857 0.328571
+0.442856 -0.42857 -0.42857 0.128571 0.114285 0.0571428 0.799998 0.971426
+;
+#X coords 0 1 15 -1 200 140 1;
+#X restore 453 68 graph;
+#X text 281 294 Argument 1 : table(array) to read;
+#X floatatom 126 336 5 0 0 0 - - -;
+#X text 233 205 Size of table (array);
+#X text 169 333 Interpolated value;
+#X obj 260 255 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 44 142 vsl 15 128 0 16 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X floatatom 44 280 5 0 0 0 - - -;
+#X text 280 250 0 = interpolation off;
+#X text 279 262 1 = interpolation on (default);
+#X msg 126 173 set tr2array;
+#X text 39 121 Index;
+#X text 122 154 Select array from witch to read.;
+#X obj 14 40 cnv 15 200 22 empty empty Made_by:mr.tof(tom@danslchamp.org)
+12 12 1 7 -1 -262144 0;
+#X obj 259 40 cnv 15 155 22 empty empty Version:01(2004-11-22) 45 12
+1 7 -1 -262144 0;
+#X text 18 68 See also : tabread \, tabread4~.;
+#X obj 126 294 table.read2 tr2array;
+#X obj 45 386 tabread tr2array;
+#X floatatom 45 418 5 0 0 0 - - -;
+#X text 91 419 No interpolation;
+#X text 21 3 Description: Reads from an array with simple 2 point interpolation.
+;
+#X connect 5 0 16 1;
+#X connect 6 0 7 0;
+#X connect 7 0 16 0;
+#X connect 7 0 17 0;
+#X connect 10 0 16 0;
+#X connect 16 0 2 0;
+#X connect 17 0 18 0;

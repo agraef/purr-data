@@ -1,0 +1,7 @@
+#N canvas 329 242 450 300 10;
+#X obj 32 206 s-ezdac~ out;
+#X obj 32 86 s-obiwancym~ cy;
+#X msg 32 5 \; cy/short bang \;;
+#X msg 142 5 \; cy/long bang \;;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;

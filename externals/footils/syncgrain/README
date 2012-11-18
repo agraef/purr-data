@@ -1,0 +1,49 @@
+_ _____SyncGrain implements synchronous granular synthesis.
+
+The source sound for the grains is obtained by reading a function table
+containing the samples of the source waveform. The grain generator has full
+control of frequency (grains/sec), overall amplitude, grain pitch (a sampling
+increment) and grain size (in millisecs). An extra parameter is the grain
+pointer speed (or rate), which controls which position the generator will start
+reading samples in the table for each successive grain. It is measured in
+fractions of grain size, so a value of 1 will make each successive grain read
+from where the previous grain should finish. A value of 0.5 will make the next
+grain start at the midway position from the previous grain start and finish,
+etc. A value of 0 will make the generator read always from the start of the
+table.  This control gives extra flexibility for creating timescale
+modifications in the resynthesis.
+
+ [Above text is based on the SyncGrain dokumentation by Dr Victor Lazzarini.]
+
+_ ___help __ _
+1. inlet: "set arrayname" message to choose grain source array/table. 
+!!! DON'T EVER DELETE THE TABLE AFTERWARDS !!!
+2. inlet: Grain Frequency in grains per second
+3. inlet: Amplitude, default starting value is 1
+4. inlet: Pitch of the grains
+5. inlet: GrainSize in milli-seconds! Good values are between 10 and 50 msec.
+6. inlet: PointerRate. Normally 0-1, but have fun with greater or smaller values!
+
+_ ____Requirements__ _
+A binary for Linux is included. To run it, you need the SndObject-Library by 
+Dr Victor Lazzarini. syncgrain~ is a direct port of the SndObject SyncGrain in
+this library. You can download SndObj for Linux, W32 and IRIX at: 
+http://www.may.ie/academic/music/musictec/SndObj/main.html
+
+To build syncgrain~ you also need flext by Thomas Grill in version 0.4.1,
+Get at http://www.parasitaere-kapazitaeten.net/Pd/ext/
+
+_ ____Bugs__ _
+_ probably some...
+
+_ ____License__ _
+GPL, see license.txt.
+
+_ ____Authors__ _
+This pd external was written by me, Frank Barknecht <fbar@footils.org> Thanks
+go out to Victor Lazzarini for writing SndObj and for his great help and
+patience with my questions, and the same applies to flext-author Thomas Grill. 
+
+
+
+

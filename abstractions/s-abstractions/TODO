@@ -1,0 +1,7 @@
+* adsr style envelope with sustain and settable length, which takes midi notes as triggers
+* auto-learning midi input abstractions
+* sample looper like susloop~
+* make the envelope self resizing
+* make 'basic' elements (sliders, numberboxes, etc) with [sssad/auto] in them
+* make s-midiloop
+* make the spectal panner

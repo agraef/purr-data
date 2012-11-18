@@ -1,0 +1,2 @@
+#N canvas 0 0 392 161 10;
+#X obj 160 67 noise~;

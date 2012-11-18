@@ -1,0 +1,5 @@
+#N canvas 157 347 466 158 10;
+#X text 45 2 Description: Converts the 1st order horizontal Ambisonic
+sound format to the 3rd order horizontal.;
+#X text 44 32 tags: ambisonic;
+#X obj 57 78 mtl/ambiWxyToWxyuvpq~;

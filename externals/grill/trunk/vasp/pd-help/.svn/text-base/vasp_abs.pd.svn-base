@@ -1,0 +1,48 @@
+#N canvas 99 112 853 471 10;
+#X msg 521 263 vasp bufabs;
+#X text 71 63 get absolute values of a vasp;
+#X text 71 79 see also vasp.*.help for an example using vasp.abs to
+generate an envelope from a vasp;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.abs 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufabs 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 465 124 graph;
+#N canvas 0 0 394 270 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufabs;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 737 285 pd init;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 521 284 pd clear_buffer;
+#X text 189 209 get the absolute values;
+#X obj 77 209 prepend set;
+#X obj 77 285 vasp.update;
+#X text 178 134 generate a sinewave;
+#X msg 77 135 vasp bufabs;
+#X obj 77 154 vasp.osc 22050;
+#X obj 77 247 vasp.abs;
+#X obj 170 210 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 77 173 vasp.update;
+#X text 58 209 *;
+#X text 71 414 * prepend-object from iemlib2 (http://pd.iem.at/iemlib)
+;
+#X obj 77 383 VASP-HELP;
+#X connect 0 0 6 0;
+#X connect 8 0 13 0;
+#X connect 11 0 12 0;
+#X connect 12 0 15 0;
+#X connect 13 0 9 0;
+#X connect 14 0 13 0;
+#X connect 15 0 8 0;

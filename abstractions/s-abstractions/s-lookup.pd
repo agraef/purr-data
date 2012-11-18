@@ -1,0 +1,17 @@
+#N canvas 71 209 450 300 10;
+#X obj 13 88 list append;
+#X msg 13 66 bang;
+#X obj 13 114 list split 0;
+#X obj 13 142 list split 1;
+#X obj 13 40 t b f;
+#X obj 108 13 inlet list-or-bang-to-clear;
+#X obj 13 13 inlet lookup;
+#X obj 13 169 outlet;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 1 3 0;
+#X connect 3 0 7 0;
+#X connect 4 0 1 0;
+#X connect 4 1 2 1;
+#X connect 5 0 0 1;
+#X connect 6 0 4 0;

@@ -1,0 +1,62 @@
+#N canvas 44 117 891 565 10;
+#X obj 62 41 cnv 15 15 15 empty empty vasp.window 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufwindow 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 512 119 graph;
+#N canvas 0 0 404 280 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufwindow;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 771 320 pd init;
+#N canvas 0 0 194 221 clear_buffers 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 569 325 pd clear_buffers;
+#X text 173 149 generate a function;
+#X obj 63 495 VASP-HELP;
+#X msg 569 301 vasp bufwindow;
+#X msg 61 149 vasp bufwindow;
+#X obj 61 278 vasp.u;
+#X floatatom 194 186 5 0 0;
+#X text 259 185 0..4;
+#X msg 231 215 lin;
+#X msg 231 240 sin;
+#X msg 231 265 hanning;
+#X msg 231 290 hamming;
+#X msg 231 315 blackman;
+#X text 275 214 0;
+#X text 275 236 1;
+#X text 295 260 2;
+#X text 300 289 3;
+#X text 300 316 4;
+#X obj 132 426 vasp.*window;
+#X obj 225 401 vasp.!window;
+#X text 60 396 see also:;
+#X obj 322 426 vasp.*xwindow;
+#X obj 225 426 vasp.*!window;
+#X obj 61 226 vasp.window lin;
+#X text 60 80 generate window functions;
+#X obj 322 401 vasp.xwindow;
+#X text 60 104 argument/right inlet: name or number of name (def linear)
+;
+#X connect 6 0 3 0;
+#X connect 7 0 26 0;
+#X connect 9 0 26 1;
+#X connect 11 0 26 1;
+#X connect 12 0 26 1;
+#X connect 13 0 26 1;
+#X connect 14 0 26 1;
+#X connect 15 0 26 1;
+#X connect 26 0 8 0;

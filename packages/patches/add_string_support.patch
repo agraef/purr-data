@@ -1,0 +1,444 @@
+Index: pd/src/g_text.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_text.c,v
+retrieving revision 1.15
+diff -u -w -r1.15 g_text.c
+--- g_text.c	4 Oct 2006 19:35:06 -0000	1.15
++++ g_text.c	12 Feb 2007 03:45:43 -0000
+@@ -276,6 +276,11 @@
+     outlet_symbol(x->mr_outlet, s);
+ }
+ 
++static void messresponder_blob(t_messresponder *x, t_blob *st)
++{ /* MP 20070107 blob type */
++    outlet_blob(x->mr_outlet, st);
++}
++
+ static void messresponder_list(t_messresponder *x, 
+     t_symbol *s, int argc, t_atom *argv)
+ {
+@@ -307,6 +312,13 @@
+     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
+ }
+ 
++static void message_blob(t_message *x, t_blob *st)
++{
++    t_atom at;
++    SETBLOB(&at, st);
++    binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, 1, &at);
++}
++
+ static void message_list(t_message *x, t_symbol *s, int argc, t_atom *argv)
+ {
+     binbuf_eval(x->m_text.te_binbuf, &x->m_messresponder.mr_pd, argc, argv);
+@@ -1333,6 +1345,7 @@
+     class_addbang(message_class, message_bang);
+     class_addfloat(message_class, message_float);
+     class_addsymbol(message_class, message_symbol);
++    class_addblob(message_class, message_blob);
+     class_addlist(message_class, message_list);
+     class_addanything(message_class, message_list);
+ 
+Index: pd/src/m_atom.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_atom.c,v
+retrieving revision 1.4
+diff -u -w -r1.4 m_atom.c
+--- m_atom.c	11 Aug 2006 20:09:07 -0000	1.4
++++ m_atom.c	12 Feb 2007 03:45:43 -0000
+@@ -28,6 +28,14 @@
+     else return (&s_float);
+ }
+ 
++t_blob *atom_getblob(t_atom *a)  /* MP 20070108 */
++{
++    static unsigned char c = 0;/* a default blob to avoid null pointers. This should be somewhere else...? */
++    static t_blob st = {1L, &c};
++    if (a->a_type == A_BLOB) return (a->a_w.w_blob);
++    else return (&st);
++}
++
+ t_symbol *atom_gensym(t_atom *a)  /* this works  better for graph labels */
+ {
+     char buf[30];
+Index: pd/src/m_binbuf.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_binbuf.c,v
+retrieving revision 1.13
+diff -u -w -r1.13 m_binbuf.c
+--- m_binbuf.c	4 Oct 2006 19:35:06 -0000	1.13
++++ m_binbuf.c	12 Feb 2007 03:45:44 -0000
+@@ -672,6 +672,10 @@
+             case A_SYMBOL:
+                 typedmess(target, stackwas->a_w.w_symbol, nargs-1, stackwas+1);
+                 break;
++            case A_BLOB: /* MP 20070106 blob type */
++                if (nargs == 1) pd_blob(target, stackwas->a_w.w_blob);
++                else pd_list(target, 0, nargs, stackwas);
++                break;
+             case A_FLOAT:
+                 if (nargs == 1) pd_float(target, stackwas->a_w.w_float);
+                 else pd_list(target, 0, nargs, stackwas);
+Index: pd/src/m_class.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_class.c,v
+retrieving revision 1.7
+diff -u -w -r1.7 m_class.c
+--- m_class.c	15 Aug 2006 04:54:15 -0000	1.7
++++ m_class.c	12 Feb 2007 03:45:44 -0000
+@@ -20,6 +20,7 @@
+ 
+ static t_symbol *class_loadsym;     /* name under which an extern is invoked */
+ static void pd_defaultfloat(t_pd *x, t_float f);
++static void pd_defaultblob(t_pd *x, t_blob *st); /* MP20061226 blob type */
+ static void pd_defaultlist(t_pd *x, t_symbol *s, int argc, t_atom *argv);
+ t_pd pd_objectmaker;    /* factory for creating "object" boxes */
+ t_pd pd_canvasmaker;    /* factory for creating canvases */
+@@ -38,6 +39,11 @@
+     else (*(*x)->c_anymethod)(x, &s_bang, 0, 0);
+ }
+ 
++static void pd_defaultblob(t_pd *x, t_blob *st) /* MP 20061226 blob type */
++{ /* for now just reject it, later convert to symbol/float/list */
++    pd_error(x, "%s: no method for blob so far...", (*x)->c_name->s_name);
++}
++
+ static void pd_defaultpointer(t_pd *x, t_gpointer *gp)
+ {
+     if (*(*x)->c_listmethod != pd_defaultlist)
+@@ -205,6 +211,7 @@
+     c->c_pointermethod = pd_defaultpointer;
+     c->c_floatmethod = pd_defaultfloat;
+     c->c_symbolmethod = pd_defaultsymbol;
++    c->c_blobmethod = pd_defaultblob; /* MP 20061226 blob type */
+     c->c_listmethod = pd_defaultlist;
+     c->c_anymethod = pd_defaultanything;
+     c->c_wb = (typeflag == CLASS_PATCHABLE ? &text_widgetbehavior : 0);
+@@ -288,6 +295,12 @@
+         if (argtype != A_SYMBOL || va_arg(ap, t_atomtype)) goto phooey;
+         class_addsymbol(c, fn);
+     }
++    else if (sel == &s_blob) /* MP 20070106 blob type */
++    {
++        post("class_addmethod: %p", fn);
++        if (argtype != A_BLOB || va_arg(ap, t_atomtype)) goto phooey;
++        class_addblob(c, fn);
++    }
+     else if (sel == &s_list)
+     {
+         if (argtype != A_GIMME) goto phooey;
+@@ -346,6 +359,11 @@
+     c->c_symbolmethod = (t_symbolmethod)fn;
+ }
+ 
++void class_addblob(t_class *c, t_method fn) /* MP 20061226 blob type */
++{
++    c->c_blobmethod = (t_blobmethod)fn;
++}
++
+ void class_addlist(t_class *c, t_method fn)
+ {
+     c->c_listmethod = (t_listmethod)fn;
+@@ -564,9 +582,10 @@
+ t_symbol  s_x =         {"x", 0, 0};
+ t_symbol  s_y =         {"y", 0, 0};
+ t_symbol  s_ =          {"", 0, 0};
++t_symbol  s_blob =    {"blob", 0, 0}; /* MP 20061223 blob type */
+ 
+ static t_symbol *symlist[] = { &s_pointer, &s_float, &s_symbol, &s_bang,
+-    &s_list, &s_anything, &s_signal, &s__N, &s__X, &s_x, &s_y, &s_};
++    &s_list, &s_anything, &s_signal, &s__N, &s__X, &s_x, &s_y, &s_, &s_blob}; /* MP 20061223 added s_blob */
+ 
+ void mess_init(void)
+ {
+@@ -654,6 +673,13 @@
+             (*c->c_symbolmethod)(x, &s_);
+         return;
+     }
++    if (s == &s_blob) /* MP 20061226 blob type */
++    {
++        /*post("pd_typedmess argc = %d\n", argc);*//* MP 20061226 debug */
++        if (argc == 1) (*c->c_blobmethod)(x, argv->a_w.w_blob);
++        else goto badarg;
++        return;
++    }
+     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
+         if (m->me_name == s)
+     {
+@@ -698,6 +724,19 @@
+                 }
+                 dp++;
+                 break;
++            case A_BLOB:/* MP 20070106 blob type */
++                /*post("pd_typedmess A_BLOB");*/
++                if (!argc) goto badarg;
++                if (argv->a_type == A_BLOB)
++                {
++                    /*post("argv->a_type == A_BLOB, argc = %d, narg= %d", argc, narg);*/
++                    *ap = (t_int)(argv->a_w.w_blob);
++                }
++                argc--;
++                argv++;
++                narg++;
++                ap++;
++                break;
+             case A_SYMBOL:
+                 if (!argc) goto badarg;
+             case A_DEFSYM:
+@@ -772,6 +811,10 @@
+         {
+         case 'f': SETFLOAT(at, va_arg(ap, double)); break;
+         case 's': SETSYMBOL(at, va_arg(ap, t_symbol *)); break;
++        case 't':
++            SETBLOB(at, va_arg(ap, t_blob *));
++            /*post("pd_vmess: arg[0].a_w.w_blob = %p", arg[0].a_w.w_blob);*/
++            break; /* MP 20061226 blob type */
+         case 'i': SETFLOAT(at, va_arg(ap, t_int)); break;       
+         case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
+         default: goto done;
+Index: pd/src/m_imp.h
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_imp.h,v
+retrieving revision 1.4
+diff -u -w -r1.4 m_imp.h
+--- m_imp.h	19 Aug 2005 23:28:03 -0000	1.4
++++ m_imp.h	12 Feb 2007 03:45:44 -0000
+@@ -25,6 +25,7 @@
+ typedef void (*t_pointermethod)(t_pd *x, t_gpointer *gp);
+ typedef void (*t_floatmethod)(t_pd *x, t_float f);
+ typedef void (*t_symbolmethod)(t_pd *x, t_symbol *s);
++typedef void (*t_blobmethod)(t_pd *x, t_blob *st); /* MP20061226 blob type */
+ typedef void (*t_listmethod)(t_pd *x, t_symbol *s, int argc, t_atom *argv);
+ typedef void (*t_anymethod)(t_pd *x, t_symbol *s, int argc, t_atom *argv);
+ 
+@@ -41,6 +42,7 @@
+     t_pointermethod c_pointermethod;
+     t_floatmethod c_floatmethod;
+     t_symbolmethod c_symbolmethod;
++    t_blobmethod c_blobmethod;  /* MP20061226 blob type */
+     t_listmethod c_listmethod;
+     t_anymethod c_anymethod;
+     struct _widgetbehavior *c_wb;       /* "gobjs" only */
+Index: pd/src/m_obj.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_obj.c,v
+retrieving revision 1.4
+diff -u -w -r1.4 m_obj.c
+--- m_obj.c	18 May 2005 04:28:51 -0000	1.4
++++ m_obj.c	12 Feb 2007 03:45:44 -0000
+@@ -15,6 +15,7 @@
+     t_gpointer *iu_pointerslot;
+     t_float *iu_floatslot;
+     t_symbol **iu_symslot;
++    t_blob **iu_blobslot; /* MP 20061226 blob type */
+     t_sample iu_floatsignalvalue;
+ };
+ 
+@@ -32,9 +33,10 @@
+ #define i_pointerslot i_un.iu_pointerslot
+ #define i_floatslot i_un.iu_floatslot
+ #define i_symslot i_un.iu_symslot
++#define i_blobslot i_un.iu_blobslot /* MP 20061226 blob type */
+ 
+ static t_class *inlet_class, *pointerinlet_class, *floatinlet_class,
+-    *symbolinlet_class;
++    *symbolinlet_class, *blobinlet_class; /* MP 20061226 added blobinlet_class */
+ 
+ #define ISINLET(pd) ((*(pd) == inlet_class) || \
+     (*(pd) == pointerinlet_class) || \
+@@ -111,6 +113,26 @@
+     else inlet_wrong(x, &s_symbol);
+ }
+ 
++static void inlet_blob(t_inlet *x, t_blob *st) /* MP20061226 blob type */
++{
++    /*post("inlet_blob (%p): st %p", &inlet_blob, st);*/
++    if (x->i_symfrom == &s_blob)
++    {
++        /*post("inlet_blob calling pd_vmess");*/
++        pd_vmess(x->i_dest, x->i_symto, "t", st);
++    }
++    else if (!x->i_symfrom)
++    {
++        /*post("inlet_blob calling pd_blob");*/
++        pd_blob(x->i_dest, st);
++    }
++    else
++    {
++        /*post("inlet_blob calling inlet_wrong");*/
++        inlet_wrong(x, &s_blob);
++    }
++}
++
+ static void inlet_list(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
+ {
+     t_atom at;
+@@ -192,6 +214,23 @@
+     return (x);
+ }
+ 
++t_inlet *blobinlet_new(t_object *owner, t_blob **stp) /* MP 20061226 blob type */
++{
++    t_inlet *x = (t_inlet *)pd_new(blobinlet_class), *y, *y2;
++    x->i_owner = owner;
++    x->i_dest = 0;
++    x->i_symfrom = &s_blob;
++    x->i_blobslot = stp;
++    x->i_next = 0;
++    if (y = owner->ob_inlet)
++    {
++        while (y2 = y->i_next) y = y2;
++        y->i_next = x;
++    }
++    else owner->ob_inlet = x;
++    return (x);
++}
++
+ static void symbolinlet_symbol(t_inlet *x, t_symbol *s)
+ {
+     *(x->i_symslot) = s;
+@@ -244,6 +283,7 @@
+     class_addpointer(inlet_class, inlet_pointer);
+     class_addfloat(inlet_class, inlet_float);
+     class_addsymbol(inlet_class, inlet_symbol);
++    class_addblob(inlet_class, inlet_blob); /* MP 20061226 blob type */
+     class_addlist(inlet_class, inlet_list);
+     class_addanything(inlet_class, inlet_anything);
+ 
+@@ -366,6 +406,18 @@
+     --stackcount;
+ }
+ 
++void outlet_blob(t_outlet *x, t_blob *st) /* MP 20061226 blob type */
++{
++    /*post("outlet_blob %p %lu", st, st->s_length);*/
++    t_outconnect *oc;
++    if(++stackcount >= STACKITER)
++        outlet_stackerror(x);
++    else
++        for (oc = x->o_connections; oc; oc = oc->oc_next)
++            pd_blob(oc->oc_to, st);
++    --stackcount;
++}
++
+ void outlet_list(t_outlet *x, t_symbol *s, int argc, t_atom *argv)
+ {
+     t_outconnect *oc;
+Index: pd/src/m_pd.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_pd.c,v
+retrieving revision 1.4
+diff -u -w -r1.4 m_pd.c
+--- m_pd.c	28 Nov 2004 21:20:42 -0000	1.4
++++ m_pd.c	12 Feb 2007 03:45:44 -0000
+@@ -284,6 +284,12 @@
+     (*(*x)->c_symbolmethod)(x, s);
+ }
+ 
++void pd_blob(t_pd *x, t_blob *st) /* MP20061226 blob type */
++{
++    /*post("pd_blob: st %p length %lu (*x)->c_blobmethod %p", st, st->s_length, (*x)->c_blobmethod);*/
++    (*(*x)->c_blobmethod)(x, st);
++}
++
+ void pd_list(t_pd *x, t_symbol *s, int argc, t_atom *argv)
+ {
+     (*(*x)->c_listmethod)(x, &s_list, argc, argv);
+Index: pd/src/m_pd.h
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/m_pd.h,v
+retrieving revision 1.17
+diff -u -w -r1.17 m_pd.h
+--- m_pd.h	22 Oct 2006 21:46:11 -0000	1.17
++++ m_pd.h	12 Feb 2007 03:45:44 -0000
+@@ -102,6 +102,16 @@
+     t_gstub *gp_stub;               /* stub which points to glist/array */
+ } t_gpointer;
+ 
++#define PD_BLOBS 1 /* MP20070211 Use this to test for blob capability */
++/* MP20061223 blob type: */
++typedef struct _blob /* pointer to a blob */
++{
++   unsigned long s_length; /* length of blob in bytes */
++   unsigned char *s_data; /* pointer to 1st byte of blob */
++} t_blob;
++/* ...MP20061223 blob type */
++
++
+ typedef union word
+ {
+     t_float w_float;
+@@ -110,6 +120,7 @@
+     t_array *w_array;
+     struct _glist *w_list;
+     int w_index;
++    t_blob *w_blob; /* MP20061223 blob type */
+ } t_word;
+ 
+ typedef enum
+@@ -125,7 +136,8 @@
+     A_DOLLAR, 
+     A_DOLLSYM,
+     A_GIMME,
+-    A_CANT
++    A_CANT,
++    A_BLOB /* MP20061223 blob type */
+ }  t_atomtype;
+ 
+ #define A_DEFSYMBOL A_DEFSYM    /* better name for this */
+@@ -212,6 +224,7 @@
+ EXTERN t_symbol s_pointer;
+ EXTERN t_symbol s_float;
+ EXTERN t_symbol s_symbol;
++EXTERN t_symbol s_blob;
+ EXTERN t_symbol s_bang;
+ EXTERN t_symbol s_list;
+ EXTERN t_symbol s_anything;
+@@ -255,6 +268,7 @@
+ #define SETFLOAT(atom, f) ((atom)->a_type = A_FLOAT, (atom)->a_w.w_float = (f))
+ #define SETSYMBOL(atom, s) ((atom)->a_type = A_SYMBOL, \
+     (atom)->a_w.w_symbol = (s))
++#define SETBLOB(atom, st) ((atom)->a_type = A_BLOB, (atom)->a_w.w_blob = (st)) /* MP 20061226 blob type */
+ #define SETDOLLAR(atom, n) ((atom)->a_type = A_DOLLAR, \
+     (atom)->a_w.w_index = (n))
+ #define SETDOLLSYM(atom, s) ((atom)->a_type = A_DOLLSYM, \
+@@ -263,6 +277,7 @@
+ EXTERN t_float atom_getfloat(t_atom *a);
+ EXTERN t_int atom_getint(t_atom *a);
+ EXTERN t_symbol *atom_getsymbol(t_atom *a);
++EXTERN t_blob *atom_getblob(t_atom *a);/* MP 20070108 blob type */
+ EXTERN t_symbol *atom_gensym(t_atom *a);
+ EXTERN t_float atom_getfloatarg(int which, int argc, t_atom *argv);
+ EXTERN t_int atom_getintarg(int which, int argc, t_atom *argv);
+@@ -326,6 +341,7 @@
+ EXTERN void pd_pointer(t_pd *x, t_gpointer *gp);
+ EXTERN void pd_float(t_pd *x, t_float f);
+ EXTERN void pd_symbol(t_pd *x, t_symbol *s);
++EXTERN void pd_blob(t_pd *x, t_blob *st); /* MP 20061226 blob type */
+ EXTERN void pd_list(t_pd *x, t_symbol *s, int argc, t_atom *argv);
+ EXTERN void pd_anything(t_pd *x, t_symbol *s, int argc, t_atom *argv);
+ #define pd_class(x) (*(x))
+@@ -350,6 +366,7 @@
+ EXTERN void outlet_pointer(t_outlet *x, t_gpointer *gp);
+ EXTERN void outlet_float(t_outlet *x, t_float f);
+ EXTERN void outlet_symbol(t_outlet *x, t_symbol *s);
++EXTERN void outlet_blob(t_outlet *x, t_blob *st); /* MP 20061226 blob type */
+ EXTERN void outlet_list(t_outlet *x, t_symbol *s, int argc, t_atom *argv);
+ EXTERN void outlet_anything(t_outlet *x, t_symbol *s, int argc, t_atom *argv);
+ EXTERN t_symbol *outlet_getsymbol(t_outlet *x);
+@@ -404,6 +421,7 @@
+ EXTERN void class_addpointer(t_class *c, t_method fn);
+ EXTERN void class_doaddfloat(t_class *c, t_method fn);
+ EXTERN void class_addsymbol(t_class *c, t_method fn);
++EXTERN void class_addblob(t_class *c, t_method fn);/* MP 20061226 blob type */
+ EXTERN void class_addlist(t_class *c, t_method fn);
+ EXTERN void class_addanything(t_class *c, t_method fn);
+ EXTERN void class_sethelpsymbol(t_class *c, t_symbol *s);
+@@ -432,6 +450,7 @@
+ #define class_addpointer(x, y) class_addpointer((x), (t_method)(y))
+ #define class_addfloat(x, y) class_doaddfloat((x), (t_method)(y))
+ #define class_addsymbol(x, y) class_addsymbol((x), (t_method)(y))
++#define class_addblob(x, y) class_addblob((x), (t_method)(y)) /* MP20061226 blob type */
+ #define class_addlist(x, y) class_addlist((x), (t_method)(y))
+ #define class_addanything(x, y) class_addanything((x), (t_method)(y))
+ #endif

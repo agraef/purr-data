@@ -1,0 +1,17 @@
+#N canvas 424 409 450 300 10;
+#X obj 136 121 t b f;
+#X symbolatom 136 222 10 0 0 0 - - -;
+#X obj 136 78 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 1;
+#X msg 136 166 a b c d e f g h;
+#X obj 136 193 list-idx 2;
+#X text 86 52 list-idx: Get element at position idx.;
+#X floatatom 136 102 5 0 0 0 - - -;
+#X obj 136 245 print;
+#X connect 0 0 3 0;
+#X connect 0 1 4 1;
+#X connect 1 0 7 0;
+#X connect 2 0 6 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 6 0 0 0;

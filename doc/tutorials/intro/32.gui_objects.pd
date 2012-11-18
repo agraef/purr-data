@@ -1,0 +1,68 @@
+#N canvas 10 40 620 460 10;
+#X obj 420 33 import libdir cyclone flatgui;
+#X obj 11 57 cnv 15 600 650 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X obj 11 348 cnv 15 400 100 empty empty empty 20 12 0 14 -261696 -66577
+0;
+#X obj 11 57 cnv 15 400 300 empty empty empty 20 12 0 14 -241657 -66577
+0;
+#X obj 30 110 bng 15 250 50 0 \$1 \$1 empty 20 8 0 8 -262144 -1 -1
+;
+#X obj 30 142 tgl 15 1.04858e+06 empty \$2 empty 20 8 0 8 -262144 -1
+-1 0 1;
+#X obj 34 188 vsl 15 128 0 127 0 1.04858e+06 empty \$3 empty 20 8 0
+8 -262144 -1 -1 0 1;
+#X obj 191 318 hsl 128 15 0 127 0 0 empty empty empty 20 8 0 8 -262144
+-1 -1 0 1;
+#X obj 201 289 hdl 15 1 2.6624e+06 8 \$5 \$5 empty 20 8 192 8 -262144
+-1 -1 0;
+#X obj 254 127 vu 15 120 \$6 empty 35 8 0 8 -66577 -1 1 0;
+#X obj 111 109 cnv 15 100 60 empty empty [canvas] 20 12 0 14 -233017
+-66577 1.04858e+06;
+#X obj 126 189 vdl 15 1 4.79232e+06 8 \$9 \$9 empty 20 8 192 8 -262144
+-1 -1 0;
+#X obj 341 116 nbx 5 14 -1e+37 1e+37 0 0 \$5 \$5 empty 45 7 0 10 -262144
+-1 -1 0 256;
+#X text 17 66 Pd comes with a standard \, built-in set of GUI elements
+\, which you can select from the "Put" menu.;
+#X text 17 356 There are also some OS-native GUI elements available
+;
+#X obj 49 404 ggee/button OK;
+#X obj 147 408 popup 124 25 #ffffff popup option;
+#X obj 333 404 ggee/ticker ;
+#X obj 324 529 ggee/envgen 200 140 1 0  ;
+#X obj 491 454 knob 32 32 0 127 0 0 empty empty empty 0 -8 32 8 -262144
+-1 -1 0 1;
+#X text 485 428 [knob];
+#X text 316 381 [ticker];
+#X text 390 505 [envgen];
+#X text 449 90 [cyclone/Scope~];
+#X text 40 380 [button];
+#X text 134 382 [popup];
+#X text 250 107 [vu];
+#X text 46 109 [bng];
+#X text 46 141 [tgl];
+#X text 21 320 [vslider];
+#X text 325 288 [hradio];
+#X text 325 318 [hslider];
+#X text 107 317 [vradio];
+#X obj 441 112 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X text 337 98 [nbx];
+#X obj 461 299 ggee/gcanvas 80 80;
+#X text 472 274 [gcanvas];
+#X obj 51 472 unauthorized/grid grid1 200 0 199 200 0 199 1 1 1 10 10 133 520;
+#X text 71 453 [unauthorized/grid];
+#X floatatom 462 386 5 0 0 0 - - -;
+#X floatatom 534 387 5 0 0 0 - - -;
+#X obj 10 10 cnv 15 400 40 empty empty gui_objects 20 12 0 24 -228992
+-66577 0;
+#X floatatom 244 680 5 0 0 0 - - -;
+#X floatatom 51 679 5 0 0 0 - - -;
+#X floatatom 491 492 5 0 0 0 - - -;
+#X text 422 67 And various others:;
+#X connect 19 0 44 0;
+#X connect 35 0 39 0;
+#X connect 35 1 40 0;
+#X connect 37 0 43 0;
+#X connect 37 1 42 0;

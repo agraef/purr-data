@@ -1,0 +1,54 @@
+#N canvas 453 191 608 468 10;
+#X floatatom 56 268 0 0 0 0 - - -;
+#X obj 56 144 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 56 168 metro 250;
+#X obj 56 235 anti-bis;
+#X obj 109 257 bng 15 100 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 135 268 flashes when a repetition would have occured;
+#N canvas 63 44 210 190 play-it 0;
+#X obj 38 84 + 60;
+#X obj 38 118 play 127 150;
+#X obj 38 54 inlet;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X restore 56 301 pd play-it;
+#X text 26 343 1992 by IRCAM;
+#X text 26 28 anti-bis;
+#X text 26 111 see also:;
+#X text 26 61 Filters out immediate repetitions of integers. Right
+output sends a bang whenever this occurs.;
+#X obj 105 112 anti-osc;
+#X obj 178 113 anti-bis&osc;
+#X msg 162 321 1 0 2 0 2 0 2 1 2 1;
+#X obj 56 202 random 3;
+#N canvas 0 0 842 581 last10 0;
+#X obj 153 175 cnv 15 150 80 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 311 195 Right outlet is responsible to first fill the list
+;
+#X text 312 211 Left outlet then only lets the smaller list pass.;
+#X obj 180 183 list;
+#X obj 180 149 inlet;
+#X obj 180 302 outlet;
+#X obj 180 258 list prepend set;
+#X obj 180 279 list trim;
+#X obj 180 228 list split 10;
+#X connect 3 0 8 0;
+#X connect 4 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 8 0 3 1;
+#X connect 8 0 6 0;
+#X connect 8 2 3 1;
+#X restore 162 299 pd last10;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 2 0 14 0;
+#X connect 3 0 0 0;
+#X connect 3 0 15 0;
+#X connect 3 1 4 0;
+#X connect 3 1 14 0;
+#X connect 14 0 3 0;
+#X connect 15 0 13 0;

@@ -1,0 +1,23 @@
+#N canvas 9 16 450 300 10;
+#X obj 16 126 gemhead -1;
+#X obj 16 270 pix_write;
+#X msg 150 147 auto 1;
+#X obj 16 170 spigot;
+#X obj 150 126 loadbang;
+#X obj 217 147 savepanel;
+#X msg 217 168 file \$1 80;
+#X obj 7 21 tgl 16 0 \$0/record \$1/record record 18 8 0 8 -260818
+-1 -1 0 1;
+#X obj 53 147 r \$0/record;
+#X obj 7 41 bng 16 250 50 0 \$0/file \$1/file file 18 8 0 8 -260818
+-1 -1;
+#X obj 217 126 r \$0/file;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 1 0;
+#X connect 8 0 3 1;
+#X connect 10 0 5 0;
+#X coords 0 -1 1 1 85 60 1 0 0;

@@ -1,0 +1,32 @@
+#ifndef __default_h__
+#define __default_h__
+
+#define CHARWIDTH 5
+#define CHARHEIGHT 8
+#define NBCHARS 128
+
+static char charmaps[NBCHARS][CHARWIDTH*CHARHEIGHT] = {
+
+{
+0,0,0,0,0,
+0,0,0,0,0,
+1,1,0,0,0,
+1,0,1,0,0,
+1,0,1,0,0,
+1,1,0,0,0,
+1,0,0,0,0,
+1,0,0,0,0,
+},
+{
+0,0,0,0,0,
+0,0,0,0,0,
+0,1,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,1,0,0,0,
+1,0,0,0,0,
+0,0,0,0,0,
+},
+};
+
+#endif

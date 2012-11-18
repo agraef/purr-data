@@ -1,0 +1,108 @@
+#N canvas 284 83 862 620 10;
+#X msg 104 432 bang;
+#X msg 68 521 stop;
+#X text 383 323 startlevel attack-duration endlevel decay-duration
+;
+#X text 416 438 direction in degrees;
+#X text 464 478 duration in ms \, 0 is infinite;
+#X text 525 524 level \, range = [-1 \, 1];
+#X text 39 417 start the effect;
+#X text 44 433 with a;
+#X text 224 150 delay before starting;
+#X text 122 75 minimum time between triggers;
+#X msg 232 329 envelope 0 100 0 100;
+#X obj 218 555 ff-constant 0 0 500 0.5;
+#X obj 476 502 hsl 190 17 -1 1 0 0 empty empty level 25 9 1 12 -261689
+-1 -1 18900 0;
+#X obj 367 418 hsl 175 17 0 360 0 1 empty empty direction 25 9 1 12
+-262131 -1 -1 17400 0;
+#X obj 418 458 hsl 235 17 0 5000 0 0 empty empty duration 25 9 1 12
+-261681 -1 -1 17800 0;
+#X text 385 336 levels are in the range [-1 \, 1];
+#X obj 35 49 hsl 290 17 1 5000 0 1 empty empty interval 25 9 1 12 -225271
+-1 -1 2890 0;
+#X msg 32 86 interval \$1;
+#X msg 143 154 delay \$1;
+#X obj 146 118 hsl 230 17 0 5000 0 1 empty empty delay 25 9 1 12 -228992
+-1 -1 1145 0;
+#X obj 100 487 bng 25 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 68 487 bng 25 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 364 438 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 360 256;
+#X obj 415 480 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 3803.42 256;
+#X obj 473 524 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 1 256;
+#X obj 143 138 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 250 256;
+#X obj 32 69 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 500.9 256;
+#X text 239 13 -- control a force-feedback constant force effect;
+#X msg 218 307 envelope \$1 \$2 \$3 \$4;
+#X obj 348 228 hsl 200 17 0 1 0 1 empty empty end_level 25 8 1 12 -261689
+-1 -1 0 0;
+#X obj 221 186 hsl 200 17 0 1 0 1 empty empty start_level 25 8 1 12
+-261689 -1 -1 11200 0;
+#X obj 218 269 nbx 3 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 0.562814 256;
+#X obj 218 286 pack float float float float;
+#X obj 345 269 nbx 3 14 -1e+37 1e+37 0 0 pack_bang_env empty empty
+0 -6 1 10 -233017 -1 -1 0 256;
+#X obj 281 269 nbx 6 14 -1e+37 1e+37 0 0 pack_bang_env empty empty
+0 -6 1 10 -233017 -1 -1 0 256;
+#X obj 409 269 nbx 6 14 -1e+37 1e+37 0 0 pack_bang_env empty empty
+0 -6 1 10 -233017 -1 -1 0 256;
+#X obj 284 207 hsl 235 17 5 5000 1 0 empty empty attack_duration 25
+9 1 12 -261681 -1 -1 0 0;
+#X obj 412 249 hsl 235 17 5 5000 1 0 empty empty decay_duration 25
+9 1 12 -261681 -1 -1 0 0;
+#X obj 198 269 bng 15 250 50 0 empty pack_bang_env empty 0 -6 0 8 -262144
+-1 -1;
+#X obj 3 3 cnv 15 850 30 empty empty [ff-constant] 15 15 1 18 -262131
+-1 0;
+#X obj 642 111 pddp_open all_about_haptics;
+#X text 530 110 For more info:;
+#X text 394 556 <-- arguments are: device# direction duration level
+;
+#X text 258 578 the outlet gives the effect number on the device or
+-1 if it is not loaded.;
+#X floatatom 218 584 5 0 0 0 - - -;
+#X msg 276 364 load;
+#X msg 276 386 unload;
+#X text 336 363 a load message \, uploads an effect to the stick;
+#X text 335 386 an unload message \, removes it;
+#X text 420 58 [ff-constant] sets up a constant force in one direction.
+;
+#X connect 0 0 11 0;
+#X connect 1 0 11 0;
+#X connect 10 0 11 0;
+#X connect 11 0 44 0;
+#X connect 12 0 24 0;
+#X connect 13 0 22 0;
+#X connect 14 0 23 0;
+#X connect 16 0 26 0;
+#X connect 17 0 11 0;
+#X connect 18 0 11 0;
+#X connect 19 0 25 0;
+#X connect 20 0 11 0;
+#X connect 21 0 1 0;
+#X connect 22 0 11 1;
+#X connect 23 0 11 2;
+#X connect 24 0 11 3;
+#X connect 25 0 18 0;
+#X connect 26 0 17 0;
+#X connect 28 0 11 0;
+#X connect 29 0 33 0;
+#X connect 30 0 31 0;
+#X connect 31 0 32 0;
+#X connect 32 0 28 0;
+#X connect 33 0 32 2;
+#X connect 34 0 32 1;
+#X connect 35 0 32 3;
+#X connect 36 0 34 0;
+#X connect 37 0 35 0;
+#X connect 38 0 32 0;
+#X connect 45 0 11 0;
+#X connect 46 0 11 0;

@@ -1,0 +1,9 @@
+#N canvas 1 22 449 300 10;
+#X obj 58 100 fmod 2.34;
+#X text 97 13 float version for mod;
+#X floatatom 58 80 5 0 0 0 - - -;
+#X floatatom 109 81 5 0 0 0 - - -;
+#X floatatom 58 123 5 0 0 0 - - -;
+#X connect 0 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 1;

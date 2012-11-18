@@ -1,0 +1,33 @@
+#N canvas 447 151 646 543 10;
+#X obj 366 242 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 -68 256;
+#X obj 455 237 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 -57.4803 256;
+#X obj 458 207 hsl 128 15 -100 100 0 0 empty empty empty -2 -6 0 8
+-262144 -1 -1 2700 1;
+#X msg 366 218 -120;
+#X obj 273 110 dac~;
+#X msg 50 274 reload;
+#X msg 109 171 start /home/kjetil/mus2840/hh1.wav;
+#X msg 288 265 stop;
+#X msg 365 267 rate \$1;
+#X msg 455 264 pan \$1;
+#X obj 260 66 k_jack~ supercollider;
+#X obj 71 325 pyext supertest supertest;
+#X text 15 15 Play a soundfile on the supercollider server.;
+#X text 333 67 <- We get the supercollider sound here.;
+#X text 432 503 -Kjetil S. Matheussen \, 2004;
+#X msg 28 487 \; pd dsp 1;
+#X obj 28 456 loadbang;
+#X connect 0 0 8 0;
+#X connect 1 0 9 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 5 0 11 0;
+#X connect 6 0 11 1;
+#X connect 7 0 11 1;
+#X connect 8 0 11 1;
+#X connect 9 0 11 1;
+#X connect 10 0 4 0;
+#X connect 10 1 4 1;
+#X connect 16 0 15 0;

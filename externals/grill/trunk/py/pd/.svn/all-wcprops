@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/ext/!svn/ver/3655/trunk/py/pd
+END
+methods-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2391/trunk/py/pd/methods-1.pd
+END
+script-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/script-1.pd
+END
+methods-2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3655/trunk/py/pd/methods-2.pd
+END
+thread-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/thread-1.pd
+END
+sendrecv-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2391/trunk/py/pd/sendrecv-1.pd
+END
+buffer-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/buffer-1.pd
+END
+sendrecv-2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2391/trunk/py/pd/sendrecv-2.pd
+END
+buffer-2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/buffer-2.pd
+END
+attr-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2391/trunk/py/pd/attr-1.pd
+END
+sendrecv-3.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2391/trunk/py/pd/sendrecv-3.pd
+END
+pak.pd
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/2391/trunk/py/pd/pak.pd
+END
+sig-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2391/trunk/py/pd/sig-1.pd
+END
+sig-2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2391/trunk/py/pd/sig-2.pd
+END
+tcltk.pd
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/2391/trunk/py/pd/tcltk.pd
+END
+simple-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/simple-1.pd
+END
+builtins-1.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2391/trunk/py/pd/builtins-1.pd
+END
+simple-2.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/simple-2.pd
+END
+simple-3.pd
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2391/trunk/py/pd/simple-3.pd
+END

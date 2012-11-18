@@ -1,0 +1,8 @@
+#N canvas 40 465 283 218 10;
+#X text 12 28 Comment: Taken from Andy Farnell's work.;
+#X text 13 10 Description: Generates a rain sound.;
+#X obj 15 87 mtl/rain~;
+#X obj 16 129 mtl/out~;
+#X text 11 50 tags: synthesize~;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;

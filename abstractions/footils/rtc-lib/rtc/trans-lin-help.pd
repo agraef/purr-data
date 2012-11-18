@@ -1,0 +1,37 @@
+#N canvas 343 243 618 404 10;
+#X floatatom 349 146 0 0 0 2 steps - -;
+#X floatatom 212 146 0 0 0 2 start - -;
+#X floatatom 280 146 0 0 0 2 end - -;
+#X floatatom 143 146 0 0 0 2 index - -;
+#X floatatom 143 216 0 0 0 0 - - -;
+#X text 137 44 linear transition -------- Int in left inlet outputs
+the nth member of a linear transition between a start value and an
+end value in n steps \, whereas "steps" is the number of row elements
+(between start and end value) minus one.;
+#X obj 282 294 expr_scale 0 12 500 2000;
+#X obj 143 175 trans-lin 500 2000 12;
+#X floatatom 252 249 5 0 0 2 index - -;
+#X floatatom 282 321 5 0 0 0 - - -;
+#X floatatom 363 262 0 0 0 2 steps - -;
+#X floatatom 404 262 0 0 0 2 start - -;
+#X floatatom 445 261 0 0 0 2 end - -;
+#X text 262 220 equivalent to "expr_scale" used like this:;
+#X obj 99 271 ==;
+#X obj 99 291 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 252 270 t a a;
+#X connect 0 0 7 3;
+#X connect 1 0 7 1;
+#X connect 2 0 7 2;
+#X connect 3 0 7 0;
+#X connect 6 0 9 0;
+#X connect 6 0 14 1;
+#X connect 7 0 4 0;
+#X connect 7 0 14 0;
+#X connect 8 0 16 0;
+#X connect 10 0 6 2;
+#X connect 11 0 6 3;
+#X connect 12 0 6 4;
+#X connect 14 0 15 0;
+#X connect 16 0 7 0;
+#X connect 16 1 6 0;

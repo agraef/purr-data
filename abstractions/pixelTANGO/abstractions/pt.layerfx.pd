@@ -1,0 +1,77 @@
+#N canvas 277 433 390 250 10;
+#X obj 1 1 cnv 5 128 47 empty empty empty 5 6 1 9 -249661 -66577 0
+;
+#X text 6 52 layer_fx;
+#X obj 10 91 inlet;
+#X obj 10 135 outlet;
+#X obj 75 135 outlet;
+#X obj 152 4 commun /amount \$0;
+#X obj 212 82 commun /fx-index \$0;
+#X obj 9 4 hsl 112 14 0.01 1 0 0 \$0-fxAmount \$0 fx_amount 38 8 1
+8 -262144 -1 -128992 0 1;
+#X obj 233 57 s \$0-index;
+#X text 122 262 Due to dynamics this index could change!! Use symbol
+references? (how to manage them?) dir2Abstraction array would need
+to do the work... the paths would be absolute.;
+#X obj 159 28 route bang;
+#X obj 75 91 inlet;
+#N canvas 597 235 654 526 new 0;
+#X obj 13 28 inlet;
+#X text 13 -1 Pixel Effects;
+#X obj 13 447 outlet;
+#X obj 380 8 cnv 15 250 140 empty empty empty 5 8 1 10 -260390 -1 0
+;
+#X obj 569 20 inlet;
+#X obj 569 123 outlet;
+#X obj 65 46 r \$0-fxAmount;
+#X obj 392 58 mementoSetup pt.layerfx \$0;
+#X obj 169 313 r \$0-index;
+#X obj 169 379 s \$0-index-set;
+#X obj 80 72 r pt.updateArrays;
+#X obj 133 95 loadbang;
+#X msg 198 247 clear bang;
+#X obj 392 80 s \$0-defaults;
+#X obj 448 129 route layerNum;
+#X obj 119 116 t b b b;
+#X obj 118 174 getdir;
+#X obj 118 195 makefilename %s/fx/*.pd;
+#X obj 13 346 dir2abstractionArray \$0;
+#X msg 118 218 pattern symbol \$1;
+#X msg 134 149 bang;
+#X connect 0 0 18 0;
+#X connect 4 0 7 0;
+#X connect 6 0 18 1;
+#X connect 7 0 13 0;
+#X connect 7 1 5 0;
+#X connect 7 1 14 0;
+#X connect 8 0 18 3;
+#X connect 10 0 15 0;
+#X connect 11 0 15 0;
+#X connect 12 0 18 2;
+#X connect 15 0 16 0;
+#X connect 15 2 12 0;
+#X connect 16 0 17 0;
+#X connect 17 0 19 0;
+#X connect 18 0 2 0;
+#X connect 18 2 9 0;
+#X connect 19 0 18 2;
+#X connect 20 0 16 0;
+#X restore 16 112 pd new interna;
+#X msg 140 207 options empty;
+#X obj 3 21 popup 124 25 grey95 Effects Passthrough edge.pd emboss.pd
+gain.pd motionblur.pd negative.pd normalize.pd posterize.pd randomdot.pd
+roll.pd rtx-DANGER_USE_AT_YOUR_OWN_RISK.pd scanline.pd;
+#X obj 228 138 r \$0-index-set;
+#X connect 2 0 12 0;
+#X connect 5 0 7 0;
+#X connect 6 0 14 0;
+#X connect 7 0 5 0;
+#X connect 10 1 6 0;
+#X connect 10 1 8 0;
+#X connect 11 0 12 1;
+#X connect 12 0 3 0;
+#X connect 12 1 4 0;
+#X connect 13 0 14 0;
+#X connect 14 0 10 0;
+#X connect 15 0 14 0;
+#X coords 0 0 1 1 130 49 1 0 0;

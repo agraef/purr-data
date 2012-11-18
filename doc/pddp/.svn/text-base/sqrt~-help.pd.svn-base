@@ -1,0 +1,79 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header sqrt~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 246 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal;
+#X text 12 45 DESCRIPTION signal square root;
+#X text 12 85 OUTLET_0 signal;
+#X text 12 65 INLET_0 signal;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 502 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 543 (none);
+#N canvas 108 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 152 43 rsqrt~;
+#X obj 203 43 sqrt;
+#X obj 22 43 q8_sqrt~;
+#X obj 82 43 q8_rsqrt~;
+#X text 8 2 [sqrt~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 446 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 511 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 485 3 sqrt~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/sqrt~ -text
+pdpedia: sqrt~;
+#X obj 232 240 metro 500;
+#X floatatom 215 137 0 0 0 0 - - -;
+#X floatatom 216 297 0 0 0 0 - - -;
+#X obj 216 264 snapshot~;
+#X floatatom 216 380 9 0 0 0 - - -;
+#X obj 216 324 t f f;
+#X obj 216 351 *;
+#X obj 215 163 sig~;
+#X text 98 445 signal;
+#X obj 232 215 loadbang;
+#X text 98 465 float;
+#X obj 216 191 sqrt~;
+#X text 168 465 - a float may be sent to the inlet as long as no signal
+connections are made to [sqrt~].;
+#X text 98 510 signal;
+#X text 168 510 - the square root of the incoming signal is output.
+;
+#X text 11 23 signal square root;
+#X text 168 445 - an incoming signal.;
+#X text 20 72 [sqrt~] takes the approximate square root of the incoming
+signal \, using a fast \, approximate algorithm which is probably accurate
+to about 120 dB (20 bits).;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 13 0 16 0;
+#X connect 14 0 20 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;
+#X connect 18 0 19 0;
+#X connect 18 1 19 1;
+#X connect 19 0 17 0;
+#X connect 20 0 24 0;
+#X connect 22 0 13 0;
+#X connect 22 0 13 0;
+#X connect 24 0 16 0;

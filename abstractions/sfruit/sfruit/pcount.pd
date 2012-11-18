@@ -1,0 +1,28 @@
+#N canvas 731 546 353 279 10;
+
+#X obj 78 24 inlet;
+#X obj 63 144 f 0;
+#X msg 78 108 0;
+#X obj 63 246 outlet;
+#X obj 78 66 route reset;
+#X obj 241 20 inlet;
+#X obj 52 108 b;
+#X obj 159 24 inlet;
+#X obj 138 144 + \$1;
+#X obj 208 144 mod \$2;
+#X obj 171 111 init 1;
+#X obj 257 111 init 1e+21;
+#X obj 174 191 import-disabled iemlib;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 1 0 8 0;
+#X connect 2 0 1 1;
+#X connect 4 0 2 0;
+#X connect 4 1 6 0;
+#X connect 5 0 9 1;
+#X connect 6 0 1 0;
+#X connect 7 0 8 1;
+#X connect 8 0 9 0;
+#X connect 9 0 1 1;
+#X connect 10 0 8 1;
+#X connect 11 0 9 1;

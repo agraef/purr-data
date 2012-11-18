@@ -1,0 +1,50 @@
+#N canvas 446 0 484 674 12;
+#X text 82 72 x-axis;
+#X text 79 292 y-axis;
+#X obj 16 649 outlet;
+#X obj 578 265 drawnumber -v c1 xsize x0(0:1000)(25:1025) y0(0:1000)(-35:965)
+0 x:;
+#X obj 81 316 r \$2-y-vis;
+#X obj 81 95 r \$2-x-vis;
+#X obj 575 375 drawnumber -v c2 \$3 x0(0:1000)(75:1075) y0(0:1000)(-35:965)
+0 \$3:;
+#X obj 574 418 drawnumber -v c2 \$4 x0(0:1000)(75:1075) y0(0:1000)(-20:980)
+0 \$4:;
+#X text 610 237 Column 1;
+#X text 610 347 Column 2;
+#X text 610 460 Column 3;
+#X text 674 203 -- Properties --;
+#X obj 577 309 drawnumber -v c1 ysize x0(0:1000)(25:1025) y0(0:1000)(-20:980)
+0 y:;
+#X text 131 565 trim floats from end of list;
+#X obj 16 593 list trim;
+#X obj 16 565 list split 2;
+#X obj 578 125 drawsymbol -v color-flag color x0(0:1000)(25:1025) y0(0:1000)(5:1005)
+;
+#X obj 574 574 drawnumber -v c3 \$7 x0(0:1000)(140:1140) y0(0:1000)(-20:980)
+0 \$7:;
+#X obj 574 531 drawnumber -v c3 \$6 x0(0:1000)(140:1140) y0(0:1000)(-35:965)
+0 \$6:;
+#X obj 575 485 drawnumber -v c3 \$5 x0(0:1000)(140:1140) y0(0:1000)(-50:950)
+0 \$5:;
+#X obj 17 4 struct \$2 float x float y float x0 float y0 float id symbol
+color float color-flag float xsize float ysize float \$3 float \$4
+float \$5 float \$6 float \$7 float c1 float c2 float c3 float int-c
+float ext-c;
+#X obj 81 125 filledpolygon int-c ext-c 1 x0(0:1000)(7:1007) y0(0:1000)(12:1012)
+x0(0:1000)(7:1007) y0(0:1000)(9:1009) x0(0:1000)(2:1002) y0(0:1000)(12:1012)
+x0(0:1000)(7:1007) y0(0:1000)(15:1015) x0(0:1000)(7:1007) y0(0:1000)(12:1012)
+x0(0:1000)(15:1015) y0(0:1000)(12:1012) x0(0:1000)(15:1015) y0(0:1000)(10:1009)
+x0(0:1000)(20:1020) y0(0:1000)(12:1012) x0(0:1000)(15:1015) y0(0:1000)(15:1015)
+x0(0:1000)(15:1015) y0(0:1000)(12:1012);
+#X obj 81 346 filledpolygon int-c ext-c 1 x0(0:1000)(11:1011) y0(0:1000)(8:1008)
+x0(0:1000)(14:1014) y0(0:1000)(8:1008) x0(0:1000)(11:1011) y0(0:1000)(3:1003)
+x0(0:1000)(8:1008) y0(0:1000)(8:1008) x0(0:1000)(11:1011) y0(0:1000)(8:1008)
+x0(0:1000)(11:1011) y0(0:1000)(16:1016) x0(0:1000)(14:1014) y0(0:1000)(16:1016)
+x0(0:1000)(11:1011) y0(0:1000)(21:1021) x0(0:1000)(8:1008) y0(0:1000)(16:1016)
+x0(0:1000)(11:1011) y0(0:1000)(16:1016);
+#X connect 4 0 22 0;
+#X connect 5 0 21 0;
+#X connect 14 0 2 0;
+#X connect 15 0 14 0;
+#X connect 20 0 15 0;

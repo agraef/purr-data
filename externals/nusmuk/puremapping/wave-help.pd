@@ -1,0 +1,19 @@
+#N canvas 441 85 302 360 10;
+#X floatatom 29 40 5 0 0 0 - - -;
+#X floatatom 60 79 5 0 0 0 - - -;
+#X floatatom 103 97 5 0 0 0 - - -;
+#X obj 23 118 wave 25 0.4;
+#X obj 26 23 hsl 200 15 -1 5 0 0 empty empty center_position -2 -6
+0 8 -262144 -1 -1 5500 1;
+#X obj 106 79 hsl 128 15 0.01 10 1 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 5900 1;
+#X obj 23 156 multi_slider 50;
+#X obj 63 61 hsl 128 15 0 50 0 0 empty empty number_of_points -2 -6
+0 8 -262144 -1 -1 12700 1;
+#X connect 1 0 3 1;
+#X connect 2 0 3 2;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;
+#X connect 4 0 0 0;
+#X connect 5 0 2 0;
+#X connect 7 0 1 0;

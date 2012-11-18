@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/3746/trunk/deljoin
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1357/trunk/deljoin/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1357/trunk/deljoin/license.txt
+END
+deljoin.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1357/trunk/deljoin/deljoin.mcp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3746/trunk/deljoin/main.cpp
+END
+deljoin.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/1357/trunk/deljoin/deljoin.vcproj
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1357/trunk/deljoin/package.txt
+END
+deljoin.help
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/1357/trunk/deljoin/deljoin.help
+END
+deljoin-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/1357/trunk/deljoin/deljoin-help.pd
+END

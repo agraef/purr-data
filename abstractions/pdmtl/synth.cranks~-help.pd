@@ -1,0 +1,15 @@
+#N canvas 240 512 453 241 10;
+#X obj 80 144 synth.cranks~;
+#X obj 80 180 mix.out_~;
+#X obj 80 73 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 95 118 hradio 15 1 0 6 empty empty empty 0 -6 0 8 -262144 -1
+-1 2;
+#X text 97 74 random;
+#X text 92 98 select 1 of 6;
+#X text 66 12 Description: Generates six different crank sounds.;
+#X text 66 30 Comment: Taken from Andy Farnell's work.;
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;

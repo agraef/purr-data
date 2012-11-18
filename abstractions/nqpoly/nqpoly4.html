@@ -1,0 +1,79 @@
+<html>
+<header>
+<title>pix.test.at</title>
+</header>
+<body bgcolor="#000000" text="#00f000" link="#00ff00" alink="#80ff80" vlink="#008000">
+
+<table border="0" height="100%" width="50%" align="center">
+<tr><td>
+<pre>
+                         _       _  _   
+ _ __   __ _ _ __   ___ | |_   _| || |  
+| '_ \ / _` | '_ \ / _ \| | | | | || |_ 
+| | | | (_| | |_) | (_) | | |_| |__   _|
+|_| |_|\__, | .__/ \___/|_|\__, |  |_|  
+          |_|_|            |___/        
+</pre>
+<p>
+okay, here is a hasty release of <a href="nqpoly4-20030329-1.tar.gz">nqpoly4</a>.
+<p>
+i've been mentioning this to too many people, so i had to finally put it online, even though i haven't had time to clean it up as much as i'd like. i was working on a better help file but it will have to wait (here's hoping you like learning by example).
+<p>
+the main differences in this version are:
+  <blockquote>
+  <p><b>new object name.</b> the new object name is <tt>nqpoly4</tt>. i decided to put a version number in the name because this version is completely incompatible with the old one. it's version 4 because versions 2 and 3 are incomplete attempts at a rewrite, lost on my harddrive somewhere.
+  <p><b>no more audio outlet.</b> you now send audio out of your "grains" using throw~ and catch~ objects. this makes it less ugly to make stereo grains, or grains that deal with audio input. it also takes the emphasis away from audio "grains", since that is only part of what nqpoly can be used for. i also dropped the ~ from the name for the same reason.
+  <p><b>extra grain creation parameters.</b> the first two parameters passed to a grain are its index, and the total number of grains that exist. see the <b>minimal-test.pd</b> patch for an example. these values are used in the gem example included with this release.
+  </blockquote>
+<p>
+  files:
+  <blockquote>
+  <p><b>nqpoly4.pd</b> and <b>nqpwrap4.pd</b> are the core files. as with the last version, your grains either need to be in the same directory as these files, or on PDs path.
+  <p><b>minimal.pd</b> and <b>minimal-test.pd</b> are a very simple test to show how voice creation / delegation works. on opening <b>minimal-test.pd</b> you should see:
+<pre>
+created_with: 0 5 param_1 param_2  
+created_with: 1 5 param_1 param_2  
+created_with: 2 5 param_1 param_2  
+created_with: 3 5 param_1 param_2  
+created_with: 4 5 param_1 param_2
+</pre>
+<p>this shows each of the copies of the <b>minimal.pd</b> grain being created. the first parameter is an index, and the second parameter is the total number of grains being created.
+<p>if you click the <b>foo bar</b> message box, you will send a trigger to the first available copy of <b>minimal.pd</b> which should print:
+<pre>
+voice: 0
+called_with: foo bar
+waiting_1000ms: bang
+voice: 0
+finished: bang
+</pre>
+<p>this just prints which voice has been activated, and which parameters it was activated with. the grain pretends to take 1000ms to process the message, so that you can test object delegation. if you press the <b>foo bar</b> button twice within 1000ms, you will see:
+<pre>
+voice: 0
+called_with: foo bar
+waiting_1000ms: bang
+voice: 1
+called_with: foo bar
+waiting_1000ms: bang
+voice: 0
+finished: bang
+voice: 1
+finished: bang
+</pre>
+<p>the first <b>foo bar</b> message arrives at voice 0. while it is busy processing the first message, the second message is handed to voice 1.
+<p>
+kind of terse, but that's really all there is to it.
+</blockquote>
+
+<p><b>petal.pd</b> and <b>petal-test.pd</b> make up a simple gem example. with the gem library loaded, have a look at <b>petal-test.pd</b>. this is only one possible way you could use gem with nqpoly, there is much more room for experimentation. this patch is also interesting because it doesn't use the voice delegation part of nqpoly. it is really just using nqpoly as a way to avoid a lot of cut+paste work.
+<p><b>tabgrain.pd</b>, <b>tabgrain-test.pd</b>, <b>phasor.pd</b> and <b>tabar~.pd</b> make up the obligatory granular synthesis patch. tabgrain-test.pd is a little complicated, but if you click all of the message boxes, you should start getting sound output. the <b>tabgrain.pd</b> object is the beginnings of a granulab-style granular synthesiser, it's mostly complete, requiring just a little more work on the pre-nqpoly4 side to give it similar functionality. i keep telling myself i'll do this one day.
+</blockquote>
+<p>
+this probably counts are an increase in the amount of documentation for nqpoly, if you have already read the documentation from the last version. so, if you would like to understand nqpoly a little more, i suggest you <a href="nqpoly20020204.tgz">check out the old version</a>.
+<p>
+you can also <a href="/index.html">email me</a> if you have any questions.
+</td></tr>
+<tr><td>--<br/><a href="http://pix.test.at/">pix.test.at</a></td></tr>
+</table>
+
+</body>
+</html>

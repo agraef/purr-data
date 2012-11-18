@@ -1,0 +1,103 @@
+#N canvas 1579 140 530 515 10;
+#X text 44 27 UTF-8 to Unicode code numbers;
+#X msg 130 58 64;
+#X floatatom 130 219 0 0 0 3 Unicode_code_number - -;
+#X msg 148 136 240 \, 144 \, 164 \, 160;
+#X msg 147 111 224 \, 188 \, 128;
+#X text 47 299 this object converts bytestreams of UTF-8 encoded strings
+and outputs the according Unicode code number of the letters (as stream).
+;
+#X text 51 344 you have to serialize UTF-8 lists as output by e.g.
+[binfile] and deserialize the Unicode code number lists for use by
+e.g. [text3d];
+#N canvas 456 284 616 356 example 0;
+#N canvas 0 0 450 437 serialize 0;
+#X obj 131 56 inlet list;
+#X obj 149 252 list split 1;
+#X obj 149 169 until;
+#X obj 149 207 list append;
+#X obj 149 148 t b l;
+#X obj 279 252 bang;
+#X obj 126 98 t b l b;
+#X obj 149 340 outlet stream;
+#X obj 291 161 outlet start;
+#X obj 39 158 outlet stop;
+#X connect 0 0 6 0;
+#X connect 1 0 7 0;
+#X connect 1 1 3 1;
+#X connect 1 2 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 4 1 3 1;
+#X connect 5 0 2 1;
+#X connect 6 0 9 0;
+#X connect 6 1 4 0;
+#X connect 6 2 8 0;
+#X restore 109 164 pd serialize;
+#N canvas 0 0 450 300 deserialize 0;
+#X obj 84 82 inlet done;
+#X obj 186 81 inlet stream;
+#X obj 324 83 inlet reset;
+#X obj 107 260 outlet list;
+#X obj 190 138 list prepend;
+#X obj 189 160 t l l;
+#X obj 107 185 list prepend;
+#X obj 299 120 t b b;
+#X obj 107 143 t b;
+#X connect 0 0 8 0;
+#X connect 1 0 4 0;
+#X connect 2 0 7 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 1;
+#X connect 5 1 4 1;
+#X connect 6 0 3 0;
+#X connect 7 0 4 1;
+#X connect 7 1 6 1;
+#X connect 8 0 6 0;
+#X restore 109 237 pd deserialize;
+#X obj 109 260 list prepend set;
+#X obj 109 283 list trim;
+#X text 112 8 a multibyte UTF-8 encoded string;
+#X text 107 330 a string of unicode code numbers;
+#X msg 109 306;
+#X obj 46 260 loadbang;
+#X obj 149 199 utf82codenumber;
+#X msg 109 30 64 201 153 224 188 128 240 144 164 160;
+#X msg 46 280 set;
+#X msg 136 129 64 201 153 224 108 128 240 144 164 160;
+#X text 134 74 erroneous string: byte#5 indicates new single-byte within
+a multi-byte \; therefore character#3 (which depends on byte#5) will
+be skipped;
+#X obj 251 220 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 274 221 error;
+#X connect 0 0 1 0;
+#X connect 0 1 8 0;
+#X connect 0 2 1 2;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 6 0;
+#X connect 7 0 2 0;
+#X connect 8 0 1 1;
+#X connect 8 1 13 0;
+#X connect 9 0 0 0;
+#X connect 10 0 6 0;
+#X connect 11 0 0 0;
+#X restore 330 228 pd example;
+#X msg 144 83 201 \, 153;
+#X text 209 85 schwa (U0259 = 601);
+#X text 160 58 ASCII '@' (U0040 = 64);
+#X text 248 112 tibetian om (U0F00 = 3840);
+#X text 284 136 Lydian letter A (U10920 = 67872);
+#X obj 130 162 utf82codenumber;
+#X obj 232 182 print error;
+#X text 52 401 if the bytestream is not a valid UTF-8 stream \, a message
+will be send to the 2nd outlet indicating an error. the currently decoded
+character will be skipped.;
+#X connect 1 0 13 0;
+#X connect 3 0 13 0;
+#X connect 4 0 13 0;
+#X connect 8 0 13 0;
+#X connect 13 0 2 0;
+#X connect 13 1 14 0;

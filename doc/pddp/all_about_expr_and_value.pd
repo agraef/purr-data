@@ -1,0 +1,50 @@
+#N canvas 0 0 448 350 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_and_value 20
+10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 176 268 v _\$0_foo;
+#X obj 24 268 expr $f1 + _\$0_foo;
+#X floatatom 24 246 5 0 0 0 - - -;
+#X floatatom 24 291 5 0 0 0 - - -;
+#X floatatom 176 248 5 0 0 0 - - -;
+#X floatatom 206 108 5 0 0 0 - - -;
+#X floatatom 23 108 5 0 0 0 - - -;
+#X floatatom 23 158 5 0 0 0 - - -;
+#X text 248 106 set variable "some_number";
+#X obj 206 131 value some_number;
+#X obj 23 131 expr $f1 + some_number;
+#X text 20 36 Access to variables within [expr] \, [expr~] \, and [fexpr~]
+is possible using the [value] object. These aren't the special dollarsign
+variables like $f3- rather \, they are global symbolic variables that
+aren't the names of functions or operators like some_number \, below:
+;
+#X text 21 184 Using Pd's dollar sign variables is tricky-- for example
+\, \$0-foo is interpretated as "\$0 minus foo". Additionally \, \$0
+cannot be at the beginning of the variable name (e.g. \, \$0foo). Underscores
+provide a workable \, if clunky \, solution:;
+#X obj 1 328 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 45 KEYWORDS nonlocal;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 NAME expr expr~ fexpr~ value;
+#X text 12 65 DESCRIPTION a touching tale of an unlikely romance between
+two Pd objects;
+#X restore 392 330 pd META;
+#N canvas 10 196 428 141 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 [expr] and [value]- Related Objects;
+#X restore 103 330 pd Related_objects;
+#X obj 6 330 pddp/pddplink all_about.pd -text All About Pd;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 6 0 2 0;
+#X connect 7 0 11 0;
+#X connect 8 0 12 0;
+#X connect 12 0 9 0;

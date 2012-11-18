@@ -1,0 +1,64 @@
+#N canvas 106 75 1012 698 12;
+#X floatatom 240 274 5 0 0 1 UNSCALED_INPUT_STREAM - -;
+#X floatatom 240 398 5 0 0 1 SCALED(0-127) - -;
+#X floatatom 240 364 5 0 0 1 MIN_UNSCALED - -;
+#X floatatom 241 330 5 0 0 1 MAX_UNSCALED - -;
+#X obj 243 254 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -258699
+-1 -1 0 0;
+#X obj 243 381 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -1
+-262144 -1 0 1;
+#X obj 244 346 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -1
+-262144 -1 0 1;
+#X obj 243 415 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -1
+-262144 -1 0 1;
+#X text 527 641 If you do not set arguments 3 and 4 \, the limits will
+not tighten.;
+#X floatatom 611 607 5 0 0 1 SCALED(50-150) - -;
+#X floatatom 688 590 5 0 0 1 MIN_UNSCALED - -;
+#X floatatom 779 560 5 0 0 1 MAX_UNSCALED - -;
+#X floatatom 533 490 5 0 0 1 UNSCALED_INPUT_STREAM - -;
+#X text 514 150 Argument 1 (required) : scale minimum input number
+to this value.;
+#X text 516 192 Argument 2 (required) : scale maximum input number
+to this value.;
+#X text 515 232 Argument 3 : milliseconds before tightening.;
+#X text 514 257 Argument 4 : milliseconds it takes to tighten.;
+#X obj 30 305 scale.adaptive 0 127 1000 10000;
+#X text 11 5 scale.adaptive \, version 4 of powerranger and powerscale
+;
+#X text 11 42 released on : 2006/07/02;
+#X text 9 59 This abstractions dynamically determines the minimum and
+maximum limits of an input number stream. The stream is then relativised
+between these two limits and then scaled to the values set as the first
+2 arguments. If arguments 3 and 4 are not blank \, it will tighten
+the minimum and maximum values to the last number streamed. The third
+argument determines how many milliseconds must pass before the a limit
+tightens after it has been changed. The last argument determines how
+long it takes to tighten.;
+#X text 10 24 tof (tofdanslchamp.org);
+#X obj 614 533 scale.adaptive 50 150;
+#X obj 317 296 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 823 488 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 394 322 Once MAX_UNSCALED or MIN_UNSCALED changes \, it will
+take 1 second before it starts to tighten. It will take 10 seconds
+to tighten around the last value streamed.;
+#X text 388 410 The scaled value is only output one a number is received
+at inlet 1;
+#X text 613 460 No automatic tightening!;
+#X text 19 -24 Description: Dynamic scale adjustment.;
+#X connect 0 0 17 0;
+#X connect 1 0 7 0;
+#X connect 2 0 5 0;
+#X connect 3 0 6 0;
+#X connect 4 0 0 0;
+#X connect 12 0 22 0;
+#X connect 17 0 1 0;
+#X connect 17 1 2 0;
+#X connect 17 2 3 0;
+#X connect 22 0 9 0;
+#X connect 22 1 10 0;
+#X connect 22 2 11 0;
+#X connect 23 0 17 1;
+#X connect 24 0 22 1;

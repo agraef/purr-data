@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/cwiid/svn/!svn/ver/190/trunk/wminput
+END
+action_enum.txt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/cwiid/svn/!svn/ver/14/trunk/wminput/action_enum.txt
+END
+c_plugin.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/cwiid/svn/!svn/ver/142/trunk/wminput/c_plugin.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/cwiid/svn/!svn/ver/180/trunk/wminput/Makefile.in
+END
+action_enum.awk
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/cwiid/svn/!svn/ver/29/trunk/wminput/action_enum.awk
+END
+c_plugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/cwiid/svn/!svn/ver/142/trunk/wminput/c_plugin.h
+END
+py_plugin.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/cwiid/svn/!svn/ver/142/trunk/wminput/py_plugin.c
+END
+wmplugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/cwiid/svn/!svn/ver/125/trunk/wminput/wmplugin.h
+END
+py_plugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/cwiid/svn/!svn/ver/142/trunk/wminput/py_plugin.h
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/132/trunk/wminput/README
+END
+util.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/125/trunk/wminput/util.c
+END
+util.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/cwiid/svn/!svn/ver/74/trunk/wminput/util.h
+END
+parser.y
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/cwiid/svn/!svn/ver/76/trunk/wminput/parser.y
+END
+main.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/151/trunk/wminput/main.c
+END
+uinput.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/cwiid/svn/!svn/ver/125/trunk/wminput/uinput.c
+END
+conf.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/137/trunk/wminput/conf.c
+END
+lexer.l
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/cwiid/svn/!svn/ver/190/trunk/wminput/lexer.l
+END
+conf.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/cwiid/svn/!svn/ver/137/trunk/wminput/conf.h
+END

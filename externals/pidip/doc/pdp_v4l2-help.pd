@@ -1,0 +1,65 @@
+#N canvas 508 213 927 686 10;
+#X obj 35 20 metro 40;
+#X msg 87 -19 stop;
+#X msg 35 -19 bang;
+#X msg 207 -159 open /dev/video0;
+#X msg 207 -135 open /dev/video1;
+#X text 339 -162 you can choose the input device using the 'open' message.
+the default is /dev/video0;
+#X msg 207 -110 close;
+#X text 347 -110 closes the video port;
+#X msg 208 -84 dim 320 240;
+#X msg 208 -61 dim 640 480;
+#X floatatom 209 -28 5 0 0 0 - - -;
+#X floatatom 212 137 5 0 0 0 - - -;
+#X msg 212 161 freq \$1;
+#X floatatom 273 137 5 0 0 0 - - -;
+#X msg 273 161 freqMHz \$1;
+#X text 317 135 sets the v4l tuner frequency (in v4l units and MHz)
+;
+#X text 325 253 pdp_v4l2 is an interface for video 4 linux 2 devices
+;
+#X text 324 268 it's very similar to pdp_v4l but should support more
+recent cameras \, if it doesn't with yours report bugs to ydegoyon@free.fr
+;
+#X obj 96 247 pdp_v4l2;
+#X text 321 202 creation arguments: <input device>;
+#X floatatom 210 20 5 0 0 0 - - -;
+#X msg 210 40 format \$1;
+#X text 294 18 sets the pixel format (like YUYV \, RGB32 \, ...);
+#X msg 209 -8 input \$1;
+#X text 293 -30 sets the v4l input (like camera \, tuner \, svideo
+\, ...);
+#X text 292 -19 see initialization phase for valid inputs;
+#X text 297 69 sets the video standard ( for tuner cards );
+#X text 294 29 see initialization phase for valid formats;
+#X text 297 81 see initialization phase for valid standards;
+#X floatatom 213 71 5 0 0 0 - - -;
+#X msg 213 91 standard \$1;
+#X obj 96 300 pdp_glx;
+#X msg 179 299 cursor 1;
+#X msg 167 271 posdim 0 0 1440 800;
+#X text 324 303 authors : Yves Degoyon and Lluis Gomez i Bigorda;
+#X text 325 317 code was inspired by pdp_v4l by Tom Schouten and xawtv
+by Gerd Knorr;
+#X connect 0 0 18 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 18 0;
+#X connect 4 0 18 0;
+#X connect 6 0 18 0;
+#X connect 8 0 18 0;
+#X connect 9 0 18 0;
+#X connect 10 0 23 0;
+#X connect 11 0 12 0;
+#X connect 12 0 18 0;
+#X connect 13 0 14 0;
+#X connect 14 0 18 0;
+#X connect 18 0 31 0;
+#X connect 20 0 21 0;
+#X connect 21 0 18 0;
+#X connect 23 0 18 0;
+#X connect 29 0 30 0;
+#X connect 30 0 18 0;
+#X connect 32 0 31 0;
+#X connect 33 0 31 0;

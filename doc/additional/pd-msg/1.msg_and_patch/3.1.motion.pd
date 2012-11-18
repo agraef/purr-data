@@ -1,0 +1,45 @@
+#N canvas 0 18 415 490 10;
+#N canvas 425 18 332 294 testing 1;
+#X obj 95 11 loadbang;
+#X msg 95 36 0;
+#X obj 12 37 random 127;
+#X floatatom 66 94 0 0 0 0 - - -;
+#X msg 12 11 bang;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;
+#X restore 119 439 pd testing;
+#X obj 20 438 s pd-testing;
+#X obj 89 247 pack f f;
+#X text 8 54 Start here;
+#X floatatom 120 185 0 0 0 0 - - -;
+#X floatatom 89 186 0 0 0 0 - - -;
+#X obj 100 219 t b f;
+#X text 7 363 Stop here;
+#X text 85 154 try this !!!;
+#X text 9 9 This example will show you how to use the motion msg.;
+#X msg 89 271 motion \$1 \$2 0;
+#X msg 20 390 motion 15 15 0 \, editmode 0 \, vis 0;
+#X msg 20 75 vis 1 \, editmode 1 \, mouse 5 5 0 0 0 \, mouseup 200
+200 0;
+#X msg 20 101 mouse 15 15 0 0 0;
+#N canvas 458 158 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 95 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 65 DESCRIPTION simulating mouse motion with messages to
+a canvas;
+#X text 12 42 LICENSE public domain;
+#X restore 364 466 pd META;
+#X connect 2 0 10 0;
+#X connect 4 0 6 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 6 1 2 1;
+#X connect 10 0 1 0;
+#X connect 11 0 1 0;
+#X connect 12 0 1 0;
+#X connect 13 0 1 0;

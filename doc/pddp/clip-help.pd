@@ -1,0 +1,142 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header clip 3 12 0 18 -204280
+-1 0;
+#X obj 0 297 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 243 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Dave Sabine \, April 25 \, 2003 Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control filter;
+#X text 12 45 DESCRIPTION force a number to lie between two limits
+;
+#X text 12 65 INLET_0 float list;
+#X text 12 125 OUTLET_0 float;
+#X text 12 85 INLET_1 float;
+#X text 12 105 INLET_2 float;
+#X text 12 205 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 415 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 458 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 533 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 306 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 46 488 428 102 Related_objects 0;
+#X obj 234 43 int;
+#X obj 274 42 f;
+#X obj 22 42 min;
+#X obj 65 42 max;
+#X obj 105 42 clip~;
+#X obj 149 42 min~;
+#X obj 191 42 max~;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [clip] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 424 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 362 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 361 float;
+#X obj 78 387 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 386 float;
+#X obj 487 3 clip;
+#X obj 460 20 pddp/pddplink http://wiki.puredata.info/en/clip -text
+pdpedia: clip;
+#X obj 306 179 clip -50 50;
+#X floatatom 306 205 5 0 0 0 - - -;
+#X floatatom 306 141 5 0 0 0 - - -;
+#X text 383 177 creation arguments;
+#X obj 128 179 clip;
+#X floatatom 138 140 5 0 0 0 - - -;
+#X floatatom 181 140 5 0 0 0 - - -;
+#X floatatom 224 140 5 0 0 0 - - -;
+#X floatatom 128 205 5 0 0 0 - - -;
+#X text 171 179 no arguments;
+#X text 205 108 list;
+#X msg 128 108 42 100 500;
+#X text 98 305 float;
+#X text 168 305 - a float at the left inlet will be clipped to the
+low and high values stored in the object.;
+#X text 98 424 float;
+#N canvas 102 355 428 206 clip_vs_min_and_max 0;
+#X text 10 70 Consider the following:;
+#X floatatom 50 96 5 0 0 0 - - -;
+#X floatatom 50 177 5 0 0 0 - - -;
+#X obj 50 151 min 50;
+#X obj 50 125 max -50;
+#X text 137 136 same as;
+#X obj 257 148 clip -50 50;
+#X floatatom 257 177 5 0 0 0 - - -;
+#X text 10 37 [clip] is a tool which combines the functionality of
+[min] and [max] into a single object.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [clip] Relationship between [clip] and [min] \, [max];
+#X connect 1 0 4 0;
+#X connect 1 0 6 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 0;
+#X connect 6 0 7 0;
+#X restore 101 567 pd clip_vs_min_and_max;
+#N canvas 99 243 428 294 low_and_high_values 0;
+#X text 35 32 [clip] always assumes that the first argument (second
+inlet) is the low extreme of the range and the second argument (third
+inlet) is the high extreme. However \, strange behaviour should be
+expected if you mix these arguments up.;
+#X obj 43 155 clip -50 50;
+#X obj 169 149 clip 72 -104;
+#X floatatom 43 122 5 0 0 0 - - -;
+#X floatatom 43 184 5 0 0 0 - - -;
+#X floatatom 169 181 5 0 0 0 - - -;
+#X text 174 104 Numbers below 72 are clipped to 72;
+#X text 174 124 Numbers above -104 are clipped to -104;
+#X floatatom 311 258 5 0 0 0 - - -;
+#X obj 311 214 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 311 236 clip 1 -1024;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [clip] Low and High Values;
+#X text 114 238 This could be used effectively;
+#X text 114 253 to toggle between two numbers.;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 3 0 2 0;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X restore 101 542 pd low_and_high_values;
+#X text 11 23 force a number to lie between two limits;
+#X text 168 424 - outputs a float which is limited to a range within
+the high and low values of the middle and last inlet.;
+#X text 167 477 - (optional) initial minimum value beyond which to
+clip the signal.;
+#X text 167 502 - (optional) initial maximum value beyond which to
+clip the signal.;
+#X text 80 477 1) float;
+#X text 80 502 2) float;
+#X text 168 386 - maximum value beyond which the incoming signal is
+clipped.;
+#X text 168 361 - minimum value beyond which the incoming signal is
+clipped.;
+#X text 98 335 list;
+#X text 168 335 - a list is distributed to the inlets of [clip].;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 16 0 17 0;
+#X connect 18 0 16 0;
+#X connect 20 0 24 0;
+#X connect 21 0 20 0;
+#X connect 22 0 20 1;
+#X connect 23 0 20 2;
+#X connect 27 0 20 0;

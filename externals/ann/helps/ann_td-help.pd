@@ -1,0 +1,251 @@
+#N canvas 1 53 858 468 12;
+#N canvas 376 163 647 348 creation 0;
+#X obj 52 235 outlet;
+#X text 246 38 specifying all;
+#X text 159 216 TIP:don't set the layers param too high;
+#X msg 49 10 create 2 1 5;
+#X text 175 6 create with 2 inputs \, 1 output and 5 frames;
+#X msg 59 38 create 2 1 5 3 3 1 0.7;
+#X text 159 179 params: num_input \, num_output \, frames \, num_layers
+\, num_neurons_hidden \, connection_rate \, learning_rate;
+#N canvas 219 181 650 413 what 0;
+#X text 37 134 you pass [0 0.1] to ann_tdnn;
+#X text 34 152 internally now there is this array: [0 0.1 0 0 0 0]
+;
+#X text 38 196 next input is [0.2 1];
+#X text 36 211 internally now there is this array: [0.2 1 0 0.1 0 0]
+;
+#X text 37 255 next input is [0.3 0.4];
+#X text 35 270 internally now there is this array: [0.3 0.4 0.2 1 0
+0.1];
+#X text 36 317 next input is [0.7 0];
+#X text 34 332 internally now there is this array: [0.7 0 0.3 0.4 0.2
+1];
+#X text 35 168 a normal ann_mlp is run with this inputs;
+#X text 38 225 a normal ann_mlp is run with this inputs;
+#X text 33 284 a normal ann_mlp is run with this inputs;
+#X text 33 347 a normal ann_mlp is run with this inputs;
+#X text 12 139 1);
+#X text 14 197 2);
+#X text 15 258 3);
+#X text 13 319 4);
+#X text 33 4 this implementation od tdnn is simply a normal ann_mlp
+with num_input*frame inputs and num_output outputs. ann_tdnn simply
+helps managing the delay \, frames and buffers.;
+#X text 65 385 ...and so on...;
+#X text 34 64 frames can be seen as the delay feedback: how many times
+an input is internally held in the input array;
+#X text 35 104 eg: 2 inputs 3 frames = internally 6 inputs;
+#X restore 155 109 pd what frames are?;
+#X connect 3 0 0 0;
+#X connect 5 0 0 0;
+#X restore 93 68 pd creation examples;
+#N canvas 137 89 728 356 run 0;
+#X obj 90 219 outlet;
+#X msg 123 69 0 1;
+#X msg 124 92 1 0;
+#X msg 125 115 1 1;
+#X msg 126 140 0 0;
+#X text 40 17 now you can run your nn passing it a list with inputs
+;
+#X text 169 70 send a list of data and watch the console for output
+;
+#X text 39 35 the output is sent as a list of float;
+#X text 184 134 these inputs are good for a nn like the one in example1
+directory;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X restore 107 180 pd run the net;
+#N canvas 1 53 619 610 other 0;
+#X obj 43 401 outlet;
+#X msg 102 37 train;
+#X msg 103 63 run;
+#X msg 152 37 setmode 0;
+#X msg 153 63 setmode 1;
+#X text 249 40 set training/running mode;
+#X text 247 63 training mode currently not implemented;
+#N canvas 266 284 690 335 training 0;
+#X obj 71 288 outlet;
+#X msg 82 195 FANN_TRAIN_INCREMENTAL;
+#X msg 82 216 FANN_TRAIN_BATCH;
+#X msg 81 238 FANN_TRAIN_RPROP;
+#X msg 81 258 FANN_TRAIN_QUICKPROP;
+#X text 40 28 you can set the training algorithm simply sending a message
+with the name of the algorithm chosen. possible values are: FANN_TRAIN_INCREMENTAL
+FANN_TRAIN_BATCH FANN_TRAIN_RPROP FANN_TRAIN_QUICKPROP the default
+is: FANN_TRAIN_RPROP see the FANN manual for details on each algorithm:
+http://fann.sourceforge.net/html/r1996.html;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X restore 150 153 pd training algorithm;
+#X text 360 175 some advanced param;
+#N canvas 325 121 698 395 training 0;
+#X obj 52 230 outlet;
+#X msg 69 118 desired_error 0.01;
+#X msg 79 146 max_iterations 500000;
+#X msg 90 178 iterations_between_reports 1000;
+#X text 58 28 you can change training parameters. see FANN manual for
+details (http://fann.sourceforge.net);
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X restore 151 179 pd training params;
+#N canvas 329 121 694 391 activation 0;
+#X obj 49 335 outlet;
+#X text 40 28 you can set ti output activation algorithm passing a
+message to nn. see the FANN manual for description of the algorithms
+;
+#X msg 69 118 set_activation_function_output FANN_THRESHOLD;
+#X msg 83 139 set_activation_function_output FANN_THRESHOLD_SYMMETRIC
+;
+#X msg 95 163 set_activation_function_output FANN_LINEAR;
+#X msg 98 184 set_activation_function_output FANN_SIGMOID;
+#X msg 106 206 set_activation_function_output FANN_SIGMOID_STEPWISE
+;
+#X msg 108 233 set_activation_function_output FANN_SIGMOID_SYMMETRIC
+;
+#X msg 115 256 set_activation_function_output FANN_SIGMOID_SYMMETRIC_STEPWISE
+;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X restore 150 203 pd activation algorithm;
+#X msg 151 287 details;
+#X text 229 285 details on the current nn;
+#X msg 145 333 help;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 13 0 0 0;
+#X restore 128 258 pd other commands;
+#N canvas 1 53 665 525 save 0;
+#X obj 39 264 outlet;
+#X msg 64 20 filename test.net;
+#X msg 66 46 save;
+#X msg 82 103 load;
+#X text 221 19 set the filename;
+#X text 214 42 save the net to the file;
+#X text 138 104 you can reload it too;
+#X text 144 182 nn can be loaded from a file at creation time simply
+passing the filename as argument;
+#X msg 68 71 save test.net;
+#X msg 93 130 load test.net;
+#X text 144 217 like [ann_td num_inputs frames filename];
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X restore 118 218 pd save the net;
+#X text 270 66 create a nn;
+#X text 244 179 run your net;
+#X text 258 215 save your net;
+#N canvas 0 0 712 542 tips 0;
+#X text 51 84 for better performances inputs value should be normalized
+\, all input should have the same range (if one input has a larger
+range it will be more "important"). the range of each input should
+be 0 centered. so [-1 \, 1] is good [-2 \, 2] is good \, [0 \, 1] not
+so good [1 \, 2] is bad. the range sould not be too small ([-0.1 \,
+0.1] is bad).;
+#X text 41 19 TIPS;
+#X text 41 56 inputs;
+#X text 39 211 outputs;
+#X text 50 235 each class of outputs should have its own output value:
+don't use the same output for 2 meanings \, use 2 outputs intead \,
+1 for each.;
+#X restore 167 285 pd tips;
+#X text 272 371 an interface to fann classes (http://fann.sourceforge.net)
+;
+#X text 274 389 by Davide Morelli - info@davidemorelli.it;
+#N canvas 228 212 580 411 train 0;
+#X obj 32 241 outlet;
+#N canvas 100 44 892 558 train 0;
+#X obj 57 397 outlet;
+#X msg 60 31 train;
+#X text 126 33 1- set the train mode;
+#X text 116 81 2- build a list with inputs and desired output;
+#X text 139 101 be shure you provide the correct numbers of inputs
+and outputs;
+#X obj 168 202 pack s f f f;
+#X obj 197 248 pack f f f;
+#X obj 168 225 unpack s f f f;
+#X msg 192 374 run;
+#X obj 198 170 tgl 15 0 empty empty in1 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 228 170 tgl 15 0 empty empty in2 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 259 170 tgl 15 0 empty empty output 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 148 169 bng 15 250 50 0 empty empty train! 0 -6 0 8 -262144
+-1 -1;
+#X text 299 183 set inputs and output value \, then send the list clicking
+on the "train!" bang;
+#X text 229 374 3- when you are ready switch again to run mode before
+exiting;
+#X text 311 308 NOTE2: while training the right outlet gives you the
+mean square error after each training pattern.;
+#X msg 316 278 create 2 1 5;
+#X text 315 226 NOTE1: before training with this example you should
+have created a nn with 2 ins and 1 out and 5 frames with a command
+like:;
+#X connect 1 0 0 0;
+#X connect 5 0 7 0;
+#X connect 6 0 0 0;
+#X connect 7 1 6 0;
+#X connect 7 2 6 1;
+#X connect 7 3 6 2;
+#X connect 8 0 0 0;
+#X connect 9 0 5 1;
+#X connect 10 0 5 2;
+#X connect 11 0 5 3;
+#X connect 12 0 5 0;
+#X connect 16 0 0 0;
+#X restore 68 50 pd train it on the fly;
+#X text 62 5 there are 2 ways to train your net;
+#X text 253 47 on the fly is simpler;
+#X text 86 128 with a trainfile the net could be more accurate;
+#X msg 89 149 train-on-file test.txt;
+#X connect 1 0 0 0;
+#X connect 5 0 0 0;
+#X restore 115 119 pd train;
+#X text 190 118 train a nn;
+#X obj 113 360 print mse;
+#X obj 54 391 print out;
+#X text 150 315 2 args needed: num_inputs and frames;
+#X text 148 331 see [pd creation examples] for details;
+#X obj 33 319 ann_td 2 5;
+#X text 9 2 ann_td: time delay neural networks in pd;
+#N canvas 406 195 494 332 META 0;
+#X text 12 210 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2;
+#X text 12 5 KEYWORDS control;
+#X text 12 150 OUTLET_0;
+#X text 12 170 OUTLET_1;
+#X text 12 190 AUTHOR Davide Morelli - info@davidemorelli.it;
+#X text 12 45 DESCRIPTION time delay neural networks in pd;
+#X text 12 65 INLET_0 list create train train-on-file filename save
+load setmode run FANN_TRAIN_INCREMENTAL FANN_TRAIN_BATCH FANN_TRAIN_RPROP
+FANN_TRAIN_QUICKPROP desired_error max_iterations iterations_between_reports
+set_activation_function_output;
+#X restore 734 408 pd META;
+#X connect 0 0 16 0;
+#X connect 1 0 16 0;
+#X connect 2 0 16 0;
+#X connect 3 0 16 0;
+#X connect 10 0 16 0;
+#X connect 16 0 13 0;
+#X connect 16 1 12 0;

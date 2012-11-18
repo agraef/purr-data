@@ -1,0 +1,11 @@
+#!/bin/sh
+OBJECTS=" ../dx7_voice.o  ../dx7_voice_data.o  ../dx7_voice_envelope.o  ../dx7_voice_operator.o  ../dxt_voice_algorithm.o  ../properties.o  ../tables.o  ../open_bank.o  ../midi_event.o  ../mixer.o  "
+#g++ -g -O2 -Wall -I../ -DHAVE_CONFIG_H -DLT_PATCH -DDEBUG -DPD -fPIC -c -o voice_init.o voice_init.cpp
+g++ -g -O2 -Wall -I../ -DHAVE_CONFIG_H -DLT_PATCH -DDEBUG -DPD -fPIC -c -o rx7~.o rx7~.cpp
+
+ld -export_dynamic -shared -o rx7~.pd_linux $OBJECTS rx7~.o
+#voice_init.o \
+
+
+
+strip --strip-unneeded rx7~.pd_linux

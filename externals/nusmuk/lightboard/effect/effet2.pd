@@ -1,0 +1,18 @@
+#N canvas 0 0 450 300 10;
+#X obj 55 13 inlet;
+#X obj 56 49 bus lumiere9;
+#X obj 72 72 bus lumiere10;
+#X obj 88 95 bus lumiere11;
+#X obj 104 118 bus lumiere12;
+#X obj 93 147 bus lumiere13;
+#X obj 109 170 bus lumiere14;
+#X obj 125 193 bus lumiere15;
+#X obj 141 216 bus lumiere16;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 0 0 4 0;
+#X connect 0 0 5 0;
+#X connect 0 0 6 0;
+#X connect 0 0 7 0;
+#X connect 0 0 8 0;

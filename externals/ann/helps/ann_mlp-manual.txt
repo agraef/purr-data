@@ -1,0 +1,137 @@
+-----------------ann_mlp manual 
+
+by davide morelli - www.davidemorelli.it
+
+
+-----------What is a neural network?
+
+To be shure you fully understand what is and why to use a ANN, read
+http://www.doc.ic.ac.uk/~nd/surprise_96/journal/vol4/cs11/report.html
+
+-----------Why use a ANN?
+Because they are useful in Pattern recognition, gesure recognition (patterns
+over time), associative recall of data (images, sounds, etc), predictions
+(e.g. time-series forecasting), complex data handling, etc..
+
+--ANNs can handle noisy inputs: 
+if you trained your ANN that [1,1] -> 1
+Then if you pass [1.1, 0.9] -> 1 probably..
+
+--ANNs can be trained without writing code: 
+see ann/examples/ann_mlp_example2 (in CVS), you can teach the ANN to tell
+you when all these balls are close together or still.. How could you do this
+coding? You'd have to compute the distance of every ball from every other
+ball, then sum all the distances and ... Very complex and difficult! With
+ANN you simply teach when the balls are close and when they are not, you
+don't have to write code at all, you just have to use pd.
+
+-----------How to build a ANN?
+INPUTS:
+You must code your input data as a list of float. 
+E.g. If you want timbre recognition you must fft a signal then build a list
+with fft's partial and feed ann_mlp with it
+E.g. if you want midi chord recognition and you played A4 C5 E6 then use the
+midi values of the notes of the chord to build a list with 3 integers (57 60
+64) 
+
+Tip: inputs should be 0 centered
+the example of chord recognition should not work well (hard to train)
+because possible input values go from 30 to 90, you should remap them so
+they go from -30 to 30
+Notice how the inputs in ann/examples/ann_mlp_example2 go from -1 to 1
+If you can't make inputs 0 centered they should at least start from 0
+
+Tip: inputs should be normalized
+If you have one input that goes from -10 to 10 and another input that goes
+from -1 to 1 the first input will be more important than the second input
+
+OUTPUTS:
+Each "meaning" you want your ANN to detect should have its own output.
+Notice ann/examples/ann_mlp_example2:
+"Calm" and "chaos" have their outputs even if they are related.
+I could have set only 1 output 0 for calm and 1 for chaos.
+But having separated outputs I can see if my ANN has been trained well or
+not, but also could be that a situation is neither calm nor chaotic, or
+somehow calm AND chaotic..
+
+-----------TRAINING ON THE FLY:
+It is much easier to train the ANN on the fly rather than using a train
+file.
+To train on the fly you simply must pass a list with 
+[inputs + expected outputs(
+If you have 3 inputs and 2 outputs then you must pass a list with 5 floats
+E.g. You want to train a ANN for a simple logical function: OR
+You build a ann_mlp with 2 inputs and 1 output
+You set |train(
+You pass lists like 
+|0 0 0(  inputs are 0 0 output is 0
+|1 0 1(  inputs are 1 0 output is 1
+|0 1 1(  inputs are 0 1 output is 1
+And so on.. Repeating until MSE is low enough
+
+MSE tells you the general error the ANN currently has with the inputs and
+outputs you are giving
+
+When you are ready set |run(
+And start passing lists with only inputs values
+|0 0(
+|1 0(
+Etc..
+The left outlet of ann_mlp will start sending lists of float, in this case a
+list with only 1 float
+
+-----------PUTTING IT TOGETHER:
+
+1) Create a ANN passing ann_mlp a message with num_inputs and num_outputs
+E.g. (the simple ann for logical function OR)
+|create 2 1(
+|
+[ann_mlp]
+
+2) set train mode
+|train(
+|
+[ann_mlp]
+
+3) train the ANN passing lists num_inputs+num_outputs long
+|0 0 0(
+|
+[ann_mlp]
+(repeat at will using different inputs until mse is low, see right outlet)
+
+4) set run mode
+|run(
+|
+[ann_mlp]
+
+5) run the net passing lists num_inputs long, the left outlet will send a
+list with the results
+|0 0(
+|
+[ann_mlp]
+
+When everything is fine you can save it to a file
+|save filename(
+|
+[ann_mlp]
+
+Can be loaded in 2 ways
+|load filename(
+|
+[ann_mlp]
+
+Or as argument
+
+[ann_mlp filename]
+
+-----------
+
+For a more in-depth sight over technical issues:
+http://fann.sourceforge.net/report/report.html
+See fann manual for details on advanced params 
+(activation functions,training params, etc..)
+http://fann.sourceforge.net/
+
+-----------
+
+questions and suggestions to info(a)davidemorelli.it

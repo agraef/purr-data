@@ -1,0 +1,8 @@
+#N canvas 382 472 450 300 12;
+#X text 339 262 dh20020401;
+#X obj 19 87 value \$1;
+#X obj 19 61 \$2;
+#X obj 19 34 loadbang;
+#X text 17 10 valueinit name value;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;

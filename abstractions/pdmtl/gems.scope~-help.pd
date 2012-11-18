@@ -1,0 +1,44 @@
+#N canvas 372 186 567 406 10;
+#X obj 238 -6 adc~;
+#X obj 34 -150 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 33 -21 gemhead;
+#X obj 245 50 *~ 1;
+#X text 229 -32 Volume boost;
+#X obj 272 -12 vsl 15 50 0 4 0 0 empty empty empty 0 -8 0 8 -258699
+-1 -1 4500 1;
+#X obj 374 -9 vsl 15 50 0 1 0 0 empty empty empty 0 -8 0 8 -258699
+-1 -1 1400 1;
+#X obj 320 57 *~ 0;
+#X obj 475 -6 vsl 15 50 0 1 0 0 empty empty empty 0 -8 0 8 -258699
+-1 -1 800 1;
+#X obj 432 59 *~ 0;
+#X obj 425 -9 noise~;
+#X obj 32 -118 gems.win 320 240;
+#X floatatom 313 -31 5 0 0 0 - - -;
+#X text 54 -142 Description: Draws an (audio) signal to the Gem window.
+;
+#X obj 35 149 gems.scope~;
+#X text 244 -60 Don't forget to turn audio on!;
+#X obj 34 -94 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 192 142 tgl 15 0 empty empty draw_mode 0 -6 0 10 -262144 -1
+-1 1 1;
+#X obj 313 -11 osc~ 65;
+#X obj 23 -74 gems.win @dimen 1024 768 @offset 1280 0 @border 0;
+#X obj 35 67 gems.fit.scale fill;
+#X connect 0 0 3 0;
+#X connect 1 0 11 0;
+#X connect 2 0 20 0;
+#X connect 3 0 14 1;
+#X connect 5 0 3 1;
+#X connect 6 0 7 1;
+#X connect 7 0 14 1;
+#X connect 8 0 9 1;
+#X connect 9 0 14 1;
+#X connect 10 0 9 0;
+#X connect 12 0 18 0;
+#X connect 16 0 19 0;
+#X connect 17 0 14 2;
+#X connect 18 0 7 0;
+#X connect 20 0 14 0;

@@ -1,0 +1,44 @@
+#N canvas 422 71 658 362 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 184 251 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 208 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 165 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 208 *Popup:;
+#X obj 8 315 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 317 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 23 Type: Modifier. Effects only layer with a pt.text footer.
+;
+#X text 12 6 pixelTANGO HELP - pt.entry - Text Control;
+#X text 177 77 Text Control Functions:;
+#N canvas 17 425 450 161 bugs 0;
+#X text 13 23 Entry send raw pd messages \, it is not parsed for special
+characters. this means that using " \; " or "$" or " \, " will cause
+strange things to happen. The benifit of this is you can use entry
+just like the "File" -> "Message" command. \; \; This may be fixed
+in a future release to remove special message characters. You can escape
+special characters with backslash.;
+#X restore 582 22 pd bugs;
+#X obj 24 95 pt.entry;
+#X text 12 39 Creation Arguments: None;
+#X text 187 165 *Entry:;
+#X text 197 186 Place to type your text. Copy-Paste works fine.;
+#X text 197 229 Change the type-face of the text.;
+#X text 187 97 *Bangs:;
+#X text 197 118 Send: Send message typed into entry box.;
+#X text 197 138 Clear: Clear message typed into entry box.;
+#X text 187 251 *Number Box:;
+#X text 197 272 Specify the point size of the type. Integers only.
+;
+#X obj 24 243 pt.text;
+#X connect 13 0 23 0;
+#X connect 13 1 23 1;

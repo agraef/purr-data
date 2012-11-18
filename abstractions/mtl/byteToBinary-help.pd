@@ -1,0 +1,60 @@
+#N canvas 14 367 789 332 10;
+#X floatatom 14 206 5 0 0 0 - - -;
+#X obj 14 136 metro 250;
+#X obj 14 115 tgl 15 0 empty empty empty 20 7 0 8 -33289 -262144 -1
+1 1;
+#X obj 14 93 loadbang;
+#X obj 14 159 f 0;
+#X obj 40 159 + 1;
+#X obj 14 182 % 256;
+#X text 12 287 A classical binary counter !;
+#X obj 101 207 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 121 205 Endianess (1 = big endian \, defaults to 0 : little
+endian) Can be the 1st arg as well.;
+#X floatatom 547 213 0 0 0 0 - - -;
+#X floatatom 530 236 0 0 0 0 - - -;
+#X floatatom 513 262 0 0 0 0 - - -;
+#X text 577 214 sec;
+#X text 556 235 min;
+#X obj 513 164 metro 1000;
+#X obj 513 145 tgl 15 0 empty empty empty 20 7 0 8 -33289 -262144 -1
+1 1;
+#X obj 513 120 loadbang;
+#X text 511 103 A binary clock.;
+#X obj 513 188 zexy/time;
+#X text 539 262 hour;
+#X obj 12 10 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 17 52 tags: conversion;
+#X text 17 14 Description: Converts a byte into a list of 8 bits;
+#X obj 14 250 mtl/seq1x8;
+#X obj 606 165 mtl/seq1x8;
+#X obj 605 227 mtl/seq1x8;
+#X obj 606 289 mtl/seq1x8;
+#X obj 14 228 mtl/byteToBinary;
+#X obj 606 143 mtl/byteToBinary;
+#X obj 605 205 mtl/byteToBinary;
+#X obj 606 267 mtl/byteToBinary;
+#X connect 0 0 28 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 1;
+#X connect 6 0 0 0;
+#X connect 8 0 28 1;
+#X connect 15 0 19 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 19 0 12 0;
+#X connect 19 0 31 0;
+#X connect 19 1 11 0;
+#X connect 19 1 30 0;
+#X connect 19 2 10 0;
+#X connect 19 2 29 0;
+#X connect 28 0 24 0;
+#X connect 29 0 25 0;
+#X connect 30 0 26 0;
+#X connect 31 0 27 0;

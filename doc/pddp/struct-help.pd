@@ -1,0 +1,163 @@
+#N struct struct-1 float x float y symbol dog array weasel struct-2
+;
+#N struct struct-2 float y;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header struct 3 12 0 18
+-204280 -1 0;
+#X obj 0 189 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 58 228 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS Updated for Pd version 0.35. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control data_structure;
+#X text 12 45 DESCRIPTION declare the fields in a data structure;
+#X text 12 65 OUTLET_0 click change select deselect displace;
+#X text 12 145 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 214 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 375 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 111 510 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [struct] Related Objects;
+#X obj 22 43 filledpolygon;
+#X obj 112 43 drawpolygon;
+#X obj 193 43 plot;
+#X obj 232 43 set;
+#X obj 262 43 get;
+#X obj 293 43 element;
+#X obj 22 73 getsize;
+#X obj 82 73 setsize;
+#X obj 142 73 pointer;
+#X obj 202 73 append;
+#X obj 254 73 sublist;
+#X restore 102 597 pd Related_objects;
+#X obj 78 296 cnv 17 3 72 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 483 3 struct;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/struct -text
+pdpedia: struct;
+#X text 11 23 declare the fields in a data structure;
+#X text 98 193 (none);
+#X text 98 295 click;
+#X text 98 325 select;
+#X text 98 310 change;
+#X text 98 355 displace;
+#X text 98 340 deselect;
+#X text 149 461 float;
+#X text 149 476 symbol;
+#X text 149 491 array;
+#N canvas 98 230 428 349 help-template1 0;
+#X obj 23 43 struct struct-1 float x float y symbol dog array weasel
+struct-2;
+#X text 20 182 This just displays a red square to visualize the data
+structure.;
+#X obj 23 159 filledpolygon 900 0 1 0 0 40 0 40 40 0 40;
+#X obj 23 226 plot weasel 0 1 0 0 10;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [struct] Data Stucture Template;
+#X text 21 247 Here we plot the array "weasel" \, which gets displayed
+on top of the red square;
+#X obj 23 78 print;
+#X text 20 99 In this example \, the "struct-1" structure is defined
+in which "x" and "y" are "floats" \, i.e. \, numbers \, but "dog" is
+a symbol and "weasel" is an array of objects of the data structure
+"struct-2".;
+#X text 21 286 To learn about z-ordering with data structures \, open
+the abstraction below:;
+#X obj 21 319 pddp/pddplink ./all_about_z_order.pd -text all_about_z_order.pd
+;
+#X connect 0 0 7 0;
+#X restore 101 96 pd help-template1;
+#N canvas 99 252 428 125 help-template2 0;
+#X obj 23 43 struct struct-2 float y;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [struct] Data Structure Template;
+#X text 21 67 Here is a data structure which specifies only the floating
+point "y". It's used for the elements of the array shown in the other
+template.;
+#X restore 101 118 pd help-template2;
+#N canvas 83 305 428 348 struct-help-data 0;
+#X scalar struct-1 95 43 symbol \; 17 \; 38 \; 2 \; 39 \; 14 \; \;
+;
+#X scalar struct-1 164 43 symbol \; 17 \; 1 \; 40 \; 2 \; 14 \; \;
+;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [struct] Related Objects;
+#X scalar struct-1 239 43 symbol \; 17 \; 38 \; 2 \; 39 \; 14 \; \;
+;
+#X text 19 279 You can also right-click on each square and choose "Properties"
+in both runmode and editmode to see the values associated with each
+scalar.;
+#X text 20 178 In editmode \, you can click on the squares to move
+them. Like other objects in Pd \, you can select multiple scalars and
+move them together (notice the blue bounding box when you select them).
+A [print] object is connected to the outlet of the corresponding [struct]
+for these boxes \, so when you move them with the mouse messages will
+print to the console.;
+#X text 20 103 The three squares above are scalars that are defined
+by the template "help-template1". The zigzag lines are arrays \, the
+elements of which are defined by the template "help-template2". In
+runmode you can click and drag each element to change its value.;
+#X restore 101 168 pd struct-help-data;
+#X text 98 138 To view instances of these data structures \, click
+the patch below:;
+#X text 98 41 The [struct] object is typically put one to a subpatch
+\, and may be accompanied by drawing instructions that define how the
+data will be visualized. Two data structures- "struct-1" and "struct-2"-
+are defined below in subpatches:;
+#X text 169 393 - the name of the struct;
+#N canvas 72 401 429 220 struct_names 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [struct] Struct Names;
+#X text 20 39 You can't use "float" or "_float_array" as struct names
+because Pd has hidden data structures named "float" and "_float_array"
+\, which are used for [table] and "Put menu arrays".;
+#X msg 23 134 \; pd-_float vis 1 \; pd-_float_array vis 1;
+#X text 20 99 You can click below to reveal the canvases that contain
+them:;
+#X restore 102 541 pd struct_names;
+#X text 188 461 - "float foo";
+#X text 188 476 - "symbol foo";
+#X text 188 491 - "array foo bar" \, where "bar" is the name of another
+data structure to be used as a template for elements of the array.
+;
+#X text 169 411 - all subsequent arguments are used to declare fields.
+Fields may be one of three types-- float \, symbol \, or array. To
+create the field "foo" \, use the syntax below for each type:;
+#X text 81 393 1) symbol atom;
+#X text 81 411 n) symbol atom;
+#X obj 99 560 pddp/pddplink scalar-help.pd;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 576 pddp/pddplink all_about_arrays.pd;
+#X obj 257 561 pddp/pddplink ../4.data.structures/06.file.pd -text
+doc/4.data.structures/06.file.pd;
+#X obj 257 576 pddp/pddplink ../4.data.structures/08.selection.pd -text
+doc/4.data.structures/08.selection.pd;
+#X text 99 217 When a scalar is moved or edited with the mouse \, data
+is sent to the outlet of the respective [struct] object. This data
+consists of: a selector that describes the mouse action that was performed
+\, a pointer to the scalar \, and-- optionally-- a number (usually
+a y-coordinate). The selectors below correspond to the following mouse
+actions:;
+#X text 172 295 - (run mode) clicking the object with the mouse.;
+#X text 172 310 - (run mode) changing the value of a field.;
+#X text 172 325 - (edit mode) selecting the object.;
+#X text 172 340 - (edit mode) deselecting an object.;
+#X text 172 355 - (edit mode) moving a selected object.;

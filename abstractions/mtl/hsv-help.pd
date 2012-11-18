@@ -1,0 +1,8 @@
+#N canvas 0 0 450 300 10;
+#X text 43 23 Description: Hue saturation value (HSV) sliders;
+#X obj 109 101 mtl/hsv;
+#X obj 109 172 cyclone/prepend set;
+#X msg 109 194;
+#X text 43 38 tags: ui;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;

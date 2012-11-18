@@ -1,0 +1,20 @@
+#N canvas 0 0 669 335 10;
+#X obj 84 101 ==;
+#X obj 85 67 t a a a;
+#X obj 84 124 select 0 1;
+#X obj 144 192 outlet;
+#X obj 85 44 inlet;
+#X obj 84 194 outlet;
+#X obj 84 160 f;
+#X obj 144 172 delay;
+#X text 211 179 delay is necessary to come out of the depth-first message
+passing;
+#X connect 0 0 2 0;
+#X connect 1 0 0 1;
+#X connect 1 1 0 0;
+#X connect 1 2 6 1;
+#X connect 2 0 6 0;
+#X connect 2 1 7 0;
+#X connect 4 0 1 0;
+#X connect 6 0 5 0;
+#X connect 7 0 3 0;

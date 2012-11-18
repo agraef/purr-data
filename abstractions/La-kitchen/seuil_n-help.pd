@@ -1,0 +1,22 @@
+#N canvas 129 149 461 350 10;
+#X floatatom 91 133 5 0 0 0 - - -;
+#X floatatom 124 164 5 0 0 0 - - -;
+#X floatatom 158 190 5 0 0 0 - - -;
+#X floatatom 91 251 5 0 0 0 - - -;
+#X text 82 108 input data;
+#X text 178 173 threshold;
+#X text 134 144 gap between samples: n;
+#X text 36 64 threshold value;
+#X text 35 43 the current sample and the sample n before is up to the
+;
+#X text 313 285 la Kitchen;
+#X text 313 302 Charles Verron;
+#X text 312 270 2004_03_18;
+#X text 34 24 This abstraction returns 1 if the difference between
+;
+#X obj 91 217 seuil_n 5 10;
+#X connect 0 0 13 0;
+#X connect 1 0 13 1;
+#X connect 2 0 13 2;
+#X connect 13 0 3 0;
+#X coords 0 0 0.00220264 0.00328947 200 140 1;

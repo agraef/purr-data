@@ -1,0 +1,49 @@
+#N canvas 787 239 490 540 10;
+#X obj 21 21 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1 1
+;
+#X obj 28 91 gemhead;
+#X obj 179 225 rotateXYZ 0 0 137.5;
+#X floatatom 183 101 5 0 0 0 - - -;
+#X floatatom 316 228 5 0 0 0 - - -;
+#X obj 179 261 translateXYZ 0.1 0.1 0;
+#X floatatom 354 228 5 0 0 0 - - -;
+#X obj 32 467 repeat 10;
+#X msg 32 444 ---;
+#X obj 32 492 print ----;
+#X text 65 445 click to clear Pd window in case of stack overflow;
+#X obj 316 188 line;
+#X obj 316 124 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 179 294 scaleXYZ 0.9 0.9 0.9;
+#X obj 30 349 circle 1;
+#X obj 28 133 color 1 0.8 0.2 0.6;
+#X obj 316 144 metro 5000;
+#X msg 316 166 -5 \, 5 5000;
+#X text 85 -1 Description: Tool for recursive transformations in Gem
+;
+#X text 35 375 See: http://www.blurty.com/users/claudiusmaximus/day/2007/07/18#407
+;
+#X text 149 182 <-- right inlet: recursion;
+#X text 228 97 <-- second inlet : number of iterations;
+#X obj 21 45 gems.win @dimen 320 240 @fps 60 @fsaa 6;
+#X obj 28 112 gems.alpha.mode 6 1;
+#X obj 28 185 gems.recurse 6;
+#X connect 0 0 22 0;
+#X connect 1 0 23 0;
+#X connect 2 0 5 0;
+#X connect 3 0 24 1;
+#X connect 4 0 5 1;
+#X connect 5 0 13 0;
+#X connect 6 0 5 2;
+#X connect 7 0 9 0;
+#X connect 8 0 7 0;
+#X connect 11 0 6 0;
+#X connect 11 0 4 0;
+#X connect 12 0 16 0;
+#X connect 13 0 14 0;
+#X connect 14 0 24 2;
+#X connect 15 0 24 0;
+#X connect 16 0 17 0;
+#X connect 17 0 11 0;
+#X connect 23 0 15 0;
+#X connect 24 0 2 0;

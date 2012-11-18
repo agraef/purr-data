@@ -1,0 +1,21 @@
+threadlib binary:
+  get them on http://grh.mur.at/software/threadlib.html
+  and follow the instructions there
+
+
+threadlib compilation:
+
+1) open the right makefile for your platform/compiler
+
+2) adapt the makefile for your needs:
+     PDPATH should point to your pd installation (usually /usr/local/lib/pd or /usr/lib/pd)
+     PDSCR should point to the PD source diretory
+
+3) type "make" to compile
+
+4) type "make install" to install help patches and binary
+(you have to be root probably)
+
+
+in case of problems:
+grh@mur.at

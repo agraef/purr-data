@@ -1,0 +1,8 @@
+#N canvas 435 185 450 493 10;
+#X obj 178 257 K12/math_average;
+#X obj 178 373 K12/math_number;
+#X obj 178 30 K12/sarcduino;
+#X obj 178 143 K12/sarcduino_piezo;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;

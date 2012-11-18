@@ -1,0 +1,6 @@
+#N canvas 409 205 190 154 12;
+#X obj 38 17 inlet;
+#X obj 39 90 outlet;
+#X obj 39 53 vasp.n 1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

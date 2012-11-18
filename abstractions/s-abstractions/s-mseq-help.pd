@@ -1,0 +1,34 @@
+#N canvas 216 243 450 300 10;
+#X obj 14 198 s-mseq 2 16 453 tick;
+#X obj 372 221 metro 200;
+#X obj 372 243 f;
+#X obj 402 243 + 1;
+#X obj 372 266 s tick;
+#X msg 81 172 453;
+#X floatatom 14 174 5 0 0 0 - - -;
+#X obj 372 203 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 14 221 5 0 0 0 - - -;
+#X text 19 9 Turns a number into a beat.;
+#X text 19 26 args:;
+#X text 261 184 Toggle me to start a timer;
+#X obj 149 174 tgl 15 0 empty empty reverse_sequence 0 -6 0 8 -262144
+-1 -1 0 1;
+#X text 19 43 1 Base to use to do conversion (e.g. base 2 produces
+1s \, 0s);
+#X text 19 59 2 Length of the sequence;
+#X text 19 76 3 Number that designates the sequence in the base specified
+e.g. 8 = 1000 and 10 = 1010;
+#X text 19 106 4 The name of a receiver that designates which to look
+up;
+#X text 59 143 set sequence;
+#X text 12 157 lookup;
+#X connect 0 0 8 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 1;
+#X connect 5 0 0 1;
+#X connect 6 0 0 0;
+#X connect 7 0 1 0;
+#X connect 12 0 0 2;

@@ -1,0 +1,19 @@
+#N canvas 0 22 458 308 10;
+#X text 20 11 Our special message "options blah blah ..." needs this
+kludge to be able to store the message in "lister" temporarily. UGLY!
+is this PD or Zexy's fault? (or popup's?);
+#X obj 49 183 lister;
+#X obj 86 161 prepend list;
+#X obj 49 204 route list;
+#X obj 86 139 inlet;
+#X obj 49 82 inlet;
+#X obj 49 225 outlet;
+#X obj 49 106 delay \$1;
+#X obj 129 139 r \$2;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X connect 3 0 6 0;
+#X connect 4 0 2 0;
+#X connect 5 0 7 0;
+#X connect 7 0 1 0;
+#X connect 8 0 2 0;

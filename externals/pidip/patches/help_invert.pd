@@ -1,0 +1,58 @@
+#N canvas 237 46 649 451 10;
+#X obj 134 300 pdp_xv;
+#X obj 153 39 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 58 107 loop \$1;
+#X obj 59 85 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0 1
+;
+#X msg 255 19 open \$1;
+#X obj 254 -5 openpanel;
+#X obj 239 -22 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 201 74 5 0 0 0 - - -;
+#X msg 110 40 stop;
+#X obj 208 43 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 142 110 metro 70;
+#X obj 137 142 pdp_yqt;
+#X obj 306 141 pdp_v4l;
+#X obj 315 110 metro 70;
+#X obj 360 76 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 317 77 stop;
+#X msg 402 108 open /dev/video;
+#N canvas 0 0 450 300 invert 0;
+#X obj 34 51 inlet;
+#X obj 34 236 outlet;
+#X obj 34 173 pdp_gain;
+#X obj 34 100 pdp_cheby 1;
+#X obj 153 24 loadbang;
+#X msg 141 146 chanmask 6;
+#X msg 153 58 chanmask 1 \, coef 0 1 \, coef 1 -1;
+#X msg 141 120 -1;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 5 0 2 0;
+#X connect 6 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 2 1;
+#X connect 7 0 5 0;
+#X restore 134 240 pd invert;
+#X connect 1 0 10 0;
+#X connect 2 0 11 0;
+#X connect 3 0 2 0;
+#X connect 4 0 11 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 11 0;
+#X connect 11 0 17 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 12 0;
+#X connect 17 0 0 0;

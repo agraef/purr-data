@@ -1,0 +1,44 @@
+#N canvas 252 101 743 661 10;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array array99 11 float 0;
+#X coords 0 1 10 -1 250 200 1;
+#X restore 461 80 graph;
+#X obj 69 195 line~;
+#X obj 36 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 69 172 0 \, 10 1000;
+#X obj 70 219 tabread4c~ array99;
+#X obj 36 32 loadbang;
+#X obj 296 195 line~;
+#X msg 296 172 0 \, 10 1000;
+#X obj 297 219 tabread4~ array99;
+#X obj 298 241 tabwrite~ test_miller;
+#X obj 70 241 tabwrite~ test_cubic;
+#X obj 36 55 t b b;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array test_miller 44100 float 0;
+#X coords 0 1 44099 -1 250 200 1;
+#X restore 295 312 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array test_cubic 44100 float 0;
+#X coords 0 1 44099 -1 250 200 1;
+#X restore 34 312 graph;
+#X msg 63 77 \; array99 resize 10 \; array99 0 -0.5 -0.5 -0.5 0.5 0.5
+0.5 -0.5 0 0 \; pd dsp 1 \;;
+#X text 43 531 tabread4c~ is a drop in remplacement for tabrad4~ \,
+but offer a 4 points cubic interpolation with tengent continuity. So
+\, in some case \, quality is better than the standart interpolation
+;
+#X connect 1 0 4 0;
+#X connect 2 0 3 0;
+#X connect 2 0 7 0;
+#X connect 2 0 9 0;
+#X connect 2 0 10 0;
+#X connect 3 0 1 0;
+#X connect 4 0 10 0;
+#X connect 5 0 11 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 11 0 2 0;
+#X connect 11 1 14 0;

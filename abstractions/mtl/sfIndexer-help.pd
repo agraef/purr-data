@@ -1,0 +1,93 @@
+#N canvas 556 25 778 668 10;
+#X obj 14 116 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 12 12 description: Loads and stores soundfiles.;
+#X msg 14 553 set \$1 \, bang;
+#X obj 13 613 mtl/out~;
+#X msg 68 274 0;
+#X msg 101 274 1;
+#X msg 135 275 2;
+#X obj 64 249 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 87 250 bang: outputs the last loaded soundfile;
+#X text 171 271 float: outputs the previously loaded soundfile at that
+index;
+#X obj 160 516 cyclone/prepend set;
+#X obj 146 560 cyclone/prepend set;
+#X obj 171 443 cyclone/prepend set;
+#X text 294 444 Outlet 3: index soundfile;
+#X text 269 556 Outlet 1: tables (one table per channel);
+#X text 13 28 tags: tables file~;
+#X obj 528 103 bng 15 250 50 0 empty empty save 17 7 0 10 -262144 -1
+-1;
+#X obj 603 120 bng 15 250 50 0 empty empty load 17 7 0 10 -262144 -1
+-1;
+#X obj 14 376 mtl/sfIndexer /id sfi-help;
+#X obj 14 138 openpanel;
+#X msg 14 163 add \$1;
+#X obj 40 185 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 40 204 openpanel;
+#X text 12 82 sfIndexer will never reload the same soundfile twice.
+It will point to the previously filled tables instead.;
+#X text 13 48 sfIndexer can store and refer to an unlimited number
+of loaded soundfiles.;
+#X obj 14 577 mtl/player~;
+#X obj 409 7 cnv 15 350 80 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 545 9 PARAM ENABLED;
+#X text 415 31 The list of loaded soundfiles can be saved and restored
+through the param system.;
+#X obj 528 144 tof/param file;
+#X text 98 203 "symbol": add the soundfile and output its data.;
+#X msg 60 229 panel;
+#X text 284 513 Outlet 2: length samplerate channels;
+#X text 68 159 "add" soundfile: adds the indicated soundfile without
+outputing its data.;
+#X text 101 229 Open internal openpanel.;
+#X msg 104 557 1;
+#X obj 480 65 ../doc/5.reference/tof/param-help;
+#X obj 224 337 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 224 356 openpanel;
+#X msg 243 378 2;
+#X text 291 355 Inlet 2 will only output the soundfile data if it is
+already loaded. It will not load anything.;
+#X obj 194 422 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 215 419 Outlet 4: is the file new or not;
+#X msg 177 305 dump;
+#X text 214 305 dump: dumps the contents out of the 5h outlet;
+#X obj 223 404 print dump;
+#X msg 160 535;
+#X msg 171 464;
+#X msg 146 580;
+#X connect 0 0 19 0;
+#X connect 2 0 25 0;
+#X connect 4 0 18 0;
+#X connect 5 0 18 0;
+#X connect 6 0 18 0;
+#X connect 7 0 18 0;
+#X connect 10 0 46 0;
+#X connect 11 0 48 0;
+#X connect 12 0 47 0;
+#X connect 16 0 29 0;
+#X connect 17 0 29 1;
+#X connect 18 0 2 0;
+#X connect 18 0 11 0;
+#X connect 18 1 10 0;
+#X connect 18 2 12 0;
+#X connect 18 3 41 0;
+#X connect 18 4 45 0;
+#X connect 19 0 20 0;
+#X connect 20 0 18 0;
+#X connect 21 0 22 0;
+#X connect 22 0 18 0;
+#X connect 25 0 3 0;
+#X connect 25 0 3 1;
+#X connect 31 0 18 0;
+#X connect 35 0 25 1;
+#X connect 37 0 38 0;
+#X connect 38 0 18 1;
+#X connect 39 0 18 1;
+#X connect 43 0 18 0;

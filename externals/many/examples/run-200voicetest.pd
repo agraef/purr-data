@@ -1,0 +1,109 @@
+#N canvas 506 162 588 537 10;
+#X declare -path ..;
+#X obj 132 207 hsl 60 18 0 1 0 1 empty empty pan 15 9 0 10 -204800
+-1 -1 2300 0;
+#X floatatom 135 229 5 0 0 0 - - -;
+#X obj 213 320 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 35 410 three outlets are needed: 2 audio and one message outlet
+that is banged when the voice is finished.;
+#X text 15 20 two inlets are needed: the first for voice-managed messages
+\, and the second for messages that are send to all instances;
+#X obj 386 9 declare -path ..;
+#X obj 63 207 hsl 60 18 0.1 10 1 1 empty empty stretch 10 9 0 10 -204786
+-1 -1 4600 0;
+#X floatatom 70 228 5 0 0 0 - - -;
+#X text 231 319 out of voices;
+#X text 26 169 factor by which to stretch sample;
+#X text 26 183 (i.e. 2 means twice as long);
+#X text 33 459 this is the patch of a single voice \, it has the same
+inlets and outlets as voices~ above:;
+#X obj 335 188 table \$0-sample;
+#X text 221 298 (you can send \$0 for localizing things);
+#X obj 336 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#N canvas 0 22 482 301 load 0;
+#X obj 48 10 inlet;
+#X obj 138 251 outlet;
+#X obj 138 167 soundfiler;
+#X obj 138 50 loadbang;
+#X msg 138 146 read -resize \$1 \$2;
+#X obj 138 113 list append \$0-sample;
+#X msg 138 72 aw.wav;
+#X obj 49 61 openpanel;
+#X obj 309 21 inlet;
+#X obj 309 48 trigger bang bang;
+#X obj 320 174 tabwrite~ \$0-sample;
+#X obj 322 145 adc~;
+#X obj 354 146 send \$0-sample;
+#X msg 354 122 resize \$1;
+#X msg 354 82 100000;
+#X connect 0 0 7 0;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 1 14 0;
+#X connect 11 0 10 0;
+#X connect 11 1 10 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 14 0 1 0;
+#X restore 336 158 pd load sample;
+#X text 248 263 <-- send the size of the sample table to all instances
+;
+#X obj 67 349 output~;
+#X obj 135 505 voicetest~ 0 0 \$0;
+#X obj 60 272 pack 0 0;
+#X obj 78 250 t b f;
+#X obj 417 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 435 137 <-- record from mic;
+#X text 148 78 <-- play your voice like an instrument \, click and
+drag;
+#X obj 60 297 voices~ 200 voicetest~ \$0;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X obj 106 259 outlet;
+#X obj 106 30 inlet;
+#X obj 160 29 inlet;
+#X obj 106 86 / 80;
+#X obj 106 199 pack float float;
+#X obj 160 152 * 10;
+#X obj 160 86 / 90;
+#X obj 160 110 + 0.1;
+#X obj 160 131 mapping/exponential_curve 0.75;
+#X obj 106 152 t b 0;
+#X connect 1 0 3 0;
+#X connect 2 0 6 0;
+#X connect 3 0 9 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 5 0;
+#X connect 9 0 4 0;
+#X connect 9 1 4 1;
+#X coords 0 0 1 1 90 90 0;
+#X restore 2 175 pd;
+#X obj 64 76 gcanvas 80 80;
+#X text 223 138 load soundfile -->;
+#X connect 0 0 1 0;
+#X connect 0 0 20 0;
+#X connect 6 0 7 0;
+#X connect 6 0 19 0;
+#X connect 14 0 15 0;
+#X connect 15 0 24 1;
+#X connect 19 0 24 0;
+#X connect 20 0 19 0;
+#X connect 20 1 19 1;
+#X connect 21 0 15 1;
+#X connect 24 0 17 0;
+#X connect 24 1 17 1;
+#X connect 24 2 2 0;
+#X connect 25 0 24 0;
+#X connect 26 0 25 0;
+#X connect 26 1 25 1;

@@ -1,0 +1,3 @@
+NAME=bookmotion
+SRCS=bookmotion.cpp unimotion.c
+HDRS=unimotion.h

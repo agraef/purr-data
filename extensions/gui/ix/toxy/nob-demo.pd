@@ -1,0 +1,74 @@
+#N canvas 151 325 465 268 12;
+#X floatatom 234 44 5 16 1024 0 - - -;
+#X msg 234 62 #w \$1 \, #h \$1;
+#X msg 14 209 #trans \$1;
+#X floatatom 14 191 5 22 100 0 - - -;
+#X obj 356 150 widget nob n2 #w 34 #h 35 #ca "#ff4a9c" #cb "#83f735"
+#cc "#fff74a" #trans 100 #th 8 #bg "#446dfd" #cn "#83f735" #nx -30
+#ny -30 -bd 1;
+#X obj 103 198 nbx 8 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 31.6832 256;
+#X obj 103 89 widget nob n1 #w 100 #h 100 #th 7 #cc purple #cb black
+#ca red #trans 81 #bg orange #range 1 #cn yellow #ny 82 #nx 50 #max
+0 #min 0 -bd 1;
+#X msg 225 159 #range \$1;
+#X msg 247 194 1;
+#X msg 274 194 10000;
+#X floatatom 234 6 5 1 50 0 - - -;
+#X msg 234 21 #th \$1;
+#X obj 338 18 tot .;
+#X msg 338 0 query tk_chooseColor;
+#X obj 333 36 makefilename "%s";
+#X obj 183 29 widget nob n3 #size #1 #w 30 #h 30 #ny 87 #nx 33 #th
+8 #bg orange #cc green #trans 134;
+#X floatatom 280 114 5 0 0 0 - - -;
+#X msg 280 129 #ny \$1;
+#X floatatom 183 11 5 0 0 0 - - -;
+#X floatatom 183 62 5 0 0 0 - - -;
+#X floatatom 280 81 5 0 0 0 - - -;
+#X msg 280 96 #nx \$1;
+#X msg 247 220 #max 1;
+#X obj 8 -2 widget dm color #arrows 0 #items .(bg ca cb cc cn.);
+#X obj 108 2 loadbang;
+#X obj 37 -2 widget dm bg #arrows 0 #items .(green red purple blue
+orange yellow black white pink.);
+#X obj 41 53 prepend;
+#X msg 108 21 bg;
+#X obj 285 152 widget dm range #arrow 0 #items .(1 100 1000 0.1.) #arrows
+0;
+#X msg 292 220 #max 32 \, #min 16;
+#X msg 247 240 #min 0 \, #max 0;
+#X obj 7 29 makefilename #%s;
+#X text 347 87 right = 1/10th;
+#X text 347 76 middle = 10;
+#X text 357 99 left = 1;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 10 0 11 0;
+#X connect 11 0 6 0;
+#X connect 12 0 14 0;
+#X connect 13 0 12 0;
+#X connect 14 0 26 0;
+#X connect 15 0 19 0;
+#X connect 16 0 17 0;
+#X connect 17 0 6 0;
+#X connect 18 0 15 0;
+#X connect 19 0 6 0;
+#X connect 20 0 21 0;
+#X connect 21 0 6 0;
+#X connect 22 0 6 0;
+#X connect 23 0 31 0;
+#X connect 24 0 27 0;
+#X connect 25 0 26 0;
+#X connect 26 0 6 0;
+#X connect 27 0 31 0;
+#X connect 28 0 7 0;
+#X connect 29 0 6 0;
+#X connect 30 0 6 0;
+#X connect 31 0 26 1;

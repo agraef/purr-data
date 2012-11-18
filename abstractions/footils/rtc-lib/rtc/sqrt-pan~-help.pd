@@ -1,0 +1,25 @@
+#N canvas 436 240 483 397 10;
+#X obj 43 196 *~ 0.3;
+#X obj 44 166 noise~;
+#X obj 43 264 ezdac~ 0;
+#X floatatom 101 196 5 0 0 0 - - -;
+#X obj 101 166 / 127;
+#X text 23 80 See also:;
+#X msg 89 79 cp-pan~;
+#X obj 43 226 sqrt-pan~;
+#X text 23 51 Square root panner;
+#X text 23 21 sqrt-pan~;
+#X msg 260 21 Envelopes;
+#X msg 264 316 Overview;
+#X obj 104 142 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 6200 1;
+#X text 104 123 L < < < M > > > R;
+#X text 197 166 controller value;
+#X text 22 328 2004 by Karlheinz Essl;
+#X connect 0 0 7 0;
+#X connect 1 0 0 0;
+#X connect 3 0 7 1;
+#X connect 4 0 3 0;
+#X connect 7 0 2 0;
+#X connect 7 1 2 1;
+#X connect 12 0 4 0;

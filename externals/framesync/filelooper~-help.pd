@@ -1,0 +1,23 @@
+#N canvas 110 130 556 452 10;
+#X text 23 15 loops a sound file between a startframe and endframe
+;
+#X text 163 188 start;
+#X text 164 200 frame;
+#X text 288 199 frame;
+#X text 288 189 end;
+#X text 27 238 audio out;
+#X text 49 197 filename;
+#X obj 170 57 frameclock 400;
+#X obj 54 285 output~;
+#X text 311 214 args: filename startframe# endframe#;
+#X text 26 146 This will loop the voice.wav sound file starting at
+frame 50 and ending at frame 200:;
+#X obj 54 216 filelooper~ examples/sdf.wav 45 291;
+#X text 29 341 FYI: if the time between start frame and end frame is
+shorter than the sample file \, then you'll get an error message in
+the Pd window:;
+#X text 44 385 error: soundfiler_read: truncated to 2.249e+06 elements
+;
+#X text 29 401 It is safe to ignore this message \, it just means it
+didn't load the entire sample into memory.;
+#X connect 11 0 8 0;

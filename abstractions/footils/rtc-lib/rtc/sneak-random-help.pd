@@ -1,0 +1,46 @@
+#N canvas 275 331 568 424 10;
+#X obj 58 147 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 438 251 RTC-seed;
+#X text 259 251 vs. 1.1: seedable by the;
+#X text 510 251 object;
+#X text 20 30 sneak-random;
+#X text 20 62 Outputs random number between 0 and n-1 whereas two consecutive
+numbers are always neighbours.;
+#X obj 221 147 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 10583 1;
+#X obj 58 177 sneak-random 7;
+#X text 259 236 1994-98 by Karlheinz Essl;
+#X floatatom 58 209 0 0 0 0 - - -;
+#X text 20 96 see also:;
+#X msg 93 96 random;
+#X msg 149 96 random-norep;
+#X msg 243 96 xrandom;
+#X msg 296 22 Chance;
+#X text 211 128 display;
+#X floatatom 151 151 4 0 0 1 n - -;
+#N canvas 63 44 196 196 disp 0;
+#X obj 29 124 outlet;
+#X obj 96 38 inlet;
+#X obj 96 67 - 1;
+#X obj 29 53 inlet;
+#X obj 29 90 expr_scale 0 6 0 127;
+#X connect 1 0 2 0;
+#X connect 2 0 4 2;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X restore 19 114 pd disp;
+#X text 208 43 vs. 1.1;
+#X obj 58 291 collect;
+#X obj 114 290 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X msg 58 311;
+#X connect 0 0 7 0;
+#X connect 7 0 9 0;
+#X connect 9 0 17 0;
+#X connect 9 0 19 0;
+#X connect 16 0 17 1;
+#X connect 16 0 7 1;
+#X connect 17 0 6 0;
+#X connect 19 0 21 0;
+#X connect 20 0 19 1;

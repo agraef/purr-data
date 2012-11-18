@@ -1,0 +1,28 @@
+#N canvas 497 114 514 385 10;
+#X floatatom 135 166 5 0 0 0 - - -;
+#X floatatom 164 188 5 0 0 0 - - -;
+#X floatatom 201 207 5 0 0 0 - - -;
+#X obj 81 250 musical.bars 32 4 2;
+#X floatatom 86 319 5 0 0 0 - - -;
+#X floatatom 223 282 5 0 0 0 - - -;
+#X floatatom 18 187 5 0 0 0 - - -;
+#X obj 103 300 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 39 13 Definition: A bar counter for building musical charts
+;
+#X text 133 323 current bar number;
+#X text 140 341 from 0 to n-1;
+#X text 205 187 # beats/bar;
+#X text 243 203 # num count per beat;
+#X text 175 165 total # bars;
+#X text 247 218 i.e. what is the smallest unit;
+#X text 263 281 beat in the bar;
+#X obj 60 88 timing.tempo_;
+#X connect 0 0 3 1;
+#X connect 1 0 3 2;
+#X connect 2 0 3 3;
+#X connect 3 0 4 0;
+#X connect 3 0 7 0;
+#X connect 3 1 5 0;
+#X connect 16 0 3 0;
+#X connect 16 0 6 0;

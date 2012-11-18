@@ -1,0 +1,16 @@
+#N canvas 221 400 450 300 10;
+#X msg 14 102 clear;
+#X msg 28 134 rule 1 2 3 2 \, rule 2 3 3 1 \, rule 3 2 1;
+#X floatatom 36 163 5 0 0 0 - - -;
+#X obj 14 218 print;
+#X text 12 10 s-replacer replaces integers with lists of other integers.
+First \, set up rules using the 'rule x x x x x ...' message. The 'clear'
+message clears out all rules. Next \, send the first integer of a rule
+to recall the list that it corresponds to.;
+#X text 88 164 <- 1 \, 2 \, and 3 will yeild the lists input above.
+;
+#X obj 14 196 s-ireplace;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 6 0 3 0;

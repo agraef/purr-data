@@ -1,0 +1,63 @@
+#N canvas 482 150 670 371 10;
+#X text -11 -34 Description: Plays 3 channels from a ambi.table.4 instance.
+;
+#X text -10 -20 See tabread~ for help.;
+#X text -10 -5 See also ambi.table.read.3~;
+#X obj 168 116 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 190 114 Last outlet outputs bang when done.;
+#X text 169 30 Send table name to second inlet to change.;
+#X obj 7 88 ambi.table.play.3~ \$0-hello;
+#X msg 187 56 tablename egg;
+#X msg 470 141 openpanel;
+#X floatatom 470 213 12 0 0 0 - - -;
+#X obj 470 190 route samples;
+#X obj 470 104 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113
+-1 -1;
+#X obj 545 100 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113
+-1 -1;
+#X msg 545 137 savepanel;
+#X obj 470 165 ambi.table.4 \$0-hello;
+#X obj 31 239 dac~ 1 2 3 4;
+#X obj 20 144 ambi.wxy2quad~;
+#X obj 22 204 ambi.gain.4~;
+#X obj 142 147 vsl 15 50 -100 0 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X msg 38 59 0 44100;
+#X msg 39 38 44100;
+#X msg 38 18 bang;
+#X obj 470 245 print READ_n_samples;
+#X msg 424 5 open medias/sounds/ambisonic00.wav;
+#X msg 99 60 stop;
+#X obj 556 213 print INFO;
+#X text 7 278 Left inlet usage is similar to;
+#X obj 195 278 tabplay~;
+#X obj 71 303 ambi.sf.read.4~ \$0-dummy;
+#X text 11 302 See also:;
+#X connect 6 0 16 0;
+#X connect 6 1 16 1;
+#X connect 6 2 16 2;
+#X connect 6 3 3 0;
+#X connect 7 0 6 1;
+#X connect 8 0 14 0;
+#X connect 9 0 22 0;
+#X connect 10 0 9 0;
+#X connect 10 1 25 0;
+#X connect 11 0 8 0;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X connect 14 0 10 0;
+#X connect 16 0 17 0;
+#X connect 16 1 17 1;
+#X connect 16 2 17 2;
+#X connect 16 3 17 3;
+#X connect 17 0 15 0;
+#X connect 17 1 15 1;
+#X connect 17 2 15 2;
+#X connect 17 3 15 3;
+#X connect 18 0 17 4;
+#X connect 19 0 6 0;
+#X connect 20 0 6 0;
+#X connect 21 0 6 0;
+#X connect 23 0 14 0;
+#X connect 24 0 6 0;

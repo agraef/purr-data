@@ -1,0 +1,39 @@
+#N canvas 258 96 681 655 10;
+#X text 59 525 2008 Matt Barber;
+#X msg 93 470 2 3 100;
+#X obj 188 357 hradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X msg 232 357 asc;
+#X msg 270 357 desc;
+#X obj 93 205 list-random 100 10;
+#X obj 125 256 prepent set;
+#X msg 93 179 bang;
+#X obj 93 230 t b a;
+#X msg 93 291 72 65 75 88 61 50 93 18 88 80;
+#X text 279 324 non-floats are removed with a warning.;
+#X msg 135 324 100 2 wrong type 3;
+#X obj 93 441 prepent set;
+#X text 66 80 Inlets: 1) list to sort;
+#X text 66 134 Argument:;
+#X text 137 134 <direction: 0/asc for ascending \, 1/desc for descending>
+;
+#X text 65 40 Sort a list of floats into ascending order using a Shell
+sort. Non-numbers are dropped.;
+#X obj 355 541 list-sort;
+#X text 299 510 Alternative implementation available in:;
+#X text 121 98 2) direction: 0 or asc for ascending \, 1 or desc for
+descending (default asc);
+#X obj 35 11 list-shellsort;
+#X obj 93 396 list-shellsort;
+#X connect 2 0 21 1;
+#X connect 3 0 21 1;
+#X connect 4 0 21 1;
+#X connect 5 0 8 0;
+#X connect 6 0 9 0;
+#X connect 7 0 5 0;
+#X connect 8 0 9 0;
+#X connect 8 1 6 0;
+#X connect 9 0 21 0;
+#X connect 11 0 21 0;
+#X connect 12 0 1 0;
+#X connect 21 0 12 0;

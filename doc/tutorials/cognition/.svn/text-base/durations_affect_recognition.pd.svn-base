@@ -1,0 +1,18 @@
+#N canvas 448 122 530 585 10;
+#X text 91 14 Note durations affect recognition;
+#X text 117 91 (from Thinking in Sound p.52);
+#X text 57 122 "Sequences of tones forming melodies are perceived as
+more than a series of pitches \, and seem to have an emergent property
+characteristic of the particular pattern- in other words \, they form
+distinctive auditory gestalten or temporal compounds. If melodies can
+be considered as temporal compounds \, then we would expect to find
+a 'temporal template' for melody recognition that has both upper and
+lower durational limits." [1];
+#X text 31 479 [1] "Thinking in sound: the cognitive psychology of
+human audition" \, ed. S. McAdams and E. Bigand. Oxford University
+Press \, 1993 \, p52;
+#X text 81 294 play happy birthday fast/slow;
+#X text 79 320 play twinkle twinkle little star fast/slow;
+#X obj 0 0 cnv 15 580 40 empty empty durations_affect_recognition 20 12
+1 18 -216441 -66577 0;
+#X text 258 24 'cognition' by Hans-Christoph Steiner;

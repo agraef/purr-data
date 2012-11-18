@@ -1,0 +1,14 @@
+#N canvas 237 88 457 287 10;
+#X text 21 8 Description: Transform your computer keyboard into a midi
+piano.;
+#X obj 23 203 unpack;
+#X floatatom 23 226 5 0 0 0 - - -;
+#X floatatom 56 226 5 0 0 0 - - -;
+#X obj 23 94 mtl/piano 1;
+#X text 21 55 Argument: listen to key input at start 0/1;
+#X text 96 225 Note Velocity;
+#X text 21 37 tags: ui midi;
+#X text 20 70 Inlet: listen switch (toggle);
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 4 0 1 0;

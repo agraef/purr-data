@@ -1,0 +1,24 @@
+#N canvas 540 469 734 369 12;
+#X obj 16 13 cnv 15 650 40 empty empty py/pyext 10 22 0 24 -260818
+-1 0;
+#X text 235 32 http://grrrr.org/ext;
+#X symbolatom 21 139 10 0 0 0 - - -;
+#X symbolatom 25 298 10 0 0 0 - - -;
+#X obj 22 179 py .str @py 1;
+#X text 145 170 convert the symbol to a Python string;
+#X text 35 216 pass it as a true Python object;
+#X symbolatom 364 295 10 0 0 0 - - -;
+#X text 462 269 use module function;
+#X text 23 119 enter some text;
+#X text 145 187 using the built-in str function;
+#X obj 25 252 pym swapcase;
+#X text 63 270 use swapcase method;
+#X obj 363 250 py string.swapcase;
+#X text 235 16 Python script objects \, (C)2003-2006 Thomas Grill;
+#X text 21 73 Py can act on Python objects in an object-oriented manner
+;
+#X connect 2 0 4 1;
+#X connect 4 0 11 1;
+#X connect 4 0 13 1;
+#X connect 11 0 3 0;
+#X connect 13 0 7 0;

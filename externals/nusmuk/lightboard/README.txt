@@ -1,0 +1,1 @@
+"Lighting for Pure Data" is an abstractions collection for "Pure Data" that aims at emulating a lighting console controlling DMX systems. Unlike a hardware lighting console, this system offers an open API allowing a full control over the lighting within Pure Data in order to connect light with other media. This also allows to have complex light movements and behaviours.

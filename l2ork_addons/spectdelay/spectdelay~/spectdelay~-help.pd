@@ -1,0 +1,285 @@
+#N canvas 80 42 898 465 10;
+#X obj 715 148 cnv 15 126 48 empty empty empty 20 12 0 14 -262130 -66577
+0;
+#X obj -38 202 cnv 15 321 102 empty empty empty 20 12 0 14 -204786
+-66577 0;
+#X obj -38 344 cnv 15 321 102 empty empty empty 20 12 0 14 -203904
+-66577 0;
+#X obj -38 59 cnv 15 321 102 empty empty empty 20 12 0 14 -261682 -66577
+0;
+#X obj 476 259 dac~;
+#X obj 476 237 *~ 0.1;
+#X obj 502 122 prepend fb;
+#X obj 350 163 *~;
+#X obj 349 58 phasor~ 440;
+#X obj 312 58 pink~;
+#N canvas 434 246 450 300 (subpatch) 0;
+#X array delay 32 float 3;
+#A 0 0.0107938 0.0107938 0.140793 0.310793 0.440792 0.510792 0.370792
+0.250793 0.240793 0.350792 0.440792 0.570791 0.660791 0.580791 0.450792
+0.420792 0.480792 0.570791 0.650791 0.640791 0.520791 0.440792 0.510791
+0.610791 0.560791 0.470791 0.410791 0.340792 0.290792 0.230792 0.120792
+0;
+#X coords 0 1 32 0 320 100 1 0 0;
+#X restore -37 60 graph;
+#X obj -38 448 hsl 316 15 0 1 0 0 \$0-fb empty empty -2 -8 0 10 -203904
+-1 -1 0 1;
+#X obj 365 143 vline~;
+#X obj 365 101 metro 1000;
+#X obj 632 121 prepend dt;
+#X obj 632 58 array2list delay;
+#X obj 502 59 array2list feedback;
+#X obj 509 80 r \$0-fb;
+#X obj -38 163 hsl 316 15 0 1 0 0 \$0-dt empty empty -2 -8 0 10 -261682
+-1 -1 0 1;
+#X obj 513 101 arrayreset feedback;
+#X obj 639 79 r \$0-dt;
+#X obj 644 100 arrayreset delay;
+#X obj 365 83 tgl 15 0 empty empty empty 17 7 0 10 -262130 -1 -1 0
+1;
+#X obj -38 306 hsl 316 15 -48 24 0 1 \$0-eq empty | 206 7 0 10 -204786
+-1 -258113 21000 1;
+#N canvas 121 264 450 300 (subpatch) 0;
+#X array feedback 32 float 3;
+#A 0 0 0.109999 0.209999 0.419997 0.569996 0.619996 0.599996 0.509997
+0.379997 0.389997 0.459997 0.539996 0.459997 0.409997 0.359998 0.319998
+0.299998 0.299998 0.299998 0.259998 0.189999 0.129999 0.139999 0.129999
+0.0999994 0.0799995 0.0599996 0.0299998 0.00999997 0.0199999 0.00999997
+0;
+#X coords 0 1 32 0 320 100 1 0 0;
+#X restore -37 345 graph;
+#N canvas 121 264 450 300 (subpatch) 0;
+#X array eq 64 float 3;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 24 64 -48 320 100 1 0 0;
+#X restore -37 203 graph;
+#X obj 502 194 spectdelay~ 1024 2048 4 6;
+#X obj 745 121 prepend eq;
+#X obj 757 100 arrayreset eq;
+#X obj 745 58 array2list eq;
+#X obj 752 79 r \$0-eq;
+#X text 316 325 spectdelay~ breaks down sound into frequency bins using
+FFT analysis and then allows user to specify eq (in db from -48 to
++ 24) \, delay amount (float value 0-1) \, and feedback (float value
+0-1). Values can be provided per-bin (we use here arrays as multisliders
+for this purpose) or as a constant value for all bins (using horizontal
+sliders).;
+#N canvas 614 159 285 344 other_options 0;
+#X obj 24 313 outlet;
+#X msg 24 28 posteq \$1;
+#X obj 24 9 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#N canvas 209 237 401 193 binmap 0;
+#X obj 830 0 cnv 15 18 193 empty empty binmap 20 12 0 14 -204786 -66577
+0;
+#X text 861 25 The word binmap \, followed by a list of ints \, which
+gives the number of adjacent FFT bins to affect for each of the elements
+of the EQ table. The binmap table and the EQ table must be the same
+size. Giving the word binmap alone cancels the use of a binmap table.
+For example \, the message "binmap 1 2 10 20 50" assumes a previous
+eq message of five floats and treats the first of those floats as the
+gain of the lowest FFT bin \, the second as the gain of the next two
+FFT bins \, the third as the gain of the next ten FFT bins \, the fourth
+as the gain of the next 20 FFT bins \, and the fifth as the gain of
+the next 50 FFT bins (and any leftover bins above these).;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X restore 35 56 pd binmap;
+#N canvas 204 287 401 193 clear 0;
+#X obj 830 0 cnv 15 18 193 empty empty clear 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word clear. This fills all the spectral delay lines
+with zero \, resulting in silence.;
+#X restore 35 77 pd clear;
+#N canvas 212 312 401 193 dbinmap 0;
+#X obj 830 0 cnv 15 18 193 empty empty dbinmap 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word dbinmap \, followed by a list of ints \, which
+gives the number of adjacent FFT bins to affect for each of the elements
+of the delay time and feedback tables. The delay binmap table and these
+tables must be the same size. Giving the word dbinmap alone cancels
+the use of a delay binmap table. The mapping scheme functions in the
+way described for the binmap message.;
+#X restore 35 98 pd dbinmap;
+#N canvas 219 268 401 193 drange 0;
+#X obj 830 0 cnv 15 18 193 empty empty drange 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word drange \, followed by two floats (min and max)
+\, which define the frequency range within which the delay time (del)
+and feedback (feed) tables function. Giving 0 for max sets the maximum
+frequency to Nyquist. By default \, the range is 0 Hz to Nyquist. Note
+that this range is ignored when using the dbinmap table.;
+#X restore 35 119 pd drange;
+#N canvas 207 348 401 193 dx 0;
+#X obj 830 0 cnv 15 18 193 empty empty dx 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word dx \, followed by an index (int) and delay
+time (float) to replace the value at that index in the currently defined
+delay time table. The table must already have at least index + 1 values.
+;
+#X restore 35 140 pd dx;
+#N canvas 233 285 401 194 ex 0;
+#X obj 830 0 cnv 15 18 193 empty empty ex 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word ex \, followed by an index (int) and EQ amplitude
+in dB (float) to replace the value at that index in the currently defined
+EQ table. The table must already have at least index + 1 values.;
+#X restore 35 161 pd ex;
+#N canvas 215 294 401 193 fb 0;
+#X obj 830 0 cnv 15 18 193 empty empty fx 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word fx \, followed by an index (int) and delay
+feedback (float) to replace the value at that index in the currently
+defined delay feedback table. The table must already have at least
+index + 1 values.;
+#X restore 35 182 pd fb;
+#N canvas 217 299 401 194 fft 0;
+#X obj 830 0 cnv 15 18 193 empty empty fft 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word fft \, followed by three ints \, gives the
+FFT length \, window length \, and overlap (respectively). (See explanation
+above in Arguments secion.) Note: sending this message will halt processing
+while object reconfigures itself and will cause an audio glitch.;
+#X restore 35 203 pd fft;
+#N canvas 230 230 401 193 hold 0;
+#X obj 830 0 cnv 15 18 193 empty empty hold 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word hold \, followed by a 0 or a 1 If 0 \, play
+normally. If 1 \, stop accepting input and allow the sound already
+in delay lines to recirculate. (If instead you let the input decay
+to zeros \, without holding \, you may hear the delay lines resonate
+pitches corresponding to the fundamental frequency of analysis and
+its harmonic partials.);
+#X restore 35 224 pd hold;
+#N canvas 223 254 401 193 maxdel 0;
+#X obj 830 0 cnv 15 18 193 empty empty maxdel 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word maxdel \, followed by a float giving the maximum
+number of seconds for the delay lines.;
+#X restore 35 245 pd maxdel;
+#N canvas 228 256 401 193 posteq 0;
+#X obj 830 0 cnv 15 18 193 empty empty posteq 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word posteq \, followed by a 0 or a 1 If 0 \, EQ
+is applied before delay. If 1 \, EQ is applied after delay \, which
+means it affects sound that's feeding back through the delay lines.
+;
+#X restore 35 266 pd posteq;
+#N canvas 224 278 401 193 range 0;
+#X obj 830 0 cnv 15 18 193 empty empty range 20 12 0 14 -204786 -66577
+0;
+#X obj 1081 186 cnv 6 149 6 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X text 861 25 The word range \, followed by two floats (min and max)
+\, which define the frequency range within which the EQ table functions.
+Giving 0 for max sets the maximum frequency to Nyquist. By default
+\, the range is 0 Hz to Nyquist. Note that this range is ignored when
+using the binmap table.;
+#X restore 35 287 pd range;
+#X text 41 7 example: eq can be pre or post delay;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 728 169 pd other_options;
+#X text 720 150 additional options:;
+#X obj 285 201 bng 15 250 50 0 eq_changed empty empty 17 7 0 10 -204786
+-1 -1;
+#X obj 285 201 bng 15 250 50 0 eq_changed empty empty 17 7 0 10 -204786
+-1 -1;
+#X obj 285 343 bng 15 250 50 0 feedback_changed empty empty 17 7 0
+10 -203904 -1 -1;
+#X obj 285 58 bng 15 250 50 0 delay_changed empty empty 17 7 0 10 -261682
+-1 -1;
+#X text 382 80 <--start here;
+#X text 317 411 NB: arrays will auto-update settings as soon as they
+are clicked only if using L2Ork iteration of Pd (http://l2ork.music.vt.edu).
+Otherwise click on respective bang buttons to activate changes. Sliders
+behave the same.;
+#X text 316 203 optional arguments:;
+#X text 315 222 1) FFT length (1024);
+#X text 315 234 2) window length (2048);
+#X text 315 246 3) window overlap (2);
+#X text 315 257 4) max delay in sec. (6);
+#X obj 543 216 hsl 81 15 0 1 0 1 empty empty empty -2 -8 0 10 -262130
+-1 -1 8000 1;
+#X text 544 214 dry;
+#X text 602 214 wet;
+#N canvas 8 200 337 291 dry_wet 0;
+#X obj 82 35 inlet~;
+#X obj 141 35 inlet~;
+#X obj 108 231 outlet~;
+#X obj 83 175 *~;
+#X obj 104 155 line~;
+#X obj 142 175 *~;
+#X obj 162 155 line~;
+#X obj 250 35 inlet;
+#X obj 104 113 expr 1-$f1;
+#X msg 104 134 \$1 10;
+#X msg 162 134 \$1 10;
+#X connect 0 0 3 0;
+#X connect 1 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 1;
+#X connect 5 0 2 0;
+#X connect 6 0 5 1;
+#X connect 7 0 8 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 4 0;
+#X connect 10 0 6 0;
+#X restore 475 215 pd dry_wet;
+#X text 317 280 spectdelay~ is a Pd port of John Gibson's jg.spectdelay~
+for Max5 (c) John Gibson 2010 \, released under GNU/GPL license. Port
+by Ivica Ico Bukvic (2010).;
+#X obj -39 474 cnv 15 898 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj -39 25 cnv 15 898 15 empty empty spectdelay~ 4 8 0 10 -233017
+-66577 0;
+#X msg 365 122 0 0 \, 1 0 5 \, 0 495 495;
+#X obj 521 161 print;
+#X connect 5 0 4 0;
+#X connect 6 0 26 0;
+#X connect 6 0 53 0;
+#X connect 7 0 26 0;
+#X connect 7 0 48 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 0;
+#X connect 12 0 7 1;
+#X connect 13 0 52 0;
+#X connect 14 0 26 0;
+#X connect 15 0 14 0;
+#X connect 16 0 6 0;
+#X connect 17 0 6 0;
+#X connect 17 0 19 0;
+#X connect 20 0 21 0;
+#X connect 20 0 14 0;
+#X connect 22 0 13 0;
+#X connect 26 0 48 1;
+#X connect 27 0 26 0;
+#X connect 29 0 27 0;
+#X connect 30 0 27 0;
+#X connect 30 0 28 0;
+#X connect 32 0 26 0;
+#X connect 45 0 48 2;
+#X connect 48 0 5 0;
+#X connect 52 0 12 0;

@@ -1,0 +1,104 @@
+#N struct help-getsize-template float x float y array array1 help-getsize-array1-template
+;
+#N struct help-getsize-array1-template float y float x;
+#N canvas 0 0 555 619 10;
+#X scalar help-getsize-template 89 279 \; 7 -6 \; 7 35 \; 26 57 \;
+45 85 \; 74 90 \; 79 137 \; 48 150 \; \;;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header getsize 3 12 0 18
+-204280 -1 0;
+#X obj 0 406 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 246 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.4. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control data_structure array;
+#X text 12 45 DESCRIPTION get the number of elements in an array;
+#X text 12 65 INLET_0 pointer;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 443 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 485 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 78 480 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 71 34 pointer;
+#X obj 205 34 setsize;
+#X obj 138 34 element;
+#X obj 14 34 struct;
+#X text 7 1 [getsize] Related Objects;
+#X obj 14 70 get;
+#X obj 51 70 set;
+#X obj 84 70 append;
+#X obj 138 70 sublist;
+#X restore 102 597 pd Related_objects;
+#X obj 78 415 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 451 float;
+#X obj 78 452 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 473 3 getsize;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/getsize -text
+pdpedia: getsize;
+#X obj 78 135 pointer;
+#X floatatom 78 190 5 0 0 0 - - -;
+#X obj 78 161 getsize help-getsize-template array1;
+#N canvas 83 204 428 227 help-getsize-template 0;
+#X obj 21 42 struct help-getsize-template float x float y array array1
+help-getsize-array1-template;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [getsize] Data Structure;
+#X obj 21 138 filledpolygon 11 527 1 -10 0 175 0 175 110 -10 110;
+#X obj 21 85 plot array1 770 2 10 15 20;
+#X text 18 107 An array plotted with a yellow trace 2 pixels wide.
+;
+#X text 18 157 A black rectangle for the background.;
+#X restore 78 223 pd help-getsize-template;
+#N canvas 76 167 428 138 help-getsize-array1-template 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [getsize] Data Structure;
+#X obj 21 42 struct help-getsize-array1-template float y float x;
+#X obj 21 69 filledpolygon 999 5 1 -5 0 0 5 5 0 0 -5;
+#X text 18 91 This is the template for the elements of the array "array1"
+\, which is defined in [pd help-getsize-template].;
+#X restore 78 244 pd help-getsize-array1-template;
+#X text 98 414 pointer;
+#X text 11 23 get the number of elements in an array;
+#X text 168 414 - a pointer to a scalar that contains an array.;
+#X text 168 451 - the output of [getsize] is the number of elements
+in the array. The smallest possible size is one.;
+#X text 81 504 1) symbol;
+#X text 81 520 2) symbol;
+#X text 77 55 When sent a pointer \, [getsize] looks up a field \,
+which should be an array \, and outputs the number of elements of the
+array.;
+#X text 168 504 - a struct name to specify the the template of a scalar.
+;
+#X text 119 190 here we just get the size of the array "array1".;
+#X text 168 519 - the name of a field within that template. (The field
+must be an array.);
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 557 pddp/pddplink all_about_arrays.pd;
+#X obj 98 572 pddp/pddplink scalar-help.pd;
+#X msg 78 109 traverse pd-getsize-help.pd \, next;
+#X text 278 303 To the left is a scalar that contains;
+#X text 278 333 diamond represents one element. (The;
+#X text 278 318 an array of 7 elements. Each white;
+#X text 278 348 black background is just a reference.);
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
+#X connect 32 0 14 0;

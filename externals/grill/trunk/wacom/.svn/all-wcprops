@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/ext/!svn/ver/3746/trunk/wacom
+END
+WacomHelperFuncs.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3109/trunk/wacom/WacomHelperFuncs.h
+END
+Wacom.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/3109/trunk/wacom/Wacom.h
+END
+TAEHelpers.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3109/trunk/wacom/TAEHelpers.c
+END
+TabletAEDictionary.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/3109/trunk/wacom/TabletAEDictionary.h
+END
+wacom-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3109/trunk/wacom/wacom-help.pd
+END
+wacom.mxe-Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/3109/trunk/wacom/wacom.mxe-Info.plist
+END
+TAEHelpers.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3109/trunk/wacom/TAEHelpers.h
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3109/trunk/wacom/main.cpp
+END
+WacomHelperFuncs.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3109/trunk/wacom/WacomHelperFuncs.c
+END

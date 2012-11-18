@@ -1,0 +1,103 @@
+#N canvas 249 436 715 476 10;
+#X obj 122 227 time;
+#X obj 67 202 t b b;
+#X obj 67 182 bang;
+#X obj 43 280 makesymbol %s-%s-%s_%s-%s-%s.wav;
+#X obj 43 227 date;
+#X obj 43 260 pack f f f f f f;
+#X msg 43 310 stop \, open \$1 \, start;
+#X obj 105 132 tgl 13 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 551250
+;
+#X obj 314 320 symbol;
+#X obj 287 300 t f b;
+#X obj 287 400 outlet read;
+#X obj 30 330 outlet save;
+#X obj 250 280 moses 1;
+#X obj 89 132 tgl 13 0 empty empty empty 0 -6 0 8 -258699 -1 -1 0 1
+;
+#X obj 30 162 moses 1;
+#X msg 30 182 stop;
+#X obj 105 52 inlet play;
+#X obj 89 32 inlet rec;
+#X text 13 6 [rec-name] - Automatic naming of a recording.;
+#N canvas 0 0 430 450 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2007 \, João Pais;
+#X restore 15 445 pd license;
+#X text 350 60 Inlets;
+#X text 350 130 Outlets;
+#X text 350 200 GUI;
+#X text 350 80 - Bang / Toggle (Recording);
+#X text 350 150 - message to writesf~;
+#X text 350 170 - message to readsf~;
+#X text 350 220 - Click on the either toggle to start/stop recording
+or playback;
+#X obj 314 360 list;
+#X obj 151 92 t f f;
+#X obj 105 72 route bang float;
+#X text 350 100 - Bang / Toggle (Playback) / Sample playback index
+;
+#X obj 324 340 moses 0;
+#X obj 324 280 0;
+#X obj 105 92 t b b;
+#X text 12 427 (C) 2007-08 João Pais - jmmmpais@googlemail.com;
+#X msg 314 380 open \$1;
+#X connect 0 0 5 3;
+#X connect 0 1 5 4;
+#X connect 0 2 5 5;
+#X connect 1 0 4 0;
+#X connect 1 1 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X connect 3 0 8 1;
+#X connect 4 0 5 0;
+#X connect 4 1 5 1;
+#X connect 4 2 5 2;
+#X connect 5 0 3 0;
+#X connect 6 0 11 0;
+#X connect 7 0 12 0;
+#X connect 8 0 27 0;
+#X connect 9 0 10 0;
+#X connect 9 1 8 0;
+#X connect 12 0 10 0;
+#X connect 12 1 9 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 1 2 0;
+#X connect 15 0 11 0;
+#X connect 16 0 29 0;
+#X connect 17 0 13 0;
+#X connect 27 0 35 0;
+#X connect 28 0 7 0;
+#X connect 28 1 31 0;
+#X connect 29 0 33 0;
+#X connect 29 1 28 0;
+#X connect 29 2 7 0;
+#X connect 31 1 27 1;
+#X connect 32 0 31 0;
+#X connect 33 0 7 0;
+#X connect 33 1 32 0;
+#X connect 35 0 10 0;
+#X coords 0 -1 1 1 90 17 1 30 130;

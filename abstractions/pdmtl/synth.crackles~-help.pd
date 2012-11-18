@@ -1,0 +1,15 @@
+#N canvas 66 611 375 300 10;
+#X obj 41 205 mix.out_~;
+#X obj 41 78 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 39 53 Comment: Taken from Andy Farnell's work.;
+#X text 41 26 Description: Generates crackles.;
+#X obj 229 129 param.gui;
+#X msg 229 107 crack;
+#X obj 41 127 synth.crackles~ @id crack;
+#X msg 41 101 switch \$1;
+#X connect 1 0 7 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;
+#X connect 6 0 0 1;
+#X connect 7 0 6 0;

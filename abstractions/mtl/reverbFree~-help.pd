@@ -1,0 +1,62 @@
+#N canvas 480 147 512 296 10;
+#X obj 24 134 mtl/reverbFree~ /id freeverb;
+#X obj 23 161 mtl/out~;
+#X text 19 25 tags: fx~;
+#X obj 23 84 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#N canvas 5 185 450 300 generate~ 0;
+#X obj 32 213 osc~ 200;
+#X obj 32 89 metro 400;
+#X obj 32 175 mtof;
+#X obj 104 195 mtof;
+#X obj 32 132 + 20;
+#X obj 32 111 random 70;
+#X floatatom 83 69 5 0 0 0 - - -;
+#X obj 32 261 outlet~;
+#X obj 103 261 outlet~;
+#X obj 30 14 inlet;
+#X obj 104 175 mtl/closestNote 0 2 4 7 9;
+#X obj 104 234 *~;
+#X obj 31 234 *~;
+#X obj 104 214 osc~ 100;
+#X obj 32 155 mtl/closestNote 0 2 4 7 9;
+#X connect 0 0 12 0;
+#X connect 1 0 5 0;
+#X connect 2 0 0 0;
+#X connect 3 0 13 0;
+#X connect 4 0 10 0;
+#X connect 4 0 14 0;
+#X connect 5 0 4 0;
+#X connect 6 0 1 1;
+#X connect 9 0 1 0;
+#X connect 9 0 11 1;
+#X connect 9 0 12 1;
+#X connect 10 0 3 0;
+#X connect 11 0 8 0;
+#X connect 12 0 7 0;
+#X connect 13 0 11 0;
+#X connect 14 0 2 0;
+#X restore 23 109 pd generate~;
+#X text 18 8 Description: wrap freeverb.;
+#X obj 222 163 cnv 15 200 20 empty empty /freeverb/ 2 12 0 8 -258401
+-262144 0;
+#X obj 222 186 hsl 100 15 0 1 0 0 /freeverb/wet /freeverb/wet_ wet
+105 7 0 8 -262144 -1 -1 0 1;
+#X obj 222 204 hsl 100 15 0 1 0 0 /freeverb/width /freeverb/width_
+width 105 7 0 8 -262144 -1 -1 9900 1;
+#X obj 222 222 hsl 100 15 0.11 1.6 0 0 /freeverb/roomsize /freeverb/roomsize_
+roomsize 105 7 0 8 -262144 -1 -1 1262 1;
+#X obj 222 240 tgl 15 0 /freeverb/freeze /freeverb/freeze_ freeze 17
+7 0 8 -262144 -166441 -1 0 1;
+#X obj 222 258 hsl 100 15 0 2 0 0 /freeverb/damping /freeverb/damping_
+damping 105 7 0 8 -262144 -1 -1 1980 1;
+#X obj 218 51 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 278 52 PARAM ENABLED;
+#X text 202 133 <-Click on the propeties menu to display params;
+#X obj 217 74 ../doc/5.reference/tof/param-help;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 4 1 0 1;

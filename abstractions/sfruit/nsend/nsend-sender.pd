@@ -1,0 +1,4 @@
+#N canvas 1517 823 127 108 10;
+#X obj 19 17 r \$1send\$2;
+#X obj 19 67 s \$3\$2;
+#X connect 0 0 1 0;

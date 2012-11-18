@@ -1,0 +1,21 @@
+Index: g_editor.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_editor.c,v
+retrieving revision 1.13
+diff -u -w -r1.13 g_editor.c
+--- g_editor.c	15 Sep 2005 03:17:27 -0000	1.13
++++ g_editor.c	28 Apr 2006 22:40:57 -0000
+@@ -1688,9 +1688,10 @@
+         }
+         else
+         {
+-            sys_vgui(
+-"pdtk_check {Close this window??} {.x%lx menuclose 1;\n} yes\n",
+-                x);
++/*             sys_vgui( */
++/* 				"pdtk_check {Close this window??} {.x%lx menuclose 1;\n} yes\n", */
++/*                 x); */
++			pd_free(&x->gl_pd);
+         }
+     }
+     else if (force == 1)

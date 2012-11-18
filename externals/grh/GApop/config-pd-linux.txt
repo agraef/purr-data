@@ -1,0 +1,36 @@
+# config file for GApop, adapted from Thomas Grill's xsample makefile
+
+# your c++ compiler (if not g++)
+# CXX=icc
+
+
+# where does the PD installation reside?
+PD=/usr/lib/pd
+
+# where are the PD header files?
+# leave it blank if it is a system directory (like /usr/local/include), 
+# 	since gcc 3.2 complains about it
+PDINC=/home/holzi/pd-0.38-4/src
+
+# where do the flext libraries reside?
+FLEXTPATH=/usr/lib/pd/flext
+
+# where should GApop objects be built?
+TARGDIR=./pd-linux
+
+# where should GApop be installed?
+# (leave blank to omit installation)
+INSTDIR=${PD}/externs
+
+# where should the GApop help be installed?
+# (leave blank to omit installation)
+HELPDIR=${PD}/doc/5.reference
+
+# additional compiler flags
+# (check whether they fit to your system!)
+#UFLAGS=-xN -tpp7 -ip -ipo_obj    # icc
+UFLAGS=-march=pentium4 -mmmx -msse2 -msse -mfpmath=sse -g  # gcc 3.2 
+
+# define to link against shared flext library (flext version >= 0.5.0)
+FLEXT_SHARED=1
+

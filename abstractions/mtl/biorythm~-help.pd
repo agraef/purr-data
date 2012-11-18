@@ -1,0 +1,44 @@
+#N canvas 254 114 467 490 10;
+#X obj 77 325 *~;
+#X obj 62 208 noise~;
+#X text 33 134 Arguments : frequency \, minimum \, maximum;
+#X floatatom 176 176 5 0 0 0 - - -;
+#X obj 62 230 lop~ 1200;
+#X text 34 121 Inlets : frequency \, minimum \, maximum \, reset phase
+(bang);
+#X text 218 174 seconds;
+#X obj 38 19 cnv 15 380 100 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 43 19 description: Generates a long lasting cycle that is inspired
+by biological rythms. Biological rythms are characterized by a duration
+(the period) a minimum and a maximum.;
+#X obj 177 311 mtl/biorythm~ 0.1 0 2;
+#N canvas 0 0 450 300 seconds2freq 0;
+#X obj 163 56 inlet;
+#X obj 171 154 /;
+#X msg 166 108 1000 \$1;
+#X obj 171 214 outlet;
+#X obj 166 83 * 1000;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 4 0 2 0;
+#X restore 175 210 pd seconds2freq;
+#X floatatom 176 241 5 0 0 1 freq - -;
+#X obj 55 388 mtl/out~;
+#X floatatom 257 240 5 0 0 1 min - -;
+#X floatatom 329 240 5 0 0 1 max - -;
+#X obj 345 276 bng 15 250 50 0 empty empty reset 17 7 0 10 -262144
+-1 -1;
+#X text 44 85 tags: control~;
+#X connect 0 0 12 0;
+#X connect 0 0 12 1;
+#X connect 1 0 4 0;
+#X connect 3 0 10 0;
+#X connect 4 0 0 0;
+#X connect 9 0 0 1;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 13 0 9 1;
+#X connect 14 0 9 2;
+#X connect 15 0 9 3;

@@ -1,0 +1,122 @@
+# ----------------------------------------------------------
+
+# adjust the next pathes to your system:
+
+# this should point to the directory which contains
+# m_pd.h and g_canvas.h
+PD_SCR = /usr/local/src/pd/src
+#PD_SCR = c:/pd/src
+
+# this is the pd directory, usually /usr/lib/pd
+# or c:/pd etc.
+PD_PATH = /usr/lib/pd
+#PD_PATH = c:/pd
+
+# path of sndfile.h from libsndfile, usually it's in
+# /usr/include and so detected automatically
+SNDFILE_SRC = /usr/include
+
+# the directory, where libsndfile is located
+# (in linux it' normally not necessary, in windows it's
+# normally in c:/windwos/system or so)
+#SNDFILE_PATH = c:/windows/system
+
+# path to threadlib.h
+THREADLIB_SRC = /home/holzi/pd-cvs/externals/grh/threadlib/src
+#THREADLIB_SRC = c:/Georg/pd-cvs/externals/grh/threadlib/src
+
+# path to threadlib.pd_linux/dll/pd_darwin
+# (usually path/to/pd/extra)
+THREADLIB_PATH = $(PD_PATH)/extra
+
+# ----------------------------------------------------------
+
+NAME=sndfiler
+
+CC = gcc
+LD = gcc
+INCLUDE= -I. -I$(PD_SCR) -I$(SNDFILE_SRC) -I$(THREADLIB_SRC)
+CC_FLAGS = -DPD -DUSE_PD_MAIN -O3 -funroll-loops \
+           -Wall -W -Wshadow -Wno-parentheses -Wno-switch \
+           -Wno-unused -fomit-frame-pointer
+LD_FLAGS = --export-dynamic -shared -o
+
+OBJ=sndfiler.o file_input.o
+
+current:
+	@echo ----------------------------
+	@echo  USAGE:
+	@echo     linux:   make pd_linux
+	@echo     windows: make pd_win
+	@echo     darwin:  make pd_darwin
+	@echo ----------------------------
+
+# ----------------------- LINUX i386 -----------------------
+
+pd_linux: $(NAME).pd_linux
+
+.SUFFIXES: .pd_linux
+
+CC_UNIX = -DUNIX -fPIC -pthread
+LIB_UNIX = -lc -lm -lsndfile -lvorbisfile $(THREADLIB_PATH)/threadlib.pd_linux
+
+.c.pd_linux:
+	$(CC) $(CC_UNIX) $(CC_FLAGS) $(INCLUDE) -o sndfiler.o -c sndfiler.c
+	$(CC) $(CC_UNIX) $(CC_FLAGS) $(INCLUDE) -o file_input.o -c file_input.c
+	$(LD) $(LD_FLAGS) $*.pd_linux $(OBJ) $(LIB_UNIX)
+	strip --strip-unneeded $*.pd_linux
+	chmod 755 $*.pd_linux
+	@test -d ../bin || mkdir -p ../bin
+	cp $*.pd_linux ../bin
+	rm -f $*.o
+
+# ------------------------ WIN MinGW -----------------------
+
+pd_win: $(NAME).dll
+
+.SUFFIXES: .dll
+
+CC_WIN = -DMSW -mms-bitfields
+LIB_WIN = $(PD_PATH)/bin/pd.dll \
+          $(SNDFILE_PATH)/pthreadGC.dll \
+          $(SNDFILE_PATH)/libsndfile.dll \
+          $(THREADLIB_PATH)/threadlib.dll
+
+.c.dll:
+	$(CC) $(CC_WIN) $(CC_FLAGS) $(INCLUDE) -o $*.o -c $*.c
+	$(LD) $(LD_FLAGS) $*.dll $*.o $(LIB_WIN)
+	strip --strip-unneeded $*.dll
+	chmod 755 $*.dll
+	@test -d ../bin || mkdir -p ../bin
+	cp $*.dll ../bin
+	rm -f $*.o
+
+# ----------------------- Mac OSX -----------------------
+
+pd_darwin: $(NAME).pd_darwin
+
+.SUFFIXES: .pd_darwin
+
+CC_DARWIN = -pthread
+LD_DARWIN = -bundle -undefined suppress -flat_namespace \
+            -bundle_loader $(PD_PATH)/bin/pd --export-dynamic \
+            -L/sw/lib -L/opt/local/lib -lsndfile -lvorbisfile \
+            $(THREADLIB_PATH)/threadlib.pd_darwin
+
+.c.pd_darwin:
+	$(CC) $(CC_UNIX) $(CC_FLAGS) $(INCLUDE) -o sndfiler.o -c sndfiler.c
+	$(CC) $(CC_UNIX) $(CC_FLAGS) $(INCLUDE) -o file_input.o -c file_input.c
+	$(LD) $(LD_DARWIN) -o $*.pd_darwin $*.o $(LIB)
+	chmod 755 $*.pd_darwin
+	@test -d ../bin || mkdir -p ../bin
+	cp $*.pd_darwin ../bin
+	rm -f $*.o
+
+# ----------------------------------------------------------
+
+clean:
+	rm -f *.o *.pd_darwin *.pd_linux *.dll
+
+install:
+	install ../bin/$(NAME).* $(PD_PATH)/extra
+	install ../doc/*.pd $(PD_PATH)/doc/5.reference

@@ -1,0 +1,81 @@
+#N canvas 349 59 700 663 10;
+#X text -221 -168 pdp_opencv_distrans : distance processing;
+#X text -221 -154 it's a morphology filter that can be used to preprocess
+video frames;
+#X obj -226 -96 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 13 -57 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 14 -29 metro 40;
+#X msg 104 -2 close;
+#X obj 34 69 pdp_v4l;
+#X msg 91 -34 open /dev/video0;
+#X obj 215 -54 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 215 -27 metro 40;
+#X msg 296 -8 close;
+#X msg 292 -32 open /dev/video0;
+#X obj 235 71 pdp_v4l2;
+#X msg 301 47 format \$1;
+#X obj 302 25 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj -196 119 pdp_qt;
+#X obj -163 55 metro 40;
+#X msg -163 27 bang;
+#X msg -122 27 stop;
+#X obj -196 -42 openpanel;
+#X msg -196 -17 open \$1;
+#X msg -196 -70 bang;
+#X msg -162 82 loop \$1;
+#X obj -82 82 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj -82 0 loadbang;
+#X text -153 -67 playing a video file;
+#X text 44 -58 Camera input;
+#X obj -225 171 cnv 15 621 250 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj -180 379 pdp_xv;
+#X floatatom -37 197 5 0 0 0 - - -;
+#X obj -180 326 pdp_opencv_distrans;
+#X text 2 196 edge threshold;
+#X msg -30 246 type 3;
+#X msg -20 266 type 5;
+#X msg -10 285 type 0;
+#X msg -32 221 voronoi \$1;
+#X obj 59 221 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 78 221 switch Voronoi diagram mode on/off;
+#X text 27 247 use 3x3 mask;
+#X text 37 266 use 5x5 mask;
+#X text 43 285 use precise distance transform;
+#X text -220 -129 commets to lluisgomez@hangar.org.;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 30 0;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 30 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 30 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 20 0;
+#X connect 20 0 15 0;
+#X connect 21 0 19 0;
+#X connect 22 0 15 0;
+#X connect 23 0 22 0;
+#X connect 24 0 23 0;
+#X connect 24 0 17 0;
+#X connect 29 0 30 1;
+#X connect 30 0 28 0;
+#X connect 32 0 30 0;
+#X connect 33 0 30 0;
+#X connect 34 0 30 0;
+#X connect 35 0 30 0;
+#X connect 36 0 35 0;

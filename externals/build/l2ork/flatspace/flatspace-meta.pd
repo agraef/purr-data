@@ -1,0 +1,8 @@
+#N canvas 10 10 200 200 10;
+#N canvas 20 20 420 300 META 0;
+#X text 10 10 META this is a prototype of a libdir meta file;
+#X text 10 10 NAME flatspace;
+#X text 10 10 AUTHOR Numerous;
+#X text 10 10 DESCRIPTION This is a collection of externals in a flat namespace;
+#X text 10 10 LICENSE GNU GPL;
+#X restore 10 10 pd META;

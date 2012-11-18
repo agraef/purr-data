@@ -1,0 +1,14 @@
+#N canvas 464 470 450 300 10;
+#X obj 55 63 r \$1-s;
+#X obj 55 142 list-idx-list;
+#X obj 130 90 dollarg;
+#X obj 130 64 loadbang;
+#X obj 130 118 list split 1;
+#X msg 55 178 label \$1;
+#X obj 55 208 s \$1-r;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 1 1 1;
+#X connect 5 0 6 0;

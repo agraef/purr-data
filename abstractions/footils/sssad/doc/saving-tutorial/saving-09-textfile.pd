@@ -1,0 +1,57 @@
+#N canvas 376 15 549 684 10;
+#X floatatom 53 88 5 0 0 0 - - -;
+#X obj 53 191 bng 15 250 50 0 empty empty save 0 -6 0 8 -262144 -1
+-1;
+#X obj 75 287 s SAVING-ADMIN;
+#X obj 100 88 store-collect-delayed more1;
+#X floatatom 53 114 5 0 0 0 - - -;
+#X obj 100 114 store-collect-delayed more2;
+#X floatatom 54 141 5 0 0 0 - - -;
+#X obj 101 141 store-collect-delayed more3;
+#X text 45 21 Instead of saving to a message box you can also save
+to a [textfile] which has the advantage \, that you can load different
+textfiles to use with the same patch.;
+#X obj 209 296 textfile;
+#X msg 97 242 clear;
+#X obj 209 207 r SAVING-SEND;
+#X obj 209 234 list prepend add;
+#X obj 209 255 list trim;
+#X obj 53 214 t b b b;
+#X obj 56 527 textfile;
+#X obj 56 443 t b b;
+#X obj 56 493 until;
+#X obj 56 561 s SAVING-REC;
+#X obj 56 423 bng 15 250 50 0 empty empty reload 0 -6 0 8 -262144 -1
+-1;
+#X text 52 384 Restoring from a file works like this:;
+#X msg 53 321 print \, write state.txt;
+#X text 326 494 Don't forget to rewind!;
+#X text 52 603 By reading from SAVING-SEND and sending to SAVING-REC
+you can also store your state in other ways \, for example to a [pool]
+object or send it over a [netsend] or [sendOSC] network connection.
+;
+#X obj 344 85 tagged-del more4;
+#X obj 345 129 tagged-del more5;
+#X msg 106 493 read state.txt \, print \, rewind;
+#X connect 0 0 3 0;
+#X connect 1 0 14 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 6 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 9 0;
+#X connect 14 0 21 0;
+#X connect 14 1 2 0;
+#X connect 14 2 10 0;
+#X connect 15 0 18 0;
+#X connect 15 1 17 1;
+#X connect 16 0 17 0;
+#X connect 16 1 26 0;
+#X connect 17 0 15 0;
+#X connect 19 0 16 0;
+#X connect 21 0 9 0;
+#X connect 26 0 15 0;

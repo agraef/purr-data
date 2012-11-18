@@ -1,0 +1,11 @@
+#N canvas 296 348 489 253 12;
+#X text 193 118 number of samples;
+#X floatatom 148 116 5 0 0 0 - - -;
+#X floatatom 148 194 10 0 0 0 - - -;
+#X text 234 195 size in Megabytes;
+#X text 40 8 Description: Converts a number of samples into it's memory
+size.;
+#X obj 148 154 mtl/smpToMem;
+#X text 39 48 tags: conversion;
+#X connect 1 0 5 0;
+#X connect 5 0 2 0;

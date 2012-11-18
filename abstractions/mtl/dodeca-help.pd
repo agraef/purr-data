@@ -1,0 +1,38 @@
+#N canvas 669 81 385 377 10;
+#X floatatom 72 198 5 0 0 0 - - -;
+#X floatatom 34 251 5 0 0 0 - - -;
+#X floatatom 153 201 5 0 0 0 - - -;
+#X obj 72 252 mtof;
+#X obj 72 274 osc~;
+#X obj 33 152 f;
+#X obj 62 152 + 1;
+#X obj 33 174 % 60;
+#X obj 33 196 + 60;
+#X floatatom 84 79 5 0 0 0 - - -;
+#X obj 33 121 metro 150;
+#X obj 33 100 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X text 150 182 change the seed \, resynths the serie;
+#X text 21 -4 Description: Given a seed \, the serie will always be
+the same.;
+#X text 21 24 Comments: gets a note from the serie;
+#X obj 84 98 mtl/bpmToMs;
+#X obj 72 223 mtl/dodeca;
+#X obj 72 304 mtl/out~;
+#X text 22 39 tags: musical;
+#X connect 0 0 16 0;
+#X connect 2 0 16 1;
+#X connect 3 0 4 0;
+#X connect 4 0 17 0;
+#X connect 4 0 17 1;
+#X connect 5 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 1;
+#X connect 7 0 8 0;
+#X connect 8 0 16 0;
+#X connect 9 0 15 0;
+#X connect 10 0 5 0;
+#X connect 11 0 10 0;
+#X connect 15 0 10 1;
+#X connect 16 0 1 0;
+#X connect 16 0 3 0;

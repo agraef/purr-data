@@ -1,0 +1,25 @@
+#N canvas 422 71 662 288 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 245 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 247 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 24 141 pt.layer 1;
+#X text 12 39 Creation Arguments: pt.layer [render order];
+#X obj 184 101 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 6 pixelTANGO HELP - pt.layer - Layer Header;
+#X text 12 23 Type: Header. Top of every pt layer;
+#X obj 184 151 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 151 *Notes:;
+#X text 187 101 *Toggle:;
+#X text 197 122 Show/Hide this layer;
+#X text 177 77 Layer Functions:;
+#X text 197 172 The creation argument (render order) starts in the
+back with 1 and goes forward up to 100 The back-most layer \, render
+order == 1 \, is turned on by default. All other layers are off by
+default.;

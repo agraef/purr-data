@@ -1,0 +1,16 @@
+#N canvas 433 22 275 240 10;
+
+#X obj 35 34 inlet;
+#X obj 75 34 inlet;
+#X obj 35 147 list-insert \$1;
+#X obj 35 62 t a a;
+#X obj 176 175 outlet;
+#X obj 178 39 inlet;
+#X obj 35 174 outlet;
+#X obj 167 92 import-disabled list-abs;
+#X connect 0 0 3 0;
+#X connect 1 0 2 1;
+#X connect 2 0 6 0;
+#X connect 3 0 4 0;
+#X connect 3 1 2 2;
+#X connect 5 0 2 0;

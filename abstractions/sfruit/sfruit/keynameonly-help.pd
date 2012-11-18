@@ -1,0 +1,22 @@
+#N canvas 98 339 450 300 10;
+#X obj 63 113 keynameonly a;
+#X obj 173 113 keynameonly b;
+#X obj 283 113 keynameonly c;
+#X floatatom 63 137 5 0 0 0 - - -;
+#X floatatom 173 137 5 0 0 0 - - -;
+#X floatatom 283 137 5 0 0 0 - - -;
+#X obj 63 162 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 173 162 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 283 162 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 16 15 keynameonly - only listen for keystrokes from one key
+;
+#X text 279 271 2008 Luke Iannini;
+#X connect 0 0 3 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 6 0;
+#X connect 4 0 7 0;
+#X connect 5 0 8 0;

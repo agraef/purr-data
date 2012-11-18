@@ -1,0 +1,28 @@
+#N canvas 269 360 542 315 10;
+#X obj 198 94 metro 250;
+#X obj 198 71 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 198 50 loadbang;
+#X text 30 19 Description: Simple counter;
+#X floatatom 198 236 5 0 0 0 - - -;
+#X obj 315 85 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 319 143 5 0 0 0 - - -;
+#X text 341 84 resets;
+#X text 366 141 Iteration value;
+#X obj 332 276 count.modulo;
+#X text 266 274 See also;
+#X floatatom 320 104 5 0 0 0 - - -;
+#X obj 198 182 count.iter 0 1;
+#X obj 426 275 count.accum;
+#X text 364 103 Current value;
+#X obj 168 125 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X connect 0 0 12 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 5 0 12 1;
+#X connect 6 0 12 2;
+#X connect 11 0 12 1;
+#X connect 12 0 4 0;
+#X connect 15 0 12 0;

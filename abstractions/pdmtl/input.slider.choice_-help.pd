@@ -1,0 +1,15 @@
+#N canvas 672 292 556 287 10;
+#X obj 351 139 s \$0r;
+#X obj 354 169 r \$0s;
+#X obj 354 194 print selected;
+#X obj 351 74 loadbang;
+#X msg 351 102 choices one two three \, set two;
+#X obj 23 134 input.slider.choice_ name \$0r \$0s;
+#X text 23 106 input.slider.choice_ name \$0r \$0s;
+#X text 31 28 Description: A horizontal slider that slides through
+preset choices (symbols).;
+#X text 23 77 The input.slider.choice_ below was created with the following:
+;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;

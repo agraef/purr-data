@@ -1,0 +1,6 @@
+TheStateName 0 , aFloat , 27
+TheStateName 0 , aSymbol , help
+TheStateName 0 , aRadio , 1
+TheStateName 1 , aFloat , 60
+TheStateName 1 , aSymbol , hi
+TheStateName 1 , aRadio , 4

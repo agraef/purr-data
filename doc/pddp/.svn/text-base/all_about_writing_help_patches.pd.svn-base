@@ -1,0 +1,42 @@
+#N canvas 0 0 448 238 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header writing_help_patches
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 216 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION guidelines for writing help patches;
+#X restore 392 218 pd META;
+#N canvas 10 196 428 105 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Writing Help Patches- Related Objects;
+#X obj 20 37 pddp/helplink pddp/pddplink;
+#X obj 20 57 pddp/helplink pddp/helplink;
+#X text 109 37 - link to other patches \, web pages \, or text files
+;
+#X text 109 57 - link to other objects' help patches;
+#X restore 103 218 pd Related_objects;
+#X obj 6 218 pddp/pddplink all_about.pd -text All About Pd;
+#X text 380 121 * pddplink and helplink;
+#X text 380 100 * pd META;
+#X text 383 145 This help file is unfinished.;
+#X text 19 36 Legitimate Authorities;
+#X text 19 36 ______________________;
+#X text 18 151 2) Include a short example patch. Justification: it's
+the whole reason to make help files be Pd patches!;
+#X text 18 56 1) For object help patches \, do not automatically turn
+on audio when the patch opens. Justification: there is no way to detect
+how the help patch audio will interact with whatever the user is already
+doing (such as opening several help patches simultaneously). Since
+unexpected audio signals can damage equipment (and ears) it is best
+to let the user turn on audio at his/her leisure.;
+#X text 18 181 You can use pddp/helplink and pddp/pddplink. See the
+"Related_objects" subpatch below for more info:;

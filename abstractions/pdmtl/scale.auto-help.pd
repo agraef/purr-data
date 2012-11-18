@@ -1,0 +1,85 @@
+#N canvas 630 22 493 780 10;
+#X floatatom 26 76 5 0 0 0 - - -;
+#X floatatom 26 140 0 0 0 0 - - -;
+#X floatatom 177 244 5 0 0 1 min - -;
+#X obj 161 301 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X floatatom 195 155 0 0 0 0 - - -;
+#X floatatom 342 155 0 0 0 0 - - -;
+#X obj 258 86 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X floatatom 136 363 5 0 0 0 - - -;
+#X obj 161 416 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X msg 186 361 reset;
+#X msg 239 361 bang;
+#X text 14 211 You can also set the output min and max using the 2nd
+and 3rd inlets:;
+#X floatatom 195 260 5 0 0 1 max - -;
+#X floatatom 117 250 5 0 0 0 - - -;
+#X obj 295 361 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X text 14 322 The [reset( message or banging the 4th inlet resets
+the stored max and min to zero. 0 disables the auto-tracking \, 1 re-enables
+it:;
+#X floatatom 81 505 5 0 0 0 - - -;
+#X obj 130 630 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 300 532 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 215 579 pack float float;
+#X msg 148 500 save;
+#X msg 215 600 set load \$1 \$2;
+#X msg 150 523 load 1 11;
+#X msg 323 531 bang;
+#X text 18 23 Description: scales a stream of numbers based on an output
+range set as arguments \, and an input range which is set dynamically.
+;
+#X text 18 678 (C) Copyright 2004 Hans-Christoph Steiner <hans@at.or.at>
+;
+#X text 235 693 released under the GNU GPL;
+#X text 13 181 If you use [scale.auto] with no arguments \, then the
+output range defaults to 0-1.;
+#X text 16 453 The dump message allow [scale.auto] to output the min
+and max of the input data. this allow user to save this data in order
+to load the same calibration with a loadbang :;
+#X text 20 664 Based on [autoscale] from the mapping library;
+#X obj 26 110 scale.auto;
+#X obj 119 88 unpack f f;
+#X floatatom 119 112 5 0 0 0 - - -;
+#X floatatom 157 111 5 0 0 0 - - -;
+#X obj 118 65 route input_range;
+#X obj 158 393 scale.auto;
+#X obj 158 278 scale.auto;
+#X obj 342 125 scale.auto -4095 4095;
+#X obj 195 125 scale.auto -0.01 0.01;
+#X obj 127 556 scale.auto 0 1 ______________;
+#X connect 0 0 30 0;
+#X connect 2 0 36 1;
+#X connect 6 0 37 0;
+#X connect 6 0 38 0;
+#X connect 7 0 35 0;
+#X connect 9 0 35 0;
+#X connect 10 0 35 3;
+#X connect 12 0 36 2;
+#X connect 13 0 36 0;
+#X connect 14 0 35 3;
+#X connect 16 0 39 0;
+#X connect 18 0 39 3;
+#X connect 19 0 21 0;
+#X connect 20 0 39 0;
+#X connect 21 0 22 0;
+#X connect 22 0 39 0;
+#X connect 23 0 39 3;
+#X connect 30 0 1 0;
+#X connect 30 3 34 0;
+#X connect 31 0 32 0;
+#X connect 31 1 33 0;
+#X connect 34 0 31 0;
+#X connect 35 0 8 0;
+#X connect 36 0 3 0;
+#X connect 37 0 5 0;
+#X connect 38 0 4 0;
+#X connect 39 0 17 0;
+#X connect 39 1 19 0;
+#X connect 39 2 19 1;

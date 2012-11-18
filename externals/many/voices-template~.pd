@@ -1,0 +1,12 @@
+#N canvas 244 339 552 361 10;
+#X obj 54 11 inlet;
+#X obj 54 324 outlet~;
+#X obj 228 325 outlet~;
+#X obj 365 323 outlet;
+#X text 416 322 bang when done;
+#X obj 243 9 inlet;
+#X text 286 12 messages for all voices;
+#X obj 56 113 print voices~_\$1;
+#X text 65 57 messages filtered by voice allocation for a single instance
+;
+#X connect 0 0 7 0;

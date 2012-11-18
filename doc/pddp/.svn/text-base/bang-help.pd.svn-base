@@ -1,0 +1,134 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bang 3 12 0 18 -204280
+-1 0;
+#X obj 0 329 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 244 494 366 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This document was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Revised by Jonathan Wilkes to conform to the PDDP template for
+Pd version 0.42.;
+#X text 12 65 DESCRIPTION output a "bang" message whatever the input
+;
+#X text 12 85 INLET_0 anything;
+#X text 12 105 OUTLET_0 bang;
+#X text 12 5 ALIAS b;
+#X text 12 25 KEYWORDS control bang_op;
+#X text 12 185 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 373 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 409 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 338 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 413 (none);
+#N canvas 40 482 428 108 Related_objects 0;
+#X obj 21 42 trigger;
+#X obj 191 43 loadbang;
+#X msg 91 43;
+#X obj 262 43 until;
+#X obj 144 43 bang;
+#X obj 312 43 metro;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [bang] Related Objects;
+#X restore 101 598 pd Related_objects;
+#X text 98 381 bang;
+#X obj 78 381 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bang -text
+pdpedia: bang;
+#X obj 469 3 bang;
+#X obj 139 224 print;
+#X msg 152 171 walk the cat;
+#X msg 139 145 45;
+#X obj 139 199 bang;
+#X obj 288 199 print;
+#X msg 288 147 walk the cat;
+#X obj 288 175 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 310 173 <- gui "bng" object;
+#X text 98 337 anything;
+#N canvas 57 48 428 509 More_bang_objects 0;
+#X obj 23 42 bang;
+#X obj 66 42 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 43 116 bang;
+#X text 20 115 1;
+#X text 19 172 2;
+#X obj 43 173 bng 15 250 50 0 empty empty empty 18 7 0 8 -262144 -1
+-1;
+#X text 178 42 - sending "bang" messages;
+#X obj 140 42 t b;
+#X msg 92 42 bang;
+#X text 19 288 3;
+#X msg 45 289 bang;
+#X msg 98 342 bang \, bang;
+#X obj 98 368 f;
+#X obj 131 368 + 1;
+#X floatatom 98 393 5 0 0 0 - - -;
+#X msg 46 342 bang;
+#X text 19 418 4;
+#X obj 43 419 trigger bang;
+#X text 151 419 Abbrevation:;
+#X obj 253 419 t b;
+#X obj 271 471 b;
+#X text 43 138 This version uses minimal CPU but serves essentially
+the same purpose as the GUI version below.;
+#X text 42 309 The word "bang" in a message box (CTRL+2) makes a clickable
+bang object. Use commas to send multiple messages:;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [bang] Common Objects for Sending bang Messages;
+#X text 20 65 The [bang] object is one of the basic building blocks
+of PD and is normally used to activate events. The four basic ways
+to send a "bang" message are:;
+#X text 42 441 When given a single argument of "bang" \, the trigger
+object is essentially the same as #1 above \, so in this case it's
+preferable (and less typing) to use:;
+#X text 67 174 a.k.a. [bng];
+#X text 42 191 This version uses a little more CPU than its cousin
+because it lights up when it receives a message or is clicked on and
+can be coloured \, resized \, or renamed. It is sometimes 'friendlier'
+as well because it can act as its own send and receive object (see
+properties...). This object can be put in a Pd patch either by keyboard
+shortcut: ALT+SHIFT+B or by creating an object (CTRL+1) and naming
+it "bng".;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 12 0 14 0;
+#X connect 13 0 12 1;
+#X connect 15 0 12 0;
+#X restore 100 473 pd More_bang_objects;
+#X text 98 441 Many objects in Pd output a "bang" message. Click the
+subpatch below to read about the most common ones:;
+#X obj 100 569 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 98 498 It is important to note that "bang" is not boolean.
+It's neither a zero or a one \; it's not true or false \; it's just
+"bang". For a boolean object \, you should check out [toggle]:;
+#X text 11 23 output a "bang" message whatever the input;
+#X text 122 567 <- Right click and choose "Help" for [toggle] helpfile.
+;
+#X text 168 381 - the [bang] object always outputs a bang message.
+;
+#X text 168 337 - [bang] takes any message supplied to its inlet and
+outputs a bang message in response.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 521 3 b;
+#X text 501 3 or;
+#X connect 15 0 17 0;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 19 0 20 0;
+#X connect 20 0 18 0;

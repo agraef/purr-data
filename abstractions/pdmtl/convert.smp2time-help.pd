@@ -1,0 +1,12 @@
+#N canvas 551 388 450 300 10;
+#X obj 102 176 convert.smp2time;
+#X floatatom 102 112 5 0 0 0 - - -;
+#X obj 106 222 print;
+#X obj 102 132 * 1000;
+#X floatatom 102 155 5 0 0 0 - - -;
+#X text 40 20 Description: Converts a number of samples into an easier
+representation of it's duration.;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;

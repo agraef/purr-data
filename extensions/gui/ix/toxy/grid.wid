@@ -1,0 +1,46 @@
+namespace eval ::ix {
+    proc grid_click {w target r hy hx hh ww size} {
+	switch $r {
+	    0 { set y [expr $hy / $hh.0]
+		set x [expr $hx / $ww.0]}
+	    1 { set x $hx
+		set y $hy
+		set hx [expr $ww * $hx]
+		set hy [expr $hh * $hy]}}
+	set rs [expr $size / 2]
+	$w coords ${target}sqr [expr $hx - $rs] [expr $hy - $rs] [expr $hx + $rs] [expr $hy + $rs]
+	pd "$target.rp _cb $x $y;"
+    }
+    proc grid_new {path target w h bg fg ln div shape size} {
+	if {[winfo exists $path.grid] != 1} {
+	    canvas $path.grid -bg $bg
+	    $path configure -width $w -height $h
+	    place $path.grid -anchor nw -relwidth 1 -relheight 1
+	    $path.grid create $shape 0 0 0 0 -fill $fg -tags ${target}sqr
+	    grid_click $path.grid $target 1 0.5 0.5 $h $w $size
+	    grid_lines $path.grid $target $div $w $h $ln
+	    bind $path.grid <1> "::ix::grid_click %W $target 0 %y %x $h $w $size"
+	    bind $path.grid <B1-Motion> "::ix::grid_click %W $target 0 %y %x $h $w $size"
+	}
+    }
+    proc grid_lines {w target lines ww hw color} {
+	$w delete gridlines
+	for {set x 1} {$x <= $lines} {incr x} {
+	    if {$lines < 64} {
+		set oh [expr $hw.0 * $x.0 / $lines.0]
+		set ow [expr $ww.0 * $x.0 / $lines.0]
+	      	$w create line $ow 0 $ow $hw -fill $color -tags gridlines
+	      	$w create line 0 $oh $ww $oh -fill $color -tags gridlines
+	    }
+	}
+	$w raise ${target}sqr
+    }
+}
+#> grid frame
+#. -bd 3
+#. #w 128 #h 128 #x 0.5 #y 0.5
+#. #fg red #bg blue #ln yellow
+#. #shape rectangle #size 12 #div 5
+#. @list ::ix::grid_click .-.grid .| 1 .#2 .#1 .#h .#w .#size
+
+::ix::grid_new .- .| .#w .#h .#bg .#fg .#ln .#div .#shape .#size

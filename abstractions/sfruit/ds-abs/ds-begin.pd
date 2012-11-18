@@ -1,0 +1,13 @@
+#N canvas 339 80 224 198 10;
+#X obj 48 65 list append traverse \$1;
+#X obj 48 88 list trim;
+#X obj 21 13 inlet;
+#X obj 21 36 t b b;
+#X obj 21 156 outlet;
+#X obj 21 120 pointer;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 3 1 0 0;
+#X connect 5 0 4 0;

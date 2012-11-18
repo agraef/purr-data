@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=pd-l2ork-k12
+Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment Tailored Specially Towards K12 Students
+Exec=pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi
+Terminal=false
+Type=Application
+Icon=pd-l2ork-k12.xpm
+X-Ayatana-Desktop-Shortcuts=ForceQuit
+
+[ForceQuit Shortcut Group]
+Name=Force Quit Pd-L2Ork K12
+Exec=/usr/bin/killall pd-l2ork pd-gui
+TargetEnvironment=Unity

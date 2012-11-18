@@ -1,0 +1,18 @@
+#N canvas 0 0 247 304 12;
+#X obj 31 66 inlet;
+#X obj 28 272 outlet;
+#X obj 31 130 vasp.exp;
+#X obj 29 242 vasp.*;
+#X obj 99 179 10;
+#X obj 98 207 log;
+#X obj 153 66 loadbang;
+#X obj 31 100 vasp./ 20;
+#X text 14 5 convert values in a vasp;
+#X text 15 23 from dB to power;
+#X connect 0 0 7 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 1;
+#X connect 6 0 4 0;
+#X connect 7 0 2 0;

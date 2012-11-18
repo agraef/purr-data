@@ -1,0 +1,2 @@
+#N canvas 0 0 450 300 10;
+#X floatatom 108 124 5 0 0 0 - #0-rec #0-send;

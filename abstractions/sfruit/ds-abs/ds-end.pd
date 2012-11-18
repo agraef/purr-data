@@ -1,0 +1,26 @@
+#N canvas 61 377 261 305 10;
+
+#X obj 139 175 pointer;
+#X obj 139 37 inlet;
+#X obj 100 228 pointer;
+#X obj 32 113 list append \$1;
+#X obj 32 137 prepent traverse;
+#X obj 139 60 t b b b;
+#X obj 139 110 until;
+#X msg 139 140 next;
+#X obj 178 198 t b b;
+#X obj 100 255 outlet;
+#X obj 27 19 import-disabled list-abs;
+#X connect 0 0 2 1;
+#X connect 0 1 8 0;
+#X connect 1 0 5 0;
+#X connect 2 0 9 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 5 1 0 0;
+#X connect 5 2 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 2 0;
+#X connect 8 1 6 1;

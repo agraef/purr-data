@@ -1,0 +1,23 @@
+#N canvas 347 116 463 385 10;
+#X obj 76 230 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 35 229 show;
+#X text 15 97 see also:;
+#X text 15 61 Generates an integer list with a certain number of ints
+starting from a given value.;
+#X msg 87 99 make-ED-scale;
+#X msg 251 23 Lists;
+#X msg 85 123 make-choice-list;
+#X msg 189 99 make-trans-scale;
+#X text 194 229 1993 by Karlheinz Essl;
+#X text 47 261 scale;
+#X floatatom 147 170 4 0 0 2 start_int - -;
+#X floatatom 35 170 4 0 0 2 number_of_ints - -;
+#X msg 35 280;
+#X text 15 29 make-scale;
+#X obj 35 200 make-scale 1;
+#X connect 0 0 1 1;
+#X connect 1 0 12 0;
+#X connect 10 0 14 1;
+#X connect 11 0 14 0;
+#X connect 14 0 1 0;

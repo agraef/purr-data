@@ -1,0 +1,2 @@
+NAME=adv2
+SRCS=main.cpp

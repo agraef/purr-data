@@ -1,0 +1,19 @@
+#N canvas 355 237 367 339 10;
+#X msg 82 101 1;
+#X obj 84 226 print;
+#X obj 204 227 print ---------;
+#X text 79 77 increase the sampling rate;
+#X obj 83 140 trigger float bang;
+#X obj 98 119 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 2600 1;
+#X obj 83 200 upsample 3;
+#X obj 158 177 hsl 128 15 0 10 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 4100 1;
+#X floatatom 162 201 5 0 0 0 - - -;
+#X connect 0 0 4 0;
+#X connect 4 0 6 0;
+#X connect 4 1 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 1 0;
+#X connect 7 0 6 1;
+#X connect 7 0 8 0;

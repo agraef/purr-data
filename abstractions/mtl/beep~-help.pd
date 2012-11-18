@@ -1,0 +1,25 @@
+#N canvas 1107 279 656 363 10;
+#X text 9 66 INLET 1: bang triggers a beep;
+#X obj 23 203 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 129 200 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 11 2 Description: A simple beep.;
+#X text 10 39 ARGUMENT 1: default midi note;
+#X text 64 80 midi note+velocity also triggers a beep;
+#X obj 229 137 mtl/piano 1;
+#X obj 23 243 mtl/beep~ 60 100;
+#X obj 129 243 mtl/beep~ 68 50;
+#X text 9 52 ARGUMENT 2: default beep length;
+#X obj 23 290 mtl/out~;
+#X obj 228 243 mtl/beep~ 67 100;
+#X text 13 18 tags: synthesize~;
+#X connect 1 0 7 0;
+#X connect 2 0 8 0;
+#X connect 6 0 11 0;
+#X connect 7 0 10 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 8 0 10 1;
+#X connect 11 0 10 0;
+#X connect 11 0 10 1;

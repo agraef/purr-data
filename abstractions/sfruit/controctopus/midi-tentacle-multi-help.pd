@@ -1,0 +1,26 @@
+#N canvas 0 22 410 453 10;
+#X obj 34 66 midi-tentacle-multi /uc33 /Knob1 /drummr;
+#X text 32 162 Like [midi-tentacle] \, but for multiple copies of one
+system. E.g. \, if you have 8 /drummr systems \, named /drummr1 \,
+/drummr2 \, etc. \, [midi-tentacle-multi] lets you address them all
+without creating a [midi-tentacle] for each number.;
+#X text 9 11 [midi-tentacle-multi /controller /control /system-name]
+;
+#X text 280 421 2008 Luke Iannini;
+#X text 29 249;
+#X text 31 247 Receives floats (0-1) from [s /uc33/Knob1] (omni) or
+(e.g.) [s /uc33/Knob1/Ch1] (specific MIDI channel) and relays them
+to /drummr[N]/module/parameter \, where [N] is the instance you've
+chosen to address with /controller/demux. Parameters can be chosen
+in the dropdown menu \, and parameters can be queried and repopulated
+using the yellow "get" button.;
+#X obj 258 96 + 1;
+#X obj 258 117 s /uc33/demux;
+#X obj 258 78 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X text 254 60 choosing an instance:;
+#X text 31 342 NOTE: "get" currently requires the existence of instance
+"1" (e.g. /drummr1). This will be fixed in a future release.;
+#X text 33 398 See [controctopus-multi-help] for an example.;
+#X connect 6 0 7 0;
+#X connect 8 0 6 0;

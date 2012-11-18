@@ -1,0 +1,28 @@
+#N canvas 552 26 597 584 10;
+#X obj 47 338 gemhead;
+#X text 61 30 Description: A basic text abstraction.;
+#X obj 373 204 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 59 63 Flags: @rguments;
+#X obj 33 153 gemhead;
+#X obj 33 196 translateXYZ 0 2 0;
+#X text 59 47 Comments: wraps Gem's text3d.;
+#X obj 375 227 gems.win;
+#X obj 74 377 translateXYZ 0 0 0;
+#X floatatom 377 525 5 0 0 0 - - -;
+#X msg 230 490 justify left top;
+#X obj 375 100 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 377 123 gems.win 640 480;
+#X msg 224 453 abcdefGEFGHIJKLMNOP;
+#X obj 72 546 gems.text @text pdmtl @font pdmtl.ttf;
+#X obj 34 266 gems.text @text PDMTL @font arial.ttf;
+#X connect 0 0 8 0;
+#X connect 2 0 7 0;
+#X connect 4 0 5 0;
+#X connect 5 0 15 0;
+#X connect 8 0 14 0;
+#X connect 9 0 14 2;
+#X connect 10 0 14 1;
+#X connect 11 0 12 0;
+#X connect 13 0 14 1;

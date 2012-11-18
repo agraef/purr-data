@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chords_memory", "chords_memory.vcproj", "{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rhythms_memory", "rhythms_memory.vcproj", "{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "themes_memory", "themes_memory.vcproj", "{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "harmonizer", "harmonizer.vcproj", "{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voicing_analyzer", "voicing_analyzer.vcproj", "{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.ActiveCfg = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.Build.0 = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.ActiveCfg = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.Build.0 = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.ActiveCfg = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.Build.0 = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.ActiveCfg = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.Build.0 = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.ActiveCfg = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.Build.0 = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.ActiveCfg = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.Build.0 = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.ActiveCfg = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.Build.0 = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.ActiveCfg = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.Build.0 = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.ActiveCfg = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Debug.Build.0 = Debug|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.ActiveCfg = Release|Win32
+		{DBC75D2A-816A-4C0A-8FE7-2016518D2D19}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

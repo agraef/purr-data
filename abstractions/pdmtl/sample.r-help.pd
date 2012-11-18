@@ -1,0 +1,45 @@
+#N struct 1210preview float x float y float p float h;
+#N struct 1317preview float x float y float p float h;
+#N canvas 344 128 773 613 10;
+#X text 24 49 Description: Receives sample_id streams.;
+#X obj 36 265 sample.display_;
+#X msg 245 106 medias/sounds/loop0.wav;
+#X obj 246 142 file.path.top;
+#X msg 20 180 SREX 0;
+#X obj 248 204 sample.bank SREX;
+#X msg 92 191 none;
+#X msg 249 171 0 \$1;
+#X obj 246 75 loadbang;
+#X msg 28 393 0 medias/sounds/loop0.wav;
+#X obj 31 523 sample.display_;
+#X msg -10 460 0;
+#X msg 70 460 none;
+#X msg 137 418 1 medias/sounds/loop1.wav;
+#X obj 29 423 sample.bank;
+#X text 124 457 When sample.bank is lined to the top patch \, you simply
+need to use the sample index to receive a sample with a sample.r that
+is also linked to the same top patch.;
+#X msg 25 458 1;
+#X text 477 342 or;
+#X text 345 330 Inlet_1: group sample_index ("none" to disconnect)
+;
+#X text 349 358 Inlet_1: sample_index (if sample.bank is linked to
+the top patch...see below);
+#X obj 110 362 loadbang;
+#X obj 30 492 sample.r;
+#X obj 36 228 sample.r SREX 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 4 0 22 0;
+#X connect 6 0 22 0;
+#X connect 7 0 5 0;
+#X connect 8 0 2 0;
+#X connect 9 0 14 0;
+#X connect 11 0 21 0;
+#X connect 12 0 21 0;
+#X connect 13 0 14 0;
+#X connect 16 0 21 0;
+#X connect 20 0 9 0;
+#X connect 20 0 13 0;
+#X connect 21 0 10 0;
+#X connect 22 0 1 0;

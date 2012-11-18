@@ -1,0 +1,39 @@
+#N canvas 385 75 905 348 10;
+#X msg 44 167 egg spam bacon ham beef \$1;
+#X floatatom 42 141 5 0 0 0 - - -;
+#X msg 449 149 savepanel;
+#X msg 431 90 save;
+#X msg 450 210 interval \$1;
+#X floatatom 448 185 5 0 0 0 - - -;
+#X obj 42 194 debug.log.file @file __TEST__debug_log_file.txt @interval
+60 @group foo/bar;
+#X msg 427 66 print;
+#X msg 441 121 file foo.txt;
+#X msg 423 40 auto \$1;
+#X obj 421 18 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 488 32 auto prints every n seconds;
+#X msg 448 259 verbose \$1;
+#X obj 452 235 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 29 29 Description: File logger for errors and other informations
+;
+#X text 485 90 saves now;
+#X text 538 125 sets file;
+#X text 539 149 save as... dialog;
+#X text 553 207 interval in seconds between each save;
+#X text 526 244 enables some informations about when the file is written
+\, and so on;
+#X text 474 64 prints log file contents;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 2 0 6 1;
+#X connect 3 0 6 1;
+#X connect 4 0 6 1;
+#X connect 5 0 4 0;
+#X connect 7 0 6 1;
+#X connect 8 0 6 1;
+#X connect 9 0 6 1;
+#X connect 10 0 9 0;
+#X connect 12 0 6 1;
+#X connect 13 0 12 0;

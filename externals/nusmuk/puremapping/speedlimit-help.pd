@@ -1,0 +1,15 @@
+#N canvas 630 215 450 300 10;
+#X floatatom 96 112 5 0 0 0 - - -;
+#X floatatom 96 153 5 0 0 0 - - -;
+#X text 55 31 limit data flow to the specific time;
+#X obj 139 179 t b b;
+#X obj 139 202 timer;
+#X floatatom 139 226 5 0 0 0 - - -;
+#X obj 96 131 speedlimit 500;
+#X text 54 47 (same than speedlim \, but as an abstraction);
+#X connect 0 0 6 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 5 0;
+#X connect 6 0 1 0;
+#X connect 6 0 3 0;

@@ -1,0 +1,15 @@
+#N canvas 343 241 489 295 10;
+#X obj 25 74 inlet;
+#X obj 45 207 outlet;
+#X obj 41 103 * -1;
+#X obj 46 141 + \$2;
+#X obj 43 172 + \$1;
+#X text 83 141 Upper Limit;
+#X text 78 173 Lower Limit;
+#X text 22 17 Inverts a scale of numbers so that the upper and lower
+limits are reversed. This works for all states inbetween limits as
+well. Usage: [invert_scale lower upper];
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;

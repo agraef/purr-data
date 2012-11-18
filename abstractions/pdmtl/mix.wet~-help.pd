@@ -1,0 +1,60 @@
+#N canvas 28 47 654 704 10;
+#X obj 174 269 mix.wet~;
+#X obj 173 106 osc~ 222;
+#X obj 174 296 mix.out_~;
+#X msg 219 203 curve \$1;
+#X obj 251 241 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 8 25 cnv 15 600 56 empty empty mix.wet~ 0 -10 0 16 -33289 -66577
+0;
+#X obj 9 29 cnv 15 598 50 empty empty empty 20 12 0 14 -241404 -66577
+0;
+#X text 13 61 Author: Thomas Ouellet Fredericks;
+#X text 14 31 Description: Controls the wetness of an effect.;
+#X text 13 46 Flags: Internal;
+#X text 247 224 dry;
+#X text 360 225 wet;
+#X obj 219 186 nbx 5 14 -1e+37 1e+37 0 1 empty empty empty 0 -8 0 10
+-262144 -1 -1 1 256;
+#X text 277 186 1= linear (default) \, 3= logarithm;
+#X floatatom 248 262 5 0 0 0 - - -;
+#X text 537 10 Version: 2;
+#X obj 328 565 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 324 548 dry;
+#X floatatom 325 586 5 0 0 0 - - -;
+#X text 83 394 You can also use mix.wet~ to turn off effects (stored
+in a subpatch) when they are not in use:;
+#X obj 194 437 osc~ 222;
+#N canvas 1 47 623 522 fx 0;
+#X obj 121 52 inlet~;
+#X obj 127 296 outlet~;
+#X obj 382 123 switch~;
+#X obj 411 55 inlet;
+#X obj 156 124 pdmtl/fx.distortion~ 127 127;
+#X connect 0 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X restore 215 477 pd fx;
+#X obj 154 631 mix.out_~;
+#X obj 198 598 mix.wet~;
+#X text 293 279 Argument 1: Curve (see mix.crossfade~ for the different
+curves);
+#X obj 197 148 pdmtl/fx.distortion~ 127 127;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 1 0 0 0;
+#X connect 1 0 25 0;
+#X connect 3 0 0 2;
+#X connect 4 0 0 2;
+#X connect 4 0 14 0;
+#X connect 12 0 3 0;
+#X connect 16 0 18 0;
+#X connect 16 0 23 2;
+#X connect 20 0 21 0;
+#X connect 20 0 23 0;
+#X connect 21 0 23 1;
+#X connect 23 0 22 0;
+#X connect 23 0 22 1;
+#X connect 23 1 21 1;
+#X connect 25 0 0 1;

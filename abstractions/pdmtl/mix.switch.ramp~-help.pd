@@ -1,0 +1,55 @@
+#N canvas 285 118 813 643 10;
+#X obj 66 380 mix.out_~;
+#X obj 20 10 cnv 6 430 1 empty empty mis.switch.ramp~ 0 -10 0 12 -66577
+-1 0;
+#X obj 20 -11 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text 21 15 Description: removes discontinuities when changin sources.
+;
+#X text 315 -7 Version: 2007-10-02;
+#X text 18 30 Author: Thomas Ouellet Fredericks \, based on an idea
+by Miller Puckette;
+#X obj 49 236 *~ 1;
+#X obj 83 215 == 0;
+#X obj 146 239 *~ 0;
+#X obj 276 179 t f b;
+#X obj 276 142 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 99 316 mix.switch.ramp~;
+#X obj 48 148 osc~ 100;
+#X obj 406 247 *~ 1;
+#X obj 440 226 == 0;
+#X obj 503 250 *~ 0;
+#X obj 633 153 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 405 159 osc~ 100;
+#X obj 633 190 t f;
+#X obj 488 386 mix.out_~;
+#X obj 153 150 osc~ 234;
+#X obj 504 159 osc~ 234;
+#X text 36 114 With mix.switch.ramp~ you get no clicks;
+#X text 444 125 Without \, you get clicks;
+#X text 106 470 Inlet_1: input signal;
+#X text 106 494 Inlet_2: bang when switching;
+#X text 106 521 outlet_1: output signal;
+#X connect 6 0 11 0;
+#X connect 7 0 6 1;
+#X connect 8 0 11 0;
+#X connect 9 0 7 0;
+#X connect 9 0 8 1;
+#X connect 9 1 11 1;
+#X connect 10 0 9 0;
+#X connect 11 0 0 0;
+#X connect 11 0 0 1;
+#X connect 12 0 6 0;
+#X connect 13 0 19 0;
+#X connect 13 0 19 1;
+#X connect 14 0 13 1;
+#X connect 15 0 19 0;
+#X connect 15 0 19 1;
+#X connect 16 0 18 0;
+#X connect 17 0 13 0;
+#X connect 18 0 14 0;
+#X connect 18 0 15 1;
+#X connect 20 0 8 0;
+#X connect 21 0 15 0;

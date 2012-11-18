@@ -1,0 +1,88 @@
+<html><head><title>::ix::{gui}</title></head>
+<%
+import random, re, string
+sys.stdout=req
+def rc(): return  "#%06x" % random.randint(0,16777216)
+things = {'control' : {
+    'kbd' : {'desc' : 'resizable, velocity sensitive keyboard. right click adds a note to the chord, middle click resets..'}, 
+    'grid' : {'desc' : 'x-y control surface'},
+    'ngrid' : {'desc' : 'multi-parameter x-y control surface'},
+    'filter' : {'desc' : """since im no mathemetician, biquad was very useless. straight RBJ rip here, middle click on the squares to change filter type, right click drag to adjust Q.."""},
+    'nob' : {'desc' : """ this was the first knob but it requires Tkzinc"""},
+    'knob' : {'desc' : """knob..multiple levels of precision: left button 1.0, middle 10.0, right 0.1"""}
+    }, 'edit' : {
+    'mat' : {'desc' : 'general purpose editing surface'},
+    'lg' : {'desc' : 'multi-set vector editor'},
+    'tile' : {'desc' : 'drum/grid/list editor'}
+    }, 'analyze' : {
+    'sp' : {'desc' : 'rgb-pixmap'},
+    'spectrum' : {'desc' : 'dual-band spectrum graph'},
+    'img' : {'desc' : """
+create an empty img and you will get the broken-image icon, which sets up dnd - just drop some images in<br><br>
+they output a symbol which is filename sans extension when clicked..
+"""}
+    }, 'container' : {
+    'dd' : {'desc' : 'drag\'n\'drop'},
+    'tree' : {'desc': 'heirarchical data management'},
+    'q' : {'desc' : 'queue'},
+    'dm' : {'desc' : 'dropdownmenu'}
+    }, '?' : {
+    'README' :{'desc' : """
+   these are my pd gui objects, designed to be patchable on the fly for modular, rearrangable interfaces for composition, analysis, whatever you need.. suggested input is a 3 button mouse or a touch-screen (although i haven't tested on one, so if you have an extra, let me know..) -  to use them in a patch, if the widget is 'thingy', create an object [widget thingy thingy1]. the id doesnt have to be unique, but its not a bad idea.. all the attributes are settable via normal messages... some might like an inspector, this wouldnt be too hard to add..also id love if X windows and the toolkits above supported multiple cursors with independent focii for larger or multipoint-touch applications, but such is not the case currently...so enjoy the 2d single-cursor goodness
+    """}, 'INSTALL' : {'desc' : """
+<b>cd /usr/local/lib/pd && cvs -d :pserver:anonymous@cvs.sf.net:/cvsroot/pure-data co extensions/gui/ix</b><br><b>echo -path /usr/local/lib/pd/extensions/gui/ix >> ~/.pdrc</b><br>
+install any missing DEPS
+"""}, 'DEPS' : {'desc' : """
+tcl >=8.5:<br>
+<b>cvs -d :pserver:anonymous@cvs.sf.net:/cvsroot/tcl co tcl <font size=-1>&& cd tcl/unix&& ./configure && make install & cd ../..</font></b><br>
+<b>cvs -d :pserver:anonymous@cvs.sf.net:/cvsroot/tktoolkit co tk <font size=-1>&& cd tk/unix&& ./configure --enable-xft && make install & cd ../..</font></b><br><br>
+widgets are currently hosted by the [widget] external<br><b>cvs -d :pserver:anonymous@cvs.sf.net:/cvsroot/pure-data co externals/miXed <font size=-1>&& cd externals/miXed && make && cp bin/* /usr/local/lib/pd/extra</font></b><br><i>-or-</i> checkout all of externals and in <font size=-1><b>cd externals/build && scons install</b></font><br><br>a cornucopia of Tk libraries are utilised<br>
+<b>for ext in blt snack tkdnd tkimg tkpath tktable tktreectrl ; do cvs -d :pserver:anonymous@cvs.sf.net:/cvsroot/$ext co $ext; cd $ext && ./configure && make install && cd ..; done</b><br>
+last i checked tkpath was actually a module in tclbitprint<br>and thats all..
+"""}
+    }}
+
+script = []
+for cat in things.iterkeys():
+    script.append("""document.getElementById('%s_items').style.display='none'""" % cat)
+    script.append("""document.getElementById('cat_%s').style.backgroundColor='gray'""" % cat)
+print "<script>\nfunction hideCats() {\n" + str.join(";\n",script) + "\n}\n</script>"
+
+script = []
+for cat in things.iterkeys():
+    for item in things[cat].iterkeys():
+        script.append("""document.getElementById('item_info_%s').style.display='none'""" % item)
+        script.append("""document.getElementById('item_%s').style.backgroundColor='gray'""" % item)
+print "<script>\nfunction hideItems() {\n" + str.join(";\n",script) + "\n}\n</script>"
+
+def getprops(item):
+    props = ""
+    for line in re.findall(r"#\.[^@]*\n",open("/usr/local/lib/pd/extensions/gui/ix/" + item + ".wid").read()):
+        props += re.sub("#\.","",line)
+    return props
+
+%>
+<style>span {font: bitstream vera sans, tahoma, helvetica, sans-serif}</style>
+<body bgcolor=<%print rc()%>  topmargin=0 leftmargin=0 marginwidth=0 marginheight=0>
+<div style="text-align: right; background-color:<%print rc()%>" width=100%>
+<%
+for cat in things.iterkeys():
+    print """<span id="cat_%(cat)s" style="background-color: gray; padding: 6px"><span style="font-size: 14px; padding: 4px; color: %(fg)s; background-color: %(bg)s" onmouseover="hideCats();document.getElementById('%(cat)s_items').style.display='';document.getElementById('cat_%(cat)s').style.backgroundColor='white'">
+    %(cat)s
+    </span></span>&nbsp;""" % {'fg' : rc(), 'bg' : rc(), 'cat' : cat}
+
+print """</div><div style="padding: 10px; text-align: right; background-color %(bg)s">""" % {'bg' : rc()}
+
+for cat in things.iterkeys():
+    print """<span id=%(cat)s_items style="display: none">""" % {'cat' : cat}
+    for item in things[cat].iterkeys():
+        print """<span id=item_%(item)s style="padding: 3px; backgound-color: black" onmouseover="hideItems();document.getElementById('item_info_%(item)s').style.display='';document.getElementById('item_%(item)s').style.backgroundColor='white'">%(item)s</span>""" % {'item' : item}
+    print "</span>"
+
+print "<br>"
+
+for cat in things.iterkeys():
+     for item in things[cat].iterkeys():
+         print """<div id=item_info_%(item)s style="display: none"><div style="float: left"><img src=c.png onmouseover="document.getElementById('img_%(item)s').src='%(item)s.PNG'"><img src=a.png onmouseover="document.getElementById('img_%(item)s').src='%(item)s.gif'"><img id=img_%(item)s src=%(item)s.PNG style="float: left; border-width: 12px; border-style: solid; border-color: gray"></div><div style="padding-top: 4px"><span style="background-color: #cccccc; color: black">%(content)s</span><br><br><span style="color: #cccccc; background-color: black">%(props)s</span></div></div>"""  % {'item' : item, 'props' : getprops(item), 'content' : things[cat][item]['desc']}
+
+%>

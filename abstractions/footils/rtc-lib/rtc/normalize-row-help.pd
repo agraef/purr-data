@@ -1,0 +1,31 @@
+#N canvas 0 48 639 407 10;
+#X text 19 33 normalize-row;
+#X text 19 65 Normalization of a twelve-tone row - the pitch classes
+are transposed in a way that the new row always starts with 0 (i.e.
+pitch class c).;
+#X obj 123 196 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 41 153 random-row;
+#X obj 81 195 show;
+#X msg 276 23 Dedecaphonics;
+#X text 203 210 random row;
+#X msg 81 226;
+#X text 19 372 1994 by Karlheinz Essl;
+#X text 170 286 "normalized" row always starting with 0 (i.e. pitch
+class c).;
+#X obj 41 261 normalize-row;
+#X obj 41 294 show;
+#X msg 41 322;
+#X obj 83 295 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 41 119 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 74 124 Generates a twelve-tone row at random;
+#X connect 2 0 4 1;
+#X connect 3 0 10 0;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 13 0 11 1;
+#X connect 14 0 3 0;

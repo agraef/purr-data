@@ -1,0 +1,17 @@
+#N canvas 372 366 450 300 10;
+#X text 53 202 beeware of loadbangs when dynamically adding instances
+using the 3rd inlet! Everytime a new instance is created \, all instances
+will receive a loadbang!;
+#X msg 218 113 7;
+#X msg 185 113 3;
+#X msg 249 112 9;
+#X text 279 112 control instances;
+#X obj 113 138 rawpoly 5 itest;
+#X text 27 21 inlet0: routed to each instance based on instance number
+;
+#X text 27 41 inlet1: connected directly to each instance;
+#X text 27 61 outlet~0: connected directly to each instance;
+#X text 27 81 outlet1: connected directly to each instance;
+#X connect 1 0 5 2;
+#X connect 2 0 5 2;
+#X connect 3 0 5 2;

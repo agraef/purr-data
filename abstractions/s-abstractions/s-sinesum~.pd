@@ -1,0 +1,139 @@
+#N canvas 85 105 1032 604 10;
+#X obj 861 10 inlet~;
+#X obj 861 122 outlet~;
+#X obj 861 37 phasor~;
+#X obj 909 9 inlet;
+#X obj 861 81 tabread4~ \$0/wavetable;
+#X obj 861 146 table \$0/wavetable;
+#X obj 254 549 s \$0/wavetable;
+#X obj 861 59 *~ 1024;
+#X msg 254 526 sinesum 1024 \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \$10
+\$11 \$12;
+#X obj 254 502 pack f f f f f f f f f f f f;
+#X obj 136 221 r \$0/harmonic/2;
+#X obj 23 221 r \$0/harmonic/1;
+#X obj 136 261 t b f;
+#X obj 136 241 / 127;
+#X obj 23 241 / 127;
+#X obj 190 283 t b f;
+#X obj 190 263 / 127;
+#X obj 239 308 t b f;
+#X obj 239 288 / 127;
+#X obj 190 243 r \$0/harmonic/3;
+#X obj 239 268 r \$0/harmonic/4;
+#X obj 288 332 t b f;
+#X obj 288 312 / 127;
+#X obj 288 292 r \$0/harmonic/5;
+#X obj 351 268 t b f;
+#X obj 351 248 / 127;
+#X obj 351 228 r \$0/harmonic/6;
+#X obj 405 288 t b f;
+#X obj 405 268 / 127;
+#X obj 405 248 r \$0/harmonic/7;
+#X obj 446 308 t b f;
+#X obj 446 288 / 127;
+#X obj 446 268 r \$0/harmonic/8;
+#X obj 488 328 t b f;
+#X obj 488 308 / 127;
+#X obj 488 288 r \$0/harmonic/9;
+#X obj 562 268 t b f;
+#X obj 562 248 / 127;
+#X obj 603 288 t b f;
+#X obj 603 268 / 127;
+#X obj 645 308 t b f;
+#X obj 645 288 / 127;
+#X obj 562 228 r \$0/harmonic/10;
+#X obj 603 248 r \$0/harmonic/11;
+#X obj 645 268 r \$0/harmonic/12;
+#X obj 5 33 vsl 8 128 0 127 0 0 \$0/harmonic/1 \$1/harmonic/1 harmonics
+2 -8 0 8 -260818 -1 -1 7100 1;
+#X obj 13 33 vsl 8 128 0 127 0 0 \$0/harmonic/2 \$1/harmonic/2 empty
+2 -8 0 8 -260818 -1 -1 900 1;
+#X obj 21 33 vsl 8 128 0 127 0 0 \$0/harmonic/3 \$1/harmonic/3 empty
+2 -8 0 8 -260818 -1 -1 2700 1;
+#X obj 29 33 vsl 8 128 0 127 0 0 \$0/harmonic/4 \$1/harmonic/4 empty
+2 -8 0 8 -260818 -1 -1 4300 1;
+#X obj 37 33 vsl 8 128 0 127 0 0 \$0/harmonic/5 \$1/harmonic/5 empty
+2 -8 0 8 -260818 -1 -1 0 1;
+#X obj 45 33 vsl 8 128 0 127 0 0 \$0/harmonic/6 \$1/harmonic/6 empty
+2 -8 0 8 -260818 -1 -1 100 1;
+#X obj 53 33 vsl 8 128 0 127 0 0 \$0/harmonic/7 \$1/harmonic/7 empty
+2 -8 0 8 -260818 -1 -1 100 1;
+#X obj 61 33 vsl 8 128 0 127 0 0 \$0/harmonic/8 \$1/harmonic/8 empty
+2 -8 0 8 -260818 -1 -1 6600 1;
+#X obj 69 33 vsl 8 128 0 127 0 0 \$0/harmonic/9 \$1/harmonic/9 empty
+2 -8 0 8 -260818 -1 -1 0 1;
+#X obj 77 33 vsl 8 128 0 127 0 0 \$0/harmonic/10 \$1/harmonic/10 empty
+0 -8 0 6 -260818 -1 -1 5600 1;
+#X obj 85 33 vsl 8 128 0 127 0 0 \$0/harmonic/11 \$1/harmonic/11 empty
+0 -8 0 6 -260818 -1 -1 0 1;
+#X obj 93 33 vsl 8 128 0 127 0 0 \$0/harmonic/12 \$1/harmonic/12 empty
+0 -8 0 6 -260818 -1 -1 0 1;
+#X obj 718 316 sssad/auto \$0/harmonic/1 \$1/harmonic/1;
+#X obj 718 335 sssad/auto \$0/harmonic/2 \$1/harmonic/2;
+#X obj 718 354 sssad/auto \$0/harmonic/3 \$1/harmonic/3;
+#X obj 718 373 sssad/auto \$0/harmonic/4 \$1/harmonic/4;
+#X obj 718 392 sssad/auto \$0/harmonic/5 \$1/harmonic/5;
+#X obj 718 411 sssad/auto \$0/harmonic/6 \$1/harmonic/6;
+#X obj 718 430 sssad/auto \$0/harmonic/7 \$1/harmonic/7;
+#X obj 718 449 sssad/auto \$0/harmonic/8 \$1/harmonic/8;
+#X obj 718 468 sssad/auto \$0/harmonic/9 \$1/harmonic/9;
+#X obj 718 487 sssad/auto \$0/harmonic/10 \$1/harmonic/10;
+#X obj 718 506 sssad/auto \$0/harmonic/11 \$1/harmonic/11;
+#X obj 718 525 sssad/auto \$0/harmonic/12 \$1/harmonic/12;
+#X obj 861 102 /~ 127;
+#X connect 0 0 2 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 1;
+#X connect 4 0 69 0;
+#X connect 7 0 4 0;
+#X connect 8 0 6 0;
+#X connect 9 0 8 0;
+#X connect 10 0 13 0;
+#X connect 11 0 14 0;
+#X connect 12 0 9 0;
+#X connect 12 1 9 1;
+#X connect 13 0 12 0;
+#X connect 14 0 9 0;
+#X connect 15 0 9 0;
+#X connect 15 1 9 2;
+#X connect 16 0 15 0;
+#X connect 17 0 9 0;
+#X connect 17 1 9 3;
+#X connect 18 0 17 0;
+#X connect 19 0 16 0;
+#X connect 20 0 18 0;
+#X connect 21 0 9 0;
+#X connect 21 1 9 4;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 24 0 9 0;
+#X connect 24 1 9 5;
+#X connect 25 0 24 0;
+#X connect 26 0 25 0;
+#X connect 27 0 9 0;
+#X connect 27 1 9 6;
+#X connect 28 0 27 0;
+#X connect 29 0 28 0;
+#X connect 30 0 9 0;
+#X connect 30 1 9 7;
+#X connect 31 0 30 0;
+#X connect 32 0 31 0;
+#X connect 33 0 9 0;
+#X connect 33 1 9 8;
+#X connect 34 0 33 0;
+#X connect 35 0 34 0;
+#X connect 36 0 9 0;
+#X connect 36 1 9 9;
+#X connect 37 0 36 0;
+#X connect 38 0 9 0;
+#X connect 38 1 9 10;
+#X connect 39 0 38 0;
+#X connect 40 0 9 0;
+#X connect 40 1 9 11;
+#X connect 41 0 40 0;
+#X connect 42 0 37 0;
+#X connect 43 0 39 0;
+#X connect 44 0 41 0;
+#X connect 69 0 1 0;
+#X coords 0 -1 1 1 106 170 1 0 0;

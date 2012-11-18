@@ -1,0 +1,5 @@
+# where is the Bonjour SDK?
+BONJOURSDK="c:\data\prog\packs\Bonjour SDK"
+
+# where is BOOST
+BOOSTPATH="C:\data\libs\boost_1_33_1"

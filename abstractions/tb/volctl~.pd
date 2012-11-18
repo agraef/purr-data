@@ -1,0 +1,22 @@
+#N canvas 428 171 462 309 10;
+#X obj 28 13 inlet~;
+#X obj 28 219 outlet~;
+#X obj 28 179 *~;
+#X obj 44 160 line~;
+#X obj 44 139 pack \$1 \$2;
+#X obj 109 115 inlet ramp_time;
+#X obj 44 53 loadbang;
+#X text 143 42 \$1: initial gain;
+#X text 143 62 \$2: initial ramp time;
+#X text 27 245 for all the people \, who are afraid to use devel or
+my volctl~ external;
+#X obj 44 75 inlet factor;
+#X text 27 275 (c) Tim Blechmann 2005 \, $Id: volctl~.pd 219 2005-12-17
+18:21:06Z tim $;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 1;
+#X connect 4 0 3 0;
+#X connect 5 0 4 1;
+#X connect 6 0 4 0;
+#X connect 10 0 4 0;

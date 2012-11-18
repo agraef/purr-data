@@ -1,0 +1,17 @@
+#N canvas 0 0 450 300 10;
+#X obj 59 45 inlet~;
+#X obj 81 259 outlet~;
+#X obj 158 47 inlet;
+#X obj 245 41 inlet;
+#X obj 317 124 dollarg;
+#X obj 322 87 loadbang;
+#X obj 299 161 unpack;
+#X obj 93 213 pong~ 1 0 1;
+#X connect 0 0 7 0;
+#X connect 2 0 7 1;
+#X connect 3 0 7 2;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 1;
+#X connect 6 1 7 2;
+#X connect 7 0 1 0;

@@ -1,0 +1,61 @@
+# where is the PD source package?
+# (this should point to the main folder, which has a "src" subfolder)
+PDPATH=/usr/local/src/pd
+
+###############################################################
+
+# prefix for flext installation
+# headers are in $(FLEXTPREFIX)/include/flext
+# libraries are in $(FLEXTPREFIX)/lib
+# build system is in $(FLEXTPREFIX)/lib/flext
+
+FLEXTPREFIX=/usr/local
+
+###############################################################
+
+# where should the external be built?
+OUTPATH=pd-linux
+
+# where should the external be installed?
+INSTPATH=/usr/local/lib/pd/extra
+
+###############################################################
+
+# STK (synthesis tool kit) support
+# http://ccrma.stanford.edu/software/stk
+
+# where to find the STK header files (e.g. stk.h)
+STK_INC=/usr/local/include/stk
+
+# where to find the STK library (normally libstk.a)
+# (comment out STK_LIB if you don't use STK)
+#STK_LIB=/usr/local/lib/libstk.a
+
+###############################################################
+
+# SndObj support
+# http://music.nuim.ie//musictec/SndObj
+
+# where to find the SndObj header files (e.g. sndobj.h)
+SNDOBJ_INC=/usr/local/include/sndobj
+
+# where to find the SndObj library (normally libsndobj.a)
+# (comment out STK_LIB if you don't use SndObj)
+#SNDOBJ_LIB=/usr/local/lib/libsndobj.a
+
+###############################################################
+
+# make flags (e.g. use multiprocessor)
+#MFLAGS=-j 2
+
+# user defined compiler flags
+# (check if they match your system!)
+UFLAGS=-msse -mfpmath=sse -ffast-math
+# don't overload new and delete operators
+UFLAGS+=-DFLEXT_USE_CMEM
+
+# user defined optimization flags
+# (check if they match your system!)
+OFLAGS=-O3
+# optimizations for Pentium 4
+OFLAGS+=-march=pentium4 

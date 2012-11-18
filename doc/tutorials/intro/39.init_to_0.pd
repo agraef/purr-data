@@ -1,0 +1,33 @@
+#N canvas 10 40 620 460 12;
+#X obj 12 13 cnv 15 400 40 empty empty init_to_zero 10 15 0 24 -228992
+-66577 0;
+#X obj 293 241 +;
+#X obj 177 242 *;
+#X obj 56 241 float;
+#X obj 242 272 bng 15 250 50 0 empty empty reset 0 -6 0 8 -262144 -1
+-1;
+#X obj 293 315 pddp/print;
+#X obj 176 315 pddp/print;
+#X obj 56 315 pddp/print;
+#X obj 414 315 pddp/print;
+#X msg 293 203 bang;
+#X msg 177 204 bang;
+#X msg 56 204 bang;
+#X msg 414 204 bang;
+#X obj 414 241 trigger float;
+#X text 47 170 Here are a few examples:;
+#X text 32 78 Objects are automatically initialized to 0 in Pd. If
+there is no value specified \, then the value will be 0. This only applies
+to places where numeric atoms are used.;
+#X connect 1 0 5 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 5 0;
+#X connect 4 0 6 0;
+#X connect 4 0 7 0;
+#X connect 4 0 8 0;
+#X connect 9 0 1 0;
+#X connect 10 0 2 0;
+#X connect 11 0 3 0;
+#X connect 12 0 13 0;
+#X connect 13 0 8 0;

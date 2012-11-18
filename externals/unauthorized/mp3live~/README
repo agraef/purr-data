@@ -1,0 +1,65 @@
+Version 0.01 
+copyleft (c) 2001 by Yves Degoyon
+
+mp3live~ is a peer-to-peer mp3 streamer package
+consisting of three objects : mp3streamout~, mp3fileout~ and mp3streamin~.
+
+To install mp3live~, follow the steps from INSTALL
+
+This software is published under GPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+mp3live~ has been compiled for Linux using LAME 3.92.
+The newest version of LAME can be found at sourceforge.net
+
+COPYING: you may use this source under GPL terms!
+
+PLEASE NOTE: This software may contain patented alogrithm (at least
+  patented in some countries). It may be not allowed to sell/use products
+  based on this source code in these countries. Check this out first!
+
+COPYRIGHT of MP3 music:
+  Please note, that the duplicating of copyrighted music without explicit
+  permission violates the rights of the owner.
+  And remember, copyrighted music sucks [ as well as corporate ]             
+
+*****************************************************************************
+
+	using mp3live~ external for Pure Data
+
+Open the help-mp3live~.pd to understand how it works.
+
+A note about MPEG encoding :
+
+ALLOWED QUALITY FACTOR :
+
+    -q <arg>        <arg> = 0...9.  Default  -q 5 
+                    -q 0:  Highest quality, very slow 
+                    -q 9:  Poor quality, but fast 
+    -h              Same as -q 2.   Recommended.
+    -f              Same as -q 7.   Fast, ok quality
+
+ALLOWED BITRATES :
+
+bitrates (kbps): 32 40 48 56 64 80 96 112 128 160 192 224 256 320
+
+BUGS :
+
+1.
+You cannot create more than MAX_DECODERS mp3streamin~ objects. The actual value is 100.
+
+2.
+Current version of lame ( 3.92 ) produces a lot of errors for quality < 5. Blame it on lame !!!!
+
+3.
+Mono is not supported. Some additional code should be added for mp3streamin~. Blame it on me !!!
+
+4.
+Resampling is not supported. Blame it on me !!!

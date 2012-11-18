@@ -1,0 +1,19 @@
+#N canvas 0 22 483 336 10;
+#X obj 59 101 color.rgbset;
+#X msg 128 228;
+#X msg 59 68 245 22 201;
+#X text 57 50 Takes a triplet of 0-255 RGB values to set;
+#X text 139 102 Orange bang re-outputs current values;
+#X text 140 116 Radio-dial selects back \, front or label;
+#X text 6 9 [color.rgbset] - Easily work with and set colors for GUI
+objects;
+#X obj 59 258 hradio 20 1 0 2 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X text 141 181 right outlet makes a "color # # #" message (connect
+a message box to it) that you can cut and paste to dynamically set
+your GUI colors;
+#X text 58 284 Left outlet connects directly to GUI objects to change
+their colors;
+#X connect 0 0 7 0;
+#X connect 0 1 1 0;
+#X connect 2 0 0 0;

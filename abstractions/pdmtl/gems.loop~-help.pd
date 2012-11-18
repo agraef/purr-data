@@ -1,0 +1,77 @@
+#N canvas 365 47 684 729 10;
+#X text 20 13 Description: Loops an image sequence (frames) and sound
+sample with variable speed playback and seek function.;
+#X text 28 42 Version: 1;
+#X obj 471 142 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 471 170 gems.win 320 240;
+#X obj 34 298 gemhead;
+#X obj 95 298 rectangle 2.6 2;
+#X obj 95 242 pix_texture;
+#X obj 125 328 tgl 15 0 empty \$0rec REC 0 -6 0 8 -258699 -262144 -1
+0 1;
+#X obj 80 735 pix_texture;
+#X floatatom 97 689 5 0 0 1 current_frame - -;
+#X floatatom 115 670 5 0 0 1 frames_recorded - -;
+#X obj 132 614 tgl 15 0 \$0rec empty rec_status 0 -6 0 8 -262144 -1
+-1 0 1;
+#X obj 80 709 translateXYZ 2.66 0 0;
+#X obj 80 760 rectangle 2.6 2;
+#X obj 95 271 translateXYZ -2.66 0 0;
+#X obj 95 110 gemhead;
+#X obj 177 160 sig~ 1;
+#X obj 95 187 gems.movies~;
+#X obj 159 216 s~ \$0audioL;
+#X obj 246 216 s~ \$0audioR;
+#X obj 218 521 r~ \$0audioL;
+#X obj 304 521 r~ \$0audioR;
+#X obj 189 605 mix.out_~;
+#X obj 258 478 sig~;
+#X floatatom 258 457 5 0 0 0 - - -;
+#X obj 80 566 gems.loop~ 32;
+#X msg 152 366 frame \$1;
+#X obj 213 392 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 213 411 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 155 322 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 212 368 Go to frame (0-1);
+#X obj 210 434 t f b;
+#X obj 165 456 pack f f;
+#X msg 165 478 loop \$1 \$2;
+#X text 27 61 Argument_1: Deternines the maximum number of recorded
+franes.;
+#X msg 135 133 load medias/movies/sync00.mov;
+#X connect 2 0 3 0;
+#X connect 4 0 25 0;
+#X connect 5 0 25 1;
+#X connect 6 0 14 0;
+#X connect 7 0 25 2;
+#X connect 8 0 13 0;
+#X connect 12 0 8 0;
+#X connect 14 0 5 0;
+#X connect 15 0 17 0;
+#X connect 16 0 17 2;
+#X connect 17 0 6 0;
+#X connect 17 4 18 0;
+#X connect 17 5 19 0;
+#X connect 20 0 25 4;
+#X connect 21 0 25 5;
+#X connect 23 0 25 3;
+#X connect 24 0 23 0;
+#X connect 25 0 12 0;
+#X connect 25 1 9 0;
+#X connect 25 2 10 0;
+#X connect 25 3 11 0;
+#X connect 25 4 22 0;
+#X connect 25 5 22 1;
+#X connect 26 0 25 2;
+#X connect 27 0 32 0;
+#X connect 28 0 31 0;
+#X connect 29 0 26 0;
+#X connect 31 0 32 1;
+#X connect 31 1 27 0;
+#X connect 32 0 33 0;
+#X connect 33 0 25 2;
+#X connect 35 0 17 1;

@@ -1,0 +1,62 @@
+#N canvas 135 178 652 409 12;
+#X msg 35 292 help;
+#X msg 34 317 doc;
+#X msg 70 318 doc+;
+#X floatatom 142 340 5 0 0 0 - - -;
+#X text 17 66 This demonstrates threading. See the threads.py file.
+;
+#X obj 137 243 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 2
+2;
+#X msg 137 263 detach \$1;
+#X floatatom 250 341 5 0 0 0 - - -;
+#X obj 272 150 bng 15 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 143 154 bng 15 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 143 181 t b b b;
+#X obj 272 177 t b b b;
+#X obj 286 206 1;
+#X obj 157 208 0;
+#X text 84 114 without threads;
+#X text 248 112 with threads;
+#X text 175 362 watch that!;
+#X msg 421 264 stop;
+#X text 391 243 you can even stop it;
+#X obj 142 306 pyext threads ex1;
+#X text 90 128 - blocking!! -;
+#X obj 16 13 cnv 15 600 40 empty empty py/pyext 10 22 0 24 -260818
+-1 0;
+#X obj 407 150 bng 15 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X obj 407 177 t b b b;
+#X text 383 112 with threads;
+#X text 249 129 non-blocking;
+#X text 384 129 parallel;
+#X obj 445 205 2;
+#X text 213 32 http://grrrr.org/ext;
+#X text 213 16 Python script objects \, (C)2003-2005 Thomas Grill;
+#X msg 44 195 reload;
+#X connect 0 0 19 0;
+#X connect 1 0 19 0;
+#X connect 2 0 19 0;
+#X connect 5 0 6 0;
+#X connect 6 0 19 0;
+#X connect 8 0 11 0;
+#X connect 9 0 10 0;
+#X connect 10 0 19 1;
+#X connect 10 1 19 2;
+#X connect 10 2 13 0;
+#X connect 11 0 19 1;
+#X connect 11 1 19 2;
+#X connect 11 2 12 0;
+#X connect 12 0 5 0;
+#X connect 13 0 5 0;
+#X connect 17 0 19 0;
+#X connect 19 0 3 0;
+#X connect 19 1 7 0;
+#X connect 22 0 23 0;
+#X connect 23 0 19 1;
+#X connect 23 1 19 2;
+#X connect 23 2 27 0;
+#X connect 27 0 5 0;
+#X connect 30 0 19 0;

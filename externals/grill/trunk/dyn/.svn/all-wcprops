@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/ext/!svn/ver/1459/trunk/dyn
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/1459/trunk/dyn/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1459/trunk/dyn/license.txt
+END
+dyn_object.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1459/trunk/dyn/dyn_object.cpp
+END
+makefile.pd-darwin
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/1459/trunk/dyn/makefile.pd-darwin
+END
+dyn_pd.h
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/1459/trunk/dyn/dyn_pd.h
+END
+dyn_proto.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1459/trunk/dyn/dyn_proto.h
+END
+dyn_api.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1459/trunk/dyn/dyn_api.cpp
+END
+dyn_base.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1459/trunk/dyn/dyn_base.cpp
+END
+config-pd-darwin.txt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/1459/trunk/dyn/config-pd-darwin.txt
+END
+build-pd-linux.sh
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1459/trunk/dyn/build-pd-linux.sh
+END
+dyn_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1459/trunk/dyn/dyn_data.h
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1459/trunk/dyn/package.txt
+END
+dyn_proxy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1459/trunk/dyn/dyn_proxy.cpp
+END
+makefile.pd-linux
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1459/trunk/dyn/makefile.pd-linux
+END
+dyn_patchable.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1459/trunk/dyn/dyn_patchable.cpp
+END
+dyn_message.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1459/trunk/dyn/dyn_message.cpp
+END
+dyn_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1459/trunk/dyn/dyn_main.cpp
+END
+dyn_text.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1459/trunk/dyn/dyn_text.cpp
+END
+dyn.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/ext/!svn/ver/1459/trunk/dyn/dyn.h
+END
+config-pd-linux.txt
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/1459/trunk/dyn/config-pd-linux.txt
+END
+dyn_patcher.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1459/trunk/dyn/dyn_patcher.cpp
+END
+dyn_proxy.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1459/trunk/dyn/dyn_proxy.h
+END
+todo.txt
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/1459/trunk/dyn/todo.txt
+END
+dyn_send.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1459/trunk/dyn/dyn_send.cpp
+END
+dyn_conn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1459/trunk/dyn/dyn_conn.cpp
+END
+dyn_listen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1459/trunk/dyn/dyn_listen.cpp
+END
+build-pd-darwin.sh
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/1459/trunk/dyn/build-pd-darwin.sh
+END
+make-files.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1459/trunk/dyn/make-files.txt
+END
+dyn.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1459/trunk/dyn/dyn.vcproj
+END
+dyn_create.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1459/trunk/dyn/dyn_create.cpp
+END

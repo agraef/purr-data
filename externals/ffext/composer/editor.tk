@@ -1,0 +1,688 @@
+# ------------------------------------------------------------------------
+# Copyright (c) 2009 Federico Ferri.                                      
+# For information on usage and redistribution, and for a DISCLAIMER OF ALL
+# WARRANTIES, see the file, "LICENSE.txt," in this distribution.          
+#                                                                         
+# composer: a music composition framework for pure-data                   
+#                                                                         
+# This program is free software; you can redistribute it and/or           
+# modify it under the terms of the GNU General Public License             
+# as published by the Free Software Foundation; either version 2          
+# of the License, or (at your option) any later version.                  
+#                                                                         
+# See file LICENSE for further informations on licensing terms.           
+#                                                                         
+# This program is distributed in the hope that it will be useful,         
+# but WITHOUT ANY WARRANTY; without even the implied warranty of          
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           
+# GNU General Public License for more details.                            
+#                                                                         
+# You should have received a copy of the GNU General Public License       
+# along with this program; if not, write to the Free Software Foundation, 
+# Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.         
+#                                                                         
+# Based on PureData by Miller Puckette and others.                        
+# ------------------------------------------------------------------------
+
+package require Tcl 8.5
+package require Tk 8.5
+package require Tktable 2.9
+
+namespace eval pd::composer {
+    variable debug
+    variable w
+    array set w {}
+    variable songname
+    array set songname {}
+    variable trackname
+    array set trackname {}
+    variable currentpattern
+    array set currentpattern {}
+    variable size
+    array set size {}
+    variable patterns
+    array set patterns {}
+    variable tracks
+    array set tracks {}
+
+    variable quirks_fix_int_floats 0
+    variable symbolmap {empty {}}
+    # set to 1 until startup, for getting soon a pattern list
+    # affects the behavior of dispatcher::patterns branch
+    variable startup
+    array set startup {}
+    variable showpattern
+    array set showpattern {}
+
+    proc debugPrint {args} {
+        variable debug
+        if {![info exists debug]} {set debug 0}
+        if {$debug} {puts stderr "composer-TCL: $args"}
+    }
+
+    proc sendGui {what} {
+        debugPrint "sendGui $what"
+        catch {netsend $what}
+        lappend what \;\n
+        catch {pdsend $what}
+        catch {pd {*}$what}
+    }
+
+    proc editCommand {method args} {
+        linsert $args 0 [uplevel {set id}] ${method}E
+    }
+
+    proc createPattern {id name rows cols} {
+        debugPrint [info level 0]
+        variable patterns
+
+        if {$name in $patterns($id)} {
+            return -code error "Pattern '$name' already exists"
+        }
+        set rows [expr {int($rows)}]
+        set cols [expr {int($cols)}]
+        if {$rows <= 0 || $cols <= 0} {
+            return -code error "Pattern dimensions must pe positive integer"
+        }
+
+        sendGui [editCommand addpattern $name $rows $cols]
+        sendGui [editCommand getpatterns]
+    }
+
+    proc removePattern {id name} {
+        debugPrint [info level 0]
+        sendGui [editCommand removepattern $name]
+        sendGui [editCommand getpatterns]
+    }
+
+    proc copyPattern {id src dst} {
+        debugPrint [info level 0]
+        sendGui [editCommand copypattern $src $dst]
+        sendGui [editCommand getpatterns]
+    }
+
+    proc resizePattern {id name rows cols} {
+        debugPrint [info level 0]
+        variable currentpattern;
+        variable size;
+
+        if {[dict exists $size($id) $name]} {
+            if {[list $rows $cols] == [dict get $size($id) $name]} return
+        }
+
+        set rows [expr {int($rows)}]
+        set cols [expr {int($cols)}]
+        if {$rows <= 0 || $cols <= 0} {
+            return -code error "Pattern dimensions must pe positive integer"
+        }
+
+        sendGui [editCommand resizepattern $name $rows $cols]
+        if {$currentpattern($id) == $name} {
+            displayPattern $id $name
+        }
+    }
+
+    proc renamePattern {id name newName} {
+        debugPrint [info level 0]
+        variable currentpattern;
+        variable patterns;
+
+        if {$name == $newName} return
+        if {$newName in $patterns($id)} {
+            return -code error "Pattern name '$newName' already exists"
+        }
+        set idx [lsearch -exact $patterns($id) $name]
+        if {$idx == -1} {
+            return -code error "No such pattern: '$name'"
+        }
+
+        sendGui [editCommand renamepattern $name $newName]
+        if {$currentpattern($id) == $name} {
+            set currentpattern($id) $newName
+        }
+        sendGui [editCommand getpatterns]
+    }
+
+    proc generateNewPatternName {id} {
+        debugPrint [info level 0]
+        variable patterns;
+        set n 0
+        while 1 {
+            set t "P[format %.02d $n]"
+            if {$t in $patterns($id)} {incr n} else {return $t}
+        }
+    }
+
+    proc displayPattern {id name} {
+        debugPrint "request-pattern-size"
+        variable showpattern
+        set showpattern($id) 1
+        sendGui [editCommand getpatternsize $name]
+    }
+
+    proc updateTitle {id} {
+        variable w
+        variable songname
+        variable trackname
+        variable currentpattern
+        set t "Song: $songname($id)"
+        if {$currentpattern($id) == "Arrangement"} {
+            append t "  Arrangement"
+        } else {
+            append t "  Track: $trackname($id)"
+            if {$currentpattern($id) != {}} {
+                append t "  Pattern: $currentpattern($id)"
+            }
+        }
+        wm title $w($id) $t
+    }
+
+    proc displayPattern_async {id name} {
+        debugPrint [info level 0]
+        variable currentpattern
+        variable patterns
+        variable size
+        variable w
+        variable songname
+        variable trackname
+        variable [getDataVar $id]
+
+        set currentpattern($id) $name
+        updateTitle $id
+       
+        if {$currentpattern($id) == {}} {
+            grid forget $w($id).t
+            return
+        }
+
+        lassign [dict get $size($id) $name] rows cols
+        grid $w($id).t -row 10 -column 0 -sticky news
+        debugPrint "resizing tktable widget to ${rows}x${cols}"
+        $w($id).t configure -state normal -variable [getDataVar $id] -rows $rows -cols [expr {1+$cols}]
+        $w($id).f.p configure -values $patterns($id)
+        $w($id).f.p current [lsearch -exact $patterns($id) $name]
+    }
+
+    proc displayCurrentPattern {id} {
+        debugPrint [info level 0]
+        variable currentpattern
+        variable w
+        debugPrint "current pattern is {$currentpattern($id)}"
+        displayPattern $id $currentpattern($id)
+    }
+
+    proc rowTag {id r} {
+        if {$r % $::div1($id) == 0} {return "alt0"}
+        if {$r % $::div2($id) == 0} {return "alt1"}
+    }
+
+    proc refreshGrid {id} {
+        debugPrint [info level 0]
+        variable currentpattern
+        debugPrint "currentPattern is {$currentpattern($id)}"
+        variable w
+        $w($id).t configure -padx [$w($id).t cget -padx]
+    }
+
+    proc dw {id n k op} {
+        if {$op != {write}} {return}
+        if {$n != [getDataVar $id]} {return}
+        if {$k == {active}} {return}
+        if {$k == {#TEST KEY#}} {return}
+        variable currentpattern
+        variable symbolmap
+
+        lassign [split $k ,] row col
+        upvar [getDataVar $id] data
+        set newVal $data($k)
+
+        debugPrint "BEFORE: newVal = '$newVal'"
+        set newVal [dict get [dict merge [list $newVal $newVal] [lreverse $symbolmap]] $newVal]
+        debugPrint "AFTER: newVal = '$newVal'"
+
+        sendGui [editCommand setcell $currentpattern($id) $row $col $newVal]
+    }
+
+    proc getDataVar {id {P {}}} {
+        variable currentpattern
+        variable songname
+        variable trackname
+        if {$P == ""} {set P $currentpattern($id)}
+        set n "[namespace current]::data_$songname($id)_$trackname($id)_$P"
+        if {![info exists $n]} {
+            array set $n {}
+            trace add variable $n write [list [namespace current]::dw $id]
+            # TODO: when to remove the above variable trace?
+        }
+        return $n
+    }
+
+    proc columnSizeChanged {id} {
+        variable w
+        variable columnsizes
+        set newsz {}
+        # tktable width returns a list of pairs (!)
+        foreach pair [$w($id).t width] {lappend newsz {*}$pair}
+        if {$columnsizes($id) != $newsz} {
+            set columnsizes($id) $newsz
+            sendGui [editCommand meta track set colw {*}$newsz]
+        }
+    }
+
+    proc divChanged {id} {
+        refreshGrid $id
+        sendGui [editCommand meta track set div \
+            [expr {int($::div1($id))}] \
+            [expr {int($::div2($id))}]]
+    }
+
+    proc createMainWindow {id} {
+        debugPrint [info level 0]
+        variable currentpattern;
+        variable w
+        variable songname
+        variable trackname
+        variable patterns
+        variable startup
+        variable showpattern
+        variable columnsizes
+        variable [getDataVar $id]
+
+        catch {destroy $w($id)}
+        debugPrint "creating window with path = '$w($id)'"
+        toplevel $w($id) -class [winfo class .]
+
+        debugPrint "top-toolbar(frame)"
+        grid [ttk::frame $w($id).f] \
+            -row 5 -columnspan 2 -sticky news
+        debugPrint "label"
+        grid [ttk::label $w($id).f.l -text "Pattern: "] \
+            -row 0 -column 0 -in $w($id).f
+        debugPrint "combobox patterns"
+        grid [ttk::combobox $w($id).f.p \
+            -textvariable "[namespace current]::currentpattern($id)"] \
+            -row 0 -column 1 -in $w($id).f
+        debugPrint "divs"
+        grid [ttk::label $w($id).f.ld1 -text "Div1: "] \
+            -row 0 -column 2 -in $w($id).f
+        grid [spinbox $w($id).f.d1 -command "[namespace current]::divChanged $id" \
+            -from 8 -to 64 \
+            -increment 1 -format %3.0f -width 3 -textvar ::div1($id)] \
+            -row 0 -column 3 -in $w($id).f
+        grid [ttk::label $w($id).f.ld2 -text "Div2: "] \
+            -row 0 -column 4 -in $w($id).f
+        grid [spinbox $w($id).f.d2 -command "[namespace current]::divChanged $id" \
+            -from 2 -to 64 \
+            -increment 1 -format %3.0f -width 3 -textvar ::div2($id)] \
+            -row 0 -column 5 -in $w($id).f
+
+        debugPrint "step2"
+        $w($id).f.p state readonly
+
+        debugPrint "bindevent"
+        bind $w($id).f.p <<ComboboxSelected>> \
+            "[namespace current]::displayCurrentPattern $id"
+        debugPrint "table"
+
+        table $w($id).t -state disabled \
+            -insertofftime 0 \
+            -bordercursor sb_h_double_arrow \
+            -colorigin -1 -sparsearray 1 \
+            -relief ridge -takefocus 1 -borderwidth 1 -colwidth 4 \
+            -browsecmd "[namespace current]::activeCellChanges $id %r %c" \
+            -cols 0 -rows 0 \
+            -cache 0 \
+            -colstretchmode none -rowstretchmode none \
+            -flashmode 1 -flashtime 2 -autoclear 1 \
+            -justify left -multiline 0 -resizeborders col \
+            -selectmode extended -selecttype cell \
+            -titlecols 1 -titlerows 0 \
+            -validate 0 \
+            -variable [getDataVar $id] \
+            -sparsearray 0 \
+            -exportselection 1 \
+            -xscrollcommand "$w($id).hscroll set" \
+            -yscrollcommand "$w($id).vscroll set" \
+            -rowtagcommand "[namespace current]::rowTag $id"
+        #grid $w($id).t -row 10 -column 0 -sticky news
+
+        if {![llength [info procs ::tk::table::ChangeWidth_]]} {
+            rename ::tk::table::ChangeWidth ::tk::table::ChangeWidth_
+            proc ::tk::table::ChangeWidth {w i a} "
+                ::pd::composer::columnSizeChanged $id
+                uplevel ::tk::table::ChangeWidth_ \$w \$i \$a
+                "
+        }
+
+        set columnsizes($id) {}
+
+        debugPrint "scrollbars"
+        grid [ttk::scrollbar $w($id).vscroll -orient vertical -command "$w($id).t yview"] -row 10 -column 1 -sticky ns
+        grid [ttk::scrollbar $w($id).hscroll -orient horizontal -command "$w($id).t xview"] -row 15 -column 0 -sticky ew
+        #grid [ttk::sizegrip $w($id).resize] -row 15 -column 1 -sticky se
+
+        grid [ttk::entry $w($id).eval] -row 20 -columnspan 2 -sticky ew
+        bind $w($id).eval <Return> "set cmd \[$w($id).eval get]; namespace eval [namespace current] \$cmd; $w($id).eval delete 0 end"
+
+        debugPrint "grid"
+        grid columnconfigure $w($id) 0 -weight 1
+        grid rowconfigure $w($id) 10 -weight 1
+
+        debugPrint "table-tags"
+        $w($id).t tag configure active  -relief solid -background gray -foreground black
+        $w($id).t tag configure flash   -background red   -foreground white
+        $w($id).t tag configure sel     -background blue  -foreground white
+        $w($id).t tag configure title   -background gray  -foreground white -justify right
+        $w($id).t tag configure alt0    -background "#20a8b8"
+        $w($id).t tag configure alt1    -background "#0f7f9f"
+        $w($id).t tag configure notecol -background "#dddded"
+
+        debugPrint "wm"
+        wm minsize $w($id) 300 150
+        wm protocol $w($id) WM_DELETE_WINDOW [list [namespace current]::sendGui [editCommand editor hide]]
+
+        debugPrint "menu"
+        menu $w($id).m -tearoff 0
+        $w($id).m add command -label "New pattern..." \
+            -command "[namespace current]::newPatternDialog $id"
+        $w($id).m add command -label "Pattern properties..." \
+            -command "[namespace current]::patternPropertiesDialog $id"
+        $w($id).m add command -label "Remove pattern..." \
+            -command "[namespace current]::removePatternConfirm $id"
+        $w($id).m add command -label "Create copy..." \
+            -command "[namespace current]::copyPatternDialog $id"
+
+        menu $w($id).mb
+        $w($id) configure -menu $w($id).mb
+        menu $w($id).mb.tools -tearoff 0
+        $w($id).mb.tools add command -label {Reload} \
+            -command {uplevel 0 {source $argv0}}
+        $w($id).mb add cascade -label {Pattern} -menu $w($id).m
+        $w($id).mb add cascade -label {Utils} -menu $w($id).mb.tools
+
+        debugPrint "more-bind-events"
+        bind $w($id).t <ButtonPress-3> "$w($id).t activate @%x,%y; tk_popup $w($id).m %X %Y"
+        bind $w($id).t <Control-t> "switchColumnType $id"
+        bind $w($id).t <ButtonRelease-1> "[namespace current]::columnSizeChanged $id"
+
+        set startup($id) 1
+        set showpattern($id) 0
+        debugPrint "request-patterns"
+        sendGui [editCommand getpatterns]
+
+        return $w($id)
+    }
+
+    proc switchColumnType {id} {
+        debugPrint [info level 0]
+        variable w
+        global colType
+        set curcol [$w($id).t index active col]
+        set tag {}
+        if {![info exists colType(c$curcol)]} {
+            set colType(c$curcol) {notes}
+            set tag {notecol}
+        } elseif {$colType(c$curcol) == {notes}} {
+            unset colType(c$curcol)
+        }
+
+        $w($id).t tag col $tag $curcol
+        #refreshGrid
+    }
+
+    proc activeCellChanges {id row col} {
+        debugPrint [info level 0]
+        variable w
+        if {$col < 0} {$w($id).t activate $row,[incr col]}
+    }
+
+    proc patternPropertiesDialog_common {id options} {
+        debugPrint [info level 0]
+        variable currentpattern
+        variable w
+        set bname 1
+        set brows 1
+        set bcols 1
+        set old_name {}
+        catch {set old_name $currentpattern($id)}
+        set vname {}
+        set vrows {}
+        set vcols {}
+        set action_cancel {destroy %w}
+        set action_ok $action_cancel
+
+        set opts {vname vrows vcols bname brows bcols action_ok action_cancel}
+        foreach opt $opts {
+            catch {set $opt [dict get $options $opt]}
+        }
+        foreach {o v} $options {
+            if {$o ni $opts} {
+                return -code error "Invalid option: $o"
+            }
+        }
+
+        set w_ $w($id).patternProps
+        catch {destroy $w_}
+        toplevel $w_ -class [winfo class .]
+
+        foreach v {action_ok action_cancel} {
+            set $v [string map [list %ns [namespace current] %id $id %w $w_ %old_name $old_name] [set $v]]
+        }
+
+        grid [ttk::label $w_.lname -text "Name: "] -row 0 -column 0
+        grid [ttk::label $w_.lrows -text "Rows: "] -row 1 -column 0
+        grid [ttk::label $w_.lcols -text "Cols: "] -row 2 -column 0
+        grid [ttk::entry $w_.ename] -row 0 -column 1
+        grid [ttk::entry $w_.erows] -row 1 -column 1
+        grid [ttk::entry $w_.ecols] -row 2 -column 1
+        grid [ttk::frame $w_.b] -row 999 -columnspan 2
+        grid [ttk::button $w_.b.ok -text Ok -command $action_ok] -row 0 -column 0 -in $w_.b
+        grid [ttk::button $w_.b.cancel -text Cancel -command $action_cancel] -row 0 -column 1 -in $w_.b
+
+        $w_.ename insert 0 $vname
+        $w_.erows insert 0 $vrows
+        $w_.ecols insert 0 $vcols
+
+        if {!$bname} {$w_.ename configure -state disabled}
+        if {!$brows} {$w_.erows configure -state disabled}
+        if {!$bcols} {$w_.ecols configure -state disabled}
+    }
+
+    proc patternPropertiesDialog {id {options {}}} {
+        debugPrint [info level 0]
+        variable currentpattern;
+        variable size;
+
+        dict set options action_ok {
+            %ns::renamePattern %id %old_name [%w.ename get]
+            %ns::resizePattern %id [%w.ename get] [%w.erows get] [%w.ecols get]
+            destroy %w
+        }
+        dict set options vname $currentpattern($id)
+        lassign [dict get $size($id) $currentpattern($id)] pat_rows pat_cols
+        dict set options vrows $pat_rows
+        dict set options vcols $pat_cols
+        patternPropertiesDialog_common $id $options
+    }
+
+    proc copyPatternDialog {id {options {}}} {
+        debugPrint [info level 0]
+        variable w;
+        variable size;
+        variable currentpattern;
+        dict set options brows 0
+        dict set options bcols 0
+        dict set options vname [generateNewPatternName $id]
+        lassign [dict get $size($id) $currentpattern($id)] pat_rows pat_cols
+        dict set options vrows $pat_rows
+        dict set options vcols $pat_rows
+        dict set options action_ok {
+            %ns::copyPattern %id %old_name [%w.ename get]
+            destroy %w
+        }
+        patternPropertiesDialog_common $id $options
+    }
+
+    proc removePatternConfirm {id} {
+        debugPrint [info level 0]
+        variable w;
+        variable currentpattern;
+        if {[tk_messageBox \
+            -type yesno -default no \
+            -title "Question" \
+            -icon question -message "Do you confirm pattern delete?" \
+            -detail "The operation cannot be undone" \
+            -parent $w($id)] == {yes}} {
+            removePattern $id $currentpattern($id)
+        }
+    }
+
+    proc newPatternDialog {id {options {}}} {
+        debugPrint [info level 0]
+        dict set options action_ok {
+            %ns::createPattern %id [%w.ename get] [%w.erows get] [%w.ecols get]
+            destroy %w
+        }
+        dict set options vname [generateNewPatternName $id]
+        dict set options vrows 16
+        dict set options vcols 8
+        patternPropertiesDialog_common $id $options
+    }
+
+    #entrypoint
+    proc init {id song_name track_name set_current_pattern debug_flag} {
+        debugPrint [info level 0]
+        variable debug
+        set debug [expr {$debug_flag != 0}]
+        variable w
+        variable songname
+        variable trackname
+        variable size
+        variable currentpattern
+        set w($id) .w_${song_name}_${track_name}
+        set songname($id) $song_name
+        set trackname($id) $track_name
+        if {$set_current_pattern == {NULL}} {
+            set currentpattern($id) {}
+        } else {
+            set currentpattern($id) $set_current_pattern
+        }
+        set size($id) {}
+    }
+
+    proc openWindow {id} {
+        debugPrint [info level 0]
+        createMainWindow $id
+        updateTitle $id
+    }
+
+    proc closeWindow {id} {
+        debugPrint [info level 0]
+        variable w
+        destroy $w($id)
+    }
+
+    proc setCellValueUI {id pat r c v} {
+        upvar 0 [getDataVar $id $pat] data
+        variable symbolmap
+        set data($r,$c) [dict get [dict merge [list $v $v] $symbolmap] $v]
+    }
+
+    proc dispatch {id args} {
+        debugPrint [info level 0]
+        variable w
+        variable patterns
+        variable size
+        variable currentpattern
+        variable startup
+        variable showpattern
+        variable quirks_fix_int_floats
+        switch -exact [lindex $args 0] {
+            patternnames {
+                # for track mode
+                set patterns($id) [lrange $args 1 end]
+                debugPrint "patterns <- $patterns($id)"
+                $w($id).f.p configure -values $patterns($id)
+                if {$startup($id)} {
+                    set startup($id) 0
+                    if {[llength $patterns($id)] > 0} {
+                        displayPattern $id [lindex $patterns($id) 0]
+                    }
+                }
+            }
+            patternsize {
+                set pat_name [lindex $args 1]
+                set pat_rows [lindex $args 2]
+                set pat_cols [lindex $args 3]
+                set new_size [list $pat_rows $pat_cols]
+                debugPrint "got patternsize: '$pat_name' (size = $pat_rows x $pat_cols)"
+                if {![dict exists $size($id) $pat_name] || [dict get $size($id) $pat_name] != $new_size || $showpattern($id)} {
+                    # TODO: uhm, does this really need to be inside the if???
+                    dict set size($id) $pat_name $new_size
+
+                    # request rows
+                    for {set i 0} {$i < $pat_rows} {incr i} {
+                        sendGui [editCommand getrow $pat_name $i]
+                    }
+                    # ...and column width
+                    sendGui [editCommand meta track get colw none]
+                    # ...and div1/div2 settings
+                    sendGui [editCommand meta track get div 8 4]
+                }
+            }
+            patternrow {
+                set pat_name [lindex $args 1]
+                if {$quirks_fix_int_floats} {
+                    set row_num [expr {int([lindex $args 2])}]
+                } else {
+                    set row_num [lindex $args 2]
+                }
+                set row [lrange $args 3 end]
+                debugPrint "got row: '$pat_name' ($row_num) {$row}"
+                setCellValueUI $id $pat_name $row_num -1 [expr {1+$row_num}]
+                for {set i 0} {$i < [llength $row]} {incr i} {
+                    setCellValueUI $id $pat_name $row_num $i [lindex $row $i]
+                }
+                lassign [dict get $size($id) $pat_name] pat_rows pat_cols
+                if {$row_num + 1 == $pat_rows} {
+                    if {$showpattern($id)} {
+                        set showpattern($id) 0
+                        displayPattern_async $id $pat_name
+                    }
+                }
+            }
+            patterncell {
+                set pat_name [lindex $args 1]
+                if {$quirks_fix_int_floats} {
+                    set row_num [expr {int([lindex $args 2])}]
+                    set col_num [expr {int([lindex $args 3])}]
+                } else {
+                    set row_num [lindex $args 2]
+                    set col_num [lindex $args 3]
+                }
+                set cell [lindex $args 4]
+                debugPrint "got cell: '$pat_name' ($row_num,$col_num) {$cell}"
+                debugPrint "dataVar = [getDataVar $id $pat_name]"
+                setCellValueUI $id $pat_name $row_num $col_num $cell
+            }
+            meta {
+                switch -exact [lindex $args 1] {
+                    track {
+                        switch -exact [lindex $args 2] {
+                            colw {
+                                set a [lrange $args 3 end]
+                                debugPrint "got meta: track: colw: '$a'"
+                                if {$a == {none}} return
+                                $w($id).t width {*}$a
+                            }
+                            div {
+                                lassign [lrange $args 3 end] ::div1($id) ::div2($id)
+                                debugPrint "got meta: track: div: '$::div1($id) $::div2($id)'"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

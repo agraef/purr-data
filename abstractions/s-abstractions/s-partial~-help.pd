@@ -1,0 +1,29 @@
+#N canvas 89 28 719 605 10;
+#X obj 173 497 s-ezdac~ o;
+#X obj 156 389 catch~ a/sum;
+#X obj 221 424 catch~ b/sum;
+#X msg 362 26 \; a/trigger bang \; b/trigger bang \;;
+#X obj 493 115 s a/frequency;
+#X obj 482 138 s b/frequency;
+#X obj 482 87 mtof;
+#X obj 601 138 s b/duration;
+#X obj 613 115 s a/duration;
+#X obj 482 68 nbx 5 14 -1e+37 1e+37 0 1 empty empty empty 0 -6 0 10
+-262144 -1 -1 64 256;
+#X obj 601 67 nbx 5 14 -1e+37 1e+37 0 1 empty empty empty 0 -6 0 10
+-262144 -1 -1 236 256;
+#X obj 601 86 * 10;
+#X obj 25 97 s-partial~ a 3 1 1 0;
+#X obj 25 119 s-partial~ a 5 0.5 1.3333 0.1;
+#X obj 25 145 s-partial~ a 2 1 2.66667 0.1;
+#X obj 254 96 s-partial~ b 3 1 1 0.2;
+#X obj 253 118 s-partial~ b 5 0.5 1.3333 0.3;
+#X obj 253 144 s-partial~ b 2.5 1 2.66667 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 1;
+#X connect 6 0 5 0;
+#X connect 6 0 4 0;
+#X connect 9 0 6 0;
+#X connect 10 0 11 0;
+#X connect 11 0 7 0;
+#X connect 11 0 8 0;

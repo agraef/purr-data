@@ -1,0 +1,10 @@
+#N canvas 309 319 748 381 10;
+#X obj 114 160 take-two;
+#X obj 114 203 print;
+#X msg 114 104 1 2 3 4;
+#X msg 176 103 list a b c d e f g h;
+#X text 192 153 take a list as input and print all combinations of
+length two without repetition.;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;

@@ -1,0 +1,13 @@
+#N canvas 1 84 450 300 10;
+#X obj 79 23 inlet;
+#X obj 61 118 f;
+#X obj 61 74 r \$1-bang;
+#X obj 61 142 s \$1-bus;
+#X obj 114 50 != 0;
+#X obj 61 95 spigot 0;
+#X connect 0 0 1 1;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 2 0 5 0;
+#X connect 4 0 5 1;
+#X connect 5 0 1 0;

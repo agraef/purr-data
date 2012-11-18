@@ -1,0 +1,14 @@
+#N canvas 438 397 450 300 10;
+#X obj 122 126 dollarg;
+#X msg 122 202;
+#X obj 139 176 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 122 103 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 122 227 saveargs;
+#X obj 122 149 prepent set;
+#X connect 0 0 5 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 5 0 1 0;

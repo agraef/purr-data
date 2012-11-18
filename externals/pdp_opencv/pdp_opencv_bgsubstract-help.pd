@@ -1,0 +1,71 @@
+#N canvas 572 49 734 841 10;
+#X obj 41 -94 cnv 15 621 223 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X msg 148 -37 open /dev/dv1394/0;
+#X obj 71 -62 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 73 -37 metro 40;
+#X msg 191 29 norm PAL;
+#X msg 161 -8 close;
+#X obj 281 -56 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 281 -29 metro 40;
+#X msg 371 -2 close;
+#X obj 301 69 pdp_v4l;
+#X msg 358 -34 open /dev/video0;
+#X obj 482 -54 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 482 -27 metro 40;
+#X msg 572 0 close;
+#X msg 559 -32 open /dev/video0;
+#X obj 502 71 pdp_v4l2;
+#X obj 43 142 cnv 15 621 73 empty empty empty 20 12 0 14 -260801 -66577
+0;
+#X obj 91 177 pdp_convert bitmap/rgb/*;
+#X text 255 171 COLORMODEL CONVERSION :: allways remember pdp_opencv
+only works in RGB colormodel;
+#X obj 44 230 cnv 15 621 113 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X msg 261 254 set;
+#X floatatom 261 292 5 0 0 0 - - -;
+#X obj 91 368 pdp_xv;
+#X obj 91 314 pdp_opencv_bgsubstract;
+#X text 71 -91 FIRST OF ALL SETUP YOUR CAMERA;
+#X text 44 -326 pdp_opencv_bgsubstract :: A simple background substract
+and binarization object.;
+#X text 43 -234 This object takes an image as a background reference
+and the compare each incomming frame with that. On the output you get
+a bw image \, black pixels are considered as background and white poixels
+as foreground.;
+#X text 43 -281 It is useful if you want to detect objects that are
+in front of an static background and you want to isolate the foreground
+siluete of the foreground objects.;
+#X text 43 -173 pdp_opencv_bgsubstract works comparing color values
+of each pixel \, so it can fail if the foreground object has the same
+color that the background \, and also if the light conditions or the
+shadows changes since you SET the background image.;
+#X text 304 253 SET THE BACKGROUNG REFERENCE;
+#X text 304 290 threshold (default 13) to use when comparing pixel
+colors;
+#X obj 91 63 pdp_ieee1394;
+#X text 42 -120 comments to lluigomez@hangar.org;
+#X connect 1 0 31 0;
+#X connect 2 0 3 0;
+#X connect 3 0 31 0;
+#X connect 4 0 31 0;
+#X connect 5 0 31 0;
+#X connect 6 0 7 0;
+#X connect 7 0 9 0;
+#X connect 8 0 9 0;
+#X connect 9 0 17 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 15 0;
+#X connect 13 0 15 0;
+#X connect 14 0 15 0;
+#X connect 15 0 17 0;
+#X connect 17 0 23 0;
+#X connect 20 0 23 0;
+#X connect 21 0 23 1;
+#X connect 23 0 22 0;
+#X connect 31 0 17 0;

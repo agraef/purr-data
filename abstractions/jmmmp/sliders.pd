@@ -1,0 +1,188 @@
+#N struct 1179-data-s float x float y array 1179-array-s 1179-element
+;
+#N struct 1179-element float y;
+#N canvas 154 44 812 763 10;
+#N canvas 747 430 407 104 data-s 0;
+#X obj 11 20 struct \$0-data-s float x float y array \$0-array-s \$0-element
+;
+#X obj 11 60 plot \$0-array-s 899 1 0 0 8;
+#X restore 10 85 pd data-s;
+#X msg 632 145 clear;
+#N canvas 734 263 334 167 element 0;
+#X text 12 127 MISSING: real limits for the sliders. works fine if
+connected with midi;
+#X obj 13 12 struct \$0-element float y;
+#X obj 13 92 filledpolygon 0 0 1 0 -3 6 -3 6 y(0:127)(0:-127) 0 y(0:127)(0:-127)
+;
+#X obj 13 52 filledpolygon 9 9 1 0 0 6 0 6 4 0 4;
+#X restore 10 65 pd element;
+#X obj 612 245 pointer;
+#X obj 495 235 t f f;
+#X obj 237 525 ctlin;
+#X obj 612 562 vsl 10 100 0 127 0 0 empty empty empty 0 -9 0 10 -191407
+-1 -1 0 0;
+#X obj 630 473 vradio 12 1 0 16 empty empty empty 0 -8 0 10 -228856
+-1 -1 0;
+#X obj 630 668 + 1;
+#X obj 612 688 i;
+#X msg 495 215 0;
+#X obj 495 285 t p p;
+#X obj 464 75 lbang;
+#N canvas 159 133 421 406 \$0-draw 0;
+#X scalar 1179-data-s 0 0 \; 0 \; 0 \; 0 \; 0 \; 0 \; 0 \; 0 \; 0 \;
+0 \; 0 \; 0 \; 0 \; 0 \; 0 \; 0 \; 0 \; \;;
+#X coords 0 137 128 10 128 40 1;
+#X restore 10 10 pd \$0-draw;
+#X obj 612 205 \$0;
+#X msg 612 225 traverse pd-\$1-draw \, bang;
+#X obj 495 265 append \$0-data-s x y;
+#X obj 357 305 setsize \$0-data-s \$0-array-s;
+#X obj 330 645 element \$0-data-s \$0-array-s;
+#X obj 632 165 s pd-\$0-draw;
+#X obj 237 665 set \$0-element y;
+#X obj 337 375 s pd-\$0-draw;
+#X obj 464 95 t b b b b b;
+#X obj 291 145 \$1;
+#X obj 337 335 * 8;
+#X obj 318 465 namecanvas \$0-sliders;
+#X obj 318 445 s \$0-sliders;
+#X text 316 485 das gibt jedem Patch eine individuelle Identität;
+#X obj 318 405 * 8;
+#X msg 337 355 donecanvasdialog 1 -1 2 0 137 \$1 10 \$1 40 0 0;
+#X msg 291 185 16;
+#X obj 291 165 sel 0;
+#X obj 311 555 tabread \$0-index;
+#X obj 86 395 tabwrite \$0-index;
+#X obj 330 625 - 1;
+#X obj 86 345 f+ 1;
+#X obj 86 365 t f f;
+#X obj 86 325 until;
+#X obj 59 255 \$1;
+#X msg 59 295 16;
+#X obj 59 275 sel 0;
+#X obj 26 445 textfile;
+#X msg 26 425 read slider-i.txt cr \, rewind \, bang;
+#X obj 71 535 bang;
+#X obj 71 485 print SLIDER;
+#X obj 26 515 route \$2;
+#X obj 26 145 symbol \$2;
+#X obj 26 185 route symbol;
+#X obj 26 205 sel \$2;
+#X obj 26 555 listfunnel;
+#X obj 26 615 tabwrite \$0-index;
+#X obj 26 575 unpack;
+#X obj 26 595 + 1;
+#X obj 59 225 t b b;
+#X obj 26 165 pipe s 50;
+#X obj 330 605 spigot;
+#X obj 311 575 t f f f;
+#X obj 237 605 spigot;
+#X obj 26 635 table \$0-index 512;
+#X text 8 655 Max. 511 sliders. should be enough?;
+#X obj 318 215 t f f f;
+#X msg 71 465 ERROR: Wrong slider string;
+#X text 3 165 ??? without pipe \, table writing after sel \$2 doesn't
+work;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 729 pd license;
+#X text 12 711 (C) 2009 João Pais - jmmmpais@googlemail.com;
+#X text 676 348 Arguments;
+#X text 676 368 - Number of sliders;
+#X text 676 388 - Identity string;
+#X text 676 428 - slider-i.txt;
+#X text 676 408 Index file;
+#X text 91 65 [sliders] - GUI for incoming midi data;
+#X msg 318 425 donecanvasdialog 1 -1 2 0 -1 1 1 \$1 44 10 10 \, dirty
+0;
+#X connect 1 0 19 0;
+#X connect 3 0 16 2;
+#X connect 4 0 16 0;
+#X connect 4 1 16 1;
+#X connect 5 0 57 0;
+#X connect 5 1 32 0;
+#X connect 6 0 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 32 0;
+#X connect 9 0 57 0;
+#X connect 10 0 4 0;
+#X connect 11 0 18 1;
+#X connect 11 1 17 1;
+#X connect 12 0 22 0;
+#X connect 14 0 15 0;
+#X connect 15 0 3 0;
+#X connect 16 0 11 0;
+#X connect 18 0 20 1;
+#X connect 22 0 46 0;
+#X connect 22 1 23 0;
+#X connect 22 2 10 0;
+#X connect 22 3 14 0;
+#X connect 22 4 1 0;
+#X connect 23 0 31 0;
+#X connect 24 0 29 0;
+#X connect 28 0 71 0;
+#X connect 29 0 21 0;
+#X connect 30 0 60 0;
+#X connect 31 0 30 0;
+#X connect 31 1 60 0;
+#X connect 32 0 56 0;
+#X connect 34 0 18 0;
+#X connect 35 0 36 0;
+#X connect 36 0 33 0;
+#X connect 36 1 33 1;
+#X connect 37 0 35 0;
+#X connect 38 0 40 0;
+#X connect 39 0 37 0;
+#X connect 40 0 39 0;
+#X connect 40 1 37 0;
+#X connect 41 0 45 0;
+#X connect 41 1 61 0;
+#X connect 42 0 41 0;
+#X connect 43 0 41 0;
+#X connect 45 0 49 0;
+#X connect 45 1 43 0;
+#X connect 46 0 54 0;
+#X connect 47 0 48 0;
+#X connect 48 0 42 0;
+#X connect 48 1 53 0;
+#X connect 49 0 51 0;
+#X connect 51 0 52 0;
+#X connect 51 1 50 1;
+#X connect 52 0 50 0;
+#X connect 53 0 38 0;
+#X connect 53 1 38 0;
+#X connect 54 0 47 0;
+#X connect 55 0 34 0;
+#X connect 56 0 57 1;
+#X connect 56 1 55 0;
+#X connect 56 2 55 1;
+#X connect 57 0 20 0;
+#X connect 60 0 28 0;
+#X connect 60 1 24 0;
+#X connect 60 2 17 0;
+#X connect 61 0 44 0;
+#X connect 71 0 26 0;
+#X coords 0 -1 1 1 128 44 2 10 10;

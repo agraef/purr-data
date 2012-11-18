@@ -1,0 +1,30 @@
+#N canvas 437 184 342 280 10;
+#X obj 375 259 ggee/image @pd_extra/K12/objects/preset.png;
+#X obj 335 260 hradio 15 1 0 4 \$0-send-none \$0-receive-none empty
+0 -8 0 10 -262144 -222940 -1 0;
+#X obj 375 160 loadbang;
+#X msg 276 370 store \$1;
+#X msg 335 370 recall \$1;
+#X obj 335 290 hradio 15 1 0 4 \$0-s-null \$0-r-null empty 0 -8 0 10
+-262144 -125791 -1 0;
+#X text 332 244 store;
+#X text 332 274 recall;
+#X obj 276 394 preset_node k12;
+#X msg 375 182 open @pd_extra/K12/objects/preset.png;
+#X obj 399 260 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-222940 -1;
+#X obj 399 290 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-125791 -1;
+#X obj 270 139 inlet;
+#X obj 310 139 inlet;
+#X connect 1 0 3 0;
+#X connect 1 0 10 0;
+#X connect 2 0 9 0;
+#X connect 3 0 8 0;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 5 0 11 0;
+#X connect 9 0 0 0;
+#X connect 12 0 5 0;
+#X connect 13 0 1 0;
+#X coords 0 -1 1 1 89 89 2 330 227;

@@ -1,0 +1,64 @@
+#N canvas 0 0 448 500 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_if 20 10 1
+18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X floatatom 23 315 5 0 0 0 - - -;
+#X floatatom 23 266 5 0 0 0 - - -;
+#X obj 374 374 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+10;
+#X floatatom 23 441 5 0 0 0 - - -;
+#X floatatom 23 376 5 0 0 0 - - -;
+#X obj 83 441 print;
+#X floatatom 374 353 5 0 0 0 - - -;
+#X obj 23 400 expr if($f2 != 0 \, if($f1 % 13 != 0 \, random($f1 -
+$f2 * 0.5 \, $f1 + $f2 * 0.5) \, $f1) \, $f1 % 60);
+#X text 20 93 b) an expression to evaluate if the condition is true
+\, and;
+#X text 20 78 a) the condition \,;
+#X text 20 37 The [expr] \, [expr~] \, and [fexpr~] objects allow you
+to build a conditional statement using the "expr if" syntax. It is
+made up of three parts \, enclosed in parentheses:;
+#X text 20 126 Each part is separated by a comma.;
+#X text 20 108 c) an expression to evaluate if the condition is false.
+;
+#X text 20 239 c) if the condition is false \, the number 20 is output.
+;
+#X text 20 340 You can nest other functions within the if function
+\, including the if function itself.;
+#X text 20 157 By scrolling the number box below you can see the [expr
+if] function in action. When a number is received at the inlet:;
+#X text 20 189 a) the condition "$f1 < 20" checks if the input is less
+than twenty.;
+#X text 20 219 b) if true \, the value is subtracted from twenty and
+output.;
+#X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 45 KEYWORDS;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 NAME expr expr~ fexpr~;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION an explanation of the "if" function from
+sly and the expr family stone;
+#X restore 392 480 pd META;
+#N canvas 9 355 428 136 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 [expr] if- Related Objects;
+#X obj 22 42 moses;
+#X obj 72 42 select;
+#X obj 132 42 spigot;
+#X restore 103 480 pd Related_objects;
+#X obj 6 480 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 23 290 expr if($f1 < 50 \, 50-$f1 \, 50);
+#X connect 3 0 24 0;
+#X connect 4 0 9 1;
+#X connect 6 0 9 0;
+#X connect 8 0 4 0;
+#X connect 9 0 5 0;
+#X connect 9 0 7 0;
+#X connect 24 0 2 0;

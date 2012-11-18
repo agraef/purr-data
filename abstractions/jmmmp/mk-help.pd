@@ -1,0 +1,10 @@
+#N canvas 125 122 364 235 10;
+#X text 12 187 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X text 12 207 Released under the BSD License;
+#X text 12 40 [mk] shows the controller number and MIDI value.;
+#X text 196 80 GUI;
+#X text 196 100 - Controller number;
+#X text 196 120 - MIDI value;
+#X obj 26 95 mk;
+#X text 12 10 [mk] - Fast visual control of MIDI inputs;
+#X text 12 157 Related objects: [m-i] [sliders];

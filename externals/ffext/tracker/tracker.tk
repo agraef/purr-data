@@ -1,0 +1,121 @@
+proc tracker_apply {id} {
+# strip "." from the TK id to make a variable name suffix 
+    set vid [string trimleft $id .]
+# for each variable, make a local variable to hold its name...
+    set var_graph_width [concat graph_width_$vid]
+    global $var_graph_width
+    set var_graph_height [concat graph_height_$vid]
+    global $var_graph_height
+    set var_saveflag [concat saveflag_$vid]
+    global $var_saveflag
+    set var_sym_send [concat sym_send_$vid]
+    global $var_sym_send
+    set var_sym_recv [concat sym_recv_$vid]
+    global $var_sym_recv
+ 
+    set cmd [concat $id resize \
+        [eval concat $$var_graph_height] \
+        [eval concat $$var_graph_width] \
+        \;]
+    pd $cmd
+
+    set cmd [concat $id set_saveflag \
+        [eval concat $$var_saveflag] \
+        \;]
+    pd $cmd
+
+    set ss [string trim [set $var_sym_send]]
+    if {$ss != {}} {pd [concat $id set_send $ss \;]}
+
+    set rs [string trim [set $var_sym_recv]]
+    if {$rs != {}} {pd [concat $id set_recv $rs \;]}
+}
+ 
+proc tracker_cancel {id} {
+    set cmd [concat $id cancel \;]
+    #puts stderr $cmd
+    pd $cmd
+}
+ 
+proc tracker_ok {id} {
+    tracker_apply $id
+    tracker_cancel $id
+}
+ 
+proc pdtk_tracker_dialog {id width height saveflag digitw ss rs} {
+    set vid [string trimleft $id .]
+ 
+    set var_graph_width [concat graph_width_$vid]
+    global $var_graph_width
+    set var_graph_height [concat graph_height_$vid]
+    global $var_graph_height
+    set var_saveflag [concat saveflag_$vid]
+    global $var_saveflag
+    set var_sym_send [concat sym_send_$vid]
+    global $var_sym_send
+    set var_sym_recv [concat sym_recv_$vid]
+    global $var_sym_recv
+
+    set $var_graph_width $width
+    set $var_graph_height $height
+    set $var_saveflag $saveflag
+    set $var_sym_recv $rs
+    set $var_sym_send $ss
+ 
+    toplevel $id -class [winfo class .]
+    wm title $id {tracker}
+    wm protocol $id WM_DELETE_WINDOW [concat tracker_cancel $id]
+ 
+    label $id.label -text {GRID PROPERTIES}
+    pack $id.label -side top
+ 
+    frame $id.buttonframe
+    pack $id.buttonframe -side bottom -fill x -pady 2m
+    button $id.buttonframe.cancel -text {Cancel}\
+        -command "tracker_cancel $id"
+    button $id.buttonframe.apply -text {Apply}\
+        -command "tracker_apply $id"
+    button $id.buttonframe.ok -text {OK}\
+        -command "tracker_ok $id"
+    pack $id.buttonframe.cancel -side left -expand 1
+    pack $id.buttonframe.apply -side left -expand 1
+    pack $id.buttonframe.ok -side left -expand 1
+     
+    frame $id.1rangef
+    pack $id.1rangef -side top
+    label $id.1rangef.lwidth -text "Width :"
+    #entry $id.1rangef.width -textvar $var_graph_width -width 7
+    spinbox $id.1rangef.width -textvariable $var_graph_width -width 7 -from 1 -to 99 -increment 1
+    pack $id.1rangef.lwidth $id.1rangef.width -side left
+ 
+    frame $id.2rangef
+    pack $id.2rangef -side top
+    label $id.2rangef.lheight -text "Height :"
+    #entry $id.2rangef.height -textvar $var_graph_height -width 7
+    spinbox $id.2rangef.height -textvariable $var_graph_height -width 7 -from 1 -to 99 -increment 1
+    pack $id.2rangef.lheight $id.2rangef.height -side left
+
+    frame $id.3rangef
+    pack $id.3rangef -side top
+    label $id.3rangef.lsaveflag -text ""
+    checkbutton $id.3rangef.saveflag -variable $var_saveflag -text "save contents"
+    pack $id.3rangef.lsaveflag $id.3rangef.saveflag -side left
+ 
+    frame $id.4rangef
+    pack $id.4rangef -side top
+    label $id.4rangef.lwidth -text "Send symbol :"
+    entry $id.4rangef.ss -textvar $var_sym_send -width 10
+    pack $id.4rangef.lwidth $id.4rangef.ss -side left
+ 
+    frame $id.5rangef
+    pack $id.5rangef -side top
+    label $id.5rangef.lwidth -text "Receive symbol :"
+    entry $id.5rangef.rs -textvar $var_sym_recv -width 10
+    pack $id.5rangef.lwidth $id.5rangef.rs -side left
+ 
+    bind $id.1rangef.width <KeyPress-Return> [concat tracker_ok $id]
+    bind $id.2rangef.height <KeyPress-Return> [concat tracker_ok $id]
+    bind $id.4rangef.ss <KeyPress-Return> [concat tracker_ok $id]
+    bind $id.5rangef.rs <KeyPress-Return> [concat tracker_ok $id]
+    focus $id.1rangef.width
+}

@@ -1,0 +1,10 @@
+#N canvas 0 0 198 227 12;
+#X obj 40 15 inlet;
+#X obj 40 48 vasp.frames?;
+#X obj 40 80 % 2;
+#X obj 40 142 outlet;
+#X obj 39 110 != 0;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;

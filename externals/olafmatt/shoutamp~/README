@@ -1,0 +1,49 @@
+version 0.5
+copyright (c) 2001/2002 by Olaf Matthes
+
+shoutamp~ is a MPEG I Layer III (mp3) streaming client for pd (by Miller 
+Puckette) that connects to a SHOUTcast or IceCast server.
+
+
+To run shoutamp~ place the file shoutamp~.dll for win or shoutamp~.pd_linux 
+in the directory of our patch or start pd with '-lib shoutamp~' flag. 
+
+To compile shoutamp~ on Linux: compile it (for instructions see install) and copy
+the binary to the directory where you saved your pd patch.
+
+To compile shoutamp~ on win: get the LAME library from http://www.mp3dev.org and
+compile it following the directions given there. To compile shoutamp~ type 
+'nmake pd_nt' and copy the dll into the correct folder.
+
+This software is published under LGPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+shoutamp~ uses LAME 3.92 to decode mp3.
+The latest version of LAME can be found at http://www.mp3dev.org
+
+PLEASE NOTE: This software may contain patented alogrithm (at least
+patented in some countries). It may be not allowed to sell/use products
+based on this source code in these countries. Check this out first!
+
+LAME was originally developed by Mike Cheng (www.uq.net.au/~zzmcheng).  Now 
+maintained by Mark Taylor (www.mp3dev.org).
+
+It's code is distributed under the GNU LESSER PUBLIC LICENSE
+(LGPL, see www.gnu.org) with the following modification:
+
+1. If you determine that distribution of LAME requires a patent license,
+   and you obtain a patent license, you may distribute LAME even though
+   redistribution of LAME may also require a patent license.  
+
+2. You agree not to enforce any patent claims for any aspect of
+   MPEG audio compression, or any other techniques contained in 
+   the LAME source code. 
+
+*****************************************************************************

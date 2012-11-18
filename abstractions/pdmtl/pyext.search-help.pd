@@ -1,0 +1,63 @@
+#N canvas 380 312 625 493 10;
+#X obj 38 49 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 36 26 1 - where to look (this script is recursive);
+#X symbolatom 143 96 10 0 0 0 - - -;
+#X text 142 57 2 - extension you're looking for (wav \, mov) case-insentitive
+;
+#X text 161 125 3 - output a list of files (including path);
+#X obj 147 261 t b;
+#X obj 147 284 bng 15 250 50 0 empty empty done 17 7 0 10 -262144 -1
+-1;
+#X obj 143 76 init.ls wav;
+#X obj 220 348 vsl 15 115 0 175 0 0 \$0slider_s \$0slider_r empty 0
+-8 0 8 -1 -262144 -1 0 0;
+#X obj 38 346 hradio 15 1 0 12 \$0hr_0_s \$0hr_0_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 361 hradio 15 1 0 12 \$0hr_1_s \$0hr_1_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 376 hradio 15 1 0 12 \$0hr_2_s \$0hr_2_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 391 hradio 15 1 0 12 \$0hr_3_s \$0hr_3_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 406 hradio 15 1 0 12 \$0hr_4_s \$0hr_4_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 421 hradio 15 1 0 12 \$0hr_5_s \$0hr_5_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 436 hradio 15 1 0 12 \$0hr_6_s \$0hr_6_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 451 hradio 15 1 0 12 \$0hr_7_s \$0hr_7_r empty 2 8 0 8 -1
+-1 -262144 0;
+#X obj 38 330 cnv 15 197 15 empty \$0hider empty 3 9 0 8 -128992 -262144
+0;
+#X obj 38 259 gui.browser \$0;
+#X msg 81 236 clear;
+#X obj 38 236 t b a;
+#X obj 38 281 flow.prepend set;
+#X msg 137 223 text.font 0 8;
+#X obj 137 203 init.lb;
+#X text 35 2 Description: Recursive search of files by their extension.
+;
+#X obj 38 209 linux.search;
+#X obj 162 144 bng 15 250 50 0 empty empty search 20 7 0 10 -262144
+-1 -1;
+#X obj 52 95 t b;
+#X msg 38 301;
+#X obj 38 69 tof/folderpanel;
+#X connect 0 0 29 0;
+#X connect 2 0 25 1;
+#X connect 5 0 6 0;
+#X connect 7 0 2 0;
+#X connect 18 0 21 0;
+#X connect 19 0 18 1;
+#X connect 20 0 18 1;
+#X connect 20 1 18 1;
+#X connect 21 0 28 0;
+#X connect 22 0 18 1;
+#X connect 23 0 22 0;
+#X connect 25 0 20 0;
+#X connect 25 1 5 0;
+#X connect 26 0 25 2;
+#X connect 27 0 19 0;
+#X connect 29 0 25 0;
+#X connect 29 0 27 0;

@@ -1,0 +1,12 @@
+#N canvas 95 40 1132 561 10;
+#X obj 68 98 rrad.pattseq /test;
+#X obj 900 181 rrad.mmetr /m;
+#X obj 919 483 print;
+#X obj 72 456 print patt;
+#X obj 219 480 careGUI;
+#X obj 919 349 preseter /bla;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 1 0 5 0;
+#X connect 5 0 2 0;
+#X connect 5 0 0 1;

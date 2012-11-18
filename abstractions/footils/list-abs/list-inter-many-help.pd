@@ -1,0 +1,91 @@
+#N canvas 256 50 619 683 10;
+#X obj 195 449 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 508 1;
+#X obj 234 449 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 1270 1;
+#X obj 274 449 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 6731 1;
+#X floatatom 195 423 5 0 0 0 - - -;
+#X floatatom 234 423 5 0 0 0 - - -;
+#X floatatom 274 423 5 0 0 0 - - -;
+#X obj 195 401 unpack 0 0 0 0;
+#X obj 313 450 vsl 15 128 0 10 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 127 1;
+#X floatatom 313 424 5 0 0 0 - - -;
+#X obj 195 372 list-inter-many;
+#N canvas 239 261 368 386 randlist 0;
+#X msg 141 73 4;
+#X obj 141 103 until;
+#X obj 141 130 random 100;
+#X obj 141 157 / 10;
+#X obj 141 199 list prepend;
+#X obj 232 200 t a;
+#X obj 118 242 list;
+#X obj 118 47 t b b b;
+#X obj 118 24 inlet;
+#X obj 118 318 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 0 6 1;
+#X connect 5 0 4 1;
+#X connect 6 0 9 0;
+#X connect 7 0 6 0;
+#X connect 7 1 0 0;
+#X connect 7 2 4 1;
+#X connect 8 0 7 0;
+#X restore 385 282 pd randlist;
+#X msg 295 337 clear;
+#X msg 295 315 print;
+#X msg 385 260 add random list;
+#X obj 195 291 / 100;
+#X floatatom 195 268 5 0 0 0 - - -;
+#X obj 385 237 until;
+#X msg 385 214 4;
+#X obj 244 292 line;
+#X floatatom 244 321 5 0 0 0 - - -;
+#X msg 244 269 0 \, 3 2000;
+#X msg 385 434;
+#X text 390 412 textfile contents:;
+#X msg 339 376 set;
+#X text 117 621 Also see:;
+#X obj 193 622 list-inter;
+#X text 97 26 [list-inter-many];
+#X obj 385 304 list prepend add;
+#X obj 385 327 list trim;
+#X text 94 93 Inlets:;
+#X text 94 61 Elementwise linear interpolation between several float
+lists stored in a [textfile] object internally.;
+#X text 98 208 Outlet: interpolated list.;
+#X text 108 171 1) [textfile] inlet. Use the selector "add" to add
+lists to the interpolation space;
+#X text 108 116 0) float: distance between lists. Values between 0
+and 1 will interpolate the first two lists \, values between 1 and
+2 interpolate the second with the third list and so on.;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 2 0;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 6 2 5 0;
+#X connect 6 3 8 0;
+#X connect 8 0 7 0;
+#X connect 9 0 6 0;
+#X connect 10 0 27 0;
+#X connect 11 0 9 1;
+#X connect 11 0 23 0;
+#X connect 12 0 9 1;
+#X connect 13 0 10 0;
+#X connect 14 0 9 0;
+#X connect 15 0 14 0;
+#X connect 16 0 13 0;
+#X connect 17 0 16 0;
+#X connect 18 0 9 0;
+#X connect 18 0 19 0;
+#X connect 20 0 18 0;
+#X connect 23 0 21 0;
+#X connect 27 0 28 0;
+#X connect 28 0 9 1;
+#X connect 28 0 21 0;

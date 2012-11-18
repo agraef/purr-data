@@ -1,0 +1,10 @@
+NAME=vst~
+
+BUILDTYPE=multi
+
+BUILDDIR=build
+SRCDIR=src
+
+SRCS=main.cpp vsthost.cpp vstmaster.cpp vstedit.cpp vstparam.cpp vstmidi.cpp editor.cpp
+        
+HDRS=main.h vsthost.h editor.h editorwin.hpp editormac.hpp

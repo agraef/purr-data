@@ -1,0 +1,70 @@
+#N canvas 115 285 650 502 10;
+#X msg 39 147 openpanel;
+#X text 38 343 You can find sample Ambisonic B-format sound files on
+http://ambisonia.com;
+#X msg 194 161 loop \$1;
+#X obj 194 142 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 193 111 play;
+#X msg 232 111 stop;
+#X msg 279 114 autostart \$1;
+#X obj 279 95 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 293 223 12 0 0 0 - - -;
+#X obj 439 280 hsl 127 8 0 1 0 0 empty empty empty -2 -8 0 10 -191407
+-1 -1 0 1;
+#X obj 538 219 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 481 249 12 0 0 0 - - -;
+#X obj 292 246 / 1000;
+#X floatatom 291 269 12 0 0 0 - - -;
+#X text 374 223 ms;
+#X text 371 271 seconds;
+#X obj 436 183 route duration elapsed done;
+#X obj 436 254 /;
+#X text 38 384 Important: The sampling rate of the file and the sampling
+rate of Pd must be the same if you want the sound to be played at correct
+speed and pitch.;
+#X text 50 451 See also :;
+#X obj 125 456 readsf~;
+#X text 12 9 Description: Reads a 4-channels first order Ambisonic
+B-format wav sound file.;
+#X obj 39 276 dac~ 1 2 3 4;
+#X obj 192 235 vsl 30 60 -100 0 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X floatatom 195 316 5 0 0 0 - - -;
+#X obj 40 229 mtl/ambiWxyToQuad~;
+#X obj 183 456 mtl/ambiTable4 \$0-dummy;
+#X obj 334 456 mtl/ambiTablePlay3~ \$0-dummy;
+#X text 15 40 tags: ambisonic;
+#X obj 39 191 mtl/ambiSfRead4~ autostart 1 \, loop 0;
+#X obj 39 253 mtl/ambiGain4~ gain -6;
+#X connect 0 0 29 0;
+#X connect 2 0 29 0;
+#X connect 3 0 2 0;
+#X connect 4 0 29 0;
+#X connect 5 0 29 0;
+#X connect 6 0 29 0;
+#X connect 7 0 6 0;
+#X connect 8 0 12 0;
+#X connect 12 0 13 0;
+#X connect 16 0 8 0;
+#X connect 16 0 17 1;
+#X connect 16 1 11 0;
+#X connect 16 1 17 0;
+#X connect 16 2 10 0;
+#X connect 17 0 9 0;
+#X connect 23 0 24 0;
+#X connect 23 0 30 4;
+#X connect 25 0 30 0;
+#X connect 25 1 30 1;
+#X connect 25 2 30 2;
+#X connect 25 3 30 3;
+#X connect 29 0 25 0;
+#X connect 29 1 25 1;
+#X connect 29 2 25 2;
+#X connect 29 4 16 0;
+#X connect 30 0 22 0;
+#X connect 30 1 22 1;
+#X connect 30 2 22 2;
+#X connect 30 3 22 3;

@@ -1,0 +1,68 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header atan 3 12 0 18 -204280
+-1 0;
+#X obj 0 436 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Revised by Jonathan Wilkes to conform to the PDDP template for
+Pd version 0.42.;
+#X text 12 5 KEYWORDS control trigonometry;
+#X text 12 45 DESCRIPTION arctangent function;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 501 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 537 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 542 (none);
+#N canvas 57 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 109 43 atan2;
+#X obj 149 43 exp;
+#X obj 177 43 log;
+#X obj 204 43 abs;
+#X obj 232 43 sqrt;
+#X obj 267 43 pow;
+#X obj 57 76 cos~;
+#X obj 89 76 osc~;
+#X obj 23 76 expr;
+#X obj 23 43 sin;
+#X obj 49 43 cos;
+#X obj 76 43 tan;
+#X text 8 2 [atan] Related Objects;
+#X restore 102 598 pd Related_objects;
+#X obj 78 445 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 444 float;
+#X text 98 464 list;
+#X text 98 509 float;
+#X obj 78 510 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 493 3 atan;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/atan -text
+pdpedia: atan;
+#X floatatom 247 209 0 0 0 0 - - -;
+#X floatatom 247 164 0 0 0 0 - - -;
+#X obj 247 186 atan;
+#X text 96 122 The [atan] object produces the arctangent of a number
+as a numeric value between -Pi/2 and Pi/2.;
+#X text 11 23 arctangent function;
+#X text 168 464 - a list will be truncated \, and the first element
+will be used as input.;
+#X obj 3 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 17 0 18 0;
+#X connect 18 0 16 0;

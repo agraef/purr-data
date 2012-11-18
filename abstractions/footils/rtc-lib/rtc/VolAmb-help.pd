@@ -1,0 +1,19 @@
+#N canvas 359 149 522 324 10;
+#X msg 258 24 Envelopes;
+#X obj 78 153 VolAmb;
+#X floatatom 78 123 0 0 0 0 - - -;
+#X floatatom 78 186 0 0 0 0 - - -;
+#X text 76 206 dyn.min;
+#X floatatom 163 186 0 0 0 0 - - -;
+#X text 163 206 dyn.max;
+#X obj 81 98 hsl 128 15 0 127 0 0 empty empty controller -2 -6 0 8
+-262144 -1 -1 3100 1;
+#X text 16 23 VolAmb;
+#X text 16 52 Controls the ambitus
+between minimum and maximum dynamic by a single controller.;
+#X text 18 242 © 1997 by Karlheinz
+Essl;
+#X connect 1 0 3 0;
+#X connect 1 1 5 0;
+#X connect 2 0 1 0;
+#X connect 7 0 2 0;

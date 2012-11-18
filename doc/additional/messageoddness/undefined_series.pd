@@ -1,0 +1,55 @@
+#N canvas 242 94 461 496 10;
+#X floatatom 161 180 5 0 0 0 - - -;
+#X symbolatom 209 179 10 0 0 0 - - -;
+#X obj 114 200 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144
+-1 -1;
+#X obj 114 156 route bang float symbol list;
+#X obj 161 200 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 209 200 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 257 200 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 305 200 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
+-1 -1;
+#X msg 151 83 lots of pie;
+#X floatatom 191 405 5 0 0 0 - - -;
+#X symbolatom 259 404 10 0 0 0 - - -;
+#X obj 124 425 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144
+-1 -1;
+#X obj 191 425 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 259 425 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 328 425 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X msg 156 104 is this a list 2?;
+#X text 144 61 [route] says these are not lists:;
+#X msg 147 29 list lots of pie;
+#X text 268 30 a list;
+#X obj 123 381 trigger bang float symbol list;
+#X msg 124 274 list lots of pie;
+#X text 251 274 a list;
+#X msg 158 330 lots of pie;
+#X msg 158 349 is this a list 2?;
+#X text 15 316 [trigger] says these are not floats \, lists \, symbols
+or lists;
+#X connect 0 0 4 0;
+#X connect 1 0 5 0;
+#X connect 3 0 2 0;
+#X connect 3 1 0 0;
+#X connect 3 2 1 0;
+#X connect 3 3 6 0;
+#X connect 3 4 7 0;
+#X connect 8 0 3 0;
+#X connect 9 0 12 0;
+#X connect 10 0 13 0;
+#X connect 15 0 3 0;
+#X connect 17 0 3 0;
+#X connect 19 0 11 0;
+#X connect 19 1 9 0;
+#X connect 19 2 10 0;
+#X connect 19 3 14 0;
+#X connect 20 0 19 0;
+#X connect 22 0 19 0;
+#X connect 23 0 19 0;

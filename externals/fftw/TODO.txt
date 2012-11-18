@@ -1,0 +1,10 @@
+
+make the objects behave correctly!
+  currently [fftw~] and [ifftw~] seem to produce noise
+  [rifftw~] just crashes
+  [rfftw~] almost work...
+
+
+LATER:
+ use "raising" (see miXed/shared/unstable/fragile.c) to overwrite pd's standard fft~objects with these
+ probably only use this, when the library is loaded on startup (and not via object-instantiation)

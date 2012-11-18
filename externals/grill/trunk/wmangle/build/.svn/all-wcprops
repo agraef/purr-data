@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/3676/trunk/wmangle/build
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/3676/trunk/wmangle/build/nmake-win-msvc.inc
+END
+gnumake-mac-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/3165/trunk/wmangle/build/gnumake-mac-gcc.inc
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/3165/trunk/wmangle/build/config-win.def
+END
+config-mac.def
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/3165/trunk/wmangle/build/config-mac.def
+END

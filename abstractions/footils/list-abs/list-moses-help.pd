@@ -1,0 +1,27 @@
+#N canvas 483 52 726 404 10;
+#X floatatom 95 93 5 0 0 0 - - -;
+#X obj 95 355 print smaller;
+#X obj 141 332 print bigger-or-equal;
+#X floatatom 141 227 5 0 0 2 split-value - -;
+#X text 57 38 list-moses: like [moses] for lists. Additionally you
+can set the element index \, at which to compare \, if it is bigger
+or smaller than the stored value.;
+#X text 338 217 arg1: comparison value;
+#X obj 188 255 hradio 15 1 0 8 empty empty split-index 0 -6 0 10 -262144
+-1 -1 2;
+#X floatatom 128 148 5 0 0 0 - - -;
+#X obj 95 277 list-moses 4 2;
+#X text 337 252 arg2: which element to compare (zero based). Can be
+negative \, too.;
+#X msg 128 172 1 TEST \$1 4 5 6 7 8;
+#X obj 188 306 print not-a-float;
+#X msg 95 117 \$1 \$1 \$1 \$1 \$1 \$1 \$1 \$1;
+#X connect 0 0 12 0;
+#X connect 3 0 8 1;
+#X connect 6 0 8 2;
+#X connect 7 0 10 0;
+#X connect 8 0 1 0;
+#X connect 8 1 2 0;
+#X connect 8 2 11 0;
+#X connect 10 0 8 0;
+#X connect 12 0 8 0;

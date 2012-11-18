@@ -1,0 +1,229 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E95A510D0B8E546F0056FDA4 /* zconf_browse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E95A51060B8E546F0056FDA4 /* zconf_browse.cpp */; };
+		E95A510E0B8E546F0056FDA4 /* zconf_domains.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E95A51070B8E546F0056FDA4 /* zconf_domains.cpp */; };
+		E95A510F0B8E546F0056FDA4 /* zconf_meta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E95A51080B8E546F0056FDA4 /* zconf_meta.cpp */; };
+		E95A51100B8E546F0056FDA4 /* zconf_resolve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E95A51090B8E546F0056FDA4 /* zconf_resolve.cpp */; };
+		E95A51110B8E546F0056FDA4 /* zconf_service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E95A510A0B8E546F0056FDA4 /* zconf_service.cpp */; };
+		E95A51120B8E546F0056FDA4 /* zconf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E95A510B0B8E546F0056FDA4 /* zconf.cpp */; };
+		E95A51130B8E546F0056FDA4 /* zconf.h in Headers */ = {isa = PBXBuildFile; fileRef = E95A510C0B8E546F0056FDA4 /* zconf.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D2AAC0630554660B00DB518D /* zconf.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = zconf.pd_darwin; sourceTree = BUILT_PRODUCTS_DIR; };
+		E95A51060B8E546F0056FDA4 /* zconf_browse.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = zconf_browse.cpp; sourceTree = "<group>"; };
+		E95A51070B8E546F0056FDA4 /* zconf_domains.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = zconf_domains.cpp; sourceTree = "<group>"; };
+		E95A51080B8E546F0056FDA4 /* zconf_meta.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = zconf_meta.cpp; sourceTree = "<group>"; };
+		E95A51090B8E546F0056FDA4 /* zconf_resolve.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = zconf_resolve.cpp; sourceTree = "<group>"; };
+		E95A510A0B8E546F0056FDA4 /* zconf_service.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = zconf_service.cpp; sourceTree = "<group>"; };
+		E95A510B0B8E546F0056FDA4 /* zconf.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = zconf.cpp; sourceTree = "<group>"; };
+		E95A510C0B8E546F0056FDA4 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289988505E68E00004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* zconf */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = zconf;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E95A51060B8E546F0056FDA4 /* zconf_browse.cpp */,
+				E95A51070B8E546F0056FDA4 /* zconf_domains.cpp */,
+				E95A51080B8E546F0056FDA4 /* zconf_meta.cpp */,
+				E95A51090B8E546F0056FDA4 /* zconf_resolve.cpp */,
+				E95A510A0B8E546F0056FDA4 /* zconf_service.cpp */,
+				E95A510B0B8E546F0056FDA4 /* zconf.cpp */,
+				E95A510C0B8E546F0056FDA4 /* zconf.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC0630554660B00DB518D /* zconf.pd_darwin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC0600554660B00DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E95A51130B8E546F0056FDA4 /* zconf.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC0620554660B00DB518D /* zconf */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB914A08733D8E0010E9CD /* Build configuration list for PBXNativeTarget "zconf" */;
+			buildPhases = (
+				D2AAC0600554660B00DB518D /* Headers */,
+				D2AAC0610554660B00DB518D /* Sources */,
+				D289988505E68E00004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zconf;
+			productName = zconf;
+			productReference = D2AAC0630554660B00DB518D /* zconf.pd_darwin */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB914E08733D8E0010E9CD /* Build configuration list for PBXProject "zconf" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* zconf */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC0620554660B00DB518D /* zconf */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC0610554660B00DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E95A510D0B8E546F0056FDA4 /* zconf_browse.cpp in Sources */,
+				E95A510E0B8E546F0056FDA4 /* zconf_domains.cpp in Sources */,
+				E95A510F0B8E546F0056FDA4 /* zconf_meta.cpp in Sources */,
+				E95A51100B8E546F0056FDA4 /* zconf_resolve.cpp in Sources */,
+				E95A51110B8E546F0056FDA4 /* zconf_service.cpp in Sources */,
+				E95A51120B8E546F0056FDA4 /* zconf.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB914B08733D8E0010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/flext,
+					"$(PD)/src",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = "-lflext-pd_d";
+				PRODUCT_NAME = zconf;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB914C08733D8E0010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/flext,
+					"$(PD)/src",
+				);
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = "-lflext-pd";
+				PRODUCT_NAME = zconf;
+			};
+			name = Release;
+		};
+		1DEB914F08733D8E0010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		1DEB915008733D8E0010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB914A08733D8E0010E9CD /* Build configuration list for PBXNativeTarget "zconf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB914B08733D8E0010E9CD /* Debug */,
+				1DEB914C08733D8E0010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB914E08733D8E0010E9CD /* Build configuration list for PBXProject "zconf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB914F08733D8E0010E9CD /* Debug */,
+				1DEB915008733D8E0010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

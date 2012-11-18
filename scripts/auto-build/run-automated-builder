@@ -1,0 +1,93 @@
+#!/bin/sh
+
+
+## TODO: 
+# - change the logfile name
+# - use a wrapper for rsync to handle platform specifics
+# - check whether rsync (or any other upload mechanism) is present
+#   and mail accordingly
+
+cd /
+
+# On Mac OS X, there are some handy things in Fink, but don't override the
+# built-in tools
+PATH="${PATH}:/sw/bin:/sw/sbin"
+export PATH
+
+# the source dir where this script is
+SCRIPT_DIR=$(echo $0 | sed 's|\(.*\)/.*$|\1|')
+. $SCRIPT_DIR/auto-build-common
+
+# the name of this script
+SCRIPT=$(echo $0| sed 's|.*/\(.*\)|\1|g')
+
+mailbody_on_failure () {
+ ## this is a somewhat simplistic expression to detect error-lines
+ echo "last 20 errors ----------------------------------------"
+ cat ${LOGFILE} | grep -i -e "error: " -e "cannot find" | tail -20
+ echo "last 15 lines ----------------------------------------"
+ tail -15 ${LOGFILE}
+ echo ""
+ echo "the full logfile - if it has been succesfully uploaded - can be viewed at:"
+ echo "http://autobuild.puredata.info/auto-build/${DATE}/logs/${LOGFILE##*/}"
+}
+
+run_build_script ()
+{
+	 distro=$1
+	 chroot=$2
+
+	 BUILDSCRIPT="${HOME}/auto-build/${distro}/scripts/auto-build/${distro}-auto-builder.sh"
+         ## LATER: make the uploaded ${LOGFILE} (name) be consistent with the uploaded package-file (name)
+	 LOGFILE="${HOME}/logs/${DATE}_${TIME}_${SYSTEM}_${HOSTNAME}_${distro}.txt"
+	 touch "${LOGFILE}" 
+
+	 if [ -d /var/chroot/$chroot ]; then
+		 echo "----------------------------------------" >> "$LOGFILE" 2>&1
+		 echo "Building in dchroot $chroot" >> "$LOGFILE" 2>&1
+		 echo "----------------------------------------" >> "$LOGFILE" 2>&1
+		 dchroot -c $chroot -d "$BUILDSCRIPT" >> "$LOGFILE" 2>&1
+	 else
+		 echo "----------------------------------------" >> "$LOGFILE" 2>&1
+		 echo "Building on native system" >> "$LOGFILE" 2>&1
+		 echo "----------------------------------------" >> "$LOGFILE" 2>&1
+		 sh "$BUILDSCRIPT" >> "$LOGFILE" 2>&1
+	 fi
+	 
+	 case $SYSTEM in 
+		  mingw*)
+				/c/cygwin/bin/sh -c \
+					 "rsync --archive --no-links --copy-links ${LOGFILE} rsync://128.238.56.50/upload/${DATE}/logs/"
+				;;
+		  *)
+				rsync -a "$LOGFILE" rsync://128.238.56.50/upload/${DATE}/logs/
+				;;
+	 esac
+
+# send status report if something failed
+	 completion_test=$(tail -1 ${LOGFILE})
+	 if [ "x${completion_test}" != "xSUCCESS" ]; then
+		if [ "x${RECIPIENT}" != "x" ]; then
+		  SUBJECT="autobuild: $distro $HOSTNAME $DATE $TIME"
+		  mailbody_on_failure | $MAIL_COMMAND -s "${SUBJECT}" ${RECIPIENT}
+		fi
+	 fi
+}
+
+for distrodir in ${HOME}/auto-build/*; do 
+	 distro=$(echo $distrodir | sed 's|.*/\(.*\)|\1|')
+	 if [ -e $distrodir/scripts/auto-build/${distro}-auto-builder.sh ]; then
+		 run_build_script $distro IGNORE_CHROOT_USE_SYSTEM
+		 if [ -e /var/chroot ]; then
+			 for chrootdir in /var/chroot/*; do 
+				 chroot=$(echo $chrootdir | sed 's|.*/\(.*\)|\1|')
+				 HOSTNAME=`cat /var/chroot/$chroot/etc/hostname`
+				 run_build_script $distro $chroot
+			 done
+		 fi
+	 fi
+done
+
+# since the above test can cause this script to exit with an error, force it
+# to be happy to prevent getting automated error emails to root
+true 

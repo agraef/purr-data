@@ -1,0 +1,26 @@
+#N canvas 427 57 420 212 10;
+#X obj 212 117 outlet;
+#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_digital.png
+;
+#X obj 228 -60 loadbang;
+#X obj 239 44 nbx 2 14 1 16 0 0 empty empty channel: -48 8 0 11 -262144
+-1 -1 1 256 3;
+#X obj 128 -60 inlet;
+#X obj 245 -15 preset_node k12;
+#X obj 128 31 route 1;
+#X obj 128 -15 route list;
+#X obj 128 8 route d;
+#X obj 212 60 tgl 30 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 228 -37 open @pd_extra/K12/objects/sarcduino_digital.png;
+#X connect 2 0 10 0;
+#X connect 3 0 5 0;
+#X connect 3 0 6 1;
+#X connect 4 0 7 0;
+#X connect 5 0 3 0;
+#X connect 6 0 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 9 0 0 0;
+#X connect 10 0 1 0;
+#X coords 0 -1 1 1 89 89 2 183 13;

@@ -1,0 +1,9 @@
+#N canvas 334 399 603 365 10;
+#X text 146 39 Description: A color selector.;
+#X text 324 199 Click and drag!!!!;
+#X obj 127 145 input.color.grid_;
+#X text 63 293 Float RGB;
+#X obj 80 268 print float_RGB;
+#X obj 270 248 print pd_color;
+#X connect 2 0 4 0;
+#X connect 2 1 5 0;

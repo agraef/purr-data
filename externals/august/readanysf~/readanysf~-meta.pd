@@ -1,0 +1,6 @@
+#N canvas 15 49 200 200 10;
+#N canvas 15 49 420 300 META 0;
+#X text 10 10 VERSION 0.4;
+#X text 10 24 AUTHOR August Black <august@alien.mur.at>;
+#X text 11 39 NAME readanysf~;
+#X restore 10 10 pd META;

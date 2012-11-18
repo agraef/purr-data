@@ -1,0 +1,292 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header expr 3 12 0 18 -204280
+-1 0;
+#X obj 0 118 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 0 418 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 449 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 537 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 127 cnv 17 3 153 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 126 float;
+#X text 98 426 float;
+#X obj 78 426 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 286 cnv 17 3 123 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 285 float;
+#X obj 489 4 expr;
+#X obj 465 21 pddp/pddplink http://wiki.puredata.info/en/expr -text
+pdpedia: expr;
+#X floatatom 87 50 0 0 0 0 - - -;
+#X floatatom 21 96 0 0 0 0 - - -;
+#X msg 21 50 bang;
+#X floatatom 87 96 0 0 0 0 - - -;
+#X floatatom 432 48 0 0 0 0 - - -;
+#X floatatom 432 95 0 0 0 0 - - -;
+#X obj 432 73 expr $f1 * $f2;
+#X floatatom 513 48 0 0 0 0 - - -;
+#X floatatom 185 49 0 0 0 0 - - -;
+#X floatatom 185 96 0 0 0 0 - - -;
+#X obj 185 74 expr sin(2 * 3.14159 * $f1 / 360);
+#X text 98 205 symbol;
+#X text 98 398 symbol;
+#X text 98 242 bang;
+#X obj 87 74 expr 2 + $f1;
+#N canvas 96 45 428 436 expr_and_symbols 0;
+#X floatatom 24 177 0 0 0 0 - - -;
+#X floatatom 24 232 0 0 0 0 - - -;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-expr-array 515 float 3;
+#A 0 -0.0122715 0 0.0122715 0.0245412 0.0368072 0.0490676 0.0613207
+0.0735645 0.0857972 0.0980171 0.110222 0.122411 0.134581 0.14673 0.158858
+0.170962 0.18304 0.19509 0.207111 0.219101 0.231058 0.24298 0.254865
+0.266713 0.278519 0.290284 0.302006 0.313681 0.32531 0.33689 0.348418
+0.359895 0.371317 0.382683 0.393992 0.405241 0.416429 0.427555 0.438616
+0.449611 0.460538 0.471396 0.482183 0.492898 0.503538 0.514102 0.524589
+0.534997 0.545325 0.55557 0.565731 0.575808 0.585797 0.595699 0.605511
+0.615231 0.624859 0.634393 0.643831 0.653172 0.662415 0.671558 0.680601
+0.68954 0.698376 0.707106 0.71573 0.724247 0.732654 0.740951 0.749136
+0.757208 0.765167 0.77301 0.780737 0.788346 0.795836 0.803207 0.810457
+0.817584 0.824589 0.831469 0.838224 0.844853 0.851355 0.857728 0.863972
+0.870087 0.87607 0.881921 0.887639 0.893224 0.898674 0.903989 0.909168
+0.914209 0.919113 0.923879 0.928506 0.932992 0.937339 0.941544 0.945607
+0.949528 0.953306 0.95694 0.96043 0.963776 0.966976 0.970031 0.97294
+0.975702 0.978317 0.980785 0.983105 0.985277 0.987301 0.989176 0.990902
+0.992479 0.993907 0.995185 0.996312 0.99729 0.998118 0.998795 0.999322
+0.999699 0.999925 1 0.999925 0.999699 0.999322 0.998796 0.998118 0.997291
+0.996313 0.995185 0.993907 0.99248 0.990903 0.989177 0.987302 0.985278
+0.983106 0.980786 0.978318 0.975702 0.97294 0.970032 0.966977 0.963776
+0.960431 0.956941 0.953306 0.949529 0.945608 0.941545 0.93734 0.932993
+0.928507 0.92388 0.919115 0.91421 0.909169 0.90399 0.898675 0.893225
+0.88764 0.881922 0.876071 0.870088 0.863974 0.85773 0.851356 0.844855
+0.838226 0.831471 0.82459 0.817586 0.810458 0.803209 0.795838 0.788348
+0.780738 0.773012 0.765168 0.75721 0.749138 0.740952 0.732656 0.724248
+0.715732 0.707108 0.698378 0.689542 0.680602 0.67156 0.662417 0.653174
+0.643833 0.634395 0.624861 0.615233 0.605513 0.595701 0.5858 0.57581
+0.565734 0.555572 0.545327 0.534999 0.524592 0.514105 0.50354 0.4929
+0.482186 0.471399 0.460541 0.449613 0.438618 0.427557 0.416432 0.405243
+0.393994 0.382686 0.371319 0.359897 0.348421 0.336892 0.325313 0.313684
+0.302008 0.290287 0.278522 0.266715 0.254868 0.242983 0.231061 0.219104
+0.207114 0.195093 0.183042 0.170964 0.158861 0.146733 0.134583 0.122413
+0.110225 0.0980197 0.0857999 0.0735671 0.0613233 0.0490703 0.0368098
+0.0245439 0.0122742 2.65359e-06 -0.0122689 -0.0245386 -0.0368045 -0.049065
+-0.061318 -0.0735619 -0.0857946 -0.0980144 -0.110219 -0.122408 -0.134578
+-0.146728 -0.158855 -0.170959 -0.183037 -0.195088 -0.207109 -0.219098
+-0.231055 -0.242977 -0.254863 -0.26671 -0.278517 -0.290282 -0.302003
+-0.313679 -0.325308 -0.336887 -0.348416 -0.359892 -0.371314 -0.382681
+-0.393989 -0.405239 -0.416427 -0.427552 -0.438614 -0.449609 -0.460536
+-0.471394 -0.482181 -0.492896 -0.503536 -0.5141 -0.524587 -0.534995
+-0.545322 -0.555568 -0.565729 -0.575806 -0.585795 -0.595697 -0.605509
+-0.615229 -0.624857 -0.634391 -0.643829 -0.65317 -0.662413 -0.671557
+-0.680599 -0.689538 -0.698374 -0.707104 -0.715729 -0.724245 -0.732652
+-0.740949 -0.749134 -0.757207 -0.765165 -0.773008 -0.780735 -0.788344
+-0.795835 -0.803205 -0.810455 -0.817583 -0.824587 -0.831468 -0.838223
+-0.844852 -0.851353 -0.857727 -0.863971 -0.870085 -0.876068 -0.88192
+-0.887638 -0.893223 -0.898673 -0.903988 -0.909166 -0.914208 -0.919112
+-0.923878 -0.928505 -0.932992 -0.937338 -0.941543 -0.945606 -0.949527
+-0.953305 -0.956939 -0.960429 -0.963775 -0.966976 -0.97003 -0.972939
+-0.975701 -0.978317 -0.980785 -0.983105 -0.985277 -0.987301 -0.989176
+-0.990902 -0.992479 -0.993907 -0.995184 -0.996312 -0.99729 -0.998118
+-0.998795 -0.999322 -0.999699 -0.999925 -1 -0.999925 -0.999699 -0.999323
+-0.998796 -0.998118 -0.997291 -0.996313 -0.995185 -0.993907 -0.99248
+-0.990903 -0.989177 -0.987302 -0.985278 -0.983106 -0.980786 -0.978318
+-0.975703 -0.972941 -0.970032 -0.966978 -0.963777 -0.960432 -0.956942
+-0.953307 -0.94953 -0.945609 -0.941545 -0.93734 -0.932994 -0.928508
+-0.923881 -0.919116 -0.914212 -0.90917 -0.903991 -0.898676 -0.893226
+-0.887642 -0.881923 -0.876072 -0.870089 -0.863975 -0.857731 -0.851358
+-0.844856 -0.838227 -0.831472 -0.824592 -0.817587 -0.81046 -0.80321
+-0.79584 -0.788349 -0.78074 -0.773013 -0.76517 -0.757212 -0.749139
+-0.740954 -0.732657 -0.72425 -0.715734 -0.70711 -0.69838 -0.689544
+-0.680604 -0.671562 -0.662419 -0.653176 -0.643835 -0.634397 -0.624863
+-0.615235 -0.605515 -0.595703 -0.585802 -0.575812 -0.565736 -0.555574
+-0.545329 -0.535002 -0.524594 -0.514107 -0.503543 -0.492902 -0.482188
+-0.471401 -0.460543 -0.449616 -0.438621 -0.42756 -0.416434 -0.405246
+-0.393997 -0.382688 -0.371322 -0.3599 -0.348423 -0.336895 -0.325315
+-0.313687 -0.302011 -0.29029 -0.278525 -0.266718 -0.254871 -0.242985
+-0.231063 -0.219106 -0.207116 -0.195095 -0.183045 -0.170967 -0.158863
+-0.146736 -0.134586 -0.122416 -0.110227 -0.0980223 -0.0858025 -0.0735698
+-0.061326 -0.0490729 -0.0368125 -0.0245465 -0.0122768 -5.30718e-06
+0.0122662;
+#X coords 0 1 515 -1 200 140 1;
+#X restore 24 279 graph;
+#X obj 240 366 loadbang;
+#X msg 240 388 \; expr-array2 sinesum 512 1;
+#X obj 99 156 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 99 176 symbol \$0-expr-array;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 24 204 expr $s2[$f1];
+#X text 21 37 Symbolic arguments like $s1 \, $s2 \, and so on are currently
+used in [expr] to get the name of an array or table. You can also type
+the name of an array directly into [expr] \, but this is limited since
+\, for example \, a dash ("e.g. \, my-table") will get interpreted
+as an operator ("e.g. \, my minus table").;
+#X text 113 219 of the array will be clipped;
+#X text 113 204 index values outside the range;
+#X text 20 116 The following syntax outputs the y-value for the element
+specified by the left inlet.;
+#X text 118 154 click here first;
+#X text 8 2 [expr] Using Symbolic Arguments;
+#X connect 0 0 8 0;
+#X connect 3 0 4 0;
+#X connect 5 0 6 0;
+#X connect 6 0 8 1;
+#X connect 8 0 1 0;
+#X restore 169 397 pd expr_and_symbols;
+#X obj 21 74 expr 1;
+#X text 168 426 - float is the only type of output.;
+#X obj 273 577 pddplink http://crca.ucsd.edu/~syadegar/expr.html;
+#X text 273 563 Expr family of objects by Shahrokh Yadegari;
+#N canvas 91 55 428 501 expr_weirdness 0;
+#X obj 42 98 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 42 143 5 0 0 0 - - -;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 42 119 expr 8 / 6;
+#X obj 42 254 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 42 302 5 0 0 0 - - -;
+#X obj 42 331 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 42 379 5 0 0 0 - - -;
+#X text 19 166 This gets tricky \, because Pd strips unnecessary characters
+from a floating point number. Hence \, if you try to type "8.0 / 6.0"
+in the [expr] object above \, the decimal point and the following zero
+will be removed once you click outside the object (try it).;
+#X text 19 230 There are several work-arounds for this problem:;
+#X text 19 253 1;
+#X text 19 330 2;
+#X obj 42 278 expr (8.0) / (6.0);
+#X text 79 143 "8" and "6" above are interpreted as integers;
+#X text 65 248 Putting parentheses next to the number forces Pd to
+interpret it as a symbol \, so no characters are stripped.;
+#X obj 42 355 expr 8.0/6.0;
+#X text 65 324 Removing the space between the numbers and the operator
+achieves the same thing.;
+#X obj 42 411 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 42 459 5 0 0 0 - - -;
+#X text 19 410 3;
+#X text 65 410 Using the "float" function makes the float type explicit.
+;
+#X obj 42 435 expr float(8) / 6;
+#X text 7 2 [expr] Weirdness with Floats vs. Ints;
+#X text 19 38 Numbers used in [expr~] follow the Max/MSP paradigm \,
+where numbers without a decimal point are interpreted as integers.
+This can be the source of some confusion in Pd \, which uses floating
+point numbers exclusively.;
+#X obj 22 576 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 22 618 5 0 0 0 - - -;
+#X text 19 486 Since float has priority over int \, the integer in
+example 3 is automatically converted to a float. Likewise \, using
+"6" instead of "6.0" in examples 1 and 2 would still give a floating
+point result.;
+#X text 19 539 These details come in handy if you want to use an integer
+to specify a large number:;
+#X text 166 595 What happens if you put a space;
+#X obj 22 596 expr 123456789%10;
+#X text 167 610 between the "%" sign and these integers?;
+#X text 19 704 Unfortunately \, [expr] doesn't understand scientific
+notation. But even if it did \, a float will lose precision in this
+calculation:;
+#X text 165 625 (Scroll down for the answer);
+#X obj 22 747 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 22 789 5 0 0 0 - - -;
+#X obj 22 767 expr int(123456789.0)%10;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 12 0;
+#X connect 6 0 15 0;
+#X connect 12 0 5 0;
+#X connect 15 0 7 0;
+#X connect 17 0 21 0;
+#X connect 21 0 18 0;
+#X connect 24 0 29 0;
+#X connect 29 0 25 0;
+#X connect 33 0 35 0;
+#X connect 35 0 34 0;
+#X restore 275 546 pd expr_weirdness;
+#X text 11 24 expression evaluation of control data;
+#X text 98 269 list;
+#X msg 395 48 3 4;
+#X text 183 350 1) a dollar-sign ($);
+#X text 166 285 - an extra inlet is added for each additional dollar-sign
+variable specified as a creation argument ($v2 \, $f3 \, etc.). Each
+inlet accepts only one of the following: signal \, float \, or symbol.
+There may be at most nine variables in one [expr~] object. Each variable
+consists of:;
+#X text 183 363 2) "v" \, "f" \, "i" or "s" (signal \, float \, integer
+or symbol);
+#X text 183 376 3) an inlet number (Note: inlet numbers start from
+one);
+#X text 168 205 - if the variable $s1 is used as an argument \, it
+will be replaced by the incoming symbol. (If $f1 \, $i1 \, and $s1
+are not used as arguments \, the symbol will trigger the output.);
+#X text 168 126 - if the variable $f1 (float) or $i1 (integer) is specified
+as an argument \, it will be replaced in the expression by the incoming
+value. The expression will then be evaluated and output. (Notes: You
+cannot use $f1 and $i1 in the same [expr] object. If $f1 \, $i1 \,
+and $s1 are not used as arguments \, an incoming float will trigger
+the output.);
+#X text 168 243 - a bang will evaluate the expression with the last
+received values and trigger the output.;
+#X text 167 463 - the arguments themselves form the expression to evaluate.
+They may be floats or symbols \, including the special variables noted
+above ($i1 \, $f2 \, etc.). The operators and functions available for
+use in [expr~] are listed below:;
+#X text 168 269 - a list will be distributed to the inlets of [expr].
+;
+#X obj 170 516 pddp/pddplink all_about_expr_functions.pd -text all_about_expr_operators_and_functions
+;
+#X text 80 463 n) float;
+#X text 98 475 symbol atom;
+#X text 98 489 comma;
+#X text 98 502 semicolon;
+#X obj 101 546 pddp/pddplink all_about_expr_if.pd -text expr_if;
+#X obj 101 561 pddp/pddplink all_about_expr_and_value.pd -text expr_and_value
+;
+#X obj 101 578 pddp/pddplink all_about_expr_multiline.pd -text expr_multiline
+;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#N canvas 52 244 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 145 AUTHOR Shahrokh Yadegari;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd 0.35 test 26 and expr*
+0.4. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control nonlocal trigonometry;
+#X text 12 65 INLET_0 float bang symbol list;
+#X text 12 85 INLET_N float symbol;
+#X text 12 105 OUTLET_N float;
+#X text 12 45 DESCRIPTION expression evaluation of control data;
+#X text 12 185 RELEASE_DATE 1989;
+#X text 12 25 LICENSE GPL v2;
+#X restore 500 598 pd META;
+#N canvas 102 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 expr~;
+#X obj 62 43 fexpr~;
+#X text 7 2 [expr] Related Objects;
+#X restore 101 598 pd Related_objects;
+#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 13 0 27 0;
+#X connect 15 0 29 0;
+#X connect 17 0 19 0;
+#X connect 19 0 18 0;
+#X connect 20 0 19 1;
+#X connect 21 0 23 0;
+#X connect 23 0 22 0;
+#X connect 27 0 16 0;
+#X connect 29 0 14 0;
+#X connect 36 0 19 0;

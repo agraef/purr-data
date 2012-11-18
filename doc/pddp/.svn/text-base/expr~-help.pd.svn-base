@@ -1,0 +1,199 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header expr~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 185 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 145 AUTHOR Shahrokh Yadegari;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd 0.35 test 26 and expr*
+0.4. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS signal nonlocal trigonometry;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_N float symbol signal;
+#X text 12 105 OUTLET_N signal;
+#X text 12 45 DESCRIPTION expression evaluation of signal data (vector)
+;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~syadegar/expr.html;
+#X text 12 185 RELEASE_DATE 1999;
+#X text 12 25 LICENSE GPL v2;
+#X restore 500 597 pd META;
+#X obj 0 368 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 405 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 500 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 105 482 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 61 42 fexpr~;
+#X obj 21 42 expr;
+#X text 7 1 [expr~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 194 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 377 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 235 cnv 17 3 125 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 252 float;
+#X text 98 343 symbol;
+#X obj 273 572 pddplink http://crca.ucsd.edu/~syadegar/expr.html;
+#X text 273 555 Expr family of objects by Shahrokh Yadegari;
+#X obj 483 3 expr~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/expr~ -text
+pdpedia: expr~;
+#X obj 18 159 print~;
+#X msg 31 138 bang;
+#X obj 18 94 sig~ 440;
+#X floatatom 93 94 0 0 0 0 - - -;
+#X floatatom 18 71 0 0 0 0 - - -;
+#X obj 18 117 expr~ $v1*$f2;
+#X obj 163 149 print~;
+#X msg 175 128 bang;
+#X floatatom 163 84 0 0 0 0 - - -;
+#X floatatom 238 84 0 0 0 0 - - -;
+#X floatatom 363 109 0 0 0 0 - - -;
+#X floatatom 307 84 0 0 0 0 - - -;
+#X obj 307 109 osc~;
+#X text 16 52 vector times scalar;
+#X text 161 53 vector;
+#X obj 306 159 dac~;
+#X text 304 54 frequency;
+#X obj 163 107 expr~ $v1*$v2;
+#X obj 306 130 expr~ $v1*$f2/128;
+#X text 98 193 signal;
+#X text 98 235 signal;
+#X obj 366 78 hsl 50 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 98 377 signal;
+#N canvas 117 43 428 483 More_expr~_examples 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X floatatom 237 101 5 0 0 0 - - -;
+#X obj 24 150 tabsend~ a1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array a1 64 float 0;
+#X coords 0 1 63 -1 100 70 1;
+#X restore 25 192 graph;
+#X obj 24 127 expr~ max(min($v1 \, $f2/10) \, -$f2/10);
+#X text 22 40 A simple limiter example;
+#X obj 24 103 osc~ 2756.25;
+#X text 152 66 Move the value below between 0 and 10;
+#X text 156 81 to change the limiter threshold;
+#X obj 25 344 tabsend~ a2;
+#X obj 167 344 tabsend~ a3;
+#X obj 25 275 osc~ 2756.25;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array a2 64 float 1;
+#A 0 0.549579 0.537788 0.441331 0.271876 0.0531549 -0.182367 -0.398338
+-0.56015 -0.640495 -0.623948 -0.509821 -0.31276 -0.0608986 0.208152
+0.45295 0.634629 0.72309 0.702001 0.571703 0.349599 0.0678645 -0.231227
+-0.501668 -0.700852 -0.796298 -0.770949 -0.626166 -0.381895 -0.0739361
+0.251307 0.543884 0.757993 0.859183 0.829905 0.672509 0.409237 0.0790617
+-0.268115 -0.579036 -0.805301 -0.910919 -0.87807 -0.710105 -0.431258
+-0.0831469 0.281461 0.606691 0.842151 0.950817 0.914845 0.738504 0.447701
+0.0861703 -0.291136 -0.626444 -0.868064 -0.978385 -0.939756 -0.757318
+-0.458317 -0.0880561 0.297047 0.638088 0.882729;
+#X coords 0 1 63 -1 100 70 1;
+#X restore 25 394 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array a3 64 float 0;
+#X coords 0 1 63 -1 100 70 1;
+#X restore 147 394 graph;
+#X obj 167 275 osc~ 100;
+#X obj 25 303 expr~ $v1*$v2 \; if ($v2 > 0 \, 0 \, $v1*$v2);
+#X text 8 2 [expr~] More examples;
+#X connect 1 0 4 1;
+#X connect 4 0 2 0;
+#X connect 6 0 4 0;
+#X connect 11 0 15 0;
+#X connect 14 0 15 1;
+#X connect 15 0 9 0;
+#X connect 15 1 10 0;
+#X restore 101 569 pd More_expr~_examples;
+#N canvas 56 89 428 436 expr_and_symbols 0;
+#X floatatom 24 177 0 0 0 0 - - -;
+#X floatatom 24 232 0 0 0 0 - - -;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-expr-array 515 float 2;
+#X coords 0 1 515 -1 200 140 1;
+#X restore 24 279 graph;
+#X obj 240 338 loadbang;
+#X obj 99 156 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 99 176 symbol \$0-expr-array;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 24 204 expr $s2[$f1];
+#X text 113 219 of the array will be clipped;
+#X text 113 204 index values outside the range;
+#X text 20 116 The following syntax outputs the y-value for the element
+specified by the left inlet.;
+#X text 118 154 click here first;
+#X text 8 2 [expr~] Using Symbolic Arguments;
+#X obj 240 362 f \$0;
+#X msg 240 388 \; \$1-expr-array sinesum 512 1;
+#X text 21 37 Symbolic arguments like $s1 \, $s2 \, and so on are currently
+used in [expr] \, [expr~] \, and [fexpr~] to get the name of an array
+or table. You can also type the name of an array directly into [expr]
+\, but this is limited since \, for example \, a dash (e.g. \, "my-table")
+will get interpreted as an operator (e.g. \, "my minus table").;
+#X connect 0 0 7 0;
+#X connect 3 0 13 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 1;
+#X connect 7 0 1 0;
+#X connect 13 0 14 0;
+#X restore 170 343 pd expr_and_symbols;
+#X text 11 23 expression evaluation of signal data (vector);
+#X text 384 93 amplitude;
+#X text 183 298 1) a dollar-sign ($);
+#X text 166 234 - an extra inlet is added for each additional dollar-sign
+variable specified as a creation argument ($v2 \, $f3 \, etc.). Each
+inlet accepts only one of the following: signal \, float \, or symbol.
+There may be at most nine variables in one [expr~] object. Each variable
+consists of:;
+#X text 168 193 - the left inlet of [expr~] only accepts signals (i.e.
+\, $f1 and $s1 variables will not work). Use the variable $v1 as a
+creation argument to use this signal in an expression.;
+#X text 183 311 2) "v" \, "f" \, "i" or "s" (signal \, float \, integer
+or symbol);
+#X text 183 324 3) an inlet number (Note: inlet numbers start from
+one);
+#X text 167 422 - the arguments themselves form the expression to evaluate.
+They may be floats or symbols \, including the special variables noted
+above ($v1 \, $f2 \, etc.). Follow the link below for all availabel
+operators and functions in [expr~]:;
+#X obj 170 476 pddp/pddplink all_about_expr_functions.pd -text all_about_expr_operators_and_functions
+;
+#X text 80 422 n) float;
+#X text 98 434 symbol atom;
+#X text 98 448 comma;
+#X text 98 461 semicolon;
+#X obj 101 506 pddp/pddplink all_about_expr_if.pd -text expr_if;
+#X obj 101 526 pddp/pddplink all_about_expr_and_value.pd -text expr_and_value
+;
+#X obj 101 546 pddp/pddplink all_about_expr_multiline.pd -text expr_multiline
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 18 0 17 0;
+#X connect 19 0 22 0;
+#X connect 20 0 22 1;
+#X connect 21 0 19 0;
+#X connect 22 0 17 0;
+#X connect 24 0 23 0;
+#X connect 25 0 34 0;
+#X connect 26 0 34 1;
+#X connect 28 0 29 0;
+#X connect 29 0 35 0;
+#X connect 34 0 23 0;
+#X connect 35 0 32 0;
+#X connect 35 0 32 1;
+#X connect 38 0 35 1;
+#X connect 38 0 27 0;

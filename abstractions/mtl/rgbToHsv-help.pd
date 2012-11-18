@@ -1,0 +1,31 @@
+#N canvas 659 100 426 439 10;
+#X text 19 15 Description: Convert float RGB or 8bit RGB to float HSV.
+;
+#X text 59 298 outlet: float HSV;
+#X text 181 319 outlet: float HSV;
+#X obj 185 209 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 244 209 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 302 210 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 237 236 t b f;
+#X obj 291 237 t b f;
+#X obj 185 268 pack f f f;
+#X text 181 187 8bit_RGB input;
+#X obj 51 280 mtl/rgbToHsv;
+#X obj 51 341 mtl/hsv;
+#X obj 185 298 mtl/rgbToHsv int;
+#X text 20 36 tags: conversion;
+#X obj 51 89 mtl/colorGrid;
+#X connect 3 0 8 0;
+#X connect 4 0 6 0;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 6 1 8 1;
+#X connect 7 0 8 0;
+#X connect 7 1 8 2;
+#X connect 8 0 12 0;
+#X connect 10 0 11 0;
+#X connect 12 0 11 0;
+#X connect 14 0 10 0;

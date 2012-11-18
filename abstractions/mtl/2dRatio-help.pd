@@ -1,0 +1,19 @@
+#N canvas 674 84 439 246 10;
+#X msg 22 89 640 480;
+#X msg 78 89 320 240;
+#X msg 134 89 256 256;
+#X obj 22 160 print;
+#X obj 75 162 /;
+#X floatatom 75 191 5 0 0 0 - - -;
+#X obj 22 127 mtl/2dRatio;
+#X obj 14 12 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 19 54 tags: 2d;
+#X text 20 14 Description: Returns the ratio of two values between
+each other.;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 4 0 5 0;
+#X connect 6 0 3 0;
+#X connect 6 0 4 0;

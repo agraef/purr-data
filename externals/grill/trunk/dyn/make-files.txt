@@ -1,0 +1,10 @@
+NAME=dyn
+SRCDIR=.
+
+SRCS= \
+	dyn_api.cpp dyn_base.cpp dyn_conn.cpp dyn_create.cpp \
+	dyn_listen.cpp dyn_main.cpp dyn_message.cpp dyn_object.cpp \
+	dyn_patchable.cpp dyn_patcher.cpp dyn_proxy.cpp dyn_send.cpp \
+	dyn_text.cpp
+PHDRS=	dyn.h
+IHDRS= dyn_data.h dyn_pd.h dyn_proto.h dyn_proxy.h

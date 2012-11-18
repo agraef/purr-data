@@ -1,0 +1,22 @@
+#N canvas 273 116 279 272 10;
+#X obj 42 72 route bang;
+#X obj 42 44 inlet;
+#X text 106 232 1997 by Karlheinz
+Essl;
+#X obj 42 204 outlet;
+#X obj 107 205 outlet;
+#X msg 107 136 stop;
+#X obj 158 42 inlet;
+#X obj 107 177 delay \$1;
+#X obj 107 106 b;
+#X obj 42 105 t b b b;
+#X connect 0 0 9 0;
+#X connect 0 1 8 0;
+#X connect 1 0 0 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 1;
+#X connect 7 0 4 0;
+#X connect 8 0 5 0;
+#X connect 9 0 3 0;
+#X connect 9 1 7 0;
+#X connect 9 2 5 0;

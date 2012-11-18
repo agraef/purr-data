@@ -1,0 +1,8 @@
+#N canvas 38 77 230 184 10;
+#X obj 36 101 outlet;
+#X obj 36 46 inlet;
+#X text 60 102 1998 by Karlheinz
+Essl;
+#X obj 36 73 expr 60000/$f1;
+#X connect 1 0 3 0;
+#X connect 3 0 0 0;

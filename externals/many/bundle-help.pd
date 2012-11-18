@@ -1,0 +1,7 @@
+#N canvas 153 160 450 300 10;
+#X text 47 138 inlet0: routed to each instance based on instance number
+;
+#X text 47 158 inlet1: connected directly to each instance;
+#X text 47 218 outlet1: connected directly to each instance;
+#X text 47 198 outlet0: connected directly to each instance;
+#X obj 91 74 bundle 5 instances-template 1 2 3 4 5 6 7;

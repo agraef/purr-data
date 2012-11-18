@@ -1,0 +1,2 @@
+#N canvas 191 22 450 300 10;
+#X obj 157 89 xbee_test /dev/tty.Bluetooth-Modem;

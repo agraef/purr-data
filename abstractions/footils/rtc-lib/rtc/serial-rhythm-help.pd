@@ -1,0 +1,30 @@
+#N canvas 443 269 500 398 10;
+#X floatatom 129 223 4 0 0 3 row_index - -;
+#X floatatom 214 225 4 0 0 3 ED - -;
+#X floatatom 100 171 4 0 0 2 min_ED - -;
+#X floatatom 157 170 4 0 0 2 max_ED - -;
+#X floatatom 214 171 4 0 0 2 steps - -;
+#X msg 84 118 alea-rhythm;
+#X msg 170 118 brown-rhythm;
+#X msg 269 118 sneak-rhythm;
+#X text 19 69 Serial permutation (i.e. with repetition check) of entry
+delays (ED) from a geometrical row defined by a min. ED \, a max. ED
+and a certain number of ED-values.;
+#X text 19 36 serial-rhythm;
+#X text 19 118 see also:;
+#X obj 44 155 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+0 1;
+#X obj 44 196 serial-rhythm 100 1000 12;
+#X msg 44 227 60;
+#X text 194 50 vs. 3.1;
+#X msg 236 23 Rhythm-Generators;
+#X obj 44 255 QT-PercPlayer;
+#X text 25 338 1993-2004 by Karlheinz Essl;
+#X connect 2 0 12 1;
+#X connect 3 0 12 2;
+#X connect 4 0 12 3;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 12 1 0 0;
+#X connect 12 2 1 0;
+#X connect 13 0 16 0;

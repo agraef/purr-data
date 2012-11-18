@@ -1,0 +1,20 @@
+Requirements
+------------
+
+This object reuires
+
+libpq >= 7.4
+PD >= 0.37
+
+Installation
+------------
+
+Modify the Makefile so that PDDIR gives the base directory of your PD installation, and INCLUDE provides the path to your PostgreSQL headers.
+
+Then from a shell prompt type:
+
+make <option>
+sudo make install
+
+Where <option> is either 'pd_linux' or 'pd_darwin' (without the quotes).
+

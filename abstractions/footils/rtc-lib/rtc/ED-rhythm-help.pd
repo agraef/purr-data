@@ -1,0 +1,73 @@
+#N canvas 137 65 669 548 10;
+#X obj 89 328 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 89 256 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X text 43 29 ED-rhythm;
+#X text 40 146 see also:;
+#X obj 438 210 loadbang;
+#X msg 438 237 500 166 166 166 250 250;
+#X msg 107 145 alea-rhythm;
+#X msg 289 145 brown-rhythm;
+#X msg 193 145 serial-rhythm;
+#X msg 388 145 sneak-rhythm;
+#X obj 159 329 bng 15 250 50 0 empty empty supply_exhausted 0 26 0
+8 -262144 -1 -1;
+#X floatatom 266 332 4 0 0 3 ED - -;
+#X floatatom 113 329 4 0 0 3 index - -;
+#X msg 438 266 600 400 200;
+#X text 532 268 ED lists;
+#X text 237 414 1995-2004 by Karlheinz Essl;
+#X text 188 41 vs. 1.2;
+#X obj 89 294 ED-rhythm 3;
+#X obj 89 398 QT-PercPlayer;
+#X text 43 63 Creates a rhythm by selecting entry delays supplied by
+a list of entry delays which has to be sent to the rightmost inlet.
+The selection is achieved by one of the possible selection mechanisms
+alea (=1) \, series (=2) \, sequence (=3) and rota ==4) which is the
+argument of this function.;
+#X floatatom 158 270 5 0 0 0 - - -;
+#X msg 89 365 70;
+#X text 121 182 selection principle (1-4);
+#N canvas 556 269 497 418 sel_princ 0;
+#X msg 231 228 1 alea;
+#X msg 231 247 2 series;
+#X msg 231 267 3 sequence;
+#X msg 231 289 4 rota;
+#X obj 231 318 list split 1;
+#X obj 231 373 outlet;
+#X obj 112 61 loadbang;
+#X obj 112 192 select 1 2 3 4;
+#X obj 112 171 + 1;
+#X obj 112 123 hradio 15 1 0 4 empty empty empty 0 -6 0 8 -262144 -1
+-1 1;
+#X msg 112 82 2;
+#X symbolatom 108 143 10 0 0 0 - - -;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 1 11 0;
+#X connect 6 0 10 0;
+#X connect 7 0 0 0;
+#X connect 7 1 1 0;
+#X connect 7 2 2 0;
+#X connect 7 3 3 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X coords 0 -1 1 1 90 65 1 100 100;
+#X restore 159 203 pd sel_princ;
+#X connect 0 0 21 0;
+#X connect 1 0 17 0;
+#X connect 4 0 5 0;
+#X connect 5 0 17 2;
+#X connect 13 0 17 2;
+#X connect 17 0 0 0;
+#X connect 17 1 12 0;
+#X connect 17 2 10 0;
+#X connect 17 3 11 0;
+#X connect 21 0 18 0;
+#X connect 23 0 17 1;
+#X connect 23 0 20 0;

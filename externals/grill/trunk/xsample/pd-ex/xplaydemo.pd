@@ -1,0 +1,79 @@
+#N canvas 126 119 739 716 12;
+#N canvas 0 0 450 300 graph2 0;
+#X array loop1 220000 float 0;
+#X coords 0 0.5 219999 -0.5 200 140 1;
+#X restore 449 285 graph;
+#N canvas 0 0 450 300 graph3 0;
+#X array loop2 220000 float 0;
+#X coords 0 0.5 219999 -0.5 200 140 1;
+#X restore 450 429 graph;
+#X obj 131 309 xplay~ loop1;
+#X obj 151 459 xplay~ loop2;
+#X obj 32 697 dac~;
+#X msg 16 240 start;
+#X msg 15 267 stop;
+#N canvas 0 0 450 300 graph1 0;
+#X array loop3 220000 float 0;
+#X coords 0 0.5 219999 -0.5 200 140 1;
+#X restore 450 575 graph;
+#X obj 242 623 xplay~ loop3;
+#X msg 103 232 print;
+#X msg 161 232 help;
+#X msg 13 364 start;
+#X msg 13 390 stop;
+#X msg 9 498 start;
+#X msg 11 524 stop;
+#X obj 180 136 xrecord~ loop1;
+#X msg 126 60 set loop2;
+#X msg 42 60 set loop1;
+#X msg 48 108 start;
+#X msg 49 136 stop;
+#X msg 209 60 set loop3;
+#X msg 305 57 append 0;
+#X obj 306 33 loadbang;
+#X text 5 -59 Demo of xplay~ to play synchronized loops;
+#X text 40 43 Click to choose loop to record;
+#X obj 333 95 adc~;
+#X obj 289 264 *~ 220000;
+#X obj 290 226 phasor~ 0.2;
+#X text 156 692 each loop array holds 220000 samples recorded at 44khz
+;
+#X text 5 91 record;
+#X text 78 -34 Record something in each of the three loop arrays. Choose
+(set) the loop to record \, then press start. There's room for up to
+5 seconds in each loop.;
+#X text 17 183 After you have recorded something into each loop \,
+you can play them selectively using the start/stop controls;
+#X text 389 224 <= this generates the position signal that xplay requires
+at the proper rate for this sample size.;
+#X text 379 48 <= We record from the beginning of the array each time.
+;
+#X text 370 96 <= Audio will be recorded from your sound card input
+(e.g. microphone);
+#X text 350 -60 (by Glenn Meader);
+#X connect 2 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 4 1;
+#X connect 3 0 4 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 8 0 4 0;
+#X connect 8 0 4 1;
+#X connect 9 0 2 0;
+#X connect 10 0 2 0;
+#X connect 11 0 3 0;
+#X connect 12 0 3 0;
+#X connect 13 0 8 0;
+#X connect 14 0 8 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 0;
+#X connect 18 0 15 0;
+#X connect 19 0 15 0;
+#X connect 20 0 15 0;
+#X connect 21 0 15 0;
+#X connect 22 0 21 0;
+#X connect 25 0 15 0;
+#X connect 26 0 2 0;
+#X connect 26 0 3 0;
+#X connect 26 0 8 0;
+#X connect 27 0 26 0;

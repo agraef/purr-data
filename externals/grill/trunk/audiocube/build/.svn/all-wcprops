@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3713/trunk/audiocube/build
+END
+gnumake-mac-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/ext/!svn/ver/3704/trunk/audiocube/build/gnumake-mac-gcc.inc
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/3704/trunk/audiocube/build/config-win.def
+END
+config-mac.def
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/3704/trunk/audiocube/build/config-mac.def
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/3713/trunk/audiocube/build/nmake-win-msvc.inc
+END

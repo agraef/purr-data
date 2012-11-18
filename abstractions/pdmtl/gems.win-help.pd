@@ -1,0 +1,95 @@
+#N canvas 387 66 883 803 10;
+#X obj 7 29 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1;
+#X text 6 -22 Description: Controls the Gem window.;
+#X obj 7 70 print settings;
+#X text 7 376 Clicking with the RIGHT mouse button in the Gem window
+will move the camera.;
+#X text 7 411 Double clicking with the RIGHT mouse button will reset
+the camera.;
+#X text 439 72 Outlet_1: Outputs the settings made to the Gem window.
+NOTE that this outlet is COMMON to all gems.win.;
+#X obj 7 215 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 26 28 Create a 320x240 Gem window with a border.;
+#X text 448 518 Once you create a gems.light object \, lighting is
+automatically turned on.;
+#X text 6 279 WARNING: There is a 200 ms delay when closing a Gem window
+to make sure PD & Gem do not crash. If you try to destroy and destroy
+the window too quickly some commands will be ingored for your own protection.
+;
+#X text 448 496 -- LIGHTING --;
+#X text 464 197 @border: set the Gem window border presence.;
+#X text 464 157 @offset: sets the Gem window offset (position).;
+#X text 464 138 @dimen: sets the Gem window dimension.;
+#X text 442 116 Arguments (use none \, some or all of these):;
+#X obj 7 112 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 26 111 Create a 320x240 Gem window without a border.;
+#X text 464 245 Special mode: you can create a gems.win with two float
+arguments that will be used as the @dimen (dimension) values like this:
+;
+#X obj 450 434 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 447 400 You can connect a toggle to the right outlet to get
+the state of the window.;
+#X text 5 -7 Flags: @rguments;
+#X text 464 176 @fps or @frame: sets the Gem window framerate (frame).
+;
+#X text 448 378 -- GEM WINDOW STATE --;
+#X msg 7 174 0;
+#X obj 7 153 flow.prepend set;
+#X text 27 215 More arguments...;
+#X text 7 446 Double clicking with the MIDDLE mouse button will destroy
+the window.;
+#X text 438 19 Inlet_1 (float): 1=Create and render. 0=Destroy. All
+of the standard Gem window commands can still be used (see gemwin's
+help for more information).;
+#X text 464 217 @anti-aliasing or @FSAA: sets anti-aliasing level;
+#X obj 467 297 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 5 499 -- KEYBOARD CONTROL --;
+#X text 6 353 -- MOUSE CONTROLS (for Linux and Windows) --;
+#X text 7 553 F12 will destroy the window;
+#X text 8 523 F11 will create the window (if there are many gems.win
+\, it will select the settings of the first one created).;
+#X text 9 586 -- VALUES --;
+#X obj 17 650 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 16 678 flow.value.changes gems.win/fps;
+#X obj 17 624 flow.value.changes gems.win/render;
+#X floatatom 16 705 5 0 0 0 - - -;
+#X floatatom 277 650 5 0 0 0 - - -;
+#X obj 277 622 flow.value.changes gems.win/width;
+#X floatatom 277 705 5 0 0 0 - - -;
+#X obj 277 677 flow.value.changes gems.win/height;
+#X obj 508 648 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 508 619 flow.value.changes gems.win/lighting;
+#X obj 467 317 gems.win 640 480;
+#X obj 7 49 gems.win @dimen 320 240 @cursor 0;
+#X obj 7 132 gems.win @dimen 320 240 @border 0;
+#X obj 450 454 gems.win 640 480;
+#X obj 8 234 gems.win @dimen 200 200 @border 0 @offset 100 100 @FSAA
+0 @fps 20 @lighting 1;
+#X obj 202 581 s gems.win/force_render;
+#X text 351 581 <- You can force the rendering of the gemwin by sending
+a bang here.;
+#X connect 0 0 46 0;
+#X connect 6 0 49 0;
+#X connect 15 0 47 0;
+#X connect 18 0 48 0;
+#X connect 24 0 23 0;
+#X connect 29 0 45 0;
+#X connect 36 0 38 0;
+#X connect 36 1 38 0;
+#X connect 37 0 35 0;
+#X connect 37 1 35 0;
+#X connect 40 0 39 0;
+#X connect 40 1 39 0;
+#X connect 42 0 41 0;
+#X connect 42 1 41 0;
+#X connect 44 0 43 0;
+#X connect 44 1 43 0;
+#X connect 46 0 2 0;
+#X connect 47 0 24 0;
+#X connect 48 1 18 0;

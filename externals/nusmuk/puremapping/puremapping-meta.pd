@@ -1,0 +1,12 @@
+#N canvas 10 10 810 371 10;
+#X text 10 50 AUTHOR Cyrille Henry and Hans-Christoph Steiner;
+#X text 11 204 LICENSE GNU GPL;
+#X text 10 30 NAME puremapping;
+#X text 9 71 DESCRIPTION Pure mapping is an objects' collection for
+Pure Data. These objects are based on the "Mapping" collection developed
+with HC Steiner (which was partly based on La-kitchen lib). But contrary
+to the "Mapping" Lib \, the "Pure Mapping" objects do not have any
+dependency. So \, they easily work with Pd Vanilla. These objects were
+made to facilitate the use of sensors within Pure Data and to create
+complex relations between input and output of a dynamic system.;
+#X text 10 224 VERSION 1.1;

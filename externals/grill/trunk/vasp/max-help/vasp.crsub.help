@@ -1,0 +1,12 @@
+max v2;
+#N vpatcher 258 153 663 391;
+#P newex 238 90 45 196617 vasp.c!-;
+#P comment 49 188 300 196617 differences in lengths are adjusted to smaller vector of each pair;
+#P comment 49 142 118 196617 c \, d ... right operand;
+#P comment 49 127 118 196617 a \, b ... left operand;
+#P comment 49 83 98 196617 e+if=(c+id)-(a+ib);
+#P comment 49 112 102 196617 e \, f ... target buffers;
+#P comment 49 44 89 196622 vasp.c!-;
+#P comment 49 172 302 196617 vasp.c- needs 2 vectors per operand which are treated as pairs;
+#P comment 49 67 147 196617 complex inverse substraction;
+#P pop;

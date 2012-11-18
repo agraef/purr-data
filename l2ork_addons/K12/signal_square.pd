@@ -1,0 +1,28 @@
+#N canvas 318 66 418 335 10;
+#X declare -lib hexloader;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_square.png;
+#X obj 141 102 loadbang;
+#X obj 31 184 inlet;
+#X obj 32 352 outlet~;
+#X obj 31 259 phasor~;
+#X obj 307 58 import hexloader;
+#X obj 32 282 >~ 0.5;
+#X obj 32 305 *~ 2;
+#X obj 32 328 -~ 1;
+#X obj 100 52 preset_node k12;
+#X obj 100 209 nbx 5 19 -1e+37 1e+37 0 0 \$0-s-null \$0-r-null empty
+0 -8 0 16 -262144 -1 -1 0 256 1;
+#X msg 141 125 open @pd_extra/K12/objects/signal_square.png;
+#X obj 31 236 mtof;
+#X connect 1 0 11 0;
+#X connect 2 0 10 0;
+#X connect 4 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 9 0 10 0;
+#X connect 10 0 9 0;
+#X connect 10 0 12 0;
+#X connect 11 0 0 0;
+#X connect 12 0 4 0;
+#X coords 0 -1 1 1 89 89 2 96 173;

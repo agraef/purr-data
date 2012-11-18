@@ -1,0 +1,5 @@
+#N struct 1015.advslider float a;
+#N canvas 0 22 450 300 10;
+#X floatatom 275 273 5 0 0 0 - - -;
+#X obj 275 41 ds-slider;
+#X connect 1 0 0 0;

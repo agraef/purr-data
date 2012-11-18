@@ -1,0 +1,56 @@
+#N canvas 283 264 634 420 10;
+#N canvas 435 477 293 176 show 0;
+#X obj 77 36 inlet;
+#X obj 77 109 outlet;
+#X obj 77 60 list prepend set;
+#X obj 77 85 list trim;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X restore 105 331 pd show;
+#X msg 105 351;
+#X msg 105 194 bang;
+#X msg 150 194 seed 123;
+#X floatatom 148 243 5 0 0 2 range - -;
+#X floatatom 191 243 5 0 0 2 length - -;
+#X text 63 26 [list-random];
+#X obj 105 265 list-random 5;
+#X text 101 119 A seed-message is used to seed the random number generator.
+;
+#X obj 172 140 random;
+#X text 103 141 Also see:;
+#X text 103 55 generates a list of pseudorandom integers from 0 to
+N-1 \, where N is the first creation argument. The second creation
+argument specifies the length of the list (minimum and default length
+is 1).;
+#N canvas 435 477 293 176 show 0;
+#X obj 77 36 inlet;
+#X obj 77 109 outlet;
+#X obj 77 60 list prepend set;
+#X obj 77 85 list trim;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X restore 289 331 pd show;
+#X msg 289 351;
+#X msg 289 194 bang;
+#X msg 334 194 seed 123;
+#X floatatom 346 243 5 0 0 2 range - -;
+#X floatatom 403 243 5 0 0 2 length - -;
+#X obj 289 265 list-random 10 20;
+#X msg 114 307 bang;
+#X msg 297 308 bang;
+#X connect 0 0 1 0;
+#X connect 2 0 7 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 1;
+#X connect 5 0 7 2;
+#X connect 7 0 0 0;
+#X connect 12 0 13 0;
+#X connect 14 0 18 0;
+#X connect 15 0 18 0;
+#X connect 16 0 18 1;
+#X connect 17 0 18 2;
+#X connect 18 0 12 0;
+#X connect 19 0 0 0;
+#X connect 20 0 12 0;

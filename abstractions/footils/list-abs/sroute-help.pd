@@ -1,0 +1,31 @@
+#N canvas 0 0 658 332 10;
+#X obj 127 156 sroute 1;
+#X obj 178 124 hradio 15 1 0 3 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X msg 127 72 1 1 1;
+#X msg 78 72 0 0 0;
+#X msg 176 72 2 2 2;
+#X text 84 29 sroute: settable route;
+#X obj 444 126 hradio 15 1 0 3 empty empty bad 0 -6 0 8 -262144 -1
+-1 0;
+#X symbolatom 414 96 10 0 0 2 good - -;
+#X obj 127 235 print SR1;
+#X obj 335 235 print SR2;
+#X msg 351 99 b b b;
+#X msg 335 72 a a a;
+#X text 401 61 type "a" or "b";
+#X obj 335 156 sroute a;
+#X obj 178 207 print SR1-miss;
+#X obj 386 203 print SR2-miss;
+#X connect 0 0 8 0;
+#X connect 0 1 14 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 6 0 13 1;
+#X connect 7 0 13 1;
+#X connect 10 0 13 0;
+#X connect 11 0 13 0;
+#X connect 13 0 9 0;
+#X connect 13 1 15 0;

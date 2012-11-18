@@ -1,0 +1,15 @@
+
+- figure out how Pd-extended is going to load this stuff in order to maintain
+  maximum capatibility
+
+- replace pd-extended's x_gui.c with this e_gfxstub.c
+
+- replace pd-extended's d_math.c with this e_sqrt.c
+
+- move this d_math.h to pd-extended's pd/src
+
+- move relevant help patches from pd-extended's pd/doc/5.reference to here
+
+- move relevent help patches from doc/pddp to here
+
+- fix objects so if instantiated with vanilla/bng they retain the namespace prefix

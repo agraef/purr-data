@@ -1,0 +1,34 @@
+#N canvas 731 31 478 597 10;
+#X text 127 258 Inlet 2 changes the lower scaling bound;
+#X text 222 288 Inlet 3 changes the upper scaling bound;
+#X floatatom 128 273 5 0 0 0 - - -;
+#X floatatom 226 304 5 0 0 0 - - -;
+#X floatatom 31 253 5 0 0 0 - - -;
+#X floatatom 31 363 5 0 0 0 - - -;
+#X text 29 236 Inlet 1 is the standard commun input;
+#X text 340 552 2008 Luke Iannini;
+#X text 2 573 Originally based on [commun-scale] by Frank Barknecht
+;
+#X text 13 145 commun-c-scale's first and second args are swapped from
+commun-c (i.e. \$0 and /parametername);
+#X text 44 434 * "hide" hides the parameter from Controctopus sniffing
+(useful to pare down the options to just the most interesting inputs).
+;
+#X text 44 476 * "round" rounds up from 0.5 increments so that an integer
+is always output (useful for communs connected to v/hdials and toggles).
+;
+#X text 328 537 made more confusing by;
+#X obj 31 327 commun-c-scale \$0 /parameter 5 37;
+#X text 13 76 commun-c-scale distinguishes between floats and other
+messages \, so you can send other messages to its OSC address and they'll
+be delivered without the scaling getting in the way.;
+#X text 13 16 commun-c-scale will scale OSC inputs from 0-1 to a range
+you specify. This way \, all of your parameters have a standardized
+interface \, where 0-1 can mean 20-20000hz for a filter or 0-100 for
+a volume control.;
+#X text 34 404 * Argument 5 and 6 can be "round" and/or "hide" (the
+order doesn't matter):;
+#X connect 2 0 13 1;
+#X connect 3 0 13 2;
+#X connect 4 0 13 0;
+#X connect 13 0 5 0;

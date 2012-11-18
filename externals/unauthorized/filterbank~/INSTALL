@@ -1,0 +1,15 @@
+untar in  /my/pd/dir/externs
+
+cd /my/pd/dir/externs/filterbank~
+
+make clean 
+
+make
+
+make install
+
+open help-filterbank~.pd
+
+Thanx for getting here.
+Yves/
+comments and bugs @ ydegoyon@free.fr

@@ -1,0 +1,75 @@
+#N canvas 24 75 823 495 10;
+#X obj 75 32 cnv 15 15 15 empty empty vasp.r!fft 0 10 1 14 -262144
+-1 0;
+#N canvas 92 108 373 314 inside 0;
+#X obj 66 154 soundfiler;
+#X obj 187 209 s \$0-sample-length;
+#X obj 66 208 s \$0-draw_display;
+#X msg 235 166 resize \$1;
+#X obj 235 119 loadbang;
+#X obj 67 53 loadbang;
+#X msg 235 140 88200;
+#X obj 67 101 filelisthandler \$0;
+#X msg 67 79 4;
+#X msg 67 133 read \$1 bufrifft;
+#X obj 235 188 s bufrifft;
+#X obj 66 178 t b;
+#X connect 0 0 11 0;
+#X connect 3 0 10 0;
+#X connect 4 0 6 0;
+#X connect 5 0 8 0;
+#X connect 6 0 3 0;
+#X connect 6 0 1 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 0;
+#X connect 9 0 0 0;
+#X connect 11 0 2 0;
+#X restore 627 390 pd inside;
+#X obj 329 388 dac~;
+#X obj 329 345 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 351 342 play;
+#X text 463 343 clear;
+#X obj 69 121 filelist \$0;
+#N canvas 0 0 413 295 clear_buffer 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 463 388 pd clear_buffer;
+#X text 157 239 real fft;
+#X obj 68 265 vasp.update;
+#X obj 68 288 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X obj 68 238 vasp.rfft;
+#X text 72 73 in opposite to cfft there is only one real input buffer
+;
+#X text 73 86 imaginary part of the fft is assumed to be zero;
+#X text 71 60 inverse real fft;
+#X msg 463 365 vasp bufrifft;
+#X obj 329 365 tabplay~ bufrifft;
+#X msg 68 214 vasp bufrifft;
+#X obj 372 144 wavedisplay-simple bufrifft \$0;
+#X text 645 127 source;
+#X text 157 345 inverse real fft;
+#X obj 68 371 vasp.update;
+#X obj 68 394 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X obj 68 345 vasp.r!fft;
+#X msg 68 320 vasp bufrifft;
+#X obj 61 461 VASP-HELP;
+#X text 103 461 - vasp overview;
+#X connect 3 0 16 0;
+#X connect 9 0 10 0;
+#X connect 11 0 9 0;
+#X connect 15 0 7 0;
+#X connect 16 0 2 0;
+#X connect 16 0 2 1;
+#X connect 17 0 11 0;
+#X connect 21 0 22 0;
+#X connect 23 0 21 0;
+#X connect 24 0 23 0;

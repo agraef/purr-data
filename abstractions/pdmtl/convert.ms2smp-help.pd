@@ -1,0 +1,10 @@
+#N canvas 120 81 619 299 12;
+#X floatatom 136 109 5 0 0 0 - - -;
+#X floatatom 136 187 5 0 0 0 - - -;
+#X text 187 107 Length in milliseconds;
+#X text 187 192 Number of samples;
+#X obj 136 148 convert.ms2smp;
+#X text 23 45 Description: Converts a millisecond interval to a it's
+corresponding number of samples.;
+#X connect 0 0 4 0;
+#X connect 4 0 1 0;

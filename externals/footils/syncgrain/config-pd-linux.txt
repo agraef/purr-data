@@ -1,0 +1,32 @@
+# flext - C++ layer for Max/MSP and pd (pure data) externals
+# tutorial examples
+# Copyright (c) 2001-2003 Thomas Grill (xovo@gmx.net)
+#
+
+# your c++ compiler (normally g++)
+# CXX=g++
+
+# where are the PD header files?
+# if it is a system include path (like /usr/local/include) 
+# you should leave it blank (as e.g. g++ 3.2 complains about it)
+PDPATH=
+
+# where do the flext libraries reside?
+FLEXTPATH=/usr/lib/pd/flext
+
+# where is the SndObj include directory? 
+# (leave blank or comment out to disable SndObj support)
+# if defined, you must have a libsndobj.a library in the lib path
+SNDOBJ=/usr/include/SndObj
+
+# where is the STK include directory?
+# (leave blank or comment out to disable STK support)
+# if defined, you must have a libstk.a library in the lib path
+STK=/usr/local/include/stk
+
+# where should the examples be built? (relative path)
+OUTPATH=./pd-linux
+
+# where should the examples be installed?
+# (leave blank to omit installation)
+INSTPATH=${FLEXTPATH}/tutorial

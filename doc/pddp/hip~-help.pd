@@ -1,0 +1,96 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header hip~ 3 12 0 18 -204280
+-1 0;
+#X obj 0 381 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 244 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 45 DESCRIPTION one-pole high pass filter;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 65 INLET_0 signal clear;
+#X text 12 85 INLET_1 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 488 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 390 cnv 17 3 37 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 100 425 428 166 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [hip~] Related Objects;
+#X obj 22 43 lop~;
+#X obj 69 43 bp~;
+#X obj 117 43 vcf~;
+#X text 22 81 Raw Filters;
+#X obj 73 108 rzero~;
+#X obj 195 108 cpole~;
+#X obj 24 108 rpole~;
+#X obj 122 108 rzero_rev~;
+#X obj 244 108 czero~;
+#X obj 293 108 czero_rev~;
+#X restore 101 597 pd Related_objects;
+#X text 98 389 signal;
+#X obj 78 497 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 497 signal;
+#X obj 491 3 hip~;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/hip~ -text
+pdpedia: hip~;
+#X obj 146 270 env~;
+#X floatatom 146 293 0 0 0 0 - - -;
+#X floatatom 195 215 0 0 0 0 - - -;
+#X obj 146 243 hip~ 5;
+#X obj 88 270 env~;
+#X floatatom 88 292 0 0 0 0 - - -;
+#X floatatom 88 144 0 0 0 0 - - -;
+#X text 89 105 The left inlet is the incoming audio signal. The right
+inlet is the cutoff frequency in Hz.;
+#X obj 88 167 osc~ 100;
+#X text 133 142 <-- scroll to change input frequency;
+#X msg 146 191 clear;
+#X text 198 190 <-- reinitialize internal state;
+#X text 227 216 <-- set cutoff frequency;
+#X text 168 389 - incoming audio signal.;
+#X obj 78 432 cnv 17 3 45 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 431 float;
+#X text 98 449 list;
+#X text 98 409 clear;
+#X text 84 312 Compare the strength of the original signal on the left
+with that of the filtered signal on the right.;
+#X text 11 23 one-pole high pass filter;
+#X text 168 543 - initial rolloff frequency.;
+#X text 168 409 - reinitialize internal state.;
+#X text 168 431 - cutoff frequency in Hz.;
+#X text 168 449 - a list to the right inlet is truncated \, and the
+first element is used as the cutoff frequency.;
+#X text 88 68 [hip~] is a one-pole high pass filter with a specified
+rolloff frequency.;
+#X text 191 272 [env~] gives the amplitude of the signal envelop in
+dB.;
+#X text 168 497 - the output is the filtered audio signal.;
+#X text 80 543 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 14 0 15 0;
+#X connect 16 0 17 1;
+#X connect 17 0 14 0;
+#X connect 18 0 19 0;
+#X connect 20 0 22 0;
+#X connect 22 0 18 0;
+#X connect 22 0 17 0;
+#X connect 24 0 17 0;

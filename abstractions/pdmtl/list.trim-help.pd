@@ -1,0 +1,21 @@
+#N canvas 549 134 460 347 10;
+#X text 27 54 Comments: Wraps [list trim].;
+#X text 30 19 Description: convert list to message \, using first item
+as selector.;
+#X msg 142 188 1 2 3;
+#X msg 142 139 list cis boom bah;
+#X msg 143 214 bang;
+#X msg 142 112 walk the dog;
+#X obj 117 312 print trim;
+#X msg 143 236 1 x y;
+#X msg 142 262 x 1 y;
+#X msg 142 162 55;
+#X obj 117 290 list.trim;
+#X connect 2 0 10 0;
+#X connect 3 0 10 0;
+#X connect 4 0 10 0;
+#X connect 5 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 6 0;

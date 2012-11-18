@@ -1,0 +1,137 @@
+#N canvas 87 28 954 628 10;
+#X text 293 589 object;
+#X text 38 587 vs. 1.1: seedable by the;
+#X msg 220 588 RTC-seed;
+#X text 14 67 Chooses elements from a supply <int list> which are repeated
+according to a multiple list <int list> by using the "series" selection
+principle.;
+#X text 14 35 ratio;
+#X msg 374 23 Chance;
+#X msg 118 131 series;
+#X msg 236 131 groups;
+#X msg 169 131 sequence;
+#X text 14 131 see also:;
+#X text 15 113 NB: the supply must be a list of numbers!;
+#X msg 153 153 sel-princ;
+#X msg 80 153 permutate;
+#X msg 80 131 alea;
+#X text 38 572 1994-98 by Karlheinz Essl after Gottfried Michael Koenig
+;
+#X msg 415 169 1;
+#X obj 415 147 loadbang;
+#X obj 215 188 vsl 15 64 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 50 1;
+#X text 489 426 choice list;
+#X text 311 273 multiple list;
+#X msg 294 290 1 1 1 1 1;
+#X msg 481 443;
+#X obj 481 410 show;
+#X obj 45 328 ratio;
+#N canvas 382 43 525 343 multifier 0;
+#X obj 62 83 inlet;
+#X obj 100 83 inlet;
+#X obj 135 83 inlet;
+#X obj 170 83 inlet;
+#X obj 205 83 inlet;
+#X obj 62 273 outlet;
+#X obj 92 184 show;
+#X obj 92 210 outlet;
+#N canvas 0 0 529 403 mpack 0;
+#X obj 143 51 inlet;
+#X obj 91 51 inlet;
+#X obj 141 122 t b f;
+#X obj 191 51 inlet;
+#X obj 189 122 t b f;
+#X obj 238 50 inlet;
+#X obj 236 121 t b f;
+#X obj 148 272 outlet;
+#X obj 300 42 inlet;
+#X obj 148 229 pack 0 0 0 0 0;
+#X obj 298 113 t b f;
+#X obj 94 85 int;
+#X obj 133 90 int;
+#X obj 196 89 int;
+#X obj 247 90 int;
+#X obj 308 83 int;
+#X connect 0 0 12 0;
+#X connect 1 0 11 0;
+#X connect 2 0 9 0;
+#X connect 2 1 9 1;
+#X connect 3 0 13 0;
+#X connect 4 0 9 0;
+#X connect 4 1 9 2;
+#X connect 5 0 14 0;
+#X connect 6 0 9 0;
+#X connect 6 1 9 3;
+#X connect 8 0 15 0;
+#X connect 9 0 7 0;
+#X connect 10 0 9 0;
+#X connect 10 1 9 4;
+#X connect 11 0 9 0;
+#X connect 12 0 2 0;
+#X connect 13 0 4 0;
+#X connect 14 0 6 0;
+#X connect 15 0 10 0;
+#X restore 62 137 pd mpack;
+#X obj 62 159 t a a;
+#X connect 0 0 8 0;
+#X connect 1 0 8 1;
+#X connect 2 0 8 2;
+#X connect 3 0 8 3;
+#X connect 4 0 8 4;
+#X connect 6 0 7 0;
+#X connect 8 0 9 0;
+#X connect 9 0 5 0;
+#X connect 9 1 6 0;
+#X restore 215 263 pd multifier;
+#X msg 60 302 1 2 3 4 5;
+#X obj 234 188 vsl 15 64 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 50 1;
+#X obj 274 188 vsl 15 64 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 50 1;
+#X obj 254 188 vsl 15 64 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 50 1;
+#X obj 294 188 vsl 15 64 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 50 1;
+#X text 57 284 supply;
+#X obj 45 180 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 325 195 adjust ratio of supply elements;
+#X obj 45 388 collect;
+#X msg 45 444;
+#X obj 99 389 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 587 375 bng 15 250 50 0 empty empty supply_exhausted 0 -6 0
+8 -262144 -1 -1;
+#X text 54 426 chosen elements;
+#X msg 291 131 sneak;
+#X msg 219 153 rota;
+#X msg 258 153 choose;
+#X text 86 47 vs. 1.1;
+#X obj 215 285 t b a;
+#X obj 515 410 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X connect 15 0 17 0;
+#X connect 15 0 26 0;
+#X connect 15 0 28 0;
+#X connect 15 0 27 0;
+#X connect 15 0 29 0;
+#X connect 16 0 15 0;
+#X connect 17 0 24 0;
+#X connect 22 0 21 0;
+#X connect 23 0 33 0;
+#X connect 23 1 22 0;
+#X connect 23 2 36 0;
+#X connect 24 0 42 0;
+#X connect 24 1 20 0;
+#X connect 25 0 23 1;
+#X connect 26 0 24 1;
+#X connect 27 0 24 3;
+#X connect 28 0 24 2;
+#X connect 29 0 24 4;
+#X connect 31 0 23 0;
+#X connect 33 0 34 0;
+#X connect 35 0 33 1;
+#X connect 42 0 25 0;
+#X connect 42 1 23 2;
+#X connect 43 0 22 1;

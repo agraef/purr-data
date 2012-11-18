@@ -1,0 +1,22 @@
+#N canvas 1 48 472 396 10;
+#X msg 260 22 Harmony;
+#X msg 80 113 st2pitch;
+#X text 14 113 see also:;
+#X text 14 67 Outputs the intervals of an incoming stream of notes.
+The argument resp. the number sent to the right inlet determines the
+reference note.;
+#X text 14 40 note2st;
+#X floatatom 41 157 4 0 0 1 note - -;
+#X floatatom 41 185 4 0 0 1 key-number - -;
+#X floatatom 186 157 4 0 0 1 reference-note - -;
+#X floatatom 186 185 4 0 0 0 - - -;
+#X floatatom 186 247 0 0 0 1 interval_modulo_12 - -;
+#X floatatom 41 247 0 0 0 1 interval - -;
+#X text 14 297 1994 by Karlheinz Essl;
+#X obj 41 218 note2st 60;
+#X connect 5 0 6 0;
+#X connect 6 0 12 0;
+#X connect 7 0 8 0;
+#X connect 8 0 12 1;
+#X connect 12 0 10 0;
+#X connect 12 1 9 0;

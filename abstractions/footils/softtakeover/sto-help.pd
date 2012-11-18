@@ -1,0 +1,30 @@
+#N canvas 279 187 722 376 10;
+#X obj 65 187 r myslider-in;
+#X obj 68 211 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 6300 1;
+#X obj 185 130 tgl 24 0 empty empty Waiting... 0 -6 0 8 -262144 -1
+-1 0 1;
+#X floatatom 66 84 5 0 0 0 - - -;
+#X floatatom 66 137 5 0 0 0 - - -;
+#X obj 65 233 s myslider-out;
+#X text 270 74 Soft Take-Over (sto);
+#X text 281 107 abstraction to temporarily stop incoming controller
+values until a certain value is reached.;
+#X text 281 175 All this is useful if you need to switch targets for
+hardware midi-fader-boxes on the fly and need to prevent sudden value
+jumps.;
+#X text 281 141 creation argument: name of a send target. Will send
+\$1 and automatically.;
+#X floatatom 166 84 5 0 0 0 - - -;
+#X obj 66 113 sto myslider-in;
+#X text 151 68 Wait for this:;
+#X text 59 64 Ctl in:;
+#X text 281 222 If you switch targets \, send "sto" a "Wait for number"-signal
+(an int into the rightmost inlet) and sto will not let anything through
+until this stored value is reached.;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 3 0 11 0;
+#X connect 10 0 11 1;
+#X connect 11 0 4 0;
+#X connect 11 1 2 0;

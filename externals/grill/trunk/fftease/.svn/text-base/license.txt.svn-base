@@ -1,0 +1,86 @@
+FFTease - A set of Live Spectral Processors
+Originally written by Eric Lyon and Christopher Penrose for the Max/MSP platform
+
+Copyright (c)Thomas Grill (xovo@gmx.net)
+
+---------------------------------------------------------
+
+Please note that this license only applies to the core FFTease objects,
+but *NOT* the sources of the pv-lib.
+The pv-lib is instead free for everyone to use as (s)he wants.
+
+---------------------------------------------------------
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+In the official fftease distribution, the GNU General Public License is
+in the file gpl.txt
+
+---------------------------------------------------------
+
+             OTHER COPYRIGHT NOTICES
+
+---------------------------------------------------------
+
+
+--- FFtease jMax port --------------------------------------
+
+This is FFTease, a set of live spectral processors.
+
+FFTease was originally designed & programmed by
+Eric Lyon     Web:   http://arcana.dartmouth.edu/~eric/ 
+	      eMail: mailto:Eric.Lyon@Dartmouth.EDU
+Christopher   Web:   http://www.sfc.keio.ac.jp/~penrose/
+	      eMail: mailto:penrose@sfc.keio.ac.jp
+
+NOTE! The original FFTease package for the MAX/MSP platform is *NOT*
+      under the GPL !!
+      However, Eric and Christoph gave me friendly permission to
+      port this really nice packagee to jMax and put 
+      *ONLY THE jMax FFTease SOURCE'S* undert the GPL.
+      (for the GPL see the file LICENSE.TXT)
+      Thanks to you !
+
+FFTease uses the pv-lib, which is used by this this release. 
+NOTE! The pv-lib is *NOT* under the GPL.
+      Rather it *IS FREE* to use by anyone as (s)he decides !!
+The pv-lib is also written by E. Lyon and Ch. Penrose.
+
+The port of these objects to the jMax system is done by 
+Christian Klippel Web:  http://mamalala.de
+
+
+
+--- flext ----------------------------------------------
+flext - C++ layer for Max/MSP and pd (pure data) externals
+Copyright (C) 2001-2003 Thomas Grill
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+In the official flext distribution, the GNU General Public License is
+in the file gpl.txt
+

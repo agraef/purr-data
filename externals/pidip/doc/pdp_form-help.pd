@@ -1,0 +1,100 @@
+#N canvas 84 12 763 664 10;
+#X obj 92 608 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X obj 346 203 pdp_v4l;
+#X obj 355 172 metro 70;
+#X obj 400 138 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 357 139 stop;
+#X msg 442 170 open /dev/video;
+#X obj 252 167 pdp_yqt;
+#X obj 628 513 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 628 565 pdp_control;
+#X msg 628 538 thread \$1;
+#X floatatom 628 626 5 0 0 0 - - -;
+#X obj 628 597 route pdp_drop;
+#X text 222 631 written by Yves Degoyon (ydegoyon@free.fr);
+#X obj 189 362 hdl 15 1 0 10 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X floatatom 207 388 5 0 0 0 - - -;
+#X floatatom 223 412 5 0 0 0 - - -;
+#X floatatom 266 479 5 0 0 0 - - -;
+#X floatatom 284 499 5 0 0 0 - - -;
+#X floatatom 304 519 5 0 0 0 - - -;
+#X text 314 478 R component;
+#X text 332 498 G component;
+#X text 352 518 B component;
+#X msg 29 352 clear;
+#X msg 30 387 delete 1;
+#X msg 30 421 resize 20;
+#X text 222 619 this is useful for video composition;
+#X text 349 361 Select current form ( 10 items by default );
+#X text 252 387 X1 coordinate;
+#X text 271 411 Y1 coordinate;
+#X floatatom 236 434 5 0 0 0 - - -;
+#X floatatom 244 456 5 0 0 0 - - -;
+#X text 284 282 Add a line;
+#X text 388 333 Add an ellipse;
+#X msg 144 282 line 24 56 134 200;
+#X text 377 305 Add a rectangle ( but in red );
+#X text 281 433 X2 coordinate or ray for ellipse;
+#X text 292 455 Y2 coordinate or ray for ellipse;
+#X text 143 261 line|rectangle|ellipse x1 y1 x2|r y2|r [ r g b angle
+];
+#X msg 163 304 rectangle 56 45 123 78 255 0 0;
+#X msg 179 333 ellipse 89 120 56 78 0 255 0;
+#X text 222 605 pdp_form : geometric forms addition in PDP;
+#X obj 144 562 pdp_form -----------------;
+#X obj 346 540 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text 487 540 alpha ( global );
+#X connect 1 0 10 0;
+#X connect 2 0 16 0;
+#X connect 3 0 2 0;
+#X connect 4 0 16 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 16 0;
+#X connect 11 0 51 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 0;
+#X connect 16 0 51 0;
+#X connect 17 0 19 0;
+#X connect 18 0 21 0;
+#X connect 19 0 18 0;
+#X connect 21 0 20 0;
+#X connect 23 0 51 1;
+#X connect 24 0 51 2;
+#X connect 25 0 51 3;
+#X connect 26 0 51 6;
+#X connect 27 0 51 7;
+#X connect 28 0 51 8;
+#X connect 32 0 51 0;
+#X connect 33 0 51 0;
+#X connect 34 0 51 0;
+#X connect 39 0 51 4;
+#X connect 40 0 51 5;
+#X connect 43 0 51 0;
+#X connect 48 0 51 0;
+#X connect 49 0 51 0;
+#X connect 51 0 0 0;
+#X connect 52 0 51 9;

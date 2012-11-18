@@ -1,0 +1,16 @@
+#N canvas 555 390 469 337 10;
+#X text 15 4 Description: Miller's vocoder;
+#X obj 21 275 mtl/out~;
+#X obj 21 248 mtl/punch~;
+#X obj 89 200 adc~ 1;
+#X text 15 19 tags: fx~;
+#X obj 19 157 mtl/sawor~;
+#X obj 19 51 mtl/piano 1;
+#X obj 20 223 mtl/vocoder~;
+#X connect 2 0 1 0;
+#X connect 2 1 1 1;
+#X connect 3 0 7 1;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 2 0;
+#X connect 7 1 2 1;

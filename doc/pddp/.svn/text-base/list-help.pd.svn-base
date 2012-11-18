@@ -1,0 +1,627 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header list 3 12 0 18 -204280
+-1 0;
+#X obj 0 144 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 244 494 344 META 0;
+#X text 12 90 LIBRARY internal;
+#X text 12 130 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 50 LICENSE SIBSD;
+#X text 12 110 AUTHOR Miller Puckette;
+#X text 12 170 HELP_PATCH_AUTHORS Updated for Pd version 0.40. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 70 DESCRIPTION building and using variable-length messages
+;
+#X text 12 5 NAME list append list prepend list trim list split list
+length;
+#X text 12 30 KEYWORDS control storage needs_work list_op symbol_op
+;
+#X text 12 150 RELEASE_DATE 2005;
+#X restore 500 598 pd META;
+#X obj 0 237 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 506 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 92 536 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [list] Related Objects;
+#X obj 21 42 float;
+#X obj 61 42 symbol;
+#X obj 112 42 pack;
+#X obj 152 42 unpack;
+#X restore 102 599 pd Related_objects;
+#X obj 78 246 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 78 153 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 493 3 list;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/list -text
+pdpedia: list;
+#N canvas 1 112 555 502 append 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
+-204280 -1 0;
+#X obj 13 3 list append;
+#X text 18 24 append (concatenate) the second list to the first;
+#X obj 0 294 cnv 3 520 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 0 377 cnv 3 520 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 78 386 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 303 cnv 17 3 40 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 353 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 304 anything;
+#X text 98 354 anything;
+#X obj 0 421 cnv 3 520 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X text 80 456 n);
+#X text 98 471 float;
+#X text 80 440 1);
+#X text 170 440 - the symbol "append".;
+#X text 170 456 - an arbitrary number of additional floats or symbols
+may be specified to initialize the list stored at the right inlet.
+;
+#X obj 158 219 list append 1 2;
+#X floatatom 168 165 5 0 0 0 - - -;
+#X msg 158 140 1 2 3;
+#X msg 178 190 bang;
+#X msg 285 189 bang;
+#X obj 158 241 print append;
+#X msg 285 163 4 5 6 and 7;
+#X msg 285 80 4 5 6;
+#X msg 285 139 four 5 6;
+#X msg 285 110 list four 5 6;
+#X text 178 354 - all input is converted to a list and stored.;
+#X text 178 304 - all input is converted to a list. The list stored
+at the right inlet is appended to it \, and the resulting list is sent
+to the outlet.;
+#X text 98 387 list;
+#X text 168 387 - the output is always a message with the selector
+"list" (see subpatch "list_conversion" for more info).;
+#X text 98 440 symbol atom;
+#X text 98 456 symbol atom;
+#X connect 16 0 21 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 16 0;
+#X connect 20 0 16 1;
+#X connect 22 0 16 1;
+#X connect 23 0 16 1;
+#X connect 24 0 16 1;
+#X connect 25 0 16 1;
+#X restore 102 365 pd append;
+#N canvas 89 83 428 592 about-lists 0;
+#X obj 22 567 print message;
+#X msg 22 380 list x.wav 44100;
+#X msg 22 538 read \$1 \$2;
+#X msg 22 409 set x.wav 44100;
+#X msg 39 509 set \, add2 read \, adddollar 1 \, adddollar 2;
+#X msg 22 439 x.wav 44100;
+#X obj 39 483 loadbang;
+#X text 127 486 reset message as it was;
+#X text 139 380 good;
+#X text 128 411 bad;
+#X text 94 439 ugly;
+#X msg 223 403 list 44100 x.wav;
+#X msg 236 428 44100 x.wav;
+#X obj 223 454 print number-first;
+#X text 217 375 these two are equivalent:;
+#X text 19 266 In the example below \, the top message sets \$1 to
+"x.wav" and \$2 to 44100 in the "read" message. The lower message box
+outputs the message "read x.wav 44100". The "set" message changes the
+content of the message box itself (click on the longer message box
+below to repair the damage.) The "ugly" message \, since it is neither
+"list" nor "set" \, gets interpreted in an arbitrary (and probably
+inappropriate!) way.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [list] About lists in Pd;
+#X text 19 37 Messages in Pd are somewhat artificially divided into
+two classes. First are data-holding messages (bang \, float \, symbol
+\, list) which are the primary way of communicating between objects.
+Second is "everything else" (you could call them out-of-band messages
+or metamessages) that describe changes in configuration \, read and
+write files \, quit Pd \, etc. These are provided so that complex objects
+don't need to have 100 separate inlets for every possible functionality.
+It's not clear whether this was a good design choice \, but it's entrenched.
+;
+#X text 19 170 The distinction becomes visible \, and ugly \, when
+the leading item in a data-holding message is a symbol. In this case
+\, to disambiguate it from the other sort \, the printed form of the
+message has a selector \, "list" or "symbol" prepended to it. Underneath
+\, there is always a selector in front of data messages \, but it is
+implied if the first data item is a number.;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 4 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 0;
+#X restore 101 546 pd about-lists;
+#X text 11 23 building and using variable-length messages;
+#X text 80 307 1);
+#X text 80 474 n);
+#X text 180 365 append - append the second list to the first;
+#X text 180 409 split - split a list in two;
+#X text 180 387 prepend - prepend the second list to the first;
+#X text 180 453 length - output the number of items in a list;
+#X text 180 431 trim - trim the "list" selector off;
+#X obj 212 98 list;
+#X msg 233 68 rice;
+#X msg 212 46 beans;
+#X obj 212 120 print groceries;
+#X msg 276 68 cornbread;
+#X text 98 510 Here are some examples showing how to use these objects
+to compose and/or use variable length messages:;
+#N canvas 20 53 525 646 simple_sequencer 0;
+#X obj 23 173 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 232 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 227 154 clear;
+#X text 20 153 send;
+#X msg 71 175 250;
+#X msg 103 175 500;
+#X msg 136 175 750;
+#X msg 169 175 1000;
+#X obj 23 258 list append;
+#X obj 188 220 t l;
+#X obj 71 214 list prepend;
+#X obj 23 426 t l l;
+#X obj 74 426 print start;
+#X obj 129 257 print stored;
+#X obj 23 451 list split 1;
+#X obj 23 575 del;
+#X obj 23 607 print bang;
+#X obj 55 542 list append;
+#X msg 35 403 0 250 250 500;
+#X text 98 150 -- add --;
+#X text 37 20 example 1: simple rhythmic sequencer;
+#X text 29 53 The top part of this patch demonstrates building up a
+message from a variable number of elements provided sequentially. The
+"list prepend" object stores the list and \, each time a number arrives
+\, prepends the previous list to it.;
+#X text 216 237 "list prepend" to its own inlet.;
+#X text 213 220 "trigger list" is needed only to connect outlet of
+;
+#X text 254 258 printout shows the growing message.;
+#X text 47 279 "list append" stores the growing message which is output
+by the "send" button above. "list prepend" would have been equivalent.
+;
+#X text 165 403 <-- test message;
+#X text 39 354 The bottom part of the patch takes numbers off the beginning
+of the list \, one by one \, to use as delays.;
+#X text 190 426 printout shows the sequence as it starts.;
+#X text 169 543 The rest of the list is stored for next time.;
+#X obj 141 505 print done;
+#X text 150 450 Split off the first item. If there is none \, nothing
+comes out the first or second outlet \, but instead we get a "bang"
+from the third one.;
+#X text 64 575 After delay \, output a bang and recall the rest of
+the list.;
+#X connect 0 0 8 0;
+#X connect 1 0 10 1;
+#X connect 4 0 10 0;
+#X connect 5 0 10 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 11 0;
+#X connect 9 0 10 1;
+#X connect 10 0 9 0;
+#X connect 10 0 8 1;
+#X connect 10 0 13 0;
+#X connect 11 0 14 0;
+#X connect 11 1 12 0;
+#X connect 14 0 15 0;
+#X connect 14 1 17 1;
+#X connect 14 2 30 0;
+#X connect 15 0 16 0;
+#X connect 15 0 17 0;
+#X connect 17 0 14 0;
+#X connect 18 0 11 0;
+#X restore 401 546 pd simple_sequencer;
+#N canvas 127 68 397 569 another_sequencer 0;
+#X obj 66 263 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 292 266 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 287 244 clear;
+#X text 63 243 send;
+#X obj 66 342 list append;
+#X obj 213 317 t l;
+#X obj 94 303 list prepend;
+#X obj 66 410 t l l;
+#X obj 121 410 print start;
+#X obj 171 340 print stored;
+#X obj 66 486 del;
+#X obj 105 486 list append;
+#X msg 94 264 250 57;
+#X msg 154 264 500 52;
+#X msg 215 264 750 55;
+#X obj 66 461 unpack;
+#X obj 66 435 list split 2;
+#X text 80 38 example 2: sequencer with pitch;
+#X text 147 242 -- add --;
+#X obj 185 438 print done;
+#X obj 115 517 print pitch;
+#X text 13 69 This example is a slight modification of example 1 showing
+how to build up lists with more than one item per iteration. We regard
+pairs of numbers as specifying a delay time and a pitch. Unlike the
+previous example \, the delay here is interpreted as teh delay until
+the next event \, not the delay since the previous one. This is done
+by taking the "pitch" output before the delay object (previously the
+"output" was taken from the delay object's output.);
+#X connect 0 0 4 0;
+#X connect 1 0 6 1;
+#X connect 4 0 7 0;
+#X connect 5 0 6 1;
+#X connect 6 0 5 0;
+#X connect 6 0 4 1;
+#X connect 6 0 9 0;
+#X connect 7 0 16 0;
+#X connect 7 1 8 0;
+#X connect 10 0 11 0;
+#X connect 11 0 16 0;
+#X connect 12 0 6 0;
+#X connect 13 0 6 0;
+#X connect 14 0 6 0;
+#X connect 15 0 10 0;
+#X connect 15 1 20 0;
+#X connect 16 0 15 0;
+#X connect 16 1 11 1;
+#X connect 16 2 19 0;
+#X restore 401 568 pd another_sequencer;
+#N canvas 48 176 447 426 serializer 0;
+#X obj 19 287 list split 1;
+#X obj 19 378 print;
+#X obj 19 204 until;
+#X obj 19 242 list append;
+#X obj 45 171 t b l;
+#X obj 149 287 bang;
+#X msg 45 148 1 2 3 4 a b c;
+#X text 34 21 example 3: serializing a message without delays;
+#X text 17 55 The "until" object can be used as shown to iterate through
+all the items of a list.;
+#X text 178 147 <- click to test;
+#X text 101 171 First store list \, then start the loop;
+#X text 88 199 "until" bangs its output until told to stop by a "bang"
+to its right inlet.;
+#X text 107 241 Store the remaining list.;
+#X text 184 286 third outlet of "split" tells us to stop.;
+#X text 37 318 Second outlet of "split" becomes the new list for "list
+append" above.;
+#X text 75 377 First outlet is the output.;
+#X connect 0 0 1 0;
+#X connect 0 1 3 1;
+#X connect 0 2 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;
+#X connect 4 1 3 1;
+#X connect 5 0 2 1;
+#X connect 6 0 4 0;
+#X restore 241 568 pd serializer;
+#N canvas 101 244 428 350 lists_vs_non-lists 0;
+#X obj 23 290 list append 1 2;
+#X floatatom 23 120 5 0 0 0 - - -;
+#X msg 23 95 1 2 3;
+#X msg 23 68 list cis boom bah;
+#X msg 23 145 bang;
+#X msg 162 260 bang;
+#X obj 23 319 print append;
+#X msg 23 43 walk the dog;
+#X msg 162 210 list x y z;
+#X msg 161 184 go dog go;
+#X msg 160 234 4 5 6 and 7;
+#X text 119 43 non-list message converted to list;
+#X text 144 68 list starting with symbol;
+#X text 75 118 number is one-element list;
+#X text 75 95 numeric list;
+#X text 75 145 bang is zero-element list;
+#X text 226 184 same for right inlet...;
+#X text 235 233 (note: only the first item;
+#X text 238 252 need be a number to make this;
+#X text 238 270 a list.);
+#X text 121 290 <- creation args initialize the list to append;
+#X obj 2 2 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [list] Lists vs. Non-lists;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 1;
+#X connect 7 0 0 0;
+#X connect 8 0 0 1;
+#X connect 9 0 0 1;
+#X connect 10 0 0 1;
+#X restore 101 568 pd lists_vs_non-lists;
+#N canvas 0 82 555 506 prepend 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
+-204280 -1 0;
+#X obj 0 299 cnv 3 520 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 0 377 cnv 3 520 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 78 386 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 308 cnv 17 3 40 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 354 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 309 anything;
+#X text 98 355 anything;
+#X obj 0 421 cnv 3 520 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X text 80 456 n);
+#X text 98 471 float;
+#X text 80 440 1);
+#X text 170 456 - an arbitrary number of additional floats or symbols
+may be specified to initialize the list stored at the right inlet.
+;
+#X floatatom 198 160 5 0 0 0 - - -;
+#X msg 188 135 1 2 3;
+#X msg 208 185 bang;
+#X msg 315 184 bang;
+#X msg 315 158 4 5 6 and 7;
+#X msg 315 75 4 5 6;
+#X msg 315 134 four 5 6;
+#X msg 315 105 list four 5 6;
+#X text 178 355 - all input is converted to a list and stored.;
+#X text 18 24 prepend the second list to the first;
+#X obj 13 3 list prepend;
+#X obj 188 214 list prepend 1 2;
+#X obj 188 236 print prepend;
+#X text 178 309 - all input is converted to a list. The list stored
+at the right inlet is prepended to it \, and the resulting list is
+sent to the outlet.;
+#X text 170 440 - the symbol "prepend".;
+#X text 98 387 list;
+#X text 168 387 - the output is always a message with the selector
+"list" (see subpatch "list_conversion" for more info).;
+#X text 98 440 symbol atom;
+#X text 98 456 symbol atom;
+#X connect 13 0 24 0;
+#X connect 14 0 24 0;
+#X connect 15 0 24 0;
+#X connect 16 0 24 1;
+#X connect 17 0 24 1;
+#X connect 18 0 24 1;
+#X connect 19 0 24 1;
+#X connect 20 0 24 1;
+#X connect 24 0 25 0;
+#X restore 102 387 pd prepend;
+#N canvas 1 82 555 530 split 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
+-204280 -1 0;
+#X obj 0 277 cnv 3 520 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 0 371 cnv 3 520 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 78 380 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 286 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 314 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 287 anything;
+#X obj 0 458 cnv 3 520 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X text 80 477 1);
+#X msg 200 145 bang;
+#X obj 159 173 list split 2;
+#X floatatom 262 148 3 0 5 0 - - -;
+#X msg 159 57 1 2;
+#X msg 124 57 1;
+#X text 156 228 first n;
+#X text 245 228 rest of list;
+#X text 337 228 shorter than n;
+#X text 18 24 cut a list into smaller ones;
+#X obj 13 3 list split;
+#X msg 173 79 one 2 3;
+#X msg 183 101 list one 2 3;
+#X msg 193 123 1 2 three;
+#X obj 159 211 print split0;
+#X obj 248 211 print split1;
+#X obj 340 211 print split2;
+#X text 178 287 - all input is converted to a list.;
+#X text 98 315 float;
+#X text 98 381 list;
+#X obj 78 403 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 404 list;
+#X obj 78 425 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 426 list;
+#X text 178 315 - split point. A value of n will send the first n elements
+to the left outlet \, and the rest of the list to the middle outlet.
+Incoming lists shorter than n are sent to the rightmost outlet.;
+#X text 168 381 - the first n elements of the incoming list.;
+#X text 168 404 - the remaining elements of the incoming list.;
+#X text 168 426 - if the incoming list has fewer than n elements \,
+it is sent in its entirety to the rightmost outlet.;
+#X text 170 477 - the symbol "split".;
+#X text 98 493 float;
+#X text 80 493 2);
+#X text 98 477 symbol atom;
+#X text 170 493 - (optional) an integer to initialize the split point.
+;
+#X connect 9 0 10 0;
+#X connect 10 0 22 0;
+#X connect 10 1 23 0;
+#X connect 10 2 24 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 0;
+#X connect 13 0 10 0;
+#X connect 19 0 10 0;
+#X connect 20 0 10 0;
+#X connect 21 0 10 0;
+#X restore 102 409 pd split;
+#N canvas 1 82 555 481 trim 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
+-204280 -1 0;
+#X obj 0 330 cnv 3 520 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 0 385 cnv 3 520 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 78 394 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 339 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 340 anything;
+#X obj 0 429 cnv 3 520 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X text 80 448 1);
+#X msg 49 139 1 2 3;
+#X msg 49 90 list cis boom bah;
+#X msg 49 195 bang;
+#X msg 49 63 walk the dog;
+#X obj 49 276 list trim;
+#X obj 49 298 print trim;
+#X msg 49 222 1 x y;
+#X msg 49 248 x 1 y;
+#X msg 49 113 55;
+#X text 98 395 anything;
+#X text 170 448 - the symbol "trim".;
+#X obj 13 3 list trim;
+#X text 18 24 remove the list selector;
+#X text 128 230 The [list trim] object inputs lists (or makes lists
+out of incoming non-list messages) and outputs a message whose selector
+is the first item of the list \, and whose arguments \, if any \, are
+the remainder of the list. If the list has no items \, or if its first
+item is numeric \, the selector is "list" (which might print out as
+list \, float \, or bang.);
+#X text 98 448 symbol atom;
+#X text 178 340 - all input is converted to a list. A bang message
+is converted to an empty list. A symbol message like "symbol blah"
+is converted to "list blah".;
+#X text 134 63 non-list messages remain non-list messages;
+#X text 97 139 implicit list remains a list;
+#X msg 49 167 symbol x;
+#X text 86 195 becomes message "list" (interpreted by most objects
+as bang);
+#X text 166 90 "list" selector gets trimmed off;
+#X text 79 113 becomes "list 55" (interpreted by most objects as float)
+;
+#X text 112 167 "symbol" selector gets trimmed off.;
+#X text 168 395 - after the incoming message is converted to a list
+\, the "list" selector is removed and the message is output.;
+#X connect 8 0 12 0;
+#X connect 9 0 12 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 14 0 12 0;
+#X connect 15 0 12 0;
+#X connect 16 0 12 0;
+#X connect 26 0 12 0;
+#X restore 102 431 pd trim;
+#N canvas 2 128 555 490 length 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
+-204280 -1 0;
+#X obj 0 374 cnv 3 520 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 0 411 cnv 3 520 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 78 420 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 383 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 384 anything;
+#X obj 0 448 cnv 3 520 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X text 80 467 1);
+#X obj 13 3 list length;
+#X msg 226 161 1 2 3;
+#X msg 226 112 list cis boom bah;
+#X msg 227 187 bang;
+#X msg 226 85 walk the dog;
+#X msg 227 209 1 x y;
+#X msg 226 235 x 1 y;
+#X msg 226 135 55;
+#X obj 201 263 list length;
+#X floatatom 201 289 5 0 0 0 - - -;
+#X text 18 24 number of elements in a list;
+#X text 98 421 float;
+#X text 170 467 - the symbol "length".;
+#X text 98 467 symbol atom;
+#X text 168 384 - any message type is accepted and converted to a list.
+;
+#X text 168 421 - [list length] outputs the number of elements in the
+list.;
+#X connect 9 0 16 0;
+#X connect 10 0 16 0;
+#X connect 11 0 16 0;
+#X connect 12 0 16 0;
+#X connect 13 0 16 0;
+#X connect 14 0 16 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X restore 102 453 pd length;
+#X text 98 307 symbol atom;
+#X text 98 322 float;
+#N canvas 51 146 428 419 list_conversion_in_Pd 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [list] Conversion;
+#X text 19 168 In brief:;
+#X text 19 188 "list" -> bang;
+#X text 19 208 "list 1" -> "float 1";
+#X text 19 228 "list hello" -> "symbol hello";
+#X text 19 37 Most objects in Pd handle zero- and one-element lists
+in the following way:;
+#X text 19 67 * an incoming zero-element list (i.e. \, a message consisting
+onf the selector "list") is treated as a bang.;
+#X text 19 97 * an incoming one-element list that contains a float
+is treated as a float.;
+#X obj 22 331 route list float;
+#X obj 22 304 list;
+#X obj 22 358 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 68 358 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 22 277 12;
+#X text 55 277 implicit float-- same as "float 12";
+#X text 55 304 output as "list 12";
+#X floatatom 68 387 5 0 0 0 - - -;
+#X text 130 331 [route] converts "list 12" to "float 12";
+#X text 19 127 * an incoming one-element list that contains a symbol
+atom is treated as a symbol.;
+#X connect 9 0 11 0;
+#X connect 9 1 12 0;
+#X connect 9 1 16 0;
+#X connect 10 0 9 0;
+#X connect 13 0 10 0;
+#X restore 241 546 pd list_conversion_in_Pd;
+#X text 170 307 - (optional) if no creation argument is given \, or
+if the first creation argument is a number \, [list] will behave like
+[list append]. Otherwise \, one of the following symbols may be given
+as arguments (see subpatches for more info):;
+#X text 98 245 [list] family objects always output a list. See the
+"list_conversion_in_Pd" subpatch below for how lists are interpreted
+by other objects.;
+#X text 98 474 depending on what the first creation argument is \,
+other creation arguments may be specified.;
+#X text 98 154 See subpatches under the heading "arguments" for more
+details. With the exception of the right inlet of [list split] \, All
+[list] objects will convert incoming non-list messages to lists (e.g.
+\, "set 5" will become "list set 5"). A bang message is converted to
+an empty list (i.e. \, "list") \, and "symbol foo" is converted to
+"list foo".;
+#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 22 0 25 0;
+#X connect 23 0 22 1;
+#X connect 24 0 22 0;
+#X connect 26 0 22 1;

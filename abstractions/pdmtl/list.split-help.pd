@@ -1,0 +1,40 @@
+#N canvas 0 0 629 579 10;
+#X msg 103 328 1 2 3;
+#X msg 79 231 list cis boom bah;
+#X msg 99 263 bang;
+#X floatatom 182 396 3 -5 5 0 - - -;
+#X obj 78 494 print split1;
+#X obj 239 497 print split2;
+#X msg 79 204 walk the dog;
+#X msg 102 306 1 2;
+#X msg 100 285 1;
+#X msg 103 349 1 2 3 4;
+#X msg 103 372 1 2 so are you;
+#X text 75 513 first n;
+#X text 210 419 <-- creation arg inits split point;
+#X text 201 202 non-list message converted to list;
+#X text 245 231 list with three symbols;
+#X text 139 288 list with one number;
+#X text 177 310 ... etc;
+#X text 241 370 <- if the first item is a number \, it's a list.;
+#X text 142 262 list with no items;
+#X text 49 25 Description: split a list into smaller ones;
+#X obj 79 421 list.split 2;
+#X text 236 516 rest of list (will output a bang if list is too short)
+;
+#X text 48 61 The "list split" object takes lists and outputs the first
+"n" items (left outlet) and the remaining ones (right outlet). The
+two outputs appear in the usual right-to-left order. The creation argument
+or the inlet sets the split point.;
+#X text 218 394 new split point(CAN BE A NEGATIVE NUMBER);
+#X connect 0 0 20 0;
+#X connect 1 0 20 0;
+#X connect 2 0 20 0;
+#X connect 3 0 20 1;
+#X connect 6 0 20 0;
+#X connect 7 0 20 0;
+#X connect 8 0 20 0;
+#X connect 9 0 20 0;
+#X connect 10 0 20 0;
+#X connect 20 0 4 0;
+#X connect 20 1 5 0;

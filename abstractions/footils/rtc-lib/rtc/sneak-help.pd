@@ -1,0 +1,61 @@
+#N canvas 332 193 471 567 10;
+#X text 368 483 object;
+#X text 123 483 vs. 1.1: seedable by the;
+#X msg 305 482 RTC-seed;
+#X msg 315 23 Chance;
+#X text 15 67 A bang in the left inlet makes a random selection of
+a supply sent to right inlet before. Note that there are no repetitions
+of the same element and that the chosen elements are always neighbours
+of the given supply.;
+#X text 15 35 sneak;
+#X text 15 131 see also:;
+#X obj 29 287 sneak;
+#X text 258 217 };
+#X msg 107 264 7 Shadock 3.14 x;
+#X floatatom 59 312 4 0 0 1 chosen_list_index - -;
+#X obj 29 351 collect;
+#X msg 29 384;
+#X obj 85 350 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X text 123 468 1994 by Karlheinz Essl;
+#X msg 155 154 sel-princ;
+#X msg 83 154 permutate;
+#X msg 83 131 alea;
+#N canvas 50 61 145 190 slider 0;
+#X obj 38 52 inlet;
+#X obj 38 129 outlet;
+#X obj 38 78 list-len;
+#X msg 38 103 range 0 \$1;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X restore 298 279 pd slider;
+#X text 159 209 supply;
+#X msg 104 208 a b c;
+#X obj 29 246 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 104 185 loadbang;
+#X msg 221 154 rota;
+#X msg 260 154 choose;
+#X msg 120 131 series;
+#X msg 170 131 sequence;
+#X msg 236 131 groups;
+#X msg 289 131 ratio;
+#X text 103 47 vs. 1.1;
+#X obj 301 304 hsl 128 15 0 12 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3175 1;
+#X msg 105 237 1 2 3 4 5;
+#X connect 7 0 11 0;
+#X connect 7 1 10 0;
+#X connect 7 1 30 0;
+#X connect 9 0 7 1;
+#X connect 9 0 18 0;
+#X connect 11 0 12 0;
+#X connect 13 0 11 1;
+#X connect 18 0 30 0;
+#X connect 20 0 7 1;
+#X connect 20 0 18 0;
+#X connect 21 0 7 0;
+#X connect 22 0 20 0;
+#X connect 31 0 7 1;
+#X connect 31 0 18 0;

@@ -1,0 +1,26 @@
+#N canvas 292 114 497 331 10;
+#X obj 106 89 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 130 113 5 0 0 0 - - -;
+#X floatatom 106 205 5 0 0 0 - - -;
+#X obj 155 138 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 91 48 counts from 0 to n-1;
+#X text 176 110 <-- n;
+#X text 194 134 <-- reset counter;
+#X text 293 225 la Kitchen;
+#X text 293 242 Charles Verron;
+#X text 292 209 2004_03_22;
+#X text 293 225 la Kitchen;
+#X text 293 242 Charles Verron;
+#X text 292 209 2004_03_22;
+#X text 293 225 la Kitchen;
+#X text 293 242 Charles Verron;
+#X text 292 209 2004_03_22;
+#X obj 144 203 print;
+#X obj 106 174 count_n 5;
+#X connect 0 0 17 0;
+#X connect 1 0 17 1;
+#X connect 3 0 17 2;
+#X connect 17 0 2 0;
+#X connect 17 0 16 0;

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/pure-data/!svn/ver/13624/trunk/doc/tutorials/playnow
+END
+draw_sound.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/4827/trunk/doc/tutorials/playnow/draw_sound.pd
+END
+voice-fm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/13624/trunk/doc/tutorials/playnow/voice-fm.pd
+END
+vibrato.pd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/pure-data/!svn/ver/2904/trunk/doc/tutorials/playnow/vibrato.pd
+END
+filter.sweep.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/13624/trunk/doc/tutorials/playnow/filter.sweep.pd
+END
+additive.pd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/pure-data/!svn/ver/2904/trunk/doc/tutorials/playnow/additive.pd
+END
+viewfm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/pure-data/!svn/ver/13624/trunk/doc/tutorials/playnow/viewfm.pd
+END
+voice-am.pd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/pure-data/!svn/ver/5058/trunk/doc/tutorials/playnow/voice-am.pd
+END
+ring-modulator.pd
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/4570/trunk/doc/tutorials/playnow/ring-modulator.pd
+END
+waveform_draw.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/2904/trunk/doc/tutorials/playnow/waveform_draw.pd
+END

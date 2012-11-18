@@ -1,0 +1,13 @@
+#N canvas 736 201 223 185 10;
+
+#X msg 26 47 capture 1;
+#X obj 68 97 route menusave;
+#X obj 26 21 loadbang;
+#X obj 26 73 tot .parent;
+#X obj 68 122 outlet;
+#X text 25 155 Idea by hans-christoph steiner;
+#X obj 124 17 import-disabled toxy;
+#X connect 0 0 3 0;
+#X connect 1 0 4 0;
+#X connect 2 0 0 0;
+#X connect 3 2 1 0;

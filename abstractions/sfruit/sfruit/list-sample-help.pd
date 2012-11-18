@@ -1,0 +1,27 @@
+#N canvas 421 159 709 295 10;
+#X obj 30 128 list-sample 5;
+#X msg 30 61 a b c d e f g h i j k l m n o p q r s t u v w x y z;
+#X obj 30 160 prepent set;
+#X floatatom 128 129 5 0 0 0 - - -;
+#X msg 167 128 3;
+#X msg 167 152 20;
+#X obj 276 147 list-shuffle;
+#X msg 276 110 a b c d e f g h i j k l m n o p q r s t u v w x y z
+;
+#X obj 276 173 prepent set;
+#X text 356 147 is just list-sample with a length equal to the length
+of the input list;
+#X text 23 10 list-sample: grab n unique random items from the incoming
+list and output them as a new list;
+#X text 572 266 2008 Luke Iannini;
+#X msg 30 199;
+#X msg 276 212;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 12 0;
+#X connect 3 0 0 1;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 13 0;

@@ -1,0 +1,23 @@
+#N canvas 224 52 358 343 10;
+#X obj 239 18 cnv 15 60 60 empty keycf f 20 12 0 14 -228801 -262144
+0;
+#X obj 25 20 loadbang;
+#X obj 25 42 s ldbng;
+#X obj 81 21 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 25 105 for assignment of actions for keys use;
+#X text 52 128 for toggle;
+#X obj 60 272 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 58 248 keyboardkeys/keytoggle;
+#X msg 58 227 f;
+#X obj 57 205 r ldbng;
+#X obj 51 147 keyboardkeys/keytoggle;
+#X obj 10 72 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 1 0 2 0;
+#X connect 1 0 11 0;
+#X connect 3 0 2 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;

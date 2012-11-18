@@ -1,0 +1,11 @@
+
+KNOWN BUGS:
+===========
+
+- UDP end-of-stream bug (FileReadGst): When you read an UDP stream and the stream is finished and you have not sent the stop message before this, the application freezes untilthere is a new stream to read.
+
+- audio_bin_ gets no end-of-stream (FileReadGst): When you play a file with audio and video tracks and you turn on audio and video playback, then with some video files the application freezes at the end of the video file. It seems that then only the video_bin_ gets the EOS signal and the audio_bin_ then tries to pull a buffer but cannot get one.
+
+- audio/video synchronisation (FileReadGst): If play only the video track of a file and later start playing the audio track, the audio track starts at the beginning, though the video is somewhere else
+
+- writing an empty gemwin (FileWriteGst): If you open a file to record, start recording and then open an empty gemwin, it gets segmentation fault (this seems to be a bug in pix_file_read::render)

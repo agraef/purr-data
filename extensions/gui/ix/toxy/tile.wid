@@ -1,0 +1,87 @@
+#console show
+package require Tktable
+namespace eval ::ix {
+    variable _
+    proc tile {t tg bg fg ac sb sf e} {
+	variable _
+	$t tag configure active -bg $ac
+	$t tag configure OFF -bg $bg -relief ridge
+	$t tag configure ON  -bg $fg -relief sunken
+	$t tag configure sel -bg $sb -fg $sf -relief flat
+	if {$e eq "columns"} {
+	    bind $t <Motion> {
+		%W selection clear all
+		set sel [%W index @%x,%y row]
+		%W selection set $sel,0 $sel,[%W cget -cols]
+	    }
+	} elseif {$e eq "rows"} {
+	    bind $t <Motion> {
+		%W selection clear all
+		set sel [%W index @%x,%y col]
+		%W selection set 0,$sel [%W cget -rows],$sel
+	    }
+	} else {
+	    bind $t <Motion> {
+		%W selection clear all
+		%W selection set @%x,%y		
+	    }
+	}
+	set _($t:e) $e
+        bind $t <Leave> {%W selection clear all}
+	bind $t <2> {%W configure -state [if {[%W cget -state] eq "normal"} {list disabled} {list normal}]}
+	bind $t <3> {::ix::tile_clk %W %x %y OFF}
+	bind $t <1> {::ix::tile_clk %W %x %y ON}
+	bind $t <B3-Motion> [bind $t <3>]
+	bind $t <B1-Motion> [bind $t <1>]
+
+	tile_clr $t
+    }
+    proc tile_dump {t id} {
+	puts "$t $id"
+	for {set c 0} {$c < [$t cget -cols]} {incr c} {
+	    for {set r 0} {$r < [$t cget -rows]} {incr r} {
+		if {[$t tag includes ON $r,$c] == 1} {
+		    pd [concat $id.rp _cb $c $r 1\;]
+		}
+	    }
+	}
+    }
+    proc tile_clk {t x y v} {
+	variable _
+	if {[$t cget -state] eq "disabled"} {
+	    switch $_($t:e) {
+		rows {
+		    for {set row 0} {$row < [$t cget -rows]} {incr row} {
+			$t tag celltag OFF $row,[$t index @$x,$y col]
+		    }
+		}
+		columns {
+		    for {set col 0} {$col < [$t cget -cols]} {incr col} {
+			$t tag celltag OFF [$t index @$x,$y row],$col
+		    }
+		}
+	    }
+	    $t tag celltag $v [$t index @$x,$y]
+	}
+    }
+    proc tile_clr {t} {
+	for {set i 0} {$i < [$t cget -rows]} {incr i} {
+	    for {set j 0} {$j < [$t cget -cols]} {incr j} {
+		$t tag celltag OFF $i,$j
+	    }
+	}	
+    }
+
+}
+#> tile table
+#. -rows 8 -cols 16 -resizeborders none -fg blue
+#. -borderwidth 2 -titlerows 0 -titlecols 0 -roworigin 0 -colorigin 0 -colwidth 4
+#. -width 16 -height 8 -variable tab -flashmode off -font {Tahoma 8}
+#. #bg "#a4e75a" #fg "#fefdff" #cb yellow #ac yellow #sb "#aaff88" #sf green
+#. #e none
+#. @bang ::ix::tile_dump .- .|
+#. @clear ::ix::tile_clr .-
+#. @clr ::ix::tile_clr .-
+
+::ix::tile .- .| .#bg .#fg .#ac .#sb .#sf .#e
+puts "tile .- .|"

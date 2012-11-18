@@ -1,0 +1,46 @@
+#N canvas 671 265 540 406 10;
+#X declare -lib Gem;
+#X obj 365 24 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 30 262 pix_texture;
+#X text 21 10 Description: Finds out the average color of a pix.;
+#X obj 134 294 gemhead 77;
+#X text 253 254 the average color of the incoming pixels;
+#X obj 253 276 unpack f f f;
+#X floatatom 367 339 5 0 0 0 - - -;
+#X floatatom 322 338 5 0 0 0 - - -;
+#X floatatom 279 339 5 0 0 0 - - -;
+#X obj 30 118 gemhead 88;
+#X obj 134 357 square 4;
+#X obj 134 334 colorRGB 1 1 1;
+#X obj 30 284 square 3.5;
+#X text 21 32 The square that is behind the film \, and looks like
+a border \, is the average color of the incoming frame.;
+#X text 22 62 tags: gems;
+#X obj 365 46 mtl/gemsWin /dimen 640 640;
+#X obj 30 236 mtl/gemsAverageColor;
+#X obj 67 142 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 67 172 openpanel;
+#X msg 137 174 1;
+#X obj 30 213 mtl/gemsMovies;
+#X text 87 141 Open movie;
+#X text 167 174 Play movie;
+#X obj 461 22 import Gem;
+#X connect 0 0 15 0;
+#X connect 1 0 12 0;
+#X connect 3 0 11 0;
+#X connect 5 0 8 0;
+#X connect 5 0 11 1;
+#X connect 5 1 7 0;
+#X connect 5 1 11 2;
+#X connect 5 2 6 0;
+#X connect 5 2 11 3;
+#X connect 9 0 20 0;
+#X connect 11 0 10 0;
+#X connect 16 0 1 0;
+#X connect 16 1 5 0;
+#X connect 17 0 18 0;
+#X connect 18 0 20 1;
+#X connect 19 0 20 2;
+#X connect 20 0 16 0;

@@ -1,0 +1,25 @@
+#N canvas 267 198 601 325 10;
+#X msg 105 145 1 2 3 4;
+#X obj 70 111 print INPUT;
+#X floatatom 40 63 5 0 0 0 - - -;
+#X obj 40 86 t a a;
+#X msg 177 144 120 30;
+#X obj 40 252 print MATCH;
+#X msg 40 228 found;
+#X text 261 101 inlet0: number stream;
+#X text 261 119 inlet1: list of numbers (pattern to match);
+#X text 261 146 outlet0: bang (on match);
+#X text 302 223 Author: Roman Haefeli;
+#X obj 40 190 list.match;
+#X text 303 242 Version: 2008-03-05;
+#X obj 0 -21 cnv 15 600 30 empty empty list.match 2 12 1 14 -233017
+-66577 0;
+#X text 14 23 Description: finds given sequence in a number stream
+and outputs a bang \, if a match is detected.;
+#X connect 0 0 11 1;
+#X connect 2 0 3 0;
+#X connect 3 0 11 0;
+#X connect 3 1 1 0;
+#X connect 4 0 11 1;
+#X connect 6 0 5 0;
+#X connect 11 0 6 0;

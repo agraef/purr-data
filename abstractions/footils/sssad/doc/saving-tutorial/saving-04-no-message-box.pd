@@ -1,0 +1,55 @@
+#N canvas 443 27 545 640 10;
+#X floatatom 49 156 5 0 0 0 - - -;
+#X msg 96 155 set \$1;
+#X msg 96 177 12;
+#X text 47 133 Old;
+#X floatatom 48 256 5 0 0 0 - - -;
+#X msg 160 252 set \$1;
+#X msg 160 274 33;
+#X text 47 207 Better:;
+#X obj 48 232 r myvalue-r;
+#X obj 48 299 s myvalue-s;
+#X obj 160 231 r myvalue-s;
+#X obj 160 299 s myvalue-r;
+#X obj 217 257 loadbang;
+#X obj 102 417 store-collect myvalue2;
+#X floatatom 48 419 5 0 0 0 - - -;
+#X obj 308 419 store-save myvalue2;
+#X msg 277 418 17;
+#X text 44 495 BUT: This still has serious problems: For one we would
+need to know all the send and receive names used this way in every
+abstraction - even in those \, we didn't build ourselves or those we
+did build \, but months ago.;
+#X text 43 564 Additionally we would need to make sure that no receiver
+names are used more than once \, as otherwise a receiver may receive
+values not intended for it.;
+#X floatatom 48 443 5 0 0 0 - - -;
+#X msg 277 442 -33;
+#X obj 102 441 store-collect myvalue3;
+#X obj 308 443 store-save myvalue3;
+#X text 41 33 The main problem we had so far is \, that we cannot really
+tell \, where the message boxes to store our state will be located
+\, because this highly depends on how our abstractions are using each
+other. So the first thing to do is move away the message boxes and
+use sends and receives instead:;
+#X text 44 341 Now we could put the right side of the construct above
+everywhere we want. We can even put this into two abstractions: store-collect.pd
+and store-save.pd which use the send and receive names taken from the
+\$1 argument:;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 4 0 9 0;
+#X connect 5 0 6 0;
+#X connect 6 0 11 0;
+#X connect 8 0 4 0;
+#X connect 10 0 5 0;
+#X connect 12 0 6 0;
+#X connect 13 0 14 0;
+#X connect 14 0 13 0;
+#X connect 15 0 16 0;
+#X connect 16 0 15 0;
+#X connect 19 0 21 0;
+#X connect 20 0 22 0;
+#X connect 21 0 19 0;
+#X connect 22 0 20 0;

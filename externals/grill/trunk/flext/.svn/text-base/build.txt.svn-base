@@ -1,0 +1,279 @@
+flext - C++ layer for Max/MSP and pd (pure data) externals
+
+Copyright (c) 2001-2009 Thomas Grill (gr@grrrr.org)
+For information on usage and redistribution, and for a DISCLAIMER OF ALL
+WARRANTIES, see the file, "license.txt," in this distribution.  
+
+----------------------------------------------------------------------------
+
+This document consists of the following parts:
+
+0) Important stuff at the beginning
+1) Using the flext build system
+1.1) Building and installing flext
+1.2) Building externals
+1.3) Tested configurations
+
+2) Using autoconf
+
+3) Other ways to compile flext and flext-based externals
+
+----------------------------------------------------------------------------
+
+0) Important stuff at the beginning
+===================================
+
+Please be aware that the build system might have difficulties handling paths with spaces.
+Under unix you might get along with escaping your\ path or quoting "your path".
+Under Windows escaping doesn't work at all and quoting might not work either - therefore it's
+best not to use spaced paths at all.
+
+----------------------------------------------------------------------------
+
+1) Using the flext build system
+===============================
+
+flext provides a universal build system which supports
+
+- various operating systems
+	Windows (win)
+	Linux (lnx)
+	MacOSX (mac)
+- various real-time systems
+	Pure Data (pd)
+	Max/MSP (max)
+- various make programs
+	GNU make (gnumake)
+	Microsoft nmake (nmake)
+- various compilers
+	Microsoft Visual C/C++ 6.0, .NET 2002/2003/2005/2008 (msvc)
+	GNU gcc 2.95 and above (gcc,cygwin,mingw)
+
+Useful combinations of the above are
+
+under Windows:
+pd msvc, using nmake
+pd cygwin, using GNU make
+pd mingw, using GNU make (from the CMD prompt, not msys!)
+max msvc, using nmake
+max cygwin, using GNU make
+max mingw, using GNU make (from the CMD prompt, not msys!)
+pd bcc, using Borland make
+
+under Linux or MacOSX:
+pd gcc, using GNU make
+
+under MacOSX:
+max gcc, using GNU make - Mach-O externals only (Max 4.5 upwards)
+
+
+There are two central scripts in the flext folder which invoke the building process:
+- build.sh for bash shells (Linux, MacOSX, cygwin)
+- build.bat for the Windows command prompt
+
+A project needs to provide some information in order to be built properly.
+By default, this resides in a file called package.txt
+
+
+Please note, that the build system is shell-oriented, which means, that you'll have
+to launch a command prompt (cmd.exe under Windows) and probably also set some
+environment variables for your development system (e.g. run vcvars32.bat included with Microsoft Visual Studio)
+
+By invoking one of the build scripts (e.g. with "bash build.sh" under unix, 
+or just "build" unter Windows) you'll get some lines of help.
+Operating System, real-time system and compiler need to be provided as arguments.
+
+
+See buildsys/readme.txt for developer-centered information.
+
+
+1.1) Prerequisites
+==================
+
+Linux:
+- A gnu g/g++ compiler should be present on any system. 
+  The command "g++ --version" should show version 2.95 at least. Compiler version >= 3.3 is recommended.
+
+OSX:
+- The developer package must be installed which contains all necessary parts.
+
+Windows:
+- Microsoft Visual Studio 6, .NET 2002/2003/2005/2008
+  Be sure to use the VCVARS32.BAT (or probably SDKVARS.BAT) command on the prompt to set up the environment variables
+  Also be sure NOT to put flext or other externals into a path containing spaces!!
+or
+- cygwin with binutils, gcc and make packages
+
+Max:
+- The Max/MSP SDK must be installed. On OSX, the frameworks therein must be copied to /Library/Frameworks
+
+
+1.2) Building and installing flext
+==================================
+
+Flext can build itself using the build system.
+From the flext main directory, run the build script
+
+e.g. under Windows
+	build pd msvc
+or under unix with
+	bash build.sh pd gcc
+
+When you run it for the first time, one or more configuration files will be created 
+from templates - you will get a message on the console. 
+You should edit the files to adapt it to your system.
+
+Depending on your platform these will have name like
+buildsys/config-win-pd-msvc.txt
+or
+buildsys/config-lnx-pd-gcc.txt
+or
+buildsys/config-mac-max-gcc.txt
+
+
+After editing the files you will have to run the build script again to ensure that flext is built.
+
+After successfully building everything, you can install flext with (under Windows)
+	build pd msvc install
+or (under unix)
+	bash build.sh pd gcc install
+
+
+You will probably have to have superuser rights in order to install things 
+into the default location.
+(try "sudo" or "su -c" prefixes, or log in as root)
+
+
+1.3) Building externals
+=======================
+
+The flext build system can be used to compile flext-based externals or also
+native PD and Max/MSP externals, provided there is a package.txt file in the project folder.
+
+In the shell, change to the project folder.
+Then, simply run the flext build script, 
+
+e.g. under Windows
+	..\flext\build pd msvc
+Then install your newly built external with
+	..\flext\build pd msvc install
+You can clean up the intermediate build folders with
+	..\flext\build pd msvc clean
+
+or under unix with
+	bash ../flext/build.sh pd gcc
+Then install your external with
+	bash ../flext/build.sh pd gcc install
+You can clean up the intermediate build folders with
+	bash ../flext/build.sh pd gcc clean
+
+
+1.4) Tested configurations
+==========================
+
+Both flext and flext-based externals have been successfully built with the 
+following combination of platform-system-compiler, build type.
+A missing combination does not necessarily mean that it won't work.
+
+win-pd-msvc, single/multi/shared
+win-pd-bcc, single/multi/shared
+win-pd-mingw, single/multi/shared (from CMD prompt, not MSYS)
+win-pd-cygwin, single/multi/shared
+win-max-msvc, single/multi/shared
+win-max-cygwin, single/multi/shared
+win-max-mingw, single/multi/shared
+
+
+mac-pd-gcc, single/multi/shared
+mac-max-gcc, single/multi/shared
+
+lnx-pd-gcc, single/multi/shared
+
+----------------------------------------------------------------------------
+
+2) Using autoconf
+=================
+
+Thanks to Tim Blechmann, flext can also be built using autoconf.
+This only works under unix shells (like bash).
+
+When starting from a fresh cvs-based copy of flext first run
+./bootstrap.sh
+
+then you can run
+./configure --help 
+to get a page of options.
+
+You need to pass the path to the PD source files or the Max SDK to the ./configure script, 
+e.g. on OS X with something like
+./configure --enable-system=pd --with-sysdir=/Applications/Pd-0.40-2/Contents/Resources/src
+
+then build flext with
+make
+
+and install it with
+sudo make install
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+MINGW: the specs file for certain gcc versions seems to be wrong and needs to be fixed before building flext
+
+- locate the specs file with "gcc --print-file specs"
+- open this file with your favourite editor
+- search for the line "*md_startfile_prefix:"
+- change the next line "/mingw/lib" to "/lib"
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+----------------------------------------------------------------------------
+
+3) Other ways to compile flext and flext-based externals
+========================================================
+
+Flext can be compiled straightforward as a static or shared library, in release or debug mode.
+
+Some preprocessor symbols must be defined depending on the build mode and the realtime system it is targetted for.
+
+for Max/MSP: FLEXT_SYS = 1
+for PD: FLEXT_SYS = 2
+
+for a debug build: FLEXT_DEBUG
+
+for a static single-threaded library: nothing needs to be defined
+for a static multi-threaded library: FLEXT_THREADS
+for a shared library (always multi-threaded): FLEXT_SHARED
+
+
+
+- Windows - Microsoft Visual Studio projects (.vcproj files)
+
+    Please have a look at the projects delivered with flext and flext-based externals.
+
+- MacOSX - Apple Xcode projects (.xcode bundles)
+
+    Please have a look at the projects delivered with flext and flext-based externals.
+
+    Xcode projects often use some Source Trees (definable in the Xcode Preferences).
+    - Flext - the flext main folder
+    - PD - the PD installation
+    - Max SDK - the Max SDK (path ending with "c74support")
+    - Max Common - Max common files (normally /Library/Application\ Support/Cycling\ \'74 )
+
+- MacOSX - Metrowerks Codewarrior (.mcp files)
+
+    You should have the following "Source Trees" (CW preferences, not project specific!) defined:
+    "OS X Volume" - Pointing to your OSX boot drive
+    "flext" - Pointing to the flext main directory
+    "Cycling74 OSX" - Pointing to the SDK for Max/MSP - the path should end with /c74support
+
+    With your project using flext use the prefix file "flcwmax-x.h" or, 
+    alternatively "flcwmax-x-thr.h" for threading support.
+
+- MacOS9 - Metrowerks Codewarrior (.mcp files)
+
+    You should have the following "Source Trees" (CW preferences, not project specific!) defined:
+    "flext" - Pointing to the flext main directory
+    "Cycling74" - Pointing to the Cycling 74 SDK
+    "MP SDK" - Pointing to the Multiprocessing SDK (for threading support)
+
+    With your project using flext use the prefix file "flcwmax.h" or, 
+    alternatively "flcwmax-thr.h" for threading support.

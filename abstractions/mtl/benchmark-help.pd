@@ -1,0 +1,34 @@
+#N canvas 42 67 627 480 10;
+#X text 82 48 description: measures how much time it takes to make
+an operation.;
+#X text 87 86 tags: tools;
+#X obj 103 351 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 103 413 f;
+#X obj 103 437 t f f;
+#X obj 146 418 + 1;
+#X msg 208 407 0;
+#X obj 263 353 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 263 421 tof/increment;
+#X text 86 306 This example measure the time it takes for two different
+methods to count from 0 to 999;
+#X obj 263 384 mtl/benchmark 1000;
+#X text 155 157 Inlet: start;
+#X text 251 182 Argument: number of bangs to send out outlet 1;
+#X text 133 221 Outlet 1: The test bangs.;
+#X text 134 241 Outlet 2: Bangs when about to start.;
+#X obj 124 182 mtl/benchmark 1000;
+#X obj 103 382 mtl/benchmark 1000;
+#X text 122 123 The results of the benchmark are printed in the Pd
+window.;
+#X connect 2 0 16 0;
+#X connect 3 0 4 0;
+#X connect 4 1 5 0;
+#X connect 5 0 3 1;
+#X connect 6 0 3 1;
+#X connect 7 0 10 0;
+#X connect 10 0 8 0;
+#X connect 10 1 8 3;
+#X connect 16 0 3 0;
+#X connect 16 1 6 0;

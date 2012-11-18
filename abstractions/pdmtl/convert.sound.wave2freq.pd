@@ -1,0 +1,9 @@
+#N canvas 0 0 399 349 10;
+#X obj 96 118 inlet;
+#X obj 102 224 /;
+#X obj 103 285 outlet;
+#X msg 103 175 344.21 \$1;
+#X text 54 74 Sound : Wave length (m) to frequency (Hz);
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;

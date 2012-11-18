@@ -1,0 +1,17 @@
+#N canvas 116 388 450 300 10;
+#X obj 44 156 synth.gun.gas~;
+#X obj 23 118 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 39 222 mix.out_~;
+#X floatatom 162 124 5 0 0 0 - - -;
+#X text 202 126 Reverb time;
+#X msg 99 121 5;
+#X msg 62 118 50;
+#X text 39 53 Comment: Taken from Andy Farnell's work.;
+#X text 41 25 Description: Generates part of a gun sound.;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 1 0 0 0;
+#X connect 3 0 0 1;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;

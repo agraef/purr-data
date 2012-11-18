@@ -1,0 +1,13 @@
+#N canvas 0 0 797 414 10;
+#X obj 128 218 unpack f f;
+#X floatatom 115 297 5 0 0 0 - - -;
+#X floatatom 194 274 5 0 0 0 - - -;
+#X text 234 138 Click and drag;
+#X text 232 218 The range is -1 to 1;
+#X msg 119 83 0.32 -0.5;
+#X text 82 27 Description: A grid.;
+#X obj 127 125 input.grid_;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 5 0 7 0;
+#X connect 7 0 0 0;

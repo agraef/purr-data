@@ -1,0 +1,20 @@
+#N canvas 0 22 432 300 10;
+
+
+
+
+
+
+#X obj 29 185 storebang murray \$0.selection;
+#X obj 29 231 r \$0.selection;
+#X symbolatom 29 256 10 0 0 0 - - -;
+#X text 8 16 storebang - takes two arguments \, a value and a receiver.
+Clicking the bang will output the value to the receiver. This is useful
+for creating multiple choice lists \, and is especially helpful when
+dynamically generating a list of choices.;
+#X text 6 95 [storebang cheese \$0.receiver] will send "cheese" to
+\$0.receiver when clicked.;
+#X text 280 265 2008 Luke Iannini;
+#X obj 29 139 storebang federer \$0.selection;
+#X obj 29 162 storebang nadal \$0.selection;
+#X connect 1 0 2 0;

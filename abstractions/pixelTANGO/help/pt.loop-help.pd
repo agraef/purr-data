@@ -1,0 +1,55 @@
+#N canvas 422 71 669 546 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 493 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 495 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 24 180 pt.loop;
+#X obj 24 322 pt.source;
+#X obj 184 273 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 339 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 194 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 184 97 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 194 *Sliders:;
+#X text 187 339 *Popup:;
+#X text 187 273 *Number Boxes:;
+#X text 187 97 *Toggle:;
+#X text 197 118 Loop_Film: Turn on and off looping of video file. Off
+by default.;
+#X obj 184 150 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 150 *Bang:;
+#X text 197 233 Out_Point: Set the relative out point of the loop;
+#X text 197 296 In_Point: Show the relative in point as percentage
+;
+#X text 197 314 Out_Point: Show the relative out point as percentage
+;
+#X text 12 23 Type: Modifier. Effects only layer. Requires pt.source
+;
+#X text 12 6 pixelTANGO HELP - pt.loop - Loop video file (Quicktime)
+;
+#X text 12 39 Creation Arguments: None;
+#X text 177 77 Loop Functions:;
+#X text 197 215 In_Point: Set the relative in point of the loop;
+#X text 197 251 Play_Rate: Control loop speed left(slow) to Right(fast)
+;
+#X text 197 360 Set the Loop direction (forward \, reverse and ping-pong)
+;
+#X text 197 171 Reset: Reset controls to defaults.;
+#X obj 184 381 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 381 *Notes:;
+#X text 197 402 The in and out points are relative because the left
+edge of the slider is the first frame and the right edge is the last
+frame. pt.loop requires pt.source to work properly. The number of frames
+is reported by pt.source and is passed to pt.loop via a loopBack in
+header and footers.;
+#X connect 4 0 5 0;
+#X connect 4 1 5 1;

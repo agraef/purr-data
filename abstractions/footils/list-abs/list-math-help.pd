@@ -1,0 +1,46 @@
+#N canvas 431 198 659 551 10;
+#X obj 160 259 print L;
+#X msg 160 194 1 2 3 4 a b c;
+#X floatatom 270 193 5 0 0 0 - - -;
+#X obj 404 263 print L;
+#X msg 404 198 1 2 3 4 a b c;
+#X floatatom 514 197 5 0 0 0 - - -;
+#X obj 164 365 print L;
+#X msg 164 300 1 2 3 4 a b c;
+#X floatatom 274 299 5 0 0 0 - - -;
+#X obj 160 226 list-math *;
+#X msg 159 167 1 2 3 4 a b c \, 10 20 30 x y z;
+#X text 132 87 Use as "list-math operator" where operator is some binary
+operator \, that expr can understand \, like + \, - \, * or /;
+#X obj 406 373 print L;
+#X msg 406 308 1 2 3 4 a b c;
+#X floatatom 516 307 5 0 0 0 - - -;
+#X obj 132 31 cnv 15 140 30 empty empty list-math 20 12 0 14 -233017
+-66577 0;
+#X text 292 40 simple mathematical operations on lists.;
+#X obj 404 230 list-math +;
+#X obj 164 332 list-math /;
+#X obj 406 340 list-math -;
+#X msg 406 416 1 2 3 4 a b c;
+#X floatatom 516 415 5 0 0 0 - - -;
+#X obj 406 448 list-math - 2;
+#X obj 406 481 print L-with-arg;
+#X text 249 448 Using a default arg:;
+#X text 131 125 A second argument is accepted to set a default scalar
+to use.;
+#X connect 1 0 9 0;
+#X connect 2 0 9 1;
+#X connect 4 0 17 0;
+#X connect 5 0 17 1;
+#X connect 7 0 18 0;
+#X connect 8 0 18 1;
+#X connect 9 0 0 0;
+#X connect 10 0 9 0;
+#X connect 13 0 19 0;
+#X connect 14 0 19 1;
+#X connect 17 0 3 0;
+#X connect 18 0 6 0;
+#X connect 19 0 12 0;
+#X connect 20 0 22 0;
+#X connect 21 0 22 1;
+#X connect 22 0 23 0;

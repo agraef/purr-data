@@ -1,0 +1,35 @@
+#N canvas 57 422 778 503 10;
+#X obj 18 168 line;
+#X obj 18 262 timeroll;
+#X obj 18 189 resample 20;
+#X text 377 154 utilisation example :;
+#X obj 376 180 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 376 222 line;
+#X obj 376 308 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X obj 545 303 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X text 439 304 better than :;
+#X text 332 283 smooth fade in and out;
+#X text 144 30 It perform a non-linearity in order to allow the continuity
+of the diferenciate of the signal (assuming the input signal is a ramp
+from 0 to 1). The shape of this non-linearity is a 3d order polygone
+;
+#X obj 18 210 curve_fade;
+#X obj 376 246 curve_fade;
+#X msg 18 144 0 \, 1 5000;
+#X msg 376 199 \$1 3000;
+#X text 144 92 This object is usefull when natural fade in or fade
+out is neaded. (same result can be acheived with the line3 external)
+;
+#X text 148 10 This object input and output range is 0-1;
+#X connect 0 0 2 0;
+#X connect 2 0 11 0;
+#X connect 4 0 14 0;
+#X connect 5 0 7 0;
+#X connect 5 0 12 0;
+#X connect 11 0 1 0;
+#X connect 12 0 6 0;
+#X connect 13 0 0 0;
+#X connect 14 0 5 0;

@@ -1,0 +1,63 @@
+#N canvas 47 54 873 437 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.osc 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufosc 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 412 131 graph;
+#N canvas 0 0 400 276 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufosc;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 692 310 pd init;
+#N canvas 40 55 247 122 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 547 310 pd clear_buffer;
+#X text 71 83 optional argument/right inlet: frequency in period length
+in samples;
+#X obj 415 311 dac~;
+#X obj 415 267 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 437 266 play;
+#X text 71 63 vasp sine wave generator;
+#X text 175 125 generate a sine wave at 1 kHz;
+#X obj 415 288 tabplay~ bufosc;
+#X msg 547 287 vasp bufosc;
+#N canvas 4 20 454 304 Hz_to_period_length 0;
+#X floatatom 139 242 0 0 0;
+#X obj 139 142 t b f;
+#X text 172 223 period length in samples (float);
+#X floatatom 139 80 0 0 0;
+#X obj 139 206 / 1;
+#X text 184 79 frequency in Hz;
+#X obj 53 142 samplerate~;
+#X obj 53 119 loadbang;
+#X floatatom 139 175 5 0 0;
+#X connect 1 0 8 0;
+#X connect 1 1 4 1;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 4 0;
+#X restore 81 311 pd Hz_to_period_length;
+#X obj 77 217 vasp.update;
+#X obj 77 194 vasp.* 0.5;
+#X msg 77 127 vasp bufosc;
+#X obj 77 171 vasp.osc 44.1;
+#X obj 66 380 VASP-HELP;
+#X connect 6 0 10 0;
+#X connect 10 0 5 0;
+#X connect 10 0 5 1;
+#X connect 11 0 3 0;
+#X connect 14 0 13 0;
+#X connect 15 0 16 0;
+#X connect 16 0 14 0;

@@ -1,0 +1,14 @@
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/scrolllist
+
+make clean
+
+make 
+
+make install
+
+open help-scrolllist.pd
+
+Thanx for getting here.
+Yves/

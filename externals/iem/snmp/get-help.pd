@@ -1,0 +1,36 @@
+#N canvas 0 46 849 470 10;
+#X msg 207 274 disconnect;
+#X msg 139 152 get SNMPv2-MIB::system.sysUpTime.0;
+#X obj 121 379 print result;
+#X msg 202 177 get SNMPv2-MIB::system.sysDescr.0;
+#X obj 121 299 snmp/get;
+#X msg 121 92 connect localhost public;
+#X floatatom 172 321 2 0 0 1 status - -;
+#X text 304 271 disconnect an open connection;
+#X text 317 89 connect to server "localhost" in community "public"
+;
+#X text 470 154 query a MIB;
+#X text 110 22 [snmp/get] communicates with a network entity usigng
+SNMP GET requests;
+#X msg 212 211 get system.sysDescr.1;
+#X msg 211 240 get system.sysContact.0;
+#X msg 365 328 set get \$1;
+#X symbolatom 365 303 0 0 0 0 - - -;
+#X msg 32 245 raw \$1;
+#X obj 32 224 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 365 357 get IF-MIB::ifInOctets.2 \, get IF-MIB::ifOutOctets.2
+;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 4 1 6 0;
+#X connect 5 0 4 0;
+#X connect 11 0 4 0;
+#X connect 12 0 4 0;
+#X connect 13 0 17 0;
+#X connect 14 0 13 0;
+#X connect 15 0 4 0;
+#X connect 16 0 15 0;
+#X connect 17 0 4 0;

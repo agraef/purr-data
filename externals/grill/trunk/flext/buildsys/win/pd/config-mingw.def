@@ -1,0 +1,51 @@
+# where is the PD installation?
+# (this should point to the main folder, which has a "src" subfolder)
+PDPATH="%ProgramFiles%\pd"
+
+###############################################################
+
+# version of the pthreads library (the one coming with PD has version number 1)
+PTHREADSVERSION=1
+
+# path to pthreads headers (PD comes with some in the src folder)
+PTHREADSINC=$(PDPATH)\src
+
+# path to pthreads link library (PD comes with one in the bin folder)
+PTHREADSLIB=$(PDPATH)\bin
+
+###############################################################
+
+# where do/should the flext headers reside/be built?
+FLEXTINC=$(PDPATH)\flext
+
+# where do/should the flext static libraries reside/be built?
+FLEXTLIB=$(FLEXTINC)
+
+# where do/should the flext shared libraries reside/be built?
+FLEXTSHLIB=$(PDPATH)\bin
+
+###############################################################
+
+# where should the external be built?
+OUTPATH=pd-mingw
+
+# where should the external be installed?
+INSTPATH=$(PDPATH)\extra
+
+###############################################################
+
+# make flags (e.g. use multiprocessor)
+#MFLAGS=-j 2
+
+# user defined compiler flags
+# (check if they match your system!)
+UFLAGS=-msse -mfpmath=sse -ffast-math
+
+# user defined optimization flags
+# (check if they match your system!)
+OFLAGS=-O3
+# optimizations for Pentium 4
+OFLAGS+=-march=pentium4 
+
+# comment if you want to compile for Windows 95/98/ME
+WINNT=1

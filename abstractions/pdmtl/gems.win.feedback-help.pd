@@ -1,0 +1,118 @@
+#N canvas 175 13 853 734 10;
+#X obj 25 63 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 23 85 gems.win 600 600;
+#X obj 23 108 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 44 482 colorRGB 1 1 1;
+#X msg 76 47 frame 60;
+#X msg 154 45 frame 20;
+#X obj 36 402 rotateXYZ;
+#X obj 23 129 gems.win @dimen 1024 768 @offset 1280 0 @border 0;
+#X obj 76 201 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 10922 1;
+#X floatatom 73 219 5 0 0 0 - - -;
+#X obj 215 591 list.make;
+#X msg 220 562 3;
+#X obj 321 593 random 255;
+#X obj 314 571 b;
+#X obj 205 625 unpack f f f;
+#X obj 330 621 / 255;
+#X floatatom 124 225 5 0 0 0 - - -;
+#X obj 225 278 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 216 524 metro 1000;
+#X obj 213 488 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 66 572 colorRGB 1 1 1 0.5;
+#X obj 71 616 alpha;
+#X obj 1 251 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X obj 210 453 loadbang;
+#X text 251 278 quality (high by default);
+#X obj 57 453 gemhead;
+#X obj 1 219 loadbang;
+#X text 216 198 feedback amount;
+#X obj 186 679 loadbang;
+#X msg 186 699 draw line;
+#X obj 59 677 colorRGB 1 1 1 1;
+#X text 48 -13 Description: A more advanced video feedback loop using
+snapshots of the rendering window.;
+#X msg 73 181 0.86;
+#X obj 73 160 loadbang;
+#X text 162 226 feedback direction (default to 0.1):;
+#X text 160 240 positive value: feed outward;
+#X text 159 256 nagative value: feed inward;
+#N canvas 0 0 450 300 autorotate 0;
+#X obj 117 110 line;
+#X obj 118 70 random 360;
+#X obj 116 33 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 116 11 loadbang;
+#X obj 116 51 metro 5000;
+#X msg 117 90 \$1 5000;
+#X obj 116 171 outlet;
+#X connect 0 0 6 0;
+#X connect 1 0 5 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X restore 125 347 pd autorotate;
+#X floatatom 126 369 5 0 0 0 - - -;
+#X obj 33 319 gems.win.feedback;
+#X text 327 183 destination;
+#X text 327 183 destination;
+#X msg 285 668 1 1 1;
+#X msg 163 533 1;
+#X msg 169 74 color 1 1 1;
+#X obj 68 646 square 0.5;
+#X obj 60 726 square 0.5;
+#X msg 185 97 color 0 0 0;
+#X text 20 251 feedback on/off;
+#X obj 4 290 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0 1
+;
+#X obj 293 51 gems.win @dimen 320 240;
+#X obj 302 16 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X connect 0 0 1 0;
+#X connect 2 0 7 0;
+#X connect 3 0 20 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 39 2;
+#X connect 10 0 14 0;
+#X connect 10 1 13 0;
+#X connect 11 0 10 0;
+#X connect 12 0 15 0;
+#X connect 13 0 12 0;
+#X connect 14 0 20 1;
+#X connect 14 1 20 2;
+#X connect 14 2 20 3;
+#X connect 15 0 10 1;
+#X connect 16 0 39 3;
+#X connect 17 0 39 4;
+#X connect 18 0 11 0;
+#X connect 19 0 18 0;
+#X connect 20 0 21 0;
+#X connect 21 0 45 0;
+#X connect 22 0 39 1;
+#X connect 23 0 19 0;
+#X connect 25 0 3 0;
+#X connect 26 0 22 0;
+#X connect 28 0 29 0;
+#X connect 29 0 46 0;
+#X connect 30 0 46 0;
+#X connect 32 0 8 0;
+#X connect 33 0 32 0;
+#X connect 37 0 38 0;
+#X connect 38 0 6 3;
+#X connect 39 0 6 0;
+#X connect 42 0 14 0;
+#X connect 43 0 20 4;
+#X connect 44 0 1 0;
+#X connect 45 0 30 0;
+#X connect 47 0 1 0;
+#X connect 49 0 39 0;
+#X connect 51 0 50 0;

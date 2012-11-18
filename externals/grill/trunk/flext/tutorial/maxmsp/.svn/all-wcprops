@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp
+END
+ex-attr1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-attr1.pat
+END
+ex-adv1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-adv1.pat
+END
+ex-attr2.pat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-attr2.pat
+END
+ex-adv2.pat
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-adv2.pat
+END
+ex-bind1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-bind1.pat
+END
+ex-attr3.pat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-attr3.pat
+END
+ex-adv3.pat
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-adv3.pat
+END
+ex-signal1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-signal1.pat
+END
+ex-signal2.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-signal2.pat
+END
+ex-timer1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-timer1.pat
+END
+ex-simple1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-simple1.pat
+END
+ex-simple2.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-simple2.pat
+END
+ex-simple3.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-simple3.pat
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/Makefile.am
+END
+ex-lib1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-lib1.pat
+END
+ex-thread1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-thread1.pat
+END
+ex-thread2.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-thread2.pat
+END
+ex-buffer1.pat
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/ext/!svn/ver/1247/trunk/flext/tutorial/maxmsp/ex-buffer1.pat
+END

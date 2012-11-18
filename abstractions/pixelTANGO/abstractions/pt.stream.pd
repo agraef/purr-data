@@ -1,0 +1,38 @@
+#N canvas 0 22 145 181 10;
+#X obj 2 2 cnv 5 128 82 empty empty Stream_Management 5 6 1 9 -249661
+-66577 0;
+#X symbolatom 5 16 15 0 0 1 IP - -;
+#X obj 5 33 nbx 5 14 -1e+37 1e+37 0 0 empty empty Port 47 8 1 9 -262144
+-1 -1 0 256;
+#X obj 5 51 tgl 30 0 \$0- \$0 Connect/Disconnect 35 15 1 8 -262144
+-1 -33289 0 1;
+#N canvas 0 22 454 304 interna 0;
+#X obj 73 22 cnv 15 300 250 empty empty empty 5 8 1 10 -260390 -1 0
+;
+#X obj 11 24 inlet;
+#X obj 11 234 outlet;
+#X obj 317 33 inlet;
+#X obj 315 250 outlet;
+#X obj 81 171 prepend ip;
+#X obj 81 148 r \$0-ip;
+#X obj 161 148 r \$0-port;
+#X obj 161 171 prepend port;
+#X obj 251 148 r \$0-port;
+#X obj 251 171 prepend port;
+#X text 9 4 Facility to choose and select streams;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 4 0;
+#X connect 9 0 10 0;
+#X restore 15 127 pd interna;
+#X obj 15 104 inlet;
+#X obj 80 104 inlet;
+#X obj 15 150 outlet;
+#X obj 80 150 outlet;
+#X connect 4 0 7 0;
+#X connect 4 1 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 1;

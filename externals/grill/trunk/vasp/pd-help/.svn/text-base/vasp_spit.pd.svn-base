@@ -1,0 +1,46 @@
+#N canvas 190 73 663 567 10;
+#X text 62 76 spit out vectors of a vasp (one vector after the other)
+;
+#X text 62 92 argument: number of outlets (if more than 1 \, outputs
+from right to left);
+#X obj 57 19 cnv 15 15 15 empty empty vasp.spit 0 10 1 14 -262144 -1
+0;
+#X text 211 304 spits out one vector after the other from right to
+left;
+#X obj 119 335 print b;
+#X obj 63 335 print a;
+#X obj 63 305 vasp.spit 3;
+#X msg 63 271 vasp bufspit1 bufspit2;
+#X obj 178 335 print c;
+#X obj 234 335 print ready;
+#X obj 118 220 print b;
+#X obj 63 220 print a;
+#X text 63 118 most right outlet: bang when ready;
+#X msg 63 160 vasp bufspit1 bufspit2 bufspit3;
+#X obj 63 188 vasp.spit;
+#X text 144 189 spits out one vector after the other out of 1 outlet
+;
+#X msg 237 271 vasp bufspit1 bufspit2 bufspit3;
+#X text 171 428 if more vectors than outlets \, see what it does!;
+#X obj 118 459 print b;
+#X obj 63 459 print a;
+#X msg 63 399 vasp bufspit1 bufspit2 bufspit3;
+#X obj 63 429 vasp.spit 2;
+#X obj 174 459 print ready;
+#X obj 50 519 VASP-HELP;
+#X obj 487 483 table bufspit1;
+#X obj 487 504 table bufspit2;
+#X obj 487 525 table bufspit3;
+#X connect 6 0 5 0;
+#X connect 6 1 4 0;
+#X connect 6 2 8 0;
+#X connect 6 3 9 0;
+#X connect 7 0 6 0;
+#X connect 13 0 14 0;
+#X connect 14 0 11 0;
+#X connect 14 1 10 0;
+#X connect 16 0 6 0;
+#X connect 20 0 21 0;
+#X connect 21 0 19 0;
+#X connect 21 1 18 0;
+#X connect 21 2 22 0;

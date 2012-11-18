@@ -1,0 +1,15 @@
+untar in /usr/local/lib/pd/externs
+
+cd /usr/local/lib/pd/externs/colorgrid
+
+make clean 
+
+make
+
+make install
+
+open help-colorgrid.pd
+
+Thanx for getting here.
+Lluis/
+comments and bugs @ lluis@artefacte.org

@@ -1,0 +1,19 @@
+#N canvas 363 266 458 308 10;
+#X obj 127 210 print;
+#X msg 70 81 4 5 6;
+#X obj 235 76 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 256 75 stop;
+#X floatatom 254 112 5 0 0 0 - - -;
+#X text 291 113 delay;
+#X msg 115 82 list a b c;
+#X text 72 11 Description: Delays an incomming list.;
+#X msg 131 117 stop;
+#X text 76 32 tags: lists timing;
+#X obj 127 157 mtl/listDelay 1000;
+#X connect 1 0 10 0;
+#X connect 2 0 10 1;
+#X connect 4 0 10 1;
+#X connect 6 0 10 0;
+#X connect 8 0 10 0;
+#X connect 10 0 0 0;

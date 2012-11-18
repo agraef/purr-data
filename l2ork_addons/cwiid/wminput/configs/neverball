@@ -1,0 +1,6 @@
+# neverball
+
+Plugin.acc.Roll = ABS_X
+Plugin.acc.Roll_Scale = 2.0
+Plugin.acc.Pitch = -ABS_Y
+Plugin.acc.Pitch_Scale = 2.0

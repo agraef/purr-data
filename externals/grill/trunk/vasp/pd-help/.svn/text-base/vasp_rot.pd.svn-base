@@ -1,0 +1,48 @@
+#N canvas 24 75 850 525 10;
+#X obj 75 32 cnv 15 15 15 empty empty vasp.rot 0 10 1 14 -262144 -1
+0;
+#X text 463 343 clear;
+#N canvas 0 0 413 295 clear_buffer 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 463 388 pd clear_buffer;
+#X text 72 73 optional argument/right inlet: value;
+#X text 71 60 rotate buffer content;
+#X msg 463 365 vasp bufrot;
+#X obj 68 333 vasp.update;
+#X floatatom 123 280 0 0 0;
+#X msg 68 246 vasp bufrot;
+#X obj 59 467 VASP-HELP;
+#X obj 72 192 vasp.u;
+#X obj 72 170 vasp.= env 0 0 1 20 -1 100;
+#X obj 180 427 vasp.shift;
+#X obj 260 427 vasp.xrot;
+#X text 55 426 related objects:;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufrot 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 443 130 graph;
+#N canvas 0 0 398 274 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 1 10 \; \$1 xlabel 1.1 0 20 40 60 80 100
+\; \$1 yticks 0 0.25 2 \; \$1 ylabel 105 -1 -0.5 0 0.5 1;
+#X msg 33 45 symbol bufrot;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 698 395 pd init;
+#X msg 72 145 vasp bufrot;
+#X obj 68 305 vasp.rot 7;
+#X text 193 139 1 create envelope;
+#X text 193 245 2 rotate buffer content;
+#X connect 5 0 2 0;
+#X connect 7 0 18 1;
+#X connect 8 0 18 0;
+#X connect 11 0 10 0;
+#X connect 17 0 11 0;
+#X connect 18 0 6 0;

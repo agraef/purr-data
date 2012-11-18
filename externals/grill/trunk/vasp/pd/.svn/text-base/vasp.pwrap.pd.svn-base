@@ -1,0 +1,10 @@
+#N canvas 40 55 404 304 12;
+#X obj 50 149 vasp.- 3.14159;
+#X obj 50 120 vasp.% 6.28319;
+#X obj 50 88 vasp.+ 3.14159;
+#X obj 50 49 inlet;
+#X obj 50 223 outlet;
+#X connect 0 0 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;

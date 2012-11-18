@@ -1,0 +1,13 @@
+#N canvas 0 0 450 300 10;
+#X obj 163 141 tabread \$1;
+#X obj 163 173 s \$2;
+#X obj 163 63 inlet;
+#X obj 163 93 select \$3;
+#X obj 163 116 f \$3;
+#X obj 221 118 outlet;
+#X text 213 75 send non-matches further along;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 4 0 0 0;

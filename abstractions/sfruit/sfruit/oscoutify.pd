@@ -1,0 +1,13 @@
+#N canvas 594 98 149 115 10;
+#X obj 21 84 s PDOSC;
+#X obj 21 31 r \$2;
+#X obj 21 55 list prepend \$1;
+#X obj 21 0 inlet;
+#X obj 108 1 inlet;
+#X obj 87 84 s /pd\$1;
+#X connect 1 0 2 0;
+#X connect 1 0 5 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 3 0 5 0;
+#X connect 4 0 2 1;

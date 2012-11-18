@@ -1,0 +1,38 @@
+
+Pd-extended build system
+========================
+
+Check out this webpage for full documentation:
+
+	http://puredata.org/docs/developer/build
+
+While you are there, check out the rest of them:
+
+	http://puredata.org/docs/developer/
+
+
+Adding specific package types
+=============================
+
+This directory is for package builders for various platforms.  The
+directories here should be named using the following format:
+
+platform_pkgname
+
+So for example, Pd for Windows runs on the Win32 platform, and uses Inno
+Setup to create the installer package, so the directory is called:
+win32_inno.  This name should also be all lowercase and use an underscore for
+a separator.
+
+There are package making files out there that are not in the Pd CVS.  I know
+of the PlanetCCRMA RPMs and Mandrake RPMs.  So for example, when these get
+checked it, they should be in:
+
+planetccrma_rpm
+mandrake_rpm
+
+Standards are good!  ;)
+
+<hans@at.or.at>
+
+

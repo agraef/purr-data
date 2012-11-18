@@ -1,0 +1,26 @@
+#N canvas 239 111 493 440 10;
+#X text 51 62 join several vasps into one;
+#X text 51 78 argument: number of vasps to join;
+#X text 51 95 left inlet triggers the output;
+#X obj 51 19 cnv 15 15 15 empty empty vasp.join 0 10 1 14 -262144 -1
+0;
+#X obj 62 382 VASP-HELP;
+#X msg 230 159 vasp bufjoin1 bufjoin2 bufjoin3;
+#X obj 128 214 prepend set;
+#X obj 61 305 prepend set;
+#X obj 61 191 vasp.split 2;
+#X obj 61 282 vasp.join 2;
+#X msg 61 159 vasp bufjoin1 bufjoin2;
+#X obj 310 337 table bufjoin1;
+#X obj 310 360 table bufjoin2;
+#X obj 310 384 table bufjoin3;
+#X msg 128 238;
+#X msg 61 329;
+#X connect 5 0 8 0;
+#X connect 6 0 14 0;
+#X connect 7 0 15 0;
+#X connect 8 0 9 0;
+#X connect 8 1 9 1;
+#X connect 8 2 6 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;

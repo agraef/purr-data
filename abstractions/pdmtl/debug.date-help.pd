@@ -1,0 +1,10 @@
+#N canvas 0 22 612 378 10;
+#X obj 214 182 debug.date;
+#X obj 212 207 debug.print SPAM;
+#X obj 213 144 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 72 61 Description: Outputs a symbol representing the date and
+time in a legible format;
+#X text 75 96 Good for using with debug.log.file;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;

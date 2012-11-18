@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Uninstalling path and abstraction entry from your .pdrc file. A backup is at .pdrc.bak"
+cp ~/.pdrc ~/.pdrc.bak
+grep -v "`pwd`" ~/.pdrc >> ~/.pdrc-tmp
+mv ~/.pdrc-tmp ~/.pdrc
+		

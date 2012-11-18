@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/3746/trunk/sms_resid_ana
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/3618/trunk/sms_resid_ana/Info.plist
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3746/trunk/sms_resid_ana/main.cpp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/3625/trunk/sms_resid_ana/package.txt
+END

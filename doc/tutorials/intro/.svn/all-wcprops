@@ -1,0 +1,401 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/pure-data/!svn/ver/16018/trunk/doc/tutorials/intro
+END
+16.ordering_messages.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/14852/trunk/doc/tutorials/intro/16.ordering_messages.pd
+END
+41.number_limitations.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/41.number_limitations.pd
+END
+31.sliders.pd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/31.sliders.pd
+END
+48.grabbing_keystrokes.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/48.grabbing_keystrokes.pd
+END
+03.getting_help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/4933/trunk/doc/tutorials/intro/03.getting_help.pd
+END
+33.guis.pd
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/33.guis.pd
+END
+28.EXERCISE-hmmm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/28.EXERCISE-hmmm.pd
+END
+07.messages.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/15560/trunk/doc/tutorials/intro/07.messages.pd
+END
+18.depth_first.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/14853/trunk/doc/tutorials/intro/18.depth_first.pd
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/pure-data/!svn/ver/5019/trunk/doc/tutorials/intro/TODO
+END
+51.multiple_messages.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/51.multiple_messages.pd
+END
+06.connections.pd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/06.connections.pd
+END
+shell_sketch.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/4897/trunk/doc/tutorials/intro/shell_sketch.pd
+END
+symbol_conversion.pd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/pure-data/!svn/ver/4829/trunk/doc/tutorials/intro/symbol_conversion.pd
+END
+TEMPLATE.pd
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/pure-data/!svn/ver/5058/trunk/doc/tutorials/intro/TEMPLATE.pd
+END
+12.hot_and_cold_inlets.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/12.hot_and_cold_inlets.pd
+END
+39.init_to_0.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/15656/trunk/doc/tutorials/intro/39.init_to_0.pd
+END
+determinism.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/8620/trunk/doc/tutorials/intro/determinism.pd
+END
+13.counters.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/13.counters.pd
+END
+24.subpatches.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/24.subpatches.pd
+END
+sorting_messages_by_selectors.pd
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/pure-data/!svn/ver/4906/trunk/doc/tutorials/intro/sorting_messages_by_selectors.pd
+END
+math.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/15504/trunk/doc/tutorials/intro/math.pd
+END
+01.hello_world.pd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/8607/trunk/doc/tutorials/intro/01.hello_world.pd
+END
+52.send_messages_to_pd.pd
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/pure-data/!svn/ver/10018/trunk/doc/tutorials/intro/52.send_messages_to_pd.pd
+END
+42.floats_and_ints.pd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/42.floats_and_ints.pd
+END
+46.sorting_messages_by_type.pd
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/46.sorting_messages_by_type.pd
+END
+typing_conventions.pd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/4886/trunk/doc/tutorials/intro/typing_conventions.pd
+END
+47.trigger_conversion.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/47.trigger_conversion.pd
+END
+EXERCISE_TEMPLATE.pd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/pure-data/!svn/ver/4896/trunk/doc/tutorials/intro/EXERCISE_TEMPLATE.pd
+END
+37.comparing_numbers.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/37.comparing_numbers.pd
+END
+keywords.pd
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/pure-data/!svn/ver/4887/trunk/doc/tutorials/intro/keywords.pd
+END
+14.event_driven_processing.pd
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/pure-data/!svn/ver/15654/trunk/doc/tutorials/intro/14.event_driven_processing.pd
+END
+15.right_to_left_order.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/15.right_to_left_order.pd
+END
+40.math_expr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/40.math_expr.pd
+END
+09.the_basic_atoms.pd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/8607/trunk/doc/tutorials/intro/09.the_basic_atoms.pd
+END
+08.EXERCISE-make_your_first_patch.pd
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/pure-data/!svn/ver/8607/trunk/doc/tutorials/intro/08.EXERCISE-make_your_first_patch.pd
+END
+send_and_receive.pd
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/4829/trunk/doc/tutorials/intro/send_and_receive.pd
+END
+17.top_to_bottom.pd
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/17.top_to_bottom.pd
+END
+21.atomic_messages.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/15655/trunk/doc/tutorials/intro/21.atomic_messages.pd
+END
+25.inlets_and_outlets.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/25.inlets_and_outlets.pd
+END
+22.selectors.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/22.selectors.pd
+END
+36.selecting_events.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/36.selecting_events.pd
+END
+02.basic_elements.pd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/pure-data/!svn/ver/4933/trunk/doc/tutorials/intro/02.basic_elements.pd
+END
+26.outlet_order.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/26.outlet_order.pd
+END
+weighted_random.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/4616/trunk/doc/tutorials/intro/weighted_random.pd
+END
+35.EXERCISE-make_a_gui_object_dynamic.pd
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/35.EXERCISE-make_a_gui_object_dynamic.pd
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/pure-data/!svn/ver/4906/trunk/doc/tutorials/intro/README.txt
+END
+50.pure_data_files.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/10015/trunk/doc/tutorials/intro/50.pure_data_files.pd
+END
+05.objects.pd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/pure-data/!svn/ver/8607/trunk/doc/tutorials/intro/05.objects.pd
+END
+34.nervous_guis.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/34.nervous_guis.pd
+END
+30.properties.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/30.properties.pd
+END
+49.building_messages.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/49.building_messages.pd
+END
+32.gui_objects.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/16018/trunk/doc/tutorials/intro/32.gui_objects.pd
+END
+storing_a_number_globally.pd
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/pure-data/!svn/ver/4906/trunk/doc/tutorials/intro/storing_a_number_globally.pd
+END
+38.math.pd
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/pure-data/!svn/ver/10029/trunk/doc/tutorials/intro/38.math.pd
+END
+10.bang.pd
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/pure-data/!svn/ver/8607/trunk/doc/tutorials/intro/10.bang.pd
+END
+27.Example-all_just_data.pd
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/pure-data/!svn/ver/10029/trunk/doc/tutorials/intro/27.Example-all_just_data.pd
+END
+29.turning_on_and_off.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/29.turning_on_and_off.pd
+END
+23.implied_selectors.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/23.implied_selectors.pd
+END
+45.using_lists.pd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/45.using_lists.pd
+END
+44.building_lists.pd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/pure-data/!svn/ver/8628/trunk/doc/tutorials/intro/44.building_lists.pd
+END
+43.EXERCISE-help_americans.pd
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/pure-data/!svn/ver/15656/trunk/doc/tutorials/intro/43.EXERCISE-help_americans.pd
+END
+19.storage_objects.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/10029/trunk/doc/tutorials/intro/19.storage_objects.pd
+END
+11.metro.pd
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/11.metro.pd
+END
+20.creation_arguments.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/8631/trunk/doc/tutorials/intro/20.creation_arguments.pd
+END
+04.edit_mode.pd
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/pure-data/!svn/ver/4933/trunk/doc/tutorials/intro/04.edit_mode.pd
+END

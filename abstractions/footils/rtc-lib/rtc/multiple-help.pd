@@ -1,0 +1,39 @@
+#N canvas 427 111 495 420 10;
+#X msg 316 23 Lists;
+#X text 15 382 1994 by Karlheinz Essl;
+#X text 15 19 multiple;
+#X text 15 53 Multiplies the elements of a supply <int list> according
+to a list of multiples <int list> sent to the right inlet. The element
+0 in the multiple list will erase the respective element of the supply.
+;
+#X obj 68 202 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 109 320 bng 15 250 50 1 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 68 290 multiple;
+#X msg 68 349;
+#X obj 68 319 show;
+#X msg 159 151 3 2 0 1;
+#X msg 146 130 4 3 2 1;
+#X text 234 141 };
+#X msg 179 194 0 0 1 0;
+#X msg 170 174 1 1 1 1;
+#X msg 68 264 1 2 3 4;
+#X text 246 159 multiples;
+#X text 15 228 supply;
+#X text 15 108 NB: both list must have the same length!;
+#X text 130 322 clear display;
+#X obj 146 235 t b a;
+#X obj 146 215 list;
+#X connect 4 0 14 0;
+#X connect 5 0 8 1;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;
+#X connect 9 0 20 0;
+#X connect 10 0 20 0;
+#X connect 12 0 20 0;
+#X connect 13 0 20 0;
+#X connect 14 0 6 0;
+#X connect 19 0 14 0;
+#X connect 19 1 6 1;
+#X connect 20 0 19 0;

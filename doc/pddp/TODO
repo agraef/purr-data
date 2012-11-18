@@ -1,0 +1,13 @@
+
+- create message-help.pd, namecanvas-help.pd and all_about_messages which
+  include [namecanvas] and the additional/pd-msg docs
+
+- check pddplinks to manuals folder (e.g., in all_about_getting_help.pd)
+
+- improve glossary
+
+- finish all_about_externals.pd
+
+- finish all_about_libraries.pd
+
+- update PDDP guidelines (or remove it)

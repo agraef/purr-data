@@ -1,0 +1,34 @@
+#N canvas 293 212 735 560 10;
+#X floatatom 299 173 5 0 0 0 - - -;
+#X obj 300 151 hsl 128 15 -1 1 0 0 empty empty empty -2 -6 0 8 -233017
+-1 -1 8900 1;
+#X obj 117 143 t a a;
+#X obj 52 315 color;
+#X obj 53 340 translateXYZ 2 2 0;
+#X obj 58 377 square 2;
+#X obj 52 234 gemhead 100;
+#X obj 254 323 color;
+#X obj 260 385 square 2;
+#X obj 254 242 gemhead 100;
+#X obj 255 348 translateXYZ -2 -2 0;
+#X text 23 -86 Description: Hue offset to an other color that helps
+you create complementary colors or similar ones.;
+#X obj 459 24 gems.win;
+#X obj 459 1 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 186 196 gems.color.offset;
+#X obj 117 29 input.color.grid_;
+#X text 297 135 Offset (-1 to 1);
+#X connect 0 0 14 1;
+#X connect 1 0 0 0;
+#X connect 2 0 3 1;
+#X connect 2 1 14 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 6 0 3 0;
+#X connect 7 0 10 0;
+#X connect 9 0 7 0;
+#X connect 10 0 8 0;
+#X connect 13 0 12 0;
+#X connect 14 0 7 1;
+#X connect 15 0 2 0;

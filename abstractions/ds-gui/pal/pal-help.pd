@@ -1,0 +1,90 @@
+#N struct 411-color-select float x float y;
+#N canvas 0 0 1004 682 12;
+#X obj 633 24 pal 411 help;
+#X obj 501 -2 namecanvas help;
+#X text 478 69 1 Click to start-->;
+#X text 480 407 6 Click the L -->;
+#X text 496 423 to enable labels;
+#X text 292 453 the word "LABEL";
+#X text 292 485 the right to change;
+#X text 498 514 from the palette;
+#X text 481 497 8 Click a color;
+#X text 293 500 font size/ left number;
+#X text 64 -1 <-- 2 Click and drag the red anchor;
+#X text 629 -4 <-- namecanvas object (required);
+#X text 110 17 (in non-editmode = stretch \; in editmode = move);
+#X text 492 306 & color menus -->;
+#X text 289 423 <-- 7 In non-editmode \,;
+#X text 293 438 click and drag;
+#X text 22 508 5 Click and drag the;
+#X text 38 524 color bars above \, or;
+#X text 38 541 scroll the numbers to;
+#X text 36 558 change rgb values;
+#X text 32 577 (You can also click the;
+#X text 37 594 number and type the value);
+#X text 290 469 (Scroll the number on;
+#X text 292 516 chooses font face);
+#X text 460 327 9 Click for handle-->;
+#X text 87 255 10 In non-editmode \, click and drag the;
+#X text 0 356 3 Move object;
+#X text 60 372 here -->;
+#X text 110 286 all GUI properties (Click the;
+#X text 639 251 f;
+#X text 109 302 anchor to make them reappear);
+#X text 496 603 GUI properties;
+#X text 492 531 (<TAB> for;
+#X text 494 549 shortcuts \, then;
+#X text 494 566 type "x" to to;
+#X text 495 584 toggle between;
+#X obj 12 80 cnv 15 438 163 empty empty empty 20 12 0 10 -233017 -66577
+0;
+#X obj 7 75 cnv 15 438 163 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 8 76 cnv 15 436 161 empty empty empty 20 12 0 10 -262144 -1
+0;
+#X text 43 100 pal is an abstraction to aid in creating and;
+#X text 42 118 developing GUI frontends in pure data. It uses;
+#X text 43 136 pd's native data structures to provide easy;
+#X text 21 79 pal- GUI Editor and Customizable Color Palette;
+#X text 42 153 access to all the properties of pd's GUI objects.;
+#X text 43 180 To use multiple pal objects in different windows \,
+;
+#X text 43 195 give each pal a different number for its first;
+#X text 43 211 creation argument;
+#X obj 747 200 cnv 15 183 447 empty empty empty 20 12 0 10 -233017
+-66577 0;
+#X obj 742 195 cnv 15 183 447 empty empty empty 20 12 0 10 -1 -1 0
+;
+#X obj 743 196 cnv 15 181 445 empty empty empty 20 12 0 10 -253760
+-1 0;
+#X text 755 232 hide all ds anchors;
+#X text 755 270 constrain x/y;
+#X text 753 250 <TAB> = on/ f = off;
+#X text 758 536 you can type "e" to;
+#X text 757 554 toggle editmode;
+#X text 779 201 -- Buttons --;
+#X text 756 305 rgb motion;
+#X text 755 288 textbox motion;
+#X text 755 367 reinit helpers;
+#X text 756 432 Hex!;
+#X text 795 459 then <ENTER>.;
+#X text 797 476 Also turns on;
+#X text 797 493 shortcuts);
+#X text 756 407 <--- Type the label;
+#X text 756 385 move anchors to top;
+#X text 795 441 to type label \,;
+#X text 794 424 (or use <TAB>;
+#X text 759 520 With shortcuts on \,;
+#X text 750 587 send name on Clean_up;
+#X text 750 607 recv name on Clean_up;
+#X text 460 288 4 Click for label -->;
+#X text 112 270 red triangle toward the right to reveal;
+#X obj 747 29 cnv 15 187 103 empty empty empty 20 12 0 10 -233017 -66577
+0;
+#X obj 742 24 cnv 15 187 103 empty empty empty 20 12 0 10 -1 -1 0;
+#X obj 743 25 cnv 15 185 101 empty empty empty 20 12 0 10 -257981 -1
+0;
+#X text 746 25 <-- pal creation args:;
+#X text 769 83 (optional/ defaults;
+#X text 771 101 to "patch");
+#X text 748 45 * a number (required);
+#X text 748 64 * name of patch;

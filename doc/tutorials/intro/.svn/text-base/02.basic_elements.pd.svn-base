@@ -1,0 +1,16 @@
+#N canvas 10 40 620 460 12;
+#X obj 36 141;
+#X obj 34 91 float;
+#X msg 34 187 message;
+#X floatatom 34 236 5 0 0 0 - - -;
+#X symbolatom 34 285 10 0 0 0 - - -;
+#X text 33 334 comment;
+#X text 54 28 comment;
+#X obj 12 13 cnv 15 400 40 empty empty Basic_Elements 20 12 0 24 -228992
+-66577 0;
+#X text 153 333 comment (like the rest of this text);
+#X text 151 91 object box;
+#X text 151 141 empty object box;
+#X text 152 232 number box (click and drag/type);
+#X text 152 284 symbol box (click and type);
+#X text 152 187 message box (click);

@@ -1,0 +1,17 @@
+#N canvas 0 48 494 424 10;
+#X text 19 64 transformations;
+#X text 19 24 A bunch of different dodecaphonic procedures;
+#X text 20 307 © 1993-2004 by Karlheinz Essl <www.essl.at>;
+#X text 20 293 Real Time Composition Library vs. 4.1 for xMAX;
+#X obj 140 64 row-modus;
+#X obj 140 222 pitch-from-row;
+#X obj 140 188 random-row;
+#X obj 140 153 check-row;
+#X obj 140 246 pitch-from-row-mod;
+#X text 19 222 pitch generators;
+#X text 19 188 row generators;
+#X text 19 155 check;
+#X obj 140 90 permutate-row;
+#X obj 246 90 normalize-row;
+#X obj 140 117 transpose-row;
+#X msg 352 24 Harmony;

@@ -1,0 +1,5 @@
+#N canvas 1 57 428 224 10;
+#X text 45 64 Description: Rotates a 3rd order horizontal Ambisonic
+sound.;
+#X obj 50 109 mtl/ambiRotateWxyuvpq~;
+#X text 46 80 tags: ambisonic;

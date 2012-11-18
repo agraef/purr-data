@@ -1,0 +1,18 @@
+#N canvas 409 354 379 280 10;
+#X obj 31 123 GEMglBegin;
+#X obj 86 100 GLdefine GL_LINE_STRIP;
+#X obj 31 13 inlet;
+#X obj 86 77 loadbang;
+#X obj 159 13 inlet;
+#X obj 221 12 inlet;
+#X obj 31 200 GEMglEnd;
+#X obj 31 151 GEMglVertex3fv;
+#X obj 31 175 GEMglVertex3fv;
+#X connect 0 0 7 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 4 0 7 1;
+#X connect 5 0 8 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;

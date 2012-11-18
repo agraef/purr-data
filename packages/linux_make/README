@@ -1,0 +1,101 @@
+
+===================
+Installing pd-l2ork
+===================
+
+To install pd-l2ork, you need to type somethings on the command
+line.  Open Terminal, xterm, Console, or whatever its called on your machine,
+and type in the commands listed below.
+
+To install:
+    tar xjf PACKAGE_NAME.tar.bz2
+    cd PACKAGE_NAME
+    make install
+
+To uninstall:
+    cd PACKAGE_NAME
+    make uninstall
+
+A preferences file is embedded into this distro.  It loads the default set of
+libraries, and sets a couple of other things. If you save the preferences
+within Pd, it will override these embedded preferences.
+
+Installing the needed dependencies
+----------------------------------
+
+You will need to install other libraries to make sure that things like MP3,
+video, etc work properly.
+
+___Debian/Ubuntu___
+
+If you want to save room, then don't install the "-dev" packages.
+
+http://puredata.org/docs/developer/Debian
+
+
+___Fedora Core___
+
+If you want to save room, then don't install the "-devel" packages.
+
+http://puredata.org/docs/developer/Fedora
+
+
+
+Installing in a different location
+----------------------------------
+
+You can install this package elsewhere, but its been compiled to run in
+/usr/local.  If you install it somewhere other than /usr/local, you will only
+be able to run pd-l2ork like this:
+
+        cd /path/to/bin/pd-l2ork && ./pd-l2ork
+
+Here's how to install it elsewhere:
+To install:
+
+        make install prefix=/path/to
+
+To uninstall:
+
+        make uninstall prefix=/path/to
+
+
+
+=================
+Building pd-l2ork
+=================
+
+
+To build everything and create an generic installer for linux, do this:
+
+
+Download and run the script from CVS which will download all the sources from
+anonymous CVS:
+
+    scripts/checkout-developer-layout.sh
+
+Now you will have all of the sources in a directory called "pure-data".  Next,
+run these commands to build in the package:
+
+    cd packages/linux_make
+    make install
+
+It will then compile and install everything into packages/linux_make/build.
+The default installation prefix is "/usr/local".  Pd-l2ork will need to be installed
+into that directory in order for it to find all its externals and docs.  You
+can compile everything to use a different prefix like this:
+
+    make install prefix=/usr
+
+After you have everything built, you can make a tarball with a generated
+Makefile which will install and uninstall everything:
+
+    make tarbz2
+
+For debian packages do:
+
+	make deb PACKAGE_TYPE=deb
+
+You can generate just the Makefile used for installation using:
+
+    make installer_makefile

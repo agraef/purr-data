@@ -1,0 +1,34 @@
+#N canvas 756 363 681 405 10;
+#X msg 33 221 0 4 8 0 4 8 0 4 8 0 4 8 0 4 8;
+#X floatatom 126 134 5 0 0 0 - - -;
+#X floatatom 79 124 5 0 0 0 - - -;
+#X text 293 125 It is used for building chords out of a scale.;
+#X msg 304 196 0 2 4 5 7 9 11;
+#X msg 304 319 0 0 0 0;
+#X floatatom 405 226 5 0 0 0 - - -;
+#X msg 33 101 0 1 2 3 4 5 6 7 8 9 10 11;
+#X obj 304 170 t b f;
+#X floatatom 302 148 5 0 0 0 - - -;
+#X text 414 195 Major scale;
+#X text 448 228 Number of notes in each chord;
+#X text 378 152 Interval between each note;
+#X text 22 7 Description: Jumps through the elements of a list \, giving
+every n element (jumping over some \, if necessary) and a total of
+up to m elements;
+#X obj 33 196 cyclone/prepend set;
+#X obj 302 282 cyclone/prepend set;
+#X obj 33 154 mtl/listJump 2 4;
+#X text 31 66 tags: lists musical;
+#X obj 303 253 mtl/listJump 2 4;
+#X connect 1 0 16 2;
+#X connect 2 0 16 1;
+#X connect 4 0 18 0;
+#X connect 6 0 18 2;
+#X connect 7 0 16 0;
+#X connect 8 0 4 0;
+#X connect 8 1 18 1;
+#X connect 9 0 8 0;
+#X connect 14 0 0 0;
+#X connect 15 0 5 0;
+#X connect 16 0 14 0;
+#X connect 18 0 15 0;

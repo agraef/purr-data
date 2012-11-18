@@ -1,0 +1,18 @@
+#N canvas 1255 177 701 554 10;
+#X text 44 47 There are four methods of synchronizing a clkSlave to
+its clkMaster:;
+#X msg 157 224 none;
+#X msg 62 115 match;
+#X msg 129 175 beat;
+#X obj 52 350 symbol;
+#X obj 52 375 outlet;
+#X text 112 110 The abstraction will start playing or will stop immediately.
+The value outputed will match the master's current step.;
+#X text 171 172 The abstraction will start playing or will stop on
+the next beat. The value outputed will start at 0;
+#X text 204 224 The abstraction will start playing or will stop immediately.
+The value outputed will start at 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;

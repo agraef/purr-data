@@ -1,0 +1,16 @@
+#N canvas 378 442 450 300 10;
+#X msg 28 90 0 1 4;
+#X text 30 73 x y z;
+#X text 245 72 x y z;
+#X msg 244 93 5 -3 4;
+#X obj 130 144 3d.distance 3 -7 0;
+#X text 27 21 Description: Returns the distance between two 3d points.
+;
+#X floatatom 137 189 5 0 0 0 - - -;
+#X msg 126 89 3 -7 0;
+#X msg 308 92 3 -7 0;
+#X connect 0 0 4 0;
+#X connect 3 0 4 1;
+#X connect 4 0 6 0;
+#X connect 7 0 4 0;
+#X connect 8 0 4 1;

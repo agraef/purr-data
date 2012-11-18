@@ -1,0 +1,32 @@
+#N canvas 433 164 459 498 10;
+#X text 14 9 Description: Simple arppegiator using a list as a chord
+and a note index.;
+#X text 22 181 Inlet_1: note index from 0 to infinity;
+#X text 214 200 Inlet_2: chord as a list of floats;
+#X obj 15 334 mtl/out~;
+#X text 14 37 tags: musical;
+#X obj 15 307 osc~;
+#X obj 15 270 mtof;
+#X msg 153 201 0 4 7 11;
+#X msg 153 244 0 2 9 7;
+#X floatatom 15 166 5 0 0 0 - - -;
+#X obj 15 99 loadbang;
+#X obj 15 122 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 15 202 mtl/arpeggio 2 4 7 11;
+#X msg 154 222 2 4 9 14;
+#X obj 297 44 mtl/clkMaster 120;
+#X obj 15 235 + 24;
+#X obj 15 142 mtl/clkSlave 1 25;
+#X connect 5 0 3 0;
+#X connect 5 0 3 1;
+#X connect 6 0 5 0;
+#X connect 7 0 12 1;
+#X connect 8 0 12 1;
+#X connect 9 0 12 0;
+#X connect 10 0 11 0;
+#X connect 11 0 16 0;
+#X connect 12 0 15 0;
+#X connect 13 0 12 1;
+#X connect 15 0 6 0;
+#X connect 16 0 9 0;

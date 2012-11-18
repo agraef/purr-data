@@ -1,0 +1,9 @@
+#N canvas 115 133 674 524 10;
+#X obj 273 270 list.avg;
+#X floatatom 273 323 5 0 0 0 - - -;
+#X msg 243 192 12 43 23;
+#X msg 348 198 3 10 2;
+#X text 157 102 Description: Returns the average value of a list.;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;

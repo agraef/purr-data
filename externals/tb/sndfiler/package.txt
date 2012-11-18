@@ -1,0 +1,4 @@
+NAME=sndfiler
+SRCDIR=src
+SRCS=sndfiler.c
+BUILDDIR=build

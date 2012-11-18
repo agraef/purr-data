@@ -1,0 +1,12 @@
+NAME=wmangle
+
+BUILDDIR=build
+
+BUILDCLASS=ext
+BUILDMODE=release
+BUILDTYPE=single
+
+SRCDIR=.
+
+SRCS=main.cpp
+HDRS=

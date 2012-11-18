@@ -1,0 +1,21 @@
+#N canvas 0 0 450 300 10;
+#X obj 12 159 dac~;
+#X obj 89 131 print~;
+#X obj 144 112 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 112 20 5 0 0 0 - - -;
+#X floatatom 265 37 9 0 0 0 - - -;
+#X floatatom 266 110 9 0 0 0 - - -;
+#X obj 18 28 WhiteNoise~;
+#X msg 89 60 coef \$1;
+#X obj 18 86 OneZero~ 0.3;
+#X obj 266 78 OneZero 0.3;
+#X connect 2 0 1 0;
+#X connect 3 0 7 0;
+#X connect 4 0 9 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 1 0;
+#X connect 8 0 0 0;
+#X connect 8 0 0 1;
+#X connect 9 0 5 0;

@@ -1,0 +1,10 @@
+#N canvas 0 22 888 440 10;
+#X obj 246 111 inlet;
+#X obj 282 254 outlet;
+#X obj 227 186 -;
+#X obj 227 148 t f f;
+#X text 450 166 todo: add smooth factor;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 1;
+#X connect 3 1 2 0;

@@ -1,0 +1,129 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header makenote 3 12 0
+18 -204280 -1 0;
+#X obj 0 281 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 246 494 367 META 0;
+#X text 12 175 LIBRARY internal;
+#X text 12 215 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 235 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 195 AUTHOR Miller Puckette;
+#X text 12 255 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 75 INLET_0 float list;
+#X text 12 95 INLET_1 float;
+#X text 12 115 INLET_2 float;
+#X text 12 135 OUTLET_0 float;
+#X text 12 155 OUTLET_1 float;
+#X text 12 45 DESCRIPTION send note-on messages and schedule note-off
+for later;
+#X restore 500 597 pd META;
+#X obj 0 443 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 508 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 108 179 428 410 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [makenote] Related Objects;
+#X obj 74 80 ctlin;
+#X obj 217 80 pgmin;
+#X obj 24 80 bendin;
+#X obj 79 107 touchin;
+#X obj 261 80 polytouchin;
+#X obj 118 80 midiin;
+#X obj 23 107 sysexin;
+#X obj 179 167 noteout;
+#X obj 76 167 ctlout;
+#X obj 24 167 bendout;
+#X obj 366 167 touchout;
+#X obj 280 167 polytouchout;
+#X obj 123 167 midiout;
+#X obj 231 167 pgmout;
+#X obj 24 221 makenote;
+#X text 21 198 MIDI note construction:;
+#X text 21 140 MIDI output:;
+#X text 21 57 MIDI input:;
+#X obj 184 221 stripnote;
+#X obj 168 80 notein;
+#X text 181 198 MIDI note deconstruction:;
+#X obj 24 33 stripnote;
+#X text 21 265 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 20 344 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 21 246 Externals;
+#X obj 21 295 pddp/helplink maxlib/pitch;
+#X obj 21 310 pddp/helplink maxlib/score;
+#X obj 21 325 pddp/helplink maxlib/chord;
+#X obj 21 360 pddp/helplink cyclone/midiformat;
+#X obj 21 375 pddp/helplink cyclone/midiparse;
+#X obj 21 390 pddp/helplink cyclone/midiflush;
+#X restore 101 597 pd Related_objects;
+#X obj 78 290 cnv 17 3 95 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 289 float;
+#X text 98 329 list;
+#X text 98 451 float;
+#X obj 78 452 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 391 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 390 float;
+#X obj 470 3 makenote;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/makenote -text
+pdpedia: makenote;
+#X text 80 59 Makenote makes MIDI-style note-on/note-off pairs \, which
+you can use for MIDI output or to drive note-like processes within
+Pd.;
+#X floatatom 276 163 0 0 0 0 - - -;
+#X floatatom 276 142 0 0 0 0 - - -;
+#X msg 194 119 60;
+#X obj 183 218 print x1;
+#X obj 276 218 print x2;
+#X floatatom 183 97 0 0 0 0 - - -;
+#X msg 234 123 60.5;
+#X text 302 142 "velocity";
+#X text 311 166 duration in milliseconds;
+#X obj 183 191 makenote 3.2 500;
+#X text 168 289 - numbers to the left inlet are "pitches" (MIDI pitch
+numbers) which may be integers or floating point numbers (for microtonal
+pitches).;
+#X msg 130 121 12 2;
+#X text 11 23 send note-on messages and schedule note-off for later
+;
+#X text 168 329 - a list with three elements (pitch \, velocity \,
+duration) will be distributed to the three inlets. You can also send
+a two-element list to use the last duration supplied to [makenote].
+Lists with more than three elements are truncated.;
+#X obj 78 415 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 414 float;
+#X text 158 544 - (optional) initial duration.;
+#X text 158 529 - (optional) initial velocity.;
+#X text 98 474 float;
+#X obj 78 475 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 168 474 - velocity (in milliseconds). After the specified duration
+\, a zero is output.;
+#X text 167 390 - velocity.;
+#X text 167 414 - duration (in milliseconds).;
+#X text 80 529 1) float;
+#X text 80 544 2) float;
+#X text 168 451 - pitch. (It is output again after the specified duration.)
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 18 0 27 2;
+#X connect 19 0 27 1;
+#X connect 20 0 27 0;
+#X connect 23 0 27 0;
+#X connect 24 0 27 0;
+#X connect 27 0 21 0;
+#X connect 27 1 22 0;
+#X connect 29 0 27 0;

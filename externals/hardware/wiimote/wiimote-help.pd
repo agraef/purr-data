@@ -1,0 +1,668 @@
+#N struct IR-blobs float x float y symbol s;
+#N struct NC-stick float x float y;
+#N struct cc-left-stick float x float y;
+#N struct cc-right-stick float x float y;
+#N canvas 432 145 830 538 10;
+#X text 8 9 IN ORDER TO CONNECT: First put the wiimote into discover
+mode (press buttons 1 and 2 simultaneously).;
+#X text 16 364 You can also specify the address as a creation argument:
+;
+#X text 15 380 (make sure to enable discover mode before creation)
+;
+#X obj 435 5 cnv 15 375 460 empty empty Wiimote: 10 15 0 14 -261689
+-143491 0;
+#X floatatom 577 159 7 0 0 1 _X #0-wii-accX-set #0-wii-accX;
+#X floatatom 577 173 7 0 0 1 _Y #0-wii-accY-set #0-wii-accY;
+#X floatatom 577 187 7 0 0 1 _Z #0-wii-accZ-set #0-wii-accZ;
+#X obj 447 159 hsl 128 14 -1 1 0 0 \$0-wii-accX \$0-wii-accX-set empty
+-2 -8 0 10 -204786 -1 -1 0 1;
+#X obj 447 173 hsl 128 14 -1 1 0 0 \$0-wii-accY \$0-wii-accY-set empty
+-2 -8 0 10 -204786 -1 -1 0 1;
+#X obj 447 187 hsl 128 14 -1 1 0 0 \$0-wii-accZ \$0-wii-accZ-set empty
+-2 -8 0 10 -204786 -1 -1 0 1;
+#N canvas 525 243 481 416 IR-data 0;
+#X scalar IR-blobs 128 384 blob1 \;;
+#X scalar IR-blobs 384 384 blob2 \;;
+#X scalar IR-blobs 640 384 blob3 \;;
+#X scalar IR-blobs 896 384 blob4 \;;
+#X coords 0 0 1024 768 256 196 1;
+#X restore 443 260 pd IR-data;
+#X text 444 242 IR Blobs (1024x768):;
+#X floatatom 577 207 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch;
+#X obj 447 207 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-pitch \$0-wii-pitch-set
+empty -2 -8 0 10 -204786 -1 -1 0 1;
+#X floatatom 577 221 7 0 0 1 _ROLL #0-wii-roll-set #0-wii-roll;
+#X obj 447 221 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-roll \$0-wii-roll-set
+empty -2 -8 0 10 -204786 -1 -1 0 1;
+#X text 447 142 Acceleration (-1 to 1):;
+#X text 722 150 Buttons:;
+#X obj 15 427 print;
+#X obj 13 193 s \$0.to.wiimote;
+#X msg 28 121 discover;
+#X msg 13 74 connect 00:1F:C5:0B:1F:86;
+#X msg 39 164 disconnect;
+#X obj 500 36 tgl 25 0 empty empty IR 6 12 0 10 -4160 -1 -1 0 1;
+#X msg 500 90 report ir \$1;
+#X msg 441 69 report acceleration \$1;
+#X obj 441 35 tgl 25 0 empty empty Acc 4 12 0 10 -204786 -1 -1 0 1
+;
+#X obj 709 40 tgl 25 0 empty empty empty 17 7 0 10 -232576 -1 -1 0
+1;
+#X msg 611 92 setLED \$1;
+#X obj 611 39 tgl 15 0 empty empty empty 17 7 0 10 -4032 -1 -1 0 1
+;
+#X obj 635 39 tgl 15 0 empty empty empty 17 7 0 10 -4032 -1 -1 0 1
+;
+#X obj 660 39 tgl 15 0 empty empty empty 17 7 0 10 -4032 -1 -1 0 1
+;
+#X obj 685 40 tgl 15 0 empty empty empty 17 7 0 10 -4032 -1 -1 0 1
+;
+#X text 606 15 LEDs:;
+#N canvas 0 0 409 401 bytemask 0;
+#X obj 269 332 outlet;
+#X obj 269 279 float;
+#X obj 318 183 |;
+#X obj 110 239 -;
+#X obj 110 204 float;
+#X obj 110 184 trigger bang float;
+#X obj 231 204 &;
+#X obj 183 142 route 0 1;
+#X msg 36 56 \$1 1;
+#X msg 106 56 \$1 2;
+#X msg 176 56 \$1 4;
+#X msg 246 56 \$1 8;
+#X obj 36 15 inlet;
+#X obj 106 15 inlet;
+#X obj 176 15 inlet;
+#X obj 246 15 inlet;
+#X obj 36 35 change;
+#X obj 106 35 change;
+#X obj 176 35 change;
+#X obj 246 35 change;
+#X connect 1 0 2 1;
+#X connect 1 0 4 1;
+#X connect 1 0 6 1;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 5 1 6 0;
+#X connect 6 0 3 1;
+#X connect 7 0 5 0;
+#X connect 7 1 2 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 0;
+#X connect 10 0 7 0;
+#X connect 11 0 7 0;
+#X connect 12 0 16 0;
+#X connect 13 0 17 0;
+#X connect 14 0 18 0;
+#X connect 15 0 19 0;
+#X connect 16 0 8 0;
+#X connect 17 0 9 0;
+#X connect 18 0 10 0;
+#X connect 19 0 11 0;
+#X restore 611 69 pd bytemask;
+#X msg 709 91 setRumble \$1;
+#X obj 441 113 s \$0.to.wiimote;
+#X text 708 17 Rumble;
+#X obj 611 116 s \$0.to.wiimote;
+#N canvas 26 157 554 440 buttons 0;
+#X obj 11 11 r \$0.from.wiimote;
+#X obj 11 33 route button;
+#X obj 33 387 s \$0.button.up;
+#X obj 66 363 s \$0.button.down;
+#X obj 103 338 s \$0.button.left;
+#X obj 138 313 s \$0.button.right;
+#X obj 177 286 s \$0.button.a;
+#X obj 212 261 s \$0.button.b;
+#X obj 243 235 s \$0.button.minus;
+#X obj 280 208 s \$0.button.home;
+#X obj 325 180 s \$0.button.plus;
+#X obj 372 151 s \$0.button.1;
+#X obj 404 122 s \$0.button.2;
+#X obj 11 79 unpack f f;
+#X obj 11 56 list;
+#X obj 33 359 & 8;
+#X obj 66 335 & 4;
+#X obj 103 310 & 1;
+#X obj 138 285 & 2;
+#X obj 177 258 & 8;
+#X obj 212 233 & 4;
+#X obj 243 207 & 16;
+#X obj 280 180 & 128;
+#X obj 325 152 & 16;
+#X obj 372 123 & 2;
+#X obj 404 94 & 1;
+#X connect 0 0 1 0;
+#X connect 1 0 14 0;
+#X connect 13 0 15 0;
+#X connect 13 0 16 0;
+#X connect 13 0 17 0;
+#X connect 13 0 18 0;
+#X connect 13 0 23 0;
+#X connect 13 1 19 0;
+#X connect 13 1 20 0;
+#X connect 13 1 21 0;
+#X connect 13 1 22 0;
+#X connect 13 1 24 0;
+#X connect 13 1 25 0;
+#X connect 14 0 13 0;
+#X connect 15 0 2 0;
+#X connect 16 0 3 0;
+#X connect 17 0 4 0;
+#X connect 18 0 5 0;
+#X connect 19 0 6 0;
+#X connect 20 0 7 0;
+#X connect 21 0 8 0;
+#X connect 22 0 9 0;
+#X connect 23 0 10 0;
+#X connect 24 0 11 0;
+#X connect 25 0 12 0;
+#X restore 711 385 pd buttons;
+#N canvas 12 0 677 674 accel 0;
+#X obj 359 239 unpack 0 0 0;
+#X obj 92 612 expr sqrt(pow($f1 \, 2) + pow($f2 \, 2) + pow($f3 \,
+2));
+#X obj 350 298 atan;
+#X obj 350 277 expr $f1 / $f2;
+#X obj 383 322 expr if ($f1 > 0 \, 3.14159 \, -3.14159);
+#X obj 350 349 pack 0 0 0;
+#X obj 350 371 expr if ($f3 <= 0 \, $f1 + $f2 \, $f1);
+#X obj 350 393 * -1;
+#X obj 299 128 unpack 0 0 0;
+#X obj 35 461 s \$0-wii-pitch-set;
+#X obj 350 463 s \$0-wii-roll-set;
+#X obj 378 148 s \$0-wii-accZ-set;
+#X obj 338 167 s \$0-wii-accY-set;
+#X obj 299 186 s \$0-wii-accX-set;
+#X text 75 514 The pitch and roll are only accurate if there are no
+extra accelerations due to hand movement. We can check if the total
+acceleration is close to gravity and only use pitch and roll in that
+case. The total acceleration is given by:;
+#X text 311 106 raw accerlation:;
+#X obj 24 239 unpack 0 0 0;
+#X obj 35 298 atan;
+#X obj 35 277 expr $f1 / $f2;
+#X obj 67 322 expr if ($f1 > 0 \, 3.14159 \, -3.14159);
+#X obj 35 349 pack 0 0 0;
+#X obj 35 371 expr if ($f3 <= 0 \, $f1 + $f2 \, $f1);
+#X obj 35 393 * -1;
+#X obj 225 578 unpack 0 0 0;
+#X obj 126 71 t a;
+#X obj 126 20 r \$0.from.wiimote;
+#X obj 126 44 route acceleration;
+#X connect 0 0 3 0;
+#X connect 0 0 4 0;
+#X connect 0 2 3 1;
+#X connect 0 2 5 2;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 1;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 13 0;
+#X connect 8 1 12 0;
+#X connect 8 2 11 0;
+#X connect 16 1 18 0;
+#X connect 16 1 19 0;
+#X connect 16 2 18 1;
+#X connect 16 2 20 2;
+#X connect 17 0 20 0;
+#X connect 18 0 17 0;
+#X connect 19 0 20 1;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 22 0 9 0;
+#X connect 23 0 1 0;
+#X connect 23 1 1 1;
+#X connect 23 2 1 2;
+#X connect 24 0 8 0;
+#X connect 24 0 16 0;
+#X connect 24 0 0 0;
+#X connect 25 0 26 0;
+#X connect 26 0 24 0;
+#X restore 711 410 pd accel;
+#N canvas 195 75 568 473 ir 0;
+#N canvas 631 449 342 204 IR-blobs 0;
+#X obj 39 34 struct IR-blobs float x float y symbol s;
+#X obj 39 71 filledcurve 9 30 0 0 -30 -30 0 0 30 30 0;
+#X obj 48 112 drawsymbol s -60 -75 0 1 blob;
+#X restore 8 19 pd IR-blobs;
+#X obj 227 420 pointer;
+#X msg 227 398 traverse pd-IR-data \, next;
+#X obj 134 63 route 0 1 2 3;
+#X obj 134 422 unpack 0 0 0;
+#X obj 134 443 set IR-blobs x y;
+#X obj 245 350 pointer;
+#X obj 152 352 unpack 0 0 0;
+#X obj 152 373 set IR-blobs x y;
+#X msg 245 328 traverse pd-IR-data \, next \, next;
+#X obj 264 272 pointer;
+#X obj 171 266 unpack 0 0 0;
+#X obj 171 292 set IR-blobs x y;
+#X msg 264 250 traverse pd-IR-data \, next \, next \, next;
+#X obj 283 197 pointer;
+#X obj 190 199 unpack 0 0 0;
+#X obj 190 220 set IR-blobs x y;
+#X msg 283 175 traverse pd-IR-data \, next \, next \, next \, next
+;
+#X obj 134 18 r \$0.from.wiimote;
+#X obj 134 40 route ir;
+#X msg 249 99 \$1 \$2 384 0;
+#X obj 249 40 t f f;
+#X obj 249 80 pack;
+#X msg 249 20 0 \, 1 \, 2 \, 3;
+#X obj 279 60 * 256;
+#X obj 279 80 + 128;
+#X obj 431 32 loadbang;
+#X obj 431 54 t b b;
+#X obj 228 147 t b b b b;
+#X connect 1 0 5 2;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 3 1 7 0;
+#X connect 3 2 11 0;
+#X connect 3 3 15 0;
+#X connect 4 0 5 0;
+#X connect 4 1 5 1;
+#X connect 6 0 8 2;
+#X connect 7 0 8 0;
+#X connect 7 1 8 1;
+#X connect 9 0 6 0;
+#X connect 10 0 12 2;
+#X connect 11 0 12 0;
+#X connect 11 1 12 1;
+#X connect 13 0 10 0;
+#X connect 14 0 16 2;
+#X connect 15 0 16 0;
+#X connect 15 1 16 1;
+#X connect 17 0 14 0;
+#X connect 18 0 19 0;
+#X connect 19 0 3 0;
+#X connect 20 0 3 0;
+#X connect 21 0 22 0;
+#X connect 21 1 24 0;
+#X connect 22 0 20 0;
+#X connect 23 0 21 0;
+#X connect 24 0 25 0;
+#X connect 25 0 22 1;
+#X connect 26 0 27 0;
+#X connect 27 0 23 0;
+#X connect 27 1 28 0;
+#X connect 28 0 2 0;
+#X connect 28 1 9 0;
+#X connect 28 2 13 0;
+#X connect 28 3 17 0;
+#X restore 710 436 pd ir;
+#X obj 735 189 tgl 13 0 \$0.bli \$0.button.left empty 17 7 0 10 -191407
+-1 -1 0 1;
+#X obj 763 189 tgl 13 0 \$0.bli \$0.button.right empty 17 7 0 10 -191407
+-1 -1 0 2;
+#X obj 749 203 tgl 13 0 \$0.bli \$0.button.down empty 17 7 0 10 -191407
+-1 -1 0 4;
+#X obj 749 175 tgl 13 0 \$0.bli \$0.button.up empty 17 7 0 10 -191407
+-1 -1 0 8;
+#X obj 726 288 tgl 13 0 \$0.bli \$0.button.minus - 5 8 0 10 -191407
+-1 -1 0 16;
+#X obj 750 288 tgl 13 0 \$0.bli \$0.button.home empty 17 7 0 10 -191407
+-1 -1 0 128;
+#X obj 774 288 tgl 13 0 \$0.bli \$0.button.plus + 5 8 0 10 -191407
+-1 -1 0 16;
+#X obj 747 228 tgl 18 0 \$0.bli \$0.button.b B 5 9 1 13 -191407 -1
+-1 0 4;
+#X obj 747 240 tgl 18 0 \$0.bli \$0.button.a A 5 9 1 13 -191407 -1
+-1 0 8;
+#X obj 749 322 tgl 16 0 \$0.bli \$0.button.1 1 5 9 1 11 -191407 -1
+-1 0 2;
+#X obj 749 349 tgl 16 0 \$0.bli \$0.button.2 2 5 9 1 11 -191407 -1
+-1 0 1;
+#X obj 215 317 spigot;
+#X obj 215 339 print WIIMOTE;
+#X obj 215 280 r \$0.from.wiimote;
+#X obj 254 299 tgl 15 0 empty empty print_data 19 7 0 13 -261234 -1
+-1 0 1;
+#X obj 15 401 wiimote 00:1F:C5:0B:1F:86;
+#X text 10 221 By default \, the wiimote does not report acceleration
+data \, IR data \, or any data from an attached extension (eg \, nunchuck).
+You must specifically enable each reporting mode.;
+#X obj 16 279 cnv 15 140 70 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X obj 21 305 wiimote;
+#X obj 21 283 r \$0.to.wiimote;
+#X obj 21 327 s \$0.from.wiimote;
+#X text 10 55 Then you can connect to a specific address:;
+#X text 27 103 Or you can try to automatically detect a wiimote:;
+#X obj 435 469 cnv 15 375 60 empty empty Extensions: 20 12 0 14 -204786
+-66577 0;
+#N canvas 3 45 418 236 Nunchuck 0;
+#X obj 16 11 cnv 15 375 180 empty empty Nunchuk: 10 15 0 14 -228992
+-355 0;
+#X floatatom 163 133 7 0 0 1 _X #0-nc-accX-set #0-nc-accX;
+#X floatatom 163 147 7 0 0 1 _Y #0-nc-accY-set #0-nc-accY;
+#X floatatom 163 161 7 0 0 1 _Z #0-nc-accZ-set #0-nc-accZ;
+#X obj 33 133 hsl 128 14 -1 1 0 0 \$0-nc-accX \$0-nc-accX-set empty
+-2 -8 0 10 -261681 -1 -1 0 1;
+#X obj 33 147 hsl 128 14 -1 1 0 0 \$0-nc-accY \$0-nc-accY-set empty
+-2 -8 0 10 -261681 -1 -1 0 1;
+#X obj 33 161 hsl 128 14 -1 1 0 0 \$0-nc-accZ \$0-nc-accZ-set empty
+-2 -8 0 10 -261681 -1 -1 0 1;
+#X obj 298 51 nbx 3 16 -1e+37 1e+37 0 0 empty \$0-nc-btn-set empty
+-80 8 0 10 -261681 -1 -1 0 256;
+#X text 29 117 Acceleration:;
+#X text 231 48 Buttons:;
+#X text 297 84 Stick:;
+#N canvas 185 133 481 416 NC-data 0;
+#X scalar NC-stick 130 133 \;;
+#X coords 0 0 256 256 80 80 1;
+#X restore 296 101 pd NC-data;
+#X obj 32 38 tgl 25 0 empty empty empty 17 7 0 10 -261682 -1 -1 0 1
+;
+#X msg 32 68 report nunchuk \$1;
+#X obj 32 89 s \$0.to.wiimote;
+#N canvas 3 217 743 313 nunchuk 0;
+#X obj 15 55 route button acceleration stick;
+#X obj 494 184 pointer;
+#X obj 494 141 loadbang;
+#X obj 387 153 unpack 0 0;
+#X obj 387 229 set NC-stick x y;
+#X obj 160 148 unpack 0 0 0;
+#X obj 240 169 s \$0-nc-accZ-set;
+#X obj 200 188 s \$0-nc-accY-set;
+#X obj 160 211 s \$0-nc-accX-set;
+#X obj 15 169 s \$0-nc-btn-set;
+#X msg 494 162 traverse pd-NC-data \, next;
+#X obj 15 11 r \$0.from.wiimote;
+#X obj 15 33 route nunchuk;
+#N canvas 154 209 610 221 NC-stick 0;
+#X obj 39 34 struct NC-stick float x float y;
+#X obj 44 71 filledpolygon 900 20 0 5 -5 0 -20 -5 -5 -20 0 -5 5 0 20
+5 5 20 0;
+#X restore 386 262 pd NC-stick;
+#X connect 0 0 9 0;
+#X connect 0 1 5 0;
+#X connect 0 2 3 0;
+#X connect 1 0 4 2;
+#X connect 2 0 10 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 5 0 8 0;
+#X connect 5 1 7 0;
+#X connect 5 2 6 0;
+#X connect 10 0 1 0;
+#X connect 11 0 12 0;
+#X connect 12 0 0 0;
+#X restore 180 89 pd nunchuk;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X restore 570 482 pd Nunchuck;
+#N canvas 161 144 450 300 MotionPlus 0;
+#X obj 56 55 cnv 15 375 160 empty empty MotionPlus: 10 15 0 14 -262130
+-83269 0;
+#X obj 67 86 tgl 25 0 empty empty empty 17 7 0 10 -203904 -1 -1 0 1
+;
+#X msg 67 116 report motionplus \$1;
+#X obj 67 137 s \$0.to.wiimote;
+#X floatatom 198 165 7 0 0 1 _pitch #0-wii-mp-pitch-set #0-wii-mp-pitch
+;
+#X floatatom 198 179 7 0 0 1 _roll #0-wii-mp-roll-set #0-wii-mp-roll
+;
+#X obj 68 165 hsl 128 14 0 16000 0 0 \$0-wii-mp-pitch \$0-wii-mp-pitch-set
+empty -2 -8 0 10 -203904 -1 -1 0 1;
+#X obj 68 179 hsl 128 14 0 16000 0 0 \$0-wii-mp-roll \$0-wii-mp-roll-set
+empty -2 -8 0 10 -203904 -1 -1 0 1;
+#N canvas 0 0 308 266 motionplus 0;
+#X obj 8 51 route motionplus;
+#X obj 8 73 route angle_rate low_speed;
+#X obj 97 98 unpack f f f;
+#X obj 8 134 unpack f f f;
+#X obj 8 20 r \$0.from.wiimote;
+#X obj 8 209 s \$0-wii-mp-pitch-set;
+#X obj 48 187 s \$0-wii-mp-roll-set;
+#X obj 89 162 s \$0-wii-mp-yaw-set;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 2 0;
+#X connect 3 0 5 0;
+#X connect 3 1 6 0;
+#X connect 3 2 7 0;
+#X connect 4 0 0 0;
+#X restore 279 116 pd motionplus;
+#X floatatom 198 193 7 0 0 1 _yaw #0-wii-mp-yaw-set #0-wii-mp-yaw;
+#X obj 68 193 hsl 128 14 0 16000 0 0 \$0-wii-mp-yaw \$0-wii-mp-yaw-set
+empty -2 -8 0 10 -203904 -1 -1 0 1;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X restore 570 502 pd MotionPlus;
+#N canvas 3 45 450 300 ClassicController 0;
+#X obj 17 21 cnv 15 375 260 empty empty ClassicController: 10 15 0
+14 -204786 -13381 0;
+#X obj 38 140 tgl 14 0 \$0.bli \$0.cc.button.L empty 17 7 0 10 -228856
+-1 -1 0 32;
+#X obj 52 140 nbx 2 14 -1e+37 1e+37 0 0 \$0.bli \$0.cc.analog.L empty
+0 -8 0 10 -228856 -1 -1 0 256;
+#X obj 121 130 tgl 14 0 \$0.bli \$0.cc.button.zl empty 17 7 0 10 -228856
+-1 -1 0 128;
+#X obj 291 140 tgl 14 0 \$0.bli \$0.cc.button.R empty 17 7 0 10 -228856
+-1 -1 0 2;
+#X obj 305 140 nbx 2 14 -1e+37 1e+37 0 0 \$0.bli \$0.cc.analog.R empty
+0 -8 0 10 -228856 -1 -1 0 256;
+#X obj 236 130 tgl 14 0 \$0.bli \$0.cc.button.zr empty 17 7 0 10 -228856
+-1 -1 0 4;
+#X obj 61 184 tgl 14 0 \$0.bli \$0.cc.button.up empty 17 7 0 10 -228856
+-1 -1 0 1;
+#X obj 80 203 tgl 14 0 \$0.bli \$0.cc.button.right empty 17 7 0 10
+-228856 -1 -1 0 128;
+#X obj 42 203 tgl 14 0 \$0.bli \$0.cc.button.left empty 17 7 0 10 -228856
+-1 -1 0 2;
+#X obj 61 222 tgl 14 0 \$0.bli \$0.cc.button.down empty 17 7 0 10 -228856
+-1 -1 0 64;
+#X obj 153 182 tgl 13 0 \$0.bli \$0.cc.button.minus - 5 8 0 10 -228856
+-1 -1 0 16;
+#X obj 177 182 tgl 13 0 \$0.bli \$0.cc.button.home empty 17 7 0 10
+-228856 -1 -1 0 8;
+#X obj 201 182 tgl 13 0 \$0.bli \$0.cc.button.plus + 5 8 0 10 -228856
+-1 -1 0 4;
+#X obj 300 181 tgl 16 0 \$0.bli \$0.cc.button.x x 5 8 0 10 -228856
+-1 -1 0 8;
+#X obj 321 202 tgl 16 0 \$0.bli \$0.cc.button.a a 5 8 0 10 -228856
+-1 -1 0 16;
+#X obj 279 202 tgl 16 0 \$0.bli \$0.cc.button.y y 5 8 0 10 -228856
+-1 -1 0 32;
+#X obj 300 223 tgl 16 0 \$0.bli \$0.cc.button.b b 5 8 0 10 -228856
+-1 -1 0 64;
+#X msg 28 80 report classic \$1;
+#X obj 28 50 tgl 25 0 empty empty empty 17 7 0 10 -228856 -1 -1 0 1
+;
+#X obj 28 103 s \$0.to.wiimote;
+#N canvas 99 0 677 676 classic 0;
+#X obj 9 11 r \$0.from.wiimote;
+#X obj 9 33 route classic;
+#X obj 9 55 route button right_stick left_stick left right;
+#X obj 9 215 unpack f f;
+#X obj 7 642 s \$0.cc.button.left;
+#X obj 38 621 s \$0.cc.button.right;
+#X obj 83 599 s \$0.cc.button.down;
+#X obj 120 577 s \$0.cc.button.up;
+#X obj 152 554 s \$0.cc.button.x;
+#X obj 183 533 s \$0.cc.button.y;
+#X obj 293 467 s \$0.cc.button.L;
+#X obj 331 445 s \$0.cc.button.zl;
+#X obj 378 423 s \$0.cc.button.zr;
+#X obj 409 402 s \$0.cc.button.R;
+#X obj 440 379 s \$0.cc.button.minus;
+#X obj 476 357 s \$0.cc.button.home;
+#X obj 507 336 s \$0.cc.button.plus;
+#X obj 7 620 & 2;
+#X obj 38 599 & 128;
+#X obj 120 555 & 1;
+#X obj 83 577 & 64;
+#X obj 152 532 & 8;
+#X obj 183 511 & 32;
+#X obj 219 489 & 64;
+#X obj 219 511 s \$0.cc.button.b;
+#X obj 256 489 s \$0.cc.button.a;
+#X obj 256 467 & 16;
+#X obj 293 445 & 32;
+#X obj 331 423 & 128;
+#X obj 378 401 & 4;
+#X obj 409 380 & 2;
+#X obj 440 357 & 16;
+#X obj 476 335 & 8;
+#X obj 507 314 & 4;
+#X obj 200 99 s \$0.cc.analog.L;
+#X obj 264 77 s \$0.cc.analog.R;
+#N canvas 0 0 456 304 left_stick 0;
+#X obj 132 150 pointer;
+#X obj 132 107 loadbang;
+#X obj 25 80 unpack 0 0;
+#X msg 132 128 traverse pd-cc.l \, next;
+#X obj 25 195 set cc-left-stick x y;
+#N canvas 302 445 610 221 cc-left-stick 0;
+#X obj 39 68 filledpolygon 900 20 0 5 -5 0 -20 -5 -5 -20 0 -5 5 0 20
+5 5 20 0;
+#X obj 39 34 struct cc-left-stick float x float y;
+#X restore 24 228 pd cc-left-stick;
+#X obj 25 31 inlet;
+#X obj 92 105 * -1;
+#X obj 92 127 + 64;
+#X obj 25 153 * 2;
+#X obj 92 159 * 2;
+#X connect 0 0 4 2;
+#X connect 1 0 3 0;
+#X connect 2 0 9 0;
+#X connect 2 1 7 0;
+#X connect 3 0 0 0;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 8 0 10 0;
+#X connect 9 0 4 0;
+#X connect 10 0 4 1;
+#X restore 136 131 pd left_stick;
+#N canvas 0 0 456 304 right_stick 0;
+#X obj 176 144 pointer;
+#X obj 177 101 loadbang;
+#X obj 25 79 unpack 0 0;
+#X obj 25 31 inlet;
+#X obj 92 104 * -1;
+#X msg 177 122 traverse pd-cc.r \, next;
+#X obj 25 192 set cc-right-stick x y;
+#N canvas 302 445 610 221 cc-right-stick 0;
+#X obj 39 68 filledpolygon 900 20 0 5 -5 0 -20 -5 -5 -20 0 -5 5 0 20
+5 5 20 0;
+#X obj 39 34 struct cc-right-stick float x float y;
+#X restore 24 228 pd cc-right-stick;
+#X obj 92 126 + 32;
+#X obj 25 159 * 4;
+#X obj 92 157 * 4;
+#X connect 0 0 6 2;
+#X connect 1 0 5 0;
+#X connect 2 0 9 0;
+#X connect 2 1 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 8 0;
+#X connect 5 0 0 0;
+#X connect 8 0 10 0;
+#X connect 9 0 6 0;
+#X connect 10 0 6 1;
+#X restore 72 156 pd right_stick;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 37 0;
+#X connect 2 2 36 0;
+#X connect 2 3 34 0;
+#X connect 2 4 35 0;
+#X connect 3 0 20 0;
+#X connect 3 0 18 0;
+#X connect 3 0 27 0;
+#X connect 3 0 30 0;
+#X connect 3 0 31 0;
+#X connect 3 0 32 0;
+#X connect 3 0 33 0;
+#X connect 3 1 17 0;
+#X connect 3 1 19 0;
+#X connect 3 1 21 0;
+#X connect 3 1 22 0;
+#X connect 3 1 23 0;
+#X connect 3 1 26 0;
+#X connect 3 1 28 0;
+#X connect 3 1 29 0;
+#X connect 17 0 4 0;
+#X connect 18 0 5 0;
+#X connect 19 0 7 0;
+#X connect 20 0 6 0;
+#X connect 21 0 8 0;
+#X connect 22 0 9 0;
+#X connect 23 0 24 0;
+#X connect 26 0 25 0;
+#X connect 27 0 10 0;
+#X connect 28 0 11 0;
+#X connect 29 0 12 0;
+#X connect 30 0 13 0;
+#X connect 31 0 14 0;
+#X connect 32 0 15 0;
+#X connect 33 0 16 0;
+#X restore 238 69 pd classic;
+#N canvas 325 377 481 416 cc.l 0;
+#X scalar cc-left-stick 62 66 \;;
+#X coords 0 0 128 128 50 50 1;
+#X restore 121 215 pd cc.l;
+#N canvas 185 133 481 416 cc.r 0;
+#X scalar cc-right-stick 64 64 \;;
+#X coords 0 0 128 128 50 50 1;
+#X restore 203 214 pd cc.r;
+#X connect 18 0 20 0;
+#X connect 19 0 18 0;
+#X restore 667 482 pd ClassicController;
+#N canvas 203 133 450 300 Balance 0;
+#X obj 37 56 cnv 15 375 215 empty empty Balance: 10 15 0 14 -232576
+-13381 0;
+#X obj 46 85 tgl 25 0 empty empty empty 17 7 0 10 -261234 -1 -1 0 1
+;
+#X obj 46 138 s \$0.to.wiimote;
+#X msg 46 115 report balance \$1;
+#N canvas 475 229 445 263 balance 0;
+#X obj 8 20 r \$0.from.wiimote;
+#X obj 8 51 route balance;
+#X obj 8 73 unpack;
+#X obj 8 95 s \$0-bal-X-set;
+#X obj 41 115 s \$0-bal-Y-set;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X restore 249 98 pd balance;
+#X text 228 144 ! Untested !;
+#X text 232 164 (but might work);
+#X floatatom 97 211 7 0 0 1 _X #0-bal-X-set #0-bal-X;
+#X floatatom 227 211 7 0 0 1 _Y #0-bal-Y-set #0-bal-Y;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;
+#X restore 667 502 pd Balance;
+#X text 18 472 (c) 2007-2010 Mike Wozniewski \, IOhannes m zmoelnig
+& Roman Haefeli;
+#X connect 20 0 19 0;
+#X connect 21 0 19 0;
+#X connect 22 0 19 0;
+#X connect 23 0 24 0;
+#X connect 24 0 36 0;
+#X connect 25 0 36 0;
+#X connect 26 0 25 0;
+#X connect 27 0 35 0;
+#X connect 28 0 38 0;
+#X connect 29 0 34 0;
+#X connect 30 0 34 1;
+#X connect 31 0 34 2;
+#X connect 32 0 34 3;
+#X connect 34 0 28 0;
+#X connect 35 0 38 0;
+#X connect 53 0 54 0;
+#X connect 55 0 53 0;
+#X connect 56 0 53 1;
+#X connect 57 0 18 0;
+#X connect 60 0 62 0;
+#X connect 61 0 60 0;
+#X coords 0 0 1 1 50 50 0;

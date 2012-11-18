@@ -1,0 +1,8 @@
+#N canvas 758 178 454 304 10;
+#X obj 78 27 inlet;
+#X obj 78 73 symbol;
+#X obj 78 102 ext13/strippath;
+#X obj 78 140 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;

@@ -1,0 +1,72 @@
+#N canvas 375 16 781 666 10;
+#X obj 341 20 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 196 92 loop \$1;
+#X obj 197 70 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0 1
+;
+#X msg 453 93 open \$1;
+#X obj 452 69 openpanel;
+#X obj 437 52 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 389 55 5 0 0 0 - - -;
+#X msg 298 21 stop;
+#X obj 396 24 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 330 91 metro 70;
+#X obj 325 123 pdp_yqt;
+#X obj 25 193 pdp_v4l;
+#X obj 34 162 metro 70;
+#X obj 79 128 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 36 129 stop;
+#X msg 121 160 open /dev/video;
+#X obj 594 197 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 594 249 pdp_control;
+#X msg 594 222 thread \$1;
+#X floatatom 594 310 5 0 0 0 - - -;
+#X obj 594 281 route pdp_drop;
+#X text 297 554 http://www.cs.cf.ac.uk/User/Paul.Rosin/resources/sdt/
+;
+#X text 296 538 inspired by Paul Rosin;
+#X text 297 570 PD-fication by Yves Degoyon ( ydegoyon@free.fr );
+#X text 297 521 pdp_distance : chamfer34 distance transform;
+#X obj 108 400 pdp_distance ----;
+#X obj 31 328 pdp_glx;
+#X floatatom 211 317 5 0 0 0 - - -;
+#X text 254 315 Coefficient 1;
+#X floatatom 237 337 5 0 0 0 - - -;
+#X floatatom 264 359 5 0 0 0 - - -;
+#X floatatom 281 382 5 0 0 0 - - -;
+#X text 280 335 Coefficient 2;
+#X text 307 357 Coefficient 3;
+#X text 324 380 Coefficient 4;
+#X obj 108 441 pdp_glx;
+#X obj 113 289 pdp_grey ----;
+#X connect 0 0 9 0;
+#X connect 1 0 10 0;
+#X connect 2 0 1 0;
+#X connect 3 0 10 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 9 1;
+#X connect 7 0 9 0;
+#X connect 8 0 6 0;
+#X connect 9 0 10 0;
+#X connect 10 0 36 0;
+#X connect 11 0 36 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 11 0;
+#X connect 16 0 18 0;
+#X connect 17 0 20 0;
+#X connect 18 0 17 0;
+#X connect 20 0 19 0;
+#X connect 25 0 35 0;
+#X connect 27 0 25 1;
+#X connect 29 0 25 2;
+#X connect 30 0 25 3;
+#X connect 31 0 25 4;
+#X connect 36 0 25 0;
+#X connect 36 0 26 0;

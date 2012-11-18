@@ -1,0 +1,32 @@
+#N canvas 439 102 969 721 10;
+#X obj 99 162 ambi.wxy2mono~;
+#X obj 99 141 ambi.mono2wxy~;
+#X text 31 119 First order 2D :;
+#X text 32 228 First order 3D :;
+#X obj 100 250 ambi.mono2wxyz~;
+#X obj 100 271 ambi.wxyz2mono~;
+#X obj 590 327 image ../../medias/images/ambisonic.gif;
+#X text 324 634 Copyright D.G. Malham \, University of York \, England
+1998ent;
+#X text 324 606 image from : http://www.york.ac.uk/inst/mustech/3d_audio/ambis2.htm
+;
+#X text 64 -12 Ambisonic system audio conversion abstractions for Pd.
+;
+#X obj 64 492 ambi.device.zoom2wxy~;
+#X text 19 470 To encode from surround microphones :;
+#X text 34 323 Third order 2D :;
+#X obj 82 346 ambi.mono2wxyuvpq~;
+#X obj 80 371 ambi.wxyuvpq2mono~;
+#X text 62 4 "angle" argument : 0 degrees is the front of the room.
+Angles grow counter-clockwise. (X is front-rear \, Y is left-right)
+;
+#X text 67 82 "duration" argument : ramp duration is ms for angle changes.
+;
+#X text 66 51 "elevation" argument : Elevation is in degrees \, from
+0 to 90 (top) and -90 (bottom).;
+#X obj 80 398 ambi.gain.7~;
+#X obj 101 291 ambi.gain.4~;
+#X obj 100 187 ambi.gain.3~;
+#X text 211 490 (Zoom H2);
+#X text 190 185 Gain is linear (not dB);
+#X obj 78 421 ambi.dominance.7~ @dominance 0.5;

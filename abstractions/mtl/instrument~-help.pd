@@ -1,0 +1,28 @@
+#N canvas 549 237 732 374 10;
+#X text 43 45 tags: instrument~;
+#X text 43 19 Description: Creates a polyphonic version of any mtl
+abstraction tagged with "instrument~" (except itslef :).;
+#X text 398 198 Arguments:;
+#X text 405 228 2: the name of the abstraction.;
+#X text 406 213 1: the number of voices.;
+#X text 406 242 3+: arguments passed to the abstraction.;
+#X text 402 265 Inlet 1: note input;
+#X text 402 286 Inlet 2: abstraction inlet 2 as definded by that abstraction.
+;
+#X obj 44 158 notein;
+#X obj 44 181 pack;
+#X obj 44 249 mtl/out~;
+#X obj 176 82 mtl/piano 1;
+#X msg 307 211 0 1 0 1;
+#X msg 307 234 1 0 1 0;
+#X msg 308 258 0.7 1 0.2 1;
+#X obj 44 210 mtl/instrument~ 3 additive~ 0.7 1 0.2 1;
+#X connect 8 0 9 0;
+#X connect 8 1 9 1;
+#X connect 9 0 15 0;
+#X connect 11 0 15 0;
+#X connect 12 0 15 1;
+#X connect 13 0 15 1;
+#X connect 14 0 15 1;
+#X connect 15 0 10 0;
+#X connect 15 0 10 1;

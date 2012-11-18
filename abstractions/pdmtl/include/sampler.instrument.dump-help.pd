@@ -1,0 +1,48 @@
+#N canvas 402 64 828 483 10;
+#X obj 73 172 sampler.instrument.dump;
+#X obj 73 206 print instrument_dump;
+#X text 80 27 Description: Dumps the settings of a sampler.instrument.
+;
+#X obj 372 258 sampler.instrument \$0i;
+#X obj 73 74 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 73 101 f \$0;
+#X msg 73 134 \$1i;
+#X obj 86 397 sampler.instrument.dump;
+#X obj 85 278 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 85 327 f \$0;
+#X msg 85 360 \$1i;
+#X obj 85 302 t b b;
+#X msg 186 342 72;
+#X obj 86 430 print instrument_dump;
+#X msg 372 223 sample \$1s;
+#X obj 399 168 sampler.sample \$0s;
+#X obj 372 81 loadbang;
+#X obj 372 106 t b b;
+#X obj 372 201 f \$0;
+#X text 246 363 You can modify the dumped data (specificly the duration
+and the pitch) by sending a midi pitch to the second inlet.;
+#X text 438 83 This dataflow loads a sample and assigns it to an instrument.
+;
+#X msg 208 143 SAMPLER;
+#X text 132 124 Last inlet is default sampler name.;
+#X msg 399 134 load medias/sounds/loop0.wav;
+#X connect 0 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 13 0;
+#X connect 8 0 11 0;
+#X connect 9 0 10 0;
+#X connect 10 0 7 0;
+#X connect 11 0 9 0;
+#X connect 11 1 12 0;
+#X connect 12 0 7 1;
+#X connect 14 0 3 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 17 1 23 0;
+#X connect 18 0 14 0;
+#X connect 21 0 0 2;
+#X connect 23 0 15 0;

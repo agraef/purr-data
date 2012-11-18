@@ -1,0 +1,45 @@
+dssi~ - a DSSI host for Pure Data
+=================================
+
+This directory (dssi) contains sourcecode and possibly binaries for a DSSI host for Pure Data. To find out more about DSSI visit http://dssi.sourceforge.net.
+
+The functionality of the external is demonstrated in in the help patch (dssi/doc/help-dssi.pd).
+
+
+
+Requirements
+------------
+
+To compile dssi~ the following are required;
+
+DSSI >= 0.9
+LADSPA SDK >= 1.x 
+liblo >= 0.12
+alsa/seq_event.h - included
+pd headers >= 0.37
+
+The help patch requires:
+
+PD >= 0.39
+
+
+
+Installation
+------------
+
+From the same directory as the makefile type:
+
+make
+make install (as root)
+
+Once compiled the binary file and help file should be placed in directories that are included in Pure Data's search path.
+
+
+
+License
+-------
+
+All files included in the dssi/src/ directory, and all binary files (if included) are licensed under the GNU GPL Version 2 (see gpl.txt for details).
+
+All files included in the dssi/include/ directory are licensed under the GNU Lesser General Public License (see lesser.txt for details).
+

@@ -1,0 +1,18 @@
+#N canvas 395 212 393 329 10;
+#X msg 24 57 0 4 7;
+#X obj 81 85 vradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 6;
+#X obj 81 212 expr 7-$f1;
+#X text 101 82 Choose your octava;
+#X text 74 56 Major chord;
+#X text 18 5 Desription: Transposes a chord to a higher or lower octava
+;
+#X obj 24 235 mtl/octava;
+#X obj 24 258 cyclone/prepend set;
+#X text 19 23 tags: musical;
+#X msg 24 282;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 2 0 6 1;
+#X connect 6 0 7 0;
+#X connect 7 0 9 0;

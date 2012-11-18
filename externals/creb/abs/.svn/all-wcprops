@@ -1,0 +1,287 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/abs
+END
+bdft.pd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/bdft.pd
+END
+bhip~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/bhip~.pd
+END
+vols~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/vols~.pd
+END
+pulsor~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/pulsor~.pd
+END
+pdynwav~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/pdynwav~.pd
+END
+sin~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/sin~.pd
+END
+expmap~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/expmap~.pd
+END
+ti_hihat.pd
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/pure-data/!svn/ver/5607/trunk/externals/creb/abs/ti_hihat.pd
+END
+blop~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/blop~.pd
+END
+cconj~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cconj~.pd
+END
+cinv~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cinv~.pd
+END
+fblock~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/fblock~.pd
+END
+vol~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/vol~.pd
+END
+fmop~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/fmop~.pd
+END
+rms~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/abs/rms~.pd
+END
+fblock.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/fblock.pd
+END
+eadsrh~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/eadsrh~.pd
+END
+lattice3.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/lattice3.pd
+END
+icep~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/icep~.pd
+END
+bpm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/bpm.pd
+END
+scale7.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/scale7.pd
+END
+tblock.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/419/trunk/externals/creb/abs/tblock.pd
+END
+dsfosc~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/dsfosc~.pd
+END
+step_4r.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/step_4r.pd
+END
+cstate~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cstate~.pd
+END
+step_16.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/step_16.pd
+END
+frequor~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/frequor~.pd
+END
+ccmap~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/ccmap~.pd
+END
+lpifft~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/lpifft~.pd
+END
+cosc~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cosc~.pd
+END
+fmod.pd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/fmod.pd
+END
+idsfosc~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/idsfosc~.pd
+END
+count.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/count.pd
+END
+cadd~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cadd~.pd
+END
+csub~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/csub~.pd
+END
+cstate+~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cstate+~.pd
+END
+inv.pd
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/inv.pd
+END
+step_4.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/step_4.pd
+END
+cmul~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cmul~.pd
+END
+eadh~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/eadh~.pd
+END
+ucnorm~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/ucnorm~.pd
+END
+bdfts.pd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/pure-data/!svn/ver/351/trunk/externals/creb/abs/bdfts.pd
+END
+step_16r.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/step_16r.pd
+END
+ti_snare.pd
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/ti_snare.pd
+END
+64k.pd
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/64k.pd
+END
+cep~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/cep~.pd
+END
+ucmod~.pd
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/pure-data/!svn/ver/956/trunk/externals/creb/abs/ucmod~.pd
+END

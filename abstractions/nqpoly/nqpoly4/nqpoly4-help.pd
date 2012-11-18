@@ -1,0 +1,26 @@
+#N canvas 101 68 444 569 10;
+#X text 7 26 (not quite poly) is an abstraction that uses various voodoo
+to fake the functionality of the [poly~] object in max.;
+#X obj 10 6 nqpoly4;
+#X text 8 63 in short \, [nqpoly4] can take abstractions that obey
+certain requirements and can link them together to make a polyphonic
+instrument.;
+#X text 9 111 since it automates the normally painful task of making
+a patch polyphonic \, it is very easy to do things like 60-nite polyphonism
+\, which really starts becoming granular synthesis.;
+#X obj 18 459 nqpoly~;
+#X text 20 478 is the old version that was tied to audio. Right-click
+and select "Help" for more info.;
+#X obj 38 369 minimal-test;
+#X obj 38 389 petal-test;
+#X obj 38 409 tabgrain-test;
+#X text 22 346 Here are a few demos:;
+#X text 156 388 a simple GEM example;
+#X text 157 368 very simple demo;
+#X text 157 410 a granular synthesis patch;
+#X text 8 191 usage: nqpoly <number of objects> <abstraction name>
+<up to 4 creation args>;
+#X text 13 241 your abstraction is ultimately called with the parameters:
+<index> <number of objects> <arg1> <arg2> <arg3> <arg4>;
+#X text 13 280 For [loadbang] \, you need to use the bang from the
+right inlet on your objects that are written for [nqpoly4].;

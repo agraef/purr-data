@@ -1,0 +1,154 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header print 3 12 0 18
+-204280 -1 0;
+#X obj 0 324 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 244 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS This document was updated for Pd
+version 0.38.4 by Dave Sabine and Hans-Christoph Steiner as part of
+a project called pddp proposed by Krzysztof Czaja to build comprehensive
+documentation for Pd. Jonathan Wilkes revised the patch to conform
+to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION print messages to the terminal window;
+#X text 12 65 INLET_0 anything;
+#X text 12 145 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 424 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 452 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 535 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 98 483 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [print] Related Objects;
+#X obj 22 43 print~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 333 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 483 3 print;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/print -text
+pdpedia: print;
+#X text 98 428 (none);
+#N canvas 103 75 428 487 print_oddities 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [print] Oddities;
+#X obj 33 189 print;
+#X msg 33 73 1;
+#X msg 42 97 float 1;
+#X obj 65 161 symbol test;
+#X msg 60 120 symbol this;
+#X obj 65 142 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 121 310 one 2 three;
+#X obj 53 394 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 121 395 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 130 371 print STRAIGHT;
+#X msg 105 290 list 1 two 3;
+#X msg 88 270 1 two 3;
+#X msg 130 331 list one 2 three;
+#X obj 56 371 route list;
+#X text 20 222 [print] only interprets the "list" selector when the
+following body of the message is an implied list \, i.e. a set of atoms
+that starts with a float.;
+#X text 20 428 This document was updated for Pd version 0.38.4 by Dave
+Sabine and Hans-Christoph Steiner as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd.;
+#X text 138 114 "symbols" are not interpreted;
+#X text 140 129 (i.e. "symbol" is also printed);
+#X text 20 38 floats are interpreted (i.e. it doesn't show the word
+"float" before the number):;
+#X connect 3 0 2 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 5 0;
+#X connect 8 0 11 0;
+#X connect 8 0 15 0;
+#X connect 12 0 11 0;
+#X connect 12 0 15 0;
+#X connect 13 0 11 0;
+#X connect 13 0 15 0;
+#X connect 14 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 9 0;
+#X connect 15 1 10 0;
+#X restore 101 569 pd print_oddities;
+#X text 98 332 anything;
+#X text 168 331 - the [print] object takes any message and prints it
+to the console window. When the print object receives a message \,
+its output will appear in the console window following the name of
+the print object and a colon (:). If the print object does not have
+a name (which you can supply as an argument within the print object
+itself) then the word "print" appears followed by a colon (:) and your
+message.;
+#X text 168 428 - [print] routes output directly to the console window.
+;
+#X msg 159 64 walk the dog;
+#X msg 85 64 bang;
+#X msg 126 64 234;
+#X obj 85 99 print;
+#X msg 158 151 walk the dog;
+#X msg 85 151 bang;
+#X msg 125 151 234;
+#X obj 85 188 print myPrintObject;
+#X text 209 188 A print object with a name.;
+#X text 132 92 A print object without a name. Be sure you can see the
+terminal window as you click on these messages.;
+#N canvas 105 232 428 300 print_and_lists 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [print] Lists;
+#X text 23 38 When the print object receives a list \, it will output
+the entire list as a single message. Like below:;
+#X obj 25 98 print print_this_list;
+#X msg 25 75 10 20 30 foo;
+#X msg 26 180 10 20 30 foo;
+#X obj 26 233 unpack f f f s;
+#X obj 26 266 print unpack_this_list;
+#X text 23 127 To output the list as separate elements \, the list
+needs to be unpacked first. Note that [unpack]'s outlets are triggered
+from right to left. Like below:;
+#X text 37 200 The arguments here are used to tell Pd what type of
+atom to expect: (f = float \, s = symbol).;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 1 7 0;
+#X connect 6 2 7 0;
+#X connect 6 3 7 0;
+#X restore 101 544 pd print_and_lists;
+#X text 82 219 Use the "-n" flag to suppress "print:" in the output
+to the console:;
+#X msg 85 253 test;
+#X obj 207 286 print;
+#X msg 207 254 test;
+#X text 159 286 vs.;
+#X obj 85 286 print -n;
+#X text 168 470 - if you provide a symbol as an argument \, the symbol--
+followed by a colon-- will precede the output when it is sent to the
+console. Or you may use the "-n" flag to only print the incoming message
+(see example above).;
+#X text 78 469 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X text 11 23 print messages to the terminal window;
+#X connect 16 0 19 0;
+#X connect 17 0 19 0;
+#X connect 18 0 19 0;
+#X connect 20 0 23 0;
+#X connect 21 0 23 0;
+#X connect 22 0 23 0;
+#X connect 28 0 32 0;
+#X connect 30 0 29 0;

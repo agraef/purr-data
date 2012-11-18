@@ -1,0 +1,22 @@
+#N canvas 329 97 593 354 12;
+#X msg 22 87 help;
+#X msg 119 136 born;
+#X msg 168 137 to;
+#X msg 210 139 hula;
+#X msg 224 182 hula 1;
+#X obj 144 283 simple3;
+#X text 257 140 tag without argument;
+#X text 293 180 tag and argument;
+#X text 68 87 print a help message;
+#X obj 16 8 cnv 15 550 40 empty empty simple3 10 22 0 24 -260818 -1
+0;
+#X text 174 28 http://grrrr.org;
+#X text 174 10 flext tutorial \, (C)2002-2006 Thomas Grill;
+#X msg 224 220 symbol yeah;
+#X text 350 219 symbol message;
+#X connect 0 0 5 0;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X connect 4 0 5 0;
+#X connect 12 0 5 0;

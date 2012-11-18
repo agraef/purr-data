@@ -1,0 +1,77 @@
+#N canvas 237 21 712 664 10;
+#X obj 176 482 pdp_glx;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 0
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 278 218 dac~;
+#X obj 257 135 metro 70;
+#X obj 215 350 pdp_mgrid;
+#X obj 252 167 pdp_yqt;
+#X obj 421 166 pdp_v4l;
+#X obj 430 135 metro 70;
+#X obj 475 101 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 432 102 stop;
+#X msg 517 133 open /dev/video;
+#X floatatom 309 279 5 0 0 0 - - -;
+#X floatatom 318 300 5 0 0 0 - - -;
+#X text 363 299 Grid dimension (X);
+#X floatatom 335 321 5 0 0 0 - - -;
+#X floatatom 353 345 5 0 0 0 - - -;
+#X floatatom 235 433 5 0 0 0 - - -;
+#X floatatom 280 399 5 0 0 0 - - -;
+#X text 332 405 Y coordinate of cell where motion has been detected
+;
+#X text 288 533 written by Yves Degoyon ( ydegoyon@free.fr );
+#X text 289 516 pdp_mgrid : grid-based motion detection;
+#X text 355 279 Threshold ( pixel average distance within a cell )
+;
+#X text 380 320 Grid dimension (Y);
+#X text 401 344 Grid visibility;
+#X text 288 433 X coordinate of cell where motion has been detected
+;
+#X obj 70 498 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 70 550 pdp_control;
+#X msg 70 523 thread \$1;
+#X floatatom 70 611 5 0 0 0 - - -;
+#X obj 70 582 route pdp_drop;
+#X connect 1 0 11 0;
+#X connect 2 0 13 0;
+#X connect 3 0 2 0;
+#X connect 4 0 13 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 11 1;
+#X connect 8 0 11 0;
+#X connect 9 0 7 0;
+#X connect 11 0 13 0;
+#X connect 12 0 0 0;
+#X connect 12 1 24 0;
+#X connect 12 2 25 0;
+#X connect 13 0 12 0;
+#X connect 13 4 10 0;
+#X connect 13 5 10 1;
+#X connect 14 0 12 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 0;
+#X connect 18 0 14 0;
+#X connect 19 0 12 1;
+#X connect 20 0 12 2;
+#X connect 22 0 12 3;
+#X connect 23 0 12 4;
+#X connect 33 0 35 0;
+#X connect 34 0 37 0;
+#X connect 35 0 34 0;
+#X connect 37 0 36 0;

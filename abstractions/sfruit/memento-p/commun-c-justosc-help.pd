@@ -1,0 +1,17 @@
+#N canvas 797 415 454 304 10;
+#X text 25 26 commun-c-justosc - Make a control visible to the OSC system
+of Memento \, without state-saving.;
+#X text 25 62 Mostly this is for buttons \, but could also work for
+other controls whose state is transient in nature.;
+#X obj 24 219 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 110 277 originator-p /system1 \$0;
+#X obj 24 143 commun-c-justosc /button1 \$0;
+#X msg 229 133 /system1/button1 bang;
+#X obj 229 159 s PDOSC;
+#X obj 229 239 s /system1/OSC;
+#X msg 229 211 /button1 bang;
+#X text 250 184 Or;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 8 0 7 0;

@@ -1,0 +1,57 @@
+#N canvas 427 96 725 630 10;
+#X obj 71 375 originator /h \$0;
+#X obj 63 289 dynamic-commun \$0;
+#X msg 93 220 init;
+#X obj 63 196 t b b;
+#X msg 63 173 bang;
+#X text 63 15 Dynamic commun generator:;
+#X text 71 39 1) Send "init" to clear commun area;
+#X text 71 59 2) For every thing you want to save \, send a list of
+target name \, sender name and receiver name. Target has to start with
+slash \, sender and receiver will internally get replaced with a "$0-NAME".
+;
+#X msg 178 348 /h/preset \$1;
+#X obj 178 327 hradio 15 1 0 2 empty empty empty 0 -6 0 8 -262144 -1
+-1 1;
+#X obj 539 211 s \$0-w;
+#X obj 542 190 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 4000 1;
+#X obj 547 281 hsl 128 15 0 127 0 0 \$0-t \$0-t send/rec-inside -2
+-6 0 8 -262144 -1 -1 7900 1;
+#X obj 539 368 r \$0-d;
+#X obj 539 411 s \$0-d-s;
+#X text 289 266 use send/rec. like this;
+#X floatatom 539 391 5 0 0 0 - - -;
+#X obj 63 150 loadbang;
+#X obj 539 167 r \$0-w-r;
+#X msg 63 246 list /what w w-r \, list /that t t \, list /dis d-s d
+;
+#X msg 281 353 /h/what \$1;
+#X obj 284 328 hsl 128 15 0 127 0 0 empty empty testOSC-/what -2 -6
+0 8 -262144 -1 -1 6200 1;
+#X obj 178 405 print;
+#X floatatom 531 498 5 0 0 0 - - -;
+#X obj 531 518 s \$0-more-s;
+#X obj 531 475 r \$0-more-r;
+#X msg 334 478 list /more more-s more-r;
+#X obj 334 510 s \$0-more-communs;
+#X obj 96 269 r \$0-more-communs;
+#X connect 0 2 22 0;
+#X connect 2 0 1 0;
+#X connect 3 0 19 0;
+#X connect 3 1 2 0;
+#X connect 4 0 3 0;
+#X connect 8 0 0 1;
+#X connect 9 0 8 0;
+#X connect 11 0 10 0;
+#X connect 13 0 16 0;
+#X connect 16 0 14 0;
+#X connect 17 0 4 0;
+#X connect 18 0 11 0;
+#X connect 19 0 1 0;
+#X connect 20 0 0 1;
+#X connect 21 0 20 0;
+#X connect 23 0 24 0;
+#X connect 25 0 23 0;
+#X connect 26 0 27 0;
+#X connect 28 0 1 0;

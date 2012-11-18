@@ -1,0 +1,7 @@
+max v2;
+#N vpatcher 256 153 557 315;
+#P comment 44 79 225 196617 argument/right inlet: repetition count(default 1);
+#P comment 44 38 89 196622 vasp.dif;
+#P newex 116 103 44 196617 vasp.dif;
+#P comment 44 62 124 196617 vasp differential function;
+#P pop;

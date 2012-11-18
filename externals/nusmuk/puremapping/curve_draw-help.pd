@@ -1,0 +1,12 @@
+#N canvas 634 355 394 367 10;
+#X floatatom 34 126 5 -1 1 0 - - -;
+#X floatatom 34 280 9 0 0 0 - - -;
+#X obj 34 144 curve_draw test 100;
+#X text 125 15 draw the in / out relation;
+#X text 31 51 arg 1 : name of the file to save the curve;
+#X text 31 64 arg 2 : size of the table;
+#X text 85 125 input (0 to 1);
+#X text 107 277 out (0 to 1);
+#X text 50 320 The mapping curve is symetric. i.e f(-x)=-f(x);
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

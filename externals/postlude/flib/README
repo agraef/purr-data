@@ -1,0 +1,43 @@
+flib - PD library for feature extraction
+----------------------------------------
+
+Installation
+------------
+
+To install this library, cd to src/ check that the install prefix in the Makefile is correct for your installation of PD, then type:
+
+	make
+	make install (as root)
+
+
+Usage
+-----
+
+To use this library type:
+
+	pd -lib flib
+
+and create an instance of one of the object classes.
+
+
+Notes
+-----
+
+This library was made for my own personal use in order to facilitate feature extraction in PD. It comes without any warranty. 
+
+Comments, bug reports and suggestions are welcome via email at the following address:
+
+	flib@postlude.co.uk
+
+If you intend to modify or add to the library, please also let me know.
+
+Enjoy!
+
+Jamie Bullock, 2005.
+
+LICENSE INFORMATION
+-------------------
+
+flib is licensed under the GPL, see gpl.txt for details.
+
+

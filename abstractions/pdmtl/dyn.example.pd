@@ -1,0 +1,19 @@
+#N canvas 178 165 549 395 10;
+#X obj 216 118 r \$2;
+#X obj 287 235 init.lf \$1;
+#X obj 215 287 s \$3;
+#X text 38 39 Dollar two is a receive symbol for this instance only
+;
+#X text 39 57 Dollar three is the common receive for all the instances
+created in this [dyn.poly] \, which is the object left outlet.;
+#X text 32 -8 This is just an example patch for dyn.poly which does
+not much;
+#X text 32 23 Dollar one is replaced by the instance number;
+#X obj 215 262 flow.prepend;
+#X obj 299 262 print instance_number;
+#X obj 215 142 flow.prepend you sent:;
+#X connect 0 0 9 0;
+#X connect 1 0 7 1;
+#X connect 1 0 8 0;
+#X connect 7 0 2 0;
+#X connect 9 0 7 0;

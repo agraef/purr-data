@@ -1,0 +1,15 @@
+#N canvas 0 22 454 304 10;
+#X obj 135 178 timing.ms2time_;
+#X obj 145 137 timer;
+#X obj 152 11 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 189 68 metro 100;
+#X obj 189 45 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 68 234 Description: displays a time in hours minutes and seconds.
+;
+#X connect 1 0 0 0;
+#X connect 2 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 1;
+#X connect 4 0 3 0;

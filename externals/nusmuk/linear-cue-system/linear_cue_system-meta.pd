@@ -1,0 +1,10 @@
+#N canvas 415 381 491 210 10;
+#X text 11 165 LICENSE GNU GPL;
+#X text 10 50 AUTHOR Cyrille Henry;
+#X text 11 71 DESCRIPTION "Linear Cue System" is an abstraction's collection
+for Pure Data. This system was developed to simplify the use of Pd
+for the living arts \, during the creation of a linear show. It allows
+an easily control and modification the temporal evolution of various
+parts of a Pd patch.;
+#X text 11 29 NAME Linear_cue_system;
+#X text 11 185 VERSION 4;

@@ -1,0 +1,40 @@
+#N canvas 1338 381 818 514 10;
+#X obj 48 284 gems.multi.circle;
+#X obj 44 104 gemhead;
+#X floatatom 112 239 5 0 0 1 repetitions - -;
+#X obj 313 117 gems.win;
+#X obj 313 78 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 48 385 pix_image;
+#X msg 109 338 open ../pdmtl/medias/images/img0.jpg;
+#X obj 48 424 pix_texture;
+#X obj 46 198 gems.fit.scale window;
+#X obj 109 313 loadbang;
+#X obj 48 474 circle;
+#X obj 160 260 tgl 15 0 empty empty keep_orientation 17 7 0 10 -262144
+-1 -1 0 1;
+#X text 18 21 Description: Renders a circle out of a multitude of geos.
+;
+#X obj 157 57 loadbang;
+#X obj 158 111 metro 5000;
+#X obj 157 157 line;
+#X msg 156 134 0 \, 360 5000;
+#X obj 47 156 rotateXYZ;
+#X obj 155 87 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X connect 0 0 5 0;
+#X connect 1 0 17 0;
+#X connect 2 0 0 1;
+#X connect 4 0 3 0;
+#X connect 5 0 7 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 0;
+#X connect 8 0 0 0;
+#X connect 9 0 6 0;
+#X connect 11 0 0 2;
+#X connect 13 0 18 0;
+#X connect 14 0 16 0;
+#X connect 15 0 17 3;
+#X connect 16 0 15 0;
+#X connect 17 0 8 0;
+#X connect 18 0 14 0;

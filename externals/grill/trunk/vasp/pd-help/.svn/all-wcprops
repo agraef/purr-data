@@ -1,0 +1,803 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/ext/!svn/ver/2997/trunk/vasp/pd-help
+END
+vasp_offsetq.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_offsetq.pd
+END
+vasp_qamax.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qamax.pd
+END
+vasp_window.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_window.pd
+END
+vasp_csqr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_csqr.pd
+END
+vasp_gather.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_gather.pd
+END
+vasp_check.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_check.pd
+END
+vasp_dsize.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_dsize.pd
+END
+vasp_crsub.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_crsub.pd
+END
+vasp_log.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_log.pd
+END
+vasp_cfft.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cfft.pd
+END
+vasp_neq.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_neq.pd
+END
+vasp_ropt.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_ropt.pd
+END
+vasp_vectors.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_vectors.pd
+END
+vasp_cdiv.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cdiv.pd
+END
+vasp_max.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_max.pd
+END
+vasp_qrmin.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qrmin.pd
+END
+vasp_ssqr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_ssqr.pd
+END
+vasp_sqrt.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_sqrt.pd
+END
+vasp_offsetd.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_offsetd.pd
+END
+vasp_alwr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_alwr.pd
+END
+vasp_abs.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_abs.pd
+END
+vasp_soffset.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_soffset.pd
+END
+vasp_radd.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_radd.pd
+END
+vasp_frames.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_frames.pd
+END
+vasp_fhp.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_fhp.pd
+END
+vasp_cnorm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cnorm.pd
+END
+vasp_valleys.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_valleys.pd
+END
+vasp_flp.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_flp.pd
+END
+vasp_doffset.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_doffset.pd
+END
+vasp_rect.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rect.pd
+END
+vasp_join.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_join.pd
+END
+vasp_xwindow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_xwindow.pd
+END
+vasp_sign.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_sign.pd
+END
+vasp_rgate.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rgate.pd
+END
+vasp_qmin.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qmin.pd
+END
+vasp_lwr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_lwr.pd
+END
+vasp_qamin.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qamin.pd
+END
+vasp_list.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_list.pd
+END
+vasp_noise.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_noise.pd
+END
+vasp_iwindow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_iwindow.pd
+END
+vasp_gate.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_gate.pd
+END
+vasp_min.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_min.pd
+END
+vasp_rpow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rpow.pd
+END
+vasp_set.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_set.pd
+END
+vasp_cifft.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cifft.pd
+END
+vasp_rsize.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rsize.pd
+END
+vasp_rfft.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rfft.pd
+END
+vasp_mosc.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mosc.pd
+END
+vasp_vector.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_vector.pd
+END
+vasp_opt.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_opt.pd
+END
+vasp_mcosc.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mcosc.pd
+END
+vasp_v.pd
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_v.pd
+END
+vasp_size.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_size.pd
+END
+vasp_ccopy.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_ccopy.pd
+END
+vasp_cnoise.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cnoise.pd
+END
+vasp_update.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_update.pd
+END
+vasp_imm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_imm.pd
+END
+vasp_osc.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_osc.pd
+END
+vasp_add.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_add.pd
+END
+vasp_nonzero.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_nonzero.pd
+END
+vasp_qsize.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qsize.pd
+END
+vasp_agtr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_agtr.pd
+END
+vasp_qframes.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qframes.pd
+END
+vasp_qvectors.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qvectors.pd
+END
+vasp_channel.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_channel.pd
+END
+vasp_rifft.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rifft.pd
+END
+vasp_shift.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_shift.pd
+END
+vasp_ageq.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_ageq.pd
+END
+vasp_csubr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_csubr.pd
+END
+vasp_mod.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mod.pd
+END
+vasp_offset.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_offset.pd
+END
+vasp_sub.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_sub.pd
+END
+vasp_int.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_int.pd
+END
+vasp_exp.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_exp.pd
+END
+vasp_gtr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_gtr.pd
+END
+vasp_mul.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mul.pd
+END
+vasp_rframes.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rframes.pd
+END
+vasp_dif.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_dif.pd
+END
+vasp_sqr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_sqr.pd
+END
+vasp_pow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_pow.pd
+END
+vasp_mphasor.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mphasor.pd
+END
+vasp_copy.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_copy.pd
+END
+vasp_mxwindow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mxwindow.pd
+END
+vasp_sync.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_sync.pd
+END
+vasp_geq.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_geq.pd
+END
+vasp_cpowi.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cpowi.pd
+END
+vasp_aleq.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_aleq.pd
+END
+vasp_div.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_div.pd
+END
+vasp_qvector.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qvector.pd
+END
+vasp_qsum.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qsum.pd
+END
+vasp_fix.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_fix.pd
+END
+vasp_cconj.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cconj.pd
+END
+vasp_miwindow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_miwindow.pd
+END
+vasp_cset.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cset.pd
+END
+vasp_sframes.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_sframes.pd
+END
+vasp_peaks.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_peaks.pd
+END
+vasp_rot.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rot.pd
+END
+vasp_xshift.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_xshift.pd
+END
+vasp_part.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_part.pd
+END
+vasp_cdivr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cdivr.pd
+END
+vasp_rmax.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rmax.pd
+END
+vasp_mirr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mirr.pd
+END
+vasp_subr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_subr.pd
+END
+vasp_tilt.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_tilt.pd
+END
+vasp_polar.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_polar.pd
+END
+vasp_dframes.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_dframes.pd
+END
+vasp_leq.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_leq.pd
+END
+vasp_mwindow.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mwindow.pd
+END
+vasp_cosc.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cosc.pd
+END
+vasp_qrmax.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qrmax.pd
+END
+vasp_multi.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_multi.pd
+END
+vasp_cadd.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cadd.pd
+END
+vasp_phasor.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_phasor.pd
+END
+vasp_radio.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_radio.pd
+END
+vasp_rvalleys.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rvalleys.pd
+END
+vasp_qoffset.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qoffset.pd
+END
+vasp_ssqrt.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_ssqrt.pd
+END
+vasp_spit.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_spit.pd
+END
+vasp_rpeaks.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rpeaks.pd
+END
+vasp_msize.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_msize.pd
+END
+vasp_qchannel.pd
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qchannel.pd
+END
+vasp_minmax.pd
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_minmax.pd
+END
+vasp_mframes.pd
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_mframes.pd
+END
+vasp_equ.pd
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_equ.pd
+END
+vasp_split.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_split.pd
+END
+vasp_csub.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_csub.pd
+END
+vasp_xrot.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_xrot.pd
+END
+vasp_cmul.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_cmul.pd
+END
+vasp_xmirr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_xmirr.pd
+END
+vasp_divr.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_divr.pd
+END
+vasp_xtilt.pd
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_xtilt.pd
+END
+vasp_rmin.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_rmin.pd
+END
+vasp_qmax.pd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/ext/!svn/ver/2997/trunk/vasp/pd-help/vasp_qmax.pd
+END

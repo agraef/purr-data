@@ -1,0 +1,8 @@
+#N canvas 21 40 643 459 12;
+#X obj -39 10 cnv 15 400 40 empty empty keywords 20 12 0 24 -228992
+-66577 0;
+#X text 127 126 float;
+#X text 127 106 bang;
+#X text 127 146 list;
+#X text 127 166 pointer;
+#X text 127 186 symbol;

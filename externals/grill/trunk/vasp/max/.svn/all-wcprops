@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/ext/!svn/ver/3725/trunk/vasp/max
+END
+vasp.freeze
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.freeze
+END
+vasp-objectmappings.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/3725/trunk/vasp/max/vasp-objectmappings.txt
+END
+vasp.nodc
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.nodc
+END
+vasp.ropt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.ropt
+END
+vasp.defer
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.defer
+END
+vasp.lower
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.lower
+END
+vasp.pwrap
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.pwrap
+END
+vasp.parts
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.parts
+END
+vasp.hilbert
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.hilbert
+END
+vasp.upper
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.upper
+END
+vasp.cconj
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.cconj
+END
+vasp.meanq
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.meanq
+END
+vasp.opt
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.opt
+END
+rndup2
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/2997/trunk/vasp/max/rndup2
+END
+vasp.im
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.im
+END
+vasp.conv
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.conv
+END
+vasp.re
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.re
+END
+vasp.cconv
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.cconv
+END
+vasp.spin
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/2997/trunk/vasp/max/vasp.spin
+END

@@ -1,0 +1,76 @@
+# Makefile for gcc @ darwin
+# 
+# usage:
+# to build run "make -f makefile.pd-darwin"
+# to install (as root), do "make -f makefile.pd-darwin install"
+#
+
+CONFIG=config-pd-darwin.txt
+
+include ${CONFIG}
+
+# compiler+linker stuff 
+INCLUDES=${PDPATH}
+FLAGS=${UFLAGS}
+
+# compiler flags for optimized build
+CFLAGS=-O2
+
+# compiler flags for debug build
+CFLAGS_D=-g
+
+# flags for shared linking
+LSHFLAGS= -dylib -dynamic -flat_namespace -undefined suppress
+
+# frameworks
+#FRAMEWORKS=Carbon veclib
+
+
+# ----------------------------------------------
+# the rest can stay untouched
+# ----------------------------------------------
+
+# all the source files from the package
+include make-files.txt
+
+MAKEFILE=makefile.pd-darwin
+
+TARGET=$(TARGDIR)/lib$(NAME).dylib
+TARGET_D=$(TARGDIR)/lib$(NAME)_d.dylib
+HDRS=$(PHDRS) $(IHDRS)
+
+
+all: $(TARGDIR) $(TARGET) $(TARGET_D)
+
+$(TARGDIR):
+	mkdir $(TARGDIR)
+
+$(patsubst %,$(SRCDIR)/%,$(SRCS)): $(patsubst %,$(SRCDIR)/%,$(HDRS)) $(patsubst %,$(SRCDIR)/%,$(IHDRS)) $(MAKEFILE) $(CONFIG)
+	touch $@
+
+$(TARGDIR)/%.o : $(SRCDIR)/%.cpp
+	$(CXX) -c -dynamic $(CFLAGS) $(CFLAGS_T)  $(CFLAGS_S) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(SRCDIR)) $(patsubst %,-F%,$(FRAMEWORKS)) $< -o $@
+
+$(TARGDIR)/%.do : $(SRCDIR)/%.cpp 
+	$(CXX) -c -dynamic $(CFLAGS_D) $(CFLAGS_T)  $(CFLAGS_S) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(SRCDIR)) $(patsubst %,-F%,$(FRAMEWORKS)) $< -o $@
+
+$(TARGET) : $(patsubst %.cpp,$(TARGDIR)/%.o,$(SRCS))
+	ld $(LSHFLAGS) -o $@ $^ -ldylib1.o -lgcc -lstdc++ $(patsubst %,-framework %,$(FRAMEWORKS)) 
+
+$(TARGET_D) : $(patsubst %.cpp,$(TARGDIR)/%.do,$(SRCS))
+	ld $(LSHFLAGS) -o $@ $^ -ldylib1.o -lgcc -lstdc++ $(patsubst %,-framework %,$(FRAMEWORKS)) 
+
+.PHONY: clean install
+
+clean:
+	rm -f $(TARGDIR)/*.{o,do} $(TARGET) $(TARGET_D)
+	
+ifdef PREFIX
+
+install:: $(PREFIX)
+endif
+
+install:: $(TARGET) $(TARGET_D)
+#	cp $(patsubst %,$(SRCDIR)/%,$(PHDRS)) $(PREFIX)/include
+	cp $(TARGDIR)/lib*.dylib $(PREFIX)/lib
+

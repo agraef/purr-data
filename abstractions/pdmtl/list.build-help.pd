@@ -1,0 +1,51 @@
+#N canvas 183 26 766 885 12;
+#X floatatom 345 114 5 0 0 0 - - -;
+#X obj 182 138 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 147 375 print result;
+#X text 395 115 Data;
+#X msg 343 169 symbol foo;
+#X msg 347 200 symbol glue;
+#X text 454 180 works with symbols too;
+#X obj 343 258 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 368 258 Bang to clear current list;
+#X text 35 112 Bang to output and clear;
+#X floatatom 333 374 5 0 0 0 - - -;
+#X text 390 374 current length of list being built;
+#X text 93 59 Description: Builds a list with the incomming data. New
+data is either append or prepended to the list being built.;
+#X text 305 289 Appends data by default.;
+#X floatatom 343 416 5 0 0 0 - - -;
+#X obj 180 440 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 145 677 print result;
+#X text 393 417 Data;
+#X text 486 475 works with symbols too;
+#X obj 410 562 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 437 559 Bang to clear current list;
+#X text 33 414 Bang to output and clear;
+#X floatatom 354 663 5 0 0 0 - - -;
+#X text 357 682 current length of list being built;
+#X text 389 591 Can also prepend.;
+#X obj 200 592 list.build prepend;
+#X msg 398 470 symbol a;
+#X msg 402 501 symbol b;
+#X msg 415 529 symbol c;
+#X obj 202 290 list.build;
+#X connect 0 0 29 1;
+#X connect 1 0 29 0;
+#X connect 4 0 29 1;
+#X connect 5 0 29 1;
+#X connect 7 0 29 1;
+#X connect 14 0 25 1;
+#X connect 15 0 25 0;
+#X connect 19 0 25 1;
+#X connect 25 0 16 0;
+#X connect 25 1 22 0;
+#X connect 26 0 25 1;
+#X connect 27 0 25 1;
+#X connect 28 0 25 1;
+#X connect 29 0 2 0;
+#X connect 29 1 10 0;

@@ -1,0 +1,12 @@
+#N canvas 262 30 450 300 10;
+#X obj 131 111 k_vst~ abyss;
+#X msg 59 59 print;
+#X msg 131 68 opengui;
+#X obj 197 68 adc~;
+#X obj 172 147 dac~;
+#X connect 0 1 4 0;
+#X connect 0 2 4 1;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 1;
+#X connect 3 1 0 2;

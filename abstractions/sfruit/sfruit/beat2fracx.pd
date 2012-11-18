@@ -1,0 +1,15 @@
+#N canvas 0 22 226 251 10;
+#X obj 43 46 list;
+#X obj 43 79 symbol2list x;
+#X obj 43 104 list split 1;
+#X obj 77 129 beat2frac;
+#X obj 43 167 *;
+#X obj 43 21 inlet;
+#X obj 43 194 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 1 3 0;
+#X connect 3 0 4 1;
+#X connect 4 0 6 0;
+#X connect 5 0 0 0;

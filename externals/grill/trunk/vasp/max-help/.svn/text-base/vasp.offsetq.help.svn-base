@@ -1,0 +1,17 @@
+max v2;
+#N vpatcher 243 134 660 396;
+#P number 202 162 42 9 0 0 160 3 0 0 0 221 221 221 222 222 222 0 0 0;
+#P number 45 162 42 9 0 0 160 3 0 0 0 221 221 221 222 222 222 0 0 0;
+#P newex 278 221 114 196617 buffer~ buffoffs? 2000;
+#P message 202 106 161 196617 vasp buffoffs? 220 buffoffs? 300;
+#P newex 202 127 65 196617 vasp.offset?;
+#P message 45 106 115 196617 vasp 200 buffoffs? 300;
+#P newex 45 127 65 196617 vasp.offset?;
+#P comment 42 59 167 196617 get a single vectored vasp«s offset;
+#P comment 42 35 89 196622 vasp.offs?;
+#P comment 199 89 190 196617 more than 1 vector. watch max window!;
+#P connect 4 0 3 0;
+#P connect 3 0 8 0;
+#P connect 6 0 5 0;
+#P connect 5 0 9 0;
+#P pop;

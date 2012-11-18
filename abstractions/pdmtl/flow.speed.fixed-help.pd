@@ -1,0 +1,24 @@
+#N canvas 83 175 741 552 10;
+#X obj 103 309 flow.speed.fixed;
+#X obj 84 168 metro 100;
+#X floatatom 101 357 5 0 0 0 - - -;
+#X floatatom 211 282 5 0 0 0 - - -;
+#X obj 106 244 f;
+#X msg 137 205 0;
+#X msg 188 206 -10;
+#X msg 288 207 100;
+#X msg 235 209 20;
+#X text 180 42 Description: Reaches a target value at a fixed speed.
+;
+#X obj 81 135 loadbang;
+#X text 256 281 speed;
+#X text 133 244 target value;
+#X connect 0 0 2 0;
+#X connect 1 0 4 0;
+#X connect 3 0 0 1;
+#X connect 4 0 0 0;
+#X connect 5 0 4 1;
+#X connect 6 0 4 1;
+#X connect 7 0 4 1;
+#X connect 8 0 4 1;
+#X connect 10 0 1 0;

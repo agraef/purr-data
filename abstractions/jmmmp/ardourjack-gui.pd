@@ -1,0 +1,713 @@
+#N canvas 270 71 561 727 10;
+#N canvas 795 233 554 348 jack-ktrl 0;
+#X obj 300 10 tgl 11 0 jack-in jack-tgl system:capture_1 14 5 0 8 -258113
+-1 -1 0 1;
+#X obj 300 25 tgl 11 0 jack-in jack-tgl system:capture_2 14 5 0 8 -258113
+-1 -1 0 2;
+#X obj 300 40 tgl 11 0 jack-in jack-tgl pure_data_0:input0 14 5 0 8
+-258113 -1 -1 0 3;
+#X obj 300 55 tgl 11 0 jack-in jack-tgl pure_data_0:input1 14 5 0 8
+-258113 -1 -1 0 4;
+#X obj 10 10 tgl 11 0 jack-out jack-tgl system:playback_1 14 5 0 8
+-4034 -1 -1 0 1;
+#X obj 10 25 tgl 11 0 jack-out jack-tgl system:playback_2 14 5 0 8
+-4034 -1 -1 0 2;
+#X obj 10 40 tgl 11 0 jack-out jack-tgl pure_data_0:output0 14 5 0
+8 -4034 -1 -1 0 3;
+#X obj 10 55 tgl 11 0 jack-out jack-tgl pure_data_0:output1 14 5 0
+8 -4034 -1 -1 0 4;
+#X coords 0 -1 1 1 540 66 2 5 5;
+#X restore 9 355 pd jack-ktrl;
+#X obj 9 315 bng 15 250 50 0 \$0-jackktrl empty List.jack.inputs.and.outputs
+20 8 0 9 -228856 -1 -1;
+#X text 11 336 OUTPUTS;
+#X text 301 336 INPUTS;
+#X obj 49 44 cnv 15 450 210 empty empty empty 20 12 0 14 -191407 -66577
+0;
+#X obj 178 58 hsl 23 50 0 127 0 0 transport_play empty empty -2 -8
+0 10 -262144 -1 -1 0 1;
+#X obj 175 58 cnv 15 28 50 empty empty empty 20 12 0 14 -99865 -66577
+0;
+#X obj 188 83 image examples/transport_play.gif;
+#X obj 209 58 hsl 23 50 0 127 0 0 transport_stop empty empty -2 -8
+0 10 -262144 -1 -1 0 1;
+#X obj 206 58 cnv 15 28 50 empty empty empty 20 12 0 14 -99865 -66577
+0;
+#X obj 220 83 image examples/transport_stop.gif;
+#X obj 240 58 hsl 23 50 0 127 0 0 rec_enable_toggle empty empty -2
+-8 0 10 -262144 -1 -1 0 1;
+#X obj 237 58 cnv 15 28 50 empty empty empty 20 12 0 14 -99865 -66577
+0;
+#X obj 252 83 image examples/record_normal_red.gif;
+#X obj 98 58 hsl 23 50 0 127 0 0 goto_end empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 95 58 cnv 15 28 50 empty empty empty 20 12 0 14 -99865 -66577
+0;
+#X obj 109 83 image examples/transport_end.gif;
+#X obj 67 58 hsl 23 50 0 127 0 0 goto_start empty empty -2 -8 0 10
+-262144 -1 -1 0 1;
+#X obj 64 58 cnv 15 28 50 empty empty empty 20 12 0 14 -99865 -66577
+0;
+#X obj 78 83 image examples/transport_start.gif;
+#X obj 209 4 cnv 15 120 30 empty empty ARDOUR-GUI 5 15 0 14 -191407
+-1 0;
+#X obj 528 24 image examples/ardour_icon_48px.gif;
+#X obj 64 119 tgl 13 0 rewind rewind-i Rewind 18 8 0 8 -162280 -162280
+-1 0 1;
+#X obj 64 139 tgl 13 0 ffwd ffwd-i Forward 18 8 0 8 -162280 -162280
+-1 0 1;
+#X obj 144 119 tgl 13 0 add_marker add_marker-i Add.marker 18 8 0 8
+-162280 -162280 -1 1 1;
+#X obj 147 58 hsl 23 50 0 127 0 0 loop_toggle empty empty -2 -8 0 10
+-262144 -1 -1 0 1;
+#X obj 144 58 cnv 15 28 50 empty empty empty 20 12 0 14 -99865 -66577
+0;
+#X obj 157 83 image examples/transport_loop.gif;
+#X obj 144 139 tgl 13 0 prev_marker prev_marker-i Previous.marker 18
+8 0 8 -162280 -162280 -1 1 1;
+#X obj 144 159 tgl 13 0 next_marker next_marker-i Next.marker 18 8
+0 8 -162280 -162280 -1 0 1;
+#X obj 64 199 nbx 4 14 -1e+37 1e+37 0 0 set_transport_speed set_transport_speed-i
+Set.transport.speed 43 8 0 8 -162280 -1 -1 1 256;
+#X obj 305 86 tgl 11 0 mute-1 mute-1-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 86 tgl 11 0 solo-1 solo-1-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 86 tgl 11 0 recenable-1 recenable-1-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X text 296 67 MUTE;
+#X text 323 67 SOLO;
+#X text 352 67 REC;
+#X obj 380 84 nbx 5 15 0 2 0 0 gainabs-1 gainabs-1-i empty 0 -8 0 8
+-162280 -1 -1 0 256;
+#X text 376 67 GAIN-ABS;
+#X obj 436 84 nbx 5 15 -100 6 0 0 gaindb-1 gaindb-1-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X text 435 67 GAIN-DB;
+#X obj 144 179 tgl 13 0 toggle_all_rec_enables toggle_all_rec_enables-i
+Rec.all.tracks.on 18 8 0 8 -162280 -162280 -1 0 1;
+#X obj 305 104 tgl 11 0 mute-2 mute-2-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 104 tgl 11 0 solo-2 solo-2-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 104 tgl 11 0 recenable-2 recenable-2-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 102 nbx 5 15 0 2 0 0 gainabs-2 gainabs-2-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 102 nbx 5 15 -100 6 0 0 gaindb-2 gaindb-2-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 305 122 tgl 11 0 mute-3 mute-3-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 122 tgl 11 0 solo-3 solo-3-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 122 tgl 11 0 recenable-3 recenable-3-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 120 nbx 5 15 0 2 0 0 gainabs-3 gainabs-3-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 120 nbx 5 15 -100 6 0 0 gaindb-3 gaindb-3-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 305 140 tgl 11 0 mute-4 mute-4-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 140 tgl 11 0 solo-4 solo-4-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 140 tgl 11 0 recenable-4 recenable-4-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 138 nbx 5 15 0 2 0 0 gainabs-4 gainabs-4-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 138 nbx 5 15 -100 6 0 0 gaindb-4 gaindb-4-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 305 158 tgl 11 0 mute-5 mute-5-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 158 tgl 11 0 solo-5 solo-5-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 158 tgl 11 0 recenable-5 recenable-5-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 156 nbx 5 15 0 2 0 0 gainabs-5 gainabs-5-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 156 nbx 5 15 -100 6 0 0 gaindb-5 gaindb-5-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 305 176 tgl 11 0 mute-6 mute-6-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 176 tgl 11 0 solo-6 solo-6-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 176 tgl 11 0 recenable-6 recenable-6-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 174 nbx 5 15 0 2 0 0 gainabs-6 gainabs-6-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 174 nbx 5 15 -100 6 0 0 gaindb-6 gaindb-6-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 305 194 tgl 11 0 mute-7 mute-7-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 194 tgl 11 0 solo-7 solo-7-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 194 tgl 11 0 recenable-7 recenable-7-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 192 nbx 5 15 0 2 0 0 gainabs-7 gainabs-7-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 192 nbx 5 15 -100 6 0 0 gaindb-7 gaindb-7-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 305 212 tgl 11 0 mute-8 mute-8-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 212 tgl 11 0 solo-8 solo-8-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 212 tgl 11 0 recenable-8 recenable-8-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 210 nbx 5 15 0 2 0 0 gainabs-8 gainabs-8-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 210 nbx 5 15 -100 6 0 0 gaindb-8 gaindb-8-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X text 278 67 ID;
+#X text 282 82 1;
+#X text 282 100 2;
+#X text 282 118 3;
+#X text 282 136 4;
+#X text 282 154 5;
+#X text 282 172 6;
+#X text 282 190 7;
+#X text 282 208 8;
+#X obj 305 230 tgl 11 0 mute-9 mute-9-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 331 230 tgl 11 0 solo-9 solo-9-i empty 18 8 0 8 -162280 -1 -1
+0 1;
+#X obj 357 230 tgl 11 0 recenable-9 recenable-9-i empty 18 8 0 8 -162280
+-1 -1 0 1;
+#X obj 380 228 nbx 5 15 0 2 0 0 gainabs-9 gainabs-9-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X obj 436 228 nbx 5 15 -100 6 0 0 gaindb-9 gaindb-9-i empty 0 -8 0
+8 -162280 -1 -1 0 256;
+#X text 282 226 9;
+#X obj 330 53 cnv 15 90 15 empty empty Track.controls 0 5 0 9 -191407
+-1 0;
+#X obj 397 7 hradio 17 1 0 6 \$0-instr-vis-1 empty empty 0 -6 0 7 -262144
+-1 -1 0;
+#X obj 398 8 cnv 15 100 15 empty empty Instructions 8 8 0 9 -233017
+-1 0;
+#X obj 184 281 cnv 15 170 30 empty empty JACK-CONNECTIONS 5 16 0 13
+-191407 -1 0;
+#X obj 64 234 bng 14 250 50 0 save_state save_state-i Save.ardour.session
+18 8 0 8 -258113 -1 -1;
+#N canvas 37 138 365 186 inside 0;
+#N canvas 0 0 716 690 ardourgui 0;
+#X obj 18 652 oscS localhost 3819 1;
+#X msg 18 52 /ardour/transport_play;
+#X msg 18 92 /ardour/transport_stop;
+#X msg 18 132 /ardour/rewind;
+#X msg 18 212 /ardour/goto_start;
+#X text 130 32 play;
+#X text 133 71 stop;
+#X text 81 111 rewind;
+#X msg 18 332 /ardour/add_marker;
+#X text 116 312 add marker;
+#X msg 37 508 /ardour/access_action;
+#X msg 18 292 /ardour/loop_toggle;
+#X msg 18 252 /ardour/goto_end;
+#X text 108 189 go to start;
+#X text 103 230 go to end;
+#X msg 18 172 /ardour/ffwd;
+#X text 73 152 forward;
+#X text 160 432 set transport speed;
+#X msg 365 482 /ardour/save_state;
+#X msg 18 372 /ardour/prev_marker;
+#X msg 18 412 /ardour/next_marker;
+#X msg 365 422 /ardour/undo;
+#X msg 365 442 /ardour/redo;
+#X msg 365 382 /ardour/toggle_punch_in;
+#X msg 365 402 /ardour/toggle_punch_out;
+#X msg 364 292 /ardour/toggle_all_rec_enables;
+#X msg 37 568 /ardour/*/#current_value;
+#X msg 37 588 /ardour/set;
+#X text 457 423 undo;
+#X text 454 439 redo;
+#X text 116 350 previous marker;
+#X text 127 391 next marker;
+#X text 521 375 punch in on/off;
+#X text 523 394 punch out on/off;
+#X text 500 231 rec on/off;
+#X msg 364 252 /ardour/rec_enable_toggle;
+#X text 529 271 rec enable on on all tracks;
+#X text 460 462 save project;
+#X text 374 183 MIXER;
+#X text 77 7 TRANSPORT;
+#X text 410 352 OPERATION;
+#X text 195 546 commented out;
+#X text 38 487 acede ao menu: gtk2_ardour/mnemonic-us.bindings;
+#X msg 37 549 /ardour/locate 44100;
+#X obj 28 32 r transport_play;
+#X obj 28 72 r transport_stop;
+#X obj 28 112 r rewind;
+#X obj 28 152 r ffwd;
+#X obj 28 192 r goto_start;
+#X obj 28 232 r goto_end;
+#X obj 28 272 r loop_toggle;
+#X obj 28 312 r add_marker;
+#X obj 28 352 r prev_marker;
+#X obj 28 392 r next_marker;
+#X obj 378 232 r rec_enable_toggle;
+#X obj 28 432 r set_transport_speed;
+#X obj 366 545 1;
+#X msg 366 565 set \$1;
+#X obj 378 272 r toggle_all_rec_enables;
+#X obj 366 615 r \$0-instr-vis-1;
+#X msg 366 635 \; pd-instructions vis 1;
+#X msg 585 573 open \$1;
+#X obj 585 529 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1
+-1;
+#X obj 585 550 openpanel;
+#X obj 366 585 s set_transport_speed-i;
+#X obj 366 525 loadbang;
+#X msg 18 452 /ardour/set_transport_speed \$1;
+#N canvas 337 68 995 433 mixer 0;
+#X text 76 6 mute #id #state;
+#X obj 21 6 r mute-1;
+#X msg 7 26 /ardour/routes/mute 1 \$1;
+#X obj 21 46 r mute-2;
+#X msg 7 66 /ardour/routes/mute 2 \$1;
+#X msg 7 106 /ardour/routes/mute 3 \$1;
+#X msg 7 146 /ardour/routes/mute 4 \$1;
+#X msg 7 186 /ardour/routes/mute 5 \$1;
+#X msg 7 226 /ardour/routes/mute 6 \$1;
+#X msg 7 266 /ardour/routes/mute 7 \$1;
+#X msg 7 306 /ardour/routes/mute 8 \$1;
+#X msg 7 346 /ardour/routes/mute 9 \$1;
+#X obj 21 86 r mute-3;
+#X obj 21 126 r mute-4;
+#X obj 21 166 r mute-5;
+#X obj 21 206 r mute-6;
+#X obj 21 246 r mute-7;
+#X obj 21 286 r mute-8;
+#X obj 21 326 r mute-9;
+#X text 246 6 solo #id #state;
+#X obj 191 6 r solo-1;
+#X msg 177 26 /ardour/routes/solo 1 \$1;
+#X obj 191 46 r solo-2;
+#X msg 177 66 /ardour/routes/solo 2 \$1;
+#X msg 177 106 /ardour/routes/solo 3 \$1;
+#X msg 177 146 /ardour/routes/solo 4 \$1;
+#X msg 177 186 /ardour/routes/solo 5 \$1;
+#X msg 177 226 /ardour/routes/solo 6 \$1;
+#X msg 177 266 /ardour/routes/solo 7 \$1;
+#X msg 177 306 /ardour/routes/solo 8 \$1;
+#X msg 177 346 /ardour/routes/solo 9 \$1;
+#X obj 191 86 r solo-3;
+#X obj 191 126 r solo-4;
+#X obj 191 166 r solo-5;
+#X obj 191 206 r solo-6;
+#X obj 191 246 r solo-7;
+#X obj 191 286 r solo-8;
+#X obj 191 326 r solo-9;
+#X msg 347 26 /ardour/routes/recenable 1 \$1;
+#X obj 361 46 r recenable-2;
+#X msg 347 66 /ardour/routes/recenable 2 \$1;
+#X msg 347 106 /ardour/routes/recenable 3 \$1;
+#X msg 347 146 /ardour/routes/recenable 4 \$1;
+#X msg 347 186 /ardour/routes/recenable 5 \$1;
+#X msg 347 226 /ardour/routes/recenable 6 \$1;
+#X msg 347 266 /ardour/routes/recenable 7 \$1;
+#X msg 347 306 /ardour/routes/recenable 8 \$1;
+#X msg 347 346 /ardour/routes/recenable 9 \$1;
+#X obj 361 86 r recenable-3;
+#X obj 361 126 r recenable-4;
+#X obj 361 166 r recenable-5;
+#X obj 361 206 r recenable-6;
+#X obj 361 246 r recenable-7;
+#X obj 361 286 r recenable-8;
+#X obj 361 326 r recenable-9;
+#X obj 361 6 r recenable-1;
+#X obj 7 406 outlet;
+#X obj 7 376 t a;
+#X obj 177 376 t a;
+#X obj 347 376 t a;
+#X msg 567 26 /ardour/routes/gainabs 1 \$1;
+#X obj 581 46 r gainabs-2;
+#X msg 567 66 /ardour/routes/gainabs 2 \$1;
+#X msg 567 106 /ardour/routes/gainabs 3 \$1;
+#X msg 567 146 /ardour/routes/gainabs 4 \$1;
+#X msg 567 186 /ardour/routes/gainabs 5 \$1;
+#X msg 567 226 /ardour/routes/gainabs 6 \$1;
+#X msg 567 266 /ardour/routes/gainabs 7 \$1;
+#X msg 567 306 /ardour/routes/gainabs 8 \$1;
+#X msg 567 346 /ardour/routes/gainabs 9 \$1;
+#X obj 581 86 r gainabs-3;
+#X obj 581 126 r gainabs-4;
+#X obj 581 166 r gainabs-5;
+#X obj 581 206 r gainabs-6;
+#X obj 581 246 r gainabs-7;
+#X obj 581 286 r gainabs-8;
+#X obj 581 326 r gainabs-9;
+#X obj 581 6 r gainabs-1;
+#X obj 567 376 t a;
+#X msg 767 26 /ardour/routes/gaindB 1 \$1;
+#X msg 767 66 /ardour/routes/gaindB 2 \$1;
+#X msg 767 106 /ardour/routes/gaindB 3 \$1;
+#X msg 767 146 /ardour/routes/gaindB 4 \$1;
+#X msg 767 186 /ardour/routes/gaindB 5 \$1;
+#X msg 767 226 /ardour/routes/gaindB 6 \$1;
+#X msg 767 266 /ardour/routes/gaindB 7 \$1;
+#X msg 767 306 /ardour/routes/gaindB 8 \$1;
+#X msg 767 346 /ardour/routes/gaindB 9 \$1;
+#X obj 767 376 t a;
+#X text 657 6 gaindB #id #value;
+#X text 856 6 gaindB #id #value;
+#X text 446 6 recenable #id #state;
+#X obj 781 6 r gaindb-1;
+#X obj 781 46 r gaindb-2;
+#X obj 781 86 r gaindb-3;
+#X obj 781 126 r gaindb-4;
+#X obj 781 166 r gaindb-5;
+#X obj 781 206 r gaindb-6;
+#X obj 781 246 r gaindb-7;
+#X obj 781 286 r gaindb-8;
+#X obj 781 326 r gaindb-9;
+#X connect 1 0 2 0;
+#X connect 2 0 57 0;
+#X connect 3 0 4 0;
+#X connect 4 0 57 0;
+#X connect 5 0 57 0;
+#X connect 6 0 57 0;
+#X connect 7 0 57 0;
+#X connect 8 0 57 0;
+#X connect 9 0 57 0;
+#X connect 10 0 57 0;
+#X connect 11 0 57 0;
+#X connect 12 0 5 0;
+#X connect 13 0 6 0;
+#X connect 14 0 7 0;
+#X connect 15 0 8 0;
+#X connect 16 0 9 0;
+#X connect 17 0 10 0;
+#X connect 18 0 11 0;
+#X connect 20 0 21 0;
+#X connect 21 0 58 0;
+#X connect 22 0 23 0;
+#X connect 23 0 58 0;
+#X connect 24 0 58 0;
+#X connect 25 0 58 0;
+#X connect 26 0 58 0;
+#X connect 27 0 58 0;
+#X connect 28 0 58 0;
+#X connect 29 0 58 0;
+#X connect 30 0 58 0;
+#X connect 31 0 24 0;
+#X connect 32 0 25 0;
+#X connect 33 0 26 0;
+#X connect 34 0 27 0;
+#X connect 35 0 28 0;
+#X connect 36 0 29 0;
+#X connect 37 0 30 0;
+#X connect 38 0 59 0;
+#X connect 39 0 40 0;
+#X connect 40 0 59 0;
+#X connect 41 0 59 0;
+#X connect 42 0 59 0;
+#X connect 43 0 59 0;
+#X connect 44 0 59 0;
+#X connect 45 0 59 0;
+#X connect 46 0 59 0;
+#X connect 47 0 59 0;
+#X connect 48 0 41 0;
+#X connect 49 0 42 0;
+#X connect 50 0 43 0;
+#X connect 51 0 44 0;
+#X connect 52 0 45 0;
+#X connect 53 0 46 0;
+#X connect 54 0 47 0;
+#X connect 55 0 38 0;
+#X connect 57 0 56 0;
+#X connect 58 0 56 0;
+#X connect 59 0 56 0;
+#X connect 60 0 78 0;
+#X connect 61 0 62 0;
+#X connect 62 0 78 0;
+#X connect 63 0 78 0;
+#X connect 64 0 78 0;
+#X connect 65 0 78 0;
+#X connect 66 0 78 0;
+#X connect 67 0 78 0;
+#X connect 68 0 78 0;
+#X connect 69 0 78 0;
+#X connect 70 0 63 0;
+#X connect 71 0 64 0;
+#X connect 72 0 65 0;
+#X connect 73 0 66 0;
+#X connect 74 0 67 0;
+#X connect 75 0 68 0;
+#X connect 76 0 69 0;
+#X connect 77 0 60 0;
+#X connect 78 0 56 0;
+#X connect 79 0 88 0;
+#X connect 80 0 88 0;
+#X connect 81 0 88 0;
+#X connect 82 0 88 0;
+#X connect 83 0 88 0;
+#X connect 84 0 88 0;
+#X connect 85 0 88 0;
+#X connect 86 0 88 0;
+#X connect 87 0 88 0;
+#X connect 88 0 56 0;
+#X connect 92 0 79 0;
+#X connect 93 0 80 0;
+#X connect 94 0 81 0;
+#X connect 95 0 82 0;
+#X connect 96 0 83 0;
+#X connect 97 0 84 0;
+#X connect 98 0 85 0;
+#X connect 99 0 86 0;
+#X connect 100 0 87 0;
+#X restore 364 202 pd mixer;
+#X obj 378 462 r save_state;
+#X text 306 66 ainda faltam algumas operacoes \, ou nao fazem sentido?
+;
+#X text 306 46 volles ardour menu? o que e que o outro fez?;
+#X text 302 91 lista de tracks: variavel de acordo com o nr dado. standard
+x (ver ardour);
+#X text 301 127 mudar as mensagens para modular: o nr do track fica
+em numbox \, e' tudo enviado numa lista.;
+#X text 303 15 adicionar sinal ligacao on/off ? substituir osc por
+novo objecto;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 8 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 0;
+#X connect 15 0 0 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;
+#X connect 21 0 0 0;
+#X connect 22 0 0 0;
+#X connect 23 0 0 0;
+#X connect 24 0 0 0;
+#X connect 25 0 0 0;
+#X connect 26 0 0 0;
+#X connect 27 0 0 0;
+#X connect 35 0 0 0;
+#X connect 43 0 0 0;
+#X connect 44 0 1 0;
+#X connect 45 0 2 0;
+#X connect 46 0 3 0;
+#X connect 47 0 15 0;
+#X connect 48 0 4 0;
+#X connect 49 0 12 0;
+#X connect 50 0 11 0;
+#X connect 51 0 8 0;
+#X connect 52 0 19 0;
+#X connect 53 0 20 0;
+#X connect 54 0 35 0;
+#X connect 55 0 66 0;
+#X connect 56 0 57 0;
+#X connect 57 0 64 0;
+#X connect 58 0 25 0;
+#X connect 59 0 60 0;
+#X connect 62 0 63 0;
+#X connect 63 0 61 0;
+#X connect 65 0 56 0;
+#X connect 66 0 0 0;
+#X connect 67 0 0 0;
+#X connect 68 0 18 0;
+#X restore 62 59 pd ardourgui;
+#N canvas 21 290 875 652 jack-inside 0;
+#X obj 383 134 shell;
+#X msg 447 314 clear;
+#X obj 383 174 f+;
+#X obj 383 104 t a b;
+#X obj 383 154 t b a;
+#X obj 440 254 list2symbol;
+#X obj 410 214 + 1;
+#X obj 383 274 pack f f s;
+#X obj 383 194 t f f;
+#X obj 487 314 r jack-in;
+#X obj 427 344 coll;
+#C restore;
+#X obj 393 294 list split 1;
+#X msg 501 342 open;
+#X obj 490 444 unsymbol;
+#X obj 244 629 s pd-jack-ktrl;
+#X obj 383 234 expr 10 + 15*$f1;
+#X msg 244 77 clear;
+#X obj 3 134 shell;
+#X msg 67 314 clear;
+#X obj 3 174 f+;
+#X obj 3 104 t a b;
+#X obj 3 154 t b a;
+#X obj 60 254 list2symbol;
+#X obj 30 214 + 1;
+#X obj 3 274 pack f f s;
+#X obj 3 194 t f f;
+#X obj 47 344 coll;
+#C restore;
+#X obj 13 294 list split 1;
+#X msg 123 342 open;
+#X obj 110 444 unsymbol;
+#X obj 3 234 expr 10 + 15*$f1;
+#X obj 107 314 r jack-out;
+#X obj 185 28 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 255 506 prepent;
+#X obj 255 546 shell;
+#X obj 155 546 send jack-tgl;
+#X msg 155 526 set 0;
+#X msg 383 576 obj 300 \$1 tgl 11 0 jack-in jack-tgl \$3 14 5 0 8 -258113
+-1 -1 0 \$2;
+#X msg 3 576 obj 10 \$1 tgl 11 0 jack-out jack-tgl \$3 14 5 0 8 -4034
+-1 -1 0 \$2;
+#X obj 225 28 loadbang;
+#X obj 110 424 makefilename "%s";
+#X obj 110 384 s2l;
+#X obj 490 424 makefilename "%s";
+#X obj 490 384 s2l;
+#X obj 110 404 l2s;
+#X obj 490 404 l2s;
+#X text 520 388 unecessarily complex way of adding " " to the command.
+if you know a better way \, tell me.;
+#X text 503 13 missing: automatic patch cables. too complicated for
+now;
+#X obj 427 364 route float;
+#X obj 47 364 route float;
+#X msg 288 283 length;
+#X obj 289 412 pack;
+#X obj 289 432 minmax;
+#X obj 205 48 t b b b a;
+#X msg 383 84 jack_lsp | grep -E "cap|in";
+#X msg 3 84 jack_lsp | grep -E "play|out";
+#X text 469 123 usar -t \, mas grep agarra a linha anterior \, nao
+a linha certa;
+#X msg 322 472 \; pd-jack-ktrl donecanvasdialog 1 -1 2 0 -1 1 1 540
+\$1 5 5;
+#X obj 322 452 expr 6 + 15*$f1;
+#X obj 205 8 r \$0-jackktrl;
+#X obj 255 526 prepent jack_connect;
+#X text 506 33 fehlt jack_disconnect: andere reihe von toggles paralell
+;
+#X text 506 53 mudar comando de grep para jack_lsp -t;
+#X connect 0 0 4 0;
+#X connect 1 0 10 0;
+#X connect 2 0 8 0;
+#X connect 3 0 0 0;
+#X connect 3 1 2 1;
+#X connect 3 1 1 0;
+#X connect 4 0 2 0;
+#X connect 4 1 5 0;
+#X connect 5 0 7 2;
+#X connect 6 0 7 1;
+#X connect 7 0 37 0;
+#X connect 7 0 11 0;
+#X connect 8 0 15 0;
+#X connect 8 1 6 0;
+#X connect 9 0 10 0;
+#X connect 10 0 48 0;
+#X connect 11 1 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 33 0;
+#X connect 15 0 7 0;
+#X connect 16 0 14 0;
+#X connect 17 0 21 0;
+#X connect 17 1 50 0;
+#X connect 18 0 26 0;
+#X connect 19 0 25 0;
+#X connect 20 0 17 0;
+#X connect 20 1 19 1;
+#X connect 20 1 18 0;
+#X connect 21 0 19 0;
+#X connect 21 1 22 0;
+#X connect 22 0 24 2;
+#X connect 23 0 24 1;
+#X connect 24 0 27 0;
+#X connect 24 0 38 0;
+#X connect 25 0 30 0;
+#X connect 25 1 23 0;
+#X connect 26 0 49 0;
+#X connect 27 1 26 0;
+#X connect 28 0 26 0;
+#X connect 29 0 33 1;
+#X connect 30 0 24 0;
+#X connect 31 0 26 0;
+#X connect 32 0 53 0;
+#X connect 33 0 60 0;
+#X connect 36 0 35 0;
+#X connect 37 0 14 0;
+#X connect 38 0 14 0;
+#X connect 39 0 53 0;
+#X connect 40 0 29 0;
+#X connect 41 0 44 0;
+#X connect 42 0 13 0;
+#X connect 43 0 45 0;
+#X connect 44 0 40 0;
+#X connect 45 0 42 0;
+#X connect 48 0 51 1;
+#X connect 48 1 43 0;
+#X connect 49 0 51 0;
+#X connect 49 1 41 0;
+#X connect 50 0 10 0;
+#X connect 50 0 26 0;
+#X connect 51 0 52 0;
+#X connect 52 1 58 0;
+#X connect 53 1 55 0;
+#X connect 53 2 54 0;
+#X connect 53 3 16 0;
+#X connect 54 0 3 0;
+#X connect 55 0 20 0;
+#X connect 58 0 57 0;
+#X connect 59 0 53 0;
+#X connect 60 0 34 0;
+#X connect 60 0 36 0;
+#X restore 62 79 pd jack-inside;
+#N canvas 809 72 402 529 instructions 0;
+#N canvas 0 0 391 419 license 0;
+#X text 8 27 All rights reserved.;
+#X text 8 207 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 67 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 107 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 277 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 147 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 7 jmmmpais@googlemail.com;
+#X text 8 -13 Copyright 2006 \, João Miguel Pais;
+#X restore 19 477 pd license;
+#X obj 131 12 cnv 15 120 30 empty empty ARDOUR-GUI 5 15 0 14 -191407
+-1 0;
+#X text 16 317 - Click on the bang to list jack inputs and outputs
+in your system \, the window should be correctly updated.;
+#X text 16 397 Keep your eyes on the jack window to make sure it works.
+Careful with feedbacks.;
+#X text 16 347 - To connect two devices \, click first in the output
+\, and after in the input - on that order! The connection will be made
+automatically.;
+#X obj 104 231 cnv 15 170 30 empty empty JACK-CONNECTIONS 5 16 0 13
+-191407 -1 0;
+#X text 16 500 Contact me for sugestions \, critiques or requests.
+;
+#X text 18 47 This patch controls some settings of your ardour session
+through osc. To use it \, you must first enable osc in ardour: Options
+-> Misc options -> Use OSC.;
+#X text 18 150 The operations in display are reduced to the amount
+of OSC commands in ardour. Menu acess can be possible in the future
+\, but until requests for it come it won't be implemented.;
+#X text 15 450 (C) 2010 Joao Pais - jmmmpais@googlemail.com;
+#X text 16 267 This window lists your jack devices found in your system
+automatically \, and enables you to connect them very fast. Obviously
+\, you must have jack working.;
+#X text 96 477 08.02.2010;
+#X text 18 90 Everything should work automatically if ardour is using
+the default OSC port. Just use the transport control \, or the commands
+to manipulate individual tracks. Track controls are channeled through
+the track Id specific to each track.;
+#X restore 62 39 pd instructions;
+#X restore 491 325 pd inside;

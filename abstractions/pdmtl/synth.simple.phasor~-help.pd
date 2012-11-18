@@ -1,0 +1,66 @@
+#N canvas 180 217 941 574 10;
+#X obj 184 99 notein;
+#X obj 184 125 pack f f;
+#X obj 234 457 *~ 0.2;
+#X obj 601 400 vsl 15 50 0 1 0 0 empty empty empty 0 -8 0 8 -258699
+-1 -1 0 1;
+#X obj 233 503 mix.out_~;
+#X text 481 14 Description: Midi instrument using a simple phasor~
+;
+#X text 482 88 All the instruments in the instr/ directory should take
+MIDI notes (pitch \, velocity) in their first inlet and use pretty
+much the same ADSR algorythm inside. Some should be mono \, other polyphonic.
+;
+#X text 480 165 Todo: allow the user to override the adsr curve.;
+#X text 480 145 The instr format is still in progress.;
+#X text 485 184 There should be a different attack curve when a ote
+is already on.;
+#X obj 184 171 pack f f f;
+#X obj 184 194 route 1 2 3 4;
+#X obj 184 148 poly 4 1;
+#X obj 733 366 pack f f f f;
+#X obj 734 336 t b f;
+#X floatatom 759 304 5 0 0 0 - - -;
+#X obj 775 336 t b f;
+#X floatatom 800 304 5 0 0 0 - - -;
+#X obj 817 337 t b f;
+#X floatatom 842 305 5 0 0 0 - - -;
+#X floatatom 714 302 5 0 0 0 - - -;
+#X obj 54 228 synth.simple.phasor~;
+#X obj 200 228 synth.simple.phasor~;
+#X obj 346 228 synth.simple.phasor~;
+#X obj 492 229 synth.simple.phasor~;
+#X obj 47 -8 input.piano_ 1;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 1 0 12 0;
+#X connect 2 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 2 1;
+#X connect 10 0 11 0;
+#X connect 11 0 21 0;
+#X connect 11 1 22 0;
+#X connect 11 2 23 0;
+#X connect 11 3 24 0;
+#X connect 12 0 10 0;
+#X connect 12 1 10 1;
+#X connect 12 2 10 2;
+#X connect 13 0 21 1;
+#X connect 13 0 22 1;
+#X connect 13 0 23 1;
+#X connect 13 0 24 1;
+#X connect 14 0 13 0;
+#X connect 14 1 13 1;
+#X connect 15 0 14 0;
+#X connect 16 0 13 0;
+#X connect 16 1 13 2;
+#X connect 17 0 16 0;
+#X connect 18 0 13 0;
+#X connect 18 1 13 3;
+#X connect 19 0 18 0;
+#X connect 20 0 13 0;
+#X connect 21 0 2 0;
+#X connect 22 0 2 0;
+#X connect 23 0 2 0;
+#X connect 24 0 2 0;
+#X connect 25 0 1 0;

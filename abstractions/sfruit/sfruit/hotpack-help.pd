@@ -1,0 +1,27 @@
+#N canvas 727 260 394 293 10;
+#X text 9 8 [hotpack] works just like [pack] \, except that it all
+of its inlets are "hot". Inlets will remember whatever they were last
+sent.;
+#X msg 29 90 vegetables;
+#X msg 109 90 with;
+#X msg 149 90 cheese;
+#X msg 39 120 if;
+#X msg 111 120 you;
+#X msg 151 120 please;
+#X obj 29 215 prepent set;
+#X obj 29 180 hotpack s s s;
+#X obj 66 156 symbol;
+#X obj 104 156 symbol;
+#X text 268 241 2008 Luke Iannini;
+#X text 267 255 proyekto.net;
+#X msg 29 252;
+#X connect 1 0 8 0;
+#X connect 2 0 9 0;
+#X connect 3 0 10 0;
+#X connect 4 0 8 0;
+#X connect 5 0 9 0;
+#X connect 6 0 10 0;
+#X connect 7 0 13 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 1;
+#X connect 10 0 8 2;

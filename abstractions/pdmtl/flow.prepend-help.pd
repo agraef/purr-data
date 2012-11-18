@@ -1,0 +1,26 @@
+#N canvas 252 555 479 340 10;
+#X msg 42 77 test;
+#X msg 150 88 symbol test;
+#X floatatom 186 119 5 0 0 0 - - -;
+#X msg 219 142 1 2 3;
+#X text 47 14 Description: Prepends anything to anything.;
+#X text 44 32 Comments: Wraps [list prepend] but the output type depends
+on the argument's type.;
+#X obj 104 234 print ANYTHING;
+#X msg 281 89 test;
+#X msg 389 100 symbol test;
+#X floatatom 425 131 5 0 0 0 - - -;
+#X msg 458 154 1 2 3;
+#X obj 343 246 print LIST;
+#X obj 104 188 flow.prepend me;
+#X obj 343 200 flow.prepend 3;
+#X connect 0 0 12 0;
+#X connect 1 0 12 0;
+#X connect 2 0 12 0;
+#X connect 3 0 12 0;
+#X connect 7 0 13 0;
+#X connect 8 0 13 0;
+#X connect 9 0 13 0;
+#X connect 10 0 13 0;
+#X connect 12 0 6 0;
+#X connect 13 0 11 0;

@@ -1,0 +1,374 @@
+
+static int LED_sym2id(t_symbol *s)
+{
+  int id=-1;
+
+  if (s==gensym("1"))id=1; // +
+  else if (s==gensym("2"))id=2; // +
+  else if (s==gensym("3"))id=3; // +
+  else if (s==gensym("4"))id=4; // +
+  else if (s==gensym("5"))id=5; // +
+  else if (s==gensym("6"))id=6; // +
+  else if (s==gensym("7"))id=7; // +
+  else if (s==gensym("8"))id=8; // +
+  else if (s==gensym("a"))id=10;
+  else if (s==gensym("b"))id=11;
+  else if (s==gensym("c"))id=12;
+  else if (s==gensym("d"))id=13;
+  else if (s==gensym("e"))id=14;
+  else if (s==gensym("f"))id=15;
+  else if (s==gensym("g"))id=16;
+  else if (s==gensym("h"))id=17;
+  else if (s==gensym("i"))id=18;// +
+  else if (s==gensym("j"))id=19;// +
+  else if (s==gensym("k"))id=20;// +
+  else if (s==gensym("l"))id=21;// +
+  else if (s==gensym("m"))id=22;// +
+  else if (s==gensym("n"))id=23;// +
+  else if (s==gensym("o"))id=24;// +
+  else if (s==gensym("p"))id=25;// +
+  else if (s==gensym("q"))id=26;// +
+  else if (s==gensym("r"))id=27;// +
+  else if (s==gensym("s"))id=28;// +
+  else if (s==gensym("t"))id=29;// +
+  else if (s==gensym("u"))id=30;// +
+  else if (s==gensym("v"))id=31;// +
+  else if (s==gensym("w"))id=32;// +
+  else if (s==gensym("x"))id=33;// +
+  else if (s==gensym("y"))id=34;// +
+  else if (s==gensym("z"))id=35;// +
+  else if (s==gensym("0"))id=0;// +
+  else if (s==gensym("9"))id=9;// +
+  else if (s==gensym("*"))id=36;// +
+  else if (s==gensym("="))id=37;// +
+  else if (s==gensym("/"))id=38;// +
+  else if (s==gensym("."))id=39;// +
+  else if (s==gensym("shift"))  id=40;
+  else if (s==gensym("undo"))   id=41;
+  else if (s==gensym("default"))id=42;
+  else if (s==gensym("all"))    id=43;
+  else if (s==gensym("window")) id=44;
+  else if (s==gensym("plug-in"))id=45;//...
+  else if (s==gensym("suspend"))id=46;
+  else if (s==gensym("auto"))   id=47;
+
+  else if (s==gensym("escape")) id=48;//
+  else if (s==gensym("enter"))  id=49;
+  else if (s==gensym("last"))   id=40;
+  else if (s==gensym("next"))   id=51;
+  else if (s==gensym("rewind")) id=52;
+  else if (s==gensym("f-fwd"))  id=53;//
+  else if (s==gensym("stop"))   id=54;
+  else if (s==gensym("play"))   id=55;
+
+  else if (s==gensym("bank"))   id=56;
+  else if (s==gensym("group"))  id=57;
+  else if (s==gensym("record")) id=58;
+  else if (s==gensym("functA")) id=59;
+  else if (s==gensym("write"))  id=50;
+  else if (s==gensym("functB")) id=61;
+  else if (s==gensym("burn"))   id=62;
+  else if (s==gensym("functC")) id=63;
+  else if (s==gensym("fx"))     id=64;//...
+  else if (s==gensym("fxbyps")) id=65;//...
+  else if (s==gensym("effect1"))id=66;//.
+  else if (s==gensym("eff-1"))  id=67;//.
+  else if (s==gensym("mute"))   id=68;//...
+  else if (s==gensym("s-mute")) id=69;//...
+  else if (s==gensym("effect2"))id=60;//.
+  else if (s==gensym("eff-2"))  id=71;//.
+  else if (s==gensym("pre"))    id=72;//...
+  else if (s==gensym("post"))   id=73;//...
+  else if (s==gensym("pre/pst"))id=74;//...
+  else if (s==gensym("effect3"))id=75;//.
+  else if (s==gensym("eff-3"))  id=76;//.
+  else if (s==gensym("sel"))    id=77;//...
+  else if (s==gensym("select")) id=77;//...
+  else if (s==gensym("effect4"))id=78;//.
+  else if (s==gensym("eff-4"))  id=79;//.
+  
+
+       return id;
+}
+
+static void LED_id2rowcol(int id, int* row, int *col)
+{
+  *row=-1;
+  *col=-1;
+
+  if (id==1)*row=0,*col=0; //1
+  else if (id==2)*row=0,*col=1;
+  else if (id==3)*row=0,*col=2;
+  else if (id==4)*row=0,*col=3;
+  else if (id==5)*row=0,*col=4;
+  else if (id==6)*row=0,*col=5;
+  else if (id==7)*row=0,*col=6;
+  else if (id==8)*row=0,*col=7;
+
+  else if (id==10)*row=4,*col=0;//a
+  else if (id==11)*row=4,*col=1;
+  else if (id==12)*row=4,*col=2;
+  else if (id==13)*row=4,*col=3;
+  else if (id==14)*row=4,*col=4;
+  else if (id==15)*row=4,*col=5;
+  else if (id==16)*row=4,*col=6;
+  else if (id==17)*row=4,*col=7;
+  else if (id==18)*row=3,*col=0;//i
+  else if (id==19)*row=3,*col=1;
+  else if (id==20)*row=3,*col=2;
+  else if (id==21)*row=3,*col=3;
+  else if (id==22)*row=3,*col=4;
+  else if (id==23)*row=3,*col=5;
+  else if (id==24)*row=3,*col=6;
+  else if (id==25)*row=3,*col=7;
+  else if (id==26)*row=2,*col=0;//q
+  else if (id==27)*row=2,*col=1;
+  else if (id==28)*row=2,*col=2;
+  else if (id==29)*row=2,*col=3;
+  else if (id==30)*row=2,*col=4;
+  else if (id==31)*row=2,*col=5;
+  else if (id==32)*row=2,*col=6;
+  else if (id==33)*row=2,*col=7;
+  else if (id==34)*row=1,*col=0;//y
+  else if (id==35)*row=1,*col=1;
+  else if (id==0) *row=1,*col=2;
+  else if (id==9) *row=1,*col=3;
+  else if (id==36)*row=1,*col=4;
+  else if (id==37)*row=1,*col=5;
+  else if (id==38)*row=1,*col=6;
+  else if (id==39)*row=1,*col=7;
+
+  else if (id==40)*row=0,*col=8;//shift -- LEFT SIDE
+  else if (id==41)*row=1,*col=8;
+  else if (id==42)*row=2,*col=8;
+  else if (id==43)*row=3,*col=8;
+  else if (id==44)*row=4,*col=8;
+  else if (id==45)*row=5,*col=8;
+  else if (id==46)*row=6,*col=8;
+  else if (id==47)*row=7,*col=8;
+  else if (id==48)*row=0,*col=9;//escape -- RIGHT SIDE
+  else if (id==49)*row=1,*col=9;
+  else if (id==50)*row=2,*col=9;
+  else if (id==51)*row=3,*col=9;
+  else if (id==52)*row=4,*col=9;
+  else if (id==53)*row=5,*col=9;
+  else if (id==54)*row=6,*col=9;
+  else if (id==55)*row=7,*col=9;
+  else if (id==56)*row=0,*col=10;//left-arrow -- VIEW
+  else if (id==57)*row=1,*col=10;
+  else if (id==58)*row=2,*col=10;
+  else if (id==59)*row=3,*col=10;
+  else if (id==50)*row=4,*col=10;
+  else if (id==61)*row=5,*col=10;
+  else if (id==62)*row=6,*col=10;
+  else if (id==63)*row=7,*col=10;
+  else if (id==64)*row=0,*col=11;
+  else if (id==65)*row=0,*col=11;
+  else if (id==66)*row=1,*col=11;
+  else if (id==67)*row=1,*col=11;
+  else if (id==68)*row=2,*col=11;
+  else if (id==69)*row=2,*col=11;
+  else if (id==60)*row=3,*col=11;
+  else if (id==71)*row=3,*col=11;
+  else if (id==72)*row=4,*col=11;
+  else if (id==73)*row=4,*col=11;
+  else if (id==74)*row=4,*col=11;
+  else if (id==75)*row=5,*col=11;
+  else if (id==76)*row=5,*col=11;
+  else if (id==77)*row=6,*col=11;
+  else if (id==78)*row=7,*col=11;
+  else if (id==79)*row=7,*col=11;
+}
+
+
+static t_class *LED_class;
+typedef struct _LED
+{
+  t_object x_obj;
+
+  t_float LED;
+  t_float state;
+} t_LED;
+
+static void LED_float(t_LED *x, t_float f)
+{
+  int row, col;
+  int state = x->state;
+  int offset = 0;
+  int id = f;
+
+  LED_id2rowcol(id, &row, &col);
+
+  if (id<0)return;
+
+  if (state>0)offset=0x40;
+  else if (state<0)offset=0x50;
+
+
+  if (col<8)offset++;
+#if 0
+  post("LED: %x %x %x %x", 0x0C, col, 0x2C, row+offset);
+  post("LED: %d %d %d %d\n", 0x0C, col, 0x2C, row+offset);
+#endif
+  outmidi_controlchange(x_port>>4, x_port&15, 0x0C, col);
+  outmidi_controlchange(x_port>>4, x_port&15, 0x2C, row+offset);
+}
+
+static void LED_symbol(t_LED *x, t_symbol *s)
+{
+  LED_float(x, LED_sym2id(s));
+}
+
+static void LED_bang(t_LED *x)
+{
+
+}
+
+static void *LED_new(void)
+{
+  t_LED *x = (t_LED *)pd_new(LED_class);
+
+  x->LED=-1;
+  floatinlet_new(&x->x_obj, &x->state);
+
+  x->state=0;
+
+  return (x);
+}
+static void LED_setup(void)
+{
+  LED_class = class_new(gensym("motormix_LED"), (t_newmethod)LED_new, 
+			      0, sizeof(t_LED), 0, 0);
+  class_addcreator((t_newmethod)LED_new, gensym("LED"), 0);
+ 
+  class_addsymbol(LED_class, LED_symbol);
+  class_addfloat (LED_class, LED_float);
+  class_addbang  (LED_class, LED_bang);
+  class_sethelpsymbol(LED_class, gensym("zexy/motormix"));
+}
+
+/* button */
+static t_class *button_class;
+typedef struct _button
+{
+  t_object x_obj;
+  int      o_itsme;      // the fader changed
+  int      o_imtouched;  // the fader was touched
+
+  t_outlet *o_value; // actual fader-value
+  t_outlet *o_touch; // 1=touched; 0=released
+
+  int activefader;
+  int fader;
+  unsigned char MSB, LSB;
+} t_button;
+
+static void button_touch(t_button *x, unsigned char value, unsigned char control)
+{
+  int pressed=0;
+  int MSB=x->MSB;
+  int LSB=0;
+  int id=0;
+
+  x->o_imtouched=0;
+
+  if (x->MSB<8){
+    if ((value==0x00) || (value==0x40))return;
+  }
+
+  if (value>=0x40){
+    pressed=1;
+    value-=0x40;
+  }
+
+  LSB=value;
+
+  post("MSB=%d, LSB=%d", MSB, LSB);
+
+  switch (MSB) {
+  case 0x08: /* left side */
+    id=MSB+40;
+    break;
+  case 0x09: /* right side */
+    id=MSB+
+    break;
+  case 0x0A: /* VIEW */
+    break;
+  case 0x0B: /* fx */
+    break;
+  default:
+    if (MSB>0x08)return;
+    switch (LSB) {
+    case 0x01: /* 1..8 */
+      id=MSB+1;
+      break;
+    case 0x05: /* a..h */
+      id=MSB+10;
+      break;
+    case 0x04: /* i..p */
+      id=MSB+18;
+      break;
+    case 0x03: /* q..x */
+      id=MSB+26;
+      break;
+    case 0x02: /* y.. . */
+      switch (MSB){
+      case 0: case 1:
+	id=MSB+34;
+	break;
+      case 2:
+	id=0;
+	break;
+      case 3:
+	id=9;
+	break;
+      default:
+	id=MSB+32;
+      }
+      break;
+    default:
+      return;
+    }
+  }
+
+
+  outlet_float(x->o_touch, pressed);
+  outlet_float(x->o_value, id);
+}
+
+static void button_list(t_button *x, t_symbol *s, int argc, t_atom *argv)
+{
+  unsigned char ctl = atom_getfloatarg(0, argc, argv);
+  unsigned char val = atom_getfloatarg(1, argc, argv);
+  //  int channel   = atom_getfloatarg(2, argc, argv);
+
+  if (x->o_imtouched)button_touch(x, val, ctl);
+
+  if (ctl==0x0f){
+	x->o_imtouched=1;
+	x->MSB=val;
+      }
+}
+
+static void *button_new()
+{
+  t_button *x = (t_button *)pd_new(button_class);
+
+  x->o_value=outlet_new(&x->x_obj, &s_float);
+  x->o_touch=outlet_new(&x->x_obj, &s_float);
+
+  x->o_imtouched = 0;
+
+  pd_bind(&x->x_obj.ob_pd, ctlin_sym);
+
+  return (x);
+}
+static void button_setup(void)
+{
+  button_class = class_new(gensym("motormix_button"), (t_newmethod)button_new, 
+			      0, sizeof(t_button), CLASS_NOINLET, A_DEFFLOAT,  0);
+  class_addcreator((t_newmethod)button_new, gensym("button"), A_DEFFLOAT, 0);
+ 
+  class_addlist(button_class, button_list);
+  class_sethelpsymbol(button_class, gensym("zexy/motormix"));
+}

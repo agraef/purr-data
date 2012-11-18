@@ -1,0 +1,163 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pd 3 12 0 18 -204280
+-1 0;
+#X obj 0 175 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 47 271 494 344 META 0;
+#X text 12 105 PLATFORM windows macosx gnulinux;
+#X text 12 165 LIBRARY internal;
+#X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 225 RELEASE_DATE 2009-06-12;
+#X text 12 65 LICENSE SIBSD;
+#X text 12 185 AUTHOR Miller Puckette;
+#X text 12 245 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 NAME pd;
+#X text 12 25 ALIAS page;
+#X text 12 125 INLET_N anything signal;
+#X text 12 145 OUTLET_N anything signal;
+#X text 12 85 DESCRIPTION subwindow (subpatch);
+#X text 12 45 KEYWORDS signal canvas_op;
+#X restore 500 597 pd META;
+#X obj 0 302 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 432 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 78 289 428 356 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pd] Related Objects;
+#X obj 22 43 inlet;
+#X obj 22 73 outlet;
+#X obj 68 43 inlet~;
+#X obj 68 73 outlet;
+#X obj 128 43 table;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X coords 0 1 100 -1 200 140 1 0 0;
+#X restore 182 44 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 100 float 3;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0;
+#X coords 0 1 100 -1 200 140 1;
+#X restore 23 203 graph;
+#X restore 102 598 pd Related_objects;
+#X obj 78 184 cnv 17 3 110 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X restore 394 3 pd;
+#X obj 431 20 pddp/pddplink http://wiki.puredata.info/en/pd -text pdpedia:
+pd;
+#X text 11 23 subwindow (subpatch);
+#X text 98 183 anything;
+#X text 98 242 signal;
+#X text 80 451 1) symbol atom;
+#X obj 78 311 cnv 17 3 110 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 310 anything;
+#X text 98 369 signal;
+#X obj 101 543 pddp/pddplink all_about_canvas_properties.pd -text all_about_canvas_properties
+;
+#X text 97 130 You can also change the graphical properties of the
+object so that part of the subwindow is visible on the parent (referred
+to as "graph on parent" or "gop").;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X restore 513 3 page;
+#X text 419 3 or (deprecated);
+#X floatatom 242 86 5 0 0 0 - - -;
+#X text 309 80 For help on inlets/outlets \, see:;
+#X obj 308 95 pddp/pddplink inlet-help.pd -text inlet-help;
+#X obj 308 110 pddp/pddplink inlet~-help.pd -text inlet~-help;
+#X obj 398 95 pddp/pddplink outlet-help.pd -text outlet-help;
+#X obj 398 110 pddp/pddplink outlet~-help.pd -text outlet~-help;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 100 560 pddp/pddplink ../2.control.examples/12.PART2.subpatch.pd
+-text doc/2.control.examples/12.PART2.subpatch.pd;
+#X obj 100 575 pddp/pddplink ../3.audio.examples/G05.execution.order.pd
+-text doc/3.audio.examples/G05.execution.order.pd;
+#N canvas 559 53 296 107 window_position 1;
+#X text 19 8 If you leave open a [pd] subwindow like;
+#X text 19 53 patch.;
+#X text 19 38 visible the next time you load the;
+#X text 19 23 this one and save the patch \, it will be;
+#X restore 382 550 pd window_position;
+#X text 97 42 The [pd] object provides a way to nest canvases. You
+can click on the object to open the subwindow and see the objects inside.
+;
+#N canvas 1 53 450 300 click_me 0;
+#X obj 26 50 inlet;
+#X obj 26 209 outlet;
+#X text 47 109 Use the [inlet] and [outlet] objects to add inlets and
+outlets to your subpatch.;
+#X obj 341 52 inlet;
+#X floatatom 341 79 5 0 0 0 - - -;
+#X text 46 147 The horizontal order of the [inlet]/[outlet] objects
+corresponds to the placement of the inlets/outlets on the [pd] object
+itself. I.e. \, the leftmost inlet -> leftmost [inlet] \, rightmost
+inlet -> rightmost [inlet] \, and so on.;
+#X obj 342 205 outlet;
+#X connect 0 0 1 0;
+#X connect 3 0 4 0;
+#X restore 179 107 pd click_me;
+#X text 168 242 - you can create a signal inlet by placing an [inlet~]
+object inside the subpatch. If there are multiple [inlet~] objects
+\, their horizontal order corresponds to the inlets drawn on the [pd]
+object.;
+#X text 168 183 - for sending control messages \, you can create an
+inlet by placing an [inlet] object inside the subpatch. If there are
+multiple [inlet] objects \, their horizontal order corresponds to the
+inlets drawn on the [pd] object.;
+#X text 168 369 - you can create a signal outlet by placing an [outlet~]
+object inside the subpatch. If there are multiple [outlet~] objects
+\, their horizontal order corresponds to the outlets drawn on the [pd]
+object.;
+#X text 168 310 - for sending control messages you can create one by
+placing an [outlet] object inside the subpatch. If there are multiple
+[outlet] objects \, their horizontal order corresponds to the outlets
+drawn on the [pd] object.;
+#X text 167 451 - (optional) specify a name for the subwindow \, which
+you can use with the prefix "pd-" to send messages to the subpatch
+itself. Duplicate names are allowed (named messages will be passed
+to both subpatches). For ease of use \, Pd allows you to edit and change
+this argument without destroying the data inside the subpatch.;
+#N canvas 250 475 296 200 nesting 0;
+#N canvas 258 420 264 105 (subpatch) 0;
+#N canvas 252 328 240 113 (subpatch) 0;
+#N canvas 203 263 309 126 (subpatch) 0;
+#N canvas 240 228 264 118 thats-enough 0;
+#X text 84 38 Ok \, that's it.;
+#X text 70 53 For real this time.;
+#N canvas 264 187 272 64 Really? 0;
+#X text 2 27 Seriously \,;
+#N canvas 227 161 266 81 What? 0;
+#X text 3 58 You're being obsessive.;
+#N canvas 89 146 450 72 Who? 0;
+#N canvas 160 252 341 101 I 0;
+#X text 16 16 Third base!;
+#X restore 5 5 pd I don't know.;
+#X text 2 39 Who's on first.;
+#X restore 7 4 pd Who?;
+#X restore 7 0 pd What?;
+#X text 2 41 Stop.;
+#X restore 197 98 pd Really?;
+#X restore 2 102 pd thats-enough;
+#X text 44 24 Ok that's enough. These;
+#X text 44 39 windows will all go away when;
+#X text 44 53 you close the main patch.;
+#X restore 138 46 pd;
+#X text 70 46 Or this:;
+#X restore 105 60 pd;
+#X text 91 33 Or this:;
+#X restore 130 97 pd;
+#X text 19 23 You can of course nest [pd] objects;
+#X text 19 38 inside other [pd] objects \, like this:;
+#X restore 382 572 pd nesting;
+#X connect 22 0 33 1;

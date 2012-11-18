@@ -1,0 +1,56 @@
+#N canvas 145 22 616 708 10;
+#X msg 147 185 bang;
+#X obj 147 263 makenote 80 1000;
+#X obj 147 298 pack 0 0;
+#X obj 147 208 random 30;
+#X obj 147 237 + 40;
+#X msg 269 211 40 \, 44 \, 56 \, 60;
+#X obj 200 167 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 200 187 metro 100;
+#X text 50 559 inlet for (note \, velocity) pairs;
+#X text 87 600 dsp-out left;
+#X text 396 600 dsp-out right;
+#X text 55 85 Arguments: <max polyphony> <voice stealing 0/1> <poly-abstraction
+name> <arg1> <arg2> <arg3> <arg4>;
+#X text 96 635 Thanks to Cesare Marilungo for inspiration.;
+#X text 17 20 [polypoly~];
+#X text 55 669 Also see:;
+#X obj 127 668 poly;
+#X floatatom 228 315 5 0 0 2 decay - -;
+#X floatatom 283 264 5 0 0 0 - - -;
+#X text 427 322 recreate all abstractions;
+#X text 395 560 extra inlet to customize freely;
+#X text 186 339 custom inlet;
+#X text 53 157 Example:;
+#X text 96 470 Your [polypoly~] abstraction needs two inlets and two
+outlet~s. First argument will be the voice index number starting from
+0 \, second argument will be the total number of voices. Four more
+arguments can be passed as arguments to [polypoly~] and will be passed
+on to the custom abstraction.;
+#X text 54 121 Inlets: <pair: note velocity> <custom> <pair: num abstraction_name>
+;
+#X msg 96 318 clear;
+#X msg 60 318 stop;
+#X text 55 44 [poly]-clone which automatically creates abstractions
+to be played based heavily on [polypoly] by Frank Barknecht.;
+#X obj 153 406 output~;
+#X obj 129 579 polypoly-voice~ 1 8 four more arguments possible;
+#X msg 310 323 12 polypoly-voice~;
+#X obj 147 361 polypoly~ 12 1 polypoly-voice~;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 30 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;
+#X connect 16 0 30 1;
+#X connect 17 0 1 2;
+#X connect 24 0 30 0;
+#X connect 25 0 30 0;
+#X connect 29 0 30 2;
+#X connect 30 0 27 0;
+#X connect 30 1 27 1;

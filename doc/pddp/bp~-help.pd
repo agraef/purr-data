@@ -1,0 +1,89 @@
+#N canvas 0 0 555 619 10;
+#X obj -1 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header bp~ 3 12 0 18 -204280
+-1 0;
+#X obj -1 364 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 246 494 367 META 0;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for Pd version-0.30. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal filter;
+#X text 12 145 LIBRARY internal;
+#X text 12 45 DESCRIPTION bandpass filter;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 float;
+#X text 12 105 INLET_2 float;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 205 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj -1 472 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 509 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#X obj 78 373 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 73 487 428 102 Related_objects 0;
+#X obj 21 42 vcf~;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [bp~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 481 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 492 3 bp~;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bp~ -text
+pdpedia: bp~;
+#X obj 137 208 env~;
+#X floatatom 137 228 0 0 0 0 - - -;
+#X floatatom 166 138 0 0 0 0 - - -;
+#X obj 78 208 env~;
+#X floatatom 78 229 0 0 0 0 - - -;
+#X floatatom 78 68 0 0 0 0 - - -;
+#X obj 78 91 osc~ 100;
+#X msg 138 115 clear;
+#X obj 138 186 bp~ 100 10;
+#X text 78 258 Compare the amplitude of the original signal on the
+left with the amplitude of the filtered signal on the right.;
+#X floatatom 195 162 0 0 0 0 - - -;
+#X text 98 372 signal;
+#X obj 78 416 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 392 clear;
+#X text 98 415 float;
+#X obj 78 444 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 445 float;
+#X text 98 481 signal;
+#X text 11 23 bandpass filter;
+#X text 168 392 - reinitialize internal state.;
+#X text 168 415 - center frequency.;
+#X text 168 445 - Q.;
+#X text 170 528 - center frequency.;
+#X text 170 544 - Q.;
+#X text 80 528 1) float;
+#X text 80 544 2) float;
+#X text 185 209 [env~] gives the amplitude of the signal envelop in
+dB.;
+#X text 75 297 [bp~] passes a sinusoid at the center frequency at unit
+gain (approximately). Other frequencies are attenuated.;
+#X text 123 66 <- scroll to change input frequency;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 98 572 pddp/pddplink ../3.audio.examples/H07.measure.spectrum.pd
+-text doc/3.audio.examples/H07.measure.spectrum.pd;
+#X connect 12 0 13 0;
+#X connect 14 0 20 1;
+#X connect 15 0 16 0;
+#X connect 17 0 18 0;
+#X connect 18 0 15 0;
+#X connect 18 0 20 0;
+#X connect 19 0 20 0;
+#X connect 20 0 12 0;
+#X connect 22 0 20 2;

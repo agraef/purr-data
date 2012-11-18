@@ -1,0 +1,26 @@
+#N canvas 159 120 612 569 10;
+#X floatatom 85 92 5 0 1 0 - - -;
+#X text 86 74 data;
+#X msg 92 117 0;
+#X floatatom 310 225 5 0 0 0 - - -;
+#X floatatom 382 177 5 0 0 0 - - -;
+#X text 430 175 size: n (n>=2);
+#X obj 85 172 f;
+#X text 51 32 amplitude_n return the amplitude covered by the last
+n (n>1) values;
+#X msg 120 117 1;
+#X msg 153 117 0.5;
+#X obj 296 198 amplitude_n 5;
+#X obj 85 224 clip 0 1;
+#X obj 85 251 timeroll;
+#X obj 296 251 timeroll;
+#X connect 0 0 6 0;
+#X connect 2 0 6 0;
+#X connect 4 0 10 1;
+#X connect 6 0 10 0;
+#X connect 6 0 11 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 10 0 3 0;
+#X connect 10 0 13 0;
+#X connect 11 0 12 0;

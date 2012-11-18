@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/ext/!svn/ver/3750/trunk/flext
+END
+flext.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3648/trunk/flext/flext.vcproj
+END
+changes.txt
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3720/trunk/flext/changes.txt
+END
+bootstrap.sh
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1247/trunk/flext/bootstrap.sh
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1247/trunk/flext/license.txt
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/ext/!svn/ver/1247/trunk/flext/gpl.txt
+END
+flext.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1247/trunk/flext/flext.mcp
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3749/trunk/flext/configure.ac
+END
+build.bat
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1247/trunk/flext/build.bat
+END
+notes.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/1247/trunk/flext/notes.txt
+END
+build.sh
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/1247/trunk/flext/build.sh
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3659/trunk/flext/package.txt
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/1247/trunk/flext/Makefile.am
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3673/trunk/flext/readme.txt
+END
+build.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3714/trunk/flext/build.txt
+END
+Doxyfile
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3750/trunk/flext/Doxyfile
+END

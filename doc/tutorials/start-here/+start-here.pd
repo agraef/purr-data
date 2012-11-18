@@ -1,0 +1,211 @@
+#N canvas 508 22 407 726 10;
+#X obj 19 36 pddp/dsp;
+#X obj 19 120 grid grid1 200 0 199 200 0 199 1 1 1 10 10 197 212;
+#X obj 19 337 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 177 256;
+#X obj 212 337 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 107 256;
+#X text 79 336 X position;
+#X text 273 336 Y position;
+#N canvas 825 22 509 639 video 0;
+#X obj 138 565 pix_texture;
+#X obj 138 390 pix_film;
+#X obj 138 594 rectangle 4 3;
+#X obj 23 25 cnv 15 300 40 empty empty empty 124 20 0 12 -228856 -66577
+0;
+#X obj 44 37 inlet;
+#X obj 243 37 inlet;
+#X obj 47 262 gemhead;
+#X obj 138 114 purepd/once;
+#X obj 138 146 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 183 353 5 0 0 0 - - -;
+#X obj 138 536 colorRGB;
+#X floatatom 149 499 5 0 0 0 - - -;
+#X floatatom 196 499 5 0 0 0 - - -;
+#X floatatom 244 499 5 0 0 0 - - -;
+#X obj 47 222 tgl 15 1 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 67 221 <-- Click here to turn video off;
+#X obj 309 110 button Open;
+#X obj 309 228 openpanel;
+#X msg 309 254 open \$1;
+#X msg 138 178 open midr-mjpeg.mov RGBA;
+#X obj 160 418 unpack 0 0 0;
+#X floatatom 268 353 5 0 0 0 - - -;
+#X text 306 354 Video length;
+#X floatatom 183 291 5 0 0 0 - - -;
+#X obj 183 318 * \$1;
+#X obj 183 262 / 199;
+#X obj 244 419 / 199;
+#X text 256 91 Click here to open your own video file;
+#X floatatom 244 392 5 0 0 0 - - -;
+#X obj 244 447 * -1;
+#X obj 244 473 + 1;
+#X connect 0 0 2 0;
+#X connect 1 0 10 0;
+#X connect 1 1 20 0;
+#X connect 4 0 7 0;
+#X connect 4 0 25 0;
+#X connect 5 0 7 0;
+#X connect 5 0 28 0;
+#X connect 6 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 14 0;
+#X connect 8 0 19 0;
+#X connect 9 0 1 1;
+#X connect 10 0 0 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 2;
+#X connect 13 0 10 3;
+#X connect 14 0 6 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 1 0;
+#X connect 19 0 1 0;
+#X connect 20 0 21 0;
+#X connect 21 0 24 1;
+#X connect 23 0 24 0;
+#X connect 24 0 9 0;
+#X connect 25 0 23 0;
+#X connect 26 0 29 0;
+#X connect 26 0 11 0;
+#X connect 28 0 26 0;
+#X connect 29 0 30 0;
+#X connect 30 0 13 0;
+#X restore 228 436 pd video;
+#N canvas 938 22 393 718 3D_graphics 0;
+#X obj 20 23 cnv 15 300 40 empty empty empty 124 20 0 12 -228856 -66577
+0;
+#X obj 121 156 gemhead;
+#X obj 121 229 colorRGB 1 1 1 1;
+#X text 99 186 red;
+#X text 205 186 green;
+#X obj 41 229 - 100;
+#X obj 41 252 / 25;
+#X floatatom 41 276 5 0 0 0 - - -;
+#X obj 240 229 - 100;
+#X obj 240 252 / 25;
+#X floatatom 240 276 5 0 0 0 - - -;
+#X obj 121 296 translateXYZ;
+#X obj 121 321 sphere 1 20;
+#X text 54 210 X;
+#X text 256 210 Y;
+#X text 237 323 Sphere;
+#X obj 41 369 receive pd;
+#X obj 41 391 route dsp;
+#X obj 41 413 select 1;
+#X obj 41 459 trigger bang bang;
+#X obj 192 459 trigger bang bang;
+#X text 202 438 off;
+#X text 50 437 on;
+#X msg 41 499 lighting 1;
+#X msg 111 499 1;
+#X msg 140 499 create;
+#X msg 192 499 destroy;
+#X msg 291 499 0;
+#X obj 111 549 gemwin;
+#X text 237 551 GEM_Window;
+#X obj 41 611 gemhead;
+#X obj 41 660 world_light -120;
+#X text 237 658 Lighting;
+#X obj 41 35 inlet;
+#X obj 240 35 inlet;
+#X obj 121 134 tgl 15 1 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 121 89 purepd/once;
+#X obj 121 112 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 61 186 / 199;
+#X obj 167 186 / 199;
+#X text 141 132 <-- Click here to turn 3D graphics off;
+#X connect 1 0 2 0;
+#X connect 2 0 11 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 0 11 1;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 0 11 2;
+#X connect 11 0 12 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 19 0;
+#X connect 18 1 20 0;
+#X connect 19 0 23 0;
+#X connect 19 0 24 0;
+#X connect 19 1 25 0;
+#X connect 20 0 26 0;
+#X connect 20 1 27 0;
+#X connect 23 0 28 0;
+#X connect 24 0 28 0;
+#X connect 25 0 28 0;
+#X connect 26 0 28 0;
+#X connect 27 0 28 0;
+#X connect 30 0 31 0;
+#X connect 33 0 5 0;
+#X connect 33 0 36 0;
+#X connect 33 0 38 0;
+#X connect 34 0 8 0;
+#X connect 34 0 36 0;
+#X connect 34 0 39 0;
+#X connect 35 0 1 0;
+#X connect 36 0 37 0;
+#X connect 37 0 35 0;
+#X connect 38 0 2 1;
+#X connect 39 0 2 2;
+#X restore 105 436 pd 3D_graphics;
+#N canvas 931 22 341 313 audio 0;
+#X obj 17 18 cnv 15 300 40 empty empty empty 124 20 0 12 -228856 -66577
+0;
+#X obj 160 140 pack 0 25;
+#X obj 160 199 line~;
+#X obj 237 118 bang;
+#X obj 237 140 delay 200;
+#X msg 237 162 0 250;
+#X obj 38 118 + 250;
+#X obj 38 140 osc~;
+#X obj 98 242 *~;
+#X obj 98 270 dac~;
+#X text 76 118 frequency;
+#X text 198 118 on;
+#X text 270 118 off;
+#X obj 38 30 inlet;
+#X obj 237 30 inlet;
+#X obj 160 118 / 199;
+#X connect 1 0 2 0;
+#X connect 2 0 8 1;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 2 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 0 9 1;
+#X connect 13 0 3 0;
+#X connect 13 0 15 0;
+#X connect 14 0 6 0;
+#X connect 15 0 1 0;
+#X restore 19 436 pd audio;
+#X text 16 12 (1) Click inside the box next to dsp to turn on and off.
+;
+#X text 16 81 (2) Click and drag anywhere in the grid to generate data
+and make sound.;
+#X text 16 626 The cursor will become a ring again. Release to complete
+the patch cord.;
+#X text 16 527 To do this \, you must first enter edit mode by going
+to the Edit menu and clicking on "Edit mode.";
+#X text 16 665 Exit edit mode by going back to the Edit menu and clicking
+on "Edit mode." Now try interacting with the grid again to see what
+happens.;
+#X text 16 466 (3) Notice how the X and Y coordinates from the grid
+are connected to the left and right "inlets" of [pd audio]. Try connecting
+them to the inlets of [pd 3D_graphics] and [pd video] as well.;
+#X text 16 563 Next \, hover over the bottom "outlet" of an X or Y
+position number box until your cursor becomes a ring. Click and hold
+on the outlet \, then draw a line to an inlet of [pd 3D_graphics] or
+[pd video].;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 8 0;
+#X connect 3 0 8 1;

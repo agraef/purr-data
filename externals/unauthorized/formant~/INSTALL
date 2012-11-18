@@ -1,0 +1,9 @@
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/formant~
+
+make
+
+make install
+
+you're set !!

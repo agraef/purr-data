@@ -1,0 +1,12 @@
+#N canvas 382 98 432 213 10;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_pink.png;
+#X obj 141 72 loadbang;
+#X obj 32 233 outlet~;
+#X obj 33 193 pink~;
+#X obj 100 211 cnv 15 51 21 empty empty Pink 20 12 1 20 -262144 -66577
+0;
+#X msg 141 95 open @pd_extra/K12/objects/signal_pink.png;
+#X connect 1 0 5 0;
+#X connect 3 0 2 0;
+#X connect 5 0 0 0;
+#X coords 0 -1 1 1 89 89 2 96 173;

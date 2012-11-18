@@ -1,0 +1,26 @@
+#N canvas 0 0 757 318 10;
+#X msg 59 96 2 6 3;
+#X obj 162 157 * 2;
+#X obj 59 229 print RESULT;
+#X msg 206 93 list foo bar;
+#X obj 299 154 makesymbol tube_%s;
+#X obj 204 210 print SYMBOLS;
+#X msg 436 98 1 2 3;
+#X obj 434 215 print no_op;
+#X text 476 185 No operation \, gives you nothing (a bang).;
+#X obj 59 155 list.for.each;
+#X obj 204 153 list.for.each;
+#X obj 434 158 list.for.each;
+#X text 65 17 Description: Execute an operation on a list of floats
+or symbols.;
+#X text 67 50 Comments: Another name for list.op.;
+#X connect 0 0 9 0;
+#X connect 1 0 9 1;
+#X connect 3 0 10 0;
+#X connect 4 0 10 1;
+#X connect 6 0 11 0;
+#X connect 9 0 2 0;
+#X connect 9 1 1 0;
+#X connect 10 0 5 0;
+#X connect 10 1 4 0;
+#X connect 11 0 7 0;

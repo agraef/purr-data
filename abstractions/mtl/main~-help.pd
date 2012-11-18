@@ -1,0 +1,6 @@
+#N canvas 195 112 482 257 10;
+#X text 65 60 tags: mix~;
+#X obj 157 142 mtl/main~;
+#X text 67 26 Description: Receives the main stereo signal routed by
+mtl/channel~;
+#X coords 0 0 1 1 133 33 0;

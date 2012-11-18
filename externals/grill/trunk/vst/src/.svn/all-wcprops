@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/3675/trunk/vst/src
+END
+vsthost.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/ext/!svn/ver/3102/trunk/vst/src/vsthost.h
+END
+vstmidi.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3102/trunk/vst/src/vstmidi.cpp
+END
+vstedit.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3102/trunk/vst/src/vstedit.cpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3102/trunk/vst/src/main.cpp
+END
+editor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3102/trunk/vst/src/editor.cpp
+END
+vstmaster.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3102/trunk/vst/src/vstmaster.cpp
+END
+editorwin.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3675/trunk/vst/src/editorwin.hpp
+END
+main.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3102/trunk/vst/src/main.h
+END
+vsthost.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3102/trunk/vst/src/vsthost.cpp
+END
+editor.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3102/trunk/vst/src/editor.h
+END
+editormac.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/ext/!svn/ver/3102/trunk/vst/src/editormac.hpp
+END
+vstparam.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3102/trunk/vst/src/vstparam.cpp
+END
+vst.rc
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/ext/!svn/ver/3102/trunk/vst/src/vst.rc
+END

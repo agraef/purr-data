@@ -1,0 +1,20 @@
+k-NN object for PD
+
+Introduction
+
+The k Nearest Neighbor algorithm is a simple and robust classification
+algorithm.  It compares an unknown feature vector to a database by
+calculating distance and assigns the classification of the k closest
+database entries to the unknown vector.  This implementation for PD
+takes inputs of PD lists for both learning and classification.
+Currently the length of the feature vectors and maximum number of
+classes is fixed at compile time.
+
+Feature Weighting
+
+This implementation also includes feature weighting to allow control
+over the relative importance of each feature.  This has been shown to
+provide significant improvements to the performance of the k-NN
+algorithm.
+
+Karl MacMillan <karlmac@peabody.jhu.edu>

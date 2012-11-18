@@ -1,0 +1,37 @@
+#N canvas 85 111 909 544 10;
+#X obj 58 31 cnv 15 15 15 empty empty vasp.size/ 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 410 286 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 2 5 \; \$1 xlabel 1.1 0 10 20 30 40 50
+\; \$1 yticks 0 0.25 2;
+#X msg 33 45 symbol bufrsize;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 714 408 pd init;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufrsize 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 453 152 graph;
+#X obj 175 416 vasp.frames;
+#X text 62 415 related objects:;
+#X floatatom 120 319 5 0 0;
+#X obj 256 416 vasp.size;
+#X obj 256 374 vasp.s/;
+#X msg 62 152 vasp bufrsize;
+#X msg 177 152 vasp bufrsize;
+#X obj 62 217 vasp.size* 2;
+#X obj 177 217 vasp.size/ 2;
+#X obj 193 31 cnv 15 15 15 empty empty vasp.size* 0 10 1 14 -262144
+-1 0;
+#X text 57 69 divide and multiplicate the size of a buffer/array;
+#X text 59 371 abbreviations:;
+#X obj 175 375 vasp.s*;
+#X obj 120 289 vasp.size?;
+#X obj 331 416 vasp.size?;
+#X obj 62 463 VASP-HELP;
+#X connect 8 0 10 0;
+#X connect 9 0 11 0;
+#X connect 10 0 16 0;
+#X connect 11 0 16 0;
+#X connect 16 0 5 0;

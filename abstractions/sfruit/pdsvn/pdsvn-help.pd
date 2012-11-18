@@ -1,0 +1,71 @@
+#N canvas 150 248 436 538 10;
+#X text 52 274 Diff will show you your changes since last commit in
+the Pd console;
+#X text 320 514 2008 Luke Iannini;
+#X text 8 6 WARNING: pdsvn is experimental and may be unstable.;
+#X text 39 31 pdsvn allows you to add \, diff-to-console and commit
+changes to a single patch.;
+#X text 39 73 To use it \, create it within the patch you'd like to
+work with.;
+#X text 40 151 The square on the left will show the status of your
+file.;
+#X text 40 475 If you'd like to work with more than one patch \, please
+see [pdsvndir] (under development).;
+#X text 41 424 You can either save pdsvn into your patch \, or save
+the patch \, spawn pdsvn \, commit and then delete it again. It doesn't
+mind either way :).;
+#X text 43 168 If it shows a "?" \, the patch you're in is "Unversioned"
+\, meaning it hasn't been added to an SVN repository. Click the status
+square to open the Commit Window \, where you can "Add" the patch.
+;
+#X text 44 237 In the Commit Window:;
+#X text 53 254 The large grey box allows you to enter a log message.
+;
+#X text 51 309 Commit will commit the patch with the log message entered.
+;
+#X text 52 332 Cancel will close the Commit Window.;
+#X text 40 367 [pdsvn] tries to watch for file changes (by monitoring
+saves) but you can manually refresh its status by clicking the text
+"SVN".;
+#N canvas 0 22 441 212 Status 0;
+#X obj 11 111 bng 15 250 50 0 \$0commit \$0commitR empty 14 7 0 8 -4032
+-1 -1;
+#X obj 11 111 cnv 15 15 15 empty \$0svndisplay M 4 8 0 13 -24198 -1
+0;
+#X obj 11 81 bng 15 250 50 0 \$0commit \$0commitR empty 14 7 0 8 -4032
+-1 -1;
+#X obj 11 81 cnv 15 15 15 empty \$0svndisplay _ 4 8 0 13 -228992 -1
+0;
+#X obj 11 141 bng 15 250 50 0 \$0commit \$0commitR empty 14 7 0 8 -4032
+-1 -1;
+#X obj 11 141 cnv 15 15 15 empty \$0svndisplay C 4 8 0 13 -258699 -1
+0;
+#X obj 11 21 bng 15 250 50 0 \$0commit \$0commitR empty 14 7 0 8 -4032
+-1 -1;
+#X obj 11 21 cnv 15 15 15 empty \$0svndisplay ? 4 8 0 13 -262131 -1
+0;
+#X obj 11 51 bng 15 250 50 0 \$0commit \$0commitR empty 14 7 0 8 -4032
+-1 -1;
+#X obj 11 51 cnv 15 15 15 empty \$0svndisplay A 4 8 0 13 -44926 -1
+0;
+#X text -17 -9 The current patch is:;
+#X text 32 51 "Added" and will be uploaded during the next commit.
+;
+#X text 31 21 "Unversioned". Click on this to open a window to add
+it.;
+#X text 33 81 "Unchanged" since you last updated your working copy.
+;
+#X text 33 111 "Modified". Click on this to open a log window and commit.
+;
+#X text 33 141 "Conflicted". Open the parent directory to find all
+versions and decide how to resolve the conflict.;
+#X restore 187 218 pd Status Messages;
+#X obj 180 116 pdsvn/pdsvn;
+#N canvas 314 368 289 111 dependencies 0;
+#X text 12 9 Toxy;
+#X text 12 24 Zexy;
+#X text 12 53 getpatchname with parent access modification;
+#X text 12 68 popen;
+#X text 12 38 getdir;
+#X text 12 83 entry;
+#X restore 43 513 pd dependencies;

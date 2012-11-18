@@ -1,0 +1,36 @@
+#N canvas 228 148 587 516 10;
+#X floatatom 229 125 5 0 0 0 - - -;
+#X obj 113 229 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 54 96 1 54 34;
+#X text 107 97 List of floats;
+#X floatatom 203 190 5 0 0 0 - - -;
+#X text 138 266 ---------------------------;
+#X obj 113 432 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 227 413 5 0 0 0 - - -;
+#X msg 54 316 list big ugly duck;
+#X msg 215 345 list quack;
+#X msg 325 345 list duck;
+#X obj 113 159 list.contains 34;
+#X obj 113 379 list.contains big;
+#X msg 21 125 43 87 2;
+#X text 18 30 Description: Check for the existence of an element in
+a list.;
+#X text 237 157 Argument 1: the element searched for.;
+#X text 270 127 Change the element searched for.;
+#X text 244 191 Returns the index where the element was found (-1 of
+not found).;
+#X text 135 227 1 if found \, 0 if not.;
+#X text 84 280 WARNING: For list list.contains to work with symbols
+\, it must be initialized with a symbol!;
+#X connect 0 0 11 1;
+#X connect 2 0 11 0;
+#X connect 8 0 12 0;
+#X connect 9 0 12 1;
+#X connect 10 0 12 1;
+#X connect 11 0 1 0;
+#X connect 11 1 4 0;
+#X connect 12 0 6 0;
+#X connect 12 1 7 0;
+#X connect 13 0 11 0;

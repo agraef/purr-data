@@ -1,0 +1,9 @@
+#N canvas 0 0 450 300 10;
+#X floatatom 79 75 5 0 0 0 - - -;
+#X floatatom 252 99 5 0 0 0 - - -;
+#X floatatom 120 276 5 0 0 0 - - -;
+#X obj 147 172 math.f.mod 12;
+#X text 41 21 Description: Floating-point modulo operation.;
+#X connect 0 0 3 0;
+#X connect 1 0 3 1;
+#X connect 3 0 2 0;

@@ -1,0 +1,11 @@
+#N canvas 134 284 456 306 10;
+#X obj 106 76 inlet;
+#X obj 106 125 /;
+#X obj 106 151 * 60;
+#X msg 106 102 1000 \$1;
+#X obj 106 185 outlet;
+#X text 59 47 Milliseconds between 2 beats to bpm conversion;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 1 0;

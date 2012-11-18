@@ -1,0 +1,4 @@
+gcc -c -o SpectacleBase.o SpectacleBase.cpp
+gcc -c -o SpectEQ.o SpectEQ.cpp
+gcc -c -o Spectacle.o Spectacle.cpp
+

@@ -1,0 +1,41 @@
+#N canvas 254 47 502 509 10;
+#X obj 73 134 cnv 15 484 186 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 186 -36 preset_hub k12 %hidden% %node% 2 5 9 %node% 2 7 8 %preset%
+1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 6 4 %node% 2 8
+8 %node% 2 9 8 %node% 2 7 3 %node% 2 8 7 %node% 2 9 7 %node% 2 10 7
+;
+#X text 64 -37 comment;
+#X obj 65 -10 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 65 -38 cnv 15 501 28 empty empty LogicCompare 5 14 0 20 -139274
+-262144 0;
+#X obj 535 -6 ggee/image @pd_extra/K12/icons/l2ork.png;
+#N canvas 529 184 450 300 META 0;
+#X text 13 6 DESCRIPTION This compares the left inlet to the right
+inlet and returns 1 if true and 0 if false. Select from = \, < \, and
+>;
+#X text 12 53 INLET_0 Input any number here;
+#X text 13 82 INLET_1 Input any number here. This gets compared to
+the left number with the chosen operation.;
+#X text 12 114 OUTLET_0 This outputs 1 if the expression is true \,
+and 0 if the expression is false.;
+#X restore 510 446 pd META;
+#X obj 79 140 K12/logic_compare;
+#X obj 79 22 K12/math_number;
+#X obj 193 22 K12/math_number;
+#X obj 79 347 K12/math_number;
+#X text 180 138 The Logic Compare object allows you to compare two
+numbers. The expression is in the following form:;
+#X text 247 168 [left inlet][operator][right inlet];
+#X text 181 184 You can choose from three operators (= \, > \, <) by
+selecting one of the boxes. The result is 1 if true \, and 0 if false.
+The result is sent out of the outlet.;
+#X text 180 233 Toggling rolling status enables continuous output of
+the same value (1 or a 0) from the object \, while disabling it (default
+behavior) will make the object output a value only when it changes
+(e.g. several zeros in a row will not make any output if the last output
+was 0 until the value changes).;
+#X connect 7 0 10 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 1;

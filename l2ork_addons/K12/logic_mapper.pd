@@ -1,0 +1,71 @@
+#N canvas 152 78 857 486 10;
+#X obj 502 103 ggee/image @pd_extra/K12/objects/logic_mapper.png;
+#X obj 201 435 outlet;
+#X obj 247 435 outlet;
+#X obj -35 110 inlet;
+#X obj 175 333 line;
+#X msg 175 311 \$1 100;
+#X obj 315 434 expr abs($f1);
+#X obj 402 434 expr abs($f1);
+#X obj -80 333 line;
+#X msg -80 311 \$1 100;
+#X obj 418 333 line;
+#X msg 418 311 \$1 100;
+#X obj 223 333 line;
+#X msg 223 311 \$1 100;
+#X obj 721 332 line;
+#X msg 721 311 \$1 100;
+#X obj 466 333 line;
+#X msg 466 311 \$1 100;
+#X obj 461 99 vsl 22 38 0 1 0 0 \$0-sld1-nullout \$0-sld1-nullin empty
+0 -9 0 10 -262144 -1 -1 0 1;
+#X obj 494 101 vradio 13 1 0 4 \$0-vradio-nullout \$0-vradio-nullin
+empty 0 -8 0 10 -262144 -1 -1 0;
+#X obj 520 99 vsl 22 38 0 1 0 0 \$0-sld2-nullout \$0-sld2-nullin empty
+0 -9 0 10 -262144 -1 -1 0 1;
+#X obj 223 276 expr if(abs($f1) <= 1 \, $f1 \, $f1) \; if(abs($f1)
+<= 1 \, $f1/2 \, $f1/2);
+#X obj 466 276 expr if(abs($f1) <= 1 \, $f1 \, $f1) \; if(abs($f1)
+<= 1 \, pow($f1 \, 6) \, pow($f1 \, 6));
+#X obj -80 276 expr if(abs($f1) <= 1 \, abs($f1) \, abs($f1)) \; if(abs($f1)
+<= 1 \, 1-abs($f1) \, 1-abs($f1));
+#X obj 502 10 loadbang;
+#X obj 402 33 preset_node k12;
+#X obj -80 215 gate 3 0;
+#X msg 502 33 open @pd_extra/K12/objects/logic_mapper.png;
+#X connect 3 0 26 1;
+#X connect 4 0 7 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 18 0;
+#X connect 7 0 20 0;
+#X connect 8 0 6 0;
+#X connect 8 0 1 0;
+#X connect 9 0 8 0;
+#X connect 10 0 7 0;
+#X connect 10 0 2 0;
+#X connect 11 0 10 0;
+#X connect 12 0 6 0;
+#X connect 12 0 1 0;
+#X connect 13 0 12 0;
+#X connect 14 0 2 0;
+#X connect 14 0 7 0;
+#X connect 15 0 14 0;
+#X connect 16 0 1 0;
+#X connect 16 0 6 0;
+#X connect 17 0 16 0;
+#X connect 19 0 25 0;
+#X connect 19 0 26 0;
+#X connect 21 0 13 0;
+#X connect 21 1 11 0;
+#X connect 22 0 17 0;
+#X connect 22 1 15 0;
+#X connect 23 0 9 0;
+#X connect 23 1 5 0;
+#X connect 24 0 27 0;
+#X connect 25 0 19 0;
+#X connect 26 0 23 0;
+#X connect 26 1 21 0;
+#X connect 26 2 22 0;
+#X connect 27 0 0 0;
+#X coords 0 -1 1 1 89 89 2 457 71;

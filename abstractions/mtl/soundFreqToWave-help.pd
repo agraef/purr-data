@@ -1,0 +1,15 @@
+#N canvas 256 138 362 226 10;
+#X floatatom 137 107 5 0 0 0 - - -;
+#X text 178 105 Air temperature (celcius);
+#X text 179 122 Defaults to 18 celsius;
+#X floatatom 26 77 5 0 0 0 - - -;
+#X obj 26 99 mtof;
+#X floatatom 26 155 5 0 0 0 - - -;
+#X text 63 155 wave length (in meters);
+#X obj 26 130 mtl/soundFreqToWave;
+#X text 20 11 Description: Frequency (Hz) to wave length (m);
+#X text 20 28 tags: conversion;
+#X connect 0 0 7 1;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 7 0 5 0;

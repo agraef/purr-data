@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/ext/!svn/ver/3746/trunk/py/build
+END
+config-mac.def
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3745/trunk/py/build/config-mac.def
+END
+config-lnx.def
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2391/trunk/py/build/config-lnx.def
+END
+nmake-win-msvc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/ext/!svn/ver/2391/trunk/py/build/nmake-win-msvc.inc
+END
+gnumake-mac-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/3746/trunk/py/build/gnumake-mac-gcc.inc
+END
+gnumake-lnx-gcc.inc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/ext/!svn/ver/2391/trunk/py/build/gnumake-lnx-gcc.inc
+END
+gnumake-win-cygwin.inc
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/2391/trunk/py/build/gnumake-win-cygwin.inc
+END
+config-win.def
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/2391/trunk/py/build/config-win.def
+END

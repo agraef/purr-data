@@ -1,0 +1,194 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabosc4~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 262 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 245 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal array;
+#X text 12 45 DESCRIPTION 4-point interpolating oscillator;
+#X text 12 65 INLET_0 signal set;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 signal;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 419 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 453 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 63 314 428 298 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [tabosc4~] Related Objects;
+#X text 21 38 Native Pd Objects;
+#X obj 24 61 tabread~;
+#X obj 98 61 tabread4;
+#X obj 173 61 tabwrite;
+#X obj 248 61 tabwrite~;
+#X obj 24 89 tabsend~;
+#X obj 100 89 tabreceive~;
+#X obj 200 89 tabplay~;
+#X obj 277 89 table;
+#X text 21 140 [array];
+#X obj 24 116 soundfiler;
+#X text 84 140 and fft objects.;
+#X obj 120 116 tabread4~;
+#X obj 211 116 getsize;
+#X text 22 170 Externals and other object libraries;
+#X obj 22 190 pddp/helplink zexy/tabdump;
+#X obj 22 210 pddp/helplink linear_path;
+#X text 103 210 <-- which library is this in?;
+#X text 103 230 <-- which library is this in?;
+#X obj 22 230 pddp/helplink score;
+#X text 103 250 <-- which library is this in?;
+#X obj 22 250 pddp/helplink tabenv;
+#X obj 22 270 pddp/helplink arraysize;
+#X restore 102 597 pd Related_objects;
+#X obj 78 271 cnv 17 3 100 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 428 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 376 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 375 float;
+#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/tabosc4~ -text
+pdpedia: tabosc4~;
+#X obj 464 3 tabosc4~;
+#X floatatom 43 203 0 0 0 0 - - -;
+#N canvas 159 26 495 270 output 0;
+#X obj 414 196 t b;
+#X obj 414 134 f;
+#X obj 414 73 inlet;
+#X text 421 36 mute;
+#X obj 414 227 f;
+#X msg 521 218 0;
+#X msg 414 104 bang;
+#X obj 414 166 moses 1;
+#X obj 521 187 t b f;
+#X obj 486 143 moses 1;
+#X obj 102 181 dbtorms;
+#X obj 486 113 r master-lvl;
+#X obj 102 52 r master-lvl;
+#X obj 414 257 s master-lvl;
+#X obj 26 222 inlet~;
+#X obj 244 50 inlet;
+#X text 244 22 level;
+#X obj 244 122 s master-lvl;
+#X msg 118 80 set \$1;
+#X obj 118 109 outlet;
+#X msg 262 78 \; pd dsp 1;
+#X obj 102 238 line~;
+#X obj 26 259 *~;
+#X obj 26 295 dac~;
+#X obj 102 210 pack 0 50;
+#X text 24 195 audio;
+#X text 114 135 show level;
+#X connect 0 0 4 0;
+#X connect 1 0 7 0;
+#X connect 2 0 6 0;
+#X connect 4 0 13 0;
+#X connect 5 0 13 0;
+#X connect 6 0 1 0;
+#X connect 7 0 0 0;
+#X connect 7 1 8 0;
+#X connect 8 0 5 0;
+#X connect 9 1 4 1;
+#X connect 10 0 24 0;
+#X connect 11 0 1 1;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
+#X connect 12 0 18 0;
+#X connect 14 0 22 0;
+#X connect 15 0 17 0;
+#X connect 15 0 20 0;
+#X connect 18 0 19 0;
+#X connect 21 0 22 1;
+#X connect 22 0 23 0;
+#X connect 22 0 23 1;
+#X connect 24 0 21 0;
+#X restore 18 224 pd output;
+#X msg 69 203 MUTE;
+#X floatatom 18 51 4 0 0 0 - - -;
+#X obj 18 76 sig~ 100;
+#X msg 32 119 set table1;
+#X obj 18 158 tabosc4~ table1;
+#X msg 116 119 set table2;
+#X floatatom 190 121 4 0 0 0 - - -;
+#X text 48 51 signal input for frequency (Hz.);
+#X text 33 98 message to switch tables;
+#X text 220 121 inlet to reset phase;
+#X obj 319 51 table table1;
+#X obj 319 73 table table2;
+#X text 98 270 signal;
+#X text 98 288 float;
+#X text 98 327 list;
+#X text 168 327 - a list will be truncated to the first item.;
+#X text 98 343 set;
+#X text 168 343 - the "set" message is used to switch to a different
+table (e.g. \, "set table2" in the example above).;
+#X text 167 375 - inlet to reset phase (range is 0 to 1).;
+#X text 98 395 list;
+#X text 167 395 - a list will be truncated to the first item.;
+#X text 98 427 signal;
+#N canvas 72 194 428 199 init_tables 0;
+#X msg 23 99 \; table1 sinesum 512 0.5 0.5 0.5 0.5 \; table2 cosinesum
+512 0 1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [tabosc4~] Subpatch to Initialize [table] objects;
+#X obj 23 75 loadbang;
+#X text 20 38 This subpatch initializes the [table] objects used by
+[tabosc4~].;
+#X text 20 147 Note: Don't send new "sinesum" messages to tables while
+you're running. Instead \, use "set" messages to switch between tables.
+;
+#X connect 3 0 0 0;
+#X restore 319 95 pd init_tables;
+#X text 29 184 volume in dB;
+#X text 11 23 4-point interpolating oscillator;
+#X text 168 471 - initializes the table or array to use.;
+#X text 168 288 - a float can be used to specify the frequency \, as
+long as there is not also a signal connection to the left inlet of
+[tabosc4~].;
+#X text 168 270 - an incoming signal to specify frequency (Hz.).;
+#X text 168 427 - the outgoing signal.;
+#X text 98 494 For good results use 512 points for up to about 15 partials
+\, or 32*npartials (rounded up to a power of 2) for more than 15 .
+;
+#X text 139 152 [tabosc4~] is a traditional computer music style wavetable
+lookup oscillator using 4-point polynomial interpolation. The table
+should have a power of two points plus three "guard points" \, one
+at the beginning and two at the end \, which should be wraparound copies
+of the last point and the first two points \, respectively. The "sinesum"
+and "cosinesum" methods for arrays do this automatically for you if
+you just want to specify partial strengths.;
+#X text 80 471 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X obj 98 530 pddp/pddplink all_about_arrays.pd;
+#X obj 98 545 pddp/pddplink ../3.audio.examples/B01.wavetables.pd -text
+doc/3.audio.examples/B01.wavetables.pd;
+#X obj 98 560 pddp/pddplink ../3.audio.examples/B05.tabread.FM.pd -text
+doc/3.audio.examples/B05.tabread.FM.pd;
+#X obj 98 575 pddp/pddplink ../3.audio.examples/B06.table.switching.pd
+-text doc/3.audio.examples/B06.table.switching.pd;
+#X connect 14 0 15 1;
+#X connect 15 0 14 0;
+#X connect 16 0 15 2;
+#X connect 17 0 18 0;
+#X connect 18 0 20 0;
+#X connect 19 0 20 0;
+#X connect 20 0 15 0;
+#X connect 21 0 20 0;
+#X connect 22 0 20 1;

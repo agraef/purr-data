@@ -1,0 +1,5 @@
+#N canvas 146 223 375 247 12;
+#X obj 73 132 print;
+#X obj 73 103 init.lf 10;
+#X text 68 70 Description: Loadbang a float.;
+#X connect 1 0 0 0;

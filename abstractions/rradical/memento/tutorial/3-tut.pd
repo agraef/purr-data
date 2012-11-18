@@ -1,0 +1,30 @@
+#N canvas 322 395 781 403 10;
+#X obj 10 7 cnv 15 100 20 empty empty Originator_Methods 20 12 1 14
+-262144 -66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X obj 30 301 originator aState \$0;
+#X msg 77 179 set;
+#X msg 74 214 copy;
+#X msg 72 233 paste;
+#X msg 74 270 create AnotherState;
+#X msg 77 132 substate \$1;
+#X obj 77 110 hradio 15 0 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 0;
+#X text 219 108 Select a substate. Substates are subdirectories \,
+that contain a set of state variables.;
+#X text 217 173 Set the managed objects to the values of the substate
+currently selected. Objects are managed with 'commun'. See later;
+#X text 215 218 Copy and paste a complete substate.;
+#X text 219 266 Create a totally new state. Overwrites the object argument.
+Instead of a state called 'aState' now everything is inside a state
+'AnotherState'.;
+#X text 42 64 Originator accepts various methods:;
+#X msg 378 10 4;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X connect 8 0 3 0;
+#X connect 9 0 8 0;
+#X connect 15 0 1 0;

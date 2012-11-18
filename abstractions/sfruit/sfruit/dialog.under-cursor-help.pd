@@ -1,0 +1,17 @@
+#N canvas 677 392 419 249 10;
+#X text 4 8 [dialog.under-cursor] constructs the appropriate message
+to spawn a pd-window under the cursor's current position.;
+#X text 5 46 Required arguments are the dimensions of the window you'd
+like to spawn (a necessity require by the message to Pd);
+#X obj 45 173 dialog.under-cursor 330 115;
+#X obj 45 197 s pd-\$0.my-dialog;
+#N canvas 563 580 330 115 \$0.my-dialog 0;
+#X text 45 22 Hallo there!;
+#X restore 287 193 pd \$0.my-dialog;
+#X obj 45 151 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 6 85 The window will automatically stay within your screen's
+boundaries.;
+#X text 273 220 2008 Luke Iannini;
+#X connect 2 0 3 0;
+#X connect 5 0 2 0;

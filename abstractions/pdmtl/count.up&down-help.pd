@@ -1,0 +1,29 @@
+#N canvas 262 348 687 436 10;
+#X obj 97 110 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X floatatom 90 207 5 0 0 0 - - -;
+#X obj 91 140 metro 250;
+#X msg 208 137 0;
+#X msg 263 140 10;
+#X msg 261 178 -20;
+#X text 95 22 Description: A counter that counts up and down.;
+#X text 310 150 Right inlet sets internal value.;
+#X obj 111 253 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X floatatom 104 350 5 0 0 0 - - -;
+#X obj 105 283 metro 250;
+#X msg 222 280 0;
+#X msg 277 283 10;
+#X obj 104 322 count.up&down -10 10;
+#X obj 90 179 count.up&down 0 10;
+#X connect 0 0 2 0;
+#X connect 2 0 14 0;
+#X connect 3 0 14 1;
+#X connect 4 0 14 1;
+#X connect 5 0 14 1;
+#X connect 8 0 10 0;
+#X connect 10 0 13 0;
+#X connect 11 0 13 1;
+#X connect 12 0 13 1;
+#X connect 13 0 9 0;
+#X connect 14 0 1 0;

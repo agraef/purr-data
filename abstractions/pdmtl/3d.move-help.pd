@@ -1,0 +1,33 @@
+#N canvas 145 173 557 352 10;
+#X obj 24 177 unpack f f f;
+#X floatatom 24 202 5 0 0 0 - - -;
+#X floatatom 63 202 5 0 0 0 - - -;
+#X floatatom 103 202 5 0 0 0 - - -;
+#X text 221 166 2nd inlet: accepts list of 3 floats;
+#X text 222 265 outlet: list of 3 floats;
+#X text 88 26 - moves a vector in the given direction on each step
+;
+#X msg 88 107 2 2 2;
+#X obj 24 100 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 167 114 4 3 5;
+#X msg 152 92 1 1 1;
+#X text 243 70 args: <X> <Y> <Z> <dX> <dY> <dZ>;
+#X text 287 88 startpoint and direction;
+#X text 221 120 1st inlet: accepts bangs;
+#X text 220 216 3rd inlet: accepts list of 3 floats;
+#X text 295 186 sets the startpoint;
+#X text 297 233 sets the direction;
+#X text 295 136 trigger;
+#X text 390 312 Version: 2007-12-09;
+#X text 391 331 Author: Roman Haefeli;
+#X obj 23 24 3d.move;
+#X obj 24 139 3d.move 0 0 0 1 2 4;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 0 2 3 0;
+#X connect 7 0 21 1;
+#X connect 8 0 21 0;
+#X connect 9 0 21 2;
+#X connect 10 0 21 2;
+#X connect 21 0 0 0;

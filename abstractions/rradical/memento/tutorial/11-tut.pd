@@ -1,0 +1,25 @@
+#N canvas 452 267 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Networking_with_OSC 20 12 1 14
+-262144 -66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X obj 76 340 OSCAbstraction /OSCState;
+#X obj 126 291 sendOSC;
+#X obj 76 316 dumpOSC 3000;
+#X msg 282 274 connect localhost 3000;
+#X obj 282 252 loadbang;
+#X obj 76 187 netcontrol /OSCState aFloat;
+#X obj 281 187 netcontrol /OSCState aRadio;
+#X text 65 77 Memento comes with an example remote control GUI called
+netcontrol. You give it the name of a receiver and then you can send
+floats to that receiver. Doing the same for other data types like symbols
+is left as an exercise to the reader. You supply the target state as
+first argument \, the receiver as second arg (without / in the example)
+;
+#X msg 378 10 12;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 0;
+#X connect 11 0 1 0;

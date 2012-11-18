@@ -1,0 +1,20 @@
+#N canvas 207 113 449 332 10;
+#X text 173 198 DSP objects for MSP;
+#X text 173 55 list operations;
+#X text 173 34 random and chance operations;
+#X text 173 13 basic low-level functions;
+#X text 173 106 pitch-related functions;
+#X text 173 149 dynamics \, ramps \, etc.;
+#X text 173 128 time-based functions;
+#X text 19 238 Real Time Composition Library vs. 4.1 for wMAX;
+#X text 19 252 (c) 1993-2006 by Karlheinz Essl <www.essl.at>;
+#X obj 33 13 rtc-help/Toolbox;
+#X obj 33 34 rtc-help/Chance;
+#X obj 33 55 rtc-help/Lists;
+#X obj 33 105 rtc-help/Harmony;
+#X obj 33 125 rtc-help/Rhythm;
+#X obj 33 146 rtc-help/Envelopes;
+#X obj 33 197 rtc-help/MSP-RTC;
+#X text 15 78 ___________________________________________________;
+#X text 15 172 ___________________________________________________
+;

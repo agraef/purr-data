@@ -1,0 +1,18 @@
+#N canvas 1 48 521 295 10;
+#X obj 51 109 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 51 144 random-row;
+#X text 25 246 1994 by Karlheinz Essl;
+#X text 25 70 Generates a twelve-tone row by random. The elements of
+the row range from 0 to 11;
+#X text 25 39 random-row;
+#X obj 51 177 show;
+#X msg 51 208;
+#X obj 93 177 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X msg 198 22 Dodecaphonics;
+#X text 84 114 Click to generate a random row;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 5 0 6 0;
+#X connect 7 0 5 1;

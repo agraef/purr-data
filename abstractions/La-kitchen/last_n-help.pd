@@ -1,0 +1,15 @@
+#N canvas 562 42 442 273 10;
+#X floatatom 141 132 5 0 0 0 - - -;
+#X floatatom 92 114 5 0 0 0 - - -;
+#X obj 92 156 last_n 12;
+#X text 26 24 This abstraction save the n last incoming datas;
+#X text 27 43 into a list;
+#X text 93 91 data;
+#X text 139 111 size: n;
+#X text 265 204 la Kitchen;
+#X text 265 221 Charles Verron;
+#X text 264 189 2004_03_18;
+#X obj 92 196 print;
+#X connect 0 0 2 1;
+#X connect 1 0 2 0;
+#X connect 2 0 10 0;

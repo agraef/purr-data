@@ -1,0 +1,16 @@
+#N canvas 10 40 636 461 12;
+#X obj 10 10 cnv 15 400 40 empty empty determinism 20 12 0 24 -228992
+-66577 0;
+#X obj 231 419 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s5.3
+;
+#X text 195 395 For more info:;
+#X obj 14 133 pddp/pddplink http://en.wikipedia.org/wiki/Deterministic_algorithm
+;
+#X text 9 73 Pd is designed to be "deterministic". This is a computer
+science term meaning to behave predictibly \, i.e. given a certain
+input \, it will always produce the same output.;
+#X text 9 163 For Pd \, this means that it will always run the program
+in the exact same order everytime. Even if the computer is not fast
+enough to complete all of the operations in realtime \, Pd will then
+cause an interruption while it ties to finish everything before moving
+to the next step.;

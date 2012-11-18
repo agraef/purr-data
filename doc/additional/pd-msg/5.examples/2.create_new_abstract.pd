@@ -1,0 +1,38 @@
+#N canvas -9 18 505 524 10;
+#X msg 77 224 msg 10 10 bang;
+#X msg 77 272 obj 10 40 metro 500;
+#X msg 77 248 floatatom 100 10 7 50 5000;
+#X msg 77 344 obj 10 70 random 127;
+#X msg 77 392 floatatom 10 100 5;
+#X msg 78 440 text 10 130 That's it !;
+#X obj 30 475 s pd-new;
+#X msg 77 296 connect 0 0 2 0;
+#X msg 77 319 connect 1 0 2 1;
+#X msg 77 368 connect 2 0 3 0;
+#X msg 77 416 connect 3 0 4 0;
+#X msg 40 79 \; pd filename new ./ \; #N canvas \; #X pop 1 \;;
+#X text 53 59 click here first;
+#X text 28 176 And then we fill it with the way describe in 1.add_objects.pd
+;
+#X text 26 15 This describe how to create a new abstraction :;
+#X msg 290 457 menuclose;
+#X text 294 483 this will kill it !;
+#N canvas 458 158 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 75 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 45 DESCRIPTION creating a pd patch dynamically;
+#X restore 448 496 pd META;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 10 0 6 0;
+#X connect 15 0 6 0;

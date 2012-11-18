@@ -1,0 +1,30 @@
+#N canvas 511 144 636 444 10;
+#X obj 45 131 list split 1;
+#X msg 94 90 /a 1 2 3;
+#X obj 45 276 list append;
+#X obj 45 299 list trim;
+#X obj 45 239 makefilename \$1%s;
+#X obj 45 188 route symbol;
+#X obj 45 89 inlet;
+#X obj 45 319 outlet;
+#X text 215 99 "Prepends" first argument to an OSC message list.;
+#X text 221 126 Example: with \$1 being "/synth" the message "/set
+x 1 2" will become "/synth/set x 1 2".;
+#X text 223 163 Right inlet lets you change the prepended argument
+;
+#X msg 146 209 set \$1%s;
+#X obj 146 185 symbol;
+#X obj 146 163 inlet;
+#X text 224 189 Lists not starting with a symbol are filtered out!
+;
+#X connect 0 0 5 0;
+#X connect 0 1 2 1;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 4 0 2 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;
+#X connect 11 0 4 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;

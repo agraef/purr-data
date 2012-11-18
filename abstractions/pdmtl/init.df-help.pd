@@ -1,0 +1,47 @@
+#N canvas 357 287 636 408 10;
+#X obj 15 65 loadbang;
+#X obj 15 162 metro;
+#X msg 15 117 1;
+#X obj 15 190 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 46 117 init.df \$1 100;
+#X floatatom 46 141 5 0 0 0 - - -;
+#X obj 175 63 loadbang;
+#X obj 175 152 metro;
+#X obj 175 177 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 208 132 5 0 0 0 - - -;
+#X obj 15 89 t b b;
+#X obj 175 85 t b b;
+#X text 13 15 Description: Default float.;
+#X text 12 36 If the first argument is 0 \, the second argument is
+outputed.;
+#X obj 15 278 loadbang;
+#X floatatom 15 340 5 0 0 0 - - -;
+#X obj 320 279 loadbang;
+#X floatatom 320 341 5 0 0 0 - - -;
+#X text 12 226 Inside the following abstractions \, you will find a
+init.df. If the abstraction's argument is not set \, the default float
+is selected.;
+#X text 173 287 Argument no set.;
+#X text 482 287 Argument set to 594;
+#X obj 208 108 init.df 50 100;
+#X obj 15 306 examples/abstraction_arguments/abs_clipper;
+#X obj 320 308 examples/abstraction_arguments/abs_clipper 594;
+#X connect 0 0 10 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 1;
+#X connect 6 0 11 0;
+#X connect 7 0 8 0;
+#X connect 9 0 7 1;
+#X connect 10 0 2 0;
+#X connect 10 1 4 0;
+#X connect 11 0 7 0;
+#X connect 11 1 21 0;
+#X connect 14 0 22 0;
+#X connect 16 0 23 0;
+#X connect 21 0 9 0;
+#X connect 22 0 15 0;
+#X connect 23 0 17 0;

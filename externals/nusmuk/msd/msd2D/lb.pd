@@ -1,0 +1,13 @@
+#N canvas 0 0 450 300 10;
+#X obj 18 86 loadbang;
+#X obj 18 63 universal;
+#X msg 18 41 loadbang loadbang;
+#X obj 18 17 inlet;
+#X obj 18 108 outlet;
+#X obj 104 84 r lb;
+#X obj 104 105 t b;
+#X connect 0 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;

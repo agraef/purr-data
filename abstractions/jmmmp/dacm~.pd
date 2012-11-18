@@ -1,0 +1,72 @@
+#N canvas 143 235 368 570 10;
+#X obj 50 50 inlet~;
+#X obj 50 130 loadbang;
+#X obj 50 170 moses 1;
+#X msg 50 190 2;
+#X obj 69 310 zl group;
+#X obj 69 270 until;
+#X obj 69 290 f+ 1;
+#X obj 89 220 f;
+#X obj 50 150 \$1;
+#X obj 69 350 prepent;
+#X msg 128 310 obj 50 90 dac~;
+#X obj 89 240 t f f b;
+#X obj 42 380 list length;
+#X obj 42 330 t l l;
+#X obj 42 400 until;
+#X obj 42 420 f+ 0;
+#X text 220 55 Inlets;
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 535 pd license;
+#X text 12 517 (C) 2009 João Pais - jmmmpais@googlemail.com;
+#X text 11 8 [dacm~] - Mono dac~ for lazy people;
+#X text 220 75 - Audio signal;
+#X text 220 105 Arguments;
+#X text 220 125 - Number of channels;
+#X obj 112 480 namecanvas \$0-dacm;
+#X obj 42 480 s \$0-dacm;
+#X msg 42 440 connect 0 0 26 \$1;
+#X connect 1 0 8 0;
+#X connect 2 0 3 0;
+#X connect 2 1 7 0;
+#X connect 3 0 7 0;
+#X connect 4 0 13 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X connect 7 0 11 0;
+#X connect 8 0 2 0;
+#X connect 9 0 24 0;
+#X connect 10 0 9 1;
+#X connect 11 0 5 0;
+#X connect 11 1 4 1;
+#X connect 11 2 10 0;
+#X connect 12 0 14 0;
+#X connect 13 0 12 0;
+#X connect 13 1 9 0;
+#X connect 14 0 15 0;
+#X connect 15 0 25 0;
+#X connect 25 0 24 0;

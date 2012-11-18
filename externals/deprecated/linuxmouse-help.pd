@@ -1,0 +1,44 @@
+#N canvas 112 187 463 472 10;
+#X floatatom 238 220 5 0 0 3 button# - -;
+#X floatatom 299 220 5 0 0 3 button_value - -;
+#X floatatom 190 220 2 0 0 3 wheel - -;
+#X floatatom 137 220 4 0 0 3 y-axis - -;
+#X floatatom 79 220 4 0 0 3 x-axis - -;
+#X obj 95 193 linuxmouse /dev/input/event0;
+#X obj 6 5 cnv 15 450 30 empty empty [linuxmouse] 20 12 1 16 -225280
+-66577 0;
+#X text 24 263 [linuxmouse] takes events directly from a Linux event
+device \, so that you get mouse data regardless of whether Pd has focus.
+Also \, the data from the event system is relative and limited to the
+screen size.;
+#X msg 51 71 start;
+#X msg 51 93 stop;
+#X msg 115 70 poll;
+#X msg 115 92 nopoll;
+#X msg 158 165 close;
+#X text 179 91 (synonyms for the same actions);
+#X text 182 75 start/stop polling;
+#X msg 147 122 open;
+#X msg 152 142 open /dev/input/event1;
+#X text 183 123 opens the previous device;
+#X msg 419 10 pddp;
+#X text 178 417 For more info on HIDs:;
+#X text 10 441 by Hans-Christoph Steiner <hans@at.or.at>;
+#X obj 340 417 pddp/pddplink ../all_about_hid.pd -text all_about_hid;
+#X text 24 325 Rather than polling like the other HID objects \, [linuxmouse]
+uses a pollfn so it receives events as they happen. A pollfn listens
+to a network socket \, and takes action upon activity. Since all mouse
+events go through the network socket between pd and pd-gui \, this
+works for responding to mouse events.;
+#X connect 5 0 4 0;
+#X connect 5 1 3 0;
+#X connect 5 2 2 0;
+#X connect 5 3 0 0;
+#X connect 5 4 1 0;
+#X connect 8 0 5 0;
+#X connect 9 0 5 0;
+#X connect 10 0 5 0;
+#X connect 11 0 5 0;
+#X connect 12 0 5 0;
+#X connect 15 0 5 0;
+#X connect 16 0 5 0;

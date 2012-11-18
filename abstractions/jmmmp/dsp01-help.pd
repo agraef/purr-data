@@ -1,0 +1,19 @@
+#N canvas 101 86 422 283 10;
+#X obj 36 89 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 12 207 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X msg 56 89 bang;
+#X text 16 227 Adapted from H-C Steiner's dsp abstraction;
+#X text 260 100 Inlets;
+#X text 260 150 GUI;
+#X text 260 170 - Click on it;
+#X text 260 120 - Bang / Number;
+#X text 260 50 Arguments;
+#X text 260 70 - DSP state (1/0);
+#X text 92 89 On / Off;
+#X text 107 118 <- Or click on it;
+#X obj 36 119 dsp01;
+#X text 12 10 [dsp01] - DSP switch;
+#X text 16 247 Released under the BSD License;
+#X connect 0 0 12 0;
+#X connect 2 0 12 0;

@@ -1,0 +1,665 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E90043870887A302008AEAFC /* pyatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90043820887A302008AEAFC /* pyatom.cpp */; };
+		E90043880887A302008AEAFC /* pyatom.h in Headers */ = {isa = PBXBuildFile; fileRef = E90043830887A302008AEAFC /* pyatom.h */; };
+		E90043890887A302008AEAFC /* pybase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90043840887A302008AEAFC /* pybase.cpp */; };
+		E900438A0887A302008AEAFC /* pybase.h in Headers */ = {isa = PBXBuildFile; fileRef = E90043850887A302008AEAFC /* pybase.h */; };
+		E900438B0887A302008AEAFC /* pymeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90043860887A302008AEAFC /* pymeth.cpp */; };
+		E903AC8E09D32D03004755CA /* pybundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E903AC8C09D32D03004755CA /* pybundle.cpp */; };
+		E903AC8F09D32D03004755CA /* pybundle.h in Resources */ = {isa = PBXBuildFile; fileRef = E903AC8D09D32D03004755CA /* pybundle.h */; };
+		E903AC9009D32D03004755CA /* pybundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E903AC8C09D32D03004755CA /* pybundle.cpp */; };
+		E903AC9109D32D03004755CA /* pybundle.h in Headers */ = {isa = PBXBuildFile; fileRef = E903AC8D09D32D03004755CA /* pybundle.h */; };
+		E90E52E908092581001341AC /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = E90E51DE08091989001341AC /* main.h */; };
+		E90E52EA08092581001341AC /* pybuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = E90E51E308091989001341AC /* pybuffer.h */; };
+		E90E52EB08092581001341AC /* pyext.h in Headers */ = {isa = PBXBuildFile; fileRef = E90E51E608091989001341AC /* pyext.h */; };
+		E90E52EC08092581001341AC /* pyprefix.h in Headers */ = {isa = PBXBuildFile; fileRef = E90E51E708091989001341AC /* pyprefix.h */; };
+		E90E52ED08092581001341AC /* pysymbol.h in Headers */ = {isa = PBXBuildFile; fileRef = E90E51E908091989001341AC /* pysymbol.h */; };
+		E90E52EE0809258A001341AC /* bound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DB08091989001341AC /* bound.cpp */; };
+		E90E52EF0809258A001341AC /* clmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DC08091989001341AC /* clmeth.cpp */; };
+		E90E52F00809258A001341AC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DD08091989001341AC /* main.cpp */; };
+		E90E52F10809258A001341AC /* modmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DF08091989001341AC /* modmeth.cpp */; };
+		E90E52F20809258A001341AC /* py.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E008091989001341AC /* py.cpp */; };
+		E90E52F30809258A001341AC /* pyargs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E108091989001341AC /* pyargs.cpp */; };
+		E90E52F40809258A001341AC /* pybuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E208091989001341AC /* pybuffer.cpp */; };
+		E90E52F50809258A001341AC /* pydsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E408091989001341AC /* pydsp.cpp */; };
+		E90E52F60809258A001341AC /* pyext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E508091989001341AC /* pyext.cpp */; };
+		E90E52F70809258A001341AC /* pysymbol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E808091989001341AC /* pysymbol.cpp */; };
+		E90E52F80809258A001341AC /* register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51EA08091989001341AC /* register.cpp */; };
+		E90E535D08092593001341AC /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E521108091CA5001341AC /* ApplicationServices.framework */; };
+		E90E535E08092593001341AC /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E52D208091F79001341AC /* vecLib.framework */; };
+		E926B6D8089F76D90034D534 /* pyatom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90043820887A302008AEAFC /* pyatom.cpp */; };
+		E926B6D9089F76D90034D534 /* pyatom.h in Sources */ = {isa = PBXBuildFile; fileRef = E90043830887A302008AEAFC /* pyatom.h */; };
+		E926B6DA089F76D90034D534 /* pybase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90043840887A302008AEAFC /* pybase.cpp */; };
+		E926B6DB089F76D90034D534 /* pybase.h in Sources */ = {isa = PBXBuildFile; fileRef = E90043850887A302008AEAFC /* pybase.h */; };
+		E926B6DC089F76D90034D534 /* pymeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90043860887A302008AEAFC /* pymeth.cpp */; };
+		E926B6DD089F76D90034D534 /* bound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DB08091989001341AC /* bound.cpp */; };
+		E926B6DE089F76D90034D534 /* clmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DC08091989001341AC /* clmeth.cpp */; };
+		E926B6DF089F76D90034D534 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DD08091989001341AC /* main.cpp */; };
+		E926B6E0089F76D90034D534 /* main.h in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DE08091989001341AC /* main.h */; };
+		E926B6E1089F76D90034D534 /* modmeth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51DF08091989001341AC /* modmeth.cpp */; };
+		E926B6E2089F76D90034D534 /* py.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E008091989001341AC /* py.cpp */; };
+		E926B6E3089F76D90034D534 /* pyargs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E108091989001341AC /* pyargs.cpp */; };
+		E926B6E4089F76D90034D534 /* pybuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E208091989001341AC /* pybuffer.cpp */; };
+		E926B6E5089F76D90034D534 /* pybuffer.h in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E308091989001341AC /* pybuffer.h */; };
+		E926B6E6089F76D90034D534 /* pydsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E408091989001341AC /* pydsp.cpp */; };
+		E926B6E7089F76D90034D534 /* pyext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E508091989001341AC /* pyext.cpp */; };
+		E926B6E8089F76D90034D534 /* pyext.h in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E608091989001341AC /* pyext.h */; };
+		E926B6E9089F76D90034D534 /* pyprefix.h in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E708091989001341AC /* pyprefix.h */; };
+		E926B6EA089F76D90034D534 /* pysymbol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E808091989001341AC /* pysymbol.cpp */; };
+		E926B6EB089F76D90034D534 /* pysymbol.h in Sources */ = {isa = PBXBuildFile; fileRef = E90E51E908091989001341AC /* pysymbol.h */; };
+		E926B6EC089F76D90034D534 /* register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E90E51EA08091989001341AC /* register.cpp */; };
+		E926B6F4089F77B20034D534 /* vecLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E52D208091F79001341AC /* vecLib.framework */; };
+		E926B7B6089F77B90034D534 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E51FB080919EC001341AC /* Python.framework */; };
+		E926B818089F782F0034D534 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E926B817089F782F0034D534 /* MaxAPI.framework */; };
+		E926B81A089F78400034D534 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E926B819089F78400034D534 /* MaxAudioAPI.framework */; };
+		E926B833089F7CB50034D534 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E521108091CA5001341AC /* ApplicationServices.framework */; };
+		E9D6763308FC61A40039A6F6 /* libflext-max_d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D6762D08FC61860039A6F6 /* libflext-max_d.dylib */; };
+		E9D6763408FC61A40039A6F6 /* libflext-max.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D6762E08FC61860039A6F6 /* libflext-max.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E90043820887A302008AEAFC /* pyatom.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pyatom.cpp; path = source/pyatom.cpp; sourceTree = "<group>"; };
+		E90043830887A302008AEAFC /* pyatom.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pyatom.h; path = source/pyatom.h; sourceTree = "<group>"; };
+		E90043840887A302008AEAFC /* pybase.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pybase.cpp; path = source/pybase.cpp; sourceTree = "<group>"; };
+		E90043850887A302008AEAFC /* pybase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pybase.h; path = source/pybase.h; sourceTree = "<group>"; };
+		E90043860887A302008AEAFC /* pymeth.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pymeth.cpp; path = source/pymeth.cpp; sourceTree = "<group>"; };
+		E903AC8C09D32D03004755CA /* pybundle.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pybundle.cpp; path = source/pybundle.cpp; sourceTree = "<group>"; };
+		E903AC8D09D32D03004755CA /* pybundle.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pybundle.h; path = source/pybundle.h; sourceTree = "<group>"; };
+		E90E51DB08091989001341AC /* bound.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = bound.cpp; path = source/bound.cpp; sourceTree = "<group>"; };
+		E90E51DC08091989001341AC /* clmeth.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = clmeth.cpp; path = source/clmeth.cpp; sourceTree = "<group>"; };
+		E90E51DD08091989001341AC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = source/main.cpp; sourceTree = "<group>"; };
+		E90E51DE08091989001341AC /* main.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = main.h; path = source/main.h; sourceTree = "<group>"; };
+		E90E51DF08091989001341AC /* modmeth.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = modmeth.cpp; path = source/modmeth.cpp; sourceTree = "<group>"; };
+		E90E51E008091989001341AC /* py.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = py.cpp; path = source/py.cpp; sourceTree = "<group>"; };
+		E90E51E108091989001341AC /* pyargs.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pyargs.cpp; path = source/pyargs.cpp; sourceTree = "<group>"; };
+		E90E51E208091989001341AC /* pybuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pybuffer.cpp; path = source/pybuffer.cpp; sourceTree = "<group>"; };
+		E90E51E308091989001341AC /* pybuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pybuffer.h; path = source/pybuffer.h; sourceTree = "<group>"; };
+		E90E51E408091989001341AC /* pydsp.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pydsp.cpp; path = source/pydsp.cpp; sourceTree = "<group>"; };
+		E90E51E508091989001341AC /* pyext.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pyext.cpp; path = source/pyext.cpp; sourceTree = "<group>"; };
+		E90E51E608091989001341AC /* pyext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pyext.h; path = source/pyext.h; sourceTree = "<group>"; };
+		E90E51E708091989001341AC /* pyprefix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pyprefix.h; path = source/pyprefix.h; sourceTree = "<group>"; };
+		E90E51E808091989001341AC /* pysymbol.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = pysymbol.cpp; path = source/pysymbol.cpp; sourceTree = "<group>"; };
+		E90E51E908091989001341AC /* pysymbol.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pysymbol.h; path = source/pysymbol.h; sourceTree = "<group>"; };
+		E90E51EA08091989001341AC /* register.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = register.cpp; path = source/register.cpp; sourceTree = "<group>"; };
+		E90E51FB080919EC001341AC /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /System/Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
+		E90E521108091CA5001341AC /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		E90E52D208091F79001341AC /* vecLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vecLib.framework; path = /System/Library/Frameworks/vecLib.framework; sourceTree = "<absolute>"; };
+		E90E52E608092505001341AC /* py.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = py.pd_darwin; sourceTree = BUILT_PRODUCTS_DIR; };
+		E926B6D3089F75950034D534 /* py.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = py.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		E926B817089F782F0034D534 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
+		E926B819089F78400034D534 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = /Library/Frameworks/MaxAudioAPI.framework; sourceTree = "<absolute>"; };
+		E9D6762D08FC61860039A6F6 /* libflext-max_d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libflext-max_d.dylib"; path = "/usr/local/lib/libflext-max_d.dylib"; sourceTree = "<absolute>"; };
+		E9D6762E08FC61860039A6F6 /* libflext-max.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libflext-max.dylib"; path = "/usr/local/lib/libflext-max.dylib"; sourceTree = "<absolute>"; };
+		E9D6762F08FC61860039A6F6 /* libflext-pd_d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libflext-pd_d.dylib"; path = "/usr/local/lib/libflext-pd_d.dylib"; sourceTree = "<absolute>"; };
+		E9D6763008FC61860039A6F6 /* libflext-pd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libflext-pd.dylib"; path = "/usr/local/lib/libflext-pd.dylib"; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E90E52E408092505001341AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E90E535D08092593001341AC /* ApplicationServices.framework in Frameworks */,
+				E90E535E08092593001341AC /* vecLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E926B6D1089F75950034D534 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9D6763308FC61A40039A6F6 /* libflext-max_d.dylib in Frameworks */,
+				E9D6763408FC61A40039A6F6 /* libflext-max.dylib in Frameworks */,
+				E926B833089F7CB50034D534 /* ApplicationServices.framework in Frameworks */,
+				E926B7B6089F77B90034D534 /* Python.framework in Frameworks */,
+				E926B6F4089F77B20034D534 /* vecLib.framework in Frameworks */,
+				E926B818089F782F0034D534 /* MaxAPI.framework in Frameworks */,
+				E926B81A089F78400034D534 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* py */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77ADFE841716C02AAC07 /* Source */,
+				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
+			);
+			name = py;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E9D6762D08FC61860039A6F6 /* libflext-max_d.dylib */,
+				E9D6762E08FC61860039A6F6 /* libflext-max.dylib */,
+				E9D6762F08FC61860039A6F6 /* libflext-pd_d.dylib */,
+				E9D6763008FC61860039A6F6 /* libflext-pd.dylib */,
+				E926B819089F78400034D534 /* MaxAudioAPI.framework */,
+				E926B817089F782F0034D534 /* MaxAPI.framework */,
+				E90E52D208091F79001341AC /* vecLib.framework */,
+				E90E521108091CA5001341AC /* ApplicationServices.framework */,
+				E90E51FB080919EC001341AC /* Python.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ADFE841716C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E903AC8C09D32D03004755CA /* pybundle.cpp */,
+				E903AC8D09D32D03004755CA /* pybundle.h */,
+				E90043820887A302008AEAFC /* pyatom.cpp */,
+				E90043830887A302008AEAFC /* pyatom.h */,
+				E90043840887A302008AEAFC /* pybase.cpp */,
+				E90043850887A302008AEAFC /* pybase.h */,
+				E90043860887A302008AEAFC /* pymeth.cpp */,
+				E90E51DB08091989001341AC /* bound.cpp */,
+				E90E51DC08091989001341AC /* clmeth.cpp */,
+				E90E51DD08091989001341AC /* main.cpp */,
+				E90E51DE08091989001341AC /* main.h */,
+				E90E51DF08091989001341AC /* modmeth.cpp */,
+				E90E51E008091989001341AC /* py.cpp */,
+				E90E51E108091989001341AC /* pyargs.cpp */,
+				E90E51E208091989001341AC /* pybuffer.cpp */,
+				E90E51E308091989001341AC /* pybuffer.h */,
+				E90E51E408091989001341AC /* pydsp.cpp */,
+				E90E51E508091989001341AC /* pyext.cpp */,
+				E90E51E608091989001341AC /* pyext.h */,
+				E90E51E708091989001341AC /* pyprefix.h */,
+				E90E51E808091989001341AC /* pysymbol.cpp */,
+				E90E51E908091989001341AC /* pysymbol.h */,
+				E90E51EA08091989001341AC /* register.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E90E52E608092505001341AC /* py.pd_darwin */,
+				E926B6D3089F75950034D534 /* py.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E90E52E208092505001341AC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E90E52E908092581001341AC /* main.h in Headers */,
+				E90E52EA08092581001341AC /* pybuffer.h in Headers */,
+				E90E52EB08092581001341AC /* pyext.h in Headers */,
+				E90E52EC08092581001341AC /* pyprefix.h in Headers */,
+				E90E52ED08092581001341AC /* pysymbol.h in Headers */,
+				E90043880887A302008AEAFC /* pyatom.h in Headers */,
+				E900438A0887A302008AEAFC /* pybase.h in Headers */,
+				E903AC9109D32D03004755CA /* pybundle.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E90E52E508092505001341AC /* py.pd_darwin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E93C2D850A5DB6E70023B566 /* Build configuration list for PBXNativeTarget "py.pd_darwin" */;
+			buildPhases = (
+				E90E52E208092505001341AC /* Headers */,
+				E90E52E308092505001341AC /* Sources */,
+				E90E52E408092505001341AC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = py.pd_darwin;
+			productName = py;
+			productReference = E90E52E608092505001341AC /* py.pd_darwin */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		E926B6D2089F75950034D534 /* py */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E93C2D890A5DB6E70023B566 /* Build configuration list for PBXNativeTarget "py" */;
+			buildPhases = (
+				E926B6CF089F75950034D534 /* Resources */,
+				E926B6D0089F75950034D534 /* Sources */,
+				E926B6D1089F75950034D534 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = py;
+			productName = py;
+			productReference = E926B6D3089F75950034D534 /* py.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = E93C2D8D0A5DB6E70023B566 /* Build configuration list for PBXProject "py" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* py */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E90E52E508092505001341AC /* py.pd_darwin */,
+				E926B6D2089F75950034D534 /* py */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E926B6CF089F75950034D534 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E903AC8F09D32D03004755CA /* pybundle.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E90E52E308092505001341AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E90E52EE0809258A001341AC /* bound.cpp in Sources */,
+				E90E52EF0809258A001341AC /* clmeth.cpp in Sources */,
+				E90E52F00809258A001341AC /* main.cpp in Sources */,
+				E90E52F10809258A001341AC /* modmeth.cpp in Sources */,
+				E90E52F20809258A001341AC /* py.cpp in Sources */,
+				E90E52F30809258A001341AC /* pyargs.cpp in Sources */,
+				E90E52F40809258A001341AC /* pybuffer.cpp in Sources */,
+				E90E52F50809258A001341AC /* pydsp.cpp in Sources */,
+				E90E52F60809258A001341AC /* pyext.cpp in Sources */,
+				E90E52F70809258A001341AC /* pysymbol.cpp in Sources */,
+				E90E52F80809258A001341AC /* register.cpp in Sources */,
+				E90043870887A302008AEAFC /* pyatom.cpp in Sources */,
+				E90043890887A302008AEAFC /* pybase.cpp in Sources */,
+				E900438B0887A302008AEAFC /* pymeth.cpp in Sources */,
+				E903AC9009D32D03004755CA /* pybundle.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E926B6D0089F75950034D534 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E926B6D8089F76D90034D534 /* pyatom.cpp in Sources */,
+				E926B6D9089F76D90034D534 /* pyatom.h in Sources */,
+				E926B6DA089F76D90034D534 /* pybase.cpp in Sources */,
+				E926B6DB089F76D90034D534 /* pybase.h in Sources */,
+				E926B6DC089F76D90034D534 /* pymeth.cpp in Sources */,
+				E926B6DD089F76D90034D534 /* bound.cpp in Sources */,
+				E926B6DE089F76D90034D534 /* clmeth.cpp in Sources */,
+				E926B6DF089F76D90034D534 /* main.cpp in Sources */,
+				E926B6E0089F76D90034D534 /* main.h in Sources */,
+				E926B6E1089F76D90034D534 /* modmeth.cpp in Sources */,
+				E926B6E2089F76D90034D534 /* py.cpp in Sources */,
+				E926B6E3089F76D90034D534 /* pyargs.cpp in Sources */,
+				E926B6E4089F76D90034D534 /* pybuffer.cpp in Sources */,
+				E926B6E5089F76D90034D534 /* pybuffer.h in Sources */,
+				E926B6E6089F76D90034D534 /* pydsp.cpp in Sources */,
+				E926B6E7089F76D90034D534 /* pyext.cpp in Sources */,
+				E926B6E8089F76D90034D534 /* pyext.h in Sources */,
+				E926B6E9089F76D90034D534 /* pyprefix.h in Sources */,
+				E926B6EA089F76D90034D534 /* pysymbol.cpp in Sources */,
+				E926B6EB089F76D90034D534 /* pysymbol.h in Sources */,
+				E926B6EC089F76D90034D534 /* register.cpp in Sources */,
+				E903AC8E09D32D03004755CA /* pybundle.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E93C2D860A5DB6E70023B566 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_MODEL_CPU = G4;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/pyprefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+					FLEXT_DEBUG,
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(flext)/source",
+					"$(PD-devel)/src",
+				);
+				INSTALL_PATH = "$(PDApp)/extra";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = STATIC;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-lflext-pd_d",
+					"-framework",
+					Python,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = py;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E93C2D870A5DB6E70023B566 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_CPU = G4;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/pyprefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=2",
+					FLEXT_SHARED,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(flext)/source",
+					"$(PD-devel)/src",
+				);
+				INSTALL_PATH = "$(PDApp)/extra";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-lflext-pd",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = py;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E93C2D880A5DB6E70023B566 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_MODEL_CPU = G4;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/pyprefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=2";
+				HEADER_SEARCH_PATHS = (
+					"$(flext)/source",
+					"$(PD-devel)/src",
+				);
+				INSTALL_PATH = "$(PDApp)/extra";
+				LIBRARY_SEARCH_PATHS = "$(flext)/build";
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = py;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		E93C2D8A0A5DB6E70023B566 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/pyprefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					FLEXT_SHARED,
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/py-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = py;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		E93C2D8B0A5DB6E70023B566 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/pyprefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"FLEXT_SYS=1",
+					FLEXT_SHARED,
+				);
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				INFOPLIST_FILE = "source/py-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(maxsdk)/max-includes",
+					"$(maxsdk)/msp-includes",
+				);
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = py;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		E93C2D8C0A5DB6E70023B566 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = source/pyprefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXT_SYS=1";
+				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(flext)/source",
+					"$(MaxSDK)/max-includes",
+					"$(MaxSDK)/msp-includes",
+				);
+				INFOPLIST_FILE = "py-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(MaxSDK)/max-includes",
+					"$(MaxSDK)/msp-includes",
+				);
+				OTHER_CFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = py;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Default;
+		};
+		E93C2D8E0A5DB6E70023B566 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_DEBUG,
+					PY_NUMPY,
+					PY_USE_GIL,
+				);
+				GCC_VERSION = 4.0;
+				HEADER_SEARCH_PATHS = (
+					"/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages/numpy/core/include",
+					"$(flext)/source",
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+			};
+			name = Development;
+		};
+		E93C2D8F0A5DB6E70023B566 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					NDEBUG,
+					PY_NUMPY,
+					PY_USE_GIL,
+				);
+				HEADER_SEARCH_PATHS = "/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages/numpy/core/include";
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Deployment;
+		};
+		E93C2D900A5DB6E70023B566 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = PY_NUMPY;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E93C2D850A5DB6E70023B566 /* Build configuration list for PBXNativeTarget "py.pd_darwin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E93C2D860A5DB6E70023B566 /* Development */,
+				E93C2D870A5DB6E70023B566 /* Deployment */,
+				E93C2D880A5DB6E70023B566 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E93C2D890A5DB6E70023B566 /* Build configuration list for PBXNativeTarget "py" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E93C2D8A0A5DB6E70023B566 /* Development */,
+				E93C2D8B0A5DB6E70023B566 /* Deployment */,
+				E93C2D8C0A5DB6E70023B566 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		E93C2D8D0A5DB6E70023B566 /* Build configuration list for PBXProject "py" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E93C2D8E0A5DB6E70023B566 /* Development */,
+				E93C2D8F0A5DB6E70023B566 /* Deployment */,
+				E93C2D900A5DB6E70023B566 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

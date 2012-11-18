@@ -1,0 +1,119 @@
+#N canvas 324 0 828 668 10;
+#X obj 275 452 pdp_glx;
+#X obj 227 97 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 46 138 open \$1;
+#X obj 45 114 openpanel;
+#X obj 30 97 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 184 98 stop;
+#X obj 187 135 metro 70;
+#X obj 124 175 pdp_yqt;
+#X obj 251 168 pdp_v4l;
+#X obj 260 137 metro 70;
+#X obj 305 103 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 262 104 stop;
+#X obj 587 463 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 587 488 thread \$1;
+#X floatatom 587 576 5 0 0 0 - - -;
+#X obj 587 547 route pdp_drop;
+#X obj 556 97 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 452 136 loop \$1;
+#X obj 453 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 375 138 open \$1;
+#X obj 374 114 openpanel;
+#X obj 359 97 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 513 98 stop;
+#X obj 516 135 metro 70;
+#X obj 453 175 pdp_yqt;
+#X obj 580 168 pdp_v4l;
+#X obj 589 137 metro 70;
+#X obj 634 103 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 591 104 stop;
+#X text 42 572 written by Yves Degoyon ( ydegoyon@free.fr );
+#X text 144 538 between 2 video sources;
+#X text 40 526 pdp_transition : alternate transitions;
+#X msg 195 323 circle 5;
+#X msg 195 301 circle 1;
+#X obj 587 515 pdp_control;
+#X msg 443 301 wipelr 5 0;
+#X text 524 302 Wipe transition left to right : <speed> <randomness>
+;
+#X msg 443 321 wipelr 5 40;
+#X text 523 321 The same with randomness;
+#X msg 443 342 wiperl 5 0;
+#X text 520 341 Wipe transition right to left : <speed> <randomness>
+;
+#X text 520 359 Multi wipe : <speed> <randomness>;
+#X msg 443 360 mwipe 5 0;
+#X text 521 378 Wipe top down : <speed> <randomness>;
+#X msg 444 379 wipetd 5 0;
+#X text 520 398 Wipe bottom up : <speed> <randomness>;
+#X msg 443 399 wipebu 5 30;
+#X msg 196 343 random 5;
+#X text 6 350 Random transition : <speed>;
+#X msg 197 364 melt 5;
+#X text 5 369 Melt transition : <speed>;
+#X text 6 308 Slow circle transition;
+#X text 6 329 Faster circle transition;
+#X text 5 402 <speed> <randomness>;
+#X text 5 391 Blend transition :;
+#X msg 197 388 blend 5 30;
+#X text 40 549 existing transition : "circle" \, "wipe" \, "random"
+\,;
+#X msg 198 414 page 10;
+#X text 5 422 Page transition : <speed>;
+#X text 175 560 "melt" \, "blend" \, "page";
+#X obj 301 392 pdp_transition;
+#X connect 1 0 8 0;
+#X connect 2 0 9 0;
+#X connect 3 0 2 0;
+#X connect 4 0 9 0;
+#X connect 5 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 62 1;
+#X connect 10 0 62 1;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 15 0;
+#X connect 15 0 36 0;
+#X connect 17 0 16 0;
+#X connect 18 0 25 0;
+#X connect 19 0 26 0;
+#X connect 20 0 19 0;
+#X connect 21 0 26 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 24 0 25 0;
+#X connect 25 0 26 0;
+#X connect 26 0 62 2;
+#X connect 27 0 62 2;
+#X connect 28 0 27 0;
+#X connect 29 0 28 0;
+#X connect 30 0 28 0;
+#X connect 34 0 62 0;
+#X connect 35 0 62 0;
+#X connect 36 0 17 0;
+#X connect 37 0 62 0;
+#X connect 39 0 62 0;
+#X connect 41 0 62 0;
+#X connect 44 0 62 0;
+#X connect 46 0 62 0;
+#X connect 48 0 62 0;
+#X connect 49 0 62 0;
+#X connect 51 0 62 0;
+#X connect 57 0 62 0;
+#X connect 59 0 62 0;
+#X connect 62 0 0 0;

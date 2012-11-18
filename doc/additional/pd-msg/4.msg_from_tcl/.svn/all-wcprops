@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/11363/trunk/doc/additional/pd-msg/4.msg_from_tcl
+END
+2.nogui.tk
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/pure-data/!svn/ver/3988/trunk/doc/additional/pd-msg/4.msg_from_tcl/2.nogui.tk
+END
+2.nogui.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/pure-data/!svn/ver/10103/trunk/doc/additional/pd-msg/4.msg_from_tcl/2.nogui.txt
+END
+recv.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/11363/trunk/doc/additional/pd-msg/4.msg_from_tcl/recv.pd
+END
+test.pd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/pure-data/!svn/ver/11363/trunk/doc/additional/pd-msg/4.msg_from_tcl/test.pd
+END
+1.tcl2pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/209/trunk/doc/additional/pd-msg/4.msg_from_tcl/1.tcl2pd
+END
+0.create_dummy_patch.tk
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/pure-data/!svn/ver/3988/trunk/doc/additional/pd-msg/4.msg_from_tcl/0.create_dummy_patch.tk
+END

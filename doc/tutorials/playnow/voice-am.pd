@@ -1,0 +1,58 @@
+#N canvas 475 82 481 584 10;
+#X obj 246 34 adc~;
+#X obj 152 496 dac~;
+#X obj 72 106 fiddle~;
+#X obj 71 126 mtof;
+#X obj 159 223 osc~;
+#X floatatom 32 107 5 0 0 0 - - -;
+#X obj 155 467 *~;
+#X obj 248 299 *~;
+#X obj 280 270 line~;
+#X obj 160 343 cos~;
+#X obj 160 323 +~;
+#X obj 280 247 pack 0 50;
+#X floatatom 129 105 5 0 0 0 - - -;
+#X obj 143 276 *~;
+#X obj 119 201 / 100;
+#X obj 119 181 - 55;
+#X text 48 6 sing into the mic to control AM synthesis with your voice
+;
+#X text 17 539 (C) Copyright 2004 Hans-Christoph Steiner <hans@at.or.at>
+;
+#X text 236 555 released under the GNU GPL;
+#X obj 186 460 nbx 3 18 -1e+37 1e+37 0 0 empty empty empty -9 -10 1
+14 -124831 -1 -1 0.267384 256;
+#X obj 175 437 hsl 200 18 0.01 1 1 0 empty empty master_amplitude 20
+9 1 14 -24198 -1 -1 14200 0;
+#X obj 355 84 pddp/dsp;
+#X obj 159 199 line~;
+#X msg 159 178 \$1 1;
+#X obj 119 246 line~;
+#X msg 119 225 \$1 1;
+#X obj 283 221 hsl 128 15 0.1 1 1 0 empty empty voice_level 10 8 0
+12 -225271 -1 -1 12700 1;
+#X connect 0 0 2 0;
+#X connect 0 0 7 0;
+#X connect 2 0 3 0;
+#X connect 2 0 5 0;
+#X connect 2 3 12 0;
+#X connect 2 3 15 0;
+#X connect 3 0 23 0;
+#X connect 4 0 13 1;
+#X connect 6 0 1 1;
+#X connect 6 0 1 0;
+#X connect 7 0 10 1;
+#X connect 8 0 7 1;
+#X connect 9 0 6 0;
+#X connect 10 0 9 0;
+#X connect 11 0 8 0;
+#X connect 13 0 10 0;
+#X connect 14 0 25 0;
+#X connect 15 0 14 0;
+#X connect 20 0 19 0;
+#X connect 20 0 6 1;
+#X connect 22 0 4 0;
+#X connect 23 0 22 0;
+#X connect 24 0 13 0;
+#X connect 25 0 24 0;
+#X connect 26 0 11 0;

@@ -1,0 +1,10 @@
+#N canvas 781 414 450 300 10;
+#X msg 83 101 a b c d | e f g h i | j k | l m n o p q r s | t u v;
+#X obj 83 154 list-part |;
+#X text 38 49 list-part - split a list into its head and tail upon
+encountering a delimiter;
+#X obj 83 199 print head;
+#X obj 175 191 print tail;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 4 0;

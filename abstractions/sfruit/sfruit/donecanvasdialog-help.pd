@@ -1,0 +1,4 @@
+#N canvas 576 113 450 300 10;
+#X msg 57 145 donecanvasdialog 1 -1 1 0 -1 1 1 85 60 100 100;
+#X msg 57 105 donecanvasdialog xUnits yUnits GOP(1)GOPandHide(2) xFrom
+yFrom xTo yTo xSize ySize xMargin yMargin;

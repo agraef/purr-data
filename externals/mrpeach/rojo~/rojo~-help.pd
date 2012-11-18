@@ -1,0 +1,30 @@
+#N canvas 1 53 450 312 10;
+#X obj 49 161 *~;
+#X obj 22 -12 vsl 15 128 0 1 0 0 empty empty vol 0 -9 0 10 -4034 -13381
+-13381 0 1;
+#X obj 50 200 dac~;
+#X obj 52 31 hsl 128 15 0 1 0 1 empty empty scale -2 -8 0 10 -4034
+-13381 -13381 2500 1;
+#X obj 79 66 hsl 128 15 0 0.99 0 0 empty empty alpha -2 -8 0 10 -4034
+-13381 -13381 0 1;
+#X text 57 -15 rojo~ is a red noise generator;
+#X text 138 242 2008 Martin Peach;
+#X text 137 221 Based on ruido.c by jose manuel berenguer;
+#X obj 49 83 rojo~;
+#N canvas 367 170 494 344 META 0;
+#X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2 or later;
+#X text 12 125 AUTHOR Martin Peach;
+#X text 12 5 KEYWORDS signal random;
+#X text 12 45 DESCRIPTION red noise generator;
+#X text 12 65 INLET_0 float;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 signal;
+#X restore 393 254 pd META;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 1 0 0 1;
+#X connect 3 0 8 0;
+#X connect 4 0 8 1;
+#X connect 8 0 0 0;

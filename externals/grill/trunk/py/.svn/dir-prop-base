@@ -1,0 +1,14 @@
+K 10
+svn:ignore
+V 94
+config.txt
+py.exp
+py.ncb
+Max Threaded Release
+max-cygwin
+max-mingw
+max-msvc
+pd-cygwin
+pd-msvc
+
+END

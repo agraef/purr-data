@@ -1,0 +1,163 @@
+###########################
+model de treball tesis ::: segui tot aquest document file:///usr/share/doc/opencv-doc/ref i anar-lo estudiant ampliant ... etc ... pensant posibles aplicacions en l'art ... a fons i molt ben documentat
+mirant tambe aqui file:///usr/share/doc/opencv-doc/papers per ampliar i altres documents a la xarxa
+###########################
+
+en tots els objectes ... en la funcio pdp_opencv_elquesigui_process fer un case "PDP_IMAGE_YUV" o el(s) que sigui i cridar pdp_llconv per a despres poder cridar pdp_opencv_elquesigui_process_rgb ... 
+
+pdp_opencv_motempl.c
+	s'han de fer variables alguns parametres que ara mateix esta cm a constants::
+		 
+		const double MHI_DURATION = 1;
+		const double MAX_TIME_DELTA = 0.5;
+		const double MIN_TIME_DELTA = 0.05;
+		const int N = 4;
+		tambe lo gran que vols el cercle (la variable magnitude li diu ell) ... lo ideal seria que aquesta fos relatica a la cuantitat de moviment ... no? ... (comp_rect.width + comp_rect.height) ... fes una cerca de "reject very small components" per trobar el lloc exacte on esta tocant aixo ... 
+		i fer que ens els outlets ens doni ... x,y,heigh,width,angle de cada un dels componoents ... 
+
+	aqui hi ha algo de info sobre com funciona aquest exemple
+	file:///usr/share/doc/opencv-doc/ref/opencvref_cv.htm#cv_motion_motempl
+	basicament veig que usa cvUpdateMotionHistory - cvCalcMotionGradient - cvSegmentMotion - cvSetImageROI - cvCalcGlobalOrientation - 
+
+	s'ha de fer que les dades dels "blobs?" surtin per algun outlet !!!!
+	veure si les etiquetes es mantenen ... al primer cop que ho fas hauries de anomenar cada un dels blobs, als seguents simplement afegirlo a la llista de la sortida possiblement substituintla per i(numero de blob)
+
+afegr el parametre apperture size al pdp_opencv_laplace :: http://www.cognotics.com/opencv/docs/1.0/ref/opencvref_cv.htm#decl_cvLaplace
+
+
+
+#########################
+mira sempre la documentacio aqui http://opencvlibrary.sourceforge.net/
+#########################
+
+
+blob detection http://opencvlibrary.sourceforge.net/cvBlobsLib
+
+find contours ... http://isa.umh.es/pfc/rmvision/opencvdocs/ref/OpenCVRef_ImageProcessing.htm#decl_cvFindContours
+			Example. Connected component detection via contour functions
+			/usr/share/doc/opencv-doc/examples/contours.c:
+		 	/usr/share/doc/opencv-doc/examples/fitellipse.c:
+			/usr/share/doc/opencv-doc/examples/squares.c:
+	/home/test/Desktop/opencv/2503_project_report.pdf
+	contours, i despres ... Peak and valley detection --- CvConvexityDefect (http://groups.google.co.in/group/OpenCV/browse_thread/thread/1d472ac178ba8020)
+	http://www.koders.com/c/fidCD4BE43F722BE11420690D3EEEF359CE428E36AE.aspx
+
+aqui hi ha moltes aplicacions bones:::
+http://opencvlibrary.cvs.sourceforge.net/opencvlibrary/opencv/apps/ 
+
+i aqui especialment:
+http://opencvlibrary.cvs.sourceforge.net/opencvlibrary/opencv/apps/Hawk/demos/
+
+be i en general tots els samples/c/ son diferents ara ... n'hi ha molts mes
+
+background extraction
+
+./lkdemo
+/camshiftdemo	
+
+object detection ... http://opencvlibrary.sourceforge.net/ObjectDetection
+
+face recognition ... http://opencvlibrary.sourceforge.net/FaceRecognition
+
+		     http://opencvlibrary.sourceforge.net/FaceDetection
+		     
+Video survillance .. http://opencvlibrary.sourceforge.net/VideoSurveillance //es un pix_movment???
+
+
+face detection ... http://www.hci.iastate.edu/575x/doku.php?id=tutorial4 ... facedetect.c
+
+find and process contours ... squares.c
+
+camera calibration http://www.youtube.com/watch?v=Q2eIv6UiGIc
+homografia 	   http://www.youtube.com/watch?v=LCzF8VuubEw
+
+optical flow detection http://www.youtube.com/watch?v=0MtMxqJ6hF4&NR=1
+
+motion tracking kalman filter   http://www.youtube.com/watch?v=iAhwCFLnRWc
+				http://www.youtube.com/watch?v=U1L0X4cts8o&feature=related
+
+color tracking + calman filter  http://www.youtube.com/watch?v=1iwvL83Cumo&feature=related
+
+llegir pixels independents ... http://www.hci.iastate.edu/575x/doku.php?id=code_samples:reading_writing_pixels
+
+smoothing filters ... http://www.hci.iastate.edu/575x/doku.php?id=code_samples:smoothing_filters
+
+binary treshold ... http://www.hci.iastate.edu/575x/doku.php?id=code_samples:sliders_threshold
+
+video_writer ??? .... http://www.hci.iastate.edu/575x/doku.php?id=code_samples:video_output
+
+
+altres coses a la referencia ::: http://www.cognotics.com/opencv/docs/1.0/ref/opencvref_cv.htm (un objecte x cada funció)
+	Sobel
+	FindContours
+
+	GetRectSubPix
+	2DRotationMatrix
+	WarpPerspective
+
+	MorphologyEx
+
+	Smooth
+	Filter2D (convolve)
+	CopyMakeBorder
+	Integral
+	
+	CvtColor (colorspace conversions)
+
+	FloodFill
+	FindContours
+
+	GetSpatialMoment
+
+	HoughLines2 ... Detecting lines with Hough transform.	
+		
+	CvHistogram ... Sample. Calculating and displaying 2D Hue-Saturation histogram of a color image
+
+	MatchTemplate
+
+	FindNearestPoint2D
+
+	SegmentMotion
+
+	
+	Example. Using Kalman filter to track a rotating point
+
+	Object Detection :::  Example. Using cascade of Haar classifiers to find objects (e.g. faces).
+
+
+	Camera Calibration
+	Undistort2
+	
+
+
+
+de http://www.cognotics.com/opencv/docs/1.0/ref/opencvref_cxcore.htm
+	Merge	
+	MixChannels
+
+	Arithmetic, Logic and Comparison
+	
+	Normalize
+	
+
+
+
+http://www.cognotics.com/opencv/docs/1.0/ref/opencvref_ml.htm ???????
+
+
+
+
+
+write text ... http://www.hci.iastate.edu/575x/doku.php?id=code_samples:adding_text
+simple edge ... http://www.hci.iastate.edu/575x/doku.php?id=code_samples:edge_detection
+
+http://www.cs.iit.edu/~agam/cs512/lect-notes/opencv-intro/opencv-intro.html#SECTION00053000000000000000
+
+############################# sevy ++
+<<<<<<< .mine
+one day : stereo calibration ( need two cams and a chessboard )
+=======
+hough lines/circles
+camshift ( very greedy )
+one day : stereo calibration ( need two cams and a chessboard )
+>>>>>>> .r12151

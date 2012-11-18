@@ -1,0 +1,28 @@
+#N canvas 179 79 735 419 10;
+#X obj 118 186 fir_filter;
+#X msg 173 98 0.5 0.3 0.2;
+#X obj 173 76 loadbang;
+#X text 259 98 filter coef;
+#X floatatom 93 82 5 0 127 0 - - -;
+#X text 97 58 data;
+#X obj 93 161 t f f;
+#X msg 100 107 0;
+#X msg 173 123 0.2 0.2 0.2 0.2 0.2;
+#X obj 93 248 time_roll;
+#X obj 345 247 time_roll;
+#X msg 128 107 127;
+#X text 375 32 the list of its coeficients.;
+#X text 588 349 la Kitchen;
+#X text 588 366 Charles Verron;
+#X text 587 333 2004_03_18;
+#X text 54 32 Fir_filter computes a finite impulse response filter
+;
+#X connect 0 0 10 0;
+#X connect 1 0 0 1;
+#X connect 2 0 1 0;
+#X connect 4 0 6 0;
+#X connect 6 0 9 0;
+#X connect 6 1 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 0 1;
+#X connect 11 0 6 0;

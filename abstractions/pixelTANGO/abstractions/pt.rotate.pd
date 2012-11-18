@@ -1,0 +1,57 @@
+#N canvas 568 49 130 68 10;
+#N canvas 608 369 558 377 interna 0;
+#X obj 12 43 inlet;
+#X obj 19 325 outlet;
+#X obj 222 4 cnv 15 300 340 empty empty empty 5 8 1 10 -260390 -1 0
+;
+#X obj 407 14 inlet;
+#X obj 424 319 outlet;
+#X obj 65 251 rotateXYZ;
+#X text 7 3 Rotate;
+#X obj 43 121 interp3 \$0-x \$0-y \$0-z;
+#X obj 237 247 s \$0-s;
+#X obj 247 205 delay 250;
+#X text 317 205 <- conflict w/ state-saving!;
+#X msg 237 226 0;
+#X obj 237 79 r \$0-reset;
+#X obj 254 148 mementoSetup pt.rotate \$0;
+#X connect 0 0 5 0;
+#X connect 3 0 13 0;
+#X connect 5 0 1 0;
+#X connect 7 0 5 1;
+#X connect 7 1 5 2;
+#X connect 7 2 5 3;
+#X connect 9 0 11 0;
+#X connect 11 0 8 0;
+#X connect 12 0 11 0;
+#X connect 13 0 9 0;
+#X connect 13 1 4 0;
+#X restore 11 99 pd interna;
+#X obj 1 1 cnv 5 128 66 empty empty Rotate 5 7 1 9 -249661 -66577 0
+;
+#X obj 6 19 hsl 117 15 -180 180 0 0 \$0-x \$0-s X 53 8 1 8 -262144
+-1 -1 2950 1;
+#X obj 6 34 hsl 117 15 -180 180 0 0 \$0-y \$0-s Y 53 8 1 8 -262144
+-1 -1 5350 1;
+#X obj 6 49 hsl 117 15 -180 180 0 0 \$0-z \$0-s Z 53 8 1 8 -262144
+-1 -1 2950 1;
+#X obj 113 3 bng 11 250 50 0 \$0-reset \$0- Reset -25 6 1 8 -262144
+-1 -1;
+#X obj 11 78 inlet;
+#X obj 76 78 inlet;
+#X obj 11 120 outlet;
+#X obj 76 120 outlet;
+#X obj 157 56 commun /x \$0;
+#X obj 157 75 commun /y \$0;
+#X obj 157 94 commun /z \$0;
+#X connect 0 0 8 0;
+#X connect 0 1 9 0;
+#X connect 2 0 10 0;
+#X connect 3 0 11 0;
+#X connect 4 0 12 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 1;
+#X connect 10 0 2 0;
+#X connect 11 0 3 0;
+#X connect 12 0 4 0;
+#X coords 0 0 1 1 130 68 1;

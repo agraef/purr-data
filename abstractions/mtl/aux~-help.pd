@@ -1,0 +1,7 @@
+#N canvas 200 136 814 528 10;
+#X text 67 26 Description: Receives an aux stereo signal routed by
+mtl/channel~;
+#X text 223 160 Argument: the aux number.;
+#X obj 147 160 mtl/aux~ 1;
+#X text 67 63 tags: mix~;
+#X coords 0 0 1 1 133 33 0;

@@ -1,0 +1,347 @@
+#N canvas 0 0 448 568 10;
+#N canvas 0 0 878 658 old 0;
+#X msg 95 368 1 2 3;
+#X obj 125 399 route list;
+#X msg 62 348 list 1 2 3;
+#X msg 10 93 list;
+#X symbolatom 32 159 10 0 0 0 - - -;
+#X obj 4 2 cnv 15 750 20 empty empty all_about_lists_vs_anythings 20
+10 1 18 -233017 -66577 0;
+#X text 7 69 SPECIAL CASES OF "LISTS".;
+#X obj 125 418 bng 15 250 50 0 empty empty list -20 7 1 10 -262144
+-1 -1;
+#X obj 189 419 bng 15 250 50 0 empty empty non-list 19 7 1 10 -262144
+-1 -1;
+#X msg 184 347 list this is a set with a cast;
+#X msg 191 366 this is a set withOUT a cast;
+#X obj 441 195 bng 15 250 50 0 empty empty bang 0 20 1 9 -262144 -1
+-1;
+#X obj 490 195 bng 15 250 50 0 empty empty float 0 21 1 9 -262144 -1
+-1;
+#X obj 539 195 bng 15 250 50 0 empty empty symbol 0 21 1 9 -262144
+-1 -1;
+#X msg 443 133 list this is a set with a cast;
+#X msg 450 152 this is a set withOUT a cast;
+#X obj 638 195 bng 15 250 50 0 empty empty list 0 21 1 9 -262144 -1
+-1;
+#X obj 120 617 route list;
+#X obj 120 636 bng 15 250 50 0 empty empty list -20 7 1 10 -262144
+-1 -1;
+#X obj 184 637 bng 15 250 50 0 empty empty non-list 19 7 1 10 -262144
+-1 -1;
+#X msg 189 581 one 2 three 4 five;
+#X msg 40 581 1 two 3 four 5;
+#X text 8 268 IMPLICIT LISTS;
+#X msg 40 561 list 1 two 3 four 5;
+#X msg 189 561 list one 2 three 4 five;
+#X msg 17 113 list 25;
+#X msg 24 133 list foo;
+#X text 87 134 A "list" of one "symbol" is converted to a "symbol"
+;
+#X text 72 113 A "list" of one "float" is converted to a "float";
+#X text 50 93 An empty "list" is converted to a "bang";
+#X obj 477 594 pddp/pddplink all_about_atom_conversion.pd -text all_about_atom_conversion
+;
+#X obj 721 3 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 11 490 Sets of mixed atoms are defined based on what the "selector"
+(the first element of a set). If the "selector" is a "float" \, then
+the set is a "list". If the "selector" is the word "list" \, then the
+set is a "list". If the "selector" is a "symbol" \, then the set is
+NOT a "list":;
+#X text 570 631 updated for Pd 0.38-2;
+#X obj 688 195 bng 15 250 50 0 empty empty UNDEFINED 0 21 1 9 -262144
+-1 -1;
+#X msg 459 356 1 1;
+#X obj 452 382 +;
+#X floatatom 452 404 5 0 0 0 - - -;
+#X msg 424 356 1 3;
+#X text 416 106 A set that is not a "list" has an undefined type:;
+#X msg 451 337 list 1 2;
+#X text 402 278 If you send a "list" of arguments to the first inlet
+of an object \, the elements of that "list" will be applied to the
+respective inlet. This does not apply to sets that are NOT "lists".
+;
+#X text 400 262 "LISTS" MAP TO INLETS;
+#X text 407 457 WORKING WITH MIXED SETS;
+#X text 11 471 SETS OF MIXED "ATOMS";
+#X text 9 288 A message having more than one atom starting with a "float"
+is implicitly considered a list. A message having more than one atom
+starting with a "symbol" is not \, unless that "symbol" is the selector
+"list".;
+#N canvas 30 68 857 475 has 0;
+#X obj 96 162 print;
+#X msg 57 93 list one two three;
+#X msg 42 54 1 2 3;
+#X msg 51 73 one 2 three;
+#X obj 17 162 route list;
+#X obj 17 181 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 85 182 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 44 132 prepend test;
+#X text 12 229 [print] only interprets the "list" selector when the
+following body of the message is an implied list \, i.e. a set of atoms
+that starts with a float.;
+#X msg 443 68 one 2 three;
+#X text 141 134 (I used cyclone's);
+#X obj 442 127 route one;
+#X text 426 17 [route] accepts lists and undefined sets and outputs
+lists \, and like [print] only interprets the 'list' selector for implied
+lists:;
+#X obj 460 159 print ONE;
+#X obj 441 159 bng 16 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 604 159 bng 16 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 668 160 print ONE;
+#X obj 650 160 bng 16 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 813 160 bng 16 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 651 129 route 1;
+#X msg 658 90 list 1 two 3;
+#X msg 652 70 1 two 3;
+#X msg 449 88 list one 2 three;
+#X msg 281 68 one 2 three;
+#X obj 280 133 prepend list;
+#X obj 280 177 print PREPEND_LIST;
+#X msg 290 89 list one 2 three;
+#X text 12 19 [prepend] interprets lists and outputs undefined sets.
+;
+#X obj 746 160 print NOT;
+#X obj 536 159 print NOT;
+#X msg 679 305 symbol test;
+#X obj 685 359 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 762 360 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 677 398 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 755 398 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 685 341 route symbol;
+#X obj 677 379 route symbol;
+#X msg 770 305 test;
+#X obj 470 359 route list;
+#X obj 470 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 538 379 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 457 397 route list;
+#X obj 457 416 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 525 417 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 473 310 list 1 two 3;
+#X msg 456 290 1 two 3;
+#X msg 489 330 list one 2 three;
+#X msg 133 330 one 2 three;
+#X obj 65 414 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 133 415 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 151 390 print STRAIGHT;
+#X msg 117 310 list 1 two 3;
+#X msg 100 290 1 two 3;
+#X msg 142 351 list one 2 three;
+#X obj 68 391 route list;
+#X text 429 231 [route list] interprets all lists \, but outputs non-lists
+on its left outlet for lists whose first element is a symbol. [route
+symbol] outputs a symbol from its left outlet.;
+#X connect 1 0 7 0;
+#X connect 2 0 7 0;
+#X connect 3 0 7 0;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 7 0 0 0;
+#X connect 7 0 4 0;
+#X connect 9 0 11 0;
+#X connect 11 0 13 0;
+#X connect 11 0 14 0;
+#X connect 11 1 15 0;
+#X connect 11 1 29 0;
+#X connect 19 0 16 0;
+#X connect 19 0 17 0;
+#X connect 19 1 18 0;
+#X connect 19 1 28 0;
+#X connect 20 0 19 0;
+#X connect 21 0 19 0;
+#X connect 22 0 11 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 26 0 24 0;
+#X connect 30 0 35 0;
+#X connect 35 0 31 0;
+#X connect 35 0 36 0;
+#X connect 35 1 32 0;
+#X connect 36 0 33 0;
+#X connect 36 1 34 0;
+#X connect 37 0 35 0;
+#X connect 38 0 39 0;
+#X connect 38 0 41 0;
+#X connect 38 1 40 0;
+#X connect 41 0 42 0;
+#X connect 41 1 43 0;
+#X connect 44 0 38 0;
+#X connect 45 0 38 0;
+#X connect 46 0 38 0;
+#X connect 47 0 50 0;
+#X connect 47 0 54 0;
+#X connect 51 0 50 0;
+#X connect 51 0 54 0;
+#X connect 52 0 50 0;
+#X connect 52 0 54 0;
+#X connect 53 0 50 0;
+#X connect 53 0 54 0;
+#X connect 54 0 48 0;
+#X connect 54 1 49 0;
+#X restore 443 543 pd has some odd cases of list handling;
+#X text 407 479 When working with sets that might be either "lists"
+or undefined \, use [prepend]. Many of the "list" handling objects
+in Pd have odd quirks which can make things difficult.;
+#X obj 441 175 route bang float symbol pointer list;
+#X obj 589 195 bng 15 250 50 0 empty empty pointer 0 21 1 9 -262144
+-1 -1;
+#X obj 11 199 bng 15 250 50 0 empty empty bang 0 20 1 9 -262144 -1
+-1;
+#X obj 60 199 bng 15 250 50 0 empty empty float 0 21 1 9 -262144 -1
+-1;
+#X obj 109 199 bng 15 250 50 0 empty empty symbol 0 21 1 9 -262144
+-1 -1;
+#X obj 208 199 bng 15 250 50 0 empty empty list 0 21 1 9 -262144 -1
+-1;
+#X obj 258 199 bng 15 250 50 0 empty empty UNDEFINED 0 21 1 9 -262144
+-1 -1;
+#X obj 11 179 route bang float symbol pointer list;
+#X obj 159 199 bng 15 250 50 0 empty empty pointer 0 21 1 9 -262144
+-1 -1;
+#X text 39 53 (this has nothing to do with lists vs. anythings);
+#X text 419 243 (this has nothing to do with lists vs. anythings);
+#X text 413 79 (this is misleading-- the anything below would match
+selector "this");
+#X text 424 440 (mention list trim here);
+#X text 16 455 (this is an anything \, which is never defined);
+#X connect 0 0 1 0;
+#X connect 1 0 7 0;
+#X connect 1 1 8 0;
+#X connect 2 0 1 0;
+#X connect 3 0 55 0;
+#X connect 9 0 1 0;
+#X connect 10 0 1 0;
+#X connect 14 0 48 0;
+#X connect 15 0 48 0;
+#X connect 17 0 18 0;
+#X connect 17 1 19 0;
+#X connect 20 0 17 0;
+#X connect 21 0 17 0;
+#X connect 23 0 17 0;
+#X connect 24 0 17 0;
+#X connect 25 0 55 0;
+#X connect 26 0 4 0;
+#X connect 26 0 55 0;
+#X connect 35 0 36 0;
+#X connect 36 0 37 0;
+#X connect 38 0 36 0;
+#X connect 40 0 36 0;
+#X connect 48 0 11 0;
+#X connect 48 1 12 0;
+#X connect 48 2 13 0;
+#X connect 48 3 49 0;
+#X connect 48 4 16 0;
+#X connect 48 5 34 0;
+#X connect 55 0 50 0;
+#X connect 55 1 51 0;
+#X connect 55 2 52 0;
+#X connect 55 3 56 0;
+#X connect 55 4 53 0;
+#X connect 55 5 54 0;
+#X restore 368 202 pd old;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header lists_vs_anythings
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 546 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 95 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS needs_work;
+#X text 12 25 NAME list;
+#X text 12 65 DESCRIPTION definitions for list and anything in the
+context of Pd;
+#X restore 392 548 pd META;
+#X obj 6 548 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 40 92 pddp/pddplink all_about_atoms.pd;
+#X obj 40 107 pddp/pddplink all_about_messages.pd;
+#X text 40 249 Anythings;
+#X text 40 182 Examples:;
+#X text 60 202 list one two three;
+#X text 60 217 0 1 60;
+#X text 60 232 list foo 121 bar;
+#X text 40 35 If you are familiar with messages in Pd then the difference
+between a list and an "anything" will be easy to understand. If not
+\, have a look at the following help patches:;
+#X text 199 201 move to all_about_route? ->;
+#X text 40 142 A list message consists of either a) the selector "list"
+followed by two or more atoms \, or b) a multi-element message beginning
+with a number ("implicit list").;
+#X text 40 269 1) The term "anything" in Pd generally means "any message"--
+to be specific \, any message in Pd that has a valid selector (or is
+an implicit float or list message). This includes the built-in message
+types float \, symbol \, list \, bang \, and pointer \, as well as
+custom messages like "set 87" \, print \, debug \, "receive972 a b
+d 3" \, etc.;
+#X text 40 349 2) The term "anything" is also used to mean messages
+with selectors other than those of Pd's built-in message types-- i.e
+\, "anything else." This use probably arises because there is not a
+name for the set of messages consisting of one or more atoms that aren't
+float \, symbol \, list \, pointer \, nor bang messages. (The word
+"meta-message" is synonymous with this meaning.);
+#N canvas 14 370 428 105 Fine_print 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Lists vs. Anythings - A few more details;
+#X text 22 43 What about messages with custom atoms? Are these included
+in "anything"?;
+#X restore 243 253 pd Fine_print;
+#X text 39 448 * (archaic) To confuse matters even more \, many externals
+were made before there was a built-in "list" message in Pd. Some external
+objects' help patches may refer to all messages that are not a symbol
+\, float \, pointer \, or bang as a "list.";
+#X text 40 127 Lists *;
+#N canvas 15 248 428 305 Related_objects_and_Quick_Quiz 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Lists vs. Anythings - Related Objects;
+#X obj 22 43 list;
+#X msg 77 43;
+#X obj 1 71 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261106 -33289 0;
+#X text 7 72 Quick Quiz!;
+#X msg 35 105 list one two three;
+#X msg 65 156 one two three;
+#X msg 75 183 symbol one_two_three;
+#X msg 55 129 1 2 3;
+#X obj 35 215 route list symbol one;
+#X obj 153 242 bng 15 500 50 0 empty empty one 0 24 1 12 -262144 -1
+-1;
+#X obj 86 242 bng 15 500 50 0 empty empty symbol 0 24 1 12 -262144
+-1 -1;
+#X obj 35 242 bng 15 500 50 0 empty empty list 0 24 1 12 -262144 -1
+-1;
+#X obj 201 242 bng 15 500 50 0 empty empty None_of_the_above 0 24 1
+12 -262144 -1 -1;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 13 0;
+#X connect 10 1 12 0;
+#X connect 10 2 11 0;
+#X connect 10 3 14 0;
+#X restore 103 548 pd Related_objects_and_Quick_Quiz;
+#X obj 40 517 pddp/pddplink all_about_message_conversion.pd;

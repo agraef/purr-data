@@ -1,0 +1,621 @@
+#N canvas 0 0 448 570 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header acoustic_conversions
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 180 63 mtof;
+#X floatatom 180 86 0 0 0 0 - - -;
+#X obj 180 110 ftom;
+#X floatatom 180 131 0 0 0 0 - - -;
+#N canvas 13 23 428 336 understanding_mtof 0;
+#X text 19 36 [mtof] will convert MIDI note numbers to Wave Freqeuency.
+This object exists in Pd for the sake of convenience and speed of processing.
+;
+#X obj 45 195 mtof;
+#X floatatom 45 173 5 0 0 0 - - -;
+#X text 85 172 Select a MIDI note: (Middle C is 60).;
+#X floatatom 45 218 5 0 0 0 - - -;
+#X obj 45 237 osc~;
+#X floatatom 107 217 0 0 0 0 - - -;
+#N canvas 396 146 628 393 output 0;
+#X obj 393 156 t b;
+#X obj 393 106 f;
+#X obj 393 56 inlet;
+#X text 399 25 mute;
+#X obj 393 181 f;
+#X msg 480 174 0;
+#X msg 393 81 bang;
+#X obj 393 131 moses 1;
+#X obj 480 149 t b f;
+#X obj 452 113 moses 1;
+#X obj 138 144 dbtorms;
+#X obj 452 88 r master-lvl;
+#X obj 138 38 r master-lvl;
+#X obj 393 206 s master-lvl;
+#X obj 22 181 inlet~;
+#X obj 254 37 inlet;
+#X text 254 14 level;
+#X obj 254 152 s master-lvl;
+#X msg 151 61 set \$1;
+#X obj 151 85 outlet;
+#X obj 138 190 line~;
+#X obj 22 212 *~;
+#X obj 138 167 pack 0 50;
+#X text 34 159 audio;
+#X text 148 106 show level;
+#X obj 73 182 inlet~;
+#X obj 73 213 *~;
+#X obj 22 241 dac~ 1;
+#X obj 73 241 dac~ 2;
+#X msg 290 82 1;
+#X obj 265 59 sel 0;
+#X msg 265 119 \; pd dsp \$1;
+#X msg 265 82 0;
+#X connect 0 0 4 0;
+#X connect 1 0 7 0;
+#X connect 2 0 6 0;
+#X connect 4 0 13 0;
+#X connect 5 0 13 0;
+#X connect 5 0 31 0;
+#X connect 6 0 1 0;
+#X connect 7 0 0 0;
+#X connect 7 1 8 0;
+#X connect 8 0 5 0;
+#X connect 9 1 4 1;
+#X connect 10 0 22 0;
+#X connect 11 0 1 1;
+#X connect 11 0 9 0;
+#X connect 12 0 10 0;
+#X connect 12 0 18 0;
+#X connect 14 0 21 0;
+#X connect 15 0 17 0;
+#X connect 15 0 30 0;
+#X connect 18 0 19 0;
+#X connect 20 0 21 1;
+#X connect 20 0 26 1;
+#X connect 21 0 27 0;
+#X connect 22 0 20 0;
+#X connect 25 0 26 0;
+#X connect 26 0 28 0;
+#X connect 29 0 31 0;
+#X connect 30 0 32 0;
+#X connect 30 1 29 0;
+#X connect 32 0 31 0;
+#X restore 45 262 pd output;
+#X msg 116 239 MUTE;
+#X text 133 217 <-- Turn up your volume here.;
+#X text 19 85 MIDI notes usually range between 0 and 127 from an incoming
+MIDI controller. However \, in Pd negative numbers to -1500 and positive
+numbers to 1499 are also supported and decimal places can be used to
+achive microtonal pitches.;
+#X text 19 145 CONVENIENT? YES!;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Understanding [mtof];
+#N canvas 14 48 428 488 Alternatives_to_mtof 0;
+#N canvas 14 48 428 416 mtof_patches 0;
+#X text 25 36 HERE IS THE ALTERNATIVE;
+#X obj 46 97 mtof;
+#X floatatom 46 57 5 0 0 0 - - -;
+#X floatatom 25 121 0 0 0 0 - - -;
+#X floatatom 133 237 0 0 0 0 - - -;
+#X obj 148 88 <= -1500;
+#X obj 148 108 expr 1-$f1;
+#X obj 105 128 spigot;
+#X obj 105 71 t f f;
+#X obj 105 148 min 1499;
+#X obj 105 195 expr (8.17579891564*exp(0.0577622650*$f1));
+#X obj 161 128 s zero;
+#X obj 133 216 r zero;
+#X obj 106 261 bang;
+#X obj 46 258 bang;
+#X obj 46 278 realtime;
+#X floatatom 171 352 0 0 0 0 - - -;
+#X obj 214 275 bang;
+#X obj 171 275 bang;
+#X obj 171 295 realtime;
+#X floatatom 171 316 0 0 0 0 - - -;
+#X obj 375 165 *;
+#X obj 418 118 loadbang;
+#X obj 375 184 exp;
+#X obj 375 204 *;
+#X floatatom 375 224 0 0 0 0 - - -;
+#X obj 407 207 r zero;
+#X text 89 53 Select a MIDI note here.;
+#X text 172 332 Arithmetic is __?__ milliseconds slower than [mtof].
+;
+#X text 169 368 [expr] is __?__ milliseconds slower than [mtof].;
+#X text 22 139 RESULT A;
+#X text 133 252 RESULT B;
+#X text 374 241 RESULT C;
+#X msg 418 139 0.0577623;
+#X msg 418 179 8.1758;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 An alternative to [mtof];
+#X connect 1 0 3 0;
+#X connect 1 0 14 0;
+#X connect 2 0 1 0;
+#X connect 2 0 8 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 1;
+#X connect 6 0 11 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 0;
+#X connect 8 1 5 0;
+#X connect 9 0 10 0;
+#X connect 9 0 13 0;
+#X connect 9 0 21 0;
+#X connect 10 0 4 0;
+#X connect 12 0 4 0;
+#X connect 13 0 15 1;
+#X connect 14 0 15 0;
+#X connect 14 0 18 0;
+#X connect 15 0 16 0;
+#X connect 17 0 19 1;
+#X connect 18 0 19 0;
+#X connect 19 0 20 0;
+#X connect 21 0 23 0;
+#X connect 22 0 33 0;
+#X connect 22 0 34 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 24 0 17 0;
+#X connect 26 0 25 0;
+#X connect 33 0 21 1;
+#X connect 34 0 24 1;
+#X restore 22 452 pd mtof_patches;
+#X text 19 121 The examples at the botton left are Pd structures which
+emulate the source code of the [mtof] object. In one case \, I have
+used the [expr] object to perform the necessary calculation. In the
+other case \, I used Pd's Arithmetic objects to perform the calculation.
+;
+#X text 19 268 Secondly \, the incoming MIDI note number is translated
+into a frequency value by the simple equation:;
+#X text 19 332 For curiosity's sake \, I included a timer to show how
+much faster the [mtof] object is compared to the two alternative methods.
+;
+#X text 20 37 The [mtof] object is really just a function defined in
+Pd's source code - which is programmed in "C".;
+#X text 20 74 As such \, it operates very quickly. If a similar function
+were to be created using Pd's arithmetic objects \, the process would
+be quite a bit slower. How much slower?;
+#X text 19 376 As well \, notice that RESULT C (the output from Pd's
+basic arithmetic objects) is not as accurate as the other two methods:
+[mtof] and/or [expr]. This is because the message boxes and the [*]
+object round off the operands because they cannot handle enough decimal
+places.;
+#X text 19 190 The first order of business performed by these examples
+is the filtering out of all numbers less than -1500 and greater than
+1499 (Just like the [mtof] source code). In other words \, "overflows
+and underflows are clipped" as Miller Puckette stated in the original
+documentation for this object.;
+#X text 19 302 (8.17579891564 * exp(0.0577622650 * MIDI_note)) = frequency
+;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Alternatives to [mtof];
+#X restore 22 302 pd Alternatives_to_mtof;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 2;
+#X connect 7 0 6 0;
+#X connect 8 0 7 3;
+#X restore 23 63 pd understanding_mtof;
+#N canvas 15 29 428 344 understanding_ftom 0;
+#X floatatom 21 109 5 0 0 0 - - -;
+#X floatatom 21 154 5 0 0 0 - - -;
+#X text 19 89 CONVENIENT? YES!;
+#X text 19 37 [ftom] will convert Wave/Signal Frequency to MIDI note
+numbers. This object exists in Pd for the sake of convenience and speed
+of processing.;
+#X text 61 108 Select a Frequency: (i.e. 440 hz is an "A" above middle
+C);
+#X obj 21 131 ftom;
+#X obj 21 181 makenote 100 500;
+#X obj 21 204 noteout;
+#X text 37 225 Note that fractional values have no effect. MIDI controllers
+only accept integers. Perhaps a subroutine could be designed to parse
+the decimal places and manipulate the pitch bend controller to achieve
+microtonal control?;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Understanding [ftom];
+#N canvas 14 48 428 488 Alternatives_to_ftom 0;
+#X text 19 71 As such \, it operates very quickly. If a similar function
+were to be created using Pd's arithmetic objects \, the process would
+be quite a bit slower. How much slower?;
+#X text 19 37 The [ftom] object is really just a function defined in
+Pd's source code - which is programmed in "C".;
+#X text 19 117 The examples at the botton left are Pd structures which
+emulate the source code of the [ftom] object. In one case \, I have
+used the [expr] object to perform the necessary calculation. In the
+other case \, I used Pd's Arithmetic objects to perform the calculation.
+;
+#X text 19 184 Firstly \, the Pd source code "clips" overflows and
+underflows. This means simply that frequencies LESS THAN zero cannot
+be tranlated into a MIDI note value - so they're ignored completely
+and the object responds with "-1500".;
+#X text 19 255 Secondly \, the incoming frequency is translated into
+a MIDI note value by the simple equation:;
+#X text 19 310 For curiosity's sake \, I included a timer to show how
+much faster the [ftom] object is compared to the two alternative methods.
+;
+#X text 19 364 As well \, notice that RESULT C (the output from Pd's
+basic arithmetic objects) is not as accurate as the other two methods:
+[ftom] and/or [expr]. This is because the message boxes and the [*]
+object round off the operands because they cannot handle enough decimal
+places.;
+#X text 19 285 (17.3123405046 * log(0.12231220585 * Frequency)) = MIDI_note
+;
+#N canvas 14 48 428 416 ftom_patches 0;
+#X text 19 39 HERE IS THE ALTERNATIVE;
+#X floatatom 40 60 5 0 0 0 - - -;
+#X floatatom 19 124 0 0 0 0 - - -;
+#X text 16 142 RESULT A;
+#X text 83 56 Select a FREQUENCY here.;
+#X obj 40 100 ftom;
+#X obj 71 80 moses 0;
+#X msg 71 101 -1500;
+#X floatatom 71 232 0 0 0 0 - - -;
+#X floatatom 121 170 0 0 0 0 - - -;
+#X obj 121 137 * 17.3123;
+#X obj 121 97 * 0.122312;
+#X obj 121 117 log;
+#X obj 108 209 expr (17.3123405046*log(.12231220585*$f1));
+#X text 71 247 RESULT B;
+#X text 120 183 RESULT C;
+#X obj 100 273 bang;
+#X obj 40 270 bang;
+#X obj 40 290 realtime;
+#X floatatom 165 364 0 0 0 0 - - -;
+#X obj 208 287 bang;
+#X obj 165 287 bang;
+#X obj 165 307 realtime;
+#X floatatom 165 328 0 0 0 0 - - -;
+#X text 196 344 Arithmetic is __?__ milliseconds slower than [mtof].
+;
+#X text 163 380 [expr] is __?__ milliseconds slower than [mtof].;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 An alternative to [ftom];
+#X connect 1 0 5 0;
+#X connect 1 0 6 0;
+#X connect 2 0 17 0;
+#X connect 5 0 2 0;
+#X connect 6 0 7 0;
+#X connect 6 1 11 0;
+#X connect 6 1 13 0;
+#X connect 7 0 8 0;
+#X connect 7 0 9 0;
+#X connect 8 0 16 0;
+#X connect 9 0 20 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 10 0;
+#X connect 13 0 8 0;
+#X connect 16 0 18 1;
+#X connect 17 0 18 0;
+#X connect 17 0 21 0;
+#X connect 18 0 19 0;
+#X connect 20 0 22 1;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X restore 22 442 pd ftom_patches;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Alternatives to [ftom];
+#X restore 21 297 pd Alternatives_to_ftom;
+#X connect 0 0 5 0;
+#X connect 1 0 6 0;
+#X connect 5 0 1 0;
+#X connect 6 0 7 0;
+#X connect 6 1 7 1;
+#X restore 23 110 pd understanding_ftom;
+#X floatatom 180 42 0 0 0 0 - - -;
+#X floatatom 180 212 0 0 0 0 - - -;
+#X floatatom 180 257 0 0 0 0 - - -;
+#X floatatom 180 168 0 0 0 0 - - -;
+#X obj 180 189 dbtorms;
+#X obj 180 236 rmstodb;
+#N canvas 14 77 428 407 understanding_dbtorms 0;
+#N canvas 3 118 452 302 What_is_a_decibel? 0;
+#X text 24 94 The difficulty in measuring the volume of an instrument
+however is caused by 'distance'. For example \, at one metre away from
+a door bell \, the amplitude might be 70 Decibels \, while at 50 metres
+away the same door bell is just a fraction of that amplitude.;
+#X text 25 33 DECIBELS are units by which we measure amplitude. A human
+voice is approximately 70 Decibels - a snare drum is approximately
+120 Decibels - the threshold of pain for the human ear is approximately
+110 Decibels (poor drummers!);
+#X text 23 174 Literally \, a Decibel is one-tenth of a Bel. A Bel
+\, according to a medical dictionary is approximately the threshold
+of the human ear at 1000 hz. I know that this seems a little vague
+\, and perhaps this isn't the best way to explain it - we might as
+well be measuring "fortnights" and "bunches" and "Alens"! Anyways...I'm
+not an acoustician.;
+#X restore 20 350 pd What_is_a_decibel?;
+#N canvas 5 174 440 242 What_does_RMS_mean? 0;
+#X text 24 21 RMS is an acronym meaning "Root Mean Square".;
+#X text 23 43 In the analog realm \, RMS is the result of an equation
+performed on electrical flow. It is used to measure voltage or current.
+It is important to note however \, that it does NOT measure "power".
+It's also important to recognize that our ears perceive changes in
+amplitude (decibels) more than we perceive changes in RMS levels.;
+#X text 23 133 In the digital realm \, i.e. Pd! \, RMS is better defined
+as "a measurement of a signal taken by squaring data points along the
+curve \, finding the mean \, and then determining the square root of
+that mean value.;
+#X restore 20 373 pd What_does_RMS_mean?;
+#X text 17 158 Example:;
+#X floatatom 20 210 0 0 0 0 - - -;
+#X obj 20 230 moses 0;
+#X msg 20 250 0;
+#X obj 82 269 min 485;
+#X floatatom 20 314 0 0 0 0 - - -;
+#X obj 147 227 dbtorms;
+#X floatatom 147 247 0 0 0 0 - - -;
+#X obj 82 289 expr (exp((2.302585092994*0.05)*($f1-100)));
+#X text 18 116 On a scale of zero to 100 decibels \, the [dbtorms]
+produces exponential values between 0 and 1;
+#X msg 20 181 0;
+#X msg 53 181 100;
+#X obj 57 249 sel 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Understanding [dbtorms];
+#X text 18 92 (exp((2.302585092994 * 0.05) * (db_value - 100)) = RMS
+;
+#X text 18 37 [dbtorms] in Pd performs the following equation to convert
+the data: Note that incoming values less than 0 or greater than 485
+are considered overflow or underflow and are clipped/ignored.;
+#X connect 3 0 4 0;
+#X connect 3 0 8 0;
+#X connect 4 0 5 0;
+#X connect 4 1 14 0;
+#X connect 5 0 7 0;
+#X connect 6 0 10 0;
+#X connect 8 0 9 0;
+#X connect 10 0 7 0;
+#X connect 12 0 3 0;
+#X connect 13 0 3 0;
+#X connect 14 0 5 0;
+#X connect 14 1 6 0;
+#X restore 23 189 pd understanding_dbtorms;
+#X floatatom 180 338 0 0 0 0 - - -;
+#X floatatom 180 383 0 0 0 0 - - -;
+#X floatatom 180 294 0 0 0 0 - - -;
+#X obj 180 315 dbtopow;
+#X obj 180 362 powtodb;
+#N canvas 13 87 428 440 understanding_rmstodb 0;
+#N canvas 4 161 452 302 What_is_a_decibel? 0;
+#X text 24 94 The difficulty in measuring the volume of an instrument
+however is caused by 'distance'. For example \, at one metre away from
+a door bell \, the amplitude might be 70 Decibels \, while at 50 metres
+away the same door bell is just a fraction of that amplitude.;
+#X text 25 33 DECIBELS are units by which we measure amplitude. A human
+voice is approximately 70 Decibels - a snare drum is approximately
+120 Decibels - the threshold of pain for the human ear is approximately
+110 Decibels (poor drummers!);
+#X text 23 174 Literally \, a Decibel is one-tenth of a Bel. A Bel
+\, according to a medical dictionary is approximately the threshold
+of the human ear at 1000 hz. I know that this seems a little vague
+\, and perhaps this isn't the best way to explain it - we might as
+well be measuring "fortnights" and "bunches" and "Alens"! Anyways...I'm
+not an acoustician.;
+#X restore 21 383 pd What_is_a_decibel?;
+#N canvas 3 246 440 242 What_does_RMS_mean? 0;
+#X text 24 21 RMS is an acronym meaning "Root Mean Square".;
+#X text 23 43 In the analog realm \, RMS is the result of an equation
+performed on electrical flow. It is used to measure voltage or current.
+It is important to note however \, that it does NOT measure "power".
+It's also important to recognize that our ears perceive changes in
+amplitude (decibels) more than we perceive changes in RMS levels.;
+#X text 23 133 In the digital realm \, i.e. Pd! \, RMS is better defined
+as "a measurement of a signal taken by squaring data points along the
+curve \, finding the mean \, and then determining the square root of
+that mean value.;
+#X restore 21 406 pd What_does_RMS_mean?;
+#X text 18 157 Example:;
+#X floatatom 21 179 0 0 0 0 - - -;
+#X floatatom 21 345 0 0 0 0 - - -;
+#X floatatom 148 279 0 0 0 0 - - -;
+#X msg 65 201 0;
+#X text 18 107 On a scale of zero to 1 decibels \, the [rmstodb] produces
+logarithmic values between 0 and 100 \, although higher values can
+also be produced.;
+#X obj 148 257 rmstodb;
+#X obj 21 279 max 0;
+#X obj 21 323 max 0;
+#X obj 21 301 expr (100+((20/2.302585092994)*log($f1)));
+#X obj 21 201 / 1000;
+#X floatatom 21 233 0 0 0 0 - - -;
+#X msg 98 201 1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Understanding [rmstodb];
+#X text 18 82 (100 + ((20/2.302585092994) * log(RMS_value)));
+#X text 18 37 [rmstodb] in Pd performs the following equation to convert
+the data: Note that incoming values less than 0 is consider underflow
+and is clipped/ignored.;
+#X connect 3 0 12 0;
+#X connect 6 0 13 0;
+#X connect 8 0 5 0;
+#X connect 9 0 11 0;
+#X connect 10 0 4 0;
+#X connect 11 0 10 0;
+#X connect 12 0 13 0;
+#X connect 13 0 8 0;
+#X connect 13 0 9 0;
+#X connect 14 0 13 0;
+#X restore 23 236 pd understanding_rmstodb;
+#N canvas 7 22 428 333 understanding_dbtopow 0;
+#N canvas 0 46 452 302 What_is_a_decibel? 0;
+#X text 24 94 The difficulty in measuring the volume of an instrument
+however is caused by 'distance'. For example \, at one metre away from
+a door bell \, the amplitude might be 70 Decibels \, while at 50 metres
+away the same door bell is just a fraction of that amplitude.;
+#X text 25 33 DECIBELS are units by which we measure amplitude. A human
+voice is approximately 70 Decibels - a snare drum is approximately
+120 Decibels - the threshold of pain for the human ear is approximately
+110 Decibels (poor drummers!);
+#X text 23 174 Literally \, a Decibel is one-tenth of a Bel. A Bel
+\, according to a medical dictionary is approximately the threshold
+of the human ear at 1000 hz. I know that this seems a little vague
+\, and perhaps this isn't the best way to explain it - we might as
+well be measuring "fortnights" and "bunches" and "Alens"! Anyways...I'm
+not an acoustician.;
+#X restore 22 267 pd What_is_a_decibel?;
+#X floatatom 22 128 0 0 0 0 - - -;
+#X floatatom 22 234 0 0 0 0 - - -;
+#X floatatom 149 167 0 0 0 0 - - -;
+#N canvas 3 96 442 209 What_does_power_mean? 0;
+#X text 30 25 What does power mean? I really don't know? I can't determine
+from my own research or from Pd's documentation why or how this data
+is used. All that I do know \, is that Pd provides these objects for
+a good reason -- I just don't know the reason.;
+#X text 27 103 Having said that \, I would enjoy learning from somebody
+who DOES know more about these objects and their usage. All that I
+can offer is an explanation of the equation used to perform these conversions.
+;
+#X restore 22 290 pd What_does_power_mean?;
+#X obj 149 145 dbtopow;
+#X obj 22 150 max 0;
+#X obj 22 172 min 870;
+#X text 19 92 exp((2.302585092994 * 0.1) * (db_value - 100)) = Power
+;
+#X obj 22 194 expr exp((2.302585092994*0.1)*($f1-100));
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Understanding [dbtopow];
+#X text 19 37 [dbtopow] in Pd performs the following equation to convert
+the data: Note that incoming values less than 0 or greater than 870
+are considered overflow or underflow and are clipped/ignored.;
+#X connect 1 0 5 0;
+#X connect 1 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 9 0;
+#X connect 9 0 2 0;
+#X restore 23 315 pd understanding_dbtopow;
+#N canvas 13 22 428 336 understanding_powtodb 0;
+#N canvas 0 22 452 302 What_is_a_decibel? 0;
+#X text 24 94 The difficulty in measuring the volume of an instrument
+however is caused by 'distance'. For example \, at one metre away from
+a door bell \, the amplitude might be 70 Decibels \, while at 50 metres
+away the same door bell is just a fraction of that amplitude.;
+#X text 25 33 DECIBELS are units by which we measure amplitude. A human
+voice is approximately 70 Decibels - a snare drum is approximately
+120 Decibels - the threshold of pain for the human ear is approximately
+110 Decibels (poor drummers!);
+#X text 23 174 Literally \, a Decibel is one-tenth of a Bel. A Bel
+\, according to a medical dictionary is approximately the threshold
+of the human ear at 1000 hz. I know that this seems a little vague
+\, and perhaps this isn't the best way to explain it - we might as
+well be measuring "fortnights" and "bunches" and "Alens"! Anyways...I'm
+not an acoustician.;
+#X restore 22 274 pd What_is_a_decibel?;
+#X text 19 110 Example:;
+#X floatatom 22 131 0 0 0 0 - - -;
+#X floatatom 22 237 0 0 0 0 - - -;
+#X floatatom 149 170 0 0 0 0 - - -;
+#N canvas 2 68 442 244 What_does_power_mean? 0;
+#X text 30 25 What does power mean? I really don't know? I can't determine
+from my own research or from Pd's documentation why or how this data
+is used. All that I do know \, is that Pd provides these objects for
+a good reason -- I just don't know the reason.;
+#X text 27 103 Having said that \, I would enjoy learning from somebody
+who DOES know more about these objects and their usage. All that I
+can offer is an explanation of the equation used to perform these conversions.
+;
+#X restore 22 297 pd What_does_power_mean?;
+#X text 18 37 [powtodb] in Pd performs the following equation to convert
+the data: Note that incoming values less than 0 are considered underflow
+and are clipped/ignored.;
+#X text 17 84 (100 + ((10/2.302585092994) * log(POWER_value))) = Debibels
+;
+#X obj 149 148 powtodb;
+#X obj 22 153 max 0;
+#X obj 22 193 expr (100 + ((10/2.302585092994)*log($f1)));
+#X obj 22 215 max 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Understanding [powtodb];
+#X connect 2 0 8 0;
+#X connect 2 0 9 0;
+#X connect 8 0 4 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 3 0;
+#X restore 23 362 pd understanding_powtodb;
+#X text 215 63 - MIDI note number to frequency;
+#X text 215 110 - Frequency to MIDI note number;
+#X text 234 190 - Decibels to RMS;
+#X text 234 237 - RMS to Decibels;
+#X text 234 316 - Decibels to power;
+#X text 234 363 - power to Decibels;
+#X text 21 412 Please note: I have no idea why it's necessary for Pd
+to measure decibels \, rms \, or power. It seems to me that RMS and
+Power are extremely important in the analog world (so that an engineer
+doesn't blow up a transistor)...but in Pd \, these things are just
+numbers which have been abstracted from their original analog counterparts.
+I would really appreciate if somebody could help me understand these
+concepts and finish this document. Why are these objects present in
+Pd? WHY should they be used and what benefits to they produce in a
+digital process?;
+#X obj 1 548 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 323 229 494 344 META 0;
+#X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 KEYWORDS conversion;
+#X text 12 95 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 NAME mtof ftom dbtorms rmstodb dbtopow powtodb;
+#X text 12 65 DESCRIPTION examples of objects that do conversions between
+acoustic units;
+#X restore 392 550 pd META;
+#N canvas 12 355 428 212 Related_objects 0;
+#X obj 23 42 dbtopow~;
+#X obj 77 42 dbtorms~;
+#X obj 132 42 rmstodb~;
+#X obj 187 42 powtodb~;
+#X obj 242 42 mtof~;
+#X obj 279 42 ftom~;
+#X obj 23 69 expr;
+#X obj 58 69 expr~;
+#X obj 98 69 sig~;
+#X obj 132 69 snapshot~;
+#X text 150 99 [rmstopow~];
+#X text 230 99 [powtorms~];
+#X text 150 120 [b2db];
+#X text 193 120 [tmtof];
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Acoustic Objects- Related Objects;
+#X obj 21 122 pddp/helplink iemlib/db2v;
+#X obj 21 142 pddp/helplink iemlib/f2note;
+#X obj 21 162 pddp/helplink iemlib/t3_sig~;
+#X obj 21 182 pddp/helplink iemlib/m2f~;
+#X obj 21 103 pddp/pddplink all_about_externals.pd -text _________
+;
+#X obj 21 103 pddp/pddplink all_about_externals.pd -text Externals
+;
+#X text 152 135 Which library for these four?;
+#X restore 103 550 pd Related_objects;
+#X obj 6 549 pddp/pddplink all_about.pd -text All About Pd;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 8 0 2 0;
+#X connect 9 0 13 0;
+#X connect 11 0 12 0;
+#X connect 12 0 9 0;
+#X connect 13 0 10 0;
+#X connect 15 0 19 0;
+#X connect 17 0 18 0;
+#X connect 18 0 15 0;
+#X connect 19 0 16 0;

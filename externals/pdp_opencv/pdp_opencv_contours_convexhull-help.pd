@@ -1,0 +1,130 @@
+#N canvas 507 74 737 767 10;
+#X obj 41 -82 cnv 15 621 223 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X obj 281 -41 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 281 -17 metro 40;
+#X msg 371 10 close;
+#X obj 301 81 pdp_v4l;
+#X msg 358 -22 open /dev/video0;
+#X obj 482 -42 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 482 -15 metro 40;
+#X msg 563 4 close;
+#X msg 559 -20 open /dev/video0;
+#X obj 504 81 pdp_v4l2;
+#X obj 40 194 cnv 15 621 400 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X obj 82 602 pdp_xv;
+#X msg 568 59 format \$1;
+#X obj 569 37 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X floatatom 167 369 5 0 0 0 - - -;
+#X text 46 -129 It is useful as a motion tracker if you have well isolated
+silouets of the objects you want to track.;
+#X msg 158 246 mode \$1;
+#X obj 219 247 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 288 248 retrieval mode ( see cvFindContours );
+#X obj 250 271 hradio 15 1 0 5 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 332 271 retrieval method ( see cvFindContours );
+#X msg 183 270 method \$1;
+#X msg 217 301 nightmode \$1;
+#X obj 307 302 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 330 302 hide original image ( default : off );
+#X text 71 -79 INPUT;
+#X text 47 -158 pdp_opencv_contours_convexhull :: Draw the convex hull
+of the biggest contour.;
+#X obj 81 97 pdp_qt;
+#X obj 110 46 metro 40;
+#X msg 110 18 bang;
+#X msg 151 18 stop;
+#X obj 79 -27 openpanel;
+#X msg 79 -2 open \$1;
+#X msg 79 -55 bang;
+#X msg 111 73 loop \$1;
+#X obj 191 73 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 191 -9 loadbang;
+#X text 122 -52 playing a video file;
+#X obj 141 98 hsl 128 15 0 2000 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 206 370 Number of points in the convex hull;
+#X floatatom 215 497 5 0 0 0 - - -;
+#X floatatom 250 497 5 0 0 0 - - -;
+#X floatatom 280 478 5 0 0 0 - - -;
+#X floatatom 314 478 5 0 0 0 - - -;
+#X floatatom 344 459 5 0 0 0 - - -;
+#X floatatom 378 459 5 0 0 0 - - -;
+#X text 417 460 etc ...;
+#X text 290 497 First convex hull point (X -Y);
+#X text 352 478 Second convex hull point (X -Y);
+#X obj 79 342 pdp_opencv_contours_convexhull;
+#X obj 41 148 cnv 15 621 40 empty empty empty 20 12 0 14 -260801 -66577
+0;
+#X floatatom 229 167 5 0 0 0 - - -;
+#X text 267 166 threshold (default 13) to use when comparing pixel
+colors;
+#X obj 81 166 pdp_opencv_threshold;
+#X obj 242 417 unpack 0 0 0 0 0 0 0 0;
+#X floatatom 394 438 5 0 0 0 - - -;
+#X floatatom 428 438 5 0 0 0 - - -;
+#X obj 81 122 pdp_spigot;
+#X obj 151 123 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 173 123 pdp_invert;
+#X msg 136 211 accuracy \$1;
+#X text 286 213 polygon approximation accuracy ( default 3 );
+#X floatatom 218 213 5 0 0 0 - - -;
+#X text 47 -101 commets to lluisgomez@hangar.org.;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 58 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 58 0;
+#X connect 13 0 10 0;
+#X connect 14 0 13 0;
+#X connect 17 0 50 0;
+#X connect 18 0 17 0;
+#X connect 20 0 22 0;
+#X connect 22 0 50 0;
+#X connect 23 0 50 0;
+#X connect 24 0 23 0;
+#X connect 28 0 58 0;
+#X connect 29 0 28 0;
+#X connect 30 0 29 0;
+#X connect 31 0 29 0;
+#X connect 32 0 33 0;
+#X connect 33 0 28 0;
+#X connect 34 0 32 0;
+#X connect 35 0 28 0;
+#X connect 36 0 35 0;
+#X connect 37 0 36 0;
+#X connect 37 0 30 0;
+#X connect 39 0 28 1;
+#X connect 50 0 12 0;
+#X connect 50 1 15 0;
+#X connect 50 2 55 0;
+#X connect 52 0 54 2;
+#X connect 54 0 50 0;
+#X connect 55 0 41 0;
+#X connect 55 1 42 0;
+#X connect 55 2 43 0;
+#X connect 55 3 44 0;
+#X connect 55 4 45 0;
+#X connect 55 5 46 0;
+#X connect 55 6 56 0;
+#X connect 55 7 57 0;
+#X connect 58 0 54 0;
+#X connect 58 1 60 0;
+#X connect 59 0 58 1;
+#X connect 60 0 54 0;
+#X connect 61 0 50 0;
+#X connect 63 0 61 0;

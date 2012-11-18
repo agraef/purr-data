@@ -1,0 +1,181 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header outlet~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 347 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 DESCRIPTION signal outlet for a subpatch;
+#X text 12 65 INLET_0 signal;
+#X text 12 5 KEYWORDS signal nonlocal canvas_op;
+#X text 12 145 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 429 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 459 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 inlet;
+#X obj 67 43 outlet;
+#X obj 118 43 inlet~;
+#X obj 168 43 outlet;
+#X obj 225 43 block~;
+#X text 8 2 [outlet~] Related Objects;
+#X text 274 43 [switch~];
+#X restore 102 598 pd Related_objects;
+#X text 98 436 (none);
+#X text 11 23 signal outlet for a subpatch;
+#X obj 477 3 outlet~;
+#X obj 446 20 pddp/pddplink http://wiki.puredata.info/en/outlet~ -text
+pdpedia: outlet~;
+#X obj 369 259 print~;
+#X obj 369 199 sig~ 12;
+#X floatatom 126 203 0 0 0 0 - - -;
+#X floatatom 126 255 0 0 0 0 - - -;
+#X text 96 182 messages in and out;
+#X text 339 176 audio in and out;
+#X obj 369 237 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#N canvas 50 247 428 293 subpatch-with-inlets-and-outlets 0;
+#X obj 67 68 inlet;
+#X text 19 38 control inlet for receiving messages;
+#X floatatom 67 96 0 0 0 0 - - -;
+#X floatatom 67 218 0 0 0 0 - - -;
+#X obj 67 250 outlet;
+#X text 19 188 control outlet for sending message;
+#X obj 339 84 inlet~;
+#X obj 339 135 print~;
+#X msg 354 109 bang;
+#X obj 339 243 outlet~;
+#X obj 339 217 sig~ 34;
+#X text 332 38 same for;
+#X text 333 57 signals.;
+#X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [outlet~] Creating Inlets/Outlets on Subpatches;
+#X connect 0 0 2 0;
+#X connect 3 0 4 0;
+#X connect 6 0 7 0;
+#X connect 8 0 7 0;
+#X connect 10 0 9 0;
+#X restore 126 229 pd subpatch-with-inlets-and-outlets;
+#X text 98 127 The subpatch below shows how to use [inlet] \, [inlet~]
+\, [outlet] \, and [outlet~] objects to get data into and out of a
+subpatch:;
+#X obj 78 356 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 355 signal;
+#X text 98 77 The [outlet~] object allows signals to be sent from a
+subpatch to objects on the parent canvas.;
+#N canvas 60 123 428 466 up/downsampling 0;
+#X obj 30 396 print~;
+#X obj 48 370 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 112 396 print~;
+#X obj 130 372 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 195 396 print~;
+#X obj 213 370 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-tab 64 float 3;
+#A 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1 64 -1 200 140 1;
+#X restore 216 181 graph;
+#X obj 274 368 s \$0-tab;
+#X msg 274 341 const 0 \, 0 0 1;
+#X obj 145 233 print~;
+#X obj 145 208 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 23 181 tabreceive~ \$0-tab;
+#N canvas 81 269 585 267 test-subpatch-upsampled 0;
+#X obj 40 17 block~ 128 1 2;
+#X obj 209 149 inlet~ hold;
+#X obj 367 153 inlet~ lin;
+#X obj 23 202 print~;
+#X obj 41 176 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 209 209 print~;
+#X obj 227 183 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 366 213 print~;
+#X obj 383 187 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 42 49 Upsampling methods:;
+#X text 206 114 sample/hold;
+#X text 337 111 linear interpolation;
+#X text 16 114 interleaved zeros;
+#X obj 23 146 inlet~;
+#X connect 1 0 5 0;
+#X connect 2 0 7 0;
+#X connect 4 0 3 0;
+#X connect 6 0 5 0;
+#X connect 8 0 7 0;
+#X connect 13 0 3 0;
+#X restore 23 285 pd test-subpatch-upsampled;
+#N canvas 46 43 585 267 test-subpatch-downsampled 0;
+#X obj 23 146 outlet~;
+#X obj 209 149 outlet~ hold;
+#X obj 367 153 outlet~ lin;
+#X text 206 173 sample/hold;
+#X text 364 177 linear interpolation;
+#X text 197 19 upsampling methods:;
+#X obj 40 17 block~ 32 1 0.5;
+#X text 18 169 interleaved zeros;
+#X obj 21 83 tabreceive~ \$0-tab;
+#X connect 8 0 0 0;
+#X connect 8 0 1 0;
+#X connect 8 0 2 0;
+#X restore 29 340 pd test-subpatch-downsampled;
+#X text 20 38 When a subpatch is reblocked to a higher or lower sample
+rate \, the inlet~ and outlet~ objects offer a choice of three upsampling
+methods. (The inlet~ upsamples when entering a subpatch with a higher
+sample rate \; the outlet~ upsamples when leaving a subpatch of _lower_
+sample rate \, as demonstrated below.) There is no corresponding choice
+of downsampling method - downsampling is done simply by dropping the
+extra samples.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [outlet~] Up/downsampling;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;
+#X connect 8 0 7 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 1;
+#X connect 11 0 12 2;
+#X connect 11 0 9 0;
+#X connect 11 0 12 0;
+#X connect 13 0 0 0;
+#X connect 13 1 2 0;
+#X connect 13 2 4 0;
+#X restore 171 538 pd up/downsampling;
+#X text 80 477 1) symbol atom;
+#X text 168 477 - (optional) The word "hold" will cause sample/hold
+upsampling/downsampling \, and the word "lin" will cause linear upsampling/downsampling.
+See the subpatch below for more details:;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 168 355 - the [outlet~] object passes a signal to the outlet
+of the subpatch in the parent canvas. When multiple [outlet~] and/or
+[outlet] objects are in one subpatch \, their horizontal order corresponds
+with the outlets drawn on the containing object in the parent patch.
+;
+#X connect 13 0 19 1;
+#X connect 14 0 19 0;
+#X connect 18 0 12 0;
+#X connect 19 0 15 0;
+#X connect 19 1 12 0;

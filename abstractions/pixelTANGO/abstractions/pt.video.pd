@@ -1,0 +1,35 @@
+#N canvas 492 644 130 18 10;
+#N canvas 85 81 670 362 interna 0;
+#X obj 15 42 inlet;
+#X obj 192 26 cnv 15 300 250 empty empty empty 5 8 1 10 -260390 -1
+0;
+#X obj 14 255 rectangle;
+#X obj 342 37 inlet;
+#X obj 43 184 unpack f f;
+#X text 13 7 Video Plane;
+#X obj 15 63 pix_texture;
+#X text 22 84 Where else to put this?;
+#X obj 108 225 * 1;
+#X obj 43 225 * 1;
+#X obj 199 111 register-tail;
+#X obj 43 156 r pt.videoPlaneSize;
+#X obj 285 148 route videoPlaneCorrection;
+#X connect 0 0 6 0;
+#X connect 3 0 10 0;
+#X connect 4 0 9 0;
+#X connect 4 1 8 0;
+#X connect 6 0 2 0;
+#X connect 8 0 2 2;
+#X connect 9 0 2 1;
+#X connect 10 1 12 0;
+#X connect 11 0 4 0;
+#X connect 12 0 8 1;
+#X connect 12 0 9 1;
+#X restore 13 55 pd interna;
+#X obj 13 34 inlet;
+#X obj 78 34 inlet;
+#X obj 1 1 cnv 5 128 16 empty empty Video_Plane 5 9 1 12 -128992 -1
+0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 1;
+#X coords 0 0 1 1 130 16 1;

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.2.8: http://docutils.sourceforge.net/" />
+<title>Building Drums in PD</title>
+<link rel="stylesheet" href="default.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="building-drums-in-pd">
+<h1 class="title">Building Drums in PD</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr class="field"><th class="docinfo-name">Autor:</th><td class="field-body">Frank Barknecht</td>
+</tr>
+<tr><th class="docinfo-name">Contact:</th>
+<td><a class="first last reference" href="mailto:fbar&#64;footils.org">fbar&#64;footils.org</a></td></tr>
+</tbody>
+</table>
+<div class="abstract topic">
+<p class="topic-title">Abstract</p>
+<p>This quicktoot describes how PD can be used to build a simple drum 
+synthesizer with graphical controls and a step sequencer.</p>
+</div>
+<div class="contents topic" id="contents">
+<p class="topic-title"><a name="contents">Contents</a></p>
+<ul class="simple">
+<li><a class="reference" href="#small-is-beautiful" id="id1" name="id1">Small is beautiful</a></li>
+<li><a class="reference" href="#the-creator" id="id2" name="id2">The Creator</a></li>
+<li><a class="reference" href="#bring-the-noise" id="id3" name="id3">Bring The Noise</a></li>
+<li><a class="reference" href="#let-it-swing" id="id4" name="id4">Let It Swing</a></li>
+<li><a class="reference" href="#going-faster" id="id5" name="id5">Going faster</a></li>
+</ul>
+</div>
+<div class="section" id="small-is-beautiful">
+<h1><a class="toc-backref" href="#id1" name="small-is-beautiful">Small is beautiful</a></h1>
+<p>Pure Data - or short PD - is a multimedia software environment written 
+by Miller Puckette and others that can be used to make art in several 
+media like music, sound or graphics. In this quicktoot we will use the 
+sound generating capabilities of PD to build a module for drum sounds. 
+Our drum synthesizer will use a synthesis algorithm that's very 
+similar to the early analog or digital drumsynths of the eighties. We 
+will not use pre-recorded samples but instead employ simple sound 
+generators. You will be surprised, how effective this is and how much 
+variety is possible with just two or three sound sources. On the other 
+hand our design leaves room for improvment. By the end of this article 
+you will be able to add these on your own. Our drummer includes a 
+preset database: When you have found a sound, that you like, you can 
+save it and recall it again later.</p>
+<p>I will not go into much detail on how to install or how to use PD: You 
+should read the documentation that comes with PD for that. I will of 
+course explain the more advanced features of PD used and everything 
+that is needed to follow this tutorial.</p>
+</div>
+<div class="section" id="the-creator">
+<h1><a class="toc-backref" href="#id2" name="the-creator">The Creator</a></h1>
+<p>Creating something in PD is very much like the genesis of a world as described
+in, well, the Bible's first book &quot;Genesis&quot;.  In the beginning you have nothing,
+just a large white area. You, the Creator, can create objects by a simple
+button press &quot;Ctrl-1&quot;, which actually means &quot;Let there be an object&quot;. And there
+was an object. But your first object is a small empty rectangle and it can do
+nothing, it has no way of communicating, it isn't alive yet. To create a living
+object you have to give it a name, you have to call it by typing the name onto
+the object, for example &quot;noise~&quot;. And there was noise. With time you can
+populate the area with more objects, you can let them talk to each other, you
+can create more worlds, and you will create by giving all of them names. We
+maybe come to <tt class="literal"><span class="pre">[moses]</span></tt> later. Our drumsynth will have the name &quot;angriff&quot;,
+which is german for &quot;attack&quot;. So our goal is, that someone can create a
+drumsynth by typing the name &quot;angriff&quot; on a new object.</p>
+<p>This is achieved in PD by a so called &quot;abstraction&quot;. An abstraction is 
+simply a saved PD patch. So our very first and basically unusable 
+version of angriff is this: A nearly empty patch with a noise~ object 
+inside, saved under the name &quot;angriff-01.pd&quot;.</p>
+<div class="figure">
+<p><img alt="angriff-01.png" src="angriff-01.png" /></p>
+<p class="caption"><a class="reference" href="angriff-01.pd">angriff-01.pd</a>, an unusable first version.</p>
+</div>
+<p>Even this can be used as an object. Just create a new, empty patch 
+(with &quot;Ctrl-n&quot;), put an object in it and call it &quot;angriff-01&quot;, i.e. the 
+name of our first drum patch without the .pd-suffix.</p>
+<div class="figure">
+<p><img alt="using_angriff-1.png" src="using_angriff-1.png" /></p>
+<p class="caption">Using the unusable angriff-01.pd in another patch. <a class="reference" href="using_angriff-1.pd">using_angriff-1.pd</a></p>
+</div>
+<p>PD searches for something that matches the object &quot;angriff-01&quot; in 
+several places: in the list of builtin objects like &quot;noise~&quot;, in 
+external libraries or in its path for abstractions. If angriff-01.pd 
+is in the same directory as the using patch or in a path known to PD 
+through the startup option &quot;-path /a/pd-path/&quot;, it gets found. If you 
+click on angriff-01, you can open it to see, what's inside. 
+Abstractions itself can use other abstractions so it's a good idea to 
+put often used functionality into abstractions. As our final drumsynth 
+should have a sound generating part and a GUI to control this, we will 
+seperate both parts from each other by use of abstractions. For the 
+synthesis of sound we will build and use an abstraction called &quot;drumcenter&quot;
+inside of the main &quot;angriff&quot; patch. The main patch includes the control 
+elements for the parameters provided by &quot;drumcenter&quot;. This way our 
+synthesis model and the view to the user are separated.</p>
+</div>
+<div class="section" id="bring-the-noise">
+<h1><a class="toc-backref" href="#id3" name="bring-the-noise">Bring The Noise</a></h1>
+<p>How do drums drum? Although human dummers can spend hours tuning their 
+drumset, drums are generally non-pitched, percussive sounds. So for 
+our first usable version of a drumsound we take some noise as a sound 
+source and put an amplitude envelope around the noise. A simple, 
+builtin envelope generator in PD is line~. drumcenter-01.pd show the 
+noise, the envelope and both multiplied together.</p>
+<div class="figure">
+<p><img alt="drumcenter-01.png" src="drumcenter-01.png" /></p>
+<p class="caption">Enveloped noise, <a class="reference" href="drumcenter-01.pd">drumcenter-01.pd</a></p>
+</div>
+<p>If you listen to this patch, it already sounds a bit like a snare, 
+doesn't it? To make this sound a bit more variable we can use filtered 
+noise, for example with a lowpass or highpass filter. PD comes with 
+both, so lets use them. Her's the noise filtered with the lop~ filter 
+at a cutoff frequency of 400 Hertz:</p>
+<div class="figure">
+<p><img alt="drumcenter-02.png" src="drumcenter-02.png" /></p>
+<p class="caption">Lowpass filtered and enveloped noise, <a class="reference" href="drumcenter-02.pd">drumcenter-02.pd</a></p>
+</div>
+<p>Now our patch is beginning to get a bit crammed and chaotic, so let's 
+replace some chords with &quot;send&quot; and &quot;receive&quot; pairs, abbreviated &quot;s&quot; and &quot;r&quot;. 
+If we give those pairs names starting with $0, they get names starting 
+with unique numbers instead of the $0 while performing. This way, we 
+can later use several instances of our patches without conflicts 
+between their own send and receive variables. We can also hide stuff 
+we don't need to see in so called subpatches. Subpatches are areas 
+inside a patch that are hidden in an object box starting with <tt class="literal"><span class="pre">[pd]</span></tt>. 
+They are like curtains hiding things in a room, but the hidden objects 
+are a full part of the surrounding patch. The special objects <tt class="literal"><span class="pre">[inlet]</span></tt>, 
+<tt class="literal"><span class="pre">[outlet]</span></tt>, <tt class="literal"><span class="pre">[inlet~]</span></tt> and <tt class="literal"><span class="pre">[outlet~]</span></tt> create points of connections between 
+the surroundig patch and the subpatch. They work with abstractions as well.</p>
+<div class="figure">
+<p><img alt="drumcenter-03.png" src="drumcenter-03.png" /></p>
+<p class="caption">Cleaning up in the house, <a class="reference" href="drumcenter-03.pd">drumcenter-03.pd</a></p>
+</div>
+</div>
+<div class="section" id="let-it-swing">
+<h1><a class="toc-backref" href="#id4" name="let-it-swing">Let It Swing</a></h1>
+<p>I lied in the previous chapter: Drums are indeed pitched, although 
+just a little bit pitched. If a drummer kicks a bassdrum, the drum 
+begins to oscillate slightly at a low frequency. But this oscillation 
+is soon damped to an even lower frequency and then disapears. To 
+simulate this behaviour, we use PD's <tt class="literal"><span class="pre">[osc~]</span></tt> object with an added 
+frequency envelope as show in drumcenter-04.pd:</p>
+<div class="figure">
+<p><img alt="drumcenter-04.png" src="drumcenter-04.png" /></p>
+<p class="caption">Percussive oscillator, <a class="reference" href="drumcenter-04.pd">drumcenter-04.pd</a></p>
+</div>
+<p>The right inlet of <tt class="literal"><span class="pre">[osc~]</span></tt> is used here to set the start phase of the 
+oscillator. If we wouldn't set it, it would be different everytime we 
+start the envelope, because an object like the <tt class="literal"><span class="pre">[osc~]</span></tt> is always on and 
+goes through its cycle even if we don't listen to it. The main inlet 
+sets the frequency, that's going from a starting value to a lower 
+frequency in a short time.</p>
+</div>
+<div class="section" id="going-faster">
+<h1><a class="toc-backref" href="#id5" name="going-faster">Going faster</a></h1>
+<p>So far we used <tt class="literal"><span class="pre">[line~]</span></tt> for all envelopes and a controlling message 
+like <tt class="literal"><span class="pre">[1,</span> <span class="pre">0</span> <span class="pre">50(</span></tt>. This tells <tt class="literal"><span class="pre">[line~]</span></tt> to first go immediatly to 1, then 
+start going to 0 for 50 milliseconds. For our oscillator frequency 
+this is fine, but instantly going to an amplitude of 1 produces 
+clicks, as you might have heard. So we need to specify an attack time, 
+in that the amplitude raises from 0. The first guess would be a 
+message like <tt class="literal"><span class="pre">[1</span> <span class="pre">10,</span> <span class="pre">0</span> <span class="pre">50(</span></tt>, but that simply doesn't work. So this has to 
+be solved with two messages to the <tt class="literal"><span class="pre">[line~]</span></tt> object, for example <tt class="literal"><span class="pre">[1</span> <span class="pre">10(</span></tt>
+to go in 10 msecs to 1 and then the release: <tt class="literal"><span class="pre">[0</span> <span class="pre">50(</span></tt>. Between them a 
+<tt class="literal"><span class="pre">[del]</span></tt> is placed, that delays for as long as the first line segment's 
+duration is. But this also has a problem, as shown in the next figure: 
+a <tt class="literal"><span class="pre">[del]</span></tt> always delays in blocks of 64 samples, and that is a time of 
+around 1.45 msecs at a sampling rate of 44100 Hertz. A bit too long 
+for the short attack times used in drum synths.</p>
+<div class="figure">
+<p><img alt="fastline.png" src="fastline.png" /></p>
+<p class="caption">Two line~ segments started with delay, <a class="reference" href="fastline.pd">fastline.pd</a></p>
+</div>
+<p>This problem isn't trivial at all and it appears everywhere, one wants 
+to contol messages in PD quicker than the signal blocksize allows, for 
+example in granular synthesis patches. A solution to this are &quot;
+Time-Tagged Triggers&quot; (T3) as proposed by Gerhard Eckel and Manuel 
+Rocha Iturbide for Max/FTS. In PD T3-objects are made available as 
+externals in IEMLIB. Time-Tagged Triggers are a replacment for the 
+standard &quot;bang&quot; message that is normally used in PD or Max. Eckel 
+writes: &quot;In Max/FTS, a T3 is nothing else than a message containing one 
+floating-point number which specifies the delay in ms after which, 
+counting from the current tick, the trigger should go off.&quot; We will now 
+use the T3 break point envelope generator <tt class="literal"><span class="pre">[t3_bpe]</span></tt> to generate faster 
+envelopes.</p>
+<div class="figure">
+<p><img alt="t3-fastline.png" src="t3-fastline.png" /></p>
+<p class="caption">Two line~ segments started with delay, <a class="reference" href="t3-fastline.pd">t3-fastline.pd</a></p>
+</div>
+<p><em>to be continued...</em></p>
+</div>
+</div>
+</body>
+</html>

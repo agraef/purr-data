@@ -1,0 +1,23 @@
+#N canvas 10 40 620 460 12;
+#X obj -37 4 cnv 15 400 40 empty empty floats_and_ints 20 12 0 24 -228992
+-66577 0;
+#X text -30 60 In Pd \, there is only one kind of number \, its generally
+known as a "float" \, which is a word used in programming to mean a
+"floating point number" \, i.e. a number with a decimal point in it.
+;
+#X text -24 242 Oftentimes \, its useful to use integers. For this
+there is the [int] object.;
+#X text 36 149 4.5;
+#X text 79 205 1.234e+07;
+#X text 188 162 -0.0032;
+#X text 323 178 4.3332;
+#X obj 223 322 int;
+#X floatatom 223 358 5 0 0 1 int - -;
+#X floatatom 164 358 5 0 0 0 float - -;
+#X obj 226 286 hsl 128 15 0 20 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X text -22 396 floats and ints are direct representations of how your
+CPU handles numbers.;
+#X connect 7 0 8 0;
+#X connect 10 0 9 0;
+#X connect 10 0 7 0;

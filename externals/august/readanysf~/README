@@ -1,0 +1,47 @@
+readanysf~, a puredata external for reading multiple file formats.
+-----------------------------------------------------------------
+© august black 2003 - 2010
+licensed under the GNU GPL v2
+
+
+see: http://aug.ment.org/readanysf/
+
+you will need:
+
+          o Gavl : by Burkhard Plaum
+            Low level multimedia API.
+            http://gmerlin.sf.net/
+            cvs -d:pserver:anonymous@gmerlin.cvs.sourceforge.net:/cvsroot/gmerlin login
+            cvs -z3 -d:pserver:anonymous@gmerlin.cvs.sourceforge.net:/cvsroot/gmerlin co -P gavl
+            cd gavl/
+            ./autogen.sh
+            ./configure --without-doxygen
+            make
+            sudo make install
+
+          o Gmerlin_avdecode : by Burkhard Plaum
+            Gmerlin_avdecoder is a general purpose media decoding library.
+            http://gmerlin.sourceforge.net
+            cvs -d:pserver:anonymous@gmerlin.cvs.sourceforge.net:/cvsroot/gmerlin login
+            cvs -z3 -d:pserver:anonymous@gmerlin.cvs.sourceforge.net:/cvsroot/gmerlin co -P gmerlin_avdecoder
+            cd gmerlin_avdecoder
+            ./autogen.sh
+            ./configure --without-doxygen
+            make
+            sudo make install
+
+
+After installing gavl and gmerlin_avdecode, you should just be able to type make.
+
+----------------------------------------------------------------------------------------
+
+Mac users: 
+
+	you can install gavl/gmerlin-avdecoder either by source as above with linux or through fink.
+	
+	then, do "make" and let me know if it doesn't work 
+
+	
+
+
+

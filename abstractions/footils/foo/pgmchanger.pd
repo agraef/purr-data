@@ -1,0 +1,64 @@
+#N canvas 204 242 669 242 10;
+#X obj -4 -4 cnv 15 680 240 empty empty empty 20 12 0 14 -143491 -66577
+0;
+#X obj 570 70 nbx 5 20 1 127 0 0 midichan midichan empty 45 7 193 10
+-260818 -62784 -1 1 256;
+#X obj 41 130 hdl 18 1 1 32 pgm1 pgm1 empty 20 8 192 8 -260818 -62784
+-1 8;
+#X obj 464 40 cnv 15 150 25 empty empty Midi_Channel 2 12 1 14 -260818
+-123526 0;
+#X obj 45 40 cnv 15 170 25 empty empty Program_Number 2 12 1 14 -260818
+-123526 0;
+#X obj 44 70 nbx 5 20 0 32 0 0 pgm-num1 pgm-num1-in empty 45 7 193
+10 -260818 -62784 -1 8 256;
+#N canvas 246 232 639 471 doit 0;
+#X obj 84 25 r pgm1;
+#X msg 84 85 \$1;
+#X obj 84 158 pgmout;
+#X obj 119 133 f 1;
+#X obj 119 109 r midichan;
+#X obj 241 84 s pgm1;
+#X obj 241 25 r pgm-num1;
+#X msg 405 279 drum;
+#X msg 405 303 piano;
+#X msg 405 327 string;
+#X msg 405 351 oboe;
+#X msg 254 397 \; pgm-name label \$1;
+#X obj 254 373 symbol;
+#X text 245 213 Optionally put pgm-number and names here (No Spaces!)
+;
+#X obj 250 242 select 10 2 3 4;
+#X obj 84 124 + 0;
+#X obj 241 60 - 0;
+#X obj 298 76 r poffset;
+#X obj 119 85 r poffset;
+#X obj 507 89 s poffset;
+#X msg 507 65 0;
+#X msg 537 65 1;
+#X text 427 39 do progams start at 0 or 1?;
+#X msg 48 183 \; pgm-num1-in set \$1;
+#X connect 0 0 1 0;
+#X connect 1 0 15 0;
+#X connect 3 0 2 1;
+#X connect 4 0 3 0;
+#X connect 6 0 16 0;
+#X connect 7 0 12 0;
+#X connect 8 0 12 0;
+#X connect 9 0 12 0;
+#X connect 10 0 12 0;
+#X connect 12 0 11 0;
+#X connect 14 0 7 0;
+#X connect 14 1 8 0;
+#X connect 14 2 9 0;
+#X connect 14 3 10 0;
+#X connect 15 0 2 0;
+#X connect 15 0 23 0;
+#X connect 15 0 14 0;
+#X connect 16 0 5 0;
+#X connect 17 0 16 1;
+#X connect 18 0 15 1;
+#X connect 20 0 19 0;
+#X connect 21 0 19 0;
+#X restore 686 0 pd doit;
+#X obj 249 166 cnv 15 160 25 empty pgm-name drum 2 12 65 14 -260818
+-123526 0;

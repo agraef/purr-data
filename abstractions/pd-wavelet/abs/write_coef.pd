@@ -1,0 +1,16 @@
+#N canvas 278 190 235 191 10;
+#X obj 66 26 inlet;
+#X obj 66 60 unpack;
+#X obj 66 138 tabwrite idwtcoef;
+#X obj 66 87 t b f;
+#X obj 66 113 f;
+#X obj 91 113 * 1;
+#X obj 104 87 r time_stretch;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 1 1 4 1;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 2 1;
+#X connect 6 0 5 1;

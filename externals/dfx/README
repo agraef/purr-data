@@ -1,0 +1,32 @@
+
+	
+	
+	pd_dfx/cvs
+	
+	
+	
+	this is the pd_dfx collection of the super destroy fx vst plugins
+	
+	
+	
+	the original files may be found at 
+	
+	http://www.smartelectronix.com/~destroyfx/
+	
+	files are copyright © 2000,2001 by Marcberg Soft und 
+	Hard GmbH, respectively Marc Poirier and Tom Murphy
+	
+	
+	currently there are only buffer_override, polarizer,
+	transverb and skidder here (and skidder is broken)
+	
+	
+	
+	for comments/whatever mail to
+	martin pi < pi(at)attacksyour.net >
+	
+	
+	
+	
+	license is in the file "COPYING" and is GPL-2
+	thanks to tom & marc for the great software they do

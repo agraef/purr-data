@@ -1,0 +1,121 @@
+#N canvas 0 0 448 238 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header message_conversion
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 43 150 pddp/pddplink all_about_messages.pd;
+#X obj 1 216 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 95 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS needs_work;
+#X text 12 65 DESCRIPTION description of message conversion performed
+by Pd;
+#X text 12 25 NAME;
+#X restore 392 218 pd META;
+#N canvas 14 133 428 370 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Message Conversion - Related Objects;
+#X obj 22 82 makefilename;
+#X obj 22 127 pddp/helplink zexy/list2symbol;
+#X obj 22 147 pddp/helplink zexy/symbol2list;
+#X obj 22 167 pddp/helplink zexy/makesymbol;
+#X obj 22 307 pddp/helplink cyclone/tosymbol;
+#X obj 22 327 pddp/helplink cyclone/fromsymbol;
+#X obj 22 347 pddp/helplink cyclone/sprintf;
+#X obj 22 52 list;
+#X obj 62 52 route;
+#X obj 22 187 pddp/helplink zexy/lister;
+#X obj 22 207 pddp/helplink zexy/list2int;
+#X obj 22 227 pddp/helplink zexy/any2list;
+#X obj 22 247 pddp/helplink zexy/repack;
+#X obj 22 267 pddp/helplink zexy/glue;
+#X obj 112 52 pack;
+#X obj 152 52 pipe;
+#X obj 22 287 pddp/helplink iemlib/iem_any;
+#X msg 196 52;
+#X obj 21 108 pddp/pddplink all_about_externals.pd -text _________
+;
+#X obj 21 108 pddp/pddplink all_about_externals.pd -text Externals
+;
+#X restore 103 218 pd Related_objects;
+#X obj 6 218 pddp/pddplink all_about.pd -text All About Pd;
+#N canvas 20 56 428 587 anythings_and_lists 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X obj 1 190 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 20 27 All the list family objects-- [list append] \, [list
+prepend] [list length] \, [list split] \, and [list trim]-- convert
+the incoming message to a list before it is processed.;
+#X msg 25 76 this is an anything.;
+#X obj 25 98 list append;
+#X obj 25 120 route list;
+#X obj 35 142 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 103 98 <- convert this message to a list;
+#X text 7 190 Convert a List to an Anything;
+#X text 7 1 Convert an Anything to a List;
+#X msg 22 266 list one two three;
+#X obj 22 338 list trim;
+#X msg 45 313 one two three;
+#X obj 25 162 print any2list;
+#X obj 22 360 print list2any;
+#X text 20 216 Use the [list trim] object to remove the "list" or "symbol"
+selector \, which will convert a list or symbol message to an anything:
+;
+#X msg 40 289 symbol one;
+#X obj 1 388 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X msg 24 419 list;
+#X symbolatom 45 488 10 0 0 0 - - -;
+#X msg 30 443 list 25;
+#X msg 37 466 list foo;
+#X text 100 466 A "list" of one "symbol" is converted to a "symbol"
+;
+#X text 85 443 A "list" of one "float" is converted to a "float";
+#X text 64 419 An empty "list" is converted to a "bang";
+#X obj 24 541 bng 15 500 50 0 empty empty bang 0 24 1 12 -262144 -1
+-1;
+#X obj 73 541 bng 15 500 50 0 empty empty float 0 24 1 12 -262144 -1
+-1;
+#X obj 122 541 bng 15 500 50 0 empty empty symbol 0 24 1 12 -262144
+-1 -1;
+#X obj 241 541 bng 15 500 50 0 empty empty list 0 24 1 12 -262144 -1
+-1;
+#X obj 281 541 bng 15 500 50 0 empty empty OTHER 0 24 1 12 -262144
+-1 -1;
+#X obj 24 514 route bang float symbol pointer list;
+#X obj 182 541 bng 15 500 50 0 empty empty pointer 0 24 1 12 -262144
+-1 -1;
+#X text 7 388 Special Cases of Lists;
+#X text 103 118 <- route removes the selector "list"...;
+#X text 123 162 <- ... so this is once again an anything;
+#X text 138 328 message "one two three" will pass unchanged;
+#X text 138 313 custom selectors are not "trimmed" \, so the;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 0 13 0;
+#X connect 10 0 11 0;
+#X connect 11 0 14 0;
+#X connect 12 0 11 0;
+#X connect 16 0 11 0;
+#X connect 18 0 30 0;
+#X connect 20 0 30 0;
+#X connect 21 0 19 0;
+#X connect 21 0 30 0;
+#X connect 30 0 25 0;
+#X connect 30 1 26 0;
+#X connect 30 2 27 0;
+#X connect 30 3 31 0;
+#X connect 30 4 28 0;
+#X connect 30 5 29 0;
+#X restore 43 42 pd anythings_and_lists;
+#X obj 43 170 pddp/pddplink all_about_lists_vs_anythings.pd;
+#X obj 43 190 pddp/pddplink all_about_atom_conversion.pd;

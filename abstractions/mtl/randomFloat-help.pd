@@ -1,0 +1,40 @@
+#N canvas 606 49 423 460 10;
+#X obj 21 188 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 21 237 5 0 0 0 - - -;
+#X floatatom 79 164 5 0 0 0 - - -;
+#X floatatom 138 187 5 0 0 0 - - -;
+#X text 113 164 min random value;
+#X text 177 185 max random value;
+#X obj 20 83 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 20 128 5 0 0 0 - - -;
+#X text 150 209 Args: min \, max;
+#X obj 21 276 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 21 321 5 0 0 0 - - -;
+#X text 137 298 min: -3 \, max: 1;
+#X obj 21 360 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 21 408 5 0 0 0 - - -;
+#X text 120 104 min:0 \, max: 1;
+#X text 177 381 min: -100 \, max: 100;
+#X obj 11 9 cnv 15 380 60 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 16 51 tags: random;
+#X text 17 14 Description: Generate a random float in a certain range.
+Bang to output the random value.;
+#X obj 20 104 mtl/randomFloat;
+#X obj 21 208 mtl/randomFloat 1 10;
+#X obj 21 298 mtl/randomFloat -3;
+#X obj 21 382 mtl/randomFloat -100 100;
+#X connect 0 0 20 0;
+#X connect 2 0 20 1;
+#X connect 3 0 20 2;
+#X connect 6 0 19 0;
+#X connect 9 0 21 0;
+#X connect 12 0 22 0;
+#X connect 19 0 7 0;
+#X connect 20 0 1 0;
+#X connect 21 0 10 0;
+#X connect 22 0 13 0;

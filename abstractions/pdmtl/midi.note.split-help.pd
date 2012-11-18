@@ -1,0 +1,21 @@
+#N canvas 0 0 570 465 10;
+#X obj 83 269 midi.note.split;
+#X text 36 78 Description: Splits floats and note off from a midi stream.
+;
+#X obj 56 190 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X obj 196 299 print note_off;
+#X obj 148 346 print note_on_vel;
+#X obj 57 397 print note_on_pitch;
+#X msg 93 187 2;
+#X msg 100 210 0;
+#X msg 168 196 73 127;
+#X msg 178 219 54 0;
+#X connect 0 0 5 0;
+#X connect 0 1 4 0;
+#X connect 0 2 3 0;
+#X connect 2 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;

@@ -1,0 +1,73 @@
+#N canvas 439 5 549 726 10;
+#X floatatom 45 227 5 0 0 0 - - -;
+#X obj 45 261 list prepend TAG;
+#X obj 45 195 route TAG;
+#X obj 45 285 s SAVING-SEND;
+#X obj 45 133 r SAVING-REC;
+#X text 126 196 filter by TAG;
+#X text 166 263 add TAG;
+#X obj 313 134 r SAVING-SEND;
+#X obj 313 295 s SAVING-REC;
+#X msg 313 231 43;
+#X obj 421 214 loadbang;
+#X text 26 91 Here's the basic principle in action:;
+#X text 31 432 Again we can make abstractions out of this for easier
+use. Now the first argument should be the tag to use for a certain
+value.;
+#X obj 81 489 store-collect-tag mytag1;
+#X obj 322 489 store-save-tag mytag1;
+#X msg 287 489 10;
+#X floatatom 38 490 5 0 0 0 - - -;
+#X msg 313 204 set \$1;
+#X obj 313 177 route TAG;
+#X obj 313 265 list prepend TAG;
+#X text 434 267 add TAG;
+#X text 393 178 filter by TAG;
+#X msg 287 534 45;
+#X floatatom 37 534 5 0 0 0 - - -;
+#X text 32 322 [list prepend TAG] will generate a message "list TAG
+number". This gets sent over to our message box saver \, where it is
+filtered out with route \, so only messages with the correct tag get
+accepted.;
+#X text 31 386 Restoring works the same: We again prepend a tag \,
+and filter by tag on the number box side.;
+#X text 23 17 So lets reduce the number of sends and receives used
+in our saving system to a single pair now. We will do this by "tagging"
+our state variables with a name tag and then filter out only the values
+with certain tags.;
+#X obj 313 156 list trim;
+#X obj 45 170 list trim;
+#X obj 80 533 store-collect-tag mytag2;
+#X obj 321 533 store-save-tag mytag2;
+#X obj 39 606 tagged a;
+#X msg 112 613 100;
+#X obj 147 613 store-save-tag a/tag;
+#X msg 209 651 24;
+#X obj 136 644 tagged b;
+#X obj 244 651 store-save-tag b/tag;
+#X text 36 567 You can now even use this in abstractions through "tagging
+with \$1" as shown here:;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 0;
+#X connect 4 0 28 0;
+#X connect 7 0 27 0;
+#X connect 9 0 19 0;
+#X connect 10 0 9 0;
+#X connect 13 0 16 0;
+#X connect 14 0 15 0;
+#X connect 15 0 14 0;
+#X connect 16 0 13 0;
+#X connect 17 0 9 0;
+#X connect 18 0 17 0;
+#X connect 19 0 8 0;
+#X connect 22 0 30 0;
+#X connect 23 0 29 0;
+#X connect 27 0 18 0;
+#X connect 28 0 2 0;
+#X connect 29 0 23 0;
+#X connect 30 0 22 0;
+#X connect 32 0 33 0;
+#X connect 33 0 32 0;
+#X connect 34 0 36 0;
+#X connect 36 0 34 0;

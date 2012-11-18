@@ -1,0 +1,76 @@
+#N canvas 0 0 447 577 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header All_About_Pd 20
+10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 552 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION table of contents;
+#X restore 392 554 pd META;
+#N canvas 10 462 428 105 Related_objects 0;
+#X text 31 37 Hm...what to put here?;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 All About Pd- Related Objects;
+#X restore 103 554 pd Related_objects;
+#X obj 6 554 pddp/pddplink all_about.pd -text All About Pd
+;
+#X obj 19 112 pddp/pddplink all_about_arrays.pd -text arrays;
+#X obj 19 127 pddp/pddplink all_about_ascii_art.pd -text ascii_art
+;
+#X obj 19 142 pddp/pddplink all_about_atom_conversion.pd -text atom_conversion
+;
+#X obj 19 157 pddp/pddplink all_about_atoms.pd -text atoms;
+#X obj 19 172 pddp/pddplink all_about_canvas_properties.pd -text canvas_properties
+;
+#X obj 19 187 pddp/pddplink all_about_data_types.pd -text data_types
+;
+#X obj 19 202 pddp/pddplink all_about_dollarsign_zero.pd -text dollarsign_zero
+;
+#X obj 19 217 pddp/pddplink all_about_expr_and_value.pd -text expr_and_value
+;
+#X obj 19 232 pddp/pddplink all_about_expr_functions.pd -text expr_functions
+;
+#X obj 19 247 pddp/pddplink all_about_expr_if.pd -text expr_if;
+#X obj 19 262 pddp/pddplink all_about_expr_multiline.pd -text expr_multiline
+;
+#X obj 19 277 pddp/pddplink all_about_haptics.pd -text haptics;
+#X obj 19 292 pddp/pddplink all_about_help_patches.pd -text help_patches
+;
+#X obj 19 307 pddp/pddplink all_about_hid.pd -text hid;
+#X obj 19 322 pddp/pddplink all_about_libraries.pd -text libraries
+;
+#X obj 19 337 pddp/pddplink all_about_lists_vs_anythings.pd -text lists_vs_anythings
+;
+#X obj 19 352 pddp/pddplink all_about_looping.pd -text looping;
+#X obj 19 367 pddp/pddplink all_about_message_conversion.pd -text message_conversion
+;
+#X obj 19 382 pddp/pddplink all_about_messages.pd -text messages;
+#X obj 19 397 pddp/pddplink all_about_midi_flags.pd -text midi_flags
+;
+#X obj 19 427 pddp/pddplink all_about_pd_META.pd -text pd_META;
+#X obj 19 442 pddp/pddplink all_about_scope_and_locality.pd -text scope_and_locality
+;
+#X obj 19 457 pddp/pddplink all_about_send_n_receive.pd -text send_n_receive
+;
+#X obj 19 472 pddp/pddplink all_about_submitting_bugs.pd -text submitting_bugs
+;
+#X obj 19 487 pddp/pddplink all_about_symbol_construction.pd -text
+symbol_construction;
+#X obj 19 502 pddp/pddplink all_about_writing_help_patches.pd -text
+writing_help_patches;
+#X obj 19 517 pddp/pddplink all_about_z_order.pd -text z_order;
+#X obj 19 97 pddp/pddplink all_about_acoustic_conversions.pd -text
+acoustic_conversions;
+#X obj 19 412 pddp/pddplink all_about.pd -text pd;
+#X text 19 77 Table of Contents;
+#X text 19 77 _________________;
+#X text 19 37 "All_About_Pd" is a series of patches to provide a resource
+for concepts and techniques in the Pure Data language.;

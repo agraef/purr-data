@@ -1,0 +1,12 @@
+#N canvas 50 61 240 179 10;
+#X obj 41 39 inlet;
+#X obj 186 36 inlet;
+#X obj 41 124 outlet;
+#X msg 186 76 set;
+#X obj 41 59 list prepend set;
+#X obj 41 83 list trim;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 2 0;

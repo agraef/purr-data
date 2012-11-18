@@ -1,0 +1,8 @@
+#N canvas 0 0 450 300 10;
+#X obj 39 14 inlet;
+#X obj 36 76 bus lumiere4;
+#X obj 71 110 bus lumiere5;
+#X obj 39 41 / 1.27;
+#X connect 0 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 0 2 0;

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/3746/trunk/patches
+END
+list-permute.pd
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3737/trunk/patches/list-permute.pd
+END
+dolbyprologic_encode.pd
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/ext/!svn/ver/3746/trunk/patches/dolbyprologic_encode.pd
+END

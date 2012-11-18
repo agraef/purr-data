@@ -1,0 +1,72 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header mtof 3 12 0 18 -204280
+-1 0;
+#X obj 0 429 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 246 495 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for pd version 0.40. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control conversion MIDI;
+#X text 12 45 DESCRIPTION MIDI to frequency conversion;
+#X text 12 65 INLET_0 float;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 527 cnv 3 550 3 empty \$0-pddp.cnv.argument argument 8 12
+0 13 -228856 -1 0;
+#X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 438 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 530 (none);
+#N canvas 107 405 428 182 Related_objects 0;
+#X text 21 38 Control objects for conversion:;
+#X obj 24 67 ftom;
+#X obj 71 67 dbtorms;
+#X obj 139 67 rmstodb;
+#X obj 208 67 dbtopow;
+#X obj 274 67 powtodb;
+#X obj 24 126 mtof~;
+#X obj 69 126 ftom~;
+#X obj 112 126 dbtorms~;
+#X obj 177 126 rmstodb~;
+#X obj 243 126 dbtopow~;
+#X obj 305 126 powtodb~;
+#X text 21 103 Signal objects for conversion:;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [mtof] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X floatatom 239 196 0 0 0 0 - - -;
+#X floatatom 239 140 0 0 0 0 - - -;
+#X obj 78 500 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/mtof -text
+pdpedia: mtof;
+#X obj 489 3 mtof;
+#X text 99 235 The mtof object transposes a midi value into a frequency
+in Hertz \, so that "69" goes to "440". You can specify microtonal
+pitches as in "69.5" (a quarter tone higher than 69).;
+#X obj 239 169 mtof;
+#X text 98 437 float;
+#X text 98 457 list;
+#X text 98 500 float;
+#X text 11 23 MIDI to frequency conversion;
+#X text 158 457 - lists will be truncated \, and the first element
+used as input.;
+#X text 158 437 - the incoming value.;
+#X obj 98 557 pddp/pddplink all_about_acoustic_conversions.pd;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 572 pddp/pddplink ../3.audio.examples/A06.frequency.pd -text
+doc/3.audio.examples/A06.frequency.pd;
+#X connect 11 0 16 0;
+#X connect 16 0 10 0;

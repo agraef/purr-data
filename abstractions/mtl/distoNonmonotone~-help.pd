@@ -1,0 +1,65 @@
+#N canvas 112 194 902 377 10;
+#X obj 564 12 cnv 15 320 90 empty empty empty 20 12 0 14 -261682 -66577
+0;
+#X text 567 36 le 16 septembre 2009;
+#X text 566 71 Copyright © 2009 par Mathieu Bouchard;
+#X text 567 59 Fabriqué à Villeray \, avec amour;
+#X text 567 24 Tel que presenté au club PureData de Montréal;
+#X text 567 13 Patch de distorsion nonmonotone qui suit l'enveloppe
+;
+#X text 566 86 Publié sous licence Standard Improved BSD;
+#X obj 31 121 mtl/out~;
+#X text 26 -2 Description: distortion nonmonotone;
+#X text 28 14 tags: fx~;
+#X obj 321 13 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 381 14 PARAM ENABLED;
+#X text 232 95 <-Click on the propeties menu to display params;
+#X obj 31 96 mtl/distoNonmonotone~ /id matju;
+#X obj 331 139 cnv 15 200 20 empty empty /matju/ 2 12 0 8 -258401 -262144
+0;
+#X obj 331 162 nbx 5 14 -1e+37 1e+37 0 0 /matju/freq1 /matju/freq1_
+freq1 50 8 0 8 -262144 -1 -1 6 256;
+#X obj 331 180 nbx 5 14 -1e+37 1e+37 0 0 /matju/amp1 /matju/amp1_ amp1
+50 8 0 8 -262144 -1 -1 4 256;
+#X obj 331 198 nbx 5 14 -1e+37 1e+37 0 0 /matju/base1 /matju/base1_
+base1 50 8 0 8 -262144 -1 -1 11 256;
+#X obj 331 216 nbx 5 14 -1e+37 1e+37 0 0 /matju/freq2 /matju/freq2_
+freq2 50 8 0 8 -262144 -1 -1 1 256;
+#X obj 331 234 nbx 5 14 -1e+37 1e+37 0 0 /matju/amp2 /matju/amp2_ amp2
+50 8 0 8 -262144 -1 -1 1 256;
+#X obj 331 252 nbx 5 14 -1e+37 1e+37 0 0 /matju/base2 /matju/base2_
+base2 50 8 0 8 -262144 -1 -1 3 256;
+#X obj 331 270 nbx 5 14 -1e+37 1e+37 0 0 /matju/freqfeed /matju/freqfeed_
+freqfeed 50 8 0 8 -262144 -1 -1 1 256;
+#X obj 331 288 nbx 5 14 -1e+37 1e+37 0 0 /matju/ampfeed /matju/ampfeed_
+ampfeed 50 8 0 8 -262144 -1 -1 4 256;
+#X obj 331 306 nbx 5 14 -1e+37 1e+37 0 0 /matju/basefeed /matju/basefeed_
+basefeed 50 8 0 8 -262144 -1 -1 4 256;
+#X obj 331 324 hsl 100 15 0 1 0 0 /matju/feedback /matju/feedback_
+feedback 105 7 0 8 -262144 -1 -1 3300 1;
+#X obj 331 342 hsl 100 15 0 1 0 0 /matju/wet /matju/wet_ wet 105 7
+0 8 -262144 -1 -1 9900 1;
+#X obj 32 41 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 372 266 582 409 loop_sample 0;
+#X obj 47 313 outlet~;
+#X obj 43 9 inlet;
+#X obj 193 319 outlet~;
+#X obj 47 200 mtl/player~ 1;
+#X obj 56 104 openpanel;
+#X obj 56 70 b;
+#X msg 59 143 open \$1 \, bang;
+#X connect 1 0 5 0;
+#X connect 3 0 0 0;
+#X connect 3 1 2 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 3 0;
+#X restore 32 66 pd loop_sample;
+#X obj 320 36 ../doc/5.reference/tof/param-help;
+#X connect 13 0 7 0;
+#X connect 13 1 7 1;
+#X connect 26 0 27 0;
+#X connect 27 0 13 0;
+#X connect 27 1 13 1;

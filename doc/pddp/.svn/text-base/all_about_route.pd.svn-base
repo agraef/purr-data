@@ -1,0 +1,289 @@
+#N canvas 190 100 1023 661 10;
+#X obj 82 273 route 23 54 1;
+#X msg 170 239 54 43;
+#X msg 212 239 1 foo bar;
+#X obj 141 418 route big apple;
+#X msg 351 376 1 2 3;
+#X msg 248 376 big apple pie;
+#X msg 320 238 walk the dog;
+#X text 8 217 numeric arguments:;
+#X text 16 356 symbolic arguments:;
+#X msg 590 287 bang;
+#X msg 621 380 list;
+#X msg 622 413 list 5;
+#X msg 593 307 symbol pie;
+#X msg 596 327 pie;
+#X msg 584 248 1 2 3;
+#X obj 26 13 route;
+#X text 67 13 - route messages according to their first element;
+#X text 25 108 If a match is found \, and the message contains only
+ONE element \, then a bang is sent out the corresponding outlet. If
+a match if found \, and the message contains multiple elements (a list)
+\, then all the list elements except the first element is sent out
+the corresponding outlet. If no match is found \, then the entire message
+is sent out the right-most outlet - the "rejection" outlet. The number
+of outlets is the number of arguments plus one.;
+#X msg 18 239 23 345 456;
+#X msg 96 239 420 34 45;
+#X msg 32 376 apple pie;
+#X msg 105 376 impeach ringo starr;
+#X text 34 490 In this case \, the data type 'symbol' is implied by
+the creation arguments and therefore this [route] object will match
+symbols only. Symbolic messages that do not match any of the arguments
+\, and all numbers \, will be output through the right-most outlet.
+;
+#X text 565 21 If necessary \, messages of different data types can
+be matched by the [route] object if the data type is explictly defined
+in the creation arguments.;
+#X text 564 71 In the example below \, instead of matching the 'value'
+of a message \, the [route] object will match 'data type': i.e. lists
+will be sent through the first outlet \, floats will be sent through
+the second outlet \, symbols through the third outlet \, bangs through
+the fourth outlet. The fifth outlet will then output anything that
+does not match one of the previously defined data types (i.e. the "pie"
+message below is a text message that hasn't been defined as a 'symbol'
+- hence \, Pd cannot determine which data type it is and it will be
+output through the right-most outlet).;
+#X text 608 208 a float;
+#X text 632 247 a list (of floats);
+#X text 627 287 a bang;
+#X text 672 307 a symbol;
+#X text 630 328 none of the above!;
+#X text 702 268 a list of symbols;
+#X text 599 349 SPECIAL CASES OF LISTS.;
+#X text 17 583 RELATED OBJECTS;
+#X obj 21 604 select;
+#X obj 68 604 trigger;
+#X obj 122 604 moses;
+#X text 26 36 Route checks the first element of a message against each
+of its creation arguments \, which may be numbers or symbols (but not
+a mixture of the two unless the data types are defined explicitly)
+\, then sends the messages through the appropriate outlets.;
+#N canvas 0 22 466 316 related_objects_from_other_libraries 0;
+#X obj 26 33 segregate;
+#X obj 104 34 multiselect;
+#X text 18 86 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 17 135 The best places to find information about Pd's libraries
+is:;
+#X text 14 157 www.pure-data.org and click on "Downloads" then "Software"
+;
+#X text 15 173 or;
+#X text 16 187 iem.kug.ac.at/pdb/;
+#X obj 193 34 demux;
+#X obj 245 34 gate;
+#X restore 21 627 pd related_objects_from_other_libraries;
+#X floatatom 625 498 5 0 0 0 - - -;
+#X symbolatom 673 497 10 0 0 0 - - -;
+#X obj 578 518 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144
+-1 -1;
+#X msg 622 450 list not-a-list;
+#X msg 578 208 89;
+#X msg 581 228 float 7;
+#X obj 578 474 route bang float symbol list;
+#X obj 625 518 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 673 518 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 721 518 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 769 518 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
+-1 -1;
+#X msg 587 268 list moon earth;
+#X text 636 228 definitely a float!;
+#X text 620 366 An empty list is translated into a bang;
+#X text 620 399 A list with only one float is translated to a float
+;
+#X text 620 435 A list with only one symbol is translated to a symbol
+;
+#X obj 141 439 bng 15 250 50 0 empty empty big -4 23 1 12 -262144 -1
+-1;
+#X obj 189 439 bng 15 250 50 0 empty empty apple -7 23 1 12 -262144
+-1 -1;
+#X obj 237 439 bng 15 250 50 0 empty empty everything_else -2 23 1
+12 -262144 -1 -1;
+#X obj 129 469 print x1;
+#X obj 189 469 print x2;
+#X obj 249 469 print x3;
+#X text 565 555 [trigger]-style shortcuts don't work:;
+#X text 678 574 !=;
+#X obj 579 575 route b f s l;
+#X obj 700 575 route bang float symbol list;
+#X obj 7 331 print x23;
+#X obj 75 331 print x54;
+#X obj 143 331 print x1;
+#X obj 204 331 print other;
+#X obj 82 293 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 109 293 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 137 293 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 161 293 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 176 265 In this case \, the creation arguments are all numbers
+and [route] will therefore assume that it should attempt to match messages
+that are data type "float". All messages that are not numbers will
+be output through the right-most outlet.;
+#N canvas 0 22 466 633 routing_data_types 0;
+#X obj 334 314 route symbol;
+#X obj 336 334 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 413 335 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 331 361 route symbol;
+#X obj 333 381 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 410 382 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 318 269 test;
+#X msg 357 269 symbol test;
+#X obj 58 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 135 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 55 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 132 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 89 266 bang;
+#X obj 56 311 route bang;
+#X obj 53 358 route bang;
+#X text 14 5 routing based on reserved words:;
+#X obj 188 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 265 331 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 185 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 262 378 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 186 311 route float;
+#X obj 183 358 route float;
+#X msg 170 266 1;
+#X msg 209 266 float 12;
+#X obj 181 542 route list;
+#X obj 181 561 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 249 562 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 168 580 route list;
+#X obj 168 599 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 236 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 184 493 list 1 two 3;
+#X msg 167 473 1 two 3;
+#X msg 200 513 list one 2 three;
+#X msg 365 289 symbol;
+#X msg 113 484 list;
+#X msg 224 287 float test;
+#X text 26 245 These all output the as same atom type that is routed:
+;
+#X msg 15 266 bang test;
+#X obj 71 131 route 1;
+#X msg 71 183 2 3 4;
+#X obj 71 164 prepend set;
+#X msg 71 100 1 2 3 4;
+#X msg 218 183 is not a list;
+#X obj 218 164 prepend set;
+#X obj 218 131 route this;
+#X msg 218 100 this is not a list;
+#X text 21 50 [route] has three modes \, first is float \, second is
+symbol \, and third is data type. In the first two modes \, the first
+element of the set is stripped off by [route].;
+#X text 26 206 In the third mode \, [route] outputs the same atom type
+(bang->bang \, float->float \, symbol->symbol).;
+#X text 26 419 Lists do not behave the same with [route list] even
+though it is interpreting incoming lists \, not just routing by keyword
+\, as in the second symbol mode.;
+#X msg 174 164 set;
+#X text 157 164 re;
+#X text 164 24 "bang" \, "float" \, "symbol" \, and "list";
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 0 1 2 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 12 0 13 0;
+#X connect 13 0 8 0;
+#X connect 13 0 14 0;
+#X connect 13 1 9 0;
+#X connect 14 0 10 0;
+#X connect 14 1 11 0;
+#X connect 20 0 16 0;
+#X connect 20 0 21 0;
+#X connect 20 1 17 0;
+#X connect 21 0 18 0;
+#X connect 21 1 19 0;
+#X connect 22 0 20 0;
+#X connect 23 0 20 0;
+#X connect 24 0 25 0;
+#X connect 24 0 27 0;
+#X connect 24 1 26 0;
+#X connect 27 0 28 0;
+#X connect 27 1 29 0;
+#X connect 30 0 24 0;
+#X connect 31 0 24 0;
+#X connect 32 0 24 0;
+#X connect 33 0 0 0;
+#X connect 34 0 24 0;
+#X connect 35 0 20 0;
+#X connect 37 0 13 0;
+#X connect 38 0 40 0;
+#X connect 40 0 39 0;
+#X connect 41 0 38 0;
+#X connect 43 0 42 0;
+#X connect 44 0 43 0;
+#X connect 45 0 44 0;
+#X connect 49 0 42 0;
+#X connect 49 0 39 0;
+#X restore 838 496 pd routing_data_types;
+#X text 580 601 This document was updated for Pd version 0.38.4 by
+Dave Sabine and Hans-Christoph Steiner as part of a project called
+pddp proposed by Krzysztof Czaja to build comprehensive documentation
+for Pd.;
+#X text 832 475 More info:;
+#X connect 0 0 64 0;
+#X connect 0 0 68 0;
+#X connect 0 1 65 0;
+#X connect 0 1 69 0;
+#X connect 0 2 66 0;
+#X connect 0 2 70 0;
+#X connect 0 3 67 0;
+#X connect 0 3 71 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 54 0;
+#X connect 3 0 57 0;
+#X connect 3 1 55 0;
+#X connect 3 1 58 0;
+#X connect 3 2 56 0;
+#X connect 3 2 59 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 0;
+#X connect 6 0 0 0;
+#X connect 9 0 44 0;
+#X connect 10 0 44 0;
+#X connect 11 0 44 0;
+#X connect 12 0 44 0;
+#X connect 13 0 44 0;
+#X connect 14 0 44 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 3 0;
+#X connect 21 0 3 0;
+#X connect 38 0 45 0;
+#X connect 39 0 46 0;
+#X connect 41 0 44 0;
+#X connect 42 0 44 0;
+#X connect 43 0 44 0;
+#X connect 44 0 40 0;
+#X connect 44 1 38 0;
+#X connect 44 2 39 0;
+#X connect 44 3 47 0;
+#X connect 44 4 48 0;
+#X connect 49 0 44 0;

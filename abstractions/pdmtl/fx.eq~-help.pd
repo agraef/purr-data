@@ -1,0 +1,13 @@
+#N canvas 487 400 360 221 10;
+#X obj 22 90 fx.eq~ @id eq;
+#X text 156 65 Build dynamic gui;
+#X obj 157 101 param.gui;
+#X msg 157 79 eq;
+#X text 20 23 Description: equalizer using hml_shelf;
+#X obj 21 123 mix.out_~;
+#X obj 22 55 noise~;
+#X connect 0 0 5 0;
+#X connect 0 1 5 1;
+#X connect 3 0 2 0;
+#X connect 6 0 0 0;
+#X connect 6 0 0 1;

@@ -1,0 +1,55 @@
+# to compile ann fann libs are needed
+# go to http://fann.sourceforge.net/
+# current is http://prdownloads.sourceforge.net/fann/fann-1.2.0.zip?download
+# go to MSVC++ folder and open all.dsw
+# compile everything
+
+# customize here !
+VC="C:\Programmi\Microsoft Visual Studio .NET\Vc7" 
+PDPATH="H:\PureData\pd-0.38-3.msw\pd"
+FANNSRC="H:\PureData\FANN\fann-1.2.0\fann-1.2.0\src\include"
+FANNLIB="H:\PureData\FANN\fann-1.2.0\fann-1.2.0\MSVC++\Release"
+
+
+current: clean pd_nt distclean
+
+pd_nt: ann_som.dll ann_mlp.dll ann_td.dll ann.dll
+#pd_nt: ann.dll
+
+
+.SUFFIXES: .dll
+
+PDNTCFLAGS = /W3 /WX /O2 /G6 /DNT /DPD /nologo
+
+
+PDNTINCLUDE = /I. /I$(PDPATH)\tcl\include /I$(PDPATH)\src /I$(VC)\include /I$(FANNSRC) /Iinclude
+
+PDNTLDIR = $(VC)\Lib
+PDNTLIB = $(PDNTLDIR)\libc.lib \
+	$(PDNTLDIR)\oldnames.lib \
+	$(PDNTLDIR)\kernel32.lib \
+	$(PDPATH)\bin\pd.lib \
+	$(FANNLIB)\libfann.lib 
+#	ann_mlp.lib ann_som.lib ann_td.lib
+
+.c.dll:
+	cl $(PDNTCFLAGS) $(PDNTINCLUDE) /c $*.c
+	link /dll /export:$*_setup $*.obj $(PDNTLIB) *.obj
+#	-del *.obj
+#	-del *.lib
+#	-del *.exp
+
+#install:
+#	copy help-*.pd $(PDPATH)/doc/5.reference/
+
+clean:
+	-del link.stamp
+	-del *.obj
+	-del *.lib
+	-del *.exp
+	-del *.dll
+
+distclean:
+	-del *.obj
+	-del *.lib
+	-del *.exp

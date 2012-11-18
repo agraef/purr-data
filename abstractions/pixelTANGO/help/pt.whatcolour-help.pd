@@ -1,0 +1,25 @@
+#N canvas 422 71 656 256 10;
+#X obj 174 77 cnv 15 460 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 214 cnv 15 640 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 306 216 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 640 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 39 Creation Arguments: None;
+#X obj 184 96 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 187 96 *Notes:;
+#X text 12 6 pixelTANGO HELP - pt.whatcolour - What colour is pt.fader?
+;
+#X text 12 23 Type: layer. Only reports the colour of the fader above
+it.;
+#X obj 24 155 pt.whatcolour;
+#X obj 24 76 pt.fader;
+#X text 177 77 whatcolour:;
+#X text 197 117 Shows you what colour the pt.fader module above it
+is set to. Useful for choosing colours before an object becomes visible.
+;
+#X connect 10 0 9 0;
+#X connect 10 2 9 1;

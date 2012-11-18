@@ -1,0 +1,50 @@
+#N canvas 108 195 818 494 10;
+#X obj 77 353 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 8 113 trigger;
+#X obj 8 91 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1 -1
+;
+#X msg 157 290 click \$1;
+#X msg 161 137 gain \$1;
+#X msg 158 215 decay \$1;
+#X text 33 92 <- play it;
+#X text 375 435 Author: Roman Haefeli;
+#X text 95 351 <- can be used to switch~ dsp off;
+#X obj 365 90 cnv 15 430 180 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X text 376 100 SYNOPSIS;
+#X text 375 160 outlet0: signal;
+#X text 375 176 outlet1: float (0/1) \, switch~ outlet;
+#X text 374 208 arg1: gain (0-127) / default = 100;
+#X text 373 226 arg2: decay (0-127) / default = 50;
+#X text 373 244 arg3: click (0-127) / default = 50;
+#X text 376 129 inlet0: accepts methods 'trigger' \, 'bang' \, 'gain'
+\, 'decay' and 'click';
+#X text 375 456 Version: 2008-03-05;
+#X obj 160 113 cnv 15 40 15 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X floatatom 161 113 5 0 0 0 - transpo-set -;
+#X obj 158 192 cnv 15 40 15 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X floatatom 158 192 5 0 0 0 - transpo-set -;
+#X obj 156 266 cnv 15 40 15 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X floatatom 157 266 5 0 0 0 - transpo-set -;
+#X text 7 33 Description: an emulation of the kickdrum from the fancy
+tr808 beatmachine;
+#X obj 3 1 cnv 15 800 30 empty empty synth.drum.808.kick~ 2 12 1 14
+-233017 -66577 0;
+#X obj 8 329 mtl/kick808~;
+#X obj 7 417 mtl/out~;
+#X text 8 60 tags: synthesize~;
+#X connect 1 0 26 0;
+#X connect 2 0 1 0;
+#X connect 3 0 26 0;
+#X connect 4 0 26 0;
+#X connect 5 0 26 0;
+#X connect 19 0 4 0;
+#X connect 21 0 5 0;
+#X connect 23 0 3 0;
+#X connect 26 0 27 0;
+#X connect 26 0 27 1;
+#X connect 26 1 0 0;

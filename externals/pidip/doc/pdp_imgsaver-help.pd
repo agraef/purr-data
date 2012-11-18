@@ -1,0 +1,54 @@
+#N canvas 518 15 712 664 10;
+#X obj 375 116 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 221 148 loop \$1;
+#X obj 222 126 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 249 95 open \$1;
+#X obj 248 71 openpanel;
+#X obj 249 45 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 338 114 stop;
+#X obj 355 147 metro 70;
+#X obj 488 158 pdp_v4l;
+#X obj 497 127 metro 70;
+#X obj 542 93 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 499 94 stop;
+#X msg 584 125 open /dev/video;
+#X obj 350 179 pdp_yqt;
+#X obj 469 381 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 469 433 pdp_control;
+#X msg 469 406 thread \$1;
+#X floatatom 469 494 5 0 0 0 - - -;
+#X obj 469 465 route pdp_drop;
+#X text 77 511 written by Yves Degoyon ( ydegoyon@free.fr );
+#X obj 198 397 pdp_glx;
+#X text 28 228 Save a snapshot of the current frame;
+#X text 78 482 pdp_imgsaver : save a snapshot as an image;
+#X msg 48 300 save /tmp/capture.jpg;
+#X text 27 241 save <name>;
+#X text 77 497 The image type is determined by extension;
+#X obj 198 354 pdp_imgsaver;
+#X text 28 255 With my imlib2 \, only jpg works !!;
+#X connect 0 0 7 0;
+#X connect 1 0 13 0;
+#X connect 2 0 1 0;
+#X connect 3 0 13 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 13 0;
+#X connect 8 0 26 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 8 0;
+#X connect 13 0 26 0;
+#X connect 14 0 16 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;
+#X connect 18 0 17 0;
+#X connect 23 0 26 0;
+#X connect 26 0 20 0;

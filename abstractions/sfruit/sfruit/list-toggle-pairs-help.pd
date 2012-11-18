@@ -1,0 +1,35 @@
+#N canvas 531 385 435 422 10;
+#X msg 126 141 10 0;
+#X msg 126 121 10 1;
+#X msg 166 121 20 1;
+#X msg 166 141 20 0;
+#X msg 206 121 30 1;
+#X msg 206 141 30 0;
+#X obj 133 175 t a;
+#X obj 169 349 bag;
+#X text 45 348 somewhat similar to;
+#X text 310 392 2009 Luke Iannini;
+#X text 36 294 I use this to learn which keys are currently being held
+down on a controller - holding down buttons 60 \, 62 and 68 outputs
+the list 60 62 68;
+#X text 45 368 but only outputs unique items and can take symbols or
+floats;
+#X msg 246 121 a 1;
+#X msg 246 141 a 0;
+#X obj 133 233 print active-items;
+#X obj 133 202 list-toggle-pairs;
+#X text 7 15 [list-toggle-pairs] - an object for turning a stream of
+flagged items into a list. If a float or symbol is followed by a 1
+\, it is added to the list \, and if followed by a 0 \, it is removed.
+Each item will only exist once in the list \, even if sent with a "1"
+flag multiple times.;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 15 0;
+#X connect 12 0 6 0;
+#X connect 13 0 6 0;
+#X connect 15 0 14 0;

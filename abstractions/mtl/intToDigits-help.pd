@@ -1,0 +1,14 @@
+#N canvas 473 159 370 244 10;
+#X msg 78 95 123;
+#X obj 78 188 print digit_list;
+#X floatatom 165 167 5 0 0 1 number_of_digits - -;
+#X msg 85 117 563427;
+#X text 131 117 <- decimals are ignored;
+#X text 16 12 Description: Converts a number to a list of digits. Decimals
+are ignored.;
+#X obj 78 143 mtl/intToDigits;
+#X text 16 47 tags: conversion;
+#X connect 0 0 6 0;
+#X connect 3 0 6 0;
+#X connect 6 0 1 0;
+#X connect 6 1 2 0;

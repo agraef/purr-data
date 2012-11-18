@@ -1,0 +1,11 @@
+#N canvas 0 0 508 403 10;
+#X obj 222 117 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 104 12 Description: Holds a signal to a fixed value.;
+#X obj 142 162 flow.hold~;
+#X obj 156 229 anal.scope_~ 1;
+#X msg 296 89 \; pd dsp 1;
+#X obj 136 90 osc~ 0.5;
+#X connect 0 0 2 1;
+#X connect 2 0 3 0;
+#X connect 5 0 2 0;

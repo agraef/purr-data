@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/ext/!svn/ver/1777/trunk/osc/oscpack
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1777/trunk/osc/oscpack/LICENSE
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/1777/trunk/osc/oscpack/TODO
+END
+CHANGES
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/1777/trunk/osc/oscpack/CHANGES
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/1777/trunk/osc/oscpack/README
+END

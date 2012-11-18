@@ -1,0 +1,90 @@
++: Added
+-: Done
+
+------------------------------------------------------
+PROBLEMS - QUESTIONS - FEATURES
+- clk-quantization-help.pd ? Yep. It is used in clk*
+- param-enabled-help.pd should be where? Where it is.
+- gems-fft~ : readsf~ fonctionne pas - Aha! Tu as sauvegardé le fichier avec lorsque tu avais la mauvaise version de tof/increment!
+- gems-sobel_filter fonctionne pas au complet (le video n'est pas affecte pas les differents settings) - La vidéo est changée, je ne comprend pas le problème que tu soulignes
+- gemsPolygon 1148-dynamicpatch 0 30 3 31 (route->polygon) connection failed - Aucune erreure ici non plus?
+- browser hightlight tags - slider remonte pas
+- remove all libs and path from auto-build and check if all mtl are loading correctly
+- Add param to tracker4
+- Fix tabread with tabread4~'s second inlet? (bah, I do not think it is so important)
+- make a list concatenator
+- Option in browser to browse with love or without
+- rename soundfileIndexer to sfIndexer
+- Class/Abstraction should be sorted alphabetically (by class name, not by folder name)
+- param /nopresets?
+- Change all "pdmtl" in help files to "mtl"
+- gem /antialising: nbx
+- flow.inbetweens no more? (What is it for?)
+- 3dPantilt - demo need to be fixed (grid, light)
+- arpeggio - demo need to be fixed
+- I do not think "drone" is really descriptive of the drone.* 
+- crank~ drone* (mix.pan~)
+- conversion - smpToBpm.pd
+
+------------------------------------------------------
+CATEGORIES TO PORT
+
+- 2d
+- 3d
+- ambi
+- anal
+- convert
+- count
+- data
+- debug
+- dyn: something like this already exists. See mtl/instrument~
+- file
+- flow
+- fx
+- gems
+- gui
+- hardware: not supported anymore (so the abs of olivier will not be included? korg, lanbox)
+- init
+- input
+- list
+- lua: can not add since lua is not part of pd-extended
+- midi
+- mix
+- musical
+- net
+- number
+- param
+- random
+- sample
+- sampler
+- scale
+- script: see lua above
+- seq
+- synth
+- table
+- timing
+
+
+------------------------------------------------------
+INTERESTING STUFF IN PD-EXTENDED
+
+will readanysf~ be included in the next release of pdextended?
+bsaylor/susloop~
+bsaylor/zhzxh~
+cxc/delta~
+moonlib/readsfv~
+moonlib/sfread2~
+
+------------------------------------------------------
+INTERESTING STUFF IN PD DOC
+
+3.audio.examples/
+B15
+H15.phaser
+H16.adsr.filter
+I03.resynthesis
+I05.compressor
+I06.timbre stamp
+I08.pvoc.reverb
+J08.classic.synth
+

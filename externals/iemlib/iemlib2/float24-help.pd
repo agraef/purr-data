@@ -1,0 +1,77 @@
+#N canvas 53 141 918 394 10;
+#X obj 91 95 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 11 6 float24;
+#X floatatom 150 259 9 0 0 0 - - -;
+#X obj 91 117 float24 0.999999 762;
+#X obj 103 191 -;
+#X obj 91 145 t b f;
+#X obj 91 167 1;
+#X obj 227 116 float 1;
+#X obj 227 96 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 239 186 -;
+#X obj 227 140 t b f;
+#X obj 227 162 1;
+#X text 277 112 then save and close the patch;
+#X text 277 123 then open the pach \, and click on both bangs;
+#X text 277 88 try to type the argument "0.999 999 762" without the
+spaces;
+#X text 278 100 into a float-object \,;
+#X text 79 7 concatenate a list of float-fragment-strings to a 23 bit
+accurate mantissa (usefull to save a number into an object with more
+then 6 decimals [7 .. 8 decimals]);
+#X obj 697 123 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 697 167 9 0 0 0 - - -;
+#X obj 697 144 float24 -12.3 4 56;
+#X obj 698 194 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 698 238 11 0 0 0 - - -;
+#X obj 698 264 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 698 330 11 0 0 0 - - -;
+#X obj 698 215 float24 0.00314159 26538;
+#X obj 698 285 float24 3.14159 26538;
+#X obj 698 308 cos;
+#X obj 694 16 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 694 82 11 0 0 0 - - -;
+#X obj 694 60 cos;
+#X obj 694 37 float 1.5708;
+#X obj 779 18 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 779 84 11 0 0 0 - - -;
+#X obj 779 62 cos;
+#X obj 779 39 float24 1.5707 963268;
+#X text 398 227 IEM KUG;
+#X text 382 215 musil;
+#X text 412 215 @;
+#X text 418 215 iem.at;
+#X text 333 204 (c) Thomas Musil 2000 - 2005;
+#X text 381 237 Graz \, Austria;
+#X connect 0 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 5 1 4 1;
+#X connect 6 0 4 0;
+#X connect 7 0 10 0;
+#X connect 8 0 7 0;
+#X connect 9 0 2 0;
+#X connect 10 0 11 0;
+#X connect 10 1 9 1;
+#X connect 11 0 9 0;
+#X connect 17 0 19 0;
+#X connect 19 0 18 0;
+#X connect 20 0 24 0;
+#X connect 22 0 25 0;
+#X connect 24 0 21 0;
+#X connect 25 0 26 0;
+#X connect 26 0 23 0;
+#X connect 27 0 30 0;
+#X connect 29 0 28 0;
+#X connect 30 0 29 0;
+#X connect 31 0 34 0;
+#X connect 33 0 32 0;
+#X connect 34 0 33 0;

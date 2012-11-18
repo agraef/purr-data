@@ -1,0 +1,48 @@
+#N canvas 1086 90 856 570 10;
+#X declare -lib Gem;
+#X declare -lib Gem;
+#X obj 88 165 pix_image;
+#X obj 88 423 pix_texture;
+#X obj 26 87 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 88 446 square;
+#X obj 26 108 mtl/gemsWin;
+#X obj 194 110 openpanel;
+#X msg 194 135 open \$1;
+#X obj 194 89 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 21 39 tags: gems;
+#X obj 405 15 import Gem;
+#X text 404 263 or;
+#X text 277 229 or;
+#X obj 88 136 gemhead;
+#X msg 236 230 ratio;
+#X msg 372 263 size;
+#X obj 88 373 mtl/gemsScaleToPix ratio;
+#X msg 296 229 1;
+#X text 323 226 (default);
+#X msg 423 261 2;
+#X msg 192 197 0;
+#X text 174 192 or;
+#X msg 146 195 none;
+#X text 21 10 Description: Scales to the width and height of a pix
+texture.;
+#X text 256 371 Argument 1: Selects the mode;
+#X text 452 258 reproduce the image \, pixel by pixel in the gem win.
+;
+#X text 382 225 scales so that the pixel ratio is kept.;
+#X text 225 194 does no scaling;
+#X connect 0 0 15 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 5 0;
+#X connect 12 0 0 0;
+#X connect 13 0 15 1;
+#X connect 14 0 15 1;
+#X connect 15 0 1 0;
+#X connect 16 0 15 1;
+#X connect 18 0 15 1;
+#X connect 19 0 15 1;
+#X connect 21 0 15 1;

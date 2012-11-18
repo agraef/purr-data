@@ -1,0 +1,37 @@
+#N canvas 306 515 565 369 10;
+#X text 41 13 Description: Dumps the values of a param.group or
+multiple param.groups;
+#X obj 42 162 param.dump;
+#X msg 82 95 top;
+#X msg 80 122 global;
+#X obj 42 196 print;
+#X text 80 195 <- You can parse the output with [flow.@parse];
+#X msg 42 70 dpd1;
+#X msg 78 71 dpd2;
+#X floatatom 256 234 5 0 0 0 - - -;
+#X msg 256 253 param1 \$1;
+#X floatatom 255 300 5 0 0 0 - - -;
+#X msg 255 319 param1 \$1;
+#X text 114 64 Sending a group's id will only output that group's parameters
+;
+#X text 116 90 Sending top will output the parameters of all the groups
+that have the same "top" patch as param.dump;
+#X text 128 119 Sending global will output the parameters of ALL the
+groups;
+#X msg 8 162 ---;
+#X obj 256 278 medias/param.atom.template @id dpd1 @param1 127;
+#X obj 255 341 medias/param.atom.template @id dpd2;
+#X connect 1 0 4 0;
+#X connect 2 0 1 0;
+#X connect 2 0 15 0;
+#X connect 3 0 1 0;
+#X connect 3 0 15 0;
+#X connect 6 0 1 0;
+#X connect 6 0 15 0;
+#X connect 7 0 1 0;
+#X connect 7 0 15 0;
+#X connect 8 0 9 0;
+#X connect 9 0 16 0;
+#X connect 10 0 11 0;
+#X connect 11 0 17 0;
+#X connect 15 0 4 0;

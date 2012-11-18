@@ -1,0 +1,2 @@
+NAME=sms_power~
+SRCS=main.cpp

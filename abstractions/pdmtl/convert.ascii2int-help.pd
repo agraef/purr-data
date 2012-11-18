@@ -1,0 +1,30 @@
+#N canvas 160 68 713 477 10;
+#X floatatom 73 94 8 0 0 0 - - -;
+#X symbolatom 63 72 10 0 0 0 - - -;
+#X text 137 68 ... no special handling for symbols;
+#X text 136 46 anything can be converted to a list...;
+#X text 138 90 ... but "float" selector is silently dropped;
+#X msg 54 51 A B C;
+#X obj 53 224 print;
+#X msg 102 121 list A B C;
+#X obj 53 170 convert.ascii2int;
+#X text 51 5 Description: Converts ascii messages to a list of integers
+;
+#X text 55 285 Inlet 2: A list of values you want appended to all messages.
+;
+#X text 56 261 Arguments: A list of values you want appended to all
+messages.;
+#X obj 75 389 print;
+#X obj 76 354 convert.ascii2int 10 13;
+#X text 233 350 This will append a line feed (10) and a carriage return(13)
+to all messages;
+#X msg 88 320 78;
+#X msg 147 320 test;
+#X connect 0 0 8 0;
+#X connect 1 0 8 0;
+#X connect 5 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 13 0 12 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;

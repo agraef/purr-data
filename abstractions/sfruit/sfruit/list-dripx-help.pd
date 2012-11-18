@@ -1,0 +1,15 @@
+#N canvas 531 393 379 300 10;
+#X msg 76 68 a b c d e f g h i;
+#X obj 76 103 list-dripx 3;
+#X obj 76 172 print;
+#X msg 167 103 2;
+#X obj 145 150 bng 15 250 50 0 empty empty end 0 -6 0 8 -262144 -1
+-1;
+#X text 80 244 based on list-drip by Frank Barknecht;
+#X text 252 272 2008 Luke Iannini;
+#X text 4 13 list-dripx - output (n) elements of a list at a time.
+;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 4 0;
+#X connect 3 0 1 1;

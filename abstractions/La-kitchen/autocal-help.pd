@@ -1,0 +1,112 @@
+#N canvas 252 177 643 533 10;
+#X obj 18 133 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 10100 1;
+#X obj 18 309 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 3800 1;
+#X floatatom 53 321 5 0 0 0 - - -;
+#X floatatom 89 340 5 0 0 0 - - -;
+#X floatatom 89 202 5 0 0 0 - - -;
+#X floatatom 65 183 5 0 0 0 - - -;
+#X floatatom 124 360 5 0 0 0 - - -;
+#X floatatom 160 380 5 0 0 0 - - -;
+#X floatatom 136 241 5 0 0 0 - - -;
+#X floatatom 112 222 5 0 0 0 - - -;
+#X obj 41 154 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#N canvas 62 435 547 477 save 0;
+#X obj 67 222 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 9005 1;
+#X obj 67 35 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 6800 1;
+#X obj 87 150 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 99 231 set \$1;
+#X msg 99 253 29;
+#X msg 164 271 set \$1;
+#X obj 164 213 loadbang;
+#X text 128 42 This is just an exemple of saving the calibration on
+message box.;
+#X msg 164 293 84;
+#X obj 67 189 autocal 0 127 0 12;
+#X text 127 75 Calibration is then saved automaticaly with the patch
+;
+#X connect 1 0 9 0;
+#X connect 2 0 9 1;
+#X connect 3 0 4 0;
+#X connect 4 0 9 2;
+#X connect 5 0 8 0;
+#X connect 6 0 4 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 3;
+#X connect 9 0 0 0;
+#X connect 9 1 3 0;
+#X connect 9 2 5 0;
+#X restore 15 506 pd save calibration;
+#X text 59 155 learn;
+#X text 35 129 Data input;
+#X text 206 317 minimum of the input;
+#X text 206 338 maximum of the input;
+#X text 206 360 center of the input;
+#X text 43 424 calibrated output;
+#X text 191 178 manual change the input minimum;
+#X text 191 197 manual change the input maximum;
+#X text 206 379 variation amplitude;
+#X text 195 45 autocal is an abstraction dedicated to calibrated sensors
+value. (auto calibration);
+#X text 196 112 You can easilly save this calibration in pd patch \,
+or adjust the jitter etc...;
+#X text 193 79 The autocal abstraction is "listening" to input value
+while "learn" is 1 \, and scale this input to the specified range.
+;
+#X text 190 220 manual change the input center (jitter);
+#X text 191 239 manual change the input amplitude (change sensibility
+of the sensors);
+#X text 296 9 autocal;
+#N canvas 0 0 885 432 non-linear 0;
+#X obj 17 28 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 8200 1;
+#X obj 17 204 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 10205 1;
+#X floatatom 159 148 5 0 0 0 - - -;
+#X text 196 248 float is for the rest...;
+#X text 201 214 1 is for square;
+#X text 194 229 -1 is for square root;
+#X text 184 176 last parametter control the shape of the transfer fonction
+;
+#X text 200 199 O (default) is for linear;
+#X obj 17 172 autocal 0 127 0 127 1;
+#X connect 0 0 8 0;
+#X connect 2 0 8 6;
+#X connect 8 0 1 0;
+#X restore 15 487 pd non-linear;
+#X text 172 278 argument = output range (default = 0..1) \, input range
+(default = 0 1) \, curve (default = linear);
+#N canvas 0 0 525 500 clip 0;
+#X obj 50 28 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 2000 1;
+#X obj 50 207 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 2000 1;
+#X obj 104 72 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 104 94 clip \$1;
+#X text 133 72 clik output to limit value or not;
+#X obj 50 175 autocal 30 80 30 80;
+#X text 176 93 (default = 1);
+#X connect 0 0 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 5 0 1 0;
+#X restore 15 468 pd clip;
+#X text 325 498 cyrille.henry@la-kitchen.fr 04_2005;
+#X obj 18 277 autocal 10 80 0 127 2;
+#X connect 0 0 31 0;
+#X connect 4 0 31 3;
+#X connect 5 0 31 2;
+#X connect 8 0 31 5;
+#X connect 9 0 31 4;
+#X connect 10 0 31 1;
+#X connect 31 0 1 0;
+#X connect 31 1 2 0;
+#X connect 31 2 3 0;
+#X connect 31 3 6 0;
+#X connect 31 4 7 0;

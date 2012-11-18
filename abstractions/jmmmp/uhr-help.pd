@@ -1,0 +1,7 @@
+#N canvas 35 130 301 182 10;
+#X text 11 132 (C) 2006 João Pais - jmmmpais@googlemail.com;
+#X text 11 10 [uhr] - Shows the time;
+#X obj 41 61 uhr;
+#X text 12 149 Released under the BSD License;
+#X text 47 41 H / M / S;
+#X text 12 99 Related objects: [stoppuhr] [clock];

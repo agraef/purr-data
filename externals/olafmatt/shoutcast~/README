@@ -1,0 +1,57 @@
+Version 0.3 
+copyright (c) 2001 by Olaf Matthes
+
+shoutcast~ is a MPEG I Layer III (mp3) streaming external for pd (by Miller 
+Puckette) that connects to a SHOUTcast or IceCast server.
+
+
+To run shoutcast~ place the file shoutcast~.dll for win or shoutcast~.pd_linux 
+in the directory of our patch or start pd with '-lib shoutcast~' flag. 
+
+To compile shoutcast~ on Linux: compile it (for instructions see install) and copy
+the binary to the directory where you saved your pd patch.
+
+To compile shoutcast~ on win: get the LAME library from http://www.mp3dev.org and
+compile it following the directions given there. To compile shoutcast~ type 
+'nmake pd_nt' and copy the dll into the correct folder.
+
+This software is published under LGPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+shoutcast~ uses LAME 3.92 to encode to mp3.
+The latest version of LAME can be found at http://www.mp3dev.org
+
+PLEASE NOTE: This software may contain patented alogrithm (at least
+patented in some countries). It may be not allowed to sell/use products
+based on this source code in these countries. Check this out first!
+
+LAME was originally developed by Mike Cheng (www.uq.net.au/~zzmcheng).  Now 
+maintained by Mark Taylor (www.mp3dev.org).
+
+It's code is distributed under the GNU LESSER PUBLIC LICENSE
+(LGPL, see www.gnu.org) with the following modification:
+
+1. If you determine that distribution of LAME requires a patent license,
+   and you obtain a patent license, you may distribute LAME even though
+   redistribution of LAME may also require a patent license.  
+
+2. You agree not to enforce any patent claims for any aspect of
+   MPEG audio compression, or any other techniques contained in 
+   the LAME source code. 
+
+*****************************************************************************
+
+For latest information on how to use shoutcast~ have a look at the online 
+shoutcast~ HOWTO which can be found at:
+
+http://www.akustische-kunst.org/puredata/shout/shoutcast-howto.html
+
+
+Please report any bugs to olaf.matthes@gmx.de!

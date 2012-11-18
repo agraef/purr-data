@@ -1,0 +1,51 @@
+#N canvas 475 74 478 331 10;
+#X obj 19 36 cnv 15 250 60 empty can45 empty 20 12 0 14 -1 -262144
+0;
+#X obj 261 137 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 320 137 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 378 137 nbx 5 14 0 255 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 320 157 t b f;
+#X obj 378 158 t b f;
+#X text 16 -5 Description: Converts an rgb value into a pd color value.
+;
+#X floatatom 78 232 10 0 0 0 - - -;
+#X obj 320 184 pack f f f;
+#X msg 78 253 \; can45 color \$1;
+#X text 258 117 8bit_RGB input;
+#X text 17 123 float_RGB input;
+#X obj 20 143 nbx 5 14 0 1 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 78 143 nbx 5 14 0 1 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 135 143 nbx 5 14 0 1 0 0 empty empty empty 0 -6 0 10 -262144
+-1 -1 0 256;
+#X obj 78 160 t b f;
+#X obj 135 161 t b f;
+#X obj 78 187 pack f f f;
+#X obj 78 209 mtl/rgbToNum;
+#X text 18 9 tags: conversion;
+#X obj 320 206 mtl/rgbToNum integer;
+#X obj 316 241 mtl/rgbToNum 8bit;
+#X obj 316 266 mtl/rgbToNum int;
+#X connect 1 0 8 0;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 8 0;
+#X connect 4 1 8 1;
+#X connect 5 0 8 0;
+#X connect 5 1 8 2;
+#X connect 7 0 9 0;
+#X connect 8 0 20 0;
+#X connect 12 0 17 0;
+#X connect 13 0 15 0;
+#X connect 14 0 16 0;
+#X connect 15 0 17 0;
+#X connect 15 1 17 1;
+#X connect 16 0 17 0;
+#X connect 16 1 17 2;
+#X connect 17 0 18 0;
+#X connect 18 0 7 0;
+#X connect 20 0 7 0;

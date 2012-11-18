@@ -1,0 +1,48 @@
+#N canvas 543 385 704 507 10;
+#X obj 86 238 print;
+#X obj 86 152 list.op2;
+#X obj 154 198 +;
+#X msg 45 105 0 1 2 3 4;
+#X text 22 21 Description: Execute an operation on a list with another
+list.;
+#X msg 166 105 10 11 12;
+#X text 171 85 Second list.;
+#X text 36 85 First list.;
+#X text 197 148 This example will add the elements of both lists. The
+resulting list will be the length of the first list.;
+#X text 205 181 Because the second list is not as long as the first
+\, list.op2 will wrap the values of the second list to fit the length
+of the first list. The second list therefore becomes: 10 11 12 10 11
+;
+#X obj 54 352 list.op2;
+#X msg 24 299 (first list);
+#X msg 128 301 (second list);
+#X msg 28 432 (result);
+#X msg 73 401 (first list elements);
+#X msg 124 371 (second list elements);
+#X msg 128 335 (feedback value);
+#X obj 439 355 list.op2;
+#X msg 379 296 list bird apple;
+#X msg 509 297 list worm pear;
+#X obj 498 407 makesymbol %s+%s;
+#X obj 474 381 pack s s;
+#X obj 415 438 print symbols;
+#X connect 1 0 0 0;
+#X connect 1 1 2 0;
+#X connect 1 2 2 1;
+#X connect 2 0 1 2;
+#X connect 3 0 1 0;
+#X connect 5 0 1 1;
+#X connect 10 0 13 0;
+#X connect 10 1 14 0;
+#X connect 10 2 15 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 1;
+#X connect 16 0 10 2;
+#X connect 17 0 22 0;
+#X connect 17 1 21 0;
+#X connect 17 2 21 1;
+#X connect 18 0 17 0;
+#X connect 19 0 17 1;
+#X connect 20 0 17 2;
+#X connect 21 0 20 0;

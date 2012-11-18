@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/pure-data/!svn/ver/15669/trunk/doc/tutorials/sound
+END
+01.hello_world.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/10241/trunk/doc/tutorials/sound/01.hello_world.pd
+END
+detecting_pitch.pd
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/detecting_pitch.pd
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/pure-data/!svn/ver/4930/trunk/doc/tutorials/sound/TODO
+END
+03.dsp_processing.pd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/03.dsp_processing.pd
+END
+crossfade.pd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/pure-data/!svn/ver/4871/trunk/doc/tutorials/sound/crossfade.pd
+END
+ramping_up_and_down.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/15669/trunk/doc/tutorials/sound/ramping_up_and_down.pd
+END
+02.audio_data.pd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/10241/trunk/doc/tutorials/sound/02.audio_data.pd
+END
+00.controlling_dsp_processing.pd
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/00.controlling_dsp_processing.pd
+END
+feedback_delay_network.pd
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/feedback_delay_network.pd
+END
+TEMPLATE.pd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/TEMPLATE.pd
+END
+02.make_some_noise.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/10241/trunk/doc/tutorials/sound/02.make_some_noise.pd
+END
+amplitude_modulation.pd
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/pure-data/!svn/ver/4871/trunk/doc/tutorials/sound/amplitude_modulation.pd
+END
+sixteen_harmonics.pd
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/pure-data/!svn/ver/4930/trunk/doc/tutorials/sound/sixteen_harmonics.pd
+END
+building_waveforms_with_sines.pd
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/building_waveforms_with_sines.pd
+END
+voice_fm.pd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/pure-data/!svn/ver/15519/trunk/doc/tutorials/sound/voice_fm.pd
+END

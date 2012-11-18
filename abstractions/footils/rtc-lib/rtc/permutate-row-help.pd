@@ -1,0 +1,21 @@
+#N canvas 0 48 633 373 10;
+#X obj 124 153 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 28 25 permutate-row;
+#X text 294 127 row of Anton Webern \, op. 28;
+#X msg 210 153 10 9 0 11 3 4 1 2 6 5 8 7;
+#X text 38 264 1994 by Karlheinz Essl;
+#X obj 124 210 print permutate-row;
+#X obj 210 123 loadbang;
+#X text 275 213 Watch the MAX-window!;
+#X text 27 43 Permutates a given row using its own structure as a permutation
+program.;
+#X text 28 72 NB: The given row must be a twelve-note-row which smallest
+index is 0;
+#X text 45 135 make new permutation!;
+#X msg 385 23 Dodecaphonics;
+#X obj 124 178 permutate-row;
+#X connect 0 0 12 0;
+#X connect 3 0 12 1;
+#X connect 6 0 3 0;
+#X connect 12 0 5 0;

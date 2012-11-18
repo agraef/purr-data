@@ -1,0 +1,95 @@
+#N canvas 112 95 1011 631 12;
+#X obj 132 124 tgl 30 0 empty empty empty 0 -6 0 8 -62784 -1 -1 0 1
+;
+#X obj 506 210 unpack f f;
+#X floatatom 421 247 5 0 0 0 - - -;
+#X floatatom 499 248 5 0 0 0 - - -;
+#X msg 132 161 open;
+#X obj 132 202 multio;
+#X msg 132 69 readout_time 20;
+#X msg 132 98 readout_time 1000;
+#X msg 132 25 readout_time 1;
+#X text 185 163 <-- open the device (opened by default if possible)
+;
+#X text 170 132 <-- start/stop readout of the device (on by default)
+;
+#X text 290 39 <--+ | <--+-> set the time between readouts (msec) |
+20 msec is the default <--+;
+#X obj 123 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 59 1;
+#X obj 154 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 198 1;
+#X obj 185 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 177 1;
+#X obj 216 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 155 1;
+#X obj 247 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 3 1;
+#X obj 278 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 0 1;
+#X obj 309 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 186 1;
+#X obj 340 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 769 1;
+#X obj 371 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 353 1;
+#X obj 402 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 1659 1;
+#X obj 433 357 vsl 30 128 0 4096 0 0 empty empty empty 0 -8 0 8 -128992
+-1 -1 1380 1;
+#X obj 123 274 route 0 1 2 3 4 5 6 7 8 9 10;
+#X obj 433 311 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 445 256;
+#X obj 402 330 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 535 256;
+#X obj 371 311 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 114 256;
+#X obj 340 330 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 248 256;
+#X obj 309 311 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 60 256;
+#X obj 278 330 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 0 256;
+#X obj 247 311 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 1 256;
+#X obj 216 330 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 50 256;
+#X obj 185 311 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 57 256;
+#X obj 154 330 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 64 256;
+#X obj 123 311 nbx 4 16 -1e+037 1e+037 0 0 empty empty empty 0 -6 0
+14 -262144 -1 -1 19 256;
+#X msg 130 46 readout_time 5;
+#X connect 0 0 5 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 4 0 5 0;
+#X connect 5 0 23 0;
+#X connect 5 1 1 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;
+#X connect 23 0 34 0;
+#X connect 23 1 33 0;
+#X connect 23 2 32 0;
+#X connect 23 3 31 0;
+#X connect 23 4 30 0;
+#X connect 23 5 29 0;
+#X connect 23 6 28 0;
+#X connect 23 7 27 0;
+#X connect 23 8 26 0;
+#X connect 23 9 25 0;
+#X connect 23 10 24 0;
+#X connect 24 0 22 0;
+#X connect 25 0 21 0;
+#X connect 26 0 20 0;
+#X connect 27 0 19 0;
+#X connect 28 0 18 0;
+#X connect 29 0 17 0;
+#X connect 30 0 16 0;
+#X connect 31 0 15 0;
+#X connect 32 0 14 0;
+#X connect 33 0 13 0;
+#X connect 34 0 12 0;
+#X connect 35 0 5 0;

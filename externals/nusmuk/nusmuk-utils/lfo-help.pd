@@ -1,0 +1,21 @@
+#N canvas 77 355 426 472 10;
+#X floatatom 54 63 5 0 0 0 - - -;
+#X obj 54 237 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 3302 1;
+#X obj 54 188 * 127;
+#X text 93 85 creation arguments:;
+#X text 125 125 2 time grain in milliseconds;
+#X text 123 105 1 period time (ms);
+#X text 152 25 Low Frequency Modulator;
+#X text 105 63 <- time (ms);
+#X obj 54 165 lfo 2000 20 ______;
+#X obj 177 238 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 12700 1;
+#X obj 177 209 * 64;
+#X obj 177 188 + 1;
+#X connect 0 0 8 0;
+#X connect 2 0 1 0;
+#X connect 8 0 2 0;
+#X connect 8 1 11 0;
+#X connect 10 0 9 0;
+#X connect 11 0 10 0;

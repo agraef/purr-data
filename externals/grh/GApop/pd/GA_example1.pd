@@ -1,0 +1,115 @@
+#N canvas 49 0 889 648 10;
+#X msg 529 540 getattributes;
+#X msg 336 532 cross;
+#X msg 155 546 getfitbuf;
+#X msg 52 547 getpopbuf;
+#X msg 529 514 help;
+#X msg 396 533 update;
+#X obj 154 572 s GAmessages;
+#X obj 29 22 cnv 15 308 68 empty empty empty 7 30 0 16 -1 -262144 0
+;
+#X obj 33 26 cnv 15 300 60 empty empty GA_example1: 40 30 0 16 -217163
+-262144 0;
+#X obj 52 572 s GAmessages;
+#X msg 52 522 set pop1;
+#N canvas 268 199 934 315 init 0;
+#X obj 46 27 loadbang;
+#X msg 46 57 \; pop1 ylabel 9.5 0 0.5 1 \; pop1 yticks 0 0.1 2 \; pop1
+xticks 0 1 2 \; fit1 ylabel 105 0 0.5 1 \; fit1 yticks 0 0.1 2 \; fit1
+xticks 0 10 2 \;;
+#X msg 364 123 cross;
+#X msg 364 179 update;
+#X obj 364 153 t b;
+#X obj 363 97 metro 1000;
+#X obj 324 219 s GAmessages;
+#X obj 314 50 r GAIO;
+#X connect 0 0 1 0;
+#X connect 2 0 4 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 0;
+#X connect 7 0 5 0;
+#X restore 267 46 pd init;
+#X msg 155 522 fitbuf fit1;
+#X obj 403 111 s GAmessages;
+#X obj 336 565 s GAmessages;
+#X obj 529 567 s GAmessages;
+#X text 548 487 Help:;
+#X obj 767 52 tgl 50 0 GAIO empty lets_propagate -15 -6 0 10 -1109
+-262144 -1 0 1;
+#X obj 77 210 cnv 15 300 200 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#N canvas 0 0 450 300 graph1 0;
+#X array pop1 10 float 1;
+#A 0 1 0.9471 0.9845 0.7524 0.9467 1 0.9475 0.983 0.7045 1;
+#X coords 0 1 9 0 300 200 1;
+#X restore 77 209 graph;
+#X text 73 413 1;
+#X text 206 412 5;
+#X text 368 412 10;
+#X obj 492 214 cnv 15 300 200 empty empty empty 20 12 0 14 -261681
+-66577 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array fit1 101 float 1;
+#A 0 0.0473031 0.052303 0.0673027 0.0723026 0.0823024 0.0923022 0.102302
+0.107302 0.117302 0.127301 0.132301 0.137301 0.137301 0.142301 0.157301
+0.167301 0.1723 0.1873 0.1923 0.2073 0.2173 0.237299 0.247299 0.257299
+0.267298 0.272298 0.282298 0.297298 0.307298 0.322297 0.324797 0.337297
+0.342297 0.342297 0.347297 0.352297 0.362297 0.362297 0.372296 0.377296
+0.382296 0.387296 0.387296 0.402296 0.407296 0.407296 0.412296 0.422295
+0.432295 0.432295 0.442295 0.442295 0.447295 0.457295 0.462295 0.467295
+0.477294 0.482294 0.492294 0.492294 0.497294 0.507294 0.512294 0.517294
+0.527293 0.527293 0.547293 0.552293 0.552293 0.567292 0.577292 0.592292
+0.594792 0.597292 0.612291 0.622291 0.632291 0.652291 0.66229 0.66729
+0.68229 0.68729 0.69229 0.697289 0.717289 0.732289 0.742289 0.752288
+0.762288 0.767288 0.782288 0.792288 0.812287 0.822287 0.842286 0.852286
+0.882286 0.887285 0.897285 0.902285 0.992283;
+#X coords 0 1 100 0 300 200 1;
+#X restore 492 213 graph;
+#X text 488 415 0;
+#X text 630 416 0.5;
+#X text 787 417 1;
+#X text 49 463 set population \, fitfunction:;
+#X obj 155 494 loadbang;
+#X msg 403 80 pairs \$1;
+#X msg 504 79 mutrange \$1;
+#X msg 639 79 mutprop \$1;
+#X obj 403 50 nbx 5 20 -1e+37 1e+37 0 0 empty empty pairs 0 -13 0 10
+-233017 -1 -258699 0 256;
+#X obj 504 50 nbx 5 20 -1e+37 1e+37 0 0 empty empty mut-range 0 -13
+0 10 -233017 -1 -258699 0 256;
+#X obj 639 51 nbx 5 20 -1e+37 1e+37 0 0 empty empty mut-prop 0 -13
+0 10 -233017 -1 -258699 0 256;
+#X text 322 502 crossover \, mutation:;
+#X obj 689 509 cnv 15 100 60 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X obj 691 511 cnv 15 96 56 empty empty empty 20 12 0 14 -260818 -66577
+0;
+#X obj 698 527 GApop pop1;
+#X floatatom 697 461 5 0 0 0 - - -;
+#X obj 698 484 r GAmessages;
+#X obj 773 575 print;
+#X floatatom 698 575 5 0 0 0 - - -;
+#X text 72 174 population (with 10 individuums):;
+#X text 489 180 fitness function:;
+#X text 581 614 (c) 2004 \, Georg Holzmann <grh@mur.at>;
+#X connect 0 0 15 0;
+#X connect 1 0 14 0;
+#X connect 2 0 6 0;
+#X connect 3 0 9 0;
+#X connect 4 0 15 0;
+#X connect 5 0 14 0;
+#X connect 10 0 9 0;
+#X connect 12 0 6 0;
+#X connect 29 0 12 0;
+#X connect 30 0 13 0;
+#X connect 31 0 13 0;
+#X connect 32 0 13 0;
+#X connect 33 0 30 0;
+#X connect 34 0 31 0;
+#X connect 35 0 32 0;
+#X connect 39 0 43 0;
+#X connect 39 1 42 0;
+#X connect 40 0 39 0;
+#X connect 41 0 39 0;

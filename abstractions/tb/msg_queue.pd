@@ -1,0 +1,18 @@
+#N canvas 418 284 367 172 10;
+#X obj 18 9 inlet dump;
+#X obj 44 29 inlet add;
+#X obj 18 72 fifop;
+#X obj 18 31 b;
+#X text 21 149 (c) Tim Blechmann 2005 \, $Id: msg_queue.pd 221 2005-12-17 18:31:17Z tim $;
+#X obj 18 91 t b a;
+#X obj 48 129 outlet;
+#X obj 44 48 prepend list;
+#X obj 48 110 list trim;
+#X connect 0 0 3 0;
+#X connect 1 0 7 0;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 5 0 2 0;
+#X connect 5 1 8 0;
+#X connect 7 0 2 0;
+#X connect 8 0 6 0;

@@ -1,0 +1,11 @@
+#N canvas 1 57 286 217 10;
+#X obj 18 70 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 15 22 Comment: Taken from Andy Farnell's work.;
+#X text 16 6 Description: Generates a gun shot.;
+#X obj 18 93 mtl/gunShot~;
+#X obj 18 131 mtl/out~;
+#X text 17 39 tags: synthesize~;
+#X connect 0 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;

@@ -1,0 +1,33 @@
+#N canvas 245 237 811 481 10;
+#X obj 20 67 osc~ 500;
+#X obj 96 113 k_jack~ freqtweak;
+#X obj 97 65 osc~ 600;
+#X obj 11 22 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 97 23 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X text 597 425 k_jack~ General jack in/out;
+#X text 593 443 -Kjetil S. Matheussen \, 2004;
+#X text 230 114 <- Make sure freqtweak is running first!;
+#X text 292 64 <- Argument is a regexp string;
+#X obj 171 64 k_jack~ alsa_pcm;
+#X text 227 181 <- Its no harm having two similar k_jack objects;
+#X obj 105 181 k_jack~ alsa_pcm;
+#X obj 11 269 k_jack~ alsa_pcm:capture;
+#X obj 11 246 k_jack~ alsa_pcm:playback;
+#X text 201 246 <- Only playback.;
+#X text 200 267 <- Only capture.;
+#X obj 10 355 k_jack~ * . . . . . . . . . . . . . . . . . . .;
+#X text 359 357 <- "*" means all jack ports available. (The "."-s are
+there just for spacing.);
+#X obj 12 297 k_jack~ _1;
+#X text 95 298 <- All ports containing "_1";
+#X connect 0 0 1 0;
+#X connect 1 0 11 0;
+#X connect 1 1 11 1;
+#X connect 2 0 1 1;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;
+#X connect 9 0 1 0;
+#X connect 9 1 1 1;
+#X coords 0 0 1 1 200 140 1;

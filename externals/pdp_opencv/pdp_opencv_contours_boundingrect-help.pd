@@ -1,0 +1,172 @@
+#N canvas 699 74 737 767 10;
+#X obj 41 -82 cnv 15 621 223 empty empty empty 20 12 0 14 -260097 -66577
+0;
+#X msg 148 -25 open /dev/dv1394/0;
+#X obj 71 -50 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 73 -25 metro 40;
+#X msg 191 41 norm PAL;
+#X msg 161 4 close;
+#X obj 482 -42 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 482 -15 metro 40;
+#X msg 563 4 close;
+#X msg 559 -20 open /dev/video0;
+#X obj 504 81 pdp_v4l2;
+#X obj 40 194 cnv 15 621 400 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X text 71 -79 FIRST OF ALL SETUP YOUR CAMERA;
+#X floatatom 187 535 5 0 0 0 - - -;
+#X floatatom 222 535 5 0 0 0 - - -;
+#X floatatom 259 535 5 0 0 0 - - -;
+#X floatatom 293 535 5 0 0 0 - - -;
+#X obj 187 508 unpack 0 0 0 0 0;
+#X obj 187 481 route 0 1 2 3 4;
+#X floatatom 245 378 5 0 0 0 - - -;
+#X floatatom 298 391 5 0 0 0 - - -;
+#X obj 99 431 pdp_opencv_contours_boundingrect;
+#X text 180 560 Xorigin Yorigin Width Height;
+#X floatatom 361 553 5 0 0 0 - - -;
+#X floatatom 396 553 5 0 0 0 - - -;
+#X floatatom 433 553 5 0 0 0 - - -;
+#X floatatom 467 553 5 0 0 0 - - -;
+#X obj 358 528 unpack 0 0 0 0 0;
+#X text 340 573 Xorigin Yorigin Width Height;
+#X obj 91 601 pdp_xv;
+#X obj 41 148 cnv 15 621 40 empty empty empty 20 12 0 14 -260801 -66577
+0;
+#X floatatom 239 156 5 0 0 0 - - -;
+#X text 277 155 threshold (default 13) to use when comparing pixel
+colors;
+#X msg 568 59 format \$1;
+#X obj 569 37 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X text 43 -307 pdp_opencv_contours_boundingrect :: Calculates up-right
+bounding rectangle of all contours of a binary image.;
+#X text 42 -234 This object considers a contour to be analyzed any
+group of white pixels in a black background \, for this reason you
+will find useful to use pdp_bgsubstract or pdp_threshold to obtain
+a correct input for pdp_opencv_contours_boundingrect.;
+#X text 43 -173 pdp_opencv_contours_boundingrect works detecting any
+white areas in the input image \, it's important to set max/min values
+of the areas you want to detect to filter non interesting noise or
+areas \, also sometimes you will need to use pdp_opencv_morphology
+to transform the contours of the shapes to be analyzed..;
+#X floatatom 297 451 5 0 0 0 - - -;
+#X text 336 452 Number of detected contours;
+#X text 290 486 For each contour detected;
+#X text 290 473 We have the contours sorted bottom to top and left
+to right;
+#X text 42 -273 It is useful as a motion tracker if you have well isolated
+silouets of the objects you want to track.;
+#X text 281 375 minimal area in pixels to be detected (default 10x10)
+;
+#X text 335 392 maximal area in pixels to be detected (default 320x240)
+;
+#X msg 123 196 mode \$1;
+#X obj 184 197 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 253 198 retrieval mode ( see cvFindContours );
+#X obj 215 221 hradio 15 1 0 5 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 297 221 retrieval method ( see cvFindContours );
+#X msg 148 220 method \$1;
+#X obj 91 155 pdp_opencv_threshold;
+#X msg 175 241 maxmove \$1;
+#X floatatom 249 242 5 0 0 0 - - -;
+#X floatatom 283 262 5 0 0 0 - - -;
+#X msg 194 260 ftolerance \$1;
+#X text 318 261 frame tolerance for identification ( default 5 );
+#X obj 92 75 pdp_ieee1394;
+#X msg 211 280 nightmode \$1;
+#X obj 301 281 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 290 302 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 303 324 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 230 301 draw \$1;
+#X text 317 300 draw bounding rectangle ( default : on );
+#X msg 245 322 show \$1;
+#X text 330 321 draw the detected contours ( default : off );
+#X text 324 281 hide original image ( default : off );
+#X text 44 -99 comments to lluisgomez@hanger.org;
+#X msg 257 346 clear;
+#X text 296 347 clear all markers;
+#X obj 91 116 pdp_scale 320 240;
+#X text 292 241 maximum move of a countour ( default 50 );
+#X msg 463 53 bang;
+#X obj 282 115 pdp_qt;
+#X obj 315 51 metro 40;
+#X msg 315 23 bang;
+#X msg 356 23 stop;
+#X obj 282 -25 openpanel;
+#X msg 282 0 open \$1;
+#X msg 316 78 loop \$1;
+#X obj 396 78 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 385 51 loadbang;
+#X text 337 -1 playing a video file;
+#X obj 342 116 hsl 128 15 0 500 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 284 -48 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X connect 1 0 57 0;
+#X connect 2 0 3 0;
+#X connect 3 0 57 0;
+#X connect 4 0 57 0;
+#X connect 5 0 57 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 70 0;
+#X connect 17 0 13 0;
+#X connect 17 1 14 0;
+#X connect 17 2 15 0;
+#X connect 17 3 16 0;
+#X connect 18 0 17 0;
+#X connect 18 1 27 0;
+#X connect 19 0 21 1;
+#X connect 20 0 21 2;
+#X connect 21 0 29 0;
+#X connect 21 1 18 0;
+#X connect 21 2 38 0;
+#X connect 27 0 23 0;
+#X connect 27 1 24 0;
+#X connect 27 2 25 0;
+#X connect 27 3 26 0;
+#X connect 31 0 51 2;
+#X connect 33 0 10 0;
+#X connect 34 0 33 0;
+#X connect 45 0 21 0;
+#X connect 46 0 45 0;
+#X connect 48 0 50 0;
+#X connect 50 0 21 0;
+#X connect 51 0 21 0;
+#X connect 52 0 21 0;
+#X connect 53 0 52 0;
+#X connect 54 0 55 0;
+#X connect 55 0 21 0;
+#X connect 57 0 70 0;
+#X connect 58 0 21 0;
+#X connect 59 0 58 0;
+#X connect 60 0 62 0;
+#X connect 61 0 64 0;
+#X connect 62 0 21 0;
+#X connect 64 0 21 0;
+#X connect 68 0 21 0;
+#X connect 70 0 51 0;
+#X connect 72 0 10 0;
+#X connect 73 0 70 0;
+#X connect 74 0 73 0;
+#X connect 75 0 74 0;
+#X connect 76 0 74 0;
+#X connect 77 0 78 0;
+#X connect 78 0 73 0;
+#X connect 79 0 73 0;
+#X connect 80 0 79 0;
+#X connect 81 0 80 0;
+#X connect 81 0 75 0;
+#X connect 83 0 73 1;
+#X connect 84 0 77 0;

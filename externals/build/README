@@ -1,0 +1,107 @@
+
+
+There are lots of docs here: http://puredata.org/docs/developer  
+
+
+Pd-extended build system
+========================
+
+This stuff as all be incorporated into the unified, cross-platform Pd-extended 
+build system.  These makefiles will probably stay around for a while since they 
+are widely used.
+
+
+PD externals build system
+=========================
+
+To build with GNU make, cd to the platform directory:
+
+cd linux
+cd win
+cd darwin
+cd irix
+
+and type make.
+
+To build with SCons:
+
+    scons
+    scons install
+
+
+Build System Internals
+======================
+
+The build system is actually on top of the different externals packages
+that are in the CVS.
+
+Every external (the source code) is linked into the "src" directory.
+In order for the paths to be platform independent, this is done via c-includes.
+
+Then the build system just tries to build every external that it 
+finds in "src".
+
+
+Externals That Need Libraries
+=============================
+
+In order to add an external that needs libraries to this build system, create
+a "libs" file with the exact same name as the source file (i.e. oggread~.c and
+oggread~.libs).  If the .libs file has cross-platforms library options, it
+should go into "externals/build/src".  .libs files for platform-specific library
+options go in "externals/build/PLATFORM"
+
+
+Externals That Are Built From Multiple Files
+============================================
+
+In your "externals/build/src/OBJECT.c" file, #include the other files that need to be
+compiled and linked in.  See how the chaos externals are included:
+
+attract1.c:#include "../../bbogart/chaos/lyapunov.c"
+attract1.c:#include "../../bbogart/chaos/attract1.c"
+
+base.c:#include "../../bbogart/chaos/lyapunov.c"
+base.c:#include "../../bbogart/chaos/base.c"
+
+base3.c:#include "../../bbogart/chaos/lyapunov.c"
+base3.c:#include "../../bbogart/chaos/base3.c"
+
+dejong.c:#include "../../bbogart/chaos/lyapunov.c"
+dejong.c:#include "../../bbogart/chaos/dejong.c"
+
+
+How To Add Aliases
+==================
+
+In the "externals/build/src/OBJECT.c" file, add a function with the alias name
+with "_setup" appended to it.  Then make a symlink to original external binary
+file that is named using the alias.
+
+(Currently, this probably won't work with Windows because it uses symlinks,
+which Windows doesn't have.  It should be possible to make it work using
+Cygwin or MinGW).
+
+
+Help Files
+==========
+
+The help files are copied to "externals/build/doc" by the makefile that is in
+that directory.  To add yours, create a line that copies your help files to
+"externals/build/doc".  Currently the list of help files to be added in this
+makefile is in alphabetical order by directory name.
+
+
+Problems with this approach
+===========================
+- no way to use autoconf/automake
+
+- it might be hard for externals that use several source files
+
+- I could not find a way how this should work on windows with nmake ..
+  for now I just put the windows links in "build/win/*.c".  This should be
+  converted to a MinGW GNU Makefile, then it would work the same as on the
+  other platforms.
+
+
+

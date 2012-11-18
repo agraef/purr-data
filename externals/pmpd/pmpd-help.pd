@@ -1,0 +1,650 @@
+#N canvas 37 22 575 730 10;
+#X obj 4 369 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 5 689 cnv 15 550 40 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 8 6 cnv 15 550 30 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 14 389 cnv 15 75 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 14 604 cnv 15 75 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 4 547 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 4 582 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 7 76 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 5 639 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 5 659 cnv 15 550 30 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 76 Examples:;
+#X text 9 369 Inlets:;
+#X text 19 388 - Left:;
+#X text 10 546 Arguments:;
+#X text 11 582 Outlets:;
+#X text 19 639 See Also:;
+#X text 74 48 Full Name:;
+#N canvas 58 22 262 70 Related_Objects 0;
+#X obj 3 10 cnv 15 250 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 3 30 cnv 15 250 30 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 5 10 Externals and libraries;
+#X obj 44 37 pmpd2d;
+#X obj 140 37 pmpd3d;
+#X restore 122 695 pd Related_Objects;
+#N canvas 541 387 524 302 init 0;
+#X msg 89 187 Xmax 127 \, Xmin 0;
+#X obj 89 215 t a;
+#X obj 89 33 loadbang;
+#X msg 143 100 mass fix 0 10 0;
+#X obj 89 241 s \$0-in;
+#X obj 89 59 t b b b b b;
+#X msg 161 80 reset;
+#X obj 44 13 inlet;
+#X msg 125 120 mass mob 1 10 0 \, mass mob 1 10 0 \, mass mob 1 10
+0;
+#X msg 107 143 link souple 1 0 1 0.5 \, link souple 1 2 1 0.5 \, link
+souple 3 2 1 0.5;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 5 0 0 0;
+#X connect 5 1 9 0;
+#X connect 5 2 8 0;
+#X connect 5 3 3 0;
+#X connect 5 4 6 0;
+#X connect 6 0 1 0;
+#X connect 7 0 5 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;
+#X restore 17 156 pd init;
+#X obj 17 344 s \$0-out;
+#X obj 17 295 r \$0-in;
+#X obj 261 184 vsl 15 127 0 127 0 0 empty empty Drag-----> -70 60 1
+10 -262144 -1 -1 0 1;
+#X obj 292 184 vsl 15 127 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 261 345 s \$0-in;
+#X msg 261 322 posX fix \$1;
+#N canvas 565 515 355 193 compute 0;
+#X obj 159 37 inlet;
+#X obj 159 74 metro 20;
+#X obj 159 135 s \$0-in;
+#X msg 159 104 bang \, massesPosL;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;
+#X restore 17 224 pd compute;
+#X obj 17 207 tgl 15 0 empty empty ON/OFF 25 10 1 10 -262144 -1 -1
+1 1;
+#X obj 261 107 r \$0-out;
+#X obj 17 139 bng 15 250 50 0 empty empty reset 25 10 1 10 -262144
+-1 -1;
+#X obj 261 131 route massesPosL;
+#X obj 311 184 vsl 15 127 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 330 184 vsl 15 127 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X obj 261 152 unpack f f f f;
+#X text 101 388 Bang - A bang at the left inlet compute the new model
+state based on previous instant.;
+#X text 188 478 To set the model parameters after creation.;
+#X text 188 456 To create the model masses and links.;
+#X text 186 512 To get the model parameters;
+#X text 103 562 None;
+#X text 18 603 - Left:;
+#X text 101 604 Outputs the model parameters asked with the attributes
+messages.;
+#X text 101 420 Messages - Different messages are used to control the
+msd object. They are of three types :;
+#X text 9 661 CATEGORY: control;
+#X text 9 671 KEYWORDS: physical model mass spring damper link;
+#X text 111 639 01_msdtest.pd;
+#X obj 157 48 pmpd;
+#X text 12 8 HELP: pmpd;
+#X text 12 20 DESCRIPTION: physical modeling for pd \, based on msd.
+;
+#X obj 17 319 pmpd;
+#X text 266 696 - Cyrille Henry \, 2011;
+#X text 283 712 based on MSD by Nicolas Montgermont;
+#X obj 17 187 loadbang;
+#N canvas 446 66 1236 814 links_attributes 0;
+#X obj 5 3 cnv 15 590 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 10 108 cnv 15 150 110 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 4 87 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X text 7 2 ATTRIBUTES Messages;
+#X text 7 87 Lists :;
+#X obj 11 222 cnv 15 150 110 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 11 335 cnv 15 150 110 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 611 26 cnv 15 150 110 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 605 5 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 612 140 cnv 15 150 110 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 612 253 cnv 15 150 110 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X text 369 530 \$1 (optional): Masses Id;
+#X text 834 500 \$2 (optional): Masses Id;
+#X text 833 487 \$1 : table name;
+#X obj 17 584 cnv 15 150 220 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 11 564 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X msg 22 597 massesPosMean;
+#X text 177 613 \$1 : none or Id;
+#X msg 23 629 massesPosStd \$1;
+#X text 179 644 \$1 : none or Id;
+#X text 173 597 output the average position of masses;
+#X text 174 628 output the standard deviation of masses position;
+#X text 177 674 \$1 : none or Id;
+#X text 179 711 \$1 : none or Id;
+#X text 173 658 output the average position of masses;
+#X text 174 695 output the standard deviation of masses position;
+#X text 177 749 \$1 : none or Id;
+#X text 178 786 \$1 : none or Id;
+#X text 173 733 output the average position of masses;
+#X text 173 770 output the standard deviation of masses position;
+#X msg 22 696 massesForcesStd \$1;
+#X msg 22 658 massesForcesMean;
+#X msg 23 735 massesSpeedsMean;
+#X msg 22 771 massesSpeedsStd \$1;
+#X text 608 5 tables :;
+#X text 15 30 The attributes messages ask the object to output some
+of his internal parameters. They can be output by lists for positions
+and forces of links;
+#X text 14 564 statistics (not implemented yet) :;
+#X msg 11 119 linksPosL (\$1);
+#X text 170 120 Output all links center positions in a list on outlet
+No 1;
+#X msg 11 138 linksPosXL (\$1);
+#X msg 13 229 linksLengthL (\$1);
+#X msg 13 248 linksLengthXL (\$1);
+#X obj 12 451 cnv 15 150 110 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X msg 14 458 linksLengthSpeedL (\$1);
+#X msg 14 477 linksLengthSpeedXL (\$1);
+#X text 184 459 Output all link lenght deformation speed in a list
+on outlet No 1;
+#X msg 615 38 linksPosT \$1 (\$2);
+#X msg 616 57 linksPosXT \$1 (\$2);
+#X msg 616 152 linksLengthT \$1 (\$2);
+#X obj 612 369 cnv 15 150 110 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X text 808 377 Output all link lenght deformation speed in a list
+on outlet No 1;
+#X msg 614 376 linksLengthSpeedT \$1 (\$2);
+#X msg 613 395 linksLengthSpeedXT \$1 (\$2);
+#X text 793 47 Output all links center positions in a table (\$1);
+#X text 170 233 Output all link lenght in a list on outlet No 1;
+#X text 171 349 Output all link center speed in a list on outlet No
+1;
+#X text 797 154 Output all link length in a list on outlet No 1;
+#X msg 16 342 linksPosSpeedL (\$1);
+#X msg 16 361 linksPosSpeedXL (\$1);
+#X msg 616 259 linksPosSpeedT \$1 (\$2);
+#X text 795 264 Output all link center speed in a list on outlet No
+1;
+#X msg 616 171 linksLengthXT \$1 (\$2);
+#X msg 616 278 linksPosSpeedXT \$1 (\$2);
+#X restore 12 519 pd links_attributes ___;
+#N canvas 888 196 1230 682 attributes__________ 0;
+#X obj 11 95 cnv 15 100 35 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 5 75 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 5 3 cnv 15 590 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 10 157 cnv 15 150 95 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 4 137 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 12 283 cnv 15 110 380 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 6 259 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X text 7 74 General :;
+#X text 7 2 ATTRIBUTES Messages;
+#X text 7 137 Lists :;
+#X text 142 299 Get specific attribute on specific element;
+#X msg 22 297 get \$1 (\$2);
+#X text 9 259 Specific :;
+#X text 142 400 The get message return the asked attribute preceded
+by an identifier and the creation No of the element. The identifier
+is made of the asked parameter and the way you asked for it.;
+#X text 143 476 message;
+#X text 383 476 response;
+#X text 142 457 Examples with 3 masses numbered 0 \, 1 and 2 and named
+mas:;
+#X text 148 566 [get massesPos mas( -----> [massesPosId 0 x0(;
+#X text 176 495 [get massesPos( -----> [massesPos 0 x0(;
+#X text 162 545 [get massesPos 1( -----> [massesPosNo 1 x1(;
+#X text 15 30 The attributes messages ask the object to output some
+of his internal parameters. They can be output by lists for positions
+and forces of masses.;
+#X text 142 367 (\$2) : - If not defined all the attributes are send
+for all the elements. - Ids or/and creations No;
+#X msg 33 104 print;
+#X text 136 104 print infos on all masses and links on right outlet
+;
+#X text 171 170 Output all masses positions in a list on outlet;
+#X text 169 199 Output all forces applied on masses in a list on outlet
+;
+#X text 170 229 Output all speeds of the masses in a list on outlet
+;
+#X text 142 324 \$1 : Attribute type ( massesPos / massesPosName /
+massesSpeeds / massesSpeedsName / massesForces / massesForcesName /
+linksPos / linksPosName );
+#X text 148 615 [get massesPosName( -----> [massesPosName mas x0(;
+#X obj 608 157 cnv 15 150 95 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 602 137 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 608 278 cnv 15 150 270 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X obj 602 258 cnv 15 590 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X text 605 258 statistics :;
+#X msg 613 291 massesPosMean;
+#X text 768 307 \$1 : none or Id;
+#X text 605 137 Tables :;
+#X msg 614 329 massesPosStd \$1;
+#X text 770 344 \$1 : none or Id;
+#X text 764 291 output the average position of masses;
+#X text 765 328 output the standard deviation of masses position;
+#X text 768 394 \$1 : none or Id;
+#X text 770 431 \$1 : none or Id;
+#X text 764 378 output the average position of masses;
+#X text 765 415 output the standard deviation of masses position;
+#X text 768 479 \$1 : none or Id;
+#X text 769 516 \$1 : none or Id;
+#X text 764 463 output the average position of masses;
+#X text 764 500 output the standard deviation of masses position;
+#X msg 613 416 massesForcesStd \$1;
+#X msg 613 378 massesForcesMean;
+#X msg 614 465 massesSpeedsMean;
+#X msg 613 501 massesSpeedsStd \$1;
+#X msg 610 170 massesPosT \$1 (\$2);
+#X msg 610 198 massesForcesT \$1 (\$2);
+#X msg 611 228 massesSpeedsT \$1 (\$2);
+#X text 770 169 Output all masses positions in a table (\$1 = table
+name \, \$2 (optional): Masses Id);
+#X text 768 198 Output all forces applied on masses in a table (\$1
+= table name \, \$2 (optional): Masses Id);
+#X text 768 229 Output all speeds of the masses in a table (\$1 = table
+name \, \$2 (optional): Masses Id);
+#X msg 16 170 massesPosL (\$1);
+#X msg 16 198 massesForcesL (\$1);
+#X msg 16 228 massesSpeedsL (\$1);
+#X text 170 183 \$1 (optional): Masses Id;
+#X text 170 213 \$1 (optional): Masses Id;
+#X text 171 242 \$1 (optional): Masses Id;
+#X text 337 509 [massesPos 1 x1(;
+#X text 337 523 [massesPos 2 x2(;
+#X text 338 630 [massesPosName mas x1(;
+#X text 339 645 [massesPosName mas x2(;
+#X text 337 581 [massesPosId 1 x1(;
+#X text 337 596 [massesPosId 2 x2(;
+#X restore 12 499 pd attributes__________;
+#N canvas 841 74 1139 731 dynamic 0;
+#X obj 5 3 cnv 15 550 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 10 85 cnv 15 130 580 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 4 62 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 575 86 cnv 15 130 380 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 568 62 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X text 7 62 Masses :;
+#X text 571 62 Links :;
+#X text 7 2 DYNAMIC SETTINGS Messages;
+#X msg 31 96 posX \$1 \$2;
+#X text 190 144 Add force on mass(es);
+#X msg 30 152 forceX \$1 \$2;
+#X text 192 212 \$1 : Value;
+#X text 193 107 \$1 : Id (symbol) or No;
+#X text 193 161 \$1 : Id (symbol) or No;
+#X msg 30 195 Xmin \$1;
+#X msg 30 217 Xmax \$1;
+#X msg 29 244 setMobile \$1;
+#X msg 29 265 setFixed \$1;
+#X text 193 89 Set position of fixed mass(es);
+#X text 193 125 \$2 : Value;
+#X text 193 179 \$2 : Value;
+#X text 189 196 Set minimimum and maximum position of all masses;
+#X text 188 244 Set mass to mobile or fixed;
+#X msg 594 150 setD \$1 \$2;
+#X text 749 136 \$2 : New value;
+#X msg 594 99 setK \$1 \$2;
+#X text 749 192 \$2 : New value;
+#X text 749 245 \$2 : New value;
+#X text 743 100 Set rigidity of link(s);
+#X text 743 156 Set damping of link(s);
+#X msg 594 205 setL \$1 \$2;
+#X text 743 209 Set initial lenght of link(s);
+#X text 749 118 \$1 : Id (symbol) or No;
+#X text 749 174 \$1 : Id (symbol) or No;
+#X text 749 227 \$1 : Id (symbol) or No;
+#X text 191 261 \$1 : Id (symbol) or No;
+#X text 10 25 Dynamic settings messages allows the user to redefine
+internal parameters of links and masses.;
+#X msg 28 286 setDEnv \$1;
+#X text 184 287 Change environement damping;
+#X text 196 304 \$1 : damping;
+#X msg 588 280 setLinkId \$1 \$2;
+#X text 742 281 Change the Id of a link;
+#X text 743 298 \$1 : link (number or Id);
+#X text 746 315 \$2 : New Id;
+#X msg 591 353 setLKTab \$1 \$2;
+#X text 750 353 change the table (K) size of a non linear link;
+#X text 751 373 \$1 : link (number or Id);
+#X text 752 390 \$2 : New KL;
+#X text 751 435 \$1 : link (number or Id);
+#X msg 591 415 setLDTab \$1 \$2;
+#X text 750 415 change the table (D) size of a non linear link;
+#X text 752 452 \$2 : New DL;
+#X text 191 373 \$2 : New Id;
+#X msg 25 339 setMassId \$1 \$2;
+#X text 191 339 Change the Id of a mass;
+#X text 192 356 \$1 : mass (number or Id);
+#X msg 23 400 setForce \$1 \$2;
+#X msg 23 468 setSpeed \$1 \$2;
+#X msg 24 531 addPos \$1 \$2;
+#X text 186 420 \$1 : Id (symbol) or No;
+#X text 186 438 \$2 : Value;
+#X text 183 403 set force on mass(es);
+#X text 185 487 \$1 : Id (symbol) or No;
+#X text 185 505 \$2 : Value;
+#X text 182 470 set speed of a mass(es);
+#X text 184 548 \$1 : Id (symbol) or No;
+#X text 184 566 \$2 : Value;
+#X text 181 531 add pos of a mass(es);
+#X msg 26 593 grabMass \$1 \$2 \$3;
+#X text 183 592 grab a mass \, and move it;
+#X text 185 614 \$1 : mass number;
+#X text 185 630 \$2 : position;
+#X text 185 646 \$3 : grab or not (0 or 1);
+#X restore 12 478 pd dynamic settings ___;
+#N canvas 818 245 561 671 creation____________ 0;
+#X obj 11 95 cnv 15 100 35 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 5 75 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 5 3 cnv 15 550 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 7 2 CREATION Messages;
+#X obj 10 156 cnv 15 150 140 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 4 137 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X obj 10 332 cnv 15 240 220 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 3 308 cnv 15 550 15 empty empty empty 20 12 0 14 -158509 -66577
+0;
+#X msg 32 104 reset;
+#X text 202 167 Add a mass;
+#X text 288 168 \$1 : Id (symbol);
+#X text 287 188 \$2 : fixed or mobile (0/1);
+#X text 287 206 \$3 : mass;
+#X msg 32 167 mass \$1 \$2 \$3 \$4;
+#X text 287 224 \$4 : initial position;
+#X text 7 137 Masses :;
+#X text 7 74 Reset :;
+#X text 129 105 Delete all masses \, links and internal variables;
+#X text 6 308 Links :;
+#X text 271 360 \$1 : Id (symbol);
+#X text 271 360 \$1 : Id (symbol);
+#X text 271 413 \$4 : rigidity;
+#X text 271 378 \$2 : creation No/Id of mass1;
+#X text 271 396 \$3 : creation No/Id of mass2;
+#X text 266 341 Add link(s);
+#X text 271 431 \$5 : damping;
+#X text 10 28 Creation messages are used to define the structure of
+the model. Messages create links and masses or destroy them.;
+#X msg 30 341 link \$1 \$2 \$3 \$4 \$5 (\$6 \$7 \$8);
+#X text 271 449 \$6 : Power of the rigidity distance;
+#X msg 35 519 tabLink \$1 \$2 \$3 \$4 \$5 \$6 \$7;
+#X text 267 468 (\$7) : minimum lenght of link;
+#X text 268 485 (\$8) : maximum lenght of link;
+#X text 266 535 \$1 : Id (symbol);
+#X text 266 535 \$1 : Id (symbol);
+#X text 266 553 \$2 : creation No/Id of mass1;
+#X text 266 571 \$3 : creation No/Id of mass2;
+#X text 261 516 Add non linear link(s);
+#X text 264 588 \$4 : table name for the rigidity;
+#X text 264 606 \$5 : length of the table;
+#X text 264 624 \$6 : table name for the damping;
+#X text 263 643 \$7 : length of the table;
+#X restore 12 457 pd creation____________;
+#N canvas 0 22 901 640 More_Info 0;
+#X text 96 12 pmpd : mass - spring - damper model;
+#X text 27 155 Be careful : if masses are deleted \, lists messages
+won't work;
+#X text 27 60 It is designed to implement particules physical model
+in PD.The model is based on two elements type : mass and link. The
+pmpd masses are the principals objects of the model. They got only
+one physical parameter \, the value of their mass. They can be mobile
+or fixed \, in this case forces applied on them automatically \, by
+links \, or manually \, by messages \, don't do anything.;
+#X obj 426 -5 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 426 294 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array rigidity1 4 float 1;
+#A 0 -1 0 1 2;
+#X array - 4 float 1;
+#A 0 0 0 0 0;
+#X coords 0 3 3 -3 200 150 1;
+#X restore 31 428 graph;
+#X text 89 585 L0;
+#N canvas 324 73 956 727 figure 0;
+#X obj 284 53 loadbang;
+#X msg 293 125 \; rigidity1 resize 1 \; rigidity1 resize 4 \; rigidity1
+bounds 0 3 3 -3 \; rigidity1 0 -1 0 1 2 \; rigidity1 ylabel -0.5 \;
+rigidity1 xlabel -3.5 \; rigidity1 xticks 0 1 1 \; rigidity1 yticks
+0 0.1 5;
+#X obj 388 574 sqrt;
+#X obj 316 651 tabwrite rigidity3;
+#X obj 343 464 - 20;
+#X obj 316 609 f;
+#X obj 316 579 t b f;
+#X obj 343 494 moses 0;
+#X obj 343 517 * -1;
+#X obj 343 538 sqrt;
+#X obj 343 559 * -1;
+#X obj 481 479 - 20;
+#X obj 453 662 f;
+#X obj 453 632 t b f;
+#X obj 481 509 moses 0;
+#X obj 481 532 * -1;
+#X obj 480 612 * -1;
+#X obj 528 622 *;
+#X obj 480 591 *;
+#X obj 525 590 t f f;
+#X obj 480 564 t f f;
+#X obj 453 683 tabwrite rigidity4;
+#X obj 181 235 t b b;
+#X obj 620 552 f;
+#X obj 620 522 t b f;
+#X obj 620 623 tabwrite rigidity2;
+#X msg 763 574 0;
+#X obj 679 437 - 50;
+#X obj 751 491 moses 40;
+#X obj 681 510 moses -40;
+#X obj 620 586 * 1.5;
+#X obj 680 462 moses 10;
+#X obj 680 488 moses -10;
+#X msg 55 419 \; rigidity2 resize 101 \; rigidity2 xticks 1 10 5 \;
+rigidity2 yticks 0 5 5 \; rigidity3 resize 51 \; rigidity3 xticks 0
+1 5 \; rigidity3 yticks 0 1 5 \; rigidity4 resize 51 \; rigidity4 xticks
+0 1 5 \; rigidity4 yticks 0 100 5;
+#X obj 631 315 f;
+#X obj 648 394 + 1;
+#X obj 632 367 t f f;
+#X obj 375 333 f;
+#X obj 375 360 moses 50.5;
+#X obj 392 411 + 1;
+#X obj 376 384 t f f;
+#X obj 176 141 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 371 310 0;
+#X msg 627 286 0;
+#X obj 631 343 moses 100.5;
+#X connect 0 0 1 0;
+#X connect 0 0 22 0;
+#X connect 2 0 5 1;
+#X connect 4 0 7 0;
+#X connect 5 0 3 0;
+#X connect 6 0 5 0;
+#X connect 6 1 3 1;
+#X connect 7 0 8 0;
+#X connect 7 1 2 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 5 1;
+#X connect 11 0 14 0;
+#X connect 12 0 21 0;
+#X connect 13 0 12 0;
+#X connect 13 1 21 1;
+#X connect 14 0 15 0;
+#X connect 14 1 19 0;
+#X connect 15 0 20 0;
+#X connect 16 0 12 1;
+#X connect 17 0 12 1;
+#X connect 18 0 16 0;
+#X connect 19 0 17 0;
+#X connect 19 1 17 1;
+#X connect 20 0 18 0;
+#X connect 20 1 18 1;
+#X connect 22 0 42 0;
+#X connect 22 1 33 0;
+#X connect 22 1 43 0;
+#X connect 23 0 30 0;
+#X connect 24 0 23 0;
+#X connect 24 1 25 1;
+#X connect 26 0 23 1;
+#X connect 27 0 31 0;
+#X connect 28 0 23 1;
+#X connect 28 1 26 0;
+#X connect 29 0 26 0;
+#X connect 29 1 23 1;
+#X connect 30 0 25 0;
+#X connect 31 0 32 0;
+#X connect 31 1 28 0;
+#X connect 32 0 29 0;
+#X connect 32 1 26 0;
+#X connect 34 0 44 0;
+#X connect 35 0 34 0;
+#X connect 36 0 35 0;
+#X connect 36 1 27 0;
+#X connect 36 1 24 0;
+#X connect 37 0 38 0;
+#X connect 38 0 40 0;
+#X connect 39 0 37 0;
+#X connect 40 0 39 0;
+#X connect 40 1 4 0;
+#X connect 40 1 6 0;
+#X connect 40 1 13 0;
+#X connect 40 1 11 0;
+#X connect 41 0 22 0;
+#X connect 42 0 37 0;
+#X connect 43 0 34 0;
+#X connect 44 0 36 0;
+#X restore 27 304 pd figure;
+#X text 105 375 Rigidity;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array rigidity2 101 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 -60 -58.5 -57 -55.5 -54 -52.5 -51 -49.5 -48
+-46.5 -45 -43.5 -42 -40.5 -39 -37.5 -36 -34.5 -33 -31.5 -30 -28.5 -27
+-25.5 -24 -22.5 -21 -19.5 -18 -16.5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 15 16.5 18 19.5 21 22.5 24 25.5 27 28.5 30 31.5 33 34.5 36
+37.5 39 40.5 42 43.5 45 46.5 48 49.5 51 52.5 54 55.5 57 58.5 0 0 0
+0 0 0 0 0 0 0 0;
+#X array - 101 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0;
+#X coords 0 100 100 -100 200 150 1;
+#X restore 449 428 graph;
+#X text 547 583 L0;
+#X text 466 374 Rigidity with Lmin and Lmax;
+#X text 563 583 Lmin;
+#X text 625 582 Lmax;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array rigidity3 51 float 1;
+#A 0 -4.47214 -4.3589 -4.24264 -4.12311 -4 -3.87298 -3.74166 -3.60555
+-3.4641 -3.31662 -3.16228 -3 -2.82843 -2.64575 -2.44949 -2.23607 -2
+-1.73205 -1.41421 -1 0 1 1.41421 1.73205 2 2.23607 2.44949 2.64575
+2.82843 3 3.16228 3.31662 3.4641 3.60555 3.74166 3.87298 4 4.12311
+4.24264 4.3589 4.47214 4.58258 4.69042 4.79583 4.89898 5 5.09902 5.19615
+5.2915 5.38516 5.47723;
+#X array - 51 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 6 50 -6 200 150 1;
+#X restore 241 428 graph;
+#X text 314 581 L0;
+#X text 257 375 Rigidity with power = 1/2;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array rigidity4 51 float 1;
+#A 0 0 -400 -361 -324 -289 -256 -225 -196 -169 -144 -121 -100 -81 -64
+-49 -36 -25 -16 -9 -4 -1 0 1 4 9 16 25 36 49 64 81 100 121 144 169
+196 225 256 289 324 361 400 441 484 529 576 625 676 729 784 841;
+#X array - 51 float 1;
+#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+#X coords 0 1000 50 -1000 200 150 1;
+#X restore 657 428 graph;
+#X text 730 582 L0;
+#X text 688 373 Rigidity with power = 2;
+#X text 571 12 The equations are :;
+#X text 497 36 if Lmin<|L[n]-L[0]|<Lmax;
+#X text 496 75 else;
+#X text 496 95 F[n] = D(L[n]-L[n-1]);
+#X text 496 54 F[n] = K(L[n] - L[0])^P + D(L[n] - L[n-1]);
+#X text 28 187 Links connect masses two by two. They got 4 physicals
+parameters : length \, rigidity \, damping and power.;
+#X text 27 216 Rigidity \, damping and power are defined by the creation
+message. The lenght is initialised to the distance between the two
+masses at the creation.;
+#X text 495 124 For oriented links \, the force F[n] is projected onto
+a vector which is given during the creation of the link using x1y1
+coordinates.;
+#X text 495 169 For normal vector \, the direction is calculated using
+the scalar product :;
+#X text 495 248 You can build specific links using different links
+messages defining the characteristic step by step.;
+#X text 496 206 x1x2 + y1y2 = 0;
+#X text 27 257 Links can be created in one shot between mutiples masses
+\, instead of creation number \, the masses linked are defined with
+their Id.;
+#X text 28 41 pmpd is the 2D object of the pmpd objects collection.
+;
+#X connect 3 0 4 0;
+#X restore 18 695 pd More_Info;
+#X connect 20 0 47 0;
+#X connect 21 0 24 0;
+#X connect 24 0 23 0;
+#X connect 26 0 25 0;
+#X connect 27 0 29 0;
+#X connect 28 0 18 0;
+#X connect 29 0 32 0;
+#X connect 32 0 21 0;
+#X connect 32 1 22 0;
+#X connect 32 2 30 0;
+#X connect 32 3 31 0;
+#X connect 47 0 19 0;
+#X connect 50 0 26 0;

@@ -1,0 +1,72 @@
+#N canvas 192 25 1116 743 10;
+#X obj 66 220 midi-tentacle /uc33 /Knob1 /modular;
+#X obj 67 12 cnv 15 340 170 empty empty Virtual_UC-33 20 12 0 14 -233017
+-66577 0;
+#X floatatom 310 148 5 0 0 0 - - -;
+#X obj 284 33 vsl 15 128 0 1 0 0 /uc33/Slider1/GUI /uc33/Slider1/GUIR
+Slider1 0 -9 0 10 -1 -159808 -1 7200 1;
+#X obj 85 80 knob 32 32 0 1 0 0 /uc33/Knob1/GUI /uc33/Knob1/GUIR Knob1
+0 -8 193 11 -262144 -159808 -1 3000 1;
+#X floatatom 128 148 5 0 0 0 - - -;
+#X obj 72 365 cnv 15 320 300 empty empty littlesynth-A 20 12 0 14 -232576
+-66577 0;
+#X obj 157 456 hsl 128 20 0 5000 0 0 \$0Brelease \$0BreleaseR release
+-2 -8 0 10 -203904 -1 -1 7200 1;
+#X obj 195 502 r \$0release;
+#X obj 108 502 r \$0filterCut;
+#X obj 157 416 hsl 128 20 0 20000 0 0 \$0BfilterCut \$0BfilterCutR
+filter-cutoff -2 -8 0 10 -261234 -1 -1 12290 1;
+#N canvas 0 22 450 300 littlesynthA 0;
+#X obj 49 37 inlet;
+#X obj 191 39 inlet;
+#X restore 108 556 pd littlesynthA;
+#X text 412 82 "Dev" is the device number \, as defined in the Pd MIDI
+preferences;
+#X text 443 231 "Omni" means the midi-tentacle will receive all channels
+and transmit to only one OSC address. "Ch.#" means the midi-tentacle
+will receive each channel and transmit it to an independently assigned
+OSC address. You can think of the radiobuttons as "pages"[1] - flip
+through them with the tentacle-pager:;
+#X obj 540 307 tentacle-pager /uc33;
+#X obj 245 220 midi-tentacle /uc33 /Slider1 /modular;
+#X obj 535 433 polaroid /uc33 \$0A;
+#X obj 518 505 originator-p /uc33 \$0A;
+#X obj 76 622 commun-c-scale-ez \$0B /littlesynthA filterCut 0 20000
+;
+#X obj 76 642 commun-c-scale-ez \$0B /littlesynthA release 0 5000;
+#X obj 76 602 originator-p /modular \$0B;
+#X text 668 495 [2];
+#X obj -303 -19 cnv 15 300 30 empty empty Controctopus_Basic_Overview
+20 12 0 14 -1721 -262144 0;
+#X text 431 661 [2] please disregard the \$0A and \$0B \, they're just
+to allow me to show everything in one patch;
+#X obj 261 557 polaroid /modular \$0B;
+#X text -298 44 1);
+#X text -298 208 2);
+#X text -296 361 3);
+#X text -297 385 That should do it.;
+#X text 439 529 Use [polaroid] to save controller maps separately from
+patch presets \, or [careGUI] to save everything together.;
+#X text -298 230 First \, click any of the yellow "get" buttons to
+populate the midi-tentacle's popup with all controllable parameters
+under the parent you specified (here \, it's /modular);
+#X obj 128 57 cc-learner /uc33 /Knob1;
+#X obj 310 57 cc-learner /uc33 /Slider1;
+#X text -295 11 2008 Luke Iannini \, proyekto.net tag sndrft;
+#X text -298 64 Set CC number of the MIDI controller you'd like cc-learner
+to represent \, or click the red button to "Learn" the controller (click
+\, then move the physical control);
+#X text 64 304 called [midi-tentacle /uc33 /Knob1 /modular];
+#X text 69 183 called [cc-learner /uc33 /Knob1];
+#X text 413 129 The pdgui knobs and sliders work like virtual versions
+of your hardware (helpful for testing). Look at their properties to
+see how they interface with cc-learner.;
+#X text 64 324 "/modular" is the group (as defined by originator-p)
+that I want to address;
+#X text 435 358 [1] Though "Omni" is a special page that necessarily
+blocks all other channels (but they'll still remember their assignment
+settings!);
+#X connect 8 0 11 1;
+#X connect 9 0 11 0;
+#X connect 31 0 5 0;
+#X connect 32 0 2 0;

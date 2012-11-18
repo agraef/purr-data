@@ -1,0 +1,8 @@
+max v2;
+#N vpatcher 200 142 489 314;
+#P origin 0 2;
+#P newex 124 111 45 196617 vasp.log;
+#P comment 45 57 189 196617 natural logarithm;
+#P comment 45 34 89 196622 vasp.log;
+#P comment 45 73 100 196617 ln(sample);
+#P pop;

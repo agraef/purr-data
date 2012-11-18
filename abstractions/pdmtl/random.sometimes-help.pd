@@ -1,0 +1,33 @@
+#N canvas 0 0 450 300 10;
+#X obj 156 210 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 213 261 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 186 233 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 265 133 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 178 86 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 179 64 init.lf 1;
+#X text 13 23 Description: random probabilities of a bang passing of
+not;
+#X obj 156 175 random.sometimes 0.2;
+#X obj 186 198 random.sometimes 0.5;
+#X obj 213 226 random.sometimes 1;
+#X obj 129 187 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 129 152 random.sometimes 0;
+#X obj 178 105 metro 500;
+#X text 14 40 Proportion normalized on 1;
+#X connect 4 0 12 0;
+#X connect 5 0 4 0;
+#X connect 7 0 0 0;
+#X connect 8 0 2 0;
+#X connect 9 0 1 0;
+#X connect 11 0 10 0;
+#X connect 12 0 3 0;
+#X connect 12 0 7 0;
+#X connect 12 0 8 0;
+#X connect 12 0 9 0;
+#X connect 12 0 11 0;

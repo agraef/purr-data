@@ -1,0 +1,73 @@
+#N canvas 172 37 712 664 10;
+#X obj 229 125 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 75 157 loop \$1;
+#X obj 76 135 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1 1
+;
+#X msg 103 104 open \$1;
+#X obj 102 80 openpanel;
+#X obj 103 54 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 192 123 stop;
+#X obj 209 156 metro 70;
+#X obj 278 188 pdp_v4l;
+#X obj 287 157 metro 70;
+#X obj 332 123 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 289 124 stop;
+#X msg 374 155 open /dev/video;
+#X obj 204 188 pdp_yqt;
+#X obj 488 441 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 488 493 pdp_control;
+#X msg 488 466 thread \$1;
+#X floatatom 488 554 5 0 0 0 - - -;
+#X obj 488 525 route pdp_drop;
+#X text 80 573 written by Yves Degoyon ( ydegoyon@free.fr );
+#X obj 190 428 pdp_glx;
+#X msg 391 319 unhide 0;
+#X text 464 325 Unhide <index>;
+#X text 412 301 Hide <x1> <y1> <x2> <y2> <x3> <y3>;
+#X text 412 290 Hide a triangular zone :;
+#X text 464 314 Unhide a triangular zone :;
+#X msg 393 274 hide 0 23 250 25 67 235;
+#X obj 190 401 pdp_cache;
+#X text 80 557 pdp_cache : hide triangular zones from a video stream
+;
+#X text 411 367 Same as hide but with percentages;
+#X msg 392 351 rawhide 0 0.823 0.15 0.234 0.892 0.678;
+#X obj 190 451 route press;
+#X obj 190 473 handle-clicks;
+#X obj 190 497 route 0;
+#X obj 191 520 s rawhide;
+#X obj 320 400 r rawhide;
+#X msg 107 401 cursor 1;
+#X connect 0 0 7 0;
+#X connect 1 0 13 0;
+#X connect 2 0 1 0;
+#X connect 3 0 13 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 13 0;
+#X connect 8 0 27 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 8 0;
+#X connect 13 0 27 0;
+#X connect 13 0 36 0;
+#X connect 14 0 16 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;
+#X connect 18 0 17 0;
+#X connect 20 0 31 0;
+#X connect 21 0 27 0;
+#X connect 26 0 27 0;
+#X connect 27 0 20 0;
+#X connect 30 0 27 0;
+#X connect 31 0 32 0;
+#X connect 32 0 33 0;
+#X connect 33 0 34 0;
+#X connect 35 0 27 0;
+#X connect 36 0 20 0;

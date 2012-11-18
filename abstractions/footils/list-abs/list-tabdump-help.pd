@@ -1,0 +1,54 @@
+#N canvas 303 65 881 635 10;
+#X msg 618 57 0 1 2 3 4 5 6 7 8 9 10;
+#X obj 618 34 loadbang;
+#X msg 39 126 bang;
+#X obj 39 384 print dump;
+#X obj 619 142 loadbang;
+#X msg 619 165 0 10 20 30 40 50 60 70 80 90 100;
+#X obj 619 187 s y-dump;
+#X obj 619 213 table y-dump 10;
+#X obj 618 104 table x-dump 10;
+#X obj 618 79 s x-dump;
+#X floatatom 46 188 5 0 0 0 - - -;
+#X msg 55 279 list x-dump 3 4;
+#X msg 55 223 list x-dump 3;
+#X msg 56 307 list y-dump 1 3;
+#X obj 89 497 expr size("$s1");
+#X floatatom 104 523 5 0 0 0 - - -;
+#X obj 36 465 t a a;
+#X obj 36 545 pack s 0;
+#X msg 36 443 symbol y-dump;
+#X text 213 495 gets size of array;
+#X text 21 23 list-tabdump: get a table's content as a list.;
+#X text 172 187 float <x>: set <count> to <x> and do a dump;
+#X text 33 58 Arguments: <table> <count> <start>;
+#X text 174 223 list <tablename> <count>: set <tablename> and <count>
+and do a dump.;
+#X text 174 291 list <tablename> <count> <start>: set <tablename> \,
+<count> and <start> position and do a dump.;
+#X text 171 124 bang: dump contents of table as specified by <table>
+\, <count> and <start>. <table> \, <count> and <start> can be set by
+arguments or with the following messages.;
+#X obj 39 349 list-tabdump x-dump;
+#X text 33 91 Inlet methods:;
+#X obj 36 603 print dump;
+#X obj 36 568 list-tabdump y-dump;
+#X text 34 412 Hint: You can use [expr] to get the size of a table
+if you want to dump everything:;
+#X connect 0 0 9 0;
+#X connect 1 0 0 0;
+#X connect 2 0 26 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 10 0 26 0;
+#X connect 11 0 26 0;
+#X connect 12 0 26 0;
+#X connect 13 0 26 0;
+#X connect 14 0 15 0;
+#X connect 14 0 17 1;
+#X connect 16 0 17 0;
+#X connect 16 1 14 0;
+#X connect 17 0 29 0;
+#X connect 18 0 16 0;
+#X connect 26 0 3 0;
+#X connect 29 0 28 0;

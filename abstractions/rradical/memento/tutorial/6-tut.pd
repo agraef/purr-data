@@ -1,0 +1,39 @@
+#N canvas 318 284 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Saving_And_Loading 20 12 1 14
+-262144 -66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X floatatom 166 253 5 0 0 0 - - -;
+#X obj 98 334 commun aRadio \$0;
+#X obj 97 282 commun aFloat \$0;
+#X obj 167 310 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 7;
+#X msg 96 201 set;
+#X msg 133 201 substate \$1;
+#X obj 103 150 tgl 24 0 empty empty Toggles_Between_2_Substates 0 -6
+0 10 -225280 -1 -1 1 1;
+#X obj 103 177 t b f;
+#X symbolatom 359 267 10 0 0 2 type_something_here - -;
+#X obj 323 289 commun aSymbol \$0;
+#X obj 323 313 symbol;
+#X text 284 334 Symbols need another 'symbol' object!;
+#X msg 378 10 7;
+#X text 51 77 Now only a single change: We added a caretaker with careGUI.
+Please select a file then play with saving and restoring. You also
+can peek into the state with PRINT.;
+#X obj 98 377 careGUI;
+#X obj 96 226 originator myState-2 \$0;
+#X text 117 461 First select a FILE \, then SAVE!!!;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 7 0 18 0;
+#X connect 8 0 18 0;
+#X connect 9 0 10 0;
+#X connect 10 0 7 0;
+#X connect 10 1 8 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 11 0;
+#X connect 15 0 1 0;

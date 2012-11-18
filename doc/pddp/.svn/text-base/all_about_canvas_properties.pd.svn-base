@@ -1,0 +1,157 @@
+#N struct xy-units float x float y;
+#N canvas 0 0 448 318 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header canvas_properties
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 296 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS GUI needs_work;
+#X text 12 45 DESCRIPTION settings for the visual appearance of a Pd
+canvas;
+#X restore 392 298 pd META;
+#N canvas 10 196 428 114 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Canvas Properties- Related Objects;
+#X obj 33 76 pddp/pddplink ../3.audio.examples/A05.output.subpatch.pd
+;
+#X text 33 45 The [output~] object used throughout the audio tutorials
+is a "gop" enabled abstraction. See:;
+#X restore 103 298 pd Related_objects;
+#X obj 6 298 pddp/pddplink all_about.pd -text All About Pd;
+#X text 21 37 You can access canvas properties by right-clicking on
+an empty area of a canvas and choosing "Properties". (You can also
+right-click on the object box of a subcanvas.);
+#X text 21 78 Most of the settings only make sense for subwindows \,
+but you can change them for a root canvas as well (for instance \,
+if you want to use it later as an abstraction).;
+#X text 21 197 hide object name and arguments: self-explanatory;
+#X text 21 252 X and Y size: width and height of the gop canvas;
+#X text 21 268 X and Y margins: which part of the gop canvas is shown
+;
+#X text 21 129 X units per pixel: scale data structures drawings;
+#X text 21 144 Y units per pixel:;
+#N canvas 12 79 428 253 gop 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Some examples of graph on parent (gop) subpatches;
+#N canvas 0 0 414 354 gop_subpatch 0;
+#X floatatom 105 126 5 0 0 1 count - -;
+#X obj 105 104 inlet;
+#X obj 105 171 + 1;
+#X msg 170 145 set \$1;
+#X obj 105 228 outlet;
+#X text 25 15 Here's the inside. Notice that wires \, object boxes
+\, and (unfortunately) message boxes don't show up on the parent patch.
+;
+#X obj 242 68 inlet;
+#X msg 242 95 set 0;
+#X text 24 257 The red box shows which area of this subpatch will be
+visible on the parent canvas. Use the x/y "size" and "margin" settings
+in the canvas properties menu to specify which portion of the subpatch
+will be visible. You can also check the box for "hide object name and
+arguments" (which can be useful for making GUI abstractions).;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X coords 0 -1 1 1 120 65 1 100 100;
+#X restore 28 143 pd gop_subpatch;
+#X obj 28 118 bng 15 250 50 0 empty empty step 17 7 0 10 -4034 -1 -1
+;
+#X obj 28 218 print;
+#X obj 141 118 bng 15 250 50 0 empty empty reset 17 7 0 10 -232576
+-1 -1;
+#X text 154 165 <- right-click inside the rectangle;
+#X text 174 180 and choose "Open" to see the "innards"...;
+#X text 25 27 "Graph on parent" lets you see (and use) GUI objects
+that are inside a subpatch. Simply check the box next to "graph on
+parent" in the canvas properties menu to enable this feature.;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 5 0 2 1;
+#X restore 332 184 pd gop;
+#X text 21 223 X range & Y range: for garrays and data structures;
+#N canvas 12 79 428 376 xy-range 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 X and Y Range;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 10 float 3;
+#A 0 1.25716 0.514292 0.814295 1.27144 1.44287 1.57145 1.35716 1.18573
+0.55715 1.28573;
+#X coords 0 1 10 -1 200 140 1;
+#X restore 102 212 graph;
+#X text 24 37 Similar to "Units per pixel" \, but you can use these
+settings to change how an array is displayed in a graph (as well as
+data structures in a "gop"-enabled subpatch).;
+#X text 24 87 For example: the Y-range for the array below is the default
+1 to -1 \, yet many of the values lie above this range. Try changing
+the Y-range to lie between 2 and 0 and you will see an improvement
+in the display of this array.;
+#X restore 332 224 pd xy-range;
+#N canvas 174 40 427 544 units 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 X and Y Units per Pixel;
+#X text 19 357 1) Right-click on an empty portion of this subpatch
+;
+#X floatatom 254 191 5 0 0 2 x #0-x -;
+#X floatatom 293 191 5 0 0 2 y #0-y -;
+#X obj 293 220 t b a;
+#X obj 274 243 set xy-units x y;
+#N canvas 0 0 450 300 xy-units 0;
+#X obj 42 146 filledpolygon 559 0 1 0 0 100 0 100 100 0 100;
+#X obj 42 173 drawnumber x 5 5 0 x=;
+#X obj 42 200 drawnumber y 5 35 0 y=;
+#X obj 234 241 pointer;
+#X obj 234 268 outlet;
+#X obj 42 53 route displace;
+#X obj 42 119 s \$0-x;
+#X obj 135 118 s \$0-y;
+#X msg 42 98 set \$1;
+#X msg 135 98 set \$1;
+#X obj 42 26 struct xy-units float x float y;
+#X obj 42 76 get xy-units x y;
+#X msg 234 214 traverse pd-units \, next;
+#X obj 234 187 loadbang;
+#X connect 3 0 4 0;
+#X connect 5 0 11 0;
+#X connect 8 0 6 0;
+#X connect 9 0 7 0;
+#X connect 10 0 5 0;
+#X connect 11 0 8 0;
+#X connect 11 1 9 0;
+#X connect 12 0 3 0;
+#X connect 13 0 12 0;
+#X restore 337 206 pd xy-units;
+#X scalar xy-units 130 209 \;;
+#X text 19 377 2) In the "Canvas Properties" dialogue \, change the
+values for the x/y units per pixel. For example \, changing x to 2
+and y to -2 will make the square half its original size.;
+#X text 19 427 3) Notice when you scroll the y value with the number
+box above \, the rectangle moves in the opposite direction from the
+mouse. This is because with the number box \, up = higher numbers \,
+while with the canvas coordinates up = lower numbers. To change this
+\, make the y units per pixel "1" instead of "-1" .;
+#X text 19 512 4) That's it \, as far as I can tell...;
+#X text 19 327 The square above is a scalar. You can use the "Units
+per pixel" settings to scale its units in the following ways:;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 1 6 1;
+#X connect 7 0 6 2;
+#X restore 332 134 pd units;
+#X text 21 163 graph on parent (gop): reveal part of a subpatch's content
+;

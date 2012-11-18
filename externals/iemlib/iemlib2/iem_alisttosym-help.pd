@@ -1,0 +1,18 @@
+#N canvas 50 29 529 402 10;
+#X obj 46 128 iem_alisttosym;
+#X symbolatom 46 151 0 0 0 0 - - -;
+#X msg 47 86 97 98 99 100;
+#X text 27 16 iem_alisttosym;
+#X text 152 15 covert a list of ASCII floats to a symbol;
+#X text 93 233 IEM KUG;
+#X text 72 221 musil;
+#X text 107 221 @;
+#X text 115 221 iem.at;
+#X text 76 243 Graz \, Austria;
+#X text 28 210 (c) Thomas Musil 2000 - 2008;
+#X msg 164 88 65 66 67 68;
+#X msg 271 88 49 50 51 52;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 11 0 0 0;
+#X connect 12 0 0 0;

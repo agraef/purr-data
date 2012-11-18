@@ -1,0 +1,46 @@
+0.6.00
+	- renamed libwiimote to libcwiid to avoid naming conflict with other projects
+	- rewrite of libcwiid architecture
+	- Python libcwiid interface
+	- Python wminput plugins
+	- rewrite of ir_ptr plugin
+
+0.5.03
+	- Bugfixes, lswm utility, disconnect messages, wminput infinite wait
+
+0.5.02
+	- Bugfixes, configure --disable-ldconfig
+
+0.5.01
+	- Bugfixes
+
+0.5.00
+	- Overhauled wminput configuration
+	- wmdemo test application
+
+0.4.01
+	- Bugfixes
+
+0.4.00
+	- Status, Nunchuk, Classic Controller support
+
+0.3.51
+	- Bugfixes
+
+0.3.50
+	- Created plugin architecture
+	- Acc calculations and plugin
+
+0.3.01
+	- Bugfixes
+
+0.3.00
+	- IR Reporting
+	- wminput Event driver
+
+0.2.00
+	- ACC Reporting
+	- Memory Read/Write 
+
+0.1.00
+	- Initial Release

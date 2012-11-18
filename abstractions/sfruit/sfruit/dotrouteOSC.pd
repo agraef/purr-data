@@ -1,0 +1,20 @@
+#N canvas 0 22 350 222 10;
+
+#X obj 123 68 loadbang;
+#X obj 123 88 list append \$1;
+#X obj 48 190 outlet;
+#X obj 48 169 sdeeprouteOSC;
+#X msg 123 148 /\$1;
+#X obj 48 144 inlet;
+#X obj 94 47 inlet;
+#X obj 123 128 list2symbol /;
+#X obj 123 108 symbol2list .;
+#X obj 193 35 import-disabled zexy;
+#X connect 0 0 1 0;
+#X connect 1 0 8 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 1;
+#X connect 5 0 3 0;
+#X connect 6 0 8 0;
+#X connect 7 0 4 0;
+#X connect 8 0 7 0;

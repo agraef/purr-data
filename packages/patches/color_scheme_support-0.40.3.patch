@@ -1,0 +1,392 @@
+Index: g_canvas.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_canvas.c,v
+retrieving revision 1.11.2.1
+diff -u -w -r1.11.2.1 g_canvas.c
+--- g_canvas.c	19 Dec 2006 05:55:44 -0000	1.11.2.1
++++ g_canvas.c	4 Nov 2007 07:14:17 -0000
+@@ -895,13 +895,15 @@
+ {
+     t_linetraverser t;
+     t_outconnect *oc;
+-    {
++    int issignal;
++    
+         linetraverser_start(&t, x);
+         while (oc = linetraverser_next(&t))
+-            sys_vgui(".x%lx.c create line %d %d %d %d -width %d -tags l%lx\n",
+-                    glist_getcanvas(x),
+-                        t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
+-                            (outlet_getsymbol(t.tr_outlet) == &s_signal ? 2:1),
++    {
++        issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
++        sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill %s -tags l%lx\n",
++                 glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
++                 (issignal ? 2:1), (issignal ? "$signal_cord" : "$msg_cord"),
+                                 oc);
+     }
+ }
+Index: g_editor.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_editor.c,v
+retrieving revision 1.13.2.1
+diff -u -w -r1.13.2.1 g_editor.c
+--- g_editor.c	19 Dec 2006 05:55:44 -0000	1.13.2.1
++++ g_editor.c	4 Nov 2007 07:14:18 -0000
+@@ -108,7 +108,7 @@
+         x->gl_editor->e_selectline_index2 = index2;
+         x->gl_editor->e_selectline_inno = inno;
+         x->gl_editor->e_selectline_tag = oc;
+-        sys_vgui(".x%lx.c itemconfigure l%lx -fill blue\n",
++        sys_vgui(".x%lx.c itemconfigure l%lx -fill $select_color\n",
+             x, x->gl_editor->e_selectline_tag);
+     }    
+ }
+@@ -117,9 +117,21 @@
+ {
+     if (x->gl_editor)
+     {
++        t_linetraverser t;
++        t_outconnect *oc;
+         x->gl_editor->e_selectedline = 0;
+-        sys_vgui(".x%lx.c itemconfigure l%lx -fill black\n",
+-            x, x->gl_editor->e_selectline_tag);
++        linetraverser_start(&t, glist_getcanvas(x));
++        do {
++            oc = linetraverser_next(&t);
++        } while (oc && oc != x->gl_editor->e_selectline_tag);
++        int issignal;
++        if(outlet_getsymbol(t.tr_outlet) == &s_signal)
++            issignal = 1;
++        else
++            issignal = 0;
++        sys_vgui(".x%lx.c itemconfigure l%lx -fill %s\n",
++            x, x->gl_editor->e_selectline_tag,
++            (issignal ? "$signal_cord" : "$msg_cord"));
+     }    
+ }
+ 
+@@ -1149,7 +1161,11 @@
+                                 x, xpos, ypos, xpos, ypos,
+                                     (issignal ? 2 : 1));
+                     }                                   
+-                    else canvas_setcursor(x, CURSOR_EDITMODE_CONNECT);
++                    else 
++                    {
++                        canvas_setcursor(x, CURSOR_EDITMODE_CONNECT);
++                    }
++                    
+                 }
+                 else if (doit)
+                     goto nooutletafterall;
+@@ -1319,6 +1335,7 @@
+             }
+             if (doit)
+             {
++                int issignal = obj_issignaloutlet(ob1, closest1);
+                 oc = obj_connect(ob1, closest1, ob2, closest2);
+                 lx1 = x11 + (noutlet1 > 1 ?
+                         ((x12-x11-IOWIDTH) * closest1)/(noutlet1-1) : 0)
+@@ -1328,10 +1345,12 @@
+                         ((x22-x21-IOWIDTH) * closest2)/(ninlet2-1) : 0)
+                             + IOMIDDLE;
+                 ly2 = y21;
+-                sys_vgui(".x%lx.c create line %d %d %d %d -width %d -tags l%lx\n",
++                sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %d -tags l%lx\n",
+                     glist_getcanvas(x),
+                         lx1, ly1, lx2, ly2,
+-                            (obj_issignaloutlet(ob1, closest1) ? 2 : 1), oc);
++                    (issignal ? "$signal_cord" : "$msg_cord"),
++                    (issignal ? 2 : 1), 
++                    oc);
+                 canvas_setundo(x, canvas_undo_connect,
+                     canvas_undo_set_connect(x, 
+                         canvas_getindex(x, &ob1->ob_g), closest1,
+Index: g_rtext.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_rtext.c,v
+retrieving revision 1.5.2.4
+diff -u -w -r1.5.2.4 g_rtext.c
+--- g_rtext.c	19 May 2007 04:04:30 -0000	1.5.2.4
++++ g_rtext.c	4 Nov 2007 07:14:18 -0000
+@@ -248,7 +248,7 @@
+             dispx + LMARGIN, dispy + TMARGIN,
+             outchars, tempbuf, sys_hostfontsize(font),
+             (glist_isselected(x->x_glist,
+-                &x->x_glist->gl_gobj)? "blue" : "black"));
++                &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
+     else if (action == SEND_UPDATE)
+     {
+         sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
+@@ -384,7 +384,7 @@
+     t_glist *glist = x->x_glist;
+     t_canvas *canvas = glist_getcanvas(glist);
+     sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+-        x->x_tag, (state? "blue" : "black"));
++        x->x_tag, (state? "$select_color" : "$text_color"));
+     canvas_editing = canvas;
+ }
+ 
+Index: g_scalar.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_scalar.c,v
+retrieving revision 1.8
+diff -u -w -r1.8 g_scalar.c
+--- g_scalar.c	21 Aug 2005 17:46:52 -0000	1.8
++++ g_scalar.c	4 Nov 2007 07:14:19 -0000
+@@ -215,7 +215,7 @@
+         scalar_getrect(z, owner, &x1, &y1, &x2, &y2);
+         x1--; x2++; y1--; y2++;
+         sys_vgui(".x%lx.c create line %d %d %d %d %d %d %d %d %d %d \
+-            -width 0 -fill blue -tags select%lx\n",
++            -width 0 -fill $select_color -tags select%lx\n",
+                 glist_getcanvas(owner), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
+                 x);
+     }
+Index: g_text.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_text.c,v
+retrieving revision 1.11.2.1
+diff -u -w -r1.11.2.1 g_text.c
+--- g_text.c	19 Dec 2006 05:55:44 -0000	1.11.2.1
++++ g_text.c	4 Nov 2007 07:14:19 -0000
+@@ -803,7 +803,7 @@
+                 (double)x1, (double)y1,
+                 canvas_realizedollar(x->a_glist, x->a_label)->s_name,
+                 sys_hostfontsize(glist_getfont(glist)),
+-                "black");
++                "$text_color");
+         }
+         else sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+     }
+@@ -936,7 +936,7 @@
+         int font = glist_getfont(glist);
+         int fontwidth = sys_fontwidth(font), fontheight = sys_fontheight(font);
+         width = (x->te_width > 0 ? x->te_width : 6) * fontwidth + 2;
+-        height = fontheight + 1; /* borrowed from TMARGIN, etc, in g_rtext.c */
++        height = fontheight + 2; /* borrowed from TMARGIN, etc, in g_rtext.c */
+     }
+         /* if we're invisible we don't know our size so we just lie about
+         it.  This is called on invisible boxes to establish order of inlets
+@@ -984,10 +984,15 @@
+ {
+     t_text *x = (t_text *)z;
+     t_rtext *y = glist_findrtext(glist, x);
++    char *outline;
+     rtext_select(y, state);
++    if (pd_class(&x->te_pd) == text_class)
++        outline = "$dash_outline";
++    else
++        outline = "$box_outline";
+     if (glist_isvisible(glist) && text_shouldvis(x, glist))
+-        sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", glist, 
+-            rtext_gettag(y), (state? "blue" : "black"));
++        sys_vgui(".x%lx.c itemconfigure %sR -outline %s\n", glist, 
++                 rtext_gettag(y), (state? "$select_color" : outline));
+ }
+ 
+ static void text_activate(t_gobj *z, t_glist *glist, int state)
+@@ -1166,19 +1171,24 @@
+ {
+     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;
+     int width = x2 - x1;
++    int issignal;
+     for (i = 0; i < n; i++)
+     {
+         int onset = x1 + (width - IOWIDTH) * i / nplus;
+         if (firsttime)
+-            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+-                glist_getcanvas(glist),
+-                onset, y2 - 1,
+-                onset + IOWIDTH, y2,
++        {
++            issignal = obj_issignaloutlet(ob,i);
++            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
++                      -fill %s -outline %s -tags %so%d\n",
++                glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
++                (issignal ? "$signal_nlet" : "$msg_nlet"),
++                (issignal ? "$signal_cord" : "$msg_cord"),
+                 tag, i);
++        }
+         else
+             sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
+                 glist_getcanvas(glist), tag, i,
+-                onset, y2 - 1,
++                onset, y2 - 2,
+                 onset + IOWIDTH, y2);
+     }
+     n = obj_ninlets(ob);
+@@ -1187,11 +1197,15 @@
+     {
+         int onset = x1 + (width - IOWIDTH) * i / nplus;
+         if (firsttime)
+-            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+-                glist_getcanvas(glist),
+-                onset, y1,
+-                onset + IOWIDTH, y1 + EXTRAPIX,
++        {
++            issignal = obj_issignalinlet(ob,i);
++            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
++                      -fill %s -outline %s -tags %si%d\n",
++                glist_getcanvas(glist), onset, y1, onset + IOWIDTH, y1 + EXTRAPIX,
++                (issignal ? "$signal_nlet" : "$msg_nlet"),
++                (issignal ? "$signal_cord" : "$msg_cord"),
+                 tag, i);
++        }
+         else
+             sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
+                 glist_getcanvas(glist), tag, i,
+@@ -1204,57 +1218,74 @@
+     char *tag, int width2, int height2, int firsttime)
+ {
+     t_object *ob;
+-    int x1, y1, x2, y2, width, height;
++    int x1, y1, x2, y2, width, height, msg_draw_const, atom_draw_const;
+     text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
+     width = x2 - x1;
+     height = y2 - y1;
+     if (x->te_type == T_OBJECT)
+     {
+-        char *pattern = ((pd_class(&x->te_pd) == text_class) ? "-" : "\"\"");
++        char *pattern; char *outline;
++        if (pd_class(&x->te_pd) == text_class)
++        {
++            pattern = "-";
++            outline = "$dash_outline";
++        }
++        else
++        {
++            pattern = "\"\"";
++            outline = "$box_outline";
++        }
+         if (firsttime)
+-            sys_vgui(".x%lx.c create line\
+- %d %d %d %d %d %d %d %d %d %d -dash %s -tags %sR\n",
++            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d \
++                      -dash %s -outline %s -fill $obj_box_fill -tags %sR\n", 
+                 glist_getcanvas(glist),
+-                    x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  pattern, tag);
++                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
++                     pattern, outline, tag);
+         else
+         {
+-            sys_vgui(".x%lx.c coords %sR\
+- %d %d %d %d %d %d %d %d %d %d\n",
++            sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
+                 glist_getcanvas(glist), tag,
+                     x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
+-            sys_vgui(".x%lx.c itemconfigure %sR -dash %s\n",
+-                glist_getcanvas(glist), tag, pattern);
++            sys_vgui(".x%lx.c itemconfigure %sR -dash %s -outline %s\n",
++                     glist_getcanvas(glist), tag, pattern, outline);
+         }
+     }
+     else if (x->te_type == T_MESSAGE)
+     {
++        msg_draw_const = ((y2-y1)/4);
++        if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
+         if (firsttime)
+-            sys_vgui(".x%lx.c create line\
+- %d %d %d %d %d %d %d %d %d %d %d %d %d %d -tags %sR\n",
++            sys_vgui(".x%lx.c create polygon \
++                     %d %d %d %d %d %d %d %d %d %d %d %d %d %d \
++                     -outline $box_outline -fill $msg_box_fill -tags %sR\n",
+                 glist_getcanvas(glist),
+-                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
++                     x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
++                     x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
+                 x1, y2,  x1, y1,
+                     tag);
+         else
+             sys_vgui(".x%lx.c coords %sR\
+  %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+                 glist_getcanvas(glist), tag,
+-                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
+-                x1, y2,  x1, y1);
++                x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,
++                x2, y2-msg_draw_const, x2+msg_draw_const, y2,  x1, y2,  x1, y1);
+     }
+     else if (x->te_type == T_ATOM)
+     {
++        atom_draw_const = ((y2-y1)/3);
+         if (firsttime)
+-            sys_vgui(".x%lx.c create line\
+- %d %d %d %d %d %d %d %d %d %d %d %d -tags %sR\n",
++            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d \
++                     -outline $box_outline -fill $atom_box_fill -tags %sR\n",
+                 glist_getcanvas(glist),
+-                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
++                     x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
++                     x2, y2,  x1, y2,  x1, y1, 
+                     tag);
+         else
+             sys_vgui(".x%lx.c coords %sR\
+  %d %d %d %d %d %d %d %d %d %d %d %d\n",
+                 glist_getcanvas(glist), tag,
+-                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
++                x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,
++                x2, y2,  x1, y2,  x1, y1);
+     }
+         /* draw inlets/outlets */
+     
+Index: u_main.tk
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/u_main.tk,v
+retrieving revision 1.25
+diff -u -w -r1.25 u_main.tk
+--- u_main.tk	9 Oct 2006 04:36:12 -0000	1.25
++++ u_main.tk	4 Nov 2007 07:15:20 -0000
+@@ -31,6 +31,24 @@
+ set pd_array_listview_page(0) 0
+ # end jsarlo
+ 
++# color scheme
++set text_color "#000"
++set select_color "#00f"
++set dash_outline "#f00"
++set dash_fill "#fff"
++set box_outline "#ccc"
++set graph_outline "#777"
++set atom_box_fill "#eee"
++set msg_box_fill "#f8f8f6"
++set obj_box_fill "#f6f8f8"
++set signal_cord_highlight "#58a"
++set signal_cord "#558"
++set signal_nlet $signal_cord
++set msg_cord_highlight "#474"
++set msg_cord "#121"
++set msg_nlet "#fff"
++set mixed_nlet "#88aaff"
++
+ if {$pd_nt == 1} {
+     global pd_guidir
+     global pd_tearoff
+Index: g_graph.c
+===================================================================
+RCS file: /cvsroot/pure-data/pd/src/g_graph.c,v
+retrieving revision 1.10
+diff -u -w -r1.10 g_graph.c
+--- g_graph.c	3 Jun 2006 19:13:07 -0000	1.10
++++ g_graph.c	4 Nov 2007 07:26:20 -0000
+@@ -729,7 +729,7 @@
+         t_garray *ga;
+             /* draw a rectangle around the graph */
+         sys_vgui(".x%lx.c create line\
+-            %d %d %d %d %d %d %d %d %d %d -tags %s\n",
++            %d %d %d %d %d %d %d %d %d %d -fill $graph_outline -tags %s\n",
+             glist_getcanvas(x->gl_owner),
+             x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+         
+@@ -950,9 +950,10 @@
+         if (canvas_showtext(x))
+             rtext_select(y, state);
+         sys_vgui(".x%lx.c itemconfigure %sR -fill %s\n", glist, 
+-        rtext_gettag(y), (state? "blue" : "black"));
++                 rtext_gettag(y), (state? "$select_color" : "black"));
+         sys_vgui(".x%lx.c itemconfigure graph%lx -fill %s\n",
+-            glist_getcanvas(glist), z, (state? "blue" : "black"));
++                 glist_getcanvas(glist), z, 
++                 (state? "$select_color" : "$graph_outline"));
+     }
+ }
+ 

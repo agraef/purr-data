@@ -1,0 +1,12 @@
+#N canvas 0 48 439 201 10;
+#X obj 144 58 random-ramp-urn;
+#X text 14 145 Real Time Composition Library vs. 4.1 for xMAX;
+#X text 14 160 © 1993-2004 by Karlheinz Essl <www.essl.at>;
+#X obj 44 107 smooth-line;
+#X obj 44 83 cos-slider;
+#X obj 143 34 schweller;
+#X obj 44 34 cresc-decresc;
+#X obj 44 58 random-ramp;
+#X msg 287 29 Envelopes;
+#X msg 145 106 VolAmb;
+#X msg 144 82 panning;

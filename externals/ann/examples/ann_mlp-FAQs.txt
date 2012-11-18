@@ -1,0 +1,8 @@
+
+Ch_uzi couldn't create error:
+ignore it, this object is needed to add GEM spheres in the second example, you don't need to run ann_mlp
+
+error: opening file.net
+the ann weights file are normal textfiles but they don't seem to be cross-platform. 
+i made those files under win32 so they should not work on osx (on linux?)
+

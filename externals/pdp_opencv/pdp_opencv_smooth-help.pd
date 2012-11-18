@@ -1,0 +1,83 @@
+#N canvas 383 108 786 603 10;
+#X obj -195 -148 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 45 -109 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 45 -81 metro 40;
+#X msg 135 -54 close;
+#X obj 65 17 pdp_v4l;
+#X msg 122 -86 open /dev/video0;
+#X obj 246 -106 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1
+0 1;
+#X obj 246 -79 metro 40;
+#X msg 327 -60 close;
+#X msg 323 -84 open /dev/video0;
+#X obj 266 19 pdp_v4l2;
+#X msg 332 -5 format \$1;
+#X obj 333 -27 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj -165 67 pdp_qt;
+#X obj -132 3 metro 40;
+#X msg -132 -25 bang;
+#X msg -91 -25 stop;
+#X obj -165 -94 openpanel;
+#X msg -165 -69 open \$1;
+#X msg -165 -122 bang;
+#X msg -131 30 loop \$1;
+#X obj -51 30 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj -51 -52 loadbang;
+#X text -122 -119 playing a video file;
+#X text 75 -110 Camera input;
+#X obj -194 110 cnv 15 621 200 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj -169 336 pdp_xv;
+#X text -196 -170 comments to ydegoyon@gmail.com.;
+#X text -195 -184 pdp_opencv_smooth : smoothing and noise removal filter.
+;
+#X obj -169 262 pdp_opencv_smooth;
+#X msg -130 134 mode \$1;
+#X obj -60 126 vradio 15 1 0 5 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text -132 112 smoothing mode ( default CV_GAUSSIAN );
+#X text -33 126 CV_BLUR_NO_SCALE : simple blur with no scaling;
+#X text -33 140 CV_BLUR : simple blur;
+#X text -32 157 CV_GAUSSIAN : gaussian blur;
+#X text -32 171 CV_MEDIAN : median blur;
+#X text -33 188 CV_BILATERAL : bilateral filter;
+#X msg -52 214 param1 \$1;
+#X floatatom 16 215 5 0 0 0 - - -;
+#X text 56 215 param1 : see cvSmooth ( default : 3 );
+#X msg -38 235 param1 \$1;
+#X floatatom 30 236 5 0 0 0 - - -;
+#X text 70 236 param2 : see cvSmooth ( default : 0 );
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 29 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 29 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 29 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 13 0;
+#X connect 19 0 17 0;
+#X connect 20 0 13 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 22 0 15 0;
+#X connect 29 0 26 0;
+#X connect 30 0 29 0;
+#X connect 31 0 30 0;
+#X connect 38 0 29 0;
+#X connect 39 0 38 0;
+#X connect 41 0 29 0;
+#X connect 42 0 41 0;

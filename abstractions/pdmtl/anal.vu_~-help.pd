@@ -1,0 +1,18 @@
+#N canvas 281 278 637 379 10;
+#X obj 25 16 loadbang;
+#X msg 25 43 \; pd dsp 1;
+#X text 127 16 Description: Displays a VU meter.;
+#X obj 125 185 anal.vu_~;
+#X obj 127 103 *~;
+#X obj 128 78 osc~ 90;
+#X obj 175 100 osc~ 0.1;
+#X obj 266 109 *~;
+#X obj 267 84 osc~ 70;
+#X obj 314 106 osc~ 0.06;
+#X connect 0 0 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 1;
+#X connect 7 0 3 1;
+#X connect 8 0 7 0;
+#X connect 9 0 7 1;

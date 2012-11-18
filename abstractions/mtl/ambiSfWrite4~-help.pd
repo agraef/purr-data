@@ -1,0 +1,57 @@
+#N canvas 2 89 494 373 10;
+#X text 45 15 Description: Writes a first-order Ambisonic sound file.
+;
+#X obj 52 197 noise~;
+#X msg 185 199 angle \$1;
+#X floatatom 185 179 5 0 0 0 - - -;
+#X obj 188 158 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 9256 1;
+#X obj 185 115 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#N canvas 1 57 454 304 auto_rotate 0;
+#X obj 145 73 inlet;
+#X obj 150 111 metro 20;
+#X floatatom 206 88 5 0 0 0 - - -;
+#X obj 146 178 outlet;
+#X obj 154 142 iemlib/modulo_counter 360;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 1;
+#X connect 4 0 3 0;
+#X restore 185 136 pd auto_rotate;
+#X obj 50 313 dac~;
+#X msg 326 77 savepanel;
+#X msg 352 108 start;
+#X msg 365 149 stop;
+#X obj 259 290 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 283 291 recording status;
+#X text 47 157 example sound;
+#X obj 185 93 iemlib/init 1;
+#X obj 258 257 mtl/ambiSfWrite4~;
+#X text 44 35 tags: ambisonic;
+#X obj 51 223 mtl/ambiMonoToWxy~ angle 0;
+#X obj 51 264 mtl/ambiWxyToMono~ angle 60;
+#X obj 62 285 mtl/ambiWxyToMono~ angle 300;
+#X connect 1 0 17 0;
+#X connect 2 0 17 1;
+#X connect 3 0 2 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X connect 8 0 15 4;
+#X connect 9 0 15 4;
+#X connect 10 0 15 4;
+#X connect 14 0 5 0;
+#X connect 15 0 11 0;
+#X connect 17 0 15 0;
+#X connect 17 0 18 0;
+#X connect 17 0 19 0;
+#X connect 17 1 15 1;
+#X connect 17 1 18 1;
+#X connect 17 1 19 1;
+#X connect 17 2 15 2;
+#X connect 17 2 18 2;
+#X connect 17 2 19 2;
+#X connect 18 0 7 0;
+#X connect 19 0 7 1;

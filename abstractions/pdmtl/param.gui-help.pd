@@ -1,0 +1,35 @@
+#N canvas 487 216 578 416 10;
+#X msg 82 95 top;
+#X msg 80 122 global;
+#X floatatom 45 247 5 0 0 0 - - -;
+#X msg 78 71 dpg2;
+#X obj 42 162 param.gui;
+#X text 114 64 Sending a group's id will build a gui of that group.
+;
+#X text 116 90 Sending top will build a gui of all groups that share
+the same top.;
+#X text 128 119 Sending global will build a gui of ALL groups.;
+#X msg 42 49 dpg1;
+#X obj 156 147 bng 15 250 50 0 empty empty CLEAR 17 7 0 10 -262144
+-1 -1;
+#X obj 146 183 cnv 15 500 60 empty empty empty 20 12 0 14 -258113 -66577
+0;
+#X text 160 191 Warning: Once a GUI is created \, it is not re-created.
+If you added abstractions to your patch and you want to build a top
+or global GUI \, you must clear param.gui first!;
+#X msg 45 266 number \$1;
+#X obj 44 289 param.template @id dpg1 @number 43;
+#X msg 42 341 toggle1 \$1;
+#X obj 43 322 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 43 364 param.template @id dpg2 @toggle1 0;
+#X text 41 13 Description: Builds a dynamic gui of PARAMS;
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 12 0;
+#X connect 3 0 4 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 1;
+#X connect 12 0 13 0;
+#X connect 14 0 16 0;
+#X connect 15 0 14 0;

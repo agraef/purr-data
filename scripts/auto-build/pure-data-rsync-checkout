@@ -1,0 +1,38 @@
+#!/bin/sh
+# update from the local CVS repository
+
+# the source dir where this script is
+SCRIPT_DIR=$(echo $0 | sed 's|\(.*\)/.*$|\1|')
+. $SCRIPT_DIR/auto-build-common
+
+# the name of this script
+SCRIPT=$(echo $0| sed 's|.*/\(.*\)|\1|g')
+LOGFILE=/home/pd/logs/${DATE}_${TIME}_-_${SCRIPT}_-_${SYSTEM}.txt
+
+update_distro ()
+{
+	 distro=$1
+	 echo "------------------------------------------------------------"	>> $LOGFILE 2>&1
+	 echo "$distro"	>> $LOGFILE 2>&1
+	 echo "------------------------------------------------------------"	>> $LOGFILE 2>&1
+	 /home/pd/rsync/$distro/scripts/update-developer-layout.sh >> $LOGFILE 2>&1
+}
+
+touch $LOGFILE
+
+for dir in /home/pd/rsync/*; do 
+	 dirname=$(echo $dir | sed 's|.*/\(.*\)|\1|')
+	 test -e $dir/scripts/update-developer-layout.sh && \
+		  update_distro $dirname
+done
+
+for dir in /home/pd/rsync/*.git; do 
+	cd $dir
+	git pull	>> $LOGFILE 2>&1
+	cd scripts
+	svn --ignore-externals update	>> $LOGFILE 2>&1
+done
+
+# since the above test can cause this script to exit with an error, force it
+# to be happy to prevent getting automated error emails to root
+true 

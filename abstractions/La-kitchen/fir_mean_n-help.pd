@@ -1,0 +1,23 @@
+#N canvas 16 302 679 463 10;
+#X floatatom 67 98 5 0 127 0 - - -;
+#X text 69 78 data;
+#X obj 67 203 t f f;
+#X msg 87 119 0;
+#X floatatom 159 129 5 0 0 0 - - -;
+#X obj 92 228 fir_mean_n 5;
+#X obj 67 264 time_roll;
+#X obj 279 264 time_roll;
+#X msg 88 140 127;
+#X text 154 106 order: n;
+#X text 542 383 la Kitchen;
+#X text 542 400 Charles Verron;
+#X text 541 367 2004_03_18;
+#X text 49 37 Fir_mean_n computes a fir low pass mean filter of order
+n;
+#X connect 0 0 2 0;
+#X connect 2 0 6 0;
+#X connect 2 1 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 1;
+#X connect 5 0 7 0;
+#X connect 8 0 2 0;

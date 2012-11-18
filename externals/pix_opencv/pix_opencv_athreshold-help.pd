@@ -1,0 +1,191 @@
+#N canvas 520 34 1119 972 10;
+#X obj 300 -86 gemhead;
+#X obj 184 629 pix_texture;
+#X obj 184 648 square 2;
+#X obj -363 -163 cnv 15 220 70 empty empty empty 20 12 0 14 -195568
+-66577 0;
+#N canvas 0 22 454 304 gemwin 0;
+#X obj 67 89 outlet;
+#X obj 67 10 inlet;
+#X obj 65 41 route create;
+#X msg 67 70 set destroy;
+#X msg 182 68 set create;
+#N canvas 87 154 247 179 Gem.init 0;
+#X obj 118 46 loadbang;
+#X msg 118 81 reset;
+#X obj 118 113 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 289 80 pd Gem.init;
+#X obj 162 241 gemwin;
+#X msg 161 188 create \, 1;
+#X msg 237 189 destroy;
+#X msg 283 161 frame 25;
+#X obj 164 126 t b b b;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 10 0;
+#X connect 2 1 4 0;
+#X connect 2 1 8 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 10 0 7 0;
+#X connect 10 2 9 0;
+#X restore -353 -119 pd gemwin;
+#X msg -353 -137 create;
+#X obj 30 625 pix_texture;
+#X obj 30 653 square 2;
+#X obj 181 241 separator;
+#X obj 312 -59 bng 25 250 50 0 load empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 369 116 bng 15 250 50 0 empty empty end_reached 20 7 0 10 -262144
+-1 -1;
+#X floatatom 351 81 5 0 10000 1 frame# - -;
+#X obj 312 -30 openpanel;
+#X msg 312 -10 open \$1;
+#X obj 300 99 pix_film;
+#X msg 318 33 auto \$1;
+#X obj 318 15 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 148 301 cnv 15 600 310 empty empty empty 20 12 0 14 -4034 -66577
+0;
+#X text -355 -157 Create window and render;
+#X obj 184 577 pix_opencv_athreshold;
+#X floatatom 343 538 5 0 0 0 - - -;
+#X msg 238 436 mode \$1;
+#X floatatom 340 500 5 0 0 0 - - -;
+#X text 376 538 ( default 3 );
+#X msg 214 350 method \$1;
+#X msg 236 397 dim \$1;
+#X floatatom 287 400 5 0 0 0 - - -;
+#X text -357 321 written by Yves Degoyon ( ydegoyon@gmail.com );
+#X msg 413 16 colorspace RGBA;
+#X msg 518 16 colorspace RGB;
+#X msg 622 16 colorspace Grey;
+#X obj 413 -12 loadbang;
+#X obj 180 212 pix_separator;
+#X obj 29 244 separator;
+#X obj 29 215 pix_separator;
+#X obj 29 279 translateXYZ -2 0 0;
+#X obj 181 276 translateXYZ 2 0 0;
+#N canvas 0 22 450 300 vswitch 0;
+#X obj 144 263 outlet;
+#X obj 36 26 inlet;
+#X obj 260 29 inlet;
+#X obj 36 133 spigot;
+#X obj 260 141 spigot;
+#X obj 119 64 loadbang;
+#X msg 83 93 0;
+#X msg 113 93 1;
+#X msg 296 104 0;
+#X msg 326 104 1;
+#X obj 399 34 inlet;
+#X obj 399 67 select 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 7 0;
+#X connect 5 0 8 0;
+#X connect 6 0 3 1;
+#X connect 7 0 3 1;
+#X connect 8 0 4 1;
+#X connect 9 0 4 1;
+#X connect 10 0 11 0;
+#X connect 11 0 7 0;
+#X connect 11 0 8 0;
+#X connect 11 1 9 0;
+#X connect 11 1 6 0;
+#X restore 122 169 pd vswitch;
+#X obj 190 170 tgl 15 0 empty load empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 63 97 pix_video;
+#X obj 63 -91 gemhead;
+#X msg 102 22 device 0;
+#X msg 111 53 driver 1;
+#X msg 88 -32 dialog;
+#X msg 93 -2 device /dev/dv1394-0;
+#X text 323 399 value to correct the theshold;
+#X text -366 -80 pix_opencv_threshold :;
+#X text 340 486 MaxValue (default 255);
+#X text 317 435 inverse mode ( default 0 );
+#X text -366 -56 Thresholding is used to segment an image by setting
+all pixels whose intensity values are above a threshold to a foreground
+value and all the remaining pixels to a background value.;
+#X text -367 -10 Whereas the conventional thresholding operator uses
+a global threshold for all pixels \, adaptive thresholding changes
+the threshold dynamically over the image. This more sophisticated version
+of thresholding can accommodate changing lighting conditions in the
+image \, e.g. those occurring as a result of a strong illumination
+gradient or shadows.;
+#X text -338 129 - zero otherwise;
+#X text -364 92 Adaptive thresholding sets a pixel dst(x \, y) value
+to:;
+#X text -338 114 - MaxValue (see MaxValue inlet) if src(x \, y) > T(x
+\, y);
+#X text -360 162 Where T(x \, y) is a threshold calculated individually
+for each pixel. For the method ADAPTIVE_THRESH_MEAN_C the threshold
+value is the mean of a blockSize x blockSize (see blocksize inlet)
+neighborhood of (x \, y) \, minus dim parameter value (see dim message).
+;
+#X text -360 238 For the method ADAPTIVE_THRESH_GAUSSIAN_C the threshold
+value is the weighted sum (i.e. cross-correlation with a Gaussian window)
+of a blockSize x blockSize neighborhood of (x \, y) \, minus dim parameter
+value.;
+#X text 341 524 blockSize;
+#X obj 288 351 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 206 328 Thresholding method ( default 0 );
+#X obj 297 437 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 306 345 0 = CV_ADAPTIVE_THRESH_MEAN_C;
+#X text 306 355 1 = CV_ADAPTIVE_THRESH_GAUSSIAN_C;
+#X obj 123 190 pix_rgba;
+#X connect 0 0 14 0;
+#X connect 1 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 8 0 36 0;
+#X connect 9 0 12 0;
+#X connect 10 0 11 0;
+#X connect 11 0 14 1;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X connect 14 0 37 1;
+#X connect 14 2 10 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 19 0 1 0;
+#X connect 20 0 19 2;
+#X connect 21 0 19 0;
+#X connect 22 0 19 1;
+#X connect 24 0 19 0;
+#X connect 25 0 19 0;
+#X connect 26 0 25 0;
+#X connect 28 0 14 0;
+#X connect 28 0 39 0;
+#X connect 29 0 14 0;
+#X connect 30 0 14 0;
+#X connect 31 0 28 0;
+#X connect 31 0 16 0;
+#X connect 32 0 8 0;
+#X connect 33 0 35 0;
+#X connect 34 0 33 0;
+#X connect 35 0 6 0;
+#X connect 36 0 19 0;
+#X connect 37 0 62 0;
+#X connect 38 0 37 2;
+#X connect 39 0 37 0;
+#X connect 40 0 39 0;
+#X connect 41 0 39 0;
+#X connect 42 0 39 0;
+#X connect 43 0 39 0;
+#X connect 44 0 39 0;
+#X connect 57 0 24 0;
+#X connect 59 0 21 0;
+#X connect 62 0 34 0;
+#X connect 62 0 32 0;

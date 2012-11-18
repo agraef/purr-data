@@ -1,0 +1,22 @@
+#N canvas 1 48 418 297 10;
+#X text 19 28 note2cents;
+#X text 19 59 Shows how many cents
+a microtonal note <float> is deviating from a tempered one.;
+#X text 19 249 1994 by Karlheinz
+Essl;
+#X floatatom 44 111 0 0 0 0 - - -;
+#X obj 44 142 note2cents;
+#X text 90 112 MIDI note number
+<float>;
+#X floatatom 44 176 0 0 0 0 - - -;
+#X floatatom 270 175 0 0 0 0 - - -;
+#X text 319 176 cents;
+#X floatatom 44 206 0 0 0 0 - - -;
+#X text 94 207 MIDI note name;
+#X text 94 177 MIDI note number
+<int>;
+#X msg 305 23 Harmony;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 4 1 7 0;
+#X connect 6 0 9 0;

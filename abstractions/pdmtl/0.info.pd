@@ -1,0 +1,83 @@
+#N canvas 546 102 777 652 10;
+#X declare -lib pdmtl;
+#X text 389 17 A collection of abstractions made by Montreal pd users.
+;
+#N canvas 0 0 493 414 open 0;
+#X obj 64 80 inlet;
+#X obj 117 258 file.path.top;
+#X msg 77 319 \; pd open \$1 \$2;
+#X obj 65 284 pack s s;
+#X obj 72 127 t a b;
+#X obj 69 178 symbol;
+#X connect 0 0 4 0;
+#X connect 1 0 3 1;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 4 1 1 0;
+#X connect 5 0 3 0;
+#X restore 26 251 pd open;
+#X text 390 94 Website: http://wiki.dataflow.ws/PdMtlAbstractions;
+#X text 158 427 -- iemlib --;
+#X text 25 374 -- zexy --;
+#X text 25 324 -- cyclone --;
+#X text 26 425 -- Gem --;
+#X text 158 324 -- ggee --;
+#X text 286 323 -- iemmatrix --;
+#X text 286 375 -- maxlib --;
+#X text 157 375 -- hcs --;
+#X text 393 193 Please check out the installation instructions at:
+http://wiki.dataflow.ws/PdMtlAbstractions/Installation;
+#X text 393 154 -- REQUIREMENTS --;
+#X obj 194 84 image medias/pdmtl_logo.gif;
+#X msg 26 205 1.browser.pd;
+#X msg 40 227 2.popup.pd;
+#X obj 295 598 xgroove~;
+#X text 292 577 -- xsample --;
+#X text 388 40 This collection of abstractions is maintained by tof@danslchamp.org
+\, puredata@11h11.com and alexandre@quessy.net.;
+#X text 432 390 -- not part of a library (i.e. flatspace) --;
+#X text 435 440 -- creb --;
+#X text 286 422 -- ext13 --;
+#X text 432 323 -- pdstring(moocow) --;
+#X obj 117 598 pyext include/process sub;
+#X text 29 470 -- tof --;
+#X text 281 473 -- oscx --;
+#X text 389 110 Version: 2009-04-11;
+#X text 391 125 Release: 2.2;
+#X text 393 173 Pd version 0.40.3-extended or Pd Vanilla (using libdir)
+;
+#X text 23 182 Browse the pdmtl abstractions:;
+#X obj 31 494 tof/folderpanel;
+#X obj 28 395 zexy/msgfile;
+#X obj 27 345 cyclone/MouseState;
+#X obj 160 346 ggee/getdir;
+#X obj 159 396 hcs/folder_list;
+#X obj 160 448 iemlib/dollarg;
+#X obj 288 343 iemmatrix/mtx_mul;
+#X obj 287 396 maxlib/dist;
+#X obj 288 446 ext13/catch13~;
+#X obj 285 495 oscx/sendOSC;
+#X obj 435 344 moocow/any2string;
+#X obj 435 364 moocow/string2any;
+#X obj 435 412 flatspace/arraysize;
+#X obj 437 461 creb/ead~;
+#X obj 29 447 gemhead;
+#X text 114 577 -- pyext --;
+#X text 540 552 * not included in pd-extended;
+#X text 392 234 -- USING --;
+#X text 392 259 Simply;
+#X obj 439 260 import pdmtl;
+#X text 521 259 in your patch;
+#X text 24 296 ------------------------ REQUIRED ----------------------
+;
+#X text 361 296 -----------------------------------------------------------
+;
+#X text 24 543 ------------------------ OPTIONNAL -------------------------
+;
+#X text 385 542 -------------------------------------------------------
+;
+#X text 354 598 sample.groove.poly~ | sample.groove~;
+#X text 26 577 -- lua --;
+#X obj 31 599 lua;
+#X connect 14 0 1 0;
+#X connect 15 0 1 0;

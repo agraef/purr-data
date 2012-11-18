@@ -1,0 +1,13 @@
+#N canvas 432 263 556 400 12;
+#X obj 250 169 folder_list;
+#X obj 164 83 trigger bang bang;
+#X obj 177 264 tolist;
+#X obj 179 334 print;
+#X msg 151 41 bang;
+#X msg 250 142 symbol /usr/*;
+#X connect 0 0 2 0;
+#X connect 1 0 2 1;
+#X connect 1 1 5 0;
+#X connect 2 0 3 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;

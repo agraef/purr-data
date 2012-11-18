@@ -1,0 +1,73 @@
+# makefile adapted from thomas grill's xsample makefile
+#
+# Makefile for BorlandC++ 
+#
+# usage: make -f makefile.pd-bcc
+#
+# ---------------------------------------------
+
+!include config-pd-bcc.txt
+
+# all the source files from the package
+!include make-files.txt
+
+SETUPFUNCTION=$(NAME)_setup
+
+# flext stuff
+TARGET=pdwin
+
+# includes, libs
+INCPATH=-I$(BCCPATH)\include -I$(PDPATH)\src -I$(FLEXTPATH) ./headers/plugin_interface ./headers/common ./headers/server ./headers/app ./headers/lang
+LIBPATH=-L$(BCCPATH)\lib -L$(PDPATH)\lib 
+LIBS=cw32.lib import32.lib C0D32.OBJ 
+
+# compiler definitions and flags
+DEFS=-DFLEXT_SYS=2
+CFLAGS=-tWD $(UFLAGS)
+
+
+# the rest can stay untouched
+# ----------------------------------------------
+
+# default target
+all: $(OUTPATH)\$(NAME).dll
+
+# remove build
+clean:
+	-del /s /q $(OUTPATH) > nul
+	rmdir $(OUTPATH)
+
+
+install:
+	cp $(OUTPATH)\$(NAME).dll $(INSTDIR)
+	
+# ----------------------------------------------
+
+OBJS= $(SRCS:.cpp=.obj)
+
+#.PATH.OBJ=$(OUTPATH)
+
+#$(SRCS): $(HDRS)
+#	-touch $<
+
+{$(SRCDIR)}.cpp.obj:
+	bcc32 -c $(CFLAGS) $(DEFS) $(INCPATH) -n$(OUTPATH) $<
+
+$(OUTPATH):
+	-@if not exist $< mkdir $<
+
+$(OUTPATH)\pd.lib: $(PDPATH)\bin\pd.dll 
+	implib -a $< $**
+
+$(OUTPATH)\$(NAME).def:
+	@echo EXPORTS $(SETUPFUNCTION) = _$(SETUPFUNCTION) > $<
+# this next line fixes a strange problem with implib - lacking underscore?!
+	@echo IMPORTS _rtext_retext=PD.rtext_retext >> $<
+
+$(OUTPATH)\$(NAME).dll :: $(OUTPATH) $(OUTPATH)\$(NAME).def $(OUTPATH)\pd.lib 
+
+$(OUTPATH)\$(NAME).dll :: $(OBJS) 
+	cd $(OUTPATH)
+	ilink32 -C -Tpd $(LIBPATH) $** ,..\$<,,$(LIBS) pd.lib $(FLEXTPATH)\flext-$(TARGET).lib ,$(NAME).def
+	cd ..
+	

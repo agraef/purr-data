@@ -1,0 +1,54 @@
+#N canvas 81 76 584 598 10;
+#X obj 6 206 cnv 15 250 40 empty empty empty 20 12 0 14 -261689 -66577
+0;
+#X obj 7 159 cnv 15 250 40 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X obj 7 4 cnv 15 250 150 empty empty empty 20 12 0 14 -228992 -66577
+0;
+#X obj 391 40 pddp/dsp;
+#X obj 23 353 dac~;
+#X obj 34 309 *~;
+#X obj 53 290 hsl 128 15 0.01 1 1 1 empty empty amplitude 5 8 0 12
+-225271 -1 -1 12700 1;
+#X obj 34 120 osc~;
+#X obj 33 264 osc~;
+#X obj 33 218 +~ 250;
+#X obj 34 167 *~ 10;
+#N canvas 0 22 450 300 graph1 0;
+#X array \$0-output 1000 float 2;
+#X coords 0 1 999 -1 500 140 1;
+#X restore 28 399 graph;
+#X obj 81 353 tabwrite~ \$0-output;
+#X obj 90 310 tgl 15 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X msg 36 20 100;
+#X msg 47 40 10;
+#X msg 60 82 0;
+#X text 88 83 this is a steady tone;
+#X text 81 41 steady or vibrato?;
+#X text 66 20 steady or vibrato?;
+#X text 85 219 <-- center pitch;
+#X text 79 168 <-- amount of change;
+#X obj 90 329 metro 200;
+#X obj 278 125 comment 270 14 Times ? 0 0 0 0 Conscious processing
+of sound in the brain is actually quite slow. Yes \, the ear can perceive
+changes on the order of 0.05ms (20 \, 000Hz) \, but your brain is made
+consciously aware of these changes at a much slower rate. You can hear
+an example of this using a oscillating frequency. A slow change in
+the frequency of a tone is perceived as vibrato \, you can consciously
+hear the wavering pitch. As that change in frequency becomes faster
+\, you can no longer consciously hear the wavering pitch. Instead you
+perceive a steady tone.;
+#X connect 5 0 4 0;
+#X connect 5 0 4 1;
+#X connect 5 0 12 0;
+#X connect 6 0 5 1;
+#X connect 7 0 10 0;
+#X connect 8 0 5 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 13 0 22 0;
+#X connect 14 0 7 0;
+#X connect 15 0 7 0;
+#X connect 16 0 7 0;
+#X connect 22 0 12 0;

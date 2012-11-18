@@ -1,0 +1,26 @@
+#N canvas 621 296 503 358 10;
+#X obj -9 50 noise~;
+#X msg 123 74 angle \$1;
+#X floatatom 123 54 5 0 0 0 - - -;
+#X obj 126 33 hsl 120 15 0 360 0 0 empty empty empty -2 -8 0 10 -260097
+-1 -1 0 1;
+#X text 163 54 Angle is in degrees.;
+#X obj -9 305 dac~ 1 2;
+#X text 3 25 tags: ambisonic;
+#X text 11 -2 Description: Encodes a mono sound to first order Ambisonics
+horizontal B-Format.;
+#X obj -11 98 mtl/ambiMonoToWxy~ angle 0;
+#X obj -16 251 mtl/ambiWxyToMono~ angle 90;
+#X obj 176 247 mtl/ambiWxyToMono~ angle 270;
+#X connect 0 0 8 0;
+#X connect 1 0 8 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 8 0 9 0;
+#X connect 8 0 10 0;
+#X connect 8 1 9 1;
+#X connect 8 1 10 1;
+#X connect 8 2 9 2;
+#X connect 8 2 10 2;
+#X connect 9 0 5 0;
+#X connect 10 0 5 1;

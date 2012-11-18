@@ -1,0 +1,237 @@
+package require BLT
+namespace import blt::
+namespace eval ::ix {
+    variable _
+    proc random_int {} {
+	return [expr "int(floor(rand()*16))"]
+    }
+    proc random_clr {} {
+        return [format "\#%1X%1X%1X%1X%1X%1X" [random_int] [random_int] [random_int] [random_int] [random_int] [random_int]]
+    }
+    proc lg_add {path tg args} {
+	variable _
+	set e [lindex $args 1]
+	set l [llength $args]
+	for {set n 2} {$n < $l} {incr n} {
+	    if {$l > 3} {set nm $e:[expr $n - 1]} else {set nm $e}
+	    set _($path:$nm:e) [expr $n - 1]
+	    set _($path:$nm:p) $e
+	    set _($path:$e:n) [expr $l - 2]
+	    lg_list $path $tg $nm [lindex $args 0] [lindex $args $n]
+	}
+    }
+    proc lg_dumper {path tg args} {
+	variable _
+	foreach e [$path element names] {	    
+	    if {$_($path:$e:e) == 1} {
+		lg_dump $path $tg $e
+	    }
+	}
+    }
+    proc lg_dump {path tg e} {
+	variable _
+	set p $_($path:$e:p)
+	set el $_($path:$e:e)
+	set n $_($path:$p:n)
+	for {set i 0} {$i < [$tg:x$e length]} {incr i} {
+	    set out {}
+	    lappend out [$tg:x$e index $i]
+	    lappend out $p
+	    if {$n > 1} {
+	    for {set x 1} {$x <= $n} {incr x} {
+		lappend out [$tg:y$p:$x index $i]
+		}
+	    } else {
+		lappend out [$tg:y$e index $i]
+	    }
+	    set out [join $out " "]
+#	    puts $out
+	    pd "$tg.rp _cb $out;"
+	}
+    }
+    proc lg_list {path tg e i1 i2} {
+	if {[$path element exists $e] != 1} {lg_nv $path $tg $e}
+	$tg:y$e append $i2
+	$tg:x$e append $i1
+    }
+    proc lg_zoom {path tg d x y} {
+	puts "$path $tg $d"
+	if {$d eq "in"} {set dn 4} {set dn 1}
+	set lx [$path axis limits x]
+	set dx [expr ([lindex $lx 1] - [lindex $lx 0]) / $dn]
+	set cx [$path axis invtransform x $x]
+	set cy [$path axis invtransform y $y]
+	set ly [$path axis limits y] 
+	set dy [expr ([lindex $ly 1] - [lindex $ly 0]) / $dn]
+	$path axis configure x -min [expr $cx - $dx] -max [expr $cx + $dx]
+	$path axis configure y -min [expr $cy - $dy] -max [expr $cy + $dy]
+    } 
+    proc lg_dr {path tg e x y} {
+	variable _
+	if {[$path element closest $x $y cl -halo 666 -interpolate 1 -along x $e] == 1} {
+	    set new [$path axis invtransform y $y]
+	    set n $tg:y$cl(name)
+	    set io $_($path:clickd)
+	    set ic $cl(index)
+	    $n index $ic $new
+	    if {$io != -1 && [expr abs($io - $ic)] > 1} {lg_smooth $io $ic $n}
+	    set _($path:clickd) $ic
+	}
+    }
+    proc lg_smooth {io ic n} {
+#	puts "smoothing $n from $io to $ic"
+	set vo [$n index $io]
+	set vc [$n index $ic]
+	if {$ic > $io} {set is $io; set vs $vo} else {set is $ic; set vs $vc}
+	set ne [expr [$n length] - 1]
+	if {$ic != $ne && $io != $ne} {
+	    for {set i 1} {$i < [expr abs($io - $ic)]} {incr i} {    
+		set nv [expr $vs + (($vc - $vo) * $i / ($ic - $io))]
+		set ni [expr $is + $i]
+		$n index $ni $nv
+	    }
+	}
+    }
+    proc lg_sl {path tg e x y} {
+	variable _
+	set t [$path invtransform $x $y]
+	if {$_($path:clickd) != -1} {
+	    set dx [expr [lindex $t 0] - [lindex $_($path:clcord) 0]]
+	    set dy [expr [lindex $t 1] - [lindex $_($path:clcord) 1]]
+
+	    set p $_($path:$e:p)
+	    set el $_($path:$e:e)
+	    set n $_($path:$p:n)
+	    
+	    if {$n > 1} {
+		for {set i 1} {$i <= $n} {incr i} {
+		    set tx $tg:x$p:$i
+		    set ty $tg:y$p:$i 
+		    $tx expr "$tx + $dx"
+		    if {$el == $i} {$ty expr "$ty + $dy"}
+		}
+	    } else {
+		$tg:x$e expr "$tg:x$e + $dx"
+		$tg:y$e expr "$tg:y$e + $dy"
+	    }
+	}
+	set _($path:clcord) $t
+	set _($path:clickd) 1
+    }
+    proc lg_draw {path tg e x y} {
+	variable _
+	if {[$path element closest $x $y cl -halo 666 -interpolate 1 -along x $e] == 1} {
+	    set t [$path invtransform $x $y]
+	    set p $_($path:$e:p)
+	    set el $_($path:$e:e)
+	    set n $_($path:$p:n)
+	    set io $_($path:clickd)
+	    set ic $cl(index)
+	    if {$n > 1} {
+		for {set i 1} {$i <= $n} {incr i} {
+		    set tx $tg:x$p:$i
+		    set ty $tg:y$p:$i 
+		    if {$el == $i} {set ny [lindex $t 1]} else {
+			if {[$ty length] == $ic} {set tc [expr $ic - 1]} else {set tc $ic}
+			set ny [$ty index $tc]
+		    }
+		    set nx [lindex $t 0]
+		    $ty append $ny
+		    $tx append $nx
+		    $tx sort $ty
+		    if {$i == 1} {
+			if {$ic < $io} {incr io}
+			incr ic
+		    }
+		    if {$io != -1 && [expr abs($io - $ic)] > 1} {lg_smooth $io $ic $ty}
+		}
+	    } else {
+		$tg:y$e append [lindex $t 1]
+		$tg:x$e append [lindex $t 0]
+		$tg:x$e sort $tg:y$e
+		if {$ic < $io} {incr io}
+		incr ic
+		if {$io != -1 && [expr abs($io - $ic)] > 1} {lg_smooth $io $ic $tg:y$e}
+	    }
+	    set _($path:clickd) $ic
+	}
+    }
+
+    proc lg_trim {path tg e x y} {
+	variable _
+	if {[$path element closest $x $y cl -halo 666 -interpolate 1 -along x $e] == 1} {
+#	    foreach name [array names cl] {puts "$name $cl($name)"}
+	    if {[expr abs([$path axis transform x [$tg:x$e index $cl(index)]] - $x.0)] < 32} {
+		set p $_($path:$cl(name):p)
+		set n $_($path:$p:n)
+		if {$n > 1} {
+		    for {set i 1} {$i <= $n} {incr i} {
+			$tg:y$p:$i delete $cl(index)
+			$tg:x$p:$i delete $cl(index)
+		    }
+		} else {
+		    $tg:y$cl(name) delete $cl(index)
+		    $tg:x$cl(name) delete $cl(index)
+		}
+	    }
+	}
+    }
+    proc lg_cl {path tg} {
+	foreach e [$path element names] {lg_dv $path $tg $e}
+#	pd "$tg.rp _cb symbol clear;"
+    }
+    proc lg_de {path tg e} {
+	variable _
+	set n $_($path:$e:n)
+	if {$n > 1} {
+	    for {set i 1} {$i <= $n} {incr i} {
+		lg_dv $path $tg $e:$i
+	    }
+	} else {
+	    lg_dv $path $tg $e
+	}
+    }
+    proc lg_dv {path tg e} {
+	blt::vector destroy $tg:x$e
+	blt::vector destroy $tg:y$e
+	$path element delete $e
+#	pd "$tg.rp _cb delete $e;"
+    }
+    proc lg_nv {path tg e} {
+	variable _
+	blt::vector create $tg:x$e -variable ""
+	blt::vector create $tg:y$e -variable ""
+	set _($path:clickd) -1
+	$path element create $e -x $tg:x$e -y $tg:y$e -symbol "circle" -pixels 2 -linewidth 2 -color [random_clr] -hide 0
+#	puts "creating: $path $e -x $tg:x$e -y $tg:y$e -color [random_clr] -hide 0"
+        $path element bind $e <B1-Motion> "::ix::lg_dr $path $tg $e %x %y"
+        $path element bind $e <Shift-B1-Motion> "::ix::lg_sl $path $tg $e %x %y"
+        $path element bind $e <Control-B1-Motion> "::ix::lg_draw $path $tg $e %x %y"
+        $path element bind $e <Alt-B1-Motion> "::ix::lg_trim $path $tg $e %x %y"
+#	$path element bind $e <1> "::ix::lg_dr $path $tg $e %x %y"
+	$path element bind $e <ButtonRelease-1> "set ::ix::_($path:clickd) -1"
+#	$path element bind $e <Shift-ButtonRelease-1> "set ::ix::_($path:clickd) -1"
+    }
+    proc lg_new {path tg} {
+	bind $path <ButtonPress-3> {}
+	bind $path <Button-4> "::ix::lg_zoom $path $tg in %x %y"
+	bind $path <Button-5> "::ix::lg_zoom $path $tg out %x %y"
+	bind $path <Control-Button-4> "$path axis configure x -min {} -max {}; $path axis configure y -min {} -max {}"
+	bind $path <Control-Button-5> [bind $path <Control-Button-4>]
+	Blt_ZoomStack $path "2" "Control-2"
+	$path axis configure x -background [$path cget -bg]
+	$path axis configure y -background [$path cget -bg]
+    }
+}
+#> lg blt::graph
+#. -bg yellow -halo 16
+#. @clear ::ix::lg_cl .- .|
+#. @delete ::ix::lg_de .- .| .#1
+#. @list ::ix::lg_add .- .| .#args
+#. @add ::ix::lg_add .- .| .#args
+#. @dump ::ix::lg_dumper .- .| .#args
+#. @cmd eval ".- .#args"
+
+::ix::lg_new .- .|
+
+puts "lg .- .|"

@@ -1,0 +1,31 @@
+#N canvas 172 121 524 498 10;
+#X text 29 68 Transition between a start velocity and an end velocity
+within a certain time. When the start velocity is bigger than the end
+velocity \, a decrescendo will be obtained. If the end velocity is
+bigger than the start velocity \, it will result in a crescendo. A
+bang is sent out the right outlet when the dynamic transition is over.
+;
+#X text 29 36 cresc-decresc;
+#X floatatom 150 204 0 0 0 0 - - -;
+#X obj 93 194 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+0 1;
+#X obj 93 231 metro 150;
+#X floatatom 257 216 0 0 0 2 start_velocity - -;
+#X floatatom 257 250 0 0 0 2 end_velocity - -;
+#X floatatom 256 288 0 0 0 2 time - -;
+#X msg 93 166 0;
+#X floatatom 93 348 4 0 0 1 velocity - -;
+#X text 59 414 1993 by Karlheinz Essl;
+#X obj 256 345 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 93 310 cresc-decresc 1 127 5000;
+#X connect 2 0 4 1;
+#X connect 3 0 4 0;
+#X connect 4 0 12 0;
+#X connect 5 0 12 1;
+#X connect 6 0 12 2;
+#X connect 7 0 12 3;
+#X connect 8 0 3 0;
+#X connect 12 0 9 0;
+#X connect 12 1 8 0;
+#X connect 12 1 11 0;

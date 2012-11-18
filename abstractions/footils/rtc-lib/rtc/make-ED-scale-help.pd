@@ -1,0 +1,31 @@
+#N canvas 462 248 524 410 10;
+#X floatatom 171 146 4 0 0 2 max_ED - -;
+#X floatatom 117 145 4 0 0 2 min_ED - -;
+#X obj 104 207 bng 15 250 50 1 empty empty clear 0 -6 0 8 -262144 -1
+-1;
+#X obj 63 206 show;
+#X text 14 28 make-ED-scale;
+#X text 14 61 Generates a geometrical scale of entry delays (ED) between
+a min. ED and a max. ED with a certain number of elements.;
+#X text 14 96 see also:;
+#X msg 88 98 make-scale;
+#X floatatom 226 145 4 0 0 2 number_of_elements - -;
+#X msg 63 237;
+#X msg 170 98 make-trans-scale;
+#X msg 286 98 make-choice-list;
+#X msg 341 23 Lists;
+#X msg 284 23 Rhythm;
+#X obj 63 141 bng 15 250 50 0 empty empty go! 0 -6 0 8 -262144 -1 -1
+;
+#X text 16 279 1994-2003 by Karlheinz Essl;
+#X text 223 39 vs. 1.1;
+#X text 16 294 vs. 1.1: now also works with floats;
+#X text 16 236 scale:;
+#X obj 63 175 make-ED-scale 250 1000 6;
+#X connect 0 0 19 2;
+#X connect 1 0 19 1;
+#X connect 2 0 3 1;
+#X connect 3 0 9 0;
+#X connect 8 0 19 3;
+#X connect 14 0 19 0;
+#X connect 19 0 3 0;

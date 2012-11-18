@@ -1,0 +1,7 @@
+#N canvas 15 49 200 200 10;
+#N canvas 25 49 420 300 META 1;
+#X text 10 10 NAME import;
+#X text 10 30 AUTHOR Hans-Christoph Steiner;
+#X text 10 50 VERSION 1.3;
+#X text 10 70 LICENSE BSD;
+#X restore 10 10 pd META;

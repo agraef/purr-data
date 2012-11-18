@@ -1,0 +1,121 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header table 3 12 0 18
+-204280 -1 0;
+#X obj 0 347 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 75 242 465 344 META 0;
+#X text 12 65 LIBRARY internal;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 125 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 5 KEYWORDS signal array GUI storage;
+#X text 12 45 DESCRIPTION array of numbers;
+#X restore 500 597 pd META;
+#X obj 0 377 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 407 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 529 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 84 273 428 334 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [table] Related Objects;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X restore 22 33 pd;
+#X obj 60 33 pddp/pddplink graph.pd;
+#X obj 124 33 struct;
+#X text 19 200 Externals and other object libraries;
+#X obj 22 91 tabread~;
+#X obj 96 91 tabread4;
+#X obj 171 91 tabwrite;
+#X obj 246 91 tabwrite~;
+#X obj 22 119 tabsend~;
+#X obj 98 119 tabreceive~;
+#X obj 198 119 tabplay~;
+#X obj 275 119 table;
+#X text 19 170 [array];
+#X obj 22 146 soundfiler;
+#X text 82 170 and fft objects.;
+#X obj 209 146 getsize;
+#X obj 118 146 tabosc4~;
+#X text 19 68 Native Pd Objects for reading from and writing to arrays:
+;
+#X obj 174 33 element;
+#X obj 19 220 pddp/helplink zexy/tabdump;
+#X obj 19 240 pddp/helplink linear_path;
+#X text 100 240 <-- which library is this in?;
+#X text 100 260 <-- which library is this in?;
+#X obj 19 260 pddp/helplink score;
+#X text 100 280 <-- which library is this in?;
+#X obj 19 280 pddp/helplink tabenv;
+#X obj 234 33 plot;
+#X obj 19 300 pddp/helplink arraysize;
+#X restore 102 598 pd Related_objects;
+#X text 80 426 1) symbol atom;
+#X text 11 23 array of numbers;
+#X obj 461 20 pddp/pddplink http://wiki.puredata.info/en/table -text
+pdpedia: table;
+#X obj 493 3 table;
+#X text 98 355 (none);
+#X text 98 385 (none);
+#X text 99 95 Note that the data (and other properties) of the array
+aren't saved with the patch. You can resize \, save to and/or read
+from an external file as you would with "array" objects. See "arrays"
+in the 2.control examples under the "pure documentation" help menu
+item.;
+#X text 80 505 2) float;
+#X text 99 321 Unfortunately there's no way to set vertical range \,
+etc.;
+#X text 98 561 For help on graphical arrays \, see:;
+#N canvas 74 365 428 203 table_vs_garray_from_Put_menu 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [table] vs. "Put" menu array: what's the difference?;
+#X text 20 80 * with the [table] object \, you can use the arguments
+to set the name and size of the garray.;
+#X text 20 110 * when using the [table] object \, you can't save any
+changes you make to the properites of the garray \, graph \, or the
+[table] subpatch itself.;
+#X text 20 150 * with the [table] object \, you cannot save the contents
+of the array with the patch. This is true even if you open the [table]
+and check "save contents" in the garray properties.;
+#X text 20 38 At first glance \, the [table] object might just look
+like garray in a graph that's been placed inside a subpatch. There
+are \, however \, some important differences:;
+#X restore 101 538 pd table_vs_garray_from_Put_menu;
+#X obj 102 191 table help-tab-2 25;
+#X obj 102 164 table help-tab-1;
+#X msg 72 242 \; help-tab-1 read table.txt;
+#X msg 72 281 \; help-tab-1 write /tmp/table.txt;
+#X obj 299 269 send help-tab-2;
+#X msg 299 242 sinesum 512 1;
+#X text 213 164 <- You can click [table] to view the garray inside.
+;
+#X text 100 52 The [table] object builds a subpatch with a graphical
+array inside. The creation arguments specify the name and an optional
+size in points.;
+#X text 99 215 You can also send messages to the garray by name:;
+#X obj 404 269 tabread help-tab-2;
+#X floatatom 404 243 5 0 0 0 - - -;
+#X floatatom 404 297 5 0 0 0 - - -;
+#X text 167 426 - (optional) name of the [table] and garray contained
+within. Use the name within array-handling objects \, like [tabwrite~]
+\, or use it to send messages to the garray (see examples above). Duplicate
+names will generate a warning when dsp is turned on. (If no argument
+is given \, [table] objects will be named "table1" \, "table2" \, "table3"
+\, etc.);
+#X text 167 505 - (optional) initial size of the array (default is
+100).;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 576 pddp/pddplink array-help.pd;
+#X connect 24 0 23 0;
+#X connect 28 0 30 0;
+#X connect 29 0 28 0;

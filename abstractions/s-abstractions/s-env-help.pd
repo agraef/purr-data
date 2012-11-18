@@ -1,0 +1,24 @@
+#N struct 1218cursor float x;
+#N struct 1218lines float x;
+#N struct 1218template float x float y array 1218arrayvals 1218arraytemplate
+;
+#N struct 1218arraytemplate float x float y;
+#N canvas 173 102 743 471 10;
+#X obj 60 271 print;
+#X text 91 8 This is a control rate envelope. The first argument is
+it's sssad state saving name (make it up) and the second argument is
+how many units long you want to make it. Numbers sent to the left inlet
+will be used to do an interpolated lookup.;
+#X floatatom 60 86 5 0 0 0 - - -;
+#N canvas 0 0 450 300 datastore 0;
+#X obj 10 10 r SSSADDATA;
+#X msg 10 30 \; SSSAD control/envelope 2 2 127 88.6486 167 79.5799
+208 113.839 270 31.2136 281 48.3433 288 31.2136 295 49.3509 304 32.2212
+312 49.3509 320 32.2212 352 82.6027 375 123.916 383 94.6943 400 104.771
+432 84.618 514 97.7172 \; SSSAD_ADMIN set \;;
+#X connect 0 0 1 0;
+#X restore 616 243 pd datastore;
+#X obj 616 177 sssad/datastore;
+#X obj 60 108 s-env control 512;
+#X connect 2 0 5 0;
+#X connect 5 0 0 0;

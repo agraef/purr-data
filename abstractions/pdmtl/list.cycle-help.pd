@@ -1,0 +1,33 @@
+#N canvas 756 516 681 405 10;
+#X obj 30 164 prepend set;
+#X msg 30 189 0 2 4 6;
+#X floatatom 123 102 5 0 0 0 - - -;
+#X floatatom 76 92 5 0 0 0 - - -;
+#X text 22 7 Description: Cycle through the elements of a list \, giving
+every n element (jumping over some \, if necessary) and a total of
+up to m elements;
+#X text 293 125 It is used for building chords out of a scale.;
+#X msg 304 196 0 2 4 5 7 9 11;
+#X obj 304 294 prepend set;
+#X msg 304 319 0 0 0 0;
+#X floatatom 393 228 5 0 0 0 - - -;
+#X msg 30 69 0 1 2 3 4 5 6 7 8 9 10 11;
+#X obj 304 170 t b f;
+#X floatatom 302 148 5 0 0 0 - - -;
+#X text 414 195 Major scale;
+#X text 436 230 Number of notes in each chord;
+#X obj 30 122 list.cycle 2 4;
+#X text 378 152 Interval between each note;
+#X obj 304 252 list.cycle 2 4;
+#X connect 0 0 1 0;
+#X connect 2 0 15 2;
+#X connect 3 0 15 1;
+#X connect 6 0 17 0;
+#X connect 7 0 8 0;
+#X connect 9 0 17 2;
+#X connect 10 0 15 0;
+#X connect 11 0 6 0;
+#X connect 11 1 17 1;
+#X connect 12 0 11 0;
+#X connect 15 0 0 0;
+#X connect 17 0 7 0;

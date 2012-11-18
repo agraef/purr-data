@@ -1,0 +1,16 @@
+#N canvas 189 120 631 300 10;
+#X obj 102 42 osc~ 444;
+#X obj 103 79 tbsig~;
+#X msg 186 79 bang;
+#N canvas 0 0 450 300 graph1 0;
+#X array tmp 100 float 0;
+#X coords 0 2 100 -2 150 100 1;
+#X restore 460 135 graph;
+#X msg 186 101 stop;
+#X msg 183 129 set tmp;
+#X obj 166 159 tabwrite~ tmp;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;

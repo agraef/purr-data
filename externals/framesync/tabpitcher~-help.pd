@@ -1,0 +1,37 @@
+#N canvas 279 99 618 384 10;
+#X text 140 227 frame;
+#X text 71 265 audio out;
+#X text 96 216 array;
+#X text 96 227 name;
+#X text 141 216 start;
+#X obj 377 279 soundfiler;
+#X obj 377 232 symbol \$0-array;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-array 20756 float 2;
+#X coords 0 1 20756 -1 200 140 1;
+#X restore 376 50 graph;
+#X obj 94 113 frameclock 400;
+#X obj 76 322 output~;
+#X msg 108 82 78;
+#X msg 77 82 55;
+#X text 134 80 <-- try jumping to a frame;
+#X obj 377 211 loadbang;
+#X obj 95 244 tabpitcher~ \$0-array 10 60;
+#X text 13 17 Plays a sound til it ends \, synced up to the frame clock
+\, with a set pitch \, based on a root pitch. The root pitch defaults
+to 69 (A above middle C \, 440Hz). It stays in sync when randomly accessing
+different frame numbers.;
+#X text 231 216 root;
+#X text 230 227 pitch;
+#X text 186 227 pitch;
+#X text 184 216 play;
+#X text 177 308 arguments: arrayname startframe# play_pitch root_pitch
+;
+#X msg 377 254 read -resize examples/sdf.wav \$1;
+#X connect 6 0 21 0;
+#X connect 10 0 8 0;
+#X connect 11 0 8 0;
+#X connect 13 0 6 0;
+#X connect 14 0 9 0;
+#X connect 14 0 9 1;
+#X connect 21 0 5 0;

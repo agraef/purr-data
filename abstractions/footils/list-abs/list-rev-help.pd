@@ -1,0 +1,13 @@
+#N canvas 449 421 464 309 10;
+#X msg 156 76 1 2 3 4;
+#X obj 184 109 print Original;
+#X obj 156 199 list-rev;
+#X obj 184 164 print Reversed;
+#X obj 183 230 print Rev_again;
+#X text 127 35 list-rev: reverse a list's order.;
+#X obj 156 131 list-rev;
+#X connect 0 0 1 0;
+#X connect 0 0 6 0;
+#X connect 2 0 4 0;
+#X connect 6 0 2 0;
+#X connect 6 0 3 0;

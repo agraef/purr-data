@@ -1,0 +1,3 @@
+#N canvas 556 409 450 300 10;
+#X obj 97 123 note-learner /mpd24A /pad1 /sfs;
+#X text 36 40 [note-learner /device /pad# /group(nonumber)];

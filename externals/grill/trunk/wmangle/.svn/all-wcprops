@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ext/!svn/ver/3676/trunk/wmangle
+END
+wmangle.help
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/3165/trunk/wmangle/wmangle.help
+END
+wmangle-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ext/!svn/ver/3165/trunk/wmangle/wmangle-help.pd
+END
+wmangle.cw
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3165/trunk/wmangle/wmangle.cw
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ext/!svn/ver/3165/trunk/wmangle/main.cpp
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3165/trunk/wmangle/package.txt
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/ext/!svn/ver/3600/trunk/wmangle/readme.txt
+END
+wmangle.mpw
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3165/trunk/wmangle/wmangle.mpw
+END
+wmangle.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/ext/!svn/ver/3165/trunk/wmangle/wmangle.vcproj
+END
+gpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/ext/!svn/ver/3165/trunk/wmangle/gpl.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/ext/!svn/ver/3165/trunk/wmangle/license.txt
+END

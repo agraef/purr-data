@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/cwiid/svn/!svn/ver/125/trunk/wminput/plugins/nunchuk_acc
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/cwiid/svn/!svn/ver/83/trunk/wminput/plugins/nunchuk_acc/Makefile.in
+END
+nunchuk_acc.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/cwiid/svn/!svn/ver/125/trunk/wminput/plugins/nunchuk_acc/nunchuk_acc.c
+END

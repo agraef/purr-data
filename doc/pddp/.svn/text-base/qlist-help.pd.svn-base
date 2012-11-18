@@ -1,0 +1,145 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header qlist 3 12 0 18
+-204280 -1 0;
+#X obj 0 351 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 304 171 494 366 META 0;
+#X text 12 135 LIBRARY internal;
+#X text 12 175 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 155 AUTHOR Miller Puckette;
+#X text 12 215 HELP_PATCH_AUTHORS Updated for Pd version 0.35. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION text-based sequencer;
+#X text 12 65 INLET_0 bang print tempo rewind next clear add add2 read
+write;
+#X text 12 95 OUTLET_0 list;
+#X text 12 115 OUTLET_1 bang;
+#X text 12 5 KEYWORDS control storage nonlocal filesystem list_op;
+#X text 12 195 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 393 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 502 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 529 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 506 (none);
+#N canvas 89 483 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [qlist] Related Objects;
+#X obj 22 43 textfile;
+#X obj 85 43 receive;
+#X restore 102 597 pd Related_objects;
+#X obj 78 360 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 403 cnv 17 3 37 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 480 3 qlist;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/qlist -text
+pdpedia: qlist;
+#N canvas 72 97 428 339 messages_to_qlist 0;
+#X msg 23 115 rewind;
+#X msg 23 139 next;
+#X msg 23 67 bang;
+#X msg 23 91 tempo 1;
+#X text 76 66 sequence automatically;
+#X text 76 91 set relative tempo;
+#X text 77 114 go to beginning (and stop);
+#X text 78 138 single-step forward;
+#X text 120 258 read a file;
+#X msg 23 259 read qlist.txt;
+#X msg 23 282 write /tmp/qlist.txt;
+#X msg 23 187 clear;
+#X msg 23 211 add 500 this is another message;
+#X msg 23 235 add2 that;
+#X text 80 186 empty the qlist;
+#X text 96 234 add a message to a qlist but don't terminate it;
+#X text 78 161 single-step forward SUPRESSING MESSAGE-SENDING;
+#X msg 23 163 next 1;
+#X msg 23 43 print;
+#X text 77 42 print contents to Pd window;
+#X obj 23 312 outlet;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [qlist] Messages Accepted by [qlist];
+#X text 156 281 write a file;
+#X text 217 210 add a message to a qlist;
+#X connect 0 0 20 0;
+#X connect 1 0 20 0;
+#X connect 2 0 20 0;
+#X connect 3 0 20 0;
+#X connect 9 0 20 0;
+#X connect 10 0 20 0;
+#X connect 11 0 20 0;
+#X connect 12 0 20 0;
+#X connect 13 0 20 0;
+#X connect 17 0 20 0;
+#X connect 18 0 20 0;
+#X restore 76 89 pd messages_to_qlist;
+#X obj 76 115 qlist;
+#X floatatom 76 163 0 0 0 0 - - -;
+#X obj 103 140 print done;
+#X text 112 165 This outlet gets a list of leading numbers for the
+next message \, for you to use in designing your own sequencer.;
+#X text 210 89 <- Click to see messages to qlist;
+#X obj 135 276 r this;
+#X obj 238 276 r that;
+#X obj 135 305 print this;
+#X obj 238 305 print that;
+#X text 73 231 These receives are invoked in the file "qlist.txt" in
+this directory.;
+#N canvas 82 159 428 398 More_Info 0;
+#X text 20 38 The qlist object reads text files containing time-tagged
+Pd messages. You can have them sequenced automatically (by sending
+a "bang" message \, possibly changing speed via "tempo" messages) or
+manually via the "rewind" and "next" messages.;
+#X text 20 228 To run it manually \, send "rewind" followed by "next".
+All messages not preceeded by numbers are sent. As soon as a message
+starting with one or more numbers is encountered \, the numbers are
+output as a list. There are many ways you could design a sequencer
+around this.;
+#X text 20 298 You can also record textual messages and save them to
+a file. Send "clear" to empty the qlist and "add" to add messages (terminated
+with semicolons.) The message \, "add2" adds a list of atoms without
+finishing with a semicolon in case you want to make variable-length
+messages.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [qlist] More Info;
+#X text 20 108 To run the qlist automatically \, send it a "read" message
+(the filename is relative to the directory the patch is in) and later
+a "bang." Messages in the file are separated by semicolons. Optional
+leading numbers are delay times in milliseconds. If the tempo is different
+from 1 the messages are sent faster or slower accordingly. Messages
+should start with a symbol giving the destination object. In the file
+"qlist.q" used here \, the messages go to objects "this" and "that"
+which are receives below.;
+#X restore 101 538 pd More_Info;
+#X text 98 402 list;
+#X obj 78 446 cnv 17 3 47 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 445 bang;
+#X text 168 445 - this outlet gets a bang when you hit the end of the
+sequence. In the file "qlist.txt" used in the example above \, the
+end is delayed 1000 milliseconds after the last message.;
+#X text 11 23 text-based sequencer;
+#X text 98 359 See the subpatch "messages_to_qlist" in the example
+above for a complete list of messages and their functionalities.;
+#X text 168 402 - if you run [qlist] manually (using the "next" message)
+\, messages starting with one or more numbers are are output as a list.
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 557 pddp/pddplink ../2.control.examples/23.sequencing.pd
+-text doc/2.control.examples/23.sequencing.pd;
+#X obj 98 572 pddp/pddplink ../3.audio.examples/D13.additive.qlist.pd
+-text doc/3.audio.examples/D13.additive.qlist.pd;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 1 16 0;
+#X connect 19 0 21 0;
+#X connect 20 0 22 0;

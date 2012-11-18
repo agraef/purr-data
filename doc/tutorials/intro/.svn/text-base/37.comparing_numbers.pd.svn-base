@@ -1,0 +1,152 @@
+#N canvas 10 40 620 460 12;
+#X obj 14 354 cnv 15 195 80 empty empty empty 40 70 0 14 -262130 -66577
+0;
+#X obj 214 354 cnv 15 380 80 empty empty empty 160 70 0 14 -232576
+-66577 0;
+#X obj 10 10 cnv 15 400 40 empty empty comparing_numbers 20 12 0 24
+-228992 -66577 0;
+#X floatatom 27 179 5 0 0 0 - - -;
+#X msg 27 132 7;
+#X floatatom 100 179 5 0 0 0 - - -;
+#X msg 100 132 4;
+#X obj 100 156 == 4;
+#X floatatom 168 179 5 0 0 0 - - -;
+#X msg 168 132 20;
+#X floatatom 237 179 5 0 0 0 - - -;
+#X msg 237 132 20;
+#X obj 237 156 != 10;
+#X obj 27 156 > 1;
+#X obj 168 156 >= 8;
+#X floatatom 354 324 7 -6 6 0 - - -;
+#X obj 224 364 == 5;
+#X obj 291 364 != 5;
+#X obj 356 364 > 5;
+#X obj 418 364 < 5;
+#X floatatom 224 391 5 0 0 0 - - -;
+#X floatatom 291 391 5 0 0 0 - - -;
+#X floatatom 356 391 5 0 0 0 - - -;
+#X floatatom 418 391 5 0 0 0 - - -;
+#X msg 545 108 3;
+#X floatatom 490 109 5 0 0 0 - - -;
+#X floatatom 545 157 5 0 0 0 - - -;
+#X obj 545 133 > 1;
+#X obj 490 135 < 5;
+#X floatatom 490 158 5 0 0 0 - - -;
+#X obj 512 184 &&;
+#X floatatom 512 206 5 0 0 0 - - -;
+#X floatatom 486 391 5 0 0 0 - - -;
+#X floatatom 548 391 5 0 0 0 - - -;
+#X obj 486 364 >= 5;
+#X obj 548 364 <= 5;
+#X floatatom 23 391 5 0 0 0 - - -;
+#X obj 23 364 moses 5;
+#X floatatom 69 391 5 0 0 0 - - -;
+#X floatatom 166 391 5 0 0 0 - - -;
+#X obj 113 364 select 5;
+#X obj 113 392 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X text 407 322 <-- click and drag here;
+#X text 9 56 There are a number of techniques for comparing numbers
+in Pd. Some are related to mathematics \, and others are related to
+programming logic.;
+#X obj 224 413 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X obj 291 413 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 356 413 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 486 413 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 548 413 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X text 14 201 Here are two different techniques \, [moses] for spliting
+a range of numbers \, and [select] for banging when a specific number
+is received:;
+#X floatatom 57 309 5 0 0 0 - - -;
+#X floatatom 110 309 5 0 0 0 - - -;
+#X obj 57 285 moses -4;
+#X msg 124 259 5;
+#X msg 57 259 -5;
+#X msg 24 259 -11;
+#X msg 91 259 1;
+#X text 10 106 These give true or false \, a 1 for true or a 0 for
+false:;
+#X floatatom 270 309 5 0 0 0 - - -;
+#X msg 284 259 5;
+#X msg 217 259 -5;
+#X msg 184 259 -11;
+#X msg 251 259 1;
+#X obj 217 310 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 217 286 select 1;
+#X obj 418 413 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X floatatom 308 179 5 0 0 0 - - -;
+#X obj 308 156 &&;
+#X obj 308 135 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 326 135 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X floatatom 368 179 5 0 0 0 - - -;
+#X obj 368 135 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 386 135 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X obj 368 156 ||;
+#X connect 4 0 13 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 9 0 14 0;
+#X connect 11 0 12 0;
+#X connect 12 0 10 0;
+#X connect 13 0 3 0;
+#X connect 14 0 8 0;
+#X connect 15 0 16 0;
+#X connect 15 0 17 0;
+#X connect 15 0 18 0;
+#X connect 15 0 19 0;
+#X connect 15 0 34 0;
+#X connect 15 0 35 0;
+#X connect 15 0 37 0;
+#X connect 15 0 40 0;
+#X connect 16 0 20 0;
+#X connect 17 0 21 0;
+#X connect 18 0 22 0;
+#X connect 19 0 23 0;
+#X connect 20 0 44 0;
+#X connect 21 0 45 0;
+#X connect 22 0 46 0;
+#X connect 23 0 65 0;
+#X connect 24 0 27 0;
+#X connect 25 0 28 0;
+#X connect 26 0 30 1;
+#X connect 27 0 26 0;
+#X connect 28 0 29 0;
+#X connect 29 0 30 0;
+#X connect 30 0 31 0;
+#X connect 32 0 47 0;
+#X connect 33 0 48 0;
+#X connect 34 0 32 0;
+#X connect 35 0 33 0;
+#X connect 37 0 36 0;
+#X connect 37 1 38 0;
+#X connect 40 0 41 0;
+#X connect 40 1 39 0;
+#X connect 52 0 50 0;
+#X connect 52 1 51 0;
+#X connect 53 0 52 0;
+#X connect 54 0 52 0;
+#X connect 55 0 52 0;
+#X connect 56 0 52 0;
+#X connect 59 0 64 0;
+#X connect 60 0 64 0;
+#X connect 61 0 64 0;
+#X connect 62 0 64 0;
+#X connect 64 0 63 0;
+#X connect 64 1 58 0;
+#X connect 67 0 66 0;
+#X connect 68 0 67 0;
+#X connect 69 0 67 1;
+#X connect 71 0 73 0;
+#X connect 72 0 73 1;
+#X connect 73 0 70 0;

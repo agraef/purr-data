@@ -1,0 +1,108 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header samphold~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 244 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 248 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for version 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal;
+#X text 12 45 DESCRIPTION sample and hold unit;
+#X text 12 65 INLET_0 signal set reset;
+#X text 12 85 INLET_1 signal float;
+#X text 12 105 OUTLET signal;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 507 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 544 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 547 (none);
+#N canvas 91 479 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [samphold~] Related Objects;
+#X obj 22 43 phasor~;
+#X obj 79 43 threshold~;
+#X restore 102 597 pd Related_objects;
+#X obj 78 253 cnv 17 3 175 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 516 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 441 cnv 17 3 60 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 464 3 samphold~;
+#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/samphold~
+-text pdpedia: samphold~;
+#X obj 180 197 snapshot~;
+#X floatatom 180 219 5 0 0 0 - - -;
+#X obj 180 151 samphold~;
+#X obj 207 118 sig~;
+#X obj 252 140 sig~;
+#X floatatom 207 97 3 0 0 0 - - -;
+#X floatatom 252 119 3 0 0 0 - - -;
+#X msg 130 48 set 34;
+#X msg 192 71 reset;
+#X text 232 96 sample signal;
+#X text 277 117 control signal;
+#X msg 180 48 reset 10;
+#X text 238 77 to force the next sample;
+#X text 237 63 reset to default 1e+20;
+#X text 98 252 signal;
+#X text 98 292 set;
+#X text 98 322 reset;
+#X text 98 399 float;
+#X text 168 252 - incoming signal \, which is sampled whenever the
+right input decreases in value (as [phasor~] does each period \, for
+example).;
+#X text 98 440 signal;
+#X text 98 464 float;
+#X text 167 464 - floats are accepted (and lists truncated) without
+error. They are ignored \, however \, if there is a signal connection
+to the same inlet.;
+#X text 98 515 signal;
+#X text 168 515 - the outgoing signal;
+#X text 168 292 - the "set" message sets the output value \, which
+continues to be updated as normal afterward (e.g. \, "set 34").;
+#X text 167 440 - the right inlet is the "control signal". When it
+decreases in value \, the left input is sampled.;
+#N canvas 291 150 170 145 metro 0;
+#X obj 19 18 loadbang;
+#X obj 19 42 metro 100;
+#X obj 19 65 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 192 174 pd metro;
+#X text 11 23 sample and hold unit;
+#X text 168 399 - floats are accepted (and lists truncated) without
+error. They are ignored \, however \, if there is a signal connection
+to the same inlet.;
+#X text 168 322 - the "reset" message causes [samphold~] to act as
+if the specified value were the most recent value of the control input
+(e.g. \, "reset 10"). Use this \, for example \, if you reset the incoming
+phasor but don't want the jump reflected in the output. Plain "reset"
+is equivalent to "reset infinity" which forces the next input to be
+sampled.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 98 573 pddp/pddplink ../3.audio.examples/C09.sample.hold.pd
+-text doc/3.audio.examples/C09.sample.hold.pd;
+#X connect 14 0 15 0;
+#X connect 16 0 14 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 1;
+#X connect 19 0 17 0;
+#X connect 20 0 18 0;
+#X connect 21 0 16 0;
+#X connect 22 0 16 0;
+#X connect 25 0 16 0;
+#X connect 40 0 14 0;

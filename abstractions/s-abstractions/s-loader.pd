@@ -1,0 +1,28 @@
+#N canvas 395 117 487 522 10;
+#X obj 31 469 soundfiler;
+#X obj 31 362 openpanel;
+#X obj 5 27 bng 15 250 50 0 \$0-open \$0-open open 0 -6 0 8 -260818
+-1 -1;
+#X symbolatom 32 29 16 0 0 2 tablename - #0/tablename;
+#X obj 31 407 pack s s;
+#X obj 202 397 symbol;
+#X obj 31 333 t b b;
+#X obj 31 304 r \$0-open;
+#X obj 239 373 r \$0/tablename;
+#X obj 82 384 r \$0/tablename;
+#X msg 202 426 \; pd-arrays obj 10 10 s-array \$1 \;;
+#X msg 17 439 read -resize \$1 \$2;
+#X obj 32 50 nbx 10 14 -1e+37 1e+37 0 0 empty \$0/size size -30 4 0
+8 -262144 -1 -1 0 256;
+#X obj 30 491 s \$0/size;
+#X connect 0 0 13 0;
+#X connect 1 0 4 0;
+#X connect 4 0 11 0;
+#X connect 5 0 10 0;
+#X connect 6 0 1 0;
+#X connect 6 1 5 0;
+#X connect 7 0 6 0;
+#X connect 8 0 5 1;
+#X connect 9 0 4 1;
+#X connect 11 0 0 0;
+#X coords 0 0 1 1 150 70 1 0 0;

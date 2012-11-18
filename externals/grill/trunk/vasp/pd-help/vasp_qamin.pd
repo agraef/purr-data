@@ -1,0 +1,53 @@
+#N canvas 57 40 879 499 10;
+#X obj 71 32 cnv 15 15 15 empty empty vasp.amin? 0 10 1 14 -262144
+-1 0;
+#N canvas 40 55 281 170 clear_buffer 0;
+#X obj 54 79 vasp.update;
+#X obj 54 56 vasp.= 0;
+#X obj 54 26 inlet;
+#X obj 54 108 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 616 427 pd clear_buffer;
+#X text 72 58 min-value of the absolute values of a vasp;
+#X text 70 75 right outlet: calculated value;
+#X msg 616 404 vasp bufamin;
+#X msg 50 192 vasp bufamin;
+#X obj 50 215 vasp.amin?;
+#X floatatom 105 249 5 0 0;
+#X text 148 248 -> current absolute minimum;
+#X obj 48 429 VASP-HELP;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufamin 100 float 0;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 535 123 graph;
+#N canvas 0 0 398 274 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 1 10 \; \$1 xlabel 1.1 0 20 40 60 80 100
+\; \$1 yticks 0 0.25 2 \; \$1 ylabel 105 -1 -0.5 0 0.5 1;
+#X msg 33 45 symbol bufamin;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 772 429 pd init;
+#X obj 48 311 vasp.abs;
+#X msg 48 290 vasp bufamin;
+#X obj 48 332 vasp.u;
+#X obj 51 128 vasp.noise;
+#X msg 51 106 vasp bufamin;
+#X text 148 106 1 create random values;
+#X obj 51 149 vasp.u;
+#X text 150 193 2 find the absolute minimum of this soundfile;
+#X text 139 291 3 to control the result display the absolute values
+;
+#X text 55 387 related objects;
+#X obj 172 386 vasp.min;
+#X obj 246 386 vasp.min?;
+#X connect 4 0 1 0;
+#X connect 5 0 6 0;
+#X connect 6 1 7 0;
+#X connect 12 0 14 0;
+#X connect 13 0 12 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 0;

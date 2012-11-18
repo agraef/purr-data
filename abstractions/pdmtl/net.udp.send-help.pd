@@ -1,0 +1,41 @@
+#N canvas 538 72 765 403 10;
+#X obj 91 112 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X obj 81 201 prepend set;
+#X msg 79 228 foo 52;
+#X msg 62 39 foo \$1;
+#X obj 66 18 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 10 -262144
+-1 -1 5200 1;
+#X symbolatom 136 46 10 0 0 0 - - -;
+#X obj 321 65 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X msg 350 62 host 255.255.255.255;
+#X msg 356 31 host 127.0.0.1;
+#X obj 184 204 route foo;
+#X obj 187 229 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 10 -262144
+-1 -1 5200 1;
+#X text 76 315 Description: Wrapper around netsend in UDP.;
+#X text 73 330 Author: Alexandre Quessy;
+#X obj 81 176 netreceive 8001 1;
+#X obj 93 87 net.udp.send @host localhost @port 8001;
+#X obj 360 192 net.udp.send @host 127.0.0.1 @port 8001 @autoconnect
+0 @delay 10000;
+#X obj 670 164 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X floatatom 361 166 5 0 0 0 - - -;
+#X obj 362 230 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 1
+1;
+#X connect 1 0 2 0;
+#X connect 3 0 14 0;
+#X connect 4 0 3 0;
+#X connect 5 0 14 0;
+#X connect 6 0 14 1;
+#X connect 7 0 14 1;
+#X connect 8 0 14 1;
+#X connect 9 0 10 0;
+#X connect 13 0 1 0;
+#X connect 13 0 9 0;
+#X connect 14 0 0 0;
+#X connect 15 0 18 0;
+#X connect 16 0 15 1;
+#X connect 17 0 15 0;

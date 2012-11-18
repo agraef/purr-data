@@ -1,0 +1,26 @@
+*****************************************************************************
+Version 0.1 
+copyleft 2002 by Yves Degoyon
+tarballs and updates available @ http://ydegoyon.free.fr
+
+blinkenlight : a blinken lights films player ( but also a pixel grid )
+
+This object displays blinken lights movies, and lets you handle
+a grid of pixels.
+It is also a "Telecran" !!
+
+There is a movies archive @ http://www.blinkenlights.de/gallery/index.en.html
+
+To install blinkenlights, follow the steps from INSTALL
+
+This software is published under GPL terms.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware, your mental health 
+or your hearing due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+
+

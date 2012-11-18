@@ -1,0 +1,27 @@
+#N canvas 394 35 818 634 10;
+#X obj 21 324 tbEnvify~;
+#X obj 291 185 Scope~ 456 390 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X obj 21 366 dacer~;
+#X msg 173 40 1000 sine 1 0.1;
+#X msg 151 9 1000 triangle 1 0.1;
+#X msg 183 64 1000 hanning 1 0.1;
+#X msg 193 85 1000 bpe 0 0 1 1 0.2 1 0 1;
+#X obj 20 272 osc~ 440;
+#X msg 204 109 1000 bpe-smooth 0 0 1 1 0.2 1 0 1 2000 8000;
+#X msg 214 133 1000 bpe-slide 0 0 1 1 0.2 1 0 1 4000 8000;
+#X text 344 36 (c) Tim Blechmann 2005 \, $Id: tbEnvify~-help.pd 221 2005-12-17 18:31:17Z tim $;
+#X text 344 17 a simple envelope generator;
+#X obj 99 351 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 0 1 12 0;
+#X connect 3 0 0 1;
+#X connect 4 0 0 1;
+#X connect 5 0 0 1;
+#X connect 6 0 0 1;
+#X connect 7 0 0 0;
+#X connect 8 0 0 1;
+#X connect 9 0 0 1;

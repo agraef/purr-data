@@ -1,0 +1,123 @@
+#N canvas 395 171 817 613 10;
+#X obj 381 235 line~;
+#X floatatom 382 21 12 0 0 0 - - -;
+#X floatatom 419 106 12 0 0 0 - - -;
+#X obj 381 256 *~ 44.1;
+#X text 420 1 Read from (ms);
+#X text 436 87 Read for (ms);
+#X msg 381 208 \$1 \, \$2 \$3;
+#X obj 381 182 pack f f f;
+#X obj 382 131 expr $f1 \; $f1+$f2 \; $f2;
+#X obj 441 427 snapshot~;
+#X obj 448 407 metro 50;
+#X obj 447 387 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg -2 223 openpanel;
+#X floatatom -3 288 12 0 0 0 - - -;
+#X obj 435 298 hradio 30 1 0 2 empty empty empty 0 -8 0 10 -257985
+-1 -1 0;
+#X obj 554 264 +~ 0;
+#X obj 546 176 phasor~ 1;
+#X obj 550 207 *~ 44100;
+#X floatatom 546 122 12 0 0 0 - - -;
+#X msg 544 87 1000;
+#X floatatom 629 224 12 0 0 0 - - -;
+#X obj 441 451 /;
+#X obj 444 474 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -191407
+-1 -1 0 1;
+#X msg 581 86 10000;
+#X msg 626 82 50;
+#X text 629 202 offset (ms);
+#X obj -4 309 s \$0-samples;
+#X obj 507 446 r \$0-samples;
+#X text 504 304 Choose control type;
+#X text 439 492 Playhead position (relative to the file duration);
+#X obj -2 186 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113 -1
+-1;
+#X obj 419 45 loadbang;
+#X msg 419 69 1000;
+#X obj 545 47 loadbang;
+#X obj 382 -13 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113
+-1 -1;
+#X text -12 -39 Description: Reads 3 channels from a ambi.table.4 instance.
+;
+#X text -16 -2 Comments: First argument is the ambi.table name. Can
+be changed via second inlet.;
+#X text -16 27 Controlled with a signal from 0 to n-1 samples.;
+#X text -11 69 In this help patch there are two ways to control a tabread4~
+object.;
+#X text -14 109 You can retrieve the length of the tables grom the
+first outlet of ambi.table.4;
+#X obj 73 182 bng 30 250 50 0 empty empty empty 17 7 0 10 -258113 -1
+-1;
+#X msg 73 219 savepanel;
+#X obj -3 265 route samples ms;
+#X floatatom 90 290 12 0 0 0 - - -;
+#X text 1 354 Send table name to second inlet to change.;
+#X obj 259 485 dac~ 1 2 3 4;
+#X obj 381 422 vsl 15 50 -100 0 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X text -16 -23 tags: ambisonic;
+#X obj 447 366 iemlib/init 1;
+#X obj 435 335 zexy/multiplex~ 0 1;
+#X obj 258 379 mtl/ambiTableRead3~ \$0-foo;
+#X obj 259 419 mtl/ambiWxyToQuad~;
+#X obj 259 458 mtl/ambiGain4~;
+#X obj 623 174 mtl/msToSmp;
+#X obj 546 144 mtl/msToFreq;
+#X obj 629 247 mtl/msToSmp;
+#X obj -2 247 mtl/ambiTable4 \$0-foo;
+#X connect 0 0 3 0;
+#X connect 1 0 8 0;
+#X connect 2 0 8 1;
+#X connect 3 0 49 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X connect 8 1 7 1;
+#X connect 8 2 7 2;
+#X connect 9 0 21 0;
+#X connect 10 0 9 0;
+#X connect 11 0 10 0;
+#X connect 12 0 56 0;
+#X connect 14 0 49 0;
+#X connect 15 0 49 1;
+#X connect 16 0 17 0;
+#X connect 17 0 15 0;
+#X connect 18 0 53 0;
+#X connect 18 0 54 0;
+#X connect 19 0 18 0;
+#X connect 20 0 55 0;
+#X connect 21 0 22 0;
+#X connect 23 0 18 0;
+#X connect 24 0 18 0;
+#X connect 27 0 21 1;
+#X connect 30 0 12 0;
+#X connect 31 0 32 0;
+#X connect 32 0 2 0;
+#X connect 33 0 19 0;
+#X connect 34 0 1 0;
+#X connect 40 0 41 0;
+#X connect 41 0 56 0;
+#X connect 42 0 13 0;
+#X connect 42 0 26 0;
+#X connect 42 1 43 0;
+#X connect 46 0 52 4;
+#X connect 48 0 11 0;
+#X connect 49 0 9 0;
+#X connect 49 0 50 0;
+#X connect 50 0 51 0;
+#X connect 50 1 51 1;
+#X connect 50 2 51 2;
+#X connect 51 0 52 0;
+#X connect 51 1 52 1;
+#X connect 51 2 52 2;
+#X connect 51 3 52 3;
+#X connect 52 0 45 0;
+#X connect 52 1 45 1;
+#X connect 52 2 45 2;
+#X connect 52 3 45 3;
+#X connect 53 0 17 1;
+#X connect 54 0 16 0;
+#X connect 55 0 15 1;
+#X connect 56 0 42 0;

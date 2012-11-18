@@ -1,0 +1,46 @@
+#N canvas 338 180 531 595 10;
+#X obj 109 86 sft.careGUI;
+#X obj 30 371 bng 15 250 50 0 \$0print empty Print 0 -6 0 8 -211762
+-1 -1;
+#X obj 68 306 bng 25 250 50 0 \$0restore \$0restoreR Restore 0 -6 0
+8 -233729 -1 -1;
+#X obj 30 306 bng 25 250 50 0 \$0save \$0saveR Save 0 -6 0 8 -40133
+-1 -1;
+#X obj 30 422 bng 20 250 50 0 \$0load empty Load 0 -6 0 8 -211157 -1
+-1;
+#X obj 60 422 bng 20 250 50 0 \$0saveAs empty SaveAs 0 -6 0 8 -113396
+-1 -1;
+#X obj 30 475 bng 15 250 50 0 \$0reset empty Reset 0 -6 0 8 -189876
+-1 -1;
+#X obj 30 250 hradio 10 1 0 8 \$0preset \$0presetR Preset 0 -6 0 8
+-129999 -1 -1 0;
+#X symbolatom 30 206 14 0 0 0 - #0fileName #0nullS;
+#X obj 30 260 hradio 10 1 0 8 \$0edit \$0editR empty 0 -6 0 8 -129264
+-1 -1 0;
+#X text 139 473 Resets the pool. Currently not implemented.;
+#X text 135 206 Displays the currently selected data file.;
+#X text 137 419 Set a file to Load or Save to. These do not actually
+move any data \, they simply choose the file to be operated upon.;
+#X text 137 370 Prints the full contents of the RRADICAL pool.;
+#X text 136 291 Save to \, or restore from \, the currently selected
+data file. These are "greyed out" until a file is set.;
+#X text 135 234 Loads a global substate (preset) setting into all rradical
+patches. The bottom radio only sets the substate to operate on \, without
+first loading its previous contents;
+#X obj 141 326 cnv 19 19 19 empty empty ! 5 7 0 14 -1 -1 0;
+#X obj 143 328 cnv 15 15 15 empty empty ! 5 7 0 14 -261761 -1 0;
+#X text 163 321 Warning! "Restore" will also load the first preset
+of all open patches.;
+#X obj 29 509 r SAVE_PREP;
+#X obj 29 540 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X text 140 503 This is a bang sent by sft.careGUI (and [polaroid])
+just before saving \, to allow preparations for the save event. For
+example \, one could use it to dump an array into a list into a commun
+object so that it could be saved when the save message arrives.;
+#X obj 4 6 cnv 15 430 50 empty empty sft.careGUI 20 12 0 16 -204352
+-66577 0;
+#X text 22 25 for Memento;
+#X text 367 559 Luke Iannini \, 2007;
+#X text 311 37 Memento control GUI;
+#X connect 19 0 20 0;

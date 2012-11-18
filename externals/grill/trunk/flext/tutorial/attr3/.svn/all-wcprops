@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ext/!svn/ver/1247/trunk/flext/tutorial/attr3
+END
+attr3.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/ext/!svn/ver/1247/trunk/flext/tutorial/attr3/attr3.mcp
+END
+attr3.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/ext/!svn/ver/1247/trunk/flext/tutorial/attr3/attr3.vcproj
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ext/!svn/ver/1247/trunk/flext/tutorial/attr3/main.cpp
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/1247/trunk/flext/tutorial/attr3/Makefile.am
+END
+package.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/ext/!svn/ver/1247/trunk/flext/tutorial/attr3/package.txt
+END

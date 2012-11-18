@@ -1,0 +1,43 @@
+#N canvas 148 147 692 494 10;
+#X obj 72 175 sssad x;
+#X floatatom 115 249 5 0 0 0 - - -;
+#X obj 71 275 sssad y;
+#X obj 71 325 sssad z;
+#X obj 481 73 r SSSAD_ADMIN;
+#X obj 481 128 route persist;
+#X obj 481 98 list trim;
+#X obj 481 184 list trim;
+#X msg 481 300 \; SSSAD z 4 \; SSSAD y 26 \; SSSAD x 106 \; SSSAD_ADMIN
+set \;;
+#X msg 315 116 save;
+#X obj 337 200 s SSSAD_ADMIN;
+#X obj 481 160 list prepend add SSSAD;
+#X msg 359 160 set \, addsemi;
+#X msg 315 228 add SSSAD_ADMIN set;
+#X obj 315 139 t b a b;
+#X obj 119 151 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 10600 1;
+#X obj 115 301 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 4;
+#X obj 72 117 sssad x;
+#X obj 119 93 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 10600 1;
+#X connect 0 0 15 0;
+#X connect 1 0 2 1;
+#X connect 2 0 1 0;
+#X connect 3 0 16 0;
+#X connect 4 0 6 0;
+#X connect 5 0 11 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 9 0 14 0;
+#X connect 11 0 7 0;
+#X connect 12 0 8 0;
+#X connect 13 0 8 0;
+#X connect 14 0 13 0;
+#X connect 14 1 10 0;
+#X connect 14 2 12 0;
+#X connect 15 0 0 1;
+#X connect 16 0 3 1;
+#X connect 17 0 18 0;
+#X connect 18 0 17 1;

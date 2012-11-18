@@ -1,0 +1,36 @@
+#N canvas 649 57 790 563 12;
+#X floatatom 48 244 5 0 0 1 Input - -;
+#X floatatom 49 404 5 0 1 1 Normalized - -;
+#X floatatom 175 369 5 0 0 1 Min - -;
+#X floatatom 276 314 5 0 0 1 Max - -;
+#X obj 178 396 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -1
+-262144 -1 0 1;
+#X obj 279 340 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -1
+-262144 -1 0 1;
+#X obj 53 442 hsl 128 15 0 1 0 0 empty empty empty -2 -6 0 8 -1 -262144
+-1 0 1;
+#X text 14 31 released on : 2006/07/02;
+#X obj 335 269 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 16 -13 Description: smart scaling of a number stream;
+#X text 15 9 contact: mrtoftrash@gmail.com;
+#X text 399 217 Hold time : milliseconds before tightening;
+#X text 404 238 Tightening time : milliseconds it takes to tighten
+the scale's range.;
+#X text 13 67 Dynamically sets the scale range based on the minimum
+and maximum values of a number stream.;
+#X text 13 103 The problem with most auto-scalers is that they tend
+to lose sensitivity over time.;
+#X text 16 143 This smart scaler solves this problem by "tightening"
+the minimum and maximum values around the last input after a set holding
+time.;
+#X obj 48 278 mtl/scaleSmart 1000 10000;
+#X text 18 49 tags: math;
+#X connect 0 0 16 0;
+#X connect 1 0 6 0;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 8 0 16 1;
+#X connect 16 0 1 0;
+#X connect 16 1 2 0;
+#X connect 16 2 3 0;

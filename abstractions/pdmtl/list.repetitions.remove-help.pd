@@ -1,0 +1,9 @@
+#N canvas 314 574 450 300 10;
+#X msg 77 95 1 2 2 3 4 3 5 5 5;
+#X msg 216 125 unique triple double double triple triple;
+#X obj 116 229 print;
+#X obj 115 173 list.repetitions.remove;
+#X text 42 18 Description: removes repititions from a list.;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;

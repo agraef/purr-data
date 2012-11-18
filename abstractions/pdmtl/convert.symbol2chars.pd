@@ -1,0 +1,18 @@
+#N canvas 404 342 614 565 10;
+#X obj 124 13 inlet;
+#X text 168 12 Symbol;
+#X obj 110 500 outlet;
+#X obj 248 498 outlet;
+#X obj 141 240 t a a;
+#X obj 192 283 list.length;
+#X msg 211 152 bang;
+#X obj 139 112 t a b;
+#X obj 138 184 convert.symbol2list;
+#X connect 0 0 7 0;
+#X connect 4 0 2 0;
+#X connect 4 1 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 8 1;
+#X connect 7 0 8 0;
+#X connect 7 1 6 0;
+#X connect 8 0 4 0;

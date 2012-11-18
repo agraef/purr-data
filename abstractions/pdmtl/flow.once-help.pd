@@ -1,0 +1,12 @@
+#N canvas 0 0 450 300 10;
+#X obj 111 130 flow.once;
+#X obj 116 161 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 112 97 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 43 28 Description: Will only bang once (unless reset).;
+#X obj 189 106 bng 15 250 50 0 empty empty reset 0 -6 0 8 -262144 -1
+-1;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 4 0 0 1;

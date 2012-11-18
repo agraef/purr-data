@@ -1,0 +1,56 @@
+#N canvas 0 0 448 503 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header symbol_construction
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 20 36 Many times you need to dynamically create different symbols.
+For example \, if you are working with many files \, you might want
+to name them with a sequential number.;
+#X text 20 75 Below are some of the most common ways to build a symbol
+from various parts. Additionally \, there are externals which can perform
+more advanced functions \, which are listed below.;
+#X text 20 127 1) Using the [makefilename] object;
+#X floatatom 41 149 5 0 0 0 - - -;
+#X symbolatom 41 192 10 0 0 0 - - -;
+#X obj 41 170 makefilename file%d.wav;
+#X text 193 170 see help patch for more details;
+#X text 20 219 2) Using variable-substitution in a message box;
+#X symbolatom 41 351 12 0 0 0 - - -;
+#X msg 41 328 symbol \$1-\$2.wav;
+#X obj 41 306 pack;
+#X floatatom 41 241 5 1 12 1 month - -;
+#X floatatom 62 262 5 2000 2020 1 year - -;
+#X obj 62 283 t b a;
+#X text 20 379 3) Using externals;
+#X obj 1 481 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS conversion;
+#X text 12 25 NAME makefilename gatom;
+#X text 12 65 DESCRIPTION how to handle symbols in Pd;
+#X restore 392 483 pd META;
+#N canvas 14 368 428 126 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Symbol Construction- Related Objects;
+#X obj 22 43 makefilename;
+#X msg 114 44;
+#X restore 103 483 pd Related_objects;
+#X obj 6 483 pddp/pddplink all_about.pd -text All About Pd;
+#X obj 38 399 pddp/helplink zexy/list2symbol;
+#X obj 38 419 pddp/helplink cyclone/sprintf;
+#X obj 38 459 pddp/helplink zexy/makesymbol;
+#X obj 38 439 pddp/helplink cyclone/tosymbol;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 15 0 12 0;
+#X connect 15 1 12 1;

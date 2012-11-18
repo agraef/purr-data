@@ -1,0 +1,16 @@
+#N canvas 393 272 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Abstractions 20 12 1 14 -262144
+-66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X msg 378 10 8;
+#X obj 59 187 anAbstraction TheStateName;
+#X obj 98 377 careGUI TheStateName.dat;
+#X text 57 78 Here's comes the cool part. All you've learned so far
+also works with abstractions. Abstractions are pd-files \, that are
+saved standalone and then called in another patch by name. Here we
+gave our abstraction an argument \, that gets routed to the 'originator'
+as name of the state. Play with it \, and don't forget to first select
+a caretaker-file.;
+#X text 100 461 First select a FILE \, then SAVE or RESTORE!!!;
+#X connect 3 0 1 0;

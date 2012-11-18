@@ -1,0 +1,35 @@
+#N canvas 238 126 606 403 10;
+#X text 212 227 frame;
+#X text 241 263 bang when done;
+#X text 71 265 audio out;
+#X text 25 20 Plays a sound file til it ends \, synced up to the frame
+clock. Should stay in sync when randomly accessing different frame
+numbers.;
+#X text 96 216 array;
+#X text 96 227 name;
+#X text 211 216 start;
+#X text 177 308 arguments: arrayname startframe#;
+#X obj 377 279 soundfiler;
+#X obj 377 232 symbol \$0-array;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-array 126079 float 2;
+#X coords 0 1 126079 -1 200 140 1;
+#X restore 376 50 graph;
+#X msg 377 254 read examples/sdf.wav \$1;
+#X obj 95 112 frameclock 400;
+#X obj 76 322 output~;
+#X obj 95 243 fstabplay~ \$0-array 40;
+#X obj 224 264 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 108 82 78;
+#X msg 77 82 55;
+#X text 134 80 <-- try jumping to a frame;
+#X obj 377 211 loadbang;
+#X connect 9 0 11 0;
+#X connect 11 0 8 0;
+#X connect 14 0 13 0;
+#X connect 14 0 13 1;
+#X connect 14 1 15 0;
+#X connect 16 0 12 0;
+#X connect 17 0 12 0;
+#X connect 19 0 9 0;

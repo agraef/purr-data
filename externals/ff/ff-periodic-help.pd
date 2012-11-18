@@ -1,0 +1,154 @@
+#N canvas 360 67 857 641 10;
+#X msg 65 474 bang;
+#X msg 66 556 stop;
+#X msg 453 340 envelope 0 100 0 100;
+#X text 85 71 period time in ms (defaults 1000 ms);
+#X text 471 361 startlevel attack-duration endlevel decay-duration
+;
+#X text 188 204 waveform phase in degrees;
+#X text 10 458 start the effect;
+#X text 15 474 with a;
+#X obj 319 573 ff-periodic 0 0 0 0.5;
+#X text 505 473 direction in degrees;
+#X text 547 511 duration in ms \, 0 is infinite;
+#X text 625 554 level \, range = [-1 \, 1];
+#X obj 576 532 hsl 190 17 -1 1 0 0 empty empty level 25 9 1 12 -261689
+-1 -1 0 0;
+#X obj 456 453 hsl 175 17 0 360 0 0 empty empty direction 25 9 1 12
+-262131 -1 -1 0 0;
+#X obj 491 491 hsl 245 17 0 5000 0 0 empty empty duration 25 9 1 12
+-261681 -1 -1 0 0;
+#X obj 453 473 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 0 256;
+#X obj 488 513 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 0 256;
+#X obj 573 554 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 0 256;
+#X text 250 12 -- control a force-feedback periodic force effect;
+#X obj 67 507 bng 25 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 35 507 bng 25 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X text 228 272 delay before starting;
+#X obj 216 316 hsl 200 17 0 5000 0 1 empty empty interval 25 9 1 12
+-225271 -1 -1 2000 0;
+#X msg 213 353 interval \$1;
+#X msg 175 289 delay \$1;
+#X obj 178 253 hsl 200 17 0 5000 0 1 empty empty delay 25 9 1 12 -228992
+-1 -1 1000 0;
+#X obj 175 273 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 251.256 256;
+#X obj 213 336 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 502.513 256;
+#X msg 134 223 phase \$1;
+#X obj 137 184 hsl 220 17 0 360 0 1 empty empty phase 25 9 1 12 -257472
+-1 -1 5500 0;
+#X obj 134 205 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 90.411 256;
+#X msg 90 157 offset \$1;
+#X obj 93 117 hsl 220 17 -1 1 0 1 empty empty offset 25 9 1 12 -225280
+-1 -1 13700 0;
+#X obj 90 139 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 0.251142 256;
+#X msg 30 92 period \$1;
+#X obj 33 51 hsl 300 17 2 2000 1 1 empty empty period 25 9 1 12 -261681
+-1 -1 22900 0;
+#X obj 30 73 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 396.907 256;
+#X msg 85 429 waveform \$1;
+#X msg 40 262 square;
+#X msg 51 282 sine;
+#X msg 61 302 triangle;
+#X msg 70 322 saw_up;
+#X msg 77 342 saw_down;
+#X obj 85 375 symbol;
+#X text 8 244 waveform shape;
+#X symbolatom 85 408 9 0 0 0 current: - -;
+#X msg 453 308 envelope \$1 \$2 \$3 \$4;
+#X obj 583 229 hsl 150 17 0 1 0 0 empty empty end_level 25 8 1 12 -261689
+-1 -1 0 0;
+#X obj 456 187 hsl 150 17 0 1 0 0 empty empty start_level 25 8 1 12
+-261689 -1 -1 0 0;
+#X obj 453 270 nbx 3 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 1 10
+-233017 -1 -1 0 256;
+#X obj 453 287 pack float float float float;
+#X obj 580 270 nbx 3 14 -1e+37 1e+37 0 0 pack_bang_env empty empty
+0 -6 1 10 -233017 -1 -1 0 256;
+#X obj 516 270 nbx 6 14 -1e+37 1e+37 0 0 pack_bang_env empty empty
+0 -6 1 10 -233017 -1 -1 1027.59 256;
+#X obj 644 270 nbx 6 14 -1e+37 1e+37 0 0 pack_bang_env empty empty
+0 -6 1 10 -233017 -1 -1 101.445 256;
+#X obj 519 208 hsl 180 17 5 5000 1 1 empty empty attack_duration 25
+9 1 12 -261681 -1 -1 13800 0;
+#X obj 647 250 hsl 180 17 5 5000 1 1 empty empty decay_duration 25
+9 1 12 -261681 -1 -1 7800 0;
+#X obj 434 270 bng 15 250 50 0 empty pack_bang_env empty 0 -6 0 8 -262144
+-1 -1;
+#X obj 3 2 cnv 15 850 30 empty empty [ff-periodic] 15 15 1 18 -261681
+-1 0;
+#X text 480 573 <-- arguments are: device# direction duration level
+;
+#X text 360 596 the outlet gives the effect number on the device or
+-1 if it is not loaded.;
+#X floatatom 319 603 5 0 0 0 - - -;
+#X text 554 107 For more info:;
+#X obj 663 106 pddp_open all_about_haptics;
+#X text 300 335 minimum time;
+#X text 300 350 between triggers;
+#X text 422 56 [ff-periodic] generates a periodic force \, basically
+a waveform that can be a pulsing or a vibration depending on the "period".
+;
+#X text 145 139 waveform offset from center [-1 \, 1];
+#X text 199 155 (defaults 0=centered);
+#X msg 441 392 load;
+#X msg 441 416 unload;
+#X text 492 391 a load message \, uploads an effect to the stick;
+#X text 491 416 an unload message \, removes it;
+#X connect 0 0 8 0;
+#X connect 1 0 8 0;
+#X connect 2 0 8 0;
+#X connect 8 0 60 0;
+#X connect 12 0 17 0;
+#X connect 13 0 15 0;
+#X connect 14 0 16 0;
+#X connect 15 0 8 1;
+#X connect 16 0 8 2;
+#X connect 17 0 8 3;
+#X connect 19 0 8 0;
+#X connect 20 0 1 0;
+#X connect 22 0 27 0;
+#X connect 23 0 8 0;
+#X connect 24 0 8 0;
+#X connect 25 0 26 0;
+#X connect 26 0 24 0;
+#X connect 27 0 23 0;
+#X connect 28 0 8 0;
+#X connect 29 0 30 0;
+#X connect 30 0 28 0;
+#X connect 31 0 8 0;
+#X connect 32 0 33 0;
+#X connect 33 0 31 0;
+#X connect 34 0 8 0;
+#X connect 35 0 36 0;
+#X connect 36 0 34 0;
+#X connect 37 0 8 0;
+#X connect 38 0 43 0;
+#X connect 39 0 43 0;
+#X connect 40 0 43 0;
+#X connect 41 0 43 0;
+#X connect 42 0 43 0;
+#X connect 43 0 45 0;
+#X connect 45 0 37 0;
+#X connect 46 0 8 0;
+#X connect 47 0 51 0;
+#X connect 48 0 49 0;
+#X connect 49 0 50 0;
+#X connect 50 0 46 0;
+#X connect 51 0 50 2;
+#X connect 52 0 50 1;
+#X connect 53 0 50 3;
+#X connect 54 0 52 0;
+#X connect 55 0 53 0;
+#X connect 56 0 50 0;
+#X connect 68 0 8 0;
+#X connect 69 0 8 0;

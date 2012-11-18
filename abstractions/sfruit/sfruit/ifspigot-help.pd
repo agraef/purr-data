@@ -1,0 +1,11 @@
+#N canvas 630 151 498 250 10;
+#X obj 26 74 ifspigot \$0test;
+#X text 10 12 [ifspigot] - receiver-conditional spigot;
+#X text 124 74 if test is 1 \, spigot is on \, else spigot is off;
+#X obj 26 114 ifspigot \$0test false;
+#X text 160 114 if test is 0 \, spigot is on \, else spigot is off
+;
+#X obj 26 157 ifspigot \$0test true 1;
+#X text 167 152 last argument lets you set default state of internal
+spigot \; with no argument \, it is 0;
+#X text 369 224 2008 Luke Iannini;

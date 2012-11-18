@@ -1,0 +1,14 @@
+#!/bin/bash
+
+touch ~/.pdrc
+
+if [ "`grep -c pd_start.pd ~/.pdrc`" == "0" ]
+then
+	path=`pwd`
+	cmd="-open `pwd`/pd_start.pd"
+	echo Adding $cmd to your ~/.pdrc file
+	echo $cmd >> ~/.pdrc
+	echo Adding $path to your pd path
+	echo -path $path >> ~/.pdrc
+fi
+		

@@ -1,0 +1,64 @@
+#N canvas 82 58 809 670 10;
+#X text 32 22 pdoctave - a pd interface to octave;
+#X text 32 38 2006 \, Franz Zotter \, IEM Graz;
+#X text 30 87 See also the iemmatrix externals !;
+#X msg 401 209 list 1 2 3 4 5;
+#X msg 410 230 matrix 2 2 1 2 3 4;
+#X msg 437 331 2;
+#X floatatom 473 343 5 0 0 0 - - -;
+#X obj 430 290 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 401 365 pdoctave_send a;
+#X obj 39 493 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 62 518 pdoctave_command b=[1:5 \; 1 \, 2 \, 3 \, 4 \, 0];
+#X obj 398 488 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 398 536 print;
+#X obj 421 268 mtx_rand;
+#X floatatom 421 251 5 0 0 0 - - -;
+#X obj 37 266 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 62 382 bang;
+#X msg 100 382 clear;
+#X obj 61 296 pdoctave_command b = [1 \, 2 \, 3 \; 3 4 5];
+#X obj 62 407 entry 124 100 grey70 yellow;
+#X msg 61 266 list a = [1 2 3];
+#X text 29 231 send commands to octave:;
+#X text 371 150 set variables in octave (you can also use the iemmatrix
+objects !) :;
+#X text 516 364 <- set variable a;
+#X obj 430 309 mtx_ones 3 3;
+#X obj 552 488 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 552 536 print;
+#X obj 552 511 pdoctave_get b;
+#X text 372 457 get variables from octave to pd:;
+#X text 30 357 with ben bogarts entry external:;
+#X obj 35 598 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 35 616 pdoctave_command mesh(rand(20 \, 20));
+#X text 32 575 use gnuplot to plot a matrix:;
+#X msg 384 189 symbol hello;
+#X text 365 613 (help-patch provided by Georg Holzmann);
+#X obj 398 511 pdoctave_get a;
+#X connect 3 0 8 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 0;
+#X connect 6 0 8 0;
+#X connect 7 0 24 0;
+#X connect 9 0 10 0;
+#X connect 11 0 35 0;
+#X connect 13 0 8 0;
+#X connect 14 0 13 0;
+#X connect 15 0 18 0;
+#X connect 16 0 19 0;
+#X connect 17 0 19 0;
+#X connect 19 0 10 0;
+#X connect 20 0 18 0;
+#X connect 24 0 8 0;
+#X connect 25 0 27 0;
+#X connect 27 0 26 0;
+#X connect 30 0 31 0;
+#X connect 33 0 8 0;
+#X connect 35 0 12 0;

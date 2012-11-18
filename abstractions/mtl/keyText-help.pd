@@ -1,0 +1,29 @@
+#N canvas 51 115 657 406 10;
+#X obj 75 181 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 73 128 loadbang;
+#X msg 75 153 1;
+#X text 91 177 on/off;
+#X text 214 53 WARNING: Has only been tested on Linux!;
+#X msg 86 285 ui symbols;
+#X obj 88 254 cyclone/prepend set;
+#X text 20 14 The focus must be given to a patcher window. There are
+two input modes.;
+#X msg 241 289;
+#X obj 243 258 cyclone/prepend set;
+#X obj 88 214 mtl/keyText 1 1;
+#X text 22 42 Argument 1: on/off (1/0).;
+#X text 20 61 Inlet 1: on/off (1/0).;
+#X text 22 -24 Description: Creates symbols and phrases while you type.
+;
+#X text 184 119 Outlet 1: result as it is being built.;
+#X text 183 136 Outlet 2: complete result when Enter/Return us pressed.
+;
+#X text 24 -10 tags: ui symbols;
+#X connect 0 0 10 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 6 0 5 0;
+#X connect 9 0 8 0;
+#X connect 10 0 6 0;
+#X connect 10 1 9 0;

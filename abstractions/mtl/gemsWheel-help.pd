@@ -1,0 +1,43 @@
+#N canvas 554 265 594 457 10;
+#X declare -lib Gem;
+#X declare -lib Gem;
+#X obj 45 91 gemhead;
+#X floatatom 147 247 5 0 0 1 duplications - -;
+#X obj 313 78 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X obj 157 57 loadbang;
+#X obj 158 111 metro 5000;
+#X obj 157 157 line;
+#X msg 156 134 0 \, 360 5000;
+#X obj 47 156 rotateXYZ;
+#X obj 155 87 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 313 117 mtl/gemsWin;
+#X msg 124 333 \$1 1 1;
+#X obj 51 386 color;
+#X obj 125 308 / 360;
+#X text 24 42 tags: gems;
+#X text 145 286 Outlet 2: angle of the element being rendered in degrees
+;
+#X obj 124 362 mtl/hsvToRgb;
+#X text 18 21 Description: Makes a wheel out of duplicated geos.;
+#X obj 51 421 circle;
+#X obj 46 267 mtl/gemsWheel 4;
+#X obj 494 16 import Gem;
+#X obj 43 118 mtl/gemsStretch;
+#X connect 0 0 20 0;
+#X connect 1 0 18 1;
+#X connect 2 0 9 0;
+#X connect 3 0 8 0;
+#X connect 4 0 6 0;
+#X connect 5 0 7 3;
+#X connect 6 0 5 0;
+#X connect 7 0 18 0;
+#X connect 8 0 4 0;
+#X connect 10 0 15 0;
+#X connect 11 0 17 0;
+#X connect 12 0 10 0;
+#X connect 15 0 11 1;
+#X connect 18 0 11 0;
+#X connect 18 1 12 0;
+#X connect 20 0 7 0;

@@ -1,0 +1,13 @@
+#N canvas 104 134 683 489 10;
+#X obj 144 191 list.concatenate;
+#X msg 143 119 list a b c d;
+#X msg 282 122 1 2 3 4 5;
+#X text 56 11 Description: Concatenantes the elements of a list.;
+#X msg 333 166 - 4 5 6;
+#X msg 344 207 2d.;
+#X obj 142 314 print;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;

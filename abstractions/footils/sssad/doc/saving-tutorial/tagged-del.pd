@@ -1,0 +1,6 @@
+#N canvas 0 0 493 304 10;
+#X floatatom 125 122 5 0 0 0 tag - -;
+#X obj 195 119 store-collect-delayed \$1/tag;
+#X connect 0 0 1 0;
+#X connect 1 0 0 0;
+#X coords 0 -1 1 1 65 40 1 100 100;

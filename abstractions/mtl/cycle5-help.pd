@@ -1,0 +1,8 @@
+#N canvas 0 0 350 147 10;
+#X floatatom 26 56 5 0 0 0 - - -;
+#X floatatom 26 103 5 0 0 0 - - -;
+#X obj 26 80 mtl/cycle5;
+#X text 24 29 tags: musical;
+#X text 25 11 Description: Cycles through the serie of fifths;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;

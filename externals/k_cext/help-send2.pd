@@ -1,0 +1,18 @@
+#N canvas 427 167 481 300 10;
+#X obj 8 75 k_cext 1 0 \; SENDFLOAT(" \$0-receive" \, 42) \; SENDSYMBOL("
+\$0-receive" \, "hello_world") \;;
+#X obj 8 53 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1 -1
+;
+#X obj 9 134 r \$0-receive;
+#X obj 9 160 route float symbol;
+#X floatatom 9 184 5 0 0 0 - - -;
+#X symbolatom 78 205 15 0 0 0 - - -;
+#X text 4 15 SENDFLOAT sends a float \, SENDSYMBOL sends a symbol:
+;
+#X text 4 233 leading spaces in the receive name will be dropped ...
+this makes $N arguments usable (as long as no receive names with leading
+spaces will be allowed);
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 5 0;

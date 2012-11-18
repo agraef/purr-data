@@ -1,0 +1,17 @@
+#N canvas 529 236 450 300 10;
+#N canvas 0 0 450 300 graph7 0;
+#X array array2 512 float 0;
+#X coords 0 1 511 -1 200 140 1;
+#X restore 235 123 graph;
+#X text 12 14 Create the filter array first (size gets set by abstraction)
+;
+#X obj 13 190 dac~;
+#X obj 21 144 *~ 0.01;
+#X text 12 32 Only first half of filter array can be used;
+#X obj 21 82 noise~;
+#X msg 105 252 \; array2 const 0;
+#X obj 20 103 fft_convolution 512 array2;
+#X connect 3 0 2 0;
+#X connect 3 0 2 1;
+#X connect 5 0 7 0;
+#X connect 7 0 3 0;

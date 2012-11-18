@@ -1,0 +1,25 @@
+#N canvas 263 138 723 395 10;
+#X obj 326 152 t f b;
+#X text 378 150 first reset (b) \, then set new length (f).;
+#X text 311 235 Right outlet is responsible to first fill the list
+;
+#X text 322 257 Left outlet then only lets the smaller list pass.;
+#X obj 180 223 list;
+#X obj 326 61 inlet;
+#X obj 180 189 inlet;
+#X obj 180 342 outlet;
+#X obj 180 268 list split \$1;
+#X obj 326 126 max 2;
+#X obj 342 82 loadbang;
+#X obj 342 103 \$1;
+#X connect 0 0 8 1;
+#X connect 0 1 4 1;
+#X connect 4 0 8 0;
+#X connect 5 0 9 0;
+#X connect 6 0 4 0;
+#X connect 8 0 4 1;
+#X connect 8 0 7 0;
+#X connect 8 2 4 1;
+#X connect 9 0 0 0;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;

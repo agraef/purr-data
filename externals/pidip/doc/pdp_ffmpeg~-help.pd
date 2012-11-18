@@ -1,0 +1,110 @@
+#N canvas 84 12 763 664 10;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 123 136 loop \$1;
+#X obj 124 114 tgl 15 0 empty empty empty 20 8 0 8 -262144 -1 -1 1
+1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 134 metro 70;
+#X obj 454 170 pdp_v4l;
+#X obj 463 139 metro 70;
+#X obj 508 105 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 465 106 stop;
+#X msg 550 137 open /dev/video;
+#X obj 606 530 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 606 582 pdp_control;
+#X msg 606 555 thread \$1;
+#X floatatom 606 643 5 0 0 0 - - -;
+#X obj 606 614 route pdp_drop;
+#X text 82 562 written by Yves Degoyon (ydegoyon@free.fr);
+#X text 657 358 Set and open the feed;
+#X floatatom 193 439 5 0 0 0 - - -;
+#X text 241 440 Streaming status;
+#X floatatom 229 462 5 0 0 0 - - -;
+#X text 272 462 Number of video frames emitted;
+#X text 319 320 BEWARE : All the stream parameters must be set in ffserver
+configuration file.;
+#X msg 318 387 starve;
+#X text 377 389 Close the current feed;
+#X floatatom 267 482 5 0 0 0 - - -;
+#X text 311 483 Number of video frames dropped;
+#X text 79 624 PDP cannot guarantee that the audio will be sent on
+time;
+#X text 78 598 NOTE : although there is an experimental audio support
+here \,;
+#X text 78 611 you'd better stream with mp3cast~ because;
+#X text 81 547 pdp_ffmeg~ : streams video & audio towards an ffmpeg
+server;
+#X obj 620 284 pdp_glx;
+#X obj 619 251 pdp_spigot;
+#X obj 684 223 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 171 309 adc~;
+#X obj 504 284 dac~;
+#X obj 684 223 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 548 223 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 674 285 close;
+#X obj 193 413 pdp_ffmpeg~;
+#X floatatom 306 505 5 0 0 0 - - -;
+#X text 352 505 Emission framerate;
+#X obj 282 199 pdp_yqt;
+#X obj 501 251 spigot~;
+#X floatatom 128 194 5 0 0 0 - - -;
+#X obj 122 273 pdp_affine;
+#X msg 318 415 feed http://localhost:8090/feed1.ffm;
+#X msg 320 357 feed http://www.xicnet.com:8000/sin1.ffm;
+#X connect 0 0 9 0;
+#X connect 1 0 46 0;
+#X connect 2 0 1 0;
+#X connect 3 0 46 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 9 1;
+#X connect 7 0 9 0;
+#X connect 8 0 6 0;
+#X connect 9 0 46 0;
+#X connect 10 0 36 0;
+#X connect 10 0 49 0;
+#X connect 11 0 10 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 10 0;
+#X connect 15 0 17 0;
+#X connect 16 0 19 0;
+#X connect 17 0 16 0;
+#X connect 19 0 18 0;
+#X connect 27 0 43 0;
+#X connect 36 1 35 0;
+#X connect 37 0 36 1;
+#X connect 38 0 43 0;
+#X connect 38 1 43 1;
+#X connect 41 0 47 1;
+#X connect 42 0 35 0;
+#X connect 43 0 22 0;
+#X connect 43 1 24 0;
+#X connect 43 2 29 0;
+#X connect 43 3 44 0;
+#X connect 46 0 36 0;
+#X connect 46 0 43 0;
+#X connect 46 4 43 0;
+#X connect 46 4 47 0;
+#X connect 46 5 43 1;
+#X connect 46 5 47 0;
+#X connect 47 1 39 1;
+#X connect 47 1 39 0;
+#X connect 48 0 49 1;
+#X connect 49 0 43 0;
+#X connect 49 0 35 0;
+#X connect 50 0 43 0;
+#X connect 51 0 43 0;

@@ -1,0 +1,20 @@
+TODO for rhythm_estimator 0.2:
+
+* compute histogram array (table) size in rhythm_ioi_histogram based
+  on the parameters ioi_resolution etc. instead of having it hardcoded
+  in rhythm_estimator.pd
+
+* have rhythm_slave_metro accept messages "start", "stop" and "auto"
+  in order to turn the metronome output on/off.  The "auto" mode would
+  turn off automatically after no input in eg. 10 seconds of time; the
+  time could be chosen in the "auto" message itself
+
+* debug rhythm_slave_metro and optimize its (default) parameter
+  values; the debugging would be done with writing incoming onset
+  times and outgoing bang times into two files and then looking at the
+  sequences in MATLAB
+
+* link all objects in one "rhythm_estimator.pd_linux" library instead
+  of three
+
+* make more examples

@@ -1,0 +1,13 @@
+#N canvas 471 516 479 301 10;
+#X msg 136 118 0 1 2 3 4 5 6 7;
+#X floatatom 201 151 5 0 0 0 ROT# - -;
+#X obj 136 230 print;
+#X obj 136 183 list-rot 3;
+#X text 124 33 list-rot;
+#X text 64 61 Rotate a list (move ROT# elements from front to back)
+;
+#X text 63 81 Negative ROT# will rotate elements from back to front.
+;
+#X connect 0 0 3 0;
+#X connect 1 0 3 1;
+#X connect 3 0 2 0;

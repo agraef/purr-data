@@ -1,0 +1,18 @@
+#N canvas 729 175 748 542 10;
+#X obj 264 366 timeroll;
+#X obj 42 162 random 1000;
+#X obj 42 136 metro 30;
+#X obj 42 112 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 42 365 timeroll;
+#X obj 68 112 loadbang;
+#X text 130 26 negativ envelope follower;
+#X obj 265 264 env- 80;
+#X obj 42 187 / 1000;
+#X connect 1 0 8 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 5 0 2 0;
+#X connect 7 0 0 0;
+#X connect 8 0 4 0;
+#X connect 8 0 7 0;

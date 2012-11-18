@@ -1,0 +1,16 @@
+#N canvas 2 89 454 304 10;
+#X obj 74 209 dac~ 1 2 3 4;
+#X obj 78 109 noise~;
+#X text 89 53 Description: Renders 1st order Ambisonic for four speakers
+disposed in a square.;
+#X text 88 81 tags: ambisonic;
+#X obj 76 181 mtl/ambiWxyToQuad~;
+#X obj 77 130 ambiMonoToWxy~ angle 0;
+#X connect 1 0 5 0;
+#X connect 4 0 0 0;
+#X connect 4 1 0 1;
+#X connect 4 2 0 2;
+#X connect 4 3 0 3;
+#X connect 5 0 4 0;
+#X connect 5 1 4 1;
+#X connect 5 2 4 2;

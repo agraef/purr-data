@@ -1,0 +1,24 @@
+#N canvas 0 0 458 308 12;
+#X obj 233 204 Counter;
+#X msg 306 91 2 7;
+#X floatatom 372 91 5 0 0 0 - - -;
+#X obj 284 241 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 226 240 5 0 0 0 - - -;
+#X floatatom 90 55 5 0 0 0 - - -;
+#X msg 17 113 reset;
+#X obj 19 68 bng 25 250 50 0 empty empty empty 0 -6 0 8 -258699 -1
+-1;
+#X text 296 70 bounds;
+#X msg 164 80 bound 0 4;
+#X text 376 72 step;
+#X msg 90 79 set \$1;
+#X connect 0 0 4 0;
+#X connect 0 1 3 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 2;
+#X connect 5 0 11 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 0;
+#X connect 11 0 0 0;

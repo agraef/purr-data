@@ -1,0 +1,83 @@
+#N canvas 481 303 707 547 10;
+#X obj 101 135 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 101 162 k_guile add.scm;
+#X obj 101 195 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 201 137 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X msg 38 134 reload;
+#X obj 341 157 k_guile send_receive.scm;
+#X msg 341 127 reload;
+#X obj 483 130 s in;
+#X obj 512 97 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 475 186 r out;
+#X msg 468 95 gakk;
+#X obj 475 215 print;
+#X obj 580 95 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 608 96 list 2 3 4;
+#X text 27 19 k_guile - guile external for PD.;
+#X text 26 36 Kjetil S. Matheussen \, 2004;
+#X obj 130 301 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 255 300 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 71 301 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 71 388 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 146 389 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X obj 213 390 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X msg 17 300 reload;
+#X obj 75 341 k_guile inout.scm;
+#X obj 436 346 k_guile mozilla.scm;
+#X msg 436 301 start;
+#X text 300 496 Note \; you can not change the number of inlets and
+outlets by sending reload .;
+#X msg 316 299 testing;
+#X msg 190 299 testing;
+#X msg 409 95 we 3 2;
+#X msg 512 286 eval (newline);
+#X msg 512 309 eval (display(environ));
+#X obj 65 487 k_guile any.scm;
+#X msg 25 448 reload;
+#X obj 193 448 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 0 256;
+#X msg 149 446 gakk;
+#X obj 261 446 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 289 447 list 2 3 4;
+#X msg 90 446 we 3 2;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 1;
+#X connect 4 0 1 0;
+#X connect 6 0 5 0;
+#X connect 8 0 7 0;
+#X connect 9 0 11 0;
+#X connect 10 0 7 0;
+#X connect 12 0 7 0;
+#X connect 13 0 7 0;
+#X connect 16 0 23 152;
+#X connect 17 0 23 323;
+#X connect 18 0 23 9;
+#X connect 22 0 23 0;
+#X connect 23 13 19 0;
+#X connect 23 185 20 0;
+#X connect 23 346 21 0;
+#X connect 25 0 24 0;
+#X connect 27 0 23 396;
+#X connect 28 0 23 284;
+#X connect 29 0 7 0;
+#X connect 30 0 24 0;
+#X connect 31 0 24 0;
+#X connect 33 0 32 0;
+#X connect 34 0 32 0;
+#X connect 35 0 32 0;
+#X connect 36 0 32 0;
+#X connect 37 0 32 0;
+#X connect 38 0 32 0;

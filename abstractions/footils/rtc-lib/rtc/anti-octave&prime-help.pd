@@ -1,0 +1,35 @@
+#N canvas 279 83 603 489 10;
+#X text 16 116 see also:;
+#X text 16 65 Filters out octaves and primes (i.e. tone repetitions)
+between two consecutive notes and outputs a bang from right outlet
+whenever this would have occured.;
+#X text 16 33 anti-octave&prime;
+#X obj 44 299 anti-octave&prime;
+#X msg 160 116 anti-interval;
+#X msg 78 138 check-octaves;
+#X msg 78 116 anti-octave;
+#X text 255 386 1993 by Karlheinz Essl;
+#X msg 324 23 Harmony;
+#X floatatom 44 341 4 0 0 1 note_name - -;
+#X obj 44 373 play2 127 500 0 1;
+#X text 206 300 Flashes when an octave or prime would have occured
+;
+#X obj 178 300 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 44 232 pipe 500;
+#X obj 44 253 t a b;
+#X obj 44 189 list split 1;
+#X obj 60 211 list;
+#X floatatom 44 276 5 0 0 0 - - -;
+#X msg 44 166 40 50 62 59 59 75;
+#X connect 3 0 9 0;
+#X connect 3 1 12 0;
+#X connect 9 0 10 0;
+#X connect 13 0 14 0;
+#X connect 14 0 17 0;
+#X connect 14 1 16 0;
+#X connect 15 0 13 0;
+#X connect 15 1 16 1;
+#X connect 16 0 15 0;
+#X connect 17 0 3 0;
+#X connect 18 0 15 0;

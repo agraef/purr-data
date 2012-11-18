@@ -1,0 +1,28 @@
+#N canvas 10 40 620 460 10;
+#X obj 292 20 import cyclone;
+#X obj 533 20 pddp/dsp;
+#X obj 8 10 cnv 15 400 40 empty empty hello_world 20 12 0 24 -228992
+-66577 0;
+#X text 198 136 2 create an object called: osc~;
+#X text 198 106 1 create a message box with the text: 200;
+#X text 198 166 3 create an object called: dac~;
+#X text 198 196 4 connect the message box to the osc~ object's left
+inlet;
+#X text 198 226 5 connect the osc~ object to both inlets of the dac~
+object;
+#X text 198 256 6 make sure your volume is set very low;
+#X text 198 286 7 turn on DSP by clicking the box on the upper right
+corner;
+#X text 198 316 8 click the message box to hear sound;
+#N canvas 0 22 454 304 how 0;
+#X text 14 9 It seems every different keyboard has a different way
+to type the tilde "~". Here is a list of how to type the tilde on various
+keyboards:;
+#X text 16 141 Mac OS X;
+#X text 16 211 Windows;
+#X text 37 252 Spanish: Alt-4-space;
+#X text 37 162 German: Alt-N-space;
+#X text 16 91 GNU/Linux;
+#X text 37 232 Any keyboard with a number pad: Alt-126;
+#X text 37 59 US: shift and the most upper-left key \, below Esc;
+#X restore 316 365 pd how to type ~;

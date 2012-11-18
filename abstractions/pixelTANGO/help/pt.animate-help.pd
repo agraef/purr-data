@@ -1,0 +1,100 @@
+#N canvas 194 100 932 627 10;
+#X obj 9 77 cnv 15 900 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 458 146 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 9 100 cnv 15 430 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 458 100 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 458 310 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 461 100 *Sliders:;
+#X obj 8 575 cnv 15 900 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 576 577 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 900 50 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 12 23 Type: General. Effects all layers in patch.;
+#X text 12 6 pixelTANGO HELP - pt.animate - Animate Parameters w/ Presets
+;
+#X text 11 77 Preset Animation Functions:;
+#X obj 180 464 pt.animate 10;
+#X text 12 100 *Introduction:;
+#X obj 458 210 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 461 310 *Notes;
+#X obj 8 350 cnv 15 450 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 11 350 *Bangs:;
+#X text 21 388 >>: Go to next key-frame;
+#X text 21 371 <<: Go to previous key-frame;
+#X text 21 407 Save: Write all key-frames to preset file;
+#X text 21 424 Load: Read all key-frames from preset file;
+#X text 471 121 Choose a key-frame \, random access with jump-on-click
+;
+#X text 471 167 Current-Key-Frame: Shows the key-frame set by the slider
+;
+#X text 12 39 Creation Arguments: pt.animate [number-of-keyframes]
+;
+#X text 471 184 Number-of-Key-Frame: Shows the total number of key-frames.
+;
+#X text 461 146 *Number Boxes: (Output only \, non-interactive);
+#X text 461 210 *Methods: Messages you can send to pt.animate;
+#X text 471 231 First Inlet:;
+#X text 481 248 "numKeys [integer]" sets the number of key-frames.
+;
+#X text 471 267 Second Inlet:;
+#X text 481 284 "[integer]" sets the current key-frame;
+#N canvas 121 78 745 414 Using 0;
+#X obj 8 356 cnv 15 700 30 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 376 358 Copyright Ben Bogart \, Franz Hildgen & \; The Societe
+des arts technologiques (SAT) 2004;
+#X obj 8 6 cnv 15 700 15 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 176 25 You can use pt.loop to control pt.animate just like
+a video clip. Connect the left outleft of pt.animate to the right inlet
+of pt.loop. Connect the right outlet of pt.loop to the left inlet of
+pt.animate. pt.animate needs to tell pt.loop how many key-frames there
+are. This happens on load-bang so if pt.loop is not attached when pt.animate
+gets created pt.loop will not get the number of keyframes. To solve
+this copy and paste the pt.loop and pt.animate together or send the
+"numKeys [integer]" message to pt.animate to force it to resend the
+number of key-frames.;
+#X text 12 6 pixelTANGO HELP - Using pt.loop to control pt.animate
+;
+#X obj 177 254 pt.animate 10;
+#X obj 10 198 pt.loop;
+#X msg 177 231 numKeys 10;
+#X text 176 155 At this point you can now use pt.loop to control the
+playback of the frames just as you would control the playback of a
+video clip. The state of pt.loop will not be saved when used outside
+of a layer.;
+#X connect 5 0 6 1;
+#X connect 6 1 5 0;
+#X connect 7 0 5 0;
+#X restore 473 402 pd Using pt.loop with pt.animate;
+#X text 22 121 pt.animate provides the ability to animate all state-saved
+parameters in a patch. In actually pt.animate is a specialized interface
+for pt.presets. This means you cannot have both in one patch because
+as they will interfere. Presets can be thought of as key-frames when
+using this module. Unlike pt.presets the first key-frame/preset is
+selected by default. This means that any changes you make to parameters
+are automatically saved in the first key-frame.;
+#X text 22 238 The animation process is: Add pt.animate to a patch
+\, alter patch parameters to the desired intitial state. (This includes
+the interpolation params.) Press the ">>" Bang to go to the next frame
+and set the params for the next state. Once you have set a number of
+key-frames you can use the "<<" and ">>" to jump from one key-frame
+to the next \, or use the slider to jump to any frame and tween from
+the current frame.;
+#X text 471 332 Will interfere with pt.presets if both are in the patch.
+Like presets only parameters that have been changed will be saved in
+the key-frame. If you do not change a value it will stay the same throughout
+the animation regardless of the current keyframe.;
+#N canvas 0 22 466 316 META 0;
+#X text 12 5 CATEGORY: PixelTANGO;
+#X text 12 16 KEYWORDS: pixeltango animate presets keyframe;
+#X restore 13 582 pd META;

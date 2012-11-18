@@ -1,0 +1,8 @@
+#N canvas 494 512 450 300 12;
+#X obj 78 114 convert truc bidule;
+#X text 16 12 help_convert;
+#X obj 78 142 print;
+#X msg 78 87 truc 1 2 3;
+#X text 322 256 dh20020401;
+#X connect 0 0 2 0;
+#X connect 3 0 0 0;

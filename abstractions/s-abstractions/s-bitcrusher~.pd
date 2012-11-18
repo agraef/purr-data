@@ -1,0 +1,22 @@
+#N canvas 137 66 476 483 10;
+#X obj 146 345 samphold~;
+#X obj 204 321 phasor~;
+#X obj 5 29 nbx 3 16 0 127 0 1 \$0/bits \$1/bits bits 0 -6 0 8 -260818
+-1 -1 77 256;
+#X obj 139 298 inlet~;
+#X obj 134 379 outlet~;
+#X obj 54 286 noise~;
+#X obj 56 310 *~ 0.001;
+#X obj 44 29 hsl 50 16 0 127 0 0 \$0/bits \$1/bits empty -2 -6 0 8
+-260818 -1 -1 3900 1;
+#X obj 204 296 mtof;
+#X obj 204 267 r \$0/bits;
+#X obj 222 413 sssad/auto \$0/bits \$1/bits;
+#X connect 0 0 4 0;
+#X connect 1 0 0 1;
+#X connect 3 0 0 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 8 0 1 0;
+#X connect 9 0 8 0;
+#X coords 0 0 1 1 100 50 1 0 0;

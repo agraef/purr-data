@@ -1,0 +1,17 @@
+#N canvas 0 0 575 364 10;
+#X floatatom 97 163 5 0 0 0 - - -;
+#X msg 97 105 bang;
+#X floatatom 143 110 5 0 0 2 min - -;
+#X floatatom 190 111 5 0 0 2 max - -;
+#X floatatom 238 113 5 0 0 2 steps - -;
+#X obj 175 247 between-variations-help;
+#X text 100 248 Also see:;
+#X obj 97 136 between-log 0 90 10;
+#X text 84 34 Bang (or any input) in left inlet outputs a random number
+of a logarithmic scale between min and max with a certain number of
+elements.;
+#X connect 1 0 7 0;
+#X connect 2 0 7 1;
+#X connect 3 0 7 2;
+#X connect 4 0 7 3;
+#X connect 7 0 0 0;

@@ -1,0 +1,33 @@
+#N canvas 496 264 483 362 10;
+#X text 286 252 Author: Roman Haefeli;
+#X text 286 269 Version: 2007-11-18;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0.scope 200 float 0;
+#X coords 0 1.1 199 -0.1 200 100 1;
+#X restore 274 92 graph;
+#X obj 14 185 tabwrite~ \$0.scope;
+#X obj 14 69 t b b;
+#X obj 14 48 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 58 97 del 0.2342;
+#X obj 73 121 del 2;
+#X text 36 45 <- draw;
+#X obj 17 235 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 38 236 <- listen;
+#X text 12 4 Description: sample accurate dirac impulse generator;
+#X obj 44 152 mtl/vdirac~;
+#X obj 17 262 mtl/vdirac~;
+#X obj 18 286 mtl/out~;
+#X text 16 19 tags: synthesize~;
+#X connect 4 0 3 0;
+#X connect 4 1 6 0;
+#X connect 4 1 7 0;
+#X connect 4 1 12 0;
+#X connect 5 0 4 0;
+#X connect 6 0 12 0;
+#X connect 7 0 12 0;
+#X connect 9 0 13 0;
+#X connect 12 0 3 0;
+#X connect 13 0 14 0;
+#X connect 13 0 14 1;

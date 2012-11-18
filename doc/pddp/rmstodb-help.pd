@@ -1,0 +1,69 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header rmstodb 3 12 0 18
+-204280 -1 0;
+#X obj 0 430 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for pd version 0.40. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control conversion acoustical_units;
+#X text 12 45 DESCRIPTION convert linear amplitude to dB;
+#X text 12 65 INLET_0 float;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 499 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 439 cnv 17 3 53 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 542 (none);
+#N canvas 76 440 428 149 Related_objects 0;
+#X text 11 28 Control objects for conversion:;
+#X obj 167 57 dbtopow;
+#X obj 233 57 powtodb;
+#X obj 23 116 mtof~;
+#X obj 68 116 ftom~;
+#X obj 111 116 dbtorms~;
+#X obj 176 116 rmstodb~;
+#X obj 242 116 dbtopow~;
+#X obj 304 116 powtodb~;
+#X text 20 93 Signal objects for conversion:;
+#X obj 23 57 mtof;
+#X obj 70 57 ftom;
+#X obj 108 57 dbtorms;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [rmstodb] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X floatatom 239 216 0 0 0 0 - - -;
+#X floatatom 239 160 0 0 0 0 - - -;
+#X obj 78 510 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 438 float;
+#X text 98 465 list;
+#X text 98 510 float;
+#X obj 474 3 rmstodb;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/rmstodb -text
+pdpedia: rmstodb;
+#X obj 239 189 rmstodb;
+#X text 109 241 The rmstodb object converts from linear ("RMS") amplitude
+to decibels \, so that an "RMS" of 1 corresponds to 100 dB. Zero amplitude
+(strictly speaking \, minus infinity dB) is clipped to zero dB;
+#X text 11 23 convert linear amplitude to dB;
+#X text 158 465 - lists will be truncated \, and the first element
+used as input.;
+#X obj 98 569 pddp/pddplink all_about_acoustic_conversions.pd;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 11 0 18 0;
+#X connect 18 0 10 0;

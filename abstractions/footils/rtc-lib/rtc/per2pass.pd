@@ -1,0 +1,11 @@
+#N canvas 63 44 315 207 10;
+#X obj 58 130 outlet;
+#X obj 58 95 expr 100 - ($f1*100);
+#X obj 58 21 inlet;
+#X text 81 152 1993 by Karlheinz Essl;
+#X obj 68 43 loadbang;
+#X obj 58 68 f \$1;
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;

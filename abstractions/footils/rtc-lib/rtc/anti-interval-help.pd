@@ -1,0 +1,44 @@
+#N canvas 3 48 661 573 10;
+#X text 37 48 anti-interval;
+#X text 37 79 Filters out a certain interval (which is the argument
+of this function) of a stream of notes and outputs a bang from right
+outlet whenever this interval would have occured.;
+#X msg 231 169 anti-octave;
+#X msg 106 169 anti-octave&prime;
+#X text 36 170 see also:;
+#X text 42 503 1995 by Karlheinz Essl;
+#X obj 66 453 play2 127 500 0 1;
+#X floatatom 173 302 4 0 0 1 forbidden_interval - -;
+#X obj 66 328 anti-interval -1;
+#X obj 66 392 anti-interval 3;
+#X obj 189 395 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 187 329 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 37 128 NB: the forbidden interval also concerns all its octave
+transpositions!;
+#X floatatom 166 365 4 0 0 1 forbidden_interval - -;
+#X text 205 328 flashes \, when forbidden intervall would have occured
+;
+#X floatatom 66 308 5 0 0 0 - - -;
+#X obj 66 266 pipe 500;
+#X obj 66 287 t a b;
+#X obj 66 223 list split 1;
+#X obj 82 245 list;
+#X floatatom 77 351 5 0 0 0 - - -;
+#X msg 66 200 40 50 60 59 75;
+#X connect 7 0 8 1;
+#X connect 8 0 9 0;
+#X connect 8 0 20 0;
+#X connect 8 1 11 0;
+#X connect 9 0 6 0;
+#X connect 9 1 10 0;
+#X connect 13 0 9 1;
+#X connect 15 0 8 0;
+#X connect 16 0 17 0;
+#X connect 17 0 15 0;
+#X connect 17 1 19 0;
+#X connect 18 0 16 0;
+#X connect 18 1 19 1;
+#X connect 19 0 18 0;
+#X connect 21 0 18 0;

@@ -1,0 +1,17 @@
+#N canvas 135 271 320 286 10;
+#X obj 29 177 synth.simple.phasor2~;
+#X obj 29 201 mix.out_~;
+#X text 27 5 Description: a simple phasor~2;
+#X obj 29 94 random 10;
+#X text 16 154 ---------------------------------------------;
+#X obj 29 113 + 40;
+#X obj 29 133 musical.closest.note 0 2 4 7 9;
+#X obj 29 74 t b;
+#X obj 29 29 timing.tempo_ 80;
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 3 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 3 0;
+#X connect 8 0 7 0;

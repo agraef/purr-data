@@ -1,0 +1,14 @@
+NAME=dyn
+
+BUILDDIR=build
+BUILDCLASS=shlib
+
+SRCDIR=.
+
+HDRS= dyn.h dyn_data.h dyn_pd.h dyn_proto.h dyn_proxy.h
+
+SRCS= \
+	dyn_api.cpp dyn_base.cpp dyn_main.cpp dyn_create.cpp \
+	dyn_patchable.cpp dyn_proxy.cpp \
+	dyn_object.cpp dyn_message.cpp dyn_patcher.cpp dyn_text.cpp \
+	dyn_conn.cpp dyn_listen.cpp dyn_send.cpp

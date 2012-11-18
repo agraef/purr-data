@@ -1,0 +1,72 @@
+#N canvas 140 138 606 372 12;
+#X obj 17 78 tgl 20 1 empty empty enable_dsp 0 -6 0 10 -225271 -1 -1
+1 1;
+#X msg 17 103 enable \$1;
+#X obj 211 272 *~;
+#X obj 252 277 hsl 128 15 0.001 10 1 1 empty empty volume -2 -6 0 10
+-261681 -1 -1 9800 1;
+#X obj 200 309 dac~;
+#X obj 16 8 cnv 15 550 40 empty empty scrape~ 10 22 0 24 -260818 -1
+0;
+#X text 206 7 FFTease (C)Lyon \, Penrose (for Max/MSP);
+#X text 206 27 Pd port;
+#X msg 14 181 getattributes;
+#X obj 427 281 print A;
+#X text 14 164 list attributes;
+#X obj 423 90 nbx 5 18 10 20000 1 1 empty empty knee 0 -6 0 10 -225271
+-1 -1 1000 256;
+#X text 424 300 attributes;
+#X obj 211 88 bng 25 250 50 0 empty empty start 0 -6 0 8 -261689 -1
+-1;
+#N canvas 35 47 456 306 schubert 0;
+#X obj 51 234 outlet~;
+#X obj 51 188 readsf~ 1;
+#X obj 51 19 inlet;
+#X msg 27 80 1;
+#X obj 52 115 t f b;
+#X obj 51 44 route bang 1 0;
+#X msg 86 149 open ../media/schubert.aiff;
+#X connect 1 0 0 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 1 6 0;
+#X connect 5 0 3 0;
+#X connect 5 1 4 0;
+#X connect 5 2 1 0;
+#X connect 6 0 1 0;
+#X restore 210 184 pd schubert;
+#X text 15 215 get attributes;
+#X obj 319 89 nbx 5 18 -100 0 0 1 empty empty multiplier 0 -6 0 10
+-225271 -1 -1 -60 256;
+#X obj 318 183 sig~ 1;
+#X obj 318 116 + 100;
+#X obj 318 143 dbtorms;
+#X msg 16 234 getknee;
+#X msg 16 257 getcutoff;
+#X msg 423 114 knee \$1;
+#X obj 505 90 nbx 5 18 10 20000 1 1 empty empty cutoff 0 -6 0 10 -225271
+-1 -1 2000 256;
+#X msg 505 114 cutoff \$1;
+#X obj 211 217 scrape~ 1000 2000;
+#X text 361 219 knee \, cutoff;
+#X connect 0 0 1 0;
+#X connect 1 0 25 0;
+#X connect 2 0 4 0;
+#X connect 2 0 4 1;
+#X connect 3 0 2 1;
+#X connect 8 0 25 0;
+#X connect 11 0 22 0;
+#X connect 13 0 14 0;
+#X connect 14 0 25 0;
+#X connect 16 0 18 0;
+#X connect 17 0 25 1;
+#X connect 18 0 19 0;
+#X connect 19 0 17 0;
+#X connect 20 0 25 0;
+#X connect 21 0 25 0;
+#X connect 22 0 25 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 25 0 2 0;
+#X connect 25 1 9 0;

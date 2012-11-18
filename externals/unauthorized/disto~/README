@@ -1,0 +1,24 @@
+Version 0.01 
+copyleft 2002 by Yves Degoyon.
+
+tarballs and updates available @ http://ydegoyon.free.fr
+
+disto~ : a kind of effect used in pop music, use it elsewhere
+
+the algorithm was taken from Digital Effects (DISTORT3),
+a guitar effects software for DOS which rocks, written by Alexey Smoli
+( http://st.karelia.ru/~smlalx/ )
+
+To install disto~, follow the steps from INSTALL
+
+This software is published under GPL terms, see COPYING 
+for rights restrictions.
+
+This is software with ABSOLUTELY NO WARRANTY.
+Use it at your OWN RISK. It's possible to damage e.g. hardware or your hearing
+due to a bug or for other reasons. 
+We do not warrant that the program is free of infringement of any third-party
+patents.
+
+*****************************************************************************
+

@@ -1,0 +1,14 @@
+#N canvas 449 54 537 211 10;
+#X floatatom 34 78 5 0 0 0 - - -;
+#X floatatom 115 79 5 0 0 0 - - -;
+#X text 158 78 You can change the number of harmonics displayed;
+#X obj 34 131 cyclone/prepend set;
+#X obj 34 105 mtl/mToHarm 12;
+#X msg 34 155;
+#X text 28 17 Description: Gets the MIDI notes of the harmonic serie
+of a MIDI note.;
+#X text 29 47 tags:;
+#X connect 0 0 4 0;
+#X connect 1 0 4 1;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;

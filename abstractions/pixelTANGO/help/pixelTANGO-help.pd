@@ -1,0 +1,127 @@
+#N canvas 329 23 931 558 10;
+#X obj 18 259 cnv 15 440 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 485 cnv 15 900 45 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 6 cnv 15 900 30 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 21 259 * Headers (Modules at the top of layers);
+#X obj 19 280 pt.layer-help;
+#X obj 118 280 cnv 16 340 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 18 322 cnv 15 440 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 8 42 cnv 15 450 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X text 11 42 Start Here First: (from the readme);
+#X text 17 68 PixelTANGO is a set of abstractions and patches that
+make use of pd/Gem for creating visuals in a live performance setting.
+Of course it can be used for many other things and provides an interface
+to use the power of pd/Gem with a less-steep learning curve.;
+#X text 123 280 Header for all pT layers;
+#X text 21 322 * Footers (Modules at the bottom of layers);
+#X obj 19 343 pt.video-help;
+#X obj 118 343 cnv 16 340 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 118 363 cnv 16 340 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 19 363 pt.text-help;
+#X text 123 343 Defines a 2D video layer;
+#X text 123 363 Defines a text layer;
+#X obj 118 383 cnv 16 340 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 19 383 pt.model-help;
+#X text 123 383 Defines a 3D model (OBJ) layer;
+#X obj 468 42 cnv 15 440 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 598 63 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 471 42 * Modifiers (Go between Headers and Footers);
+#X obj 469 63 pt.entry-help;
+#X obj 598 83 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 83 pt.fader-help;
+#X text 603 83 RGBA colour fading for layer;
+#X obj 598 103 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 103 pt.file-help;
+#X text 603 63 Text entry for text layers;
+#X text 603 103 File selection for QTs \, Models etc.;
+#X obj 598 143 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 143 pt.layerfx-help;
+#X obj 469 283 pt.translate-help;
+#X obj 598 283 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 603 143 Pixel effects for layer textures;
+#X obj 598 163 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 163 pt.live-help;
+#X text 603 163 Live DV/firewire video input;
+#X obj 598 183 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 183 pt.loop-help;
+#X text 603 183 Looper for QT files;
+#X obj 598 203 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 203 pt.rotate-help;
+#X text 603 203 Control 3D rotation of layer;
+#X text 603 283 Control 3D translation of layer;
+#X obj 598 223 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 223 pt.scale-help;
+#X text 603 223 Control scale of layer;
+#X obj 598 243 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 243 pt.source-help;
+#X text 603 243 Texture source switcher;
+#X obj 598 263 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 263 pt.squeeze-help;
+#X text 603 263 Control independant XYZ scale of layer;
+#X obj 468 322 cnv 15 440 15 empty empty empty 20 12 0 14 -261148 -66577
+0;
+#X obj 598 343 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 598 363 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 598 383 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 471 322 * General (Effect all layers in patch);
+#X obj 469 343 pt.light-help;
+#X text 603 343 Control lighting in scene;
+#X obj 469 363 pt.window-help;
+#X text 603 363 Render window controls;
+#X obj 469 383 pt.interp-help;
+#X text 603 383 Interpolation control;
+#X text 548 488 Copyright Ben Bogart \, Franz Hildgen \, \; The Societe
+des arts technologiques (SAT) & \; The Interaccess Electronic Media
+Arts Centre 2004;
+#X text 17 138 PixelTANGO was written by Ben Bogart and Franz Hildgen
+@ The Societe des arts technologiques (SAT) and at the Interaccess
+Electronic Media Arts Centre as part of the Territoires Ouverts / Open
+Territories (TOT) project funded by Heritage Canada.;
+#X text 17 208 PixelTANGO is Copyright Ben Bogart \, Franz Hildgen
+\, The Societe des arts technologiques and The Interaccess Electronic
+Media Arts Centre;
+#X text 468 7 Click on each pT object to get the full help for that
+module.;
+#X obj 598 403 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 403 pt.presets-help;
+#X text 603 403 Presets (State-Saving);
+#X obj 598 423 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X text 603 423 Animate params using presets;
+#X text 12 6 pixelTANGO HELP - Listing of Modules - CVS: $Revsion$
+;
+#X obj 469 423 pt.animate-help;
+#X obj 598 123 cnv 16 310 16 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 469 123 pt.filelist-help;
+#X text 603 123 Load a directory of files by wildcard;
+#N canvas 0 22 462 312 META 0;
+#X text 12 5 CATEGORY: PixelTANGO;
+#X text 12 15 KEYWORDS: pixeltango video gem graphics rradical index
+objects;
+#X restore 13 490 pd META;

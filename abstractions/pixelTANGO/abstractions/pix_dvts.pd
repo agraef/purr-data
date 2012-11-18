@@ -1,0 +1,4 @@
+#N canvas 0 22 454 304 10;
+#X text 18 14 pix_dvts placeholder;
+#X obj 46 80 inlet;
+#X obj 45 137 outlet;

@@ -1,0 +1,188 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header spigot 3 12 0 18
+-204280 -1 0;
+#X obj 0 295 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 243 494 364 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.38-4. It was edited by Dave Sabine and Hans-Christoph Steiner
+as part of a project called pddp proposed by Krzysztof Czaja to build
+comprehensive documentation for Pd. Revised by Jonathan Wilkes to conform
+to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION pass or block messages;
+#X text 12 65 INLET_0 anything;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 anything;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 389 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 443 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 72 359 428 230 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [spigot] Related Objects;
+#X text 20 38 Externals;
+#X text 19 85 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 19 126 The best places to find information about Pd's libraries
+is:;
+#X text 19 146 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 19 161 or;
+#X text 19 176 iem.kug.ac.at/pdb/;
+#X obj 21 58 pddp/helplink cyclone/gate;
+#X restore 102 598 pd Related_objects;
+#X obj 78 304 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 398 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 345 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 344 float;
+#X obj 481 3 spigot;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/spigot -text
+pdpedia: spigot;
+#X text 11 23 pass or block messages;
+#X msg 101 111 0.5 1000;
+#X floatatom 134 177 1 0 0 0 - - -;
+#X obj 101 197 spigot;
+#X obj 101 218 print;
+#X msg 120 155 walk the cat;
+#X msg 111 133 bang;
+#X text 147 177 control: nonzero to pass messages \, zero to stop them
+;
+#X text 18 52 [spigot] passes messages from its left inlet to its outlet
+\, as long as a nonzero number is sent to its right inlet. When its
+right inlet gets zero \, incoming messages are "blocked" (i.e. ignored).
+;
+#X text 18 242 [spigot] works essentially like a doorway. When the
+door is open \, messages can pass through. When the door is closed
+\, messages are ignored. By default \, the door is always closed!;
+#N canvas 96 273 428 291 using_spigot_to_create_a_gate 0;
+#X text 20 38 Unlike its closest cousin MAX \, Pd does not have a native
+[gate] object. There are other Pd libraries which include gates for
+both audio and numerical data \, but similar routines can be built
+in Pd using [spigot]. The example below shows a two-way gate using
+two [spigots] and the [expr] object.;
+#X floatatom 121 188 1 0 0 0 - - -;
+#X text 138 187 controls: open and close the gates.;
+#X floatatom 24 262 5 0 0 0 - - -;
+#X floatatom 76 262 5 0 0 0 - - -;
+#X obj 24 129 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 24 149 metro 200;
+#X obj 24 171 f;
+#X obj 51 171 + 1;
+#X text 44 127 Click to start sending info through the gates.;
+#X obj 24 240 spigot;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [spigot] Using [spigot] to Create a Gate;
+#X obj 76 240 spigot 1;
+#X obj 121 218 == 0;
+#X connect 1 0 10 1;
+#X connect 1 0 14 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 7 0 10 0;
+#X connect 7 0 13 0;
+#X connect 8 0 7 1;
+#X connect 10 0 3 0;
+#X connect 13 0 4 0;
+#X connect 14 0 13 1;
+#X restore 102 568 pd using_spigot_to_create_a_gate;
+#N canvas 61 206 428 334 spigot_for_audio_signals 0;
+#X text 20 38 [spigot] does not work with audio signals. The data types
+which are accepted by this object are floats \, symbols \, lists \,
+bangs \, anythings and pointers. However \, audio signals require a
+completely different treatment.;
+#X text 21 100 Pd does not have a [spigot] for audio signals \, but
+the same effect can be created using the following structure:;
+#X obj 24 147 osc~ 800;
+#X obj 24 217 *~;
+#X floatatom 39 196 1 0 0 0 - - -;
+#X obj 24 279 env~;
+#X floatatom 24 300 5 0 0 0 - - -;
+#X obj 69 299 dac~;
+#X obj 69 279 *~ 0.05;
+#X text 79 168 Here is the [spigot].;
+#X text 80 183 When "0" \, audio signal;
+#X text 79 198 is effectively blocked.;
+#X text 80 213 When "1" \, audio signal is;
+#X text 80 228 not effected in any way.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [spigot] Is There a [spigot] for Audio Signals?;
+#X obj 287 145 pddp/dsp;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 3 0 8 0;
+#X connect 4 0 3 1;
+#X connect 5 0 6 0;
+#X connect 8 0 7 0;
+#X restore 102 547 pd spigot_for_audio_signals;
+#X text 98 303 anything;
+#X text 167 344 - "0" blocks all incoming messages to the left inlet.
+"1" (or any nonzero number) passes the incoming message to the outlet.
+;
+#X text 98 397 anything;
+#X text 168 397 - if the last value received at the right inlet was
+nonzero \, [spigot] passes the message from the first inlet to its
+outlet.;
+#X text 168 457 - By default \, the left inlet of [spigot] is initially
+closed. A one (or any nonzero number) as a creation argument will cause
+the spigot to be open initially. See the subpatch below for an example:
+;
+#X text 168 303 - [spigot] takes the input to the left inlet and either
+ignores it or passes it through to the outlet \, depending on the value
+at the right inlet.;
+#N canvas 74 291 428 213 creation_args 0;
+#X obj 146 108 spigot 0;
+#X text 21 38 [spigot] only accepts one numerical creation argument:
+a one or a zero. At creation time the [spigot] is "closed". With a
+one \, its defaults to open.;
+#X obj 214 108 spigot 1;
+#X obj 146 81 bng 15 250 50 0 empty empty empty 0 -6 0 8 -225271 -1
+-1;
+#X obj 90 108 spigot;
+#X obj 90 135 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 146 135 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 214 135 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [spigot] Creation Arguments;
+#X text 20 158 [spigot] used to accept any symbol as a creation argument
+\, but all of these are meaningless and have no effect on the operation
+of the object. This was removed in Pd 0.38-3;
+#X connect 0 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 0 0;
+#X connect 3 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X restore 171 510 pd creation_args;
+#X text 90 457 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 296 548 pddp/pddplink ../2.control.examples/18.conditional.pd
+-text doc/2.control.examples/18.conditional.pd;
+#X connect 15 0 17 0;
+#X connect 16 0 17 1;
+#X connect 17 0 18 0;
+#X connect 19 0 17 0;
+#X connect 20 0 17 0;

@@ -1,0 +1,16 @@
+#N canvas 589 269 450 300 10;
+#X obj 10 108 s-recorder~ rec;
+#X obj 10 48 osc~ 440;
+#X obj 334 146 osc~ 220;
+#X text 9 5 Quick and easy way to record audio streams;
+#X text 10 197 Global receivers for left and right are called mainout-l
+and mainout-r.;
+#X obj 215 146 osc~ 110;
+#X msg 170 67 \; rec/record 1 \;;
+#X text 168 49 Trigger recording externally.;
+#X obj 334 174 throw~ mainout-l;
+#X obj 215 174 throw~ mainout-r;
+#X connect 1 0 0 0;
+#X connect 1 0 0 1;
+#X connect 2 0 8 0;
+#X connect 5 0 9 0;

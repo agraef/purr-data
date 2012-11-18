@@ -1,0 +1,27 @@
+#N canvas 100 217 609 319 10;
+#X obj 35 25 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 8000 1;
+#X obj 62 108 commun /volume \$0;
+#X obj 220 145 originator /mypatch \$0;
+#X obj 21 174 careGUI;
+#X obj 108 64 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 6400 1;
+#X obj 140 35 commun /pan \$0;
+#X floatatom 220 98 5 0 0 1 substate_selector - -;
+#X msg 220 121 setsub \$1;
+#X msg 411 59 /mypatch/volume \$1;
+#X floatatom 411 30 5 0 0 2 set_volume_by_OSC_message - -;
+#X floatatom 413 105 5 0 0 2 set_pan_by_OSC_message - -;
+#X msg 413 134 /mypatch/pan \$1;
+#X obj 369 181 print OSC;
+#X connect 0 0 1 0;
+#X connect 1 0 0 0;
+#X connect 2 2 12 0;
+#X connect 4 0 5 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 2 0;
+#X connect 8 0 2 1;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 11 0 2 1;

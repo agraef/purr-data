@@ -1,0 +1,9 @@
+#N canvas 0 0 450 300 10;
+#X obj 139 74 inlet;
+#X obj 211 130 f \$2;
+#X obj 139 179 tabwrite \$1;
+#X obj 139 106 t f b;
+#X connect 0 0 3 0;
+#X connect 1 0 2 1;
+#X connect 3 0 2 0;
+#X connect 3 1 1 0;

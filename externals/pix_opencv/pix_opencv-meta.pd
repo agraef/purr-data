@@ -1,0 +1,8 @@
+#N canvas 15 49 200 200 10;
+#N canvas 25 49 420 300 META 1;
+#X text 10 10 NAME pix_opencv;
+#X text 10 30 AUTHOR Yves Degoyon <ydegoyon@gmail.com> and Lluis Gomez i Bigorda <lluisgomez@hangar.org>;
+#X text 10 65 Further documentation at hangar.org/wikis/lab/doku.php?id=start:puredata_opencv;
+#X text 10 95 VERSION 0.2-rc5;
+#X text 10 120 LICENSE Intel License Agreement For Open Source Computer Vision Library;
+#X restore 10 10 pd META;

@@ -1,0 +1,51 @@
+#N canvas 77 314 560 321 10;
+#X obj 24 217 mix.out_~;
+#X obj 126 95 tgl 15 0 empty empty :off/on: 20 7 0 8 -33289 -262144
+-1 0 1;
+#X obj 20 -11 cnv 15 430 22 empty empty empty 20 12 0 14 -241404 -66577
+0;
+#X obj 20 10 cnv 6 430 1 empty empty ::mix.switch.nice~:: 0 -10 0 12
+-66577 -1 0;
+#X obj 20 -11 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text 256 123 Outlet 2: to switch~;
+#X text 256 107 Outlet 1: amplitude smooth ramps;
+#X obj 27 109 osc~ 440;
+#X obj 56 130 osc~ 660;
+#X text 376 -7 Version: 2;
+#X obj 20 63 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X obj 21 58 cnv 1 430 1 empty empty empty 0 -10 0 16 -66577 -66577
+0;
+#X text 26 18 Description: switch~ without glitches.;
+#N canvas 0 0 454 304 volumes 0;
+#X obj 364 32 inlet switch;
+#X obj 35 24 inlet~;
+#X obj 135 25 inlet~;
+#X obj 37 261 outlet~;
+#X obj 180 263 outlet~;
+#X obj 96 123 *~;
+#X obj 126 123 *~;
+#X obj 235 25 inlet~;
+#X obj 358 81 switch~;
+#X connect 0 0 8 0;
+#X connect 1 0 5 0;
+#X connect 2 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 1;
+#X connect 7 0 5 1;
+#X restore 51 192 pd volumes;
+#X text 25 33 Author: ClaudiusMaximus. Modified by Thomas Ouellet Fredericks
+;
+#X text 127 195 <- Put the [switch~] object inside a subpatch!;
+#X obj 127 116 mix.switch.nice~ 10;
+#X text 189 158 Argument 1: Delay time (2xfade time). Defaults to the
+minimum value of 10ms.;
+#X connect 1 0 16 0;
+#X connect 7 0 13 0;
+#X connect 8 0 13 1;
+#X connect 13 0 0 0;
+#X connect 13 1 0 1;
+#X connect 16 0 13 2;
+#X connect 16 1 13 3;

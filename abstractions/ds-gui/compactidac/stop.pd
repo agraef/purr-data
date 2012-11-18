@@ -1,0 +1,53 @@
+#N canvas 0 84 1004 682 12;
+#N canvas 37 15 546 300 stop 1;
+#X obj 71 66 outlet;
+#X obj 71 41 struct \$0-stop float x float y float border float vis
+;
+#X obj 91 209 filledpolygon -v vis 999 border 1 0 0 20 0 20 20 0 20
+;
+#X obj 91 127 filledpolygon -v vis 933 933 1 5 7 7 5 10 8 13 5 15 7
+12 10 15 13 13 15 10 12 7 15 5 13 8 10 5 7 2 7 2 13 7 18 13 18 18 13
+18 7 13 2 7 2 2 7 5 7;
+#X connect 1 0 0 0;
+#X restore 107 43 pd stop;
+#X obj 401 176 pointer;
+#X obj 107 71 route click;
+#X obj 43 201 outlet;
+#X obj 364 98 t b b;
+#X obj 364 70 r \$1-init;
+#X obj 401 126 list prepend pd- \$1 -gop;
+#X msg 401 151 traverse \$1\$2\$3 \, bang;
+#X obj 107 96 unpack p;
+#X obj 107 176 sel 0 1;
+#X obj 47 72 inlet;
+#X msg 107 201 999;
+#X msg 133 229 0;
+#X obj 107 256 set \$0-stop border;
+#X obj 107 121 t b a;
+#X obj 107 146 1;
+#X obj 682 67 inlet;
+#X obj 682 341 set \$0-stop vis;
+#X obj 260 212 append \$0-stop x y border vis;
+#X obj 260 176 pack \$2 \$3 999 1;
+#X connect 0 0 2 0;
+#X connect 1 0 18 4;
+#X connect 2 0 8 0;
+#X connect 4 0 19 0;
+#X connect 4 1 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 1 0;
+#X connect 8 0 14 0;
+#X connect 9 0 11 0;
+#X connect 9 1 12 0;
+#X connect 10 0 9 0;
+#X connect 11 0 13 0;
+#X connect 12 0 13 0;
+#X connect 14 0 15 0;
+#X connect 14 0 3 0;
+#X connect 14 1 13 1;
+#X connect 15 0 9 0;
+#X connect 16 0 17 0;
+#X connect 18 0 17 1;
+#X connect 18 0 13 1;
+#X connect 19 0 18 0;

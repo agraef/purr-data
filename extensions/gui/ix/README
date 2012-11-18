@@ -1,0 +1,13 @@
+pd_base.tk:    a pure TCL/Tk PD gui
+pd_objects.tk: objects for above GUI
+
+*.wid: original widget prototypes, considered 'stable', all are working on:
+    - linux
+     \- pd 0.0.39
+      \- toxy 0.1.19
+       \- tk 8.5
+        \- handful of tk extensions: grep require *.wid
+
+
+screenshots:
+http://whats-your.name/pd/gui/

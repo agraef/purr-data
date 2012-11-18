@@ -1,0 +1,23 @@
+#N canvas 121 146 376 296 10;
+#X text 12 247 (C) 2006 João Pais - jmmmpais@googlemail.com
+;
+#X text 12 267 Released under the BSD License;
+#X text 256 125 Outlets;
+#X text 256 75 Arguments;
+#X floatatom 36 156 5 0 0 0 - - -;
+#X text 12 10 [tastin] - Gate for keyboard input;
+#X text 256 95 - State (0 / 1);
+#X text 256 145 - key number;
+#X text 256 165 - state;
+#X obj 123 139 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 74 156 Key value;
+#X text 143 138 State;
+#X text 256 195 Key control;
+#X obj 36 119 tastin;
+#X text 256 215 - Esc: on / off;
+#X text 12 30 Controls the flow of keyboard events with the Esc key
+\, so that nothing gets triggered by accident. The numbers are also
+displayed in the object.;
+#X connect 13 0 4 0;
+#X connect 13 1 9 0;

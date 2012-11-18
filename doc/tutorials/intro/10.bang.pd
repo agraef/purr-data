@@ -1,0 +1,34 @@
+#N canvas 10 40 620 460 12;
+#X obj 18 191 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 18 269 bang;
+#X text 40 189 <--bang button;
+#X text 62 270 <--you can also send "bang" using a message box;
+#X text 14 137 Here \, this toggle changes state when it receives a
+bang:;
+#X obj 8 10 cnv 15 400 40 empty empty bang 20 12 0 24 -228992 -66577
+0;
+#X text 13 79 In Pd \, "bang" means "do it". What that "it" is depends
+on the object receiving the bang.;
+#X msg 73 349 bang;
+#X obj 73 387 print word;
+#X obj 132 352 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 279 324 bang;
+#X obj 289 398 pddp/print_long;
+#X msg 279 350 send me!;
+#X obj 395 320 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 394 349 234;
+#X obj 18 219 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X obj 18 297 tgl 15 0 empty empty empty 0 -6 0 10 -262144 -1 -1 0
+1;
+#X connect 0 0 15 0;
+#X connect 1 0 16 0;
+#X connect 7 0 8 0;
+#X connect 9 0 8 0;
+#X connect 10 0 12 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 14 0 11 0;

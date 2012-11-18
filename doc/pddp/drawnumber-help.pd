@@ -1,0 +1,163 @@
+#N struct drawnumber-help-template float x float y float cat float
+dog float dog-vis;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header drawnumber 3 12
+0 18 -204280 -1 0;
+#X obj 0 119 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 243 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 165 RELEASE_DATE 2009-06-12;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control data_structure;
+#X text 12 65 DESCRIPTION display a numberic field of a template;
+#X text 12 5 ALIAS drawsymbol;
+#X text 12 85 INLET_0 float;
+#X restore 500 597 pd META;
+#X obj 0 204 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 232 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 460 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 98 419 428 169 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 92 42 struct;
+#X obj 142 42 drawpolygon;
+#X obj 223 42 plot;
+#X obj 17 42 drawsymbol;
+#X obj 262 42 drawcurve;
+#X text 7 78 Other Data Structure Objects;
+#X obj 245 112 element;
+#X obj 76 112 get;
+#X obj 107 112 set;
+#X obj 136 112 getsize;
+#X obj 190 112 setsize;
+#X obj 22 112 pointer;
+#X text 7 1 [drawnumber] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 128 cnv 17 3 65 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 127 float;
+#X text 98 177 list;
+#X text 168 127 - [drawnumber] has a single inlet to toggle visibility
+of the number. A zero makes it invisible. Any nonzero value makes it
+visible.;
+#X text 98 208 (none);
+#N canvas 7 169 428 164 drawnumber-help-data 0;
+#X scalar drawnumber-help-template 24 61 49 17 1 \;;
+#X scalar drawnumber-help-template 174 61 41 18 1 \;;
+#X obj 1 1 cnv 15 425 20 empty empty empty 20 12 2 14 -204280 -195568
+0;
+#X text 6 1 [drawnumber] Window to Display Data Structure Instances
+;
+#X text 21 91 Each dog/cat pair is a scalar. (You can click each in
+editmode to get a bounding blue box and move them around.) When not
+in editmode you may click and scroll the values up and down for each
+field.;
+#X restore 28 61 pd drawnumber-help-data;
+#N canvas 115 43 428 526 drawnumber-help-template 0;
+#X obj 23 121 drawnumber cat 0 0 0 cat=;
+#X obj 23 92 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 22 454 struct drawnumber-help-template float x float y float
+cat float dog float dog-vis;
+#X obj 22 314 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 22 353 set drawnumber-help-template dog-vis;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [drawnumber] subpatch for data structure template;
+#N canvas 115 239 426 147 init 0;
+#X obj 14 57 pointer;
+#X msg 14 35 traverse pd-drawnumber-help-data \, next;
+#X obj 14 12 loadbang;
+#X obj 14 80 outlet;
+#X text 67 58 This just sends a pointer to the right inlet of the [set]
+object;
+#X text 257 39 the list);
+#X text 255 27 (select the first scalar in;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X restore 235 331 pd init;
+#X text 42 91 "0" makes both "cat" fields invisible;
+#X text 40 311 "0" makes a single instance of a "dog" field invisible
+;
+#X obj 23 210 drawnumber -v dog-vis dog 0 -15 900 dog=;
+#X text 20 29 [drawnumber] is used below to display the values of two
+fields- "dog" and "cat". These two fields are defined in the template
+"drawnumber-help-template" located at the bottom of this subpatch.
+;
+#X text 20 139 For the [drawnumber] object associated with "cat" above
+\, a [toggle] is connected to the inlet. This toggles visibility globally
+(i.e. \, for all existing scalars defined by the template "drawnumber-help-template").
+;
+#X text 21 229 The [drawnumber] object for "dog" above uses the -v
+flag \, which can be used to set visibility for each scalar individually.
+The (flag \, value) pair "-v dog-vis" means that the field "dog-vis"
+determines whether "dog" will be visible in a given scalar. (If you
+use the -v flag you can no longer use the inlet of this [drawsymbol]
+object.);
+#X text 19 372 With the [set] object \, we can change the value of
+"dog-vis" in order to set visibility for the "dog" field. Notice when
+you click the [toggle] \, it only affects one scalar-- the one which
+the [set] object is currently pointing to (see the "init" subpatch).
+;
+#X text 19 487 This object defines the fields for this template. (Their
+values were initialized when this help patch was created.);
+#X connect 1 0 0 0;
+#X connect 3 0 4 0;
+#X connect 7 0 4 1;
+#X restore 28 89 pd drawnumber-help-template;
+#X obj 461 3 drawnumber;
+#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/drawnumber
+-text pdpedia: drawnumber;
+#X text 99 464 When not in "edit" mode \, you can click and drag vertically
+on the numbers to change their values. (In edit mode you can move \,
+cut \, copy \, and paste the objects.);
+#X text 201 89 <- click this subpatch to see how [drawnumber] is used.
+;
+#X text 179 59 <- subpatch to display the data structures;
+#X text 11 23 display a numeric field of a template;
+#X text 98 437 Note: you cannot use both the -n and -v flag.;
+#X text 168 177 - a list will be truncated to the first element.;
+#X text 80 253 0-2 flags;
+#X text 168 304 - the field name of the number to draw.;
+#X text 168 353 - RGB color (0=black \, 999=white \, 900=red \, 90=green
+\, 9=blue \, 555=grey \, etc.).;
+#X text 168 381 - (optional) label ("cat=" for instance).;
+#X text 168 253 - "-n" flag to make the number invisible initially.
+;
+#X text 168 270 - a "-v [variable]" flag to assign a variable to make
+the number visible/invisible.;
+#X text 168 321 - relative x coordinate.;
+#X text 168 337 - relative y coordinate.;
+#X text 80 321 2) *;
+#X text 80 337 3) *;
+#X text 80 353 4) *;
+#X text 80 304 1) *;
+#X text 98 504 Keyboard entry is supported for [drawnumber] (but not
+for [drawsymbol]) when not in editmode. Click a number to enter values
+\, the click the enter key when you are finished.;
+#X text 80 270 (symbol atoms);
+#X text 80 381 5) symbol atom;
+#X text 98 405 * Any of these can be numbers (float) or field names
+(symbol atom).;
+#X obj 98 542 pddp/pddplink drawsymbol-help.pd;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 318 542 pddp/pddplink ../4.data.structures/09.scaling.pd -text
+doc/4.data.structure/09.scaling.pd;
+#X obj 318 557 pddp/pddplink ../4.data.structures/10.onoff.pd -text
+doc/4.data.structures/10.onoff.pd;
+#X obj 98 572 pddp/pddplink all_about_z_order.pd;
+#X obj 98 557 pddp/pddplink scalar-help.pd;

@@ -1,0 +1,32 @@
+namespace eval ::ix {
+proc dd {path target symbol args} {
+    set sym [join [lrange $args 0 end] " "]
+    $path delete 0 end
+    $path insert 0 $sym
+    ddp $target $symbol $sym
+}
+proc ddp {target symbol stuff} {
+    if {$symbol == 1} {
+      pd "$target.rp _cb symbol [pdtk_enquote $stuff];"
+    } else {
+	pd "$target.rp _cb $stuff;"
+    }
+}
+}
+#> dd entry
+#. -selectforeground black -selectbackground green
+#. -bg blue -font .(helvetica 10.) -width 24 -borderwidth 0
+#. #symbol 1
+#. @bang ::ix::ddp .| .#symbol [.- get]
+#. @list ::ix::dd .- .| 0 .#args
+#. @symbol ::ix::dd .- .| 1 .#1
+#. @clear .- delete 0 end
+package require tkdnd
+puts "dd .- .|"
+bind .- <ButtonPress-1> {focus .-}
+dnd bindtarget .- text/uri-list <Drop> {foreach i %D {::ix::dd .- .| .#symbol [regsub -- "^file://" $i ""]}}
+dnd bindtarget .- text/plain <Drop> {::ix::dd .- .| .#symbol %D}
+dnd bindsource .- text/plain {return [.- get]}
+dnd bindsource .- text/uri-list {return "\{[.- get]\}"}
+bind .- <Button1-Leave> {dnd drag %W}
+bind .- <Return> {::ix::ddp .| .#symbol [.- get]}

@@ -1,0 +1,44 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty top_to_bottom 20 12 0 24 -228992
+-66577 0;
+#X msg 495 137 1;
+#X obj 495 164 + 1;
+#X floatatom 502 190 5 0 0 0 - - -;
+#X obj 495 214 + 1;
+#X floatatom 502 240 5 0 0 0 - - -;
+#X obj 495 264 + 1;
+#X floatatom 502 290 5 0 0 0 - - -;
+#X obj 495 314 + 1;
+#X floatatom 502 340 5 0 0 0 - - -;
+#X msg 106 273 1;
+#X obj 113 319 + 1;
+#X floatatom 148 272 5 0 0 0 - - -;
+#X obj 211 275 + 1;
+#X floatatom 239 329 5 0 0 0 - - -;
+#X obj 184 310 + 1;
+#X floatatom 289 281 5 0 0 0 - - -;
+#X obj 282 305 + 1;
+#X floatatom 289 331 5 0 0 0 - - -;
+#X text 15 175 The example below is just as functional as the example
+on the right. But the example on the right clearly shows the flow of
+the messages.;
+#X text 16 81 Messages flow from the top to the bottom of a patch \,
+always flowing from the outlets on the bottom to inlets on the top.
+Therefore it is also a good idea to structure your patch to represent
+that.;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 0 13 0;
+#X connect 13 0 14 0;
+#X connect 13 0 15 0;
+#X connect 15 0 16 0;
+#X connect 15 0 17 0;
+#X connect 17 0 18 0;

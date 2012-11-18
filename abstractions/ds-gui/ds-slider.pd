@@ -1,0 +1,79 @@
+#N struct 1003.advslider float a;
+#N canvas 612 163 475 427 10;
+#N canvas 676 67 729 456 advslider 0;
+#X obj 31 23 struct \$0.advslider float a;
+#X obj 31 50 route click change;
+#X msg 168 318 traverse pd-\$1.gop \, bang;
+#X obj 168 339 pointer;
+#X obj 99 365 append \$0.advslider a;
+#X msg 99 340 0;
+#X obj 80 248 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 121 302 \$0;
+#X obj 91 75 get \$0.advslider a;
+#X obj 90 122 outlet;
+#X obj 99 248 loadbang;
+#X obj 80 271 t b b b b;
+#X msg 159 271 clear;
+#X obj 205 271 s pd-\$0.gop;
+#X obj 81 389 \$0;
+#X msg 81 411 \; pd-\$1.gop donecanvasdialog 0 -1 2 0 0 30 200 30 200
+0 0 \;;
+#X obj 244 97 filledpolygon 955 553 3 0 0 30 0 30 210 0 210;
+#X obj 244 127 filledpolygon 595 535 3 0 a(0:200) 10 a(0:200) 15 a(0:200)
+20 a(0:200) 30 a(0:200) 30 a(0:200)(10:210) 20 a(0:200)(10:210) 15
+a(0:200)(10:210) 10 a(0:200)(10:210) 0 a(0:200)(10:210);
+#X obj 247 193 drawnumber a 5 a(0:200) 133;
+#X connect 0 0 1 0;
+#X connect 1 0 8 0;
+#X connect 1 1 8 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 1;
+#X connect 5 0 4 0;
+#X connect 6 0 11 0;
+#X connect 7 0 2 0;
+#X connect 8 0 9 0;
+#X connect 10 0 11 0;
+#X connect 11 0 14 0;
+#X connect 11 1 5 0;
+#X connect 11 2 7 0;
+#X connect 11 3 12 0;
+#X connect 12 0 13 0;
+#X connect 14 0 15 0;
+#X restore 150 49 pd advslider;
+#N canvas 72 231 459 309 \$0.gop 0;
+#X scalar 1003.advslider 39 \;;
+#X coords 0 0 30 200 30 200 1;
+#X restore 102 101 pd \$0.gop;
+#X obj 151 109 outlet;
+#X obj 203 200 propertybang;
+#X msg 203 224 vis 1;
+#N canvas 34 48 213 497 \$0.properties 1;
+#X obj 31 36 nbx 5 14 -1e+37 1e+37 0 0 empty empty width 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 111 36 nbx 5 14 -1e+37 1e+37 0 0 empty empty height 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 31 96 nbx 5 14 -1e+37 1e+37 0 0 empty empty bottom 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 111 96 nbx 5 14 -1e+37 1e+37 0 0 empty empty top 0 -8 0 10 -262144
+-1 -1 0 256;
+#X symbolatom 16 261 30 0 0 2 label - -;
+#X obj 78 436 bng 40 250 50 0 empty empty OK 10 20 0 20 -204800 -1
+-1;
+#X symbolatom 76 141 20 0 0 2 send-name - -;
+#X symbolatom 76 191 20 0 0 2 receive-name - -;
+#X obj 13 141 tgl 15 0 empty empty $ 17 7 0 12 -262144 -1 -1 0 1;
+#X obj 39 141 nbx 1 15 0 9 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0 256;
+#X obj 13 191 tgl 15 0 empty empty $ 17 7 0 12 -262144 -1 -1 0 1;
+#X obj 39 191 nbx 1 15 0 9 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0 256;
+#X obj 71 304 color.rgbset;
+#X restore 198 316 pd \$0.properties;
+#X obj 203 248 s pd-\$0.properties;
+#X obj 345 91 vsl 15 128 0 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 0 1;
+#X connect 0 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X coords 0 -1 1 1 33 213 2 100 100;

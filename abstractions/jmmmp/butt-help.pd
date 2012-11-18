@@ -1,0 +1,31 @@
+#N struct 1431-color float x float y float farbe float ynpos;
+#N canvas 188 69 481 385 10;
+#X text 12 357 Released under the BSD License;
+#X text 198 160 Inlets;
+#X text 198 220 Outlets;
+#X text 198 90 Arguments;
+#X obj 82 162 print;
+#X text 24 183 Always the same output;
+#X obj 52 122 butt 15 18;
+#X obj 112 122 butt 15 15;
+#X obj 82 122 butt 15 16;
+#X obj 142 122 butt 15 13;
+#X text 12 307 Done following the concept of [Tot] by J. Kreidler.
+;
+#X text 12 268 To know which colors to use \, have a look at;
+#X obj 279 268 pd-colors;
+#X text 198 110 - Size (points);
+#X text 21 10 [butt] - Color-changing Toggle Button;
+#X text 23 40 [butt] is a color-changing toggle button. It serves only
+to have a different graphic presentation.;
+#X text 198 130 - TCL Color - between 10 and 19 works better;
+#X text 12 337 (C) 2010 João Pais - jmmmpais@googlemail.com;
+#X text 198 180 - Bang \, float (like a toggle);
+#X text 198 240 - 0 \, 1 (like a toggle);
+#X obj 22 122 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X connect 6 0 4 0;
+#X connect 7 0 4 0;
+#X connect 8 0 4 0;
+#X connect 9 0 4 0;
+#X connect 20 0 4 0;

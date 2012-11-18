@@ -1,0 +1,77 @@
+# makefile adapted from thomas grill's xsample makefile
+#
+# Makefile for gcc @ OSX (darwin)
+#
+# usage:
+# to build run "make -f makefile.pd-darwin"
+# to install (as root), do "make -f makefile.pd-darwin install"
+# to install help, do "make -f makefile.pd-darwin install-help"
+#
+
+CONFIG=config-pd-darwin.txt
+
+include ${CONFIG}
+
+FLEXTLIB=$(FLEXTPATH)/libflext.a
+
+# compiler stuff
+INCLUDES=$(PDINC) ./headers/plugin_interface ./headers/common ./headers/server ./headers/app ./headers/lang
+FLAGS=-DFLEXT_SYS=2
+CFLAGS=${UFLAGS} -dynamic -O2 -Wno-unused -Wno-parentheses -Wno-switch -Wstrict-prototypes -funroll-loops -fmove-all-movables -frerun-loop-opt -fno-rtti -fno-exceptions  
+LIBS=m gcc
+LDFLAGS=$(FLEXTLIB) -bundle -bundle_loader $(PDBIN)
+FRAMEWORKS=Carbon veclib
+
+# ----------------------------------------------
+# the rest can stay untouched
+# ----------------------------------------------
+
+NAME=tbext
+
+include make-files.txt
+
+MAKEFILE=makefile.pd-darwin
+TARGET=$(TARGDIR)/$(NAME).pd_darwin
+
+
+# default target
+all: $(TARGDIR) $(TARGET) 
+
+$(patsubst %,$(SRCDIR)/%,$(SRCS)): $(patsubst %,$(SRCDIR)/%,$(HDRS)) $(MAKEFILE) $(CONFIG)
+	touch $(patsubst %,$(SRCDIR)/%,$(SRCS))
+
+$(TARGDIR):
+	-mkdir $(TARGDIR)
+
+$(TARGDIR)/%.o : $(SRCDIR)/%.cpp 
+	$(CXX) -c $(CFLAGS) $(FLAGS) $(patsubst %,-I%,$(INCLUDES) $(FLEXTPATH)) $< -o $@
+
+$(TARGET) : $(patsubst %.cpp,$(TARGDIR)/%.o,$(SRCS)) 
+	$(CXX) $(LDFLAGS) $^ $(patsubst %,-framework %,$(FRAMEWORKS)) $(patsubst %,-L%,$(LIBPATH)) $(patsubst %,-l%,$(LIBS))  -o $@ 
+	chmod 755 $@
+
+
+$(INSTDIR):
+	-mkdir $(INSTDIR)
+
+install:: $(INSTDIR)
+
+install:: $(TARGET) 
+	cp -R $^ $(INSTDIR)
+#	chown -R root.root $(INSTDIR)
+
+
+$(HELPDIR):
+	-mkdir $(HELPDIR)
+
+install-help:: $(HELPDIR)
+
+install-help:: ./pd
+	cp $^/*.* $(HELPDIR)
+#	chown -R root.root $(HELPDIR)
+
+
+.PHONY: clean
+clean:
+	rm -f $(TARGDIR)/*.o $(TARGET)
+	

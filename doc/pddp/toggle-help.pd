@@ -1,0 +1,396 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header toggle 3 12 0 18
+-204280 -1 0;
+#X obj 0 308 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 165 AUTHOR Thomas Musil;
+#X text 12 185 WEBSITE;
+#X text 12 225 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS control GUI nonlocal;
+#X text 12 65 DESCRIPTION gui-toggle between zero and a non-zero value
+;
+#X text 12 5 ALIAS tgl;
+#X text 12 85 INLET_0 float bang size nonzero init send receive label
+label_pos label_font color pos delta;
+#X text 12 125 OUTLET_0 float;
+#X text 12 205 RELEASE_DATE 2002;
+#X restore 500 597 pd META;
+#X obj 0 422 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 459 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 544 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 317 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 54 490 428 100 Related_objects 0;
+#X obj 20 53 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
+#X text 18 29 All iem-gui objects:;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [tgl] Related Objects;
+#X restore 100 597 pd Related_objects;
+#X obj 78 431 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 346 167 and receive names. Right-;
+#X text 346 182 click and choose;
+#X text 345 198 "Properties" to set them \,;
+#X text 120 255 Use the UP- \, DOWN- \, LEFT- or RIGHT-key to move
+a selected gui-object. Right-click and choose "Properties" to modify
+its appearance.;
+#X text 346 212 or change them with messages;
+#X text 346 226 (see the subpatch below);
+#X text 98 361 see the following subpatch for messages that change
+the gui-properties of [bng]:;
+#N canvas 60 6 428 618 Changing_GUI_Properties 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 212 37 no init;
+#X text 162 166 label;
+#X msg 212 56 init 0;
+#X msg 232 109 init 1;
+#X msg 162 186 label blabla;
+#X msg 172 236 label myToggle;
+#X text 303 37 change send name;
+#X text 22 166 change receive name;
+#X obj 212 133 s tgl_rcv;
+#X obj 304 133 s tgl_rcv;
+#X obj 22 262 s tgl_rcv;
+#X obj 162 262 s tgl_rcv;
+#X msg 304 58 send foo6_snd;
+#X msg 314 108 send tgl_snd;
+#X msg 42 213 receive tgl_rcv;
+#X obj 42 237 s tgl2_rcv;
+#X msg 22 188 receive tgl2_rcv;
+#N canvas 317 326 161 227 init 0;
+#X obj 16 11 loadbang;
+#X obj 16 42 f \$0;
+#X msg 16 73 \; \$1-size 15 \; \$1-nonzero 1 \; \$1-lbl-x 17 \; \$1-lbl-y
+7 \; \$1-font-size 10 \; \$1-xpos 336 \; \$1-ypos 500;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 311 580 pd init;
+#X msg 22 109 size \$1;
+#X text 21 37 dimensions;
+#X obj 22 58 nbx 3 14 8 200 0 0 empty \$0-size empty 0 -8 0 12 -262144
+-1 -1 15 256;
+#X text 69 55 size;
+#X obj 22 133 s tgl_rcv;
+#X obj 112 58 nbx 3 14 -1e+37 1e+37 0 0 empty \$0-nonzero empty 0 -8
+0 12 -262144 -1 -1 1 256;
+#X obj 112 133 s tgl_rcv;
+#X text 111 37 nonzero-value;
+#X msg 112 109 nonzero \$1;
+#X text 224 75 init value;
+#X text 226 89 on loadbang;
+#X text 306 165 label position;
+#X text 20 302 font properties;
+#X msg 308 237 label_pos \$1 \$2;
+#X msg 22 374 label_font \$1 \$2;
+#X text 71 326 1.font(0-2);
+#X text 71 347 2.height;
+#X text 357 188 1.x-offset;
+#X text 357 209 2.y-offset;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-lbl-x empty
+0 -8 0 12 -262144 -1 -1 17 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-lbl-y empty
+0 -8 0 12 -262144 -1 -1 7 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 308 187 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
+0 -8 0 12 -262144 -1 -1 10 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 22 324 pd flash-time;
+#X text 162 302 preset-colors;
+#X text 301 302 RGB-colors;
+#X msg 162 409 color \$1 \$2 \$3;
+#N canvas 364 205 306 317 flash-time 0;
+#X obj 69 196 t b a;
+#X obj 33 262 outlet;
+#X obj 33 237 pack 0 0 0;
+#X obj 120 197 t b a;
+#X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
+-1 -1 0 256;
+#X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 0 1 2 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 3 1 2 2;
+#X connect 4 0 2 0;
+#X connect 5 0 0 0;
+#X connect 6 0 3 0;
+#X coords 0 -1 1 1 48 62 2 100 100;
+#X restore 162 324 pd flash-time;
+#N canvas 0 0 306 317 flash-time 0;
+#X obj 96 521 outlet;
+#X obj 162 230 t b f;
+#X obj 96 268 +;
+#X obj 96 293 t b f;
+#X obj 96 324 +;
+#X obj 19 208 * -65536;
+#X obj 96 208 * -256;
+#X obj 162 208 * -1;
+#X obj 96 355 - 1;
+#X obj 96 385 list prepend 0;
+#X obj 96 410 route 0 1 2;
+#X obj 96 497 pack 0 0 0;
+#X obj 115 456 t b a;
+#X obj 168 455 t b a;
+#X obj 104 124 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 120 120 1.bg;
+#X text 120 137 2.front;
+#X text 120 153 3.label;
+#X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
+-258113 -1 0 256;
+#X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
+-13381 -1 0 256;
+#X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
+-4160 -1 0 256;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 10 2 13 0;
+#X connect 11 0 0 0;
+#X connect 12 0 11 0;
+#X connect 12 1 11 1;
+#X connect 13 0 11 0;
+#X connect 13 1 11 2;
+#X connect 14 0 9 1;
+#X connect 18 0 5 0;
+#X connect 19 0 6 0;
+#X connect 20 0 7 0;
+#X coords 0 -1 1 1 102 74 2 100 100;
+#X restore 302 324 pd flash-time;
+#X text 211 326 1.bg;
+#X text 211 346 2.front;
+#X text 211 367 3.label;
+#X text 163 462 delta;
+#X text 21 462 position;
+#X msg 22 569 pos \$1 \$2;
+#X msg 164 569 delta \$1 \$2;
+#X obj 164 545 list;
+#X obj 164 484 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 70 483 1.x-position;
+#X text 70 505 2.y-position;
+#X text 243 483 1.x-delta;
+#X text 243 505 2.y-delta;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
+-8 0 12 -262144 -1 -1 336 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
+-8 0 12 -262144 -1 -1 500 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 22 484 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 193 484 pd flash-time;
+#X obj 311 467 cnv 15 102 102 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X obj 312 468 cnv 15 100 100 empty empty empty 20 12 0 14 -261682
+-66577 0;
+#X obj 308 262 s tgl_rcv;
+#X obj 22 399 s tgl_rcv;
+#X obj 162 434 s tgl_rcv;
+#X obj 22 594 s tgl_rcv;
+#X obj 164 594 s tgl_rcv;
+#X obj 336 500 tgl 15 0 tgl_snd tgl_rcv myToggle 17 7 0 10 -262144
+-1 -1 0 1;
+#X obj 337 538 nbx 3 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X text 6 2 [tgl] Changing Properties through Messages;
+#X connect 3 0 9 0;
+#X connect 4 0 9 0;
+#X connect 5 0 12 0;
+#X connect 6 0 12 0;
+#X connect 13 0 10 0;
+#X connect 14 0 10 0;
+#X connect 15 0 16 0;
+#X connect 17 0 11 0;
+#X connect 19 0 23 0;
+#X connect 21 0 19 0;
+#X connect 24 0 27 0;
+#X connect 27 0 25 0;
+#X connect 32 0 62 0;
+#X connect 33 0 63 0;
+#X connect 38 0 32 0;
+#X connect 39 0 33 0;
+#X connect 42 0 64 0;
+#X connect 43 0 42 0;
+#X connect 44 0 42 0;
+#X connect 50 0 65 0;
+#X connect 51 0 66 0;
+#X connect 52 0 51 0;
+#X connect 53 0 52 0;
+#X connect 58 0 50 0;
+#X connect 59 0 52 1;
+#X connect 67 0 68 0;
+#X restore 170 394 pd Changing_GUI_Properties;
+#X text 168 463 - creating a [bng] without any arguments will set default
+values for all gui-properties. See the subpatch below to learn how
+to dynamically instantiate a [bng] object with custom properties:;
+#X obj 406 3 tgl 15 0 foo6_rcv empty empty 17 7 0 10 -262144 -1 -1
+0 1;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/toggle -text
+pdpedia: toggle;
+#X text 426 0 abbreviation: [tgl];
+#X obj 302 78 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 302 153 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144
+-1 -1;
+#X obj 302 103 s foo6_rcv;
+#X obj 302 127 r foo6_snd;
+#X obj 56 274 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 26 124 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X msg 29 65 33;
+#X obj 56 184 tgl 60 1 foo6_snd foo6_rcv big_toggle 66 27 2 13 -228992
+-4033 -34 1 1;
+#X msg 72 87 1;
+#X msg 79 109 0;
+#X floatatom 56 253 4 0 0 0 - - -;
+#X msg 63 65 -0.001;
+#X msg 183 123 set 1;
+#X msg 188 145 set 0;
+#X obj 20 159 tgl 15 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+1;
+#X obj 95 253 tgl 15 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
+1;
+#X msg 175 101 set -0.23;
+#X obj 323 59 tgl 15 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+1;
+#X obj 322 153 tgl 15 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
+1;
+#X msg 173 79 0 3 4.55;
+#X msg 165 57 0.22 0 -5.44;
+#X msg 323 79 set \$1;
+#X text 345 151 [tgl] has settable send;
+#N canvas 47 373 428 173 tgl_without_gui 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [tgl] Build a toggle without a gui;
+#X obj 58 87 == 0;
+#X floatatom 22 138 3 0 0 0 - - -;
+#X obj 22 43 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 96 86 toggle;
+#X obj 22 87 f 1;
+#X text 95 69 This works like;
+#X text 97 105 without the gui.;
+#X connect 2 0 6 1;
+#X connect 4 0 6 0;
+#X connect 6 0 2 0;
+#X connect 6 0 3 0;
+#X restore 100 552 pd tgl_without_gui;
+#X text 98 316 bang;
+#X text 168 316 - toggle between zero and the non-zero value.;
+#X text 98 331 float;
+#X text 98 346 list;
+#X text 168 346 - a list will be concatenated to the first item.;
+#X text 168 331 - output the value.;
+#X text 98 431 float;
+#N canvas 80 194 428 314 tgl_creation_arguments 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [tgl] Creation Arguments and Dynamic Patching;
+#X text 19 38 "tgl" can be called with 14 creation arguments. These
+are not "optional" - all parameters must be filled or the gui-bng will
+not instantiate correctly.;
+#X text 21 127 It's unclear what the Unknown value is for- it is necessary
+to have it so you can specify the non-zero value.;
+#X text 22 164 Click the msg-box to dynamically create a tgl:;
+#X text 21 82 tgl creation arguments: Size Init sendName receiveName
+Label labelXOff labelYOff Font# fontSize bgColor foregroundColor LblColor
+initValue non-zeroValue;
+#X obj 23 231 s pd-tgl_creation_arguments;
+#X msg 23 186 obj 160 270 tgl 25 0 tgl-snd tgl-rcv Pleione 30 14 0
+20 5 18 13 0 1 \;;
+#X connect 7 0 6 0;
+#X restore 170 519 pd tgl_creation_arguments;
+#X text 11 23 gui-toggle between zero and a non-zero value;
+#X text 215 551 (c) musil@iem.kug.ac.at;
+#X text 257 564 IEM KUG;
+#X text 232 576 graz \, austria 2002;
+#X text 98 463 14;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 22 0 24 0;
+#X connect 25 0 23 0;
+#X connect 25 0 40 0;
+#X connect 27 0 29 0;
+#X connect 28 0 29 0;
+#X connect 29 0 32 0;
+#X connect 29 0 37 0;
+#X connect 30 0 29 0;
+#X connect 31 0 29 0;
+#X connect 32 0 26 0;
+#X connect 33 0 29 0;
+#X connect 34 0 29 0;
+#X connect 35 0 29 0;
+#X connect 36 0 29 0;
+#X connect 38 0 29 0;
+#X connect 39 0 43 0;
+#X connect 41 0 29 0;
+#X connect 42 0 29 0;
+#X connect 43 0 24 0;

@@ -1,0 +1,77 @@
+#N canvas 51 36 891 586 10;
+#X obj 61 33 cnv 15 15 15 empty empty vasp.imm 0 10 1 14 -262144 -1
+0;
+#N canvas 0 0 261 214 clear_buffer 0;
+#X obj 49 73 vasp.= 0;
+#X obj 49 49 inlet;
+#X obj 49 97 vasp.u;
+#X obj 49 118 bng 15 250 50 0 \$0-draw_display empty empty 0 -6 1152
+8 -262144 -1 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X restore 656 460 pd clear_buffer;
+#X obj 51 533 VASP-HELP;
+#X obj 159 477 vasp.!;
+#X text 58 476 abbreviation:;
+#X obj 57 216 vasp.imm 88200;
+#X obj 154 218 vasp.imm 88200;
+#X obj 254 218 vasp.imm 88200;
+#X obj 57 241 vasp.noise;
+#X obj 154 268 vasp.max;
+#X obj 57 316 vasp.-> bufnotimm;
+#X obj 154 369 vasp.update;
+#N canvas 0 0 450 300 graph1 0;
+#X array bufnotimm 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 511 69 graph;
+#N canvas 0 0 394 270 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol bufnotimm;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 760 461 pd init;
+#X obj 57 191 t b b b;
+#X obj 355 447 dac~;
+#X obj 355 399 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X text 377 398 play;
+#X obj 355 422 tabplay~ bufnotimm;
+#X msg 656 435 vasp bufnotimm;
+#X obj 57 290 vasp.min;
+#X obj 154 243 vasp.osc 882;
+#X obj 57 266 vasp.* 0.1;
+#X obj 254 268 vasp.* 0.2;
+#X obj 254 243 vasp.osc 3.4;
+#X text 61 55 create an immediate vasp;
+#X text 360 217 create three immediate vasps;
+#X text 111 164 <-- click me;
+#X text 55 124 argument/right inlet: length in samples;
+#X text 55 86 immediate vasps are temporary buffers that are created
+on demand and deleted after usage in a command chain.;
+#X obj 57 165 bng 15 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X text 361 239 and compose them;
+#X text 363 318 copy the result to an existing buffer/array;
+#X connect 5 0 8 0;
+#X connect 6 0 21 0;
+#X connect 7 0 24 0;
+#X connect 8 0 22 0;
+#X connect 9 0 20 1;
+#X connect 10 1 11 0;
+#X connect 14 0 5 0;
+#X connect 14 1 6 0;
+#X connect 14 2 7 0;
+#X connect 16 0 18 0;
+#X connect 18 0 15 0;
+#X connect 18 0 15 1;
+#X connect 19 0 1 0;
+#X connect 20 0 10 0;
+#X connect 21 0 9 0;
+#X connect 22 0 20 0;
+#X connect 23 0 9 1;
+#X connect 24 0 23 0;
+#X connect 30 0 14 0;

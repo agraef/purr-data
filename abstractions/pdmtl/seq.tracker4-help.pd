@@ -1,0 +1,101 @@
+#N canvas 1128 16 711 636 10;
+#X declare -stdpath extra/tof;
+#X obj 23 143 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X msg 115 301 pattern \$1;
+#X floatatom 115 283 5 0 0 0 - - -;
+#X floatatom 246 117 5 0 0 0 bpm - -;
+#X msg 133 322 play;
+#X msg 139 343 stop;
+#X obj 246 159 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 21 11 Description: A scrollable tracker with an unlimited number
+of patterns of any length.;
+#X text 41 144 Show editor;
+#X obj 508 392 param.gui;
+#X obj 589 369 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 246 137 seq.timing.master @bpm 160 @id STH;
+#N canvas 0 0 450 300 trigger 0;
+#X msg 42 103 trigger onbeat;
+#X msg 135 302 tigger onloop;
+#X msg 96 197 tigger onevent;
+#X msg 149 399 tigger follow;
+#X text 34 29 There are many ways of triggering and synchronizing seq.timing.slave
+enabled abstractions to seq.timing.master. Here are the available four
+modes (each mode is always prepended by the trigger message):;
+#X obj 42 469 outlet;
+#X text 156 145 That means that the abstraction can start playing on
+each beat (every 24 steps).;
+#X text 208 241 If you set seq.timing.slave's events/beat to 4 \, the
+abstraction can start playing at any quarter beat.;
+#X text 240 346 If you set seq.timing.slave's length to 16 events and
+the events/beat to 4 \, the abstraction can start playing every 4 beats.
+;
+#X text 156 103 Next time you press play \, the abstraction will start
+playing from event 0 (restarts the pattern) once it receives a new
+beat.;
+#X text 207 194 Next time you press play \, the abstraction will start
+playing from event 0 (restarts the pattern) once it receives a new
+event.;
+#X text 240 301 Next time you press play \, the abstraction will start
+playing from event 0 (restarts the pattern) once it receives a loop
+start.;
+#X text 254 400 The abstraction will start playing immediatly the next
+time you press play. It will try to match seq.timing.master's current
+event (does not restart the pattern).;
+#X connect 0 0 5 0;
+#X connect 1 0 5 0;
+#X connect 2 0 5 0;
+#X connect 3 0 5 0;
+#X restore 159 367 pd trigger types;
+#X text 283 368 <-- Open me!;
+#X text 21 42 Warning: seq.tracker4 must be linked to a seq.timing.master.
+;
+#X text 176 421 Outlet_1: Outputs all columns.;
+#X msg 48 222 read seq.tracker4_0.txt;
+#X msg 66 242 write seq.tracker4_0.txt;
+#X text 144 176 Saving the patterns;
+#X text 105 201 You can save patterns with the following messages...
+;
+#X text 394 223 BUT;
+#X text 243 242 it is even better to store and restore your patterns
+with param.atoms:;
+#X obj 251 304 param.save;
+#X obj 440 298 param.load;
+#X obj 251 279 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 441 272 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 509 368 tracker;
+#X text 475 343 -- SHOW DATA.PARAMETERS --;
+#X obj 23 395 seq.tracker4 @id tracker @timing STH;
+#X obj 492 496 sampler.bank~ @id exemple;
+#X obj 493 460 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 27 497 sampler.play~ @bank exemple;
+#X obj 40 555 mix.out_~;
+#X text 176 436 Outlet_2: Outputs columns 1 - 3;
+#X text 176 453 Outlet_3: Outputs columns 4 - 6;
+#X text 179 466 Outlet_4: Outputs columns 7 - 9;
+#X text 177 479 Outlet_5: Outputs columns 10 - 12;
+#X text 21 70 Multiple seq.tracker4 can be synchronized to each other
+through the same seq.timing.master.;
+#X connect 0 0 28 0;
+#X connect 1 0 28 0;
+#X connect 2 0 1 0;
+#X connect 3 0 11 0;
+#X connect 4 0 28 0;
+#X connect 5 0 28 0;
+#X connect 10 0 9 1;
+#X connect 11 0 6 0;
+#X connect 12 0 28 0;
+#X connect 16 0 28 0;
+#X connect 17 0 28 0;
+#X connect 24 0 22 0;
+#X connect 25 0 23 0;
+#X connect 26 0 9 0;
+#X connect 28 0 31 0;
+#X connect 30 0 29 0;
+#X connect 31 0 32 0;
+#X connect 31 1 32 1;

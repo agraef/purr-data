@@ -1,0 +1,24 @@
+#N canvas 680 185 564 315 10;
+#X obj 73 168 watch-input;
+#X text 185 171 you can turn off monitoring here (to save cpu \, for
+example \, though it doesn't take much).;
+#X text 373 275 2009 Luke Iannini;
+#X text 373 289 proyekto.net;
+#X text 48 15 [watch-input] helps you check for signal presence. By
+default \, it monitors the [adc~]'s 0 and 1 channels \, but if you
+connect any signal to the top inputs \, those will be shown instead.
+;
+#X obj 73 89 osc~ 440;
+#X obj 73 115 *~ 1;
+#X obj 107 116 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 176 115 *~ 1;
+#X obj 210 116 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 176 89 osc~ 1000;
+#X connect 5 0 6 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 1;
+#X connect 8 0 0 1;
+#X connect 9 0 8 1;
+#X connect 10 0 8 0;

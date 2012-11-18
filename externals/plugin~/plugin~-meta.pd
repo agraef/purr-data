@@ -1,0 +1,5 @@
+#N canvas 15 49 200 200 10;
+#N canvas 25 49 420 300 META 1;
+#X text 10 25 AUTHOR Jarno Seppänen  <jams@cs.tut.fi>;
+#X text 10 10 VERSION 0.2.2;
+#X restore 10 10 pd META;

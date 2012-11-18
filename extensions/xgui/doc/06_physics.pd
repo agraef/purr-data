@@ -1,0 +1,24 @@
+#N canvas 168 295 427 332 10;
+#X text 11 24 Here a small example to shows that the behaviors generated
+with pure-data can be very funny !!!;
+#X text 224 197 dh20020210;
+#X text 13 -1 Patch "pdx_connect.pd" must be loaded and connected;
+#X msg 21 175 show;
+#X obj 22 60 loadbang;
+#X msg 104 103 show;
+#X msg 262 63 hide;
+#X msg 227 62 bang;
+#X obj 21 82 t b b b;
+#X msg 55 125 size 400 400;
+#X text 26 247 Try to move the thing on the seg windows to ma;
+#X obj 77 151 canvas */physics;
+#X obj 21 197 i-seg_mp */physics 150 150;
+#X connect 3 0 12 0;
+#X connect 4 0 8 0;
+#X connect 5 0 11 0;
+#X connect 6 0 11 0;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 8 1 9 0;
+#X connect 8 2 5 0;
+#X connect 9 0 11 0;

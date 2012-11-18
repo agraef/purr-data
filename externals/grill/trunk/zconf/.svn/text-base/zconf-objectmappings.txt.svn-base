@@ -1,0 +1,11 @@
+max objectfile zconf.browse zconf;
+max objectfile zconf.domains zconf;
+max objectfile zconf.meta zconf;
+max objectfile zconf.resolve zconf;
+max objectfile zconf.service zconf;
+
+max oblist zconf zconf.browse;
+max oblist zconf zconf.domains;
+max oblist zconf zconf.meta;
+max oblist zconf zconf.resolve;
+max oblist zconf zconf.service;

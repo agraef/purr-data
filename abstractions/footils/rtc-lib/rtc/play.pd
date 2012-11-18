@@ -1,0 +1,17 @@
+#N canvas 50 61 413 213 10;
+#X obj 44 50 inlet;
+#X obj 137 49 inlet;
+#X obj 90 49 inlet;
+#X obj 218 50 inlet;
+#X obj 236 87 r MIDI-channel;
+#X obj 44 80 makenote \$1 \$2;
+#X obj 44 146 noteout \$3;
+#X text 176 164 1992-96 by Karlheinz Essl;
+#X text 91 166 vs. 2;
+#X connect 0 0 5 0;
+#X connect 1 0 5 2;
+#X connect 2 0 5 1;
+#X connect 3 0 6 2;
+#X connect 4 0 6 2;
+#X connect 5 0 6 0;
+#X connect 5 1 6 1;

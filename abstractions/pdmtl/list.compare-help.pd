@@ -1,0 +1,16 @@
+#N canvas 1342 462 611 415 10;
+#X obj 74 162 list.compare;
+#X msg 233 71 1 2 3 4;
+#X msg 89 65 4;
+#X msg 123 66 1 2 3 4;
+#X msg 43 65 1 2 3;
+#X obj 74 221 print COMPARE;
+#X text 176 223 Returns 1 if both lists are equal. 0 if not.;
+#X msg 131 91 4 3 2 1;
+#X text 52 20 Desciption: Compares two lists.;
+#X connect 0 0 5 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 7 0 0 0;

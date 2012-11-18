@@ -1,0 +1,23 @@
+#N canvas 349 428 467 379 10;
+#X text 19 14 metro-dev%;
+#X obj 44 146 tgl 15 0 empty empty start/stop 0 -6 0 8 -262144 -1 -1
+1 1;
+#X msg 44 241 60;
+#X obj 44 205 metro-dev% 500 15;
+#X text 24 327 1993 by Karlheinz Essl;
+#X text 21 111 see also:;
+#X msg 88 111 metro;
+#X obj 44 275 QT-PercPlayer;
+#X floatatom 158 180 4 0 0 2 deviation(%) - -;
+#X floatatom 101 163 4 0 0 2 basic_speed - -;
+#X text 131 147;
+#X floatatom 158 241 4 0 0 1 ED - -;
+#X text 19 46 Introduces irregularities to an equal pulsation by deviating
+from a given pulsation speed ("in galit" \, "rubato" \, human feeling).
+;
+#X connect 1 0 3 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 3 1 11 0;
+#X connect 8 0 3 2;
+#X connect 9 0 3 1;

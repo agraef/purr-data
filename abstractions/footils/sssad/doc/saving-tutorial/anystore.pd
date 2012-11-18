@@ -1,0 +1,10 @@
+#N canvas 0 0 412 280 10;
+#X obj 153 117 loadbang;
+#X obj 105 38 inlet;
+#X obj 105 146 outlet;
+#X obj 105 64 list prepend set;
+#X obj 105 88 list trim;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;

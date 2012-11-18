@@ -1,0 +1,39 @@
+Index: g_canvas.c
+===================================================================
+--- g_canvas.c	(revision 9910)
++++ g_canvas.c	(working copy)
+@@ -1133,10 +1133,22 @@
+ 
+ /* -------------------------- subcanvases ---------------------- */
+ 
+-static void *subcanvas_new(t_symbol *s)
++static void *subcanvas_new(t_symbol *s, int argc, t_atom *argv)
+ {
+     t_atom a[6];
+     t_canvas *x, *z = canvas_getcurrent();
++    if (argc)
++    {
++        int bufsize;
++        char *buf;
++        t_binbuf *bb = binbuf_new();
++        binbuf_addv(bb, "s", s);
++        binbuf_add(bb, argc, argv);
++        binbuf_gettext(bb, &buf, &bufsize);
++        buf[bufsize] = '\0';
++        binbuf_free(bb);
++        s = gensym(buf);
++    }
+     if (!*s->s_name) s = gensym("/SUBPATCH/");
+     SETFLOAT(a, 0);
+     SETFLOAT(a+1, GLIST_DEFCANVASYLOC);
+@@ -1750,8 +1762,8 @@
+         A_NULL);
+ 
+ /* ----- subcanvases, which you get by typing "pd" in a box ---- */
+-    class_addcreator((t_newmethod)subcanvas_new, gensym("pd"), A_DEFSYMBOL, 0);
+-    class_addcreator((t_newmethod)subcanvas_new, gensym("page"),  A_DEFSYMBOL, 0);
++    class_addcreator((t_newmethod)subcanvas_new, gensym("pd"), A_GIMME, 0);
++    class_addcreator((t_newmethod)subcanvas_new, gensym("page"),  A_GIMME, 0);
+ 
+     class_addmethod(canvas_class, (t_method)canvas_click,
+         gensym("click"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);

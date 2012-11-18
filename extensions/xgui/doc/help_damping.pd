@@ -1,0 +1,15 @@
+#N canvas 333 240 450 300 10;
+#X text 19 11 help damping;
+#X msg 62 64 !c 10;
+#X msg 62 86 !c 1;
+#X obj 49 132 damping my_first_damping 10;
+#X obj 45 164 print;
+#X msg 109 90 ?c;
+#X msg 156 78 ?force;
+#X msg 239 60 mass 0 0 10 10;
+#X connect 1 0 3 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 1;

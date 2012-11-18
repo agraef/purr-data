@@ -1,0 +1,53 @@
+#N canvas 237 21 712 664 10;
+#X obj 268 64 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 370 44 open \$1;
+#X obj 369 20 openpanel;
+#X obj 354 3 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X floatatom 316 99 5 0 0 0 - - -;
+#X msg 225 65 stop;
+#X obj 323 68 hsl 300 15 0 1000 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 257 135 metro 70;
+#X obj 558 272 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 558 324 pdp_control;
+#X msg 558 297 thread \$1;
+#X floatatom 558 385 5 0 0 0 - - -;
+#X obj 558 356 route pdp_drop;
+#X floatatom 264 257 5 0 0 0 - - -;
+#X floatatom 295 282 5 0 0 0 - - -;
+#X text 315 257 Number of frames decoded;
+#X text 344 281 Total number of frames;
+#X floatatom 317 164 5 0 0 0 - - -;
+#X text 368 164 Frame command;
+#X obj 316 183 t b f;
+#X text 81 394 written by Yves Degoyon;
+#X obj 218 293 pdp_glx;
+#X text 81 360 pdp_fcqt : fast & compressed quicktime movie reader
+;
+#X text 81 377 ( frames are cached and compressed and no audio decoding
+);
+#X floatatom 326 306 5 0 0 0 - - -;
+#X text 372 305 Frame rate;
+#X obj 225 222 pdp_fcqt;
+#X connect 0 0 7 0;
+#X connect 1 0 26 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 7 1;
+#X connect 5 0 7 0;
+#X connect 6 0 4 0;
+#X connect 7 0 26 0;
+#X connect 8 0 10 0;
+#X connect 9 0 12 0;
+#X connect 10 0 9 0;
+#X connect 12 0 11 0;
+#X connect 17 0 19 0;
+#X connect 19 0 26 0;
+#X connect 19 1 26 1;
+#X connect 26 0 21 0;
+#X connect 26 1 13 0;
+#X connect 26 2 14 0;
+#X connect 26 3 24 0;

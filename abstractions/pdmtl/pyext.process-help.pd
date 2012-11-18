@@ -1,0 +1,15 @@
+#N canvas 652 186 450 300 10;
+#X obj 121 157 linux.process;
+#X msg 121 204 stopping process 6853;
+#X obj 121 181 flow.prepend set;
+#X symbolatom 121 118 30 0 0 0 - - -;
+#X obj 209 138 bng 15 250 50 0 empty empty stop 17 7 0 10 -262144 -1
+-1;
+#X text 119 96 process to start (ie xclock);
+#X text 27 31 Description: A simple python script to start and stop
+(SIGTERM) process;
+#X text 34 259 TODO: give the choice to SIGKILL \, SIGQUIT...;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 1;

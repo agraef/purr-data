@@ -1,0 +1,38 @@
+Source: pd-many
+Section: sound
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+Uploaders: Hans-Christoph Steiner <hans@eds.org>
+Build-Depends: debhelper (>= 7.0.50~),
+               puredata
+Standards-Version: 3.9.1
+Homepage: http://puredata.info
+
+Package: pd-many
+Architecture: all
+Depends: ${shlibs:Depends},
+         pd,
+         pd-ggee,
+         pd-libdir,
+         ${misc:Depends}
+Recommends: pd-import,
+            pd-pddp
+Description: a Pd library for creating and managing many instances of objects
+ This is a library for of techniques for creating and managing many
+ instances of an object.
+ .
+  * bundle: a bundle of instances all connected to the same 
+            inlets and outlets
+  * instances: many instances that are both individually 
+               and globally addressable 
+  * instances~: same as [instances] but with outlet~s
+  * polypoly~: designed for MIDI polyphony, built upon 
+               [poly] and based on [polypoly]
+  * voices~: similar to polypoly~, but for generate voice 
+             allocation without being tied to MIDI
+ .
+ Objects in the 'many' lib are based on code from Stephen Pickles'
+ (aka pix) nqpoly4 and Frank Barknecht's polypoly.  Thanks to pix's
+ nqpoly4 because that was the real groundbreaking work that proved
+ that a useful and reliable instance-managing object could be
+ programmed in Pd.

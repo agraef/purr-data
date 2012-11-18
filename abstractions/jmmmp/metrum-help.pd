@@ -1,0 +1,55 @@
+#N canvas 125 122 430 309 10;
+#X obj 16 109 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 161 108 100;
+#X text 12 247 (C) 2006 João Pais - jmmmpais@googlemail.com
+;
+#X text 306 100 Inlets;
+#X text 306 120 - On / Off;
+#X text 306 170 Outlets;
+#X text 36 108 On / Off;
+#X obj 16 129 metrum 100 1;
+#X text 12 10 [metrum] - Metro with GUI;
+#X obj 16 149 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 306 140 - Velocity (ms);
+#X text 306 190 - Bang;
+#X text 306 210 - Velocity (ms);
+#X text 306 30 Arguments;
+#X text 306 50 - Velocity (ms);
+#X text 306 70 - Initial state;
+#X msg 151 88 500;
+#X text 192 94 Velocity (ms);
+#X floatatom 151 149 5 0 0 0 - - -;
+#X text 192 149 Velocity (ms);
+#N canvas 0 0 426 446 license 0;
+#X text 8 47 All rights reserved.;
+#X text 8 227 The names of its contributors may not be used to endorse
+or promote products derived from this software without specific prior
+written permission.;
+#X text 8 87 Redistribution and use in source and binary forms \, with
+or without modification \, are permitted provided that the following
+conditions are met:;
+#X text 8 127 Redistributions of source code must retain the above
+copyright notice \, this list of conditions and the following disclaimer.
+;
+#X text 8 297 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES \, INCLUDING
+\, BUT NOT LIMITED TO \, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT \, INDIRECT
+\, INCIDENTAL \, SPECIAL \, EXEMPLARY \, OR CONSEQUENTIAL DAMAGES (INCLUDING
+\, BUT NOT LIMITED TO \, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES
+;
+#X text 8 167 Redistributions in binary form must reproduce the above
+copyright notice \, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the distribution.
+;
+#X text 8 27 jmmmpais@googlemail.com;
+#X text 8 7 Copyright 2006 \, João Pais;
+#X restore 15 269 pd license;
+#X connect 0 0 7 0;
+#X connect 1 0 7 1;
+#X connect 7 0 9 0;
+#X connect 7 1 18 0;
+#X connect 16 0 7 1;

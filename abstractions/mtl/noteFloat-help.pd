@@ -1,0 +1,27 @@
+#N canvas 458 339 484 340 10;
+#X floatatom 72 83 5 0 0 0 - - -;
+#X obj 122 85 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 150 86 60 127;
+#X msg 52 128 2;
+#X msg 47 172 0;
+#X msg 200 137 0 57 65;
+#X msg 218 162 0 57 0;
+#X msg 179 112 60 0;
+#X obj 123 254 cyclone/prepend set;
+#X text 46 49 tags: midi;
+#X msg 123 280 60 0;
+#X obj 123 226 mtl/noteFloat;
+#X text 45 9 Description: Converts float inputs to midi notes. Removes
+any channel information. Regular midi notes simply pass through.;
+#X text 214 200 Inlet 2: midi base note. 60 by default.;
+#X connect 0 0 11 0;
+#X connect 1 0 11 0;
+#X connect 2 0 11 0;
+#X connect 3 0 11 0;
+#X connect 4 0 11 0;
+#X connect 5 0 11 0;
+#X connect 6 0 11 0;
+#X connect 7 0 11 0;
+#X connect 8 0 10 0;
+#X connect 11 0 8 0;

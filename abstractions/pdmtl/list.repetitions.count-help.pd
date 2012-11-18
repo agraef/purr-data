@@ -1,0 +1,12 @@
+#N canvas 314 574 553 325 10;
+#X msg 77 95 1 2 2 3 4 3 5 5 5;
+#X msg 216 125 unique triple double double triple triple;
+#X obj 115 173 list.repetitions.count;
+#X obj 264 229 print LIST.ELEMENT;
+#X obj 116 228 print ELEMENT.COUNT;
+#X text 42 18 Description: outputs every element of a list and the
+number of times it has been found in the list.;
+#X connect 0 0 2 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 1 3 0;

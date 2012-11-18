@@ -1,0 +1,90 @@
+#N canvas 238 303 753 580 10;
+#X obj 63 224 float;
+#X floatatom 63 252 5 0 0 0 - - -;
+#X obj 102 224 + 1;
+#X obj 62 274 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X obj 35 166 bang;
+#X obj 81 167 bang;
+#X obj 59 124 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
+-1;
+#X obj 220 232 float;
+#X floatatom 220 260 5 0 0 0 - - -;
+#X obj 259 232 + 1;
+#X obj 219 282 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 224 123 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 180 165 delay 1000;
+#X obj 261 166 delay 1000;
+#X msg 90 199 0;
+#X text 118 199 reset;
+#X msg 247 208 0;
+#X text 275 208 reset;
+#X obj 550 231 float;
+#X floatatom 550 259 5 0 0 0 - - -;
+#X obj 589 231 + 1;
+#X obj 549 281 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 554 122 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 510 164 delay 1000;
+#X obj 591 165 delay 1000;
+#X msg 577 207 0;
+#X text 605 207 reset;
+#X obj 449 171 bang;
+#X text 80 68 counts twice per bang button click:;
+#X text 451 70 but this counts once:;
+#X obj 102 445 float;
+#X floatatom 102 473 5 0 0 0 - - -;
+#X obj 141 445 + 1;
+#X obj 101 495 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X obj 106 336 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X msg 129 421 0;
+#X text 157 421 reset;
+#X obj 62 378 metro 1000;
+#X obj 143 379 metro 1000;
+#X text 317 334 The first [delay] triggers the execution \, which ultimately
+sends a bang to the second [delay] \, which hasn't fired yet. When
+the second [delay] receives that bang \, it resets its timer. Therefore
+\, the second [delay] never fires.;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 0 1;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 4 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 7 0 9 0;
+#X connect 8 0 10 0;
+#X connect 9 0 7 1;
+#X connect 11 0 12 0;
+#X connect 11 0 13 0;
+#X connect 12 0 7 0;
+#X connect 13 0 7 0;
+#X connect 14 0 0 1;
+#X connect 16 0 7 1;
+#X connect 18 0 19 0;
+#X connect 18 0 20 0;
+#X connect 18 0 27 0;
+#X connect 19 0 21 0;
+#X connect 20 0 18 1;
+#X connect 22 0 23 0;
+#X connect 22 0 24 0;
+#X connect 23 0 18 0;
+#X connect 24 0 18 0;
+#X connect 25 0 18 1;
+#X connect 27 0 22 0;
+#X connect 30 0 31 0;
+#X connect 30 0 32 0;
+#X connect 31 0 33 0;
+#X connect 32 0 30 1;
+#X connect 34 0 37 0;
+#X connect 34 0 38 0;
+#X connect 35 0 30 1;
+#X connect 37 0 30 0;
+#X connect 38 0 30 0;

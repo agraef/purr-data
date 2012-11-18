@@ -1,0 +1,13 @@
+#N canvas 10 40 620 460 12;
+#X obj 8 10 cnv 15 400 40 empty empty edit_mode 20 12 0 24 -228992
+-66577 0;
+#X text 19 67 There are two modes when editing a patch: play and edit.
+In order to edit an existing patch \, or create new boxes \, you need
+to switch to edit mode.;
+#X text 20 131 To switch to edit mode \, go to the "Edit" menu and
+select "Edit mode". Now try putting down some boxes on this canvas.
+You can select which one from the "Put" menu.;
+#X text 26 347 To stop editing \, go to the "Edit" menu again \, and
+select "Edit mode" again.;
+#X text 26 404 You can also use the key command Ctrl-E (Cmd-E on Mac
+OS X) to switch between edit and play mode.;

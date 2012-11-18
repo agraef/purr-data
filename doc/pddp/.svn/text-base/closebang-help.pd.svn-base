@@ -1,0 +1,59 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header closebang 3 12 0
+18 -204280 -1 0;
+#X obj 0 456 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 245 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR IOhannes m zmölnig;
+#X text 12 105 WEBSITE;
+#X text 12 5 KEYWORDS control;
+#X text 12 65 OUTLET_0 bang;
+#X text 12 125 RELEASE_DATE 2006;
+#X text 12 145 HELP_PATCH_AUTHORS IOhannes m zmoelnig. Jonathan Wilkes
+revised the patch to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 DESCRIPTION send a beng when abstraction is closed;
+#X restore 500 597 pd META;
+#X obj 0 484 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 76 487 428 102 Related_objects 0;
+#X obj 25 42 initbang;
+#X obj 86 42 loadbang;
+#X obj 150 42 bang;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [closebang] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 493 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 460 3 closebang;
+#X text 99 460 (none);
+#X text 98 493 bang;
+#X text 100 570 Pd Documentation Chapter 3.6 - doc/1.manual/x3.htm
+;
+#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/closebang
+-text pdpedia: closebang;
+#X text 99 542 (none);
+#X text 11 23 send a bang when abstraction is closed;
+#X obj 112 236 r from-closebang-abs;
+#X obj 112 262 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 167 493 - a "bang" message is sent automatically when the containing
+patch is closed. It is only triggered when the patch is an embedded
+object in another patch.;
+#X obj 112 133 closebang-abs;
+#X text 109 158 Above is an abstraction that contains a [closebang]
+object connected to [send from-closebang-abs]. If you select the subpatch
+above in editmode and delete it \, the [closebang] object contained
+within will send a bang to the [receive] object below:;
+#X text 207 133 <- delete me;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 16 0 17 0;

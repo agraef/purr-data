@@ -1,0 +1,52 @@
+#N canvas 0 0 448 239 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header data_types 20 10
+1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 43 66 pddp/pddplink all_about_atoms.pd;
+#X obj 1 217 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 NAME;
+#X text 12 45 KEYWORDS;
+#X text 12 65 DESCRIPTION list of help patches related to Pd data types
+;
+#X restore 392 219 pd META;
+#X obj 6 219 pddp/pddplink all_about.pd -text All About Pd;
+#N canvas 25 153 428 150 Quick_Quiz! 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Messages- Related Objects;
+#X obj 22 99 bng 15 500 50 0 empty empty list 0 25 0 8 -262144 -1 -1
+;
+#X obj 69 99 bng 15 500 50 0 empty empty bang 0 25 0 8 -262144 -1 -1
+;
+#X obj 117 99 bng 15 500 50 0 empty empty float 0 25 0 8 -262144 -1
+-1;
+#X obj 165 99 bng 15 500 50 0 empty empty symbol 0 25 0 8 -262144 -1
+-1;
+#X obj 213 99 bng 15 500 50 0 empty empty pop 0 25 0 8 -262144 -1 -1
+;
+#X obj 261 99 bng 15 500 50 0 empty empty none_of_the_above 0 25 0
+8 -262144 -1 -1;
+#X text 276 42 <- Click to find out;
+#X msg 22 43 pop quiz: What type of message is this?;
+#X obj 22 70 route list bang float symbol pop;
+#X connect 9 0 10 0;
+#X connect 10 0 2 0;
+#X connect 10 1 3 0;
+#X connect 10 2 4 0;
+#X connect 10 3 5 0;
+#X connect 10 4 6 0;
+#X connect 10 5 7 0;
+#X restore 103 219 pd Quick_Quiz!;
+#X text 42 36 See:;
+#X obj 43 86 pddp/pddplink all_about_messages.pd;
+#X obj 43 106 pddp/pddplink all_about_message_conversion.pd;
+#X obj 43 126 pddp/pddplink all_about_atom_conversion.pd;
+#X obj 43 146 pddp/pddplink all_about_symbol_construction.pd;

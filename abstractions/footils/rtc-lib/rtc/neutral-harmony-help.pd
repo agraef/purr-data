@@ -1,0 +1,41 @@
+#N canvas 0 48 469 413 10;
+#X msg 43 327 Bb;
+#X obj 43 140 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 43 177 metro 250;
+#X obj 43 241 neutral-harmony 6;
+#X text 19 74 Building an interval row by alternating a given interval
+(e.g. 3) with its compliment (e.g. 8). Outputs pitch classes (i.e.
+notes without any register informations).;
+#X obj 43 209 bng 15 50 50 0 empty empty rhythm_bangs 0 -6 0 8 -262144
+-1 -1;
+#X floatatom 157 212 4 0 0 1 interval - -;
+#X floatatom 168 327 0 0 0 0 - - -;
+#X text 198 329 interval;
+#X text 75 329 pitch class;
+#N canvas 674 72 418 195 play-it 0;
+#X obj 33 100 show-pitchclass;
+#X obj 33 67 + 60;
+#X obj 33 40 inlet;
+#X obj 143 100 note2st;
+#X text 58 40 map into middle octave;
+#X obj 33 130 outlet;
+#X obj 143 130 outlet;
+#X obj 206 100 play2 127 200 1 1;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 1 0 3 0;
+#X connect 1 0 7 0;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X restore 43 293 pd play-it;
+#X text 19 367 1993 by Karlheinz Essl;
+#X msg 285 29 Harmony;
+#X text 19 41 neutral-harmony;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 10 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 1;
+#X connect 10 0 0 0;
+#X connect 10 1 7 0;

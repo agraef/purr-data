@@ -1,0 +1,186 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header delay 3 12 0 18
+-204280 -1 0;
+#X obj 0 200 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 39 180 494 386 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 65 DESCRIPTION bang after time delay;
+#X text 12 5 ALIAS del;
+#X text 12 85 INLET_0 float bang stop;
+#X text 12 105 INLET_1 float;
+#X text 12 125 OUTLET_0 bang;
+#X text 12 25 KEYWORDS control time bang_op;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 393 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 446 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 488 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 97 299 428 291 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 42 37 timer;
+#X obj 8 37 pipe;
+#X obj 80 37 metro;
+#X obj 119 37 makenote;
+#X obj 179 87 delwrite~;
+#X text 4 208 The best places to find information about Pd's libraries
+is:;
+#X text 4 230 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 4 251 iem.kug.ac.at/pdb/;
+#X text 5 112 Externals;
+#X text 5 159 Externals are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 7 62 Audio Objects;
+#X obj 10 87 vd~;
+#X obj 47 87 delread~;
+#X obj 113 87 delwrite~;
+#X text 7 1 [delay] Related Objects;
+#X text 5 133 [nop~];
+#X text 46 133 [z~];
+#X text 73 133 [t3_delay];
+#X text 137 133 [idelay~];
+#X text 194 133 [delay~];
+#X restore 101 597 pd Related_objects;
+#X obj 78 209 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 402 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 360 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 359 float;
+#X obj 451 3 delay;
+#X text 491 3 or;
+#X obj 517 2 del;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/delay -text
+pdpedia: delay;
+#X obj 100 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 100 150 delay 2000;
+#X obj 100 173 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 98 253 bang;
+#X text 98 313 stop;
+#X text 168 359 - a float to the right inlet sets the delay time (in
+milliseconds).;
+#X text 98 336 list;
+#X text 98 401 bang;
+#X msg 168 101 stop;
+#X msg 122 101 500;
+#X floatatom 157 128 0 0 0 0 - - -;
+#X text 188 129 <- scroll to change delay time in milliseconds;
+#X text 168 401 - [delay] only outputs a bang. It cannot be used like
+an "echo" or to delay messages other than bang. For that purpose \,
+you should explore [pipe].;
+#N canvas 106 287 428 250 A_delay_based_metronome 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 19 55 Let's assume for a moment that Miller had forgotten to
+build the [metro] object. (I know that sounds absurd \, but for the
+sake of example...);
+#X text 19 104 [delay] could be used to create a metronome as follows.
+;
+#X obj 58 197 bng 15 50 10 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 58 175 delay 1000;
+#X msg 22 135 bang;
+#X msg 58 135 stop;
+#X obj 260 176 metro 1000;
+#X obj 260 197 bng 15 50 10 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 260 157 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X floatatom 317 155 5 0 0 0 - - -;
+#X floatatom 115 154 5 0 0 0 - - -;
+#X text 152 175 is the same as;
+#X text 19 36 A makeshift [metro];
+#X text 7 1 [delay] A Metronome Built with [delay];
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 8 0;
+#X connect 9 0 7 0;
+#X connect 10 0 7 1;
+#X connect 11 0 4 1;
+#X restore 101 550 pd A_delay_based_metronome;
+#N canvas 103 173 428 389 Random_Impulse_Generator 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 21 35 Some users might be familiar with SC (SuperCollider)
+by James McCartney. For more info about SC \, visit www.audiosynth.com.
+Anyways...SC has a unit generator called "DUST". Dust will produce
+random impulses at a specified "density". I believe that Dust was given
+its name because it creates a sound that is similar to actual dust
+on old vinyl LP's -- you know that old crackling sound like Rice Krispies.
+;
+#X text 20 143 The idea is quite simple. If you want a "very dusty"
+sound \, you make the density quite high...if you want a "slightly
+dusty" sound \, you make the density quite low.;
+#X obj 22 299 delay;
+#X obj 22 321 bng 15 50 10 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 22 235 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X text 20 188 Dust.ar(2) in SC will produce 2 dusty impulses randomly
+per second. In the example below \, you'll see a version of this process
+created using Pd's delay object.;
+#X obj 22 278 random 500;
+#X obj 22 257 metro 500;
+#X floatatom 92 236 5 0 0 0 - - -;
+#X text 20 343 Also note that this example merely approximates the
+output of SC's "Dust" object.;
+#X text 130 236 low numbers produce a very "dusty" output.;
+#X text 130 248 high numbers produce a slightly "dusty" output.;
+#X text 7 1 [delay] A Random Impulse Generator using [delay];
+#X connect 3 0 4 0;
+#X connect 5 0 8 0;
+#X connect 7 0 3 0;
+#X connect 8 0 7 0;
+#X connect 9 0 8 1;
+#X connect 9 0 7 1;
+#X restore 101 572 pd Random_Impulse_Generator;
+#X text 168 313 - causes [delay] to cancel its scheduled output.;
+#X text 168 336 - a list of floats will be truncated to the first element.
+;
+#X text 80 465 1) float;
+#X text 97 54 The [delay] object sends a bang to its outlet after a
+delay (in milliseconds) \, specified by its right inlet or its creation
+argument.;
+#X text 168 253 - a bang to the left inlet will output a bang after
+the prescribed time (set either at the right inlet creation argument).
+In the above example \, you should notice a delay of 2 seconds \, then
+a bang at the outlet.;
+#X text 168 208 - if a float is sent to the left inlet \, [delay] will
+set the delay time equal to that number (milliseconds) and schedule
+the outgoing bang.;
+#X text 98 492 [delay] accepts only ONE bang at a time. It cannot process
+multiple delays. In other words \, sending a "bang" to a [delay] which
+is already set will reschedule its output \, cancelling the old one.
+;
+#X text 168 465 - (optional) initial delay time (in milliseconds).
+;
+#X text 98 208 float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 298 550 pddp/pddplink ../2.control.examples/07.time.pd;
+#X text 11 23 bang after time delay;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 24 0 17 0;
+#X connect 25 0 17 0;
+#X connect 26 0 17 1;

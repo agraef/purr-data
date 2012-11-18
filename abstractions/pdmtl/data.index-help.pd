@@ -1,0 +1,23 @@
+#N canvas 632 207 450 300 10;
+#X obj 100 175 data.index;
+#X obj 70 221 print OLD_INDEX;
+#X obj 191 218 print NEW_INDEX;
+#X msg 43 88 la;
+#X msg 94 86 le;
+#X msg 142 85 li;
+#X msg 186 88 lo;
+#X msg 224 95 lu;
+#X text 33 32 Description: Creates an index for new data. Returns the
+index of data already treated.;
+#X msg 189 126 34;
+#X obj 249 152 bng 15 250 50 0 empty empty clear 17 7 0 10 -262144
+-1 -1;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 1;

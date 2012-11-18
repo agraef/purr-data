@@ -1,0 +1,43 @@
+#N canvas 403 277 313 218 12;
+#X floatatom 157 24 5 16 1024 0 - - -;
+#X msg 157 42 #w \$1 \, #h \$1;
+#X floatatom 194 7 5 3 22 0 - - -;
+#X obj 13 148 nbx 8 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
+-262144 -1 -1 -0.0116279 256;
+#X obj 13 39 widget knob n1 #w 88 #h 88 #th 3 #cc purple #cb black
+#ca red #trans 81 #bg green #range 1 #cn navy #ny 79 #nx 43 #max 0
+#min 0 #an white -bd 1;
+#X msg 135 109 #range \$1;
+#X msg 157 144 1;
+#X msg 184 144 10000;
+#X floatatom 203 94 5 0 0 0 - - -;
+#X msg 203 109 #ny \$1;
+#X floatatom 203 61 5 0 0 0 - - -;
+#X msg 203 76 #nx \$1;
+#X msg 157 170 #max 1;
+#X msg 202 170 #max 32 \, #min 16;
+#X msg 157 190 #min 0 \, #max 0;
+#X msg 103 107 1;
+#X msg 103 85 100;
+#X msg 104 63 1000;
+#X msg 104 41 0.1;
+#X msg 194 23 #th \$1;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 19 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 4 0;
+#X connect 8 0 9 0;
+#X connect 9 0 4 0;
+#X connect 10 0 11 0;
+#X connect 11 0 4 0;
+#X connect 12 0 4 0;
+#X connect 13 0 4 0;
+#X connect 14 0 4 0;
+#X connect 15 0 5 0;
+#X connect 16 0 5 0;
+#X connect 17 0 5 0;
+#X connect 18 0 5 0;
+#X connect 19 0 4 0;

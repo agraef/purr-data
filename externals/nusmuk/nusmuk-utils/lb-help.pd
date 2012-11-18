@@ -1,0 +1,19 @@
+#N canvas 198 102 450 300 10;
+#X obj 83 92 lb;
+#X obj 113 92 loadbang;
+#X obj 83 112 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 113 113 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 58 92 lb;
+#X obj 58 112 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 205 91 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 205 112 s lb;
+#X text 102 29 This is mostly a shortcut for loadbang;
+#X text 103 45 you can send bangs to lb;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 4 0 5 0;
+#X connect 6 0 7 0;

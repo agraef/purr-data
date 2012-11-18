@@ -1,0 +1,12 @@
+#N canvas 535 446 694 301 10;
+#X floatatom 86 52 5 0 0 0 - - -;
+#X floatatom 86 93 5 0 0 0 - - -;
+#X floatatom 86 138 5 0 0 0 - - -;
+#X obj 86 70 / 10;
+#X text 70 11 Description: Rounds a float to it's closest integer.
+;
+#X obj 86 112 number.round;
+#X connect 0 0 3 0;
+#X connect 1 0 5 0;
+#X connect 3 0 1 0;
+#X connect 5 0 2 0;

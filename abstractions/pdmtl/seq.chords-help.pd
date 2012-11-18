@@ -1,0 +1,25 @@
+#N canvas 261 114 731 554 10;
+#X obj 22 70 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X obj 86 412 prepend set;
+#X msg 85 440 75 77 79 80 81;
+#X obj 150 278 seq.chords;
+#X obj 31 102 metro 250;
+#X text 280 91 Enter your patition like this. Chords are separated
+by commas. The keynord new as first resets the sequence;
+#X msg 280 164 reset \, 60 64 67 \, 68 \, 72 73 74 \, 75 77 79 80 81
+\, 59 58 64 67 69;
+#X msg 281 209 reset \, a \, b \, c \, d \, e \, f \, g \, h \, i \,
+j \, k \, l \, m \, n \, o \, p \, q \, r \, s \, t \, u \, v \, w
+\, x \, y \, z;
+#X text 342 422 Author: Alexandre Quessy;
+#X obj 281 142 loadbang;
+#X text 168 15 Description: sequence of chords or anything settable
+with a message box with a serie of lists separated by commas;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X connect 6 0 3 1;
+#X connect 7 0 3 1;
+#X connect 9 0 6 0;

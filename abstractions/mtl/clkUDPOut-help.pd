@@ -1,0 +1,11 @@
+#N canvas 1087 85 450 300 10;
+#X text 16 86 Description: Send a timing flow through UDP;
+#X floatatom 300 102 5 0 0 0 - - -;
+#X obj 387 151 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 27 203 mtl/clkUDPOut localhost 8247;
+#X obj 300 126 mtl/clkMaster;
+#X text 18 158 open clkUDPIn's help for a working example.;
+#X text 15 102 tags: timing network;
+#X connect 1 0 4 0;
+#X connect 4 2 2 0;

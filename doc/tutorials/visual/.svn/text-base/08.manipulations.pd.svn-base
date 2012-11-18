@@ -1,0 +1,109 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty manipulations 20 12 0 24 -228992
+-66577 0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 28 130 color;
+#X obj 28 342 translate;
+#X obj 331 96 gemhead;
+#X msg 219 78 lighting \$1;
+#X obj 219 57 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 219 101 gemwin;
+#X obj 205 432 world_light;
+#X obj 331 427 cube;
+#X obj 205 412 gemhead;
+#X obj 332 146 translateXYZ 0 0 0;
+#X obj 457 86 hsl 128 15 -2 2 0 0 empty empty X 12 8 1 12 -233017 -1
+-1 0 1;
+#X obj 457 106 hsl 128 15 -2 2 0 0 empty empty Y 12 8 1 12 -233017
+-1 -1 5900 1;
+#X obj 457 126 hsl 128 15 -2 2 0 0 empty empty Z 12 8 1 12 -233017
+-1 -1 0 1;
+#X obj 457 166 hsl 128 15 0 360 0 0 empty empty X 12 8 1 12 -233017
+-1 -1 0 1;
+#X obj 457 186 hsl 128 15 0 360 0 0 empty empty Y 12 8 1 12 -233017
+-1 -1 0 1;
+#X obj 457 206 hsl 128 15 0 360 0 0 empty empty Z 12 8 1 12 -233017
+-1 -1 0 1;
+#X obj 331 225 rotateXYZ 0 0 0;
+#X obj 457 246 hsl 128 15 0 3 0 1 empty empty X 12 8 1 12 -233017 -1
+-1 4233 1;
+#X obj 457 266 hsl 128 15 0 3 0 1 empty empty Y 12 8 1 12 -233017 -1
+-1 4233 1;
+#X obj 457 286 hsl 128 15 0 3 0 1 empty empty Z 12 8 1 12 -233017 -1
+-1 4233 1;
+#X obj 457 326 hsl 128 15 0 1 0 1 empty empty R 12 8 1 12 -261689 -1
+-1 12700 1;
+#X obj 457 346 hsl 128 15 0 1 0 1 empty empty G 12 8 1 12 -225271 -1
+-1 12700 1;
+#X obj 457 366 hsl 128 15 0 1 0 1 empty empty B 12 8 1 12 -228992 -1
+-1 12700 1;
+#X obj 331 385 colorRGB 1 1 1;
+#X obj 28 371 sphere;
+#X obj 27 83 gemhead;
+#X obj 60 300 hsl 128 15 -2 2 0 0 empty empty amount 6 8 1 12 -233017
+-1 -1 0 1;
+#X msg 73 318 1 0 1;
+#X msg 120 318 0 0.5 0.5;
+#X text 118 335 direction;
+#X obj 60 230 hsl 128 15 0 3 0 0 empty empty amount 6 8 1 12 -233017
+-1 -1 0 1;
+#X msg 73 248 1 0 1;
+#X msg 120 248 0 0.5 0.5;
+#X text 118 265 direction;
+#X obj 60 163 hsl 128 15 0 360 0 0 empty empty amount 6 8 1 12 -233017
+-1 -1 0 1;
+#X msg 73 181 1 0 1;
+#X msg 120 181 0 0.5 0.5;
+#X msg 39 103 1 1 1;
+#X msg 86 103 1 0 0;
+#X msg 133 103 0 0 1;
+#X obj 28 205 rotate;
+#X obj 28 272 scale 1 1 1;
+#X text 118 198 rotation axis;
+#X obj 331 305 scaleXYZ 1 1 1;
+#X obj 331 75 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 27 64 tgl 15 1 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X connect 3 0 43 0;
+#X connect 4 0 27 0;
+#X connect 5 0 12 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 11 0 9 0;
+#X connect 12 0 19 0;
+#X connect 13 0 12 1;
+#X connect 14 0 12 2;
+#X connect 15 0 12 3;
+#X connect 16 0 19 1;
+#X connect 17 0 19 2;
+#X connect 18 0 19 3;
+#X connect 19 0 46 0;
+#X connect 20 0 46 1;
+#X connect 21 0 46 2;
+#X connect 22 0 46 3;
+#X connect 23 0 26 1;
+#X connect 24 0 26 2;
+#X connect 25 0 26 3;
+#X connect 26 0 10 0;
+#X connect 28 0 3 0;
+#X connect 29 0 4 1;
+#X connect 30 0 4 2;
+#X connect 31 0 4 2;
+#X connect 33 0 44 1;
+#X connect 34 0 44 2;
+#X connect 35 0 44 2;
+#X connect 37 0 43 1;
+#X connect 38 0 43 2;
+#X connect 39 0 43 2;
+#X connect 40 0 3 1;
+#X connect 41 0 3 1;
+#X connect 42 0 3 1;
+#X connect 43 0 44 0;
+#X connect 44 0 4 0;
+#X connect 46 0 26 0;
+#X connect 47 0 5 0;
+#X connect 48 0 28 0;

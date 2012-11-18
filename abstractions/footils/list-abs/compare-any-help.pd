@@ -1,0 +1,38 @@
+#N canvas 394 294 528 377 10;
+#X msg 246 131 symbol x;
+#X msg 255 154 symbol y;
+#X msg 116 137 symbol x;
+#X msg 125 160 symbol y;
+#X obj 96 254 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 236 109 2.3;
+#X msg 106 114 2.3;
+#X msg 131 180 i;
+#X msg 140 201 j;
+#X msg 258 175 i;
+#X msg 264 196 j;
+#X obj 96 278 print;
+#X text 37 14 [compare-any];
+#X text 81 37 Test if two anythings are the same. Out: 1 if equal \,
+0 if not equal.;
+#X msg 96 92 1;
+#X msg 226 87 1;
+#X obj 96 231 compare-any;
+#X msg 221 66 0;
+#X msg 86 71 0;
+#X connect 0 0 16 1;
+#X connect 1 0 16 1;
+#X connect 2 0 16 0;
+#X connect 3 0 16 0;
+#X connect 4 0 11 0;
+#X connect 5 0 16 1;
+#X connect 6 0 16 0;
+#X connect 7 0 16 0;
+#X connect 8 0 16 0;
+#X connect 9 0 16 1;
+#X connect 10 0 16 1;
+#X connect 14 0 16 0;
+#X connect 15 0 16 1;
+#X connect 16 0 4 0;
+#X connect 17 0 16 1;
+#X connect 18 0 16 0;

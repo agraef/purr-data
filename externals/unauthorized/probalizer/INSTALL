@@ -1,0 +1,14 @@
+untar in /my/pd/dir/externs
+
+cd /my/pd/dir/externs/probalizer
+
+make clean 
+
+make
+
+make install
+
+open help-probalizer.pd
+
+comments and bugs @ ydegoyon@free.fr
+Yves/

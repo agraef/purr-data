@@ -1,0 +1,21 @@
+#N canvas 262 173 610 462 10;
+#X text 62 147 c \, d ... right operand;
+#X text 62 132 a \, b ... left operand;
+#X text 62 117 e \, f ... target buffers;
+#X text 60 201 differences in lengths are adjusted to smaller vector
+of each pair;
+#X text 62 87 e+if=(a+ib)-(c+id);
+#X text 61 169 vasp.c- needs 2 vectors per operand which are treated
+as pairs;
+#X text 62 71 complex subtraction;
+#X obj 57 23 cnv 15 15 15 empty empty vasp.c- 0 10 1 14 -262144 -1
+0;
+#X obj 297 94 vasp.c-;
+#X text 46 287 related objects:;
+#X obj 182 330 vasp.c!-;
+#X obj 265 330 vasp.c!/;
+#X obj 182 288 vasp.c=;
+#X obj 265 309 vasp.c/;
+#X obj 265 288 vasp.c*;
+#X obj 52 377 VASP-HELP;
+#X obj 182 309 vasp.c+;

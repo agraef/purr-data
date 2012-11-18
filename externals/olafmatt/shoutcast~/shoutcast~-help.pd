@@ -1,0 +1,89 @@
+#N canvas 268 21 787 723 10;
+#X floatatom 18 36 0 40 16000 0 - - -;
+#X msg 426 657 \; pd dsp 1;
+#X floatatom 17 692 0 0 0 0 - - -;
+#X msg 183 416 disconnect;
+#X text 251 415 <-- close connection;
+#X text 210 38 <-- settings for mp3 stream;
+#X text 270 92 1 = joint stereo (default);
+#X text 234 80 mode: 0 = stereo;
+#X msg 92 63 mpeg 48000 224 1 5;
+#X obj 18 63 osc~ 1000;
+#X msg 215 464 print;
+#X msg 492 657 \; pd dsp 0;
+#X msg 149 354 passwd letmein;
+#X msg 155 283 icecast;
+#X msg 144 261 shoutcast;
+#X text 207 260 <-- use SHOUTcast server (default);
+#X text 148 240 ---------- select and configure server ----------;
+#X text 165 332 ---------- connect / disconnect -----------;
+#X obj 426 631 loadbang;
+#X text 384 7 SHOUTcast server ----------;
+#X floatatom 108 678 10 0 0 0 - - -;
+#X text 230 130 quality: 1 = high \, 9 = low (default = 5);
+#X text 233 69 bitrate: bitrate of stream (default = 224kbit/s);
+#X msg 173 392 connect localhost puredata.mp3 8000;
+#X text 179 677 <-- kilobytes sent to server;
+#X msg 118 151 vbr 48000 0 4;
+#X obj 17 606 shoutcast~ 2 512;
+#X msg 194 437 connect;
+#X text 245 436 <-- connect to default or last server again;
+#X text 129 649 (default value shown);
+#X text 176 374 "connect <hostname> <mountpoint> <portno>";
+#X text 212 149 <-- use variable bitrate encoding (VBR);
+#X text 474 162 quality: 0 = high \, 9 = low;
+#X text 231 50 "mpeg <samplerate> <bitrate> <mode> <quality>";
+#X text 270 104 2 = dual channel (not supported by lame);
+#X text 238 162 "vbr <samplerate> <mode> <quality>";
+#X text 401 375 (defaults shown);
+#X text 242 178 a quality setting of "4" gives roughly 128k max. bitrate
+;
+#X text 127 633 "shoutcast~ <inchannels> <buffersize>";
+#X text 47 692 <-- connection state;
+#X text 270 117 3 = mono;
+#X msg 103 113 mpeg 24000 16 3 5;
+#X msg 100 85 mpeg 32000 32 1 5;
+#X msg 87 39 mpeg 22050 128 0 5;
+#X text 18 7 -------- shoutcast~ 0.3d - send mp3 encoded audio stream
+to;
+#X text 217 484 ----- set stream comments -----;
+#X msg 227 521 name test stream;
+#X msg 238 541 genre experimental;
+#X msg 247 563 url http://www.akustische-kunst.org/;
+#X msg 262 585 public 0;
+#X text 209 281 <-- use full IceCast server support (it's possible
+to connect to Icecast using the shoutcast setting but not the other
+way round!);
+#X text 246 353 <-- your password for the server (default = letmein)
+;
+#X msg 140 202 printlame;
+#X text 205 202 <-- print lame settings to console window;
+#X text 253 462 <-- print settings to console window;
+#X text 227 500 these comments will be displayed by users mp3 player...
+;
+#X text 325 586 <-- tell the server if this stream should be published
+on shoutcast.com or wherever (also depends on your server's config
+settings...);
+#X connect 0 0 9 0;
+#X connect 3 0 26 0;
+#X connect 8 0 26 0;
+#X connect 9 0 26 0;
+#X connect 9 0 26 1;
+#X connect 10 0 26 0;
+#X connect 12 0 26 0;
+#X connect 13 0 26 0;
+#X connect 14 0 26 0;
+#X connect 18 0 1 0;
+#X connect 23 0 26 0;
+#X connect 25 0 26 0;
+#X connect 26 0 2 0;
+#X connect 26 1 20 0;
+#X connect 27 0 26 0;
+#X connect 41 0 26 0;
+#X connect 42 0 26 0;
+#X connect 43 0 26 0;
+#X connect 46 0 26 0;
+#X connect 47 0 26 0;
+#X connect 48 0 26 0;
+#X connect 49 0 26 0;
+#X connect 52 0 26 0;

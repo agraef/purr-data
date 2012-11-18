@@ -1,0 +1,10 @@
+#N canvas 501 290 343 157 10;
+#N canvas 690 174 154 104 abslist 0;
+#X msg 19 11 blsaw~;
+#X msg 20 38 blsquare~;
+#X msg 20 65 bltriangle~;
+#X restore 12 12 pd abslist;
+#X msg 12 37 version 0.2.0;
+#X text 13 64 bandlimited oscillators;
+#X text 13 84 copyright by roman haefeli;
+#X text 14 106 published under the gnu public license;

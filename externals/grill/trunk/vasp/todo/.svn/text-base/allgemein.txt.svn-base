@@ -1,0 +1,42 @@
+Vasp allgemein:
+---------------
+
+- nicht unwichtig: alle Operationen werden zumeist nur auf 1 (reell) oder 2 (komplex) Buffer angewendet.
+	allerdings funktionieren sie immer auch für mehrere bzw. mehrere Paare
+
+
+Hilfe:
+------
+
+!! bitte die wavedisplays nicht ändern, das ist relativ kompliziert wegen graph on parent einstellungen... 
+
+- Hilfe-Seite mit Abkürzungen
+
+- vasp.cnoise... Unterschied zu 2 unabhängigen vasp.noise-Kanälen demonstrieren
+
+  > M: den unterschied musst du erklären, das kannst du am besten, thomas. akustisch ist der eher schwer auszumachen (oder gar nicht)
+
+  >> T: mit den Laptop-Lautsprechern ist er vielleicht nicht zu hören, mit Monitoren aber sehr deutlich
+
+- vasp-xshift eigentlich nur sinnvol in verbindung mit einem fft-beispiel, ... xrot auch.
+
+- neue objekte in die "vasp_main" aufnehmen und entsprechend "gruppieren"
+
+  > T: neue Objekte: 
+  > vasp.radio, vasp.!radio, vasp.size, vasp.size?, vasp.size+, vasp.size, vasp.size*, vasp.size/
+  > vasp.frames*, vasp.frames/, vasp.imm, vasp.copy, vasp.ccopy, vasp.peaks?, vasp.fix
+
+
+- genau überlegen, ob noch "standard-soundfiles" hinzugefügt werden sollen
+
+was passiert mit vasp_size, vasp_size?, vasp_vector ??? oder doch vasp_n ???
+alle fft-objekte, erklären, wie das mit dem prime-factor funkt.
+unterschiede zwischen amin?, min?, amax?, max? besser erklären.
+
+- was ist mit abstractions (vasp_opt zum beispiel)
+
+  > T: man sollte die in der Hilfe vielleicht auf eine eigene Seite stellen (vasp.pwrap, vasp.opt, vasp.ropt)
+
+
+- vasp_valleys sollte man gleich optimieren (nicht extra anklicken), oder? bei den peaks ist es dafür nicht so sinnvoll, ...
+

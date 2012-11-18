@@ -1,0 +1,16 @@
+#acc_led
+
+include buttons
+
+Plugin.acc.X	= REL_X
+Plugin.acc.Y	= REL_Y
+
+# You can set Plugin.led.Led[1->4] to 1
+# to have that led be active all the time
+Plugin.led.Led4 = 1
+
+# Setting battery to 1 enables the battery check function
+# By default the keypress is A + B
+# You can change this by setting Plugin.led.Button to any
+# wiimote or attachment button
+Plugin.led.Battery = 1

@@ -1,0 +1,39 @@
+#N canvas 929 362 638 607 10;
+#X obj 166 117 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 210 228 5 0 0 0 - - -;
+#X floatatom 271 78 5 0 0 0 - - -;
+#X floatatom 316 107 5 0 0 0 - - -;
+#X text 315 76 min random value;
+#X text 359 106 max random value;
+#X text 7 96 Bang to output random.f value;
+#X obj 34 271 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 35 365 5 0 0 0 - - -;
+#X text 78 16 Description: Generates a random.f in a certain range.
+;
+#X text 373 173 Args: min \, max;
+#X obj 237 274 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 238 368 5 0 0 0 - - -;
+#X text 357 311 min: -3 \, max: 1;
+#X obj 239 402 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 240 496 5 0 0 0 - - -;
+#X text 99 308 min:0 \, max: 1;
+#X obj 34 309 random.f;
+#X obj 211 172 random.f 0 1;
+#X obj 237 312 random.f @min -3;
+#X text 442 439 min: -100 \, max: 100;
+#X obj 239 440 random.f @max 100 @min -100;
+#X text 79 36 flags: @rguments;
+#X connect 0 0 18 0;
+#X connect 2 0 18 1;
+#X connect 3 0 18 2;
+#X connect 7 0 17 0;
+#X connect 11 0 19 0;
+#X connect 14 0 21 0;
+#X connect 17 0 8 0;
+#X connect 18 0 1 0;
+#X connect 19 0 12 0;
+#X connect 21 0 15 0;

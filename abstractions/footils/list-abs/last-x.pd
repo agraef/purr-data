@@ -1,0 +1,10 @@
+#N canvas 417 318 464 379 10;
+#X obj 265 147 inlet;
+#X obj 179 149 inlet;
+#X obj 179 253 outlet;
+#X text 54 77 This is just a backwards compatibility wrapper around
+list-lastx;
+#X obj 179 206 list-lastx \$1;
+#X connect 0 0 4 1;
+#X connect 1 0 4 0;
+#X connect 4 0 2 0;

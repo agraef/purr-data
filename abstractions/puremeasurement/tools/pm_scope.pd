@@ -1,0 +1,229 @@
+#N canvas 180 170 640 735 10;
+#X obj 68 45 cnv 10 200 130 empty empty empty 0 0 1 16 -225280 -42246
+0;
+#X obj 252 97 bng 12 250 50 0 \$0-scope1_y+ empty + 1 -10 1 14 -262144
+-1 -1;
+#X obj 252 114 bng 12 250 50 0 \$0-scope1_y- empty - 3 16 1 18 -262144
+-1 -1;
+#X obj 71 19 r~ i1;
+#X obj 147 48 cnv 15 120 24 empty \$0-scope1_ovldstr OVERLOAD! 2 11
+1 14 -225280 -225280 0;
+#X obj 121 18 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 132 157 nbx 3 14 0 250 0 0 \$0-scope1_xtime \$0-set_scope1_xtime
+msec 35 8 1 8 -262144 -1 -1 100 256;
+#N canvas 352 0 832 750 scope1 0;
+#X obj -2 -51 cnv 15 140 24 empty empty scope1 20 12 1 18 -233017 -1109
+0;
+#X obj 113 -51 cnv 15 120 24 empty empty subpatch 0 12 1 18 -233017
+-1109 0;
+#X obj 391 100 loadbang;
+#X obj 263 374 delay 1000;
+#X obj 15 102 inlet~;
+#X obj 580 615 cnv 15 60 25 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X obj 286 596 cnv 15 60 40 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X obj 339 344 div 2;
+#X obj 339 421 pow 0;
+#X msg 339 398 10;
+#X obj 382 375 select 0 1;
+#X msg 382 404 1;
+#X msg 414 404 3;
+#X obj 366 448 * 1;
+#X floatatom 346 300 5 0 0 0 - - -;
+#X msg 309 224 1;
+#X msg 392 224 1;
+#X obj 309 249 + 1;
+#X obj 392 249 - 1;
+#X obj 392 274 * -1;
+#X msg 346 224 0;
+#X obj 396 495 / 10;
+#X obj 375 530 * -1;
+#X obj 292 161 cnv 15 90 25 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X obj 405 161 cnv 15 90 25 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X obj 561 63 cnv 15 115 20 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X text -4 136 ------------------------------------------------------------
+;
+#X text 416 136 ----------------------------------;
+#X obj 42 478 cnv 15 125 20 empty empty empty 20 12 0 14 -228992 -66577
+0;
+#X msg 45 335 0;
+#X obj 45 360 metro 1000;
+#X obj 79 392 delay 500;
+#X obj 83 101 inlet;
+#X text 129 99 <-- bang to reset;
+#X text 157 112 overload;
+#X msg 45 414 14;
+#X obj 80 238 cnv 15 125 20 empty empty empty 20 12 0 14 -228992 -66577
+0;
+#X obj 366 471 t b f;
+#X obj 339 375 t b f;
+#X obj 382 344 mod 2;
+#X obj 346 320 t f f;
+#X obj 2 314 threshold~ 0.98 100 -0.98 100;
+#X obj 88 283 cnv 15 115 25 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X obj 520 373 phasor~;
+#X obj 521 351 sig~;
+#X obj 521 306 samplerate~;
+#X obj 589 461 cnv 15 120 25 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X obj 594 369 cnv 15 110 25 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X obj 488 228 metro 400;
+#X obj 511 588 clip~ -1 1;
+#X obj 521 87 block~ 1024;
+#X obj 521 328 / 1024;
+#X obj 582 396 / 1000;
+#X obj 582 418 * 44100;
+#X obj 521 442 *~ 4410;
+#X obj 153 -7 cnv 15 80 15 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X text 155 -8 arrays;
+#X obj 153 9 cnv 15 80 15 empty empty empty 20 12 0 14 -228992 -66577
+0;
+#X text 155 9 symbols;
+#X obj 153 25 cnv 15 80 15 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X text 154 25 floats;
+#X text 30 -9 global variables:;
+#X msg 597 164 100;
+#X obj 608 184 cnv 15 140 25 empty empty empty 20 12 0 14 -262131 -66577
+0;
+#X msg 488 203 1;
+#X msg 79 414 7;
+#X obj 83 190 f \$0;
+#X msg 83 226 \; \$1-scope1_ovldstr color 7 7;
+#X obj 83 166 t b b;
+#X obj 16 287 tabwrite~ \$0-scope1_buffer;
+#X obj 279 165 r \$0-scope1_y-;
+#X obj 392 165 r \$0-scope1_y+;
+#X obj 521 65 table \$0-scope1_buffer 11050;
+#X obj 597 189 s \$0-set_scope1_xtime;
+#X obj 582 373 r \$0-scope1_xtime;
+#X obj 522 465 tabread4~ \$0-scope1_buffer;
+#X obj 511 619 tabwrite~ \$0-meas1;
+#X obj 289 555 pack 0.1 1 -1 \$0;
+#X obj 45 442 pack 7 7 \$0;
+#X msg 45 464 \; \$3-scope1_ovldstr color \$2 \$1;
+#X msg 289 582 \; \$4-meas1 bounds 0 \$2 1023 \$3 \; \$4-meas1 yticks
+0 \$1 5 \; \$4-meas1 ylabel 1140 \$3 0 \$2;
+#X text 243 -8 \$0-scope1_buffer \, \$0-meas1;
+#X text 243 9 \$0-scope1_ovldstr;
+#X text 243 25 \$0-scope1_y- \, \$0-scope1_y+ \, \$0-scope1_xtime \,
+\$0-set_scope1_xtime;
+#X connect 2 0 3 0;
+#X connect 2 0 20 0;
+#X connect 2 0 45 0;
+#X connect 2 0 62 0;
+#X connect 2 0 64 0;
+#X connect 3 0 77 0;
+#X connect 4 0 41 0;
+#X connect 4 0 69 0;
+#X connect 7 0 38 0;
+#X connect 8 0 13 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 11 0 13 1;
+#X connect 12 0 13 1;
+#X connect 13 0 37 0;
+#X connect 14 0 17 1;
+#X connect 14 0 18 1;
+#X connect 14 0 40 0;
+#X connect 15 0 17 0;
+#X connect 16 0 18 0;
+#X connect 17 0 14 0;
+#X connect 18 0 19 0;
+#X connect 19 0 14 0;
+#X connect 20 0 14 0;
+#X connect 21 0 77 0;
+#X connect 22 0 49 1;
+#X connect 22 0 77 2;
+#X connect 29 0 30 0;
+#X connect 30 0 35 0;
+#X connect 30 0 31 0;
+#X connect 31 0 65 0;
+#X connect 32 0 68 0;
+#X connect 35 0 78 0;
+#X connect 37 0 77 0;
+#X connect 37 1 21 0;
+#X connect 37 1 22 0;
+#X connect 37 1 49 2;
+#X connect 37 1 77 1;
+#X connect 38 0 9 0;
+#X connect 38 1 8 1;
+#X connect 39 0 10 0;
+#X connect 40 0 7 0;
+#X connect 40 1 39 0;
+#X connect 41 0 30 0;
+#X connect 41 1 30 0;
+#X connect 43 0 54 0;
+#X connect 44 0 43 0;
+#X connect 45 0 51 0;
+#X connect 45 0 53 1;
+#X connect 48 0 69 0;
+#X connect 48 0 76 0;
+#X connect 49 0 76 0;
+#X connect 51 0 44 0;
+#X connect 52 0 53 0;
+#X connect 53 0 54 1;
+#X connect 54 0 75 0;
+#X connect 62 0 73 0;
+#X connect 64 0 48 0;
+#X connect 65 0 78 0;
+#X connect 66 0 67 0;
+#X connect 68 0 66 0;
+#X connect 68 1 29 0;
+#X connect 70 0 15 0;
+#X connect 71 0 16 0;
+#X connect 74 0 52 0;
+#X connect 75 0 49 0;
+#X connect 77 0 80 0;
+#X connect 78 0 79 0;
+#X coords 0 0 0.00222222 0.00333333 200 140 0;
+#X restore 72 49 pd scope1;
+#X text 70 156 x range:;
+#X text 72 202 The pm oscilloscope.;
+#X text 143 22 <--reset overload;
+#X text 73 310 Note that the processing is done in the "scope1" subpatch
+(click on it to view/edit).;
+#X text 73 520 Note also that there is a scope~ object in the cyclone
+library \, which you may prefer over the simple one presented here.
+;
+#X obj 73 588 cnv 15 236 65 empty empty empty 20 12 0 14 -262144 -66577
+0;
+#X text 75 592 (c) M. Blau 2004-2005;
+#X text 79 606 matthias.blau AT fh-oldenburg.de;
+#X text 77 620 IHA FH-OOW \, Oldenburg \, Germany;
+#X text 72 580 ------------------------------------------------------------
+;
+#X text 72 212 ------------------------------------------------------------
+;
+#N canvas 0 0 450 300 graph14 0;
+#X array \$0-meas1 1024 float 0;
+#X coords 0 1 1023 -1 150 80 1;
+#X restore 72 72 graph;
+#X text 73 440 If you change the size of the display \, you will probably
+have to adjust the position of the y-axis labels. To do so \, you have
+to change the last line in the message box at the center bottom of
+the subpatch: Substitute the 1140 in "$4-meas1 ylabel 1140 \$3 0 \$2"
+by a more suitable value.;
+#X text 73 350 If you want to use multiple scopes at the same time
+\, you can simply copy the scope above. In addition \, you will have
+to change the names of all global variables to contain e.g. "scope2"
+instead of "scope1". Also the array that is displayed must be changed
+from "$0-meas1" to e.g. "$0-meas2". (Hint: use a text editor to do
+this).;
+#X text 73 230 Principle of operation: the incoming signal (i1 in the
+example above) is written to a buffer ($0-scope1_buffer) which is then
+resampled using 4-point interpolation (1024 values via tabread4~).
+The resampled values are written to the "meas1" array (which is displayed)
+every 400ms.;
+#X text 78 634 updated for version v28II06;
+#X connect 3 0 7 0;
+#X connect 5 0 7 1;

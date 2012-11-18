@@ -1,0 +1,60 @@
+#N canvas 79 77 899 565 10;
+#X obj 58 31 cnv 15 15 15 empty empty vasp.frames 0 10 1 14 -262144
+-1 0;
+#N canvas 0 0 450 300 graph1 0;
+#X array buffram1 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 530 149 graph;
+#N canvas 0 0 400 276 init 0;
+#X obj 33 19 loadbang;
+#X msg 33 73 \; \$1 xticks 0 4410 10 \; \$1 xlabel 1.1 0 22050 44100
+66150 88200 \; \$1 yticks 0 0.25 2 \; \$1 ylabel 94000 -1 -0.5 0 0.5
+1;
+#X msg 33 45 symbol buffram1;
+#X msg 140 45 symbol buffram2;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X restore 714 408 pd init;
+#X text 119 397 abbreviation;
+#N canvas 0 0 450 300 graph1 0;
+#X array buffram2 88200 float 0;
+#X coords 0 1 88199 -1 300 100 1;
+#X restore 530 268 graph;
+#X obj 62 303 vasp.osc 22050;
+#X obj 62 335 vasp.update;
+#X msg 62 165 vasp buffram1;
+#X obj 62 225 vasp.frames 30000;
+#X obj 90 258 prepend set;
+#X msg 90 280;
+#X obj 233 226 vasp.frames 22050;
+#X obj 233 335 vasp.update;
+#X obj 261 258 prepend set;
+#X msg 233 164 vasp buffram1 buffram2 11050;
+#X floatatom 330 197 5 0 0 0 - - -;
+#X obj 233 303 vasp.osc 11025;
+#X msg 261 280;
+#X obj 62 397 vasp.f;
+#X obj 61 498 VASP-HELP;
+#X text 57 69 set the number of frames of a vasp;
+#X text 58 83 argument/right inlet: value in frames;
+#X text 60 429 related objects:;
+#X obj 61 451 vasp.size;
+#X obj 150 451 vasp.f?;
+#X obj 223 451 vasp.f=;
+#X text 57 100 the number of frames is limited by the size of a buffer/array!
+;
+#X text 57 129 all vectors of a vasp have the same frame count/length!
+;
+#X connect 5 0 6 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 0 5 0;
+#X connect 9 0 10 0;
+#X connect 11 0 13 0;
+#X connect 11 0 16 0;
+#X connect 13 0 17 0;
+#X connect 14 0 11 0;
+#X connect 15 0 11 1;
+#X connect 16 0 12 0;

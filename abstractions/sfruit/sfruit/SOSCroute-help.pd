@@ -1,0 +1,30 @@
+#N canvas 707 400 454 373 10;
+#X msg 262 44 /otherthang;
+#X msg 23 18 /mythang 100;
+#X msg 58 39 /otherthang ohyeah;
+#X floatatom 93 186 5 0 0 0 - - -;
+#X symbolatom 136 186 10 0 0 0 - - -;
+#X obj 103 145 list;
+#X obj 224 144 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 71 145 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 290 317 SOSCroute 0.1;
+#X text 290 333 2007 Luke Iannini;
+#X obj 103 101 SOSCroute /mythang;
+#X text 8 215 SOSCroute is the same as OSCroute \, but with one addition:
+it has a right-inlet for changing the route.;
+#X obj 302 101 OSCroute /onlythang;
+#X text 9 262 For 0.1 \, that addition comes with the subtraction of
+using multiple arguments for multiple routes (that's harder : ) ).
+;
+#X msg 245 24 /mythang;
+#X connect 0 0 10 1;
+#X connect 1 0 10 0;
+#X connect 2 0 10 0;
+#X connect 5 0 4 0;
+#X connect 5 0 3 0;
+#X connect 10 0 5 0;
+#X connect 10 0 7 0;
+#X connect 10 1 6 0;
+#X connect 14 0 10 1;

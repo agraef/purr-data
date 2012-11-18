@@ -1,0 +1,81 @@
+#N canvas 265 177 760 664 10;
+#X obj 159 72 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 217 112 open \$1;
+#X obj 216 88 openpanel;
+#X obj 201 71 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 124 70 stop;
+#X obj 164 178 dac~;
+#X obj 147 112 metro 70;
+#X obj 142 144 pdp_yqt;
+#X obj 296 139 pdp_v4l;
+#X obj 305 108 metro 70;
+#X obj 350 74 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 307 75 stop;
+#X obj 511 446 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 511 498 pdp_control;
+#X msg 511 471 thread \$1;
+#X floatatom 511 559 5 0 0 0 - - -;
+#X obj 511 530 route pdp_drop;
+#X obj 217 375 pdp_vloopback /dev/video1;
+#X obj 66 71 loadbang;
+#X msg 369 79 open /dev/video0;
+#X obj 505 110 metro 70;
+#X obj 550 76 bng 15 250 50 0 empty empty empty 20 8 0 8 -262144 -1
+-1;
+#X msg 507 77 stop;
+#X msg 569 81 open /dev/video0;
+#X text 99 453 pdp_vloopback : a vloopback output module;
+#X text 99 465 enables you to send pd output to any other application
+that supports v4l input ( skype \, webcamstudio \, ... );
+#X text 103 517 written by ydegoyon@gmail.com;
+#X text 101 504 code inspired by mjpegtools_yuv_to_v4l by Jan Panteltje
+;
+#X obj 497 141 pdp_v4l2 /dev/video0;
+#X msg 66 97 loop 1;
+#X obj 217 409 pdp_xv;
+#X text 382 374 default /dev/video1;
+#X msg 362 274 open /dev/video1;
+#X msg 364 302 close;
+#X text 469 272 open a vloopback device;
+#X text 405 302 close a vloopback device;
+#X floatatom 369 410 5 0 0 0 - - -;
+#X text 411 407 number of frames written;
+#X msg 365 332 invert \$1;
+#X obj 433 333 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 455 331 invert red and blue channels ( default : 1 );
+#X connect 0 0 6 0;
+#X connect 1 0 7 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 17 0;
+#X connect 7 4 5 0;
+#X connect 7 5 5 1;
+#X connect 8 0 17 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 9 0;
+#X connect 12 0 14 0;
+#X connect 13 0 16 0;
+#X connect 14 0 13 0;
+#X connect 16 0 15 0;
+#X connect 17 0 30 0;
+#X connect 17 1 36 0;
+#X connect 18 0 29 0;
+#X connect 19 0 8 0;
+#X connect 20 0 28 0;
+#X connect 21 0 20 0;
+#X connect 22 0 20 0;
+#X connect 23 0 28 0;
+#X connect 28 0 17 0;
+#X connect 29 0 7 0;
+#X connect 32 0 17 0;
+#X connect 33 0 17 0;
+#X connect 38 0 17 0;
+#X connect 39 0 38 0;

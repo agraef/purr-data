@@ -1,0 +1,24 @@
+#N canvas 525 364 717 422 10;
+#X obj 172 83 *~ 0.2;
+#X obj 172 46 osc~ 60;
+#X obj 202 127 fx.punch~;
+#X text 169 9 Description: Boost the input signal to it's maximum amplitude
+while never clipping.;
+#X obj 201 211 anal.scope_~ 1;
+#X obj 35 212 anal.scope_~ 1;
+#X obj 232 46 osc~ 120;
+#X obj 232 83 *~ 0.05;
+#X obj 544 210 anal.scope_~ 1;
+#X obj 378 211 anal.scope_~ 1;
+#X floatatom 297 104 5 0 0 0 - - -;
+#X obj 297 82 init.lf 10;
+#X connect 0 0 2 0;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 4 0;
+#X connect 2 1 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 2 1;
+#X connect 7 0 9 0;
+#X connect 10 0 2 2;
+#X connect 11 0 10 0;

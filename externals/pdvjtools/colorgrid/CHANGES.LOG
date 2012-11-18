@@ -1,0 +1,13 @@
+0.5
+  GOP working
+
+0.4
+  Added the colorpicker image inside the C code, so, there will not be  more path problems. 
+  Now colorgrid has one new requeriment :: libtk-img 
+
+0.2
+  Better algorithm for extract RGB values
+  new spectrum image 
+
+0.1
+  First version for pd 0.37

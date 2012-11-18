@@ -1,0 +1,8 @@
+#N canvas 871 385 105 115 10;
+#X obj 17 57 timer;
+#X obj 17 14 inlet;
+#X obj 53 14 inlet;
+#X obj 17 83 outlet;
+#X connect 0 0 3 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;

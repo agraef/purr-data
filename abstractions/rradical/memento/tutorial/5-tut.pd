@@ -1,0 +1,51 @@
+#N canvas 318 284 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Commun_and_Originator 20 12 1
+14 -262144 -66577 0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X floatatom 166 253 5 0 0 0 - - -;
+#X obj 98 334 commun aRadio \$0;
+#X obj 97 282 commun aFloat \$0;
+#X obj 167 310 hradio 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1
+-1 4;
+#X obj 87 421 s \$0-something-in;
+#X obj 87 376 r \$0-something-out;
+#X obj 223 422 s \$0-something-out;
+#X obj 223 375 r \$0-something-in;
+#X obj 226 400 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 3900 1;
+#X msg 378 10 6;
+#X obj 87 397 commun aThing \$0;
+#X obj 152 202 originator myState \$0;
+#X msg 152 177 set;
+#X msg 189 177 substate \$1;
+#X obj 159 126 tgl 24 0 empty empty Toggles_Between_2_Substates 0 -6
+0 10 -225280 -1 -1 0 1;
+#X obj 159 153 t b f;
+#X text 67 451 Now play with these settings and try to switch between
+substates as well.;
+#X text 66 224 And lets manage some things with commun objects. Note
+the \$0.;
+#X symbolatom 359 267 10 0 0 2 type_something_here - -;
+#X obj 323 289 commun aSymbol \$0;
+#X obj 323 313 symbol;
+#X text 284 334 Symbols need another 'symbol' object!;
+#X text 51 77 Now lets see \, how originator and commun work together.
+First create the originator and add some messages to it:;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 3 0;
+#X connect 6 0 4 0;
+#X connect 8 0 13 0;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 12 0 1 0;
+#X connect 13 0 7 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 15 0;
+#X connect 18 1 16 0;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X connect 23 0 21 0;

@@ -1,0 +1,63 @@
+ fluid~ - soundfont external for Pd and Max/MSP
+ orchestra in a box  by fbar@footils.org 
+
+I'm pleased to announce a cross platform external called "fluid~" that provides
+soundfont synthesis using the advanced fluidsynth library.
+
+This is a source-code only release for most systems except Pd on Linux, because
+I only have access to a Linux system with developer tools, no Mac, no Windows.
+
+_ ___ what's it?__
+
+fluid~ is an external build around the free fluidsynth soundfont synthesizer
+available on www.fluidsynth.org Soundfonts collect digitally sampled
+instruments. fluid~ converts Pd or (x)Max to a fullblown orchestra with just a
+single external.
+
+To build binaries of fluid, the cross platform external wrapper flext is needed
+as well. flext is freely (GPL) available at
+www.parasitaere-kapazitaeten.net/Pd/ext or in the pure-data.cvs
+
+Currently fluid~ is in an early test stage, but in its prior incarnation under
+the name "iiwu~" it has proven to be stable for several months.
+
+As I only have and use Pd on Linux, I'd be really thankful, if some smart
+Max-developer would give me a hand (a big hand, actually) in providing (x)Max
+versions of fluid~, and the same goes for a Windows version of fluid~ for Pd.
+
+_ ___getting it __
+
+Source of this external is available at the Pure Data CVS, currently residing
+at pure-data.sf.net
+
+Instructions for checking out the source are available on this site, as well.
+In short checking out fluid goes like this:
+
+$ cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/pure-data login 
+[no password]
+
+$ cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/pure-data co externals/footils/fluid
+
+_ ___building it __
+
+fluid~ should be compiled using the flext-build system. See the flext
+documentation for details. Basically you need to run the flext build script
+with your architecture as arguments. So if for example you built flext for Pd
+on Linux using the gcc compile, you need to call: 
+
+$ sh FLEXTPATH/build.sh pd gcc
+
+from inside the fluid-directors (this one here).
+
+_ __troubleshooting __
+
+If you encounter Pd crashes when using fluid~ then the reason might be a bug in
+libfluidsynth's LADSPA code. Try to get or build a version of libfluidsynth
+that does not have LADSPA enabled (--enable-ladspa=no). This does not seem to
+be a bug in fluid~ but one in libfluidsynth.
+
+_ __the thankyous __
+
+Credits, thanks and props go out to Peter Hanappe, the primary author of fluid,
+and to Larry Troxler, author of the older iiwu~ external, on which much of this
+is based, and of course to the "flext-ernal master" Thomas Grill. 

@@ -1,0 +1,18 @@
+#N canvas 371 159 843 511 10;
+#X obj 49 144 phasor~ 0.3;
+#X obj 49 225 flow.wrap~;
+#X text 133 225 Wraps between 0 and 1 by default;
+#X obj 50 288 anal.sig_~;
+#X obj 400 138 phasor~ 0.3;
+#X obj 401 282 anal.sig_~;
+#X obj 399 169 *~ 6;
+#X obj 442 193 anal.sig_~;
+#X text 509 220 This instance wraps the input between 0 and 3;
+#X obj 400 219 flow.wrap~ 0 3;
+#X text 28 13 Description: wraps a signal around a range;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 4 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 0 9 0;
+#X connect 9 0 5 0;

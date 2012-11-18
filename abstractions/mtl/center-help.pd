@@ -1,0 +1,13 @@
+#N canvas 316 339 409 209 10;
+#X floatatom 127 109 5 0 0 0 - - -;
+#X floatatom 127 160 5 0 0 0 - - -;
+#X text 25 9 Description: returns the center value between the minimum
+and maximum received values.;
+#X msg 184 114 bang;
+#X text 125 88 Inlet_1 : stream of floats.;
+#X text 217 113 Inlet_2 : reset;
+#X obj 127 137 mtl/center;
+#X text 27 44 tags: math;
+#X connect 0 0 6 0;
+#X connect 3 0 6 1;
+#X connect 6 0 1 0;

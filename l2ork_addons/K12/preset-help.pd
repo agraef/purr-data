@@ -1,0 +1,34 @@
+#N canvas 304 103 501 448 10;
+#X obj 26 53 cnv 15 483 225 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 138 -34 preset_hub k12 %hidden% %node% 2 5 9 %node% 2 7 8 %preset%
+1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 9 7;
+#X text 16 -35 comment;
+#X obj 17 -8 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 17 -36 cnv 15 501 28 empty empty Preset 5 14 0 20 -139274 -262144
+0;
+#X obj 487 -4 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 31 57 K12/preset;
+#X text 140 56 The preset object allows you save all the specific settings
+of your objects and recall them later. For example you can save the
+number in a number box. You store the values by clicking one of the
+store boxes. Recall your preset by clicking the corresponding recall
+box.;
+#X obj 31 297 K12/math_number;
+#X text 139 132 In this example \, we have stored four presets that
+have different numbers in this Math Number object. Click on recall
+in the Preset object and notice that the number changes. Then \, change
+the number in the number box and click on one of the store boxes. When
+you click on the recall box for that store \, you will see that it
+recalls the number you set.;
+#N canvas 127 194 450 300 META 0;
+#X text 13 77 INLET_1 Values 0-3 will store presets 0-3;
+#X text 14 56 INLET_0 Values 0-3 will recall presets 0-3;
+#X text 13 6 DESCRIPTION Use this to save different presets in your
+program. Click on a store box to store a preset in that slot \, and
+click on a recall box to recall that preset;
+#X restore 459 383 pd META;
+#X text 143 230 Preset's left inlet allows recalling of preset using
+numbers 0 to 3 \, while right inlet allows for storing of presets also
+using numbers 0 to 3;

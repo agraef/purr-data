@@ -1,0 +1,398 @@
+# http://whats-your.name/pd
+
+foreach pkg {Img snack tkdnd tkpath} {
+    if {[catch {package require $pkg}]} {set has_$pkg 0} {set has_$pkg 1}}
+
+source pre8.5.tcl
+
+namespace eval ::pd {
+    source pd_objects.tk
+
+    foreach type [dict keys $obj] {
+	if {[dict exists $obj $type methods]} {
+	    eval [dict get $obj $type methods]}}
+
+    proc rc {} {return [format "\#%06x" [expr "int(floor(rand() * 16777216.))"]]}
+    proc rgb {} {return [list [expr "int(floor(rand() * 256))"]  [expr "int(floor(rand() * 256))"]  [expr "int(floor(rand() * 256))"]]}
+    proc lighten {rgb r} {set l {}; foreach c $rgb {lappend l [expr {(256 - $c) * $r + $c}]}; return $l}
+    proc darken {rgb r} {set l {}; foreach c $rgb {lappend l [expr {$c - ($c * $r)}]}; return $l}
+    proc color {rgb} {return [format "\#%02x%02x%02x" [expr int([lindex $rgb 0])] [expr int([lindex $rgb 1])] [expr int([lindex $rgb 2])]]}
+    proc hsvToRgb {hue sat value} {
+        set v [format %.0f [expr {255.0*$value}]]
+        if {$sat == 0} {return "$v $v $v"} else {
+            set hue [expr {$hue*6.0}]
+            if {$hue >= 6.0} {set hue 0.0}
+            scan $hue. %d i
+            set f [expr {$hue-$i}]
+            set p [format %.0f [expr {255.0*$value*(1 - $sat)}]]
+            set q [format %.0f [expr {255.0*$value*(1 - ($sat*$f))}]]
+            set t [format %.0f [expr {255.0*$value*(1 - ($sat*(1 - $f)))}]]
+            switch $i {
+                0 {return "$v $t $p"}
+                1 {return "$q $v $p"}
+                2 {return "$p $v $t"}
+                3 {return "$p $q $v"}
+                4 {return "$t $p $v"}
+                5 {return "$v $p $q"}
+                default {error "i value $i is out of range"}}}}
+    proc random_txt {n} {
+        set i 0
+        set text ""
+        while {$i < $n} {
+            set int [expr "int(floor(rand()*62))"]
+            if {$int < 10} {incr int 48} elseif {$int < 36} {incr int 55} else {incr int 61}
+            set text "$text[format %c $int]"
+            incr i}
+	return $text}
+    option add *borderWidth 0
+    option add *font {{bitstream vera sans} 10}
+
+    proc item_new {_ a} {
+	variable ""
+	variable obj
+	foreach local [dict keys $a] {set $local [dict get $a $local]}
+	if {[dict exists $obj $type attributes]} {set da [dict get $obj $type attributes]} {set da {}}
+    	if {$id eq "-"} {
+	    if {[dict keys $($_)] eq ""} {set id 0} else {set id -1
+		while true {if {[lsearch [dict keys $($_)] [incr id]] == -1} {break}}}}
+
+	if {![info exists x]} {set x 13; set y 31}
+	if {[dict exists $da x]} {set sx [dict get $da x]} {set sx 0}
+	if {[dict exists $da y]} {set sy [dict get $da y]} {set sy 0}
+
+    	update $_ $id abs [dict merge [dict merge [dict merge {class item ins 0 outs 0 color {128 128 128}} $da] [dict remove $a id]] [dict create x $x xx [expr $x + $sx] y $y yy [expr $y + $sy]]] 0
+	item_draw $_ $id
+	return $id}
+
+    proc item_draw {_ is} {
+	variable ""
+	variable obj
+	if {$is eq "all"} {set is [dict keys $($_)]}
+	foreach id $is {
+	    set type [dict get $($_) $id type]
+	    if {[dict exists $obj $type init]} {
+		foreach local [dict keys [dict get $($_) $id]] {
+		    set $local [dict get $($_) $id $local]}
+		set tags [list $class i$id $id]
+		set rgb $color; set color [color $rgb]
+		eval [dict get $obj $type init]
+		if {$class eq "item" && ($ins > 0 || $outs > 0)} {
+		    eval [dict get $obj io init]
+		}
+	    }
+	    redraw $_ $id
+	}
+    }
+
+    proc redraw {_ items} {
+	variable ""
+	variable obj
+	switch $items {
+	    all {set items [dict keys $($_)]}
+	    default {}}
+	foreach id $items {
+	    foreach local [dict keys [dict get $($_) $id]] {
+		set $local [dict get $($_) $id $local]}
+	    set x [tr $_ x t $x];set y [tr $_ y t $y];set xx [tr $_ x t $xx];set yy [tr $_ y t $yy]
+	    if {[expr $x > $xx]} {lassign "$x $xx" xx x}
+	    if {[expr $y > $yy]} {lassign "$y $yy" yy y}
+	    set sx [expr $xx - $x]; set sy [expr $yy - $y]
+	    if {[lsearch [getsel $_] $id] >= 0} {set rgb {233 233 233};set color [set [l $_ canvas sc]];set selected 1} else {
+		set rgb [dict get $($_) $id color];set color [color $rgb];set selected 0}
+	    set atags [concat $class i$id $id]
+	    set tags [concat $class && i$id && $id]
+	    set item [$_ find withtag $tags]
+	    if {[dict exists $obj $type tags]} {
+		foreach tag [dict get $obj $type tags] {
+		    set $tag [$_ find withtag "$tags && $tag"]}}
+	    if {[dict exists $obj $type redraw]} {
+		eval [dict get $obj $type redraw]}
+	     if {$class eq "item" && ($ins > 0 || $outs > 0)} {
+ 		eval [dict get $obj io redraw]
+ 		foreach i [dict keys $($_)] {
+ 		    if {[dict get $($_) $i class] eq "cable"} {
+ 			if {[lindex [dict get $($_) $i from] 0] eq $id || [lindex [dict get $($_) $i to] 0] eq $id} {
+ 			    redraw $_ $i
+ 			}
+ 		    }
+ 		}
+ 	    }
+	}
+    }
+
+    proc item_delete {_ {items ""}} {
+	variable ""
+	variable obj
+	if {$items eq ""} {set items [getsel $_]}
+	foreach id $items {
+	    foreach i [$_ find withtag i$id] {
+		$_ delete $i
+	    }
+	    set type [dict get $($_) $id type]
+	    if {[dict exists $obj $type destroy]} {
+		eval [dict get $obj $type destroy]}
+	    dict unset ($_) $id
+	    set sel [lremove [dict get $($_) canvas sel] $id]; up $_ canvas sel
+	    send "delete $_:$id"
+	}
+    }
+    
+    proc update {_ item r u redraw} {
+	variable ""
+	foreach a [dict keys $u] {
+	    switch $r {
+		abs {dict set ($_) $item $a [dict get $u $a]}
+		rel {dict set ($_) $item $a [expr {[dict get $($_) $item $a] + [dict get $u $a]}]}
+	    }
+#	    send [concat update $_:$item $a [dict get $($_) $item $a]]
+	}
+	send [concat update $_:$item $u]
+	if {$redraw == 1} {redraw $_ $item}
+    }
+
+    proc up {_ id args} {
+	variable ""
+	foreach arg $args {
+	    upvar $arg var
+	    dict set ($_) $id $arg $var
+	    send [concat update $_:$id $arg $var]
+	}
+    }
+
+    proc item_mua {_ r u redraw {items -}} {
+	variable ""
+	if {$items eq "-"} {set items [getsel $_]}
+	foreach item $items {update $_ $item $r $u $redraw}
+    }
+
+    proc l {_ id args} {
+	variable ""
+	foreach arg $args {
+	    upvar $arg var
+	    set var [dict get $($_) $id $arg]
+	}
+	return $args
+    }
+
+    proc msg {} {
+	if {![winfo exists .msg]} {
+	    toplevel .msg
+	    grid [entry .msg.text]
+	    bind .msg.text <KeyPress-Return> {::pd::send [.msg.text get]}}}
+
+    proc inspector {_} {
+	variable ""
+	set p .ic
+	if {![winfo exists $p]} {
+	    toplevel $p
+	    if {[info exists ($_:inspect)]} {unset ($_:inspect)}}}
+
+    proc inspect {_ id} {
+	set p .ic
+	if {![winfo exists $p]} {return}
+	variable ""
+	if {![dict exists $($_) $id]} {return}
+	set keys [dict keys [dict get $($_) $id]]
+	if {![info exists ($_:inspect)] || ($($_:inspect:type) ne [dict get $($_) $id type])} {
+	    foreach c [winfo children $p] {destroy $c}
+	    set n 0
+	    foreach k [concat id $keys] {
+	        entry $p.$k -width 8 -bd 0 -font {{Bitstream Vera Sans} 11}
+		$p.$k insert 0 $k
+		$p.$k configure -state disabled
+		entry $p.${k}v -width 16 -bd 0 -bg gray94 -font  {{Bitstream Vera Sans} 10}
+		if {$n == 0} {set cmd "::pd::inspect $_ \[$p.${k}v get\]";set cmdT $cmd} {
+		    set cmd "::pd::item_mua $_ abs \[dict create $k \[$p.${k}v get\] \] 1 \[$p.idv get\]"
+		    set cmdT "::pd::item_mua $_ abs \[dict create $k \[$p.${k}v get\] \] 1"}
+		bind $p.${k}v <Any-KeyRelease> $cmd
+		bind $p.${k}v <Tab> $cmdT
+ 		grid $p.$k $p.${k}v -sticky nsew
+ 		grid columnconfigure $p 1 -weight 3
+ 		grid columnconfigure $p 0 -weight 1
+ 		grid rowconfigure $p $n -weight 1
+		incr n
+	    }
+	    set ($_:inspect:type) [dict get $($_) $id type]
+	}
+	set ($_:inspect) $id
+	$p.idv delete 0 end
+	$p.idv insert 0 $id
+	foreach k $keys {
+	    $p.${k}v delete 0 end
+	    $p.${k}v insert 0 [dict get $($_) $id $k]}}
+
+
+    
+    proc rmenu {_ x y X Y} {
+	variable ""
+	variable obj
+        destroy $_.rmenu
+	if {[winfo exists $_.rmenu] != 1} {
+	    set m [menu $_.rmenu -tearoff yes]
+
+
+	    $m add cascade -label "edit" -menu [set me [menu $m.edit -tearoff no]]
+	    foreach a {copy cut paste selecta} {
+		$me add command -label $a -command "::pd::clip $_ $a"}
+
+	    $m add cascade -label "object" -menu [set mo [menu $m.object -tearoff no]]
+	    foreach type [dict keys $obj] {
+		$mo add command -label $type -command "::pd::item_new $_ \{id - type $type x [tr $_ x i $x] y [tr $_ y i $y]\}"}
+
+	    $m add cascade -label "view" -menu [set mv [menu $m.view -tearoff no]]
+	    $mv add command -label "zoom to fit" -command "::pd::viewpoint $_ {action fit}"
+	    $mv add command -label "flip x" -command "::pd::viewpoint $_ {action mirror_x}"
+	    $mv add command -label "flip y" -command "::pd::viewpoint $_ {action mirror_y}"
+	    $mv add command -label "reset" -command "::pd::viewpoint $_ {action reset}"
+
+	    $m add command -label reload -command {source pd_base.tk}
+	    $m add command -label "console" -command {source /usr/local/bin/tkcon.tcl; tkcon show}
+	    $m add command -label "inspector" -command "::pd::inspector $_"
+	    $m add command -label "msg" -command "::pd::msg"
+	} else {
+	    #	    $_.rmenu entryconfigure 0 -label $x
+	}
+
+	tk_popup $_.rmenu $X $Y
+    }
+
+    proc tr {_ d inv v} {
+	variable ""
+	array set dm {x width y height}
+	l $_ canvas xa xb ya yb
+	switch $inv {
+	    t {return [expr ($v - $${d}a) / ($${d}b - $${d}a + 0.0) * [winfo $dm($d) $_]]}
+	    i {return [expr ($${d}b - $${d}a) * $v /([winfo $dm($d) $_] + 0.0) + $${d}a]}
+	    d {return [expr ($${d}b - $${d}a) * $v /([winfo $dm($d) $_] + 0.0)]}
+	    id {return [expr $v / ($${d}b - $${d}a + 0.0) * [winfo $dm($d) $_]]}}}
+
+    proc viewpoint {_ opts} {
+	variable ""
+	l $_ canvas xa xb ya yb xao yao xbo ybo
+	switch [dict get $opts action] {
+	    fit {
+		lassign [$_ bbox item] xa ya xb yb
+		foreach z {xa xb ya yb} {set $z [tr $_ [string range $z 0 0] i [set $z]]}
+	    }
+	    mirror_x {
+		lassign "$xb $xa" xa xb
+	    }
+	    mirror_y {
+		lassign "$yb $ya" ya yb
+	    }
+	    reset {
+		lassign "$xao $xbo $yao $ybo" xa xb ya yb
+	    }
+	    square {
+		
+	    }
+	    move {
+		foreach xy {x y} {
+		    set mvt [tr $_ $xy d [expr {[dict get $opts $xy] - $($_:c$xy)}]]
+		    foreach ab {a b} {set ${xy}$ab [expr $${xy}$ab - $mvt]}}
+	    }
+	    zoom {
+		array set dir {in 0.5 out 1.5}
+		foreach xy [dict get $opts axe] {
+		    set radius  [expr ($${xy}b - $${xy}a) / 2. * $dir([dict get $opts dir])]
+		    set center [tr $_ $xy i [dict get $opts $xy]]
+		    set ${xy}a [expr {$center - $radius}]
+		    set ${xy}b [expr {$center + $radius}]
+		}
+	    }
+	    resize {
+		foreach xy {x y} {
+		    set mvt [tr $_ $xy d [expr {[dict get $opts $xy] - $($_:c$xy)}]]
+		    set ${xy}a [expr $${xy}a - $mvt]
+		    set ${xy}b [expr $${xy}b + $mvt]}
+	    }
+	    scroll {
+		set xy [dict get $opts axis]
+		set mv [expr ($${xy}b - $${xy}a) / 4.0]
+		foreach ab {a b} {set ${xy}$ab [expr [dict get $opts units] > 0 ? $${xy}$ab + $mv : $${xy}$ab - $mv ]}
+	    }
+	}
+	up $_ canvas xa xb ya yb
+	redraw $_ all
+    }
+
+    proc clip {_ action} {
+	variable ""
+	switch $action {
+	    selecta {
+		set items {}
+		foreach i [dict keys $($_)] {if {[dict get $($_) $i class] eq "item"} {lappend items $i}}
+		updatesel $_ $items
+ 	    }
+	    cut {
+		set ($_:c) [dict create]
+		set i 0
+		foreach item [getsel $_] {
+		    dict set ($_:c) $i [dict get $($_) $item]
+		    incr i
+		}
+		item_delete $_
+	    }
+	    copy {
+		set ($_:c) [dict create]
+		set i 0
+		foreach item [getsel $_] {
+		    dict set ($_:c) $i [dict get $($_) $item]
+		    incr i
+		}
+	    }
+	    paste {
+		set pasted {}
+		foreach item [dict keys $($_:c)] {
+		    item_new $_ [dict merge [dict get $($_:c) $item] {id -}]
+		}
+	    }
+	}
+    }
+    
+    proc new {_} {
+	variable ""
+ 	variable obj
+	if {[info exists ($_)] != 1} {set ($_) {}}
+	if {[winfo exists $_] != 1} {
+	    item_new $_ [dict create type canvas id canvas]
+	    item_new $_ [dict create type gridlines id grid]
+	}
+    }
+
+    variable pd_send
+    set pd_send -1
+    proc connect {} {
+	if {[catch {set pd_send [socket localhost 13665]}]} {set pd_send -1} {puts "connected $pd_send"}
+	catch {set pd_receive [socket -server ::pd::receive_conn 13666]}
+	exec pd -guiport 13666 &
+    }
+    proc receive_conn {s addr port} {
+	fileevent $s readable [list ::pd::receive $s]
+	fconfigure $s -buffering line -blocking 0
+	puts "connection from $addr"
+    }
+    proc receive {s} {
+	set l [gets $s]
+	if {[eof $s]} {
+	    close $s
+	} else {
+	    if {[catch {eval $l}]} {puts "error in: $l"}
+	}
+    }
+    proc send {msg} {
+#	puts [concat s: $msg]
+ 	variable pd_send
+ 	if {$pd_send ne -1} {
+ 	    puts $pd_send [concat $msg \;]
+ 	    flush $pd_send
+ 	}
+    }
+
+    if {![winfo exists .c]} {
+	toplevel .c -width 512 -height 512
+	new .c.c
+#	connect
+    }
+
+}

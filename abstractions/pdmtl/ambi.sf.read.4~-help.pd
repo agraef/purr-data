@@ -1,0 +1,75 @@
+#N canvas 113 221 678 571 10;
+#X msg 51 85 openpanel;
+#X text 33 424 You can find sample Ambisonic B-format sound files on
+http://ambisonia.com;
+#X msg 194 161 loop \$1;
+#X obj 194 142 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 193 111 play;
+#X msg 232 111 stop;
+#X msg 279 114 autostart \$1;
+#X obj 279 95 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 294 359 12 0 0 0 - - -;
+#X obj 440 416 hsl 127 8 0 1 0 0 empty empty empty -2 -8 0 10 -191407
+-1 -1 0 1;
+#X obj 539 355 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 482 385 12 0 0 0 - - -;
+#X obj 293 382 / 1000;
+#X floatatom 292 405 12 0 0 0 - - -;
+#X text 375 359 ms;
+#X text 372 407 seconds;
+#X obj 437 319 route duration elapsed done;
+#X obj 437 390 /;
+#X text 30 455 Important: The sampling rate of the file and the sampling
+rate of Pd must be the same if you want the sound to be played at correct
+speed and pitch.;
+#X text 42 522 See also :;
+#X obj 117 527 readsf~;
+#X obj 175 527 ambi.table.4 \$0-dummy;
+#X obj 316 524 ambi.table.play.3~ \$0-dummy;
+#X msg 169 69 open medias/sounds/ambisonic00.wav;
+#X obj 169 49 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113 -1
+-1;
+#X obj 39 191 ambi.sf.read.4~ @autostart 1 @loop 0;
+#X text 47 12 Description: Reads a 4-channels first order Ambisonic
+B-format wav sound file.;
+#X text 191 47 This example file has a sampling rate of 44.1 kHz;
+#X obj 25 264 ambi.wxy2quad~;
+#X obj 18 288 ambi.gain.4~ @gain -6;
+#X obj 30 343 dac~ 1 2 3 4;
+#X obj 177 270 vsl 30 60 -100 0 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X floatatom 180 351 5 0 0 0 - - -;
+#X connect 0 0 25 0;
+#X connect 2 0 25 0;
+#X connect 3 0 2 0;
+#X connect 4 0 25 0;
+#X connect 5 0 25 0;
+#X connect 6 0 25 0;
+#X connect 7 0 6 0;
+#X connect 8 0 12 0;
+#X connect 12 0 13 0;
+#X connect 16 0 8 0;
+#X connect 16 0 17 1;
+#X connect 16 1 11 0;
+#X connect 16 1 17 0;
+#X connect 16 2 10 0;
+#X connect 17 0 9 0;
+#X connect 23 0 25 0;
+#X connect 24 0 23 0;
+#X connect 25 0 28 0;
+#X connect 25 1 28 1;
+#X connect 25 2 28 2;
+#X connect 25 4 16 0;
+#X connect 28 0 29 0;
+#X connect 28 1 29 1;
+#X connect 28 2 29 2;
+#X connect 28 3 29 3;
+#X connect 29 0 30 0;
+#X connect 29 1 30 1;
+#X connect 29 2 30 2;
+#X connect 29 3 30 3;
+#X connect 31 0 29 4;
+#X connect 31 0 32 0;

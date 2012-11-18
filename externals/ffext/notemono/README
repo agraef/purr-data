@@ -1,0 +1,5 @@
+this external is for tracking highest/lowest note
+pressed on a midi keyboard, so you can achieve
+monophonic midi input, in order to control monophonic
+synth/oscillators
+

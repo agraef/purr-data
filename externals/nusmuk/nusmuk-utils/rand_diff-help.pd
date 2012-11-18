@@ -1,0 +1,18 @@
+#N canvas 93 73 450 300 10;
+#X msg 53 132 bang;
+#X floatatom 53 232 0 0 0 0 - - -;
+#X msg 63 156 seed 123;
+#X text 105 130 bang for output;
+#X text 145 156 message to set the seed;
+#X floatatom 134 183 0 0 0 0 - - -;
+#X text 164 183 inlet to reset the range;
+#X text 144 206 argument to initialize the range;
+#X text 125 77 \$1 : range;
+#X obj 53 206 rand_diff 10;
+#X text 45 31 rand-diff - random number with very few redondancy from
+precedent output;
+#X text 45 60 output are mostly growing;
+#X connect 0 0 9 0;
+#X connect 2 0 9 0;
+#X connect 5 0 9 1;
+#X connect 9 0 1 0;

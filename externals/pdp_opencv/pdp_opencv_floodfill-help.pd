@@ -1,0 +1,122 @@
+#N canvas 405 196 826 623 10;
+#X text -158 -39 used in tracking algorithms as an object selector
+;
+#X text -159 -62 pdp_opencv_floodfill : mark image components with
+a specific color;
+#X obj -166 18 cnv 15 621 250 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 74 58 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 74 85 metro 40;
+#X msg 164 112 close;
+#X obj 94 183 pdp_v4l;
+#X msg 151 80 open /dev/video0;
+#X obj 275 60 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 275 87 metro 40;
+#X msg 356 106 close;
+#X msg 352 82 open /dev/video0;
+#X obj 295 185 pdp_v4l2;
+#X msg 361 161 format \$1;
+#X obj 362 139 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj -136 233 pdp_qt;
+#X obj -103 169 metro 40;
+#X msg -103 141 bang;
+#X msg -62 141 stop;
+#X obj -136 72 openpanel;
+#X msg -136 97 open \$1;
+#X msg -136 44 bang;
+#X msg -102 196 loop \$1;
+#X obj -22 196 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj -22 114 loadbang;
+#X text -93 47 playing a video file;
+#X text 104 56 Camera input;
+#X obj -166 278 cnv 15 621 350 empty empty empty 20 12 0 14 -258113
+-66577 0;
+#X obj -86 641 pdp_xv;
+#X floatatom 88 464 5 0 0 0 - - -;
+#X floatatom 95 484 5 0 0 0 - - -;
+#X msg 31 294 mark \$1 \$2;
+#X obj -86 668 route press;
+#X msg 78 443 color \$1;
+#X obj 140 444 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 166 442 activate color mode ( default : on );
+#X msg -36 640 cursor 1;
+#X msg 67 368 fillcolor 1 255 0 123;
+#X text 205 369 fillcolor of nth component ( 1 < n < 10 );
+#X text 36 640 <-- click in the video window on the shape/component
+you want to mark;
+#X text 106 280 mark %x %y : mark a component;
+#X text 106 292 ( 0 <= %x <= 1 );
+#X text 107 303 ( 0 <= %y <= 1 );
+#X obj 39 531 route 0 1 2 3 4 5 6 7 8 9;
+#X floatatom 40 576 5 0 0 0 - - -;
+#X floatatom 76 577 5 0 0 0 - - -;
+#X floatatom 112 577 5 0 0 0 - - -;
+#X floatatom 148 577 5 0 0 0 - - -;
+#X obj 40 554 unpack f f f f;
+#X text 42 593 X;
+#X text 79 593 Y;
+#X text 111 594 Width;
+#X text 149 594 Height;
+#X msg 46 322 delete 1;
+#X msg 60 344 clear;
+#X text 106 322 delete a component ( 1 <= index <= 10 );
+#X text 109 344 delete all components;
+#X text 198 532 detected components;
+#X text 168 405 set connectivity ( default 4 );
+#X text 129 463 lower tolerance ( default 20 );
+#X text 135 483 upper tolerance ( default 20 );
+#X text -158 -26 Written by Lluis Gomez i Bigorda ( lluisgomez@hangar.org
+);
+#X obj -78 500 pdp_opencv_floodfill;
+#X msg 74 394 connectivity 4;
+#X msg 76 418 connectivity 8;
+#X text -158 -12 and Yves Degoyon ( ydegoyon@gmail.com );
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 62 0;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 10 0 12 0;
+#X connect 11 0 12 0;
+#X connect 12 0 62 0;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 62 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 20 0;
+#X connect 20 0 15 0;
+#X connect 21 0 19 0;
+#X connect 22 0 15 0;
+#X connect 23 0 22 0;
+#X connect 24 0 23 0;
+#X connect 24 0 17 0;
+#X connect 28 0 32 0;
+#X connect 29 0 62 1;
+#X connect 30 0 62 2;
+#X connect 31 0 62 0;
+#X connect 32 0 31 0;
+#X connect 33 0 62 0;
+#X connect 34 0 33 0;
+#X connect 36 0 28 0;
+#X connect 37 0 62 0;
+#X connect 43 0 48 0;
+#X connect 48 0 44 0;
+#X connect 48 1 45 0;
+#X connect 48 2 46 0;
+#X connect 48 3 47 0;
+#X connect 53 0 62 0;
+#X connect 54 0 62 0;
+#X connect 62 0 28 0;
+#X connect 62 0 36 0;
+#X connect 62 1 43 0;
+#X connect 63 0 62 0;
+#X connect 64 0 62 0;

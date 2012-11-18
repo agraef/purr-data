@@ -1,0 +1,41 @@
+#N canvas 347 241 611 495 10;
+#X obj 9 7 cnv 15 100 20 empty empty Using_OSC 20 12 1 14 -262144 -66577
+0;
+#X obj 378 34 s part;
+#X text 406 8 click here \, to go on;
+#X obj 59 298 OSCAbstraction /OSCState;
+#X msg 378 10 11;
+#X obj 59 249 pack s s;
+#X obj 249 245 pack s 0;
+#X obj 418 244 pack s 0;
+#X symbolatom 59 167 10 0 0 0 - - -;
+#X obj 59 189 t b s;
+#X obj 59 215 symbol /OSCState/aSymbol;
+#X floatatom 249 167 5 0 0 0 - - -;
+#X obj 418 171 hradio 15 1 0 8 empty empty aRadio 0 -6 0 8 -262144
+-1 -1 3;
+#X obj 418 218 symbol /OSCState/aRadio;
+#X obj 249 217 symbol /OSCState/aFloat;
+#X obj 249 191 t b f;
+#X obj 418 194 t b f;
+#X text 55 76 Here's an example \, how you could create the needed
+OSC-messages by hand: OSC-Selectors are like a filesystem path \, where
+/ is the directory divider. First comes the name of the state \, after
+that the thing to set and as second part of the list you give the value
+to set.;
+#X connect 4 0 1 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 1 5 1;
+#X connect 10 0 5 0;
+#X connect 11 0 15 0;
+#X connect 12 0 16 0;
+#X connect 13 0 7 0;
+#X connect 14 0 6 0;
+#X connect 15 0 14 0;
+#X connect 15 1 6 1;
+#X connect 16 0 13 0;
+#X connect 16 1 7 1;

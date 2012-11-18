@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/pure-data/!svn/ver/13194/trunk/doc/tutorials/visual
+END
+ch_gemwin.pd
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/pure-data/!svn/ver/4993/trunk/doc/tutorials/visual/ch_gemwin.pd
+END
+15.pixel_processing.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/15.pixel_processing.pd
+END
+05.basic_2d_objects.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/05.basic_2d_objects.pd
+END
+10.Exercise-make_your_object.pd
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/10.Exercise-make_your_object.pd
+END
+07.basic_3d_objects.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/07.basic_3d_objects.pd
+END
+01.gemwin.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/01.gemwin.pd
+END
+03.gemwin_control.pd
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/03.gemwin_control.pd
+END
+02.gemwin_as_reference.pd
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/02.gemwin_as_reference.pd
+END
+14.live_video.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/14.live_video.pd
+END
+08.manipulations.pd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/08.manipulations.pd
+END
+12.texturing.pd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/12.texturing.pd
+END
+TEMPLATE.pd
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/pure-data/!svn/ver/5058/trunk/doc/tutorials/visual/TEMPLATE.pd
+END
+gemwin_control-help.pd
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/gemwin_control-help.pd
+END
+09.gem_units.pd
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/09.gem_units.pd
+END
+13.movies.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/13.movies.pd
+END
+11.images.pd
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/11.images.pd
+END
+10.exercise.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/10.exercise.pd
+END
+04.render_chains.pd
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/04.render_chains.pd
+END
+gemwin_control.pd
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/pure-data/!svn/ver/7612/trunk/doc/tutorials/visual/gemwin_control.pd
+END
+17.tracking.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/13194/trunk/doc/tutorials/visual/17.tracking.pd
+END
+06.lighting.pd
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/06.lighting.pd
+END
+16.Exercise-pix_effects.pd
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/pure-data/!svn/ver/10032/trunk/doc/tutorials/visual/16.Exercise-pix_effects.pd
+END

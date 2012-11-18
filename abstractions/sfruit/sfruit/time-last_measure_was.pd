@@ -1,0 +1,12 @@
+#N canvas 513 202 450 300 10;
+#X obj 129 107 inlet;
+#X obj 102 159 timer;
+#X obj 129 129 t b;
+#X obj 102 193 outlet;
+#X obj 102 75 t b;
+#X obj 102 52 get_delegate time-clock measure;
+#X connect 0 0 2 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 1;
+#X connect 4 0 1 0;
+#X connect 5 0 4 0;

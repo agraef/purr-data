@@ -1,0 +1,32 @@
+#N canvas 523 326 450 300 10;
+#X obj 212 203 rotateXYZ;
+#X obj 212 125 repeat 5;
+#X obj 212 150 translateXYZ -0.35 -0.07 0.01;
+#X obj 283 250 cuboid 6 0.01 0.1;
+#X obj 212 250 cube 1.2;
+#X obj 212 52 inlet;
+#X obj 6 28 nbx 3 14 0 360 0 0 \$0/skitz \$1/skitz skitz 0 -6 0 8 -233017
+-128992 -1 6 256;
+#X obj 6 56 nbx 3 14 0 360 0 0 \$0/phat \$1/phat phat 0 -6 0 8 -233017
+-128992 -1 3.025 256;
+#X obj 359 205 r \$0/phat;
+#X obj 231 173 r \$0/skitz;
+#X obj 397 229 * 0.07;
+#X obj 212 81 scaleXYZ 0.5 0.5 0.5;
+#X obj 45 28 nbx 3 14 0 8 0 0 \$0/num \$1/num num 0 -6 0 8 -233017
+-128992 -1 7 256;
+#X obj 263 104 r \$0/num;
+#X connect 0 0 4 0;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 5 0 11 0;
+#X connect 8 0 3 2;
+#X connect 8 0 10 0;
+#X connect 9 0 0 1;
+#X connect 9 0 0 2;
+#X connect 9 0 0 3;
+#X connect 10 0 3 3;
+#X connect 11 0 1 0;
+#X connect 13 0 1 1;
+#X coords 0 -1 1 1 85 75 1 0 0;

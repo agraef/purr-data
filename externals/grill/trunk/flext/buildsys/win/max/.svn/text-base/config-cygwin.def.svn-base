@@ -1,0 +1,71 @@
+# where is the Max/MSP application?
+MAXAPPPATH=/cygdrive/c/program\ files/MaxMSP\ 4.5
+
+# where are the Max/MSP common files?
+MAXCOMPATH=/cygdrive/c/program\ files/common\ files/Cycling\ \'74
+
+
+# where are the Max/MSP SDK header files?
+# you should have the latest version!
+MAXSDKPATH=$(MAXAPPPATH)/maxmspsdk_win/4.5\ headers/c74support
+
+###############################################################
+
+###############################################################
+
+# where do/should the flext headers reside/be built?
+FLEXTINC=$(MAXCOMPATH)/flext
+
+# where do/should the flext static libraries reside/be built?
+FLEXTLIB=$(FLEXTINC)
+
+# where do/should the flext shared libraries reside/be built?
+# (a good place is the MaxMSP program folder)
+FLEXTSHLIB=$(MAXAPPPATH)
+
+###############################################################
+
+# where should the external be built?
+# (path for temporary files)
+OUTPATH=max-cygwin
+
+# where should the external be installed?
+INSTPATH=$(MAXCOMPATH)/externals/flext
+
+# where should the initialization files be installed?
+INITPATH=$(MAXCOMPATH)/init
+
+# where should the help files be installed?
+HELPPATH=$(MAXAPPPATH)/max-help/flext
+
+###############################################################
+
+# where is the STK installation?
+# (uncomment the line with # to disable STK support)
+# --------------------------------------------------------------------
+# In order to use STK you must have a libstk.a library
+#
+#STK=c:\data\prog\audio\stk
+
+# where is the Sndobjs installation?
+# (uncomment the line with # to disable SNDOBJ support)
+# --------------------------------------------------------------------
+# Please be sure to delete an eventual m_pd.h file from the SNDOBJ include folder!!
+# The shared flext library links to the libsndobj.a file from the SNDOBJ distribution.
+#
+#SNDOBJ=c:\data\prog\audio\sndobj
+
+###############################################################
+
+# make flags (e.g. use multiprocessor)
+#MFLAGS=-j 2
+
+# user defined compiler flags
+# (check if they match your system!)
+UFLAGS=-msse -mfpmath=sse -ffast-math
+
+# user defined optimization flags
+# (check if they match your system!)
+OFLAGS=-O3
+# optimizations for Pentium 4
+OFLAGS+=-march=pentium4 

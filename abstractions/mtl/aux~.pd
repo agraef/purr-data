@@ -1,0 +1,8 @@
+#N canvas 32 152 814 528 10;
+#X obj 147 267 outlet~;
+#X obj 373 268 outlet~;
+#X obj 381 165 tof/common~ MTLAUX\$1R;
+#X obj 210 153 tof/common~ MTLAUX\$1L;
+#X connect 2 0 1 0;
+#X connect 3 0 0 0;
+#X coords 0 0 1 1 133 33 0;

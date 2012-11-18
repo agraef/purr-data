@@ -1,0 +1,47 @@
+#N canvas 1545 120 675 680 10;
+#X obj 22 124 sampler.instrument \$0i;
+#X obj 432 175 sampler.instrument.dump;
+#X obj 432 209 print instrument_dump;
+#X obj 432 77 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 432 104 f \$0;
+#X msg 432 137 \$1i;
+#X text 38 5 Description: A sampler.instrument is used in conjunction
+with a sampler.sample to play back sound samples with various configurations.
+;
+#X text 19 87 Argument_1 (symbol): The instrument's name;
+#X text 228 284 -- KEYS AND VALUES --;
+#X text 133 318 start (0-1): Sets playback start point;
+#X text 133 332 end (0-1): Sets playback end point;
+#X text 134 348 pitch (float): Sets playback speed;
+#X text 135 362 loop (0/1): Toggles loop playback;
+#X text 136 377 sample (symbol): Assigns a sampler.sample to the instrument
+;
+#X text 136 395 vol (envelope): Assigns a volume envelope \, x range=100
+\, y range=1.;
+#X text 138 422 pan (envelope): Assigns a pan envelope \, x range=100
+\, y range=1;
+#X text 139 450 lookup (envelope): Assigns a lookup envelope \, x range=100
+\, y range=1;
+#X obj 226 569 envgen 100 60 1 0  ;
+#X msg 224 543 dump;
+#X obj 326 642 print envelope;
+#X text 236 486 -- ENVELOPES --;
+#X text 138 501 To create envelopes compatible with a sampler.instrument
+\, use the envgen external with the following creation arguments: envgen
+100 60 1 0;
+#X text 40 42 Comments: Play a sampler.instrument with sampler.play~
+;
+#X text 16 228 key(symbol) value(anything): See the possible key and
+value pairs below.;
+#X text 16 201 dump taget(symbol): Dumps an instrument's settings to
+a specified target.;
+#X text 17 183 clear: Resets the instrument to it's default values.
+;
+#X text 17 166 Inlet_1 messages:;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 17 1 19 0;
+#X connect 18 0 17 0;

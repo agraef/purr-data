@@ -1,0 +1,26 @@
+#N canvas 18 81 567 226 10;
+#X obj -15 98 *~ 0.5;
+#X obj 66 98 *~ 0.5;
+#X text -18 19 Description: A distortion using expr~ tanh;
+#X obj -16 165 mtl/out~;
+#X obj -16 74 osc~ 110;
+#X obj 67 73 osc~ 110;
+#X text -17 37 tags: fx~;
+#X obj -15 123 mtl/distoTanh~ /id tanh;
+#X text 132 123 <-Click on the propeties menu to display params;
+#X obj 301 20 cnv 15 200 40 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#X text 361 21 PARAM ENABLED;
+#X obj 302 157 cnv 15 200 20 empty empty /tanh/ 2 12 0 8 -258401 -262144
+0;
+#X obj 302 180 hsl 100 15 0 1 0 0 /tanh/wet /tanh/wet_ wet 105 7 0
+8 -262144 -1 -1 0 1;
+#X obj 302 198 hsl 100 15 1 100 0 0 /tanh/amount /tanh/amount_ amount
+105 7 0 8 -262144 -1 -1 0 1;
+#X obj 301 44 ../doc/5.reference/tof/param-help;
+#X connect 0 0 7 0;
+#X connect 1 0 7 1;
+#X connect 4 0 0 0;
+#X connect 5 0 1 0;
+#X connect 7 0 3 0;
+#X connect 7 1 3 1;

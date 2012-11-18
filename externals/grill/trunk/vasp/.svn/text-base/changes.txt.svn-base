@@ -1,0 +1,152 @@
+Version history:
+
+0.1.4:
+- FIX: resurrect help message-functionality and add some missing help texts
+- FIX: break condition for some loop constructs (thanks to Patrick King)
+- FIX: help file names / object names have been broken by flext changes
+- CHANGE: fixed C++-type headers and changed to some C++ std types and algorithms
+- FIX: vasp.*!wnd was missing (was vasp.!wnd)
+- ADD: vasp-objectmappings file (many thanks to Oliver Stotz)
+- FIX: changes for flext 0.5 (64-bit compatibility)
+
+0.1.3:
+- CHANGE: exchanged #defines for templates in vector calculation loops
+- FIX: bug for binary operations of complex vasps
+- ADD: implemented (factor-4) loop unrolling for vector calculation loops
+- CHANGE: completely restructured vector optimization and introduced multi-dimensional multi-layered functionality
+- ADD: vasp.size variants: attribute "zero" (default: true) - whether new samples shall be zeroed
+- ADD: vasp.sum? to get sum of sample values
+- ADD: all objects: attribute "defer" to queue outgoing vasps  - to avoid stack faults for message loops
+- CHANGE: enable attributes "detach" and "prior" also for non-threaded builds to ensure patch compatibility
+- FIX: vasp.size - flext bug for @keep=1
+- FIX: vasp.imm - bug with memory reservation length
+- ADD: vasp.imm - attribute "zero" (default: true) - whether array should be cleared 
+- FIX: Max/MSP - freeing immediate buffers with overdrive is bogus -> using queued flext timer
+- FIX: Bug in clearing vasp references
+- CHANGE: changed behavior of vasp.spit on uneven vector counts
+		[vasp a b c( -> [vasp.spit 2] now outputs a(outlet 2), b(outlet 1), c(outlet 2), bang(outlet 3)
+- REMOVE: eliminated [vasp.cconj] as an object as it can easily be replaced by an abstraction
+- ADD: vasp.search (vasp.o=, vasp.f=) objects... @incl attribute (default false) to include current sample into search
+- ADD: [vasp.channels?] reports number of channels in the first vasp vector (buffer/array)
+- CHANGE: vasp.min?, vasp.max?, vasp.amin?, vasp.amax?, vasp.rmin?, vasp.rmax? no longer return the reference vasp / return a list of vector maxima/minima
+- CHANGE: inherited several classes from the flext class, so that new and delete use the RT-system functions
+- FIX: fixed memory leaks associated to VBuffer retrieval
+- FIX: fixed bug on vasp.search for vectors with 0 channels
+
+0.1.2:
+- FIX: bug in vasp.frames* ... wrong argument
+- FIX: another bug in resize of immediate buffers
+- CHANGE: immediates will be initialized to zero, also upon resize to a larger size (by default, later make this optional)
+- ADD: attributes for all basic parameters: ref,to,arg, update,detach,prior (loglvl,argchk,unit later)
+- ADD: vasp.channel,vasp.vector - attribute "index"
+- ADD: vasp.frames,vasp.frames+,vasp.offset,vasp.offset+,vasp.size,vasp.size+,vasp.imm - attribute "frames"
+- ADD: vasp.frames*,vasp.frames/,vasp.size*,vasp.size/ - attribute "factor"
+- ADD: vasp.part - attribute "parts"
+- ADD: vasp.peaks? - attribute "peaks"
+- ADD: vasp.shift,vasp.xshift - attribute "fill"
+- ADD: vasp.tilt,vasp.xtilt - attributes "fill","inter"
+- ADD: vasp.offset=,vasp.frames= - attributes "dir","slope"
+- CHANGE: update m_method_ virtual functions of same objects
+- FIX: immediate vasp garbage collection is now done in separate thread
+- ADD: vasp.size... objects: attribute "keep" determines whether buffer content should be preserved (default = 1)
+- CHANGE: buffer reference checks upon all operations enforced (by new CVasp (checked vasp) class)
+- FIX: immediate vasps can not have frames > size
+- FIX: immediate garbage collection was not triggered in threaded build
+- FIX: changed forgotten standard ASSERT to FLEXT_ASSERT (thanks to Frank Barknecht)
+
+0.1.1:
+- FIX: bug in resize of immediate buffers
+- CHANGE: check (at actual operation!) whether vector exceeds buffer size (GetRVecs, GetCVecs -> corrlen)
+
+0.1.0:
+- NEW: vasp.a<, vasp.a>, vasp.a<=, vasp.a>= for absolute comparisons
+- CHANGE: clear stored vasp of an object if a "set" message with an invalid vasp is received
+- CHANGE: cleaned up the process loops (with thread yield) and fixed a corresponding bug in vasp.peaks/valleys
+- CHANGE: warn - but don't stop - on large FFT prime factors
+- FIX: vasp.radd and vasp.rpow had wrong argument initialization
+- FIX: mixfft is not thread-safe... introduced thread mutex for it
+- FIX: vasp.shift: shift argument was modulo frame count... why?
+
+0.0.8:
+- CHANGE: vasp.radio got right outlet for non-radio messages
+- ADD: thread yield for all simple vasp objects
+- CHANGE: vasp.? and vasp.??: made explicit list outlets
+- NEW: vasp.window, vasp.*window, vasp.!window, vasp.*!window, vasp.xwindow, vasp.*xwindow
+- REMOVE: vasp.bevel, vasp.!bevel... obsolete due to new vasp.window objects
+- REMOVE: vasp.noradio (vasp.!radio)... can easily be an abstraction of vasp.radio
+- ADD: minimum length parameter for immediate vasps
+- NEW: vasp.channel? (vasp.c?), vasp.channel (vasp.c) for set/query of buffer channel
+- CHANGE: env - reversed time/value pairs to value/time pairs
+- FIX: vasp.! with length arg outputs its reference on bang
+- FIX: on set message check for invalid vasps
+- FIX: reintroduce test for invalid buffer names (why was it commented out?)
+- FIX: fixe several bugs in vasp.offset= and vasp.frames=
+- CHANGE: allow size 0 (is default) for immediate vasps
+
+0.0.7:
+- CHANGE: vasp.m is now called vasp.multi by default
+- CHANGE: vasp.sync and vasp.multi now have a default argument = 2
+- FIX: vasp.phasor - period length now 1 instead of 2 PI
+- FIX: bug in multi mode (more src, one arg vector)
+- ADD: path specification for help symbols
+- CHANGE: rewrote vasp.imm implementation (still very inefficient!!)
+- ADD: prior message defines differential priority for detached operations
+- ADD: full DFT implementation (radix-2/radix-n) - also support of "to" message
+- ADD: full implementation of vasp.(x)tilt with several interpolation methods
+- CHANGE: vasp.split and vasp.join now have default argument = 2
+- ADD: vasp.offset= (vasp.o=) and vasp.frames= (vasp.f=): search for sample values (eg. zero crossings)
+- ADD: checks and log messages for out-of-range buffer offset and length
+
+0.0.6:
+- reorganized file structure
+- ADD: main names of vasp.n and vasp.n? are now vasp.vector and vasp.vectors?, respectively
+- ADD: main names of vasp.? and vasp.?? are now vasp.list and vasp.nonzero, respectively
+- NEW: vasp.size, vasp.size+, vasp.size? (vasp.s,vasp.s+,vasp.s?) for buffer size manipulation
+- NEW: vasp.peaks? for extremum extraction
+- ADD: shortcuts for vasp.frames,vasp.frames+,vasp.frames? -> vasp.f,vasp.f+,vasp.f?
+- CHANGE: changed vasp.offs,vasp.offs+,vasp.offs? to vasp.offset,vasp.offset+,vasp.offset?
+- ADD: shortcuts for vasp.offset,vasp.offset+,vasp.offset? -> vasp.o,vasp.o+,vasp.o?
+- ADD: envelopes (env ...) as arguments to all operations where vasps are used
+- FIX: default arguments for all binary/anytype operations
+- ADD: vasp.frames* (vasp.f*), vasp.frames/ (vasp.f/), vasp.size* (vasp.s*), vasp.size/ (vasp.s/)
+- ADD: detached operation: operations run as threads, according to detach flag/message
+- CHANGE: vasp.sync has as many outputs as inputs and outputs all input vasps
+- ADD: vasp.! : like vasp but stores the content temporarily (not just the reference)
+- ADD: vasp.copy (vasp.->) and vasp.ccopy (vasp.c->) for instant vasp copying
+- ADD: vasp.radio and vasp.noradio (vasp.!radio) ... filters for radio messages
+- ADD: vasp.fix - bashes NANs to zero, normalizes denormal numbers
+- ADD: double type consisting of 2 additive floats (e.g. "double 1. 1.e-13") for all numeric arguments
+- ADD: vasp.(x)shift - "fill" method/flag defines how to fill shifted areas (0..zero (default),1..none,2..edge value)
+
+0.0.5:
+- FIX: lacking sqrt in [vasp.rmin?],[vasp.rmax?]
+- FIX: (offs >= frames) bug in [vasp.offs?] 
+- ADD: lacking setup of [vasp.!-] and [vasp.c!-] objects 
+- FIX: buggy [vasp.int] code
+- FIX: recognition of integer arguments
+
+0.0.4:
+- CHANGE: vasp.min/max functions so that a vasp length 0 results in 0
+- REMOVED: [vasp.inv], [vasp.cinv].... already replaced by [vasp.!/ 1]
+- FIX: outlet bug in [vasp.?]
+- ADD: right inlet to [vasp]... just like in [float] etc.
+
+0.0.3:
+- restructured the code for future use of break-point lists (aka envelopes) as arguments
+- changed some object's names
+- new objects: vasp.min?, vasp.max? and the likes
+- fixed Max problem with connecting vasp.min,vasp.max right outlet to number boxes
+- fixed right inlet problem for generator and filter objects
+
+0.0.2:
+- vasp.cmin,vasp.cmax - renamed to vasp.rmin,vasp.rmax
+- reversed vasp channel and offset
+- fixed bug with arguments to complex binary operations
+- vasp.chk: included channel check
+- fixed pointer bug in vasp.?
+- fixed pointer increment bug in vasp.fhp
+- changed VecBlock implementation
+
+0.0.1:
+- defined the vasp
+- quick and dirty setup of most functions (non-interruptible)

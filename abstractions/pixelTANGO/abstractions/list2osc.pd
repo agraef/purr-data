@@ -1,0 +1,13 @@
+#N canvas 341 314 454 304 10;
+#X obj 21 132 l2s;
+#X msg 37 108 symbol /;
+#X obj 21 160 makesymbol /%s;
+#X obj 21 188 outlet;
+#X obj 37 86 loadbang;
+#X obj 21 57 inlet;
+#X text 17 9 Make an OSC name from a list;
+#X connect 0 0 2 0;
+#X connect 1 0 0 1;
+#X connect 2 0 3 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;

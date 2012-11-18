@@ -1,0 +1,13 @@
+#N canvas 234 137 450 300 10;
+#X floatatom 135 43 5 0 0 0 - - -;
+#X floatatom 135 141 5 0 0 0 - - -;
+#X floatatom 164 159 5 0 0 0 - - -;
+#X floatatom 193 188 5 0 0 0 - - -;
+#X obj 135 111 tbroute 3;
+#X floatatom 193 75 5 0 0 0 - - -;
+#X text 236 74 destination;
+#X connect 0 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 1 2 0;
+#X connect 4 2 3 0;
+#X connect 5 0 4 1;

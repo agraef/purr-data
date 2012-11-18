@@ -1,0 +1,84 @@
+#N canvas 57 22 555 619 10;
+#X declare;
+#X declare;
+#X declare -lib cyclone -lib osc;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header import 3 12 0 18
+-204280 -1 0;
+#X obj 0 294 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Hans-Christoph Steiner;
+#X text 12 205 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION load libraries from a patch;
+#X text 12 65 INLET_0 bang rewind;
+#X text 12 85 OUTLET_0 symbol;
+#X text 12 105 OUTLET_1 bang;
+#X text 12 185 RELEASE_DATE 2005;
+#X restore 500 597 pd META;
+#X obj 0 369 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 455 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 505 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 105 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [import] Related Objects;
+#X obj 22 42 declare;
+#X restore 102 597 pd Related_objects;
+#X obj 78 303 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 378 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 411 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 482 3 import;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/import -text
+pdpedia: import;
+#X msg 91 114 bang;
+#X symbolatom 102 188 0 0 0 0 - - -;
+#X obj 91 214 print;
+#X text 138 113 get next item in list of loaded libs;
+#X text 150 137 start at the top of the list again;
+#X msg 103 138 rewind;
+#X text 97 509 [import] loads libraries from the patch. On Pd 0.40.
+or greater \, it loads the library into the patch's local namespace.
+On older versions \, it loads the libraries into the global namespace.
+;
+#X text 98 302 bang;
+#X text 98 332 rewind;
+#X text 98 377 symbol;
+#X text 98 410 bang;
+#X obj 262 184 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 283 183 bang after the end of the list is reached;
+#X text 11 23 load libraries from a patch;
+#X text 168 377 - a "bang" to the inlet of [import] sends a symbol
+to the left outlet which the name of a loaded library.;
+#X text 168 332 - the "rewind" message starts at the top of the list
+of libraries.;
+#X text 168 302 - sending a "bang" to [import] makes it output the
+loaded libraries one at a time (i.e. \, one per bang).;
+#X text 167 410 - once [import] has output the last library in the
+list \, sending another "bang" to its inlet will cause a "bang" to
+be sent out its right outlet.;
+#X text 80 471 n) symbol atom;
+#X text 167 471 - the arguments to [import] specify the libraries to
+load for patch.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 97 568 pddp/pddplink all_about_libraries.pd;
+#X obj 91 162 import cyclone osc;
+#X connect 13 0 35 0;
+#X connect 18 0 35 0;
+#X connect 35 0 14 0;
+#X connect 35 0 15 0;
+#X connect 35 1 24 0;
