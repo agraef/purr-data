@@ -90,6 +90,7 @@ then
 	echo "Pd dev package..."
 	cd doc/
 	svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
+	cp -f ../l2ork_addons/doc/Makefile .
 	cd ..
 	cd externals/miXed
 	make clean
@@ -116,7 +117,7 @@ fi
 
 if [ $full -gt 0 -o $deb -gt 0 ]
 then
-	echo "Pd full installer..."
+	echo "Pd full installer... IMPORTANT! When ran for the first time this step requires internet connection to pull sources from other repositories..."
 
 	# check if Gem submodule is empty, and if so do first init
 	if [ "$(ls -A Gem)" ]; then
@@ -158,6 +159,7 @@ then
 	# update docs
 	cd doc/
 	svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
+	cp -f ../l2ork_addons/doc/Makefile .
 	cd ..
 
 	if [ $full -eq 2 -o $deb -eq 2 ]
@@ -219,7 +221,6 @@ then
 	if [ $full -gt 1 -o $deb -eq 2 ]
 	then
 		make distclean
-		./runmebeforereinstalling.sh
 		rm -rf build/
 	fi
 	make install prefix=$inst_dir
