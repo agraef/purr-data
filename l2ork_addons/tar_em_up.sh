@@ -216,7 +216,7 @@ then
 	else
 		cd Gem/
 	fi
-	git pull
+	#git pull
 	cd ../packages/linux_make
 	if [ $full -gt 1 -o $deb -eq 2 ]
 	then
