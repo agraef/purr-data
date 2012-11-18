@@ -1,0 +1,3 @@
+[submodule "Gem"]
+	path = Gem
+	url = git://pd-gem.git.sourceforge.net/gitroot/pd-gem/Gem
