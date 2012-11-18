@@ -19,7 +19,6 @@ m4/config
 *.d_fat
 *.d_fat_o
 po/*.msg
-bin/
 ASIOSDK2
 pd-0.*
 pd.pc
