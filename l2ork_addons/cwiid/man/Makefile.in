@@ -1,0 +1,22 @@
+#Copyright (C) 2007 L. Donnie Smith
+
+include @top_builddir@/defs.mak
+
+DEST_MAN_DIR = $(ROOTDIR)$(mandir)
+
+all:
+
+install:
+	for f in `ls man?/*.?`; do \
+		install -D -m 644 $$f $(DEST_MAN_DIR)/$$f ; \
+	done
+
+uninstall:
+	for f in `ls man?/*.?`; do \
+		rm -f $(DEST_MAN_DIR)/$$f ; \
+	done
+
+distclean:
+	rm Makefile
+
+.PHONY: all install uninstall distclean

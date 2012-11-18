@@ -1,0 +1,97 @@
+LIBNAME    =fftw~
+VERSION    =0.1
+
+PREFIX     =@prefix@@PDLIBDIR@
+
+INSTALL_BIN=$(PREFIX)/extra
+
+EXT = @EXT@ 
+DEFS = @DFLAGS@ -DVERSION=\"$(VERSION)\"
+IFLAGS = -I. @INCLUDES@ $(INCLUDES)
+
+CC = @CC@
+LD = @LD@
+STRIP = @STRIP@ @STRIPFLAGS@
+
+AFLAGS = 
+LFLAGS = @LFLAGS@
+WFLAGS =
+
+MAKEDEP_FLAGS = @MAKEDEP_FLAGS@
+
+TARNAME =  $(LIBNAME)-@VERSION@.tgz
+BINTARNAME =  $(LIBNAME)-@VERSION@-bin.tgz
+
+.SUFFIXES: .$(EXT)
+
+CFLAGS = $(DEFS) $(IFLAGS) $(WFLAGS) @CFLAGS@ 
+
+LIBS = @LIBS@
+
+SOURCES=$(sort $(filter %.c, $(wildcard *.c)))
+OTARGETS = $(SOURCES:.c=.o)
+TARGETS = $(SOURCES:.c=.$(EXT))
+
+
+
+ifeq (,$(findstring fftw3, $(LIBS) ))
+all:
+	@echo "nothing to be done (no fftw3)"
+
+else
+all: $(TARGETS)
+
+endif
+
+clean:
+	-rm -f *.o *.d
+
+binclean:
+	-rm -f *.$(EXT)
+
+distclean: clean binclean
+	-rm -f *~ _* config.*
+	-rm -rf autom4te.cache
+
+install: install-bin install-doc
+
+install-bin: all
+	-install -d $(INSTALL_BIN)
+	-install -m 644 *.$(EXT) $(INSTALL_BIN)
+
+install-doc:
+	-install -d $(INSTALL_BIN)
+	-install -m 644 *.pd $(INSTALL_BIN)
+
+dist: distclean
+	(cd ..;tar czvf $(TARNAME) $(LIBNAME))
+
+distbin: distclean all clean
+	(cd ..; tar cvzf $(BINTARNAME) $(LIBNAME))
+
+everything: clean all install distclean
+
+%.$(EXT): %.o
+	$(LD) $(LFLAGS) -o $@ *.o $(LIBS)
+	$(STRIP) $@
+
+
+$(LIBNAME): $(OTARGETS)
+	$(LD) $(LFLAGS) -o $(LIBNAME).$(EXT) *.o $(LIBS)
+	$(STRIP) $(LIBNAME).$(EXT)
+
+## dependencies: as proposed by the GNU-make documentation
+## see http://www.gnu.org/software/make/manual/html_node/make_47.html#SEC51
+-include $(SOURCES:.c=.d)
+%.d: %.c
+	@set -e; rm -f $@; \
+	 $(CC) $(MAKEDEP_FLAGS) $(CFLAGS) $< > $@.$$$$; \
+	 sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	 rm -f $@.$$$$
+
+configure: configure.ac
+	autoconf
+
+Makefile: Makefile.in configure
+	./configure
+

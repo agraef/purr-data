@@ -1,0 +1,52 @@
+PD_DIR = @PD_DIR@
+PDP_DIR = @PDP_DIR@
+
+GEM_OPENCV_VERSION = @GEM_OPENCV_VERSION@
+
+# build flags
+
+INCLUDES = -I$(PD_DIR)/src -I.  -I$(PDP_DIR)/include -I$(PD_DIR)/src
+CPPFLAGS  = -fPIC -DPD -O2 -funroll-loops -fomit-frame-pointer  -ffast-math \
+    -Wall -W -Wno-unused -Wno-parentheses -Wno-switch \
+    -DGEM_OPENCV_VERSION=\"$(GEM_OPENCV_VERSION)\" -g
+
+UNAME := $(shell uname -s)
+ifeq ($(UNAME),Linux)
+ INCLUDES += `pkg-config --cflags opencv`
+ LDFLAGS =  --export-dynamic -shared
+ LIBS = `pkg-config --libs opencv`
+ EXTENSION = pd_linux
+endif
+ifeq ($(UNAME),Darwin)
+ INCLUDES += -I/Library/Frameworks/OpenCV.framework/Headers/
+ LDFLAGS =  -bundle -undefined dynamic_lookup
+ LIBS =  -lm -framework OpenCV
+ EXTENSION = pd_darwin
+endif
+
+.SUFFIXES = $(EXTENSION)
+
+SOURCES = pdp_opencv_threshold.cc pdp_opencv_edge.cc pdp_opencv_distrans.cc pdp_opencv_laplace.cc pdp_opencv_motempl.cc pdp_opencv_morphology.cc pdp_opencv_haarcascade.cc pdp_opencv_contours_convexity.cc pdp_opencv_contours_boundingrect.cc pdp_opencv_bgsubstract.cc pdp_opencv_lk.cc pdp_opencv_floodfill.cc pdp_opencv_hist_compare.cc pdp_opencv_dft.cc pdp_opencv_knear.cc pdp_opencv_hu_moments.cc pdp_opencv_hu_compare.cc pdp_opencv_pgh_compare.cc pdp_opencv_bgstats.cc pdp_opencv_athreshold.cc pdp_opencv_hough_lines.cc pdp_opencv_channels.cc pdp_opencv_hough_circles.cc pdp_opencv_camshift.cc pdp_opencv_colorfilt.cc pdp_opencv_contours_convexhull.cc pdp_opencv_of_bm.cc pdp_opencv_of_hs.cc pdp_opencv_of_lk.cc pdp_opencv_smooth.cc
+SOURCES_OPT = @SOURCES_OPT@
+
+all: $(SOURCES:.c=.$(EXTENSION)) $(SOURCES:.cc=.$(EXTENSION)) $(SOURCES_OPT:.c=.$(EXTENSION)) $(SOURCES_OPT:.cc=.$(EXTENSION))
+
+%.$(EXTENSION): %.o
+	gcc $(LDFLAGS) -o $*.$(EXTENSION) $*.o $(LIBS)
+
+.cc.o:
+	g++ $(CPPFLAGS) $(INCLUDES) -o $*.o -c $*.cc
+
+.c.o:
+	gcc $(CPPFLAGS) $(INCLUDES) -o $*.o -c $*.c
+
+install:
+	cp -f --remove-destination *.pd $(PD_DIR)/doc/5.reference
+
+clean:
+	rm -f pdp_opencv*.o
+	rm -f pdp_opencv*.$(EXTENSION)
+
+distro: clean all
+	rm *.o
+

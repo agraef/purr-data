@@ -1,0 +1,30 @@
+LIBS = @LIBS@
+LIBOSCDIR = ../libOSC
+LIBOSC = ${LIBOSCDIR}/libOSC.a
+
+# strange bug requires this...
+CFLAGS= @CFLAGS@ @INCLUDES@
+# INCLUDES= @INCLUDES@
+
+DUMPOBJS=dumpOSC.o
+
+
+both: sendOSC dumpOSC
+
+sendOSC: sendOSC.o htmsocket.o ${LIBOSC}
+	${CC} ${CFLAGS} $(INCLUDES) -o sendOSC sendOSC.o htmsocket.o $(LIBS) ${LIBOSC}
+
+dumpOSC: ${DUMPOBJS}
+	${CC} ${CFLAGS} $(INCLUDES) -o $@ ${DUMPOBJS} $(LIBS)
+
+dumpUDP: dumpUDP.o
+	${CC} ${CFLAGS} $(INCLUDES) -o dumpUDP dumpUDP.o $(LIBS)
+
+${LIBOSC}:
+	echo "You need to go to " ${LIBOSCDIR} " and do a make."
+	(cd ../libOSC ; make)
+
+clean:
+	rm -f sendOSC dumpOSC *.o
+
+
