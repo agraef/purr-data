@@ -117,10 +117,19 @@ fi
 if [ $full -gt 0 -o $deb -gt 0 ]
 then
 	echo "Pd full installer..."
-	# update the include files to be safe
-	if [ ! -d "/usr/local/include/pdl2ork" ]; then
-		sudo mkdir /usr/local/include/pdl2ork
+
+	# check if Gem submodule is empty, and if so do first init
+	if [ "$(ls -A Gem)" ]; then
+		git submodule update
+	else
+		git submodule init
+		git submodule update
 	fi
+
+	# update the include files to be safe
+	#if [ ! -d "/usr/local/include/pdl2ork" ]; then
+	#	sudo mkdir /usr/local/include/pdl2ork
+	#fi
 
 	#if [ $full -eq 3 ]
 	#then
