@@ -139,7 +139,7 @@ deb: $(bindir)
 	install -p -m0644 $(scripts_src)/pd-mode.el \
 		$(DESTDIR)/usr/share/emacs/site-lisp/
 # Pd-related scripts
-	install -p $(scripts_src)/pd-diff $(DESTDIR)$(bindir)
+	#install -p $(scripts_src)/pd-diff $(DESTDIR)$(bindir)
 	install -p $(scripts_src)/config-switcher.sh $(DESTDIR)$(bindir)
 # delete these since they are provided by the 'puredata' package
 	#rm -f $(DESTDIR)$(bindir)/pdsend
