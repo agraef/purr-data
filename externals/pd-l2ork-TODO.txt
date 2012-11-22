@@ -1,0 +1,12 @@
+Diff status between pd-l2ork externals source tree and main community pd svn
+AS OF 11/22/2012
+
+DONE:
+creb
+
+MERGE:
+miXed
+ggee
+
+TODO:
+test other

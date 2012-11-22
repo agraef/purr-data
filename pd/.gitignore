@@ -20,6 +20,7 @@ m4/config
 *.lo
 *.la
 *.pd_linux
+*.pd_linux_o
 *.pd_darwin
 *.d_fat
 *.d_fat_o

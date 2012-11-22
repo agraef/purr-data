@@ -1,15 +1,15 @@
 10
 
 dir
-16135
+16568
 https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/externals/creb
 https://pure-data.svn.sourceforge.net/svnroot/pure-data
 
 
 
-2011-11-17T16:06:41.140954Z
-15787
-katjav
+2012-11-01T23:47:27.756251Z
+16514
+doelie
 
 
 
@@ -26,14 +26,14 @@ katjav
 
 df7eb9d6-776f-4174-a42d-0ffd8d5d5b5d
 
-Makefile.config.in
+bootstrap
 file
 
 
 
 
 2012-05-04T00:49:10.119816Z
-ab9a6f7c6b65c77bca870b21698daa50
+3dae4e9d6cae45bea01ac7b73e294119
 2008-08-27T22:27:30.525666Z
 10266
 eighthave
@@ -58,7 +58,109 @@ eighthave
 
 
 
-480
+36
+
+Makefile
+file
+
+
+
+
+2012-05-04T00:49:10.119816Z
+20f4513d1eff96a8a089f81b3603a0e9
+2008-08-27T22:27:30.525666Z
+10266
+eighthave
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+816
+
+creb.mk
+file
+
+
+
+
+2012-11-22T18:49:46.624124Z
+dc1c820204ef5077e0880ffc4e0f47bd
+2012-11-01T23:47:27.756251Z
+16514
+doelie
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2029
+
+Makefile.config.in
+file
+
+
+
+
+2012-11-22T18:49:46.625124Z
+43fc3655ad4bc4024a66adc8fe4f4575
+2012-10-27T13:58:28.867727Z
+16491
+doelie
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+486
 
 README.darcs
 file
@@ -174,10 +276,10 @@ file
 
 
 
-2012-05-04T00:49:10.119816Z
-1a63f1792f1705593ea0d9bc6442cb2b
-2006-08-25T22:38:42.000000Z
-5742
+2012-11-22T18:49:46.626124Z
+0afe3a3bae2bb1404de1e621244ad47d
+2012-10-27T13:58:28.867727Z
+16491
 doelie
 
 
@@ -200,7 +302,7 @@ doelie
 
 
 
-870
+871
 
 TODO
 file
@@ -312,72 +414,4 @@ doelie
 
 modules
 dir
-
-bootstrap
-file
-
-
-
-
-2012-05-04T00:49:10.119816Z
-3dae4e9d6cae45bea01ac7b73e294119
-2008-08-27T22:27:30.525666Z
-10266
-eighthave
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-36
-
-Makefile
-file
-
-
-
-
-2012-05-04T00:49:10.119816Z
-20f4513d1eff96a8a089f81b3603a0e9
-2008-08-27T22:27:30.525666Z
-10266
-eighthave
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-816
 

@@ -6,9 +6,10 @@ current: ead~.o ear~.o eadsr~.o dist~.o \
         bfft~.o dynwav~.o statwav~.o bdiag~.o \
 	diag~.o matrix~.o permut~.o lattice~.o ratio.o ffpoly.o fwarp.o \
 	junction~.o fdn~.o bwin~.o eblosc~.o bitsplit~.o sbosc~.o \
-	blocknorm~.o resofilt~.o scrollgrid1D~.o \
+	blocknorm~.o resofilt~.o scrollgrid1D~.o  \
 	\
 	dwt.o cmath.o \
+	sawtooth~.o \
 	\
 	setup.o
 

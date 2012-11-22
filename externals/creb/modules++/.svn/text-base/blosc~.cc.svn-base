@@ -25,12 +25,10 @@
 #include <stdlib.h>
 #include <string.h>  
 
+#include "../modules/extlib_util.h"
 
 #include "DSPIcomplex.h"
 #include "DSPIfilters.h"
-
-typedef unsigned long long u64;
-typedef unsigned long u32;
 
 
 
@@ -471,7 +469,7 @@ static void blosc_dsp(t_blosc *x, t_signal **sp)
   int n = sp[0]->s_n;
 
   /* set sampling rate scaling for phasors */
-  x->x_ctl.c_phase_inc_scale = 4.0 * (t_float)(1<<(LPHASOR-2)) / sys_getsr();
+  x->x_ctl.c_phase_inc_scale = 4.0 * ((t_float)(1<<(LPHASOR-2))) / sys_getsr();
 
 
   /* setup & register the correct process routine depending on the waveform */

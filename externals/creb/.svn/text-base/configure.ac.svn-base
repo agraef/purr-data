@@ -9,7 +9,7 @@ if test $ARCH == Linux;
 then
 	PD_INCLUDE_DIR=$prefix/pd/src
 	LIBNAME=creb.pd_linux
-	LIBFLAGS="-export_dynamic -shared"
+        LIBFLAGS="-rdynamic -shared"
 	echo "Linux"
 
 elif test $ARCH == Darwin;

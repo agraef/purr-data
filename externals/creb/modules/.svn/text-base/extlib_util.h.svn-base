@@ -23,6 +23,39 @@
 #include <math.h>
 #include "m_pd.h"
 
+// __COUNTER__ is a CPP extension enabled in gcc >= 4.3
+#if defined __GNUC__ && __GNUC__ == 4 && __GNUC_MINOR__ >= 3
+#define HAVE_COUNTER
+#endif
+#if defined __GNUC__ && __GNUC__ >= 5
+#define HAVE_COUNTER
+#endif
+#ifdef __clang__ // Should we check version here?
+#define HAVE_COUNTER
+#endif
+#ifndef HAVE_COUNTER
+#warning CT_ASSERT() disabled
+#define CT_ASSERT(...)
+#else
+#define CT_NAMED_ASSERT(name,x)                         \
+    typedef int _GENSYM(name ## _ctassert_)[-((x)==0)]
+#define CT_ASSERT(x) CT_NAMED_ASSERT(,x)
+#define _GENSYM(x) _CONCAT(x,__COUNTER__)
+#define _CONCAT1(x,y) x##y
+#define _CONCAT(x,y) _CONCAT1(x,y)
+#endif
+
+/* Only defined in pd-extended. */
+#ifndef PD_FLOAT_PRECISION
+#define PD_FLOAT_PRECISION 32
+#endif
+
+/* http://www.unix.org/version2/whatsnew/lp64_wp.html */
+typedef unsigned long long u64;
+typedef unsigned int u32;
+CT_ASSERT(sizeof(u32)==4);
+CT_ASSERT(sizeof(u64)==8);
+
 /* envelope stuff */
 
 /* exponential range for envelopes is 60dB */
@@ -70,6 +103,7 @@ typedef union
 #define IS_DENORMAL(f) (((((t_flint)(f)).i[1]) & 0x7ff00000) == 0)
 
 #endif // endif PD_FLOAT_PRECISION
+
 #else   // if not defined(__i386__) || defined(__x86_64__)
 #define IS_DENORMAL(f) 0
 #endif // end if defined(__i386__) || defined(__x86_64__)

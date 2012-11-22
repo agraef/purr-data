@@ -1,25 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svnroot/pure-data/!svn/ver/15787/trunk/externals/creb
-END
-configure.ac
-K 25
-svn:wc:ra_dav:version-url
-V 66
-/svnroot/pure-data/!svn/ver/5742/trunk/externals/creb/configure.ac
-END
-TODO
-K 25
-svn:wc:ra_dav:version-url
-V 58
-/svnroot/pure-data/!svn/ver/5607/trunk/externals/creb/TODO
-END
-Makefile.config.in
-K 25
-svn:wc:ra_dav:version-url
-V 73
-/svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/Makefile.config.in
+/svnroot/pure-data/!svn/ver/16514/trunk/externals/creb
 END
 CHANGES.LOG
 K 25
@@ -62,4 +44,28 @@ K 25
 svn:wc:ra_dav:version-url
 V 64
 /svnroot/pure-data/!svn/ver/10266/trunk/externals/creb/bootstrap
+END
+creb.mk
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/pure-data/!svn/ver/16514/trunk/externals/creb/creb.mk
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/pure-data/!svn/ver/16491/trunk/externals/creb/configure.ac
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/pure-data/!svn/ver/5607/trunk/externals/creb/TODO
+END
+Makefile.config.in
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/pure-data/!svn/ver/16491/trunk/externals/creb/Makefile.config.in
 END

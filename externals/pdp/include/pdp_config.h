@@ -32,7 +32,7 @@
 /* #undef HAVE_PDP_SDL */
 
 /* build pdp_v4l */
-#define HAVE_PDP_V4L 1
+/* #undef HAVE_PDP_V4L */
 
 /* experimental vforth dsp engine */
 /* #undef HAVE_PDP_VFORTH */
