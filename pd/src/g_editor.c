@@ -4486,7 +4486,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	//fprintf(stderr,"dopaste autopatching? %d==%d %d\n", count, nbox, connectme);
 
 	//if we are pasting only one object autoposition it below our selection
-	if (count == nbox+1 && connectme) {
+	if (count == nbox+1 && connectme == 1) {
     	canvas_connect(x, indx, 0, nobj, 0);
 
 		//is this universally safe? I think so
