@@ -807,6 +807,7 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 							np1->np_next = np2;
 						else hd1->phd_npreset = np2;
 						np2->np_preset = (int)f;
+						np2->np_next = NULL;
 					}
 
 					if (hd1->phd_node->pn_val.l_n > 0) {
@@ -1170,6 +1171,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 		gl_phub->ph_next = x;
 	}
 	x->ph_next = NULL;
+	x->ph_data = NULL;
 
 	hd1 = NULL;
 	hd2 = NULL;
