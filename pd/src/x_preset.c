@@ -407,9 +407,15 @@ static int preset_node_location_changed(t_preset_node *x)
 
 static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom *argv)
 {
-	if (PH_DEBUG) fprintf(stderr,"preset_node_anything\n");
+	if (PH_DEBUG) fprintf(stderr,"preset_node_anything %lx\n", (t_int)x);
 	int i;
 	alist_list(&x->pn_val, 0, argc, argv);
+	if(PH_DEBUG) {
+		if (x->pn_val.l_vec->l_a.a_type == A_SYMBOL)
+			fprintf(stderr,"	%lx data is %s\n", (t_int)x, x->pn_val.l_vec->l_a.a_w.w_symbol->s_name);
+		else if (x->pn_val.l_vec->l_a.a_type == A_FLOAT)
+			fprintf(stderr,"	%lx data is %f\n", (t_int)x, x->pn_val.l_vec->l_a.a_w.w_float);
+	}
 	// check for pointers and warn user presetting them has not been tested
     for (i = 0; i < x->pn_val.l_n; i++)
     {
@@ -448,6 +454,7 @@ void preset_node_request_hub_store(t_preset_node *x, t_float f)
 
 void preset_node_set_and_output_value(t_preset_node *x, t_alist val)
 {
+	if(PH_DEBUG) fprintf(stderr,"preset_node_set_and_output_value %lx\n", (t_int)x);
 	t_atom *outv;
 	if (val.l_n > 0) {
 		alist_clear(&x->pn_val);
@@ -455,6 +462,12 @@ void preset_node_set_and_output_value(t_preset_node *x, t_alist val)
 		XL_ATOMS_ALLOCA(outv, x->pn_val.l_n);
 		alist_toatoms(&x->pn_val, outv);
 		outlet_list(x->pn_outlet, &s_list, x->pn_val.l_n, outv);
+		if(PH_DEBUG) {
+			if (outv->a_type == A_SYMBOL)
+				fprintf(stderr,"	%lx outputs %s\n", (t_int)x, outv->a_w.w_symbol->s_name);
+			else if (outv->a_type == A_FLOAT)
+				fprintf(stderr,"	%lx outputs %f\n", (t_int)x, outv->a_w.w_float);
+		}
 		XL_ATOMS_FREEA(outv, x->pn_val.l_n);
 	}
 }
@@ -751,6 +764,7 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 		}
 		if (valid)
 			x->ph_preset = f;
+		if(PH_DEBUG) fprintf(stderr,"	done\n");
 
 		SETFLOAT(ap+0, f);
 		SETFLOAT(ap+1, (t_float)valid);
@@ -782,6 +796,13 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 				if (hd1->phd_node) {
 					if(PH_DEBUG) fprintf(stderr,"	node is active\n");
 					// only if the node is active (not NULL/disabled)
+
+					// reset np1 and np2 from the previous run
+					// (if we have more phd_nodes, stale data will append
+					// new presets to the last phd_node eventually resulting in crash)
+					np1 = NULL;
+					np2 = NULL;
+
 					overwrite = 0;
 					if (hd1->phd_npreset) {
 						// if this node has already pre-existing presets
@@ -812,11 +833,22 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 
 					if (hd1->phd_node->pn_val.l_n > 0) {
 						changed = 1;
+						if(PH_DEBUG) {
+							fprintf(stderr,"	node data len = %d, old hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
+							if (hd1->phd_node->pn_val.l_vec->l_a.a_type == A_SYMBOL)
+								fprintf(stderr,"	%lx outputs %s\n", (t_int)hd1->phd_node, hd1->phd_node->pn_val.l_vec->l_a.a_w.w_symbol->s_name);
+							else if (hd1->phd_node->pn_val.l_vec->l_a.a_type == A_FLOAT)
+								fprintf(stderr,"	%lx outputs %f\n", (t_int)hd1->phd_node, hd1->phd_node->pn_val.l_vec->l_a.a_w.w_float);
+						}
 						alist_clear(&np2->np_val);
-						if(PH_DEBUG) fprintf(stderr,"	node data len = %d, old hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
 						alist_clone(&hd1->phd_node->pn_val, &np2->np_val);
-						if(PH_DEBUG) fprintf(stderr,"	node data len = %d, NEW hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
-
+						if(PH_DEBUG) {
+							fprintf(stderr,"	node data len = %d, NEW hub data len = %d\n", hd1->phd_node->pn_val.l_n, np2->np_val.l_n);
+							if (hd1->phd_node->pn_val.l_vec->l_a.a_type == A_SYMBOL)
+								fprintf(stderr,"	%lx outputs %s\n", (t_int)hd1->phd_node, np2->np_val.l_vec->l_a.a_w.w_symbol->s_name);
+							else if (hd1->phd_node->pn_val.l_vec->l_a.a_type == A_FLOAT)
+								fprintf(stderr,"	%lx outputs %f\n", (t_int)hd1->phd_node, np2->np_val.l_vec->l_a.a_w.w_float);
+						}
 						// finally if this is the first preset, hd1->phd_npreset will be NULL so,
 						// let's have it point to the newly created n2
 						if (!hd1->phd_npreset)
