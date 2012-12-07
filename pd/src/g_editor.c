@@ -92,10 +92,11 @@ int gobj_filter_highlight_behavior(t_rtext *y) {
 	char name[4];
 	int bufsize, i;
 	rtext_gettext(y, &buf, &bufsize);
-	for (i = 0; i < 3; i++) {
+	if (bufsize > 4) bufsize = 4;
+	for (i = 0; i < bufsize; i++) {
 		name[i] = buf[i];
 	}
-	name[3]='\0';
+	name[i]='\0';
 	//fprintf(stderr,"object name = >%s<\n", name);
 	if (!strcmp(name, "bng") ||
 		!strcmp(name, "nbx") ||
