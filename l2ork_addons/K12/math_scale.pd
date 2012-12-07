@@ -2,26 +2,26 @@
 #X obj 162 159 ggee/image @pd_extra/K12/objects/math_scale.png;
 #X obj 8 85 inlet;
 #X obj 162 62 loadbang;
-#X obj 117 156 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
+#X obj 118 156 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
 0 -8 0 11 -262144 -1 -1 0 256 3;
 #X obj 62 16 preset_node k12;
 #X obj 47 533 outlet;
 #X obj 63 39 preset_node k12;
 #X obj 8 240 maxlib/scale 0 10000 0 10000;
-#X obj 156 156 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
+#X obj 157 156 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
 0 -8 0 11 -262144 -1 -1 100 256 3;
-#X obj 117 183 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
+#X obj 118 183 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
 0 -8 0 11 -262144 -1 -1 0 256 3;
-#X obj 156 183 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
+#X obj 157 183 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
 0 -8 0 11 -262144 -1 -1 1 256 3;
 #X msg 162 85 open @pd_extra/K12/objects/math_scale.png;
 #X obj 63 62 preset_node k12;
 #X obj 64 85 preset_node k12;
 #X obj 129 319 t b f;
 #X obj 8 438 moses 0;
-#X text 155 153 -;
-#X text 155 180 -;
-#X text 129 167 scale to;
+#X text 156 153 -;
+#X text 156 180 -;
+#X text 130 167 scale to;
 #X obj 55 371 + 1;
 #X obj 55 393 gate 2 1;
 #X obj 113 393 gate 2 1;
@@ -29,10 +29,10 @@
 #X obj 62 295 t f f;
 #X obj 47 480 moses 0;
 #X msg 59 438 set \$1;
-#X msg 86 503;
+#X msg 86 503 1;
 #X msg 147 438 set \$1;
 #X obj 55 349 >;
-#X msg 8 480;
+#X msg 8 480 0;
 #X connect 1 0 7 0;
 #X connect 2 0 11 0;
 #X connect 3 0 4 0;
