@@ -215,8 +215,8 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 
 		if (x->x_hide_frame <= 1) {
 			sys_vgui(
-		".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
-		-fill #%6.6x -tags {%lxBASE1 %lxNUM text}\n",
+				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
+					-fill #%6.6x -tags {%lxBASE1 %lxNUM text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
 				     xpos + x->x_numwidth, ypos+4,
@@ -235,6 +235,16 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1,
 				     nlet_tag, 0, x);
+		} else {
+			sys_vgui(
+				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
+					-fill #%6.6x -tags {%lxBASE1 %lxNUM text}\n",
+				     canvas, xpos, ypos,
+				     xpos + x->x_numwidth-4, ypos,
+				     xpos + x->x_numwidth, ypos+4,
+				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
+				     xpos, ypos + x->x_gui.x_h,
+				     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
 		}
 		if (!x->x_hide_frame || x->x_hide_frame == 2)
 			sys_vgui(
@@ -280,13 +290,13 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 		if (yyyy) nlet_tag = rtext_gettag(yyyy);
 		else nlet_tag = "bogus";
 
+		sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
+			     canvas, x, xpos, ypos,
+			     xpos + x->x_numwidth-4, ypos,
+			     xpos + x->x_numwidth, ypos+4,
+			     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
+			     xpos, ypos + x->x_gui.x_h);
 		if (x->x_hide_frame <= 1) {
-			sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
-				     canvas, x, xpos, ypos,
-				     xpos + x->x_numwidth-4, ypos,
-				     xpos + x->x_numwidth, ypos+4,
-				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
-				     xpos, ypos + x->x_gui.x_h);
 		   if(!x->x_gui.x_fsf.x_snd_able)
 				sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
 				     canvas, nlet_tag, 0,
@@ -499,8 +509,13 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 		else
 		{
 			sys_vgui(".x%lx.c dtag %lxNUM selected\n", canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline #%6.6x\n",
-		        canvas, x, IEM_GUI_COLOR_NORMAL);
+
+			if (x->x_hide_frame <= 1)
+		    	sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline #%6.6x\n",
+		        	canvas, x, IEM_GUI_COLOR_NORMAL);
+			else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline #%6.6x\n",
+		        	canvas, x, x->x_gui.x_bcol);
+
 		    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
 		        canvas, x, x->x_gui.x_fcol);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
