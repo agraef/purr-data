@@ -72,10 +72,10 @@
 #X msg 120 207 1 \, 0 250;
 #X obj 120 231 line;
 #X obj 169 -31 change;
-#X obj 218 120 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
-0 -8 0 10 -262144 -1 -1 0.3 256 3;
-#X obj 218 142 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
-0 -8 0 10 -262144 -1 -1 0.02 256 3;
+#X obj 218 120 nbx 4 14 0 1e+37 0 1 \$0-s-null \$0-r-null empty 0 -8
+0 10 -262144 -1 -1 0.3 256 3;
+#X obj 218 142 nbx 4 14 0 1e+37 0 1 \$0-s-null \$0-r-null empty 0 -8
+0 10 -262144 -1 -1 0.02 256 3;
 #X text 225 108 high;
 #X text 225 131 low;
 #X obj 311 89 preset_node k12;
