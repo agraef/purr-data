@@ -136,7 +136,7 @@ int glob_preset_node_list_update_paired(t_preset_node *x, int paired)
 		n = n->gpnl_next;
 	}
 	if (n->gpnl_node == x) {
-		n->gpnl_paired = 1;
+		n->gpnl_paired = paired;
 	}
 	else {
 		// we should never get here
@@ -543,22 +543,39 @@ void preset_node_purge(t_preset_node *x) {
 
 	//==================== end functions are for interaction with the hub =====================//
 
+static void preset_node_set(t_preset_node *x, t_symbol *s)
+{
+	if(PH_DEBUG) fprintf(stderr,"preset_node_set %s\n", s->s_name);
+
+	x->pn_hub_name = s;
+	
+	if (x->pn_hub) {
+		preset_hub_delete_a_node(x->pn_hub, x);
+		glob_preset_node_list_update_paired(x, 1);
+	}
+
+	x->pn_hub = NULL;
+	preset_node_seek_hub(x);
+}
+
+static void preset_node_set_null(t_preset_node *x)
+{
+	preset_node_set(x, &s_);
+}
+
 static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 {
 	if(PH_DEBUG) fprintf(stderr,"===preset_node_new===\n");
 	t_glist *glist=(t_glist *)canvas_getcurrent();
 	t_canvas *canvas = (t_canvas *)glist_getcanvas(glist);
 
-	// first check if the mandatory argument is sane, otherwise bail out
-    if (!(argc > 0 && argv[0].a_type == A_SYMBOL)) {
-		pd_error(canvas, "preset_node requires alphanumeric name as its argument");
-		return(NULL);
-	}
-
     t_preset_node *x = (t_preset_node *)pd_new(preset_node_class);
 
-	// read basic creation arguments
-	x->pn_hub_name = (t_symbol *)atom_getsymbol(&argv[0]);
+	// read creation arguments and substitute "default" for objects without optional arguments
+    if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
+		x->pn_hub_name = gensym("default");
+	else
+		x->pn_hub_name = (t_symbol *)atom_getsymbol(&argv[0]);
 
 	x->pn_canvas = canvas;
 	t_canvas *y = x->pn_canvas;
@@ -620,6 +637,8 @@ void preset_node_setup(void)
         gensym("recall"), A_DEFFLOAT, 0);
     class_addmethod(preset_node_class, (t_method)preset_node_request_hub_store,
         gensym("store"), A_DEFFLOAT, 0);
+    class_addmethod(preset_node_class, (t_method)preset_node_set,
+        gensym("set"), A_SYMBOL, 0);
 
     class_addmethod(preset_node_class, (t_method)preset_node_clear,
         gensym("clear"), A_DEFFLOAT, 0);
@@ -1144,17 +1163,17 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	loc_pos = 0;
 	pos = 0; // position within argc
 
-	// first check if the mandatory argument is sane, otherwise bail out
-	if (!(argc > 0 && argv[0].a_type == A_SYMBOL)) {
-		pd_error(canvas, "preset_hub requires alphanumeric name as its argument");
-		return(NULL);
-	}
+	// read creation arguments and substitute "default" for objects without optional arguments
+    if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
+		name = gensym("default");
+	else
+		name = (t_symbol *)atom_getsymbol(&argv[0]);
 
 	// now check if there is already another hub on the same canvas with the same name and fail if so
 	check = canvas->gl_phub;
 	if (check) {
 		while (check) {
-			if (!strcmp(atom_getsymbol(&argv[0])->s_name, check->ph_name->s_name)) {
+			if (!strcmp(name->s_name, check->ph_name->s_name)) {
 				pd_error(canvas, "preset_hub with the name %s already exists on this canvas", check->ph_name->s_name);
 				return(NULL);
 			}
@@ -1166,7 +1185,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	x->ph_invis = 0;
 
 	// read basic creation arguments
-	x->ph_name = (t_symbol *)atom_getsymbol(&argv[0]);
+	x->ph_name = name;
 	pos++;
 	if (argc > 1 && argv[1].a_type == A_FLOAT) {
 		x->ph_invis = (int)atom_getfloat(&argv[1]);
