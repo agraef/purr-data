@@ -547,7 +547,10 @@ static void preset_node_set(t_preset_node *x, t_symbol *s)
 {
 	if(PH_DEBUG) fprintf(stderr,"preset_node_set %s\n", s->s_name);
 
-	x->pn_hub_name = s;
+	if (!strcmp(s->s_name, "default"))
+		x->pn_hub_name = &s_;
+	else
+		x->pn_hub_name = s;
 	
 	if (x->pn_hub) {
 		preset_hub_delete_a_node(x->pn_hub, x);
@@ -573,7 +576,7 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 
 	// read creation arguments and substitute "default" for objects without optional arguments
     if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
-		x->pn_hub_name = gensym("default");
+		x->pn_hub_name = &s_;
 	else
 		x->pn_hub_name = (t_symbol *)atom_getsymbol(&argv[0]);
 
@@ -1165,7 +1168,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 
 	// read creation arguments and substitute "default" for objects without optional arguments
     if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
-		name = gensym("default");
+		name = &s_;
 	else
 		name = (t_symbol *)atom_getsymbol(&argv[0]);
 

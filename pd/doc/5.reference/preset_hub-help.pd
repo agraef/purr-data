@@ -1,5 +1,7 @@
 #N canvas 138 24 555 517 10;
-#X obj 183 295 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
+#X obj 109 282 cnv 15 60 39 empty empty empty 20 12 0 14 -261234 -66577
+0;
+#X obj 183 294 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
@@ -40,21 +42,16 @@ to conform to the PDDP template for Pd version 0.42.;
 0 15 %node% 1 10 %preset% 1 2.24 nlah 1 %preset% 0 a b c 4 3 2 1 %node%
 3 13 0 0 %preset% 1 1.02 %preset% 0 0.01 %node% 2 20 0 %preset% 1 two
 %preset% 0 zero %node% 1 25 %node% 2 44 0 %node% 1 48 %node% 3 73 0
-0 %node% 2 54 0 %node% 1 20 %preset% 1 99 %preset% 2 23 %preset% 3
-1001 %preset% 0 3 %node% 2 36 1 %preset% 1 problems %preset% 2 skidoo
-%preset% 3 nights %preset% 0 stooges %node% 1 39 %node% 2 45 0;
+0 %node% 2 54 0 %node% 1 21 %preset% 1 99 %preset% 2 23 %preset% 3
+1001 %preset% 0 3 %node% 2 31 1 %preset% 1 problems %preset% 2 skidoo
+%preset% 3 nights %preset% 0 stooges %node% 1 33 %node% 2 39 0 %node%
+1 65;
 #X msg 80 125 store \$1;
 #X msg 80 74 recall \$1;
 #X msg 30 73 purge;
 #X msg 20 51 reset;
 #X msg 80 174 clear \$1;
 #X obj 20 231 print hub_test_says;
-#X obj 188 271 preset_node test;
-#X floatatom 188 300 5 0 0 0 - - -;
-#X msg 197 238 purge;
-#X msg 188 216 reset;
-#X msg 248 237 clearall \$1;
-#X floatatom 248 216 5 0 0 0 - - -;
 #X obj 376 50 cnv 15 159 290 empty empty empty 20 12 0 14 -228856 -66577
 0;
 #X msg 447 139 store \$1;
@@ -68,11 +65,10 @@ to conform to the PDDP template for Pd version 0.42.;
 24 0 %node% 1 26 %node% 3 14 0 3 %preset% 0 -17 %preset% 1 382 %preset%
 2 1234 %node% 1 25 %preset% 0 -4 %preset% 1 54 %preset% 2 -999 %node%
 3 2 0 3 %node% 1 6 %node% 3 1 0 3 %node% 1 5 %node% 1 23 %node% 1 45
-%node% 3 73 0 3 %node% 2 54 2 %node% 1 37 %node% 2 45 2;
+%node% 3 73 0 3 %node% 2 54 2 %node% 1 32 %node% 2 39 2;
 #X obj 386 244 print hub_another_says;
 #X obj 20 268 hub_node_abs;
 #X obj 386 270 preset_node another;
-#X obj 237 300 print middle_node;
 #X obj 188 51 preset_node test;
 #X obj 188 135 list;
 #X msg 226 71 aaa 32 1;
@@ -89,11 +85,10 @@ to conform to the PDDP template for Pd version 0.42.;
 #X connect 1 0 0 0;
 #X connect 2 0 3 0;
 #X connect 3 0 2 0;
-#X restore 119 268 pd sub;
+#X restore 119 292 pd sub;
 #X text 98 418 reset;
 #X text 99 472 anything;
-#X obj 474 3 preset_hub default %hidden% %node% 2 9 1;
-#X obj 430 21 pddp/pddplink http://wiki.puredata.info/en/preset_hub
+#X obj 425 21 pddp/pddplink http://wiki.puredata.info/en/preset_hub
 -text pdpedia: preset_hub;
 #X text 99 376 purge;
 #X text 98 397 recall;
@@ -141,36 +136,48 @@ same canvas as the abstraction:;
 #X text 168 356 - clears preset n for all nodes;
 #X text 171 515 - OPTIONAL context for this preset (defaults to "default")
 ;
-#X connect 13 0 19 0;
-#X connect 14 0 13 0;
-#X connect 15 0 13 0;
-#X connect 16 0 13 0;
-#X connect 17 0 13 0;
-#X connect 18 0 13 0;
-#X connect 20 0 21 0;
-#X connect 20 0 38 0;
-#X connect 21 0 20 0;
-#X connect 22 0 20 0;
-#X connect 23 0 20 0;
-#X connect 24 0 20 0;
-#X connect 25 0 24 0;
-#X connect 27 0 34 0;
-#X connect 28 0 34 0;
-#X connect 29 0 27 0;
-#X connect 30 0 34 0;
-#X connect 31 0 34 0;
-#X connect 32 0 34 0;
-#X connect 33 0 32 0;
-#X connect 34 0 35 0;
-#X connect 37 0 55 0;
-#X connect 39 0 40 0;
-#X connect 40 0 39 0;
-#X connect 40 0 43 0;
-#X connect 41 0 40 0;
-#X connect 42 0 40 0;
-#X connect 44 0 40 0;
-#X connect 55 0 37 0;
-#X connect 56 0 15 0;
-#X connect 57 0 14 0;
-#X connect 58 0 18 0;
-#X connect 59 0 28 0;
+#X obj 479 3 preset_hub %hidden% %hidden%;
+#X obj 189 271 preset_node test;
+#X floatatom 189 299 5 0 0 0 - - -;
+#X msg 198 211 purge;
+#X msg 189 189 reset;
+#X msg 249 210 clearall \$1;
+#X floatatom 249 189 5 0 0 0 - - -;
+#X obj 233 300 print middle_node;
+#X msg 232 244 set another;
+#X msg 311 244 set test;
+#X connect 14 0 20 0;
+#X connect 15 0 14 0;
+#X connect 16 0 14 0;
+#X connect 17 0 14 0;
+#X connect 18 0 14 0;
+#X connect 19 0 14 0;
+#X connect 22 0 29 0;
+#X connect 23 0 29 0;
+#X connect 24 0 22 0;
+#X connect 25 0 29 0;
+#X connect 26 0 29 0;
+#X connect 27 0 29 0;
+#X connect 28 0 27 0;
+#X connect 29 0 30 0;
+#X connect 32 0 48 0;
+#X connect 33 0 34 0;
+#X connect 34 0 33 0;
+#X connect 34 0 37 0;
+#X connect 35 0 34 0;
+#X connect 36 0 34 0;
+#X connect 38 0 34 0;
+#X connect 48 0 32 0;
+#X connect 49 0 16 0;
+#X connect 50 0 15 0;
+#X connect 51 0 19 0;
+#X connect 52 0 23 0;
+#X connect 65 0 66 0;
+#X connect 65 0 71 0;
+#X connect 66 0 65 0;
+#X connect 67 0 65 0;
+#X connect 68 0 65 0;
+#X connect 69 0 65 0;
+#X connect 70 0 69 0;
+#X connect 72 0 65 0;
+#X connect 73 0 65 0;
