@@ -543,14 +543,14 @@ void preset_node_purge(t_preset_node *x) {
 
 	//==================== end functions are for interaction with the hub =====================//
 
-static void preset_node_set(t_preset_node *x, t_symbol *s)
+static void preset_node_set(t_preset_node *x, t_symbol *s, int argc, t_atom *argv)
 {
-	if(PH_DEBUG) fprintf(stderr,"preset_node_set %s\n", s->s_name);
+	if(PH_DEBUG) fprintf(stderr,"preset_node_set %d\n", argc);
 
-	if (!strcmp(s->s_name, "default"))
-		x->pn_hub_name = &s_;
+	if (argc == 0)
+		x->pn_hub_name = &s_;		
 	else
-		x->pn_hub_name = s;
+		x->pn_hub_name = (t_symbol *)atom_getsymbol(&argv[0]);
 	
 	if (x->pn_hub) {
 		preset_hub_delete_a_node(x->pn_hub, x);
@@ -561,11 +561,6 @@ static void preset_node_set(t_preset_node *x, t_symbol *s)
 	preset_node_seek_hub(x);
 }
 
-static void preset_node_set_null(t_preset_node *x)
-{
-	preset_node_set(x, &s_);
-}
-
 static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 {
 	if(PH_DEBUG) fprintf(stderr,"===preset_node_new===\n");
@@ -574,7 +569,7 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 
     t_preset_node *x = (t_preset_node *)pd_new(preset_node_class);
 
-	// read creation arguments and substitute "default" for objects without optional arguments
+	// read creation arguments and substitute default for objects without optional arguments
     if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
 		x->pn_hub_name = &s_;
 	else
@@ -641,7 +636,7 @@ void preset_node_setup(void)
     class_addmethod(preset_node_class, (t_method)preset_node_request_hub_store,
         gensym("store"), A_DEFFLOAT, 0);
     class_addmethod(preset_node_class, (t_method)preset_node_set,
-        gensym("set"), A_SYMBOL, 0);
+        gensym("set"), A_GIMME, 0);
 
     class_addmethod(preset_node_class, (t_method)preset_node_clear,
         gensym("clear"), A_DEFFLOAT, 0);
@@ -1166,11 +1161,15 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	loc_pos = 0;
 	pos = 0; // position within argc
 
-	// read creation arguments and substitute "default" for objects without optional arguments
-    if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
+	// read creation arguments and substitute default for objects without optional arguments
+    if (!(argc > 0 && argv[0].a_type == A_SYMBOL) || 
+		(argc > 0 && argv[0].a_type == A_SYMBOL && !strcmp(atom_getsymbol(&argv[0])->s_name, "%hidden%"))) {
+		pos--; // we subtract one position as we are essentially missing one argument	
 		name = &s_;
-	else
+	}
+	else {
 		name = (t_symbol *)atom_getsymbol(&argv[0]);
+	}
 
 	// now check if there is already another hub on the same canvas with the same name and fail if so
 	check = canvas->gl_phub;

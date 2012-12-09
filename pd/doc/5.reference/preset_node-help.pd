@@ -1,7 +1,7 @@
-#N canvas 438 24 555 517 10;
+#N canvas 438 24 555 677 10;
 #X obj 180 291 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
-#X obj 107 279 cnv 15 60 39 empty empty empty 20 12 0 14 -261234 -66577
+#X obj 107 279 cnv 15 60 37 empty empty empty 20 12 0 14 -261234 -66577
 0;
 #X obj 0 655 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
@@ -25,7 +25,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 598 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 347 cnv 3 3 140 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 347 cnv 17 3 140 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 102 481 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -108,7 +108,14 @@ of message the connected object can output.;
 #X text 98 605 Scope- [preset_hub foo] is local to its patch and all
 of that patch's children (i.e. \, subpatches and abstractions).;
 #X obj 98 633 pddp/pddplink preset_hub-help.pd;
-#N canvas 186 308 428 292 More_info 0;
+#N canvas 411 177 428 483 More_info 0;
+#X obj 271 378 cnv 15 39 23 empty empty empty 20 12 0 14 -261234 -66577
+0;
+#X obj 275 382 hradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 52 378 cnv 15 36 25 empty empty empty 20 12 0 14 -261234 -66577
+0;
+#X msg 58 382 set;
 #X obj 30 165 cnv 15 349 98 empty \$0-pddp.cnv.subheading empty 3 12
 0 14 -191407 -1 0;
 #X obj 31 166 cnv 15 347 96 empty \$0-pddp.cnv.subheading empty 3 12
@@ -128,6 +135,31 @@ same canvas as the abstraction:;
 #X text 168 205 inside it.;
 #X text 40 171 [preset_hub foo] <-- this won't apply to [bar] because
 ;
+#X obj 52 430 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
+0;
+#X msg 213 406 store \$1;
+#X obj 213 382 hradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 1;
+#X msg 275 406 recall \$1;
+#X msg 92 382 set some_scope;
+#X obj 58 407 preset_node some_scope;
+#X obj 213 433 preset_hub  %hidden% %node% 2 60 17 %preset% 0 50 %preset%
+1 100 %node% 2 60 19 %preset% 0 50 %preset% 1 100;
+#X floatatom 58 435 5 0 0 0 - - -;
+#X text 19 275 Setting node scope via "set" message allows for dynamic
+scope switching. If you wish to set it to the default (also known as
+null or "") scope \, you should use empty "set" message. Notice in
+the example below how hub recall does not work until you click on the
+"set" message which sets scope node to null as is the case with the
+hub.;
+#X connect 1 0 17 0;
+#X connect 3 0 19 0;
+#X connect 15 0 20 0;
+#X connect 16 0 15 0;
+#X connect 17 0 20 0;
+#X connect 18 0 19 0;
+#X connect 19 0 21 0;
+#X connect 21 0 19 0;
 #X restore 459 610 pd More_info;
 #X text 168 386 - purge all orphaned/unused nodes (forwarded to hub)
 ;
@@ -144,8 +176,6 @@ hub);
 #X text 98 346 clear;
 #X text 168 346 - clear this node data at preset n (forwarded to hub)
 ;
-#X text 171 565 - OPTIONAL context for this preset (defaults to "default")
-;
 #X text 98 447 set;
 #X text 168 447 - change context (hub) node is paired with;
 #X msg 229 242 set another;
@@ -153,6 +183,8 @@ hub);
 #X obj 380 293 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
 #X floatatom 386 298 5 0 0 0 - - -;
+#X text 171 565 - OPTIONAL scope for this preset (defaults to null
+or "");
 #X connect 16 0 25 0;
 #X connect 17 0 16 0;
 #X connect 18 0 16 0;
@@ -178,13 +210,13 @@ hub);
 #X connect 39 0 41 0;
 #X connect 40 0 39 0;
 #X connect 41 0 42 0;
-#X connect 44 0 77 0;
+#X connect 44 0 76 0;
 #X connect 46 0 47 0;
 #X connect 47 0 46 0;
 #X connect 47 0 50 0;
 #X connect 48 0 47 0;
 #X connect 49 0 47 0;
 #X connect 51 0 47 0;
+#X connect 73 0 26 0;
 #X connect 74 0 26 0;
-#X connect 75 0 26 0;
-#X connect 77 0 44 0;
+#X connect 76 0 44 0;
