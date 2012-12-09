@@ -29,7 +29,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [preset_node] Related Objects;
-#X obj 22 36 preset_hub;
+#X obj 22 36 preset_hub default %hidden%;
 #X restore 101 637 pd Related_objects;
 #X obj 78 482 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -104,7 +104,6 @@ to conform to the PDDP template for Pd version 0.42.;
 the object below it back to its inlet. It can recall whatever type
 of message the connected object can output.;
 #X text 81 545 1) symbol;
-#X text 171 545 - name for this preset;
 #X text 98 585 Scope- [preset_hub foo] is local to its patch and all
 of that patch's children (i.e. \, subpatches and abstractions).;
 #X obj 98 613 pddp/pddplink preset_hub-help.pd;
@@ -143,6 +142,8 @@ hub);
 ;
 #X text 98 346 clear;
 #X text 168 346 - clear this node data at preset n (forwarded to hub)
+;
+#X text 171 545 - OPTIONAL context for this preset (defaults to "default")
 ;
 #X connect 15 0 24 0;
 #X connect 16 0 15 0;
