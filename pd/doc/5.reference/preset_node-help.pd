@@ -1,7 +1,7 @@
 #N canvas 438 24 555 517 10;
 #X obj 113 279 cnv 15 60 39 empty empty empty 20 12 0 14 -261234 -66577
 0;
-#X obj 0 635 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 0 655 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header preset_node 3 12
 0 18 -204280 -1 0;
@@ -16,24 +16,24 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 65 INLET_0 anything;
 #X text 12 85 OUTLET_0 anything;
 #X text 12 105 AUTHOR Ivica Ico Bukvic (c) 2012 <ico@vt.edu>;
-#X restore 500 637 pd META;
-#X obj 0 473 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 657 pd META;
+#X obj 0 493 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 528 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 548 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 578 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 598 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 347 cnv 3 3 120 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 347 cnv 3 3 140 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 102 481 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [preset_node] Related Objects;
 #X obj 22 36 preset_hub default %hidden%;
-#X restore 101 637 pd Related_objects;
-#X obj 78 482 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 101 657 pd Related_objects;
+#X obj 78 502 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 4 637 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 657 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 11 20 universal preset system for pd-l2ork;
 #X obj 474 3 preset_node;
@@ -54,12 +54,12 @@ to conform to the PDDP template for Pd version 0.42.;
 #X msg 81 174 clear \$1;
 #X floatatom 81 150 5 0 0 0 - - -;
 #X obj 20 231 print hub_test_says;
-#X obj 188 273 preset_node test;
+#X obj 188 279 preset_node test;
 #X floatatom 188 302 5 0 0 0 - - -;
-#X msg 197 233 purge;
-#X msg 188 211 reset;
-#X msg 248 232 clearall \$1;
-#X floatatom 248 211 5 0 0 0 - - -;
+#X msg 197 213 purge;
+#X msg 188 191 reset;
+#X msg 248 212 clearall \$1;
+#X floatatom 248 191 5 0 0 0 - - -;
 #X obj 376 50 cnv 15 156 279 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X msg 447 83 store \$1;
@@ -99,14 +99,14 @@ to conform to the PDDP template for Pd version 0.42.;
 #X restore 123 289 pd sub;
 #X text 98 366 clearall;
 #X text 99 386 purge;
-#X text 99 482 anything;
-#X text 169 482 - [preset_node] makes an invisible connection from
+#X text 99 502 anything;
+#X text 169 502 - [preset_node] makes an invisible connection from
 the object below it back to its inlet. It can recall whatever type
 of message the connected object can output.;
-#X text 81 545 1) symbol;
-#X text 98 585 Scope- [preset_hub foo] is local to its patch and all
+#X text 81 565 1) symbol;
+#X text 98 605 Scope- [preset_hub foo] is local to its patch and all
 of that patch's children (i.e. \, subpatches and abstractions).;
-#X obj 98 613 pddp/pddplink preset_hub-help.pd;
+#X obj 98 633 pddp/pddplink preset_hub-help.pd;
 #N canvas 186 308 428 292 More_info 0;
 #X obj 30 165 cnv 15 349 98 empty \$0-pddp.cnv.subheading empty 3 12
 0 14 -191407 -1 0;
@@ -127,24 +127,28 @@ same canvas as the abstraction:;
 #X text 168 205 inside it.;
 #X text 40 171 [preset_hub foo] <-- this won't apply to [bar] because
 ;
-#X restore 459 590 pd More_info;
+#X restore 459 610 pd More_info;
 #X text 168 386 - purge all orphaned/unused nodes (forwarded to hub)
 ;
 #X text 98 427 reset;
 #X text 98 406 recall;
-#X text 98 447 store;
+#X text 98 467 store;
 #X text 168 406 - recall the values stored at index n (forwarded to
 hub);
 #X text 168 427 - reset all preset node data (forwarded to hub);
-#X text 168 447 - store the current state at index n (forwarded to
+#X text 168 467 - store the current state at index n (forwarded to
 hub);
 #X text 168 366 - clear all node data at preset n (forwarded to hub)
 ;
 #X text 98 346 clear;
 #X text 168 346 - clear this node data at preset n (forwarded to hub)
 ;
-#X text 171 545 - OPTIONAL context for this preset (defaults to "default")
+#X text 171 565 - OPTIONAL context for this preset (defaults to "default")
 ;
+#X text 98 447 set;
+#X text 168 447 - change context (hub) node is paired with;
+#X msg 231 246 set another;
+#X msg 310 246 set test;
 #X connect 15 0 24 0;
 #X connect 16 0 15 0;
 #X connect 17 0 15 0;
@@ -178,3 +182,5 @@ hub);
 #X connect 48 0 47 0;
 #X connect 49 0 47 0;
 #X connect 51 0 47 0;
+#X connect 74 0 25 0;
+#X connect 75 0 25 0;
