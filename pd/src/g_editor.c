@@ -4174,6 +4174,7 @@ static void canvas_copy(t_canvas *x)
 	copiedfont = 0;
     binbuf_free(copy_binbuf);
 	//fprintf(stderr, "canvas_copy\n");
+	sys_vgui("pdtk_canvas_reset_last_clipboard\n");
     copy_binbuf = canvas_docopy(x);
 	if (!x->gl_editor->e_selection)
 		sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
@@ -4188,8 +4189,7 @@ static void canvas_copy(t_canvas *x)
 
 //#if defined(MSW) || defined(__APPLE__)
 //            /* for Mac or Windows, copy the text to the clipboard here */
-        sys_vgui("clipboard clear\n", bufsize, buf);
-        sys_vgui("clipboard append {%.*s}\n", bufsize, buf);
+        sys_vgui("clipboard clear\n clipboard append {%.*s}\n", bufsize, buf);
 //#else
             /* in X windows the selection already went to the
             clipboard when it was made; here we "copy" it to our own buffer

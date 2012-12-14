@@ -1903,81 +1903,95 @@ proc menu_mycnv {name accel} {
 
 # correct edit menu, enabling or disabling undo/redo/cut/copy/paste
 proc menu_fixeditmenu {name} {
-	catch {
-		#puts stderr "fixeditmenu $name\n"
+	if { [winfo exists $name] } {
+		catch {
+			#puts stderr "fixeditmenu $name\n"
 
-		#global pd_undoaction
-		#global pd_redoaction
-		#global pd_undocanvas
+			#global pd_undoaction
+			#global pd_redoaction
+			#global pd_undocanvas
 
-		global global_selection
-		global global_clipboard
-		global last_clipboard
+			global global_selection
+			global global_clipboard
+			global last_clipboard
 
-		# investigate if we have already something copied from an external source
-		set current_clipboard 0
-		catch {set current_clipboard [clipboard get]}
-		if {$current_clipboard != 0} {
-			# make sure the clipboard contents have not changed
-			if { [string compare $last_clipboard $current_clipboard] } {
-				set data [split $current_clipboard "\n"]
-				set first 0
-				set full_line ""
-				pd [concat $name reset_copyfromexternalbuffer\;]
-				foreach line $data {
-					if { [string index $line end] == ";" } {
-						if { $full_line == "" } {
-							set full_line $line
+			# investigate if we have already something copied from an external source
+			set current_clipboard 0
+			catch {set current_clipboard [clipboard get]}
+			#puts stderr $current_clipboard
+			#puts stderr "======================================\n"
+			#puts stderr $last_clipboard
+			if {$current_clipboard != 0} {
+				#puts stderr "curent clipboard != 0"
+				# make sure the clipboard contents have not changed
+				if { [string compare $last_clipboard $current_clipboard] } {
+					#puts stderr "current != last"
+					set data [split $current_clipboard "\n"]
+					set first 0
+					set full_line ""
+					pd [concat $name reset_copyfromexternalbuffer\;]
+					foreach line $data {
+						if { [string index $line end] == ";" } {
+							if { $full_line == "" } {
+								set full_line $line
+							} else {
+								append full_line " " $line
+							}
+							#puts stderr "pd.tk sends: |$line| |$full_line|"
+							if { !$first } {
+								pd [concat $name copyfromexternalbuffer\;]
+								pd [concat $name copyfromexternalbuffer $full_line\;]
+								set first 1
+							} else {
+								pd [concat $name copyfromexternalbuffer $full_line\;]
+							}
+							set full_line ""
 						} else {
 							append full_line " " $line
+							set full_line [string map {"\n" ""} $full_line]
 						}
-						#puts stderr "pd.tk sends: |$line| |$full_line|\n"
-						if { !$first } {
-							pd [concat $name copyfromexternalbuffer\;]
-							pd [concat $name copyfromexternalbuffer $full_line\;]
-							set first 1
-						} else {
-							pd [concat $name copyfromexternalbuffer $full_line\;]
-						}
-						set full_line ""
-					} else {
-						append full_line " " $line
-						set full_line [string map {"\n" ""} $full_line]
 					}
+					set global_clipboard 1
+					set last_clipboard $current_clipboard
+					pd [concat $name copyfromexternalbuffer\;]
+					pdtk_canvas_update_edit_menu $name 1
 				}
-				set global_clipboard 1
-				set last_clipboard $current_clipboard
-				pd [concat $name copyfromexternalbuffer\;]
-				pdtk_canvas_update_edit_menu $name 1
+			}
+
+			# puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
+			if {$::undo($name) != "no"} {
+				$name.m.edit entryconfigure "Undo*" -state normal \
+				    -label [concat "Undo " $::undo($name)]
+			} else {
+				$name.m.edit entryconfigure "Undo*" -state disabled -label "Undo"
+			}
+			if {$::redo($name) != "no"} {
+				$name.m.edit entryconfigure "Redo*" -state normal\
+				    -label [concat "Redo " $::redo($name)]
+			} else {
+				$name.m.edit entryconfigure "Redo*" -state disabled
+			}
+
+			if {$global_selection == 1} {
+				$name.m.edit entryconfigure "Duplicate" -state normal
+			} else {
+				$name.m.edit entryconfigure "Duplicate" -state disabled
+			}
+
+			if {$global_clipboard == 1} {
+				$name.m.edit entryconfigure "Paste" -state normal
+			} else {
+				$name.m.edit entryconfigure "Paste" -state disabled
 			}
 		}
-
-		# puts stderr [concat menu_fixeditmenu $name $pd_undocanvas $pd_undoaction]
-		if {$::undo($name) != "no"} {
-		    $name.m.edit entryconfigure "Undo*" -state normal \
-		        -label [concat "Undo " $::undo($name)]
-		} else {
-		    $name.m.edit entryconfigure "Undo*" -state disabled -label "Undo"
-		}
-		if {$::redo($name) != "no"} {
-		    $name.m.edit entryconfigure "Redo*" -state normal\
-		        -label [concat "Redo " $::redo($name)]
-		} else {
-		    $name.m.edit entryconfigure "Redo*" -state disabled
-		}
-
-		if {$global_selection == 1} {
-		    $name.m.edit entryconfigure "Duplicate" -state normal
-		} else {
-		    $name.m.edit entryconfigure "Duplicate" -state disabled
-		}
-
-		if {$global_clipboard == 1} {
-		    $name.m.edit entryconfigure "Paste" -state normal
-		} else {
-		    $name.m.edit entryconfigure "Paste" -state disabled
-		}
 	}
+}
+
+# reset last_clipboard whenever we do copy/cut from inside pd
+proc pdtk_canvas_reset_last_clipboard {} {
+	global last_clipboard
+	set last_clipboard 0
+	#puts stderr pdtk_canvas_reset_last_clipboard
 }
 
 # message from Pd to update the currently available undo/redo action
