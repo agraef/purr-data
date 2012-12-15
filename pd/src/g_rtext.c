@@ -14,6 +14,7 @@
 #include "m_imp.h"
 #include "s_stuff.h"
 #include "g_canvas.h"
+#include "s_utf8.h"
 #include "t_tk.h"
 
 #define LMARGIN 2
@@ -39,10 +40,10 @@ static int last_sel = 0;
 
 struct _rtext
 {
-    char *x_buf;
-    int x_bufsize;
-    int x_selstart;
-    int x_selend;
+    char *x_buf;    /*-- raw byte string, assumed UTF-8 encoded (moo) --*/
+    int x_bufsize;  /*-- byte length --*/
+    int x_selstart; /*-- byte offset --*/
+    int x_selend;   /*-- byte offset --*/
     int x_active;
     int x_dragfrom;
     int x_height;
@@ -111,8 +112,30 @@ void rtext_getseltext(t_rtext *x, char **buf, int *bufsize)
     *bufsize = x->x_selend - x->x_selstart;
 }
 
+/* convert t_text te_type symbol for use as a Tk tag */
+static t_symbol *rtext_gettype(t_rtext *x)
+{
+    switch (x->x_text->te_type) 
+    {
+    case T_TEXT: return gensym("text");
+    case T_OBJECT: return gensym("obj");
+    case T_MESSAGE: return gensym("msg");
+    case T_ATOM: return gensym("atom");
+    }
+    return (&s_);
+}
+
 /* LATER deal with tcl-significant characters */
 
+/* firstone(), lastone()
+ *  + returns byte offset of (first|last) occurrence of 'c' in 's[0..n-1]', or
+ *    -1 if none was found
+ *  + 's' is a raw byte string
+ *  + 'c' is a byte value
+ *  + 'n' is the length (in bytes) of the prefix of 's' to be searched.
+ *  + we could make these functions work on logical characters in utf8 strings,
+ *    but we don't really need to...
+ */
 static int firstone(char *s, int c, int n)
 {
     char *s2 = s + n;
@@ -149,6 +172,16 @@ static int lastone(char *s, int c, int n)
     of the entire text in pixels.
     */
 
+   /*-- moo: 
+    * + some variables from the original version have been renamed
+    * + variables with a "_b" suffix are raw byte strings, lengths, or offsets
+    * + variables with a "_c" suffix are logical character lengths or offsets
+    *   (assuming valid UTF-8 encoded byte string in x->x_buf)
+    * + a fair amount of O(n) computations required to convert between raw byte
+    *   offsets (needed by the C side) and logical character offsets (needed by
+    *   the GUI)
+    */
+
     /* LATER get this and sys_vgui to work together properly,
         breaking up messages as needed.  As of now, there's
         a limit of 1950 characters, imposed by sys_vgui(). */
@@ -167,14 +200,17 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 	if (x) {
 		t_float dispx, dispy;
 		char smallbuf[200], *tempbuf;
-		int outchars = 0, nlines = 0, ncolumns = 0,
+		int outchars_b = 0, nlines = 0, ncolumns = 0,
 		    pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
 		int reportedindex = 0;
 		t_canvas *canvas = glist_getcanvas(x->x_glist);
-		int widthspec = x->x_text->te_width;
-		int widthlimit = (widthspec ? widthspec : BOXWIDTH);
-		int inindex = 0;
-		int selstart = 0, selend = 0;
+
+		int widthspec_c = x->x_text->te_width;
+		int widthlimit_c = (widthspec_c ? widthspec_c : BOXWIDTH);
+		int inindex_b = 0;
+		int inindex_c = 0;
+		int selstart_b = 0, selend_b = 0;
+		int x_bufsize_c = u8_charnum(x->x_buf, x->x_bufsize);
 		    /* if we're a GOP (the new, "goprect" style) borrow the font size
 		    from the inside to preserve the spacing */
 		if (pd_class(&x->x_text->te_pd) == canvas_class &&
@@ -189,74 +225,85 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		if (x->x_bufsize >= 100)
 		     tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
 		else tempbuf = smallbuf;
-		while (x->x_bufsize - inindex > 0)
+		while (x_bufsize_c - inindex_c > 0)
 		{
-		    int inchars = x->x_bufsize - inindex;
-		    int maxindex = (inchars > widthlimit ? widthlimit : inchars);
+			int inchars_b  = x->x_bufsize - inindex_b;
+			int inchars_c  = x_bufsize_c  - inindex_c;
+			int maxindex_c = (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
+			int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c);
 		    int eatchar = 1;
-		    int foundit = firstone(x->x_buf + inindex, '\n', maxindex);
-		    if (foundit < 0)
+			int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
+			int foundit_c;
+			if (foundit_b < 0)
 		    {
-		        if (inchars > widthlimit)
+		        if (inchars_c > widthlimit_c)
 		        {
-		            foundit = lastone(x->x_buf + inindex, ' ', maxindex);
-		            if (foundit < 0)
+					foundit_b = lastone(x->x_buf + inindex_b, ' ', maxindex_b);
+					if (foundit_b < 0)
 		            {
-		                foundit = maxindex;
+						foundit_b = maxindex_b;
+						foundit_c = maxindex_c;
 		                eatchar = 0;
 		            }
+					else
+						foundit_c = u8_charnum(x->x_buf + inindex_b, foundit_b);
 		        }
 		        else
 		        {
-		            foundit = inchars;
+					foundit_b = inchars_b;
+					foundit_c = inchars_c;
 		            eatchar = 0;
 		        }
 		    }
+			else
+				foundit_c = u8_charnum(x->x_buf + inindex_b, foundit_b);
+
 		    if (nlines == findy)
 		    {
 		        int actualx = (findx < 0 ? 0 :
-		            (findx > foundit ? foundit : findx));
-		        *indexp = inindex + actualx;
+		            (findx > foundit_c ? foundit_c : findx));
+		        *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx);
 		        reportedindex = 1;
 		    }
-		    strncpy(tempbuf+outchars, x->x_buf + inindex, foundit);
-		    if (x->x_selstart >= inindex &&
-		        x->x_selstart <= inindex + foundit + eatchar)
-		            selstart = x->x_selstart + outchars - inindex;
-		    if (x->x_selend >= inindex &&
-		        x->x_selend <= inindex + foundit + eatchar)
-		            selend = x->x_selend + outchars - inindex;
-		    outchars += foundit;
-		    inindex += (foundit + eatchar);
-		    if (inindex < x->x_bufsize)
-		        tempbuf[outchars++] = '\n';
-		    if (foundit > ncolumns)
-		        ncolumns = foundit;
+		    strncpy(tempbuf+outchars_b, x->x_buf + inindex_b, foundit_b);
+		    if (x->x_selstart >= inindex_b &&
+		        x->x_selstart <= inindex_b + foundit_b + eatchar)
+		            selstart_b = x->x_selstart + outchars_b - inindex_b;
+		    if (x->x_selend >= inindex_b &&
+		        x->x_selend <= inindex_b + foundit_b + eatchar)
+		            selend_b = x->x_selend + outchars_b - inindex_b;
+		    outchars_b += foundit_b;
+		    inindex_b += (foundit_b + eatchar);
+		    inindex_c += (foundit_c + eatchar);
+		    if (inindex_b < x->x_bufsize)
+		        tempbuf[outchars_b++] = '\n';
+		    if (foundit_c > ncolumns)
+		        ncolumns = foundit_c;
 		    nlines++;
 		}
 		if (!reportedindex)
-		    *indexp = outchars;
+		    *indexp = outchars_b;
 		dispx = text_xpix(x->x_text, x->x_glist);
 		dispy = text_ypix(x->x_text, x->x_glist);
 		if (nlines < 1) nlines = 1;
-		if (!widthspec)
+		if (!widthspec_c)
 		{
 		    while (ncolumns < 3)
 		    {
-		        tempbuf[outchars++] = ' ';
+		        tempbuf[outchars_b++] = ' ';
 		        ncolumns++;
 		    }
 		}
-		else ncolumns = widthspec;
+		else ncolumns = widthspec_c;
 		pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
 		pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
 
 		if (action == SEND_FIRST) {
 			//fprintf(stderr,"canvas=.x%lx %s\n", (t_int)canvas, tempbuf);
-		    sys_vgui("pdtk_text_new .x%lx.c %s %f %f {%.*s} %d %s\n",
-		        canvas, x->x_tag,
+		    sys_vgui("pdtk_text_new .x%lx.c {%s %s text} %f %f {%.*s} %d %s\n",
+		        canvas, x->x_tag, rtext_gettype(x)->s_name,
 		        dispx + LMARGIN, dispy + TMARGIN,
-		        outchars, tempbuf, sys_hostfontsize(font),
+		        outchars_b, tempbuf, sys_hostfontsize(font),
 		        (glist_isselected(x->x_glist,
 		            &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
 		}
@@ -267,7 +314,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 				((t_glist *)(x->x_text))->gl_isgraph,
 				((t_glist *)(x->x_text))->gl_goprect );*/
 		    sys_vgui("pdtk_text_set .x%lx.c %s {%.*s}\n",
-		        canvas, x->x_tag, outchars, tempbuf);
+		        canvas, x->x_tag, outchars_b, tempbuf);
 			/*if ( pd_class(&x->x_text->te_pd) == canvas_class &&
 		    	((t_glist *)(x->x_text))->gl_isgraph &&
 		    	(((t_glist *)(x->x_text))->gl_goprect) ) {
@@ -279,19 +326,20 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		            pixwide, pixhigh, 0);
 		    if (x->x_active)
 		    {
-		        if (selend > selstart)
+		        if (selend_b > selstart_b)
 		        {
 		            sys_vgui(".x%lx.c select from %s %d\n", canvas, 
-		                x->x_tag, selstart);
+		                x->x_tag, u8_charnum(x->x_buf, selstart_b));
 		            sys_vgui(".x%lx.c select to %s %d\n", canvas, 
-		                x->x_tag, selend + (sys_oldtclversion ? 0 : -1));
+		                x->x_tag, u8_charnum(x->x_buf, selend_b)
+					  	+ (sys_oldtclversion ? 0 : -1));
 		            sys_vgui(".x%lx.c focus \"\"\n", canvas);        
 		        }
 		        else
 		        {
 		            sys_vgui(".x%lx.c select clear\n", canvas);
 		            sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
-		                selstart);
+		                u8_charnum(x->x_buf, selstart_b));
 		            sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
 		        }
 		    }
@@ -467,7 +515,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
                 ....
             } */
             if (x->x_selstart && (x->x_selstart == x->x_selend)) {
-                x->x_selstart--;
+                u8_dec(x->x_buf, &x->x_selstart);
 				if (glist_isvisible(glist_getcanvas(x->x_glist)))
 					sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
 			}
@@ -476,7 +524,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
         else if (n == 127)      /* delete */
         {
             if (x->x_selend < x->x_bufsize && (x->x_selstart == x->x_selend))
-                x->x_selend++;
+                u8_inc(x->x_buf, &x->x_selend);
 			if (glist_isvisible(glist_getcanvas(x->x_glist)))
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
         }
@@ -491,7 +539,13 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 /* at Guenter's suggestion, use 'n>31' to test wither a character might
 be printable in whatever 8-bit character set we find ourselves. */
 
-        if (n == '\n' || (n > 31 && n != 127))
+/*-- moo:
+  ... but test with "<" rather than "!=" in order to accomodate unicode
+  codepoints for n (which we get since Tk is sending the "%A" substitution
+  for bind <Key>), effectively reducing the coverage of this clause to 7
+  bits.  Case n>127 is covered by the next clause.
+*/
+        if (n == '\n' || (n > 31 && n < 127))
         {
             newsize = x->x_bufsize+1;
             x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
@@ -503,13 +557,29 @@ be printable in whatever 8-bit character set we find ourselves. */
 			if (glist_isvisible(glist_getcanvas(x->x_glist)))
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
         }
+		/*--moo: check for unicode codepoints beyond 7-bit ASCII --*/
+		else if (n > 127)
+		{
+            int ch_nbytes = u8_wc_nbytes(n);
+            newsize = x->x_bufsize + ch_nbytes;
+            x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
+            for (i = x->x_bufsize; i > x->x_selstart; i--)
+                x->x_buf[i] = x->x_buf[i-1];
+            x->x_bufsize = newsize;
+            /*-- moo: assume canvas_key() has encoded keysym as UTF-8 */
+            strncpy(x->x_buf+x->x_selstart, keysym->s_name, ch_nbytes);
+            x->x_selstart = x->x_selstart + ch_nbytes;
+        }
         x->x_selend = x->x_selstart;
         x->x_glist->gl_editor->e_textdirty = 1;
     }
     else if (!strcmp(keysym->s_name, "Right"))
     {
         if (x->x_selend == x->x_selstart && x->x_selstart < x->x_bufsize)
-            x->x_selend = x->x_selstart = x->x_selstart + 1;
+        {
+            u8_inc(x->x_buf, &x->x_selstart);
+            x->x_selend = x->x_selstart;
+        }
         else
             x->x_selstart = x->x_selend;
 		last_sel = 0;		
@@ -517,7 +587,10 @@ be printable in whatever 8-bit character set we find ourselves. */
     else if (!strcmp(keysym->s_name, "Left"))
     {
         if (x->x_selend == x->x_selstart && x->x_selstart > 0)
-            x->x_selend = x->x_selstart = x->x_selstart - 1;
+        {
+            u8_dec(x->x_buf, &x->x_selstart);
+            x->x_selend = x->x_selstart;
+        }
         else
             x->x_selend = x->x_selstart;
 		last_sel = 0;
@@ -527,11 +600,11 @@ be printable in whatever 8-bit character set we find ourselves. */
 		if (!last_sel) last_sel = 2;
 		if (last_sel == 1 && x->x_selstart < x->x_selend) {
 		    if (x->x_selstart < x->x_bufsize)
-		        x->x_selstart =  x->x_selstart + 1;			
+		        u8_inc(x->x_buf, &x->x_selstart);		
 		} else {
 			last_sel = 2;
 		    if (x->x_selend < x->x_bufsize)
-		        x->x_selend =  x->x_selend + 1;
+		        u8_inc(x->x_buf, &x->x_selend);
 		}
     }
     else if (!strcmp(keysym->s_name, "ShiftLeft"))
@@ -542,16 +615,16 @@ be printable in whatever 8-bit character set we find ourselves. */
 		} else {
 			last_sel = 1;
 		    if (x->x_selstart > 0)
-		        x->x_selstart = x->x_selstart - 1;
+		        u8_dec(x->x_buf, &x->x_selstart);
 		}
     }
         /* this should be improved...  life's too short */
     else if (!strcmp(keysym->s_name, "Up") || !strcmp(keysym->s_name, "Home"))
     {
         if (x->x_selstart)
-            x->x_selstart--;
+            u8_dec(x->x_buf, &x->x_selstart);
         while (x->x_selstart > 0 && x->x_buf[x->x_selstart] != '\n')
-            x->x_selstart--;
+            u8_dec(x->x_buf, &x->x_selstart);
         x->x_selend = x->x_selstart;
 		last_sel = 0;
     }
@@ -559,9 +632,9 @@ be printable in whatever 8-bit character set we find ourselves. */
     {
         while (x->x_selend < x->x_bufsize &&
             x->x_buf[x->x_selend] != '\n')
-            x->x_selend++;
+            u8_inc(x->x_buf, &x->x_selend);
         if (x->x_selend < x->x_bufsize)
-            x->x_selend++;
+            u8_inc(x->x_buf, &x->x_selend);
         x->x_selstart = x->x_selend;
 		last_sel = 0;
     }
@@ -569,31 +642,31 @@ be printable in whatever 8-bit character set we find ourselves. */
     {
 		/* first find first non-space char going back */
 		while (x->x_selstart > 0 && x->x_buf[x->x_selstart-1] == ' ')
-			x->x_selstart--;
+			u8_dec(x->x_buf, &x->x_selstart);
 		/* now go back until you find another space or the beginning of the buffer */
         while (x->x_selstart > 0 &&
 		  x->x_buf[x->x_selstart] != '\n' &&
 		  x->x_buf[x->x_selstart-1] != ' ')
-            x->x_selstart--;
+            u8_dec(x->x_buf, &x->x_selstart);
 		if (x->x_buf[x->x_selstart+1] == ' ')
-			x->x_selstart++;
+			u8_inc(x->x_buf, &x->x_selstart);
 		x->x_selend = x->x_selstart;
     }
     else if (!strcmp(keysym->s_name, "CtrlRight"))
     {
 		/* now go forward until you find another space or the end of the buffer */
 		if (x->x_selend < x->x_bufsize - 1)
-			x->x_selend++;
+			u8_inc(x->x_buf, &x->x_selend);
         while (x->x_selend < x->x_bufsize &&
           x->x_buf[x->x_selend] != '\n' &&
 		  x->x_buf[x->x_selend] != ' ')
-            x->x_selend++;
+            u8_inc(x->x_buf, &x->x_selend);
 		/* now skip all the spaces and land before next word */
         while (x->x_selend < x->x_bufsize &&
 		  x->x_buf[x->x_selend] == ' ')
-            x->x_selend++;
+            u8_inc(x->x_buf, &x->x_selend);
 		if (x->x_selend > 0 && x->x_buf[x->x_selend-1] == ' ')
-			x->x_selend--;
+			u8_dec(x->x_buf, &x->x_selend);
 		x->x_selstart = x->x_selend;
     }
     else if (!strcmp(keysym->s_name, "CtrlShiftLeft"))
@@ -609,14 +682,17 @@ be printable in whatever 8-bit character set we find ourselves. */
 		}
 		/* first find first non-space char going back */
 		while (*target > 0 && x->x_buf[*target-1] == ' ')
-			(*target)--;
+			u8_dec(x->x_buf, target);
+			//(*target)--;
 		/* now go back until you find another space or the beginning of the buffer */
         while (*target > 0 &&
 		  x->x_buf[*target] != '\n' &&
 		  x->x_buf[*target-1] != ' ')
-            (*target)--;
+			u8_dec(x->x_buf, target);
+            //(*target)--;
 		if (x->x_buf[*target+1] == ' ')
-			(*target)++;
+			u8_inc(x->x_buf, target);
+			//(*target)++;
         if (x->x_selstart > x->x_selend) {
 			swap = x->x_selend;
 			x->x_selend = x->x_selstart;
@@ -637,17 +713,21 @@ be printable in whatever 8-bit character set we find ourselves. */
 		}
 		/* now go forward until you find another space or the end of the buffer */
 		if (*target < x->x_bufsize - 1)
-			(*target)++;
+			u8_inc(x->x_buf, target);
+			//(*target)++;
         while (*target < x->x_bufsize &&
           x->x_buf[*target] != '\n' &&
 		  x->x_buf[*target] != ' ')
-            (*target)++;
+			u8_inc(x->x_buf, target);
+            //(*target)++;
 		/* now skip all the spaces and land before next word */
         while (*target < x->x_bufsize &&
 		  x->x_buf[*target] == ' ')
-            (*target)++;
+			u8_inc(x->x_buf, target);
+            //(*target)++;
 		if (*target > 0 && x->x_buf[*target-1] == ' ')
-			(*target)--;
+			u8_dec(x->x_buf, target);
+			//(*target)--;
         if (x->x_selstart > x->x_selend) {
 			swap = x->x_selend;
 			x->x_selend = x->x_selstart;

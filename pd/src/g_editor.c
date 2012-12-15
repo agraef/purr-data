@@ -9,6 +9,7 @@
 #include "s_stuff.h"
 #include "g_magicglass.h"
 #include "g_canvas.h"
+#include "s_utf8.h" /*-- moo --*/
 #include "g_undo.h"
 #include "x_preset.h"
 #include <string.h>
@@ -3490,6 +3491,9 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         case 127:gotkeysym = gensym("Delete"); break;
         default:
             sprintf(buf, "%c", (int)(av[1].a_w.w_float));
+			/*-- moo: assume keynum is a Unicode codepoint; encode as UTF-8 --*/
+			char buf[UTF8_MAXBYTES1];
+			u8_wc_toutf8_nul(buf, (UCS4)(av[1].a_w.w_float));
             gotkeysym = gensym(buf);
         }
     }

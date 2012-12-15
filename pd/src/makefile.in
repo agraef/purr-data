@@ -66,7 +66,8 @@ OPT_SAFE_SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_
     m_pd.c m_class.c m_obj.c m_atom.c m_memory.c m_binbuf.c \
     m_conf.c m_glob.c m_sched.c \
     s_main.c s_inter.c s_file.c s_print.c \
-    s_loader.c s_path.c s_entry.c s_audio.c s_midi.c\
+    s_loader.c s_path.c s_entry.c s_audio.c s_midi.c \
+	s_utf8.c \
     d_ugen.c d_arithmetic.c d_dac.c d_misc.c \
     d_fft.c d_global.c \
     d_resample.c \

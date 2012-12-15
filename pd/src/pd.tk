@@ -18,6 +18,11 @@
 #http://ico.bukvic.net <ico@vt.edu>
 
 #puts stderr [info tclversion]
+##--moo: force default system and stdio encoding to UTF-8
+encoding system utf-8
+fconfigure stderr -encoding utf-8
+fconfigure stdout -encoding utf-8
+##--/moo
 
 if { [info tclversion] >= 8.5 } {
 
@@ -5947,9 +5952,9 @@ proc pdtk_text_new {canvasname myname x y text font color} {
 #        30 { set typeface [lindex $pd_fontlist 8] }
 #        36 { set typeface [lindex $pd_fontlist 9] }
 #    }
-
+	#[encoding convertfrom utf-8 $text]
     $canvasname create text $x $y -font [get_font_for_size $font] \
-        -tags $myname -text $text -fill $color -anchor nw
+        -tags $myname -text [encoding convertfrom utf-8 $text] -fill $color -anchor nw
 	$canvasname addtag text withtag $myname
 	#$canvasname bind $myname <Home> [concat $canvasname icursor $myname 0]
 	#$canvasname bind $myname <End> [concat $canvasname icursor $myname end]
@@ -5964,7 +5969,7 @@ proc pdtk_text_new {canvasname myname x y text font color} {
 
 ################ pdtk_text_set -- change the text ##################
 proc pdtk_text_set {canvasname myname text} {
-    catch {$canvasname itemconfig $myname -text $text}
+    catch {$canvasname itemconfig $myname -text [encoding convertfrom utf-8 $text]}
     #    pd [concat $myname size [$canvasname bbox $myname] \;]
 }
 
