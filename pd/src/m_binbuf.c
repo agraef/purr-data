@@ -1026,6 +1026,7 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             char bp2[WBUFSIZE];
             atom_string(ap, bp2, WBUFSIZE);
             strnescape(bp, bp2, (ep-bp)-2);
+			//atom_string(ap, bp, (ep-bp)-2);
             length = strlen(bp);
             bp += length;
             ncolumn += length;
