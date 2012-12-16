@@ -1311,7 +1311,8 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
         outline = "$dash_outline";
     else
         outline = "$box_outline";
-    if (glist_isvisible(glist) && gobj_shouldvis(&x->te_g, glist)) {
+	//fprintf(stderr,"text_select isvisible=%d shouldvis=%d istoplevel=%d\n", glist_isvisible(glist), gobj_shouldvis(&x->te_g, glist), glist_istoplevel(glist));
+    if (gobj_shouldvis(&x->te_g, glist)) {
 		if (glist_istoplevel(glist)) {
 		    sys_vgui(".x%lx.c itemconfigure %sR -outline %s\n", glist_getcanvas(glist), 
 		             rtext_gettag(y), (state? "$select_color" : outline));

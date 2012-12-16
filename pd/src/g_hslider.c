@@ -260,7 +260,7 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
 	t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
 
-	if (glist_isvisible(canvas)) {
+	//if (glist_isvisible(canvas)) {
 
 		if(x->x_gui.x_fsf.x_selected)
 		{
@@ -323,7 +323,7 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 			sys_vgui("destroy %s\n", lh->h_pathname);
 			x->x_gui.label_vis = 0;
 		}
-	}
+	//}
 }
 
 void hslider_check_minmax(t_hslider *x, double min, double max);

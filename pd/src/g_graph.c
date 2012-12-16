@@ -1123,7 +1123,7 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void graph_select(t_gobj *z, t_glist *glist, int state)
 {
-	//fprintf(stderr,"graph_select .x%lx %d...\n", (t_int)z, state);
+	//fprintf(stderr,"graph_select .x%lx .x%lx %d...\n", (t_int)z, (t_int)glist, state);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
         text_widgetbehavior.w_selectfn(z, glist, state);

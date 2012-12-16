@@ -3091,7 +3091,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 				
 				if (pd_class(&y1->g_pd) == preset_node_class) {
 					if (pd_class(&y2->g_pd) == message_class) {
-						error("preset_node does not work with messages.\n");
+						error("preset_node does not work with messages.");
 						return;
 					}
 				}
@@ -4707,7 +4707,7 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 		/* now check for illegal connections between preset_node object and other non-supported objects */
 	if (pd_class(&src->g_pd) == preset_node_class) {
 		if (pd_class(&sink->g_pd) == message_class) {
-				error("preset_node does not work with messages.\n");
+				error("preset_node does not work with messages.");
 				goto bad;
 		}
 	}

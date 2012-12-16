@@ -270,7 +270,7 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
 	t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
     int n=x->x_number, i;
 
-	if (glist_isvisible(canvas)) {
+	//if (glist_isvisible(canvas)) {
 
 		if(x->x_gui.x_fsf.x_selected)
 		{
@@ -342,7 +342,7 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
 			sys_vgui("destroy %s\n", lh->h_pathname);
 			x->x_gui.scale_vis = 0;
 		}
-	}
+	//}
 }
 
 static void vradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)

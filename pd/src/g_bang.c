@@ -240,7 +240,7 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
 	t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
 
-	if (glist_isvisible(canvas)) {
+	//if (glist_isvisible(canvas)) {
 
 		if(x->x_gui.x_fsf.x_selected)
 		{
@@ -305,7 +305,7 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 			sys_vgui("destroy %s\n", lh->h_pathname);
 			x->x_gui.label_vis = 0;
 		}
-	}
+	//}
 }
 
 static void bng__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
