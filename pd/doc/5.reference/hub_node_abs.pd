@@ -5,5 +5,4 @@
 #X symbolatom 142 89 10 0 0 0 - - -;
 #X text 138 66 abstraction;
 #X connect 1 0 2 0;
-#X connect 2 0 1 0;
 #X coords 0 -1 1 1 80 66 1 134 48;

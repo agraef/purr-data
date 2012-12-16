@@ -1,4 +1,4 @@
-#N canvas 138 24 555 616 10;
+#N canvas 138 24 553 616 10;
 #X obj 109 282 cnv 15 60 37 empty empty empty 20 12 0 14 -261234 -66577
 0;
 #X obj 183 294 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
@@ -82,9 +82,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X floatatom 113 91 5 0 0 0 - - -;
 #X text 111 41 a preset in a subpatch;
 #X connect 0 0 1 0;
-#X connect 1 0 0 0;
 #X connect 2 0 3 0;
-#X connect 3 0 2 0;
 #X restore 119 292 pd sub;
 #X text 98 418 reset;
 #X text 99 472 anything;
@@ -162,19 +160,16 @@ or "");
 #X connect 29 0 30 0;
 #X connect 32 0 48 0;
 #X connect 33 0 34 0;
-#X connect 34 0 33 0;
 #X connect 34 0 37 0;
 #X connect 35 0 34 0;
 #X connect 36 0 34 0;
 #X connect 38 0 34 0;
-#X connect 48 0 32 0;
 #X connect 49 0 16 0;
 #X connect 50 0 15 0;
 #X connect 51 0 19 0;
 #X connect 52 0 23 0;
-#X connect 64 0 65 0;
 #X connect 64 0 70 0;
-#X connect 65 0 64 0;
+#X connect 64 0 65 0;
 #X connect 66 0 64 0;
 #X connect 67 0 64 0;
 #X connect 68 0 64 0;
