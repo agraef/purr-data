@@ -331,7 +331,16 @@ struct _outconnect
 {
     struct _outconnect *oc_next;
     t_pd *oc_to;
+	int oc_vis;	// whether the connection should be visible
 };
+
+int outconnect_visible(t_outconnect *oc) {
+	return oc->oc_vis;
+}
+
+void outconnect_setvisible(t_outconnect *oc, int vis) {
+	oc->oc_vis = vis;
+}
 
 struct _outlet
 {

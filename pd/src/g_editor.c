@@ -2861,74 +2861,79 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     {
         t_linetraverser t;
         t_outconnect *oc;
+        int parseOutno;
+        t_object *parseOb = NULL;
+        t_outlet *parseOutlet = NULL;
         t_float fx = xpos, fy = ypos;
         t_glist *glist2 = glist_getcanvas(x);
         linetraverser_start(&t, glist2);
         while (oc = linetraverser_next(&t))
         {
-            // jsarlo
-            int parseOutno;
-            t_object *parseOb = NULL;
-            t_outlet *parseOutlet = NULL;
-            // end jsarlo
-            t_float lx1 = t.tr_lx1, ly1 = t.tr_ly1,
-                lx2 = t.tr_lx2, ly2 = t.tr_ly2;
-            t_float area = (lx2 - lx1) * (fy - ly1) -
-                (ly2 - ly1) * (fx - lx1);
-            t_float dsquare = (lx2-lx1) * (lx2-lx1) + (ly2-ly1) * (ly2-ly1);
-            if (area * area >= 50 * dsquare) continue;
-            if ((lx2-lx1) * (fx-lx1) + (ly2-ly1) * (fy-ly1) < 0) continue;
-            if ((lx2-lx1) * (lx2-fx) + (ly2-ly1) * (ly2-fy) < 0) continue;
-            if (doit)
-            {
-                glist_selectline(glist2, oc, 
-                    canvas_getindex(glist2, &t.tr_ob->ob_g), t.tr_outno,
-                    canvas_getindex(glist2, &t.tr_ob2->ob_g), t.tr_inno);
-            }
-            // jsarlo
-            parseOutno = t.tr_outno;
-            parseOb = t.tr_ob;
-            for (parseOutlet = parseOb->ob_outlet; 
-                 parseOutlet && parseOutno; 
-                 parseOutlet = parseOutlet->o_next, parseOutno--);
-            if (parseOutlet && magicGlass_isOn(x->gl_magic_glass))
-            {
-                magicGlass_bind(x->gl_magic_glass,
-                                t.tr_ob,
-                                t.tr_outno); 
-                magicGlass_setDsp(x->gl_magic_glass,
-                                  obj_issignaloutlet(t.tr_ob, t.tr_outno));
-            }
-            magicGlass_moveText(x->gl_magic_glass, xpos, ypos); 
-            if (magicGlass_isOn(x->gl_magic_glass))
-                magicGlass_show(x->gl_magic_glass);
-            if (canvas_cnct_inlet_tag[0] != 0)
-            {
-				sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
-		       			x, canvas_cnct_inlet_tag,
-						(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-						(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
-				if (objtooltip) {
-					objtooltip = 0;
-					sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
-				}
-                canvas_cnct_inlet_tag[0] = 0;                  
-            }
-            if (canvas_cnct_outlet_tag[0] != 0)
-            {
-                sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
-                       	x, canvas_cnct_outlet_tag,
-						(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-						(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
-				if (objtooltip) {
-					objtooltip = 0;
-					sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
-				}
-                canvas_cnct_outlet_tag[0] = 0;                  
-            }
-            // end jsarlo
-            canvas_setcursor(x, CURSOR_EDITMODE_DISCONNECT);
-            return;
+			//fprintf(stderr,"oc_visible %d\n", outconnect_visible(oc));
+			//ignore invisible connections
+			if (outconnect_visible(oc)) {
+
+		        parseOb = NULL;
+		        parseOutlet = NULL;
+		        t_float lx1 = t.tr_lx1, ly1 = t.tr_ly1,
+		            lx2 = t.tr_lx2, ly2 = t.tr_ly2;
+		        t_float area = (lx2 - lx1) * (fy - ly1) -
+		            (ly2 - ly1) * (fx - lx1);
+		        t_float dsquare = (lx2-lx1) * (lx2-lx1) + (ly2-ly1) * (ly2-ly1);
+		        if (area * area >= 50 * dsquare) continue;
+		        if ((lx2-lx1) * (fx-lx1) + (ly2-ly1) * (fy-ly1) < 0) continue;
+		        if ((lx2-lx1) * (lx2-fx) + (ly2-ly1) * (ly2-fy) < 0) continue;
+		        if (doit)
+		        {
+		            glist_selectline(glist2, oc, 
+		                canvas_getindex(glist2, &t.tr_ob->ob_g), t.tr_outno,
+		                canvas_getindex(glist2, &t.tr_ob2->ob_g), t.tr_inno);
+		        }
+		        // jsarlo
+		        parseOutno = t.tr_outno;
+		        parseOb = t.tr_ob;
+		        for (parseOutlet = parseOb->ob_outlet; 
+		             parseOutlet && parseOutno; 
+		             parseOutlet = parseOutlet->o_next, parseOutno--);
+		        if (parseOutlet && magicGlass_isOn(x->gl_magic_glass))
+		        {
+			        magicGlass_bind(x->gl_magic_glass,
+			                        t.tr_ob,
+			                        t.tr_outno); 
+			        magicGlass_setDsp(x->gl_magic_glass,
+			                          obj_issignaloutlet(t.tr_ob, t.tr_outno));
+		        }
+		        magicGlass_moveText(x->gl_magic_glass, xpos, ypos); 
+		        if (magicGlass_isOn(x->gl_magic_glass))
+		            magicGlass_show(x->gl_magic_glass);
+		        if (canvas_cnct_inlet_tag[0] != 0)
+		        {
+					sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+				   			x, canvas_cnct_inlet_tag,
+							(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+					if (objtooltip) {
+						objtooltip = 0;
+						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+					}
+		            canvas_cnct_inlet_tag[0] = 0;                  
+		        }
+		        if (canvas_cnct_outlet_tag[0] != 0)
+		        {
+		            sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+		                   	x, canvas_cnct_outlet_tag,
+							(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+							(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+					if (objtooltip) {
+						objtooltip = 0;
+						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+					}
+		            canvas_cnct_outlet_tag[0] = 0;                  
+		        }
+		        // end jsarlo
+		        canvas_setcursor(x, CURSOR_EDITMODE_DISCONNECT);
+		        return;
+			}
         }
     }
     if (canvas_cnct_inlet_tag[0] != 0)
@@ -3031,7 +3036,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
             int width1 = x12 - x11, closest1, hotspot1;
             int width2 = x22 - x21, closest2, hotspot2;
             int lx1, lx2, ly1, ly2;
-            t_outconnect *oc;
+            t_outconnect *oc, *oc2;
 
             if (noutlet1 > 1)
             {
@@ -3083,29 +3088,13 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
             {
 				// if the first object is preset_node, check if the object we are connecting to
 				// is supported. If not, disallow connection
-				/*
+				
 				if (pd_class(&y1->g_pd) == preset_node_class) {
-					if (pd_class(&y2->g_pd) != gatom_class &&
-						pd_class(&y2->g_pd) != bng_class &&
-						pd_class(&y2->g_pd) != hradio_class &&
-						pd_class(&y2->g_pd) != hradio_old_class &&
-						pd_class(&y2->g_pd) != hslider_class &&
-						pd_class(&y2->g_pd) != my_canvas_class &&
-						pd_class(&y2->g_pd) != my_numbox_class &&
-						pd_class(&y2->g_pd) != toggle_class &&
-						pd_class(&y2->g_pd) != vradio_class &&
-						pd_class(&y2->g_pd) != vradio_old_class &&
-						pd_class(&y2->g_pd) != vslider_class &&
-						pd_class(&y2->g_pd) != vu_class &&
-						pd_class(&y2->g_pd) != pdint_class &&
-						pd_class(&y2->g_pd) != pdfloat_class &&
-						pd_class(&y2->g_pd) != pdsymbol_class &&
-						pd_class(&y2->g_pd) != print_class &&
-						pd_class(&y2->g_pd) != text_class) { // we need also text_class for interactively created objects
-						error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
+					if (pd_class(&y2->g_pd) == message_class) {
+						error("preset_node does not work with messages.\n");
 						return;
 					}
-				}*/
+				}
 
 				// now check if explicit user-made connection into preset_node if kind other than message
 				// messages may be used to change node's operation
@@ -3116,6 +3105,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 
                 int issignal = obj_issignaloutlet(ob1, closest1);
                 oc = obj_connect(ob1, closest1, ob2, closest2);
+				outconnect_setvisible(oc, 1);
                 lx1 = x11 + (noutlet1 > 1 ?
                         ((x12-x11-IOWIDTH) * closest1)/(noutlet1-1) : 0)
                              + IOMIDDLE;
@@ -3169,8 +3159,10 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 				// (by this time we know we are connecting only to legal objects who have at least one outlet)
 				if (pd_class(&y1->g_pd) == preset_node_class) {
 					//fprintf(stderr,"gotta do auto-connect back to preset_node\n");
-					if (!canvas_isconnected(x, ob2, 0, ob1, 0))
-						obj_connect(ob2, 0, ob1, 0);
+					if (!canvas_isconnected(x, ob2, 0, ob1, 0) && pd_class(&y2->g_pd) != print_class) {
+						oc2 = obj_connect(ob2, 0, ob1, 0);
+						outconnect_setvisible(oc2, 0);
+					}
 					//else
 					//	fprintf(stderr,"error: already connected (this happens when loading from file and is ok)\n");
 				}
@@ -4694,7 +4686,7 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
     int whoout = fwhoout, outno = foutno, whoin = fwhoin, inno = finno;
     t_gobj *src = 0, *sink = 0;
     t_object *objsrc, *objsink;
-    t_outconnect *oc;
+    t_outconnect *oc, *oc2;
     int nin = whoin, nout = whoout;
     if (paste_canvas == x) whoout += paste_onset, whoin += paste_onset;
     for (src = x->gl_list; whoout; src = src->g_next, whoout--)
@@ -4713,28 +4705,12 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 		goto bad;
     }
 		/* now check for illegal connections between preset_node object and other non-supported objects */
-	/*if (pd_class(&src->g_pd) == preset_node_class) {
-		if (pd_class(&sink->g_pd) != gatom_class &&
-			pd_class(&sink->g_pd) != bng_class &&
-			pd_class(&sink->g_pd) != hradio_class &&
-			pd_class(&sink->g_pd) != hradio_old_class &&
-			pd_class(&sink->g_pd) != hslider_class &&
-			pd_class(&sink->g_pd) != my_canvas_class &&
-			pd_class(&sink->g_pd) != my_numbox_class &&
-			pd_class(&sink->g_pd) != toggle_class &&
-			pd_class(&sink->g_pd) != vradio_class &&
-			pd_class(&sink->g_pd) != vradio_old_class &&
-			pd_class(&sink->g_pd) != vslider_class &&
-			pd_class(&sink->g_pd) != vu_class &&
-			pd_class(&sink->g_pd) != pdint_class &&
-			pd_class(&sink->g_pd) != pdfloat_class &&
-			pd_class(&sink->g_pd) != pdsymbol_class &&
-			pd_class(&sink->g_pd) != print_class &&
-			pd_class(&sink->g_pd) != text_class) {
-				error("preset node currently works only with gui objects, ints, floats, and symbols, plus a print object for node monitoring...\n");
+	if (pd_class(&src->g_pd) == preset_node_class) {
+		if (pd_class(&sink->g_pd) == message_class) {
+				error("preset_node does not work with messages.\n");
 				goto bad;
 		}
-	}*/
+	}
 
         /* if object creation failed, make dummy inlets or outlets
         as needed */ 
@@ -4747,13 +4723,16 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 
 	if (!canvas_isconnected(x, objsrc, outno, objsink, inno)) {
     	if (!(oc = obj_connect(objsrc, outno, objsink, inno))) goto bad;
+		outconnect_setvisible(oc, 1);
 		// add auto-connect back to preset_node object
 		// (by this time we know we are connecting only to legal objects who have at least one outlet)
 		// EXCEPTION: we do not connect back to the print class
 		if (pd_class(&objsrc->ob_pd) == preset_node_class && pd_class(&sink->g_pd) != print_class) {
 			//fprintf(stderr,"canvas_connect: gotta do auto-connect back to preset_node\n");
-			if (!canvas_isconnected(x, objsink, 0, objsrc, 0))
-				obj_connect(objsink, 0, objsrc, 0);
+			if (!canvas_isconnected(x, objsink, 0, objsrc, 0)) {
+				oc2 = obj_connect(objsink, 0, objsrc, 0);
+				outconnect_setvisible(oc2, 0);
+			}
 		}
 		if (glist_isvisible(x) && (pd_class(&sink->g_pd) != preset_node_class || (pd_class(&sink->g_pd) == preset_node_class && pd_class(&src->g_pd) == message_class)))
 		{
