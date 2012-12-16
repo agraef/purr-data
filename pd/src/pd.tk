@@ -328,12 +328,14 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	global autotips
 	global signal_cord_highlight
 	global signal_cord
+	global highlight_width
 
 	set k12_mode 1
 	set signal_cord_width 4
 	set autotips 1
 	set signal_cord_highlight "#474"
 	set signal_cord "#2ca7d4"
+	set highlight_width 7
 
 	image create photo i.wii_connect -file $extra_dir/K12/icons/wii_connect_on.png
 	image create photo i.wii_buttons -file $extra_dir/K12/icons/wii_buttons.png
