@@ -34,8 +34,9 @@ loadlib30: ggee
 loadlib31: iem_anything
 loadlib32: ekext
 loadlib33: pdp
-loadlib34: pidip
-nloadlib: 34
+loadlib34: flatgui
+loadlib35: pidip
+nloadlib: 35
 path1: /var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType
 path2: ~/pd-l2ork-externals
 path3: ~/L2Ork/PD/Abstractions
