@@ -22,3 +22,10 @@ po/*.msg
 ASIOSDK2
 pd-0.*
 pd.pc
+*.deps
+*.d
+*_stamp
+*.a
+.svn
+packages/linux_make/build/
+pd/src/makefile
