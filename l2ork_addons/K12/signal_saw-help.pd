@@ -1,11 +1,12 @@
-#N canvas 409 90 513 390 10;
+#N canvas 66 172 513 390 10;
 #X obj 226 -80 cnv 15 472 100 empty empty empty 20 12 0 14 -233017
 -66577 0;
-#X obj 470 -236 preset_hub k12 %hidden% %node% 2 9 8 %preset% 0 440
+#X obj 470 -236 preset_hub k12 %hidden% %node% 2 13 8 %preset% 0 440
 %preset% 1 440 %preset% 2 440 %preset% 3 440 %node% 2 2 14 %preset%
 0 72.093 %preset% 1 72.093 %preset% 2 72.093 %preset% 3 72.093 %node%
 2 7 5 %preset% 0 10 %preset% 1 20 %preset% 2 30 %preset% 3 40 %node%
-2 8 7 %preset% 0 10 %preset% 1 20 %preset% 2 30 %preset% 3 40;
+2 8 7 %preset% 0 10 %preset% 1 20 %preset% 2 30 %preset% 3 40 %node%
+2 2 28;
 #X obj 230 43 K12/output;
 #N canvas 690 254 450 514 META 0;
 #X text 8 5 DESCRIPTION This generates a sawtooth wave;
@@ -21,11 +22,14 @@ effect object \, signal math object \, or the sound object;
 #X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png;
 #X obj 231 -75 K12/signal_saw;
 #X obj 231 -189 K12/math_number;
-#X obj 326 -189 K12/preset;
+#X obj 464 -185 cnv 15 233 99 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X text 486 -154 Recall preset 0;
+#X text 472 -137 to start the example;
+#X obj 604 -180 K12/preset;
 #X text 326 -63 The Signal Saw object is a sound generator that generates
-a sawtooth wave. Use the left inlet to set the frequency with a signal.
-Use the right inlet to set the frequency with a number. Connect the
-outlet to any signal math objects \, any effects \, or the sound output
-object.;
+a sawtooth wave. Use the left inlet to set the pitch (0 to 127). Connect
+the outlet to any signal math objects \, any effects \, or the sound
+output object.;
 #X connect 7 0 2 0;
 #X connect 8 0 7 0;
