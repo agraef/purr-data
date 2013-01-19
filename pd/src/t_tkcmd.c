@@ -582,7 +582,8 @@ void pdgui_doevalfile(Tcl_Interp *interp, char *s)
     if (Tcl_EvalFile(interp, buf) != TCL_OK)
     {
         char buf2[1000];
-		printf("error in file %s line %d: %s\n", buf, interp->errorLine, Tcl_GetStringResult(interp));
+		const char *trace = Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
+		printf("error in file %s: %s\n", buf, trace);
         sprintf(buf2, "puts [concat tcl: %s: can't open script]\n",
             buf);
         tcl_mess(buf2);
