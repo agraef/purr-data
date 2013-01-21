@@ -141,6 +141,12 @@ static void inlet_list(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
         || x->i_symfrom == &s_symbol || x->i_symfrom == &s_pointer)
             typedmess(x->i_dest, x->i_symto, argc, argv);
     else if (!x->i_symfrom) pd_list(x->i_dest, s, argc, argv);
+    else if (!argc)
+      inlet_bang(x);
+    else if (argc==1 && argv->a_type == A_FLOAT)
+      inlet_float(x, atom_getfloat(argv));
+    else if (argc==1 && argv->a_type == A_SYMBOL)
+      inlet_symbol(x, atom_getsymbol(argv));
     else inlet_wrong(x, &s_list);
 }
 
