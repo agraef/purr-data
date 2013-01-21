@@ -640,15 +640,17 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
+	int at_arg = 0;
 
 	//first we need to check if the list of arguments has $@
-	//fprintf(stderr,"binbuf=%d target=%d argc=%d argv=%d ac=%d\n", (int)x, (int)target, (int)ac, argc, (int)argv);
+	//fprintf(stderr,"=========\nbinbuf_eval argc:%d ac:%d\n", argc, (int)ac);
 	int count;
 	for (count = 0; count < ac; count++) {
 		//fprintf(stderr, "count %d\n", count);
 		if (at[count].a_type == A_DOLLAR && at[count].a_w.w_symbol==gensym("@")) {
-			//fprintf(stderr,"yes %d %d %d\n", ac, argc, ac+argc-1);
+			//fprintf(stderr,"found @ count:%d ac:%d argc:%d ac+argc-1:%d\n", count, ac, argc, ac+argc-1);
 			ac = ac + argc;
+			maxnargs = ac;
 		}
 	}
 
@@ -668,18 +670,22 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             maxnargs = ac;
 			//if (at && x->b_n) fprintf(stderr,"pd_objectmaker %s %d %d %d\n", at[0].a_w.w_symbol->s_name, ac, argc, maxnargs);
 		}
-        else
+        else if (!maxnargs) //we set maxnargs=ac if we encounter $@ arg (see above) so we avoid this place because A_SEMI and A_COMMA tend to be detected at location 220. Why? No idea. Perhaps it is a line delimiter for one line in the saved file?
         {
             int i, j = (target ? 0 : -1);
             for (i = 0; i < ac; i++)
             {
-                if (at[i].a_type == A_SEMI)
+                if (at[i].a_type == A_SEMI) {
                     j = -1;
-                else if (at[i].a_type == A_COMMA)
+					//fprintf(stderr,"A_SEMI %d\n", i);
+                } else if (at[i].a_type == A_COMMA) {
                     j = 0;
-                else if (++j > maxnargs)
+					//fprintf(stderr,"A_COMMA %d\n", i);
+                } else if (++j > maxnargs) {
                     maxnargs = j;
+				}
             }
+			//fprintf(stderr,"maxnargs = %d\n", maxnargs);
         }
         if (maxnargs <= SMALLMSG)
             mstack = smallstack;
@@ -695,7 +701,7 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
 
     }
     msp = mstack;
-	//fprintf(stderr,"maxnargs=%d argc=%d\n", maxnargs, argc);
+	//fprintf(stderr,"maxnargs=%d ac=%d argc=%d\n", maxnargs, ac, argc);
 	//static t_atom *ems = mstack+MSTACKSIZE;
     while (1)
     {
@@ -793,6 +799,7 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                     //}
                     for (i=0; i<argc; i++)
                     {
+						//fprintf(stderr, "@: %d %d\n", i, maxnargs);
                         *msp++=argv[i];
                         nargs++;
 						ac--;
