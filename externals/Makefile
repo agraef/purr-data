@@ -1158,18 +1158,11 @@ mrpeach_install: mrpeach
 	install -p $(MRPEACH_OBJECTS:.c=.$(EXTENSION)) $(DESTDIR)$(objectsdir)/$(MRPEACH_NAME)
 	install -p $(externals_src)/mrpeach/*/*.pd \
 		$(DESTDIR)$(objectsdir)/$(MRPEACH_NAME)
-	install -p $(externals_src)/mrpeach/net/test.txt \
-		$(externals_src)/mrpeach/midifile/I_Wanna_Be_Sedated.mid \
+	install -p $(externals_src)/mrpeach/midifile/I_Wanna_Be_Sedated.mid \
 		$(DESTDIR)$(objectsdir)/$(MRPEACH_NAME)
-#	install -d $(DESTDIR)$(manualsdir)/$(MRPEACH_NAME)
-#	install -p $(externals_src)/mrpeach/manual.txt \
-#		$(DESTDIR)$(manualsdir)/$(MRPEACH_NAME)
-#	install -d $(DESTDIR)$(readmesdir)
-#	install -p $(externals_src)/mrpeach/README \
-#		$(DESTDIR)$(readmesdir)/$(MRPEACH_NAME).txt
-#	install -d $(DESTDIR)$(examplesdir)/$(MRPEACH_NAME)
-#	install -p $(externals_src)/mrpeach/examples/*.pd \
-#		$(DESTDIR)$(examplesdir)/$(MRPEACH_NAME)
+	install -d $(DESTDIR)$(objectsdir)/$(MRPEACH_NAME)/examples
+	install -p $(externals_src)/mrpeach/net/examples/test.txt \
+		$(DESTDIR)$(objectsdir)/$(MRPEACH_NAME)/examples
 
 mrpeach_clean:
 	-rm -f -- $(MRPEACH_OBJECTS:.c=.$(EXTENSION))
