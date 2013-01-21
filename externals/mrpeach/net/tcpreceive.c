@@ -44,7 +44,7 @@ typedef struct _tcpreceive
 	t_tcpconnection x_connection[MAX_CONNECTIONS];
     t_atom          x_addrbytes[5];
     t_atom          x_msgoutbuf[MAX_UDP_RECEIVE];
-    char            x_msginbuf[MAX_UDP_RECEIVE];
+    unsigned char   x_msginbuf[MAX_UDP_RECEIVE];
 } t_tcpreceive;
 
 void tcpreceive_setup(void);

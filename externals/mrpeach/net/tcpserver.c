@@ -35,7 +35,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <pthread.h>
-#if defined(UNIX) || defined(unix)
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -1211,7 +1211,7 @@ static void tcpserver_free(t_tcpserver *x)
 {
     int     i;
 
-    //post("tcp_server_free...");
+    post("tcp_server_free...");
     for(i = 0; i < MAX_CONNECT; i++)
     {
         if (x->x_sr[i] != NULL) 
@@ -1229,7 +1229,7 @@ static void tcpserver_free(t_tcpserver *x)
         sys_rmpollfn(x->x_connectsocket);
         sys_closesocket(x->x_connectsocket);
     }
-    //post("...tcp_server_free");
+    post("...tcp_server_free");
 }
 
 void tcpserver_setup(void)

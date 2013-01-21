@@ -29,7 +29,7 @@
 /* #undef HAVE_PDP_READLINE */
 
 /* build pdp_sdl */
-/* #undef HAVE_PDP_SDL */
+#define HAVE_PDP_SDL 1
 
 /* build pdp_v4l */
 /* #undef HAVE_PDP_V4L */

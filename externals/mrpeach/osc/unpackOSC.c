@@ -65,47 +65,8 @@ The OSC webpage is http://cnmat.cnmat.berkeley.edu/OpenSoundControl
 
 */
 
-#include "m_pd.h"
+#include "packingOSC.h"
 
-    #include <stdio.h>
-    #include <string.h>
-    #include <stdlib.h>
-#ifdef _WIN32
-    #include <winsock2.h>
-    #include <sys/timeb.h>
-#else
-    #include <sys/types.h>
-    #include <netinet/in.h>
-    #include <ctype.h>
-    #include <sys/time.h>
-#endif /* _WIN32 */
-
-/* Declarations */
-#ifdef WIN32
-  typedef unsigned __int64 osc_time_t;
-#else
-  typedef unsigned long long osc_time_t;
-#endif
-
-#define MAX_MESG 65536
-/* MAX_MESG was 32768 MP: make same as MAX_UDP_PACKET */
-#define OSC_MAX_RECURSION 16 /* maximum bundle depth */
-/* ----------------------------- was dumpOSC ------------------------- */
-
-/* You may have to redefine this typedef if ints on your system
-  aren't 4 bytes. */
-typedef unsigned int uint4;
-typedef struct
-{
-    uint4 seconds;
-    uint4 fraction;
-} OSCTimeTag;
-
-typedef union
-{
-    int     i;
-    float   f;
-} intfloat32;
 
 static t_class *unpackOSC_class;
 
@@ -119,7 +80,8 @@ typedef struct _unpackOSC
     char        x_raw[MAX_MESG];/* bytes making up the entire OSC message */
     int         x_raw_c;/* number of bytes in OSC message */
     int         x_bundle_flag;/* non-zero if we are processing a bundle */
-    int         x_recursion_level;/* number of times we reenter unpackOSCPath */
+    int         x_recursion_level;/* number of times we reenter unpackOSC_list */
+    int         x_abort_bundle;/* non-zero if unpackOSC_list is not well formed */
 } t_unpackOSC;
 
 void unpackOSC_setup(void);
@@ -137,13 +99,13 @@ static t_float unpackOSC_DeltaTime(OSCTimeTag tt);
 static void *unpackOSC_new(void)
 {
     t_unpackOSC *x;
-
     x = (t_unpackOSC *)pd_new(unpackOSC_class);
     x->x_data_out = outlet_new(&x->x_obj, &s_list);
     x->x_delay_out = outlet_new(&x->x_obj, &s_float);
     x->x_raw_c = x->x_data_atc = 0;
     x->x_bundle_flag = 0;
     x->x_recursion_level = 0;
+    x->x_abort_bundle = 0;
     return (x);
 }
 
@@ -157,7 +119,6 @@ void unpackOSC_setup(void)
         (t_newmethod)unpackOSC_new, (t_method)unpackOSC_free,
         sizeof(t_unpackOSC), 0, 0);
     class_addlist(unpackOSC_class, (t_method)unpackOSC_list);
-    class_sethelpsymbol(unpackOSC_class, gensym("routeOSC")); /* same help patch as routeOSC*/
 }
 
 /* unpackOSC_list expects an OSC packet in the form of a list of floats on [0..255] */
@@ -167,6 +128,7 @@ static void unpackOSC_list(t_unpackOSC *x, t_symbol *s, int argc, t_atom *argv)
     char            *messageName, *args, *buf;
     OSCTimeTag      tt;
 
+    if(x->x_abort_bundle) return; /* if backing quietly out of the recursive stack */
     if ((argc%4) != 0)
     {
         post("unpackOSC: Packet size (%d) not a multiple of 4 bytes: dropping packet", argc);
@@ -253,15 +215,16 @@ static void unpackOSC_list(t_unpackOSC *x, t_symbol *s, int argc, t_atom *argv)
                 post("unpackOSC: Bad size count %d in bundle (only %d bytes left in entire bundle)",
                     size, argc-i-4);
                 x->x_recursion_level = 0;
-                return;	
+                return;
             }
 
             /* Recursively handle element of bundle */
             x->x_recursion_level++;
-            if (x->x_recursion_level > OSC_MAX_RECURSION)
+            if (x->x_recursion_level > MAX_BUNDLE_NESTING)
             {
-                post("unpackSOC: bundle depth %d exceeded", OSC_MAX_RECURSION);
+                post("unpackOSC: bundle depth %d exceeded", MAX_BUNDLE_NESTING);
                 x->x_recursion_level = 0;
+                x->x_abort_bundle = 1;/* we need to back out of the recursive stack*/
                 return;
             }
             unpackOSC_list(x, s, size, &argv[i+4]);
@@ -283,7 +246,7 @@ static void unpackOSC_list(t_unpackOSC *x, t_symbol *s, int argc, t_atom *argv)
     {
         post("unpackOSC: Time message: %s\n :).\n", buf);
         x->x_recursion_level = 0;
-        return; 	
+        return;
     }
     else
     { /* This is not a bundle message or a time message */
@@ -314,6 +277,7 @@ static void unpackOSC_list(t_unpackOSC *x, t_symbol *s, int argc, t_atom *argv)
         outlet_anything(x->x_data_out, atom_getsymbol(x->x_data_at), x->x_data_atc-1, x->x_data_at+1);
     x->x_data_atc = 0;
     x->x_recursion_level = 0;
+    x->x_abort_bundle = 0;
 }
 
 static int unpackOSC_path(t_unpackOSC *x, char *path)
@@ -615,9 +579,10 @@ static int unpackOSC_IsNiceString(char *string, char *boundary)
         return 0;
     }
 
+    /* anything less than space (0x20) is no good, UTF-8 sequences will be accepted -- not strictly OSC v1.0 */
     for (i = 0; string[i] != '\0'; i++)
-        if ((!isprint(string[i])) || (string + i >= boundary)) return 0;
-
+        /* if ((!isprint(string[i])) || (string + i >= boundary)) return 0; */ /* only ASCII printable chars */
+        if ((0==(string[i]&0xE0)) || (string + i >= boundary)) return 0;
     /* If we made it this far, it's a null-terminated sequence of printing characters
        in the given boundary.  Now we just make sure it's null padded... */
 

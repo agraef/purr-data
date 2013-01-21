@@ -62,7 +62,7 @@ typedef struct t_midifile
     size_t              total_time; /* current time for this MIDI file in delta_time units */
     t_atom              midi_data[3]; /* one MIDI packet as a list */
     t_outlet            *midi_list_outlet;
-    t_outlet            *bang_outlet;
+    t_outlet            *status_outlet;
     t_outlet            *total_time_outlet;
     FILE                *fP;
     FILE                *tmpFP;
@@ -109,6 +109,7 @@ static void *midifile_new(t_symbol *s, int argc, t_atom *argv);
 static void midifile_verbosity(t_midifile *x, t_floatarg verbosity);
 static void midifile_single_track(t_midifile *x, t_floatarg track);
 static void midifile_dump(t_midifile *x, t_floatarg track);
+static t_symbol *midifile_key_name(int sf, int mi);
 void midifile_setup(void);
 
 void midifile_setup(void)
@@ -175,8 +176,8 @@ static void *midifile_new(t_symbol *s, int argc, t_atom *argv)
     }
     x->midi_list_outlet = outlet_new(&x->x_obj, &s_list);
     x->total_time_outlet = outlet_new(&x->x_obj, &s_float); /* current total_time */
-    x->bang_outlet = outlet_new(&x->x_obj, &s_bang); /* bang at end of file */
-    post("midifile 2008 Martin Peach");
+    x->status_outlet = outlet_new(&x->x_obj, &s_anything);/* last outlet for everything else */
+    post("midifile 20110212 by Martin Peach");
     return (void *)x;
 }
 
@@ -266,7 +267,7 @@ static void midifile_flush(t_midifile *x)
 
     if(x->state != mfWriting) return; /* only if we're writing */
 
-    outlet_bang(x->bang_outlet); /* bang so tick count can be saved externally */
+    outlet_bang(x->status_outlet); /* bang so tick count can be saved externally */
     midifile_write_end_of_track(x, end_time);
     written = midifile_write_header(x);
 /* now copy the MIDI data from tmpFP to fP */
@@ -413,7 +414,7 @@ static void midifile_bang(t_midifile *x)
             { /* set ended flag, only bang once */
                 if (x->verbosity > 1)
                     post ("ended = %d x->header_chunk.chunk_ntrks = %d", ended, x->header_chunk.chunk_ntrks);
-                outlet_bang(x->bang_outlet);
+                outlet_bang(x->status_outlet);
                 ++x->ended;
             }
             /* fall through into mfWriting */
@@ -460,7 +461,7 @@ static void midifile_list(t_midifile *x, t_symbol *s, int argc, t_atom *argv)
                     written = midifile_write_variable_length_value(x->tmpFP, x->track_chunk[0].delta_time);
                     dt_written = 1;
                 }
-                if (j == x->track_chunk[0].running_status) continue;/* don't save redundant status byte */
+                //if (j == x->track_chunk[0].running_status) continue;/* don't save redundant status byte */
                 if (j >= 0x80 && j <= 0xEF)x->track_chunk[0].running_status = j;/* new running status */
                 else if (j >= 0xF0 && j <= 0xF7)
                 {
@@ -560,7 +561,7 @@ static void midifile_float(t_midifile *x, t_float ticks)
             {
                 if (x->verbosity)
                     post ("midifile: ended = %d x->header_chunk.chunk_ntrks = %d", ended, x->header_chunk.chunk_ntrks);
-                outlet_bang(x->bang_outlet);
+                outlet_bang(x->status_outlet);
             }
             break;
         case mfWriting: /* add ticks to current time */
@@ -590,6 +591,7 @@ static int midifile_read_header_chunk(t_midifile *x)
     char    buf[4];
     size_t  n;
     int     div, smpte, ticks;
+    t_atom  output_atom;
 
     if (x->fP == NULL)
     {
@@ -649,6 +651,8 @@ static int midifile_read_header_chunk(t_midifile *x)
             sP = "Unknown format";
     }
     if (x->verbosity) post("midifile: Header chunk format: %d (%s)", x->header_chunk.chunk_format, sP);
+    SETFLOAT(&output_atom, x->header_chunk.chunk_format);
+    outlet_anything( x->status_outlet, gensym("format"), 1, &output_atom);
 
     n = fread(cP, 1L, 2L, x->fP);
     x->offset += n;
@@ -659,6 +663,8 @@ static int midifile_read_header_chunk(t_midifile *x)
     }
     x->header_chunk.chunk_ntrks = midifile_get_multibyte_2(cP);
     if (x->verbosity) post("midifile: Header chunk ntrks: %d", x->header_chunk.chunk_ntrks);
+    SETFLOAT(&output_atom, x->header_chunk.chunk_ntrks);
+    outlet_anything( x->status_outlet, gensym("tracks"), 1, &output_atom);
     if (x->header_chunk.chunk_ntrks > MAX_TRACKS)
     {
         error ("midifile: Header chunk ntrks (%d) exceeds midifile MAX_TRACKS, set to %d",
@@ -680,8 +686,18 @@ static int midifile_read_header_chunk(t_midifile *x)
         ticks = div & 0x0FF;
         if (x->verbosity)
             post("midifile: Header chunk division: 0x%X: %d frames per second, %d ticks per frame", div, smpte, ticks);
+        SETFLOAT(&output_atom, smpte);
+        outlet_anything( x->status_outlet, gensym("frames_per_sec"), 1, &output_atom);
+        SETFLOAT(&output_atom, ticks);
+        outlet_anything( x->status_outlet, gensym("ticks_per_frame"), 1, &output_atom);
     }
-    else if (x->verbosity) post("midifile: Header chunk division: 0x%X: %d ticks per quarter note", div, div);
+    else
+    {
+        if (x->verbosity)
+            post("midifile: Header chunk division: 0x%X: %d ticks per quarter note", div, div);
+        SETFLOAT(&output_atom, div);
+        outlet_anything( x->status_outlet, gensym("ticks_per_quarternote"), 1, &output_atom);
+    }
     return 1;
 }
 
@@ -1162,8 +1178,11 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
     size_t          delta_time, time_sig, len, i;
     unsigned char   status, c, d, nn, dd, cc, bb, mi, mcp, n;
     char            sf;
+    char            fps, hour, min, sec, frame, subframe;
+
     unsigned short  sn;
     unsigned char   tt[3];
+    t_atom          output_atom[6];
 
     cP = x->track_chunk[mfindex].track_data + x->track_chunk[mfindex].track_index;
     last_cP = x->track_chunk[mfindex].track_data + x->track_chunk[mfindex].chunk_length;
@@ -1220,13 +1239,24 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                     x->midi_data[0].a_w.w_float = status;
                     outlet_list(x->midi_list_outlet, &s_list, 1, x->midi_data);
                     break;
-                case 0xFF:
+                case 0xFF: /* meta event */
                     c = *cP++;
                     cP = midifile_read_var_len(cP, &len);/* meta length */
                     if (x->verbosity) post("midifile: Track %d Meta: %02X length %lu", mfindex, c, len);
                     switch (c)
                     {
-                        case 0x58:
+                        case 0x59: /* key signature */
+                            sf = *(signed char *)cP++;
+                            mi = *cP++;
+                            if (x->verbosity)
+                                post ("midifile: Key Signature: %d %s, %s",
+                                    sf, (sf<0)?"flats":"sharps", (mi)?"minor":"major");
+                            SETFLOAT(&output_atom[0], sf);
+                            SETFLOAT(&output_atom[1], mi);
+                            SETSYMBOL(&output_atom[2], midifile_key_name(sf, mi));
+                            outlet_anything( x->status_outlet, gensym("key_sig"), 3, output_atom);
+                            break;
+                        case 0x58: /* time signature */
                             nn = *cP++;
                             dd = *cP++;
                             dd = 1<<(dd);
@@ -1235,87 +1265,150 @@ static void midifile_get_next_track_chunk_data(t_midifile *x, int mfindex)
                             if (x->verbosity)
                                 post ("midifile: Time Signature: %d/%d %d clocks per tick, %d 32nd notes per quarternote",
                                     nn, dd, cc, bb);
+                            SETFLOAT(&output_atom[0], nn);
+                            SETFLOAT(&output_atom[1], dd);
+                            SETFLOAT(&output_atom[2], cc);
+                            SETFLOAT(&output_atom[3], bb);
+                            outlet_anything( x->status_outlet, gensym("time_sig"), 4, output_atom);
                             break;
-                        case 0x59:
-                            sf = *(signed char *)cP++;
-                            mi = *cP++;
-                            if (x->verbosity)
-                                post ("midifile: Key Signature: %d %s, %s",
-                                    sf, (sf<0)?"flats":"sharps", (mi)?"minor":"major");
+                        case 0x54: /* smpte  offset */
+                            hour = *cP++; /* hour is mixed with fps as 0ffhhhhhh */
+                            switch (hour>>6)
+                            {
+                                case 0:
+                                    fps = 24;
+                                    break;
+                                case 1:
+                                    fps = 25;
+                                    break;
+                                case 2:
+                                    fps = 29;/* 30 fps dropframe */
+                                    break;
+                                case 3:
+                                    fps = 30;
+                                default:
+                                    fps = 0; /* error */
+                            }
+                            hour = hour & 0x3F;
+                            min = *cP++;
+                            sec = *cP++;
+                            frame = *cP++;
+                            subframe = *cP++;
+                            if (x->verbosity) post ("midifile: %lu SMPTE offset: %d:%d:%d:%d:%d, %d fps", hour, min, sec, frame, subframe, fps);
+                            SETFLOAT(&output_atom[0], hour);
+                            SETFLOAT(&output_atom[1], min);
+                            SETFLOAT(&output_atom[2], sec);
+                            SETFLOAT(&output_atom[3], frame);
+                            SETFLOAT(&output_atom[4], subframe);
+                            SETFLOAT(&output_atom[5], fps);
+                            outlet_anything( x->status_outlet, gensym("smpte"), 6, output_atom);
                             break;
-                        case 0x51:
+                        case 0x51: /* set tempo */
                             tt[0] = *cP++;
                             tt[1] = *cP++;
                             tt[2] = *cP++;
                             time_sig = midifile_get_multibyte_3(tt);
                             if (x->verbosity) post ("midifile: %lu microseconds per MIDI quarter-note", time_sig);
+                            SETFLOAT(&output_atom[0], time_sig);
+                            outlet_anything( x->status_outlet, gensym("microsec_per_quarternote"), 1, output_atom);
                             break;
-                        case 0x2F:
+                        case 0x2F: /* end of track */
                             if (x->verbosity) post ("midifile: End of Track %d", mfindex);
                             delta_time = NO_MORE_ELEMENTS;
+                            SETFLOAT(&output_atom[0], mfindex);
+                            SETFLOAT(&output_atom[1], x->total_time);
+                            outlet_anything( x->status_outlet, gensym("end"), 2, output_atom);
                             cP += len;
                             break;
                         case 0x21:
                             tt[0] = *cP++;
                             if (x->verbosity) post ("midifile: MIDI port or cable number (unofficial): %d", tt[0]);
                             break;
-                        case 0x20:
+                        case 0x20: /* MIDI channel prefix */
                             mcp = *cP++;
                             if (x->verbosity) post ("midifile: MIDI Channel Prefix: %d", mcp);
+                            SETFLOAT(&output_atom[0], mfindex);
+                            SETFLOAT(&output_atom[1], mcp);
+                            outlet_anything( x->status_outlet, gensym("channel"), 2, output_atom);
                             break;
-                        case 0x06:
+                        case 0x07: /* cue point */
+                            str = cP;
+                            c = cP[len];
+                            cP[len] = '\0'; /* null terminate temporarily */
+                            if (x->verbosity) post ("midifile: Cue Point: %s", str);
+                            SETSYMBOL(&output_atom[0], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("cue"), 1, output_atom);
+                            cP[len] = c;
+                            cP += len;
+                            break;
+                        case 0x06: /* marker */
                             str = cP;
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Marker: %s", str);
+                            SETSYMBOL(&output_atom[0], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("marker"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
                             break;
-                        case 0x05:
+                        case 0x05: /* lyrics */
                             str = cP;
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Lyric: %s", str);
+                            SETSYMBOL(&output_atom[0], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("lyrics"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
                             break;
-                        case 0x04:
+                        case 0x04: /* instrument name */
                             str = cP;
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Instrument Name: %s", str);
+                            SETSYMBOL(&output_atom[0], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("instr_name"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
                             break;
-                        case 0x03:
+                        case 0x03: /* sequence/track name */
                             str = cP;
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Sequence/Track Name: %s", str);
+                            SETFLOAT(&output_atom[0], mfindex);
+                            SETSYMBOL(&output_atom[1], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("name"), 2, output_atom);
                             cP[len] = c;
                             cP += len;
                             break;
-                        case 0x02:
+                        case 0x02:/* copyright notice */
                             str = cP;
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Copyright Notice: %s", str);
+                            SETSYMBOL(&output_atom[0], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("copyright"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
                             break;
-                        case 0x01:
+                        case 0x01: /* text event */
                             str = cP;
                             c = cP[len];
                             cP[len] = '\0'; /* null terminate temporarily */
                             if (x->verbosity) post ("midifile: Text Event: %s", str);
+                            SETSYMBOL(&output_atom[0], gensym(str));
+                            outlet_anything( x->status_outlet, gensym("text"), 1, output_atom);
                             cP[len] = c;
                             cP += len;
                             break;
-                        case 0x00:
+                        case 0x00: /* sequence number */
                             tt[0] = *cP++;
                             tt[1] = *cP++;
                             sn = midifile_get_multibyte_2(tt);
                             if (x->verbosity) post ("midifile: Sequence Number %d", sn);
+                            SETFLOAT(&output_atom[0], sn);
+                            outlet_anything( x->status_outlet, gensym("seq_num"), 1, output_atom);
                             break;
                         default:
                             if (x->verbosity) post ("midifile: Unknown: %02X", c);
@@ -1463,4 +1556,29 @@ static void midifile_skip_next_track_chunk_data(t_midifile *x, int mfindex)
     else x->track_chunk[mfindex].total_time += delta_time;
 }
 
+static t_symbol *midifile_key_name(int sf, int mi)
+{
+    /* set a symbole to the key name baseed on */
+    /* sf= number of sharps if positive, else flats
+    /* mi = 0=major 1= minor */
+    char    *maj_key[15]={"B",  "Gb", "Db", "Ab", "Eb", "Bb", "F", "C", "G", "D", "A",  "E",  "B",  "F#", "Db"};
+    char    *min_key[15]={"G#", "Eb", "Bb", "F",  "C",  "G",  "D", "A", "E", "B", "F#", "C#", "G#", "D#", "Bb"};
+    char    buf[8] = {"no_key."};
+    int     i;
+
+    if ((sf >= -7)&&(sf <= 7))
+    {
+        if (mi == 1)
+        {
+            i = sprintf(buf, "%s", min_key[sf+7]);
+            sprintf(buf+i, "%s", "Minor");
+        }
+        else if (mi == 0)
+        {
+            i = sprintf(buf, "%s", maj_key[sf+7]);
+            sprintf(buf+i, "%s", "Major");
+        }
+    }
+    return gensym(buf);
+}
 /* fin midifile.c */
