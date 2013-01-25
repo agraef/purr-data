@@ -178,13 +178,13 @@ static void pd_tilde_donew(t_pd_tilde *x, char *pddir, char *schedlibdir,
     struct stat statbuf;
     x->x_infd = x->x_outfd = 0;
     x->x_childpid = -1;
-    snprintf(pdexecbuf, MAXPDSTRING, "%s/bin/pd", pddir);
+    snprintf(pdexecbuf, MAXPDSTRING, "%s/bin/pd-l2ork", pddir);
     if (stat(pdexecbuf, &statbuf) < 0)
     {
-        snprintf(pdexecbuf, MAXPDSTRING, "%s/../../../bin/pd", pddir);
+        snprintf(pdexecbuf, MAXPDSTRING, "%s/../../../bin/pd-l2ork", pddir);
         if (stat(pdexecbuf, &statbuf) < 0)
         {
-            snprintf(pdexecbuf, MAXPDSTRING, "%s/pd", pddir);
+            snprintf(pdexecbuf, MAXPDSTRING, "%s/pd-l2ork", pddir);
             if (stat(pdexecbuf, &statbuf) < 0)
             {
                 ERROR "pd~: can't stat %s", pdexecbuf);

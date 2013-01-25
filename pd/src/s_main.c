@@ -463,14 +463,6 @@ void sys_findprogdir(char *progname)
             strncpy(sbuf2, sbuf, lastslash-sbuf);
             sbuf2[lastslash-sbuf] = 0;
         }
-            /* go back to the parent from there once more, e.g., ~/pd */
-		strcpy(sbuf, sbuf2);
-        lastslash = strrchr(sbuf, '/');
-        if (lastslash)
-        {
-            strncpy(sbuf2, sbuf, lastslash-sbuf);
-            sbuf2[lastslash-sbuf] = 0;
-        }
         else strcpy(sbuf2, "..");
     }
     else
