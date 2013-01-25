@@ -12,7 +12,7 @@ GEM2PDP_DISTRO = /mnt/c/ydegoyon.free.fr/gem2pdp-$(GEM2PDP_VERSION)
 GEM2PDP_TARBALL = $(GEM2PDP_DISTRO).tar.gz
 # build flags
 
-INCLUDES = @INCLUDES@ -I$(PD_DIR)/src -I. -I$(PDP_DIR)/include  -I$(GEM_DIR)/src 
+INCLUDES = @INCLUDES@ -I$(PD_DIR)/src -I. -I$(PDP_DIR)/include  -I$(GEM_DIR)/src -I$(GEM_DIR)/src/deprecated
 CFLAGS = -fPIC -DPD -O2 -funroll-loops -fomit-frame-pointer  -ffast-math \
     -Wall -W -Wno-unused -Wno-parentheses -Wno-switch \
     -DGEM2PDP_VERSION=\"$(GEM2PDP_VERSION)\" -g  @CFLAGS@

@@ -29,9 +29,9 @@ then
 elif test -d ../../gem/Gem; 
 then
 	GEM_DIR=../../gem/Gem
-elif  test -d ../../Gem; 
+elif  test -d ../../gem/Gem; 
 then
-	GEM_DIR=../../Gem
+	GEM_DIR=../../gem/Gem
 else
    echo "Gem sources not found"
 fi
@@ -69,7 +69,7 @@ then
 fi
 
 echo -n "looking for gem sources (required) ... "
-if test -f $GEM_DIR/src/Base/GemBase.h
+if test -f $GEM_DIR/src/Base/CPPExtern.h
 then
   AC_SUBST(GEM_DIR)
   echo "ok." 

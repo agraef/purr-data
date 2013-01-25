@@ -11,8 +11,8 @@
 #include "gem2pdp.h"
 #include "yuv.h"
 
-#include "Gem/Manager.h"
-#include "Gem/Cache.h"
+#include "Base/GemMan.h"
+#include "Base/GemCache.h"
 
 #if defined(GEM_VERSION_MAJOR) && defined (GEM_VERSION_MINOR) && (GEM_VERSION_MAJOR>0 || GEM_VERSION_MINOR>=91)
 # define GEM2PDP_LEGACY_GEM 0
@@ -35,12 +35,59 @@ gem2pdp :: gem2pdp(void)
   GemMan::getDimen(&m_width, &m_height);
 #endif
   m_image = NULL;
+  m_buffer = GL_FRONT_LEFT;
   m_pdpoutlet = outlet_new(this->x_obj, &s_anything);
 }
 
 gem2pdp :: ~gem2pdp()
 {
   if (m_image) cleanImage();
+}
+
+void gem2pdp :: bufferMess(int buffer)
+{
+  switch(buffer)
+  {
+      case 0:
+        m_buffer = GL_FRONT_LEFT;
+        break;
+      case 1:
+        m_buffer = GL_FRONT_RIGHT;
+        break;
+      case 2:
+        m_buffer = GL_BACK_LEFT;
+        break;
+      case 3:
+        m_buffer = GL_BACK_RIGHT;
+        break;
+      case 4:
+        m_buffer = GL_FRONT;
+        break;
+      case 5:
+        m_buffer = GL_BACK;
+        break;
+      case 6:
+        m_buffer = GL_LEFT;
+        break;
+      case 7:
+        m_buffer = GL_RIGHT;
+        break;
+      case 8:
+        m_buffer = GL_FRONT_AND_BACK;
+        break;
+      case 9:
+        m_buffer = GL_AUX0;
+        break;
+      case 10:
+        m_buffer = GL_AUX1;
+        break;
+      case 11:
+        m_buffer = GL_AUX2;
+        break;
+      case 12:
+        m_buffer = GL_AUX3;
+        break;
+  }
 }
 
 void gem2pdp :: bangMess()
@@ -50,7 +97,6 @@ void gem2pdp :: bangMess()
  short int *pY, *pU, *pV;
  unsigned char r,g,b,a;
  t_int cpt;
- void *idontknowwhatitis=NULL;
 
   if ( !GemMan::windowExists() )
   {
@@ -68,9 +114,6 @@ void gem2pdp :: bangMess()
   GemMan::getOffset(&m_x, &m_y);
   GemMan::getDimen(&m_width, &m_height);
 #endif
-  pbuffers = GemMan::m_buffer;
-  // GemMan::m_buffer = 1;
-  // GemMan::render(idontknowwhatitis);
   // post("gem2pdp : got dimensions : x=%d y=%d w=%d h=%d", m_x, m_y, m_width, m_height);
         
   if (m_width <= 0 || m_height <= 0)
@@ -105,6 +148,7 @@ void gem2pdp :: bangMess()
      post( "gem2pdp : allocated image : w=%d h=%d", m_image->xsize, m_image->ysize );
    }
 
+   glReadBuffer(m_buffer);
    glReadPixels(m_x, m_y, m_image->xsize, m_image->ysize,
     	    	m_image->format, m_image->type, m_image->data);    
            
@@ -141,10 +185,6 @@ void gem2pdp :: bangMess()
 
    pdp_packet_pass_if_valid(m_pdpoutlet, &m_packet0);
 
-   // restore buffer state
-   // GemMan::m_buffer = pbuffers;
-   // GemMan::render(idontknowwhatitis);
-
    // post("gem2pdp : read image"); 
 }
 
@@ -159,6 +199,8 @@ void gem2pdp :: obj_setupCallback(t_class *classPtr)
   ::post( "gem2pdp : a bridge between GEM and PDP/PiDiP v"GEM2PDP_VERSION" (ydegoyon@free.fr)" );
   class_addmethod(classPtr, (t_method)&gem2pdp::bangMessCallback,
     	    gensym("bang"), A_NULL);
+  class_addmethod(classPtr, (t_method)&gem2pdp::bufferMessCallback,
+    	    gensym("buffer"), A_FLOAT, A_NULL);
   class_sethelpsymbol( classPtr, gensym("gem2pdp.pd") );
 }
 
@@ -167,8 +209,14 @@ void gem2pdp :: bangMessCallback(void *data)
   GetMyClass(data)->bangMess();
 }
 
+void gem2pdp :: bufferMessCallback(void *data, t_floatarg buffer)
+{
+  GetMyClass(data)->bufferMess((int)buffer);
+}
+
 void gem2pdp :: render(GemState *state)
 {
-  GemMan::render(state);
+  m_gemstate=state;
+  // GemMan::render(state);
   return;
 }

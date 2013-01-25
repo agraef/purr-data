@@ -57,6 +57,10 @@ void pix_2pdp::bangMess()
     // make pdp packet
     psize = gem_xsize * gem_ysize;
     m_packet0 = pdp_packet_new_image_YCrCb( gem_xsize, gem_ysize);
+    if(!m_packet0) {
+      error("couldn't allocate new pdp packet...");
+      return;
+    }
     m_header = pdp_packet_header(m_packet0);
     m_data = (short int *)pdp_packet_data(m_packet0);
 
@@ -88,8 +92,9 @@ void pix_2pdp::bangMess()
             *(pV) = ( yuv_RGBtoV( (g1<<16) +  (g2<<8) +  g3 ) - 128 ) << 8;
             *(pU) = ( yuv_RGBtoU( (g1<<16) +  (g2<<8) +  g3 ) - 128 ) << 8;
             pY++;
-            if ( (px%2==0) && (py%2==0) )
+            if ( (px%2==0) && (py%2==0) ) {
               pV++; pU++;
+	    }
           }
         }
         pdp_packet_pass_if_valid(m_pdpoutlet, &m_packet0);

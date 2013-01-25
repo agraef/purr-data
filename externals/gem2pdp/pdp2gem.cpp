@@ -10,7 +10,8 @@
 
 
 #include "pdp2gem.h"
-#include "Gem/State.h"
+#include "Base/GemState.h"
+#include "Base/GemVersion.h"
 #include "yuv.h"
 
 CPPEXTERN_NEW_WITH_ONE_ARG(pdp2gem, t_symbol *, A_DEFSYM)
@@ -235,13 +236,17 @@ void pdp2gem :: startRendering()
 
 void pdp2gem :: render(GemState *state)
 {
-  if ( m_data )
+  if ( m_data && state )
   {
     // lock mutex
     pthread_mutex_lock(m_mutex);
 
     m_pixBlock.newimage = 1;
+#if GEM_VERSION_MINOR >= 93
+    state->set(GemState::_PIX, &m_pixBlock);
+#else
     state->image = &m_pixBlock;
+#endif
   }
 }
 

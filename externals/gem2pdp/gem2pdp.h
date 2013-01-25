@@ -11,7 +11,7 @@
 #define INCLUDE_GEM2PDP_H_
 
 #include "Base/GemBase.h"
-#include "Gem/Image.h"
+#include "Base/GemPixUtil.h"
 #include "pdp.h"
 
 class GEM_EXTERN gem2pdp : public GemBase
@@ -30,14 +30,18 @@ class GEM_EXTERN gem2pdp : public GemBase
    t_outlet     *m_pdpoutlet;
    virtual ~gem2pdp(void);
    virtual void bangMess(void);
+   virtual void bufferMess(int);
    virtual void render(GemState *state);
    void         cleanImage();
    int        m_packet0;
    t_pdp        *m_header;
    short int    *m_data;
+   void         *m_gemstate;
+   GLenum       m_buffer;
     	
  private:
    static void 	bangMessCallback(void *data);
+   static void 	bufferMessCallback(void *data, t_floatarg buffer);
 };
 
 #endif

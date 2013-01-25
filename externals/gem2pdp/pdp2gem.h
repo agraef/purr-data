@@ -21,7 +21,7 @@
 #include <stdio.h>
 
 #include "Base/GemBase.h"
-#include "Gem/Image.h"
+#include "Base/GemPixUtil.h"
 #include "pdp.h"
 #include <pthread.h>
 
