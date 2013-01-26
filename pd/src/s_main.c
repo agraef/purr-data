@@ -450,13 +450,18 @@ void sys_findprogdir(char *progname)
     strncpy(sbuf, progname, FILENAME_MAX);
     sbuf[FILENAME_MAX-1] = 0;
 #endif
-    lastslash = strrchr(sbuf, '/');
-    if (lastslash)
+#ifdef INSTALL_PREFIX
+    strcpy(sbuf2, INSTALL_PREFIX);
+#else
+    strcpy(sbuf2, ".");
+#endif
+    /*lastslash = strrchr(sbuf, '/');
+    if (!strcmp(sbuf2, "") && lastslash)
     {
-            /* bash last slash to zero so that sbuf is directory pd was in,
-                e.g., ~/pd/bin */
+            // bash last slash to zero so that sbuf is directory pd was in,
+            //    e.g., ~/pd/bin
         *lastslash = 0; 
-            /* go back to the parent from there, e.g., ~/pd */
+            // go back to the parent from there, e.g., ~/pd
         lastslash = strrchr(sbuf, '/');
         if (lastslash)
         {
@@ -464,16 +469,7 @@ void sys_findprogdir(char *progname)
             sbuf2[lastslash-sbuf] = 0;
         }
         else strcpy(sbuf2, "..");
-    }
-    else
-    {
-            /* no slashes found.  Try INSTALL_PREFIX. */
-#ifdef INSTALL_PREFIX
-        strcpy(sbuf2, INSTALL_PREFIX);
-#else
-        strcpy(sbuf2, ".");
-#endif
-    }
+    }*/
         /* now we believe sbuf2 holds the parent directory of the directory
         pd was found in.  We now want to infer the "lib" directory and the
         "gui" directory.  In "simple" unix installations, the layout is
