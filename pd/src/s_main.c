@@ -452,8 +452,8 @@ void sys_findprogdir(char *progname)
 #endif
 #ifdef INSTALL_PREFIX
     strcpy(sbuf2, INSTALL_PREFIX);
-#else
-    strcpy(sbuf2, ".");
+//#else
+//    strcpy(sbuf2, ".");
 #endif
     /*lastslash = strrchr(sbuf, '/');
     if (!strcmp(sbuf2, "") && lastslash)
