@@ -378,13 +378,15 @@ creb_install: creb
 		--version "0.9.2"
 	install -p $(externals_src)/creb/abs/*.pd $(DESTDIR)$(objectsdir)/$(CREB_NAME)
 	install -p $(CREB_OBJECTS:.c=.$(EXTENSION)) \
-		$(CREB_CXXOBJECTS:.cc=.$(EXTENSION)) 		$(DESTDIR)$(objectsdir)/$(CREB_NAME)
+		$(CREB_CXXOBJECTS:.cc=.$(EXTENSION)) \
+		$(DESTDIR)$(objectsdir)/$(CREB_NAME)
 	install -p $(externals_src)/creb/doc/*.* $(DESTDIR)$(objectsdir)/$(CREB_NAME)
-	install -d $(DESTDIR)$(readmesdir)
+	install -d $(DESTDIR)$(objectsdir)/$(CREB_NAME)/manual
 	install -p $(externals_src)/creb/doc/reference.txt \
-		$(DESTDIR)$(readmesdir)/$(CREB_NAME).txt
-	install -d $(DESTDIR)$(examplesdir)/$(CREB_NAME)
-	install -p $(externals_src)/creb/doc/examples/*.* $(DESTDIR)$(examplesdir)/$(CREB_NAME)
+		$(DESTDIR)$(objectsdir)/$(CREB_NAME)/manual
+	install -d $(DESTDIR)$(objectsdir)/$(CREB_NAME)/examples
+	install -p $(externals_src)/creb/doc/examples/*.* \
+		$(DESTDIR)$(objectsdir)/$(CREB_NAME)/examples
 
 creb_clean:
 	-rm -f -- $(CREB_OBJECTS:.c=.$(EXTENSION))
@@ -544,7 +546,7 @@ freeverb_clean:
 GEM2PDP_NAME=gem2pdp
 GEM2PDP_OBJECTS := $(wildcard $(externals_src)/gem2pdp/*.cpp)
 $(externals_src)/gem2pdp/configure: $(externals_src)/gem2pdp/configure.ac
-	cd $(externals_src)/gem2pdp && aclocal && autoconf
+	cd $(externals_src)/gem2pdp && autoconf
 
 $(externals_src)/gem2pdp/Makefile: $(externals_src)/gem2pdp/Makefile.in
 	cd $(externals_src)/gem2pdp && ./configure --with-pddir=$(pd_src) \
@@ -562,15 +564,8 @@ gem2pdp_install: gem2pdp
 #		--version "0.6"
 	install -p $(GEM2PDP_OBJECTS:.cpp=.$(EXTENSION)) $(DESTDIR)$(objectsdir)
 	install -p $(externals_src)/gem2pdp/*.pd  $(DESTDIR)$(objectsdir)
-#	install -d $(DESTDIR)$(manualsdir)/$(GEM2PDP_NAME)
-#	install -p $(externals_src)/gem2pdp/manual.txt \
-#		$(DESTDIR)$(manualsdir)/$(GEM2PDP_NAME)
-	install -d $(DESTDIR)$(readmesdir)
 	install -p $(externals_src)/gem2pdp/README \
-		$(DESTDIR)$(readmesdir)/$(GEM2PDP_NAME).txt
-#	install -d $(DESTDIR)$(examplesdir)/$(GEM2PDP_NAME)
-#	install -p $(externals_src)/gem2pdp/examples/*.pd \
-#		$(DESTDIR)$(examplesdir)/$(GEM2PDP_NAME)
+		$(DESTDIR)$(objectsdir)/$(GEM2PDP_NAME)-README.txt
 
 gem2pdp_clean:
 	-rm -rf -- $(externals_src)/gem2pdp/autom4te.cache
