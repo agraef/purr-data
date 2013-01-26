@@ -203,7 +203,7 @@ install:  all
 	install $(BINARYMODE) $(PDEXEC) $(DESTDIR)$(bindir)/@PDEXEC@
 # kludge to allow pd~ to work by default in pd-l2ork
 	rm -f $(DESTDIR)$(libpddir)/pd
-	#ln -s $(bindir)/pd-l2ork $(DESTDIR)$(libpddir)/bin/pd
+	ln -s $(bindir)/pd-l2ork $(DESTDIR)$(libpddir)/pd-l2ork
 	install -m755 $(BIN_DIR)/pdsend $(DESTDIR)$(bindir)/pdsend
 	install -m755 $(BIN_DIR)/pdreceive $(DESTDIR)$(bindir)/pdreceive 
 	for dir in $(shell ls -1 ../doc | grep -v CVS); do \
