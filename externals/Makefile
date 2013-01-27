@@ -546,7 +546,7 @@ freeverb_clean:
 GEM2PDP_NAME=gem2pdp
 GEM2PDP_OBJECTS := $(wildcard $(externals_src)/gem2pdp/*.cpp)
 $(externals_src)/gem2pdp/configure: $(externals_src)/gem2pdp/configure.ac
-	cd $(externals_src)/gem2pdp && autoconf
+	cd $(externals_src)/gem2pdp && aclocal && autoconf
 
 $(externals_src)/gem2pdp/Makefile: $(externals_src)/gem2pdp/Makefile.in
 	cd $(externals_src)/gem2pdp && ./configure --with-pddir=$(pd_src) \
