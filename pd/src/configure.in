@@ -149,6 +149,7 @@ then
 #    exit -1
 fi
 
+AC_CHECK_LIB(tcl8.6, main,,
 AC_CHECK_LIB(tcl85, main,,
         AC_CHECK_LIB(tcl8.5, main,,
         AC_CHECK_LIB(tcl84, main,,
@@ -156,16 +157,17 @@ AC_CHECK_LIB(tcl85, main,,
                 AC_CHECK_LIB(tcl8.3, main,,
                     AC_CHECK_LIB(tcl8.2, main,,
                                     AC_CHECK_LIB(tcl8.0, main,,
-                            echo no tcl library found; exit 1)))))))
+                            echo no tcl library found; exit 1))))))))
 
+AC_CHECK_LIB(tk8.6, main,,
 AC_CHECK_LIB(tk85, main,,
-        AC_CHECK_LIB(tk8.5, main,,
+    AC_CHECK_LIB(tk8.5, main,,
        AC_CHECK_LIB(tk84, main,,
             AC_CHECK_LIB(tk8.4, main,,
                 AC_CHECK_LIB(tk8.3, main,,
                     AC_CHECK_LIB(tk8.2, main,,
                                     AC_CHECK_LIB(tk8.0, main,,
-                            echo no tk library found; exit 1)))))))
+                            echo no tk library found; exit 1))))))))
 
 
 if test x$tk != "xno"; then
