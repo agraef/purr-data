@@ -136,7 +136,7 @@ void pdp_imageproc_not_process(void *x, u32 width, u32 height, s16 *image)
 
 void pdp_imageproc_mask_process(void *x, u32 width, u32 height, s16 *image)
 {
-    u32 mask = (u32)x;
+    uptr mask = (uptr)x;
     u32 *plane = (u32 *)image;
     int count = (width * height) >> 1;
     int i;
@@ -279,7 +279,7 @@ void pdp_imageproc_zero_process(void *x, u32 width, u32 height, s16 *image)
 void pdp_imageproc_constant_process(void *x, u32 width, u32 height, s16 *image)
 {
     int i;
-    u32 value = (u32)x;
+    uptr value = (uptr)x;
     u32 *plane = (u32 *)image;
     int wordsize = (width * height) >> 1;
     value = (value & 0xffff) | (value << 16);
@@ -346,7 +346,7 @@ void pdp_imageproc_zthresh_process(void *x, u32 width, u32 height, s16 *image)
 void pdp_imageproc_hardthresh_process(void *x, u32 width, u32 height, s16 *image)
 {
     int i;
-    s32 thresh = (s32)x;
+    uptr thresh = (uptr)x;
     s32 sign1, isign2, a;
     s32 *wimage = (s32 *)image;
     int wsize = (width * height) >> 1;
@@ -370,7 +370,7 @@ void pdp_imageproc_hardthresh_process(void *x, u32 width, u32 height, s16 *image
 void pdp_imageproc_softthresh_process(void *x, u32 width, u32 height, s16 *image)
 {
     int i;
-    s32 thresh = (s32)x;
+    sptr thresh = (sptr)x;
     s32 sign1, sign2, a;
     s32 *wimage = (s32 *)image;
     int wsize = (width * height) >> 1;

@@ -20,7 +20,7 @@ clean:
 
 pdp_opengl.pd_linux: subdirs
 	rm -f pdp_opengl.pd_linux
-	$(CC) --export-dynamic -shared -o pdp_opengl.pd_linux modules/*.o system/*.o $(LDFLAGS) -g
+	$(CC) -rdynamic -shared -o pdp_opengl.pd_linux modules/*.o system/*.o $(LDFLAGS) -g
 
 pdp_opengl.pd_darwin: subdirs
 	rm -f pdp_opengl.pd_linux

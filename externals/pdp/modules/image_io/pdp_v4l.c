@@ -35,7 +35,14 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <linux/types.h>
-#include <linux/videodev.h>
+
+#ifdef HAVE_LIBV4L1_VIDEODEV_H
+# include <libv4l1-videodev.h>
+#else
+# warning trying to use deprecated V4L-1 API
+# include <linux/videodev.h>
+#endif
+
 #include <sys/mman.h>
 #include <sched.h>
 #include <pthread.h>

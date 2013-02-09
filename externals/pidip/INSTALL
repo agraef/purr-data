@@ -2,32 +2,36 @@ a/ first, install  :
 
 MANDATORY ::
 ============
-***** PD sources 	: http://www-crca.ucsd.edu/~msp/software.html
-***** PDP and its deps  : http://zwizwa.fartit.com/pd/pdp/
-***** imlib2 		: http://sourceforge.net/project/showfiles.php?group_id=2
-***** theora 		: http://www.theora.org/files/
-                          ---->  watchout !! you will need the static libs ( theora.a, ogg.a, vorbis.a )
-***** Image Magick 	: http://www.imagemagick.org
-                          ---->  watchout !! configure with --enable-shared 
+***** PD sources 	: svn co https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/pd pd 
+***** PDP sources       : svn co https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/externals/pdp pdp 
+( make a ./configure in pdp )
 
-OPTIONALLY ::
-=============
-***** ffmpeg		: http://ffmpeg.sourceforge.net/cvs 
-( --with-ffmpeg=PATH )    ----> watchout, it requires the cvs snapshot !
-                          + don't forget to activate mp3 and vorbis support in ffmpeg : 
-                          ./configure --enable-mp3lame --enable-vorbis
-OR
+DEPENDENCIES ::
+============
 
-***** mpeg4ip		: http://mpeg4ip.sourceforge.net/ ( download mpeg4ip v1.0 )
-( --with-mpeg4ip=PATH )    
+on a ubuntu system :
 
-b/ ./configure --with-pd=PATH --with-pdp=PATH [--with-ffmpeg=PATH] OR [--with-mpeg4ip=PATH] ( not both )
+apt-get install libbz2-dev libc6-dev libdc1394-22-dev libfreetype6-dev libgcc1 libimlib2-dev libmp3lame-dev libogg-dev libraw1394-dev libtheora-dev libvorbis-dev libvorbisenc2 zlib1g-dev tcllib libcv-dev
+
+OPTIONAL ::
+============
+
+ARToolKitPlus sources : 
+http://studierstube.icg.tu-graz.ac.at/handheld_ar/artoolkitplus.php
+
+libfreenect if you want to build pdp_freenect from :
+git clone https://github.com/OpenKinect/libfreenect.git
+( build it and put it off the stove for the moment )
+
+b/ ./configure --with-pd=PATH --with-pdp=PATH [--with-artkp=PATH]
 
 c/ make clean 
 
 d/ make
 
-e/ as root, make install
+e/ copy the pidip.pd_linux in place where pd can find it.
+if you use pd-extended :
+cp pidip.pd_linux /usr/lib/pd-extended/extra/pidip/pidip.pd_linux 
 
 f/ modify your pd start-up script :
 
@@ -39,5 +43,5 @@ loading of PDP library ( option "-lib <path>/pdp" )
 Enjoy!!
 
 Thanx for getting here.
-Yves/
-comments and bugs @ ydegoyon@free.fr
+sevy
+comments and bugs @ tffobject@gmail.com

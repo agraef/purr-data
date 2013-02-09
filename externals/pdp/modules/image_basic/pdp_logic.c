@@ -89,7 +89,7 @@ static void pdp_logic_process_hardthresh(t_pdp_logic *x)
 static void pdp_logic_set_mask(t_pdp_logic *x, t_floatarg f)
 {
     /* using a pointer as a variable hmm? */
-    u32 mask = ((u32)f) & 0xffff;
+    sptr mask = ((sptr)f) & 0xffff;
     x->x_mask = ((void * )mask);
 }
 
@@ -98,12 +98,12 @@ static void pdp_logic_set_threshold(t_pdp_logic *x, t_floatarg f)
     /* using a pointer as a variable hmm? */
     if (f<0.0f) f = 0.0f;
     if (f>1.0f) f = 1.0f;
-    x->x_mask = (void *)((u32)(((float)0x7fff) * f));
+    x->x_mask = (void *)((sptr)(((float)0x7fff) * f));
 }
 
 static void pdp_logic_set_depth(t_pdp_logic *x, t_floatarg f)
 {
-    u32 mask;
+    sptr mask;
     int shift = (16 - ((int)f));
     if (shift < 0) shift = 0;
     if (shift > 16) shift = 16;

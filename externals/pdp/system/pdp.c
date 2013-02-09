@@ -110,8 +110,12 @@ void pdp_setup(void){
     if (initialized) return;
 
     /* babble */
-#ifdef PDP_VERSION	
+#ifdef PDP_VERSION
+# if PD_MAJOR_VERSION==0 && PD_MINOR_VERSION<43
     pdp_post("PDP: pure data packet version " PDP_VERSION );
+# else
+    logpost(NULL, 3, "PDP: pure data packet version " PDP_VERSION );
+# endif
 #else
     pdp_post ("PDP: pure data packet");
 #endif

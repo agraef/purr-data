@@ -678,7 +678,7 @@ void pdp_text_setup(void)
     class_addmethod(pdp_text_class, (t_method)pdp_text_blend, gensym("blend"),  A_DEFFLOAT, A_NULL);
     class_addmethod(pdp_text_class, (t_method)pdp_text_antialias, gensym("antialias"),  A_DEFFLOAT, A_NULL);
 
-    imlib_add_path_to_font_path("/usr/X11R6/lib/X11/fonts/TTF");
+    imlib_add_path_to_font_path("/usr/share/fonts/X11/TTF");
 #ifdef __APPLE__
     imlib_add_path_to_font_path("/System/Library/Fonts");
     imlib_add_path_to_font_path("/Library/Fonts");

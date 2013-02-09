@@ -7,7 +7,7 @@ AC_HEADER_STDC
 dnl TAG REPO WHEN RELEASE VERSION CHANGES !!!
 dnl After changing version, do "make mrproper ; sh bootstrap"
 
-PDP_VERSION=0.12.7-svn
+PDP_VERSION=0.12.7
 
 
 
@@ -96,6 +96,12 @@ then
 elif test -f $PWD/../src/m_pd.h;
 then
 	PD_CPPFLAGS="-I$PWD/../src"
+elif test -f /usr/local/include/pd/m_pd.h;
+then
+	PD_CPPFLAGS="-I/usr/local/include/pd"
+elif test -f /usr/include/pd/m_pd.h;
+then
+	PD_CPPFLAGS="-I/usr/include/pd"
 fi
 
 
@@ -139,28 +145,64 @@ then
 
 dnl if not darwin, assume target is linux
 else
-	AC_CHECK_HEADER(linux/videodev.h,
+  have_v4l="no"
+  have_libv4l="no"
+  AC_CHECK_HEADERS([libv4l1-videodev.h], have_v4l="yes")
+  AC_CHECK_HEADERS([linux/videodev.h], have_libv4l="yes")
+
+  if test "x$have_libv4l" = "xyes"
+  then
+    have_v4l="yes"
+  fi
+
+  if test "x$enable_v4l" = "xno"
+  then
+   have_v4l="no"
+  fi
+
+  if test "x$have_v4l" = "xyes"
+  then
 		PDP_OPTMOD="$PDP_OPTMOD pdp_v4l.o"
-		AC_DEFINE(HAVE_PDP_V4L, 1, build pdp_v4l),
-		echo "   linux/videodev.h not found: not building pdp_v4l")
+		AC_DEFINE(HAVE_PDP_V4L, 1, [build pdp_v4l])
 
-
+    if test "x$have_libv4l" = "xyes"
+    then
+  		AC_DEFINE(HAVE_PDP_LIBV4L, 1, [build pdp_v4l with libv4l])
+      PDP_V4L_CFLAGS="`pkg-config --cflags libv4l 2>/dev/null || pkg-config --cflags libv4l2`"
+      PDP_V4L_LIBS="`pkg-config --libs libv4l 2>/dev/null || pkg-config --libs libv4l2`"
+    else
+      PDP_V4L_CFLAGS=""
+      PDP_V4L_LIBS=""
+    fi
+    PDP_CFLAGS="$PDP_CFLAGS $PDP_V4L_CFLAGS"
+    LIBS="$LIBS $PDP_V4L_LIBS"
+  else
+    AC_MSG_RESULT([not building pdp_v4l])
+  fi
 fi
 
 dnl optional gsl support
 if test $enable_gsl == yes;
 then
-	AC_CHECK_LIB(gsl,main,
-		PDP_OPTTYPES="$PDP_OPTTYPES pdp_matrix.o"
-		PDP_MATRIX_BASIC="$PDP_MATRIX_BASIC pdp_mat_mul.o pdp_mat_lu.o pdp_mat_vec.o"
-		PDP_IMAGE_BASIC="$PDP_IMAGE_BASIC pdp_cheby.o"
-		PDP_IMAGE_SPECIAL="$PDP_IMAGE_SPECIAL pdp_histo.o"
-		AC_DEFINE(HAVE_PDP_GSL, 1, gsl support)
-		LIBS="$LIBS -lgsl",
-		echo "   libgsl not found: not building matrix type support")
-	AC_CHECK_LIB(gslcblas,main,
-		LIBS="$LIBS -lgslcblas", echo "   libgslcblas not found")
+  AC_CHECK_LIB(gslcblas,main)
+  AC_CHECK_LIB(gsl,main,
+    PDP_OPTTYPES="$PDP_OPTTYPES pdp_matrix.o"
+    PDP_MATRIX_BASIC="$PDP_MATRIX_BASIC pdp_mat_mul.o pdp_mat_lu.o pdp_mat_vec.o"
+    PDP_IMAGE_BASIC="$PDP_IMAGE_BASIC pdp_cheby.o"
+    PDP_IMAGE_SPECIAL="$PDP_IMAGE_SPECIAL pdp_histo.o"
+    AC_DEFINE(HAVE_PDP_GSL, 1, gsl support)
+    PDP_GSL_FOUND=1,
+    echo "   libgsl not found: not building matrix type support")
 
+  if test -n "$PDP_GSL_FOUND"; then
+    if test $ARCH == Darwin
+    then
+      LIBS="$LIBS -lgslcblas -lgsl"
+    else
+      dnl if not darwin, assume target is linux
+      LIBS="$LIBS `pkg-config --libs gsl`"
+    fi
+  fi
 fi
 
 

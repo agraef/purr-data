@@ -26,8 +26,11 @@
 
 #include "pdp.h"
 #include "pdp_llconv.h"
-#include "s_stuff.h" // need to get sys_libdir for libquicktime plugins
 
+
+#if PD_MAJOR_VERSION==0 && PD_MINOR_VERSION>=43
+#include "s_stuff.h" // need to get sys_libdir for libquicktime plugins
+#endif
 
 #define min(x,y) ((x<y)?(x):(y))
 

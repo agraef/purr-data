@@ -1,4 +1,4 @@
-#N canvas 127 47 872 636 10;
+#N canvas 446 83 872 636 10;
 #X text 452 600 written by Yves Degoyon (ydegoyon@free.fr);
 #X floatatom 240 549 5 0 0 0 - - -;
 #X text 289 550 Number of video frames decoded;
@@ -55,7 +55,7 @@
 #X floatatom 309 455 5 0 0 0 - - -;
 #X text 354 455 File size ( in kbs );
 #X obj 39 496 pdp_glx;
-#X obj 78 259 vsl 15 128 0 510 0 0 empty filesize empty 0 -8 0 8 -262144
+#X obj 78 259 vsl 15 128 0 2524 0 0 empty filesize empty 0 -8 0 8 -262144
 -1 -1 0 1;
 #X msg 310 473 \; filesize range 0 \$1;
 #X floatatom 59 411 5 0 0 0 - - -;
@@ -69,6 +69,7 @@
 #X obj 152 265 symbol;
 #X msg 115 265 bang;
 #X obj 241 582 block~ 512;
+#X obj 39 461 pdp_convert image/YCrCb/*;
 #X connect 3 0 29 0;
 #X connect 4 0 3 0;
 #X connect 8 0 40 0;
@@ -87,7 +88,7 @@
 #X connect 25 0 27 1;
 #X connect 27 0 29 0;
 #X connect 28 0 27 0;
-#X connect 29 0 50 0;
+#X connect 29 0 63 0;
 #X connect 29 1 38 0;
 #X connect 29 2 6 0;
 #X connect 29 3 1 0;
@@ -111,3 +112,4 @@
 #X connect 59 0 61 0;
 #X connect 60 0 33 0;
 #X connect 61 0 60 0;
+#X connect 63 0 50 0;

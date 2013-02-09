@@ -1,20 +1,103 @@
-/* quicktime library minor version */
-#undef QUICKTIME_NEWER
+/* include/pidip_config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define to 1 if you have image magick */
+/* dc1394 cameras interface */
+#undef HAVE_DC1394
+
+/* M$ hacked kinect interface */
+#undef HAVE_FREENECT
+
+/* OpenCV library */
+#undef HAVE_OPENCV
+
+/* augmented reality toolkit plus */
+#undef HAVE_ARTKP
+
+/* image magick capture capability */
 #undef HAVE_IMAGE_MAGICK
 
-/* Define to 1 if you have ffmpeg source tree */
-#undef HAVE_PIDIP_FFMPEG
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have mpeg4ip source tree */
-#undef HAVE_PIDIP_MPEG4IP
+/* Define to 1 if you have the `bz2' library (-lbz2). */
+#undef HAVE_LIBBZ2
 
-/* Define to 1 if you have video 4 linux 2 */
-#undef HAVE_V4L2
+/* Define to 1 if you have the `dl' library (-ldl). */
+#undef HAVE_LIBDL
 
-/* Define to 1 if you have libdv for firewire camera */
+/* build pdp_ieee1394 for linux */
 #undef HAVE_LIBDV
 
-/* Define to 1 if you have libdc1394 for dc camera */
-#undef HAVE_DC1394
+/* Define to 1 if you have the `mp3lame' library (-lmp3lame). */
+#undef HAVE_LIBMP3LAME
+
+/* Define to 1 if you have the `ogg' library (-logg). */
+#undef HAVE_LIBOGG
+
+/* Define to 1 if you have the `quicktime' library (-lquicktime). */
+#undef HAVE_LIBQUICKTIME
+
+/* Define to 1 if you have the `theora' library (-ltheora). */
+#undef HAVE_LIBTHEORA
+
+/* Define to 1 if you have the `vorbis' library (-lvorbis). */
+#undef HAVE_LIBVORBIS
+
+/* Define to 1 if you have the `vorbisenc' library (-lvorbisenc). */
+#undef HAVE_LIBVORBISENC
+
+/* Define to 1 if you have the `z' library (-lz). */
+#undef HAVE_LIBZ
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* build pdp_vloopback */
+#undef HAVE_V4L
+
+/* build pdp_v4l2 */
+#undef HAVE_V4L2
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define if using the dmalloc debugging malloc package */
+#undef WITH_DMALLOC

@@ -69,7 +69,7 @@ static inline int rgb2u(int r, int g, int b)
 /* swap top to bottom */
 static inline void _exchange_row(char *row1, char *row2, int size)
 {
-    int mask = ~(sizeof(int)-1);
+    int mask = ~((unsigned int)sizeof(int)-1);
     int *irow1 = (int *)row1;
     int *irow2 = (int *)row2;
 

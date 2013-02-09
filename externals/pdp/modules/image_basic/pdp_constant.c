@@ -54,7 +54,7 @@ void pdp_constant_value(t_pdp_constant *x, t_floatarg f)
     if (f>1.0f) f = 1.0f;
     if (f<-1.0f) f = -1.0f;
 
-    x->x_constant = (void *)((s32)(0x7fff * f));
+    x->x_constant = (void *)((sptr)(0x7fff * f));
 }
 
 

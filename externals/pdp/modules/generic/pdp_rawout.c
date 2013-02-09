@@ -242,8 +242,8 @@ static t_int *rawout_perform(t_int *w);
 static void rawout_dsp(t_rawout *x, t_signal **sp){
     int nargs = 2 + x->x_chans;
     t_int args[nargs];
-    args[0] = (int)x;
-    args[1] = (int)sp[0]->s_n;
+    args[0] = (t_int)x;
+    args[1] = (t_int)sp[0]->s_n;
     float **in = (float **)(args+2);
     int i;
     for (i=0; i<x->x_chans; i++) in[i] = sp[i]->s_vec;

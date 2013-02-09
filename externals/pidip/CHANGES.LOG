@@ -1,7 +1,42 @@
+0.12.30 ( codename Great Blobs Of Fire )
+   added pdp_cluster : clusterization of colors for later color blob detection.
+   added pdp_ycfilter : YUV color filter using luminosity or not.
+   added pdp_shapes : a more general pdp_shape object detecting all blobs of a given color (using luminosity or not).
+   note : if you want to work with black and white, you need to activate the luminosity,
+   otherwise it's not necessary... it is off by default.
+
+0.12.29 ( codename Moving Targets )
+   added pdp_skeleton : skeletonization object.
+   ( feed it with a binary blob image  )
+
+   added pdp_joint : calculate ending, inflection and junction points in a skeleton.
+   ( feed it with the output of pdp_skeleton of course, , otherwise the output will be all red  )
+   although the algorithm was written from scratch,
+   it requires some utilities from opencv ( install libcv-dev ).
+
+0.12.28 ( codename Prevolution )
+   added pdp_freenect : module to get video and data from a kinect device
+   ( it's fun to hack mainstream devices )
+   based on libfreenect from Hector Martin & http://openkinect.org
+   dedicated to t.b.b., he would have liked it :
+   http://ydegoyon.free.fr/basiony-ak47.jpg
+   and thanks to Francisco Sanmartin for his pre-release tests and support.
+
+0.12.27 ( codename Freed From Mainstream )
+   added pdp_artkp : binding to ARToolKitPlus
+   it offers a 6 Degrees Of Freedom tracking in theory (3D tracking) using 2D markers.
+   ( requires ARToolKitPlus sources and to compile pidip with --with-artkp=/path/to/ARToolKitPlus,
+   see help-pacth )
+   this object comes from the investigations of llgib on augmented reality toolkits.
+
+0.12.26 ( codename I will not work until 67 )
+   pdp_theonice~ : fixed number of audio samples to send ( no more audio x-run)
+   pdp_theonice~ : flush packets it seems necessary now
+
 0.12.25 ( codename Dangerous Modules )
    added pdp_vloopback : some say it's dangerous, but it works smooth
 
-0.12.25 ( codename CrunchyBits )
+0.12.25 ( codename Crunchy Bits )
    fixed default font for pdp_text, pdp_qtext
    fixed crash in pdp_theonice~
 

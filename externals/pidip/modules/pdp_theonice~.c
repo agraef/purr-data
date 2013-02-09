@@ -36,12 +36,14 @@
 #include <vorbis/codec.h>
 #include <vorbis/vorbisenc.h>
 
+#define MAX_PACKETS_STACK 1
+
 #define MIN_FRAMERATE 1
 #define MAX_FRAMERATE 100
-#define DEFAULT_FRAME_RATE 7
+#define DEFAULT_FRAME_RATE 12
 #define MIN_VIDEO_QUALITY 0
 #define MAX_VIDEO_QUALITY 63
-#define DEFAULT_VIDEO_QUALITY 2
+#define DEFAULT_VIDEO_QUALITY 16
 #define MIN_VIDEO_BITRATE 45
 #define MAX_VIDEO_BITRATE 2000
 #define DEFAULT_VIDEO_BITRATE 48
@@ -50,15 +52,11 @@
 #define DEFAULT_AUDIO_QUALITY 0.5
 #define MIN_AUDIO_BITRATE 8
 #define MAX_AUDIO_BITRATE 2000
-#define DEFAULT_AUDIO_BITRATE 32
+#define DEFAULT_AUDIO_BITRATE 64
 
 #define DEFAULT_CHANNELS 2
-#define DEFAULT_DRIFT 100
 #define DEFAULT_BITS 8
 #define MAX_AUDIO_PACKET_SIZE (128 * 1024)
-// streams hard-coded serial numbers
-#define STREAMV_SNO 0x987654
-#define STREAMA_SNO 0x456789
 
 #define MAX_COMMENT_LENGTH 1024
 #define STRBUF_SIZE 1024
@@ -75,7 +73,7 @@ static char base64table[65] = {
     'w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/',
 };
 
-static char   *pdp_theonice_version = "pdp_theonice~: version 0.1, a theora a/v streaming object, written by ydegoyon@free.fr";
+static char   *pdp_theonice_version = "pdp_theonice~: version 1.5, a theora a/v streaming object, written by ydegoyon@free.fr";
 
 typedef struct pdp_theonice_struct
 {
@@ -97,16 +95,16 @@ typedef struct pdp_theonice_struct
     int x_socketfd;                // connection socket
     int x_streaming;             // streaming on : connected and all 
     int x_pstreaming;            // previous state
-    char  *x_passwd;               // password
-    char  x_title[MAX_COMMENT_LENGTH];         // title of the stream 
-    char  x_url[MAX_COMMENT_LENGTH];           // url of the stream 
-    char  x_genre[MAX_COMMENT_LENGTH];         // genre of the stream 
-    char  x_description[MAX_COMMENT_LENGTH];   // description 
-    char  x_artist[MAX_COMMENT_LENGTH];        // artist
-    char  x_copyright[MAX_COMMENT_LENGTH];
-    char  x_date[MAX_COMMENT_LENGTH];          // starting system date 
-    char  x_hostname[MAX_COMMENT_LENGTH];      // name or IP of host to connect to 
-    char  x_mountpoint[MAX_COMMENT_LENGTH];    // mountpoint
+    char *x_passwd;               // password
+    char x_title[MAX_COMMENT_LENGTH];         // title of the stream 
+    char x_url[MAX_COMMENT_LENGTH];           // url of the stream 
+    char x_genre[MAX_COMMENT_LENGTH];         // genre of the stream 
+    char x_description[MAX_COMMENT_LENGTH];   // description 
+    char x_artist[MAX_COMMENT_LENGTH];        // artist
+    char x_copyright[MAX_COMMENT_LENGTH];
+    char x_date[MAX_COMMENT_LENGTH];          // starting system date 
+    char x_hostname[MAX_COMMENT_LENGTH];      // name or IP of host to connect to 
+    char x_mountpoint[MAX_COMMENT_LENGTH];    // mountpoint
     int x_port;                     // port number
     int x_public;                   // publish on www.oggcast.com 
     int x_framerate;
@@ -119,7 +117,8 @@ typedef struct pdp_theonice_struct
     int x_nbframes_dropped;
     int x_pnbframes_dropped;
     int x_frames;
-    t_float x_maxdrift;     /* maximum delay between audio and video */
+    int x_apkg;
+    int x_vpkg;
     struct timeval x_tstart;
     struct timeval x_tzero;
     struct timeval x_tcurrent;
@@ -131,7 +130,8 @@ typedef struct pdp_theonice_struct
     ogg_page         x_ogg_page;       // ogg page for headers
     ogg_page         x_apage;          // ogg audio page
     ogg_page         x_vpage;          // ogg video page
-    ogg_packet       x_ogg_packet;     // ogg packet
+    ogg_packet       x_ogg_apacket;    // ogg packet
+    ogg_packet       x_ogg_vpacket;    // ogg packet
     ogg_stream_state x_statev;         // vorbis stream state
     ogg_stream_state x_statet;         // theora stream state
     theora_info      x_theora_info;    // theora info
@@ -206,8 +206,9 @@ static void pdp_theonice_init_encoder(t_pdp_theonice *x)
     x->x_einit=0;
 
     // init streams
-    ogg_stream_init(&x->x_statet, STREAMA_SNO);
-    ogg_stream_init(&x->x_statev, STREAMV_SNO);
+    srand(time(NULL));
+    ogg_stream_init(&x->x_statet, rand());
+    ogg_stream_init(&x->x_statev, rand());
 
     theora_info_init(&x->x_theora_info);
     x->x_theora_info.width=x->x_tvwidth;
@@ -220,19 +221,20 @@ static void pdp_theonice_init_encoder(t_pdp_theonice *x)
     x->x_theora_info.fps_denominator=1;
     x->x_theora_info.aspect_numerator=1;
     x->x_theora_info.aspect_denominator=1;
-    x->x_theora_info.colorspace=OC_CS_UNSPECIFIED;
+    x->x_theora_info.colorspace=OC_CS_ITU_REC_470BG;
     x->x_theora_info.target_bitrate=x->x_vkbps;
     x->x_theora_info.quality=x->x_vquality;
 
     x->x_theora_info.dropframes_p=0;
     x->x_theora_info.quick_p=1;
     x->x_theora_info.keyframe_auto_p=1;
-    x->x_theora_info.keyframe_frequency=64;
-    x->x_theora_info.keyframe_frequency_force=64;
-    x->x_theora_info.keyframe_data_target_bitrate=x->x_vkbps*1.5;
+    x->x_theora_info.keyframe_frequency=10;
+    x->x_theora_info.keyframe_frequency_force=10;
+    x->x_theora_info.keyframe_data_target_bitrate=x->x_vkbps*5;
     x->x_theora_info.keyframe_auto_threshold=80;
     x->x_theora_info.keyframe_mindistance=8;
     x->x_theora_info.noise_sensitivity=1; 
+    x->x_theora_info.sharpness=0; 
 
     theora_encode_init(&x->x_theora_state,&x->x_theora_info);
 
@@ -263,13 +265,12 @@ static void pdp_theonice_init_encoder(t_pdp_theonice *x)
     vorbis_comment_add_tag(&(x->x_vorbis_comment),"PERFORMER",x->x_artist);
     vorbis_comment_add_tag(&(x->x_vorbis_comment),"COPYRIGHT",x->x_copyright);
     vorbis_comment_add_tag(&(x->x_vorbis_comment),"DATE",x->x_date);
-    vorbis_comment_add_tag(&(x->x_vorbis_comment),"ENCODER","pdp_theonice~ v0.1");
+    vorbis_comment_add_tag(&(x->x_vorbis_comment),"ENCODER","pdp_theonice~ v1.5");
     vorbis_analysis_init(&x->x_dsp_state,&x->x_vorbis_info);
     vorbis_block_init(&x->x_dsp_state,&x->x_vorbis_block);
     
     post( "pdp_theonice~ : encoder initialized." );
     x->x_einit=1;
-
 }
 
     /* terminate the encoding process */
@@ -287,16 +288,22 @@ static void pdp_theonice_shutdown_encoder(t_pdp_theonice *x)
          vorbis_analysis( &x->x_vorbis_block, NULL );
          vorbis_bitrate_addblock( &x->x_vorbis_block );
   
-         while(vorbis_bitrate_flushpacket(  &x->x_dsp_state, &x->x_ogg_packet ))
+         while(vorbis_bitrate_flushpacket( &x->x_dsp_state, &x->x_ogg_apacket ))
          {
-            ogg_stream_packetin( &x->x_statev, &x->x_ogg_packet );
+            ogg_stream_packetin( &x->x_statev, &x->x_ogg_apacket );
+            x->x_apkg++;
+            // post( "pdp_theonice~ : audio packets :%d", x->x_apkg);
          }
       }
-      while( ( ret = ogg_stream_pageout( &x->x_statev, &x->x_apage) ) > 0 )
+
+      while(1)
       {
-        x->x_audiotime = vorbis_granule_time(&x->x_dsp_state, ogg_page_granulepos(&x->x_apage));
-  
-        // post("pdp_theonice~ : writing audio : %d samples, header : %d, body : %d", nbsamples, x->x_apage.header_len, x->x_apage.body_len);
+        ret = ogg_stream_flush(&x->x_statev, &x->x_apage);
+        if(ret<0){
+          post( "pdp_theonice~ : ogg encoding error." );
+          return;
+        }
+        if(ret==0)break;
         if ( ( ret = send(x->x_socketfd, (void*)x->x_apage.header, x->x_apage.header_len, MSG_NOSIGNAL) ) < 0 )
         {
           post( "pdp_theonice~ : could not write audio packet (ret=%d).", ret );
@@ -307,6 +314,8 @@ static void pdp_theonice_shutdown_encoder(t_pdp_theonice *x)
           post( "pdp_theonice~ : could not write audio packet (ret=%d).", ret );
           perror( "send" );
         }
+        x->x_apkg -= ogg_page_packets((ogg_page *)&x->x_apage);
+        x->x_audiotime = vorbis_granule_time(&x->x_dsp_state, ogg_page_granulepos(&x->x_apage));
       }
   
       ogg_stream_clear(&x->x_statev);
@@ -349,8 +358,8 @@ static int pdp_theonice_write_headers(t_pdp_theonice *x)
       return -1;
     }
 
-    theora_encode_header(&x->x_theora_state, &x->x_ogg_packet);
-    ogg_stream_packetin(&x->x_statet, &x->x_ogg_packet);
+    theora_encode_header(&x->x_theora_state, &x->x_ogg_vpacket);
+    ogg_stream_packetin(&x->x_statet, &x->x_ogg_vpacket);
     if(ogg_stream_pageout(&x->x_statet, &x->x_ogg_page)!=1)
     {
       post( "pdp_theonice~ : ogg encoding error." );
@@ -380,11 +389,11 @@ static int pdp_theonice_write_headers(t_pdp_theonice *x)
     theora_comment_add_tag(&(x->x_theora_comment),"PERFORMER",x->x_artist);
     theora_comment_add_tag(&(x->x_theora_comment),"COPYRIGHT",x->x_copyright);
     theora_comment_add_tag(&(x->x_theora_comment),"DATE",x->x_date);
-    theora_comment_add_tag(&(x->x_theora_comment),"ENCODER","pdp_theonice~ v0.1");
-    theora_encode_comment(&x->x_theora_comment, &x->x_ogg_packet);
-    ogg_stream_packetin(&x->x_statet, &x->x_ogg_packet);
-    theora_encode_tables(&x->x_theora_state, &x->x_ogg_packet);
-    ogg_stream_packetin(&x->x_statet, &x->x_ogg_packet);
+    theora_comment_add_tag(&(x->x_theora_comment),"ENCODER","pdp_theonice~ v1.5");
+    theora_encode_comment(&x->x_theora_comment, &x->x_ogg_vpacket);
+    ogg_stream_packetin(&x->x_statet, &x->x_ogg_vpacket);
+    theora_encode_tables(&x->x_theora_state, &x->x_ogg_vpacket);
+    ogg_stream_packetin(&x->x_statet, &x->x_ogg_vpacket);
 
     vorbis_analysis_headerout(&x->x_dsp_state, &x->x_vorbis_comment, 
                               &aheader,&aheadercomm,&aheadercode);
@@ -925,15 +934,15 @@ static t_int *pdp_theonice_perform(t_int *w)
     while (n--)
     {
        fsample=*(in1++);
-       if (fsample > 1.0) { fsample = 1.0; }
-       if (fsample < -1.0) { fsample = -1.0; }
+       // if (fsample > 1.0) { fsample = 1.0; }
+       // if (fsample < -1.0) { fsample = -1.0; }
        x->x_audio_buf[0][x->x_audioin_position]=fsample;
        fsample=*(in2++);
-       if (fsample > 1.0) { fsample = 1.0; }
-       if (fsample < -1.0) { fsample = -1.0; }
+       // if (fsample > 1.0) { fsample = 1.0; }
+       // if (fsample < -1.0) { fsample = -1.0; }
        x->x_audio_buf[1][x->x_audioin_position]=fsample;
        x->x_audioin_position=(x->x_audioin_position+1)%(MAX_AUDIO_PACKET_SIZE);
-       if ( x->x_audioin_position >= MAX_AUDIO_PACKET_SIZE-1 )
+       if ( x->x_audioin_position > MAX_AUDIO_PACKET_SIZE-1 )
        {
           post( "pdp_theonice~ : audio x-run" );
        }
@@ -970,8 +979,6 @@ static t_int *pdp_theonice_perform(t_int *w)
     x->x_pvideotime = x->x_videotime;
     if ( x->x_videotime >= 0. ) outlet_float(x->x_outlet_vtime, x->x_videotime);
   }
-
-  pdp_theonice_send_audio(x);
 
   return (w+5);
 }
@@ -1019,6 +1026,8 @@ static void pdp_theonice_process_yv12(t_pdp_theonice *x)
    x->x_frames++;
 
    pdp_theonice_send_video(x);
+   pdp_theonice_send_audio(x);
+
 }
 
 static void pdp_theonice_send_video(t_pdp_theonice *x)
@@ -1067,16 +1076,30 @@ static void pdp_theonice_send_video(t_pdp_theonice *x)
       }  
       else
       {
-         // stream one packet
-         theora_encode_packetout(&x->x_theora_state, 0, &x->x_ogg_packet);
-         ogg_stream_packetin(&x->x_statet, &x->x_ogg_packet);
-         // post( "pdp_theonice~ : new (theora) ogg packet : bytes:%ld, bos:%ld, eos:%ld, no:%lld",
-         //                        x->x_ogg_packet.bytes, x->x_ogg_packet.b_o_s, 
-         //                        x->x_ogg_packet.e_o_s, x->x_ogg_packet.packetno );
+         x->x_frameswritten++;
+         if ( x->x_frameslate > 0 ) x->x_frameslate--;
+         x->x_secondcount++;
 
-         while( ( ret = ogg_stream_pageout(&x->x_statet, &x->x_vpage) ) >0 )
+         // weld packets into the bitstream 
+         while(theora_encode_packetout(&x->x_theora_state, 0, &x->x_ogg_vpacket))
          {
-           x->x_videotime = theora_granule_time(&x->x_theora_state, ogg_page_granulepos(&x->x_vpage));
+           ogg_stream_packetin( &x->x_statet, &x->x_ogg_vpacket);
+           x->x_vpkg++;
+           // post("pdp_theonice~ : video packets : %d", x->x_vpkg);
+         }
+
+         // post( "pdp_theonice~ : new (theora) ogg packet : bytes:%ld, bos:%ld, eos:%ld, no:%lld",
+         //                        x->x_ogg_vpacket.bytes, x->x_ogg_vpacket.b_o_s, 
+         //                        x->x_ogg_vpacket.e_o_s, x->x_ogg_vpacket.packetno );
+
+         while(1)
+         {
+           ret = ogg_stream_flush(&x->x_statet, &x->x_vpage);
+           if(ret<0){
+              post( "pdp_theonice~ : ogg encoding error." );
+              return;
+           }
+           if(ret==0)break;
            // post("pdp_theonice~ : writing video : header : %d, body : %d", x->x_vpage.header_len, x->x_vpage.body_len); 
            if ( ( ret = send(x->x_socketfd, (void*)x->x_vpage.header, x->x_vpage.header_len, MSG_NOSIGNAL) ) < 0 )
            {
@@ -1092,10 +1115,10 @@ static void pdp_theonice_send_video(t_pdp_theonice *x)
              pdp_theonice_disconnect(x);
              return;
            }
+           x->x_vpkg -= ogg_page_packets((ogg_page *)&x->x_vpage);
+           x->x_videotime = theora_granule_time(&x->x_theora_state, ogg_page_granulepos(&x->x_vpage));
+           // post( "pdp_theonice~ : sent %d bytes (%d video frames)", x->x_vpage.header_len+x->x_vpage.body_len, ogg_page_packets((ogg_page *)&x->x_vpage ) );
          }
-         x->x_frameswritten++;
-         if ( x->x_frameslate > 0 ) x->x_frameslate--;
-         x->x_secondcount++;
       }
 
     }
@@ -1103,35 +1126,38 @@ static void pdp_theonice_send_video(t_pdp_theonice *x)
 
 static void pdp_theonice_send_audio(t_pdp_theonice *x)
 {
-  int    nbaudiosamples, nbusecs, nbsamples, ret;
+  int    nbaudiosamples, nbsamples, ret, send_page;
+  float  nbusecs;
   struct timeval tstream;
 
     // calculate the number of audio samples to output
     if ( gettimeofday(&tstream, NULL) == -1)
     {
-       post("pdp_theonice~ : could set stop time" );
+       post("pdp_theonice~ : could get time" );
     }
     // calculate time diff in micro seconds
-    nbusecs = ( tstream.tv_usec - x->x_tprevstream.tv_usec ) + 
-              ( tstream.tv_sec - x->x_tprevstream.tv_sec )*1000000;
-    nbaudiosamples = (sys_getsr()*1000000)/nbusecs;
+    // nbusecs = ( tstream.tv_usec - x->x_tprevstream.tv_usec ) + 
+    //           ( tstream.tv_sec - x->x_tprevstream.tv_sec )*1000000;
+    // nbaudiosamples = sys_getsr()*(nbusecs/1000000);
+
     memcpy( &x->x_tprevstream, &tstream, sizeof( struct timeval) );
       
-    if ( x->x_audioin_position > nbaudiosamples )
-    {
-       nbsamples = nbaudiosamples;
-    }
-    else
-    {
-       nbsamples = x->x_audioin_position;
-    }
+    nbsamples = x->x_audioin_position;
+    if( nbsamples <= 0 ) return;
+
     // audio is ahead of video, do not send audio
     if ( x->x_audiotime > x->x_videotime ) return;
+
+    // post("pdp_theonice~ : writing audio : %d samples, audioin : %d", nbsamples, x->x_audioin_position ); 
 
     if ( x->x_socketfd > 0 && x->x_streaming )
     {
       x->x_vbuffer=vorbis_analysis_buffer( &x->x_dsp_state, nbsamples );
-      if ( !x->x_vbuffer ) return;
+      if ( !x->x_vbuffer ) 
+      {
+         post( "pdp_theonice~ : error getting audio buffers" );
+         return;
+      }
  
       memcpy( (void*)&x->x_vbuffer[0][0], (void*)&x->x_audio_buf[0][0], nbsamples*sizeof( t_float ) );
       memcpy( (void*)&x->x_vbuffer[1][0], (void*)&x->x_audio_buf[1][0], nbsamples*sizeof( t_float ) );
@@ -1146,21 +1172,23 @@ static void pdp_theonice_send_audio(t_pdp_theonice *x)
         vorbis_bitrate_addblock( &x->x_vorbis_block );
 
         // weld packets into the bitstream 
-        while(vorbis_bitrate_flushpacket( &x->x_dsp_state, &x->x_ogg_packet ))
+        while( vorbis_bitrate_flushpacket( &x->x_dsp_state, &x->x_ogg_apacket ) > 0 )
         {
-          ogg_stream_packetin( &x->x_statev, &x->x_ogg_packet);
+          ogg_stream_packetin( &x->x_statev, &x->x_ogg_apacket);
+          x->x_apkg++;
+          // post( "pdp_theonice~ : audio packets :%d", x->x_apkg);
         }
 
       }
 
-      x->x_eos=0;
-      while( !x->x_eos )
+      while(1)
       {
-        ret = ogg_stream_pageout( &x->x_statev, &x->x_apage);
-        if ( ret == 0 ) break;
-        x->x_audiotime = vorbis_granule_time(&x->x_dsp_state, ogg_page_granulepos(&x->x_apage));
-
-        // post("pdp_theonice~ : writing audio : %d samples, header : %d, body : %d", nbsamples, x->x_apage.header_len, x->x_apage.body_len); 
+        ret = ogg_stream_flush(&x->x_statev, &x->x_apage);
+        if(ret<0){
+           post( "pdp_theonice~ : ogg encoding error." );
+           return;
+        }
+        if(ret==0)break;
         if ( ( ret = send(x->x_socketfd, (void*)x->x_apage.header, x->x_apage.header_len, MSG_NOSIGNAL) ) < 0 )
         {
           post( "pdp_theonice~ : could not write audio packet (ret=%d).", ret );
@@ -1175,7 +1203,9 @@ static void pdp_theonice_send_audio(t_pdp_theonice *x)
           pdp_theonice_disconnect(x);
           return;
         }
-        if (ogg_page_eos(&x->x_apage)) x->x_eos=1;
+        x->x_apkg -= ogg_page_packets((ogg_page *)&x->x_apage);
+        x->x_audiotime = vorbis_granule_time(&x->x_dsp_state, ogg_page_granulepos(&x->x_apage));
+        // post( "pdp_theonice~ : sent %d bytes (%d audio blocks)", x->x_apage.header_len+x->x_apage.body_len, ogg_page_packets((ogg_page *)&x->x_apage) );
       }
 
       memcpy( &x->x_audio_buf[0][0], &x->x_audio_buf[0][nbsamples], 
@@ -1282,7 +1312,6 @@ void *pdp_theonice_new(void)
     x->x_vquality = DEFAULT_VIDEO_QUALITY;
     x->x_akbps = DEFAULT_AUDIO_BITRATE;
     x->x_aquality = DEFAULT_AUDIO_QUALITY;
-    x->x_maxdrift = DEFAULT_DRIFT/1000;
 
     x->x_socketfd = -1;
     x->x_passwd = "letmein";
@@ -1306,6 +1335,8 @@ void *pdp_theonice_new(void)
     x->x_pmframerate = 0;
     x->x_nbframes_dropped = 0;
     x->x_pnbframes_dropped = 0;
+    x->x_apkg = 0;
+    x->x_vpkg = 0;
 
     x->x_tzero.tv_sec = 0;
     x->x_tzero.tv_usec = 0;

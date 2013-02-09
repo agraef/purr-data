@@ -61,7 +61,7 @@ typedef struct _pdp_colorgrid
     t_symbol*  x_fname;
 } t_pdp_colorgrid;
 
-void load_tk_procs () {
+void load_tk_procs (void) {
 	// ########### pdp_colorgrid procedures -- ydegoyon@free.fr #########
 	// package require Img
 	sys_gui("package require base64\n");
@@ -99,7 +99,7 @@ void load_tk_procs () {
 	sys_gui("set $var_graph_pdp_colorgrid $pdp_colorgrid\n");
 	sys_gui("set $var_graph_xlines $xlines\n");
 	sys_gui("set $var_graph_ylines $ylines\n");
-	sys_gui("toplevel $id -class [winfo class .]\n");
+	sys_gui("toplevel $id\n");
 	sys_gui("wm title $id {pdp_colorgrid}\n");
 	sys_gui("wm protocol $id WM_DELETE_WINDOW [concat pdp_colorgrid_cancel $id]\n");
 	sys_gui("label $id.label -text {COLORGRID PROPERTIES}\n");

@@ -48,6 +48,9 @@ typedef unsigned short     u16;
 typedef unsigned int       u32;
 typedef unsigned long long u64;
 
+typedef unsigned long      uptr;  /* An unsigned int the size of a pointer. */
+typedef signed   long      sptr;
+
 typedef struct _pdp t_pdp;
 typedef void (*t_pdp_packet_method1)(t_pdp *);              /* dst */
 typedef void (*t_pdp_packet_method2)(t_pdp *, t_pdp *);     /* dst, src */

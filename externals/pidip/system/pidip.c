@@ -74,21 +74,40 @@ extern "C"
     void pdp_theorout_tilde_setup(void);
     void pdp_cropper_setup(void);
     void pdp_background_setup(void);
+    void pdp_backgroundyuv_setup(void);
     void pdp_mapper_setup(void);
     void pdp_theonice_tilde_setup(void);
     void pdp_icedthe_tilde_setup(void);
     void pdp_fdiff_setup(void);
     void pdp_hue_setup(void);
     void pdp_dot_setup(void);
+    void pdp_skeleton_setup(void);
+    void pdp_cluster_setup(void);
+    void pdp_ycfilter_setup(void);
+
+#ifdef HAVE_OPENCV
+    void pdp_joint_setup(void);
+    void pdp_shapes_setup(void);
+#endif
 
 #ifdef HAVE_DC1394
     void pdp_dc1394_setup(void);
 #endif
 
+#ifdef HAVE_FREENECT
+    void pdp_freenect_setup(void);
+#endif
+
+#ifdef HAVE_ARTKP
+    void pdp_artkp_setup(void);
+#endif
+
+#ifdef HAVE_V4L
+    void pdp_vloopback_setup(void);
+#endif
 
 #ifdef HAVE_V4L2
     void pdp_v4l2_setup(void);
-    void pdp_vloopback_setup(void);
 #endif
 
 #ifdef HAVE_LIBDV
@@ -103,20 +122,10 @@ extern "C"
     void pdp_capture_setup(void);
 #endif
 
-#ifdef HAVE_PIDIP_FFMPEG
-    void pdp_ffmpeg_tilde_setup(void);
-    void pdp_live_tilde_setup(void);
-#endif
-
-#ifdef HAVE_PIDIP_MPEG4IP
-    void pdp_mp4live_tilde_setup(void);
-    void pdp_mp4player_tilde_setup(void);
-#endif
-
 /* library setup routine */
 void pidip_setup(void){
     
-    post("PiDiP : additional video processing objects for PDP\n\tversion " PDP_PIDIP_VERSION "\n\tby Yves Degoyon and Lluis Gomez i Bigorda");
+    post("PiDiP : additional video processing objects for PDP\n\tversion " PDP_PIDIP_VERSION "\n\tby Yves Degoyon and Lluis Gomez i Bigorda\n\tNot for repressive, military or commercial use!");
 
     pdp_intrusion_setup();
     pdp_yqt_setup();
@@ -183,20 +192,40 @@ void pidip_setup(void){
     pdp_theorout_tilde_setup();
     pdp_cropper_setup();
     pdp_background_setup();
+    pdp_backgroundyuv_setup();
     pdp_mapper_setup();
     pdp_theonice_tilde_setup();
     pdp_icedthe_tilde_setup();
     pdp_fdiff_setup();
     pdp_hue_setup();
     pdp_dot_setup();
+    pdp_skeleton_setup();
+    pdp_cluster_setup();
+    pdp_ycfilter_setup();
+
+#ifdef HAVE_OPENCV
+    pdp_joint_setup();
+    pdp_shapes_setup();
+#endif
 
 #ifdef HAVE_DC1394
     pdp_dc1394_setup();
 #endif
 
+#ifdef HAVE_FREENECT
+    pdp_freenect_setup();
+#endif
+
+#ifdef HAVE_ARTKP
+    pdp_artkp_setup();
+#endif
+
+#ifdef HAVE_V4L
+    pdp_vloopback_setup();
+#endif
+
 #ifdef HAVE_V4L2
     pdp_v4l2_setup();
-    pdp_vloopback_setup();
 #endif
 
 #ifdef HAVE_LIBDV
@@ -209,16 +238,6 @@ void pidip_setup(void){
 
 #ifdef HAVE_IMAGE_MAGICK
     pdp_capture_setup();
-#endif
-
-#ifdef HAVE_PIDIP_FFMPEG
-    pdp_ffmpeg_tilde_setup();
-    pdp_live_tilde_setup();
-#endif
-
-#ifdef HAVE_PIDIP_MPEG4IP
-    pdp_mp4live_tilde_setup();
-    pdp_mp4player_tilde_setup();
 #endif
 }
 

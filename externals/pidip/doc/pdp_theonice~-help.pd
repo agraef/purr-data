@@ -1,4 +1,4 @@
-#N canvas 131 125 861 556 10;
+#N canvas 135 149 861 556 10;
 #X obj 156 158 dac~;
 #X text 246 113 <-- everything is in this box;
 #X text 275 128 where the block size is redefined;
@@ -13,8 +13,11 @@
 #X text 276 155 ( acceptable? ) theora audio decoding;
 #X obj 395 221 loadbang;
 #X obj 160 55 adc~;
+#X obj 93 56 osc~ 150;
 #X connect 5 0 0 0;
 #X connect 5 1 0 1;
 #X connect 12 0 4 0;
 #X connect 13 0 5 0;
 #X connect 13 1 5 1;
+#X connect 14 0 5 0;
+#X connect 14 0 5 1;

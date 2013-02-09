@@ -1,4 +1,4 @@
-#N canvas 508 213 927 686 10;
+#N canvas 600 67 927 686 10;
 #X obj 35 20 metro 40;
 #X msg 87 -19 stop;
 #X msg 35 -19 bang;
@@ -36,12 +36,12 @@ recent cameras \, if it doesn't with yours report bugs to ydegoyon@free.fr
 #X text 297 81 see initialization phase for valid standards;
 #X floatatom 213 71 5 0 0 0 - - -;
 #X msg 213 91 standard \$1;
-#X obj 96 300 pdp_glx;
 #X msg 179 299 cursor 1;
 #X msg 167 271 posdim 0 0 1440 800;
 #X text 324 303 authors : Yves Degoyon and Lluis Gomez i Bigorda;
 #X text 325 317 code was inspired by pdp_v4l by Tom Schouten and xawtv
 by Gerd Knorr;
+#X obj 96 300 pdp_glx;
 #X connect 0 0 18 0;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
@@ -55,11 +55,11 @@ by Gerd Knorr;
 #X connect 12 0 18 0;
 #X connect 13 0 14 0;
 #X connect 14 0 18 0;
-#X connect 18 0 31 0;
+#X connect 18 0 35 0;
 #X connect 20 0 21 0;
 #X connect 21 0 18 0;
 #X connect 23 0 18 0;
 #X connect 29 0 30 0;
 #X connect 30 0 18 0;
-#X connect 32 0 31 0;
-#X connect 33 0 31 0;
+#X connect 31 0 35 0;
+#X connect 32 0 35 0;

@@ -9,6 +9,12 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
+/* Define to 1 if you have the <libv4l1-videodev.h> header file. */
+#undef HAVE_LIBV4L1_VIDEODEV_H
+
+/* Define to 1 if you have the <linux/videodev.h> header file. */
+#undef HAVE_LINUX_VIDEODEV_H
+
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
@@ -18,23 +24,20 @@
 /* gsl support */
 #undef HAVE_PDP_GSL
 
+/* build pdp_v4l with libv4l */
+#undef HAVE_PDP_LIBV4L
+
 /* build png support */
 #undef HAVE_PDP_PNG
 
 /* build pdp_qt */
 #undef HAVE_PDP_QT
 
-/* readline needed for console support */
-#undef HAVE_PDP_READLINE
-
 /* build pdp_sdl */
 #undef HAVE_PDP_SDL
 
 /* build pdp_v4l */
 #undef HAVE_PDP_V4L
-
-/* experimental vforth dsp engine */
-#undef HAVE_PDP_VFORTH
 
 /* build X11 support */
 #undef HAVE_PDP_X
@@ -77,6 +80,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION

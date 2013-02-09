@@ -5,10 +5,16 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `gslcblas' library (-lgslcblas). */
-/* #undef HAVE_LIBGSLCBLAS */
+#define HAVE_LIBGSLCBLAS 1
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
+
+/* Define to 1 if you have the <libv4l1-videodev.h> header file. */
+#define HAVE_LIBV4L1_VIDEODEV_H 1
+
+/* Define to 1 if you have the <linux/videodev.h> header file. */
+/* #undef HAVE_LINUX_VIDEODEV_H */
 
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
@@ -19,29 +25,26 @@
 /* gsl support */
 #define HAVE_PDP_GSL 1
 
+/* build pdp_v4l with libv4l */
+/* #undef HAVE_PDP_LIBV4L */
+
 /* build png support */
 #define HAVE_PDP_PNG 1
 
 /* build pdp_qt */
 #define HAVE_PDP_QT 1
 
-/* readline needed for console support */
-/* #undef HAVE_PDP_READLINE */
-
 /* build pdp_sdl */
 #define HAVE_PDP_SDL 1
 
 /* build pdp_v4l */
-/* #undef HAVE_PDP_V4L */
-
-/* experimental vforth dsp engine */
-/* #undef HAVE_PDP_VFORTH */
+#define HAVE_PDP_V4L 1
 
 /* build X11 support */
 #define HAVE_PDP_X 1
 
 /* build pdp_xv */
-/* #undef HAVE_PDP_XV */
+#define HAVE_PDP_XV 1
 
 /* enable forced pwc v4l support */
 /* #undef HAVE_PWCV4L */
@@ -78,6 +81,9 @@
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME ""
+
+/* Define to the home page for this package. */
+#define PACKAGE_URL ""
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION ""

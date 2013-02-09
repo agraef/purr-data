@@ -26,7 +26,7 @@ mrproper: clean
 
 pdp_scaf.pd_linux: pdp_scaf_all
 	rm -f pdp_scaf.pd_linux
-	gcc --export-dynamic -shared -o pdp_scaf.pd_linux pdp/*.o $(PDP_CA_LIBS)
+	gcc -rdynamic -shared -o pdp_scaf.pd_linux pdp/*.o $(PDP_CA_LIBS)
 
 install: all
 	install -d $(prefix)/lib/scaf

@@ -1,28 +1,30 @@
 PD_DIR = @PD_DIR@
 PDP_DIR = @PDP_DIR@
-FFMPEG_SOURCE_DIR = @FFMPEG_SOURCE_DIR@
 
 PDP_PIDIP_LIBS = @PDP_PIDIP_LIBS@
 IMLIB_CFLAGS = @IMLIB_CFLAGS@
+ARTKP_CPPFLAGS = @ARTKP_CPPFLAGS@
 IMLIB_LIBS = @IMLIB_LIBS@
 THEORA_LIBS = @THEORA_LIBS@
 DC1394_LIBS = @DC1394_LIBS@
+FREENECT_LIBS = @FREENECT_LIBS@
+OPENCV_LIBS = @OPENCV_LIBS@
+ARTKP_LIBS = @ARTKP_LIBS@
 PDP_PIDIP_INCLUDES =  @PDP_PIDIP_INCLUDES@
 PDP_PIDIP_VERSION = @PDP_PIDIP_VERSION@
-MPEG4IP_CFLAGS = @MPEG4IP_CFLAGS@
 
 PDP_PIDIP_DISTRO = /mnt/c/ydegoyon.free.fr/pidip-$(PDP_PIDIP_VERSION)
 PDP_PIDIP_TARBALL = $(PDP_PIDIP_DISTRO).tar.gz
 
-PDP_PIDIP_CFLAGS  = $(MPEG4IP_CFLAGS) $(IMLIB_CFLAGS) \
+PDP_PIDIP_CFLAGS  = $(IMLIB_CFLAGS) $(ARTKP_CPPFLAGS) \
     -DPD -DX_DISPLAY_MISSING -O2 -funroll-loops -fomit-frame-pointer  -ffast-math \
     -fPIC -Wall -W -Wstrict-prototypes \
     -Wno-unused -Wno-parentheses -Wno-switch \
     -DPDP_PIDIP_VERSION=\"$(PDP_PIDIP_VERSION)\" -g
 
-PDP_PIDIP_CPPFLAGS  = $(MPEG4IP_CFLAGS) $(IMLIB_CFLAGS) \
+PDP_PIDIP_CPPFLAGS  = $(IMLIB_CFLAGS) $(ARTKP_CPPFLAGS) \
     -DPD -DX_DISPLAY_MISSING -O2 -funroll-loops -fomit-frame-pointer  -ffast-math \
-    -Wall -W -Wstrict-prototypes \
+    -Wall -W \
     -Wno-unused -Wno-parentheses -Wno-switch \
     -DPDP_PIDIP_VERSION=\"$(PDP_PIDIP_VERSION)\" -g
 
@@ -42,12 +44,12 @@ pdp_pidip_all:
 
 pidip.pd_darwin: pdp_pidip_all
 	rm -f pidip.pd_darwin
-	g++ -bundle -undefined dynamic_lookup -headerpad_max_install_names -o pidip.pd_darwin modules/*.o system/*.o -L/sw/lib $(THEORA_LIBS) $(DC1394_LIBS) $(PDP_PIDIP_LIBS) $(IMLIB_LIBS)
+	g++ -bundle -undefined dynamic_lookup -headerpad_max_install_names -o pidip.pd_darwin modules/*.o system/*.o -L/sw/lib $(THEORA_LIBS) $(DC1394_LIBS) $(FREENECT_LIBS) $(OPENCV_LIBS) $(PDP_PIDIP_LIBS) $(IMLIB_LIBS) $(ARTKP_LIBS)
 	strip -x pidip.pd_darwin
 
 pidip.pd_linux: pdp_pidip_all
 	rm -f pidip.pd_linux
-	g++ -Wl,--export-dynamic -shared -o pidip.pd_linux modules/*.o system/*.o $(THEORA_LIBS) $(PDP_PIDIP_LIBS) $(IMLIB_LIBS) $(DC1394_LIBS)
+	g++ -Wl,--export-dynamic -shared -o pidip.pd_linux modules/*.o system/*.o $(THEORA_LIBS) $(PDP_PIDIP_LIBS) $(IMLIB_LIBS) $(DC1394_LIBS) $(FREENECT_LIBS) $(OPENCV_LIBS) $(ARTKP_LIBS)
 	strip --strip-unneeded pidip.pd_linux
 
 clean:
@@ -55,9 +57,11 @@ clean:
 	rm -f pidip.pd_linux
 
 install:
-	if test ! -d /usr/X11R6/lib/X11/fonts/TTF; then mkdir /usr/X11R6/lib/X11/fonts/TTF; fi
-	cp fonts/* /usr/X11R6/lib/X11/fonts/TTF
-	cp -f --remove-destination doc/* $(PD_DIR)/doc/5.reference
+	#if test ! -d /usr/X11R6/lib/X11/fonts/TTF; then mkdir /usr/X11R6/lib/X11/fonts/TTF; fi
+	#cp fonts/* /usr/X11R6/lib/X11/fonts/TTF
+	if test ! -d /usr/share/fonts/X11/TTF; then mkdir /usr/share/fonts/X11/TTF; fi
+	cp fonts/* /usr/share/fonts/X11/TTF	
+	#cp -f --remove-destination doc/* $(PD_DIR)/doc/5.reference
 
 distro: clean all
 	rm -f */*.o

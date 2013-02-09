@@ -18,9 +18,11 @@ OBJECTS = pdp_intrusion.o  pdp_yqt.o  pdp_simura.o  pdp_underwatch.o  \
           pdp_ocanvas.o pdp_spotlight.o pdp_colorgrid.o \
 	  pdp_binary.o pdp_erode.o pdp_dilate.o pdp_hitandmiss.o \
           pdp_disintegration.o pdp_distance.o pdp_theorin~.o \
-          pdp_theorout~.o pdp_cropper.o pdp_background.o \
+          pdp_theorout~.o pdp_cropper.o pdp_background.o pdp_backgroundyuv.o \
           pdp_mapper.o pdp_theonice~.o pdp_icedthe~.o\
           pdp_fdiff.o pdp_hue.o pdp_dot.o pdp_qtext.o\
-         @PDP_CAPTURE_OBJECT@ @PDP_STREAMING_OBJECTS@ @PDP_DC1394_OBJECT@ # pdp_xcanvas.o pdp_aa.o
+          pdp_skeleton.o pdp_cluster.o pdp_ycfilter.o\
+         @PDP_CAPTURE_OBJECT@ @PDP_DC1394_OBJECT@ @PDP_FREENECT_OBJECT@\
+          @PDP_ARTKP_OBJECT@ @PDP_OPENCV_OBJECT@ #pdp_xcanvas.o pdp_aa.o
 
 all_modules: $(OBJECTS) 
