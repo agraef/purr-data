@@ -1,0 +1,13 @@
+#N canvas 495 201 450 300 10;
+#X msg 83 52 dsp;
+#X obj 53 132 pdinfo;
+#X obj 53 152 print;
+#X msg 53 23 bang;
+#X text 89 23 print all properties and values to the console;
+#X msg 94 77 version;
+#X msg 100 99 symbol dsp;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;
+#X connect 5 0 1 0;
+#X connect 6 0 1 0;
