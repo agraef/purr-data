@@ -7,6 +7,7 @@
 #include "m_pd.h"
 #include <math.h>
 #include <string.h>
+#include <stdint.h>
 #ifdef _MSC_VER
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
@@ -65,19 +66,30 @@ static void *valverect_tilde_new(t_floatarg sag, t_floatarg dist)
 }
 
 /* Andrew Simper's pow(2, x) aproximation from the music-dsp list */
-static float f_pow2(float x)
+
+/* 32 bit "pointer cast" union */
+typedef union {
+        float f;
+        int32_t i;
+} ls_pcast32;
+
+/* union version */
+static inline float f_pow2(float x)
 {
-	long *px = (long*)(&x); // store address of float as long pointer
-	const float tx = (x-0.5f) + (3<<22); // temporary value for truncation
-	const long  lx = *((long*)&tx) - 0x4b400000; // integer power of 2
-	const float dx = x-(float)(lx); // float remainder of power of 2
+        ls_pcast32 *px, tx, lx;
+        float dx;
 
-	x = 1.0f + dx*(0.6960656421638072f + // cubic apporoximation of 2^x
-                   dx*(0.224494337302845f +  // for x in the range [0, 1]
-                   dx*(0.07944023841053369f)));
-	*px += (lx<<23); // add integer power of 2 to exponent
+        px = (ls_pcast32 *)&x; // store address of float as long pointer
+        tx.f = (x-0.5f) + (3<<22); // temporary value for truncation
+        lx.i = tx.i - 0x4b400000; // integer power of 2
+        dx = x - (float)lx.i; // float remainder of power of 2
 
-	return x;
+        x = 1.0f + dx * (0.6960656421638072f + // cubic apporoximation of 2^x
+                   dx * (0.224494337302845f +  // for x in the range [0, 1]
+                   dx * (0.07944023841053369f)));
+        (*px).i += (lx.i << 23); // add integer power of 2 to exponent
+
+        return (*px).f;
 }
 
 static t_int *valverect_tilde_perform(t_int *w)

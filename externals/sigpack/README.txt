@@ -3,9 +3,15 @@ sigpack version 0.04
 signal object library for pure-data
 
 objects:
-sp_chop~ sp_decimate~ sp_diode~ sp_foldback~ sp_foldover~ sp_freqdiv~
-sp_freqshift~ sp_hardlimit~ sp_harmgen~ sp_impulse~ sp_rectify~ sp_round~ sp_saturate~ sp_shape~ sp_sieve~
-sp_split~ sp_transient~ sp_ustep~ sp_valverect~ sp_vowel~ sp_wavewrap~
+chop~ decimate~ diode~ foldback~ foldover~ freqdiv~
+freqshift~ hardlimit~ harmgen~ impulse~ rectify~ round~ saturate~ shape~ sieve~
+split~ transient~ ustep~ valverect~ vowel~ wavewrap~
+
+
+these are based on code from swh_plugins (http://plugin.org.uk):
+diode~.c foldover~.c freqdiv~.c freqshift~.c hardlimit~.c harmgen~.c impulse~.c
+shape~.c transient~.c valverect~.c wavewrap~.c
+
 
 released under the GNU/GPL-license
 this is software with absolutely no warranty
@@ -14,6 +20,18 @@ use it at your own risk
 contact
 <postmeister@weiss-archiv.de>
 <http://www.weiss-archiv.de>
+
+
+-----------------TODO--------------------
+:: update swh_plugins code from latest release: http://plugin.org.uk/releases/0.4.15
+
+
+
+-----------------v0.043------------------
+:: removed type-punning since it doesn't work for 64-bit or C99
+
+-----------------v0.042------------------
+::removed "sp_" prefix from object names
 
 -----------------v0.04-------------------
 ::cleaning up code a bit

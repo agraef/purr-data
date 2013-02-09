@@ -5,10 +5,15 @@
 
 #include "m_pd.h"
 #include <math.h>
+#include <stdio.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #ifdef _MSC_VER
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
-#define M_PI 3.14159265358979323846
 #endif
 
 /* ------------------------ freqshift~ ----------------------------- */
@@ -99,11 +104,22 @@ static float f_clamp(float x, float a, float b)
 	return x;
 }
 
+static int f_round(t_float f) {
+#if PD_FLOAT_PRECISION == 64
+    return (int)lround(f);
+#else
+    return (int)lroundf(f);
+#endif
+}
+
+// this relies on type-punning, which is not allowed in C99 or 64-bit
+#if 0
 // Round float to int using IEEE int* hack
 static int f_round(float f) {
         f += (3<<22);
         return *((int*)&f) - 0x4b400000;
 }
+#endif
 
 // Cubic interpolation function
 static float cube_interp(const float fr, const float inm1, const float
@@ -136,7 +152,7 @@ static t_int *freqshift_tilde_perform(t_int *w)
 		/* Perform the Hilbert FIR convolution
 		 * (probably FFT would be faster) */
 		hilb = 0.0f;
-	    for (i = 0; i <= NZEROS/2; i++) {
+	    for (i = 0; i < NZEROS/2; i++) {
 	        hilb += (xcoeffs[i] * x->x_delay[(x->x_dptr - i*2) & (D_SIZE - 1)]);
 		}
 
@@ -149,7 +165,6 @@ static t_int *freqshift_tilde_perform(t_int *w)
 	    frac_p = x->x_phi - int_p;
 	    rm1 = hilb * cube_interp(frac_p, x->x_sint[int_p], x->x_sint[int_p+1],
 	                             x->x_sint[int_p+2], x->x_sint[int_p+3]);
-
 	    /* Calcuate the table positions for the cosine modulator */
 	    int_p = (int_p + SIN_T_SIZE / 4) & (SIN_T_SIZE - 1);
 

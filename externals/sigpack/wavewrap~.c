@@ -6,11 +6,15 @@
 
 #include "m_pd.h"
 #include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #ifdef _MSC_VER
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4305 )
 #endif
-#define M_PI 3.14159265358979323846
 
 // ------------------------ wavewrap~ ----------------------------- 
 // sinus wavewrapper. produces an unusual distortion effect
