@@ -29,3 +29,4 @@ pd.pc
 .svn
 packages/linux_make/build/
 pd/src/makefile
+l2ork_addons/cwiid/defs.mak
