@@ -24,9 +24,11 @@ pd-0.*
 pd.pc
 *.deps
 *.d
+*.d.*
 *_stamp
 *.a
 .svn
 packages/linux_make/build/
 pd/src/makefile
 l2ork_addons/cwiid/defs.mak
+CVS
