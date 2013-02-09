@@ -10,8 +10,8 @@ extern "C" {
 
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
-#define PD_BUGFIX_VERSION 6
-#define PD_TEST_VERSION "20130123"
+#define PD_BUGFIX_VERSION 7
+#define PD_TEST_VERSION "20130126"
 #define PDL2ORK
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
