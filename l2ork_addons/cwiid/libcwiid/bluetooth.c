@@ -115,9 +115,12 @@ int cwiid_get_bdinfo_array(int dev_id, unsigned int timeout, int max_bdinfo,
 	     i++) {
 		/* Filter by class */
 		if (!(flags & BT_NO_WIIMOTE_FILTER) &&
-		  ((dev_list[i].dev_class[0] != WIIMOTE_CLASS_0) ||
+		  (((dev_list[i].dev_class[0] != WIIMOTE_CLASS_0) ||
 		   (dev_list[i].dev_class[1] != WIIMOTE_CLASS_1) ||
-		   (dev_list[i].dev_class[2] != WIIMOTE_CLASS_2))) {
+		   (dev_list[i].dev_class[2] != WIIMOTE_CLASS_2)) &&
+		  ((dev_list[i].dev_class[0] != WIIMOTE_PLUS_CLASS_0) ||
+		   (dev_list[i].dev_class[1] != WIIMOTE_PLUS_CLASS_1) ||
+		   (dev_list[i].dev_class[2] != WIIMOTE_CLASS_2)))) {
 			continue;
 		}
 
@@ -132,6 +135,7 @@ int cwiid_get_bdinfo_array(int dev_id, unsigned int timeout, int max_bdinfo,
 		/* Filter by name */
 		if (!(flags & BT_NO_WIIMOTE_FILTER) &&
 		  strncmp((*bdinfo)[bdinfo_count].name, WIIMOTE_NAME, BT_NAME_LEN) &&
+		  strncmp((*bdinfo)[bdinfo_count].name, WIIMOTE_PLUS_NAME, BT_NAME_LEN) &&
 		  strncmp((*bdinfo)[bdinfo_count].name, WIIBALANCE_NAME, BT_NAME_LEN)) {
 			continue;
 		}

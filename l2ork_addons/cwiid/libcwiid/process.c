@@ -369,7 +369,7 @@ int process_write(struct wiimote *wiimote, unsigned char *data)
 	struct rw_mesg rw_mesg;
 
 	if (wiimote->rw_status != RW_WRITE) {
-		cwiid_err(wiimote, "Received unexpected write report");
+		cwiid_err(wiimote, "Received unexpected write report %d", wiimote->rw_status);
 		return -1;
 	}
 
