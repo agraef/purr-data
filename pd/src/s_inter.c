@@ -859,9 +859,9 @@ void sys_unqueuegui(void *client)
 
 int sys_pollgui(void)
 {
-    //return (sys_domicrosleep(0, 1) || sys_poll_togui());
+    return (sys_domicrosleep(0, 1) || sys_poll_togui());
 	// "fix" for sluggish gui proposed by Miller on 12/16/2012
-	return (sys_domicrosleep(0, 1) + sys_poll_togui());
+	// return (sys_domicrosleep(0, 1) + sys_poll_togui());
 }
 
 
