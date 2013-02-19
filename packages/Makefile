@@ -114,7 +114,7 @@ ifeq ($(OS_NAME),darwin)
   PD_CONFIGURE_FLAGS = --enable-jack
 else
   ifeq ($(OS_NAME),linux)
-    PD_CONFIGURE_FLAGS = --enable-jack --enable-alsa
+    PD_CONFIGURE_FLAGS = --enable-jack --enable-alsa --enable-fftw
   else
     PD_CONFIGURE_FLAGS = 
   endif
