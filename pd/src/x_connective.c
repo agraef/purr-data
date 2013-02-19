@@ -323,13 +323,40 @@ static void receive_setup(void)
 
 static t_class *sel1_class;
 
+static t_class *sel1_proxy_class;
+
+typedef struct _sel1_proxy
+{
+    t_pd l_pd;
+    void *parent;
+} t_sel1_proxy;
+
 typedef struct _sel1
 {
     t_object x_obj;
     t_atom x_atom;
     t_outlet *x_outlet1;
     t_outlet *x_outlet2;
+    t_sel1_proxy x_pxy;
 } t_sel1;
+
+static void sel1_proxy_init(t_sel1_proxy *x, t_sel1 *p)
+{
+    x->l_pd = sel1_proxy_class;
+    x->parent = (void *)p;
+}
+
+static void sel1_proxy_float(t_sel1_proxy *x, t_float f)
+{
+    t_sel1 *p = (t_sel1 *)x->parent;
+    SETFLOAT(&p->x_atom, f);
+}
+
+static void sel1_proxy_symbol(t_sel1_proxy *x, t_symbol *s)
+{
+    t_sel1 *p = (t_sel1 *)x->parent;
+    SETSYMBOL(&p->x_atom, s);
+}
 
 static void sel1_float(t_sel1 *x, t_float f)
 {
@@ -367,14 +394,14 @@ static void sel2_float(t_sel2 *x, t_float f)
 {
     t_selectelement *e;
     int nelement;
-    if (x->x_type == A_FLOAT || x->x_mixed == 1)
+    if (x->x_type == A_FLOAT || x->x_mixed)
     {
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
             if (e->e_atom.a_type == A_FLOAT && e->e_atom.a_w.w_float == f)
-        {
-            outlet_bang(e->e_outlet);
-            return;
-        }
+            {
+                outlet_bang(e->e_outlet);
+                return;
+            }
     }
     outlet_float(x->x_rejectout, f);
 }
@@ -387,10 +414,10 @@ static void sel2_symbol(t_sel2 *x, t_symbol *s)
     {
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
             if (e->e_atom.a_type == A_SYMBOL && e->e_atom.a_w.w_symbol == s)
-        {
-            outlet_bang(e->e_outlet);
-            return;
-        }
+            {
+                outlet_bang(e->e_outlet);
+                return;
+            }
     }
     outlet_symbol(x->x_rejectout, s);
 }
@@ -414,16 +441,12 @@ static void *select_new(t_symbol *s, int argc, t_atom *argv)
         t_sel1 *x = (t_sel1 *)pd_new(sel1_class);
         x->x_atom = *argv;
         x->x_outlet1 = outlet_new(&x->x_obj, &s_bang);
+        sel1_proxy_init(&x->x_pxy, x);
+        inlet_new(&x->x_obj, &x->x_pxy.l_pd, 0, 0);
         if (argv->a_type == A_FLOAT)
-        {
-            floatinlet_new(&x->x_obj, &x->x_atom.a_w.w_float);
             x->x_outlet2 = outlet_new(&x->x_obj, &s_float);
-        }
         else
-        {
-            symbolinlet_new(&x->x_obj, &x->x_atom.a_w.w_symbol);
             x->x_outlet2 = outlet_new(&x->x_obj, &s_symbol);
-        }
         return (x);
     }
     else
@@ -432,26 +455,24 @@ static void *select_new(t_symbol *s, int argc, t_atom *argv)
         t_selectelement *e;
         t_sel2 *x = (t_sel2 *)pd_new(sel2_class);
         x->x_nelement = argc;
-	x->x_type = argv[0].a_type;
-	t_int f,s = 0;
+        x->x_type = argv[0].a_type;
+        t_int f, s = 0;
         x->x_vec = (t_selectelement *)getbytes(argc * sizeof(*x->x_vec));
         for (n = 0, e = x->x_vec; n < argc; n++, e++)
         {
             e->e_outlet = outlet_new(&x->x_obj, &s_bang);
             if (argv[n].a_type == A_FLOAT)
-	    {
-	        e->e_atom.a_w.w_float = atom_getfloatarg(n, argc, argv);
-		e->e_atom.a_type = A_FLOAT;
-		f = 1;
-	    }
+            {
+                SETFLOAT(&e->e_atom, atom_getfloatarg(n, argc, argv));
+                f = 1;
+            }
             else
-	    {
-		e->e_atom.a_w.w_symbol = atom_getsymbolarg(n, argc, argv);
-		e->e_atom.a_type = A_SYMBOL;
-		s = 1;
-	    }
+            {
+                SETSYMBOL(&e->e_atom, atom_getsymbolarg(n, argc, argv));
+                s = 1;
+            }
         }
-	x->x_mixed = f * s;
+        x->x_mixed = f * s;
         x->x_rejectout = outlet_new(&x->x_obj, &s_float);
         return (x);
     }
@@ -460,6 +481,10 @@ static void *select_new(t_symbol *s, int argc, t_atom *argv)
 
 void select_setup(void)
 {
+    sel1_proxy_class = class_new(gensym("select_inlet"),
+        0, 0, sizeof(t_sel1_proxy), 0, 0);
+    class_addfloat(sel1_proxy_class, (t_method)sel1_proxy_float);
+    class_addsymbol(sel1_proxy_class, (t_method)sel1_proxy_symbol);
     sel1_class = class_new(gensym("select"), 0, 0,
         sizeof(t_sel1), 0, 0);
     class_addfloat(sel1_class, sel1_float);
