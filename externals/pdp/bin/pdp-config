@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prefix=/usr
+prefix=/usr/local
 version=0.12.7
 
 usage="\

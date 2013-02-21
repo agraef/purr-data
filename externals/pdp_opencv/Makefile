@@ -1,5 +1,5 @@
-PD_DIR = /Software/pd-svn/trunk/pd
-PDP_DIR = /Software/pd-svn/trunk/externals/pdp
+PD_DIR = /home/ico/Downloads/PureData/pure-data/pd
+PDP_DIR = /home/ico/Downloads/PureData/pure-data/externals/pdp
 
 GEM_OPENCV_VERSION = 0.2
 
@@ -13,7 +13,7 @@ CPPFLAGS  = -fPIC -DPD -O2 -funroll-loops -fomit-frame-pointer  -ffast-math \
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Linux)
  INCLUDES += `pkg-config --cflags opencv`
- LDFLAGS =  --export-dynamic -shared
+ LDFLAGS = -Wl,--export-dynamic -shared
  LIBS = `pkg-config --libs opencv`
  EXTENSION = pd_linux
 endif
@@ -27,7 +27,7 @@ endif
 .SUFFIXES = $(EXTENSION)
 
 SOURCES = pdp_opencv_threshold.cc pdp_opencv_edge.cc pdp_opencv_distrans.cc pdp_opencv_laplace.cc pdp_opencv_motempl.cc pdp_opencv_morphology.cc pdp_opencv_haarcascade.cc pdp_opencv_contours_convexity.cc pdp_opencv_contours_boundingrect.cc pdp_opencv_bgsubstract.cc pdp_opencv_lk.cc pdp_opencv_floodfill.cc pdp_opencv_hist_compare.cc pdp_opencv_dft.cc pdp_opencv_knear.cc pdp_opencv_hu_moments.cc pdp_opencv_hu_compare.cc pdp_opencv_pgh_compare.cc pdp_opencv_bgstats.cc pdp_opencv_athreshold.cc pdp_opencv_hough_lines.cc pdp_opencv_channels.cc pdp_opencv_hough_circles.cc pdp_opencv_camshift.cc pdp_opencv_colorfilt.cc pdp_opencv_contours_convexhull.cc pdp_opencv_of_bm.cc pdp_opencv_of_hs.cc pdp_opencv_of_lk.cc pdp_opencv_smooth.cc
-SOURCES_OPT = pdp_opencv_surf.cc
+SOURCES_OPT = 
 
 all: $(SOURCES:.c=.$(EXTENSION)) $(SOURCES:.cc=.$(EXTENSION)) $(SOURCES_OPT:.c=.$(EXTENSION)) $(SOURCES_OPT:.cc=.$(EXTENSION))
 

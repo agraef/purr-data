@@ -13,7 +13,7 @@ CPPFLAGS  = -fPIC -DPD -O2 -funroll-loops -fomit-frame-pointer  -ffast-math \
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Linux)
  INCLUDES += `pkg-config --cflags opencv`
- LDFLAGS =  --export-dynamic -shared
+ LDFLAGS = -Wl,--export-dynamic -shared
  LIBS = `pkg-config --libs opencv`
  EXTENSION = pd_linux
 endif

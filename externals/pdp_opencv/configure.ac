@@ -1,6 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT
+AC_PREREQ(2.65)
+AC_INIT([pdp_opencv],[0.2-rc6-svn],[lluisgomez@hangar.org],[pdp_opencv-dev],[http://www.hangar.org/wikis/lab/doku.php?id=start:puredata_opencv])
 AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE
 AC_DISABLE_OPTION_CHECKING
@@ -69,9 +70,27 @@ AM_SANITY_CHECK
 AM_MAINTAINER_MODE
 AM_WITH_DMALLOC
 
-AC_CHECK_LIB(cv, cvSobel, , AC_MSG_ERROR(you need to install opencv library (libcv)))
-AC_CHECK_LIB(highgui, cvNamedWindow, , AC_MSG_ERROR(you need to install high gui library (libhighgui)))
-AC_CHECK_LIB(cvaux, cvSegmentImage, , AC_MSG_ERROR(you need to install opencv auxiliary library (libcvaux) ))
+# Very basic check for OpenCV. This does not collect any compile flags; these
+# are currently set in Makefile.in through pkg-config
+# TODO: use a more robust and well-established OpenCV configure approach
+AC_CHECK_LIB([cv], [cvSobel], [], [
+  # try another lib name used in other versions of OpenCV
+  AC_CHECK_LIB([opencv_imgproc], [cvSobel], [],
+    [AC_MSG_ERROR([[missing a library from opencv try installing libcv]])
+  ])
+])
+
+AC_CHECK_LIB([highgui], [cvNamedWindow], [], [
+  AC_CHECK_LIB([opencv_highgui], [cvNamedWindow], [], [
+    AC_MSG_ERROR([[missing a library from opencv, try installing libhighgui]])
+  ])
+])
+
+AC_CHECK_LIB([cvaux], [cvSegmentImage], [], [
+  AC_CHECK_LIB([opencv_legacy], [cvSegmentImage], [], [
+    AC_MSG_ERROR([[missing a library from opencv try installing libcvaux]])
+  ])
+])
 
 echo -n "looking for pd sources (required) ... "
 if test -f $PD_DIR/src/m_pd.h

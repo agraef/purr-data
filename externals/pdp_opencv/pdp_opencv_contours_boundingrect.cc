@@ -229,11 +229,6 @@ static void pdp_opencv_contours_boundingrect_process_rgb(t_pdp_opencv_contours_b
              if ( odist < dist )
              {
                oi=im;
-               x->x_xmark[oi] = (float)(rect.x+rect.width/2);
-               x->x_ymark[oi] = (float)(rect.y+rect.height/2);
-               x->x_wmark[oi] = (int)rect.width;
-               x->x_hmark[oi] = (int)rect.height;
-               x->x_found[oi] = x->x_ftolerance;
                dist=odist;
              }
            }
@@ -247,6 +242,11 @@ static void pdp_opencv_contours_boundingrect_process_rgb(t_pdp_opencv_contours_b
          else
          {
            // post( "contour found : %d", oi );
+           x->x_xmark[oi] = (float)(rect.x+rect.width/2);
+           x->x_ymark[oi] = (float)(rect.y+rect.height/2);
+           x->x_wmark[oi] = (int)rect.width;
+           x->x_hmark[oi] = (int)rect.height;
+           x->x_found[oi] = x->x_ftolerance;
          }
 
          if ( x->x_draw )

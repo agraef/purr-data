@@ -28,6 +28,7 @@
 #include <dlfcn.h>
 #include <ctype.h>
 #include <math.h>
+#include <cvaux.h>
 
 #include "pdp.h"
 

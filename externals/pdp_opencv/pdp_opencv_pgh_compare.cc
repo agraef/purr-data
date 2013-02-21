@@ -30,6 +30,7 @@
 
 #ifndef _EiC
 #include "cv.h"
+#include "cvaux.h"
 #endif
 
 typedef struct pdp_opencv_pgh_compare_struct

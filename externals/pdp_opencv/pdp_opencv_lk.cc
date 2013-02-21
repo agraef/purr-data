@@ -25,11 +25,13 @@
 #include <limits.h>
 #include <dlfcn.h>
 #include <ctype.h>
+#include <cvaux.h>
 
 #include "pdp.h"
 
 #ifndef _EiC
 #include "cv.h"
+#include <opencv2/highgui/highgui_c.h>
 #endif
 
 #define MAX_MARKERS 500
@@ -171,9 +173,9 @@ static void pdp_opencv_lk_process_rgb(t_pdp_opencv_lk *x)
         x->count = MAX_COUNT;
         cvGoodFeaturesToTrack( x->grey, eig, temp, x->points[1], &x->count,
                                x->quality, x->min_distance, 0, 3, 0, 0.04 );
-        cvFindCornerSubPix( x->grey, x->points[1], x->count,
-             cvSize(x->win_size,x->win_size), cvSize(-1,-1),
-             cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03));
+        // cvFindCornerSubPix( x->grey, x->points[1], x->count,
+        //       cvSize(x->win_size,x->win_size), cvSize(-1,-1),
+        //       cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03));
         cvReleaseImage( &eig );
         cvReleaseImage( &temp );
 

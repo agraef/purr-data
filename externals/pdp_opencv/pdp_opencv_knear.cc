@@ -35,7 +35,7 @@
 #include "pdp.h"
 
 #include "cv.h"
-#include "highgui.h"
+#include <opencv2/highgui/highgui_c.h>
 #include "ml.h"
 
 typedef struct pdp_opencv_knear_struct
