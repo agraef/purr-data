@@ -19,23 +19,30 @@ typedef struct _print
     t_symbol *x_sym;
 } t_print;
 
-static void *print_new(t_symbol *s, int argc, t_atom *argv)
+static void *print_new(t_symbol *sel, int argc, t_atom *argv)
 {
-    int bufsize;
-    char *buf;
     t_print *x = (t_print *)pd_new(print_class);
-    if (argc)
+    if (argc == 0)
+        x->x_sym = gensym("print");
+    else if (argc == 1 && argv->a_type == A_SYMBOL)
     {
+        t_symbol *s = atom_getsymbolarg(0, argc, argv);
+        if (!strcmp(s->s_name, "-n"))
+            x->x_sym = &s_;
+        else x->x_sym = s;
+    }
+    else
+    {
+        int bufsize;
+        char *buf;
         t_binbuf *bb = binbuf_new();
         binbuf_add(bb, argc, argv);
         binbuf_gettext(bb, &buf, &bufsize);
+        buf = resizebytes(buf, bufsize, bufsize+1);
         buf[bufsize] = 0;
         x->x_sym = gensym(buf);
+        freebytes(buf, bufsize+1);
         binbuf_free(bb);
-    }
-    else 
-    {
-        x->x_sym = gensym("print");
     }
     return (x);
 }
@@ -58,7 +65,10 @@ static void print_float(t_print *x, t_float f)
 static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
     int i;
-    if (argc && argv->a_type != A_SYMBOL) startpost("%s:", x->x_sym->s_name);
+    if (argc && argv->a_type != A_SYMBOL)
+		startpost("%s%s%g", x->x_sym->s_name,
+            (*x->x_sym->s_name ? ": " : ""),
+            atom_getfloatarg(0, argc--, argv++));
     else startpost("%s: %s", x->x_sym->s_name,
         (argc > 1 ? s_list.s_name : (argc == 1 ? s_symbol.s_name :
             s_bang.s_name)));
