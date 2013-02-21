@@ -68,12 +68,11 @@ static void clip_setup(void)
 #define DUMTAB2SIZE 1024
 
 #ifdef MSW
-#define int32 long
-#endif
-
-#if defined(__unix__) || defined(__APPLE__)
-#include <sys/types.h>
-#define int32 int32_t
+ typedef __int32 int32_t; /* use MSVC's internal type */
+#elif defined(IRIX)
+ typedef long int32_t;  /* a data type that has 32 bits */
+#else
+# include <stdint.h>  /* this is where int32_t is defined in C99 */
 #endif
 
 static float rsqrt_exptab[DUMTAB1SIZE], rsqrt_mantissatab[DUMTAB2SIZE];
@@ -84,8 +83,8 @@ static void init_rsqrt(void)
     for (i = 0; i < DUMTAB1SIZE; i++)
     {
         float f;
-        int32 l = (i ? (i == DUMTAB1SIZE-1 ? DUMTAB1SIZE-2 : i) : 1)<< 23;
-        *(int32 *)(&f) = l;
+        int32_t l = (i ? (i == DUMTAB1SIZE-1 ? DUMTAB1SIZE-2 : i) : 1)<< 23;
+        *(int32_t *)(&f) = l;
         rsqrt_exptab[i] = 1./sqrt(f);   
     }
     for (i = 0; i < DUMTAB2SIZE; i++)
@@ -97,16 +96,18 @@ static void init_rsqrt(void)
 
     /* these are used in externs like "bonk" */
 
-t_float q8_rsqrt(t_float f)
+t_float q8_rsqrt(t_float f0)
 {
+    float f = (float)f0;
     long l = *(long *)(&f);
     if (f < 0) return (0);
     else return (rsqrt_exptab[(l >> 23) & 0xff] *
             rsqrt_mantissatab[(l >> 13) & 0x3ff]);
 }
 
-t_float q8_sqrt(t_float f)
+t_float q8_sqrt(t_float f0)
 {
+    float f = (float)f0;
     long l = *(long *)(&f);
     if (f < 0) return (0);
     else return (f * rsqrt_exptab[(l >> 23) & 0xff] *
@@ -556,7 +557,7 @@ void powtodb_tilde_setup(void)
 }
 
 /* ----------------------------- pow ----------------------------- */
-static t_class *pow_tilde_class;
+static t_class *pow_tilde_class, *scalarpow_tilde_class;
 
 typedef struct _pow_tilde
 {
@@ -564,13 +565,34 @@ typedef struct _pow_tilde
     t_float x_f;
 } t_pow_tilde;
 
+typedef struct _scalarpow_tilde
+{
+    t_object x_obj;
+    t_float x_f;
+    t_float x_g;
+} t_scalarpow_tilde;
+
 static void *pow_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
-    t_pow_tilde *x = (t_pow_tilde *)pd_new(pow_tilde_class);
-    inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
-    outlet_new(&x->x_obj, &s_signal);
-    x->x_f = 0;
-    return (x);
+    if (argc > 1) post("pow~: extra arguments ignored");
+    if (argc)
+    {
+        t_scalarpow_tilde *x =
+            (t_scalarpow_tilde *)pd_new(scalarpow_tilde_class);
+        floatinlet_new(&x->x_obj, &x->x_g);
+        x->x_g = atom_getfloatarg(0, argc, argv);
+        outlet_new(&x->x_obj, &s_signal);
+        x->x_f = 0;
+        return (x);
+    }
+    else
+    {
+        t_pow_tilde *x = (t_pow_tilde *)pd_new(pow_tilde_class);
+        inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
+        outlet_new(&x->x_obj, &s_signal);
+        x->x_f = 0;
+        return (x);
+    }
 }
 
 t_int *pow_tilde_perform(t_int *w)
@@ -591,18 +613,46 @@ t_int *pow_tilde_perform(t_int *w)
     return (w+5);
 }
 
+t_int *scalarpow_tilde_perform(t_int *w)
+{
+    t_sample *in = (t_sample *)(w[1]);
+    t_float g = *(t_float *)(w[2]);
+    t_sample *out = (t_sample *)(w[3]);
+    int n = (int)(w[4]);
+    while (n--)
+    {
+        t_float f = *in++;
+        if (f > 0)
+            *out = pow(f, g);
+        else *out = 0;
+        out++;
+    }
+    return(w+5);
+}
+
 static void pow_tilde_dsp(t_pow_tilde *x, t_signal **sp)
 {
     dsp_add(pow_tilde_perform, 4,
         sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 }
 
+static void scalarpow_tilde_dsp(t_scalarpow_tilde *x, t_signal **sp)
+{
+    dsp_add(scalarpow_tilde_perform, 4,
+        sp[0]->s_vec, &x->x_g, sp[1]->s_vec, sp[0]->s_n);
+}
+
 static void pow_tilde_setup(void)
 {
     pow_tilde_class = class_new(gensym("pow~"), (t_newmethod)pow_tilde_new, 0,
-        sizeof(t_pow_tilde), 0, A_DEFFLOAT, 0);
+        sizeof(t_pow_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(pow_tilde_class, t_pow_tilde, x_f);
     class_addmethod(pow_tilde_class, (t_method)pow_tilde_dsp, gensym("dsp"), 0);
+    scalarpow_tilde_class = class_new(gensym("pow~"), 0, 0,
+        sizeof(t_scalarpow_tilde), 0, 0);
+    CLASS_MAINSIGNALIN(scalarpow_tilde_class, t_scalarpow_tilde, x_f);
+    class_addmethod(scalarpow_tilde_class, (t_method)scalarpow_tilde_dsp,
+        gensym("dsp"), 0);
 }
 
 /* ----------------------------- exp ----------------------------- */
