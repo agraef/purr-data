@@ -108,11 +108,13 @@ then
 	rm Gem.pd_linux
 	cd ../packages/linux_make
 	make distclean
-	cd ../../../
+	cd ../../
+	gitfolder=`basename $PWD`
+	cd ../
 	rm -f pd-l2ork-dev-`date +%Y%m%d`.tar.bz2 2> /dev/null
 	echo "tar dev installer..."
-	tar -jcf pd-l2ork-dev-`date +%Y%m%d`.tar.bz2 pure-data
-	cd pure-data/
+	tar -jcf pd-l2ork-dev-`date +%Y%m%d`.tar.bz2 $gitfolder
+	cd $gitfolder
 fi
 
 if [ $full -gt 0 -o $deb -gt 0 ]
@@ -192,7 +194,7 @@ then
 		./autogen.sh
 	elif [ $full -eq 3 ]
 	then
-		echo "Since pd-l2ork relies on a unique version of cwiid library, we will need to install it to make disis_wiimote external work properly. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... No worries though, L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. To install cwiid library go to pure-data/l2ork-addons/cwiid/ folder and install it using the usual:"
+		echo "Since pd-l2ork relies on a unique version of cwiid library, we will need to install it to make disis_wiimote external work properly. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... No worries though, L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. To install cwiid library go to <pd-l2ork-root-git-folder>/l2ork-addons/cwiid/ folder and install it using the usual:"
 		echo
 		echo "./configure"
 		echo "make"
