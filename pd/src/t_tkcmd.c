@@ -603,6 +603,8 @@ void pdgui_startup(Tcl_Interp *interp)
 
         /* add our own TK commands */
     Tcl_CreateCommand(interp, "pd",  (Tcl_CmdProc*)pdCmd, (ClientData)NULL, 
+        (Tcl_CmdDeleteProc *)NULL);
+    Tcl_CreateCommand(interp, "pdsend",  (Tcl_CmdProc*)pdCmd, (ClientData)NULL, 
         (Tcl_CmdDeleteProc *)NULL); 
 #ifdef MSW
     Tcl_CreateCommand(interp, "pd_pollsocket",(Tcl_CmdProc*)  pd_pollsocketCmd,

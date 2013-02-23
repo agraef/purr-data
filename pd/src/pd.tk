@@ -3361,6 +3361,11 @@ proc pdtk_canvas_checkgeometry {topname} {
     }
 }
 
+# from newer pd branch
+proc pdtk_canvas_mouse {name x y b f} {
+    pd [canvastosym $name] mouse [$name canvasx $x] [$name canvasy $y] $b $f \;
+}
+
 proc pdtk_canvas_sendclick {name x y b f} {
     pd [canvastosym $name] mouse [$name canvasx $x] [$name canvasy $y] $b $f \;
 }
