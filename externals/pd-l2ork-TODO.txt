@@ -3,6 +3,7 @@ AS OF Feb. 19, 2012
 
 DONE:
 creb
+flatgui (disabled, as all externals have various problems)
 gem2pdp
 mrpeach
 pdp
@@ -17,5 +18,6 @@ ggee
 TODO:
 test other
 
+BUGS:
 *pdp_colorgrid is not working (crashes when disabling/reenabling grid)
 *videogrid throws a weird TCL error when you try to change its initialization parameters (Pagano)
