@@ -1088,13 +1088,15 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         sys_vgui(".x%lx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
 		if (!do_not_redraw) {
+			//fprintf(stderr,"graph_displace redraw\n");
         	glist_redraw(glist_getcanvas(glist));
-			gobj_select(z, glist, 1);
+			//gobj_select(z, glist, 1);
         	canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
 		}
     }
 }
 
+extern int old_displace; //from g_editor.c for legacy drawing
 
 static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
@@ -1107,14 +1109,17 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 		// first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
 		t_gobj *g;
 		for (g = x->gl_list; g; g = g->g_next) {
-			if (g && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {
+			//fprintf(stderr,"shouldvis %d %d\n", gobj_shouldvis(g, glist), gobj_shouldvis(g, x));
+			if (g && gobj_shouldvis(g, x) && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {
 				//fprintf(stderr,"old way\n");
+				old_displace = 1;
 				graph_displace(z, glist, dx, dy);
 				return;
 			}
 		}
 		// else we do things the new and more elegant way
 		//fprintf(stderr,"new way\n");
+		
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
         canvas_fixlinesfor(glist_getcanvas(glist), &x->gl_obj);
@@ -1158,9 +1163,10 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 		}
 
 		t_gobj *g;
+		//fprintf(stderr,"graph_select\n");
 		if (x->gl_list)
 			for (g = x->gl_list; g; g = g->g_next)
-				if (g && (g->g_pd->c_wb->w_displacefnwtag != NULL || pd_class((t_pd *)g) == garray_class))
+				if (g && gobj_shouldvis(g, x) && (g->g_pd->c_wb->w_displacefnwtag != NULL || pd_class((t_pd *)g) == garray_class))
 					gobj_select(g, x, state);
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n", canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }

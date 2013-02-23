@@ -70,6 +70,7 @@ extern void glob_preset_node_list_check_loc_and_update(void);
 extern t_class *text_class;
 
 int do_not_redraw = 0;     // used to optimize redrawing
+int old_displace = 0;	   // for legacy displaces within gop that are not visible to displaceselection
 
 int connect_exception = 0; // used when autopatching to bypass check whether one is trying to connect signal with non-signal nlet
 						   // since this is impossible to figure out when the newly created object is an empty one
@@ -158,7 +159,7 @@ void gobj_delete(t_gobj *x, t_glist *glist)
 int gobj_shouldvis(t_gobj *x, struct _glist *glist)
 {
     t_object *ob;
-	//fprintf(stderr,"shouldvis\n");
+	//fprintf(stderr,"shouldvis %d %d %d %d\n", glist->gl_havewindow, glist->gl_isgraph, glist->gl_goprect, glist->gl_owner != NULL);
     if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_goprect &&
         glist->gl_owner && (pd_class(&glist->gl_pd) != garray_class))
     {
@@ -171,6 +172,7 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
         if (y1 > y2)
             m = y1, y1 = y2, y2 = m;
         gobj_getrect(x, glist, &gx1, &gy1, &gx2, &gy2);
+		//fprintf(stderr,"gobj_shouldvis gop: %d %d %d %d || object %d %d %d %d\n", x1, x2, y1, y2, gx1, gx2, gy1, gy2);
         if (gx1 < x1 || gx1 > x2 || gx2 < x1 || gx2 > x2 ||
             gy1 < y1 || gy1 > y2 || gy2 < y1 || gy2 > y2)
                 return (0);
@@ -182,13 +184,17 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
         /* return true if the text box should be drawn.  We don't show text
         boxes inside graphs---except comments, if we're doing the new
         (goprect) style. */
+		//fprintf(stderr,"pd_checkobject %lx\n", x);
         return (glist->gl_havewindow ||
             (ob->te_pd != canvas_class &&
                 ob->te_pd->c_wb != &text_widgetbehavior) ||
             (ob->te_pd == canvas_class && (((t_glist *)ob)->gl_isgraph)) ||
             (glist->gl_goprect && (ob->te_type == T_TEXT)));
     }
-    else return (1);
+    else {
+		return (1);
+		//fprintf(stderr,"else return 1\n");
+	}
 }
 
 void gobj_vis(t_gobj *x, struct _glist *glist, int flag)
@@ -3408,6 +3414,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 	//fprintf(stderr,"canvas_displaceselection %d %d\n", dx, dy);
     t_selection *y;
     int resortin = 0, resortout = 0;
+	old_displace = 0;
     if (!canvas_undo_already_set_move && x->gl_editor->e_selection)
     {
         //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, 1),
@@ -3422,23 +3429,30 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 		if (y->sel_what->g_pd->c_wb && y->sel_what->g_pd->c_wb->w_displacefnwtag) {
 			/* this is a vanilla object */
 			gobj_displace_withtag(y->sel_what, x, dx, dy);
+			//fprintf(stderr, "displaceselection with tag\n");
 		}
 		else {
 			/* we will move the non-conforming objects the old way */
 			gobj_displace(y->sel_what, x, dx, dy);
+			old_displace = 1;
+			//fprintf(stderr, "displaceselection\n");
 		}
         t_class *cl = pd_class(&y->sel_what->g_pd);
         if (cl == vinlet_class) resortin = 1;
         else if (cl == voutlet_class) resortout = 1;
     }
 	if (dx || dy) {
-		sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
+		if (!old_displace) {
+			//fprintf(stderr,"move selected\n");
+			sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
+		}
 	    if (resortin) canvas_resortinlets(x);
 	    if (resortout) canvas_resortoutlets(x);
 	    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 	    if (x->gl_editor->e_selection)
 	        canvas_dirty(x, 1);
 	}
+	old_displace = 0;
 }
 
     /* this routine is called whenever a key is pressed or released.  "x"
@@ -5416,6 +5430,8 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
 {
     t_gobj *y;
     x->gl_font = font;
+	if (x->gl_isgraph && !canvas_isabstraction(x))
+		vmess(&x->gl_pd, gensym("menu-open"), "");
     if (xresize != 1 || yresize != 1)
     {
         for (y = x->gl_list; y; y = y->g_next)
@@ -5424,12 +5440,17 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
             gobj_getrect(y, x, &x1, &y1, &x2, &y2);
             nx1 = x1 * xresize + 0.5;
             ny1 = y1 * yresize + 0.5;
-			if (pd_class(&y->g_pd) != scalar_class)
+			if (pd_class(&y->g_pd) != scalar_class) {
+				//fprintf(stderr,"dofont gobj displace %lx %d %d %d %d : %f %f : %d %d\n", y, x1, x2, y1, y2, xresize, yresize, nx1, ny1);
             	gobj_displace(y, x, nx1-x1, ny1-y1);
+			}
         }
     }
     if (glist_isvisible(x))
+	{
+		//fprintf(stderr,"glist_redraw %lx\n", x);
         glist_redraw(x);
+	}
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == canvas_class
             && !canvas_isabstraction((t_canvas *)y))
