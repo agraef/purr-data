@@ -3493,25 +3493,27 @@ proc pdtk_canvas_getscroll {name} {
 				}
 			}
 			"image" {
-				set imgtags [$name gettags $item]
-				set imgtag [lindex $imgtags 0]
-				if { $imgtag != "" } {
-					set anchor [$name itemcget $imgtag -anchor]
-					set img [$name itemcget $imgtag -image]
-					set imgh [image height $img]
-					set imgw [image width $img]
-					set center [$name coords $item]
-					set coords [list \
-						[expr [lindex $center 0] - [expr $imgw/2]] \
-						[expr [lindex $center 1] - [expr $imgh/2]] \
-						[expr [lindex $center 0] + [expr $imgw/2]] \
-						[expr [lindex $center 1] + [expr $imgh/2]] \
-					]
-					foreach {x y} $coords {
-						if { $x < $x1 } {set x1 $x}
-						if { $x > $x2 } {set x2 $x}
-						if { $y < $y1 } {set y1 $y}
-						if { $y > $y2 } {set y2 $y}
+				catch {
+					set imgtags [$name gettags $item]
+					set imgtag [lindex $imgtags 0]
+					if { $imgtag != "" } {
+						set anchor [$name itemcget $imgtag -anchor]
+						set img [$name itemcget $imgtag -image]
+						set imgh [image height $img]
+						set imgw [image width $img]
+						set center [$name coords $item]
+						set coords [list \
+							[expr [lindex $center 0] - [expr $imgw/2]] \
+							[expr [lindex $center 1] - [expr $imgh/2]] \
+							[expr [lindex $center 0] + [expr $imgw/2]] \
+							[expr [lindex $center 1] + [expr $imgh/2]] \
+						]
+						foreach {x y} $coords {
+							if { $x < $x1 } {set x1 $x}
+							if { $x > $x2 } {set x2 $x}
+							if { $y < $y1 } {set y1 $y}
+							if { $y > $y2 } {set y2 $y}
+						}
 					}
 				}
 			}
