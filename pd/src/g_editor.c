@@ -5430,7 +5430,7 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
 {
     t_gobj *y;
     x->gl_font = font;
-	if (x->gl_isgraph && !canvas_isabstraction(x))
+	if (x->gl_isgraph && !canvas_isabstraction(x) && (xresize != 1 || yresize != 1) && !glist_istoplevel(x))
 		vmess(&x->gl_pd, gensym("menu-open"), "");
     if (xresize != 1 || yresize != 1)
     {
