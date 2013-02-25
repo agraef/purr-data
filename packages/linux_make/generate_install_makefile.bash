@@ -23,7 +23,7 @@ function print_dir ()
 
 function post_install ()
 {
-	echo -e "\tcp -f lib/pd-l2ork/pd-l2ork \$(prefix)/lib/pd-l2ork/pd-l2ork"
+	echo -e "\tcp -f lib/pd-l2ork/pd-l2ork '\$(prefix)/lib/pd-l2ork/pd-l2ork'"
 	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork.png /usr/share/icons/hicolor/128x128/apps/"
 	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-red.png /usr/share/icons/hicolor/128x128/apps/"
 	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-k12.png /usr/share/icons/hicolor/128x128/apps/"
@@ -83,6 +83,7 @@ function remove_dir ()
 
 function uninstall_tree ()
 {
+	 echo -e "\trm -f '\$(prefix)/lib/pd-l2ork/pd-l2ork'"
 	 for file in `\ls -1d $1/*`; do
 		  local target=`echo $file | $SED`
 		  if [ -d "$file" ]; then
