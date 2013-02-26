@@ -400,6 +400,7 @@ void magicGlass_free(t_magicGlass *x)
 	//fprintf(stderr,"magicglass_free\n");
     x->x_dspOn = 0;
     clock_free(x->x_clearClock);
+	clock_free(x->x_flashClock);
 }
 
 void magicGlass_setup(void)
