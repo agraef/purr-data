@@ -596,7 +596,7 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
                 }
             }
         }
-        else
+        else if (argv[0].a_type == A_SYMBOL)   /* one symbol arg */
         {
             for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
             {
