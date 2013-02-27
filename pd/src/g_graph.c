@@ -137,7 +137,8 @@ void glist_delete(t_glist *x, t_gobj *y)
 		if (glist_isvisible(canvas))
 		    gobj_vis(y, x, 0);
 		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
-		    rtext_new(x, ob);
+		    //rtext_new(x, ob);
+			rtext_free(glist_findrtext(x, ob));
 		if (x->gl_list == y) {
 			if (y->g_next)		
 				x->gl_list = y->g_next;
