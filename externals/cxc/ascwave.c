@@ -68,7 +68,7 @@ void ascwave_ft1(t_ascwave *x, t_floatarg g)
   xip = (char*)malloc((sz+1)*sizeof(char));
   xap = (char*)malloc((sz+1)*sizeof(char));
 
-  for (i = 0;i <= sz; ++i) {
+  for (i = 0; i < sz; ++i) {
     if (i == sz-1) {
       xip[i] = lchr;
     } else {
@@ -86,17 +86,21 @@ void ascwave_ft1(t_ascwave *x, t_floatarg g)
       xap[i] = i % 80 + 33;
   }
   //  xip[sz] = schr;//'\n';
-  xip[sz+1] = '\0';
+  xip[sz] = '\0';
   //xap[sz] = schr;//'\n';
-  xap[sz+1] = '\0';
+  xap[sz] = '\0';
   //  poststring(xip);
   //  post("ft1: %f, %d", x->x_jodel, sz);
   //  outlet_float(x->t_ob.ob_outlet, x->x_jodel + x->x_jodel);
   outlet_symbol(x->t_ob.ob_outlet, gensym(xip));
-  for (i = 0; i < g-2;++i)
+  for (i = 0; i < g-2;++i) {
+	fprintf(stderr,"i=%d ", i);
     outlet_symbol(x->t_ob.ob_outlet, gensym(xap));
-  if (g > 1)
+  }
+  if (g > 1) {
+	fprintf(stderr,"g > 1");
     outlet_symbol(x->t_ob.ob_outlet, gensym(xip));
+  }
   x->x_jodel = g;
 
   free(xip);

@@ -56,6 +56,11 @@ void ascseq_anything(t_ascseq *x, t_symbol* s, t_int argc, t_atom* argv)
   len = 0;
   x->x_bla[0] = '\0';
 
+  if (!s) { // we sent a bang, so report and ignore it)
+	error("ascseq: ignoring bang message");
+	return;
+  }
+
   //symbol_string(s->s_name, tmp, 1024);
   if(!strstr(s->s_name,LISTSEL)) {
     strcat(x->x_bla,s->s_name);
