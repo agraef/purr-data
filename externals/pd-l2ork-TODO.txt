@@ -21,3 +21,7 @@ test other
 BUGS:
 *pdp_colorgrid is not working (crashes when disabling/reenabling grid)
 *videogrid throws a weird TCL error when you try to change its initialization parameters (Pagano)
+
+L2Ork:
+*Serene modify parts for alternating posture sides in the second section
+*Serene change bass notes in the introduction and ending
