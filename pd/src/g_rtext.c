@@ -422,6 +422,18 @@ t_rtext *glist_findrtext(t_glist *gl, t_text *who)
     return (x);
 }
 
+/* same as above but without error reporting */
+t_rtext *glist_tryfindrtext(t_glist *gl, t_text *who)
+{
+    t_rtext *x=NULL;
+    if (!gl->gl_editor)
+        canvas_create_editor(gl);
+	if (gl->gl_editor->e_rtext)
+	    for (x = gl->gl_editor->e_rtext; x && x->x_text != who; x = x->x_next)
+    	    ;
+    return (x);
+}
+
 int rtext_width(t_rtext *x)
 {
     int w = 0, h = 0, indx;
