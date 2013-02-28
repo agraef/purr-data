@@ -179,7 +179,7 @@ void glist_delete(t_glist *x, t_gobj *y)
 		canvas_setdeleting(canvas, wasdeleting);
 		x->gl_valid = ++glist_valid;
 		if (late_rtext_free) {
-			fprintf(stderr,"glist_delete late_rtext_free\n");
+			//fprintf(stderr,"glist_delete late_rtext_free\n");
 			rtext_free(rt);
 		}
 	}
