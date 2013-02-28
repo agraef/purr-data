@@ -91,6 +91,8 @@ void glist_delete(t_glist *x, t_gobj *y)
 		t_canvas *canvas = glist_getcanvas(x);
 		int drawcommand = class_isdrawcommand(y->g_pd);
 		int wasdeleting;
+		t_rtext *rt = NULL;
+		int late_rtext_free = 0;
 
 		if (pd_class(&y->g_pd) == canvas_class) {
 		  /* JMZ: send a closebang to the canvas */
@@ -136,11 +138,24 @@ void glist_delete(t_glist *x, t_gobj *y)
 		        glist_getcanvas(x)->gl_name)), 2);
 		if (glist_isvisible(canvas))
 		    gobj_vis(y, x, 0);
-		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
+		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd))) {
 		    //rtext_new(x, ob);
-			rtext_free(glist_findrtext(x, ob));
+			rt = glist_findrtext(x, ob);
+			if (rt) {
+				if (pd_class(&y->g_pd) != canvas_class) {
+					//fprintf(stderr,"glist_delete calls rtext_free %lx %d %d %d\n",
+						//glist_findrtext(x, ob),
+						//(pd_class(&y->g_pd) != canvas_class ? 1 : 0),
+						//(!x->gl_isgraph ? 1 : 0),
+						//(!x->gl_owner ? 1 : 0));
+					  rtext_free(rt);
+				} else {
+					late_rtext_free = 1;
+				}
+			}
+		}
 		if (x->gl_list == y) {
-			if (y->g_next)		
+			if (y->g_next)
 				x->gl_list = y->g_next;
 			else
 				x->gl_list = NULL;
@@ -163,6 +178,10 @@ void glist_delete(t_glist *x, t_gobj *y)
 		        glist_getcanvas(x)->gl_name)), 1);
 		canvas_setdeleting(canvas, wasdeleting);
 		x->gl_valid = ++glist_valid;
+		if (late_rtext_free) {
+			fprintf(stderr,"glist_delete late_rtext_free\n");
+			rtext_free(rt);
+		}
 	}
 }
 
