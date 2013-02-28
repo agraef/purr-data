@@ -11,6 +11,7 @@ to this file... */
 #include "m_imp.h"
 #include "t_tk.h"
 #include "g_canvas.h"
+#include "g_all_guis.h" /* for canvas handle freeing */
 #include "s_stuff.h"    /* for sys_hostfontsize */
 #include <stdio.h>
 #include <string.h>
@@ -83,8 +84,9 @@ void canvas_closebang(t_canvas *x);
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
+	//fprintf(stderr,"glist_delete?\n");
 	if (x->gl_list) {
-
+		//fprintf(stderr,"glist_delete YES\n");
 		t_gobj *g;
 		t_object *ob;
 		t_gotfn chkdsp = zgetfn(&y->g_pd, gensym("dsp"));
@@ -337,13 +339,23 @@ void glist_sort(t_glist *x)
 
 void glist_cleanup(t_glist *x)
 {
+	//fprintf(stderr,"glist_cleanup =============\n");
     freebytes(x->gl_xlabel, x->gl_nxlabels * sizeof(*(x->gl_xlabel)));
     freebytes(x->gl_ylabel, x->gl_nylabels * sizeof(*(x->gl_ylabel)));
+	if (x->x_handle) {	
+		pd_unbind(x->x_handle, ((t_scalehandle *)x->x_handle)->h_bindsym);
+		pd_free(x->x_handle);
+	}
+	if (x->x_mhandle) {
+		pd_unbind(x->x_mhandle, ((t_scalehandle *)x->x_mhandle)->h_bindsym);
+		pd_free(x->x_mhandle);
+	}
     gstub_cutoff(x->gl_stub);
 }
 
 void glist_free(t_glist *x)
 {
+	//fprintf(stderr,"glist_free =============\n");
     glist_cleanup(x);
     freebytes(x, sizeof(*x));
 }
@@ -1219,6 +1231,7 @@ static void graph_delete(t_gobj *z, t_glist *glist)
 
 static void graph_delete(t_gobj *z, t_glist *glist)
 {
+	//fprintf(stderr,"graph_delete\n");
     t_glist *x = (t_glist *)z;
     t_gobj *y;
     text_widgetbehavior.w_deletefn(z, glist);

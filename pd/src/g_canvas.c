@@ -872,11 +872,14 @@ int glist_getfont(t_glist *x)
 
 void canvas_free(t_canvas *x)
 {
+	//fprintf(stderr,"canvas_free %lx\n", x);
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
-    if (x->gl_magic_glass)
-      magicGlass_free(x->gl_magic_glass);
+    if (x->gl_magic_glass) {
+      	//magicGlass_free(x->gl_magic_glass);
+		pd_free(&x->gl_magic_glass->x_obj.te_g.g_pd);
+	}
 
     //canvas_noundo(x);
 	canvas_undo_free(x);
