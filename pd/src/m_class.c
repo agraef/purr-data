@@ -142,9 +142,9 @@ static void pd_defaultlist(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 
         /* if the object is patchable (i.e., can have proper inlets)
             send it on to obj_list which will unpack the list into the inlets */
-    else if ((*x)->c_patchable)
+    else if (argc>0 && (*x)->c_patchable)
         obj_list((t_object *)x, s, argc, argv);
-            /* otherwise gove up and complain. */
+            /* otherwise give up and complain. */
     else pd_defaultanything(x, &s_list, argc, argv);
 }
 
