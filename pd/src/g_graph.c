@@ -81,6 +81,10 @@ int canvas_setdeleting(t_canvas *x, int flag)
 /* JMZ: emit a closebang message */
 void canvas_closebang(t_canvas *x);
 
+/* variant of the glist_findrtext found in g_rtext.c 
+   that does not throw a consistency check */
+extern t_rtext *glist_tryfindrtext(t_glist *gl, t_text *who);
+
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
@@ -142,18 +146,9 @@ void glist_delete(t_glist *x, t_gobj *y)
 		    gobj_vis(y, x, 0);
 		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd))) {
 		    //rtext_new(x, ob);
-			rt = glist_findrtext(x, ob);
-			if (rt) {
-				if (pd_class(&y->g_pd) != canvas_class) {
-					//fprintf(stderr,"glist_delete calls rtext_free %lx %d %d %d\n",
-						//glist_findrtext(x, ob),
-						//(pd_class(&y->g_pd) != canvas_class ? 1 : 0),
-						//(!x->gl_isgraph ? 1 : 0),
-						//(!x->gl_owner ? 1 : 0));
-					  rtext_free(rt);
-				} else {
-					late_rtext_free = 1;
-				}
+			rt = glist_tryfindrtext(x, ob);
+			if (rt)
+				late_rtext_free = 1;
 			}
 		}
 		if (x->gl_list == y) {
