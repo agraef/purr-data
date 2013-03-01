@@ -30,3 +30,4 @@ L2Ork Infrastructure:
 *unload and reload r8169 on resume (check other L2Ork machines for /usr/lib/pm-utils/bin/pm-action)
 *update pd-l2ork version
 *sync L2Ork git
+*check for flashplugin-installer
