@@ -372,6 +372,11 @@ static void sel1_symbol(t_sel1 *x, t_symbol *s)
     else outlet_symbol(x->x_outlet2, s);
 }
 
+static void sel1_bang(t_sel1 *x)
+{
+	sel1_symbol(x, gensym("bang"));
+}
+
 static t_class *sel2_class;
 
 typedef struct _selectelement
@@ -420,6 +425,11 @@ static void sel2_symbol(t_sel2 *x, t_symbol *s)
             }
     }
     outlet_symbol(x->x_rejectout, s);
+}
+
+static void sel2_bang(t_sel2 *x)
+{
+	sel2_symbol(x, gensym("bang"));
 }
 
 static void sel2_free(t_sel2 *x)
@@ -489,11 +499,13 @@ void select_setup(void)
         sizeof(t_sel1), 0, 0);
     class_addfloat(sel1_class, sel1_float);
     class_addsymbol(sel1_class, sel1_symbol);
+    class_addbang(sel1_class, sel1_bang);
 
     sel2_class = class_new(gensym("select"), 0, (t_method)sel2_free,
         sizeof(t_sel2), 0, 0);
     class_addfloat(sel2_class, sel2_float);
     class_addsymbol(sel2_class, sel2_symbol);
+	class_addbang(sel2_class, sel2_bang);
 
     class_addcreator((t_newmethod)select_new, gensym("select"),  A_GIMME, 0);
     class_addcreator((t_newmethod)select_new, gensym("sel"),  A_GIMME, 0);
