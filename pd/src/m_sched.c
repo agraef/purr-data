@@ -286,7 +286,7 @@ static void sched_pollformeters( void)
 
     if (sched_diored && (sched_diddsp - sched_dioredtime > 0))
     {
-        sys_vgui("pdtk_pd_dio 0\n");
+        //sys_vgui("pdtk_pd_dio 0\n");
         sched_diored = 0;
     }
     if (sched_diddsp - sched_nextmeterpolltime < 0)

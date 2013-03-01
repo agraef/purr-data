@@ -6175,15 +6175,21 @@ proc pdtk_pd_meters {indb outdb inclip outclip} {
     
 }
 
+set sched_dio_off 0
+
 proc pdtk_pd_dio {red} {
 #    puts stderr [concat dio $red]
 	global pd_nt
+	global sched_dio_off
     if {$red == 1} {
 		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
 			.controls.dio configure -style IOErrorOn.TButton
 		} else {
 	        .controls.dio configure -background red -activebackground red
 		}
+		set current_window $tkcanvas
+		after cancel $sched_dio_off	
+		set sched_dio_off [after 1000 pdtk_pd_dio 0]
     } else {
 		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
 			.controls.dio configure -style IOErrorOff.TButton
