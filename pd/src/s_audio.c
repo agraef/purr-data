@@ -891,7 +891,7 @@ void sys_get_audio_apis(char *buf)
      n++;
 #endif
 #ifdef USEAPI_JACK
-    sprintf(buf + strlen(buf), "{jack %d} ", API_JACK); n++;
+    sprintf(buf + strlen(buf), "{JACK %d} ", API_JACK); n++;
 #endif
     strcat(buf, "}");
         /* then again, if only one API (or none) we don't offer any choice. */
