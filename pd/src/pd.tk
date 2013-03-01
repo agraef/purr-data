@@ -6699,7 +6699,7 @@ proc midi_popup_action {buttonname varname devlist index} {
 proc midi_popup {name buttonname varname devlist} {
     global pd_nt
     if [winfo exists $name.popup] {destroy $name.popup}
-    menu $name.popup -tearoff false
+    match_linux_wm [list menu $name.popup -tearoff false]
     if {$pd_nt == 1} {
     $name.popup configure -font menuFont
     }
@@ -6759,16 +6759,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
     pack $id.in1f -side top
 
     match_linux_wm [list label $id.in1f.l1 -text "  input device 1:"]
-    if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		match_linux_wm [list ttk::combobox $id.in1f.x1 \
-			-state readonly \
-			-values $midi_indevlist]
-		$id.in1f.x1 current 0
-	} else {
-		button $id.in1f.x1 -text [lindex $midi_indevlist $midi_indev1] \
-	        -command [list midi_popup $id $id.in1f.x1 midi_indev1 \
-			$midi_indevlist]
-	}
+	match_linux_wm [list button $id.in1f.x1 -text [lindex $midi_indevlist $midi_indev1] \
+        -command [list midi_popup $id $id.in1f.x1 midi_indev1 \
+		$midi_indevlist]]
     pack $id.in1f.l1 $id.in1f.x1 -side left -pady 3
 
     # input device 2
@@ -6777,16 +6770,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
         pack $id.in2f -side top
 
         match_linux_wm [list label $id.in2f.l1 -text "  input device 2:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-			match_linux_wm [list ttk::combobox $id.in2f.x1 \
-				-state readonly \
-				-values $midi_indevlist]
-			$id.in2f.x1 current 1
-		} else {
-		    button $id.in2f.x1 -text [lindex $midi_indevlist $midi_indev2] \
+		match_linux_wm [list button $id.in2f.x1 -text [lindex $midi_indevlist $midi_indev2] \
 		        -command [list midi_popup $id $id.in2f.x1 midi_indev2 \
-				$midi_indevlist]
-		}
+				$midi_indevlist]]
         pack $id.in2f.l1 $id.in2f.x1 -side left -pady 3
     }
 
@@ -6794,17 +6780,10 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
     if {$longform && [llength $midi_indevlist] > 2} {
         match_linux_wm [list frame $id.in3f]
         pack $id.in3f -side top
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-			match_linux_wm [list ttk::combobox $id.in3f.x1 \
-				-state readonly \
-				-values $midi_indevlist]
-			$id.in3f.x1 current 2
-		} else {
-		    match_linux_wm [list label $id.in3f.l1 -text "  input device 3:"]
-		    button $id.in3f.x1 -text [lindex $midi_indevlist $midi_indev3] \
-		        -command [list midi_popup $id $id.in3f.x1 midi_indev3 \
-		            $midi_indevlist]
-		}
+	    match_linux_wm [list label $id.in3f.l1 -text "  input device 3:"]
+	    match_linux_wm [list button $id.in3f.x1 -text [lindex $midi_indevlist $midi_indev3] \
+	        -command [list midi_popup $id $id.in3f.x1 midi_indev3 \
+	            $midi_indevlist]]
         pack $id.in3f.l1 $id.in3f.x1 -side left -pady 3
     }
 
@@ -6814,16 +6793,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
         pack $id.in4f -side top
 
         match_linux_wm [list label $id.in4f.l1 -text "  input device 4:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-			match_linux_wm [list ttk::combobox $id.in4f.x1 \
-				-state readonly \
-				-values $midi_indevlist]
-			$id.in4f.x1 current 3
-		} else {
-		    button $id.in4f.x1 -text [lindex $midi_indevlist $midi_indev4] \
-		        -command [list midi_popup $id $id.in4f.x1 midi_indev4 \
-		            $midi_indevlist]
-		}
+	    match_linux_wm [list button $id.in4f.x1 -text [lindex $midi_indevlist $midi_indev4] \
+	        -command [list midi_popup $id $id.in4f.x1 midi_indev4 \
+	            $midi_indevlist]]
         pack $id.in4f.l1 $id.in4f.x1 -side left -pady 3
     }
 
@@ -6831,16 +6803,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
     match_linux_wm [list frame $id.out1f]
     pack $id.out1f -side top
     match_linux_wm [list label $id.out1f.l1 -text "output device 1:"]
-	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		match_linux_wm [list ttk::combobox $id.out1f.x1 \
-			-state readonly \
-			-values $midi_outdevlist]
-		$id.out1f.x1 current 0
-	} else {
-		button $id.out1f.x1 -text [lindex $midi_outdevlist $midi_outdev1] \
-		    -command [list midi_popup $id $id.out1f.x1 midi_outdev1 \
-		        $midi_outdevlist]
-	}
+	match_linux_wm [list button $id.out1f.x1 -text [lindex $midi_outdevlist $midi_outdev1] \
+	    -command [list midi_popup $id $id.out1f.x1 midi_outdev1 \
+	        $midi_outdevlist]]
     pack $id.out1f.l1 $id.out1f.x1 -side left -pady 3
 
     # output device 2
@@ -6848,16 +6813,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
         match_linux_wm [list frame $id.out2f]
         pack $id.out2f -side top
         match_linux_wm [list label $id.out2f.l1 -text "output device 2:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-			match_linux_wm [list ttk::combobox $id.out2f.x1 \
-				-state readonly \
-				-values $midi_outdevlist]
-			$id.out2f.x1 current 1
-		} else {
-		    button $id.out2f.x1 -text [lindex $midi_outdevlist $midi_outdev2] \
-		        -command [list midi_popup $id $id.out2f.x1 \
-				midi_outdev2 $midi_outdevlist]
-		}
+	    match_linux_wm [list button $id.out2f.x1 -text [lindex $midi_outdevlist $midi_outdev2] \
+	        -command [list midi_popup $id $id.out2f.x1 \
+			midi_outdev2 $midi_outdevlist]]
         pack $id.out2f.l1 $id.out2f.x1 -side left -pady 3
     }
 
@@ -6866,16 +6824,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
         match_linux_wm [list frame $id.out3f]
         pack $id.out3f -side top
         match_linux_wm [list label $id.out3f.l1 -text "output device 3:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-			match_linux_wm [list ttk::combobox $id.out3f.x1 \
-				-state readonly \
-				-values $midi_outdevlist]
-			$id.out3f.x1 current 2
-		} else {
-		    button $id.out3f.x1 -text [lindex $midi_outdevlist $midi_outdev3] \
-		        -command [list midi_popup $id $id.out3f.x1 \
-				midi_outdev3 $midi_outdevlist]
-		}
+	    match_linux_wm [list button $id.out3f.x1 -text [lindex $midi_outdevlist $midi_outdev3] \
+	        -command [list midi_popup $id $id.out3f.x1 \
+			midi_outdev3 $midi_outdevlist]]
         pack $id.out3f.l1 $id.out3f.x1 -side left -pady 3
     }
 
@@ -6884,16 +6835,9 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
         match_linux_wm [list frame $id.out4f]
         pack $id.out4f -side top
         match_linux_wm [list label $id.out4f.l1 -text "output device 4:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-			match_linux_wm [list ttk::combobox $id.out4f.x1 \
-				-state readonly \
-				-values $midi_outdevlist]
-			$id.out4f.x1 current 3
-		} else {
-		    button $id.out4f.x1 -text [lindex $midi_outdevlist $midi_outdev4] \
-		        -command [list midi_popup $id $id.out4f.x1 \
-				midi_outdev4 $midi_outdevlist]
-		}
+	    match_linux_wm [list button $id.out4f.x1 -text [lindex $midi_outdevlist $midi_outdev4] \
+	        -command [list midi_popup $id $id.out4f.x1 \
+			midi_outdev4 $midi_outdevlist]]
         pack $id.out4f.l1 $id.out4f.x1 -side left -pady 3
     }
 
@@ -6955,16 +6899,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 	if {$alsa == 0} {
 	    # input device 1
 	    match_linux_wm [list label $id.in1f.l1 -text "  input device 1:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-	    	match_linux_wm [list ttk::combobox $id.in1f.x1 \
-				-state readonly \
-		        $midi_indevlist]
-			$id.in1f.x1 current 0
-		} else {
-			button $id.in1f.x1 -text [lindex $midi_indevlist $midi_indev1] \
-		        -command [list midi_popup $id $id.in1f.x1 \
-				midi_indev1 $midi_indevlist]
-		}
+		match_linux_wm [list button $id.in1f.x1 -text [lindex $midi_indevlist $midi_indev1] \
+	        -command [list midi_popup $id $id.in1f.x1 \
+			midi_indev1 $midi_indevlist]]
 	    pack $id.in1f.l1 $id.in1f.x1 -side left -pady 3
 
         # input device 2
@@ -6972,16 +6909,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		    match_linux_wm [list frame $id.in2f]
 		    pack $id.in2f -side top
 		    match_linux_wm [list label $id.in2f.l1 -text "  input device 2:"]
-			if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-				match_linux_wm [list ttk::combobox $id.in2f.x1 \
-					-state readonly \
-				    $midi_indevlist]
-				$id.in2f.x1 current 1
-			} else {
-				button $id.in2f.x1 -text [lindex $midi_indevlist $midi_indev2] \
-				    -command [list midi_popup $id $id.in2f.x1 midi_indev2 \
-				        $midi_indevlist]
-			}
+			match_linux_wm [list button $id.in2f.x1 -text [lindex $midi_indevlist $midi_indev2] \
+			    -command [list midi_popup $id $id.in2f.x1 midi_indev2 \
+			        $midi_indevlist]]
 		    pack $id.in2f.l1 $id.in2f.x1 -side left -pady 3
 		}
 
@@ -6990,16 +6920,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		    match_linux_wm [list frame $id.in3f]
 		    pack $id.in3f -side top
 		    match_linux_wm [list label $id.in3f.l1 -text "  input device 3:"]
-			if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-				match_linux_wm [list ttk::combobox $id.in3f.x1 \
-					-state readonly \
-				    $midi_indevlist]
-				$id.in3f.x1 current 2
-			} else {
-				button $id.in3f.x1 -text [lindex $midi_indevlist $midi_indev3] \
-				    -command [list midi_popup $id $id.in3f.x1 midi_indev3 \
-				        $midi_indevlist]
-			}
+			match_linux_wm [list button $id.in3f.x1 -text [lindex $midi_indevlist $midi_indev3] \
+			    -command [list midi_popup $id $id.in3f.x1 midi_indev3 \
+			        $midi_indevlist]]
 		    pack $id.in3f.l1 $id.in3f.x1 -side left -pady 3
 		}
 
@@ -7008,17 +6931,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		    match_linux_wm [list frame $id.in4f]
 		    pack $id.in4f -side top
 		    match_linux_wm [list label $id.in4f.l1 -text "  input device 4:"]
-			if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-				match_linux_wm [list ttk::combobox $id.in4f.x1 \
-					-state readonly \
-				    $midi_indevlist]
-				$id.in4f.x1 current 3
-			} else {
-				button $id.in4f.x1 -text [lindex $midi_indevlist $midi_indev4] \
-				    -command [list midi_popup $id $id.in4f.x1 midi_indev4 \
-				        $midi_indevlist]
-			}
-
+			match_linux_wm [list button $id.in4f.x1 -text [lindex $midi_indevlist $midi_indev4] \
+			    -command [list midi_popup $id $id.in4f.x1 midi_indev4 \
+			        $midi_indevlist]]
 		    pack $id.in4f.l1 $id.in4f.x1 -side left -pady 3
 		}
 
@@ -7026,16 +6941,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		match_linux_wm [list frame $id.out1f]
 		pack $id.out1f -side top
 		match_linux_wm [list label $id.out1f.l1 -text "output device 1:"]
-		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-	    	match_linux_wm [list ttk::combobox $id.out1f.x1 \
-				-state readonly \
-		        $midi_outdevlist]
-			$id.out1f.x1 current 0
-		} else {
-			button $id.out1f.x1 -text [lindex $midi_outdevlist $midi_outdev1] \
-				-command [list midi_popup $id $id.out1f.x1 midi_outdev1 \
-				    $midi_outdevlist]
-		}
+		match_linux_wm [list button $id.out1f.x1 -text [lindex $midi_outdevlist $midi_outdev1] \
+			-command [list midi_popup $id $id.out1f.x1 midi_outdev1 \
+			    $midi_outdevlist]]
 		pack $id.out1f.l1 $id.out1f.x1 -side left -pady 3
 
 		# output device 2
@@ -7043,16 +6951,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		    match_linux_wm [list frame $id.out2f]
 		    pack $id.out2f -side top
 		    match_linux_wm [list label $id.out2f.l1 -text "output device 2:"]
-			if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-				match_linux_wm [list ttk::combobox $id.out2f.x1 \
-					-state readonly \
-				    $midi_outdevlist]
-				$id.out2f.x1 current 1
-			} else {
-				button $id.out2f.x1 -text [lindex $midi_outdevlist $midi_outdev2] \
-				    -command [list midi_popup $id $id.out2f.x1 \
-					midi_outdev2 $midi_outdevlist]
-			}
+			match_linux_wm [list button $id.out2f.x1 -text [lindex $midi_outdevlist $midi_outdev2] \
+			    -command [list midi_popup $id $id.out2f.x1 \
+				midi_outdev2 $midi_outdevlist]]
 		    pack $id.out2f.l1 $id.out2f.x1 -side left -pady 3
 		}
 
@@ -7061,16 +6962,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		    match_linux_wm [list frame $id.out3f]
 		    pack $id.out3f -side top
 		    match_linux_wm [list label $id.out3f.l1 -text "output device 3:"]
-			if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-				match_linux_wm [list ttk::combobox $id.out3f.x1 \
-					-state readonly \
-				    $midi_outdevlist]
-				$id.out3f.x1 current 2
-			} else {
-				button $id.out3f.x1 -text [lindex $midi_outdevlist $midi_outdev3] \
-				    -command [list midi_popup $id $id.out3f.x1 \
-					midi_outdev3 $midi_outdevlist]
-			}
+			match_linux_wm [list button $id.out3f.x1 -text [lindex $midi_outdevlist $midi_outdev3] \
+			    -command [list midi_popup $id $id.out3f.x1 \
+				midi_outdev3 $midi_outdevlist]]
 		    pack $id.out3f.l1 $id.out3f.x1 -side left -pady 3
 		}
 
@@ -7079,16 +6973,9 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
 		    match_linux_wm [list frame $id.out4f]
 		    pack $id.out4f -side top
 		    match_linux_wm [list label $id.out4f.l1 -text "output device 4:"]
-			if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-				match_linux_wm [list ttk::combobox $id.out4f.x1 \
-					-state readonly \
-				    $midi_outdevlist]
-				$id.out4f.x1 current 3
-			} else {
-				button $id.out4f.x1 -text [lindex $midi_outdevlist $midi_outdev4] \
-				    -command [list midi_popup $id $id.out4f.x1 \
-					midi_outdev4 $midi_outdevlist]
-			}
+			match_linux_wm [list button $id.out4f.x1 -text [lindex $midi_outdevlist $midi_outdev4] \
+			    -command [list midi_popup $id $id.out4f.x1 \
+				midi_outdev4 $midi_outdevlist]]
 		    pack $id.out4f.l1 $id.out4f.x1 -side left -pady 3
 		}
 
