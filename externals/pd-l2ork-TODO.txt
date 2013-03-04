@@ -1,10 +1,11 @@
 Diff status between pd-l2ork externals source tree and main community pd svn
-AS OF Feb. 19, 2012
+AS OF Mar. 3, 2013
 
 DONE:
 creb
 flatgui (disabled, as all externals have various problems)
 gem2pdp
+moonlib
 mrpeach
 pdp
 pdp_opencv
