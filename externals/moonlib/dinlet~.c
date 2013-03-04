@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2002 Antoine Rousseau 
+Copyright (C) 2002 Antoine Rousseau
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -13,18 +13,18 @@ Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 /* this file is made from parts of m_object.c and g_io.c
 * 	it defines a signal inlet named dinlet~ which is the same as inlet~
-*  exepts you can give a default float value for the case none signal 
+*  exepts you can give a default float value for the case none signal
 *  is connected to this inlet~. */
 
 /***********************************************************************/
-/* CAUTION : 
-		You MUST fix a bug pd sources and recompile them in order to have 
+/* CAUTION :
+		You MUST fix a bug pd sources and recompile them in order to have
 	dinlet~ working !!
 
 	this function must be fixed in pd/m_obj.c:								  */
@@ -33,22 +33,22 @@ t_sample *obj_findsignalscalar(t_object *x, int m)
 {
     int n = 0,mbak=m;
     t_inlet *i;
-	 post("my obj_findsignalscalar");
+    post("my obj_findsignalscalar");
     if (x->ob_pd->c_firstin && x->ob_pd->c_floatsignalin)
     {
-    	if (!m--)
-	    return (x->ob_pd->c_floatsignalin > 0 ?
-	    	(t_sample *)(((char *)x) + x->ob_pd->c_floatsignalin) : 0);
-    	n++;
+        if (!m--)
+            return (x->ob_pd->c_floatsignalin > 0 ?
+                    (t_sample *)(((char *)x) + x->ob_pd->c_floatsignalin) : 0);
+        n++;
     }
     for (i = x->ob_inlet; i; i = i->i_next, m--)
-    	if (i->i_symfrom == &s_signal)
-    {
-    	/*if (m == 0)*/
-		if(n==mbak)
-	    return (&i->i_un.iu_floatsignalvalue);
-    	n++;
-    }
+        if (i->i_symfrom == &s_signal)
+        {
+            /*if (m == 0)*/
+            if(n==mbak)
+                return (&i->i_un.iu_floatsignalvalue);
+            n++;
+        }
     return (0);
 }
 #endif
@@ -85,11 +85,11 @@ struct _inlet
 static void dinlet_float(t_inlet *x, t_float f)
 {
     if (x->i_symfrom == &s_float)
-    	pd_vmess(x->i_dest, x->i_symto, "f", (t_floatarg)f);
+        pd_vmess(x->i_dest, x->i_symto, "f", (t_floatarg)f);
     else if (x->i_symfrom == &s_signal)
-    	x->i_un.iu_floatsignalvalue = f;
+        x->i_un.iu_floatsignalvalue = f;
     else if (!x->i_symfrom)
-    	pd_float(x->i_dest, f);
+        pd_float(x->i_dest, f);
     /*else inlet_wrong(x, &s_float);*/
 }
 /**************** from g_io.c : *********************************/
@@ -111,8 +111,8 @@ typedef struct _vinlet
     t_float *x_fill;
     t_float *x_read;
     int x_hop;
-    	/* if not reblocking, the next slot communicates the parent's inlet
-	signal from the prolog to the DSP routine: */
+    /* if not reblocking, the next slot communicates the parent's inlet
+    signal from the prolog to the DSP routine: */
     t_signal *x_directsignal;
 } t_vinlet;
 
@@ -125,7 +125,7 @@ static void *dinlet_newsig(t_floatarg f)
     x->x_endbuf = x->x_buf = (t_float *)getbytes(0);
     x->x_bufsize = 0;
     x->x_directsignal = 0;
-	 x->x_inlet->i_un.iu_floatsignalvalue=f;
+    x->x_inlet->i_un.iu_floatsignalvalue=f;
     outlet_new(&x->x_obj, &s_signal);
     return (x);
 }

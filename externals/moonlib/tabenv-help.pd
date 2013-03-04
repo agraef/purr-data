@@ -1,4 +1,4 @@
-#N canvas 0 31 534 360 10;
+#N canvas 1 88 534 360 10;
 #X text 22 332 (c) Antoine Rousseau 2001;
 #X obj 21 19 tabenv;
 #X text 78 21 A envelope follower for table (not in real-time).;
@@ -19,15 +19,15 @@
 #X text 47 86 (like;
 #X obj 90 86 tabplay~;
 #X text 79 38 (in fact it's a mix between tabplay and env~);
-#N canvas 502 150 494 344 META 0;
+#N canvas 379 147 494 344 META 0;
 #X text 12 25 LICENSE GPL v2;
 #X text 12 105 AUTHOR Antoine Rousseau;
 #X text 12 125 HELP_PATCH_AUTHORS Antoine Rousseau. "pd meta" information
 added by Jonathan Wilkes for Pd version 0.42.;
 #X text 12 45 DESCRIPTION dump the contents of a table as a list;
-#X text 12 5 KEYWORDS control array needs_work (example patch);
 #X text 12 65 INLET_0 set reset list;
 #X text 12 85 OUTLET_0 float;
+#X text 12 5 KEYWORDS control array;
 #X restore 471 332 pd META;
 #X connect 5 0 7 0;
 #X connect 6 0 7 0;

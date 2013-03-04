@@ -1,4 +1,4 @@
-#N canvas 0 31 644 383 10;
+#N canvas 1 88 644 383 10;
 #X obj 0 0 cnv 8 100 60 empty empty popen 10 20 1 18 -262144 -1109
 0;
 #X text 13 362 (c) Moonix: Antoine Rousseau 2003;
@@ -65,7 +65,7 @@ with pdsend/pdreceive.;
 #X text 46 297 You can use "at now" to lauch programs totally independantly
 from Pd:;
 #X msg 206 313 echo xclock -display 0:0 | at now;
-#N canvas 372 181 494 344 META 0;
+#N canvas 370 189 494 344 META 0;
 #X text 12 25 LICENSE GPL v2;
 #X text 12 125 AUTHOR Antoine Rousseau;
 #X text 12 145 HELP_PATCH_AUTHORS Antoine Rousseau. "pd meta" information
@@ -74,6 +74,6 @@ added by Jonathan Wilkes for Pd version 0.42.;
 #X text 12 65 INLET_0 anything;
 #X text 12 85 OUTLET_0;
 #X text 12 105 OUTLET_1;
-#X text 12 5 KEYWORDS control filesystem needs_work (outlets?);
+#X text 12 5 KEYWORDS control filesystem;
 #X restore 587 353 pd META;
 #X connect 19 0 17 0;

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2004 Antoine Rousseau 
+Copyright (C) 2004 Antoine Rousseau
 all material Copyright (c) 1997-1999 Miller Puckette.
 
 This library is free software; you can redistribute it and/or
@@ -14,7 +14,7 @@ Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -26,16 +26,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define UNITBIT32 1572864.  /* 3*2^19; bit 32 has place value 1 */
 
-    /* machine-dependent definitions.  These ifdefs really
-    should have been by CPU type and not by operating system! */
+/* machine-dependent definitions.  These ifdefs really
+should have been by CPU type and not by operating system! */
 #ifdef IRIX
-    /* big-endian.  Most significant byte is at low address in memory */
+/* big-endian.  Most significant byte is at low address in memory */
 #define HIOFFSET 0    /* word offset to find MSB */
 #define LOWOFFSET 1    /* word offset to find LSB */
 #define int32 long  /* a data type that has 32 bits */
 #else
 #ifdef _WIN32
-    /* little-endian; most significant byte is at highest address */
+/* little-endian; most significant byte is at highest address */
 #define HIOFFSET 1
 #define LOWOFFSET 0
 #define int32 long
@@ -56,17 +56,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <endian.h>
 
-#if !defined(__BYTE_ORDER) || !defined(__LITTLE_ENDIAN)                         
+#if !defined(__BYTE_ORDER) || !defined(__LITTLE_ENDIAN)
 #error No byte order defined                                                    
-#endif                                                                          
-                                                                                
-#if __BYTE_ORDER == __LITTLE_ENDIAN                                             
-#define HIOFFSET 1                                                              
-#define LOWOFFSET 0                                                             
-#else                                                                           
-#define HIOFFSET 0    /* word offset to find MSB */                             
-#define LOWOFFSET 1    /* word offset to find LSB */                            
-#endif /* __BYTE_ORDER */                                                       
+#endif
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define HIOFFSET 1
+#define LOWOFFSET 0
+#else
+#define HIOFFSET 0    /* word offset to find MSB */
+#define LOWOFFSET 1    /* word offset to find LSB */
+#endif /* __BYTE_ORDER */
 
 #include <sys/types.h>
 #define int32 int32_t
@@ -96,9 +96,9 @@ static float ssaw_array[1002];
 
 typedef struct _ssaw
 {
-	t_object x_obj;
+    t_object x_obj;
     //from phasor~:
-	double x_phase;
+    double x_phase;
     float x_conv;
     float x_f;	    /* scalar frequency */
     float x_band;	/* band limit (Hertz)*/
@@ -126,7 +126,7 @@ static t_int *ssaw_perform(t_int *w)
     union tabfudge tf;
     int normhipart;
     float conv = x->x_conv;
-	float band=x->x_band*.33;
+    float band=x->x_band*.33;
     float *buf = ssaw_array;
 
     tf.tf_d = UNITBIT32;
@@ -134,41 +134,45 @@ static t_int *ssaw_perform(t_int *w)
     tf.tf_d = dphase;
 
     for (i = 0; i < n; i++)
-    //while (n--)
+        //while (n--)
     {
-		float phase,band2,findex /*= *in++*/;
-		int index /*= findex*/;
-		float frac,  a,  b,  c,  d, cminusb, *fp;
-		
-    	tf.tf_i[HIOFFSET] = normhipart;
-    	band2=abs(*in);
-		if(band2>999999) band2=999999; else if(band2<1) band2=1;
-		band2=band/band2;
-		dphase += *in++ * conv;
-		/**out++*/phase = (tf.tf_d - UNITBIT32)-0.5;
-		tf.tf_d = dphase;
+        float phase,band2,findex /*= *in++*/;
+        int index /*= findex*/;
+        float frac,  a,  b,  c,  d, cminusb, *fp;
 
-		findex=phase*band2;
-		if(findex>0.5) findex=0.5; else if(findex<-0.5) findex=-0.5;
+        tf.tf_i[HIOFFSET] = normhipart;
+        band2=abs(*in);
+        if(band2>999999) band2=999999;
+        else if(band2<1) band2=1;
+        band2=band/band2;
+        dphase += *in++ * conv;
+        /**out++*/
+        phase = (tf.tf_d - UNITBIT32)-0.5;
+        tf.tf_d = dphase;
 
-		/*findex=findex*1000+501;
-		index=findex;*/
-		/*if (index < 1)
-		    index = 1, frac = 0;
-		else if (index > maxindex)
-		    index = maxindex, frac = 1;
-		else*/ frac = findex - index;
-		/*fp = buf + index;
-		a = fp[-1];
-		b = fp[0];
-		c = fp[1];
-		d = fp[2];
-		cminusb = c-b;
-		*out++ = 0.5+ phase - (
-				 b + frac * ( cminusb - 0.1666667f * (1.-frac) * (
-				(d - a - 3.0f * cminusb) * frac + (d + 2.0f*a - 3.0f*b))) 
-				);*/
-		*out++ = 0.5+ phase - buf[(int)(findex*1000+501)];
+        findex=phase*band2;
+        if(findex>0.5) findex=0.5;
+        else if(findex<-0.5) findex=-0.5;
+
+        /*findex=findex*1000+501;
+        index=findex;*/
+        /*if (index < 1)
+            index = 1, frac = 0;
+        else if (index > maxindex)
+            index = maxindex, frac = 1;
+        else*/
+        frac = findex - index;
+        /*fp = buf + index;
+        a = fp[-1];
+        b = fp[0];
+        c = fp[1];
+        d = fp[2];
+        cminusb = c-b;
+        *out++ = 0.5+ phase - (
+        		 b + frac * ( cminusb - 0.1666667f * (1.-frac) * (
+        		(d - a - 3.0f * cminusb) * frac + (d + 2.0f*a - 3.0f*b)))
+        		);*/
+        *out++ = 0.5+ phase - buf[(int)(findex*1000+501)];
     }
 
     tf.tf_i[HIOFFSET] = normhipart;
@@ -189,25 +193,26 @@ static void ssaw_ft1(t_ssaw *x, t_float f)
 
 static void ssaw_initarray(void)
 {
-	int i;
-	float j;
+    int i;
+    float j;
 
-	for(i=0;i<1002;i++){
-		j=(i-1)*M_PI/1000.0; //period 2000 sample, 1 sample back phase
-		ssaw_array[i]= 0.57692* 
-			(-1*cos(j) + 0.333333*cos(j*3.0) -0.2* cos(j*5.0));
-	}
+    for(i=0; i<1002; i++)
+    {
+        j=(i-1)*M_PI/1000.0; //period 2000 sample, 1 sample back phase
+        ssaw_array[i]= 0.57692*
+                       (-1*cos(j) + 0.333333*cos(j*3.0) -0.2* cos(j*5.0));
+    }
 }
 
 void ssaw_tilde_setup(void)
 {
     ssaw_class = class_new(gensym("ssaw~"), (t_newmethod)ssaw_new, 0,
-    	sizeof(t_ssaw), 0, A_DEFFLOAT, 0);
+                           sizeof(t_ssaw), 0, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(ssaw_class, t_ssaw, x_f);
     class_addmethod(ssaw_class, (t_method)ssaw_dsp, gensym("dsp"), 0);
     class_addmethod(ssaw_class, (t_method)ssaw_ft1,
-    	gensym("ft1"), A_FLOAT, 0);
-	ssaw_initarray();
+                    gensym("ft1"), A_FLOAT, 0);
+    ssaw_initarray();
 
 }
 

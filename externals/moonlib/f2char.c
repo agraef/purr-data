@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2002 Antoine Rousseau 
+Copyright (C) 2002 Antoine Rousseau
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -13,7 +13,7 @@ Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 typedef struct _f2char
 {
     t_object x_obj;
-}t_f2char;
+} t_f2char;
 
 t_class *f2char_class;
 
@@ -30,24 +30,24 @@ void f2char_setup(void);
 
 static void f2char_float(t_f2char *x,t_floatarg f)
 {
-	char s[2]={0};
-	
-	s[0]=(char)f;
-	outlet_symbol(x->x_obj.ob_outlet,gensym(s));
+    char s[2]= {0};
+
+    s[0]=(char)f;
+    outlet_symbol(x->x_obj.ob_outlet,gensym(s));
 }
 
 static void *f2char_new(void)
-{  
-	t_f2char *x = (t_f2char *)pd_new(f2char_class);
-	outlet_new(&x->x_obj,&s_symbol);
-	return (void *)x;
+{
+    t_f2char *x = (t_f2char *)pd_new(f2char_class);
+    outlet_new(&x->x_obj,&s_symbol);
+    return (void *)x;
 }
 
 void f2char_setup(void)
 {
-	f2char_class = class_new(gensym("f2char"),(t_newmethod)f2char_new, 
-		0, sizeof(t_f2char), 0, 0);
+    f2char_class = class_new(gensym("f2char"),(t_newmethod)f2char_new,
+                             0, sizeof(t_f2char), 0, 0);
 
-	class_addfloat(f2char_class, f2char_float);
+    class_addfloat(f2char_class, f2char_float);
 }
 
