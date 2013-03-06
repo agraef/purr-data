@@ -402,7 +402,6 @@ void magicGlass_free(t_magicGlass *x)
     x->x_dspOn = 0;
     clock_free(x->x_clearClock);
 	clock_free(x->x_flashClock);
-	x = NULL;
 }
 
 void magicGlass_setup(void)
