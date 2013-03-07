@@ -14,8 +14,9 @@ then
 	echo "     -u    full installer for end-users without sudo"
 	echo
 	echo "   Options for devs only (please ignore):"
-	echo "     -b    build a deb (incremental)"
+	echo "     -b    build a deb (incremental, all platforms)"
 	echo "     -B    build a deb (complete recompile)"
+	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -f    full installer (incremental)"
 	echo "     -F    full installer (complete recompile)"
 	echo "     -w    do not install cwiid system-wide"
@@ -29,10 +30,11 @@ core=0
 dev=0
 full=0
 no_cwiid=0
+rpi=0
 
 inst_dir=/usr/local
 
-while getopts ":abBcdefFuw" Option
+while getopts ":abBcdefFRuw" Option
 do case $Option in
 		a)		addon=1;;
 
@@ -41,6 +43,10 @@ do case $Option in
 
 		B)		deb=2
 				inst_dir=/usr;;
+
+		R)		deb=2
+				inst_dir=/usr
+				rpi=1;;
 
 		c)		core=1;;
 
@@ -224,6 +230,15 @@ then
 	then
 		make distclean
 		rm -rf build/
+	fi
+	if [ $rpi -eq 0 ]
+	then
+		echo "installing desktop version..."
+		cp -f debian/control.desktop debian/control
+	else
+		echo "installing raspbian version..."
+		cp -f debian/control.raspbian debian/control
+		cat ../../externals/OSCx/src/Makefile | sed -e s/-lpd//g > ../../externals/OSCx/src/Makefile
 	fi
 	make install prefix=$inst_dir
 	echo "copying l2ork-specific externals..."
