@@ -1,0 +1,32 @@
+Source: pd-l2ork
+Version: 20121108
+Section: sound
+Priority: optional
+Maintainer: Ivica Ico Bukvic <ico@vt.edu>
+Homepage: http://puredata.info
+Package: pd-l2ork
+Architecture: i386
+Depends: xterm | x-terminal-emulator, ttf-dejavu-core, tcl, tk, libasound2, libjack-jackd2-0, libbluetooth3, libgl1-mesa-glx, libglu1-mesa, libftgl2, libgmerlin0, libgmerlin-avdec1, libavifile-0.7c2, libmpeg3-1, libquicktime2, libv4l-0, libraw1394-11, libdc1394-22, libfftw3-3, libvorbis0a, libmp3lame0, libspeex1, libgsl0ldbl, python, libsmpeg0, libjpeg62, tkpng, libflite1, libgsm1, libxv1
+Provides: pd-l2ork
+Recommends: xdg-utils, pulseaudio-utils, tap-plugins, ladspa-foo-plugins, invada-studio-plugins-ladspa, blepvco, swh-plugins, mcp-plugins, cmt, blop, slv2-jack, omins, ubuntustudio-audio-plugins, rev-plugins, libslv2-dev, dssi-utils, vco-plugins, wah-plugins, fil-plugins, mda-lv2
+Conflicts: puredata-utils, cyclist
+Replaces: pd-l2ork
+Description: L2Ork fork of Pure Data (a.k.a. pd-l2ork) with patches and a
+ large collection of externals Pd (aka Pure Data) is a real-time graphical
+ programming environment for audio, video, and graphical processing. It is the
+ third major branch of the family of patcher programming languages known as Max
+ (Max/FTS, ISPW Max, Max/MSP, jMax, etc.) originally developed by Miller
+ Puckette and company at IRCAM. The core of Pd is written and maintained by
+ Miller Puckette and includes the work of many developers, making the whole
+ package very much a community effort.
+ .
+ Pd was created to explore ideas of how to further refine the Max paradigm
+ with the core ideas of allowing data to be treated in a more open-ended way
+ and opening it up to applications outside of audio and MIDI, such as graphics
+ and video.
+ .
+ This distribution of Pd is a Linux Laptop Orchestra (L2Ork) variation of
+ Pd-extended. It includes a wide array of libraries that allow you to work with
+ HIDs, video, OpenGL 3D graphics, and more. It also provides additional
+ usability improvements on top of base Pd-extended package. For additional
+ info on L2Ork visit http://l2ork.music.vt.edu. 
