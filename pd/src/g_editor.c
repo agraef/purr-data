@@ -729,7 +729,7 @@ void *canvas_undo_set_cut(t_canvas *x, int mode)
     }
     else if (mode == UCUT_CUT)
     {
-        buf->u_objectbuf = 0;
+        buf->u_objectbuf = canvas_docopy(x);
     }
     else if (mode == UCUT_CLEAR)
     {
@@ -745,7 +745,7 @@ void *canvas_undo_set_cut(t_canvas *x, int mode)
 			{
 				if (glist_isselected(x, y)) {
 					buf->p_a[i] = j;
-					i++; 
+					i++;
 				}
 				j++;
 			}
@@ -768,7 +768,7 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 		//fprintf(stderr,"UNDO_UNDO\n");
         if (mode == UCUT_CUT) {
 			//fprintf(stderr, "UCUT_CUT\n");
-            canvas_dopaste(x, copy_binbuf);
+            canvas_dopaste(x, buf->u_objectbuf);
 		}
         else if (mode == UCUT_CLEAR) {
 			//fprintf(stderr, "UCUT_CLEAR\n");
