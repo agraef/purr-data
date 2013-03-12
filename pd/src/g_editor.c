@@ -2011,10 +2011,10 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 	//fprintf(stderr,"canvas_vis .x%lx %f\n", (t_int)x, f);
     char buf[30];
     int flag = (f != 0);
-    if (x != glist_getcanvas(x) && glist_isvisible(glist_getcanvas(x))) {
-        bug("canvas_vis");
+    //if (x != glist_getcanvas(x) && glist_isvisible(glist_getcanvas(x))) {
+        //bug("canvas_vis");
 		//fprintf(stderr,"canvas_vis .x%lx .x%lx %f\n", (t_int)x, (t_int)glist_getcanvas(x), f);
-	}
+	//}
     if (flag)
     {
         /* post("havewindow %d, isgraph %d, isvisible %d  editor %d",
