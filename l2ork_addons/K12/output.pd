@@ -1,4 +1,4 @@
-#N canvas 351 176 512 456 10;
+#N canvas 656 170 512 456 10;
 #X obj 129 189 ggee/image @pd_extra/K12/objects/audio_off.png;
 #X obj -53 26 inlet~;
 #N canvas 316 207 286 259 dsp 0;
@@ -30,7 +30,7 @@
 #X obj -11 416 *~ 0.5;
 #X obj -54 416 *~ 0.5;
 #X obj 31 120 preset_node k12;
-#X obj 133 192 vsl 34 44 0 100 0 0 pd-l2ork-k12_main_out empty empty
+#X obj 133 192 vsl 34 44 0 100 0 0 pd-l2ork-k12_main_out null empty
 0 -9 0 10 -262144 -1 -1 0 1;
 #N canvas 0 0 271 201 level 0;
 #X obj 49 8 inlet~;
@@ -93,7 +93,6 @@
 #X connect 12 0 11 0;
 #X connect 13 0 11 1;
 #X connect 14 0 15 0;
-#X connect 15 0 14 0;
 #X connect 15 0 16 1;
 #X connect 15 0 44 0;
 #X connect 16 0 5 0;
