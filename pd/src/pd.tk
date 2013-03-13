@@ -4586,7 +4586,7 @@ proc iemgui_preset_col {id presetcol} {
     if { [eval concat $$var_iemgui_l2_f1_b0] == 0 } { set $var_iemgui_bcol $presetcol }
     if { [eval concat $$var_iemgui_l2_f1_b0] == 1 } { set $var_iemgui_fcol $presetcol }
     if { [eval concat $$var_iemgui_l2_f1_b0] == 2 } { set $var_iemgui_lcol $presetcol }
-    iemgui_set_col_example $id
+    catch { iemgui_set_col_example $id }
 }
 
 proc iemgui_choose_col_bkfrlb {id} {
@@ -4669,7 +4669,7 @@ proc iemgui_choose_col_bkfrlb {id} {
 		}
 	}
 
-    iemgui_set_col_example $id
+    catch { iemgui_set_col_example $id }
 }
 
 proc iemgui_lilo {id} {
