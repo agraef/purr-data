@@ -797,13 +797,21 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                     //    error("message stack overflow");
                     //    goto broken;
                     //}
-                    for (i=0; i<argc; i++)
-                    {
+					if (0<argc) {
+		                for (i=0; i<argc; i++)
+		                {
+							//fprintf(stderr, "@: %d %d\n", i, maxnargs);
+		                    *msp++=argv[i];
+		                    nargs++;
+							ac--;
+		                }
+					} else {
 						//fprintf(stderr, "@: %d %d\n", i, maxnargs);
-                        *msp++=argv[i];
-                        nargs++;
-						ac--;
-                    }
+						// we use this when $@ has no arguments (e.g. receives a bang) and convert it to 0 just like we do with $n that has no argument associated with it
+	                    SETFLOAT(msp, 0);
+	                    nargs++;
+						msp++;
+					}
                     msp--;
                     nargs--;
 					//fprintf(stderr,"x->b_n=%d ac=%d maxnargs=%d nargs=%d argc=%d\n", x->b_n, ac, maxnargs, nargs, argc);
