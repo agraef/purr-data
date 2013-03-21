@@ -669,7 +669,7 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
     int narg = 0;
     t_pd *bonzo;
     
-	//fprinf(stderr,"\nstart %s %d\n", s->s_name, c->c_nmethod);
+	//fprintf(stderr,"\nstart %s %d\n", s->s_name, c->c_nmethod);
 
         /* check for messages that are handled by fixed slots in the class
         structure.  We don't catch "pointer" though so that sending "pointer"
