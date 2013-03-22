@@ -1078,6 +1078,8 @@ static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
         else if (u->u_type == TR_SYMBOL)
             outlet_symbol(u->u_outlet,
                 (argc ? atom_getsymbol(argv) : &s_symbol));
+        else if (u->u_type == TR_ANYTHING)
+            outlet_anything(u->u_outlet, s, argc, argv);
         else if (u->u_type == TR_POINTER)
         {
             if (!argc || argv->a_type != TR_POINTER)
@@ -1130,7 +1132,7 @@ static void trigger_pointer(t_trigger *x, t_gpointer *gp)
 {
     t_atom at;
     SETPOINTER(&at, gp);
-    trigger_list(x, &s_pointer, 1, &at);
+    trigger_list(x, &s_list, 1, &at);
 }
 
 static void trigger_float(t_trigger *x, t_float f)
