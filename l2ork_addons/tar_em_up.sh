@@ -8,18 +8,16 @@ then
 	echo "   Usage: ./tar_em_up.sh -option1 -option2 ..."
 	echo "   Options:"
 	echo "     -a    l2ork addon to the dev package"
+	echo "     -b    build a deb (incremental, all platforms)"
+	echo "     -B    build a deb (complete recompile)"
 	echo "     -c    core Pd"
 	echo "     -d    whole dev folder"
 	echo "     -e    everything"
-	echo "     -u    full installer for end-users without sudo"
-	echo
-	echo "   Options for devs only (please ignore):"
-	echo "     -b    build a deb (incremental, all platforms)"
-	echo "     -B    build a deb (complete recompile)"
-	echo "     -R    build a Raspberry Pi deb (complete recompile)"
 	echo "     -f    full installer (incremental)"
 	echo "     -F    full installer (complete recompile)"
-	echo "     -w    do not install cwiid system-wide"
+	echo "     -R    build a Raspberry Pi deb (complete recompile)"
+	echo "     -r    build a Raspberry Pi deb (incremental)"
+	echo "     -w    install custom version of cwiid system-wide"
 	echo
 	exit 1
 fi
@@ -29,7 +27,7 @@ deb=0
 core=0
 dev=0
 full=0
-no_cwiid=0
+sys_cwiid=0
 rpi=0
 
 inst_dir=/usr/local
@@ -48,6 +46,10 @@ do case $Option in
 				inst_dir=/usr
 				rpi=1;;
 
+		r)		deb=1
+				inst_dir=/usr
+				rpi=1;;
+
 		c)		core=1;;
 
 		d)		dev=1;;
@@ -61,18 +63,7 @@ do case $Option in
 
 		F)		full=2;;
 
-		u)		full=3
-				echo "
-You've selected sudo-less version of the installer. Please note that this option, while not requiring sudo, may generate broken binaries if you are running other versions of pd on your system. To avoid this, you have two options:
-
-1) Uninstall other versions of the software
-
-2) Use -f or -F options for the devs instead that automatically guide you through sudo options and install Pd-l2ork in the /usr/local/ folder. Please note that you need to have sudo enabled on your system in order to use this option. You can use -f option if you've only made small changes to your build environment but have already built most of the binaries. This will be a lot faster. Otherwise use option -F.
-
-Press any key to continue or CTRL+C to cancel install..."
-				read dummy
-				;;
-		w)		no_cwiid=1
+		w)		sys_cwiid=1
 				;;
 
 		*)		echo "Error: unknown option";;
@@ -170,7 +161,7 @@ then
 	cp -f ../l2ork_addons/doc/Makefile .
 	cd ..
 
-	if [ $full -eq 2 -o $full -eq 3 -o $deb -eq 2 ]
+	if [ $full -eq 2 -o $deb -eq 2 ]
 	then
 	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
 	#	read dummy
@@ -185,7 +176,10 @@ then
 			# we have disabled system-wide install because as of 23-03-2013
 			# we now statically link disis_wiimote against custom L2Ork version
 			# of the cwiid library
-			# sudo make install
+			if [ $sys_cwiid -eq 1 ]
+			then
+				sudo make install
+			fi
 			cd ../../
 	#	fi
 		# clean files that may remain stuck even after doing global make clean (if any)
