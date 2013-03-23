@@ -1,13 +1,23 @@
 [Desktop Entry]
-Name=pd-l2ork
+Name=Pd-L2Ork
 Comment=L2Ork Iteration of Pure-Data Interactive DSP Environment
-Exec=pd-l2ork -rt -jack -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi %U
+Exec=pd-l2ork -rt -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi %U
 Terminal=false
 Type=Application
 Icon=pd-l2ork.xpm
-X-Ayatana-Desktop-Shortcuts=ForceQuit
+X-Ayatana-Desktop-Shortcuts=ALSA;JACK;ForceQuit
 Categories=AudioVideo;Audio;
 MimeType=application/x-puredata;
+
+[ALSA Shortcut Group]
+Name=ALSA
+Exec=pd-l2ork -rt -alsa -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi %U
+TargetEnvironment=Unity
+
+[JACK Shortcut Group]
+Name=JACK
+Exec=pd-l2ork -rt -jack -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi %U
+TargetEnvironment=Unity
 
 [ForceQuit Shortcut Group]
 Name=Force Quit Pd-L2Ork
