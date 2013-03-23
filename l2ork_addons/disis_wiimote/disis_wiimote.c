@@ -107,7 +107,7 @@
 #include <m_pd.h>
 #include <math.h>
 #include <pthread.h>
-#include <cwiid.h>
+#include "cwiid.h"
 #define PI	3.14159265358979323
 #define WIIMOTE_BALANCE_CALWEIGHT 17.0f
 #define HAVE_CWIID_MOTIONPLUS_LOWSPEED

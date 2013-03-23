@@ -4,11 +4,18 @@ SYM=disis_wiimote
 # If you want to use a customized Pd, then define a $PD_PATH variable.
 # Otherwise, the Pd must be installed on the system
 PD_PATH=../../pd
+# IMPORTANT! disis_wiimote requires a custom L2Ork version of cwiid library
+# For the time being we statically link to a L2Ork version of cwiid library
+# Change this paths if you are compiling disis_wiimote separately from
+# the rest of the pd-l2ork source to reflect the correct location of the
+# custom L2Ork version of the libcwiid
+CWIID_PATH=../cwiid
 
 ######################################################
 # You shouldn't need to change anything beyond here! #
 ######################################################
 
+CWIID_LIB_STATIC= $(CWIID_PATH)/libcwiid/libcwiid.a
 
 ifdef PD_PATH
 PD_INCLUDE := -I$(PD_PATH)/src
@@ -20,10 +27,10 @@ PD_EXTRA_PATH := /usr/local/lib/pd/extra
 PD_DOC_PATH := /usr/local/lib/pd/doc
 endif
 
-# we just use the cwiid that comes with ubuntu/hardy
-# although the code still uses the cwiid_internal.h from the 
-# supplied source		
-LIBS = -lcwiid -lbluetooth -lpthread
+# we use custom version of cwiid so for the time being we statically link to it	
+LIBS = $(CWIID_LIB_STATIC) -lbluetooth -lpthread
+# later
+#LIBS = -lcwiid -lbluetooth -lpthread
 #LIBS = $(CWIID_PATH)/libcwiid/libcwiid.a -lrt -lbluetooth -lpthread
 
 

@@ -170,21 +170,24 @@ then
 	cp -f ../l2ork_addons/doc/Makefile .
 	cd ..
 
-	if [ $full -eq 2 -o $deb -eq 2 ]
+	if [ $full -eq 2 -o $full -eq 3 -o $deb -eq 2 ]
 	then
 	#	echo "Since we are doing a complete recompile we are assuming we will need to install l2ork version of the cwiid library. You will need to remove any existing cwiid libraries manually as they will clash with this one. L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... You will also have to enter sudo password to install these... Press any key to continue or CTRL+C to cancel install..."
 	#	read dummy
-		if [ $no_cwiid -eq 0 ]
-		then
+	#	if [ $no_cwiid -eq 0 ]
+	#	then
 			cd l2ork_addons/cwiid/
 			# install cwiid
 			aclocal
 			autoconf
 			./configure
 			make
-			sudo make install
+			# we have disabled system-wide install because as of 23-03-2013
+			# we now statically link disis_wiimote against custom L2Ork version
+			# of the cwiid library
+			# sudo make install
 			cd ../../
-		fi
+	#	fi
 		# clean files that may remain stuck even after doing global make clean (if any)
 		cd externals/miXed
 		make clean
@@ -198,29 +201,29 @@ then
 		rm Gem.pd_linux
 		aclocal
 		./autogen.sh
-	elif [ $full -eq 3 ]
-	then
-		echo "Since pd-l2ork relies on a unique version of cwiid library, we will need to install it to make disis_wiimote external work properly. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... No worries though, L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. To install cwiid library go to <pd-l2ork-root-git-folder>/l2ork-addons/cwiid/ folder and install it using the usual:"
-		echo
-		echo "./configure"
-		echo "make"
-		echo "sudo make install"
-		echo
-		echo "As an alternative, you can also use the -f or -F options instead of an -u option to have this performed automatically. Please note that options -f and -F require that your system has sudo enabled. Press any key to continue or CTRL+C to cancel install..."
-		read dummy
+	#elif [ $full -eq 3 ]
+	#then
+	#	echo "Since pd-l2ork relies on a unique version of cwiid library, we will need to install it to make disis_wiimote external work properly. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... No worries though, L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. To install cwiid library go to <pd-l2ork-root-git-folder>/l2ork-addons/cwiid/ folder and install it using the usual:"
+	#	echo
+	#	echo "./configure"
+	#	echo "make"
+	#	echo "sudo make install"
+	#	echo
+	#	echo "As an alternative, you can also use the -f or -F options instead of an -u option to have this performed automatically. Please note that options -f and -F require that your system has sudo enabled. Press any key to continue or CTRL+C to cancel install..."
+	#	read dummy
 		# clean files that may remain stuck even after doing global make clean (if any)
-		cd externals/miXed
-		make clean
-		cd ../../Gem/src/
-		make distclean
-		rm -rf ./.libs
-		rm -rf ./*/.libs
-		cd ../
-		make distclean
-		rm gemglutwindow.pd_linux
-		rm Gem.pd_linux
-		aclocal
-		./autogen.sh
+	#	cd externals/miXed
+	#	make clean
+	#	cd ../../Gem/src/
+	#	make distclean
+	#	rm -rf ./.libs
+	#	rm -rf ./*/.libs
+	#	cd ../
+	#	make distclean
+	#	rm gemglutwindow.pd_linux
+	#	rm Gem.pd_linux
+	#	aclocal
+	#	./autogen.sh
 	else
 		cd Gem/
 	fi
