@@ -100,6 +100,11 @@
 //	* Cleaned up pd-l2ork console messages
 //	* Improved disconnect logic to allow re-enabling of settings upon reconnection
 
+//  v1.0.3 Changelog:
+//  2013-03-23 DISIS (Ivica Ico Bukvic <ico@vt.edu)
+//  http://disis.music.vt.edu
+//	* Made sure that the involuntary disconnection detection (e.g. due to low battery) does get reported by showing appropriate connection status from the rightmost outlet
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/select.h>
@@ -832,7 +837,7 @@ static void pd_cwiid_callback(cwiid_wiimote_t *wiimote, int mesg_count,
 					break;
 				case CWIID_MESG_ERROR:
 					post("Erroneous data packet received, likely due to lost connection");
-					//pd_cwiid_doDisconnect(x);
+					pd_cwiid_status(x);
 					break;
 				default:
 					break;
@@ -1197,7 +1202,7 @@ static void *pd_cwiid_new(t_symbol* s, int argc, t_atom *argv)
 {
 	int i;
 
-	post("DISIS threaded implementation of wiimote object v.1.0.2");
+	post("DISIS threaded implementation of wiimote object v.1.0.3");
 	t_wiimote *x = (t_wiimote *)pd_new(pd_cwiid_class);
 	
 	// create outlets:
