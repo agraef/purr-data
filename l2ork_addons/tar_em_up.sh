@@ -32,7 +32,7 @@ rpi=0
 
 inst_dir=/usr/local
 
-while getopts ":abBcdefFRuw" Option
+while getopts ":abBcdefFRruw" Option
 do case $Option in
 		a)		addon=1;;
 
@@ -41,14 +41,6 @@ do case $Option in
 
 		B)		deb=2
 				inst_dir=/usr;;
-
-		R)		deb=2
-				inst_dir=/usr
-				rpi=1;;
-
-		r)		deb=1
-				inst_dir=/usr
-				rpi=1;;
 
 		c)		core=1;;
 
@@ -62,6 +54,14 @@ do case $Option in
 		f)		full=1;;
 
 		F)		full=2;;
+
+		R)		deb=2
+				inst_dir=/usr
+				rpi=1;;
+
+		r)		deb=1
+				inst_dir=/usr
+				rpi=1;;
 
 		w)		sys_cwiid=1
 				;;
