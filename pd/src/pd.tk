@@ -886,7 +886,7 @@ wm title . "Pure-Data L2Ork"
 # initial location of Pd window (+x+y)
 wm geometry . +10+35
 catch {
-	set appicon [image create photo -format gif -file "$pd_guidir/pd-48x48.gif"]
+	set appicon [image create photo -format gif -file "$pd_guidir/pd-l2ork.gif"]
 	wm iconphoto . -default $appicon
 }
 . configure -menu .mbar -width 200 -height 150
