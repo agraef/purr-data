@@ -62,7 +62,6 @@ void binbuf_free(t_binbuf *x)
 {
     t_freebytes(x->b_vec, x->b_n * sizeof(*x->b_vec));
     t_freebytes(x,  sizeof(*x));
-	x = NULL;
 }
 
 t_binbuf *binbuf_duplicate(t_binbuf *y)

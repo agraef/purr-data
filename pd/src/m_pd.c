@@ -49,7 +49,6 @@ void pd_free(t_pd *x)
             binbuf_free(((t_object *)x)->ob_binbuf);
     }
     if (c->c_size) t_freebytes(x, c->c_size);
-	x = NULL;
 }
 
 void gobj_save(t_gobj *x, t_binbuf *b)
