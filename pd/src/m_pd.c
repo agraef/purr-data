@@ -302,7 +302,7 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
         t_bindelem *e, *e2;
         int warned = 0;
         for (e = b->b_list; e; e = e->e_next)
-            if (*e->e_who == c)
+            if (e->e_who != NULL && *e->e_who == c)
         {
             if (x && !warned)
             {
