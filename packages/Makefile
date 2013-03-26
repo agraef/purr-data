@@ -265,9 +265,9 @@ endif
 # links to keep the old-style placement for Gem examples in the Help Browser
 ifneq ($(OS_NAME),windows)
 	install -d $(DESTDIR)$(examplesdir)
-	ln -s ../../extra/$(GEM_NAME)/examples $(DESTDIR)$(examplesdir)/$(GEM_NAME)
+	ln -sf ../../extra/$(GEM_NAME)/examples $(DESTDIR)$(examplesdir)/$(GEM_NAME)
 	install -d  $(DESTDIR)$(manualsdir)
-	ln -s ../../extra/$(GEM_NAME)/manual $(DESTDIR)$(manualsdir)/$(GEM_NAME)
+	ln -sf ../../extra/$(GEM_NAME)/manual $(DESTDIR)$(manualsdir)/$(GEM_NAME)
 endif
 
 
