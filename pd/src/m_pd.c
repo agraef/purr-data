@@ -68,6 +68,7 @@ typedef struct _bindelem
 {
     t_pd *e_who;
     struct _bindelem *e_next;
+	int e_delayed_free;
 } t_bindelem;
 
 typedef struct _bindlist
@@ -82,7 +83,7 @@ static void bindlist_cleanup(t_bindlist *x)
 {
 	//fprintf(stderr,"bindlist_cleanup\n");
 	t_bindelem *e, *e2;
-    if (x->b_list->e_who == NULL)
+    if (x->b_list->e_delayed_free == 1)
     {
 		e = x->b_list;
         x->b_list = e->e_next;
@@ -90,7 +91,7 @@ static void bindlist_cleanup(t_bindlist *x)
 		//fprintf(stderr,"success B1a\n");
     }
     for (e = x->b_list; e2 = e->e_next; e = e2)
-        if (e2->e_who == NULL)
+        if (e2->e_delayed_free == 1)
     {
         e->e_next = e2->e_next;
         freebytes(e2, sizeof(t_bindelem));
@@ -197,6 +198,7 @@ void pd_bind(t_pd *x, t_symbol *s)
             t_bindelem *e = (t_bindelem *)getbytes(sizeof(t_bindelem));
             e->e_next = b->b_list;
             e->e_who = x;
+			e->e_delayed_free = 0;
             b->b_list = e;
         }
         else
@@ -208,8 +210,10 @@ void pd_bind(t_pd *x, t_symbol *s)
             b->b_list = e1;
             e1->e_who = x;
             e1->e_next = e2;
+			e1->e_delayed_free = 0;
             e2->e_who = s->s_thing;
             e2->e_next = 0;
+			e2->e_delayed_free = 0;
             s->s_thing = &b->b_pd;
         }
     }
@@ -247,7 +251,7 @@ void pd_unbind(t_pd *x, t_symbol *s)
         {
 			if (change_bindlist_via_graph) {
 				change_bindlist_via_graph++;
-				e->e_who = NULL;
+				e->e_delayed_free = 1;
 			} else {
             	b->b_list = e->e_next;
             	freebytes(e, sizeof(t_bindelem));
@@ -259,7 +263,7 @@ void pd_unbind(t_pd *x, t_symbol *s)
         {
 			if (change_bindlist_via_graph) {
 				change_bindlist_via_graph++;
-				e2->e_who = NULL;
+				e2->e_delayed_free = 0;
 			} else {
 		        e->e_next = e2->e_next;
 		        freebytes(e2, sizeof(t_bindelem));
@@ -301,16 +305,19 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
         t_bindelem *e, *e2;
         int warned = 0;
         for (e = b->b_list; e; e = e->e_next)
-            if (e->e_who != NULL && *e->e_who == c)
-        {
-            if (x && !warned)
-            {
-                zz();
-                post("warning: %s: multiply defined", s->s_name);
-                warned = 1;
-            }
-            x = e->e_who;
-        }
+		{
+            //if (e->e_who != NULL && *e->e_who == c)
+            if (e->e_delayed_free != 1 && *e->e_who == c)
+		    {
+		        if (x && !warned)
+		        {
+		            zz();
+		            post("warning: %s: multiply defined", s->s_name);
+		            warned = 1;
+		        }
+		        x = e->e_who;
+		    }
+		}
     }
     return x;
 }
