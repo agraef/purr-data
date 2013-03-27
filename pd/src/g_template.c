@@ -2146,8 +2146,8 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
 				 sys_hostfontsize(glist_getfont(glist)), sys_fontweight);
-        sys_vgui(" -tags .x%lx.x%lx.drawnumber%lx\n", 
-			glist_getcanvas(glist), glist, data);
+        sys_vgui(" -tags {.x%lx.x%lx.drawnumber%lx %lx}\n", 
+			glist_getcanvas(glist), glist, data, data);
     }
     else sys_vgui(".x%lx.c delete .x%lx.x%lx.drawnumber%lx\n", glist_getcanvas(glist), 
 		glist_getcanvas(glist), glist, data);
