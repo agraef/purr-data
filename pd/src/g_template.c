@@ -2325,9 +2325,365 @@ static void drawnumber_setup(void)
         sizeof(t_drawnumber), 0, A_GIMME, 0);
     class_setdrawcommand(drawnumber_class);
     class_addfloat(drawnumber_class, drawnumber_float);
-    class_addcreator((t_newmethod)drawnumber_new, gensym("drawsymbol"),
-        A_GIMME, 0);
     class_setparentwidget(drawnumber_class, &drawnumber_widgetbehavior);
+}
+
+/* ---------------------- drawsymbol -------------------------------- */
+
+t_class *drawsymbol_class;
+
+typedef struct _drawsymbol
+{
+    t_object x_obj;
+    t_fielddesc x_value;
+    t_fielddesc x_xloc;
+    t_fielddesc x_yloc;
+    t_fielddesc x_color;
+    t_fielddesc x_vis;
+	t_fielddesc x_fontsize;
+    t_symbol *x_label;
+    int x_flags;
+    t_canvas *x_canvas;
+} t_drawsymbol;
+
+static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
+{
+    t_drawsymbol *x = (t_drawsymbol *)pd_new(drawsymbol_class);
+    char *classname = classsym->s_name;
+    int flags = 0;
+    
+    if (classname[4] == 's')
+        flags |= DRAW_SYMBOL;
+    x->x_flags = flags;
+    fielddesc_setfloat_const(&x->x_vis, 1);
+    x->x_canvas = canvas_getcurrent();
+    while (1)
+    {
+        t_symbol *firstarg = atom_getsymbolarg(0, argc, argv);
+        if (!strcmp(firstarg->s_name, "-v") && argc > 1)
+        {
+            fielddesc_setfloatarg(&x->x_vis, 1, argv+1);
+            argc -= 2; argv += 2;
+        }
+        else break;
+    }
+    if (flags & DRAW_SYMBOL)
+    {
+        if (argc) fielddesc_setsymbolarg(&x->x_value, argc--, argv++);
+        else fielddesc_setsymbol_const(&x->x_value, &s_);
+    }
+    else
+    {
+        if (argc) fielddesc_setfloatarg(&x->x_value, argc--, argv++);
+        else fielddesc_setfloat_const(&x->x_value, 0);
+    }
+    if (argc) fielddesc_setfloatarg(&x->x_xloc, argc--, argv++);
+    else fielddesc_setfloat_const(&x->x_xloc, 0);
+    if (argc) fielddesc_setfloatarg(&x->x_yloc, argc--, argv++);
+    else fielddesc_setfloat_const(&x->x_yloc, 0);
+    if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
+    else fielddesc_setfloat_const(&x->x_color, 1);
+	if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
+	else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+    if (argc)
+        x->x_label = atom_getsymbolarg(0, argc, argv);
+    else x->x_label = &s_;
+
+    return (x);
+}
+
+void drawsymbol_float(t_drawsymbol *x, t_floatarg f)
+{
+    int viswas;
+    if (x->x_vis.fd_type != A_FLOAT || x->x_vis.fd_var)
+    {
+        pd_error(x, "global vis/invis for a template with variable visibility");
+        return;
+    }
+    viswas = (x->x_vis.fd_un.fd_float != 0);
+    
+    if ((f != 0 && viswas) || (f == 0 && !viswas))
+        return;
+    canvas_redrawallfortemplatecanvas(x->x_canvas, 2);
+    fielddesc_setfloat_const(&x->x_vis, (f != 0));
+    canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
+}
+
+/* -------------------- widget behavior for drawsymbol ------------ */
+
+#define DRAWSYMBOL_BUFSIZE 80
+static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
+{
+    int nchars;
+    strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
+    buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
+    nchars = strlen(buf);
+    atom_string(ap, buf + nchars, DRAWSYMBOL_BUFSIZE - nchars);
+}
+
+static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int *xp1, int *yp1, int *xp2, int *yp2)
+{
+    t_drawsymbol *x = (t_drawsymbol *)z;
+    t_atom at;
+        int xloc, yloc, font, fontwidth, fontheight;
+    char buf[DRAWSYMBOL_BUFSIZE];
+
+    if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
+    {
+        *xp1 = *yp1 = 0x7fffffff;
+        *xp2 = *yp2 = -0x7fffffff;
+        return;
+    }
+    xloc = glist_xtopixels(glist,
+        basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
+    yloc = glist_ytopixels(glist,
+        basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
+    font = fielddesc_getfloat(&x->x_value, template, data, 0);
+    fontwidth = sys_fontwidth(font);
+        fontheight = sys_fontheight(font);
+    if (x->x_flags & DRAW_SYMBOL)
+        SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
+    else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
+    drawsymbol_sprintf(x, buf, &at);
+    *xp1 = xloc;
+    *yp1 = yloc;
+    *xp2 = xloc + fontwidth * strlen(buf);
+    *yp2 = yloc + fontheight;
+}
+
+static void drawsymbol_displace(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int dx, int dy)
+{
+    /* refuse */
+}
+
+static void drawsymbol_select(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int state)
+{
+    //post("drawsymbol_select %d", state);
+    /* fill in later */
+}
+
+static void drawsymbol_activate(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int state)
+{
+    //post("drawsymbol_activate %d", state);
+}
+
+static void drawsymbol_vis(t_gobj *z, t_glist *glist, 
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int vis)
+{
+    t_drawsymbol *x = (t_drawsymbol *)z;
+    
+        /* see comment in plot_vis() */
+    if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
+        return;
+    if (vis)
+    {
+        t_atom at;
+		int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
+		if (!fontsize) fontsize = glist_getfont(glist);
+        int xloc = glist_xtopixels(glist,
+            basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
+        int yloc = glist_ytopixels(glist,
+            basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
+        char colorstring[20], buf[DRAWSYMBOL_BUFSIZE];
+        numbertocolor(fielddesc_getfloat(&x->x_color, template, data, 1),
+            colorstring);
+        if (x->x_flags & DRAW_SYMBOL)
+            SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
+        else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
+        drawsymbol_sprintf(x, buf, &at);
+        sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
+                glist_getcanvas(glist), xloc, yloc, colorstring, buf);
+        sys_vgui(" -font {{%s} -%d %s}", sys_font,
+				 sys_hostfontsize(fontsize), sys_fontweight);
+        sys_vgui(" -tags {.x%lx.x%lx.drawsymbol%lx %lx}\n", 
+			glist_getcanvas(glist), glist, data, data);
+    }
+    else sys_vgui(".x%lx.c delete .x%lx.x%lx.drawsymbol%lx\n", glist_getcanvas(glist), 
+		glist_getcanvas(glist), glist, data);
+}
+
+static t_float drawsymbol_motion_ycumulative;
+static t_glist *drawsymbol_motion_glist;
+static t_scalar *drawsymbol_motion_scalar;
+static t_array *drawsymbol_motion_array;
+static t_word *drawsymbol_motion_wp;
+static t_template *drawsymbol_motion_template;
+static t_gpointer drawsymbol_motion_gpointer;
+static int drawsymbol_motion_symbol;
+static int drawsymbol_motion_firstkey;
+
+    /* LATER protect against the template changing or the scalar disappearing
+    probably by attaching a gpointer here ... */
+
+static void drawsymbol_motion(void *z, t_floatarg dx, t_floatarg dy)
+{
+    t_drawsymbol *x = (t_drawsymbol *)z;
+    t_fielddesc *f = &x->x_value;
+    t_atom at;
+    if (!gpointer_check(&drawsymbol_motion_gpointer, 0))
+    {
+        post("drawsymbol_motion: scalar disappeared");
+        return;
+    }
+    if (drawsymbol_motion_symbol)
+    {
+        post("drawsymbol_motion: symbol");
+        return;
+    }
+    drawsymbol_motion_ycumulative -= dy;
+    template_setfloat(drawsymbol_motion_template,
+        f->fd_un.fd_varsym,
+            drawsymbol_motion_wp, 
+            drawsymbol_motion_ycumulative,
+                1);
+    if (drawsymbol_motion_scalar)
+        template_notifyforscalar(drawsymbol_motion_template,
+            drawsymbol_motion_glist, drawsymbol_motion_scalar,
+                gensym("change"), 1, &at);
+
+    if (drawsymbol_motion_scalar)
+        scalar_redraw(drawsymbol_motion_scalar, drawsymbol_motion_glist);
+    if (drawsymbol_motion_array)
+        array_redraw(drawsymbol_motion_array, drawsymbol_motion_glist);
+}
+
+static void drawsymbol_key(void *z, t_floatarg fkey)
+{
+    t_drawsymbol *x = (t_drawsymbol *)z;
+    t_fielddesc *f = &x->x_value;
+    int key = fkey;
+    char sbuf[MAXPDSTRING];
+    t_atom at;
+    if (!gpointer_check(&drawsymbol_motion_gpointer, 0))
+    {
+        post("drawsymbol_motion: scalar disappeared");
+        return;
+    }
+    if (key == 0)
+        return;
+    if (drawsymbol_motion_symbol)
+    {
+            /* key entry for a symbol field */
+        if (drawsymbol_motion_firstkey)
+            sbuf[0] = 0;
+        else strncpy(sbuf, template_getsymbol(drawsymbol_motion_template,
+            f->fd_un.fd_varsym, drawsymbol_motion_wp, 1)->s_name,
+                MAXPDSTRING);
+        sbuf[MAXPDSTRING-1] = 0;
+        if (key == '\b')
+        {
+            if (*sbuf)
+                sbuf[strlen(sbuf)-1] = 0;
+        }
+        else
+        {
+            sbuf[strlen(sbuf)+1] = 0;
+            sbuf[strlen(sbuf)] = key;
+        }
+    }
+    else
+    {
+            /* key entry for a numeric field.  This is just a stopgap. */
+        float newf;
+        if (drawsymbol_motion_firstkey)
+            sbuf[0] = 0;
+        else sprintf(sbuf, "%g", template_getfloat(drawsymbol_motion_template,
+            f->fd_un.fd_varsym, drawsymbol_motion_wp, 1));
+        drawsymbol_motion_firstkey = (key == '\n');
+        if (key == '\b')
+        {
+            if (*sbuf)
+                sbuf[strlen(sbuf)-1] = 0;
+        }
+        else
+        {
+            sbuf[strlen(sbuf)+1] = 0;
+            sbuf[strlen(sbuf)] = key;
+        }
+        if (sscanf(sbuf, "%g", &newf) < 1)
+            newf = 0;
+        template_setfloat(drawsymbol_motion_template,
+            f->fd_un.fd_varsym, drawsymbol_motion_wp, newf, 1);
+        if (drawsymbol_motion_scalar)
+            template_notifyforscalar(drawsymbol_motion_template,
+                drawsymbol_motion_glist, drawsymbol_motion_scalar,
+                    gensym("change"), 1, &at);
+        if (drawsymbol_motion_scalar)
+            scalar_redraw(drawsymbol_motion_scalar, drawsymbol_motion_glist);
+        if (drawsymbol_motion_array)
+            array_redraw(drawsymbol_motion_array, drawsymbol_motion_glist);
+    }
+}
+
+static int drawsymbol_click(t_gobj *z, t_glist *glist, 
+    t_word *data, t_template *template, t_scalar *sc, t_array *ap,
+    t_float basex, t_float basey,
+    int xpix, int ypix, int shift, int alt, int dbl, int doit)
+{
+    t_drawsymbol *x = (t_drawsymbol *)z;
+    int x1, y1, x2, y2;
+    drawsymbol_getrect(z, glist,
+        data, template, basex, basey,
+        &x1, &y1, &x2, &y2);
+    if (xpix >= x1 && xpix <= x2 && ypix >= y1 && ypix <= y2
+        && x->x_value.fd_var &&
+            fielddesc_getfloat(&x->x_vis, template, data, 0))
+    {
+        if (doit)
+        {
+            drawsymbol_motion_glist = glist;
+            drawsymbol_motion_wp = data;
+            drawsymbol_motion_template = template;
+            drawsymbol_motion_scalar = sc;
+            drawsymbol_motion_array = ap;
+            drawsymbol_motion_firstkey = 1;
+            drawsymbol_motion_ycumulative =
+                fielddesc_getfloat(&x->x_value, template, data, 0);
+            drawsymbol_motion_symbol = ((x->x_flags & DRAW_SYMBOL) != 0);
+            if (drawsymbol_motion_scalar)
+                gpointer_setglist(&drawsymbol_motion_gpointer, 
+                    drawsymbol_motion_glist, drawsymbol_motion_scalar);
+            else gpointer_setarray(&drawsymbol_motion_gpointer,
+                    drawsymbol_motion_array, drawsymbol_motion_wp);
+           glist_grab(glist, z, drawsymbol_motion, drawsymbol_key,
+                xpix, ypix);
+        }
+        return (1);
+    }
+    else return (0);
+}
+
+t_parentwidgetbehavior drawsymbol_widgetbehavior =
+{
+    drawsymbol_getrect,
+    drawsymbol_displace,
+    drawsymbol_select,
+    drawsymbol_activate,
+    drawsymbol_vis,
+    drawsymbol_click,
+};
+
+static void drawsymbol_free(t_drawsymbol *x)
+{
+}
+
+static void drawsymbol_setup(void)
+{
+    drawsymbol_class = class_new(gensym("drawsymbol"),
+        (t_newmethod)drawsymbol_new, (t_method)drawsymbol_free,
+        sizeof(t_drawsymbol), 0, A_GIMME, 0);
+    class_setdrawcommand(drawsymbol_class);
+    class_addfloat(drawsymbol_class, drawsymbol_float);
+    class_setparentwidget(drawsymbol_class, &drawsymbol_widgetbehavior);
 }
 
 /* ---------------------- setup function ---------------------------- */
@@ -2339,5 +2695,6 @@ void g_template_setup(void)
     curve_setup();
     plot_setup();
     drawnumber_setup();
+	drawsymbol_setup();
 }
 
