@@ -3525,6 +3525,10 @@ proc pdtk_canvas_getscroll {name} {
 					if { $y < $y1 } {set y1 $y}
 					if { $y > $y2 } {set y2 $y}
 				}
+				#set imgtags [$name gettags $item]
+				#set imgtag [lindex $imgtags 0]
+				#puts stderr $imgtag
+				#$name create rectangle $x1 $y1 $x2 $y2 -outline #ff0000 -tag debug
 			}
 
 	    }
@@ -3560,32 +3564,53 @@ proc pdtk_canvas_getscroll {name} {
 		set canvaswidth [ expr {abs($xmaxval-$xminval)} ]
 		set canvasheight [ expr {abs($ymaxval-$yminval)} ]
 
-		#puts stderr "$winwidth ? $canvaswidth   $winheight ? $canvasheight"
+		#puts stderr "BEFORE W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
 
 		if {$::scroll($parentname) == 1} {
-			if {$winwidth >= $canvaswidth || $::xscrollable($parentname) && [expr $winwidth + 14] >= $canvaswidth} {
+
+			if {($::xscrollable($parentname) && $::yscrollable($parentname)
+					&& [expr $winwidth + 14] >= $canvaswidth
+					&& [expr $winheight + 14] >= $canvasheight)} {
+				#puts stderr "TRYING TO ADJUST WIDTH & HEIGHT"
 				pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
-				set winwidth [winfo width $parentname.c]
-				set winheight [winfo height $parentname.c]
-			}
-			if {$winheight >= $canvasheight || $::yscrollable($parentname) && [expr $winheight + 14] >= $canvasheight} {
 				pack forget $parentname.scrollvert
 				set ::yscrollable($parentname) 0
-				set winwidth [winfo width $parentname.c]
-				set winheight [winfo height $parentname.c]
+				set winwidth [expr {$winwidth + 14}]
+				set winheight [expr {$winheight + 14}]
 			}
-			if {$winwidth < $canvaswidth} {
+
+			if {$winwidth >= $canvaswidth && $::xscrollable($parentname)} {
+				#puts stderr "NO HORIZONTAL NECESSARY"
+				pack forget $parentname.scrollhort
+				set ::xscrollable($parentname) 0
+				set winheight [expr {$winheight + 14}]
+			}
+
+			if {$winheight >= $canvasheight && $::yscrollable($parentname)} {
+				#puts stderr "NO VERTICAL NECESSARY"
+				pack forget $parentname.scrollvert
+				set ::yscrollable($parentname) 0
+				set winwidth [expr {$winwidth + 14}]
+			}
+
+			#puts stderr "AFTER W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
+
+			if {$winwidth < $canvaswidth && $::xscrollable($parentname) == 0} {
+				#puts stderr "PUTTING HORIZONTAL"
 				pack $parentname.scrollhort -fill x \
 					-side bottom -before $parentname.c
 				set ::xscrollable($parentname) 1
 			}
-			if {$winheight < $canvasheight} {
+			if {$winheight < $canvasheight && $::yscrollable($parentname) == 0} {
+				#puts stderr "PUTTING VERTICAL"
 				pack $parentname.scrollvert -fill y \
 					-side right -before $parentname.c
 				set ::yscrollable($parentname) 1
 			}
 		}
+
+		#puts stderr "========================\n\n"
 	
 		if {$pdtk_canvas_mouseup_name != $name || \
 				$pdtk_canvas_mouseup_xminval != $xminval || \
