@@ -683,12 +683,15 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
 /*********** dpsaha@vt.edu resize move hooks ****************/
 void canvas_draw_gop_resize_hooks(t_canvas* x)
 {
+	t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
+	t_scalehandle *mh = (t_scalehandle *)(x->x_mhandle);
+
 	if(x->gl_edit && glist_isvisible(x) && glist_istoplevel(x) && x->gl_goprect && !x->gl_editor->e_selection) {
 		
 		//Drawing and Binding Resize_Blob for GOP
-		t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
 		sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
-		sys_vgui("destroy %s\n", sh->h_pathname);		
+		sys_vgui("destroy %s\n", sh->h_pathname);	
+		sys_vgui(".x%lx.c delete GOP_resblob\n", x);	
 		sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 		sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxGOP GOP_resblob}\n",
@@ -705,9 +708,9 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 				 sh->h_pathname, sh->h_bindsym->s_name);
 
 		//Drawing and Binding Move_Blob for GOP
-		t_scalehandle *mh = (t_scalehandle *)(x->x_mhandle);
 		sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
-		sys_vgui("destroy %s\n", mh->h_pathname);		
+		sys_vgui("destroy %s\n", mh->h_pathname);
+		sys_vgui(".x%lx.c delete GOP_movblob\n", x);	
 		sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 				 mh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 		sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxMOVE %lxGOP GOP_movblob}\n",
@@ -725,6 +728,8 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 
 	}
 	else{
+		sys_vgui("destroy %s\n", sh->h_pathname);
+		sys_vgui("destroy %s\n", mh->h_pathname);
 		sys_vgui(".x%lx.c delete GOP_resblob ; .x%lx.c delete GOP_movblob ;\n", x, x);					//delete the GOP_resblob and GOP_movblob	
 	}
 }

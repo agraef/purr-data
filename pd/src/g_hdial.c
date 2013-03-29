@@ -174,8 +174,10 @@ void hradio_draw_erase(t_hradio* x, t_glist* glist)
 	if (x->x_gui.x_fsf.x_selected) {
 		t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
 		sys_vgui("destroy %s\n", sh->h_pathname);
+		sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 		t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
 		sys_vgui("destroy %s\n", lh->h_pathname);
+		sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
 	}
 /*
     for(i=0; i<n; i++)
@@ -285,8 +287,10 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 				}
 				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
-				if (x->x_gui.scale_vis)
+				if (x->x_gui.scale_vis) {
 					sys_vgui("destroy %s\n", sh->h_pathname);
+					sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+				}
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
@@ -304,8 +308,10 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 				x->x_gui.scale_vis = 1;
 				if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
 				{
-					if (x->x_gui.label_vis)
+					if (x->x_gui.label_vis) {
 						sys_vgui("destroy %s\n", lh->h_pathname);
+						sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
+					}
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
@@ -337,8 +343,10 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x,
 		             x->x_gui.x_lcol);
 			sys_vgui("destroy %s\n", sh->h_pathname);
+			sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 			x->x_gui.scale_vis = 0;
 			sys_vgui("destroy %s\n", lh->h_pathname);
+			sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
 			x->x_gui.label_vis = 0;
 		}
 	//}
@@ -393,7 +401,6 @@ static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t
 		{
 			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
 			hradio_draw_move(x, x->x_gui.x_glist);
-			sys_vgui("destroy %s\n", sh->h_pathname);
 			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
 			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
@@ -443,7 +450,6 @@ static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t
 		{
 			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
 			hradio_draw_move(x, x->x_gui.x_glist);
-			sys_vgui("destroy %s\n", sh->h_pathname);
 			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
 			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
