@@ -712,8 +712,15 @@ static void gatom_redraw(t_gobj *client, t_glist *glist)
     glist_retext(x->a_glist, &x->a_text);
 }
 
-static void gatom_retext(t_gatom *x, int senditup)
+	/* recolor option offers 	0 ignore recolor
+								1 recolor */
+static void gatom_retext(t_gatom *x, int senditup, int recolor)
 {
+	t_canvas *canvas = glist_getcanvas(x->a_glist);
+	t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
+	if (recolor)
+		sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+	    	rtext_gettag(y), "$text_color");
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &x->a_atom);
     if (senditup && glist_isvisible(x->a_glist))
@@ -732,7 +739,7 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
         x->a_atom.a_w.w_symbol = atom_getsymbol(argv),
             changed = (x->a_atom.a_w.w_symbol != oldatom.a_w.w_symbol);
     if (changed)
-        gatom_retext(x, 1);
+        gatom_retext(x, 1, 0);
     x->a_buf[0] = 0;
 }
 
@@ -834,6 +841,7 @@ static void gatom_motion(void *z, t_floatarg dx, t_floatarg dy)
 
 static void gatom_key(void *z, t_floatarg f)
 {
+	//fprintf(stderr,"gatom_key %f\n", f);
     t_gatom *x = (t_gatom *)z;
     int c = f;
     int len = strlen(x->a_buf);
@@ -843,7 +851,9 @@ static void gatom_key(void *z, t_floatarg f)
     {
         /* we're being notified that no more keys will come for this grab */
         if (x->a_buf[0])
-            gatom_retext(x, 1);
+            gatom_retext(x, 1, 1);
+		else
+			gatom_retext(x, 0, 1);
         return;
     }
     else if (c == '\b')
@@ -860,7 +870,7 @@ static void gatom_key(void *z, t_floatarg f)
             x->a_atom.a_w.w_symbol = gensym(x->a_buf);
         else bug("gatom_key");
         gatom_bang(x);
-        gatom_retext(x, 1);
+        gatom_retext(x, 1, 1);
         x->a_buf[0] = 0;
     }
     else if (len < (ATOMBUFSIZE-1))
@@ -1469,9 +1479,15 @@ static int text_click(t_gobj *z, struct _glist *glist,
     }
     else if (x->te_type == T_ATOM)
     {
-        if (doit)
+		t_canvas *canvas = glist_getcanvas(glist);
+		t_rtext *y = glist_findrtext(glist, x);
+        if (doit) {
             gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,
                 (t_floatarg)shift, (t_floatarg)0, (t_floatarg)alt);
+			//fprintf(stderr,"atom click\n");
+			sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+		    	rtext_gettag(y), "$select_color");
+		}
         return (1);
     }
     else if (x->te_type == T_MESSAGE)
