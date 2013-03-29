@@ -175,7 +175,7 @@ void vradio_draw_erase(t_vradio* x, t_glist* glist)
 		sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 		t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
 		sys_vgui("destroy %s\n", lh->h_pathname);
-		sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
+		sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 	}
 
 /*
@@ -311,16 +311,16 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
 				{
 					if (x->x_gui.label_vis) {
 						sys_vgui("destroy %s\n", lh->h_pathname);
-						sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
+						sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 					}
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxVDRO}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH lxVDRO}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x);
+						lh->h_pathname, x, x, x);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -347,7 +347,7 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
 			sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 			x->x_gui.scale_vis = 0;
 			sys_vgui("destroy %s\n", lh->h_pathname);
-			sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
+			sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 			x->x_gui.scale_vis = 0;
 		}
 	//}
