@@ -2253,6 +2253,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
     # slide offscreen windows into view
     if {$tcl_version >= 8.4} {
         set geometry [split $geometry +]
+        if { $pd_nt == 0 && [lindex $geometry 2] == 0 } {
+			after idle center_window $name [expr int(-$width/3)] [expr int(-$height/3)]
+        }
         set i 1
         foreach geo {width height} {
             set screen($geo) [winfo screen$geo .]
@@ -2266,7 +2269,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         if { $pd_nt == 2 && [lindex $geometry 2] < 22 } {
             lset geometry 2 22
         }
-        set geometry [join $geometry +] 
+        set geometry [join $geometry +]
     }
 
 	#apply window properties
