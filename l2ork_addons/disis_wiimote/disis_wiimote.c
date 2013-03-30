@@ -105,6 +105,11 @@
 //  http://disis.music.vt.edu
 //	* Made sure that the involuntary disconnection detection (e.g. due to low battery) does get reported by showing appropriate connection status from the rightmost outlet
 
+//  v1.0.4 Changelog:
+//  2013-03-29 DISIS (Ivica Ico Bukvic <ico@vt.edu)
+//  http://disis.music.vt.edu
+//	* Added explicit connection reporting even if it fails to connect (for use in GUI displays to reflect the connection pending)
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/select.h>
@@ -1036,6 +1041,7 @@ static void pd_cwiid_doConnect(t_wiimote *x, t_symbol *dongaddr)
 
 		if (x->wiimote == NULL) {
 			post("Error: could not find and/or connect to a wiimote. Please ensure that bluetooth is enabled, and that the 'hcitool scan' command lists your Nintendo device.");
+			clock_delay(x->x_clock_status, 0);
 		} else {
 
 			if(!addWiimoteObject(x, cwiid_get_id(x->wiimote))) {
@@ -1202,7 +1208,7 @@ static void *pd_cwiid_new(t_symbol* s, int argc, t_atom *argv)
 {
 	int i;
 
-	post("DISIS threaded implementation of wiimote object v.1.0.3");
+	post("DISIS threaded implementation of wiimote object v.1.0.4");
 	t_wiimote *x = (t_wiimote *)pd_new(pd_cwiid_class);
 	
 	// create outlets:
