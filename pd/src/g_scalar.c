@@ -335,6 +335,7 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
 
 static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
+	//fprintf(stderr,"scalar_vis %d\n", vis);
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
     t_canvas *templatecanvas = template_findcanvas(template);
@@ -354,6 +355,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
         return;
     }
+	else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
 
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {

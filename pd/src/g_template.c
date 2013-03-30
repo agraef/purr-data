@@ -1987,6 +1987,7 @@ typedef struct _drawnumber
     t_fielddesc x_yloc;
     t_fielddesc x_color;
     t_fielddesc x_vis;
+	t_fielddesc x_fontsize;
     t_symbol *x_label;
     int x_flags;
     t_canvas *x_canvas;
@@ -2029,6 +2030,8 @@ static void *drawnumber_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_yloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_color, 1);
+	if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
+	else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
     if (argc)
         x->x_label = atom_getsymbolarg(0, argc, argv);
     else x->x_label = &s_;
@@ -2084,7 +2087,8 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
         basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
     yloc = glist_ytopixels(glist,
         basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
-    font = glist_getfont(glist);
+    font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
+	if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
         fontheight = sys_fontheight(font);
     if (x->x_flags & DRAW_SYMBOL)
@@ -2108,7 +2112,7 @@ static void drawnumber_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    post("drawnumber_select %d", state);
+    //post("drawnumber_select %d", state);
     /* fill in later */
 }
 
@@ -2116,13 +2120,14 @@ static void drawnumber_activate(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    post("drawnumber_activate %d", state);
+    //post("drawnumber_activate %d", state);
 }
 
 static void drawnumber_vis(t_gobj *z, t_glist *glist, 
     t_word *data, t_template *template, t_float basex, t_float basey,
     int vis)
 {
+	//fprintf(stderr,"drawnumber_vis %d\n", vis);
     t_drawnumber *x = (t_drawnumber *)z;
     
         /* see comment in plot_vis() */
@@ -2131,6 +2136,8 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
     if (vis)
     {
         t_atom at;
+		int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
+		if (!fontsize) fontsize = glist_getfont(glist);
         int xloc = glist_xtopixels(glist,
             basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
         int yloc = glist_ytopixels(glist,
@@ -2145,7 +2152,7 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
         sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
-				 sys_hostfontsize(glist_getfont(glist)), sys_fontweight);
+				 sys_hostfontsize(fontsize), sys_fontweight);
         sys_vgui(" -tags {.x%lx.x%lx.drawnumber%lx %lx}\n", 
 			glist_getcanvas(glist), glist, data, data);
     }
@@ -2440,7 +2447,8 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
         basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
     yloc = glist_ytopixels(glist,
         basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
-    font = fielddesc_getfloat(&x->x_value, template, data, 0);
+    font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
+	if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
         fontheight = sys_fontheight(font);
     if (x->x_flags & DRAW_SYMBOL)
