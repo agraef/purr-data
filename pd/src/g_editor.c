@@ -2009,28 +2009,18 @@ void canvas_map(t_canvas *x, t_floatarg f);
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
 	//fprintf(stderr,"canvas_vis .x%lx %f\n", (t_int)x, f);
-    char buf[30];
     int flag = (f != 0);
-    //if (x != glist_getcanvas(x) && glist_isvisible(glist_getcanvas(x))) {
-        //bug("canvas_vis");
-		//fprintf(stderr,"canvas_vis .x%lx .x%lx %f\n", (t_int)x, (t_int)glist_getcanvas(x), f);
-	//}
     if (flag)
     {
-        /* post("havewindow %d, isgraph %d, isvisible %d  editor %d",
-            x->gl_havewindow, x->gl_isgraph, glist_isvisible(x),
-                (x->gl_editor != 0)); */
-            /* test if we're already visible and toplevel */
-        if (x->gl_editor)
+        /* If a subpatch/abstraction has GOP/gl_isgraph set, then it will have
+         * a gl_editor already, if its not, it will not have a gl_editor.
+         * canvas_create_editor(x) checks if a gl_editor is already created,
+         * so its ok to run it on a canvas that already has a gl_editor. */
+        if (x->gl_editor && x->gl_havewindow)
         {           /* just put us in front */
-#ifdef MSW
-            canvas_vis(x, 0);
-            canvas_vis(x, 1);
-#else
-            sys_vgui("raise .x%lx\n", x);
-            sys_vgui("focus .x%lx.c\n", x);
-            sys_vgui("wm deiconify .x%lx\n", x);
-#endif
+            sys_vgui("pdtk_canvas_raise .x%lx\n", x);
+			sys_vgui("focus .x%lx.c\n", x);
+            sys_vgui("wm deiconify .x%lx\n", x);  
         }
         else
         {
@@ -2543,7 +2533,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int shiftmod, runmode, altmod, doublemod = 0, rightclick;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
 
-	//fprintf(stderr,"canvas_doclick\n");
+	fprintf(stderr,"canvas_doclick\n");
     
     if (!x->gl_editor)
     {
