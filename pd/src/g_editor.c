@@ -2018,13 +2018,14 @@ void canvas_vis(t_canvas *x, t_floatarg f)
          * so its ok to run it on a canvas that already has a gl_editor. */
         if (x->gl_editor && x->gl_havewindow)
         {           /* just put us in front */
-            sys_vgui("pdtk_canvas_raise .x%lx\n", x);
+			fprintf(stderr,"existing\n");
+            sys_vgui("raise .x%lx\n", x);
 			sys_vgui("focus .x%lx.c\n", x);
             sys_vgui("wm deiconify .x%lx\n", x);  
         }
         else
         {
-			//fprintf(stderr,"new window\n");
+			fprintf(stderr,"new\n");
             canvas_create_editor(x);
             sys_vgui("pdtk_canvas_new .x%lx %d %d +%d+%d %d\n", x,
                 (int)(x->gl_screenx2 - x->gl_screenx1),
@@ -2533,7 +2534,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int shiftmod, runmode, altmod, doublemod = 0, rightclick;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
 
-	fprintf(stderr,"canvas_doclick\n");
+	//fprintf(stderr,"canvas_doclick\n");
     
     if (!x->gl_editor)
     {
