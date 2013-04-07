@@ -847,6 +847,7 @@ bind . <$ctrl_key-Key-a> {.printout.frame.text tag add sel 1.0 end}
 #	.mbar.edit entryconfigure "Paste" -state normal}
 bind . <$ctrl_key-Key-c> {tk_textCopy .printout.frame.text}
 bind .printout <$ctrl_key-Key-c> {tk_textCopy .printout.frame.text}
+bind .printout <$ctrl_key-Key-a> {.printout.frame.text tag add sel 1.0 end}
 #	.mbar.edit entryconfigure "Paste" -state normal}
 #bind . <$ctrl_key-Key-v> {tk_textPaste .printout.frame.text}
 bind . <$ctrl_key-Key-w> {menu_quit}
