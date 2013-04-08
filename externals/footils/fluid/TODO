@@ -1,0 +1,5 @@
+mkdir -p pd-linux/release-single
+mkdir -p pd-linux/release-single/
+g++ -c  -I../../grill/trunk/flext/source/ -msse -mfpmath=sse -ffast-math -DFLEXT_USE_CMEM -O3  -pthread -fPIC -fvisibility-inlines-hidden -DNDEBUG -DFLEXT_SYS=2 -DPD -I../../../pd/src -I/usr/include/stk -I/usr/include/SndObj -I./libbuild/include/flext fluid/main.cpp -o pd-linux/release-single/main.opp
+g++ -pthread -shared  -Wl,-S -L../../../pd/bin -L./libbuild/lib -o pd-linux/release-single/fluid~.pd_linux   pd-linux/release-single/main.opp  ../../grill/trunk/flext/libbuild/lib/libflext-pd_s.a* -lfluidsynth -lflext-pd_s
+
