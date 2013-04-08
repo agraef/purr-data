@@ -1,0 +1,5 @@
+pd-pluginhost (1.0~-1) UNRELEASED; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Tue, 09 Oct 2012 21:12:17 -0400

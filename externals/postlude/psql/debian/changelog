@@ -1,0 +1,5 @@
+pd-psql (0.1-1) UNRELEASED; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Hans-Christoph Steiner <hans@eds.org>  Sun, 16 Sep 2012 11:48:18 -0400

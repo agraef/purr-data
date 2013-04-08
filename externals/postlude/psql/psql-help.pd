@@ -1,0 +1,53 @@
+#N canvas 241 93 917 646 10;
+#X obj 377 547 print postgres;
+#X msg 27 171 sql DROP DATABASE pddbase sqlend;
+#X msg 8 105 sql CREATE DATABASE pddbase sqlend;
+#X text 374 63 to the newly created 'pddbase' database;
+#X text 375 52 2 Create a new table in the database - this time connecting
+;
+#X text 419 141 3 Insert some data. Each click of the message below
+;
+#X text 418 151 inserts a new row into the specified table.;
+#X text 450 271 4 Retrieve all data in the specified table using a
+wild;
+#X text 27 155 click this to destroy the database;
+#X msg 377 95 sql CREATE TABLE datatable(id INTEGER \, duration FLOAT
+\, type VARCHAR \, datetime DATETIME) sqlend;
+#X text 451 282 card '*'. Note each row returned is preceded by an
+index;
+#X text 463 358 Also show the degree of error;
+#X msg 459 376 sql SELECT id \, ABS((duration - 1500)/1500) AS error
+FROM datatable ORDER BY error LIMIT 1 sqlend;
+#X text 463 346 5 Find the 'id' of entry closest to 1500 msec in duration.
+;
+#X msg 418 177 sql INSERT INTO datatable VALUES(22 \, 1023.33 \, 'singing'
+\, datetime('now'::date \, 'now'::time)) sqlend \, sql INSERT INTO
+datatable VALUES(24 \, 1500.1 \, 'coughing' \, datetime('now'::date
+\, 'now'::time)) sqlend \, sql INSERT INTO datatable VALUES(26 \, 2222.11
+\, 'sobbing' \, datetime('now'::date \, 'now'::time)) sqlend;
+#X obj 475 549 route 0 1 2 3 4 5 6 7 8;
+#X text 624 548 use route to separate indexed 'tuples';
+#X obj 475 584 unpack 0 0 s s;
+#X text 571 584 use unpack to access individual fields;
+#X msg 449 305 sql select * from datatable WHERE id < 30 sqlend;
+#X obj 377 446 psql pddbase;
+#X obj 8 222 psql template1 localhost 5432;
+#X obj 446 479 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X text 472 480 Bang when the results from each query have been returned
+;
+#X text 7 56 1 Create a new database - by connecting;
+#X text 7 69 to PostgreSQL's default database: 'template1';
+#X obj 8 4 cnv 15 250 40 empty empty [psql] 20 12 1 14 -191407 -66577
+0;
+#X text 27 24 based on [sqlsingle] by Iain Mott;
+#X connect 1 0 21 0;
+#X connect 2 0 21 0;
+#X connect 9 0 20 0;
+#X connect 12 0 20 0;
+#X connect 14 0 20 0;
+#X connect 15 0 17 0;
+#X connect 19 0 20 0;
+#X connect 20 0 15 0;
+#X connect 20 0 0 0;
+#X connect 20 1 22 0;

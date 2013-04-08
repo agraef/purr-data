@@ -1,0 +1,28 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: pluginhost~
+Upstream-Contact: Jamie Bullock <jamie@jamiebullock.com>
+Source: http://puredata.info/downloads/pluginhost
+
+Files: *
+Copyright: 2006-2012, Jamie Bullock
+           2004, Chris Cannam, Steve Harris and Sean Bolton     
+           2000, Jarno Seppänen, remIXed 2005
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this package; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+X-Comment: On Debian systems, the complete text of the GNU General
+ Public License can be found in `/usr/share/common-licenses/GPL-2'. Also, some
+ of the code included in this package was originally under a BSD-style
+ license, but its thoroughly mixed up so not separable, therefore that code is
+ not listed separately.

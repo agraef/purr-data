@@ -1,0 +1,26 @@
+Source: pd-pluginhost
+Section: sound
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+Uploaders: Hans-Christoph Steiner <hans@eds.org>
+Build-Depends: debhelper (>= 7.0.50~),
+               puredata-dev | puredata (<< 0.43),
+               dssi-dev,
+               libasound2-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386],
+               libdssialsacompat-dev [hurd-i386],
+               liboss-salsa-dev [kfreebsd-i386 kfreebsd-amd64],
+               ladspa-sdk
+Standards-Version: 3.9.3
+Homepage: http://puredata.info
+Vcs-Git: git://anonscm.debian.org/pkg-multimedia/pd-pluginhost.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-multimedia/pd-pluginhost.git;a=summary
+
+Package: pd-pluginhost
+Architecture: any
+Depends: ${shlibs:Depends},
+         puredata-core | pd,
+         ${misc:Depends}
+Recommends: 
+Description: Pd object for hosting LADSPA and DSSI plugins
+ pluginhost~ is a LADSPA and DSSI plugin host for Pure Data, supporting
+ multiple plugin instances per object.

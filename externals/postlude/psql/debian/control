@@ -1,0 +1,26 @@
+Source: pd-psql
+Section: sound
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+DM-Upload-Allowed: yes
+Uploaders: Hans-Christoph Steiner <hans@eds.org>
+Build-Depends: debhelper (>= 7.0.50~),
+               puredata-dev | puredata (<< 0.43),
+	       libpq-dev
+Standards-Version: 3.9.3
+Homepage: http://puredata.info
+Vcs-Git: git://git.debian.org/pkg-multimedia/pd-psql.git
+Vcs-Browser: http://git.debian.org/?p=pkg-multimedia/pd-psql.git;a=summary
+
+Package: pd-psql
+Architecture: any
+Depends: ${shlibs:Depends},
+         puredata-core | pd,
+         ${misc:Depends}
+Description: Pd object for connecting to PostgreSQL databases
+ psql allows you to send SQL messages to a PostgreSQL database from Pd and
+ retrieve the results.  It provides a bit of a wrapper to SQL commands to
+ make them easier to write in Pd.
+ .
+ You will need to separately set up a PostgreSQL database to connect to,
+ if you don't already have one.

@@ -1,0 +1,3 @@
+usr/lib/pd/extra/psql/README.txt        usr/share/doc/pd-psql/README
+usr/lib/pd/extra/psql/examples          usr/share/doc/pd-psql/examples
+usr/share/common-licenses/GPL-2             usr/lib/pd/extra/psql/LICENSE.txt
