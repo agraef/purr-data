@@ -1,15 +1,17 @@
 Diff status between pd-l2ork externals source tree and main community pd svn
-AS OF Mar. 3, 2013
+AS OF April 7, 2013
 
-DONE:
+DONE: (*denotes unique changes)
 creb
 flatgui (disabled, as all externals have various problems)
+*footils
 gem2pdp
 moonlib
 mrpeach
 pdp
 pdp_opencv
 pidip
+postlude
 sigpack
 
 MERGE:
@@ -19,7 +21,7 @@ ggee
 TODO:
 test other
 
-BUGS:
+BUGS: (pdp/pidip--currently not in pd-l2ork because of bugs)
 *pdp_colorgrid is not working (crashes when disabling/reenabling grid)
 *videogrid throws a weird TCL error when you try to change its initialization parameters (Pagano)
 
@@ -27,7 +29,4 @@ L2Ork Composition:
 *N/A
 
 L2Ork Infrastructure:
-*unload and reload r8169 on resume (check other L2Ork machines for /usr/lib/pm-utils/bin/pm-action)
-*update pd-l2ork version
-*sync L2Ork git
-*check for flashplugin-installer
+*keep testing optimal boot options
