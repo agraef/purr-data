@@ -472,7 +472,6 @@ flext:
 	cd $(externals_src)/grill/trunk/flext && \
 	./bootstrap.sh && \
 	./build.sh pd gcc build && \
-	cp -f ../../../../l2ork_addons/flext/config-lnx-pd-gcc.txt buildsys/ && \
 	./build.sh pd gcc build && \
 	./build.sh pd gcc build && \
 	./build.sh pd gcc install
