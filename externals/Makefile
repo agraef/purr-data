@@ -128,9 +128,11 @@ CXXFLAGS = $(CFLAGS)
 #
 # WARNING!  this MUST be all on one line because the automatic package
 # building scripts rely on it being that way.
-LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vanilla vbap windowing zexy
+LIB_TARGETS = adaptive arraysize bassemu boids bsaylor comport creb cxc cyclone earplug ekext ext13 freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-hexloader loaders-libdir mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdogg plugin pmpd sigpack smlib tof unauthorized vanilla vbap windowing zexy flext
 
 # DISABLED: flatgui
+
+# NEW (IN-PROGRESS): flext
 
 # this is for libraries that don't compile (yet) on all platforms
 ifeq ($(OS_NAME),windows)
@@ -464,6 +466,53 @@ flatgui_install:
 flatgui_clean:
 	make -C $(externals_src)/flatgui clean
 
+#------------------------------------------------------------------------------#
+# FLEXT and FLEXT externals
+flext:
+	cd $(externals_src)/grill/trunk/flext && \
+	./bootstrap.sh && \
+	./build.sh pd gcc build && \
+	cp -f ../../../../l2ork_addons/flext/config-lnx-pd-gcc.txt buildsys/ && \
+	./build.sh pd gcc build && \
+	./build.sh pd gcc build && \
+	./build.sh pd gcc install
+
+	#fluid~
+	cd footils/fluid && \
+	../../grill/trunk/flext/build.sh pd gcc build && \
+	../../grill/trunk/flext/build.sh pd gcc build
+
+	#disis_munger~
+	cd ../l2ork_addons/disis_munger && \
+	../../externals/grill/trunk/flext/build.sh pd gcc build && \
+	../../externals/grill/trunk/flext/build.sh pd gcc build
+
+flext_install:
+	# we don't install flext but rather link it statically,
+	# so we only install statically linked externals
+
+	#fluid~
+	cd footils/fluid && \
+	install -D pd-linux/release-multi/fluid~.pd_linux $(DESTDIR)$(objectsdir)/flext/fluid~.pd_linux && \
+	install -D pd/* $(DESTDIR)$(objectsdir)/flext/
+
+	#disis_munger~
+	cd ../l2ork_addons/disis_munger && \
+	install -D pd-linux/release-multi/disis_munger~.pd_linux $(DESTDIR)$(objectsdir)/flext/disis_munger~.pd_linux && \
+	install -D *help.pd $(DESTDIR)$(objectsdir)/flext/
+
+flext_clean:
+	#flext
+	cd grill/trunk/flext/ && \
+	./build.sh pd gcc clean
+
+	#fluid~
+	cd footils/fluid && \
+	../../grill/trunk/flext/build.sh pd gcc clean
+
+	#fluid~
+	cd ../l2ork_addons/disis_munger && \
+	../../externals/grill/trunk/flext/build.sh pd gcc clean
 
 #------------------------------------------------------------------------------#
 # FLIB
@@ -482,15 +531,8 @@ flib_install: flib
 	install -p $(FLIB_OBJECTS:.c=.$(EXTENSION)) $(DESTDIR)$(objectsdir)/$(FLIB_NAME)
 	install -p $(externals_src)/postlude/flib/doc/*.pd \
 		$(DESTDIR)$(objectsdir)/$(FLIB_NAME)
-#	install -d $(DESTDIR)$(manualsdir)/$(FLIB_NAME)
-#	install -p $(externals_src)/postlude/flib/manual.txt \
-#		$(DESTDIR)$(manualsdir)/$(FLIB_NAME)
-	install -d $(DESTDIR)$(readmesdir)
 	install -p $(externals_src)/postlude/flib/README \
-		$(DESTDIR)$(readmesdir)/$(FLIB_NAME).txt
-#	install -d $(DESTDIR)$(examplesdir)/$(FLIB_NAME)
-#	install -p $(externals_src)/postlude/flib/examples/*.pd \
-#		$(DESTDIR)$(examplesdir)/$(FLIB_NAME)
+		$(DESTDIR)$(objectsdir)/$(FLIB_NAME)/README.txt
 
 flib_clean:
 	-rm -f -- $(FLIB_OBJECTS:.c=.$(EXTENSION))
@@ -1435,17 +1477,10 @@ postlude_install: postlude
 	install -p $(POSTLUDE_OBJECTS:.c=.$(EXTENSION)) $(DESTDIR)$(objectsdir)/$(POSTLUDE_NAME)
 	install -p $(externals_src)/postlude/dssi/doc/output~.pd \
 		$(DESTDIR)$(objectsdir)/$(POSTLUDE_NAME)
-#	install -d $(DESTDIR)$(manualsdir)/$(POSTLUDE_NAME)
-#	install -p $(externals_src)/postlude/manual.txt \
-#		$(DESTDIR)$(manualsdir)/$(POSTLUDE_NAME)
-	install -d $(DESTDIR)$(readmesdir)
 	install -p $(externals_src)/postlude/dssi/README \
-		$(DESTDIR)$(readmesdir)/$(POSTLUDE_NAME)-dssi.txt
+		$(DESTDIR)$(objectsdir)/$(POSTLUDE_NAME)/README-dssi.txt
 	install -p $(externals_src)/postlude/psql/README \
-		$(DESTDIR)$(readmesdir)/$(POSTLUDE_NAME)-psql.txt
-	install -d $(DESTDIR)$(examplesdir)/$(POSTLUDE_NAME)
-#	install -p $(externals_src)/postlude/examples/*.pd \
-#		$(DESTDIR)$(examplesdir)/$(POSTLUDE_NAME)
+		$(DESTDIR)$(objectsdir)/$(POSTLUDE_NAME)README-psql.txt
 
 postlude_clean:
 	-rm -f -- $(POSTLUDE_OBJECTS:.c=.$(EXTENSION))

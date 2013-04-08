@@ -76,7 +76,7 @@ static void knob_draw_update(t_knob *x, t_glist *glist)
 	int x2 = text_xpix(&x->x_gui.x_obj, glist) + radius + radius * sin( -angle); 
         int y2 = text_ypix(&x->x_gui.x_obj, glist) + radius + radius * cos(  angle);
 	
-	sys_vgui(".x%x.c coords %xKNOB %d %d %d %d\n",
+	sys_vgui(".x%lx.c coords %xKNOB %d %d %d %d\n",
 		glist_getcanvas(glist), x,
 		x1,  /* x1 */     
 		y1,  /* y1 */  
@@ -86,7 +86,7 @@ static void knob_draw_update(t_knob *x, t_glist *glist)
         
     	/* post("knob: (%d, %d) (%d, %d)", x1,y1,x2,y2); */
 	
-	sys_vgui(".x%x.c itemconfigure %xBASE -start %d -extent %d \n", glist_getcanvas(glist), x,
+	sys_vgui(".x%lx.c itemconfigure %xBASE -start %d -extent %d \n", glist_getcanvas(glist), x,
 	     start, extent);
     }
 }
@@ -110,20 +110,20 @@ static void knob_draw_new(t_knob *x, t_glist *glist)
     
 
     /* BASE2 */
-    sys_vgui(".x%x.c create arc %d %d %d %d -outline #%6.6x -style arc -width 3 -start -80 -extent 340 -tags %xBASE2\n",
+    sys_vgui(".x%lx.c create arc %d %d %d %d -outline #%6.6x -style arc -width 3 -start -80 -extent 340 -tags %xBASE2\n",
 	     canvas, 
 	     xpos, ypos, 				/*  upper left */
 	     xpos + x->x_gui.x_h, ypos + x->x_gui.x_h,	/* lower right */
 	     x->x_gui.x_fcol, x);
     
     /* BASE */
-    sys_vgui(".x%x.c create arc %d %d %d %d -fill #%6.6x -style arc -width 3 -start -80 -extent 340 -tags %xBASE\n",
+    sys_vgui(".x%lx.c create arc %d %d %d %d -fill #%6.6x -style arc -width 3 -start -80 -extent 340 -tags %xBASE\n",
 	     canvas, 
 	     xpos, ypos, 				/*  upper left */
 	     xpos + x->x_gui.x_h, ypos + x->x_gui.x_h,	/* lower right */
 	     x->x_gui.x_bcol, x);
     /* LINE */
-    sys_vgui(".x%x.c create line %d %d %d %d -width 3 -fill #%6.6x -capstyle round -tags %xKNOB\n",
+    sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -capstyle round -tags %xKNOB\n",
 	     canvas, 
 	     x1,  	/* x1 */     
 	     y1,  	/* y1 */  
@@ -132,19 +132,19 @@ static void knob_draw_new(t_knob *x, t_glist *glist)
 	     x->x_gui.x_fcol,          	/* color */
 	     x);   
     
-    sys_vgui(".x%x.c create text %d %d -text {%s} -anchor w \
+    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 	     -font {%s %d bold} -fill #%6.6x -tags %xLABEL\n",
 	     canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 	     strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 	     x->x_gui.x_font, x->x_gui.x_fontsize, x->x_gui.x_lcol, x);
     if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xOUT%d\n",
+        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %xOUT%d\n",
 	     canvas,
 	     xpos, ypos + x->x_gui.x_h+2,
 	     xpos+7, ypos + x->x_gui.x_h+3,
 	     x, 0);
     if(!x->x_gui.x_fsf.x_rcv_able)
-	sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xIN%d\n",
+	sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %xIN%d\n",
 	     canvas,
 	     xpos, ypos-2,
 	     xpos+7, ypos-1,
@@ -169,7 +169,7 @@ static void knob_draw_move(t_knob *x, t_glist *glist)
 	
    
     
-    sys_vgui(".x%x.c coords %xKNOB %d %d %d %d\n",
+    sys_vgui(".x%lx.c coords %xKNOB %d %d %d %d\n",
 	     canvas, x, 
 	     x1,  /* x1 */     
 	     y1,  /* y1 */  
@@ -178,25 +178,25 @@ static void knob_draw_move(t_knob *x, t_glist *glist)
 	     );
     /* post("knob: (%d, %d) (%d, %d)", x1,y1,x2,y2); */
     
-    sys_vgui(".x%x.c coords %xBASE %d %d %d %d\n",
+    sys_vgui(".x%lx.c coords %xBASE %d %d %d %d\n",
 	     canvas, x,
 	     xpos, ypos,
 	     xpos + x->x_gui.x_h, ypos + x->x_gui.x_h);
     
-    sys_vgui(".x%x.c coords %xBASE2 %d %d %d %d\n",
+    sys_vgui(".x%lx.c coords %xBASE2 %d %d %d %d\n",
 	     canvas, x,
 	     xpos, ypos,
 	     xpos + x->x_gui.x_h, ypos + x->x_gui.x_h);
     
-    sys_vgui(".x%x.c coords %xLABEL %d %d\n",
+    sys_vgui(".x%lx.c coords %xLABEL %d %d\n",
 	     canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
     if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%x.c coords %xOUT%d %d %d %d %d\n",
+        sys_vgui(".x%lx.c coords %xOUT%d %d %d %d %d\n",
 	     canvas, x, 0,
 	     xpos, ypos + x->x_gui.x_h+2,
 	     xpos+7, ypos + x->x_gui.x_h+3);
     if(!x->x_gui.x_fsf.x_rcv_able)
-	sys_vgui(".x%x.c coords %xIN%d %d %d %d %d\n",
+	sys_vgui(".x%lx.c coords %xIN%d %d %d %d %d\n",
 	     canvas, x, 0,
 	     xpos, ypos-2,
 	     xpos+7, ypos-1);
@@ -206,29 +206,29 @@ static void knob_draw_erase(t_knob* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%x.c delete %xBASE\n", canvas, x);
-    sys_vgui(".x%x.c delete %xBASE2\n", canvas, x);
-    sys_vgui(".x%x.c delete %xKNOB\n", canvas, x);
-    sys_vgui(".x%x.c delete %xLABEL\n", canvas, x);
+    sys_vgui(".x%lx.c delete %xBASE\n", canvas, x);
+    sys_vgui(".x%lx.c delete %xBASE2\n", canvas, x);
+    sys_vgui(".x%lx.c delete %xKNOB\n", canvas, x);
+    sys_vgui(".x%lx.c delete %xLABEL\n", canvas, x);
     if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%x.c delete %xOUT%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete %xOUT%d\n", canvas, x, 0);
     if(!x->x_gui.x_fsf.x_rcv_able)
-	sys_vgui(".x%x.c delete %xIN%d\n", canvas, x, 0);
+	sys_vgui(".x%lx.c delete %xIN%d\n", canvas, x, 0);
 }
 
 static void knob_draw_config(t_knob* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-    sys_vgui(".x%x.c itemconfigure %xLABEL -font {%s %d bold} -fill #%6.6x -text {%s} \n",
+    sys_vgui(".x%lx.c itemconfigure %xLABEL -font {%s %d bold} -fill #%6.6x -text {%s} \n",
 	     canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize,
 	     x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_lcol,
 	     strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    sys_vgui(".x%x.c itemconfigure %xKNOB -fill #%6.6x\n", canvas,
+    sys_vgui(".x%lx.c itemconfigure %xKNOB -fill #%6.6x\n", canvas,
 	     x, x->x_gui.x_fcol);
-    sys_vgui(".x%x.c itemconfigure %xBASE2 -outline #%6.6x\n", canvas,
+    sys_vgui(".x%lx.c itemconfigure %xBASE2 -outline #%6.6x\n", canvas,
 	     x, x->x_gui.x_fcol);
-    sys_vgui(".x%x.c itemconfigure %xBASE -fill #%6.6x\n", canvas,
+    sys_vgui(".x%lx.c itemconfigure %xBASE -fill #%6.6x\n", canvas,
 	     x, x->x_gui.x_bcol);
 }
 
@@ -239,21 +239,21 @@ static void knob_draw_io(t_knob* x,t_glist* glist, int old_snd_rcv_flags)
     t_canvas *canvas=glist_getcanvas(glist);
 
     if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xOUT%d\n",
+        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %xOUT%d\n",
 	     canvas,
 	     xpos, ypos + x->x_gui.x_h+2,
 	     xpos+7, ypos + x->x_gui.x_h+3,
 	     x, 0);
     if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%x.c delete %xOUT%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete %xOUT%d\n", canvas, x, 0);
     if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%x.c create rectangle %d %d %d %d -tags %xIN%d\n",
+        sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %xIN%d\n",
 	     canvas,
 	     xpos, ypos-2,
 	     xpos+7, ypos-1,
 	     x, 0);
     if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%x.c delete %xIN%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete %xIN%d\n", canvas, x, 0);
 }
 
 static void knob_draw_select(t_knob *x, t_glist *glist)
@@ -263,16 +263,16 @@ static void knob_draw_select(t_knob *x, t_glist *glist)
     if(x->x_gui.x_fsf.x_selected)
     {
 	pd_bind(&x->x_gui.x_obj.ob_pd, iemgui_key_sym);
-	sys_vgui(".x%x.c itemconfigure %xBASE2 -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
-	sys_vgui(".x%x.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
-	sys_vgui(".x%x.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
+	sys_vgui(".x%lx.c itemconfigure %xBASE2 -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
+	sys_vgui(".x%lx.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
+	sys_vgui(".x%lx.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_SELECTED);
     }
     else
     {
 	pd_unbind(&x->x_gui.x_obj.ob_pd, iemgui_key_sym);
-	sys_vgui(".x%x.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
-	sys_vgui(".x%x.c itemconfigure %xBASE2 -outline #%6.6x\n", canvas, x, x->x_gui.x_fcol);
-	sys_vgui(".x%x.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
+	sys_vgui(".x%lx.c itemconfigure %xBASE -fill #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+	sys_vgui(".x%lx.c itemconfigure %xBASE2 -outline #%6.6x\n", canvas, x, x->x_gui.x_fcol);
+	sys_vgui(".x%lx.c itemconfigure %xLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
     }
 }
 

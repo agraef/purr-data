@@ -1,6 +1,8 @@
 NAME=fluid~
-
-BUILDDIR=build
-
 SRCDIR=fluid
 SRCS=main.cpp
+PDPATH=../../../pd
+INCPATH+=-I../../grill/trunk/flext/source
+LIBPATH+=-L../../grill/trunk/flext/libbuild/lib
+BUILDTYPE=multi
+BUILDDIR=build

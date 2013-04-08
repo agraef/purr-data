@@ -4,7 +4,7 @@
 #
 
 # where are the PD header files?
-PDPATH=/usr/include
+PDPATH=../../../pd/src
 
 # where do the flext libraries reside?
 FLEXTPATH=/usr/lib/pd/flext
