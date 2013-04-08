@@ -3568,14 +3568,14 @@ proc pdtk_canvas_getscroll {name} {
 		set canvaswidth [ expr {abs($xmaxval-$xminval)} ]
 		set canvasheight [ expr {abs($ymaxval-$yminval)} ]
 
-		#puts stderr "BEFORE W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
+		puts stderr "BEFORE W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
 
 		if {$::scroll($parentname) == 1} {
 
 			if {($::xscrollable($parentname) && $::yscrollable($parentname)
 					&& [expr $winwidth + 14] >= $canvaswidth
 					&& [expr $winheight + 14] >= $canvasheight)} {
-				#puts stderr "TRYING TO ADJUST WIDTH & HEIGHT"
+				puts stderr "TRYING TO ADJUST WIDTH & HEIGHT"
 				pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
 				pack forget $parentname.scrollvert
@@ -3585,36 +3585,36 @@ proc pdtk_canvas_getscroll {name} {
 			}
 
 			if {$winwidth >= $canvaswidth && $::xscrollable($parentname)} {
-				#puts stderr "NO HORIZONTAL NECESSARY"
+				puts stderr "NO HORIZONTAL NECESSARY"
 				pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
 				set winheight [expr {$winheight + 14}]
 			}
 
 			if {$winheight >= $canvasheight && $::yscrollable($parentname)} {
-				#puts stderr "NO VERTICAL NECESSARY"
+				puts stderr "NO VERTICAL NECESSARY"
 				pack forget $parentname.scrollvert
 				set ::yscrollable($parentname) 0
 				set winwidth [expr {$winwidth + 14}]
 			}
 
-			#puts stderr "AFTER W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
+			puts stderr "AFTER W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
 
 			if {$winwidth < $canvaswidth && $::xscrollable($parentname) == 0} {
-				#puts stderr "PUTTING HORIZONTAL"
+				puts stderr "PUTTING HORIZONTAL"
 				pack $parentname.scrollhort -fill x \
 					-side bottom -before $parentname.c
 				set ::xscrollable($parentname) 1
 			}
 			if {$winheight < $canvasheight && $::yscrollable($parentname) == 0} {
-				#puts stderr "PUTTING VERTICAL"
+				puts stderr "PUTTING VERTICAL"
 				pack $parentname.scrollvert -fill y \
 					-side right -before $parentname.c
 				set ::yscrollable($parentname) 1
 			}
 		}
 
-		#puts stderr "========================\n\n"
+		puts stderr "========================\n\n"
 	
 		if {$pdtk_canvas_mouseup_name != $name || \
 				$pdtk_canvas_mouseup_xminval != $xminval || \
@@ -3640,6 +3640,7 @@ proc pdtk_canvas_getscroll {name} {
 	}
 	set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
+    update
 }
 
 proc pdtk_canvas_sendkey {name state key iso shift focus} {
