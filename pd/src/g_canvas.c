@@ -884,6 +884,7 @@ void canvas_free(t_canvas *x)
     if (x->gl_magic_glass) {
       	//magicGlass_free(x->gl_magic_glass);
 		pd_free(&x->gl_magic_glass->x_obj.te_g.g_pd);
+		x->gl_magic_glass = NULL;
 	}
 
     //canvas_noundo(x);
@@ -911,11 +912,11 @@ void canvas_free(t_canvas *x)
         freebytes(x->gl_env->ce_argv, x->gl_env->ce_argc * sizeof(t_atom));
         freebytes(x->gl_env, sizeof(*x->gl_env));
     }
+    canvas_resume_dsp(dspstate);
     glist_cleanup(x);
     gfxstub_deleteforkey(x);        /* probably unnecessary */
     if (!x->gl_owner)
         canvas_takeofflist(x);
-    canvas_resume_dsp(dspstate);
 }
 
 /* ----------------- lines ---------- */
@@ -1376,8 +1377,8 @@ static void canvas_dodsp(t_canvas *x, int toplevel, t_signal **sp)
         /* find all the "dsp" boxes and add them to the graph */
 
     ob = &x->gl_magic_glass->x_obj;
-    if (ob && x->gl_magic_glass->x_connectedObj) {
-		//fprintf(stderr,"adding cord inspector to dsp\n");
+    if (ob && magicGlass_bound(x->gl_magic_glass)) {
+		//fprintf(stderr,"adding cord inspector to dsp %d\n", magicGlass_bound(x->gl_magic_glass));
 		ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
 	}
     

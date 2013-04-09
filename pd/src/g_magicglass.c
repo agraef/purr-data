@@ -18,7 +18,7 @@ void magicGlass_clearText(t_magicGlass *x);
 
 void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 {
-	//fprintf(stderr,"magicglass_bind\n");
+	//fprintf(stderr,"magicglass_bind %lx\n", (t_int)x);
     if (x->x_connectedObj != obj)
     {
         if (x->x_connectedObj)
@@ -38,7 +38,7 @@ void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 
 void magicGlass_unbind(t_magicGlass *x)
 {
-	//fprintf(stderr,"magicglass_unbind\n");
+	//fprintf(stderr,"magicglass_unbind %lx\n", (t_int)x);
     if (x->x_connectedObj)
     {
         obj_disconnect(x->x_connectedObj,
@@ -285,7 +285,7 @@ void magicGlass_moveText(t_magicGlass *x, int pX, int pY)
 int magicGlass_bound(t_magicGlass *x)
 {
 	//fprintf(stderr,"magicglass_bound\n");
-    if (x->x_connectedObj)
+    if (x->x_connectedObj != NULL)
         return 1;
     else
         return 0;
@@ -378,7 +378,7 @@ void *magicGlass_new(t_glist *c)
 {
 	//fprintf(stderr,"magicglass_new\n");
     t_magicGlass *x = (t_magicGlass *)pd_new(magicGlass_class);
-    x->x_connectedObj= NULL;
+    x->x_connectedObj = NULL;
     x->x_connectedOutno = 0;
     x->x_visible = 0;
     x->x_c = c;
@@ -397,7 +397,7 @@ void *magicGlass_new(t_glist *c)
 
 void magicGlass_free(t_magicGlass *x)
 {
-	//fprintf(stderr,"magicglass_free\n");
+	//fprintf(stderr,"magicglass_free %lx\n", (t_int)x);
 	magicGlass_unbind(x);
     x->x_dspOn = 0;
     clock_free(x->x_clearClock);
