@@ -911,11 +911,11 @@ void canvas_free(t_canvas *x)
         freebytes(x->gl_env->ce_argv, x->gl_env->ce_argc * sizeof(t_atom));
         freebytes(x->gl_env, sizeof(*x->gl_env));
     }
-    canvas_resume_dsp(dspstate);
     glist_cleanup(x);
     gfxstub_deleteforkey(x);        /* probably unnecessary */
     if (!x->gl_owner)
         canvas_takeofflist(x);
+    canvas_resume_dsp(dspstate);
 }
 
 /* ----------------- lines ---------- */
