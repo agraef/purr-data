@@ -3420,7 +3420,7 @@ proc pdtk_canvas_getscroll_ping {name} {
 		set ::update_tick($wname) 3	
 		pdtk_canvas_getscroll $name
 	}
-	after 50 [list pdtk_canvas_getscroll_ping $name]
+	after 250 [list pdtk_canvas_getscroll_ping $name]
 }
 
 proc pdtk_select_all_gop_widgets {name gop state} {
@@ -3453,22 +3453,23 @@ proc pdtk_canvas_getscroll {name} {
     if {![winfo exists $name]} {return}
 
 	# waiting for refresh
-	if {$::update_tick([winfo parent $name]) == 2} {return}
+	#if {$::update_tick([winfo parent $name]) == 2} {return}
 
 	# init
-	if {$::update_tick([winfo parent $name]) == 0} {
-	 	set ::update_tick([winfo parent $name]) 1
-		pdtk_canvas_getscroll_ping $name		
-	}
+	#if {$::update_tick([winfo parent $name]) == 0} {
+	# 	set ::update_tick([winfo parent $name]) 1
+	#	pdtk_canvas_getscroll_ping $name		
+	#}
 
 	# update
-	if {$::update_tick([winfo parent $name]) == 1} {
-		set ::update_tick([winfo parent $name]) 2
-		return
-	}
+	#if {$::update_tick([winfo parent $name]) == 1} {
+	#	set ::update_tick([winfo parent $name]) 2
+	#	return
+	#}
 
 	#debug
 	#catch { $name delete debug }
+	#puts stderr "top-left x:[$name canvasx 0] y:[$name canvasy 0]"
 
 	#ico@bukvic.net 5/18/10
 	#bbox all is not accurate when using text
@@ -3538,6 +3539,8 @@ proc pdtk_canvas_getscroll {name} {
 	    }
 	}
 
+	#puts stderr "$x1 $x2 $y1 $y2"
+
 	set parentname [winfo parent $name]
 
 	if {$x1 != 1.0e30} {
@@ -3553,8 +3556,10 @@ proc pdtk_canvas_getscroll {name} {
 		set xminval $x1
 		set yminval $y1
 
-		set xmaxval [expr $x1+($x2-$x1)]
-		set ymaxval [expr $y1+($y2-$y1)]
+		#set xmaxval [expr $x1+($x2-$x1)]
+		#set ymaxval [expr $y1+($y2-$y1)]
+		set xmaxval $x2
+		set ymaxval $y2
 
 		#if {$x1 < $xminval} {set xminval $x1}
 		#if {$y1 < $yminval} {set yminval $y1}
@@ -3638,9 +3643,11 @@ proc pdtk_canvas_getscroll {name} {
 			set ::yscrollable($parentname) 0
 		}
 	}
-	set ::update_tick([winfo parent $name]) 1
+	#set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
+	#puts stderr "END top-left x:[$name canvasx 0] y:[$name canvasy 0]"
     update
+
 }
 
 proc pdtk_canvas_sendkey {name state key iso shift focus} {
