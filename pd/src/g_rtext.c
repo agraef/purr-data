@@ -509,6 +509,8 @@ void rtext_activate(t_rtext *x, int state)
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
 }
 
+extern int ignore_scroll;
+
 void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 {
     int w = 0, h = 0, indx, i, newsize, ndel;
@@ -528,7 +530,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
             } */
             if (x->x_selstart && (x->x_selstart == x->x_selend)) {
                 u8_dec(x->x_buf, &x->x_selstart);
-				if (glist_isvisible(glist_getcanvas(x->x_glist)))
+				if (glist_isvisible(glist_getcanvas(x->x_glist)) && !ignore_scroll)
 					sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
 			}
 			
@@ -537,7 +539,7 @@ void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
         {
             if (x->x_selend < x->x_bufsize && (x->x_selstart == x->x_selend))
                 u8_inc(x->x_buf, &x->x_selend);
-			if (glist_isvisible(glist_getcanvas(x->x_glist)))
+			if (glist_isvisible(glist_getcanvas(x->x_glist)) && !ignore_scroll)
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
         }
         
@@ -566,7 +568,7 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_buf[x->x_selstart] = n;
             x->x_bufsize = newsize;
             x->x_selstart = x->x_selstart + 1;
-			if (glist_isvisible(glist_getcanvas(x->x_glist)))
+			if (glist_isvisible(glist_getcanvas(x->x_glist)) && !ignore_scroll)
 				sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)glist_getcanvas(x->x_glist));
         }
 		/*--moo: check for unicode codepoints beyond 7-bit ASCII --*/

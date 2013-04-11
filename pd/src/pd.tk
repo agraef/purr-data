@@ -6300,11 +6300,15 @@ proc pdtk_pastetext {} {
     set pdtk_pastebuffer ""
     catch {global pdtk_pastebuffer; set pdtk_pastebuffer [clipboard get]}
 #    puts stderr [concat paste $pdtk_pastebuffer]
-    for {set i 0} {$i < [string length $pdtk_pastebuffer]} {incr i 1} {
+    for {set i 0} {$i < [expr [string length $pdtk_pastebuffer] - 1]} {incr i 1} {
         set cha [string index $pdtk_pastebuffer $i]
         scan $cha %c keynum
-        pd [concat pd key 1 $keynum 0 \;]
+        pd [concat pd key 1 $keynum 0 1\;]
     }
+	incr i 1
+	set cha [string index $pdtk_pastebuffer $i]
+	scan $cha %c keynum
+	pd [concat pd key 1 $keynum 0 0\;]
 }
 
 ############# open and save dialogs for objects in Pd ##########

@@ -71,6 +71,7 @@ extern t_class *text_class;
 
 int do_not_redraw = 0;     // used to optimize redrawing
 int old_displace = 0;	   // for legacy displaces within gop that are not visible to displaceselection
+int ignore_scroll = 0;
 
 int connect_exception = 0; // used when autopatching to bypass check whether one is trying to connect signal with non-signal nlet
 						   // since this is impossible to figure out when the newly created object is an empty one
@@ -3449,7 +3450,9 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
     /* this routine is called whenever a key is pressed or released.  "x"
     may be zero if there's no current canvas.  The first argument is true or
     false for down/up; the second one is either a symbolic key name (e.g.,
-    "Right" or an Ascii key number.  The third is the shift key. */
+    "Right" or an Ascii key number.  The third is the shift key. 
+	In Pd-L2Ork additional argument is to determine whether we're pasting
+	to ignore unnecessary getscroll calls at paste time */
 void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
     static t_symbol *keynumsym, *keyupsym, *keynamesym;
@@ -3467,6 +3470,9 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     
     if (ac < 3)
         return;
+		/* Pd-L2Ork's ignore scroll at paste time */
+	if (ac > 3 && av[3].a_type == A_FLOAT)
+		ignore_scroll = av[3].a_w.w_float;
     if (!x || !x->gl_editor)
         return;
     canvas_undo_already_set_move = 0;
