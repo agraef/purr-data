@@ -2035,6 +2035,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 			sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
             canvas_reflecttitle(x);
             x->gl_havewindow = 1;
+			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 
 /*
 			//newly opened arrays created prior to pd-l2ork require fittograph
