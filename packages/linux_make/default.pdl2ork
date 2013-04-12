@@ -33,8 +33,7 @@ loadlib29: ext13
 loadlib30: ggee
 loadlib31: iem_anything
 loadlib32: ekext
-loadlib33: flext
-nloadlib: 33
+nloadlib: 32
 path1: /var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType
 path2: ~/pd-l2ork-externals
 path3: ~/L2Ork/PD/Abstractions
