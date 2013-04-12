@@ -71,7 +71,6 @@ extern t_class *text_class;
 
 int do_not_redraw = 0;     // used to optimize redrawing
 int old_displace = 0;	   // for legacy displaces within gop that are not visible to displaceselection
-int ignore_scroll = 0;
 
 int connect_exception = 0; // used when autopatching to bypass check whether one is trying to connect signal with non-signal nlet
 						   // since this is impossible to figure out when the newly created object is an empty one
@@ -3470,9 +3469,6 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     
     if (ac < 3)
         return;
-		/* Pd-L2Ork's ignore scroll at paste time */
-	if (ac > 3 && av[3].a_type == A_FLOAT)
-		ignore_scroll = av[3].a_w.w_float;
     if (!x || !x->gl_editor)
         return;
     canvas_undo_already_set_move = 0;
