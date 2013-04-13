@@ -3647,8 +3647,10 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
 		//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		//sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 20\n", x);  
     }
-    else if (x->gl_editor->e_onmotion == MA_REGION)
+    else if (x->gl_editor->e_onmotion == MA_REGION) {
         canvas_doregion(x, xpos, ypos, 0);
+		sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 0\n", x);
+	}
     else if (x->gl_editor->e_onmotion == MA_CONNECT) {
 		//fprintf(stderr,"MA_CONNECT\n");
         canvas_doconnect(x, xpos, ypos, 0, 0);
