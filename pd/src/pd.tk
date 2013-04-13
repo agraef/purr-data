@@ -2911,7 +2911,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
     # bother with modifiers there.
     # We don't handle multiple clicks yet.
 
-    # bind $name.c <Configure> { pdtk_canvas_getscroll %W }
+    bind $name.c <Configure> {after 100 pdtk_canvas_getscroll %W}
+	#bind $name.c <Configure> {after 100 pdtk_canvas_getscroll_configure %W}
     bind $name.c <Button> {pdtk_canvas_click %W %x %y %b 0}
     bind $name.c <Shift-Button> {pdtk_canvas_click %W %x %y %b 1}
     bind $name.c <Control-Shift-Button> {pdtk_canvas_click %W %x %y %b 3}
@@ -3420,7 +3421,7 @@ proc pdtk_canvas_getscroll_ping {name} {
 		set ::update_tick($wname) 3	
 		pdtk_canvas_getscroll $name
 	}
-	after 50 [list pdtk_canvas_getscroll_ping $name]
+	after 100 [list pdtk_canvas_getscroll_ping $name]
 }
 
 proc pdtk_select_all_gop_widgets {name gop state} {
@@ -3437,6 +3438,32 @@ proc pdtk_select_all_gop_widgets {name gop state} {
 					$name.c dtag $tag selected
 				}
 			}
+		}
+	}
+}
+
+proc pdtk_canvas_getscroll_configure {canvas} {
+	set window [string trimright $canvas .c]
+	if {$::scroll($window)} {
+		set xy [$window.scrollvert get]
+		if { [expr [lindex $xy 1] - [lindex $xy 0]] == 1.0 && $::yscrollable($window) } {
+    		pack forget $window.scrollvert
+			set ::yscrollable($window) 0
+		}
+		if { [expr [lindex $xy 1] - [lindex $xy 0]] < 1.0 && $::yscrollable($window) == 0 } {	
+			pack $window.scrollvert -side right \
+                   -fill y -before $window.c
+			set ::yscrollable($window) 1
+		}
+		set xy [$window.scrollhort get]
+		if { [expr [lindex $xy 1] - [lindex $xy 0]] == 1.0 && $::xscrollable($window)} {
+    		pack forget $window.scrollhort
+			set ::xscrollable($window) 0
+		}
+		if { [expr [lindex $xy 1] - [lindex $xy 0]] < 1.0 && $::xscrollable($window) == 0 } {		
+			pack $window.scrollhort -side bottom \
+                   -fill x -before $window.c
+			set ::xscrollable($window) 1
 		}
 	}
 }
@@ -3579,17 +3606,17 @@ proc pdtk_canvas_getscroll {name} {
 
 		if {$::scroll($parentname) == 1} {
 
-			# if {($::xscrollable($parentname) && $::yscrollable($parentname)
-			#		&& [expr $winwidth + 14] >= $canvaswidth
-			#		&& [expr $winheight + 14] >= $canvasheight)} {
+			if {($::xscrollable($parentname) && $::yscrollable($parentname)
+					&& [expr $winwidth + 14] >= $canvaswidth
+					&& [expr $winheight + 14] >= $canvasheight)} {
 				#puts stderr "TRYING TO ADJUST WIDTH & HEIGHT"
-			#	pack forget $parentname.scrollhort
-			#	set ::xscrollable($parentname) 0
-			#	pack forget $parentname.scrollvert
-			#	set ::yscrollable($parentname) 0
-				#set winwidth [expr {$winwidth + 14}]
-				#set winheight [expr {$winheight + 14}]
-			#}
+				pack forget $parentname.scrollhort
+				set ::xscrollable($parentname) 0
+				pack forget $parentname.scrollvert
+				set ::yscrollable($parentname) 0
+				set winwidth [expr {$winwidth + 14}]
+				set winheight [expr {$winheight + 14}]
+			}
 
 			if {$winwidth >= $canvaswidth && $::xscrollable($parentname)} {
 				#puts stderr "NO HORIZONTAL NECESSARY"
