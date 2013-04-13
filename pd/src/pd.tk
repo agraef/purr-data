@@ -2229,13 +2229,15 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	if {![info exists ::update_tick($name)]} {
 		set ::update_tick($name) 0
 	}
+	if {![info exists ::drag_tick($name)]} {
+		set ::drag_tick($name) 0
+	}
 	if {![info exists ::undo($name)]} {
 		set ::undo($name) no
 	}
 	if {![info exists ::redo($name)]} {
 		set ::redo($name) no
 	}
-
 	if {![info exists ::font($name)]} {
 		set ::font($name) 10
 	}
@@ -3442,6 +3444,7 @@ proc pdtk_select_all_gop_widgets {name gop state} {
 	}
 }
 
+# currently unused
 proc pdtk_canvas_getscroll_configure {canvas} {
 	set window [string trimright $canvas .c]
 	if {$::scroll($window)} {
@@ -3931,7 +3934,38 @@ proc pdtk_canvas_scroll {canvas xy distance} {
 	}
 }
 
+proc pdtk_check_scroll_on_motion_ping {name} {
+	set wname [string trimright $name .c]
+	if {![winfo exists $wname]} {
+		set ::drag_tick($wname) 0
+		return
+	}
+	if {$::drag_tick($wname) == 2} {
+		set ::drag_tick($wname) 3	
+		pdtk_check_scroll_on_motion $name 0
+	}
+	after 50 [list pdtk_check_scroll_on_motion_ping $name]
+}
+
 proc pdtk_check_scroll_on_motion {w threshold} {
+    # kludge since this gets called sometimes after a canvas is destroyed
+    if {![winfo exists $w]} {return}
+
+	# waiting for refresh
+	if {$::drag_tick([winfo parent $w]) == 2} {return}
+
+	# init
+	if {$::drag_tick([winfo parent $w]) == 0} {
+	 	set ::drag_tick([winfo parent $w]) 1
+		pdtk_check_scroll_on_motion_ping $w	
+	}
+
+	# update
+	if {$::drag_tick([winfo parent $w]) == 1} {
+		set ::drag_tick([winfo parent $w]) 2
+		return
+	}
+
 	set x1 [$w canvasx 0]
 	set x2 [expr [$w canvasx 0] + [winfo width $w]]
 	set y1 [$w canvasy 0]
@@ -3957,6 +3991,8 @@ proc pdtk_check_scroll_on_motion {w threshold} {
 			pdtk_canvas_scroll $w y -1
 		}
 	}
+
+	set ::drag_tick([winfo parent $w]) 1
 }
 
 proc pdtk_canvas_motion {name x y mods} {
