@@ -548,8 +548,10 @@ void hradio_draw(t_hradio *x, t_glist *glist, int mode)
         sys_queuegui(x, glist, hradio_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         hradio_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
         hradio_draw_new(x, glist);
+		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+	}
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         hradio_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)

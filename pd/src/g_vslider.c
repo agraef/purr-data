@@ -544,8 +544,10 @@ void vslider_draw(t_vslider *x, t_glist *glist, int mode)
         sys_queuegui(x, glist, vslider_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         vslider_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
         vslider_draw_new(x, glist);
+		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+	}
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         vslider_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)

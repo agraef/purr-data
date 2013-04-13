@@ -408,8 +408,10 @@ void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)
 {
     if(mode == IEM_GUI_DRAW_MODE_MOVE)
         my_canvas_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
         my_canvas_draw_new(x, glist);
+		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+	}
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         my_canvas_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)

@@ -747,8 +747,10 @@ void vu_draw(t_vu *x, t_glist *glist, int mode)
 	//fprintf(stderr,"vu_draw %d\n", mode);
     if(mode == IEM_GUI_DRAW_MODE_MOVE)
         vu_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
         vu_draw_new(x, glist);
+		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+	}
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         vu_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)

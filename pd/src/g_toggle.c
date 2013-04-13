@@ -539,8 +539,10 @@ void toggle_draw(t_toggle *x, t_glist *glist, int mode)
         toggle_draw_update(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         toggle_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
         toggle_draw_new(x, glist);
+		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+	}
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         toggle_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)

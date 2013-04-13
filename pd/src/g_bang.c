@@ -521,8 +521,10 @@ void bng_draw(t_bng *x, t_glist *glist, int mode)
         bng_draw_update(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         bng_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
         bng_draw_new(x, glist);
+		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+	}
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         bng_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
