@@ -174,8 +174,10 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
         gobj_getrect(x, glist, &gx1, &gy1, &gx2, &gy2);
 		//fprintf(stderr,"gobj_shouldvis gop: %d %d %d %d || object %d %d %d %d\n", x1, x2, y1, y2, gx1, gx2, gy1, gy2);
         if (gx1 < x1 || gx1 > x2 || gx2 < x1 || gx2 > x2 ||
-            gy1 < y1 || gy1 > y2 || gy2 < y1 || gy2 > y2)
+            gy1 < y1 || gy1 > y2 || gy2 < y1 || gy2 > y2) {
+				//fprintf(stderr,"does not fit within boundaries\n");
                 return (0);
+		}
 		if (glist==glist_getcanvas(glist))
         	sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
     }
@@ -185,6 +187,14 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
         boxes inside graphs---except comments, if we're doing the new
         (goprect) style. */
 		//fprintf(stderr,"pd_checkobject %lx\n", x);
+		/*fprintf(stderr,"pd_checkobject %d %d %d %d %d %d %d\n",
+			glist->gl_havewindow, 
+            (ob->te_pd != canvas_class ? 1:0),
+			(ob->te_pd->c_wb != &text_widgetbehavior ? 1:0),
+			(ob->te_pd == canvas_class ? 1:0),
+			((t_glist *)ob)->gl_isgraph,
+            glist->gl_goprect,
+			(ob->te_type == T_TEXT ? 1:0));*/
         return (glist->gl_havewindow ||
             (ob->te_pd != canvas_class &&
                 ob->te_pd->c_wb != &text_widgetbehavior) ||

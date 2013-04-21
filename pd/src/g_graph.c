@@ -1191,9 +1191,11 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 		t_gobj *g;
 		//fprintf(stderr,"graph_select\n");
 		if (x->gl_list)
-			for (g = x->gl_list; g; g = g->g_next)
-				if (g && gobj_shouldvis(g, x) && (g->g_pd->c_wb->w_displacefnwtag != NULL || pd_class((t_pd *)g) == garray_class))
+			for (g = x->gl_list; g; g = g->g_next) {
+				//fprintf(stderr,"shouldvis %d\n",gobj_shouldvis(g, x));
+				if ((g && gobj_shouldvis(g, x) && (g->g_pd->c_wb->w_displacefnwtag != NULL) || (g && pd_class((t_pd *)g) == garray_class)))
 					gobj_select(g, x, state);
+		}
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n", canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
 }

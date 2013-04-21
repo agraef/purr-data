@@ -1184,7 +1184,7 @@ static void gatom_properties(t_gobj *z, t_glist *owner)
 static void text_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"text_getrect %d %d\n", (glist->gl_editor ? 1 : 0), (glist->gl_editor->e_rtext ? 1:0));
+	//fprintf(stderr,"text_getrect\n");
     t_text *x = (t_text *)z;
     int width, height, iscomment = (x->te_type == T_TEXT);
     t_float x1, y1, x2, y2;
@@ -1194,10 +1194,23 @@ static void text_getrect(t_gobj *z, t_glist *glist,
     
     if (x->te_type == T_ATOM && x->te_width > 0)
     {
+		//fprintf(stderr,"	T_ATOM\n");
         int font = glist_getfont(glist);
         int fontwidth = sys_fontwidth(font), fontheight = sys_fontheight(font);
         width = (x->te_width > 0 ? x->te_width : 6) * fontwidth + 2;
         height = fontheight + 3; /* borrowed from TMARGIN, etc, in g_rtext.c */
+    }
+    else if (x->te_type == T_TEXT)
+    {
+		//fprintf(stderr,"	T_TEXT\n");
+        t_rtext *y = glist_findrtext(glist, x);
+		if (y) {
+		    width = rtext_width(y);
+			height = rtext_height(y);
+		} else {
+			width = height = 10;
+		}
+		//fprintf(stderr,"T_TEXT width=%d height=%d\n", width, height);
     }
         /* if we're invisible we don't know our size so we just lie about
         it.  This is called on invisible boxes to establish order of inlets
@@ -1219,7 +1232,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         t_rtext *y = glist_findrtext(glist, x);
         width = rtext_width(y);
 
-		//fprintf(stderr,"width=%d\n", width);
+		//fprintf(stderr,"rtext_width=%d\n", width);
 
 		/*  now find if we have more inlets or outlets than
 			what can comfortably fit and adjust accordingly
@@ -1246,12 +1259,16 @@ static void text_getrect(t_gobj *z, t_glist *glist,
 		}
         height = rtext_height(y) - (iscomment << 1);
     }
-    else width = height = 10;
+    else {
+		width = height = 10;
+		//fprintf(stderr,"	default\n");
+	}
     x1 = text_xpix(x, glist);
     y1 = text_ypix(x, glist);
     x2 = x1 + width;
     y2 = y1 + height;
-    y1 += iscomment;
+	//x1 += iscomment*2;
+    //y1 += iscomment*6;
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -1418,7 +1435,7 @@ static void text_delete(t_gobj *z, t_glist *glist)
 
 static void text_vis(t_gobj *z, t_glist *glist, int vis)
 {
-	//fprintf(stderr,"text_vis\n");
+	//fprintf(stderr,"text_vis %d\n", vis);
     t_text *x = (t_text *)z;
 
 #ifdef PDL2ORK
@@ -1438,6 +1455,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
 		{
 		    if (gobj_shouldvis(&x->te_g, glist))
 		    {
+				//fprintf(stderr,"	draw it\n");
 		        t_rtext *y = glist_findrtext(glist, x);
 		        if (x->te_type == T_ATOM)
 		            glist_retext(glist, x);
@@ -1451,6 +1469,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
 		    t_rtext *y = glist_findrtext(glist, x);
 		    if (gobj_shouldvis(&x->te_g, glist))
 		    {
+				//fprintf(stderr,"	erase it\n");
 		        text_eraseborder(x, glist, rtext_gettag(y));
 		        rtext_erase(y);
 		    }
