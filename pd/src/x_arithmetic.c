@@ -156,15 +156,31 @@ static void *binop1_pow_new(t_floatarg f)
 
 static void binop1_pow_bang(t_binop *x)
 {
-    outlet_float(x->x_obj.ob_outlet,
-        (x->x_f1 > 0 ? powf(x->x_f1, x->x_f2) : 0));
+	if (x->x_f1 >= 0)
+    	outlet_float(x->x_obj.ob_outlet,
+        	powf(x->x_f1, x->x_f2));
+	else if (x->x_f2 <= -1 || x->x_f2 >= 1 || x->x_f2 == 0)
+    	outlet_float(x->x_obj.ob_outlet,
+        	powf(x->x_f1, x->x_f2));
+	else {
+		pd_error(x, "pow: calculation resulted in NaN");
+    	outlet_float(x->x_obj.ob_outlet, 0);
+	}
 }
 
 static void binop1_pow_float(t_binop *x, t_float f)
 {
     x->x_f1 = f;
-    outlet_float(x->x_obj.ob_outlet,
-        (x->x_f1 > 0 ? powf(x->x_f1, x->x_f2) : 0));
+	if (x->x_f1 >= 0)
+    	outlet_float(x->x_obj.ob_outlet,
+        	powf(x->x_f1, x->x_f2));
+	else if (x->x_f2 <= -1 || x->x_f2 >= 1 || x->x_f2 == 0)
+    	outlet_float(x->x_obj.ob_outlet,
+        	powf(x->x_f1, x->x_f2));
+	else {
+		pd_error(x, "pow: calculation resulted in NaN");
+    	outlet_float(x->x_obj.ob_outlet, 0);
+	}
 }
 
 /* ------------------------ max -------------------------------- */
