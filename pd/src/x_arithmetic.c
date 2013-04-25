@@ -163,7 +163,7 @@ static void binop1_pow_bang(t_binop *x)
     	outlet_float(x->x_obj.ob_outlet,
         	powf(x->x_f1, x->x_f2));
 	else {
-		pd_error(x, "pow: calculation resulted in NaN");
+		pd_error(x, "pow: calculation resulted in a NaN");
     	outlet_float(x->x_obj.ob_outlet, 0);
 	}
 }
@@ -178,7 +178,7 @@ static void binop1_pow_float(t_binop *x, t_float f)
     	outlet_float(x->x_obj.ob_outlet,
         	powf(x->x_f1, x->x_f2));
 	else {
-		pd_error(x, "pow: calculation resulted in NaN");
+		pd_error(x, "pow: calculation resulted in a NaN");
     	outlet_float(x->x_obj.ob_outlet, 0);
 	}
 }
