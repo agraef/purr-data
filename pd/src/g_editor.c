@@ -2019,6 +2019,10 @@ void canvas_map(t_canvas *x, t_floatarg f);
 void canvas_vis(t_canvas *x, t_floatarg f)
 {
 	//fprintf(stderr,"canvas_vis .x%lx %f\n", (t_int)x, f);
+
+	t_gobj *g;
+	t_int properties;
+
     int flag = (f != 0);
     if (flag)
     {
@@ -2122,6 +2126,24 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             canvas_map(x, 0);
         canvas_destroy_editor(x);
         sys_vgui("destroy .x%lx\n", x);
+		// delete properties windows of objects in the patcher we're closing
+		g = x->gl_list;
+		while (g) {
+			properties = gfxstub_haveproperties((void *)g);
+			if (properties) {
+				//sys_vgui("destroy .gfxstub%lx\n", properties);
+				gfxstub_deleteforkey((void *)g);
+			}
+			g = g->g_next;
+		}
+		// now check if canvas has its properties open
+		properties = gfxstub_haveproperties((void *)x);
+		if (properties) {
+			//sys_vgui("destroy .gfxstub%lx\n", properties);
+			gfxstub_deleteforkey((void *)x);
+		}
+
+		
         for (i = 1, x2 = x; x2; x2 = x2->gl_next, i++)
             ;
         //sys_vgui(".mbar.find delete %d\n", i);
