@@ -224,17 +224,17 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 				     xpos, ypos + x->x_gui.x_h,
 				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x);
 			if(!x->x_gui.x_fsf.x_snd_able)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxNUM outlet}\n",
+				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %lxNUM outlet}\n",
 				     canvas,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
-				     nlet_tag, 0, x);
+				     x, nlet_tag, 0, x);
 			if(!x->x_gui.x_fsf.x_rcv_able)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxNUM inlet}\n",
+				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %lxNUM inlet}\n",
 				     canvas,
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1,
-				     nlet_tag, 0, x);
+				     x, nlet_tag, 0, x);
 		} else {
 			sys_vgui(
 				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
@@ -298,13 +298,13 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 			     xpos, ypos + x->x_gui.x_h);
 		if (x->x_hide_frame <= 1) {
 		   if(!x->x_gui.x_fsf.x_snd_able)
-				sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-				     canvas, nlet_tag, 0,
+				sys_vgui(".x%lx.c coords %lxNUM%so%d %d %d %d %d\n",
+				     canvas, x, nlet_tag, 0,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h);
 		   if(!x->x_gui.x_fsf.x_rcv_able)
-				sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
-				     canvas, nlet_tag, 0,
+				sys_vgui(".x%lx.c coords %lxNUM%si%d %d %d %d %d\n",
+				     canvas, x, nlet_tag, 0,
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1);
 		}
@@ -417,21 +417,21 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxNUM%so%d\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
-		         nlet_tag, 0);
+		         x, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxNUM%si%d\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+IOWIDTH, ypos+1,
-		         nlet_tag, 0);
+		         x, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
 
 	}
 }
@@ -784,6 +784,8 @@ static void my_numbox_getrect(t_gobj *z, t_glist *glist,
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
     *xp2 = *xp1 + x->x_numwidth;
     *yp2 = *yp1 + x->x_gui.x_h;
+
+	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
 static void my_numbox_save(t_gobj *z, t_binbuf *b)
@@ -928,12 +930,14 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     my_numbox_check_minmax(x, min, max);
 	if (need_to_redraw) {
 	    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
-	    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
+	    //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
+		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_NEW);
 	} else {
 		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
 		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+		//(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+		//(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 	}
 	
     canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);

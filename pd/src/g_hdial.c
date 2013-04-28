@@ -105,11 +105,11 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxHRDO outlet}\n",
-		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%so%d %lxHRDO        c outlet}\n",
+		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxHRDO inlet}\n",
-		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%si%d %lxHRDO inlet}\n",
+		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, x);
 	//}
 }
 
@@ -153,11 +153,11 @@ void hradio_draw_move(t_hradio *x, t_glist *glist)
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-		         canvas, nlet_tag, 0, xx11b, yy12-1, xx11b + IOWIDTH, yy12);
+		    sys_vgui(".x%lx.c coords %lxHRDO%so%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 0, xx11b, yy12-1, xx11b + IOWIDTH, yy12);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
-		         canvas, nlet_tag, 0, xx11b, yy11, xx11b + IOWIDTH, yy11+1);
+		    sys_vgui(".x%lx.c coords %lxHRDO%si%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 0, xx11b, yy11, xx11b + IOWIDTH, yy11+1);
 		/* redraw scale handle rectangle if selected */
 		if (x->x_gui.x_fsf.x_selected)
 			hradio_draw_select(x, x->x_gui.x_glist);
@@ -249,20 +249,20 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHRDO%so%d\n",
 		             canvas,
 		             xpos, ypos + x->x_gui.x_w-1,
 		             xpos + IOWIDTH, ypos + x->x_gui.x_w,
-		             nlet_tag, 0);
+		             x, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHRDO%si%d\n",
 		             canvas,
 		             xpos, ypos,
-		             xpos + IOWIDTH, ypos+1, nlet_tag, 0);
+		             xpos + IOWIDTH, ypos+1, x,nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxHRDO%si%d\n", canvas, x, nlet_tag, 0);
 	}
 }
 
@@ -572,6 +572,8 @@ static void hradio_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1, int *x
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
     *xp2 = *xp1 + x->x_gui.x_w*x->x_number;
     *yp2 = *yp1 + x->x_gui.x_h;
+
+	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
 static void hradio_save(t_gobj *z, t_binbuf *b)
@@ -652,8 +654,9 @@ static void hradio_dialog(t_hradio *x, t_symbol *s, int argc, t_atom *argv)
     {
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-        canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+        //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+        //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     }
 
 	/* forcing redraw of the scale handle */

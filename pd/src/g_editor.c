@@ -2136,13 +2136,16 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 			}
 			g = g->g_next;
 		}
-		// now check if canvas has its properties open
-		properties = gfxstub_haveproperties((void *)x);
-		if (properties) {
-			//sys_vgui("destroy .gfxstub%lx\n", properties);
-			gfxstub_deleteforkey((void *)x);
+		// now check if canvas has its properties open and
+		// if the canvas is not gop-enabled or its parent is not visible
+		// close its properties
+		if (!x->gl_isgraph || x->gl_owner && !glist_isvisible(x->gl_owner)) {
+			properties = gfxstub_haveproperties((void *)x);
+			if (properties) {
+				//sys_vgui("destroy .gfxstub%lx\n", properties);
+				gfxstub_deleteforkey((void *)x);
+			}
 		}
-
 		
         for (i = 1, x2 = x; x2; x2 = x2->gl_next, i++)
             ;

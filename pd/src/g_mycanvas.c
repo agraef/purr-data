@@ -439,6 +439,7 @@ static void my_canvas_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1, int
 	    *xp2 = *xp1 + x->x_gui.x_w;
 	    *yp2 = *yp1 + x->x_gui.x_h;
 	}
+	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
 static void my_canvas_save(t_gobj *z, t_binbuf *b)
@@ -514,7 +515,8 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
         h = 1;
     x->x_vis_h = h;
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+    //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+	iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
 	/* forcing redraw of the scale handle */
 	if (x->x_gui.x_fsf.x_selected) {

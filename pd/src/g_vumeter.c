@@ -172,29 +172,29 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVU outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
-		         nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxVU outlet}\n",
+		         x, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
-		         nlet_tag, 1, x);
+		         x, nlet_tag, 1, x);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVU inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %lxVU inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
-		         nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxVU inlet}\n",
+		         x, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %lxVU inlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
-		         nlet_tag, 1, x);
+		         x, nlet_tag, 1, x);
 		}
 		x->x_updaterms = x->x_updatepeak = 1;
 		sys_queuegui(x, x->x_gui.x_glist, vu_draw_update);
@@ -255,23 +255,23 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
 		         ypos+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-		         canvas, nlet_tag, 0,
+		    sys_vgui(".x%lx.c coords %lxVU%so%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 0,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4);
-		    sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-		         canvas, nlet_tag, 1,
+		    sys_vgui(".x%lx.c coords %lxVU%so%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 1,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		             xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able)
 		{
-		sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
-		         canvas, nlet_tag, 0,
+		sys_vgui(".x%lx.c coords %lxVU%si%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 0,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1);
-		sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
-		         canvas, nlet_tag, 1,
+		sys_vgui(".x%lx.c coords %lxVU%si%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 1,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1);
 		}
@@ -410,39 +410,39 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%so%d\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
-		         nlet_tag, 0);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+		         x, nlet_tag, 0);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%so%d\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
-		         nlet_tag, 1);
+		         x, nlet_tag, 1);
 		}
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 0);
-		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 1);
+		    sys_vgui(".x%lx.c delete %lxVU%so%d\n", canvas, x, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxVU%so%d\n", canvas, x, nlet_tag, 1);
 		}
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%si%d\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
-		         nlet_tag, 0);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+		         x, nlet_tag, 0);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%si%d\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
-		         nlet_tag, 1);
+		         x, nlet_tag, 1);
 		}
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 0);
-		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 1);
+		    sys_vgui(".x%lx.c delete %lxVU%si%d\n", canvas, x, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxVU%si%d\n", canvas, x, nlet_tag, 1);
 		}
 	}
 }
@@ -763,16 +763,94 @@ void vu_draw(t_vu *x, t_glist *glist, int mode)
 
 /* ------------------------ vu widgetbehaviour----------------------------- */
 
+static void vu_scale_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *xp2, int *yp2, int scale_x, int scale_y)
+{
+	t_float width_multiplier;
+	int scale_length;	
+	int scale_x1;
+	int scale_y1;
+	int scale_x2;
+	int scale_y2;
+	int actual_fontsize; //seems tk does its own thing when it comes to rendering
+	int actual_height;
+
+	if (x->gl_isgraph && !glist_istoplevel(x)) {
+		//fprintf(stderr,"vu_scale_getrect\n");
+
+		switch(x_gui.x_fsf.x_font_style) {
+			case 1:
+				width_multiplier = 0.83333;
+				break;
+			case 2:
+				width_multiplier = 0.735;
+				break;
+			default:
+				width_multiplier = 1.0;
+				break;
+		}
+		if (x_gui.x_fontsize % 2 == 0) {
+			actual_fontsize = x_gui.x_fontsize;
+		} else {
+			actual_fontsize = x_gui.x_fontsize;
+		}
+		actual_height = actual_fontsize;
+		//exceptions
+		if (x_gui.x_fsf.x_font_style == 0 && (actual_fontsize == 8 || actual_fontsize == 13 || actual_fontsize % 10 == 1 || actual_fontsize % 10 == 6 || (actual_fontsize > 48 && actual_fontsize < 100 && (actual_fontsize %10 == 4 || actual_fontsize %10 == 9))) ) {
+			actual_fontsize += 1;
+		}
+		else if (x_gui.x_fsf.x_font_style == 1 && actual_fontsize >= 5 && actual_fontsize < 13 && actual_fontsize % 2 == 1)
+			actual_fontsize += 1;
+		else if (x_gui.x_fsf.x_font_style == 2 && actual_fontsize >= 5 && actual_fontsize % 2 == 1)
+			actual_fontsize += 1;
+		if (actual_height == 9)
+			actual_height += 1;
+		//done with exceptions
+
+		width_multiplier = width_multiplier * (actual_fontsize * 0.6);
+
+		scale_length = 4;
+		scale_x1 = scale_x;
+		scale_y1 = scale_y - actual_height/2;
+		scale_x2 = scale_x1 + (scale_length * width_multiplier);
+		scale_y2 = scale_y1 + actual_height*1.1;
+
+		//DEBUG
+		//fprintf(stderr,"%f %d %d\n", width_multiplier, scale_length, x_gui.x_fsf.x_font_style);
+		//sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
+		//sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags iemguiDEBUG\n", x, scale_x1, scale_y1, scale_x2, scale_y2);
+		if (scale_x1 < *xp1) *xp1 = scale_x1;
+		if (scale_x2 > *xp2) *xp2 = scale_x2;
+		if (scale_y1 < *yp1) *yp1 = scale_y1;
+		if (scale_y2 > *yp2) *yp2 = scale_y2;
+		//DEBUG
+		//sys_vgui(".x%lx.c delete iemguiDEBUG\n", glist_getcanvas(x));
+		//sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags iemguiDEBUG\n", glist_getcanvas(x), *xp1, *yp1, *xp2, *yp2);
+	}
+}
 
 static void vu_getrect(t_gobj *z, t_glist *glist,
                        int *xp1, int *yp1, int *xp2, int *yp2)
 {
     t_vu* x = (t_vu*)z;
 
+    int yyy, end;
+    int xpos=text_xpix(&x->x_gui.x_obj, glist);
+    int ypos=text_ypix(&x->x_gui.x_obj, glist);
+	int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2, k4=ypos-k3;
+
     *xp1 = text_xpix(&x->x_gui.x_obj, glist);
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
     *xp2 = *xp1 + x->x_gui.x_w + 3;
     *yp2 = *yp1 + x->x_gui.x_h + 6;
+
+	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
+
+	//vu has custom scale all labels unlike other iemgui object
+	end=xpos+x->x_gui.x_w+4;
+	yyy = k4 + k1*(k2-1);
+	vu_scale_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2, end+1, yyy+k3+2);
+	yyy = k4;
+	vu_scale_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2, end+1, yyy+k3+2);
 }
 
 static void vu_save(t_gobj *z, t_binbuf *b)
@@ -904,8 +982,9 @@ static void vu_dialog(t_vu *x, t_symbol *s, int argc, t_atom *argv)
     vu_scale(x, (t_float)scale);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-    canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+    //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+    //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+	iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
 	/* forcing redraw of the scale handle */
 	if (x->x_gui.x_fsf.x_selected) {

@@ -111,13 +111,13 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%so%d %lxHSLDR outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%so%d %lxHSLDR outlet}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
-		         xpos+7, ypos + x->x_gui.x_h, nlet_tag, 0, x);
+		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%si%d %lxHSLDR inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%si%d %lxHSLDR inlet}\n",
 		         canvas, xpos, ypos,
-		         xpos+7, ypos+1, nlet_tag, 0, x);
+		         xpos+7, ypos+1, x, nlet_tag, 0, x);
 	//}
 }
 
@@ -153,13 +153,13 @@ static void hslider_draw_move(t_hslider *x, t_glist *glist)
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c coords %so%d %d %d %d %d\n",
-		         canvas, nlet_tag, 0,
+		    sys_vgui(".x%lx.c coords %lxHSLDR%so%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 0,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+7, ypos + x->x_gui.x_h);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c coords %si%d %d %d %d %d\n",
-		         canvas, nlet_tag, 0,
+		    sys_vgui(".x%lx.c coords %lxHSLDR%si%d %d %d %d %d\n",
+		         canvas, x, nlet_tag, 0,
 		         xpos, ypos,
 		         xpos+7, ypos+1);
 		/* redraw scale handle rectangle if selected */
@@ -242,17 +242,17 @@ static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHSLDR%so%d\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
-		         xpos+7, ypos + x->x_gui.x_h, nlet_tag, 0);
+		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c delete %so%d\n", canvas, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxHSLDR%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHSLDR%si%d\n",
 		         canvas, xpos, ypos,
-		         xpos+7, ypos+1, nlet_tag, 0);
+		         xpos+7, ypos+1, x, nlet_tag, 0);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c delete %si%d\n", canvas, nlet_tag, 0);
+		    sys_vgui(".x%lx.c delete %lxHSLDR%si%d\n", canvas, x, nlet_tag, 0);
 	}
 }
 
@@ -559,6 +559,8 @@ static void hslider_getrect(t_gobj *z, t_glist *glist,
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
     *xp2 = *xp1 + x->x_gui.x_w + 8;
     *yp2 = *yp1 + x->x_gui.x_h;
+
+	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
 static void hslider_save(t_gobj *z, t_binbuf *b)
@@ -727,8 +729,9 @@ static void hslider_dialog(t_hslider *x, t_symbol *s, int argc, t_atom *argv)
     hslider_check_minmax(x, min, max);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-    canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+    //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+    //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+	iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
 	/* forcing redraw of the scale handle */
 	if (x->x_gui.x_fsf.x_selected) {

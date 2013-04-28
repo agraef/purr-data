@@ -214,6 +214,7 @@ typedef struct _iemgui
 	int				   label_offset_x;
 	int				   label_offset_y;
 	int				   label_vis;
+	int				   x_vis;				/* is the object drawn? */
 } t_iemgui;
 
 typedef struct _iemguidummy
@@ -372,6 +373,8 @@ EXTERN void iemgui_receive(void *x, t_iemgui *iemgui, t_symbol *s);
 EXTERN void iemgui_label(void *x, t_iemgui *iemgui, t_symbol *s);
 EXTERN void iemgui_label_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
 EXTERN void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
+EXTERN void iemgui_label_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *xp2, int *yp2);
+EXTERN void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode);
 EXTERN void iemgui_size(void *x, t_iemgui *iemgui);
 EXTERN void iemgui_delta(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
 EXTERN void iemgui_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
