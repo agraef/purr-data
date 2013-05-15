@@ -66,6 +66,7 @@ void garray_arrayviewlist_close(t_garray *x);
 
 void array_resize(t_array *x, int n)
 {
+	//fprintf(stderr,"array_resize\n");
     int elemsize, oldn;
     t_gpointer *gp;
     t_template *template = template_findbyname(x->a_templatesym);
@@ -91,6 +92,7 @@ void array_resize(t_array *x, int n)
 
 static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
 {
+	//fprintf(stderr,"array_resize_and_redraw\n");
     t_array *a2 = array;
     int vis = glist_isvisible(glist);
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
@@ -264,6 +266,7 @@ int garray_getname(t_garray *x, t_symbol **namep)
             to fit a new size and style for the garray */
 void garray_fittograph(t_garray *x, int n)
 {
+	//fprintf(stderr,"garray_fittoraph %d\n", n);
     t_array *array = garray_getarray(x);
     t_glist *gl = x->x_glist;
     if (gl->gl_list == &x->x_gobj && !x->x_gobj.g_next)
@@ -910,18 +913,23 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                         memmove((char *)(array->a_vec) + elemsize * i, 
                             (char *)(array->a_vec) + elemsize * (i+1),
                                 (array->a_n - 1 - i) * elemsize);
-                        array_resize_and_redraw(array, glist, array->a_n - 1);
+                        //array_resize_and_redraw(array, glist, array->a_n - 1);
+						garray_resize(array_garray, array->a_n - 1);
+						canvas_setcursor(glist_getcanvas(glist), 0);
                         return (0);
                     }
                     else if (alt)
                     {
                         /* add a point (after the clicked-on one) */
-                        array_resize_and_redraw(array, glist, array->a_n + 1);
+						//fprintf(stderr,"add a point\n");
+                        //array_resize_and_redraw(array, glist, array->a_n + 1);
                         elem = (char *)array->a_vec;
                         memmove(elem + elemsize * (i+1), 
                             elem + elemsize * i,
                                 (array->a_n - i - 1) * elemsize);
                         i++;
+						garray_resize(array_garray, array->a_n + 1);
+						canvas_setcursor(glist_getcanvas(glist), 0);
                     }
                     if (xonset >= 0)
                     {
