@@ -44,6 +44,7 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *oldy_prev, t_gobj *oldy_next);
 static void canvas_paste_xyoffset(t_canvas *x);
 void canvas_setgraph(t_glist *x, int flag, int nogoprect);
+void canvas_mouseup(t_canvas *x, t_floatarg fxpos, t_floatarg fypos, t_floatarg fwhich);
 static char canvas_cnct_inlet_tag[4096];
 static char canvas_cnct_outlet_tag[4096];
 static int outlet_issignal = 0;
@@ -74,6 +75,10 @@ int old_displace = 0;	   // for legacy displaces within gop that are not visible
 
 int connect_exception = 0; // used when autopatching to bypass check whether one is trying to connect signal with non-signal nlet
 						   // since this is impossible to figure out when the newly created object is an empty one
+
+// used to test whether the shift is pressed and if so, handle various connection exceptions (e.g. multiconnect)
+int glob_lmclick = 0;
+int glob_shift = 0;
 
 struct _outlet
 {
@@ -2589,6 +2594,12 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     altmod = (mod & ALTMOD);
     rightclick = (mod & RIGHTCLICK);
 
+	if (!rightclick) glob_lmclick = doit;
+	if (x->gl_editor->e_onmotion == MA_CONNECT && glob_shift) {
+		//fprintf(stderr,"MA_CONNECT + glob_shift--> mouse_doclick returning\n");
+		return;
+	}
+
     canvas_undo_already_set_move = 0;
 
             /* if keyboard was grabbed, notify grabber and cancel the grab */
@@ -2650,9 +2661,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         ob = pd_checkobject(&y->g_pd);
         if (rightclick)
             canvas_rightclick(x, xpos, ypos, y);
-        else if (shiftmod)
+        else if (shiftmod && canvas_cnct_outlet_tag[0] == 0)
         {
-			//selection
+			//selection (only if we are not hovering above an nlet)
             if (doit)
             {
                 t_rtext *rt;
@@ -2695,7 +2706,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 {
                     if (doit)
                     {
-
+						//fprintf(stderr,"start connection\n");
                         int issignal = obj_issignaloutlet(ob, closest);
                         x->gl_editor->e_onmotion = MA_CONNECT;
                         x->gl_editor->e_xwas = xpos;
@@ -3038,16 +3049,567 @@ int canvas_isconnected (t_canvas *x, t_text *ob1, int n1,
     return (0);
 }
 
-void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
+void canvas_sort_selection_according_to_location(t_canvas *x)
 {
-	//fprintf(stderr,"canvas_doconnect\n");
+	int n_selected = glist_selectionindex(x, 0, 1); // get all selected objects
+	//fprintf(stderr,"n_selected = %d\n", n_selected);
+	t_selection *traverse, *sel[n_selected];
+	int map[n_selected];
+	int already_mapped = 0;
+	int i = 0, j = 0, k = 0, leftmost = 99999, topmost = 99999;
+	t_text *yt;
+	for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next) {
+		sel[i] = traverse;
+		map[i] = -1;
+		i++;
+	}
+	for (i = 0; i < n_selected; i++) {
+		for (j = 0; j < n_selected; j++) {
+			yt = (t_text *)(sel[j]->sel_what);
+			if ((yt->te_xpix < leftmost) ||
+				(yt->te_xpix == leftmost && yt->te_ypix <= topmost)) {
+				for (k = 0; k < n_selected; k++) {
+					if (map[k] == j) {
+						already_mapped = 1;
+					}
+				}
+				if (!already_mapped) {
+					map[i] = j;
+					leftmost = yt->te_xpix;
+					topmost = yt->te_ypix;
+				}
+				already_mapped = 0;
+			}
+		}
+		leftmost = 99999;
+		topmost = 99999;
+	}
+	/*
+	// debug
+	for (i = 0; i < n_selected; i++) {
+		yt = (t_text *)(sel[map[i]]->sel_what);
+		fprintf(stderr,"sorted: %d (%d) x=%d y=%d\n", i, map[i], yt->te_xpix, yt->te_ypix);
+	}*/
+	x->gl_editor->e_selection = sel[map[0]];
+	for (i = 0; i < n_selected-1; i++) {
+		sel[map[i]]->sel_next = sel[map[i+1]];
+	}
+	sel[map[n_selected-1]]->sel_next = 0;
+
+	/*
+	// debug
+	i = 0;
+	for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next) {
+		yt = (t_text *)(traverse->sel_what);
+		fprintf(stderr,"final: %d x=%d y=%d\n", i, yt->te_xpix, yt->te_ypix);
+		i++;
+	}*/
+}
+
+int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int closest2, int multi, int create_undo)
+{
+    int x11=0, y11=0, x12=0, y12=0;
+    int x21=0, y21=0, x22=0, y22=0;
+	int lx1, lx2, ly1, ly2;
+    int noutlet1, ninlet2;
+	t_object *ob1, *ob2;
+	t_outconnect *oc, *oc2;
+
+    ob1 = pd_checkobject(&y1->g_pd);
+    ob2 = pd_checkobject(&y2->g_pd);
+    noutlet1 = obj_noutlets(ob1);
+    ninlet2 = obj_ninlets(ob2);
+	gobj_getrect(y1, x, &x11, &y11, &x12, &y12);
+	gobj_getrect(y2, x, &x21, &y21, &x22, &y22);
+
+    if (canvas_isconnected (x, ob1, closest1, ob2, closest2))
+    {
+		if(x->gl_magic_glass) {                
+			magicGlass_unbind(x->gl_magic_glass);
+        	magicGlass_hide(x->gl_magic_glass);
+		}
+		if (!multi)
+            canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+        return(1);
+    }
+    if (obj_issignaloutlet(ob1, closest1) &&
+        !obj_issignalinlet(ob2, closest2))
+    {
+        error("cannot connect signal outlet to control inlet");
+       	if(x->gl_magic_glass) {
+			magicGlass_unbind(x->gl_magic_glass);
+            magicGlass_hide(x->gl_magic_glass);
+		}
+        if (!multi)
+            canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+        return(1);
+    }
+
+	// if the first object is preset_node, check if the object we are connecting to
+	// is supported. If not, disallow connection
+	
+	if (pd_class(&y1->g_pd) == preset_node_class) {
+		if (pd_class(&y2->g_pd) == message_class) {
+			error("preset_node does not work with messages.");
+			return(1);
+		}
+	}
+
+	// now check if explicit user-made connection into preset_node is other than message
+	// messages may be used to change node's operation
+	if (pd_class(&y2->g_pd) == preset_node_class && pd_class(&y1->g_pd) != message_class) {
+		error("preset node only accepts messages as input to adjust its settings...\n");
+		return(1);
+	}
+
+    int issignal = obj_issignaloutlet(ob1, closest1);
+    oc = obj_connect(ob1, closest1, ob2, closest2);
+	outconnect_setvisible(oc, 1);
+    lx1 = x11 + (noutlet1 > 1 ?
+            ((x12-x11-IOWIDTH) * closest1)/(noutlet1-1) : 0)
+                 + IOMIDDLE;
+    ly1 = y12;
+    lx2 = x21 + (ninlet2 > 1 ?
+            ((x22-x21-IOWIDTH) * closest2)/(ninlet2-1) : 0)
+                + IOMIDDLE;
+    ly2 = y21;
+    sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %s -tags {l%lx all_cords}\n",
+        glist_getcanvas(x),
+            lx1, ly1, lx2, ly2,
+        (issignal ? "$signal_cord" : "$msg_cord"),
+        (issignal ? "$signal_cord_width" : "$msg_cord_width"), 
+        oc);
+    if (canvas_cnct_inlet_tag[0] != 0)
+    {
+        sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+               	x, canvas_cnct_inlet_tag,
+				(last_inlet_filter ? "black" : (obj_issignaloutlet(ob1, closest1) ? "$signal_cord" : "$msg_cord")),
+				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+		if (objtooltip) {
+			objtooltip = 0;
+			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+		}
+        canvas_cnct_inlet_tag[0] = 0;                  
+    }
+    if (canvas_cnct_outlet_tag[0] != 0)
+    {
+        sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+               	x, canvas_cnct_outlet_tag,
+				(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+				(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+		if (objtooltip) {
+			objtooltip = 0;
+			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+		}
+        canvas_cnct_outlet_tag[0] = 0;                  
+    }
+    // end jsarlo
+    canvas_dirty(x, 1);
+    /*canvas_setundo(x, canvas_undo_connect,
+        canvas_undo_set_connect(x, 
+            canvas_getindex(x, &ob1->ob_g), closest1,
+            canvas_getindex(x, &ob2->ob_g), closest2),
+            "connect");*/
+	if (create_undo) {
+		canvas_undo_add(x, 1, "connect", canvas_undo_set_connect(x, 
+		        canvas_getindex(x, &ob1->ob_g), closest1,
+		        canvas_getindex(x, &ob2->ob_g), closest2));
+	}
+
+	// add auto-connect back to preset_node object
+	// (by this time we know we are connecting only to legal objects who have at least one outlet)
+	if (pd_class(&y1->g_pd) == preset_node_class) {
+		//fprintf(stderr,"gotta do auto-connect back to preset_node\n");
+		if (!canvas_isconnected(x, ob2, 0, ob1, 0) && pd_class(&y2->g_pd) != print_class) {
+			oc2 = obj_connect(ob2, 0, ob1, 0);
+			outconnect_setvisible(oc2, 0);
+		}
+		//else
+		//	fprintf(stderr,"error: already connected (this happens when loading from file and is ok)\n");
+	}
+	return(0);
+}
+
+int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
+{
+	//fprintf(stderr,"canvas_trymulticonnect\n");
     int x11=0, y11=0, x12=0, y12=0;
     t_gobj *y1;
     int x21=0, y21=0, x22=0, y22=0;
     t_gobj *y2;
     int xwas = x->gl_editor->e_xwas,
         ywas = x->gl_editor->e_ywas;
-    if (doit) sys_vgui(".x%lx.c delete x\n", x);
+	t_object *ob1, *ob2;
+	int noutlet1, ninlet2;
+	int i;
+	int return_val = 1;
+
+    if (!glob_shift) sys_vgui(".x%lx.c delete x\n", x);
+
+	if ((y1 = canvas_findhitbox(x, xwas, ywas, &x11, &y11, &x12, &y12))
+		    && (y2 = canvas_findhitbox(x, xpos, ypos, &x21, &y21, &x22, &y22)))
+	{
+		// FIRST OPTION: if two objects are selected and the one that is originating
+		// is one of the selected objects try multi-connecting all outlets into
+		// all inlets starting with the user-made one as an offset
+		if (!x->gl_editor->e_selection->sel_next->sel_next && glist_isselected(x, y1) && glist_isselected(x, y2))
+		{
+			//fprintf(stderr,"first option\n");
+		    ob1 = pd_checkobject(&y1->g_pd);
+		    ob2 = pd_checkobject(&y2->g_pd);
+		    if (ob1 && ob2 && ob1 != ob2 &&
+		        (noutlet1 = obj_noutlets(ob1))
+		        && (ninlet2 = obj_ninlets(ob2)))
+		    {
+		        int width1 = x12 - x11, closest1, hotspot1;
+		        int width2 = x22 - x21, closest2, hotspot2;
+		        int lx1, lx2, ly1, ly2;
+		        t_outconnect *oc, *oc2;
+
+		        if (noutlet1 > 1)
+		        {
+		            closest1 = ((xwas-x11) * (noutlet1-1) + width1/2)/width1;
+		            hotspot1 = x11 +
+		                (width1 - IOWIDTH) * closest1 / (noutlet1-1);
+		        }
+		        else closest1 = 0, hotspot1 = x11;
+
+		        if (ninlet2 > 1)
+		        {
+		            closest2 = ((xpos-x21) * (ninlet2-1) + width2/2)/width2;
+		            hotspot2 = x21 +
+		                (width2 - IOWIDTH) * closest2 / (ninlet2-1);
+		        }
+		        else closest2 = 0, hotspot2 = x21;
+
+		        if (closest1 >= noutlet1)
+		            closest1 = noutlet1 - 1;
+		        if (closest2 >= ninlet2)
+		            closest2 = ninlet2 - 1;
+
+				int nconnections = ( noutlet1 - closest1 < ninlet2 - closest2 ? noutlet1 - closest1 : ninlet2 - closest2 );
+				for (i = 0; i < nconnections; i++) {
+					return_val = canvas_doconnect_doit(x, y1, y2, closest1 + i, closest2 + i, 1, 1);
+				}
+			}
+			return(return_val);
+		// end of FIRST OPTION
+		}
+		// SECOND OPTION: if more than two objects are selected and the one that is originating
+		// is not one of the selected, connect originating to all selected objects' the outlets
+		// specified by the first connection
+		else if (x->gl_editor->e_selection->sel_next && !glist_isselected(x, y1) && glist_isselected(x, y2))
+		{
+			//fprintf(stderr,"second option\n");
+		    ob1 = pd_checkobject(&y1->g_pd);
+		    ob2 = pd_checkobject(&y2->g_pd);
+		    int noutlet1, ninlet2;
+		    if (ob1 && ob2 && ob1 != ob2 &&
+		        (noutlet1 = obj_noutlets(ob1))
+		        && (ninlet2 = obj_ninlets(ob2)))
+		    {
+		        int width1 = x12 - x11, closest1, hotspot1;
+		        int width2 = x22 - x21, closest2, hotspot2;
+		        int lx1, lx2, ly1, ly2;
+		        t_outconnect *oc, *oc2;
+
+		        if (noutlet1 > 1)
+		        {
+		            closest1 = ((xwas-x11) * (noutlet1-1) + width1/2)/width1;
+		            hotspot1 = x11 +
+		                (width1 - IOWIDTH) * closest1 / (noutlet1-1);
+		        }
+		        else closest1 = 0, hotspot1 = x11;
+
+		        if (ninlet2 > 1)
+		        {
+		            closest2 = ((xpos-x21) * (ninlet2-1) + width2/2)/width2;
+		            hotspot2 = x21 +
+		                (width2 - IOWIDTH) * closest2 / (ninlet2-1);
+		        }
+		        else closest2 = 0, hotspot2 = x21;
+
+		        if (closest1 >= noutlet1)
+		            closest1 = noutlet1 - 1;
+		        if (closest2 >= ninlet2)
+		            closest2 = ninlet2 - 1;
+
+				return_val = canvas_doconnect_doit(x, y1, y2, closest1, closest2, 1, 1);
+
+				// now that we made the initial connection and know where to begin and where to connect to, let's connect the rest
+				t_selection *sel;
+    			for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
+					// do this only with objects that have not been connected as of yet
+					if (sel->sel_what != y1 && sel->sel_what != y2) {
+						ob2 = pd_checkobject(&sel->sel_what->g_pd);
+						ninlet2 = obj_ninlets(ob2);
+						if (closest2 < ninlet2) {
+							return_val = canvas_doconnect_doit(x, y1, sel->sel_what, closest1, closest2, 1, 1);
+						}
+					}
+				}	
+			}
+			return(return_val);
+		// end of SECOND OPTION
+		}
+
+		// THIRD OPTION: if more than two objects are selected and the one that is receiving connection
+		// is one of the selected, and the target object is selected, connect nth outlet (as specified by
+		// the first connection) from all selected objects into the inlet of the unselected one
+		else if (x->gl_editor->e_selection->sel_next->sel_next && glist_isselected(x, y1) && !glist_isselected(x, y2))
+		{
+			//fprintf(stderr,"third option\n");
+		    ob1 = pd_checkobject(&y1->g_pd);
+		    ob2 = pd_checkobject(&y2->g_pd);
+		    int noutlet1, ninlet2;
+		    if (ob1 && ob2 && ob1 != ob2 &&
+		        (noutlet1 = obj_noutlets(ob1))
+		        && (ninlet2 = obj_ninlets(ob2)))
+		    {
+		        int width1 = x12 - x11, closest1, hotspot1;
+		        int width2 = x22 - x21, closest2, hotspot2;
+		        int lx1, lx2, ly1, ly2;
+		        t_outconnect *oc, *oc2;
+
+		        if (noutlet1 > 1)
+		        {
+		            closest1 = ((xwas-x11) * (noutlet1-1) + width1/2)/width1;
+		            hotspot1 = x11 +
+		                (width1 - IOWIDTH) * closest1 / (noutlet1-1);
+		        }
+		        else closest1 = 0, hotspot1 = x11;
+
+		        if (ninlet2 > 1)
+		        {
+		            closest2 = ((xpos-x21) * (ninlet2-1) + width2/2)/width2;
+		            hotspot2 = x21 +
+		                (width2 - IOWIDTH) * closest2 / (ninlet2-1);
+		        }
+		        else closest2 = 0, hotspot2 = x21;
+
+		        if (closest1 >= noutlet1)
+		            closest1 = noutlet1 - 1;
+		        if (closest2 >= ninlet2)
+		            closest2 = ninlet2 - 1;
+
+				return_val = canvas_doconnect_doit(x, y1, y2, closest1, closest2, 1, 1);
+
+				// now that we made the initial connection and know where to begin and where to connect to, let's connect the rest
+				t_selection *sel;
+    			for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
+					// do this only with objects that have not been connected as of yet
+					if (sel->sel_what != y1 && sel->sel_what != y2) {
+						ob2 = pd_checkobject(&sel->sel_what->g_pd);
+						noutlet1 = obj_noutlets(ob2);
+						if (closest1 < noutlet1) {
+							return_val = canvas_doconnect_doit(x, sel->sel_what, y2, closest1, closest2, 1, 1);
+						}
+					}
+				}	
+			}
+			return(return_val);
+		// end of THIRD OPTION
+		}
+
+		// FOURTH OPTION: if more than two objects are selected and both y1 and y2 are selected
+		// connect each originating object's outlet to each of the outgoing objects' inlets until you run
+		// out of objects or outlets. This one is tricky as there is no guarrantee that objects will be selected
+		// in proper visual order, so we order the selection from left to right and top to bottom
+		// to ensure proper visual pairing. This option has two variants, A and B.
+
+		// OPTION A VS B: we either connect outgoing to each of other objects (A) or incoming to all other objects (B). We
+		// determine which one of the two options is selected based on which condition will yield more successful connections.
+		else if (x->gl_editor->e_selection->sel_next->sel_next && glist_isselected(x, y1) && glist_isselected(x, y2))
+		{
+			//fprintf(stderr,"fourth option\n");
+		    ob1 = pd_checkobject(&y1->g_pd);
+		    ob2 = pd_checkobject(&y2->g_pd);
+		    int noutlet1, ninlet2;
+		    if (ob1 && ob2 && ob1 != ob2 &&
+		        (noutlet1 = obj_noutlets(ob1))
+		        && (ninlet2 = obj_ninlets(ob2)))
+		    {
+		        int width1 = x12 - x11, closest1, hotspot1;
+		        int width2 = x22 - x21, closest2, hotspot2;
+		        int lx1, lx2, ly1, ly2;
+		        t_outconnect *oc, *oc2;
+
+		        if (noutlet1 > 1)
+		        {
+		            closest1 = ((xwas-x11) * (noutlet1-1) + width1/2)/width1;
+		            hotspot1 = x11 +
+		                (width1 - IOWIDTH) * closest1 / (noutlet1-1);
+		        }
+		        else closest1 = 0, hotspot1 = x11;
+
+		        if (ninlet2 > 1)
+		        {
+		            closest2 = ((xpos-x21) * (ninlet2-1) + width2/2)/width2;
+		            hotspot2 = x21 +
+		                (width2 - IOWIDTH) * closest2 / (ninlet2-1);
+		        }
+		        else closest2 = 0, hotspot2 = x21;
+
+		        if (closest1 >= noutlet1)
+		            closest1 = noutlet1 - 1;
+		        if (closest2 >= ninlet2)
+		            closest2 = ninlet2 - 1;
+
+				return_val = canvas_doconnect_doit(x, y1, y2, closest1, closest2, 1, 1);
+
+				// now that we made the initial connection and know where to begin and where to connect to, let's connect the rest
+				t_selection *sel;
+				// resort selection
+				canvas_sort_selection_according_to_location(x);
+				// now check for OPTION A vs. B (see description above)
+				int successA = 0;
+				int successB = 0;
+				int do_count;
+
+				// try option A
+				int tmp_closest1 = closest1;
+				int tmp_closest2 = closest2;
+				t_object *tmp_ob1 = ob1;
+				t_object *tmp_ob2 = ob2;
+				int tmp_noutlet1 = noutlet1;
+				int tmp_ninlet2 = ninlet2;
+				for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
+					if (sel->sel_what != y1 && sel->sel_what != y2) {
+						tmp_ob2 = pd_checkobject(&sel->sel_what->g_pd);
+						tmp_ninlet2 = obj_ninlets(tmp_ob2);
+						tmp_closest1++;
+						if (tmp_closest1 >= tmp_noutlet1) {
+							break;
+						}
+						else if (tmp_closest2 < tmp_ninlet2) {
+							do_count = 1;
+							if (canvas_isconnected (x, tmp_ob1, tmp_closest1, tmp_ob2, tmp_closest2))
+							{
+								do_count = 0;
+							}
+							if (obj_issignaloutlet(ob1, closest1) &&
+								!obj_issignalinlet(ob2, closest2))
+							{
+								do_count = 0;
+							}	
+							if (pd_class(&tmp_ob1->ob_pd) == preset_node_class) {
+								if (pd_class(&tmp_ob2->ob_pd) == message_class) {
+									do_count = 0;
+								}
+							}
+							if (pd_class(&tmp_ob2->ob_pd) == preset_node_class && pd_class(&tmp_ob1->ob_pd) != message_class) {
+								do_count = 0;
+							}
+							successA += do_count;
+						}
+					}
+				}
+				//fprintf(stderr,"successA %d\n", successA);
+
+				// try option B
+				tmp_closest1 = closest1;
+				tmp_closest2 = closest2;
+				tmp_ob1 = ob1;
+				tmp_ob2 = ob2;
+				tmp_noutlet1 = noutlet1;
+				tmp_ninlet2 = ninlet2;
+				for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
+					if (sel->sel_what != y1 && sel->sel_what != y2) {
+						tmp_ob1 = pd_checkobject(&sel->sel_what->g_pd);
+						tmp_noutlet1 = obj_noutlets(tmp_ob1);
+						tmp_closest2++;
+						if (tmp_closest2 >= tmp_ninlet2) {
+							break;
+						}
+						else if (tmp_closest1 < tmp_noutlet1) {
+							do_count = 1;
+							if (canvas_isconnected (x, tmp_ob1, tmp_closest1, tmp_ob2, tmp_closest2))
+							{
+								do_count = 0;
+							}
+							if (obj_issignaloutlet(ob1, closest1) &&
+								!obj_issignalinlet(ob2, closest2))
+							{
+								do_count = 0;
+							}	
+							if (pd_class(&tmp_ob1->ob_pd) == preset_node_class) {
+								if (pd_class(&tmp_ob2->ob_pd) == message_class) {
+									do_count = 0;
+								}
+							}
+							if (pd_class(&tmp_ob2->ob_pd) == preset_node_class && pd_class(&tmp_ob1->ob_pd) != message_class) {
+								do_count = 0;
+							}
+							successB += do_count;
+						}
+					}
+				}
+				//fprintf(stderr,"successB %d\n", successB);
+				
+				// now decide which one is better (we give preference to option A if both are equal)
+				if (successA >= successB)
+				{
+					// OPTION A (see description above)
+					for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+					{
+						// do this only with objects that have not been connected as of yet
+						if (sel->sel_what != y1 && sel->sel_what != y2) {
+							ob2 = pd_checkobject(&sel->sel_what->g_pd);
+							ninlet2 = obj_ninlets(ob2);
+							closest1++;
+							if (closest1 >= noutlet1) {
+								break;
+							}
+							else if (closest2 < ninlet2) {
+								return_val = canvas_doconnect_doit(x, y1, sel->sel_what, closest1, closest2, 1, 1);
+							}
+						}
+					}
+				}
+				else
+				{
+					// OPTION B (see description above)
+					for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+					{
+						// do this only with objects that have not been connected as of yet
+						if (sel->sel_what != y1 && sel->sel_what != y2) {
+							ob1 = pd_checkobject(&sel->sel_what->g_pd);
+							noutlet1 = obj_ninlets(ob1);
+							closest2++;
+							if (closest2 >= ninlet2) {
+								break;
+							}
+							else if (closest1 < noutlet1) {
+								return_val = canvas_doconnect_doit(x, sel->sel_what, y2, closest1, closest2, 1, 1);
+							}
+						}
+					}
+				}			
+			}			
+			return(return_val);
+		// end of FOURTH OPTION
+		}
+	}
+
+	return(1);
+}
+
+void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
+{
+	//fprintf(stderr,"canvas_doconnect\n");
+	if (doit && x->gl_editor->e_selection && x->gl_editor->e_selection->sel_next) {
+		int result = canvas_trymulticonnect(x, xpos, ypos, which, doit);
+		if (!result) {
+			return;
+		}
+	}
+    int x11=0, y11=0, x12=0, y12=0;
+    t_gobj *y1;
+    int x21=0, y21=0, x22=0, y22=0;
+    t_gobj *y2;
+    int xwas = x->gl_editor->e_xwas,
+        ywas = x->gl_editor->e_ywas;
+    if (doit && !glob_shift) sys_vgui(".x%lx.c delete x\n", x);
     else {
 
 		sys_vgui(".x%lx.c coords x %d %d %d %d\n",
@@ -3092,113 +3654,9 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
             if (closest2 >= ninlet2)
                 closest2 = ninlet2 - 1;
 
-            if (canvas_isconnected (x, ob1, closest1, ob2, closest2))
-            {
-                // jsarlo
-				if(x->gl_magic_glass) {                
-					magicGlass_unbind(x->gl_magic_glass);
-                	magicGlass_hide(x->gl_magic_glass);
-				}
-                // end jsarlo
-                canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
-                return;
-            }
-            if (obj_issignaloutlet(ob1, closest1) &&
-                !obj_issignalinlet(ob2, closest2))
-            {
-                if (doit)
-                    error("cannot connect signal outlet to control inlet");
-                // jsarlo
-               	if(x->gl_magic_glass) {
-					magicGlass_unbind(x->gl_magic_glass);
-	                magicGlass_hide(x->gl_magic_glass);
-				}
-                // end jsarlo
-                canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
-                return;
-            }
             if (doit)
             {
-				// if the first object is preset_node, check if the object we are connecting to
-				// is supported. If not, disallow connection
-				
-				if (pd_class(&y1->g_pd) == preset_node_class) {
-					if (pd_class(&y2->g_pd) == message_class) {
-						error("preset_node does not work with messages.");
-						return;
-					}
-				}
-
-				// now check if explicit user-made connection into preset_node if kind other than message
-				// messages may be used to change node's operation
-				if (pd_class(&y2->g_pd) == preset_node_class && pd_class(&y1->g_pd) != message_class) {
-					error("preset node only accepts messages as input to adjust its settings...\n");
-					return;
-				}
-
-                int issignal = obj_issignaloutlet(ob1, closest1);
-                oc = obj_connect(ob1, closest1, ob2, closest2);
-				outconnect_setvisible(oc, 1);
-                lx1 = x11 + (noutlet1 > 1 ?
-                        ((x12-x11-IOWIDTH) * closest1)/(noutlet1-1) : 0)
-                             + IOMIDDLE;
-                ly1 = y12;
-                lx2 = x21 + (ninlet2 > 1 ?
-                        ((x22-x21-IOWIDTH) * closest2)/(ninlet2-1) : 0)
-                            + IOMIDDLE;
-                ly2 = y21;
-                sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %s -tags {l%lx all_cords}\n",
-                    glist_getcanvas(x),
-                        lx1, ly1, lx2, ly2,
-                    (issignal ? "$signal_cord" : "$msg_cord"),
-                    (issignal ? "$signal_cord_width" : "$msg_cord_width"), 
-                    oc);
-                if (canvas_cnct_inlet_tag[0] != 0)
-                {
-                    sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
-                           	x, canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (obj_issignaloutlet(ob1, closest1) ? "$signal_cord" : "$msg_cord")),
-							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
-					if (objtooltip) {
-						objtooltip = 0;
-						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
-					}
-                    canvas_cnct_inlet_tag[0] = 0;                  
-                }
-                if (canvas_cnct_outlet_tag[0] != 0)
-                {
-                    sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
-                           	x, canvas_cnct_outlet_tag,
-							(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-							(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
-					if (objtooltip) {
-						objtooltip = 0;
-						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
-					}
-                    canvas_cnct_outlet_tag[0] = 0;                  
-                }
-                // end jsarlo
-                canvas_dirty(x, 1);
-                /*canvas_setundo(x, canvas_undo_connect,
-                    canvas_undo_set_connect(x, 
-                        canvas_getindex(x, &ob1->ob_g), closest1,
-                        canvas_getindex(x, &ob2->ob_g), closest2),
-                        "connect");*/
-				canvas_undo_add(x, 1, "connect", canvas_undo_set_connect(x, 
-                        canvas_getindex(x, &ob1->ob_g), closest1,
-                        canvas_getindex(x, &ob2->ob_g), closest2));
-
-				// add auto-connect back to preset_node object
-				// (by this time we know we are connecting only to legal objects who have at least one outlet)
-				if (pd_class(&y1->g_pd) == preset_node_class) {
-					//fprintf(stderr,"gotta do auto-connect back to preset_node\n");
-					if (!canvas_isconnected(x, ob2, 0, ob1, 0) && pd_class(&y2->g_pd) != print_class) {
-						oc2 = obj_connect(ob2, 0, ob1, 0);
-						outconnect_setvisible(oc2, 0);
-					}
-					//else
-					//	fprintf(stderr,"error: already connected (this happens when loading from file and is ok)\n");
-				}
+				canvas_doconnect_doit(x, y1, y2, closest1, closest2, 0, 1);
             }
     	    else 
             // jsarlo
@@ -3255,7 +3713,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     	magicGlass_hide(x->gl_magic_glass);
 	}
     // end jsarlo
-    canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+	canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
 }
 
 void canvas_selectinrect(t_canvas *x, int lox, int loy, int hix, int hiy)
@@ -3362,6 +3820,7 @@ void canvas_mouseup(t_canvas *x,
     canvas_upclicktime = sys_getrealtime();
     canvas_upx = xpos;
     canvas_upy = ypos;
+	glob_lmclick = 0;
 
     if (x->gl_editor->e_onmotion == MA_CONNECT)
         canvas_doconnect(x, xpos, ypos, which, 1);
@@ -3432,7 +3891,8 @@ void canvas_mouseup(t_canvas *x,
 		canvas_cnct_inlet_tag[0] = 0;                  
 	}
     
-    x->gl_editor->e_onmotion = MA_NONE;
+	if (!x->gl_editor->e_onmotion == MA_CONNECT || !glob_shift)
+	    x->gl_editor->e_onmotion = MA_NONE;
 }
 
     /* displace the selection by (dx, dy) pixels */
@@ -3510,6 +3970,14 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     canvas_undo_already_set_move = 0;
     down = (atom_getfloat(av) != 0);  /* nonzero if it's a key down */
     shift = (atom_getfloat(av+2) != 0);  /* nonzero if shift-ed */
+	glob_shift = shift;
+	//fprintf(stderr,"%d %d %d %d\n", (x->gl_editor != NULL ? 1 : 0), (x->gl_editor->e_onmotion == MA_CONNECT ? 1 : 0), glob_shift, glob_lmclick);
+	// check if user released shift while trying manual multi-connect
+	if (x->gl_editor && x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick) {
+		//fprintf(stderr,"shift released during connect\n");
+		sys_vgui(".x%lx.c delete x\n", x);
+		canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
+	}
     if (av[1].a_type == A_SYMBOL) {
         gotkeysym = av[1].a_w.w_symbol;
 	}
