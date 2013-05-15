@@ -233,9 +233,15 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 			int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c);
 		    int eatchar = 1;
 			int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
+
+			//following deals with \v replacement for \n in multiline comments
+			int foundit_bv  = firstone(x->x_buf + inindex_b, '\v', maxindex_b);
+			//fprintf(stderr,"%d %d <%s>\n", foundit_b, foundit_bv, x->x_buf);
+			if ((foundit_bv < foundit_b && foundit_bv != -1) || (foundit_b == -1 && foundit_bv != -1)) foundit_b = foundit_bv;
+
 			int foundit_c;
 			if (foundit_b < 0)
-		    {
+		    { 
 		        if (inchars_c > widthlimit_c)
 		        {
 					foundit_b = lastone(x->x_buf + inindex_b, ' ', maxindex_b);
@@ -486,6 +492,7 @@ void rtext_select(t_rtext *x, int state)
 
 void rtext_activate(t_rtext *x, int state)
 {
+    //fprintf(stderr, "rtext_activate\n");
     int w = 0, h = 0, indx;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);

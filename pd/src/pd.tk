@@ -3678,7 +3678,7 @@ proc pdtk_canvas_getscroll {name} {
 	set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
 	#puts stderr "END top-left x:[$name canvasx 0] y:[$name canvasy 0]"
-    #update (bad idea--all kinds of unpredicted problems)
+    #update (bad idea--all kinds of unpredictable problems)
 
 }
 
@@ -6064,8 +6064,9 @@ proc pdtk_text_new {canvasname myname x y text font color} {
 #        36 { set typeface [lindex $pd_fontlist 9] }
 #    }
 	#[encoding convertfrom utf-8 $text]
+	set print_text [string map { \v \n } $text]
     $canvasname create text $x $y -font [get_font_for_size $font] \
-        -tags $myname -text [encoding convertfrom utf-8 $text] -fill $color -anchor nw
+        -tags $myname -text [encoding convertfrom utf-8 $print_text] -fill $color -anchor nw
 	$canvasname addtag text withtag $myname
 	#$canvasname bind $myname <Home> [concat $canvasname icursor $myname 0]
 	#$canvasname bind $myname <End> [concat $canvasname icursor $myname end]
@@ -6080,7 +6081,8 @@ proc pdtk_text_new {canvasname myname x y text font color} {
 
 ################ pdtk_text_set -- change the text ##################
 proc pdtk_text_set {canvasname myname text} {
-    catch {$canvasname itemconfig $myname -text [encoding convertfrom utf-8 $text]}
+    set print_text [string map { \v \n } $text]
+    catch {$canvasname itemconfig $myname -text [encoding convertfrom utf-8 $print_text]}
     #    pd [concat $myname size [$canvasname bbox $myname] \;]
 }
 

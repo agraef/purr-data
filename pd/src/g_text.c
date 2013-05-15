@@ -60,7 +60,9 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     {
         x->te_xpix = atom_getfloatarg(0, argc, argv);
         x->te_ypix = atom_getfloatarg(1, argc, argv);
-        if (argc > 2) binbuf_restore(x->te_binbuf, argc-2, argv+2);
+        if (argc > 2) {
+            binbuf_restore(x->te_binbuf, argc-2, argv+2);
+        }
         else
         {
             SETSYMBOL(&at, gensym("comment"));
@@ -1573,14 +1575,35 @@ void text_save(t_gobj *z, t_binbuf *b)
             label, symfrom, symto);
         binbuf_addv(b, ";");
     }           
-    else        
+    else    
     {
-		//fprintf(stderr, "text\n");
+        //fprintf(stderr,"comment\n");
+        int natom = binbuf_getnatom(x->te_binbuf);
+        t_atom *a = binbuf_getvec(x->te_binbuf);
+        int i;
+        for (i = 0; i < natom; i++) {
+            t_symbol *s;
+            if(a[i].a_type == A_SYMBOL) {
+                //fprintf(stderr,"%d is a symbol\n", i);
+                s = a[i].a_w.w_symbol;
+                if (s != NULL && s->s_name != NULL) {
+                    //fprintf(stderr,"s != NULL\n");
+                    char *c;
+                    for(c = s->s_name; c != NULL && *c != '\0'; c++) {
+                        if(*c == '\n') {
+                            *c = '\v';
+                            //fprintf(stderr,"n->v\n");
+                        }
+                    }
+                }
+            }
+        }
+
         binbuf_addv(b, "ssii", gensym("#X"), gensym("text"),
             (int)x->te_xpix, (int)x->te_ypix);
         binbuf_addbinbuf(b, x->te_binbuf);
         binbuf_addv(b, ";");
-    }           
+    }
 }
 
     /* this one is for everyone but "gatoms"; it's imposed in m_class.c */
@@ -2024,6 +2047,12 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 canvas_updatewindowlist();
     }
     else {
+        char * c;
+        for(c = buf; *c != '\0'; c++) {
+            if(*c == '\n') {
+                *c = '\v';
+            }
+        }
 		binbuf_gettext(x->te_binbuf, &c1, &i1);
 		t_binbuf *b = binbuf_new();
 		binbuf_text(b, buf, bufsize);
