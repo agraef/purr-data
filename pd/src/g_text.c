@@ -1202,6 +1202,13 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         width = (x->te_width > 0 ? x->te_width : 6) * fontwidth + 2;
         height = fontheight + 3; /* borrowed from TMARGIN, etc, in g_rtext.c */
     }
+    // jsarlo
+    else if (strcmp("magicGlass", class_getname(x->ob_pd)) == 0)
+    {
+        width = 0;
+        height = 0;
+    }
+    // end jsarlo
     else if (x->te_type == T_TEXT)
     {
 		//fprintf(stderr,"	T_TEXT\n");
@@ -1221,14 +1228,6 @@ static void text_getrect(t_gobj *z, t_glist *glist,
         flag because we might be within the vis() routine and not have set
         that yet.  So we check directly whether the "rtext" list has been
         built.  LATER reconsider when "vis" flag should be on and off? */
-
-    // jsarlo
-    else if (strcmp("magicGlass", class_getname(x->ob_pd)) == 0)
-    {
-        width = 0;
-        height = 0;
-    }
-    // end jsarlo
     else if (glist->gl_editor && glist->gl_editor->e_rtext)
     {
         t_rtext *y = glist_findrtext(glist, x);
