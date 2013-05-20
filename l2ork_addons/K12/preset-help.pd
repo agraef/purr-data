@@ -1,9 +1,9 @@
-#N canvas 258 110 501 448 10;
+#N canvas 258 110 501 530 10;
 #X obj 26 53 cnv 15 478 274 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 138 -34 preset_hub k12 %hidden% %node% 2 5 9 %node% 2 7 8 %preset%
 1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 9 7 %node% 2 6
-8 %node% 2 8 7;
+8 %node% 2 8 7 %node% 2 7 7;
 #X text 16 -35 comment;
 #X obj 17 -8 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
@@ -33,7 +33,6 @@ box. Similarly \, you can send a number between 0 and 3 to the left
 inlet to recall that preset \, or a number between 0 and 3 to the right
 inlet to store that preset. Using the inlets or clicking on the boxes
 does the same thing.;
-#X text 152 302;
 #X text 141 183 The preset object can be placed anywhere in the patch
 and does not have to be connected to any objects to store and recall
 their values.;
