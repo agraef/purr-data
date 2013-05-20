@@ -11,12 +11,12 @@ MimeType=application/x-puredata;
 
 [ALSA Shortcut Group]
 Name=ALSA
-Exec=pd-l2ork -rt -alsa -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U
+Exec=pd-l2ork -k12 -noautopatch -rt -alsa -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U
 TargetEnvironment=Unity
 
 [JACK Shortcut Group]
 Name=JACK
-Exec=pd-l2ork -rt -jack -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U
+Exec=pd-l2ork -k12 -noautopatch -rt -jack -audiobuf 5 -inchannels 2 -outchannels 2 -alsamidi -mididev 0 -d 3 %U
 TargetEnvironment=Unity
 
 [ForceQuit Shortcut Group]
