@@ -29,6 +29,7 @@ if { [info tclversion] >= 8.5 } {
 	# EDIT THIS PART TO CUSTOMIZE LINUX THEME
 	# match gnome colors
 	# Ubuntu Human
+	# set linux_wm_bgcolor "#3e3d39"
 	set linux_wm_bgcolor "#e5e5e5"
 	# set linux_wm_hlcolor "#fdbf69"
 	set linux_wm_hlcolor "#f9ba81"
@@ -42,7 +43,8 @@ if { [info tclversion] >= 8.5 } {
 		-window		"#ffffff"
 		-darkest 	"#999999"
 		-darker 	"#709970"
-		-dark		"#a8e6a8"
+		#-dark		"#a8e6a8"
+		-dark		"#bcbcbc"
 		-light		"#d2ffd2"
 		-lighter 	"#e5e5e5"
 		-disabledfg	"#a3a3a3"
