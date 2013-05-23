@@ -27,7 +27,7 @@
 /* these are powers of 2 + margins */
 #define SCOPE_DEFWIDTH     130  /* CHECKED */
 #define SCOPE_MINWIDTH      66
-#define SCOPE_DEFHEIGHT    130  /* CHECKED */
+#define SCOPE_DEFHEIGHT     66  /* CHECKED */
 #define SCOPE_MINHEIGHT     34
 #define SCOPE_DEFPERIOD    256
 #define SCOPE_MINPERIOD      2

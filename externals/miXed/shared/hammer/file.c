@@ -177,10 +177,10 @@ void hammereditor_open(t_hammerfile *f, char *title, char *owner)
     }
     if (owner)
 	sys_vgui("hammereditor_open .%x %dx%d {%s: %s} %d\n",
-		 (int)f, 400, 500, owner, title, (f->f_editorfn != 0));
+		 (int)f, 600, 600, owner, title, (f->f_editorfn != 0));
     else
 	sys_vgui("hammereditor_open .%x %dx%d {%s} %d\n",
-		 (int)f, 400, 500, (title ? title : "Untitled"),
+		 (int)f, 600, 600, (title ? title : "Untitled"),
 		 (f->f_editorfn != 0));
 }
 
