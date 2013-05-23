@@ -432,6 +432,7 @@ variable duplicate_tags -1
 variable current_window 0
 variable nlet_color 0
 variable autotips 0
+#variable magicglass 0
 variable tooltip_visible 0
 
 # x:y location tooltip during dragging
@@ -1909,7 +1910,7 @@ proc menu_mycnv {name accel} {
 
 ############iemlib##################
 
-# correct edit menu, enabling or disabling undo/redo/cut/copy/paste
+# correct edit menu, enabling or disabling undo/redo/cut/copy/paste/tooltips/cord inspector
 proc menu_fixeditmenu {name} {
 	if { [winfo exists $name] } {
 		catch {
@@ -1922,6 +1923,12 @@ proc menu_fixeditmenu {name} {
 			global global_selection
 			global global_clipboard
 			global last_clipboard
+
+			global autotips
+			#global magicglass
+
+			pdtk_canvas_tooltips $name $autotips
+			#pdtk_canvas_magicglassval $name $magicglass
 
 			# investigate if we have already something copied from an external source
 			set current_clipboard 0
@@ -2199,6 +2206,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	global global_selection
 	global k12_mode
 	global k12_saveas_on_new
+	global autotips
+	#global magicglass
 
 	#retaining window-specific preferences
 	global window_prefs
@@ -2712,11 +2721,16 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	if { $editable == 1 } {
     	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d"
-		#if { $ctrl_l_down == 0  $ctrl_r_down == 0 } {
-		#	$name configure -cursor $cursor_editmode_nothing
-			#pd [concat $name editmode 1 \;]
-		#}
 	}
+
+	if { $autotips == 1 } {
+    	$name.m.edit entryconfigure "Autotips" -background "#7dd37d"
+	}
+
+	#if { $magicglass == 1 } {
+    #	$name.m.edit entryconfigure "Cord Inspector" -background "#7dd37d"
+	#	menu_magicglass $name
+	#}
 
     #if { $editable == 0 } {
     #    $name.m.edit entryconfigure "Edit mode" -indicatoron false 
@@ -5991,12 +6005,15 @@ proc pdtk_canvas_tooltips {name value} {
 #####################iemlib#######################
 
 proc pdtk_canvas_magicglassval {name value} {
+	#variable magicglass
 	#global colors
 
     if { $value } {
 		$name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background "#7dd37d"
+		#set magicglass 1
     } else {                          
         $name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background {}
+		#set magicglass 0
     }                                                 
 }
 
@@ -7971,7 +7988,7 @@ proc pdtk_tip {w fromc show args} {
     if {$show == 0} {
         catch {
 			destroy $w.tiplabel
-			#$w delete tiparrow
+			$w delete tiparrow
         	$w delete $w.tipwindow
 		}
 		set tooltip_visible 0
@@ -8018,35 +8035,35 @@ proc pdtk_tip {w fromc show args} {
 			if { [string match "\{Inlet*" $args] } {
 		    	set yoffset 0
 				set anchor "nw"
-				set top_bottom [expr -10 - [winfo reqheight $w.tiplabel]]
-				set yreal_offset -5
+				set top_bottom [expr -15 - [winfo reqheight $w.tiplabel]]
+				set yreal_offset -10
 				set xreal_offset 0
 		    } else {
 				set yoffset [winfo height $w]
 		    	set anchor "sw"
 				set top_bottom [expr 20 + [winfo reqheight $w.tiplabel]]
-				set yreal_offset 5
+				set yreal_offset 14
 				set xreal_offset 0
 		    }
-			set x [expr $xreal + rand()*10] 
+			set x [expr $xreal - 10] 
 			set y [expr $yreal + $top_bottom]
 
 			# now check if there is enough room to do the default above/below (if not redo behavior)
 			if { $top_bottom < 0 && $y < [expr [$w canvasy 0] + $yoffset] } {
 				set yoffset [winfo height $w]
 		    	set anchor "sw"
-				set top_bottom [expr 35 + [winfo reqheight $w.tiplabel]]
-				set yreal_offset 15
+				set top_bottom [expr 25 + [winfo reqheight $w.tiplabel]]
+				set yreal_offset 20
 				set xreal_offset 0
 			}
 			if { $top_bottom > 0 && $y > [expr [$w canvasy 0] + $yoffset] } {
 		    	set yoffset 0
 				set anchor "nw"
-				set top_bottom [expr -25 - [winfo reqheight $w.tiplabel]]
-				set yreal_offset -5
+				set top_bottom [expr -20 - [winfo reqheight $w.tiplabel]]
+				set yreal_offset -15
 				set xreal_offset 0
 			}
-			set x [expr $xreal + rand()*10] 
+			set x [expr $xreal - 10] 
 			set y [expr $yreal + $top_bottom]
 
 			# if we still cannot fit things, let's now stick them as close to the side we selected last
@@ -8067,24 +8084,30 @@ proc pdtk_tip {w fromc show args} {
 			}
 
 			#now do the arrow
-			#if { $right } {
-			#	if { $xarrow > [expr [$w canvasx 0] + [winfo width $w] - 13] } {
-			#		set xarrow [expr [$w canvasx 0] + [winfo width $w] - 13]
-			#	}
-			#}
+			if { $right } {
+				if { $xarrow > [expr [$w canvasx 0] + [winfo width $w] - 10] } {
+					set xarrow [expr [$w canvasx 0] + [winfo width $w] - 10]
+				}
+			} else {
+				if { $xarrow < [$w canvasx 0] } {
+					set xarrow [$w canvasx 0]
+				}
+			}
 
-			#if { $top_bottom < 0 } {
-			#	set yarrow [expr $y + [winfo reqheight $w.tiplabel] - 1]
-			#} else {
-			#	set yarrow [expr $y - [winfo reqheight $w.tiplabel] + 1]
-			#}
+			if { $top_bottom < 0 } {
+				set yarrow [expr $y + [winfo reqheight $w.tiplabel] - 1]
+			} else {
+				set yarrow [expr $y - [winfo reqheight $w.tiplabel] + 0]
+			}
 
-			#if {$exists} {
-				#$w coords tiparrow [expr $xreal+$xreal_offset] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+7] $yarrow
-			#} else {
-				#$w create polygon [expr $xreal+$xreal_offset] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+7] $yarrow -fill $nlet_color -width 4 -tags tiparrow
-				#update
-			#}
+			if {$exists} {
+				#$w coords tiparrow [expr $xreal+$xreal_offset] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow
+				$w coords tiparrow [expr $xarrow+5] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow
+			} else {
+				#$w create polygon [expr $xreal+$xreal_offset] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow -fill $nlet_color -width 4 -tags tiparrow
+				$w create polygon [expr $xarrow+5] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow -fill $nlet_color -width 4 -tags tiparrow
+				#update (bad idea--avoid this)
+			}
 		}
 
 		set tags $w.tipwindow
