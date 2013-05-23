@@ -58,14 +58,7 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 {
 	//fprintf(stderr,"magicglass_updateText\n");
     int bgSize;
-	/* change second argument (10.0) to provide optimal scaling in the following entry */
-	float font = (float)(sys_hostfontsize(glist_getfont(x->x_c)))/10.0;
-	if (font <= 1.0) {
-		x->x_display_font = 9;
-		font = 1.0;
-	} else {
-		x->x_display_font = sys_hostfontsize(glist_getfont(x->x_c));
-	}
+	x->x_display_font = sys_hostfontsize(glist_getfont(x->x_c));
 
     if (x->x_visible)
     {
@@ -78,10 +71,11 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 				color = "#e87216";
 				clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
 			}
-		    sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s} -fill %s\n",
+		    sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s} -fill %s -font {{%s} -%d %s}\n",
 		            x->x_c,
 		            x->x_string,
-					color);
+					color,
+					sys_font, x->x_display_font, sys_fontweight);
 		} else {
 		    sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s}\n",
 		            x->x_c,
@@ -92,14 +86,15 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
         {
 			if (strlen(x->x_string) > x->x_maxSize) x->x_maxSize = strlen(x->x_string);
         }
-		bgSize = x->x_x + (int)((30.0 * font) + ((font * 7.0) * (float)x->x_maxSize));
+		bgSize = x->x_x + (sys_fontwidth(x->x_display_font) * x->x_maxSize) + 26;
+		//fprintf(stderr,"%d %d %d : %d %d\n", sys_fontheight(x->x_display_font), sys_fontwidth(x->x_display_font), x->x_maxSize, x->x_x, bgSize);
         sys_vgui(".x%x.c coords magicGlassText %d %d\n",
                  x->x_c,
                  x->x_x + 20,
                  x->x_y);
         sys_vgui(".x%x.c coords magicGlassLine %d %d %d %d %d %d\n",
                  x->x_c,
-                 x->x_x + 3,
+                 x->x_x + 8,
                  x->x_y,
                  x->x_x + 13,
                  x->x_y + 5,
@@ -108,20 +103,20 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
         sys_vgui(".x%x.c coords magicGlassBg %d %d %d %d\n",
                  x->x_c,
                  x->x_x + 13,
-                 x->x_y - (int)(12.0 * font),
+                 x->x_y - (int)(sys_fontheight(x->x_display_font)/2) - 3,
                  bgSize,
-                 x->x_y + (int)(12.0 * font));
+                 x->x_y + (int)(sys_fontheight(x->x_display_font)/2) + 3);
     }
 }
 
 void magicGlass_drawNew(t_magicGlass *x)
 {
 	//fprintf(stderr,"magicglass_drawNew\n");
-    sys_vgui(".x%x.c create rectangle 0 0 0 0 -outline #ffffff -fill #000000 -tags magicGlassBg\n",
+    sys_vgui(".x%x.c create rectangle 0 0 0 0 -outline #000000 -fill #000000 -tags magicGlassBg\n",
              x->x_c);
     sys_vgui(".x%x.c create polygon 0 0 0 0 0 0 -fill #000000 -width 4 -tags magicGlassLine\n",
              x->x_c);
-    sys_vgui(".x%x.c create text 0 0 -text {} -anchor w -fill #e87216 -font {{%s} %d %s} -tags magicGlassText\n",
+    sys_vgui(".x%x.c create text 0 0 -text {} -anchor w -fill #e87216 -font {{%s} -%d %s} -tags magicGlassText\n",
              x->x_c, sys_font, x->x_display_font, sys_fontweight);
     sys_vgui(".x%x.c raise magicGlassBg\n",
              x->x_c);
