@@ -5948,6 +5948,8 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
     if (glist_isvisible(x))
 	{
 		//fprintf(stderr,"glist_redraw %lx\n", x);
+		if (magicGlass_isOn(x->gl_magic_glass))
+			magicGlass_hide(x->gl_magic_glass);
         glist_redraw(x);
 	}
     for (y = x->gl_list; y; y = y->g_next)
