@@ -87,7 +87,7 @@ static void pddplink_select(t_gobj *z, t_glist *glist, int state)
     if (glist_isvisible(glist) && glist->gl_havewindow)
     {
 	if (state)
-	    sys_vgui(".x%lx.c itemconfigure %s -fill blue\n",
+	    sys_vgui(".x%lx.c itemconfigure %s -fill $select_color\n",
 		     glist, rtext_gettag(y));
 	else
 	    sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
