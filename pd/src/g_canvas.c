@@ -461,6 +461,9 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 	x->move_offset_y = 0;
 	x->move_vis = 0;
 
+	x->canvas_cnct_inlet_tag[0] = 0;
+	x->canvas_cnct_outlet_tag[0] = 0;
+
 	x->u_queue = canvas_undo_init(x);
 
     return(x);
@@ -680,6 +683,8 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
     }
 }
 
+extern void canvas_check_nlet_highlights(t_canvas *x);
+
 /*********** dpsaha@vt.edu resize move hooks ****************/
 void canvas_draw_gop_resize_hooks(t_canvas* x)
 {
@@ -732,6 +737,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 		sys_vgui("destroy %s\n", mh->h_pathname);
 		sys_vgui(".x%lx.c delete GOP_resblob ; .x%lx.c delete GOP_movblob ;\n", x, x);					//delete the GOP_resblob and GOP_movblob	
 	}
+	canvas_check_nlet_highlights(x);
 }
 /*****************************************************************************/
 

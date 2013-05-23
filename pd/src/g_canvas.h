@@ -222,6 +222,10 @@ struct _glist
 
 	//global preset array pointer
 	t_preset_hub *gl_phub;
+
+	//tags for currently highlighted nlets
+	char canvas_cnct_inlet_tag[4096];
+	char canvas_cnct_outlet_tag[4096];
 };
 
 #define gl_gobj gl_obj.te_g
