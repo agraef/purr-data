@@ -1255,7 +1255,7 @@ proc menu_opentext {filename} {
     } else {
 		destroy .about
 		toplevel .about -class [winfo class .]
-		wm title .about "About Pd"
+		wm title .about "About Pd-L2Ork"
 		wm geometry .about 550x480
 		match_linux_wm [list text .about.text -relief sunken -bd 1 -font text_font \
 		    -yscrollcommand ".about.scroll set" -highlightthickness 0 -takefocus 0]
@@ -1395,7 +1395,7 @@ proc menu_addstd {mbar} {
 
     # the "Help" menu
     if {$pd_nt != 2} {
-        $mbar.help add command -label {About Pd} \
+        $mbar.help add command -label {About Pd-L2Ork} \
             -command {menu_doc_open doc/1.manual 1.introduction.txt} 
     }
     $mbar.help add command -label {Html} \
