@@ -2619,18 +2619,22 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         return;
     }
 
-		/* remove stale tooltips, if any */
+	// remove stale tooltips, if any
 	if (objtooltip) {
 		objtooltip = 0;
 		sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
 	}
     
+	// read key and mouse button states
     shiftmod = (mod & SHIFTMOD);
     runmode = ((mod & CTRLMOD) || (!x->gl_edit));
     altmod = (mod & ALTMOD);
     rightclick = (mod & RIGHTCLICK);
 
+	// set global left mouse click variable
 	if (!rightclick) glob_lmclick = doit;
+
+	// return if user is connecting and holding shift (for multiconnect)
 	if (x->gl_editor->e_onmotion == MA_CONNECT && glob_shift) {
 		//fprintf(stderr,"MA_CONNECT + glob_shift--> mouse_doclick returning\n");
 		return;
@@ -2638,7 +2642,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 
     canvas_undo_already_set_move = 0;
 
-            /* if keyboard was grabbed, notify grabber and cancel the grab */
+    // if keyboard was grabbed, notify grabber and cancel the grab
     if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
@@ -2649,38 +2653,42 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         sys_getrealtime() - canvas_upclicktime < DCLICKINTERVAL)
             doublemod = 1;
     x->gl_editor->e_lastmoved = 0;
-    if (doit)
+	// commented out on 5-23-2013 while fixing shift+click actions
+    /*if (doit)
     {
+		fprintf(stderr,"doit %d\n", x->gl_editor->e_onmotion);
 		if (x->gl_editor->e_onmotion == MA_MOVE) {		
-			//fprintf(stderr,"letting go of objects\n");
+			fprintf(stderr,"letting go of objects\n");
         	sys_vgui(".x%lx.c raise all_cords\n", x);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		}
         x->gl_editor->e_grab = 0;
         x->gl_editor->e_onmotion = MA_NONE;
     }
-    /* post("click %d %d %d %d", xpos, ypos, which, mod); */
+    post("click %d %d %d %d", xpos, ypos, which, mod);
     
     if (x->gl_editor->e_onmotion != MA_NONE) {
 		//fprintf(stderr,"onmotion != MA_NONE\n");
         return;
-	}
+	}*/
 
     x->gl_editor->e_xwas = xpos;
     x->gl_editor->e_ywas = ypos;
 	//fprintf(stderr,"mouse %d %d\n", xpos, ypos);
 
+	// if we are in runmode and it is not right-click
     if (runmode && !rightclick)
     {
         for (y = x->gl_list; y; y = y->g_next)
         {
-                /* check if the object wants to be clicked */
+            // check if the object wants to be clicked
             if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)
                 && (clickreturned = gobj_click(y, x, xpos, ypos,
                     shiftmod, ((mod & CTRLMOD) && (!x->gl_edit)) || altmod,
                         0, doit)))
                             break;
         }
+		// if we are not clicking
         if (!doit)
         {
             if (y)
@@ -3939,8 +3947,11 @@ void canvas_mouseup(t_canvas *x,
 		x->canvas_cnct_inlet_tag[0] = 0;                  
 	}
     
-	if (!x->gl_editor->e_onmotion == MA_CONNECT || !glob_shift)
+	if (x->gl_editor->e_onmotion != MA_CONNECT || x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift) {
+		//fprintf(stderr,"releasing shift during connect without the button pressed\n");
 	    x->gl_editor->e_onmotion = MA_NONE;
+	}
+	canvas_doclick(x, xpos, ypos, 0, 0, 0);
 }
 
     /* displace the selection by (dx, dy) pixels */
@@ -3977,10 +3988,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
         else if (cl == voutlet_class) resortout = 1;
     }
 	if (dx || dy) {
-		//if (!old_displace) {
-			//fprintf(stderr,"move selected\n");
-			sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
-		//}
+		sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
 	    if (resortin) canvas_resortinlets(x);
 	    if (resortout) canvas_resortoutlets(x);
 	    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
@@ -4020,12 +4028,20 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     shift = (atom_getfloat(av+2) != 0);  /* nonzero if shift-ed */
 	glob_shift = shift;
 	//fprintf(stderr,"%d %d %d %d\n", (x->gl_editor != NULL ? 1 : 0), (x->gl_editor->e_onmotion == MA_CONNECT ? 1 : 0), glob_shift, glob_lmclick);
+
 	// check if user released shift while trying manual multi-connect
-	if (x->gl_editor && x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick) {
+	if (x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick) {
 		//fprintf(stderr,"shift released during connect\n");
 		sys_vgui(".x%lx.c delete x\n", x);
 		canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
 	}
+
+	// check if user released shift while dragging inside an object
+	if (x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick) {
+		fprintf(stderr,"shift released during button+shift drag\n");
+		canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
+	}
+
     if (av[1].a_type == A_SYMBOL) {
         gotkeysym = av[1].a_w.w_symbol;
 	}
