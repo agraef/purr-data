@@ -79,6 +79,18 @@ static void pddplink_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     }
 }
 
+static void pddplink_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_text *t = (t_text *)z;
+    t->te_xpix += dx;
+    t->te_ypix += dy;
+    /*if (glist_isvisible(glist))
+    {
+        t_rtext *y = glist_findrtext(glist, t);
+        rtext_displace(y, dx, dy);
+    }*/
+}
+
 static void pddplink_select(t_gobj *z, t_glist *glist, int state)
 {
     t_pddplink *x = (t_pddplink *)z;
@@ -86,12 +98,17 @@ static void pddplink_select(t_gobj *z, t_glist *glist, int state)
     rtext_select(y, state);
     if (glist_isvisible(glist) && glist->gl_havewindow)
     {
-	if (state)
-	    sys_vgui(".x%lx.c itemconfigure %s -fill $select_color\n",
-		     glist, rtext_gettag(y));
-	else
-	    sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
-		     glist, rtext_gettag(y), x->x_vistext);
+		if (state) {
+			sys_vgui(".x%lx.c itemconfigure %s -fill $select_color\n",
+				glist, rtext_gettag(y));
+			sys_vgui(".x%lx.c addtag selected withtag %s\n",
+				glist, rtext_gettag(y));
+		}
+		else {
+			sys_vgui(".x%lx.c itemconfigure %s -text {%s} -fill #0000dd -activefill #e70000\n",
+				glist, rtext_gettag(y), x->x_vistext);
+			sys_vgui(".x%lx.c dtag %s selected\n", glist, rtext_gettag(y));
+		}
     }
 }
 
@@ -137,6 +154,7 @@ static t_widgetbehavior pddplink_widgetbehavior =
     0,
     pddplink_vis,
     pddplink_wbclick,
+	pddplink_displace_withtag,
 };
 
 /* Code that might be merged back to g_text.c ends here. */
