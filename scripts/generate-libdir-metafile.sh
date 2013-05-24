@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 # this script is used to generate a mylibrary/mylibrary.pd meta file.  This
 # file is read for relevant meta data when a libdir is opened. (That's the
 # plan at least) <hans@at.or.at>
+
+# improvements and bug-fixes by Ivica Ico Bukvic <ico@vt.edu> 2013
 
 # keeps track of where the last bit of text was printed so that new text is
 # not printed on top of existing text
@@ -14,7 +16,7 @@ print_pd_text ()
 	 file_name="$1"; shift
 	 meta_type="$1"; shift
 	 echo "#X text 10 $Y ${meta_type} $@;" >> "$file_name"
-	 ((Y=Y+20))
+	 let Y="Y+20"
 }
 
 if [ $# -lt 2 ]; then
@@ -33,7 +35,8 @@ else
 BASE_DIR="$1"; shift
 LIBNAME="$1"; shift
 libdir_file_name="${BASE_DIR}/${LIBNAME}/${LIBNAME}-meta.pd"
-# create pd file
+# delete old and create a new pd file
+rm -f "${libdir_file_name}"
 touch "${libdir_file_name}"
 
 # create .pd header with subpatch called "META"
