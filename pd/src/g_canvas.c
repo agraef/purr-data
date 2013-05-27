@@ -733,8 +733,10 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 
 	}
 	else{
-		sys_vgui("destroy %s\n", sh->h_pathname);
-		sys_vgui("destroy %s\n", mh->h_pathname);
+		if (sh)
+			sys_vgui("destroy %s\n", sh->h_pathname);
+		if (mh)
+			sys_vgui("destroy %s\n", mh->h_pathname);
 		sys_vgui(".x%lx.c delete GOP_resblob ; .x%lx.c delete GOP_movblob ;\n", x, x);					//delete the GOP_resblob and GOP_movblob	
 	}
 	canvas_check_nlet_highlights(x);
