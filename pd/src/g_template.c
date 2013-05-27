@@ -1067,7 +1067,9 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         if (xloc > x2) x2 = xloc;
         if (yloc < y1) y1 = yloc;
         if (yloc > y2) y2 = yloc;
+		//fprintf(stderr,"	=====%d %d %d %d\n", x1, y1, x2, y2);
     }
+	//fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -1251,6 +1253,7 @@ static int curve_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//fprintf(stderr,"curve_click %f %f %d %d %lx\n", basex, basey, xpix, ypix, (t_int)data);
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
     int bestn = -1;
@@ -1552,6 +1555,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
+	//fprintf(stderr,"plot_getrect\n");
     t_plot *x = (t_plot *)z;
     int elemsize, yonset, wonset, xonset;
     t_canvas *elemtemplatecanvas;
@@ -1576,12 +1580,14 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
         int incr = (array->a_n <= 2000 ? 1 : array->a_n / 1000);
         for (i = 0, xsum = 0; i < array->a_n; i += incr)
         {
+			//fprintf(stderr,"	<====plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
             t_float usexloc, useyloc;
             t_gobj *y;
                 /* get the coords of the point proper */
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, basex + xloc, basey + yloc, xinc,
                 xfielddesc, yfielddesc, wfielddesc, &xpix, &ypix, &wpix);
+			//fprintf(stderr,"		!!!!!!!!elemsize%d yonset%d wonset%d xonset%d i%d basex%f xloc%f basey%f yloc%f xinc%f xpix%f ypix%f wpix%f\n", elemsize, yonset, wonset, xonset, i, basex, xloc, basey, yloc, xinc, xpix, ypix, wpix);
             if (xpix < x1)
                 x1 = xpix;
             if (xpix > x2)
@@ -1590,6 +1596,8 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                 y1 = ypix - wpix;
             if (ypix + wpix > y2)
                 y2 = ypix + wpix;
+
+			//fprintf(stderr,"	/////plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
             
             if (scalarvis != 0)
             {
@@ -1598,14 +1606,15 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                     usexloc = basex + xloc + fielddesc_cvttocoord(xfielddesc, 
                         *(t_float *)(((char *)(array->a_vec) + elemsize * i)
                             + xonset));
-                else usexloc = basex + xsum, xsum += xinc;
+                else usexloc = x1; //usexloc = basex + xsum, xsum += xinc;
                 if (yonset >= 0)
                     yval = *(t_float *)(((char *)(array->a_vec) + elemsize * i)
                         + yonset);
                 else yval = 0;
-                useyloc = basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
+                useyloc = (y1+y2)/2; //basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
+					//fprintf(stderr,".-.-. usexloc %f useyloc %f (alt %f %f)\n", usexloc, useyloc, basex + xloc + fielddesc_cvttocoord(xfielddesc, *(t_float *)(((char *)(array->a_vec) + elemsize * i) + xonset)), *(t_float *)(((char *)(array->a_vec) + elemsize * i) + yonset));
                     int xx1, xx2, yy1, yy2;
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
@@ -1613,6 +1622,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                         (t_word *)((char *)(array->a_vec) + elemsize * i),
                             elemtemplate, usexloc, useyloc, 
                                 &xx1, &yy1, &xx2, &yy2);
+					//fprintf(stderr,"	.....plot_getrect %d %d %d %d\n", xx1, yy1, xx2, yy2); 
                     if (xx1 < x1)
                         x1 = xx1;
                     if (yy1 < y1)
@@ -1620,11 +1630,14 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                      if (xx2 > x2)
                         x2 = xx2;
                     if (yy2 > y2)
-                        y2 = yy2;   
+                        y2 = yy2;
+					//fprintf(stderr,"	.....plot_getrect %d %d %d %d\n", x1, y1, x2, y2); 
                 }
             }
+			//fprintf(stderr,"	>====plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
         }
     }
+	//fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
 
     *xp1 = x1;
     *yp1 = y1;
@@ -1942,6 +1955,7 @@ static int plot_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+	//fprintf(stderr,"plot_click %lx %lx %f %f %d %d\n", (t_int)z, (t_int)glist, basex, basey, xpix, ypix);
     t_plot *x = (t_plot *)z;
     t_symbol *elemtemplatesym;
     t_float linewidth, xloc, xinc, yloc, style, vis, scalarvis;
@@ -1953,6 +1967,7 @@ static int plot_click(t_gobj *z, t_glist *glist,
         &vis, &scalarvis,
         &xfielddesc, &yfielddesc, &wfielddesc) && (vis != 0))
     {
+		//fprintf(stderr,"	->array_doclick\n");
         return (array_doclick(array, glist, sc, ap,
             elemtemplatesym,
             linewidth, basex + xloc, xinc, basey + yloc, scalarvis,

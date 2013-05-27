@@ -835,11 +835,12 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
                 xfield, yfield, wfield, &pxpix, &pypix, &pwpix);
+			//fprintf(stderr,"	array_getcoordinate %d: pxpix:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
             if (pwpix < 4)
                 pwpix = 4;
             dx = pxpix - xpix;
             if (dx < 0) dx = -dx;
-            if (dx > 8)
+            if (dx > 8) //this is the arbitrary radius away from the actual object's center
                 continue;   
             dy = pypix - ypix;
             if (dy < 0) dy = -dy;
@@ -856,15 +857,22 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 if (dx + dy < best)
                     best = dx + dy;
             }
+			//fprintf(stderr,"	1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);
         }
-        if (best > 8)
+        if (best > 8) //this is the arbitrary radius away from the actual object's center
         {
-            if (scalarvis != 0)
+			//fprintf(stderr,"	best > 8\n");
+            if (scalarvis != 0) {
+				//fprintf(stderr,"		array_doclick_element\n");
                 return (array_doclick_element(array, glist, sc, ap,
                     elemtemplatesym, linewidth, xloc, xinc, yloc,
                         xfield, yfield, wfield,
                         xpix, ypix, shift, alt, dbl, doit));
-            else return (0);
+			}
+            else {
+				//fprintf(stderr,"		return 0\n");
+				return (0);
+			}
         }
         best += 0.001;  /* add truncation error margin */
         for (i = 0; i < array->a_n; i += incr)
@@ -889,13 +897,22 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     dy = 100;
             }
             else dy2 = dy3 = 100;
+			//fprintf(stderr,"	2nd %f %f %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, dy2, dy3, elemsize, yonset, wonset, xonset, i);
             if (dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best)
             {
-                if (dy < dy2 && dy < dy3)
+				//fprintf(stderr, "got this far\n");
+                if (dy < dy2 && dy < dy3 || best < 1) {
                     array_motion_fatten = 0;
-                else if (dy2 < dy3)
+					//fprintf(stderr,"A\n");
+				}
+                else if (dy2 < dy3) {
                     array_motion_fatten = -1;
-                else array_motion_fatten = 1;
+					//fprintf(stderr,"B\n");
+				}
+                else {
+					array_motion_fatten = 1;
+					//fprintf(stderr,"C\n");
+				}
                 if (doit)
                 {
                     char *elem = (char *)array->a_vec;
@@ -1026,6 +1043,7 @@ static void array_getrect(t_array *array, t_glist *glist,
                 y2 = pypix + pwpix;
         }
     }
+	//fprintf(stderr,"array_getrect %f %f %f %f\n", x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;

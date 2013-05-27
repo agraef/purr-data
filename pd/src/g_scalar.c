@@ -155,6 +155,7 @@ void scalar_getbasexy(t_scalar *x, t_float *basex, t_float *basey)
 static void scalar_getrect(t_gobj *z, t_glist *owner,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
+	//fprintf(stderr,"scalar_getrect\n");
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
     t_canvas *templatecanvas = template_findcanvas(template);
@@ -184,11 +185,12 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
             if (ny1 < y1) y1 = ny1;
             if (nx2 > x2) x2 = nx2;
             if (ny2 > y2) y2 = ny2;
+			//fprintf(stderr,"	====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
         }
         if (x2 < x1 || y2 < y1)
             x1 = y1 = x2 = y2 = 0;
     }
-    //fprintf(stderr,"scalar x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
+    //fprintf(stderr,"FINAL scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -249,8 +251,13 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 		sys_vgui(".x%lx.c dtag scalar%lx selected\n",
 			glist_getcanvas(owner), x);
 		if (templatecanvas) {
+			// get the universal tag for all nested objects
+			t_canvas *tag = owner;
+			while (tag->gl_owner) {
+				tag = tag->gl_owner;
+			}
 			sys_vgui(".x%lx.c dtag %lx selected\n",
-				glist_getcanvas(owner), x->sc_vec);
+				glist_getcanvas(owner), (t_int)tag);
 		}
 	}
 	//sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
@@ -294,6 +301,7 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
+	//fprintf(stderr,"scalar_displace_withtag %lx %d %d\n", (t_int)z, dx, dy);
     t_scalar *x = (t_scalar *)z;
     t_symbol *templatesym = x->sc_template;
     t_template *template = template_findbyname(templatesym);
@@ -407,19 +415,34 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_atom at[2];
     t_float basex = template_getfloat(template, gensym("x"), data, 0);
     t_float basey = template_getfloat(template, gensym("y"), data, 0);
-    SETFLOAT(at, basex + xloc);
-    SETFLOAT(at+1, basey + yloc);
-    if (doit)
+	//fprintf(stderr,"=================scalar_doclick %f %f %f %f\n", basex, basey, xloc, yloc);
+
+	SETFLOAT(at, basex + xloc);
+	SETFLOAT(at+1, basey + yloc);
+    if (doit) {
+		//fprintf(stderr,"	doit\n");
         template_notifyforscalar(template, owner, 
             sc, gensym("click"), 2, at);
+	}
+
+	// if we are nested ignore xloc and yloc, otherwise nested objects get their hitbox miscalculated
+	if (xloc != 0.0 || yloc != 0.0) {
+		//fprintf(stderr,"ignoring\n");
+		basex = 0.0;
+		basey = 0.0;
+	}
+
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {
+		//fprintf(stderr,"looking for template... %f %f %f %f %lx %lx\n", basex, basey, xloc, yloc, (t_int)owner, (t_int)data);
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
-        if (hit = (*wb->w_parentclickfn)(y, owner,
-            data, template, sc, ap, basex + xloc, basey + yloc,
-            xpix, ypix, shift, alt, dbl, doit))
-                return (hit);
+	    if (hit = (*wb->w_parentclickfn)(y, owner,
+	        data, template, sc, ap, basex + xloc, basey + yloc,
+	        xpix, ypix, shift, alt, dbl, doit)) {
+				//fprintf(stderr,"	...got it %f %f\n", basex + xloc, basey + yloc);
+	            return (hit);
+		}
     }
     return (0);
 }
@@ -427,7 +450,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	fprintf(stderr,"scalar_click\n");
+	//fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
     return (scalar_doclick(x->sc_vec, template, x, 0,
