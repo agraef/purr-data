@@ -188,7 +188,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
         if (x2 < x1 || y2 < y1)
             x1 = y1 = x2 = y2 = 0;
     }
-    /* post("scalar x1 %d y1 %d x2 %d y2 %d", x1, y1, x2, y2); */
+    //fprintf(stderr,"scalar x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -237,8 +237,13 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 		sys_vgui(".x%lx.c addtag selected withtag scalar%lx\n",
 			glist_getcanvas(owner), x);
 		if (templatecanvas) {
+			// get the universal tag for all nested objects
+			t_canvas *tag = owner;
+			while (tag->gl_owner) {
+				tag = tag->gl_owner;
+			}
 			sys_vgui(".x%lx.c addtag selected withtag %lx\n",
-				glist_getcanvas(owner), x->sc_vec);
+				glist_getcanvas(owner), (t_int)tag);
 		}
 	} else {
 		sys_vgui(".x%lx.c dtag scalar%lx selected\n",
@@ -422,7 +427,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"scalar_click\n");
+	fprintf(stderr,"scalar_click\n");
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
     return (scalar_doclick(x->sc_vec, template, x, 0,
