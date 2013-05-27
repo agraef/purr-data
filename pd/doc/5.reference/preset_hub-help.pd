@@ -1,9 +1,9 @@
-#N canvas 138 24 553 616 10;
+#N canvas 138 24 553 651 10;
 #X obj 109 282 cnv 15 60 37 empty empty empty 20 12 0 14 -261234 -66577
 0;
 #X obj 183 294 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 0 1041 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header preset_hub 3 12
 0 18 -204280 -1 0;
@@ -18,34 +18,31 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 85 OUTLET_0 anything;
 #X text 12 105 AUTHOR Ivica Ico Bukvic (c) 2012 <ico@vt.edu>;
 #X text 12 65 INLET_0 clear purge recall reset store;
-#X restore 500 597 pd META;
-#X obj 0 463 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 1043 pd META;
+#X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 498 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 608 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 778 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 357 cnv 17 3 100 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 357 cnv 17 3 200 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 102 481 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 36 preset_node;
 #X text 7 1 [preset_hub] Related Objects;
-#X restore 101 597 pd Related_objects;
-#X obj 78 472 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 101 1043 pd Related_objects;
+#X obj 78 572 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 1043 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 11 20 universal preset system for pd-l2ork;
-#X obj 20 202 preset_hub test %hidden% %node% 1 2 %preset% 1 30 %preset%
-0 15 %node% 1 10 %preset% 1 2.24 nlah 1 %preset% 0 a b c 4 3 2 1 %node%
-3 13 0 0 %preset% 1 1.02 %preset% 0 0.01 %node% 2 20 0 %preset% 1 two
-%preset% 0 zero %node% 1 25 %node% 2 44 0 %node% 1 48 %node% 3 73 0
-0 %node% 2 54 0 %node% 1 21 %preset% 1 99 %preset% 2 23 %preset% 3
-1001 %preset% 0 3 %node% 2 31 1 %preset% 1 problems %preset% 2 skidoo
-%preset% 3 nights %preset% 0 stooges %node% 1 33 %node% 2 39 0 %node%
-1 64;
+#X obj 20 202 preset_hub test %hidden% %node% 2 31 1 %preset% 1 problems
+%preset% 2 skidoo %preset% 3 nights %preset% 0 stooges %node% 1 33
+%preset% 0 aaa 32 1 %preset% 1 2.24 nlah 1 %preset% 2 1 2 3 4 %node%
+2 39 0 %preset% 0 1 %preset% 1 5 %preset% 2 9 %node% 1 61 %preset%
+0 22.1 %preset% 1 0.5 %preset% 2 3.14;
 #X msg 80 125 store \$1;
 #X msg 80 74 recall \$1;
 #X msg 30 73 purge;
@@ -61,11 +58,9 @@ to conform to the PDDP template for Pd version 0.42.;
 #X msg 386 60 reset;
 #X msg 447 190 clear \$1;
 #X floatatom 447 166 5 0 0 0 - - -;
-#X obj 386 217 preset_hub another %hidden% %node% 2 23 10 %node% 2
-24 0 %node% 1 26 %node% 3 14 0 3 %preset% 0 -17 %preset% 1 382 %preset%
-2 1234 %node% 1 25 %preset% 0 -4 %preset% 1 54 %preset% 2 -999 %node%
-3 2 0 3 %node% 1 6 %node% 3 1 0 3 %node% 1 5 %node% 1 23 %node% 1 45
-%node% 3 73 0 3 %node% 2 54 2 %node% 1 32 %node% 2 39 2;
+#X obj 386 217 preset_hub another %hidden% %node% 1 32 %preset% 0 99
+%preset% 1 65 %preset% 2 123 %preset% 3 0 %node% 2 39 2 %preset% 0
+19 %preset% 1 0.23 %preset% 2 999;
 #X obj 386 244 print hub_another_says;
 #X obj 20 268 hub_node_abs;
 #X obj 386 270 preset_node another;
@@ -75,7 +70,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X msg 236 91 2.24 nlah 1;
 #X obj 188 157 print ----result----;
 #X msg 241 111 list 1 2 3 4;
-#N canvas 0 0 404 229 sub 0;
+#N canvas 444 419 404 229 sub 0;
 #X obj 237 69 preset_node test;
 #X floatatom 237 92 5 0 0 0 - - -;
 #X obj 113 69 preset_node another;
@@ -84,14 +79,14 @@ to conform to the PDDP template for Pd version 0.42.;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
 #X restore 119 292 pd sub;
-#X text 98 418 reset;
-#X text 99 472 anything;
+#X text 98 416 reset;
+#X text 99 572 anything;
 #X obj 425 21 pddp/pddplink http://wiki.puredata.info/en/preset_hub
 -text pdpedia: preset_hub;
-#X text 99 376 purge;
-#X text 98 397 recall;
-#X text 98 438 store;
-#X text 81 515 1) symbol;
+#X text 98 376 purge;
+#X text 98 396 recall;
+#X text 98 436 store;
+#X text 81 625 1) symbol;
 #X obj 381 305 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
 #X floatatom 386 310 5 0 0 0 - - -;
@@ -101,12 +96,50 @@ to conform to the PDDP template for Pd version 0.42.;
 #X floatatom 80 151 5 0 0 0 - - -;
 #X obj 447 58 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
-#X obj 98 573 pddp/pddplink preset_node-help.pd;
-#X text 168 397 - recall the values stored at index n;
-#X text 168 438 - store the current state at index n;
-#X text 169 472 - print message in response to input;
-#X text 98 545 Scope- [preset_hub foo] is local to its patch and all
+#X obj 98 813 pddp/pddplink preset_node-help.pd;
+#X text 168 396 - recall the values stored at index n;
+#X text 168 436 - store the current state at index n;
+#X text 98 785 Scope- [preset_hub foo] is local to its patch and all
 of that patch's children (i.e. \, subpatches and abstractions).;
+#X text 168 376 - purge all orphaned/unused nodes;
+#X text 98 356 clear;
+#X text 168 356 - clears preset n for all nodes;
+#X obj 479 3 preset_hub  %hidden% %node% 2 10 1;
+#X obj 189 271 preset_node test;
+#X floatatom 189 299 5 0 0 0 - - -;
+#X msg 198 211 purge;
+#X msg 189 189 reset;
+#X msg 249 210 clearall \$1;
+#X floatatom 249 189 5 0 0 0 - - -;
+#X obj 233 300 print middle_node;
+#X msg 232 244 set another;
+#X msg 311 244 set test;
+#X text 171 625 - OPTIONAL scope for this preset (defaults to null
+or "");
+#X text 168 416 - reset all preset node data (wipes hub clean);
+#X text 98 456 read;
+#X text 169 572 - print message in response to input followed by 1
+for successful and 0 for failed operation;
+#X text 81 645 2) symbol file;
+#X text 81 735 3) float;
+#X text 171 645 - OPTIONAL literal "file" argument instructs hub not
+to embed its preset data into the patch but rather assumes that the
+user will save this data into an external file (see read \, write \,
+readpreset \, and writepreset message above)--this also means that
+changes to the preset will not trigger "patch dirty" message;
+#X text 171 735 - OPTIONAL argument used exclusively in the K12 mode
+that renders preset_hub invisible to GUI operations;
+#X text 98 476 write;
+#X text 98 496 readpreset;
+#X text 168 476 - write all presets to a file named in the second argument
+;
+#X text 168 456 - reads all presets from a file named in the second
+argument;
+#X text 168 496 - read one preset (optional 3rd argumemnt \, otherwise
+preset 0) from a file named in the second argument;
+#X text 98 526 writepreset;
+#X text 168 526 - write one preset (optional 3rd argumemnt \, otherwise
+preset 0) to a file named in the second argument;
 #N canvas 186 348 428 292 More_info 0;
 #X obj 30 165 cnv 15 349 98 empty \$0-pddp.cnv.subheading empty 3 12
 0 14 -191407 -1 0;
@@ -127,23 +160,71 @@ same canvas as the abstraction:;
 #X text 168 205 inside it.;
 #X text 40 171 [preset_hub foo] <-- this won't apply to [bar] because
 ;
-#X restore 461 551 pd More_info;
-#X text 168 376 - purge all orphaned/unused nodes;
-#X text 168 418 - reset all preset node data;
-#X text 98 356 clear;
-#X text 168 356 - clears preset n for all nodes;
-#X obj 479 3 preset_hub  %hidden% %node% 2 10 1;
-#X obj 189 271 preset_node test;
-#X floatatom 189 299 5 0 0 0 - - -;
-#X msg 198 211 purge;
-#X msg 189 189 reset;
-#X msg 249 210 clearall \$1;
-#X floatatom 249 189 5 0 0 0 - - -;
-#X obj 233 300 print middle_node;
-#X msg 232 244 set another;
-#X msg 311 244 set test;
-#X text 171 515 - OPTIONAL scope for this preset (defaults to null
-or "");
+#X restore 461 791 pd More_info;
+#N canvas 512 381 640 292 More_info 0;
+#X obj -9 -1 cnv 15 639 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text -3 -1 [preset_hub] More info on reading/writing operations
+;
+#X obj 9 192 preset_hub another file %hidden%;
+#X obj 19 139 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X msg 19 159 recall \$1;
+#X obj 85 139 hradio 15 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X msg 85 159 store \$1;
+#X obj 10 238 preset_node another;
+#X floatatom 10 260 5 0 0 0 - - -;
+#X obj 135 238 preset_node another;
+#X symbolatom 135 260 10 0 0 0 - - -;
+#X text 263 24 First \, click on read to read all presets stored in
+a separate file. Try recalling presets 0 and 1 Note how storing a new
+preset does not make the patch dirty due to use of the "file" flag.
+;
+#X msg 151 165 reset;
+#X text 263 82 Now reset the hub by clicking on the "reset" message.
+The hub should be now clear of any presets. Now read a single preset
+by clicking on readpreset message on the left. Notice how only preset
+1 has any data (in this case identical to that found in all presets
+file we loaded using the read call above.;
+#X text 263 166 Loading a preset into a hub that already has data will
+automatically result in a merge. As you experiment with mixing and
+merging various presets \, notice how nodes in a preset that do not
+have the right match in the current patch will be silently discarded
+to minimize clutter among presets.;
+#X msg 9 28 read preset_hub_all.preset;
+#X msg 9 83 readpreset preset_hub_one.preset;
+#X msg 9 104 writepreset /tmp/preset_hub_one.preset 1;
+#X msg 9 49 write /tmp/preset_hub_all.preset;
+#X obj 9 213 print preset_hub_another_says;
+#X text 263 250 NB: check for write permissions before trying to save
+files into specific folders.;
+#X connect 2 0 19 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 9 0 10 0;
+#X connect 12 0 2 0;
+#X connect 15 0 2 0;
+#X connect 16 0 2 0;
+#X connect 17 0 2 0;
+#X connect 18 0 2 0;
+#X restore 461 841 pd More_info;
+#X text 98 833 Writing to and reading from a file- preset_hub can also
+write to an external file and read from it. More so \, the optional
+2nd creation argument (literal symbol "file") prevents preset_hub from
+trying to save itself into the patch. Hub can read/write all preset
+states (read/write) or a select preset (readpreset/writepreset). Resetting
+of hub's previously stored data must be done manually by the user.
+Otherwise \, loaded data will be merged with the data already found
+in the hub. Only valid nodes will be imported. Node data that does
+not have a valid node in the existing patch will be silently dropped.
+Reading a single preset will automatically recall it as soon as the
+preset has been loaded.;
+#X text 98 1007 Default values- messages when supplied no argument
+default to 0 or empty string;
 #X connect 14 0 20 0;
 #X connect 15 0 14 0;
 #X connect 16 0 14 0;
@@ -168,11 +249,11 @@ or "");
 #X connect 50 0 15 0;
 #X connect 51 0 19 0;
 #X connect 52 0 23 0;
-#X connect 64 0 70 0;
-#X connect 64 0 65 0;
-#X connect 66 0 64 0;
-#X connect 67 0 64 0;
-#X connect 68 0 64 0;
-#X connect 69 0 68 0;
-#X connect 71 0 64 0;
-#X connect 72 0 64 0;
+#X connect 61 0 67 0;
+#X connect 61 0 62 0;
+#X connect 63 0 61 0;
+#X connect 64 0 61 0;
+#X connect 65 0 61 0;
+#X connect 66 0 65 0;
+#X connect 68 0 61 0;
+#X connect 69 0 61 0;

@@ -55,6 +55,10 @@ struct _preset_hub
 	int ph_invis;					// make it invisible (only for the k12 mode)
 	int ph_preset;					// last enabled preset (-1 at init time)
 
+	int ph_extern_file;				// are we reading/writing from/to a file
+									// 0 = standard mode (saving with patch) 
+									// 1 = saving into external file
+
 	t_canvas *ph_canvas;
 
 	struct _preset_hub *ph_next;	// next hub on the same canvas
