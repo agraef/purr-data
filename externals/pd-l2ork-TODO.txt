@@ -22,9 +22,6 @@ TODO:
 test other
 
 BUGS:
-*need to correctly calculate rectangle for iemgui objects whose text spills outside GOP
-*preset_hub ability to save/read externally rather than inside the script
-
 (pdp/pidip--currently not in pd-l2ork because of bugs)
 *pdp_colorgrid is not working (crashes when disabling/reenabling grid)
 *videogrid throws a weird TCL error when you try to change its initialization parameters (Pagano)
