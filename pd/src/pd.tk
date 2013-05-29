@@ -1255,7 +1255,7 @@ proc menu_opentext {filename} {
     } else {
 		destroy .about
 		toplevel .about -class [winfo class .]
-		wm title .about "About Pd-L2Ork"
+		wm title .about "Text Viewer"
 		wm geometry .about 550x480
 		match_linux_wm [list text .about.text -relief sunken -bd 1 -font text_font \
 		    -yscrollcommand ".about.scroll set" -highlightthickness 0 -takefocus 0]
@@ -1331,6 +1331,52 @@ proc menu_doc_open {dir basename} {
         set basename [file tail $fullpath]
         pd [concat pd open [pdtk_enquote $basename] \
                 [pdtk_enquote $dirname] \;]
+    }
+}
+
+# backported from pd
+# ------------------------------------------------------------------------------
+# opening docs as menu items (like the Test Audio and MIDI patch and the manual)
+#package provide pd_menucommands 0.1
+#
+#namespace eval ::pd_menucommands:: {
+#    variable untitled_number "1"
+#
+#    namespace export menu_*
+#}
+
+proc ::menu_doc_open {dir basename} {
+    if {[file pathtype $dir] eq "relative"} {
+        set dirname "$::sys_libdir/$dir"
+    } else {
+        set dirname $dir
+    }
+    set textextension "[string tolower [file extension $basename]]"
+    if {[lsearch -exact [lindex $::filetypes 0 1]  $textextension] > -1} {
+        set fullpath [file normalize [file join $dirname $basename]]
+        set dirname [file dirname $fullpath]
+        set basename [file tail $fullpath]
+        pdsend "pd open [enquote_path $basename] [enquote_path $dirname]"
+    } else {
+        ::menu_openfile "$dirname/$basename"
+    }
+}
+
+# open HTML docs from the menu using the OS-default HTML viewer
+proc ::menu_openfile {filename} {
+    if {$::tcl_platform(os) eq "Darwin"} {
+        exec sh -c [format "open '%s'" $filename]
+    } elseif {$::tcl_platform(platform) eq "windows"} {
+        exec rundll32 url.dll,FileProtocolHandler [format "%s" $filename] &
+    } else {
+        foreach candidate { gnome-open xdg-open sensible-browser iceweasel firefox \
+                                mozilla galeon konqueror netscape lynx } {
+            set browser [lindex [auto_execok $candidate] 0]
+            if {[string length $browser] != 0} {
+                exec -- sh -c [format "%s '%s'" $browser $filename] &
+                break
+            }
+        }
     }
 }
 
