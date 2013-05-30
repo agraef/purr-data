@@ -1345,22 +1345,27 @@ proc menu_doc_open {dir basename} {
 #    namespace export menu_*
 #}
 
-proc ::menu_doc_open {dir basename} {
-    if {[file pathtype $dir] eq "relative"} {
-        set dirname "$::sys_libdir/$dir"
-    } else {
-        set dirname $dir
-    }
-    set textextension "[string tolower [file extension $basename]]"
-    if {[lsearch -exact [lindex $::filetypes 0 1]  $textextension] > -1} {
-        set fullpath [file normalize [file join $dirname $basename]]
-        set dirname [file dirname $fullpath]
-        set basename [file tail $fullpath]
-        pdsend "pd open [enquote_path $basename] [enquote_path $dirname]"
-    } else {
-        ::menu_openfile "$dirname/$basename"
-    }
-}
+# TODO enquote a filename to send it to pd, " isn't handled properly tho...
+#proc enquote_path {message} {
+#    string map {"," "\\," ";" "\\;" " " "\\ "} $message
+#}
+
+#proc ::menu_doc_open {dir basename} {
+#    if {[file pathtype $dir] eq "relative"} {
+#        set dirname "$::sys_libdir/$dir"
+#    } else {
+#        set dirname $dir
+#    }
+#    set textextension "[string tolower [file extension $basename]]"
+#    if {[lsearch -exact [lindex $::filetypes 0 1]  $textextension] > -1} {
+#        set fullpath [file normalize [file join $dirname $basename]]
+#        set dirname [file dirname $fullpath]
+#        set basename [file tail $fullpath]
+#        pdsend "pd open [enquote_path $basename] [enquote_path $dirname]"
+#    } else {
+#        ::menu_openfile "$dirname/$basename"
+#    }
+#}
 
 # open HTML docs from the menu using the OS-default HTML viewer
 proc ::menu_openfile {filename} {
@@ -2771,7 +2776,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d"
 	}
 
-	if { $autotips == 1 } {
+	if { $k12_mode == 0 && $autotips == 1 } {
     	$name.m.edit entryconfigure "Autotips" -background "#7dd37d"
 	}
 
