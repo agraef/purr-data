@@ -4579,8 +4579,10 @@ proc pdtk_canvas_popup {name xpix ypix canprop canopen isobject} {
 			$name.popup entryconfigure 5 -state active
 		}
 	}
-    tk_popup $name.popup $tmp_xpix \
-        $tmp_ypix 0
+	if { $k12_mode == 0 || $isobject == 1 } {
+		tk_popup $name.popup $tmp_xpix \
+		    $tmp_ypix 0
+	}
 }
 
 # begin of change "iemlib"

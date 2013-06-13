@@ -198,6 +198,11 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
 			((t_glist *)ob)->gl_isgraph,
             glist->gl_goprect,
 			(ob->te_type == T_TEXT ? 1:0));*/
+		if (sys_k12_mode && x->g_pd == preset_hub_class) {
+			//fprintf(stderr,"glist_select do not select invised preset_hub in K12 mode\n");
+			t_preset_hub *ph = (t_preset_hub *)x;
+			if (ph->ph_invis > 0) return(0);
+		}
         return (glist->gl_havewindow ||
             (ob->te_pd != canvas_class &&
                 ob->te_pd->c_wb != &text_widgetbehavior) ||
@@ -1972,9 +1977,21 @@ static t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
 }
 
     /* right-clicking on a canvas object pops up a menu. */
-static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y)
+static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
 {
     int canprop, canopen, isobject;
+	t_gobj *y = NULL;
+	int x1, y1, x2, y2;
+	if (x->gl_editor->e_selection) {
+		glist_noselect(x);
+	}
+	for (y = x->gl_list; y; y = y->g_next) {
+		if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)) {
+			if (!glist_isselected(x, y))
+				glist_select(x, y);
+				break;
+		}
+	}
 	/* abstractions should only allow for properties inside them 
 	   otherwise they end-up being dirty without visible notification
 	   besides, why would one mess with their properties without
