@@ -77,6 +77,11 @@ int connect_exception = 0; // used when autopatching to bypass check whether one
 // used to test whether the shift is pressed and if so, handle various connection exceptions (e.g. multiconnect)
 int glob_lmclick = 0;
 int glob_shift = 0;
+int glob_ctrl = 0;
+int glob_alt = 0;
+
+static t_glist *canvas_last_glist;
+static int canvas_last_glist_x, canvas_last_glist_y;
 
 struct _outlet
 {
@@ -3264,7 +3269,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
 		}
         x->canvas_cnct_inlet_tag[0] = 0;                  
     }
-    if (x->canvas_cnct_outlet_tag[0] != 0)
+    if (x->canvas_cnct_outlet_tag[0] != 0 && !glob_shift)
     {
         sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                	x, x->canvas_cnct_outlet_tag,
@@ -3947,28 +3952,28 @@ void canvas_mouseup(t_canvas *x,
         }
 		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     }
-
-	if (x->canvas_cnct_outlet_tag[0] != 0)
-	{
-		sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
-		       	x, x->canvas_cnct_outlet_tag,
-				(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
-	}
-	if (x->canvas_cnct_inlet_tag[0] != 0)
-	{
-		sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
-	   			x, x->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
-		x->canvas_cnct_inlet_tag[0] = 0;                  
-	}
     
 	if (x->gl_editor->e_onmotion != MA_CONNECT || x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift) {
 		//fprintf(stderr,"releasing shift during connect without the button pressed\n");
+		if (x->canvas_cnct_outlet_tag[0] != 0)
+		{
+			sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+				   	x, x->canvas_cnct_outlet_tag,
+					(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+					(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+		}
+		if (x->canvas_cnct_inlet_tag[0] != 0)
+		{
+			sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
+		   			x, x->canvas_cnct_inlet_tag,
+					(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+					(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+			x->canvas_cnct_inlet_tag[0] = 0;                  
+		}
+
 	    x->gl_editor->e_onmotion = MA_NONE;
 	}
-	canvas_doclick(x, xpos, ypos, 0, 0, 0);
+	canvas_doclick(x, xpos, ypos, 0, (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
 }
 
     /* displace the selection by (dx, dy) pixels */
@@ -4050,12 +4055,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 	if (x->gl_editor->e_onmotion == MA_CONNECT && !glob_shift && !glob_lmclick) {
 		//fprintf(stderr,"shift released during connect\n");
 		sys_vgui(".x%lx.c delete x\n", x);
-		canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
+		canvas_mouseup(x, canvas_last_glist_x, canvas_last_glist_y, 0);
 	}
 
 	// check if user released shift while dragging inside an object
 	if (x->gl_editor->e_onmotion == MA_PASSOUT && !glob_shift && !glob_lmclick) {
-		fprintf(stderr,"shift released during button+shift drag\n");
+		//fprintf(stderr,"shift released during button+shift drag\n");
 		canvas_mouseup(x, x->gl_editor->e_xwas, x->gl_editor->e_ywas, 0);
 	}
 
@@ -4203,12 +4208,23 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 		}
     }
 
+    if (x && keynum == 0 && x->gl_edit &&
+        !strncmp(gotkeysym->s_name, "Alt", 3))
+	{
+		glob_alt = down;
+	}
+
         /* if control key goes up or down, and if we're in edit mode, change
-        cursor to indicate how the click action changes */
+        cursor to indicate how the click action changes
+		NEW: do so only if not doing anything else in edit mode */
     if (x && keynum == 0 && x->gl_edit &&
         !strncmp(gotkeysym->s_name, "Control", 7))
-            canvas_setcursor(x, down ?
-                CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
+	{
+			glob_ctrl = down;
+			if(x->gl_editor->e_onmotion == MA_NONE)
+            	canvas_setcursor(x, down ?
+                	CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
+	}
 }
 
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
@@ -6059,9 +6075,6 @@ static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floa
 
     canvas_dofont(x2, font, realresize, realresize);
 }
-
-static t_glist *canvas_last_glist;
-static int canvas_last_glist_x, canvas_last_glist_y;
 
 void glist_getnextxy(t_glist *gl, int *xpix, int *ypix)
 {
