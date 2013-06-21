@@ -224,17 +224,17 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 				     xpos, ypos + x->x_gui.x_h,
 				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x);
 			if(!x->x_gui.x_fsf.x_snd_able)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %lxNUM outlet}\n",
+				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM outlet}\n",
 				     canvas,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
-				     x, nlet_tag, 0, x);
+				     x, nlet_tag, 0, nlet_tag, 0, x);
 			if(!x->x_gui.x_fsf.x_rcv_able)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %lxNUM inlet}\n",
+				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM inlet}\n",
 				     canvas,
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1,
-				     x, nlet_tag, 0, x);
+				     x, nlet_tag, 0, nlet_tag, 0, x);
 		} else {
 			sys_vgui(
 				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
@@ -417,19 +417,19 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxNUM%so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
-		         x, nlet_tag, 0);
+		         x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxNUM%si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+IOWIDTH, ypos+1,
-		         x, nlet_tag, 0);
+		         x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
 

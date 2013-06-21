@@ -105,11 +105,11 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%so%d %lxHRDO        c outlet}\n",
-		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO outlet}\n",
+		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%si%d %lxHRDO inlet}\n",
-		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO inlet}\n",
+		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, nlet_tag, 0, x);
 	//}
 }
 
@@ -249,18 +249,18 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHRDO%so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO outlet}\n",
 		             canvas,
 		             xpos, ypos + x->x_gui.x_w-1,
 		             xpos + IOWIDTH, ypos + x->x_gui.x_w,
-		             x, nlet_tag, 0);
+		             x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHRDO%si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO inlet}\n",
 		             canvas,
 		             xpos, ypos,
-		             xpos + IOWIDTH, ypos+1, x,nlet_tag, 0);
+		             xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxHRDO%si%d\n", canvas, x, nlet_tag, 0);
 	}

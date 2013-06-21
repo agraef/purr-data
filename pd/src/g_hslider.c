@@ -111,13 +111,13 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%so%d %lxHSLDR outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR outlet}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
-		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, x);
+		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%si%d %lxHSLDR inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR inlet}\n",
 		         canvas, xpos, ypos,
-		         xpos+7, ypos+1, x, nlet_tag, 0, x);
+		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x);
 	//}
 }
 
@@ -242,15 +242,15 @@ static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHSLDR%so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR outlet}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
-		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0);
+		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxHSLDR%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxHSLDR%si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR inlet}\n",
 		         canvas, xpos, ypos,
-		         xpos+7, ypos+1, x, nlet_tag, 0);
+		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxHSLDR%si%d\n", canvas, x, nlet_tag, 0);
 	}

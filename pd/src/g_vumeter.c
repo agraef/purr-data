@@ -172,29 +172,29 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		         x->x_gui.x_lcol, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %lxVU outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %lxVU outlet}\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 1, x);
+		         x, nlet_tag, 1, nlet_tag, 1, x);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %lxVU inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
-		         x, nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %lxVU inlet}\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU inlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
-		         x, nlet_tag, 1, x);
+		         x, nlet_tag, 1, nlet_tag, 1, x);
 		}
 		x->x_updaterms = x->x_updatepeak = 1;
 		sys_queuegui(x, x->x_gui.x_glist, vu_draw_update);
@@ -410,16 +410,16 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 0);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%so%d\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 1);
+		         x, nlet_tag, 1, nlet_tag, 1, x);
 		}
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		{
@@ -428,16 +428,16 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 		}
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%si%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU outlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
-		         x, nlet_tag, 0);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxVU%si%d\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
-		         x, nlet_tag, 1);
+		         x, nlet_tag, 1, nlet_tag, 1, x);
 		}
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		{
