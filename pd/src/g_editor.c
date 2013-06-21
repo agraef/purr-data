@@ -102,7 +102,7 @@ int gobj_filter_highlight_behavior(t_rtext *y) {
 	char name[4];
 	int bufsize, i;
 	rtext_gettext(y, &buf, &bufsize);
-	if (bufsize > 4) bufsize = 4;
+	if (bufsize > 3) bufsize = 3;
 	for (i = 0; i < bufsize; i++) {
 		name[i] = buf[i];
 	}
@@ -2800,6 +2800,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         if (yr)
                         {
 							last_outlet_filter = gobj_filter_highlight_behavior(yr);
+							//fprintf(stderr,"last_outlet_filter == %d\n", last_outlet_filter);
                             sprintf(x->canvas_cnct_outlet_tag, 
                                     "%so%d",
                                     rtext_gettag(yr),
@@ -2857,6 +2858,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     if (yr)
                     {
 						last_inlet_filter = gobj_filter_highlight_behavior(yr);
+						//fprintf(stderr,"last_inlet_filter == %d\n", last_inlet_filter);
                         sprintf(x->canvas_cnct_inlet_tag, 
                                 "%si%d",
                                 rtext_gettag(yr),
@@ -3750,6 +3752,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 if (y)
                 {
 					last_inlet_filter = gobj_filter_highlight_behavior(y);
+					//fprintf(stderr,"last_inlet_filter == %d\n", last_inlet_filter);
                     sprintf(x->canvas_cnct_inlet_tag, 
                             "%si%d",
                             rtext_gettag(y),
