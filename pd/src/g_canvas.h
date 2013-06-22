@@ -121,6 +121,9 @@ typedef struct _editor
     unsigned int e_lastmoved: 1;    /* one if mouse has moved since click */
     unsigned int e_textdirty: 1;    /* one if e_textedfor has changed */
     unsigned int e_selectedline: 1; /* one if a line is selected */
+    t_magicGlass *gl_magic_glass;   /* magic glass object */
+	char canvas_cnct_inlet_tag[4096]; /* tags for currently highlighted nlets */
+	char canvas_cnct_outlet_tag[4096];
 } t_editor;
 
 #define MA_NONE    0    /* e_onmotion: do nothing on mouse motion */
@@ -202,30 +205,21 @@ struct _glist
     unsigned int gl_isgraph:1;      /* show as graph on parent */
     unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
 	unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
-    t_magicGlass *gl_magic_glass;   /* magic glass object */
-
+	//global preset array pointer
+	t_preset_hub *gl_phub;
+	//infinite undo goodies (have to stay here rather than the editor to prevent its obliteration when editor is deleted)
+	t_undo_action *u_queue;
+	t_undo_action *u_last;
 	//dpsaha@vt.edu for the gop dynamic resizing
 	t_pd	   		   *x_handle;
 	int 			   scale_offset_x;	
 	int				   scale_offset_y;
-	int				   scale_vis;
-	
+	int				   scale_vis;	
 	//dpsaha@vt.edu for the move handle
 	t_pd			   *x_mhandle;
 	int				   move_offset_x;
 	int				   move_offset_y;
 	int				   move_vis;
-
-	//infinite undo goodies
-	t_undo_action *u_queue;
-	t_undo_action *u_last;
-
-	//global preset array pointer
-	t_preset_hub *gl_phub;
-
-	//tags for currently highlighted nlets
-	char canvas_cnct_inlet_tag[4096];
-	char canvas_cnct_outlet_tag[4096];
 };
 
 #define gl_gobj gl_obj.te_g

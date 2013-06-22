@@ -352,7 +352,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     int font = (owner ? owner->gl_font : sys_defaultfont);
 
     glist_init(x);
-    x->gl_magic_glass = magicGlass_new(x);
+    //x->gl_magic_glass = magicGlass_new(x);
     x->gl_obj.te_type = T_OBJECT;
     if (!owner)
         canvas_addtolist(x);
@@ -460,9 +460,6 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
 	x->move_offset_x = 0;
 	x->move_offset_y = 0;
 	x->move_vis = 0;
-
-	x->canvas_cnct_inlet_tag[0] = 0;
-	x->canvas_cnct_outlet_tag[0] = 0;
 
 	x->u_queue = canvas_undo_init(x);
 
@@ -888,12 +885,6 @@ void canvas_free(t_canvas *x)
 	//fprintf(stderr,"canvas_free %lx\n", x);
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
-
-    if (x->gl_magic_glass) {
-      	//magicGlass_free(x->gl_magic_glass);
-		pd_free(&x->gl_magic_glass->x_obj.te_g.g_pd);
-		x->gl_magic_glass = NULL;
-	}
 
     //canvas_noundo(x);
 	canvas_undo_free(x);
@@ -1385,10 +1376,12 @@ static void canvas_dodsp(t_canvas *x, int toplevel, t_signal **sp)
 
         /* find all the "dsp" boxes and add them to the graph */
 
-    ob = &x->gl_magic_glass->x_obj;
-    if (ob && magicGlass_bound(x->gl_magic_glass)) {
-		//fprintf(stderr,"adding cord inspector to dsp %d\n", magicGlass_bound(x->gl_magic_glass));
-		ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
+	if (x->gl_editor) {
+		ob = &x->gl_editor->gl_magic_glass->x_obj;
+		if (ob && magicGlass_bound(x->gl_editor->gl_magic_glass)) {
+			//fprintf(stderr,"adding cord inspector to dsp %d\n", magicGlass_bound(x->gl_magic_glass));
+			ugen_add(dc, ob);  // this t_canvas could be an array, hence no gl_magic_glass
+		}
 	}
     
     for (y = x->gl_list; y; y = y->g_next)
