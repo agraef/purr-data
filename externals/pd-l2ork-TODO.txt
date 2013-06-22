@@ -4,7 +4,6 @@ AS OF April 7, 2013
 DONE: (*denotes unique changes)
 creb
 flatgui (disabled, as all externals have various problems)
-*footils
 gem2pdp
 moonlib
 mrpeach
@@ -15,8 +14,9 @@ postlude
 sigpack
 
 MERGE:
-miXed
-ggee
+*footils (fluid improvements)
+*ggee (image improvements--more work needed)
+*miXed (Scope~ and coll, improvements to the textfile viewer)
 
 TODO:
 test other
