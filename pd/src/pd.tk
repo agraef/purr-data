@@ -3083,7 +3083,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	bind $name <FocusIn> "menu_fixeditmenu $name"
 	# bind $name <FocusOut> { pdtk_noselect %W }
 	if { $k12_mode == 1 } { pd [concat $name tooltips 1 \;] }
-    focus $name.c
+    after 100 [concat focus $name.c]
 
 	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
 		after 1000 [concat pdtk_k12_saveas_on_new $name]
