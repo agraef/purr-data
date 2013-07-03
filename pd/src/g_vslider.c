@@ -568,7 +568,7 @@ static void vslider_getrect(t_gobj *z, t_glist *glist,
     *xp1 = text_xpix(&x->x_gui.x_obj, glist);
     *yp1 = text_ypix(&x->x_gui.x_obj, glist);
     *xp2 = *xp1 + x->x_gui.x_w;
-    *yp2 = *yp1 + x->x_gui.x_h + 7;
+    *yp2 = *yp1 + x->x_gui.x_h + 5;
 
 	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }

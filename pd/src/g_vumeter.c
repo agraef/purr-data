@@ -839,18 +839,20 @@ static void vu_getrect(t_gobj *z, t_glist *glist,
 	int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2, k4=ypos-k3;
 
     *xp1 = text_xpix(&x->x_gui.x_obj, glist);
-    *yp1 = text_ypix(&x->x_gui.x_obj, glist);
-    *xp2 = *xp1 + x->x_gui.x_w + 3;
-    *yp2 = *yp1 + x->x_gui.x_h + 6;
+    *yp1 = text_ypix(&x->x_gui.x_obj, glist) + 2;
+    *xp2 = *xp1 + x->x_gui.x_w + 2;
+    *yp2 = *yp1 + x->x_gui.x_h + 2;
 
 	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 
-	//vu has custom scale all labels unlike other iemgui object
-	end=xpos+x->x_gui.x_w+4;
-	yyy = k4 + k1*(k2-1);
-	vu_scale_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2, end+1, yyy+k3+2);
-	yyy = k4;
-	vu_scale_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2, end+1, yyy+k3+2);
+	if (x->x_scale) {
+		//vu has custom scale all labels unlike other iemgui object
+		end=xpos+x->x_gui.x_w+4;
+		yyy = k4 + k1*(k2-1);
+		vu_scale_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2, end+1, yyy+k3+2);
+		yyy = k4;
+		vu_scale_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2, end+1, yyy+k3+2);
+	}
 }
 
 static void vu_save(t_gobj *z, t_binbuf *b)
