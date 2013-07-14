@@ -6366,7 +6366,6 @@ proc pdtk_pd_dio {red} {
 		} else {
 	        .controls.dio configure -background red -activebackground red
 		}
-		set current_window $tkcanvas	
     } else {
 		#puts stderr off
 		if {[info tclversion] >= 8.5 && $pd_nt == 0} {
