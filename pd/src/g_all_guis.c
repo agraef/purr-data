@@ -533,9 +533,9 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *x
 
 void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
 {
-	if(gobj_shouldvis(x, iemgui->x_glist)) {
+	if(gobj_shouldvis(x, glist_getcanvas(iemgui->x_glist))) {
 		if (!iemgui->x_vis) {
-			//fprintf(stderr,"draw new\n");
+			//fprintf(stderr,"draw new %d\n", mode);
     		(*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_NEW);
     		canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
 			iemgui->x_vis = 1;
@@ -544,7 +544,7 @@ void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
 	    (*iemgui->x_draw)(x, iemgui->x_glist, mode);
 	    canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
 	} else if (iemgui->x_vis) {
-		//fprintf(stderr,"draw erase\n");
+		//fprintf(stderr,"draw erase %d\n", mode);
 		(*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_ERASE);
 		iemgui->x_vis = 0;
 	}
