@@ -3676,17 +3676,17 @@ proc pdtk_canvas_getscroll {name} {
 
 		if {$::scroll($parentname) == 1} {
 
-			if {($::xscrollable($parentname) && $::yscrollable($parentname)
-					&& [expr $winwidth + 14] >= $canvaswidth
-					&& [expr $winheight + 14] >= $canvasheight)} {
-				#puts stderr "TRYING TO ADJUST WIDTH & HEIGHT"
-				pack forget $parentname.scrollhort
-				set ::xscrollable($parentname) 0
-				pack forget $parentname.scrollvert
-				set ::yscrollable($parentname) 0
-				set winwidth [expr {$winwidth + 14}]
-				set winheight [expr {$winheight + 14}]
-			}
+			#if {($::xscrollable($parentname) && $::yscrollable($parentname)
+			#		&& [expr $winwidth + 14] >= $canvaswidth
+			#		&& [expr $winheight + 14] >= $canvasheight)} {
+			#	#puts stderr "TRYING TO ADJUST WIDTH & HEIGHT"
+			#	pack forget $parentname.scrollhort
+			#	set ::xscrollable($parentname) 0
+			#	pack forget $parentname.scrollvert
+			#	set ::yscrollable($parentname) 0
+			#	set winwidth [expr {$winwidth + 14}]
+			#	set winheight [expr {$winheight + 14}]
+			#}
 
 			if {$winwidth >= $canvaswidth && $::xscrollable($parentname)} {
 				#puts stderr "NO HORIZONTAL NECESSARY"
