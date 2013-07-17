@@ -47,6 +47,7 @@ typedef struct _disis_netreceive
     t_outlet *x_addrout;
     t_atom x_addrbytes[5];
     int x_connectsocket;
+	int x_acceptsocket;
     int x_nconnections;
 	int x_oldnconnections;
     int x_udp;
@@ -216,8 +217,122 @@ static void disis_netreceive_connectpoll(t_disis_netreceive *x)
         //outlet_float(x->x_connectout, ++x->x_nconnections);
 		x->x_oldnconnections = x->x_nconnections;
 		++x->x_nconnections;
+		x->x_acceptsocket = fd;
 		clock_delay(x->x_clock, 0);
     }
+}
+
+static void disis_netreceive_setport(t_disis_netreceive *x, t_floatarg fportno)
+{
+	if (!fportno)
+		return;
+
+	//fprintf(stderr,"disis_netreceive_setport\n");
+	struct sockaddr_in server;
+	int sockfd, intarg, portno = fportno;
+
+	x->x_isdeleting = 1;
+
+    if (x->x_connectsocket >= 0)
+    {
+        sys_rmpollfn(x->x_connectsocket);
+		if (!x->x_udp && x->x_acceptsocket >= 0)
+			sys_rmpollfn(x->x_acceptsocket);
+        sys_closesocket(x->x_connectsocket);
+    }
+
+	clock_unset(x->x_clock);
+	clock_free(x->x_clock);
+
+	//delete the msgqueue (if any)
+	if (x->x_start != NULL) {
+		t_msgqueue *tmp;
+		while (x->x_start) {
+			tmp = x->x_start;
+			x->x_start = x->x_start->msg_next;
+
+			//destruct the parsed one
+			if (tmp->msg_binbuf)
+				binbuf_free(tmp->msg_binbuf);
+
+			//deallocate msgqueue tmp is pointing to
+			freebytes(tmp, sizeof(*tmp));
+		}
+	}
+
+	x->x_start = NULL;
+	x->x_end = NULL;
+
+	// now recreate connection with the new portno
+
+        /* create a socket */
+    sockfd = socket(AF_INET, (x->x_udp ? SOCK_DGRAM : SOCK_STREAM), 0);
+
+    if (sockfd < 0)
+    {
+        sys_sockerror("socket");
+        return;
+    }
+
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY;
+
+    intarg = 1;
+
+		/* ask OS to allow another Pd to repoen this port after we close it. */
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,
+        (char *)&intarg, sizeof(intarg)) < 0)
+            post("setsockopt (SO_REUSEADDR) failed\n");
+
+        /* Stream (TCP) sockets are set NODELAY */
+    if (!x->x_udp)
+    {
+        intarg = 1;
+        if (setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY,
+            (char *)&intarg, sizeof(intarg)) < 0)
+                post("setsockopt (TCP_NODELAY) failed\n");
+    }
+        /* assign server port number */
+    server.sin_port = htons((u_short)portno);
+
+        /* name the socket */
+    if (bind(sockfd, (struct sockaddr *)&server, sizeof(server)) < 0)
+    {
+        sys_sockerror("bind");
+        sys_closesocket(sockfd);
+        return;
+    }
+
+	x->x_acceptsocket = -1;
+
+    if (x->x_udp)        /* datagram protocol */
+    {
+        t_socketreceiver *y = socketreceiver_new((void *)x, 
+            (t_socketnotifier)disis_netreceive_notify,
+                (x->x_msgout ? disis_netreceive_doit : 0), 1);
+        sys_addpollfn(sockfd, (t_fdpollfn)disis_socketreceiver_getudp, y);
+        x->x_connectout = 0;
+    }
+    else        /* streaming protocol */
+    {
+        if (listen(sockfd, 5) < 0)
+        {
+            sys_sockerror("listen");
+            sys_closesocket(sockfd);
+            sockfd = -1;
+        }
+        else
+        {
+            sys_addpollfn(sockfd, (t_fdpollfn)disis_netreceive_connectpoll, x);
+        }
+    }
+    x->x_connectsocket = sockfd;
+	//post("connectsocket = %d", x->x_connectsocket);
+    x->x_nconnections = 0;
+	x->x_isdeleting = 0;
+
+	x->x_clock = clock_new(x, (t_method)disis_netreceive_output);
+	clock_delay(x->x_clock, 0);
 }
 
 static void *disis_netreceive_new(t_symbol *compatflag,
@@ -283,6 +398,8 @@ static void *disis_netreceive_new(t_symbol *compatflag,
     {
         x->x_msgout = outlet_new(&x->x_obj, &s_anything);
     }
+
+	x->x_acceptsocket = -1;
 
     if (udp)        /* datagram protocol */
     {
@@ -397,6 +514,8 @@ static void disis_netreceive_free(t_disis_netreceive *x)
     if (x->x_connectsocket >= 0)
     {
         sys_rmpollfn(x->x_connectsocket);
+		if (!x->x_udp && x->x_acceptsocket >= 0)
+			sys_rmpollfn(x->x_acceptsocket);
         sys_closesocket(x->x_connectsocket);
     }
 
@@ -424,6 +543,8 @@ void disis_netreceive_setup(void)
 {
     disis_netreceive_class = class_new(gensym("disis_netreceive"),
         (t_newmethod)disis_netreceive_new, (t_method)disis_netreceive_free,
-        sizeof(t_disis_netreceive), CLASS_NOINLET, A_DEFFLOAT, A_DEFFLOAT, 
+        sizeof(t_disis_netreceive), 0, A_DEFFLOAT, A_DEFFLOAT, 
             A_DEFSYM, 0);
+
+	class_addmethod(disis_netreceive_class, (t_method)disis_netreceive_setport, gensym("port"), A_DEFFLOAT, 0);
 }
