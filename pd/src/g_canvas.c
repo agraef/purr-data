@@ -1059,20 +1059,6 @@ void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-static void canvas_loadbangabstractions(t_canvas *x, t_symbol *s)
-{
-    t_gobj *y;
-    //t_symbol *s = gensym("loadbang");
-    for (y = x->gl_list; y; y = y->g_next)
-        if (pd_class(&y->g_pd) == canvas_class)
-    {
-        if (canvas_isabstraction((t_canvas *)y))
-            canvas_loadbang((t_canvas *)y);
-        else
-            canvas_loadbangabstractions((t_canvas *)y, s);
-    }
-}
-
 void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
 {
     t_gobj *y;
@@ -1080,26 +1066,52 @@ void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
     for (y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == canvas_class)
     {
-        if (!canvas_isabstraction((t_canvas *)y))
+        if (!canvas_isabstraction((t_canvas *)y)) {
+			//fprintf(stderr,"%lx s:canvas_loadbangsubpatches %s\n",x,s->s_name);
             canvas_loadbangsubpatches((t_canvas *)y, s);
+		}
     }
     for (y = x->gl_list; y; y = y->g_next)
         if ((pd_class(&y->g_pd) != canvas_class) &&
-            zgetfn(&y->g_pd, s))
+            zgetfn(&y->g_pd, s)) {
+				//fprintf(stderr,"%lx s:obj_loadbang %s\n",x,s->s_name);
                 pd_vmess(&y->g_pd, s, "");
+		}
+}
+
+static void canvas_loadbangabstractions(t_canvas *x, t_symbol *s)
+{
+    t_gobj *y;
+    //t_symbol *s = gensym("loadbang");
+    for (y = x->gl_list; y; y = y->g_next)
+        if (pd_class(&y->g_pd) == canvas_class)
+    {
+        if (canvas_isabstraction((t_canvas *)y)) {
+			//fprintf(stderr,"%lx a:canvas_loadbang %s\n",x,s->s_name);
+            canvas_loadbangabstractions((t_canvas *)y, s);
+    		canvas_loadbangsubpatches((t_canvas *)y, s);
+		}
+        else {
+			//fprintf(stderr,"%lx a:canvas_loadbangabstractions %s\n",x,s->s_name);
+            canvas_loadbangabstractions((t_canvas *)y, s);
+		}
+    }
 }
 
 void canvas_loadbang(t_canvas *x)
 {
     //t_gobj *y;
 	// first loadbang preset hubs and nodes
+	//fprintf(stderr,"%lx 0\n", x);
     canvas_loadbangabstractions(x, gensym("pre-loadbang"));
     canvas_loadbangsubpatches(x, gensym("pre-loadbang"));
-
+	//fprintf(stderr,"%lx 1\n", x);
 	// then do the regular loadbang
     canvas_loadbangabstractions(x, gensym("loadbang"));
     canvas_loadbangsubpatches(x, gensym("loadbang"));
+	//fprintf(stderr,"%lx 2\n", x);
 }
+
 /* JMZ:
  * initbang is emitted after the canvas is done, but before the parent canvas is done
  * therefore, initbangs cannot reach to the outlets
