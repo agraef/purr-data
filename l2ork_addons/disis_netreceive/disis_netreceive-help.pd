@@ -1,52 +1,120 @@
-#N canvas 303 49 384 509 10;
-#X floatatom 201 328 0 0 0 0 - - -;
-#X text 11 60 The Netreceive object opens a socket for TCP ("stream")
-or UDP ("datagram") network reception on a specified port. If using
-TCP \, an outlet gives you the number of Netsend objects (or other
-compatible clients) have opened connections here.;
-#X text 12 133 Incoming network messages appear on "receive" objects
-\; it's up to the sender to select which one. Here \, a "receive foo"
-fields messages sent from the Netsend help window \, q.v.;
-#X text 11 275 first argument: portnumber = 3000;
-#X text 12 286 second argument: 0 or none for TCP \, nonzero for UDP
+#N canvas 374 24 552 683 10;
+#X obj 0 661 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header disis_netreceive
+3 12 0 18 -204280 -1 0;
+#X obj 0 311 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 5 KEYWORDS control network;
+#X text 12 45 DESCRIPTION listen for incoming messages from a network
 ;
-#X text 216 306 <-- TCP \, port 3000;
-#X text 240 362 <-- UDP \, port 3001;
-#X text 13 345 incoming messages;
-#X obj 78 328 print tcp;
-#X obj 78 384 print udp;
-#X text 12 174 There are some possibilities for intercommunication
-with other programs... see the help for "netsend.";
-#X text 241 494 [netreceive 4567 0 old];
-#X text 14 429 If you set the third argument to the word "old" \, everything
-sent to the specified port is received into the global message space.
-This is the original behavior of [netreceive]. This can be VERY INSECURE
-since it gives someone full access to your computer \, allowing them
-to do anything that Pd can via the network.;
-#X obj 78 307 disis_netreceive 3000;
-#X obj 78 363 disis_netreceive 3001 1;
-#X floatatom 213 411 3 0 0 0 - - -;
-#X floatatom 240 411 3 0 0 0 - - -;
-#X floatatom 267 411 3 0 0 0 - - -;
-#X floatatom 294 411 3 0 0 0 - - -;
-#X text 170 410 from;
-#X floatatom 322 411 5 0 0 0 - - -;
-#X obj 213 385 unpack 0 0 0 0 0;
-#X text 12 234 SECURITY ALERT: the port that netreceive opens has no
+#X text 12 85 OUTLET_0 anything;
+#X text 12 105 OUTLET_1 float;
+#X text 12 145 AUTHOR Ivica Ico Bukvic;
+#X text 12 65 INLET_0 port;
+#X text 12 165 WEBSITE http://l2ork.music.vt.edu;
+#X text 12 185 RELEASE_DATE 2013;
+#X text 12 205 HELP_PATCH_AUTHORS Based on netreceive help file. Revised
+by Ivica Ico Bukvic to conform to the PDDP template for Pd-L2Ork.;
+#X restore 500 663 pd META;
+#X obj 0 368 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 490 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 629 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 103 35 netsend;
+#X obj 13 35 disis_netsend;
+#X obj 157 35 netreceive;
+#X text 8 2 [disis_netreceive] Related Objects;
+#X restore 102 664 pd Related_objects;
+#X obj 78 377 cnv 17 3 25 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 80 510 1) float;
+#X floatatom 262 82 0 0 0 0 - - -;
+#X obj 139 82 print tcp;
+#X obj 139 166 print udp;
+#X text 8 21 listen for incoming messages from a network;
+#X text 168 525 - (optional) 0 for TCP \, nonzero for UDP. (Default
+is TCP.);
+#X text 168 510 - (optional) port number.;
+#X text 80 525 2) float;
+#X text 80 540 3) symbol atom;
+#X text 98 376 anything;
+#X obj 78 413 cnv 17 3 25 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 412 float;
+#X text 274 60 <- TCP \, port 3000;
+#X text 284 144 <- UDP \, port 3001;
+#X obj 4 663 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 393 20 pddp/pddplink http://wiki.puredata.info/en/netreceive
+-text pdpedia: disis_netreceive;
+#X obj 446 3 disis_netreceive;
+#X obj 139 61 disis_netreceive 3000;
+#X obj 139 145 disis_netreceive 3001 1;
+#N canvas 102 334 426 289 About_disis_netreceive 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 18 228 SECURITY ALERT: the port that netreceive opens has no
 access restrictions \, so anyone can connect to it and send messages.
 ;
-#X text 12 204 You can also send and receive messages to Pd from the
-command line using 'pdsend' and 'pdreceive'.;
-#X text 228 329 <--- # of open connections;
-#X text 12 11 disis_netreceive listens for incoming messages from network.
-it uses gui-safe way of dispatching incoming data and also offers sender
-IP/Port info in UDP mode.;
-#X connect 13 0 8 0;
-#X connect 13 1 0 0;
-#X connect 14 0 9 0;
-#X connect 14 1 21 0;
-#X connect 21 0 15 0;
-#X connect 21 1 16 0;
-#X connect 21 2 17 0;
-#X connect 21 3 18 0;
-#X connect 21 4 20 0;
+#X text 8 2 [disis_netreceive] More Info;
+#X text 21 38 The [disis_netreceive] object opens a socket for TCP
+("stream") or UDP ("datagram") network reception on a specified port.
+If using TCP \, an outlet gives you the number of [disis_netsend] objects
+(or other compatible clients) have opened connections here.;
+#X text 19 114 Incoming network messages appear at the left inlet of
+the [disis_netreceive] object. (They used to be received by [receive]
+objects \, in which case it was up to the sender to select which one).
+To test the object you can send messages from the [disis_netsend] help
+window.;
+#X text 20 190 There are some possibilities for intercommunication
+with other programs... see the help for [disis_netsend].;
+#X restore 102 638 pd About_disis_netreceive;
+#X text 168 540 - if you set the third argument to the word "old" \,
+everything sent to the specified port is received into the global message
+space. This is the original behavior of [disis_netreceive]. This can
+be VERY INSECURE since it gives someone full access to your computer
+\, allowing them to do anything that Pd can via the network.;
+#X text 98 270 Old behavior: [disis_netreceive 4567 0 old] (see argument
+3 below);
+#X text 98 211 You can send messages from the [disis_netsend] objects
+in the help patch for [disis_netsend].;
+#X msg 139 124 port 4000;
+#X text 203 123 Change port after creation;
+#X obj 78 321 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 168 376 - any message received by this [disis_netreceive] object
+will be sent to the left outlet.;
+#X text 98 320 port;
+#X text 168 320 - change incoming port number after creation.;
+#X floatatom 274 189 3 0 0 0 - - -;
+#X floatatom 301 189 3 0 0 0 - - -;
+#X floatatom 328 189 3 0 0 0 - - -;
+#X floatatom 355 189 3 0 0 0 - - -;
+#X floatatom 383 189 5 0 0 0 - - -;
+#X obj 274 166 unpack 0 0 0 0 0;
+#X text 145 187 packet received from;
+#X text 168 412 - when using TCP \, the [disis_netreceive] object has
+a right inlet which shows the number of open connections. In UDP mode
+\, right outlet outputs the IP address and socket number from which
+the last packet was received. This is useful for routing data from
+different sources.;
+#X text 287 82 <- number of open connections;
+#X connect 26 0 11 0;
+#X connect 26 1 10 0;
+#X connect 27 0 12 0;
+#X connect 27 1 43 0;
+#X connect 32 0 27 0;
+#X connect 43 0 38 0;
+#X connect 43 1 39 0;
+#X connect 43 2 40 0;
+#X connect 43 3 41 0;
+#X connect 43 4 42 0;
