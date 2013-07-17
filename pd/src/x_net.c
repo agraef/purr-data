@@ -188,6 +188,7 @@ typedef struct _netreceive
     t_object x_obj;
     t_outlet *x_msgout;
     t_outlet *x_connectout;
+    int x_acceptsocket;
     int x_connectsocket;
     int x_nconnections;
     int x_udp;
@@ -244,6 +245,7 @@ static void netreceive_connectpoll(t_netreceive *x)
             (t_socketnotifier)netreceive_notify,
                 (x->x_msgout ? netreceive_doit : 0), 0);
         sys_addpollfn(fd, (t_fdpollfn)socketreceiver_read, y);
+		x->x_acceptsocket = fd;
         outlet_float(x->x_connectout, ++x->x_nconnections);
     }
 }
@@ -308,6 +310,8 @@ static void *netreceive_new(t_symbol *compatflag,
     }
     else x->x_msgout = outlet_new(&x->x_obj, &s_anything);
 
+	x->x_acceptsocket = -1;
+
     if (udp)        /* datagram protocol */
     {
         t_socketreceiver *y = socketreceiver_new((void *)x, 
@@ -343,6 +347,8 @@ static void netreceive_free(t_netreceive *x)
     if (x->x_connectsocket >= 0)
     {
         sys_rmpollfn(x->x_connectsocket);
+		if (x->x_acceptsocket >= 0)
+			sys_rmpollfn(x->x_acceptsocket);
         sys_closesocket(x->x_connectsocket);
     }
 }
