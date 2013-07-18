@@ -2685,24 +2685,26 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         sys_getrealtime() - canvas_upclicktime < DCLICKINTERVAL)
             doublemod = 1;
     x->gl_editor->e_lastmoved = 0;
-	// commented out on 5-23-2013 while fixing shift+click actions
-    /*if (doit)
+	// this was temporarily commented out on 5-23-2013 while fixing shift+click actions
+	// most likely I forgot to reenable it -- need to check for any regressions as this is
+	// needed to re-check scrollbar after something was created->startmotion->clicked to let go
+    if (doit)
     {
-		fprintf(stderr,"doit %d\n", x->gl_editor->e_onmotion);
+		//fprintf(stderr,"doit %d\n", x->gl_editor->e_onmotion);
 		if (x->gl_editor->e_onmotion == MA_MOVE) {		
-			fprintf(stderr,"letting go of objects\n");
+			//fprintf(stderr,"letting go of objects\n");
         	sys_vgui(".x%lx.c raise all_cords\n", x);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		}
         x->gl_editor->e_grab = 0;
         x->gl_editor->e_onmotion = MA_NONE;
     }
-    post("click %d %d %d %d", xpos, ypos, which, mod);
+    //post("click %d %d %d %d", xpos, ypos, which, mod);
     
     if (x->gl_editor->e_onmotion != MA_NONE) {
 		//fprintf(stderr,"onmotion != MA_NONE\n");
         return;
-	}*/
+	}
 
     x->gl_editor->e_xwas = xpos;
     x->gl_editor->e_ywas = ypos;
