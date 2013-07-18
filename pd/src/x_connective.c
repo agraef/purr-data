@@ -537,6 +537,7 @@ typedef struct _route
     t_routeelement *x_vec;
     t_outlet *x_rejectout;
     t_route_proxy x_pxy;
+	t_int x_mixed;
 } t_route;
 
 static void route_proxy_init(t_route_proxy *x, t_route *p)
@@ -563,7 +564,7 @@ static void route_anything(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 {
     t_routeelement *e;
     int nelement;
-    if (x->x_type == A_SYMBOL) 
+    if (x->x_type == A_SYMBOL || x->x_mixed) 
     {
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
             if (e->e_w.w_symbol == sel)
@@ -582,12 +583,12 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 {
     t_routeelement *e;
     int nelement;
-    if (x->x_type == A_FLOAT)
+    if (x->x_type == A_FLOAT || x->x_mixed)
     {
         t_float f;
         if (!argc) return;
         if (argv->a_type != A_FLOAT)
-            goto rejected;
+            goto try_symbol;
         f = atom_getfloat(argv);
         for (nelement = x->x_nelement, e = x->x_vec; nelement--; e++)
             if (e->e_w.w_float == f)
@@ -599,7 +600,8 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             return;
         }
     }
-    else    /* symbol arguments */
+ try_symbol:
+    if (x->x_type == A_SYMBOL || x->x_mixed)    /* symbol arguments */
     {
         if (argc > 1)       /* 2 or more args: treat as "list" */
         {
@@ -661,7 +663,7 @@ static void route_free(t_route *x)
 
 static void *route_new(t_symbol *s, int argc, t_atom *argv)
 {
-    int n;
+    int n, flt = 0, sym = 0;
     t_routeelement *e;
     t_route *x = (t_route *)pd_new(route_class);
     t_atom a;
@@ -671,18 +673,22 @@ static void *route_new(t_symbol *s, int argc, t_atom *argv)
         SETFLOAT(&a, 0);
         argv = &a;
     }
-    x->x_type = argv[0].a_type;
     x->x_nelement = argc;
     x->x_vec = (t_routeelement *)getbytes(argc * sizeof(*x->x_vec));
     for (n = 0, e = x->x_vec; n < argc; n++, e++)
     {
         e->e_outlet = outlet_new(&x->x_obj, &s_list);
-        if (x->x_type == A_FLOAT)
+        if (argv[n].a_type == A_FLOAT) {
             e->e_w.w_float = atom_getfloatarg(n, argc, argv);
-        else e->e_w.w_symbol = atom_getsymbolarg(n, argc, argv);
+			flt = 1;
+		} else {
+			e->e_w.w_symbol = atom_getsymbolarg(n, argc, argv);
+			sym = 1;
+		}
     }
     if (argc == 1)
     {
+		x->x_type = argv[0].a_type;
 		route_proxy_init(&x->x_pxy, x);
 		inlet_new(&x->x_obj, &x->x_pxy.l_pd, 0, 0);
         /*if (argv->a_type == A_FLOAT)
@@ -690,6 +696,7 @@ static void *route_new(t_symbol *s, int argc, t_atom *argv)
 		else
 			symbolinlet_new(&x->x_obj, &x->x_vec->e_w.w_symbol);*/
     }
+	x->x_mixed = flt * sym;
     x->x_rejectout = outlet_new(&x->x_obj, &s_list);
     return (x);
 }
