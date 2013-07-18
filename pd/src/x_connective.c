@@ -471,7 +471,7 @@ static void *select_new(t_symbol *s, int argc, t_atom *argv)
         for (n = 0, e = x->x_vec; n < argc; n++, e++)
         {
             e->e_outlet = outlet_new(&x->x_obj, &s_bang);
-            if (argv[n].a_type == A_FLOAT)
+            if (argv[0].a_type == A_FLOAT)
             {
                 SETFLOAT(&e->e_atom, atom_getfloatarg(n, argc, argv));
                 f = 1;
@@ -515,11 +515,19 @@ void select_setup(void)
 
 static t_class *route_class;
 
+static t_class *route_proxy_class;
+
 typedef struct _routeelement
 {
     t_word e_w;
     t_outlet *e_outlet;
 } t_routeelement;
+
+typedef struct _route_proxy
+{
+    t_pd l_pd;
+    void *parent;
+} t_route_proxy;
 
 typedef struct _route
 {
@@ -528,7 +536,28 @@ typedef struct _route
     t_int x_nelement;
     t_routeelement *x_vec;
     t_outlet *x_rejectout;
+    t_route_proxy x_pxy;
 } t_route;
+
+static void route_proxy_init(t_route_proxy *x, t_route *p)
+{
+    x->l_pd = route_proxy_class;
+    x->parent = (void *)p;
+}
+
+static void route_proxy_float(t_route_proxy *x, t_float f)
+{
+    t_route *p = (t_route *)x->parent;
+	p->x_type = A_FLOAT;
+	p->x_vec->e_w.w_float = f;
+}
+
+static void route_proxy_symbol(t_route_proxy *x, t_symbol *s)
+{
+    t_route *p = (t_route *)x->parent;
+	p->x_type = A_SYMBOL;
+	p->x_vec->e_w.w_symbol = s;
+}
 
 static void route_anything(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 {
@@ -654,9 +683,12 @@ static void *route_new(t_symbol *s, int argc, t_atom *argv)
     }
     if (argc == 1)
     {
-        if (argv->a_type == A_FLOAT)
+		route_proxy_init(&x->x_pxy, x);
+		inlet_new(&x->x_obj, &x->x_pxy.l_pd, 0, 0);
+        /*if (argv->a_type == A_FLOAT)
             floatinlet_new(&x->x_obj, &x->x_vec->e_w.w_float);
-        else symbolinlet_new(&x->x_obj, &x->x_vec->e_w.w_symbol);
+		else
+			symbolinlet_new(&x->x_obj, &x->x_vec->e_w.w_symbol);*/
     }
     x->x_rejectout = outlet_new(&x->x_obj, &s_list);
     return (x);
@@ -664,6 +696,10 @@ static void *route_new(t_symbol *s, int argc, t_atom *argv)
 
 void route_setup(void)
 {
+	route_proxy_class = class_new(gensym("route_inlet"),
+		0, 0, sizeof(t_route_proxy), 0, 0);
+	class_addfloat(route_proxy_class, (t_method)route_proxy_float);
+	class_addsymbol(route_proxy_class, (t_method)route_proxy_symbol);
     route_class = class_new(gensym("route"), (t_newmethod)route_new,
         (t_method)route_free, sizeof(t_route), 0, A_GIMME, 0);
     class_addlist(route_class, route_list);
