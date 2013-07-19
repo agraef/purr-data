@@ -1997,6 +1997,10 @@ static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
 				break;
 		}
 	}
+	// if we are in K12 mode and are requesting popup on comments, bail as we don't want users
+	// to get into conventional help files
+	if (sys_k12_mode && y && pd_class(&y->g_pd) == text_class)
+		return;
 	/* abstractions should only allow for properties inside them 
 	   otherwise they end-up being dirty without visible notification
 	   besides, why would one mess with their properties without
