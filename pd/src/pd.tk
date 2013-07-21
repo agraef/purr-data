@@ -347,35 +347,41 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.wii_buttons -file $extra_dir/K12/icons/wii_buttons.png
 	image create photo i.wii_speed -file $extra_dir/K12/icons/wii_speed.png
 	image create photo i.wii_hit -file $extra_dir/K12/icons/wii_hit.png
-
 	image create photo i.sarcduino -file $extra_dir/K12/icons/sarcduino_on.png
+
 	image create photo i.sarcduino_digital -file $extra_dir/K12/icons/sarcduino_digital.png
 	image create photo i.sarcduino_analog -file $extra_dir/K12/icons/sarcduino_analog.png
 	image create photo i.sarcduino_hit -file $extra_dir/K12/icons/sarcduino_hit.png
 	image create photo i.sarcduino_piezo -file $extra_dir/K12/icons/sarcduino_piezo.png
-
-	image create photo i.sarcduino_net -file $extra_dir/K12/icons/sarcduino_net.png
-	image create photo i.preset -file $extra_dir/K12/icons/preset.png
+	#image create photo i.sarcduino_net -file $extra_dir/K12/icons/sarcduino_net.png
 	image create photo i.math_number -file $extra_dir/K12/icons/math_number.png
-	image create photo i.math_average -file $extra_dir/K12/icons/math_average.png
-	image create photo i.math_random -file $extra_dir/K12/icons/math_random.png
 
+	image create photo i.math_netsend -file $extra_dir/K12/icons/math_netsend.png
+	image create photo i.math_netreceive -file $extra_dir/K12/icons/math_netreceive.png
+	image create photo i.math_tag -file $extra_dir/K12/icons/math_tag.png
+	image create photo i.math_routebytag -file $extra_dir/K12/icons/math_routebytag.png
+	image create photo i.math_average -file $extra_dir/K12/icons/math_average.png
+
+	image create photo i.math_random -file $extra_dir/K12/icons/math_random.png
 	image create photo i.math_add -file $extra_dir/K12/icons/math_add.png
 	image create photo i.math_subtract -file $extra_dir/K12/icons/math_subtract.png
 	image create photo i.math_multiply -file $extra_dir/K12/icons/math_multiply.png
 	image create photo i.math_divide -file $extra_dir/K12/icons/math_divide.png
-	image create photo i.math_scale -file $extra_dir/K12/icons/math_scale.png
 
+	image create photo i.math_scale -file $extra_dir/K12/icons/math_scale.png
 	image create photo i.logic_compare -file $extra_dir/K12/icons/logic_compare.png
-	image create photo i.logic_mapper -file $extra_dir/K12/icons/logic_mapper.png
+	#image create photo i.logic_mapper -file $extra_dir/K12/icons/logic_mapper.png
 	image create photo i.logic_metronome -file $extra_dir/K12/icons/logic_metronome.png
 	image create photo i.logic_counter -file $extra_dir/K12/icons/logic_counter.png
 	image create photo i.logic_sequencer -file $extra_dir/K12/icons/logic_sequencer.png
 
 	image create photo i.signal_microphone -file $extra_dir/K12/icons/signal_microphone.png
+	image create photo i.signal_netsend -file $extra_dir/K12/icons/signal_netsend.png
+	image create photo i.signal_netreceive -file $extra_dir/K12/icons/signal_netreceive.png	
 	image create photo i.signal_sampler -file $extra_dir/K12/icons/signal_sampler.png
-	image create photo i.signal_envelope -file $extra_dir/K12/icons/signal_envelope.png
+	image create photo i.signal_player -file $extra_dir/K12/icons/signal_player.png
 
+	image create photo i.signal_envelope -file $extra_dir/K12/icons/signal_envelope.png
 	image create photo i.signal_sine -file $extra_dir/K12/icons/signal_sine.png
 	image create photo i.signal_saw -file $extra_dir/K12/icons/signal_saw.png
 	image create photo i.signal_square -file $extra_dir/K12/icons/signal_square.png
@@ -396,6 +402,8 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.fx_reverb -file $extra_dir/K12/icons/fx_reverb.png
 
 	image create photo i.output -file $extra_dir/K12/icons/audio_on.png
+	image create photo i.preset -file $extra_dir/K12/icons/preset.png
+	image create photo i.comment -file $extra_dir/K12/icons/comment.png
 
 	image create photo i.edit -file $extra_dir/K12/icons/edit.png
 	image create photo i.perform -file $extra_dir/K12/icons/perform.png
@@ -2411,8 +2419,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 		# ---------------------------------- MATH ROW 1 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
-		match_linux_wm [list button $name.k12frame.math_1.b_sarcduino_net -image i.sarcduino_net \
-			-command [concat put_K12_objects $name sarcduino_net]]
+		#match_linux_wm [list button $name.k12frame.math_1.b_sarcduino_net -image i.sarcduino_net \
+		#	-command [concat put_K12_objects $name sarcduino_net]]
 		match_linux_wm [list button $name.k12frame.math_1.b_preset -image i.preset \
 			-command [concat put_K12_objects $name preset]] 
 		match_linux_wm [list button $name.k12frame.math_1.b_math_number -image i.math_number \
@@ -2421,8 +2429,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-command [concat put_K12_objects $name math_average]]
 		match_linux_wm [list button $name.k12frame.math_1.b_math_random -image i.math_random \
 			-command [concat put_K12_objects $name math_random]]
-		pack $name.k12frame.math_1.b_sarcduino_net $name.k12frame.math_1.b_preset $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_average $name.k12frame.math_1.b_math_random -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.math_1.b_sarcduino_net "Arduino Net: Use this to retrieve data from arduino devices connected via network"
+		pack $name.k12frame.math_1.b_preset $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_average $name.k12frame.math_1.b_math_random -side left -expand 0 -padx 1 -pady 1
+		#setTooltip $name.k12frame.math_1.b_sarcduino_net "Arduino Net: Use this to retrieve data from arduino devices connected via network"
 		setTooltip $name.k12frame.math_1.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
 		setTooltip $name.k12frame.math_1.b_math_number "Number: Use this to assign a value to other objects"
 		setTooltip $name.k12frame.math_1.b_math_average "Average: Use this to calculate average from a stream of numbers"
@@ -2451,17 +2459,17 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		match_linux_wm [list frame $name.k12frame.logic -relief flat]
 		match_linux_wm [list button $name.k12frame.logic.b_logic_compare -image i.logic_compare \
 			-command [concat put_K12_objects $name logic_compare]]
-		match_linux_wm [list button $name.k12frame.logic.b_logic_mapper -image i.logic_mapper \
-			-command [concat put_K12_objects $name logic_mapper]]
+		#match_linux_wm [list button $name.k12frame.logic.b_logic_mapper -image i.logic_mapper \
+		#	-command [concat put_K12_objects $name logic_mapper]]
 		match_linux_wm [list button $name.k12frame.logic.b_logic_metronome -image i.logic_metronome \
 			-command [concat put_K12_objects $name logic_metronome]]
 		match_linux_wm [list button $name.k12frame.logic.b_logic_counter -image i.logic_counter \
 			-command [concat put_K12_objects $name logic_counter]]
 		match_linux_wm [list button $name.k12frame.logic.b_logic_sequencer -image i.logic_sequencer \
 			-command [concat put_K12_objects $name logic_sequencer]]
-		pack $name.k12frame.logic.b_logic_compare $name.k12frame.logic.b_logic_mapper $name.k12frame.logic.b_logic_metronome $name.k12frame.logic.b_logic_counter $name.k12frame.logic.b_logic_sequencer -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.logic.b_logic_compare $name.k12frame.logic.b_logic_metronome $name.k12frame.logic.b_logic_counter $name.k12frame.logic.b_logic_sequencer -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.logic.b_logic_compare "Compare: Use this to compare two values"
-		setTooltip $name.k12frame.logic.b_logic_mapper "Mapper: Use this to map one value to two different but related values"
+		#setTooltip $name.k12frame.logic.b_logic_mapper "Mapper: Use this to map one value to two different but related values"
 		setTooltip $name.k12frame.logic.b_logic_metronome "Metronome: Use this to create a steady pulse"
 		setTooltip $name.k12frame.logic.b_logic_counter "Counter: Use this to count events"
 		setTooltip $name.k12frame.logic.b_logic_sequencer "Sequencer: Use this to map values to MIDI pitches"
