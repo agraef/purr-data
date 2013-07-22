@@ -32,7 +32,7 @@ static void pmenu_w_additem(t_pmenu* x, t_symbol *label, int i) {
 	sys_vgui("$%xw add command -label \"%s\" -command {select%x \"%d\"} \n",
                    x, label->s_name, x, i,x,i);
 			   }
-	if ( i == COLUMNBREAK ) sys_vgui("$%xw entryconfigure %i -columnbreak  true \n",x,i);
+	if ( i % COLUMNBREAK == 0 ) sys_vgui("$%xw entryconfigure %i -columnbreak  true \n",x,i);
 			   
 }
 
