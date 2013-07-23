@@ -1,0 +1,57 @@
+#N canvas 341 55 502 560 10;
+#X obj 310 39 cnv 15 243 107 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 86 319 cnv 15 469 192 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 186 -29 preset_hub k12 %hidden% %node% 2 5 9 %node% 2 7 8 %preset%
+1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 6 4 %node% 2 8
+8 %node% 2 9 8 %node% 2 10 8 %node% 2 10 4 %preset% 0 0 %node% 2 14
+6 %node% 2 14 10 %node% 2 7 7 %node% 2 9 7 %preset% 0 0 %node% 2 9
+7 %node% 2 9 3 %preset% 0 3000 %node% 2 12 5 %preset% 0 0 %node% 2
+12 9 %preset% 0 127 %node% 2 8 7 %preset% 0 0.15748 %node% 2 8 3 %preset%
+0 3000 %node% 2 11 31 %node% 2 12 5 %node% 2 12 9 %node% 2 10 6 %preset%
+0 127 %node% 2 10 12 %preset% 0 0 %node% 2 10 13 %preset% 0 1 %node%
+2 12 3 %preset% 0 kerplop %node% 2 13 11 %preset% 0 120 %node% 2 14
+8 %node% 2 11 3 %preset% 0 kerplop %node% 2 10 3 %preset% 0 3000 %node%
+2 10 7 %preset% 0 0 %node% 2 11 7 %preset% 0 0 %node% 2 13 3 %preset%
+0 kerplop %node% 2 13 3 %preset% 0 kerplop %node% 2 22 3 %node% 2 22
+11 %node% 2 23 5 %node% 2 23 9 %node% 2 24 3 %node% 2 24 3 %node% 2
+26 3 %node% 2 24 3 %node% 2 25 3 %node% 2 19 8 %node% 2 14 8 %node%
+2 9 18 %preset% 0 localhost %node% 2 17 7 %node% 2 7 3 %preset% 0 3000
+%node% 2 7 17 %preset% 0 localhost %node% 2 13 8;
+#X obj 65 -4 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 65 -33 cnv 15 501 28 empty empty Math/NetReceive 5 14 0 20 -139274
+-262144 0;
+#X obj 535 0 ggee/image @pd_extra/K12/icons/l2ork.png;
+#N canvas 652 262 450 370 META 0;
+#X text 13 5 DESCRIPTION This receives tagged incoming data information
+from the network on the specified port;
+#X text 13 44 INLET_0 The port number to listen on for incoming network
+data;
+#X text 13 83 OUTLET_0 Outputs all tagged data the object receives
+on the specified port;
+#X restore 511 703 pd META;
+#X obj 95 214 K12/math_netsend 0;
+#X obj 95 328 K12/math_netreceive 0;
+#X obj 95 25 K12/math_number 0;
+#X obj 95 646 K12/math_number 0;
+#X obj 95 105 K12/math_tag 0;
+#X obj 95 532 K12/math_routebytag 0;
+#X obj 455 48 K12/preset 0;
+#X text 190 325 The Math NetReceive object receives data information
+over the network from another computer. In this example \, the NetReceive
+object is listening on port 3000 for incoming information. It sends
+any information it receives on this port to the RouteByTag object.
+The RouteByTag object listens specifically for information tagged with
+the tag 'kerplop' in this example \, and sends it to the bottom number
+box. Math NetReceive's partner object is the Math NetSend object. Change
+the top number box to see a NetSend object send information to this
+NetReceive object.Look at the help files for the NetSend \, Tag \,
+and RouteByTag objects for more information on how those objects work.
+;
+#X text 316 105 Recall leftmost presetto start the example.;
+#X connect 8 0 12 0;
+#X connect 9 0 11 0;
+#X connect 11 0 7 0;
+#X connect 12 0 10 0;
