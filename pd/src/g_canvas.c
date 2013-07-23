@@ -785,10 +785,10 @@ void canvas_map(t_canvas *x, t_floatarg f)
 		}
         else for (y = x->gl_list; y; y = y->g_next) {
             gobj_vis(y, x, 1);
-			if (x->gl_editor && x->gl_editor->e_selection)
-	        	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-	            	gobj_select(sel->sel_what, x, 1);
 		}
+		if (x->gl_editor && x->gl_editor->e_selection)
+        	for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+            	gobj_select(sel->sel_what, x, 1);
         x->gl_mapped = 1;
         canvas_drawlines(x);
         if (x->gl_isgraph && x->gl_goprect)
@@ -1692,6 +1692,55 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+// utility function to replace @pd_extra and other sys-recognizable paths
+
+char * canvas_path_replace(
+    char const * const original, 
+    char const * const pattern, 
+    char const * const replacement
+) {
+	size_t const replen = strlen(replacement);
+	size_t const patlen = strlen(pattern);
+	size_t const orilen = strlen(original);
+
+	size_t patcnt = 0;
+	const char * oriptr;
+	const char * patloc;
+
+	// find how many times the pattern occurs in the original string
+	for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
+	{
+		patcnt++;
+	}
+
+	{
+		// allocate memory for the new string
+		size_t const retlen = orilen + patcnt * (replen - patlen);
+		char * const returned = (char *) malloc( sizeof(char) * (retlen + 1) );
+
+		if (returned != NULL)
+		{
+			// copy the original string, 
+			// replacing all the instances of the pattern
+			char * retptr = returned;
+			for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
+			{
+				size_t const skplen = patloc - oriptr;
+				// copy the section until the occurence of the pattern
+				strncpy(retptr, oriptr, skplen);
+				retptr += skplen;
+				// copy the replacement 
+				strncpy(retptr, replacement, replen);
+				retptr += replen;
+			}
+			// copy the rest of the string.
+			strcpy(retptr, oriptr);
+		}
+		return returned;
+	}
+}
+
+
     /* utility function to read a file, looking first down the canvas's search
     path (set with "declare" objects in the patch and recursively in calling
     patches), then down the system one.  The filename is the concatenation of
@@ -1711,9 +1760,21 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
     t_namelist *nl, thislist;
     int fd = -1;
     t_canvas *y;
+	const char *final_name;
+
+	//check for @sys_extra path and replace
+	if (strstr(name, "@pd_extra") != NULL) {
+		t_namelist *path = pd_extrapath;
+		while (path->nl_next)
+			path = path->nl_next;
+		final_name = canvas_path_replace(name, "@pd_extra", path->nl_string);
+	}
+	else {
+		final_name = name; 
+	}
 
         /* first check if "name" is absolute (and if so, try to open) */
-    if (sys_open_absolute(name, ext, dirresult, nameresult, size, bin, &fd))
+    if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
         return (fd);
     
         /* otherwise "name" is relative; start trying in directories named
@@ -1742,12 +1803,12 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
             }
             strncat(realname, nl->nl_string, FILENAME_MAX-strlen(realname));
             realname[FILENAME_MAX-1] = 0;
-            if ((fd = sys_trytoopenone(realname, name, ext,
+            if ((fd = sys_trytoopenone(realname, final_name, ext,
                 dirresult, nameresult, size, bin)) >= 0)
                     return (fd);
         }
     }
-    return (open_via_path((x ? canvas_getdir(x)->s_name : "."), name, ext,
+    return (open_via_path((x ? canvas_getdir(x)->s_name : "."), final_name, ext,
         dirresult, nameresult, size, bin));
 }
 
