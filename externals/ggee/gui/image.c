@@ -15,11 +15,11 @@ static t_class *image_class;
 
 typedef struct _image
 {
-     t_object x_obj;
-     t_glist * x_glist;
-     int x_width;
-     int x_height;
-     t_symbol*  x_fname;
+	t_object x_obj;
+	t_glist * x_glist;
+	int x_width;
+	int x_height;
+	t_symbol*  x_fname;
 } t_image;
 
 /* widget helper functions */
@@ -84,18 +84,21 @@ void image_doopen(t_image* x) {
 				path = path->nl_next;
 			const char *new_fname = image_path_replace(x->x_fname->s_name, "@pd_extra", path->nl_string);
 			strcpy(fname, new_fname);
+			freebytes(new_fname, strlen(new_fname));
 		}
-		sys_vgui("image create photo img%x -file {%s}\n",x,fname);
-		sys_vgui(".x%x.c itemconfigure %xS -image img%x\n", 
+		sys_vgui("catch {image delete $img%x}\n", x);
+		sys_vgui("set img%x [image create photo -file {%s}]\n", x, fname);
+		sys_vgui(".x%x.c itemconfigure %xS -image $img%x\n", 
 			   glist_getcanvas(x->x_glist),x,x);
 	}
 }
 
-void image_drawme(t_image *x, t_glist *glist, int firsttime)
+void image_drawme(t_image *x, t_glist *glist, int redraw)
 {
-	if (firsttime) {
+	if (redraw) {
 		//first create blank image widget (in case we have no image to begin with)
-		//as this is the only place where we do so (namely at creation time)
+		//sys_vgui(".x%x.c itemconfigure %xS -image null\n", glist_getcanvas(glist));
+		sys_vgui("catch {.x%lx.c delete %xS}\n", glist_getcanvas(glist),x);
 		sys_vgui(".x%x.c create image %d %d -tags %xS\n", 
 			glist_getcanvas(glist),text_xpix(&x->x_obj, glist), 
 			text_ypix(&x->x_obj, glist),x);
@@ -112,10 +115,9 @@ void image_drawme(t_image *x, t_glist *glist, int firsttime)
 
 void image_erase(t_image* x,t_glist* glist)
 {
-     int n;
-     sys_vgui(".x%x.c delete %xS\n",
-	      glist_getcanvas(glist), x);
-
+	sys_vgui("catch {.x%x.c delete %xS}\n",glist_getcanvas(glist), x);
+	sys_vgui("catch {image delete $img%x}\n", x);
+	sys_vgui("catch {.x%x.c delete %xSEL}\n",glist_getcanvas(glist), x);
 }
 	
 
@@ -190,16 +192,18 @@ static void image_displace_wtag(t_gobj *z, t_glist *glist,
 
 static void image_select(t_gobj *z, t_glist *glist, int state)
 {
+	//fprintf(stderr,"image_select %d\n", state);
 	t_image *x = (t_image *)z;
 	if (state) {
 		if (glist_istoplevel(glist))
 			sys_vgui(".x%x.c create rectangle \
-				%d %d %d %d -tags {%xSEL %xS} -outline $select_color\n",
+				%d %d %d %d -tags %xSEL -outline $select_color\n",
 		glist_getcanvas(glist),
 		text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
-		text_xpix(&x->x_obj, glist) + x->x_width, text_ypix(&x->x_obj, glist) + x->x_height,x, x);
+		text_xpix(&x->x_obj, glist) + x->x_width, text_ypix(&x->x_obj, glist) + x->x_height, x);
 		//if (glist->gl_owner && !glist_istoplevel(glist))
 		sys_vgui(".x%x.c addtag selected withtag %xS\n", glist_getcanvas(glist), x);
+		sys_vgui(".x%x.c addtag selected withtag %xSEL\n", glist_getcanvas(glist), x);
 	}
 	else {
 		sys_vgui("catch {.x%x.c delete %xSEL}\n",
@@ -226,6 +230,7 @@ static void image_delete(t_gobj *z, t_glist *glist)
        
 static void image_vis(t_gobj *z, t_glist *glist, int vis)
 {
+	//fprintf(stderr,"image_vis %d\n", vis);
 	t_image* x = (t_image*)z;
 	if (vis)
 		image_drawme(x, glist, 1);
@@ -287,6 +292,12 @@ static void image_setwidget(void)
     image_widgetbehavior.w_displacefnwtag =	image_displace_wtag;
 }
 
+static void image_free(t_image *x)
+{
+	sys_vgui("image delete img%x\n", x);
+	//sys_vgui(".x%x.c delete %xSEL\n", x);
+	//sys_vgui(".x%x.c delete %xS\n", x);
+}
 
 static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
 {
@@ -304,7 +315,7 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
 
 void image_setup(void)
 {
-    image_class = class_new(gensym("image"), (t_newmethod)image_new, 0,
+    image_class = class_new(gensym("image"), (t_newmethod)image_new, (t_method)image_free,
 				sizeof(t_image),0, A_GIMME,0);
 
     class_addmethod(image_class, (t_method)image_size, gensym("size"),
