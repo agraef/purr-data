@@ -2430,7 +2430,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		match_linux_wm [list button $name.k12frame.wii.b_wii_hit -image i.wii_hit \
 			-command [concat put_K12_objects $name wii_hit]]
 		pack $name.k12frame.wii.b_wii_connect $name.k12frame.wii.b_wii_buttons $name.k12frame.wii.b_wii_speed $name.k12frame.wii.b_wii_hit -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.wii.b_wii_connect "Wiimote: Use this to connect wiimote to the computer"
+		setTooltip $name.k12frame.wii.b_wii_connect "Wiimote Connect: Use this to connect wiimote to the computer"
 		setTooltip $name.k12frame.wii.b_wii_buttons "Wiimote Buttons: Use this to select which Wiimote button should activate objects connected to this object"
 		setTooltip $name.k12frame.wii.b_wii_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken"
 		setTooltip $name.k12frame.wii.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving"
@@ -2442,7 +2442,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		# ---------------------------------- ARDUINO -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.arduino -relief flat]
 		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino -image i.sarcduino \
-			-command [concat put_K12_objects $name sarcduino]]
+			-command [concat put_K12_objects $name sarcduino_connect]]
 		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_digital -image i.sarcduino_digital \
 			-command [concat put_K12_objects $name sarcduino_digital]]
 		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_analog -image i.sarcduino_analog \
@@ -2452,7 +2452,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		match_linux_wm [list button $name.k12frame.arduino.b_sarcduino_piezo -image i.sarcduino_piezo \
 			-command [concat put_K12_objects $name sarcduino_piezo]]
 		pack $name.k12frame.arduino.b_sarcduino $name.k12frame.arduino.b_sarcduino_digital $name.k12frame.arduino.b_sarcduino_analog $name.k12frame.arduino.b_sarcduino_hit $name.k12frame.arduino.b_sarcduino_piezo -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.arduino.b_sarcduino "Arduino: Use this to arduino to the computer"
+		setTooltip $name.k12frame.arduino.b_sarcduino "Arduino Connect: Use this to arduino to the computer"
 		setTooltip $name.k12frame.arduino.b_sarcduino_digital "Arduino Digital: Use this to detect on/off states of a digital sensor"
 		setTooltip $name.k12frame.arduino.b_sarcduino_analog "Arduino Analog: Use this to monitor analog sensor speed"
 		setTooltip $name.k12frame.arduino.b_sarcduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
