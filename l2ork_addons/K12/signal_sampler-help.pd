@@ -1,13 +1,14 @@
 #N canvas 318 94 502 570 10;
 #X obj 347 -21 preset_hub k12 %hidden% %node% 2 6 14 %preset% 0 100
 %node% 2 7 37 %preset% 0 1 %node% 2 7 38 %preset% 0 25.974 %node% 2
-7 39 %preset% 0 0 %node% 2 8 7 %preset% 0 60 %node% 2 9 8 %preset%
-0 %node% 2 14 1 %preset% 0 100;
-#X obj 122 162 cnv 15 474 251 empty empty empty 20 12 0 14 -233017
+7 39 %preset% 0 0 %node% 2 8 7 %preset% 0 60 %node% 2 9 8 %node% 2
+14 1 %preset% 0 100 %node% 2 6 28 %preset% 0 1 %node% 2 13 1 %preset%
+0 100 %node% 2 12 1;
+#X obj 120 160 cnv 15 480 295 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 112 -3 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 112 -31 cnv 15 501 28 empty empty Sampler 5 14 0 20 -139274
+#X obj 112 -31 cnv 15 501 28 empty empty Signal/Sampler 5 14 0 20 -139274
 -262144 0;
 #X obj 583 0 ggee/image @pd_extra/K12/icons/l2ork.png;
 #N canvas 406 27 450 514 META 0;
@@ -15,33 +16,35 @@
 to be recorded;
 #X text 17 9 DESCRIPTION This allows you to record a sample and play
 it back at different pitches;
-#X text 15 111 OUTLET_1 This is the sample signal that is played back
-;
 #X text 15 77 INLET_1 Send the number of the pitch here. This also
 triggers the playback when it receives the pitch;
-#X restore 560 515 pd META;
-#X obj 127 437 K12/output;
+#X text 15 111 OUTLET_0 This is the sample signal that is played back
+;
+#X restore 560 555 pd META;
+#X obj 127 477 K12/output;
 #X obj 127 166 K12/signal_sampler;
-#X obj 245 41 K12/math_number;
+#X obj 274 41 K12/math_number;
 #X obj 499 41 K12/preset;
+#X text 227 361 To Playback: Send the right inlet the number of the
+pitch for playback. A pitch of 60 gives you the same pitch that was
+recorded. The Sampler will only playback the range you specify with
+the start and end sliders.;
+#X text 227 300 To Record: specify a number greater than zero by dragging
+over the number after "snd:". Then \, press the red button. It will
+record for up to ten seconds \, but you can stop it by pressing record
+again.;
+#X obj 128 41 K12/signal_microphone;
+#X text 226 419 To preivew the sound \, click on the green play button.
+It will playback at the specified pitch at the right inlet.;
 #X text 227 162 The Sampler object allows you to record a sound and
 then play it back at different speeds. Send a signal (like the microphone)
 to the left inlet. The right inlet sets the pitch of the playback.
 60 is the normal pitch. You can pick at what point the same starts
-and ends with the sliders \, if you put the start slider past the end
-slider \, then the sample will play backwards! The outlet outputs the
+and ends with the sliders. If you put the start slider past the end
+slider \, then the sample will play backwards. The outlet outputs the
 sample.;
-#X text 227 320 To Playback: Send the right inlet the number of the
-pitch for playback. A pitch of 60 gives you the same pitch that was
-recorded. The Sampler will only playback the range you specify with
-the start and end sliders.;
-#X text 227 259 To Record: specify a number greater than zero by dragging
-over the number after "snd:". Then \, press the red button. It will
-record for up to ten seconds \, but you can stop it by pressing record
-again.;
-#X text 226 378 To preivew the sound \, click on the green play button.
-It will playback at the specified pitch at the right inlet.;
-#X obj 128 41 K12/signal_microphone;
+#X text 227 262 Before being able to preview the sound recall the first
+preset to configure all settings.;
 #X connect 7 0 6 0;
 #X connect 8 0 7 1;
-#X connect 14 0 7 0;
+#X connect 12 0 7 0;

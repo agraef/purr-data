@@ -1,25 +1,27 @@
-#N canvas 496 146 502 417 10;
-#X obj 134 136 cnv 15 475 101 empty empty empty 20 12 0 14 -233017
+#N canvas 325 102 502 417 10;
+#X obj 348 -28 preset_hub k12 %hidden% %node% 2 5 5 %node% 2 6 7 %node%
+2 6 7 %node% 2 7 10 %node% 2 7 11;
+#X obj 132 134 cnv 15 480 104 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 123 -7 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 123 -35 cnv 15 501 28 empty empty SarcduinoHit 5 14 0 20 -139274
+#X obj 123 -35 cnv 15 501 28 empty empty Sarcduino/Hit 5 14 0 20 -139274
 -262144 0;
 #X obj 594 -4 ggee/image @pd_extra/K12/icons/l2ork.png;
 #N canvas 456 27 450 514 META 0;
-#X text 7 58 OUTLET_0 This outputs a 1 if a hit is detected or a 0
+#X text 6 58 OUTLET_0 This outputs a 1 if a hit is detected or a 0
 otherwise;
-#X text 8 38 INLET_0 Connect the Sarcudino Connect object to this inlet
+#X text 6 38 INLET_0 Connect the Sarcudino Connect object to this inlet
 ;
 #X text 6 5 DESCRIPTION This is used to detect sudden changes in the
 Arduino data;
-#X restore 567 353 pd META;
-#X obj 140 26 K12/sarcduino;
+#X restore 570 358 pd META;
 #X obj 140 264 K12/math_number;
 #X obj 140 141 K12/sarcduino_hit;
-#X text 239 147 The Sarcduino Hit object detects sudden changes in
+#X text 239 156 The Sarcduino Hit object detects sudden changes in
 the data coming from the Arduino. Connect the Sarduino Connect object
 to the inlet. This object will output the number 1 when a hit is detected
 and a 0 otherwise.;
-#X connect 5 0 7 0;
+#X obj 140 26 K12/sarcduino_connect;
 #X connect 7 0 6 0;
+#X connect 9 0 7 0;

@@ -1,4 +1,4 @@
-#N canvas 417 55 608 389 10;
+#N canvas 417 55 608 420 10;
 #X obj 267 205 select 255;
 #X obj 267 229 zl group 70;
 #X obj 267 252 unpack f f f f f f f f f f f f f f;
@@ -203,9 +203,9 @@
 #X msg 125 149 open 0 \, info;
 #X obj 420 216 route open;
 #X obj 336 367 outlet;
-#X text 64 346 message structure:;
-#X text 64 358 digital = d <channel> <val>;
-#X text 64 369 analog = a <channel> <val>;
+#X text 41 335 message structure:;
+#X text 41 347 digital = d <channel> <val>;
+#X text 41 358 analog = a <channel> <val>;
 #X obj 185 15 bng 85 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_off.png;

@@ -1,19 +1,14 @@
 #N canvas 522 74 502 526 10;
-#X text 346 -27 comment;
-#X obj 94 250 cnv 15 459 94 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 89 253 cnv 15 465 102 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 186 -36 preset_hub k12 %hidden% %node% 2 5 9 %node% 2 7 8 %preset%
 1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 6 4 %node% 2 8
 8 %node% 2 9 8 %node% 2 10 8 %node% 2 13 4 %node% 2 14 6 %node% 2 14
-10 %node% 2 7 7 %node% 2 8 7 %node% 2 9 7 %node% 2 10 3 %node% 2 11
-5 %node% 2 11 9 %node% 2 10 7 %node% 2 11 3 %node% 2 11 31 %node% 2
-12 5 %node% 2 12 9;
-#X text 64 -37 comment;
-#X obj 65 -10 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+10 %node% 2 7 7 %node% 2 4 7 %node% 2 5 7 %node% 2 10 3 %node% 2 11
+5 %node% 2 11 9 %node% 2 6 7 %node% 2 7 3 %node% 2 7 31 %node% 2 8
+5 %node% 2 8 9;
+#X obj 64 -10 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 65 -38 cnv 15 501 28 empty empty MathRandom 5 14 0 20 -139274
--262144 0;
-#X obj 535 -6 ggee/image @pd_extra/K12/icons/l2ork.png;
 #N canvas 529 184 450 300 META 0;
 #X text 12 110 OUTLET_0 A new random number will come out of this outlet
 if a 1 is sent to the inlet;
@@ -21,18 +16,21 @@ if a 1 is sent to the inlet;
 to be generated at output;
 #X text 13 6 DESCRIPTION This generates random numbers in the specified
 range;
-#X restore 515 463 pd META;
+#X restore 514 463 pd META;
 #X obj 97 17 K12/math_number;
-#X obj 211 17 K12/math_number;
-#X obj 97 361 K12/math_number;
+#X obj 246 17 K12/math_number;
+#X obj 97 378 K12/math_number;
 #X obj 97 144 K12/logic_compare;
-#X obj 97 252 K12/math_random;
-#X text 193 256 The Math Random object generates a random number whenever
+#X obj 97 259 K12/math_random;
+#X text 191 262 The Math Random object generates a random number whenever
 it recieves a number 1 into its inlet. You can change the range of
 the random values by specifying an low limit and high limit using the
 two number boxes on the object. The outlet sends out a random number
 between the two values you set.;
-#X connect 8 0 11 0;
-#X connect 9 0 11 1;
-#X connect 11 0 12 0;
-#X connect 12 0 10 0;
+#X obj 64 -39 cnv 15 501 28 empty empty Math/Random 5 14 0 20 -139274
+-262144 0;
+#X obj 535 -6 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X connect 4 0 7 0;
+#X connect 5 0 7 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;

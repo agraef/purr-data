@@ -40,9 +40,9 @@
 #X symbolatom 142 226 10 0 0 0 - - -;
 #X obj 39 177 preset_node k12;
 #X obj 142 -1 t b b;
-#X obj 231 202 wavinfo;
-#X obj 231 224 outlet;
-#X obj 275 224 outlet;
+#X obj 39 270 wavinfo;
+#X obj 39 292 outlet;
+#X obj 81 292 outlet;
 #X connect 0 0 15 0;
 #X connect 1 0 12 0;
 #X connect 2 0 13 0;
@@ -52,9 +52,9 @@
 #X connect 7 0 3 0;
 #X connect 10 0 11 0;
 #X connect 12 0 2 0;
-#X connect 12 0 16 0;
 #X connect 13 0 14 0;
 #X connect 13 0 6 0;
+#X connect 13 0 16 0;
 #X connect 14 0 13 0;
 #X connect 15 0 1 0;
 #X connect 15 1 10 0;

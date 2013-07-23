@@ -9,7 +9,7 @@
 #X text 181 179 tag;
 #X obj 23 104 loadbang;
 #X msg 23 126 set ...;
-#X obj 121 253 list prepend;
+#X obj 121 253 list prepend 0;
 #X connect 0 0 5 0;
 #X connect 2 0 10 0;
 #X connect 3 0 6 0;

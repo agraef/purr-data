@@ -1,10 +1,12 @@
 #N canvas 375 35 502 495 10;
+#X obj 233 -22 preset_hub k12 %hidden% %node% 2 4 14 %node% 2 4 28
+%node% 2 11 10;
 #X obj 11 358 cnv 1 479 99 empty empty empty 20 12 0 14 -228856 -66577
 0;
 #X obj 0 -2 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 0 -30 cnv 15 501 28 empty empty Filter 5 14 0 20 -139274 -262144
-0;
+#X obj 0 -30 cnv 15 501 28 empty empty FX/Filter 5 14 0 20 -139274
+-262144 0;
 #X obj 16 480 K12/output;
 #X obj 16 135 K12/wii_speed;
 #N canvas 8 50 450 514 META 0;
@@ -27,7 +29,7 @@ by inputing a a value between -1 and 1 on the right side input.;
 #X obj 16 24 K12/wii_connect;
 #X obj 16 248 K12/instr_sustained2;
 #X obj 16 363 K12/fx_filter;
-#X connect 4 0 9 0;
-#X connect 8 0 4 0;
-#X connect 9 0 10 0;
-#X connect 10 0 3 0;
+#X connect 5 0 10 0;
+#X connect 9 0 5 0;
+#X connect 10 0 11 0;
+#X connect 11 0 4 0;

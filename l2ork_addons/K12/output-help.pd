@@ -1,15 +1,17 @@
 #N canvas 398 24 501 573 10;
-#X obj 9 383 cnv 15 466 127 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 205 -24 preset_hub k12 %hidden% %node% 2 2 14 %node% 2 2 28
+;
+#X obj 6 379 cnv 15 478 138 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 13 386 K12/output;
 #X obj 14 147 K12/wii_speed;
 #X obj 14 269 K12/instr_sustained2;
-#N canvas 1302 418 450 514 META 0;
+#N canvas 916 254 450 514 META 0;
 #X text 9 10 DESCRIPTION This is the main audio output. This sends
 the signals to the speakers and controls the main volume;
-#X text 7 47 INLET_0 Connect any signal you want to hear in the speakers
+#X text 9 47 INLET_0 Connect any signal you want to hear in the speakers
 ;
-#X restore 443 522 pd META;
+#X restore 452 525 pd META;
 #X obj -2 -2 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #X obj -2 -30 cnv 15 501 28 empty empty Output 5 14 0 20 -139274 -262144
@@ -25,6 +27,6 @@ on and sets the level. Sliding it all the way down turns the speakers
 off.;
 #X text 111 458 Toggle "stereo mode" on when using headphones or standard
 computer speakers. Toggle it off when using the L2Ork setup.;
-#X connect 2 0 3 0;
-#X connect 3 0 1 0;
-#X connect 8 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 9 0 3 0;

@@ -1,4 +1,6 @@
 #N canvas 226 48 502 517 10;
+#X obj 245 44 preset_hub k12 %hidden% %node% 2 2 33 %node% 2 2 34 %node%
+2 3 14 %node% 2 3 28 %node% 2 9 8 %node% 2 9 16;
 #X obj 20 429 cnv 15 472 98 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 23 214 K12/wii_hit;
@@ -13,8 +15,8 @@ to a sound. The speed is adjustable using the slider.;
 #X restore 457 663 pd META;
 #X obj 8 66 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 8 38 cnv 15 501 28 empty empty Multitap 5 14 0 20 -139274 -262144
-0;
+#X obj 8 38 cnv 15 501 28 empty empty FX/Multitap 5 14 0 20 -139274
+-262144 0;
 #X obj 479 69 ggee/image @pd_extra/K12/icons/l2ork.png;
 #X obj 23 94 K12/wii_connect;
 #X obj 24 433 K12/fx_multitap;
@@ -25,7 +27,7 @@ inlet. To adjust the delay \, use the slider on the object. The range
 is 5 ms to 2000 ms. Use the feedback slider to adjust how long the
 delay decays. The outlet sends out the original sound plus the delays.
 ;
-#X connect 1 0 9 0;
-#X connect 7 0 1 0;
+#X connect 2 0 10 0;
 #X connect 8 0 2 0;
-#X connect 9 0 8 0;
+#X connect 9 0 3 0;
+#X connect 10 0 9 0;

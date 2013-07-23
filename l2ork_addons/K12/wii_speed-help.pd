@@ -1,7 +1,8 @@
 #N canvas 363 24 502 429 10;
-#X obj 17 -2 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+#X obj 248 -25 preset_hub k12 %hidden%;
+#X obj 17 -1 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 28 137 cnv 1 479 208 empty empty empty 20 12 0 14 -228856 -66577
+#X obj 26 136 cnv 15 481 210 empty empty empty 20 12 0 14 -228856 -66577
 0;
 #X obj 33 142 K12/wii_speed;
 #N canvas 402 50 450 514 META 0;
@@ -10,8 +11,8 @@
 ;
 #X text 12 64 OUTLET_0 Connect to an instrument to drive its loudness
 or to some other mathematical object that will modify its value;
-#X restore 460 365 pd META;
-#X obj 17 -30 cnv 15 501 28 empty empty WiiSpeed 5 14 0 20 -139274
+#X restore 464 374 pd META;
+#X obj 17 -30 cnv 15 501 28 empty empty Wii/Speed 5 14 0 20 -139274
 -262144 0;
 #X obj 488 1 ggee/image @pd_extra/K12/icons/l2ork.png;
 #X obj 33 24 K12/wii_connect;
@@ -28,4 +29,4 @@ reads something else than zero even though you are not moving the Wiimote)
 keeping it still click anywhere on the object. The value should now
 read zero and you can pick up the Wiimote and resume playing with it.
 ;
-#X connect 6 0 2 0;
+#X connect 7 0 3 0;

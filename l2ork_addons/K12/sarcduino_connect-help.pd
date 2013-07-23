@@ -1,20 +1,20 @@
 #N canvas 101 108 501 260 10;
-#X obj 127 61 cnv 15 459 99 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 366 -26 preset_hub k12 %hidden%;
+#X obj 124 58 cnv 15 470 104 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 112 -3 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 112 -31 cnv 15 501 28 empty empty Sarcduino 5 14 0 20 -139274
--262144 0;
+#X obj 112 -31 cnv 15 501 28 empty empty Sarcduino/Connect 5 14 0 20
+-139274 -262144 0;
 #X obj 583 0 ggee/image @pd_extra/K12/icons/l2ork.png;
 #N canvas 406 27 450 514 META 0;
 #X text 6 5 DESCRIPTION This is used to connect the Arduino to the
 patch. Connect the Arudino via USB and press CONNECT;
-#X text 9 57 OUTLET_0 Connect this to one of the Sarcduino objects
+#X text 6 57 OUTLET_0 Connect this to one of the Sarcduino objects
 (Analog or Digital);
-#X restore 561 204 pd META;
-#X obj 131 65 K12/sarcduino;
+#X restore 560 205 pd META;
 #X text 226 74 The Sarcduino object allows you to connect the Arduino
 to the program. Simply plug in the USB cable for the Arduino and press
 the CONNECT button. The icon will turn green when the Arudino is connected.
-Connect the outlet to the Sarcduino Analog or Sarcduino Digital objects.
-;
+Connect the outlet to other Sarcduino objects.;
+#X obj 131 65 K12/sarcduino_connect;

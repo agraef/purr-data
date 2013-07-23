@@ -1,5 +1,5 @@
-#N canvas 4 27 502 535 10;
-#X obj 226 -10 preset_hub k12 %hidden% %node% 2 6 8 %node% 2 7 3 %preset%
+#N canvas 4 27 503 587 10;
+#X obj 226 -8 preset_hub k12 %hidden% %node% 2 6 8 %node% 2 7 3 %preset%
 0 1 %node% 2 7 11 %preset% 0 120 %node% 2 8 3 %preset% 0 0 %node% 2
 8 19 %preset% 0 15 %node% 3 9 4 0 %preset% 0 73 %node% 3 9 5 0 %preset%
 0 69 %node% 3 9 6 0 %preset% 0 36 %node% 3 9 7 0 %preset% 0 45 %node%
@@ -28,7 +28,7 @@
 15 16 %node% 2 15 21 %node% 2 15 26 %node% 2 15 31 %node% 2 15 36 %node%
 2 15 41 %node% 2 15 46 %node% 2 15 51 %node% 2 15 56 %node% 2 15 61
 %node% 2 15 66 %node% 2 15 71 %node% 2 15 76 %node% 2 15 81;
-#X obj 139 182 cnv 15 369 89 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 137 182 cnv 15 369 89 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 32 265 cnv 15 374 231 empty empty empty 20 12 0 14 -233017 -66577
 0;
@@ -41,7 +41,7 @@ this to the right inlet of an instrument object;
 #X restore 456 723 pd META;
 #X obj 8 9 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 8 -19 cnv 15 501 28 empty empty Sequencer 5 14 0 20 -139274
+#X obj 8 -20 cnv 15 501 28 empty empty Logic/Sequencer 5 14 0 20 -139274
 -262144 0;
 #X obj 479 12 ggee/image @pd_extra/K12/icons/l2ork.png;
 #X obj 118 46 K12/preset;
@@ -50,7 +50,7 @@ this to the right inlet of an instrument object;
 #X obj 40 273 K12/logic_sequencer;
 #X obj 19 526 K12/instr_sustained2;
 #X obj 18 644 K12/output;
-#X text 146 184 The Sequencer object allows you to make a step-sequencer
+#X text 144 184 The Sequencer object allows you to make a step-sequencer
 of pitches. Send the inlet a number to cause the pitch to be selected
 in the corresponding column. Select a pitch for each column using the
 sliders. The output is the pitch (a number between 0 and 127). Send

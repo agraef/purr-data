@@ -1,4 +1,6 @@
-#N canvas 215 40 502 501 10;
+#N canvas 208 40 502 501 10;
+#X obj 259 -15 preset_hub k12 %hidden% %node% 2 2 14 %node% 2 2 28
+%node% 2 3 33 %node% 2 3 34 %node% 2 4 14 %node% 2 4 28;
 #X obj 7 255 cnv 15 474 99 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 10 31 K12/wii_connect;
@@ -14,17 +16,17 @@ object;
 #X text 9 41 INLET_0 Send a number between 0 and 1 here to control
 the loudness;
 #X restore 449 453 pd META;
-#X obj 1 6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+#X obj 0 6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 1 -22 cnv 15 501 28 empty empty SustainedInstrument1 5 14 0
-20 -139274 -262144 0;
+#X obj 0 -22 cnv 15 501 28 empty empty Instrument/Air 5 14 0 20 -139274
+-262144 0;
 #X obj 472 10 ggee/image @pd_extra/K12/icons/l2ork.png;
-#X text 115 260 The Sustained Instrument makes long notes that sound
-like a flute. Connect any input device to the left inlet to trigger
-the sound. In this example we are using Wii Speed. To change the pitch
+#X obj 10 259 K12/instr_sustained1;
+#X text 115 260 The Air Instrument makes long notes that sound like
+a flute. Connect any input device to the left inlet to trigger the
+sound. In this example we are using Wii Speed. To change the pitch
 \, send a number between 0 and 127 to the right inlet. Connect the
 outlet to an effect object or to the sound object.;
-#X obj 10 259 K12/instr_sustained1;
-#X connect 1 0 2 0;
-#X connect 2 0 9 0;
-#X connect 9 0 3 0;
+#X connect 2 0 3 0;
+#X connect 3 0 9 0;
+#X connect 9 0 4 0;

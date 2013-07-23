@@ -1,10 +1,12 @@
-#N canvas 81 48 501 530 10;
-#X obj 127 61 cnv 15 472 99 empty empty empty 20 12 0 14 -233017 -66577
+#N canvas 81 48 501 350 10;
+#X obj 364 -26 preset_hub k12 %hidden% %node% 2 6 14 %node% 2 6 28
+%node% 2 7 7 %node% 2 9 1;
+#X obj 125 60 cnv 15 476 104 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 112 -3 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 112 -31 cnv 15 501 28 empty empty Microphone 5 14 0 20 -139274
--262144 0;
+#X obj 112 -31 cnv 15 501 28 empty empty Signal/Microphone 5 14 0 20
+-139274 -262144 0;
 #X obj 583 0 ggee/image @pd_extra/K12/icons/l2ork.png;
 #N canvas 406 27 450 530 META 0;
 #X text 9 10 DESCRIPTION This outputs the audio from the microphone
@@ -13,14 +15,14 @@
 microphone (non-signal);
 #X text 9 57 OUTLET_0 Connect this to any signal math \, or effect
 objects \, or to the sound object;
-#X restore 556 290 pd META;
+#X restore 556 291 pd META;
 #X obj 133 186 K12/output;
-#X obj 239 186 K12/math_number;
+#X obj 245 186 K12/math_number;
 #X text 230 69 The Microphone object allows you to get the signal from
 your microphone. Connect this to any signal math \, effect objects
 \, the record buffer object \, or the sound object. The left outlet
 is the signal. The right outlet is the average level of the signal.
 Set the microhpone level with the slider.;
 #X obj 132 66 K12/signal_microphone;
-#X connect 8 0 5 0;
-#X connect 8 1 6 0;
+#X connect 9 0 6 0;
+#X connect 9 1 7 0;

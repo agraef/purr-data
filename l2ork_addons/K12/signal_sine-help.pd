@@ -1,9 +1,9 @@
-#N canvas 105 55 513 390 10;
-#X obj 440 -191 cnv 15 233 99 empty empty empty 20 12 0 14 -233017
+#N canvas 105 55 502 410 10;
+#X obj 443 -181 cnv 15 246 101 empty empty empty 20 12 0 14 -233017
 -66577 0;
-#X obj 579 -187 K12/preset;
-#X obj 226 -80 cnv 15 462 98 empty empty empty 20 12 0 14 -233017 -66577
-0;
+#X obj 593 -175 K12/preset;
+#X obj 225 -62 cnv 15 464 102 empty empty empty 20 12 0 14 -233017
+-66577 0;
 #X obj 470 -236 preset_hub k12 %hidden% %node% 2 1 16 %preset% 0 0
 %node% 2 1 8 %preset% 0 440 %preset% 1 440 %preset% 2 440 %preset%
 3 440 %node% 2 10 8 %preset% 0 2 %node% 2 13 9 %node% 2 2 16 %node%
@@ -12,26 +12,25 @@
 %node% 2 9 7 %preset% 0 60 %preset% 1 62 %preset% 2 63 %preset% 3 65
 %node% 2 10 4 %preset% 0 60 %preset% 1 62 %preset% 2 63 %preset% 3
 65 %node% 2 4 28;
-#X obj 230 43 K12/output;
+#X obj 230 63 K12/output;
 #N canvas 635 172 450 514 META 0;
 #X text 34 63 OUTLET_0 This outputs a sawtooth wave. Send this to any
 effect object \, signal math object \, or the sound object;
 #X text 33 12 DESCRIPTION This generates a sine wave;
 #X text 33 37 INLET_0 Send values between 0 and 127 to set the pitch
 ;
-#X restore 656 118 pd META;
+#X restore 658 144 pd META;
 #X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 209 -243 cnv 15 501 28 empty empty SignalSine 5 14 0 20 -139274
+#X obj 209 -243 cnv 15 501 28 empty empty Signal/Sine 5 14 0 20 -139274
 -262144 0;
 #X obj 680 -212 ggee/image @pd_extra/K12/icons/l2ork.png;
-#X obj 231 -190 K12/math_number;
-#X obj 231 -77 K12/signal_sine;
-#X text 326 -63 The Signal Sine object is a sound generator that generates
+#X obj 231 -180 K12/math_number;
+#X obj 231 -57 K12/signal_sine;
+#X text 326 -43 The Signal Sine object is a sound generator that generates
 a sin wave. Use the left inlet to set the frequency with a signal.
 Connect the outlet to any signal math objects \, any effects \, or
 the sound output object.;
-#X text 462 -160 Recall preset 0;
-#X text 448 -143 to start the example;
+#X text 451 -123 Recall leftmost presetto start the example.;
 #X connect 9 0 10 0;
 #X connect 10 0 4 0;
