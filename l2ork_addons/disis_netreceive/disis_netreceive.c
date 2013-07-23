@@ -242,7 +242,7 @@ static void disis_netreceive_setport(t_disis_netreceive *x, t_floatarg fportno)
     }
 
 	clock_unset(x->x_clock);
-	clock_free(x->x_clock);
+	//clock_free(x->x_clock);
 
 	//delete the msgqueue (if any)
 	if (x->x_start != NULL) {
@@ -331,7 +331,7 @@ static void disis_netreceive_setport(t_disis_netreceive *x, t_floatarg fportno)
     x->x_nconnections = 0;
 	x->x_isdeleting = 0;
 
-	x->x_clock = clock_new(x, (t_method)disis_netreceive_output);
+	//x->x_clock = clock_new(x, (t_method)disis_netreceive_output);
 	clock_delay(x->x_clock, 0);
 }
 
