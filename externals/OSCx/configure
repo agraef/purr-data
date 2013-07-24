@@ -4426,7 +4426,7 @@ else
 					 LDFLAGS="-Wl,--export-dynamic -shared"
 					 INCLUDES="$INCLUDES"
 					 pd_suffix=pd_linux
-					 LIBS="-L../../../pd/bin -lpd -lc -lm"
+					 LIBS="-lc -lm"
 					 ;;
         sparc-sun-*)
 		          echo "YOU HAVE A SPARC STATION,	not setting any flags, not supported yet"
