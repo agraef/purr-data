@@ -1,5 +1,6 @@
 #include "ext13.h"
 #include "m_pd.h"
+#include "s_stuff.h"
 #include <sys/stat.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -76,15 +77,37 @@ static void wavinfo_bang(t_wavinfo *x)
 //  outlet_float(x->x_obj.ob_outlet, x->x_f);
 }
 
+extern char * canvas_path_replace(
+    char const * const original, 
+    char const * const pattern, 
+    char const * const replacement
+);
+
 static void wavinfo_symbol(t_wavinfo *x, t_symbol *filename)
 {
    struct stat statbuf;
    t_wave* wavinfo;
    int result;
    char fname[MAXPDSTRING];
-   int ok=(stat(filename->s_name, &statbuf) >= 0);
+   char *final_name;
+
+	//check for @sys_extra path and replace
+	if (strstr(filename->s_name, "@pd_extra") != NULL) {
+		t_namelist *path = pd_extrapath;
+		while (path->nl_next)
+			path = path->nl_next;
+		final_name = canvas_path_replace(filename->s_name, "@pd_extra", path->nl_string);
+	}
+	else {
+		final_name = filename->s_name; 
+	}
+	//fprintf(stderr," %s %s\n", filename->s_name, final_name);
+
+   int ok=(stat(final_name, &statbuf) >= 0);
    if (ok>0) {
-       canvas_makefilename(x->x_canvas, filename->s_name,fname, MAXPDSTRING);
+
+       canvas_makefilename(x->x_canvas, final_name,fname, MAXPDSTRING);
+
        if ((x->x_fd = open(fname,( O_NONBLOCK | O_RDONLY))) < 0)
        {
             error("can't open %s",fname);
