@@ -11,10 +11,10 @@
 #N canvas 406 27 450 530 META 0;
 #X text 9 10 DESCRIPTION This outputs the audio from the microphone
 ;
-#X text 8 93 OUTLET_1 This is the average level of the audio from thec
-microphone (non-signal);
 #X text 9 57 OUTLET_0 Connect this to any signal math \, or effect
 objects \, or to the sound object;
+#X text 8 93 OUTLET_1 This is the average level of the audio from the
+microphone (non-signal);
 #X restore 556 291 pd META;
 #X obj 133 186 K12/output;
 #X obj 245 186 K12/math_number;
