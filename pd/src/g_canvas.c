@@ -793,7 +793,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
         canvas_drawlines(x);
         if (x->gl_isgraph && x->gl_goprect)
             canvas_drawredrect(x, 1);
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        sys_vgui("pdtk_canvas_force_getscroll .x%lx.c\n", x);
         //}
     }
     else
@@ -1027,7 +1027,7 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+	sys_vgui("pdtk_canvas_force_getscroll .x%lx.c\n", x);
 	//fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
 }
 

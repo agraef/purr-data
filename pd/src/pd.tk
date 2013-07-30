@@ -3671,6 +3671,11 @@ proc pdtk_canvas_getscroll_configure {canvas} {
 	}
 }
 
+proc pdtk_canvas_force_getscroll {name} {
+	set ::update_tick([winfo parent $name]) 0
+	pdtk_canvas_getscroll $name
+}
+
 proc pdtk_canvas_getscroll {name} {
 	global pd_nt
     global pdtk_canvas_mouseup_name
