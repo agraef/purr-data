@@ -1805,7 +1805,7 @@ proc menu_cut {name} {
 	global copytexttocanvas
 	if {![string match .gfxstub* $name] && ![string match .printout* $name] && ![string match *entry $name]} {
 		pd [concat $name cut \;]
-		pdtk_canvas_getscroll $name.c
+		#pdtk_canvas_getscroll $name.c
 		set copytexttocanvas 0
 		clipboard clear
 	} else {
@@ -1838,7 +1838,7 @@ proc menu_paste {name} {
 		#	pdtk_pastetext
 		#} else {
 			pd [concat $name paste \;]
-			pdtk_canvas_getscroll $name.c
+			#pdtk_canvas_getscroll $name.c
 		#}
 	} else {
 		# puts stderr "pasting text..."
@@ -1852,7 +1852,7 @@ bind . <$ctrl_key-Key-c> {global copytexttocanvas; tk_textCopy .printout.frame.t
 
 proc menu_duplicate {name} {
     pd [concat $name duplicate \;]
-	pdtk_canvas_getscroll $name.c
+	#pdtk_canvas_getscroll $name.c
 }
 
 proc menu_selectall {name} {
@@ -3113,7 +3113,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     # bother with modifiers there.
     # We don't handle multiple clicks yet.
 
-    bind $name.c <Configure> {after 100 pdtk_canvas_getscroll %W}
+    bind $name.c <Configure> {pdtk_canvas_getscroll %W}
 	#bind $name.c <Configure> {after 100 pdtk_canvas_getscroll_configure %W}
     bind $name.c <Button> {pdtk_canvas_click %W %x %y %b 0}
     bind $name.c <Shift-Button> {pdtk_canvas_click %W %x %y %b 1}
@@ -3613,18 +3613,18 @@ proc pdtk_canvas_mouseup {name x y b} {
             [$name canvasy $y] $b \;]
 }
 
-proc pdtk_canvas_getscroll_ping {name} {
-	set wname [string trimright $name .c]
-	if {![winfo exists $wname]} {
-		set ::update_tick($wname) 0
-		return
-	}
-	if {$::update_tick($wname) == 2} {
-		set ::update_tick($wname) 3	
-		pdtk_canvas_getscroll $name
-	}
-	after 100 [list pdtk_canvas_getscroll_ping $name]
-}
+#proc pdtk_canvas_getscroll_ping {name} {
+#	set wname [string trimright $name .c]
+#	if {![winfo exists $wname]} {
+#		set ::update_tick($wname) 0
+#		return
+#	}
+#	if {$::update_tick($wname) == 2} {
+#		set ::update_tick($wname) 3	
+#		pdtk_canvas_getscroll $name
+#	}
+#	after 100 [list pdtk_canvas_getscroll_ping $name]
+#}
 
 proc pdtk_select_all_gop_widgets {name gop state} {
 	#puts stderr "======================$name $gop $state"
@@ -3678,24 +3678,31 @@ proc pdtk_canvas_getscroll {name} {
     global pdtk_canvas_mouseup_xmaxval
     global pdtk_canvas_mouseup_yminval
     global pdtk_canvas_mouseup_ymaxval
+	#global ::update_tick([winfo parent $name])
 
     # kludge since this gets called sometimes after a canvas is destroyed
     if {![winfo exists $name]} {return}
 
+	if {$::update_tick([winfo parent $name]) == 1} {return}
+
+	#set ::update_tick([winfo parent $name]) 1
+
+	after 100 set ::update_tick([winfo parent $name]) 0
+
 	# waiting for refresh
-	if {$::update_tick([winfo parent $name]) == 2} {return}
+	#if {$::update_tick([winfo parent $name]) == 2} {return}
 
 	# init
-	if {$::update_tick([winfo parent $name]) == 0} {
-	 	set ::update_tick([winfo parent $name]) 1
-		pdtk_canvas_getscroll_ping $name		
-	}
+	#if {$::update_tick([winfo parent $name]) == 0} {
+	# 	set ::update_tick([winfo parent $name]) 1
+	#	pdtk_canvas_getscroll_ping $name		
+	#}
 
 	# update
-	if {$::update_tick([winfo parent $name]) == 1} {
-		set ::update_tick([winfo parent $name]) 2
-		return
-	}
+	#if {$::update_tick([winfo parent $name]) == 1} {
+	#	set ::update_tick([winfo parent $name]) 2
+	#	return
+	#}
 
 	#puts stderr getscroll
 
