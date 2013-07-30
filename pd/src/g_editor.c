@@ -3250,6 +3250,10 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
 			error("preset_node does not work with messages.");
 			return(1);
 		}
+		if (obj_noutlets(ob2) == 0) {
+			error("preset_node does not work with objects with zero or undefined number of outlets\n");
+			return(1);
+		}
 	}
 
 	// now check if explicit user-made connection into preset_node is other than message
@@ -3307,6 +3311,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
             canvas_getindex(x, &ob1->ob_g), closest1,
             canvas_getindex(x, &ob2->ob_g), closest2),
             "connect");*/
+
 	if (create_undo) {
 		canvas_undo_add(x, 1, "connect", canvas_undo_set_connect(x, 
 		        canvas_getindex(x, &ob1->ob_g), closest1,
@@ -3316,6 +3321,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
 	// add auto-connect back to preset_node object
 	// (by this time we know we are connecting only to legal objects who have at least one outlet)
 	if (pd_class(&y1->g_pd) == preset_node_class) {
+		
 		//fprintf(stderr,"gotta do auto-connect back to preset_node\n");
 		if (!canvas_isconnected(x, ob2, 0, ob1, 0) && pd_class(&y2->g_pd) != print_class) {
 			oc2 = obj_connect(ob2, 0, ob1, 0);
@@ -3324,6 +3330,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
 		//else
 		//	fprintf(stderr,"error: already connected (this happens when loading from file and is ok)\n");
 	}
+
 	return(0);
 }
 
@@ -5337,8 +5344,12 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 		/* now check for illegal connections between preset_node object and other non-supported objects */
 	if (pd_class(&src->g_pd) == preset_node_class) {
 		if (pd_class(&sink->g_pd) == message_class) {
-				error("preset_node does not work with messages.");
-				goto bad;
+			error("preset_node does not work with messages.");
+			goto bad;
+		}
+		if (obj_noutlets(pd_checkobject(&sink->g_pd)) == 0) {
+			error("preset_node does not work with objects with zero or undefined number of outlets\n");
+			goto bad;
 		}
 	}
 
