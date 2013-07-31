@@ -7,10 +7,10 @@
 #X obj 222 145 K12/output;
 #X obj 222 -78 K12/wii_hit;
 #N canvas 832 145 450 514 META 0;
-#X text 11 5 DESCRIPTION Creates a sound like a bass drum;
 #X text 10 50 OUTLET_0 Connect this to a yellow effect or the green
 sound object.;
 #X text 11 30 INLET_0 Send a 1 here to trigger the sound.;
+#X text 11 5 DESCRIPTION Creates a sound of a bass drum;
 #X restore 653 220 pd META;
 #X obj 209 -215 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;

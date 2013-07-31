@@ -7,8 +7,8 @@ empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X obj 48 60 inlet;
 #X obj 4 257 outlet;
 #X msg 71 103 set \$1;
-#X obj 47 80 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 0 7 10 0
-10 -262144 -247489 -1;
+#X obj 47 80 bng 20 50 50 0 \$0-bng-send \$0-bng-receive 0 7 10 0 10
+-262144 -247489 -1;
 #X obj 168 78 loadbang;
 #X obj 168 100 \$1;
 #X obj 168 230 tosymbol;
@@ -22,7 +22,6 @@ empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X connect 1 0 2 0;
 #X connect 1 0 5 0;
 #X connect 1 0 6 0;
-#X connect 1 0 0 0;
 #X connect 3 0 1 0;
 #X connect 4 0 3 0;
 #X connect 4 0 7 0;

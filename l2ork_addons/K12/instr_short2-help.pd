@@ -9,8 +9,8 @@
 #N canvas 529 34 450 514 META 0;
 #X text 4 56 OUTLET_0 Connect this to a yellow effect or the green
 sound object.;
-#X text 4 6 DESCRIPTION Creates a sound like a snare drum;
 #X text 4 31 INLET_0 Send a number 1 here to trigger the sound;
+#X text 4 6 DESCRIPTION Creates a sound of a snare drum;
 #X restore 685 -108 pd META;
 #X obj 240 -554 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;

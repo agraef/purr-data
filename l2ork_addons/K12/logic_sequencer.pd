@@ -11,112 +11,112 @@ empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X obj 550 144 K12/float_2_midi_pitch;
 #X floatatom 220 184 3 0 0 0 - - -;
 #X msg 165 411 set \$1;
-#X obj 220 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 1 7 10
+#X obj 220 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 1 7 10
 0 10 -262144 -247489 -1;
 #X obj 112 54 preset_node k12;
 #X obj 242 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 242 184 3 0 0 0 - - -;
 #X msg 187 411 set \$1;
-#X obj 242 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 2 7 10
+#X obj 242 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 2 7 10
 0 10 -262144 -247489 -1;
 #X obj 112 74 preset_node k12;
 #X obj 264 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 264 184 3 0 0 0 - - -;
 #X msg 209 411 set \$1;
-#X obj 264 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 3 7 10
+#X obj 264 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 3 7 10
 0 10 -262144 -247489 -1;
 #X obj 112 94 preset_node k12;
 #X obj 286 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 286 184 3 0 0 0 - - -;
 #X msg 231 411 set \$1;
-#X obj 286 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 4 7 10
+#X obj 286 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 4 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 34 preset_node k12;
 #X obj 308 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 308 184 3 0 0 0 - - -;
 #X msg 254 411 set \$1;
-#X obj 308 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 5 7 10
+#X obj 308 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 5 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 54 preset_node k12;
 #X obj 330 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 330 184 3 0 0 0 - - -;
 #X msg 276 411 set \$1;
-#X obj 330 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 6 7 10
+#X obj 330 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 6 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 74 preset_node k12;
 #X obj 352 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 352 184 3 0 0 0 - - -;
 #X msg 298 411 set \$1;
-#X obj 352 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 7 7 10
+#X obj 352 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 7 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 94 preset_node k12;
 #X obj 374 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 374 184 3 0 0 0 - - -;
 #X msg 320 411 set \$1;
-#X obj 374 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 8 7 10
+#X obj 374 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 8 7 10
 0 10 -262144 -247489 -1;
 #X obj 306 34 preset_node k12;
 #X obj 396 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 396 184 3 0 0 0 - - -;
 #X msg 342 411 set \$1;
-#X obj 396 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 9 7 10
+#X obj 396 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 9 7 10
 0 10 -262144 -247489 -1;
 #X obj 306 54 preset_node k12;
 #X obj 418 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 418 184 3 0 0 0 - - -;
 #X msg 364 411 set \$1;
-#X obj 418 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 10 4 10
+#X obj 418 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 10 4 10
 0 10 -262144 -247489 -1;
 #X obj 306 74 preset_node k12;
 #X obj 440 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 440 184 3 0 0 0 - - -;
 #X msg 386 411 set \$1;
-#X obj 440 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 11 4 10
+#X obj 440 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 11 4 10
 0 10 -262144 -247489 -1;
 #X obj 306 94 preset_node k12;
 #X obj 462 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 462 184 3 0 0 0 - - -;
 #X msg 408 411 set \$1;
-#X obj 462 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 12 4 10
+#X obj 462 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 12 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 34 preset_node k12;
 #X obj 484 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 484 184 3 0 0 0 - - -;
 #X msg 431 411 set \$1;
-#X obj 484 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 13 4 10
+#X obj 484 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 13 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 54 preset_node k12;
 #X obj 506 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 506 184 3 0 0 0 - - -;
 #X msg 453 411 set \$1;
-#X obj 506 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 14 4 10
+#X obj 506 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 14 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 74 preset_node k12;
 #X obj 528 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 528 184 3 0 0 0 - - -;
 #X msg 475 411 set \$1;
-#X obj 528 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 15 4 10
+#X obj 528 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 15 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 94 preset_node k12;
 #X obj 550 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 550 184 3 0 0 0 - - -;
 #X msg 521 412 set \$1;
-#X obj 550 162 bng 20 250 50 0 \$0-bng-send \$0-bng-receive 16 4 10
+#X obj 550 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 16 4 10
 0 10 -262144 -247489 -1;
 #X connect 1 0 4 0;
 #X connect 3 0 10 0;
