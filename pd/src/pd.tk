@@ -2648,10 +2648,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		match_linux_wm [list button $name.k12frame.instr.b_instr_sustained2 -image i.instr_sustained2 \
 			-command [concat put_K12_objects $name instr_sustained2]]
 		pack $name.k12frame.instr.b_instr_short1 $name.k12frame.instr.b_instr_short2 $name.k12frame.instr.b_instr_sustained1 $name.k12frame.instr.b_instr_sustained2 -side left -expand 0 -padx 1 -pady 1
-		setTooltip $name.k12frame.instr.b_instr_short1 "Short Sound 1: Use this to produce short sounds like a single bass drum hit"
-		setTooltip $name.k12frame.instr.b_instr_short2 "Short Sound 2: Use this to produce short sounds like a single snare drum hit"
-		setTooltip $name.k12frame.instr.b_instr_sustained1 "Sustained Sound 1: Use this to produce long sustained sound like a sound of a woodwind instrument"
-		setTooltip $name.k12frame.instr.b_instr_sustained2 "Sustained Sound 2: Use this to produce long sustained sound like a sound of brass instrument"
+		setTooltip $name.k12frame.instr.b_instr_short1 "Bass Drum: Use this to produce short sounds like a single bass drum hit"
+		setTooltip $name.k12frame.instr.b_instr_short2 "Snare Drum: Use this to produce short sounds like a single snare drum hit"
+		setTooltip $name.k12frame.instr.b_instr_sustained1 "Air Instrument: Use this to produce long sustained sound like a sound of a woodwind instrument"
+		setTooltip $name.k12frame.instr.b_instr_sustained2 "Brass Instrument: Use this to produce long sustained sound like a sound of brass instrument"
 		pdtk_standardkeybindings $name.k12frame.instr.b_instr_short1
 		pdtk_standardkeybindings $name.k12frame.instr.b_instr_short2
 		pdtk_standardkeybindings $name.k12frame.instr.b_instr_sustained1
