@@ -1,0 +1,40 @@
+#N canvas 177 69 609 614 10;
+#X obj -30 -30 preset_hub k12 1 %hidden% %node% 2 1 7 %preset% 0 67
+%node% 2 3 7 %preset% 0 1 %node% 2 4 10 %preset% 0 2 %node% 2 5 14
+%preset% 0 100 %node% 2 5 28 %preset% 0 1 %node% 2 6 15 %preset% 0
+290 %node% 2 6 16 %preset% 0 5 %node% 2 7 7 %preset% 0 1 %node% 2 8
+8 %node% 2 9 5 %preset% 0 48 %node% 2 9 11 %preset% 0 72 %node% 2 9
+16 %preset% 0 67 %node% 2 9 21 %preset% 0 70 %node% 2 9 26 %preset%
+0 74 %node% 2 9 31 %preset% 0 65 %node% 2 9 36 %preset% 0 69 %node%
+2 9 41 %preset% 0 70 %node% 2 9 46 %preset% 0 53 %node% 2 9 51 %preset%
+0 72 %node% 2 9 56 %preset% 0 67 %node% 2 9 61 %preset% 0 70 %node%
+2 9 66 %preset% 0 76 %node% 2 9 71 %preset% 0 65 %node% 2 9 76 %preset%
+0 69 %node% 2 9 81 %preset% 0 55 %node% 2 10 7 %node% 2 10 3 %preset%
+0 1 %node% 2 10 11 %preset% 0 240 %node% 2 11 3 %preset% 0 1 %node%
+2 11 19 %preset% 0 16 %node% 2 12 8 %preset% 0 223.63 %node% 2 12 16
+%preset% 0 801.37;
+#X obj 168 47 K12/math_number 0;
+#X obj 86 121 K12/instr_sustained2 0;
+#X obj 37 25 K12/math_number 0;
+#X obj 86 354 K12/fx_reverb 0;
+#X obj 86 468 K12/output 0;
+#X obj 86 235 K12/signal_envelope 0;
+#X obj 188 163 K12/math_number 0;
+#X obj 17 -420 K12/preset 0;
+#X obj 168 -194 K12/logic_sequencer 0;
+#X obj 168 -420 K12/logic_metronome 0;
+#X obj 168 -306 K12/logic_counter 0;
+#X obj -12 354 K12/fx_multitap 0;
+#X text 14 -331 press leftmost presetto begin;
+#X connect 1 0 2 1;
+#X connect 1 0 7 1;
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 6 0 12 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 1;
+#X connect 9 0 1 0;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 12 0 5 0;
