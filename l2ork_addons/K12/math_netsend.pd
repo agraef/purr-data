@@ -21,8 +21,8 @@
 #X obj 67 281 gate 1 1;
 #X obj 52 227 t 1 s b 0;
 #X obj 168 281 gate 1 1;
-#X msg 242 176 3000;
 #X obj 215 132 t b b;
+#X msg 215 177 3000;
 #X connect 0 0 13 0;
 #X connect 2 0 12 0;
 #X connect 3 0 5 0;
@@ -33,7 +33,7 @@
 #X connect 11 0 8 0;
 #X connect 12 0 7 0;
 #X connect 13 0 1 0;
-#X connect 14 0 22 0;
+#X connect 14 0 21 0;
 #X connect 15 0 9 0;
 #X connect 16 0 9 0;
 #X connect 17 0 18 0;
@@ -45,9 +45,8 @@
 #X connect 19 1 11 0;
 #X connect 19 2 18 1;
 #X connect 19 3 20 0;
-#X connect 19 3 18 0;
 #X connect 20 0 9 0;
-#X connect 21 0 5 0;
-#X connect 22 0 21 0;
-#X connect 22 1 15 0;
+#X connect 21 0 22 0;
+#X connect 21 1 15 0;
+#X connect 22 0 5 0;
 #X coords 0 -1 1 1 89 89 2 117 127;
