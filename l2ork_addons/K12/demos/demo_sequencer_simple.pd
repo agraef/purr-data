@@ -26,6 +26,7 @@
 #X obj 168 -306 K12/logic_counter 0;
 #X obj -12 354 K12/fx_multitap 0;
 #X text 14 -331 press leftmost presetto begin;
+#X text 14 -291 by Ivica Ico Bukvic<ico@vt.edu>;
 #X connect 1 0 2 1;
 #X connect 1 0 7 1;
 #X connect 2 0 6 0;
