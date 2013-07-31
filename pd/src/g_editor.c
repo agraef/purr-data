@@ -1009,6 +1009,7 @@ void canvas_undo_move(t_canvas *x, void *z, int action)
     if (action == UNDO_UNDO || action == UNDO_REDO)
     {
         int i;
+		do_not_redraw = 1;
         for (i = 0; i < buf->u_n; i++)
         {
             int x1, y1, x2, y2, newx, newy;
@@ -1028,6 +1029,8 @@ void canvas_undo_move(t_canvas *x, void *z, int action)
 				glist_select(x, y);
             }
         }
+		do_not_redraw = 0;
+		canvas_redraw(x);
 		if (resortin) canvas_resortinlets(x);
 		if (resortout) canvas_resortoutlets(x);
     }
