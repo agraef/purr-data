@@ -24,68 +24,17 @@ typedef struct _image
 
 /* widget helper functions */
 
-
-char * image_path_replace(
-    char const * const original, 
-    char const * const pattern, 
-    char const * const replacement
-) {
-	size_t const replen = strlen(replacement);
-	size_t const patlen = strlen(pattern);
-	size_t const orilen = strlen(original);
-
-	size_t patcnt = 0;
-	const char * oriptr;
-	const char * patloc;
-
-	// find how many times the pattern occurs in the original string
-	for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
-	{
-		patcnt++;
-	}
-
-	{
-		// allocate memory for the new string
-		size_t const retlen = orilen + patcnt * (replen - patlen);
-		char * const returned = (char *) malloc( sizeof(char) * (retlen + 1) );
-
-		if (returned != NULL)
-		{
-			// copy the original string, 
-			// replacing all the instances of the pattern
-			char * retptr = returned;
-			for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
-			{
-				size_t const skplen = patloc - oriptr;
-				// copy the section until the occurence of the pattern
-				strncpy(retptr, oriptr, skplen);
-				retptr += skplen;
-				// copy the replacement 
-				strncpy(retptr, replacement, replen);
-				retptr += replen;
-			}
-			// copy the rest of the string.
-			strcpy(retptr, oriptr);
-		}
-		return returned;
-	}
-}
-
 void image_doopen(t_image* x) {
 	if (strlen(x->x_fname->s_name) != 0) {
 		char fname[MAXPDSTRING];
 		canvas_makefilename(glist_getcanvas(x->x_glist), x->x_fname->s_name,
 						fname, MAXPDSTRING);
 		
-		//check for @sys_extra path and replace
-		if (strstr(fname, "@pd_extra") != NULL) {
-			t_namelist *path = pd_extrapath;
-			while (path->nl_next)
-				path = path->nl_next;
-			const char *new_fname = image_path_replace(x->x_fname->s_name, "@pd_extra", path->nl_string);
-			strcpy(fname, new_fname);
-			freebytes(new_fname, strlen(new_fname));
-		}
+		//check for sys path arguments and replace
+		char *new_fname = canvas_parse_sys_filename_args(x->x_fname->s_name);
+		strcpy(fname, new_fname);
+		freebytes(new_fname, strlen(new_fname));
+
 		sys_vgui("catch {image delete $img%x}\n", x);
 		sys_vgui("set img%x [image create photo -file {%s}]\n", x, fname);
 		sys_vgui(".x%x.c itemconfigure %xS -image $img%x\n", 
