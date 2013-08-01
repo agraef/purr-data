@@ -367,7 +367,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 					 x->x_gui.x_fontsize, sys_fontweight,
 		             x->x_gui.x_lcol);
     }
-	if (x->x_gui.x_fsf.x_selected)
+	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
 		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");

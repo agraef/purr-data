@@ -123,7 +123,7 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 
     sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -outline #%6.6x\n", canvas, x,
              x->x_gui.x_bcol, x->x_gui.x_bcol);
-	if (x->x_gui.x_fsf.x_selected)
+	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
     	sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
 	else
     	sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x,
