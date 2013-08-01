@@ -16,8 +16,8 @@
 #X msg 73 281 1;
 #X obj 73 314 outlet;
 #X msg 162 85 open @pd_extra/K12/objects/logic_metronome.png;
-#X obj 121 178 nbx 5 19 -1e+37 1e+37 0 0 \$0-s-null \$0-r-null empty
-0 -8 0 16 -262144 -1 -1 0 256 1;
+#X obj 121 178 nbx 5 19 1 1e+37 0 0 \$0-s-null \$0-r-null empty 0 -8
+0 16 -262144 -1 -1 1 256 1;
 #X text 143 154 on/off;
 #X text 142 195 speed(BPM);
 #X connect 0 0 6 0;
