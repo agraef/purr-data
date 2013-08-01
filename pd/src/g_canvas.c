@@ -1716,7 +1716,7 @@ char * canvas_path_replace(
 	{
 		// allocate memory for the new string
 		size_t const retlen = orilen + patcnt * (replen - patlen);
-		char * const returned = (char *) malloc( sizeof(char) * (retlen + 1) );
+		char * returned = (char *) malloc( sizeof(char) * (retlen + 1) );
 
 		if (returned != NULL)
 		{
@@ -1741,6 +1741,23 @@ char * canvas_path_replace(
 }
 
 
+char * canvas_parse_sys_filename_args(const char *name)
+{
+	//check for @sys_extra path and replace
+	char *final_name = NULL;
+	if (strstr(name, "@pd_extra") != NULL) {
+		t_namelist *path = pd_extrapath;
+		while (path->nl_next)
+			path = path->nl_next;
+		final_name = canvas_path_replace(name, "@pd_extra", path->nl_string);
+	}
+	else {
+		final_name = (char *) malloc( sizeof(char) * (strlen(name) + 1) );
+		strcpy(final_name, name); 
+	}
+	return(final_name);
+}
+
     /* utility function to read a file, looking first down the canvas's search
     path (set with "declare" objects in the patch and recursively in calling
     patches), then down the system one.  The filename is the concatenation of
@@ -1759,19 +1776,12 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
 {
     t_namelist *nl, thislist;
     int fd = -1;
+	int result = 0;
     t_canvas *y;
-	const char *final_name;
+	char *final_name;
 
-	//check for @sys_extra path and replace
-	if (strstr(name, "@pd_extra") != NULL) {
-		t_namelist *path = pd_extrapath;
-		while (path->nl_next)
-			path = path->nl_next;
-		final_name = canvas_path_replace(name, "@pd_extra", path->nl_string);
-	}
-	else {
-		final_name = name; 
-	}
+	//check for sys path and replace
+	final_name = canvas_parse_sys_filename_args(name);
 
         /* first check if "name" is absolute (and if so, try to open) */
     if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
@@ -1808,8 +1818,9 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
                     return (fd);
         }
     }
-    return (open_via_path((x ? canvas_getdir(x)->s_name : "."), final_name, ext,
-        dirresult, nameresult, size, bin));
+    result = open_via_path((x ? canvas_getdir(x)->s_name : "."), final_name, ext, dirresult, nameresult, size, bin);
+	freebytes((void *)final_name, strlen(final_name));
+	return(result);
 }
 
 void canvasgop_draw_move(t_canvas *x, int doit)

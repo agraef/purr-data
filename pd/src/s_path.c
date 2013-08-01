@@ -344,6 +344,8 @@ there is no search and instead we just try to open the file literally.  */
 /* see also canvas_open() which, in addition, searches down the
 canvas-specific path. */
 
+EXTERN const char * canvas_parse_sys_filename_args(const char *name);
+
 static int do_open_via_path(const char *dir, const char *name,
     const char *ext, char *dirresult, char **nameresult, unsigned int size,
     int bin, t_namelist *searchpath)
@@ -351,31 +353,38 @@ static int do_open_via_path(const char *dir, const char *name,
     t_namelist *nl;
     int fd = -1;
 
+	//check for sys path and replace
+	const char *final_name = canvas_parse_sys_filename_args(name);	
+
         /* first check if "name" is absolute (and if so, try to open) */
-    if (sys_open_absolute(name, ext, dirresult, nameresult, size, bin, &fd))
-        return (fd);
+    if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
+        goto do_open_via_path_end;
     
         /* otherwise "name" is relative; try the directory "dir" first. */
-    if ((fd = sys_trytoopenone(dir, name, ext,
+    if ((fd = sys_trytoopenone(dir, final_name, ext,
         dirresult, nameresult, size, bin)) >= 0)
-            return (fd);
+            goto do_open_via_path_end;
 
         /* next go through the search path */
     for (nl = searchpath; nl; nl = nl->nl_next)
-        if ((fd = sys_trytoopenone(nl->nl_string, name, ext,
+        if ((fd = sys_trytoopenone(nl->nl_string, final_name, ext,
             dirresult, nameresult, size, bin)) >= 0)
-                return (fd);
+				goto do_open_via_path_end;
 
         /* next look in built-in paths like "extra" */
     if (sys_usestdpath)
         for (nl = pd_extrapath; nl; nl = nl->nl_next)
-            if ((fd = sys_trytoopenone(nl->nl_string, name, ext,
+            if ((fd = sys_trytoopenone(nl->nl_string, final_name, ext,
                 dirresult, nameresult, size, bin)) >= 0)
-                    return (fd);
+                    goto do_open_via_path_end;
 
     *dirresult = 0;
     *nameresult = dirresult;
+	freebytes((void *)final_name, strlen(final_name));
     return (-1);
+do_open_via_path_end:
+	freebytes((void *)final_name, strlen(final_name));
+	return (fd);
 }
 
     /* open via path, using the global search path. */

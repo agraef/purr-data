@@ -548,6 +548,10 @@ EXTERN int canvas_hitbox(t_canvas *x, t_gobj *y, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p);
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 
+/* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
+
+EXTERN char * canvas_parse_sys_filename_args(const char *name);
+
 typedef void (*t_undofn)(t_canvas *canvas, void *buf,
     int action);        /* a function that does UNDO/REDO */
 #define UNDO_FREE 0                     /* free current undo/redo buffer */
