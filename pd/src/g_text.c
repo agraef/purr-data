@@ -1638,7 +1638,8 @@ static t_widgetbehavior gatom_widgetbehavior =
 void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2)
 {
-	if (pd_class(&ob->te_pd) == text_class)
+	//if this is a comment or we are drawing inside gop on one of our parents return
+	if (pd_class(&ob->te_pd) == text_class || glist_getcanvas(glist) != glist)
 		return;
 	//fprintf(stderr,"glist_drawiofor\n");
     int n = obj_noutlets(ob), nplus = (n == 1 ? 1 : n-1), i;

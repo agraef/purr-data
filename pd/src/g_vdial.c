@@ -103,10 +103,10 @@ void vradio_draw_new(t_vradio *x, t_glist *glist)
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%so%d %so%d %lxVRDO outlet}\n",
 		         canvas, xx11, yy11-1, xx11 + IOWIDTH, yy11, x, nlet_tag, 0, nlet_tag, 0, x);
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%si%d %si%d %lxVRDO inlet}\n",
 		         canvas, xx11, yy11b, xx11 + IOWIDTH, yy11b+1, x, nlet_tag, 0, nlet_tag, 0, x);
 	//}
@@ -150,10 +150,10 @@ void vradio_draw_move(t_vradio *x, t_glist *glist)
 		}
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xx11+x->x_gui.x_ldx, yy11b+x->x_gui.x_ldy);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c coords %lxVRDO%so%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0, xx11, yy11-1, xx11 + IOWIDTH, yy11);
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c coords %lxVRDO%si%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0, xx11, yy11b, xx11 + IOWIDTH, yy11b+1);
 		/* redraw scale handle rectangle if selected */
@@ -232,7 +232,7 @@ void vradio_draw_io(t_vradio* x, t_glist* glist, int old_snd_rcv_flags)
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
 
-	if (glist_isvisible(canvas)) {
+	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
 		t_gobj *y = (t_gobj *)x;
 		t_object *ob = pd_checkobject(&y->g_pd);

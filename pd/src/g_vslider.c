@@ -109,13 +109,13 @@ static void vslider_draw_new(t_vslider *x, t_glist *glist)
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight, 
 		         x->x_gui.x_lcol, x, x);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%so%d %so%d %lxVSLDR outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+4,
 		         xpos+7, ypos + x->x_gui.x_h+5,
 		         x, nlet_tag, 0, nlet_tag, 0, x);
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%si%d %si%d %lxVSLDR inlet}\n",
 		         canvas,
 		         xpos, ypos,
@@ -155,12 +155,12 @@ static void vslider_draw_move(t_vslider *x, t_glist *glist)
 		         xpos + x->x_gui.x_w-1, r);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c coords %lxVSLDR%so%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0,
 		         xpos, ypos + x->x_gui.x_h+4,
 		         xpos+7, ypos + x->x_gui.x_h+5);
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c coords %lxVSLDR%si%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0,
 		         xpos, ypos,
@@ -230,7 +230,7 @@ static void vslider_draw_io(t_vslider* x,t_glist* glist, int old_snd_rcv_flags)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	if (glist_isvisible(canvas)) {
+	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
 		t_gobj *y = (t_gobj *)x;
 		t_object *ob = pd_checkobject(&y->g_pd);

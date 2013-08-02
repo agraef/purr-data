@@ -95,10 +95,10 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxTGL%so%d %so%d %lxTGL outlet}\n",
 		         canvas, xx, yy + x->x_gui.x_h-1, xx + IOWIDTH, yy + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x);
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxTGL%si%d %si%d %lxTGL inlet}\n",
 		         canvas, xx, yy, xx + IOWIDTH, yy+1, x, nlet_tag, 0, nlet_tag, 0, x);
 	//}
@@ -139,10 +139,10 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
 		         canvas, x, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w, yy+w);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xx+x->x_gui.x_ldx, yy+x->x_gui.x_ldy);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c coords %lxTGL%so%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0, xx, yy + x->x_gui.x_h-1, xx + IOWIDTH, yy + x->x_gui.x_h);
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		    sys_vgui(".x%lx.c coords %lxTGL%si%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0, xx, yy, xx + IOWIDTH, yy+1);
 		/* redraw scale handle rectangle if selected */
@@ -223,7 +223,7 @@ void toggle_draw_io(t_toggle* x, t_glist* glist, int old_snd_rcv_flags)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	if (glist_isvisible(canvas)) {
+	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
 		t_gobj *y = (t_gobj *)x;
 		t_object *ob = pd_checkobject(&y->g_pd);

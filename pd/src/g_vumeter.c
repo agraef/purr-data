@@ -170,7 +170,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		{
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
 		         canvas,
@@ -183,7 +183,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
 		         x, nlet_tag, 1, nlet_tag, 1, x);
 		}
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		{
 		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU inlet}\n",
 		         canvas,
@@ -253,7 +253,7 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx,
 		         ypos+x->x_gui.x_ldy);
-		if(!x->x_gui.x_fsf.x_snd_able)
+		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		{
 		    sys_vgui(".x%lx.c coords %lxVU%so%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0,
@@ -264,7 +264,7 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		             xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4);
 		}
-		if(!x->x_gui.x_fsf.x_rcv_able)
+		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		{
 		sys_vgui(".x%lx.c coords %lxVU%si%d %d %d %d %d\n",
 		         canvas, x, nlet_tag, 0,
@@ -393,7 +393,7 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	if (glist_isvisible(canvas)) {
+	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
 		t_gobj *y = (t_gobj *)x;
 		t_object *ob = pd_checkobject(&y->g_pd);

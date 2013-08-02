@@ -223,13 +223,13 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
 				     xpos, ypos + x->x_gui.x_h,
 				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x);
-			if(!x->x_gui.x_fsf.x_snd_able)
+			if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM outlet}\n",
 				     canvas,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
 				     x, nlet_tag, 0, nlet_tag, 0, x);
-			if(!x->x_gui.x_fsf.x_rcv_able)
+			if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM inlet}\n",
 				     canvas,
 				     xpos, ypos,
@@ -297,12 +297,12 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 			     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
 			     xpos, ypos + x->x_gui.x_h);
 		if (x->x_hide_frame <= 1) {
-		   if(!x->x_gui.x_fsf.x_snd_able)
+		   if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 				sys_vgui(".x%lx.c coords %lxNUM%so%d %d %d %d %d\n",
 				     canvas, x, nlet_tag, 0,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h);
-		   if(!x->x_gui.x_fsf.x_rcv_able)
+		   if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 				sys_vgui(".x%lx.c coords %lxNUM%si%d %d %d %d %d\n",
 				     canvas, x, nlet_tag, 0,
 				     xpos, ypos,
@@ -401,7 +401,7 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	if (glist_isvisible(canvas)) {
+	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
 		t_gobj *y = (t_gobj *)x;
 		t_object *ob = pd_checkobject(&y->g_pd);
