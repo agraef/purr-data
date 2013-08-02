@@ -1100,6 +1100,24 @@ proc menu_open {} {
 	}
 }
 
+proc menu_k12_open_demos {} {
+	global pd_guidir filetypes
+	if { ! [file isdirectory $pd_guidir/extra/K12/demos]} {
+		set files [tk_getOpenFile -defaultextension .pd \
+						  -multiple true \
+		                  -filetypes $filetypes -initialdir $pd_guidir/extra/]
+	} else {
+		set files [tk_getOpenFile -defaultextension .pd \
+						  -multiple true \
+		                  -filetypes $filetypes -initialdir $pd_guidir/extra/K12/demos]
+	}
+    if {$files != ""} {
+		foreach filename $files {
+			open_file $filename
+		}
+	}	
+}
+
 proc pdtk_set_current_dir {path_and_filename} {
 	global pd_opendir untitled_directory
 	set directory [file dirname $path_and_filename]
@@ -2728,6 +2746,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
     $name.m.file add command -label Open -command {menu_open} \
         -accelerator [accel_munge "Ctrl+o"]
+
+	if { $k12_mode == 1 } {
+		$name.m.file add command -label {K12 Demos} -command {menu_k12_open_demos}
+	}
 
     $name.m.file add  separator
     $name.m.file add command -label Close \
