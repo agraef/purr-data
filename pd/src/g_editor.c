@@ -907,6 +907,10 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 			}
 			do_not_redraw -= 1;
 			canvas_redraw(x);
+			if (x->gl_owner && glist_isvisible(x->gl_owner)) {
+				gobj_vis((t_gobj *)x, x->gl_owner, 0);
+				gobj_vis((t_gobj *)x, x->gl_owner, 1);
+			}
 			glob_preset_node_list_check_loc_and_update();
 		}
     }
@@ -1080,8 +1084,8 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
     }
     else if (action == UNDO_REDO)
     {
-		if (buf->u_offset)
-			do_not_redraw += 1;
+		//if (buf->u_offset)
+		//	do_not_redraw += 1;
         t_selection *sel;
 		glist_noselect(x);
 		//if the pasted object is supposed to be autopatched
@@ -1093,7 +1097,7 @@ void canvas_undo_paste(t_canvas *x, void *z, int action)
         canvas_dopaste(x, buf->u_objectbuf);
             /* if it was "duplicate" have to re-enact the displacement. */
         if (buf->u_offset) {
-			do_not_redraw -= 1;
+			//do_not_redraw -= 1;
             //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
             //    gobj_displace(sel->sel_what, x, 10, 10);
 			canvas_paste_xyoffset(x);
@@ -5047,6 +5051,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 {
 	//fprintf(stderr,"start dopaste\n");
 	do_not_redraw += 1;
+	int was_dnr = do_not_redraw;
 	
     t_gobj *newgobj, *last, *g2;
     int dspstate = canvas_suspend_dsp(), nbox, count;
@@ -5108,9 +5113,11 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     paste_onset = nbox;
     paste_canvas = x;
 
+	do_not_redraw = 0;
     pd_bind(&x->gl_pd, gensym("#X"));
     binbuf_eval(b, 0, 0, 0);
     pd_unbind(&x->gl_pd, gensym("#X"));
+	do_not_redraw = was_dnr;
 
 	/* select newly created objects */
     for (g2 = x->gl_list, count = 0; g2; g2 = g2->g_next, count++)
@@ -5145,7 +5152,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	//if we are copying from external buffer and the current canvas is not empty
 	else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") && !copyfromexternalbuffer ||
 		copyfromexternalbuffer && !canvas_empty) {
-		if (!copyfromexternalbuffer) canvas_paste_xyoffset(x);
+		//if (!copyfromexternalbuffer) canvas_paste_xyoffset(x);
 		if (!we_are_undoing) canvas_paste_atmouse(x);
 		//fprintf(stderr,"doing a paste\n");
 	}
@@ -5159,7 +5166,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 		canvas_redraw(x);
 	}*/
 	do_not_redraw -= 1;
-	//fprintf(stderr,"dopaste redraw\n");
+	//fprintf(stderr,"dopaste redraw %d\n", do_not_redraw);
 	canvas_redraw(x);
 
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
