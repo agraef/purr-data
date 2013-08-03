@@ -359,6 +359,7 @@ void glist_free(t_glist *x)
 
 t_inlet *canvas_addinlet(t_canvas *x, t_pd *who, t_symbol *s)
 {
+	//fprintf(stderr,"canvas_addinlet %d %lx %d\n", x->gl_loading, x->gl_owner, glist_isvisible(x->gl_owner));
     t_inlet *ip = inlet_new(&x->gl_obj, who, s, 0);
     if (!x->gl_loading && x->gl_owner && glist_isvisible(x->gl_owner))
     {
@@ -758,11 +759,11 @@ void glist_redraw(t_glist *x)
                 canvas_drawredrect(x, 1);
             }
         }
-        if (x->gl_owner && glist_isvisible(x->gl_owner))
-        {
-            graph_vis(&x->gl_gobj, x->gl_owner, 0); 
-            graph_vis(&x->gl_gobj, x->gl_owner, 1);
-        }
+    }
+    if (x->gl_owner && glist_isvisible(x->gl_owner))
+    {
+        graph_vis(&x->gl_gobj, x->gl_owner, 0); 
+        graph_vis(&x->gl_gobj, x->gl_owner, 1);
     }
 }
 
