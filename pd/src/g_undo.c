@@ -58,6 +58,7 @@ void canvas_undo_undo(t_canvas *x)
 		we_are_undoing = 1;
 		//fprintf(stderr,"canvas_undo_undo %d\n", x->u_last->type);
 		glist_noselect(x);
+		canvas_undo_name = x->u_last->name;
         switch(x->u_last->type)
         {
 		    case 1:	canvas_undo_connect(x, x->u_last->data, UNDO_UNDO); break; 		//connect
@@ -99,6 +100,7 @@ void canvas_undo_redo(t_canvas *x)
 		x->u_last = x->u_last->next;
 		//fprintf(stderr,"canvas_undo_redo %d\n", x->u_last->type);
 		glist_noselect(x);
+		canvas_undo_name = x->u_last->name;
         switch(x->u_last->type)
         {
 		    case 1:	canvas_undo_connect(x, x->u_last->data, UNDO_REDO); break; 		//connect
