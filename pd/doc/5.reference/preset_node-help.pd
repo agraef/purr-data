@@ -3,7 +3,7 @@
 0;
 #X obj 105 279 cnv 15 60 37 empty empty empty 20 12 0 14 -261234 -66577
 0;
-#X obj -2 865 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj -2 930 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj -2 0 cnv 15 552 40 empty \$0-pddp.cnv.header preset_node 3 12
 0 18 -204280 -1 0;
@@ -18,7 +18,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 65 INLET_0 anything;
 #X text 12 85 OUTLET_0 anything;
 #X text 12 105 AUTHOR Ivica Ico Bukvic (c) 2012 <ico@vt.edu>;
-#X restore 498 867 pd META;
+#X restore 498 932 pd META;
 #X obj -2 633 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj -2 688 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
@@ -27,15 +27,16 @@ to conform to the PDDP template for Pd version 0.42.;
 12 0 13 -228856 -1 0;
 #X obj 76 347 cnv 17 3 280 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 102 481 428 108 Related_objects 0;
+#N canvas 102 481 428 93 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [preset_node] Related Objects;
 #X obj 22 36 preset_hub default %hidden%;
-#X restore 99 867 pd Related_objects;
+#X obj 141 36 preset_node_array;
+#X restore 99 932 pd Related_objects;
 #X obj 76 642 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 2 867 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 2 932 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 9 20 universal preset system for pd-l2ork;
 #X obj 472 3 preset_node;
@@ -199,6 +200,10 @@ info.;
 #X msg 186 190 clear 0;
 #X text 96 827 Default values- messages when supplied no argument default
 to 0 or empty string;
+#X text 96 861 Presets with Arrays- arrays cannot be accessed directly
+as they have no direct inlets and outlets. For this reason we use preset_node_array
+abstraction to read/write to/from arrays. For additional info see;
+#X obj 288 900 pddp/pddplink preset_node_array-help.pd;
 #X connect 16 0 25 0;
 #X connect 17 0 16 0;
 #X connect 18 0 16 0;
@@ -209,7 +214,6 @@ to 0 or empty string;
 #X connect 23 0 16 0;
 #X connect 24 0 23 0;
 #X connect 26 0 27 0;
-#X connect 26 0 45 0;
 #X connect 28 0 26 0;
 #X connect 29 0 26 0;
 #X connect 30 0 26 0;

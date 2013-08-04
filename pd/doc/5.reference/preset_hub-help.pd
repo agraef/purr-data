@@ -1,9 +1,9 @@
-#N canvas 138 24 553 651 10;
+#N canvas 214 51 553 651 10;
 #X obj 109 282 cnv 15 60 37 empty empty empty 20 12 0 14 -261234 -66577
 0;
 #X obj 183 294 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
-#X obj 0 1041 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 0 1111 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header preset_hub 3 12
 0 18 -204280 -1 0;
@@ -18,7 +18,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 85 OUTLET_0 anything;
 #X text 12 105 AUTHOR Ivica Ico Bukvic (c) 2012 <ico@vt.edu>;
 #X text 12 65 INLET_0 clear purge recall reset store;
-#X restore 500 1043 pd META;
+#X restore 500 1113 pd META;
 #X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj 0 608 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
@@ -27,15 +27,16 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 78 357 cnv 17 3 200 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 102 481 428 108 Related_objects 0;
+#N canvas 102 481 428 97 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 36 preset_node;
 #X text 7 1 [preset_hub] Related Objects;
-#X restore 101 1043 pd Related_objects;
+#X obj 98 36 preset_node_array;
+#X restore 101 1113 pd Related_objects;
 #X obj 78 572 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 4 1043 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 1113 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 11 20 universal preset system for pd-l2ork;
 #X obj 20 202 preset_hub test %hidden% %node% 2 31 1 %preset% 1 problems
@@ -104,7 +105,8 @@ of that patch's children (i.e. \, subpatches and abstractions).;
 #X text 168 376 - purge all orphaned/unused nodes;
 #X text 98 356 clear;
 #X text 168 356 - clears preset n for all nodes;
-#X obj 479 3 preset_hub  %hidden% %node% 2 10 1;
+#X obj 479 3 preset_hub  %hidden% %node% 2 10 1 %node% 2 90 37 %node%
+3 10 3 37;
 #X obj 189 271 preset_node test;
 #X floatatom 189 299 5 0 0 0 - - -;
 #X msg 198 211 purge;
@@ -225,6 +227,10 @@ Reading a single preset will automatically recall it as soon as the
 preset has been loaded.;
 #X text 98 1007 Default values- messages when supplied no argument
 default to 0 or empty string;
+#X text 98 1041 Presets with Arrays- arrays cannot be accessed directly
+as they have no direct inlets and outlets. For this reason we use preset_node_array
+abstraction to read/write to/from arrays. For additional info see;
+#X obj 290 1080 pddp/pddplink preset_node_array-help.pd;
 #X connect 14 0 20 0;
 #X connect 15 0 14 0;
 #X connect 16 0 14 0;
@@ -249,7 +255,6 @@ default to 0 or empty string;
 #X connect 50 0 15 0;
 #X connect 51 0 19 0;
 #X connect 52 0 23 0;
-#X connect 61 0 67 0;
 #X connect 61 0 62 0;
 #X connect 63 0 61 0;
 #X connect 64 0 61 0;
