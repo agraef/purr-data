@@ -85,10 +85,10 @@ fi
 if [ $dev -eq 1 ]
 then
 	echo "Pd dev package..."
-	cd doc/
+	#cd doc/
 	#svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
-	cp -f ../l2ork_addons/doc/Makefile .
-	cd ..
+	#cp -f ../l2ork_addons/doc/Makefile .
+	#cd ..
 	cd externals/miXed
 	make clean
 	cd ../
@@ -156,10 +156,10 @@ then
 	#fi
 
 	# update docs
-	cd doc/
+	#cd doc/
 	#svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
-	cp -f ../l2ork_addons/doc/Makefile .
-	cd ..
+	#cp -f ../l2ork_addons/doc/Makefile .
+	#cd ..
 
 	if [ $full -eq 2 -o $deb -eq 2 ]
 	then
