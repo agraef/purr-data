@@ -1,4 +1,4 @@
-#N canvas 317 67 553 459 10;
+#N canvas 317 67 553 610 10;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array myarray1 64 float 1;
 #A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -66,20 +66,23 @@
 #X obj 39 -2 cnv 15 552 40 empty \$0-pddp.cnv.header preset_node_array
 3 12 0 18 -204280 -1 0;
 #X obj 479 3 preset_node_array;
-#X obj 39 435 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 39 585 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 39 326 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 102 436 482 332 META 0;
+#N canvas 102 436 482 235 META 0;
 #X text 18 16 KEYWORDS control storage;
 #X text 18 36 LICENSE;
-#X text 18 96 OUTLET_0 anything;
-#X text 18 76 INLET_0 clear purge recall reset store;
-#X text 18 116 AUTHOR András Murányi 2013 based on rc-patches by
-Dan Wilcox;
-#X text 18 136 HELP_PATCH_AUTHORS András Murányi;
-#X text 18 56 DESCRIPTION Experimental Array saving for Pd-l2ork;
-#X restore 539 437 pd META;
+#X text 18 106 OUTLET_0 anything;
+#X text 18 86 INLET_0 clear purge recall reset store;
+#X text 18 126 AUTHOR András Murányi 2013 based on rc-patches by
+Dan Wilcox. Additional improvements/fixes/clean-up by Ivica Ico Bukvic
+;
+#X text 18 176 HELP_PATCH_AUTHORS András Murányi and Ivica Ico Bukvic
+;
+#X text 18 56 DESCRIPTION Array preset saving abstraction using preset_node
+;
+#X restore 539 587 pd META;
 #X obj 39 370 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
 #X obj 117 334 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
@@ -90,8 +93,8 @@ Dan Wilcox;
 #X text 7 1 [preset_node_array] Related Objects;
 #X obj 21 36 preset_node;
 #X obj 97 36 preset_hub  %hidden% %node% 2 13 2;
-#X restore 140 437 pd Related_objects;
-#X obj 43 437 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X restore 140 587 pd Related_objects;
+#X obj 43 587 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 120 387 1) symbol;
 #X text 212 406 - OPTIONAL scope for this preset (defaults to null
@@ -102,7 +105,18 @@ or "");
 #X text 211 387 - Array name;
 #X text 50 18 Array preset saving abstraction using preset_node;
 #X obj 337 219 preset_node_array myarray1 foo;
+#X obj 39 435 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#X text 120 456 Updating list and preset_node data after loading a
+new file currently has to be done manually by sending a bang to <arrayname>_changed
+like so:;
+#X obj 123 504 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 123 524 s myarray1_changed;
+#X text 120 546 The bang can be therefore linked to the operations
+that open a new file (typically [openpanel] or some other object;
 #X connect 2 0 1 0;
 #X connect 3 0 1 0;
 #X connect 4 0 3 0;
 #X connect 5 0 2 0;
+#X connect 25 0 26 0;
