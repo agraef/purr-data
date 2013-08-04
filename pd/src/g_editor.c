@@ -3406,7 +3406,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 			return(return_val);
 		// end of FIRST OPTION
 		}
-		// SECOND OPTION: if more than two objects are selected and the one that is originating
+		// SECOND OPTION: if two or more objects are selected and the one that is originating
 		// is not one of the selected, connect originating to all selected objects' the outlets
 		// specified by the first connection
 		else if (x->gl_editor->e_selection->sel_next && !glist_isselected(x, y1) && glist_isselected(x, y2))
@@ -3464,10 +3464,10 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 		// end of SECOND OPTION
 		}
 
-		// THIRD OPTION: if more than two objects are selected and the one that is receiving connection
+		// THIRD OPTION: if two or more objects are selected and the one that is receiving connection
 		// is one of the selected, and the target object is selected, connect nth outlet (as specified by
 		// the first connection) from all selected objects into the inlet of the unselected one
-		else if (x->gl_editor->e_selection->sel_next->sel_next && glist_isselected(x, y1) && !glist_isselected(x, y2))
+		else if (x->gl_editor->e_selection->sel_next && glist_isselected(x, y1) && !glist_isselected(x, y2))
 		{
 			//fprintf(stderr,"third option\n");
 		    ob1 = pd_checkobject(&y1->g_pd);
