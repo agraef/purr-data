@@ -86,7 +86,7 @@ if [ $dev -eq 1 ]
 then
 	echo "Pd dev package..."
 	cd doc/
-	svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
+	#svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
 	cp -f ../l2ork_addons/doc/Makefile .
 	cd ..
 	cd externals/miXed
@@ -157,7 +157,7 @@ then
 
 	# update docs
 	cd doc/
-	svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
+	#svn checkout https://pure-data.svn.sourceforge.net/svnroot/pure-data/trunk/doc .
 	cp -f ../l2ork_addons/doc/Makefile .
 	cd ..
 
