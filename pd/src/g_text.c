@@ -41,6 +41,7 @@ extern void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf, const char *
 extern void *canvas_undo_set_create(t_canvas *x);
 extern void canvas_undo_create(t_canvas *x, void *z, int action);
 extern int we_are_undoing;
+extern void glob_preset_node_list_seek_hub(void);
 
 /* ----------------- the "text" object.  ------------------ */
 
@@ -2044,6 +2045,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 		        if (newest && pd_class(newest) == canvas_class)
 		            canvas_loadbang((t_canvas *)newest);
 		        canvas_restoreconnections(glist_getcanvas(glist));
+				glob_preset_node_list_seek_hub();
 				//canvas_apply_restore_original_position(glist_getcanvas(glist), pos);
 			}
         }
