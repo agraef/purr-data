@@ -296,7 +296,7 @@ static void curve_list(t_curve *x, t_symbol *s, int ac, t_atom *av)
 	    segp->s_delta = av[1].a_w.w_float;
 	else
 	    segp->s_delta = 0;
-	curve_cc(x, segp, 0.);
+	curve_cc(x, segp, x->x_ccinput);
     }
     x->x_deltaset = 0;
     x->x_target = x->x_segs->s_target;
