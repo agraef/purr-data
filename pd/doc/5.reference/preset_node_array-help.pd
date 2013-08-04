@@ -1,9 +1,7 @@
 #N canvas 317 67 553 610 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array myarray1 64 float 1;
-#A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
-#X coords 0 1 63 0 201 86 1 0 0;
+#X array myarray1 64 float 0;
+#X coords 0 1 63 0 202 89 1 0 0;
 #X restore 63 219 graph;
 #X obj 63 171 preset_hub foo %hidden% %node% 2 1 0 %preset% 1 1 1 1
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
@@ -73,12 +71,11 @@
 #N canvas 102 436 482 235 META 0;
 #X text 18 16 KEYWORDS control storage;
 #X text 18 36 LICENSE;
-#X text 18 106 OUTLET_0 anything;
 #X text 18 86 INLET_0 clear purge recall reset store;
-#X text 18 126 AUTHOR András Murányi 2013 based on rc-patches by
+#X text 18 107 AUTHOR András Murányi 2013 based on rc-patches by
 Dan Wilcox. Additional improvements/fixes/clean-up by Ivica Ico Bukvic
 ;
-#X text 18 176 HELP_PATCH_AUTHORS András Murányi and Ivica Ico Bukvic
+#X text 18 157 HELP_PATCH_AUTHORS András Murányi and Ivica Ico Bukvic
 ;
 #X text 18 56 DESCRIPTION Array preset saving abstraction using preset_node
 ;
