@@ -27,6 +27,7 @@ extern t_pd *newest;
     list split - first n elements to first outlet, rest to second outlet 
     list trim - trim off "list" selector
     list length - output number of items in list
+    list cat - build a list by accumulating elements
 
 Need to think more about:
     list foreach - spit out elements of a list one by one (also in reverse?)
@@ -34,7 +35,6 @@ Need to think more about:
     list reverse - permute elements of a list back to front
     list pack - synonym for 'pack'
     list unpack - synonym for 'unpack'
-    list cat - build a list by accumulating elements
 
 Probably don't need:
     list first - output first n elements.
@@ -247,6 +247,124 @@ static void list_append_setup(void)
     class_sethelpsymbol(list_append_class, &s_list);
 }
 
+/* ------------- list cat --------------------- */
+
+t_class *list_cat_class;
+t_class *list_cat_proxy_class;
+
+typedef struct _list_cat_proxy
+{
+    t_pd l_pd;
+    void *parent;
+} t_list_cat_proxy;
+
+typedef struct _list_cat
+{
+    t_object x_obj;
+    t_alist x_alist;
+	t_list_cat_proxy x_pxy;
+} t_list_cat;
+
+static void list_cat_clear(t_list_cat *x);
+
+static void list_cat_proxy_init(t_list_cat_proxy *x, t_list_cat *p)
+{
+    x->l_pd = list_cat_proxy_class;
+    x->parent = (void *)p;
+}
+
+static void list_cat_proxy_clear(t_list_cat_proxy *x)
+{
+    t_list_cat *p = (t_list_cat *)x->parent;
+    list_cat_clear(p);
+}
+
+static void *list_cat_new( void)
+{
+    t_list_cat *x = (t_list_cat *)pd_new(list_cat_class);
+    alist_init(&x->x_alist);
+    outlet_new(&x->x_obj, &s_list);
+    list_cat_proxy_init(&x->x_pxy, x);
+    inlet_new(&x->x_obj, &x->x_pxy.l_pd, 0, 0);
+    return (x);
+}
+
+static void list_cat_list(t_list_cat *x, t_symbol *s,
+    int argc, t_atom *argv)
+{
+    t_atom *outv;
+    int n, outc = x->x_alist.l_n + argc;
+    XL_ATOMS_ALLOCA(outv, outc);
+    atoms_copy(argc, argv, outv + x->x_alist.l_n);
+    if (x->x_alist.l_npointer)
+    {
+        t_alist y;
+        alist_clone(&x->x_alist, &y);
+        alist_toatoms(&y, outv);
+        outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
+        alist_clear(&y);
+    }
+    else
+    {
+        alist_toatoms(&x->x_alist, outv);
+        outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
+    }
+	alist_list(&x->x_alist, s, outc, outv);
+    XL_ATOMS_FREEA(outv, outc);
+}
+
+static void list_cat_anything(t_list_cat *x, t_symbol *s,
+    int argc, t_atom *argv)
+{
+	t_atom *outv;
+    int n, outc = x->x_alist.l_n + argc + 1;
+    XL_ATOMS_ALLOCA(outv, outc);
+    SETSYMBOL(outv + x->x_alist.l_n, s);
+    atoms_copy(argc, argv, outv + x->x_alist.l_n + 1);
+    if (x->x_alist.l_npointer)
+    {
+        t_alist y;
+        alist_clone(&x->x_alist, &y);
+        alist_toatoms(&y, outv);
+        outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
+        alist_clear(&y);
+    }
+    else
+    {
+        alist_toatoms(&x->x_alist, outv);
+        outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
+    }
+	if (x->x_alist.l_n <= 1)
+		alist_anything(&x->x_alist, s, outc, outv);
+	else
+		alist_list(&x->x_alist, s, outc, outv);
+    XL_ATOMS_FREEA(outv, outc);
+}
+
+static void list_cat_clear(t_list_cat *x)
+{
+    alist_clear(&x->x_alist);
+}
+
+static void list_cat_free(t_list_cat *x)
+{
+    alist_clear(&x->x_alist);
+}
+
+static void list_cat_setup(void)
+{
+    list_cat_class = class_new(gensym("list cat"),
+        (t_newmethod)list_cat_new, (t_method)list_cat_free,
+        sizeof(t_list_cat), 0, 0);
+    class_addlist(list_cat_class, list_cat_list);
+    class_addanything(list_cat_class, list_cat_anything);
+    class_sethelpsymbol(list_cat_class, &s_list);
+
+    list_cat_proxy_class = class_new(gensym("list cat pxy"), 0, 0,
+        sizeof(t_list_cat_proxy), 0, 0);
+	class_addmethod(list_cat_proxy_class, (t_method)list_cat_proxy_clear, gensym("clear"), 0);
+}
+
 /* ------------- list prepend --------------------- */
 
 t_class *list_prepend_class;
@@ -329,6 +447,8 @@ static void list_prepend_setup(void)
     class_addlist(list_prepend_class, list_prepend_list);
     class_addanything(list_prepend_class, list_prepend_anything);
     class_sethelpsymbol(list_prepend_class, &s_list);
+
+
 }
 
 /* ------------- list split --------------------- */
@@ -480,6 +600,8 @@ static void *list_new(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
         t_symbol *s2 = argv[0].a_w.w_symbol;
         if (s2 == gensym("append"))
             newest = list_append_new(s, argc-1, argv+1);
+        else if (s2 == gensym("cat"))
+            newest = list_cat_new();
         else if (s2 == gensym("prepend"))
             newest = list_prepend_new(s, argc-1, argv+1);
          else if (s2 == gensym("split"))
@@ -501,6 +623,7 @@ void x_list_setup(void)
 {
     alist_setup();
     list_append_setup();
+    list_cat_setup();
     list_prepend_setup();
     list_split_setup();
     list_trim_setup();
