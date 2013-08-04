@@ -1,0 +1,123 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabread4 3 12 0
+18 -204280 -1 0;
+#X obj 0 247 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 247 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS Dave Sabine \, May 2 \, 2003 Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control array;
+#X text 12 45 DESCRIPTION read numbers from a table with 4-point interpolation
+;
+#X text 12 95 OUTLET_0 float;
+#X text 12 75 INLET_0 float set;
+#X text 12 175 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 422 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 475 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 74 320 428 293 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [tabread4] Related Objects;
+#X text 21 38 Native Pd Objects;
+#X obj 24 61 tabread~;
+#X obj 98 61 tabread4;
+#X obj 173 61 tabwrite;
+#X obj 248 61 tabwrite~;
+#X obj 24 89 tabsend~;
+#X obj 100 89 tabreceive~;
+#X obj 200 89 tabplay~;
+#X obj 277 89 table;
+#X text 21 140 [array];
+#X obj 24 116 soundfiler;
+#X text 84 140 and fft objects.;
+#X obj 211 116 getsize;
+#X obj 120 116 tabosc4~;
+#X text 22 165 Externals and other object libraries;
+#X obj 22 185 pddp/helplink zexy/tabdump;
+#X obj 22 205 pddp/helplink linear_path;
+#X text 103 205 <-- which library is this in?;
+#X text 103 225 <-- which library is this in?;
+#X obj 22 225 pddp/helplink score;
+#X text 103 245 <-- which library is this in?;
+#X obj 22 245 pddp/helplink tabenv;
+#X obj 22 265 pddp/helplink arraysize;
+#X restore 102 597 pd Related_objects;
+#X obj 78 256 cnv 17 3 160 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 255 float;
+#X text 98 362 list;
+#X text 98 430 float;
+#X obj 78 431 cnv 17 3 40 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 466 3 tabread4;
+#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/tabread4 -text
+pdpedia: tabread4;
+#X floatatom 101 216 0 0 0 0 interpolation - -;
+#X floatatom 101 107 0 0 1000 0 location - -;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array 10 float 1;
+#A 0 0 0.749989 0 -0.849987 0 -0.349995 0.949986 0 -0.699989 -0.399994
+;
+#X coords 0 1 9 -1 100 40 1;
+#X restore 316 73 graph;
+#X text 168 362 - a list will be truncated to the first item.;
+#X text 98 377 set;
+#X text 168 255 - a float at the left inlet will move to the corresponding
+location in the table's array. The lowest valid number is "0" which
+represents the first element of the array. The highest valid number
+is a fraction below the actual length of the array (values out of range
+are ignored). Each fractional increment between the lower and upper
+bounds of the array will produce an interpolation of the actual array
+values at the outlet.;
+#X text 168 377 - the "set" message allows you to read from dynamic
+sources (e.g. \, "set tabread-help-array"). You can change the source
+at any time using the "set" message.;
+#X text 168 430 - outputs a floating point number representing an interpolation
+of the array value corresponding to the location described at the inlet.
+;
+#X text 11 23 read numbers from a table with 4-point interpolation
+;
+#X obj 98 543 pddp/pddplink all_about_arrays.pd -text all_about_arrays
+;
+#X obj 101 132 / 100;
+#X text 323 163 Draw values in the table below:;
+#X text 168 493 - the name of the array or table to read. The array
+or table must exist in an open Pd patch/canvas or an error message
+will appear in the console.;
+#X text 80 493 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 101 189 tabread4 \$0-array;
+#X obj 172 125 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X obj 172 145 f \$0;
+#X msg 172 166 set \$1-another_table;
+#X obj 374 182 table \$0-another_table 10;
+#X obj 182 47 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X obj 182 67 f \$0;
+#X msg 182 89 set \$1-array;
+#X obj 96 558 pddp/pddplink ../2.control.examples/15.arrays.pd;
+#X obj 96 573 pddp/pddplink ../2.control.examples/16.more.arrays.pd
+;
+#X connect 16 0 25 0;
+#X connect 25 0 30 0;
+#X connect 30 0 15 0;
+#X connect 31 0 32 0;
+#X connect 32 0 33 0;
+#X connect 33 0 30 0;
+#X connect 35 0 36 0;
+#X connect 36 0 37 0;
+#X connect 37 0 30 0;

@@ -1,0 +1,56 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabreceive~ 3 12
+0 18 -204280 -1 0;
+#X obj 0 450 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 255 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION read a block of a signal from an array continuously
+;
+#X text 12 75 INLET_0;
+#X text 12 95 OUTLET_0 signal;
+#X text 12 175 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS signal array block_oriented;
+#X restore 500 597 pd META;
+#X obj 0 487 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 565 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 74 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 103 43 fft~;
+#X obj 23 43 tabsend~;
+#X text 8 2 [tabreceive~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 459 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 496 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 456 3 tabreceive~;
+#X obj 425 20 pddp/pddplink http://wiki.puredata.info/en/tabreceive~
+-text pdpedia: tabreceive~;
+#X text 11 23 read a block of a signal from an array continuously;
+#X obj 95 226 tabreceive~;
+#X text 90 291 By default a block is 64 samples \; this can be reset
+using the block~ object.;
+#X text 203 226 - read a block of a signal from an array continuously
+;
+#X text 168 542 - the name of an array to read from.;
+#X text 98 495 signal;
+#X text 98 458 unknown;
+#X text 80 542 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X obj 98 570 pddp/pddplink all_about_arrays.pd;

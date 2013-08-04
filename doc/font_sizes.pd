@@ -1,0 +1,241 @@
+#N canvas 26 165 1002 607 10;
+#X obj 351 386 cnv 15 69 16 empty empty 69x16 2 12 0 9 -128992 -66577
+0;
+#X obj 351 355 cnv 15 78 20 empty empty 78x20 2 12 0 9 -128992 -66577
+0;
+#X obj 695 387 cnv 15 70 17 empty empty 70x17 2 12 0 9 -128992 -66577
+0;
+#X text 161 389 Mac OS X;
+#X text 160 357 Windows;
+#X text 161 417 GNU/Linux;
+#X obj 775 387 cnv 15 70 17 empty empty 70x17 2 12 0 9 -128992 -66577
+0;
+#X obj 865 387 cnv 15 60 15 empty empty 60x15 2 12 0 9 -128992 -66577
+0;
+#X obj 520 173 cnv 15 100 60 empty empty courier10 20 12 0 8 -233017
+-66577 0;
+#X msg 539 177 courier10;
+#X obj 650 103 cnv 15 100 60 empty empty courier10 20 12 0 9 -233017
+-66577 0;
+#X msg 670 105 courier10;
+#X text 651 124 Windows/0.39.2-extended-test7;
+#X obj 695 357 cnv 15 60 17 empty empty 60x17 2 12 0 9 -128992 -66577
+0;
+#X obj 775 357 cnv 15 60 17 empty empty 60x17 2 12 0 9 -128992 -66577
+0;
+#X obj 351 416 cnv 15 87 19 empty empty 87x19 2 12 0 9 -128992 -66577
+0;
+#X text 17 314 these represent the size of this message box:;
+#X msg 346 313 courier10;
+#X text 15 1 the fonts line up on these platforms:;
+#X obj 139 35 cnv 15 100 60 empty empty courier10 20 12 0 9 -233017
+-66577 0;
+#X msg 157 41 courier10;
+#X text 350 335 0.39.2-extended-test7;
+#X text 697 335 0.39-2;
+#X text 777 334 0.40-2;
+#X text 857 334 devel 0.39-1test1;
+#X obj 501 386 cnv 15 69 16 empty empty 69x16 2 12 0 9 -128992 -66577
+0;
+#X text 500 335 0.38.4-extended;
+#X obj 612 387 cnv 15 70 17 empty empty 70x17 2 12 0 9 -128992 -66577
+0;
+#X text 614 335 0.38-4;
+#X text 18 444 these represent the size of this comment:;
+#X obj 140 240 cnv 15 100 60 empty empty courier10 20 12 0 10 -233017
+-66577 0;
+#X msg 158 243 courier10;
+#X obj 232 500 cnv 7 52 7 empty empty 52x7 2 15 0 11 -128992 -66577
+0;
+#X text 163 499 Mac OS X;
+#X text 162 467 Windows;
+#X text 163 527 GNU/Linux;
+#X obj 784 500 cnv 7 63 8 empty empty 63x8 2 15 0 11 -128992 -66577
+0;
+#X obj 506 500 cnv 7 62 7 empty empty 62x7 2 15 0 11 -128992 -66577
+0;
+#X obj 20 170 cnv 15 100 60 empty empty courier10 20 12 0 12 -233017
+-66577 0;
+#X msg 39 174 courier10;
+#X text 47 212 12 pt;
+#X text 176 284 10pt;
+#X text 686 140 9 pt;
+#X obj 20 35 cnv 15 100 60 empty empty courier10 20 12 0 12 -233017
+-66577 0;
+#X msg 39 39 courier10;
+#X text 47 77 12 pt;
+#X text 40 64 0.38-4;
+#X text 40 199 0.40-2;
+#X text 139 64 devel 0.39-1test1;
+#X text 32 16 ---------- Mac OS X ----------;
+#X obj 614 500 cnv 7 63 8 empty empty 63x8 2 15 0 11 -128992 -66577
+0;
+#X text 435 442 ----------------------------------------------------------
+;
+#X text 445 312 ----------------------------------------------------------
+;
+#X obj 699 500 cnv 7 63 8 empty empty 63x8 2 15 0 11 -128992 -66577
+0;
+#X obj 21 102 cnv 15 100 60 empty empty courier10 20 12 0 12 -233017
+-66577 0;
+#X msg 40 106 courier10;
+#X text 48 144 12 pt;
+#X text 41 131 0.39-2;
+#X text 141 78 9 pt (closest);
+#X obj 870 500 cnv 6 53 6 empty empty 53x6 2 15 0 11 -128992 -66577
+0;
+#X obj 520 103 cnv 15 100 60 empty empty courier10 20 12 0 8 -233017
+-66577 0;
+#X msg 539 107 courier10;
+#X text 548 124 0.39-2;
+#X text 542 16 ---------- Windows ----------;
+#X text 528 140 8 pt (closest);
+#X text 549 197 0.40-2;
+#X obj 699 470 cnv 5 51 5 empty empty 51x5 2 15 0 11 -128992 -66577
+0;
+#X text 526 213 8 pt (closest);
+#X obj 784 470 cnv 5 51 5 empty empty 51x5 2 15 0 11 -128992 -66577
+0;
+#X text 296 443 courier10;
+#X obj 269 102 cnv 15 100 60 empty empty courier10 20 12 0 8 -233017
+-66577 0;
+#X msg 288 106 courier10;
+#X text 297 123 0.39-2;
+#X text 272 16 ---------- GNU/Linux ----------;
+#X obj 381 242 cnv 15 100 60 empty empty courier10 20 12 0 8 -233017
+-66577 0;
+#X msg 399 246 courier10;
+#X text 382 263 0.39.2-extended-RC1;
+#X text 417 279 8 pt;
+#X text 307 139 8 pt;
+#X obj 695 414 cnv 15 69 17 empty empty 69x17 2 12 0 9 -128992 -66577
+0;
+#X obj 700 530 cnv 7 61 8 empty empty 61x8 2 15 0 11 -128992 -66577
+0;
+#X obj 233 416 cnv 15 62 17 empty empty 62x17 2 12 0 9 -128992 -66577
+0;
+#X obj 380 103 cnv 15 100 60 empty empty courier8 20 12 0 8 -233017
+-66577 0;
+#X msg 399 106 courier10;
+#X text 416 140 8 pt;
+#X text 381 124 0.39.2-extended-test7;
+#X obj 355 529 cnv 7 80 10 empty empty 80x10 2 15 0 11 -128992 -66577
+0;
+#X obj 269 170 cnv 15 100 60 empty empty courier10 20 12 0 10 -233017
+-66577 0;
+#X msg 290 175 courier10;
+#X text 298 194 0.40-2;
+#X text 275 210 10 pt (closest);
+#X obj 785 530 cnv 7 61 8 empty empty 61x8 2 15 0 11 -128992 -66577
+0;
+#N canvas 0 22 466 290 instructions 0;
+#X text 18 45 If the sizing was all working nicely \, the fonts would
+line up exactly on the top section when both are set to 10 point since
+they are the same font. That is what we are trying to achieve. But
+that doesn't happen very much. So here are the three tests \, from
+the top to bottom: - top: adjust the font size in the canvas until
+it matches the message box. Move the message box over the canvas font
+so it lines up it exactly. Mark down the font size in the canvas. If
+you can't get an exact match \, write (closest) - middle: copy and
+paste one of the canvases with the dimensions in it (e.g. 69x16). Take
+this canvas and make it fit exactly over the [courier10( message box.
+then put it in the right place in the grid. - bottom: copy and paste
+one of the canvases with the dimensions in it (e.g. 53x6). Take this
+canvas and make it fit exactly over the comment "courier1)". then put
+it in the correct place in the grid.;
+#X obj 364 7 import cyclone;
+#X restore 849 28 pd instructions;
+#X obj 782 150 comment 173 10 helvetica ? 0 0 0 0 adjust the font size
+in the canvas until it matches the message box. Move the message box
+over the canvas font so it lines up it exactly. Mark down the font
+size in the canvas. If you can't get an exact match \, write (closest)
+;
+#X obj 13 340 comment 132 10 helvetica ? 0 0 0 0 copy and paste one
+of the canvases with the dimensions in it (e.g. 69x16). Take this canvas
+and make it fit exactly over the [courier10( message box. then put
+it in the right place in the grid.;
+#X obj 13 480 comment 132 10 helvetica ? 0 0 0 0 copy and paste one
+of the canvases with the dimensions in it (e.g. 53x6). Take this canvas
+and make it fit exactly over the comment "courier10". then put it in
+the correct place in the grid.;
+#X obj 354 499 cnv 7 63 8 empty empty 63x8 2 15 0 11 -128992 -66577
+0;
+#X obj 140 170 cnv 15 100 60 empty empty courier10 20 12 0 12 -233017
+-66577 0;
+#X msg 159 174 courier10;
+#X text 167 212 12 pt;
+#X text 140 196 0.39.2-ext-test7;
+#N canvas 285 122 610 587 get-fontsize 0;
+#X obj 45 79 cnv 10 68 16 empty \$0-cnv 68x16 2 30 0 11 -260818 -128992
+0;
+#X obj 146 165 pack 0 0;
+#X floatatom 146 80 5 0 0 0 - - -;
+#X obj 176 139 t b a;
+#X floatatom 176 119 5 0 0 0 - - -;
+#X obj 146 235 s \$0-cnv;
+#X msg 45 79 courier10;
+#X msg 146 207 vis_size \$1 \$2 \, label \$1x$2;
+#X text 144 261 setting label this way only works with pd >= 0-40;
+#X obj 50 319 cnv 10 55 8 empty \$0-cnv2 55x8 2 30 0 11 -260818 -128992
+0;
+#X obj 152 387 pack 0 0;
+#X floatatom 152 322 5 0 0 0 - - -;
+#X obj 182 361 t b a;
+#X floatatom 182 341 5 0 0 0 - - -;
+#X msg 152 449 vis_size \$1 \$2 \, label \$1x$2;
+#X text 150 503 setting label this way only works with pd >= 0-40;
+#X obj 152 477 s \$0-cnv2;
+#X text 48 316 courier10;
+#X obj 148 45 hsl 128 15 40 80 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 145 61 int;
+#X obj 188 85 hsl 128 15 5 20 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 185 101 int;
+#X obj 154 285 hsl 128 15 40 80 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 151 301 int;
+#X obj 194 305 hsl 128 15 5 20 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 191 321 int;
+#X connect 1 0 7 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 3 1 1 1;
+#X connect 4 0 3 0;
+#X connect 7 0 5 0;
+#X connect 10 0 14 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 12 1 10 1;
+#X connect 13 0 12 0;
+#X connect 14 0 16 0;
+#X connect 18 0 19 0;
+#X connect 19 0 2 0;
+#X connect 20 0 21 0;
+#X connect 21 0 4 0;
+#X connect 22 0 23 0;
+#X connect 23 0 11 0;
+#X connect 24 0 25 0;
+#X connect 25 0 13 0;
+#X restore 852 60 pd get-fontsize;
+#X obj 520 240 cnv 15 100 60 empty empty courier10 20 12 0 10 -233017
+-66577 0;
+#X msg 538 244 courier10;
+#X text 556 284 10pt;
+#X text 520 265 0.39-2-extended-rc2;
+#X obj 233 359 cnv 15 62 17 empty empty 62x17 2 12 0 9 -128992 -66577
+0;
+#X obj 232 470 cnv 7 52 7 empty empty 52x7 2 15 0 11 -128992 -66577
+0;
+#X obj 233 389 cnv 15 62 17 empty empty 62x17 2 12 0 9 -128992 -66577
+0;
+#X obj 270 240 cnv 15 100 60 empty empty courier10 20 12 0 10 -233017
+-66577 0;
+#X msg 288 244 courier10;
+#X text 306 284 10pt;
+#X text 270 265 0.39-2-extended-rc2;
+#X text 140 265 0.39-2-extended-rc2;
+#X obj 232 530 cnv 7 52 7 empty empty 52x7 2 15 0 11 -128992 -66577
+0;
+#X text 221 334 0.39.2-extended-rc2;

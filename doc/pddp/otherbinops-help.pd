@@ -1,0 +1,521 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (binops2-3) 3 12
+0 18 -204280 -1 0;
+#X obj 0 178 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 46 242 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS This document was updated for Pd
+version 0.35 test 29 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION relational and logical operators;
+#X text 12 5 NAME > >= == != <= < mod div & | << >> && || %;
+#X text 12 145 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 301 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 381 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 69 435 428 156 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 (binops2-3) Related Objects;
+#X text 138 57 - binary arithmetic operators;
+#X obj 19 57 pddp/pddplink operators-help.pd;
+#X obj 19 77 pddp/pddplink math-help.pd;
+#X text 138 77 - higher math in Pd;
+#X text 19 37 Links to other control operators;
+#X text 19 107 Links to signal operators;
+#X obj 19 127 pddp/pddplink sigbinops-help.pd;
+#X restore 102 598 pd Related_objects;
+#X obj 79 187 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 309 float;
+#X obj 79 310 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 273 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 272 float;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bag -text
+pdpedia: bag;
+#X text 11 23 relational and logical operators;
+#X obj 127 4 >;
+#X obj 154 4 >=;
+#X obj 182 4 ==;
+#X obj 236 4 <=;
+#X obj 264 4 <;
+#X obj 209 4 !=;
+#X obj 290 4 mod;
+#X obj 317 4 div;
+#X obj 366 4 &;
+#X obj 394 4 |;
+#X obj 474 4 &&;
+#X obj 501 4 ||;
+#X obj 421 4 <<;
+#X obj 448 4 >>;
+#X obj 527 4 %;
+#X text 341 4 and;
+#X floatatom 254 51 5 0 0 0 - - -;
+#X floatatom 296 51 5 0 0 0 - - -;
+#X obj 254 88 >;
+#X floatatom 254 125 5 0 0 0 - - -;
+#X msg 219 51 bang;
+#X text 98 186 bang;
+#X text 168 186 - a bang outputs the last value computed by the object.
+;
+#X text 98 206 list;
+#X text 168 206 - a pair of floats is distributed to the two inlets.
+Lists with more than two elements will be truncated.;
+#X text 98 236 float;
+#X text 168 236 - a float will be stored at the left inlet and used
+to evaluate and output a value.;
+#X text 167 272 - a float to the right inlet will be stored.;
+#X text 168 309 - all relational and logical operators output a float
+value.;
+#X text 80 358 1) float;
+#X text 167 358 - (optional) initial value for the right inlet.;
+#X text 142 154 All these objects share similar behavior.;
+#X msg 183 51 2 1;
+#N canvas 49 53 428 611 understanding_MOD_and_DIV 0;
+#X text 24 35 [mod] and [div] are helpful objects to determine whether
+or not a fraction produces a remainder \, or to determine the value
+of the remainder.;
+#X floatatom 28 195 0 0 0 0 - - -;
+#X floatatom 28 237 0 0 0 0 - - -;
+#X floatatom 140 197 0 0 0 0 - - -;
+#X text 60 196 divided by;
+#X text 175 198 has a remainder of;
+#X floatatom 302 198 0 0 0 0 - - -;
+#X obj 28 216 mod;
+#X text 25 108 [mod] takes a number in its left inlet and will divide
+that number by either the creation argument or the number given at
+its left inlet and will produce the value of the remainder at its outlet.
+If no creation argument is given \, then the default value is 1;
+#X obj 80 178 loadbang;
+#X msg 140 178 1;
+#X text 25 260 [div] takes a number in its left inlet and will divide
+that number by either the creation argument or the number given at
+its left inlet and will produce the result without a remainder. If
+no creation argument is given \, then the default value is 1;
+#X floatatom 28 341 0 0 0 0 - - -;
+#X floatatom 28 383 0 0 0 0 - - -;
+#X floatatom 140 343 0 0 0 0 - - -;
+#X text 60 342 divided by;
+#X floatatom 256 344 0 0 0 0 - - -;
+#X obj 80 324 loadbang;
+#X msg 140 324 1;
+#X obj 28 362 div;
+#X text 176 343 is equal to;
+#X text 294 343 with no remainder.;
+#X obj 257 371 /;
+#X floatatom 257 391 0 0 0 0 - - -;
+#X text 227 389 or;
+#X text 297 392 with a remainder.;
+#X text 25 413 In the following example \, I've built a metronome which
+counts bar numbers and beat numbers: default time signature is 4/4
+(Common Time).;
+#X obj 28 474 metro 500;
+#X obj 28 455 tgl 15 0 empty empty Start-Stop 20 8 0 8 -262144 -1 -1
+0 1;
+#X obj 53 495 + 1;
+#X floatatom 28 515 0 0 0 0 - - -;
+#X text 57 513 Total Beat Count;
+#X obj 28 539 div 4;
+#X obj 139 540 mod 4;
+#X floatatom 224 581 0 0 0 0 - - -;
+#X floatatom 113 580 0 0 0 0 - - -;
+#X obj 28 495 f 1;
+#X msg 112 453 1;
+#X obj 28 559 + 1;
+#X obj 139 559 + 1;
+#X text 136 453 Reset;
+#X text 39 579 Bar number;
+#X text 152 581 Beat Count;
+#X floatatom 344 491 0 0 0 0 - - -;
+#X text 181 491 How many beats per bar?;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) [mod] and [div];
+#X text 25 76 For example \, 3 / 3 = 1 with a remainder of zero (i.e.
+no remainder) \, while \, 4 / 3 = 1 with a remainder of one.;
+#X connect 1 0 7 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 1;
+#X connect 7 0 2 0;
+#X connect 9 0 10 0;
+#X connect 10 0 3 0;
+#X connect 12 0 19 0;
+#X connect 12 0 22 0;
+#X connect 13 0 16 0;
+#X connect 14 0 19 1;
+#X connect 14 0 22 1;
+#X connect 17 0 18 0;
+#X connect 18 0 14 0;
+#X connect 19 0 13 0;
+#X connect 22 0 23 0;
+#X connect 27 0 36 0;
+#X connect 28 0 27 0;
+#X connect 29 0 36 1;
+#X connect 30 0 32 0;
+#X connect 30 0 33 0;
+#X connect 32 0 38 0;
+#X connect 33 0 39 0;
+#X connect 36 0 29 0;
+#X connect 36 0 30 0;
+#X connect 37 0 36 1;
+#X connect 38 0 35 0;
+#X connect 39 0 34 0;
+#X connect 43 0 33 1;
+#X connect 43 0 32 1;
+#X restore 101 430 pd understanding_MOD_and_DIV;
+#N canvas 61 337 428 254 understanding_%_modulus 0;
+#X floatatom 21 184 0 0 0 0 - - -;
+#X text 18 36 - this object has nothing to do with percentage!;
+#X text 18 56 - a modulus is a number by which two given numbers can
+be divided and produce the same remainder.;
+#X text 18 86 - in the example below: 9 / 2 = 4.5 \, and 7 / 2 = 3.5.
+Hence if 7 and 9 are divided by 2 \, then the remainder of both equations
+is .5. Therefore \, the modulus of 7 and 9 is "2".;
+#X msg 21 135 9;
+#X obj 21 163 % 7;
+#X floatatom 55 135 5 0 0 0 - - -;
+#X text 18 214 Note that the modulus operator is not a "bitwise" operator
+\, but a math function.;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) Modulus [%];
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X restore 281 562 pd understanding_%_modulus;
+#N canvas 87 181 428 280 understanding_&_AND 0;
+#X obj 174 221 &;
+#X floatatom 228 187 5 0 0 0 - - -;
+#X floatatom 270 188 5 0 0 0 - - -;
+#X msg 174 164 13;
+#X msg 203 165 9;
+#X text 26 119 13 = "1101";
+#X text 32 131 9 = "1001";
+#X text 19 144 Hence:"1001";
+#X obj 174 124 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 174 142 t b b;
+#X floatatom 174 243 0 0 0 0 - - -;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 18 35 [&] -- This is the bitwise AND operator which returns
+a "1" for each bit position where the corresponding bits of both its
+operands are "1".;
+#X text 19 77 When comparing the binary codes for 13 and 9 (below)
+\, we can see that the first and fourth digits of both codes are "1".
+Hence the result will be "1001" -- in other words "9".;
+#X text 7 1 (binops2-3) The [&] Object;
+#X connect 0 0 10 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 0 1;
+#X connect 8 0 9 0;
+#X connect 9 0 3 0;
+#X connect 9 1 4 0;
+#X restore 281 430 pd understanding_&_AND;
+#N canvas 92 219 428 293 understanding_|_OR 0;
+#X floatatom 137 261 0 0 0 0 - - -;
+#X floatatom 191 205 5 0 0 0 - - -;
+#X floatatom 233 206 5 0 0 0 - - -;
+#X msg 137 177 13;
+#X msg 166 178 9;
+#X text 26 131 13 = "1101";
+#X text 32 143 9 = "1001";
+#X obj 137 137 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 137 155 t b b;
+#X text 19 156 Hence:"1101";
+#X obj 137 239 |;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) Related Objects;
+#X text 17 35 [|] -- This is the bitwise OR operator which returns
+a "1" for each bit position where one OR both of the corresponding
+bits of both its operands is a "1".;
+#X text 18 77 When comparing the binary codes for 13 and 9 (below)
+\, we can see that the first and fourth digits of both codes are both
+1 and the second position of 13 is a one. Hence the result will be
+"1101" -- in other words "13".;
+#X connect 1 0 10 0;
+#X connect 2 0 10 1;
+#X connect 3 0 10 0;
+#X connect 4 0 10 1;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 8 1 4 0;
+#X connect 10 0 0 0;
+#X restore 281 452 pd understanding_|_OR;
+#N canvas 94 256 428 294 understanding_<<_LEFT-SHIFT 0;
+#X obj 21 149 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 21 167 t b b;
+#X msg 21 188 13;
+#X obj 21 229 <<;
+#X floatatom 21 251 5 0 0 0 - - -;
+#X msg 49 188 2;
+#X floatatom 87 200 5 0 0 0 - - -;
+#X floatatom 135 200 5 0 0 0 - - -;
+#X text 18 35 [<<] -- This is the left shift operator and it works
+by shifting the digits of the binary representation of the first operand
+(left inlet) to the left by the number of places specified by the second
+operand (right inlet). The spaces created to the right are filled by
+zeros \, and any digits falling off the left are discarded. The following
+code returns 52 as the binary of 13 ("1101") is shifted two places
+to the left giving "110100":;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) Left-shift;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 5 0 3 1;
+#X connect 6 0 3 0;
+#X connect 7 0 3 1;
+#X restore 281 474 pd understanding_<<_LEFT-SHIFT;
+#N canvas 82 206 428 348 understanding_>>_RIGHT-SHIFT 0;
+#X obj 21 162 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 21 180 t b b;
+#X floatatom 21 264 5 0 0 0 - - -;
+#X floatatom 87 213 5 0 0 0 - - -;
+#X floatatom 135 213 5 0 0 0 - - -;
+#X msg 21 201 13;
+#X obj 21 242 >>;
+#X msg 49 201 2;
+#X text 18 35 [>>] -- This is the sign-propagating right shift operator
+which shifts the digits of the binary representation of the first operand
+(left inlet) to the right by the number of places specified by the
+second operand (right inlet) \, discarding any shifted off to the right.
+The copies of the leftmost bit are added on from the left \, thereby
+preserving the sign of the number. This next examples returns 3 ("11")
+as the two right-most bits of 13 ("1101") are shifted off to the right
+and discarded.;
+#X text 13 291 Note that this object preserves negative values for
+negative operands. ("sign-propagating").;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) Right-shift;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 1 1 7 0;
+#X connect 3 0 6 0;
+#X connect 4 0 6 1;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 7 0 6 1;
+#X restore 281 496 pd understanding_>>_RIGHT-SHIFT;
+#N canvas 94 222 428 418 understanding_&&_LOGICAL-AND 0;
+#X msg 52 259 5;
+#X obj 21 309 &&;
+#X floatatom 21 329 5 0 0 0 - - -;
+#X floatatom 190 267 5 0 0 0 - - -;
+#X text 18 36 [&&] - This is the logical AND operator \, which returns
+a Boolean true (a one) if both operands are true. Logically it follows
+that if the first operand is false \, then the whole expression is
+false \, and this is how the objects works: It first evaluates the
+left hand operand (left inlet) and if this returns false (zero) then
+\, without going any further \, it returns a false (a zero). Otherwise
+it returns the value of the second operand (right inlet).;
+#X floatatom 233 267 5 0 0 0 - - -;
+#X text 18 354 Note that this is not a bitwise operator. It compares
+floats.;
+#X obj 21 217 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 21 235 t b b;
+#X msg 21 259 17;
+#X text 18 145 In other words \, IF the left inlet is zero \, THEN
+output zero. ELSEIF the left inlet is non-zero AND the right inlet
+is zero \, then output zero. ELSEIF the left inlet is non-zero AND
+the right inlet is non-zero \, THEN output non-zero!;
+#X obj 87 217 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 87 235 t b b;
+#X msg 87 259 17;
+#X msg 118 259 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) Logical-and;
+#X connect 0 0 1 1;
+#X connect 1 0 2 0;
+#X connect 3 0 1 0;
+#X connect 5 0 1 1;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 1 0 0;
+#X connect 9 0 1 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 13 0 1 0;
+#X connect 14 0 1 1;
+#X restore 281 518 pd understanding_&&_LOGICAL-AND;
+#N canvas 105 196 428 400 understanding_||_LOGICAL-OR 0;
+#X msg 52 250 5;
+#X floatatom 21 320 5 0 0 0 - - -;
+#X floatatom 192 251 5 0 0 0 - - -;
+#X floatatom 235 251 5 0 0 0 - - -;
+#X text 18 345 Note that this is not a bitwise operator. It compares
+floats.;
+#X obj 21 208 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 21 226 t b b;
+#X msg 21 250 17;
+#X text 18 35 [||] -- This is the logical OR operator and it returns
+a value of true (non-zero) if one or both of the operands is true.
+It works by first evaluating the left-hand operand (left inlet) and
+\, if this is true \, diregarding the right-hand operand (right inlet)
+and returning a non-zero. If \, however \, the left-hand operand (left
+inlet) is false \, then it returns the value of the right-hand operand
+(right inlet).;
+#X text 18 146 In other words \, IF the left inlet is non-zero \, THEN
+output non-zero. ELSEIF the left inlet is zero AND the right inlet
+is zero \, then output zero. ELSEIF the left inlet is zero AND the
+right inlet is non-zero \, THEN output non-zero!;
+#X obj 21 300 ||;
+#X obj 92 207 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 92 225 t b b;
+#X msg 92 249 0;
+#X msg 123 249 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 (binops2-3) Logical-or;
+#X connect 0 0 10 1;
+#X connect 2 0 10 0;
+#X connect 3 0 10 1;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 1 0 0;
+#X connect 7 0 10 0;
+#X connect 10 0 1 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 12 1 14 0;
+#X connect 13 0 10 0;
+#X connect 14 0 10 1;
+#X restore 281 540 pd understanding_||_LOGICAL-OR;
+#X text 98 385 Relational Operators;
+#X text 278 385 Logical Operators;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#N canvas 76 63 428 577 Relational_Operators 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X floatatom 227 354 0 0 0 0 - - -;
+#X floatatom 277 433 0 0 0 0 - - -;
+#X obj 227 333 >;
+#X obj 277 412 ==;
+#X obj 64 130 == 42;
+#X floatatom 64 109 5 0 0 0 - - -;
+#X floatatom 38 156 2 0 0 0 - - -;
+#X obj 63 155 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 34 105 42;
+#X text 19 87 For example: IF 42 is equal to x \, then "1" (True);
+#X text 83 147 Note that the object outputs 1 or 0 with every incoming
+message.;
+#X text 20 179 All of these objects operate the same way. The right
+inlet or creation argument sets the "condition" to which the incoming
+messages are compared. The left inlet accepts numbers or a "bang" --
+a number will reset the value and output a true or false (1 or 0) depending
+on whether or not the incoming value meets the necessary condition.
+A "bang" will force the object to output a true or false (1 or 0) based
+on the value that is already stored in the left inlet.;
+#X floatatom 35 280 5 0 0 0 - - -;
+#X floatatom 73 280 5 0 0 0 - - -;
+#X text 20 278 a;
+#X text 113 279 b;
+#X text 98 355 Is a greater than b?;
+#X floatatom 252 394 0 0 0 0 - - -;
+#X text 52 394 Is a greater than or equal to b?;
+#X obj 252 373 >=;
+#X text 171 433 Is a equal to b?;
+#X obj 305 450 !=;
+#X floatatom 305 470 0 0 0 0 - - -;
+#X obj 335 283 r a_b;
+#X obj 335 302 unpack f f;
+#X obj 35 334 pack f f;
+#X obj 35 354 s a_b;
+#X text 177 471 Is a NOT equal to b?;
+#X floatatom 331 508 0 0 0 0 - - -;
+#X text 220 508 Is a less than b?;
+#X obj 331 488 <;
+#X floatatom 356 547 0 0 0 0 - - -;
+#X obj 356 527 <;
+#X text 173 547 Is a less than or equal to b?;
+#X text 18 36 Most relational operators output a boolean value: true
+or false (1 or 0) depending on the relation between the input (left
+inlet) and the condition (right inlet or creation argument).;
+#X obj 73 306 t b a;
+#X text 7 1 (binops2-3) Relational Operators;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 7 0;
+#X connect 5 0 8 0;
+#X connect 6 0 5 0;
+#X connect 9 0 5 0;
+#X connect 13 0 26 0;
+#X connect 14 0 36 0;
+#X connect 20 0 18 0;
+#X connect 22 0 23 0;
+#X connect 24 0 25 0;
+#X connect 25 0 3 0;
+#X connect 25 0 20 0;
+#X connect 25 0 4 0;
+#X connect 25 0 22 0;
+#X connect 25 0 31 0;
+#X connect 25 0 33 0;
+#X connect 25 1 3 1;
+#X connect 25 1 20 1;
+#X connect 25 1 4 1;
+#X connect 25 1 22 1;
+#X connect 25 1 31 1;
+#X connect 25 1 33 1;
+#X connect 26 0 27 0;
+#X connect 31 0 29 0;
+#X connect 33 0 32 0;
+#X connect 36 0 26 0;
+#X connect 36 1 26 1;
+#X restore 101 408 pd Relational_Operators;
+#N canvas 79 189 428 247 Logical_Operators 0;
+#X obj -1 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 7 1 (binops2-3) Logical Operators-- a.k.a. "Bit Twiddling"
+;
+#X text 24 26 These objects are adopted from the mother of all object
+oriented languages: C. They are "bitwise" operators which perform logical
+and shift operations on 32-bit numbers.;
+#X text 17 194 Hence \, performing "bitwise" relational tests means
+that Pd can compare "1101" to "1001" instead of operating with the
+integers that are represented by those binary codes.;
+#X text 17 116 Well \, these objects perform "relational" tests on
+the binary forms of 32-bit numbers. For example \, the number 13 is
+represented in your computer's operating system in binary code by "1101"
+and the number 9 is "1001". Each of those binary digits is an 8-bit
+word: 8 bits * 4 digits = 32-bits!;
+#X obj -1 80 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 7 81 What does "bitwise" mean?;
+#X restore 281 408 pd Logical_Operators;
+#X connect 31 0 33 0;
+#X connect 32 0 33 1;
+#X connect 33 0 34 0;
+#X connect 35 0 33 0;
+#X connect 47 0 33 0;

@@ -1,0 +1,81 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header catch~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 423 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 243 494 344 META 0;
+#X text 12 85 LIBRARY internal;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 165 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal nonlocal;
+#X text 12 45 DESCRIPTION summing signal bus and nonlocal connection
+;
+#X text 12 65 OUTLET_0 signal;
+#X text 12 145 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 451 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 493 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 93 479 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 72 43 send~;
+#X obj 119 43 receive~;
+#X obj 181 43 inlet~;
+#X obj 231 43 outlet~;
+#X obj 22 43 throw~;
+#X text 8 2 [catch~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 460 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X floatatom 224 268 0 0 0 0 - - -;
+#X obj 73 243 sig~ 50;
+#X obj 224 243 snapshot~;
+#X obj 73 149 sig~ 25;
+#X obj 267 193 loadbang;
+#X obj 267 218 metro 200;
+#X floatatom 358 268 0 0 0 0 - - -;
+#X obj 358 243 snapshot~;
+#X msg 89 172 set signal2;
+#X msg 90 196 set signal1;
+#X text 98 459 signal;
+#X text 98 427 (none);
+#X text 11 23 summing signal bus and non-local connection;
+#X text 67 99 Any number of [throw~] objects can add into one [catch~]
+object (but two [catch~] objects cannot share the same name.);
+#X text 71 295 You can redirect [throw~] via a "set" message.;
+#X text 79 510 1) symbol atom;
+#X text 168 459 - the outgoing signal is the sum of all signals coming
+from [throw~] objects that share the same name as this [catch~].;
+#X text 168 510 - [catch~] takes one argument-- a symbol atom-- as
+its name. Other [throw~] objects may have the same name \, but there
+may be no other [catch~] objects that shares this name.;
+#X obj 474 3 catch~;
+#X obj 448 20 pddp/pddplink http://wiki.puredata.info/en/catch~ -text
+pdpedia: catch~;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 224 168 catch~ signal1;
+#X obj 358 168 catch~ signal2;
+#X obj 73 220 throw~ signal1;
+#X obj 73 268 throw~ signal1;
+#X connect 10 0 34 0;
+#X connect 11 0 9 0;
+#X connect 12 0 33 0;
+#X connect 13 0 14 0;
+#X connect 14 0 11 0;
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
+#X connect 17 0 33 0;
+#X connect 18 0 33 0;
+#X connect 31 0 11 0;
+#X connect 32 0 16 0;

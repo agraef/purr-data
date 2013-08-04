@@ -1,0 +1,26 @@
+#N canvas 735 240 543 348 10;
+#X obj 10 10 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -204280 -1 0;
+#X text 17 11 [initbang] Abstraction Example No 1;
+#X msg 17 285 obj 20 50 outlet;
+#X obj 17 228 loadbang;
+#X text 91 142 This poses a problem if you want to save the patch with
+a connection from this abstraction's outlet in the parent patch to
+the [print from_loadbang] object below it. The next time you open the
+patch \, Pd will attempt to connect those objects BEFORE the [outlet]
+gets created \, and you will get an error.;
+#X obj 17 252 trigger bang bang;
+#X obj 250 308 print initbang-help.pd;
+#X text 91 72 This abstraction uses [loadbang] below to create the
+[outlet] seen at left. The [loadbang] object sends its bang after everything
+is done loading \, that means after all objects \, connections \, etc.
+in the parent patch have been created.;
+#X msg 138 265 the error above shows that loadbang creates the outlet
+too late;
+#X text 71 50 <- dynamically created [outlet];
+#X obj 17 308 send pd-initbang-help-ex1-loadbang.pd;
+#X connect 2 0 10 0;
+#X connect 3 0 5 0;
+#X connect 5 0 2 0;
+#X connect 5 1 8 0;
+#X connect 8 0 6 0;

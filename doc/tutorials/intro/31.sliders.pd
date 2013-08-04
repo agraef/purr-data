@@ -1,0 +1,42 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty sliders 20 12 0 24 -228992 -66577
+0;
+#X obj 120 105 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X floatatom 120 247 5 0 0 0 - - -;
+#X obj 338 106 vsl 15 128 0 1 0 0 empty empty empty 0 -8 0 8 -262144
+-1 -1 0 1;
+#X floatatom 338 248 5 0 0 0 - - -;
+#X floatatom 253 423 5 0 0 0 - - -;
+#X msg 356 360 1000;
+#X msg 271 360 100;
+#X msg 227 360 60;
+#X msg 313 360 127;
+#X text 9 61 Sliders are generally useful for controlling things over
+a range of numbers \, like a color or loudness.;
+#X text 144 130 by default \,;
+#X text 144 152 they range;
+#X text 142 174 from 0 to 127;
+#X text 363 138 0 to 1 is a;
+#X text 361 160 commonly used;
+#X text 361 181 range;
+#X obj 257 400 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X msg 185 360 0;
+#X msg 140 360 -23;
+#X text 16 276 They act very similarly to number boxes \, except they
+show their value graphically rather that with numbers. One difference
+is that sliders always limit the range of numbers that can pass thru:
+;
+#X obj 234 424 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 6 0 17 0;
+#X connect 7 0 17 0;
+#X connect 8 0 17 0;
+#X connect 9 0 17 0;
+#X connect 17 0 5 0;
+#X connect 17 0 21 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;

@@ -1,0 +1,10 @@
+#N canvas 357 509 468 150 10;
+#X text 32 10 This patch is here to test the 2.nogui script;
+#X obj 35 32 osc~ 440;
+#X obj 34 82 dac~;
+#X obj 35 56 /~ 50;
+#X text 18 101 Have a look to the TCL source to understand how this
+works.;
+#X connect 1 0 3 0;
+#X connect 3 0 2 0;
+#X connect 3 0 2 1;

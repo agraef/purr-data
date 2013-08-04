@@ -1,0 +1,137 @@
+#N struct element-help-template float x float y array array1 array1-element-help-template
+;
+#N struct array1-element-help-template float y;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header element 3 12 0 18
+-204280 -1 0;
+#X obj 0 333 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 55 244 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for Pd version 0.4. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control data_structure array;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 INLET_1 pointer;
+#X text 12 105 INLET_2 pointer;
+#X text 12 45 DESCRIPTION get pointer to an element of an array;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 449 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 493 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 82 455 428 134 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 92 72 struct;
+#X obj 142 72 drawpolygon;
+#X obj 223 72 plot;
+#X obj 17 72 drawsymbol;
+#X obj 262 72 drawcurve;
+#X obj 71 37 get;
+#X obj 102 37 set;
+#X obj 131 37 getsize;
+#X obj 185 37 setsize;
+#X obj 17 37 pointer;
+#X obj 240 37 drawnumber;
+#X text 7 1 [element] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 342 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 99 343 float;
+#X text 98 398 list;
+#X text 228 255 <- subpatch to display the data structures;
+#X obj 475 3 element;
+#X obj 450 20 pddp/pddplink http://wiki.puredata.info/en/element -text
+pdpedia: element;
+#N canvas 80 372 428 228 element-help-data 0;
+#X scalar element-help-template 40 40 \; 19 \; 0 \; 11 \; 9 \; 41 \;
+14 \; 31 \; 38 \; 33 \; \;;
+#X obj 0 0 cnv 15 425 20 empty empty empty 20 12 2 14 -204280 -195568
+0;
+#X text 5 0 Window to Display Data Structure Instances;
+#X text 20 155 You can also click and drag each element vertically
+to change its value. When there is no "x" field specified (as in the
+template array1-element-help-template) you can click and drag horizontally
+to change multiple elements in one mouse swoop.;
+#X text 20 110 Each purple square above represents one element of the
+array. Using the [element] object in the parent window you can get
+the y-value of each element.;
+#X restore 77 257 pd element-help-data;
+#N canvas 73 89 428 189 element-help-template 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [element] subpatch;
+#X obj 21 76 struct element-help-template float x float y array array1
+array1-element-help-template;
+#X obj 21 158 filledpolygon 777 666 1 -10 -10 210 -10 210 65 -10 65
+;
+#X obj 21 120 plot -y y(0:41)(41:0) array1 500 1 0 15 25;
+#X text 18 37 This [struct] contains an array "array1." The elements
+of this array are defined by array1-element-help-template;
+#X restore 77 279 pd element-help-template;
+#N canvas 80 82 428 218 array1-element-help-template 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [element] subpatch;
+#X obj 21 73 struct array1-element-help-template float y;
+#X obj 21 131 drawnumber y -5 -20 0;
+#X obj 21 102 filledpolygon 509 0 1 -5 0 0 5 5 0 0 -5;
+#X text 19 37 This [struct] is used in element-help-template to define
+the elements of the array "array1.";
+#X text 20 158 When "array1" is plotted \, each element will be represented
+by a purple box and a number \, as specified here by the [filledpolygon]
+and [drawnumber] objects.;
+#X restore 77 301 pd array1-element-help-template;
+#X obj 78 421 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 420 pointer;
+#X text 169 343 - [element] takes a float to its left inlet \, which
+specifies the element of an array. Indices range from zero to the number
+of elements minus one. Indices out of range are quietly replaced by
+the nearest endpoint.;
+#X obj 78 458 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 459 pointer;
+#X text 168 459 - when [element] receives a float to its left inlet
+\, it outputs a pointer to the specified element of the array.;
+#X obj 297 107 pointer;
+#X floatatom 125 209 5 0 0 0 - - -;
+#X text 130 156 outlet is pointer to single element;
+#X text 176 207 here we just get the value of y.;
+#X msg 297 83 traverse pd-element-help-data \, next;
+#X obj 125 135 element element-help-template array1;
+#X obj 125 182 get array1-element-help-template y;
+#X obj 125 112 hradio 15 1 0 9 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 155 93 index (0-8);
+#X floatatom 81 135 5 0 0 0 - - -;
+#X text 11 23 get pointer to an element of an array;
+#X text 168 527 - field name. The field name must be an array.;
+#X text 168 398 - a list will be truncated to the first element.;
+#X text 168 512 - name of the template.;
+#X text 168 420 - the right inlet of [element] takes a pointer to a
+scalar.;
+#X text 80 512 1) symbol atom;
+#X text 80 527 2) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 98 557 pddp/pddplink all_about_arrays.pd;
+#X obj 98 572 pddp/pddplink scalar-help.pd;
+#X text 125 75 2 ... then here;
+#X text 299 63 1 Click here first...;
+#X connect 23 0 28 1;
+#X connect 27 0 23 0;
+#X connect 28 0 29 0;
+#X connect 29 0 24 0;
+#X connect 30 0 28 0;
+#X connect 30 0 32 0;

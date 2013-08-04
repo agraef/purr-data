@@ -1,0 +1,88 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header framp~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 417 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 253 507 362 META 0;
+#X text 12 155 LIBRARY internal;
+#X text 12 195 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 175 AUTHOR Miller Puckette;
+#X text 12 235 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 75 INLET_0 signal;
+#X text 12 95 INLET_1 signal;
+#X text 12 115 OUTLET_0 signal;
+#X text 12 135 OUTLET_1 signal;
+#X text 12 45 DESCRIPTION estimate frequency and amplitude of FFT components
+;
+#X text 12 215 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS signal block_oriented;
+#X restore 500 597 pd META;
+#X obj 0 478 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 543 (none);
+#N canvas 105 479 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 fft~;
+#X text 8 2 [framp~] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 426 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 486 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 451 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 479 3 framp~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/framp~ -text
+pdpedia: framp~;
+#X text 147 127 frequency;
+#X floatatom 78 142 0 0 0 0 - - -;
+#X obj 78 92 * 44100;
+#X floatatom 78 67 0 0 0 0 - - -;
+#X text 150 65 frequency;
+#X text 153 83 in bins;
+#X text 147 144 in Hz.;
+#X obj 79 193 rfft~;
+#X obj 78 117 / 64;
+#X msg 165 214 bang;
+#X obj 78 220 framp~;
+#X obj 165 269 print~ frequency;
+#X obj 180 244 print~ amplitude;
+#X obj 78 168 osc~;
+#X text 201 214 <- print analysis;
+#X text 98 425 signal;
+#X text 98 450 signal;
+#X text 98 485 signal;
+#X obj 78 511 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 510 signal;
+#X text 11 23 estimate frequency and amplitude of FFT components;
+#X text 75 309 [framp~] takes as input a rectangular-windowed FFT and
+outputs \, for each FFT channel \, the estimated amplitude and frequency
+of any component feedinf that channel. A sinusoidal component should
+appear in four components (or three in the special case of a sinusoid
+exactly tuned to a bin.) Frequency output is in bins \, i.e. \, units
+of SR/N.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X connect 15 0 27 0;
+#X connect 16 0 22 0;
+#X connect 17 0 16 0;
+#X connect 21 0 24 0;
+#X connect 21 1 24 1;
+#X connect 22 0 15 0;
+#X connect 23 0 25 0;
+#X connect 23 0 26 0;
+#X connect 24 0 25 0;
+#X connect 24 1 26 0;
+#X connect 27 0 21 0;

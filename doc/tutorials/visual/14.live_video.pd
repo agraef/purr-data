@@ -1,0 +1,47 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 8 10 cnv 15 400 40 empty empty live_video 20 12 0 24 -228992
+-66577 0;
+#X obj 465 16 gemwin_control;
+#X obj 466 60 import Gem;
+#X obj 6 76 gemhead;
+#X msg 143 139 freq 1234;
+#X msg 145 210 dimen 256 256;
+#X msg 145 230 dimen 64 64;
+#X msg 141 62 mode NTSC;
+#X msg 142 88 channel 2;
+#X obj 6 417 rectangle 4 3;
+#X msg 145 190 dimen 256 128;
+#X obj 6 393 pix_texture;
+#X text 223 83 depending on your capture-device you can switch between
+(e.g) Tuner \, COMPOSITE & S-VHS;
+#X text 211 63 defaults to PAL;
+#X text 221 141 set the frequency for the TV-Tuner;
+#X text 260 194 various dimension (might not work on your specific
+capture-device);
+#X obj 6 366 pix_video;
+#X msg 145 271 colorspace RGBA;
+#X text 263 271 could be RGBA \, YUV or Grey;
+#X msg 148 312 device 0;
+#X msg 148 342 driver 0;
+#X text 262 313 switch between capture-cards;
+#X text 252 343 switch between drivers (e.g: v4l and ieee1394);
+#X msg 150 380 enumerate;
+#X text 248 379 list all devices to the console;
+#X msg 156 422 dialog;
+#X text 222 423 configure the device via a pop-up dialog (on Windows(r))
+;
+#X connect 3 0 16 0;
+#X connect 4 0 16 0;
+#X connect 5 0 16 0;
+#X connect 6 0 16 0;
+#X connect 7 0 16 0;
+#X connect 8 0 16 0;
+#X connect 10 0 16 0;
+#X connect 11 0 9 0;
+#X connect 16 0 11 0;
+#X connect 17 0 16 0;
+#X connect 19 0 16 0;
+#X connect 20 0 16 0;
+#X connect 23 0 16 0;
+#X connect 25 0 16 0;

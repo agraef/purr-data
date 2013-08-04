@@ -1,0 +1,73 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header dbtorms 3 12 0 18
+-204280 -1 0;
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 245 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for pd version 0.40. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control conversion;
+#X text 12 45 DESCRIPTION convert dB to linear amplitude;
+#X text 12 65 INLET_0 float;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 527 cnv 3 550 3 empty \$0-pddp.cnv.argument argument 8 12
+0 13 -228856 -1 0;
+#X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 434 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 530 (none);
+#N canvas 41 419 428 170 Related_objects 0;
+#X text 19 36 Control objects for conversion:;
+#X obj 107 60 rmstodb;
+#X obj 176 60 dbtopow;
+#X obj 242 60 powtodb;
+#X obj 22 119 mtof~;
+#X obj 67 119 ftom~;
+#X obj 110 119 dbtorms~;
+#X obj 175 119 rmstodb~;
+#X obj 241 119 dbtopow~;
+#X obj 303 119 powtodb~;
+#X text 19 96 Signal objects for conversion:;
+#X obj 22 60 mtof;
+#X obj 69 60 ftom;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [dbtorms] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X floatatom 239 196 0 0 0 0 - - -;
+#X floatatom 239 140 0 0 0 0 - - -;
+#X obj 78 499 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 433 float;
+#X text 98 499 float;
+#X obj 472 3 dbtorms;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/dbtorms -text
+pdpedia: dbtorms;
+#X obj 239 169 dbtorms;
+#X text 11 23 convert dB to linear amplitude;
+#X text 168 456 - lists will be truncated \, and the first element
+will be used as input.;
+#X text 109 231 The [dbtorms] object converts from decibels to linear
+("RMS") amplitude \, so that 100 dB corresponds to an "RMS" of 1 .
+Zero dB \, which should correspond to 0.0001 in "RMS" \, is instead
+rounded down to zero.;
+#X text 98 456 list;
+#X text 168 433 - the incoming value.;
+#X obj 98 556 pddp/pddplink all_about_acoustic_conversions.pd;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 98 571 pddp/pddplink ../3.audio.examples/A02.amplitude.pd -text
+doc/3.audio.examples/A02.amplitude.pd;
+#X connect 11 0 17 0;
+#X connect 17 0 10 0;

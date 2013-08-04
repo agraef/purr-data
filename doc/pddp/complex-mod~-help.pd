@@ -1,0 +1,95 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header complex-mod~ 3 12
+0 18 -204280 -1 0;
+#X obj 0 376 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 44 250 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 DESCRIPTION complex modulator;
+#X text 12 65 INLET_0 signal;
+#X text 12 85 INLET_1 signal;
+#X text 12 105 INLET_2 float signal;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 205 RELEASE_DATE 2009;
+#X text 12 5 KEYWORDS signal abstraction;
+#X restore 500 597 pd META;
+#X obj 0 480 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 542 (none);
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 hilbert~;
+#X text 8 2 [complex_mod~] Related Objects;
+#X restore 102 598 pd Related_objects;
+#X obj 79 385 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 489 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 409 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 408 float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 453 3 complex-mod~;
+#X text 11 23 complex modulator;
+#X floatatom 78 64 0 0 0 0 - - -;
+#X obj 78 194 complex-mod~;
+#X obj 78 92 phasor~ 440;
+#X obj 78 123 cos~;
+#X obj 113 146 cos~;
+#X obj 113 122 -~ 0.25;
+#X floatatom 147 169 0 0 0 0 - - -;
+#X text 140 212 right outlet;
+#X text 142 228 gives the other;
+#X text 140 244 sideband;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-mod-output 882 float 0;
+#X coords 0 1 882 -1 300 170 1 0 0;
+#X restore 244 127 graph;
+#X text 98 384 signal;
+#X obj 79 434 cnv 17 3 35 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 433 float;
+#X obj 79 511 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 168 384 - real part of a complex valued signal.;
+#X text 167 408 - imaginary part of a complex valued signal.;
+#X text 167 433 - ???;
+#X text 167 453 - ???;
+#X text 98 453 signal;
+#X text 98 308 The complex modulator takes two signals in which it
+considers to be the real and imaginary part of a complex-valued signal.
+It then does a complex multiplication by a sinusoud to shift all frequencies
+up or down by any frequency shift in Hz.;
+#X text 98 488 signal;
+#X text 168 488 - ???;
+#X text 98 510 signal;
+#X text 168 510 - ???;
+#X obj 455 51 pddp/dsp;
+#X obj 416 20 pddp/pddplink http://wiki.puredata.info/en/complex-mod~
+-text pdpedia: complex-mod~;
+#X obj 79 269 tabwrite~ \$0-mod-output;
+#X obj 39 222 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 16 0 18 0;
+#X connect 17 0 43 0;
+#X connect 18 0 19 0;
+#X connect 18 0 21 0;
+#X connect 19 0 17 0;
+#X connect 20 0 17 1;
+#X connect 21 0 20 0;
+#X connect 22 0 17 2;
+#X connect 44 0 43 0;

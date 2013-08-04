@@ -1,0 +1,229 @@
+#N canvas 0 0 448 570 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header looping 20 10 1
+18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 20 37 Programming with Pd is a different way of thinking than
+standard procedural or object-oriented programming. Looping illustrates
+this.;
+#X text 21 102 a) a chain of several object connect together;
+#X text 21 118 b) a wire (or nonlocal connection) from the outlet of
+an object at the end of the chain that goes to the inlet of an earlier
+object in the chain.;
+#X text 21 156 c) a condition to continue the loop \, and a condition
+that stops the loop. (Otherwise this is an infinite loop!);
+#N canvas 14 48 428 513 Recursive_vs_Iterative_Loops 0;
+#X obj 1 1 cnv 15 425 20 empty empty empty 20 10 1 18 -233017 -66577
+0;
+#X text 7 1 Recursive vs. Iterative Loops;
+#X obj 102 161 f;
+#X obj 102 115 t b b;
+#X obj 129 137 0;
+#X obj 129 254 print;
+#X obj 152 161 + 1;
+#X obj 102 187 t a a;
+#X obj 102 209 moses 100;
+#X obj 102 95 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 19 36 Recursive loops are [define it] \, while iterative loops
+are [define it];
+#X text 19 68 Below is an example of a recursive loop in Pd.;
+#X obj 59 353 t b b;
+#X obj 86 375 0;
+#X obj 59 476 print;
+#X obj 59 449 moses 100;
+#X obj 59 328 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 19 288 Here are two iterative loops \, both using [until] to
+perform the same task as above.;
+#X obj 59 399 until;
+#X obj 59 425 f;
+#X obj 93 425 + 1;
+#X obj 127 399 b;
+#X obj 59 169 b;
+#X obj 102 231 t a a;
+#X msg 229 328 100;
+#X obj 229 350 t a b;
+#X obj 276 373 0;
+#X obj 229 400 f;
+#X obj 259 400 + 1;
+#X obj 229 373 until;
+#X obj 229 427 print;
+#X text 157 353 or...;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 3 1 4 0;
+#X connect 4 0 2 1;
+#X connect 6 0 2 1;
+#X connect 7 0 8 0;
+#X connect 7 1 6 0;
+#X connect 8 0 23 0;
+#X connect 9 0 3 0;
+#X connect 12 0 18 0;
+#X connect 12 1 13 0;
+#X connect 13 0 19 1;
+#X connect 15 0 14 0;
+#X connect 15 1 21 0;
+#X connect 16 0 12 0;
+#X connect 18 0 19 0;
+#X connect 19 0 15 0;
+#X connect 19 0 20 0;
+#X connect 20 0 19 1;
+#X connect 21 0 18 1;
+#X connect 22 0 2 0;
+#X connect 23 0 22 0;
+#X connect 23 1 5 0;
+#X connect 24 0 25 0;
+#X connect 25 0 29 0;
+#X connect 25 1 26 0;
+#X connect 26 0 27 1;
+#X connect 27 0 28 0;
+#X connect 27 0 30 0;
+#X connect 28 0 27 1;
+#X connect 29 0 27 0;
+#X restore 23 237 pd Recursive_vs_Iterative_Loops;
+#X text 21 82 A recursive loop in Pd consists of the following:;
+#X text 21 196 Additionally \, there are several Pd objects that can
+be used to create iterative loops.;
+#N canvas 22 133 428 498 A_more_complex_recursive_loop 0;
+#X obj 1 1 cnv 15 425 20 empty empty empty 20 10 1 18 -233017 -66577
+0;
+#X text 7 1 A more complex recursive loop;
+#X obj 91 123 +;
+#X floatatom 130 123 5 0 0 0 - - -;
+#X msg 91 94 1;
+#X obj 170 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 130 94 0;
+#X obj 91 169 t f f;
+#X text 189 255 X;
+#X text 99 256 Y;
+#X obj 61 249 t b f;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array \$0-array 100 float 1;
+#A 0 0 0.935458 0.948449 0.960016 0.970142 0.978811 0.98601 0.991728
+0.995956 0.998689 0.999923 0.999654 0.997884 0.994616 0.989854 0.983606
+0.97588 0.966689 0.956046 0.943968 0.930471 0.915578 0.899309 0.88169
+0.862747 0.842508 0.821004 0.798267 0.774331 0.749233 0.723009 0.695699
+0.667345 0.637988 0.607673 0.576446 0.544353 0.511443 0.477764 0.443368
+0.408306 0.372631 0.336397 0.299657 0.262467 0.224883 0.186962 0.148759
+0.110333 0.0717417 0.0330423 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274 0.000796274 0.000796274 0.000796274
+0.000796274 0.000796274 0.000796274;
+#X coords 0 1 99 -1 300 100 1;
+#X restore 24 375 graph;
+#X obj 88 274 tabwrite \$0-array;
+#X obj 91 146 moses 100;
+#X obj 91 67 bng 20 250 50 0 empty empty start 0 -6 1 10 -4033 -1 -1
+;
+#X text 177 119 <-- counter;
+#X text 189 146 <-- split at array size to stop;
+#X text 217 159 and reset counter to 0;
+#X text 61 296 ^--bang for next step;
+#X obj 61 209 expr abs(cos( min (1.57 \, ($f1 / $f2 - 0.4)) ) );
+#X obj 276 186 hsl 128 15 1 127 0 1 empty empty change_graph_shape
+-130 8 1 12 -208896 -1 -1 2500 0;
+#X text 21 322 In this example \, the "bang" from [t b f] continues
+the loop. The [moses 100] ends the loop.;
+#X text 157 94 <-- stop;
+#X obj 43 161 bang;
+#X text 9 95 continue -->;
+#X text 20 37 Here is a recursive loop with a little more complex behavior:
+;
+#X connect 2 0 3 0;
+#X connect 2 0 13 0;
+#X connect 3 0 2 1;
+#X connect 4 0 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 0;
+#X connect 6 0 2 1;
+#X connect 7 0 19 0;
+#X connect 7 1 12 1;
+#X connect 10 0 23 0;
+#X connect 10 1 12 0;
+#X connect 13 0 7 0;
+#X connect 13 1 5 0;
+#X connect 14 0 4 0;
+#X connect 19 0 10 0;
+#X connect 20 0 19 1;
+#X connect 23 0 4 0;
+#X restore 23 264 pd A_more_complex_recursive_loop;
+#N canvas 20 155 428 257 A_basic_sample_looper 0;
+#X obj 1 1 cnv 15 425 20 empty empty empty 20 10 1 18 -233017 -66577
+0;
+#X text 7 1 A basic sample looper using recursive looping;
+#X text 20 37 For the most basic looping of samples \, you can use
+[readsf~]:;
+#X obj 59 186 readsf~;
+#X obj 50 106 spigot;
+#X obj 83 84 tgl 15 0 empty empty allow_looping 17 7 0 10 -4033 -1
+-1 0 1;
+#X msg 59 160 open ../sound/voice.wav;
+#X text 104 206 ^- "bang"ed when complete;
+#X msg 23 160 1;
+#X obj 60 218 dac~;
+#X obj 23 133 t b b;
+#X obj 23 85 bng 20 250 50 0 empty empty start 0 -6 1 10 -4033 -1 -1
+;
+#X connect 3 0 9 0;
+#X connect 3 0 9 1;
+#X connect 3 1 4 0;
+#X connect 4 0 10 0;
+#X connect 5 0 4 1;
+#X connect 6 0 3 0;
+#X connect 8 0 3 0;
+#X connect 10 0 8 0;
+#X connect 10 1 6 0;
+#X connect 11 0 10 0;
+#X restore 23 290 pd A_basic_sample_looper;
+#X obj 1 548 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS needs_work;
+#X text 12 25 NAME until;
+#X text 12 65 DESCRIPTION how to create loops in Pd;
+#X restore 392 550 pd META;
+#N canvas 9 223 428 342 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Looping- Related Objects;
+#X obj 22 42 until;
+#X obj 21 78 pddp/pddplink all_about_externals.pd -text _________;
+#X obj 21 78 pddp/pddplink all_about_externals.pd -text Externals;
+#X obj 20 99 pddp/helplink flatspace/loop;
+#X obj 20 139 pddp/helplink iemlib/modulo_counter;
+#X obj 20 179 pddp/helplink creb/count;
+#X obj 20 199 pddp/helplink creb/count;
+#X obj 20 219 pddp/helplink unauthorized/countund;
+#X obj 20 239 pddp/helplink ekext/cup;
+#X obj 20 259 pddp/helplink ekext/cupd;
+#X obj 20 279 pddp/helplink markex/counter;
+#X obj 20 299 pddp/helplink cyclone/counter;
+#X obj 20 119 pddp/helplink flatspace/gem_counter;
+#X obj 20 159 pddp/helplink iemlib/for++;
+#X text 186 78 Sample Looping;
+#X text 187 78 ______________;
+#X obj 185 98 pddp/helplink flatspace/susloop~;
+#X obj 82 42 loop~;
+#X obj 185 118 pddp/helplink cyclone/count~;
+#X text 186 198 Video Looping;
+#X text 187 198 _____________;
+#X obj 185 228 pddp/helplink pdp/pdp_loop;
+#X obj 185 248 pddp/helplink pdp/pdp_qtloop~;
+#X obj 185 138 pddp/helplink loopsampler;
+#X obj 185 158 pddp/helplink xgroove~;
+#X text 263 139 Which library for;
+#X text 263 159 loopsampler and xgroove~?;
+#X restore 103 550 pd Related_objects;
+#X obj 6 550 pddp/pddplink all_about.pd -text All About Pd;

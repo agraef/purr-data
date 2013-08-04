@@ -1,0 +1,18 @@
+#N canvas 0 18 383 241 10;
+#N canvas 209 154 262 142 my-subpatch 0;
+#X text 37 40 This is the sub patch;
+#X restore 215 98 pd my-subpatch;
+#X msg 33 62 \; pd-my-subpatch vis 1;
+#X msg 37 127 \; pd-my-subpatch vis 0;
+#X text 43 42 pop-up;
+#X text 40 109 close;
+#X text 13 17 pop-up and close a subpatch :;
+#N canvas 218 113 494 396 META 0;
+#X text 12 5 GENRE tutorial;
+#X text 12 85 HELP_PATCH_AUTHORS Damien Henry. "pd meta" information
+added by Jonathan Wilkes for Pd version 0.42.;
+#X text 12 65 DESCRIPTION how to show/hide a patch using messages;
+#X text 12 25 KEYWORDS control canvas_op nonlocal dynamic_patching
+;
+#X text 12 44 LICENSE public domain;
+#X restore 329 216 pd META;

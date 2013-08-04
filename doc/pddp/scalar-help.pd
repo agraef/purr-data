@@ -1,0 +1,422 @@
+#N struct Pd-logo float x float y symbol Pd float obj1-c float wire-c
+float obj2-c float Pd-c float lightning-vis symbol adc float adc-c
+;
+#N struct red-box float x float y float bottom;
+#N struct box float x float y float w0 float p;
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (scalar) 3 12 0
+18 -204280 -1 0;
+#X obj 0 442 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 44 250 494 344 META 0;
+#X text 12 65 LIBRARY internal;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for Pd v0.41. Revised by
+Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 45 DESCRIPTION graphical instance of a data structure;
+#X text 12 125 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS control data-structure;
+#X restore 500 597 pd META;
+#X obj 0 469 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 497 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 501 (none);
+#N canvas 54 478 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [scalar] Related Objects;
+#X obj 21 42 struct;
+#X obj 71 42 drawpolygon;
+#X obj 152 42 drawnumber;
+#X obj 228 42 plot;
+#X obj 21 72 append;
+#X obj 71 72 get;
+#X obj 101 72 set;
+#X obj 131 72 getsize;
+#X obj 183 72 setsize;
+#X obj 237 72 element;
+#X restore 102 597 pd Related_objects;
+#N canvas 84 74 428 477 Pd-logo-template 0;
+#N canvas 236 304 450 300 init 0;
+#X obj 108 109 loadbang;
+#X msg 108 136 traverse pd-scalar-help.pd \, next;
+#X obj 108 163 pointer;
+#X obj 108 217 set Pd-logo obj1-c wire-c obj2-c adc-c Pd-c;
+#X msg 108 190 list 999 0 999 0 0 \$1;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;
+#X restore 21 41 pd init;
+#X obj 21 145 unpack p;
+#X obj 21 167 t b a;
+#X obj 360 210 t a;
+#X obj 21 68 struct Pd-logo float x float y symbol Pd float obj1-c
+float wire-c float obj2-c float Pd-c float lightning-vis symbol adc
+float adc-c;
+#X obj 21 241 set Pd-logo obj1-c adc-c wire-c obj2-c Pd-c lightning-vis
+;
+#X obj 21 439 filledpolygon 777 666 1 -12 -14 40 -14 40 55 -12 55;
+#X obj 21 325 filledpolygon obj1-c adc-c 1 0 9 7 9 0 9 0 10 30 10 30
+-7 0 -7 0 -6 7 -6 0 -6;
+#X obj 21 268 drawsymbol adc 3 -3 adc-c;
+#X obj 21 382 filledpolygon obj2-c Pd-c 1 7 29 0 29 0 28 25 28 25 29
+18 29 25 29 25 45 0 45 0 44 7 44 0 44 0 28;
+#X obj 21 417 drawsymbol Pd 3 32 Pd-c;
+#X obj 21 360 drawpolygon wire-c 1 3 10 3 28 4 28 4 10;
+#X obj 21 290 filledpolygon -v lightning-vis 990 0 1 4 11 -2 20 3 20
+1 28 9 17 4 17 5 12;
+#X obj 21 118 route select click;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#N canvas 108 55 380 398 animation 0;
+#X obj 27 18 inlet;
+#X obj 27 343 outlet;
+#X msg 27 45 0 999 0 999 0 0;
+#X msg 49 95 999 0 0 999 0 0;
+#X obj 82 171 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 82 194 sel 0 1;
+#X obj 223 171 0;
+#X msg 223 218 999 0 0 0 999 0;
+#X msg 243 277 999 0 0 999 0 0;
+#X obj 49 73 del 250;
+#X obj 82 122 del 100;
+#X obj 243 254 del 300;
+#X msg 101 218 999 0 777 999 0 1;
+#X obj 82 149 metro 200;
+#X obj 223 149 del 1200;
+#X msg 82 245 999 0 0 999 0 0;
+#X obj 223 194 del 50;
+#X connect 0 0 2 0;
+#X connect 0 0 9 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 15 0;
+#X connect 5 1 12 0;
+#X connect 6 0 15 0;
+#X connect 6 0 13 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 3 0;
+#X connect 9 0 10 0;
+#X connect 10 0 13 0;
+#X connect 10 0 14 0;
+#X connect 11 0 8 0;
+#X connect 12 0 1 0;
+#X connect 13 0 4 0;
+#X connect 14 0 6 0;
+#X connect 14 0 16 0;
+#X connect 15 0 1 0;
+#X connect 16 0 7 0;
+#X connect 16 0 11 0;
+#X restore 21 197 pd animation;
+#X text 8 2 [scalar] A Scalar with Lots of Drawing Instructions;
+#X connect 1 0 2 0;
+#X connect 2 0 15 0;
+#X connect 2 1 3 0;
+#X connect 3 0 5 6;
+#X connect 4 0 13 0;
+#X connect 13 0 1 0;
+#X connect 13 1 1 0;
+#X connect 15 0 5 0;
+#X restore 79 210 pd Pd-logo-template;
+#X scalar Pd-logo 29 172 Pd~ 999 0 999 0 0 adc~ 0 \;;
+#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/scalar -text
+pdpedia: scalar;
+#X text 11 23 graphical instance of a data structure;
+#X text 98 446 (none);
+#X text 98 474 (none);
+#X obj 209 364 *~;
+#X floatatom 172 312 5 0 100 1 Volume_(dB) - -;
+#X obj 172 334 dbtorms;
+#X obj 208 392 dac~;
+#N canvas 107 82 428 452 box-face-template 0;
+#X obj 22 67 route click;
+#X obj 22 92 unpack p;
+#X obj 22 228 line;
+#X obj 22 117 t b a;
+#X obj 22 264 set box w0;
+#X msg 22 167 10 100;
+#X obj 97 167 del 500;
+#X msg 97 193 0 100;
+#X obj 22 325 drawpolygon 0 1 w0(0:10)(-4:-10) w0(0:10)(-4:-10) w0(0:10)(4:10)
+w0(0:10)(-4:-10) w0(0:10)(4:10) w0(0:10)(4:10) w0(0:10)(-4:-10) w0(0:10)(4:10)
+w0(0:10)(-4:-10) w0(0:10)(-4:-10);
+#X obj 22 391 drawpolygon 0 w0 -5 w0(0:10)(-14:-18) -5 w0(0:10)(-13:-17)
+;
+#X obj 22 418 drawpolygon 0 w0 5 w0(0:10)(-14:-18) 5 w0(0:10)(-13:-17)
+;
+#N canvas 366 92 332 503 make-noise 0;
+#X obj 43 446 *~;
+#X obj 42 141 line~;
+#X obj 43 473 outlet~;
+#X obj 147 424 osc~;
+#X obj 160 255 osc~;
+#X obj 146 373 *~;
+#X obj 42 41 inlet;
+#X obj 256 7 inlet;
+#X obj 147 397 +~ 0;
+#X obj 161 193 *~ 0;
+#X obj 256 133 mtof;
+#X obj 256 246 s tempo;
+#X obj 256 219 -;
+#X obj 256 166 * 0.16;
+#X obj 222 166 log;
+#X obj 256 61 + 55;
+#X msg 256 193 190 \$1;
+#X obj 256 39 mod 21;
+#X obj 66 213 *~ 50;
+#X obj 65 336 +~;
+#X obj 160 233 +~;
+#X obj 222 210 *~ 5;
+#X obj 222 188 osc~;
+#X obj 79 262 +~ 1;
+#X obj 182 166 * 0.1;
+#X obj 79 311 *~ 250;
+#X obj 79 289 *~;
+#X msg 123 213 0.7;
+#X obj 78 239 osc~ 1.1;
+#X obj 256 85 sel 60;
+#X obj 256 107 8;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 0 9 0;
+#X connect 1 0 18 0;
+#X connect 3 0 0 1;
+#X connect 4 0 5 1;
+#X connect 5 0 8 0;
+#X connect 6 0 1 0;
+#X connect 7 0 17 0;
+#X connect 7 0 27 0;
+#X connect 8 0 3 0;
+#X connect 9 0 20 0;
+#X connect 10 0 13 0;
+#X connect 10 0 8 1;
+#X connect 10 0 14 0;
+#X connect 10 0 24 0;
+#X connect 12 0 11 0;
+#X connect 13 0 16 0;
+#X connect 14 0 22 0;
+#X connect 15 0 29 0;
+#X connect 16 0 12 0;
+#X connect 17 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 5 0;
+#X connect 20 0 4 0;
+#X connect 21 0 20 1;
+#X connect 22 0 21 0;
+#X connect 23 0 26 0;
+#X connect 23 0 26 1;
+#X connect 24 0 9 1;
+#X connect 25 0 19 1;
+#X connect 26 0 25 0;
+#X connect 27 0 28 1;
+#X connect 28 0 23 0;
+#X connect 29 0 30 0;
+#X connect 29 1 10 0;
+#X connect 30 0 10 0;
+#X restore 97 264 pd make-noise;
+#X obj 96 291 outlet~;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [scalar] Scalar with Complex Drawing Instructions;
+#X obj 172 193 % 80;
+#X obj 172 167 get box y;
+#X obj 22 42 struct box float x float y float w0;
+#N canvas 513 6 428 642 move 0;
+#X obj 107 42 inlet;
+#X obj 27 42 inlet;
+#X obj 48 444 pointer;
+#X obj 93 77 b;
+#X msg 93 105 stop;
+#X obj 48 190 0;
+#X obj 48 489 get box x y;
+#X obj 48 538 set box x y;
+#X obj 48 464 t a a;
+#X obj 48 516 +;
+#X obj 79 516 +;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [scalar] Subpatch to Move the Boxheads Around;
+#X obj 48 244 t b b;
+#X obj 48 169 del 2000;
+#X obj 184 155 random 2;
+#X obj 184 182 sel 0 1;
+#X obj 116 213 0;
+#X obj 146 213 1;
+#X obj 75 271 t b b;
+#X obj 102 317 == 0;
+#X obj 75 376 *;
+#X obj 102 294 f;
+#X obj 75 294 3;
+#X obj 75 405 spigot;
+#X obj 127 405 spigot;
+#X obj 160 383 == 0;
+#X obj 154 277 t a;
+#X obj 48 212 metro 100;
+#X obj 184 222 random 2;
+#X obj 249 222 random 2;
+#X obj 249 244 - 0.5;
+#X obj 184 244 - 0.5;
+#X obj 249 266 * 2;
+#X obj 249 288 div -1;
+#X obj 184 266 * 2;
+#X obj 184 288 div -1;
+#X obj 103 346 *;
+#X obj 309 222 random 2;
+#X obj 309 244 - 0.5;
+#X obj 309 266 * 2;
+#X obj 309 288 div -1;
+#X obj 109 168 r tempo;
+#X obj 27 139 del 350;
+#X connect 0 0 2 1;
+#X connect 0 0 3 0;
+#X connect 1 0 43 0;
+#X connect 2 0 8 0;
+#X connect 3 0 4 0;
+#X connect 3 0 15 0;
+#X connect 3 0 38 0;
+#X connect 4 0 14 0;
+#X connect 4 0 28 0;
+#X connect 4 0 43 0;
+#X connect 5 0 28 0;
+#X connect 6 0 9 0;
+#X connect 6 1 10 0;
+#X connect 8 0 6 0;
+#X connect 8 1 7 2;
+#X connect 9 0 7 0;
+#X connect 10 0 7 1;
+#X connect 13 0 2 0;
+#X connect 13 1 19 0;
+#X connect 14 0 5 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 16 0 29 0;
+#X connect 16 1 18 0;
+#X connect 16 1 30 0;
+#X connect 17 0 27 0;
+#X connect 18 0 27 0;
+#X connect 19 0 23 0;
+#X connect 19 1 22 0;
+#X connect 20 0 22 1;
+#X connect 20 0 37 0;
+#X connect 21 0 24 0;
+#X connect 21 0 25 0;
+#X connect 22 0 20 0;
+#X connect 23 0 21 0;
+#X connect 24 0 9 1;
+#X connect 25 0 10 1;
+#X connect 26 0 25 1;
+#X connect 27 0 26 0;
+#X connect 27 0 24 1;
+#X connect 28 0 13 0;
+#X connect 29 0 32 0;
+#X connect 30 0 31 0;
+#X connect 31 0 33 0;
+#X connect 32 0 35 0;
+#X connect 33 0 34 0;
+#X connect 34 0 10 1;
+#X connect 35 0 36 0;
+#X connect 36 0 9 1;
+#X connect 37 0 21 1;
+#X connect 38 0 39 0;
+#X connect 39 0 40 0;
+#X connect 40 0 41 0;
+#X connect 41 0 37 1;
+#X connect 42 0 28 1;
+#X connect 43 0 14 0;
+#X connect 43 0 28 0;
+#X restore 118 224 pd move;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 3 0 6 0;
+#X connect 3 1 4 1;
+#X connect 3 1 16 0;
+#X connect 3 1 18 1;
+#X connect 5 0 2 0;
+#X connect 5 0 11 0;
+#X connect 6 0 7 0;
+#X connect 6 0 18 0;
+#X connect 7 0 2 0;
+#X connect 7 0 11 0;
+#X connect 11 0 12 0;
+#X connect 15 0 11 1;
+#X connect 16 0 15 0;
+#X connect 17 0 0 0;
+#X restore 225 334 pd box-face-template;
+#X text 245 358 The drawing instructions for the three;
+#X text 245 373 scalars to the left are a bit more complex \,;
+#X text 245 388 and allow us to associate one field-- "w0"--;
+#X text 244 403 with the size of the square. Click each little;
+#X text 244 418 "scalar creature" in runmode to trigger a note.;
+#X text 13 230 Above is a scalar with more drawing instructions-- it's
+made to look like two Pd object boxes connected together. Here it's
+used to exemplify data flow in Pd-- if you click or select the scalar
+\, it will trigger a simple animation. Open the subpatch "Pd-logo-template"
+to see how it works.;
+#N canvas 144 264 428 300 red-box-template 0;
+#X obj 22 42 struct red-box float x float y float bottom;
+#X obj 22 135 filledpolygon 900 0 1 0 0 20 0 20 bottom 0 bottom;
+#X text 19 69 Explain (or link to explanation) about x and y variables.
+;
+#X obj 22 162 drawnumber bottom -12 -15 250 bottom=;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [scalar] A Simple Scalar;
+#X restore 420 202 pd red-box-template;
+#X scalar red-box 369 199 20 \;;
+#X text 190 119 Below is a simple scalar-- it consists of a red box
+\, and a number with a label. The field "bottom" is associated with
+the two of the y-values of the box. If you click and drag the number
+\, you can change the placement of the bottom of the box.;
+#N canvas 50 456 428 105 Interacting_with_Scalars 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [scalar] Interacting with Scalars;
+#X text 19 37 When you interact with the scalar in a patch with the
+mouse \, some of those mouse actions are captured and sent to the outlet
+of the [struct] object. See the help patch for [struct] for a complete
+list of these actions.;
+#X restore 102 556 pd Interacting_with_Scalars;
+#N canvas 50 456 428 129 Appending_Scalars_to_a_Canvas 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [scalar] Appending Scalars;
+#X text 19 37 Blurb about the fact that these scalars were appended
+to the canvas when the patch was created (and they persist after you
+save them and their values are remembered). For more on how to instantiate
+a scalar \, see the help patch for [append].;
+#X obj 21 101 pddp/pddplink ../4.data.structures/04.append.pd -text
+doc/4.data.structures/04.append.pd;
+#X restore 102 534 pd Appending_Scalars_to_a_Canvas;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 385 291 pddp/dsp;
+#X obj 99 576 pddp/pddplink ../4.data.structures/01.scalars.pd -text
+doc/4.data.structures/01.scalars.pd;
+#X text 303 534 <-- needs work;
+#X text 70 56 Scalars are graphical instances of data structures. Their
+behavior is similar to other objects in Pd-- you can click them \,
+select them \, change their values \, delete them \, and so on.;
+#X obj 23 357 cnv 15 100 60 empty empty WOW 20 12 0 40 -262144 -232952
+0;
+#X scalar box 58 349 0 0 \;;
+#X scalar box 91 373 0 69 \;;
+#X scalar box 123 348 0 75 \;;
+#X connect 15 0 18 0;
+#X connect 15 0 18 1;
+#X connect 16 0 17 0;
+#X connect 17 0 15 0;
+#X connect 19 0 15 1;

@@ -1,0 +1,75 @@
+#N canvas 1 88 556 621 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header initbang 3 12 0
+18 -204280 -1 0;
+#X obj 1 425 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 244 494 344 META 0;
+#X text 12 95 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 135 WEBSITE;
+#X text 12 45 DESCRIPTION send "bang" automatically when abstraction
+starts to load;
+#X text 12 75 OUTLET_0 bang;
+#X text 12 5 KEYWORDS control bang_op;
+#X text 12 155 RELEASE_DATE 2006;
+#X text 12 175 HELP_PATCH_AUTHORS IOhannes m zmoelnig. Jonathan Wilkes
+revised the patch to conform to the PDDP template for Pd version 0.42.
+;
+#X text 12 115 AUTHOR IOhannes m zmoelnig;
+#X restore 502 597 pd META;
+#X obj 1 452 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 1 505 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 1 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 100 509 (none);
+#N canvas 95 482 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 21 42 closebang;
+#X text 7 1 [initbang] Related Objects;
+#X obj 101 42 loadbang;
+#X restore 104 597 pd Related_objects;
+#X obj 80 461 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 442 22 pddp/pddplink http://wiki.puredata.info/en/initbang -text
+pdpedia: initbang;
+#X obj 468 5 initbang;
+#X text 100 429 (none);
+#X text 100 460 bang;
+#X obj 95 352 print from_initbang;
+#X obj 95 207 print from_loadbang;
+#X text 102 536 [initbang] is useful if you want to build abstractions
+that have a variable number of inlets or outlets.;
+#X text 13 21 send "bang" automatically when abstraction starts to
+load;
+#X obj 6 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 92 231 To solve this problem \, the abstraction below uses
+[initbang] instead of [loadbang]. [initbang] will send a bang before
+Pd initializes the parent patch \, so that the [outlet] is created
+before the connection between objects is made. Thus \, you can see
+below that the objects are connected successfully.;
+#X text 112 118 The above outlet is supposed to be connected to [print]
+object below but [loadbang] sends its bang too late. Pd will try to
+connect the abstraction's outlet to the inlet of [print] \, but this
+will happen before [loadbang] is executed (i.e. \, before the outlet
+exists). The result is the an error in the Pd window \, and connection
+fails.;
+#X text 92 372 Careful \, [initbang] sends its bang when the patch
+is starting to load \, so things like GUI objects will not have created
+their visual elements yet.;
+#X text 102 569 Pd Documentation Chapter 3.6 -;
+#X obj 289 569 pddp/pddplink ../1.manual/x3.htm;
+#X obj 95 99 initbang-help-ex1-loadbang;
+#X obj 95 321 initbang-help-ex2-initbang;
+#X text 160 460 - a bang message is sent when the containing parent
+patch first opens the abstraction as an embedded object. If the patch
+is a top-most patch \, no bang will ever be sent.;
+#X text 93 51 The abstraction below dynamically creates an outlet using
+[loadbang]. The [loadbang] object sends a bang after this help patch
+has loaded.;
+#X connect 25 0 14 0;

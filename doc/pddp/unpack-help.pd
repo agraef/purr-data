@@ -1,0 +1,121 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header unpack 3 12 0 18
+-204280 -1 0;
+#X obj 0 191 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 243 494 361 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 26 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 45 DESCRIPTION split a message into atoms;
+#X text 12 5 KEYWORDS control list_op;
+#X text 12 65 INLET_0 anything;
+#X text 12 85 OUTLET_N float list symbol pointer bang;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 391 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 444 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 546 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 100 211 428 404 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 pack;
+#X obj 59 43 trigger;
+#X text 8 2 [unpack] Related Objects;
+#X text 19 266 These objects are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 19 315 The best places to find information about Pd's libraries
+is:;
+#X text 19 335 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 19 355 or;
+#X text 19 375 iem.kug.ac.at/pdb/;
+#X text 19 79 Externals;
+#X obj 20 103 pddp/helplink zexy/pack~;
+#X obj 20 123 pddp/helplink zexy/unpack~;
+#X obj 20 143 pddp/helplink zexy/tabdump;
+#X obj 20 163 pddp/helplink zexy/niagara;
+#X obj 20 183 pddp/helplink zexy/packel;
+#X obj 20 203 pddp/helplink zexy/repack;
+#X obj 20 223 pddp/helplink zexy/drip;
+#X obj 20 243 pddp/helplink zexy/sort;
+#X restore 102 597 pd Related_objects;
+#X obj 78 200 cnv 17 3 185 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 267 float;
+#X obj 78 400 cnv 17 3 37 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 481 3 unpack;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/unpack -text
+pdpedia: unpack;
+#X floatatom 137 162 0 0 0 0 - - -;
+#X floatatom 252 161 0 0 0 0 - - -;
+#X floatatom 290 161 0 0 0 0 - - -;
+#X floatatom 103 162 0 0 0 0 - - -;
+#X msg 103 91 1 2;
+#X msg 142 91 3 4 shut;
+#X msg 221 91 5 6 pick 7 8;
+#X symbolatom 179 162 10 0 0 0 - - -;
+#X text 11 23 split a message into atoms;
+#X text 98 297 symbol;
+#X text 98 199 list;
+#X text 98 340 pointer;
+#X text 98 368 bang;
+#X text 168 399 - if no arguments are provided \, [unpack] defaults
+to two outlets. Otherwise \, one outlet is created for each creation
+argument specified.;
+#X obj 373 128 unpack;
+#X msg 373 91 60 127;
+#X floatatom 373 162 3 0 0 0 - - -;
+#X floatatom 406 162 3 0 0 0 - - -;
+#X text 168 199 - the elements will be distributed to the outlets.
+The type of each element must match the arguments supplied to [unpack]
+\, or a "type mismatch" error will result. Lists with more (or fewer)
+elements than the total number of outlets are accepted.;
+#X text 100 60 [unpack] takes a list and distributes the elements to
+its outlets.;
+#X text 80 463 1) float;
+#X text 98 477 symbol atom;
+#X text 97 550 [unpack] only checks the first letter of each symbol
+atom in its arguments \, so both "f" and "float" will specify float
+type (so will "foo" \, for that matter).;
+#X text 168 267 - if no arguments are given \, or if the first argument
+is an "f" \, a float will be accepted and sent to the left outlet.
+;
+#X obj 103 128 unpack 0 0 s f f;
+#X text 168 297 - if the first argument to [unpack] is "s" \, a symbol
+message will be sent to the left outlet. Symbol atoms are also accepted
+and given the "symbol" selector when output.;
+#X text 168 340 - if the first argument to [unpack] is "p" \, a pointer
+will be accepted and sent to the left outlet;
+#X text 168 368 - a bang to the inlet has no apparent effect.;
+#X text 168 463 - one outlet is created for each argument specified.
+(If no arguments are provided \, [unpack] will accept a list with two
+floats.) Each symbolic argument specifies the type of atom expected
+in the incoming list. Acceptable arguments are: "f" for float \, "p"
+for pointer \, and "s" for symbol. You can also use a float (e.g. \,
+"o") to specify float.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 17 0 37 0;
+#X connect 18 0 37 0;
+#X connect 19 0 37 0;
+#X connect 27 0 29 0;
+#X connect 27 1 30 0;
+#X connect 28 0 27 0;
+#X connect 37 0 16 0;
+#X connect 37 1 13 0;
+#X connect 37 2 20 0;
+#X connect 37 3 14 0;
+#X connect 37 4 15 0;

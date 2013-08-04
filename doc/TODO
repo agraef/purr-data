@@ -1,0 +1,19 @@
+
+- add externals HOWTO to manuals/Pd
+
+- create Makefile for Pd-extended build system
+
+- add pd-fileformat doc: http://student-kmt.hku.nl/%7Etjeerd/pd/pd_fileformat.html
+
+- replace [pddp] with "pddp" in all help files so that it doesn't cause bugs
+  with the pddp/pddp.pd meta file, and other things in the future.  Here's a
+  pattern:  sed -n 's|obj \([0-9]*\) \([0-9]*\) pddp;|msg \1 \2 pddp;|p' *.pd
+
+- add doc/pddp/about, help, etc. to doc/Makefile
+
+- mv doc/pddp/pddp.pd to doc/pddp/about/pddp-about.pd
+
+- add [symbol 1( and [1 ( test messages to the bottom right example in 
+  [pd some odd cases of list handling] in
+  doc/pddp/all_about_lists_vs_anythings.pd
+

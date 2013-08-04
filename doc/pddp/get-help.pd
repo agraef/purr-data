@@ -1,0 +1,124 @@
+#N struct get-help-template float x float y symbol s;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header get 3 12 0 18 -204280
+-1 0;
+#X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 245 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control data_structure;
+#X text 12 45 DESCRIPTION get values from a scalar;
+#X text 12 65 INLET_0 pointer;
+#X text 12 85 OUTLET_N float symbol;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 375 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 438 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 506 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 102 480 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 72 34 set;
+#X obj 104 34 append;
+#X obj 163 34 getsize;
+#X obj 14 59 setsize;
+#X obj 72 59 element;
+#X obj 184 59 sublist;
+#X obj 14 34 pointer;
+#X obj 132 59 struct;
+#X text 7 1 [get] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 347 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 383 float;
+#X obj 78 384 cnv 17 3 48 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 493 3 get;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/get -text
+pdpedia: get;
+#X msg 121 139 next;
+#X floatatom 106 234 5 0 0 0 - - -;
+#X floatatom 185 234 5 0 0 0 - - -;
+#X obj 106 162 pointer;
+#X text 302 115 output first scalar in list;
+#X text 164 138 output next item;
+#X text 102 250 x output;
+#X text 183 250 y output;
+#X text 261 251 s output;
+#X symbolatom 265 234 18 0 0 0 - - -;
+#X obj 145 186 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 98 346 pointer;
+#X text 168 346 - [get] takes a pointer to a scalar.;
+#X text 98 398 symbol;
+#X text 166 183 bang when there are no more items;
+#X text 11 23 get values from a scalar;
+#X text 221 283 <- Click here to see the data;
+#N canvas 111 75 428 272 get-help-data 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [get] Data Window;
+#X scalar get-help-template 22 43 guten_tag \;;
+#X scalar get-help-template 79 87 jo_napot_kivanok \;;
+#X text 62 42 Each blue rectangle is a scalar. Their appearance and
+data structure are defined by the template "get-help-template".;
+#X text 27 187 In addition to using the [get] object \, you can right-click
+on a rectangle and choose "Properties" to view the field values of
+the scalar. (You can also change them-- once you are finished \, click
+"Ok" to update the values.);
+#X text 27 124 The "x" and "y" fields in a [struct] are special: they
+always specify the screen coordinates for the top left corner of each
+rectangle. In editmode you can click and drag each rectangle to change
+these values.;
+#X restore 106 283 pd get-help-data;
+#X msg 106 116 traverse pd-get-help-data \, next;
+#X obj 106 208 get get-help-template x y s;
+#N canvas 105 219 428 175 get-help-template 0;
+#X obj 23 118 filledpolygon 9 0 1 0 0 20 0 20 30 0 30;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [get] Template subpatch;
+#X text 19 69 This [struct] just defines a simple data structure. The
+values for the fields were set when this help patch was created.;
+#X obj 21 42 struct get-help-template float x float y symbol s;
+#X text 21 137 Draw a blue rectangle with a black border.;
+#X restore 106 305 pd get-help-template;
+#X text 168 383 - one outlet is created for each field specified in
+the creation arguments. When [get] receives a pointer at its inlet
+\, the value of each field is output to the corresponding outlet.;
+#X text 168 472 - the name of a field or fields in that template. An
+outlet is created for each field specified.;
+#X text 103 56 [get] \, when sent a pointer to a scalar \, retrieves
+fields from it by name. The fields can be a float or symbol. (In the
+future this will also allow access to sublists of scalars.);
+#X text 168 457 - a struct name to specify the template of a scalar.
+;
+#X text 97 510 If you have data whose templates vary (from a heterogeneous
+list \, for example) you can use [pointer] to select according to template
+before sending to [get]. (See pointer-help.pd for more information.)
+;
+#X text 80 457 1) symbol atom;
+#X text 80 472 n) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 97 563 pddp/pddplink ../04.data.structures/02.getting.data.pd
+-text doc/04.data.structures/02.getting.data.pd;
+#X obj 97 578 pddp/pddplink scalar-help.pd;
+#X connect 13 0 16 0;
+#X connect 16 0 32 0;
+#X connect 16 1 23 0;
+#X connect 31 0 16 0;
+#X connect 32 0 14 0;
+#X connect 32 1 15 0;
+#X connect 32 2 22 0;

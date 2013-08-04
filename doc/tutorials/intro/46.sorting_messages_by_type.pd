@@ -1,0 +1,49 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty sorting_messages_by_type 20
+12 0 24 -228992 -66577 0;
+#X floatatom 282 359 5 0 0 0 - - -;
+#X symbolatom 351 358 10 0 0 0 - - -;
+#X obj 214 379 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144
+-1 -1;
+#X obj 214 335 route bang float symbol list;
+#X obj 282 379 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
+-1 -1;
+#X obj 351 379 bng 15 250 50 0 empty empty symbol -12 23 1 12 -262144
+-1 -1;
+#X obj 420 379 bng 15 250 50 0 empty empty list -2 23 1 12 -262144
+-1 -1;
+#X obj 489 379 bng 15 250 50 0 empty empty selector_series -18 23 1
+12 -262144 -1 -1;
+#X msg 40 172 bang;
+#X msg 128 183 642.3;
+#X msg 214 159 symbol moshimoshi;
+#X msg 214 183 symbol sayonara;
+#X obj 40 197 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 411 171 1 2 3;
+#X msg 411 194 5 for free!;
+#X msg 411 218 list here we go...;
+#X msg 423 251 not a list? nope...;
+#X msg 105 159 float 5;
+#X text 10 63 When processing messages \, some operations should only
+be applied to messages of a certain type. [route] allows you to sort
+messages by type:;
+#X msg 423 276 selector data data;
+#X connect 1 0 5 0;
+#X connect 2 0 6 0;
+#X connect 4 0 3 0;
+#X connect 4 1 1 0;
+#X connect 4 2 2 0;
+#X connect 4 3 7 0;
+#X connect 4 4 8 0;
+#X connect 9 0 4 0;
+#X connect 10 0 4 0;
+#X connect 11 0 4 0;
+#X connect 12 0 4 0;
+#X connect 13 0 4 0;
+#X connect 14 0 4 0;
+#X connect 15 0 4 0;
+#X connect 16 0 4 0;
+#X connect 17 0 4 0;
+#X connect 18 0 4 0;
+#X connect 20 0 4 0;

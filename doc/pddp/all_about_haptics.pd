@@ -1,0 +1,61 @@
+#N canvas 0 0 448 374 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header haptics 20 10 1
+18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 352 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 45 DESCRIPTION definition of haptics;
+#X restore 392 354 pd META;
+#N canvas 10 196 428 359 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Haptic Objects in Pd;
+#X text 72 58 Control the pulses and vibrations of a TouchSense (aka
+iFeel) mouse;
+#X text 24 114 Set the overall gain for all force effects;
+#X text 24 153 Apply forces to automatically center the controller
+;
+#X text 24 193 Apply a spring force in a specified direction;
+#X text 24 233 Apply friction to the movement of the controller. Also
+known as damping.;
+#X text 25 280 Periodic effects are forces controlled by waveforms
+of various shape \, strength \, and frequency;
+#X text 25 329 Apply a constant force in a specified direction;
+#X obj 10 33 pddp/pddplink all_about_externals.pd -text _________;
+#X obj 10 33 pddp/pddplink all_about_externals.pd -text Externals;
+#X obj 10 58 pddp/helplink hcs/ifeel;
+#X obj 10 94 pddp/helplink flatspace/ff-gain;
+#X obj 10 134 pddp/helplink flatspace/ff-autocenter;
+#X obj 10 174 pddp/helplink flatspace/ff-spring;
+#X obj 10 214 pddp/helplink flatspace/ff-friction;
+#X obj 10 264 pddp/helplink flatspace/ff-periodic;
+#X obj 10 314 pddp/helplink flatspace/ff-constant;
+#X restore 103 354 pd Related_objects;
+#X obj 6 354 pddp/pddplink all_about.pd -text All About Pd;
+#X text 19 37 "Haptic" means relating to the sense of touch. Haptic
+feedback relates to the sense of touch at the skin level \, and the
+feeling of forces in the muscles and joints. Vibrations stimulate the
+sense of touch while various forces stimulate the muscles.;
+#X text 19 106 There are many haptic devices available \, from a US\$35
+Logitech iFeel mouse \, to the massive \, extremely expensive haptic
+devices used for remote control surgery. Immersion \, Inc. has almost
+a monopoly on this technology due to a number of patents. These objects
+all work with Immersion technology \, generally known as "TouchSense".
+;
+#X text 19 188 Numerous companies produce haptic game controllers:
+mice \, joysticks \, gamepads \, steering wheels. These objects work
+with game controllers. Belkin \, Logitech \, Microsoft \, Saitek \,
+and others make TouchSense game controllers.;
+#X text 19 245 Currently \, these objects only work on GNU/Linux. For
+info on how to get it working \, see: http://at.or.at/hans/haptics
+;
+#X text 19 295 See also:;
+#X obj 19 315 pddp/pddplink all_about_hid.pd;

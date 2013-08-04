@@ -1,0 +1,127 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header readsf~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 283 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 246 494 344 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS Updated for version 0.42-4. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION read a soundfile;
+#X text 12 65 INLET_0 float open start stop print;
+#X text 12 85 INLET_N signal;
+#X text 12 105 OUTLET_R bang;
+#X text 12 185 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS signal soundfile;
+#X restore 500 597 pd META;
+#X obj 0 428 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 510 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 76 483 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 23 44 soundfiler;
+#X obj 103 44 writesf~;
+#X text 8 2 [readsf~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 292 cnv 17 3 125 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 437 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 466 3 readsf~;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/readsf~ -text
+pdpedia: readsf~;
+#X text 165 149 The wave \, aiff \, and nextstep formats are parsed
+automatically \, although only 2- 3- and 4- byte samples are accepted
+(4 bytes implies floating point and is not available in aiff format.)
+;
+#X text 98 318 open;
+#X text 168 318 - the open message is followed by a filename \, an
+onset in sample frames \, and \, as an override \, you may also supply
+a header size to skip \, a number of channels \, bytes per channel
+\, and endianness (see example above).;
+#X text 98 367 start;
+#X text 98 385 stop;
+#X text 98 402 print;
+#X text 168 402 - send statistics to the console for debugging.;
+#X obj 78 477 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#X text 98 476 bang;
+#X text 98 436 signal;
+#X text 168 436 - [readsf~] defaults to one signal outlet for a single
+channel of audio output. An additional inlet is added for each channel
+specified by the first creation argument.;
+#X text 168 476 - the rightmost inlet sends a bang when the soundfile
+is done.;
+#X msg 80 124 0;
+#X obj 446 231 print didit;
+#X obj 120 233 env~ 16384;
+#X floatatom 120 252 0 0 0 0 - - -;
+#X msg 81 146 print;
+#X obj 11 260 dac~;
+#X obj 204 232 env~ 16384;
+#X floatatom 204 251 0 0 0 0 - - -;
+#X obj 11 176 readsf~ 4 1e+06;
+#X obj 283 231 env~ 16384;
+#X floatatom 283 250 0 0 0 0 - - -;
+#X obj 367 231 env~ 16384;
+#X floatatom 367 251 0 0 0 0 - - -;
+#X msg 11 80 open ../sound/bell.aiff 0 200 4 2 b;
+#X obj 71 234 *~ 0.1;
+#X obj 12 235 *~ 0.1;
+#X msg 11 59 open ../sound/bell.aiff;
+#X msg 20 102 start;
+#X msg 20 125 stop;
+#X text 207 107 The object immediately starts reading from the file
+\, but output will only appear after you send a "1" to start playback.
+A "0" stops it.;
+#X text 109 101 start playback;
+#X text 109 123 stop it;
+#X text 11 23 read a soundfile;
+#X text 168 545 - buffer size per channel in bytes.;
+#X text 168 528 - an integer that specifies the number of channels.
+;
+#X text 79 528 1) float;
+#X text 79 545 2) float;
+#X msg 80 103 1;
+#X text 168 367 - start playback.;
+#X text 168 385 - stop playback.;
+#X text 98 292 float;
+#X text 168 292 - "1" (or any nonzero value) has the same effect as
+"start" \, and "0" has the same effect as "stop".;
+#X text 195 41 The [readsf~] object reads a soundfile into its signal
+outputs. You must open the soundfile in advance (a couple of seconds
+before you'll need it) using the "open" message.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 24 0 32 0;
+#X connect 26 0 27 0;
+#X connect 28 0 32 0;
+#X connect 30 0 31 0;
+#X connect 32 0 26 0;
+#X connect 32 0 39 0;
+#X connect 32 1 30 0;
+#X connect 32 1 38 0;
+#X connect 32 2 33 0;
+#X connect 32 2 38 0;
+#X connect 32 3 35 0;
+#X connect 32 3 39 0;
+#X connect 32 4 25 0;
+#X connect 33 0 34 0;
+#X connect 35 0 36 0;
+#X connect 37 0 32 0;
+#X connect 38 0 29 1;
+#X connect 39 0 29 0;
+#X connect 40 0 32 0;
+#X connect 41 0 32 0;
+#X connect 42 0 32 0;
+#X connect 51 0 32 0;

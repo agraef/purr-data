@@ -1,0 +1,91 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header sysexin 3 12 0 18
+-204280 -1 0;
+#X obj 0 441 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 47 253 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.35. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 OUTLET_0 float;
+#X text 12 85 OUTLET_1 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X text 12 45 DESCRIPTION needs a description;
+#X text 12 5 KEYWORDS control MIDI;
+#X restore 500 597 pd META;
+#X obj 0 469 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 90 178 441 423 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 78 80 ctlin;
+#X obj 221 80 pgmin;
+#X obj 28 80 bendin;
+#X obj 83 107 touchin;
+#X obj 265 80 polytouchin;
+#X obj 28 34 midiin;
+#X obj 27 107 sysexin;
+#X obj 183 167 noteout;
+#X obj 80 167 ctlout;
+#X obj 28 167 bendout;
+#X obj 370 167 touchout;
+#X obj 284 167 polytouchout;
+#X obj 127 167 midiout;
+#X obj 235 167 pgmout;
+#X obj 28 221 makenote;
+#X text 25 198 MIDI note construction:;
+#X text 25 140 MIDI output:;
+#X text 25 57 MIDI input:;
+#X obj 188 221 stripnote;
+#X obj 172 80 notein;
+#X text 185 198 MIDI note deconstruction:;
+#X text 8 2 [sysexin] Related Objects;
+#X text 26 265 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 25 344 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 26 246 Externals;
+#X obj 26 295 pddp/helplink maxlib/pitch;
+#X obj 26 310 pddp/helplink maxlib/score;
+#X obj 26 325 pddp/helplink maxlib/chord;
+#X obj 26 360 pddp/helplink cyclone/midiformat;
+#X obj 26 375 pddp/helplink cyclone/midiparse;
+#X obj 26 390 pddp/helplink cyclone/midiflush;
+#X restore 102 597 pd Related_objects;
+#X text 98 477 float;
+#X obj 78 478 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 445 (none);
+#X obj 78 503 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 364 572 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
+;
+#X text 98 572 for an explanation of MIDI usage in Pd see:;
+#X floatatom 225 184 0 0 0 0 - - -;
+#X floatatom 264 184 0 0 0 0 - - -;
+#X text 164 264 of the channel (Linux only):;
+#X text 164 230 This object is always omni and;
+#X text 163 246 outputs the port number instead;
+#X text 11 23 needs a description;
+#X text 168 477 - port number;
+#X text 98 502 ???;
+#X text 168 502 - ???;
+#X text 80 545 1) ???;
+#X text 168 545 - ???;
+#X obj 484 3 sysexin;
+#X obj 447 20 pddp/pddplink http://wiki.puredata.info/en/sysexin -text
+pdpedia: sysexin;
+#X obj 225 153 sysexin;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 27 0 14 0;
+#X connect 27 1 15 0;

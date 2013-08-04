@@ -1,0 +1,99 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header writesf~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 267 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal;
+#X text 12 45 DESCRIPTION write audio signals to a soundfile;
+#X text 12 65 INLET_0 signal open start stop print;
+#X text 12 85 INLET_N signal;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 498 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 107 479 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [writesf~] Related Objects;
+#X obj 22 43 readsf~;
+#X obj 80 43 soundfiler;
+#X restore 102 597 pd Related_objects;
+#X obj 78 276 cnv 17 3 183 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 465 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X obj 472 3 writesf~;
+#X obj 441 20 pddp/pddplink http://wiki.puredata.info/en/writesf~ -text
+pdpedia: writesf~;
+#X text 98 502 (none);
+#X msg 77 179 print;
+#X msg 9 103 bang;
+#X msg 76 135 start;
+#X msg 78 157 stop;
+#X obj 9 134 del 1000;
+#X obj 67 223 writesf~ 2;
+#X msg 67 65 open /tmp/foo.wav;
+#X obj 81 201 osc~ 440;
+#X msg 67 111 open -bytes 4 /tmp/foo.wav;
+#X text 176 64 create a new 16-bit soundfile;
+#X text 233 88 create 24-bit soundfile;
+#X text 232 111 create 32-bit floating-point soundfile;
+#X msg 67 88 open -bytes 3 /tmp/foo.wav;
+#X text 11 23 write audio signals to a soundfile;
+#X text 98 275 signal;
+#X text 98 292 open;
+#X text 98 415 start;
+#X text 98 430 stop;
+#X text 98 445 print;
+#X text 98 464 signal;
+#X text 167 464 - an additional inlet is created for each channel specified
+by the creation argument.;
+#X text 202 328 -wave \, -nextstep \, -aiff;
+#X text 203 343 -big \, -little (nextstep only!);
+#X text 203 358 -bytes <2 \, 3 \, or 4>;
+#X text 203 374 -rate <sample rate>;
+#X text 167 389 (setting sample rate will affect the soundfile header
+but the file will _not_ be resampled.);
+#X text 168 292 - the "open" message creates a new soundfile that can
+be written to. The "open" message may take flag-style arguments as
+follows:;
+#X text 168 415 - start streaming audio to disk.;
+#X text 168 430 - stop streaming audio to disk.;
+#X text 149 206 The soundfile is 2- or 3-byte fixed point ("pcm") or
+4-byte floating-point. The soundfile format is determined by the file
+extent ("foo.wav" \, "foo.aiff" \, or "foo.snd").;
+#X text 149 138 [writesf~] creates a subthread whose task is to write
+audio streams to disk. You need not provide any disk access time between
+"open" and "start" \, but between "stop" and the next "open" you must
+give the object time to flush all the output to disk.;
+#X text 168 445 - print debugging information.;
+#X text 168 275 - the incoming signal is written to the file.;
+#X text 168 544 - the creation argument is the number of channels (1
+to 64).;
+#X text 80 544 1) float;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X connect 13 0 18 0;
+#X connect 14 0 15 0;
+#X connect 14 0 17 0;
+#X connect 15 0 18 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 19 0 18 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 0;
+#X connect 25 0 18 0;

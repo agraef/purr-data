@@ -1,0 +1,60 @@
+#N canvas 299 251 572 554 10;
+#X obj 4 202 cnv 3 550 3 empty empty inlets 15 12 0 13 -228856 -1 0
+;
+#X obj 4 234 cnv 3 550 3 empty empty outlet 15 12 0 13 -228856 -1 0
+;
+#X obj 4 294 cnv 3 550 3 empty empty argument 15 12 0 13 -228856 -1
+0;
+#X obj 4 354 cnv 3 550 3 empty empty more_info 15 12 0 13 -228856 -1
+0;
+#X obj 420 384 cnv 17 3 40 empty empty 1 5 9 0 16 -228856 -162280 0
+;
+#X obj 369 384 cnv 17 3 80 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 447 384 cnv 17 3 25 empty empty 2 5 9 0 16 -228856 -162280 0
+;
+#X text 101 10 This is a collection of graphic elements for the PDDP
+template-help.pd. These are meant to be copied-n-pasted into new help
+patches.;
+#X obj 4 174 cnv 3 550 3 empty empty inlet 15 12 0 13 -228856 -1 0
+;
+#X obj 4 264 cnv 3 550 3 empty empty outlets 15 12 0 13 -228856 -1
+0;
+#X obj 396 384 cnv 17 3 60 empty empty 0 5 9 0 16 -228856 -162280 0
+;
+#X obj 339 384 cnv 17 3 100 empty empty 0 5 9 0 16 -228856 -162280
+0;
+#X obj 4 324 cnv 3 550 3 empty empty arguments 15 12 0 13 -228856 -1
+0;
+#X obj 140 88 cnv 10 23 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 140 114 cnv 10 27 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X text 22 66 highlights by character width:;
+#X text 57 88 1-3 chars;
+#X text 67 114 4 chars;
+#X obj 140 139 cnv 10 34 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 280 89 cnv 10 38 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 280 114 cnv 10 46 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 280 139 cnv 10 52 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 430 88 cnv 10 57 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 430 114 cnv 10 63 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X obj 430 139 cnv 10 69 16 empty empty empty 20 12 0 14 -262126 -66577
+0;
+#X text 67 139 5 chars;
+#X text 207 88 6 chars;
+#X text 207 114 7 chars;
+#X text 207 139 8 chars;
+#X text 358 87 9 chars;
+#X text 357 115 10 chars;
+#X text 357 139 11 chars;
+#X obj 309 384 cnv 17 3 120 empty empty 0 5 9 0 16 -228856 -162280
+0;
+#X obj 279 384 cnv 17 3 140 empty empty 0 5 9 0 16 -228856 -162280
+0;

@@ -1,0 +1,19 @@
+#N canvas 336 40 530 585 10;
+#X obj 123 280 osc~ 500;
+#X obj 275 280 phasor~;
+#X obj 275 261 sig~;
+#X msg 275 241 300;
+#X text 74 63 There are four distinct sounds being played in a sequence.
+Determine the order of the sequence of the sounds.;
+#X obj 192 259 noise~;
+#X text 97 619 (Warren 1968 \; Warren et al. 1969 \; Warren and Obusek
+1972);
+#X obj 192 279 hip~ 3000;
+#X text 347 280 speech 'ee';
+#X text 167 119 (from Thinking in Sound \, p.40);
+#X obj 0 0 cnv 15 580 40 empty empty Identification_of_order 20 12
+1 18 -216441 -66577 0;
+#X text 258 24 'cognition' by Hans-Christoph Steiner;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 5 0 7 0;

@@ -1,0 +1,138 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabread~ 3 12 0
+18 -204280 -1 0;
+#X obj 0 270 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 245 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Dave Sabine \, April 25 \, 2003 .
+Jonathan Wilkes revised the patch to conform to the PDDP template for
+Pd version 0.42.;
+#X text 12 45 DESCRIPTION read numbers from a table and output as signal
+;
+#X text 12 165 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS signal array;
+#X text 12 65 INLET_0 signal set;
+#X text 12 85 OUTLET_0 signal;
+#X restore 500 597 pd META;
+#X obj 0 426 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 464 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 533 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 83 315 428 299 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [tabread~] Related Objects;
+#X text 21 38 Native Pd Objects;
+#X obj 24 61 tabread;
+#X obj 98 61 tabread4;
+#X obj 173 61 tabwrite;
+#X obj 248 61 tabwrite~;
+#X obj 24 89 tabsend~;
+#X obj 100 89 tabreceive~;
+#X obj 200 89 tabplay~;
+#X obj 277 89 table;
+#X text 21 140 [array];
+#X obj 24 116 soundfiler;
+#X text 84 140 and fft objects.;
+#X obj 120 116 tabread4~;
+#X obj 211 116 getsize;
+#X obj 282 116 setsize;
+#X text 22 164 Externals and other object libraries;
+#X obj 22 184 pddp/helplink zexy/tabdump;
+#X obj 22 204 pddp/helplink linear_path;
+#X text 103 204 <-- which library is this in?;
+#X text 103 224 <-- which library is this in?;
+#X obj 22 224 pddp/helplink score;
+#X text 103 244 <-- which library is this in?;
+#X obj 22 244 pddp/helplink tabenv;
+#X obj 22 264 pddp/helplink arraysize;
+#X restore 102 597 pd Related_objects;
+#X obj 78 279 cnv 17 3 135 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 435 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 475 3 tabread~;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/tabread~ -text
+pdpedia: tabread~;
+#X text 98 375 set;
+#X text 168 482 - the argument informs [tabread~] which array to read.
+The array must exist in an open Pd patch/canvas or an error message
+will appear in the terminal window.;
+#X floatatom 106 223 0 0 0 0 value - -;
+#X floatatom 87 65 0 0 99 0 index - -;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-array1 100 float 3;
+#A 0 0.833332 0.433332 0.366665 0.333332 0.299999 0.266665 0.233332
+0.199999 0.133332 0.0999988 0.0333322 0.0333322 -1.13249e-06 -0.0666678
+-0.100001 -0.116668 -0.133334 -0.166668 -0.200001 -0.233334 -0.266668
+-0.300001 -0.300001 -0.333334 -0.366668 -0.366668 -0.400001 -0.433334
+-0.433334 -0.433334 -0.450001 -0.466667 -0.500001 -0.500001 -0.500001
+-0.533334 -0.533334 -0.566667 -0.583334 -0.600001 -0.633334 -0.633334
+-0.633334 -0.6 -0.6 -0.566667 -0.566667 -0.566667 -0.566667 -0.566667
+-0.566667 -0.566667 -0.566667 -0.566667 -0.566667 -0.566667 -0.533334
+-0.533334 -0.5 -0.5 -0.466667 -0.466667 -0.433334 -0.4 -0.366667 -0.333333
+-0.3 -0.283333 -0.266667 -0.233333 -0.2 -0.133333 -0.133333 -0.133333
+-0.0666667 -0.0666667 -0.0666667 1.49012e-08 0.1 0.1 0.233333 0.3 0.333334
+0.4 0.433334 0.566667 0.633334 0.733334 0.733334 0.766667 0.766667
+0.800001 0.800001 0.800001 0.800001 0.800001 0.800001 0.800001 0.800001
+0.900001;
+#X coords 0 1 99 -1 100 60 1;
+#X restore 383 83 graph;
+#X text 346 217 mouse to draw new values.;
+#X text 346 204 Open the table and use your;
+#X text 168 375 - the "set" message allows you to read from dynamic
+sources (e.g. \, "set tabread~-help-array"). You can change the source
+at any time using the "set" message.;
+#X text 11 24 read numbers from a table and output as signal;
+#X obj 98 569 pddp/pddplink all_about_arrays.pd -text all_about_arrays
+;
+#X text 80 482 1) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 232 65 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X obj 106 164 tabread~ \$0-array1;
+#X obj 385 182 table \$0-array2;
+#X obj 87 126 sig~;
+#X obj 232 85 symbol \$0-array2;
+#X msg 232 107 set \$1;
+#X obj 122 65 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X msg 122 107 set \$1;
+#X obj 122 85 symbol \$0-array1;
+#X obj 39 176 metro 100;
+#X obj 106 199 snapshot~;
+#X obj 39 156 loadbang;
+#X text 98 278 signal;
+#X text 168 278 - a signal at the left inlet will move to the corresponding
+index in the table's array. The index ranges from 0 to the size of
+the array minus one (numbers outside this range are ignored). By default
+\, the size of an array in a table is 100 - or 0 to 99 . The actual
+size of the array can be altered using the array's dialog box or the
+resize command. More about arrays can be found below.;
+#X text 98 434 signal;
+#X text 168 434 - outputs is an audio signal which corresponds to the
+index you query using the inlet.;
+#X obj 96 538 pddp/pddplink ../2.control.examples/15.arrays.pd;
+#X obj 95 553 pddp/pddplink ../2.control.examples/16.more.arrays.pd
+;
+#X connect 15 0 27 0;
+#X connect 24 0 28 0;
+#X connect 25 0 34 0;
+#X connect 27 0 25 0;
+#X connect 28 0 29 0;
+#X connect 29 0 25 0;
+#X connect 30 0 32 0;
+#X connect 31 0 25 0;
+#X connect 32 0 31 0;
+#X connect 33 0 34 0;
+#X connect 34 0 14 0;
+#X connect 35 0 33 0;

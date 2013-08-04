@@ -1,0 +1,70 @@
+#N canvas 1 88 555 619 10;
+#X declare;
+#X declare;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header declare 3 12 0 18
+-204280 -1 0;
+#X obj 0 105 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 252 494 344 META 0;
+#X text 12 65 LIBRARY internal;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 85 AUTHOR Miller Puckette;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for Pd version 0.41. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION set environment for loading patch;
+#X text 12 125 RELEASE_DATE 1997;
+#X text 12 5 KEYWORDS control pd_op;
+#X restore 500 597 pd META;
+#X obj 0 134 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 164 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 386 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 90 486 428 103 Related_objects 0;
+#X obj 15 34 import;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [declare] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/declare -text
+pdpedia: declare;
+#X obj 470 3 declare;
+#X text 98 109 (none);
+#X text 98 139 (none);
+#X text 164 291 -lib;
+#X text 164 307 -stdlib;
+#X text 164 255 -path;
+#X text 164 271 -stdpath;
+#X text 262 255 add to search path \, relative to the patch;
+#X text 262 291 load a library \, relative to the patch;
+#X text 262 308 load a library \, relative to Pd;
+#X text 161 333 (for any of these you may use a full pathname such
+as "/tmp/dir" or \, in Windows \, "C:/garbage" instead of a relative
+path).;
+#X text 262 272 add to search path \, relative to Pd;
+#X text 98 482 WARNING: you might want to avoid putting "declare" statements
+inside abstractions \, as their effects will extend to the calling
+patch. As of version 0.41 \, "declare path" is ignored inside abstractions
+\, although \, probably unwisely \, "-stdpath" takes effect (on the
+calling patch as well as the abstraction.);
+#X text 98 561 BUG: The name "-stdpath" is confusing \, as it has a
+quite different effect from "-stdpath" on the pd command line.;
+#X text 11 23 set environment for loading patch;
+#X text 139 69 NEEDS AN EXAMPLE;
+#X text 165 185 - the [declare] object adds one or more directories
+to the search path \, and/or pre-loads one or more libraries ("extensions")
+to Pd in preparation for opening the patch from a file. Usage is "declare
+[-flag value] [-flag value] ..." where the flag can be:;
+#X text 97 400 If you put abstractions and/or other supporting files
+in a subdirectory "more" \, you can put an object \, "declare -path
+more" to make sure Pd sees them when the patch is loaded. Or \, if
+you have zexy installed in the directory extra/zexy (in the Pd installation")
+you can get it using "declare -stdpath extra/zexy".;
+#X text 80 185 n) symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;

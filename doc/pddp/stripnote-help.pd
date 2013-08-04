@@ -1,0 +1,110 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header stripnote 3 12 0
+18 -204280 -1 0;
+#X obj 0 358 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 242 494 366 META 0;
+#X text 12 155 LIBRARY internal;
+#X text 12 195 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 215 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 175 AUTHOR Miller Puckette;
+#X text 12 235 HELP_PATCH_AUTHORS Updated for Pd version 0.28. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control MIDI;
+#X text 12 45 DESCRIPTION send note-on messages and schedule note-off
+for later;
+#X text 12 75 INLET_0 float list;
+#X text 12 115 OUTLET_0 float;
+#X text 12 95 INLET_1 float;
+#X text 12 135 OUTLET_1 float;
+#X restore 500 597 pd META;
+#X obj 0 467 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 540 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 544 (none);
+#N canvas 107 153 428 433 Related_objects 0;
+#X obj 1 2 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 3 [stripnote] Related Objects;
+#X obj 74 81 ctlin;
+#X obj 217 81 pgmin;
+#X obj 24 81 bendin;
+#X obj 79 108 touchin;
+#X obj 261 81 polytouchin;
+#X obj 118 81 midiin;
+#X obj 23 108 sysexin;
+#X obj 179 168 noteout;
+#X obj 76 168 ctlout;
+#X obj 24 168 bendout;
+#X obj 366 168 touchout;
+#X obj 280 168 polytouchout;
+#X obj 123 168 midiout;
+#X obj 231 168 pgmout;
+#X obj 24 222 makenote;
+#X text 21 199 MIDI note construction:;
+#X text 21 141 MIDI output:;
+#X text 21 58 MIDI input:;
+#X obj 184 222 stripnote;
+#X obj 168 81 notein;
+#X text 181 199 MIDI note deconstruction:;
+#X obj 24 34 makenote;
+#X text 22 275 Additional useful objects for MIDI processing (Maxlib
+by Olaf Matthes);
+#X text 21 354 Also \, from cyclone (alpha) by Krzysztof Czaja:;
+#X text 22 256 Externals;
+#X obj 22 305 pddp/helplink maxlib/pitch;
+#X obj 22 320 pddp/helplink maxlib/score;
+#X obj 22 335 pddp/helplink maxlib/chord;
+#X obj 22 370 pddp/helplink cyclone/midiformat;
+#X obj 22 385 pddp/helplink cyclone/midiparse;
+#X obj 22 400 pddp/helplink cyclone/midiflush;
+#X restore 102 597 pd Related_objects;
+#X obj 78 367 cnv 17 3 65 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 366 float;
+#X text 98 406 list;
+#X text 98 476 float;
+#X obj 78 477 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 439 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 438 float;
+#X obj 466 3 stripnote;
+#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/stripnote
+-text pdpedia: stripnote;
+#X text 130 227 Stripnote takes note-off (zero-velocity) messages out
+of a stream of MIDI-style note message and passes the others through
+unchanged.;
+#X msg 134 127 23 0;
+#X obj 134 202 print x1;
+#X obj 191 202 print x2;
+#X obj 134 166 stripnote;
+#X text 168 366 - MIDI pitch value. The value will pass unchanged to
+the left outlet if the current value of the right inlet is non-zero.
+;
+#X msg 174 127 34.5 67.8;
+#X text 167 438 - a float to the right inlet is stored for later use.
+;
+#X text 168 476 - the MIDI pitch value received at the left inlet will
+pass unchanged if the value of the right inlet is non-zero.;
+#X text 98 506 float;
+#X obj 78 507 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 168 506 - the velocity will pass unchanged if the value of
+the right inlet is non-zero.;
+#X text 11 23 send note-on messages and schedule note-off for later
+;
+#X text 168 406 - a (pitch \, velocity) pair is distributed to the
+two inlets. Lists with more than two elements will be truncated.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 19 0 22 0;
+#X connect 22 0 20 0;
+#X connect 22 1 21 0;
+#X connect 24 0 22 0;

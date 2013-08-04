@@ -1,0 +1,32 @@
+#N canvas 10 40 620 460 12;
+#X obj 304 137 cnv 15 80 25 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X obj 192 137 cnv 15 80 25 empty empty empty 20 12 0 14 -261681 -66577
+0;
+#X obj 10 10 cnv 15 400 40 empty empty math_expr 20 12 0 24 -228992
+-66577 0;
+#X text 204 114 sqrt(x^2 + y^2);
+#X obj 106 274 +;
+#X obj 106 316 sqrt;
+#X floatatom 106 373 7 0 0 0 - - -;
+#X obj 79 230 pow 2;
+#X obj 141 230 pow 2;
+#X floatatom 321 141 5 0 0 0 y - -;
+#X floatatom 208 141 5 0 0 0 x - -;
+#X obj 238 290 expr sqrt(pow($f1 \, 2) + pow($f2 \, 2));
+#X floatatom 237 373 7 0 0 0 - - -;
+#X obj 321 176 trigger bang float;
+#X text 11 57 The [expr] object allows you to write out formulas in
+the standard style of many programming languages.;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 7 0 4 0;
+#X connect 8 0 4 1;
+#X connect 9 0 13 0;
+#X connect 10 0 7 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 13 0 7 0;
+#X connect 13 0 11 0;
+#X connect 13 1 11 1;
+#X connect 13 1 8 0;

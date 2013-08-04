@@ -1,0 +1,22 @@
+#N canvas 389 283 450 300 10;
+#X msg 173 54 0.999999;
+#X obj 173 86 + 9e-07;
+#X floatatom 164 184 15 0 0 0 - - -;
+#X obj 135 215 pddp/print;
+#X obj 112 245 nbx 15 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0
+10 -262144 -1 -1 1 256;
+#X obj 98 264 print LEFT;
+#X obj 269 182 print RIGHT;
+#X text 51 5 there is a disconnect between the precision that can be
+displayed in Pd and the precision of the math that is happening behind
+the scenes:;
+#X floatatom 187 113 15 0 0 0 - - -;
+#X obj 173 147 moses 1;
+#X connect 0 0 1 0;
+#X connect 1 0 8 0;
+#X connect 1 0 9 0;
+#X connect 9 0 2 0;
+#X connect 9 0 3 0;
+#X connect 9 0 4 0;
+#X connect 9 0 5 0;
+#X connect 9 1 6 0;

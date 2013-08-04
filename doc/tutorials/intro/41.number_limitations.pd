@@ -1,0 +1,22 @@
+#N canvas 10 40 620 460 12;
+#X obj -20 9 cnv 15 400 40 empty empty number_limitations 20 12 0 24
+-228992 -66577 0;
+#X text 23 146 NaN;
+#X text 86 147 -inf;
+#X text 154 148 inf;
+#X text -9 253 rounding errors;
+#X floatatom 2 411 12 999900 1e+20 0 - - -;
+#X text -9 373 Pd can only display 6 significant digits:;
+#X floatatom 3 331 12 0 0 0 - - -;
+#X text 113 287 999999 + 999999 = 1 \, 999 \, 998;
+#X msg 3 278 999999;
+#X obj 3 305 + 999999;
+#X obj -9 204 pddp/pddplink http://en.wikipedia.org/wiki/Real_numbers
+;
+#X text -13 61 Computers use floating point numbers to try to represent
+real numbers (a real number is any number that could be plotted on
+a line).;
+#X text 137 332 == 2 \, OOO \, OOO;
+#X text 108 409 <-- click and drag up to see;
+#X connect 9 0 10 0;
+#X connect 10 0 7 0;

@@ -1,0 +1,71 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 foo \$0-pddp.cnv.footer empty 20 12 0 14
+-228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header abs 3 12 0 18 -204280
+-1 0;
+#X obj 0 452 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 237 507 320 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 35 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 15 KEYWORDS control;
+#X text 12 55 DESCRIPTION absolute value;
+#X text 12 75 INLET_0 float;
+#X text 12 95 OUTLET_0 float;
+#X text 12 175 RELEASE_DATE 1997;
+#X restore 500 598 pd META;
+#X obj 0 511 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 542 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 570 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 546 (none);
+#N canvas 102 479 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 236 42 sqrt;
+#X obj 271 42 pow;
+#X obj 56 75 cos~;
+#X obj 88 75 osc~;
+#X obj 22 75 expr;
+#X obj 22 42 sin;
+#X obj 48 42 cos;
+#X obj 75 42 tan;
+#X obj 108 42 atan;
+#X obj 143 42 atan2;
+#X obj 181 42 exp;
+#X text 7 1 [abs] Related Objects;
+#X obj 208 42 log;
+#X restore 102 598 pd Related_objects;
+#X obj 78 460 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 479 list;
+#X text 98 518 float;
+#X obj 78 519 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X floatatom 239 225 0 0 0 0 - - -;
+#X floatatom 239 168 0 0 0 0 - - -;
+#X text 112 248 [abs] will output the absolute value of a number.;
+#X obj 239 198 abs;
+#X obj 492 4 abs;
+#X obj 465 21 pddp/pddplink http://wiki.puredata.info/en/abs -text
+pdpedia: abs;
+#X text 11 24 absolute value;
+#X text 168 479 - a list will be truncated \, and the first element
+will be used as input.;
+#X text 168 518 - the absolute value of the number given at the inlet.
+;
+#X text 98 459 float;
+#X text 168 459 - the incoming value.;
+#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 14 0 16 0;
+#X connect 16 0 13 0;

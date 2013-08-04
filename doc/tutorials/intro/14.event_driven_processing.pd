@@ -1,0 +1,72 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty event_driven_processing 20 12
+0 24 -228992 -66577 0;
+#X obj 113 324 tgl 20 0 empty empty empty 0 -6 0 8 -24198 -1 -1 0 1
+;
+#X obj 113 372 float;
+#X obj 170 372 + 1;
+#X floatatom 113 397 5 0 0 0 - - -;
+#X obj 113 418 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 113 348 metro 1000;
+#X obj 384 316 bng 20 250 50 0 empty empty empty 0 -6 0 8 -24198 -1
+-1;
+#X obj 385 353 float;
+#X obj 442 353 + 1;
+#X floatatom 385 378 5 0 0 0 - - -;
+#X obj 385 399 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 54 145 cnv 15 80 30 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X obj 236 140 cnv 15 80 30 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X obj 404 139 cnv 15 80 30 empty empty empty 20 12 0 14 -225271 -66577
+0;
+#X obj 72 181 + 1;
+#X floatatom 72 207 5 0 0 0 - - -;
+#X msg 72 149 1;
+#X msg 237 145 convert;
+#X obj 237 178 symbol;
+#X symbolatom 237 206 10 0 0 0 - - -;
+#X obj 72 234 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 237 233 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 421 176 float;
+#X obj 478 176 + 1;
+#X floatatom 421 204 5 0 0 0 - - -;
+#X obj 421 229 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X obj 277 364 delay 1000;
+#X msg 421 144 bang;
+#X text 18 65 Message processing is driven by events \, nothing happens
+if there are no events. There is nothing happening in the patches below
+until you click on the messages (the bang buttons at the bottom of
+each patch illustrate this):;
+#X text 18 265 Pd is always ready to process messages \, you don't
+need to tell it to run. You can keep events happening by sending a
+stream of messages:;
+#X connect 1 0 6 0;
+#X connect 2 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 1;
+#X connect 4 0 5 0;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 0 10 0;
+#X connect 9 0 8 1;
+#X connect 10 0 11 0;
+#X connect 11 0 27 0;
+#X connect 15 0 16 0;
+#X connect 16 0 21 0;
+#X connect 17 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 20 0;
+#X connect 20 0 22 0;
+#X connect 23 0 24 0;
+#X connect 23 0 25 0;
+#X connect 24 0 23 1;
+#X connect 25 0 26 0;
+#X connect 27 0 8 0;
+#X connect 28 0 23 0;

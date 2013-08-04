@@ -1,0 +1,20 @@
+#N canvas 10 40 620 460 10;
+#X declare -lib Gem;
+#X obj 64 322 gemwin;
+#X obj 8 10 cnv 15 400 40 empty empty gemwin_as_pointer 20 12 0 24
+-228992 -66577 0;
+#X msg 64 254 create;
+#X text 17 63 Gem is based on OpenGL \, which uses the graphics card
+to do the processing. That means that instead of directly controlling
+the data like you do with Pd messages or audio \, in Gem you are controlling
+a "pointer" to the data on the video card.;
+#X obj 302 323 gemwin;
+#X text 17 137 [gemwin] is a pointer to the output buffer of your video
+card. The screen you are looking at is that output buffer drawn to
+the screen.;
+#X msg 302 255 destroy;
+#X text 17 188 So even if there are multiple [gemwin] objects \, there
+is only one screen. Each [gemwin] object is then a pointer to the same
+window.;
+#X connect 2 0 0 0;
+#X connect 6 0 4 0;

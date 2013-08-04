@@ -1,0 +1,101 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header vline~ 3 12 0 18
+-204280 -1 0;
+#X obj 0 361 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 244 494 344 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS Updated for version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS signal time conversion;
+#X text 12 45 DESCRIPTION high-precision audio ramp generator;
+#X text 12 65 INLET_0 float list stop;
+#X text 12 85 INLET_1 float;
+#X text 12 105 INLET_2 float;
+#X text 12 125 OUTLET_0 signal;
+#X text 12 205 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 499 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 541 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 545 (none);
+#N canvas 85 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 43 line~;
+#X obj 62 43 line;
+#X text 8 2 [vline~] Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 370 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 369 float;
+#X text 98 393 list;
+#X obj 78 508 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 448 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 447 float;
+#X obj 480 3 vline~;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/vline~ -text
+pdpedia: vline~;
+#X text 11 23 high-precision audio ramp generator;
+#X text 168 393 - a list to the first inlet is distributed among the
+inlets of [vline~].;
+#X text 98 426 stop;
+#X obj 78 471 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
+-162280 0;
+#X text 98 470 float;
+#X text 98 507 signal;
+#X text 168 507 - the output is a linear ramp whose levels and timing
+are determined by the messages sent to the inlet(s).;
+#X obj 31 271 snapshot~;
+#X floatatom 31 294 5 0 0 0 - - -;
+#X obj 41 244 metro 100;
+#X msg 31 69 1 1000;
+#X msg 59 174 stop;
+#X msg 51 113 0;
+#X obj 31 200 vline~;
+#X text 86 67 ramp up;
+#X msg 40 91 0 1000;
+#X text 86 90 ramp down;
+#X text 60 133 ramp up \, jump down \, ramp up again;
+#X msg 54 152 1 1000 \, 0 0 1000 \, 1 1000 1000;
+#X text 86 112 jump down;
+#X text 147 181 The [vline~] object \, like [line~] \, generates linear
+ramps whose levels and timing are determined by messages you send it.
+The messages consist of a target value \, a time interval (zero if
+not supplied) \, and an initial delay (also zero if not supplied.)
+Ramps may start and stop between audio samples \, in which case the
+output is interpolated accordingly.;
+#X text 147 276 Any number of future ramps may be scheduled and [vline~]
+will remember them and execute them in order. They must be specified
+in increasing order of initial delay however \, since a segment cancels
+all planned segments at any future time.;
+#X text 168 369 - target value.;
+#X text 168 426 - the "stop" message freezes [vline~] at its current
+value.;
+#X text 167 447 - time value.;
+#X text 167 470 - initial delay.;
+#X obj 41 222 loadbang;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 455 51 pddp/dsp;
+#X obj 98 572 pddp/pddplink ../3.audio.examples/C04.control.to.signal.pd
+-text doc/3.audio.examples/C04.control.to.signal.pd;
+#X connect 24 0 25 0;
+#X connect 26 0 24 0;
+#X connect 27 0 30 0;
+#X connect 28 0 30 0;
+#X connect 29 0 30 0;
+#X connect 30 0 24 0;
+#X connect 32 0 30 0;
+#X connect 35 0 30 0;
+#X connect 43 0 26 0;

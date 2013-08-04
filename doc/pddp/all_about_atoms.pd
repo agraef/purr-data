@@ -1,0 +1,182 @@
+#N canvas 0 0 448 238 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header atoms 20 10 1 18
+-261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#N canvas 15 77 428 202 What_is_an_atom? 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 What is an atom in Pd?;
+#X text 19 166 See the other subpatches for more details.;
+#X text 19 136 3) Variables: dollar and dollsym atoms.;
+#X text 19 36 An atom is the the most basic unit of data in a message.
+Atoms can be divided into three groups:;
+#X text 19 66 1) Basic atom types: float \, symbol \, and (less commonly)
+pointer atoms.;
+#X text 19 101 2) Special atom types: comma and semicolons \, which
+are generally used to separate messages in Pd.;
+#X restore 43 42 pd What_is_an_atom?;
+#N canvas 22 133 428 399 Basic_atoms 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 20 320 Pointer is a special type of atom used in connection
+with data-structures. It has no visible form and cannot be converted
+to one of the other atom types. See help for data structures for more
+info.;
+#X text 20 131 A symbol atom can be defined in two ways:;
+#X text 20 37 A float atom represents a single floating point number
+\, which can be used for mathematical computations in Pd.;
+#X obj 1 95 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X obj 1 285 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Float Atom;
+#X text 7 95 Symbol Atom;
+#X text 7 285 Pointer Atom;
+#X text 80 176 Five Examples: word pitch foo-bar 1.2.3 #x21;
+#X text 80 62 Five Examples: 12 -42 3.14 0.019 1e-16;
+#X text 30 146 a) a series of characters that does not contain whitespace
+\, semicolons or commas that cannot be interpreted as a float.;
+#X text 30 197 b) Any set of characters that is created and stored
+in Pd's memory as a symbol atom. For example \, some Pd objects can
+format a directory name like "Video Projects" as a single symbol atom
+for convenience \, (even though it has a space in it). Note that as
+of Pd version 0.42 such "exotic" symbol atoms will not be saved correctly
+in a Pd patch.;
+#X restore 43 69 pd Basic_atoms;
+#N canvas 9 155 428 464 Special_atoms 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Commas and Semicolons in Pd;
+#X text 20 37 Commas and Semicolons are also atoms.;
+#X text 20 58 They are normally used in message boxes \, where they
+separate multiple messages from each other. See message box help for
+more details on this.;
+#X msg 23 102 This is a message box. Right-click and choose "Help"
+;
+#X text 19 179 Commas and semicolons are special because they are not
+separated from other atoms by whitespace.;
+#X text 19 134 Commas and semicolons can also be used in object boxes.
+For example \, the [expr] object uses them in order to organize and
+separate complex mathematical expressions.;
+#X obj 1 226 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X obj 22 339 list append three atoms \,;
+#X obj 22 400 list length;
+#X floatatom 22 422 5 0 0 0 - - -;
+#X obj 22 319 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 55 380 print;
+#X text 19 259 At least for the standard "vanilla" objects \, when
+you enter commas and semicolons as arguments it seems they are converted
+to symbol atoms (and escaped):;
+#X msg 112 380 set \$3;
+#X text 160 433 it again. (I.e. \, you will lose data.);
+#X text 178 339 <- In object boxes \, commas/semicolons;
+#X text 196 354 are saved and loaded consistently;
+#X text 142 403 <- In message boxes \, commas/semicolons won't;
+#X text 7 226 Conversion of Commas and Semicolons to Symbol Atoms;
+#X msg 115 404;
+#X text 160 418 be escaped if you save the patch and load;
+#X connect 8 0 9 0;
+#X connect 8 0 12 0;
+#X connect 8 0 14 0;
+#X connect 9 0 10 0;
+#X connect 11 0 8 0;
+#X connect 14 0 20 0;
+#X restore 43 95 pd Special_atoms;
+#N canvas 7 69 428 561 Variable_atoms 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X obj 1 228 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X obj 1 298 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 298 In message boxes;
+#X obj 1 368 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X msg 22 462 symbol o;
+#X symbolatom 22 506 10 0 0 0 - - -;
+#X msg 22 484 symbol f\$1o;
+#X msg 127 462 1 2 3;
+#X obj 178 529 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 204 527 so this doesn't match;
+#X obj 127 506 route 123;
+#X text 209 505 [route] expects a float \,;
+#X text 169 484 <- this will always output a symbol-atom;
+#X obj 20 323 pddp/pddplink ../2.control.examples/10.more.messages.pd
+-text doc/2.control.examples/10.more.messages.pd;
+#X obj 127 529 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 19 266 pddp/pddplink ../2.control.examples/14.dollarsigns.pd
+-text doc/2.control.examples/14.dollarsigns.pd;
+#X obj 19 251 pddp/pddplink ../2.control.examples/13.locality.pd -text
+doc/2.control.examples/13.locality.pd;
+#X text 20 343 Also see help for message box:;
+#X msg 205 344 right-click me;
+#X text 7 368 Dollsym Atom Expansion;
+#X text 7 228 In object boxes and iemGUIs;
+#X text 20 37 Dollarsign atoms are variables \, used when the actual
+value will be filled in somewhere else. They have two separate behaviors:
+one in object boxes \, and the other in message boxes. In both cases
+\, there are two types of dollarsign variables:;
+#X text 7 1 Variable atoms \, aka Dollarsign Atoms or Dollarsign Variables
+;
+#X msg 127 484 \$1\$2\$3;
+#X text 20 107 1) dollar atoms- a dollar sign followed by an integer:
+"\$1" \, "\$2" \, and so on. These variables can expand to become float
+\, symbol \, or pointer atoms.;
+#X text 20 152 2) dollsym atoms- a dollar atom followed and/or preceded
+by a symbol atom \, with no whitespace in between. Examples are "\$1-something"
+\, "\$2.blah" \, and "pd-\$1-foo". They always expand to symbol atoms.
+;
+#X text 20 403 You can create a dollsym atom that consists only of
+dollar atoms ganged together with no white space in between. Just remember
+that the result will always be a symbol-atom-- even if each dollar
+atom is substituted with a float.;
+#X connect 5 0 7 0;
+#X connect 7 0 6 0;
+#X connect 8 0 24 0;
+#X connect 11 0 15 0;
+#X connect 11 1 9 0;
+#X connect 24 0 11 0;
+#X restore 43 120 pd Variable_atoms;
+#X text 42 162 Atoms are used to build messages in Pd. For more details
+on messages \, see the following:;
+#X obj 43 191 pddp/pddplink all_about_messages.pd;
+#X text 163 120 also see:;
+#X obj 223 120 pddp/pddplink all_about_dollarsign_zero.pd;
+#X obj 1 216 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 25 KEYWORDS needs_work;
+#X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42. Some info was pulled from puredata.info;
+#X text 12 45 DESCRIPTION overview of Pd atoms;
+#X restore 392 218 pd META;
+#N canvas 14 133 428 105 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Atoms- Related Objects;
+#X floatatom 22 43 5 0 0 0 - - -;
+#X symbolatom 22 67 10 0 0 0 - - -;
+#X restore 103 218 pd Related_objects;
+#X obj 6 218 pddp/pddplink all_about.pd -text All About Pd;
+#X text 168 42 <- give some links to the manual;
+#N canvas 7 69 428 185 Custom_atoms 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 External atoms;
+#X text 20 37 External libraries may add atom types-- for example \,
+to support video or graphics \, or to add expressivity to the Pd language
+that would be difficult to achieve using only numbers or symbols.;
+#X text 20 97 The custom atom types may or may not work with Pd's built-in
+objects. Consult the documentation for the particular library for more
+information.;
+#X text 20 147 What else to say here?;
+#X restore 43 145 pd Custom_atoms;
+#X text 163 145 <-- work on this;

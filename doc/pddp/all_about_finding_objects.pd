@@ -1,0 +1,52 @@
+#N canvas 0 0 448 447 10;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header Pure_Data_search
+20 10 1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 425 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 274 223 494 284 META 0;
+#X text 12 65 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 DESCRIPTION tips for searching for objects;
+#X text 12 85 HELP_PATCH_AUTHORS Jonathan Wilkes \, Pd-ext 0.42.;
+#X text 12 25 KEYWORDS help;
+#X restore 392 427 pd META;
+#X obj 6 427 pddp/pddplink all_about.pd -text All About Pd;
+#N canvas 9 180 428 183 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Searching for Objects;
+#X text 32 39 * pdpedia;
+#X text 32 59 * mailing lists;
+#X text 32 79 * google;
+#X text 32 99 * your own harddrive;
+#X restore 103 427 pd References;
+#X text 19 121 Advanced Search;
+#X text 19 26 Simple Search;
+#X text 19 26 _____________;
+#X text 19 121 _______________;
+#X text 19 171 You can use regular expressions \, too:;
+#X text 19 188 "obj [0-9]+ [0-9]+ osc~ [0-9]+" will match all help
+patches that have an [osc~] object with a creation argument.;
+#X text 19 141 Use quotes to search for a specific phrase \, such as:
+"frequency modulation";
+#X obj 24 250 pddp/pddplink http://www.tcl.tk/man/tcl8.5/TclCmd/re_syntax.htm
+;
+#X text 19 218 Pd search uses the regex syntax from the Tcl language
+\, which is documented here:;
+#X text 19 382 For more details on PDDP tags \, see:;
+#X obj 24 399 pddp/pddplink all_about_pd_META.pd;
+#X text 19 46 Enter your search terms and click "Search" \, or click
+a keyword. You can use the drop-down menu below the search bar to filter
+the results by category. Searches are not case sensitive.;
+#X text 19 101 Use <ctrl-+> and <ctrl-=> to change the size of the
+fonts.;
+#X text 19 272 Finally \, you can make use of PDDP keywords to refine
+your search. They are listed at the bottom of the search homepage.
+Click one to see the regex syntax \, which you can use to search for
+any of the PDDP tag.;
+#X text 19 322 Clicking on a "folder" icon will bring up the containing
+directory in an external file browser. Clicking the "i" icon will bring
+up a README.txt for the containing library (or META.pd if there isn't
+a README). Internal objects will pop up a message saying so.;

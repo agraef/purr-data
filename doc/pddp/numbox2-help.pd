@@ -1,0 +1,426 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header nbx 3 12 0 18 -204280
+-1 0;
+#X obj 0 260 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 246 494 344 META 0;
+#X text 12 155 LIBRARY internal;
+#X text 12 65 LICENSE SIBSD;
+#X text 12 175 AUTHOR Thomas Musil;
+#X text 12 195 WEBSITE;
+#X text 12 235 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 45 KEYWORDS control storage GUI nonlocal;
+#X text 12 85 DESCRIPTION gui-number box;
+#X text 12 5 NAME nbx;
+#X text 12 25 ALIAS my_numbox;
+#X text 12 135 OUTLET_0 float;
+#X text 12 105 INLET_0 float bang set size range log init log_height
+send receive label label_pos label_font color pos delta;
+#X text 12 215 RELEASE_DATE 2002;
+#X restore 500 597 pd META;
+#X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 462 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 73 462 428 128 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [nbx] Related Objects;
+#X floatatom 22 43 5 0 0 0 - - -;
+#X obj 62 43 float;
+#X obj 106 43 int;
+#X obj 20 90 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
+#X text 18 66 All iem-gui objects:;
+#X restore 102 597 pd Related_objects;
+#X obj 78 269 cnv 17 3 140 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 268 float;
+#X text 98 338 list;
+#X text 98 433 float;
+#X obj 78 434 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X floatatom 28 175 6 0 0 0 - - -;
+#X msg 57 94 set \$1;
+#X floatatom 48 49 6 0 0 0 - - -;
+#X obj 28 199 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 28 49 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X floatatom 57 71 4 0 0 0 - - -;
+#X floatatom 108 49 6 0 0 0 - - -;
+#X floatatom 366 48 7 0 0 0 - - -;
+#X obj 241 159 ftom;
+#X floatatom 241 183 4 0 0 0 - - -;
+#X floatatom 287 159 9 0 0 0 - - -;
+#X floatatom 366 120 9 0 0 0 - - -;
+#X floatatom 241 63 4 0 0 0 - - -;
+#X obj 241 85 mtof;
+#X text 104 151 (0.01 pixels);
+#X msg 108 71 set \$1;
+#X text 106 120 shift-click & drag;
+#X text 107 135 for fine-tuning;
+#X obj 77 199 print;
+#N canvas 133 180 290 126 once 0;
+#X obj 38 24 inlet;
+#X obj 38 80 outlet;
+#X obj 38 53 spigot 1;
+#X msg 102 53 0;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 1;
+#X restore 77 175 pd once;
+#X obj 108 93 s foo13_rcv;
+#X obj 366 71 s goo14_rcv;
+#X obj 366 96 r goo14_snd;
+#X obj 28 135 nbx 6 15 -1e+37 1e+37 0 0 foo13_snd foo13_rcv empty 45
+7 0 10 -225280 -1109 -1 0 256;
+#X obj 241 128 nbx 5 18 55 3520 1 0 goo14_snd goo14_rcv log.freq. 10
+-10 0 14 -261234 -159808 -90881 55 72;
+#X text 363 157 and receive names. Right-;
+#X text 363 172 click and choose;
+#X text 362 141 [nbx] has settable send;
+#X obj 466 48 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/nbx -text
+pdpedia: nbx;
+#X text 168 268 - a float to the left inlet will be displayed \, stored
+\, and sent to the outlet.;
+#X text 168 338 - a list will be truncated to the first item.;
+#X text 98 311 set;
+#X text 168 311 - sending a set message followed by a value (e.g. \,
+"set 14") will display and store the value without outputting it.;
+#X text 97 360 see the following subpatch for messages that change
+the gui-properties of [nbx]:;
+#N canvas 49 27 446 599 Changing_GUI_Properties 0;
+#X text 17 152 log height;
+#X text 340 24 no init;
+#X msg 350 94 init 1;
+#X msg 340 43 init 0;
+#X msg 242 64 lin;
+#X msg 252 94 log;
+#X text 238 24 linear/;
+#X text 238 39 logarithmical;
+#X text 349 58 init value;
+#X text 350 73 on loadbang;
+#X obj 242 119 s nbx_rcv;
+#X obj 340 119 s nbx_rcv;
+#X msg 17 175 log_height 256;
+#X obj 17 245 s nbx_rcv;
+#X text 346 152 label;
+#X msg 346 172 label blabla;
+#X text 115 153 change send name;
+#X text 220 152 change receive name;
+#X obj 117 245 s nbx_rcv;
+#X obj 223 245 s nbx_rcv;
+#X obj 346 245 s nbx_rcv;
+#X msg 117 175 send nbx1_snd;
+#X msg 127 200 send nbx_snd;
+#X obj 231 222 s z_rcv;
+#X msg 223 174 receive z_rcv;
+#X msg 231 199 receive nbx_rcv;
+#N canvas 372 228 161 250 init 0;
+#X obj 16 11 loadbang;
+#X obj 16 42 f \$0;
+#X msg 16 73 \; \$1-xpos 320 \; \$1-ypos 330 \; \$1-xlabel 0 \; \$1-ylabel
+-8 \; \$1-font-size 10 \; \$1-width 5 \; \$1-height 14 \; \$1-bg 0
+\; \$1-front 12 \; \$1-label 12;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 360 400 pd init;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-bottom empty
+0 -8 0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-top empty 0
+-8 0 12 -262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 124 44 pd flash-time;
+#X text 121 23 output-range;
+#X text 173 46 1.bottom;
+#X text 173 66 2.top;
+#X msg 124 94 range \$1 \$2;
+#X obj 124 118 s nbx_rcv;
+#X text 15 280 label position;
+#X text 137 280 font properties;
+#X msg 17 387 label_pos \$1 \$2;
+#X msg 139 387 label_font \$1 \$2;
+#X text 188 304 1.font(0-2);
+#X text 188 325 2.height;
+#X text 66 303 1.x-offset;
+#X text 66 324 2.y-offset;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
+0 -8 0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
+0 -8 0 12 -262144 -1 -1 -8 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 17 302 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
+0 -8 0 12 -262144 -1 -1 10 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 139 302 pd flash-time;
+#X text 18 445 preset-colors;
+#X text 119 445 RGB-colors;
+#X msg 18 552 color \$1 \$2 \$3;
+#N canvas 364 205 306 317 flash-time 0;
+#X obj 69 196 t b a;
+#X obj 33 262 outlet;
+#X obj 33 237 pack 0 0 0;
+#X obj 120 197 t b a;
+#X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
+-1 -1 0 256;
+#X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X connect 0 0 2 0;
+#X connect 0 1 2 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 3 1 2 2;
+#X connect 4 0 2 0;
+#X connect 5 0 0 0;
+#X connect 6 0 3 0;
+#X coords 0 -1 1 1 48 62 2 100 100;
+#X restore 18 467 pd flash-time;
+#N canvas 0 0 306 317 flash-time 0;
+#X obj 96 521 outlet;
+#X obj 162 230 t b f;
+#X obj 96 268 +;
+#X obj 96 293 t b f;
+#X obj 96 324 +;
+#X obj 19 208 * -65536;
+#X obj 96 208 * -256;
+#X obj 162 208 * -1;
+#X obj 96 355 - 1;
+#X obj 96 385 list prepend 0;
+#X obj 96 410 route 0 1 2;
+#X obj 96 497 pack 0 0 0;
+#X obj 115 456 t b a;
+#X obj 168 455 t b a;
+#X obj 104 124 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 120 120 1.bg;
+#X text 120 137 2.front;
+#X text 120 153 3.label;
+#X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
+-258113 -1 0 256;
+#X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
+-13381 -1 0 256;
+#X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
+-4160 -1 0 256;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 10 2 13 0;
+#X connect 11 0 0 0;
+#X connect 12 0 11 0;
+#X connect 12 1 11 1;
+#X connect 13 0 11 0;
+#X connect 13 1 11 2;
+#X connect 14 0 9 1;
+#X connect 18 0 5 0;
+#X connect 19 0 6 0;
+#X connect 20 0 7 0;
+#X coords 0 -1 1 1 102 74 2 100 100;
+#X restore 120 467 pd flash-time;
+#X text 67 469 1.bg;
+#X text 67 489 2.front;
+#X text 67 510 3.label;
+#X text 348 445 delta;
+#X text 236 445 position;
+#X msg 237 540 pos \$1 \$2;
+#X msg 349 540 delta \$1 \$2;
+#X obj 349 516 list;
+#X obj 349 467 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
+-8 0 12 -262144 -1 -1 320 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
+-8 0 12 -262144 -1 -1 330 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 237 467 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 378 467 pd flash-time;
+#X obj 304 291 cnv 15 92 92 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X obj 305 292 cnv 15 90 90 empty empty empty 20 12 0 14 -261682 -66577
+0;
+#X obj 320 330 nbx 5 14 -1e+37 1e+37 0 0 nbx_snd nbx_rcv my_nbx 0 -8
+0 10 -262144 -33289 -33289 0 256;
+#X obj 17 412 s nbx_rcv;
+#X obj 139 412 s nbx_rcv;
+#X obj 18 577 s nbx_rcv;
+#X obj 349 577 s nbx_rcv;
+#X obj 237 577 s nbx_rcv;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-width empty
+0 -8 0 12 -262144 -1 -1 5 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-height empty
+0 -8 0 12 -262144 -1 -1 14 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 17 44 pd flash-time;
+#X obj 17 118 s nbx_rcv;
+#X text 66 46 1.width;
+#X text 66 66 2.height;
+#X text 14 23 dimensions;
+#X msg 17 94 size \$1 \$2;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [nbx] Changing GUI Properties through Messages;
+#X msg 356 197 label my_nbx;
+#X text 285 466 1.x-pos;
+#X text 285 488 2.y-pos;
+#X connect 2 0 11 0;
+#X connect 3 0 11 0;
+#X connect 4 0 10 0;
+#X connect 5 0 10 0;
+#X connect 12 0 13 0;
+#X connect 15 0 20 0;
+#X connect 21 0 18 0;
+#X connect 22 0 18 0;
+#X connect 24 0 19 0;
+#X connect 25 0 23 0;
+#X connect 27 0 31 0;
+#X connect 31 0 32 0;
+#X connect 35 0 62 0;
+#X connect 36 0 63 0;
+#X connect 41 0 35 0;
+#X connect 42 0 36 0;
+#X connect 45 0 64 0;
+#X connect 46 0 45 0;
+#X connect 47 0 45 0;
+#X connect 53 0 66 0;
+#X connect 54 0 65 0;
+#X connect 55 0 54 0;
+#X connect 56 0 55 0;
+#X connect 57 0 53 0;
+#X connect 58 0 55 1;
+#X connect 67 0 72 0;
+#X connect 72 0 68 0;
+#X connect 75 0 20 0;
+#X restore 170 394 pd Changing_GUI_Properties;
+#N canvas 73 200 428 314 nbx-creation-arguments 0;
+#X text 21 37 "nbx" can be called with 18 creation arguments. These
+are not "optional" - all parameters must be filled or the gui-bng will
+not instantiate correctly.;
+#X text 21 171 For example \, click the msg-box to dynamically create
+an nbx:;
+#X obj 22 235 s pd-nbx-creation-arguments;
+#X text 22 97 nbx creation arguments: xSize ySize rangeBtm rangeTop
+Logarithmic Init sendName receiveName Label labelXOff labelYOff Font#
+fontsize bgColor foregroundColor lblColor initValue logHeight;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [nbx] Creation Arguments;
+#X msg 22 193 obj 150 280 nbx 5 14 0 127 0 1 send receive Maia 15 -8
+0 13 14 12 23 63 256;
+#X connect 6 0 2 0;
+#X restore 170 524 pd nbx-creation-arguments;
+#X text 168 465 - if you create an [nbx] object without arguments \,
+default values are chosen for the GUI-properties. See the subpatch
+below to learn how to dynamically instantiate a [nbx] with custom properties:
+;
+#X text 115 208 Use the UP- \, DOWN- \, LEFT- or RIGHT-key to move
+a selected gui-object. Right-click and choose "Properties" to modify
+its appearance.;
+#X text 362 188 "Properties" to set them.;
+#X text 11 23 gui-number box;
+#X text 97 466 18;
+#X text 215 551 (c) musil@iem.kug.ac.at;
+#X text 257 564 IEM KUG;
+#X text 232 576 graz \, austria 2002;
+#X text 425 4 [my_numbox] or [nbx];
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 98 295 bang;
+#X text 168 295 - output the current value;
+#X connect 13 0 16 0;
+#X connect 14 0 36 0;
+#X connect 15 0 36 0;
+#X connect 17 0 36 0;
+#X connect 18 0 14 0;
+#X connect 19 0 28 0;
+#X connect 20 0 34 0;
+#X connect 21 0 22 0;
+#X connect 25 0 26 0;
+#X connect 26 0 37 0;
+#X connect 28 0 33 0;
+#X connect 32 0 31 0;
+#X connect 35 0 24 0;
+#X connect 36 0 32 0;
+#X connect 36 0 13 0;
+#X connect 37 0 21 0;
+#X connect 37 0 23 0;

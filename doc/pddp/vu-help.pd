@@ -1,0 +1,375 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header vu 3 12 0 18 -204280
+-1 0;
+#X obj 0 287 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 53 246 494 344 META 0;
+#X text 12 155 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 175 AUTHOR Thomas Musil;
+#X text 12 195 WEBSITE;
+#X text 12 5 KEYWORDS control GUI nonlocal;
+#X text 12 45 DESCRIPTION gui-vu-meter-display;
+#X text 12 65 INLET_0 float list bang size scale receive label label_pos
+label_font color pos delta;
+#X text 12 95 INLET_1 float;
+#X text 12 115 OUTLET_0 float;
+#X text 12 135 OUTLET_1 float;
+#X text 12 215 RELEASE_DATE 2002;
+#X text 12 235 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X restore 500 597 pd META;
+#X obj 0 435 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 489 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 572 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 81 462 428 126 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [vu] Related Objects;
+#X obj 22 91 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
+#X text 20 67 All iem-gui objects:;
+#X obj 23 43 env~;
+#X restore 92 597 pd Related_objects;
+#X obj 78 296 cnv 17 3 90 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 295 float;
+#X obj 78 444 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 396 cnv 17 3 30 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/vu -text pdpedia:
+vu;
+#X text 98 312 list;
+#X text 98 396 float;
+#X text 98 412 list;
+#X text 168 312 - a 2-item list will be distributed to the two inlets
+;
+#X text 98 444 float;
+#X obj 78 466 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 466 float;
+#N canvas 76 117 428 416 vu-creation-arguments 0;
+#X obj 25 237 s pd-vu-creation-arguments;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [vu] Creation Arguments;
+#X text 22 163 For example \, click the msg-box to dynamically create
+a [vu]:;
+#X text 23 98 [vu] creation arguments: xSize ySize receiveName Label
+labelXOff labelYOff font# fontSize bgColor labelColor Scale Unknown(0)
+;
+#X text 22 38 [vu] can be called with 12 creation arguments. These
+are not "optional" - all parameters must be filled or the gui-bng will
+not instantiate correctly.;
+#X msg 25 195 obj 160 280 vu 15 120 fff Elektra -15 -12 0 12 26 12
+0 0;
+#X connect 6 0 0 0;
+#X restore 170 549 pd vu-creation-arguments;
+#N canvas 75 10 428 611 Changing_GUI_Properties 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X floatatom 130 62 1 0 1 0 - #0-scale -;
+#X text 124 38 display scale;
+#X msg 130 116 scale \$1;
+#X obj 130 141 s vu_rcv;
+#X text 213 38 change receive name;
+#X obj 215 141 s vu_rcv;
+#X msg 215 62 receive vu12_rcv;
+#X obj 231 114 s vu12_rcv;
+#X msg 231 89 receive vu_rcv;
+#X msg 339 61 label blabla;
+#X obj 339 141 s vu_rcv;
+#X text 339 38 label;
+#N canvas 378 326 151 256 init 0;
+#X obj 16 11 loadbang;
+#X obj 16 42 f \$0;
+#X msg 16 73 \; \$1-xpos 330 \; \$1-ypos 245 \; \$1-scale 1 \; \$1-xlabel
+-1 \; \$1-ylabel -8 \; \$1-label 12 \; \$1-font-size 10 \; \$1-width
+15 \; \$1-height 120 \; \$1-font 0 \; \$1-bg 12 \; \$1-bg 12;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 352 404 pd init;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-width empty
+0 -8 0 12 -262144 -1 -1 15 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-height empty
+0 -8 0 12 -262144 -1 -1 120 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 22 59 pd flash-time;
+#X text 19 38 dimensions;
+#X text 71 61 1.width;
+#X text 71 81 2.height;
+#X msg 22 116 size \$1 \$2;
+#X obj 22 141 s vu_rcv;
+#X text 20 175 label position;
+#X text 152 175 font properties;
+#X msg 22 250 label_pos \$1 \$2;
+#X msg 154 250 label_font \$1 \$2;
+#X text 203 199 1.font(0-2);
+#X text 203 220 2.height;
+#X text 71 198 1.x-offset;
+#X text 71 219 2.y-offset;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
+0 -8 0 12 -262144 -1 -1 -1 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
+0 -8 0 12 -262144 -1 -1 -8 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 22 197 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
+0 -8 0 12 -262144 -1 -1 10 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 154 197 pd flash-time;
+#X text 22 310 preset-colors;
+#X text 131 310 RGB-colors;
+#N canvas 364 205 169 292 flash-time 0;
+#X obj 69 196 t b a;
+#X obj 33 262 outlet;
+#X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
+-1 -1 12 256;
+#X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X obj 33 237 pack 0 0;
+#X connect 0 0 4 0;
+#X connect 0 1 4 1;
+#X connect 2 0 4 0;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 22 332 pd flash-time;
+#N canvas 0 0 306 317 flash-time 0;
+#X obj 96 521 outlet;
+#X obj 162 230 t b f;
+#X obj 96 268 +;
+#X obj 96 293 t b f;
+#X obj 96 324 +;
+#X obj 19 208 * -65536;
+#X obj 96 208 * -256;
+#X obj 162 208 * -1;
+#X obj 96 355 - 1;
+#X obj 96 385 list prepend 0;
+#X obj 115 456 t b a;
+#X obj 104 124 vradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 120 120 1.bg;
+#X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
+-258113 -1 0 256;
+#X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
+-13381 -1 0 256;
+#X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
+-4160 -1 0 256;
+#X text 120 137 2.label;
+#X obj 96 410 route 0 1;
+#X obj 96 497 pack 0 0;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 17 0;
+#X connect 10 0 18 0;
+#X connect 10 1 18 1;
+#X connect 11 0 9 1;
+#X connect 13 0 5 0;
+#X connect 14 0 6 0;
+#X connect 15 0 7 0;
+#X connect 17 0 18 0;
+#X connect 17 1 10 0;
+#X connect 18 0 0 0;
+#X coords 0 -1 1 1 102 58 2 100 100;
+#X restore 132 332 pd flash-time;
+#X text 71 334 1.bg;
+#X text 71 354 2.label;
+#X msg 22 407 color \$1 \$2;
+#X text 153 463 delta;
+#X text 21 463 position;
+#X msg 22 560 pos \$1 \$2;
+#X msg 154 560 delta \$1 \$2;
+#X obj 154 536 list;
+#X obj 154 485 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 70 484 1.x-position;
+#X text 70 506 2.y-position;
+#X text 233 484 1.x-delta;
+#X text 233 506 2.y-delta;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
+-8 0 12 -262144 -1 -1 330 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
+-8 0 12 -262144 -1 -1 245 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 22 485 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 183 485 pd flash-time;
+#X obj 296 213 cnv 15 102 177 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X obj 297 214 cnv 15 100 175 empty empty empty 20 12 0 14 -261682
+-66577 0;
+#X obj 22 275 s vu_rcv;
+#X obj 154 275 s vu_rcv;
+#X obj 22 432 s vu_rcv;
+#X obj 154 585 s vu_rcv;
+#X obj 22 585 s vu_rcv;
+#X text 6 2 [vu] Changing Properties through Messages;
+#X msg 349 114 label my-vu;
+#X obj 330 245 vu 15 120 vu_rcv my-vu -1 -8 0 10 -33289 -33289 1 0
+;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 7 0 6 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 14 0 18 0;
+#X connect 18 0 19 0;
+#X connect 22 0 51 0;
+#X connect 23 0 52 0;
+#X connect 28 0 22 0;
+#X connect 29 0 23 0;
+#X connect 32 0 36 0;
+#X connect 33 0 36 0;
+#X connect 36 0 53 0;
+#X connect 39 0 55 0;
+#X connect 40 0 54 0;
+#X connect 41 0 40 0;
+#X connect 42 0 41 0;
+#X connect 47 0 39 0;
+#X connect 48 0 41 1;
+#X connect 57 0 11 0;
+#X restore 172 375 pd Changing_GUI_Properties;
+#X text 97 345 see the following subpatch for messages that change
+the gui-properties of [vu]:;
+#X text 168 493 - creating a [vu] without any arguments will set default
+values for all gui-properties. See the subpatch below to learn how
+to dynamically instantiate a [vu] object with custom properties:;
+#X text 170 239 Use the UP- \, DOWN- \, LEFT- or RIGHT-key to move
+a selected gui-object. Right-click and choose "Properties" to modify
+its appearance.;
+#X text 341 111 and receive names. Right-;
+#X text 341 126 click and choose;
+#X text 340 142 "Properties" to set them \,;
+#X text 341 156 or change them with messages;
+#X text 341 170 (see the subpatch below);
+#X floatatom 259 90 7 -110 20 1 dB - -;
+#X obj 42 48 tgl 15 1 empty empty empty 8 -8 0 10 -262144 -1 -1 0 1
+;
+#X obj 43 125 vu 15 120 foo7_rcv vu-meter 60 0 0 10 -1 -355 1 0;
+#X floatatom 42 259 6 0 0 1 dB - -;
+#X floatatom 104 259 6 0 0 1 dB - -;
+#X text 108 68 <list> of rms \, peak;
+#X obj 259 197 s foo7_rcv;
+#X obj 259 168 pack 0 0;
+#X floatatom 277 113 7 -110 20 1 dB - -;
+#X obj 277 138 t b f;
+#X floatatom 52 90 7 -110 20 1 dB - -;
+#X floatatom 120 90 7 -110 20 1 dB - -;
+#N canvas 44 136 290 278 source 0;
+#X obj 40 95 random 102;
+#X obj 40 171 - 101;
+#X obj 40 205 pack 0 0;
+#X obj 40 45 metro 300;
+#X obj 40 69 t b b;
+#X obj 133 95 random 20;
+#X obj 40 117 t f f;
+#X obj 91 147 +;
+#X obj 91 172 - 101;
+#X obj 40 21 inlet;
+#X obj 40 250 outlet;
+#X obj 100 249 s fff;
+#X obj 159 249 s vu_rcv;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 2 0 10 0;
+#X connect 2 0 11 0;
+#X connect 2 0 12 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 4 1 5 0;
+#X connect 5 0 7 1;
+#X connect 6 0 1 0;
+#X connect 6 1 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 2 1;
+#X connect 9 0 3 0;
+#X restore 42 68 pd source;
+#X text 340 95 [vu] has settable send;
+#X text 11 23 gui-vu-meter-display;
+#X text 98 493 12;
+#X text 168 295 - rms level.;
+#X text 168 396 - peak-level.;
+#X text 168 412 - a list will be truncated to the first element.;
+#X text 168 444 - rms level.;
+#X text 168 466 - peak-level.;
+#X text 98 328 bang;
+#X text 168 328 - a bang will output the current values of the inlets.
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 30 0 37 0;
+#X connect 31 0 42 0;
+#X connect 32 0 33 0;
+#X connect 32 1 34 0;
+#X connect 37 0 36 0;
+#X connect 38 0 39 0;
+#X connect 39 0 37 0;
+#X connect 39 1 37 1;
+#X connect 40 0 32 0;
+#X connect 41 0 32 1;
+#X connect 42 0 32 0;

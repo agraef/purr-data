@@ -1,0 +1,107 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header choice 3 12 0 18
+-204280 -1 0;
+#X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 247 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for Pd version-0.30. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 45 DESCRIPTION search for a best match to an incoming list
+;
+#X text 12 65 INLET_0 list add clear print;
+#X text 12 85 OUTLET_0 float;
+#X text 12 5 KEYWORDS control storage analysis list_op;
+#X text 12 165 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 383 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 448 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 512 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 297 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 103 479 428 110 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [choice] Related Objects;
+#X obj 21 41 list;
+#X restore 101 597 pd Related_objects;
+#X obj 78 391 cnv 17 3 50 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 391 float;
+#X obj 484 3 choice;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/choice -text
+pdpedia: choice;
+#X obj 98 210 choice;
+#X msg 136 101 print;
+#X msg 124 78 clear;
+#X msg 98 54 add 1 0 0 \, add 0 1 0 \, add 0 0 1 \, add 1 1 1 \, add
+1 1 0;
+#X obj 174 186 pack 0 0 0;
+#X floatatom 279 140 0 0 0 0 - - -;
+#X floatatom 245 140 0 0 0 0 - - -;
+#X floatatom 212 140 0 0 0 0 - - -;
+#X obj 174 162 f;
+#X msg 174 140 bang;
+#X floatatom 98 231 0 0 0 0 - - -;
+#X obj 174 211 choice 1;
+#X floatatom 174 232 0 0 0 0 - - -;
+#X text 166 119 tweak the numbers and hit "bang" to input a list;
+#X text 98 296 list;
+#X text 98 323 add;
+#X text 98 340 clear;
+#X text 98 357 print;
+#X text 168 391 - [choice] outputs the index of the best match \, counting
+from zero. The quality of the match is the dot product of the two vectors
+after normalizing them \, i.e. \, the vector whose direction is closest
+to that of the input wins.;
+#X text 98 516 You can use numbers other than 0 and 1 to indicate relative
+strengths of the attributes \, or even use negative numbers to indicate
+opposites \, either in the incoming lists or in the stored ones.;
+#N canvas 92 415 428 146 More_about_choice 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 [choice] More Info;
+#X text 19 36 You can use [choice] to choose interactively between
+a number of behaviors depending on their attributes. For example \,
+you might have stored a number of melodies \, of which some are syncopated
+\, some chromatic \, some are more than 100 years old \, some are bugle
+calls \, and some are Christmas carols. You could then ask to find
+a syncopated bugle call (1 \, 0 \, 0 \, 1 \, 0) and you'll get the
+thing most closely matching the request.;
+#X restore 101 571 pd More_about_choice;
+#X text 11 23 search for a best match to an incoming list;
+#X text 168 296 - when sent a list of numbers \, [choice] will output
+the index of the known vector that matches most closely.;
+#X text 168 323 - add vectors.;
+#X text 168 340 - delete all stored vectors.;
+#X text 168 357 - debugging printout.;
+#X text 80 467 1) float;
+#X text 97 255 The [choice] object holds a list of vectors \, each
+having up to ten elements.;
+#X text 168 467 - (optional) if given a nonzero creation argument \,
+[choice] tries to avoid repetitious outputs by weighting less recently
+output vectors preferentially.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 13 0 23 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 15 0 24 0;
+#X connect 16 0 13 0;
+#X connect 16 0 24 0;
+#X connect 17 0 13 0;
+#X connect 17 0 24 0;
+#X connect 18 0 17 2;
+#X connect 19 0 17 1;
+#X connect 20 0 21 1;
+#X connect 21 0 17 0;
+#X connect 22 0 21 0;
+#X connect 24 0 25 0;

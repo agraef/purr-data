@@ -1,0 +1,161 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header timer 3 12 0 18
+-204280 -1 0;
+#X obj 0 394 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 245 494 368 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control time;
+#X text 12 45 DESCRIPTION measure logical time;
+#X text 12 65 INLET_0 bang;
+#X text 12 85 INLET_1 bang;
+#X text 12 105 OUTLET_0 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 470 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 512 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 516 (none);
+#N canvas 73 345 428 246 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [timer] Related Objects;
+#X obj 135 35 metro;
+#X obj 72 35 realtime;
+#X obj 24 35 timer;
+#X obj 183 35 delay;
+#X text 22 162 The best places to find information about Pd's libraries
+is:;
+#X text 22 182 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 24 197 or;
+#X text 21 212 iem.kug.ac.at/pdb/;
+#X text 22 120 This object is only offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X text 22 70 Externals;
+#X obj 24 95 pddp/helplink iemlib/t3_timer;
+#X restore 102 597 pd Related_objects;
+#X obj 78 403 cnv 17 3 25 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 478 float;
+#X obj 78 479 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 434 cnv 17 3 25 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 168 478 - upon sending the "flush" message to the left inlet
+\, [bag] will output each value in the order it was received.;
+#X obj 482 3 timer;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/timer -text
+pdpedia: timer;
+#X msg 104 180 bang;
+#X msg 79 158 bang;
+#X obj 79 202 timer;
+#X floatatom 79 224 0 0 0 0 - - -;
+#X text 151 226 Output is in milliseconds;
+#X text 114 158 Click here to start or reset;
+#X text 74 111 The [timer] object measures elapsed logical time. Logical
+time moves forward as if all computation were instantaneous and as
+if all [delay] and [metro] objects were exact.;
+#X text 142 181 Click here to get elapsed logical time. Click again...and
+again...to see periodic measurements from the start or reset time.
+;
+#X text 77 250 NOTE: Unlike most other objects in Pd \, the right inlet
+of [timer] is the hot one (i.e. \, a bang to it triggers the output).
+;
+#X text 98 402 bang;
+#X text 168 402 - an initial "bang" to the left inlet starts the timer.
+Subsequent "bangs" reset the timer.;
+#X text 98 433 bang;
+#X text 167 433 - a bang to the right inlet causes the elapsed time
+to be output (in milliseconds).;
+#N canvas 94 193 428 419 Time_Objects 0;
+#X text 21 38 In a fantasy world \, computers could exist somehow beyond
+the restrictions of time and digital computation could be performed
+in ZERO time. However \, that is not the case. Instead \, every process
+within Pd and within your operating system requires at least a few
+nanoseconds of your CPU's time.;
+#X text 22 123 The [timer] object is like a clock that is not constrained
+to the regular laws of physics and the universal space-time continuum.
+It reports "time" measurements as only Pd can see them!;
+#X text 23 182 The [cputime] object is like a clock that measures how
+much time your CPU actually required to carry out your request. Keep
+in mind however that your CPU is busy doing many things simoultaneously
+\, so even though a process might take 5 minutes to complete \, your
+CPU does not pay full attention to that process for the entire 5 minutes.
+Instead \, it simply begins the process \, then refers back to that
+process from time to time until the it is complete. In other cases
+\, your CPU might require a full 5 minutes while Pd might report that
+merely a few milliseconds have passed. This type of discrepancy depends
+heavily on your computer's hardware and the type of processing it is
+performing.;
+#X text 24 341 The [realtime] object is as much like your own wrist
+watch as Pd can possibly manage. It measures time according to your
+operating system's internal clock.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [cputime] Why the Discrepencies Between Clocks?;
+#X restore 102 548 pd Time_Objects;
+#N canvas 73 72 428 495 Time_Measurements 0;
+#X text 21 38 [timer] works like essentially like a stop-watch. Once
+it starts \, you can continue to "poll" the [timer] to view the elapsed
+time.;
+#X text 20 135 As stated above \, [timer] measures "logical" time.
+This value may be slightly different that CPU time or "real" time.
+PD offers two objects which measure CPU time and "real" time. See the
+reference documents for those objects for more information.;
+#X obj 25 304 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 25 448 0 0 0 0 - - -;
+#X floatatom 110 448 0 0 0 0 - - -;
+#X floatatom 172 448 0 0 0 0 - - -;
+#X text 21 211 In the example below \, I've created an abstraction
+which will force each of Pd's stop-watches \, [timer] [cputime] and
+[realtime] to measure various processes and report the elapsed time.
+Click on each [bng] to begin the process and wait for the results.
+Notice the discrepancies in the results.;
+#X text 23 464 Logical Time;
+#X text 170 464 Real Time;
+#X text 109 464 CPU Time;
+#X obj 40 340 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 45 298 1 Measures elapsed time between two "bangs" from a [trigger]
+object.;
+#X text 60 332 2 Measures the amount of time Pd requires to turn on
+DSP and start an oscillator.;
+#X obj 84 372 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 21 85 The odd aspect about comparing [timer] to a stop-watch
+is that a stop-watch can be stopped! [timer] can only be started or
+reset. It cannot be stopped.;
+#X text 105 364 3 Measures the amount of time Pd requires count to
+three...please wait for approximately 3 seconds.;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [timer] Related Objects;
+#X obj 25 408 time_measurements;
+#X connect 2 0 18 0;
+#X connect 10 0 18 1;
+#X connect 13 0 18 2;
+#X connect 18 0 3 0;
+#X connect 18 1 4 0;
+#X connect 18 2 5 0;
+#X restore 102 572 pd Time_Measurements;
+#X text 11 23 measure logical time;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 16 0 18 1;
+#X connect 17 0 18 0;
+#X connect 18 0 19 0;

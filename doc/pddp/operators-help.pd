@@ -1,0 +1,106 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (binops1) 3 12 0
+18 -204280 -1 0;
+#X obj 0 324 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 507 358 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 85 DATATYPE_IN bang float list;
+#X text 12 105 DATATYPE_OUT float;
+#X text 12 65 DESCRIPTION binary arithmetic operators;
+#X text 12 5 NAME + - * / pow max min;
+#X text 12 25 KEYWORDS control trigonometry;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 442 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 479 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 523 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 94 481 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 56 75 cos~;
+#X obj 88 75 osc~;
+#X obj 22 75 expr;
+#X obj 22 42 sin;
+#X obj 48 42 cos;
+#X obj 75 42 tan;
+#X obj 108 42 atan;
+#X obj 143 42 atan2;
+#X obj 181 42 exp;
+#X obj 208 42 log;
+#X obj 236 42 abs;
+#X obj 265 42 sqrt;
+#X text 7 1 (arithmetic_operators) Related Objects;
+#X restore 102 597 pd Related_objects;
+#X obj 78 333 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 386 list;
+#X text 98 450 float;
+#X obj 78 451 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 414 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 413 float;
+#X text 78 499 1) float;
+#X obj 363 3 +;
+#X obj 388 3 -;
+#X obj 414 3 *;
+#X obj 440 3 /;
+#X obj 466 3 pow;
+#X obj 491 3 max;
+#X obj 517 3 min;
+#X obj 429 20 pddp/pddplink http://wiki.puredata.info/en/operators
+-text pdpedia: operators;
+#X obj 128 166 +;
+#X msg 94 124 3 4;
+#X floatatom 128 124 5 0 0 0 - - -;
+#X floatatom 169 124 5 0 0 0 - - -;
+#X floatatom 128 193 5 0 0 0 - - -;
+#X msg 54 124 bang;
+#X text 98 332 bang;
+#X text 98 357 float;
+#X text 168 413 - a float to the right inlet is stored.;
+#X text 168 332 - perform the operation using the last values stored
+at the inlets.;
+#X text 168 357 - store the incoming value at the left inlet and perform
+the operation.;
+#X text 168 384 - a pair of floats will be distributed to the two inlets.
+;
+#X floatatom 259 124 5 0 0 0 - - -;
+#X floatatom 259 193 5 0 0 0 - - -;
+#X obj 259 168 * 2;
+#X text 118 239 All of these objects share the same behavior.;
+#X obj 364 170 pow 4;
+#X floatatom 364 193 0 0 0 0 - - -;
+#X floatatom 403 126 5 0 0 0 - - -;
+#X floatatom 364 126 5 0 0 0 - - -;
+#X obj 98 542 pddp/pddplink pow-help.pd;
+#X text 168 499 - initializes the value of the right inlet.;
+#X text 98 527 Click below for individual help patches:;
+#X obj 98 557 pddp/pddplink min-help.pd;
+#X obj 98 572 pddp/pddplink max-help.pd;
+#X text 11 23 binary arithmetic operators;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 23 0 27 0;
+#X connect 24 0 23 0;
+#X connect 25 0 23 0;
+#X connect 26 0 23 1;
+#X connect 28 0 23 0;
+#X connect 35 0 37 0;
+#X connect 37 0 36 0;
+#X connect 39 0 40 0;
+#X connect 41 0 39 1;
+#X connect 42 0 39 0;

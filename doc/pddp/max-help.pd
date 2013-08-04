@@ -1,0 +1,77 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header max 3 12 0 18 -204280
+-1 0;
+#X obj 0 364 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 246 494 368 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION choose the greater of two values;
+#X text 12 65 INLET_0 float list bang;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 482 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 94 481 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 23 42 min;
+#X text 8 3 [max] Related Objects;
+#X obj 63 42 clip;
+#X restore 102 597 pd Related_objects;
+#X obj 78 373 cnv 17 3 70 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 426 list;
+#X text 98 490 float;
+#X obj 78 491 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 454 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 453 float;
+#X text 78 544 1) float;
+#X text 98 372 bang;
+#X text 98 397 float;
+#X text 168 544 - initializes the value of the right inlet.;
+#X floatatom 186 168 5 0 0 0 - - -;
+#X floatatom 186 222 5 0 0 0 - - -;
+#X floatatom 228 168 5 0 0 0 - - -;
+#X floatatom 316 168 5 0 0 0 - - -;
+#X floatatom 316 223 5 0 0 0 - - -;
+#X text 11 23 choose the greater of two values;
+#X obj 497 3 max;
+#X obj 469 20 pddp/pddplink http://wiki.puredata.info/en/max -text
+pdpedia: max;
+#X obj 159 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 168 372 - output the last value.;
+#X obj 186 195 max;
+#X obj 316 195 max 5;
+#X text 168 397 - the incoming value is output if it is greater than
+the value at the right inlet.;
+#X text 168 424 - a list will be distributed to the inlets.;
+#X text 168 453 - a float to the right inlet is stored.;
+#X text 168 490 - the two values at each inlet are compared \, and
+the greater value is output.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 18 0 28 0;
+#X connect 20 0 28 1;
+#X connect 21 0 29 0;
+#X connect 26 0 28 0;
+#X connect 28 0 19 0;
+#X connect 29 0 22 0;

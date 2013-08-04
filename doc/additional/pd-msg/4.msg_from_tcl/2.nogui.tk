@@ -1,0 +1,35 @@
+#!/usr/bin/wish -f
+
+#Here a small exemple that show a way to use the -nogui option.
+#damien HENRY
+#dh20010730
+
+puts "*********************"
+puts "* pd -nogui example *"
+puts "* (c) Damien HENRY  *"
+puts "*    This is GPL... *"
+puts "*********************"
+puts ""
+puts "WARNING : you need to run pd -open recv.pd -nogui first"
+
+#definition of the procedure that send msg to pd
+proc pd_send {string2send} {
+  set to_pd [socket localhost 3006]
+  puts $to_pd "$string2send;"
+  .lmsg configure -text "$string2send;"
+  close $to_pd
+}
+
+#create the gui
+wm title . "a simple tcl/tk gui to open pd-patch"
+label .l1 -text "open :  patch & path"
+entry .pd_patch -textvariable pd_patch -width 23
+entry .pd_path -textvariable pd_path -width 23
+button .bload -text Load -width 20 -command {pd_send "pd open $pd_patch $pd_path" }
+button .bclose -text close -width 20 -command {pd_send "pd-$pd_patch menuclose" }
+button .bdspon -text "dsp on" -width 20  -command {pd_send "pd dsp 1" }
+button .bdspoff -text "dsp off" -width 20  -command {pd_send "pd dsp 0" }
+label .lmsg
+button .bq -text "quit" -width 20  -command {exit}
+
+pack .l1 .pd_patch .pd_path .bload .bclose .bdspon .bdspoff .lmsg .bq

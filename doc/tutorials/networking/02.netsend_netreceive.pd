@@ -1,0 +1,36 @@
+#N canvas 10 40 620 460 10;
+#X obj 8 10 cnv 15 400 40 empty empty netsend_netreceive 20 12 0 24
+-228992 -66577 0;
+#X obj 56 211 send \$0-local-data;
+#X obj 56 342 receive \$0-local-data;
+#X obj 60 174 hsl 150 20 0 127 0 0 empty empty empty -2 -6 0 8 -225271
+-1 -1 0 1;
+#X obj 59 381 hsl 150 20 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 311 174 hsl 150 20 0 127 0 0 empty empty empty -2 -6 0 8 -225280
+-1 -1 0 1;
+#X obj 311 381 hsl 150 20 0 127 0 0 empty empty empty -2 -6 0 8 -262144
+-1 -1 0 1;
+#X obj 308 261 netsend;
+#X obj 308 341 netreceive 34567;
+#X msg 326 222 connect localhost 34567;
+#X obj 308 280 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 415 360 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X text 329 279 <-- connection status;
+#X text 433 360 <-- connection status;
+#X msg 327 241 disconnect;
+#X msg 308 199 send \$1;
+#X text 45 78 At the most basic level \, networking in Pd works a lot
+like the standard [send] and [receive] objects \, except there is a
+network port number rather than a send/receive name:;
+#X connect 2 0 4 0;
+#X connect 3 0 1 0;
+#X connect 5 0 15 0;
+#X connect 7 0 10 0;
+#X connect 8 0 6 0;
+#X connect 8 1 11 0;
+#X connect 9 0 7 0;
+#X connect 14 0 7 0;
+#X connect 15 0 7 0;

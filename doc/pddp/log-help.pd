@@ -1,0 +1,69 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header log 3 12 0 18 -204280
+-1 0;
+#X obj 0 439 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 52 244 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 28 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control;
+#X text 12 45 DESCRIPTION natural logarithm of a number;
+#X text 12 65 INLET_0 float;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 504 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 541 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 545 (none);
+#N canvas 86 482 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 208 42 abs;
+#X obj 236 42 sqrt;
+#X obj 271 42 pow;
+#X obj 56 75 cos~;
+#X obj 88 75 osc~;
+#X obj 22 75 expr;
+#X obj 22 42 sin;
+#X obj 48 42 cos;
+#X obj 75 42 tan;
+#X obj 108 42 atan;
+#X obj 143 42 atan2;
+#X text 7 1 [log] Related Objects;
+#X obj 181 42 exp;
+#X restore 101 597 pd Related_objects;
+#X obj 78 448 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 447 float;
+#X text 98 467 list;
+#X text 98 512 float;
+#X obj 78 513 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X floatatom 239 217 0 0 0 0 - - -;
+#X floatatom 239 160 0 0 0 0 - - -;
+#X text 94 274 [log] will output the natural logarithm (base E) of
+a number. The value of zero will produce "-1000" which represents "negative
+infinity".;
+#X obj 239 190 log;
+#X obj 493 3 log;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/log -text
+pdpedia: log;
+#X text 11 23 natural logarithm of a number;
+#X text 168 467 - a list will be truncated \, and the first element
+will be used as input.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 15 0 17 0;
+#X connect 17 0 14 0;

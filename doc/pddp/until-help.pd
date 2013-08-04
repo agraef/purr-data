@@ -1,0 +1,163 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header until 3 12 0 18
+-204280 -1 0;
+#X obj 0 346 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 243 494 367 META 0;
+#X text 12 125 LIBRARY internal;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 205 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 26 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 45 DESCRIPTION looping mechanism;
+#X text 12 65 INLET_0 float bang;
+#X text 12 105 OUTLET_0 bang;
+#X text 12 85 INLET_1 bang;
+#X text 12 5 KEYWORDS control bang_op;
+#X text 12 185 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 435 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 472 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 500 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 476 (none);
+#N canvas 105 453 428 159 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [until] Related Objects;
+#X text 19 38 External Objects;
+#X obj 21 57 pddp/helplink iemlib/for++;
+#X obj 21 77 pddp/helplink cyclone/counter;
+#X obj 21 97 pddp/helplink gem_counter;
+#X text 123 97 <-- Which library?;
+#X obj 21 117 pddp/helplink iemlib/modulo_counter;
+#X restore 102 597 pd Related_objects;
+#X obj 78 355 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 444 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 407 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 482 3 until;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/until -text
+pdpedia: until;
+#X obj 37 195 until;
+#X msg 37 172 100;
+#X obj 37 246 print i;
+#X text 11 23 looping mechanism;
+#X text 98 406 bang;
+#X text 167 406 - a bang to the right inlet ends the loop.;
+#X text 98 354 bang;
+#X text 98 374 float;
+#X text 168 354 - a bang to the left inlet starts the loop.;
+#X text 168 374 - sending a float to the left inlet will cause [until]
+to iterate that number of times.;
+#X text 98 443 bang;
+#X obj 37 221 f;
+#X obj 67 221 + 1;
+#X text 117 98 If you start [until] with a number \, it iterates that
+number of times. The [uzi] object in MAX works the same way.;
+#X obj 119 176 until;
+#X msg 119 129 100;
+#X obj 119 196 print i;
+#X msg 149 136 3;
+#X msg 179 143 42;
+#N canvas 86 234 428 358 Infinite_loops 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [until] Infinite loops;
+#X msg 23 61 bang;
+#X obj 23 81 until;
+#X obj 23 101 print;
+#X text 61 61 DO NOT CLICK. DO NOT CLICK. DO NOT CLICK.;
+#X text 20 126 The [until] object's left inlet starts a loop in which
+it outputs "bang" until its right inlet gets a "bang" which stops it.
+;
+#X text 64 81 If you click \, kill Pd or reboot the computer.;
+#X msg 72 241 bang;
+#X obj 72 262 until;
+#X text 103 241 start;
+#X obj 72 284 f;
+#X obj 101 284 + 1;
+#X obj 147 286 sel 0;
+#X obj 72 328 print;
+#X obj 101 306 mod 10;
+#X text 20 189 The example below includes a method to stop the loop
+to prevent Pd from looping infinitely.;
+#X text 20 37 How to FREEZE Pd;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 8 0 9 0;
+#X connect 9 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 0 14 0;
+#X connect 12 0 15 0;
+#X connect 13 0 9 1;
+#X connect 15 0 11 1;
+#X connect 15 0 13 0;
+#X restore 102 533 pd Infinite_loops;
+#N canvas 106 85 428 440 Loops 0;
+#X text 20 38 Every modern programming language will have various "looping"
+mechanisms: either in the form of an object \, or as a data structure.
+For example in Visual Basic:;
+#X text 31 105 DO UNTIL i = 100;
+#X text 31 119 i = i + 1;
+#X text 32 90 i = 0;
+#X text 31 134 LOOP;
+#X text 20 245 And now Pd's version of the above programming structures:
+;
+#X obj 29 322 until;
+#X obj 29 382 print i;
+#X text 20 160 OR:;
+#X text 30 186 FOR i = 0 TO 100;
+#X text 29 212 NEXT;
+#X text 30 200 ' do something;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [until] More about loops;
+#X obj 239 292 until;
+#X msg 239 272 100;
+#X obj 239 312 print i;
+#X text 139 289 OR:;
+#X obj 29 352 f;
+#X obj 57 352 + 1;
+#X msg 29 268 100;
+#X obj 29 291 t a b;
+#X obj 70 322 0;
+#X connect 6 0 18 0;
+#X connect 14 0 16 0;
+#X connect 15 0 14 0;
+#X connect 18 0 19 0;
+#X connect 18 0 7 0;
+#X connect 19 0 18 1;
+#X connect 20 0 21 0;
+#X connect 21 0 6 0;
+#X connect 21 1 22 0;
+#X connect 22 0 18 1;
+#X restore 102 509 pd Loops;
+#X text 116 216 If you start [until] with a "bang" \, it will begin
+an infinite loop! Please plan ahead in this case so that there is a
+mechanism in place to stop the loop - otherwise Pd will effectively
+freeze. (See the "Loops" subpatch below.);
+#X obj 102 555 pddp/pddplink all_about_looping.pd -text all_about_looping
+;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 102 572 pddp/pddplink ../2.control.examples/24.loops.pd -text
+doc/2.control.examples/24.loops.pd;
+#X connect 14 0 25 0;
+#X connect 15 0 14 0;
+#X connect 25 0 16 0;
+#X connect 25 0 26 0;
+#X connect 26 0 25 1;
+#X connect 28 0 30 0;
+#X connect 29 0 28 0;
+#X connect 31 0 28 0;
+#X connect 32 0 28 0;

@@ -1,0 +1,160 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header gatom 3 12 0 18
+-204280 -1 0;
+#X obj 0 231 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 255 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 35 LICENSE SIBSD;
+#X text 12 135 AUTHOR Miller Puckette;
+#X text 12 195 HELP_PATCH_AUTHORS Updated for Pd version 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 75 INLET_0 float bang symbol set;
+#X text 12 95 OUTLET_0 float;
+#X text 12 175 RELEASE_DATE 1997;
+#X text 12 55 DESCRIPTION atom (number box and symbol box);
+#X text 12 5 KEYWORDS control storage GUI nonlocal symbol_op;
+#X restore 500 597 pd META;
+#X obj 0 396 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 470 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 499 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 474 (none);
+#N canvas 89 496 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 47 1 Related Objects;
+#X floatatom 9 3 5 0 0 0 - - -;
+#X obj 21 42 float;
+#X obj 61 42 list;
+#X obj 102 45 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256;
+#X obj 169 42 drawnumber;
+#X restore 102 597 pd Related_objects;
+#X obj 78 240 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 404 float;
+#X obj 78 405 cnv 17 3 52 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X floatatom 396 3 5 0 0 0 - - -;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/gatom -text
+pdpedia: gatom;
+#X floatatom 25 58 0 0 0 0 - - -;
+#X floatatom 25 96 0 0 0 0 - - -;
+#X msg 469 76 set 45;
+#X floatatom 469 104 0 0 0 0 - - -;
+#X text 98 239 bang;
+#X text 98 259 float;
+#X text 98 289 list;
+#X text 98 309 symbol;
+#X text 98 339 set;
+#N canvas 98 96 430 514 Number_box_properties 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X floatatom 70 102 12 0 0 0 - - -;
+#X floatatom 71 223 1 0 0 0 - - -;
+#X text 50 2 Properties for gatom;
+#X text 20 38 Right click on a number box and choose "Properties" to
+change the following:;
+#X text 19 69 width;
+#X text 69 69 - width of the number box (in characters). By default
+the width is 5 characters.;
+#X text 148 102 width = 12 characters;
+#X floatatom 70 123 2 0 0 0 - - -;
+#X text 148 123 width = 2 characters;
+#X text 69 164 If you select a width of 0 \, the number box will grow
+as needed to hold the number--BUT BEWARE \, THIS IS EXPENSIVE IN CPU
+TIME. In a production patch \, you'll want to set a specific width.
+;
+#X floatatom 70 143 0 0 0 0 - - -;
+#X text 148 143 width = 0 characters (read below);
+#X text 69 240 A width of one gives a clickable toggle switch ala Max.
+;
+#X text 88 223 width = 1 character: toggle between 0 and 1;
+#X text 19 260 limits;
+#X floatatom 71 282 5 0 127 0 - - -;
+#X text 109 281 numbers between 0 and 127;
+#X text 69 260 - set lower and upper limits for scrolling the number
+box;
+#X text 68 300 This only affects scrolling- you can still send values
+to the number box that are outside these limits.;
+#X floatatom 71 353 5 0 127 1 my_number_box - -;
+#X text 19 331 label;
+#X text 69 331 - give the number box a visible name;
+#X text 68 371 Use the radio buttons to reposition the label to the
+left \, right \, top \, or bottom of the number box. Spaces in the
+label will automatically be converted to underscores.;
+#X text 19 413 messages;
+#X text 69 413 - nonlocal send and receive;
+#X floatatom 193 532 5 0 0 2 Number_box_7 gatom-help-rcv gatom-help-snd
+;
+#X obj 276 540 r gatom-help-snd;
+#X obj 71 516 s gatom-help-rcv;
+#X msg 71 490 28;
+#X text 68 433 As an alternative to using wires \, you can set send
+and receive names to send messages through the number box. "Number-box-7"
+below is set to receive messages to "gatom-help-rcv" \, and send messages
+to "gatom-help-snd";
+#X floatatom 276 563 5 0 0 0 - - -;
+#X text 68 583 Notice that you cannot make local connections with wires
+to "Number_box_7" when using non-local send and receive names. If you
+want to use both \, see the [nbx] object:;
+#X obj 71 626 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256;
+#X floatatom 13 3 5 0 0 0 - - -;
+#X connect 27 0 31 0;
+#X connect 29 0 28 0;
+#X restore 102 571 pd Number_box_properties;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X symbolatom 25 138 10 0 0 0 - - -;
+#X text 11 23 atom (number box and symbol box);
+#X symbolatom 476 3 10 0 0 0 - - -;
+#X text 440 3 and;
+#X symbolatom 25 174 10 0 0 0 - - -;
+#X text 61 52 A number box allows you to display a number or enter
+a number using the mouse and keyboard. When a number arrives at the
+number box's inlet \, it is displayed and sent to the outlet. You can
+click on a number box and drag upward or downward to change the value
+continuously.;
+#X text 97 134 A symbol box allows you to display a single symbol-atom
+or enter one using the mouse and keyboard. Unlike a number box you
+cannot change the value by clicking and dragging.;
+#X text 96 172 The symbol box is called "Symbol" in the "Put" menu.
+;
+#X text 168 239 - sends the current value to the outlet.;
+#X msg 469 156 set foo;
+#X symbolatom 469 180 10 0 0 0 - - -;
+#X text 168 309 - symbol box only: an incoming symbol is displayed
+and output. (Number box will display and output zero.);
+#X text 168 259 - number box only: sets the current value and outputs
+it. (Symbol box will display 'float' and output 'symbol float'.);
+#X text 168 289 - a list will be truncated to the first item.;
+#X text 168 339 - displays the incoming value without outputting it
+(e.g. \, "set 23" will cause a number box to display 23). Sending a
+set message without a value does not change the current value of a
+number box or symbol box.;
+#X text 168 404 - number box only: outputs a float for each message
+it receives (except set).;
+#X text 98 434 symbol;
+#X text 168 434 - symbol box only: outputs a symbol message for each
+message it receives (except set).;
+#X text 100 537 Control-clicking (or command-clicking on a mac) toggles
+the value between 0 and the last nonzero value.;
+#X floatatom 59 545 5 0 0 0 - - -;
+#X text 100 503 You can shift-click a number box and drag to change
+the number by hundredths instead of ones.;
+#X text 62 112 The number box is called "Number" in the "Put" menu.
+;
+#X text 67 197 To enter data simply click a number box or symbol box
+and begin typing. Then click "Enter" to finish and output it.;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 25 0 29 0;
+#X connect 34 0 35 0;

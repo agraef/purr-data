@@ -1,0 +1,26 @@
+#N canvas 10 40 620 460 12;
+#X msg 93 390 menuclose;
+#X obj 45 437 s pd-mon-nouveau-patch.pd;
+#X obj 20 200 cnv 15 5 5 empty empty 1 5 0 0 20 -262144 -258699 0;
+#X obj 20 240 cnv 15 5 5 empty empty 2 5 0 0 20 -262144 -258699 0;
+#X obj 20 280 cnv 15 5 5 empty empty 3 5 0 0 20 -262144 -258699 0;
+#X msg 59 145 \; pd filename mon-nouveau-patch.pd /tmp \; #N canvas
+\; #X pop 1 \;;
+#X text 12 109 Click these messages starting from the top:;
+#X msg 59 230 msg 20 27 symbol Hello_World!;
+#X msg 75 270 symbolatom 20 100 0 0 0 0;
+#X msg 91 310 connect 0 0 1 0;
+#X text 90 350 click on [symbol Hello_World!( in the new window;
+#X text 172 390 now close the new window;
+#X obj 20 320 cnv 15 5 5 empty empty 4 5 0 0 20 -262144 -258699 0;
+#X obj 20 360 cnv 15 5 5 empty empty 5 5 0 0 20 -262144 -258699 0;
+#X obj 20 400 cnv 15 5 5 empty empty 6 5 0 0 20 -262144 -258699 0;
+#X obj 8 10 cnv 15 400 40 empty empty send_messages_to_pd 20 12 0 24
+-228992 -66577 0;
+#X text 11 55 Keeping true to the name "Pure Data" \, you can send
+messages to Pd itself. All messages are in the same format \, whether
+its in your patch \, or it's Pd's GUI talking to the Pd core.;
+#X connect 0 0 1 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;

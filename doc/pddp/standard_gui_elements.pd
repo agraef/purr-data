@@ -1,0 +1,41 @@
+#N canvas 89 34 488 576 10;
+#X obj 2 2 cnv 15 450 20 empty empty [object_name] 2 11 1 18 -233017
+-66577 0;
+#X obj 21 133 tgl 30 0 empty empty start 1 15 1 12 -90049 -1 -1 0 1
+;
+#X obj 369 143 vsl 20 128 0 1 0 0 empty empty amp -1 -8 1 12 -225271
+-1 -1 0 1;
+#X obj 194 466 grouping patch;
+#X obj 100 241 nbx 5 20 -1e+37 1e+37 0 0 empty empty display_number_box
+0 -6 1 16 -199729 -1 -1 0 256;
+#X text 19 337 The idea behind these objects is to have a color scheme
+which consistently represents various ideas. Also \, having GUI objects
+highlighted by color signals the user that they should play with that
+object \, while plain white objects are part of the implementation.
+;
+#X obj 418 3 pddp/pddplink http://puredata.info/dev/pddp -text pddp;
+#X text 175 447 click on these for more info:;
+#X text 248 523 updated for Pd version 0.37.1;
+#N canvas 0 22 458 308 related_objects 0;
+#X restore 317 466 pd related_objects;
+#X text 14 37 [object_name] is an example patch for the PDDP style
+guide.;
+#X obj 223 132 bng 30 250 50 0 empty empty open 1 15 1 12 -4080 -1
+-228;
+#X obj 129 133 bng 30 250 50 0 empty empty stop 2 15 1 12 -212999 -1
+-1;
+#X obj 271 196 hsl 60 18 0 1 0 1 empty empty pan 2 9 1 12 -257472 -1
+-1 2950 0;
+#X obj 55 133 bng 30 250 50 0 empty empty start 1 15 1 12 -90049 -1
+-1;
+#X obj 28 409 comment 400 12 Times ? 0 0 0 0 This is Times 12pt;
+#X obj 33 438 comment 400 14 Times ? 0 0 0 0 comment;
+#X obj 255 132 bng 30 250 50 0 empty empty save 1 15 1 12 -512 -1 -4015
+;
+#X text 14 65 The colors used should not be the standard "quick pick"
+colors. PDDP should have distinct colors so that PDDP patches look
+distinct from regular Pd patches.;
+#X obj 466 43 cnv 10 2 500 empty empty empty 20 12 0 14 -166441 -262144
+0;
+#X text 332 312 page separator -->;
+#X obj 22 184 pddp/dsp;

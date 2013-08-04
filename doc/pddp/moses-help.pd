@@ -1,0 +1,121 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header moses 3 12 0 18
+-204280 -1 0;
+#X obj 0 302 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 50 211 494 384 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 205 RELEASE_DATE 2009-06-12;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 165 AUTHOR Miller Puckette;
+#X text 12 225 HELP_PATCH_AUTHORS This help patch was updated for Pd
+version 0.35 test 26 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control filter;
+#X text 12 45 DESCRIPTION part a stream of numbers;
+#X text 12 65 INLET_0 float list;
+#X text 12 85 INLET_1 float;
+#X text 12 105 OUTLET_0 float;
+#X text 12 125 OUTLET_1 float;
+#X restore 500 597 pd META;
+#X obj 0 410 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 498 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 106 297 428 256 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [moses] Related Objects;
+#X text 19 168 The best places to find information about Pd's libraries
+is:;
+#X text 19 190 www.puredata.org and click on "Downloads" then "Software"
+;
+#X text 20 206 or;
+#X text 19 221 iem.kug.ac.at/pdb/;
+#X text 20 119 Externals are offered in Pd only if you have downloaded
+and properly installed the appropriate library. These objects may or
+may not exist in a single library.;
+#X obj 22 42 list split;
+#X text 20 80 Externals;
+#X obj 20 98 pddp/helplink cyclone/split;
+#X restore 102 597 pd Related_objects;
+#X obj 78 311 cnv 17 3 65 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 310 float;
+#X text 98 350 list;
+#X text 98 418 float;
+#X obj 78 419 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 382 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 381 float;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/moses -text
+pdpedia: moses;
+#X obj 483 3 moses;
+#X floatatom 68 143 4 0 0 0 - - -;
+#X floatatom 124 142 4 0 0 0 - - -;
+#X floatatom 68 196 4 0 0 0 - - -;
+#X floatatom 121 196 4 0 0 0 - - -;
+#X text 65 66 Moses takes numbers and outputs them at left if they're
+less than a control value \, and at right if they're greater or equal
+to it. The creation argument initializes the control value (10 in this
+example) and the right inlet changes it.;
+#N canvas 103 360 428 202 More_info 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 146 moses 0;
+#X floatatom 22 170 5 0 0 0 - - -;
+#X floatatom 65 170 5 0 0 0 - - -;
+#X floatatom 22 124 5 0 0 0 - - -;
+#X text 20 38 One way to think of [moses] is as a filter. For the following
+example \, imagine that [moses] works as a low pass and high pass filter
+simoultaneously -- for non-audio signals. Below you will see that negative
+numbers will pass through the left outlet while positive numbers will
+pass through the right outlet.;
+#X text 8 2 [moses] More Info;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 4 0 1 0;
+#X restore 102 548 pd More_info;
+#X text 167 381 - a float to the right inlet sets the control value.
+;
+#X text 98 453 float;
+#X obj 78 454 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 168 453 - incoming values (to the left inlet) will pass at
+the right outlet if they are greater than or equal to the control value.
+;
+#X obj 68 169 moses 10;
+#X text 224 179 The control value may be a float or integer. Try shift-scrolling:
+;
+#X floatatom 327 221 5 0 0 0 - - -;
+#X floatatom 327 267 5 0 0 0 - - -;
+#X obj 327 244 moses 1.5;
+#X floatatom 378 267 5 0 0 0 - - -;
+#X text 11 23 part a stream of numbers;
+#X text 168 350 - a two element list is distributed to the two inlets.
+Lists with more than two elements will be truncated.;
+#X text 168 516 - (optional) initializes the control value.;
+#X text 168 418 - incoming values (to the left inlet) will pass at
+the left outlet if they are less than the control value.;
+#X text 81 516 1) float;
+#X text 168 310 - if the float the left inlet is less than the control
+value \, it passes at the left inlet. If it is greater than or equal
+to the control value it passes at the right inlet.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 100 568 pddp/pddplink ../2.control.examples/18.conditional.pd
+-text doc/2.control.examples/18.conditional.pd;
+#X connect 17 0 27 0;
+#X connect 18 0 27 1;
+#X connect 27 0 19 0;
+#X connect 27 1 20 0;
+#X connect 29 0 31 0;
+#X connect 31 0 30 0;
+#X connect 31 1 32 0;

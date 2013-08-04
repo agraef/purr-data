@@ -1,0 +1,26 @@
+#N canvas 259 51 474 426 10;
+#X obj 178 130 print;
+#X msg 175 51 1 2 3;
+#X msg 189 75 list 1 2 3;
+#X msg 202 103 list one 2 three;
+#X text 27 12 [print] automatically converts lists that start with
+a a numeric atom into a list with an implied selector:;
+#X obj 178 270 print;
+#X msg 175 191 list word;
+#X msg 189 215 symbol word;
+#X msg 202 243 word;
+#X text 27 152 [print] automatically converts lists with one symbolic
+atom into a symbol message:;
+#X obj 178 400 print;
+#X msg 175 331 1;
+#X msg 189 355 float 4;
+#X text 27 292 [print] automatically converts all floats to a numeric
+atom with an implied float selector:;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 6 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 5 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;

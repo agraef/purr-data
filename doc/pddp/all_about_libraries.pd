@@ -1,0 +1,49 @@
+#N canvas 0 0 448 238 10;
+#X declare;
+#X declare;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header libraries 20 10
+1 18 -261106 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 216 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 344 META 0;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE all_about_pd;
+#X text 12 45 KEYWORDS needs_work;
+#X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42. Some info was pulled from puredata.info;
+#X text 12 65 DESCRIPTION how pure data libraries are loaded;
+#X text 12 25 NAME;
+#X restore 392 218 pd META;
+#N canvas 14 133 428 105 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261106 -33289 0;
+#X text 7 2 Libraries - Related Objects;
+#X obj 22 42 declare;
+#X obj 22 72 import;
+#X restore 103 218 pd Related_objects;
+#X obj 6 218 pddp/pddplink all_about.pd -text All About Pd;
+#X text 20 37 Explain what libraries are \, how to load them \, and
+any missing features that are currently being worked on.;
+#N canvas 14 48 428 166 How_to_load_libraries 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 How to load libraries;
+#X text 19 36 Ways to load libraries: command line \, declare \, import
+\, any others?;
+#X restore 43 81 pd How_to_load_libraries;
+#N canvas 9 155 428 240 What_happens_when_you_load_a_library 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 What happens when you load a library?;
+#X text 19 37 Describe what happens \, and maybe give one or two examples...
+;
+#X restore 43 111 pd What_happens_when_you_load_a_library;
+#N canvas 7 69 428 112 Loading_libs_in_an_abstraction 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 20 10
+1 18 -261106 -33289 0;
+#X text 7 1 Loading libs in an abstraction;
+#X text 20 37 Info here...;
+#X restore 43 141 pd Loading_libs_in_an_abstraction;

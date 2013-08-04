@@ -1,0 +1,35 @@
+#N canvas 10 40 620 460 10;
+#X obj 438 85 float;
+#X text 20 72 Many objects can accept "arguments" to define their behavior.
+Here is a plain [float] object:;
+#X obj 438 143 float 5.5;
+#X obj 438 215 float 5.5;
+#X obj 438 197 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X floatatom 438 236 5 0 0 0 - - -;
+#X obj 10 10 cnv 15 400 40 empty empty creation_arguments 20 12 0 24
+-228992 -66577 0;
+#X text 229 402 For more info:;
+#X obj 277 422 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s1.2
+;
+#X text 20 135 Here is a [float] object with a creation argument of
+"5.5":;
+#X text 20 187 Here \, the creation argument of "5.5" makes this [float]
+store the value 5.5 by default. Clicking the bang makes [float] output
+the value that it is currently storing:;
+#X obj 438 313 float 5.5;
+#X floatatom 438 334 7 0 0 0 - - -;
+#X obj 438 295 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 474 288 -123;
+#X msg 512 288 0.0044;
+#X text 20 286 On most objects \, the creation arguments can be replaced
+by data coming in from the inlets. With the [float] object \, the right
+inlet \, a cold inlet \, sets the value that the [float] object stores:
+;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 11 0 12 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 1;
+#X connect 15 0 11 1;

@@ -1,0 +1,27 @@
+#N canvas 10 40 620 460 12;
+#X obj 10 10 cnv 15 400 40 empty empty subpatches 20 12 0 24 -228992
+-66577 0;
+#X text 12 69 Encapsulation is a key concept in Pd programming. Each
+object is an idea that is bundled up into an easy-to-use package. You
+should make encapsulated your ideas. Subpatches are the easiest way
+to do this.;
+#N canvas 10 40 620 460 what's 0;
+#X obj 140 91 loadbang;
+#X obj 139 149 float;
+#X obj 198 149 + 1;
+#X floatatom 139 221 5 0 0 0 - - -;
+#X obj 30 149 delay 1000;
+#X text 39 39 just counting away in here...;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 3 0;
+#X connect 1 0 4 0;
+#X connect 2 0 1 1;
+#X connect 4 0 1 0;
+#X restore 97 190 pd what's in here?;
+#X text 26 414 A subpatch is part of the same file \, its just a way
+of organizing the logic of a program.;
+#X text 19 271 To make a subpatch \, create an object that started
+with the word "pd" \, then type anything after that to identify it.
+Try making one below:;
+#X text 179 214 ^-- right-click here and select "Open";

@@ -1,0 +1,186 @@
+#N struct template2 float x float y float z float q float zz;
+#N struct template1 float x float y float z float q;
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pointer 3 12 0 18
+-204280 -1 0;
+#X obj 0 142 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 245 496 366 META 0;
+#X text 12 165 LIBRARY internal;
+#X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 185 AUTHOR Miller Puckette;
+#X text 12 245 HELP_PATCH_AUTHORS Updated for Pd version 0.35. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 KEYWORDS control data_structure storage nonlocal;
+#X text 12 45 DESCRIPTION remember the location of a scalar in a list
+;
+#X text 12 85 INLET_1 pointer;
+#X text 12 105 OUTLET_0 bang pointer;
+#X text 12 125 OUTLET_N pointer;
+#X text 12 145 OUTLET_R bang;
+#X text 12 65 INLET_0 bang pointer traverse next vnext rewind send-window
+;
+#X text 12 225 RELEASE_DATE 1997;
+#X restore 500 597 pd META;
+#X obj 0 355 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#N canvas 54 483 428 109 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pointer] Related Objects;
+#X obj 12 34 get;
+#X obj 45 34 set;
+#X obj 80 34 append;
+#X obj 130 34 getsize;
+#X obj 186 34 setsize;
+#X obj 246 34 element;
+#X obj 12 59 sublist;
+#X obj 70 59 struct;
+#X restore 102 597 pd Related_objects;
+#X obj 78 150 cnv 17 3 175 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 360 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 336 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 469 3 pointer;
+#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/pointer -text
+pdpedia: pointer;
+#X text 98 149 bang;
+#X text 98 176 traverse;
+#X text 98 227 next;
+#X text 98 252 vnext;
+#X text 98 335 pointer;
+#X text 98 303 rewind;
+#X text 98 163 pointer;
+#X obj 78 398 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
+-162280 0;
+#X text 98 359 pointer;
+#X text 98 473 bang;
+#X obj 78 471 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
+-162280 0;
+#X text 98 397 pointer;
+#X text 168 397 - an additional outlet is created for each argument
+(a template name) provided to [pointer]. This makes it possible to
+route outgoing pointers to different outlets according to the class
+of the scalar being output. Pointers to objects that do not match any
+of the specified templates are sent to the second to last outlet.;
+#X text 168 303 - reset the pointer to the head of the list.;
+#X text 167 335 - stores the value of the pointer without outputting
+it.;
+#X text 168 163 - an incoming pointer is stored and send to the left
+outlet.;
+#X text 168 252 - the message "vnext 0" behaves exactly as the "next"
+message. "vnext 1" will move to the next selected object. The window
+must be visible for the "selection" to make sense (i.e. \, you will
+get an error if it is not visible).;
+#X text 168 359 - the current value of the pointer. If one or more
+arguments are provided \, the first outlet will only output a pointer
+to the template specified by the first argument.;
+#X obj 78 99 pointer;
+#X msg 87 66 bang;
+#X msg 126 66 next;
+#X obj 78 121 print out1;
+#X msg 165 66 vnext 1;
+#X msg 224 66 rewind;
+#X obj 181 121 print out2:end_of_list;
+#N canvas 86 344 428 221 More_on_pointers 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pointer] More info;
+#X text 20 38 [pointer] is a storage object like [float] \, except
+that the thing stored is the location of a scalar somewhere. You can
+send a pointer a value (perhaps from another [pointer] object). The
+right inlet takes pointers and simply stores them. A bang in the left
+outputs the [pointer] \, and a [pointer] in the left both sets and
+outputs the value.;
+#X text 20 120 The value of a [pointer] can either indicate a real
+scalar \, or else the "head" (before the first element) of the list.
+This allows you to point to an empty list \, and also \, to "append"
+a scalar to the beginning of the list.;
+#X text 21 175 Pointers are "safe": if you delete a scalar \, pointers
+to it are marked invalid.;
+#X restore 101 575 pd More_on_pointers;
+#N canvas 103 349 428 192 Arguments_with_pointer 0;
+#X text 20 38 Optional arguments to pointer allow you to select according
+to the class of the scalar being output:;
+#X msg 37 102 next;
+#X obj 23 130 pointer help-pointer-template1 help-pointer-template2
+;
+#X obj 23 156 print template1;
+#X obj 128 156 print template2;
+#X obj 233 156 print other;
+#X obj 338 156 print bangout;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pointer] Specifying Creation Arguments;
+#X msg 23 79 traverse pd-pointer-help-data;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 2 2 5 0;
+#X connect 2 3 6 0;
+#X connect 9 0 2 0;
+#X restore 171 549 pd Arguments_with_pointer;
+#N canvas 114 187 428 210 pointer-help-data 0;
+#X scalar template2 48 120 -32 0 0 \;;
+#X scalar template1 163 36 90 0 \;;
+#X scalar template1 248 147 9 0 \;;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pointer] Window to Display Scalars;
+#X restore 395 81 pd pointer-help-data;
+#X msg 78 44 traverse pd-pointer-help-data;
+#N canvas 118 187 428 109 pointer-help-template1 0;
+#X obj 24 58 filledpolygon z 0 1 0 0 20 0 20 30 0 30;
+#X obj 11 32 struct template1 float x float y float z;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pointer] template1;
+#X restore 365 101 pd pointer-help-template1;
+#N canvas 107 187 428 106 pointer-help-template2 0;
+#X obj 45 65 filledcurve 909 0 0 0 0 30 30 60 0 30 -30 0 0;
+#X obj 24 35 struct template2 float x float y;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 8 2 [pointer] template2;
+#X restore 365 121 pd pointer-help-template2;
+#X text 11 23 remember the location of a scalar in a list;
+#X text 168 227 - move forward one element and output the pointer.
+When the end of the list is reached \, a bang goes to the right outlet.
+;
+#X text 168 176 - "traverse" \, followed by a subwindow name (or patch
+filename) sets the value of [pointer] to the "head" of the list. The
+"pd-" prefix must be used with the subwindow name \, e.g. \, "traverse
+pd-pointer-help-data".;
+#X text 98 318 send-window;
+#X text 168 473 - a bang at the right outlet signals the end of the
+list.;
+#X text 168 495 - [pointer] takes (optional) arguments \, each of which
+is the name of a template. An additional outlet is created for each
+argument \, so that pointers are routed to different outlets based
+on the class of scalar being output.;
+#X msg 273 65 send-window vis 1;
+#X text 168 318 - send a message to the canvas that contains the scalar.
+;
+#X text 168 149 - outputs the current value of the pointer.;
+#X text 98 495 n) float;
+#X text 93 510 symbol atom;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 245 575 pddp/pddplink scalar-help.pd;
+#X connect 31 0 34 0;
+#X connect 31 1 37 0;
+#X connect 32 0 31 0;
+#X connect 33 0 31 0;
+#X connect 35 0 31 0;
+#X connect 36 0 31 0;
+#X connect 41 0 31 0;
+#X connect 50 0 31 0;

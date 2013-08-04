@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pure Data 0.43\n"
+"Report-Msgid-Bugs-To: http://bugs.puredata.info\n"
+"POT-Creation-Date: 2012-12-31 20:40-0500\n"
+"PO-Revision-Date: 2012-12-31 20:45-0500\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "X position"
+msgstr ""
+
+msgid "Y position"
+msgstr ""
+
+msgid "video"
+msgstr ""
+
+msgid "<-- Click here to turn video off"
+msgstr ""
+
+msgid "Video length"
+msgstr ""
+
+msgid "Click here to open your own video file"
+msgstr ""
+
+msgid "3D_graphics"
+msgstr ""
+
+msgid "red"
+msgstr ""
+
+msgid "green"
+msgstr ""
+
+msgid "X"
+msgstr ""
+
+msgid "Y"
+msgstr ""
+
+msgid "Sphere"
+msgstr ""
+
+msgid "off"
+msgstr ""
+
+msgid "on"
+msgstr ""
+
+msgid "GEM_Window"
+msgstr ""
+
+msgid "Lighting"
+msgstr ""
+
+msgid "<-- Click here to turn 3D graphics off"
+msgstr ""
+
+msgid "frequency"
+msgstr ""
+
+msgid "audio"
+msgstr ""
+
+msgid "(1) Click inside the box next to dsp to turn on and off. "
+msgstr ""
+
+msgid "(2) Click and drag anywhere in the grid to generate data and make sound."
+msgstr ""
+
+msgid "The cursor will become a ring again. Release to complete the patch cord."
+msgstr ""
+
+msgid "To do this, you must first enter edit mode by going to the Edit menu and clicking on\"Edit mode\""
+msgstr ""
+
+msgid "Exit edit mode by going back to the Edit menu and clicking on\"Edit mode\" Now try interacting with the grid again to see what happens."
+msgstr ""
+
+msgid "(3) Notice how the X and Y coordinates from the grid are connected to the left and right\"inlet\" of [pd audio]. Try connecting them to the inlets of [pd 3D_graphics] and [pd video] as well."
+msgstr ""
+
+msgid "Next, hover over the bottom\"outle\" of an X or Y position number box until your cursor becomes a ring. Click and hold on the outlet, then draw a line to an inlet of [pd 3D_graphics] or [pd video]."
+msgstr ""

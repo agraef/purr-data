@@ -1,0 +1,42 @@
+
+Pd patches for demonstrating ideas of the cognitive psychology of music
+
+
+From "Music, Cognition, and Computerized Sound", Perry Cook:
+p31: 	sine sweeps with bursts of masking white noise
+	music with bursts of masking white noise
+
+p33:	"common fate" groups of dots moving through random dots
+	"common fate" using onset time, AM, FM
+
+p34:	Chownings female voice/bell demo
+
+
+"Auditory Scene Analysis", by Albert Bregman:
+
+repeating reading person while talking, then adding other sound source (Psych of Music class demo)
+
+
+Found. of Cog. Psych p224-225:
+	Bregman and Ruddnicky(1975): CCCFFCC stream segregation
+	Deutsch (1974): alternating high/low tones in each ear
+pp225-226	
+	Bregman: a stream of alternating high/low tones turns into two 
+		distinct streams when sped up.  Make sure the notes remain 		distinct with small silences as separation.
+pp234-235
+	masking tones and stream perception
+
+
+
+from class:
+	take two meoldies and layers them in the same pitch range.  then 
+	move them an octave apart.
+
+
+Interval Classes
+	take melody and scramble the octaves while keeping the pitches the 
+	same (after Deutsch)
+
+Deutsch: alternating ear notes form scales
+
+

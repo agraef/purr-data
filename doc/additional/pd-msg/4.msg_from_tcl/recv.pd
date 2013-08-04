@@ -1,0 +1,8 @@
+#N canvas 357 509 628 150 10;
+#X obj 453 26 netreceive 3006 0 old;
+#X text 27 66 Execute the tcl files in 4.msg_from_tcl. (use wish83if
+your under Win xx);
+#X text 32 10 This patch is here to receive the commands sent by tcl
+scripts;
+#X text 25 92 Have a look to the TCL source to understand how this
+works.;

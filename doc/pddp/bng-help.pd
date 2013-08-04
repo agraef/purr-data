@@ -1,0 +1,444 @@
+#N canvas 0 0 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bng 3 12 0 18 -204280
+-1 0;
+#X obj 0 300 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 42 244 494 344 META 0;
+#X text 12 115 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 135 AUTHOR Thomas Musil;
+#X text 12 155 WEBSITE;
+#X text 12 195 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 45 DESCRIPTION gui-bang;
+#X text 12 65 INLET_0 anything size flashtime init send receive label
+label_pos label_font color pos delta;
+#X text 12 95 OUTLET_0 bang;
+#X text 12 5 KEYWORDS control nonlocal GUI bang_op;
+#X text 12 175 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj 0 408 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 445 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 309 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 28 461 428 129 Related_objects 0;
+#X obj 22 43 bang;
+#X obj 69 43 trigger;
+#X obj 145 43 until;
+#X obj 201 43 bang~;
+#X msg 257 43;
+#X obj 20 93 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
+#X text 18 69 All iem-gui objects:;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [bng] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X text 98 417 bang;
+#X obj 78 417 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 98 308 anything;
+#X obj 495 3 bng 15 250 50 0 foo5_rcv empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bng -text
+pdpedia: bng;
+#X obj 144 227 print;
+#N canvas 598 330 187 198 once 0;
+#X msg 38 77 1;
+#X obj 38 51 t b b;
+#X obj 68 133 sel 0;
+#X obj 68 107 f 0;
+#X obj 38 24 inlet;
+#X obj 68 163 outlet;
+#X connect 0 0 3 1;
+#X connect 1 0 0 0;
+#X connect 1 1 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X restore 144 203 pd once;
+#X obj 116 228 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144
+-1 -1;
+#X obj 75 110 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 116 148 bng 50 950 50 1 foo5_snd foo5_rcv big-bang 57 25 0 12
+-262131 -260818 -143491;
+#X msg 116 49 33;
+#X msg 157 49 -3.14;
+#X msg 180 97 11 22 33.33;
+#X msg 170 73 open xxx;
+#X msg 187 121 funny;
+#X obj 292 72 s foo5_rcv;
+#X obj 292 102 r foo5_snd;
+#X obj 292 53 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
+-1;
+#X obj 292 126 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144
+-1 -1;
+#X msg 75 49 0;
+#X text 321 142 and receive names. Right-;
+#X text 321 157 click and choose;
+#N canvas 85 201 428 309 bng_creation_arguments 0;
+#X text 12 28 "bng" can be called with 14 creation arguments. These
+are not "optional" - all parameters must be filled or the gui-bng will
+not instantiate correctly.;
+#X text 12 132 For example \, click the msg-box to dynamically create
+a bng:;
+#X text 12 80 bng creation arguments: Size Hold Interrupt Init sendName
+receiveName Label labelXOff labelYOff Font# fontSize bgColor foregroundColor
+lblColor;
+#X obj 13 196 s pd-bng_creation_arguments;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [bng] Creation Arguments and Dynamic Patching;
+#X msg 13 154 obj 180 240 bng 30 500 50 0 send receive Atlas -2 40
+0 12 9 2 18;
+#X connect 6 0 3 0;
+#X restore 100 519 pd bng_creation_arguments;
+#X text 320 173 "Properties" to set them \,;
+#X text 320 126 [bng] has settable send;
+#X text 110 250 Use the UP- \, DOWN- \, LEFT- or RIGHT-key to move
+a selected gui-object. Right-click and choose "Properties" to modify
+its appearance.;
+#X text 321 187 or change them with messages;
+#X text 321 201 (see the subpatch below);
+#N canvas 48 5 428 610 Changing_GUI_Properties 0;
+#X text 239 33 no init;
+#X text 270 159 label position;
+#X text 167 451 delta;
+#X text 11 294 font properties;
+#X text 151 159 label;
+#X text 15 451 position;
+#X msg 13 103 size \$1;
+#X msg 104 104 flashtime \$1 \$2;
+#X msg 239 54 init 0;
+#X msg 249 104 init 1;
+#X msg 321 54 send foo5a_snd;
+#X msg 151 180 label new-label;
+#X msg 272 231 label_pos \$1 \$2;
+#X msg 13 366 label_font \$1 \$2;
+#X msg 16 558 pos \$1 \$2;
+#X msg 168 558 delta \$1 \$2;
+#X text 171 294 preset-colors;
+#X text 297 294 RGB-colors;
+#X msg 171 401 color \$1 \$2 \$3;
+#X msg 329 104 send bng-snd;
+#X obj 13 127 s bng_rcv;
+#X obj 104 128 s bng_rcv;
+#X obj 239 129 s bng_rcv;
+#X obj 321 129 s bng_rcv;
+#X obj 13 255 s bng_rcv;
+#X obj 23 230 s bng1a_rcv;
+#X obj 151 256 s bng_rcv;
+#X obj 272 256 s bng_rcv;
+#X obj 13 391 s bng_rcv;
+#X obj 171 426 s bng_rcv;
+#X obj 168 583 s bng_rcv;
+#X obj 16 583 s bng_rcv;
+#X msg 23 206 receive bng_rcv;
+#X msg 13 180 receive bng1a_rcv;
+#X msg 163 231 label myBang;
+#N canvas 375 166 160 287 init 0;
+#X obj 16 11 loadbang;
+#X obj 16 42 f \$0;
+#X msg 16 72 \; \$1-interrupt 50 \; \$1-hold 250 \; \$1-xpos 340 \;
+\$1-ypos 500 \; \$1-xlabel 17 \; \$1-ylabel 7 \; \$1-dim 15 \; \$1-font
+0 \; \$1-font-size 10 \; \$1-bg 0 \; \$1-front 12 \; \$1-label 12;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 320 583 pd init;
+#X text 320 33 change send name;
+#X text 13 159 change receive name;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-interrupt empty
+0 -8 0 12 -262144 -1 -1 50 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-hold empty 0
+-8 0 12 -262144 -1 -1 250 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 104 54 pd flash-time;
+#X text 101 33 flash-time;
+#X text 12 32 dimensions;
+#N canvas 364 205 306 317 flash-time 0;
+#X obj 69 196 t b a;
+#X obj 33 262 outlet;
+#X obj 33 237 pack 0 0 0;
+#X obj 120 197 t b a;
+#X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
+-1 -1 0 256;
+#X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
+-262144 -1 -1 12 256;
+#X connect 0 0 2 0;
+#X connect 0 1 2 1;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 3 1 2 2;
+#X connect 4 0 2 0;
+#X connect 5 0 0 0;
+#X connect 6 0 3 0;
+#X coords 0 -1 1 1 48 62 2 100 100;
+#X restore 171 316 pd flash-time;
+#N canvas 0 0 306 317 flash-time 0;
+#X obj 96 521 outlet;
+#X obj 162 230 t b f;
+#X obj 96 268 +;
+#X obj 96 293 t b f;
+#X obj 96 324 +;
+#X obj 19 208 * -65536;
+#X obj 96 208 * -256;
+#X obj 162 208 * -1;
+#X obj 96 355 - 1;
+#X obj 96 385 list prepend 0;
+#X obj 96 410 route 0 1 2;
+#X obj 96 497 pack 0 0 0;
+#X obj 115 456 t b a;
+#X obj 168 455 t b a;
+#X obj 104 124 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X text 120 120 1.bg;
+#X text 120 137 2.front;
+#X text 120 153 3.label;
+#X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
+-258113 -1 0 256;
+#X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
+-13381 -1 0 256;
+#X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
+-4160 -1 0 256;
+#X connect 1 0 2 0;
+#X connect 1 1 2 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 2 0;
+#X connect 7 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 10 2 13 0;
+#X connect 11 0 0 0;
+#X connect 12 0 11 0;
+#X connect 12 1 11 1;
+#X connect 13 0 11 0;
+#X connect 13 1 11 2;
+#X connect 14 0 9 1;
+#X connect 18 0 5 0;
+#X connect 19 0 6 0;
+#X connect 20 0 7 0;
+#X coords 0 -1 1 1 102 74 2 100 100;
+#X restore 298 316 pd flash-time;
+#X text 248 72 init on;
+#X text 248 85 loadbang;
+#X obj 168 534 list;
+#X obj 168 473 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 310 466 cnv 15 102 102 empty empty empty 20 12 0 14 -1 -66577
+0;
+#X obj 311 467 cnv 15 100 100 empty empty empty 20 12 0 14 -261682
+-66577 0;
+#X obj 340 500 bng 15 250 50 1 bng-snd bng_rcv myBang 17 7 0 10 -262144
+-33289 -33289;
+#X text 62 318 1.font(0-2);
+#X text 62 339 2.height;
+#X text 220 318 1.bg;
+#X text 220 338 2.front;
+#X text 220 359 3.label;
+#X text 64 472 1.x-position;
+#X text 64 494 2.y-position;
+#X text 247 472 1.x-delta;
+#X text 247 494 2.y-delta;
+#X obj 13 53 nbx 3 14 8 200 0 0 empty \$0-dim empty 0 -8 0 12 -262144
+-1 -1 15 256;
+#X text 58 51 size;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
+0 -8 0 12 -262144 -1 -1 17 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
+0 -8 0 12 -262144 -1 -1 7 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 272 181 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
+-262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
+0 -8 0 12 -262144 -1 -1 10 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 13 316 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
+-8 0 12 -262144 -1 -1 340 256;
+#X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
+-8 0 12 -262144 -1 -1 500 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 16 473 pd flash-time;
+#N canvas 366 206 174 259 flash-time 0;
+#X obj 68 180 pack;
+#X obj 103 149 t b a;
+#X obj 68 205 outlet;
+#X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
+0 12 -262144 -1 -1 0 256;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 1 1 0 1;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X coords 0 -1 1 1 48 42 2 100 100;
+#X restore 197 473 pd flash-time;
+#X text 321 203 2.y-offset;
+#X text 321 182 1.x-offset;
+#X text 153 56 1.interrupt;
+#X text 153 76 2.hold;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 2 [bng] Changing Properties through Messages;
+#X connect 6 0 20 0;
+#X connect 7 0 21 0;
+#X connect 8 0 22 0;
+#X connect 9 0 22 0;
+#X connect 10 0 23 0;
+#X connect 11 0 26 0;
+#X connect 12 0 27 0;
+#X connect 13 0 28 0;
+#X connect 14 0 31 0;
+#X connect 15 0 30 0;
+#X connect 18 0 29 0;
+#X connect 19 0 23 0;
+#X connect 32 0 25 0;
+#X connect 33 0 24 0;
+#X connect 34 0 26 0;
+#X connect 38 0 7 0;
+#X connect 41 0 18 0;
+#X connect 42 0 18 0;
+#X connect 45 0 15 0;
+#X connect 46 0 45 0;
+#X connect 59 0 6 0;
+#X connect 61 0 12 0;
+#X connect 62 0 13 0;
+#X connect 63 0 14 0;
+#X connect 64 0 45 1;
+#X restore 101 380 pd Changing_GUI_Properties;
+#X text 168 463 - creating a [bng] without any arguments will set default
+values for all gui-properties. See the subpatch below to learn how
+to dynamically instantiate a [bng] object with custom properties:;
+#X text 11 23 gui-bang;
+#N canvas 43 24 428 573 bng_properties 0;
+#X text 22 53 1 Size;
+#X obj 104 60 bng 8 250 50 0 empty empty 8 10 4 0 8 -262144 -1 -1;
+#X obj 129 53 bng 15 250 50 0 empty empty 15 17 9 0 8 -262144 -1 -1
+;
+#X obj 164 43 bng 25 250 50 0 empty empty 25 27 20 0 8 -262144 -1 -1
+;
+#X text 51 75 Default size is 15 pixels. The minimum size is 8 and
+it does not have a maximum size.;
+#X text 23 258 3 Hold;
+#X obj 93 258 bng 15 50 10 0 empty empty 50 17 8 0 8 -262144 -1 -1
+;
+#X obj 128 258 bng 15 750 50 0 empty empty 750 17 8 0 8 -262144 -1
+-1;
+#X text 23 341 4 Receive Symbol/Send Symbol;
+#X text 49 356 This object can act as its own send or receive object.
+;
+#X obj 41 391 bng 15 250 50 0 link_this_bang empty This_one_sends_a_bang
+17 8 0 10 -262144 -1 -1;
+#X obj 41 412 bng 15 250 50 0 empty link_this_bang This_one_receives_it.
+17 8 0 10 -262144 -1 -1;
+#X text 232 370 Here is the alternative method.;
+#X text 26 447 5 GUI Options;
+#X text 49 469 The other properties are 'name' \, 'x/y offset' \, 'font
+size' \, and colours (for the background \, front \, and labels [name])
+;
+#X text 48 275 The default hold is 250 milliseconds. The hold value
+controls the length of time that the bng object stays "lit". Note that
+bng sends its message immediately regardless of the hold value.;
+#X obj 233 436 s linked_bngs;
+#X obj 338 389 r linked_bngs;
+#X text 22 105 2 Interrupt (milliseconds);
+#X text 48 119 If the bng object is "lit" and holding (see "hold" below)
+\, then receives another message before the hold time has passed \,
+the bng will quickly flash again for the duration you set in this interrupt
+property.;
+#X obj 24 203 bng 15 1000 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 47 187 This bng will hold for 1000 milliseconds \, but interrupt
+for 50 milliseconds if it gets a second message during its "hold".
+Click it once...wait. Then click it multiple times rather quickly to
+see the effect.;
+#X obj 233 413 bang;
+#X obj 338 413 bang;
+#X msg 233 389 send a message;
+#X text 18 510 This document was updated for Pd version 0.35 test 24
+by Dave Sabine as part of a project called pddp proposed by Krzysztof
+Czaja to build comprehensive documentation for Pd.;
+#X obj 338 439 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 2 [bng] Properties;
+#X connect 17 0 23 0;
+#X connect 22 0 16 0;
+#X connect 23 0 26 0;
+#X connect 24 0 22 0;
+#X restore 101 556 pd bng_properties;
+#X text 80 463 14;
+#X text 215 551 (c) musil@iem.kug.ac.at;
+#X text 257 564 IEM KUG;
+#X text 232 576 graz \, austria 2002;
+#X text 168 418 - [bng] only outputs a bang message.;
+#X text 168 308 - [bng] outputs a bang message in response to any message
+that has not been defined to affect gui-properties (see below).;
+#X text 98 346 See the following subpatch for messages that change
+the gui-properties of [bng]:;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 15 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 16 0;
+#X connect 18 0 15 0;
+#X connect 19 0 18 0;
+#X connect 20 0 18 0;
+#X connect 21 0 18 0;
+#X connect 22 0 18 0;
+#X connect 23 0 18 0;
+#X connect 25 0 27 0;
+#X connect 26 0 24 0;
+#X connect 28 0 18 0;

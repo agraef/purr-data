@@ -1,0 +1,113 @@
+#N canvas 1 88 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header fft~ 3 12 0 18 -204280
+-1 0;
+#X obj 0 399 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 49 254 507 361 META 0;
+#X text 12 150 LIBRARY internal;
+#X text 12 190 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 210 RELEASE_DATE 2009-06-12;
+#X text 12 30 LICENSE SIBSD;
+#X text 12 170 AUTHOR Miller Puckette;
+#X text 12 230 HELP_PATCH_AUTHORS Updated for Pd version 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 70 INLET_0 signal;
+#X text 12 90 INLET_1 signal;
+#X text 12 110 OUTLET_0 signal;
+#X text 12 130 OUTLET_1 signal;
+#X text 12 50 DESCRIPTION Fourier analyses;
+#X text 12 5 KEYWORDS signal block_oriented analysis;
+#X restore 500 597 pd META;
+#X obj 0 460 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 523 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 551 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X text 98 527 (none);
+#N canvas 103 483 428 107 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [fft~] Related Objects;
+#X obj 22 42 ifft~;
+#X obj 68 42 rfft~;
+#X obj 114 42 rifft~;
+#X obj 163 42 block~;
+#X text 211 42 [switch~];
+#X restore 101 597 pd Related_objects;
+#X obj 78 408 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 469 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 433 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 491 3 fft~;
+#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/fft~ -text
+pdpedia: fft~;
+#X floatatom 15 124 0 0 0 0 - - -;
+#X obj 15 75 * 44100;
+#X floatatom 15 53 0 0 0 0 - - -;
+#X obj 15 180 osc~;
+#X obj 15 205 rfft~;
+#X obj 15 99 / 64;
+#X obj 15 261 rifft~;
+#X obj 60 261 print~ real;
+#X obj 74 236 print~ imaginary;
+#X obj 15 298 /~ 64;
+#X obj 15 364 print~ resynthesized;
+#X msg 25 337 bang;
+#X msg 60 192 bang;
+#X msg 36 150 0.25;
+#X msg 77 150 0;
+#X text 42 125 frequency in Hz.;
+#X text 43 52 frequency in bins;
+#X text 55 298 <- renormalize;
+#X text 61 337 <- print resynthesis;
+#X text 98 407 signal;
+#X text 98 432 signal;
+#X obj 78 496 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 495 signal;
+#X text 98 468 signal;
+#X text 11 23 Fourier analyses;
+#X text 183 313 There is no normalization \, so that an FFT followed
+by an IFFT has a gain of N.;
+#X text 182 352 See the FFT examples to see how to use these in practice.
+;
+#X text 184 243 The real FFT outputs N/2+1 real parts and N/2-1 imaginary
+parts. The other outputs are zero. At DC and at the Nyquist there is
+no imaginary part \, but the second through Nth output is as a real
+and imaginary pair \, which can be thought of as the cosine and sin
+component strengths.;
+#X text 104 151 <- bash phase;
+#X text 92 193 <- print analysis;
+#X text 184 118 The FFT objects do Fourier analyses and resyntheses
+of incoming real or complex signals. Complex signals are handled as
+pairs of signals (real and imaginary part.) The analysis size is one
+block (you can use the [block~] or [switch~] objects to control block
+size).;
+#X obj 5 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 455 51 pddp/dsp;
+#X obj 98 555 pddp/pddplink ../3.audio.examples/I01.Fourier.analysis.pd
+-text doc/3.audio.examples/I01.Fourier.analysis.pd;
+#X text 98 573 also see examples I02-I10 in doc/3.audio.examples;
+#X connect 14 0 17 0;
+#X connect 15 0 19 0;
+#X connect 16 0 15 0;
+#X connect 17 0 18 0;
+#X connect 18 0 21 0;
+#X connect 18 0 20 0;
+#X connect 18 1 22 0;
+#X connect 18 1 20 1;
+#X connect 19 0 14 0;
+#X connect 20 0 23 0;
+#X connect 23 0 24 0;
+#X connect 25 0 24 0;
+#X connect 26 0 21 0;
+#X connect 26 0 22 0;
+#X connect 27 0 17 1;
+#X connect 28 0 17 1;

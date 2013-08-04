@@ -1,0 +1,103 @@
+#N canvas 0 0 555 619 10;
+#X obj -1 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header change 3 12 0 18
+-204280 -1 0;
+#X obj -1 337 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 51 247 494 344 META 0;
+#X text 12 105 LIBRARY internal;
+#X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 125 AUTHOR Miller Puckette;
+#X text 12 185 HELP_PATCH_AUTHORS This document was updated for Pd
+version 0.35 test 26 by Dave Sabine as part of a project called pddp
+proposed by Krzysztof Czaja to build comprehensive documentation for
+Pd. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 5 KEYWORDS control filter;
+#X text 12 45 DESCRIPTION eliminate redundancy in a number stream;
+#X text 12 65 INLET_0 float bang set;
+#X text 12 85 OUTLET_0 float;
+#X text 12 165 RELEASE_DATE 2009;
+#X restore 500 597 pd META;
+#X obj -1 481 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 524 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#X obj 78 346 cnv 17 3 125 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 74 489 428 104 Related_objects 0;
+#X obj 15 31 spigot;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [change] Related Objects;
+#X obj 65 31 select;
+#X restore 101 597 pd Related_objects;
+#X obj 78 490 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 483 3 change;
+#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/change -text
+pdpedia: change;
+#X msg 22 108 1;
+#X msg 50 108 1;
+#X msg 79 108 1;
+#X msg 112 107 0;
+#X text 20 90 Click from left to right...;
+#X obj 22 139 change;
+#X obj 22 160 print;
+#X text 61 161 watch the console;
+#X obj 22 218 change 6.5;
+#X obj 22 241 print;
+#X msg 22 189 6.5;
+#X msg 52 189 5.5;
+#X msg 88 190 bang;
+#X text 93 218 creation argument;
+#X text 98 345 bang;
+#X text 98 375 float;
+#X text 98 405 list;
+#X text 98 444 set;
+#X floatatom 210 271 0 0 0 0 - - -;
+#X floatatom 210 182 0 0 0 0 - - -;
+#X floatatom 248 198 0 0 0 0 - - -;
+#X msg 248 220 set \$1;
+#X text 293 220 set the value;
+#X text 247 179 if different from current value \, output and set;
+#X obj 210 292 print;
+#X obj 210 249 change;
+#X text 206 147 The "set" method can be used to store a number in the
+object without outputting that value.;
+#X text 98 490 float;
+#X text 11 23 eliminate redundancy in a number stream;
+#X text 167 543 - (optional) a number to specify the initial value.
+;
+#X text 168 345 - sending a bang message to the inlet will force [change]
+to output its current value.;
+#X text 168 375 - a float will be output only if it differs from the
+previous value of [change].;
+#X text 168 405 - lists will be truncated and the first element will
+be output only if it differs from the previous value of [change].;
+#X text 168 490 - if the incoming float was different than the previous
+value \, it will be sent to the outlet.;
+#X text 80 543 1) float;
+#X text 168 444 "set" followed by a value (e.g. \, "set 12") will set
+the value of [change] without outputting it.;
+#X text 18 59 The change object passes its input to the outlet only
+when it changes.;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X connect 12 0 17 0;
+#X connect 13 0 17 0;
+#X connect 14 0 17 0;
+#X connect 15 0 17 0;
+#X connect 17 0 18 0;
+#X connect 20 0 21 0;
+#X connect 22 0 20 0;
+#X connect 23 0 20 0;
+#X connect 24 0 20 0;
+#X connect 30 0 36 0;
+#X connect 31 0 37 0;
+#X connect 32 0 33 0;
+#X connect 33 0 37 0;
+#X connect 37 0 30 0;
