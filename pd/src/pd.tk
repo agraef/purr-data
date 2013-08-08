@@ -878,7 +878,7 @@ if {$pd_nt == 2} {
 	bind . <Mod1-quoteleft>  {menu_raisenextwindow}
 } else {
 	bind . <Control-Next>    {menu_raisenextwindow}
-	#bind . <Control-Prior>   {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
+	bind . <Control-Prior>   {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 }
 
 # pass key presses inside main window to patch windows
@@ -1025,8 +1025,8 @@ proc pdtk_fixwindowmenu {} {
 		} else {
 			.mbar.windows add command -label "Next Window" -command {menu_raisenextwindow} \
 				-accelerator "Ctrl+PageDown"
-			#.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-			#	-accelerator "Ctrl+PageUp"
+			.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+				-accelerator "Ctrl+PageUp"
 		}
 		.mbar.windows add separator
 		.mbar.windows add command -label {parent window} -state disabled
@@ -1218,22 +1218,22 @@ proc menu_raisenextwindow {} {
 }
 
 # lreverse came along in Tcl 8.5
-#proc menu_raisepreviouswindow {} {
-#	set last [lindex [wm stackorder .] end]
-#	set all [wm stackorder .]
-#	foreach i $all {
-#		if { $i != $last } { 
-#			raise [lindex $i]
-#			set target $i
-#		} else {
-#			if { [winfo exists $target.c] } {
-#				focus $target.c
-#			} else {
-#				focus $target
-#			}
-#		}
-#	}
-#}
+proc menu_raisepreviouswindow {} {
+	set last [lindex [wm stackorder .] end]
+	set all [wm stackorder .]
+	foreach i $all {
+		if { $i != $last } { 
+			raise [lindex $i]
+			set target $i
+		} else {
+			if { [winfo exists $target.c] } {
+				focus $target.c
+			} else {
+				focus $target
+			}
+		}
+	}
+}
 
 ################## menu commands for console #########################
 
@@ -1427,31 +1427,31 @@ proc ::menu_openfile {filename} {
 proc menu_addstd {mbar} {
     global pd_apilist pd_midiapilist pd_nt pd_tearoff
     #          the "Audio" menu
-    $mbar.audio add command -label {audio ON} -accelerator [accel_munge "Ctrl+/"] \
+    $mbar.audio add command -label {Audio ON} -accelerator [accel_munge "Ctrl+/"] \
         -command {menu_audio 1} 
-    $mbar.audio add command -label {audio OFF} -accelerator [accel_munge "Ctrl+."] \
+    $mbar.audio add command -label {Audio OFF} -accelerator [accel_munge "Ctrl+."] \
         -command {menu_audio 0} 
 	$mbar.audio add separator
-    for {set x 0} {$x<[llength $pd_apilist]} {incr x} {
-        $mbar.audio add radiobutton -label [lindex [lindex $pd_apilist $x] 0] \
+    for {set x 1} {$x<[llength $pd_apilist]} {incr x} {
+        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_apilist $x] 0] Audio Driver] \
             -command {menu_audio 0} -variable pd_whichapi \
             -value [lindex [lindex $pd_apilist $x] 1]\
             -command {pd [concat pd audio-setapi $pd_whichapi \;]}
     }
 	$mbar.audio add separator
     for {set x 0} {$x<[llength $pd_midiapilist]} {incr x} {
-        $mbar.audio add radiobutton -label [lindex [lindex $pd_midiapilist $x] 0] \
+        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_midiapilist $x] 0] driver]\
             -command {menu_midi 0} -variable pd_whichmidiapi \
             -value [lindex [lindex $pd_midiapilist $x] 1]\
             -command {pd [concat pd midi-setapi $pd_whichmidiapi \;]}
     }
-    if {$pd_nt != 2} {
-		$mbar.audio add separator
-        $mbar.audio add command -label {Audio settings...} \
-            -command {pd pd audio-properties \;}
-        $mbar.audio add command -label {MIDI settings...} \
-            -command {pd pd midi-properties \;}
-    }
+    #if {$pd_nt != 2} {
+	#	$mbar.audio add separator
+    #    $mbar.audio add command -label {Audio settings...} \
+    #        -command {pd pd audio-properties \;}
+    #    $mbar.audio add command -label {MIDI settings...} \
+    #        -command {pd pd midi-properties \;}
+    #}
 	$mbar.audio add separator    
     $mbar.audio add command -label {Test Audio and MIDI} \
         -command {menu_doc_open doc/7.stuff/tools testtone.pd} 
@@ -1486,28 +1486,30 @@ proc menu_addstd {mbar} {
         $mbar.help add command -label {About Pd-L2Ork} \
             -command {menu_doc_open doc/1.manual 1.introduction.txt} 
     }
-    $mbar.help add command -label {Html} \
+    $mbar.help add command -label {Manual} \
         -command {menu_doc_open doc/1.manual index.htm} 
     $mbar.help add command -label {Browser} \
         -accelerator [accel_munge "Ctrl+b"] \
         -command {::helpbrowser::open_helpbrowser}
     $mbar.help add separator
-    $mbar.help add command -label {puredata.info} \
-        -command {menu_openhtml http://puredata.info} 
-    $mbar.help add command -label {Pdpedia} \
-        -command {menu_openpdpedia} 
-    $mbar.help add command -label {FAQ} \
-        -command {menu_openhtml http://puredata.info/docs/faq} 
-    $mbar.help add separator
-    $mbar.help add command -label {mailing lists} \
+    #$mbar.help add command -label {puredata.info} \
+    #    -command {menu_openhtml http://puredata.info} 
+    #$mbar.help add command -label {Pdpedia} \
+    #    -command {menu_openpdpedia} 
+    #$mbar.help add command -label {FAQ} \
+    #    -command {menu_openhtml http://puredata.info/docs/faq} 
+    #$mbar.help add separator
+    $mbar.help add command -label {Pd-L2Ork mailing list} \
+        -command {menu_openhtml http://disis.music.vt.edu/listinfo/l2ork-dev} 
+    $mbar.help add command -label {Pure-Data mailing lists} \
         -command {menu_openhtml http://puredata.info/community/lists} 
-    $mbar.help add command -label {forums} \
+    $mbar.help add command -label {Forums} \
         -command {menu_openhtml http://puredata.hurleur.com/} 
     $mbar.help add command -label {IRC chat} \
         -command {menu_openhtml irc://irc.freenode.net/dataflow} 
-    $mbar.help add separator
-	$mbar.help add command -label {report bug} -command \
-		{menu_openhtml {http://sourceforge.net/tracker/?func=add&group_id=55736&atid=478070}} 
+    #$mbar.help add separator
+	#$mbar.help add command -label {report bug} -command \
+	#	{menu_openhtml {http://sourceforge.net/tracker/?func=add&group_id=55736&atid=478070}} 
 }
 
 #################### the "File" menu for the Pd window ##############
@@ -3052,8 +3054,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		} else {
 			$name.m.windows add command -label "Next Window" -command {menu_raisenextwindow} \
 				-accelerator "Ctrl+PageDown"
-			#$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
-			#	-accelerator "Ctrl+PageUp"
+			$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
+				-accelerator "Ctrl+PageUp"
 		}
 		$name.m.windows add separator
 		$name.m.windows add command -label {parent window}\
@@ -3183,7 +3185,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Mod1-quoteleft> {menu_raisenextwindow}
     } else {
         bind $name.c <Control-Next>   {menu_raisenextwindow}
-        #bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
+        bind $name.c <Control-Prior>  {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 	}
     bind $name.c <Key> {pdtk_canvas_sendkey %W 1 %K %A 0 1}
     bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1 1}
@@ -3214,10 +3216,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Button-5>  "pdtk_canvas_scroll $name.c y +1"
         bind $name.c <Shift-Button-4>  "pdtk_canvas_scroll $name.c x -1"
         bind $name.c <Shift-Button-5>  "pdtk_canvas_scroll $name.c x +1"
-		if { $k12_mode == 0 } {
-		    bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
-		    bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
-		}
+		#if { $k12_mode == 0 } {
+		#    bind $name.c <Control-Button-4>  "pdtk_zoom $name 1"
+		#    bind $name.c <Control-Button-5>  "pdtk_zoom $name -1"
+		#}
     } default {
         bind $name.c  <MouseWheel> \
             "pdtk_canvas_scroll $name.c y \[expr -abs(%D)/%D\]"
