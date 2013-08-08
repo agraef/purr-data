@@ -19,7 +19,7 @@
 -1;
 #X text 96 186 open;
 #X obj 35 425 tabread4~ \$0-buffer;
-#X obj 35 508 outlet~;
+#X obj 35 558 outlet~;
 #N canvas 755 199 523 405 fileio_logic 0;
 #X obj 142 -23 inlet;
 #X obj 142 159 patch_name 99;
@@ -143,6 +143,11 @@
 #X restore 85 446 pd envelope_logic;
 #X obj 35 477 *~;
 #X obj 207 404 t 1 0;
+#X obj 35 519 *~;
+#X msg 78 477 0 5 \, 1 5 5;
+#X obj 78 499 vline~;
+#X obj 99 114 t f f;
+#X obj 99 136 pipe 5;
 #X connect 1 0 10 0;
 #X connect 2 0 7 0;
 #X connect 3 0 9 0;
@@ -155,7 +160,7 @@
 #X connect 8 0 4 0;
 #X connect 9 0 3 0;
 #X connect 10 0 0 0;
-#X connect 11 0 5 0;
+#X connect 11 0 31 0;
 #X connect 13 0 17 0;
 #X connect 15 0 26 0;
 #X connect 17 0 19 3;
@@ -170,7 +175,13 @@
 #X connect 23 0 22 0;
 #X connect 24 0 19 0;
 #X connect 25 0 26 1;
-#X connect 26 0 16 0;
+#X connect 26 0 28 0;
 #X connect 27 0 12 0;
 #X connect 27 1 5 0;
+#X connect 28 0 16 0;
+#X connect 29 0 30 0;
+#X connect 30 0 28 1;
+#X connect 31 0 32 0;
+#X connect 31 1 29 0;
+#X connect 32 0 5 0;
 #X coords 0 -1 1 1 89 89 2 96 173;

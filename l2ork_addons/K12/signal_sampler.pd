@@ -1,9 +1,9 @@
-#N canvas 581 112 466 542 10;
+#N canvas 581 112 466 575 10;
 #X obj 141 205 ggee/image @pd_extra/K12/objects/signal_sampler.png
 ;
 #X obj 142 91 loadbang;
-#X obj 59 128 inlet;
-#X obj -16 128 inlet~;
+#X obj 29 69 inlet;
+#X obj -16 69 inlet~;
 #X msg 142 114 open @pd_extra/K12/objects/signal_sampler.png;
 #X obj -15 452 tabwrite~ \$0-buffer;
 #X msg 186 329 stop;
@@ -15,11 +15,11 @@
 #X obj 99 233 hsl 78 11 0 100 0 1 \$0-s-null \$0-r-null end 31 6 0
 10 -262144 -1 -1 1300 1;
 #X text 95 187 rec;
-#X obj 140 577 outlet~;
+#X obj 139 622 outlet~;
 #X obj 140 282 sel 1 0;
 #X obj 47 307 delay 10000;
 #X obj 139 203 nbx 1 14 0 9 0 0 empty empty empty 0 -8 0 12 -262144
--1 -1 1 256 3;
+-1 -1 0 256 3;
 #X text 122 201 snd:;
 #N canvas 273 186 523 442 fileio_logic 0;
 #X obj 142 -23 inlet;
@@ -135,7 +135,7 @@
 -1 -1 0 1;
 #X text 157 186 play;
 #X obj 275 295 sel 1;
-#X obj 59 150 t 1 f;
+#X obj 29 141 t 1 f;
 #X obj 275 465 delay;
 #X msg 275 487 0;
 #X msg 275 443 \$4;
@@ -169,8 +169,13 @@
 #X obj 234 174 preset_node k12;
 #X obj 234 150 preset_node k12;
 #X obj 159 307 t b b;
+#X obj 140 596 *~;
+#X obj 191 569 vline~;
+#X msg 191 545 0 5 \, 1 5 5;
+#X obj 29 117 pipe 5;
+#X obj 29 92 t f f;
 #X connect 1 0 4 0;
-#X connect 2 0 26 0;
+#X connect 2 0 45 0;
 #X connect 3 0 5 0;
 #X connect 4 0 0 0;
 #X connect 6 0 5 0;
@@ -202,7 +207,7 @@
 #X connect 29 0 27 0;
 #X connect 30 0 19 0;
 #X connect 31 0 32 1;
-#X connect 32 0 12 0;
+#X connect 32 0 41 0;
 #X connect 33 0 17 1;
 #X connect 33 1 8 0;
 #X connect 34 0 35 0;
@@ -213,4 +218,10 @@
 #X connect 39 0 9 0;
 #X connect 40 0 17 1;
 #X connect 40 1 6 0;
+#X connect 41 0 12 0;
+#X connect 42 0 41 1;
+#X connect 43 0 42 0;
+#X connect 44 0 26 0;
+#X connect 45 0 44 0;
+#X connect 45 1 43 0;
 #X coords 0 -1 1 1 89 89 2 96 173;
