@@ -78,9 +78,9 @@ hammer/tosymbol.c \
 hammer/zl.c
 
 HGROWFITTER_SOURCES = \
-hammer/Append.c \
 hammer/past.c \
-hammer/prepend.c
+#hammer/Append.c \
+#hammer/prepend.c
 
 HFILE_SOURCES = \
 hammer/capture.c \
@@ -118,7 +118,6 @@ sickle/linedrive.c
 
 SSIC_TILDE = $(TILDE)
 SSIC_SOURCES = \
-sickle/abs.c \
 sickle/acos.c \
 sickle/acosh.c \
 sickle/allpass.c \
@@ -172,6 +171,9 @@ sickle/trapezoid.c \
 sickle/triangle.c \
 sickle/vectral.c \
 sickle/zerox.c
+
+#disabled
+#sickle/abs.c \
 
 SFORKY_TILDE = $(TILDE)
 SFORKY_SOURCES = \
