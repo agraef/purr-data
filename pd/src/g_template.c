@@ -1216,6 +1216,7 @@ static t_gpointer curve_motion_gpointer;
 
 static void curve_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
+	//fprintf(stderr,"curve_motion\n");
     t_curve *x = (t_curve *)z;
     t_fielddesc *f = x->x_vec + curve_motion_field;
     t_atom at;
@@ -1679,6 +1680,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
 	}
 
 	//fprintf(stderr,"===============plot %lx glist %lx glist_getcanvas %lx plot->x_obj %lx plot->x_canvas %lx glist_getcanvas(plot->x_canvas) %lx\n", (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist), (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
+	int draw_me = 1;	//used for experimental disabling of drawing outside GOP bounds
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -1747,16 +1749,27 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     minyval = yval;
                 if (i == nelem-1 || inextx != ixpix)
                 {
+					//fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
+					// with the following experimental code we can prevent drawing outside the gop window (preferred but needs to be further tested)
+					/*if (glist->gl_y2 > glist->gl_y1) {
+						if (minyval >= glist->gl_y1 && maxyval <= glist->gl_y2) draw_me = 1;
+						else draw_me = 0; 
+					} else {
+						if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1) draw_me = 1;
+						else draw_me = 0; 
+					}
+					if (draw_me) {*/
 					//we subtract 1 from y to keep it in sync with the rest of the types of templates
-                    sys_vgui(
-".x%lx.c create rectangle %d %d %d %d -fill black -width 0  -tags {.x%lx.x%lx.plot%lx %lx}\n",
-                        glist_getcanvas(glist),
-                        ixpix, (int)glist_ytopixels(glist, 
-                            basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
-                        inextx, (int)(glist_ytopixels(glist, 
-                            basey + fielddesc_cvttocoord(yfielddesc, maxyval))
-                                + linewidth) - 1, glist_getcanvas(glist), glist,
-						 data, (t_int)tag);
+		               sys_vgui(
+	".x%lx.c create rectangle %d %d %d %d -fill black -width 0  -tags {.x%lx.x%lx.plot%lx %lx}\n",
+		                    glist_getcanvas(glist),
+		                    ixpix, (int)glist_ytopixels(glist, 
+		                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
+		                    inextx, (int)(glist_ytopixels(glist, 
+		                        basey + fielddesc_cvttocoord(yfielddesc, maxyval))
+		                            + linewidth) - 1, glist_getcanvas(glist), glist,
+							 data, (t_int)tag);
+					//} //part of experimental code above
                     ndrawn++;
                     minyval = 1e20;
                     maxyval = -1e20;

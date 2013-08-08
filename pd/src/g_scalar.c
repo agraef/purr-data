@@ -266,6 +266,7 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 
 static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
+	//fprintf(stderr,"scalar_displace\n");
     t_scalar *x = (t_scalar *)z;
     t_symbol *templatesym = x->sc_template;
     t_template *template = template_findbyname(templatesym);
@@ -415,7 +416,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_atom at[2];
     t_float basex = template_getfloat(template, gensym("x"), data, 0);
     t_float basey = template_getfloat(template, gensym("y"), data, 0);
-	//fprintf(stderr,"=================scalar_doclick %f %f %f %f\n", basex, basey, xloc, yloc);
+	//fprintf(stderr,"=================scalar_doclick %f %f %f %f %d\n", basex, basey, xloc, yloc, doit);
 
 	SETFLOAT(at, basex + xloc);
 	SETFLOAT(at+1, basey + yloc);

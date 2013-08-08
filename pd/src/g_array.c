@@ -719,6 +719,7 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
                     (t_word *)(((char *)array_motion_wp) +
                         array_motion_elemsize * array_motion_lastx),
                             1);
+		// here we block scalar from exceeding the array GOP edges
 		if (graph) {
 			if (graph->gl_y1 > graph->gl_y2) {
 				if (newy > graph->gl_y1) newy = graph->gl_y1;
