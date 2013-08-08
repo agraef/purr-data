@@ -60,7 +60,7 @@ pdpedia: route;
 #X obj 27 136 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X msg 140 61 7 17;
-#N canvas 11 63 516 509 float_mode 0;
+#N canvas 414 108 516 509 float_mode 0;
 #X text 89 271 float;
 #X text 89 365 list;
 #X text 89 325 symbol;
@@ -72,7 +72,7 @@ pdpedia: route;
 If there is a match \, a bang is sent to the outlet corresponding to
 the matching creation argument. If there is no match the input is sent
 to the rightmost outlet.;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+#X obj 0 0 cnv 15 515 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [route] Message Handling in "Float Mode";
 #X obj 1 261 cnv 3 500 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
@@ -123,11 +123,11 @@ sent to the rightmost outlet.;
 #X text 168 249 - [route] handles its input in 3 different "modes"
 \, depending on what the creation arguments are. Click the subpatches
 below to see how message types are handled under each mode.;
-#N canvas 15 22 516 599 selector_mode 0;
+#N canvas 289 73 516 599 selector_mode 0;
 #X text 88 548 pointer;
 #X text 138 548 - a pointer is always sent to the rightmost outlet.
 ;
-#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+#X obj 0 0 cnv 15 515 21 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 0 389 cnv 3 500 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
@@ -234,26 +234,26 @@ how incoming data is handled in each mode.;
 #X msg 140 85 Grizabella;
 #X text 11 23 route a message according to the selector or first element
 ;
-#N canvas 592 32 442 587 type_mode 0;
+#N canvas 592 32 426 587 type_mode 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [route] Message Handling in "Type Mode";
-#X msg 84 304 bang;
+#X msg 85 305 bang;
 #X msg 96 348 symbol pie;
 #X msg 99 368 pie;
-#X msg 78 265 1 2 3;
-#X text 102 225 a float;
-#X text 126 264 a list (of floats);
-#X text 121 304 a bang;
+#X msg 74 265 1 2 3;
+#X text 93 224 a float;
+#X text 119 264 a list (of floats);
+#X text 122 305 a bang;
 #X text 175 348 a symbol;
 #X text 133 369 none of the above!;
-#X text 196 285 a list of symbols;
+#X text 178 284 a list of symbols;
 #X floatatom 109 425 5 0 0 0 - - -;
 #X symbolatom 157 424 10 0 0 0 - - -;
 #X obj 62 445 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
 -1;
-#X msg 72 225 89;
-#X msg 75 245 float 7;
+#X msg 62 225 89;
+#X msg 68 245 float 7;
 #X obj 62 401 route bang float symbol list;
 #X obj 109 445 bng 15 250 50 0 empty empty float -4 23 1 12 -262144
 -1 -1;
@@ -263,8 +263,8 @@ how incoming data is handled in each mode.;
 -1 -1;
 #X obj 253 445 bng 15 250 50 0 empty empty undefined -18 23 1 12 -262144
 -1 -1;
-#X msg 81 285 list moon earth;
-#X text 130 245 definitely a float!;
+#X msg 80 285 list moon earth;
+#X text 123 243 definitely a float!;
 #X text 49 482 [trigger]-style shortcuts don't work:;
 #X text 162 501 !=;
 #X obj 63 502 route b f s l;
@@ -326,10 +326,10 @@ how incoming data is handled in each mode.;
 ;
 #X msg 15 266 bang test;
 #X obj 71 131 route 1;
-#X msg 71 183 2 3 4;
+#X msg 71 183;
 #X obj 71 164 prepend set;
 #X msg 71 100 1 2 3 4;
-#X msg 218 183 is not a list;
+#X msg 218 183;
 #X obj 218 164 prepend set;
 #X obj 218 131 route this;
 #X msg 218 100 this is not a list;
@@ -476,9 +476,9 @@ are sent to the rightmost outlet unchanged.;
 #X obj 274 301 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X msg 312 216 symbol word;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+#X obj 1 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
-#X text 8 2 [route] The Second Inlet;
+#X text 8 1 [route] The Second Inlet;
 #X text 20 38 The right inlet is used to reset the argument's value
 as in the patch below. This feature is available only on [route] objects
 with only ONE creation argument (or no creation arguments in which
@@ -513,15 +513,15 @@ Otherwise \, route will not recognize the value correctly.;
 #X text 98 400 symbol;
 #X text 167 386 - the right inlet is available if there is only one
 creation argument. See the subpatch below for details:;
-#X msg 269 85 symbol other;
 #X obj 258 145 route word;
 #X obj 269 110 list trim;
-#X msg 258 60 other;
 #X obj 315 168 print rejection_outlet;
 #X obj 258 192 print left_outlet;
 #X symbolatom 355 86 10 0 0 0 - - -;
 #X symbolatom 334 119 10 0 0 0 - - -;
 #X text 398 119 This one doesn't work;
+#X msg 269 85 symbol word;
+#X msg 258 60 word;
 #X connect 12 0 17 0;
 #X connect 12 0 21 0;
 #X connect 12 1 19 0;
@@ -533,10 +533,10 @@ creation argument. See the subpatch below for details:;
 #X connect 15 0 12 0;
 #X connect 22 0 12 0;
 #X connect 33 0 12 0;
-#X connect 49 0 51 0;
-#X connect 50 0 54 0;
-#X connect 50 1 53 0;
-#X connect 51 0 50 0;
-#X connect 52 0 50 0;
-#X connect 55 0 51 0;
+#X connect 49 0 52 0;
+#X connect 49 1 51 0;
+#X connect 50 0 49 0;
+#X connect 53 0 50 0;
+#X connect 54 0 49 0;
 #X connect 56 0 50 0;
+#X connect 57 0 49 0;
