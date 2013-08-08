@@ -1,20 +1,66 @@
-#N canvas 286 197 499 284 10;
-#X obj 19 108 sig~;
-#X obj 71 133 loadbang;
-#X obj 71 157 metro 100;
-#X obj 71 181 snapshot~;
-#X floatatom 19 87 5 0 0 0 - - -;
-#X floatatom 71 206 7 0 0 0 - - -;
-#X text 316 257 updated for Pd version 0.42.;
-#X obj 20 132 abs~;
-#X obj 21 14 abs~;
-#X text 60 14 - absolute value;
-#X text 82 33 Passes nonnegative values unchanged \, but replaces negative
-ones with their (positive) inverses.;
-#X text 81 66 (turn DSP on to test):;
-#X connect 0 0 7 0;
-#X connect 1 0 2 0;
-#X connect 2 0 3 0;
-#X connect 3 0 5 0;
-#X connect 4 0 0 0;
-#X connect 7 0 3 0;
+#N canvas 339 124 552 446 10;
+#X obj -8 4 cnv 15 552 40 empty \$0-pddp.cnv.header abs~ 3 12 0 18
+-204280 -1 0;
+#X obj 127 201 *~ 0.2;
+#X obj 127 179 *~;
+#X text 21 209 no arguments;
+#X obj 127 243 dac~;
+#X obj -8 303 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj -8 351 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -8 388 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 71 360 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 71 317 cnv 17 3 17 empty \$0-pddp.cnv.let.n 0 5 9 0 16 -228856
+-162280 0;
+#X text 99 317 signal;
+#X text 99 360 signal;
+#X text 88 397 (none);
+#X obj 22 147 osc~ 1;
+#X obj 127 123 osc~ 200;
+#X obj 205 123 osc~ 220;
+#X obj 508 8 abs~;
+#X text 154 317 - The signal that was input;
+#X text 152 360 - The absolute value of input;
+#X text 20 58 abs~ can be used for a rough instantaneous measure of
+signal amplitude \, among other things.;
+#X text 173 183 Signal multiplication where the modulator wave is limited
+to a positive range produces amplitude modulation (as opposed to ring
+modulation).;
+#X obj 475 56 pddp/dsp;
+#X text 0 27 converts all signal values to positive values;
+#X obj -8 429 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 429 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#N canvas 248 344 428 75 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 9 28 abs~;
+#X restore 198 431 pd Related_objects;
+#N canvas 432 306 417 220 META 0;
+#X text 13 11 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 13 -109 LICENSE SIBSD;
+#X text 13 -9 AUTHOR Miller Puckette;
+#X text 13 31 RELEASE_DATE 1997;
+#X text 13 -129 KEYWORDS signal absolute;
+#X text 13 -89 DESCRIPTION converts all signal values to positive values
+;
+#X text 13 -69 INLET_0 signal;
+#X text 13 -49 OUTLET_0 signal;
+#X text 13 51 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 13 -29 LIBRARY internal;
+#X restore 494 431 pd META;
+#X obj 22 193 abs~;
+#X obj 206 151 abs~;
+#X connect 1 0 4 0;
+#X connect 1 0 4 1;
+#X connect 2 0 1 0;
+#X connect 13 0 27 0;
+#X connect 14 0 2 0;
+#X connect 15 0 28 0;
+#X connect 28 0 2 1;
