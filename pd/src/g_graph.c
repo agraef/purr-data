@@ -849,11 +849,13 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             if (g->g_pd == garray_class &&
                 !garray_getname((t_garray *)g, &arrayname))
         {
-            i -= sys_fontheight(glist_getfont(x));
+            //i -= sys_fontheight(glist_getfont(x));
+			i++;
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw\
-             -font {{%s} %d %s} -tags %s\n",
-             (long)glist_getcanvas(x),  x1, i, arrayname->s_name, sys_font,
-                sys_hostfontsize(glist_getfont(x)), sys_fontweight, tag);
+             -font {{%s} %d %s} -tags %s -fill %s\n",
+             (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name, sys_font,
+                sys_hostfontsize(glist_getfont(x)), sys_fontweight, tag,
+				(glist_isselected(x, gr) ? "$select_color" : "$graph_outline"));
         }
         
             /* draw ticks on horizontal borders.  If lperb field is
@@ -1182,7 +1184,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 */
         	sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
                  canvas, rtext_gettag(y), 
-                 (state? "$select_color" : "$text_color"));
+                 (state? "$select_color" : "$graph_outline"));
 
         	sys_vgui(".x%lx.c itemconfigure %sfill -fill %s\n",
                  canvas, rtext_gettag(y), 
