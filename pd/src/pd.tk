@@ -809,7 +809,7 @@ pack .printout.bar -side bottom -fill x -expand 0
 pack .printout.frame -fill both -expand 1
 pack .printout.bar.clear -side left -padx 3 -pady 3
 #pack .printout.bar.x -side right -padx 3 -pady 3
-pack .printout.bar.entry -side right -fill both -expand 1 -padx 5 -pady 3
+pack .printout.bar.entry -side right -fill both -expand 1 -padx 3 -pady 3
 pack .printout.bar.label -side right -padx 3 -pady 3
 
 # the console is open by default
