@@ -19,7 +19,6 @@
 static t_class *imagebang_class;
 t_widgetbehavior imagebang_widgetbehavior;
 
-
 typedef struct _imagebang
 {
      t_object x_obj;
@@ -35,7 +34,6 @@ typedef struct _imagebang
      int 		flashing;
 	 t_outlet* outlet;
 } t_imagebang;
-
 
 static void imagebang_bang(t_imagebang *x)
 {
@@ -75,7 +73,6 @@ static void imagebang_brk_timeout(t_imagebang *x)
     
 }
 
-
 /* widget helper functions */
 
 static const char* imagebang_get_filename(t_imagebang *x,char *file) {
@@ -96,37 +93,28 @@ static const char* imagebang_get_filename(t_imagebang *x,char *file) {
 }
 
 static int imagebang_click(t_imagebang *x, struct _glist *glist,
-    int xpos, int ypos, int shift, int alt, int dbl, int doit) {
-		//DEBUG(post("x:%i y:%i dbl:%i doit:%i",xpos,ypos,dbl,doit);)
-		if ( doit) imagebang_bang(x) ;
-		
-		return (1);
-	}
-
-
-
+    int xpos, int ypos, int shift, int alt, int dbl, int doit)
+{
+	//DEBUG(post("x:%i y:%i dbl:%i doit:%i",xpos,ypos,dbl,doit);)
+	if (doit) imagebang_bang(x);
+	return (1);
+}
 
 static void imagebang_drawme(t_imagebang *x, t_glist *glist, int firsttime) {
-     if (firsttime) {	
-		 
-		 DEBUG(post("Rendering: \n   %x_imagebang:%s \n   %x_imagebang:%s",x->image_a,x->image_a->s_name,x->image_b,x->image_b->s_name);)
-		 
+     if (firsttime) {			 
+		DEBUG(post("Rendering: \n   %x_imagebang:%s \n   %x_imagebang:%s",x->image_a,x->image_a->s_name,x->image_b,x->image_b->s_name);)
+
 		sys_vgui(".x%x.c create image %d %d -anchor nw -image %x_imagebang -disabledimage %x_imagebang -tags %ximage\n", 
 			glist_getcanvas(glist),
 			text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),x->image_a,x->image_b,x);
-	  
-	  
-	   sys_vgui("pd [concat %s _imagesize [image width %x_imagebang] [image height %x_imagebang] \\;]\n",x->receive->s_name,x->image_a,x->image_a);
-	   
-	   
+
+		sys_vgui("pd [concat %s _imagesize [image width %x_imagebang] [image height %x_imagebang] \\;]\n",x->receive->s_name,x->image_a,x->image_a);
      } else {
 	  sys_vgui(".x%x.c coords %ximage %d %d\n",
 		   glist_getcanvas(glist), x,
 		   text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
      }
-
 }
-
 
 void imagebang_erase(t_imagebang* x,t_glist* glist)
 {
@@ -135,7 +123,6 @@ void imagebang_erase(t_imagebang* x,t_glist* glist)
 	      glist_getcanvas(glist), x);
 
 }
-	
 
 
 /* ------------------------ image widgetbehaviour----------------------------- */
@@ -147,13 +134,13 @@ static void imagebang_getrect(t_gobj *z, t_glist *glist,
     int width, height;
     t_imagebang* x = (t_imagebang*)z;
 
-
     width = x->width;
     height = x->height;
     *xp1 = text_xpix(&x->x_obj, glist);
     *yp1 = text_ypix(&x->x_obj, glist);
     *xp2 = text_xpix(&x->x_obj, glist) + width;
     *yp2 = text_ypix(&x->x_obj, glist) + height;
+	//fprintf(stderr,"%d %d %d %d\n", *xp1, *yp1, *xp2, *yp2);
 }
 
 static void imagebang_displace(t_gobj *z, t_glist *glist,
@@ -176,21 +163,18 @@ static void imagebang_select(t_gobj *z, t_glist *glist, int state)
      t_imagebang *x = (t_imagebang *)z;
      if (state) {
 	  sys_vgui(".x%x.c create rectangle \
-%d %d %d %d -tags %xSEL -outline blue\n",
-		   glist_getcanvas(glist),
-		   text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
-		   text_xpix(&x->x_obj, glist) + x->width, text_ypix(&x->x_obj, glist) + x->height,
-		   x);
+			%d %d %d %d -tags %xSEL -outline $select_color\n",
+			glist_getcanvas(glist),
+			text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
+			text_xpix(&x->x_obj, glist) + x->width,
+			text_ypix(&x->x_obj, glist) + x->height,
+			x);
      }
      else {
 	  sys_vgui(".x%x.c delete %xSEL\n",
 		   glist_getcanvas(glist), x);
      }
-
-
-
 }
-
 
 static void imagebang_activate(t_gobj *z, t_glist *glist, int state)
 {
@@ -205,35 +189,27 @@ static void imagebang_delete(t_gobj *z, t_glist *glist)
     //canvas_deletelinesfor(glist_getcanvas(glist), x);
     canvas_deletelinesfor(glist, x);
 }
-
-       
+      
 static void imagebang_vis(t_gobj *z, t_glist *glist, int vis)
 {
     t_imagebang* s = (t_imagebang*)z;
-    if (vis)
-	 imagebang_drawme(s, glist, 1);
-    else
-	 imagebang_erase(s,glist);
+	if (vis)
+		imagebang_drawme(s, glist, 1);
+	else
+		imagebang_erase(s,glist);
 }
-
-
-
 
 static void imagebang_size(t_imagebang* x,t_floatarg w,t_floatarg h) {
      x->width = w;
      x->height = h;
 }
 
-
-
-	
 static void imagebang_imagesize_callback(t_imagebang *x, t_float w, t_float h) {
 	DEBUG(post("received w %f h %f",w,h);)
 	x->width = w;
 	x->height = h;
 	canvas_fixlinesfor(x->glist,(t_text*) x);
 }
-	
 	
 static void imagebang_free(t_imagebang *x) {
 	
@@ -255,7 +231,6 @@ static void imagebang_free(t_imagebang *x) {
 	clock_free(x->clock_brk);
     
 }
-	
 	
 static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
 {
@@ -292,12 +267,10 @@ static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
 			sys_vgui("if { [info exists %x_imagebang] == 0 } { image create photo %x_imagebang -file \"%s\"\n set %x_imagebang 1\n} \n",x->image_a,x->image_a,fname,x->image_a); 
 		    //sys_vgui("pd [concat test %x_imagebang \\;]\n",x->image_a);
 		} else {
-			post("Oups... [imagebang] could not find \"%s\"",image_a->s_name);
+			post("Oops... [imagebang] could not find \"%s\"",image_a->s_name);
 		}
 	}
-    
-    
-    
+   
     if ( argc > 1 && (argv+1)->a_type == A_SYMBOL ) {
 		image_b= atom_getsymbol(argv+1);
 		fname = imagebang_get_filename(x,image_b->s_name); // Get image file path
@@ -307,7 +280,7 @@ static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
 			sys_vgui("if { [info exists %x_imagebang] == 0} { image create photo %x_imagebang -file \"%s\"\n set %x_imagebang 1\n} \n",x->image_b,x->image_b,fname,x->image_b);
 			//sys_vgui("pd [concat test %x_imagebang \\;]\n",x->image_b);
 		} else {
-			post("Oups... [imagebang] could not find \"%s\"",image_b->s_name);
+			post("Oops... [imagebang] could not find \"%s\"",image_b->s_name);
 		}
 	}
 	
@@ -333,50 +306,42 @@ static void *imagebang_new(t_symbol *s, int argc, t_atom *argv)
 	
     pd_bind(&x->x_obj.ob_pd, x->receive );
     
-    x->clock_flash = clock_new(x, (t_method)imagebang_flash_timeout);
-    x->clock_brk = clock_new(x, (t_method)imagebang_brk_timeout);
-    
-    
-   x->outlet = outlet_new(&x->x_obj, &s_float);
-   
-
-   return (x);
+	x->clock_flash = clock_new(x, (t_method)imagebang_flash_timeout);
+	x->clock_brk = clock_new(x, (t_method)imagebang_brk_timeout);
+	x->outlet = outlet_new(&x->x_obj, &s_float);
+	return (x);
    
 }
 
 void imagebang_setup(void)
 {
-	
-	
-    imagebang_class = class_new(gensym("imagebang"), (t_newmethod)imagebang_new, (t_method)imagebang_free,
-				sizeof(t_imagebang),0, A_GIMME,0);
+    imagebang_class = class_new(gensym("imagebang"),
+		(t_newmethod)imagebang_new, (t_method)imagebang_free,
+		sizeof(t_imagebang),0, A_GIMME,0);
 
     class_addmethod(imagebang_class, (t_method)imagebang_imagesize_callback,\
-                     gensym("_imagesize"), A_DEFFLOAT, A_DEFFLOAT, 0);
+		gensym("_imagesize"), A_DEFFLOAT, A_DEFFLOAT, 0);
 
     class_addbang(imagebang_class,(t_method)imagebang_bang);
     
-    imagebang_widgetbehavior.w_getrectfn =     imagebang_getrect;
-    imagebang_widgetbehavior.w_displacefn =    imagebang_displace;
-    imagebang_widgetbehavior.w_selectfn =   imagebang_select;
-    imagebang_widgetbehavior.w_activatefn =   imagebang_activate;
-    imagebang_widgetbehavior.w_deletefn =   imagebang_delete;
-    imagebang_widgetbehavior.w_visfn =   imagebang_vis;
+    imagebang_widgetbehavior.w_getrectfn =	imagebang_getrect;
+    imagebang_widgetbehavior.w_displacefn =	imagebang_displace;
+    imagebang_widgetbehavior.w_selectfn =	imagebang_select;
+    imagebang_widgetbehavior.w_activatefn =	imagebang_activate;
+    imagebang_widgetbehavior.w_deletefn =	imagebang_delete;
+    imagebang_widgetbehavior.w_visfn =		imagebang_vis;
 
     imagebang_widgetbehavior.w_clickfn = (t_clickfn)imagebang_click;
     
 
 #if PD_MINOR_VERSION < 37
 	imagebang_widgetbehavior.w_propertiesfn = NULL; 
-    //imagebang_widgetbehavior.w_savefn =   imagebang_save;
+    //imagebang_widgetbehavior.w_savefn = imagebang_save;
 #endif
-
     
     class_setwidget(imagebang_class,&imagebang_widgetbehavior);
 #if PD_MINOR_VERSION >= 37
    // class_setsavefn(imagebang_class,&imagebang_save);
 #endif
-
 }
-
 
