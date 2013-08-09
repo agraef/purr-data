@@ -426,6 +426,7 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
 		int dspwas = canvas_suspend_dsp();
         glist_delete(x->x_glist, &x->x_gobj);
 		canvas_resume_dsp(dspwas);
+		canvas_redraw(glist_getcanvas(x->x_glist));
     }
 	else 
 	{
@@ -668,6 +669,7 @@ static int array_motion_fatten;
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
 
+// this is called when a mouse drag happens inside an array (either scalar or the whole array--this needs to be tested)
 static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     array_motion_xcumulative += dx * array_motion_xperpix;
