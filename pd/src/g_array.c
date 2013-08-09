@@ -417,20 +417,26 @@ extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
     t_floatarg fflags, t_floatarg deleteit)
 {
-	canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
-
-    int flags = fflags;
-    int saveit = ((flags & 1) != 0);
-    int style = ((flags & 6) >> 1);
-    /*t_float stylewas = template_getfloat(
-        template_findbyname(x->x_scalar->sc_template),
-            gensym("style"), x->x_scalar->sc_vec, 1);*/
     if (deleteit != 0)
     {
+		//fprintf(stderr,"deleteit\n");
+		//glist_select(x->x_glist, &x->x_gobj);
+		//canvas_undo_add(x->x_glist, 3, "delete", canvas_undo_set_cut(x->x_glist, 2)); // 2 = UCUT_CLEAR (from g_editor.c)
+		//currently cannot be undo'd until we do a new kind of undo
+		int dspwas = canvas_suspend_dsp();
         glist_delete(x->x_glist, &x->x_gobj);
+		canvas_resume_dsp(dspwas);
     }
-    else
-    {
+	else 
+	{
+		canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
+
+		int flags = fflags;
+		int saveit = ((flags & 1) != 0);
+		int style = ((flags & 6) >> 1);
+		/*t_float stylewas = template_getfloat(
+		    template_findbyname(x->x_scalar->sc_template),
+		        gensym("style"), x->x_scalar->sc_vec, 1);*/
         int size;
         int styleonset, styletype;
         t_symbol *stylearraytype;
