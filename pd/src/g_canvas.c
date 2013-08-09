@@ -54,9 +54,6 @@ void canvas_reflecttitle(t_canvas *x);
 static void canvas_addtolist(t_canvas *x);
 static void canvas_takeofflist(t_canvas *x);
 static void canvas_pop(t_canvas *x, t_floatarg fvis);
-static int canvas_should_bind(t_canvas *x);
-static void canvas_bind(t_canvas *x);
-static void canvas_unbind(t_canvas *x);
 
 /* --------- functions to handle the canvas environment ----------- */
 
@@ -235,9 +232,12 @@ void canvas_makefilename(t_canvas *x, char *file, char *result, int resultsize)
 
 void canvas_rename(t_canvas *x, t_symbol *s, t_symbol *dir)
 {
-    canvas_unbind(x);
+    if (strcmp(x->gl_name->s_name, "Pd"))
+        pd_unbind(&x->gl_pd, canvas_makebindsym(x->gl_name));
     x->gl_name = s;
-    canvas_bind(x);
+    if (strcmp(x->gl_name->s_name, "Pd"))
+        pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
+    if (glist_isvisible(x))
     if (x->gl_havewindow) //was glist_isvisible(x)
         canvas_reflecttitle(x);
     if (dir && dir != &s_)
@@ -408,7 +408,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_owner = owner;
     x->gl_name = (*s->s_name ? s : 
         (canvas_newfilename ? canvas_newfilename : gensym("Pd")));
-    canvas_bind(x);
+    if (strcmp(x->gl_name->s_name, "Pd"))
+        pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
     x->gl_loading = 1;
 	//fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", (t_int)x, (t_int)x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
@@ -548,8 +549,9 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     x->gl_screenx1 = x->gl_screeny1 = 0;
     x->gl_screenx2 = 450;
     x->gl_screeny2 = 300;
+    if (strcmp(x->gl_name->s_name, "Pd"))
+        pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
     x->gl_owner = g;
-	canvas_bind(x);
     x->gl_isgraph = 1;
     x->gl_goprect = 0;
     x->gl_obj.te_binbuf = binbuf_new();
@@ -900,7 +902,11 @@ void canvas_free(t_canvas *x)
 
 	if (x->gl_editor)
 		canvas_destroy_editor(x);
-    canvas_unbind(x);
+
+    if (strcmp(x->gl_name->s_name, "Pd")) {
+		//fprintf(stderr,"canvas_free calling pd_unbind\n");
+        pd_unbind(&x->gl_pd, canvas_makebindsym(x->gl_name));
+	}
     if (x->gl_env)
     {
         freebytes(x->gl_env->ce_argv, x->gl_env->ce_argc * sizeof(t_atom));
@@ -1311,26 +1317,6 @@ static void *table_new(t_symbol *s, t_floatarg f)
 int canvas_isabstraction(t_canvas *x)
 {
     return (x->gl_env != 0);
-}
-
-    /* return true if the "canvas" object should be bound to a name */
-static int canvas_should_bind(t_canvas *x)
-{
-        /* FIXME should have a "backwards compatible" mode */
-        /* not named "Pd" && (is top level || is subpatch) */
-    return strcmp(x->gl_name->s_name, "Pd") && (!x->gl_owner || !x->gl_env);
-}
-
-static void canvas_bind(t_canvas *x)
-{
-    if (canvas_should_bind(x))
-        pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
-}
-
-static void canvas_unbind(t_canvas *x)
-{
-    if (canvas_should_bind(x))
-        pd_unbind(&x->gl_pd, canvas_makebindsym(x->gl_name));
 }
 
     /* return true if the "canvas" object is a "table". */
