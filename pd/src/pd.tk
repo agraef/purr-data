@@ -3775,12 +3775,23 @@ proc pdtk_canvas_getscroll {name} {
 						set imgh [image height $img]
 						set imgw [image width $img]
 						set center [$name coords $item]
-						set coords [list \
-							[expr [lindex $center 0] - [expr $imgw/2]] \
-							[expr [lindex $center 1] - [expr $imgh/2]] \
-							[expr [lindex $center 0] + [expr $imgw/2]] \
-							[expr [lindex $center 1] + [expr $imgh/2]] \
-						]
+						#for debugging purposes
+						#puts stderr "IMAGE: $anchor [lindex $center 0] [lindex $center 1]"
+						if { $anchor == "nw" } {
+							set coords [list \
+								[expr [lindex $center 0]] \
+								[expr [lindex $center 1]] \
+								[expr [lindex $center 0] + [expr $imgw]] \
+								[expr [lindex $center 1] + [expr $imgh]] \
+							]
+						} else {
+							set coords [list \
+								[expr [lindex $center 0] - [expr $imgw/2]] \
+								[expr [lindex $center 1] - [expr $imgh/2]] \
+								[expr [lindex $center 0] + [expr $imgw/2]] \
+								[expr [lindex $center 1] + [expr $imgh/2]] \
+							]
+						}
 						foreach {x y} $coords {
 							if { $x < $x1 } {set x1 $x}
 							if { $x > $x2 } {set x2 $x}
