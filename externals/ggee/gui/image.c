@@ -19,7 +19,11 @@ typedef struct _image
 	t_glist * x_glist;
 	int x_width;
 	int x_height;
+	int x_img_width;
+	int x_img_height;
 	t_symbol*  x_fname;
+	t_symbol* receive;
+	//t_symbol* send;
 } t_image;
 
 /* widget helper functions */
@@ -39,6 +43,7 @@ void image_doopen(t_image* x) {
 		sys_vgui("set img%x [image create photo -file {%s}]\n", x, fname);
 		sys_vgui(".x%x.c itemconfigure %xS -image $img%x\n", 
 			   glist_getcanvas(x->x_glist),x,x);
+		sys_vgui("pd [concat %s _imagesize [image width $img%x] [image height $img%x] \\;]\n",x->receive->s_name, x, x);
 	}
 }
 
@@ -91,6 +96,7 @@ static t_symbol *get_filename(t_int argc, t_atom *argv)
 
 /* ------------------------ image widgetbehaviour----------------------------- */
 
+extern int sys_k12_mode;
 
 static void image_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
@@ -98,12 +104,21 @@ static void image_getrect(t_gobj *z, t_glist *glist,
 	int width, height;
 	t_image* x = (t_image*)z;
 
-	width = x->x_width;
-	height = x->x_height;
-	*xp1 = text_xpix(&x->x_obj, glist);
-	*yp1 = text_ypix(&x->x_obj, glist);
-	*xp2 = text_xpix(&x->x_obj, glist) + width;
-	*yp2 = text_ypix(&x->x_obj, glist) + height;
+	if (!sys_k12_mode) {
+		width = x->x_img_width;
+		height = x->x_img_height;
+		*xp1 = text_xpix(&x->x_obj, glist) - width/2;
+		*yp1 = text_ypix(&x->x_obj, glist) - height/2;
+		*xp2 = text_xpix(&x->x_obj, glist) + width/2;
+		*yp2 = text_ypix(&x->x_obj, glist) + height/2;	
+	} else {
+		width = x->x_width;
+		height = x->x_height;
+		*xp1 = text_xpix(&x->x_obj, glist) - width/2;
+		*yp1 = text_ypix(&x->x_obj, glist) - height/2;
+		*xp2 = text_xpix(&x->x_obj, glist) + width/2;
+		*yp2 = text_ypix(&x->x_obj, glist) + height/2;
+	}
 	//fprintf(stderr,"image_getrect %d %d %d %d\n", *xp1, *yp1, *xp2, *yp2);
 }
 
@@ -114,10 +129,20 @@ static void image_displace(t_gobj *z, t_glist *glist,
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    sys_vgui(".x%x.c coords %xSEL %d %d %d %d\n",
-		   glist_getcanvas(glist), x,
-		   text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
-		   text_xpix(&x->x_obj, glist) + x->x_width, text_ypix(&x->x_obj, glist) + x->x_height);
+	if (!sys_k12_mode)
+		sys_vgui(".x%x.c coords %xSEL %d %d %d %d\n",
+			glist_getcanvas(glist), x,
+			text_xpix(&x->x_obj, glist) - x->x_img_width/2,
+			text_ypix(&x->x_obj, glist) - x->x_img_height/2,
+			text_xpix(&x->x_obj, glist) + x->x_img_width/2,
+			text_ypix(&x->x_obj, glist) + x->x_img_height/2);
+	else
+		sys_vgui(".x%x.c coords %xSEL %d %d %d %d\n",
+			glist_getcanvas(glist), x,
+			text_xpix(&x->x_obj, glist) - x->x_width/2,
+			text_ypix(&x->x_obj, glist) - x->x_height/2,
+			text_xpix(&x->x_obj, glist) + x->x_width/2,
+			text_ypix(&x->x_obj, glist) + x->x_height/2);
 
     image_drawme(x, glist, 0);
     canvas_fixlinesfor(glist,(t_text*) x);
@@ -144,12 +169,24 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 	//fprintf(stderr,"image_select %d\n", state);
 	t_image *x = (t_image *)z;
 	if (state) {
-		if (glist_istoplevel(glist))
-			sys_vgui(".x%x.c create rectangle \
-				%d %d %d %d -tags %xSEL -outline $select_color\n",
-		glist_getcanvas(glist),
-		text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
-		text_xpix(&x->x_obj, glist) + x->x_width, text_ypix(&x->x_obj, glist) + x->x_height, x);
+		if (glist_istoplevel(glist)) {
+			if (!sys_k12_mode)
+				sys_vgui(".x%x.c create rectangle \
+					%d %d %d %d -tags %xSEL -outline $select_color\n",
+					glist_getcanvas(glist),
+					text_xpix(&x->x_obj, glist) - x->x_img_width/2,
+					text_ypix(&x->x_obj, glist) - x->x_img_height/2,
+					text_xpix(&x->x_obj, glist) + x->x_img_width/2,
+					text_ypix(&x->x_obj, glist) + x->x_img_height/2, x);
+			else
+				sys_vgui(".x%x.c create rectangle \
+					%d %d %d %d -tags %xSEL -outline $select_color\n",
+					glist_getcanvas(glist),
+					text_xpix(&x->x_obj, glist) - x->x_width/2,
+					text_ypix(&x->x_obj, glist) - x->x_height/2,
+					text_xpix(&x->x_obj, glist) + x->x_width/2,
+					text_ypix(&x->x_obj, glist) + x->x_height/2, x);
+		}
 		//if (glist->gl_owner && !glist_istoplevel(glist))
 		sys_vgui(".x%x.c addtag selected withtag %xS\n", glist_getcanvas(glist), x);
 		sys_vgui(".x%x.c addtag selected withtag %xSEL\n", glist_getcanvas(glist), x);
@@ -229,6 +266,13 @@ void image_open(t_image* x, t_symbol *s, t_int argc, t_atom *argv)
 	image_doopen(x);
 }
 
+static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
+	//fprintf(stderr,"received w %f h %f\n",w,h);
+	x->x_img_width = w;
+	x->x_img_height = h;
+	canvas_fixlinesfor(x->x_glist,(t_text*) x);
+}
+
 static void image_setwidget(void)
 {
     image_widgetbehavior.w_getrectfn =     	image_getrect;
@@ -244,6 +288,9 @@ static void image_setwidget(void)
 static void image_free(t_image *x)
 {
 	sys_vgui("image delete img%x\n", x);
+    if (x->receive) {
+		pd_unbind(&x->x_obj.ob_pd,x->receive);
+	}
 	//sys_vgui(".x%x.c delete %xSEL\n", x);
 	//sys_vgui(".x%x.c delete %xS\n", x);
 }
@@ -258,31 +305,36 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
     x->x_height = 15;
 
     x->x_fname = get_filename(argc, argv);
+
+	// Create default receiver
+	char buf[MAXPDSTRING];
+	sprintf(buf, "#%lx", (long)x);
+	x->receive = gensym(buf);
+    pd_bind(&x->x_obj.ob_pd, x->receive);
+
     //outlet_new(&x->x_obj, &s_bang);
     return (x);
 }
 
 void image_setup(void)
 {
-    image_class = class_new(gensym("image"), (t_newmethod)image_new, (t_method)image_free,
+    image_class = class_new(gensym("image"),
+				(t_newmethod)image_new, (t_method)image_free,
 				sizeof(t_image),0, A_GIMME,0);
-
-    class_addmethod(image_class, (t_method)image_size, gensym("size"),
-    	A_FLOAT, A_FLOAT, 0);
-
 /*
-    class_addmethod(image_class, (t_method)image_color, gensym("color"),
+	class_addmethod(image_class, (t_method)image_size, gensym("size"),
+    	A_FLOAT, A_FLOAT, 0);
+	class_addmethod(image_class, (t_method)image_color, gensym("color"),
     	A_SYMBOL, 0);
 */
-
     class_addmethod(image_class, (t_method)image_open, gensym("open"),
     	A_GIMME, 0);
+    class_addmethod(image_class, (t_method)image_imagesize_callback,\
+                     gensym("_imagesize"), A_DEFFLOAT, A_DEFFLOAT, 0);
 	
     image_setwidget();
     class_setwidget(image_class,&image_widgetbehavior);
-#if PD_MINOR_VERSION >= 37
     class_setsavefn(image_class,&image_save);
-#endif
 }
 
 
