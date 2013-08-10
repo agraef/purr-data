@@ -1,7 +1,7 @@
-#N canvas 0 0 448 374 10;
-#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header all_about_pd 20
-10 1 18 -261106 -33289 0;
-#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+#N canvas 433 159 447 377 10;
+#X obj 2 -3 cnv 15 445 20 empty \$0-pddp.cnv.header all_about_pd 19
+11 1 18 -261106 -33289 0;
+#X obj 407 0 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 352 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
