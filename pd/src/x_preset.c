@@ -104,10 +104,12 @@ int glob_preset_node_list_delete(t_preset_node *x)
 
 	// first check if we are the first gpnl
 	if (n2->gpnl_node == x) {
+		if(PH_DEBUG) fprintf(stderr,"	we are first\n");
 		gpnl = n2->gpnl_next;
 		freebytes(n2, sizeof(*n2));
 	} 
 	else {
+		if(PH_DEBUG) fprintf(stderr,"	we are NOT first\n");
 		while (n2->gpnl_node != x && n2->gpnl_next) {
 			n1 = n2;
 			n2 = n2->gpnl_next;
@@ -263,6 +265,36 @@ int glob_preset_hub_list_delete(t_preset_hub *x)
 
 //====================== end global vars ===========================//
 
+//====================== helper functions ==========================//
+
+static int compare_hub_node_names(t_atom *a, t_atom *b)
+{
+	if(PH_DEBUG) {
+		fprintf(stderr,"	comparing: ");
+		if (a->a_type == A_SYMBOL)
+			fprintf(stderr,"A_SYMBOL %s |", atom_getsymbol(a)->s_name);
+		else
+			fprintf(stderr,"A_FLOAT %f |", atom_getfloat(a));
+		if (b->a_type == A_SYMBOL)
+			fprintf(stderr," A_SYMBOL %s\n", atom_getsymbol(b)->s_name);
+		else
+			fprintf(stderr," A_FLOAT %f\n", atom_getfloat(b));
+	}
+	if (a->a_type == A_SYMBOL && b->a_type == A_SYMBOL) {
+		if (!strcmp(atom_getsymbol(a)->s_name, atom_getsymbol(b)->s_name)) {
+			return(0);
+		}
+	}
+	else if (a->a_type == A_FLOAT && b->a_type == A_FLOAT) {
+		if (atom_getfloat(a) == atom_getfloat(b)) {
+			return(0);
+		}
+	}
+	return 1;
+}
+
+//==================== end helper functions ========================//
+
 //======================== preset_node =============================//
 
 // we declare this class as part of the g_canvas.h (to expose it to the rest of the code)
@@ -293,7 +325,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 				h = c->gl_phub;
 				while (h) {
 					if(PH_DEBUG) fprintf(stderr,"	analyzing hub\n");
-					if (!strcmp(h->ph_name->s_name, x->pn_hub_name->s_name)) {
+					if (!compare_hub_node_names(h->ph_name, x->pn_hub_name)) {
 						if(PH_DEBUG) fprintf(stderr,"	found a match\n");
 						found = 1;
 						break;
@@ -301,6 +333,10 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 					h = h->ph_next;
 				}
 			}
+			if (found) break; 	// need to stop the main while loop here
+								// before we increase depth unnecessarily below
+								// otherwise hubs in subpatches will fail to pair
+								// its local nodes
 			c = c->gl_owner;
 			if (c)
 				depth++;
@@ -350,7 +386,7 @@ static void preset_node_update_my_glist_location(t_preset_node *x)
 			}
 		}
 		else {
-			if(PH_DEBUG) fprintf(stderr,"	preset_node: no matching hub %s found\n", x->pn_hub_name->s_name);
+			if(PH_DEBUG) fprintf(stderr,"	preset_node: no matching hub found\n");
 		}
 
 		// finally if this is the first time we are creating the object, old_location should be the same as the current location
@@ -377,7 +413,7 @@ void preset_node_seek_hub(t_preset_node *x)
 		while (!x->pn_hub && y) {
 			h = y->gl_phub;
 			while (h) {
-				if (h->ph_name->s_name == x->pn_hub_name->s_name) {
+				if (!compare_hub_node_names(h->ph_name, x->pn_hub_name)) {
 					x->pn_hub = h;
 					if(PH_DEBUG) fprintf(stderr,"	node found hub\n");
 					// update our location in respect to the newfound hub
@@ -574,11 +610,26 @@ static void preset_node_set(t_preset_node *x, t_symbol *s, int argc, t_atom *arg
 {
 	if(PH_DEBUG) fprintf(stderr,"preset_node_set %d\n", argc);
 
-	if (argc == 0)
-		x->pn_hub_name = &s_;		
-	else
-		x->pn_hub_name = (t_symbol *)atom_getsymbol(&argv[0]);
-	
+	if (x->pn_hub_name->a_type == A_SYMBOL && x->pn_hub_name->a_w.w_symbol == &s_)
+		freebytes(x->pn_hub_name, sizeof(t_atom));
+
+	x->pn_hub_name = (t_atom *)getbytes(sizeof(t_atom));
+
+	if (argc == 0) {
+		x->pn_hub_name->a_type = A_SYMBOL;
+		x->pn_hub_name->a_w.w_symbol = &s_;
+		if (PH_DEBUG) fprintf(stderr,"	name is null symbol\n");		
+	} else {
+		if (argv[0].a_type == A_SYMBOL)
+			SETSYMBOL(x->pn_hub_name, atom_getsymbolarg(0, argc, argv));
+		else
+			SETFLOAT(x->pn_hub_name, atom_getfloatarg(0, argc, argv));
+		if(PH_DEBUG) {
+			if (x->pn_hub_name->a_type == A_SYMBOL) fprintf(stderr,"	name is a symbol %s\n", atom_getsymbol(x->pn_hub_name)->s_name);
+			else fprintf(stderr,"	name is a float %f\n", atom_getfloat(x->pn_hub_name));
+		}
+	}
+
 	if (x->pn_hub) {
 		preset_hub_delete_a_node(x->pn_hub, x);
 		glob_preset_node_list_update_paired(x, 1);
@@ -596,11 +647,23 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
 
     t_preset_node *x = (t_preset_node *)pd_new(preset_node_class);
 
+	x->pn_hub_name = (t_atom *)getbytes(sizeof(t_atom));
+
 	// read creation arguments and substitute default for objects without optional arguments
-    if (!(argc > 0 && argv[0].a_type == A_SYMBOL))
-		x->pn_hub_name = &s_;
-	else
-		x->pn_hub_name = (t_symbol *)atom_getsymbol(&argv[0]);
+    if (argc == 0) {	
+		x->pn_hub_name->a_type = A_SYMBOL;
+		x->pn_hub_name->a_w.w_symbol = &s_;
+		if (PH_DEBUG) fprintf(stderr,"	name is null symbol\n");
+	} else {
+		if (argv[0].a_type == A_SYMBOL)
+			SETSYMBOL(x->pn_hub_name, atom_getsymbolarg(0, argc, argv));
+		else
+			SETFLOAT(x->pn_hub_name, atom_getfloatarg(0, argc, argv));
+		if(PH_DEBUG) {
+			if (x->pn_hub_name->a_type == A_SYMBOL) fprintf(stderr,"	name is a symbol %s\n", atom_getsymbol(x->pn_hub_name)->s_name);
+			else fprintf(stderr,"	name is a float %f\n", atom_getfloat(x->pn_hub_name));
+		}
+	}
 
 	x->pn_canvas = canvas;
 	t_canvas *y = x->pn_canvas;
@@ -643,6 +706,9 @@ static void preset_node_free(t_preset_node* x)
 	} else {
 		free(x->pn_gl_loc);
 	}	
+	//if (x->pn_hub_name->a_type == A_SYMBOL && x->pn_hub_name->a_w.w_symbol == &s_)
+	if (x->pn_hub_name)
+		freebytes(x->pn_hub_name, sizeof(t_atom));
 }
 
 void preset_node_setup(void)
@@ -735,14 +801,10 @@ void preset_hub_save(t_gobj *z, t_binbuf *b)
 
 	t_preset_hub *x = (t_preset_hub *)z;
 
-	binbuf_addv(b, "ssiiss", gensym("#X"), gensym("obj"), (int)x->ph_obj.te_xpix,
-				(int)x->ph_obj.te_ypix, gensym("preset_hub"), x->ph_name);
+	binbuf_addv(b, "ssii", gensym("#X"), gensym("obj"), (int)x->ph_obj.te_xpix,
+		(int)x->ph_obj.te_ypix);
 
-	if (x->ph_extern_file)
-		binbuf_addv(b, "s", gensym("file"));
-
-	if (x->ph_invis)
-		binbuf_addv(b, "i", (int)x->ph_invis);
+	binbuf_addbinbuf(b, x->ph_obj.te_binbuf);
 
 	binbuf_addv(b, "s", gensym("%hidden%"));
 
@@ -1771,7 +1833,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	t_hub_parser h_cur = H_NONE;
 
 	t_preset_hub *x, *check;
-	t_symbol *name;
+	t_atom *name;
 	int i, pos, loc_pos;
 	int j, data_count; //for lists
 	t_glist *glist=(t_glist *)canvas_getcurrent();
@@ -1780,23 +1842,43 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 	loc_pos = 0;
 	pos = 0; // position within argc
 
+	name = (t_atom *)getbytes(sizeof(t_atom));
+
 	// read creation arguments and substitute default for objects without optional arguments
-    if (!(argc > 0 && argv[0].a_type == A_SYMBOL) || 
+    if (argc == 0 ||
 		(argc > 0 && argv[0].a_type == A_SYMBOL && !strcmp(atom_getsymbol(&argv[0])->s_name, "%hidden%"))) {
-		pos--; // we subtract one position as we are essentially missing one argument (to counter pos++; call below that is called without checks)	
-		name = &s_;
-	}
-	else {
-		name = (t_symbol *)atom_getsymbol(&argv[0]);
+			pos--; // we subtract one position as we are essentially missing one argument (to counter pos++; call below that is called without checks)	
+			name->a_type = A_SYMBOL;
+			name->a_w.w_symbol = &s_;
+			if (PH_DEBUG) fprintf(stderr,"	name is null symbol\n");
+	} else {
+		if (argv[0].a_type == A_SYMBOL)
+			SETSYMBOL(name, atom_getsymbolarg(0, argc, argv));
+		else
+			SETFLOAT(name, atom_getfloatarg(0, argc, argv));
+		if(PH_DEBUG) {
+			if (name->a_type == A_SYMBOL) fprintf(stderr,"	name is a symbol %s\n", atom_getsymbol(name)->s_name);
+			else fprintf(stderr,"	name is a float %f\n", atom_getfloat(name));
+		}
 	}
 
 	// now check if there is already another hub on the same canvas with the same name and fail if so
 	check = canvas->gl_phub;
 	if (check) {
 		while (check) {
-			if (!strcmp(name->s_name, check->ph_name->s_name)) {
-				pd_error(canvas, "preset_hub with the name %s already exists on this canvas", check->ph_name->s_name);
-				return(NULL);
+			if (name->a_type == A_SYMBOL && check->ph_name->a_type == A_SYMBOL) {
+				if (!strcmp(atom_getsymbol(name)->s_name, atom_getsymbol(check->ph_name)->s_name)) {
+					pd_error(canvas, "preset_hub with the name %s already exists on this canvas", atom_getsymbol(check->ph_name)->s_name);
+					freebytes(name, sizeof(t_atom));
+					return(NULL);
+				}
+			}
+			else if (name->a_type == A_FLOAT && check->ph_name->a_type == A_FLOAT) {
+				if (atom_getfloat(name) == atom_getfloat(check->ph_name)) {
+					pd_error(canvas, "preset_hub with the name %f already exists on this canvas", atom_getfloat(check->ph_name));
+					freebytes(name, sizeof(t_atom));
+					return(NULL);
+				}
 			}
 			check = check->ph_next;
 		}
@@ -1825,9 +1907,12 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 		}*/
 		pos++;
 	}
-	if(PH_DEBUG) fprintf(stderr,"hub name %s file %d invis %d\n", x->ph_name->s_name, x->ph_extern_file, x->ph_invis);
+	if(PH_DEBUG) fprintf(stderr,"	hub file %d invis %d\n", x->ph_extern_file, x->ph_invis);
 
-	pos++; // one more time to move ahead of the %hidden% tag
+	while (argc > pos && argv[pos].a_type != A_SYMBOL && !strcmp(atom_getsymbol(&argv[pos])->s_name, "%hidden%")) {
+		if(PH_DEBUG) fprintf(stderr,"	pos++\n");
+		pos++; // one more time to move ahead of the %hidden% tag
+	}
 
 	// assign default x and y position
 	x->ph_obj.te_xpix = 0;
@@ -1988,7 +2073,7 @@ static void preset_hub_free(t_preset_hub* x)
 		}
 		if (h2 != x) {
 			// this should never happen
-			pd_error(x, "preset_hub %s destructor was unable to find its canvas pointer", x->ph_name->s_name);
+			pd_error(x, "preset_hub %s destructor was unable to find its canvas pointer", atom_getsymbol(x->ph_name)->s_name);
 		} else {
 			if (h1 == h2) {
 				// this means we're the first on the multi-element list
@@ -2019,6 +2104,10 @@ static void preset_hub_free(t_preset_hub* x)
 			hd1 = hd2;
 		}
 	}
+	
+	//if (x->ph_name->a_type == A_SYMBOL && x->ph_name->a_w.w_symbol == &s_)
+	if (x->ph_name)
+		freebytes(x->ph_name, sizeof(t_atom));
 }
 
 void preset_hub_setup(void)

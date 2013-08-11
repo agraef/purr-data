@@ -14,7 +14,7 @@ typedef struct _preset_node
     t_object pn_obj;
     t_alist pn_val;	// last known value (null if not initialized)
 
-	t_symbol *pn_hub_name;	// hub name this node is associated with
+	t_atom *pn_hub_name;	// hub name this node is associated with
 	t_preset_hub *pn_hub;	// pointer to the hub (null if none, equiv. to active/disabled)
 
 	t_canvas *pn_canvas;
@@ -51,7 +51,7 @@ typedef struct _preset_hub_data
 struct _preset_hub
 {
 	t_object ph_obj;
-	t_symbol *ph_name;
+	t_atom *ph_name;
 	int ph_invis;					// make it invisible (only for the k12 mode)
 	int ph_preset;					// last enabled preset (-1 at init time)
 
