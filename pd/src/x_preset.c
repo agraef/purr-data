@@ -610,11 +610,6 @@ static void preset_node_set(t_preset_node *x, t_symbol *s, int argc, t_atom *arg
 {
 	if(PH_DEBUG) fprintf(stderr,"preset_node_set %d\n", argc);
 
-	if (x->pn_hub_name->a_type == A_SYMBOL && x->pn_hub_name->a_w.w_symbol == &s_)
-		freebytes(x->pn_hub_name, sizeof(t_atom));
-
-	x->pn_hub_name = (t_atom *)getbytes(sizeof(t_atom));
-
 	if (argc == 0) {
 		x->pn_hub_name->a_type = A_SYMBOL;
 		x->pn_hub_name->a_w.w_symbol = &s_;

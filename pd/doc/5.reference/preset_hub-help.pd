@@ -41,9 +41,10 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 11 20 universal preset system for pd-l2ork;
 #X obj 20 202 preset_hub test %hidden% %node% 2 31 1 %preset% 1 problems
 %preset% 2 skidoo %preset% 3 nights %preset% 0 stooges %node% 1 33
-%preset% 0 aaa 32 1 %preset% 1 2.24 nlah 1 %preset% 2 1 2 3 4 %node%
-2 39 0 %preset% 0 1 %preset% 1 5 %preset% 2 9 %node% 1 61 %preset%
-0 22.1 %preset% 1 0.5 %preset% 2 3.14 %node% 1 59;
+%preset% 0 aaa 32 1 %preset% 1 2.24 nlah 1 %preset% 2 1 2 3 4 %preset%
+3 1 2 3 4 %node% 2 39 0 %preset% 0 1 %preset% 1 5 %preset% 2 9 %preset%
+3 1337 %node% 1 61 %preset% 0 22.1 %preset% 1 0.5 %preset% 2 3.14 %node%
+1 59 %preset% 0 999 %preset% 1 777 %preset% 2 555 %preset% 3 333;
 #X msg 80 125 store \$1;
 #X msg 80 74 recall \$1;
 #X msg 30 73 purge;
@@ -61,7 +62,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X floatatom 447 166 5 0 0 0 - - -;
 #X obj 386 217 preset_hub another %hidden% %node% 1 32 %preset% 0 99
 %preset% 1 65 %preset% 2 123 %preset% 3 0 %node% 2 39 2 %preset% 0
-19 %preset% 1 0.23 %preset% 2 999;
+19 %preset% 1 0.23 %preset% 2 999 %preset% 3 0.01;
 #X obj 386 244 print hub_another_says;
 #X obj 20 268 hub_node_abs;
 #X obj 386 270 preset_node another;
@@ -71,7 +72,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X msg 236 91 2.24 nlah 1;
 #X obj 188 157 print ----result----;
 #X msg 241 111 list 1 2 3 4;
-#N canvas 444 419 404 229 sub 0;
+#N canvas 778 51 404 229 sub 0;
 #X obj 237 69 preset_node test;
 #X floatatom 237 92 5 0 0 0 - - -;
 #X obj 113 69 preset_node another;
@@ -110,7 +111,6 @@ of that patch's children (i.e. \, subpatches and abstractions).;
 #X msg 189 189 reset;
 #X msg 249 210 clearall \$1;
 #X floatatom 249 189 5 0 0 0 - - -;
-#X obj 233 300 print middle_node;
 #X msg 232 244 set another;
 #X msg 311 244 set test;
 #X text 171 625 - OPTIONAL scope for this preset (defaults to null
@@ -292,5 +292,5 @@ looking one level up.;
 #X connect 62 0 59 0;
 #X connect 63 0 59 0;
 #X connect 64 0 63 0;
+#X connect 65 0 59 0;
 #X connect 66 0 59 0;
-#X connect 67 0 59 0;
