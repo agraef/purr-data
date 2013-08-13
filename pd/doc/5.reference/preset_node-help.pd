@@ -3,8 +3,8 @@
 0;
 #X obj 105 279 cnv 15 60 37 empty empty empty 20 12 0 14 -261234 -66577
 0;
-#X obj -2 930 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+#X obj -2 1027 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
+0 14 -228856 -66577 0;
 #X obj -2 0 cnv 15 552 40 empty \$0-pddp.cnv.header preset_node 3 12
 0 18 -204280 -1 0;
 #X obj -2 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
@@ -18,14 +18,14 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 12 65 INLET_0 anything;
 #X text 12 85 OUTLET_0 anything;
 #X text 12 105 AUTHOR Ivica Ico Bukvic (c) 2012 <ico@vt.edu>;
-#X restore 498 932 pd META;
-#X obj -2 633 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 498 1029 pd META;
+#X obj -2 693 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj -2 688 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj -2 748 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj -2 738 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+#X obj -2 798 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
 12 0 13 -228856 -1 0;
-#X obj 76 347 cnv 17 3 280 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 76 347 cnv 17 3 340 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #N canvas 102 481 428 93 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -33,10 +33,10 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 7 1 [preset_node] Related Objects;
 #X obj 22 36 preset_hub default %hidden%;
 #X obj 141 36 preset_node_array;
-#X restore 99 932 pd Related_objects;
-#X obj 76 642 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 99 1029 pd Related_objects;
+#X obj 76 702 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 2 932 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 2 1029 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 9 20 universal preset system for pd-l2ork;
 #X obj 472 3 preset_node;
@@ -93,13 +93,13 @@ nlah 1 %preset% 2 1 2 3 4 %node% 2 50 0 %preset% 0 0 %preset% 1 1 %preset%
 #X restore 115 289 pd sub;
 #X text 96 366 clearall;
 #X text 96 386 purge;
-#X text 97 642 anything;
-#X text 167 642 - [preset_node] makes an invisible connection from
+#X text 97 701 anything;
+#X text 167 701 - [preset_node] makes an invisible connection from
 the object below it back to its inlet. It can recall whatever type
 of message the connected object can output.;
-#X text 96 745 Scope- [preset_hub foo] is local to its patch and all
+#X text 96 839 Scope- [preset_hub foo] is local to its patch and all
 of that patch's children (i.e. \, subpatches and abstractions).;
-#X obj 96 773 pddp/pddplink preset_hub-help.pd;
+#X obj 96 867 pddp/pddplink preset_hub-help.pd;
 #N canvas 411 177 428 483 More_info 0;
 #X obj 271 378 cnv 15 39 23 empty empty empty 20 12 0 14 -261234 -66577
 0;
@@ -151,56 +151,63 @@ hub.;
 #X connect 17 0 20 0;
 #X connect 18 0 19 0;
 #X connect 19 0 21 0;
-#X restore 457 750 pd More_info;
+#X restore 457 844 pd More_info;
 #X text 166 386 - purge all orphaned/unused nodes (forwarded to hub)
 ;
-#X text 96 427 reset;
+#X text 96 437 reset;
 #X text 96 406 recall;
-#X text 96 467 store;
-#X text 166 406 - recall the values stored at index n (forwarded to
-hub);
-#X text 166 427 - reset all preset node data (forwarded to hub);
-#X text 166 467 - store the current state at index n (forwarded to
+#X text 96 477 store;
+#X text 166 437 - reset all preset node data (forwarded to hub);
+#X text 166 477 - store the current state at index n (forwarded to
 hub);
 #X text 166 366 - clear all node data at preset n (forwarded to hub)
 ;
 #X text 96 346 clear;
 #X text 166 346 - clear this node data at preset n (forwarded to hub)
 ;
-#X text 96 447 set;
-#X text 166 447 - change context (hub) node is paired with;
+#X text 96 457 set;
+#X text 166 457 - change context (hub) node is paired with;
 #X msg 229 242 set another;
 #X msg 308 242 set test;
 #X obj 381 293 cnv 15 44 27 empty empty empty 20 12 0 14 -204280 -66577
 0;
 #X floatatom 387 298 5 0 0 0 - - -;
-#X text 169 705 - OPTIONAL scope for this preset (defaults to null
+#X text 169 765 - OPTIONAL scope for this preset (defaults to null
 or "");
-#X text 96 486 read;
-#X text 96 516 write;
-#X text 96 546 readpreset;
-#X text 96 586 writepreset;
-#X text 166 486 - reads all presets from a file named in the second
+#X text 96 543 read;
+#X text 96 573 write;
+#X text 96 603 readpreset;
+#X text 96 643 writepreset;
+#X text 166 543 - reads all presets from a file named in the second
 argument (forwarded to hub);
-#X text 166 516 - write all presets to a file named in the second argument
+#X text 166 573 - write all presets to a file named in the second argument
 (forwarded to hub);
-#X text 166 546 - read one preset (optional 3rd argumemnt \, otherwise
+#X text 166 603 - read one preset (optional 3rd argumemnt \, otherwise
 preset 0) from a file named in the second argument (forwarded to hub)
 ;
-#X text 166 586 - write one preset (optional 3rd argumemnt \, otherwise
+#X text 166 643 - write one preset (optional 3rd argumemnt \, otherwise
 preset 0) to a file named in the second argument (forwarded to hub)
 ;
-#X text 96 795 Reading and writing- see preset_hub-help.pd for more
+#X text 96 887 Reading and writing- see preset_hub-help.pd for more
 info.;
-#X obj 96 809 pddp/pddplink preset_hub-help.pd;
+#X obj 96 901 pddp/pddplink preset_hub-help.pd;
 #X msg 186 190 clear 0;
-#X text 96 827 Default values- messages when supplied no argument default
-to 0 or empty string;
-#X text 96 861 Presets with Arrays- arrays cannot be accessed directly
+#X text 96 962 Presets with Arrays- arrays cannot be accessed directly
 as they have no direct inlets and outlets. For this reason we use preset_node_array
 abstraction to read/write to/from arrays. For additional info see;
-#X obj 288 900 pddp/pddplink preset_node_array-help.pd;
-#X text 79 705 1) symbol/float;
+#X obj 288 1001 pddp/pddplink preset_node_array-help.pd;
+#X text 79 765 1) symbol/float;
+#X text 166 406 - recall the values stored at index n where n must
+be >= 0 (forwarded to hub);
+#X text 96 808 Recall values- only values 0 or greater are valid. No
+negative preset numbers are possible.;
+#X text 96 919 Default values- depending on the expected data format
+messages when supplied no argument default to null (empty string) or
+0;
+#X text 96 496 sort;
+#X text 166 496 - sort all presets chronologically and assign them
+new preset numbers one after another starting with a value n or 0 if
+no value provided (forwarded to hub);
 #X connect 15 0 24 0;
 #X connect 16 0 15 0;
 #X connect 17 0 15 0;
@@ -224,12 +231,12 @@ abstraction to read/write to/from arrays. For additional info see;
 #X connect 38 0 40 0;
 #X connect 39 0 38 0;
 #X connect 40 0 41 0;
-#X connect 43 0 73 0;
+#X connect 43 0 72 0;
 #X connect 44 0 45 0;
 #X connect 45 0 48 0;
 #X connect 46 0 45 0;
 #X connect 47 0 45 0;
 #X connect 49 0 45 0;
+#X connect 69 0 25 0;
 #X connect 70 0 25 0;
-#X connect 71 0 25 0;
-#X connect 85 0 25 0;
+#X connect 84 0 25 0;
