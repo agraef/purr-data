@@ -51,6 +51,7 @@ void preset_node_seek_hub(t_preset_node *x);
 int  preset_hub_compare_loc(int *h_loc, int h_loc_length, int *n_loc, int n_loc_length);
 void preset_hub_reset(t_preset_hub *h);
 void preset_hub_purge(t_preset_hub *h);
+void preset_hub_sort(t_preset_hub *x, t_float f);
 void preset_hub_clear(t_preset_hub *x, t_float f);
 void preset_hub_read(t_preset_hub *x, t_symbol *filename);
 void preset_hub_write(t_preset_hub *x, t_symbol *filename);
@@ -604,6 +605,11 @@ void preset_node_purge(t_preset_node *x) {
 		preset_hub_purge(x->pn_hub);
 }
 
+void preset_node_sort(t_preset_node *x, t_float f) {
+	if (x->pn_hub)
+		preset_hub_sort(x->pn_hub, f);
+}
+
 	//==================== end functions are for interaction with the hub =====================//
 
 static void preset_node_set(t_preset_node *x, t_symbol *s, int argc, t_atom *argv)
@@ -734,6 +740,8 @@ void preset_node_setup(void)
         gensym("reset"), A_NULL, 0);
     class_addmethod(preset_node_class, (t_method)preset_node_purge,
         gensym("purge"), A_NULL, 0);
+    class_addmethod(preset_node_class, (t_method)preset_node_sort,
+        gensym("sort"), A_DEFFLOAT, 0);
 
     class_addmethod(preset_node_class, (t_method)preset_node_request_hub_read,
         gensym("read"), A_DEFSYM, 0);
@@ -899,7 +907,7 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
 void preset_hub_store(t_preset_hub *h, t_float f)
 {
 	if(PH_DEBUG) fprintf(stderr,"preset_hub_store\n");
-	t_atom ap[1];
+	t_atom ap[2];
 	t_preset_hub_data *hd1;
 	t_node_preset *np1, *np2;
 	int overwrite;
@@ -987,7 +995,12 @@ void preset_hub_store(t_preset_hub *h, t_float f)
 		if (changed && !h->ph_extern_file) canvas_dirty(h->ph_canvas, 1);
 
 		SETFLOAT(ap+0, f);
-		outlet_anything(h->ph_outlet, gensym("store"), 1, ap);
+		SETFLOAT(ap+1, 1);
+		outlet_anything(h->ph_outlet, gensym("store"), 2, ap);
+	} else {
+		SETFLOAT(ap+0, f);
+		SETFLOAT(ap+1, 0);
+		outlet_anything(h->ph_outlet, gensym("store"), 2, ap);
 	}
 }
 
@@ -1151,12 +1164,9 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 	t_node_preset *np1, *np2;
 	int changed = 0;
 
-	hd2 = h->ph_data;
-
 	if(PH_DEBUG) fprintf(stderr,"preset_hub_clear\n");
 
-	// deallocate all the dynamically-allocated memory for disabled nodes
-	if (hd2) {
+	if (h->ph_data) {
 		if(PH_DEBUG) fprintf(stderr,"	got ph_data\n");
 		hd2 = h->ph_data;
 		while (hd2) {
@@ -1176,8 +1186,8 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 						np2 = np1->np_next;
 						if (np2 && np2->np_preset == (int)f) {
 							np1->np_next = np2->np_next;
-							if (np1->np_val.l_n)
-								alist_clear(&np1->np_val);
+							if (np2->np_val.l_n)
+								alist_clear(&np2->np_val);
 							freebytes(np2, sizeof(*np2));
 							changed = 1;
 							if(PH_DEBUG) fprintf(stderr,"	found preset to delete\n");
@@ -1195,7 +1205,6 @@ void preset_hub_clear(t_preset_hub *h, t_float f)
 	SETFLOAT(ap+0, (t_float)changed);
 	outlet_anything(h->ph_outlet, gensym("clear"), 1, ap);
 }
-
 
 void preset_hub_purge(t_preset_hub *h)
 {
@@ -1247,6 +1256,84 @@ void preset_hub_purge(t_preset_hub *h)
 
 	SETFLOAT(ap+0, (t_float)changed);
 	outlet_anything(h->ph_outlet, gensym("purge"), 1, ap);
+}
+
+void preset_hub_sort(t_preset_hub *h, t_float f)
+{
+	t_atom ap[1];
+	t_preset_hub_data *hd2;
+	t_node_preset *np1;
+	int changed = 0;
+	int lowest = 0;
+	int highest = 0;
+	int i = 0;
+	int target = (int)f;
+	int gotpreset = 0;
+
+	if(PH_DEBUG) fprintf(stderr,"preset_hub_sort\n");
+
+	if (h->ph_data) {
+		if(PH_DEBUG) fprintf(stderr,"	got ph_data\n");
+		hd2 = h->ph_data;
+		np1 = hd2->phd_npreset;
+		lowest = np1->np_preset;
+		// first let's find the lowest and highest preset
+		// numbers that we'll remap to the new target value
+		while (hd2) {
+			np1 = hd2->phd_npreset;
+			while(np1) {
+				if (np1->np_preset < lowest) lowest = np1->np_preset;
+				if (np1->np_preset > highest) highest = np1->np_preset;
+				np1 = np1->np_next;
+			}
+			hd2 = hd2->phd_next;
+		}
+		if(PH_DEBUG) fprintf(stderr,"	lowest = %d highest = %d\n", lowest, highest);
+
+		// now that we have the lowest and highest we'll do a for loop
+		// from one to the other and reassign preset numbers
+		for (i = lowest; i <= highest; i++) {
+			gotpreset = 0;
+			hd2 = h->ph_data;
+			while (hd2) {
+				np1 = hd2->phd_npreset;
+				while (np1) {
+					if (np1->np_preset == i) {
+						if(PH_DEBUG) fprintf(stderr,"	changing preset %d to %d\n", np1->np_preset, target);
+						// we give altered presets temporarily negative value to 
+						// distinguish it from others that haven't yet been changed
+						// this is important for sequential changes where things can
+						// otherwise go out of order (e.g. in first pass 1 is changed to 2
+						// and then in the second  pass the same 2 is changed to 3 before
+						// reaching some other 2 that follows it). We will revert all
+						// to positive values after this step
+						np1->np_preset = -target;
+						gotpreset = 1;
+						changed = 1;
+						break;
+					}
+					np1 = np1->np_next;
+				}
+				hd2 = hd2->phd_next;
+			}
+			if (gotpreset) target++;
+		}
+		// now revert negative values to positive
+		hd2 = h->ph_data;
+		while (hd2) {
+			np1 = hd2->phd_npreset;
+			while(np1) {
+				if (np1->np_preset < 0) np1->np_preset = -np1->np_preset;
+				np1 = np1->np_next;
+			}
+			hd2 = hd2->phd_next;
+		}
+	}
+
+	if (changed && !h->ph_extern_file) canvas_dirty(h->ph_canvas, 1);
+
+	SETFLOAT(ap+0, (t_float)changed);
+	outlet_anything(h->ph_outlet, gensym("sort"), 1, ap);
 }
 
 void preset_hub_read(t_preset_hub *x, t_symbol *filename)
@@ -2129,6 +2216,8 @@ void preset_hub_setup(void)
         gensym("reset"), A_NULL, 0);
     class_addmethod(preset_hub_class, (t_method)preset_hub_purge,
         gensym("purge"), A_NULL, 0);
+    class_addmethod(preset_hub_class, (t_method)preset_hub_sort,
+        gensym("sort"), A_DEFFLOAT, 0);
 
     class_addmethod(preset_hub_class, (t_method)preset_hub_read,
         gensym("read"), A_DEFSYM, 0);
