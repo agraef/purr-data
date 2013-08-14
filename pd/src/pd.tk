@@ -32,7 +32,9 @@ if { [info tclversion] >= 8.5 } {
 	# set linux_wm_bgcolor "#3e3d39"
 	set linux_wm_bgcolor "#e5e5e5"
 	# set linux_wm_hlcolor "#fdbf69"
-	set linux_wm_hlcolor "#f9ba81"
+	# set linux_wm_hlcolor "#f9ba81"
+	# set linux_wm_hlcolor "#ffaa16"
+	set linux_wm_hlcolor "#eb5f28"
 
 	# ttk colors
 	# -frame, -lighter, and -selectbg are automatically
@@ -148,11 +150,13 @@ proc match_linux_wm {list} {
 	global pd_nt linux_wm_bgcolor linux_wm_hlcolor
 	if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 		if {[lsearch -regexp $list ::] == -1} {
+			#puts stderr [lindex $list 0]
 			if {[lindex $list 0] != "button" \
 				&& [lindex $list 0] != "checkbutton" \
 				&& [lindex $list 0] != "radiobutton" \
 				&& [lindex $list 0] != "entry" \
-				&& [lindex $list 0] != "scrollbar"} { 
+				&& [lindex $list 0] != "scrollbar" \
+				&& [lindex $list 1] != "add"} { 
 					lappend list -bg $linux_wm_bgcolor
 			}
 			if {[lindex $list 0] == "listbox" \
@@ -160,9 +164,14 @@ proc match_linux_wm {list} {
 
 				lappend list -bg white -highlightcolor $linux_wm_hlcolor
 			}
+			if {[lindex $list 1] == "add"} {
+	
+				#lappend list -background "#000000"
+				set newlist [list [lindex $list 0] add command -label {} -state disabled]
+			}
 			if {[lindex $list 0] == "menu"} {
 	
-				lappend list -activebackground $linux_wm_hlcolor -bd 0
+				lappend list -activebackground $linux_wm_hlcolor -bg "#3c3b37" -fg "#dddddd" -bd 0 -activeborderwidth 0 -relief flat -disabledforeground "#777777"
 			}
 			#convert non-ttk objects to ttk objects
 			if {[lindex $list 0] == "button" \
@@ -696,12 +705,12 @@ set ctrls_outlevel 0
 set show_text_window 0
 
 match_linux_wm [list frame .controls]
-if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
-	ttk::separator .eyecandy
-	pack .eyecandy .controls -fill x -expand 0
-} else {
-	pack .controls -fill x -expand 1
-}
+#if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
+#	ttk::separator .eyecandy
+#	pack .eyecandy .controls -fill x -expand 0
+#} else {
+pack .controls -fill x -expand 1
+#}
 match_linux_wm [list frame .controls.switches]
 match_linux_wm [list checkbutton .controls.switches.audiobutton -text {compute audio  } \
     -variable ctrls_audio_on \
@@ -1028,11 +1037,11 @@ proc pdtk_fixwindowmenu {} {
 			.mbar.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
 				-accelerator "Ctrl+PageUp"
 		}
-		.mbar.windows add separator
+		match_linux_wm [list .mbar.windows add separator]
 		.mbar.windows add command -label {parent window} -state disabled
 		.mbar.windows add command -label {Pd & Console} -command menu_raise_console \
 			-accelerator [accel_munge "Ctrl+;"] -state disabled
-		.mbar.windows add separator
+		match_linux_wm [list .mbar.windows add separator]
 		foreach i $menu_windowlist {
 		    .mbar.windows add command -label [lindex $i 0] \
 		        -command [concat menu_domenuwindow [lindex $i 1]]
@@ -1431,18 +1440,20 @@ proc menu_addstd {mbar} {
         -command {menu_audio 1} 
     $mbar.audio add command -label {Audio OFF} -accelerator [accel_munge "Ctrl+."] \
         -command {menu_audio 0} 
-	$mbar.audio add separator
+	match_linux_wm [list $mbar.audio add separator]
     for {set x 1} {$x<[llength $pd_apilist]} {incr x} {
         $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_apilist $x] 0] Audio Driver] \
             -command {menu_audio 0} -variable pd_whichapi \
             -value [lindex [lindex $pd_apilist $x] 1]\
+			-selectcolor "#dddddd" \
             -command {pd [concat pd audio-setapi $pd_whichapi \;]}
     }
-	$mbar.audio add separator
+	match_linux_wm [list $mbar.audio add separator]
     for {set x 0} {$x<[llength $pd_midiapilist]} {incr x} {
         $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_midiapilist $x] 0] driver]\
             -command {menu_midi 0} -variable pd_whichmidiapi \
             -value [lindex [lindex $pd_midiapilist $x] 1]\
+			-selectcolor "#dddddd" \
             -command {pd [concat pd midi-setapi $pd_whichmidiapi \;]}
     }
     #if {$pd_nt != 2} {
@@ -1452,7 +1463,7 @@ proc menu_addstd {mbar} {
     #    $mbar.audio add command -label {MIDI settings...} \
     #        -command {pd pd midi-properties \;}
     #}
-	$mbar.audio add separator    
+	match_linux_wm [list $mbar.audio add separator] 
     $mbar.audio add command -label {Test Audio and MIDI} \
         -command {menu_doc_open doc/7.stuff/tools testtone.pd} 
     $mbar.audio add command -label {Load Meter} \
@@ -1491,7 +1502,7 @@ proc menu_addstd {mbar} {
     $mbar.help add command -label {Browser} \
         -accelerator [accel_munge "Ctrl+b"] \
         -command {::helpbrowser::open_helpbrowser}
-    $mbar.help add separator
+    match_linux_wm [list $mbar.help add separator]
     #$mbar.help add command -label {puredata.info} \
     #    -command {menu_openhtml http://puredata.info} 
     #$mbar.help add command -label {Pdpedia} \
@@ -1518,20 +1529,20 @@ proc menu_addstd {mbar} {
     -accelerator [accel_munge "Ctrl+n"]
 .mbar.file add command -label Open -command {menu_open} \
     -accelerator [accel_munge "Ctrl+o"]
-.mbar.file add  separator
+match_linux_wm [list .mbar.file add separator]
 .mbar.file add command -label Close -accelerator [accel_munge "Ctrl+w"] \
 	-state disabled
 .mbar.file add command -label Save -accelerator [accel_munge "Ctrl+s"] \
 	-state disabled
 .mbar.file add command -label "Save as..." -accelerator [accel_munge "Ctrl+S"] \
 	-state disabled
-.mbar.file add  separator
+match_linux_wm [list .mbar.file add  separator]
 if {$pd_nt != 2} {
 	.mbar.file add command -label "Message..." -command {menu_send} \
 		-accelerator [accel_munge "Ctrl+m"]
 	# On MacOS X, follow the standard Human Interface Guidelines
 	# i.e. the Preferences menu under "Pd"
-	.mbar.file add  separator
+	match_linux_wm [list .mbar.file add  separator]
     .mbar.file add command -label Path... \
         -command {pd pd start-path-dialog \;}
     .mbar.file add command -label Startup... \
@@ -1539,16 +1550,16 @@ if {$pd_nt != 2} {
 } else { # Mac OS X
 	# Cmd-m is minimize window on Mac OS X, so remove binding
 	.mbar.file add command -label "Message..." -command {menu_send}
-	.mbar.file add  separator
+	match_linux_wm [list .mbar.file add  separator]
 	.mbar.file add command -label "Make app from patch..." -state disabled
 	.mbar.file add command -label "Make app from folder..." -state disabled
 }
-.mbar.file add  separator
+match_linux_wm [list .mbar.file add  separator]
 .mbar.file add command -label "Print..." -accelerator [accel_munge "Ctrl+p"] \
 	-state disabled
 if {$pd_nt != 2} {
 # Mac OS X doesn't put Quit on the File menu
-.mbar.file add  separator
+match_linux_wm [list .mbar.file add  separator]
 .mbar.file add command -label Quit -command {menu_quit} \
     -accelerator [accel_munge "Ctrl+q"]
 }
@@ -1559,7 +1570,7 @@ if {$pd_nt != 2} {
     -state disabled
 .mbar.edit add command -label Redo -accelerator [accel_munge "Ctrl+Z"] \
     -state disabled
-.mbar.edit add separator
+match_linux_wm [list .mbar.edit add separator]
 # this should apply to .printout.frame.text
 .mbar.edit add command -label Cut  -accelerator [accel_munge "Ctrl+x"] \
     -command {tk_textCut .printout.frame.text} -state disabled
@@ -1575,7 +1586,7 @@ if {$pd_nt != 2} {
     -command {.printout.frame.text tag add sel 1.0 end}
 .mbar.edit add command -label {Reselect} \
         -accelerator "Ctrl+Enter" -state disabled
-.mbar.edit add separator
+match_linux_wm [list .mbar.edit add separator]
 .mbar.edit add command -label {Tidy Up} -accelerator [accel_munge "Ctrl+y"] -state disabled
 
 .mbar.edit add command -label {Bring To Front} \
@@ -1586,7 +1597,7 @@ if {$pd_nt != 2} {
         -accelerator [accel_munge "Ctrl+Down"] \
 		-state disabled
 
-.mbar.edit add separator
+match_linux_wm [list .mbar.edit add separator]
 if {$pd_nt == 2} { # no key command for Mac OS X
 	.mbar.edit add command -label {Text Editor} -state disabled
 } else {
@@ -1600,13 +1611,13 @@ if {$pd_nt == 2} { # no key command for Mac OS X
     -state disabled \
     -accelerator [accel_munge "Ctrl+r"]
 
-.mbar.edit add separator
+match_linux_wm [list .mbar.edit add separator]
 
 .mbar.edit add command -label "Toggle console" \
 	-accelerator [accel_munge "Ctrl+R"] -command menu_toggle_console
 .mbar.edit add command -label "Clear console" \
     -accelerator [accel_munge "Ctrl+L"] -command menu_clear_console
-.mbar.edit add separator
+match_linux_wm [list .mbar.edit add separator]
 # this should apply to .printout.frame.text
 .mbar.edit add command -label {Find...} -accelerator [accel_munge "Ctrl+f"] \
     -state disabled
@@ -1614,7 +1625,7 @@ if {$pd_nt == 2} { # no key command for Mac OS X
 .mbar.edit add command -label {Find Again} -accelerator [accel_munge "Ctrl+g"] \
     -state disabled
 .mbar.edit add command -label {Find last error}
-.mbar.edit add separator
+match_linux_wm [list .mbar.edit add separator]
 .mbar.edit add checkbutton -label "Autotips" \
         -indicatoron false -selectcolor black \
         -accelerator [accel_munge "Ctrl+E"] \
@@ -2400,7 +2411,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
 		if {$::menu($name) == 1} {
-			ttk::separator $name.eyecandy
+			#ttk::separator $name.eyecandy
 		}
 	}
 
@@ -2717,7 +2728,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
 		if {$::menu($name) == 1} {
-			pack $name.eyecandy $name.c -fill x -expand 0
+			#pack $name.eyecandy $name.c -fill x -expand 0
 		}
 	}
 
@@ -2753,7 +2764,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		$name.m.file add command -label {K12 Demos} -command {menu_k12_open_demos}
 	}
 
-    $name.m.file add  separator
+    match_linux_wm [list $name.m.file add separator]
     $name.m.file add command -label Close \
         -command [concat menu_close $name] \
         -accelerator [accel_munge "Ctrl+w"]
@@ -2765,7 +2776,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -command [concat menu_saveas $name] \
         -accelerator [accel_munge "Ctrl+S"]
 	if { $k12_mode == 0 } {
-		$name.m.file add  separator
+		match_linux_wm [list $name.m.file add separator]
 
 		# arrange menus according to Apple HIG
 		if {$pd_nt != 2 } {
@@ -2779,19 +2790,19 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		} else { 
 			# Cmd-m is minimize window on Mac OS X		
 			$name.m.file add command -label "Message..." -command {menu_send}
-			$name.m.file add  separator
+			match_linux_wm [list $name.m.file add  separator]
 			$name.m.file add command -label "Make app from patch..." \
 				-command {menu_makeapp 0}
 			$name.m.file add command -label "Make app from folder..." \
 				-command {menu_makeapp 1}
 		}
-		$name.m.file add separator
+		match_linux_wm [list $name.m.file add separator]
 		$name.m.file add command -label "Print..." -command [concat menu_print $name] \
 		    -accelerator [accel_munge "Ctrl+p"]
 	}
 	if {$pd_nt != 2} {
 		# Mac OS X doesn't put Quit on the File menu
-		$name.m.file add separator
+		match_linux_wm [list $name.m.file add separator]
 		$name.m.file add command -label Quit -command {menu_quit} \
 			-accelerator [accel_munge "Ctrl+q"]
 	}
@@ -2806,7 +2817,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     $name.m.edit add command -label Redo -command [concat menu_redo $name] \
         -accelerator [accel_munge "Ctrl+Z"]
 
-    $name.m.edit add separator
+    match_linux_wm [list $name.m.edit add separator]
 
     $name.m.edit add command -label Cut -command [concat menu_cut $name] \
         -accelerator [accel_munge "Ctrl+x"] -state disabled
@@ -2844,7 +2855,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		    -accelerator "Ctrl+Enter" -state disabled
 	}
 
-    $name.m.edit add separator
+    match_linux_wm [list $name.m.edit add separator]
 
 	$name.m.edit add command -label {Tidy Up} \
 		-command [concat menu_tidyup $name] \
@@ -2861,7 +2872,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		    -accelerator [accel_munge "Ctrl+Down"] -state disabled
 	}
 
-	$name.m.edit add separator
+	match_linux_wm [list $name.m.edit add separator]
 
 	if { $k12_mode == 0 } {
 
@@ -2887,7 +2898,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     #if { $editable == 0 } {
     #       $name.m.edit entryconfigure "Cord Inspector" -indicatoron false }
   
-    $name.m.edit add separator
+    match_linux_wm [list $name.m.edit add separator]
 ## end jsarlo
 
 	$name.m.edit add command -label "Toggle console" \
@@ -2898,7 +2909,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	    -accelerator [accel_munge "Ctrl+L"] \
 	    -command [concat menu_clear_console]
 
-	$name.m.edit add separator
+	match_linux_wm [list $name.m.edit add separator]
 
 	if { $k12_mode == 0 } {
     
@@ -2912,7 +2923,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		$name.m.edit add command -label {Find last error} \
 		    -command [concat menu_finderror] 
 
-		$name.m.edit add separator
+		match_linux_wm [list $name.m.edit add separator]
 
 		############iemlib##################
 		# instead of "red = #BC3C60" we take "grey85", so there is no difference,
@@ -2930,11 +2941,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -accelerator [accel_munge "Ctrl+e"]
 
 	if { $editable == 1 } {
-    	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d"
+    	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d" -foreground black
 	}
 
 	if { $k12_mode == 0 && $autotips == 1 } {
-    	$name.m.edit entryconfigure "Autotips" -background "#7dd37d"
+    	$name.m.edit entryconfigure "Autotips" -background "#7dd37d" -foreground "#dddddd"
 	}
 
 	#if { $magicglass == 1 } {
@@ -2975,7 +2986,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		    -command [concat menu_comment $name 0] \
 		    -accelerator [accel_munge "Ctrl+5"]
 
-		$name.m.put add separator
+		match_linux_wm [list $name.m.put add separator]
 		
 		############iemlib##################
 
@@ -3017,7 +3028,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 		############iemlib##################
 		
-		$name.m.put add separator
+		match_linux_wm [list $name.m.put add separator]
 		
 		$name.m.put add command -label Graph \
 		    -command [concat menu_graph $name] 
@@ -3057,12 +3068,12 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			$name.m.windows add command -label "Previous Window" -command {menu_raisepreviouswindow} \
 				-accelerator "Ctrl+PageUp"
 		}
-		$name.m.windows add separator
+		match_linux_wm [list $name.m.windows add separator]
 		$name.m.windows add command -label {parent window}\
 		    -command [concat menu_windowparent $name] 
 		$name.m.windows add command -label {Pd & Console} -command menu_raise_console \
 			-accelerator [accel_munge "Ctrl+;"]
-		$name.m.windows add separator
+		match_linux_wm [list $name.m.windows add separator]
 
 		# the audio menu
 		match_linux_wm [list menu $name.m.audio -tearoff $pd_tearoff]
@@ -3095,7 +3106,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		    -command [concat popup_action $name 1]
 		$name.popup add command -label {Help} \
 		    -command [concat popup_action $name 2]
-		$name.popup add separator
+		match_linux_wm [list $name.popup add separator]
 		$name.popup add command -label {To Front} \
 		    -command [concat popup_action $name 3]
 		$name.popup add command -label {To Back} \
@@ -3107,7 +3118,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		    -command [concat popup_action $name 1]
 		$name.popup add command -label {Help} \
 		    -command [concat popup_action $name 2]
-		$name.popup add separator
+		match_linux_wm [list $name.popup add separator]
 		$name.popup add command -label {To Front} -state disabled \
 		    -command [concat popup_action $name 3]
 		$name.popup add command -label {To Back} -state disabled \
@@ -3549,7 +3560,7 @@ proc pdtk_canvas_toggle_menu {rootname x} {
 		set ::menu($rootname) 1
 		if {[info exists ::loaded($rootname)]} {
     		$rootname configure -menu $rootname.m
-			pack $rootname.eyecandy -fill x -expand 0 -before $rootname.c
+			#pack $rootname.eyecandy -fill x -expand 0 -before $rootname.c
 			if { $k12_mode == 1 } {
 				pack $rootname.k12frame  -side left -fill y -before $rootname.c
 				wm minsize $rootname 580 532
@@ -3559,7 +3570,7 @@ proc pdtk_canvas_toggle_menu {rootname x} {
 		set ::menu($rootname) 0
 		if {[info exists ::loaded($rootname)]} {
     		$rootname configure -menu ""
-			pack forget $rootname.eyecandy
+			#pack forget $rootname.eyecandy
 			if { $k12_mode == 1 } {
 				pack forget $rootname.k12frame
 				wm minsize $rootname 50 20
@@ -6210,10 +6221,10 @@ proc pdtk_canvas_editval {name value} {
 	global k12_mode
 	#if {[winfo exists $name]} {
 		if { $value } {
-		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d"
+		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d" -foreground black
 			if { $k12_mode == 1 } { $name.k12frame.edit.b configure -image i.edit }
 		} else {                          
-		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background {}
+		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background {} -foreground "#dddddd"
 			if { $k12_mode == 1 } { $name.k12frame.edit.b configure -image i.perform }
 		}
 	#}                                             
@@ -6226,12 +6237,12 @@ proc pdtk_canvas_tooltips {name value} {
 	#if {[winfo exists $name]} {
 		if { $value } {
 			if { $k12_mode == 0 } {
-		   		$name.m.edit entryconfigure "Autotips" -indicatoron false -background "#7dd37d"
+		   		$name.m.edit entryconfigure "Autotips" -indicatoron false -background "#7dd37d" -foreground black
 			}
 			set autotips 1
 		} else {      
 			if { $k12_mode == 0 } {                    
-		    	$name.m.edit entryconfigure "Autotips" -indicatoron false -background {}
+		    	$name.m.edit entryconfigure "Autotips" -indicatoron false -background {} -foreground "#dddddd"
 			}
 			set autotips 0
 		}
@@ -6244,10 +6255,10 @@ proc pdtk_canvas_magicglassval {name value} {
 	#global colors
 
     if { $value } {
-		$name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background "#7dd37d"
+		$name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background "#7dd37d" -foreground black
 		#set magicglass 1
     } else {                          
-        $name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background {}
+        $name.m.edit entryconfigure "Cord Inspector" -indicatoron false -background {} -foreground "#dddddd"
 		#set magicglass 0
     }                                                 
 }
