@@ -3058,7 +3058,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 		        {
 					sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
 				   			x, x->gl_editor->canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+							(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
 							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
 					if (objtooltip) {
 						objtooltip = 0;
@@ -3291,7 +3291,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
     {
         sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                	x, x->gl_editor->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (obj_issignaloutlet(ob1, closest1) ? "$signal_cord" : "$msg_cord")),
+				(last_inlet_filter ? "black" : (obj_issignalinlet(ob2, closest2) ? "$signal_cord" : "$msg_cord")),
 				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
 		if (objtooltip) {
 			objtooltip = 0;
@@ -3777,7 +3777,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 {
                     sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                            	x, x->gl_editor->canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+							(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
 							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));                
                 }
                 if (y)
@@ -3812,7 +3812,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     {
         sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                	x, x->gl_editor->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+				(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
 				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
 		if (objtooltip) {
 			objtooltip = 0;
@@ -4000,7 +4000,7 @@ void canvas_mouseup(t_canvas *x,
 		{
 			sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
 		   			x, x->gl_editor->canvas_cnct_inlet_tag,
-					(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+					(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
 					(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
 			x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
 		}
@@ -5985,7 +5985,7 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
             {
                 sys_vgui(".x%x.c itemconfigure %s -outline %s -fill %s -width 1\n",
                        	x, x->gl_editor->canvas_cnct_inlet_tag,
-						(last_inlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
+						(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
 						(inlet_issignal ? "$signal_nlet" : "$msg_nlet")); 
                 x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
             }
