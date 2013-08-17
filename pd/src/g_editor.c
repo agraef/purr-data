@@ -215,8 +215,8 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
             (glist->gl_goprect && (ob->te_type == T_TEXT)));
     }
     else {
-		return (1);
 		//fprintf(stderr,"else return 1\n");
+		return (1);
 	}
 }
 

@@ -211,23 +211,28 @@ t_symbol *canvas_getdir(t_canvas *x)
 
 void canvas_makefilename(t_canvas *x, char *file, char *result, int resultsize)
 {
+	char interim[FILENAME_MAX];
+	sys_expandpathelems(file, interim);
     char *dir = canvas_getenv(x)->ce_dir->s_name;
-    if (file[0] == '/' || (file[0] && file[1] == ':') || !*dir)
+    if (interim[0] == '/' || (interim[0] && interim[1] == ':') || !*dir)
     {
-        strncpy(result, file, resultsize);
+		fprintf(stderr,"root file\n");
+        strncpy(result, interim, resultsize);
         result[resultsize-1] = 0;
     }
     else
     {
+		fprintf(stderr,"relative file\n");
         int nleft;
         strncpy(result, dir, resultsize);
         result[resultsize-1] = 0;
         nleft = resultsize - strlen(result) - 1;
         if (nleft <= 0) return;
         strcat(result, "/");
-        strncat(result, file, nleft);
+        strncat(result, interim, nleft);
         result[resultsize-1] = 0;
-    }           
+    } 
+	fprintf(stderr,"resulting file = <%s>\n", result);          
 }
 
 void canvas_rename(t_canvas *x, t_symbol *s, t_symbol *dir)
@@ -1693,72 +1698,6 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-// utility function to replace @pd_extra and other sys-recognizable paths
-
-char * canvas_path_replace(
-    char const * const original, 
-    char const * const pattern, 
-    char const * const replacement
-) {
-	size_t const replen = strlen(replacement);
-	size_t const patlen = strlen(pattern);
-	size_t const orilen = strlen(original);
-
-	size_t patcnt = 0;
-	const char * oriptr;
-	const char * patloc;
-
-	// find how many times the pattern occurs in the original string
-	for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
-	{
-		patcnt++;
-	}
-
-	{
-		// allocate memory for the new string
-		size_t const retlen = orilen + patcnt * (replen - patlen);
-		char * returned = (char *) malloc( sizeof(char) * (retlen + 1) );
-
-		if (returned != NULL)
-		{
-			// copy the original string, 
-			// replacing all the instances of the pattern
-			char * retptr = returned;
-			for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
-			{
-				size_t const skplen = patloc - oriptr;
-				// copy the section until the occurence of the pattern
-				strncpy(retptr, oriptr, skplen);
-				retptr += skplen;
-				// copy the replacement 
-				strncpy(retptr, replacement, replen);
-				retptr += replen;
-			}
-			// copy the rest of the string.
-			strcpy(retptr, oriptr);
-		}
-		return returned;
-	}
-}
-
-
-char * canvas_parse_sys_filename_args(const char *name)
-{
-	//check for @sys_extra path and replace
-	char *final_name = NULL;
-	if (strstr(name, "@pd_extra") != NULL) {
-		t_namelist *path = pd_extrapath;
-		while (path->nl_next)
-			path = path->nl_next;
-		final_name = canvas_path_replace(name, "@pd_extra", path->nl_string);
-	}
-	else {
-		final_name = (char *) malloc( sizeof(char) * (strlen(name) + 1) );
-		strcpy(final_name, name); 
-	}
-	return(final_name);
-}
-
     /* utility function to read a file, looking first down the canvas's search
     path (set with "declare" objects in the patch and recursively in calling
     patches), then down the system one.  The filename is the concatenation of
@@ -1779,10 +1718,10 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
     int fd = -1;
 	int result = 0;
     t_canvas *y;
-	char *final_name;
+	char final_name[FILENAME_MAX];
 
-	//check for sys path and replace
-	final_name = canvas_parse_sys_filename_args(name);
+		/* first check for @pd_extra (and later possibly others) and ~/ and replace */
+	sys_expandpathelems(name, final_name);
 
         /* first check if "name" is absolute (and if so, try to open) */
     if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
@@ -1820,7 +1759,6 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
         }
     }
     result = open_via_path((x ? canvas_getdir(x)->s_name : "."), final_name, ext, dirresult, nameresult, size, bin);
-	freebytes((void *)final_name, strlen(final_name));
 	return(result);
 }
 

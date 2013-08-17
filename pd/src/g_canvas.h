@@ -550,7 +550,7 @@ EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 
 /* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
 
-EXTERN char * canvas_parse_sys_filename_args(const char *name);
+EXTERN void sys_expandpathelems(const char *name, const char *result);
 
 typedef void (*t_undofn)(t_canvas *canvas, void *buf,
     int action);        /* a function that does UNDO/REDO */

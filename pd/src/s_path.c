@@ -70,6 +70,55 @@ void sys_unbashfilename(const char *from, char *to)
     *to = 0;
 }
 
+/* expand special tags inside path that start with @ */
+
+// utility function to expand paths (see sys_expandpathelems call below for more info)
+
+static void sys_path_replace(
+    char const * const original,
+    char * returned, 
+    char const * const pattern, 
+    char const * const replacement
+) {
+	size_t const replen = strlen(replacement);
+	size_t const patlen = strlen(pattern);
+	size_t const orilen = strlen(original);
+
+	size_t patcnt = 0;
+	const char * oriptr;
+	const char * patloc;
+
+	// find how many times the pattern occurs in the original string
+	for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
+	{
+		patcnt++;
+	}
+
+	{
+		// allocate memory for the new string
+		size_t const retlen = orilen + patcnt * (replen - patlen);
+
+		if (returned != NULL)
+		{
+			// copy the original string, 
+			// replacing all the instances of the pattern
+			char *retptr = returned;
+			for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
+			{
+				size_t const skplen = patloc - oriptr;
+				// copy the section until the occurence of the pattern
+				strncpy(retptr, oriptr, skplen);
+				retptr += skplen;
+				// copy the replacement 
+				strncpy(retptr, replacement, replen);
+				retptr += replen;
+			}
+			// copy the rest of the string.
+			strcpy(retptr, oriptr);
+		}
+	}
+}
+
 /* expand env vars and ~ at the beginning of a path and make a copy to return */
 static void sys_expandpath(const char *from, char *to)
 {
@@ -93,6 +142,23 @@ static void sys_expandpath(const char *from, char *to)
     ExpandEnvironmentStrings(to, buf, FILENAME_MAX - 2);
     strncpy(to, buf, FILENAME_MAX - 1);
 #endif    
+}
+
+
+/* used for expanding paths for various objects */
+void sys_expandpathelems(const char *name, char *result)
+{
+	//check for expandable elements in path (e.g. @pd_extra, ~/) and replace
+	char interim[FILENAME_MAX];
+	if (strstr(name, "@pd_extra") != NULL) {
+		t_namelist *path = pd_extrapath;
+		while (path->nl_next)
+			path = path->nl_next;
+		sys_path_replace(name, interim, "@pd_extra", path->nl_string);
+	} else {
+		strcpy(interim, name);
+	}
+	sys_expandpath(interim, result);
 }
 
 /* test if path is absolute or relative, based on leading /, env vars, ~, etc */
@@ -344,17 +410,16 @@ there is no search and instead we just try to open the file literally.  */
 /* see also canvas_open() which, in addition, searches down the
 canvas-specific path. */
 
-EXTERN const char * canvas_parse_sys_filename_args(const char *name);
-
 static int do_open_via_path(const char *dir, const char *name,
     const char *ext, char *dirresult, char **nameresult, unsigned int size,
     int bin, t_namelist *searchpath)
 {
     t_namelist *nl;
     int fd = -1;
+	char final_name[FILENAME_MAX];
 
-	//check for sys path and replace
-	const char *final_name = canvas_parse_sys_filename_args(name);	
+		/* first check for @ and ~ (and later others) and replace */
+	sys_expandpathelems(name, final_name);	
 
         /* first check if "name" is absolute (and if so, try to open) */
     if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
@@ -380,10 +445,8 @@ static int do_open_via_path(const char *dir, const char *name,
 
     *dirresult = 0;
     *nameresult = dirresult;
-	freebytes((void *)final_name, strlen(final_name));
     return (-1);
 do_open_via_path_end:
-	freebytes((void *)final_name, strlen(final_name));
 	return (fd);
 }
 
