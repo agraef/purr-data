@@ -149,16 +149,20 @@ static void sys_expandpath(const char *from, char *to)
 void sys_expandpathelems(const char *name, char *result)
 {
 	//check for expandable elements in path (e.g. @pd_extra, ~/) and replace
+	//fprintf(stderr,"sys_expandpathelems name=<%s>\n", name);
 	char interim[FILENAME_MAX];
 	if (strstr(name, "@pd_extra") != NULL) {
 		t_namelist *path = pd_extrapath;
 		while (path->nl_next)
 			path = path->nl_next;
 		sys_path_replace(name, interim, "@pd_extra", path->nl_string);
+		//fprintf(stderr,"path->nl_string=<%s>\n", path->nl_string);
 	} else {
 		strcpy(interim, name);
 	}
+	//fprintf(stderr,"sys_expandpathelems interim=<%s>\n", interim);
 	sys_expandpath(interim, result);
+	//fprintf(stderr,"sys_expandpathelems result=<%s>\n", result);
 }
 
 /* test if path is absolute or relative, based on leading /, env vars, ~, etc */

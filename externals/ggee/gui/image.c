@@ -35,14 +35,14 @@ void image_doopen(t_image* x) {
 		char fname[FILENAME_MAX];
 		canvas_makefilename(glist_getcanvas(x->x_glist), x->x_fname->s_name,
 						fname, FILENAME_MAX);
-		fprintf(stderr,"post @ cooked name <%s>\n", fname);
+		//fprintf(stderr,"post @ cooked name <%s>\n", fname);
 		sys_vgui(".x%x.c create rectangle \
 			%d %d %d %d -tags %xMT -outline black -fill gray\n",
-			glist_getcanvas(glist),
-			text_xpix(&x->x_obj, glist) - x->x_width/2,
-			text_ypix(&x->x_obj, glist) - x->x_height/2,
-			text_xpix(&x->x_obj, glist) + x->x_width/2,
-			text_ypix(&x->x_obj, glist) + x->x_height/2, x);
+			glist,
+			text_xpix(&x->x_obj, x->x_glist) - x->x_width/2,
+			text_ypix(&x->x_obj, x->x_glist) - x->x_height/2,
+			text_xpix(&x->x_obj, x->x_glist) + x->x_width/2,
+			text_ypix(&x->x_obj, x->x_glist) + x->x_height/2, x);
 		sys_vgui("catch {image delete $img%x}\n", x);
 		sys_vgui("set img%x [image create photo -file {%s}]\n", x, fname);
 		sys_vgui(".x%x.c itemconfigure %xS -image $img%x\n", 
@@ -52,11 +52,11 @@ void image_doopen(t_image* x) {
 	else {
 		sys_vgui(".x%x.c create rectangle \
 			%d %d %d %d -tags %xMT -outline black -fill gray\n",
-			glist_getcanvas(glist),
-			text_xpix(&x->x_obj, glist) - x->x_width/2,
-			text_ypix(&x->x_obj, glist) - x->x_height/2,
-			text_xpix(&x->x_obj, glist) + x->x_width/2,
-			text_ypix(&x->x_obj, glist) + x->x_height/2, x);
+			glist,
+			text_xpix(&x->x_obj, x->x_glist) - x->x_width/2,
+			text_ypix(&x->x_obj, x->x_glist) - x->x_height/2,
+			text_xpix(&x->x_obj, x->x_glist) + x->x_width/2,
+			text_ypix(&x->x_obj, x->x_glist) + x->x_height/2, x);
 	}
 }
 
@@ -99,6 +99,7 @@ static t_symbol *get_filename(t_int argc, t_atom *argv)
 {
     t_symbol *fname;
     fname = atom_getsymbolarg(0, argc, argv);
+	//fprintf(stderr,"fname=<%s>\n", fname->s_name);
     if(argc > 1)
     {
         int i;
@@ -114,6 +115,7 @@ static t_symbol *get_filename(t_int argc, t_atom *argv)
 			}
         }
         fname = gensym(buf);
+		//fprintf(stderr,"argc>1 fname=<%s>\n", fname->s_name);
     }
     return fname;
 }
@@ -313,7 +315,7 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
 			//fprintf(stderr,"erasing\n");
 			image_erase(x, glist_getcanvas(x->x_glist));
 	} else {
-		sys_vgui("catch {.x%x.c delete %xMT}\n", x->x_glist, x);
+		sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
 		canvas_fixlinesfor(x->x_glist,(t_text*) x);
 	}
 }
@@ -354,7 +356,7 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
 
 	x->x_fname = get_filename(argc, argv);
 	if (strlen(x->x_fname->s_name) > 0) {
-		//fprintf(stderr,"get_filename succeeded %s\n", x->x_fname->s_name);
+		//fprintf(stderr,"get_filename succeeded <%s> <%s>\n", x->x_fname->s_name, atom_getsymbol(argv)->s_name);
 		argc--;
 		argv++;
 	}

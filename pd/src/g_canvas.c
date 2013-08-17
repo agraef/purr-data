@@ -213,16 +213,17 @@ void canvas_makefilename(t_canvas *x, char *file, char *result, int resultsize)
 {
 	char interim[FILENAME_MAX];
 	sys_expandpathelems(file, interim);
+	//fprintf(stderr,"interim = <%s>\n", interim);
     char *dir = canvas_getenv(x)->ce_dir->s_name;
     if (interim[0] == '/' || (interim[0] && interim[1] == ':') || !*dir)
     {
-		fprintf(stderr,"root file\n");
+		//fprintf(stderr,"root file\n");
         strncpy(result, interim, resultsize);
         result[resultsize-1] = 0;
     }
     else
     {
-		fprintf(stderr,"relative file\n");
+		//fprintf(stderr,"relative file\n");
         int nleft;
         strncpy(result, dir, resultsize);
         result[resultsize-1] = 0;
@@ -232,7 +233,7 @@ void canvas_makefilename(t_canvas *x, char *file, char *result, int resultsize)
         strncat(result, interim, nleft);
         result[resultsize-1] = 0;
     } 
-	fprintf(stderr,"resulting file = <%s>\n", result);          
+	//fprintf(stderr,"resulting file = <%s>\n", result);          
 }
 
 void canvas_rename(t_canvas *x, t_symbol *s, t_symbol *dir)

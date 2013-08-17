@@ -1408,8 +1408,22 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 
 			// and finally redraw canvas--we have to redraw canvas since
 			// there is no consistent naming of objects
+			t_object *ob = NULL;
+			t_rtext *yr = NULL;
+			ob = pd_checkobject(&next->g_pd);
+			if (ob) {
+				yr = glist_findrtext(x, (t_text *)&ob->ob_g);
+			}
+			if (yr) {
+				fprintf(stderr,"lower\n");
+				sys_vgui(".x%lx.c lower selected %s\n", x, rtext_gettag(yr));
+				//sys_vgui(".x%lx.c raise all_cords\n", x);
+			} else {
+				fprintf(stderr,"redraw\n");
+				canvas_redraw(x);
+			}
 			//sys_vgui(".x%lx.c lower selected .%lx\n", x, (t_int)next);
-			canvas_redraw(x);
+			//canvas_redraw(x);
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -1430,11 +1444,24 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			prev->g_next = y;
 			y->g_next = next;
 
-			// and finally redraw canvas--we have to redraw canvas since
-			// there is no consistent naming of objects
+			// and finally redraw canvas
+			t_object *ob = NULL;
+			t_rtext *yr = NULL;
+			ob = pd_checkobject(&prev->g_pd);
+			if (ob) {
+				yr = glist_findrtext(x, (t_text *)&ob->ob_g);
+			}
+			if (yr) {
+				fprintf(stderr,"raise\n");
+				sys_vgui(".x%lx.c raise selected %s\n", x, rtext_gettag(yr));
+				//sys_vgui(".x%lx.c raise all_cords\n", x);
+			} else {
+				fprintf(stderr,"redraw\n");
+				canvas_redraw(x);
+			}
 			//sys_vgui(".x%lx.c raise selected .%lx\n", x, (t_int)prev);
 			//sys_vgui(".x%lx.c raise all_cords\n", x);
-			canvas_redraw(x);
+			//canvas_redraw(x);
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -2476,9 +2503,20 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		else x->gl_list = oldy_next;
 
 		// and finally redraw
-		sys_vgui(".x%lx.c raise selected\n", x);
-		sys_vgui(".x%lx.c raise all_cords\n", x);
-		//canvas_redraw(x);	
+		t_object *ob = NULL;
+		t_rtext *yr = NULL;
+		ob = pd_checkobject(&y_end->g_pd);
+		if (ob) {
+			yr = glist_findrtext(x, (t_text *)&ob->ob_g);
+		}
+		if (yr) {
+			fprintf(stderr,"raise\n");
+			sys_vgui(".x%lx.c raise selected %s\n", x, rtext_gettag(yr));
+			//sys_vgui(".x%lx.c raise all_cords\n", x);
+		} else {
+			fprintf(stderr,"redraw\n");
+			canvas_redraw(x);
+		}
 	}
 	if (which == 4) /* to back */
 	{
