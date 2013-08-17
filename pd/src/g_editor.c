@@ -1406,7 +1406,9 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 				x->gl_list = y;
 			}
 
-			// and finally redraw canvas
+			// and finally redraw canvas--we have to redraw canvas since
+			// there is no consistent naming of objects
+			//sys_vgui(".x%lx.c lower selected .%lx\n", x, (t_int)next);
 			canvas_redraw(x);
 
 			glob_preset_node_list_check_loc_and_update();
@@ -1428,7 +1430,10 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			prev->g_next = y;
 			y->g_next = next;
 
-			// and finally redraw canvas
+			// and finally redraw canvas--we have to redraw canvas since
+			// there is no consistent naming of objects
+			//sys_vgui(".x%lx.c raise selected .%lx\n", x, (t_int)prev);
+			//sys_vgui(".x%lx.c raise all_cords\n", x);
 			canvas_redraw(x);
 
 			glob_preset_node_list_check_loc_and_update();
@@ -2471,7 +2476,9 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		else x->gl_list = oldy_next;
 
 		// and finally redraw
-		canvas_redraw(x);	
+		sys_vgui(".x%lx.c raise selected\n", x);
+		sys_vgui(".x%lx.c raise all_cords\n", x);
+		//canvas_redraw(x);	
 	}
 	if (which == 4) /* to back */
 	{
@@ -2485,7 +2492,8 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		else oldy_prev->g_next = NULL; //oldy was the last in the cue
 
 		// and finally redraw
-		canvas_redraw(x);
+		sys_vgui(".x%lx.c lower selected\n", x);
+		//canvas_redraw(x);
 	}
 	canvas_dirty(x, 1);
 	glob_preset_node_list_check_loc_and_update();
