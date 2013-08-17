@@ -1,25 +1,54 @@
-#N canvas 0 26 462 397 10;
-#X obj 213 273 image /home/ico/Downloads/PureData/pure-data/externals/ggee/gui/logo100.gif
+#N canvas 0 26 462 618 10;
+#X obj 74 489 ggee/image @pd_extra/ggee/logo100.gif
 ;
-#X text 19 18 Incorporate images. This is instantiated with;
-#X text 19 31 [image logo100.gif];
-#X msg 179 179 open \$1;
-#X obj 179 135 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1
+#X text 26 12 Incorporate images. This is instantiated with;
+#X text 26 25 [image logo100.gif];
+#X msg 40 395 open \$1;
+#X obj 40 351 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1
 -1;
-#X obj 179 156 openpanel;
+#X obj 40 372 openpanel;
 #N canvas 369 218 396 195 META 0;
 #X text 12 125 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 25 LICENSE Tcl/Tk;
 #X text 12 5 KEYWORDS control GUI;
 #X text 12 45 DESCRIPTION display an image;
-#X text 12 65 INLET_0 open size;
 #X text 12 85 OUTLET_0 bang;
 #X text 12 105 AUTHOR Ivica Ico Bukvic \, based on Guenter Geiger's
 image;
-#X restore 412 376 pd META;
-#X text 19 64 [image] works with .gif \, .ppm \, .pgm and .png image
+#X text 12 65 INLET_0 open gopspill;
+#X restore 405 590 pd META;
+#X obj 162 490 ggee/image @pd_extra/ggee/logo100.gif;
+#X obj 155 348 loadbang;
+#X msg 155 371 1;
+#X msg 155 395 gopspill \$1;
+#X floatatom 184 371 5 0 0 0 - - -;
+#X obj 252 448 ggee/image ;
+#X msg 245 395 open \$1;
+#X obj 245 351 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1
+-1;
+#X obj 245 372 openpanel;
+#X text 26 48 [image] works with .gif \, .ppm \, .pgm and .png image
 formats only.;
+#X text 263 425 this is how an empty imagelooks like when createdwithout
+any parameters;
+#X text 27 83 Pd-L2Ork version of [image] also has a special feature
+that allows its reported rectangle to be smaller \, so it can be used
+as a decoration for a graph-on-parent abstraction that may potentially
+spill beyond the grap-on-parent rectangle (as is the case with K12
+mode). To invoke this mode \, pass a "gopspill 0/1" message into the
+object or create it by giving it an optional argument \, 0=off(default)
+\, 1=on. Filename is always first optional argument and the float argument
+second. In the absence of a symbol (string) filename \, the float value
+will be treated as the gopspill argument. For instance:[image logo100.gif
+1][image logo100.gif 0] is synonymous to [image logo100.gif];
 #X connect 3 0 0 0;
 #X connect 4 0 5 0;
 #X connect 5 0 3 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 7 0;
+#X connect 11 0 10 0;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 15 0 13 0;
