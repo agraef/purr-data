@@ -3662,13 +3662,12 @@ proc pdtk_canvas_mouseup {name x y b} {
 #}
 
 proc pdtk_select_all_gop_widgets {name gop state} {
-	#puts stderr "======================$name $gop $state"
+	#puts stderr "pdtk_select_all_gop_widgets $name $gop $state"
 	foreach item [$name.c find all] {
 		#puts stderr [$name.c gettags $item]
 		foreach tag [$name.c gettags $item] {
 			if { [string first $gop $tag] > -1 } {
 				#puts stderr ...match
-				#$name.c delete $item
 				if {$state} {
 					$name.c addtag selected withtag $tag
 				} else {
