@@ -1410,20 +1410,26 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			// there is no consistent naming of objects
 			t_object *ob = NULL;
 			t_rtext *yr = NULL;
-			ob = pd_checkobject(&next->g_pd);
+			if (prev) {
+				ob = pd_checkobject(&prev->g_pd);
+			}
 			if (ob) {
 				yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 			}
 			if (yr) {
-				fprintf(stderr,"lower\n");
+				//fprintf(stderr,"lower\n");
 				sys_vgui(".x%lx.c lower selected %s\n", x, rtext_gettag(yr));
+				sys_vgui(".x%lx.c raise selected %s\n", x, rtext_gettag(yr));
 				//sys_vgui(".x%lx.c raise all_cords\n", x);
+			} else if (prev == NULL) {
+				// we get here if we are supposed to go all the way to the bottom
+				//fprintf(stderr,"lower to the bottom\n");
+				sys_vgui(".x%lx.c lower selected\n", x);
 			} else {
-				fprintf(stderr,"redraw\n");
+				// fall back to legacy redraw for objects that are not patchable
+				//fprintf(stderr,"fallback redraw\n");
 				canvas_redraw(x);
 			}
-			//sys_vgui(".x%lx.c lower selected .%lx\n", x, (t_int)next);
-			//canvas_redraw(x);
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -1447,21 +1453,25 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			// and finally redraw canvas
 			t_object *ob = NULL;
 			t_rtext *yr = NULL;
-			ob = pd_checkobject(&prev->g_pd);
+			if (prev) {
+				ob = pd_checkobject(&prev->g_pd);
+			}
 			if (ob) {
 				yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 			}
 			if (yr) {
-				fprintf(stderr,"raise\n");
+				//fprintf(stderr,"raise\n");
 				sys_vgui(".x%lx.c raise selected %s\n", x, rtext_gettag(yr));
 				//sys_vgui(".x%lx.c raise all_cords\n", x);
+			} else if (next == NULL) {
+				// we get here if we are supposed to go all the way to the top
+				//fprintf(stderr,"raise to the top\n");
+				sys_vgui(".x%lx.c raise selected\n", x);
 			} else {
-				fprintf(stderr,"redraw\n");
+				// fall back to legacy redraw for objects that are not patchable
+				//fprintf(stderr,"fallback redraw\n");
 				canvas_redraw(x);
 			}
-			//sys_vgui(".x%lx.c raise selected .%lx\n", x, (t_int)prev);
-			//sys_vgui(".x%lx.c raise all_cords\n", x);
-			//canvas_redraw(x);
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -2510,11 +2520,11 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 			yr = glist_findrtext(x, (t_text *)&ob->ob_g);
 		}
 		if (yr) {
-			fprintf(stderr,"raise\n");
+			//fprintf(stderr,"raise\n");
 			sys_vgui(".x%lx.c raise selected %s\n", x, rtext_gettag(yr));
 			//sys_vgui(".x%lx.c raise all_cords\n", x);
 		} else {
-			fprintf(stderr,"redraw\n");
+			//fprintf(stderr,"redraw\n");
 			canvas_redraw(x);
 		}
 	}
@@ -2530,6 +2540,7 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		else oldy_prev->g_next = NULL; //oldy was the last in the cue
 
 		// and finally redraw
+		//fprintf(stderr,"lower\n");
 		sys_vgui(".x%lx.c lower selected\n", x);
 		//canvas_redraw(x);
 	}
