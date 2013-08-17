@@ -1,5 +1,5 @@
 #N canvas 152 78 857 486 10;
-#X obj 502 103 ggee/image @pd_extra/K12/objects/logic_mapper.png;
+#X obj 502 103 ggee/image @pd_extra/K12/objects/logic_mapper.png 1;
 #X obj 201 435 outlet;
 #X obj 247 435 outlet;
 #X obj -35 110 inlet;
@@ -67,5 +67,4 @@ empty 0 -8 0 10 -262144 -1 -1 0;
 #X connect 26 0 23 0;
 #X connect 26 1 21 0;
 #X connect 26 2 22 0;
-#X connect 27 0 0 0;
 #X coords 0 -1 1 1 89 89 2 457 71;

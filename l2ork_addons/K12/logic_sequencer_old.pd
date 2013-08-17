@@ -1,6 +1,6 @@
 #N canvas 239 95 507 379 10;
 #X obj 411 247 ggee/image @pd_extra/K12/objects/logic_sequencer.png
-;
+1;
 #X obj 273 58 inlet;
 #X obj 408 390 outlet;
 #X obj 274 100 select 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;

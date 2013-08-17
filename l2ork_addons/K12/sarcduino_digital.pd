@@ -1,7 +1,7 @@
 #N canvas 427 57 420 212 10;
 #X obj 212 117 outlet;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_digital.png
-;
+1;
 #X obj 228 -60 loadbang;
 #X obj 239 44 nbx 2 14 1 16 0 0 empty empty channel: -48 8 0 11 -262144
 -1 -1 1 256 3;
@@ -22,5 +22,4 @@
 #X connect 7 0 8 0;
 #X connect 8 0 6 0;
 #X connect 9 0 0 0;
-#X connect 10 0 1 0;
 #X coords 0 -1 1 1 89 89 2 183 13;

@@ -5,7 +5,7 @@
 #X obj 301 -129 inlet;
 #X obj 301 -86 * 10000;
 #X msg 301 118 \$1 100;
-#X obj 338 36 ggee/image @pd_extra/K12/objects/fx_filter.png;
+#X obj 338 36 ggee/image @pd_extra/K12/objects/fx_filter.png 1;
 #X obj 338 -54 loadbang;
 #X obj 301 41 hsl 68 29 50 10000 0 0 \$0-s-filt0 \$0-r-filt0 empty
 -2 -8 0 10 -262144 -1 -1 0 1;
@@ -25,5 +25,4 @@
 #X connect 9 0 2 1;
 #X connect 10 0 8 0;
 #X connect 11 0 4 0;
-#X connect 12 0 6 0;
 #X coords 0 -1 1 1 89 89 2 293 4;

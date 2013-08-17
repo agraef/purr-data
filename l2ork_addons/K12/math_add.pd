@@ -1,14 +1,14 @@
 #N canvas 547 50 389 209 10;
-#X obj 42 111 inlet;
-#X obj 83 111 inlet;
-#X obj 42 251 outlet;
-#X obj 42 167 +;
-#X obj 141 205 ggee/image @pd_extra/K12/objects/math_add.png;
-#X obj 141 72 loadbang;
-#X obj 83 136 t b f;
+#X obj 32 111 inlet;
+#X obj 73 111 inlet;
+#X obj 32 251 outlet;
+#X obj 32 167 +;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/math_add.png 1;
+#X obj 134 72 loadbang;
+#X obj 73 136 t b f;
 #X obj 104 213 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 16
 -262144 -1 -1 0 256 3;
-#X msg 141 95 open @pd_extra/K12/objects/math_add.png;
+#X msg 134 95 open @pd_extra/K12/objects/math_add.png;
 #X connect 0 0 3 0;
 #X connect 1 0 6 0;
 #X connect 3 0 7 0;
@@ -16,5 +16,4 @@
 #X connect 6 0 3 0;
 #X connect 6 1 3 1;
 #X connect 7 0 2 0;
-#X connect 8 0 4 0;
 #X coords 0 -1 1 1 89 89 2 96 173;

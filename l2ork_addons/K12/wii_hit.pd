@@ -17,7 +17,7 @@
 #X obj 25 -195 inlet;
 #X obj 25 -173 route acceleration;
 #X obj 25 -150 unpack 0 0 0;
-#X obj 261 121 ggee/image @pd_extra/K12/objects/wii_hit1.png;
+#X obj 261 121 ggee/image @pd_extra/K12/objects/wii_hit1.png 1;
 #X obj 169 -9 select 0 1;
 #X obj 169 -53 expr if ($f1 > 0 \, 1 \, 0);
 #N canvas 31 175 465 442 delays 0;

@@ -1,14 +1,21 @@
-#N canvas 430 117 502 514 10;
+#N canvas 424 117 501 514 10;
 #X declare -lib hexloader;
 #X obj 203 29 cnv 15 467 105 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 450 -236 preset_hub k12 %hidden% %node% 2 1 16 %preset% 0 0
 %node% 2 8 8 %preset% 0 440 %node% 2 10 8 %preset% 0 2 %node% 2 13
 9 %node% 2 2 16 %node% 2 7 8 %node% 2 7 8 %preset% 0 440 %node% 2 10
-9 %node% 2 2 14 %preset% 0 76.7442 %node% 2 7 7 %preset% 0 60 %node%
-2 10 10 %node% 2 12 3 %node% 2 12 11 %node% 2 8 9 %preset% 0 261.626
-%node% 2 10 3 %preset% 0 1 %node% 2 10 11 %preset% 0 100 %node% 2 2
-28 %node% 2 9 15 %node% 2 9 16 %node% 2 13 8;
+9 %node% 2 2 14 %preset% 0 53.4884 %preset% 1 48.8372 %preset% 2 74.4186
+%preset% 3 74.4186 %node% 2 7 7 %preset% 0 60 %preset% 1 67 %preset%
+2 72 %preset% 3 76 %node% 2 10 10 %node% 2 12 3 %node% 2 12 11 %node%
+2 8 9 %preset% 0 60 %preset% 1 67 %preset% 2 72 %preset% 3 76 %node%
+2 10 3 %preset% 0 1 %node% 2 10 11 %preset% 0 100 %node% 2 2 28 %preset%
+0 1 %preset% 1 1 %preset% 2 1 %preset% 3 1 %node% 2 9 15 %preset% 0
+238.182 %preset% 1 186.364 %preset% 2 56.8182 %preset% 3 5 %node% 2
+9 16 %preset% 0 5 %preset% 1 315.909 %preset% 2 56.8182 %preset% 3
+5 %node% 2 13 8 %node% 2 10 0 %preset% 0 60 %preset% 1 120 %preset%
+2 180 %preset% 3 240 %node% 2 10 4 %preset% 0 1 %preset% 1 1 %preset%
+2 1 %preset% 3 1;
 #X obj 212 157 K12/output;
 #N canvas 574 86 450 514 META 0;
 #X text 8 24 INLET_0 Send the signal to be shaped here;
@@ -26,7 +33,7 @@ shaped by the envelope;
 #X obj 211 -187 K12/math_number;
 #X obj 211 -76 K12/signal_square;
 #X obj 211 36 K12/signal_envelope;
-#X obj 315 -76 K12/logic_metronome;
+#X obj 316 -76 K12/logic_metronome;
 #X text 305 34 The Signal Envelope object allows you to control the
 attack and decay of a sound. In other words \, how fast the sound happpens
 and how fast it fades away. Input the signal to be shaped into the
@@ -36,7 +43,7 @@ Recall leftmost preset above for an example.;
 #X obj 427 -180 cnv 15 243 107 empty empty empty 20 12 0 14 -233017
 -66577 0;
 #X obj 572 -171 K12/preset 0;
-#X text 434 -119 Recall leftmost presetto start the example.;
+#X text 433 -123 Recall one of thepresets to start theexample.;
 #X connect 7 0 8 0;
 #X connect 8 0 9 0;
 #X connect 9 0 2 0;

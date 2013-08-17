@@ -1,7 +1,7 @@
 #N canvas 512 50 426 312 10;
 #X obj 72 41 inlet;
 #X obj 162 62 loadbang;
-#X obj 162 159 ggee/image @pd_extra/K12/objects/math_number.png;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/math_number.png 1;
 #X msg 170 252 \$1 10;
 #X obj 170 275 line~;
 #X obj 169 326 outlet~;
@@ -21,7 +21,6 @@
 #X connect 6 0 8 0;
 #X connect 6 0 3 0;
 #X connect 7 0 6 0;
-#X connect 9 0 2 0;
 #X connect 10 0 12 0;
 #X connect 11 0 6 0;
 #X connect 12 1 11 0;

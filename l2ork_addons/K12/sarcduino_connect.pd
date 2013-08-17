@@ -208,7 +208,7 @@
 #X text 41 358 analog = a <channel> <val>;
 #X obj 185 15 bng 85 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_off.png;
+#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_off.png 1;
 #X obj 302 46 loadbang;
 #X obj 336 24 select 0 1;
 #X obj 140 127 gate 2 1;

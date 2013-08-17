@@ -1,6 +1,6 @@
-#N canvas -7 24 1022 517 10;
+#N canvas 0 24 743 471 10;
 #X obj 395 239 ggee/image @pd_extra/K12/objects/logic_sequencer.png
-;
+1;
 #X obj 275 -34 inlet;
 #X obj 383 385 outlet;
 #X obj 275 6 select 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;
@@ -10,114 +10,116 @@
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X obj 550 144 K12/float_2_midi_pitch;
 #X floatatom 220 184 3 0 0 0 - - -;
-#X msg 165 411 set \$1;
+#X msg 185 411 set \$1;
 #X obj 220 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 1 7 10
 0 10 -262144 -247489 -1;
 #X obj 112 54 preset_node k12;
 #X obj 242 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 242 184 3 0 0 0 - - -;
-#X msg 187 411 set \$1;
+#X msg 207 411 set \$1;
 #X obj 242 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 2 7 10
 0 10 -262144 -247489 -1;
 #X obj 112 74 preset_node k12;
 #X obj 264 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 264 184 3 0 0 0 - - -;
-#X msg 209 411 set \$1;
+#X msg 229 411 set \$1;
 #X obj 264 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 3 7 10
 0 10 -262144 -247489 -1;
 #X obj 112 94 preset_node k12;
 #X obj 286 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 286 184 3 0 0 0 - - -;
-#X msg 231 411 set \$1;
+#X msg 251 411 set \$1;
 #X obj 286 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 4 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 34 preset_node k12;
 #X obj 308 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 308 184 3 0 0 0 - - -;
-#X msg 254 411 set \$1;
+#X msg 274 411 set \$1;
 #X obj 308 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 5 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 54 preset_node k12;
 #X obj 330 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 330 184 3 0 0 0 - - -;
-#X msg 276 411 set \$1;
+#X msg 296 411 set \$1;
 #X obj 330 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 6 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 74 preset_node k12;
 #X obj 352 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 352 184 3 0 0 0 - - -;
-#X msg 298 411 set \$1;
+#X msg 318 411 set \$1;
 #X obj 352 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 7 7 10
 0 10 -262144 -247489 -1;
 #X obj 209 94 preset_node k12;
 #X obj 374 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 374 184 3 0 0 0 - - -;
-#X msg 320 411 set \$1;
+#X msg 340 411 set \$1;
 #X obj 374 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 8 7 10
 0 10 -262144 -247489 -1;
 #X obj 306 34 preset_node k12;
 #X obj 396 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 396 184 3 0 0 0 - - -;
-#X msg 342 411 set \$1;
+#X msg 362 411 set \$1;
 #X obj 396 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 9 7 10
 0 10 -262144 -247489 -1;
 #X obj 306 54 preset_node k12;
 #X obj 418 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 418 184 3 0 0 0 - - -;
-#X msg 364 411 set \$1;
+#X msg 384 411 set \$1;
 #X obj 418 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 10 4 10
 0 10 -262144 -247489 -1;
 #X obj 306 74 preset_node k12;
 #X obj 440 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 440 184 3 0 0 0 - - -;
-#X msg 386 411 set \$1;
+#X msg 406 411 set \$1;
 #X obj 440 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 11 4 10
 0 10 -262144 -247489 -1;
 #X obj 306 94 preset_node k12;
 #X obj 462 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 462 184 3 0 0 0 - - -;
-#X msg 408 411 set \$1;
+#X msg 428 411 set \$1;
 #X obj 462 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 12 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 34 preset_node k12;
 #X obj 484 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 484 184 3 0 0 0 - - -;
-#X msg 431 411 set \$1;
+#X msg 451 411 set \$1;
 #X obj 484 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 13 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 54 preset_node k12;
 #X obj 506 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 506 184 3 0 0 0 - - -;
-#X msg 453 411 set \$1;
+#X msg 473 411 set \$1;
 #X obj 506 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 14 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 74 preset_node k12;
 #X obj 528 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 528 184 3 0 0 0 - - -;
-#X msg 475 411 set \$1;
+#X msg 495 411 set \$1;
 #X obj 528 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 15 4 10
 0 10 -262144 -247489 -1;
 #X obj 403 94 preset_node k12;
 #X obj 550 202 vsl 20 128 0 127 0 0 \$0-slider-s-null \$0-slider-r-null
 empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X floatatom 550 184 3 0 0 0 - - -;
-#X msg 521 412 set \$1;
+#X msg 516 411 set \$1;
 #X obj 550 162 bng 20 100 50 0 \$0-bng-send \$0-bng-receive 16 4 10
 0 10 -262144 -247489 -1;
+#X obj 552 6 loadbang;
+#X msg 552 29 open @pd_extra/K12/objects/logic_sequencer.png;
 #X connect 1 0 4 0;
 #X connect 3 0 10 0;
 #X connect 3 0 8 0;
@@ -153,115 +155,100 @@ empty 0 -9 0 10 -262144 -1 -1 0 1;
 #X connect 3 15 83 0;
 #X connect 4 0 3 0;
 #X connect 5 0 6 0;
-#X connect 6 0 5 0;
 #X connect 6 0 7 0;
 #X connect 6 0 9 0;
 #X connect 6 0 2 0;
 #X connect 8 0 6 0;
 #X connect 9 0 8 0;
 #X connect 11 0 12 0;
-#X connect 12 0 11 0;
 #X connect 12 0 14 0;
 #X connect 12 0 7 0;
 #X connect 12 0 2 0;
 #X connect 13 0 12 0;
 #X connect 14 0 13 0;
 #X connect 16 0 17 0;
-#X connect 17 0 16 0;
 #X connect 17 0 19 0;
 #X connect 17 0 2 0;
 #X connect 17 0 7 0;
 #X connect 18 0 17 0;
 #X connect 19 0 18 0;
 #X connect 21 0 22 0;
-#X connect 22 0 21 0;
 #X connect 22 0 24 0;
 #X connect 22 0 2 0;
 #X connect 22 0 7 0;
 #X connect 23 0 22 0;
 #X connect 24 0 23 0;
 #X connect 26 0 27 0;
-#X connect 27 0 26 0;
 #X connect 27 0 29 0;
 #X connect 27 0 7 0;
 #X connect 27 0 2 0;
 #X connect 28 0 27 0;
 #X connect 29 0 28 0;
 #X connect 31 0 32 0;
-#X connect 32 0 31 0;
 #X connect 32 0 34 0;
 #X connect 32 0 7 0;
 #X connect 32 0 2 0;
 #X connect 33 0 32 0;
 #X connect 34 0 33 0;
 #X connect 36 0 37 0;
-#X connect 37 0 36 0;
 #X connect 37 0 39 0;
 #X connect 37 0 7 0;
 #X connect 37 0 2 0;
 #X connect 38 0 37 0;
 #X connect 39 0 38 0;
 #X connect 41 0 42 0;
-#X connect 42 0 41 0;
 #X connect 42 0 44 0;
 #X connect 42 0 7 0;
 #X connect 42 0 2 0;
 #X connect 43 0 42 0;
 #X connect 44 0 43 0;
 #X connect 46 0 47 0;
-#X connect 47 0 46 0;
 #X connect 47 0 49 0;
 #X connect 47 0 2 0;
 #X connect 47 0 7 0;
 #X connect 48 0 47 0;
 #X connect 49 0 48 0;
 #X connect 51 0 52 0;
-#X connect 52 0 51 0;
 #X connect 52 0 54 0;
 #X connect 52 0 2 0;
 #X connect 52 0 7 0;
 #X connect 53 0 52 0;
 #X connect 54 0 53 0;
 #X connect 56 0 57 0;
-#X connect 57 0 56 0;
 #X connect 57 0 59 0;
 #X connect 57 0 2 0;
 #X connect 57 0 7 0;
 #X connect 58 0 57 0;
 #X connect 59 0 58 0;
 #X connect 61 0 62 0;
-#X connect 62 0 61 0;
 #X connect 62 0 64 0;
 #X connect 62 0 2 0;
 #X connect 62 0 7 0;
 #X connect 63 0 62 0;
 #X connect 64 0 63 0;
 #X connect 66 0 67 0;
-#X connect 67 0 66 0;
 #X connect 67 0 69 0;
 #X connect 67 0 2 0;
 #X connect 67 0 7 0;
 #X connect 68 0 67 0;
 #X connect 69 0 68 0;
 #X connect 71 0 72 0;
-#X connect 72 0 71 0;
 #X connect 72 0 74 0;
 #X connect 72 0 2 0;
 #X connect 72 0 7 0;
 #X connect 73 0 72 0;
 #X connect 74 0 73 0;
 #X connect 76 0 77 0;
-#X connect 77 0 76 0;
 #X connect 77 0 79 0;
 #X connect 77 0 2 0;
 #X connect 77 0 7 0;
 #X connect 78 0 77 0;
 #X connect 79 0 78 0;
 #X connect 81 0 82 0;
-#X connect 82 0 81 0;
 #X connect 82 0 84 0;
 #X connect 82 0 2 0;
 #X connect 82 0 7 0;
 #X connect 83 0 82 0;
 #X connect 84 0 83 0;
+#X connect 86 0 87 0;
 #X coords 0 -1 1 1 356 213 2 217 141;

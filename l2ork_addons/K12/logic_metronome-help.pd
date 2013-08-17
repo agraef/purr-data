@@ -6,9 +6,11 @@
 8 %node% 2 9 8 %node% 2 13 4 %preset% 0 0 %node% 2 14 6 %node% 2 14
 10 %node% 2 10 4 %preset% 0 1 %node% 2 11 9 %node% 2 10 13 %preset%
 0 120 %node% 2 11 8 %preset% 0 120 %node% 2 12 9 %node% 2 13 21 %preset%
-0 10 %node% 2 6 7 %node% 2 7 7 %node% 2 10 7 %node% 2 12 3 %node% 2
-12 19 %node% 2 12 3 %node% 2 12 11 %node% 2 8 7 %node% 2 10 3 %node%
-2 10 19 %node% 2 11 3 %node% 2 11 11;
+0 10 %node% 2 6 7 %preset% 0 1 %node% 2 7 7 %preset% 0 1 %node% 2 10
+7 %node% 2 12 3 %preset% 0 1 %node% 2 12 19 %preset% 0 16 %node% 2
+12 3 %node% 2 12 11 %node% 2 8 7 %preset% 0 120 %node% 2 10 3 %node%
+2 10 19 %node% 2 11 3 %node% 2 11 11 %node% 2 12 8 %node% 2 12 0 %preset%
+0 120 %node% 2 12 4 %preset% 0 1;
 #X obj 65 -10 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #X obj 65 -38 cnv 15 501 28 empty empty Logic/Metronome 5 14 0 20 -139274
@@ -23,17 +25,17 @@ time interval when the toggle is on;
 #X text 17 107 OUTLET_0 Outputs 1 when the metronome fires;
 #X restore 510 436 pd META;
 #X obj 86 18 K12/math_number;
-#X obj 86 368 K12/math_number;
+#X obj 86 373 K12/math_number;
 #X obj 193 18 K12/math_number;
-#X obj 458 31 preset;
-#X obj 86 260 logic_counter;
-#X obj 86 140 logic_metronome;
 #X text 182 147 The Logic Metronome object outputs a 1 on a certain
 time interval when the toggle is on. The speed is determined by the
 number box and is in Beats Per Minute (BPM). Send a 1 into the left
 inlet to turn it on and a 0 to turn it off. Set the speed by sending
 a number in BPM to the right inlet.;
+#X obj 458 31 K12/preset;
+#X obj 86 140 K12/logic_metronome;
+#X obj 86 260 K12/logic_counter;
 #X connect 6 0 11 0;
 #X connect 8 0 11 1;
-#X connect 10 0 7 0;
-#X connect 11 0 10 0;
+#X connect 11 0 12 0;
+#X connect 12 0 7 0;

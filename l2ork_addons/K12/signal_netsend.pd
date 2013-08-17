@@ -1,7 +1,7 @@
 #N canvas 571 62 452 422 10;
 #X obj 162 62 loadbang;
 #X obj 162 159 ggee/image @pd_extra/K12/objects/signal_netsend.png
-;
+1;
 #X obj 59 54 preset_node k12;
 #X obj 121 180 nbx 5 19 -1e+37 1e+37 0 0 \$0-s-null \$0-r-null empty
 0 -8 0 16 -262144 -1 -1 4000 256 1;
@@ -30,7 +30,6 @@
 #X connect 8 0 19 0;
 #X connect 9 0 6 0;
 #X connect 11 0 10 0;
-#X connect 12 0 1 0;
 #X connect 13 0 6 0;
 #X connect 14 0 5 0;
 #X connect 15 0 16 0;

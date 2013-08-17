@@ -1,7 +1,7 @@
 #N canvas 425 50 539 317 10;
 #X obj 33 -88 inlet;
 #X obj 261 121 ggee/image @pd_extra/K12/objects/sarcduino_hit1.png
-;
+1;
 #X obj 169 -9 select 0 1;
 #X obj 197 17 delay 100;
 #X obj 261 17 loadbang;

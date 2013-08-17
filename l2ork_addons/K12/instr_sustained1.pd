@@ -1,5 +1,6 @@
 #N canvas 739 169 438 262 10;
-#X obj 285 42 ggee/image @pd_extra/K12/objects/instr_sustained1.png;
+#X obj 285 42 ggee/image @pd_extra/K12/objects/instr_sustained1.png
+1;
 #X obj 147 131 outlet~;
 #X obj 146 -77 noise~;
 #X obj 147 57 svf~ 500 0.95;
@@ -25,6 +26,5 @@
 #X connect 10 0 8 0;
 #X connect 11 0 14 0;
 #X connect 12 0 13 0;
-#X connect 13 0 0 0;
 #X connect 14 0 3 1;
 #X coords 0 -1 1 1 89 89 2 240 10;

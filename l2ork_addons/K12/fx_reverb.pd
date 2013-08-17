@@ -1,7 +1,7 @@
 #N canvas 203 131 548 278 10;
 #X obj 397 66 bng 86 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 440 96 ggee/image @pd_extra/K12/objects/fx_reverb1.png;
+#X obj 440 96 ggee/image @pd_extra/K12/objects/fx_reverb1.png 1;
 #X obj 272 92 freeverb~;
 #X obj 273 150 outlet~;
 #X obj 271 -53 inlet~;

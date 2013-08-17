@@ -1,4 +1,4 @@
-#N canvas 456 127 529 368 10;
+#N canvas 456 127 545 391 10;
 #X obj 337 311 disis_wiimote;
 #X obj 337 78 bng 76 250 50 0 empty connect_r empty 17 7 0 10 -258699
 -1 -262144;
@@ -35,7 +35,8 @@
 #X connect 12 0 11 0;
 #X restore 337 289 pd running_the_wiimote;
 #X obj 337 267 delay 1000;
-#X obj 375 103 ggee/image @pd_extra/K12/objects/wii_connect_off.png;
+#X obj 375 103 ggee/image @pd_extra/K12/objects/wii_connect_off.png
+1;
 #X obj 462 371 loadbang;
 #X obj 496 328 select 0 1 2;
 #X msg 496 306 2;

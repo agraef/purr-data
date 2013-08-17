@@ -17,7 +17,8 @@
 #X msg 139 225 0;
 #X obj 206 234 line~;
 #X obj 139 73 + 1;
-#X obj 443 89 ggee/image @pd_extra/K12/objects/instr_sustained2.png;
+#X obj 443 89 ggee/image @pd_extra/K12/objects/instr_sustained2.png
+1;
 #X obj 400 93 cnv 15 65 23 empty empty Brass 16 12 1 20 -262144 -66577
 0;
 #X obj 261 -4 inlet;
@@ -45,7 +46,6 @@
 #X connect 20 0 24 0;
 #X connect 21 0 16 0;
 #X connect 22 0 23 0;
-#X connect 23 0 18 0;
 #X connect 24 0 2 0;
 #X connect 24 0 17 0;
 #X connect 24 0 12 1;

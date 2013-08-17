@@ -1,7 +1,7 @@
 #N canvas 417 55 416 250 10;
 #X obj 188 114 outlet;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_piezo.png
-;
+1;
 #X obj 228 -60 loadbang;
 #X obj 245 44 nbx 1 14 1 16 0 0 empty empty channel: -48 8 0 11 -262144
 -1 -1 1 256 3;
@@ -25,7 +25,6 @@
 #X connect 7 0 11 0;
 #X connect 8 0 6 0;
 #X connect 9 0 0 0;
-#X connect 10 0 1 0;
 #X connect 11 0 13 0;
 #X connect 12 0 9 0;
 #X connect 13 0 12 0;

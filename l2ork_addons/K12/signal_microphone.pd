@@ -1,8 +1,8 @@
 #N canvas 459 92 418 403 10;
-#X obj 129 189 image @pd_extra/K12/objects/signal_microphone.png;
+#X obj 129 189 ggee/image @pd_extra/K12/objects/signal_microphone.png 1;
 #X obj 111 120 preset_node k12;
 #X obj 111 188 vsl 34 44 0 100 0 0 \$0-s_none \$0-r_none empty 0 -9
-0 10 -262144 -1 -1 4300 1;
+0 10 -262144 -1 -1 0 1;
 #N canvas 0 0 271 201 level 0;
 #X obj 49 8 inlet~;
 #X obj 48 99 *~;
@@ -29,7 +29,6 @@
 #X obj 276 335 speedlim 10;
 #X obj 276 357 outlet;
 #X connect 1 0 2 0;
-#X connect 2 0 1 0;
 #X connect 2 0 3 1;
 #X connect 3 0 5 0;
 #X connect 3 0 6 0;
@@ -38,7 +37,6 @@
 #X connect 7 0 8 0;
 #X connect 8 0 11 0;
 #X connect 9 0 10 0;
-#X connect 10 0 0 0;
 #X connect 11 0 12 0;
 #X connect 12 0 13 0;
 #X coords 0 -1 1 1 89 89 2 84 157;

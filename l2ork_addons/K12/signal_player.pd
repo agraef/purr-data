@@ -1,5 +1,5 @@
-#N canvas 432 106 428 449 10;
-#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_player.png;
+#N canvas 432 106 428 491 10;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_player.png 1;
 #X obj 142 91 loadbang;
 #X obj -11 91 inlet;
 #X obj 99 220 hsl 78 11 0 100 0 1 \$0-s-null \$0-r-null start 26 5
@@ -159,7 +159,6 @@
 #X connect 7 1 24 1;
 #X connect 8 0 4 0;
 #X connect 9 0 3 0;
-#X connect 10 0 0 0;
 #X connect 11 0 31 0;
 #X connect 13 0 17 0;
 #X connect 15 0 26 0;

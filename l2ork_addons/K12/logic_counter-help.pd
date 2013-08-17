@@ -6,9 +6,11 @@
 8 %node% 2 9 8 %node% 2 13 4 %preset% 0 0 %node% 2 14 6 %node% 2 14
 10 %node% 2 10 4 %preset% 0 1 %node% 2 11 9 %node% 2 10 13 %preset%
 0 120 %node% 2 11 8 %preset% 0 120 %node% 2 12 9 %node% 2 13 21 %preset%
-0 10 %node% 2 6 7 %node% 2 7 7 %node% 2 10 7 %node% 2 12 3 %node% 2
-12 19 %node% 2 12 3 %node% 2 12 11 %node% 2 8 7 %node% 2 10 3 %node%
-2 10 19;
+0 10 %node% 2 6 7 %preset% 0 1 %node% 2 7 7 %preset% 0 1 %node% 2 10
+7 %node% 2 12 3 %preset% 0 1 %node% 2 12 19 %preset% 0 16 %node% 2
+12 3 %node% 2 12 11 %node% 2 8 7 %preset% 0 60 %node% 2 10 3 %node%
+2 10 19 %node% 2 12 8 %node% 2 12 0 %preset% 0 60 %node% 2 12 4 %preset%
+0 1;
 #X obj 65 -10 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #X obj 65 -38 cnv 15 501 28 empty empty Logic/Counter 5 14 0 20 -139274
@@ -24,14 +26,14 @@ number;
 #X obj 96 18 K12/math_number;
 #X obj 96 368 K12/math_number;
 #X obj 240 18 K12/math_number;
-#X obj 458 31 preset;
-#X obj 96 250 logic_counter;
 #X text 191 263 The Logic Counter object counts from the start number
 to the end number. It outputs the next number in the count when the
 inlet receives a number 1 If the start number is greate than the end
 number it will count down or vice-versa.;
-#X obj 96 140 logic_metronome;
-#X connect 6 0 12 0;
-#X connect 8 0 12 1;
-#X connect 10 0 7 0;
-#X connect 12 0 10 0;
+#X obj 458 31 K12/preset;
+#X obj 96 140 K12/logic_metronome;
+#X obj 96 250 K12/logic_counter;
+#X connect 6 0 11 0;
+#X connect 8 0 11 1;
+#X connect 11 0 12 0;
+#X connect 12 0 7 0;

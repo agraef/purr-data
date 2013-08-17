@@ -1,19 +1,20 @@
-#N canvas 578 92 502 526 10;
+#N canvas 454 91 502 526 10;
 #X obj 308 23 cnv 15 242 107 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 78 259 cnv 15 477 200 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 186 -38 preset_hub k12 %hidden% %node% 2 5 9 %node% 2 7 8 %preset%
-1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 6 4 %node% 2 8
-8 %node% 2 9 8 %node% 2 10 8 %node% 2 6 4 %preset% 0 0 %node% 2 14
-6 %node% 2 14 10 %node% 2 7 7 %node% 2 5 7 %node% 2 9 7 %node% 2 10
-3 %node% 2 12 5 %preset% 0 0 %node% 2 12 9 %preset% 0 127 %node% 2
-8 7 %preset% 0 0.15748 %node% 2 11 3 %node% 2 11 31 %node% 2 12 5 %node%
-2 12 9 %node% 2 6 6 %preset% 0 127 %node% 2 6 12 %preset% 0 0 %node%
-2 6 13 %preset% 0 1 %node% 2 13 3 %preset% 0 1 %node% 2 13 11 %preset%
-0 120 %node% 2 14 8 %node% 2 17 3 %node% 2 17 11 %node% 2 17 5 %node%
-2 17 9 %node% 2 11 8 %node% 2 9 3 %node% 2 9 11 %node% 2 10 5 %node%
-2 10 9;
+1 2 %preset% 0 1 %preset% 2 3 %preset% 3 4 %node% 2 6 4 %preset% 0
+0 %node% 2 8 8 %node% 2 9 8 %node% 2 10 8 %node% 2 6 4 %preset% 0 0
+%node% 2 14 6 %node% 2 14 10 %node% 2 7 7 %node% 2 5 7 %preset% 0 0.11811
+%node% 2 9 7 %node% 2 10 3 %node% 2 12 5 %preset% 0 0 %node% 2 12 9
+%preset% 0 127 %node% 2 8 7 %preset% 0 0.15748 %node% 2 11 3 %node%
+2 11 31 %node% 2 12 5 %node% 2 12 9 %node% 2 6 6 %preset% 0 127 %node%
+2 6 12 %preset% 0 0 %node% 2 6 13 %preset% 0 1 %node% 2 13 3 %preset%
+0 1 %node% 2 13 11 %preset% 0 120 %node% 2 14 8 %node% 2 17 3 %node%
+2 17 11 %node% 2 17 5 %node% 2 17 9 %node% 2 11 8 %node% 2 9 3 %node%
+2 9 11 %node% 2 10 5 %preset% 0 0 %node% 2 10 9 %preset% 0 127 %node%
+2 9 0 %preset% 0 240 %node% 2 9 4 %preset% 0 1;
 #X obj 65 -12 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #N canvas 529 184 450 300 META 0;

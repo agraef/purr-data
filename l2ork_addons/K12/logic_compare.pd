@@ -1,7 +1,7 @@
 #N canvas 512 50 471 401 10;
 #X obj 8 85 inlet;
 #X obj 162 62 loadbang;
-#X obj 162 159 ggee/image @pd_extra/K12/objects/logic_compare.png;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/logic_compare.png 1;
 #X obj 62 86 preset_node k12;
 #X obj -30 389 outlet;
 #X obj 138 172 hradio 15 1 0 3 \$0-s-null \$0-r-null empty 0 -8 0 10
@@ -37,7 +37,6 @@
 #X connect 0 0 8 0;
 #X connect 1 0 26 0;
 #X connect 3 0 5 0;
-#X connect 5 0 3 0;
 #X connect 5 0 11 0;
 #X connect 5 0 19 0;
 #X connect 6 0 7 0;
@@ -66,7 +65,6 @@
 #X connect 22 0 23 0;
 #X connect 23 0 25 0;
 #X connect 25 0 24 0;
-#X connect 26 0 2 0;
 #X connect 27 0 30 0;
 #X connect 27 0 31 0;
 #X connect 29 0 14 0;

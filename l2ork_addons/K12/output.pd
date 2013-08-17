@@ -1,5 +1,5 @@
 #N canvas 656 170 512 456 10;
-#X obj 129 189 ggee/image @pd_extra/K12/objects/audio_off.png;
+#X obj 129 189 ggee/image @pd_extra/K12/objects/audio_off.png 1;
 #X obj -53 26 inlet~;
 #N canvas 316 207 286 259 dsp 0;
 #X obj 178 43 route dsp;

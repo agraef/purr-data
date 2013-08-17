@@ -115,7 +115,7 @@
 #X obj 15 396 / 100;
 #X obj 162 62 loadbang;
 #X msg 3 282 \$1 50;
-#X obj 162 159 ggee/image @pd_extra/K12/objects/wii_speed.png;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/wii_speed.png 1;
 #X obj 128 162 cnv 15 61 26 empty \$0-speed_num 0 10 12 0 20 -262144
 -66577 0;
 #X obj 15 466 send \$0-speed_num;
@@ -137,5 +137,4 @@
 #X connect 11 0 7 0;
 #X connect 12 0 17 0;
 #X connect 13 0 5 0;
-#X connect 17 0 14 0;
 #X coords 0 -1 1 1 89 89 2 117 127;

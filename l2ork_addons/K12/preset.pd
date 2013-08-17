@@ -1,5 +1,5 @@
 #N canvas 437 184 342 280 10;
-#X obj 375 259 ggee/image @pd_extra/K12/objects/preset.png;
+#X obj 375 259 ggee/image @pd_extra/K12/objects/preset.png 1;
 #X obj 335 260 hradio 15 1 0 4 \$0-send-none \$0-receive-none empty
 0 -8 0 10 -262144 -222940 -1 0;
 #X obj 375 160 loadbang;
@@ -17,6 +17,14 @@
 -125791 -1;
 #X obj 270 139 inlet;
 #X obj 310 139 inlet;
+#X text 338 258 1;
+#X text 352 258 2;
+#X text 367 258 3;
+#X text 382 258 4;
+#X text 338 288 1;
+#X text 352 288 2;
+#X text 367 288 3;
+#X text 382 288 4;
 #X connect 1 0 3 0;
 #X connect 1 0 10 0;
 #X connect 2 0 9 0;
@@ -24,7 +32,6 @@
 #X connect 4 0 8 0;
 #X connect 5 0 4 0;
 #X connect 5 0 11 0;
-#X connect 9 0 0 0;
 #X connect 12 0 5 0;
 #X connect 13 0 1 0;
 #X coords 0 -1 1 1 89 89 2 330 227;

@@ -1,5 +1,5 @@
 #N canvas 512 50 424 539 10;
-#X obj 162 159 ggee/image @pd_extra/K12/objects/math_scale.png;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/math_scale.png 1;
 #X obj 8 85 inlet;
 #X obj 162 62 loadbang;
 #X obj 118 156 nbx 4 14 -1e+37 1e+37 0 1 \$0-s-null \$0-r-null empty
@@ -40,7 +40,6 @@
 #X connect 4 0 3 0;
 #X connect 6 0 8 0;
 #X connect 7 0 15 0;
-#X connect 8 0 6 0;
 #X connect 8 0 7 2;
 #X connect 9 0 12 0;
 #X connect 9 0 7 3;
@@ -48,7 +47,6 @@
 #X connect 10 0 13 0;
 #X connect 10 0 7 4;
 #X connect 10 0 22 0;
-#X connect 11 0 0 0;
 #X connect 12 0 9 0;
 #X connect 13 0 10 0;
 #X connect 14 0 28 0;

@@ -24,7 +24,7 @@
 #X msg 130 226 7;
 #X msg -21 226 2;
 #X msg 160 226 8;
-#X obj 62 97 ggee/image @pd_extra/K12/objects/wii_button_inactive.png;
+#X obj 62 97 ggee/image @pd_extra/K12/objects/wii_button_inactive.png 1;
 #X msg 131 -93 open @pd_extra/K12/objects/wii_button_b.png;
 #X msg 131 -72 open @pd_extra/K12/objects/wii_button_a.png;
 #X msg 377 -93 open @pd_extra/K12/objects/wii_button_up.png;

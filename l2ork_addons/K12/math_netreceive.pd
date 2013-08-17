@@ -1,7 +1,7 @@
 #N canvas 571 62 452 350 10;
 #X obj 162 62 loadbang;
 #X obj 162 159 ggee/image @pd_extra/K12/objects/math_netreceive.png
-;
+1;
 #X obj 239 111 inlet;
 #X obj 59 54 preset_node k12;
 #X obj 121 276 outlet;
@@ -19,7 +19,6 @@
 #X connect 5 0 7 0;
 #X connect 6 0 4 0;
 #X connect 7 0 6 0;
-#X connect 9 0 1 0;
 #X connect 10 0 11 0;
 #X connect 11 0 5 0;
 #X coords 0 -1 1 1 89 89 2 117 127;

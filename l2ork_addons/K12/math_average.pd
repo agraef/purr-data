@@ -1,7 +1,7 @@
 #N canvas 540 50 416 255 10;
 #X obj 42 111 inlet;
 #X obj 42 276 outlet;
-#X obj 141 205 ggee/image @pd_extra/K12/objects/math_average.png;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/math_average.png 1;
 #X obj 141 72 loadbang;
 #X obj 100 214 nbx 5 19 1 1e+37 0 1 \$0-s-null \$0-r-null empty 0 -8
 0 16 -262144 -1 -1 5 256 1;
@@ -14,6 +14,5 @@
 #X connect 4 0 5 1;
 #X connect 4 0 8 0;
 #X connect 5 0 1 0;
-#X connect 7 0 2 0;
 #X connect 8 0 4 0;
 #X coords 0 -1 1 1 89 89 2 96 173;

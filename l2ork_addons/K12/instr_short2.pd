@@ -3,7 +3,7 @@
 #X obj 14 172 outlet~;
 #X obj 15 100 *~;
 #X obj 146 68 line~;
-#X obj 388 70 ggee/image @pd_extra/K12/objects/instr_short2.png;
+#X obj 388 70 ggee/image @pd_extra/K12/objects/instr_short2.png 1;
 #X obj 347 74 cnv 15 65 22 empty empty Snare 13 13 1 20 -262144 -66577
 0;
 #N canvas 3 75 450 300 (subpatch) 0;
@@ -3175,6 +3175,5 @@
 #X connect 9 0 1 0;
 #X connect 10 0 3 0;
 #X connect 11 0 12 0;
-#X connect 12 0 4 0;
 #X connect 13 0 7 0;
 #X coords 0 -1 1 1 89 89 2 343 38;

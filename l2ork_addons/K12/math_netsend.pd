@@ -1,6 +1,6 @@
 #N canvas 571 62 452 443 10;
 #X obj 162 62 loadbang;
-#X obj 162 159 ggee/image @pd_extra/K12/objects/math_netsend.png;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/math_netsend.png 1;
 #X obj 34 128 inlet;
 #X obj 57 62 preset_node k12;
 #X obj 34 395 outlet;
@@ -32,7 +32,6 @@
 #X connect 9 0 19 0;
 #X connect 11 0 8 0;
 #X connect 12 0 7 0;
-#X connect 13 0 1 0;
 #X connect 14 0 21 0;
 #X connect 15 0 9 0;
 #X connect 16 0 9 0;

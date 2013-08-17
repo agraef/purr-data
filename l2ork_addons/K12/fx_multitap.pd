@@ -3,7 +3,7 @@
 #X obj 12 500 outlet~;
 #X obj 43 422 *~ 0.85;
 #X obj 12 469 *~ 0.5;
-#X obj 375 259 ggee/image @pd_extra/K12/objects/fx_multitap.png;
+#X obj 375 259 ggee/image @pd_extra/K12/objects/fx_multitap.png 1;
 #X obj 44 255 delwrite~ \$0-delread_ex 2000;
 #X obj 59 389 delread~ \$0-delread_ex 2000;
 #X obj 76 163 loadbang;
@@ -26,9 +26,7 @@
 #X connect 6 0 2 0;
 #X connect 7 0 10 0;
 #X connect 8 0 9 0;
-#X connect 9 0 8 0;
 #X connect 9 0 6 0;
-#X connect 10 0 4 0;
 #X connect 13 0 15 0;
 #X connect 13 0 16 0;
 #X connect 15 0 2 1;

@@ -1394,7 +1394,7 @@
 #X restore 232 -6 graph;
 #X obj 17 235 *~;
 #X obj 141 205 line~;
-#X obj 385 245 ggee/image @pd_extra/K12/objects/instr_short1.png;
+#X obj 385 245 ggee/image @pd_extra/K12/objects/instr_short1.png 1;
 #X obj 343 253 cnv 15 65 22 empty empty Bass 18 9 1 20 -262144 -66577
 0;
 #X obj 16 143 select 1;
@@ -1410,5 +1410,4 @@
 #X connect 8 0 3 0;
 #X connect 9 0 4 0;
 #X connect 10 0 11 0;
-#X connect 11 0 5 0;
 #X coords 0 -1 1 1 89 89 2 340 213;
