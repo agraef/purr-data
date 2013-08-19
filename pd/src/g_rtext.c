@@ -196,7 +196,7 @@ extern int sys_oldtclversion;
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     int *indexp)
 {
-	//fprintf(stderr,"rtext_senditup\n");
+	//fprintf(stderr,"rtext_senditup %d %d\n", *widthp, *heightp);
 	if (x) {
 		t_float dispx, dispy;
 		char smallbuf[200], *tempbuf;
@@ -205,12 +205,12 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		int reportedindex = 0;
 		t_canvas *canvas = glist_getcanvas(x->x_glist);
 
-		int widthspec_c = x->x_text->te_width;
-		int widthlimit_c = (widthspec_c ? widthspec_c : BOXWIDTH);
-		int inindex_b = 0;
-		int inindex_c = 0;
-		int selstart_b = 0, selend_b = 0;
-		int x_bufsize_c = u8_charnum(x->x_buf, x->x_bufsize);
+		int widthspec_c = x->x_text->te_width; // width if any specified
+		int widthlimit_c = (widthspec_c ? widthspec_c : BOXWIDTH); // width limit in chars
+		int inindex_b = 0; // index location in the buffer
+		int inindex_c = 0; // index location in the u8 chars
+		int selstart_b = 0, selend_b = 0; // selection start and end
+		int x_bufsize_c = u8_charnum(x->x_buf, x->x_bufsize); // buffer size in u8 chars
 		    /* if we're a GOP (the new, "goprect" style) borrow the font size
 		    from the inside to preserve the spacing */
 		if (pd_class(&x->x_text->te_pd) == canvas_class &&
@@ -220,7 +220,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		else font = glist_getfont(x->x_glist);
 		fontwidth = sys_fontwidth(font);
 		fontheight = sys_fontheight(font);
-		findx = (*widthp + (fontwidth/2)) / fontwidth;
+		findx = (*widthp + (fontwidth/2)) / fontwidth; // calculating x and y in pixels
 		findy = *heightp / fontheight;
 		if (x->x_bufsize >= 100)
 		     tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
@@ -240,7 +240,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 			if ((foundit_bv < foundit_b && foundit_bv != -1) || (foundit_b == -1 && foundit_bv != -1)) foundit_b = foundit_bv;
 
 			int foundit_c;
-			if (foundit_b < 0)
+			if (foundit_b < 0) //if we did not find an \n
 		    { 
 		        if (inchars_c > widthlimit_c)
 		        {
@@ -271,6 +271,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		        *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx);
 		        reportedindex = 1;
 		    }
+			//fprintf(stderr,"eatchar %d <%s>\n", eatchar, tempbuf);
 		    strncpy(tempbuf+outchars_b, x->x_buf + inindex_b, foundit_b);
 		    if (x->x_selstart >= inindex_b &&
 		        x->x_selstart <= inindex_b + foundit_b + eatchar)
@@ -283,9 +284,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		    inindex_c += (foundit_c + eatchar);
 		    if (inindex_b < x->x_bufsize)
 		        tempbuf[outchars_b++] = '\n';
-		    if (foundit_c > ncolumns)
+		    if (foundit_c > ncolumns) // if we found a row that is longer than previous (total width)
 		        ncolumns = foundit_c;
-		    nlines++;
+			nlines++;
 		}
 		if (!reportedindex)
 		    *indexp = outchars_b;
@@ -335,9 +336,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		        if (selend_b > selstart_b)
 		        {
 		            sys_vgui(".x%lx.c select from %s %d\n", canvas, 
-		                x->x_tag, u8_charnum(x->x_buf, selstart_b));
+		                x->x_tag, u8_charnum(tempbuf, selstart_b));
 		            sys_vgui(".x%lx.c select to %s %d\n", canvas, 
-		                x->x_tag, u8_charnum(x->x_buf, selend_b)
+		                x->x_tag, u8_charnum(tempbuf, selend_b)
 					  	+ (sys_oldtclversion ? 0 : -1));
 		            sys_vgui(".x%lx.c focus \"\"\n", canvas);        
 		        }
@@ -345,7 +346,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		        {
 		            sys_vgui(".x%lx.c select clear\n", canvas);
 		            sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
-		                u8_charnum(x->x_buf, selstart_b));
+		                u8_charnum(tempbuf, selstart_b));
 		            sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
 		        }
 		    }
@@ -516,6 +517,16 @@ void rtext_activate(t_rtext *x, int state)
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
 }
 
+// outputs 1 if found one of the special chars
+// this function is used with traversal through rtext below
+// using ctrl+left/right and similar shortcuts
+static int rtext_compare_special_chars(const char c)
+{
+		if (c != '\n' && c != '\v' && c != ' ')
+			return 0;
+		return 1;
+}
+
 void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 {
     int w = 0, h = 0, indx, i, newsize, ndel;
@@ -566,6 +577,7 @@ be printable in whatever 8-bit character set we find ourselves. */
 */
         if (n == '\n' || (n > 31 && n < 127))
         {
+			//fprintf(stderr,"return or 31-127\n");
             newsize = x->x_bufsize+1;
             x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
             for (i = x->x_bufsize; i > x->x_selstart; i--)
@@ -579,6 +591,7 @@ be printable in whatever 8-bit character set we find ourselves. */
 		/*--moo: check for unicode codepoints beyond 7-bit ASCII --*/
 		else if (n > 127)
 		{
+			//fprintf(stderr,">127\n");
             int ch_nbytes = u8_wc_nbytes(n);
             newsize = x->x_bufsize + ch_nbytes;
             x->x_buf = resizebytes(x->x_buf, x->x_bufsize, newsize);
@@ -659,16 +672,23 @@ be printable in whatever 8-bit character set we find ourselves. */
     }
     else if (!strcmp(keysym->s_name, "CtrlLeft"))
     {
+		//fprintf(stderr,"ctrleft\n");
 		/* first find first non-space char going back */
-		while (x->x_selstart > 0 && x->x_buf[x->x_selstart-1] == ' ')
+		while (x->x_selstart > 0 && rtext_compare_special_chars(x->x_buf[x->x_selstart-1])) {
+			//fprintf(stderr,"while 1 <%c>\n", x->x_buf[x->x_selstart-1]);
 			u8_dec(x->x_buf, &x->x_selstart);
+		}
 		/* now go back until you find another space or the beginning of the buffer */
         while (x->x_selstart > 0 &&
-		  x->x_buf[x->x_selstart] != '\n' &&
-		  x->x_buf[x->x_selstart-1] != ' ')
+		  !rtext_compare_special_chars(x->x_buf[x->x_selstart-1])) {
+			//fprintf(stderr,"while 2 <%c>\n", x->x_buf[x->x_selstart-1]);
             u8_dec(x->x_buf, &x->x_selstart);
-		if (x->x_buf[x->x_selstart+1] == ' ')
+		}
+		if (x->x_buf[x->x_selstart+1] == ' ' &&
+		  x->x_buf[x->x_selstart] == ' ') {
+			//fprintf(stderr,"go forward\n");
 			u8_inc(x->x_buf, &x->x_selstart);
+		}
 		x->x_selend = x->x_selstart;
     }
     else if (!strcmp(keysym->s_name, "CtrlRight"))
@@ -677,19 +697,19 @@ be printable in whatever 8-bit character set we find ourselves. */
 		if (x->x_selend < x->x_bufsize - 1)
 			u8_inc(x->x_buf, &x->x_selend);
         while (x->x_selend < x->x_bufsize &&
-          x->x_buf[x->x_selend] != '\n' &&
-		  x->x_buf[x->x_selend] != ' ')
+          !rtext_compare_special_chars(x->x_buf[x->x_selend]))
             u8_inc(x->x_buf, &x->x_selend);
 		/* now skip all the spaces and land before next word */
-        while (x->x_selend < x->x_bufsize &&
+        /*while (x->x_selend < x->x_bufsize &&
 		  x->x_buf[x->x_selend] == ' ')
             u8_inc(x->x_buf, &x->x_selend);
 		if (x->x_selend > 0 && x->x_buf[x->x_selend-1] == ' ')
-			u8_dec(x->x_buf, &x->x_selend);
+			u8_dec(x->x_buf, &x->x_selend);*/
 		x->x_selstart = x->x_selend;
     }
     else if (!strcmp(keysym->s_name, "CtrlShiftLeft"))
 	{
+		//fprintf(stderr,"ctrlshiftleft %d %d %d\n", last_sel, x->x_selstart, x->x_selend);
 		int swap = 0;
 		int *target;
 		if (!last_sel) last_sel = 1;
@@ -700,18 +720,24 @@ be printable in whatever 8-bit character set we find ourselves. */
 			target = &x->x_selstart;
 		}
 		/* first find first non-space char going back */
-		while (*target > 0 && x->x_buf[*target-1] == ' ')
+		while (*target > 0 && rtext_compare_special_chars(x->x_buf[*target-1])) {
 			u8_dec(x->x_buf, target);
 			//(*target)--;
+		}
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
 		/* now go back until you find another space or the beginning of the buffer */
         while (*target > 0 &&
-		  x->x_buf[*target] != '\n' &&
-		  x->x_buf[*target-1] != ' ')
+		  !rtext_compare_special_chars(x->x_buf[*target-1])) {
 			u8_dec(x->x_buf, target);
             //(*target)--;
-		if (x->x_buf[*target+1] == ' ')
+		}
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
+		if (x->x_buf[*target+1] == ' ' &&
+		  x->x_buf[x->x_selstart] == ' ') {
 			u8_inc(x->x_buf, target);
 			//(*target)++;
+		}
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
         if (x->x_selstart > x->x_selend) {
 			swap = x->x_selend;
 			x->x_selend = x->x_selstart;
@@ -721,6 +747,7 @@ be printable in whatever 8-bit character set we find ourselves. */
 	}
     else if (!strcmp(keysym->s_name, "CtrlShiftRight"))
 	{
+		//fprintf(stderr,"ctrlshiftright %d %d %d\n", last_sel, x->x_selstart, x->x_selend);
 		int swap = 0;
 		int *target;
 		if (!last_sel) last_sel = 2;
@@ -730,29 +757,38 @@ be printable in whatever 8-bit character set we find ourselves. */
 			last_sel = 2;
 			target = &x->x_selend;
 		}
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
 		/* now go forward until you find another space or the end of the buffer */
-		if (*target < x->x_bufsize - 1)
+		if (*target < x->x_bufsize - 1) {
+			//fprintf(stderr,"while 1 <%c>\n", x->x_buf[*target]);
 			u8_inc(x->x_buf, target);
 			//(*target)++;
+		}
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
         while (*target < x->x_bufsize &&
-          x->x_buf[*target] != '\n' &&
-		  x->x_buf[*target] != ' ')
+          !rtext_compare_special_chars(x->x_buf[*target])) {
+			//fprintf(stderr,"while 2 <%c>\n", x->x_buf[*target]);
 			u8_inc(x->x_buf, target);
             //(*target)++;
+		}
 		/* now skip all the spaces and land before next word */
-        while (*target < x->x_bufsize &&
-		  x->x_buf[*target] == ' ')
+        /*while (*target < x->x_bufsize &&
+		  x->x_buf[*target] == ' ') {
 			u8_inc(x->x_buf, target);
             //(*target)++;
-		if (*target > 0 && x->x_buf[*target-1] == ' ')
+		}
+		if (*target > 0 && x->x_buf[*target-1] == ' ') {
 			u8_dec(x->x_buf, target);
 			//(*target)--;
+		}*/
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
         if (x->x_selstart > x->x_selend) {
 			swap = x->x_selend;
 			x->x_selend = x->x_selstart;
 			x->x_selstart = swap;
 			last_sel = 2;
 		}
+		//fprintf(stderr,"%d %d\n", x->x_selstart, x->x_selend);
 	}
 
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);

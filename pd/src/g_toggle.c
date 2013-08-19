@@ -239,18 +239,18 @@ void toggle_draw_io(t_toggle* x, t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags %lxTGL%so%d\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxTGL%so%d %so%d %lxTGL outlet}\n",
 		         canvas, xpos,
 		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
-		         ypos + x->x_gui.x_h, x, nlet_tag, 0);
+		         ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxTGL%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxTGL%so%d %so%d %lxTGL outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxTGL%si%d %si%d %lxTGL outlet}\n",
 		         canvas, xpos, ypos,
 		         xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c delete {%lxTGL%si%d %si%d %lxTGL outlet}\n", canvas, x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c delete %lxTGL%si%d\n", canvas, x, nlet_tag, 0);
 	}
 }
 

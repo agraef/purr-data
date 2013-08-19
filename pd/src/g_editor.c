@@ -882,6 +882,7 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 						//now put the moved object at the beginning of the cue
 						y->g_next = glist_nth(x, 0);
 						x->gl_list = y;
+						//LATER when objects are properly tagged lower y here
 					}
 					//if the object is supposed to be at the current end of gl_list	
 					//can this ever happen???
@@ -902,10 +903,12 @@ void canvas_undo_cut(t_canvas *x, void *z, int action)
 
 						y_prev->g_next = y;
 						y->g_next = y_next;
+						//LATER when objects are properly tagged lower y here
 					}
 				}
 			}
 			do_not_redraw -= 1;
+			//LATER disable redrawing here
 			canvas_redraw(x);
 			if (x->gl_owner && glist_isvisible(x->gl_owner)) {
 				gobj_vis((t_gobj *)x, x->gl_owner, 0);
@@ -1406,8 +1409,9 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 				x->gl_list = y;
 			}
 
-			// and finally redraw canvas--we have to redraw canvas since
-			// there is no consistent naming of objects
+			// and finally redraw canvas
+			canvas_redraw(x);
+			/* some day when the object tagging is properly done for all GUI objects
 			t_object *ob = NULL;
 			t_rtext *yr = NULL;
 			if (prev) {
@@ -1427,9 +1431,9 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 				sys_vgui(".x%lx.c lower selected\n", x);
 			} else {
 				// fall back to legacy redraw for objects that are not patchable
-				//fprintf(stderr,"fallback redraw\n");
+				//fprintf(stderr,"lower fallback redraw\n");
 				canvas_redraw(x);
-			}
+			}*/
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -1451,6 +1455,8 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			y->g_next = next;
 
 			// and finally redraw canvas
+			canvas_redraw(x);
+			/* some day when the object tagging is properly done for all GUI objects
 			t_object *ob = NULL;
 			t_rtext *yr = NULL;
 			if (prev) {
@@ -1469,9 +1475,9 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 				sys_vgui(".x%lx.c raise selected\n", x);
 			} else {
 				// fall back to legacy redraw for objects that are not patchable
-				//fprintf(stderr,"fallback redraw\n");
+				//fprintf(stderr,"raise fallback redraw\n");
 				canvas_redraw(x);
-			}
+			}*/
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -2513,20 +2519,9 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 		else x->gl_list = oldy_next;
 
 		// and finally redraw
-		t_object *ob = NULL;
-		t_rtext *yr = NULL;
-		ob = pd_checkobject(&y_end->g_pd);
-		if (ob) {
-			yr = glist_findrtext(x, (t_text *)&ob->ob_g);
-		}
-		if (yr) {
-			//fprintf(stderr,"raise\n");
-			sys_vgui(".x%lx.c raise selected %s\n", x, rtext_gettag(yr));
-			//sys_vgui(".x%lx.c raise all_cords\n", x);
-		} else {
-			//fprintf(stderr,"redraw\n");
-			canvas_redraw(x);
-		}
+		//fprintf(stderr,"raise\n");
+		sys_vgui(".x%lx.c raise selected\n", x);
+		sys_vgui(".x%lx.c raise all_cords\n", x);
 	}
 	if (which == 4) /* to back */
 	{
@@ -5005,6 +5000,7 @@ static void canvas_cut(t_canvas *x)
 	/* if we are cutting text */
     else if (x->gl_editor && x->gl_editor->e_textedfor)
     {
+		//fprintf(stderr,"canvas_cut textedfor\n");
         char *buf;
         int bufsize;
         rtext_getseltext(x->gl_editor->e_textedfor, &buf, &bufsize);
@@ -5012,6 +5008,7 @@ static void canvas_cut(t_canvas *x)
             return;
         canvas_copy(x);
         rtext_key(x->gl_editor->e_textedfor, 127, &s_);
+		canvas_fixlinesfor(x,(t_text*) x->gl_editor->e_selection->sel_what);
         canvas_dirty(x, 1);
     }
 	/* else we are cutting objects */

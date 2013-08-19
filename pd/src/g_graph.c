@@ -27,6 +27,7 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
 extern int do_not_redraw;
+int gop_redraw = 0;
 
 /* -------------------- maintaining the list -------------------- */
 
@@ -954,7 +955,11 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 
             /* draw contents of graph as glist */
         for (g = x->gl_list; g; g = g->g_next) {
+			gop_redraw = 1;
+			//fprintf(stderr,"drawing gop objects\n");
             gobj_vis(g, x, 1);
+			//fprintf(stderr,"done\n");
+			gop_redraw = 0;
 		}
 		/* reselect it upon redrawing if it was selected before */
         glist_drawiofor(parent_glist, &x->gl_obj, 1,

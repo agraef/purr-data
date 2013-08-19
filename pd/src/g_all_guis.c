@@ -464,8 +464,20 @@ void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *a
 //Helvetica: 70 x 10 (14) -> 5 x 10 -> 0.83333
 //Times: 61 x 10 (14) -> 4.357 x 10 -> 0.72619; 0.735 appears to work better
 
+// We use this global var to check when getrect should report label:
+// It should report it when drawing inside gop to see if we truly fit.
+// Otherwise we should not report it while inside gop to avoid label being
+// misinterpreted as part of the "hot" area of a widget (e.g. toggle)
+extern int gop_redraw;
+
 void iemgui_label_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *xp2, int *yp2)
 {
+	//fprintf(stderr,"gop_redraw = %d\n", gop_redraw);
+	if (!gop_redraw) {
+		//fprintf(stderr,"ignoring label\n");
+		return;
+	}
+
 	t_float width_multiplier;
 	int label_length;	
 	int label_x1;
@@ -533,12 +545,55 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *x
 
 void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
 {
-	if(gobj_shouldvis(x, glist_getcanvas(iemgui->x_glist))) {
+	gop_redraw = 1;
+	if(gobj_shouldvis(x, iemgui->x_glist)) {
 		if (!iemgui->x_vis) {
 			//fprintf(stderr,"draw new %d\n", mode);
     		(*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_NEW);
     		canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
 			iemgui->x_vis = 1;
+			if (iemgui->x_glist != glist_getcanvas(iemgui->x_glist)) {
+				// if we are inside gop and just have had our object's properties changed
+				// we'll adjust our layer position to ensure that ordering is honored
+				t_canvas *canvas = glist_getcanvas(iemgui->x_glist);
+				t_gobj *y = (t_gobj *)iemgui->x_glist;
+				gobj_vis(y, canvas, 0);
+				gobj_vis(y, canvas, 1);
+				// reorder it visually
+				glist_redraw(canvas);
+				/* some day when the object tagging is properly done for all GUI objects
+				glist_noselect(canvas);
+				glist_select(canvas, y);
+				t_gobj *yy = canvas->gl_list;
+				if (yy != y) {
+					fprintf(stderr,"not bottom\n");
+					while (yy && yy->g_next != y) {
+						fprintf(stderr,"+\n");
+						yy = yy->g_next;
+					}
+					// now we have yy which is right before our y graph
+					t_object *ob = NULL;
+					t_rtext *yr = NULL;
+					if (yy) {
+						yr = glist_findrtext(canvas, (t_text *)yy);
+					}
+					if (yr) {
+						fprintf(stderr,"lower\n");
+						sys_vgui(".x%lx.c lower selected %s\n", canvas, rtext_gettag(yr));
+						sys_vgui(".x%lx.c raise selected %s\n", canvas, rtext_gettag(yr));
+						//sys_vgui(".x%lx.c raise all_cords\n", canvas);
+					} else {
+						// fall back to legacy redraw for objects that are not patchable
+						fprintf(stderr,"lower fallback redraw\n");
+						canvas_redraw(canvas);
+					}
+				} else {
+					// we get here if we are supposed to go all the way to the bottom
+					fprintf(stderr,"lower to the bottom\n");
+					sys_vgui(".x%lx.c lower selected\n", canvas);
+				}
+				glist_noselect(canvas);*/
+			}
 		}
 		//fprintf(stderr,"draw move iemgui->x_w=%d\n", iemgui->x_w);
 	    (*iemgui->x_draw)(x, iemgui->x_glist, mode);
@@ -548,6 +603,7 @@ void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
 		(*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_ERASE);
 		iemgui->x_vis = 0;
 	}
+	gop_redraw = 0;
 }
 
 void iemgui_size(void *x, t_iemgui *iemgui)
@@ -564,6 +620,7 @@ void iemgui_delta(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
     iemgui->x_obj.te_ypix += (int)atom_getintarg(1, ac, av);
     if(glist_isvisible(iemgui->x_glist))
     {
+		//fprintf(stderr,"iemgui_delta->shouldvis\n");
         iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);
     }
 }

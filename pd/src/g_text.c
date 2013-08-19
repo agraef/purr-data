@@ -1996,6 +1996,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 	char *c1, *c2;
 	int i1, i2;
 
+	//fprintf(stderr,"text_setto %d\n", x->te_type);
 
     if (x->te_type == T_OBJECT)
     {
@@ -2025,6 +2026,10 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 		        binbuf_free(x->te_binbuf);
 		        x->te_binbuf = b;
 				//canvas_apply_restore_original_position(glist_getcanvas(glist), pos);
+			} else {
+				//just retext it
+				t_rtext *yr = glist_findrtext(glist, x);
+				if (yr) rtext_retext(yr);
 			}
         }
         else  /* normally, just destroy the old one and make a new one. */
@@ -2047,6 +2052,10 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 		        canvas_restoreconnections(glist_getcanvas(glist));
 				glob_preset_node_list_seek_hub();
 				//canvas_apply_restore_original_position(glist_getcanvas(glist), pos);
+			} else {
+				//fprintf(stderr,"just retext it\n");
+				t_rtext *yr = glist_findrtext(glist, x);
+				if (yr) rtext_retext(yr);
 			}
         }
             /* if we made a new "pd" or changed a window name,
@@ -2055,13 +2064,15 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
                 canvas_updatewindowlist();
     }
-    else {
-        char * c;
-        for(c = buf; *c != '\0'; c++) {
-            if(*c == '\n') {
-                *c = '\v';
-            }
-        }
+    else { // T_MESSAGE, T_TEXT, T_ATOM
+		if (x->te_type == T_TEXT) {
+		    char * c;
+		    for(c = buf; *c != '\0'; c++) {
+		        if(*c == '\n') {
+		            *c = '\v';
+		        }
+		    }
+		}
 		binbuf_gettext(x->te_binbuf, &c1, &i1);
 		t_binbuf *b = binbuf_new();
 		binbuf_text(b, buf, bufsize);
