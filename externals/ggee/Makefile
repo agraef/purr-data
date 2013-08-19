@@ -6,7 +6,7 @@ LIBRARY_NAME = ggee
 # add your .c source files, one object per file, to the SOURCES
 # variable, help files will be included automatically
 
-SOURCES = control/constant.c control/rl.c control/serial_ms.c control/sl.c control/getdir.c control/rtout.c control/serial_mt.c control/stripdir.c control/inv.c control/serial_bird.c control/shell.c control/unserialize.c control/qread.c control/serialize.c control/sinh.c control/unwonk.c experimental/fofsynth~.c experimental/tabwrite4~.c experimental/pvocfreq.c filters/bandpass.c filters/highpass.c filters/hlshelf.c filters/lowshelf.c filters/notch.c filters/equalizer.c filters/highshelf.c filters/lowpass.c filters/moog~.c gui/button.c gui/fatom.c gui/image.c gui/sliderh.c gui/ticker.c gui/envgen.c gui/slider.c gui/state.c gui/toddle.c signal/atan2~.c signal/mixer~.c signal/sfwrite~.c signal/streamin~.c signal/streamout~.c
+SOURCES = control/constant.c control/rl.c control/serial_ms.c control/sl.c control/getdir.c control/rtout.c control/serial_mt.c control/stripdir.c control/inv.c control/serial_bird.c control/shell.c control/unserialize.c control/qread.c control/serialize.c control/sinh.c control/unwonk.c experimental/fofsynth~.c experimental/tabwrite4~.c experimental/pvocfreq.c filters/bandpass.c filters/highpass.c filters/hlshelf.c filters/lowshelf.c filters/notch.c filters/equalizer.c filters/highshelf.c filters/lowpass.c filters/moog~.c gui/image.c gui/envgen.c signal/atan2~.c signal/mixer~.c signal/sfwrite~.c signal/streamin~.c signal/streamout~.c
 
 SOURCES_linux =
 
