@@ -6637,7 +6637,15 @@ proc pdtk_pastetext {} {
     for {set i 0} {$i < [string length $pdtk_pastebuffer]} {incr i 1} {
         set cha [string index $pdtk_pastebuffer $i]
         scan $cha %c keynum
-        pd [concat pd key 1 $keynum 0\;]
+		if {$i == [expr [string length $pdtk_pastebuffer] - 1]} {
+			# unlike key command which would be pd [concat pd key 1 $keynum 0\;]
+			# we add first digit to ask for force getscroll as we limit the number of 
+			# getscrolls we can get per second so last one is likely to be eaten up
+			# in the process
+        	pd [concat pd pastetext 1 1 $keynum 0\;]
+		} else {
+        	pd [concat pd pastetext 0 1 $keynum 0\;]
+		}
     }
 }
 

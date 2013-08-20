@@ -6105,6 +6105,16 @@ void glob_key(void *dummy, t_symbol *s, int ac, t_atom *av)
     canvas_key(canvas_editing, s, ac, av);
 }
 
+void glob_pastetext(void *dummy, t_symbol *s, int ac, t_atom *av)
+{
+	//fprintf(stderr,"glob_pastetext %s\n", s->s_name);
+	canvas_key(canvas_editing, s, ac-1, av+1);
+	if ((int)atom_getfloat(av) == 1) {
+		//fprintf(stderr,"force getscroll\n");
+		sys_vgui("pdtk_canvas_force_getscroll .x%lx.c\n", canvas_editing);
+	}
+}
+
 void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 {
 	//fprintf(stderr,"canvas_editmode %f\n", fyesplease);
