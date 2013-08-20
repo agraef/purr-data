@@ -750,6 +750,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 void canvas_drawredrect(t_canvas *x, int doit)
 {
     if (doit){
+        //fprintf(stderr,"GOP %d %d\n", x->gl_pixwidth, x->gl_pixheight);
         sys_vgui(".x%lx.c create line\
             %d %d %d %d %d %d %d %d %d %d -fill #ff8080 -tags GOP\n",
             glist_getcanvas(x),

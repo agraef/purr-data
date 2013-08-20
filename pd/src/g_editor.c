@@ -4345,6 +4345,9 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 	}
 }
 
+extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
+    int *xp1, int *yp1, int *xp2, int *yp2);
+
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 { 
@@ -4418,9 +4421,26 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             }
             else if (ob && ob->ob_pd == canvas_class)
             {
+				int tmpx1 = 0, tmpy1 = 0, tmpx2 = 0, tmpy2 = 0;
+				int tmp_x_final = 0, tmp_y_final = 0;
                 gobj_vis(y1, x, 0);
                 ((t_canvas *)ob)->gl_pixwidth += xpos - x->gl_editor->e_xnew;
                 ((t_canvas *)ob)->gl_pixheight += ypos - x->gl_editor->e_ynew;
+				graph_checkgop_rect((t_gobj *)ob, x, &tmpx1, &tmpy1, &tmpx2, &tmpy2);
+				tmpx1 = ob->te_xpix;
+				tmpy1 = ob->te_ypix;
+				//fprintf(stderr,"%d %d %d %d\n", tmpx1, tmpy1, tmpx2, tmpy2);
+				if (!((t_canvas *)ob)->gl_hidetext) {
+					tmp_x_final = tmpx2 - tmpx1;
+					tmp_y_final	= tmpy2 - tmpy1;
+				} else {
+					tmp_x_final = tmpx2;
+					tmp_y_final	= tmpy2;
+				}
+				if (tmp_x_final > ((t_canvas *)ob)->gl_pixwidth)
+					((t_canvas *)ob)->gl_pixwidth = tmp_x_final;
+				if (tmp_y_final > ((t_canvas *)ob)->gl_pixheight)
+					((t_canvas *)ob)->gl_pixheight = tmp_y_final;
                 x->gl_editor->e_xnew = xpos;
                 x->gl_editor->e_ynew = ypos;
                 canvas_fixlinesfor(x, ob);

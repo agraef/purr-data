@@ -1024,16 +1024,16 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 			*xp2 = tw + *xp1;
 		if (th + *yp1 > *yp2)
 			*yp2 = th + *yp1;
-	} else {
-		// failsafe where we cannot have a gop that is smaller than 1x1 pixels
-		// when the text is hidden
-		int in = obj_ninlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
-		int out = obj_noutlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
-		int minhsize = (in >= out ? in : out);
-		int minvsize = ((in > 0 ? 1 : 0) + (out > 0 ? 1 : 0)) * 2 + 6;
-		if (*xp2 < *xp1+minhsize) *xp2 = *xp1+minhsize;
-		if (*yp2 < *yp1+minvsize) *yp2 = *yp1+minvsize;
 	}
+	// failsafe where we cannot have a gop that is smaller than 1x1 pixels
+	// regardless whether the text is hidden
+	int in = obj_ninlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
+	int out = obj_noutlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
+	int minhsize = (in >= out ? in : out) + SCALE_GOP_MINWIDTH;
+	int minvsize = ((in > 0 ? 1 : 0) + (out > 0 ? 1 : 0)) * 2 + SCALE_GOP_MINHEIGHT;
+	if (*xp2 < *xp1+minhsize) *xp2 = *xp1+minhsize;
+	if (*yp2 < *yp1+minvsize) *yp2 = *yp1+minvsize;
+	
 }
 
     /* get the rectangle, enlarged to contain all the "contents" --
