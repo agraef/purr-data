@@ -625,7 +625,16 @@ static void message_free(t_message *x)
 
 void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
-	//fprintf(stderr,"canvas_msg\n");
+	/*fprintf(stderr,"canvas_msg\n");
+	int i = 0;
+	while(i < argc) {
+		if (argv[i].a_type == A_FLOAT)
+			fprintf(stderr," %f", atom_getfloatarg(i, argc, argv));
+		else
+			fprintf(stderr," %s", atom_getsymbolarg(i, argc, argv)->s_name);
+		i++;
+	}
+	fprintf(stderr,"\n");*/
     t_message *x = (t_message *)pd_new(message_class);
     x->m_messresponder.mr_pd = messresponder_class;
     x->m_messresponder.mr_outlet = outlet_new(&x->m_text, &s_float);
@@ -1240,6 +1249,7 @@ static void text_getrect(t_gobj *z, t_glist *glist,
     {
         t_rtext *y = glist_findrtext(glist, x);
         width = rtext_width(y);
+		height = rtext_height(y) - (iscomment << 1);
 
 		//fprintf(stderr,"rtext_width=%d\n", width);
 
@@ -1555,7 +1565,6 @@ void text_save(t_gobj *z, t_binbuf *b)
 		//fprintf(stderr, "this must be it\n");
         binbuf_addbinbuf(b, x->te_binbuf);
 		//fprintf(stderr, "DONE this must be it\n");
-        binbuf_addv(b, ";");
     }
     else if (x->te_type == T_MESSAGE)
     {
@@ -1563,7 +1572,6 @@ void text_save(t_gobj *z, t_binbuf *b)
         binbuf_addv(b, "ssii", gensym("#X"), gensym("msg"),
             (int)x->te_xpix, (int)x->te_ypix);
         binbuf_addbinbuf(b, x->te_binbuf);
-        binbuf_addv(b, ";");
     }
     else if (x->te_type == T_ATOM)
     {
@@ -1580,7 +1588,6 @@ void text_save(t_gobj *z, t_binbuf *b)
             (double)((t_gatom *)x)->a_draghi,
             (double)((t_gatom *)x)->a_wherelabel,
             label, symfrom, symto);
-        binbuf_addv(b, ";");
     }           
     else    
     {
@@ -1609,8 +1616,10 @@ void text_save(t_gobj *z, t_binbuf *b)
         binbuf_addv(b, "ssii", gensym("#X"), gensym("text"),
             (int)x->te_xpix, (int)x->te_ypix);
         binbuf_addbinbuf(b, x->te_binbuf);
-        binbuf_addv(b, ";");
     }
+    if (x->te_width)
+        binbuf_addv(b, ",si", gensym("f"), (int)x->te_width);
+    binbuf_addv(b, ";");
 }
 
     /* this one is for everyone but "gatoms"; it's imposed in m_class.c */
@@ -1841,48 +1850,33 @@ void text_drawborder(t_text *x, t_glist *glist,
     }
     else if (x->te_type == T_MESSAGE)
     {
-        msg_draw_const = ((y2-y1)/4);
-        if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
         if (firsttime)
-		{
-            sys_vgui(".x%lx.c create polygon \
-                     %d %d %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $msg_box_fill -tags {%sR text}\n",
+            sys_vgui(".x%lx.c create polygon\
+ %d %d %d %d %d %d %d %d %d %d %d %d %d %d -outline $box_outline -fill $msg_box_fill -tags {%sR text}\n",
                 glist_getcanvas(glist),
-                     x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
-                     x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
+                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
                 x1, y2,  x1, y1,
-                    tag);	
-        }
+                    tag);
         else
-        {
             sys_vgui(".x%lx.c coords %sR\
  %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
-                x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,
-                x2, y2-msg_draw_const, x2+msg_draw_const, y2,  x1, y2,  x1, y1);
-        }
+                x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
+                x1, y2,  x1, y1);
     }
     else if (x->te_type == T_ATOM)
     {
-        atom_draw_const = ((y2-y1)/3);
         if (firsttime)
-		{
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $atom_box_fill -tags {%sR text}\n",
+            sys_vgui(".x%lx.c create polygon\
+ %d %d %d %d %d %d %d %d %d %d %d %d -outline $box_outline -fill $atom_box_fill -tags {%sR text}\n",
                 glist_getcanvas(glist),
-                     x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
-                     x2, y2,  x1, y2,  x1, y1, 
+                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
                     tag);
-         }
-         else
-         {
+        else
             sys_vgui(".x%lx.c coords %sR\
  %d %d %d %d %d %d %d %d %d %d %d %d\n",
                 glist_getcanvas(glist), tag,
-                x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,
-                x2, y2,  x1, y2,  x1, y1);
-         }
+                x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
     }
 
 	/* draw inlets/outlets */    

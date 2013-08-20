@@ -166,7 +166,7 @@ static int lastone(char *s, int c, int n)
         SEND_FIRST - draw the box  for the first time
         SEND_UPDATE - redraw the updated box
         otherwise - don't draw, just calculate.
-    Called with *widthp and *heightpas coordinates of
+    Called with *widthp and *heightp as coordinates of
     a test point, the routine reports the index of the character found
     there in *indexp.  *widthp and *heightp are set to the width and height
     of the entire text in pixels.
@@ -196,7 +196,7 @@ extern int sys_oldtclversion;
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     int *indexp)
 {
-	//fprintf(stderr,"rtext_senditup %d %d\n", *widthp, *heightp);
+	//fprintf(stderr,"rtext_senditup <%s>\n", x->x_buf);
 	if (x) {
 		t_float dispx, dispy;
 		char smallbuf[200], *tempbuf;
@@ -204,9 +204,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		    pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
 		int reportedindex = 0;
 		t_canvas *canvas = glist_getcanvas(x->x_glist);
-
 		int widthspec_c = x->x_text->te_width; // width if any specified
 		int widthlimit_c = (widthspec_c ? widthspec_c : BOXWIDTH); // width limit in chars
+		//fprintf(stderr,"senditup widthlimit_c %d %d\n", widthspec_c, widthlimit_c);
 		int inindex_b = 0; // index location in the buffer
 		int inindex_c = 0; // index location in the u8 chars
 		int selstart_b = 0, selend_b = 0; // selection start and end
@@ -233,18 +233,20 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 			int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c);
 		    int eatchar = 1;
 			int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
-
+			int foundit_c;
 			//following deals with \v replacement for \n in multiline comments
 			int foundit_bv  = firstone(x->x_buf + inindex_b, '\v', maxindex_b);
 			//fprintf(stderr,"%d %d <%s>\n", foundit_b, foundit_bv, x->x_buf);
 			if ((foundit_bv < foundit_b && foundit_bv != -1) || (foundit_b == -1 && foundit_bv != -1)) foundit_b = foundit_bv;
-
-			int foundit_c;
 			if (foundit_b < 0) //if we did not find an \n
 		    { 
+                /* too much text to fit in one line? */
 		        if (inchars_c > widthlimit_c)
 		        {
-					foundit_b = lastone(x->x_buf + inindex_b, ' ', maxindex_b);
+                    /* is there a space to break the line at?  OK if it's even
+                    one byte past the end since in this context we know there's
+                    more text */
+					foundit_b = lastone(x->x_buf + inindex_b, ' ', maxindex_b + 1);
 					if (foundit_b < 0)
 		            {
 						foundit_b = maxindex_b;
@@ -295,7 +297,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		if (nlines < 1) nlines = 1;
 		if (!widthspec_c)
 		{
-		    while (ncolumns < 3)
+		    while (ncolumns < (x->x_text->te_type == T_TEXT ? 1 : 3))
 		    {
 		        tempbuf[outchars_b++] = ' ';
 		        ncolumns++;
@@ -305,6 +307,21 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
 		pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
 
+	    if (action && x->x_text->te_width && x->x_text->te_type != T_ATOM)
+	    {
+	            /* if our width is specified but the "natural" width is the
+	            same as the specified width, set specified width to zero
+	            so future text editing will automatically change width.
+	            Except atoms whose content changes at runtime. */
+	        int widthwas = x->x_text->te_width, newwidth = 0, newheight = 0,
+	            newindex = 0;
+	        x->x_text->te_width = 0;
+	        rtext_senditup(x, 0, &newwidth, &newheight, &newindex);
+	        if (newwidth/fontwidth != widthwas)
+	            x->x_text->te_width = widthwas;
+	        else x->x_text->te_width = 0;
+			//fprintf(stderr,"senditup width %d %d %d\n", newwidth/fontwidth, widthwas, x->x_text->te_width);
+	    }
 		if (action == SEND_FIRST) {
 			//fprintf(stderr,"canvas=.x%lx %s\n", (t_int)canvas, tempbuf);
 		    sys_vgui("pdtk_text_new .x%lx.c {%s %s text} %f %f {%.*s} %d %s\n",

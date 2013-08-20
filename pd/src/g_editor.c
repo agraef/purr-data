@@ -1966,7 +1966,9 @@ static char *cursorlist[] = {
     "$cursor_runmode_addpoint",
     "$cursor_editmode_nothing",
     "$cursor_editmode_connect",
-    "$cursor_editmode_disconnect"
+    "$cursor_editmode_disconnect",
+    "$cursor_editmode_resize",
+    "$cursor_editmode_resize_bottom_right"
 };
 
 void canvas_setcursor(t_canvas *x, unsigned int cursornum)
@@ -2835,8 +2837,36 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 /* look for an outlet we just clicked onto */
             int noutlet;
 			int ninlet;
-			// if object is valid, has outlets, and we are within the bottom area of an object
-            if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-4)
+                /* resize?  only for "true" text boxes or canvases*/
+            if (!sys_k12_mode && ob && !x->gl_editor->e_textedfor &&
+                (ob->te_pd->c_wb == &text_widgetbehavior ||
+                    ob->ob_pd == canvas_class) &&
+                        xpos >= x2-4 && ypos < y2-4)
+            {
+                if (doit)
+                {
+                    if (!glist_isselected(x, y))
+                    {
+                        glist_noselect(x);
+                        glist_select(x, y);
+                    }
+                    x->gl_editor->e_onmotion = MA_RESIZE;
+                    x->gl_editor->e_xwas = x1;
+                    x->gl_editor->e_ywas = y1;
+                    x->gl_editor->e_xnew = xpos;
+                    x->gl_editor->e_ynew = ypos;
+					canvas_undo_add(x, 6, "resize", canvas_undo_set_apply(x, glist_getindex(x, y)));
+                }                                   
+                else {
+					if (ob->ob_pd != canvas_class || !((t_canvas *)ob)->gl_isgraph)
+						canvas_setcursor(x, CURSOR_EDITMODE_RESIZE);
+					else canvas_setcursor(x, CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT);
+					canvas_check_nlet_highlights(x);
+				}
+            }
+                /* look for an outlet */
+				// if object is valid, has outlets, and we are within the bottom area of an object
+            else if (ob && (noutlet = obj_noutlets(ob)) && ypos >= y2-4)
             {
                 int width = x2 - x1;
                 int nout1 = (noutlet > 1 ? noutlet - 1 : 1);
@@ -3990,9 +4020,11 @@ void canvas_mouseup(t_canvas *x,
         canvas_doconnect(x, xpos, ypos, which, 1);
     else if (x->gl_editor->e_onmotion == MA_REGION)
         canvas_doregion(x, xpos, ypos, 1);
-    else if (x->gl_editor->e_onmotion == MA_MOVE)
+    else if (x->gl_editor->e_onmotion == MA_MOVE ||
+        x->gl_editor->e_onmotion == MA_RESIZE)
     {
-            /* after motion, if there's only one item selected, activate it */
+            /* after motion or resizing, if there's only one text item
+                selected, activate the text */
         if (x->gl_editor->e_selection &&
             !(x->gl_editor->e_selection->sel_next))
         {
@@ -4330,6 +4362,8 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             xpos - x->gl_editor->e_xwas, ypos - x->gl_editor->e_ywas);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
+        x->gl_editor->e_xnew = xpos;
+        x->gl_editor->e_ynew = ypos;
 		//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		//sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 20\n", x);  
     }
@@ -4357,6 +4391,44 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         if (rt)
             rtext_mouse(rt, xpos - x->gl_editor->e_xwas,
                 ypos - x->gl_editor->e_ywas, RTEXT_DRAG);
+    }
+    else if (x->gl_editor->e_onmotion == MA_RESIZE)
+    {
+        int x11=0, y11=0, x12=0, y12=0; 
+        t_gobj *y1;
+        if (y1 = canvas_findhitbox(x,
+            x->gl_editor->e_xwas, x->gl_editor->e_ywas,
+                &x11, &y11, &x12, &y12))
+        {
+            int wantwidth = xpos - x11;
+            t_gotfn sizefn;
+            t_object *ob = pd_checkobject(&y1->g_pd);
+            if (ob && ob->te_pd->c_wb == &text_widgetbehavior ||
+                    (ob->ob_pd == canvas_class &&
+                        !((t_canvas *)ob)->gl_isgraph))
+            {
+                wantwidth = wantwidth / sys_fontwidth(glist_getfont(x));
+                if (wantwidth < 1)
+                    wantwidth = 1;
+                ob->te_width = wantwidth;
+                gobj_vis(y1, x, 0);
+                canvas_fixlinesfor(x, ob);
+                gobj_vis(y1, x, 1);
+				canvas_dirty(x, 1);
+            }
+            else if (ob && ob->ob_pd == canvas_class)
+            {
+                gobj_vis(y1, x, 0);
+                ((t_canvas *)ob)->gl_pixwidth += xpos - x->gl_editor->e_xnew;
+                ((t_canvas *)ob)->gl_pixheight += ypos - x->gl_editor->e_ynew;
+                x->gl_editor->e_xnew = xpos;
+                x->gl_editor->e_ynew = ypos;
+                canvas_fixlinesfor(x, ob);
+                gobj_vis(y1, x, 1);
+				canvas_dirty(x, 1);
+            }
+            else post("not resizable");
+        }
     }
     else canvas_doclick(x, xpos, ypos, 0, mod, 0);
 	//if (toggle_moving == 1) {

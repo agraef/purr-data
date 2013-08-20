@@ -174,6 +174,11 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
                 	textp[0]=='@'))) /* JMZ: $@ and $# expansion */
                         dollar = 1;
                 if (!slash) bufp++;
+                else if (lastslash)
+                {
+                    bufp++;
+                    slash = 0;
+                }
             }
             while (textp != etext && bufp != ebuf && 
                 (slash || (*textp != ' ' && *textp != '\n' && *textp != '\r'
@@ -349,7 +354,8 @@ done:
 }
 
 /* add a binbuf to another one for saving.  Semicolons and commas go to
-symbols ";", "'",; the symbol ";" goes to "\;", etc. */
+symbols ";", "'",; We assume here (probably incorrectly) that there's
+no symbol whose name is ";" - should we be escaping those?. */
 
 void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
 {
@@ -391,10 +397,10 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
         case A_SYMBOL:
 			//fprintf(stderr,"addbinbuf: symbol\n");
                 /* FIXME make this general */
-            if (!strcmp(ap->a_w.w_symbol->s_name, ";"))
+            /*if (!strcmp(ap->a_w.w_symbol->s_name, ";"))
                 SETSYMBOL(ap, gensym(";"));
             else if (!strcmp(ap->a_w.w_symbol->s_name, ","))
-                SETSYMBOL(ap, gensym(","));
+                SETSYMBOL(ap, gensym(","));*/
             break;
         default:
             bug("binbuf_addbinbuf");
@@ -462,6 +468,23 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
                     SETDOLLAR(ap, dollar);
                 }
             }
+            else if (strchr(argv->a_w.w_symbol->s_name, '\\'))
+            {
+                char buf[MAXPDSTRING], *sp1, *sp2;
+                int slashed = 0;
+                for (sp1 = buf, sp2 = argv->a_w.w_symbol->s_name;
+                    *sp2 && sp1 < buf + (MAXPDSTRING-1);
+                        sp2++)
+                {
+                    if (slashed)
+                        *sp1++ = *sp2;
+                    else if (*sp2 == '\\')
+                        slashed = 1;
+                    else *sp1++ = *sp2, slashed = 0;
+                }
+                *sp1 = 0;
+                SETSYMBOL(ap, gensym(buf));
+            }
             else *ap = *argv;
             argv++;
         }
@@ -502,6 +525,15 @@ int binbuf_getnatom(t_binbuf *x)
 t_atom *binbuf_getvec(t_binbuf *x)
 {
     return (x->b_vec);
+}
+
+int binbuf_resize(t_binbuf *x, int newsize)
+{
+    t_atom *new = t_resizebytes(x->b_vec,
+        x->b_n * sizeof(*x->b_vec), newsize * sizeof(*x->b_vec));
+    if (new)
+        x->b_vec = new, x->b_n = newsize;
+    return (new != 0);
 }
 
 int canvas_getdollarzero( void);
@@ -873,7 +905,7 @@ broken:
 
 static int binbuf_doopen(char *s, int mode)
 {
-    char namebuf[FILENAME_MAX];
+    char namebuf[MAXPDSTRING];
 #ifdef MSW
     mode |= O_BINARY;
 #endif
@@ -883,7 +915,7 @@ static int binbuf_doopen(char *s, int mode)
 
 static FILE *binbuf_dofopen(char *s, char *mode)
 {
-    char namebuf[FILENAME_MAX];
+    char namebuf[MAXPDSTRING];
     sys_bashfilename(s, namebuf);
     return (fopen(namebuf, mode));
 }
@@ -894,7 +926,7 @@ int binbuf_read(t_binbuf *b, char *filename, char *dirname, int crflag)
     int fd;
     int readret;
     char *buf;
-    char namebuf[FILENAME_MAX];
+    char namebuf[MAXPDSTRING];
     
     namebuf[0] = 0;
     if (*dirname)
@@ -947,9 +979,9 @@ int binbuf_read_via_canvas(t_binbuf *b, char *filename, t_canvas *canvas,
     int crflag)
 {
     int filedesc;
-    char buf[FILENAME_MAX], *bufptr;
+    char buf[MAXPDSTRING], *bufptr;
     if ((filedesc = canvas_open(canvas, filename, "",
-        buf, &bufptr, FILENAME_MAX, 0)) < 0)
+        buf, &bufptr, MAXPDSTRING, 0)) < 0)
     {
         error("%s: can't open", filename);
         return (1);
@@ -965,9 +997,9 @@ int binbuf_read_via_path(t_binbuf *b, char *filename, char *dirname,
     int crflag)
 {
     int filedesc;
-    char buf[FILENAME_MAX], *bufptr;
+    char buf[MAXPDSTRING], *bufptr;
     if ((filedesc = open_via_path(
-        dirname, filename, "", buf, &bufptr, FILENAME_MAX, 0)) < 0)
+        dirname, filename, "", buf, &bufptr, MAXPDSTRING, 0)) < 0)
     {
         error("%s: can't open", filename);
         return (1);
@@ -986,7 +1018,7 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd);
 int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
 {
     FILE *f = 0;
-    char sbuf[WBUFSIZE], fbuf[FILENAME_MAX], *bp = sbuf, *ep = sbuf + WBUFSIZE;
+    char sbuf[WBUFSIZE], fbuf[MAXPDSTRING], *bp = sbuf, *ep = sbuf + WBUFSIZE;
     t_atom *ap;
     int indx, deleteit = 0;
     int ncolumn = 0;
@@ -1053,6 +1085,14 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
         sys_unixerror(fbuf);
         goto fail;
     }
+
+
+    if (fflush(f) != 0) 
+    {
+        sys_unixerror(fbuf);
+        goto fail;
+    }
+
     if (deleteit)
         binbuf_free(x);
     fclose(f);
@@ -1128,7 +1168,7 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                 {
                     if (stackdepth >= MAXSTACK)
                     {
-                        post("too many embedded patches");
+                        error("stack depth exceeded: too many embedded patches");
                         return (newb);
                     }
                     stack[stackdepth] = nobj;
@@ -1592,10 +1632,14 @@ void binbuf_evalfile(t_symbol *name, t_symbol *dir)
     glob_setfilename(0, name, dir);
     if (binbuf_read(b, name->s_name, dir->s_name, 0))
     {
-        perror(name->s_name);
+        error("%s: read failed", name->s_name);
     }
     else
     {
+            /* save bindings of symbols #N, #A (and restore afterward) */
+        t_pd *bounda = gensym("#A")->s_thing, *boundn = s__N.s_thing;
+        gensym("#A")->s_thing = 0;
+        s__N.s_thing = &pd_canvasmaker;
         if (import)
         {
             t_binbuf *newb = binbuf_convert(b, 1);
@@ -1603,13 +1647,15 @@ void binbuf_evalfile(t_symbol *name, t_symbol *dir)
             b = newb;
         }
         binbuf_eval(b, 0, 0, 0);
+        gensym("#A")->s_thing = bounda;
+        s__N.s_thing = boundn;
     }
     glob_setfilename(0, &s_, &s_);
     binbuf_free(b);
     canvas_resume_dsp(dspstate);
 }
 
-void glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir)
+t_pd *glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir)
 {
     t_pd *x = 0;
         /* even though binbuf_evalfile appears to take care of dspstate,
@@ -1618,9 +1664,17 @@ void glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir)
         is still necessary -- probably not. */
 
     int dspstate = canvas_suspend_dsp();
+    t_pd *boundx = s__X.s_thing;
+        s__X.s_thing = 0;       /* don't save #X; we'll need to leave it bound
+                                for the caller to grab it. */
     binbuf_evalfile(name, dir);
-    while ((x != s__X.s_thing) && (x = s__X.s_thing))
+    while ((x != s__X.s_thing) && s__X.s_thing) 
+    {
+        x = s__X.s_thing;
         vmess(x, gensym("pop"), "i", 1);
+	}
     pd_doloadbang();
     canvas_resume_dsp(dspstate);
+	s__X.s_thing = boundx;
+	return x;
 }

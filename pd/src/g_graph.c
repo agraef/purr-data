@@ -1005,24 +1005,35 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 
 	//fprintf(stderr,"graph_checkgop_rect\n");
 	t_glist *x = (t_glist *)z;
-	int x21, y21, x22, y22;
-	text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);
-    if (x22 > *xp2)
-        *xp2 = x22;
-    if (y22 > *yp2) 
-        *yp2 = y22;
-	int fw = sys_fontwidth(x->gl_font);
-	int fh = sys_fontheight(x->gl_font);
-	// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
-	// later consider fixing hardwired values
-	int tcols = strlen(x->gl_name->s_name) - 3;
-	int th = fh + fh * (tcols/60) + 4;
-	if (tcols > 60) tcols = 60;
-	int tw = fw * tcols + 4;
-	if (tw + *xp1 > *xp2)
-		*xp2 = tw + *xp1;
-	if (th + *yp1 > *yp2)
-		*yp2 = th + *yp1;
+	if (!x->gl_hidetext) {
+		int x21, y21, x22, y22;
+		text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);
+		if (x22 > *xp2)
+		    *xp2 = x22;
+		if (y22 > *yp2) 
+		    *yp2 = y22;
+		int fw = sys_fontwidth(x->gl_font);
+		int fh = sys_fontheight(x->gl_font);
+		// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
+		// later consider fixing hardwired values
+		int tcols = strlen(x->gl_name->s_name) - 3;
+		int th = fh + fh * (tcols/60) + 4;
+		if (tcols > 60) tcols = 60;
+		int tw = fw * tcols + 4;
+		if (tw + *xp1 > *xp2)
+			*xp2 = tw + *xp1;
+		if (th + *yp1 > *yp2)
+			*yp2 = th + *yp1;
+	} else {
+		// failsafe where we cannot have a gop that is smaller than 1x1 pixels
+		// when the text is hidden
+		int in = obj_ninlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
+		int out = obj_noutlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
+		int minhsize = (in >= out ? in : out);
+		int minvsize = ((in > 0 ? 1 : 0) + (out > 0 ? 1 : 0)) * 2 + 6;
+		if (*xp2 < *xp1+minhsize) *xp2 = *xp1+minhsize;
+		if (*yp2 < *yp1+minvsize) *yp2 = *yp1+minvsize;
+	}
 }
 
     /* get the rectangle, enlarged to contain all the "contents" --
@@ -1080,9 +1091,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 		//fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
 
 		// check if the text is not hidden and if so use that as the limit of the gop's size
-		if (!x->gl_hidetext) {
-			graph_checkgop_rect(z, glist, &x1, &y1, &x2, &y2);
-		}
+		graph_checkgop_rect(z, glist, &x1, &y1, &x2, &y2);
 
 		/* fix visibility of edge items for garrays */
 		int has_garray = 0;

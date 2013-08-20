@@ -204,6 +204,8 @@ if { $tcl_platform(platform) == "windows" }  {
     set cursor_editmode_nothing "hand2"
     set cursor_editmode_connect "circle"
     set cursor_editmode_disconnect "X_cursor"
+	set cursor_editmode_resize "sb_h_double_arrow"
+	set cursor_editmode_resize_bottom_right "bottom_right_corner"
 	# set file types that open/save recognize
 	set filetypes {
 		{{Pd Files}         {.pd}  }
@@ -230,6 +232,8 @@ if { $tcl_platform(platform) == "windows" }  {
     set cursor_editmode_nothing "hand2"
     set cursor_editmode_connect "circle"
     set cursor_editmode_disconnect "X_cursor"
+	set cursor_editmode_resize "sb_h_double_arrow"
+	set cursor_editmode_resize_bottom_right "bottom_right_corner"
 	# set file types that open/save recognize
 	set filetypes {
 		{{Pd Files}                {.pd}  }
@@ -262,6 +266,8 @@ if { $tcl_platform(platform) == "windows" }  {
     set cursor_editmode_nothing "hand2"
     set cursor_editmode_connect "target"
     set cursor_editmode_disconnect "X_cursor"
+	set cursor_editmode_resize "sb_h_double_arrow"
+	set cursor_editmode_resize_bottom_right "bottom_right_corner"
 	# set file types that open/save recognize
 	set filetypes {
 		{{pd files}         {.pd}  }

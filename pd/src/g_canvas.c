@@ -1778,6 +1778,31 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
 	return(result);
 }
 
+static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    static int warned;
+    t_gobj *g, *g2;
+    t_object *ob;
+    if (argc > 1 && !warned)
+    {
+        post("** ignoring width or font settings from future Pd version **");
+        warned = 1;
+    }
+    if (!x->gl_list)
+        return;
+    for (g = x->gl_list; g2 = g->g_next; g = g2)
+        ;
+    if (ob = pd_checkobject(&g->g_pd))
+    {
+        ob->te_width = atom_getfloatarg(0, argc, argv);
+        if (glist_isvisible(x))
+        {
+            gobj_vis(g, x, 0);
+            gobj_vis(g, x, 1);
+        }
+    }
+}
+
 void canvasgop_draw_move(t_canvas *x, int doit)
 {
 	//delete the earlier GOP window so that when dragging 
@@ -2131,6 +2156,9 @@ void g_canvas_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_declare,
         gensym("declare"), A_GIMME, 0);
 
+/*--------------- future message to set formatting  -------------- */
+    class_addmethod(canvas_class, (t_method)canvas_f,
+        gensym("f"), A_GIMME, 0);
 /* -------------- setups from other files for canvas_class ---------------- */
     g_graph_setup();
     g_editor_setup();
