@@ -1982,8 +1982,7 @@ void text_eraseborder(t_text *x, t_glist *glist, char *tag)
     glist_eraseiofor(glist, x, tag);
 }
 
-    /* change text; if T_OBJECT, remake it.  LATER we'll have an undo buffer
-    which should be filled in here before making the change. */
+    /* change text; if T_OBJECT, remake it. */
 
 void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 {

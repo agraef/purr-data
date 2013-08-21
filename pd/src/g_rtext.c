@@ -290,6 +290,10 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		        ncolumns = foundit_c;
 			nlines++;
 		}
+		// append new line in case we end our input with an \n
+		if (x->x_buf[x_bufsize_c - 1] == '\n') {
+			nlines++;
+		}
 		if (!reportedindex)
 		    *indexp = outchars_b;
 		dispx = text_xpix(x->x_text, x->x_glist);
