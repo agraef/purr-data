@@ -32,6 +32,8 @@ static t_class *makeshift_class;
 #define COMMENT_HANDLEWIDTH    8
 #define COMMENT_OUTBUFSIZE  1000
 
+extern void canvas_setcursor(t_canvas *x, unsigned int cursornum);
+
 typedef struct _comment
 {
     t_object   x_ob;
@@ -76,7 +78,7 @@ static t_pd *commentsink = 0;
 static void comment_draw(t_comment *x)
 {
     char buf[COMMENT_OUTBUFSIZE], *outbuf, *outp;
-    int cvid = (int)x->x_canvas;
+    int cvid = (t_int)x->x_canvas;
     int reqsize = x->x_textbufsize + 250;  /* FIXME estimation */
     if (reqsize > COMMENT_OUTBUFSIZE)
     {
@@ -92,9 +94,9 @@ static void comment_draw(t_comment *x)
 	    x->x_bindsym->s_name, cvid, x->x_texttag, x->x_tag,
 	    (float)(text_xpix((t_text *)x, x->x_glist) + COMMENT_LMARGIN),
 	    (float)(text_ypix((t_text *)x, x->x_glist) + COMMENT_TMARGIN),
-	    x->x_fontfamily->s_name, x->x_fontsize,
+	    x->x_fontfamily->s_name, -x->x_fontsize,
 	    (glist_isselected(x->x_glist, &x->x_glist->gl_gobj) ?
-	     "blue" : x->x_color),
+	     "$select_color" : x->x_color),
 	    (x->x_encoding ? x->x_encoding->s_name : "\"\""),
 	    x->x_textbufsize, x->x_textbuf, x->x_pixwidth);
     x->x_bbpending = 1;
@@ -105,7 +107,7 @@ static void comment_draw(t_comment *x)
 static void comment_update(t_comment *x)
 {
     char buf[COMMENT_OUTBUFSIZE], *outbuf, *outp;
-    int cvid = (int)x->x_canvas;
+    int cvid = (t_int)x->x_canvas;
     int reqsize = x->x_textbufsize + 250;  /* FIXME estimation */
     if (reqsize > COMMENT_OUTBUFSIZE)
     {
@@ -149,6 +151,9 @@ static void comment_update(t_comment *x)
     x->x_bbpending = 1;
     sys_gui(outbuf);
     if (outbuf != buf) freebytes(outbuf, reqsize);
+	sys_vgui("catch {.x%x.c coords %s %d %d %d %d}\n",
+		 cvid, x->x_outlinetag,
+		 x->x_x1, x->x_y1, x->x_newx2, x->x_y2);
 }
 
 static void comment_validate(t_comment *x, t_glist *glist)
@@ -210,6 +215,7 @@ static void comment__bboxhook(t_comment *x, t_symbol *bindsym,
 
 static void comment__clickhook(t_comment *x, t_symbol *s, int ac, t_atom *av)
 {
+	//fprintf(stderr,"clickhook\n");
     int xx, yy, ndx;
     if (ac == 8 && av->a_type == A_SYMBOL
 	&& av[1].a_type == A_FLOAT && av[2].a_type == A_FLOAT
@@ -245,7 +251,7 @@ static void comment__clickhook(t_comment *x, t_symbol *s, int ac, t_atom *av)
 	{
 	    /* start resizing */
 	    char buf[COMMENT_OUTBUFSIZE], *outp = buf;
-	    int cvid = (int)x->x_canvas;
+	    int cvid = (t_int)x->x_canvas;
 	    sprintf(outp, ".x%x.c bind %s <ButtonRelease> \
  {pd [concat %s _release %s \\;]}\n", cvid, x->x_texttag,
 		    x->x_bindsym->s_name, x->x_bindsym->s_name);
@@ -254,10 +260,11 @@ static void comment__clickhook(t_comment *x, t_symbol *s, int ac, t_atom *av)
  {pd [concat %s _motion %s %%x %%y \\;]}\n", cvid, x->x_texttag,
 		    x->x_bindsym->s_name, x->x_bindsym->s_name);
 	    outp += strlen(outp);
-	    sprintf(outp, ".x%x.c create rectangle %d %d %d %d -outline blue \
+	    sprintf(outp, ".x%x.c create rectangle %d %d %d %d -outline $select_color \
  -tags {%s %s}\n",
 		    cvid, x->x_x1, x->x_y1, x->x_x2, x->x_y2,
 		    x->x_outlinetag, x->x_tag);
+		canvas_setcursor(glist_getcanvas(x->x_canvas), CURSOR_EDITMODE_RESIZE);
 	    sys_gui(buf);
 	    x->x_newx2 = x->x_x2;
 	    x->x_dragon = 1;
@@ -267,7 +274,8 @@ static void comment__clickhook(t_comment *x, t_symbol *s, int ac, t_atom *av)
 
 static void comment__releasehook(t_comment *x, t_symbol *bindsym)
 {
-    int cvid = (int)x->x_canvas;
+	//fprintf(stderr,"releasehook\n");
+    int cvid = (t_int)x->x_canvas;
     sys_vgui(".x%x.c bind %s <ButtonRelease> {}\n", cvid, x->x_texttag);
     sys_vgui(".x%x.c bind %s <Motion> {}\n", cvid, x->x_texttag);
     sys_vgui(".x%x.c delete %s\n", cvid, x->x_outlinetag);
@@ -283,11 +291,30 @@ static void comment__releasehook(t_comment *x, t_symbol *bindsym)
 static void comment__motionhook(t_comment *x, t_symbol *bindsym,
 				t_floatarg xx, t_floatarg yy)
 {
-    int cvid = (int)x->x_canvas;
-    if (xx > x->x_x1 + COMMENT_MINWIDTH)
-	sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-		 cvid, x->x_outlinetag,
-		 x->x_x1, x->x_y1, x->x_newx2 = xx, x->x_y2);
+	//fprintf(stderr,"motionhook\n");
+	if (x->x_dragon)
+	{
+		if (glist_isselected(x->x_canvas, (t_gobj *)x))
+			glist_deselect(x->x_canvas, (t_gobj *)x);
+		int cvid = (t_int)x->x_canvas;
+		if (xx > x->x_x1 + COMMENT_MINWIDTH)
+		{
+			x->x_newx2 = xx;
+			if (x->x_newx2 != x->x_x2)
+			{
+				x->x_pixwidth = x->x_newx2 - x->x_x1;
+				x->x_x2 = x->x_newx2;
+				comment_update(x);
+			}
+		}
+	}
+	else
+	{
+		if (xx > x->x_x2 - COMMENT_HANDLEWIDTH && xx < x->x_x2 && yy > x->x_y1 && yy < x->x_y2)
+			canvas_setcursor(glist_getcanvas(x->x_canvas), CURSOR_EDITMODE_RESIZE);
+		else
+			canvas_setcursor(glist_getcanvas(x->x_canvas), CURSOR_EDITMODE_NOTHING);
+	}	
 }
 
 static void commentsink__bboxhook(t_pd *x, t_symbol *bindsym,
@@ -375,6 +402,27 @@ static void comment_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     }
 }
 
+static void comment_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
+{
+    t_comment *x = (t_comment *)z;
+    if (!x->x_active && !x->x_dragon)  /* LATER rethink */
+    {
+	t_text *t = (t_text *)z;
+	comment_validate(x, glist);
+	t->te_xpix += dx;
+	t->te_ypix += dy;
+	if (x->x_bbset)
+	{
+	    x->x_x1 += dx;
+	    x->x_y1 += dy;
+	    x->x_x2 += dx;
+	    x->x_y2 += dy;
+	}
+	/*if (glist_isvisible(glist))
+	    sys_vgui(".x%x.c move %s %d %d\n", x->x_canvas, x->x_tag, dx, dy);*/
+    }
+}
+
 static void comment_activate(t_gobj *z, t_glist *glist, int state)
 {
     t_comment *x = (t_comment *)z;
@@ -410,7 +458,13 @@ static void comment_select(t_gobj *z, t_glist *glist, int state)
     comment_validate(x, glist);
     if (!state && x->x_active) comment_activate(z, glist, 0);
     sys_vgui(".x%x.c itemconfigure %s -fill %s\n", x->x_canvas,
-	     x->x_texttag, (state ? "blue" : x->x_color));
+	     x->x_texttag, (state ? "$select_color" : x->x_color));
+	if (state)
+		sys_vgui(".x%lx.c addtag selected withtag %s\n", 
+			glist_getcanvas(glist), x->x_texttag);
+	else
+		sys_vgui(".x%lx.c dtag %s selected\n",
+			glist_getcanvas(glist), x->x_texttag);
     /* A regular rtext should now set 'canvas_editing' variable to its canvas,
        but we do not do that, because we get the keys through a global binding
        to "#key" (and because 'canvas_editing' is not exported). */
@@ -473,7 +527,8 @@ static t_widgetbehavior comment_widgetbehavior =
     0,
     comment_vis,
     0,
-    FORKY_WIDGETPADDING
+	comment_displace_withtag,
+    //FORKY_WIDGETPADDING
 };
 
 /* this fires if a transform request was sent to a symbol we are bound to */
@@ -585,7 +640,7 @@ static void comment_list(t_comment *x, t_symbol *s, int ac, t_atom *av)
 		x->x_selend++;
 	    x->x_selstart = x->x_selend;
 	}
-	else if (!strcmp(keysym->s_name, "F4"))
+	/*else if (!strcmp(keysym->s_name, "F5"))
 	{
 	    t_text *newt, *oldt = (t_text *)x;
 	    t_binbuf *bb = binbuf_new();
@@ -607,10 +662,10 @@ static void comment_list(t_comment *x, t_symbol *s, int ac, t_atom *av)
 	    glist_noselect(x->x_glist);
 	    glist_select(x->x_glist, &newt->te_g);
 	    gobj_activate(&newt->te_g, x->x_glist, 1);
-	    x->x_glist->gl_editor->e_textdirty = 1;  /* force evaluation */
+	    x->x_glist->gl_editor->e_textdirty = 1;  // force evaluation
 	    canvas_unsetcurrent(x->x_glist);
 	    canvas_dirty(x->x_glist, 1);
-	    clock_delay(x->x_transclock, 0);  /* LATER rethink */
+	    clock_delay(x->x_transclock, 0);  // LATER rethink
 	    goto donelist;
 	}
 	else if (!strcmp(keysym->s_name, "F5"))
@@ -627,7 +682,7 @@ static void comment_list(t_comment *x, t_symbol *s, int ac, t_atom *av)
 	    canvas_dirty(x->x_glist, 1);
 	    binbuf_free(bb);
 	    goto donelist;
-	}
+	}*/
 	else goto donelist;
 	comment_update(x);
     }
@@ -685,9 +740,9 @@ static void *comment_new(t_symbol *s, int ac, t_atom *av)
     t->te_type = T_TEXT;
     x->x_glist = canvas_getcurrent();
     x->x_canvas = 0;
-    sprintf(x->x_tag, "all%x", (int)x);
-    sprintf(x->x_texttag, "t%x", (int)x);
-    sprintf(x->x_outlinetag, "h%x", (int)x);
+    sprintf(x->x_tag, "all%lx", (t_int)x);
+    sprintf(x->x_texttag, "t%lx", (t_int)x);
+    sprintf(x->x_outlinetag, "h%lx", (t_int)x);
     x->x_pixwidth = 0;
     x->x_fontsize = 0;
     x->x_fontfamily = 0;
@@ -753,7 +808,7 @@ textpart:
     if (x->x_fontsize < 1)
 	x->x_fontsize = glist_getfont(x->x_glist);
     if (!x->x_fontfamily)
-	x->x_fontfamily = gensym("helvetica");
+	x->x_fontfamily = gensym("{DejaVu Sans Mono}");
     sprintf(x->x_color, "#%2.2x%2.2x%2.2x", x->x_red, x->x_green, x->x_blue);
 
     x->x_binbuf = binbuf_new();
@@ -768,7 +823,7 @@ textpart:
     x->x_transclock = clock_new(x, (t_method)comment_transtick);
     x->x_bbset = 0;
     x->x_bbpending = 0;
-    sprintf(buf, "miXed%x", (int)x);
+    sprintf(buf, "miXed%lx", (t_int)x);
     x->x_bindsym = gensym(buf);
     pd_bind((t_pd *)x, x->x_bindsym);
     if (!commentsink)
