@@ -250,6 +250,7 @@ static void comment__clickhook(t_comment *x, t_symbol *s, int ac, t_atom *av)
 	else if (xx > x->x_x2 - COMMENT_HANDLEWIDTH)
 	{
 	    /* start resizing */
+		fprintf(stderr,"start resizing\n");
 	    char buf[COMMENT_OUTBUFSIZE], *outp = buf;
 	    int cvid = (t_int)x->x_canvas;
 	    sprintf(outp, ".x%x.c bind %s <ButtonRelease> \
@@ -274,7 +275,7 @@ static void comment__clickhook(t_comment *x, t_symbol *s, int ac, t_atom *av)
 
 static void comment__releasehook(t_comment *x, t_symbol *bindsym)
 {
-	//fprintf(stderr,"releasehook\n");
+	fprintf(stderr,"releasehook\n");
     int cvid = (t_int)x->x_canvas;
     sys_vgui(".x%x.c bind %s <ButtonRelease> {}\n", cvid, x->x_texttag);
     sys_vgui(".x%x.c bind %s <Motion> {}\n", cvid, x->x_texttag);
@@ -282,20 +283,20 @@ static void comment__releasehook(t_comment *x, t_symbol *bindsym)
     x->x_dragon = 0;
     if (x->x_newx2 != x->x_x2)
     {
-	x->x_pixwidth = x->x_newx2 - x->x_x1;
-	x->x_x2 = x->x_newx2;
-	comment_update(x);
+		x->x_pixwidth = x->x_newx2 - x->x_x1;
+		x->x_x2 = x->x_newx2;
+		comment_update(x);
     }
 }
 
 static void comment__motionhook(t_comment *x, t_symbol *bindsym,
 				t_floatarg xx, t_floatarg yy)
 {
-	//fprintf(stderr,"motionhook\n");
+	fprintf(stderr,"motionhook\n");
 	if (x->x_dragon)
 	{
-		if (glist_isselected(x->x_canvas, (t_gobj *)x))
-			glist_deselect(x->x_canvas, (t_gobj *)x);
+		//if (glist_isselected(x->x_canvas, (t_gobj *)x))
+		//	glist_deselect(x->x_canvas, (t_gobj *)x);
 		int cvid = (t_int)x->x_canvas;
 		if (xx > x->x_x1 + COMMENT_MINWIDTH)
 		{
@@ -425,6 +426,7 @@ static void comment_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void comment_activate(t_gobj *z, t_glist *glist, int state)
 {
+	///fprintf(stderr,"activate\n");
     t_comment *x = (t_comment *)z;
     comment_validate(x, glist);
     if (state)
@@ -454,15 +456,16 @@ static void comment_activate(t_gobj *z, t_glist *glist, int state)
 
 static void comment_select(t_gobj *z, t_glist *glist, int state)
 {
+	fprintf(stderr,"select\n");
     t_comment *x = (t_comment *)z;
     comment_validate(x, glist);
     if (!state && x->x_active) comment_activate(z, glist, 0);
     sys_vgui(".x%x.c itemconfigure %s -fill %s\n", x->x_canvas,
 	     x->x_texttag, (state ? "$select_color" : x->x_color));
-	if (state)
+	if (state && !x->x_dragon)
 		sys_vgui(".x%lx.c addtag selected withtag %s\n", 
 			glist_getcanvas(glist), x->x_texttag);
-	else
+	else if (!x->x_dragon)
 		sys_vgui(".x%lx.c dtag %s selected\n",
 			glist_getcanvas(glist), x->x_texttag);
     /* A regular rtext should now set 'canvas_editing' variable to its canvas,

@@ -55,8 +55,8 @@ hammer/maximum.c \
 hammer/minimum.c \
 hammer/switch.c
 
-HFORKY_SOURCES = \
-hammer/comment.c
+#HFORKY_SOURCES = \
+#hammer/comment.c
 
 HFRAGILE_SOURCES = \
 hammer/grab.c \
@@ -172,7 +172,6 @@ sickle/triangle.c \
 sickle/vectral.c \
 sickle/zerox.c
 
-#disabled
 #sickle/abs.c \
 
 SFORKY_TILDE = $(TILDE)
