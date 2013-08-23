@@ -1710,64 +1710,61 @@ windowing_clean:
 #------------------------------------------------------------------------------#
 # Zexy
 ZEXY_NAME = zexy
-ZEXY_OBJECTS := $(wildcard $(externals_src)/zexy/src/[a-vxy0]*.c) \
-$(externals_src)/zexy/src/wrap.c $(externals_src)/zexy/src/z~.c
-ZEXY_VERSION := $(shell grep VERSION $(externals_src)/zexy/src/zexy.h | \
-	grep -v _VERSION | cut -d ' ' -f 3 | cut -d '"' -f 2)
+zexy_src := $(externals_src)/$(ZEXY_NAME)
 
-# ADAPTED FROM IEM16 - previous script broke builds.
-ZEXY_DIR := $(externals_src)/zexy/src
+$(zexy_src)/configure: $(zexy_src)/configure.ac
+	cd $(zexy_src) && ./autogen.sh
 
-$(ZEXY_DIR)/aclocal.m4: $(ZEXY_DIR)/acinclude.m4
-	cd $(ZEXY_DIR) && aclocal
-
-$(ZEXY_DIR)/configure: $(ZEXY_DIR)/configure.ac $(ZEXY_DIR)/aclocal.m4
-	cd $(ZEXY_DIR) && autoconf
-
-$(ZEXY_DIR)/Make.config: $(ZEXY_DIR)/Make.config.in \
-$(ZEXY_DIR)/configure
-	cd $(ZEXY_DIR) && ./configure --disable-library \
+$(zexy_src)/Makefile: $(zexy_src)/configure $(zexy_src)/Makefile.am $(zexy_src)/src/Makefile.am
+	cd $(zexy_src) && ./configure --disable-library \
+		--with-extension=$(EXTENSION) \
+		--prefix=$(prefix) \
+		--libdir=$(objectsdir) \
 		--with-pd=$(pd_src)
 
-zexy: $(ZEXY_DIR)/Make.config
-	$(MAKE) -C $(ZEXY_DIR) alias
+zexy: $(zexy_src)/Makefile
+	$(MAKE) -C $(zexy_src)
 
 zexy_install: zexy
-	install -d $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)
-	$(scripts_src)/generate-libdir-metafile.sh $(DESTDIR)$(objectsdir) $(ZEXY_NAME) \
-		--author "IOhannes m zmoelnig <zmoelnig@iem.kug.ac.at>" \
-		--license "GNU GPL" \
-		--description "swiss army knife for pd" \
-		--version "$(ZEXY_VERSION)"
-	#install -p $(ZEXY_OBJECTS:.c=.$(EXTENSION)) $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)
-	install -p $(externals_src)/zexy/src/*.$(EXTENSION) $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)
-# the below doesn't work for some reason, probably because of some kind of
-# strange make execution order <hans@at.or.at>
-#	install -p $(shell $(externals_src)/zexy/src/*.$(EXTENSION)) \
-#		$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)
-	install -p $(shell ls -1 $(externals_src)/zexy/abs/*.pd | \
-		grep -v '-help.pd' | sed 's|\(.*\)|"\1"|g') \
-		$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)
-# an escape pattern for the abstractions with special characters
-#		grep -v '-help.pd' | sed 's/\([&<>|~]\)/\\\1/g') 
-	install -p $(shell ls -1 $(externals_src)/zexy/reference/*-help.pd | \
-		sed 's|\(.*\)|"\1"|g') $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)
-	install -p $(externals_src)/zexy/zexy.pd  $(DESTDIR)$(objectsdir)
+	$(MAKE) -C $(zexy_src) DESTDIR=$(DESTDIR) prefix=$(prefix) \
+		libdir=$(objectsdir) pkglibdir=$(objectsdir)/$(ZEXY_NAME) install
+# remove all .la files (libtool archives) created by autotools
+	find $(DESTDIR)$(objectsdir)/$(ZEXY_NAME) -name "*.la" -exec rm {} \;
+	find $(DESTDIR)$(objectsdir)/$(ZEXY_NAME) -name "*.dll.a" -exec rm {} \;
+# add missing aliases
+# can't do these on Windows because FAT, NTFS don't support these chars in filenames
+# on Windows, these are faked in by loading them as libs
+ifneq ($(OS_NAME),windows)
+	test -e $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION) || \
+		ln -s 0x2e.$(EXTENSION) \
+			$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION)
+	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)' || \
+		ln -s 0x260x260x7e.$(EXTENSION) \
+			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)'
+	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)' || \
+		ln -s 0x3c0x7e.$(EXTENSION) \
+			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)'
+	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)' || \
+		ln -s 0x3d0x3d0x7e.$(EXTENSION) \
+			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)'
+	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)' || \
+		ln -s 0x3e0x7e.$(EXTENSION) \
+			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)'
+	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)' || \
+		ln -s 0x7c0x7c0x7e.$(EXTENSION) \
+			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)'
+endif
 
 zexy_clean:
-	-$(MAKE) -C $(externals_src)/zexy/src clean
-	-$(MAKE) -C $(externals_src)/zexy/src alias-clean
-	-rm -f -- $(ZEXY_OBJECTS:.c=.$(EXTENSION))
-	-rm -f -- $(ZEXY_OBJECTS:.c=.d)
-	-rm -rf -- $(externals_src)/zexy/src/autom4ate
-	-rm -rf -- $(externals_src)/zexy/src/conf[0-9][0-9][0-9]*
-	-rm -f -- $(externals_src)/zexy/src/configure
-	-rm -f -- $(externals_src)/zexy/src/Make.config
-	-rm -f -- $(externals_src)/zexy/src/zexyconf.h
+	-$(MAKE) -C $(externals_src)/zexy clean
+	-rm -rf -- $(externals_src)/zexy/autom4te.cache
+	-rm -f -- $(externals_src)/zexy/aclocal.m4
+	-rm -f -- $(externals_src)/zexy/libtool
+	-rm -f -- $(externals_src)/zexy/ltmain.sh
+	-rm -f -- $(externals_src)/zexy/m4/lt*.m4
+	-rm -f -- $(externals_src)/zexy/m4/libtool.m4
+	-rm -f -- $(externals_src)/zexy/configure
 	-rm -f -- $(externals_src)/zexy/src/*.o
-	-rm -f -- $(externals_src)/zexy/src/*.bak
-	-rm -f -- $(externals_src)/*/*.*~
-	-rm -f -- $(externals_src)/*.*~
 
 
 
