@@ -1,23 +1,23 @@
-/******************************************************
+/* 
+ * mavg :: moving average filter
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
-
-/* mavg :: moving average filter */
 
 static t_class *mavg_class;
 
@@ -49,12 +49,11 @@ static void mavg_resize(t_mavg *x, t_float f)
   while(i--) *dumbuf++ = x->avg;
 }
 
-static void mavg_set(t_mavg *x, t_symbol *s, int argc, t_atom *argv)
+static void mavg_set(t_mavg *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   int i = x->size;
   t_float *dummy = x->buf;
   t_float f=(argc)?atom_getfloat(argv):x->avg;
-  ZEXY_USEVAR(s);
 
   while (i--) *dummy++=f;
 
@@ -83,8 +82,8 @@ static void *mavg_new(t_floatarg f)
   int i = (f<1)?2:f;
   t_float *dumbuf;
 
-  outlet_new(&x->x_obj, &s_float);
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym(""));
+  outlet_new(&x->x_obj, gensym("float"));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym(""));
 
   x->buf = x->wp = (t_float *)getbytes(sizeof(t_float) * i);
   x->size = i;

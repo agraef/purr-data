@@ -1,21 +1,24 @@
-/******************************************************
+/* 
+ * dirac~: unity sample
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
+ * optimizations:
+ *  (c) 2005 tim blechmann 
  *
- *   1999:forum::für::umläute:2004
- *
- *
- *   institute of electronic music and acoustics (iem)
- *
- * optimizations
- *   copyright (c) 2005 tim blechmann
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 
 /*
@@ -117,7 +120,7 @@ static void dirac_dsp(t_dirac *x, t_signal **sp)
 
 static void dirac_helper(void)
 {
-  post("%c dirac~-object :: generates a dirac (unity-pulse)", HEARTSYMBOL);
+  post(""HEARTSYMBOL" dirac~-object :: generates a dirac (unity-pulse)");
   post("creation : \"dirac~ [<position>]\" : create a dirac at specified position (in samples)\n"
        "inlet\t: <position>\t: create a dirac at new position\n"
        "\t  'bang'\t: create a dirac at specified position\n"

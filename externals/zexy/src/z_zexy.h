@@ -14,6 +14,7 @@ void setup_0x7c0x7c0x7e(void); /* 0x7c0x7c0x7e */
 void a2l_setup(void); /* a2l */
 void abs_tilde_setup(void); /* abs~ */
 void absgn_tilde_setup(void); /* absgn~ */
+void atof_setup(void); /* atof */
 void atoi_setup(void); /* atoi */
 void avg_tilde_setup(void); /* avg~ */
 void blockmirror_tilde_setup(void); /* blockmirror~ */
@@ -40,6 +41,7 @@ void list2symbol_setup(void); /* list2symbol */
 void lister_setup(void); /* lister */
 void listfind_setup(void); /* listfind */
 void liststorage_setup(void); /* liststorage */
+void longload_setup(void); /* longload */
 void lpt_setup(void); /* lpt */
 void makesymbol_setup(void); /* makesymbol */
 void matchbox_setup(void); /* matchbox */

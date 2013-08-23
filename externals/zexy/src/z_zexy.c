@@ -16,6 +16,7 @@ void z_zexy_setup(void)
 	a2l_setup(); /* a2l */
 	abs_tilde_setup(); /* abs~ */
 	absgn_tilde_setup(); /* absgn~ */
+	atof_setup(); /* atof */
 	atoi_setup(); /* atoi */
 	avg_tilde_setup(); /* avg~ */
 	blockmirror_tilde_setup(); /* blockmirror~ */
@@ -42,6 +43,7 @@ void z_zexy_setup(void)
 	lister_setup(); /* lister */
 	listfind_setup(); /* listfind */
 	liststorage_setup(); /* liststorage */
+	longload_setup(); /* longload */
 	lpt_setup(); /* lpt */
 	makesymbol_setup(); /* makesymbol */
 	matchbox_setup(); /* matchbox */

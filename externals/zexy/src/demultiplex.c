@@ -1,27 +1,21 @@
-/******************************************************
+/* 
+ * demux :  demultiplex the input to a specified output  
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-
-/* 1509:forum::für::umläute:2000 */
-
-/*
-  demux :  multiplex the input to a specified output  
-
-  TODO::  mux   :  demultiplex a specified input to the output
-*/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 #include <stdio.h>
@@ -80,16 +74,14 @@ static void demux_any(t_demux *x, t_symbol *s, int argc, t_atom *argv)
   outlet_anything(x->selected, s, argc, argv);
 }
 
-static void *demux_new(t_symbol *s, int argc, t_atom *argv)
+static void *demux_new(t_symbol* UNUSED(s), int argc, t_atom* UNUSED(argv))
 {
   t_demux *x = (t_demux *)pd_new(demux_class);
   int n = (argc < 2)?2:argc;
-  ZEXY_USEVAR(s);
-  ZEXY_USEVAR(argv);
 
   x->n_out = n - 1;
   
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("select"));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("select"));
   x->out = (t_outlet **)getbytes(n * sizeof(t_outlet *));
 
   for (n=0; n<=x->n_out; n++) {

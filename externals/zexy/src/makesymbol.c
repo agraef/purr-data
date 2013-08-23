@@ -1,22 +1,26 @@
-/******************************************************
+/* 
+ * makesymbol: yet another (formatted) symbol creation mechanism
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 
 /* 
-(l) 1210:forum::für::umläute:1999
+(l) 1210:forum::fÃ¼r::umlÃ¤ute:1999
 
 "makesymbol" is something between "symbol" and "makefilename", 
    thus storing and creating (formatted) symbols...
@@ -87,9 +91,8 @@ static t_symbol* list2symbol(char *masque, int argc, t_atom *argv)
 	return (gensym(buffer));
 }
 
-static void makesymbol_list(t_makesymbol *x, t_symbol *s, int argc, t_atom *argv)
+static void makesymbol_list(t_makesymbol *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-        ZEXY_USEVAR(s);
 	x->x_sym = list2symbol(x->mask, argc, argv);
 	outlet_symbol(x->x_obj.ob_outlet, x->x_sym);
 }
@@ -100,10 +103,9 @@ static void makesymbol_bang(t_makesymbol *x)
 }
 
 
-static void *makesymbol_new(t_symbol *s, int argc, t_atom *argv)
+static void *makesymbol_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
 	t_makesymbol *x = (t_makesymbol *)pd_new(makesymbol_class);
-        ZEXY_USEVAR(s);
 
 	x->buf = (char *)getbytes(MAXSTRINGLENG * sizeof(char));
 
@@ -117,7 +119,7 @@ static void *makesymbol_new(t_symbol *s, int argc, t_atom *argv)
 		x->x_sym = gensym("");
 	}
 
-	outlet_new(&x->x_obj, &s_symbol);
+	outlet_new(&x->x_obj, gensym("symbol"));
 	inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("symbol"), gensym("sym1"));
 
 	return (x);
@@ -129,10 +131,9 @@ static void makesymbol_free(t_makesymbol *x)
 }
 
 
-static void makesymbol_helper(t_makesymbol *x)
+static void makesymbol_helper(t_makesymbol* UNUSED(x))
 {
-  ZEXY_USEVAR(x);
-	post("\n%c makesymbol :: create a formatted symbol", HEARTSYMBOL);
+	post("\n"HEARTSYMBOL" makesymbol :: create a formatted symbol");
 	post("<list of anything>\t: glue up to 10 list-elements to 1 formatted symbol\n"
 		"'bang'\t\t\t: re-output\n"
 		"'help'\t\t\t: view this"

@@ -1,24 +1,22 @@
-/******************************************************
+/* 
+ * >~: signal comparision
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*
-	finally :: some of the missing binops for signals :: >~
-
-	1302:forum::für::umläute:2000
-*/
 
 #include "zexySIMD.h"
 
@@ -40,24 +38,23 @@ typedef struct _scalargt_tilde
   t_float x_g;    	    /* inlet value */
 } t_scalargt_tilde;
 
-static void *gt_tilde_new(t_symbol *s, int argc, t_atom *argv)
+static void *gt_tilde_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   if (argc > 1) post(">~: extra arguments ignored");
   if (argc) 
     {
       t_scalargt_tilde *x = (t_scalargt_tilde *)pd_new(scalargt_tilde_class);
       floatinlet_new(&x->x_obj, &x->x_g);
       x->x_g = atom_getfloatarg(0, argc, argv);
-      outlet_new(&x->x_obj, &s_signal);
+      outlet_new(&x->x_obj, gensym("signal"));
       x->x_f = 0;
       return (x);
     }
   else
     {
       t_gt_tilde *x = (t_gt_tilde *)pd_new(gt_tilde_class);
-      inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
-      outlet_new(&x->x_obj, &s_signal);
+      inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"), gensym("signal"));
+      outlet_new(&x->x_obj, gensym("signal"));
       x->x_f = 0;
       return (x);
     }
@@ -180,15 +177,13 @@ static t_int *scalargt_tilde_performSSE(t_int *w)
 #endif /* __SSE__ */
 
 
-static void gt_tilde_dsp(t_gt_tilde *x, t_signal **sp)
+static void gt_tilde_dsp(t_gt_tilde* UNUSED(x), t_signal **sp)
 {
   t_sample*in1=sp[0]->s_vec;
   t_sample*in2=sp[1]->s_vec;
   t_sample*out=sp[2]->s_vec;
 
   int n=sp[0]->s_n;
-
-  ZEXY_USEVAR(x);
 
 #ifdef __SSE__
   if(
@@ -233,7 +228,7 @@ static void scalargt_tilde_dsp(t_scalargt_tilde *x, t_signal **sp)
 
 static void gt_tilde_help(t_object*x)
 {
-  post("\n%c >~\t\t:: compare 2 signals", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" >~\t\t:: compare 2 signals");
 }
 
 void setup_0x3e0x7e(void)
@@ -255,3 +250,10 @@ void setup_0x3e0x7e(void)
 
   zexy_register(">~");
 }
+
+#ifndef ZEXY_LIBRARY
+void setup(void)
+{
+    setup_0x3e0x7e();
+}
+#endif

@@ -1,25 +1,27 @@
-/******************************************************
+/* 
+ * quantize~: quantize a signal to various bit-depths
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
   the long waited for quantize~-object that quantizes in many possible (but equal) steps
-  of course, we´ll make a comfortable quantize of the float-signal for 16bit and 8bit
+  of course, weÅ½ll make a comfortable quantize of the float-signal for 16bit and 8bit
 
-  1110:forum::für::umläute:1999
+  1110:forum::fÃ¼r::umlÃ¤ute:1999
 */
 
 #include "zexy.h"
@@ -73,10 +75,9 @@ static void quantize_dsp(t_quantize *x, t_signal **sp)
   dsp_add(quantize_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
 
-static void quantize_tilde_helper(t_quantize *x)
+static void quantize_tilde_helper(t_quantize* UNUSED(x))
 {
-  ZEXY_USEVAR(x);
-  post("%c quantize~-object\t:: used for quantizing signals by various degrees", HEARTSYMBOL);
+  post(""HEARTSYMBOL" quantize~-object\t:: used for quantizing signals by various degrees");
   post("<quants> : quantize a signal into <quants> steps ('0' turns quantizing off)\n"
        "'8bit'   : quantize to 8 bit\n"
        "'16bit'  : quantize to 16 bit (default)\n"

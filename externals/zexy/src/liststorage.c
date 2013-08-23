@@ -1,19 +1,21 @@
-/******************************************************
+/* 
+ * liststorage: stores a number of lists
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*  
     this is heavily based on code from [textfile],
@@ -77,7 +79,6 @@ static void _liststorage_deletemsglist(t_msglist*list) {
   t_msglist*x=list;
   while(x) {
     t_msglist*y=x;
-    int i=0;
     x=x->next;
 
     freebytes(y->argv, y->argc*sizeof(t_atom));
@@ -343,8 +344,8 @@ static void *liststorage_new(t_floatarg f)
   t_liststorage *x = (t_liststorage *)pd_new(liststorage_class);
   int slots=f;
 
-  x->x_slotin=inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("slot"));
-  x->x_dataout=outlet_new(&x->x_obj, &s_list);
+  x->x_slotin=inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("slot"));
+  x->x_dataout=outlet_new(&x->x_obj, gensym("list"));
   x->x_infoout=outlet_new(&x->x_obj, 0);
 
 

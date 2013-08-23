@@ -1,9 +1,26 @@
+/* 
+ * mulitplex   :  multiplex a specified input to the output
+ *
+ * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/* 1903:forum::f�r::uml�ute:2005 */
+
+/* 1903:forum::für::umläute:2005 */
 
 /*
- *  mulitplex   :  multiplex a specified input to the output
- *
  * THINK: should the selector-inlet be the first or the last ???
  * pros/cons:
  *  the 1st inlet being the selector is not consistant with pd (hot/cold)
@@ -76,7 +93,7 @@ static void *mux_new(t_symbol *s, int argc, t_atom *argv)
     x->in[n] = inlet_new ((t_object*)x, (t_pd*)x->x_proxy[n], 0,0);
   }
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym(""));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym(""));
 
   outlet_new(&x->x_obj, 0);
   return (x);

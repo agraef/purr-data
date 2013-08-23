@@ -1,18 +1,21 @@
-/******************************************************
+/* 
+ * sfplay: multichannel soundfile player (use [readsf~] instead)
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
 sfplay.c - Author: Winfried Ritsch - IEM Graz 10.Mai 99 - 
@@ -133,9 +136,8 @@ static int sfplay_am_i_big_endian(void)
 }
 
 
-static void sfplay_helper(t_sfplay *x)
+static void sfplay_helper(t_sfplay* UNUSED(x))
 {
-  ZEXY_USEVAR(x);
 	post("\nsfplay :: a soundfile-player (c) winfried ritsch 1999");
 	post("\ncreation :: sfplay <channels> <bytes> : channels set the number of channels, bytes skip fileheader");
 	post("\nopen [<path>]<filename> [<endianity>]\t::open b(ig) or l(ittle) endian file"
@@ -144,7 +146,7 @@ static void sfplay_helper(t_sfplay *x)
 		"\nstop\t\t\t::stop playing"
 		"\nrewind\t\t\t::rewind tape"
 		"\ngoto <n>\t\t::play from byte n");
-	post("\n\nyou can also start playing with a ´bang´ or a ´1´, and stop with a ´0´"
+	post("\n\nyou can also start playing with a 'bang' or a '1', and stop with a '0'"
 		"\nthe last outlet will do a bang after the last sample has been played");
 
 }
@@ -622,7 +624,7 @@ static void *sfplay_new(t_floatarg chan,t_floatarg skip)
    while (c--) {
       outlet_new(&x->x_obj, gensym("signal")); /* channels outlet */
    }
-   x->bangout = outlet_new(&x->x_obj,  &s_bang);
+   x->bangout = outlet_new(&x->x_obj,  gensym("bang"));
     
    x->filep = t_getbytes(DACBLKSIZE*sizeof(short)*x->x_channels);
    

@@ -1,13 +1,12 @@
-#N canvas 0 31 640 508 10;
+#N canvas 420 106 775 605 10;
 #X text 129 36 write data to the (parallel) port;
-#X obj 81 355 % 256;
-#X floatatom 81 304 4 0 0 0 - - -;
+#X floatatom 81 304 4 0 255 0 - - -;
 #X text 122 304 write an 8bit-word;
 #X obj 90 33 lpt;
 #X text 521 30 part of zexy;
 #X text 79 64 this does not work on osX (as there is no parallel port)
 ;
-#N canvas 0 0 631 406 windows 0;
+#N canvas 4 49 631 406 windows 0;
 #X text 32 16 To get it running under WinNT/2000/XP a special kernel
 driver is needed. These systems do not allow direct access to I/O ports.
 ;
@@ -27,8 +26,8 @@ Click on 'Start' and then 'Exit'.;
 #X restore 292 86 pd windows;
 #X text 80 253 you should be member of the "lp" group or set the the
 permissions of the device file;
-#X obj 81 397 lpt /dev/parport0;
-#N canvas 0 0 553 385 raw 0;
+#X obj 81 477 lpt /dev/parport0;
+#N canvas 4 49 553 385 raw 0;
 #X text 24 127 if your port-address exceeds 0x3ff \, "lpt" will try
 to get all permissions with the iopl()-command. this might be dangerous
 !;
@@ -51,32 +50,32 @@ gain raw access to the port.;
 (and similar);
 #X text 82 189 the preferred way for linux users is to use the device-filesystem:
 ;
-#X text 217 398 <-- access /dev/parport0;
-#X obj 84 465 lpt/dev/parports/0;
-#X text 222 466 <-- some systems might use this syntax;
+#X text 217 478 <-- access /dev/parport0;
+#X obj 84 545 lpt /dev/parports/0;
+#X text 222 546 <-- some systems might use this syntax;
 #X msg 335 309 control \$1;
-#X obj 335 330 % 256;
-#X floatatom 335 291 4 0 0 0 - - -;
-#X text 373 291 set the control bits;
-#X floatatom 81 429 5 0 0 0 - - -;
-#X msg 337 363 bang;
-#X text 380 367 read the input bits;
-#X text 131 429 input bits;
-#N canvas 460 154 494 344 META 0;
+#X floatatom 335 291 4 0 255 0 - - -;
+#X floatatom 81 509 5 0 0 0 - - -;
+#X msg 337 433 bang;
+#X text 380 437 read the input bits;
+#X text 131 509 input bits;
+#N canvas 461 150 494 344 META 0;
 #X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 25 LICENSE GPL v2;
 #X text 12 125 AUTHOR IOhannes m zmoelnig;
 #X text 12 45 DESCRIPTION write data to the (parallel) port;
 #X text 12 65 INLET_0 float bang control;
-#X text 12 85 INLET_1;
-#X text 12 5 KEYWORDS control filesystem needs_work (inlet_1?);
 #X text 12 105 OUTLET_0 float;
-#X restore 571 477 pd META;
-#X connect 1 0 9 0;
-#X connect 2 0 1 0;
-#X connect 9 0 22 0;
-#X connect 18 0 19 0;
-#X connect 19 0 9 0;
-#X connect 20 0 18 0;
-#X connect 23 0 9 0;
+#X text 12 5 KEYWORDS control hardware interfacing;
+#X text 12 85 INLET_1 float;
+#X restore 571 557 pd META;
+#X floatatom 335 361 4 0 255 0 - - -;
+#X text 373 361 alternative way to set control bits;
+#X text 373 291 set control bits;
+#X connect 1 0 8 0;
+#X connect 8 0 19 0;
+#X connect 17 0 8 0;
+#X connect 18 0 17 0;
+#X connect 20 0 8 0;
+#X connect 24 0 8 1;

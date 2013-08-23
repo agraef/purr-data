@@ -45,24 +45,25 @@ foot_c() {
  echo
 }
 
+setup_names() {
+find . -name "*.c" -not -name zexy.c -not -name z_zexy.c | sort | while read f; do
+  i=${f##*/}
+  i=${i%.c}
+  SETUPNAME=$(echo $i | sed -e "s/.*0x.*/setup_&/g" -e "s/~/_tilde/g" -e "/0x/! s/.*/&_setup/")
+  if grep -w ${SETUPNAME} $f > /dev/null; then
+    echo ${SETUPNAME} ${i}
+  fi
+done 
+}
+
 ##################################
 ## body
-
 head_h > $ZEXY_H
 head_c > $ZEXY_C
 
-for f in `ls *.c | grep -v zexy.c`
-do
-## each c-file in zexy needs to have a z_<file>_setup()-function
-## that calls all needed setup-functions
-## any non-alpha-numeric-character is replaced by "_"
-## e.g. "multiplex~.c" -> "z_multiplex__setup()"
-  i=${f%.c}
-  SETUPNAME=$(echo $i | sed -e "s/.*0x.*/setup_&/g" -e "s/~/_tilde/g" -e "/0x/! s/.*/&_setup/")
-  if grep -w ${SETUPNAME} $f > /dev/null; then
-   echo "void ${SETUPNAME}(void); /* $i */" >> $ZEXY_H
-   echo "	${SETUPNAME}(); /* $i */" >> $ZEXY_C
-  fi
+setup_names | while read SETUPNAME i; do
+ echo "void ${SETUPNAME}(void); /* $i */" >> $ZEXY_H
+ echo "	${SETUPNAME}(); /* $i */" >> $ZEXY_C
 done
 
 foot_h >> $ZEXY_H

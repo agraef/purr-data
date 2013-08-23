@@ -1,25 +1,21 @@
-/******************************************************
+/* 
+ * urn :  "generate random numbers without duplicates" (very max-like)
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-/* 1008:forum::für::umläute:2001 */
-
-/*
-  urn :  "generate random numbers without duplicates"
-  very max-like
-*/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 
@@ -108,15 +104,14 @@ static void urn_seed(t_urn *x, t_float f)
   x->x_seed = f;
 }
 
-static void *urn_new(t_symbol *s, int argc, t_atom *argv)
+static void *urn_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_urn *x = (t_urn *)pd_new(urn_class);
   t_float f=0.;
-  ZEXY_USEVAR(s);
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym(""));
-  x->x_floatout=outlet_new(&x->x_obj, &s_float);
-  x->x_bangout =outlet_new(&x->x_obj, &s_bang);
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym(""));
+  x->x_floatout=outlet_new(&x->x_obj, gensym("float"));
+  x->x_bangout =outlet_new(&x->x_obj, gensym("bang"));
 
   x->x_seed = makeseed();
   x->x_noauto = 0;
@@ -140,7 +135,7 @@ static void *urn_new(t_symbol *s, int argc, t_atom *argv)
 
 static void urn_help(t_urn*x)
 {
-  post("\n%c urn\t\t:: generate randum numbers without repetition", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" urn\t\t:: generate randum numbers without repetition");
 }
 
 void urn_setup(void)

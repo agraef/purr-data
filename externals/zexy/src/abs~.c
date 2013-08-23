@@ -1,24 +1,22 @@
-/******************************************************
+/* 
+ * abs~: absolute value for signals
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2005
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*
-  abs~: absolute value of signal
-  
-  2112:forum::für::umläute:2005
-*/
 
 #include "zexySIMD.h"
 
@@ -137,7 +135,7 @@ static void sigABS_dsp(t_abs *x, t_signal **sp)
 
 static void sigABS_helper(void)
 {
-  post("\n%c abs~ \t\t:: absolute value of a signal", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" abs~ \t\t:: absolute value of a signal");
 }
 
 static void *sigABS_new(void)

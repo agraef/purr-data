@@ -1,24 +1,21 @@
-/******************************************************
+/* 
+ *  sort :  sort a list of floats
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- ******************************************************/
-
-
-/* 1309:forum::für::umläute:2000 */
-
-/*
-  sort :  sort a package of floats
-*/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 
@@ -109,13 +106,13 @@ static void sort_list(t_sort *x, t_symbol *s, int argc, t_atom *argv)
   else
     for (n = 0, i=argc-1; n < argc; n++, i--) SETFLOAT(&atombuf[n], idx[i]);
 
-  outlet_list(x->indexOut , &s_list, n, atombuf);
+  outlet_list(x->indexOut , gensym("list"), n, atombuf);
 
   if (x->ascending) 
     for (n = 0; n < argc; n++) SETFLOAT(&atombuf[n], buf[n]);
   else
     for (n = 0, i=argc-1; n < argc; n++, i--) SETFLOAT(&atombuf[n], buf[i]);
-  outlet_list(x->sortedOut, &s_list, n, atombuf);
+  outlet_list(x->sortedOut, gensym("list"), n, atombuf);
 
 
   freebytes(atombuf, argc*sizeof(t_atom));
@@ -126,20 +123,20 @@ static void *sort_new(t_floatarg f)
   t_sort *x = (t_sort *)pd_new(sort_class);
   x->ascending = (f < 0.f)?0:1;
 
-  x->sortedOut=outlet_new(&x->x_obj, &s_list);
-  x->indexOut=outlet_new(&x->x_obj, &s_list);
+  x->sortedOut=outlet_new(&x->x_obj, gensym("list"));
+  x->indexOut=outlet_new(&x->x_obj, gensym("list"));
 
   x->bufsize = 0;
   x->buffer = NULL;
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("direction"));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("direction"));
 
   return (x);
 }
 
 static void sort_help(t_sort*x)
 {
-  post("\n%c sort\t\t:: sort a list of numbers", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" sort\t\t:: sort a list of numbers");
 }
 void sort_setup(void)
 {

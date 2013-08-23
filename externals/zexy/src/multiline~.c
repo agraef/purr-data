@@ -1,18 +1,22 @@
-/******************************************************
+/* 
+ * multiline~: interpolating signal multiplier
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 /*
   a multiline that MULTIplicates MULTIple signals with "ramped floats" (--> like "line~")
@@ -20,7 +24,7 @@
   this is kind of multiplying some streams with the square diagonal matrix : diag*~
   for smooth-results we do this line~ thing
 
-  1403:forum::für::umläute:2001
+  1403:forum::fÃ¼r::umlÃ¤ute:2001
 */
 
 
@@ -59,9 +63,8 @@ typedef struct _mline {
 
 /* the message thing */
 
-static void mline_list(t_mline *x, t_symbol *s, int argc, t_atom *argv)
+static void mline_list(t_mline *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   if (argc>x->sigNUM)x->time=atom_getfloat(argv+argc-1);
 
   if (x->time <= 0) {
@@ -195,11 +198,10 @@ static void mline_free(t_mline *x)
 }
 
 
-static void *mline_new(t_symbol *s, int argc, t_atom *argv)
+static void *mline_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_mline *x = (t_mline *)pd_new(mline_class);
   int i;
-  ZEXY_USEVAR(s);
 
   if (!argc) {
     argc = 1;
@@ -216,14 +218,14 @@ static void *mline_new(t_symbol *s, int argc, t_atom *argv)
 
   i = argc-1;
 
-  outlet_new(&x->x_obj, &s_signal);
+  outlet_new(&x->x_obj, gensym("signal"));
 
   while (i--) {
-    inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
-    outlet_new(&x->x_obj, &s_signal);
+    inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"), gensym("signal"));
+    outlet_new(&x->x_obj, gensym("signal"));
   }
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym(""));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym(""));
   floatinlet_new(&x->x_obj, &x->time);
     
   x->sigIN  = (t_sample **)getbytes(x->sigNUM * sizeof(t_sample **));
@@ -250,7 +252,7 @@ static void *mline_new(t_symbol *s, int argc, t_atom *argv)
 
 static void mline_help(t_mline*x)
 {
-  post("\n%c multiline~\t:: ramped multiplication of multiple signals", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" multiline~\t:: ramped multiplication of multiple signals");
 }
 
 void multiline_tilde_setup(void)

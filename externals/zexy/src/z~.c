@@ -1,25 +1,28 @@
-/******************************************************
+/* 
+ * z~: samplewise delay (z^-N) 
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
   here we do some sample-wise delay, so you can do your own FIR-filter-designs
   here are :: "z^(-1)", "z^(-N)"
   to do :: a "lattice~" section ...
 
-  1302:forum::für::umläute:2000
+  1302:forum::fÃ¼r::umlÃ¤ute:2000
 */
 
 #include "zexy.h"
@@ -101,7 +104,7 @@ static void *zNdelay_new(t_floatarg f)
   }
   x->phase = 0;
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft1"));
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("ft1"));
   outlet_new(&x->x_obj, gensym("signal")); 
   return (x);
 }
@@ -114,7 +117,7 @@ static void zNdelay_free(t_zNdelay *x)
 
 static void zdel_helper(void)
 {
-  post("\n%c z~\t:: samplewise delay", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" z~\t:: samplewise delay");
   post("creation :: 'z~ [<n>]' : creates a <n>-sample delay; default is 1");
 }
 

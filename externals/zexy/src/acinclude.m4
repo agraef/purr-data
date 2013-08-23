@@ -78,7 +78,7 @@ AC_DEFUN([AC_CHECK_FRAMEWORK],
   temp_check_ldflags_org="${LDFLAGS}"
   LDFLAGS="-framework [$1] ${LDFLAGS}"
 
-  AC_LINK_IFELSE(AC_LANG_PROGRAM(,), [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])], [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
 
   if test "x$temp_check_ldflags_success" = "xyes"; then
     AC_MSG_RESULT([yes])
@@ -100,7 +100,7 @@ AC_DEFUN([AC_CHECK_LDFLAGS],
   temp_check_ldflags_org="${LDFLAGS}"
   LDFLAGS="$1 ${LDFLAGS}"
 
-  AC_LINK_IFELSE(AC_LANG_PROGRAM(,), [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])], [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
 
   if test "x$temp_check_ldflags_success" = "xyes"; then
     AC_MSG_RESULT([yes])
@@ -160,3 +160,37 @@ if test "$fat_binary" != no; then
    undefine([Name])
 fi
 ])# AC_CHECK_FAT
+
+AC_DEFUN([AC_CHECK_SIMD],
+[
+AC_ARG_ENABLE(simd,
+       [  --enable-simd=ARCHS
+                          enable SIMD optimization;
+                          valid arguments are: SSE2
+       ],
+       [simd=$enableval], [simd=no])
+if test "$simd" != no; then
+   AC_MSG_CHECKING([SIMD optimization])
+
+   # Respect SIMD given to --enable-simd if present.
+   if test "$simd" != yes; then
+	    SIMD=`echo "$simd" | tr ',' ' '`
+   else
+	    # Choose a default set of architectures based upon platform.
+      SIMD="SSE2"
+   fi
+   AC_MSG_RESULT([$SIMD])
+
+   for smd in $SIMD 
+   do
+    case "${smd}" in
+    SSE2|sse2)
+      AC_CHECK_CFLAGS([-mfpmath=sse -msse])
+    ;;
+    *)
+      AC_MSG_RESULT([unknown SIMD instructions: ${smd}])
+    ;;
+    esac
+   done
+fi
+])# AC_CHECK_SIMD

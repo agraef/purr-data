@@ -1,18 +1,21 @@
-/******************************************************
+/* 
+ * noisi~: bandlimited noise generator
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
   30041999
@@ -24,7 +27,7 @@
   and I made only very few modifications so look out for the LICENSE.TXT delivered with 
   puredata for further (c)-information
 
-  forum für umläute 1999
+  forum fÃ¼r umlÃ¤ute 1999
 
   this is in fact the very same as the late "NOISE.C", except that I tried to optimize the code a little  bit
   (by partially removing those very expensive if..then's in about 15 minutes, so there are thousands of new bugs very likely)
@@ -140,7 +143,7 @@ static void noisi_dsp(t_nois *x, t_signal **sp){
 
 
 static void noisi_helper(void){
-  post("\n%c noisi~\t:: a bandlimited interpolating pseudo-noise generator", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" noisi~\t:: a bandlimited interpolating pseudo-noise generator");
   post("<freq>\t : sampling-frequency (in Hz)\n"
        "'help'\t : view this");
   post("creation : \"noisi~ [<freq>]\"\t: ('0'(default) will produce 'white' noise)\n");

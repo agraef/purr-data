@@ -1,26 +1,25 @@
-/******************************************************
+/* 
+ * symbol2list: convert a symbol into a list (with given delimiters)
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 #include <stdlib.h>
 #include <string.h>
-
-/*
- * symbol2list: convert a symbol into a list (with given delimiters)
-*/
 
 /* ------------------------- symbol2list ------------------------------- */
 
@@ -74,7 +73,7 @@ static void symbol2list_process(t_symbol2list *x)
   cc=x->s->s_name;
   cp=cc;
   
-  if (x->delimiter==NULL || x->delimiter==&s_){
+  if (x->delimiter==NULL || x->delimiter==gensym("")){
     i=strlen(cc);
     if(x->argnum<i){
       freebytes(x->argv, x->argnum*sizeof(t_atom));
@@ -122,7 +121,7 @@ static void symbol2list_process(t_symbol2list *x)
     if(cp)string2atom(x->argv+i, cp, strlen(cp));
 }
 static void symbol2list_bang(t_symbol2list *x){
-  if(!(x->s) || x->s==&s_){
+  if(!(x->s) || x->s==gensym("")){
     outlet_bang(x->x_obj.ob_outlet);
     return;
   }
@@ -133,10 +132,9 @@ static void symbol2list_symbol(t_symbol2list *x, t_symbol *s){
   x->s = s;
   symbol2list_bang(x);
 }
-static void *symbol2list_new(t_symbol *s, int argc, t_atom *argv)
+static void *symbol2list_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_symbol2list *x = (t_symbol2list *)pd_new(symbol2list_class);
-  ZEXY_USEVAR(s);
 
   outlet_new(&x->x_obj, 0);
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("symbol"), gensym(""));
@@ -154,7 +152,7 @@ static void symbol2list_free(t_symbol2list *x)
 
 static void symbol2list_help(t_symbol2list*x)
 {
-  post("\n%c symbol2list\t:: split a symbol into a list of atoms", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" symbol2list\t:: split a symbol into a list of atoms");
 }
 
 void symbol2list_setup(void)

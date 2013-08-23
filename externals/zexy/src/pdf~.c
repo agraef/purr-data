@@ -1,20 +1,21 @@
-/******************************************************
+/* 
+ * pdf~:  get the ProbabilityDensityFunction of a signal
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-/* get the ProbabilityDensityFunction of a signal */
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 
@@ -57,7 +58,7 @@ static void pdf_bang(t_pdf *x)
     {
       SETFLOAT(a, *buf++*max);
       SETFLOAT(a+1,x->size-n-1);
-      outlet_list(x->x_obj.ob_outlet, &s_list, 2, (t_atom*)&a);
+      outlet_list(x->x_obj.ob_outlet, gensym("list"), 2, (t_atom*)&a);
     }
 }
 
@@ -95,14 +96,12 @@ static void *pdf_new(t_floatarg f)
 {
   int i = f;
   t_pdf *x = (t_pdf *)pd_new(pdf_class);
-  t_float *buf;
 
   x->size = (i)?i:64;
   x->buf = (t_float *)getbytes(x->size * sizeof(*x->buf));
-  buf = x->buf;
   clear_pdfbuf(x);
 
-  outlet_new(&x->x_obj, &s_list);
+  outlet_new(&x->x_obj, gensym("list"));
     
   return (x);
 }
@@ -115,7 +114,7 @@ static void pdf_free(t_pdf *x)
 
 static void pdf_tilde_helper(void)
 {
-  post("\n%c pdf~\t:: get the probability density function of a signal (-1.0 to +1.0)", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" pdf~\t:: get the probability density function of a signal (-1.0 to +1.0)");
   post("'bang'\t  : output a list of the probabilities of 'n' function values"
        "\n'clear'\t  : clear the buffer (set all probabilities to zero)"
        "\n<1/0>\t  : short for 'bang' and 'clear'"

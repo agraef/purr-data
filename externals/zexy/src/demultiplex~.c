@@ -1,24 +1,23 @@
-/******************************************************
+/* 
+ *  demux~ : demultiplex a signal to a specified output
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
-
-/* ------------------------------------------------------------------------------ */
-
-/* demux~ : demultiplex a signal to a specified output */
 
 static t_class *demux_class;
 
@@ -72,7 +71,7 @@ static void demux_dsp(t_demux *x, t_signal **sp)
 
 static void demux_helper(void)
 {
-  post("\n%c demux~\t:: demultiplex a signal to one of various outlets", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" demux~\t:: demultiplex a signal to one of various outlets");
   post("<#out>\t : the outlet-number (counting from 0) to witch the inlet is routed"
        "'help'\t : view this");
   post("creation : \"demux~ [arg1 [arg2...]]\"\t: the number of arguments equals the number of outlets\n");
@@ -83,12 +82,10 @@ static void demux_free(t_demux *x)
   freebytes(x->out, x->n_out * sizeof(t_sample *));
 }
 
-static void *demux_new(t_symbol *s, int argc, t_atom *argv)
+static void *demux_new(t_symbol* UNUSED(s), int argc, t_atom* UNUSED(argv))
 {
   t_demux *x = (t_demux *)pd_new(demux_class);
   int i;
-  ZEXY_USEVAR(s);
-  ZEXY_USEVAR(argv);
 
   if (!argc)argc=2;
   x->n_out=argc;

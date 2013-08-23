@@ -1,21 +1,25 @@
-/******************************************************
+/* 
+ * lpt: read/write the parallel port
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 /* 
-   (c) 2000:forum::für::umläute:2005
+   (c) 2000:forum::fÃ¼r::umlÃ¤ute:2005
 
    write to the parallel port
    extended to write to any port (if we do have permissions)
@@ -165,8 +169,8 @@ static void *lpt_new(t_symbol *s, int argc, t_atom *argv)
     error("lpt: the use of 'lp' has been deprecated; use 'lpt' instead");
 
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("control"));
-  outlet_new(&x->x_obj, &s_float);
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("control"));
+  outlet_new(&x->x_obj, gensym("float"));
   x->mode = MODE_NONE;
   x->port = 0;
   x->device = -1;
@@ -279,10 +283,9 @@ static void lpt_free(t_lpt *x)
 }
 
 
-static void lpt_helper(t_lpt *x)
+static void lpt_helper(t_lpt*UNUSED(x))
 {
-  ZEXY_USEVAR(x);
-  post("\n%c lpt :: direct access to the parallel port", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" lpt :: direct access to the parallel port");
   post("<byte>\t: write byte to the parallel-port");
   post("\ncreation:\t\"lpt [<port>]\": connect to parallel port <port> (0..2)");
   post("\t\t\"lpt <portaddr>\": connect to port @ <portaddr> (hex)");

@@ -1,17 +1,21 @@
-/******************************************************
+/* 
+ * step~: unity step function
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
   step~  : will make a unity step at a desired point in the signal-vector; the second input specifies a 
@@ -97,7 +101,7 @@ static void step_dsp(t_step *x, t_signal **sp)
 
 static void step_helper(void)
 {
-  post("%c step~-object :: generates a unity-step", HEARTSYMBOL);
+  post(""HEARTSYMBOL" step~-object :: generates a unity-step");
   post("creation : \"dirac~ [<position> [<length>]]\" : create a rectangular window\n"
        "\t\t\tat specified position and with specified length (in samples)\n"
        "inlet1\t: <position>\t: create a rectangular window at new position\n"
@@ -112,8 +116,8 @@ static void *step_new(t_floatarg farg)
 {
   t_step *x = (t_step *)pd_new(step_class);
 
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("ft1"));
-  outlet_new(&x->x_obj, &s_signal);
+  inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("float"), gensym("ft1"));
+  outlet_new(&x->x_obj, gensym("signal"));
 
   x->position = 0;
   x->wait4start = x->wait4stop = 0;

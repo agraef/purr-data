@@ -1,26 +1,25 @@
-/******************************************************
+/* 
+ *  strcmp    : compare 2 lists as if they were strings
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 #include <stdlib.h>
 #include <string.h>
-
-/*
- * strcmp    : compare 2 lists as if they were strings
-*/
 
 /* ------------------------- strcmp ------------------------------- */
 
@@ -80,9 +79,8 @@ static void list2binbuf(t_binbuf**bbuf, int *n, char**str, int argc, t_atom*argv
   if(' '==s[i])s[i]=0;
 }
 
-static void strcmp_list(t_strcmp *x, t_symbol *s, int argc, t_atom *argv)
+static void strcmp_list(t_strcmp *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   list2binbuf(&x->bbuf1, &x->n1, &x->str1, argc, argv);
   strcmp_bang(x);
 }
@@ -94,9 +92,8 @@ static void strcmp_symbol(t_strcmp *x, t_symbol *s)
   strcmp_bang(x);
 }
 
-static void strcmp_secondlist(t_strcmp *x, t_symbol *s, int argc, t_atom *argv)
+static void strcmp_secondlist(t_strcmp *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   list2binbuf(&x->bbuf2, &x->n2, &x->str2, argc, argv);
 }
 static void strcmp_secondsymbol(t_strcmp *x, t_symbol *s)
@@ -115,10 +112,9 @@ static void strcmp_proxy_symbol(t_strcmp_proxy *y, t_symbol *s)
   if(s)strcmp_secondsymbol(y->p_master, s);
 }
 
-static void *strcmp_new(t_symbol *s, int argc, t_atom *argv)
+static void *strcmp_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_strcmp *x = (t_strcmp *)pd_new(strcmp_class);
-  ZEXY_USEVAR(s);
 
   x->x_proxy=(t_strcmp_proxy*)pd_new(strcmp_proxy_class);
   x->x_proxy->p_master = x;
@@ -154,7 +150,7 @@ static void strcmp_free(t_strcmp *x)
 
 static void strcmp_help(t_strcmp*x)
 {
-  post("\n%c strcmp\t\t:: compare to lists as strings", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" strcmp\t\t:: compare to lists as strings");
 }
 
 

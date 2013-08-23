@@ -1,30 +1,33 @@
-/******************************************************
+/* 
+ * sfrecord: multichannel soundfile recorder (try [writesf~] instead)
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
 sfplay.c - Author: Winfried Ritsch - IEM Graz 10.Mai 99 - 
 Modified:
-sfrecord.c - hacked from sfplay ::: 2308:forum::für::umläute:1999 @ iem
+sfrecord.c - hacked from sfplay ::: 2308:forum::fÃ¼r::umlÃ¤ute:1999 @ iem
 
 please mail problems and ideas for improvements to
 ritsch@iem.kug.ac.at
 zmoelnig@iem.kug.ac.at
 */
 
-/* TODO: deprecate this in favour of [sfplay~] */
+/* TODO: deprecate this in favour of [writesf~] */
 
 /* #define DEBUG_ME for debugging messages */
 
@@ -136,7 +139,7 @@ static void sfrecord_open(t_sfrecord *x,t_symbol *filename,t_symbol *endian)
 		x->swap = (endian->s_name[0] == 'b');
 
 	/* 
-   * skip header after open;; sometimes we´ll have to write a header using the x->skip; so don´t delete it completely 
+   * skip header after open;; sometimes weÅ½ll have to write a header using the x->skip; so donÅ½t delete it completely 
    */
   /* x->skip = 1; */
 
@@ -176,7 +179,7 @@ static void sfrecord_close(t_sfrecord *x)
 	return;
 }
 
-/* for skipping header of soundfile  Don´t use this for memory map */
+/* for skipping header of soundfile  DonÅ½t use this for memory map */
 
 static int sfrecord_skip(t_sfrecord *x)
 {
@@ -220,7 +223,7 @@ static void sfrecord_float(t_sfrecord *x, t_floatarg f)
 	else sfrecord_stop(x);
 }
 
-/* say what state we´re in */
+/* say what state weÅ½re in */
 static void sfrecord_bang(t_sfrecord* x)
 {
 	if (x->state == SFRECORD_WRITE) state_out(x, 1); else state_out(x, 0);
@@ -523,7 +526,7 @@ static void *sfrecord_new(t_floatarg chan)
 	default: c=1; break;
 	}
 
-	outlet_new(&x->x_obj, &s_float);
+	outlet_new(&x->x_obj, gensym("float"));
 
 	x->x_channels = c;
 	x->x_skip = x->x_offset = 0;
@@ -545,7 +548,7 @@ static void *sfrecord_new(t_floatarg chan)
 #ifdef DEBUG_ME
 		post("create extra channel #%d", c);
 #endif
-		inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal); /* channels inlet */
+		inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"), gensym("signal")); /* channels inlet */
 	}
 
 	x->filep = t_getbytes(DACBLKSIZE*sizeof(short)*x->x_channels);
@@ -569,7 +572,7 @@ static void sfrecord_helper(void)
 		"\nstop\t\t\t:: stop playing"
 		"\nbang\t\t\t:: outputs the current state (1_recording, 0_not-recording)");
 		
-	post("\n\nyou can also start recording with a ´1´, and stop with a ´0´");
+	post("\n\nyou can also start recording with a '1', and stop with a '0'");
 }
 
 

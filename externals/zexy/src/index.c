@@ -1,21 +1,25 @@
-/******************************************************
+/* 
+ * index: associative dictionary
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 /* 
-   (c) 2005:forum::für::umläute:2000
+   (c) 2005:forum::fÃ¼r::umlÃ¤ute:2000
 
    "index" simulates an associative index :: that is : convert a symbol to an index
 
@@ -167,10 +171,9 @@ static void index_add(t_index *x, t_symbol *s, t_float f)
   outlet_float(x->x_obj.ob_outlet, -1.f);
 }
 /* delete a symbol from the map (if it is in there) */
-static void index_delete(t_index *x, t_symbol *s, int argc, t_atom*argv)
+static void index_delete(t_index *x, t_symbol* UNUSED(s), int argc, t_atom*argv)
 {
   int idx=-1;
-  ZEXY_USEVAR(s);
   if(argc!=1){
     error("index :: delete what ?");
     return;
@@ -284,14 +287,12 @@ static void index_resize(t_index *x, t_float automod)
 
 
 
-static void *index_new(t_symbol *s, int argc, t_atom *argv)
+static void *index_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_index *x = (t_index *)pd_new(index_class);
   t_symbol** buf;
 
   int maxentries = 0, automod=0;
-
-  ZEXY_USEVAR(s);
 
   if (argc--) {
     maxentries = (int)atom_getfloat(argv++);
@@ -311,7 +312,7 @@ static void *index_new(t_symbol *s, int argc, t_atom *argv)
 
   while (maxentries--) buf[maxentries]=0;
 
-  outlet_new(&x->x_obj, &s_float);
+  outlet_new(&x->x_obj, gensym("float"));
 
   return (x);
 }
@@ -325,7 +326,7 @@ static void index_free(t_index *x)
 static void index_helper(t_index *x)
 {
   endpost();
-  post("%c index :: index symbols to indices", HEARTSYMBOL);
+  post(""HEARTSYMBOL" index :: index symbols to indices");
   post("<symbol>             : look up the <symbol> in the index and return it's index");
   post("<int>                : look up the element at index <int> in the index");
   post("'add <symbol>'       : add a new symbol to the index-map");

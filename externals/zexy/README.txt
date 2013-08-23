@@ -6,13 +6,10 @@ outline of this file::
 ==============================================================================
  +  general
  +  installation
-   +  linux
+   +  linux, irix, OSX,... (autoconf)
    +  w32
-   +  irix
-   +  osX
  +  using
- +  authors
-
+ +  license
 
 
 general::
@@ -33,65 +30,69 @@ published under.
 installation::
 ==============================================================================
 
-linux :
+linux, irix, osx, mingw,... :
 ------------------------------------------------------------------------------
+see INSTALL for more detailed instructions
 
-short:
-#1> cd src/
+#0> ./autogen.sh
+#1> ./configure
 #2> make
 #3> make install
-(this will automatically call autoconf and ./configure if needed (see "long"))
 
-long:
-#1>  cd src/
-#2>  ./bootstrap.sh
-#3>  ./configure
-#4>  make
-#5>  make install
+installation directory:
+by defaultm zexy will install into /usr/local/lib/pd/extra/zexy
+the path can be changed via the "--prefix", or "--libdir"
+e.g. "./configure --prefix=/usr" -> /usr/lib/pd/extra/zexy
+e.g. "./configure --libdir=/tmp/foo" -> /tmp/foo/zexy
 
-this will install the zexy external into /usr/local/lib/pd/externs
-(the path can be changed either via the "--prefix"-flag to "configure"
-or by editing the makefile
-alternatively you can try "make everything" (after ./configure)
-note: if you don't want the parallel-port object [lpt]
- (e.g.: because you don't have a parallel-port) you can disable it 
- with "--disable-lpt"
+puredata headers:
+zexy needs to find the Pd headers (and Pd.lib on some systems) during the build
+process.
+if you have installed the headers in a non-standard location, you can specify
+them with the "--with-pd" option:
+"./configure --with-pd=/usr/include/pd" will add /usr/include/pd to the INCLUDE
+path.
+"./configure --with-pd=/home/me/src/Pd-0.43.1" can be used to add
+/home/me/src/Pd-0.43.1/src to the INCLUDEs and /home/me/src/Pd-0.43.1/bin to the
+library search path
+
+custom external extension:
+zexy does it's best to determine the correct external extension for your system.
+e.g. it will use "dll" on w32, or "pd_linux" on linux.
+if - for whatever obscure reasons - you want to force the extension to certain
+value, you can use the "--with-extension" flag:
+"./configure --with-extension=l_ia64" will use "l_ia64" for the resulting
+binaries
+
+SSE2 (SIMD):
+by default zexy is compiled without SIMD optimization (recently there have been
+reports about crashes, when SSE2 was enabled; until this is fixed, the default
+is to use the safe fallback)
+if you want to enable SSE2 optimization, configure with
+"./configure --enable-simd=SSE2"
+
+multi-object vs single-object libraries:
+by default, zexy builds a single library "zexy" that contains all objects.
+if - for some obscure reason - you insist on having a lot of small libraries
+each containing a single object, you can enable this by using the
+"--disable-library" flag
+
+parallel port support:
+if you don't want the parallel-port object [lpt] you can disable it with
+	"--disable-lpt"
+ (e.g.: because you don't have a parallel-port)
 
 
-macOS-X:
-------------------------------------------------------------------------------
-see installation/linux
-
-there is nothing special in the code, so it should compile out of the box:
-"cd" to zexy/src
-run "./bootstrap.sh; ./configure; make" (for further details please see "1) linux")
-
-building with a special version of Pd:
-        to build zexy with your special version of Pd, you should specify the path to your Pd ressources
-        (e.g. "./configure --with-pd=/Applications/Pd.app/Contents/Resources")
-fat-binaries
-        if you want to build a multi-arch binary you have to specify this as well
-        (e.g. "./configure --enable-fat-binary=i386,ppc --with-extension=d_fat")
-
-note on generating dependencies:
- on older systems the automatic creation of build dependencies
- might fail with following error:
-    cpp0: invalid option -smart
- a simple workaround is to not use the "-E" flag for the preprocessor
- try:
-   make CPP=cc
-
+fat (multiarch) binaries:
+for building multi-arch binaries (currently only supported on OSX), specify the
+wanted architectures in the "--enable-fat-binary" flag
+e.g. "./configure --enable-fat-binary=i386,ppc --with-extension=d_fat"
 
 win32 :
 ------------------------------------------------------------------------------
 
-#1 extract the zexy-0_x.zip to your pd-path (this file should be located 
-   at <mypdpath>/pd/zexy/)
-#2 execute the "z_install.bat", this should copy all necessary files 
-   to the correct places
-
 to compile: 
- + w/ MSVC use makefile.nt or zexy.dsw; 
+ + w/ MSVC use the build project found in build/win-vs*/
  OR
  + with GCC configure your pd path, eg:
 	#> ./configure --prefix=/c/program/pd; make; make install
@@ -107,17 +108,6 @@ to compile:
 	    the "unit-at-a-time" optimization (which gets enabled by "-O2")
 	    is the cause of this problem. turning it off might help
 
-irix :
-------------------------------------------------------------------------------
-
-though i have physical access to both SGI's O2s and indys,
-i haven't tried to compile the zexy externals there for years.
-the configure-script should work here too;
-if not, try "make -f makefile.irix"
-Good luck !
-
-
-
 making pd run with the zexy external::
 ==============================================================================
 make sure, that pd will be looking at this location 
@@ -128,24 +118,8 @@ make sure, that you somehow load the zexy external (either add "-lib zexy"
 or "-lib <myzexypath>/zexy" to your startup-script (.pdrc or whatever) 
 or load it via the object "zexy" at runtime
 
-
-
-authors::
+license::
 ==============================================================================
-this software has been mainly written by 
-	IOhannes m zmoelnig <zmoelnig [at] iem [dot] at>
-but a lot of others have contributed as well.
-
-Copyright 1999-2010 IOhannes m zmoelnig
-Copyright 1999-2010 zexy-contributers
-Copyright 1998-2004 matt wright
-Copyright 1999-2000 winfried ritsch
-Copyright 1999      guenter geiger
-Copyright 1996-1999 miller s puckette
-Copyright 2005-2006 tim blechmann
-Copyright 2009-2010 franz zotter
-
-
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -156,9 +130,5 @@ Copyright 2009-2010 franz zotter
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-
+    You should have received a copy of the GNU General Public License along
+    with this program.  If not, see <http://www.gnu.org/licenses/>.

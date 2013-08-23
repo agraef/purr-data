@@ -1,27 +1,24 @@
-/******************************************************
+/* 
+ * glue: glue two lists together (use [list append] instead)
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 #include <string.h>
-
-
-/* ------------------------- glue ------------------------------- */
-
-/* glue 2 lists together (append) */
 
 static t_class *glue_class;
 
@@ -35,9 +32,8 @@ typedef struct _zglue
   t_int changed;
 } t_glue;
 
-static void glue_lst2(t_glue *x, t_symbol *s, int argc, t_atom *argv)
+static void glue_lst2(t_glue *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   x->changed = 1;
   if (x->n2 != argc) {
     freebytes(x->ap2, x->n2 * sizeof(t_atom));
@@ -46,9 +42,8 @@ static void glue_lst2(t_glue *x, t_symbol *s, int argc, t_atom *argv)
   } else memcpy(x->ap2, argv, argc * sizeof(t_atom));
 }
 
-static void glue_lst(t_glue *x, t_symbol *s, int argc, t_atom *argv)
+static void glue_lst(t_glue *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   if (x->n != x->n2+argc) {
     freebytes(x->ap, x->n * sizeof(t_atom));
     x->n1 = argc;
@@ -88,10 +83,9 @@ static void glue_free(t_glue *x)
   freebytes(x->ap2, sizeof(t_atom)*x->n2);
 }
 
-static void *glue_new(t_symbol *s, int argc, t_atom *argv)
+static void *glue_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_glue *x = (t_glue *)pd_new(glue_class);
-  ZEXY_USEVAR(s);
 
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("list"), gensym(""));
   outlet_new(&x->x_obj, 0);
@@ -106,7 +100,7 @@ static void *glue_new(t_symbol *s, int argc, t_atom *argv)
 
 static void glue_help(t_glue*x)
 {
-  post("\n%c glue\t\t:: glue together 2 lists (like [list append])", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" glue\t\t:: glue together 2 lists (like [list append])");
 }
 
 void glue_setup(void)

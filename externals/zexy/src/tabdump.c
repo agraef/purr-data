@@ -1,23 +1,21 @@
-
-/******************************************************
+/* 
+ * tabdump: get the content of a table as a list of floats
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-
-/* hack : 2108:forum::für::umläute:1999 @ iem */
-
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "zexy.h"
 
 
@@ -55,15 +53,14 @@ static void tabdump_bang(t_tabdump *x)
 
       atombuf = (t_atom *)getbytes(sizeof(t_atom)*npoints);
       for (n = 0; n < npoints; n++) SETFLOAT(&atombuf[n], zarray_getfloat(vec, start+n));
-      outlet_list(x->x_obj.ob_outlet, &s_list, npoints, atombuf);
+      outlet_list(x->x_obj.ob_outlet, gensym("list"), npoints, atombuf);
       freebytes(atombuf,sizeof(t_atom)*npoints);
     }
 }
 
-static void tabdump_list(t_tabdump *x, t_symbol*s,int argc, t_atom*argv)
+static void tabdump_list(t_tabdump *x, t_symbol* UNUSED(s),int argc, t_atom*argv)
 {
   int a,b;
-  ZEXY_USEVAR(s);
   switch(argc){
   case 2:
     a=atom_getint(argv);
@@ -88,14 +85,14 @@ static void *tabdump_new(t_symbol *s)
   x->x_arrayname = s;
   x->startindex=0;
   x->stopindex=-1;
-  outlet_new(&x->x_obj, &s_list);
+  outlet_new(&x->x_obj, gensym("list"));
 
   return (x);
 }
 
 static void tabdump_helper(void)
 {
-  post("\n%c tabdump - object : dumps a table as a package of floats", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" tabdump - object : dumps a table as a package of floats");
   post("'set <table>'\t: read out another table\n"
        "'bang'\t\t: dump the table\n"
        "outlet\t\t: table-data as package of floats");

@@ -1,24 +1,21 @@
-/******************************************************
+/* 
+ * ||~: logical OR for signals
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-/*
-	finally :: some of the missing binops for signals :: ||~
-
-	1302:forum::für::umläute:2000
-*/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexySIMD.h"
 
@@ -38,24 +35,23 @@ typedef struct _scalaroror_tilde
   t_float x_g;    	    /* inlet value */
 } t_scalaroror_tilde;
 
-static void *oror_tilde_new(t_symbol *s, int argc, t_atom *argv)
+static void *oror_tilde_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
-  ZEXY_USEVAR(s);
   if (argc > 1) post("||~: extra arguments ignored");
   if (argc) 
     {
       t_scalaroror_tilde *x = (t_scalaroror_tilde *)pd_new(scalaroror_tilde_class);
       floatinlet_new(&x->x_obj, &x->x_g);
       x->x_g = atom_getfloatarg(0, argc, argv);
-      outlet_new(&x->x_obj, &s_signal);
+      outlet_new(&x->x_obj, gensym("signal"));
       x->x_f = 0;
       return (x);
     }
   else
     {
       t_oror_tilde *x = (t_oror_tilde *)pd_new(oror_tilde_class);
-      inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
-      outlet_new(&x->x_obj, &s_signal);
+      inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"), gensym("signal"));
+      outlet_new(&x->x_obj, gensym("signal"));
       x->x_f = 0;
       return (x);
     }
@@ -194,15 +190,13 @@ static t_int *scalaroror_tilde_performSSE(t_int *w)
 }
 #endif /* __SSE__ */
 
-static void oror_tilde_dsp(t_oror_tilde *x, t_signal **sp)
+static void oror_tilde_dsp(t_oror_tilde* UNUSED(x), t_signal **sp)
 {
   t_sample*in1=sp[0]->s_vec;
   t_sample*in2=sp[1]->s_vec;
   t_sample*out=sp[2]->s_vec;
 
   int n=sp[0]->s_n;
-
-  ZEXY_USEVAR(x);
 
 #ifdef __SSE__
   if(
@@ -248,7 +242,7 @@ static void scalaroror_tilde_dsp(t_scalaroror_tilde *x, t_signal **sp)
 
 static void oror_tilde_help(t_object*x)
 {
-  post("\n%c &&~\t\t:: logical OR operation on 2 signals", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" &&~\t\t:: logical OR operation on 2 signals");
 }
 
 void setup_0x7c0x7c0x7e(void)
@@ -270,3 +264,10 @@ void setup_0x7c0x7c0x7e(void)
 
   zexy_register("||~");
 }
+
+#ifndef ZEXY_LIBRARY
+void setup(void)
+{
+    setup_0x7c0x7c0x7e();
+}
+#endif

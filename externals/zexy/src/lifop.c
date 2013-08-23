@@ -1,20 +1,21 @@
-/******************************************************
+/* 
+ * lifop:  a LIFO (last-in first-out) with priorities
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-/* 2305:forum::für::umläute:2001 */
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 
 #include "zexy.h"
@@ -130,10 +131,9 @@ static t_lifop_prioritylist*getLifo(t_lifop_prioritylist*plifo)
   return plifo;
 }
 
-static void lifop_list(t_lifop *x, t_symbol *s, int argc, t_atom *argv)
+static void lifop_list(t_lifop *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_lifop_prioritylist*plifo=0;
-  ZEXY_USEVAR(s);
   if(!(plifo=lifop_genprioritylist(x, x->priority))) {
     error("[lifop]: couldn't get priority lifo");
     return;
@@ -176,7 +176,7 @@ static void lifop_bang(t_lifop *x)
   freebytes(lifo, sizeof(t_lifop_list));
 
   /* output the list */
-  outlet_list(x->x_out, &s_list, argc, argv);
+  outlet_list(x->x_out, gensym("list"), argc, argv);
 
   /* free the list */
   freebytes(argv, argc*sizeof(t_atom));
@@ -232,7 +232,7 @@ static void lifop_dump(t_lifop*x)
       int argc=lifo->argc;
 
       /* output the list */
-      outlet_list(x->x_out, &s_list, argc, argv);
+      outlet_list(x->x_out, gensym("list"), argc, argv);
 
       lifo=lifo->next;
     }
@@ -254,7 +254,7 @@ static void *lifop_new(void)
 
   floatinlet_new(&x->x_obj, &x->priority);
   x->x_out=outlet_new(&x->x_obj, gensym("list"));
-  x->x_infout=outlet_new(&x->x_obj, &s_float);
+  x->x_infout=outlet_new(&x->x_obj, gensym("float"));
 
   x->lifo_list = 0;
   x->priority=0;
@@ -264,7 +264,7 @@ static void *lifop_new(void)
 }
 static void lifop_help(t_lifop*x)
 {
-  post("\n%c lifop\t\t:: a Last-In-First-Out queue with priorities", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" lifop\t\t:: a Last-In-First-Out queue with priorities");
 }
 void lifop_setup(void)
 {

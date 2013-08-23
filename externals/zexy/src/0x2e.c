@@ -1,22 +1,21 @@
-/******************************************************
+/* 
+ * [.]: scala multiplication
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-/* 2305:forum::für::umläute:2001 */
-
-/*skalar multiplikation */
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 
 #include "zexy.h"
@@ -36,10 +35,9 @@ typedef struct _scalmul
 } t_scalmul;
 
 
-static void scalmul_lst2(t_scalmul *x, t_symbol *s, int argc, t_atom *argv)
+static void scalmul_lst2(t_scalmul *x, t_symbol *UNUSED(s), int argc, t_atom *argv)
 {
   t_float *fp;
-  ZEXY_USEVAR(s);
   if (x->n2 != argc) {
     freebytes(x->buf2, x->n2 * sizeof(t_float));
     x->n2 = argc;
@@ -49,12 +47,11 @@ static void scalmul_lst2(t_scalmul *x, t_symbol *s, int argc, t_atom *argv)
   while(argc--)*fp++=atom_getfloat(argv++);
 }
 
-static void scalmul_lst(t_scalmul *x, t_symbol *s, int argc, t_atom *argv)
+static void scalmul_lst(t_scalmul *x, t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_float *fp;
   t_atom  *ap;
   int n;
-  ZEXY_USEVAR(s);
 
   if (argc){
     if (x->n1 != argc) {
@@ -121,10 +118,9 @@ static void scalmul_free(t_scalmul *x)
   freebytes(x->buf2, sizeof(t_float)*x->n2);
 }
 
-static void *scalmul_new(t_symbol *s, int argc, t_atom *argv)
+static void *scalmul_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_scalmul *x;
-  ZEXY_USEVAR(s);
   if (argc-1){
     x = (t_scalmul *)pd_new(scalmul_class);
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("list"), gensym(""));
@@ -150,7 +146,7 @@ static void *scalmul_new(t_symbol *s, int argc, t_atom *argv)
 
 static void scalmul_help(t_scalmul*x)
 {
-  post("\n%c .\t\t:: scalar multiplication (in-product)", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" .\t\t:: scalar multiplication (in-product)");
 }
 
 void setup_0x2e(void)
@@ -170,3 +166,10 @@ void setup_0x2e(void)
   class_sethelpsymbol(scalmul_scal_class, gensym("scalarmult"));
   zexy_register(".");
 }
+
+#ifndef ZEXY_LIBRARY
+void setup(void)
+{
+    setup_0x2e();
+}
+#endif

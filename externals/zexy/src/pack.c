@@ -1,30 +1,34 @@
-
-/* 1903:forum::für::umläute:2005 */
+/* 
+ * pack: a type-agnostic version of [pack]
+ *
+ * (c) 2007-2011 forum::fÃ¼r::umlÃ¤ute
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
- *  mulitplex   :  zpack a specified input to the output
+ * this version of [pack] does not care about types, so you can send a symbol to a float inlet and vice versa
+ * you can also initialize it with symbols, e.g. [pack foo bar] will output [list foo bar( when banged
  *
- * THINK: should the selector-inlet be the first or the last ???
- * pros/cons:
- *  the 1st inlet being the selector is not consistant with pd (hot/cold)
- *   but as it since the hot inlet is selectable, the whole object is not really consitant
- *  numbering would have to start with 1 (for the 1st not-leftmost inlet)
- * if the selector is rightmost this would mean: cold is right(most), hot is (somewhere) left
- * numbering would be ok
- *
- * conclusio: make the selector rightmost
- *
+ * for know this object is named [zexy/pack], as there might be some issues with compatibility with the original [pack]
  */
 
 #include "zexy.h"
 #include <stdio.h>
 
 
-/* ------------------------- zpack ------------------------------- */
-
-/*
-  a zpacker
-*/
+/* ------------------------- zexy/pack ------------------------------- */
 
 static t_class *zpack_class;
 static t_class *zpackproxy_class;
@@ -58,17 +62,45 @@ static void zpack_bang(t_zpack*x) {
   outlet_list(x->x_obj.ob_outlet, gensym("list"), x->x_argc, x->x_argv);
 }
 
-static void zpack_list0(t_zpack*x, t_symbol *s, int argc, t_atom *argv) {
+
+static void zpack_any(t_zpack*x, t_symbol *s, int argc, t_atom *argv) {
   int i=0;
-  for(i=0; i<argc && i<x->x_argc; i++)
-    setatom(x, argv+i, i);
-  zpack_bang(x);
+  int count=x->x_argc;
+
+  if(NULL!=s && x->x_argc>0) {
+    t_atom a;
+    SETSYMBOL(&a, s);
+    setatom(x, &a, i++);
+    count--;
+  }
+
+  if(count>argc)
+    count=argc;
+
+  while(count-->0) {
+    setatom(x, argv++, i++);
+  }
+ 
+ zpack_bang(x);
 }
 
-static void zpack_list(t_zpackproxy *y, t_symbol *s, int argc, t_atom *argv)
+static void zpack_list(t_zpack*x, t_symbol *s, int argc, t_atom *argv) {
+  zpack_any(x, 0, argc, argv);
+}
+
+
+static void zpack_proxy_list(t_zpackproxy *y, t_symbol *s, int argc, t_atom *argv)
 {
-  if(argc>0)
+  /* until we have lists of lists, this only uses the 1st element */
+  if(argc>0) /* this filters out 'bang', and allows 'list', 'float' and 'symbol' */
     setatom(y->p_master, argv, y->id);
+}
+static void zpack_proxy_any(t_zpackproxy *y, t_symbol *s, int argc, t_atom *argv)
+{
+  /* until we have lists of lists, this only uses the selector */
+  t_atom a;
+  SETSYMBOL(&a, s); 
+  setatom(y->p_master, &a, y->id);
 }
 
 static void *zpack_new(t_symbol *s, int argc, t_atom *argv)
@@ -135,18 +167,19 @@ void zpack_setup(void)
   zpack_class = class_new(gensym("zexy/pack"), (t_newmethod)zpack_new,
 			(t_method)zpack_free, sizeof(t_zpack), 0, A_GIMME,  0);
 #if 0
-  /* oops Pd-0.42 allows us to override built-ins
+  /* oops Pd>=0.42 allows us to override built-ins
    * this is bad as long as the 2 objects are not compatible */
   class_addcreator((t_newmethod)zpack_new, gensym("pack"), A_GIMME, 0);
 #endif
   class_addbang(zpack_class, zpack_bang);
-  class_addlist(zpack_class, zpack_list0);
+  class_addlist(zpack_class, zpack_list);
+  class_addanything(zpack_class, zpack_any);
 
   zpackproxy_class = class_new(gensym("zpack proxy"), 0, 0,
 			    sizeof(t_zpackproxy),
 			    CLASS_PD | CLASS_NOINLET, 0);
-  class_addlist(zpackproxy_class, zpack_list);
-
+  class_addlist(zpackproxy_class, zpack_proxy_list);
+  class_addanything(zpackproxy_class, zpack_proxy_any);
 
   zexy_register("pack");
 }

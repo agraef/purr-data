@@ -1,22 +1,22 @@
-/******************************************************
- *
- * zexy - implementation file
- *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
 /*
-  1110:forum::für::umläute:1999
-*/
+ * blockmirror~: mirrors a signalblock around it's center
+ *
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 #include "zexy.h"
 
@@ -74,7 +74,7 @@ static void blockmirror_dsp(t_blockmirror *x, t_signal **sp)
 
 static void blockmirror_helper(t_blockmirror*x)
 {
-  post("\n%c blockmirror~-object for reverting a signal", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" blockmirror~-object for reverting a signal");
   post("'help' : view this\n"
        "signal~");
   post("outlet : signal~");

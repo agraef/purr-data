@@ -1,20 +1,21 @@
-/******************************************************
+/* 
+ * tabminmax: get minimum and maximum of a table
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
-
-/* hack : 2108:forum::für::umläute:1999 @ iem */
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "zexy.h"
 
@@ -74,18 +75,17 @@ static void tabminmax_bang(t_tabminmax *x)
       
       SETFLOAT(atombuf, max);
       SETFLOAT(atombuf+1, maxdex);
-      outlet_list(x->max_out, &s_list, 2, atombuf);
+      outlet_list(x->max_out, gensym("list"), 2, atombuf);
       
       SETFLOAT(atombuf, min);
       SETFLOAT(atombuf+1, mindex);
-      outlet_list(x->min_out, &s_list, 2, atombuf);
+      outlet_list(x->min_out, gensym("list"), 2, atombuf);
     }
 }
 
-static void tabminmax_list(t_tabminmax *x, t_symbol*s,int argc, t_atom*argv)
+static void tabminmax_list(t_tabminmax *x, t_symbol* UNUSED(s),int argc, t_atom*argv)
 {
   int a,b;
-  ZEXY_USEVAR(s);
   switch(argc){
   case 2:
     a=atom_getint(argv);
@@ -110,15 +110,15 @@ static void *tabminmax_new(t_symbol *s)
   x->x_arrayname = s;
   x->startindex=0;
   x->stopindex=-1;
-  x->min_out=outlet_new(&x->x_obj, &s_list);
-  x->max_out=outlet_new(&x->x_obj, &s_list);
+  x->min_out=outlet_new(&x->x_obj, gensym("list"));
+  x->max_out=outlet_new(&x->x_obj, gensym("list"));
 
   return (x);
 }
 
 static void tabminmax_helper(void)
 {
-  post("\n%c tabminmax - object : dumps a table as a package of floats", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" tabminmax - object : dumps a table as a package of floats");
   post("'set <table>'\t: read out another table\n"
        "'bang'\t\t: get min and max of the table\n"
        "outlet\t\t: table-data as package of floats");

@@ -1,18 +1,22 @@
-/******************************************************
+/* 
+ * matchbox: see whether a regular expression matches a symbol in the box
  *
- * zexy - implementation file
+ * (c) 1999-2011 IOhannes m zmÃ¶lnig, forum::fÃ¼r::umlÃ¤ute, institute of electronic music and acoustics (iem)
  *
- * copyleft (c) IOhannes m zmölnig
- *
- *   1999:forum::für::umläute:2004
- *
- *   institute of electronic music and acoustics (iem)
- *
- ******************************************************
- *
- * license: GNU General Public License v.2
- *
- ******************************************************/
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 /* LATER: add a creation argument to specify the initial search mode
  *
@@ -38,10 +42,6 @@
 
 #define FALSE 0
 #define TRUE  1
-
-/*
- * matchbox    : see whether a regular expression matches the given symbol
- */
 
 /* ------------------------- matchbox ------------------------------- */
 
@@ -544,7 +544,7 @@ static void matchbox_list(t_matchbox*x, t_symbol*s, int argc, t_atom*argv) {
   outlet_float(x->x_outNumResults, (t_float)results);
   
   for(dummylist=resultlist; 0!=dummylist; dummylist=dummylist->next)
-    outlet_list(x->x_outResult,  &s_list, dummylist->argc, dummylist->argv);
+    outlet_list(x->x_outResult,  gensym("list"), dummylist->argc, dummylist->argv);
 }
 
 static void matchbox_add(t_matchbox*x, t_symbol*s, int argc, t_atom*argv) {
@@ -587,7 +587,7 @@ static void matchbox_dump(t_matchbox*x) {
 
   for(lp=x->x_lists->next; 0!=lp; lp=lp->next)
   {
-    outlet_list(x->x_outResult,  &s_list, lp->argc, lp->argv);
+    outlet_list(x->x_outResult,  gensym("list"), lp->argc, lp->argv);
   }
 }
 
@@ -626,7 +626,7 @@ static void *matchbox_new(t_symbol *s, int argc, t_atom*argv)
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("symbol"), gensym("add"));
 
   x->x_outResult    =outlet_new(&x->x_obj, gensym("list"));
-  x->x_outNumResults=outlet_new(&x->x_obj, &s_float);
+  x->x_outNumResults=outlet_new(&x->x_obj, gensym("float"));
 
 
   x->x_lists=(t_listlist*)getbytes(sizeof(t_listlist));
@@ -654,7 +654,7 @@ static void matchbox_free(t_matchbox *x)
 
 static void matchbox_help(t_matchbox*x)
 {
-  post("\n%c matchbox\t\t:: find a list in a pool of lists", HEARTSYMBOL);
+  post("\n"HEARTSYMBOL" matchbox\t\t:: find a list in a pool of lists");
 }
 
 void matchbox_setup(void)

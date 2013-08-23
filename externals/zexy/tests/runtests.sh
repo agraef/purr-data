@@ -9,27 +9,44 @@ then
  PD=pd
 fi
 
+if which ${PD} > /dev/null
+then
+ :
+else
+ echo "Pd is needed to run tests" 1>&2
+ echo "you can specify the full binary in the PD variable" 1>&2
+ exit 77
+fi
 
-#SUFFIX="$$"
+echo running tests in ${TESTDIR:=.}
+
+
 SUFFIX=$(date +%y%m%d-%H%M%S)
+RUNTESTS_FINAL_LOG=runtest-${SUFFIX}.log
+
 
 RUNTESTS_TXT=runtests.txt
-RUNTESTS_LOG=log-runtests.${SUFFIX}
+if which tempfile > /dev/null
+then
+  RUNTESTS_LOG=$(tempfile)
+else
+  RUNTESTS_LOG=tmp$$.log
+fi
 
-LIBFLAGS="-path ../src:../ -lib zexy -path ../abs/"
+LIBFLAGS="-path ../src/.libs/:../src/:../ -lib zexy -path ../abs/:${TESTDIR}:."
 
-function list_tests() {
+list_tests() {
 #  find . -mindepth 2  -name "*.pd" | sed 's|\.pd$|;|' 
- ls -1 */*.pd | sed 's|\.pd$|;|'
+ ls -1 ${TESTDIR}/*/*.pd | sed 's|\.pd$|;|'
 }
 
-function debug() {
+debug() {
  :
 if [ "x${DEBUG}" = "xyes" ]; then echo $@; fi
 }
 
 
-function evaluate_tests() {
+evaluate_tests() {
  local logfile
  local testfile
  local numtests
@@ -41,7 +58,7 @@ function evaluate_tests() {
 
  numtests=$(grep -c . ${testfile})
  numpass=$(egrep -c "regression-test: (.*/fail.*: failed|.*: OK)$" ${logfile})
- let numfail=0
+ numfail=0
  failtests=""
  for t in $(egrep "regression-test: .*: (failed|OK)$" ${logfile} | egrep -v "regression-test: (.*/fail.*: failed|.*: OK)$" | awk '{print $2}')
  do
@@ -54,23 +71,27 @@ function evaluate_tests() {
  echo "regression-test: ${numpass} regression-tests passed" >>  ${logfile}
  echo "regression-test: ${numfail} regression-tests failed" >>  ${logfile}
  echo "regression-test: ======================================" >>  ${logfile}
- echo "regression-test: failed tests: ${failtests}" >> ${logfile}
+ if [ "x${failtests}" != "x" ]; then
+  echo "regression-test: failed tests: ${failtests}" >> ${logfile}
+ fi
  debug "show results"
  cat ${logfile} | egrep "^regression-test: " | sed -e 's/^regression-test: //'
 }
 
 
-function run_nogui() {
+run_nogui() {
  debug "running test without gui"
  ${PD} ${LIBFLAGS} -nogui runtests_nogui.pd > ${RUNTESTS_LOG} 2>&1 
+ SUCCESS=$?
  debug "testing done"
  evaluate_tests ${RUNTESTS_TXT} ${RUNTESTS_LOG}
  debug "testing finished"
 }
 
-function run_withgui() {
+run_withgui() {
  debug "running test with gui"
  ${PD} ${LIBFLAGS} -stderr runtests.pd 2>&1 | tee ${RUNTESTS_LOG}
+ SUCCESS=$?
  echo "testing completed, no evaluation will be done; see ${RUNTESTS_LOG} for results"
 }
 
@@ -79,7 +100,7 @@ list_tests > ${RUNTESTS_TXT}
 USEGUI=""
 DEBUG=""
 
-while [ "$@" ]
+while [ "x$#" != "x0" ]
 do
  if test "x$1" = "x-gui"; then
   USEGUI="yes"
@@ -90,13 +111,32 @@ do
  if test "x$1" = "x-d"; then
   DEBUG="yes"
  fi
+ if test "x$1" = "x-nolog"; then
+  RUNTESTS_FINAL_LOG=
+ fi
  shift
 done
 
+SUCCESS=0
 if [ "x${USEGUI}" = "xyes" ]; then
  run_withgui
 else
  run_nogui
 fi
 
-echo $@
+if [ "x${RUNTESTS_NOLOG}" != "x" ]; then
+  RUNTESTS_FINAL_LOG=
+fi
+if [ "x${RUNTESTS_FINAL_LOG}" = "x" ]; then
+ :
+else
+ cat ${RUNTESTS_LOG} >> ${RUNTESTS_FINAL_LOG}
+fi
+
+if [ "x${RUNTESTS_FINAL_LOG}" = "x${RUNTESTS_LOG}" ]; then
+ :
+else
+ rm -f ${RUNTESTS_LOG}
+fi
+
+exit ${SUCCESS}
