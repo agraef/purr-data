@@ -1,6 +1,6 @@
 #N canvas 146 67 452 406 10;
 #X obj 162 55 loadbang;
-#X obj 162 159 ggee/image @pd_extra/K12/objects/logic_counter.png 1;
+#X obj 162 159 ggee/image @pd_extra/K12/objects/logic_counter.png;
 #X obj 121 157 nbx 5 19 -1e+37 1e+37 0 1 empty empty empty 0 -8 0 16
 -262144 -1 -1 1 256 1;
 #X obj 62 86 preset_node k12;
