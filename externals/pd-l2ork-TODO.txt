@@ -12,11 +12,12 @@ pdp_opencv
 pidip
 postlude
 sigpack
+zexy
 
 MERGE:
 *footils (fluid improvements)
-*ggee (image improvements--more work needed)
-*miXed (Scope~ and coll, improvements to the textfile viewer)
+*ggee (total overhaul)
+*miXed (Scope~, comment, coll, improvements to the textfile viewer)
 
 TODO:
 test other
