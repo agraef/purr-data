@@ -135,7 +135,7 @@ static int sys_do_load_lib(t_canvas *canvas, char *objectname)
     else strcat(symname, "_setup");
     
 #if 0
-    fprintf(stderr, "lib: %s\n", classname);
+    fprintf(stderr, "lib: %s %s\n", classname, symname);
 #endif
         /* try looking in the path for (objectname).(sys_dllextent) ... */
     if ((fd = canvas_open(canvas, objectname, sys_dllextent,
