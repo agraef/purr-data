@@ -262,10 +262,10 @@ static void image_vis(t_gobj *z, t_glist *glist, int vis)
 static void image_save(t_gobj *z, t_binbuf *b)
 {
     t_image *x = (t_image *)z;
-    binbuf_addv(b, "ssiiss", gensym("#X"), gensym("obj"),
+    binbuf_addv(b, "ssiissi", gensym("#X"), gensym("obj"),
                 x->x_obj.te_xpix, x->x_obj.te_ypix,   
                 atom_getsymbol(binbuf_getvec(x->x_obj.te_binbuf)),
-                x->x_fname);
+                x->x_fname, x->x_gop_spill);
     binbuf_addv(b, ";");
 }
 
