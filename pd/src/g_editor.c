@@ -63,6 +63,7 @@ extern void canvas_setbounds(t_canvas *x, int x1, int y1, int x2, int y2);
 int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floatarg resize, t_floatarg preview);
+static void canvas_displaceselection(t_canvas *x, int dx, int dy);
 // for updating preset_node locations in case of operations that alter glist object locations (tofront/back, cut, delete, undo/redo cut/delete)
 extern void glob_preset_node_list_check_loc_and_update(void);
 // for preset_node
@@ -1016,28 +1017,35 @@ void canvas_undo_move(t_canvas *x, void *z, int action)
     if (action == UNDO_UNDO || action == UNDO_REDO)
     {
         int i;
-		do_not_redraw = 1;
+        int x1=0, y1=0, x2=0, y2=0, newx=0, newy=0;
+        t_gobj *y;
+		//do_not_redraw = 1;
         for (i = 0; i < buf->u_n; i++)
         {
-            int x1, y1, x2, y2, newx, newy;
-            t_gobj *y;
-            newx = buf->u_vec[i].e_xpix;
-            newy = buf->u_vec[i].e_ypix;
             y = glist_nth(x, buf->u_vec[i].e_index);
+			newx = buf->u_vec[i].e_xpix;
+			newy = buf->u_vec[i].e_ypix;
             if (y)
             {
-                gobj_getrect(y, x, &x1, &y1, &x2, &y2);
-                gobj_displace(y, x, newx-x1, newy - y1);
-                buf->u_vec[i].e_xpix = x1;
-                buf->u_vec[i].e_ypix = y1;
+				glist_noselect(x);
+				glist_select(x, y);
+	            gobj_getrect(y, x, &x1, &y1, &x2, &y2);
+				canvas_displaceselection(x, newx-x1, newy - y1);
+				buf->u_vec[i].e_xpix = x1;
+				buf->u_vec[i].e_ypix = y1;
 				cl = pd_class(&y->g_pd);
 		        if (cl == vinlet_class) resortin = 1;
 		        else if (cl == voutlet_class) resortout = 1;
-				glist_select(x, y);
             }
         }
-		do_not_redraw = 0;
-		canvas_redraw(x);
+		glist_noselect(x);
+        for (i = 0; i < buf->u_n; i++)
+        {
+			y = glist_nth(x, buf->u_vec[i].e_index);
+			glist_select(x, y);
+		}
+		//do_not_redraw = 0;
+		//canvas_redraw(x);
 		if (resortin) canvas_resortinlets(x);
 		if (resortout) canvas_resortoutlets(x);
     }
@@ -4101,7 +4109,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
     t_selection *y;
     int resortin = 0, resortout = 0;
 	old_displace = 0;
-    if (!canvas_undo_already_set_move && x->gl_editor->e_selection)
+    if (!we_are_undoing && !canvas_undo_already_set_move && x->gl_editor->e_selection)
     {
         //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, 1),
         //    "motion");
@@ -5066,6 +5074,9 @@ static void canvas_doclear(t_canvas *x)
 					canvas_menuclose((t_glist *)y, 0);
 				}
 
+				/* delete any stale visual cords */
+				canvas_eraselinesfor(x, (t_text *)y);
+
 				/* now destroy the object */
                 glist_delete(x, y);
 #if 0
@@ -5080,7 +5091,7 @@ static void canvas_doclear(t_canvas *x)
     }
 restore:
     canvas_dirty(x, 1);
-	canvas_redraw(x);
+	//canvas_redraw(x);
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
     canvas_resume_dsp(dspstate);
 }
@@ -5139,11 +5150,12 @@ static void canvas_paste_xyoffset(t_canvas *x)
     int resortout = 0;
 
     for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next) {
-        gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
+        //gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
 		cl = pd_class(&sel->sel_what->g_pd);
         if (cl == vinlet_class) resortin = 1;
         if (cl == voutlet_class) resortout = 1;
 	}
+	canvas_displaceselection(x, paste_xyoffset*10, paste_xyoffset*10);
 
     if (resortin) canvas_resortinlets(x);
     if (resortout) canvas_resortoutlets(x);
@@ -5271,9 +5283,9 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
             glist_select(x, g2);
 
     paste_canvas = 0;
-    canvas_resume_dsp(dspstate);
 
 	//fprintf(stderr,"dopaste autopatching? %d==%d %d\n", count, nbox, connectme);
+	do_not_redraw -= 1;
 
 	//if we are pasting only one object autoposition it below our selection
 	if (count == nbox+1 && connectme == 1) {
@@ -5308,12 +5320,12 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	}
 
     canvas_dirty(x, 1);
-	/*if (!canvas_undo_name || canvas_undo_name[0] != 'd') {
-		canvas_redraw(x);
-	}*/
-	do_not_redraw -= 1;
 	//fprintf(stderr,"dopaste redraw %d\n", do_not_redraw);
-	canvas_redraw(x);
+	//if (!canvas_undo_name || !strcmp(canvas_undo_name, "duplicate")) {
+		// need to redraw duplicated objects as they need to be drawn with an offset
+		// fprintf(stderr,"canvas_dopaste redraw objects\n");
+		// canvas_redraw(x);
+	//}
 
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 	if (!abort_when_pasting_from_external_buffer) {
@@ -5321,6 +5333,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	} else {
 		error("failed pasting correctly from external buffer, likely due to incomplete text selection. hopefully you saved your work... please get ready to crash...");
 	}
+    canvas_resume_dsp(dspstate);
 	abort_when_pasting_from_external_buffer = 0;
 	glob_preset_node_list_check_loc_and_update();
 	//fprintf(stderr,"end dopaste\n");
