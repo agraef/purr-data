@@ -817,10 +817,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 	    if (vis && gobj_shouldvis(gr, parent_glist))
 	    {
 	        sys_vgui(".x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d -tags %sfill -fill $graph_outline\n",
+ %d %d %d %d %d %d %d %d %d %d -tags {%sfill %s} -fill $graph_outline\n",
 	            glist_getcanvas(x->gl_owner),
 				//parent_glist,
-	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag, tag);
 	    }
 	    else if (gobj_shouldvis(gr, parent_glist))
 	    {
@@ -840,9 +840,9 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         t_garray *ga;
             /* draw a rectangle around the graph */
         sys_vgui(".x%lx.c create line\
-            %d %d %d %d %d %d %d %d %d %d -fill $graph_outline -tags %sR\n",
+            %d %d %d %d %d %d %d %d %d %d -fill $graph_outline -tags {%sR %s}\n",
             glist_getcanvas(x->gl_owner),
-            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag, tag);
         
             /* if there's just one "garray" in the graph, write its name
                 along the top */

@@ -84,13 +84,13 @@ void vradio_draw_new(t_vradio *x, t_glist *glist)
 
 		for(i=0; i<n; i++)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxVRDO text}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxVRDO %lx text}\n",
 		             canvas, xx11, yy11, xx12, yy12,
-		             x->x_gui.x_bcol, x, i, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxBUT%d %lxVRDO text}\n",
+		             x->x_gui.x_bcol, x, i, x, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxBUT%d %lxVRDO %lx text}\n",
 		             canvas, xx21, yy21, xx22, yy22,
 		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x);
+		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x, x);
 		    yy11 += dy;
 		    yy12 += dy;
 		    yy21 += dy;
@@ -98,17 +98,17 @@ void vradio_draw_new(t_vradio *x, t_glist *glist)
 		    x->x_drawn = x->x_on;
 		}
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVRDO text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVRDO %lx text}\n",
 		         canvas, xx11+x->x_gui.x_ldx, yy11b+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x);
+		         x->x_gui.x_lcol, x, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%so%d %so%d %lxVRDO outlet}\n",
-		         canvas, xx11, yy11-1, xx11 + IOWIDTH, yy11, x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%so%d %so%d %lxVRDO %lx outlet}\n",
+		         canvas, xx11, yy11-1, xx11 + IOWIDTH, yy11, x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%si%d %si%d %lxVRDO inlet}\n",
-		         canvas, xx11, yy11b, xx11 + IOWIDTH, yy11b+1, x, nlet_tag, 0, nlet_tag, 0, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%si%d %si%d %lxVRDO %lx inlet}\n",
+		         canvas, xx11, yy11b, xx11 + IOWIDTH, yy11b+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
 	//}
 }
 
@@ -248,18 +248,18 @@ void vradio_draw_io(t_vradio* x, t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%so%d %so%d %lxVRDO outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%so%d %so%d %lxVRDO %lx outlet}\n",
 		             canvas, xpos,
 		             ypos+(x->x_number*x->x_gui.x_h)-1,
 		             xpos+ IOWIDTH,
-		             ypos+(x->x_number*x->x_gui.x_h), x, nlet_tag, 0, nlet_tag, 0, x);
+		             ypos+(x->x_number*x->x_gui.x_h), x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxVRDO%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%si%d %si%d %lxVRDO inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVRDO%si%d %si%d %lxVRDO %lx inlet}\n",
 		             canvas, xpos, ypos,
 		             xpos+ IOWIDTH, ypos+1,
-		             x, nlet_tag, 0, nlet_tag, 0, x);
+		             x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxVRDO%si%d\n", canvas, x, nlet_tag, 0);
 	}
@@ -294,11 +294,11 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVRDO}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVRDO %lx}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h * x->x_number - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x);
+					 sh->h_pathname, x, x, x);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -316,11 +316,11 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH lxVDRO}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH lxVDRO %lx}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x);
+						lh->h_pathname, x, x, x, x);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

@@ -216,55 +216,55 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 		if (x->x_hide_frame <= 1) {
 			sys_vgui(
 				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
-					-fill #%6.6x -tags {%lxBASE1 %lxNUM text}\n",
+					-fill #%6.6x -tags {%lxBASE1 %lxNUM %lx text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
 				     xpos + x->x_numwidth, ypos+4,
 				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
 				     xpos, ypos + x->x_gui.x_h,
-				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x);
+				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, x);
 			if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM outlet}\n",
+				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
 				     canvas,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
-				     x, nlet_tag, 0, nlet_tag, 0, x);
+				     x, nlet_tag, 0, nlet_tag, 0, x, x);
 			if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM inlet}\n",
+				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
 				     canvas,
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1,
-				     x, nlet_tag, 0, nlet_tag, 0, x);
+				     x, nlet_tag, 0, nlet_tag, 0, x, x);
 		} else {
 			sys_vgui(
 				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
-					-fill #%6.6x -tags {%lxBASE1 %lxNUM text}\n",
+					-fill #%6.6x -tags {%lxBASE1 %lxNUM %lx text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
 				     xpos + x->x_numwidth, ypos+4,
 				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
 				     xpos, ypos + x->x_gui.x_h,
-				     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
+				     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, x);
 		}
 		if (!x->x_hide_frame || x->x_hide_frame == 2)
 			sys_vgui(
-				".x%lx.c create line %d %d %d %d %d %d -fill #%6.6x -tags {%lxBASE2 %lxNUM text}\n",
+				".x%lx.c create line %d %d %d %d %d %d -fill #%6.6x -tags {%lxBASE2 %lxNUM %lx text}\n",
 				canvas, xpos, ypos,
 				xpos + half, ypos + half,
 				xpos, ypos + x->x_gui.x_h,
-				x->x_gui.x_fcol, x, x);
+				x->x_gui.x_fcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM text}\n",
+		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM %lx text}\n",
 		    canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		    strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		    x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x);
+		         x->x_gui.x_lcol, x, x, x);
 		my_numbox_ftoa(x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM noscroll text}\n",
+		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM %lx noscroll text}\n",
 		    canvas, xpos+half+2, ypos+half+d,
 		    x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		    x->x_gui.x_fcol, x, x);
+		    x->x_gui.x_fcol, x, x, x);
 	//}
 }
 
@@ -417,19 +417,19 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+IOWIDTH, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
 
@@ -474,11 +474,11 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxNUM}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxNUM %lx}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_numwidth - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x);
+					 sh->h_pathname, x, x, x);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -495,11 +495,11 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxNUM}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxNUM %lx}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x);
+						lh->h_pathname, x, x, x, x);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

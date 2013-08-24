@@ -131,70 +131,70 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		if (yyyy) nlet_tag = rtext_gettag(yyyy);
 		else nlet_tag = "bogus";
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU text}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos+x->x_gui.x_w+2,
-		         ypos+x->x_gui.x_h+4, x->x_gui.x_bcol, x, x);
+		         ypos+x->x_gui.x_h+4, x->x_gui.x_bcol, x, x, x);
 		for(i=1; i<=IEM_VU_STEPS; i++)
 		{
 		    led_col = iemgui_vu_col[i];
 		    yyy = k4 + k1*(k2-i);
-		    sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxRLED%d %lxVU text}\n",
-		             canvas, quad1+1, yyy+2, quad3+1, yyy+2, x->x_led_size, iemgui_color_hex[led_col], x, i, x);
+		    sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxRLED%d %lxVU %lx text}\n",
+		             canvas, quad1+1, yyy+2, quad3+1, yyy+2, x->x_led_size, iemgui_color_hex[led_col], x, i, x, x);
 		    if(((i+2)&3) && (x->x_scale))
 		        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		                 -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
+		                 -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %lx text}\n",
 		                 canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i], 
 						 x->x_gui.x_font, x->x_gui.x_fontsize,
-		                 sys_fontweight, x->x_gui.x_lcol, x, i, x);
+		                 sys_fontweight, x->x_gui.x_lcol, x, i, x, x);
 		}
 		if(x->x_scale)
 		{
 		    i=IEM_VU_STEPS+1;
 		    yyy = k4 + k1*(k2-i);
 		    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU text}\n",
+		             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %lx text}\n",
 		             canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight,
-		             x->x_gui.x_lcol, x, i, x);
+		             x->x_gui.x_lcol, x, i, x, x);
 		}
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRCOVER %lxVU text}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRCOVER %lxVU %lx text}\n",
 		         canvas, quad1+1, ypos+1, quad3,
-		         ypos+1 + k1*IEM_VU_STEPS, x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxPLED %lxVU text}\n",
+		         ypos+1 + k1*IEM_VU_STEPS, x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, x);
+		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxPLED %lxVU %lx text}\n",
 		         canvas, mid+1, ypos+12,
-		         mid+1, ypos+12, x->x_led_size, x->x_gui.x_bcol, x, x);
+		         mid+1, ypos+12, x->x_led_size, x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVU text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVU %lx text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x);
+		         x->x_gui.x_lcol, x, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 1, nlet_tag, 1, x);
+		         x, nlet_tag, 1, nlet_tag, 1, x, x);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU inlet}\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx inlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
-		         x, nlet_tag, 1, nlet_tag, 1, x);
+		         x, nlet_tag, 1, nlet_tag, 1, x, x);
 		}
 		x->x_updaterms = x->x_updatepeak = 1;
 		sys_queuegui(x, x->x_gui.x_glist, vu_draw_update);
@@ -410,16 +410,16 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU outlet}\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
-		         x, nlet_tag, 1, nlet_tag, 1, x);
+		         x, nlet_tag, 1, nlet_tag, 1, x, x);
 		}
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		{
@@ -428,16 +428,16 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 		}
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU outlet}\n",
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
-		         x, nlet_tag, 1, nlet_tag, 1, x);
+		         x, nlet_tag, 1, nlet_tag, 1, x, x);
 		}
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		{
@@ -484,11 +484,11 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVU}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVU %lx}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 2 - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h + 4 - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x);
+					 sh->h_pathname, x, x, x);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -505,11 +505,11 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxVU}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxVU %lx}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x);
+						lh->h_pathname, x, x, x, x);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -922,18 +922,18 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
                 yyy = k4 + k1*(k2-i);
                 if((i+2)&3)
                     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-                             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
+                             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %lx}\n",
                              canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i], 
 							 x->x_gui.x_font, x->x_gui.x_fontsize,
-                             sys_fontweight, x->x_gui.x_lcol, x, i, x);
+                             sys_fontweight, x->x_gui.x_lcol, x, i, x, x);
             }
             i=IEM_VU_STEPS+1;
             yyy = k4 + k1*(k2-i);
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-                     -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU}\n",
+                     -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %lx}\n",
                      canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i], 
 					 x->x_gui.x_font, x->x_gui.x_fontsize,
-                     sys_fontweight, x->x_gui.x_lcol, x, i, x);
+                     sys_fontweight, x->x_gui.x_lcol, x, i, x, x);
         }
     }
 }

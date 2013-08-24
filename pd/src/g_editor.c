@@ -1418,8 +1418,8 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			}
 
 			// and finally redraw canvas
-			canvas_redraw(x);
-			/* some day when the object tagging is properly done for all GUI objects
+			//canvas_redraw(x);
+			// some day when the object tagging is properly done for all GUI objects
 			t_object *ob = NULL;
 			t_rtext *yr = NULL;
 			if (prev) {
@@ -1441,7 +1441,7 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 				// fall back to legacy redraw for objects that are not patchable
 				//fprintf(stderr,"lower fallback redraw\n");
 				canvas_redraw(x);
-			}*/
+			}//*/
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -1463,8 +1463,8 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 			y->g_next = next;
 
 			// and finally redraw canvas
-			canvas_redraw(x);
-			/* some day when the object tagging is properly done for all GUI objects
+			//canvas_redraw(x);
+			// some day when the object tagging is properly done for all GUI objects
 			t_object *ob = NULL;
 			t_rtext *yr = NULL;
 			if (prev) {
@@ -1485,7 +1485,7 @@ void canvas_undo_arrange(t_canvas *x, void *z, int action)
 				// fall back to legacy redraw for objects that are not patchable
 				//fprintf(stderr,"raise fallback redraw\n");
 				canvas_redraw(x);
-			}*/
+			}//*/
 
 			glob_preset_node_list_check_loc_and_update();
 		}
@@ -1665,10 +1665,10 @@ void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
 		t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
 
 		//if gop is being disabled go one level up
-		if (!x->gl_isgraph && x->gl_owner) {
+		/*if (!x->gl_isgraph && x->gl_owner) {
 			canvas=canvas->gl_owner;
 			canvas_redraw(canvas);
-		}
+		}*/
 
 		//if properties window is open, update the properties with the previous window properties		
 		/*t_int properties = gfxstub_haveproperties((void *)x);
@@ -4143,6 +4143,11 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 	    if (x->gl_editor->e_selection)
 	        canvas_dirty(x, 1);
 	}
+	// if we have old_displace, legacy displaced objects won't conform
+	// to proper ordering of objects as they have been redrawn on top
+	// of everything else rather than where they were supposed to be
+	// (e.g. possibly in the middle or at the bottom)
+	if (old_displace) canvas_redraw(x);
 	old_displace = 0;
 }
 

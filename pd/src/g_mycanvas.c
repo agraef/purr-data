@@ -49,20 +49,20 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
 
 	//if (glist_isvisible(glist)) {
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRECT %lxMYCNV text}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRECT %lxMYCNV %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_vis_w, ypos + x->x_vis_h,
-		         x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags {%lxBASE %lxMYCNV text}\n",
+		         x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, x);
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags {%lxBASE %lxMYCNV %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
-		         x->x_gui.x_bcol, x, x);
+		         x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxMYCNV text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxMYCNV %lx text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-				 x->x_gui.x_lcol, x, x);
+				 x->x_gui.x_lcol, x, x, x);
 	//}
 }
 
@@ -157,11 +157,11 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxMYCNV}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxMYCNV %lx}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_vis_w - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_vis_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x);
+					 sh->h_pathname, x, x, x);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -179,11 +179,11 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxMYCNV}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxMYCNV %lx}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x);
+						lh->h_pathname, x, x, x, x);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

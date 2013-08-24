@@ -96,31 +96,31 @@ static void vslider_draw_new(t_vslider *x, t_glist *glist)
 		if (yyyy) nlet_tag = rtext_gettag(yyyy);
 		else nlet_tag = "bogus";
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVSLDR text}\n",
+		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVSLDR %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h+5,
-		         x->x_gui.x_bcol, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxVSLDR text}\n",
+		         x->x_gui.x_bcol, x, x, x);
+		sys_vgui(".x%lx.c create line %d %d %d %d -width 3 -fill #%6.6x -tags {%lxKNOB %lxVSLDR %lx text}\n",
 		         canvas, xpos+2, r,
-		         xpos + x->x_gui.x_w-1, r, x->x_gui.x_fcol, x, x);
+		         xpos + x->x_gui.x_w-1, r, x->x_gui.x_fcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVSLDR text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVSLDR %lx text}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight, 
-		         x->x_gui.x_lcol, x, x);
+		         x->x_gui.x_lcol, x, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%so%d %so%d %lxVSLDR outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%so%d %so%d %lxVSLDR %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+4,
 		         xpos+7, ypos + x->x_gui.x_h+5,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%si%d %si%d %lxVSLDR inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%si%d %si%d %lxVSLDR %lx inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+7, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
 	//}
 }
 
@@ -246,19 +246,19 @@ static void vslider_draw_io(t_vslider* x,t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%so%d %so%d %lxVSLDR outlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%so%d %so%d %lxVSLDR %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+4,
 		         xpos+7, ypos + x->x_gui.x_h+5,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxVSLDR%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%si%d %si%d %lxVSLDR inlet}\n",
+		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVSLDR%si%d %si%d %lxVSLDR %lx inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+7, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxVSLDR%si%d\n", canvas, x, nlet_tag, 0);
 	}
@@ -288,11 +288,11 @@ static void vslider_draw_select(t_vslider *x, t_glist *glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVSLDR}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVSLDR %lx}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + 5 + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x);
+					 sh->h_pathname, x, x, x);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -310,11 +310,11 @@ static void vslider_draw_select(t_vslider *x, t_glist *glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxVSLDR}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxVSLDR %lx}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x);
+						lh->h_pathname, x, x, x, x);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

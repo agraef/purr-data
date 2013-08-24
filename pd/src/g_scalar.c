@@ -363,8 +363,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         {
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags scalar%lx\n",
-                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x);
+            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lx scalar%lx}\n",
+                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x, x);
         }
         else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
         return;
