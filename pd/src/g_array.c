@@ -299,8 +299,9 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *templateargsym,
     int flags = fflags;
     t_gpointer gp;
     int filestyle = ((flags & 6) >> 1);
-    int style = (filestyle == 0 ? PLOTSTYLE_POLY :
-        (filestyle == 1 ? PLOTSTYLE_POINTS : filestyle));
+	//fprintf(stderr,"filestyle = %d\n", filestyle);
+    int style = (filestyle == 0 ? PLOTSTYLE_POINTS :
+        (filestyle == 1 ? PLOTSTYLE_POLY : filestyle));
     if (templateargsym != &s_float)
     {
         error("array %s: only 'float' type understood", templateargsym->s_name);
@@ -430,7 +431,8 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
     }
 	else 
 	{
-		canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
+		//need a new kind of undo
+		//canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
 
 		int flags = fflags;
 		int saveit = ((flags & 1) != 0);
@@ -481,12 +483,15 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
             size = 1;
         if (size != a->a_n)
             garray_resize(x, size);
-        else if (style != x->x_style) {
+        if (style != x->x_style) {
 			x->x_style = style;
             garray_fittograph(x, size);
 		}
+		fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
         template_setfloat(scalartemplate, gensym("style"),
             x->x_scalar->sc_vec, (t_float)x->x_style, 0);
+    	template_setfloat(scalartemplate, gensym("linewidth"),
+			x->x_scalar->sc_vec, ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
 
 		char buf[MAXPDSTRING];
 		sprintf(buf, "%s_changed", x->x_realname->s_name);
