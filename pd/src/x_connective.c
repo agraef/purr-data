@@ -581,6 +581,7 @@ static void route_anything(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 
 static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 {
+	//fprintf(stderr,"route_list\n");
     t_routeelement *e;
     int nelement;
     if (x->x_type == A_FLOAT || x->x_mixed)
@@ -600,7 +601,7 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 				if (argc > 1)
 					outlet_list(e->e_outlet, 0, argc-1, argv+1);
 				else
-					outlet_list(e->e_outlet, 0, argc, argv);
+					outlet_bang(e->e_outlet);
 			}
             return;
         }
@@ -639,7 +640,7 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             {
                 if (e->e_w.w_symbol == &s_float)
                 {
-                    outlet_float(e->e_outlet, argv[0].a_w.w_float);
+                    outlet_bang(e->e_outlet);
                     return;
                 }
             }
@@ -650,7 +651,7 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             {
                 if (e->e_w.w_symbol == &s_symbol)
                 {
-                    outlet_symbol(e->e_outlet, argv[0].a_w.w_symbol);
+                    outlet_bang(e->e_outlet);
                     return;
                 }
             }
