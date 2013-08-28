@@ -72,13 +72,15 @@ void bng_draw_new(t_bng *x, t_glist *glist)
 		else nlet_tag = "bogus";
 
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxBNG %lx text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxBNG %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x, x);
-		sys_vgui(".x%lx.c create oval %d %d %d %d -fill #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
-		         canvas, xpos+1, ypos+1,
-		         xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1,
+		int cr = (x->x_gui.x_w-(x->x_gui.x_w % 2 ? 0 : 1))/2;
+		int cx = xpos+1+cr;
+		int cy = ypos+1+cr;
+		sys_vgui(".x%lx.c create circle %d %d -r %d -fill #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
+		         canvas, cx, cy, cr,
 		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxBNG %lx text}\n",
@@ -88,13 +90,13 @@ void bng_draw_new(t_bng *x, t_glist *glist)
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist) {
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxBNG%so%d %so%d %lxBNG %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%so%d %so%d %lxBNG %lx outlet}\n",
 		         canvas, xpos,
 		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
 		         ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, x);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist) {
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxBNG%si%d %si%d %lxBNG %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%si%d %si%d %lxBNG %lx inlet}\n",
 		         canvas, xpos, ypos,
 		         xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
 		}
@@ -125,11 +127,15 @@ void bng_draw_move(t_bng *x, t_glist *glist)
 		sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
 		         canvas, x, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-		sys_vgui(".x%lx.c coords %lxBUT %d %d %d %d\n",
-		         canvas, x, xpos+1,ypos+1,
-		         xpos + x->x_gui.x_w-1, ypos + x->x_gui.x_h-1);
-		sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
-		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
+		int cr = (x->x_gui.x_w-(x->x_gui.x_w % 2 ? 0 : 1))/2;
+		int cx = xpos+1+cr;
+		int cy = ypos+1+cr;
+		/*sys_vgui(".x%lx.c create circle %d %d -r %d -stroke #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
+		         canvas, cx, cy, cr,*/
+		sys_vgui(".x%lx.c coords %lxBUT %d %d\n",
+		         canvas, x, cx, cy);
+		sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %d\n", canvas, x,
+		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
@@ -221,14 +227,14 @@ void bng_draw_io(t_bng* x, t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxBNG%so%d %so%d %lxBNG %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%so%d %so%d %lxBNG %lx outlet}\n",
 		         canvas, xpos,
 		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
 		         ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxBNG%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxBNG%si%d %si%d %lxBNG %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%si%d %si%d %lxBNG %lx inlet}\n",
 		         canvas, xpos, ypos,
 		         xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
@@ -250,8 +256,8 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxBUT -outline $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke $select_color\n", canvas, x);
 				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
 				if (x->x_gui.scale_vis) {
@@ -302,8 +308,8 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 		}
 		else
 		{
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
-		    sys_vgui(".x%lx.c itemconfigure %lxBUT -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
 			sys_vgui(".x%lx.c dtag %lxBNG selected\n", canvas, x);
 			sys_vgui("destroy %s\n", sh->h_pathname);
@@ -378,8 +384,8 @@ static void bng__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_fl
 		if (glist_isvisible(x->x_gui.x_glist))
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create rectangle %d %d %d %d\
-	 -outline $select_color -width 1 -tags %s\n",
+			sys_vgui(".x%x.c create prect %d %d %d %d\
+	 -stroke $select_color -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + x->x_gui.x_w,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);

@@ -49,11 +49,11 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
 
 	//if (glist_isvisible(glist)) {
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRECT %lxMYCNV %lx text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxRECT %lxMYCNV %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_vis_w, ypos + x->x_vis_h,
 		         x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, x);
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -outline #%6.6x -tags {%lxBASE %lxMYCNV %lx text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -stroke #%6.6x -tags {%lxBASE %lxMYCNV %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x, x);
@@ -121,12 +121,12 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 		sprintf(color, "#%6.6x", x->x_gui.x_bcol);
 	*/
 
-    sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -outline #%6.6x\n", canvas, x,
+    sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -stroke #%6.6x\n", canvas, x,
              x->x_gui.x_bcol, x->x_gui.x_bcol);
 	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-    	sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+    	sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
 	else
-    	sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x,
+    	sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x,
              x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -148,7 +148,7 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
-			    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+			    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
 
 				if (x->x_gui.scale_vis) {
 					sys_vgui("destroy %s\n", sh->h_pathname);
@@ -198,7 +198,7 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 		}
 		else
 		{
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, x->x_gui.x_bcol);
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x, x->x_gui.x_bcol);
 			sys_vgui(".x%lx.c dtag %lxMYCNV selected\n", canvas, x);
 			sys_vgui("destroy %s\n", sh->h_pathname);
 			sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
@@ -274,8 +274,8 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx
 		if (glist_isvisible(x->x_gui.x_glist))
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create rectangle %d %d %d %d\
-	 -outline $select_color -width 1 -tags %s\n",
+			sys_vgui(".x%x.c create prect %d %d %d %d\
+	 -stroke $select_color -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + x->x_vis_w,
 					x->x_gui.x_obj.te_ypix + x->x_vis_h, sh->h_outlinetag);

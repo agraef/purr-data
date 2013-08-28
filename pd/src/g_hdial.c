@@ -45,10 +45,10 @@ void hradio_draw_update(t_gobj *client, t_glist *glist)
     {
         t_canvas *canvas=glist_getcanvas(glist);
 
-        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n",
+        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
                  canvas, x, x->x_drawn,
                  x->x_gui.x_bcol, x->x_gui.x_bcol);
-        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n",
+        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
                  canvas, x, x->x_on,
                  x->x_gui.x_fcol, x->x_gui.x_fcol);
         x->x_drawn = x->x_on;
@@ -86,10 +86,10 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
 
 		for(i=0; i<n; i++)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxHRDO %lx text}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxHRDO %lx text}\n",
 		             canvas, xx11, yy11, xx11+dx, yy12,
 		             x->x_gui.x_bcol, x, i, x, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxBUT%d %lxHRDO %lx text}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxBUT%d %lxHRDO %lx text}\n",
 		             canvas, xx21, yy21, xx22, yy22,
 		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
 		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x, x);
@@ -105,10 +105,10 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %lx outlet}\n",
 		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, nlet_tag, 0, x, x);
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %lx inlet}\n",
 		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
 	//}
 }
@@ -217,7 +217,7 @@ void hradio_draw_config(t_hradio* x, t_glist* glist)
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");		
     for(i=0; i<n; i++)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -fill #%6.6x\n .x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n", 
+        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -fill #%6.6x\n .x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n", 
 			 canvas, x, i, x->x_gui.x_bcol, canvas, x, i,
              (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
              (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);
@@ -249,7 +249,7 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %lx outlet}\n",
 		             canvas,
 		             xpos, ypos + x->x_gui.x_w-1,
 		             xpos + IOWIDTH, ypos + x->x_gui.x_w,
@@ -257,7 +257,7 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %lx inlet}\n",
 		             canvas,
 		             xpos, ypos,
 		             xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
@@ -283,7 +283,7 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 
 				for(i=0; i<n; i++)
 				{
-				    sys_vgui(".x%lx.c itemconfigure %lxBASE%d -outline $select_color\n", canvas, x, i);
+				    sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke $select_color\n", canvas, x, i);
 				}
 				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
@@ -337,7 +337,7 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 			sys_vgui(".x%lx.c dtag %lxHRDO selected\n", canvas, x);
 		    for(i=0; i<n; i++)
 		    {
-		        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -outline #%6.6x\n", canvas, x, i,
+		        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke #%6.6x\n", canvas, x, i,
 		                 IEM_GUI_COLOR_NORMAL);
 		    }
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x,
@@ -412,8 +412,8 @@ static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t
 		if (glist_isvisible(x->x_gui.x_glist))
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create rectangle %d %d %d %d\
-	 -outline $select_color -width 1 -tags %s\n",
+			sys_vgui(".x%x.c create prect %d %d %d %d\
+	 -stroke $select_color -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + (x->x_gui.x_w * x->x_number),
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);

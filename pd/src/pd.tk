@@ -206,6 +206,7 @@ if { $tcl_platform(platform) == "windows" }  {
     set cursor_editmode_disconnect "X_cursor"
 	set cursor_editmode_resize "sb_h_double_arrow"
 	set cursor_editmode_resize_bottom_right "bottom_right_corner"
+	set cursor_scroll "fleur"
 	# set file types that open/save recognize
 	set filetypes {
 		{{Pd Files}         {.pd}  }
@@ -234,6 +235,7 @@ if { $tcl_platform(platform) == "windows" }  {
     set cursor_editmode_disconnect "X_cursor"
 	set cursor_editmode_resize "sb_h_double_arrow"
 	set cursor_editmode_resize_bottom_right "bottom_right_corner"
+	set cursor_scroll "fleur"
 	# set file types that open/save recognize
 	set filetypes {
 		{{Pd Files}                {.pd}  }
@@ -268,6 +270,7 @@ if { $tcl_platform(platform) == "windows" }  {
     set cursor_editmode_disconnect "X_cursor"
 	set cursor_editmode_resize "sb_h_double_arrow"
 	set cursor_editmode_resize_bottom_right "bottom_right_corner"
+	set cursor_scroll "fleur"
 	# set file types that open/save recognize
 	set filetypes {
 		{{pd files}         {.pd}  }
@@ -279,9 +282,9 @@ if { $tcl_platform(platform) == "windows" }  {
 	set externalsdir "$::env(HOME)/pd-l2ork-externals"
 }   
 
-proc bgerror {message} {
-	pdtk_post "\ntcl error: $message"
-}     
+#proc bgerror {message} {
+#	pdtk_post "\ntcl error: $message"
+#}     
 
 # make sure the user folder for installing externals exists
 catch {
@@ -352,7 +355,7 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	global highlight_width
 
 	set k12_mode 1
-	set signal_cord_width 4
+	set signal_cord_width 5
 	set autotips 1
 	set signal_cord_highlight "#474"
 	set signal_cord "#2ca7d4"
@@ -538,7 +541,7 @@ set obj_box_fill "#f6f8f8"
 set signal_cord_highlight "#58a"
 set signal_cord "#808095"
 set signal_nlet $signal_cord
-set signal_cord_width 2
+set signal_cord_width 3
 set msg_cord_highlight "#474"
 set msg_cord "#565"
 set msg_nlet "white"
@@ -547,7 +550,7 @@ set msg_cord_width 1
 
 #nlet highlighting stuff
 set select_nlet_color $select_color
-set highlight_width 3
+set highlight_width 5
 
 if {$pd_nt == 1} {
     global pd_guidir
@@ -2322,6 +2325,8 @@ proc pdtk_k12_show_sound_icons {name} {
 	}
 }
 
+package require tkpath
+
 ############# pdtk_canvas_new -- create a new canvas ###############
 proc pdtk_canvas_new {name width height geometry editable} {
     global pd_tearoff put_tearoff
@@ -2723,7 +2728,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pack $name.k12frame.edit $name.k12frame.datasound $name.k12frame.wii $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
 	}
 
-    canvas $name.c -width $width -height $height -background $::canvas_color($name) \
+    tkp::canvas $name.c -width $width -height $height -background $::canvas_color($name) \
 		-highlightthickness 0 -bd 0 \
         -yscrollcommand "$name.scrollvert set" \
         -xscrollcommand "$name.scrollhort set" \
@@ -3185,10 +3190,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     }
     #on linux, button 2 "pastes" from the X windows clipboard
     if {$pd_nt == 0} {
-        bind $name.c <Button-2> {\
-                                     pdtk_canvas_click %W %x %y %b 0;\
-                                     pdtk_canvas_mouseup %W %x %y %b;\
-                                     pdtk_pastetext}
+        bind $name.c <Button-2> {pdtk_canvas_middleclick %W %x %y %b 0;}
     }
 
     bind $name.c <ButtonRelease> {pdtk_canvas_mouseup %W %x %y %b}
@@ -3262,6 +3264,156 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
 		after 1000 [concat pdtk_k12_saveas_on_new $name]
 	}
+
+	set ::scroll_on($name) 0
+	set ::last_scroll_x($name) 0
+	set ::last_scroll_y($name) 0
+}
+
+set HSCROLL_PAD_L 6
+set HSCROLL_PAD_R 13
+set VSCROLL_PAD_U 6
+set VSCROLL_PAD_D 13
+set SCROLL_PAD_EDGE 5
+set SCROLL_THICKNESS 5
+set scrollbar_color "#555"
+set hit_scrollbar 0
+
+proc pdtk_canvas_draw_scrollbars {name} {
+	global scrollbar_color
+	global HSCROLL_PAD_L
+	global HSCROLL_PAD_R
+	global VSCROLL_PAD_U
+	global VSCROLL_PAD_D
+	global SCROLL_PAD_EDGE
+	global SCROLL_THICKNESS
+	set name [string trimright $name .c]
+	catch {
+		$name.c delete hscrollbar($name)
+		$name.c delete vscrollbar($name)
+	}
+	if {$::xscrollable($name)} {
+		set visible [$name.c xview]
+		set vx1 [lindex $visible 0]
+		set vx2 [lindex $visible 1]
+		set npix [expr int([winfo width $name]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
+		set width [expr int($npix * ($vx2 -$vx1))]
+		set loffset [expr int($vx1 * $npix)] 
+		set scrollx1 [expr [$name.c canvasx 0] + $HSCROLL_PAD_L + $loffset]
+		set scrolly1 [expr [$name.c canvasy 0] + [winfo height $name] - $SCROLL_PAD_EDGE]
+		set scrollx2 [expr $scrollx1 + $width]
+		#puts stderr "$vx1 $vx2 $npix $width $loffset $scrollx1 $scrollx2"
+		set hscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx2 $scrolly1 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags hscrollbar($name) -strokelinecap round]
+		$name.c bind $hscroll <Button-1> {pdtk_canvas_scroll_horizontal_click %W %x %y %b 0}
+	}
+
+	if {$::yscrollable($name)} {
+		set visible [$name.c yview]
+		set vy1 [lindex $visible 0]
+		set vy2 [lindex $visible 1]
+		set npix [expr int([winfo height $name]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
+		set height [expr int($npix * ($vy2 -$vy1))]
+		set toffset [expr int($vy1 * $npix)] 
+		set scrollx1 [expr [$name.c canvasx 0] + [winfo width $name] - $SCROLL_PAD_EDGE]
+		set scrolly1 [expr [$name.c canvasy 0] + $VSCROLL_PAD_U +$toffset]
+		set scrolly2 [expr $scrolly1 + $height]
+		#puts stderr "$vy1 $vy2 $npix $height $toffset $scrolly1 $scrolly2"
+		set vscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx1 $scrolly2 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags vscrollbar($name) -strokelinecap round]
+		$name.c bind $vscroll <Button-1> {pdtk_canvas_scroll_vertical_click %W %x %y %b 0}
+	}
+	pdtk_canvas_update_sticky_tip $name.c
+}
+
+# from c
+proc pdtk_canvas_scroll_xy_click {name x y b} {
+	set ::scroll_on($name) $b
+	#set ::last_scroll_x($name) $x
+	#set ::last_scroll_y($name) $y
+	#puts stderr "XY CLICK $name $x $y"
+}
+
+proc pdtk_canvas_scroll_horizontal_click {name x y b mod} {
+	global hit_scrollbar
+	#puts stderr "HORIZONTAL CLICK $name $x $y $b $mod"
+	set name [string trimright $name .c]
+	if { $b == 1 } {
+		set ::scroll_on($name) 1
+		set hit_scrollbar 1
+	} else {
+		set ::scroll_on($name) 0
+		set hit_scrollbar 0
+	}
+	#puts stderr $::scroll_on($name)
+	set ::last_scroll_x($name) $x
+}
+
+#scroll_on states:
+#0 = no scrolling
+#1 = horizontal
+#2 = vertical
+#3 = both (middle click)
+
+proc pdtk_canvas_scroll_horizontal_motion {name x y mod} {
+	#puts stderr "HORIZONTAL MOTION $name $x $y $mod"
+	set name [string trimright $name .c]
+	if {$::xscrollable($name) && ($::scroll_on($name) == 1 || $::scroll_on($name) == 3)} {
+		set deltax [expr $::last_scroll_x($name) - $x]
+		#puts stderr "deltax=$deltax"
+		if { $deltax != 0 } {
+			set visible [$name.c xview]
+			set vx1 [lindex $visible 0]
+			set vx2 [lindex $visible 1]
+			set perpixdelta [expr ($vx2 - $vx1)/[winfo width $name]]
+			#puts stderr "scrolling... $vx1 $vx2 $perpixdelta"
+			#$name xview scroll [expr -$deltax] units
+			set displace [expr $perpixdelta*$deltax]
+			if {$::scroll_on($name) == 3} {
+				set displace [expr -$displace]
+			}
+			$name.c xview moveto [expr $vx1 - $displace]
+			pdtk_canvas_draw_scrollbars $name
+		}
+	}
+	set ::last_scroll_x($name) $x
+}
+
+proc pdtk_canvas_scroll_vertical_click {name x y b mod} {
+	#puts stderr "VERTICAL CLICK $name $x $y $b $mod"
+	global hit_scrollbar
+	set name [string trimright $name .c]
+	if { $b == 1 } {
+		set ::scroll_on($name) 2
+		set hit_scrollbar 1
+	} else {
+		set ::scroll_on($name) 0
+		set hit_scrollbar 0
+	}
+	#puts stderr $::scroll_on($name)
+	set ::last_scroll_y($name) $y
+}
+
+proc pdtk_canvas_scroll_vertical_motion {name x y mod} {
+	#puts stderr "VERTICAL MOTION $name $x $y $mod"
+	set name [string trimright $name .c]
+	if {$::yscrollable($name) && $::scroll_on($name) >= 2} {
+		set deltay [expr $::last_scroll_y($name) - $y]
+		#puts stderr "deltay=$deltay"
+		if { $deltay != 0 } {
+			set visible [$name.c yview]
+			set vy1 [lindex $visible 0]
+			set vy2 [lindex $visible 1]
+			set perpixdelta [expr ($vy2 - $vy1)/[winfo height $name]]
+			#puts stderr "scrolling... $vx1 $vx2 $perpixdelta"
+			#$name xview scroll [expr -$deltax] units
+			set displace [expr $perpixdelta*$deltay]
+			if {$::scroll_on($name) == 3} {
+				set displace [expr -$displace]
+			}
+			$name.c yview moveto [expr $vy1 - $displace]
+			pdtk_canvas_draw_scrollbars $name
+		}
+	}
+	set ::last_scroll_y($name) $y
 }
 
 proc pdtk_k12_saveas_on_new {name} {
@@ -3618,9 +3770,21 @@ proc pdtk_canvas_sendclick {name x y b f} {
     pd [canvastosym $name] mouse [$name canvasx $x] [$name canvasy $y] $b $f \;
 }
 
+proc pdtk_canvas_sendmiddleclick {name x y b f} {
+    pd [canvastosym $name] mouse-2 [$name canvasx $x] [$name canvasy $y] $b $f \;
+}
+
 proc pdtk_canvas_click {name x y b f} {
+	global hit_scrollbar
     focus $name
-    pdtk_canvas_sendclick $name $x $y $b $f
+	if {$hit_scrollbar == 0} {
+    	pdtk_canvas_sendclick $name $x $y $b $f
+	}
+}
+
+proc pdtk_canvas_middleclick {name x y b f} {
+    focus $name
+    pdtk_canvas_sendmiddleclick $name $x $y $b $f
 }
 
 proc pdtk_canvas_rightclick {name x y b} { 
@@ -3652,6 +3816,8 @@ set pdtk_canvas_mouseup_ymaxval 0
 proc pdtk_canvas_mouseup {name x y b} {
     pd [concat [canvastosym $name] mouseup [$name canvasx $x] \
             [$name canvasy $y] $b \;]
+	pdtk_canvas_scroll_horizontal_click $name $x $y 0 0
+	pdtk_canvas_scroll_vertical_click $name $x $y 0 0
 }
 
 #proc pdtk_canvas_getscroll_ping {name} {
@@ -3682,6 +3848,48 @@ proc pdtk_select_all_gop_widgets {name gop state} {
 			}
 		}
 	}
+}
+
+proc pdtk_find_lowest_widget_withtag {canvas name} {
+	#puts stderr "...pdtk_find_lowest_widget_withtag $canvas $name"
+	set ::arrange_lowest 0
+	foreach item [$canvas find all] {
+		#puts stderr "tags=[$canvas gettags $item]"
+		foreach tag [$canvas gettags $item] {
+			if { [string first $name $tag] > -1 } {
+				#puts stderr ...match
+				set ::arrange_lowest $tag
+				break;
+			}
+		}
+		if { $::arrange_lowest != 0 } {
+			break;
+		}
+	}
+	#puts stderr "final_lowest=$tag"
+}
+
+proc pdtk_find_highest_widget_withtag {canvas name} {
+	#puts stderr "pdtk_find_highest_widget_withtag $canvas $name"
+	set ::arrange_highest 0
+	set interrupt 0
+	foreach item [$canvas find all] {
+		#puts stderr "tags=[$canvas gettags $item]"
+		foreach tag [$canvas gettags $item] {
+			if { [string first $name $tag] > -1 } {
+				#puts stderr ...match
+				set ::arrange_highest $tag
+				break;
+			} elseif { $::arrange_highest != 0 } {
+				set interrupt 1
+				break;
+			}
+		}
+		if { $interrupt == 1 } {
+			break;
+		}
+	}
+	#puts stderr "final_highest=$tag"
 }
 
 # currently unused
@@ -3818,12 +4026,15 @@ proc pdtk_canvas_getscroll {name} {
 				}
 			}
 			default {
-				set coords [$name coords $item]
-				foreach {x y} $coords {
-					if { $x < $x1 } {set x1 $x}
-					if { $x > $x2 } {set x2 $x}
-					if { $y < $y1 } {set y1 $y}
-					if { $y > $y2 } {set y2 $y}
+				if { $item != 0 } {
+					set coords [$name bbox $item]
+					#puts stderr "$name $item $coords"
+					foreach {x y} $coords {
+						if { $x < $x1 } {set x1 $x}
+						if { $x > $x2 } {set x2 $x}
+						if { $y < $y1 } {set y1 $y}
+						if { $y > $y2 } {set y2 $y}
+					}
 				}
 				#set imgtags [$name gettags $item]
 				#set imgtag [lindex $imgtags 0]
@@ -3902,14 +4113,14 @@ proc pdtk_canvas_getscroll {name} {
 
 			if {$winwidth < $canvaswidth && $::xscrollable($parentname) == 0} {
 				#puts stderr "PUTTING HORIZONTAL"
-				pack $parentname.scrollhort -fill x \
-					-side bottom -before $parentname.c
+				#pack $parentname.scrollhort -fill x \
+				#	-side bottom -before $parentname.c
 				set ::xscrollable($parentname) 1
 			}
 			if {$winheight < $canvasheight && $::yscrollable($parentname) == 0} {
 				#puts stderr "PUTTING VERTICAL"
-				pack $parentname.scrollvert -fill y \
-					-side right -before $parentname.c
+				#pack $parentname.scrollvert -fill y \
+				#	-side right -before $parentname.c
 				set ::yscrollable($parentname) 1
 			}
 		}
@@ -3940,6 +4151,8 @@ proc pdtk_canvas_getscroll {name} {
 	}
 	set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
+	pdtk_canvas_draw_scrollbars $name
+	pdtk_canvas_update_sticky_tip $name
 	#puts stderr "END top-left x:[$name canvasx 0] y:[$name canvasy 0]"
     #update (bad idea--all kinds of unpredictable problems)
 
@@ -4194,6 +4407,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 proc pdtk_canvas_scroll {canvas xy distance} {
 	if {$xy eq "x" && $::xscrollable([winfo parent $canvas]) == 1 || $xy eq "y" && $::yscrollable([winfo parent $canvas]) == 1 } {
     	$canvas [list $xy]view scroll $distance units
+		pdtk_canvas_draw_scrollbars $canvas
 	}
 }
 
@@ -4268,6 +4482,8 @@ proc pdtk_canvas_motion {name x y mods} {
  	#puts stderr [concat $pointer_x_local $pointer_y_local $pointer_x_global $pointer_y_global]
     #puts stderr [concat [canvastosym $name] $name $x $y]
     pd [canvastosym $name] motion [$name canvasx $x] [$name canvasy $y] $mods \;
+	pdtk_canvas_scroll_horizontal_motion $name $x $y 0
+	pdtk_canvas_scroll_vertical_motion $name $x $y 0
 }
 
 # "map" event tells us when the canvas becomes visible (arg is "0") or
@@ -5715,6 +5931,8 @@ proc array_apply {id canvas} {
     set saveit [eval concat $$var_array_saveit]
     set drawasrects [eval concat $$var_array_drawasrects]
 
+	#puts stderr "...[expr $saveit + 2 * $drawasrects]"
+
 	set xdraw [expr int([$canvas.c canvasx 0])]
 	set ydraw [expr int([$canvas.c canvasy 0])]
 
@@ -5802,12 +6020,12 @@ proc pdtk_array_dialog {id name n flags newone canvas} {
     match_linux_wm [list radiobutton $id.drawasrects.drawasrects1 -value 1 \
         -variable $var_array_drawasrects \
         -text "polygon"]
-    match_linux_wm [list radiobutton $id.drawasrects.drawasrects2 -value 2 \
-        -variable $var_array_drawasrects \
-        -text "bezier curve"]
+    #match_linux_wm [list radiobutton $id.drawasrects.drawasrects2 -value 2 \
+    #    -variable $var_array_drawasrects \
+    #    -text "bezier curve"]
     pack $id.drawasrects.drawasrects0 -side top
     pack $id.drawasrects.drawasrects1 -side top
-    pack $id.drawasrects.drawasrects2 -side top
+    #pack $id.drawasrects.drawasrects2 -side top
 
     if {$newone != 0} { 
         match_linux_wm [list frame $id.radio]
@@ -8203,6 +8421,34 @@ proc pdtk_canvas_enteritem {tkcanvas x y item enterid} {
 	}
 }
 
+# update sticky tooltip when scrolling
+proc pdtk_canvas_update_sticky_tip {w} {
+	#puts stderr "update_sticky_tip $w [lsearch -exact [$w gettags $w.tipwindow] \"sticky\"] [winfo exists $w.tiplabel]"
+	#catch {
+		if {[winfo exists $w.tiplabel]} {
+			#puts stderr "got it"
+			#set yreal [expr [$w canvasy 0] * -1 + \
+			#	[winfo pointery $w]-[winfo rooty $w]]
+			set yoffset 0
+			#if {$yreal < [expr [winfo height $w] - \
+			#	[winfo reqheight $w.tiplabel]] - 5} {
+			#		set yoffset [winfo height $w]
+			#		set anchor "sw"
+			#} else {
+			#	set anchor "nw"
+			#}
+			if {[$w itemcget $w.tipwindow -anchor] == "sw"} {
+				set yoffset [winfo height $w]
+			}
+			set x [$w canvasx 0]
+			set y [expr [$w canvasy 0] + $yoffset]
+			$w coords $w.tipwindow $x $y
+			#$w itemconfigure $w.tipwindow -anchor $anchor
+			#puts stderr "[winfo pointery $w] [winfo rooty $w] $yreal $anchor"
+		}
+	#}
+}
+
 # move activewidth to toggle on editmode?
 proc pdtk_canvas_leaveitem {w} {
     variable afterid
@@ -8273,7 +8519,7 @@ proc pdtk_tip {w fromc show args} {
 		}
 
 		if {$fromc == 1} {
-			set yreal [expr [$w canvasy 0] * -1 + \
+			set yreal [expr [$w canvasy 0] + \
 				[winfo pointery $w]-[winfo rooty $w]]
 			set yoffset 0
 			if {$yreal < [expr [winfo height $w] - \
@@ -8283,6 +8529,7 @@ proc pdtk_tip {w fromc show args} {
 			} else {
 				set anchor "nw"
 			}
+			#puts stderr "$yreal [winfo height $w] [winfo reqheight $w.tiplabel]"
 			set x [$w canvasx 0]
 			set y [expr [$w canvasy 0] + $yoffset]
 		} else {
@@ -8363,7 +8610,7 @@ proc pdtk_tip {w fromc show args} {
 				$w coords tiparrow [expr $xarrow+5] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow
 			} else {
 				#$w create polygon [expr $xreal+$xreal_offset] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow -fill $nlet_color -width 4 -tags tiparrow
-				$w create polygon [expr $xarrow+5] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow -fill $nlet_color -width 4 -tags tiparrow
+				$w create ppolygon [expr $xarrow+5] [expr $yreal+$yreal_offset] $xarrow $yarrow [expr $xarrow+10] $yarrow -stroke $nlet_color -fill $nlet_color -strokewidth 1 -tags tiparrow
 				#update (bad idea--avoid this)
 			}
 		}
@@ -8376,21 +8623,35 @@ proc pdtk_tip {w fromc show args} {
 			$w coords $w.tipwindow $x $y
 			$w itemconfigure $w.tipwindow -anchor $anchor
 		} else {
-		       	$w create window $x $y -window $w.tiplabel -anchor $anchor \
-			    -tags $tags
-			$w bind $w.tipwindow <Enter> "pdtk_tip_mouseover $w"
-			#update
+	       	$w create window $x $y -window $w.tiplabel -anchor $anchor \
+		    -tags $tags
+			if {$fromc == 1} {
+				#$w bind $w.tiplabel <Enter> "pdtk_tip_mouseover $w"
+				bind $w.tiplabel <Motion> "pdtk_tip_mouseover $w"
+				#update -- bad idea, don't do it
+			}
 		}
     }
 }
 
+set ::tip_mouseover_ping 0
+
 # move the tip if the user happens to mouse over it
 proc pdtk_tip_mouseover {w} {
+	if {$::tip_mouseover_ping == 1} { return }
 	#puts stderr "pdtk_tip_mouseover $w"
-    set msg [$w.tiplabel cget -text]
-    set sticky [expr [lsearch -exact [$w gettags $w.tipwindow] \
-	"sticky"] != -1]
-    pdtk_tip $w $sticky 1 $msg 
+	if {[$w itemcget $w.tipwindow -anchor] == "sw"} {
+		set yoffset 0
+		set anchor "nw"
+	} else {
+		set yoffset [winfo height $w]
+		set anchor "sw"
+	}
+	set x [$w canvasx 0]
+	set y [expr [$w canvasy 0] + $yoffset]
+	$w coords $w.tipwindow $x $y
+	$w itemconfigure $w.tipwindow -anchor $anchor
+	after 50 {set ::tip_mouseover_ping 0}
 }
 
 proc pdtk_gettip { w item xletno name helpname dir } {

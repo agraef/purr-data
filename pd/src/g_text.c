@@ -602,7 +602,7 @@ static void message_click(t_message *x,
     if (glist_isvisible(x->m_glist))
     {
         t_rtext *y = glist_findrtext(x->m_glist, &x->m_text);
-        sys_vgui(".x%lx.c itemconfigure %sR -width 5\n", 
+        sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 5\n", 
             glist_getcanvas(x->m_glist), rtext_gettag(y));
         clock_delay(x->m_clock, 120);
     }
@@ -613,7 +613,7 @@ static void message_tick(t_message *x)
     if (glist_isvisible(x->m_glist))
     {
         t_rtext *y = glist_findrtext(x->m_glist, &x->m_text);
-        sys_vgui(".x%lx.c itemconfigure %sR -width 1\n",
+        sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1\n",
             glist_getcanvas(x->m_glist), rtext_gettag(y));
     }
 }
@@ -1369,6 +1369,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     t_rtext *y = glist_findrtext(glist, x);
     char *outline;
     rtext_select(y, state);
+	//fprintf(stderr,"text_select %s\n", rtext_gettag(y));
     if (pd_class(&x->te_pd) == text_class)
         outline = "$dash_outline";
     else
@@ -1376,7 +1377,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
 	//fprintf(stderr,"text_select isvisible=%d shouldvis=%d istoplevel=%d\n", glist_isvisible(glist), gobj_shouldvis(&x->te_g, glist), glist_istoplevel(glist));
     if (gobj_shouldvis(&x->te_g, glist)) {
 		if (glist_istoplevel(glist)) {
-		    sys_vgui(".x%lx.c itemconfigure %sR -outline %s\n", glist_getcanvas(glist), 
+		    sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n", glist_getcanvas(glist), 
 		             rtext_gettag(y), (state? "$select_color" : outline));
 			if (z->g_pd == gatom_class) {
 				sys_vgui(".x%lx.c itemconfigure %lx.l -fill %s\n", glist_getcanvas(glist), 
@@ -1394,7 +1395,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
 		    	    glist_getcanvas(glist), rtext_gettag(y));
 
 				if (pd_class(&x->te_pd) == text_class && glist_istoplevel(glist))
-	        		sys_vgui(".x%lx.c itemconfigure %sR -width 1 -fill $obj_box_fill\n",
+	        		sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 -fill $obj_box_fill\n",
 						glist_getcanvas(glist), rtext_gettag(y));
 
 				t_object *ob = pd_checkobject(&x->te_pd);
@@ -1418,7 +1419,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
 		        	glist_getcanvas(glist), rtext_gettag(y));
 
 				if (pd_class(&x->te_pd) == text_class)
-			   		sys_vgui(".x%lx.c itemconfigure %sR -width 2 -fill %s\n",
+			   		sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 -fill %s\n",
 						glist_getcanvas(glist), 
 		            	rtext_gettag(y), invalid_fill);
 
@@ -1669,8 +1670,8 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         {
 			//fprintf(stderr,"glist_drawiofor o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags {%so%d %lx outlet}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d \
+                      -fill %s -stroke %s -tags {%so%d %lx outlet}\n",
                 glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1699,8 +1700,8 @@ void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
         {
 			//fprintf(stderr,"glist_drawiofor i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags {%si%d %lx inlet}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d \
+                      -fill %s -stroke %s -tags {%si%d %lx inlet}\n",
                 glist_getcanvas(glist), onset, y1, onset + IOWIDTH, y1 + EXTRAPIX,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1739,8 +1740,8 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
         {
 			//fprintf(stderr,"drawiofor_withtag o firsttime\n");
             issignal = obj_issignaloutlet(ob,i);
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags {%so%d %lx outlet}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d \
+                      -fill %s -stroke %s -tags {%so%d %lx outlet}\n",
                 glist_getcanvas(glist), onset, y2 - 2, onset + IOWIDTH, y2,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1764,8 +1765,8 @@ void glist_drawiofor_withtag(t_glist *glist, t_object *ob, int firsttime,
         {
 			//fprintf(stderr,"drawiofor_withtag i firsttime\n");
             issignal = obj_issignalinlet(ob,i);
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d \
-                      -fill %s -outline %s -tags {%si%d %lx inlet}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d \
+                      -fill %s -stroke %s -tags {%si%d %lx inlet}\n",
                 glist_getcanvas(glist), onset, y1, onset + IOWIDTH, y1 + EXTRAPIX,
                 (issignal ? "$signal_nlet" : "$msg_nlet"),
                 (issignal ? "$signal_cord" : "$msg_cord"),
@@ -1820,7 +1821,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (pd_class(&x->te_pd) == text_class)
         {
             pattern = "-";
-            outline = "$dash_outline -width 2";
+            outline = "$dash_outline -strokewidth 2";
 			fill = invalid_fill;
         }
         else
@@ -1831,11 +1832,12 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         if (firsttime)
 		{
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d \
-                      -dash %s -outline %s -fill %s -tags {%sR %lx text}\n", 
+            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d \
+                      -stroke %s -fill %s -tags {%sR %lx text}\n", 
                 glist_getcanvas(glist),
                      x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
-                     pattern, outline, fill, tag, tag);
+                     outline, fill, tag, tag);
+				//-dash %s -> pattern disabled for tkpath
         }
         else
         {
@@ -1851,8 +1853,8 @@ void text_drawborder(t_text *x, t_glist *glist,
     else if (x->te_type == T_MESSAGE)
     {
         if (firsttime)
-            sys_vgui(".x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d %d %d %d %d -outline $box_outline -fill $msg_box_fill -tags {%sR %lx text}\n",
+            sys_vgui(".x%lx.c create ppolygon\
+ %d %d %d %d %d %d %d %d %d %d %d %d %d %d -stroke $box_outline -fill $msg_box_fill -tags {%sR %lx text}\n",
                 glist_getcanvas(glist),
                 x1, y1,  x2+4, y1,  x2, y1+4,  x2, y2-4,  x2+4, y2,
                 x1, y2,  x1, y1,
@@ -1867,8 +1869,8 @@ void text_drawborder(t_text *x, t_glist *glist,
     else if (x->te_type == T_ATOM)
     {
         if (firsttime)
-            sys_vgui(".x%lx.c create polygon\
- %d %d %d %d %d %d %d %d %d %d %d %d -outline $box_outline -fill $atom_box_fill -tags {%sR %lx text}\n",
+            sys_vgui(".x%lx.c create ppolygon\
+ %d %d %d %d %d %d %d %d %d %d %d %d -stroke $box_outline -fill $atom_box_fill -tags {%sR %lx text}\n",
                 glist_getcanvas(glist),
                 x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1,
                     tag, tag);
@@ -1904,7 +1906,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         if (pd_class(&x->te_pd) == text_class)
         {
             pattern = "-";
-            outline = "$dash_outline -width 2";
+            outline = "$dash_outline -strokewidth 2";
 			fill = invalid_fill;
         }
         else
@@ -1915,11 +1917,12 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         }
         if (firsttime)
 		{
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d \
-                      -dash %s -outline %s -fill %s -tags {%sR %lx text}\n", 
+            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d \
+                      -stroke %s -fill %s -tags {%sR %lx text}\n", 
                 glist_getcanvas(glist),
                      x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1,  
-                     pattern, outline, fill, tag, tag);
+                     outline, fill, tag, tag);
+				//-dash %s -> pattern disabled for tkpath
         }
     }
     else if (x->te_type == T_MESSAGE)
@@ -1927,9 +1930,9 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
         msg_draw_const = ((y2-y1)/4);
         if (msg_draw_const > 10) msg_draw_const = 10; /* looks bad if too big */
         if (firsttime)
-            sys_vgui(".x%lx.c create polygon \
+            sys_vgui(".x%lx.c create ppolygon \
                      %d %d %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $msg_box_fill -tags {%sR %lx text}\n",
+                     -stroke $box_outline -fill $msg_box_fill -tags {%sR %lx text}\n",
                 glist_getcanvas(glist),
                      x1, y1,  x2+msg_draw_const, y1,  x2, y1+msg_draw_const,  
                      x2, y2-msg_draw_const,  x2+msg_draw_const, y2,  
@@ -1940,8 +1943,8 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     {
         atom_draw_const = ((y2-y1)/3);
         if (firsttime)
-            sys_vgui(".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d %d %d \
-                     -outline $box_outline -fill $atom_box_fill -tags {%sR %lx text}\n",
+            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d %d %d \
+                     -stroke $box_outline -fill $atom_box_fill -tags {%sR %lx text}\n",
                 glist_getcanvas(glist),
                      x1, y1,  x2-atom_draw_const, y1,  x2, y1+atom_draw_const,  
                      x2, y2,  x1, y2,  x1, y1, 

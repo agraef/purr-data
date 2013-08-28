@@ -16,6 +16,8 @@ to be different but are now unified except for some fossilized names.) */
 #include <string.h>
 
 extern int do_not_redraw;
+extern void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag, int issignal);
+extern void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
 
     /* LATER consider adding font size to this struct (see glist_getfont()) */
 struct _canvasenvironment
@@ -811,7 +813,8 @@ void canvas_map(t_canvas *x, t_floatarg f)
         {
             /* just clear out the whole canvas */
 			sys_vgui(".x%lx.c dtag all selected\n", x);
-            sys_vgui(".x%lx.c delete all\n", x);
+            //sys_vgui(".x%lx.c delete all\n", x);
+			sys_vgui("foreach item [.x%lx.c find withtag {(!root)}] { .x%lx.c delete $item }\n", x, x);
             x->gl_mapped = 0;
         }
     }
@@ -934,11 +937,12 @@ static void canvas_drawlines(t_canvas *x)
     {
         issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
 		if (!(pd_class(&t.tr_ob2->ob_g.g_pd) == preset_node_class && pd_class(&t.tr_ob->ob_g.g_pd) != message_class))
-		    sys_vgui(".x%lx.c create line %d %d %d %d -width %s -fill %s \
+			canvas_drawconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc, issignal);
+		    /*sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %s -stroke %s \
 	-tags {l%lx all_cords}\n",
 		             glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
 		             (issignal ? "$signal_cord_width" : "$msg_cord_width"), (issignal ? "$signal_cord" : "$msg_cord"),
-		             oc);
+		             oc);*/
     }
 }
 
@@ -952,9 +956,10 @@ void canvas_fixlinesfor(t_canvas *x, t_text *text)
     {
         if (t.tr_ob == text || t.tr_ob2 == text)
         {
-            sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
+            /*sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
                 glist_getcanvas(x), oc,
-                    t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);
+                    t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);*/
+			canvas_updateconnection(x, t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc);
         }
     }
 }

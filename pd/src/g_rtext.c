@@ -24,7 +24,7 @@
 #define TMARGIN 3
 #define BMARGIN 1
 #else
-#define TMARGIN 4
+#define TMARGIN 3
 #define BMARGIN 0
 #endif
 

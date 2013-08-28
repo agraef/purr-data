@@ -1173,19 +1173,27 @@ static void curve_vis(t_gobj *z, t_glist *glist,
                 numbertocolor(
                     fielddesc_getfloat(&x->x_fillcolor, template, data, 1),
                     fill);
-                sys_vgui(".x%lx.c create polygon\\\n",
+                sys_vgui(".x%lx.c create ppolygon\\\n",
                     glist_getcanvas(glist));
             }
-            else sys_vgui(".x%lx.c create line\\\n", glist_getcanvas(glist));
+            else sys_vgui(".x%lx.c create polyline\\\n", glist_getcanvas(glist));
             for (i = 0; i < n; i++)
                 sys_vgui("%d %d\\\n", pix[2*i], pix[2*i+1]);
-            sys_vgui("-width %f\\\n", width);
-            if (flags & CLOSED) sys_vgui("-fill %s -outline %s\\\n",
+            sys_vgui("-strokewidth %f\\\n", width);
+			if (flags & CLOSED) sys_vgui("-fill %s -stroke %s\\\n",
                 fill, outline);
-            else sys_vgui("-fill %s\\\n", outline);
-            if (flags & BEZ) sys_vgui("-smooth 1\\\n");
+            else sys_vgui("-stroke %s\\\n", outline);
+            //if (flags & BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
             sys_vgui("-tags {.x%lx.x%lx.curve%lx %lx}\n", glist_getcanvas(glist), glist,
 				data, (t_int)tag);
+			if (!glist_istoplevel(glist)) {
+				t_canvas *gl = glist_getcanvas(glist);
+				//glist_noselect(gl);
+				//glist_select(gl, (t_gobj *)glist);
+				char objtag[64];
+				sprintf(objtag, ".x%lx.x%lx.curve%lx", (t_int)gl, (t_int)glist, (t_int)data);
+				canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
+			}
         }
         else post("warning: curves need at least two points to be graphed");
     }
@@ -1672,7 +1680,6 @@ static void plot_vis(t_gobj *z, t_glist *glist,
     int tovis)
 {
     t_plot *x = (t_plot *)z;
-
 	// get the universal tag for all nested objects
 	t_canvas *tag = x->x_canvas;
 	while (tag->gl_owner) {
@@ -1761,7 +1768,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
 					if (draw_me) {*/
 					//we subtract 1 from y to keep it in sync with the rest of the types of templates
 		               sys_vgui(
-	".x%lx.c create rectangle %d %d %d %d -fill black -width 0  -tags {.x%lx.x%lx.plot%lx %lx}\n",
+	".x%lx.c create prect %d %d %d %d -fill black -strokewidth 0 -tags {.x%lx.x%lx.plot%lx %lx}\n",
 		                    glist_getcanvas(glist),
 		                    ixpix, (int)glist_ytopixels(glist, 
 		                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
@@ -1790,7 +1797,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
             {
                     /* found "w" field which controls linewidth.  The trace is
                     a filled polygon with 2n points. */
-                sys_vgui(".x%lx.c create polygon \\\n",
+                sys_vgui(".x%lx.c create ppolygon \\\n",
                     glist_getcanvas(glist));
 
                 for (i = 0, xsum = xloc; i < nelem; i++)
@@ -1858,9 +1865,9 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                                 fielddesc_cvttocoord(wfielddesc, wval)));
                 }
             ouch:
-                sys_vgui(" -width 1 -fill %s -outline %s\\\n",
-                    outline, outline);
-                if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n");
+                sys_vgui(" -strokewidth 1 -stroke %s\\\n",
+                    outline);
+                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
                 sys_vgui("-tags {.x%lx.x%lx.plot%lx %lx}\n", glist_getcanvas(glist), glist,
 					 data, (t_int)tag);
@@ -1870,7 +1877,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     /* no "w" field.  If the linewidth is positive, draw a
                     segmented line with the requested width; otherwise don't
                     draw the trace at all. */
-                sys_vgui(".x%lx.c create line \\\n", glist_getcanvas(glist));
+                sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
 
                 for (xsum = xloc, i = 0; i < nelem; i++)
                 {
@@ -1902,9 +1909,9 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     glist_ytopixels(glist, basey + yloc + 
                         fielddesc_cvttocoord(yfielddesc, yval)));
 
-                sys_vgui("-width %f\\\n", linewidth);
-                sys_vgui("-fill %s\\\n", outline);
-                if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n");
+                sys_vgui("-strokewidth %f\\\n", linewidth);
+                //sys_vgui("-fill %s\\\n", outline);
+                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
                 sys_vgui("-tags {.x%lx.x%lx.plot%lx %lx}\n", glist_getcanvas(glist), glist, data, (t_int)tag);
             }
@@ -1937,6 +1944,10 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 }
             }
         }
+		if (!glist_istoplevel(glist)) {
+			sys_vgui(".x%lx.c lower .x%lx.x%lx.plot%lx %s\n", glist_getcanvas(glist), glist_getcanvas(glist), glist, data, rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
+			sys_vgui(".x%lx.c raise .x%lx.x%lx.plot%lx %s\n", glist_getcanvas(glist), glist_getcanvas(glist), glist, data, rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
+		}
     }
     else
     {

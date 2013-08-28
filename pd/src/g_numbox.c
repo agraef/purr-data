@@ -215,7 +215,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 
 		if (x->x_hide_frame <= 1) {
 			sys_vgui(
-				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
+				".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke #%6.6x \
 					-fill #%6.6x -tags {%lxBASE1 %lxNUM %lx text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
@@ -224,20 +224,20 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 				     xpos, ypos + x->x_gui.x_h,
 				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, x);
 			if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
+				sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
 				     canvas,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
 				     x, nlet_tag, 0, nlet_tag, 0, x, x);
 			if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
+				sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
 				     canvas,
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1,
 				     x, nlet_tag, 0, nlet_tag, 0, x, x);
 		} else {
 			sys_vgui(
-				".x%lx.c create polygon %d %d %d %d %d %d %d %d %d %d -outline #%6.6x \
+				".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke #%6.6x \
 					-fill #%6.6x -tags {%lxBASE1 %lxNUM %lx text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
@@ -248,7 +248,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 		}
 		if (!x->x_hide_frame || x->x_hide_frame == 2)
 			sys_vgui(
-				".x%lx.c create line %d %d %d %d %d %d -fill #%6.6x -tags {%lxBASE2 %lxNUM %lx text}\n",
+				".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x -tags {%lxBASE2 %lxNUM %lx text}\n",
 				canvas, xpos, ypos,
 				xpos + half, ypos + half,
 				xpos, ypos + x->x_gui.x_h,
@@ -367,7 +367,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 	*/
 
 	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas) {
-		sys_vgui(" .x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
+		sys_vgui(" .x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill $select_color \n .x%lx.c itemconfigure %lxBASE2 -stroke $select_color\n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -380,7 +380,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 		*/
 	}
 	else {
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -417,7 +417,7 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
 		else nlet_tag = "bogus";
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
@@ -425,7 +425,7 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+IOWIDTH, ypos+1,
@@ -458,9 +458,9 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline $select_color\n",
+				sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke $select_color\n",
 			    	canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $select_color\n",
+				sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke $select_color\n",
 					canvas, x);
 				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n",
 					canvas, x);
@@ -517,12 +517,12 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 			sys_vgui(".x%lx.c dtag %lxNUM selected\n", canvas, x);
 
 			if (x->x_hide_frame <= 1)
-		    	sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline #%6.6x\n",
+		    	sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke #%6.6x\n",
 		        	canvas, x, IEM_GUI_COLOR_NORMAL);
-			else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -outline #%6.6x\n",
+			else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke #%6.6x\n",
 		        	canvas, x, x->x_gui.x_bcol);
 
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
 		        canvas, x, x->x_gui.x_fcol);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
 		        canvas, x, x->x_gui.x_lcol);
@@ -599,8 +599,8 @@ static void my_numbox__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx
 		if (glist_isvisible(x->x_gui.x_glist))
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create rectangle %d %d %d %d\
-	 -outline $select_color -width 1 -tags %s\n",
+			sys_vgui(".x%x.c create prect %d %d %d %d\
+	 -stroke $select_color -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + x->x_numwidth,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);

@@ -469,15 +469,12 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
             pd_unbind(&x->x_gobj.g_pd, x->x_realname);
             x->x_realname = canvas_realizedollar(x->x_glist, argname);
             pd_bind(&x->x_gobj.g_pd, x->x_realname);
-                /* redraw the whole glist, just so the name change shows up */
-            if (x->x_glist->gl_havewindow)
-                canvas_redraw(x->x_glist);
-            else if (glist_isvisible(x->x_glist->gl_owner))
-            {
-                gobj_vis(&x->x_glist->gl_gobj, x->x_glist->gl_owner, 0);
-                gobj_vis(&x->x_glist->gl_gobj, x->x_glist->gl_owner, 1);
-            }
         }
+            /* redraw the whole glist, just so the name change shows up */
+        if (x->x_glist->gl_havewindow) {
+            canvas_redraw(glist_getcanvas(x->x_glist));
+			//fprintf(stderr,"================REDRAW\n");
+		}
         size = fsize;
         if (size < 1)
             size = 1;
@@ -487,7 +484,7 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
 			x->x_style = style;
             garray_fittograph(x, size);
 		}
-		fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
+		//fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
         template_setfloat(scalartemplate, gensym("style"),
             x->x_scalar->sc_vec, (t_float)x->x_style, 0);
     	template_setfloat(scalartemplate, gensym("linewidth"),
@@ -499,6 +496,33 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
 
         garray_setsaveit(x, (saveit != 0));
         garray_redraw(x);
+        if (glist_getcanvas(x->x_glist) != x->x_glist)
+        {
+			int arrange = 0;
+			t_gobj *y = glist_getcanvas(x->x_glist)->gl_list;
+			if (y != (t_gobj *)x->x_glist) {
+				while (y && y->g_next != (t_gobj *)x->x_glist) {
+					//fprintf(stderr,"================SEARCHING %s\n", rtext_gettag(glist_findrtext(glist_getcanvas(x->x_glist), pd_checkobject(&y->g_pd))));
+					y = y->g_next;
+				}
+				arrange = 1;
+			}
+			//fprintf(stderr,"================FOUND %s %d\n", rtext_gettag(glist_findrtext(glist_getcanvas(x->x_glist), pd_checkobject(&y->g_pd))), arrange);
+			char *below = rtext_gettag(glist_findrtext(glist_getcanvas(x->x_glist), pd_checkobject(&y->g_pd)));
+			glist_noselect(glist_getcanvas(x->x_glist));
+            gobj_vis(&x->x_glist->gl_gobj, glist_getcanvas(x->x_glist), 0);
+            gobj_vis(&x->x_glist->gl_gobj, glist_getcanvas(x->x_glist), 1);
+			glist_select(glist_getcanvas(x->x_glist), (t_gobj *)x->x_glist);
+			
+			if (!arrange) {
+				sys_vgui(".x%lx.c lower selected\n", glist_getcanvas(x->x_glist));
+				//fprintf(stderr,"--------------TOBOTTOM\n");
+			} else {
+				sys_vgui(".x%lx.c lower selected %s\n", glist_getcanvas(x->x_glist), below);
+				sys_vgui(".x%lx.c raise selected %s\n", glist_getcanvas(x->x_glist), below);
+				//fprintf(stderr,"++++++++++++++TOMIDDLE\n");
+			}
+        }
         canvas_dirty(x->x_glist, 1);
     }
 }
@@ -1136,8 +1160,8 @@ static void garray_save(t_gobj *z, t_binbuf *b)
     }
     /* style = template_getfloat(scalartemplate, gensym("style"),
             x->x_scalar->sc_vec, 0); */
-    filestyle = (x->x_style == PLOTSTYLE_POINTS ? 1 : 
-        (x->x_style == PLOTSTYLE_POLY ? 0 : x->x_style)); 
+    filestyle = (x->x_style == PLOTSTYLE_POINTS ? 0 : 
+        (x->x_style == PLOTSTYLE_POLY ? 1 : x->x_style)); 
     binbuf_addv(b, "sssisi;", gensym("#X"), gensym("array"),
         x->x_name, array->a_n, &s_float,
             x->x_saveit + 2 * filestyle + 8*x->x_hidename);

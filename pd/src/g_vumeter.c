@@ -131,7 +131,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		if (yyyy) nlet_tag = rtext_gettag(yyyy);
 		else nlet_tag = "bogus";
 
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU %lx text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU %lx text}\n",
 		         canvas, xpos, ypos,
 		         xpos+x->x_gui.x_w+2,
 		         ypos+x->x_gui.x_h+4, x->x_gui.x_bcol, x, x, x);
@@ -139,8 +139,8 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		{
 		    led_col = iemgui_vu_col[i];
 		    yyy = k4 + k1*(k2-i);
-		    sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxRLED%d %lxVU %lx text}\n",
-		             canvas, quad1+1, yyy+2, quad3+1, yyy+2, x->x_led_size, iemgui_color_hex[led_col], x, i, x, x);
+		    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -stroke #%6.6x -tags {%lxRLED%d %lxVU %lx text}\n",
+		             canvas, quad1+1, yyy+2, quad3, yyy+2, x->x_led_size, iemgui_color_hex[led_col], x, i, x, x);
 		    if(((i+2)&3) && (x->x_scale))
 		        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 		                 -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %lx text}\n",
@@ -158,10 +158,10 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 					 x->x_gui.x_fontsize, sys_fontweight,
 		             x->x_gui.x_lcol, x, i, x, x);
 		}
-		sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill #%6.6x -outline #%6.6x -tags {%lxRCOVER %lxVU %lx text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxRCOVER %lxVU %lx text}\n",
 		         canvas, quad1+1, ypos+1, quad3,
 		         ypos+1 + k1*IEM_VU_STEPS, x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, x);
-		sys_vgui(".x%lx.c create line %d %d %d %d -width %d -fill #%6.6x -tags {%lxPLED %lxVU %lx text}\n",
+		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -fill #%6.6x -tags {%lxPLED %lxVU %lx text}\n",
 		         canvas, mid+1, ypos+12,
 		         mid+1, ypos+12, x->x_led_size, x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
@@ -172,12 +172,12 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		         x->x_gui.x_lcol, x, x, x);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
 		         x, nlet_tag, 0, nlet_tag, 0, x, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
@@ -185,12 +185,12 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
 		         x, nlet_tag, 0, nlet_tag, 0, x, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx inlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
@@ -236,7 +236,7 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
 		{
 		    yyy = k4 + k1*(k2-i);
 		    sys_vgui(".x%lx.c coords %lxRLED%d %d %d %d %d\n",
-		             canvas, x, i, quad1+1, yyy+2, quad3+1, yyy+2);
+		             canvas, x, i, quad1+1, yyy+2, quad3, yyy+2);
 		    if(((i+2)&3) && (x->x_scale))
 		        sys_vgui(".x%lx.c coords %lxSCALE%d %d %d\n",
 		                 canvas, x, i, end+1, yyy+k3+2);
@@ -341,7 +341,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 
     for(i=1; i<=IEM_VU_STEPS; i++)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxRLED%d -width %d\n", canvas, x, i,
+        sys_vgui(".x%lx.c itemconfigure %lxRLED%d -strokewidth %d\n", canvas, x, i,
                  x->x_led_size);
         if(((i+2)&3) && (x->x_scale))
 			if (x->x_gui.x_fsf.x_selected)
@@ -377,7 +377,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 		         x->x_gui.x_lcol,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 
-    sys_vgui(".x%lx.c itemconfigure %lxRCOVER -fill #%6.6x -outline #%6.6x\n .x%lx.c itemconfigure %lxPLED -width %d\n .x%lx.c itemconfigure %lxBASE -fill #%6.6x\n",
+    sys_vgui(".x%lx.c itemconfigure %lxRCOVER -fill #%6.6x -stroke #%6.6x\n .x%lx.c itemconfigure %lxPLED -strokewidth %d\n .x%lx.c itemconfigure %lxBASE -fill #%6.6x\n",
 			 canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol, canvas, x, x->x_led_size,
 			 canvas, x, x->x_gui.x_bcol);
     /*
@@ -410,12 +410,12 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
 		         x, nlet_tag, 0, nlet_tag, 0, x, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
@@ -428,12 +428,12 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 		}
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
 		{
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
 		         x, nlet_tag, 0, nlet_tag, 0, x, x);
-		    sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %lx outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
@@ -462,7 +462,7 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE -outline $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
 				for(i=1; i<=IEM_VU_STEPS; i++)
 				{
 				    if(((i+2)&3) && (x->x_scale))
@@ -525,7 +525,7 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 		else
 		{
 			sys_vgui(".x%lx.c dtag %lxVU selected\n", canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -outline #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
 		    for(i=1; i<=IEM_VU_STEPS; i++)
 		    {
 		        if(((i+2)&3) && (x->x_scale))
@@ -610,8 +610,8 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 		if (glist_isvisible(x->x_gui.x_glist))
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create rectangle %d %d %d %d\
-	 -outline $select_color -width 1 -tags %s\n",
+			sys_vgui(".x%x.c create prect %d %d %d %d\
+	 -stroke $select_color -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 2,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h + 4, sh->h_outlinetag);

@@ -206,8 +206,8 @@ static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         scalar_getrect(&x->sc_gobj, glist, &x1, &y1, &x2, &y2);
         x1--; x2++; y1--; y2++;
 		if (glist_istoplevel(glist))
-		    sys_vgui(".x%lx.c create line %d %d %d %d %d %d %d %d %d %d \
-		        -width 0 -fill $select_color -tags {select%lx selected}\n",
+		    sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d %d %d %d %d \
+		        -strokewidth 0 -fill $select_color -tags {select%lx selected}\n",
 		            glist_getcanvas(glist), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
 		            x);
     }
@@ -363,7 +363,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         {
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
-            sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags {%lx scalar%lx}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lx scalar%lx}\n",
                 glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x, x);
         }
         else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
