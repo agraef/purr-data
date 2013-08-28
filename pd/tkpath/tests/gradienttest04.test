@@ -1,0 +1,103 @@
+#!/bin/sh
+# start with WISH \
+	exec wish "$0" ${1+"$@"} 
+
+
+# gradienttest04.test 
+# ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+# Test for gradient spanning slave interps.
+# Version tested tkpath 0.2.4 (patched) with tk8.4.11 OSX/X11 10.4
+# Negative test under Aqua 0.2.4 (unpatched) with tk8.4.11
+#
+# Author 	: Arndt Roger Schneider
+# Email   : roger.schneider@addcom.de
+# Copyright © 2008 Arndt Roger Schneider
+#
+# Modul   : tkPathGradient.c
+# Lines   : 654 - 681
+# ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+#
+#
+#   /* 
+#      fixme roger: 04/07/2008
+#
+#      Don't recreate the Gradient Tables for
+#      slave interps -- otherwise will void
+#      existing gradients in the main interp...
+#
+#      THERE IS NO FREE FOR THESE HASH TABLES...
+#
+#
+#   */
+#     
+#   if (NULL == gGradientHashPtr) {
+#     gGradientHashPtr = (Tcl_HashTable *) ckalloc( sizeof(Tcl_HashTable) );
+#     Tcl_InitHashTable(gGradientHashPtr, TCL_STRING_KEYS);
+#   }
+#
+#   if (NULL == gLinearGradientHashPtr) {
+#     gLinearGradientHashPtr = (Tcl_HashTable *) ckalloc( sizeof(Tcl_HashTable) );
+#     Tcl_InitHashTable(gLinearGradientHashPtr, TCL_STRING_KEYS);
+#   }
+#  
+#   if (NULL == gRadialGradientHashPtr) {
+#     gRadialGradientHashPtr = (Tcl_HashTable *) ckalloc( sizeof(Tcl_HashTable) );
+#     Tcl_InitHashTable(gRadialGradientHashPtr, TCL_STRING_KEYS);
+#   }
+# ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+#
+# Date 	  : Monday 07 April 20:39
+# License : Tcl-License (aka BSD)
+#
+# Description 	: Tkpath 0.2.4 uses global
+#                 gradient tables which are deleted
+#                 whenever a slave interp requires
+#                 tkpath.
+# 
+# ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+# The standard packages : Tk, Tcltest
+package require Tk
+package require tkpath
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    package require tcltest
+    namespace import -force ::tcltest::*
+}
+
+# Extend auto_path, that local packages can be used.
+lappend auto_path [file dirname [info script]]
+
+# Load Local Packages ...
+set masterg [tkpath::gradient create radial  \
+                -stops [list \
+                           {0 white 0.9}  [list 1 red4 0.4]] \
+                -radialtransition {
+                    0.477551020408 0.540983606557
+                    1.00918367347 0.898979591837
+                    0.139344262295}]
+
+test gradientslave-1.1 {Shared gradients inside slave} {
+
+    interp create slavei
+
+    slavei eval {
+
+        package require Tk
+        package require tkpath
+    }
+
+    tkpath::gradient names
+
+} $masterg
+
+test gradientslave-1.2 {Destroy slave} {
+    interp delete slavei
+} {}
+
+
+
+# Local Variables:
+# Coding: utf-8-unix
+# Mode: Tcl
+# End:

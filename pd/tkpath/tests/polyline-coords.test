@@ -1,0 +1,17 @@
+package require tkpath; # 0.2.4 cairo & aqua 
+pack [tkp::canvas .c] 
+
+if {[lsearch [namespace children] ::tcltest] == -1} { 
+    package require tcltest 
+    namespace import -force ::tcltest::* 
+}
+
+test polyline-1.1 {polyline coords} { 
+    .c coords [.c create polyline 12 20 34 5 90 56] 
+} {12.0 20.0 34.0 5.0 90.0 56.0} 
+
+test polygon-1.1 {polygon coords} { 
+    .c coords [.c create ppolygon 12 20 34 5 90 56 -fill red] 
+} {12.0 20.0 34.0 5.0 90.0 56.0} 
+
+

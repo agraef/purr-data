@@ -107,7 +107,7 @@ endif
 .PHONY: pd gui externs all
 
 all: pd $(BIN_DIR)/pd-watchdog gui $(BIN_DIR)/pdsend \
-    $(BIN_DIR)/pdreceive externs
+    $(BIN_DIR)/pdreceive externs tkpath
 
 bin: pd $(BIN_DIR)/pd-watchdog gui $(BIN_DIR)/pdsend \
     $(BIN_DIR)/pdreceive
@@ -189,6 +189,11 @@ externs:
 	make -C ../extra/pd~      @EXTERNTARGET@
 	make -C ../extra/stdout   @EXTERNTARGET@
 
+tkpath:
+	cd ../tkpath && aclocal && autoconf && ./configure --prefix=$(prefix)
+	make -C ../tkpath
+	cd ../src
+
 BINARYMODE=@binarymode@
 
 ABOUT_FILE=$(DESTDIR)$(pddocdir)/1.manual/1.introduction.txt
@@ -199,6 +204,8 @@ install:  all
 	install -m644 pd.tk $(DESTDIR)$(libpdbindir)/pd.tk
 	install -m644 pkgIndex.tcl $(DESTDIR)$(libpdbindir)/pkgIndex.tcl
 	install -m644 helpbrowser.tcl $(DESTDIR)$(libpdbindir)/helpbrowser.tcl
+	install -m644 ../tkpath/library/tkpath.tcl $(DESTDIR)$(libpdbindir)/tkpath.tcl
+	install -m644 ../tkpath/libtkpath*so $(DESTDIR)$(libpdbindir)/
 	install -d $(DESTDIR)$(bindir)
 	install $(BINARYMODE) $(PDEXEC) $(DESTDIR)$(bindir)/@PDEXEC@
 # kludge to allow pd~ to work by default in pd-l2ork
@@ -258,6 +265,7 @@ distclean: clean
 		autom4te.cache/output.* autom4te.cache/traces.* autom4te.cache/requests
 	-rmdir autom4te.cache
 	-rm -rf autom4te-*.cache
+	cd ../tkpath && make distclean
 
 tags: $(SRC) $(GSRC); ctags *.[ch]
 
@@ -296,13 +304,4 @@ etags_Linux:
 
 etags_MINGW:
 	find /usr/local/include/ -type f -name \*.h -exec etags -a '{}' \;
-
-
-
-
-
-
-
-
-
 
