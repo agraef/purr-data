@@ -136,6 +136,7 @@ typedef struct _editor
 #define MA_PASSOUT 4    /* send on to e_grab */
 #define MA_DRAGTEXT 5   /* drag in text editor to alter selection */
 #define MA_RESIZE  6    /* drag to resize */
+#define MA_SCROLL  -1    /* scroll with middle click onto empty canvas */
 
 /* editor structure for "garrays".  We don't bother to delete and regenerate
 this structure when the "garray" becomes invisible or visible, although we
@@ -390,6 +391,7 @@ struct _parentwidgetbehavior
 #define CURSOR_EDITMODE_DISCONNECT 6
 #define CURSOR_EDITMODE_RESIZE 7
 #define CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT 8
+#define CURSOR_SCROLL 9
 EXTERN void canvas_setcursor(t_glist *x, unsigned int cursornum);
 
 extern t_canvas *canvas_editing;    /* last canvas to start text edting */ 
@@ -464,9 +466,10 @@ EXTERN void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
 EXTERN void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag);
 EXTERN void canvas_create_editor(t_glist *x);
 EXTERN void canvas_destroy_editor(t_glist *x);
-void canvas_deletelinesforio(t_canvas *x, t_text *text,
+EXTERN void canvas_deletelinesforio(t_canvas *x, t_text *text,
     t_inlet *inp, t_outlet *outp);
-extern int glist_amreloadingabstractions; /* stop GUI changes while reloading */ 
+EXTERN int glist_amreloadingabstractions; /* stop GUI changes while reloading */
+EXTERN int canvas_restore_original_position(t_glist *x, t_gobj *y, const char *objtag, int dir);
 
 /* -------------------- functions on texts ------------------------- */
 EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos);
