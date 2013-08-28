@@ -254,13 +254,11 @@
 #X text 261 270 use this to toggle different parts (0=off \, 1=on)OR
 recall presets 1-4 above;
 #X text 261 244 by Ivica Ico Bukvic <ico@vt.edu>;
-#X obj 109 400 print;
 #X connect 1 0 4 0;
 #X connect 3 0 1 0;
 #X connect 3 0 6 0;
 #X connect 3 0 9 0;
 #X connect 4 0 30 0;
-#X connect 4 0 97 0;
 #X connect 5 0 78 0;
 #X connect 6 0 7 0;
 #X connect 6 0 92 0;
