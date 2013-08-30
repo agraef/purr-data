@@ -3859,7 +3859,7 @@ proc pdtk_tag_all_widgets_with_arrange {canvas object state} {
 		#puts stderr [$canvas gettags $item]
 		foreach tag [$canvas gettags $item] {
 			if { [string first $object $tag] > -1 } {
-				puts stderr "...tag all match $tag"
+				#puts stderr "...tag all match $tag"
 				if {$state} {
 					$canvas addtag arrange withtag $tag
 				} else {
@@ -3889,10 +3889,10 @@ proc pdtk_find_lowest_widget_withtag_and_arrange {canvas name target objtag} {
 	#puts stderr "final_lowest=$tag"
 	if { $arrange_lowest != 0 } {
 		if { $objtag == 0 } {
-			puts stderr all_widgets
+			#puts stderr all_widgets
 			pdtk_tag_all_widgets_with_arrange $canvas $target 1
 		} else {
-			puts stderr one_object
+			#puts stderr one_object
 			$canvas addtag arrange withtag $objtag
 		}
 		$canvas raise arrange
