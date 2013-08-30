@@ -1067,7 +1067,6 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         if (xloc > x2) x2 = xloc;
         if (yloc < y1) y1 = yloc;
         if (yloc > y2) y2 = yloc;
-		//fprintf(stderr,"	=====%d %d %d %d\n", x1, y1, x2, y2);
     }
 	//fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
     *xp1 = x1;
@@ -1134,11 +1133,11 @@ static void curve_vis(t_gobj *z, t_glist *glist,
     int i, n = x->x_npoints;
     t_fielddesc *f = x->x_vec;
 
-	// get the universal tag for all nested objects
+	/*// get the universal tag for all nested objects
 	t_canvas *tag = x->x_canvas;
 	while (tag->gl_owner) {
 		tag = tag->gl_owner;
-	}
+	}*/
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -1184,14 +1183,14 @@ static void curve_vis(t_gobj *z, t_glist *glist,
                 fill, outline);
             else sys_vgui("-stroke %s\\\n", outline);
             //if (flags & BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
-            sys_vgui("-tags {.x%lx.x%lx.curve%lx %lx}\n", glist_getcanvas(glist), glist,
-				data, (t_int)tag);
+            sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist,
+				data);
 			if (!glist_istoplevel(glist)) {
 				t_canvas *gl = glist_getcanvas(glist);
 				//glist_noselect(gl);
 				//glist_select(gl, (t_gobj *)glist);
 				char objtag[64];
-				sprintf(objtag, ".x%lx.x%lx.curve%lx", (t_int)gl, (t_int)glist, (t_int)data);
+				sprintf(objtag, ".x%lx.x%lx.template%lx", (t_int)gl, (t_int)glist, (t_int)data);
 				canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
 			}
         }
@@ -1199,7 +1198,7 @@ static void curve_vis(t_gobj *z, t_glist *glist,
     }
     else
     {
-        if (n > 1) sys_vgui(".x%lx.c delete .x%lx.x%lx.curve%lx\n",
+        if (n > 1) sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist,
 			data);      
     }
@@ -1589,7 +1588,6 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
         int incr = (array->a_n <= 2000 ? 1 : array->a_n / 1000);
         for (i = 0, xsum = 0; i < array->a_n; i += incr)
         {
-			//fprintf(stderr,"	<====plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
             t_float usexloc, useyloc;
             t_gobj *y;
                 /* get the coords of the point proper */
@@ -1680,11 +1678,11 @@ static void plot_vis(t_gobj *z, t_glist *glist,
     int tovis)
 {
     t_plot *x = (t_plot *)z;
-	// get the universal tag for all nested objects
+	/*// get the universal tag for all nested objects
 	t_canvas *tag = x->x_canvas;
 	while (tag->gl_owner) {
 		tag = tag->gl_owner;
-	}
+	}*/
 
 	//fprintf(stderr,"===============plot %lx glist %lx glist_getcanvas %lx plot->x_obj %lx plot->x_canvas %lx glist_getcanvas(plot->x_canvas) %lx\n", (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist), (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
 	int draw_me = 1;	//used for experimental disabling of drawing outside GOP bounds
@@ -1768,14 +1766,15 @@ static void plot_vis(t_gobj *z, t_glist *glist,
 					if (draw_me) {*/
 					//we subtract 1 from y to keep it in sync with the rest of the types of templates
 		               sys_vgui(
-	".x%lx.c create prect %d %d %d %d -fill black -strokewidth 0 -tags {.x%lx.x%lx.plot%lx %lx}\n",
+	".x%lx.c create prect %d %d %d %d -fill black -strokewidth 0 -tags {.x%lx.x%lx.template%lx}\n",
 		                    glist_getcanvas(glist),
 		                    ixpix, (int)glist_ytopixels(glist, 
 		                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
 		                    inextx, (int)(glist_ytopixels(glist, 
 		                        basey + fielddesc_cvttocoord(yfielddesc, maxyval))
 		                            + linewidth) - 1, glist_getcanvas(glist), glist,
-							 data, (t_int)tag);
+							 data);
+
 					//} //part of experimental code above
                     ndrawn++;
                     minyval = 1e20;
@@ -1869,8 +1868,8 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     outline);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
-                sys_vgui("-tags {.x%lx.x%lx.plot%lx %lx}\n", glist_getcanvas(glist), glist,
-					 data, (t_int)tag);
+                sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist,
+					 data);
             }
             else if (linewidth > 0)
             {
@@ -1913,7 +1912,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 //sys_vgui("-fill %s\\\n", outline);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
-                sys_vgui("-tags {.x%lx.x%lx.plot%lx %lx}\n", glist_getcanvas(glist), glist, data, (t_int)tag);
+                sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist, data);
             }
         }
             /* We're done with the outline; now draw all the points.
@@ -1945,9 +1944,15 @@ static void plot_vis(t_gobj *z, t_glist *glist,
             }
         }
 		if (!glist_istoplevel(glist)) {
+			t_canvas *gl = glist_getcanvas(glist);
+			char objtag[64];
+			sprintf(objtag, ".x%lx.x%lx.template%lx", (t_int)gl, (t_int)glist, (t_int)data);
+			canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
+		}
+			/*
 			sys_vgui(".x%lx.c lower .x%lx.x%lx.plot%lx %s\n", glist_getcanvas(glist), glist_getcanvas(glist), glist, data, rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
 			sys_vgui(".x%lx.c raise .x%lx.x%lx.plot%lx %s\n", glist_getcanvas(glist), glist_getcanvas(glist), glist, data, rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
-		}
+		}*/
     }
     else
     {
@@ -1969,7 +1974,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
             }
         }
             /* and then the trace */
-        sys_vgui(".x%lx.c delete .x%lx.x%lx.plot%lx\n",
+        sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
 }
@@ -2183,11 +2188,11 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
 	//fprintf(stderr,"drawnumber_vis %d\n", vis);
     t_drawnumber *x = (t_drawnumber *)z;
 
-	// get the universal tag for all nested objects
+	/*// get the universal tag for all nested objects
 	t_canvas *tag = x->x_canvas;
 	while (tag->gl_owner) {
 		tag = tag->gl_owner;
-	}
+	}*/
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -2212,10 +2217,10 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
 				 sys_hostfontsize(fontsize), sys_fontweight);
-        sys_vgui(" -tags {.x%lx.x%lx.drawnumber%lx %lx}\n", 
-			glist_getcanvas(glist), glist, data, (t_int)tag);
+        sys_vgui(" -tags {.x%lx.x%lx.template%lx}\n", 
+			glist_getcanvas(glist), glist, data);
     }
-    else sys_vgui(".x%lx.c delete .x%lx.x%lx.drawnumber%lx\n", glist_getcanvas(glist), 
+    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n", glist_getcanvas(glist), 
 		glist_getcanvas(glist), glist, data);
 }
 
@@ -2484,7 +2489,7 @@ static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
     strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
     buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
     nchars = strlen(buf);
-    atom_string(ap, buf + nchars, DRAWSYMBOL_BUFSIZE - nchars);
+    atom_string(ap, buf, DRAWSYMBOL_BUFSIZE);
 }
 
 static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
@@ -2548,11 +2553,11 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist,
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
-	// get the universal tag for all nested objects
+	/*// get the universal tag for all nested objects
 	t_canvas *tag = x->x_canvas;
 	while (tag->gl_owner) {
 		tag = tag->gl_owner;
-	}
+	}*/
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -2577,10 +2582,10 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
 				 sys_hostfontsize(fontsize), sys_fontweight);
-        sys_vgui(" -tags {.x%lx.x%lx.drawsymbol%lx %lx}\n", 
-			glist_getcanvas(glist), glist, data, (t_int)tag);
+        sys_vgui(" -tags {.x%lx.x%lx.template%lx}\n", 
+			glist_getcanvas(glist), glist, data);
     }
-    else sys_vgui(".x%lx.c delete .x%lx.x%lx.drawsymbol%lx\n", glist_getcanvas(glist), 
+    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n", glist_getcanvas(glist), 
 		glist_getcanvas(glist), glist, data);
 }
 

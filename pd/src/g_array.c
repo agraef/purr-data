@@ -418,6 +418,7 @@ extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
     t_floatarg fflags, t_floatarg deleteit)
 {
+	//fprintf(stderr,"================garray_arraydialog\n");
     if (deleteit != 0)
     {
 		//fprintf(stderr,"deleteit\n");
@@ -495,34 +496,8 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
 		x->x_send = gensym(buf);
 
         garray_setsaveit(x, (saveit != 0));
+		//fprintf(stderr,"GARRAY_REDRAW\n");
         garray_redraw(x);
-        if (glist_getcanvas(x->x_glist) != x->x_glist)
-        {
-			int arrange = 0;
-			t_gobj *y = glist_getcanvas(x->x_glist)->gl_list;
-			if (y != (t_gobj *)x->x_glist) {
-				while (y && y->g_next != (t_gobj *)x->x_glist) {
-					//fprintf(stderr,"================SEARCHING %s\n", rtext_gettag(glist_findrtext(glist_getcanvas(x->x_glist), pd_checkobject(&y->g_pd))));
-					y = y->g_next;
-				}
-				arrange = 1;
-			}
-			//fprintf(stderr,"================FOUND %s %d\n", rtext_gettag(glist_findrtext(glist_getcanvas(x->x_glist), pd_checkobject(&y->g_pd))), arrange);
-			char *below = rtext_gettag(glist_findrtext(glist_getcanvas(x->x_glist), pd_checkobject(&y->g_pd)));
-			glist_noselect(glist_getcanvas(x->x_glist));
-            gobj_vis(&x->x_glist->gl_gobj, glist_getcanvas(x->x_glist), 0);
-            gobj_vis(&x->x_glist->gl_gobj, glist_getcanvas(x->x_glist), 1);
-			glist_select(glist_getcanvas(x->x_glist), (t_gobj *)x->x_glist);
-			
-			if (!arrange) {
-				sys_vgui(".x%lx.c lower selected\n", glist_getcanvas(x->x_glist));
-				//fprintf(stderr,"--------------TOBOTTOM\n");
-			} else {
-				sys_vgui(".x%lx.c lower selected %s\n", glist_getcanvas(x->x_glist), below);
-				sys_vgui(".x%lx.c raise selected %s\n", glist_getcanvas(x->x_glist), below);
-				//fprintf(stderr,"++++++++++++++TOMIDDLE\n");
-			}
-        }
         canvas_dirty(x->x_glist, 1);
     }
 }
@@ -1212,8 +1187,12 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
         garray_vis(&x->x_gobj, x->x_glist, 0); 
         garray_vis(&x->x_gobj, x->x_glist, 1);
     }
+		/* we do this to reposition objects back where they belong */
+	if (!glist_istoplevel(glist)) {
+		canvas_restore_original_position(glist_getcanvas(glist), (t_gobj *)glist, 0, -1);
+	}
 	if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist)) {
-		//fprintf(stderr,"yes\n");
+		//fprintf(stderr,"garray_doredraw isselected\n");
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), glist, 1);
 	}
 }
@@ -1223,6 +1202,7 @@ void garray_redraw(t_garray *x)
 	//fprintf(stderr,"garray_redraw\n");
     if (glist_isvisible(x->x_glist))
         sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
+		//garray_doredraw(&x->x_gobj, x->x_glist);
     /* jsarlo { */
     /* this happens in garray_vis() when array is visible for
        performance reasons */

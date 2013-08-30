@@ -3833,13 +3833,16 @@ proc pdtk_canvas_mouseup {name x y b} {
 #	after 100 [list pdtk_canvas_getscroll_ping $name]
 #}
 
+# we use this to ensure that all gop children are selected for
+# optimized displace and other operations without having to redraw
+# canvas on every operation
 proc pdtk_select_all_gop_widgets {name gop state} {
 	#puts stderr "pdtk_select_all_gop_widgets $name $gop $state"
 	foreach item [$name.c find all] {
 		#puts stderr [$name.c gettags $item]
 		foreach tag [$name.c gettags $item] {
 			if { [string first $gop $tag] > -1 } {
-				#puts stderr ...match
+				#puts stderr "...match $tag"
 				if {$state} {
 					$name.c addtag selected withtag $tag
 				} else {
@@ -3850,23 +3853,59 @@ proc pdtk_select_all_gop_widgets {name gop state} {
 	}
 }
 
-proc pdtk_find_lowest_widget_withtag {canvas name} {
-	#puts stderr "...pdtk_find_lowest_widget_withtag $canvas $name"
-	set ::arrange_lowest 0
+# we use this to restore widgets original position (front to back)
+# typically we call this when redrawing
+proc pdtk_tag_all_widgets_with_arrange {canvas object state} {
+	#puts stderr "pdtk_select_all_gop_widgets $canvas $object $state"
+	foreach item [$canvas find all] {
+		#puts stderr [$canvas gettags $item]
+		foreach tag [$canvas gettags $item] {
+			if { [string first $object $tag] > -1 } {
+				puts stderr "...tag all match $tag"
+				if {$state} {
+					$canvas addtag arrange withtag $tag
+				} else {
+					$canvas dtag $tag arrange
+				}
+			}
+		}
+	}
+}
+
+proc pdtk_find_lowest_widget_withtag_and_arrange {canvas name target objtag} {
+	#puts stderr "...pdtk_find_lowest_widget_withtag $canvas $name $target $objtag"
+	set arrange_lowest 0
 	foreach item [$canvas find all] {
 		#puts stderr "tags=[$canvas gettags $item]"
 		foreach tag [$canvas gettags $item] {
 			if { [string first $name $tag] > -1 } {
-				#puts stderr ...match
-				set ::arrange_lowest $tag
+				#puts stderr "...match $tag"
+				set arrange_lowest $tag
 				break;
 			}
 		}
-		if { $::arrange_lowest != 0 } {
+		if { $arrange_lowest != 0 } {
 			break;
 		}
 	}
 	#puts stderr "final_lowest=$tag"
+	if { $arrange_lowest != 0 } {
+		if { $objtag == 0 } {
+			puts stderr all_widgets
+			pdtk_tag_all_widgets_with_arrange $canvas $target 1
+		} else {
+			puts stderr one_object
+			$canvas addtag arrange withtag $objtag
+		}
+		$canvas raise arrange
+		$canvas lower arrange $arrange_lowest
+
+		if { $objtag == 0} {
+			pdtk_tag_all_widgets_with_arrange $canvas $target 0
+		} else {
+			$canvas dtag $objtag arrange
+		}
+	}
 }
 
 proc pdtk_find_highest_widget_withtag {canvas name} {

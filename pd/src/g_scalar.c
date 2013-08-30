@@ -207,7 +207,7 @@ static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         x1--; x2++; y1--; y2++;
 		if (glist_istoplevel(glist))
 		    sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d %d %d %d %d \
-		        -strokewidth 0 -fill $select_color -tags {select%lx selected}\n",
+		        -strokewidth 1 -stroke $select_color -tags {select%lx selected}\n",
 		            glist_getcanvas(glist), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
 		            x);
     }
@@ -220,6 +220,7 @@ static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 
 static void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
+	//fprintf(stderr,"scalar_select %d\n", state);
     t_scalar *x = (t_scalar *)z;
     t_template *tmpl;
     t_symbol *templatesym = x->sc_template;
@@ -238,7 +239,10 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 	if (state) {
 		sys_vgui(".x%lx.c addtag selected withtag scalar%lx\n",
 			glist_getcanvas(owner), x);
-		if (templatecanvas) {
+		if (x->sc_vec)
+			sys_vgui(".x%lx.c addtag selected withtag .x%lx.x%lx.template%lx\n",
+				glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+		/*if (templatecanvas) {
 			// get the universal tag for all nested objects
 			t_canvas *tag = owner;
 			while (tag->gl_owner) {
@@ -246,11 +250,13 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 			}
 			sys_vgui(".x%lx.c addtag selected withtag %lx\n",
 				glist_getcanvas(owner), (t_int)tag);
-		}
+		}*/
 	} else {
 		sys_vgui(".x%lx.c dtag scalar%lx selected\n",
 			glist_getcanvas(owner), x);
-		if (templatecanvas) {
+		sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
+			glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+		/*if (templatecanvas) {
 			// get the universal tag for all nested objects
 			t_canvas *tag = owner;
 			while (tag->gl_owner) {
@@ -258,7 +264,7 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 			}
 			sys_vgui(".x%lx.c dtag %lx selected\n",
 				glist_getcanvas(owner), (t_int)tag);
-		}
+		}*/
 	}
 	//sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
     scalar_drawselectrect(x, owner, state);
@@ -363,13 +369,13 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         {
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
-            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lx scalar%lx}\n",
-                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x, x);
+            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {scalar%lx}\n",
+                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x);
         }
         else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
         return;
     }
-	else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
+	//else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
 
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {
@@ -377,13 +383,13 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         if (!wb) continue;
         (*wb->w_parentvisfn)(y, owner, x->sc_vec, template, basex, basey, vis);
     }
+    sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))
     {
 		scalar_select(z, owner, 1);
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
     }
-    sys_unqueuegui(x);
 }
 
 static void scalar_doredraw(t_gobj *client, t_glist *glist)
@@ -399,7 +405,8 @@ static void scalar_doredraw(t_gobj *client, t_glist *glist)
 void scalar_redraw(t_scalar *x, t_glist *glist)
 {
     if (glist_isvisible(glist))
-        sys_queuegui(x, glist, scalar_doredraw);
+		scalar_doredraw((t_gobj *)x, glist);
+        //sys_queuegui(x, glist, scalar_doredraw);
 }
 
 extern void template_notifyforscalar(t_template *template, t_glist *owner,

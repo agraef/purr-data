@@ -83,10 +83,10 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
 		         canvas, xx, yy, xx + x->x_gui.x_w, yy + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -stroke #%6.6x -tags {%lxX1 %lxTGL %lx text}\n",
-		         canvas, xx+w+1, yy+w+1, xx + x->x_gui.x_w-w, yy + x->x_gui.x_h-w, w,
+		         canvas, xx+w+1, yy+w+1, xx + x->x_gui.x_w-w-1, yy + x->x_gui.x_h-w-1, w,
 		         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -stroke #%6.6x -tags {%lxX2 %lxTGL %lx text}\n",
-		         canvas, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w, yy+w, w,
+		         canvas, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w-1, yy+w+1, w,
 		         (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
 		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxTGL %lx text}\n",
@@ -133,10 +133,10 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
 		         canvas, x, xx, yy, xx + x->x_gui.x_w, yy + x->x_gui.x_h);
 		sys_vgui(".x%lx.c itemconfigure %lxX1 -strokewidth %d\n", canvas, x, w);
 		sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
-		         canvas, x, xx+w+1, yy+w+1, xx + x->x_gui.x_w-w, yy + x->x_gui.x_h-w);
+		         canvas, x, xx+w+1, yy+w+1, xx + x->x_gui.x_w-w-1, yy + x->x_gui.x_h-w-1);
 		sys_vgui(".x%lx.c itemconfigure %lxX2 -strokewidth %d\n", canvas, x, w);
 		sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
-		         canvas, x, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w, yy+w);
+		         canvas, x, xx+w+1, yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w-1, yy+w+1);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xx+x->x_gui.x_ldx, yy+x->x_gui.x_ldy);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)

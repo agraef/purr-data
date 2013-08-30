@@ -107,7 +107,7 @@ endif
 .PHONY: pd gui externs all
 
 all: pd $(BIN_DIR)/pd-watchdog gui $(BIN_DIR)/pdsend \
-    $(BIN_DIR)/pdreceive externs tkpath
+    $(BIN_DIR)/pdreceive externs
 
 bin: pd $(BIN_DIR)/pd-watchdog gui $(BIN_DIR)/pdsend \
     $(BIN_DIR)/pdreceive
@@ -197,7 +197,7 @@ tkpath:
 BINARYMODE=@binarymode@
 
 ABOUT_FILE=$(DESTDIR)$(pddocdir)/1.manual/1.introduction.txt
-install:  all
+install: all tkpath
 	install -d $(DESTDIR)$(libpdbindir)
 	install $(BIN_DIR)/$(GUINAME) $(DESTDIR)$(libpdbindir)/$(GUINAME)
 	install $(BIN_DIR)/pd-watchdog $(DESTDIR)$(libpdbindir)/pd-watchdog

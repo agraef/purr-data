@@ -846,7 +846,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         sys_vgui(".x%lx.c create prect\
             %d %d %d %d -stroke $graph_outline -tags {%sR}\n",
             glist_getcanvas(x->gl_owner),
-            x1, y1, x2, y2, tag);
+            x1, y1, x2, y2, tag); // -fill $obj_box_fill
         
             /* if there's just one "garray" in the graph, write its name
                 along the top */
@@ -854,13 +854,13 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             if (g->g_pd == garray_class &&
                 !garray_getname((t_garray *)g, &arrayname))
         {
-            //i -= sys_fontheight(glist_getfont(x));
-			i++;
+			//i++;
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw\
              -font {{%s} %d %s} -tags {%s} -fill %s\n",
              (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name, sys_font,
                 sys_hostfontsize(glist_getfont(x)), sys_fontweight, tag,
 				(glist_isselected(x, gr) ? "$select_color" : "$graph_outline"));
+            i += sys_fontheight(glist_getfont(x));
         }
         
             /* draw ticks on horizontal borders.  If lperb field is
