@@ -253,8 +253,6 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag, 
 
 	if (y->g_next) {
 		ob = pd_checkobject(&y->g_next->g_pd);
-	} else {
-		ret = 1;
 	}
 	if (ob) {
 		yrnxt = glist_findrtext(x, (t_text *)&ob->ob_g);
