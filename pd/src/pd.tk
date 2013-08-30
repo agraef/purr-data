@@ -3210,7 +3210,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
     bind $name.c <Shift-Key> {pdtk_canvas_sendkey %W 1 %K %A 1 1}
     bind $name.c <KeyRelease> {pdtk_canvas_sendkey %W 0 %K %A 0 1}
     bind $name.c <Motion> {pdtk_canvas_motion %W %x %y 0}
+    bind $name.c <Shift-Motion> {pdtk_canvas_motion %W %x %y 1}
     bind $name.c <Control-Motion> {pdtk_canvas_motion %W %x %y 2}
+    bind $name.c <Control-Shift-Motion> {pdtk_canvas_motion %W %x %y 3}
 
     # canvas bindings ---------------------------------------------------------
     # just for tooltips right now

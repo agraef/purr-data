@@ -2485,10 +2485,10 @@ void drawsymbol_float(t_drawsymbol *x, t_floatarg f)
 #define DRAWSYMBOL_BUFSIZE 80
 static void drawsymbol_sprintf(t_drawsymbol *x, char *buf, t_atom *ap)
 {
-    int nchars;
-    strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
-    buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
-    nchars = strlen(buf);
+    //int nchars;
+    //strncpy(buf, x->x_label->s_name, DRAWSYMBOL_BUFSIZE);
+    //buf[DRAWSYMBOL_BUFSIZE - 1] = 0;
+    //nchars = strlen(buf);
     atom_string(ap, buf, DRAWSYMBOL_BUFSIZE);
 }
 

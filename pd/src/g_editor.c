@@ -29,7 +29,7 @@ char *class_gethelpdir(t_class *c);
 
 /* ------------------ forward declarations --------------- */
 static void canvas_doclear(t_canvas *x);
-void glist_setlastxy(t_glist *gl, int xval, int yval);
+void glist_setlastxymod(t_glist *gl, int xval, int yval, int mod);
 static void glist_donewloadbangs(t_glist *x);
 static t_binbuf *canvas_docopy(t_canvas *x);
 static void canvas_dopaste(t_canvas *x, t_binbuf *b);
@@ -68,6 +68,7 @@ int canvas_apply_restore_original_position(t_canvas *x, int orig_pos);
 extern void canvas_draw_gop_resize_hooks(t_canvas *x);
 static void canvas_font(t_canvas *x, t_floatarg font, t_floatarg oldfont, t_floatarg resize, t_floatarg preview);
 static void canvas_displaceselection(t_canvas *x, int dx, int dy);
+void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos, t_floatarg fmod);
 // for updating preset_node locations in case of operations that alter glist object locations (tofront/back, cut, delete, undo/redo cut/delete)
 extern void glob_preset_node_list_check_loc_and_update(void);
 // for preset_node
@@ -86,7 +87,7 @@ int glob_ctrl = 0;
 int glob_alt = 0;
 
 static t_glist *canvas_last_glist;
-static int canvas_last_glist_x, canvas_last_glist_y;
+static int canvas_last_glist_x, canvas_last_glist_y, canvas_last_glist_mod;
 
 struct _outlet
 {
@@ -4489,14 +4490,18 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         /* if control key goes up or down, and if we're in edit mode, change
         cursor to indicate how the click action changes
 		NEW: do so only if not doing anything else in edit mode */
-    if (x && keynum == 0 && x->gl_edit &&
+    if (x && keynum == 0 &&
         !strncmp(gotkeysym->s_name, "Control", 7))
 	{
-			glob_ctrl = down;
-			if(x->gl_editor->e_onmotion == MA_NONE)
-            	canvas_setcursor(x, down ?
-                	CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
+		//fprintf(stderr,"ctrl\n");
+		glob_ctrl = down;
+		if(x->gl_edit && x->gl_editor->e_onmotion == MA_NONE)
+        	canvas_setcursor(x, down ?
+            	CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
 	}
+	//fprintf(stderr," %d %d %d %s %d %d\n", glob_shift, glob_ctrl, glob_alt, gotkeysym->s_name, keynum, down);
+	//canvas_motion(x, canvas_last_glist_x, canvas_last_glist_y, canvas_last_glist_mod);
+	pd_vmess(&x->gl_pd, gensym("motion"), "fff", (double)canvas_last_glist_x, (double)canvas_last_glist_y, (double)(glob_shift+glob_ctrl*2+glob_alt*4));
 }
 
 extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
@@ -4512,7 +4517,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         bug("editor");
         return;
     }
-    glist_setlastxy(x, xpos, ypos);
+    glist_setlastxymod(x, xpos, ypos, mod);
     if (x->gl_editor->e_onmotion == MA_MOVE)
     {
         canvas_displaceselection(x, 
@@ -4604,10 +4609,13 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             else post("not resizable");
         }
     }
-	else if (x->gl_editor->e_onmotion == MA_SCROLL) { fprintf(stderr,"canvas_motion MA_SCROLL\n"); }
+	else if (x->gl_editor->e_onmotion == MA_SCROLL) {
+		//fprintf(stderr,"canvas_motion MA_SCROLL\n");
+	}
     else  {
 		//fprintf(stderr,"canvas_motion -> doclick %d\n", x->gl_editor->e_onmotion);
 		canvas_doclick(x, xpos, ypos, 0, mod, 0);
+		//pd_vmess(&x->gl_pd, gensym("mouse"), "ffff", (double)xpos, (double)ypos, 0, (double)mod);
 	}
 	//if (toggle_moving == 1) {
 	//	sys_vgui("pdtk_update_xy_tooltip .x%lx %d %d\n", x, (int)xpos, (int)ypos);
@@ -6450,6 +6458,14 @@ void glist_setlastxy(t_glist *gl, int xval, int yval)
     canvas_last_glist = gl;
     canvas_last_glist_x = xval;
     canvas_last_glist_y = yval;
+}
+
+void glist_setlastxymod(t_glist *gl, int xval, int yval, int mod)
+{
+    canvas_last_glist = gl;
+    canvas_last_glist_x = xval;
+    canvas_last_glist_y = yval;
+	canvas_last_glist_mod = mod;
 }
 
 static void canvas_enterobj(t_canvas *x, t_symbol *item, t_floatarg xpos,

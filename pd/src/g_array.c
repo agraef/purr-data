@@ -943,7 +943,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     array_motion_template = elemtemplate;
                     array_motion_xperpix = glist_dpixtodx(glist, 1);
                     array_motion_yperpix = glist_dpixtody(glist, 1);
-                    if (alt && xpix < pxpix1) /* delete a point */
+                    if (alt) /* delete a point */
                     {
                         if (array->a_n <= 1)
                             return (0);
@@ -955,7 +955,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 						canvas_setcursor(glist_getcanvas(glist), 0);
                         return (0);
                     }
-                    else if (alt)
+                    else if (shift)
                     {
                         /* add a point (after the clicked-on one) */
 						//fprintf(stderr,"add a point\n");
@@ -1015,10 +1015,11 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 }
                 if (alt)
                 {
-                    if (xpix < pxpix1)
-                        return (CURSOR_EDITMODE_DISCONNECT);
-                    else return (CURSOR_RUNMODE_ADDPOINT);
+                    return (CURSOR_EDITMODE_DISCONNECT);
                 }
+                else if (shift) {
+					return (CURSOR_RUNMODE_ADDPOINT);
+				}
                 else return (array_motion_fatten ?
                     CURSOR_RUNMODE_THICKEN : CURSOR_RUNMODE_CLICKME);
             //}
