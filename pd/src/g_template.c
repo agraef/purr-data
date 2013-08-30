@@ -1573,7 +1573,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     t_array *array;
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
     int i;
-    t_float xpix, ypix, wpix;
+    t_float xpix1, xpix2, ypix, wpix;
     t_fielddesc *xfielddesc, *yfielddesc, *wfielddesc;
     if (!plot_readownertemplate(x, data, template, 
         &elemtemplatesym, &array, &linewidth, &xloc, &xinc, &yloc, &style,
@@ -1593,12 +1593,12 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                 /* get the coords of the point proper */
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, basex + xloc, basey + yloc, xinc,
-                xfielddesc, yfielddesc, wfielddesc, &xpix, &ypix, &wpix);
+                xfielddesc, yfielddesc, wfielddesc, &xpix1, &xpix2, &ypix, &wpix);
 			//fprintf(stderr,"		!!!!!!!!elemsize%d yonset%d wonset%d xonset%d i%d basex%f xloc%f basey%f yloc%f xinc%f xpix%f ypix%f wpix%f\n", elemsize, yonset, wonset, xonset, i, basex, xloc, basey, yloc, xinc, xpix, ypix, wpix);
-            if (xpix < x1)
-                x1 = xpix;
-            if (xpix > x2)
-                x2 = xpix;
+            if (xpix1 < x1)
+                x1 = xpix1;
+            if (xpix2 > x2)
+                x2 = xpix2;
             if (ypix - wpix < y1)
                 y1 = ypix - wpix;
             if (ypix + wpix > y2)

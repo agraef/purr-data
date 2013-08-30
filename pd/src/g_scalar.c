@@ -166,6 +166,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
         /* if someone deleted the template canvas, we're just a point */
     if (!templatecanvas)
     {
+		//fprintf(stderr,"...point\n");
         x1 = x2 = glist_xtopixels(owner, basex);
         y1 = y2 = glist_ytopixels(owner, basey);
     }

@@ -624,7 +624,7 @@ void array_getcoordinate(t_glist *glist,
     char *elem, int xonset, int yonset, int wonset, int indx,
     t_float basex, t_float basey, t_float xinc,
     t_fielddesc *xfielddesc, t_fielddesc *yfielddesc, t_fielddesc *wfielddesc,
-    t_float *xp, t_float *yp, t_float *wp)
+    t_float *xp1, t_float *xp2, t_float *yp, t_float *wp)
 {
     t_float xval, yval, ypix, wpix;
     if (xonset >= 0)
@@ -646,8 +646,10 @@ void array_getcoordinate(t_glist *glist,
             wpix = -wpix;
     }
     else wpix = 1;
-    *xp = glist_xtopixels(glist, basex +
+    *xp1 = glist_xtopixels(glist, basex +
         fielddesc_cvttocoord(xfielddesc, xval));
+    *xp2 = glist_xtopixels(glist, basex +
+        fielddesc_cvttocoord(xfielddesc, xval+1))-1;
     *yp = ypix;
     *wp = wpix;
 }
@@ -839,21 +841,28 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
         &elemtemplate, &elemsize, xfield, yfield, wfield,
         &xonset, &yonset, &wonset))
     {
-        t_float best = 100;
+        t_float best = -1;
             /* if it has more than 2000 points, just check 1000 of them. */
         int incr = (array->a_n <= 2000 ? 1 : array->a_n / 1000);
+        t_float pxpix1, pxpix2, pypix, pwpix, dx, dy, dy2, dy3;
         for (i = 0; i < array->a_n; i += incr)
         {
-            t_float pxpix, pypix, pwpix, dx, dy;
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
-                xfield, yfield, wfield, &pxpix, &pypix, &pwpix);
+                xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
 			//fprintf(stderr,"	array_getcoordinate %d: pxpix:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
             if (pwpix < 4)
                 pwpix = 4;
-            dx = pxpix - xpix;
+			if (xpix >= pxpix1 && xpix <= pxpix2 && ypix >= pypix-pwpix && ypix <= pypix+pwpix) {
+				best = i;
+				break;
+			}
+/*
+            if (pwpix < 4)
+                pwpix = 4;
+            dx = pxpix1 - xpix;
             if (dx < 0) dx = -dx;
-            if (dx > 8) //this is the arbitrary radius away from the actual object's center
+            if (dx > pxpix2-pxpix1) //this is the arbitrary radius away from the actual object's center, originally 8
                 continue;   
             dy = pypix - ypix;
             if (dy < 0) dy = -dy;
@@ -870,9 +879,10 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 if (dx + dy < best)
                     best = dx + dy;
             }
-			//fprintf(stderr,"	1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);
+			//fprintf(stderr,"	1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);*/
         }
-        if (best > 8) //this is the arbitrary radius away from the actual object's center
+		//fprintf(stderr,"	best = %f\n", best);
+        if (best == -1) //this is the arbitrary radius away from the actual object's center, originally 8
         {
 			//fprintf(stderr,"	best > 8\n");
             if (scalarvis != 0) {
@@ -887,17 +897,14 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 				return (0);
 			}
         }
-        best += 0.001;  /* add truncation error margin */
-        for (i = 0; i < array->a_n; i += incr)
-        {
-            t_float pxpix, pypix, pwpix, dx, dy, dy2, dy3;
-            array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
-                xonset, yonset, wonset, i, xloc, yloc, xinc,
-                xfield, yfield, wfield, &pxpix, &pypix, &pwpix);
-            if (pwpix < 4)
-                pwpix = 4;
-            dx = pxpix - xpix;
-            if (dx < 0) dx = -dx;
+        //best += 0.001;  /* add truncation error margin */
+        //for (i = 0; i < array->a_n; i += incr)
+        //{
+            //array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
+            //    xonset, yonset, wonset, i, xloc, yloc, xinc,
+            //    xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
+            //dx = pxpix1 - xpix;
+            //if (dx < 0) dx = -dx;
             dy = pypix - ypix;
             if (dy < 0) dy = -dy;
             if (wonset >= 0)
@@ -911,10 +918,10 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             }
             else dy2 = dy3 = 100;
 			//fprintf(stderr,"	2nd %f %f %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, dy2, dy3, elemsize, yonset, wonset, xonset, i);
-            if (dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best)
-            {
-				//fprintf(stderr, "got this far\n");
-                if (dy < dy2 && dy < dy3 || best < 1) {
+            //if (dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best)
+            //{
+				//fprintf(stderr, "dy=%f dy2=%f dy3=%f\n", dy, dy2, dy3);
+                if (dy < dy2 && dy < dy3) {
                     array_motion_fatten = 0;
 					//fprintf(stderr,"A\n");
 				}
@@ -936,7 +943,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     array_motion_template = elemtemplate;
                     array_motion_xperpix = glist_dpixtodx(glist, 1);
                     array_motion_yperpix = glist_dpixtody(glist, 1);
-                    if (alt && xpix < pxpix) /* delete a point */
+                    if (alt && xpix < pxpix1) /* delete a point */
                     {
                         if (array->a_n <= 1)
                             return (0);
@@ -1008,14 +1015,14 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 }
                 if (alt)
                 {
-                    if (xpix < pxpix)
+                    if (xpix < pxpix1)
                         return (CURSOR_EDITMODE_DISCONNECT);
                     else return (CURSOR_RUNMODE_ADDPOINT);
                 }
                 else return (array_motion_fatten ?
                     CURSOR_RUNMODE_THICKEN : CURSOR_RUNMODE_CLICKME);
-            }
-        }   
+            //}
+        //}   
     }
     return (0);
 }
@@ -1038,18 +1045,18 @@ static void array_getrect(t_array *array, t_glist *glist,
         else incr = array->a_n / 300;
         for (i = 0; i < array->a_n; i += incr)
         {
-            t_float pxpix, pypix, pwpix, dx, dy;
+            t_float pxpix1, pxpix2, pypix, pwpix, dx, dy;
             array_getcoordinate(glist, (char *)(array->a_vec) +
                 i * elemsize,
                 xonset, yonset, wonset, i, 0, 0, 1,
                 0, 0, 0,
-                &pxpix, &pypix, &pwpix);
+                &pxpix1, &pxpix2, &pypix, &pwpix);
             if (pwpix < 2)
                 pwpix = 2;
-            if (pxpix < x1)
-                x1 = pxpix;
-            if (pxpix > x2)
-                x2 = pxpix;
+            if (pxpix1 < x1)
+                x1 = pxpix1;
+            if (pxpix2 > x2)
+                x2 = pxpix2;
             if (pypix - pwpix < y1)
                 y1 = pypix - pwpix;
             if (pypix + pwpix > y2)
