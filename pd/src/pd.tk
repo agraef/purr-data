@@ -2729,10 +2729,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	}
 
     tkp::canvas $name.c -width $width -height $height -background $::canvas_color($name) \
-		-highlightthickness 0 -bd 0 \
-        -yscrollcommand "$name.scrollvert set" \
-        -xscrollcommand "$name.scrollhort set" \
-        -scrollregion [concat 0 0 $width $height]
+		-highlightthickness 0 -bd 0
+        #-yscrollcommand "$name.scrollvert set" \
+        #-xscrollcommand "$name.scrollhort set" \
+        #-scrollregion [concat 0 0 $width $height]
 	#$name.c configure -closeenough 0.0
 
 	#pdtk_standardkeybindings $name.c
@@ -2743,9 +2743,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		}
 	}
 
-    match_linux_wm [list scrollbar $name.scrollvert -command "$name.c yview"]
-    match_linux_wm [list scrollbar $name.scrollhort -command "$name.c xview" \
-        -orient horizontal]
+    #match_linux_wm [list scrollbar $name.scrollvert -command "$name.c yview"]
+    #match_linux_wm [list scrollbar $name.scrollhort -command "$name.c xview" \
+    #-orient horizontal]
 
 	#pack $name.scrollhort -side bottom -fill x
 	#pack $name.scrollvert -side right -fill y
@@ -3280,6 +3280,7 @@ set scrollbar_color "#555"
 set hit_scrollbar 0
 
 proc pdtk_canvas_draw_scrollbars {name} {
+	#puts stderr "pdtk_canvas_draw_scrollbars $name"
 	global scrollbar_color
 	global HSCROLL_PAD_L
 	global HSCROLL_PAD_R
@@ -3646,36 +3647,33 @@ proc pdtk_array_listview_close {id arrayName} {
 #get the name of the toplevel window for a canvas; this is also
 #the name of the canvas object in Pd.
 
-proc pdtk_canvas_autoscrollbars {name x y} {
-    set size [$name bbox all]
-	set x2 [lindex $size 2]
-	set y2 [lindex $size 3]
-    set rootname [winfo parent $name]
-	if {$x > $x2} {pack forget $rootname.scrollhort}
-	if {$y > $y2} {pack forget $rootname.scrollvert}
-	if {$x < $x2} {pack $rootname.scrollhort -side bottom \
-                   -fill x -before $rootname.c}
-	if {$y < $y2} {pack $rootname.scrollvert -side right \
-                   -fill y -before $rootname.c}
-}
+#proc pdtk_canvas_autoscrollbars {name x y} {
+#    set size [$name bbox all]
+#	set x2 [lindex $size 2]
+#	set y2 [lindex $size 3]
+#    set rootname [winfo parent $name]
+#	if {$x > $x2} {pack forget $rootname.scrollhort}
+#	if {$y > $y2} {pack forget $rootname.scrollvert}
+#	if {$x < $x2} {pack $rootname.scrollhort -side bottom \
+#                   -fill x -before $rootname.c}
+#	if {$y < $y2} {pack $rootname.scrollvert -side right \
+#                   -fill y -before $rootname.c}
+#}
 
 proc pdtk_canvas_toggle_scrollbars {rootname x} {
     if {$x == 1} {
 		set ::scroll($rootname) 1
 		set ::xscrollable($rootname) 1
 		set ::yscrollable($rootname) 1
-		if {[info exists ::loaded($rootname)]} {
-			pdtk_canvas_getscroll $rootname.c
-		}
-    } elseif {$x == 0}  {
+    } elseif {$x == 0} {
 		set ::scroll($rootname) 0
 		set ::xscrollable($rootname) 0
 		set ::yscrollable($rootname) 0
-		if {[info exists ::loaded($rootname)]} {
-    		pack forget $rootname.scrollhort
-    		pack forget $rootname.scrollvert
-		}
     }
+	if {[info exists ::loaded($rootname)]} {
+		#puts stderr getscroll
+		pdtk_canvas_force_getscroll $rootname.c
+	}
 }
 
 proc pdtk_set_canvas_background {rootname color} {
@@ -3931,33 +3929,6 @@ proc pdtk_find_highest_widget_withtag {canvas name} {
 	#puts stderr "final_highest=$tag"
 }
 
-# currently unused
-proc pdtk_canvas_getscroll_configure {canvas} {
-	set window [string trimright $canvas .c]
-	if {$::scroll($window)} {
-		set xy [$window.scrollvert get]
-		if { [expr [lindex $xy 1] - [lindex $xy 0]] == 1.0 && $::yscrollable($window) } {
-    		pack forget $window.scrollvert
-			set ::yscrollable($window) 0
-		}
-		if { [expr [lindex $xy 1] - [lindex $xy 0]] < 1.0 && $::yscrollable($window) == 0 } {	
-			pack $window.scrollvert -side right \
-                   -fill y -before $window.c
-			set ::yscrollable($window) 1
-		}
-		set xy [$window.scrollhort get]
-		if { [expr [lindex $xy 1] - [lindex $xy 0]] == 1.0 && $::xscrollable($window)} {
-    		pack forget $window.scrollhort
-			set ::xscrollable($window) 0
-		}
-		if { [expr [lindex $xy 1] - [lindex $xy 0]] < 1.0 && $::xscrollable($window) == 0 } {		
-			pack $window.scrollhort -side bottom \
-                   -fill x -before $window.c
-			set ::xscrollable($window) 1
-		}
-	}
-}
-
 proc pdtk_canvas_force_getscroll {name} {
 	set ::update_tick([winfo parent $name]) 0
 	pdtk_canvas_getscroll $name
@@ -3971,6 +3942,8 @@ proc pdtk_canvas_getscroll {name} {
     global pdtk_canvas_mouseup_yminval
     global pdtk_canvas_mouseup_ymaxval
 	#global ::update_tick([winfo parent $name])
+
+	#puts stderr "pdtk_canvas_getscroll $name"
 
     # kludge since this gets called sometimes after a canvas is destroyed
     if {![winfo exists $name]} {return}
@@ -4136,14 +4109,14 @@ proc pdtk_canvas_getscroll {name} {
 
 			if {$winwidth >= $canvaswidth && $::xscrollable($parentname)} {
 				#puts stderr "NO HORIZONTAL NECESSARY"
-				pack forget $parentname.scrollhort
+				#pack forget $parentname.scrollhort
 				set ::xscrollable($parentname) 0
 				#set winheight [expr {$winheight + 14}]
 			}
 
 			if {$winheight >= $canvasheight && $::yscrollable($parentname)} {
 				#puts stderr "NO VERTICAL NECESSARY"
-				pack forget $parentname.scrollvert
+				#pack forget $parentname.scrollvert
 				set ::yscrollable($parentname) 0
 				#set winwidth [expr {$winwidth + 14}]
 			}
@@ -4153,7 +4126,7 @@ proc pdtk_canvas_getscroll {name} {
 			if {$winwidth < $canvaswidth && $::xscrollable($parentname) == 0} {
 				#puts stderr "PUTTING HORIZONTAL"
 				#pack $parentname.scrollhort -fill x \
-				#	-side bottom -before $parentname.c
+				#-side bottom -before $parentname.c
 				set ::xscrollable($parentname) 1
 			}
 			if {$winheight < $canvasheight && $::yscrollable($parentname) == 0} {
@@ -4182,9 +4155,9 @@ proc pdtk_canvas_getscroll {name} {
 		}
 	} else {
 		if {$::scroll($parentname) == 1} {
-			pack forget $parentname.scrollhort
+			#pack forget $parentname.scrollhort
 			set ::xscrollable($parentname) 0
-			pack forget $parentname.scrollvert
+			#pack forget $parentname.scrollvert
 			set ::yscrollable($parentname) 0
 		}
 	}
