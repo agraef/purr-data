@@ -8403,7 +8403,7 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 		#puts stderr "gettags $tags $xletno [$tkcanvas canvasx $x] [$tkcanvas canvasy $y]"
 		if { $xletno == -1 && $object ne "text" } { return }
 		if { $object ne "text" } {
-			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -outline]
+			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -stroke]
 		} else {
 			set nlet_color $select_color
 		}
