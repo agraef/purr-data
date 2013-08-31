@@ -3357,6 +3357,8 @@ proc pdtk_canvas_scroll_horizontal_click {name x y b mod} {
 #3 = both (middle click)
 
 proc pdtk_canvas_scroll_horizontal_motion {name x y mod} {
+	global HSCROLL_PAD_L
+	global HSCROLL_PAD_R
 	#puts stderr "HORIZONTAL MOTION $name $x $y $mod"
 	set name [string trimright $name .c]
 	if {$::xscrollable($name) && ($::scroll_on($name) == 1 || $::scroll_on($name) == 3)} {
@@ -3366,10 +3368,10 @@ proc pdtk_canvas_scroll_horizontal_motion {name x y mod} {
 			set visible [$name.c xview]
 			set vx1 [lindex $visible 0]
 			set vx2 [lindex $visible 1]
-			set perpixdelta [expr ($vx2 - $vx1)/[winfo width $name]]
+			set perpixdelta [expr (1.0)/([winfo width $name]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
 			#puts stderr "scrolling... $vx1 $vx2 $perpixdelta"
 			#$name xview scroll [expr -$deltax] units
-			set displace [expr $perpixdelta*$deltax]
+			set displace [expr $perpixdelta * $deltax]
 			if {$::scroll_on($name) == 3} {
 				set displace [expr -$displace]
 			}
@@ -3396,6 +3398,8 @@ proc pdtk_canvas_scroll_vertical_click {name x y b mod} {
 }
 
 proc pdtk_canvas_scroll_vertical_motion {name x y mod} {
+	global VSCROLL_PAD_U
+	global VSCROLL_PAD_D
 	#puts stderr "VERTICAL MOTION $name $x $y $mod"
 	set name [string trimright $name .c]
 	if {$::yscrollable($name) && $::scroll_on($name) >= 2} {
@@ -3405,13 +3409,14 @@ proc pdtk_canvas_scroll_vertical_motion {name x y mod} {
 			set visible [$name.c yview]
 			set vy1 [lindex $visible 0]
 			set vy2 [lindex $visible 1]
-			set perpixdelta [expr ($vy2 - $vy1)/[winfo height $name]]
-			#puts stderr "scrolling... $vx1 $vx2 $perpixdelta"
+			set perpixdelta [expr (1.0)/([winfo height $name.c]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
+			#puts stderr "scrolling... $vy1 $vy2 $perpixdelta $deltay"
 			#$name xview scroll [expr -$deltax] units
-			set displace [expr $perpixdelta*$deltay]
+			set displace [expr $perpixdelta * $deltay]
 			if {$::scroll_on($name) == 3} {
 				set displace [expr -$displace]
 			}
+			#puts stderr "$name.c yview moveto [expr $vy1 - $displace]"
 			$name.c yview moveto [expr $vy1 - $displace]
 			pdtk_canvas_draw_scrollbars $name
 		}
