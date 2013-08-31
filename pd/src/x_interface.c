@@ -5,10 +5,19 @@
 /* interface objects */
 
 #include "m_pd.h"
+#include "m_imp.h"
 #include "g_canvas.h"
+#include "s_stuff.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+/* we need the following for [pdinfo] ... */
+
+#define MAXNDEV 20
+#define DEVDESCSIZE 80
+
+extern t_class *classtable_findbyname(t_symbol *s);
 
 /* -------------------------- print ------------------------------ */
 t_class *print_class;
@@ -114,13 +123,17 @@ static t_class *classinfo_class;
 
 typedef struct _classinfo {
     t_object x_obj;
-    t_float   x_depth;
+    t_outlet *x_out2;
+    t_symbol *x_name;
 } t_classinfo;
 
 /* used by all the *info objects */
-void info_out(t_text *te, t_int all, t_symbol *s, int argc, t_atom *argv)
+
+static t_int info_to_console = 0;
+
+void info_out(t_text *te, t_symbol *s, int argc, t_atom *argv)
 {
-    if (all)
+    if (info_to_console)
     {
         startpost("%s:", s->s_name);
         if (argc > 0)
@@ -131,6 +144,24 @@ void info_out(t_text *te, t_int all, t_symbol *s, int argc, t_atom *argv)
         outlet_list(te->ob_outlet,
             &s_list, argc, argv);
     }
+}
+
+void info_print(t_text *te)
+{
+    t_class *c = classtable_findbyname(te->ob_pd->c_name);
+    if(c == NULL)
+    {
+        pd_error(te, "s: can't find entry in classtable");
+        return;
+    }
+    info_to_console = 1;
+    t_int i;
+    t_methodentry *m;
+    for(i = c->c_nmethod, m = c->c_methods; i; i--, m++)
+        if(m->me_name != gensym("print"))
+            (m->me_fun)(te, m->me_name, 0, 0);
+/*  pd_forwardmess(te->te_pd, 0, 0); not sure why this doesn't work */
+    info_to_console = 0;
 }
 
 /* -------------------------- canvasinfo ------------------------------ */
@@ -147,189 +178,176 @@ t_canvas *canvasinfo_dig(t_canvasinfo *x)
   return c;
 }
 
-void canvasinfo_get(t_canvasinfo *x, t_symbol *s, t_int all)
+void canvasinfo_args(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_canvas *c = canvasinfo_dig(x);
-    if(s == gensym("args"))
+    int n = 0;
+    t_atom *a = 0;
+    t_binbuf *b;
+    if(!c) return;
+    if (s == gensym("args")) c = canvas_getrootfor(c);
+    b = c->gl_obj.te_binbuf;
+    if(!b)
     {
-        int argc = 0;
-        t_atom *argv = 0;
-        t_binbuf *b;
-        if(!c) return;
-        c = canvas_getrootfor(c);
-        b = c->gl_obj.te_binbuf;
-
-        if(!b)
-        {
-            info_out((t_text *)x, all, s, 0, 0);
-        }
-        else
-        {
-            argc = binbuf_getnatom(b);
-            argv = binbuf_getvec(b);
-            info_out((t_text *)x, all, s, argc-1, argv+1);
-        }
-    }
-    else if(s == gensym("coords"))
-    {
-        t_int gop = c->gl_isgraph + c->gl_hidetext;
-        t_atom at[9];
-        SETFLOAT(at, (c->gl_isgraph) ? c->gl_x1 : 0);
-        SETFLOAT(at+1, (c->gl_isgraph) ? c->gl_y1 : 0);
-        SETFLOAT(at+2, (c->gl_isgraph) ? c->gl_x2 : 0);
-        SETFLOAT(at+3, (c->gl_isgraph) ? c->gl_y2 : 0);
-        SETFLOAT(at+4, (c->gl_isgraph) ? c->gl_pixwidth : 0);
-        SETFLOAT(at+5, (c->gl_isgraph) ? c->gl_pixheight : 0);
-        SETFLOAT(at+6, (c->gl_isgraph) ? gop : 0);
-        SETFLOAT(at+7, (c->gl_isgraph) ? c->gl_xmargin : 0);
-        SETFLOAT(at+8, (c->gl_isgraph) ? c->gl_ymargin : 0);
-        info_out((t_text *)x, all, s, 9, at);
-    }
-    else if(s == gensym("dir"))
-    {
-        c = canvas_getrootfor(c);
-        t_atom at[1];
-        SETSYMBOL(at, canvas_getdir(c));
-        info_out((t_text *)x, all, s, 1, at);
-    }
-    else if (s == gensym("dirty"))
-    {
-        t_atom at[1];
-        SETFLOAT(at, c->gl_dirty);
-        info_out((t_text *)x, all, s, 1, at);
-    }
-    else if (s == gensym("dollarzero"))
-    {
-        c = canvas_getrootfor(c);
-        t_symbol *d = gensym("$0");
-        t_symbol *ret = canvas_realizedollar(c, d);
-        float f = (float)strtod(ret->s_name,NULL);
-        t_atom at[1];
-        SETFLOAT(at, f);
-        info_out((t_text *)x, all, s, 1, at);
-    }
-    else if (s == gensym("editmode"))
-    {
-        t_atom at[1];
-        SETFLOAT(at, c->gl_edit);
-        info_out((t_text *)x, all, s, 1, at);
-    }
-    else if (s == gensym("filename"))
-    {
-        c = canvas_getrootfor(c);
-        t_atom at[1];
-        SETSYMBOL(at, c->gl_name);
-        info_out((t_text *)x, all, s, 1, at);
-    }
-    else if (s == gensym("name"))
-    {
-        char buf[MAXPDSTRING];
-        snprintf(buf, MAXPDSTRING, ".x%lx", (long unsigned int)c);
-        t_atom at[1];
-        SETSYMBOL(at, gensym(buf));
-        info_out((t_text *)x, all, s, 1, at);
-    }
-    else if (s == gensym("parent"))
-    {
-        t_atom at[1];
-        if (c->gl_owner)
-        {
-            t_gpointer gp;
-            gpointer_init(&gp);
-            gpointer_setglist(&gp, c->gl_owner, 0);
-            SETPOINTER(at, &gp);
-            info_out((t_text *)x, all, s, 1, at);
-            gpointer_unset(&gp);
-        }
-        else
-        {
-            SETFLOAT(at, 0);
-            info_out((t_text *)x, all, s, 1, at);
-        }
-    }
-    else if (s == gensym("posonparent"))
-    {
-        t_atom at[2];
-        SETFLOAT(at, c->gl_obj.te_xpix);
-        SETFLOAT(at+1, c->gl_obj.te_ypix);
-        info_out((t_text *)x, all, s, 2, at);
-    }
-    else if (s == gensym("screenpos"))
-    {
-        t_atom at[4];
-        SETFLOAT(at, c->gl_screenx1);
-        SETFLOAT(at+1, c->gl_screeny1);
-        SETFLOAT(at+2, c->gl_screenx2);
-        SETFLOAT(at+3, c->gl_screeny2);
-        info_out((t_text *)x, all, s, 4, at);
-    }
-    else if (s == gensym("self"))
-    {
-        t_atom at[1];
-        t_gpointer gp;
-        gpointer_init(&gp);
-        gpointer_setglist(&gp, c, 0);
-        SETPOINTER(at, &gp);
-        info_out((t_text *)x, all, s, 1, at);
-        gpointer_unset(&gp);
-    }
-    else if (s == gensym("vis"))
-    {
-        t_atom at[1];
-        SETFLOAT(at, glist_isvisible(c));
-        info_out((t_text *)x, all, s, 1, at);
+        info_out((t_text *)x, s, 0, 0);
     }
     else
     {
-        pd_error(x, "canvasinfo: no %s property", s->s_name);
+        n = binbuf_getnatom(b);
+        a = binbuf_getvec(b);
+        if (s == gensym("args"))
+            info_out((t_text *)x, s, n-1, a+1);
+        else
+            info_out((t_text *)x, s, n, a);
     }
 }
 
-void canvasinfo_symbol(t_canvasinfo *x, t_symbol *s)
+void canvasinfo_coords(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    canvasinfo_get(x, s, 0);
+    t_canvas *c = canvasinfo_dig(x);
+    t_int gop = c->gl_isgraph + c->gl_hidetext;
+    t_atom at[9];
+    SETFLOAT(at, (c->gl_isgraph) ? c->gl_x1 : 0);
+    SETFLOAT(at+1, (c->gl_isgraph) ? c->gl_y1 : 0);
+    SETFLOAT(at+2, (c->gl_isgraph) ? c->gl_x2 : 0);
+    SETFLOAT(at+3, (c->gl_isgraph) ? c->gl_y2 : 0);
+    SETFLOAT(at+4, (c->gl_isgraph) ? c->gl_pixwidth : 0);
+    SETFLOAT(at+5, (c->gl_isgraph) ? c->gl_pixheight : 0);
+    SETFLOAT(at+6, (c->gl_isgraph) ? gop : 0);
+    SETFLOAT(at+7, (c->gl_isgraph) ? c->gl_xmargin : 0);
+    SETFLOAT(at+8, (c->gl_isgraph) ? c->gl_ymargin : 0);
+    info_out((t_text *)x, s, 9, at);
 }
 
-void canvasinfo_bang(t_canvasinfo *x)
+void canvasinfo_dir(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    canvasinfo_get(x, gensym("args"), 1);
-    canvasinfo_get(x, gensym("coords"), 1);
-    canvasinfo_get(x, gensym("dir"), 1);
-    canvasinfo_get(x, gensym("dollarzero"), 1);
-    canvasinfo_get(x, gensym("editmode"), 1);
-    canvasinfo_get(x, gensym("filename"), 1);
-    canvasinfo_get(x, gensym("name"), 1);
-    canvasinfo_get(x, gensym("parent"), 1);
-    canvasinfo_get(x, gensym("posonparent"), 1);
-    canvasinfo_get(x, gensym("screenpos"), 1);
-    canvasinfo_get(x, gensym("self"), 1);
-    canvasinfo_get(x, gensym("vis"), 1);
+    t_canvas *c = canvasinfo_dig(x);
+    c = canvas_getrootfor(c);
+    t_atom at[1];
+    SETSYMBOL(at, canvas_getdir(c));
+    info_out((t_text *)x, s, 1, at);
 }
 
-void canvasinfo_pointer(t_canvasinfo *x, t_gpointer *gp)
+void canvasinfo_dirty(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    pd_error(x, "canvasinfo: no method for pointer");
+    t_canvas *c = canvasinfo_dig(x);
+    t_atom at[1];
+    SETFLOAT(at, c->gl_dirty);
+    info_out((t_text *)x, s, 1, at);
 }
 
-void canvasinfo_float(t_canvasinfo *x, t_float f)
+void canvasinfo_dollarzero(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    pd_error(x, "canvasinfo: no method for float");
+    t_canvas *c = canvasinfo_dig(x);
+    c = canvas_getrootfor(c);
+    t_symbol *d = gensym("$0");
+    t_symbol *ret = canvas_realizedollar(c, d);
+    float f = (float)strtod(ret->s_name,NULL);
+    t_atom at[1];
+    SETFLOAT(at, f);
+    info_out((t_text *)x, s, 1, at);
 }
 
-static void canvasinfo_list(t_canvasinfo *x, t_symbol *s, int ac, t_atom *av)
+void canvasinfo_editmode(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    obj_list(&x->x_obj, 0, ac, av);
+    t_canvas *c = canvasinfo_dig(x);
+    t_atom at[1];
+    SETFLOAT(at, c->gl_edit);
+    info_out((t_text *)x, s, 1, at);
 }
 
-static void canvasinfo_anything(t_canvasinfo *x, t_symbol *s, int ac, t_atom *av)
+void canvasinfo_filename(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_atom *av2 = (t_atom *)getbytes((ac + 1) * sizeof(t_atom));
-    int i;
-    for (i = 0; i < ac; i++)
-        av2[i + 1] = av[i];
-    SETSYMBOL(av2, s);
-    obj_list(&x->x_obj, 0, ac+1, av2);
-    freebytes(av2, (ac + 1) * sizeof(t_atom));
+    t_canvas *c = canvasinfo_dig(x);
+    c = canvas_getrootfor(c);
+    t_atom at[1];
+    SETSYMBOL(at, c->gl_name);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    int x1, y1, x2, y2;
+    t_gobj *ob = canvas_findhitbox(c, xpos, ypos, &x1, &y1, &x2, &y2);
+    if (ob)
+    {
+        t_atom at[5];
+        char *classname = class_getname(ob->g_pd);
+        SETSYMBOL(at, gensym(classname));
+        SETFLOAT(at+1, (t_float)x1);
+        SETFLOAT(at+2, (t_float)y1);
+        SETFLOAT(at+3, (t_float)x2);
+        SETFLOAT(at+4, (t_float)y2);
+        info_out((t_text *)x, gensym("hitbox"), 5, at);
+    }
+    else
+        info_out((t_text *)x, gensym("hitbox"), 0, 0);
+}
+
+void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    char buf[MAXPDSTRING];
+    snprintf(buf, MAXPDSTRING, ".x%lx", (long unsigned int)c);
+    t_atom at[1];
+    SETSYMBOL(at, gensym(buf));
+    info_out((t_text *)x, s, 1, at);
+}
+
+void canvasinfo_pointer(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    t_atom at[1];
+    t_gpointer gp;
+    gpointer_init(&gp);
+    gpointer_setglist(&gp, c, 0);
+    SETPOINTER(at, &gp);
+    info_out((t_text *)x, s, 1, at);
+    gpointer_unset(&gp);
+}
+
+void canvasinfo_posonparent(t_canvasinfo *x, t_symbol *s,
+    int argc, t_atom *argv)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    t_atom at[2];
+    SETFLOAT(at, c->gl_obj.te_xpix);
+    SETFLOAT(at+1, c->gl_obj.te_ypix);
+    info_out((t_text *)x, s, 2, at);
+}
+
+void canvasinfo_screenpos(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    t_atom at[4];
+    SETFLOAT(at, c->gl_screenx1);
+    SETFLOAT(at+1, c->gl_screeny1);
+    SETFLOAT(at+2, c->gl_screenx2);
+    SETFLOAT(at+3, c->gl_screeny2);
+    info_out((t_text *)x, s, 4, at);
+}
+
+void canvasinfo_toplevel(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    t_float f = c->gl_owner ? 0 : 1;
+    t_atom at[1];
+    SETFLOAT(at, f);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void canvasinfo_vis(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvasinfo_dig(x);
+    t_atom at[1];
+    SETFLOAT(at, glist_isvisible(c));
+    info_out((t_text *)x, s, 1, at);
+}
+
+void canvasinfo_print(t_canvasinfo *x)
+{
+    info_print((t_text *)x);
 }
 
 void *canvasinfo_new(t_floatarg f)
@@ -351,67 +369,352 @@ void canvasinfo_setup(void)
         sizeof(t_canvasinfo),
         CLASS_DEFAULT, A_DEFFLOAT, 0);
 
-    class_addbang(canvasinfo_class, canvasinfo_bang);
-    class_addpointer(canvasinfo_class, canvasinfo_pointer);
-    class_addfloat(canvasinfo_class, canvasinfo_float);
-    class_addsymbol(canvasinfo_class, canvasinfo_symbol);
-    class_addlist(canvasinfo_class, canvasinfo_list);
-    class_addanything(canvasinfo_class, canvasinfo_anything);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_args,
+        gensym("args"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_args,
+        gensym("boxtext"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_coords,
+        gensym("coords"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_dir,
+        gensym("dir"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_dirty,
+        gensym("dirty"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_dollarzero,
+        gensym("dollarzero"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_editmode,
+        gensym("editmode"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_filename,
+        gensym("filename"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_hitbox,
+        gensym("hitbox"), A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_name,
+        gensym("name"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_pointer,
+        gensym("pointer"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_posonparent,
+        gensym("posonparent"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_screenpos,
+        gensym("screenpos"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_toplevel,
+        gensym("toplevel"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_vis,
+        gensym("vis"), A_GIMME, 0);
+    class_addmethod(canvasinfo_class, (t_method)canvasinfo_print,
+        gensym("print"), 0);
+
+    post("canvasinfo: v0.1");
+    post("stable canvasinfo methods: args dir dirty editmode vis");
+
 }
 
 /* -------------------------- pdinfo ------------------------------ */
 static t_class *pdinfo_class;
 
-void pdinfo_get(t_pdinfo *x, t_symbol *s, t_int all)
+t_symbol *getapiname(int id)
 {
-    if(s == gensym("dsp"))
+    t_symbol *s = 0;
+    switch (id)
+    {
+        case API_NONE: s = gensym("none"); break;
+        case API_ALSA: s = gensym("ALSA"); break;
+        case API_OSS: s = gensym("OSS"); break;
+        case API_MMIO: s = gensym("MMIO"); break;
+        case API_PORTAUDIO: s = gensym("PortAudio"); break;
+        case API_JACK: s = gensym("JACK"); break;
+        case API_SGI: s = gensym("SGI"); break;
+        //case API_AUDIOUNIT: s = gensym("AudioUnit"); break;
+        //case API_ESD: s = gensym("ESD"); break;
+        //case API_DUMMY: s = gensym("dummy"); break;
+    }
+    return s;
+}
+
+void pdinfo_dir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_symbol *dir = pd_getdirname();
+    if (!dir)
+    {
+        pd_error(x, "pdinfo: can't find pd's directory");
+        return;
+    }
+    SETSYMBOL(at, dir);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_dsp(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[1];
+    SETFLOAT(at, (t_float)canvas_dspstate);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[1];
+    t_symbol *api = getapiname(sys_audioapi);
+    SETSYMBOL(at, api);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_audioin(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+//        char i
+}
+
+void pdinfo_audio_api_list_raw(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[7];
+    int i;
+    for(i = 0; i < 7; i++)
+        SETSYMBOL(at+i, getapiname(i));
+    info_out((t_text *)x, s, i, at);
+}
+
+void pdinfo_audio_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[8];
+    int n = 0;
+#ifdef USEAPI_OSS
+    SETSYMBOL(at+n, getapiname(API_OSS)); n++;
+#endif
+#ifdef USEAPI_MMIO
+    SETSYMBOL(at+n, getapiname(API_MMIO)); n++;
+#endif
+#ifdef USEAPI_ALSA
+    SETSYMBOL(at+n, getapiname(API_ALSA)); n++;
+#endif
+#ifdef USEAPI_PORTAUDIO
+#ifdef MSW
+    SETSYMBOL(at+n, getapiname(API_PORTAUDIO));
+#else
+#ifdef OSX
+    SETSYMBOL(at+n, getapiname(API_PORTAUDIO));
+#else
+    SETSYMBOL(at+n, getapiname(API_PORTAUDIO));
+#endif
+#endif
+    n++;
+#endif
+#ifdef USEAPI_JACK
+    SETSYMBOL(at+n, getapiname(API_JACK)); n++;
+#endif
+#ifdef USEAPI_AUDIOUNIT
+    SETSYMBOL(at+n, getapiname(API_AUDIOUNIT)); n++;
+#endif
+#ifdef USEAPI_ESD
+    SETSYMBOL(at+n, getapiname(API_ESD)); n++;
+#endif
+#ifdef USEAPI_DUMMY
+    SETSYMBOL(at+n, getapiname(API_DUMMY)); n++;
+#endif
+    info_out((t_text *)x, s, n, at);
+}
+
+void pdinfo_audio_listdevs(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
+    int nindevs = 0, noutdevs = 0, i, canmulti = 0, cancallback = 0;
+    sys_get_audio_devs(indevlist, &nindevs,
+            outdevlist, &noutdevs,
+            &canmulti, &cancallback,
+            MAXNDEV, DEVDESCSIZE);
+    t_atom at[4];
+    if (s == gensym("audio-multidev-support"))
+    {
+        SETFLOAT(at, canmulti);
+        info_out((t_text *)x, s, 1, at); 
+    }
+    else if (s == gensym("audio-indevlist"))
+    {
+        for (i = 0; i < nindevs; i++)
+           SETSYMBOL(at+i, gensym(indevlist + i * DEVDESCSIZE));
+        info_out((t_text *)x, s, i, at);
+    }
+    else if (s == gensym("audio-outdevlist"))
+    {
+        for (i = 0; i < noutdevs; i++)
+           SETSYMBOL(at+i, gensym(outdevlist + i * DEVDESCSIZE));
+        info_out((t_text *)x, s, i, at);
+    }
+}
+
+void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    int devno;
+    if (argc) devno = (int)atom_getfloatarg(0, argc, arg);
+    else devno = 0;
+    int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
+    int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
+    int rate, advance, callback, blocksize;
+    sys_get_audio_params(&naudioindev, audioindev, chindev,
+        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
+    int *dev, *chan, ndev;
+    if (s == gensym("audio-indev"))
+        dev = audioindev, chan = chindev, ndev = naudioindev;
+    else
+        dev = audiooutdev, chan = choutdev, ndev = naudiooutdev;
+    if (devno >= 0 && devno < ndev)
+    {
+        t_atom at[2];
+        SETFLOAT(at, (t_float)dev[devno]);
+        SETFLOAT(at+1, (t_float)chan[devno]);
+        info_out((t_text *)x, s, 2, at);
+    }
+    else
+        info_out((t_text *)x, s, 0, 0);
+}
+
+void pdinfo_midi_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[1];
+    t_symbol *api, *def = gensym("DEFAULT");
+#ifdef USEAPI_OSS
+    def = gensym("OSS");
+#endif
+    api = sys_midiapi ? gensym("ALSA") : def;
+    SETSYMBOL(at, api);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_midi_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[8];
+    int n = 0;
+    SETSYMBOL(at+n, gensym("DEFAULT"));
+#ifdef USEAPI_OSS
+    SETSYMBOL(at+n, gensym("OSS"));
+#endif
+    n++;
+#ifdef USEAPI_ALSA
+    SETSYMBOL(at+n, getapiname(API_ALSA)); n++;
+#endif
+    info_out((t_text *)x, s, n, at);
+}
+
+void pdinfo_midi_listdevs(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    char indevlist[MAXMIDIINDEV*DEVDESCSIZE],
+        outdevlist[MAXMIDIOUTDEV*DEVDESCSIZE];
+    int nindevs = 0, noutdevs = 0, i;
+    sys_get_midi_devs(indevlist, &nindevs,
+            outdevlist, &noutdevs,
+            MAXNDEV, DEVDESCSIZE);
+    t_atom at[4];
+    if (s == gensym("midi-indevlist"))
+    {
+        for (i = 0; i < nindevs; i++)
+           SETSYMBOL(at+i, gensym(indevlist + i * DEVDESCSIZE));
+        info_out((t_text *)x, s, i, at);
+    }
+    else if (s == gensym("midi-outdevlist"))
+    {
+        for (i = 0; i < noutdevs; i++)
+           SETSYMBOL(at+i, gensym(outdevlist + i * DEVDESCSIZE));
+        info_out((t_text *)x, s, i, at);
+    }
+}
+
+void pdinfo_midi_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    int devno, nmidiindev, midiindev[MAXMIDIINDEV],
+        nmidioutdev, midioutdev[MAXMIDIOUTDEV];
+    int *dev, *chan, ndev;
+    t_atom at[4];
+    if (argc) devno = (int)atom_getfloatarg(0, argc, arg);
+    else devno = 0;
+    sys_get_midi_params(&nmidiindev, midiindev, &nmidioutdev, midioutdev);
+    if (s == gensym("midi-indev"))
+        dev = midiindev, ndev = nmidiindev;
+    else
+        dev = midioutdev, ndev = nmidioutdev;
+    if (devno >= 0 && devno < ndev)
     {
         t_atom at[1];
-        SETFLOAT(at, (t_float)canvas_dspstate);
-        info_out((t_text *)x, all, s, 1, at);
+        SETFLOAT(at, (t_float)dev[devno]);
+        info_out((t_text *)x, s, 1, at);
     }
-    else if(s == gensym("version"))
-    {
-        int major=0, minor=0, bugfix=0;
-        sys_getversion(&major, &minor, &bugfix);
-        t_atom at[3];
-        SETFLOAT(at, (t_float)major);
-        SETFLOAT(at+1, (t_float)minor);
-        SETFLOAT(at+2, (t_float)bugfix);
-        info_out((t_text *)x, all, s, 3, at);
-    }
+    else
+        info_out((t_text *)x, s, 0, 0);
 }
 
-void pdinfo_symbol(t_pdinfo *x, t_symbol *s)
+void pdinfo_audio_outdev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
 {
-    pdinfo_get(x, s, 0);
+    int devno;
+    if (argc) devno = (int)atom_getfloatarg(0, argc, arg);
+    else devno = 0;
+    int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
+    int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
+    int rate, advance, callback, blocksize;
+    sys_get_audio_params(&naudioindev, audioindev, chindev,
+        &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
+    if (devno >= 0 && devno < naudioindev)
+    {
+        t_atom at[2];
+        SETFLOAT(at, (t_float)audioindev[devno]);
+        SETFLOAT(at+1, (t_float)chindev[devno]);
+        info_out((t_text *)x, s, 2, at);
+    }
+    else
+        info_out((t_text *)x, s, 0, 0);
 }
 
-void pdinfo_bang(t_pdinfo *x)
+void pdinfo_audio_inchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
 {
-    pdinfo_get(x, gensym("dsp"), 1);
-    pdinfo_get(x, gensym("version"), 1);
+    t_atom at[1];
+    SETFLOAT(at, (t_float)sys_get_inchannels());
+    info_out((t_text *)x, s, 1, at);
 }
 
-static void pdinfo_anything(t_pdinfo *x, t_symbol *s, int ac, t_atom *av)
+void pdinfo_audio_outchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
 {
-    if(av->a_type == A_FLOAT)
-    {
-        pd_error(x, "pdinfo: no method for float");
-        return;
-    }
-    else if(av->a_type == A_POINTER)
-    {
-        pd_error(x, "pdinfo: no method for pointer");
-        return;
-    }
-    pdinfo_get(x, s, 0);
+    t_atom at[1];
+    SETFLOAT(at, (t_float)sys_get_outchannels());
+    info_out((t_text *)x, s, 1, at);
+}
+
+
+void pdinfo_audio_samplerate(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[1];
+    SETFLOAT(at, (t_float)sys_getsr());
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_audio_blocksize(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[1];
+    SETFLOAT(at, (t_float)sys_getblksize());
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    int major=0, minor=0, bugfix=0;
+    sys_getversion(&major, &minor, &bugfix);
+    t_atom at[3];
+    SETFLOAT(at, (t_float)major);
+    SETFLOAT(at+1, (t_float)minor);
+    SETFLOAT(at+2, (t_float)bugfix);
+    info_out((t_text *)x, s, 3, at);
+}
+
+void pdinfo_pi(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+{
+    t_atom at[1];
+    const t_float Pi = 3.141592653589793;
+    SETFLOAT(at, Pi);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void pdinfo_print(t_pdinfo *x)
+{
+    info_print((t_text *)x);
 }
 
 void *pdinfo_new(t_symbol *s, t_int argc, t_atom *argv)
 {
     t_pdinfo *x = (t_pdinfo *)pd_new(pdinfo_class);
-
     outlet_new(&x->x_obj, &s_list);    
     return (void *)x;
 }
@@ -423,49 +726,208 @@ void pdinfo_setup(void)
         sizeof(t_pdinfo),
         CLASS_DEFAULT, 0);
 
-    class_addbang(pdinfo_class, pdinfo_bang);
-    class_addsymbol(pdinfo_class, pdinfo_symbol);
-    class_addanything(pdinfo_class, pdinfo_anything);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_api,
+        gensym("audio-api"), A_DEFFLOAT, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_apilist,
+        gensym("audio-apilist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_api_list_raw,
+        gensym("audio-apilist-raw"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_inchannels,
+        gensym("audio-inchannels"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_dev,
+        gensym("audio-indev"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_listdevs,
+        gensym("audio-indevlist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_listdevs,
+        gensym("audio-multidev-support"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_outchannels,
+        gensym("audio-outchannels"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_dev,
+        gensym("audio-outdev"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_listdevs,
+        gensym("audio-outdevlist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_blocksize,
+        gensym("blocksize"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_dir,
+        gensym("dir"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_dsp,
+        gensym("dsp-status"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_midi_api,
+        gensym("midi-api"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_midi_apilist,
+        gensym("midi-apilist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_midi_dev,
+        gensym("midi-indev"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_midi_listdevs,
+        gensym("midi-indevlist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_midi_dev,
+        gensym("midi-outdev"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_midi_listdevs,
+        gensym("midi-outdevlist"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_pi,
+        gensym("pi"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_audio_samplerate,
+        gensym("samplerate"), A_GIMME, 0);
+    class_addmethod(pdinfo_class, (t_method)pdinfo_version,
+        gensym("version"), A_GIMME, 0);
+
+    class_addmethod(pdinfo_class, (t_method)pdinfo_print,
+        gensym("print"), 0);
+
+    post("pdinfo: v.0.1");
+    post("stable pdinfo methods: dir dsp version");
 }
 
 /* -------------------------- classinfo ------------------------------ */
-void classinfo_get(t_classinfo *x, t_symbol *s, t_int all)
+t_symbol *attosym(t_atomtype at)
 {
+    t_symbol *s;
+    switch (at)
+    {
+        case A_FLOAT: s = gensym("A_FLOAT"); break;
+        case A_SYMBOL: s = gensym("A_SYMBOL"); break;
+        case A_POINTER: s = gensym("A_POINTER"); break;
+        case A_DEFFLOAT: s = gensym("A_DEFFLOAT"); break;
+        case A_DEFSYM: s = gensym("A_DEFSYM"); break;
+        case A_GIMME: s = gensym("A_GIMME"); break;
+        case A_CANT: s = gensym("A_CANT"); break;
+        default: s = 0;
+    }
+    return s;
+}
+
+void classinfo_args(t_classinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_class *c;
+    if(!(c = classtable_findbyname(x->x_name)))
+    {
+        outlet_bang(x->x_out2);
+        return;
+    }
+    c = classtable_findbyname(gensym("objectmaker"));
+    if (!c)
+    {
+        pd_error(x, "classinfo: no objectmaker.");
+        return;
+    }
+    t_atom ap[MAXPDARG];
+    t_int i;
+    t_methodentry *m;
+    for(i = c->c_nmethod, m = c->c_methods; i; i--, m++)
+    {
+        if(m->me_name == x->x_name)
+            break;
+    }
+    /* We have to check if there was a match-- while the class
+       table holds all classes, the objectmaker only creates a
+       new method entry if the class has a t_newmethod defined
+       in its setup routine. This misses a few objects such as 
+       gatom which can't be typed into a box. Consequently I'm
+       sending a bang to the reject outlet for those objects--
+       unfortunately that means a "reject" bang could mean the
+       object either doesn't exist, or it doesn't have its own
+       t_newmethod. However, one can use the other [classinfo]
+       methods to unambiguously check the class for existence.
+    */
+    if (i)
+    {
+        t_atomtype arg, *args = m->me_arg;
+        for(i = 0; arg = *args; args++, i++)
+        {
+            t_symbol *sym = attosym(arg);
+            if (!sym)
+            {
+                pd_error(x, "classinfo: %s: bad argtype", x->x_name->s_name);
+                return;
+            }
+            SETSYMBOL(ap+i, sym);
+        }
+        info_out((t_text *)x, s, i, ap);
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+
+void classinfo_externdir(t_classinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_class *c;
+    if(!(c = classtable_findbyname(x->x_name)))
+    {
+        outlet_bang(x->x_out2);
+        return;
+    }
     t_atom at[1];
-    SETFLOAT(at, (zgetfn(&pd_objectmaker, s)) ? 1 : 0);
-    info_out((t_text *)x, all, s, 1, at);
+    SETSYMBOL(at, c->c_externdir);
+    info_out((t_text *)x, s, 1, at);
 }
 
-void classinfo_symbol(t_classinfo *x, t_symbol *s)
+void classinfo_methods(t_classinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    classinfo_get(x, s, 0);
-}
-
-void classinfo_bang(t_classinfo *x)
-{
-     
-}
-
-static void classinfo_anything(t_classinfo *x, t_symbol *s, int ac, t_atom *av)
-{
-    if(av->a_type == A_FLOAT)
+    t_class *c;
+    if(!(c = classtable_findbyname(x->x_name)))
     {
-        pd_error(x, "classinfo: no method for float");
+        outlet_bang(x->x_out2);
         return;
     }
-    else if(av->a_type == A_POINTER)
-    {
-        pd_error(x, "classinfo: no method for pointer");
-        return;
-    }
-    classinfo_get(x, s, 0);
+    t_atom at[1];
+    SETFLOAT(at, c->c_nmethod);
+    info_out((t_text *)x, s, 1, at);
 }
 
-void *classinfo_new(t_symbol *s, t_int argc, t_atom *argv)
+void classinfo_size(t_classinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_class *c;
+    if(!(c = classtable_findbyname(x->x_name)))
+    {
+        outlet_bang(x->x_out2);
+        return;
+    }
+    t_atom at[1];
+    SETFLOAT(at, (t_float)c->c_size);
+    info_out((t_text *)x, s, 1, at);
+} 
+ 
+void classinfo_float(t_classinfo *x, t_float f)
+{
+    t_class *c;
+    if(c = classtable_findbyname(x->x_name))
+    {
+        if(f >= 0 && (t_int)f < c->c_nmethod)
+        {
+            t_atom ap[MAXPDARG+1];
+            if(c->c_nmethod)
+            {
+                t_methodentry *me = c->c_methods;
+                SETSYMBOL(ap, (me+(t_int)f)->me_name);
+                t_atomtype arg, *args = (me+(t_int)f)->me_arg;
+                t_int n;
+                for(n = 1; arg = *args; args++, n++)
+                {
+                    t_symbol *s = attosym(arg);
+                    SETSYMBOL(ap+n, s);
+                }
+                info_out((t_text *)x, &s_list, n, ap);
+            }
+        }
+        else
+            info_out((t_text *)x, &s_bang, 0, 0);
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+
+void classinfo_print(t_classinfo *x)
+{
+    info_print((t_text *)x);
+}
+
+void *classinfo_new(t_symbol *s)
 {
     t_classinfo *x = (t_classinfo *)pd_new(classinfo_class);
-
-    outlet_new(&x->x_obj, &s_anything);    
+    x->x_name = s;
+    symbolinlet_new(&x->x_obj, &x->x_name);
+    outlet_new(&x->x_obj, &s_anything);
+    x->x_out2 = outlet_new(&x->x_obj, &s_bang);
     return (void *)x;
 }
 
@@ -474,17 +936,30 @@ void classinfo_setup(void)
     classinfo_class = class_new(gensym("classinfo"),
         (t_newmethod)classinfo_new, 0,
         sizeof(t_classinfo),
-        CLASS_DEFAULT, 0);
+        CLASS_DEFAULT, A_DEFSYM, 0);
 
-    class_addbang(classinfo_class, classinfo_bang);
-    class_addanything(classinfo_class, classinfo_anything);
-    class_addsymbol(classinfo_class, classinfo_symbol);
+    class_addfloat(classinfo_class, classinfo_float);
+    class_addmethod(classinfo_class, (t_method)classinfo_args, gensym("args"),
+        A_GIMME, 0);
+    class_addmethod(classinfo_class, (t_method)classinfo_externdir,
+        gensym("externdir"), A_GIMME, 0);
+    class_addmethod(classinfo_class, (t_method)classinfo_methods,
+        gensym("methods"), A_GIMME, 0);
+    class_addmethod(classinfo_class, (t_method)classinfo_size, gensym("size"),
+        A_GIMME, 0);
+    class_addmethod(classinfo_class, (t_method)classinfo_print,
+        gensym("print"), 0);
+
+    post("classinfo: v.0.1");
+    post("stable classinfo methods: size");
+
+/* todo: add "instance" method to return instances of a class on a canvas */
 }
 
 void x_interface_setup(void)
 {
-    print_setup();
-    canvasinfo_setup();
-    pdinfo_setup();
-    classinfo_setup();
+	print_setup();
+	canvasinfo_setup();
+	pdinfo_setup();
+	classinfo_setup();
 }

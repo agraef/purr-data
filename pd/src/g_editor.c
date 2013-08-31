@@ -2057,7 +2057,7 @@ int canvas_hitbox(t_canvas *x, t_gobj *y, int xpos, int ypos,
 }
 
     /* find the last gobj, if any, containing the point. */
-static t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
+t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p)
 {
     t_gobj *y, *rval = 0;

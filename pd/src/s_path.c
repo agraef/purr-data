@@ -731,4 +731,44 @@ void glob_startup_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-
+t_symbol *pd_getdirname(void)
+{
+    char buf[MAXPDSTRING], buf2[MAXPDSTRING];
+    int len;
+#ifdef _WIN32
+    if ((len = GetModuleFileName(NULL, buf, sizeof(buf))) == 0)
+        strcpy(buf, ".");
+    else
+        buf[len] = '\0';
+    sys_unbashfilename(buf, buf);
+#elif defined(__APPLE__)
+    len = sizeof(buf);
+    _NSGetExecutablePath(buf, &len);
+    if (len != -1) buf[len] = '\0';
+#elif defined(__FreeBSD__)
+    len = (ssize_t)(readlink("/proc/curproc/file", buf, sizeof(buf)-1));
+    if (len != -1) buf[len] = '\0';
+#else
+    len = (ssize_t)(readlink("/proc/self/exe", buf, sizeof(buf)-1));
+    if (len != -1) buf[len] = '\0';
+#endif
+    if (len != -1)
+    {
+        char *lastslash;
+        lastslash = strrchr(buf, '/');
+        if (lastslash)
+        {
+            lastslash++;
+            *lastslash= '\0';
+            strncpy(buf2, buf, lastslash-buf);
+            buf2[lastslash-buf] = '\0';
+        }
+        else strcpy(buf2, ".");
+    }
+    else
+    {
+        return 0;
+    }
+    t_symbol *foo = gensym(buf2);
+   return foo;
+}

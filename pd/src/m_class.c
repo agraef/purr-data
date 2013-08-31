@@ -33,6 +33,14 @@ static void pd_defaultlist(t_pd *x, t_symbol *s, int argc, t_atom *argv);
 t_pd pd_objectmaker;    /* factory for creating "object" boxes */
 t_pd pd_canvasmaker;    /* factory for creating canvases */
 
+typedef struct _classtable
+{
+    t_class *ct_class;
+    struct _classtable *ct_next;
+} t_classtable;
+
+t_classtable *ct;
+
 static t_symbol *class_extern_dir = &s_;
 
 static void pd_defaultanything(t_pd *x, t_symbol *s, int argc, t_atom *argv)
@@ -165,6 +173,28 @@ static void pd_defaultlist(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 
 extern void text_save(t_gobj *z, t_binbuf *b);
 
+void classtable_register(t_class *c)
+{
+    t_classtable *t;
+    for(t = ct; t; t = t->ct_next)
+        if (t->ct_class == c) post("already registered %s", c->c_name->s_name);
+    t = (t_classtable *)t_getbytes(sizeof(*t));
+    t->ct_class = c;
+    t->ct_next = ct;
+    ct = t;
+}
+
+// todo-- make accessors so m_imp.h isn't needed by x_interface.c
+
+t_class *classtable_findbyname(t_symbol *s)
+{
+    t_classtable *t;
+    for (t = ct; t; t = t->ct_next)
+        if (t->ct_class->c_name == s)
+            return t->ct_class;
+    return NULL;
+}
+
 t_class *class_new(t_symbol *s, t_newmethod newmethod, t_method freemethod,
     size_t size, int flags, t_atomtype type1, ...)
 {
@@ -233,6 +263,8 @@ t_class *class_new(t_symbol *s, t_newmethod newmethod, t_method freemethod,
 #if 0 
     post("class: %s", c->c_name->s_name);
 #endif
+    classtable_register(c);
+//    post("class: %s", c->c_name->s_name);
     return (c);
 }
 

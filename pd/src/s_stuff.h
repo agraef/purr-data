@@ -94,9 +94,15 @@ void sys_getmeters(t_sample *inmax, t_sample *outmax);
 void sys_listdevs(void);
 void sys_setblocksize(int n);
 
+EXTERN void sys_get_audio_devs(char *indevlist, int *nindevs,
+                          char *outdevlist, int *noutdevs, int *canmulti, int *cancallback, 
+                          int maxndev, int devdescsize);
+EXTERN void sys_get_audio_apis(char *buf);
+
 /* s_midi.c */
 #define MAXMIDIINDEV 16         /* max. number of input ports */
 #define MAXMIDIOUTDEV 16        /* max. number of output ports */
+extern int sys_midiapi;
 extern int sys_nmidiin;
 extern int sys_nmidiout;
 extern int sys_midiindevlist[];
@@ -104,6 +110,11 @@ extern int sys_midioutdevlist[];
 
 void sys_open_midi(int nmidiin, int *midiinvec,
     int nmidiout, int *midioutvec, int enable);
+
+EXTERN void sys_get_midi_apis(char *buf);
+EXTERN void sys_get_midi_devs(char *indevlist, int *nindevs,
+    char *outdevlist, int *noutdevs, 
+   int maxndev, int devdescsize);
 void sys_get_midi_params(int *pnmidiindev, int *pmidiindev,
     int *pnmidioutdev, int *pmidioutdev);
 
