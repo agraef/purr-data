@@ -142,12 +142,14 @@ void gobj_getrect(t_gobj *x, t_glist *glist, int *x1, int *y1,
 
 void gobj_displace(t_gobj *x, t_glist *glist, int dx, int dy)
 {
+	fprintf(stderr,"gobj_displace\n");
     if (x->g_pd->c_wb && x->g_pd->c_wb->w_displacefn)
         (*x->g_pd->c_wb->w_displacefn)(x, glist, dx, dy);
 }
 
 void gobj_displace_withtag(t_gobj *x, t_glist *glist, int dx, int dy)
 {
+		fprintf(stderr,"gobj_displace_withtag\n");
     if (x->g_pd->c_wb && x->g_pd->c_wb->w_displacefnwtag)
         (*x->g_pd->c_wb->w_displacefnwtag)(x, glist, dx, dy);
 }
@@ -4281,7 +4283,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 		sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
 	    if (resortin) canvas_resortinlets(x);
 	    if (resortout) canvas_resortoutlets(x);
-	    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+	    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 	    if (x->gl_editor->e_selection)
 	        canvas_dirty(x, 1);
 	}
@@ -4615,6 +4617,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
 	}
     else {
 		//fprintf(stderr,"canvas_motion -> doclick %d\n", x->gl_editor->e_onmotion);
+		//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		canvas_doclick(x, xpos, ypos, 0, mod, 0);
 		//pd_vmess(&x->gl_pd, gensym("mouse"), "ffff", (double)xpos, (double)ypos, 0, (double)mod);
 	}
@@ -5316,8 +5319,8 @@ static void canvas_paste_xyoffset(t_canvas *x)
 	}
 	canvas_displaceselection(x, paste_xyoffset*10, paste_xyoffset*10);
 
-    if (resortin) canvas_resortinlets(x);
-    if (resortout) canvas_resortoutlets(x);
+    //if (resortin) canvas_resortinlets(x);
+    //if (resortout) canvas_resortoutlets(x);
 
 	// alternative one-line implementation that
 	// replaces the entire function
