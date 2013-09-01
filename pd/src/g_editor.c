@@ -4510,7 +4510,7 @@ extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 { 
-    //fprintf(stderr,"motion %d %d\n", (int)xpos, (int)ypos);
+    //fprintf(stderr,"motion %d %d %d\n", (int)xpos, (int)ypos, (int)fmod);
     int mod = fmod;
     if (!x->gl_editor)
     {
@@ -4609,10 +4609,11 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
             else post("not resizable");
         }
     }
-	else if (x->gl_editor->e_onmotion == MA_SCROLL) {
+	else if (x->gl_editor->e_onmotion == MA_SCROLL || mod == -1) {
+		// we use bogus mod from tcl to let editor know we are scrolling
 		//fprintf(stderr,"canvas_motion MA_SCROLL\n");
 	}
-    else  {
+    else {
 		//fprintf(stderr,"canvas_motion -> doclick %d\n", x->gl_editor->e_onmotion);
 		canvas_doclick(x, xpos, ypos, 0, mod, 0);
 		//pd_vmess(&x->gl_pd, gensym("mouse"), "ffff", (double)xpos, (double)ypos, 0, (double)mod);
