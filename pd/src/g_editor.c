@@ -142,14 +142,12 @@ void gobj_getrect(t_gobj *x, t_glist *glist, int *x1, int *y1,
 
 void gobj_displace(t_gobj *x, t_glist *glist, int dx, int dy)
 {
-	fprintf(stderr,"gobj_displace\n");
     if (x->g_pd->c_wb && x->g_pd->c_wb->w_displacefn)
         (*x->g_pd->c_wb->w_displacefn)(x, glist, dx, dy);
 }
 
 void gobj_displace_withtag(t_gobj *x, t_glist *glist, int dx, int dy)
 {
-		fprintf(stderr,"gobj_displace_withtag\n");
     if (x->g_pd->c_wb && x->g_pd->c_wb->w_displacefnwtag)
         (*x->g_pd->c_wb->w_displacefnwtag)(x, glist, dx, dy);
 }
@@ -4207,7 +4205,8 @@ void canvas_mouseup(t_canvas *x,
 	    x->gl_editor->e_onmotion = MA_NONE;
 	}
 	//fprintf(stderr,"canvas_mouseup -> canvas_doclick %d\n", which);
-	canvas_doclick(x, xpos, ypos, 0, (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
+	if (canvas_last_glist_mod == -1) //this is to ignore scrollbar clicks from within tcl
+		canvas_doclick(x, xpos, ypos, 0, (glob_shift + glob_ctrl*2 + glob_alt*4), 0);
 }
 
 void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
@@ -4283,7 +4282,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 		sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
 	    if (resortin) canvas_resortinlets(x);
 	    if (resortout) canvas_resortoutlets(x);
-	    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+	    //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 	    if (x->gl_editor->e_selection)
 	        canvas_dirty(x, 1);
 	}
@@ -4512,12 +4511,19 @@ extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 { 
-    //fprintf(stderr,"motion %d %d %d\n", (int)xpos, (int)ypos, (int)fmod);
+    //fprintf(stderr,"motion %d %d %d %d\n", (int)xpos, (int)ypos, (int)fmod, canvas_last_glist_mod);
     int mod = fmod;
     if (!x->gl_editor)
     {
         bug("editor");
         return;
+    }
+    if (canvas_last_glist_mod == -1 && mod != -1) {
+    	//fprintf(stderr,"revert the cursor %d\n", x->gl_edit);
+    	if (x->gl_edit)
+	    	canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+	    else
+	    	canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
     }
     glist_setlastxymod(x, xpos, ypos, mod);
     if (x->gl_editor->e_onmotion == MA_MOVE)
@@ -4613,10 +4619,12 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     }
 	else if (x->gl_editor->e_onmotion == MA_SCROLL || mod == -1) {
 		// we use bogus mod from tcl to let editor know we are scrolling
+		if (mod == -1)
+			canvas_setcursor(x, CURSOR_RUNMODE_CLICKME);
 		//fprintf(stderr,"canvas_motion MA_SCROLL\n");
 	}
     else {
-		//fprintf(stderr,"canvas_motion -> doclick %d\n", x->gl_editor->e_onmotion);
+		//fprintf(stderr,"canvas_motion -> doclick %d %d\n", x->gl_editor->e_onmotion, mod);
 		//sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		canvas_doclick(x, xpos, ypos, 0, mod, 0);
 		//pd_vmess(&x->gl_pd, gensym("mouse"), "ffff", (double)xpos, (double)ypos, 0, (double)mod);

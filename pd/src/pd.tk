@@ -3269,9 +3269,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	set ::scroll_on($name) 0
 	set ::hit_scrollbar($name) 0
-	set ::scroll_was_cursor($name) 0
+	#set ::scroll_was_cursor($name) 0
 	set ::last_scroll_x($name) 0
 	set ::last_scroll_y($name) 0
+	set ::canvaswidth($name) 0
+	set ::canvasheight($name) 0
 }
 
 set HSCROLL_PAD_L 6
@@ -3307,13 +3309,14 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			set scrolly1 [expr [$name.c canvasy 0] + [winfo height $name] - $SCROLL_PAD_EDGE]
 			set scrollx2 [expr $scrollx1 + $width]
 			#puts stderr "$vx1 $vx2 $npix $width $loffset $scrollx1 $scrollx2"
-			set hscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx2 $scrolly1 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags noscroll -strokelinecap round]
-			$name.c bind $hscroll <Button-1> {pdtk_canvas_scroll_horizontal_click %W %x %y %b 0}
-			$name.c bind $hscroll <Enter> {pdtk_canvas_enter_scrollbar %W}
-			$name.c bind $hscroll <Leave> {pdtk_canvas_leave_scrollbar %W}
+			set hscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx2 $scrolly1 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags xscroll -strokelinecap round]
+			$name.c addtag noscroll withtag xscroll
+			#$name.c bind $hscroll <Button-1> {pdtk_canvas_scroll_horizontal_click %W %x %y %b 0}
+			$name.c bind $hscroll <Enter> {pdtk_canvas_enter_scrollbar %W %x %y}
+			#$name.c bind $hscroll <Motion> {pdtk_canvas_enter_scrollbar %W}
+			$name.c bind $hscroll <Leave> {pdtk_canvas_leave_scrollbar %W %x %y}
 		}
 	}
-
 	if {$::yscrollable($name)} {
 		set visible [$name.c yview]
 		set vy1 [lindex $visible 0]
@@ -3326,31 +3329,80 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			set scrolly1 [expr [$name.c canvasy 0] + $VSCROLL_PAD_U +$toffset]
 			set scrolly2 [expr $scrolly1 + $height]
 			#puts stderr "$vy1 $vy2 $npix $height $toffset $scrolly1 $scrolly2"
-			set vscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx1 $scrolly2 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags noscroll -strokelinecap round]
-			$name.c bind $vscroll <Button-1> {pdtk_canvas_scroll_vertical_click %W %x %y %b 0}
-			$name.c bind $vscroll <Enter> {pdtk_canvas_enter_scrollbar %W}
-			$name.c bind $vscroll <Leave> {pdtk_canvas_leave_scrollbar %W}
+			set vscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx1 $scrolly2 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags yscroll -strokelinecap round]
+			$name.c addtag noscroll withtag yscroll
+			#$name.c bind $vscroll <Button-1> {pdtk_canvas_scroll_vertical_click %W %x %y %b 0}
+			$name.c bind $vscroll <Enter> {pdtk_canvas_enter_scrollbar %W %x %y}
+			#$name.c bind $vscroll <Motion> {pdtk_canvas_enter_scrollbar %W}
+			$name.c bind $vscroll <Leave> {pdtk_canvas_leave_scrollbar %W %x %y}
 		}
 	}
 	pdtk_canvas_update_sticky_tip $name.c
 }
 
-proc pdtk_canvas_enter_scrollbar {name} {
+proc pdtk_canvas_enter_scrollbar {name x y} {
 	set name [string trimright $name .c]
-	global cursor_runmode_clickme
 	if { $::hit_scrollbar($name) == 0 } {
-		set ::scroll_was_cursor($name) [$name cget -cursor]
-		$name configure -cursor $cursor_runmode_clickme
-		set ::hit_scrollbar($name) 1
+		set x [$name.c canvasx $x]
+		set y [$name.c canvasy $y]
+		set inside 0
+		if { $::yscrollable($name) } {
+			set coords [$name.c bbox yscroll]
+			foreach {xa ya xb yb} $coords {
+				#puts stderr "Y | $x $y | $xa $xb $ya $yb"
+				if { [expr $xa + 3] < $x && [expr $xb - 3] > $x && [expr $ya + 5] < $y && [expr $yb - 5] > $y } {
+					 #puts stderr "inside Y"
+					 set inside 1
+				}
+			}
+		}
+		if { $::xscrollable($name) } {
+			set coords [$name.c bbox xscroll]
+			foreach {xa ya xb yb} $coords {
+				#puts stderr "Y | $x $y | $xa $xb $ya $yb"
+				if { [expr $xa + 5] < $x && [expr $xb - 5] > $x && [expr $ya + 3] < $y && [expr $yb - 3] > $y } {
+					 #puts stderr "inside X"
+					 set inside 1
+				}
+			}
+		}
+		#set ::scroll_was_cursor($name) [$name cget -cursor]
+		#$name configure -cursor $cursor_runmode_clickme
+		if { $inside == 1 } {
+			set ::hit_scrollbar($name) 1
+		}
 		#puts stderr scrollbar_enter
 	}
 }
 
-proc pdtk_canvas_leave_scrollbar {name} {
+proc pdtk_canvas_leave_scrollbar {name x y} {
+	#puts stderr pre_scrollbar_leave
 	set name [string trimright $name .c]
 	if { $::hit_scrollbar($name) != 0 } {
+		set x [$name.c canvasx $x]
+		set y [$name.c canvasy $y]
+		if { $::yscrollable($name) } {
+			set coords [$name.c bbox yscroll]
+			foreach {xa ya xb yb} $coords {
+				#puts stderr "Y | $x $y | $xa $xb $ya $yb"
+				if { [expr $xa + 3] < $x && [expr $xb - 3] > $x && [expr $ya + 5] < $y && [expr $yb - 5] > $y } {
+					 #puts stderr "Y still inside"
+					 return
+				}
+			}
+		}
+		if { $::xscrollable($name) } {
+			set coords [$name.c bbox xscroll]
+			foreach {xa ya xb yb} $coords {
+				#puts stderr "Y | $x $y | $xa $xb $ya $yb"
+				if { [expr $xa + 5] < $x && [expr $xb - 5] > $x && [expr $ya + 3] < $y && [expr $yb - 3] > $y } {
+					 #puts stderr "X still inside"
+					 return
+				}
+			}
+		}
 		set ::hit_scrollbar($name) 0
-		$name configure -cursor $::scroll_was_cursor($name)
+		#$name configure -cursor $::scroll_was_cursor($name)
 		#puts stderr scrollbar_leave
 	}
 }
@@ -3364,6 +3416,30 @@ proc pdtk_canvas_scroll_xy_click {name x y b} {
 	#puts stderr "XY CLICK $name $x $y"
 }
 
+proc pdtk_canvas_detect_scroll_click {name x y b mod} {
+	set xc [$name.c canvasx $x]
+	set yc [$name.c canvasy $y]
+	if { $::yscrollable($name) } {
+		set coords [$name.c bbox yscroll]
+		foreach {xa ya xb yb} $coords {
+			#puts stderr "Y | $x $y | $xa $xb $ya $yb"
+			if { [expr $xa + 3] < $xc && [expr $xb - 3] > $xc && [expr $ya + 5] < $yc && [expr $yb - 5] > $yc } {
+				 pdtk_canvas_scroll_vertical_click $name.c $x $y $b $mod
+				 return
+			}
+		}
+	}
+	if { $::xscrollable($name) } {
+		set coords [$name.c bbox xscroll]
+		foreach {xa ya xb yb} $coords {
+			#puts stderr "Y | $x $y | $xa $xb $ya $yb"
+			if { [expr $xa + 5] < $xc && [expr $xb - 5] > $xc && [expr $ya + 3] < $yc && [expr $yb - 3] > $yc } {
+				 pdtk_canvas_scroll_horizontal_click $name.c $x $y $b $mod
+			}
+		}
+	}
+}
+
 proc pdtk_canvas_scroll_horizontal_click {name x y b mod} {
 	#puts stderr "HORIZONTAL CLICK $name $x $y $b $mod"
 	set name [string trimright $name .c]
@@ -3372,7 +3448,7 @@ proc pdtk_canvas_scroll_horizontal_click {name x y b mod} {
 		#set ::hit_scrollbar($name) 1
 	} else {
 		set ::scroll_on($name) 0
-		pdtk_canvas_leave_scrollbar $name
+		pdtk_canvas_leave_scrollbar $name $x $y
 	}
 	#puts stderr $::scroll_on($name)
 	set ::last_scroll_x($name) $x
@@ -3387,8 +3463,8 @@ proc pdtk_canvas_scroll_horizontal_click {name x y b mod} {
 proc pdtk_canvas_scroll_horizontal_motion {name x y mod} {
 	global HSCROLL_PAD_L
 	global HSCROLL_PAD_R
-	#puts stderr "HORIZONTAL MOTION $name $x $y $mod"
 	set name [string trimright $name .c]
+	#puts stderr "HORIZONTAL MOTION $name $x $y $mod $::last_scroll_x($name)"
 	if {$::xscrollable($name) && ($::scroll_on($name) == 1 || $::scroll_on($name) == 3)} {
 		set deltax [expr $::last_scroll_x($name) - $x]
 		#puts stderr "deltax=$deltax"
@@ -3396,7 +3472,11 @@ proc pdtk_canvas_scroll_horizontal_motion {name x y mod} {
 			set visible [$name.c xview]
 			set vx1 [lindex $visible 0]
 			set vx2 [lindex $visible 1]
-			set perpixdelta [expr (1.0)/([winfo width $name]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
+			if {$::scroll_on($name) == 1} {
+				set perpixdelta [expr (1.0)/([winfo width $name]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
+			} else {
+				set perpixdelta [expr 1.0/$::canvasheight($name)]
+			}
 			#puts stderr "scrolling... $vx1 $vx2 $perpixdelta"
 			#$name xview scroll [expr -$deltax] units
 			set displace [expr $perpixdelta * $deltax]
@@ -3418,7 +3498,7 @@ proc pdtk_canvas_scroll_vertical_click {name x y b mod} {
 		#set ::hit_scrollbar($name) 1
 	} else {
 		set ::scroll_on($name) 0
-		pdtk_canvas_leave_scrollbar $name
+		pdtk_canvas_leave_scrollbar $name $x $y
 	}
 	#puts stderr $::scroll_on($name)
 	set ::last_scroll_y($name) $y
@@ -3427,8 +3507,8 @@ proc pdtk_canvas_scroll_vertical_click {name x y b mod} {
 proc pdtk_canvas_scroll_vertical_motion {name x y mod} {
 	global VSCROLL_PAD_U
 	global VSCROLL_PAD_D
-	#puts stderr "VERTICAL MOTION $name $x $y $mod"
 	set name [string trimright $name .c]
+	#puts stderr "VERTICAL MOTION $name $x $y $mod $::last_scroll_y($name)"
 	if {$::yscrollable($name) && $::scroll_on($name) >= 2} {
 		set deltay [expr $::last_scroll_y($name) - $y]
 		#puts stderr "deltay=$deltay"
@@ -3436,7 +3516,11 @@ proc pdtk_canvas_scroll_vertical_motion {name x y mod} {
 			set visible [$name.c yview]
 			set vy1 [lindex $visible 0]
 			set vy2 [lindex $visible 1]
-			set perpixdelta [expr (1.0)/([winfo height $name.c]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
+			if {$::scroll_on($name) == 2} {
+				set perpixdelta [expr (1.0)/([winfo height $name.c]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
+			} else {
+				set perpixdelta [expr 1.0/$::canvasheight($name)]
+			}
 			#puts stderr "scrolling... $vy1 $vy2 $perpixdelta $deltay"
 			#$name xview scroll [expr -$deltax] units
 			set displace [expr $perpixdelta * $deltay]
@@ -3809,6 +3893,7 @@ proc pdtk_canvas_sendmiddleclick {name x y b f} {
 proc pdtk_canvas_click {name x y b f} {
     focus $name
     set scroll_name [string trimright $name .c]
+    pdtk_canvas_detect_scroll_click $scroll_name $x $y $b $f
 	if { $::hit_scrollbar($scroll_name) == 0 } {
     	pdtk_canvas_sendclick $name $x $y $b $f
 	}
@@ -3846,10 +3931,13 @@ set pdtk_canvas_mouseup_yminval 0
 set pdtk_canvas_mouseup_ymaxval 0
 
 proc pdtk_canvas_mouseup {name x y b} {
-    pd [concat [canvastosym $name] mouseup [$name canvasx $x] \
-            [$name canvasy $y] $b \;]
 	pdtk_canvas_scroll_horizontal_click $name $x $y 0 0
 	pdtk_canvas_scroll_vertical_click $name $x $y 0 0
+	set scroll_name [string trimright $name .c]
+	if { $::hit_scrollbar($scroll_name) == 0 } {
+    	pd [concat [canvastosym $name] mouseup [$name canvasx $x] \
+            [$name canvasy $y] $b \;]
+    }
 }
 
 #proc pdtk_canvas_getscroll_ping {name} {
@@ -4124,6 +4212,9 @@ proc pdtk_canvas_getscroll {name} {
 
 		set canvaswidth [ expr {abs($xmaxval-$xminval)} ]
 		set canvasheight [ expr {abs($ymaxval-$yminval)} ]
+
+		set ::canvaswidth($parentname) $canvaswidth
+		set ::canvasheight($parentname) $canvasheight
 
 		#puts stderr "BEFORE W: $winwidth ? $canvaswidth -- H: $winheight ? $canvasheight -- SC: $::xscrollable($parentname) $::yscrollable($parentname)"
 
@@ -4519,6 +4610,7 @@ proc pdtk_check_scroll_on_motion {w threshold} {
 }
 
 proc pdtk_canvas_motion {name x y mods} {
+	#puts stderr "motion [$name canvasx $x] [$name canvasy $y]"
 	global pointer_x_local pointer_y_local pointer_x_global pointer_y_global tooltip_visible
 	set pointer_x_local $x
 	set pointer_y_local $y
@@ -4529,9 +4621,9 @@ proc pdtk_canvas_motion {name x y mods} {
 	if { $::hit_scrollbar($scroll_name) != 0 } { set mods -1 }
  	#puts stderr [concat $pointer_x_local $pointer_y_local $pointer_x_global $pointer_y_global]
     #puts stderr [concat [canvastosym $name] $name $x $y]
-    pd [canvastosym $name] motion [$name canvasx $x] [$name canvasy $y] $mods \;
-	pdtk_canvas_scroll_horizontal_motion $name $x $y 0
+    pdtk_canvas_scroll_horizontal_motion $name $x $y 0
 	pdtk_canvas_scroll_vertical_motion $name $x $y 0
+    pd [canvastosym $name] motion [$name canvasx $x] [$name canvasy $y] $mods \;
 }
 
 # "map" event tells us when the canvas becomes visible (arg is "0") or
