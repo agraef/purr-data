@@ -3295,7 +3295,8 @@ proc pdtk_canvas_draw_scrollbars {name} {
 	global SCROLL_THICKNESS
 	set name [string trimright $name .c]
 	catch {
-		$name.c delete noscroll
+		$name.c delete xscroll
+		$name.c delete yscroll
 	}
 	if {$::xscrollable($name)} {
 		set visible [$name.c xview]
