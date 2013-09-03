@@ -189,7 +189,7 @@ VERSION_DATE := $(shell date +%Y%m%d)
 #PD-EXTENDED_VERSION = $(PD-EXTENDED_VERSION_PREFIX)-$(VERSION_DATE)
 PD-EXTENDED_VERSION = $(VERSION_DATE)
 
-PACKAGE_NAME = Pd-l2ork-full-`arch`-$(PD_VERSION)
+PACKAGE_NAME = Pd-l2ork-full-`uname -m`-$(PD_VERSION)
 
 
 #==============================================================================#

@@ -171,7 +171,7 @@ then
 			# install cwiid
 			aclocal
 			autoconf
-			./configure
+			./configure --with-python=python2
 			make
 			# we have disabled system-wide install because as of 23-03-2013
 			# we now statically link disis_wiimote against custom L2Ork version
@@ -296,8 +296,8 @@ then
 	then
 		mv *.deb ../../../
 	else
-		#rm -f ../../../Pd-l2ork-full-`arch`-`date +%Y%m%d`.tar.bz2 2> /dev/null
-		#mv build/Pd*bz2 ../../../Pd-l2ork-full-`arch`-`date +%Y%m%d`.tar.bz2
+		#rm -f ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
+		#mv build/Pd*bz2 ../../../Pd-l2ork-full-`uname -m`-`date +%Y%m%d`.tar.bz2
 		mv -f build/pd*bz2 ../../..
 	fi
 	cd ../../
@@ -306,9 +306,9 @@ fi
 if [ $addon -eq 1 ]
 then
 	echo "l2ork addons..."
-	rm -f ../l2ork_addons-`arch`-`date +%Y%m%d`.tar.bz2 2> /dev/null
+	rm -f ../l2ork_addons-`uname -m`-`date +%Y%m%d`.tar.bz2 2> /dev/null
 	#cp -rf /usr/local/lib/pd/* l2ork_addons/externals/
-	tar -jcf ../l2ork_addons-`arch`-`date +%Y%m%d`.tar.bz2 l2ork_addons
+	tar -jcf ../l2ork_addons-`uname -m`-`date +%Y%m%d`.tar.bz2 l2ork_addons
 fi
 
 cd l2ork_addons/

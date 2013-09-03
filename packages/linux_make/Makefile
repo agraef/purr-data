@@ -72,7 +72,7 @@ install:
 #
 #==============================================================================#
 
-PACKAGE_NAME = pd-l2ork-`arch`-$(PD_VERSION)
+PACKAGE_NAME = pd-l2ork-`uname -m`-$(PD_VERSION)
 
 package: $(PACKAGE_TYPE)
 

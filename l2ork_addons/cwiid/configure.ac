@@ -67,7 +67,7 @@ if test $REQUIRE_PYTHON; then
 fi
 AC_SUBST(PYTHON)
 if test $PYTHON; then
-	PYTHON_VERSION=[`$PYTHON -c 'import sys; print sys.version[:3]'`]
+	PYTHON_VERSION=[`$PYTHON -c 'import sys; print(sys.version[:3])'`]
 	AC_SUBST(PYTHON_VERSION)
 	AC_DEFINE([HAVE_PYTHON],1,[Define to 1 if python support is enabled])
 fi

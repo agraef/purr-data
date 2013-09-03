@@ -65,7 +65,7 @@ fi
 
 ##-- check libs: libflite.a
 LDFLAGS_SAVE="$LDFLAGS"
-AC_CHECK_LIB(flite,[flite_init],[pdflite_have_lib=yes],[pdflite_have_lib=no],[-lm])
+AC_CHECK_LIB(flite,[flite_init],[pdflite_have_lib=yes],[pdflite_have_lib=no],[-lasound -lm])
 if test "$pdflite_have_lib" != "yes"; then
   for d in \
     /usr/lib /usr/local/lib /sw/lib \
@@ -74,7 +74,7 @@ if test "$pdflite_have_lib" != "yes"; then
     /usr/lib/flite/lib /usr/local/lib/flite/lib /sw/lib/flite/lib
   do
     LDFLAGS="$LDFLAGS_SAVE -L$d"
-    AC_CHECK_LIB(flite,[flite_init],[pdflite_have_lib=yes],[pdflite_have_lib=no],[-lm])
+    AC_CHECK_LIB(flite,[flite_init],[pdflite_have_lib=yes],[pdflite_have_lib=no],[-lasound -lm])
     if test "$pdflite_have_lib" = "yes"; then
       break
     fi
@@ -89,32 +89,32 @@ if test "$pdflite_have_lib" != "yes"; then
 fi
 
 ##-- flite: libs: base
-FLITE_LIBS="-lflite -lm"
+FLITE_LIBS="-lflite -lasound -lm"
 AC_SUBST(FLITE_LIBS)
 
 ##-- Check for flite : libs : flite_cmulex
 AC_CHECK_LIB(flite_cmulex,[cmu_lex_init],[],
 	[AC_MSG_ERROR([required library 'flite_cmulex' not found -- quitting],1)],
-	[-lflite -lm])
+	[-lflite -lasound -lm])
 FLITE_LEXLIBS="-lflite_cmulex"
 AC_SUBST(FLITE_LEXLIBS)
 
 ##-- Check for flite : libs : flite_usenglish
 AC_CHECK_LIB(flite_usenglish,[usenglish_init],[],
 	[AC_MSG_ERROR([required library 'flite_usenglish' not found -- quitting],1)],
-	[-lflite_cmulex -lflite -lm])
+	[-lflite_cmulex -lflite -lasound -lm])
 FLITE_LANGLIBS="-lflite_usenglish"
 AC_SUBST(FLITE_LANGLIBS)
 
 ##-- Check for flite : libs : flite_cmu_us_kal16
-AC_CHECK_LIB(flite_cmu_us_kal16,[register_cmu_us_kal],[],
+AC_CHECK_LIB(flite_cmu_us_kal16,[register_cmu_us_kal16],[],
 	[AC_MSG_ERROR([required library 'flite_cmu_us_kal16' not found -- quitting],1)],
-	[-lflite_usenglish -lflite_cmulex -lflite -lm])
+	[-lflite_usenglish -lflite_cmulex -lflite -lasound -lm])
 FLITE_VOICELIBS="-lflite_cmu_us_kal16"
 AC_SUBST(FLITE_VOICELIBS)
 
 ##-- register voice function
-AC_DEFINE([PDFLITE_REGISTER_VOICE],[register_cmu_us_kal],
+AC_DEFINE([PDFLITE_REGISTER_VOICE],[register_cmu_us_kal16],
 	[This is the function we will call to register the synth voice])
 
 ## /local: flite
