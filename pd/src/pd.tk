@@ -3303,11 +3303,11 @@ proc pdtk_canvas_draw_scrollbars {name} {
 		set vx1 [lindex $visible 0]
 		set vx2 [lindex $visible 1]
 		if {$vx2 - $vx1 < 0.99} {
-			set npix [expr int([winfo width $name]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
+			set npix [expr int([winfo width $name.c]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
 			set width [expr int($npix * ($vx2 -$vx1))]
 			set loffset [expr int($vx1 * $npix)] 
 			set scrollx1 [expr [$name.c canvasx 0] + $HSCROLL_PAD_L + $loffset]
-			set scrolly1 [expr [$name.c canvasy 0] + [winfo height $name] - $SCROLL_PAD_EDGE]
+			set scrolly1 [expr [$name.c canvasy 0] + [winfo height $name.c] - $SCROLL_PAD_EDGE]
 			set scrollx2 [expr $scrollx1 + $width]
 			#puts stderr "$vx1 $vx2 $npix $width $loffset $scrollx1 $scrollx2"
 			set hscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx2 $scrolly1 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags xscroll -strokelinecap round]
@@ -3323,10 +3323,10 @@ proc pdtk_canvas_draw_scrollbars {name} {
 		set vy1 [lindex $visible 0]
 		set vy2 [lindex $visible 1]
 		if {$vy2 - $vy1 < 0.99} {
-			set npix [expr int([winfo height $name]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
+			set npix [expr int([winfo height $name.c]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
 			set height [expr int($npix * ($vy2 -$vy1))]
 			set toffset [expr int($vy1 * $npix)] 
-			set scrollx1 [expr [$name.c canvasx 0] + [winfo width $name] - $SCROLL_PAD_EDGE]
+			set scrollx1 [expr [$name.c canvasx 0] + [winfo width $name.c] - $SCROLL_PAD_EDGE]
 			set scrolly1 [expr [$name.c canvasy 0] + $VSCROLL_PAD_U +$toffset]
 			set scrolly2 [expr $scrolly1 + $height]
 			#puts stderr "$vy1 $vy2 $npix $height $toffset $scrolly1 $scrolly2"
@@ -3474,7 +3474,7 @@ proc pdtk_canvas_scroll_horizontal_motion {name x y mod} {
 			set vx1 [lindex $visible 0]
 			set vx2 [lindex $visible 1]
 			if {$::scroll_on($name) == 1} {
-				set perpixdelta [expr (1.0)/([winfo width $name]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
+				set perpixdelta [expr (1.0)/([winfo width $name.c]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
 			} else {
 				set perpixdelta [expr 1.0/$::canvasheight($name)]
 			}
