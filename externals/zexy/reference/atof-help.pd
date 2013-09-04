@@ -1,0 +1,31 @@
+#N canvas 533 119 615 317 10;
+#X floatatom 42 231 4 0 0 0 - - -;
+#X symbolatom 42 155 10 0 0 0 - - -;
+#X text 509 17 part of zexy;
+#N canvas 515 193 494 344 META 0;
+#X text 12 125 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2;
+#X text 12 5 KEYWORDS control conversion;
+#X text 12 45 DESCRIPTION convert ascii to integer;
+#X text 12 105 AUTHOR IOhannes m zmoelnig;
+#X text 12 65 INLET_0 symbol;
+#X text 12 85 OUTLET_0 float;
+#X restore 565 297 pd META;
+#X obj 42 102 makefilename %g;
+#X obj 42 178 atof;
+#X symbolatom 79 201 10 0 0 1 reject - -;
+#X text 146 19 convert ascii to floats;
+#X obj 94 21 atof;
+#X text 328 286 updated for zexy-2.2.7;
+#X obj 45 64 hsl 128 15 0 2 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 8900 1;
+#X floatatom 42 84 5 0 0 0 - - -;
+#X msg 76 129 symbol foo;
+#X connect 1 0 5 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X connect 5 1 6 0;
+#X connect 10 0 11 0;
+#X connect 11 0 4 0;
+#X connect 12 0 1 0;
