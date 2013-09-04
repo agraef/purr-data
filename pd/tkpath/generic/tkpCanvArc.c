@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tkpCanvArc.c,v 1.5 2008/07/22 09:41:35 matben Exp $
+ * RCS: @(#) $Id$
  */
 
 #include <stdio.h>

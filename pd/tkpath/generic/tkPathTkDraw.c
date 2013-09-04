@@ -11,7 +11,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkPathTkDraw.c,v 1.25 2008/05/22 06:18:21 matben Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"

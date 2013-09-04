@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkWinGDIPlusPath.cpp,v 1.58 2012/07/04 18:49:06 petasis Exp $
+ * $Id$
  */
 
 /* This should go into configure.in but don't know how. */

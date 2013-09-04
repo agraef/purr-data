@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id: tkPathSurface.c,v 1.28 2012/07/04 19:43:18 petasis Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"

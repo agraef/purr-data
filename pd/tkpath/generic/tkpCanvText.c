@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tkpCanvText.c,v 1.8 2008/07/16 13:17:33 matben Exp $
+ * RCS: @(#) $Id$
  */
 
 #include <stdio.h>

@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkPath.h,v 1.32 2008/06/14 14:23:25 matben Exp $
+ * $Id$
  */
 
 #ifndef INCLUDED_TKPATH_H

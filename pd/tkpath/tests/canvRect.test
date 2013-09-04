@@ -6,7 +6,7 @@
 # Copyright (c) 1998-1999 by Scriptics Corporation.
 # All rights reserved.
 #
-# RCS: @(#) $Id: canvRect.test,v 1.1 2008/05/21 13:56:02 matben Exp $
+# RCS: @(#) $Id$
 
 package require tcltest 2.1
 eval tcltest::configure $argv

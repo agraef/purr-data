@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkUnixCairoPath.c,v 1.53 2010/04/30 10:16:00 ebrunel Exp $
+ * $Id$
  */
  
 /* This should go into configure.in but don't know how. */

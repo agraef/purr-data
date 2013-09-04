@@ -5586,7 +5586,6 @@ done
 	#TEA_BUGGY_STRTOD
     fi
 
-
 #--------------------------------------------------------------------
 # The code makes use of PTR2INT, ensure the correct definition is
 # picked from Tcl/Tk internal headers...
@@ -5700,6 +5699,7 @@ _ACEOF
     fi
 
 fi
+
 
 
 #-----------------------------------------------------------------------

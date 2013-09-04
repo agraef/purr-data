@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id: tkCanvPrect.c,v 1.28 2010/04/30 10:16:00 ebrunel Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"

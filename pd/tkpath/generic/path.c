@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: path.c,v 1.39 2012/07/05 06:41:15 petasis Exp $
+ * $Id$
  */
 
 #include "tkp.h"

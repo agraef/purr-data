@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tkpCanvUtil.c,v 1.13 2010/03/10 22:47:37 petasis Exp $
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

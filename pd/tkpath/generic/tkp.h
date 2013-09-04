@@ -4,7 +4,7 @@
  *		This file includes stuff from tk.h which we need
  *		in a modified form and to make the tkp::canvas self contained.
  *
- * $Id: tkp.h,v 1.6 2008/07/16 13:17:33 matben Exp $
+ * $Id$
  */
 
 #ifndef INCLUDED_TKP_H

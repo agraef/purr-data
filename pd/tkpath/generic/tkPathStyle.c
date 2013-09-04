@@ -14,7 +14,7 @@
  *       items are not notified. They will only notice any change when
  *       they need to redisplay.
  *
- * $Id: tkPathStyle.c,v 1.32 2012/07/04 19:43:18 petasis Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"

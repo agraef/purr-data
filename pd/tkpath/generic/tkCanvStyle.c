@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2008  Mats Bengtsson
  *
- * $Id: tkCanvStyle.c,v 1.2 2008/06/05 12:51:58 matben Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"

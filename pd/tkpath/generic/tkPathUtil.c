@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkPathUtil.c,v 1.30 2012/07/04 19:43:18 petasis Exp $
+ * $Id$
  */
 
 #include <float.h>

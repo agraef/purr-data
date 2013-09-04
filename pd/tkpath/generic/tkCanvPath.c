@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkCanvPath.c,v 1.55 2012/07/04 19:43:18 petasis Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"

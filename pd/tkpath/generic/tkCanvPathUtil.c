@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2008  Mats Bengtsson
  *
- * $Id: tkCanvPathUtil.c,v 1.34 2008/08/10 08:02:17 matben Exp $
+ * $Id$
  */
 
 #include "tkPathStyle.h"

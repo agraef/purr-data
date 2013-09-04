@@ -10,7 +10,7 @@
 #       
 #  Copyright (c) 2005-2008  Mats Bengtsson
 #  
-# $Id: tkpath.tcl,v 1.15 2008/06/04 14:08:21 matben Exp $
+# $Id$
 
 namespace eval ::tkp {}
 

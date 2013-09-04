@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkMacOSXPath.c,v 1.62 2010/04/30 10:16:00 ebrunel Exp $
+ * $Id$
  *
  */
 

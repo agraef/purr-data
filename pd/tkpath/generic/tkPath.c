@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id: tkPath.c,v 1.18 2012/07/04 19:43:18 petasis Exp $
+ * $Id$
  */
 
 #include "tkIntPath.h"
