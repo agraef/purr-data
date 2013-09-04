@@ -32,6 +32,7 @@ For latest changes please see changelog
 #include <math.h>
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 //Unnecessary to include these two header file for this version
 //#include <stdlib.h>
