@@ -3165,7 +3165,7 @@ done
 fi
 
 if test $PYTHON; then
-	PYTHON_VERSION=`$PYTHON -c 'import sys; print sys.version[:3]'`
+	PYTHON_VERSION=`$PYTHON -c 'import sys; print(sys.version[:3])'`
 
 
 $as_echo "#define HAVE_PYTHON 1" >>confdefs.h

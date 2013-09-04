@@ -5586,6 +5586,7 @@ done
 	#TEA_BUGGY_STRTOD
     fi
 
+
 #--------------------------------------------------------------------
 # The code makes use of PTR2INT, ensure the correct definition is
 # picked from Tcl/Tk internal headers...
@@ -5699,7 +5700,6 @@ _ACEOF
     fi
 
 fi
-
 
 
 #-----------------------------------------------------------------------
@@ -8334,7 +8334,7 @@ fi
 		if (!($i~/^(isysroot|mmacosx-version-min)/)) print "-"$i}'`"
 	    if test $do64bit = yes; then :
 
-		case `arch` in
+		case `uname -m` in
 		    ppc)
 			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler accepts -arch ppc64 flag" >&5
 $as_echo_n "checking if compiler accepts -arch ppc64 flag... " >&6; }
@@ -8410,8 +8410,8 @@ $as_echo "$tcl_cv_cc_arch_x86_64" >&6; }
 
 fi;;
 		    *)
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Don't know how enable 64-bit on architecture \`arch\`" >&5
-$as_echo "$as_me: WARNING: Don't know how enable 64-bit on architecture \`arch\`" >&2;};;
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Don't know how enable 64-bit on architecture \`uname -m\`" >&5
+$as_echo "$as_me: WARNING: Don't know how enable 64-bit on architecture \`uname -m\`" >&2;};;
 		esac
 
 else

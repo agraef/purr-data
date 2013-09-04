@@ -2682,7 +2682,7 @@ if ${ac_cv_lib_flite_flite_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lflite -lm $LIBS"
+LIBS="-lflite -lasound -lm $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -2732,7 +2732,7 @@ if ${ac_cv_lib_flite_flite_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lflite -lm $LIBS"
+LIBS="-lflite -lasound -lm $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -2784,7 +2784,7 @@ $as_echo "$as_me: WARNING: - is the directory containing the 'flite' library in 
 fi
 
 ##-- flite: libs: base
-FLITE_LIBS="-lflite -lm"
+FLITE_LIBS="-lflite -lasound -lm"
 
 
 ##-- Check for flite : libs : flite_cmulex
@@ -2794,7 +2794,7 @@ if ${ac_cv_lib_flite_cmulex_cmu_lex_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lflite_cmulex -lflite -lm $LIBS"
+LIBS="-lflite_cmulex -lflite -lasound -lm $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -2845,7 +2845,7 @@ if ${ac_cv_lib_flite_usenglish_usenglish_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lflite_usenglish -lflite_cmulex -lflite -lm $LIBS"
+LIBS="-lflite_usenglish -lflite_cmulex -lflite -lasound -lm $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -2890,13 +2890,13 @@ FLITE_LANGLIBS="-lflite_usenglish"
 
 
 ##-- Check for flite : libs : flite_cmu_us_kal16
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for register_cmu_us_kal in -lflite_cmu_us_kal16" >&5
-$as_echo_n "checking for register_cmu_us_kal in -lflite_cmu_us_kal16... " >&6; }
-if ${ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal+:} false; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for register_cmu_us_kal16 in -lflite_cmu_us_kal16" >&5
+$as_echo_n "checking for register_cmu_us_kal16 in -lflite_cmu_us_kal16... " >&6; }
+if ${ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal16+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lflite_cmu_us_kal16 -lflite_usenglish -lflite_cmulex -lflite -lm $LIBS"
+LIBS="-lflite_cmu_us_kal16 -lflite_usenglish -lflite_cmulex -lflite -lasound -lm $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -2906,27 +2906,27 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char register_cmu_us_kal ();
+char register_cmu_us_kal16 ();
 int
 main ()
 {
-return register_cmu_us_kal ();
+return register_cmu_us_kal16 ();
   ;
   return 0;
 }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal=yes
+  ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal16=yes
 else
-  ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal=no
+  ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal16=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal" >&5
-$as_echo "$ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal" >&6; }
-if test "x$ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal" = xyes; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal16" >&5
+$as_echo "$ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal16" >&6; }
+if test "x$ac_cv_lib_flite_cmu_us_kal16_register_cmu_us_kal16" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_LIBFLITE_CMU_US_KAL16 1
 _ACEOF
@@ -2942,7 +2942,7 @@ FLITE_VOICELIBS="-lflite_cmu_us_kal16"
 
 ##-- register voice function
 
-$as_echo "#define PDFLITE_REGISTER_VOICE register_cmu_us_kal" >>confdefs.h
+$as_echo "#define PDFLITE_REGISTER_VOICE register_cmu_us_kal16" >>confdefs.h
 
 
 ## /local: flite

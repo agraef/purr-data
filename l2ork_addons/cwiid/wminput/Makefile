@@ -22,8 +22,8 @@ YFLAGS += -d
 
 ifdef PYTHON
 	SOURCES += py_plugin.c
-	CFLAGS += -I/usr/include/python2.7
-	LDLIBS += -lpython2.7
+	CFLAGS += $(shell pkg-config --cflags python-2.7)
+	LDLIBS += $(shell pkg-config --libs python-2.7)
 endif
 
 SOURCES += $(LAST_SOURCES)
