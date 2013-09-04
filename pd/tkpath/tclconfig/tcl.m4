@@ -1700,7 +1700,7 @@ AC_DEFUN([TEA_CONFIG_CFLAGS], [
 		awk 'BEGIN {FS=" +-";ORS=" "}; {for (i=2;i<=NF;i++) \
 		if (!([$]i~/^(isysroot|mmacosx-version-min)/)) print "-"[$]i}'`"
 	    AS_IF([test $do64bit = yes], [
-		case `arch` in
+		case `uname -m` in
 		    ppc)
 			AC_CACHE_CHECK([if compiler accepts -arch ppc64 flag],
 				tcl_cv_cc_arch_ppc64, [
@@ -1726,7 +1726,7 @@ AC_DEFUN([TEA_CONFIG_CFLAGS], [
 			    do64bit_ok=yes
 			]);;
 		    *)
-			AC_MSG_WARN([Don't know how enable 64-bit on architecture `arch`]);;
+			AC_MSG_WARN([Don't know how enable 64-bit on architecture `uname -m`]);;
 		esac
 	    ], [
 		# Check for combined 32-bit and 64-bit fat build

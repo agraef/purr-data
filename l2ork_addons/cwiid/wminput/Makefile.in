@@ -22,8 +22,8 @@ YFLAGS += -d
 
 ifdef PYTHON
 	SOURCES += py_plugin.c
-	CFLAGS += -I/usr/include/python@PYTHON_VERSION@
-	LDLIBS += -lpython@PYTHON_VERSION@
+	CFLAGS += $(shell pkg-config --cflags python-@PYTHON_VERSION@)
+	LDLIBS += $(shell pkg-config --libs python-@PYTHON_VERSION@)
 endif
 
 SOURCES += $(LAST_SOURCES)
