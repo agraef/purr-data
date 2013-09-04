@@ -76,10 +76,10 @@ void bng_draw_new(t_bng *x, t_glist *glist)
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x, x);
-		int cr = (x->x_gui.x_w-(x->x_gui.x_w % 2 ? 0 : 1))/2;
-		int cx = xpos+1+cr;
-		int cy = ypos+1+cr;
-		sys_vgui(".x%lx.c create circle %d %d -r %d -fill #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
+		t_float cr = (x->x_gui.x_w-2)/2.0;
+		t_float cx = xpos+cr+1.5;
+		t_float cy = ypos+cr+1.5;
+		sys_vgui(".x%lx.c create circle %f %f -r %f -fill #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
 		         canvas, cx, cy, cr,
 		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
@@ -127,14 +127,14 @@ void bng_draw_move(t_bng *x, t_glist *glist)
 		sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
 		         canvas, x, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-		int cr = (x->x_gui.x_w-(x->x_gui.x_w % 2 ? 0 : 1))/2;
-		int cx = xpos+1+cr;
-		int cy = ypos+1+cr;
+		t_float cr = (x->x_gui.x_w-2)/2.0;
+		t_float cx = xpos+cr+1.5;
+		t_float cy = ypos+cr+1.5;
 		/*sys_vgui(".x%lx.c create circle %d %d -r %d -stroke #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
 		         canvas, cx, cy, cr,*/
-		sys_vgui(".x%lx.c coords %lxBUT %d %d\n",
+		sys_vgui(".x%lx.c coords %lxBUT %f %f\n",
 		         canvas, x, cx, cy);
-		sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %d\n", canvas, x,
+		sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n", canvas, x,
 		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
 		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
 		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
