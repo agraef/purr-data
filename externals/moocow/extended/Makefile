@@ -109,7 +109,7 @@ flite.autogen_stamp:
 	touch $@
 
 flite.configure_stamp: flite.autogen_stamp
-	(cd $(FLITE_DIR) && sh ./configure $(CONFIGURE_ARGS) $(FLITE_CONFIGURE_ARGS) && make clean) || $(ONFAIL)
+	(cd $(FLITE_DIR) && autoconf && sh ./configure $(CONFIGURE_ARGS) $(FLITE_CONFIGURE_ARGS) && make clean) || $(ONFAIL)
 	touch $@
 
 flite.build_stamp: flite.configure_stamp
