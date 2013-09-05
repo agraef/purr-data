@@ -3302,7 +3302,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 		set visible [$name.c xview]
 		set vx1 [lindex $visible 0]
 		set vx2 [lindex $visible 1]
-		if {$vx2 - $vx1 < 0.99} {
+		#if {$vx2 - $vx1 < 0.99} {
 			set npix [expr int([winfo width $name.c]-$HSCROLL_PAD_L-$HSCROLL_PAD_R)]
 			set width [expr int($npix * ($vx2 -$vx1))]
 			set loffset [expr int($vx1 * $npix)] 
@@ -3316,13 +3316,13 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			$name.c bind $hscroll <Enter> {pdtk_canvas_enter_scrollbar %W %x %y}
 			#$name.c bind $hscroll <Motion> {pdtk_canvas_enter_scrollbar %W}
 			$name.c bind $hscroll <Leave> {pdtk_canvas_leave_scrollbar %W %x %y}
-		}
+		#}
 	}
 	if {$::yscrollable($name)} {
 		set visible [$name.c yview]
 		set vy1 [lindex $visible 0]
 		set vy2 [lindex $visible 1]
-		if {$vy2 - $vy1 < 0.99} {
+		#if {$vy2 - $vy1 < 0.99} {
 			set npix [expr int([winfo height $name.c]-$VSCROLL_PAD_U-$VSCROLL_PAD_D)]
 			set height [expr int($npix * ($vy2 -$vy1))]
 			set toffset [expr int($vy1 * $npix)] 
@@ -3336,7 +3336,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			$name.c bind $vscroll <Enter> {pdtk_canvas_enter_scrollbar %W %x %y}
 			#$name.c bind $vscroll <Motion> {pdtk_canvas_enter_scrollbar %W}
 			$name.c bind $vscroll <Leave> {pdtk_canvas_leave_scrollbar %W %x %y}
-		}
+		#}
 	}
 	pdtk_canvas_update_sticky_tip $name.c
 }
