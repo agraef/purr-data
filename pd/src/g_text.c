@@ -56,6 +56,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     t_atom at;
     x->te_width = 0;                            /* don't know it yet. */
     x->te_type = T_TEXT;
+	x->te_iemgui = 0;
     x->te_binbuf = binbuf_new();
     if (argc > 1)
     {
@@ -168,6 +169,9 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
     x->te_ypix = ypix;
     x->te_width = 0;
     x->te_type = T_OBJECT;
+	/* let's see if iemgui objects did not already set the value to 1, otherwise set it explicitly to 0 */
+	if (x->te_iemgui != 1)
+		x->te_iemgui = 0;
     glist_add(gl, &x->te_g);
 
     if (selected)
@@ -640,6 +644,7 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     x->m_messresponder.mr_outlet = outlet_new(&x->m_text, &s_float);
     x->m_text.te_width = 0;                             /* don't know it yet. */
     x->m_text.te_type = T_MESSAGE;
+	x->m_text.te_iemgui = 0;
     x->m_text.te_binbuf = binbuf_new();
     x->m_glist = gl;
     x->m_clock = clock_new(x, (t_method)message_tick);
@@ -1093,6 +1098,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
     t_atom at;
     x->a_text.te_width = 0;                        /* don't know it yet. */
     x->a_text.te_type = T_ATOM;
+	x->a_text.te_iemgui = 0;
     x->a_text.te_binbuf = binbuf_new();
     x->a_glist = gl;
     x->a_atom.a_type = type;

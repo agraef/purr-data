@@ -1320,6 +1320,8 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_scaleheight = 0;
 	x->x_tmpfontsize = 0;
 
+	x->x_gui.x_obj.te_iemgui = 1;
+
     return (x);
 }
 

@@ -999,6 +999,8 @@ static void *vslider_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_gui.label_offset_y = 0;
 	x->x_gui.label_vis = 0;
 
+	x->x_gui.x_obj.te_iemgui = 1;
+
     return (x);
 }
 

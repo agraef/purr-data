@@ -102,33 +102,9 @@ static t_canvas *c_selection;
 
 /* iemgui uses black inlets and outlets while default objects use gray ones
    add here more as necessary */
-int gobj_filter_highlight_behavior(t_rtext *y) {
+int gobj_filter_highlight_behavior(t_text *y) {
 
-	char *buf;
-	char name[4];
-	int bufsize, i;
-	rtext_gettext(y, &buf, &bufsize);
-	if (bufsize > 3) bufsize = 3;
-	for (i = 0; i < bufsize; i++) {
-		name[i] = buf[i];
-	}
-	name[i]='\0';
-	//fprintf(stderr,"object name = >%s<\n", name);
-	if (!strcmp(name, "bng") ||
-		!strcmp(name, "nbx") ||
-		!strcmp(name, "hdl") ||
-		!strcmp(name, "hsl") ||
-		!strcmp(name, "tgl") ||
-		!strcmp(name, "vdl") ||
-		!strcmp(name, "vsl") ||
-		!strcmp(name, "vu ") ||
-		/* alternative names for hradio and vradio when invoked from the menu */
-		!strcmp(name, "hra") ||
-		!strcmp(name, "vra")
-		)
-		return 1;
-
-	return 0;
+	return (y->te_iemgui);
 }
 
 /* ---------------- generic widget behavior ------------------------- */
@@ -2967,7 +2943,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         }
                         if (yr)
                         {
-							last_outlet_filter = gobj_filter_highlight_behavior(yr);
+							last_outlet_filter = gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
 							//fprintf(stderr,"last_outlet_filter == %d\n", last_outlet_filter);
                             sprintf(x->gl_editor->canvas_cnct_outlet_tag, 
                                     "%so%d",
@@ -3025,7 +3001,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 
                     if (yr)
                     {
-						last_inlet_filter = gobj_filter_highlight_behavior(yr);
+						last_inlet_filter = gobj_filter_highlight_behavior((t_text *)&ob->ob_g);
 						//fprintf(stderr,"last_inlet_filter == %d\n", last_inlet_filter);
                         sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                                 "%si%d",
@@ -3973,7 +3949,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 if (y)
                 {
-					last_inlet_filter = gobj_filter_highlight_behavior(y);
+					last_inlet_filter = gobj_filter_highlight_behavior((t_text *)&ob2->ob_g);
 					//fprintf(stderr,"last_inlet_filter == %d\n", last_inlet_filter);
                     sprintf(x->gl_editor->canvas_cnct_inlet_tag, 
                             "%si%d",
@@ -4251,7 +4227,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 	//fprintf(stderr,"canvas_displaceselection %d %d\n", dx, dy);
     t_selection *y;
     int resortin = 0, resortout = 0;
-	old_displace = 0;
+	//old_displace = 0;
     if (!we_are_undoing && !canvas_undo_already_set_move && x->gl_editor->e_selection)
     {
         //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, 1),
@@ -4271,7 +4247,8 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 		else {
 			/* we will move the non-conforming objects the old way */
 			gobj_displace(y->sel_what, x, dx, dy);
-			old_displace = 1;
+			canvas_restore_original_position(x, y->sel_what, 0, -1);
+			//old_displace = 1;
 			//fprintf(stderr, "displaceselection\n");
 		}
         t_class *cl = pd_class(&y->sel_what->g_pd);
@@ -4290,8 +4267,8 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 	// to proper ordering of objects as they have been redrawn on top
 	// of everything else rather than where they were supposed to be
 	// (e.g. possibly in the middle or at the bottom)
-	if (old_displace) canvas_redraw(x);
-	old_displace = 0;
+	//if (old_displace) canvas_redraw(x);
+	//old_displace = 0;
 }
 
     /* this routine is called whenever a key is pressed or released.  "x"
