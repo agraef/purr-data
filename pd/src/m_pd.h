@@ -203,11 +203,12 @@ typedef struct _text        /* patchable object - graphical, with text */
     short te_ypix;
     short te_width;             /* requested width in chars, 0 if auto */
     unsigned int te_type:2;     /* from defs below */
+	unsigned int te_iemgui:1;	/* if this is an iemgui (for nlets color) */
 } t_text;
 
 #define T_TEXT 0        /* just a textual comment */
 #define T_OBJECT 1      /* a MAX style patchable object */
-#define T_MESSAGE 2     /* a MAX stype message */
+#define T_MESSAGE 2     /* a MAX style message */
 #define T_ATOM 3        /* a cell to display a number or symbol */
 
 #define te_pd te_g.g_pd
