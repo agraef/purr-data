@@ -412,7 +412,7 @@ static void mknob_properties(t_gobj *z, t_glist *owner)
 
     iemgui_properties(&x->x_gui, srl);
     sprintf(buf, "pdtk_iemgui_dialog %%s mknob \
-	    --------dimension(pix):-------- %d %d width: %d %d number_of_drag_steps: \
+	    --------dimension(pix):-------- %d %d width: %d %d {# steps:} \
 	    -----------output-range:----------- %g left: %g right: %g \
 	    %d lin log %d %d empty %d \
 	    %s %s \
