@@ -30,7 +30,7 @@ full=0
 sys_cwiid=0
 rpi=0
 
-inst_dir=/usr/local
+inst_dir=${inst_dir:-/usr/local}
 
 while getopts ":abBcdefFRruw" Option
 do case $Option in
