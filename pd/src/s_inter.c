@@ -1170,13 +1170,18 @@ int sys_startgui(const char *guidir)
 #if defined(__linux__) || defined(IRIX)
         /* now that we've spun off the child process we can promote
         our process's priority, if we can and want to.  If not specfied
-        (-1), we check root status.  This misses the case where we might
-        have permission from a "security module" (linux 2.6) -- I don't
-        know how to test for that.  The "-rt" flag must b eset in that
-        case. */
+        (-1), we assume real-time was wanted.  Afterward, just in case
+        someone made Pd setuid in order to get permission to do this,
+        unset setuid and lose root priveliges after doing this.  Starting
+        in Linux 2.6 this is accomplished by putting lines like:
+                @audio - rtprio 99
+                @audio - memlock unlimited
+        in the system limits file, perhaps /etc/limits.conf or
+        /etc/security/limits.conf */
     if (sys_hipriority == -1)
-        sys_hipriority = (!getuid() || !geteuid());
+        sys_hipriority = 1; //(!getuid() || !geteuid());
     
+	sprintf(cmdbuf, "%s/pd-watchdog\n", guidir);
     if (sys_hipriority)
     {
             /* To prevent lockup, we fork off a watchdog process with
@@ -1216,7 +1221,6 @@ int sys_startgui(const char *guidir)
             }
             close(pipe9[1]);
 
-            sprintf(cmdbuf, "%s/pd-watchdog\n", guidir);
             if (sys_verbose) fprintf(stderr, "%s", cmdbuf);
             execl("/bin/sh", "sh", "-c", cmdbuf, (char*)0);
             perror("pd: exec");
