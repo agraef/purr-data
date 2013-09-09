@@ -446,7 +446,7 @@ void sys_loadpreferences( void)
         sys_hipriority = 0;
     else
 #ifdef UNIX
-        sys_hipriority = !geteuid();
+        sys_hipriority = 1; //!geteuid();
 #else
 #ifdef MSW
         sys_hipriority = 0;
