@@ -19,6 +19,11 @@ then
 	echo "     -r    build a Raspberry Pi deb (incremental)"
 	echo "     -w    install custom version of cwiid system-wide"
 	echo
+	echo "   For custom install locations do the following before"
+	echo "   running this script:"
+	echo
+	echo "           export inst_dir=/some/custom/location"
+	echo
 	exit 1
 fi
 
