@@ -24,6 +24,10 @@ fconfigure stderr -encoding utf-8
 fconfigure stdout -encoding utf-8
 ##--/moo
 
+set appname [tk appname]
+tk appname $appname-startup
+#puts stderr "APPNAME [tk appname]"
+
 if { [info tclversion] >= 8.5 } {
 
 	# EDIT THIS PART TO CUSTOMIZE LINUX THEME
@@ -8854,3 +8858,30 @@ proc pdtk_gettip { w item xletno name helpname dir } {
     pdtk_tip $w 0 1 $msg
 }
 
+# ---------------- allow for unique instance ---------------------
+
+proc pdtk_open_files_via_unique {filenames} {
+	#puts stderr "pdtk_open_files_via_unique $filenames"
+	if { $filenames != 0 } {
+		foreach file $filenames {
+			#puts stderr "open_file $file"
+			open_file $file
+		}
+	}
+}
+
+proc pdtk_check_unique {unique filenames} {
+	#puts stderr "pdtk_check_unique $unique $filenames"
+	global appname
+	if { $unique == 0 } {
+		#puts stderr "send pd-l2ork pdtk_open_files_via_unique $filenames"
+		set outcome [catch {send pd-l2ork pdtk_open_files_via_unique $filenames}]
+		#puts stderr "outcome = $outcome"
+		if { $outcome == 0 } {
+			menu_really_quit
+			exit
+		}
+	}
+	tk appname $appname
+	#puts stderr "this is unique instance [tk appname]"
+}

@@ -199,8 +199,8 @@ void sys_setvirtualalarm( void);
 #define API_SGI 6
 
 #ifdef __linux__
-#define API_DEFAULT API_OSS
-#define API_DEFSTRING "OSS"
+#define API_DEFAULT API_ALSA
+#define API_DEFSTRING "ALSA"
 #endif
 #ifdef MSW
 #define API_DEFAULT API_MMIO

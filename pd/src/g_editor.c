@@ -4733,7 +4733,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
     int force = fforce;
     t_glist *g;
 	if (x->gl_owner && (force == 0 || force == 1)) {
-		fprintf(stderr,"	invis\n");
+		//fprintf(stderr,"	invis\n");
         canvas_vis(x, 0);   /* if subpatch, just invis it */
     }
     else if (force == 0)    

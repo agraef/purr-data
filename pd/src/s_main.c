@@ -50,6 +50,7 @@ int sys_guisetportnumber;   /* if started from the GUI, this is the port # */
 int sys_nosleep = 0;  	/* skip all "sleep" calls and spin instead */
 int sys_console = 0;	/* default settings for the console is off */
 int sys_k12_mode = 0;	/* by default k12 mode is off */
+int sys_unique = 0;     /* by default off, prevents multiple instances of pd-l2ork */
 
 char *sys_guicmd;
 t_symbol *sys_libdir;
@@ -247,7 +248,7 @@ static void pd_makeversion(void)
     //snprintf(foo, sizeof(foo), "Pd-l2ork version %d.%d-%d%s\n", PD_MAJOR_VERSION,
     //    PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);	
 
-    snprintf(foo, sizeof(foo), "Pd-l2ork version %s\n", PD_TEST_VERSION);
+    snprintf(foo, sizeof(foo), "Pd-L2Ork version %s\n", PD_TEST_VERSION);
 
     pd_version = strdup(foo);
 }
@@ -258,8 +259,9 @@ int sys_main(int argc, char **argv)
     int i, noprefs;
     sys_externalschedlib = 0;
     sys_extraflags = 0;
+    char * filenames;
 #ifdef PD_DEBUG
-    fprintf(stderr, "Pd: COMPILED FOR DEBUGGING\n");
+    fprintf(stderr, "Pd-L2Ork: COMPILED FOR DEBUGGING\n");
 #endif
     pd_init();                                  /* start the message system */
     sys_findprogdir(argv[0]);                   /* set sys_progname, guipath */
@@ -283,6 +285,30 @@ int sys_main(int argc, char **argv)
         return (0);
     if (sys_startgui(sys_guidir->s_name))       /* start the gui */
         return(1);
+        /* check if we are unique, otherwise, just focus existing
+        instance, and if necessary open file inside it */\
+    if (sys_openlist) {
+        // let's create one continuous string from all files
+        int length = 0;
+        t_namelist *nl;
+        for (nl = sys_openlist; nl; nl = nl->nl_next)
+            length = length + strlen(nl->nl_string) + 1;
+        if((filenames = malloc(length)) != NULL) {
+            filenames[0] = '\0';   // ensures the memory is an empty string
+            if (sys_openlist) {
+                for (nl = sys_openlist; nl; nl = nl->nl_next) {
+                    strcat(filenames,nl->nl_string);
+                    if (nl->nl_next)
+                        strcat(filenames," ");
+                }
+            }
+            //fprintf(stderr,"final list: <%s>\n", filenames);
+        } else {
+            error("filelist malloc failed!\n");
+            return(1);
+        }
+    }
+    sys_vgui("pdtk_check_unique %d %s\n", sys_unique, (filenames ? filenames : "0"));
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
             sys_extraflagsstring));
@@ -308,8 +334,8 @@ int sys_main(int argc, char **argv)
 }
 
 static char *(usagemessage[]) = {
-"usage: pd [-flags] [file]...\n",
-"\naudio configuration flags:\n",
+"Usage: pd-l2ork [-flags <value>] [file1 file2 ... filen]\n",
+"\nAudio configuration flags:\n",
 "-r <n>           -- specify sample rate\n",
 "-audioindev ...  -- audio in devices; e.g., \"1,3\" for first and third\n",
 "-audiooutdev ... -- audio out devices (same)\n",
@@ -350,7 +376,7 @@ static char *(usagemessage[]) = {
 #ifdef USEAPI_MMIO
 "-mmio            -- use MMIO audio API (default for Windows)\n",
 #endif
-"      (default audio API for this platform:  ", API_DEFSTRING, ")\n\n",
+"      (default audio API for this platform:  ", API_DEFSTRING, ")\n",
 
 "\nMIDI configuration flags:\n",
 "-midiindev ...   -- midi in device list; e.g., \"1,3\" for first and third\n",
@@ -364,7 +390,7 @@ static char *(usagemessage[]) = {
 #endif
 
 
-"\nother flags:\n",
+"\nOther flags:\n",
 "-path <path>     -- add to file search path\n",
 "-nostdpath       -- don't search standard (\"extra\") directory\n",
 "-stdpath         -- search standard directory (true by default)\n",
@@ -395,6 +421,8 @@ static char *(usagemessage[]) = {
 "-batch           -- run off-line as a batch process\n",
 "-autopatch       -- enable auto-patching new from selected objects\n",
 "-k12             -- enable K-12 education mode (requires L2Ork K12 lib)\n",
+"-unique          -- enable multiple instances (disabled by default)\n",
+"\n",
 };
 
 static void sys_parsedevlist(int *np, int *vecp, int max, char *str)
@@ -787,6 +815,12 @@ int sys_argparse(int argc, char **argv)
         {
             sys_k12_mode = 1;
             argc--; argv++;
+        }
+        else if (!strcmp(*argv, "-unique"))
+        {
+            sys_unique = 1;
+            argc -= 1;
+            argv += 1;
         }
         else if (!strcmp(*argv, "-guiport") && argc > 1 &&
             sscanf(argv[1], "%d", &sys_guisetportnumber) >= 1)
