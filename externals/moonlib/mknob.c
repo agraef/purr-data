@@ -140,24 +140,24 @@ static void mknob_draw_new(t_mknob *x, t_glist *glist)
     if (yyyy) nlet_tag = rtext_gettag(yyyy);
     else nlet_tag = "bogus";
 
-    sys_vgui(".x%lx.c create circle %f %f -r %f -fill #%6.6x -tags {%xBASE %xMKNOB}\n",
+    sys_vgui(".x%lx.c create circle %f %f -r %f -fill #%6.6x -tags {%xBASE %xMKNOB %s}\n",
              canvas,xc,yc,rc,
-             x->x_gui.x_bcol, x, x);
+             x->x_gui.x_bcol, x, x, nlet_tag);
     /*sys_vgui(".x%lx.c create circle %f %f -r %f -stroke \"\" -fill #%6.6x -tags {%xCENTER %xMKNOB}\n",
          canvas,xc,yc,3.5,
          x->x_gui.x_fcol, x, x);*/
     /*sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d -fill #%6.6x -tags {%xKNOB %xMKNOB}\n",
              glist_getcanvas(glist),
              (int)xc,ypos,(int)xc-4,(int)yc,(int)xc+4,(int)yc,x->x_gui.x_fcol,x,x);*/
-    sys_vgui(".x%lx.c create ppolygon %f %d %f %f -strokewidth 2 -stroke #%6.6x -tags {%xKNOB %xMKNOB}\n",
-             canvas,xc,ypos,xc,yc,x->x_gui.x_fcol,x,x);
+    sys_vgui(".x%lx.c create ppolygon %f %d %f %f -strokewidth 2 -stroke #%6.6x -tags {%xKNOB %xMKNOB %s}\n",
+             canvas,xc,ypos,xc,yc,x->x_gui.x_fcol,x,x,nlet_tag);
     mknob_update_knob(x,glist);
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-	     -font {{%s} %d bold} -fill #%6.6x -tags {%xLABEL %xMKNOB}\n",
+	     -font {{%s} %d bold} -fill #%6.6x -tags {%xLABEL %xMKNOB %s}\n",
              canvas, xpos+x->x_gui.x_ldx,
              ypos+x->x_gui.x_ldy,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-             x->x_gui.x_font, x->x_gui.x_fontsize, x->x_gui.x_lcol, x, x);
+             x->x_gui.x_font, x->x_gui.x_fontsize, x->x_gui.x_lcol, x, x, nlet_tag);
     if (canvas == glist) {
         if(!x->x_gui.x_fsf.x_snd_able)
             sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%xOUT%d %xMKNOB %so0 outlet}\n",
