@@ -141,7 +141,6 @@ sickle/delta.c \
 sickle/deltaclip.c \
 sickle/edge.c \
 sickle/kink.c \
-sickle/log.c \
 sickle/lores.c \
 sickle/maximum.c \
 sickle/minimum.c \
@@ -172,6 +171,7 @@ sickle/triangle.c \
 sickle/vectral.c \
 sickle/zerox.c
 
+#sickle/log.c \
 #sickle/abs.c \
 
 SFORKY_TILDE = $(TILDE)
