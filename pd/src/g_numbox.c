@@ -200,71 +200,60 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 
 	//if (glist_isvisible(canvas)) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		if (x->x_hide_frame <= 1) {
 			sys_vgui(
 				".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke #%6.6x \
-					-fill #%6.6x -tags {%lxBASE1 %lxNUM %lx text}\n",
+					-fill #%6.6x -tags {%lxBASE1 %lxNUM %s text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
 				     xpos + x->x_numwidth, ypos+4,
 				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
 				     xpos, ypos + x->x_gui.x_h,
-				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, x);
+				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, nlet_tag);
 			if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
+				sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %s outlet}\n",
 				     canvas,
 				     xpos, ypos + x->x_gui.x_h-1,
 				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
-				     x, nlet_tag, 0, nlet_tag, 0, x, x);
+				     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 			if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
+				sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %s inlet}\n",
 				     canvas,
 				     xpos, ypos,
 				     xpos+IOWIDTH, ypos+1,
-				     x, nlet_tag, 0, nlet_tag, 0, x, x);
+				     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		} else {
 			sys_vgui(
 				".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke #%6.6x \
-					-fill #%6.6x -tags {%lxBASE1 %lxNUM %lx text}\n",
+					-fill #%6.6x -tags {%lxBASE1 %lxNUM %s text}\n",
 				     canvas, xpos, ypos,
 				     xpos + x->x_numwidth-4, ypos,
 				     xpos + x->x_numwidth, ypos+4,
 				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
 				     xpos, ypos + x->x_gui.x_h,
-				     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, x);
+				     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, nlet_tag);
 		}
 		if (!x->x_hide_frame || x->x_hide_frame == 2)
 			sys_vgui(
-				".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x -tags {%lxBASE2 %lxNUM %lx text}\n",
+				".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x -tags {%lxBASE2 %lxNUM %s text}\n",
 				canvas, xpos, ypos,
 				xpos + half, ypos + half,
 				xpos, ypos + x->x_gui.x_h,
-				x->x_gui.x_fcol, x, x, x);
+				x->x_gui.x_fcol, x, x, nlet_tag);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM %lx text}\n",
+		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM %s text}\n",
 		    canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		    strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		    x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x, x);
+		         x->x_gui.x_lcol, x, x, nlet_tag);
 		my_numbox_ftoa(x);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM %lx noscroll text}\n",
+		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM %s noscroll text}\n",
 		    canvas, xpos+half+2, ypos+half+d,
 		    x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		    x->x_gui.x_fcol, x, x, x);
+		    x->x_gui.x_fcol, x, x, nlet_tag);
 	//}
 }
 
@@ -277,18 +266,7 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 
 	if (glist_isvisible(canvas)) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
 			     canvas, x, xpos, ypos,
@@ -337,16 +315,6 @@ static void my_numbox_draw_erase(t_my_numbox* x,t_glist* glist)
 		sys_vgui("destroy %s\n", lh->h_pathname);
 		sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 	}
-/*
-    sys_vgui(".x%lx.c delete %lxBASE1\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxBASE2\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxNUMBER\n", canvas, x);
-    if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c delete %lxOUT%d\n", canvas, x, 0);
-    if(!x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c delete %lxIN%d\n", canvas, x, 0);
-*/
 }
 
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
@@ -403,33 +371,22 @@ static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_fla
 
 	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%so%d %so%d %lxNUM %s outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h-1,
 		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
-		         x, nlet_tag, 0, nlet_tag, 0, x, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxNUM%si%d %si%d %lxNUM %s inlet}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos+IOWIDTH, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x, x);
+		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
 
@@ -458,6 +415,8 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
+				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+
 				sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke $select_color\n",
 			    	canvas, x);
 				sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke $select_color\n",
@@ -474,11 +433,11 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxNUM %lx}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxNUM %s}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_numwidth - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x, x);
+					 sh->h_pathname, x, x, nlet_tag);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -495,11 +454,11 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxNUM %lx}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxNUM %s}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x, x);
+						lh->h_pathname, x, x, x, nlet_tag);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

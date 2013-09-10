@@ -71,45 +71,34 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
 
 	//if (glist_isvisible(canvas)) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		for(i=0; i<n; i++)
 		{
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxHRDO %lx text}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE%d %lxHRDO %s text}\n",
 		             canvas, xx11, yy11, xx11+dx, yy12,
-		             x->x_gui.x_bcol, x, i, x, x);
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxBUT%d %lxHRDO %lx text}\n",
+		             x->x_gui.x_bcol, x, i, x, nlet_tag);
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxBUT%d %lxHRDO %s text}\n",
 		             canvas, xx21, yy21, xx22, yy22,
 		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x, x);
+		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x, nlet_tag);
 		    xx11 += dx;
 		    xx21 += dx;
 		    xx22 += dx;
 		    x->x_drawn = x->x_on;
 		}
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHRDO %lx text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHRDO %s text}\n",
 		         canvas, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x, x);
+		         x->x_gui.x_lcol, x, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %lx outlet}\n",
-		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet}\n",
+		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %lx inlet}\n",
-		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet}\n",
+		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 	//}
 }
 
@@ -124,18 +113,7 @@ void hradio_draw_move(t_hradio *x, t_glist *glist)
 
 	if (glist_isvisible(canvas)) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		xx11 = xx11b;
 		xx21=xx11b+s4;
@@ -235,32 +213,21 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 
 	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet}\n",
 		             canvas,
 		             xpos, ypos + x->x_gui.x_w-1,
 		             xpos + IOWIDTH, ypos + x->x_gui.x_w,
-		             x, nlet_tag, 0, nlet_tag, 0, x, x);
+		             x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet}\n",
 		             canvas,
 		             xpos, ypos,
-		             xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		             xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxHRDO%si%d\n", canvas, x, nlet_tag, 0);
 	}
@@ -281,6 +248,8 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
+				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+
 				for(i=0; i<n; i++)
 				{
 				    sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke $select_color\n", canvas, x, i);
@@ -294,11 +263,11 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHRDO %lx}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHRDO %s}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w * x->x_number - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x, x);
+					 sh->h_pathname, x, x, nlet_tag);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -315,11 +284,11 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxHRDO %lx}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxHRDO %s}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x, x);
+						lh->h_pathname, x, x, x, nlet_tag);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

@@ -778,7 +778,7 @@ int garray_getname(t_garray *x, t_symbol **namep);
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
     t_glist *x = (t_glist *)gr;
-	//fprintf(stderr,"graph vis gobj=.x%lx %d\n", (t_int)gr, vis);
+	//fprintf(stderr,"graph vis canvas=%lx gobj=%lx %d\n", (t_int)parent_glist, (t_int)gr, vis);
 	//fprintf(stderr,"graph_vis gr=.x%lx parent_glist=.x%lx glist_getcanvas(x->gl_owner)=.x%lx vis=%d\n", (t_int)gr, (t_int)parent_glist, (t_int)glist_getcanvas(x->gl_owner), vis);  
 	char tag[50];
     t_gobj *g;
@@ -817,10 +817,11 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 	    if (vis && gobj_shouldvis(gr, parent_glist))
 	    {
 	        sys_vgui(".x%lx.c create ppolygon\
- %d %d %d %d %d %d %d %d %d %d -tags {%sfill} -fill $graph_outline\n",
+ %d %d %d %d %d %d %d %d %d %d -tags {%sfill} -fill $graph_outline -stroke $graph_outline\n",
 	            glist_getcanvas(x->gl_owner),
 				//parent_glist,
 	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
+            glist_noselect(x->gl_owner);
 	    }
 	    else if (gobj_shouldvis(gr, parent_glist))
 	    {
@@ -1204,9 +1205,9 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
                  canvas, rtext_gettag(y), 
                  (state? "$select_color" : "$graph_outline"));
 
-        	sys_vgui(".x%lx.c itemconfigure %sfill -stroke %s\n",
+        	sys_vgui(".x%lx.c itemconfigure %sfill -stroke %s -fill %s\n",
                  canvas, rtext_gettag(y), 
-                 (state? "$select_color" : "$graph_outline"));
+                 (state? "$select_color" : "$graph_outline"), (state? "$select_color" : "$graph_outline"));
 		}
 
 		t_gobj *g;

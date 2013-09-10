@@ -773,7 +773,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
     called from the GUI after the fact to "notify" us that we're mapped. */
 void canvas_map(t_canvas *x, t_floatarg f)
 {
-	//fprintf(stderr,"canvas_map\n");
+	//fprintf(stderr,"canvas_map %lx %f\n", (t_int)x, f);
     int flag = (f != 0);
     t_gobj *y;
     if (flag)
@@ -823,7 +823,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
 void canvas_redraw(t_canvas *x)
 {
 	if (do_not_redraw) return;
-	//fprintf(stderr,"canvas_redraw\n");
+	//fprintf(stderr,"canvas_redraw %lx\n", (t_int)x);
     if (glist_isvisible(x))
     {
 		//fprintf(stderr,"canvas_redraw glist_isvisible=true\n");

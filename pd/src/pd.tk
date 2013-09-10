@@ -1809,10 +1809,9 @@ proc menu_close {name} {
 		destroy $topname
 		focus . 
 	} else {
-		set parent [menu_windowparent $name]
+		menu_windowparent $name
 		pdtk_canvas_checkgeometry $name
     	pd [concat $name menuclose 0 \;]
-		focus $parent
 	}
 }
 
@@ -3228,7 +3227,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
         bind $name.c <Option-Motion> {pdtk_canvas_motion %W %x %y 4}
     } else { 
         bind $name.c <Alt-Motion> {pdtk_canvas_motion %W %x %y 4}
-    }   
+    }
     bind $name.c <Map> {pdtk_canvas_map %W}
     bind $name.c <Unmap> {pdtk_canvas_unmap %W}
 
@@ -3979,7 +3978,7 @@ proc pdtk_select_all_gop_widgets {name gop state} {
 proc pdtk_tag_all_widgets_with_arrange {canvas object state} {
 	#puts stderr "pdtk_select_all_gop_widgets $canvas $object $state"
 	foreach item [$canvas find all] {
-		#puts stderr [$canvas gettags $item]
+		puts stderr [$canvas gettags $item]
 		foreach tag [$canvas gettags $item] {
 			if { [string first $object $tag] > -1 } {
 				#puts stderr "...tag all match $tag"
@@ -3994,13 +3993,13 @@ proc pdtk_tag_all_widgets_with_arrange {canvas object state} {
 }
 
 proc pdtk_find_lowest_widget_withtag_and_arrange {canvas name target objtag} {
-	#puts stderr "...pdtk_find_lowest_widget_withtag $canvas $name $target $objtag"
+	# puts stderr "...pdtk_find_lowest_widget_withtag $canvas $name $target $objtag"
 	set arrange_lowest 0
 	foreach item [$canvas find all] {
-		#puts stderr "tags=[$canvas gettags $item]"
+		# puts stderr "tags=[$canvas gettags $item]"
 		foreach tag [$canvas gettags $item] {
 			if { [string first $name $tag] > -1 } {
-				#puts stderr "...match $tag"
+				# puts stderr "...match $tag"
 				set arrange_lowest $tag
 				break;
 			}
@@ -4011,20 +4010,17 @@ proc pdtk_find_lowest_widget_withtag_and_arrange {canvas name target objtag} {
 	}
 	#puts stderr "final_lowest=$tag"
 	if { $arrange_lowest != 0 } {
-		if { $objtag == 0 } {
-			#puts stderr all_widgets
-			pdtk_tag_all_widgets_with_arrange $canvas $target 1
-		} else {
-			#puts stderr one_object
+		if { $objtag != 0 } {
+			# puts stderr "one_object canvas=$canvas object=$objtag"
 			$canvas addtag arrange withtag $objtag
 		}
 		$canvas raise arrange
 		$canvas lower arrange $arrange_lowest
 
-		if { $objtag == 0} {
-			pdtk_tag_all_widgets_with_arrange $canvas $target 0
-		} else {
+		if { $objtag != 0 } {
 			$canvas dtag $objtag arrange
+		} else {
+			$canvas dtag all arrange
 		}
 	}
 }
@@ -4631,12 +4627,12 @@ proc pdtk_canvas_motion {name x y mods} {
 # invisible (arg is "").  Invisibility means the Window Manager has minimized
 # us.  We don't get a final "unmap" event when we destroy the window.
 proc pdtk_canvas_map {name} {
-    #   puts stderr [concat map $name]
+    #puts stderr [concat map $name]
     pd [canvastosym $name] map 1 \;
 }
 
 proc pdtk_canvas_unmap {name} {
-    #   puts stderr [concat unmap $name]
+    #puts stderr [concat unmap $name]
     pd [canvastosym $name] map 0 \;
 }
 

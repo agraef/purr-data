@@ -396,5 +396,6 @@ EXTERN void iem_inttosymargs(t_iem_init_symargs *symargp, int n);
 EXTERN int iem_symargstoint(t_iem_init_symargs *symargp);
 EXTERN void iem_inttofstyle(t_iem_fstyle_flags *fstylep, int n);
 EXTERN int iem_fstyletoint(t_iem_fstyle_flags *fstylep);
+EXTERN char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj);
 
 EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);

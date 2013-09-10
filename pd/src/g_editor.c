@@ -224,6 +224,7 @@ int gobj_click(t_gobj *x, struct _glist *glist,
 int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag, int dir)
 {
 	// we do this instead to save us costly redraw of the canvas
+	//fprintf(stderr,"canvas_restore_original_position %lx %lx %s %d\n", (t_int)x, (t_int)y, objtag, dir);
 	t_object *ob = NULL;
 	t_rtext *yrnxt = NULL, *yr = NULL;
 	int ret = 0;
@@ -244,13 +245,7 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag, 
 	}
 	if (ret != 1) {
 		if (dir == -1) {
-			if (yrnxt) {
-				// lower into middle
-				if (objtag)
-					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
-				else
-					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
-			} else if (x->gl_list == y) {
+			if (x->gl_list == y) {
 				// we get here if we are supposed to go all the way to the bottom
 				if (objtag)
 					sys_vgui(".x%lx.c addtag arrange withtag %s\n", x, objtag);
@@ -261,6 +256,14 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag, 
 					sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
 				else
 					sys_vgui(".x%lx.c dtag selected arrange\n", x);
+			} else if (yrnxt) {
+				// lower into middle
+				if (objtag)
+					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
+				else {
+					sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
+					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
+				}
 			} else {
 				// fall back to legacy redraw for objects that are not patchable
 				canvas_redraw(x);
@@ -271,8 +274,10 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag, 
 				// raise into middle
 				if (objtag)
 					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
-				else
+				else {
+					sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
 					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
+				}
 			} else if (y->g_next == NULL) {
 				// we get here if we are supposed to go all the way to the top
 				if (objtag)
@@ -2191,7 +2196,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
          * a gl_editor already, if its not, it will not have a gl_editor.
          * canvas_create_editor(x) checks if a gl_editor is already created,
          * so its ok to run it on a canvas that already has a gl_editor. */
-        if (x->gl_editor && x->gl_havewindow)
+        if (x->gl_editor && x->gl_havewindow && glist_isvisible(x))
         {           /* just put us in front */
 			//fprintf(stderr,"existing\n");
             sys_vgui("raise .x%lx\n", x);
@@ -2578,6 +2583,7 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy, t_gobj *o
 	   also added "To Front" and "To Back" */
 static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float ypos)
 {
+	//fprintf(stderr,"canvas_done_pupup %lx\n", (t_int)x);
     char pathbuf[FILENAME_MAX], namebuf[FILENAME_MAX];
     t_gobj *y=NULL, *oldy=NULL, *oldy_prev=NULL, *oldy_next=NULL, *y_begin, *y_end=NULL;
 	int x1, y1, x2, y2;
@@ -2610,13 +2616,16 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 			if (!glist_isselected(x, y))
 				glist_select(x, y);
 		}
-		// this was a bogus/unsupported call--get me out of here!
-		if (!x->gl_editor->e_selection) {
-			post("Popup action could not be performed because multiple items were selected...");
-			return;
-		}
 	}
 	//}
+
+	// this was a bogus/unsupported call for tofront/back--get me out of here!
+	// we don't have to check for multiple objects being selected since we did noselect
+	// above explicitly for cases 3 and 4 when detecting more than one selected object
+	if ((which == 3 || which == 4) && !x->gl_editor->e_selection) {
+		post("Popup action could not be performed because no object was found under the cursor...");
+		return;
+	}
 	
     for (y = x->gl_list; y; y = y->g_next)
     {
@@ -2652,11 +2661,12 @@ static void canvas_done_popup(t_canvas *x, t_float which, t_float xpos, t_float 
 					//if (!glist_isselected(x, y))
 					//	glist_select(x, y);
                 	(*class_getpropertiesfn(pd_class(&y->g_pd)))(y, x);
+                	return;
 				}
-                return;
             }
             else if (which == 1)    /* open */
             {
+            	//fprintf(stderr,"OPEN\n");
                 if (!zgetfn(&y->g_pd, gensym("menu-open")))
                     continue;
                 vmess(&y->g_pd, gensym("menu-open"), "");
@@ -4226,8 +4236,9 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 {
 	//fprintf(stderr,"canvas_displaceselection %d %d\n", dx, dy);
     t_selection *y;
+    char *tag = NULL;
     int resortin = 0, resortout = 0;
-	//old_displace = 0;
+	old_displace = 0;
     if (!we_are_undoing && !canvas_undo_already_set_move && x->gl_editor->e_selection)
     {
         //canvas_setundo(x, canvas_undo_move, canvas_undo_set_move(x, 1),
@@ -4245,11 +4256,17 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 			//fprintf(stderr, "displaceselection with tag\n");
 		}
 		else {
-			/* we will move the non-conforming objects the old way */
+			/* we will move the non-conforming objects the old way THIS SHOULD GO AWAY SOON*/
 			gobj_displace(y->sel_what, x, dx, dy);
-			canvas_restore_original_position(x, y->sel_what, 0, -1);
-			//old_displace = 1;
-			//fprintf(stderr, "displaceselection\n");
+			t_object *ob = pd_checkobject(&y->sel_what->g_pd);
+			t_rtext *yyyy = glist_findrtext(x, (t_text *)&ob->ob_g);
+			if (yyyy) tag = rtext_gettag(yyyy);
+			if (tag)
+				canvas_restore_original_position(x, y->sel_what, tag, -1); 
+			else
+				old_displace = 1;
+			tag = NULL; 
+			//fprintf(stderr, "displaceselection old_displace=%d\n", old_displace);
 		}
         t_class *cl = pd_class(&y->sel_what->g_pd);
         if (cl == vinlet_class) resortin = 1;
@@ -4267,8 +4284,8 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 	// to proper ordering of objects as they have been redrawn on top
 	// of everything else rather than where they were supposed to be
 	// (e.g. possibly in the middle or at the bottom)
-	//if (old_displace) canvas_redraw(x);
-	//old_displace = 0;
+	if (old_displace) canvas_redraw(x);
+	old_displace = 0;
 }
 
     /* this routine is called whenever a key is pressed or released.  "x"
@@ -4712,10 +4729,13 @@ void glob_verifyquit(void *dummy, t_floatarg f)
     */
 void canvas_menuclose(t_canvas *x, t_floatarg fforce)
 {
+	//fprintf(stderr,"canvas_menuclose %lx %f\n", (t_int)x, fforce);
     int force = fforce;
     t_glist *g;
-	if (x->gl_owner && (force == 0 || force == 1))
+	if (x->gl_owner && (force == 0 || force == 1)) {
+		fprintf(stderr,"	invis\n");
         canvas_vis(x, 0);   /* if subpatch, just invis it */
+    }
     else if (force == 0)    
     {
         g = glist_finddirty(x);
@@ -4726,7 +4746,7 @@ void canvas_menuclose(t_canvas *x, t_floatarg fforce)
 				/* if this is an abstraction */
             	vmess(&g->gl_pd, gensym("menu-open"), "");
 			} else {
-				/* is this even necessary? */
+				// is this even necessary?
 	            canvas_vis(g, 1);
 			}
 			if (!glist_istoplevel(g) && g->gl_env) {
@@ -4895,9 +4915,9 @@ static void canvas_find_parent(t_canvas *x)
 {
     if (x->gl_owner) {
 		t_glist *owner = x->gl_owner;
-		while (!glist_isvisible(owner) && owner->gl_owner)
+		while (!glist_isvisible(owner) && !owner->gl_havewindow && owner->gl_owner)
 			owner = owner->gl_owner;
-		if (glist_isvisible(owner))
+		if (glist_isvisible(owner) && owner->gl_havewindow)
 			canvas_vis(owner, 1);
 	}
 	else {

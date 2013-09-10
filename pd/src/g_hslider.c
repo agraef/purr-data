@@ -83,41 +83,30 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 
 	//if (glist_isvisible(canvas)) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
-
-		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxHSLDR %lx text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxHSLDR %s text}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h,
-		         x->x_gui.x_bcol, x, x, x);
-		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 -stroke #%6.6x -tags {%lxKNOB %lxHSLDR %lx text}\n",
+		         x->x_gui.x_bcol, x, x, nlet_tag);
+		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 -stroke #%6.6x -tags {%lxKNOB %lxHSLDR %s text}\n",
 		         canvas, r, ypos+2, r,
-		         ypos + x->x_gui.x_h-2, x->x_gui.x_fcol, x, x, x);
+		         ypos + x->x_gui.x_h-2, x->x_gui.x_fcol, x, x, nlet_tag);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR %lx text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR % text}\n",
 		         canvas, xpos+x->x_gui.x_ldx,
 		         ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-				 x->x_gui.x_lcol, x, x, x);
+				 x->x_gui.x_lcol, x, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR %s outlet}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
-		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR %s inlet}\n",
 		         canvas, xpos, ypos,
-		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 	//}
 }
 
@@ -130,18 +119,7 @@ static void hslider_draw_move(t_hslider *x, t_glist *glist)
 
 	if (glist_isvisible(canvas)) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
 		         canvas, x,
@@ -198,14 +176,6 @@ static void hslider_draw_config(t_hslider* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-	/*
-	char color[64];
-	if (x->x_gui.x_fsf.x_selected)
-		sprintf(color, "$select_color");
-	else
-		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
-	*/
-
 	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
 		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
@@ -217,7 +187,6 @@ static void hslider_draw_config(t_hslider* x,t_glist* glist)
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
     sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n .x%lx.c itemconfigure %lxBASE -fill #%6.6x\n",
 		canvas, x, x->x_gui.x_fcol, canvas, x, x->x_gui.x_bcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_gui.x_bcol);
 }
 
 static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
@@ -228,29 +197,18 @@ static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
 
 	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
 
-		t_gobj *y = (t_gobj *)x;
-		t_object *ob = pd_checkobject(&y->g_pd);
-
-		/* GOP objects are unable to call findrtext triggering consistency check error */
-		t_rtext *yyyy = NULL;
-		if (!glist->gl_isgraph || glist_istoplevel(glist))
-			yyyy = glist_findrtext(canvas, (t_text *)&ob->ob_g);
-
-		/* on GOP we cause segfault as apparently text_gettag() returns bogus data */
-		char *nlet_tag;
-		if (yyyy) nlet_tag = rtext_gettag(yyyy);
-		else nlet_tag = "bogus";
+		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR %lx outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR %s outlet}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
-		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxHSLDR%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR %lx inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR %s inlet}\n",
 		         canvas, xpos, ypos,
-		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, x);
+		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
 		    sys_vgui(".x%lx.c delete %lxHSLDR%si%d\n", canvas, x, nlet_tag, 0);
 	}
@@ -270,6 +228,8 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 			// if so, disable highlighting
 			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
 
+				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+
 				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
 				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
 
@@ -280,11 +240,11 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 
 				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHSLDR %lx}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHSLDR %s}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 5 - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x, x);
+					 sh->h_pathname, x, x, nlet_tag);
 				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 					 sh->h_pathname, sh->h_bindsym->s_name);
 				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
@@ -302,11 +262,11 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 
 					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxHSLDR %lx}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxHSLDR %s}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x, x);
+						lh->h_pathname, x, x, x, nlet_tag);
 					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
 						lh->h_pathname, lh->h_bindsym->s_name);
 					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",

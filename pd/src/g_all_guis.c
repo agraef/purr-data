@@ -834,3 +834,19 @@ int iem_fstyletoint(t_iem_fstyle_flags *fstylep)
 {
     return ((fstylep->x_font_style << 0) & 63);
 }
+
+char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj)
+{
+	t_gobj *y = (t_gobj *)iem_obj;
+	t_object *ob = pd_checkobject(&y->g_pd);
+
+	/* GOP objects are unable to call findrtext triggering consistency check error */
+	t_rtext *yyyy = NULL;
+	if (!glist->gl_isgraph || glist_istoplevel(glist))
+		yyyy = glist_findrtext(glist_getcanvas(glist), (t_text *)&ob->ob_g);
+
+	/* on GOP we cause segfault as text_gettag() returns bogus data */
+	if (yyyy) return(rtext_gettag(yyyy));
+	else return("bogus");
+}
+
