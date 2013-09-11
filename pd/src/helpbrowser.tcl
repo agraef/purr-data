@@ -21,7 +21,7 @@ proc ::helpbrowser::open_helpbrowser {} {
         wm deiconify .help_browser
         raise .help_browser
     } else {
-        toplevel .help_browser -class HelpBrowser
+        toplevel .help_browser -class [winfo class .]
         wm group .help_browser .
         wm transient .help_browser
         wm title .help_browser [_ "Help Browser"]
