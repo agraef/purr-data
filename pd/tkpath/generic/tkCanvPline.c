@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPline.c,v 1.25 2010/04/30 10:16:00 ebrunel Exp $
  */
 
 #include "tkIntPath.h"
@@ -25,8 +25,6 @@ typedef struct PlineItem  {
     Tk_PathItemEx headerEx; /* Generic stuff that's the same for all
                              * path types.  MUST BE FIRST IN STRUCTURE. */
     PathRect coords;		/* Coordinates (unorders bare bbox). */
-    PathRect totalBbox;		/* Bounding box including stroke.
-				 * Untransformed coordinates. */
 } PlineItem;
 
 
@@ -131,7 +129,7 @@ CreatePline(Tcl_Interp *interp, Tk_PathCanvas canvas, struct Tk_PathItem *itemPt
     itemExPtr->canvas = canvas;
     itemExPtr->styleObj = NULL;
     itemExPtr->styleInst = NULL;
-    plinePtr->totalBbox = NewEmptyPathRect();
+    itemPtr->totalBbox = NewEmptyPathRect();
     
     if (optionTable == NULL) {
 	optionTable = Tk_CreateOptionTable(interp, optionSpecs);
@@ -214,7 +212,7 @@ PlineCoords(Tcl_Interp *interp, Tk_PathCanvas canvas, Tk_PathItem *itemPtr,
     int result;
     
     result = ProcessCoords(interp, canvas, itemPtr, objc, objv);
-    if ((result == TCL_OK) && (objc == 1)) {
+    if ((result == TCL_OK) && ((objc == 1) || (objc == 4))) {
 	ComputePlineBbox(canvas, plinePtr);
     }
     return result;
@@ -242,8 +240,8 @@ ComputePlineBbox(Tk_PathCanvas canvas, PlineItem *plinePtr)
     r.x2 = MAX(plinePtr->coords.x1, plinePtr->coords.x2);
     r.y1 = MIN(plinePtr->coords.y1, plinePtr->coords.y2);
     r.y2 = MAX(plinePtr->coords.y1, plinePtr->coords.y2);
-    plinePtr->totalBbox = GetGenericPathTotalBboxFromBare(NULL, &style, &r);
-    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &plinePtr->totalBbox);
+    itemPtr->totalBbox = GetGenericPathTotalBboxFromBare(NULL, &style, &r);
+    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &itemPtr->totalBbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -410,7 +408,7 @@ ScalePline(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double originX, double or
 {
     PlineItem *plinePtr = (PlineItem *) itemPtr;
 
-    ScalePathRect(&plinePtr->totalBbox, originX, originY, scaleX, scaleY);
+    ScalePathRect(&itemPtr->totalBbox, originX, originY, scaleX, scaleY);
     ScalePathRect(&plinePtr->coords, originX, originY, scaleX, scaleY);
     ScaleItemHeader(itemPtr, originX, originY, scaleX, scaleY);
 }
@@ -421,7 +419,7 @@ TranslatePline(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double deltaX, double
     PlineItem *plinePtr = (PlineItem *) itemPtr;
 
     /* Just translate the bbox as well. */
-    TranslatePathRect(&plinePtr->totalBbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->totalBbox, deltaX, deltaY);
     TranslatePathRect(&plinePtr->coords, deltaX, deltaY);
     TranslateItemHeader(itemPtr, deltaX, deltaY);
 }

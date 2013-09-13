@@ -1,12 +1,12 @@
 /*
  * tkCanvPtext.c --
  *
- *	This file implements a text canvas item modelled after its
+486 *	This file implements a text canvas item modelled after its
  *	SVG counterpart. See http://www.w3.org/TR/SVG11/.
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPtext.c,v 1.26 2010/04/30 10:16:00 ebrunel Exp $
  */
 
 #include "tkIntPath.h"
@@ -28,8 +28,6 @@ typedef struct PtextItem  {
     int textAnchor;
     double x;
     double y;
-    PathRect bbox;		/* Bounding box with zero width outline.
-				 * Untransformed coordinates. */
     Tcl_Obj *utf8Obj;		/* The actual text to display; UTF-8 */
     int numChars;		/* Length of text in characters. */
     int numBytes;		/* Length of text in bytes. */
@@ -201,7 +199,7 @@ CreatePtext(Tcl_Interp *interp, Tk_PathCanvas canvas,
     itemExPtr->canvas = canvas;
     itemExPtr->styleObj = NULL;
     itemExPtr->styleInst = NULL;
-    ptextPtr->bbox = NewEmptyPathRect();
+    itemPtr->bbox = NewEmptyPathRect();
     ptextPtr->utf8Obj = NULL;
     ptextPtr->numChars = 0;
     ptextPtr->numBytes = 0;
@@ -344,7 +342,7 @@ ComputePtextBbox(Tk_PathCanvas canvas, PtextItem *ptextPtr)
         bbox.x2 += halfWidth;
         bbox.x2 += halfWidth;
     }
-    ptextPtr->bbox = bbox;
+    itemPtr->bbox = bbox;
     SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &bbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
@@ -485,7 +483,7 @@ DisplayPtext(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, Display *display, Drawa
     /* @@@ We need to handle gradients as well here!
            Wait to see what the other APIs have to say.
     */
-    TkPathTextDraw(ctx, &style, &ptextPtr->textStyle, ptextPtr->bbox.x1, ptextPtr->y, 
+    TkPathTextDraw(ctx, &style, &ptextPtr->textStyle, itemPtr->bbox.x1, ptextPtr->y, 
             Tcl_GetString(ptextPtr->utf8Obj), ptextPtr->custom);
     TkPathEndPath(ctx);
     TkPathFree(ctx);
@@ -508,7 +506,7 @@ PtextToPoint(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double *pointPtr)
 
     style = TkPathCanvasInheritStyle(itemPtr, 
 	    kPathMergeStyleNotFill | kPathMergeStyleNotStroke);
-    dist = PathRectToPointWithMatrix(ptextPtr->bbox, style.matrixPtr, pointPtr);    
+    dist = PathRectToPointWithMatrix(itemPtr->bbox, style.matrixPtr, pointPtr);    
     TkPathCanvasFreeInheritedStyle(&style);
     return dist;
 }
@@ -522,7 +520,7 @@ PtextToArea(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double *areaPtr)
     
     style = TkPathCanvasInheritStyle(itemPtr, 
 	    kPathMergeStyleNotFill | kPathMergeStyleNotStroke);
-    area = PathRectToAreaWithMatrix(ptextPtr->bbox, style.matrixPtr, areaPtr);
+    area = PathRectToAreaWithMatrix(itemPtr->bbox, style.matrixPtr, areaPtr);
     TkPathCanvasFreeInheritedStyle(&style);
     return area;
 }
@@ -541,7 +539,7 @@ ScalePtext(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double originX, double or
 
     ptextPtr->x = originX + scaleX*(ptextPtr->x - originX);
     ptextPtr->y = originY + scaleY*(ptextPtr->y - originY);
-    ScalePathRect(&ptextPtr->bbox, originX, originY, scaleX, scaleY);
+    ScalePathRect(&itemPtr->bbox, originX, originY, scaleX, scaleY);
     ScaleItemHeader(itemPtr, originX, originY, scaleX, scaleY);
 }
 
@@ -552,7 +550,7 @@ TranslatePtext(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double deltaX, double
 
     ptextPtr->x += deltaX;
     ptextPtr->y += deltaY;
-    TranslatePathRect(&ptextPtr->bbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->bbox, deltaX, deltaY);
     TranslateItemHeader(itemPtr, deltaX, deltaY);
 }
 

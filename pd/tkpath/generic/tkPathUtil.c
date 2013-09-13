@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkPathUtil.c,v 1.30 2012/07/04 19:43:18 petasis Exp $
  */
 
 #include <float.h>
@@ -190,6 +190,7 @@ TkPathGetTotalBbox(PathAtom *atomPtr, Tk_PathStyle *stylePtr)
 {
     PathRect bare, total;
     
+	fprintf(stderr,"TKPathGetTotalBbox\n");
     bare = GetGenericBarePathBbox(atomPtr);
     total = GetGenericPathTotalBboxFromBare(atomPtr, stylePtr, &bare);
     return total;

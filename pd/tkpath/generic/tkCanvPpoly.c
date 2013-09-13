@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPpoly.c,v 1.25 2010/04/30 10:16:00 ebrunel Exp $
  */
 
 #include "tkIntPath.h"
@@ -26,10 +26,6 @@ typedef struct PpolyItem  {
                              * path types.  MUST BE FIRST IN STRUCTURE. */
     char type;		    /* Polyline or polygon. */
     PathAtom *atomPtr;
-    PathRect bbox;	    /* Bounding box with zero width outline.
-			     * Untransformed coordinates. */
-    PathRect totalBbox;	    /* Bounding box including stroke.
-			     * Untransformed coordinates. */
     int maxNumSegments;	    /* Max number of straight segments (for subpath)
 			     * needed for Area and Point functions. */
 } PpolyItem;
@@ -198,8 +194,8 @@ CreateAny(Tcl_Interp *interp, Tk_PathCanvas canvas, struct Tk_PathItem *itemPtr,
     itemExPtr->styleInst = NULL;
     ppolyPtr->atomPtr = NULL;
     ppolyPtr->type = type;
-    ppolyPtr->bbox = NewEmptyPathRect();
-    ppolyPtr->totalBbox = NewEmptyPathRect();
+    itemPtr->bbox = NewEmptyPathRect();
+    itemPtr->totalBbox = NewEmptyPathRect();
     ppolyPtr->maxNumSegments = 0;
     
     if (ppolyPtr->type == kPpolyTypePolyline) {
@@ -280,10 +276,10 @@ ComputePpolyBbox(Tk_PathCanvas canvas, PpolyItem *ppolyPtr)
         return;
     }
     style = TkPathCanvasInheritStyle(itemPtr, kPathMergeStyleNotFill);
-    ppolyPtr->bbox = GetGenericBarePathBbox(ppolyPtr->atomPtr);
-    ppolyPtr->totalBbox = GetGenericPathTotalBboxFromBare(ppolyPtr->atomPtr,
-            &style, &ppolyPtr->bbox);
-    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &ppolyPtr->totalBbox);
+    itemPtr->bbox = GetGenericBarePathBbox(ppolyPtr->atomPtr);
+    itemPtr->totalBbox = GetGenericPathTotalBboxFromBare(ppolyPtr->atomPtr,
+            &style, &itemPtr->bbox);
+    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &itemPtr->totalBbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -384,7 +380,7 @@ DisplayPpoly(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, Display *display, Drawa
     
     style = TkPathCanvasInheritStyle(itemPtr, 0);
     TkPathDrawPath(Tk_PathCanvasTkwin(canvas), drawable, ppolyPtr->atomPtr, &style,
-            &m, &ppolyPtr->bbox);
+            &m, &itemPtr->bbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -440,8 +436,8 @@ ScalePpoly(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double originX, double or
     PpolyItem *ppolyPtr = (PpolyItem *) itemPtr;
 
     ScalePathAtoms(ppolyPtr->atomPtr, originX, originY, scaleX, scaleY);
-    ScalePathRect(&ppolyPtr->bbox, originX, originY, scaleX, scaleY);
-    ScalePathRect(&ppolyPtr->totalBbox, originX, originY, scaleX, scaleY);
+    ScalePathRect(&itemPtr->bbox, originX, originY, scaleX, scaleY);
+    ScalePathRect(&itemPtr->totalBbox, originX, originY, scaleX, scaleY);
     ScaleItemHeader(itemPtr, originX, originY, scaleX, scaleY);
 }
 
@@ -451,9 +447,9 @@ TranslatePpoly(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double deltaX, double
     PpolyItem *ppolyPtr = (PpolyItem *) itemPtr;
 
     TranslatePathAtoms(ppolyPtr->atomPtr, deltaX, deltaY);
-    TranslatePathRect(&ppolyPtr->bbox, deltaX, deltaY);
-    TranslatePathRect(&ppolyPtr->totalBbox, deltaX, deltaY);
-    TranslateItemHeader(itemPtr, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->bbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->totalBbox, deltaX, deltaY);
+    TranslateItemHeader(itemPtr, deltaX, deltaY);    
 }
 
 /*

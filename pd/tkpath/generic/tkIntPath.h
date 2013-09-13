@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkIntPath.h,v 1.52 2010/04/30 10:16:00 ebrunel Exp $
  */
 
 #ifndef INCLUDED_TKINTPATH_H

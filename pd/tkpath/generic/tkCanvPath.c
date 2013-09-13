@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPath.c,v 1.55 2012/07/04 19:43:18 petasis Exp $
  */
 
 #include "tkIntPath.h"
@@ -35,10 +35,6 @@ typedef struct PathItem  {
     int pathLen;
     Tcl_Obj *normPathObjPtr;/* The object containing the normalized path. */
     PathAtom *atomPtr;
-    PathRect bbox;          /* Bounding box with zero width outline.
-                             * Untransformed coordinates. */
-    PathRect totalBbox;     /* Bounding box including stroke.
-                             * Untransformed coordinates. */
     int maxNumSegments;     /* Max number of straight segments (for subpath)
                              * needed for Area and Point functions. */
     long flags;             /* Various flags, see enum. */
@@ -215,8 +211,8 @@ CreatePath(
     pathPtr->pathLen = 0;
     pathPtr->normPathObjPtr = NULL;
     pathPtr->atomPtr = NULL;
-    pathPtr->bbox = NewEmptyPathRect();
-    pathPtr->totalBbox = NewEmptyPathRect();
+    itemPtr->bbox = NewEmptyPathRect();
+    itemPtr->totalBbox = NewEmptyPathRect();
     pathPtr->maxNumSegments = 0;
     pathPtr->flags = 0L;
     
@@ -404,10 +400,10 @@ ComputePathBbox(
      * Get an approximation of the path's bounding box
      * assuming zero stroke width.
      */
-    pathPtr->bbox = GetGenericBarePathBbox(pathPtr->atomPtr);
-    pathPtr->totalBbox = GetGenericPathTotalBboxFromBare(pathPtr->atomPtr,
-            &style, &pathPtr->bbox);
-    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &pathPtr->totalBbox);
+    itemPtr->bbox = GetGenericBarePathBbox(pathPtr->atomPtr);
+    itemPtr->totalBbox = GetGenericPathTotalBboxFromBare(pathPtr->atomPtr,
+            &style, &itemPtr->bbox);
+    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &itemPtr->totalBbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -586,7 +582,7 @@ DisplayPath(
     if (pathPtr->pathLen > 2) {
         style = TkPathCanvasInheritStyle(itemPtr, 0);
         TkPathDrawPath(Tk_PathCanvasTkwin(canvas), drawable, pathPtr->atomPtr, 
-                &style, &m, &pathPtr->bbox);
+                &style, &m, &itemPtr->bbox);
         TkPathCanvasFreeInheritedStyle(&style);
     }
 }
@@ -903,10 +899,10 @@ ScalePath(
     pathPtr->flags |= kPathItemNeedNewNormalizedPath;
 
     /* Just scale the bbox'es as well. */
-    ScalePathRect(&pathPtr->bbox, originX, originY, scaleX, scaleY);
-    NormalizePathRect(&pathPtr->bbox);
+    ScalePathRect(&itemPtr->bbox, originX, originY, scaleX, scaleY);
+    NormalizePathRect(&itemPtr->bbox);
     
-    ScalePathRect(&pathPtr->totalBbox, originX, originY, scaleX, scaleY);
+    ScalePathRect(&itemPtr->totalBbox, originX, originY, scaleX, scaleY);
     NormalizePathRect(&r);
     ScaleItemHeader(itemPtr, originX, originY, scaleX, scaleY);
 }
@@ -948,8 +944,8 @@ TranslatePath(
     pathPtr->flags |= kPathItemNeedNewNormalizedPath;
 
     /* Just translate the bbox'es as well. */
-    TranslatePathRect(&pathPtr->bbox, deltaX, deltaY);
-    TranslatePathRect(&pathPtr->totalBbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->bbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->totalBbox, deltaX, deltaY);
     TranslateItemHeader(itemPtr, deltaX, deltaY);
 }
 

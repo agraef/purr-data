@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2005-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkPath.h,v 1.32 2008/06/14 14:23:25 matben Exp $
  */
 
 #ifndef INCLUDED_TKPATH_H
@@ -51,13 +51,6 @@ typedef struct PathPoint {
     double x;
     double y;
 } PathPoint;
-
-typedef struct PathRect {
-    double x1;
-    double y1;
-    double x2;
-    double y2;
-} PathRect;
 
 /*
  * The transformation matrix:

@@ -13,7 +13,7 @@
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * RCS: @(#) $Id: tkpCanvas.c,v 1.16 2012/07/04 19:43:18 petasis Exp $
  */
 
 /* #define USE_OLD_TAG_SEARCH 1 */
@@ -1074,8 +1074,8 @@ CanvasWidgetCmd(
 	char *arg;
 	int length;
 
-	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "type coords ?arg arg ...?");
+	if (objc < 2) {
+	    Tcl_WrongNumArgs(interp, 1, objv, "type ?arg arg ...?");
 	    result = TCL_ERROR;
 	    goto done;
 	}

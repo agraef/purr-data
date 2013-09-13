@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvGroup.c,v 1.9 2008/07/23 07:08:37 matben Exp $
  */
 
 #include <float.h>

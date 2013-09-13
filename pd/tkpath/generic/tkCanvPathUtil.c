@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPathUtil.c,v 1.34 2008/08/10 08:02:17 matben Exp $
  */
 
 #include "tkPathStyle.h"
@@ -1963,10 +1963,14 @@ TranslateItemHeader(Tk_PathItem *itemPtr, double deltaX, double deltaY)
     /* If all coords == -1 the item is hidden. */
     if ((itemPtr->x1 != -1) || (itemPtr->x2 != -1) ||
 	    (itemPtr->y1 != -1) || (itemPtr->y2 != -1)) {
-	itemPtr->x1 += (int) deltaX;
-	itemPtr->x2 += (int) deltaX;
-	itemPtr->y1 += (int) deltaY;
-	itemPtr->y2 += (int) deltaY;
+        Tk_PathStyle style;
+        style = TkPathCanvasInheritStyle(itemPtr, kPathMergeStyleNotFill);
+        SetGenericPathHeaderBbox(itemPtr, style.matrixPtr, &itemPtr->totalBbox);
+        TkPathCanvasFreeInheritedStyle(&style);
+    	/*itemPtr->x1 += (int) deltaX;
+    	itemPtr->x2 += (int) deltaX;
+    	itemPtr->y1 += (int) deltaY;
+    	itemPtr->y2 += (int) deltaY;*/
     }
 }
 

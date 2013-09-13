@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPathUtil.h,v 1.24 2008/07/16 13:17:28 matben Exp $
  */
 
 #ifndef INCLUDED_TKCANVPATHUTIL_H

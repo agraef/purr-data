@@ -1,3 +1,15 @@
+2013-09-12  Ivica Ico Bukvic  <ico@vt.edu>
+
+        * moved bbox and totalBbox to Tk_PathItem to make it visible
+        to Translate calls that previously failed to take into
+        account transforms via matrices (e.g. scale). This resulted
+        in artifacts left behind when translating objects with 
+        scaling matrices applied to them (the same solves scale
+        calls and potentially ensuing artifacts as well)
+        * adapted all objects to reflect aforesaid change
+	* merged patch by Sean McKnight found at:
+        https://sourceforge.net/p/tclbitprint/patches/3/
+
 2012-07-04  George Petasis  <petasis@iit.demokritos.gr>
 
         * generic/tkpUtil.c: Fix in the tkStateKeyObjType definistion, in

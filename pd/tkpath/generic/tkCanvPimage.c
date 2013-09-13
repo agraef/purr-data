@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPimage.c,v 1.27 2010/04/30 10:16:00 ebrunel Exp $
  */
 
 #include "tkIntPath.h"
@@ -42,8 +42,6 @@ typedef struct PimageItem  {
     Tk_PhotoHandle photo;
     double width;	    /* If 0 use natural width or height. */
     double height;
-    PathRect bbox;	    /* Bounding box with zero width outline.
-                             * Untransformed coordinates. */
 } PimageItem;
 
 
@@ -192,7 +190,7 @@ CreatePimage(Tcl_Interp *interp, Tk_PathCanvas canvas, struct Tk_PathItem *itemP
     pimagePtr->photo = NULL;
     pimagePtr->height = 0;
     pimagePtr->width = 0;
-    pimagePtr->bbox = NewEmptyPathRect();
+    itemPtr->bbox = NewEmptyPathRect();
     
     if (optionTable == NULL) {
 	optionTable = Tk_CreateOptionTable(interp, optionSpecs);
@@ -267,6 +265,7 @@ GetTMatrix(PimageItem *pimagePtr)
 void
 ComputePimageBbox(Tk_PathCanvas canvas, PimageItem *pimagePtr)
 {
+    Tk_PathItem *itemPtr = (Tk_PathItem *)pimagePtr;
     Tk_PathState state = pimagePtr->header.state;
     TMatrix matrix;
     int width = 0, height = 0;
@@ -291,7 +290,7 @@ ComputePimageBbox(Tk_PathCanvas canvas, PimageItem *pimagePtr)
     bbox.y1 = pimagePtr->coord[1];
     bbox.x2 = bbox.x1 + width;
     bbox.y2 = bbox.y1 + height;
-    pimagePtr->bbox = bbox;
+    itemPtr->bbox = bbox;
     matrix = GetTMatrix(pimagePtr);
     SetGenericPathHeaderBbox(&pimagePtr->header, &matrix, &bbox);
 }
@@ -472,7 +471,7 @@ PimageToPoint(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double *pointPtr)
 {
     PimageItem *pimagePtr = (PimageItem *) itemPtr;
     TMatrix m = GetTMatrix(pimagePtr);
-    return PathRectToPointWithMatrix(pimagePtr->bbox, &m, pointPtr);
+    return PathRectToPointWithMatrix(itemPtr->bbox, &m, pointPtr);
 }
 
 static int		
@@ -480,7 +479,7 @@ PimageToArea(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double *areaPtr)
 {
     PimageItem *pimagePtr = (PimageItem *) itemPtr;
     TMatrix m = GetTMatrix(pimagePtr);
-    return PathRectToAreaWithMatrix(pimagePtr->bbox, &m, areaPtr);
+    return PathRectToAreaWithMatrix(itemPtr->bbox, &m, areaPtr);
 }
 
 static int		
@@ -502,7 +501,7 @@ TranslatePimage(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double deltaX, doubl
     PimageItem *pimagePtr = (PimageItem *) itemPtr;
 
     /* Just translate the bbox'es as well. */
-    TranslatePathRect(&(pimagePtr->bbox), deltaX, deltaY);
+    TranslatePathRect(&(itemPtr->bbox), deltaX, deltaY);
     pimagePtr->coord[0] += deltaX;
     pimagePtr->coord[1] += deltaY;
     TranslateItemHeader(itemPtr, deltaX, deltaY);

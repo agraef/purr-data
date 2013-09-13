@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkCanvPrect.c,v 1.28 2010/04/30 10:16:00 ebrunel Exp $
  */
 
 #include "tkIntPath.h"
@@ -26,10 +26,6 @@ typedef struct PrectItem  {
                              * path types.  MUST BE FIRST IN STRUCTURE. */
     double rx;		    /* Radius of corners. */
     double ry;
-    PathRect rect;	    /* Bounding box with zero width outline.
-                             * Untransformed coordinates. */
-    PathRect totalBbox;	    /* Bounding box including stroke.
-                             * Untransformed coordinates. */
     int maxNumSegments;	    /* Max number of straight segments (for subpath)
                              * needed for Area and Point functions. */
 } PrectItem;
@@ -153,8 +149,8 @@ CreatePrect(Tcl_Interp *interp, Tk_PathCanvas canvas, Tk_PathItem *itemPtr,
     itemExPtr->canvas = canvas;
     itemExPtr->styleObj = NULL;
     itemExPtr->styleInst = NULL;
-    prectPtr->rect = NewEmptyPathRect();
-    prectPtr->totalBbox = NewEmptyPathRect();
+    itemPtr->bbox = NewEmptyPathRect();
+    itemPtr->totalBbox = NewEmptyPathRect();
     prectPtr->maxNumSegments = 100;		/* Crude overestimate. */
     
     if (optionTable == NULL) {
@@ -172,7 +168,7 @@ CreatePrect(Tcl_Interp *interp, Tk_PathCanvas canvas, Tk_PathItem *itemPtr,
             break;
         }
     }
-    if (CoordsForRectangularItems(interp, canvas, &prectPtr->rect, i, objv) != TCL_OK) {
+    if (CoordsForRectangularItems(interp, canvas, &itemPtr->bbox, i, objv) != TCL_OK) {
         goto error;
     }
     if (ConfigurePrect(interp, canvas, itemPtr, objc-i, objv+i, 0) == TCL_OK) {
@@ -196,7 +192,7 @@ PrectCoords(Tcl_Interp *interp, Tk_PathCanvas canvas, Tk_PathItem *itemPtr,
     PrectItem *prectPtr = (PrectItem *) itemPtr;
     int result;
 
-    result = CoordsForRectangularItems(interp, canvas, &prectPtr->rect, objc, objv);
+    result = CoordsForRectangularItems(interp, canvas, &itemPtr->bbox, objc, objv);
     if ((result == TCL_OK) && ((objc == 1) || (objc == 4))) {
 	ComputePrectBbox(canvas, prectPtr);
     }
@@ -220,8 +216,8 @@ ComputePrectBbox(Tk_PathCanvas canvas, PrectItem *prectPtr)
         return;
     }
     style = TkPathCanvasInheritStyle(itemPtr, kPathMergeStyleNotFill);
-    prectPtr->totalBbox = GetGenericPathTotalBboxFromBare(NULL, &style, &prectPtr->rect);
-    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &prectPtr->totalBbox);
+    itemPtr->totalBbox = GetGenericPathTotalBboxFromBare(NULL, &style, &itemPtr->bbox);
+    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &itemPtr->totalBbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -293,13 +289,14 @@ ConfigurePrect(Tcl_Interp *interp, Tk_PathCanvas canvas, Tk_PathItem *itemPtr,
 static PathAtom *
 MakePathAtoms(PrectItem *prectPtr)
 {
+    Tk_PathItem *itemPtr = (Tk_PathItem *) prectPtr;
     PathAtom *atomPtr;
     double points[4];
     
-    points[0] = prectPtr->rect.x1;
-    points[1] = prectPtr->rect.y1;
-    points[2] = prectPtr->rect.x2;
-    points[3] = prectPtr->rect.y2;
+    points[0] = itemPtr->bbox.x1;
+    points[1] = itemPtr->bbox.y1;
+    points[2] = itemPtr->bbox.x2;
+    points[3] = itemPtr->bbox.y2;
     TkPathMakePrectAtoms(points, prectPtr->rx, prectPtr->ry, &atomPtr);
     return atomPtr;
 }
@@ -336,7 +333,7 @@ DisplayPrect(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, Display *display, Drawa
     style = TkPathCanvasInheritStyle(itemPtr, 0);
     atomPtr = MakePathAtoms(prectPtr);
     TkPathDrawPath(Tk_PathCanvasTkwin(canvas), drawable, atomPtr, 
-	    &style, &m, &prectPtr->rect);
+	    &style, &m, &itemPtr->bbox);
     TkPathFreeAtoms(atomPtr);
     TkPathCanvasFreeInheritedStyle(&style);
 }
@@ -354,7 +351,7 @@ PrectToPoint(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double *pointPtr)
     PrectItem *prectPtr = (PrectItem *) itemPtr;
     Tk_PathStyle style;
     TMatrix *mPtr;
-    PathRect *rectPtr = &prectPtr->rect;
+    PathRect *rectPtr = &itemPtr->bbox;
     double bareRect[4];
     double width, dist;
     int rectiLinear = 0;
@@ -405,7 +402,7 @@ PrectToArea(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double *areaPtr)
     Tk_PathItemEx *itemExPtr = &prectPtr->headerEx;
     Tk_PathStyle style = itemExPtr->style;  /* NB: We *copy* the style for temp usage. */
     TMatrix *mPtr;
-    PathRect *rectPtr = &(prectPtr->rect);
+    PathRect *rectPtr = &(itemPtr->bbox);
     double bareRect[4];
     double width;
     int rectiLinear = 0;
@@ -459,20 +456,20 @@ static void
 ScalePrect(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double originX, double originY,
         double scaleX, double scaleY)
 {
-    PrectItem *prectPtr = (PrectItem *) itemPtr;
+    //PrectItem *prectPtr = (PrectItem *) itemPtr;
 
-    ScalePathRect(&prectPtr->rect, originX, originY, scaleX, scaleY);
+    ScalePathRect(&itemPtr->bbox, originX, originY, scaleX, scaleY);
     ScaleItemHeader(itemPtr, originX, originY, scaleX, scaleY);
 }
 
 static void		
 TranslatePrect(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double deltaX, double deltaY)
 {
-    PrectItem *prectPtr = (PrectItem *) itemPtr;
+    //PrectItem *prectPtr = (PrectItem *) itemPtr;
 
     /* Just translate the bbox'es as well. */
-    TranslatePathRect(&prectPtr->rect, deltaX, deltaY);
-    TranslatePathRect(&prectPtr->totalBbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->bbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->totalBbox, deltaX, deltaY);
     TranslateItemHeader(itemPtr, deltaX, deltaY);
 }
 

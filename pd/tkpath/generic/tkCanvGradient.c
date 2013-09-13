@@ -7,7 +7,7 @@
  *
  * TODO: o Add tkwin option here and there so we can free stop colors!
  *
- * $Id$
+ * $Id: tkCanvGradient.c,v 1.3 2012/07/04 19:43:18 petasis Exp $
  */
 
 #include "tkIntPath.h"

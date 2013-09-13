@@ -6,7 +6,7 @@
  *
  * Copyright (c) 2007-2008  Mats Bengtsson
  *
- * $Id$
+ * $Id: tkPathStyle.h,v 1.5 2008/06/03 08:08:17 matben Exp $
  */
 
 #include "tkIntPath.h"

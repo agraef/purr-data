@@ -4,7 +4,7 @@
  *		This file includes stuff from tk.h which we need
  *		in a modified form and to make the tkp::canvas self contained.
  *
- * $Id$
+ * $Id: tkp.h,v 1.6 2008/07/16 13:17:33 matben Exp $
  */
 
 #ifndef INCLUDED_TKP_H
@@ -68,6 +68,13 @@ typedef struct Tk_PathTags {
 				 * *tagPtr. */
 } Tk_PathTags;
 
+typedef struct PathRect {
+    double x1;
+    double y1;
+    double x2;
+    double y2;
+} PathRect;
+
 typedef struct Tk_PathItem {
     int id;			/* Unique identifier for this item (also
 				 * serves as first tag for item). */
@@ -106,6 +113,10 @@ typedef struct Tk_PathItem {
 				 * item. Item area includes x1 and y1 but not
 				 * x2 and y2. */
     Tk_PathState state;		/* State of item. */
+    PathRect bbox;	    /* Bounding box with zero width outline.
+                             * Untransformed coordinates. */
+    PathRect totalBbox;	    /* Bounding box including stroke.
+                             * Untransformed coordinates. */
     char *reserved1;		/* reserved for future use */
     int redraw_flags;		/* Some flags used in the canvas */
 
