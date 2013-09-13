@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 335 85 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header fft~ 3 12 0 18 -204280
 -1 0;
 #X obj 0 399 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 254 507 361 META 0;
+#N canvas 191 393 406 290 META 0;
 #X text 12 150 LIBRARY internal;
 #X text 12 190 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 210 RELEASE_DATE 2009-06-12;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 551 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 527 (none);
-#N canvas 103 483 428 107 Related_objects 0;
+#N canvas 435 567 428 107 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [fft~] Related Objects;
@@ -36,7 +36,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 68 42 rfft~;
 #X obj 114 42 rifft~;
 #X obj 163 42 block~;
-#X text 211 42 [switch~];
+#X obj 214 42 switch~;
 #X restore 101 597 pd Related_objects;
 #X obj 78 408 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
