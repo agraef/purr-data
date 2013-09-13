@@ -4302,6 +4302,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         
     int down, shift;
 	int focus = 1;
+	int autorepeat = 0;
 
 		/* remove stale tooltips, if any */
 	if (objtooltip) {
@@ -4309,13 +4310,15 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 		sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
 	}
     
-    if (ac < 3)
+    if (ac < 5)
         return;
     if (!x || !x->gl_editor)
         return;
     canvas_undo_already_set_move = 0;
     down = (atom_getfloat(av) != 0);  /* nonzero if it's a key down */
     shift = (atom_getfloat(av+2) != 0);  /* nonzero if shift-ed */
+    autorepeat = (int)(atom_getfloat(av+4));
+    //fprintf(stderr,"canvas_key autorepeat=%d\n", autorepeat);
 	glob_shift = shift;
 	//fprintf(stderr,"%d %d %d %d\n", (x->gl_editor != NULL ? 1 : 0), (x->gl_editor->e_onmotion == MA_CONNECT ? 1 : 0), glob_shift, glob_lmclick);
 
@@ -4386,18 +4389,20 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         else if (keynum == 29)
             keynum = 0, gotkeysym = gensym("Right");
 #endif
-    if (keynumsym->s_thing && down)
-        pd_float(keynumsym->s_thing, (t_float)keynum);
-    if (keyupsym->s_thing && !down)
-        pd_float(keyupsym->s_thing, (t_float)keynum);
-    if (keynamesym->s_thing)
-    {
-        t_atom at[2];
-        at[0] = av[0];
-        SETFLOAT(at, down);
-        SETSYMBOL(at+1, gotkeysym);
-        pd_list(keynamesym->s_thing, 0, 2, at);
-    }
+    if (!autorepeat) {
+	    if (keynumsym->s_thing && down)
+	        pd_float(keynumsym->s_thing, (t_float)keynum);
+	    if (keyupsym->s_thing && !down)
+	        pd_float(keyupsym->s_thing, (t_float)keynum);
+	    if (keynamesym->s_thing)
+	    {
+	        t_atom at[2];
+	        at[0] = av[0];
+	        SETFLOAT(at, down);
+	        SETSYMBOL(at+1, gotkeysym);
+	        pd_list(keynamesym->s_thing, 0, 2, at);
+	    }
+	}
     if (!x->gl_editor)  /* if that 'invis'ed the window, we'd better stop. */
         return;
     if (x && down)
