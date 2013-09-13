@@ -396,14 +396,14 @@ static void key_setup(void)
         sizeof(t_keyup), CLASS_NOINLET, 0);
     class_addfloat(keyup_class, keyup_float);
     keyup_sym = gensym("#keyup");
-    class_sethelpsymbol(keyup_class, gensym("key"));
+    //class_sethelpsymbol(keyup_class, gensym("key"));
     
     keyname_class = class_new(gensym("keyname"),
         (t_newmethod)keyname_new, (t_method)keyname_free,
         sizeof(t_keyname), CLASS_NOINLET, 0);
     class_addlist(keyname_class, keyname_list);
     keyname_sym = gensym("#keyname");
-    class_sethelpsymbol(keyname_class, gensym("key"));
+    //class_sethelpsymbol(keyname_class, gensym("key"));
 }
 
 /* -------------------------- setup routine ------------------------------ */
