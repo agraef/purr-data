@@ -60,6 +60,8 @@ main(int argc, char **argv)
     {
         //specify root window name
         argc--; argv++;
+    } else if (argc == 1) { //if we are running directly from pd-gui with no args
+        argv[0]="pd-l2ork";
     }
     Tk_Main(argc, argv, Tcl_AppInit);
     return 0;                   /* Needed only to prevent compiler warning. */
