@@ -5,7 +5,7 @@ package ifneeded helpbrowser 0.1 [list source [file join $dir helpbrowser.tcl]]
 
 namespace eval ::tkpath {
     proc load_package {dir} {
-	load [file join $dir libtkpath0.3.2.so]
+	load [file join $dir libtkpath0.3.3.so]
 	# Allow optional redirect of library components.
 	# Only necessary for testing, but could be used elsewhere.
 	if {[info exists ::env(TKPATH_LIBRARY)]} {
@@ -16,5 +16,9 @@ namespace eval ::tkpath {
 }
 
 package ifneeded tkpath 0.3.2 [list ::tkpath::load_package $dir]
+
+package ifneeded tkdnd 2.6 \
+  "source \{$dir/tkdnd.tcl\} ; \
+   tkdnd::initialise \{$dir\} libtkdnd2.6.so tkdnd"
 
 #*EOF*

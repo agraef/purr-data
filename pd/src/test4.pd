@@ -1,0 +1,5 @@
+#N canvas 433 184 450 300 10;
+#X floatatom 40 40 5 0 0 0 - - -, f 5;
+#X floatatom 399 207 5 0 0 0 - - -, f 5;
+#X obj 171 26 l2ork_toggle_scrollbars 0;
+#X connect 0 0 1 0;

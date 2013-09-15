@@ -1,0 +1,7 @@
+#N canvas 433 184 450 300 10;
+#X obj 187 107 bng 21 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 225 54 size \$1;
+#X floatatom 225 28 5 0 0 0 - - -, f 5;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;

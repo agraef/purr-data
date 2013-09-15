@@ -194,10 +194,15 @@ tkpath:
 	make -C ../tkpath
 	cd ../src
 
+tkdnd:
+	cd ../tkdnd && aclocal && autoconf && ./configure --prefix=$(prefix)
+	make -C ../tkdnd
+	cd ../src
+
 BINARYMODE=@binarymode@
 
 ABOUT_FILE=$(DESTDIR)$(pddocdir)/1.manual/1.introduction.txt
-install: all tkpath
+install: all tkpath tkdnd
 	install -d $(DESTDIR)$(libpdbindir)
 	install $(BIN_DIR)/$(GUINAME) $(DESTDIR)$(libpdbindir)/$(GUINAME)
 	install $(BIN_DIR)/pd-watchdog $(DESTDIR)$(libpdbindir)/pd-watchdog
@@ -206,11 +211,16 @@ install: all tkpath
 	install -m644 helpbrowser.tcl $(DESTDIR)$(libpdbindir)/helpbrowser.tcl
 	install -m644 ../tkpath/library/tkpath.tcl $(DESTDIR)$(libpdbindir)/tkpath.tcl
 	install -m644 ../tkpath/libtkpath*so $(DESTDIR)$(libpdbindir)/
+	install -m644 ../tkdnd/library/tkdnd.tcl $(DESTDIR)$(libpdbindir)/tkdnd.tcl
+	install -m644 ../tkdnd/library/tkdnd_unix.tcl $(DESTDIR)$(libpdbindir)/tkdnd_unix.tcl
+	install -m644 ../tkdnd/library/tkdnd_compat.tcl $(DESTDIR)$(libpdbindir)/tkdnd_compat.tcl
+	install -m644 ../tkdnd/libtkdnd*so $(DESTDIR)$(libpdbindir)/
 	install -d $(DESTDIR)$(bindir)
 	install $(BINARYMODE) $(PDEXEC) $(DESTDIR)$(bindir)/@PDEXEC@
 # kludge to allow pd~ to work by default in pd-l2ork
 	rm -f $(DESTDIR)$(libpddir)/pd
 	ln -sf $(bindir)/pd-l2ork $(DESTDIR)$(libpddir)/pd-l2ork
+	ln -sf $(bindir)/pd-l2ork $(DESTDIR)$(libpdbindir)/pd-l2ork
 	install -m755 $(BIN_DIR)/pdsend $(DESTDIR)$(bindir)/pdsend
 	install -m755 $(BIN_DIR)/pdreceive $(DESTDIR)$(bindir)/pdreceive 
 	for dir in $(shell ls -1 ../doc | grep -v CVS); do \

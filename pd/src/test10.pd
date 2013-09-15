@@ -1,0 +1,12 @@
+#N canvas 583 132 450 300 10;
+#X obj 111 137 aaaaaaaaaaaaaaaa;
+#X obj 96 51 key;
+#X obj 96 72 print PRESS;
+#X obj 174 72 print RELEASE;
+#X obj 265 72 print NAME;
+#X obj 265 51 keyname;
+#X obj 152 104 l2ork_toggle_console 1;
+#X obj 174 51 keyup;
+#X connect 1 0 2 0;
+#X connect 5 0 4 0;
+#X connect 7 0 3 0;

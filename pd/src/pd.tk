@@ -625,6 +625,7 @@ set auto_path [linsert $auto_path 0 [file dirname [info script]]]
 package require helpbrowser
 package require msgcat
 package require tkpng
+package require tkdnd
 
 # official GNU gettext msgcat shortcut
 proc _ {s} {return [::msgcat::mc $s]}
@@ -844,7 +845,8 @@ wm withdraw .printout
 
 bind .printout.frame.text <Button> {pdtk_update_root_edit_menu 0}
 bind .printout.frame.text <<Selection>> {pdtk_update_root_edit_menu 1}
-bind .printout <Control-Next> {menu_raisenextwindow}	
+bind .printout <Control-Next> {menu_raisenextwindow}
+bind .printout <Control-Prior> {menu_raisepreviouswindow} ;# needs Tcl/Tk 8.5
 bind .printout <Control-w> { .controls.switches.console invoke }
 
 proc pdtk_update_root_edit_menu {value} {
@@ -939,6 +941,11 @@ if { [info tclversion] >= 8.5 && $pd_nt == 0 } { wm resizable . 0 0 }
 # Intercept closing the main pd window: MP 20060413:
 wm protocol . WM_DELETE_WINDOW menu_quit
 focus .
+after idle {
+	dnd bindtarget . text/uri-list <Drop> { foreach file %D {open_file $file} }
+	dnd bindtarget .printout.frame text/uri-list <Drop> { foreach file %D {open_file $file} }
+	dnd bindtarget .printout.bar text/uri-list <Drop> { foreach file %D {open_file $file} }
+}
 
 
 ############### set up global variables ################################
@@ -1176,13 +1183,6 @@ proc open_file {filename} {
     if {[regexp -nocase -- "\.(pd|pat|mxt)$" $basename]} {
         pd "pd open [pdtk_enquote $basename] [pdtk_enquote $directory] ;"
         set pd_opendir $directory
-    }
-}
-
-catch {
-    package require tkdnd
-    dnd bindtarget . text/uri-list <Drop> {
-        foreach file %D {open_file $file}
     }
 }
 
@@ -3251,10 +3251,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
             "pdtk_canvas_scroll $name.c x \[expr -abs(%D)/%D\]"
     }}
 
-    catch {
-        dnd bindtarget $name.c text/uri-list <Drop> \
-            "pdtk_canvas_makeobjs $name %D %x %y"
-    }
+    #dnd bindtarget $name.c text/uri-list <Drop> { pdtk_canvas_makeobjs $name %D %x %y }
+    after idle [list dnd bindtarget $name text/uri-list <Drop> { foreach file %D {open_file $file} }]
 
     #    puts stderr "all done"
     #   after 1 [concat raise $name]
@@ -3896,10 +3894,16 @@ proc pdtk_canvas_sendmiddleclick {name x y b f} {
 
 proc pdtk_canvas_click {name x y b f} {
     focus $name
-    set scroll_name [string trimright $name .c]
-    pdtk_canvas_detect_scroll_click $scroll_name $x $y $b $f
-	if { $::hit_scrollbar($scroll_name) == 0 } {
-    	pdtk_canvas_sendclick $name $x $y $b $f
+    if { $b == 6 } {
+        pdtk_canvas_scroll $name x -1
+	} elseif { $b == 7 } {
+        pdtk_canvas_scroll $name x +1
+	} else {
+	    set scroll_name [string trimright $name .c]
+	    pdtk_canvas_detect_scroll_click $scroll_name $x $y $b $f
+		if { $::hit_scrollbar($scroll_name) == 0 } {
+	    	pdtk_canvas_sendclick $name $x $y $b $f
+		}
 	}
 }
 
@@ -4673,9 +4677,12 @@ proc pdtk_canvas_unmap {name} {
 }
 
 proc pdtk_canvas_makeobjs {name files x y} {
+	puts stderr pdtk_canvas_makeobjs
     set c 0
     for {set n 0} {$n < [llength $files]} {incr n} {
+    	puts stderr "file $n"
         if {[regexp {.*/(.+).pd$} [lindex $files $n] file obj] == 1} {
+        	puts stderr "name obj"
             pd $name obj $x [expr $y + ($c * 30)] [pdtk_enquote $obj] \;
             incr c
         }

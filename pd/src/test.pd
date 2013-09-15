@@ -1,0 +1,7 @@
+#N canvas 433 184 450 300 10;
+#X floatatom 222 141 5 0 0 0 - - -, f 5;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array array1 5 float 1;
+#A 0 0 -0.0571432 1.11759e-08 -0.071429 -0.071429;
+#X coords 0 1 5 -1 200 140 1;
+#X restore 37 71 graph;
