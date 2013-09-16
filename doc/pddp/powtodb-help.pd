@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header powtodb 3 12 0 18
 -204280 -1 0;
 #X obj 0 428 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 243 494 344 META 0;
+#N canvas 488 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 437 cnv 17 3 53 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 538 (none);
-#N canvas 98 440 428 151 Related_objects 0;
+#N canvas 218 477 428 151 Related_objects 0;
 #X text 11 28 Control objects for conversion:;
 #X obj 23 116 mtof~;
 #X obj 68 116 ftom~;
@@ -53,9 +53,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 436 float;
 #X text 98 463 list;
 #X text 98 506 float;
-#X obj 474 3 powtodb;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/powtodb -text
-pdpedia: powtodb;
+#X obj 494 9 powtodb;
 #X text 11 23 convert from power units to dB;
 #X text 158 463 - lists will be truncated \, and the first element
 used as input.;
@@ -63,6 +61,7 @@ used as input.;
 #X text 109 252 The [powtodb] object converts power units \, equal
 to the square of the "RMS" amplitude \, to decibels.;
 #X obj 98 566 pddp/pddplink all_about_acoustic_conversions.pd;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 11 0 20 0;
-#X connect 20 0 10 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 19 0;
+#X connect 19 0 10 0;

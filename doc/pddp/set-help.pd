@@ -1,12 +1,12 @@
 #N struct set-help-template float x float y float a symbol b;
-#N canvas 0 0 555 619 10;
+#N canvas 425 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header set 3 12 0 18 -204280
 -1 0;
 #X obj 0 230 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 245 494 344 META 0;
+#N canvas 481 285 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ by Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 505 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 76 482 428 109 Related_objects 0;
+#N canvas 210 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [set] Related Objects;
@@ -46,9 +46,7 @@ by Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 98 265 list;
 #X obj 78 374 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
 -162280 0;
-#X obj 492 3 set;
-#X obj 466 20 pddp/pddplink http://wiki.puredata.info/en/set -text
-pdpedia: set;
+#X obj 518 11 set;
 #X text 11 23 set values in a scalar;
 #N canvas 381 200 428 296 set-help-template 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -75,7 +73,7 @@ b;
 #X scalar set-help-template 7 42 111 Comedy \;;
 #X obj 359 126 pointer;
 #X msg 359 73 traverse pd-set-help.pd \, next;
-#X floatatom 224 127 5 0 0 0 - - -;
+#X floatatom 224 127 5 0 0 0 - - -, f 5;
 #X text 366 56 output first scalar in list;
 #X scalar set-help-template 116 42 61 Tragedy \;;
 #X msg 370 98 next;
@@ -135,11 +133,11 @@ object.;
 #X obj 353 552 pddp/pddplink scalar-help.pd;
 #X obj 224 153 set set-help-template a;
 #X obj 224 201 set -symbol set-help-template b;
-#X symbolatom 224 180 10 0 0 0 - - -;
+#X symbolatom 224 180 10 0 0 0 - - -, f 10;
 #X text 236 73 Click here first->;
-#X connect 17 0 46 1;
-#X connect 17 0 47 1;
-#X connect 18 0 17 0;
-#X connect 19 0 46 0;
-#X connect 22 0 17 0;
-#X connect 48 0 47 0;
+#X connect 16 0 45 1;
+#X connect 16 0 46 1;
+#X connect 17 0 16 0;
+#X connect 18 0 45 0;
+#X connect 21 0 16 0;
+#X connect 47 0 46 0;

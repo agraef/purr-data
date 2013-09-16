@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header until 3 12 0 18
 -204280 -1 0;
 #X obj 0 346 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 243 494 367 META 0;
+#N canvas 485 256 494 367 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ for Pd version 0.42.;
 #X obj 0 500 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 476 (none);
-#N canvas 105 453 428 159 Related_objects 0;
+#N canvas 213 464 428 159 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [until] Related Objects;
@@ -46,9 +46,7 @@ for Pd version 0.42.;
 -162280 0;
 #X obj 78 407 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 482 3 until;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/until -text
-pdpedia: until;
+#X obj 499 11 until;
 #X obj 37 195 until;
 #X msg 37 172 100;
 #X obj 37 246 print i;
@@ -149,15 +147,16 @@ mechanism in place to stop the loop - otherwise Pd will effectively
 freeze. (See the "Loops" subpatch below.);
 #X obj 102 555 pddp/pddplink all_about_looping.pd -text all_about_looping
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 102 572 pddp/pddplink ../2.control.examples/24.loops.pd -text
 doc/2.control.examples/24.loops.pd;
-#X connect 14 0 25 0;
-#X connect 15 0 14 0;
-#X connect 25 0 16 0;
-#X connect 25 0 26 0;
-#X connect 26 0 25 1;
-#X connect 28 0 30 0;
-#X connect 29 0 28 0;
-#X connect 31 0 28 0;
-#X connect 32 0 28 0;
+#X connect 13 0 24 0;
+#X connect 14 0 13 0;
+#X connect 24 0 15 0;
+#X connect 24 0 25 0;
+#X connect 25 0 24 1;
+#X connect 27 0 29 0;
+#X connect 28 0 27 0;
+#X connect 30 0 27 0;
+#X connect 31 0 27 0;

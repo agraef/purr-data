@@ -1,41 +1,78 @@
-#N canvas 0 26 616 359 10;
-#X text 6 315 input values should be constrained between -1 and 1;
-#X text 236 97 this is probably only useful for mathematical calculations
+#N canvas 339 135 554 504 10;
+#X obj 0 479 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 355 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 503 392 385 253 META 0;
+#X text 354 316 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 354 196 LICENSE SIBSD;
+#X text 354 296 AUTHOR Miller Puckette;
+#X text 354 336 RELEASE_DATE 1997;
+#X text 354 276 LIBRARY cyclone;
+#X text 354 236 INLET_0 signal;
+#X text 354 256 OUTLET_0 signal;
+#X text 354 216 DESCRIPTION takes the hyperbolic tan function for signals
 ;
-#X obj 28 109 *~ 0.999;
-#X obj 28 86 cycle~ 2;
-#X msg 215 138 range -3.14159 3.14159;
-#X obj 160 112 -~ 0.999;
-#X obj 160 89 *~ 2;
-#X obj 160 67 phasor~ 2;
-#X text 16 35 Arc Hyperbolic tangent function (atanh(x)) for signals
+#X text 354 174 KEYWORDS hyperbolic tangent tan atanh tanh signal;
+#X text 354 356 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 504 481 pd META;
+#X obj 0 396 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 433 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 209 515 434 129 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 66 39 acosh~;
+#X obj 66 66 asin;
+#X obj 66 91 asinh~;
+#X obj 150 39 asin~;
+#X obj 150 66 atan~;
+#X obj 251 39 cosh~;
+#X obj 251 66 cosh;
+#X obj 251 91 cosx~;
+#X obj 335 39 acos~;
+#X obj 150 91 acos;
+#X restore 193 481 pd Related_objects;
+#X obj 79 405 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -2 cnv 15 552 40 empty \$0-pddp.cnv.header atanh~ 3 12 0 18
+-204280 -1 0;
+#X text 113 369 signal;
+#X text 113 405 signal;
+#X text 111 444 (none);
+#X text 16 23 Arc Hyperbolic tangent function (atanh(x)) for signals
 ;
-#X text 22 330 Note: asymptotic to infinity around -1 and 1;
-#X obj 26 164 Scope~ 130 130 256 3 128 -3.14159 3.14159 0 0 0 0 102
+#X obj 55 130 *~ 0.999;
+#X obj 55 107 cycle~ 2;
+#X msg 296 162 range -3.14159 3.14159;
+#X obj 241 136 -~ 0.999;
+#X obj 241 113 *~ 2;
+#X obj 241 91 phasor~ 2;
+#X obj 56 220 Scope~ 130 77 256 3 128 -3.14159 3.14159 0 0 0 0 102
 255 51 135 135 135 0;
-#X obj 171 168 Scope~ 130 130 256 3 128 -3.14159 3.14159 0 0 0 0 102
+#X obj 239 220 Scope~ 131 78 256 3 128 -3.14159 3.14159 0 0 0 0 102
 255 51 135 135 135 0;
-#X obj 28 136 atanh~;
-#X obj 159 136 atanh~;
-#N canvas 309 151 494 454 META 0;
-#X text 12 165 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 135 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X obj 55 157 atanh~;
+#X obj 240 160 atanh~;
+#X text 169 370 - input to atanh function;
+#X text 169 407 - output of atanh function;
+#X obj 504 2 atanh~;
+#X obj 483 47 pddp/dsp;
+#X obj 79 370 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 319 107 this is probably only useful for mathematical calculations
 ;
-#X text 12 5 KEYWORDS signal max_compatible trigonometry;
-#X text 12 45 DESCRIPTION arc hyperbolic tangent function (atanh(x))
-for signals;
-#X text 12 75 INLET_0 signal;
-#X text 12 95 OUTLET_0 signal;
-#X text 12 115 AUTHOR Krzysztof Czaja;
-#X text 12 25 LICENSE SIBSD;
-#X restore 565 337 pd META;
-#X connect 2 0 12 0;
-#X connect 3 0 2 0;
-#X connect 4 0 10 0;
-#X connect 4 0 11 0;
-#X connect 5 0 13 0;
-#X connect 6 0 5 0;
-#X connect 7 0 6 0;
-#X connect 12 0 10 0;
-#X connect 13 0 11 0;
+#X obj 10 480 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 20 0;
+#X connect 13 0 12 0;
+#X connect 14 0 18 0;
+#X connect 14 0 19 0;
+#X connect 15 0 21 0;
+#X connect 16 0 15 0;
+#X connect 17 0 16 0;
+#X connect 20 0 18 0;
+#X connect 21 0 19 0;

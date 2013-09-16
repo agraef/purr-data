@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 426 39 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header polytouchin 3 12
 0 18 -204280 -1 0;
 #X obj 0 411 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 116 213 494 375 META 0;
+#N canvas 481 259 494 375 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 428 421 Related_objects 0;
+#N canvas 206 210 428 421 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -78,9 +78,7 @@ by Olaf Matthes);
 ;
 #X text 98 572 for an explanation of MIDI usage in Pd see:;
 #X text 80 545 1) float;
-#X obj 455 3 polytouchin;
-#X obj 423 20 pddp/pddplink http://wiki.puredata.info/en/polytouchin
--text pdpedia: polytouchin;
+#X obj 466 11 polytouchin;
 #X text 11 23 needs a description;
 #X floatatom 257 208 0 0 0 0 - - -;
 #X floatatom 226 208 0 0 0 0 - - -;
@@ -90,7 +88,8 @@ by Olaf Matthes);
 #X text 168 472 - ???;
 #X text 168 497 - ???;
 #X text 168 545 - ???;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 24 0 22 0;
-#X connect 24 1 21 0;
-#X connect 24 2 23 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 23 0 21 0;
+#X connect 23 1 20 0;
+#X connect 23 2 22 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header outlet 3 12 0 18
 -204280 -1 0;
 #X obj 0 399 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 485 286 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -24,7 +24,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 217 518 428 109 Related_objects 0;
 #X obj 1 2 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 44 inlet;
@@ -32,8 +32,8 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 118 44 inlet~;
 #X obj 168 44 outlet;
 #X obj 216 44 block~;
-#X text 266 44 [switch~];
 #X text 8 3 [outlet] Related Objects;
+#X obj 266 43 switch~;
 #X restore 102 598 pd Related_objects;
 #X obj 78 408 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -41,9 +41,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 98 487 (none);
 #X text 98 515 (none);
 #X text 11 23 control outlet for a subpatch;
-#X obj 477 3 outlet;
-#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/outlet -text
-pdpedia: outlet;
+#X obj 500 10 outlet;
 #X text 167 515 - a symbolic argument to an [outlet] object which will
 be ignored. However \, [outlet] will not create if you give it an initial
 float argument.;
@@ -90,8 +88,8 @@ the outlet of canvas in which it is contained. When multiple [outlet~]
 and/or [outlet] objects are in one subpatch \, their horizontal order
 corresponds to the outlets drawn on the containing object in the parent
 patch.;
-#X connect 17 0 23 1;
-#X connect 18 0 23 0;
-#X connect 22 0 16 0;
-#X connect 23 0 19 0;
-#X connect 23 1 16 0;
+#X connect 16 0 22 1;
+#X connect 17 0 22 0;
+#X connect 21 0 15 0;
+#X connect 22 0 18 0;
+#X connect 22 1 15 0;

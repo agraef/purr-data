@@ -1,4 +1,4 @@
-#N canvas 190 100 1023 661 10;
+#N canvas 428 36 1023 661 10;
 #X obj 82 273 route 23 54 1;
 #X msg 170 239 54 43;
 #X msg 212 239 1 foo bar;
@@ -59,7 +59,7 @@ output through the right-most outlet).;
 of its creation arguments \, which may be numbers or symbols (but not
 a mixture of the two unless the data types are defined explicitly)
 \, then sends the messages through the appropriate outlets.;
-#N canvas 0 22 466 316 related_objects_from_other_libraries 0;
+#N canvas 225 348 466 316 related_objects_from_other_libraries 0;
 #X obj 26 33 segregate;
 #X obj 104 34 multiselect;
 #X text 18 86 These objects are offered in Pd only if you have downloaded
@@ -74,8 +74,8 @@ is:;
 #X obj 193 34 demux;
 #X obj 245 34 gate;
 #X restore 21 627 pd related_objects_from_other_libraries;
-#X floatatom 625 498 5 0 0 0 - - -;
-#X symbolatom 673 497 10 0 0 0 - - -;
+#X floatatom 625 498 5 0 0 0 - - -, f 5;
+#X symbolatom 673 497 10 0 0 0 - - -, f 10;
 #X obj 578 518 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144
 -1 -1;
 #X msg 622 450 list not-a-list;

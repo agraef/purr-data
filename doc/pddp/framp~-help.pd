@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 431 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header framp~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 417 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 253 507 362 META 0;
+#N canvas 474 272 507 362 META 0;
 #X text 12 155 LIBRARY internal;
 #X text 12 195 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 543 (none);
-#N canvas 105 479 428 109 Related_objects 0;
+#N canvas 222 513 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 fft~;
@@ -41,9 +41,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 451 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 479 3 framp~;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/framp~ -text
-pdpedia: framp~;
+#X obj 497 10 framp~;
 #X text 147 127 frequency;
 #X floatatom 78 142 0 0 0 0 - - -;
 #X obj 78 92 * 44100;
@@ -74,15 +72,15 @@ exactly tuned to a bin.) Frequency output is in bins \, i.e. \, units
 of SR/N.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
-#X connect 15 0 27 0;
-#X connect 16 0 22 0;
-#X connect 17 0 16 0;
-#X connect 21 0 24 0;
-#X connect 21 1 24 1;
-#X connect 22 0 15 0;
-#X connect 23 0 25 0;
-#X connect 23 0 26 0;
-#X connect 24 0 25 0;
-#X connect 24 1 26 0;
-#X connect 27 0 21 0;
+#X obj 478 56 pddp/dsp;
+#X connect 14 0 26 0;
+#X connect 15 0 21 0;
+#X connect 16 0 15 0;
+#X connect 20 0 23 0;
+#X connect 20 1 23 1;
+#X connect 21 0 14 0;
+#X connect 22 0 24 0;
+#X connect 22 0 25 0;
+#X connect 23 0 24 0;
+#X connect 23 1 25 0;
+#X connect 26 0 20 0;

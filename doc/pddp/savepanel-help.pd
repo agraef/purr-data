@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header savepanel 3 12 0
 18 -204280 -1 0;
 #X obj 0 334 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 243 494 344 META 0;
+#N canvas 486 285 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ create;
 #X obj 0 528 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 505 (none);
-#N canvas 104 480 428 109 Related_objects 0;
+#N canvas 213 517 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 openpanel;
@@ -37,9 +37,7 @@ create;
 -162280 0;
 #X obj 78 468 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 463 3 savepanel;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/savepanel
--text pdpedia: savepanel;
+#X obj 482 10 savepanel;
 #X text 98 342 bang;
 #X text 98 467 symbol;
 #X text 168 467 - once chosen from the file browser \, the filename
@@ -63,8 +61,9 @@ it is a symbol).;
 #X text 168 342 - when [savepanel] gets a bang \, a "Save As" file
 browser appears on the screen. If you choose a filename \, it appears
 on the outlet.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 17 0 19 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 16 0 18 0;
+#X connect 18 0 17 0;
 #X connect 19 0 18 0;
-#X connect 20 0 19 0;
-#X connect 24 0 19 0;
+#X connect 23 0 18 0;

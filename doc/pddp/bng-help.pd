@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 433 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bng 3 12 0 18 -204280
 -1 0;
 #X obj 0 300 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 42 244 494 344 META 0;
+#N canvas 504 285 494 344 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 25 LICENSE SIBSD;
 #X text 12 135 AUTHOR Thomas Musil;
@@ -27,7 +27,7 @@ label_pos label_font color pos delta;
 0 13 -228856 -1 0;
 #X obj 78 309 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 28 461 428 129 Related_objects 0;
+#N canvas 220 497 428 129 Related_objects 0;
 #X obj 22 43 bang;
 #X obj 69 43 trigger;
 #X obj 145 43 until;
@@ -43,10 +43,8 @@ label_pos label_font color pos delta;
 #X obj 78 417 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 308 anything;
-#X obj 495 3 bng 15 250 50 0 foo5_rcv empty empty 17 7 0 10 -262144
+#X obj 526 13 bng 15 250 50 0 foo5_rcv empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bng -text
-pdpedia: bng;
 #X obj 144 227 print;
 #N canvas 598 330 187 198 once 0;
 #X msg 38 77 1;
@@ -158,9 +156,9 @@ its appearance.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-interrupt empty
-0 -8 0 12 -262144 -1 -1 50 256;
+0 -8 0 12 -262144 -1 -1 50 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-hold empty 0
--8 0 12 -262144 -1 -1 250 256;
+-8 0 12 -262144 -1 -1 250 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -176,11 +174,11 @@ its appearance.;
 #X obj 33 237 pack 0 0 0;
 #X obj 120 197 t b a;
 #X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
--1 -1 0 256;
+-1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X connect 0 0 2 0;
 #X connect 0 1 2 1;
 #X connect 2 0 1 0;
@@ -212,11 +210,11 @@ its appearance.;
 #X text 120 137 2.front;
 #X text 120 153 3.label;
 #X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
--258113 -1 0 256;
+-258113 -1 0 256 0;
 #X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
--13381 -1 0 256;
+-13381 -1 0 256 0;
 #X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
--4160 -1 0 256;
+-4160 -1 0 256 0;
 #X connect 1 0 2 0;
 #X connect 1 1 2 1;
 #X connect 2 0 3 0;
@@ -263,16 +261,16 @@ its appearance.;
 #X text 247 472 1.x-delta;
 #X text 247 494 2.y-delta;
 #X obj 13 53 nbx 3 14 8 200 0 0 empty \$0-dim empty 0 -8 0 12 -262144
--1 -1 15 256;
+-1 -1 15 256 0;
 #X text 58 51 size;
 #N canvas 366 206 174 259 flash-time 0;
 #X obj 68 180 pack;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
-0 -8 0 12 -262144 -1 -1 17 256;
+0 -8 0 12 -262144 -1 -1 17 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
-0 -8 0 12 -262144 -1 -1 7 256;
+0 -8 0 12 -262144 -1 -1 7 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -285,9 +283,9 @@ its appearance.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
-0 -8 0 12 -262144 -1 -1 10 256;
+0 -8 0 12 -262144 -1 -1 10 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -300,9 +298,9 @@ its appearance.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
--8 0 12 -262144 -1 -1 340 256;
+-8 0 12 -262144 -1 -1 340 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
--8 0 12 -262144 -1 -1 500 256;
+-8 0 12 -262144 -1 -1 500 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -315,9 +313,9 @@ its appearance.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -429,16 +427,17 @@ Czaja to build comprehensive documentation for Pd.;
 that has not been defined to affect gui-properties (see below).;
 #X text 98 346 See the following subpatch for messages that change
 the gui-properties of [bng]:;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 15 0 14 0;
-#X connect 17 0 18 0;
-#X connect 18 0 16 0;
-#X connect 18 0 15 0;
-#X connect 19 0 18 0;
-#X connect 20 0 18 0;
-#X connect 21 0 18 0;
-#X connect 22 0 18 0;
-#X connect 23 0 18 0;
-#X connect 25 0 27 0;
-#X connect 26 0 24 0;
-#X connect 28 0 18 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 14 0 13 0;
+#X connect 16 0 17 0;
+#X connect 17 0 15 0;
+#X connect 17 0 14 0;
+#X connect 18 0 17 0;
+#X connect 19 0 17 0;
+#X connect 20 0 17 0;
+#X connect 21 0 17 0;
+#X connect 22 0 17 0;
+#X connect 24 0 26 0;
+#X connect 25 0 23 0;
+#X connect 27 0 17 0;

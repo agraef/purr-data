@@ -1,14 +1,14 @@
 #N struct string_of_dolls float x float y array dolls doll symbol label
 ;
 #N struct doll float y;
-#N canvas 0 0 555 619 10;
+#N canvas 431 39 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header setsize 3 12 0 18
 -204280 -1 0;
 #X obj 0 304 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 247 494 328 META 0;
+#N canvas 487 301 494 328 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ by Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 485 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 46 483 428 109 Related_objects 0;
+#N canvas 222 522 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 23 44 get;
@@ -48,14 +48,12 @@ by Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 78 369 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 11 23 resize an array;
-#X obj 473 3 setsize;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/setsize -text
-pdpedia: setsize;
+#X obj 491 11 setsize;
 #X scalar string_of_dolls 32 110 An_array_of_paper_dolls... \; -3 \;
 0 \; 0 \; 0 \; 0 \; \;;
 #X msg 204 171 traverse pd-setsize-help.pd \, next;
 #X obj 204 196 pointer;
-#X floatatom 33 237 5 0 0 0 - - -;
+#X floatatom 33 237 5 0 0 0 - - -, f 5;
 #N canvas 90 353 428 173 doll-template 0;
 #X obj 23 43 struct doll float y;
 #X obj 23 65 filledcurve 999 0 1 -10 -1 -10 -1 0 -1 0 -1 0 -4 0 -4
@@ -100,9 +98,10 @@ to default values.;
 ;
 #X text 80 444 1) symbol atom;
 #X text 80 462 n) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 98 557 pddp/pddplink all_about_arrays.pd;
 #X obj 98 572 pddp/pddplink scalar-help.pd;
-#X connect 16 0 17 0;
-#X connect 17 0 21 1;
-#X connect 18 0 21 0;
+#X connect 15 0 16 0;
+#X connect 16 0 20 1;
+#X connect 17 0 20 0;

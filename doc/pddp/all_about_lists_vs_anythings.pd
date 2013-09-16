@@ -1,10 +1,10 @@
-#N canvas 0 0 448 568 10;
+#N canvas 429 34 448 568 10;
 #N canvas 0 0 878 658 old 0;
 #X msg 95 368 1 2 3;
 #X obj 125 399 route list;
 #X msg 62 348 list 1 2 3;
 #X msg 10 93 list;
-#X symbolatom 32 159 10 0 0 0 - - -;
+#X symbolatom 32 159 10 0 0 0 - - -, f 10;
 #X obj 4 2 cnv 15 750 20 empty empty all_about_lists_vs_anythings 20
 10 1 18 -233017 -66577 0;
 #X text 7 69 SPECIAL CASES OF "LISTS".;
@@ -54,7 +54,7 @@ NOT a "list":;
 -1 -1;
 #X msg 459 356 1 1;
 #X obj 452 382 +;
-#X floatatom 452 404 5 0 0 0 - - -;
+#X floatatom 452 404 5 0 0 0 - - -, f 5;
 #X msg 424 356 1 3;
 #X text 416 106 A set that is not a "list" has an undefined type:;
 #X msg 451 337 list 1 2;
@@ -263,7 +263,7 @@ selector "this");
 ;
 #X obj 1 546 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 377 405 494 174 META 0;
 #X text 12 115 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -313,7 +313,7 @@ were made before there was a built-in "list" message in Pd. Some external
 objects' help patches may refer to all messages that are not a symbol
 \, float \, pointer \, or bang as a "list.";
 #X text 40 127 Lists *;
-#N canvas 15 248 428 305 Related_objects_and_Quick_Quiz 0;
+#N canvas 305 271 428 305 Related_objects_and_Quick_Quiz 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Lists vs. Anythings - Related Objects;

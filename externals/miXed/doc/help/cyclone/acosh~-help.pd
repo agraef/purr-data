@@ -1,44 +1,82 @@
-#N canvas 0 31 620 344 10;
-#X text 259 79 this is probably only useful for mathematical calculations
-;
-#X msg 242 136 range 0 2;
-#X obj 167 110 +~ 1;
-#X obj 167 87 *~ 2;
-#X obj 167 65 phasor~ 2;
-#X text 15 35 Arc Hyperbolic cosine function (acosh(x)) for signals
-;
-#X obj 15 93 +~ 2;
-#X obj 15 64 cycle~ 2;
-#X text 18 316 very expensive windowing?;
-#X obj 15 162 Scope~ 130 130 256 3 128 0 2 0 0 0 0 102 255 51 135 135
-135 0;
-#X obj 176 166 Scope~ 130 130 256 3 128 0 2 0 0 0 0 102 255 51 135
-135 135 0;
-#X obj 166 134 acosh~;
-#X obj 15 124 acosh~;
-#X obj 246 114 loadbang;
-#X text 50 102 be greater than 1;
-#X text 49 90 input values must;
-#N canvas 430 169 494 344 META 0;
-#X text 12 165 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 135 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS signal max_compatible trigonometry;
-#X text 12 45 DESCRIPTION arc hyperbolic cosine function (acosh(x))
+#N canvas 228 80 554 485 10;
+#X obj 0 461 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 323 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 387 291 391 247 META 0;
+#X text 18 57 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 18 -76 LICENSE SIBSD;
+#X text 18 37 AUTHOR Miller Puckette;
+#X text 18 77 RELEASE_DATE 1997;
+#X text 18 17 LIBRARY cyclone;
+#X text 18 -23 INLET_0 signal;
+#X text 18 -3 OUTLET_0 signal;
+#X text 18 -56 DESCRIPTION takes the arc hyperbolic cosine function
 for signals;
-#X text 12 75 INLET_0 signal;
-#X text 12 95 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 115 AUTHOR Krzysztof Czaja;
-#X restore 571 324 pd META;
-#X connect 1 0 9 0;
-#X connect 1 0 10 0;
-#X connect 2 0 11 0;
-#X connect 3 0 2 0;
-#X connect 4 0 3 0;
-#X connect 6 0 12 0;
-#X connect 7 0 6 0;
+#X text 18 -96 KEYWORDS hyperbolic cosine cosh signal acos acosh;
+#X text 18 97 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 503 463 pd META;
+#X obj 0 369 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 406 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 110 412 427 126 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 20 59 asin;
+#X obj 20 84 asinh~;
+#X obj 71 34 asin~;
+#X obj 71 59 atan~;
+#X obj 71 84 atanh~;
+#X obj 122 34 cosh~;
+#X obj 122 59 cosh;
+#X obj 122 84 cosx~;
+#X obj 20 34 acos;
+#X obj 166 34 acos~;
+#X restore 197 463 pd Related_objects;
+#X obj 79 381 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -1 cnv 15 552 40 empty \$0-pddp.cnv.header acosh~ 3 12 0 18
+-204280 -1 0;
+#X text 16 23 Arc Hyperbolic cosine function (acosh(x)) for signals
+;
+#X msg 243 164 range 0 2;
+#X obj 164 138 +~ 1;
+#X obj 164 115 *~ 2;
+#X obj 164 93 phasor~ 2;
+#X obj 12 121 +~ 2;
+#X obj 13 210 Scope~ 133 78 256 3 128 0 2 0 0 0 0 102 255 51 135 135
+135 0;
+#X obj 243 210 Scope~ 130 80 256 3 128 0 2 0 0 0 0 102 255 51 135 135
+135 0;
+#X obj 163 162 acosh~;
+#X obj 12 152 acosh~;
+#X obj 243 142 loadbang;
+#X text 47 130 be greater than 1;
+#X text 46 118 input values must;
+#X obj 12 92 osc~ 2;
+#X text 113 337 signal;
+#X text 169 338 - input to acosh function;
+#X text 113 381 signal;
+#X text 99 420 (none);
+#X text 169 382 - output of acosh function;
+#X obj 505 1 acosh~;
+#X obj 484 48 pddp/dsp;
+#X text 256 107 this is probably only useful for mathematical calculations
+;
+#X obj 79 339 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 6 461 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 9 0 14 0;
+#X connect 9 0 15 0;
+#X connect 10 0 16 0;
 #X connect 11 0 10 0;
-#X connect 12 0 9 0;
-#X connect 13 0 1 0;
+#X connect 12 0 11 0;
+#X connect 13 0 17 0;
+#X connect 16 0 15 0;
+#X connect 17 0 14 0;
+#X connect 18 0 9 0;
+#X connect 21 0 13 0;

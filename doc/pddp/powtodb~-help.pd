@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header powtodb~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 412 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 245 494 344 META 0;
+#N canvas 483 280 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 421 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 490 (none);
-#N canvas 102 446 428 141 Related_objects 0;
+#N canvas 217 485 428 141 Related_objects 0;
 #X obj 23 102 mtof;
 #X obj 68 102 ftom;
 #X obj 111 102 dbtorms;
@@ -64,13 +64,11 @@ such as *~ and osc~ \, depending on your hardware and math library.
 #X obj 209 169 dbtopow~;
 #X text 99 292 The powtodb~ object converts power units \, equal to
 the square of the "RMS" amplitude \, to decibels.;
-#X obj 471 3 powtodb~;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/powtodb~ -text
-pdpedia: powtodb~;
+#X obj 488 10 powtodb~;
 #X text 11 23 convert power units to dB for audio signals;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 480 56 pddp/dsp;
 #X connect 10 0 11 0;
 #X connect 12 0 13 0;
 #X connect 13 0 20 0;

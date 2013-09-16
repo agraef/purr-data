@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 426 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header metro 3 12 0 18
 -204280 -1 0;
 #X obj 0 327 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 507 361 META 0;
+#N canvas 465 262 507 361 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 96 378 428 249 Related_objects 0;
+#N canvas 208 379 428 249 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [metro] Related Objects;
@@ -54,11 +54,9 @@ is:;
 #X obj 78 417 cnv 17 3 55 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 416 float;
-#X obj 483 3 metro;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/metro -text
-pdpedia: metro;
+#X obj 503 11 metro;
 #X obj 109 224 metro 500;
-#X floatatom 160 201 4 0 0 0 - - -;
+#X floatatom 160 201 4 0 0 0 - - -, f 4;
 #X msg 109 125 1;
 #X text 177 124 nonzero number or "bang" to start;
 #X msg 150 158 0;
@@ -89,10 +87,11 @@ by the creation argument or a value sent to its right inlet.;
 #X text 11 23 send a bang periodically ala metronome;
 #X text 168 395 - a list will be distributed to the inlets of [metro].
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 16 0 23 0;
-#X connect 17 0 16 1;
-#X connect 18 0 16 0;
-#X connect 20 0 16 0;
-#X connect 21 0 16 0;
-#X connect 22 0 16 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 15 0 22 0;
+#X connect 16 0 15 1;
+#X connect 17 0 15 0;
+#X connect 19 0 15 0;
+#X connect 20 0 15 0;
+#X connect 21 0 15 0;

@@ -1,11 +1,11 @@
-#N canvas 237 28 555 685 10;
+#N canvas 427 31 555 685 10;
 #X obj 0 697 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header route 3 12 0 18
 -204280 -1 0;
 #X obj 0 240 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 229 494 392 META 0;
+#N canvas 482 297 494 392 META 0;
 #X text 12 85 PLATFORM windows macosx gnulinux;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -31,7 +31,7 @@ or first element;
 0 13 -228856 -1 0;
 #X obj 0 672 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 74 482 428 109 Related_objects 0;
+#N canvas 211 576 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [route] Related Objects;
@@ -43,9 +43,7 @@ or first element;
 -162280 0;
 #X obj 78 456 cnv 17 3 17 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
 -162280 0;
-#X obj 512 4 route;
-#X obj 459 20 pddp/pddplink http://wiki.puredata.info/en/route -text
-pdpedia: route;
+#X obj 508 12 route;
 #X obj 27 113 route 0 1;
 #X msg 27 61 0 12;
 #X msg 65 61 1 13;
@@ -248,8 +246,8 @@ how incoming data is handled in each mode.;
 #X text 175 348 a symbol;
 #X text 133 369 none of the above!;
 #X text 178 284 a list of symbols;
-#X floatatom 109 425 5 0 0 0 - - -;
-#X symbolatom 157 424 10 0 0 0 - - -;
+#X floatatom 109 425 5 0 0 0 - - -, f 5;
+#X symbolatom 157 424 10 0 0 0 - - -, f 10;
 #X obj 62 445 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
 -1;
 #X msg 62 225 89;
@@ -400,8 +398,8 @@ it is and it will be output through the right-most outlet).;
 #X msg 87 54 list;
 #X msg 88 87 list 5;
 #X text 65 23 SPECIAL CASES OF LISTS.;
-#X floatatom 107 188 5 0 0 0 - - -;
-#X symbolatom 155 187 10 0 0 0 - - -;
+#X floatatom 107 188 5 0 0 0 - - -, f 5;
+#X symbolatom 155 187 10 0 0 0 - - -, f 10;
 #X obj 60 208 bng 15 250 50 0 empty empty bang -6 23 1 12 -262144 -1
 -1;
 #X msg 88 124 list not-a-list;
@@ -465,9 +463,9 @@ are sent to the rightmost outlet unchanged.;
 -162280 0;
 #X text 98 386 float;
 #N canvas 79 52 428 344 second_inlet 0;
-#X floatatom 68 278 5 0 0 0 - - -;
-#X floatatom 31 232 5 0 0 0 - - -;
-#X floatatom 80 234 5 0 0 0 - - -;
+#X floatatom 68 278 5 0 0 0 - - -, f 5;
+#X floatatom 31 232 5 0 0 0 - - -, f 5;
+#X floatatom 80 234 5 0 0 0 - - -, f 5;
 #X obj 217 301 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X msg 203 206 symbol word;
@@ -487,7 +485,7 @@ multiple creation arguments \, you'll notice that this second inlet
 is absent.;
 #X obj 23 256 route 42;
 #X obj 217 276 route word;
-#X floatatom 23 278 5 0 0 0 - - -;
+#X floatatom 23 278 5 0 0 0 - - -, f 5;
 #X msg 23 210 42;
 #X obj 217 255 list trim;
 #X text 20 128 Also notice in the right example how symbols need to
@@ -517,26 +515,26 @@ creation argument. See the subpatch below for details:;
 #X obj 269 110 list trim;
 #X obj 315 168 print rejection_outlet;
 #X obj 258 192 print left_outlet;
-#X symbolatom 355 86 10 0 0 0 - - -;
-#X symbolatom 334 119 10 0 0 0 - - -;
+#X symbolatom 355 86 10 0 0 0 - - -, f 10;
+#X symbolatom 334 119 10 0 0 0 - - -, f 10;
 #X text 398 119 This one doesn't work;
 #X msg 269 85 symbol word;
 #X msg 258 60 word;
-#X connect 12 0 17 0;
-#X connect 12 0 21 0;
-#X connect 12 1 19 0;
-#X connect 12 1 20 0;
-#X connect 12 2 16 0;
-#X connect 12 2 18 0;
-#X connect 13 0 12 0;
-#X connect 14 0 12 0;
-#X connect 15 0 12 0;
-#X connect 22 0 12 0;
-#X connect 33 0 12 0;
-#X connect 49 0 52 0;
-#X connect 49 1 51 0;
-#X connect 50 0 49 0;
-#X connect 53 0 50 0;
-#X connect 54 0 49 0;
-#X connect 56 0 50 0;
-#X connect 57 0 49 0;
+#X connect 11 0 16 0;
+#X connect 11 0 20 0;
+#X connect 11 1 18 0;
+#X connect 11 1 19 0;
+#X connect 11 2 15 0;
+#X connect 11 2 17 0;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 0;
+#X connect 21 0 11 0;
+#X connect 32 0 11 0;
+#X connect 48 0 51 0;
+#X connect 48 1 50 0;
+#X connect 49 0 48 0;
+#X connect 52 0 49 0;
+#X connect 53 0 48 0;
+#X connect 55 0 49 0;
+#X connect 56 0 48 0;

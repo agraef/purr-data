@@ -1,12 +1,39 @@
-#N canvas 0 26 470 300 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 31 268 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 31 281 ___________________________________________________
-;
-#X text 117 30 sample playback without interpolation;
-#X obj 36 30 index~;
-#X floatatom 263 172 0 0 100 0 - - -;
+#N canvas 423 35 559 376 10;
+#X obj -1 347 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 229 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 591 163 378 222 META 0;
+#X text 11 59 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 11 -61 LICENSE SIBSD;
+#X text 11 39 AUTHOR Miller Puckette;
+#X text 11 79 RELEASE_DATE 1997;
+#X text 11 19 LIBRARY cyclone;
+#X text 11 -21 INLET_0 signal;
+#X text 11 -1 OUTLET_0 signal;
+#X text 11 99 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 11 -81 KEYWORDS signal interpolation playback sample;
+#X text 11 -41 DESCRIPTION sample playback without interpolation;
+#X restore 502 349 pd META;
+#X obj -1 268 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 305 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 301 275 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 196 349 pd Related_objects;
+#X obj 85 239 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 85 278 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header index~ 3 12 0 18
+-204280 -1 0;
+#X obj 501 2 index~;
+#X text 11 23 sample playback without interpolation;
+#X floatatom 275 159 0 0 100 0 - - -;
 #N canvas 159 26 532 285 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -60,44 +87,39 @@
 #X connect 23 0 20 0;
 #X connect 26 0 5 0;
 #X connect 27 0 21 0;
-#X restore 238 195 pd output;
-#X msg 289 172 MUTE;
-#X obj 38 184 table sample;
-#X obj 38 110 openpanel;
-#X msg 38 135 read -resize \$1 sample;
-#X obj 38 160 soundfiler;
-#X obj 38 85 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 250 182 pd output;
+#X msg 301 159 MUTE;
+#X obj 35 165 table sample;
+#X obj 35 87 openpanel;
+#X msg 35 112 read -resize \$1 sample;
+#X obj 35 137 soundfiler;
+#X obj 35 62 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 64 86 load a sample;
-#X obj 238 144 index~ sample;
-#X obj 238 115 count~;
-#X obj 238 88 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X text 53 62 load a sample;
+#X obj 250 131 index~ sample;
+#X obj 250 102 count~;
+#X obj 250 75 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 261 89 playback sample at current srate;
-#N canvas 121 128 494 378 META 0;
-#X text 12 185 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 55 DESCRIPTION sample playback without interpolation;
-#X text 12 115 OUTLET_0 signal;
-#X text 12 75 INLET_0 signal set;
-#X text 12 155 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 267 75 playback sample at current srate;
+#X obj 35 193 table foo;
+#X msg 298 102 set foo;
+#X text 347 101 set another table;
+#X text 110 238 signal;
+#X text 177 238 - signal to sample playback;
+#X text 110 277 signal;
+#X text 177 320 - sample to playback;
+#X text 177 277 - signal without interpolation;
+#X text 93 320 1) table;
+#X obj 481 49 pddp/dsp;
+#X obj 7 347 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 95 INLET_1;
-#X text 12 35 LICENSE SIBSD;
-#X text 12 135 AUTHOR Krzysztof Czaja;
-#X text 12 5 KEYWORDS signal array max_compatible needs_work (is there
-a better example patch for this object?);
-#X restore 420 278 pd META;
-#X obj 38 216 table foo;
-#X msg 286 115 set foo;
-#X text 346 115 set another table;
-#X connect 5 0 6 1;
-#X connect 6 0 5 0;
-#X connect 7 0 6 2;
-#X connect 9 0 10 0;
-#X connect 10 0 11 0;
-#X connect 12 0 9 0;
-#X connect 14 0 6 0;
-#X connect 15 0 14 0;
-#X connect 16 0 15 0;
-#X connect 20 0 14 0;
+#X connect 11 0 12 1;
+#X connect 12 0 11 0;
+#X connect 13 0 12 2;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 18 0 15 0;
+#X connect 20 0 12 0;
+#X connect 21 0 20 0;
+#X connect 22 0 21 0;
+#X connect 25 0 20 0;

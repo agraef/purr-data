@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header swap 3 12 0 18 -204280
 -1 0;
 #X obj 0 220 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 275 494 357 META 0;
+#N canvas 489 275 494 357 META 0;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -29,7 +29,7 @@ order;
 0 13 -228856 -1 0;
 #X obj 0 537 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 86 455 428 136 Related_objects 0;
+#N canvas 217 495 428 136 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [swap] Related Objects;
@@ -46,9 +46,7 @@ order;
 #X obj 78 380 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 379 float;
-#X obj 443 3 swap;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/swap -text
-pdpedia: swap;
+#X obj 445 10 swap;
 #X text 98 278 float;
 #X text 168 283 - a float at the left inlet will send the number to
 the right outlet and then send the number at the right inlet to the
@@ -69,16 +67,16 @@ in the left inlet.;
 #X obj 78 457 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X obj 78 152 swap;
-#X floatatom 106 79 5 0 0 0 - - -;
-#X floatatom 190 119 5 0 0 0 - - -;
-#X floatatom 118 179 5 0 0 0 - - -;
-#X floatatom 78 179 5 0 0 0 - - -;
+#X floatatom 106 79 5 0 0 0 - - -, f 5;
+#X floatatom 190 119 5 0 0 0 - - -, f 5;
+#X floatatom 118 179 5 0 0 0 - - -, f 5;
+#X floatatom 78 179 5 0 0 0 - - -, f 5;
 #X msg 149 78 42 7;
 #X obj 78 77 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144 -1
 -1;
 #X msg 191 78 42 7 3 4;
-#X floatatom 333 143 5 0 0 0 - - -;
-#X floatatom 294 142 5 0 0 0 - - -;
+#X floatatom 333 143 5 0 0 0 - - -, f 5;
+#X floatatom 294 142 5 0 0 0 - - -, f 5;
 #X msg 294 88 bang;
 #X obj 294 112 swap 12;
 #X text 188 102 float;
@@ -88,19 +86,19 @@ in the left inlet.;
 #N canvas 90 38 428 503 More_Info 0;
 #X msg 42 82 42 7;
 #X obj 42 107 swap;
-#X floatatom 42 133 5 0 0 0 - - -;
-#X floatatom 101 133 5 0 0 0 - - -;
+#X floatatom 42 133 5 0 0 0 - - -, f 5;
+#X floatatom 101 133 5 0 0 0 - - -, f 5;
 #X obj 42 157 pack f f;
 #X obj 42 181 print;
-#X floatatom 43 347 5 0 0 0 - - -;
-#X floatatom 93 347 5 0 0 0 - - -;
-#X floatatom 142 347 5 0 0 0 - - -;
-#X floatatom 111 468 5 0 0 0 - - -;
-#X floatatom 158 468 5 0 0 0 - - -;
-#X floatatom 212 468 5 0 0 0 - - -;
+#X floatatom 43 347 5 0 0 0 - - -, f 5;
+#X floatatom 93 347 5 0 0 0 - - -, f 5;
+#X floatatom 142 347 5 0 0 0 - - -, f 5;
+#X floatatom 111 468 5 0 0 0 - - -, f 5;
+#X floatatom 158 468 5 0 0 0 - - -, f 5;
+#X floatatom 212 468 5 0 0 0 - - -, f 5;
 #X msg 42 271 2 2500 9 420;
 #X obj 42 317 unpack f f f f;
-#X floatatom 192 347 5 0 0 0 - - -;
+#X floatatom 192 347 5 0 0 0 - - -, f 5;
 #X text 18 38 [swap] is most commonly used to change the order of a
 list. This trick is best suited for a PAIR of numbers.;
 #X obj 165 373 swap;
@@ -109,7 +107,7 @@ list. This trick is best suited for a PAIR of numbers.;
 #X obj 195 406 swap;
 #X obj 168 431 swap;
 #X obj 227 436 swap;
-#X floatatom 263 468 5 0 0 0 - - -;
+#X floatatom 263 468 5 0 0 0 - - -, f 5;
 #X text 199 373 This could quickly become ridiculous!;
 #X msg 140 271 1 2 3 4;
 #X msg 219 271 0 200 3333 1111;
@@ -162,7 +160,7 @@ first piece of information to be sent out the object is the MIDI CHANNEL.
 #X obj 21 183 swap;
 #X obj 21 222 pack;
 #X obj 21 266 route 0;
-#X floatatom 21 294 5 0 0 0 - - -;
+#X floatatom 21 294 5 0 0 0 - - -, f 5;
 #X text 76 183 Here \, [swap] is used to store the VELOCITY until the
 PITCH information comes from [notein]. The next step will pack the
 two together...but we have to ensure that [pack] receives the two numbers
@@ -174,7 +172,7 @@ a "note-off" signal (i.e. VELOCITY = 0).;
 #X obj 21 386 notein;
 #X obj 22 426 pack;
 #X obj 22 451 route 0;
-#X floatatom 22 476 5 0 0 0 - - -;
+#X floatatom 22 476 5 0 0 0 - - -, f 5;
 #X obj 22 497 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X text 45 315 This will "bang" only when velocity = 0;
@@ -220,15 +218,15 @@ before packing them up and sending them to the [route] object.;
 #X text 168 503 - initializes the value of the right inlet.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 503 3 fswap;
-#X text 480 3 or;
-#X connect 24 0 28 0;
-#X connect 24 1 27 0;
-#X connect 25 0 24 0;
-#X connect 26 0 24 1;
-#X connect 29 0 24 0;
-#X connect 30 0 24 0;
-#X connect 31 0 24 0;
-#X connect 34 0 35 0;
-#X connect 35 0 33 0;
-#X connect 35 1 32 0;
+#X obj 505 10 fswap;
+#X text 482 10 or;
+#X connect 23 0 27 0;
+#X connect 23 1 26 0;
+#X connect 24 0 23 0;
+#X connect 25 0 23 1;
+#X connect 28 0 23 0;
+#X connect 29 0 23 0;
+#X connect 30 0 23 0;
+#X connect 33 0 34 0;
+#X connect 34 0 32 0;
+#X connect 34 1 31 0;

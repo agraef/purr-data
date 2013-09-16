@@ -5,7 +5,7 @@
 -1 0;
 #X obj 0 144 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 244 494 344 META 0;
+#N canvas 450 328 494 344 META 0;
 #X text 12 90 LIBRARY internal;
 #X text 12 130 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 50 LICENSE SIBSD;
@@ -27,7 +27,7 @@ length;
 0 13 -228856 -1 0;
 #X obj 0 546 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 92 536 428 109 Related_objects 0;
+#N canvas 179 562 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [list] Related Objects;
@@ -40,7 +40,7 @@ length;
 -162280 0;
 #X obj 78 153 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X obj 517 4 list;
+#X obj 510 11 list;
 #N canvas 1 112 555 502 append 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header empty 3 12 0 14
 -204280 -1 0;
@@ -68,7 +68,7 @@ length;
 may be specified to initialize the list stored at the right inlet.
 ;
 #X obj 158 219 list append 1 2;
-#X floatatom 168 165 5 0 0 0 - - -;
+#X floatatom 168 165 5 0 0 0 - - -, f 5;
 #X msg 158 140 1 2 3;
 #X msg 178 190 bang;
 #X msg 285 189 bang;
@@ -311,7 +311,7 @@ append" above.;
 #X restore 241 608 pd serializer;
 #N canvas 101 244 428 350 lists_vs_non-lists 0;
 #X obj 23 290 list append 1 2;
-#X floatatom 23 120 5 0 0 0 - - -;
+#X floatatom 23 120 5 0 0 0 - - -, f 5;
 #X msg 23 95 1 2 3;
 #X msg 23 68 list cis boom bah;
 #X msg 23 145 bang;
@@ -368,7 +368,7 @@ append" above.;
 #X text 170 456 - an arbitrary number of additional floats or symbols
 may be specified to initialize the list stored at the right inlet.
 ;
-#X floatatom 198 160 5 0 0 0 - - -;
+#X floatatom 198 160 5 0 0 0 - - -, f 5;
 #X msg 188 135 1 2 3;
 #X msg 208 185 bang;
 #X msg 315 184 bang;
@@ -419,7 +419,7 @@ sent to the outlet.;
 #X text 80 477 1);
 #X msg 200 145 bang;
 #X obj 159 173 list split 2;
-#X floatatom 262 148 3 0 5 0 - - -;
+#X floatatom 262 148 3 0 5 0 - - -, f 3;
 #X msg 159 57 1 2;
 #X msg 124 57 1;
 #X text 156 228 first n;
@@ -549,7 +549,7 @@ as bang);
 #X msg 226 235 x 1 y;
 #X msg 226 135 55;
 #X obj 201 263 list length;
-#X floatatom 201 289 5 0 0 0 - - -;
+#X floatatom 201 289 5 0 0 0 - - -, f 5;
 #X text 18 24 number of elements in a list;
 #X text 98 421 float;
 #X text 170 467 - the symbol "length".;
@@ -592,7 +592,7 @@ is treated as a float.;
 #X msg 22 277 12;
 #X text 55 277 implicit float-- same as "float 12";
 #X text 55 304 output as "list 12";
-#X floatatom 68 387 5 0 0 0 - - -;
+#X floatatom 68 387 5 0 0 0 - - -, f 5;
 #X text 130 331 [route] converts "list 12" to "float 12";
 #X text 19 127 * an incoming one-element list that contains a symbol
 atom is treated as a symbol.;
@@ -637,7 +637,7 @@ an empty list (i.e. \, "list") \, and "symbol foo" is converted to
 #X obj 0 431 cnv 3 520 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
 #X text 80 450 1);
-#X floatatom 189 166 5 0 0 0 - - -;
+#X floatatom 189 166 5 0 0 0 - - -, f 5;
 #X msg 179 143 1 2 3;
 #X msg 196 189 bang;
 #X msg 170 120 4 5 6 and 7;

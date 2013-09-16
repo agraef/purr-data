@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header block~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 271 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 42 244 494 344 META 0;
+#N canvas 479 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -26,7 +26,7 @@ for DSP;
 0 13 -228856 -1 0;
 #X obj 0 435 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 48 485 428 105 Related_objects 0;
+#N canvas 212 523 428 105 Related_objects 0;
 #X obj 83 42 fft~;
 #X obj 23 42 switch~;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -35,8 +35,6 @@ for DSP;
 #X restore 102 597 pd Related_objects;
 #X obj 78 280 cnv 17 3 40 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/block~ -text
-pdpedia: block~;
 #X text 98 280 set;
 #X text 98 341 (none);
 #X floatatom 78 247 0 0 0 0 - - -;
@@ -156,7 +154,7 @@ to display how different "set" messages change the block size.;
 #X connect 31 0 25 0;
 #X coords 0 -1 1 1 175 35 1 45 300;
 #X restore 78 209 pd visualize;
-#X obj 422 3 block~;
+#X obj 422 12 block~;
 #X text 90 161 IMPORTANT NOTE: Since you may have at most one block~/switch~
 object in any window \, [block~] has been put in a subpatch (below)
 for this example:;
@@ -182,10 +180,11 @@ any other block size. This is intended for later use in video processing.
 #X obj 455 51 pddp/dsp;
 #X obj 102 576 pddp/pddplink ../3.audio.examples/J07.oversampling.pd
 -text doc/3.audio.examples/J07.oversampling.pd;
-#X text 469 3 or [switch~];
-#X connect 19 0 28 0;
-#X connect 20 0 28 0;
-#X connect 21 0 28 0;
-#X connect 22 0 28 0;
-#X connect 23 0 28 0;
-#X connect 28 0 12 0;
+#X text 469 12 or;
+#X obj 494 12 switch~;
+#X connect 18 0 27 0;
+#X connect 19 0 27 0;
+#X connect 20 0 27 0;
+#X connect 21 0 27 0;
+#X connect 22 0 27 0;
+#X connect 27 0 11 0;

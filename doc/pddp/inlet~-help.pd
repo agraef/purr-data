@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header inlet~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 350 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 486 283 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -24,7 +24,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 220 515 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 inlet;
@@ -33,7 +33,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 168 43 outlet;
 #X obj 225 43 block~;
 #X text 8 2 [inlet~] Related Objects;
-#X text 275 42 [switch~];
+#X obj 277 43 switch~;
 #X restore 102 598 pd Related_objects;
 #X obj 78 386 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -70,9 +70,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X restore 126 229 pd subpatch-with-inlets-and-outlets;
 #X text 98 353 (none);
 #X text 11 23 signal inlet for a subpatch;
-#X obj 477 3 inlet~;
-#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/inlet~ -text
-pdpedia: inlet~;
+#X obj 497 10 inlet~;
 #X text 98 385 signal;
 #N canvas 61 152 428 466 up/downsampling 0;
 #X obj 30 396 print~;

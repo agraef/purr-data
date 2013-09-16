@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pow 3 12 0 18 -204280
 -1 0;
 #X obj 0 401 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 494 368 META 0;
+#N canvas 481 262 494 368 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 94 481 428 109 Related_objects 0;
+#N canvas 216 516 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 57 76 cos~;
@@ -61,9 +61,7 @@ the left inlet is the base.;
 #X obj 78 460 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 459 float;
-#X obj 495 3 pow;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/pow -text
-pdpedia: pow;
+#X obj 516 11 pow;
 #X text 11 23 exponential function;
 #X text 168 407 - base.;
 #X text 168 459 - exponent.;
@@ -74,12 +72,13 @@ the two inlets.;
 #X floatatom 229 130 0 0 0 0 - - -;
 #X obj 332 161 pow 3;
 #X msg 332 130 3;
-#X floatatom 332 188 5 0 0 0 - - -;
-#X floatatom 367 131 5 0 0 0 - - -;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X floatatom 332 188 5 0 0 0 - - -, f 5;
+#X floatatom 367 131 5 0 0 0 - - -, f 5;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X connect 14 0 15 0;
 #X connect 15 0 13 0;
-#X connect 27 0 15 1;
-#X connect 28 0 30 0;
-#X connect 29 0 28 0;
-#X connect 31 0 28 0;
+#X connect 26 0 15 1;
+#X connect 27 0 29 0;
+#X connect 28 0 27 0;
+#X connect 30 0 27 0;

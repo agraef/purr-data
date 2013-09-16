@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header poly 3 12 0 18 -204280
 -1 0;
 #X obj 0 287 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 187 494 405 META 0;
+#N canvas 482 220 494 405 META 0;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 107 480 428 109 Related_objects 0;
+#N canvas 220 510 428 109 Related_objects 0;
 #X obj 62 43 makenote;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -46,9 +46,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X text 98 406 float;
 #X text 98 381 clear;
-#X obj 491 3 poly;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/poly -text
-pdpedia: poly;
+#X obj 503 11 poly;
 #X obj 102 190 poly 4 1;
 #X msg 153 144 60 0;
 #X msg 197 144 62 64;
@@ -77,7 +75,8 @@ and outputs triples containing voice number \, pitch and velocity.
 You can pack the output and use the route object to route messages
 among a bank of voices depending on the first outlet. [poly] can be
 configured to do voice stealing or not (the default.);
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 78 467 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X obj 78 490 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
@@ -90,13 +89,13 @@ the output.;
 #X text 168 443 - voice number;
 #X text 168 466 - pitch;
 #X text 168 489 - velocity;
-#X connect 17 0 21 0;
-#X connect 17 1 21 1;
-#X connect 17 2 21 2;
-#X connect 18 0 17 0;
-#X connect 19 0 17 0;
-#X connect 20 0 17 0;
-#X connect 21 0 22 0;
-#X connect 24 0 17 0;
-#X connect 25 0 17 0;
-#X connect 26 0 17 0;
+#X connect 16 0 20 0;
+#X connect 16 1 20 1;
+#X connect 16 2 20 2;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 16 0;
+#X connect 20 0 21 0;
+#X connect 23 0 16 0;
+#X connect 24 0 16 0;
+#X connect 25 0 16 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header dbtopow~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 415 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 246 494 344 META 0;
+#N canvas 486 283 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 424 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 492 (none);
-#N canvas 54 440 428 149 Related_objects 0;
+#N canvas 219 473 428 149 Related_objects 0;
 #X obj 253 43 powtodb~;
 #X obj 23 102 mtof;
 #X obj 68 102 ftom;
@@ -53,9 +53,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 461 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 461 signal;
-#X obj 474 3 dbtopow~;
-#X obj 440 20 pddp/pddplink http://wiki.puredata.info/en/dbtopow~ -text
-pdpedia: dbtopow~;
+#X obj 485 11 dbtopow~;
 #X obj 239 162 dbtopow~;
 #X text 11 23 convert dB to power units for audio signals;
 #X text 98 297 The [dbtopow~] object converts decibels to power units
@@ -67,10 +65,11 @@ such as [*~] and [osc~] \, depending on your hardware and math library.
 ;
 #X obj 263 199 loadbang;
 #X obj 263 221 metro 150;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 476 51 pddp/dsp;
 #X connect 10 0 11 0;
-#X connect 12 0 18 0;
-#X connect 18 0 10 0;
-#X connect 22 0 23 0;
-#X connect 23 0 10 0;
+#X connect 12 0 17 0;
+#X connect 17 0 10 0;
+#X connect 21 0 22 0;
+#X connect 22 0 10 0;

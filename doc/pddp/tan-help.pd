@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tan 3 12 0 18 -204280
 -1 0;
 #X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 54 243 494 360 META 0;
+#N canvas 484 266 494 360 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 #X obj 0 564 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 540 (none);
-#N canvas 82 476 428 109 Related_objects 0;
+#N canvas 211 513 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 76 43 atan;
@@ -74,13 +74,12 @@ a circle) and multiply it by 2(Pi) where Pi is equal to approximately
 of an angle.;
 #X text 83 300 [sin] and [cos] will return numbers between -1 and 1:
 the sine and cosine of a number repectively.;
-#X obj 494 3 tan;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/tan -text
-pdpedia: tan;
+#X obj 515 10 tan;
 #X text 11 23 tangent function;
 #X text 148 465 - a list will be truncated \, and the first element
 will be used as input.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X connect 16 0 18 0;
 #X connect 17 0 20 0;
 #X connect 19 0 24 0;

@@ -1,11 +1,11 @@
-#N canvas 398 77 555 619 10;
+#N canvas 431 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header select 3 12 0 18
 -204280 -1 0;
 #X obj 0 163 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 171 494 420 META 0;
+#N canvas 484 205 494 420 META 0;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -30,7 +30,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 540 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 100 340 428 250 Related_objects 0;
+#N canvas 217 373 428 250 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [select] Related Objects;
@@ -59,11 +59,9 @@ is:;
 #X obj 78 306 cnv 17 3 45 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 305 float;
-#X obj 446 3 select;
-#X text 493 3 or;
-#X obj 518 3 sel;
-#X obj 448 20 pddp/pddplink http://wiki.puredata.info/en/select -text
-pdpedia: select;
+#X obj 444 10 select;
+#X text 491 10 or;
+#X obj 516 10 sel;
 #X msg 62 49 6;
 #X obj 29 99 select 6;
 #X msg 29 49 234;
@@ -88,11 +86,11 @@ environments.;
 #X text 22 217 Now the Pd equivalent:;
 #X msg 60 242 1;
 #X msg 92 242 2;
-#X floatatom 138 242 5 0 0 0 - - -;
+#X floatatom 138 242 5 0 0 0 - - -, f 5;
 #X obj 60 280 sel 1 2;
 #X msg 60 426 symbol Hello;
 #X msg 79 399 symbol GoodBye;
-#X symbolatom 181 452 21 0 0 0 - - -;
+#X symbolatom 181 452 21 0 0 0 - - -, f 21;
 #X obj 27 517 ==;
 #X obj 55 517 !=;
 #X obj 82 517 >;
@@ -129,9 +127,9 @@ environments.;
 #X msg 23 135 42;
 #X obj 23 203 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 56 203 5 0 0 0 - - -;
-#X floatatom 31 157 5 0 0 0 - - -;
-#X floatatom 80 159 5 0 0 0 - - -;
+#X floatatom 56 203 5 0 0 0 - - -, f 5;
+#X floatatom 31 157 5 0 0 0 - - -, f 5;
+#X floatatom 80 159 5 0 0 0 - - -, f 5;
 #X obj 197 222 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X msg 183 137 symbol word;
@@ -274,7 +272,7 @@ See the subpatch below for more details:;
 -1;
 #X obj 77 209 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 104 209 5 0 0 0 - - -;
+#X floatatom 104 209 5 0 0 0 - - -, f 5;
 #X text 61 139 If you click-n-drag this number box \, you'll notice
 how all numbers except "23" \, "54" \, and "1" are simply sent through
 to the rightmost outlet.;
@@ -313,8 +311,8 @@ creation argument. See the subpatch below for details:;
 ;
 #X obj 296 572 pddp/pddplink ../2.control.examples/18.conditional.pd
 -text doc/2.control.examples/18.conditional.pd;
+#X connect 17 0 20 0;
 #X connect 18 0 21 0;
-#X connect 19 0 22 0;
-#X connect 19 1 23 0;
-#X connect 20 0 21 0;
-#X connect 21 0 19 0;
+#X connect 18 1 22 0;
+#X connect 19 0 20 0;
+#X connect 20 0 18 0;

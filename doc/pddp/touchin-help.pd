@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header touchin 3 12 0 18
 -204280 -1 0;
 #X obj 0 431 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 48 220 494 375 META 0;
+#N canvas 485 257 494 375 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 428 421 Related_objects 0;
+#N canvas 217 207 428 421 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -80,10 +80,9 @@ by Olaf Matthes);
 #X text 168 467 - MIDI channel.;
 #X text 168 492 - ???;
 #X text 168 545 - ???;
-#X obj 472 3 touchin;
-#X obj 443 20 pddp/pddplink http://wiki.puredata.info/en/touchin -text
-pdpedia: touchin;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 491 10 touchin;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 236 192 touchin;
-#X connect 25 0 18 0;
-#X connect 25 1 17 0;
+#X connect 24 0 18 0;
+#X connect 24 1 17 0;

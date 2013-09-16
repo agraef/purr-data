@@ -1,38 +1,62 @@
-#N canvas 0 26 417 273 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 24 228 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 23 242 ___________________________________________________
+#N canvas 426 34 558 433 10;
+#X obj -1 405 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 267 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 612 216 369 225 META 0;
+#X text -67 136 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text -67 22 LICENSE SIBSD;
+#X text -67 117 AUTHOR Miller Puckette;
+#X text -67 155 RELEASE_DATE 1997;
+#X text -67 98 LIBRARY cyclone;
+#X text -67 174 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text -67 3 KEYWORDS private variable patch store;
+#X text -67 41 DESCRIPTION private variables for patch and its subpatches
 ;
-#X obj 36 28 pv foo;
-#X text 97 28 private variables for patch and it's subpatches;
-#X obj 173 50 value;
-#X text 98 49 see also:;
-#X obj 78 119 pv my_private_bar;
-#X obj 263 119 pv my_private_bar;
-#X msg 263 93 bang;
-#X obj 263 148 print my_private_bar;
-#N canvas 0 0 353 164 works 0;
-#X obj 32 66 pv my_private_bar;
-#X msg 32 40 bang;
-#X obj 32 95 print my_private_underground_bar;
-#X connect 0 0 2 0;
-#X connect 1 0 0 0;
-#X restore 48 150 pd works here too of course;
-#N canvas 247 115 494 411 META 0;
-#X text 12 155 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 125 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text -67 60 INLET_0 message bang;
+#X text -67 79 OUTLET_0 message;
+#X restore 502 407 pd META;
+#X obj -1 324 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 361 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 313 327 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 198 407 pd Related_objects;
+#X obj 81 277 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 81 333 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header pv 3 12 0 18 -204280
+-1 0;
+#X obj 56 109 pv my_private_bar;
+#X obj 56 198 pv my_private_bar;
+#X msg 56 172 bang;
+#X obj 56 227 print my_private_bar;
+#X msg 56 85 foo;
+#X text 110 275 message;
+#X text 185 275 - message to set as stored private variable;
+#X text 110 294 bang;
+#X text 185 294 - output stored pv;
+#X text 110 333 message;
+#X text 185 333 - stored private variable;
+#X text 92 373 1) message;
+#X text 185 373 - name of private variable;
+#X obj 501 7 pv foo;
+#X obj 292 199 pv my_private_bar;
+#X msg 292 173 bang;
+#X obj 292 228 print my_private_underground_bar;
+#X text 276 150 also works here:;
+#X text 37 47 store message in variablemy_private_bar:;
+#X text 40 149 ...then access it here:;
+#X text 12 23 private variables for patch and its subpatches;
+#X obj 11 407 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 45 DESCRIPTION private variables for patch and it's subpatches
-;
-#X text 12 85 OUTLET_0 anything;
-#X text 12 65 INLET_0 anything bang;
-#X text 12 5 KEYWORDS control nonlocal max_compatible local;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 105 AUTHOR Krzysztof Czaja;
-#X restore 368 252 pd META;
-#X msg 78 95 foo;
-#X connect 8 0 10 0;
-#X connect 9 0 8 0;
-#X connect 13 0 7 0;
+#X connect 10 0 12 0;
+#X connect 11 0 10 0;
+#X connect 13 0 9 0;
+#X connect 23 0 25 0;
+#X connect 24 0 23 0;

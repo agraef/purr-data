@@ -1,6 +1,73 @@
-#N canvas 0 31 800 366 10;
-#X obj 407 306 dac~;
-#N canvas 252 136 556 460 svf_part2 0;
+#N canvas 432 38 559 593 10;
+#X obj -1 826 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 422 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 619 316 365 289 META 0;
+#X text 10 156 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 -42 LICENSE SIBSD;
+#X text 10 138 AUTHOR Miller Puckette;
+#X text 10 174 RELEASE_DATE 1997;
+#X text 10 120 LIBRARY cyclone;
+#X text 10 192 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 -60 KEYWORDS signal filter state variable state-variable
+cutoff;
+#X text 10 -24 DESCRIPTION state-variable filter;
+#X text 10 -6 INLET_0 signal;
+#X text 10 12 INLET_1 signal float;
+#X text 10 30 INLET_2 signal float;
+#X text 10 48 OUTLET_0 signal;
+#X text 10 66 OUTLET_1 signal;
+#X text 10 84 OUTLET_2 signal;
+#X text 10 102 OUTLET_3 signal;
+#X restore 499 828 pd META;
+#X obj -1 538 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 647 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 704 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 317 494 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 195 828 pd Related_objects;
+#X obj 78 431 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 547 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header svf~ 3 12 0 18
+-204280 -1 0;
+#X obj 491 9 svf~;
+#X text 12 24 state-variable filter;
+#X obj 78 498 cnv 17 3 33 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 106 431 signal;
+#X text 178 431 - signal to filter;
+#X text 106 497 signal;
+#X text 106 515 float;
+#X text 106 455 signal;
+#X text 106 472 float;
+#X text 178 463 - set cutoff frequency;
+#X text 178 505 - set resonance (0-1);
+#X obj 78 456 cnv 17 3 33 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 572 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 78 595 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 89 658 1) float;
+#X text 89 680 2) float;
+#X text 106 785 Floats or signals can modify these in real-time. The
+value of these parameters is only sampled once per signal vector.;
+#X text 106 739 One of its advantages is that the it produces low-pass
+\, high-pass \, band-pass \, and band-reject (notch) output simultaneously
+- so all four are available in parallel.;
+#X text 106 711 svf~ implements Chamberlin's state-variable filter
+algorithm.;
+#X obj 109 394 dac~;
+#N canvas 976 146 556 460 svf_part2 0;
 #X text -1 306 onepole~.help contains yet another example.;
 #X text -1 382 svf~ accepts arguments or max messages to change the
 frequency input mode. it is generally recommended to set the mode with
@@ -28,31 +95,17 @@ may also improve efficiency slightly.;
 vector \, it is more efficient to use the radians mode than to do logarithmic
 scaling outside the object at audio rate.;
 #X text -59 191 radians;
-#X restore 617 344 pd svf_part2;
-#X text 16 12 state-variable filter;
-#X text 8 273 special thanks to 2up;
-#X msg 379 81 0.5;
-#X text 545 118 frequency range is 0 - f(s)/4;
-#X obj 409 151 noise~;
-#X text 8 158 Floats or signals can modify these in real-time. The
-value of these parameters is only sampled once per signal vector.;
-#X text 8 138 Arguments are cutoff frequency (Hz) \, and resonance
-(0-1).;
-#X text 8 93 One of its advantages is that the it produces low-pass
-\, high-pass \, band-pass \, and band-reject (notch) output simultaneously
-- so all four are available in parallel.;
-#X text 8 65 svf~ implements Chamberlin's state-variable filter algorithm.
-;
-#X msg 422 86 37;
-#X text 553 164 left: (signal) filter input;
-#X text 527 254 outputs: lowpass \, highpass \, bandpass \, notch;
-#X text 553 192 right: (signal/float) resonance (0 - 1);
-#X text 553 178 middle: (signal/float) cutoff frequency;
-#X obj 346 25 loadbang;
-#X obj 458 106 * 11025;
-#X obj 458 85 / 512;
-#X floatatom 458 127 0 0 0 0 - - -;
-#N canvas 40 55 716 389 svf_algorithm 0;
+#X restore 432 382 pd svf_part2;
+#X msg 298 135 0.5;
+#X text 190 83 frequency range is 0 - f(s)/4;
+#X obj 108 56 noise~;
+#X msg 142 113 37;
+#X text 246 314 outputs: lowpass \, highpass \, bandpass \, notch;
+#X obj 130 83 loadbang;
+#X obj 142 180 * 11025;
+#X obj 142 159 / 512;
+#X floatatom 142 201 0 0 0 0 - - -;
+#N canvas 858 168 716 389 svf_algorithm 0;
 #X text 242 290 bandstop = lowpass + hipass \;;
 #X text 59 179 this is the dsp loop. note how the calculations work
 together to produce all four outputs simultaneously.;
@@ -64,66 +117,61 @@ in radians input mode);
 #X text 242 242 hipass = in_samp - lowpass - q * bandpass \;;
 #X text 242 226 lowpass = lowpass + (cf_radians * bandpass) \;;
 #X text 242 274 bandpass = bandpass - (bandpass ^ 3.) * 0.0001 \;;
-#X restore 499 344 pd svf_algorithm;
-#X text 8 240 (float) resonance (0-1);
-#X text 8 226 (float) cutoff frequency (Hz);
-#X text 8 212 arguments (optional):;
-#X obj 526 201 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X restore 314 382 pd svf_algorithm;
+#X obj 230 288 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 493 201 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 195 288 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 460 201 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 163 288 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 427 201 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 130 288 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X obj 508 219 *~ 0;
-#X obj 475 219 *~ 0;
-#X obj 442 219 *~ 0;
-#X obj 409 219 *~ 0;
-#X floatatom 507 151 0 0 0 0 - - -;
-#X obj 409 175 svf~ 797 0.5;
-#X obj 409 269 *~ 0.7;
-#X obj 464 54 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+#X obj 209 314 *~ 0;
+#X obj 174 314 *~ 0;
+#X obj 142 314 *~ 0;
+#X obj 109 314 *~ 0;
+#X floatatom 177 226 0 0 0 0 - - -;
+#X obj 108 251 svf~ 797 0.5;
+#X obj 108 361 *~ 0.7;
+#X obj 142 137 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
 -1 -1 3700 1;
-#N canvas 511 83 494 469 META 0;
-#X text 12 255 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 225 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 106 547 signal;
+#X text 178 547 - lowpass signal;
+#X text 106 572 signal;
+#X text 178 572 - highpass signal;
+#X text 106 595 signal;
+#X text 178 595 - bandpass signal;
+#X obj 78 620 cnv 17 3 17 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
+-162280 0;
+#X text 106 620 signal;
+#X text 178 620 - notch signal;
+#X obj 480 54 pddp/dsp;
+#X text 178 655 - initial cutoff frequency (Hz);
+#X text 178 679 - initial resonance (0-1);
+#X obj 12 829 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS signal filter max_compatible;
-#X text 12 65 INLET_0 signal;
-#X text 12 85 INLET_1 signal;
-#X text 12 105 INLET_2 signal;
-#X text 12 125 OUTLET_0 signal;
-#X text 12 145 OUTLET_1 signal;
-#X text 12 165 OUTLET_2 signal;
-#X text 12 185 OUTLET_3 signal;
-#X text 12 45 DESCRIPTION state-variable filter;
-#X text 12 205 AUTHOR Krzysztof Czaja;
-#X text 12 25 LICENSE SIBSD;
-#X restore 751 344 pd META;
-#X connect 4 0 32 0;
-#X connect 6 0 33 0;
-#X connect 11 0 35 0;
-#X connect 16 0 4 0;
-#X connect 16 0 11 0;
-#X connect 16 0 27 0;
-#X connect 17 0 19 0;
-#X connect 18 0 17 0;
-#X connect 19 0 33 1;
-#X connect 24 0 28 1;
-#X connect 25 0 29 1;
-#X connect 26 0 30 1;
-#X connect 27 0 31 1;
-#X connect 28 0 34 0;
-#X connect 29 0 34 0;
-#X connect 30 0 34 0;
-#X connect 31 0 34 0;
-#X connect 32 0 33 2;
-#X connect 33 0 31 0;
-#X connect 33 1 30 0;
-#X connect 33 2 29 0;
-#X connect 33 3 28 0;
-#X connect 34 0 0 0;
-#X connect 34 0 0 1;
-#X connect 35 0 18 0;
+#X connect 31 0 49 0;
+#X connect 33 0 50 0;
+#X connect 34 0 52 0;
+#X connect 36 0 31 0;
+#X connect 36 0 34 0;
+#X connect 36 0 44 0;
+#X connect 37 0 39 0;
+#X connect 38 0 37 0;
+#X connect 39 0 50 1;
+#X connect 41 0 45 1;
+#X connect 42 0 46 1;
+#X connect 43 0 47 1;
+#X connect 44 0 48 1;
+#X connect 45 0 51 0;
+#X connect 46 0 51 0;
+#X connect 47 0 51 0;
+#X connect 48 0 51 0;
+#X connect 49 0 50 2;
+#X connect 50 0 48 0;
+#X connect 50 1 47 0;
+#X connect 50 2 46 0;
+#X connect 50 3 45 0;
+#X connect 51 0 29 0;
+#X connect 51 0 29 1;
+#X connect 52 0 38 0;

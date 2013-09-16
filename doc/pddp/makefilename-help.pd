@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 426 37 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header makefilename 3 12
 0 18 -204280 -1 0;
 #X obj 0 179 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 252 494 344 META 0;
+#N canvas 483 287 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 479 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 75 446 428 187 Related_objects 0;
+#N canvas 212 443 428 187 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [makefilename] Related Objects;
@@ -43,9 +43,7 @@ Pd version 0.42.;
 #X text 98 187 float;
 #X obj 78 328 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 444 3 makefilename;
-#X obj 415 20 pddp/pddplink http://wiki.puredata.info/en/makefilename
--text pdpedia: makefilename;
+#X obj 468 11 makefilename;
 #X floatatom 49 64 0 0 0 0 - - -;
 #X text 81 143 numbered filenames;
 #X symbolatom 49 122 0 0 0 0 - - -;
@@ -88,7 +86,7 @@ hard drive...like below:;
 #X symbolatom 61 358 0 0 0 0 - - -;
 #X obj 64 309 hsl 150 18 0 122 0 1 empty empty ASCII_range 2 9 1 12
 -262131 -1 -1 6800 0;
-#X floatatom 30 360 3 0 0 0 - - -;
+#X floatatom 30 360 3 0 0 0 - - -, f 3;
 #X text 19 514 - only one printf pattern can be used at once;
 #X text 19 476 - This object does not provide advanced formatting and
 parsing abilities. For example \, you cannot use spaces or odd characters
@@ -99,7 +97,7 @@ box.;
 #X obj 267 309 hsl 150 18 0 255 0 1 empty empty 0_to_FF 2 9 1 12 -262131
 -1 -1 5100 0;
 #X obj 264 338 makefilename hex=%X;
-#X floatatom 233 360 3 0 0 0 - - -;
+#X floatatom 233 360 3 0 0 0 - - -, f 3;
 #X obj 61 338 makefilename ASCII=%c;
 #X text 29 381 Watch out! ASCII characters 123 and 125 (curly braces)
 lock up Pd. Also \, reserved characters that Pd uses show up with a
@@ -183,7 +181,7 @@ which operates 24 hours per day \, every day.;
 #X obj 58 330 + 1;
 #X obj 153 369 route 0 1 2 3 4 5 6;
 #X obj 25 379 mod 24;
-#X floatatom 25 404 5 0 0 0 - - -;
+#X floatatom 25 404 5 0 0 0 - - -, f 5;
 #X floatatom 25 354 0 0 0 0 - - -;
 #X obj 25 330 f;
 #X obj 47 430 sel 0;
@@ -353,11 +351,11 @@ type used \, then the list will be truncated.;
 #X obj 98 572 pddp/pddplink all_about_symbol_construction.pd;
 #X obj 98 554 pddp/pddplink ../1.manual/x3.htm -text Pd Manual Chapter
 3.6 - doc/1.manual/x3.htm;
-#X connect 13 0 16 0;
-#X connect 16 0 15 0;
-#X connect 17 0 22 0;
-#X connect 18 0 17 0;
-#X connect 19 0 17 0;
-#X connect 20 0 17 0;
-#X connect 21 0 17 0;
-#X connect 22 0 23 0;
+#X connect 12 0 15 0;
+#X connect 15 0 14 0;
+#X connect 16 0 21 0;
+#X connect 17 0 16 0;
+#X connect 18 0 16 0;
+#X connect 19 0 16 0;
+#X connect 20 0 16 0;
+#X connect 21 0 22 0;

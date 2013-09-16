@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 37 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pgmin 3 12 0 18
 -204280 -1 0;
 #X obj 0 402 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 245 507 371 META 0;
+#N canvas 475 256 507 371 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ the MIDI port;
 0 13 -228856 -1 0;
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 109 170 428 419 Related_objects 0;
+#N canvas 219 209 428 419 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [pgmin] Related Objects;
@@ -66,16 +66,14 @@ by Olaf Matthes);
 #X restore 102 597 pd Related_objects;
 #X obj 78 440 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 483 3 pgmin;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/pgmin -text
-pdpedia: pgmin;
+#X obj 507 10 pgmin;
 #X text 95 134 The [pgmin] object reads incoming program change messages.
 ;
 #X obj 231 162 pgmin;
-#X floatatom 231 212 5 0 0 0 - - -;
-#X floatatom 258 189 5 0 0 0 - - -;
+#X floatatom 231 212 5 0 0 0 - - -, f 5;
+#X floatatom 258 189 5 0 0 0 - - -, f 5;
 #X obj 230 245 pgmin 2;
-#X floatatom 230 267 5 0 0 0 - - -;
+#X floatatom 230 267 5 0 0 0 - - -, f 5;
 #X text 98 407 (none);
 #X text 98 439 float;
 #X obj 78 465 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
@@ -95,7 +93,8 @@ accepts all channels.;
 #X text 168 439 (integer) program change number.;
 #X text 168 464 (integer) channel number.;
 #X text 80 511 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 12 0 13 0;
-#X connect 12 1 14 0;
-#X connect 15 0 16 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 12 0;
+#X connect 11 1 13 0;
+#X connect 14 0 15 0;

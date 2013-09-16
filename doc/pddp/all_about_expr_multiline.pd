@@ -1,13 +1,13 @@
-#N canvas 0 0 448 282 10;
+#N canvas 433 34 448 282 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_multiline 20
 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X floatatom 23 196 5 0 0 0 - - -;
-#X floatatom 102 196 5 0 0 0 - - -;
-#X floatatom 23 93 5 0 0 0 - - -;
+#X floatatom 23 196 5 0 0 0 - - -, f 5;
+#X floatatom 102 196 5 0 0 0 - - -, f 5;
+#X floatatom 23 93 5 0 0 0 - - -, f 5;
 #X floatatom 181 196 0 0 0 0 - - -;
-#X floatatom 260 196 5 0 0 0 - - -;
+#X floatatom 260 196 5 0 0 0 - - -, f 5;
 #X obj 23 119 expr $f1 \; $f1 * 2 \; pow($f1 \, 2) \; if($f1%128 <
 64 \, $f1%128 \, 128 - $f1%128);
 #X text 260 227 back down;
@@ -20,7 +20,7 @@ extra outlet is added to the object.;
 #X text 272 155 the last statement;
 #X obj 1 260 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 380 135 494 156 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -31,7 +31,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 DESCRIPTION Like to enter multiple expressions inside
 expr? You can if you want \, and this patch tells you how...;
 #X restore 392 262 pd META;
-#N canvas 10 196 428 129 Related_objects 0;
+#N canvas 224 164 428 129 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 [expr] Multiline- Related Objects;

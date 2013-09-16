@@ -1,18 +1,60 @@
-#N canvas 0 26 799 603 10;
-#X text 13 -77 Exponential ramp generator;
-#X text 69 309 line output;
-#X obj 684 310 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X text 692 268 parameter;
-#X text 617 269 time;
-#X msg 138 196 1 \, 0 1000 0.5;
-#X floatatom 684 237 0 0 0 0 - - -;
-#X msg 589 236 1 \, 0 500;
-#X msg 532 237 0 \, 1 500;
-#X obj 63 244 line~;
-#X msg 250 196 1 \, 0.5 500 0.5 0 500 -0.5;
-#X msg 43 192 0 \, 1 1000 0.5;
-#X text 9 -65 curve~ is similar to line~. It produces a signal that
+#N canvas 425 64 552 615 10;
+#X obj -1 886 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 329 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 617 454 348 203 META 0;
+#X text 60 130 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 60 22 LICENSE SIBSD;
+#X text 60 112 AUTHOR Miller Puckette;
+#X text 60 148 RELEASE_DATE 1997;
+#X text 60 94 LIBRARY cyclone;
+#X text 60 4 KEYWORDS signal ramp generator exponential;
+#X text 60 40 DESCRIPTION exponential ramp generator;
+#X text 60 58 INLET_0 list;
+#X text 60 76 OUTLET_0 signal;
+#X text 60 166 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 500 888 pd META;
+#X obj -1 499 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 536 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 612 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 305 549 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 34 36 line~;
+#X obj 80 36 vline~;
+#X restore 202 888 pd Related_objects;
+#X obj 88 508 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header curve~ 3 12 0 18
+-204280 -1 0;
+#X text 11 23 Exponential ramp generator;
+#X text 101 171 line output;
+#X msg 221 105 1 \, 0 1000 0.5;
+#X obj 36 143 line~;
+#X msg 349 105 1 \, 0.5 500 0.5 0 500 -0.5;
+#X msg 36 105 0 \, 1 1000 0.5;
+#X text 278 171 curve output;
+#X text 33 76 amp examples: compare curve~ and line~;
+#X text 353 78 example of an "s" curve;
+#X obj 221 143 curve~;
+#X obj 220 190 Scope~ 130 81 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X obj 36 190 Scope~ 130 81 256 3 128 -1 1 0 0 0 0 102 255 51 135 135
+135 0;
+#X text 118 337 list;
+#X text 118 507 signal;
+#X text 178 507 - signal produced by input parameters;
+#X text 114 555 1) float;
+#X text 178 555 - set initial value;
+#X text 114 576 2) float;
+#X text 178 576 - set parameter;
+#X text 114 629 curve~ is similar to line~. It produces a signal that
 goes from an initial to target value over a specified number of milliseconds.
 However \, it produces non-linear ramps using a piecewise approximation
 of an exponential function. You specify the parameter to this exponential
@@ -27,49 +69,55 @@ is used if there are two arguments) \, or a list with two or more value
 in a single list. The object's approximation of the exponential becomes
 better when the vector size is smaller \, but the object also becomes
 more computationally expensive.;
-#X text 194 236 optional arguments set initial value (default 0) and
+#X obj 499 3 curve~;
+#X obj 479 51 pddp/dsp;
+#X obj 88 339 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 88 425 cnv 17 3 30 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 118 423 float;
+#X text 178 424 - curve duration in milliseconds (useful if you wish
+to feed individual float values into first inlet;
+#X obj 88 462 cnv 17 3 30 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 118 460 float;
+#X text 178 461 - curve parameter (-1 to 1). See "different_parameters"
+subpatch for more info;
+#N canvas 1007 345 279 310 different_parameters 0;
+#X obj 89 172 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 187 62 parameter;
+#X text 119 62 time;
+#X floatatom 188 79 0 0 0 0 - - -;
+#X msg 122 79 1 \, 0 500;
+#X text 54 62 value;
+#X text 101 130 curve signal out;
+#X text 107 169 bang when done;
+#X text 34 40 try different curve parameters (-1 to 1);
+#X obj 56 131 curve~;
+#X obj 57 203 Scope~ 151 80 256 3 128 -1 1 0 0 0 0 102 255 51 135 135
+135 0;
+#X text 34 6 optional arguments set initial value (default 0) and
 parameter (default 0);
-#X text 540 269 value;
-#X text 542 305 curve signal out;
-#X text 700 300 bang when done;
-#X text 210 296 curve output;
-#X text 18 485 Special thanks to Richard Dudas for the suggestion of
-a curve equation to use.;
-#X text 1 175 amp examples: compare curve~ and line~;
-#X text 255 179 example of an "s" curve;
-#X obj 138 246 curve~;
-#X obj 207 320 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
-135 135 0;
-#X obj 64 332 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
-135 135 0;
-#X text 500 201 try different curve parameters (-1 to 1);
-#X obj 532 283 curve~;
-#X obj 532 329 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
-135 135 0;
-#N canvas 325 206 494 401 META 0;
-#X text 12 215 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 185 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X msg 56 79 0 \, 1 500;
+#X connect 3 0 9 2;
+#X connect 4 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 1 0 0;
+#X connect 12 0 9 0;
+#X restore 385 234 pd different_parameters;
+#X text 118 348 float;
+#X text 178 338 - triplet of floats of form intial value \, time (ms)
+\, parameter. Parameter specifies what kind of cuve 1 to 0 for exponential
+\, 0 for line \, 0 to -1 for logarithmic. Can have up to 42 triplets.
+Single float value sets the curve immediately to that value unless
+duration is set to other than 0 via second inlet.;
+#X obj 6 886 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS signal conversion max_compatible ramp;
-#X text 12 45 DESCRIPTION exponential ramp generator;
-#X text 12 65 INLET_0 float list;
-#X text 12 105 INLET_2 float;
-#X text 12 85 INLET_1 float;
-#X text 12 125 OUTLET_0 signal;
-#X text 12 145 OUTLET_1 bang;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 165 AUTHOR Krzysztof Czaja;
-#X restore 749 498 pd META;
-#X connect 5 0 9 0;
-#X connect 5 0 21 0;
-#X connect 6 0 25 2;
-#X connect 7 0 25 0;
-#X connect 8 0 25 0;
-#X connect 9 0 23 0;
-#X connect 10 0 21 0;
-#X connect 11 0 9 0;
-#X connect 11 0 21 0;
-#X connect 21 0 22 0;
-#X connect 25 0 26 0;
-#X connect 25 1 2 0;
+#X connect 11 0 12 0;
+#X connect 11 0 18 0;
+#X connect 12 0 20 0;
+#X connect 13 0 18 0;
+#X connect 14 0 12 0;
+#X connect 14 0 18 0;
+#X connect 18 0 19 0;

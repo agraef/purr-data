@@ -1,4 +1,4 @@
-#N canvas 252 22 555 619 10;
+#N canvas 427 35 555 619 10;
 #X declare;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
@@ -6,7 +6,7 @@
 -1 0;
 #X obj 0 294 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 494 344 META 0;
+#N canvas 485 285 494 344 META 0;
 #X text 12 125 PATH internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 535 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 105 478 428 109 Related_objects 0;
+#N canvas 214 518 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [path] Related Objects;
@@ -38,9 +38,7 @@ to conform to the PDDP template for Pd version 0.42.;
 -162280 0;
 #X obj 78 441 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 482 3 path;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/path -text
-pdpedia: path;
+#X obj 505 13 path;
 #X msg 91 84 bang;
 #X symbolatom 102 188 0 0 0 0 - - -;
 #X obj 91 214 print;
@@ -76,9 +74,9 @@ for patch.;
 #X text 168 362 - resets to output at the top of the list of paths.
 ;
 #X text 168 336 - add a path to the end of the list of paths.;
-#X connect 13 0 32 0;
-#X connect 18 0 32 0;
-#X connect 32 0 14 0;
-#X connect 32 0 15 0;
-#X connect 32 1 23 0;
-#X connect 33 0 32 0;
+#X connect 12 0 31 0;
+#X connect 17 0 31 0;
+#X connect 31 0 13 0;
+#X connect 31 0 14 0;
+#X connect 31 1 22 0;
+#X connect 32 0 31 0;

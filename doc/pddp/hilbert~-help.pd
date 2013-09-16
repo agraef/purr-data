@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header hilbert~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 397 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 487 283 494 344 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 0 542 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 518 (none);
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 222 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [hilbert~] Related Objects;
@@ -40,9 +40,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 -162280 0;
 #X obj 78 429 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 468 3 hilbert~;
-#X obj 442 20 pddp/pddplink http://wiki.puredata.info/en/hilbert~ -text
-pdpedia: hilbert~;
+#X obj 487 12 hilbert~;
 #X text 11 23 Hilbert transform;
 #X obj 37 225 hilbert~;
 #X obj 36 196 osc~ 440;
@@ -59,8 +57,9 @@ the input signal suitable for signal sideband modulation via [complex-mod~].
 #X text 98 546 The [hilbert~] object is an abstraction \, so you can
 click on the object to bring up the subpatch to see how it works.;
 #X msg 102 259 bang;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 478 50 pddp/dsp;
 #X obj 98 572 pddp/pddplink ../3.audio.examples/H09.ssb.modulation.pd
 -text doc/3.audio.examples/H09.ssb.modulation.pd;
 #X obj 78 489 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
@@ -73,9 +72,9 @@ click on the object to bring up the subpatch to see how it works.;
 #X restore 217 183 graph;
 #X obj 37 345 tabwrite~ \$0-left;
 #X obj 83 319 tabwrite~ \$0-right;
-#X connect 15 0 32 0;
-#X connect 15 1 33 0;
+#X connect 14 0 31 0;
+#X connect 14 1 32 0;
+#X connect 15 0 14 0;
 #X connect 16 0 15 0;
-#X connect 17 0 16 0;
-#X connect 25 0 32 0;
-#X connect 25 0 33 0;
+#X connect 24 0 31 0;
+#X connect 24 0 32 0;

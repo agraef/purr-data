@@ -1,64 +1,99 @@
-#N canvas 0 26 539 593 10;
-#X obj 53 251 fromsymbol;
-#X obj 4 14 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 17 559 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 17 570 ___________________________________________________
-;
-#X obj 94 190 tosymbol;
-#X text 35 72 since pd lacks a quoting mechanism (like `foo bar`) there
-is;
-#X text 36 84 no support for spaces in symbols \, so the original max
-way of;
-#X text 35 96 using from/tosymbol won't work. One has to construct
-symbols;
-#X text 34 109 with other tools like;
-#X obj 185 113 tosymbol;
-#X obj 267 113 makesymbol;
-#X text 248 109 or;
-#X text 342 110 from zexy;
-#X msg 94 164 this is a list of symbols;
-#X text 275 216 becomes a symbol with spaces;
-#X text 200 278 and can be transformed back into a list;
-#X text 31 164 so this:;
-#X obj 90 421 tosymbol;
-#X text 50 365 1;
-#X text 57 394 2;
-#X obj 55 329 tosymbol;
-#X msg 90 391 lets place a _ instead of a space inside;
-#X msg 67 366 separator _;
-#X text 117 333 can also be used to generate non space symbols from
+#N canvas 429 35 560 577 10;
+#X obj -1 732 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 490 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 617 364 366 224 META 0;
+#X text 7 21 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 7 -99 LICENSE SIBSD;
+#X text 7 1 AUTHOR Miller Puckette;
+#X text 7 41 RELEASE_DATE 1997;
+#X text 7 -19 LIBRARY cyclone;
+#X text 7 -39 OUTLET_0 signal;
+#X text 7 63 HELP_PATCH_AUTHORS Alex Cleveland updated this patch for
+Pd-l2ork version 2013.05.28;
+#X text 7 -121 KEYWORDS symbol transform messages numbers;
+#X text 7 -79 DESCRIPTION transform messages to symbols;
+#X text 7 -59 INLET_0 message list;
+#X restore 501 734 pd META;
+#X obj -1 554 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 591 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 640 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 322 474 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 38 35 fromsymbol;
+#X restore 204 734 pd Related_objects;
+#X obj 78 504 cnv 17 3 36 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 80 563 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header tosymbol 3 12 0
+18 -204280 -1 0;
+#X obj 46 324 tosymbol;
+#X text 108 324 can also be used to generate non space symbols from
 lists:;
-#X symbolatom 90 446 0 0 0 0 - - -;
-#X symbolatom 94 216 25 0 0 0 - - -;
-#X obj 53 278 print THIS_IS_A_LIST;
-#X text 1 486 For more info:;
-#X obj 148 504 pddp/pddplink ../all_about_lists_vs_anythings.pd -text
+#X text 106 525 list;
+#X text 104 610 (none);
+#X obj 489 10 tosymbol;
+#X text 106 502 message;
+#X text 178 502 - messgae to be transformed into symbol;
+#X text 178 525 - list of messages to turn into symbols;
+#X text 106 563 symbol;
+#X text 178 563 - symbol (including whitespace) of input;
+#X obj 106 676 pddp/pddplink ../all_about_lists_vs_anythings.pd -text
 all_about_lists_vs_anythings;
-#X obj 348 504 pddp/pddplink ../all_about_symbol_construction.pd -text
+#X obj 106 697 pddp/pddplink ../all_about_symbol_construction.pd -text
 all_about_symbol_construction;
-#X obj 4 504 pddp/pddplink ../all_about_data_types.pd -text all_about_data_types
+#X obj 106 655 pddp/pddplink ../all_about_data_types.pd -text all_about_data_types
 ;
-#X obj 29 16 fromsymbol;
-#X obj 29 37 tosymbol;
-#X text 121 22 transform symbol to numbers or messages and vice versa
+#X obj 236 246 fromsymbol;
+#X obj 265 187 tosymbol;
+#X text 39 54 since pd lacks a quoting mechanism (like `foo bar`) there
+is;
+#X text 40 66 no support for spaces in symbols \, so the original max
+way of;
+#X text 39 78 using from/tosymbol won't work. One has to construct
+symbols;
+#X text 38 91 with other tools like;
+#X obj 189 95 tosymbol;
+#X obj 271 95 makesymbol;
+#X text 252 91 or;
+#X text 346 92 from zexy;
+#X msg 265 161 this is a list of symbols;
+#X symbolatom 265 213 25 0 0 0 - - -, f 25;
+#X obj 236 273 print THIS_IS_A_LIST;
+#X obj 45 206 fromsymbol;
+#X msg 45 157 4;
+#X obj 45 228 route float;
+#X floatatom 45 255 5 0 0 0 - - -, f 5;
+#X obj 45 184 tosymbol;
+#X text 38 133 works with symbols:;
+#X text 254 133 also works with list of symbols:;
+#X text 422 161 so this...;
+#X text 421 207 ...becomes a symbol with spaces;
+#X text 365 266 ...and can be transformed back into a list;
+#X obj 106 415 tosymbol;
+#X text 66 359 1;
+#X text 73 388 2;
+#X msg 106 385 lets place a _ instead of a space inside;
+#X msg 83 360 separator _;
+#X symbolatom 106 440 0 0 0 0 - - -;
+#X text 11 23 transform messages to symbols;
+#X obj 9 731 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#N canvas 247 115 494 344 META 0;
-#X text 12 155 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 125 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 45 DESCRIPTION transform symbol to numbers or messages;
-#X text 12 5 KEYWORDS control conversion max_compatible symbol_op;
-#X text 12 85 OUTLET_0 symbol;
-#X text 12 65 INLET_0 float list separator;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 105 AUTHOR Krzysztof Czaja;
-#X restore 488 573 pd META;
-#X connect 0 0 26 0;
-#X connect 4 0 0 0;
-#X connect 4 0 25 0;
-#X connect 13 0 4 0;
-#X connect 17 0 24 0;
-#X connect 21 0 17 0;
-#X connect 22 0 17 0;
+#X connect 23 0 35 0;
+#X connect 24 0 23 0;
+#X connect 24 0 34 0;
+#X connect 33 0 24 0;
+#X connect 36 0 38 0;
+#X connect 37 0 40 0;
+#X connect 38 0 39 0;
+#X connect 40 0 36 0;
+#X connect 46 0 51 0;
+#X connect 49 0 46 0;
+#X connect 50 0 46 0;

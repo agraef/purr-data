@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 35 558 622 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header adc~ 3 12 0 18 -204280
 -1 0;
 #X obj 0 292 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 581 390 397 242 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,28 +27,24 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 79 301 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 96 433 428 209 Related_objects 0;
+#N canvas 216 458 428 173 Related_objects 0;
 #X obj 22 43 dac~;
 #X obj 62 43 switch~;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 2 [adc~] Related Objects;
-#X text 114 43 [block~];
-#X text 19 66 (Note: having a [block~] and a [switch~] in the same
-window causes an error \, which is why [block~] is shown above as a
-comment.);
-#X text 19 118 Externals;
+#X text 19 78 Externals;
 #X obj 173 43 throw~;
 #X obj 225 43 catch~;
 #X obj 277 43 send~;
 #X obj 321 43 receive~;
-#X obj 19 142 pddp/helplink pdogg/oggcast~;
-#X obj 19 162 pddp/helplink unauthorized/mp3cast~;
-#X text 18 183 [shoutcast~] (What library is this object in?);
+#X obj 19 102 pddp/helplink pdogg/oggcast~;
+#X obj 19 122 pddp/helplink unauthorized/mp3cast~;
+#X text 18 143 [shoutcast~] (What library is this object in?);
+#X text 18 55;
+#X obj 119 43 block~;
 #X restore 102 597 pd Related_objects;
-#X obj 490 3 adc~;
-#X obj 466 20 pddp/pddplink http://wiki.puredata.info/en/adc~ -text
-pdpedia: adc~;
+#X obj 510 11 adc~;
 #X text 99 338 signal;
 #X obj 79 338 cnv 17 3 70 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
@@ -72,7 +68,7 @@ hardware which corresponds to the argument you provide. If no arguments
 are provided \, then there are two outlets which represent audio channels
 1 and 2 on your computers sound card.;
 #X obj 87 103 env~;
-#X floatatom 87 151 5 0 0 0 - - -;
+#X floatatom 87 151 5 0 0 0 - - -, f 5;
 #X obj 87 127 spigot;
 #X obj 150 104 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
@@ -144,7 +140,7 @@ switch \, or disable both using the "-nosound" switch.;
 #X text 7 2 [dac~] -nodac and -noadc;
 #X restore 102 567 pd defeating_audio_computation;
 #X text 12 23 audio input;
-#X connect 13 0 25 0;
-#X connect 25 0 27 0;
-#X connect 27 0 26 0;
-#X connect 28 0 27 1;
+#X connect 12 0 24 0;
+#X connect 24 0 26 0;
+#X connect 26 0 25 0;
+#X connect 27 0 26 1;

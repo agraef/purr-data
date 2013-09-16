@@ -1,4 +1,4 @@
-#N canvas 0 0 448 239 10;
+#N canvas 428 36 448 239 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header data_types 20 10
 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -6,7 +6,7 @@
 #X obj 43 66 pddp/pddplink all_about_atoms.pd;
 #X obj 1 217 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 372 88 494 162 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -18,7 +18,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 ;
 #X restore 392 219 pd META;
 #X obj 6 219 pddp/pddplink all_about.pd -text All About Pd;
-#N canvas 25 153 428 150 Quick_Quiz! 0;
+#N canvas 194 98 428 150 Quick_Quiz! 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Messages- Related Objects;

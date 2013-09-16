@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 424 45 555 619 10;
 #X obj -1 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header change 3 12 0 18
 -204280 -1 0;
 #X obj -1 337 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 247 494 344 META 0;
+#N canvas 479 297 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ for Pd version 0.42.;
 12 0 13 -228856 -1 0;
 #X obj 78 346 cnv 17 3 125 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 74 489 428 104 Related_objects 0;
+#N canvas 210 534 428 104 Related_objects 0;
 #X obj 15 31 spigot;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -38,9 +38,7 @@ for Pd version 0.42.;
 #X restore 101 597 pd Related_objects;
 #X obj 78 490 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 483 3 change;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/change -text
-pdpedia: change;
+#X obj 499 11 change;
 #X msg 22 108 1;
 #X msg 50 108 1;
 #X msg 79 108 1;
@@ -86,18 +84,19 @@ value \, it will be sent to the outlet.;
 the value of [change] without outputting it.;
 #X text 18 59 The change object passes its input to the outlet only
 when it changes.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 12 0 17 0;
-#X connect 13 0 17 0;
-#X connect 14 0 17 0;
-#X connect 15 0 17 0;
-#X connect 17 0 18 0;
-#X connect 20 0 21 0;
-#X connect 22 0 20 0;
-#X connect 23 0 20 0;
-#X connect 24 0 20 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 16 0;
+#X connect 12 0 16 0;
+#X connect 13 0 16 0;
+#X connect 14 0 16 0;
+#X connect 16 0 17 0;
+#X connect 19 0 20 0;
+#X connect 21 0 19 0;
+#X connect 22 0 19 0;
+#X connect 23 0 19 0;
+#X connect 29 0 35 0;
 #X connect 30 0 36 0;
-#X connect 31 0 37 0;
-#X connect 32 0 33 0;
-#X connect 33 0 37 0;
-#X connect 37 0 30 0;
+#X connect 31 0 32 0;
+#X connect 32 0 36 0;
+#X connect 36 0 29 0;

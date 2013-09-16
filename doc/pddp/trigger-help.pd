@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 426 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header trigger 3 12 0 18
 -204280 -1 0;
 #X obj 0 219 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 242 494 358 META 0;
+#N canvas 484 266 494 358 META 0;
 #X text 12 135 LIBRARY internal;
 #X text 12 175 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -29,7 +29,7 @@ convert data types;
 0 13 -228856 -1 0;
 #X obj 0 497 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 49 301 428 283 Related_objects 0;
+#N canvas 215 343 428 283 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [trigger] Related Objects;
@@ -57,11 +57,9 @@ is:;
 -162280 0;
 #X obj 78 265 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X obj 447 3 trigger;
-#X obj 517 3 t;
-#X text 497 3 or;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/trigger -text
-pdpedia: trigger;
+#X obj 446 11 trigger;
+#X obj 516 11 t;
+#X text 496 11 or;
 #X text 98 64 The [trigger] object outputs its input from right to
 left \, converting to the types indicated by its creation arguments.
 There is also a "pointer" argument type (see the [pointer] object.)
@@ -86,9 +84,9 @@ creation arguments can be abbreviated as follows:;
 #X text 97 446 "list" = l;
 #X text 97 474 "anything" = a;
 #X text 97 460 "pointer" = p;
-#X floatatom 230 114 5 0 0 0 - - -;
+#X floatatom 230 114 5 0 0 0 - - -, f 5;
 #X obj 230 160 +;
-#X floatatom 230 185 5 0 0 0 - - -;
+#X floatatom 230 185 5 0 0 0 - - -, f 5;
 #X obj 230 136 t a a;
 #X text 11 23 sequence messages in right-to-left order/ convert data
 types;
@@ -191,13 +189,13 @@ atom to a different type of atom.;
 and watch your terminal window for the output.;
 #X msg 23 215 bang;
 #X msg 60 215 1;
-#X floatatom 94 215 5 0 0 0 - - -;
+#X floatatom 94 215 5 0 0 0 - - -, f 5;
 #X msg 133 215 symbol cat;
 #X msg 207 215 this is anything;
 #X obj 23 264 print all_messages_are_converted_to_bangs;
 #X text 20 293 Another example showing floats and symbols.;
 #X msg 23 317 bang;
-#X floatatom 93 317 5 0 0 0 - - -;
+#X floatatom 93 317 5 0 0 0 - - -, f 5;
 #X msg 135 317 symbol cat;
 #X msg 209 317 this is anything;
 #X obj 23 345 t f s;
@@ -261,12 +259,12 @@ with no delay between the events...more at the top right of the page...
 #X obj 23 438 t b b;
 #X msg 23 416 bang;
 #X obj 23 468 timer;
-#X floatatom 23 490 5 0 0 0 - - -;
+#X floatatom 23 490 5 0 0 0 - - -, f 5;
 #X text 57 416 Click here.;
 #X text 62 489 Watch here.;
 #X text 20 511 Now \, to prove that I'm not crazy...click here >;
 #X obj 319 560 timer;
-#X floatatom 319 581 5 0 0 0 - - -;
+#X floatatom 319 581 5 0 0 0 - - -, f 5;
 #X obj 346 538 delay 2000;
 #X text 136 430 any delay between the first bang and the second bang
 ;
@@ -276,7 +274,7 @@ with no delay between the events...more at the top right of the page...
 ;
 #X obj 319 600 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 403 518 5 0 0 0 - - -;
+#X floatatom 403 518 5 0 0 0 - - -, f 5;
 #X text 19 588 at the top-right to clearly see "logical time";
 #X text 19 601 as measured by [timer].;
 #X obj 319 513 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -321,17 +319,17 @@ has creation arguments which specify what data type the object should
 output through each outlet. Messages which are sent to the first outlet
 will be floats \; the second outlet will send bangs \; the third \,
 symbols \; etc.;
-#X floatatom 23 278 5 0 0 0 - - -;
+#X floatatom 23 278 5 0 0 0 - - -, f 5;
 #X obj 80 278 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X symbolatom 138 322 10 0 0 0 - - -;
-#X floatatom 192 187 5 0 0 0 - - -;
+#X symbolatom 138 322 10 0 0 0 - - -, f 10;
+#X floatatom 192 187 5 0 0 0 - - -, f 5;
 #X obj 192 228 pack f s;
 #X msg 237 187 symbol earth;
 #X msg 250 209 symbol jupiter;
 #X obj 196 300 print a_list;
-#X floatatom 23 463 5 0 0 0 - - -;
-#X symbolatom 68 463 10 0 0 0 - - -;
+#X floatatom 23 463 5 0 0 0 - - -, f 5;
+#X symbolatom 68 463 10 0 0 0 - - -, f 10;
 #X obj 113 441 print another_list;
 #X text 228 159 Click on all these.;
 #X obj 23 398 r anythings;
@@ -369,12 +367,13 @@ to the terminal window.;
 #X connect 22 0 4 0;
 #X restore 102 550 pd Converting_data_types_(cont.);
 #X text 80 328 1) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 339 501 pddp/pddplink all_about_messages.pd -text all_about_messages
 ;
 #X obj 291 574 pddp/pddplink ../2.control.examples/03.connections.pd
 ;
-#X connect 30 0 33 0;
-#X connect 31 0 32 0;
-#X connect 33 0 31 0;
-#X connect 33 1 31 1;
+#X connect 29 0 32 0;
+#X connect 30 0 31 0;
+#X connect 32 0 30 0;
+#X connect 32 1 30 1;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header unpack 3 12 0 18
 -204280 -1 0;
 #X obj 0 191 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 243 494 361 META 0;
+#N canvas 488 264 494 361 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 546 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 100 211 428 404 Related_objects 0;
+#N canvas 220 221 428 404 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 pack;
@@ -57,9 +57,7 @@ is:;
 #X text 98 267 float;
 #X obj 78 400 cnv 17 3 37 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X obj 481 3 unpack;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/unpack -text
-pdpedia: unpack;
+#X obj 500 11 unpack;
 #X floatatom 137 162 0 0 0 0 - - -;
 #X floatatom 252 161 0 0 0 0 - - -;
 #X floatatom 290 161 0 0 0 0 - - -;
@@ -67,7 +65,7 @@ pdpedia: unpack;
 #X msg 103 91 1 2;
 #X msg 142 91 3 4 shut;
 #X msg 221 91 5 6 pick 7 8;
-#X symbolatom 179 162 10 0 0 0 - - -;
+#X symbolatom 179 162 10 0 0 0 - - -, f 10;
 #X text 11 23 split a message into atoms;
 #X text 98 297 symbol;
 #X text 98 199 list;
@@ -78,8 +76,8 @@ to two outlets. Otherwise \, one outlet is created for each creation
 argument specified.;
 #X obj 373 128 unpack;
 #X msg 373 91 60 127;
-#X floatatom 373 162 3 0 0 0 - - -;
-#X floatatom 406 162 3 0 0 0 - - -;
+#X floatatom 373 162 3 0 0 0 - - -, f 3;
+#X floatatom 406 162 3 0 0 0 - - -, f 3;
 #X text 168 199 - the elements will be distributed to the outlets.
 The type of each element must match the arguments supplied to [unpack]
 \, or a "type mismatch" error will result. Lists with more (or fewer)
@@ -107,15 +105,16 @@ floats.) Each symbolic argument specifies the type of atom expected
 in the incoming list. Acceptable arguments are: "f" for float \, "p"
 for pointer \, and "s" for symbol. You can also use a float (e.g. \,
 "o") to specify float.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 17 0 37 0;
-#X connect 18 0 37 0;
-#X connect 19 0 37 0;
-#X connect 27 0 29 0;
-#X connect 27 1 30 0;
-#X connect 28 0 27 0;
-#X connect 37 0 16 0;
-#X connect 37 1 13 0;
-#X connect 37 2 20 0;
-#X connect 37 3 14 0;
-#X connect 37 4 15 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 16 0 36 0;
+#X connect 17 0 36 0;
+#X connect 18 0 36 0;
+#X connect 26 0 28 0;
+#X connect 26 1 29 0;
+#X connect 27 0 26 0;
+#X connect 36 0 15 0;
+#X connect 36 1 12 0;
+#X connect 36 2 19 0;
+#X connect 36 3 13 0;
+#X connect 36 4 14 0;

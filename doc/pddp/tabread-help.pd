@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabread 3 12 0 18
 -204280 -1 0;
 #X obj 0 277 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 245 494 344 META 0;
+#N canvas 483 279 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 541 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 83 315 428 299 Related_objects 0;
+#N canvas 215 327 428 299 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [tabread] Related Objects;
@@ -60,9 +60,7 @@ Pd version 0.42.;
 #X text 98 452 float;
 #X obj 78 453 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 475 3 tabread;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/tabread -text
-pdpedia: tabread;
+#X obj 492 11 tabread;
 #X text 168 285 - a float at the left inlet will move to the corresponding
 index in the table's array. The index ranges from 0 to the size of
 the array minus one (numbers outside this range are ignored). By default
@@ -123,11 +121,11 @@ at any time using the "set" message.;
 #X obj 98 547 pddp/pddplink ../2.control.examples/15.arrays.pd;
 #X obj 97 562 pddp/pddplink ../2.control.examples/16.more.arrays.pd
 ;
-#X connect 19 0 36 0;
-#X connect 31 0 32 0;
-#X connect 32 0 35 0;
-#X connect 33 0 34 0;
-#X connect 34 0 37 0;
-#X connect 35 0 36 0;
-#X connect 36 0 18 0;
-#X connect 37 0 36 0;
+#X connect 18 0 35 0;
+#X connect 30 0 31 0;
+#X connect 31 0 34 0;
+#X connect 32 0 33 0;
+#X connect 33 0 36 0;
+#X connect 34 0 35 0;
+#X connect 35 0 17 0;
+#X connect 36 0 35 0;

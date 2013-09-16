@@ -1,4 +1,4 @@
-#N canvas 416 398 124 30 10;
+#N canvas 429 35 515 390 10;
 #X obj 107 2 inlet;
 #X msg 86 225 \; pd open \$1.pd \$2;
 #X obj 86 192 pack s s;

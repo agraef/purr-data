@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header textfile 3 12 0
 18 -204280 -1 0;
 #X obj 0 429 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 243 494 344 META 0;
+#N canvas 487 285 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 535 (none);
-#N canvas 73 482 428 109 Related_objects 0;
+#N canvas 216 519 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [textfile] Related Objects;
@@ -42,9 +42,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 498 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 11 23 read and write text files;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/textfile -text
-pdpedia: textfile;
-#X obj 465 3 textfile;
+#X obj 485 11 textfile;
 #X obj 85 347 print done;
 #X text 98 497 bang;
 #X text 167 497 - this outlet gets a bang when you hit the end of the
@@ -98,16 +96,16 @@ sequences of messages.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 274 311 to semicolons.;
-#X connect 21 0 41 0;
-#X connect 23 0 41 0;
-#X connect 25 0 41 0;
-#X connect 27 0 41 0;
-#X connect 28 0 41 0;
-#X connect 29 0 41 0;
-#X connect 30 0 41 0;
-#X connect 33 0 41 0;
-#X connect 35 0 41 0;
-#X connect 36 0 41 0;
-#X connect 38 0 41 0;
-#X connect 41 0 47 0;
-#X connect 41 1 15 0;
+#X connect 20 0 40 0;
+#X connect 22 0 40 0;
+#X connect 24 0 40 0;
+#X connect 26 0 40 0;
+#X connect 27 0 40 0;
+#X connect 28 0 40 0;
+#X connect 29 0 40 0;
+#X connect 32 0 40 0;
+#X connect 34 0 40 0;
+#X connect 35 0 40 0;
+#X connect 37 0 40 0;
+#X connect 40 0 46 0;
+#X connect 40 1 14 0;

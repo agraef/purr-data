@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header keyname 3 12 0 18
 -204280 -1 0;
 #X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 5 12 0 13
 -228856 -1 0;
-#N canvas 51 244 494 344 META 0;
+#N canvas 487 280 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2009-06-12;
@@ -27,15 +27,15 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 464 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 5 12
 0 13 -228856 -1 0;
 #X text 98 441 (none);
-#N canvas 105 474 428 145 Related_objects 0;
+#N canvas 220 483 428 145 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 20 73 Externals and other object libraries;
-#X text 19 100 [gemkeyboard];
-#X text 102 100 [gemkeyname];
 #X obj 22 43 key;
 #X text 8 2 [keyup] Related Objects;
 #X obj 53 43 keyup;
+#X obj 19 101 gemkeyboard;
+#X obj 99 101 gemkeyname;
 #X restore 102 597 pd Related_objects;
 #X text 98 373 float;
 #X obj 78 374 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
@@ -66,12 +66,10 @@ can mimic some of the functions in other languages - Javascript for
 example has:;
 #X text 8 2 [keyup] Reacing to User Input;
 #X restore 102 523 pd reacting_to_user_input;
-#X obj 472 3 keyname;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/keyname -text
-pdpedia: keyname;
+#X obj 493 10 keyname;
 #X obj 103 167 keyname;
-#X symbolatom 142 195 10 0 0 0 - - -;
-#X floatatom 103 195 5 0 0 0 - - -;
+#X symbolatom 142 195 10 0 0 0 - - -, f 10;
+#X floatatom 103 195 5 0 0 0 - - -, f 5;
 #X obj 142 221 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X text 155 167 When you type on the keyboard \, [keyname] sends data
@@ -95,7 +93,7 @@ the pointer location. This is dependent on the system.;
 #X obj 52 75 loadbang;
 #X msg 23 16 bang;
 #X obj 33 158 qlist;
-#X floatatom 33 185 5 0 0 0 - - -;
+#X floatatom 33 185 5 0 0 0 - - -, f 5;
 #X obj 218 30 r keyboard_fun;
 #X msg 52 105 read keyboard_fun.txt;
 #X msg 45 51 rewind;
@@ -131,7 +129,7 @@ the pointer location. This is dependent on the system.;
 ;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X connect 15 0 17 0;
+#X connect 15 1 16 0;
 #X connect 16 0 18 0;
-#X connect 16 1 17 0;
-#X connect 17 0 19 0;
-#X connect 18 0 12 0;
+#X connect 17 0 12 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabplay~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 284 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 344 META 0;
+#N canvas 487 285 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 565 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 58 313 441 301 Related_objects 0;
+#N canvas 202 329 441 301 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [tabplay~] Related Objects;
@@ -59,9 +59,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 446 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 472 3 tabplay~;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/tabplay~ -text
-pdpedia: tabplay~;
+#X obj 489 10 tabplay~;
 #X text 98 292 bang;
 #X text 98 310 float;
 #X text 98 347 list;
@@ -142,23 +140,23 @@ tabread4~ and there are none of tabread4~'s interpolation artifacts.
 #X text 80 520 1) symbol;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 480 56 pddp/dsp;
 #X obj 98 570 pddp/pddplink all_about_arrays.pd;
 #X obj 13 180 tabplay~ \$0-array;
 #X msg 33 96 stop;
 #X text 98 417 stop;
 #X text 168 417 - stop playback;
-#X connect 23 0 53 0;
-#X connect 24 0 22 0;
-#X connect 26 0 35 0;
-#X connect 27 0 26 1;
-#X connect 28 0 27 0;
-#X connect 29 0 27 0;
-#X connect 35 0 25 0;
-#X connect 36 0 53 0;
-#X connect 37 0 53 0;
-#X connect 38 0 53 0;
-#X connect 39 0 53 0;
-#X connect 53 0 24 0;
-#X connect 53 0 26 0;
-#X connect 54 0 53 0;
+#X connect 22 0 52 0;
+#X connect 23 0 21 0;
+#X connect 25 0 34 0;
+#X connect 26 0 25 1;
+#X connect 27 0 26 0;
+#X connect 28 0 26 0;
+#X connect 34 0 24 0;
+#X connect 35 0 52 0;
+#X connect 36 0 52 0;
+#X connect 37 0 52 0;
+#X connect 38 0 52 0;
+#X connect 52 0 23 0;
+#X connect 52 0 25 0;
+#X connect 53 0 52 0;

@@ -1,4 +1,4 @@
-#N canvas 0 0 448 248 10;
+#N canvas 428 34 448 248 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header messages 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -46,7 +46,7 @@ include "set 3 4 5" \, "threshold 30 74" \, and "foo bar 3 four".;
 #X restore 43 94 pd User_defined_messages_in_Pd;
 #X obj 1 226 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 384 80 494 180 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -64,7 +64,7 @@ atoms before reading about messages.;
 1 18 -261106 -33289 0;
 #X msg 23 72 foo;
 #X msg 23 140 symbol foo;
-#X symbolatom 22 378 10 0 0 0 - - -;
+#X symbolatom 22 378 10 0 0 0 - - -, f 10;
 #X msg 22 254 symbol clear;
 #X msg 46 310 clear;
 #X text 109 260 like this one and pass it to the outlet after;
@@ -95,7 +95,7 @@ Pd's built-in message types.;
 #X connect 5 0 12 0;
 #X connect 12 0 3 0;
 #X restore 43 120 pd Distinguishing_Message_Types;
-#N canvas 24 124 428 150 Quick_Quiz! 0;
+#N canvas 195 104 428 150 Quick_Quiz! 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Messages- Related Objects;
@@ -124,8 +124,8 @@ Pd's built-in message types.;
 #X restore 103 228 pd Quick_Quiz!;
 #N canvas 0 0 878 627 old 0;
 #X obj 433 459 route;
-#X floatatom 113 135 5 0 0 1 "float" - -;
-#X symbolatom 204 135 10 0 0 1 "symbol" - -;
+#X floatatom 113 135 5 0 0 1 "float" - -, f 5;
+#X symbolatom 204 135 10 0 0 1 "symbol" - -, f 10;
 #X obj 116 231 symbol;
 #X symbolatom 116 278 0 0 0 0 - - -;
 #X msg 125 255 word;
@@ -133,7 +133,7 @@ Pd's built-in message types.;
 #X msg 99 191 symbol this;
 #X text 190 190 set type directly;
 #X text 157 255 does not work (check console messages);
-#X floatatom 35 253 5 0 0 0 - - -;
+#X floatatom 35 253 5 0 0 0 - - -, f 5;
 #X msg 40 232 12;
 #X msg 23 212 float 83;
 #N canvas 534 126 490 340 Related_Objects 0;
@@ -192,9 +192,9 @@ from within a patch. "pointer" atoms are used for accessing data stored
 in graphical data structures.;
 #X obj 421 197 int;
 #X obj 429 177 / 5.23;
-#X floatatom 429 149 5 0 0 0 - - -;
-#X floatatom 462 217 5 0 0 0 - - -;
-#X floatatom 421 217 5 0 0 0 - - -;
+#X floatatom 429 149 5 0 0 0 - - -, f 5;
+#X floatatom 462 217 5 0 0 0 - - -, f 5;
+#X floatatom 421 217 5 0 0 0 - - -, f 5;
 #X obj 511 147 tosymbol;
 #X obj 575 148 fromsymbol;
 #X obj 658 147 list2symbol;

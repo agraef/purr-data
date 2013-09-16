@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header lrshift~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 374 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 244 494 344 META 0;
+#N canvas 480 287 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 110 480 428 109 Related_objects 0;
+#N canvas 217 518 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [lrshift~] Related Objects;
@@ -36,9 +36,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 -162280 0;
 #X obj 78 420 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 469 3 lrshift~;
-#X obj 441 20 pddp/pddplink http://wiki.puredata.info/en/lrshift~ -text
-pdpedia: lrshift~;
+#X obj 490 12 lrshift~;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-shiftin 64 float 0;
 #X coords 0 1 63 0 100 70 1;
@@ -69,16 +67,16 @@ the samples. Negative numbers shift samples the left \, and positive
 numbers shift to the right.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 481 55 pddp/dsp;
 #X obj 73 182 tabreceive~ \$0-shiftin;
 #X obj 418 286 s \$0-shiftin;
-#X connect 13 0 35 0;
-#X connect 14 0 13 0;
-#X connect 15 0 16 0;
-#X connect 17 0 18 0;
-#X connect 19 0 20 0;
-#X connect 23 0 18 0;
-#X connect 24 0 16 0;
-#X connect 34 0 20 0;
-#X connect 34 0 23 0;
-#X connect 34 0 24 0;
+#X connect 12 0 34 0;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 18 0 19 0;
+#X connect 22 0 17 0;
+#X connect 23 0 15 0;
+#X connect 33 0 19 0;
+#X connect 33 0 22 0;
+#X connect 33 0 23 0;

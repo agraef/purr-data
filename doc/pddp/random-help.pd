@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header random 3 12 0 18
 -204280 -1 0;
 #X obj 0 252 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 247 494 344 META 0;
+#N canvas 480 281 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 476 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 87 265 428 374 Related_objects 0;
+#N canvas 211 256 428 374 Related_objects 0;
 #X text 20 255 These objects are offered in Pd only if you have downloaded
 and properly installed the appropriate library. These objects may or
 may not exist in a single library.;
@@ -384,22 +384,20 @@ obj 0 0 cnv 15 200 18 empty \$0-pddp.cnv.random-subheading empty 3
 #X obj 78 356 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 355 float;
-#X obj 481 3 random;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/random -text
-pdpedia: random;
+#X obj 499 10 random;
 #X text 81 56 [random] outputs pseudorandom integers between 0 and
 N-1 where N is the creation argument or the value of the right inlet.
 ;
 #X obj 84 122 random 100;
 #X obj 84 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 84 144 3 0 0 0 - - -;
+#X floatatom 84 144 3 0 0 0 - - -, f 3;
 #X text 154 122 Generates random numbers between 0 and 99;
 #X obj 84 187 random 100;
 #X obj 84 167 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 84 210 3 0 0 0 - - -;
-#X floatatom 141 162 5 0 0 0 - - -;
+#X floatatom 84 210 3 0 0 0 - - -, f 3;
+#X floatatom 141 162 5 0 0 0 - - -, f 5;
 #X text 181 162 Changes the 'range' of random numbers.;
 #X text 98 260 bang;
 #X text 98 299 seed;
@@ -415,7 +413,7 @@ sending a message \, like below:;
 #X obj 90 227 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 90 245 random 1000;
-#X floatatom 90 265 3 0 0 0 - - -;
+#X floatatom 90 265 3 0 0 0 - - -, f 3;
 #X obj 24 201 loadbang;
 #X text 21 294 Seeds are kept locally so that if two [random]s are
 seeded the same \, they will have the same output - as demonstrated
@@ -425,10 +423,10 @@ output.;
 #X obj 106 366 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 106 398 random 1000;
-#X floatatom 106 418 3 0 0 0 - - -;
+#X floatatom 106 418 3 0 0 0 - - -, f 3;
 #X obj 180 343 loadbang;
 #X obj 180 398 random 1000;
-#X floatatom 180 418 3 0 0 0 - - -;
+#X floatatom 180 418 3 0 0 0 - - -, f 3;
 #X text 233 363 Click again to repeat output.;
 #X text 20 38 Random numbers are generated via a complex equation which
 produces a pseudo-predictable sequence of numbers. Each [random] object's
@@ -477,7 +475,7 @@ of [random]:;
 #X msg 44 343 seed \$1;
 #X obj 106 381 bng 15 250 50 0 empty empty Click_for_output 0 -8 0
 10 -262144 -1 -1;
-#X floatatom 106 421 5 0 0 0 - - -;
+#X floatatom 106 421 5 0 0 0 - - -, f 5;
 #X obj 106 400 random 42;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -512,7 +510,7 @@ probability for each one \, you can do as shown:;
 -1;
 #X obj 89 202 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 125 151 3 0 100 0 - - -;
+#X floatatom 125 151 3 0 100 0 - - -, f 3;
 #X obj 23 177 moses 80;
 #X text 20 230 This outputs a number at left 80% of the time \, otherwise
 at right \, unless you override the "80" using the number box. You
@@ -561,7 +559,8 @@ inlet.;
 #X text 167 355 - a float to the right inlet sets N \, where the output
 ranges between 0 and N-1.;
 #X text 78 442 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 102 527 pddp/pddplink ../2.control.examples/19.random.pd -text
 doc/2.control.examples/19.random.pd;
 #X obj 102 542 pddp/pddplink ../2.control.examples/20.weighted-random.pd
@@ -570,8 +569,8 @@ doc/2.control.examples/19.random.pd;
 -text doc/2.control.examples/21.markov.chain.pd;
 #X obj 102 572 pddp/pddplink ../2.control.examples/22.random-walk.pd
 -text doc/2.control.examples/22.random-walk.pd;
-#X connect 16 0 18 0;
-#X connect 17 0 16 0;
-#X connect 20 0 22 0;
-#X connect 21 0 20 0;
-#X connect 23 0 20 1;
+#X connect 15 0 17 0;
+#X connect 16 0 15 0;
+#X connect 19 0 21 0;
+#X connect 20 0 19 0;
+#X connect 22 0 19 1;

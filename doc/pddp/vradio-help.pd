@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header vradio 3 12 0 18
 -204280 -1 0;
 #X obj 0 316 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 54 247 494 344 META 0;
+#N canvas 486 284 494 344 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 25 LICENSE SIBSD;
 #X text 12 135 AUTHOR Thomas Musil;
@@ -27,7 +27,7 @@ label_pos label_font color pos delta;
 0 13 -228856 -1 0;
 #X obj 78 325 cnv 17 3 85 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 83 461 428 129 Related_objects 0;
+#N canvas 216 499 428 129 Related_objects 0;
 #X obj 22 43 bang;
 #X obj 69 43 trigger;
 #X obj 145 43 until;
@@ -44,8 +44,8 @@ label_pos label_font color pos delta;
 #X text 291 174 and receive names. Right-;
 #X text 291 189 click and choose;
 #X text 290 205 "Properties" to set them \,;
-#X floatatom 292 63 5 0 5 0 - - -;
-#X floatatom 292 137 5 0 0 0 - - -;
+#X floatatom 292 63 5 0 5 0 - - -, f 5;
+#X floatatom 292 137 5 0 0 0 - - -, f 5;
 #X text 98 324 float;
 #X text 98 389 list;
 #X text 98 447 float;
@@ -57,20 +57,18 @@ left \, in increasing order \, starting from zero.;
 selected gui-object. Right-click and choose "Properties" to modify
 its appearance.;
 #X text 11 21 vertical column of gui-radio buttons;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/vradio -text
-pdpedia: vradio;
 #X obj 529 45 vradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
 #X obj 91 48 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
-#X floatatom 11 230 4 0 0 0 - - -;
+#X floatatom 11 230 4 0 0 0 - - -, f 4;
 #X obj 11 252 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
 #X obj 126 255 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X msg 226 76 set \$1;
-#X floatatom 226 55 4 0 5 0 - - -;
-#X floatatom 114 48 4 0 9 0 - - -;
+#X floatatom 226 55 4 0 5 0 - - -, f 4;
+#X floatatom 114 48 4 0 9 0 - - -, f 4;
 #X obj 148 255 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 170 255 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
@@ -141,7 +139,7 @@ button number is selected.;
 #X msg 111 52 init 0;
 #X text 120 71 init value;
 #X text 121 85 on loadbang;
-#X floatatom 204 52 3 0 20 0 - #0-number -;
+#X floatatom 204 52 3 0 20 0 - #0-number -, f 3;
 #X text 204 33 number (of cells);
 #X msg 204 104 number \$1;
 #X obj 204 128 s vradio_rcv;
@@ -155,7 +153,7 @@ button number is selected.;
 #X msg 21 104 size \$1;
 #X text 20 33 dimensions;
 #X obj 21 54 nbx 3 14 8 200 0 0 empty \$0-size empty 0 -8 0 12 -262144
--1 -1 15 256;
+-1 -1 15 256 0;
 #X text 71 51 size;
 #X obj 21 128 s vradio_rcv;
 #X text 314 160 label position;
@@ -171,9 +169,9 @@ button number is selected.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
-0 -8 0 12 -262144 -1 -1 0 256;
+0 -8 0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
-0 -8 0 12 -262144 -1 -1 -8 256;
+0 -8 0 12 -262144 -1 -1 -8 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -186,9 +184,9 @@ button number is selected.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
-0 -8 0 12 -262144 -1 -1 10 256;
+0 -8 0 12 -262144 -1 -1 10 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -205,11 +203,11 @@ button number is selected.;
 #X obj 33 237 pack 0 0 0;
 #X obj 120 197 t b a;
 #X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
--1 -1 0 256;
+-1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X connect 0 0 2 0;
 #X connect 0 1 2 1;
 #X connect 2 0 1 0;
@@ -241,11 +239,11 @@ button number is selected.;
 #X text 120 137 2.front;
 #X text 120 153 3.label;
 #X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
--258113 -1 0 256;
+-258113 -1 0 256 0;
 #X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
--13381 -1 0 256;
+-13381 -1 0 256 0;
 #X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
--4160 -1 0 256;
+-4160 -1 0 256 0;
 #X connect 1 0 2 0;
 #X connect 1 1 2 1;
 #X connect 2 0 3 0;
@@ -290,9 +288,9 @@ button number is selected.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
--8 0 12 -262144 -1 -1 349 256;
+-8 0 12 -262144 -1 -1 349 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
--8 0 12 -262144 -1 -1 432 256;
+-8 0 12 -262144 -1 -1 432 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -305,9 +303,9 @@ button number is selected.;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -319,7 +317,7 @@ button number is selected.;
 0;
 #X obj 318 416 cnv 15 100 175 empty empty empty 20 12 0 14 -261682
 -66577 0;
-#X floatatom 350 567 5 0 0 0 - - -;
+#X floatatom 350 567 5 0 0 0 - - -, f 5;
 #X obj 349 432 vradio 15 1 0 8 vradio_snd vradio_rcv myVradio 0 -8
 0 10 -262144 -33289 -33289 0;
 #X obj 316 259 s vradio_rcv;
@@ -363,25 +361,26 @@ button number is selected.;
 values for its gui-properties. See the subpatch below to learn how
 to dynamically instantiate a [vradio] object with custom properties:
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X text 98 372 bang;
 #X text 168 372 - output the current value.;
-#X connect 13 0 42 0;
-#X connect 24 0 38 0;
-#X connect 25 0 26 0;
-#X connect 28 0 38 0;
-#X connect 29 0 28 0;
-#X connect 30 0 38 0;
-#X connect 38 0 25 0;
+#X connect 13 0 41 0;
+#X connect 23 0 37 0;
+#X connect 24 0 25 0;
+#X connect 27 0 37 0;
+#X connect 28 0 27 0;
+#X connect 29 0 37 0;
+#X connect 37 0 24 0;
+#X connect 37 0 36 0;
+#X connect 37 0 40 0;
 #X connect 38 0 37 0;
-#X connect 38 0 41 0;
-#X connect 39 0 38 0;
-#X connect 40 0 38 0;
-#X connect 41 0 27 0;
-#X connect 41 1 31 0;
-#X connect 41 2 32 0;
-#X connect 41 3 33 0;
-#X connect 41 4 34 0;
-#X connect 41 5 35 0;
-#X connect 41 6 36 0;
-#X connect 43 0 14 0;
+#X connect 39 0 37 0;
+#X connect 40 0 26 0;
+#X connect 40 1 30 0;
+#X connect 40 2 31 0;
+#X connect 40 3 32 0;
+#X connect 40 4 33 0;
+#X connect 40 5 34 0;
+#X connect 40 6 35 0;
+#X connect 42 0 14 0;

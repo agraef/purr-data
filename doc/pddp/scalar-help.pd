@@ -3,14 +3,14 @@ float obj2-c float Pd-c float lightning-vis symbol adc float adc-c
 ;
 #N struct red-box float x float y float bottom;
 #N struct box float x float y float w0 float p;
-#N canvas 1 88 555 619 10;
+#N canvas 428 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (scalar) 3 12 0
 18 -204280 -1 0;
 #X obj 0 442 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 44 250 494 344 META 0;
+#N canvas 487 283 494 344 META 0;
 #X text 12 65 LIBRARY internal;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 501 (none);
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 215 513 428 109 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [scalar] Related Objects;
@@ -131,13 +131,11 @@ float adc-c;
 #X connect 15 0 5 0;
 #X restore 79 210 pd Pd-logo-template;
 #X scalar Pd-logo 29 172 Pd~ 999 0 999 0 0 adc~ 0 \;;
-#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/scalar -text
-pdpedia: scalar;
 #X text 11 23 graphical instance of a data structure;
 #X text 98 446 (none);
 #X text 98 474 (none);
 #X obj 209 364 *~;
-#X floatatom 172 312 5 0 100 1 Volume_(dB) - -;
+#X floatatom 172 312 5 0 100 1 Volume_(dB) - -, f 5;
 #X obj 172 334 dbtorms;
 #X obj 208 392 dac~;
 #N canvas 107 82 428 452 box-face-template 0;
@@ -415,8 +413,8 @@ select them \, change their values \, delete them \, and so on.;
 #X scalar box 58 349 0 0 \;;
 #X scalar box 91 373 0 69 \;;
 #X scalar box 123 348 0 75 \;;
-#X connect 15 0 18 0;
-#X connect 15 0 18 1;
-#X connect 16 0 17 0;
-#X connect 17 0 15 0;
-#X connect 19 0 15 1;
+#X connect 14 0 17 0;
+#X connect 14 0 17 1;
+#X connect 15 0 16 0;
+#X connect 16 0 14 0;
+#X connect 18 0 14 1;

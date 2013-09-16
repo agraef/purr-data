@@ -1,32 +1,64 @@
-#N canvas 0 26 426 299 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text -8 259 docs based on the MAX/MSP reference (c) cycling'74;
-#X text -9 273 ___________________________________________________
+#N canvas 427 36 558 430 10;
+#X obj -1 402 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 226 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 617 203 357 237 META 0;
+#X text 203 336 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 203 190 LICENSE SIBSD;
+#X text 203 317 AUTHOR Miller Puckette;
+#X text 203 355 RELEASE_DATE 1997;
+#X text 203 298 LIBRARY cyclone;
+#X text 203 374 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 203 171 KEYWORDS substitute symbol replace;
+#X text 203 209 DESCRIPTION substitute a symbol for another symbol
+in a message;
+#X text 203 241 INLET_0 message;
+#X text 203 260 INLET_1 message;
+#X text 203 279 OUTLET_0 message;
+#X restore 496 404 pd META;
+#X obj -1 303 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 340 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 314 328 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 200 404 pd Related_objects;
+#X obj 78 235 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 312 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header substitute 3 12
+0 18 -204280 -1 0;
+#X obj 477 10 substitute;
+#X text 11 23 substitute a symbol for another symbol in a message;
+#X obj 83 141 substitute foo bar;
+#X msg 83 73 bar foo;
+#X obj 83 186 print;
+#X msg 188 105 bar foo;
+#X text 106 235 message;
+#X text 181 235 - string to input and check for substitution;
+#X obj 78 264 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 106 264 message;
+#X text 181 264 - format <str1> <str2> \, change replacement policy
+to if see str1 change to str2;
+#X text 106 312 message;
+#X text 181 312 - output message with replaced strings;
+#X text 89 352 1) string;
+#X text 89 370 2) string;
+#X text 183 352 - string to search for;
+#X text 183 370 - string to replace with;
+#X text 200 134 arg1 sets initial string to search for \, arg2 sets
+initial string to replace it with;
+#X text 243 96 string1: set new string to search for \; string2: string
+to replace it with;
+#X text 136 71 input string to check for substitutions;
+#X obj 10 404 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj -2 28 substitute;
-#X text 83 27 substitute a symbol for another symbol in a message;
-#X obj 1 135 substitute foo bar;
-#X msg 1 89 bar foo;
-#X obj 1 180 print;
-#X msg 122 89 bar foo;
-#X msg 192 88 set bar foo;
-#X text 179 90 =;
-#N canvas 380 180 494 389 META 0;
-#X text 12 185 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 155 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 75 INLET_0 anything;
-#X text 12 95 INLET_1 anything;
-#X text 12 115 OUTLET_0 anything;
-#X text 12 5 KEYWORDS control max_compatible anything_op;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 45 DESCRIPTION substitute a symbol for another symbol in
-a message;
-#X text 12 135 AUTHOR Krzysztof Czaja;
-#X restore 369 276 pd META;
-#X connect 5 0 7 0;
-#X connect 6 0 5 0;
-#X connect 8 0 5 1;
-#X connect 9 0 5 1;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 14 0 11 1;

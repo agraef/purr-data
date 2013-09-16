@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header lop~ 3 12 0 18 -204280
 -1 0;
 #X obj 0 381 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 245 494 344 META 0;
+#N canvas 487 290 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 390 cnv 17 3 37 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 94 426 428 166 Related_objects 0;
+#N canvas 220 463 428 166 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 69 43 bp~;
@@ -61,9 +61,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 431 float;
 #X text 98 449 list;
 #X text 98 409 clear;
-#X obj 490 3 lop~;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/lop~ -text
-pdpedia: lop~;
+#X obj 514 10 lop~;
 #X text 133 112 <- scroll to change input frequency;
 #X obj 147 213 lop~ 5;
 #X text 84 291 Compare the strength of the original signal on the left
@@ -80,13 +78,14 @@ first element is used as the cutoff frequency.;
 dB.;
 #X text 88 68 [lop~] is a one-pole low pass filter with a specified
 rolloff frequency.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 479 51 pddp/dsp;
 #X connect 12 0 13 0;
-#X connect 14 0 28 1;
+#X connect 14 0 27 1;
 #X connect 15 0 16 0;
 #X connect 17 0 18 0;
 #X connect 18 0 15 0;
-#X connect 18 0 28 0;
-#X connect 19 0 28 0;
-#X connect 28 0 12 0;
+#X connect 18 0 27 0;
+#X connect 19 0 27 0;
+#X connect 27 0 12 0;

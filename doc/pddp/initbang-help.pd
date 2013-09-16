@@ -1,11 +1,11 @@
-#N canvas 1 88 556 621 10;
+#N canvas 431 37 556 621 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header initbang 3 12 0
 18 -204280 -1 0;
 #X obj 1 425 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 244 494 344 META 0;
+#N canvas 487 289 494 344 META 0;
 #X text 12 95 LIBRARY internal;
 #X text 12 25 LICENSE SIBSD;
 #X text 12 135 WEBSITE;
@@ -26,7 +26,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 #X obj 1 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 100 509 (none);
-#N canvas 95 482 428 109 Related_objects 0;
+#N canvas 221 522 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 21 42 closebang;
@@ -35,9 +35,7 @@ revised the patch to conform to the PDDP template for Pd version 0.42.
 #X restore 104 597 pd Related_objects;
 #X obj 80 461 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 442 22 pddp/pddplink http://wiki.puredata.info/en/initbang -text
-pdpedia: initbang;
-#X obj 468 5 initbang;
+#X obj 490 10 initbang;
 #X text 100 429 (none);
 #X text 100 460 bang;
 #X obj 95 352 print from_initbang;
@@ -72,4 +70,3 @@ is a top-most patch \, no bang will ever be sent.;
 #X text 93 51 The abstraction below dynamically creates an outlet using
 [loadbang]. The [loadbang] object sends a bang after this help patch
 has loaded.;
-#X connect 25 0 14 0;

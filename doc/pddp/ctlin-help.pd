@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header ctlin 3 12 0 18
 -204280 -1 0;
 #X obj 0 301 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 245 494 358 META 0;
+#N canvas 480 268 494 358 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 337 float;
-#N canvas 50 160 441 439 Related_objects 0;
+#N canvas 199 186 441 439 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [ctlin] Related Objects;
@@ -65,7 +65,7 @@ by Olaf Matthes);
 #X obj 22 400 pddp/helplink cyclone/midiparse;
 #X obj 22 415 pddp/helplink cyclone/midiflush;
 #X restore 101 597 pd Related_objects;
-#X obj 483 3 ctlin;
+#X obj 505 12 ctlin;
 #X text 109 66 The [ctlin] object reads control change messages directly
 from the MIDI port. See a MIDI-specification chart near you for control
 change message numbers and their meannings (MIDI implementation documents
@@ -80,25 +80,23 @@ are freely available on the internet in c=various forms).;
 #X obj 78 388 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
 -162280 0;
 #X obj 24 69 ctlin;
-#X floatatom 24 133 5 0 0 0 - - -;
-#X floatatom 37 112 5 0 0 0 - - -;
-#X floatatom 51 91 5 0 0 0 - - -;
+#X floatatom 24 133 5 0 0 0 - - -, f 5;
+#X floatatom 37 112 5 0 0 0 - - -, f 5;
+#X floatatom 51 91 5 0 0 0 - - -, f 5;
 #X text 168 305 - [ctlin] reads data directly from the MIDI port;
 #X obj 120 136 ctlin 64;
-#X floatatom 120 177 5 0 0 0 - - -;
-#X floatatom 165 161 5 0 0 0 - - -;
+#X floatatom 120 177 5 0 0 0 - - -, f 5;
+#X floatatom 165 161 5 0 0 0 - - -, f 5;
 #X text 187 134 Process only controller no. 64 on all channels;
 #X text 103 193 ctl. value;
 #X text 172 176 Chan. no.;
 #X obj 116 223 ctlin 64 1;
 #X text 193 224 Process only controller 64 on channel 1;
-#X floatatom 116 249 5 0 0 0 - - -;
+#X floatatom 116 249 5 0 0 0 - - -, f 5;
 #X text 113 264 ctl. value;
 #X obj 362 570 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
 ;
 #X text 100 570 for an explanation of MIDI usage in Pd see:;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/ctlin -text
-pdpedia: ctlin;
 #X text 11 23 read incoming Control Change messages;
 #X text 168 481 - (optional) controller number to process. If no arguments
 are present [ctlin] reads all controller data on all channels.;

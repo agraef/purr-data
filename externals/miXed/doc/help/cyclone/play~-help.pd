@@ -1,17 +1,50 @@
-#N canvas 0 26 446 532 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 28 491 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 29 504 ___________________________________________________
-;
-#X obj 39 168 table sample;
-#X obj 39 94 openpanel;
-#X msg 39 119 read -resize \$1 sample;
-#X obj 39 144 soundfiler;
-#X obj 39 69 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
--1;
-#X text 65 70 load a sample;
-#X floatatom 72 387 0 0 100 0 - - -;
+#N canvas 429 36 558 496 10;
+#X obj -252 380 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
+0 14 -233017 -33289 0;
+#X obj -252 225 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0
+13 -228856 -1 0;
+#N canvas 622 279 360 227 META 0;
+#X text 11 143 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 11 29 LICENSE SIBSD;
+#X text 11 124 AUTHOR Miller Puckette;
+#X text 11 162 RELEASE_DATE 1997;
+#X text 11 105 LIBRARY cyclone;
+#X text 11 181 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 11 86 OUTLET_0 signal;
+#X text 11 10 KEYWORDS signal sample playback play position;
+#X text 11 48 DESCRIPTION position based sample playback;
+#X text 11 67 INLET_0 signal set x;
+#X restore 251 382 pd META;
+#X obj -252 281 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12
+0 13 -228856 -1 0;
+#X obj -252 318 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8
+12 0 13 -228856 -1 0;
+#N canvas 324 397 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore -44 382 pd Related_objects;
+#X obj -171 234 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -170 290 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -252 -89 cnv 15 552 40 empty \$0-pddp.cnv.header play~ 3 12
+0 18 -204280 -1 0;
+#X obj 253 -80 play~;
+#X text -240 -66 position based sample playback;
+#X text -146 233 signal;
+#X text -71 233 - signal to have positional playback;
+#X text -146 253 set x;
+#X text -71 253 - change sample to array x;
+#X obj -237 83 table sample;
+#X obj -237 9 openpanel;
+#X msg -237 34 read -resize \$1 sample;
+#X obj -237 59 soundfiler;
+#X obj -237 -16 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144
+-1 -1;
+#X text -219 -17 load a sample;
+#X floatatom -50 166 0 0 100 0 - - -;
 #N canvas 159 26 532 285 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -65,42 +98,36 @@
 #X connect 23 0 20 0;
 #X connect 26 0 5 0;
 #X connect 27 0 21 0;
-#X restore 43 411 pd output;
-#X msg 101 387 MUTE;
-#X msg 138 274 set sample;
-#X text 219 277 change array;
-#X text 148 31 position based sample playback;
-#X obj 43 264 line~;
-#X msg 43 230 0 \, 441 1000;
-#X obj 43 354 play~ sample;
-#X text 140 352 arg is an array;
-#X text 140 364 if a second arg is given it's treated as a number;
-#X text 140 376 of channels and play~ tries to load 0-sample ....;
-#X text 139 387 to n-sample where n is the number of channels-1;
-#X obj 36 30 play~ table 4;
-#X msg 130 230 441 \, 0 1000;
-#X text 43 213 forward;
-#X text 137 209 backward;
-#N canvas 247 115 494 344 META 0;
-#X text 12 155 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 125 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS signal max_compatible array;
-#X text 12 45 DESCRIPTION position based sample playback;
-#X text 12 65 INLET_0 signal set;
-#X text 12 85 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 105 AUTHOR Krzysztof Czaja;
-#X restore 396 511 pd META;
-#X connect 4 0 5 0;
-#X connect 5 0 6 0;
-#X connect 7 0 4 0;
-#X connect 9 0 10 1;
-#X connect 10 0 9 0;
-#X connect 11 0 10 2;
-#X connect 12 0 17 0;
-#X connect 15 0 17 0;
-#X connect 16 0 15 0;
-#X connect 17 0 10 0;
-#X connect 23 0 15 0;
+#X restore -75 190 pd output;
+#X msg -24 166 MUTE;
+#X msg -62 67 set sample;
+#X text 7 66 change array;
+#X obj -75 33 line~;
+#X msg -75 -1 0 \, 441 1000;
+#X obj -75 123 play~ sample;
+#X msg 12 -1 441 \, 0 1000;
+#X text -75 -18 forward;
+#X text 19 -18 backward;
+#X text -146 290 signal;
+#X text -71 290 - sample playback;
+#X text -164 329 1) table;
+#X text -71 329 - sample to play;
+#X text -164 350 2) float;
+#X text -71 350 - option arg for number of channels;
+#X obj 228 -39 pddp/dsp;
+#X text 6 104 arg is an array. if a second argument is given \, it's
+treated as a number of channels. then play~ tries to load 0-sample
+to n-sample where n is the number of channels;
+#X obj -236 380 pddp/pddplink all_about_help_patches.pd -text Usage
+Guide;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 19 0 16 0;
+#X connect 21 0 22 1;
+#X connect 22 0 21 0;
+#X connect 23 0 22 2;
+#X connect 24 0 28 0;
+#X connect 26 0 28 0;
+#X connect 27 0 26 0;
+#X connect 28 0 22 0;
+#X connect 29 0 26 0;

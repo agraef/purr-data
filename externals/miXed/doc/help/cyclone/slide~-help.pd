@@ -1,44 +1,87 @@
-#N canvas 0 26 468 384 10;
-#X text 15 35 Smooth-out changes in signal values;
-#X text 174 200 args: <slideup> <slidedown>;
-#X floatatom 155 156 0 0 0 0 - - -;
-#X msg 69 130 1;
-#X msg 31 129 0;
-#X text 154 136 slide down;
-#X floatatom 96 156 0 0 0 0 - - -;
-#X text 16 61 Slide filters an input signal logarithmically between
+#N canvas 428 36 558 588 10;
+#X obj -1 639 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 357 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 601 340 377 257 META 0;
+#X text 10 187 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 43 LICENSE SIBSD;
+#X text 10 169 AUTHOR Miller Puckette;
+#X text 10 205 RELEASE_DATE 1997;
+#X text 10 151 LIBRARY cyclone;
+#X text 10 223 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 133 OUTLET_0 signal;
+#X text 10 79 INLET_0 signal;
+#X text 10 97 INLET_1 float;
+#X text 10 115 INLET_2 float;
+#X text 10 61 DESCRIPTION smooth-out changes in signal values;
+#X text 10 12 KEYWORDS signal smooth smooth-out changes slideup slidedown
+slide;
+#X restore 500 641 pd META;
+#X obj -1 446 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 483 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 321 491 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 202 641 pd Related_objects;
+#X obj 80 366 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 80 456 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header slide~ 3 12 0 18
+-204280 -1 0;
+#X obj 498 11 slide~;
+#X text 18 24 Smooth-out changes in signal values;
+#X obj 80 392 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj 80 419 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 264 148 args: <slideup> <slidedown>;
+#X floatatom 247 127 0 0 0 0 - - -;
+#X msg 172 60 1;
+#X msg 133 60 0;
+#X text 272 126 slide down;
+#X floatatom 200 102 0 0 0 0 - - -;
+#X obj 154 115 sig~;
+#X floatatom 154 85 0 0 0 0 - - -;
+#X text 225 101 slide up;
+#X obj 172 192 Scope~ 142 71 256 3 128 -1 1 0 0 0 0 102 255 51 135
+135 135 0;
+#X obj 155 291 Snapshot~ 100;
+#X obj 155 316 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X obj 154 150 slide~ 5000 5000;
+#X text 107 366 signal;
+#X text 182 366 - signal to smooth out;
+#X text 107 392 float;
+#X text 107 419 float;
+#X text 182 392 - slideup value;
+#X text 182 419 - slidedown vlaue;
+#X text 107 456 signal;
+#X text 182 456 - smoothed out signal;
+#X text 90 496 1) float;
+#X text 90 518 2) float;
+#X text 109 565 Slide filters an input signal logarithmically between
 changes in signal value. The formula is y(n) = y(n-1) + ((x(n) - y(n-1))/slide).
 It's particularly useful for envelope following and lowpass filtering.
 ;
-#X obj 37 174 sig~;
-#X floatatom 37 155 0 0 0 0 - - -;
-#X text 96 136 slide up;
-#X obj 227 239 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
-135 135 0;
-#X obj 37 237 Snapshot~ 100;
-#X obj 38 262 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256;
-#X obj 37 198 slide~ 5000 5000;
-#N canvas 309 151 494 428 META 0;
-#X text 12 195 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 165 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X obj 478 50 pddp/dsp;
+#X text 182 496 - initial slideup value;
+#X text 182 518 - initial slidedown vlaue;
+#X obj 9 640 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS signal filter max_compatible;
-#X text 12 45 DESCRIPTION smooth-out changes in signal values;
-#X text 12 65 INLET_0 signal;
-#X text 12 85 INLET_1 signal;
-#X text 12 105 INLET_2 signal;
-#X text 12 125 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 145 AUTHOR Krzysztof Czaja;
-#X restore 416 361 pd META;
-#X connect 2 0 14 2;
-#X connect 3 0 9 0;
-#X connect 4 0 9 0;
-#X connect 6 0 14 1;
-#X connect 8 0 14 0;
-#X connect 9 0 8 0;
-#X connect 12 0 13 0;
-#X connect 14 0 11 0;
-#X connect 14 0 12 0;
+#X connect 15 0 26 2;
+#X connect 16 0 21 0;
+#X connect 17 0 21 0;
+#X connect 19 0 26 1;
+#X connect 20 0 26 0;
+#X connect 21 0 20 0;
+#X connect 24 0 25 0;
+#X connect 26 0 23 0;
+#X connect 26 0 24 0;

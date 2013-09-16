@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 39 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header cos 3 12 0 18 -204280
 -1 0;
 #X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 39 244 494 344 META 0;
+#N canvas 483 290 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 543 (none);
-#N canvas 46 479 428 109 Related_objects 0;
+#N canvas 217 521 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 48 42 tan;
@@ -74,13 +74,12 @@ a circle) and multiply it by 2(Pi) where Pi is equal to approximately
 of an angle.;
 #X text 83 289 [sin] and [cos] will return numbers between -1 and 1:
 the sine and cosine of a number repectively.;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/cos -text
-pdpedia: cos;
-#X obj 492 3 cos;
+#X obj 519 11 cos;
 #X text 11 23 cosine function;
 #X text 168 467 - a list will be truncated \, and the first element
 will be used as input.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X connect 16 0 18 0;
 #X connect 17 0 20 0;
 #X connect 19 0 24 0;

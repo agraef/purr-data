@@ -1,11 +1,11 @@
-#N canvas 0 0 447 577 10;
+#N canvas 430 34 447 577 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header All_About_Pd 20
 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 552 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 381 442 494 141 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -14,14 +14,13 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION table of contents;
 #X restore 392 554 pd META;
-#N canvas 10 462 428 105 Related_objects 0;
+#N canvas 219 482 428 105 Related_objects 0;
 #X text 31 37 Hm...what to put here?;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 All About Pd- Related Objects;
 #X restore 103 554 pd Related_objects;
-#X obj 6 554 pddp/pddplink all_about.pd -text All About Pd
-;
+#X obj 6 554 pddp/pddplink all_about.pd -text All About Pd;
 #X obj 19 112 pddp/pddplink all_about_arrays.pd -text arrays;
 #X obj 19 127 pddp/pddplink all_about_ascii_art.pd -text ascii_art
 ;

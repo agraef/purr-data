@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 39 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header makenote 3 12 0
 18 -204280 -1 0;
 #X obj 0 281 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 246 494 367 META 0;
+#N canvas 485 265 494 367 META 0;
 #X text 12 175 LIBRARY internal;
 #X text 12 215 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 235 RELEASE_DATE 2009-06-12;
@@ -29,7 +29,7 @@ for later;
 0 13 -228856 -1 0;
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 108 179 428 410 Related_objects 0;
+#N canvas 218 222 428 410 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [makenote] Related Objects;
@@ -76,9 +76,7 @@ by Olaf Matthes);
 #X obj 78 391 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 390 float;
-#X obj 470 3 makenote;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/makenote -text
-pdpedia: makenote;
+#X obj 486 11 makenote;
 #X text 80 59 Makenote makes MIDI-style note-on/note-off pairs \, which
 you can use for MIDI output or to drive note-like processes within
 Pd.;
@@ -118,12 +116,13 @@ Lists with more than three elements are truncated.;
 #X text 80 544 2) float;
 #X text 168 451 - pitch. (It is output again after the specified duration.)
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 18 0 27 2;
-#X connect 19 0 27 1;
-#X connect 20 0 27 0;
-#X connect 23 0 27 0;
-#X connect 24 0 27 0;
-#X connect 27 0 21 0;
-#X connect 27 1 22 0;
-#X connect 29 0 27 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 17 0 26 2;
+#X connect 18 0 26 1;
+#X connect 19 0 26 0;
+#X connect 22 0 26 0;
+#X connect 23 0 26 0;
+#X connect 26 0 20 0;
+#X connect 26 1 21 0;
+#X connect 28 0 26 0;

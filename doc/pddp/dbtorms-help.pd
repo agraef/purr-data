@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 515 143 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header dbtorms 3 12 0 18
 -204280 -1 0;
 #X obj 0 425 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 245 494 344 META 0;
+#N canvas 565 394 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 434 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 530 (none);
-#N canvas 41 419 428 170 Related_objects 0;
+#N canvas 296 565 428 170 Related_objects 0;
 #X text 19 36 Control objects for conversion:;
 #X obj 107 60 rmstodb;
 #X obj 176 60 dbtopow;
@@ -52,9 +52,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X text 98 433 float;
 #X text 98 499 float;
-#X obj 472 3 dbtorms;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/dbtorms -text
-pdpedia: dbtorms;
+#X obj 494 11 dbtorms;
 #X obj 239 169 dbtorms;
 #X text 11 23 convert dB to linear amplitude;
 #X text 168 456 - lists will be truncated \, and the first element
@@ -66,8 +64,9 @@ rounded down to zero.;
 #X text 98 456 list;
 #X text 168 433 - the incoming value.;
 #X obj 98 556 pddp/pddplink all_about_acoustic_conversions.pd;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 98 571 pddp/pddplink ../3.audio.examples/A02.amplitude.pd -text
 doc/3.audio.examples/A02.amplitude.pd;
-#X connect 11 0 17 0;
-#X connect 17 0 10 0;
+#X connect 11 0 16 0;
+#X connect 16 0 10 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabosc4~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 262 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 245 494 344 META 0;
+#N canvas 483 286 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 491 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 63 314 428 298 Related_objects 0;
+#N canvas 215 334 428 298 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [tabosc4~] Related Objects;
@@ -61,9 +61,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 376 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 375 float;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/tabosc4~ -text
-pdpedia: tabosc4~;
-#X obj 464 3 tabosc4~;
+#X obj 485 8 tabosc4~;
 #X floatatom 43 203 0 0 0 0 - - -;
 #N canvas 159 26 495 270 output 0;
 #X obj 414 196 t b;
@@ -118,12 +116,12 @@ pdpedia: tabosc4~;
 #X connect 24 0 21 0;
 #X restore 18 224 pd output;
 #X msg 69 203 MUTE;
-#X floatatom 18 51 4 0 0 0 - - -;
+#X floatatom 18 51 4 0 0 0 - - -, f 4;
 #X obj 18 76 sig~ 100;
 #X msg 32 119 set table1;
 #X obj 18 158 tabosc4~ table1;
 #X msg 116 119 set table2;
-#X floatatom 190 121 4 0 0 0 - - -;
+#X floatatom 190 121 4 0 0 0 - - -, f 4;
 #X text 48 51 signal input for frequency (Hz.);
 #X text 33 98 message to switch tables;
 #X text 220 121 inlet to reset phase;
@@ -175,7 +173,7 @@ you just want to specify partial strengths.;
 #X text 80 471 1) symbol atom;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 475 55 pddp/dsp;
 #X obj 98 530 pddp/pddplink all_about_arrays.pd;
 #X obj 98 545 pddp/pddplink ../3.audio.examples/B01.wavetables.pd -text
 doc/3.audio.examples/B01.wavetables.pd;
@@ -183,12 +181,12 @@ doc/3.audio.examples/B01.wavetables.pd;
 doc/3.audio.examples/B05.tabread.FM.pd;
 #X obj 98 575 pddp/pddplink ../3.audio.examples/B06.table.switching.pd
 -text doc/3.audio.examples/B06.table.switching.pd;
-#X connect 14 0 15 1;
-#X connect 15 0 14 0;
-#X connect 16 0 15 2;
-#X connect 17 0 18 0;
-#X connect 18 0 20 0;
-#X connect 19 0 20 0;
-#X connect 20 0 15 0;
-#X connect 21 0 20 0;
-#X connect 22 0 20 1;
+#X connect 13 0 14 1;
+#X connect 14 0 13 0;
+#X connect 15 0 14 2;
+#X connect 16 0 17 0;
+#X connect 17 0 19 0;
+#X connect 18 0 19 0;
+#X connect 19 0 14 0;
+#X connect 20 0 19 0;
+#X connect 21 0 19 1;

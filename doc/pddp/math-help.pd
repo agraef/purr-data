@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (math_functions)
 3 12 0 18 -204280 -1 0;
 #X obj 0 325 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 488 281 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 0 13 -228856 -1 0;
 #X obj 0 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 219 515 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 (math) Related Objects;
@@ -45,23 +45,21 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 #X obj 78 457 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 11 23 higher math in Pd;
-#X obj 252 3 sin;
-#X obj 278 3 cos;
-#X obj 304 3 tan;
-#X obj 331 3 atan;
-#X obj 364 3 atan2;
-#X obj 404 3 exp;
-#X obj 432 3 log;
-#X obj 459 3 abs;
-#X obj 487 3 sqrt;
-#X obj 522 3 pow;
-#X obj 464 20 pddp/pddplink http://wiki.puredata.info/en/math -text
-pdpedia: math;
+#X obj 249 12 sin;
+#X obj 275 12 cos;
+#X obj 301 12 tan;
+#X obj 328 12 atan;
+#X obj 361 12 atan2;
+#X obj 401 12 exp;
+#X obj 429 12 log;
+#X obj 456 12 abs;
+#X obj 484 12 sqrt;
+#X obj 519 12 pow;
 #X text 123 139 For individual help patches \, follow the links below:
 ;
 #X obj 252 87 sin;
-#X floatatom 252 61 5 0 0 0 - - -;
-#X floatatom 252 114 5 0 0 0 - - -;
+#X floatatom 252 61 5 0 0 0 - - -, f 5;
+#X floatatom 252 114 5 0 0 0 - - -, f 5;
 #X text 168 333 - the incoming value;
 #X text 168 352 - a list will be truncated.;
 #X obj 124 171 sin;
@@ -96,6 +94,7 @@ the right inlet. All other math functions listed here take no arguments.
 the previous value.);
 #X text 97 403 (Note: The [atan2] and [pow] objects have a right inlet.
 See their respective help patches (links above) for more info.);
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 26 0 28 0;
-#X connect 27 0 26 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 25 0 27 0;
+#X connect 26 0 25 0;

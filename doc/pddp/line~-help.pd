@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 426 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header line~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 271 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 245 494 344 META 0;
+#N canvas 481 284 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 516 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 493 (none);
-#N canvas 62 373 428 230 Related_objects 0;
+#N canvas 213 398 428 230 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 vline~;
@@ -48,9 +48,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 381 cnv 17 3 65 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 380 float;
-#X obj 478 3 line~;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/line~ -text
-pdpedia: line~;
+#X obj 509 9 line~;
 #X obj 66 210 snapshot~;
 #X obj 66 164 line~;
 #X floatatom 66 233 0 0 0 0 - - -;
@@ -87,7 +85,7 @@ be a single target value (causing the output to jump to the target)
 or a target and a time in milliseconds (to start a new ramp).;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 486 51 pddp/dsp;
 #X obj 98 547 pddp/pddplink ../3.audio.examples/A03.line.pd/ -text
 doc/3.audio.examples/A03.line.pd;
 #X obj 98 562 pddp/pddplink ../3.audio.examples/A04.line2.pd/ -text
@@ -96,12 +94,12 @@ doc/3.audio.examples/A04.line2.pd;
 Documentation folder doc/3.audio.examples:;
 #X obj 98 577 pddp/pddplink ../3.audio.examples/C05.sampler.oneshot.pd
 -text doc/3.audio.examples/C05.sampler.oneshot.pd;
-#X connect 17 0 19 0;
-#X connect 18 0 17 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 19 0 16 0;
 #X connect 20 0 17 0;
-#X connect 21 0 18 0;
-#X connect 23 0 18 0;
-#X connect 25 0 18 0;
-#X connect 27 0 18 0;
-#X connect 28 0 18 0;
-#X connect 29 0 20 0;
+#X connect 22 0 17 0;
+#X connect 24 0 17 0;
+#X connect 26 0 17 0;
+#X connect 27 0 17 0;
+#X connect 28 0 19 0;

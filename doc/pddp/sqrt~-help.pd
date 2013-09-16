@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 433 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header sqrt~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 437 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 246 494 344 META 0;
+#N canvas 492 283 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 543 (none);
-#N canvas 108 478 428 109 Related_objects 0;
+#N canvas 220 517 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 152 43 rsqrt~;
@@ -39,14 +39,12 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 511 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 485 3 sqrt~;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/sqrt~ -text
-pdpedia: sqrt~;
+#X obj 511 7 sqrt~;
 #X obj 232 240 metro 500;
 #X floatatom 215 137 0 0 0 0 - - -;
 #X floatatom 216 297 0 0 0 0 - - -;
 #X obj 216 264 snapshot~;
-#X floatatom 216 380 9 0 0 0 - - -;
+#X floatatom 216 380 9 0 0 0 - - -, f 9;
 #X obj 216 324 t f f;
 #X obj 216 351 *;
 #X obj 215 163 sig~;
@@ -64,16 +62,16 @@ connections are made to [sqrt~].;
 #X text 20 72 [sqrt~] takes the approximate square root of the incoming
 signal \, using a fast \, approximate algorithm which is probably accurate
 to about 120 dB (20 bits).;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 13 0 16 0;
-#X connect 14 0 20 0;
-#X connect 15 0 18 0;
-#X connect 16 0 15 0;
-#X connect 18 0 19 0;
-#X connect 18 1 19 1;
-#X connect 19 0 17 0;
-#X connect 20 0 24 0;
-#X connect 22 0 13 0;
-#X connect 22 0 13 0;
-#X connect 24 0 16 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 481 55 pddp/dsp;
+#X connect 12 0 15 0;
+#X connect 13 0 19 0;
+#X connect 14 0 17 0;
+#X connect 15 0 14 0;
+#X connect 17 0 18 0;
+#X connect 17 1 18 1;
+#X connect 18 0 16 0;
+#X connect 19 0 23 0;
+#X connect 21 0 12 0;
+#X connect 23 0 15 0;

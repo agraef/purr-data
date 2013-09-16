@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header my_canvas 3 12 0
 18 -204280 -1 0;
 #X obj 0 352 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 245 494 344 META 0;
+#N canvas 485 284 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 105 AUTHOR Thomas Musil;
@@ -23,7 +23,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 546 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 80 481 428 109 Related_objects 0;
+#N canvas 219 521 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [cnv] Related Objects;
@@ -32,9 +32,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 22 73 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
 #X restore 102 597 pd Related_objects;
 #X text 11 23 gui-rectangle;
-#X text 418 3 [my_canvas] or [cnv];
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/cnv -text
-pdpedia: cnv;
+#X text 420 10 [my_canvas] or [cnv];
 #X text 98 356 (none);
 #X text 98 435 (none);
 #X text 98 374 See the following subpatch for messages that change
@@ -44,16 +42,16 @@ the gui-properties of [cnv]:;
 #X text 12 301 get position on canvas;
 #X msg 13 109 size \$1;
 #X obj 13 72 nbx 3 14 8 200 0 0 empty \$0-dim empty 0 -8 0 12 -262144
--1 -1 15 256;
+-1 -1 15 256 0;
 #X obj 13 133 s cnv_rcv;
 #N canvas 366 206 174 259 flash-time 0;
 #X obj 68 180 pack;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-width empty
-0 -8 0 12 -262144 -1 -1 100 256;
+0 -8 0 12 -262144 -1 -1 100 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-height empty
-0 -8 0 12 -262144 -1 -1 60 256;
+0 -8 0 12 -262144 -1 -1 60 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -89,9 +87,9 @@ the gui-properties of [cnv]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
-0 -8 0 12 -262144 -1 -1 20 256;
+0 -8 0 12 -262144 -1 -1 20 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
-0 -8 0 12 -262144 -1 -1 12 256;
+0 -8 0 12 -262144 -1 -1 12 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -104,9 +102,9 @@ the gui-properties of [cnv]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
-0 -8 0 12 -262144 -1 -1 14 256;
+0 -8 0 12 -262144 -1 -1 14 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -124,9 +122,9 @@ the gui-properties of [cnv]:;
 #X obj 69 196 t b a;
 #X obj 33 262 outlet;
 #X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
--1 -1 10 256;
+-1 -1 10 256 0;
 #X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X obj 33 237 pack 0 0;
 #X connect 0 0 4 0;
 #X connect 0 1 4 1;
@@ -151,11 +149,11 @@ the gui-properties of [cnv]:;
 -1 -1 0;
 #X text 120 120 1.bg;
 #X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
--258113 -1 0 256;
+-258113 -1 0 256 0;
 #X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
--13381 -1 0 256;
+-13381 -1 0 256 0;
 #X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
--4160 -1 0 256;
+-4160 -1 0 256 0;
 #X text 120 137 2.label;
 #X obj 96 410 route 0 1;
 #X obj 96 497 pack 0 0;
@@ -194,9 +192,9 @@ the gui-properties of [cnv]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
--8 0 12 -262144 -1 -1 310 256;
+-8 0 12 -262144 -1 -1 310 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
--8 0 12 -262144 -1 -1 500 256;
+-8 0 12 -262144 -1 -1 500 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -209,9 +207,9 @@ the gui-properties of [cnv]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -242,9 +240,9 @@ the gui-properties of [cnv]:;
 #X obj 27 370 r cnv_snd;
 #X msg 165 408 color \$1 \$2;
 #X obj 27 421 nbx 3 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 90 421 nbx 3 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X msg 25 245 label my_canvas;
 #X msg 204 109 send cnv_snd;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -304,16 +302,16 @@ a cnv:;
 #X text 168 463 - creating a [cnv] without any arguments will set default
 values for all gui-properties. See the subpatch below to learn how
 to dynamically instantiate a [cnv] object with custom properties:;
-#X floatatom 338 318 4 0 0 0 - - -;
-#X floatatom 382 318 4 0 0 0 - - -;
+#X floatatom 338 318 4 0 0 0 - - -, f 4;
+#X floatatom 382 318 4 0 0 0 - - -, f 4;
 #X text 349 334 x;
 #X text 393 334 y;
 #X obj 435 170 metro 100;
 #X obj 435 150 tgl 15 1 empty empty empty 20 8 0 10 -262144 -1 -1 1
 1;
 #X obj 338 270 r from_K1;
-#X floatatom 435 318 4 0 0 0 - - -;
-#X floatatom 479 318 4 0 0 0 - - -;
+#X floatatom 435 318 4 0 0 0 - - -, f 4;
+#X floatatom 479 318 4 0 0 0 - - -, f 4;
 #X text 445 334 x;
 #X text 490 334 y;
 #X obj 435 270 r from_K2;
@@ -518,7 +516,7 @@ a [cnv] \, as are the horizontal dividers below.;
 #X obj 136 115 sel 0;
 #X msg 130 137 1e+37;
 #X obj 205 155 t a;
-#X floatatom 13 147 5 0 0 0 - - -;
+#X floatatom 13 147 5 0 0 0 - - -, f 5;
 #X obj 93 118 + 1;
 #X connect 0 0 3 0;
 #X connect 1 0 9 0;
@@ -714,12 +712,12 @@ a [cnv] \, as are the horizontal dividers below.;
 #X text 325 551 Note: [cnv] is not to be confused;
 #X text 325 564 with the Pd canvas \, or [pd] \,;
 #X text 325 577 [table] \, etc.;
-#X connect 21 0 39 0;
-#X connect 22 0 21 0;
-#X connect 23 0 30 0;
-#X connect 28 0 31 0;
-#X connect 30 0 17 0;
-#X connect 30 1 18 0;
-#X connect 31 0 24 0;
-#X connect 31 1 25 0;
-#X connect 39 0 40 0;
+#X connect 20 0 38 0;
+#X connect 21 0 20 0;
+#X connect 22 0 29 0;
+#X connect 27 0 30 0;
+#X connect 29 0 16 0;
+#X connect 29 1 17 0;
+#X connect 30 0 23 0;
+#X connect 30 1 24 0;
+#X connect 38 0 39 0;

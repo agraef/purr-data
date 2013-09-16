@@ -1,7 +1,7 @@
 #N struct help-getsize-template float x float y array array1 help-getsize-array1-template
 ;
 #N struct help-getsize-array1-template float y float x;
-#N canvas 0 0 555 619 10;
+#N canvas 426 32 555 619 10;
 #X scalar help-getsize-template 89 279 \; 7 -6 \; 7 35 \; 26 57 \;
 45 85 \; 74 90 \; 79 137 \; 48 150 \; \;;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
@@ -10,7 +10,7 @@
 -204280 -1 0;
 #X obj 0 406 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 344 META 0;
+#N canvas 478 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -30,7 +30,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 78 480 428 109 Related_objects 0;
+#N canvas 214 518 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 71 34 pointer;
@@ -48,11 +48,9 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 451 float;
 #X obj 78 452 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 473 3 getsize;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/getsize -text
-pdpedia: getsize;
+#X obj 492 11 getsize;
 #X obj 78 135 pointer;
-#X floatatom 78 190 5 0 0 0 - - -;
+#X floatatom 78 190 5 0 0 0 - - -, f 5;
 #X obj 78 161 getsize help-getsize-template array1;
 #N canvas 83 204 428 227 help-getsize-template 0;
 #X obj 21 42 struct help-getsize-template float x float y array array1
@@ -99,6 +97,6 @@ must be an array.);
 #X text 278 333 diamond represents one element. (The;
 #X text 278 318 an array of 7 elements. Each white;
 #X text 278 348 black background is just a reference.);
-#X connect 14 0 16 0;
-#X connect 16 0 15 0;
-#X connect 32 0 14 0;
+#X connect 13 0 15 0;
+#X connect 15 0 14 0;
+#X connect 31 0 13 0;

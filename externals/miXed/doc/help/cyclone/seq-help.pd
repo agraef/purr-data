@@ -1,64 +1,100 @@
-#N canvas 0 26 618 427 10;
-#X obj 49 298 seq;
-#X msg 306 252 write test1.mid;
-#X msg 175 132 bang;
-#X msg 167 251 record;
-#X msg 175 159 stop;
-#X obj 180 113 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
--1 -1;
-#X msg 222 251 stop record;
-#X obj 10 337 midiout;
-#X obj 7 167 midiin;
-#X msg 306 275 read test1.mid;
-#X msg 225 158 pause;
-#X msg 285 158 continue;
-#X obj 29 -37 seq;
-#X text 65 -36 - a simple MIDI file player and recorder;
-#X text 208 113 loop;
-#X text 213 131 play;
-#X text 236 223 recording;
-#X text 352 348 jkant.altervista.org;
-#X text 352 324 ver 0.1 05-07;
-#X text 74 302 <-- click object to open list editor;
-#X text 261 90 <-- midi file should be in the same folder or an open
-window popups to pick file;
-#X text 404 251 save in patch folder;
-#N canvas 109 124 494 383 META 0;
-#X text 12 185 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 155 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 45 DESCRIPTION a simple MIDI file player and recorder;
-#X text 12 5 KEYWORDS control MIDI storage max_compatible filesystem
-;
-#X text 12 95 OUTLET_0 float;
-#X text 12 115 OUTLET_1 bang;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 135 AUTHOR Krzysztof Czaja;
-#X text 12 65 INLET_0 bang float read stop pause continue record stop
-record write read goto;
-#X restore 555 360 pd META;
-#X msg 199 189 goto;
-#X text 27 -10 cyclone's [seq] input accepts midi files and realtime
+#N canvas 431 34 559 616 10;
+#X obj -1 795 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 454 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 612 382 377 243 META 0;
+#X text 15 160 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 15 27 LICENSE SIBSD;
+#X text 15 141 AUTHOR Miller Puckette;
+#X text 15 179 RELEASE_DATE 1997;
+#X text 15 122 LIBRARY cyclone;
+#X text 15 198 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 15 8 KEYWORDS player play record MIDI midi;
+#X text 15 46 DESCRIPTION simple MIDI file player and recorder;
+#X text 15 65 INLET_0 midiin read bang other_message;
+#X text 15 84 OUTLET_0 midiout;
+#X text 15 103 OUTLET_1 bang;
+#X restore 501 797 pd META;
+#X obj -1 564 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 626 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 667 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 324 515 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 203 797 pd Related_objects;
+#X obj 78 463 cnv 17 3 90 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 573 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header seq 3 12 0 18 -204280
+-1 0;
+#X obj 519 8 seq;
+#X text 107 462 midiin;
+#X text 227 460 - realtime midimessage to play/record;
+#X text 107 484 read <midi-file>;
+#X text 227 484 - read midi-file to play/record;
+#X text 107 507 bang;
+#X text 227 507 - play;
+#X text 107 528 other message;
+#X text 227 528 - stop \, pause \, continue \, record \, stop record
+\, write <midi-file>;
+#X text 107 572 midiout;
+#X text 227 572 - ouput for midi being read;
+#X text 106 638 (none);
+#X text 106 678 cyclone's [seq] input accepts midi files and realtime
 midi messages through [midiin]. All trakcs of a multi-track midi file
 are merged into one. [notein] may be connected through a [midiformat]
 object. Left inlet outputs midi data to [midiout]. [noteout] may be
 connected through a [midiparse] object. Right inlet outputs a bang
 message at the sequence's end \, useful for loops. [seq] has his own
 midi list editor.;
-#X msg 173 90 read test.mid;
-#X connect 0 0 7 0;
-#X connect 0 1 5 0;
-#X connect 1 0 0 0;
-#X connect 2 0 0 0;
-#X connect 3 0 0 0;
-#X connect 4 0 0 0;
-#X connect 5 0 2 0;
-#X connect 6 0 0 0;
-#X connect 8 0 0 0;
-#X connect 8 0 7 0;
-#X connect 9 0 0 0;
-#X connect 10 0 0 0;
-#X connect 11 0 0 0;
-#X connect 23 0 0 0;
-#X connect 25 0 0 0;
+#X msg 200 269 write test1.mid;
+#X msg 216 341 bang;
+#X msg 188 229 record;
+#X msg 164 107 stop;
+#X obj 216 322 bng 15 250 50 0 empty empty empty 0 -6 0 10 -262144
+-1 -1;
+#X msg 194 249 stop record;
+#X obj 75 425 midiout;
+#X obj 75 346 midiin;
+#X msg 207 290 read test1.mid;
+#X msg 170 128 pause;
+#X msg 175 149 continue;
+#X text 244 322 loop;
+#X text 254 340 play;
+#X text 181 393 <-- click object to open list editor;
+#X text 298 268 save in patch folder;
+#X msg 181 170 goto;
+#X msg 149 63 read test.mid;
+#X obj 149 392 seq;
+#X text 11 24 simple MIDI file player and recorder;
+#X obj 78 600 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 107 599 bang;
+#X text 227 599 - bang output at sequence's end;
+#X text 188 207 recording:;
+#X text 242 56 <-- midi file should be in the same folder or an open
+window popups to pick file;
+#X obj 14 798 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 23 0 40 0;
+#X connect 24 0 40 0;
+#X connect 25 0 40 0;
+#X connect 26 0 40 0;
+#X connect 27 0 24 0;
+#X connect 28 0 40 0;
+#X connect 30 0 29 0;
+#X connect 30 0 40 0;
+#X connect 31 0 40 0;
+#X connect 32 0 40 0;
+#X connect 33 0 40 0;
+#X connect 38 0 40 0;
+#X connect 39 0 40 0;
+#X connect 40 0 29 0;
+#X connect 40 1 27 0;

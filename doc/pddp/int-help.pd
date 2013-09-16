@@ -1,10 +1,10 @@
-#N canvas 0 0 555 619 10;
+#N canvas 425 35 555 619 10;
 #X obj 0 595 cnv 15 550 21 empty empty empty 20 12 0 14 -228856 -66577
 0;
 #X obj 0 0 cnv 15 550 40 empty empty int 3 12 0 18 -204280 -1 0;
 #X obj 0 234 cnv 3 550 3 empty empty inlets 8 12 0 13 -228856 -1 0
 ;
-#N canvas 49 212 482 395 META 0;
+#N canvas 492 233 482 395 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -32,7 +32,7 @@ for Pd version 0.42.;
 -162280 0;
 #X obj 78 243 cnv 17 3 82 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 501 4 or;
+#X text 495 12 or;
 #X obj 100 524 pddp/pddplink http://crca.ucsd.edu/~msp/Pd_documentation/x2.htm#s3.1
 -text Pd manual 2.3.1: anatomy of a message;
 #N canvas 107 165 428 375 More_Info 0;
@@ -67,12 +67,12 @@ and can represent real numbers between:;
 #X text 98 262 float;
 #X text 98 302 list;
 #X text 98 334 float;
-#N canvas 93 484 428 108 Related_objects 0;
+#N canvas 212 521 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 64 36 value;
 #X obj 111 36 list;
-#X floatatom 152 37 5 0 0 0 - - -;
+#X floatatom 152 37 5 0 0 0 - - -, f 5;
 #X msg 195 36;
 #X obj 22 36 float;
 #X obj 22 66 symbol;
@@ -80,10 +80,8 @@ and can represent real numbers between:;
 #X text 7 1 [int] Related Objects;
 #X restore 101 597 pd Related_objects;
 #X text 99 382 float;
-#X obj 474 3 int;
-#X obj 522 3 i;
-#X obj 470 21 pddp/pddplink http://wiki.puredata.info/en/int -text
-pdpedia: int;
+#X obj 468 11 int;
+#X obj 516 11 i;
 #X msg 115 122 bang;
 #X floatatom 105 205 0 0 0 0 - - -;
 #X floatatom 105 100 0 0 0 0 - - -;
@@ -110,7 +108,7 @@ object's stored value is incremented by 1 with each "bang".;
 #X msg 164 84 bang;
 #X obj 164 113 int;
 #X obj 192 113 + 1;
-#X floatatom 164 139 5 0 0 0 - - -;
+#X floatatom 164 139 5 0 0 0 - - -, f 5;
 #X text 7 1 [int] Example: Building a Counter;
 #X connect 2 0 3 0;
 #X connect 3 0 4 0;
@@ -133,7 +131,7 @@ to an integer and stored for later use.;
 #X text 81 430 1) float;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 22 0 30 0;
-#X connect 24 0 30 0;
-#X connect 25 0 30 1;
-#X connect 30 0 23 0;
+#X connect 21 0 29 0;
+#X connect 23 0 29 0;
+#X connect 24 0 29 1;
+#X connect 29 0 22 0;

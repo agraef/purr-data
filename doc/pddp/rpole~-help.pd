@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header rpole~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 246 494 344 META 0;
+#N canvas 484 286 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -32,9 +32,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 413 cnv 17 3 30 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 479 3 rpole~;
-#X obj 452 20 pddp/pddplink http://wiki.puredata.info/en/rpole~ -text
-pdpedia: rpole~;
+#X obj 497 10 rpole~;
 #X floatatom 152 194 0 0 0 0 - - -;
 #X obj 96 107 osc~ 100;
 #X msg 111 139 clear;
@@ -48,15 +46,15 @@ pdpedia: rpole~;
 #X obj 95 217 rpole~ 0.9;
 #N canvas 93 273 326 287 test 0;
 #X obj 76 78 osc~;
-#X floatatom 76 55 5 0 0 0 - - -;
+#X floatatom 76 55 5 0 0 0 - - -, f 5;
 #X obj 77 219 env~ 16384;
-#X floatatom 77 243 5 0 0 0 - - -;
+#X floatatom 77 243 5 0 0 0 - - -, f 5;
 #X obj 76 168 rpole~;
 #X obj 104 107 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
 #X obj 76 105 *~;
 #X msg 97 137 set 1;
-#X floatatom 172 157 4 -100 100 0 - - -;
+#X floatatom 172 157 4 -100 100 0 - - -, f 4;
 #X obj 172 182 / 100;
 #X obj 214 256 dac~;
 #X obj 228 177 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
@@ -97,7 +95,7 @@ or by an audio signal (right inlet).;
 #X text 49 284 where y[n] is the output \, x[n] the input \, and a[n]
 the filter coefficient. The filter is unstable if/when |a[n]|>1.;
 #X text 80 505 1) float;
-#N canvas 27 280 428 309 Related_objects 0;
+#N canvas 212 318 428 309 Related_objects 0;
 #X obj 74 60 rzero~;
 #X obj 25 80 cpole~;
 #X obj 25 60 rpole~;
@@ -130,13 +128,14 @@ for an introduction to the necessary theory.;
 #X text 167 412 - filter coefficient.;
 #X text 167 505 - (optional) initializes filter coefficient.;
 #X text 49 242 The action of [rpole~] is:;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 473 58 pddp/dsp;
 #X obj 98 557 pddp/pddplink ../3.audio.examples/H11.shelving.pd -text
 doc/3.audio.examples/H11.shelving.pd;
 #X obj 98 572 pddp/pddplink ../3.audio.examples/H14.all.pass.pd -text
 doc/3.audio.examples/H14.all.pass.pd;
-#X connect 12 0 21 1;
-#X connect 13 0 21 0;
-#X connect 14 0 21 0;
-#X connect 15 0 21 0;
+#X connect 11 0 20 1;
+#X connect 12 0 20 0;
+#X connect 13 0 20 0;
+#X connect 14 0 20 0;

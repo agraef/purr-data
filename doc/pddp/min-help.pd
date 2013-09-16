@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header min 3 12 0 18 -204280
 -1 0;
 #X obj 0 369 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 494 361 META 0;
+#N canvas 483 269 494 361 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 94 481 428 109 Related_objects 0;
+#N canvas 213 519 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [min] Related Objects;
@@ -46,20 +46,18 @@ for Pd version 0.42.;
 -162280 0;
 #X text 98 458 float;
 #X text 78 544 1) float;
-#X obj 497 3 min;
+#X obj 515 11 min;
 #X text 98 377 bang;
 #X text 98 402 float;
 #X text 168 458 - a float to the right inlet is stored.;
 #X text 168 544 - initializes the value of the right inlet.;
-#X obj 469 20 pddp/pddplink http://wiki.puredata.info/en/min -text
-pdpedia: min;
-#X floatatom 186 168 5 0 0 0 - - -;
-#X floatatom 186 222 5 0 0 0 - - -;
+#X floatatom 186 168 5 0 0 0 - - -, f 5;
+#X floatatom 186 222 5 0 0 0 - - -, f 5;
 #X obj 186 195 min;
-#X floatatom 228 168 5 0 0 0 - - -;
+#X floatatom 228 168 5 0 0 0 - - -, f 5;
 #X obj 316 195 min 5;
-#X floatatom 316 168 5 0 0 0 - - -;
-#X floatatom 316 223 5 0 0 0 - - -;
+#X floatatom 316 168 5 0 0 0 - - -, f 5;
+#X floatatom 316 223 5 0 0 0 - - -, f 5;
 #X text 168 377 - output the last value.;
 #X text 168 402 - the incoming float is compared to the value at the
 right inlet \, and the greater of the two is output.;
@@ -67,10 +65,11 @@ right inlet \, and the greater of the two is output.;
 ;
 #X text 168 495 - the two values at the inlets are compared \, and
 the greater one is output.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X text 11 23 choose the lesser (minimum) of two values;
-#X connect 21 0 23 0;
-#X connect 23 0 22 0;
-#X connect 24 0 23 1;
-#X connect 25 0 27 0;
-#X connect 26 0 25 0;
+#X connect 20 0 22 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 1;
+#X connect 24 0 26 0;
+#X connect 25 0 24 0;

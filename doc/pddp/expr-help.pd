@@ -1,4 +1,4 @@
-#N canvas 0 0 555 619 10;
+#N canvas 433 38 555 619 10;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header expr 3 12 0 18 -204280
 -1 0;
 #X obj 0 118 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
@@ -18,9 +18,7 @@
 #X obj 78 286 cnv 17 3 123 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
 #X text 98 285 float;
-#X obj 489 4 expr;
-#X obj 465 21 pddp/pddplink http://wiki.puredata.info/en/expr -text
-pdpedia: expr;
+#X obj 514 11 expr;
 #X floatatom 87 50 0 0 0 0 - - -;
 #X floatatom 21 96 0 0 0 0 - - -;
 #X msg 21 50 bang;
@@ -145,16 +143,16 @@ specified by the left inlet.;
 #N canvas 91 55 428 501 expr_weirdness 0;
 #X obj 42 98 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 42 143 5 0 0 0 - - -;
+#X floatatom 42 143 5 0 0 0 - - -, f 5;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 42 119 expr 8 / 6;
 #X obj 42 254 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 42 302 5 0 0 0 - - -;
+#X floatatom 42 302 5 0 0 0 - - -, f 5;
 #X obj 42 331 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 42 379 5 0 0 0 - - -;
+#X floatatom 42 379 5 0 0 0 - - -, f 5;
 #X text 19 166 This gets tricky \, because Pd strips unnecessary characters
 from a floating point number. Hence \, if you try to type "8.0 / 6.0"
 in the [expr] object above \, the decimal point and the following zero
@@ -171,7 +169,7 @@ interpret it as a symbol \, so no characters are stripped.;
 achieves the same thing.;
 #X obj 42 411 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 42 459 5 0 0 0 - - -;
+#X floatatom 42 459 5 0 0 0 - - -, f 5;
 #X text 19 410 3;
 #X text 65 410 Using the "float" function makes the float type explicit.
 ;
@@ -183,7 +181,7 @@ This can be the source of some confusion in Pd \, which uses floating
 point numbers exclusively.;
 #X obj 22 576 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 22 618 5 0 0 0 - - -;
+#X floatatom 22 618 5 0 0 0 - - -, f 5;
 #X text 19 486 Since float has priority over int \, the integer in
 example 3 is automatically converted to a float. Likewise \, using
 "6" instead of "6.0" in examples 1 and 2 would still give a floating
@@ -199,7 +197,7 @@ calculation:;
 #X text 165 625 (Scroll down for the answer);
 #X obj 22 747 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 22 789 5 0 0 0 - - -;
+#X floatatom 22 789 5 0 0 0 - - -, f 5;
 #X obj 22 767 expr int(123456789.0)%10;
 #X connect 0 0 3 0;
 #X connect 3 0 1 0;
@@ -257,7 +255,7 @@ use in [expr~] are listed below:;
 ;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
-#N canvas 52 244 494 344 META 0;
+#N canvas 490 291 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 145 AUTHOR Shahrokh Yadegari;
@@ -272,21 +270,22 @@ for Pd version 0.42.;
 #X text 12 185 RELEASE_DATE 1989;
 #X text 12 25 LICENSE GPL v2;
 #X restore 500 598 pd META;
-#N canvas 102 481 428 109 Related_objects 0;
+#N canvas 222 522 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 expr~;
 #X obj 62 43 fexpr~;
 #X text 7 2 [expr] Related Objects;
 #X restore 101 598 pd Related_objects;
-#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 13 0 27 0;
-#X connect 15 0 29 0;
-#X connect 17 0 19 0;
-#X connect 19 0 18 0;
-#X connect 20 0 19 1;
-#X connect 21 0 23 0;
-#X connect 23 0 22 0;
-#X connect 27 0 16 0;
-#X connect 29 0 14 0;
-#X connect 36 0 19 0;
+#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 26 0;
+#X connect 14 0 28 0;
+#X connect 16 0 18 0;
+#X connect 18 0 17 0;
+#X connect 19 0 18 1;
+#X connect 20 0 22 0;
+#X connect 22 0 21 0;
+#X connect 26 0 15 0;
+#X connect 28 0 13 0;
+#X connect 35 0 18 0;

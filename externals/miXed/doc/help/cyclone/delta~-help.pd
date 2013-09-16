@@ -1,56 +1,88 @@
-#N canvas 0 26 548 326 10;
-#X text 15 35 Transform a signal into differences between successive
-samples;
-#X obj 256 268 *~ 0.02;
-#X obj 256 187 *~ 50;
-#X obj 256 135 phasor~ 2.003;
-#X obj 256 160 cos~;
-#X obj 256 214 +~ 440;
-#X obj 256 239 cycle~;
-#X obj 172 181 *~ 200000;
-#X floatatom 34 214 0 0 0 0 - - -;
-#X obj 34 187 snapshot~ 100;
-#X obj 172 300 dac~;
-#X obj 172 267 *~ 0.02;
-#X obj 172 240 cycle~;
-#X obj 172 214 +~ 440;
-#X obj 172 104 phasor~ 2;
-#X obj 172 128 cos~;
-#X msg 34 107 0 \, 5000 5000;
-#X obj 34 129 line~;
-#X text 173 87 Proposal for a new ambulance siren:;
-#X text 257 118 "(ambulance)";
-#X text 34 68 what's the increment between succesive samples of a line?
-;
-#X obj 34 157 delta~;
-#X obj 172 154 delta~;
-#N canvas 40 68 494 403 META 0;
-#X text 12 165 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 135 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS signal max_compatible;
-#X text 12 45 DESCRIPTION transform a signal into differences between
+#N canvas 420 38 554 524 10;
+#X obj -2 501 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 340 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 609 279 362 257 META 0;
+#X text 13 161 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 13 28 LICENSE SIBSD;
+#X text 13 141 AUTHOR Miller Puckette;
+#X text 13 181 RELEASE_DATE 1997;
+#X text 13 121 LIBRARY cyclone;
+#X text 13 81 INLET_0 signal;
+#X text 13 101 OUTLET_0 signal;
+#X text 13 8 KEYWORDS signal delta transform sample;
+#X text 13 48 DESCRIPTION transform signal into difference between
 successive samples;
-#X text 12 75 INLET_0 signal;
-#X text 12 95 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 115 AUTHOR Krzysztof Czaja;
-#X restore 490 300 pd META;
-#X connect 1 0 10 1;
-#X connect 2 0 5 0;
-#X connect 3 0 4 0;
-#X connect 4 0 2 0;
-#X connect 5 0 6 0;
-#X connect 6 0 1 0;
-#X connect 7 0 13 0;
-#X connect 9 0 8 0;
-#X connect 11 0 10 0;
-#X connect 12 0 11 0;
-#X connect 13 0 12 0;
+#X text 13 201 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 498 503 pd META;
+#X obj -1 382 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 419 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 83 351 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header delta~ 3 12 0 18
+-204280 -1 0;
+#X text 114 351 signal;
+#X obj 83 391 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 114 391 signal;
+#N canvas 90 529 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 13 33 clip~;
+#X obj 56 33 -~;
+#X obj 87 33 +~;
+#X restore 195 503 pd Related_objects;
+#X obj 502 2 delta~;
+#X obj 352 265 *~ 0.02;
+#X obj 352 184 *~ 50;
+#X obj 352 132 phasor~ 2.003;
+#X obj 352 157 cos~;
+#X obj 352 211 +~ 440;
+#X obj 352 236 cycle~;
+#X obj 268 178 *~ 200000;
+#X floatatom 57 233 0 0 0 0 - - -;
+#X obj 57 206 snapshot~ 100;
+#X obj 268 297 dac~;
+#X obj 268 264 *~ 0.02;
+#X obj 268 237 cycle~;
+#X obj 268 211 +~ 440;
+#X obj 268 101 phasor~ 2;
+#X obj 268 125 cos~;
+#X msg 57 120 0 \, 5000 5000;
+#X obj 57 148 line~;
+#X text 269 84 Proposal for a new ambulance siren:;
+#X text 353 115 "(ambulance)";
+#X obj 57 176 delta~;
+#X obj 268 151 delta~;
+#X text 177 351 - signal to transform;
+#X text 177 391 - transformed signal signal;
+#X text 114 430 (none);
+#X obj 485 49 pddp/dsp;
+#X text 11 23 Transform signal into difference between successive samples
+;
+#X text 54 84 what's the increment between succesive samples of a
+line?;
+#X obj 7 503 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 21 1;
+#X connect 13 0 16 0;
 #X connect 14 0 15 0;
-#X connect 15 0 22 0;
+#X connect 15 0 13 0;
 #X connect 16 0 17 0;
-#X connect 17 0 21 0;
-#X connect 21 0 9 0;
-#X connect 22 0 7 0;
+#X connect 17 0 12 0;
+#X connect 18 0 24 0;
+#X connect 20 0 19 0;
+#X connect 22 0 21 0;
+#X connect 23 0 22 0;
+#X connect 24 0 23 0;
+#X connect 25 0 26 0;
+#X connect 26 0 32 0;
+#X connect 27 0 28 0;
+#X connect 28 0 31 0;
+#X connect 31 0 20 0;
+#X connect 32 0 18 0;

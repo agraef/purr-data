@@ -1,37 +1,72 @@
-#N canvas 0 26 521 352 10;
-#X text 15 35 Convert milliseconds to a number of samples (at the current
-sampling rate);
-#X msg 271 117 0 \, 1000 3000;
-#X floatatom 271 239 0 0 0 0 - - -;
-#X obj 271 137 line~;
-#X floatatom 87 138 0 0 0 0 - - -;
-#X floatatom 30 91 0 0 0 0 - - -;
-#X text 281 198 number of samples out (as a signal);
-#X text 281 162 number of milliseconds in (as a signal);
-#X text 23 68 Use as a calculator or for float parameters;
-#X obj 30 114 mstosamps~;
-#X obj 271 178 mstosamps~;
-#X obj 271 217 Snapshot~ 100;
-#X text 263 92 or convert signal values;
-#X text 57 88 number of milliseconds;
-#X text 116 139 number of samples;
-#X text 312 242 number of samples;
-#N canvas 247 115 494 367 META 0;
-#X text 12 165 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 135 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#N canvas 427 34 558 489 10;
+#X obj -1 461 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 287 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 620 258 359 239 META 0;
+#X text 7 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 7 -35 LICENSE SIBSD;
+#X text 7 85 AUTHOR Miller Puckette;
+#X text 7 125 RELEASE_DATE 1997;
+#X text 7 65 LIBRARY cyclone;
+#X text 7 145 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 7 25 OUTLET_0 signal;
+#X text 7 45 OUTLET_1 float;
+#X text 7 5 INLET_0 float signal;
+#X text 7 -15 DESCRIPTION convert milliseconds to number of samples
 ;
-#X text 12 5 KEYWORDS signal conversion max_compatible;
-#X text 12 45 DESCRIPTION convert milliseconds to a number of samples
-( at the current sampling rate );
-#X text 12 75 INLET_0 signal;
-#X text 12 95 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 115 AUTHOR Krzysztof Czaja;
-#X restore 471 330 pd META;
-#X connect 1 0 3 0;
-#X connect 3 0 10 0;
-#X connect 5 0 9 0;
-#X connect 9 1 4 0;
-#X connect 10 0 11 0;
-#X connect 11 0 2 0;
+#X text 7 -55 KEYWORDS signal sample samples milliseconds seconds;
+#X restore 502 463 pd META;
+#X obj -1 348 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 405 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 319 385 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 204 463 pd Related_objects;
+#X obj 78 298 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 80 357 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header mstosamps~ 3 12
+0 18 -204280 -1 0;
+#X obj 478 6 mstosamps~;
+#X msg 285 103 0 \, 1000 3000;
+#X floatatom 285 225 0 0 0 0 - - -;
+#X obj 285 123 line~;
+#X floatatom 70 170 0 0 0 0 - - -;
+#X floatatom 13 123 0 0 0 0 - - -;
+#X text 295 184 number of samples out (as a signal);
+#X text 295 148 number of milliseconds in (as a signal);
+#X obj 13 146 mstosamps~;
+#X obj 285 164 mstosamps~;
+#X obj 285 203 Snapshot~ 100;
+#X text 277 78 or convert signal values;
+#X text 40 120 number of milliseconds;
+#X text 105 169 number of samples;
+#X text 326 228 number of samples;
+#X text 111 297 float;
+#X text 178 297 - number of milliseconds;
+#X text 111 318 signal;
+#X text 178 319 - number of milliseconds in (as signal);
+#X text 111 358 signal;
+#X text 178 357 - number of samples out (as signal);
+#X text 111 426 (none);
+#X obj 480 50 pddp/dsp;
+#X text 10 79 Use as a calculator or for float parameters;
+#X text 111 379 float;
+#X text 178 379 - number of samples (given float);
+#X obj 80 379 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 11 23 Convert milliseconds to number of samples;
+#X obj 15 460 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 10 0 12 0;
+#X connect 12 0 18 0;
+#X connect 14 0 17 0;
+#X connect 17 1 13 0;
+#X connect 18 0 19 0;
+#X connect 19 0 11 0;

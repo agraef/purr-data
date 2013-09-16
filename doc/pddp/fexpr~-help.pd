@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 30 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header fexpr~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 195 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 244 494 344 META 0;
+#N canvas 487 280 494 344 META 0;
 #X text 12 140 LIBRARY internal;
 #X text 12 160 AUTHOR Shahrokh Yadegari;
 #X text 12 180 WEBSITE http://crca.ucsd.edu/~syadegar/expr.html;
@@ -27,7 +27,7 @@ level);
 0 13 -228856 -1 0;
 #X obj 0 489 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 107 482 428 109 Related_objects 0;
+#N canvas 221 514 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 expr;
@@ -47,9 +47,7 @@ level);
 #X text 98 203 signal;
 #X text 98 245 signal;
 #X text 98 377 signal;
-#X obj 480 3 fexpr~;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/fexpr~ -text
-pdpedia: fexpr~;
+#X obj 501 8 fexpr~;
 #X floatatom 240 67 0 0 0 0 - - -;
 #X floatatom 287 100 0 0 0 0 - - -;
 #X msg 287 69 -10;
@@ -146,15 +144,15 @@ an audible click in the output.;
 #X obj 166 117 v pr;
 #X obj 297 118 v r;
 #X obj 223 119 v b;
-#X floatatom 166 88 5 0 0 0 - - -;
-#X floatatom 297 90 5 0 0 0 - - -;
+#X floatatom 166 88 5 0 0 0 - - -, f 5;
+#X floatatom 297 90 5 0 0 0 - - -, f 5;
 #X msg 167 63 10;
 #X obj 221 60 expr 8./3;
 #X msg 118 186 set 1.2 2.3 4.4;
-#X floatatom 223 89 7 0 0 0 - - -;
+#X floatatom 223 89 7 0 0 0 - - -, f 7;
 #X msg 65 96 stop;
 #X msg 65 117 start;
-#X floatatom 359 90 5 0 0 0 - - -;
+#X floatatom 359 90 5 0 0 0 - - -, f 5;
 #X obj 359 119 v dt;
 #X msg 300 62 18;
 #X msg 355 63 0.01;
@@ -231,8 +229,8 @@ which generate chotic signals;
 #X obj 166 67 v pr;
 #X obj 297 68 v r;
 #X obj 223 69 v b;
-#X floatatom 166 38 5 0 0 0 - - -;
-#X floatatom 297 40 5 0 0 0 - - -;
+#X floatatom 166 38 5 0 0 0 - - -, f 5;
+#X floatatom 297 40 5 0 0 0 - - -, f 5;
 #X msg 167 13 10;
 #X obj 221 10 expr 8./3;
 #N canvas 0 0 450 300 (subpatch) 0;
@@ -248,10 +246,10 @@ which generate chotic signals;
 #X coords 0 -1 2047 1 100 60 1;
 #X restore 370 447 graph;
 #X msg 118 136 set 1.2 2.3 4.4;
-#X floatatom 223 39 7 0 0 0 - - -;
+#X floatatom 223 39 7 0 0 0 - - -, f 7;
 #X msg 65 46 stop;
 #X msg 65 67 start;
-#X floatatom 349 40 5 0 0 0 - - -;
+#X floatatom 349 40 5 0 0 0 - - -, f 5;
 #X obj 349 69 v dt;
 #X msg 300 12 18;
 #X msg 345 13 0.01;
@@ -391,7 +389,7 @@ or an "x" or "y" as specified in the following subpatch:;
 #N canvas 118 44 428 479 fexpr~_and_symbols 0;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-expr-array 515 float 2;
-#X coords 0 1 515 -1 200 140 1;
+#X coords 0 1 514 -1 200 140 1;
 #X restore 24 329 graph;
 #X obj 240 386 loadbang;
 #X obj 105 176 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -404,7 +402,7 @@ or an "x" or "y" as specified in the following subpatch:;
 specified by the left inlet.;
 #X text 124 174 click here first;
 #X obj 105 196 symbol \$0-expr~-array;
-#X floatatom 24 266 5 0 0 0 - - -;
+#X floatatom 24 266 5 0 0 0 - - -, f 5;
 #X text 21 37 Symbolic arguments like $s1 \, $s2 \, and so on are currently
 used in [expr] \, [expr~] \, and [fexpr~] to get the name of an array
 or table. You can also type the name of an array directly into [expr~]
@@ -412,7 +410,7 @@ or table. You can also type the name of an array directly into [expr~]
 will get interpreted as an operator ("e.g. \, my minus table").;
 #X text 8 2 [fexpr~] Using Symbolic Arguments;
 #X obj 24 224 expr $s2[$f1];
-#X floatatom 24 177 5 0 0 0 - - -;
+#X floatatom 24 177 5 0 0 0 - - -, f 5;
 #X obj 240 412 f \$0;
 #X msg 240 438 \; \$1-expr-array sinesum 512 1;
 #X connect 1 0 14 0;
@@ -429,8 +427,9 @@ They may be floats or symbols \, including the special variables noted
 above ($x1 \, $f2 \, etc.). The operators and functions available for
 use in [fexpr~] are listed below:;
 #X text 98 428 symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 481 56 pddp/dsp;
 #X obj 98 498 pddp/pddplink all_about_expr_if.pd -text expr_if;
 #X obj 98 518 pddp/pddplink all_about_expr_and_value.pd -text expr_and_value
 ;
@@ -438,17 +437,17 @@ use in [fexpr~] are listed below:;
 ;
 #X obj 167 468 pddp/pddplink all_about_expr_functions.pd -text all_about_expr_operators_and_functions
 ;
-#X connect 20 0 29 0;
-#X connect 21 0 45 1;
-#X connect 22 0 21 0;
-#X connect 25 0 45 0;
-#X connect 26 0 45 0;
-#X connect 27 0 26 0;
-#X connect 28 0 21 0;
-#X connect 29 0 45 0;
-#X connect 30 0 29 0;
-#X connect 31 0 29 0;
-#X connect 32 0 21 0;
-#X connect 35 0 23 0;
-#X connect 35 0 23 1;
-#X connect 45 0 35 0;
+#X connect 19 0 28 0;
+#X connect 20 0 44 1;
+#X connect 21 0 20 0;
+#X connect 24 0 44 0;
+#X connect 25 0 44 0;
+#X connect 26 0 25 0;
+#X connect 27 0 20 0;
+#X connect 28 0 44 0;
+#X connect 29 0 28 0;
+#X connect 30 0 28 0;
+#X connect 31 0 20 0;
+#X connect 34 0 22 0;
+#X connect 34 0 22 1;
+#X connect 44 0 34 0;

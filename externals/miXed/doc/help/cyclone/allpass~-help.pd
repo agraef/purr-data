@@ -1,7 +1,41 @@
-#N canvas 0 31 528 447 10;
-#X obj 36 30 allpass~;
-#X text 115 30 allpass filter;
-#X floatatom 150 303 0 0 100 0 - - -;
+#N canvas 253 41 553 668 10;
+#X obj -1 646 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 355 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 386 400 407 280 META 0;
+#X text 62 183 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 62 31 LICENSE SIBSD;
+#X text 62 164 AUTHOR Miller Puckette;
+#X text 62 202 RELEASE_DATE 1997;
+#X text 62 145 LIBRARY cyclone;
+#X text 62 69 INLET_0 signal;
+#X text 62 12 KEYWORDS filter pass;
+#X text 62 88 INLET_1 float delay time;
+#X text 62 107 INLET_2 float gain;
+#X text 62 126 OUTLET_0 signal;
+#X text 62 50 DESCRIPTION allpass filter for signal;
+#X text 62 221 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 498 648 pd META;
+#X obj -1 441 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 478 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 554 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 132 612 428 72 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 15 36 svf~;
+#X restore 201 648 pd Related_objects;
+#X obj 81 389 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header allpass~ 3 12 0
+18 -204280 -1 0;
+#X text 11 23 allpass filter for signal;
+#X floatatom 169 292 0 0 100 0 - - -;
 #N canvas 159 26 532 285 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -55,14 +89,14 @@
 #X connect 23 0 20 0;
 #X connect 26 0 5 0;
 #X connect 27 0 21 0;
-#X restore 125 325 pd output;
-#X msg 176 303 MUTE;
-#X floatatom 183 184 5 0 0 0 - - -;
-#X obj 125 72 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+#X restore 144 314 pd output;
+#X msg 195 292 MUTE;
+#X floatatom 202 173 5 0 0 0 - - -;
+#X obj 144 61 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
-#X obj 260 224 / 100;
-#X floatatom 260 205 5 0 0 0 - - -;
-#X text 154 71 generate short noisebursts;
+#X obj 261 220 / 100;
+#X floatatom 261 199 5 0 0 0 - - -;
+#X text 164 58 generate short noisebursts;
 #N canvas 0 22 290 283 burst 0;
 #X obj 48 173 noise~;
 #X obj 95 172 line~;
@@ -82,45 +116,48 @@
 #X connect 5 0 1 0;
 #X connect 6 0 4 0;
 #X connect 7 0 3 0;
-#X restore 125 100 pd burst;
-#X text 240 184 delay time;
-#X text 305 204 gain;
-#X text 175 125 del time / gain can also be;
-#X text 22 403 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 21 417 ___________________________________________________
+#X restore 144 89 pd burst;
+#X text 237 170 delay time;
+#X text 300 195 gain;
+#X text 198 110 del time / gain can also be;
+#X text 198 121 specified using signals when;
+#X text 197 133 using a signal to control gain;
+#X text 197 145 the gain coeff is ignored \, see below;
+#X msg 88 168 clear;
+#X text 54 149 clear buffer;
+#X obj 144 241 allpass~ 100 4 0.7 0;
+#X text 163 363 - signal to pass;
+#X text 115 451 signal;
+#X text 113 364 signal;
+#X text 96 490 1) float - max del time (default 10ms);
+#X text 96 503 2) float - initial del time;
+#X text 96 515 3) float - initial gain;
+#X text 96 527 4) float - gain coefficient;
+#X text 96 563 an all pass filter passes all frequencies equally \,
+but changes the phase relationship between various frequencies. It
+does this by varying its propogation delay with frequency.;
+#X text 169 452 - output of allpass filter with del time;
+#X obj 492 2 allpass~;
+#X obj 81 412 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X obj 81 450 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 113 387 float;
+#X text 163 387 - delay time;
+#X text 113 410 float;
+#X text 163 410 - gain;
+#X obj 482 50 pddp/dsp;
+#X obj 81 364 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 6 646 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 274 264 1 max del time (default 10ms);
-#X text 274 277 2 initial del time;
-#X text 274 289 3 initial gain;
-#X text 274 301 4 gain coefficient;
-#X text 175 136 specified using signals when;
-#X text 174 148 using a signal to control gain;
-#X text 174 160 the gain coeff is ignored \, see below;
-#X msg 71 179 clear;
-#X text 37 162 clear buffer;
-#X obj 125 252 allpass~ 100 4 0.7 0;
-#N canvas 430 169 494 402 META 0;
-#X text 12 195 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 165 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS signal max_compatible filter;
-#X text 12 45 DESCRIPTION allpass filter;
-#X text 12 85 INLET_1 signal;
-#X text 12 65 INLET_0 signal clear;
-#X text 12 105 INLET_2 signal;
-#X text 12 125 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 145 AUTHOR Krzysztof Czaja;
-#X restore 478 425 pd META;
-#X text 273 249 allpass~ accepts up to 4 args:;
-#X connect 2 0 3 1;
-#X connect 3 0 2 0;
-#X connect 4 0 3 2;
-#X connect 5 0 25 1;
-#X connect 6 0 10 0;
-#X connect 7 0 25 2;
-#X connect 8 0 7 0;
-#X connect 10 0 25 0;
-#X connect 23 0 25 0;
-#X connect 25 0 3 0;
+#X connect 10 0 11 1;
+#X connect 11 0 10 0;
+#X connect 12 0 11 2;
+#X connect 13 0 27 1;
+#X connect 14 0 18 0;
+#X connect 15 0 27 2;
+#X connect 16 0 15 0;
+#X connect 18 0 27 0;
+#X connect 25 0 27 0;
+#X connect 27 0 11 0;

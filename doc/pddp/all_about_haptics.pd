@@ -1,11 +1,11 @@
-#N canvas 0 0 448 374 10;
+#N canvas 428 33 448 374 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header haptics 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 352 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 374 245 494 136 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -14,7 +14,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION definition of haptics;
 #X restore 392 354 pd META;
-#N canvas 10 196 428 359 Related_objects 0;
+#N canvas 212 24 428 359 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Haptic Objects in Pd;

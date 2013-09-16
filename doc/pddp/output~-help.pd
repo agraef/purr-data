@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header output~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 307 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 368 META 0;
+#N canvas 483 261 494 368 META 0;
 #X text 12 225 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 265 HELP_PATCH_AUTHORS Jonathan Wilkes;
 #X text 12 205 AUTHOR Hans Christoph Steiner;
@@ -28,7 +28,7 @@
 #X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 502 (none);
-#N canvas 103 481 428 109 Related_objects 0;
+#N canvas 216 518 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 29 38 dac~;
@@ -41,8 +41,6 @@
 -162280 0;
 #X obj 78 342 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/output~ -text
-pdpedia: output~;
 #X obj 107 167 osc~ 200;
 #X obj 377 170 noise~;
 #X obj 106 205 output~;
@@ -83,7 +81,8 @@ and passed to this outlet.;
 ;
 #X obj 99 572 pddp/pddplink ../3.audio.examples/A05.output.subpatch.pd
 -text doc/3.audio.examples/A05.output.subpatch.pd;
-#X connect 13 0 15 0;
+#X obj 479 0 output~;
+#X connect 12 0 14 0;
+#X connect 12 0 14 1;
 #X connect 13 0 15 1;
-#X connect 14 0 16 1;
-#X connect 14 0 16 0;
+#X connect 13 0 15 0;

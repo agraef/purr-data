@@ -1,68 +1,99 @@
-#N canvas 0 26 738 369 10;
-#X msg 400 210 resume;
-#X msg 363 210 pause;
-#X msg 356 174 stop;
-#X text 15 35 Generate signal ramp or envelope;
-#X obj 62 219 loadbang;
-#X obj 62 241 metro 250;
-#X floatatom 24 288 5 0 0 0 - - -;
-#X obj 24 265 snapshot~;
-#X obj 368 262 loadbang;
-#X floatatom 330 331 5 0 0 0 - - -;
-#X obj 330 308 snapshot~;
-#X text 350 51 You can generate a ramp using a list of values \, set
-and initial value \, then send a list of value and target time pairs.
+#N canvas 420 35 558 585 10;
+#X obj -1 467 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 293 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 619 351 347 244 META 0;
+#X text 5 160 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 5 20 LICENSE SIBSD;
+#X text 5 140 AUTHOR Miller Puckette;
+#X text 5 180 RELEASE_DATE 1997;
+#X text 5 120 LIBRARY cyclone;
+#X text 5 100 OUTLET_0 signal;
+#X text 5 200 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 5 0 KEYWORDS signal generate ramp envelope;
+#X text 5 40 DESCRIPTION generate signal ramp or envelope;
+#X text 5 60 INLET_0 float message;
+#X text 5 80 INLET_1 float;
+#X restore 502 469 pd META;
+#X obj -1 385 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 422 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 305 484 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 205 469 pd Related_objects;
+#X obj 83 302 cnv 17 3 33 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 83 352 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 -91 cnv 15 552 40 empty \$0-pddp.cnv.header Line~ 3 12 0
+18 -204280 -1 0;
+#X obj 510 -81 Line~;
+#X text 11 -67 Generate signal ramp or envelope;
+#X msg 346 136 resume;
+#X msg 303 136 pause;
+#X msg 296 100 stop;
+#X obj 44 142 loadbang;
+#X obj 44 164 metro 250;
+#X floatatom 8 211 5 0 0 0 - - -, f 5;
+#X obj 8 188 snapshot~;
+#X obj 308 188 loadbang;
+#X floatatom 272 257 5 0 0 0 - - -, f 5;
+#X obj 272 234 snapshot~;
+#X msg 8 33 1;
+#X msg 36 33 0;
+#X msg 59 72 5000;
+#X msg 145 145 bang;
+#X text 93 81 sent to the left inlet;
+#X msg 272 41 0 \, 1 1000;
+#X obj 272 167 Line~ 0.5;
+#X obj 8 112 Line~ 0.5;
+#X msg 288 64 0 \, 10 1000 0 1000 0.1 5000;
+#X obj 308 210 metro 100;
+#X text 110 301 float;
+#X obj 83 394 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 110 352 float;
+#X text 172 352 - sets the te nex float send to the left inlet;
+#X text 172 301 - immediately sets value;
+#X text 110 394 signal;
+#X text 172 394 - ramps to value set amount of time;
+#X text 110 320 message;
+#X text 172 320 - can stop \, pause \, resume;
+#X text 91 437 1) float;
+#X text 172 437 - set the intial value;
+#X msg 399 172 bang;
+#X obj 479 -38 pddp/dsp;
+#X text 327 91 stop the line generation and cancel all pending actions
 ;
-#X text 83 85 a float on the left inlet sets immediately;
-#X text 451 207 pause and resume the line generation;
-#X text 387 172 stop the line generation and cancel all pending actions
+#X text 389 128 pause and resume the line generation;
+#X text 348 6 You can generate a ramp using a list of values \, set
+and initial value \, then send a list of value and target time pairs.
 ;
-#X text 88 189 argument sets the initial value;
-#X msg 26 86 1;
-#X msg 54 86 0;
-#X msg 78 136 5000;
-#X msg 163 222 bang;
-#X text 111 134 sets the time for the next float;
-#X text 112 149 sent to the left inlet;
-#X text 493 137 it will take up to 64 value-time pairs;
-#X msg 332 115 0 \, 1 1000;
-#X obj 330 241 Line~ 0.5;
-#X obj 26 189 Line~ 0.5;
-#X text 16 13 Line~;
-#X msg 348 138 0 \, 10 1000 0 1000 0.1 5000;
-#X obj 368 284 metro 100;
-#N canvas 462 244 494 403 META 0;
-#X text 12 245 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 5 GENRE help;
-#X text 12 185 LIBRARY external cyclone;
-#X text 12 205 AUTHOR krzYszcz;
-#X text 12 225 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 69 103 argument sets the initial value;
+#X text 93 57 sets the time for the next float;
+#X text 67 8 a float on the left inlet sets immediately;
+#X obj 10 467 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 25 NAME Line~;
-#X text 12 85 DESCRIPTION generate signal ramp or envelope;
-#X text 12 45 KEYWORDS signal conversion max_compatible ramp;
-#X text 12 105 INLET_0 float list stop pause resume;
-#X text 12 125 INLET_1 float;
-#X text 12 145 OUTLET_0 signal;
-#X text 12 165 OUTLET_1 bang;
-#X text 12 65 LICENSE SIBSD;
-#X restore 688 347 pd META;
-#X connect 0 0 24 0;
-#X connect 1 0 24 0;
-#X connect 2 0 24 0;
-#X connect 4 0 5 0;
-#X connect 5 0 7 0;
-#X connect 7 0 6 0;
-#X connect 8 0 28 0;
-#X connect 10 0 9 0;
-#X connect 16 0 25 0;
-#X connect 17 0 25 0;
-#X connect 18 0 25 1;
-#X connect 19 0 5 0;
-#X connect 19 0 28 0;
-#X connect 23 0 24 0;
-#X connect 24 0 10 0;
-#X connect 25 0 7 0;
-#X connect 27 0 24 0;
-#X connect 28 0 10 0;
+#X connect 11 0 27 0;
+#X connect 12 0 27 0;
+#X connect 13 0 27 0;
+#X connect 14 0 15 0;
+#X connect 15 0 17 0;
+#X connect 17 0 16 0;
+#X connect 18 0 30 0;
+#X connect 20 0 19 0;
+#X connect 21 0 28 0;
+#X connect 22 0 28 0;
+#X connect 23 0 28 1;
+#X connect 24 0 15 0;
+#X connect 26 0 27 0;
+#X connect 27 0 20 0;
+#X connect 28 0 17 0;
+#X connect 29 0 27 0;
+#X connect 30 0 20 0;
+#X connect 42 0 30 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header vsnapshot~ 3 12
 0 18 -204280 -1 0;
 #X obj 0 436 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 483 283 494 344 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ on demand;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 542 (none);
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 214 521 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 snapshot~;
@@ -40,9 +40,7 @@ on demand;
 -162280 0;
 #X text 11 23 precision conversion of a signal to a number on demand
 ;
-#X obj 463 3 vsnapshot~;
-#X obj 431 20 pddp/pddplink http://wiki.puredata.info/en/vsnapshot~
--text pdpedia: vsnapshot~;
+#X obj 476 10 vsnapshot~;
 #X floatatom 80 308 0 0 0 0 - - -;
 #X msg 91 233 bang;
 #X text 154 310 This output updates each time bang is clicked above.
@@ -65,9 +63,9 @@ a bang message.;
 #X text 168 464 - a bang takes the current sample from the signal \,
 converts it to a float \, and sends it to the outlet.;
 #X text 168 509 - the outgoing value.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 16 0 22 0;
-#X connect 18 0 22 0;
-#X connect 22 0 15 0;
-#X connect 22 0 15 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 477 56 pddp/dsp;
+#X connect 15 0 21 0;
+#X connect 17 0 21 0;
+#X connect 21 0 14 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bendin 3 12 0 18
 -204280 -1 0;
 #X obj 0 395 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 48 245 494 344 META 0;
+#N canvas 477 282 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 0 560 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 439 float;
-#N canvas 50 112 428 456 Related_objects 0;
+#N canvas 213 167 428 456 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [bendin] Related Objects;
@@ -63,24 +63,24 @@ by Olaf Matthes);
 #X obj 22 400 pddp/helplink cyclone/midiformat;
 #X obj 22 415 pddp/helplink cyclone/midiparse;
 #X obj 22 430 pddp/helplink cyclone/midiflush;
+#X obj 185 344 pitch;
+#X obj 186 365 chord;
 #X restore 101 597 pd Related_objects;
-#X obj 482 3 bendin;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/bendin -text
-pdpedia: bendin;
+#X obj 497 10 bendin;
 #X text 98 405 (none);
 #X obj 78 439 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 78 467 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 467 float;
-#X floatatom 148 171 5 0 0 0 - - -;
-#X floatatom 191 171 5 0 0 0 - - -;
+#X floatatom 148 171 5 0 0 0 - - -, f 5;
+#X floatatom 191 171 5 0 0 0 - - -, f 5;
 #X obj 148 144 bendin;
 #X text 85 221 The [bendin] object reads incoming pitch bend values
 and reports them. If started with no arguments it reports the channel
 number through the right outlet.;
 #X obj 260 144 bendin 2;
-#X floatatom 260 171 5 0 0 0 - - -;
+#X floatatom 260 171 5 0 0 0 - - -, f 5;
 #X text 311 171 <-- pitch bend values on channel 2;
 #X obj 99 564 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
 ;
@@ -93,7 +93,8 @@ show the second (right) outlet.;
 #X text 168 467 - MIDI channel number (available unless argument is
 given).;
 #X text 80 514 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 17 0 15 0;
-#X connect 17 1 16 0;
-#X connect 19 0 20 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 16 0 14 0;
+#X connect 16 1 15 0;
+#X connect 18 0 19 0;

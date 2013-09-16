@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pipe 3 12 0 18 -204280
 -1 0;
 #X obj 0 148 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 202 494 386 META 0;
+#N canvas 485 247 494 386 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -30,7 +30,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 104 322 428 267 Related_objects 0;
+#N canvas 215 361 428 267 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 23 43 delay;
@@ -54,9 +54,7 @@ in a single library.;
 -162280 0;
 #X obj 78 374 cnv 17 3 17 empty \$0-pddp.cnv.let.r r 5 9 0 16 -228856
 -162280 0;
-#X obj 492 3 pipe;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/pipe -text
-pdpedia: pipe;
+#X obj 513 11 pipe;
 #X text 98 206 symbol;
 #X text 98 232 pointer;
 #X text 98 259 list;
@@ -77,9 +75,9 @@ pdpedia: pipe;
 #X text 115 282 A pipe for one float \, and one symbol.;
 #X msg 20 159 symbol cat;
 #X msg 92 159 symbol dog;
-#X symbolatom 20 210 10 0 0 0 - - -;
-#X symbolatom 95 303 10 0 0 0 - - -;
-#X floatatom 20 303 5 0 0 0 - - -;
+#X symbolatom 20 210 10 0 0 0 - - -, f 10;
+#X symbolatom 95 303 10 0 0 0 - - -, f 10;
+#X floatatom 20 303 5 0 0 0 - - -, f 5;
 #X msg 31 261 100 dog;
 #X msg 20 240 42 cat;
 #X floatatom 21 386 0 0 0 0 - - -;
@@ -123,22 +121,22 @@ rightmost inlet.;
 #X text 168 259 - a list to the left inlet will be distributed among
 [pipe]'s inlets.;
 #X obj 95 104 pipe 1000;
-#X floatatom 126 53 5 0 0 0 - - -;
+#X floatatom 126 53 5 0 0 0 - - -, f 5;
 #X msg 95 53 1;
-#X floatatom 95 126 5 0 0 0 - - -;
-#X floatatom 162 53 5 0 0 0 - - -;
+#X floatatom 95 126 5 0 0 0 - - -, f 5;
+#X floatatom 162 53 5 0 0 0 - - -, f 5;
 #N canvas 80 25 428 536 More_info 0;
 #X obj 1 451 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
 0 14 -204280 -1 0;
 #X text 20 80 Like water running through a pipe \, it goes in one end...runs
 the length of the pipe...then comes out the other end.;
-#X floatatom 23 127 5 0 0 0 - - -;
+#X floatatom 23 127 5 0 0 0 - - -, f 5;
 #X obj 23 148 pipe 20;
-#X floatatom 23 170 5 0 0 0 - - -;
+#X floatatom 23 170 5 0 0 0 - - -, f 5;
 #X text 20 38 The left inlet accepts numbers \, symbols \, pointers
 \, messages \, and lists. The right inlet adjusts the delay time (the
 length of the pipe).;
-#X floatatom 69 127 5 0 0 0 - - -;
+#X floatatom 69 127 5 0 0 0 - - -, f 5;
 #X text 111 126 Adjust the length of the pipe.;
 #X floatatom 23 298 0 0 0 0 - - -;
 #X obj 23 391 pipe 2000;
@@ -214,11 +212,12 @@ below for more about the arguments:;
 #X text 98 327 float;
 #X text 98 340 symbol;
 #X text 98 353 pointer;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 25 0 28 0;
-#X connect 26 0 25 0;
-#X connect 27 0 25 0;
-#X connect 29 0 25 1;
-#X connect 39 0 25 0;
-#X connect 40 0 25 0;
-#X connect 49 0 25 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 24 0 27 0;
+#X connect 25 0 24 0;
+#X connect 26 0 24 0;
+#X connect 28 0 24 1;
+#X connect 38 0 24 0;
+#X connect 39 0 24 0;
+#X connect 48 0 24 0;

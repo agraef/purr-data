@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header realtime 3 12 0
 18 -204280 -1 0;
 #X obj 0 376 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 243 494 372 META 0;
+#N canvas 479 256 494 372 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 185 RELEASE_DATE 2009-06-12;
@@ -30,7 +30,7 @@ for Pd version 0.42.;
 #X obj 0 537 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 514 (none);
-#N canvas 107 323 428 268 Related_objects 0;
+#N canvas 210 352 428 268 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [realtime] Related Objects;
@@ -56,9 +56,7 @@ is:;
 -162280 0;
 #X obj 78 429 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 466 3 realtime;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/realtime -text
-pdpedia: realtime;
+#X obj 486 11 realtime;
 #X msg 119 160 bang;
 #X msg 94 138 bang;
 #X floatatom 94 204 0 0 0 0 - - -;
@@ -154,7 +152,8 @@ most other objects in pd \, the left inlet of [realtime] is a "cold"
 inlet \, i.e. \, it does not trigger the output.;
 #X text 11 23 ask operating system for elapsed real time;
 #X text 168 481 - elapsed time in milliseconds.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 15 0 21 1;
-#X connect 16 0 21 0;
-#X connect 21 0 17 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 14 0 20 1;
+#X connect 15 0 20 0;
+#X connect 20 0 16 0;

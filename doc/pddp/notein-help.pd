@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header notein 3 12 0 18
 -204280 -1 0;
 #X obj 0 391 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 245 494 360 META 0;
+#N canvas 482 269 494 360 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 428 390 Related_objects 0;
+#N canvas 218 234 428 390 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [notein] Related Objects;
@@ -67,13 +67,11 @@ by Olaf Matthes);
 #X text 98 427 float;
 #X obj 78 428 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 484 3 notein;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/notein -text
-pdpedia: notein;
+#X obj 498 11 notein;
 #X obj 43 107 notein;
-#X floatatom 43 175 5 0 0 0 - - -;
-#X floatatom 59 154 5 0 0 0 - - -;
-#X floatatom 76 133 5 0 0 0 - - -;
+#X floatatom 43 175 5 0 0 0 - - -, f 5;
+#X floatatom 59 154 5 0 0 0 - - -, f 5;
+#X floatatom 76 133 5 0 0 0 - - -, f 5;
 #X text 40 56 The [notein] object reads incoming MIDI notes and reports
 their note number \, velocity and channel number. Without the argument
 it reads from all MIDI channels (omni).;
@@ -84,8 +82,8 @@ it reads from all MIDI channels (omni).;
 #X text 98 477 float;
 #X obj 78 478 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
 -162280 0;
-#X floatatom 188 282 5 0 0 0 - - -;
-#X floatatom 233 282 5 0 0 0 - - -;
+#X floatatom 188 282 5 0 0 0 - - -, f 5;
+#X floatatom 233 282 5 0 0 0 - - -, f 5;
 #X obj 188 249 notein 1;
 #X text 251 248 notein listening only to channel 1;
 #X text 153 295 note number;
@@ -98,8 +96,8 @@ it reads from all MIDI channels (omni).;
 Therefore [notein] reports each note twice (note-on when a key on your
 keyboard is pressed and note-off when the key is released). This could
 be sometimes misleading when tracking notes.;
-#X floatatom 190 355 5 0 0 0 - - -;
-#X floatatom 241 355 5 0 0 0 - - -;
+#X floatatom 190 355 5 0 0 0 - - -, f 5;
+#X floatatom 241 355 5 0 0 0 - - -, f 5;
 #X text 155 368 note number;
 #X text 251 368 velocity;
 #X obj 190 322 notein 17;
@@ -116,11 +114,12 @@ if no creation argument is specified.;
 #X text 168 525 - the MIDI channel number from which to read. If no
 argument is provided [notein] reads from all channels (and sprouts
 a third inlet).;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 12 0 13 0;
-#X connect 12 1 14 0;
-#X connect 12 2 15 0;
-#X connect 24 0 22 0;
-#X connect 24 1 23 0;
-#X connect 36 0 32 0;
-#X connect 36 1 33 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 11 0 12 0;
+#X connect 11 1 13 0;
+#X connect 11 2 14 0;
+#X connect 23 0 21 0;
+#X connect 23 1 22 0;
+#X connect 35 0 31 0;
+#X connect 35 1 32 0;

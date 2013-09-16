@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header midiout 3 12 0 18
 -204280 -1 0;
 #X obj 0 421 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 47 253 494 344 META 0;
+#N canvas 486 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2009-06-12;
@@ -27,7 +27,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 428 435 Related_objects 0;
+#N canvas 210 192 428 435 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -78,11 +78,9 @@ by Olaf Matthes);
 #X obj 220 244 midiout;
 #X text 168 268 use this to output raw MIDI;
 #X text 163 288 (the second inlet is the port;
-#X floatatom 220 212 5 0 0 0 - - -;
-#X floatatom 259 212 5 0 0 0 - - -;
-#X obj 477 3 midiout;
-#X obj 447 20 pddp/pddplink http://wiki.puredata.info/en/midiout -text
-pdpedia: midiout;
+#X floatatom 220 212 5 0 0 0 - - -, f 5;
+#X floatatom 259 212 5 0 0 0 - - -, f 5;
+#X obj 495 11 midiout;
 #X text 168 482 - port number;
 #X text 168 457 - ???;
 #X text 168 525 - ???;

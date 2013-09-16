@@ -1,13 +1,13 @@
 #N struct drawpolygon-help-template float x float y float weasel float
 dog float cat float vis;
-#N canvas 0 0 555 619 10;
+#N canvas 432 31 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header drawpolygon 3 12
 0 18 -204280 -1 0;
 #X obj 0 147 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 246 494 344 META 0;
+#N canvas 487 277 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 145 RELEASE_DATE 2009-06-12;
@@ -29,7 +29,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 516 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 71 454 428 156 Related_objects 0;
+#N canvas 216 468 428 156 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 92 42 struct;
@@ -54,9 +54,7 @@ of the number. A zero makes it invisible. Any nonzero value makes it
 visible.;
 #X text 98 226 (none);
 #X text 179 80 <- subpatch to display the data structures;
-#X obj 449 3 drawpolygon;
-#X obj 420 20 pddp/pddplink http://wiki.puredata.info/en/drawpolygon
--text pdpedia: drawpolygon;
+#X obj 473 10 drawpolygon;
 #N canvas 23 258 428 340 drawpolygon-help-data 0;
 #X scalar drawpolygon-help-template 101 41 0 60 100 1 \;;
 #X scalar drawpolygon-help-template 301 44 1 80 100 1 \;;

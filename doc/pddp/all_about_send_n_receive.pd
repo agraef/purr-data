@@ -1,11 +1,11 @@
-#N canvas 0 0 448 523 10;
+#N canvas 430 34 448 523 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header send_and_receive
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 501 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 376 361 494 174 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -16,7 +16,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 DESCRIPTION additional information for send and receive
 ;
 #X restore 392 503 pd META;
-#N canvas 14 368 428 126 Related_objects 0;
+#N canvas 217 407 428 126 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X obj 22 42 pddp/helplink cyclone/universal;
@@ -36,32 +36,32 @@ you build or between objects where patch cords are not possible.;
 message sent within a single patch - from a [send] object to a [receive]
 object in the same patch. But the functionality of these objects goes
 far beyond the scope of a single patch.;
-#X floatatom 42 110 5 0 0 0 - - -;
-#X floatatom 96 136 5 0 0 0 - - -;
+#X floatatom 42 110 5 0 0 0 - - -, f 5;
+#X floatatom 96 136 5 0 0 0 - - -, f 5;
 #X obj 42 136 s aNum;
 #X obj 96 110 r aNum;
 #X obj 170 135 s aSymbol;
 #X msg 170 110 symbol hello;
 #X obj 267 110 r aSymbol;
-#X symbolatom 267 137 10 0 0 0 - - -;
+#X symbolatom 267 137 10 0 0 0 - - -, f 10;
 #X obj 16 262 send one_send;
 #X obj 16 306 receive one_send;
 #X obj 19 244 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 3800 0;
+-1 -1 0 0;
 #X obj 153 262 send one_send;
 #X obj 156 244 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 1200 0;
+-1 -1 0 0;
 #X obj 291 262 send one_send;
 #X obj 294 244 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 3200 0;
+-1 -1 0 0;
 #X obj 19 327 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 3200 1;
+-1 -1 0 1;
 #X obj 153 306 receive one_send;
 #X obj 156 327 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 3200 1;
+-1 -1 0 1;
 #X obj 291 306 receive one_send;
 #X obj 294 327 hsl 128 15 0 127 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 3200 1;
+-1 -1 0 1;
 #X text 17 289 All [receive]s of the same name will receive the "messages":
 ;
 #X text 17 224 You can have multiple [send]s with the same name:;
@@ -83,7 +83,7 @@ the following information about 'scope' and 'locality'.;
 #X obj 28 66 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
 #X obj 28 91 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -6 0 10
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 28 117 vsl 15 128 0 127 0 0 empty empty empty 0 -8 0 8 -262144
 -1 -1 0 1;
 #X obj 21 386 hdl 15 1 0 8 empty empty empty 0 -6 0 8 -262144 -1 -1
@@ -113,8 +113,8 @@ and choosing "Properties" from the menu that appears.;
 messages without attaching a separate [send] or [receive] object to
 them with a patch cord.;
 #X text 230 242 THE OL'FASHION WAY;
-#X floatatom 236 266 5 0 0 0 - - -;
-#X floatatom 290 293 5 0 0 0 - - -;
+#X floatatom 236 266 5 0 0 0 - - -, f 5;
+#X floatatom 290 293 5 0 0 0 - - -, f 5;
 #X obj 236 290 s a;
 #X obj 290 265 r a;
 #X text 230 325 USING THESE OBJECTS' INTERNAL SEND AND RECEIVE FUNCTIONALITY
@@ -122,9 +122,9 @@ them with a patch cord.;
 #X text 335 269 As you see here \, these number boxes are linked together
 with send and receives objects.;
 #X obj 241 347 nbx 5 14 -1e+37 1e+37 0 0 b empty empty 0 -6 0 10 -262144
--1 -1 0 256;
+-1 -1 0 256 0;
 #X obj 303 347 nbx 5 14 -1e+37 1e+37 0 0 empty b empty 0 -6 0 10 -262144
--1 -1 0 256;
+-1 -1 0 256 0;
 #X text 250 370 These number boxes are linked together via their 'send'
 or 'receive' property.;
 #X text 258 8 Some objects in Pd contain their own internal send and

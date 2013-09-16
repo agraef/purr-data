@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
-#X obj 0 595 cnv 15 552 21 foo \$0-pddp.cnv.footer empty 20 12 0 14
+#N canvas 312 24 559 420 10;
+#X obj 0 389 cnv 15 552 21 foo \$0-pddp.cnv.footer empty 20 12 0 14
 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header abs 3 12 0 18 -204280
 -1 0;
-#X obj 0 452 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 246 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 48 237 507 320 META 0;
+#N canvas 355 138 507 278 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 35 LICENSE SIBSD;
@@ -20,15 +20,15 @@ for Pd version 0.42.;
 #X text 12 75 INLET_0 float;
 #X text 12 95 OUTLET_0 float;
 #X text 12 175 RELEASE_DATE 1997;
-#X restore 500 598 pd META;
-#X obj 0 511 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 392 pd META;
+#X obj 0 305 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 542 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 336 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 570 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 364 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X text 98 546 (none);
-#N canvas 102 479 428 109 Related_objects 0;
+#X text 98 340 (none);
+#N canvas 214 304 428 109 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 236 42 sqrt;
@@ -44,28 +44,26 @@ for Pd version 0.42.;
 #X obj 181 42 exp;
 #X text 7 1 [abs] Related Objects;
 #X obj 208 42 log;
-#X restore 102 598 pd Related_objects;
-#X obj 78 460 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 214 391 pd Related_objects;
+#X obj 78 254 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 479 list;
-#X text 98 518 float;
-#X obj 78 519 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X text 98 273 list;
+#X text 98 312 float;
+#X obj 78 313 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X floatatom 239 225 0 0 0 0 - - -;
-#X floatatom 239 168 0 0 0 0 - - -;
-#X text 112 248 [abs] will output the absolute value of a number.;
-#X obj 239 198 abs;
-#X obj 492 4 abs;
-#X obj 465 21 pddp/pddplink http://wiki.puredata.info/en/abs -text
-pdpedia: abs;
+#X floatatom 239 152 0 0 0 0 - - -;
+#X floatatom 239 95 0 0 0 0 - - -;
+#X text 112 175 [abs] will output the absolute value of a number.;
+#X obj 239 125 abs;
+#X obj 519 9 abs;
 #X text 11 24 absolute value;
-#X text 168 479 - a list will be truncated \, and the first element
+#X text 168 273 - a list will be truncated \, and the first element
 will be used as input.;
-#X text 168 518 - the absolute value of the number given at the inlet.
+#X text 168 312 - the absolute value of the number given at the inlet.
 ;
-#X text 98 459 float;
-#X text 168 459 - the incoming value.;
-#X obj 4 598 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X text 98 253 float;
+#X text 168 253 - the incoming value.;
+#X obj 4 392 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X connect 14 0 16 0;
 #X connect 16 0 13 0;

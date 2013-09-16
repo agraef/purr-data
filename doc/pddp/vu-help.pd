@@ -1,11 +1,11 @@
-#N canvas 391 40 558 622 10;
+#N canvas 429 34 558 622 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header vu 3 12 0 18 -204280
 -1 0;
 #X obj 0 287 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 246 494 344 META 0;
+#N canvas 488 283 494 344 META 0;
 #X text 12 155 LIBRARY internal;
 #X text 12 25 LICENSE SIBSD;
 #X text 12 175 AUTHOR Thomas Musil;
@@ -27,7 +27,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 572 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 81 462 428 126 Related_objects 0;
+#N canvas 207 509 428 126 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [vu] Related Objects;
@@ -42,8 +42,6 @@ to conform to the PDDP template for Pd version 0.42.;
 -162280 0;
 #X obj 78 396 cnv 17 3 30 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/vu -text pdpedia:
-vu;
 #X text 98 312 list;
 #X text 98 396 float;
 #X text 98 412 list;
@@ -362,14 +360,14 @@ its appearance.;
 ;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 30 0 37 0;
-#X connect 31 0 42 0;
-#X connect 32 0 33 0;
-#X connect 32 1 34 0;
-#X connect 37 0 36 0;
-#X connect 38 0 39 0;
-#X connect 39 0 37 0;
-#X connect 39 1 37 1;
-#X connect 40 0 32 0;
-#X connect 41 0 32 1;
-#X connect 42 0 32 0;
+#X connect 29 0 36 0;
+#X connect 30 0 41 0;
+#X connect 31 0 32 0;
+#X connect 31 1 33 0;
+#X connect 36 0 35 0;
+#X connect 37 0 38 0;
+#X connect 38 0 36 0;
+#X connect 38 1 36 1;
+#X connect 39 0 31 0;
+#X connect 40 0 31 1;
+#X connect 41 0 31 0;

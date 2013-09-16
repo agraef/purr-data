@@ -1,13 +1,13 @@
 #N struct template2 float x float y float z float q float zz;
 #N struct template1 float x float y float z float q;
-#N canvas 0 0 555 619 10;
+#N canvas 428 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pointer 3 12 0 18
 -204280 -1 0;
 #X obj 0 142 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 48 245 496 366 META 0;
+#N canvas 478 262 496 366 META 0;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -32,7 +32,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 54 483 428 109 Related_objects 0;
+#N canvas 213 516 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [pointer] Related Objects;
@@ -51,9 +51,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 336 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 469 3 pointer;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/pointer -text
-pdpedia: pointer;
+#X obj 494 11 pointer;
 #X text 98 149 bang;
 #X text 98 176 traverse;
 #X text 98 227 next;
@@ -174,13 +172,14 @@ on the class of scalar being output.;
 #X text 168 149 - outputs the current value of the pointer.;
 #X text 98 495 n) float;
 #X text 93 510 symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 245 575 pddp/pddplink scalar-help.pd;
-#X connect 31 0 34 0;
-#X connect 31 1 37 0;
-#X connect 32 0 31 0;
-#X connect 33 0 31 0;
-#X connect 35 0 31 0;
-#X connect 36 0 31 0;
-#X connect 41 0 31 0;
-#X connect 50 0 31 0;
+#X connect 30 0 33 0;
+#X connect 30 1 36 0;
+#X connect 31 0 30 0;
+#X connect 32 0 30 0;
+#X connect 34 0 30 0;
+#X connect 35 0 30 0;
+#X connect 40 0 30 0;
+#X connect 49 0 30 0;

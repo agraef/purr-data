@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 426 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header choice 3 12 0 18
 -204280 -1 0;
 #X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 247 494 344 META 0;
+#N canvas 478 286 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 297 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 103 479 428 110 Related_objects 0;
+#N canvas 213 517 428 110 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [choice] Related Objects;
@@ -37,9 +37,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 391 cnv 17 3 50 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 391 float;
-#X obj 484 3 choice;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/choice -text
-pdpedia: choice;
+#X obj 497 10 choice;
 #X obj 98 210 choice;
 #X msg 136 101 print;
 #X msg 124 78 clear;
@@ -90,18 +88,19 @@ having up to ten elements.;
 #X text 168 467 - (optional) if given a nonzero creation argument \,
 [choice] tries to avoid repetitious outputs by weighting less recently
 output vectors preferentially.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 13 0 23 0;
-#X connect 14 0 13 0;
-#X connect 15 0 13 0;
-#X connect 15 0 24 0;
-#X connect 16 0 13 0;
-#X connect 16 0 24 0;
-#X connect 17 0 13 0;
-#X connect 17 0 24 0;
-#X connect 18 0 17 2;
-#X connect 19 0 17 1;
-#X connect 20 0 21 1;
-#X connect 21 0 17 0;
-#X connect 22 0 21 0;
-#X connect 24 0 25 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 22 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 14 0 23 0;
+#X connect 15 0 12 0;
+#X connect 15 0 23 0;
+#X connect 16 0 12 0;
+#X connect 16 0 23 0;
+#X connect 17 0 16 2;
+#X connect 18 0 16 1;
+#X connect 19 0 20 1;
+#X connect 20 0 16 0;
+#X connect 21 0 20 0;
+#X connect 23 0 24 0;

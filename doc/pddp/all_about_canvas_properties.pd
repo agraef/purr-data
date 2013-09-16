@@ -1,12 +1,12 @@
 #N struct xy-units float x float y;
-#N canvas 0 0 448 318 10;
+#N canvas 429 34 448 318 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header canvas_properties
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 1 296 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 445 194 426 134 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -16,7 +16,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 45 DESCRIPTION settings for the visual appearance of a Pd
 canvas;
 #X restore 392 298 pd META;
-#N canvas 10 196 428 114 Related_objects 0;
+#N canvas 217 212 428 114 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Canvas Properties- Related Objects;
@@ -43,7 +43,7 @@ if you want to use it later as an abstraction).;
 1 18 -261106 -33289 0;
 #X text 7 1 Some examples of graph on parent (gop) subpatches;
 #N canvas 0 0 414 354 gop_subpatch 0;
-#X floatatom 105 126 5 0 0 1 count - -;
+#X floatatom 105 126 5 0 0 1 count - -, f 5;
 #X obj 105 104 inlet;
 #X obj 105 171 + 1;
 #X msg 170 145 set \$1;
@@ -106,8 +106,8 @@ in the display of this array.;
 #X text 7 1 X and Y Units per Pixel;
 #X text 19 357 1) Right-click on an empty portion of this subpatch
 ;
-#X floatatom 254 191 5 0 0 2 x #0-x -;
-#X floatatom 293 191 5 0 0 2 y #0-y -;
+#X floatatom 254 191 5 0 0 2 x #0-x -, f 5;
+#X floatatom 293 191 5 0 0 2 y #0-y -, f 5;
 #X obj 293 220 t b a;
 #X obj 274 243 set xy-units x y;
 #N canvas 0 0 450 300 xy-units 0;

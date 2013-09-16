@@ -1,16 +1,62 @@
-#N canvas 0 26 712 482 10;
-#X floatatom 367 358 0 0 0 0 - - -;
-#X obj 250 348 noise~;
-#X obj 250 415 *~ 0.05;
-#X obj 250 448 dac~;
-#X obj 84 149 sig~ 1;
-#X text 231 151 Length (samps);
-#X obj 516 56 loadbang;
-#X msg 50 107 clear;
-#X floatatom 209 149 0 0 0 0 - - -;
-#X floatatom 160 120 0 0 0 0 - - -;
-#X obj 516 83 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#N canvas 276 82 555 596 10;
+#X declare -lib iemmatrix;
+#X obj -1 690 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 432 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 392 384 433 268 META 0;
+#X text 27 89 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 27 -55 LICENSE SIBSD;
+#X text 27 71 AUTHOR Miller Puckette;
+#X text 27 107 RELEASE_DATE 1997;
+#X text 27 53 LIBRARY cyclone;
+#X text 27 -37 DESCRIPTION converts all signal values to positive values
+;
+#X text 27 -86 KEYWORDS signal buffer buffir buff FIR finite impulse
+response convolution filter;
+#X text 27 -19 INLET_0 signal;
+#X text 27 -1 INLET_1 float;
+#X text 27 17 INLET_2 float;
+#X text 27 35 OUTLET_0 signal;
+#X text 27 125 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 502 693 pd META;
+#X obj -1 515 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 552 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 628 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 162 548 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 11 28 fir;
+#X restore 202 693 pd Related_objects;
+#X obj 79 464 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 554 40 empty \$0-pddp.cnv.header buffir~ 3 12 0
+18 -204280 -1 0;
+#X text 105 440 signal;
+#X text 163 439 - signal to pass to FIR;
+#X text 105 523 signal;
+#X obj 79 485 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 105 465 float;
+#X obj 79 524 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 105 487 float;
+#X text 163 487 - Length (samples);
+#X text 163 463 - Offset (samples);
+#X text 163 522 - based on buffer \, offset \, length;
+#X obj 39 132 sig~ 1;
+#X text 169 136 Length (samps);
+#X obj 350 114 loadbang;
+#X msg 28 82 clear;
+#X floatatom 145 136 0 0 0 0 - - -;
+#X floatatom 86 105 0 0 0 0 - - -;
+#X obj 350 141 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
 #N canvas 480 212 405 395 genRamp 0;
 #X obj 39 197 sel 0 1;
 #X obj 81 254 i;
@@ -50,53 +96,56 @@
 #X connect 13 0 0 0;
 #X connect 14 0 8 0;
 #X connect 15 0 7 0;
-#X restore 516 108 pd genRamp;
-#X text 42 88 clears input history only;
-#X text 186 115 Offset (samps);
-#X text 387 109 Generate new fir =>;
-#X text 178 200 Initial args: buffer \, offset(samps) \, length(samps)
-;
-#X text 181 225 256 point max len;
-#X text 8 275 integral of buffer from offset to offset + length;
-#X text 399 357 number of samples in impulse;
-#X obj 250 383 buffir~ fir_buf 0 10;
-#X obj 50 200 buffir~ fir_buf 0 32;
-#X obj 516 135 peek~ fir_buf;
-#X obj 403 269 table fir_buf 128;
-#X obj 50 229 Snapshot~ 100;
-#X obj 52 253 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256;
-#X text 15 19 a table based FIR convolution filter;
-#X text 16 42 buffir~ is a table based FIR (finite impulse response)
+#X restore 350 166 pd genRamp;
+#X text 20 64 clears input history only;
+#X text 112 104 Offset (samps);
+#X text 121 207 256 point max len;
+#X text 10 274 integral of buffer from offset to offset + length;
+#X obj 28 176 buffir~ fir_buf 0 32;
+#X obj 350 193 peek~ fir_buf;
+#X obj 368 363 table fir_buf 128;
+#X obj 28 205 Snapshot~ 100;
+#X obj 28 229 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
+-262144 -1 -1 0 256 0;
+#X floatatom 146 305 0 0 0 0 - - -;
+#X obj 29 295 noise~;
+#X obj 29 362 *~ 0.05;
+#X obj 29 395 dac~;
+#X obj 29 330 buffir~ fir_buf 0 10;
+#X text 86 568 1) table;
+#X text 163 567 - buffer (max size 256);
+#X text 87 585 2) float;
+#X text 163 585 - offset;
+#X text 87 602 3) float;
+#X text 163 602 - length;
+#X text 102 638 buffir~ is a table based FIR (finite impulse response)
 filter. an input signal is convolved with n samples of a buffer. Currently
 the maximum number of points is 256;
-#X text 343 295 table is a 128-point downwards ramp with random values
-here and there with amplitude from 1 to 0;
-#N canvas 309 151 494 411 META 0;
-#X text 12 195 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 165 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X obj 498 2 buffir~;
+#X obj 483 49 pddp/dsp;
+#X text 11 23 table based FIR (finite impulse response) convolution
+filter;
+#X obj 79 443 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 337 319 table is a 128-point downwards ramp with random values
+here and there with amplitude from 1 to 0;
+#X text 172 298 number of samples in impulse;
+#X text 155 159 Initial args: buffer \, offset(samps) \, length(samps)
 ;
-#X text 12 5 KEYWORDS signal filter array max_compatible;
-#X text 12 45 DESCRIPTION a table based FIR convolution filter;
-#X text 12 125 OUTLET_0 signal;
-#X text 12 65 INLET_0 signal clear;
-#X text 12 85 INLET_1 signal;
-#X text 12 105 INLET_2 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 145 AUTHOR Krzysztof Czaja;
-#X restore 663 461 pd META;
-#X connect 0 0 19 2;
-#X connect 1 0 19 0;
-#X connect 2 0 3 0;
-#X connect 2 0 3 1;
-#X connect 4 0 20 0;
-#X connect 6 0 10 0;
-#X connect 7 0 20 0;
-#X connect 8 0 20 2;
-#X connect 9 0 20 1;
-#X connect 10 0 11 0;
-#X connect 11 0 21 0;
-#X connect 19 0 2 0;
-#X connect 20 0 23 0;
-#X connect 23 0 24 0;
+#X text 418 165 Generate new fir;
+#X obj 7 692 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 19 0 31 0;
+#X connect 21 0 25 0;
+#X connect 22 0 31 0;
+#X connect 23 0 31 2;
+#X connect 24 0 31 1;
+#X connect 25 0 26 0;
+#X connect 26 0 32 0;
+#X connect 31 0 34 0;
+#X connect 34 0 35 0;
+#X connect 36 0 40 2;
+#X connect 37 0 40 0;
+#X connect 38 0 39 0;
+#X connect 38 0 39 1;
+#X connect 40 0 38 0;

@@ -1,63 +1,98 @@
-#N canvas 0 26 768 482 10;
-#X text 24 -2 Take base to the exponent power using signals;
-#X obj 471 264 *~ 0.2;
-#X msg 471 143 -7 \, 1 1500 -1 1500 -7 300;
-#X obj 509 206 sig~ 2;
-#X obj 471 240 pow~;
-#X obj 47 94 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#N canvas 428 35 558 537 10;
+#X obj -1 674 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 423 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 598 305 385 244 META 0;
+#X text 7 118 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 7 -15 LICENSE SIBSD;
+#X text 7 99 AUTHOR Miller Puckette;
+#X text 7 137 RELEASE_DATE 1997;
+#X text 7 80 LIBRARY cyclone;
+#X text 7 156 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 7 61 OUTLET_0 signal;
+#X text 7 42 INLET_1 flaot signal;
+#X text 7 -34 KEYWORDS signal power exponent base;
+#X text 7 4 DESCRIPTION take base to the exponent power using signals
+;
+#X text 7 23 INLET_0 signal;
+#X restore 503 676 pd META;
+#X obj -1 505 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 542 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 582 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 328 438 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 208 676 pd Related_objects;
+#X obj 81 432 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 81 459 cnv 17 3 35 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header pow~ 3 12 0 18
+-204280 -1 0;
+#X obj 514 8 pow~;
+#X text 11 23 Take base to the exponent power using signals;
+#X text 107 432 signal;
+#X text 181 432 - signal to take to exponent power;
+#X obj 81 516 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 107 459 float;
+#X text 107 478 signal;
+#X text 181 468 - base of power function;
+#X text 107 515 signal;
+#X text 181 515 - output of power function;
+#X text 89 554 1) float;
+#X text 181 554 - set intial power (default 0);
+#X obj 317 261 *~ 0.2;
+#X msg 317 140 -7 \, 1 1500 -1 1500 -7 300;
+#X obj 339 205 sig~ 2;
+#X obj 317 237 pow~;
+#X obj 31 92 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 47 355 dac~;
-#X obj 47 305 *~;
-#X obj 47 239 *~ 440;
-#X msg 47 125 -1 \, 1 3000;
-#X obj 47 276 cycle~;
-#X obj 47 196 pow~ 2;
-#X text 26 23 pow~ is useful for generating curves from line~. In the
-example below \, pow~ with an argument 2 (for 2 to the exponent specified
-by the input signal) is used to generate a pitch glissando.;
-#X text 101 193 optional argument determines the base of the power
-function. Default is 0;
-#X text 59 257 result goes from 220 to 880 Hz;
-#X text 119 126 pitch glissando;
-#X text 510 236 base can be a signal too;
-#X text 137 180 base in;
-#X text 320 89 amplitude envelope. 2 to the -7 doesn't completely shut
-off the signal...;
-#X text 57 180 exponent in;
-#X text 57 215 result out;
-#X obj 481 319 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
+#X obj 31 353 dac~;
+#X obj 31 303 *~;
+#X obj 31 230 *~ 440;
+#X msg 31 135 -1 \, 1 3000;
+#X obj 31 267 cycle~;
+#X obj 31 194 pow~ 2;
+#X text 43 248 result goes from 220 to 880 Hz;
+#X text 103 136 pitch glissando;
+#X obj 316 327 Scope~ 130 77 256 3 128 -1 1 0 0 0 0 102 255 51 135
 135 135 0;
-#X text 69 95 click to hear something;
-#X obj 107 327 Scope~ 130 130 256 3 128 -1 1 0 0 0 0 102 255 51 135
-135 135 0;
-#X obj 471 176 Line~ -7;
-#X obj 47 147 Line~ -1;
-#N canvas 247 115 494 366 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 53 93 click to hear something;
+#X obj 80 327 Scope~ 129 75 256 3 128 -1 1 0 0 0 0 102 255 51 135 135
+135 0;
+#X obj 317 173 Line~ -7;
+#X obj 31 157 Line~ -1;
+#X obj 483 53 pddp/dsp;
+#X text 114 597 pow~ is useful for generating curves from line~. In
+the example above \, pow~ with an argument 2 (for 2 to the exponent
+specified by the input signal) is used to generate a pitch glissando.
 ;
-#X text 12 5 KEYWORDS signal max_compatible;
-#X text 12 45 DESCRIPTION take base to the exponent power using signals
+#X text 72 180 optional argument determines the base of the power
+function. Default is 0;
+#X text 349 236 base can be a signal or float;
+#X text 295 87 amplitude envelope. 2 to the -7 doesn't completely
+shut off the signal...;
+#X obj 9 674 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 65 INLET_0 signal;
-#X text 12 85 INLET_1 signal;
-#X text 12 105 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 716 462 pd META;
-#X connect 1 0 7 1;
-#X connect 1 0 21 0;
-#X connect 2 0 24 0;
-#X connect 3 0 4 1;
-#X connect 4 0 1 0;
-#X connect 5 0 9 0;
-#X connect 5 0 2 0;
-#X connect 7 0 6 0;
-#X connect 7 0 23 0;
-#X connect 8 0 10 0;
-#X connect 9 0 25 0;
-#X connect 10 0 7 0;
-#X connect 11 0 8 0;
-#X connect 24 0 4 0;
-#X connect 25 0 11 0;
+#X connect 22 0 28 1;
+#X connect 22 0 35 0;
+#X connect 23 0 38 0;
+#X connect 24 0 25 1;
+#X connect 25 0 22 0;
+#X connect 26 0 30 0;
+#X connect 26 0 23 0;
+#X connect 28 0 27 0;
+#X connect 28 0 37 0;
+#X connect 29 0 31 0;
+#X connect 30 0 39 0;
+#X connect 31 0 28 0;
+#X connect 32 0 29 0;
+#X connect 38 0 25 0;
+#X connect 39 0 32 0;

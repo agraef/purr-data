@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header samplerate~ 3 12
 0 18 -204280 -1 0;
 #X obj 0 431 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 344 META 0;
+#N canvas 488 283 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 515 (none);
-#N canvas 102 482 428 109 Related_objects 0;
+#N canvas 222 516 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [samplerate~] Related Objects;
@@ -35,11 +35,9 @@ to conform to the PDDP template for Pd version 0.42.;
 #X text 98 482 float;
 #X obj 78 483 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 455 3 samplerate~;
-#X obj 425 20 pddp/pddplink http://wiki.puredata.info/en/samplerate~
--text pdpedia: samplerate~;
+#X obj 470 11 samplerate~;
 #X obj 225 197 samplerate~;
-#X floatatom 225 240 8 0 0 0 - - -;
+#X floatatom 225 240 8 0 0 0 - - -, f 8;
 #X obj 225 154 bng 30 250 50 0 empty empty empty 0 -6 0 8 -260818 -1
 -1;
 #X text 98 439 bang;
@@ -51,6 +49,7 @@ flag: -r <n>. For example: pd -r 22050;
 #X text 99 573 DSP does not need to be turned on for [samplerate~]
 to work;
 #X text 168 482 - the sample rate.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 14 0 15 0;
-#X connect 16 0 14 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 13 0 14 0;
+#X connect 15 0 13 0;

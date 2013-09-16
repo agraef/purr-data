@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 407 77 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header send 3 12 0 18 -204280
 -1 0;
 #X obj 0 240 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 54 246 494 344 META 0;
+#N canvas 462 331 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -26,7 +26,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 438 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 95 291 428 315 Related_objects 0;
+#N canvas 193 354 428 315 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [send] Related Objects;
@@ -56,28 +56,26 @@ for Pd version 0.42.;
 #X restore 102 597 pd Related_objects;
 #X obj 78 342 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 466 3 send;
-#X text 498 3 or;
-#X obj 521 3 s;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/send -text
-pdpedia: send;
+#X obj 465 10 send;
+#X text 497 10 or;
+#X obj 520 10 s;
 #X obj 52 124 s;
-#X floatatom 52 100 5 0 0 0 - - -;
-#X floatatom 284 95 5 0 0 0 - - -;
+#X floatatom 52 100 5 0 0 0 - - -, f 5;
+#X floatatom 284 95 5 0 0 0 - - -, f 5;
 #X obj 284 66 r;
-#X floatatom 339 95 5 0 0 0 - - -;
+#X floatatom 339 95 5 0 0 0 - - -, f 5;
 #X obj 339 66 r;
-#X floatatom 390 95 5 0 0 0 - - -;
+#X floatatom 390 95 5 0 0 0 - - -, f 5;
 #X obj 390 66 r;
-#X floatatom 52 167 5 0 0 0 - - -;
-#X floatatom 277 177 5 0 0 0 - - -;
-#X floatatom 348 177 5 0 0 0 - - -;
-#X floatatom 423 177 5 0 0 0 - - -;
+#X floatatom 52 167 5 0 0 0 - - -, f 5;
+#X floatatom 277 177 5 0 0 0 - - -, f 5;
+#X floatatom 348 177 5 0 0 0 - - -, f 5;
+#X floatatom 423 177 5 0 0 0 - - -, f 5;
 #X text 51 147 with creation argument;
 #X obj 52 191 s dave;
 #X obj 277 148 r dave;
 #X obj 348 148 r dave;
-#X floatatom 152 168 5 0 0 0 - - -;
+#X floatatom 152 168 5 0 0 0 - - -, f 5;
 #X obj 423 148 r hans;
 #X obj 152 192 s hans;
 #X obj 78 249 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
@@ -90,7 +88,7 @@ pdpedia: send;
 inlet can be used to dynamically change the send/receive name. (See
 example above).;
 #X obj 112 124 s;
-#X floatatom 112 66 5 0 0 0 - - -;
+#X floatatom 112 66 5 0 0 0 - - -, f 5;
 #X msg 157 66 symbol dave;
 #X msg 157 94 symbol hans;
 #X text 98 341 (none);
@@ -100,17 +98,17 @@ object with the same name.;
 ;
 #N canvas 64 68 428 493 Dynamic_send_vs_messages 0;
 #X text 20 42 Consider this:;
-#X floatatom 115 43 5 0 0 0 - - -;
-#X floatatom 171 43 5 0 0 0 - - -;
+#X floatatom 115 43 5 0 0 0 - - -, f 5;
+#X floatatom 171 43 5 0 0 0 - - -, f 5;
 #X obj 115 69 s dave;
 #X obj 171 69 s hans;
 #X obj 264 43 r dave;
 #X obj 320 43 r hans;
-#X floatatom 264 67 5 0 0 0 - - -;
-#X floatatom 320 67 5 0 0 0 - - -;
+#X floatatom 264 67 5 0 0 0 - - -, f 5;
+#X floatatom 320 67 5 0 0 0 - - -, f 5;
 #X text 20 112 Now consider this:;
-#X floatatom 139 114 5 0 0 0 - - -;
-#X floatatom 208 115 5 0 0 0 - - -;
+#X floatatom 139 114 5 0 0 0 - - -, f 5;
+#X floatatom 208 115 5 0 0 0 - - -, f 5;
 #X msg 139 142 \; dave \$1;
 #X msg 208 142 \; hans \$1;
 #X text 20 232 And to complicate things a little more \, and offer
@@ -161,7 +159,8 @@ send/receive name.;
 a single inlet which accepts any message as input. The input is sent
 to all [receive] objects with the same name (argument).;
 #X text 80 393 1) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 98 457 pddp/pddplink all_about_scope_and_locality.pd -text all_about_scope_and_locality
 ;
 #X text 98 493 doc/1.manual/x5.htm;
@@ -172,15 +171,15 @@ to all [receive] objects with the same name (argument).;
 -text doc/2.control.examples/10.more.messages.pd;
 #X obj 97 545 pddp/pddplink ../2.control.examples/13.locality.pd -text
 doc/2.control.examples/13.locality.pd;
-#X connect 14 0 13 0;
-#X connect 16 0 15 0;
-#X connect 18 0 17 0;
-#X connect 20 0 19 0;
-#X connect 21 0 26 0;
+#X connect 13 0 12 0;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X connect 19 0 18 0;
+#X connect 20 0 25 0;
+#X connect 26 0 21 0;
 #X connect 27 0 22 0;
-#X connect 28 0 23 0;
-#X connect 29 0 31 0;
-#X connect 30 0 24 0;
-#X connect 38 0 37 0;
-#X connect 39 0 37 1;
-#X connect 40 0 37 1;
+#X connect 28 0 30 0;
+#X connect 29 0 23 0;
+#X connect 37 0 36 0;
+#X connect 38 0 36 1;
+#X connect 39 0 36 1;

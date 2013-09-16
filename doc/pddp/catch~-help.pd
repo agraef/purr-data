@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 37 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header catch~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 423 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 243 494 344 META 0;
+#N canvas 555 407 418 220 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 93 479 428 109 Related_objects 0;
+#N canvas 212 519 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 72 43 send~;
@@ -59,23 +59,22 @@ from [throw~] objects that share the same name as this [catch~].;
 #X text 168 510 - [catch~] takes one argument-- a symbol atom-- as
 its name. Other [throw~] objects may have the same name \, but there
 may be no other [catch~] objects that shares this name.;
-#X obj 474 3 catch~;
-#X obj 448 20 pddp/pddplink http://wiki.puredata.info/en/catch~ -text
-pdpedia: catch~;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 502 10 catch~;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 455 51 pddp/dsp;
 #X obj 224 168 catch~ signal1;
 #X obj 358 168 catch~ signal2;
 #X obj 73 220 throw~ signal1;
 #X obj 73 268 throw~ signal1;
-#X connect 10 0 34 0;
+#X connect 10 0 33 0;
 #X connect 11 0 9 0;
-#X connect 12 0 33 0;
+#X connect 12 0 32 0;
 #X connect 13 0 14 0;
 #X connect 14 0 11 0;
 #X connect 14 0 16 0;
 #X connect 16 0 15 0;
-#X connect 17 0 33 0;
-#X connect 18 0 33 0;
-#X connect 31 0 11 0;
-#X connect 32 0 16 0;
+#X connect 17 0 32 0;
+#X connect 18 0 32 0;
+#X connect 30 0 11 0;
+#X connect 31 0 16 0;

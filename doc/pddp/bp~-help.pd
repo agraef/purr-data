@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj -1 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header bp~ 3 12 0 18 -204280
 -1 0;
 #X obj -1 364 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 246 494 367 META 0;
+#N canvas 483 262 494 367 META 0;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
 #X text 12 165 AUTHOR Miller Puckette;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 12 0 13 -228856 -1 0;
 #X obj 78 373 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 73 487 428 102 Related_objects 0;
+#N canvas 213 529 428 102 Related_objects 0;
 #X obj 21 42 vcf~;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -37,9 +37,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X restore 101 597 pd Related_objects;
 #X obj 78 481 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 492 3 bp~;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bp~ -text
-pdpedia: bp~;
+#X obj 502 11 bp~;
 #X obj 137 208 env~;
 #X floatatom 137 228 0 0 0 0 - - -;
 #X floatatom 166 138 0 0 0 0 - - -;
@@ -74,16 +72,17 @@ dB.;
 #X text 75 297 [bp~] passes a sinusoid at the center frequency at unit
 gain (approximately). Other frequencies are attenuated.;
 #X text 123 66 <- scroll to change input frequency;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 476 52 pddp/dsp;
 #X obj 98 572 pddp/pddplink ../3.audio.examples/H07.measure.spectrum.pd
 -text doc/3.audio.examples/H07.measure.spectrum.pd;
-#X connect 12 0 13 0;
-#X connect 14 0 20 1;
-#X connect 15 0 16 0;
-#X connect 17 0 18 0;
-#X connect 18 0 15 0;
-#X connect 18 0 20 0;
-#X connect 19 0 20 0;
-#X connect 20 0 12 0;
-#X connect 22 0 20 2;
+#X connect 11 0 12 0;
+#X connect 13 0 19 1;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 17 0 19 0;
+#X connect 18 0 19 0;
+#X connect 19 0 11 0;
+#X connect 21 0 19 2;

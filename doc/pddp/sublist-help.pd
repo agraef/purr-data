@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header sublist 3 12 0 18
 -204280 -1 0;
 #X obj 0 439 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 344 META 0;
+#N canvas 488 280 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 76 482 428 109 Related_objects 0;
+#N canvas 216 513 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [sublist] Related Objects;
@@ -42,9 +42,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 485 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 473 3 sublist;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/sublist -text
-pdpedia: sublist;
+#X obj 492 11 sublist;
 #X text 96 170 Don't try this yet -- it's untested.;
 #X text 103 208 "sublist" will take as creation arguments a template
 name and a field name \; its one input takes a pointer. If you send
@@ -58,5 +56,6 @@ is in fact a pointer to the head of the sublist.;
 #X text 168 545 - field name.;
 #X text 80 530 1) symbol;
 #X text 80 545 2) symbol;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 98 573 pddp/pddplink scalar-help.pd;

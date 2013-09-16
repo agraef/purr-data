@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header keyup 3 12 0 18
 -204280 -1 0;
 #X obj 0 218 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 245 494 344 META 0;
+#N canvas 487 284 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 145 RELEASE_DATE 2009-06-12;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 422 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 399 (none);
-#N canvas 107 446 428 145 Related_objects 0;
+#N canvas 216 478 428 145 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 52 42 keyname;
@@ -49,7 +49,7 @@ successfully. (This may produce different results on different systems.)
 ;
 #X obj 83 162 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 103 162 5 0 0 0 - - -;
+#X floatatom 103 162 5 0 0 0 - - -, f 5;
 #N canvas 107 160 428 356 reacting_to_user_input 0;
 #X text 19 37 Most \, if not all \, programming environments provide
 us with tools to capture 'user initiated' events from the operating
@@ -73,9 +73,7 @@ can mimic some of the functions in other languages - Javascript for
 example has:;
 #X text 7 1 [keyup] Reacing to User Input;
 #X restore 102 525 pd reacting_to_user_input;
-#X obj 483 3 keyup;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/keyup -text
-pdpedia: keyup;
+#X obj 504 11 keyup;
 #X text 100 83 [keyup] reports the (system dependent) numbers of "printing"
 keys of the keyboard.;
 #X obj 103 125 keyup;
@@ -96,7 +94,7 @@ the pointer location. This is dependent on the system.;
 #X obj 52 75 loadbang;
 #X msg 23 16 bang;
 #X obj 33 158 qlist;
-#X floatatom 33 185 5 0 0 0 - - -;
+#X floatatom 33 185 5 0 0 0 - - -, f 5;
 #X obj 218 30 r keyboard_fun;
 #X msg 52 105 read keyboard_fun.txt;
 #X msg 45 51 rewind;
@@ -131,5 +129,5 @@ the pointer location. This is dependent on the system.;
 #X text 168 222 - [keyup] gets input directly from the keyboard.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 20 0 14 0;
-#X connect 20 0 15 0;
+#X connect 19 0 14 0;
+#X connect 19 0 15 0;

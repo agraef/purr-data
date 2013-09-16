@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (binops1) 3 12 0
 18 -204280 -1 0;
 #X obj 0 324 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 507 358 META 0;
+#N canvas 468 268 507 358 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 523 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 94 481 428 109 Related_objects 0;
+#N canvas 215 519 428 109 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 56 75 cos~;
@@ -55,20 +55,18 @@ for Pd version 0.42.;
 -162280 0;
 #X text 98 413 float;
 #X text 78 499 1) float;
-#X obj 363 3 +;
-#X obj 388 3 -;
-#X obj 414 3 *;
-#X obj 440 3 /;
-#X obj 466 3 pow;
-#X obj 491 3 max;
-#X obj 517 3 min;
-#X obj 429 20 pddp/pddplink http://wiki.puredata.info/en/operators
--text pdpedia: operators;
+#X obj 364 12 +;
+#X obj 389 12 -;
+#X obj 415 12 *;
+#X obj 441 12 /;
+#X obj 467 12 pow;
+#X obj 492 12 max;
+#X obj 518 12 min;
 #X obj 128 166 +;
 #X msg 94 124 3 4;
-#X floatatom 128 124 5 0 0 0 - - -;
-#X floatatom 169 124 5 0 0 0 - - -;
-#X floatatom 128 193 5 0 0 0 - - -;
+#X floatatom 128 124 5 0 0 0 - - -, f 5;
+#X floatatom 169 124 5 0 0 0 - - -, f 5;
+#X floatatom 128 193 5 0 0 0 - - -, f 5;
 #X msg 54 124 bang;
 #X text 98 332 bang;
 #X text 98 357 float;
@@ -79,28 +77,29 @@ at the inlets.;
 the operation.;
 #X text 168 384 - a pair of floats will be distributed to the two inlets.
 ;
-#X floatatom 259 124 5 0 0 0 - - -;
-#X floatatom 259 193 5 0 0 0 - - -;
+#X floatatom 259 124 5 0 0 0 - - -, f 5;
+#X floatatom 259 193 5 0 0 0 - - -, f 5;
 #X obj 259 168 * 2;
 #X text 118 239 All of these objects share the same behavior.;
 #X obj 364 170 pow 4;
 #X floatatom 364 193 0 0 0 0 - - -;
-#X floatatom 403 126 5 0 0 0 - - -;
-#X floatatom 364 126 5 0 0 0 - - -;
+#X floatatom 403 126 5 0 0 0 - - -, f 5;
+#X floatatom 364 126 5 0 0 0 - - -, f 5;
 #X obj 98 542 pddp/pddplink pow-help.pd;
 #X text 168 499 - initializes the value of the right inlet.;
 #X text 98 527 Click below for individual help patches:;
 #X obj 98 557 pddp/pddplink min-help.pd;
 #X obj 98 572 pddp/pddplink max-help.pd;
 #X text 11 23 binary arithmetic operators;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 23 0 27 0;
-#X connect 24 0 23 0;
-#X connect 25 0 23 0;
-#X connect 26 0 23 1;
-#X connect 28 0 23 0;
-#X connect 35 0 37 0;
-#X connect 37 0 36 0;
-#X connect 39 0 40 0;
-#X connect 41 0 39 1;
-#X connect 42 0 39 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 22 0 26 0;
+#X connect 23 0 22 0;
+#X connect 24 0 22 0;
+#X connect 25 0 22 1;
+#X connect 27 0 22 0;
+#X connect 34 0 36 0;
+#X connect 36 0 35 0;
+#X connect 38 0 39 0;
+#X connect 40 0 38 1;
+#X connect 41 0 38 0;

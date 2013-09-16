@@ -1,4 +1,4 @@
-#N canvas 0 0 448 643 10;
+#N canvas 431 33 448 643 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header midi_flags 20 10
 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -48,7 +48,7 @@ so if you want to use /dev/midi00 \, start Pd with "-mididev 1". Always
 add 1 to the device number.;
 #X obj 1 621 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 380 507 494 143 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -58,7 +58,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 45 DESCRIPTION list of command line flags relating to MIDI
 ;
 #X restore 392 623 pd META;
-#N canvas 10 196 428 342 Related_objects 0;
+#N canvas 220 305 428 342 Related_objects 0;
 #X obj 22 41 dbtopow~;
 #X obj 76 41 dbtorms~;
 #X obj 131 41 rmstodb~;

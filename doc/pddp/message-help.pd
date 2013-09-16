@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 430 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header message 3 12 0 18
 -204280 -1 0;
 #X obj 0 189 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 45 260 494 344 META 0;
+#N canvas 485 287 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 35 LICENSE SIBSD;
@@ -27,7 +27,7 @@ bang_op;
 0 13 -228856 -1 0;
 #X obj 0 555 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 98 489 428 109 Related_objects 0;
+#N canvas 219 520 428 109 Related_objects 0;
 #X obj 116 43 list;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
@@ -40,9 +40,7 @@ bang_op;
 -162280 0;
 #X obj 78 343 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X msg 512 3;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/message -text
-pdpedia: message;
+#X msg 514 11;
 #X msg 101 141 walk the dog;
 #X obj 101 164 print;
 #N canvas 85 15 428 600 dollarsign_variables 0;
@@ -158,7 +156,7 @@ message).;
 #X msg 12 3;
 #X text 40 2 About Commas and Semicolons;
 #X obj 23 136 list length;
-#X floatatom 23 164 5 0 0 3 No_of_atoms - -;
+#X floatatom 23 164 5 0 0 3 No_of_atoms - -, f 5;
 #X obj 23 94 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 23 114 list append one \, 3;
@@ -254,7 +252,7 @@ all_about_symbol_construction;
 doc/2.control.examples/04.messages.pd;
 #X obj 286 574 pddp/pddplink ../2.control.examples/10.more.messages.pd
 -text doc/2.control.examples/10.more.messages.pd;
-#X text 329 2 To create \, click <Control-2>;
+#X text 331 10 To create \, click <Control-2>;
 #X text 98 57 Message boxes hold one or more messages. Anytime the
 message box receives any message at all \, the messages in the box
 are all sent to their destinations.;
@@ -262,4 +260,4 @@ are all sent to their destinations.;
 #X text 141 164 <- object box (notice the different border);
 #X text 81 402 n) symbol atom;
 #X text 100 417 float;
-#X connect 12 0 13 0;
+#X connect 11 0 12 0;

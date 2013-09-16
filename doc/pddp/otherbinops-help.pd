@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 42 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (binops2-3) 3 12
 0 18 -204280 -1 0;
 #X obj 0 178 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 492 291 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 0 13 -228856 -1 0;
 #X obj 0 381 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 69 435 428 156 Related_objects 0;
+#N canvas 221 481 428 156 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 (binops2-3) Related Objects;
@@ -45,8 +45,6 @@ Pd. Revised by Jonathan Wilkes to conform to the PDDP template.;
 #X obj 79 273 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 272 float;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bag -text
-pdpedia: bag;
 #X text 11 23 relational and logical operators;
 #X obj 127 4 >;
 #X obj 154 4 >=;
@@ -64,10 +62,10 @@ pdpedia: bag;
 #X obj 448 4 >>;
 #X obj 527 4 %;
 #X text 341 4 and;
-#X floatatom 254 51 5 0 0 0 - - -;
-#X floatatom 296 51 5 0 0 0 - - -;
+#X floatatom 254 51 5 0 0 0 - - -, f 5;
+#X floatatom 296 51 5 0 0 0 - - -, f 5;
 #X obj 254 88 >;
-#X floatatom 254 125 5 0 0 0 - - -;
+#X floatatom 254 125 5 0 0 0 - - -, f 5;
 #X msg 219 51 bang;
 #X text 98 186 bang;
 #X text 168 186 - a bang outputs the last value computed by the object.
@@ -187,7 +185,7 @@ Hence if 7 and 9 are divided by 2 \, then the remainder of both equations
 is .5. Therefore \, the modulus of 7 and 9 is "2".;
 #X msg 21 135 9;
 #X obj 21 163 % 7;
-#X floatatom 55 135 5 0 0 0 - - -;
+#X floatatom 55 135 5 0 0 0 - - -, f 5;
 #X text 18 214 Note that the modulus operator is not a "bitwise" operator
 \, but a math function.;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
@@ -199,8 +197,8 @@ is .5. Therefore \, the modulus of 7 and 9 is "2".;
 #X restore 281 562 pd understanding_%_modulus;
 #N canvas 87 181 428 280 understanding_&_AND 0;
 #X obj 174 221 &;
-#X floatatom 228 187 5 0 0 0 - - -;
-#X floatatom 270 188 5 0 0 0 - - -;
+#X floatatom 228 187 5 0 0 0 - - -, f 5;
+#X floatatom 270 188 5 0 0 0 - - -, f 5;
 #X msg 174 164 13;
 #X msg 203 165 9;
 #X text 26 119 13 = "1101";
@@ -230,8 +228,8 @@ Hence the result will be "1001" -- in other words "9".;
 #X restore 281 430 pd understanding_&_AND;
 #N canvas 92 219 428 293 understanding_|_OR 0;
 #X floatatom 137 261 0 0 0 0 - - -;
-#X floatatom 191 205 5 0 0 0 - - -;
-#X floatatom 233 206 5 0 0 0 - - -;
+#X floatatom 191 205 5 0 0 0 - - -, f 5;
+#X floatatom 233 206 5 0 0 0 - - -, f 5;
 #X msg 137 177 13;
 #X msg 166 178 9;
 #X text 26 131 13 = "1101";
@@ -266,10 +264,10 @@ bits of both its operands is a "1".;
 #X obj 21 167 t b b;
 #X msg 21 188 13;
 #X obj 21 229 <<;
-#X floatatom 21 251 5 0 0 0 - - -;
+#X floatatom 21 251 5 0 0 0 - - -, f 5;
 #X msg 49 188 2;
-#X floatatom 87 200 5 0 0 0 - - -;
-#X floatatom 135 200 5 0 0 0 - - -;
+#X floatatom 87 200 5 0 0 0 - - -, f 5;
+#X floatatom 135 200 5 0 0 0 - - -, f 5;
 #X text 18 35 [<<] -- This is the left shift operator and it works
 by shifting the digits of the binary representation of the first operand
 (left inlet) to the left by the number of places specified by the second
@@ -293,9 +291,9 @@ to the left giving "110100":;
 #X obj 21 162 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 21 180 t b b;
-#X floatatom 21 264 5 0 0 0 - - -;
-#X floatatom 87 213 5 0 0 0 - - -;
-#X floatatom 135 213 5 0 0 0 - - -;
+#X floatatom 21 264 5 0 0 0 - - -, f 5;
+#X floatatom 87 213 5 0 0 0 - - -, f 5;
+#X floatatom 135 213 5 0 0 0 - - -, f 5;
 #X msg 21 201 13;
 #X obj 21 242 >>;
 #X msg 49 201 2;
@@ -324,8 +322,8 @@ negative operands. ("sign-propagating").;
 #N canvas 94 222 428 418 understanding_&&_LOGICAL-AND 0;
 #X msg 52 259 5;
 #X obj 21 309 &&;
-#X floatatom 21 329 5 0 0 0 - - -;
-#X floatatom 190 267 5 0 0 0 - - -;
+#X floatatom 21 329 5 0 0 0 - - -, f 5;
+#X floatatom 190 267 5 0 0 0 - - -, f 5;
 #X text 18 36 [&&] - This is the logical AND operator \, which returns
 a Boolean true (a one) if both operands are true. Logically it follows
 that if the first operand is false \, then the whole expression is
@@ -333,7 +331,7 @@ false \, and this is how the objects works: It first evaluates the
 left hand operand (left inlet) and if this returns false (zero) then
 \, without going any further \, it returns a false (a zero). Otherwise
 it returns the value of the second operand (right inlet).;
-#X floatatom 233 267 5 0 0 0 - - -;
+#X floatatom 233 267 5 0 0 0 - - -, f 5;
 #X text 18 354 Note that this is not a bitwise operator. It compares
 floats.;
 #X obj 21 217 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -368,9 +366,9 @@ the right inlet is non-zero \, THEN output non-zero!;
 #X restore 281 518 pd understanding_&&_LOGICAL-AND;
 #N canvas 105 196 428 400 understanding_||_LOGICAL-OR 0;
 #X msg 52 250 5;
-#X floatatom 21 320 5 0 0 0 - - -;
-#X floatatom 192 251 5 0 0 0 - - -;
-#X floatatom 235 251 5 0 0 0 - - -;
+#X floatatom 21 320 5 0 0 0 - - -, f 5;
+#X floatatom 192 251 5 0 0 0 - - -, f 5;
+#X floatatom 235 251 5 0 0 0 - - -, f 5;
 #X text 18 345 Note that this is not a bitwise operator. It compares
 floats.;
 #X obj 21 208 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -423,8 +421,8 @@ right inlet is non-zero \, THEN output non-zero!;
 #X obj 227 333 >;
 #X obj 277 412 ==;
 #X obj 64 130 == 42;
-#X floatatom 64 109 5 0 0 0 - - -;
-#X floatatom 38 156 2 0 0 0 - - -;
+#X floatatom 64 109 5 0 0 0 - - -, f 5;
+#X floatatom 38 156 2 0 0 0 - - -, f 2;
 #X obj 63 155 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X msg 34 105 42;
@@ -438,8 +436,8 @@ a number will reset the value and output a true or false (1 or 0) depending
 on whether or not the incoming value meets the necessary condition.
 A "bang" will force the object to output a true or false (1 or 0) based
 on the value that is already stored in the left inlet.;
-#X floatatom 35 280 5 0 0 0 - - -;
-#X floatatom 73 280 5 0 0 0 - - -;
+#X floatatom 35 280 5 0 0 0 - - -, f 5;
+#X floatatom 73 280 5 0 0 0 - - -, f 5;
 #X text 20 278 a;
 #X text 113 279 b;
 #X text 98 355 Is a greater than b?;
@@ -514,8 +512,8 @@ word: 8 bits * 4 digits = 32-bits!;
 0 14 -204280 -1 0;
 #X text 7 81 What does "bitwise" mean?;
 #X restore 281 408 pd Logical_Operators;
-#X connect 31 0 33 0;
-#X connect 32 0 33 1;
-#X connect 33 0 34 0;
-#X connect 35 0 33 0;
-#X connect 47 0 33 0;
+#X connect 30 0 32 0;
+#X connect 31 0 32 1;
+#X connect 32 0 33 0;
+#X connect 34 0 32 0;
+#X connect 46 0 32 0;

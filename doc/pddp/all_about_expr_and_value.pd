@@ -1,16 +1,16 @@
-#N canvas 0 0 448 350 10;
+#N canvas 429 33 448 350 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_and_value 20
 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
 #X obj 176 268 v _\$0_foo;
 #X obj 24 268 expr $f1 + _\$0_foo;
-#X floatatom 24 246 5 0 0 0 - - -;
-#X floatatom 24 291 5 0 0 0 - - -;
-#X floatatom 176 248 5 0 0 0 - - -;
-#X floatatom 206 108 5 0 0 0 - - -;
-#X floatatom 23 108 5 0 0 0 - - -;
-#X floatatom 23 158 5 0 0 0 - - -;
+#X floatatom 24 246 5 0 0 0 - - -, f 5;
+#X floatatom 24 291 5 0 0 0 - - -, f 5;
+#X floatatom 176 248 5 0 0 0 - - -, f 5;
+#X floatatom 206 108 5 0 0 0 - - -, f 5;
+#X floatatom 23 108 5 0 0 0 - - -, f 5;
+#X floatatom 23 158 5 0 0 0 - - -, f 5;
 #X text 248 106 set variable "some_number";
 #X obj 206 131 value some_number;
 #X obj 23 131 expr $f1 + some_number;
@@ -25,7 +25,7 @@ cannot be at the beginning of the variable name (e.g. \, \$0foo). Underscores
 provide a workable \, if clunky \, solution:;
 #X obj 1 328 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 373 194 494 164 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -36,7 +36,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 DESCRIPTION a touching tale of an unlikely romance between
 two Pd objects;
 #X restore 392 330 pd META;
-#N canvas 10 196 428 141 Related_objects 0;
+#N canvas 218 216 428 141 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 [expr] and [value]- Related Objects;

@@ -1,35 +1,65 @@
-#N canvas 0 26 471 309 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 19 268 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 18 282 ___________________________________________________
-;
-#X obj 26 24 speedlim;
-#X text 113 24 speed limit for incoming messages;
-#X obj 64 131 speedlim 300;
-#X text 158 124 arg is minimum delay between outputs;
-#X text 158 136 in milliseconds;
-#X floatatom 64 172 5 0 0 0 - - -;
-#X floatatom 64 76 5 0 0 0 - - -;
-#X floatatom 143 99 5 0 0 0 - - -;
-#X text 185 98 change delay time;
-#X text 106 74 move fast!!!;
-#X text 22 202 clock message (as in the max version) not supported
+#N canvas 422 36 559 465 10;
+#X obj -1 438 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 223 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 606 247 361 228 META 0;
+#X text 10 155 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 22 LICENSE SIBSD;
+#X text 10 136 AUTHOR Miller Puckette;
+#X text 10 174 RELEASE_DATE 1997;
+#X text 10 117 LIBRARY cyclone;
+#X text 10 193 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 3 KEYWORDS delay speed limit ms milliseconds;
+#X text 10 41 DESCRIPTION speed limit for incoming messages;
+#X text 10 60 INLET_0 anything;
+#X text 10 98 OUTLET_1 anything;
+#X text 10 79 INLET_1 float;
+#X restore 501 440 pd META;
+#X obj -1 286 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 339 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 384 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 304 363 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 200 440 pd Related_objects;
+#X obj 78 232 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 299 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header speedlim 3 12 0
+18 -204280 -1 0;
+#X obj 78 259 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X obj 489 10 speedlim;
+#X text 11 23 speed limit for incoming messages;
+#X obj 134 135 speedlim 300;
+#X floatatom 134 176 5 0 0 0 - - -, f 5;
+#X floatatom 134 77 5 0 0 0 - - -, f 5;
+#X floatatom 203 103 5 0 0 0 - - -, f 5;
+#X text 107 259 float;
+#X text 107 231 anything;
+#X text 107 298 anything;
+#X text 178 231 - message to input;
+#X text 178 298 - output message only if minimum delay between outputs
+is met;
+#X text 89 355 1) float;
+#X text 178 355 - delay time;
+#X text 121 396 clock message (as in the max version) not supported
 for;
-#X text 22 215 obvious reasons.;
-#N canvas 380 180 494 385 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 121 409 obvious reasons.;
+#X text 170 76 input;
+#X text 219 128 optional arg is minimum delay between input to output
+in milliseconds;
+#X text 241 102 change delay time (ms);
+#X text 178 259 - change delay time (ms);
+#X obj 11 441 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS control filter max_compatible;
-#X text 12 45 DESCRIPTION speed limit for incoming messages;
-#X text 12 65 INLET_0 anything;
-#X text 12 85 INLET_1 float;
-#X text 12 105 OUTLET_0 anything;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 421 287 pd META;
-#X connect 5 0 8 0;
-#X connect 9 0 5 0;
-#X connect 10 0 5 1;
+#X connect 13 0 14 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 1;

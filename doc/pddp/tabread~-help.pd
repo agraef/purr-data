@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabread~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 270 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 245 494 344 META 0;
+#N canvas 490 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 533 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 83 315 428 299 Related_objects 0;
+#N canvas 215 329 428 299 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [tabread~] Related Objects;
@@ -59,9 +59,7 @@ Pd version 0.42.;
 -162280 0;
 #X obj 78 435 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 475 3 tabread~;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/tabread~ -text
-pdpedia: tabread~;
+#X obj 486 11 tabread~;
 #X text 98 375 set;
 #X text 168 482 - the argument informs [tabread~] which array to read.
 The array must exist in an open Pd patch/canvas or an error message
@@ -124,15 +122,15 @@ index you query using the inlet.;
 #X obj 96 538 pddp/pddplink ../2.control.examples/15.arrays.pd;
 #X obj 95 553 pddp/pddplink ../2.control.examples/16.more.arrays.pd
 ;
-#X connect 15 0 27 0;
-#X connect 24 0 28 0;
-#X connect 25 0 34 0;
-#X connect 27 0 25 0;
-#X connect 28 0 29 0;
-#X connect 29 0 25 0;
-#X connect 30 0 32 0;
-#X connect 31 0 25 0;
-#X connect 32 0 31 0;
-#X connect 33 0 34 0;
-#X connect 34 0 14 0;
-#X connect 35 0 33 0;
+#X connect 14 0 26 0;
+#X connect 23 0 27 0;
+#X connect 24 0 33 0;
+#X connect 26 0 24 0;
+#X connect 27 0 28 0;
+#X connect 28 0 24 0;
+#X connect 29 0 31 0;
+#X connect 30 0 24 0;
+#X connect 31 0 30 0;
+#X connect 32 0 33 0;
+#X connect 33 0 13 0;
+#X connect 34 0 32 0;

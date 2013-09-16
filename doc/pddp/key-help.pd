@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 434 31 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header key 3 12 0 18 -204280
 -1 0;
 #X obj 0 257 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 242 494 344 META 0;
+#N canvas 487 278 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 473 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 449 (none);
-#N canvas 92 446 428 145 Related_objects 0;
+#N canvas 222 479 428 145 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 21 42 keyup;
@@ -38,9 +38,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 293 float;
 #X obj 78 294 cnv 17 3 140 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 489 3 key;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/key -text
-pdpedia: key;
+#X obj 517 9 key;
 #X text 98 261 (none);
 #X text 98 411 Also note that key combinations \, such as SHIFT+7 produce
 a different result than SHIFT or 7 alone.;
@@ -56,7 +54,7 @@ when the key is pressed down. Only one event is captured at a time.
 #X obj 103 137 key;
 #X obj 83 174 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 103 174 5 0 0 0 - - -;
+#X floatatom 103 174 5 0 0 0 - - -, f 5;
 #X text 132 137 Type something on the keyboard to send input to Pd
 ;
 #X text 100 95 [key] reports the (system dependent) numbers of "printing"
@@ -91,7 +89,7 @@ example has:;
 #X obj 52 75 loadbang;
 #X msg 23 16 bang;
 #X obj 33 158 qlist;
-#X floatatom 33 185 5 0 0 0 - - -;
+#X floatatom 33 185 5 0 0 0 - - -, f 5;
 #X obj 228 30 r keyboard_fun;
 #X msg 52 105 read keyboard_fun.txt;
 #X msg 45 51 rewind;
@@ -126,6 +124,7 @@ example has:;
 #X text 100 572 for more on HIDs:;
 #X text 11 23 get input from the keyboard;
 #X text 168 261 - [key] gets input directly from the keyboard.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 17 0 18 0;
-#X connect 17 0 19 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 16 0 17 0;
+#X connect 16 0 18 0;

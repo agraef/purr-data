@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 39 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (graph) 3 12 0 18
 -204280 -1 0;
 #X obj 0 453 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 344 META 0;
+#N canvas 485 291 494 344 META 0;
 #X text 12 65 LIBRARY internal;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -23,7 +23,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 218 526 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 23 43 table;
@@ -36,9 +36,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 98 491 (none);
 #N canvas 0 0 450 300 (subpatch) 0;
 #X coords 0 1 100 -1 40 20 1;
-#X restore 481 2 graph;
-#X obj 456 20 pddp/pddplink http://wiki.puredata.info/en/graph -text
-pdpedia: graph;
+#X restore 496 9 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X coords 0 1 100 -1 200 140 1;
 #X restore 165 188 graph;
@@ -56,5 +54,6 @@ window. For more help on garrays \, see below under the heading "more_info".
 #X text 167 532 - (optional) the name of the graph. When using the
 "Put" menu \, the name is created automatically.;
 #X text 11 23 container canvas for a garray;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 98 572 pddp/pddplink array-help.pd -text array-help;

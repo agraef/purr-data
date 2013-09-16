@@ -1,33 +1,61 @@
-#N canvas 0 26 448 277 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 11 237 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 10 251 ___________________________________________________
+#N canvas 428 35 559 401 10;
+#X obj -1 373 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 224 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 628 170 351 238 META 0;
+#X text 6 123 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 6 -23 LICENSE SIBSD;
+#X text 6 104 AUTHOR Miller Puckette;
+#X text 6 142 RELEASE_DATE 1997;
+#X text 6 85 LIBRARY cyclone;
+#X text 6 161 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 6 47 INLET_1 float;
+#X text 6 -42 KEYWORDS combine numbers list threshold thresh;
+#X text 6 -4 DESCRIPTION combine numbers that are received close together
+into a list;
+#X text 6 28 INLET_0 float;
+#X text 6 66 OUTLET_0 list;
+#X restore 501 375 pd META;
+#X obj -1 287 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 329 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 318 298 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 199 375 pd Related_objects;
+#X obj 78 234 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 299 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header thresh 3 12 0 18
+-204280 -1 0;
+#X obj 78 260 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 110 260 float;
+#X text 92 342 1) float;
+#X obj 500 10 thresh;
+#X obj 159 132 thresh 100;
+#X obj 159 176 print thresh;
+#X floatatom 159 68 5 0 0 0 - - -, f 5;
+#X text 196 69 move fast!!!;
+#X floatatom 216 97 5 0 0 0 - - -, f 5;
+#X text 254 96 period length;
+#X text 110 233 float;
+#X text 178 233 - number to store into list;
+#X text 178 260 - period length;
+#X text 110 299 list;
+#X text 178 299 - list of numbers stored that a recieved within period
 ;
-#X obj 12 33 thresh;
-#X text 71 35 combine numbers into a list that are received close together
+#X text 178 342 - initial period length;
+#X text 229 125 inital arg sets period length (default 10msecs);
+#X text 11 23 combine numbers that are received close together into
+a list;
+#X obj 11 375 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 13 151 thresh 100;
-#X obj 13 175 print thresh;
-#X floatatom 13 82 5 0 0 0 - - -;
-#X text 62 83 move fast!!!;
-#X floatatom 78 112 5 0 0 0 - - -;
-#X text 123 111 period length;
-#X text 93 150 inital arg sets period length (default 10msecs);
-#N canvas 380 180 494 373 META 0;
-#X text 12 185 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 155 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 45 DESCRIPTION combine numbers into a list that are received
-close together;
-#X text 12 75 INLET_0 list float;
-#X text 12 95 INLET_1 float;
-#X text 12 115 OUTLET_0 list;
-#X text 12 5 KEYWORDS control conversion max_compatible list_op;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 135 AUTHOR Krzysztof Czaja;
-#X restore 397 256 pd META;
-#X connect 5 0 6 0;
-#X connect 7 0 5 0;
-#X connect 9 0 5 1;
+#X connect 13 0 14 0;
+#X connect 15 0 13 0;
+#X connect 17 0 13 1;

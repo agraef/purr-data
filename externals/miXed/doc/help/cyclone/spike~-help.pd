@@ -1,40 +1,75 @@
-#N canvas 0 26 456 227 10;
-#X text 15 35 Report intervals of zero to non-zero transitions;
-#X obj 64 162 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X obj 40 162 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X obj 40 138 edge~;
-#X obj 86 181 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X floatatom 215 101 0 0 0 0 - - -;
-#X floatatom 119 62 0 0 0 0 - - -;
-#X floatatom 119 180 0 0 0 0 - - -;
-#X obj 119 90 train~ 85.5;
-#X text 168 58 adjust interval;
-#X text 253 100 set refractory period;
-#X text 130 156 interval output;
-#X text 57 120 signal input;
-#X obj 119 137 spike~;
-#N canvas 380 180 494 383 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#N canvas 419 37 558 484 10;
+#X obj -1 457 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 294 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 583 246 378 247 META 0;
+#X text 6 135 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 6 2 LICENSE SIBSD;
+#X text 6 116 AUTHOR Miller Puckette;
+#X text 6 154 RELEASE_DATE 1997;
+#X text 6 97 LIBRARY cyclone;
+#X text 6 173 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 6 59 INLET_1 float;
+#X text 6 -30 KEYWORDS signal intervals transitions refractory zero
+non-zero;
+#X text 6 21 DESCRIPTION report intervals of zero to non-zero transitions
 ;
-#X text 12 5 KEYWORDS signal max_compatible;
-#X text 12 45 DESCRIPTION report intervals of zero to non-zero transitions
+#X text 6 40 INLET_0 signal;
+#X text 6 78 OUTLET_0 float bang;
+#X restore 500 459 pd META;
+#X obj -1 355 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 414 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 306 384 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 204 459 pd Related_objects;
+#X obj 81 303 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 81 366 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header spike~ 3 12 0 18
+-204280 -1 0;
+#X text 11 23 Report intervals of zero to non-zero transitions;
+#X text 108 303 signal;
+#X text 181 303 - input signal to detect transitions;
+#X obj 81 329 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 109 329 float;
+#X text 181 329 - set refractory period;
+#X text 109 364 float;
+#X text 181 364 - report time interval of zero to non-zero transitions
 ;
-#X text 12 65 INLET_0 signal;
-#X text 12 85 INLET_1 float;
-#X text 12 105 OUTLET_0 float;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 406 206 pd META;
-#X connect 3 0 2 0;
-#X connect 3 1 1 0;
-#X connect 5 0 13 1;
-#X connect 6 0 8 0;
-#X connect 8 0 3 0;
-#X connect 8 0 13 0;
-#X connect 13 0 4 0;
-#X connect 13 0 7 0;
+#X text 104 425 (none);
+#X text 110 386 bang;
+#X text 181 386 - bang when number output;
+#X obj 499 10 spike~;
+#X obj 479 55 pddp/dsp;
+#X obj 234 155 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 207 155 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 207 131 edge~;
+#X obj 187 242 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 220 184 0 0 0 0 - - -;
+#X floatatom 186 77 0 0 0 0 - - -;
+#X floatatom 220 241 0 0 0 0 - - -;
+#X obj 186 105 train~ 85.5;
+#X text 214 77 adjust interval;
+#X text 249 185 set refractory period;
+#X obj 187 208 spike~;
+#X obj 8 459 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 24 0 23 0;
+#X connect 24 1 22 0;
+#X connect 26 0 32 1;
+#X connect 27 0 29 0;
+#X connect 29 0 24 0;
+#X connect 29 0 32 0;
+#X connect 32 0 25 0;
+#X connect 32 0 28 0;

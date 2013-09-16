@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 29 549 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header loadbang 3 12 0
 18 -204280 -1 0;
 #X obj 0 422 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 244 494 344 META 0;
+#N canvas 482 280 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Pd version 0.42.;
 #X obj 0 520 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 495 (none);
-#N canvas 89 493 428 100 Related_objects 0;
+#N canvas 219 516 428 100 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 21 42 bang;
@@ -38,14 +38,12 @@ Pd version 0.42.;
 #X restore 102 597 pd Related_objects;
 #X obj 78 459 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 466 3 loadbang;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/loadbang -text
-pdpedia: loadbang;
+#X obj 480 12 loadbang;
 #X obj 89 264 loadbang;
 #X obj 89 312 f 1;
 #X obj 132 312 f 4;
 #X obj 89 337 +;
-#X floatatom 89 361 5 0 0 0 - - -;
+#X floatatom 89 361 5 0 0 0 - - -, f 5;
 #X obj 89 287 t b b;
 #X obj 87 122 loadbang;
 #X obj 87 147 metro 1000;
@@ -65,11 +63,11 @@ a process automatically when this patch was loaded.;
 of numbers. Click the [bng] below to verify that the numbers were stored
 in the [float] objects.;
 #X obj 25 327 f;
-#X floatatom 25 352 2 0 0 0 - - -;
+#X floatatom 25 352 2 0 0 0 - - -, f 2;
 #X obj 64 327 f;
-#X floatatom 64 352 2 0 0 0 - - -;
+#X floatatom 64 352 2 0 0 0 - - -, f 2;
 #X obj 104 327 f;
-#X floatatom 103 352 2 0 0 0 - - -;
+#X floatatom 103 352 2 0 0 0 - - -, f 2;
 #X obj 25 235 bng 15 250 50 0 empty empty Click_here_to_see_the_numbers_stored_in_the_float_objects.
 0 -6 0 8 -262144 -1 -1;
 #X obj 194 288 random 10;
@@ -119,11 +117,11 @@ line can be found in Chapter 3.6 of the HTML documentation.;
 ;
 #X obj 101 572 pddp/pddplink ../1.manual/x3.htm -text Pd Manual Chapter
 3.6 - doc/1.manual/x3.htm;
-#X connect 12 0 17 0;
-#X connect 13 0 15 0;
-#X connect 14 0 15 1;
-#X connect 15 0 16 0;
-#X connect 17 0 13 0;
-#X connect 17 1 14 0;
+#X connect 11 0 16 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 1;
+#X connect 14 0 15 0;
+#X connect 16 0 12 0;
+#X connect 16 1 13 0;
+#X connect 17 0 18 0;
 #X connect 18 0 19 0;
-#X connect 19 0 20 0;

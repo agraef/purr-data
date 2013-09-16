@@ -1,59 +1,97 @@
-#N canvas 0 26 620 311 10;
-#X obj 55 164 sustain;
-#X floatatom 55 221 5 0 0 0 - - -;
-#X floatatom 99 195 5 0 0 0 - - -;
-#X msg 55 78 44 127;
-#X text 110 77 note on =;
-#X msg 184 76 pitch velocity;
-#X text 294 76 is passed through;
-#X text 144 195 velocity;
-#X text 101 221 pitch;
-#X text 110 103 note off (i.e. velocity = 0);
-#X obj 99 140 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+#N canvas 427 34 558 562 10;
+#X obj -1 534 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 611 310 368 258 META 0;
+#X text 10 150 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 -21 LICENSE SIBSD;
+#X text 10 131 AUTHOR Miller Puckette;
+#X text 10 169 RELEASE_DATE 1997;
+#X text 10 112 LIBRARY cyclone;
+#X text 10 188 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 36 INLET_1 float;
+#X text 10 74 OUTLET_0 float;
+#X text 10 -40 KEYWORDS pitch velocity hold note offs;
+#X text 10 -2 DESCRIPTION hold note offs and output them on request
 ;
-#X msg 69 103 55 0;
-#X text 121 133 when on sustain holds back all note offs;
-#X text 121 144 and outputs them when turned off again.;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 28 272 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 27 286 ___________________________________________________
+#X text 10 17 INLET_0 list float;
+#X text 10 55 INLET_2 toggle;
+#X text 10 93 OUTLET_1 float;
+#X restore 502 536 pd META;
+#X obj -1 429 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 492 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 318 457 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 204 536 pd Related_objects;
+#X obj 80 440 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header sustain 3 12 0
+18 -204280 -1 0;
+#X obj 492 10 sustain;
+#X text 11 23 hold note offs and output them on request;
+#X obj -1 298 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#X obj 80 308 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 24 179 sustain;
+#X floatatom 24 236 5 0 0 0 - - -, f 5;
+#X floatatom 63 210 5 0 0 0 - - -, f 5;
+#X msg 24 93 44 127;
+#X text 69 92 note on =;
+#X msg 132 92 pitch velocity;
+#X text 226 92 is passed through;
+#X text 98 210 velocity;
+#X text 59 236 pitch;
+#X text 73 118 note off (i.e. velocity = 0);
+#X obj 63 155 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
-#X obj 466 178 sustain;
-#X obj 510 148 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X msg 38 118 55 0;
+#X text 82 148 when on sustain holds back all note offs;
+#X text 82 159 and outputs them when turned off again.;
+#X obj 395 179 sustain;
+#X obj 434 158 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X floatatom 466 205 5 0 0 0 - - -;
-#X floatatom 510 204 5 0 0 0 - - -;
-#X floatatom 466 120 5 0 0 0 - - -;
-#X floatatom 488 98 5 0 0 0 - - -;
-#X text 462 74 alternatively:;
-#X text 531 95 set velocity;
-#X text 508 119 then pitch;
-#N canvas 380 180 494 404 META 0;
-#X text 12 215 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 185 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X floatatom 395 206 5 0 0 0 - - -, f 5;
+#X floatatom 434 205 5 0 0 0 - - -, f 5;
+#X floatatom 395 108 5 0 0 0 - - -, f 5;
+#X floatatom 414 134 5 0 0 0 - - -, f 5;
+#X text 451 131 set velocity;
+#X text 430 107 then pitch;
+#X text 180 307 - send x \, y pair that represent pitch and velocity
+\, velocity zero turns note off;
+#X obj 80 389 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X text 106 389 toggle;
+#X text 180 389 - when on \, sustain holds back all note offs and outputs
+them when turned off again;
+#X text 106 440 float;
+#X text 180 440 - pitch;
+#X text 105 504 (none);
+#X obj 80 465 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 106 465 float;
+#X text 180 465 - velocity;
+#X text 387 75 alternately:;
+#X obj 80 363 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 106 307 list;
+#X text 106 363 float;
+#X text 180 363 - set velocity;
+#X text 106 338 float;
+#X text 180 338 - set pitch;
+#X obj 5 538 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS control MIDI storage max_compatible;
-#X text 12 45 DESCRIPTION hold note offs and output them on request
-;
-#X text 12 65 INLET_0 float list;
-#X text 12 85 INLET_1 float;
-#X text 12 105 INLET_2 float;
-#X text 12 125 OUTLET_0 float;
-#X text 12 145 OUTLET_1 float;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 165 AUTHOR Krzysztof Czaja;
-#X restore 571 291 pd META;
-#X obj 23 19 sustain;
-#X text 92 19 hold note offs and output them on request;
-#X connect 0 0 1 0;
-#X connect 0 1 2 0;
-#X connect 3 0 0 0;
-#X connect 10 0 0 2;
-#X connect 11 0 0 0;
-#X connect 17 0 19 0;
-#X connect 17 1 20 0;
-#X connect 18 0 17 2;
-#X connect 21 0 17 0;
-#X connect 22 0 17 1;
+#X connect 11 0 12 0;
+#X connect 11 1 13 0;
+#X connect 14 0 11 0;
+#X connect 21 0 11 2;
+#X connect 22 0 11 0;
+#X connect 25 0 27 0;
+#X connect 25 1 28 0;
+#X connect 26 0 25 2;
+#X connect 29 0 25 0;
+#X connect 30 0 25 1;

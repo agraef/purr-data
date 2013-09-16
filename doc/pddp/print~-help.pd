@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header print~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 427 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 344 META 0;
+#N canvas 487 287 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 544 (none);
-#N canvas 105 481 428 109 Related_objects 0;
+#N canvas 212 516 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 print;
@@ -34,9 +34,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X restore 102 597 pd Related_objects;
 #X obj 78 436 cnv 17 3 65 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 477 3 print~;
-#X obj 452 20 pddp/pddplink http://wiki.puredata.info/en/print~ -text
-pdpedia: print~;
+#X obj 502 8 print~;
 #X obj 138 274 print~;
 #X msg 150 215 bang;
 #X obj 138 189 phasor~ 1000;
@@ -57,8 +55,9 @@ one or more vectors out when you send it a bang or a number. By default
 a vector is 64 samples.;
 #X text 168 516 - [print~] sends its output to the console window.
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 13 0 12 0;
-#X connect 14 0 12 0;
-#X connect 17 0 12 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 480 56 pddp/dsp;
+#X connect 12 0 11 0;
+#X connect 13 0 11 0;
+#X connect 16 0 11 0;

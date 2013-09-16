@@ -1,4 +1,4 @@
-#N canvas 0 0 448 248 10;
+#N canvas 431 35 448 248 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header atom_conversion
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -6,7 +6,7 @@
 #X obj 43 80 pddp/pddplink all_about_messages.pd;
 #X obj 1 226 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 402 131 468 128 META 0;
 #X text 12 65 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -14,12 +14,12 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION how to convert Pd atoms;
 #X restore 392 228 pd META;
-#N canvas 14 133 428 105 Related_objects 0;
+#N canvas 222 153 428 105 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Atoms- Related Objects;
-#X floatatom 22 43 5 0 0 0 - - -;
-#X symbolatom 22 67 10 0 0 0 - - -;
+#X floatatom 22 43 5 0 0 0 - - -, f 5;
+#X symbolatom 22 67 10 0 0 0 - - -, f 10;
 #X obj 105 42 makefilename;
 #X obj 200 60 pddp/helplink cyclone/fromsymbol;
 #X obj 200 80 pddp/helplink zexy/symbol2list;
@@ -59,7 +59,7 @@ a float. There are two important externals for this \, however:;
 #X text 255 494 where "123" is a real;
 #X text 255 509 symbol-atom;
 #X obj 130 503 send;
-#X floatatom 93 479 5 0 0 0 - - -;
+#X floatatom 93 479 5 0 0 0 - - -, f 5;
 #X text 19 494 Also see:;
 #X obj 20 514 pddp/helplink zexy/list2symbol;
 #X obj 20 529 pddp/helplink cyclone/tosymbol;
@@ -98,7 +98,7 @@ as an element) \, and so it will convert an incoming float to a symbol-atom:
 #X msg 42 98 list one 2 3;
 #X msg 140 98 1 2 3;
 #X msg 42 131 symbol \$1\$2\$3;
-#X symbolatom 42 158 10 0 0 0 - - -;
+#X symbolatom 42 158 10 0 0 0 - - -, f 10;
 #X text 19 36 Dollarsign variables can be used to join several atoms
 together to form one atom. The result is always a symbol-atom.;
 #X text 139 131 \$1\$2\$3 is always a symbol-atom \,;

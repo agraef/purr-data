@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header spigot 3 12 0 18
 -204280 -1 0;
 #X obj 0 295 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 243 494 364 META 0;
+#N canvas 486 265 494 364 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 538 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 72 359 428 230 Related_objects 0;
+#N canvas 217 400 428 230 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [spigot] Related Objects;
@@ -51,12 +51,10 @@ is:;
 #X obj 78 345 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 344 float;
-#X obj 481 3 spigot;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/spigot -text
-pdpedia: spigot;
+#X obj 498 10 spigot;
 #X text 11 23 pass or block messages;
 #X msg 101 111 0.5 1000;
-#X floatatom 134 177 1 0 0 0 - - -;
+#X floatatom 134 177 1 0 0 0 - - -, f 1;
 #X obj 101 197 spigot;
 #X obj 101 218 print;
 #X msg 120 155 walk the cat;
@@ -76,10 +74,10 @@ door is open \, messages can pass through. When the door is closed
 both audio and numerical data \, but similar routines can be built
 in Pd using [spigot]. The example below shows a two-way gate using
 two [spigots] and the [expr] object.;
-#X floatatom 121 188 1 0 0 0 - - -;
+#X floatatom 121 188 1 0 0 0 - - -, f 1;
 #X text 138 187 controls: open and close the gates.;
-#X floatatom 24 262 5 0 0 0 - - -;
-#X floatatom 76 262 5 0 0 0 - - -;
+#X floatatom 24 262 5 0 0 0 - - -, f 5;
+#X floatatom 76 262 5 0 0 0 - - -, f 5;
 #X obj 24 129 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
 #X obj 24 149 metro 200;
@@ -113,9 +111,9 @@ completely different treatment.;
 the same effect can be created using the following structure:;
 #X obj 24 147 osc~ 800;
 #X obj 24 217 *~;
-#X floatatom 39 196 1 0 0 0 - - -;
+#X floatatom 39 196 1 0 0 0 - - -, f 1;
 #X obj 24 279 env~;
-#X floatatom 24 300 5 0 0 0 - - -;
+#X floatatom 24 300 5 0 0 0 - - -, f 5;
 #X obj 69 299 dac~;
 #X obj 69 279 *~ 0.05;
 #X text 79 168 Here is the [spigot].;
@@ -178,11 +176,12 @@ of the object. This was removed in Pd 0.38-3;
 #X connect 4 0 5 0;
 #X restore 171 510 pd creation_args;
 #X text 90 457 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 296 548 pddp/pddplink ../2.control.examples/18.conditional.pd
 -text doc/2.control.examples/18.conditional.pd;
-#X connect 15 0 17 0;
-#X connect 16 0 17 1;
-#X connect 17 0 18 0;
-#X connect 19 0 17 0;
-#X connect 20 0 17 0;
+#X connect 14 0 16 0;
+#X connect 15 0 16 1;
+#X connect 16 0 17 0;
+#X connect 18 0 16 0;
+#X connect 19 0 16 0;

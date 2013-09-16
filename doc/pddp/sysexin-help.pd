@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 428 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header sysexin 3 12 0 18
 -204280 -1 0;
 #X obj 0 441 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 47 253 494 344 META 0;
+#N canvas 480 286 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 441 423 Related_objects 0;
+#N canvas 202 205 441 423 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -81,11 +81,9 @@ by Olaf Matthes);
 #X text 168 502 - ???;
 #X text 80 545 1) ???;
 #X text 168 545 - ???;
-#X obj 484 3 sysexin;
-#X obj 447 20 pddp/pddplink http://wiki.puredata.info/en/sysexin -text
-pdpedia: sysexin;
+#X obj 490 11 sysexin;
 #X obj 225 153 sysexin;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 27 0 14 0;
-#X connect 27 1 15 0;
+#X connect 26 0 14 0;
+#X connect 26 1 15 0;

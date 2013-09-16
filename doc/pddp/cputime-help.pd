@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header cputime 3 12 0 18
 -204280 -1 0;
 #X obj 0 333 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 242 494 360 META 0;
+#N canvas 483 273 494 360 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -32,7 +32,7 @@ for Pd version 0.42.;
 -162280 0;
 #X text 98 454 (none);
 #X text 98 416 float;
-#N canvas 48 338 428 252 Related_objects 0;
+#N canvas 214 380 428 252 Related_objects 0;
 #X obj 125 35 metro;
 #X obj 62 35 realtime;
 #X obj 14 36 timer;
@@ -52,9 +52,7 @@ may not exist in a single library.;
 #X text 7 1 [cputime] Related Objects;
 #X obj 11 91 pddp/helplink iemlib/t3_timer;
 #X restore 102 597 pd Related_objects;
-#X obj 471 3 cputime;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/cputime -text
-pdpedia: cputime;
+#X obj 493 10 cputime;
 #X msg 122 156 bang;
 #X msg 83 134 bang;
 #X floatatom 83 200 0 0 0 0 - - -;
@@ -164,6 +162,6 @@ to be output (in milliseconds).;
 #X text 101 531 For a patch that uses [cputime] see:;
 #X obj 98 551 pddp/pddplink ../7.stuff/tools/load-meter.pd;
 #X text 101 571 (also accessible from the "Media" menu);
-#X connect 13 0 19 1;
-#X connect 14 0 19 0;
-#X connect 19 0 15 0;
+#X connect 12 0 18 1;
+#X connect 13 0 18 0;
+#X connect 18 0 14 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 28 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bonk~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 235 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 208 227 494 344 META 0;
+#N canvas 476 281 494 344 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ learn forget write read;
 0 13 -228856 -1 0;
 #X obj 78 244 cnv 17 3 45 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 45 491 428 101 Related_objects 0;
+#N canvas 209 519 428 101 Related_objects 0;
 #X obj 21 42 env~;
 #X obj 59 42 threshold~;
 #X obj 135 42 fiddle~;
@@ -40,9 +40,7 @@ learn forget write read;
 #X restore 100 597 pd Related_objects;
 #X obj 78 308 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 483 3 bonk~;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/bonk~ -text
-pdpedia: bonk~;
+#X obj 504 12 bonk~;
 #X obj 234 135 spigot;
 #X obj 151 79 bonk~;
 #X obj 151 135 spigot;
@@ -269,17 +267,18 @@ nominally 11 filters). This "velocity" is the sum of the square roots
 of the amplitudes of the bands \, normalized so that 100 is an attack
 of amplitude of about 1 . The instrument number is significant only
 if [bonk~] has a "template set" in memory.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 12 0 17 0;
-#X connect 13 0 14 0;
-#X connect 13 1 12 0;
-#X connect 13 1 20 0;
-#X connect 14 0 18 0;
-#X connect 15 0 14 1;
-#X connect 16 0 12 1;
-#X connect 21 0 13 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 476 54 pddp/dsp;
+#X connect 11 0 16 0;
+#X connect 12 0 13 0;
+#X connect 12 1 11 0;
+#X connect 12 1 19 0;
+#X connect 13 0 17 0;
+#X connect 14 0 13 1;
+#X connect 15 0 11 1;
+#X connect 20 0 12 0;
+#X connect 22 0 21 0;
 #X connect 23 0 22 0;
-#X connect 24 0 23 0;
-#X connect 25 0 23 0;
-#X connect 33 0 13 0;
+#X connect 24 0 22 0;
+#X connect 32 0 12 0;

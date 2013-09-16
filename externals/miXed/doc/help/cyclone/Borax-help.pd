@@ -1,71 +1,126 @@
-#N canvas 0 26 606 459 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 16 416 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 15 430 ___________________________________________________
+#N canvas 272 43 553 637 10;
+#X obj -1 770 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 389 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 397 244 424 414 META 0;
+#X text 57 314 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 57 26 LICENSE SIBSD;
+#X text 57 296 AUTHOR Miller Puckette;
+#X text 57 332 RELEASE_DATE 1997;
+#X text 57 278 LIBRARY cyclone;
+#X text 57 8 KEYWORDS midi note music pitch velocity;
+#X text 57 44 DESCRIPTION reports current info on note on/off;
+#X text 57 80 INLET_1 float;
+#X text 57 62 INLET_0 float;
+#X text 57 98 INLET_2 bang;
+#X text 57 116 OUTLET_0 float;
+#X text 57 134 OUTLET_1 float;
+#X text 57 152 OUTLET_2 float;
+#X text 57 170 OUTLET_3 float;
+#X text 57 188 OUTLET_4 float;
+#X text 57 206 OUTLET_5 float;
+#X text 57 224 OUTLET_6 float;
+#X text 57 242 OUTLET_7 float;
+#X text 57 260 OUTLET_8 float;
+#X text 57 350 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 501 772 pd META;
+#X obj -1 466 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 697 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 164 546 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 9 30 notein;
+#X obj 65 30 midiin;
+#X obj 121 30 midiparse;
+#X obj 9 53 noteout;
+#X obj 121 54 midiformat;
+#X obj 65 54 midiout;
+#X restore 207 772 pd Related_objects;
+#X obj 79 444 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header Borax 3 12 0 18
+-204280 -1 0;
+#X text 11 23 reports current info on note on/off;
+#X obj 87 78 notein 1;
+#X floatatom 87 347 5 0 0 0 - - -;
+#X floatatom 101 320 5 0 0 0 - - -;
+#X floatatom 115 295 5 0 0 0 - - -;
+#X floatatom 129 269 5 0 0 0 - - -;
+#X floatatom 143 243 5 0 0 0 - - -;
+#X floatatom 157 217 5 0 0 0 - - -;
+#X floatatom 171 191 5 0 0 0 - - -;
+#X floatatom 185 165 5 0 0 0 - - -;
+#X floatatom 199 139 5 0 0 0 - - -;
+#X text 413 523 offs);
+#X text 427 592 offs received);
+#X msg 199 78 bang;
+#X text 231 76 reset all values;
+#X text 377 477 on or off;
+#X text 108 397 float;
+#X text 157 396 - midi note number;
+#X obj 79 500 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 108 420 float;
+#X text 157 419 - velocity;
+#X obj 79 421 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 108 442 bang;
+#X text 157 441 - reset all values;
+#X obj 79 523 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
+-162280 0;
+#X obj 79 477 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 546 cnv 17 3 17 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
+-162280 0;
+#X obj 79 569 cnv 17 3 17 empty \$0-pddp.cnv.let.0 4 5 9 0 16 -228856
+-162280 0;
+#X obj 79 592 cnv 17 3 17 empty \$0-pddp.cnv.let.0 5 5 9 0 16 -228856
+-162280 0;
+#X obj 79 615 cnv 17 3 17 empty \$0-pddp.cnv.let.0 6 5 9 0 16 -228856
+-162280 0;
+#X obj 79 642 cnv 17 3 17 empty \$0-pddp.cnv.let.0 7 5 9 0 16 -228856
+-162280 0;
+#X obj 79 665 cnv 17 3 17 empty \$0-pddp.cnv.let.0 8 5 9 0 16 -228856
+-162280 0;
+#X text 108 523 float;
+#X text 108 499 float;
+#X text 108 546 float;
+#X text 108 569 float;
+#X text 108 592 float;
+#X text 108 614 float;
+#X text 108 641 float;
+#X text 108 665 float;
+#X text 108 477 float;
+#X text 157 477 - nr of incoming note that is turned;
+#X text 157 499 - voice nr of incoming note on / off;
+#X text 157 523 - nr of notes being held (i.e. ons without;
+#X text 157 545 - pitch of current on/off received;
+#X text 157 569 - velocity of current note;
+#X text 157 592 - nr of all completed notes (i.e. nr of note;
+#X text 157 613 - duration of last note completed;
+#X text 157 640 - total count of delta times (see below);
+#X text 157 665 - delta time of last two note ons;
+#X text 97 711 (none);
+#X obj 424 4 Borax;
+#X obj 79 397 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 87 113 Borax;
+#X obj 7 770 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 39 19 Borax;
-#X text 95 20 reports current info on note on/off;
-#X obj 34 95 notein 1;
-#X obj 34 129 Borax ---------------;
-#X floatatom 34 364 5 0 0 0 - - -;
-#X floatatom 49 338 5 0 0 0 - - -;
-#X floatatom 64 312 5 0 0 0 - - -;
-#X floatatom 80 286 5 0 0 0 - - -;
-#X floatatom 95 260 5 0 0 0 - - -;
-#X floatatom 110 234 5 0 0 0 - - -;
-#X floatatom 126 208 5 0 0 0 - - -;
-#X floatatom 141 182 5 0 0 0 - - -;
-#X floatatom 157 156 5 0 0 0 - - -;
-#X text 96 336 <------------------ voice nr of incoming note on / off
-;
-#X text 457 311 offs);
-#X text 106 311 <---------------- nr of notes being held (i.e. ons
-without;
-#X text 119 286 <-------------- pitch of current on/off received;
-#X text 137 260 <----------- velocity of current note;
-#X text 155 234 <-------- nr of all completed notes (i.e. nr of note
-;
-#X text 472 234 offs received);
-#X text 167 208 <------ duration of last note completed;
-#X text 198 155 <- delta time of last two note ons;
-#X text 184 181 <--- total count of delta times (see below);
-#X msg 157 95 bang;
-#X text 215 94 reset all values;
-#N canvas 364 7 494 548 META 0;
-#X text 12 355 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 325 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS control MIDI max_compatible;
-#X text 12 45 DESCRIPTION report current info on note on / off;
-#X text 12 65 INLET_0 float;
-#X text 12 85 INLET_1 float;
-#X text 12 105 INLET_2 bang;
-#X text 12 125 OUTLET_0 float;
-#X text 12 145 OUTLET_1 float;
-#X text 12 165 OUTLET_2 float;
-#X text 12 185 OUTLET_3 float;
-#X text 12 205 OUTLET_4 float;
-#X text 12 225 OUTLET_5 float;
-#X text 12 245 OUTLET_6 float;
-#X text 12 265 OUTLET_7 float;
-#X text 12 285 OUTLET_8 float;
-#X text 12 305 AUTHOR Krzysztof Czaja;
-#X text 12 25 LICENSE SIBSD;
-#X restore 556 437 pd META;
-#X text 426 363 on or off;
-#X text 78 363 <--------------------- nr of incoming note that is turned
-;
-#X connect 5 0 6 0;
-#X connect 5 1 6 1;
-#X connect 6 0 7 0;
-#X connect 6 1 8 0;
-#X connect 6 2 9 0;
-#X connect 6 3 10 0;
-#X connect 6 4 11 0;
-#X connect 6 5 12 0;
-#X connect 6 6 13 0;
-#X connect 6 7 14 0;
-#X connect 6 8 15 0;
-#X connect 26 0 6 2;
+#X connect 9 0 61 0;
+#X connect 9 1 61 1;
+#X connect 21 0 61 2;
+#X connect 61 0 10 0;
+#X connect 61 1 11 0;
+#X connect 61 2 12 0;
+#X connect 61 3 13 0;
+#X connect 61 4 14 0;
+#X connect 61 5 15 0;
+#X connect 61 6 16 0;
+#X connect 61 7 17 0;
+#X connect 61 8 18 0;

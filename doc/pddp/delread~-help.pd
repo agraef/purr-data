@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header delread~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 292 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 244 494 344 META 0;
+#N canvas 484 286 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2009-06-12;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 301 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 93 450 428 139 Related_objects 0;
+#N canvas 216 491 428 139 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 19 78 Control objects for delays:;
@@ -40,8 +40,6 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 393 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 393 signal;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/delread~ -text
-pdpedia: delread~;
 #X floatatom 299 169 0 0 0 0 - - -;
 #X text 340 168 input to delay line;
 #X obj 299 193 sig~;
@@ -58,7 +56,7 @@ size of the delay line or less than zero it is clipped to the length
 of the delay line.;
 #X text 98 483 You can use more than one [delread~] object for the
 same delay line.;
-#X obj 466 3 delread~;
+#X obj 485 10 delread~;
 #X obj 299 218 delwrite~ delread_ex 1000;
 #X obj 112 148 delread~ delread_ex 1000;
 #X text 11 23 read a signal from a delay line;
@@ -71,18 +69,19 @@ same delay line.;
 #X text 98 511 Note: if the [delwrite~] runs after the [delread~] the
 minimum delay is actually one DSP period \, not zero.;
 #X text 80 440 1) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 474 58 pddp/dsp;
 #X obj 98 542 pddp/pddplink ../3.audio.examples/G01.delay.pd -text
 doc/3.audio.examples/G01.delay.pd;
 #X obj 98 557 pddp/pddplink ../3.audio.examples/G02.delay.loop.pd -text
 doc/3.audio.examples/G02.delay.loop.pd;
 #X obj 98 572 pddp/pddplink ../3.audio.examples/G05.execution.order.pd
 -text doc/3.audio.examples/G05.execution.order.pd;
-#X connect 12 0 14 0;
+#X connect 11 0 13 0;
+#X connect 13 0 25 0;
 #X connect 14 0 26 0;
-#X connect 15 0 27 0;
-#X connect 17 0 18 0;
-#X connect 19 0 20 0;
-#X connect 20 0 17 0;
-#X connect 27 0 17 0;
+#X connect 16 0 17 0;
+#X connect 18 0 19 0;
+#X connect 19 0 16 0;
+#X connect 26 0 16 0;

@@ -1,70 +1,73 @@
-#N canvas 0 26 667 373 10;
-#X floatatom 46 248 5 0 0 0 - - -;
-#X obj 46 191 xbendin;
-#X floatatom 90 220 5 0 0 0 - - -;
-#X obj 266 192 xbendin 1;
-#X floatatom 266 249 5 0 0 0 - - -;
-#X text 341 191 arg = channel nr;
-#X text 130 221 channel nr;
-#X obj 46 156 xbendout;
-#X floatatom 46 105 5 0 0 0 - - -;
-#X floatatom 97 133 5 0 0 0 - - -;
-#X text 97 250 14 bit pitchbend value;
-#X floatatom 266 107 5 0 0 0 - - -;
-#X obj 266 161 xbendout 1;
-#X text 98 104 14 bit pitchbend value;
-#X text 136 133 channel nr;
-#X text 462 18 that can handle 14 bit values;
-#X obj 480 197 xbendin2 1;
-#X obj 480 164 xbendout2 1;
-#X floatatom 480 252 5 0 0 0 - - -;
-#X floatatom 480 89 5 0 0 0 - - -;
-#X floatatom 545 226 5 0 0 0 - - -;
-#X floatatom 552 141 5 0 0 0 - - -;
-#X text 594 142 channel;
-#X text 560 116 lsb;
-#X text 523 90 msb;
-#X floatatom 516 114 5 0 0 0 - - -;
-#X text 587 224 lsb;
-#X text 522 252 msb;
-#X obj 4 14 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 31 332 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 30 346 ___________________________________________________
+#N canvas 427 38 559 519 10;
+#X obj -1 492 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 292 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 630 298 351 235 META 0;
+#X text 3 104 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 3 -36 LICENSE SIBSD;
+#X text 3 84 AUTHOR Miller Puckette;
+#X text 3 124 RELEASE_DATE 1997;
+#X text 3 64 LIBRARY cyclone;
+#X text 3 144 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 3 -56 KEYWORDS midi pitchbend pitch bend 14 bit channel;
+#X text 3 -16 DESCRIPTION midi pitchbend in;
+#X text 3 4 INLET_0 midi;
+#X text 3 24 OUTLET_0 float;
+#X text 3 44 OUTLET_1 float;
+#X restore 503 494 pd META;
+#X obj -1 332 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 395 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 436 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 320 412 428 119 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 29 35 xbendout;
+#X obj 29 61 xbendin2;
+#X obj 29 87 xbendout2;
+#X restore 205 494 pd Related_objects;
+#X obj 79 304 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 344 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header xbendin 3 12 0
+18 -204280 -1 0;
+#X obj 496 12 xbendin;
+#X floatatom 178 237 5 0 0 0 - - -, f 5;
+#X floatatom 229 207 5 0 0 0 - - -, f 5;
+#X text 269 208 channel nr;
+#X floatatom 178 73 5 0 0 0 - - -, f 5;
+#X floatatom 235 101 5 0 0 0 - - -, f 5;
+#X text 219 238 14 bit pitchbend value;
+#X text 219 72 14 bit pitchbend value;
+#X text 274 101 channel nr;
+#X text 179 304 - midi stream to input;
+#X text 110 343 float;
+#X text 179 343 - 14 bit pitchbend value;
+#X obj 79 368 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 110 367 float;
+#X text 179 367 - channel number;
+#X text 11 23 midi pitchbend in;
+#X text 110 304 midi;
+#X text 110 452 in/output from;
+#X obj 218 457 midiin;
+#X obj 309 457 midiout;
+#X text 268 452 or to;
+#X obj 178 131 xbendout 0;
+#X obj 178 168 xbendin 0;
+#X text 243 158 optional arg sets initial channel number;
+#X text 92 408 1) float;
+#X text 179 408 - sets initial channel number;
+#X obj 10 494 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 26 16 xbendin;
-#X obj 97 37 xbendout2;
-#X obj 97 16 xbendout;
-#X obj 26 36 xbendin2;
-#X text 192 19 extra precision midi pitchbend objects;
-#X text 192 34 in/output from;
-#X obj 300 39 midiin;
-#X obj 391 39 midiout;
-#X text 350 34 or to;
-#N canvas 309 151 494 364 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS control MIDI max_compatible;
-#X text 12 45 DESCRIPTION MIDI pitchbend;
-#X text 12 65 INLET_0 float;
-#X text 12 85 OUTLET_0 float;
-#X text 12 105 OUTLET_1 float;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 617 352 pd META;
-#X connect 1 0 0 0;
-#X connect 1 1 2 0;
-#X connect 3 0 4 0;
-#X connect 7 0 1 0;
-#X connect 8 0 7 0;
-#X connect 9 0 7 1;
-#X connect 11 0 12 0;
-#X connect 12 0 3 0;
-#X connect 16 0 18 0;
-#X connect 16 1 20 0;
-#X connect 17 0 16 0;
-#X connect 19 0 17 0;
-#X connect 21 0 17 2;
-#X connect 25 0 17 1;
+#X connect 14 0 31 0;
+#X connect 15 0 31 1;
+#X connect 31 0 32 0;
+#X connect 32 0 11 0;
+#X connect 32 1 12 0;

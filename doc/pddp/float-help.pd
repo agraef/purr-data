@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header float 3 12 0 18
 -204280 -1 0;
 #X obj 0 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 63 256 482 332 META 0;
+#N canvas 494 296 482 332 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -24,11 +24,11 @@ to conform to the PDDP template for Pd version 0.42.;
 0;
 #X obj 341 145 cnv 10 23 16 empty empty empty 20 12 0 14 -262126 -66577
 0;
-#X floatatom 379 117 5 0 0 0 - - -;
-#X floatatom 340 169 5 0 0 0 - - -;
+#X floatatom 379 117 5 0 0 0 - - -, f 5;
+#X floatatom 340 169 5 0 0 0 - - -, f 5;
 #X obj 359 117 bng 15 250 50 0 empty empty empty 20 7 0 12 -4034 -1
 -1;
-#X floatatom 80 169 5 0 0 0 - - -;
+#X floatatom 80 169 5 0 0 0 - - -, f 5;
 #X msg 80 61 bang;
 #X msg 320 61 7 3 4;
 #X obj 340 144 f;
@@ -43,11 +43,9 @@ to conform to the PDDP template for Pd version 0.42.;
 -162280 0;
 #X obj 78 347 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 460 21 pddp/pddplink http://wiki.puredata.info/en/float -text
-pdpedia: float;
-#X obj 462 3 float;
-#X obj 522 3 f;
-#X text 501 4 or;
+#X obj 462 12 float;
+#X obj 522 12 f;
+#X text 501 13 or;
 #X msg 119 115 12;
 #X msg 152 115 -0.02;
 #X msg 94 90 555;
@@ -135,14 +133,14 @@ by 3).;
 #X text 98 366 float;
 #X text 98 386 list;
 #X text 98 408 float;
-#N canvas 102 481 428 108 Related_objects 0;
+#N canvas 212 516 428 108 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [float] Related Objects;
 #X obj 22 36 int;
 #X obj 54 36 value;
 #X obj 101 36 list;
-#X floatatom 142 37 5 0 0 0 - - -;
+#X floatatom 142 37 5 0 0 0 - - -, f 5;
 #X msg 185 36;
 #X restore 101 597 pd Related_objects;
 #X text 99 445 float;
@@ -161,7 +159,7 @@ which sets the value that is stored.;
 #X obj 80 226 21;
 #X obj 80 206 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X floatatom 80 248 5 0 0 0 - - -;
+#X floatatom 80 248 5 0 0 0 - - -, f 5;
 #X text 122 204 As an additional shortcut \, you can leave off the
 class name "float" altogether and just use a single number in an object
 box to create a [float] object (with the value initialized to that
@@ -191,11 +189,11 @@ will create an implicit [list] object.);
 #X connect 11 0 12 0;
 #X connect 12 0 7 0;
 #X connect 13 0 9 0;
+#X connect 22 0 13 1;
 #X connect 23 0 13 1;
-#X connect 24 0 13 1;
-#X connect 25 0 13 0;
-#X connect 26 0 12 0;
-#X connect 49 0 51 0;
-#X connect 50 0 49 0;
-#X connect 56 0 58 0;
-#X connect 57 0 56 0;
+#X connect 24 0 13 0;
+#X connect 25 0 12 0;
+#X connect 48 0 50 0;
+#X connect 49 0 48 0;
+#X connect 55 0 57 0;
+#X connect 56 0 55 0;

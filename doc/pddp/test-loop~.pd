@@ -1,11 +1,11 @@
-#N canvas 33 0 680 609 12;
+#N canvas 428 34 680 609 12;
 #X floatatom 52 262 0 0 0 0 - - -;
 #X obj 261 346 print~;
 #X msg 47 373 bang;
 #X msg 274 313 bang;
 #X obj 52 306 loop~;
 #X floatatom 102 245 0 0 0 0 - - -;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array array1 44100 float 0;
 #X coords 0 10 44100 0 200 150 1;
 #X restore 65 17 graph;
@@ -16,7 +16,7 @@
 #X msg 194 261 bang;
 #X obj 204 347 print~;
 #X msg 217 314 bang;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array array2 150000 float 0;
 #X coords 0 1 150000 -1 200 150 1;
 #X restore 332 398 graph;

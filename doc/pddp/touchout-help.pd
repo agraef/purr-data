@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 31 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header touchout 3 12 0
 18 -204280 -1 0;
 #X obj 0 417 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 245 494 344 META 0;
+#N canvas 485 281 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 428 421 Related_objects 0;
+#N canvas 213 206 428 421 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -79,12 +79,11 @@ by Olaf Matthes);
 #X text 168 470 - ???;
 #X text 168 545 - ???;
 #X obj 236 192 touchout;
-#X floatatom 236 163 5 0 0 0 - - -;
-#X floatatom 281 163 5 0 0 0 - - -;
-#X obj 472 3 touchout;
-#X obj 439 20 pddp/pddplink http://wiki.puredata.info/en/touchout -text
-pdpedia: touchout;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X floatatom 236 163 5 0 0 0 - - -, f 5;
+#X floatatom 281 163 5 0 0 0 - - -, f 5;
+#X obj 487 11 touchout;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X text 98 445 list;
 #X text 168 445 - a list is distributed to the two inlets.;
 #X connect 21 0 20 0;

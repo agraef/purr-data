@@ -1,4 +1,4 @@
-#N canvas 87 221 428 300 10;
+#N canvas 434 38 428 300 10;
 #X obj 1 9 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 10 [initbang] Abstraction Example No 2;

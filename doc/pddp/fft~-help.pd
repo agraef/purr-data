@@ -1,11 +1,11 @@
-#N canvas 335 85 555 619 10;
+#N canvas 428 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header fft~ 3 12 0 18 -204280
 -1 0;
 #X obj 0 399 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 191 393 406 290 META 0;
+#N canvas 468 274 507 361 META 0;
 #X text 12 150 LIBRARY internal;
 #X text 12 190 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 210 RELEASE_DATE 2009-06-12;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 551 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 527 (none);
-#N canvas 435 567 428 107 Related_objects 0;
+#N canvas 214 524 428 107 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [fft~] Related Objects;
@@ -36,7 +36,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 68 42 rfft~;
 #X obj 114 42 rifft~;
 #X obj 163 42 block~;
-#X obj 214 42 switch~;
+#X obj 210 42 switch~;
 #X restore 101 597 pd Related_objects;
 #X obj 78 408 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -44,9 +44,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 433 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 491 3 fft~;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/fft~ -text
-pdpedia: fft~;
+#X obj 512 10 fft~;
 #X floatatom 15 124 0 0 0 0 - - -;
 #X obj 15 75 * 44100;
 #X floatatom 15 53 0 0 0 0 - - -;
@@ -91,23 +89,23 @@ block (you can use the [block~] or [switch~] objects to control block
 size).;
 #X obj 5 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 481 55 pddp/dsp;
 #X obj 98 555 pddp/pddplink ../3.audio.examples/I01.Fourier.analysis.pd
 -text doc/3.audio.examples/I01.Fourier.analysis.pd;
 #X text 98 573 also see examples I02-I10 in doc/3.audio.examples;
-#X connect 14 0 17 0;
-#X connect 15 0 19 0;
-#X connect 16 0 15 0;
-#X connect 17 0 18 0;
-#X connect 18 0 21 0;
-#X connect 18 0 20 0;
-#X connect 18 1 22 0;
-#X connect 18 1 20 1;
-#X connect 19 0 14 0;
-#X connect 20 0 23 0;
-#X connect 23 0 24 0;
-#X connect 25 0 24 0;
-#X connect 26 0 21 0;
-#X connect 26 0 22 0;
-#X connect 27 0 17 1;
-#X connect 28 0 17 1;
+#X connect 13 0 16 0;
+#X connect 14 0 18 0;
+#X connect 15 0 14 0;
+#X connect 16 0 17 0;
+#X connect 17 0 20 0;
+#X connect 17 0 19 0;
+#X connect 17 1 21 0;
+#X connect 17 1 19 1;
+#X connect 18 0 13 0;
+#X connect 19 0 22 0;
+#X connect 22 0 23 0;
+#X connect 24 0 23 0;
+#X connect 25 0 20 0;
+#X connect 25 0 21 0;
+#X connect 26 0 16 1;
+#X connect 27 0 16 1;

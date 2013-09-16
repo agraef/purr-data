@@ -1,40 +1,73 @@
-#N canvas 0 26 501 294 10;
-#X text 16 15 Convert number of samples (at the current sampling rate)
-to milliseconds;
-#X msg 263 127 0 \, 44100 3000;
-#X floatatom 263 248 0 0 0 0 - - -;
-#X obj 263 187 sampstoms~;
-#X floatatom 79 171 0 0 0 0 - - -;
-#X obj 25 139 sampstoms~;
-#X floatatom 25 116 0 0 0 0 - - -;
-#X text 74 118 number of samples in;
-#X text 90 155 number of milliseconds out;
-#X text 17 44 Many signal objects accepts arguments or inputs in milliseconds
-but sometimes you want to make calculations in samples. sampstoms~
-can perform the conversion.;
-#X text 272 208 milliseconds out (as a signal);
-#X text 273 171 number of samples in (as a signal);
-#X obj 263 226 Snapshot~ 100;
-#X obj 263 146 Line~;
-#X text 18 93 Use as a calculator or for float parameters;
-#X text 247 110 or convert signal values;
-#N canvas 309 151 494 394 META 0;
-#X text 12 185 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 155 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#N canvas 427 35 558 460 10;
+#X obj -1 433 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 266 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 596 209 385 259 META 0;
+#X text 5 198 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 5 52 LICENSE SIBSD;
+#X text 5 179 AUTHOR Miller Puckette;
+#X text 5 217 RELEASE_DATE 1997;
+#X text 5 160 LIBRARY cyclone;
+#X text 5 236 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 5 122 OUTLET_0 signal;
+#X text 5 103 INLET_0 signal float;
+#X text 5 33 KEYWORDS signal samples sample ms milliseconds convert
 ;
-#X text 12 5 KEYWORDS signal conversion max_compatible;
-#X text 12 45 DESCRIPTION convert number of samples (at the current
-sampling rate) to milliseconds;
-#X text 12 75 INLET_0 signal;
-#X text 12 95 OUTLET_0 signal;
-#X text 12 115 OUTLET_1 float;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 135 AUTHOR Krzysztof Czaja;
-#X restore 451 273 pd META;
-#X connect 1 0 13 0;
-#X connect 3 0 12 0;
-#X connect 5 1 4 0;
-#X connect 6 0 5 0;
-#X connect 12 0 2 0;
-#X connect 13 0 3 0;
+#X text 5 141 OUTLET_1 float;
+#X text 5 71 DESCRIPTION convert nummber of samples at sampling rate
+to milliseconds;
+#X restore 503 435 pd META;
+#X obj -1 325 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 388 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 316 355 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 200 435 pd Related_objects;
+#X obj 78 275 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 77 360 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header sampstoms~ 3 12
+0 18 -204280 -1 0;
+#X obj 476 10 sampstoms~;
+#X text 105 274 float;
+#X text 178 274 - number of samples;
+#X text 105 294 signal;
+#X text 178 294 - number of sample in (as signal);
+#X text 105 334 signal;
+#X text 178 334 - number of ms out \, as signal;
+#X msg 291 102 0 \, 44100 3000;
+#X floatatom 291 223 0 0 0 0 - - -;
+#X obj 291 162 sampstoms~;
+#X floatatom 88 168 0 0 0 0 - - -;
+#X obj 31 136 sampstoms~;
+#X floatatom 31 113 0 0 0 0 - - -;
+#X text 56 113 number of samples in;
+#X text 300 183 milliseconds out (as a signal);
+#X text 301 146 number of samples in (as a signal);
+#X obj 291 201 Snapshot~ 100;
+#X obj 291 127 Line~;
+#X text 105 399 (none);
+#X text 105 360 float;
+#X text 178 360 - number of ms;
+#X obj 77 334 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 480 54 pddp/dsp;
+#X text 12 74 Use as a calculator or for float parameters:;
+#X text 116 161 number of milliseconds out;
+#X text 269 75 or convert signal values:;
+#X text 11 23 Convert number of samples at sampling rate to milliseconds
+;
+#X obj 12 435 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 16 0 26 0;
+#X connect 18 0 25 0;
+#X connect 20 1 19 0;
+#X connect 21 0 20 0;
+#X connect 25 0 17 0;
+#X connect 26 0 18 0;

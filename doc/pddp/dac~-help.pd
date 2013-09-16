@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header dac~ 3 12 0 18 -204280
 -1 0;
 #X obj 0 259 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 243 494 344 META 0;
+#N canvas 482 289 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,28 +26,23 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 268 cnv 17 3 17 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#N canvas 41 417 428 171 Related_objects 0;
+#N canvas 220 454 428 171 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [dac~] Related Objects;
 #X obj 63 42 switch~;
-#X text 115 42 [block~];
-#X text 20 65 (Note: having a [block~] and a [switch~] in the same
-window causes an error \, which is why [block~] is shown above as a
-comment.);
-#X text 20 117 Externals;
-#X text 19 142 [shoutcast~];
-#X text 106 142 [oggcast~];
-#X text 181 142 [mp3cast~];
+#X text 20 74 Externals;
+#X text 19 99 [shoutcast~];
 #X obj 174 42 throw~;
 #X obj 226 42 catch~;
 #X obj 278 42 send~;
 #X obj 322 42 receive~;
 #X obj 23 42 adc~;
+#X obj 122 41 block~;
+#X obj 109 101 oggcast~;
+#X obj 183 100 mp3cast~;
 #X restore 101 597 pd Related_objects;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/dac~ -text
-pdpedia: dac~;
-#X obj 492 3 dac~;
+#X obj 508 10 dac~;
 #X text 109 133 default stereo signals: same as;
 #X text 198 221 all channels on an 8-channel device;
 #X obj 65 133 dac~;
@@ -99,13 +94,14 @@ and output with lower than 10 milliseconds of latency.;
 #X text 7 2 [dac~] Multi-channel Audio;
 #X restore 101 545 pd Multi-channel_audio;
 #X text 80 401 n) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 66 51 osc~ 880;
 #X obj 66 80 *~;
 #X obj 66 106 *~ 0.1;
 #X obj 96 80 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 477 53 pddp/dsp;
 #N canvas 84 189 428 347 sample_rate 0;
 #X text 19 37 [adc~] and [dac~] always operate at the sample rate that
 is specified in Pd's command line. By default \, the sample rate is
@@ -141,7 +137,7 @@ switch \, or disable both using the "-nosound" switch.;
 #X restore 101 570 pd defeating_audio_computation;
 #X text 117 79 <- Click to test;
 #X text 11 23 audio output;
+#X connect 27 0 28 0;
 #X connect 28 0 29 0;
-#X connect 29 0 30 0;
-#X connect 30 0 13 0;
-#X connect 31 0 29 1;
+#X connect 29 0 12 0;
+#X connect 30 0 28 1;

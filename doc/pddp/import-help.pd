@@ -1,4 +1,4 @@
-#N canvas 57 22 555 619 10;
+#N canvas 430 37 555 619 10;
 #X declare;
 #X declare;
 #X declare -lib cyclone -lib osc;
@@ -8,7 +8,7 @@
 -204280 -1 0;
 #X obj 0 294 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 494 344 META 0;
+#N canvas 487 287 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 505 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 105 478 428 109 Related_objects 0;
+#N canvas 218 522 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [import] Related Objects;
@@ -40,9 +40,7 @@ to conform to the PDDP template for Pd version 0.42.;
 -162280 0;
 #X obj 78 411 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 482 3 import;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/import -text
-pdpedia: import;
+#X obj 500 10 import;
 #X msg 91 114 bang;
 #X symbolatom 102 188 0 0 0 0 - - -;
 #X obj 91 214 print;
@@ -77,8 +75,8 @@ load for patch.;
 ;
 #X obj 97 568 pddp/pddplink all_about_libraries.pd;
 #X obj 91 162 import cyclone osc;
-#X connect 13 0 35 0;
-#X connect 18 0 35 0;
-#X connect 35 0 14 0;
-#X connect 35 0 15 0;
-#X connect 35 1 24 0;
+#X connect 12 0 34 0;
+#X connect 17 0 34 0;
+#X connect 34 0 13 0;
+#X connect 34 0 14 0;
+#X connect 34 1 23 0;

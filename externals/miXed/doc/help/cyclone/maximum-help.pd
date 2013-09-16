@@ -1,39 +1,70 @@
-#N canvas 0 26 440 384 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 16 343 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 15 357 ___________________________________________________
+#N canvas 428 34 558 520 10;
+#X obj -1 493 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 293 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 615 292 368 238 META 0;
+#X text 8 154 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 8 14 LICENSE SIBSD;
+#X text 8 134 AUTHOR Miller Puckette;
+#X text 8 174 RELEASE_DATE 1997;
+#X text 8 114 LIBRARY cyclone;
+#X text 8 194 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 8 74 INLET_1 float;
+#X text 8 -6 KEYWORDS max maximum greatesst list;
+#X text 8 34 DESCRIPTION output the greatest in a list of numbers;
+#X text 8 54 INLET_0 list bang float;
+#X text 8 94 OUTLET_0 float;
+#X restore 504 495 pd META;
+#X obj -1 407 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 444 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 287 353 457 172 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 55 55 minimum;
+#X restore 198 495 pd Related_objects;
+#X obj 80 302 cnv 17 3 49 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 80 370 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header maximum 3 12 0
+18 -204280 -1 0;
+#X obj 493 2 maximum;
+#X text 11 23 output the greatest in a list of numbers;
+#X msg 86 71 1 2 3 4 3 2;
+#X floatatom 86 243 5 0 0 0 - - -, f 5;
+#X msg 104 101 bang;
+#X floatatom 117 134 5 0 0 0 - - -, f 5;
+#X floatatom 137 180 5 0 0 0 - - -, f 5;
+#X text 172 179 set current value;
+#X text 153 128 output if higher than current value \,;
+#X text 152 140 otherwise output current val;
+#X text 116 301 list;
+#X text 180 301 - list of numbers to get maximum value;
+#X text 116 318 bang;
+#X text 138 102 send most recent output again;
+#X text 180 318 - send most recent output again;
+#X text 116 336 float;
+#X text 180 336 - output if higher than current value \, otherwise
+output current max;
+#X obj 80 416 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 116 370 float;
+#X text 180 370 - set current max;
+#X text 116 415 float;
+#X text 180 415 - the stored maximum value;
+#X text 99 460 1) float;
+#X text 180 460 - initial maximum;
+#X obj 86 208 maximum 5;
+#X text 150 208 optional argument sets initial maximum;
+#X obj 14 494 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 24 16 maximum;
-#X text 99 15 output the greatest in a list of numbers;
-#X text 100 29 see also;
-#X obj 167 33 minimum;
-#X obj 83 251 maximum;
-#X msg 83 114 1 2 3 4 3 2;
-#X floatatom 83 286 5 0 0 0 - - -;
-#X msg 21 144 bang;
-#X text 55 145 send most recent output again;
-#X floatatom 103 170 5 0 0 0 - - -;
-#X floatatom 127 221 5 0 0 0 - - -;
-#X text 174 221 set current value;
-#X text 147 168 output if higher than current value \,;
-#X text 146 180 otherwise output current val;
-#N canvas 247 115 494 381 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS control max_compatible;
-#X text 12 45 DESCRIPTION output the greatest in a list of numbers
-;
-#X text 12 65 INLET_0 float list bang;
-#X text 12 85 INLET_1 float;
-#X text 12 105 OUTLET_0 float;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 390 363 pd META;
-#X connect 7 0 9 0;
-#X connect 8 0 7 0;
-#X connect 10 0 7 0;
-#X connect 12 0 7 0;
-#X connect 13 0 7 1;
+#X connect 11 0 33 0;
+#X connect 13 0 33 0;
+#X connect 14 0 33 0;
+#X connect 15 0 33 1;
+#X connect 33 0 12 0;

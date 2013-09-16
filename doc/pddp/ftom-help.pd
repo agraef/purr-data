@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header ftom 3 12 0 18 -204280
 -1 0;
 #X obj 0 421 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 242 494 344 META 0;
+#N canvas 485 290 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 430 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 528 (none);
-#N canvas 71 422 428 163 Related_objects 0;
+#N canvas 215 470 428 163 Related_objects 0;
 #X text 19 37 Control objects for conversion:;
 #X obj 59 66 dbtorms;
 #X obj 113 66 rmstodb;
@@ -53,9 +53,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 429 float;
 #X text 98 456 list;
 #X text 98 500 float;
-#X obj 492 3 ftom;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/ftom -text
-pdpedia: ftom;
+#X obj 510 10 ftom;
 #X obj 249 159 ftom;
 #X text 11 23 frequency to MIDI conversion;
 #X text 158 456 - lists will be truncated \, and the first element
@@ -69,5 +67,5 @@ infinity.);
 ;
 #X obj 98 572 pddp/pddplink ../3.audio.examples/A06.frequency.pd -text
 doc/3.audio.examples/A06.frequency.pd;
-#X connect 11 0 18 0;
-#X connect 18 0 10 0;
+#X connect 11 0 17 0;
+#X connect 17 0 10 0;

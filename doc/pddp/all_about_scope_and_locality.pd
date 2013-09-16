@@ -1,4 +1,4 @@
-#N canvas 0 0 448 395 10;
+#N canvas 429 35 448 395 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header scope_and_locality
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -10,36 +10,36 @@ either 'local' or 'global'.;
 #N canvas 16 214 428 369 Global_scope 0;
 #N canvas 1 1 254 169 example_a 0;
 #X obj 18 19 r foo;
-#X floatatom 18 44 5 0 0 0 - - -;
+#X floatatom 18 44 5 0 0 0 - - -, f 5;
 #X obj 18 96 r a-foo;
-#X floatatom 18 116 5 0 0 0 - - -;
+#X floatatom 18 116 5 0 0 0 - - -, f 5;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
 #X restore 14 56 pd example_a;
 #N canvas 121 2 256 168 example_b 0;
 #X obj 18 19 r foo;
-#X floatatom 18 44 5 0 0 0 - - -;
+#X floatatom 18 44 5 0 0 0 - - -, f 5;
 #X obj 18 96 r a-foo;
-#X floatatom 18 116 5 0 0 0 - - -;
+#X floatatom 18 116 5 0 0 0 - - -, f 5;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
 #X restore 14 81 pd example_b;
 #N canvas 215 2 263 169 example_c 0;
 #X obj 18 19 r foo;
-#X floatatom 18 44 5 0 0 0 - - -;
+#X floatatom 18 44 5 0 0 0 - - -, f 5;
 #X obj 18 96 r a-foo;
-#X floatatom 18 116 5 0 0 0 - - -;
+#X floatatom 18 116 5 0 0 0 - - -, f 5;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
 #X restore 14 106 pd example_c;
 #X text 17 38 Open these subpatches.;
 #X obj 23 187 s foo;
-#X floatatom 23 166 5 0 0 0 - - -;
+#X floatatom 23 166 5 0 0 0 - - -, f 5;
 #X text 13 125 Click-n-drag these number boxes and notice the appropriate
 receive objects in each open sub-patch.;
-#X floatatom 82 166 5 0 0 0 - - -;
-#X floatatom 159 166 5 0 0 0 - - -;
-#X floatatom 232 166 5 0 0 0 - - -;
+#X floatatom 82 166 5 0 0 0 - - -, f 5;
+#X floatatom 159 166 5 0 0 0 - - -, f 5;
+#X floatatom 232 166 5 0 0 0 - - -, f 5;
 #X obj 82 187 s a-foo;
 #X obj 159 187 s b-foo;
 #X obj 232 187 s c-foo;
@@ -72,14 +72,14 @@ many modules with a receive object called [r number] but you want that
 that they don't effect the performance of the other modules.;
 #X obj 84 222 r \$1;
 #X obj 18 245 s \$1;
-#X floatatom 18 221 5 0 0 0 - - -;
-#X floatatom 84 248 5 0 0 0 - - -;
-#X floatatom 189 224 5 0 0 0 - - -;
-#X floatatom 278 250 5 0 0 0 - - -;
+#X floatatom 18 221 5 0 0 0 - - -, f 5;
+#X floatatom 84 248 5 0 0 0 - - -, f 5;
+#X floatatom 189 224 5 0 0 0 - - -, f 5;
+#X floatatom 278 250 5 0 0 0 - - -, f 5;
 #X obj 278 224 r \$1-foo;
 #X obj 189 248 s \$1-foo;
-#X floatatom 367 224 5 0 0 0 - - -;
-#X floatatom 456 250 5 0 0 0 - - -;
+#X floatatom 367 224 5 0 0 0 - - -, f 5;
+#X floatatom 456 250 5 0 0 0 - - -, f 5;
 #X text 62 513 LOCAL_SCOPE (and inheritance);
 #X obj 456 224 r \$2-dave;
 #X obj 367 248 s \$2-dave;
@@ -167,7 +167,7 @@ or "inheritance-foo".;
 #X text 115 119 <- confusing \, clean it up;
 #X obj 1 373 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 375 272 494 138 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -176,7 +176,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS nonlocal needs_work;
 #X text 12 45 DESCRIPTION notions of scope in Pd;
 #X restore 392 375 pd META;
-#N canvas 11 243 428 121 Related_objects 0;
+#N canvas 216 279 428 121 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Scope and Locality- Related Objects;

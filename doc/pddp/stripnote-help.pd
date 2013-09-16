@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header stripnote 3 12 0
 18 -204280 -1 0;
 #X obj 0 358 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 242 494 366 META 0;
+#N canvas 487 261 494 366 META 0;
 #X text 12 155 LIBRARY internal;
 #X text 12 195 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 215 RELEASE_DATE 2009-06-12;
@@ -29,7 +29,7 @@ for later;
 #X obj 0 567 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 544 (none);
-#N canvas 107 153 428 433 Related_objects 0;
+#N canvas 220 191 428 433 Related_objects 0;
 #X obj 1 2 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 3 [stripnote] Related Objects;
@@ -76,9 +76,7 @@ by Olaf Matthes);
 #X obj 78 439 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 438 float;
-#X obj 466 3 stripnote;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/stripnote
--text pdpedia: stripnote;
+#X obj 480 10 stripnote;
 #X text 130 227 Stripnote takes note-off (zero-velocity) messages out
 of a stream of MIDI-style note message and passes the others through
 unchanged.;
@@ -103,8 +101,9 @@ the right inlet is non-zero.;
 ;
 #X text 168 406 - a (pitch \, velocity) pair is distributed to the
 two inlets. Lists with more than two elements will be truncated.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 19 0 22 0;
-#X connect 22 0 20 0;
-#X connect 22 1 21 0;
-#X connect 24 0 22 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 18 0 21 0;
+#X connect 21 0 19 0;
+#X connect 21 1 20 0;
+#X connect 23 0 21 0;

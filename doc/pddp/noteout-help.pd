@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header noteout 3 12 0 18
 -204280 -1 0;
 #X obj 0 352 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 244 494 369 META 0;
+#N canvas 479 258 494 369 META 0;
 #X text 12 65 PLATFORM windows macosx gnulinux;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -29,7 +29,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 107 157 428 430 Related_objects 0;
+#N canvas 215 197 428 430 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [noteout] Related Objects;
@@ -72,9 +72,7 @@ by Olaf Matthes);
 #X obj 78 422 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 421 float;
-#X obj 473 3 noteout;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/noteout -text
-pdpedia: noteout;
+#X obj 495 10 noteout;
 #X obj 78 447 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
 -162280 0;
 #X text 98 446 float;
@@ -106,13 +104,14 @@ is to be sent. If no argument is provided [noteout] transmits on channel
 #X text 167 421 - (integer) velocity.;
 #X text 167 446 - (integer) channel number.;
 #X text 80 521 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 19 0 18 0;
-#X connect 21 0 20 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 18 0 17 0;
+#X connect 20 0 19 0;
+#X connect 21 0 24 0;
 #X connect 22 0 25 0;
-#X connect 23 0 26 0;
-#X connect 24 0 26 1;
-#X connect 25 0 23 0;
-#X connect 25 1 24 0;
-#X connect 25 2 27 0;
-#X connect 27 0 26 2;
+#X connect 23 0 25 1;
+#X connect 24 0 22 0;
+#X connect 24 1 23 0;
+#X connect 24 2 26 0;
+#X connect 26 0 25 2;

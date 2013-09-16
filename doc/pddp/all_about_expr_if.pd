@@ -1,16 +1,16 @@
-#N canvas 0 0 448 500 10;
+#N canvas 430 36 448 500 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_if 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X floatatom 23 315 5 0 0 0 - - -;
-#X floatatom 23 266 5 0 0 0 - - -;
+#X floatatom 23 315 5 0 0 0 - - -, f 5;
+#X floatatom 23 266 5 0 0 0 - - -, f 5;
 #X obj 374 374 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 10;
-#X floatatom 23 441 5 0 0 0 - - -;
-#X floatatom 23 376 5 0 0 0 - - -;
+#X floatatom 23 441 5 0 0 0 - - -, f 5;
+#X floatatom 23 376 5 0 0 0 - - -, f 5;
 #X obj 83 441 print;
-#X floatatom 374 353 5 0 0 0 - - -;
+#X floatatom 374 353 5 0 0 0 - - -, f 5;
 #X obj 23 400 expr if($f2 != 0 \, if($f1 % 13 != 0 \, random($f1 -
 $f2 * 0.5 \, $f1 + $f2 * 0.5) \, $f1) \, $f1 % 60);
 #X text 20 93 b) an expression to evaluate if the condition is true
@@ -34,7 +34,7 @@ than twenty.;
 output.;
 #X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 375 307 494 205 META 0;
 #X text 12 85 LIBRARY PDDP;
 #X text 12 45 KEYWORDS;
 #X text 12 5 GENRE all_about_pd;
@@ -45,7 +45,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 DESCRIPTION an explanation of the "if" function from
 sly and the expr family stone;
 #X restore 392 480 pd META;
-#N canvas 9 355 428 136 Related_objects 0;
+#N canvas 217 377 428 136 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 [expr] if- Related Objects;

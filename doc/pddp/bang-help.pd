@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bang 3 12 0 18 -204280
 -1 0;
 #X obj 0 329 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 244 494 366 META 0;
+#N canvas 570 331 408 299 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -32,7 +32,7 @@ Pd version 0.42.;
 #X obj 78 338 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 413 (none);
-#N canvas 40 482 428 108 Related_objects 0;
+#N canvas 215 518 428 108 Related_objects 0;
 #X obj 21 42 trigger;
 #X obj 191 43 loadbang;
 #X msg 91 43;
@@ -46,9 +46,7 @@ Pd version 0.42.;
 #X text 98 381 bang;
 #X obj 78 381 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bang -text
-pdpedia: bang;
-#X obj 469 3 bang;
+#X obj 468 11 bang;
 #X obj 139 224 print;
 #X msg 152 171 walk the cat;
 #X msg 139 145 45;
@@ -76,7 +74,7 @@ pdpedia: bang;
 #X msg 98 342 bang \, bang;
 #X obj 98 368 f;
 #X obj 131 368 + 1;
-#X floatatom 98 393 5 0 0 0 - - -;
+#X floatatom 98 393 5 0 0 0 - - -, f 5;
 #X msg 46 342 bang;
 #X text 19 418 4;
 #X obj 43 419 trigger bang;
@@ -124,11 +122,12 @@ It's neither a zero or a one \; it's not true or false \; it's just
 ;
 #X text 168 337 - [bang] takes any message supplied to its inlet and
 outputs a bang message in response.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 521 3 b;
-#X text 501 3 or;
-#X connect 15 0 17 0;
-#X connect 16 0 17 0;
-#X connect 17 0 14 0;
-#X connect 19 0 20 0;
-#X connect 20 0 18 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 520 11 b;
+#X text 500 11 or;
+#X connect 14 0 16 0;
+#X connect 15 0 16 0;
+#X connect 16 0 13 0;
+#X connect 18 0 19 0;
+#X connect 19 0 17 0;

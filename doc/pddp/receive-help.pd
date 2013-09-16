@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header receive 3 12 0 18
 -204280 -1 0;
 #X obj 0 271 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 244 494 344 META 0;
+#N canvas 485 282 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -25,7 +25,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 434 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 93 310 428 292 Related_objects 0;
+#N canvas 219 333 428 292 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [receive] Related Objects;
@@ -55,31 +55,29 @@ for Pd version 0.42.;
 #X restore 102 597 pd Related_objects;
 #X obj 78 340 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 516 3 r;
-#X obj 442 3 receive;
-#X text 492 3 or;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/receive -text
-pdpedia: receive;
+#X obj 518 12 r;
+#X obj 444 12 receive;
+#X text 494 12 or;
 #X obj 47 107 s;
-#X floatatom 47 83 5 0 0 0 - - -;
-#X floatatom 149 112 5 0 0 0 - - -;
+#X floatatom 47 83 5 0 0 0 - - -, f 5;
+#X floatatom 149 112 5 0 0 0 - - -, f 5;
 #X obj 149 83 r;
-#X floatatom 204 112 5 0 0 0 - - -;
+#X floatatom 204 112 5 0 0 0 - - -, f 5;
 #X obj 204 83 r;
-#X floatatom 255 112 5 0 0 0 - - -;
+#X floatatom 255 112 5 0 0 0 - - -, f 5;
 #X obj 255 83 r;
-#X floatatom 51 166 5 0 0 0 - - -;
-#X floatatom 306 192 5 0 0 0 - - -;
-#X floatatom 377 192 5 0 0 0 - - -;
-#X floatatom 452 192 5 0 0 0 - - -;
+#X floatatom 51 166 5 0 0 0 - - -, f 5;
+#X floatatom 306 192 5 0 0 0 - - -, f 5;
+#X floatatom 377 192 5 0 0 0 - - -, f 5;
+#X floatatom 452 192 5 0 0 0 - - -, f 5;
 #X text 50 146 with creation argument;
 #X obj 51 190 s dave;
 #X obj 306 163 r dave;
 #X obj 377 163 r dave;
-#X floatatom 151 167 5 0 0 0 - - -;
-#X floatatom 383 82 5 0 0 0 - - -;
+#X floatatom 151 167 5 0 0 0 - - -, f 5;
+#X floatatom 383 82 5 0 0 0 - - -, f 5;
 #X msg 383 105 \; dave \$1;
-#X floatatom 461 80 5 0 0 0 - - -;
+#X floatatom 461 80 5 0 0 0 - - -, f 5;
 #X msg 461 105 \; hans \$1;
 #X obj 452 163 r hans;
 #X obj 151 191 s hans;
@@ -88,15 +86,15 @@ pdpedia: receive;
 #X text 168 339 - [receive] outputs the message(s) sent from a corresponding
 [send] of the same name.;
 #N canvas 100 55 428 469 Messages_and_Data_Types 0;
-#X floatatom 23 177 5 0 0 0 - - -;
-#X floatatom 22 288 5 0 0 0 - - -;
+#X floatatom 23 177 5 0 0 0 - - -, f 5;
+#X floatatom 22 288 5 0 0 0 - - -, f 5;
 #X obj 23 234 s a_float;
 #X obj 22 262 r a_float;
 #X obj 33 205 s whatever;
 #X obj 170 204 s whatever;
 #X obj 158 233 s a_symbol;
 #X obj 158 262 r a_symbol;
-#X symbolatom 158 176 10 0 0 0 - - -;
+#X symbolatom 158 176 10 0 0 0 - - -, f 10;
 #X text 62 176 click-n-drag;
 #X text 228 176 type something;
 #X text 318 200 click this;
@@ -109,12 +107,12 @@ pdpedia: receive;
 #X obj 295 407 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 72 313 r whatever;
-#X floatatom 72 443 5 0 0 0 - - -;
-#X symbolatom 113 424 10 0 0 0 - - -;
+#X floatatom 72 443 5 0 0 0 - - -, f 5;
+#X symbolatom 113 424 10 0 0 0 - - -, f 10;
 #X obj 161 381 print;
 #X obj 195 363 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X symbolatom 158 291 10 0 0 0 - - -;
+#X symbolatom 158 291 10 0 0 0 - - -, f 10;
 #X obj 154 404 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X msg 295 217 \; whatever 1 2 3 4 \;;
@@ -158,7 +156,8 @@ message box. The [receive] object accepts any message as input.;
 #X text 334 110 message;
 #X text 334 122 boxes;
 #X text 80 391 1) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 98 439 pddp/pddplink all_about_send_n_receive.pd -text all_about_send_n_receive
 ;
 #X obj 98 454 pddp/pddplink all_about_scope_and_locality.pd -text all_about_scope_and_locality
@@ -173,14 +172,14 @@ doc/2.control.examples/13.locality.pd;
 ;
 #X obj 98 490 pddp/pddplink ../1.manual/x5.htm -text doc/1.manual/x5.htm
 ;
-#X connect 14 0 13 0;
-#X connect 16 0 15 0;
-#X connect 18 0 17 0;
-#X connect 20 0 19 0;
-#X connect 21 0 26 0;
+#X connect 13 0 12 0;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X connect 19 0 18 0;
+#X connect 20 0 25 0;
+#X connect 26 0 21 0;
 #X connect 27 0 22 0;
-#X connect 28 0 23 0;
-#X connect 29 0 35 0;
-#X connect 30 0 31 0;
-#X connect 32 0 33 0;
-#X connect 34 0 24 0;
+#X connect 28 0 34 0;
+#X connect 29 0 30 0;
+#X connect 31 0 32 0;
+#X connect 33 0 23 0;

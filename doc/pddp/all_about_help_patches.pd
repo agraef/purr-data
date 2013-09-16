@@ -1,9 +1,9 @@
-#N canvas 398 77 554 618 10;
+#N canvas 426 34 554 618 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
 #X obj 0 168 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 507 26 494 625 META 0;
+#N canvas 487 70 494 558 META 0;
 #X text 12 95 RELEASE_VERSION 0.41.4;
 #X text 158 96 Keywords:;
 #X text 12 5 GENRE help;
@@ -40,7 +40,7 @@ sense in terms of abstractions;
 0 13 -228856 -1 0;
 #X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 78 483 428 109 Related_objects 0;
+#N canvas 213 517 428 109 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 6 1 Related Objects;
@@ -61,11 +61,11 @@ sense in terms of abstractions;
 #X obj 110 143 float 6.5;
 #X obj 110 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X floatatom 110 175 5 0 0 0 - - -;
+#X floatatom 110 175 5 0 0 0 - - -, f 5;
 #X obj 260 143 symbol foo;
 #X obj 260 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X symbolatom 260 175 10 0 0 0 - - -;
+#X symbolatom 260 175 10 0 0 0 - - -, f 10;
 #X text 40 143 Examples:;
 #X obj 22 292 delwrite~ help-delay 500;
 #X obj 0 210 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
@@ -123,9 +123,9 @@ more atoms in which the first atom is a float atom.;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -33289 0;
 #X msg 168 162 set 20;
-#X floatatom 131 196 5 0 0 0 - - -;
+#X floatatom 131 196 5 0 0 0 - - -, f 5;
 #X obj 131 215 print OUTPUT;
-#X floatatom 131 164 5 0 0 0 - - -;
+#X floatatom 131 164 5 0 0 0 - - -, f 5;
 #X text 19 37 Many objects accept custom messages like:;
 #X text 7 1 [help] Messages with Custom Selectors;
 #X connect 7 0 8 0;
@@ -140,7 +140,7 @@ accepts no messages. These xlets are labeled (inactive).;
 #X text 98 176 message type;
 #X text 178 176 - description of behavior;
 #X msg 151 125 42;
-#X floatatom 151 147 5 0 0 0 - - -;
+#X floatatom 151 147 5 0 0 0 - - -, f 5;
 #X text 180 125 <-- Click the message box;
 #X obj 455 51 pddp/dsp;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header help_patches 3

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header loop~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 343 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 243 494 344 META 0;
+#N canvas 483 287 494 344 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 78 352 cnv 17 3 95 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 548 (none);
-#N canvas 81 440 428 149 Related_objects 0;
+#N canvas 222 479 428 149 Related_objects 0;
 #X obj 253 43 powtodb~;
 #X obj 23 102 mtof;
 #X obj 68 102 ftom;
@@ -50,9 +50,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 78 504 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 504 signal;
-#X obj 481 3 loop~;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/loop~ -text
-pdpedia: loop~;
+#X obj 510 11 loop~;
 #X obj 78 456 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 379 float;
@@ -120,7 +118,7 @@ is adjusted so that changing window size doesn't change the transposition.
 #X restore 102 575 pd About_[loop~];
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 484 51 pddp/dsp;
 #X obj 78 524 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 524 signal;
@@ -135,34 +133,34 @@ is adjusted so that changing window size doesn't change the transposition.
 -1 -1;
 #X obj 338 255 f \$0;
 #X msg 318 299 read ../doc/sound/vocal.aiff \$1-array;
-#X connect 28 0 31 0;
-#X connect 30 0 29 0;
-#X connect 31 0 34 0;
-#X connect 31 0 36 0;
-#X connect 31 0 39 1;
-#X connect 31 1 29 0;
-#X connect 31 1 36 1;
-#X connect 32 0 31 1;
-#X connect 33 0 31 0;
-#X connect 35 0 34 0;
-#X connect 36 0 40 0;
-#X connect 38 0 37 0;
-#X connect 38 0 37 1;
-#X connect 39 0 40 1;
-#X connect 40 0 63 0;
-#X connect 41 0 42 0;
-#X connect 42 0 39 0;
-#X connect 43 0 31 0;
-#X connect 48 0 38 0;
-#X connect 49 0 51 0;
-#X connect 50 0 48 1;
-#X connect 51 0 52 0;
-#X connect 52 0 50 0;
-#X connect 63 0 48 0;
-#X connect 64 0 65 0;
+#X connect 27 0 30 0;
+#X connect 29 0 28 0;
+#X connect 30 0 33 0;
+#X connect 30 0 35 0;
+#X connect 30 0 38 1;
+#X connect 30 1 28 0;
+#X connect 30 1 35 1;
+#X connect 31 0 30 1;
+#X connect 32 0 30 0;
+#X connect 34 0 33 0;
+#X connect 35 0 39 0;
+#X connect 37 0 36 0;
+#X connect 37 0 36 1;
+#X connect 38 0 39 1;
+#X connect 39 0 62 0;
+#X connect 40 0 41 0;
+#X connect 41 0 38 0;
+#X connect 42 0 30 0;
+#X connect 47 0 37 0;
+#X connect 48 0 50 0;
+#X connect 49 0 47 1;
+#X connect 50 0 51 0;
+#X connect 51 0 49 0;
+#X connect 62 0 47 0;
+#X connect 63 0 64 0;
+#X connect 65 0 66 0;
 #X connect 66 0 67 0;
-#X connect 67 0 68 0;
-#X connect 68 0 57 0;
+#X connect 67 0 56 0;
+#X connect 68 0 69 0;
 #X connect 69 0 70 0;
-#X connect 70 0 71 0;
-#X connect 71 0 57 0;
+#X connect 70 0 56 0;

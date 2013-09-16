@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 37 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header mtof~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 418 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 243 494 344 META 0;
+#N canvas 486 285 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 427 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 496 (none);
-#N canvas 107 445 428 145 Related_objects 0;
+#N canvas 220 482 428 145 Related_objects 0;
 #X obj 23 43 ftom~;
 #X obj 70 43 dbtorms~;
 #X obj 138 43 rmstodb~;
@@ -46,7 +46,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 14 -204280 -1 0;
 #X text 8 2 [mtof~] Related Objects;
 #X restore 102 597 pd Related_objects;
-#X obj 482 3 mtof~;
+#X obj 504 12 mtof~;
 #X obj 209 149 mtof~;
 #X obj 209 205 snapshot~;
 #X floatatom 209 236 0 0 0 0 - - -;
@@ -54,8 +54,6 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 209 124 sig~;
 #X obj 256 179 metro 100;
 #X obj 256 149 loadbang;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/mtof~ -text
-pdpedia: mtof~;
 #X text 98 426 signal;
 #X obj 78 464 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -69,8 +67,9 @@ such as *~ and osc~ \, depending on your hardware and math library.
 #X text 99 265 The [mtof~] object transposes a midi value into a frequency
 in Hertz \, so that "69" goes to "440". You can specify microtonal
 pitches as in "69.5" (a quarter tone higher than 69).;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 476 52 pddp/dsp;
 #X connect 11 0 12 0;
 #X connect 12 0 13 0;
 #X connect 14 0 15 0;

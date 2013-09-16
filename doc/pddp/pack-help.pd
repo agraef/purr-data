@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 37 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pack 3 12 0 18 -204280
 -1 0;
 #X obj 0 113 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 245 494 370 META 0;
+#N canvas 482 257 494 370 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 565 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 98 318 428 296 Related_objects 0;
+#N canvas 217 333 428 296 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [pack] Related Objects;
@@ -57,9 +57,7 @@ is:;
 -162280 0;
 #X obj 78 350 cnv 17 3 37 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X obj 493 3 pack;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/pack -text
-pdpedia: pack;
+#X obj 511 10 pack;
 #X text 98 186 symbol;
 #X text 98 119 bang;
 #X text 98 147 float;
@@ -120,8 +118,8 @@ of values) when it receives a message to its left inlet.;
 #X msg 46 285 1 2 dog;
 #X obj 23 211 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 55 390 5 0 0 0 - - -;
-#X floatatom 53 343 5 0 0 0 - - -;
+#X floatatom 55 390 5 0 0 0 - - -, f 5;
+#X floatatom 53 343 5 0 0 0 - - -, f 5;
 #X msg 129 450 100 earth me 42;
 #X text 19 38 Perhaps the best way to build creation arguments is to
 define the data types that [pack] should expect at each inlet: (i.e.
@@ -168,7 +166,7 @@ force [pack] to output the entire package of stored values.;
 #X obj 394 69 pack;
 #X obj 394 91 print;
 #X msg 432 46 2;
-#X floatatom 394 46 5 0 0 0 - - -;
+#X floatatom 394 46 5 0 0 0 - - -, f 5;
 #X text 98 427 Note: [pack] may output a float \, symbol \, or pointer
 if only one argument is specified.;
 #X text 11 23 combine several atoms into one message;
@@ -205,6 +203,6 @@ in the same manner as a list.;
 #X text 98 348 An inlet is created for each argument given. Each may
 store a float \, symbol \, or pointer \, depending on the argument
 given. These inlets will not accept lists/anythings.;
-#X connect 22 0 23 0;
-#X connect 24 0 22 1;
-#X connect 25 0 22 0;
+#X connect 21 0 22 0;
+#X connect 23 0 21 1;
+#X connect 24 0 21 0;

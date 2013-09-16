@@ -1,10 +1,10 @@
-#N canvas 0 0 448 545 10;
+#N canvas 430 35 448 545 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_operators_and_functions
 20 10 1 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X floatatom 140 881 5 0 0 0 - - -;
-#X floatatom 188 880 5 0 0 0 - - -;
+#X floatatom 140 881 5 0 0 0 - - -, f 5;
+#X floatatom 188 880 5 0 0 0 - - -, f 5;
 #X obj 140 901 v a;
 #X obj 188 901 v b;
 #X obj 36 794 expr max(a \, b);
@@ -56,8 +56,8 @@
 #X obj 36 857 expr modf(a);
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array expr_array 11 float 3;
-#A 0 -0.707106 0 0.707106 1 0.707108 2.65359e-006 -0.707104 -1 -0.70711
--5.30718e-006 0.707103;
+#A 0 -0.707106 0 0.707106 1 0.707108 2.65359e-06 -0.707104 -1 -0.70711
+-5.30718e-06 0.707103;
 #X coords 0 1 11 -1 80 60 1;
 #X restore 22 1757 graph;
 #X obj 22 1844 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -91,8 +91,8 @@ properly. You can just put a zero as the second value.;
 #X text 149 1147 factorial;
 #X text 127 835 get signed integer value from floating point number
 ;
-#X floatatom 120 504 5 0 0 0 - - -;
-#X floatatom 168 503 5 0 0 0 - - -;
+#X floatatom 120 504 5 0 0 0 - - -, f 5;
+#X floatatom 168 503 5 0 0 0 - - -, f 5;
 #X obj 120 524 v a;
 #X obj 168 524 v b;
 #X floatatom 36 503 0 0 0 0 - - -;
@@ -119,13 +119,13 @@ properly. You can just put a zero as the second value.;
 #X obj 22 613 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 36 612 expr if(a \, b \, c);
-#X floatatom 238 880 5 0 0 0 - - -;
+#X floatatom 238 880 5 0 0 0 - - -, f 5;
 #X obj 238 901 v c;
 #X text 147 637 (See expr-if subpatch for more details);
 #X text 117 855 get signed fractional value from floating point number
 ;
-#X floatatom 152 1201 5 0 0 0 - - -;
-#X floatatom 200 1200 5 0 0 0 - - -;
+#X floatatom 152 1201 5 0 0 0 - - -, f 5;
+#X floatatom 200 1200 5 0 0 0 - - -, f 5;
 #X obj 152 1221 v a;
 #X obj 200 1221 v b;
 #X obj 22 664 bng 12 250 50 0 empty empty empty 17 7 0 10 -262144 -1
@@ -168,8 +168,8 @@ properly. You can just put a zero as the second value.;
 -1 -1;
 #X floatatom 36 1575 0 0 0 0 - - -;
 #X text 9 1511 *;
-#X floatatom 152 1575 5 0 0 0 - - -;
-#X floatatom 200 1574 5 0 0 0 - - -;
+#X floatatom 152 1575 5 0 0 0 - - -, f 5;
+#X floatatom 200 1574 5 0 0 0 - - -, f 5;
 #X obj 152 1595 v a;
 #X obj 200 1595 v b;
 #X obj 36 1309 expr sin(a);
@@ -263,8 +263,8 @@ properly. You can just put a zero as the second value.;
 -1;
 #X obj 36 123 expr a ~ b;
 #X obj 36 836 expr imodf(a);
-#X floatatom 131 1971 5 0 0 0 - - -;
-#X floatatom 179 1970 5 0 0 0 - - -;
+#X floatatom 131 1971 5 0 0 0 - - -, f 5;
+#X floatatom 179 1970 5 0 0 0 - - -, f 5;
 #X obj 131 1991 v a;
 #X obj 179 1991 v b;
 #X text 18 2277 cbrt(a);
@@ -327,7 +327,7 @@ the dash and the \$0 will get interpreted as an operator and a value
 \, respectively.;
 #X obj 35 2131 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X floatatom 35 2195 5 0 0 0 - - -;
+#X floatatom 35 2195 5 0 0 0 - - -, f 5;
 #X obj 35 2150 symbol \$0-expr-array;
 #X obj 35 2172 expr size("$s1");
 #X obj 36 1863 expr sum("expr_array");
@@ -355,7 +355,7 @@ arguments to the [expr] \, [expr~] \, and [fexpr~] objects.;
 #X text 7 82 Operators (from highest to lowest precedence);
 #X obj 1 2568 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 375 387 494 164 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -366,7 +366,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 DESCRIPTION complete list of functions and operators
 for expr family objects;
 #X restore 392 2570 pd META;
-#N canvas 10 380 428 140 Related_objects 0;
+#N canvas 218 414 428 140 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 6 1 [expr] Functions and Operators- Related Objects;

@@ -1,4 +1,4 @@
-#N canvas 0 0 448 238 10;
+#N canvas 428 33 448 238 10;
 #X declare;
 #X declare;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header libraries 20 10
@@ -7,7 +7,7 @@
 ;
 #X obj 1 216 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 374 81 494 169 META 0;
 #X text 12 85 LIBRARY PDDP;
 #X text 12 5 GENRE all_about_pd;
 #X text 12 45 KEYWORDS needs_work;
@@ -17,7 +17,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 DESCRIPTION how pure data libraries are loaded;
 #X text 12 25 NAME;
 #X restore 392 218 pd META;
-#N canvas 14 133 428 105 Related_objects 0;
+#N canvas 216 143 428 105 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Libraries - Related Objects;

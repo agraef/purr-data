@@ -1,51 +1,89 @@
-#N canvas 0 26 618 491 10;
-#X text 15 35 Sample-and-hold;
-#X obj 109 405 cycle~;
-#X obj 109 377 *~ 1000;
-#X obj 109 433 *~ 0.2;
-#X floatatom 109 208 0 0 0 0 - - -;
-#X obj 109 241 phasor~ 20;
-#X floatatom 323 206 0 0 0 0 - - -;
-#X floatatom 122 270 0 0 0 0 - - -;
-#X obj 109 468 dac~;
-#X obj 323 239 phasor~ 11.33;
-#X text 282 312 Optional argument sets trigger value for control input
-(default 0) \; you need a trigger above 0 to work with phasor~;
-#X text 13 171 You've heard it before: the classic arpeggiator \, made
-with two phasor~ objects;
-#X text 207 290 control signal;
-#X text 29 294 input signal;
-#X text 161 377 sah~ output used as the frequency of an oscillator
+#N canvas 429 34 552 520 10;
+#X obj -1 736 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 429 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 617 284 356 243 META 0;
+#X text 10 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 32 LICENSE SIBSD;
+#X text 10 146 AUTHOR Miller Puckette;
+#X text 10 184 RELEASE_DATE 1997;
+#X text 10 127 LIBRARY cyclone;
+#X text 10 203 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 108 OUTLET_0 signal;
+#X text 10 13 KEYWORDS signal sample hold arpeggiator;
+#X text 10 89 INLET_1 signal;
+#X text 10 70 INLET_0 signal float;
+#X text 10 51 DESCRIPTION sample-and-hold;
+#X restore 499 738 pd META;
+#X obj -1 517 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 554 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj -1 604 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
+12 0 13 -228856 -1 0;
+#N canvas 311 415 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 198 738 pd Related_objects;
+#X obj 79 439 cnv 17 3 34 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 527 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header sah~ 3 12 0 18
+-204280 -1 0;
+#X obj 508 8 sah~;
+#X text 108 437 signal;
+#X obj 79 488 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X text 108 487 signal;
+#X text 179 487 - control signal;
+#X text 179 438 - input signal to sample;
+#X text 108 527 signal;
+#X text 179 527 - output samples of input signal when control triggers
 ;
-#X text 161 271 set trigger;
-#X obj 109 310 sah~ 0.01;
-#X text 16 60 The sah~ object accepts two signals. The left signal
+#X text 90 565 1) float;
+#X text 179 564 - sets trigger value for control input (default 0)
+\, needs to be above 0 to work with phasor~;
+#X text 106 614 The sah~ object accepts two signals. The left signal
 is the "input" and the right signal is the "control." When the control
 makes a transition from being at or below the trigger value to being
 above the trigger value \, the input is sampled and its current value
 is output until another control transition occurs and the input is
 sampled again. The default threshold value is 0 \, but can be specified
 via a float in the left inlet or as an argument to sah~.;
-#N canvas 309 151 494 407 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X obj 93 320 cycle~;
+#X obj 93 292 *~ 1000;
+#X obj 93 348 *~ 0.2;
+#X floatatom 93 99 0 0 0 0 - - -;
+#X obj 93 123 phasor~ 20;
+#X floatatom 144 183 0 0 0 0 - - -;
+#X floatatom 103 149 0 0 0 0 - - -;
+#X obj 93 383 dac~;
+#X obj 144 205 phasor~ 11.33;
+#X text 166 232 Optional argument sets trigger value for control input
+(default 0) \; you need a trigger above 0 to work with phasor~;
+#X text 27 54 You've heard it before: the classic arpeggiator \, made
+with two phasor~ objects;
+#X text 145 292 sah~ output used as the frequency of an oscillator
 ;
-#X text 12 5 KEYWORDS signal max_compatible;
-#X text 12 65 INLET_0 signal;
-#X text 12 85 INLET_1 signal;
-#X text 12 105 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 45 DESCRIPTION sample and hold;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 568 470 pd META;
-#X connect 1 0 3 0;
-#X connect 2 0 1 0;
-#X connect 3 0 8 0;
-#X connect 3 0 8 1;
-#X connect 4 0 5 0;
-#X connect 5 0 16 0;
-#X connect 6 0 9 0;
-#X connect 7 0 16 0;
-#X connect 9 0 16 1;
-#X connect 16 0 2 0;
+#X text 128 148 set trigger;
+#X obj 93 243 sah~ 0.01;
+#X obj 477 47 pddp/dsp;
+#X text 9 23 Sample-and-hold;
+#X text 108 457 float;
+#X text 179 458 - set trigger;
+#X obj 13 736 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 21 0 23 0;
+#X connect 22 0 21 0;
+#X connect 23 0 28 0;
+#X connect 23 0 28 1;
+#X connect 24 0 25 0;
+#X connect 25 0 34 0;
+#X connect 26 0 29 0;
+#X connect 27 0 34 0;
+#X connect 29 0 34 1;
+#X connect 34 0 22 0;

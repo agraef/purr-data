@@ -1,4 +1,4 @@
-#N canvas 0 0 448 570 10;
+#N canvas 431 35 448 570 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header looping 20 10 1
 18 -261106 -33289 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -90,7 +90,7 @@ be used to create iterative loops.;
 0;
 #X text 7 1 A more complex recursive loop;
 #X obj 91 123 +;
-#X floatatom 130 123 5 0 0 0 - - -;
+#X floatatom 130 123 5 0 0 0 - - -, f 5;
 #X msg 91 94 1;
 #X obj 170 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
@@ -184,7 +184,7 @@ the loop. The [moses 100] ends the loop.;
 #X restore 23 290 pd A_basic_sample_looper;
 #X obj 1 548 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 383 422 494 163 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -194,7 +194,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 NAME until;
 #X text 12 65 DESCRIPTION how to create loops in Pd;
 #X restore 392 550 pd META;
-#N canvas 9 223 428 342 Related_objects 0;
+#N canvas 219 238 428 342 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 Looping- Related Objects;

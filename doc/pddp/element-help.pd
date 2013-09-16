@@ -1,14 +1,14 @@
 #N struct element-help-template float x float y array array1 array1-element-help-template
 ;
 #N struct array1-element-help-template float y;
-#N canvas 0 0 555 619 10;
+#N canvas 428 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header element 3 12 0 18
 -204280 -1 0;
 #X obj 0 333 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 55 244 494 344 META 0;
+#N canvas 482 282 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 553 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 82 455 428 134 Related_objects 0;
+#N canvas 211 492 428 134 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 92 72 struct;
@@ -50,9 +50,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 99 343 float;
 #X text 98 398 list;
 #X text 228 255 <- subpatch to display the data structures;
-#X obj 475 3 element;
-#X obj 450 20 pddp/pddplink http://wiki.puredata.info/en/element -text
-pdpedia: element;
+#X obj 497 10 element;
 #N canvas 80 372 428 228 element-help-data 0;
 #X scalar element-help-template 40 40 \; 19 \; 0 \; 11 \; 9 \; 41 \;
 14 \; 31 \; 38 \; 33 \; \;;
@@ -105,7 +103,7 @@ the nearest endpoint.;
 #X text 168 459 - when [element] receives a float to its left inlet
 \, it outputs a pointer to the specified element of the array.;
 #X obj 297 107 pointer;
-#X floatatom 125 209 5 0 0 0 - - -;
+#X floatatom 125 209 5 0 0 0 - - -, f 5;
 #X text 130 156 outlet is pointer to single element;
 #X text 176 207 here we just get the value of y.;
 #X msg 297 83 traverse pd-element-help-data \, next;
@@ -114,7 +112,7 @@ the nearest endpoint.;
 #X obj 125 112 hradio 15 1 0 9 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
 #X text 155 93 index (0-8);
-#X floatatom 81 135 5 0 0 0 - - -;
+#X floatatom 81 135 5 0 0 0 - - -, f 5;
 #X text 11 23 get pointer to an element of an array;
 #X text 168 527 - field name. The field name must be an array.;
 #X text 168 398 - a list will be truncated to the first element.;
@@ -129,9 +127,9 @@ scalar.;
 #X obj 98 572 pddp/pddplink scalar-help.pd;
 #X text 125 75 2 ... then here;
 #X text 299 63 1 Click here first...;
-#X connect 23 0 28 1;
-#X connect 27 0 23 0;
-#X connect 28 0 29 0;
-#X connect 29 0 24 0;
-#X connect 30 0 28 0;
-#X connect 30 0 32 0;
+#X connect 22 0 27 1;
+#X connect 26 0 22 0;
+#X connect 27 0 28 0;
+#X connect 28 0 23 0;
+#X connect 29 0 27 0;
+#X connect 29 0 31 0;

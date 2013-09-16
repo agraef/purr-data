@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header (canvas) 3 12 0
 18 -204280 -1 0;
 #X obj 0 293 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 280 META 0;
+#N canvas 482 350 494 280 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -32,9 +32,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X restore 102 598 pd Related_objects;
 #X obj 78 302 cnv 17 3 85 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X text 328 3 (This help patch itself is a canvas);
-#X obj 451 20 pddp/pddplink http://wiki.puredata.info/en/canvas -text
-pdpedia: canvas;
+#X text 328 11 (This help patch itself is a canvas);
 #X obj 101 560 pddp/pddplink all_about_canvas_properties.pd -text all_about_canvas_properties
 ;
 #X text 72 56 This help patch is associated with several related objects:
@@ -74,7 +72,8 @@ objects on the canvas. See the links below for more details:;
 #X text 98 512 (5);
 #X text 168 512 - canvas arguments are 5 floats which are not directly
 accessible: topLeftX topLeftY canvasWidth canvasHeight fontSize.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 101 575 pddp/pddplink ../3.audio.examples/G05.execution.order.pd
 -text doc/3.audio.examples/G05.execution.order.pd;
 #X text 11 23 Pure Data document window;

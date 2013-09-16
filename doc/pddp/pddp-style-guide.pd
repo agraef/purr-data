@@ -1,4 +1,4 @@
-#N canvas 102 76 462 561 10;
+#N canvas 429 31 462 561 10;
 #X text 15 30 design principles;
 #X text 50 50 - Make states visible and visibly distinguished;
 #X text 50 65 - Teach by example \, not by formalism;

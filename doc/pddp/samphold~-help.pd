@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header samphold~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 244 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 248 494 344 META 0;
+#N canvas 488 288 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 547 (none);
-#N canvas 91 479 428 109 Related_objects 0;
+#N canvas 217 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [samphold~] Related Objects;
@@ -40,16 +40,14 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 441 cnv 17 3 60 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 464 3 samphold~;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/samphold~
--text pdpedia: samphold~;
+#X obj 482 10 samphold~;
 #X obj 180 197 snapshot~;
-#X floatatom 180 219 5 0 0 0 - - -;
+#X floatatom 180 219 5 0 0 0 - - -, f 5;
 #X obj 180 151 samphold~;
 #X obj 207 118 sig~;
 #X obj 252 140 sig~;
-#X floatatom 207 97 3 0 0 0 - - -;
-#X floatatom 252 119 3 0 0 0 - - -;
+#X floatatom 207 97 3 0 0 0 - - -, f 3;
+#X floatatom 252 119 3 0 0 0 - - -, f 3;
 #X msg 130 48 set 34;
 #X msg 192 71 reset;
 #X text 232 96 sample signal;
@@ -92,17 +90,18 @@ if the specified value were the most recent value of the control input
 phasor but don't want the jump reflected in the output. Plain "reset"
 is equivalent to "reset infinity" which forces the next input to be
 sampled.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 478 53 pddp/dsp;
 #X obj 98 573 pddp/pddplink ../3.audio.examples/C09.sample.hold.pd
 -text doc/3.audio.examples/C09.sample.hold.pd;
-#X connect 14 0 15 0;
-#X connect 16 0 14 0;
-#X connect 17 0 16 0;
-#X connect 18 0 16 1;
+#X connect 13 0 14 0;
+#X connect 15 0 13 0;
+#X connect 16 0 15 0;
+#X connect 17 0 15 1;
+#X connect 18 0 16 0;
 #X connect 19 0 17 0;
-#X connect 20 0 18 0;
-#X connect 21 0 16 0;
-#X connect 22 0 16 0;
-#X connect 25 0 16 0;
-#X connect 40 0 14 0;
+#X connect 20 0 15 0;
+#X connect 21 0 15 0;
+#X connect 24 0 15 0;
+#X connect 39 0 13 0;

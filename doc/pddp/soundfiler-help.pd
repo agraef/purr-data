@@ -1,11 +1,11 @@
-#N canvas 398 77 555 619 10;
+#N canvas 429 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header soundfiler 3 12
 0 18 -204280 -1 0;
 #X obj 0 387 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 247 494 344 META 0;
+#N canvas 490 283 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 554 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 533 (none);
-#N canvas 76 485 428 106 Related_objects 0;
+#N canvas 217 519 428 106 Related_objects 0;
 #X obj 0 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 2 [soundfiler] Related Objects;
@@ -41,9 +41,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 495 float;
 #X obj 78 496 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 457 3 soundfiler;
-#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/soundfiler
--text pdpedia: soundfiler;
+#X obj 477 10 soundfiler;
 #X text 11 23 read and write soundfiles to arrays;
 #X text 98 395 read;
 #X text 98 412 write;
@@ -115,10 +113,10 @@ and unsupplied channels are zeroed out).;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X obj 98 575 pddp/pddplink all_about_arrays.pd;
-#X connect 18 0 19 0;
-#X connect 29 0 18 0;
-#X connect 30 0 18 0;
-#X connect 31 0 18 0;
-#X connect 32 0 18 0;
-#X connect 33 0 18 0;
-#X connect 34 0 18 0;
+#X connect 17 0 18 0;
+#X connect 28 0 17 0;
+#X connect 29 0 17 0;
+#X connect 30 0 17 0;
+#X connect 31 0 17 0;
+#X connect 32 0 17 0;
+#X connect 33 0 17 0;

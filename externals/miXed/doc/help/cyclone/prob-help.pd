@@ -1,71 +1,108 @@
-#N canvas 0 26 669 571 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 7 524 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 6 538 ___________________________________________________;
-#X obj -2 21 prob;
+#N canvas 428 32 558 554 10;
+#X obj -1 723 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 493 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 620 322 359 239 META 0;
+#X text 10 88 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 -45 LICENSE SIBSD;
+#X text 10 69 AUTHOR Miller Puckette;
+#X text 10 107 RELEASE_DATE 1997;
+#X text 10 50 LIBRARY cyclone;
+#X text 10 126 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 -64 KEYWORDS random generator weighted;
+#X text 10 -26 DESCRIPTION weighted series of random numbers;
+#X text 10 -7 INLET_0 list bang message;
+#X text 10 31 OUTLET_1 bang;
+#X text 10 12 OUTLET_0 float;
+#X restore 500 726 pd META;
+#X obj -1 623 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 686 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 314 452 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 199 726 pd Related_objects;
+#X obj 77 502 cnv 17 3 110 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 77 659 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header prob 3 12 0 18
+-204280 -1 0;
+#X obj 514 6 prob;
 #C restore;
-#X text 137 23 weighted series of random numbers;
-#X text 5 53 coll maintains a probability matrix a.k.a 1st order;
-#X text 5 65 markov chain and outputs a number according to it.;
-#X text 168 94 0 has a 80% chance to be followed by 1 \, and;
-#X text 168 106 a 10% chance to be followed by 2 or 3;
-#X obj 215 217 prob;
+#X text 11 23 weighted series of random numbers;
+#X text 16 50 coll maintains a probability matrix a.k.a 1st order;
+#X text 16 62 markov chain and outputs a number according to it.;
+#X text 31 94 0 has a 80% chance to be followed by 1 \, and;
+#X text 31 106 a 10% chance to be followed by 2 or 3;
+#X obj 55 158 prob;
 #C restore;
-#X floatatom 215 251 5 0 0 0 - - -;
-#X msg 201 128 0 1 80 \, 0 2 10 \, 0 3 10;
-#X obj 215 164 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X floatatom 55 183 5 0 0 0 - - -, f 5;
+#X msg 55 126 0 1 80 \, 0 2 10 \, 0 3 10;
+#X msg 124 257 0 1 30 \, 0 2 30 \, 0 3 40;
+#X msg 150 281 1 2 30 \, 1 0 70;
+#X floatatom 100 451 5 0 0 0 - - -, f 5;
+#X obj 121 430 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X msg 237 189 0;
-#X text 235 163 puts out a number and sets prob to this value;
-#X text 267 189 resets prob to 0;
-#X text 181 132 1;
-#X text 136 224 comment;
-#X text -3 164 2 try this a couple of times:;
-#X msg 338 274 0 1 30 \, 0 2 30 \, 0 3 40;
-#X msg 364 301 1 2 30 \, 1 0 70;
-#X floatatom 271 472 5 0 0 0 - - -;
-#X obj 294 451 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
--1;
-#X text 334 253 load probabilities:;
-#X text 315 448 bang when we reach a number for which we have no rule
+#X text 120 236 load probabilities:;
+#X text 142 427 bang when we reach a number for which we have no rule
 ;
-#X obj 271 279 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 100 220 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X msg 178 397 reset 0;
-#X obj 271 426 prob;
+#X msg 178 375 reset 0;
+#X obj 100 405 prob;
 #C restore;
-#X msg 197 337 clear;
-#X text 102 339 clear matrix:;
-#X text 14 380 when we get stuck reset to 0:;
-#X msg 378 331 dump;
-#X text 416 332 print out all rules;
-#X msg 386 368 embed;
-#X text 434 367 save matrix with the patch;
-#N canvas 130 105 494 366 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X msg 175 352 clear;
+#X text 216 351 clear matrix:;
+#X msg 164 305 dump;
+#X text 196 303 print out all rules;
+#X msg 172 329 embed;
+#X text 211 328 save matrix with the patch;
+#X text 105 502 list;
+#X text 177 502 - list of triplets \, specifying probability function
+in form <x \, y \, prob> where x has an prob% chance of being followed
+by y;
+#X text 105 550 bang;
+#X text 177 550 - puts out a number and sets prob to this value;
+#X text 105 572 message;
+#X text 105 632 float;
+#X text 177 632 - random number based on prob function;
+#X obj 77 632 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 105 659 bang;
+#X text 177 572 - clear: clear matrix \, dump: print out all rule \,
+embed: save matrix with the patch \, reset: when get stuck (reach number
+for which there is no rule);
+#X text 177 659 - when we reach a number for which there is no rule
 ;
-#X text 12 5 KEYWORDS control max_compatible random;
-#X text 12 45 DESCRIPTION weighted series of random numbers;
-#X text 12 65 INLET_0 bang float list dump embed clear reset;
-#X text 12 85 OUTLET_0 float;
-#X text 12 105 OUTLET_1 bang;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 616 551 pd META;
-#X connect 9 0 10 0;
-#X connect 11 0 9 0;
-#X connect 12 0 9 0;
-#X connect 12 0 13 0;
-#X connect 13 0 9 0;
-#X connect 19 0 27 0;
-#X connect 20 0 27 0;
-#X connect 25 0 27 0;
-#X connect 26 0 27 0;
-#X connect 27 0 21 0;
-#X connect 27 1 22 0;
-#X connect 28 0 27 0;
-#X connect 31 0 27 0;
-#X connect 33 0 27 0;
+#X text 105 695 (none);
+#X text 229 375 when we get stuck reset to 0;
+#X obj 350 161 prob;
+#C restore;
+#X floatatom 350 186 5 0 0 0 - - -, f 5;
+#X obj 350 108 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X msg 360 133 0;
+#X text 390 132 resets prob to 0;
+#X text 370 96 puts out a number and sets prob to this value;
+#X obj 13 724 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 15 0 16 0;
+#X connect 17 0 15 0;
+#X connect 18 0 26 0;
+#X connect 19 0 26 0;
+#X connect 24 0 26 0;
+#X connect 25 0 26 0;
+#X connect 26 0 20 0;
+#X connect 26 1 21 0;
+#X connect 27 0 26 0;
+#X connect 29 0 26 0;
+#X connect 31 0 26 0;
+#X connect 46 0 47 0;
+#X connect 48 0 46 0;
+#X connect 48 0 49 0;
+#X connect 49 0 46 0;

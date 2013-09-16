@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header timer 3 12 0 18
 -204280 -1 0;
 #X obj 0 394 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 245 494 368 META 0;
+#N canvas 484 259 494 368 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ for Pd version 0.42.;
 #X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 516 (none);
-#N canvas 73 345 428 246 Related_objects 0;
+#N canvas 220 379 428 246 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [timer] Related Objects;
@@ -58,9 +58,7 @@ may not exist in a single library.;
 -162280 0;
 #X text 168 478 - upon sending the "flush" message to the left inlet
 \, [bag] will output each value in the order it was received.;
-#X obj 482 3 timer;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/timer -text
-pdpedia: timer;
+#X obj 503 9 timer;
 #X msg 104 180 bang;
 #X msg 79 158 bang;
 #X obj 79 202 timer;
@@ -155,7 +153,8 @@ three...please wait for approximately 3 seconds.;
 #X connect 18 2 5 0;
 #X restore 102 572 pd Time_Measurements;
 #X text 11 23 measure logical time;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 16 0 18 1;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 15 0 17 1;
+#X connect 16 0 17 0;
 #X connect 17 0 18 0;
-#X connect 18 0 19 0;

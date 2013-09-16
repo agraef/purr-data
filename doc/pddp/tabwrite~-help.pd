@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabwrite~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 324 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 245 494 344 META 0;
+#N canvas 485 288 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -24,7 +24,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 77 301 428 313 Related_objects 0;
+#N canvas 214 319 428 313 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 20 38 Native Pd Objects;
@@ -55,9 +55,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X restore 102 597 pd Related_objects;
 #X obj 78 333 cnv 17 3 135 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 466 3 tabwrite~;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/tabwrite~
--text pdpedia: tabwrite~;
+#X obj 484 9 tabwrite~;
 #X text 11 23 write a signal in an array;
 #X msg 95 194 bang;
 #X msg 111 239 stop;
@@ -95,7 +93,7 @@ element (e.g. \, "start 500" will start recording at the 500th element).
 #X text 166 452 - the signal to be written to the array.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 455 51 pddp/dsp;
+#X obj 480 55 pddp/dsp;
 #X obj 98 570 pddp/pddplink all_about_arrays.pd;
 #X obj 171 219 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
 -1;
@@ -103,10 +101,10 @@ element (e.g. \, "start 500" will start recording at the 500th element).
 #X obj 78 291 tabwrite~ \$0-array;
 #X obj 329 293 table \$0-array2;
 #X msg 171 261 set \$1-array2;
-#X connect 12 0 36 0;
-#X connect 13 0 36 0;
-#X connect 14 0 36 0;
-#X connect 21 0 36 0;
-#X connect 34 0 35 0;
-#X connect 35 0 38 0;
-#X connect 38 0 36 0;
+#X connect 11 0 35 0;
+#X connect 12 0 35 0;
+#X connect 13 0 35 0;
+#X connect 20 0 35 0;
+#X connect 33 0 34 0;
+#X connect 34 0 37 0;
+#X connect 37 0 35 0;

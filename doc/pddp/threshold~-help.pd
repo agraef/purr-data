@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header threshold~ 3 12
 0 18 -204280 -1 0;
 #X obj 0 295 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 244 494 365 META 0;
+#N canvas 486 261 494 365 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 101 481 428 109 Related_objects 0;
+#N canvas 217 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [threshold~] Related Objects;
@@ -40,13 +40,11 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 352 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 351 float;
-#X obj 453 3 threshold~;
-#X obj 425 20 pddp/pddplink http://wiki.puredata.info/en/threshold~
--text pdpedia: threshold~;
+#X obj 478 10 threshold~;
 #X text 11 23 trigger from audio signal;
 #X obj 140 168 sig~;
 #X obj 140 226 threshold~ 10 100 0 100;
-#X floatatom 140 141 5 0 0 0 - - -;
+#X floatatom 140 141 5 0 0 0 - - -, f 5;
 #X obj 140 254 print trigger;
 #X obj 275 254 print rest;
 #X msg 296 196 1;
@@ -82,13 +80,14 @@ specify debounce times in milliseconds \, for the [threshold~] to wait
 after the two event types before triggering again.;
 #X text 79 526 3) float;
 #X text 79 546 4) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 15 0 16 0;
-#X connect 16 0 18 0;
-#X connect 16 1 19 0;
-#X connect 17 0 15 0;
-#X connect 20 0 16 1;
-#X connect 21 0 16 1;
-#X connect 22 0 16 0;
-#X connect 23 0 16 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 481 57 pddp/dsp;
+#X connect 14 0 15 0;
+#X connect 15 0 17 0;
+#X connect 15 1 18 0;
+#X connect 16 0 14 0;
+#X connect 19 0 15 1;
+#X connect 20 0 15 1;
+#X connect 21 0 15 0;
+#X connect 22 0 15 0;

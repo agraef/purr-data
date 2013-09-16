@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 515 143 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header line 3 12 0 18 -204280
 -1 0;
 #X obj 0 267 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 494 364 META 0;
+#N canvas 565 371 494 364 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 498 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 59 376 428 230 Related_objects 0;
+#N canvas 297 500 428 230 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 line~;
@@ -50,12 +50,10 @@ for Pd version 0.42.;
 #X obj 78 347 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 346 float;
-#X obj 493 3 line;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/line -text
-pdpedia: line;
+#X obj 509 10 line;
 #X obj 137 180 line;
 #X msg 137 87 1000 1000;
-#X floatatom 137 201 5 0 0 0 - - -;
+#X floatatom 137 201 5 0 0 0 - - -, f 5;
 #X text 203 86 ramp up.;
 #X msg 146 110 0 1000;
 #X text 193 110 ramp down.;
@@ -77,8 +75,8 @@ takes off from its current value.;
 #X text 16 271 Due to this unique behavior \, a common construct found
 in Pd patches includes the [pack] object as follows:;
 #X obj 30 392 line;
-#X floatatom 30 413 10 0 0 0 - - -;
-#X floatatom 30 306 5 0 0 0 - - -;
+#X floatatom 30 413 10 0 0 0 - - -, f 10;
+#X floatatom 30 306 5 0 0 0 - - -, f 5;
 #X obj 30 372 pack f 500;
 #X msg 41 325 50;
 #X msg 49 346 2000;
@@ -201,12 +199,12 @@ time which is defined at the right inlet.;
 #X obj 25 175 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 25 195 t b b;
-#X floatatom 25 264 5 0 0 0 - - -;
+#X floatatom 25 264 5 0 0 0 - - -, f 5;
 #X obj 150 260 line;
 #X msg 150 236 1000;
 #X obj 150 216 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 150 282 5 0 0 0 - - -;
+#X floatatom 150 282 5 0 0 0 - - -, f 5;
 #X text 20 309 If [line] receives a new target value without an accompanying
 "time" \, it simply jumps to the new value...as in the example above
 on the right. In the example above on the left \, you'll see that [line]
@@ -247,8 +245,8 @@ first ramp.;
 ;
 #X obj 98 571 pddp/pddplink ../3.audio.examples/C03.zipper.noise.pd
 -text doc/3.audio.examples/C03.zipper.noise.pd;
-#X connect 17 0 19 0;
-#X connect 18 0 17 0;
-#X connect 21 0 17 0;
-#X connect 23 0 17 0;
-#X connect 24 0 17 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 0;
+#X connect 20 0 16 0;
+#X connect 22 0 16 0;
+#X connect 23 0 16 0;

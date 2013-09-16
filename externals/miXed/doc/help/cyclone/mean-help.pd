@@ -1,40 +1,74 @@
-#N canvas 0 26 419 351 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 15 313 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 14 327 ___________________________________________________
+#N canvas 421 34 559 534 10;
+#X obj -1 506 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 333 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 596 317 370 225 META 0;
+#X text 8 148 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 8 22 LICENSE SIBSD;
+#X text 8 130 AUTHOR Miller Puckette;
+#X text 8 166 RELEASE_DATE 1997;
+#X text 8 112 LIBRARY cyclone;
+#X text 8 184 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 8 4 KEYWORDS average list mean;
+#X text 8 40 DESCRIPTION find the running average of a stream of numbers
 ;
-#X floatatom 98 276 5 0 0 0 - - -;
-#X obj 24 27 mean;
-#X text 60 32 find the running average of a stream of numbers;
-#X obj 98 215 mean;
-#X floatatom 44 130 5 0 0 0 - - -;
-#X obj 157 163 line;
-#X msg 98 85 clear;
-#X msg 157 131 0 \, 1 1000;
-#X msg 158 99 1 2 3 4 5;
-#N canvas 247 115 494 368 META 0;
-#X text 12 175 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 145 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 8 58 INLET_0 list float message;
+#X text 8 94 OUTLET_1 float;
+#X text 8 76 OUTLET_0 float;
+#X restore 502 508 pd META;
+#X obj -1 398 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 458 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 307 431 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 206 508 pd Related_objects;
+#X obj 80 342 cnv 17 3 47 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 80 431 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header mean 3 12 0 18
+-204280 -1 0;
+#X obj 518 4 mean;
+#X text 11 23 find the running average of a stream of numbers;
+#X floatatom 95 278 5 0 0 0 - - -, f 5;
+#X obj 95 217 mean;
+#X floatatom 123 104 5 0 0 0 - - -, f 5;
+#X obj 146 191 line;
+#X msg 95 70 clear;
+#X msg 146 166 0 \, 1 1000;
+#X msg 135 136 1 2 3 4 5;
+#X floatatom 116 247 5 0 0 0 - - -, f 5;
+#X text 154 241 total no of values included in the;
+#X text 154 256 averaging process;
+#X text 135 279 mean;
+#X text 107 341 list;
+#X text 180 341 - list of numbers to take avg;
+#X text 107 358 float;
+#X text 180 358 - number to add running average;
+#X text 107 373 message;
+#X text 180 373 - clear: clear avg \, start over;
+#X text 107 408 float;
+#X text 180 408 - running average;
+#X text 107 476 (none);
+#X obj 80 408 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 107 431 float;
+#X text 180 431 - total number of values processed;
+#X text 199 135 list of numbers to average;
+#X text 211 164 creates list of numbers;
+#X text 131 68 clear average;
+#X text 159 103 number to add to running average;
+#X obj 11 508 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS control max_compatible;
-#X text 12 45 DESCRIPTION find the running average of a stream of numbers
-;
-#X text 12 65 INLET_0 float list clear;
-#X text 12 85 OUTLET_0 float;
-#X text 12 105 OUTLET_1 float;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 125 AUTHOR Krzysztof Czaja;
-#X restore 370 331 pd META;
-#X floatatom 119 245 5 0 0 0 - - -;
-#X text 159 243 total no of values included in the;
-#X text 159 258 averaging process;
-#X text 138 277 mean;
-#X connect 6 0 3 0;
-#X connect 6 1 13 0;
-#X connect 7 0 6 0;
-#X connect 8 0 6 0;
-#X connect 9 0 6 0;
-#X connect 10 0 8 0;
-#X connect 11 0 6 0;
+#X connect 12 0 11 0;
+#X connect 12 1 18 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 12 0;
+#X connect 16 0 14 0;
+#X connect 17 0 12 0;

@@ -1,4 +1,4 @@
-#N canvas 0 26 773 596 10;
+#N canvas 432 34 773 596 10;
 #X text 5 29 "HID" stands for "Human Interface Device". A HID is any
 device that is meant to allow humans to interact with a computer. Usually
 \, HIDs are mice \, keyboards \, joysticks \, tablets \, gamepads \,
@@ -125,7 +125,7 @@ to the 'printing' characters. [keyname] reports Shift \, Ctrl \, Alt
 ;
 #X obj 1 566 cnv 15 770 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 710 435 494 158 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -134,7 +134,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION definition of haptics;
 #X restore 722 568 pd META;
-#N canvas 151 430 428 155 Related_objects 0;
+#N canvas 420 447 428 155 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;
 #X text 7 2 hid - Related Objects;

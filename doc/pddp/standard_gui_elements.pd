@@ -1,4 +1,4 @@
-#N canvas 89 34 488 576 10;
+#N canvas 427 36 488 576 10;
 #X obj 2 2 cnv 15 450 20 empty empty [object_name] 2 11 1 18 -233017
 -66577 0;
 #X obj 21 133 tgl 30 0 empty empty start 1 15 1 12 -90049 -1 -1 0 1
@@ -7,13 +7,14 @@
 -1 -1 0 1;
 #X obj 194 466 grouping patch;
 #X obj 100 241 nbx 5 20 -1e+37 1e+37 0 0 empty empty display_number_box
-0 -6 1 16 -199729 -1 -1 0 256;
+0 -6 1 16 -199729 -1 -1 0 256 0;
 #X text 19 337 The idea behind these objects is to have a color scheme
 which consistently represents various ideas. Also \, having GUI objects
 highlighted by color signals the user that they should play with that
 object \, while plain white objects are part of the implementation.
 ;
-#X obj 418 3 pddp/pddplink http://puredata.info/dev/pddp -text pddp;
+#X obj 418 3 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
 #X text 175 447 click on these for more info:;
 #X text 248 523 updated for Pd version 0.37.1;
 #N canvas 0 22 458 308 related_objects 0;

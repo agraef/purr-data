@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bendout 3 12 0 18
 -204280 -1 0;
 #X obj 0 377 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 244 494 344 META 0;
+#N canvas 489 282 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to conform to the PDDP template for Pd version 0.42.;
 #X obj 0 561 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 387 float;
-#N canvas 60 184 441 421 Related_objects 0;
+#N canvas 204 206 441 421 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [bendout] Related Objects;
@@ -72,13 +72,11 @@ by Olaf Matthes);
 #X text 98 430 float;
 #X obj 99 565 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
 ;
-#X obj 470 3 bendout;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/bendout -text
-pdpedia: bendout;
-#X floatatom 111 146 5 0 0 0 - - -;
-#X floatatom 150 163 5 0 0 0 - - -;
+#X obj 493 13 bendout;
+#X floatatom 111 146 5 0 0 0 - - -, f 5;
+#X floatatom 150 163 5 0 0 0 - - -, f 5;
 #X obj 111 186 bendout;
-#X floatatom 231 163 5 0 0 0 - - -;
+#X floatatom 231 163 5 0 0 0 - - -, f 5;
 #X text 305 186 <-- pitch bend values on channel 2;
 #X obj 231 186 bendout 2;
 #X text 11 23 send pitchbend value to the MIDI port;
@@ -89,9 +87,10 @@ channel can be changed by sending an integer to the right inlet.;
 #X text 168 430 - MIDI channel number (defaults to channel 1).;
 #X text 168 462 - [bendin] writes directly to the MIDI port.;
 #X text 80 505 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X text 98 407 list;
 #X text 168 407 - a list is distributed to the inlets.;
-#X connect 16 0 18 0;
-#X connect 17 0 18 1;
-#X connect 19 0 21 0;
+#X connect 15 0 17 0;
+#X connect 16 0 17 1;
+#X connect 18 0 20 0;

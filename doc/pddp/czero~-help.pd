@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header czero~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 206 491 389 META 0;
+#N canvas 482 237 491 389 META 0;
 #X text 12 185 LIBRARY internal;
 #X text 12 225 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -30,7 +30,7 @@ raw;
 0 13 -228856 -1 0;
 #X obj 0 543 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 63 281 428 309 Related_objects 0;
+#N canvas 214 316 428 309 Related_objects 0;
 #X obj 75 61 rzero~;
 #X obj 26 81 cpole~;
 #X obj 26 61 rpole~;
@@ -66,17 +66,17 @@ for an introduction to the necessary theory.;
 #X text 98 434 signal;
 #N canvas 21 185 498 375 test 0;
 #X obj 88 282 env~ 16384;
-#X floatatom 88 306 5 0 0 0 - - -;
-#X floatatom 420 107 4 -1000 1000 0 - - -;
+#X floatatom 88 306 5 0 0 0 - - -, f 5;
+#X floatatom 420 107 4 -1000 1000 0 - - -, f 4;
 #X obj 285 310 dac~;
 #X obj 285 274 *~;
 #X obj 311 101 cos~;
-#X floatatom 237 46 5 0 0 0 - - -;
+#X floatatom 237 46 5 0 0 0 - - -, f 5;
 #X obj 265 98 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
 #X obj 237 96 *~;
 #X obj 237 69 phasor~;
-#X floatatom 318 52 5 0 0 0 - - -;
+#X floatatom 318 52 5 0 0 0 - - -, f 5;
 #X obj 318 75 / 1000;
 #X obj 344 102 -~ 0.25;
 #X obj 344 124 cos~;
@@ -84,14 +84,14 @@ for an introduction to the necessary theory.;
 #X obj 310 152 *~;
 #X obj 344 152 *~;
 #X obj 164 282 env~ 16384;
-#X floatatom 164 306 5 0 0 0 - - -;
+#X floatatom 164 306 5 0 0 0 - - -, f 5;
 #X obj 317 270 dbtorms;
-#X floatatom 318 250 5 0 0 0 - - -;
+#X floatatom 318 250 5 0 0 0 - - -, f 5;
 #X obj 181 206 czero~;
-#X floatatom 137 118 4 -1000 1000 0 - - -;
+#X floatatom 137 118 4 -1000 1000 0 - - -, f 4;
 #X obj 28 112 cos~;
 #X obj 48 71 phasor~;
-#X floatatom 51 46 5 0 0 0 - - -;
+#X floatatom 51 46 5 0 0 0 - - -, f 5;
 #X obj 61 113 -~ 0.25;
 #X obj 61 135 cos~;
 #X obj 137 137 / 1000;
@@ -155,9 +155,7 @@ for an introduction to the necessary theory.;
 #X obj 126 229 sig~;
 #X msg 57 162 set 0.6 0.8;
 #X obj 41 252 czero~ 0.9 0.4;
-#X obj 477 3 czero~;
-#X obj 450 20 pddp/pddplink http://wiki.puredata.info/en/czero~ -text
-pdpedia: czero~;
+#X obj 496 12 czero~;
 #X text 179 152 The action of czero~ is:;
 #X text 238 173 y[n] = x[n] - a[n] * x[n-1];
 #X text 176 193 where y[n] is the output \, x[n] the input \, and a[n]
@@ -179,8 +177,9 @@ stable.;
 via a one-zero filter \, whose coefficients are controlled by creation
 arguments or by another complex audio signal (remaining two inlets).
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 485 50 pddp/dsp;
 #X obj 100 572 pddp/pddplink ../3.audio.examples/H12.peaking.pd -text
 doc/3.audio.examples/H12.peaking.pd;
 #X connect 23 0 29 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header polytouchout 3 12
 0 18 -204280 -1 0;
 #X obj 0 412 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 49 245 494 367 META 0;
+#N canvas 481 261 494 367 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ to conform to the PDDP template for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 428 421 Related_objects 0;
+#N canvas 213 206 428 421 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -79,18 +79,17 @@ by Olaf Matthes);
 #X text 168 420 - MIDI channel.;
 #X text 168 445 - ???;
 #X text 168 545 - ???;
-#X floatatom 226 173 5 0 0 0 - - -;
-#X floatatom 260 173 5 0 0 0 - - -;
+#X floatatom 226 173 5 0 0 0 - - -, f 5;
+#X floatatom 260 173 5 0 0 0 - - -, f 5;
 #X obj 226 202 polytouchout;
-#X floatatom 295 173 5 0 0 0 - - -;
-#X obj 452 3 polytouchout;
-#X obj 419 20 pddp/pddplink http://wiki.puredata.info/en/polytouchout
--text pdpedia: polytouchout;
+#X floatatom 295 173 5 0 0 0 - - -, f 5;
+#X obj 461 11 polytouchout;
 #X text 98 470 float;
 #X obj 78 471 cnv 17 3 17 empty \$0-pddp.cnv.let.2 2 5 9 0 16 -228856
 -162280 0;
 #X text 168 470 - ???;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X connect 20 0 22 0;
 #X connect 21 0 22 1;
 #X connect 23 0 22 2;

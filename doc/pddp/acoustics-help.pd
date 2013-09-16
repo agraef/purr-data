@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+#N canvas 171 163 561 481 10;
+#X obj 0 451 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header acoustics 3 12 0
 18 -204280 -1 0;
-#X obj 0 433 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#X obj 0 289 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 242 494 344 META 0;
+#N canvas 317 389 404 227 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -17,17 +17,17 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 5 NAME mtof ftom dbtorms rmstodb dbtopow powtodb;
 #X text 12 65 DESCRIPTION control objects for conversion;
 #X text 12 145 RELEASE_DATE 1997;
-#X restore 500 597 pd META;
-#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+#X restore 500 453 pd META;
+#X obj 0 359 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
-#X obj 0 536 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+#X obj 0 392 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
 0 13 -228856 -1 0;
-#X obj 0 565 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+#X obj 0 421 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#X obj 78 442 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X obj 78 298 cnv 17 3 55 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 540 (none);
-#N canvas 71 422 428 163 Related_objects 0;
+#X text 98 396 (none);
+#N canvas 79 451 428 163 Related_objects 0;
 #X text 19 37 Control objects for conversion:;
 #X obj 59 66 dbtorms;
 #X obj 113 66 rmstodb;
@@ -44,49 +44,48 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [ftom] Related Objects;
-#X restore 102 597 pd Related_objects;
-#X obj 78 512 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+#X restore 221 453 pd Related_objects;
+#X obj 78 368 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X text 98 441 float;
-#X text 98 468 list;
-#X text 98 512 float;
-#X text 158 468 - lists will be truncated \, and the first element
+#X text 98 297 float;
+#X text 98 324 list;
+#X text 98 368 float;
+#X text 158 324 - lists will be truncated \, and the first element
 will be used as input.;
-#X obj 392 250 ftom;
-#X obj 392 198 mtof;
-#X floatatom 392 170 0 0 0 0 - - -;
-#X floatatom 392 225 0 0 0 0 - - -;
-#X floatatom 392 274 0 0 0 0 - - -;
-#X floatatom 231 170 0 0 0 0 - - -;
-#X floatatom 231 225 0 0 0 0 - - -;
-#X floatatom 231 274 0 0 0 0 - - -;
-#X obj 231 198 dbtorms;
-#X obj 231 250 rmstodb;
-#X floatatom 58 170 0 0 0 0 - - -;
-#X floatatom 58 225 0 0 0 0 - - -;
-#X floatatom 58 274 0 0 0 0 - - -;
-#X obj 58 198 dbtopow;
-#X obj 58 250 powtodb;
-#X obj 258 2 mtof;
-#X obj 294 2 ftom;
-#X obj 330 3 dbtorms;
-#X obj 386 3 rmstodb;
-#X obj 440 3 dbtopow;
-#X obj 497 3 powtodb;
-#X obj 433 20 pddp/pddplink http://wiki.puredata.info/en/acoustics
--text pdpedia: acoustics;
+#X obj 392 203 ftom;
+#X obj 392 151 mtof;
+#X floatatom 392 123 0 0 0 0 - - -;
+#X floatatom 392 178 0 0 0 0 - - -;
+#X floatatom 392 227 0 0 0 0 - - -;
+#X floatatom 231 123 0 0 0 0 - - -;
+#X floatatom 231 178 0 0 0 0 - - -;
+#X floatatom 231 227 0 0 0 0 - - -;
+#X obj 231 151 dbtorms;
+#X obj 231 203 rmstodb;
+#X floatatom 58 123 0 0 0 0 - - -;
+#X floatatom 58 178 0 0 0 0 - - -;
+#X floatatom 58 227 0 0 0 0 - - -;
+#X obj 58 151 dbtopow;
+#X obj 58 203 powtodb;
+#X obj 258 10 mtof;
+#X obj 294 10 ftom;
+#X obj 330 11 dbtorms;
+#X obj 386 11 rmstodb;
+#X obj 440 11 dbtopow;
+#X obj 497 11 powtodb;
 #X text 11 23 control objects for conversion;
-#X obj 110 197 pddp/pddplink dbtopow-help.pd -text dbtopow-help;
-#X obj 110 251 pddp/pddplink powtodb-help.pd -text powtodb-help;
-#X obj 282 197 pddp/pddplink dbtorms-help.pd -text dbtorms-help;
-#X obj 282 251 pddp/pddplink rmstodb-help.pd -text rmstodb-help;
-#X obj 426 197 pddp/pddplink ftom-help.pd -text ftom-help;
-#X obj 426 251 pddp/pddplink mtof-help.pd -text mtof-help;
-#X text 158 441 - the incoming value.;
-#X obj 98 569 pddp/pddplink all_about_acoustic_conversions.pd;
-#X text 87 126 Click on the links next to each object for more help:
+#X obj 110 150 pddp/pddplink dbtopow-help.pd -text dbtopow-help;
+#X obj 110 204 pddp/pddplink powtodb-help.pd -text powtodb-help;
+#X obj 282 150 pddp/pddplink dbtorms-help.pd -text dbtorms-help;
+#X obj 282 204 pddp/pddplink rmstodb-help.pd -text rmstodb-help;
+#X obj 426 150 pddp/pddplink ftom-help.pd -text ftom-help;
+#X obj 426 204 pddp/pddplink mtof-help.pd -text mtof-help;
+#X text 158 297 - the incoming value.;
+#X obj 98 425 pddp/pddplink all_about_acoustic_conversions.pd;
+#X text 87 79 Click on the links next to each object for more help:
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 453 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X connect 15 0 19 0;
 #X connect 16 0 18 0;
 #X connect 17 0 16 0;

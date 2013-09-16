@@ -4,14 +4,14 @@ array array2 plot-help-array2-template array array3 plot-help-array3-template
 #N struct plot-help-array1-template float y;
 #N struct plot-help-array2-template float x float y;
 #N struct plot-help-array3-template float y float w;
-#N canvas 0 0 555 619 10;
+#N canvas 429 31 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header plot 3 12 0 18 -204280
 -1 0;
 #X obj 0 121 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 107 245 436 344 META 0;
+#N canvas 540 283 436 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -30,7 +30,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 525 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 109 428 428 163 Related_objects 0;
+#N canvas 215 459 428 163 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [plot] Related Objects;
@@ -51,9 +51,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X text 98 129 float;
 #X text 98 183 list;
-#X obj 491 3 plot;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/plot -text
-pdpedia: plot;
+#X obj 513 11 plot;
 #N canvas 92 134 428 403 plot-help-data 0;
 #X scalar plot-help-template 32 98 \; 2 \; -32 \; 12 \; -54 \; -9 \;
 \; 0 0 \; 7 14 \; 27 -10 \; 0 -30 \; -40 0 \; 0 50 \; 60 0 \; \; 11

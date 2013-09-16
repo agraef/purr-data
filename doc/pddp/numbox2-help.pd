@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 433 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header nbx 3 12 0 18 -204280
 -1 0;
 #X obj 0 260 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 246 494 344 META 0;
+#N canvas 490 290 494 344 META 0;
 #X text 12 155 LIBRARY internal;
 #X text 12 65 LICENSE SIBSD;
 #X text 12 175 AUTHOR Thomas Musil;
@@ -27,11 +27,11 @@ send receive label label_pos label_font color pos delta;
 0 13 -228856 -1 0;
 #X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 73 462 428 128 Related_objects 0;
+#N canvas 219 507 428 128 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [nbx] Related Objects;
-#X floatatom 22 43 5 0 0 0 - - -;
+#X floatatom 22 43 5 0 0 0 - - -, f 5;
 #X obj 62 43 float;
 #X obj 106 43 int;
 #X obj 20 90 x_all_guis bng tgl vsl hsl hradio vradio vu cnv nbx;
@@ -44,21 +44,21 @@ send receive label label_pos label_font color pos delta;
 #X text 98 433 float;
 #X obj 78 434 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X floatatom 28 175 6 0 0 0 - - -;
+#X floatatom 28 175 6 0 0 0 - - -, f 6;
 #X msg 57 94 set \$1;
-#X floatatom 48 49 6 0 0 0 - - -;
+#X floatatom 48 49 6 0 0 0 - - -, f 6;
 #X obj 28 199 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
 #X obj 28 49 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
-#X floatatom 57 71 4 0 0 0 - - -;
-#X floatatom 108 49 6 0 0 0 - - -;
-#X floatatom 366 48 7 0 0 0 - - -;
+#X floatatom 57 71 4 0 0 0 - - -, f 4;
+#X floatatom 108 49 6 0 0 0 - - -, f 6;
+#X floatatom 366 48 7 0 0 0 - - -, f 7;
 #X obj 241 159 ftom;
-#X floatatom 241 183 4 0 0 0 - - -;
-#X floatatom 287 159 9 0 0 0 - - -;
-#X floatatom 366 120 9 0 0 0 - - -;
-#X floatatom 241 63 4 0 0 0 - - -;
+#X floatatom 241 183 4 0 0 0 - - -, f 4;
+#X floatatom 287 159 9 0 0 0 - - -, f 9;
+#X floatatom 366 120 9 0 0 0 - - -, f 9;
+#X floatatom 241 63 4 0 0 0 - - -, f 4;
 #X obj 241 85 mtof;
 #X text 104 151 (0.01 pixels);
 #X msg 108 71 set \$1;
@@ -79,16 +79,14 @@ send receive label label_pos label_font color pos delta;
 #X obj 366 71 s goo14_rcv;
 #X obj 366 96 r goo14_snd;
 #X obj 28 135 nbx 6 15 -1e+37 1e+37 0 0 foo13_snd foo13_rcv empty 45
-7 0 10 -225280 -1109 -1 0 256;
+7 0 10 -225280 -1109 -1 0 256 0;
 #X obj 241 128 nbx 5 18 55 3520 1 0 goo14_snd goo14_rcv log.freq. 10
--10 0 14 -261234 -159808 -90881 55 72;
+-10 0 14 -261234 -159808 -90881 55 72 0;
 #X text 363 157 and receive names. Right-;
 #X text 363 172 click and choose;
 #X text 362 141 [nbx] has settable send;
 #X obj 466 48 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/nbx -text
-pdpedia: nbx;
+-262144 -1 -1 0 256 0;
 #X text 168 268 - a float to the left inlet will be displayed \, stored
 \, and sent to the outlet.;
 #X text 168 338 - a list will be truncated to the first item.;
@@ -138,9 +136,9 @@ the gui-properties of [nbx]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-bottom empty
-0 -8 0 12 -262144 -1 -1 0 256;
+0 -8 0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-top empty 0
--8 0 12 -262144 -1 -1 0 256;
+-8 0 12 -262144 -1 -1 0 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -166,9 +164,9 @@ the gui-properties of [nbx]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
-0 -8 0 12 -262144 -1 -1 0 256;
+0 -8 0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
-0 -8 0 12 -262144 -1 -1 -8 256;
+0 -8 0 12 -262144 -1 -1 -8 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -181,9 +179,9 @@ the gui-properties of [nbx]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
-0 -8 0 12 -262144 -1 -1 10 256;
+0 -8 0 12 -262144 -1 -1 10 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -200,11 +198,11 @@ the gui-properties of [nbx]:;
 #X obj 33 237 pack 0 0 0;
 #X obj 120 197 t b a;
 #X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
--1 -1 0 256;
+-1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X connect 0 0 2 0;
 #X connect 0 1 2 1;
 #X connect 2 0 1 0;
@@ -236,11 +234,11 @@ the gui-properties of [nbx]:;
 #X text 120 137 2.front;
 #X text 120 153 3.label;
 #X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
--258113 -1 0 256;
+-258113 -1 0 256 0;
 #X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
--13381 -1 0 256;
+-13381 -1 0 256 0;
 #X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
--4160 -1 0 256;
+-4160 -1 0 256 0;
 #X connect 1 0 2 0;
 #X connect 1 1 2 1;
 #X connect 2 0 3 0;
@@ -281,9 +279,9 @@ the gui-properties of [nbx]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
--8 0 12 -262144 -1 -1 320 256;
+-8 0 12 -262144 -1 -1 320 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
--8 0 12 -262144 -1 -1 330 256;
+-8 0 12 -262144 -1 -1 330 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -296,9 +294,9 @@ the gui-properties of [nbx]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -311,7 +309,7 @@ the gui-properties of [nbx]:;
 #X obj 305 292 cnv 15 90 90 empty empty empty 20 12 0 14 -261682 -66577
 0;
 #X obj 320 330 nbx 5 14 -1e+37 1e+37 0 0 nbx_snd nbx_rcv my_nbx 0 -8
-0 10 -262144 -33289 -33289 0 256;
+0 10 -262144 -33289 -33289 0 256 0;
 #X obj 17 412 s nbx_rcv;
 #X obj 139 412 s nbx_rcv;
 #X obj 18 577 s nbx_rcv;
@@ -322,9 +320,9 @@ the gui-properties of [nbx]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-width empty
-0 -8 0 12 -262144 -1 -1 5 256;
+0 -8 0 12 -262144 -1 -1 5 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-height empty
-0 -8 0 12 -262144 -1 -1 14 256;
+0 -8 0 12 -262144 -1 -1 14 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -402,7 +400,7 @@ its appearance.;
 #X text 215 551 (c) musil@iem.kug.ac.at;
 #X text 257 564 IEM KUG;
 #X text 232 576 graz \, austria 2002;
-#X text 425 4 [my_numbox] or [nbx];
+#X text 426 9 [my_numbox] or [nbx];
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X text 98 295 bang;

@@ -1,33 +1,62 @@
-#N canvas 0 26 451 254 10;
-#X obj 40 113 iter;
-#X msg 40 71 1 2 3 4;
-#X obj 40 145 print;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 22 213 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 21 227 ___________________________________________________
+#N canvas 422 37 558 370 10;
+#X obj -1 343 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 202 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 597 167 366 215 META 0;
+#X text 10 -74 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 10 -194 LICENSE SIBSD;
+#X text 10 -94 AUTHOR Miller Puckette;
+#X text 10 -54 RELEASE_DATE 1997;
+#X text 10 -114 LIBRARY cyclone;
+#X text 10 -34 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 10 -214 KEYWORDS split list series;
+#X text 10 -174 DESCRIPTION split a list into a series of data;
+#X text 10 -154 INLET_0 list float;
+#X text 10 -134 OUTLET_0 float;
+#X restore 499 345 pd META;
+#X obj -1 258 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 300 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 302 272 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 199 345 pd Related_objects;
+#X obj 79 213 cnv 17 3 33 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 78 271 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header iter 3 12 0 18
+-204280 -1 0;
+#X obj 514 2 iter;
+#X text 107 212 list;
+#X text 107 231 float;
+#X text 179 231 - floats just pass through;
+#X text 107 271 float;
+#X text 107 314 (none);
+#X obj 40 123 iter;
+#X msg 40 91 1 2 3 4;
+#X obj 40 155 print;
+#X obj 417 123 iter;
+#X floatatom 417 91 5 0 0 0 - - -, f 5;
+#X floatatom 417 155 5 0 0 0 - - -, f 5;
+#X obj 232 123 iter;
+#X obj 232 155 print;
+#X msg 232 91 foo bar del mar;
+#X text 11 23 split a list into a series of data;
+#X text 404 61 single floats just pass through;
+#X text 12 61 works for lists of numbers;
+#X text 218 61 and for lists of words;
+#X text 179 212 - list to split into series of data;
+#X text 179 271 - series of data from input list;
+#X obj 15 344 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 163 112 iter;
-#X floatatom 163 68 5 0 0 0 - - -;
-#X floatatom 163 142 5 0 0 0 - - -;
-#X text 184 88 single floats just pass through;
-#N canvas 75 96 494 344 META 0;
-#X text 12 195 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 5 GENRE help;
-#X text 12 165 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 45 KEYWORDS control conversion max_compatible;
-#X text 12 25 NAME iter;
-#X text 12 85 DESCRIPTION split a list into a series of numbers;
-#X text 12 105 INLET_0 anything;
-#X text 12 125 OUTLET_0 anything;
-#X text 12 65 LICENSE SIBSD;
-#X text 12 145 AUTHOR Krzysztof Czaja;
-#X restore 399 233 pd META;
-#X obj 40 23 iter;
-#X text 84 24 split a list into a series of numbers;
-#X connect 0 0 2 0;
-#X connect 1 0 0 0;
-#X connect 6 0 8 0;
-#X connect 7 0 6 0;
+#X connect 15 0 17 0;
+#X connect 16 0 15 0;
+#X connect 18 0 20 0;
+#X connect 19 0 18 0;
+#X connect 21 0 22 0;
+#X connect 23 0 21 0;

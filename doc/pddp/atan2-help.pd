@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 426 35 559 622 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header atan2 3 12 0 18
 -204280 -1 0;
 #X obj 0 405 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 48 243 494 362 META 0;
+#N canvas 572 335 399 294 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -29,7 +29,7 @@ for Pd version 0.42.;
 #X obj 0 557 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 533 (none);
-#N canvas 54 480 428 109 Related_objects 0;
+#N canvas 213 521 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 149 43 exp;
@@ -53,9 +53,7 @@ for Pd version 0.42.;
 #X text 98 500 float;
 #X obj 78 501 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 484 3 atan2;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/atan2 -text
-pdpedia: atan2;
+#X obj 506 12 atan2;
 #X text 92 97 The [atan2] object produces the arctangent of the quotient
 of its two arguments. The number produced is a value between Pi and
 -Pi and represents the counterclockwise angle in radians (not degrees)
@@ -105,10 +103,10 @@ to the left inlet.;
 #X connect 23 0 0 0;
 #X connect 23 1 17 0;
 #X restore 101 566 pd atan2_vs_atan;
-#X floatatom 224 217 5 0 0 0 - - -;
-#X floatatom 261 217 5 0 0 0 - - -;
+#X floatatom 224 217 5 0 0 0 - - -, f 5;
+#X floatatom 261 217 5 0 0 0 - - -, f 5;
 #X obj 224 241 atan2;
-#X floatatom 224 268 5 0 0 0 - - -;
+#X floatatom 224 268 5 0 0 0 - - -, f 5;
 #X obj 78 464 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 463 float;
@@ -116,7 +114,8 @@ to the left inlet.;
 #X text 168 463 - X coordinate;
 #X text 168 433 - a list will be distributed between the two inlets
 of [atan2].;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 19 0 21 0;
-#X connect 20 0 21 1;
-#X connect 21 0 22 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 18 0 20 0;
+#X connect 19 0 20 1;
+#X connect 20 0 21 0;

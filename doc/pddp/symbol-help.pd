@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header symbol 3 12 0 18
 -204280 -1 0;
 #X obj 0 317 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 246 494 363 META 0;
+#N canvas 484 265 494 363 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 74 346 428 238 Related_objects 0;
+#N canvas 213 386 428 238 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [symbol] Related Objects;
@@ -51,9 +51,7 @@ for Pd version 0.42.;
 -162280 0;
 #X obj 78 442 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
-#X obj 481 3 symbol;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/symbol -text
-pdpedia: symbol;
+#X obj 500 10 symbol;
 #X text 11 23 store a symbol;
 #X text 98 325 bang;
 #X text 98 350 symbol;
@@ -62,7 +60,7 @@ pdpedia: symbol;
 #X text 168 483 - the symbol is output when a message is received at
 the left inlet of [symbol].;
 #X obj 51 220 symbol;
-#X symbolatom 51 279 10 0 0 0 - - -;
+#X symbolatom 51 279 10 0 0 0 - - -, f 10;
 #X obj 60 256 print;
 #X msg 63 82 dog;
 #X msg 71 105 cat;
@@ -73,7 +71,7 @@ the left inlet of [symbol].;
 stored stored value.;
 #X text 275 120 IMPORTANT NOTE;
 #X obj 302 156 symbol;
-#X symbolatom 302 195 10 0 0 0 - - -;
+#X symbolatom 302 195 10 0 0 0 - - -, f 10;
 #X text 270 213 Careful not to get them confused.;
 #X text 270 175 is very different than the symbol box:;
 #X text 270 136 the [symbol] object:;
@@ -87,7 +85,7 @@ stored stored value.;
 #X text 68 125 outputs "symbol list";
 #X msg 217 103 list 12;
 #X text 283 125 outputs "symbol float";
-#X symbolatom 217 125 10 0 0 0 - - -;
+#X symbolatom 217 125 10 0 0 0 - - -, f 10;
 #X text 20 38 The [symbol] object and the symbol box handle the "list"
 selector inconsistently.;
 #X text 23 76 [symbol] output;
@@ -117,13 +115,14 @@ store and output the selector. E.g. \, a float will output the word
 #X text 168 350 - a symbol sent to the left inlet will be stored and
 output. Symbol atoms (e.g. \, "foo") are accepted and given the "symbol"
 selector.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X text 98 391 anything;
-#X connect 19 0 20 0;
-#X connect 19 0 21 0;
-#X connect 22 0 19 0;
-#X connect 23 0 19 0;
-#X connect 24 0 19 1;
-#X connect 25 0 19 1;
-#X connect 26 0 19 1;
-#X connect 34 0 19 0;
+#X connect 18 0 19 0;
+#X connect 18 0 20 0;
+#X connect 21 0 18 0;
+#X connect 22 0 18 0;
+#X connect 23 0 18 1;
+#X connect 24 0 18 1;
+#X connect 25 0 18 1;
+#X connect 33 0 18 0;

@@ -1,12 +1,12 @@
 #N struct get-help-template float x float y symbol s;
-#N canvas 0 0 555 619 10;
+#N canvas 430 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header get 3 12 0 18 -204280
 -1 0;
 #X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 245 494 344 META 0;
+#N canvas 482 279 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 506 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 102 480 428 109 Related_objects 0;
+#N canvas 216 515 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 72 34 set;
@@ -44,19 +44,17 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 383 float;
 #X obj 78 384 cnv 17 3 48 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
-#X obj 493 3 get;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/get -text
-pdpedia: get;
+#X obj 518 11 get;
 #X msg 121 139 next;
-#X floatatom 106 234 5 0 0 0 - - -;
-#X floatatom 185 234 5 0 0 0 - - -;
+#X floatatom 106 234 5 0 0 0 - - -, f 5;
+#X floatatom 185 234 5 0 0 0 - - -, f 5;
 #X obj 106 162 pointer;
 #X text 302 115 output first scalar in list;
 #X text 164 138 output next item;
 #X text 102 250 x output;
 #X text 183 250 y output;
 #X text 261 251 s output;
-#X symbolatom 265 234 18 0 0 0 - - -;
+#X symbolatom 265 234 18 0 0 0 - - -, f 18;
 #X obj 145 186 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X text 98 346 pointer;
@@ -115,10 +113,10 @@ before sending to [get]. (See pointer-help.pd for more information.)
 #X obj 97 563 pddp/pddplink ../04.data.structures/02.getting.data.pd
 -text doc/04.data.structures/02.getting.data.pd;
 #X obj 97 578 pddp/pddplink scalar-help.pd;
-#X connect 13 0 16 0;
-#X connect 16 0 32 0;
-#X connect 16 1 23 0;
-#X connect 31 0 16 0;
-#X connect 32 0 14 0;
-#X connect 32 1 15 0;
-#X connect 32 2 22 0;
+#X connect 12 0 15 0;
+#X connect 15 0 31 0;
+#X connect 15 1 22 0;
+#X connect 30 0 15 0;
+#X connect 31 0 13 0;
+#X connect 31 1 14 0;
+#X connect 31 2 21 0;

@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header delay 3 12 0 18
 -204280 -1 0;
 #X obj 0 200 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 39 180 494 386 META 0;
+#N canvas 482 240 494 386 META 1;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 45 LICENSE SIBSD;
@@ -29,14 +29,14 @@ for Pd version 0.42.;
 0 13 -228856 -1 0;
 #X obj 0 488 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 97 299 428 291 Related_objects 0;
+#N canvas 219 337 428 291 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 42 37 timer;
 #X obj 8 37 pipe;
 #X obj 80 37 metro;
 #X obj 119 37 makenote;
-#X obj 179 87 delwrite~;
+#X obj 180 87 delwrite~;
 #X text 4 208 The best places to find information about Pd's libraries
 is:;
 #X text 4 230 www.puredata.org and click on "Downloads" then "Software"
@@ -49,13 +49,13 @@ may not exist in a single library.;
 #X text 7 62 Audio Objects;
 #X obj 10 87 vd~;
 #X obj 47 87 delread~;
-#X obj 113 87 delwrite~;
+#X obj 113 89 delwrite~;
 #X text 7 1 [delay] Related Objects;
-#X text 5 133 [nop~];
-#X text 46 133 [z~];
-#X text 73 133 [t3_delay];
-#X text 137 133 [idelay~];
-#X text 194 133 [delay~];
+#X obj 12 134 nop~;
+#X obj 48 134 z~;
+#X obj 78 133 t3_delay;
+#X obj 138 133 idelay~;
+#X obj 192 133 delay~;
 #X restore 101 597 pd Related_objects;
 #X obj 78 209 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
@@ -64,11 +64,9 @@ may not exist in a single library.;
 #X obj 78 360 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 359 float;
-#X obj 451 3 delay;
-#X text 491 3 or;
-#X obj 517 2 del;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/delay -text
-pdpedia: delay;
+#X obj 452 12 delay;
+#X text 492 12 or;
+#X obj 518 11 del;
 #X obj 100 102 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 100 150 delay 2000;
@@ -105,8 +103,8 @@ sake of example...);
 -1;
 #X obj 260 157 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X floatatom 317 155 5 0 0 0 - - -;
-#X floatatom 115 154 5 0 0 0 - - -;
+#X floatatom 317 155 5 0 0 0 - - -, f 5;
+#X floatatom 115 154 5 0 0 0 - - -, f 5;
 #X text 152 175 is the same as;
 #X text 19 36 A makeshift [metro];
 #X text 7 1 [delay] A Metronome Built with [delay];
@@ -142,7 +140,7 @@ per second. In the example below \, you'll see a version of this process
 created using Pd's delay object.;
 #X obj 22 278 random 500;
 #X obj 22 257 metro 500;
-#X floatatom 92 236 5 0 0 0 - - -;
+#X floatatom 92 236 5 0 0 0 - - -, f 5;
 #X text 20 343 Also note that this example merely approximates the
 output of SC's "Dust" object.;
 #X text 130 236 low numbers produce a very "dusty" output.;
@@ -176,11 +174,12 @@ is already set will reschedule its output \, cancelling the old one.
 #X text 168 465 - (optional) initial delay time (in milliseconds).
 ;
 #X text 98 208 float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X obj 298 550 pddp/pddplink ../2.control.examples/07.time.pd;
 #X text 11 23 bang after time delay;
+#X connect 15 0 16 0;
 #X connect 16 0 17 0;
-#X connect 17 0 18 0;
-#X connect 24 0 17 0;
-#X connect 25 0 17 0;
-#X connect 26 0 17 1;
+#X connect 23 0 16 0;
+#X connect 24 0 16 0;
+#X connect 25 0 16 1;

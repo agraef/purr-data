@@ -1,46 +1,75 @@
-#N canvas 0 26 515 376 10;
-#X obj 4 4 cnv 15 400 40 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 5 331 docs based on the MAX/MSP reference (c) cycling'74;
-#X text 4 345 ___________________________________________________;
-#X obj 13 32 switch;
-#X text 85 33 output a message from a specific inlet;
-#X obj 220 216 switch 4;
-#X obj 220 244 print;
-#X floatatom 147 88 5 0 0 0 - - -;
-#X msg 232 115 one;
-#X msg 245 137 two;
-#X msg 258 163 three;
-#X msg 271 188 four;
-#X obj 192 87 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#N canvas 429 37 559 517 10;
+#X obj -1 489 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 321 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 631 303 351 222 META 0;
+#X text 9 108 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 9 -25 LICENSE SIBSD;
+#X text 9 89 AUTHOR Miller Puckette;
+#X text 9 127 RELEASE_DATE 1997;
+#X text 9 70 LIBRARY cyclone;
+#X text 9 146 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X text 9 -44 KEYWORDS inlet specific switch filter;
+#X text 9 -6 DESCRIPTION output a message from a specific inlet;
+#X text 9 13 INLET_0 bang float;
+#X text 9 32 INLET_N message;
+#X text 9 51 OUTLET_0 message;
+#X restore 502 491 pd META;
+#X obj -1 407 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 446 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 318 415 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X restore 202 491 pd Related_objects;
+#X obj 83 332 cnv 17 3 34 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 83 380 cnv 17 3 17 empty \$0-pddp.cnv.let.0 n 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header switch 3 12 0 18
+-204280 -1 0;
+#X obj 498 10 switch;
+#X text 11 23 output a message from a specific inlet;
+#X text 117 381 message;
+#X text 187 380 - any message to pass through;
+#X text 117 417 message;
+#X text 187 417 - passed message \, from open inlet;
+#X text 99 459 1) float;
+#X text 187 460 - set the number of inlets;
+#X text 117 330 float;
+#X text 117 350 bang;
+#X text 187 351 - output open outlet number;
+#X obj 83 418 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X text 187 330 - set which inlet is open;
+#X obj 178 253 switch 4;
+#X obj 178 281 print;
+#X floatatom 178 64 5 0 0 0 - - -, f 5;
+#X msg 192 157 one;
+#X msg 206 179 two;
+#X msg 220 205 three;
+#X msg 234 230 four;
+#X text 244 254 arg is nr of inlets;
+#X msg 187 101 bang;
+#X text 219 98 which one's open ?;
+#X obj 231 134 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 286 217 arg is nr of inlets;
-#X msg 146 177 bang;
-#X text 15 177 which one's open ?;
-#N canvas 380 180 494 430 META 0;
-#X text 12 235 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 205 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
+#X text 216 65 set which inlet is open;
+#X text 254 125 bang all inlets \; open inlet passes message;
+#X obj 6 490 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 12 5 KEYWORDS control max_compatible;
-#X text 12 45 DESCRIPTION output a message from a specific inlet;
-#X text 12 65 INLET_0 bang float;
-#X text 12 85 INLET_1 anything;
-#X text 12 105 INLET_2 anything;
-#X text 12 125 INLET_3 anything;
-#X text 12 145 INLET_4 anything;
-#X text 12 165 OUTLET_0 anything;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 185 AUTHOR Krzysztof Czaja;
-#X restore 466 354 pd META;
-#X connect 5 0 6 0;
-#X connect 7 0 5 0;
-#X connect 8 0 5 1;
-#X connect 9 0 5 2;
-#X connect 10 0 5 3;
-#X connect 11 0 5 4;
-#X connect 12 0 8 0;
-#X connect 12 0 9 0;
-#X connect 12 0 10 0;
-#X connect 12 0 11 0;
-#X connect 14 0 5 0;
+#X connect 22 0 23 0;
+#X connect 24 0 22 0;
+#X connect 25 0 22 1;
+#X connect 26 0 22 2;
+#X connect 27 0 22 3;
+#X connect 28 0 22 4;
+#X connect 30 0 22 0;
+#X connect 32 0 25 0;
+#X connect 32 0 26 0;
+#X connect 32 0 27 0;
+#X connect 32 0 28 0;

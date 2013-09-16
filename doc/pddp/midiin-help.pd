@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 430 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header midiin 3 12 0 18
 -204280 -1 0;
 #X obj 0 441 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 47 253 494 344 META 0;
+#N canvas 487 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2009-06-12;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 568 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 178 441 414 Related_objects 0;
+#N canvas 208 213 441 414 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 78 80 ctlin;
@@ -70,9 +70,7 @@ by Olaf Matthes);
 #X obj 364 572 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
 ;
 #X text 98 572 for an explanation of MIDI usage in Pd see:;
-#X obj 484 3 midiin;
-#X obj 454 20 pddp/pddplink http://wiki.puredata.info/en/midiin -text
-pdpedia: midiin;
+#X obj 505 12 midiin;
 #X obj 225 153 midiin;
 #X floatatom 225 184 0 0 0 0 - - -;
 #X floatatom 258 184 0 0 0 0 - - -;
@@ -87,5 +85,5 @@ pdpedia: midiin;
 #X text 164 264 of the channel (Linux only).;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 16 0 17 0;
-#X connect 16 1 18 0;
+#X connect 15 0 16 0;
+#X connect 15 1 17 0;

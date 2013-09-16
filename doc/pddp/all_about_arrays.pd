@@ -1,6 +1,6 @@
 #N struct ds-array-ex float x float y array circles circle;
 #N struct circle float y symbol a;
-#N canvas 0 0 448 312 10;
+#N canvas 429 33 448 312 10;
 #N canvas 12 67 428 377 Common_uses_for_arrays_in_PD 0;
 #X text 20 37 Arrays are versatile. Their simple structure make them
 useful in countless situations. This page discusses perhaps the most
@@ -184,7 +184,7 @@ see the help patches in doc/4.data.structures/ \, especially 05.array.pd.
 #X obj 55 20 struct ds-array-ex float x float y array circles circle
 ;
 #X obj 12 242 setsize ds-array-ex circles;
-#X floatatom 35 216 5 0 0 0 - - -;
+#X floatatom 35 216 5 0 0 0 - - -, f 5;
 #X msg 171 188 traverse pd-Data_structure_arrays \, next;
 #X obj 55 47 plot circles 759 3 15 0 25;
 #X obj 55 74 drawpolygon 666 1 0 0 0 100 310 100;
@@ -205,7 +205,7 @@ graphical representation. They provide more flexibility than "Put"
 menu arrays (both graphically and in their structure).;
 #X text 90 371 see subpatch for ds definition ->;
 #X text 20 343 click here to change the size of the array ->;
-#X floatatom 305 345 5 0 0 0 - - -;
+#X floatatom 305 345 5 0 0 0 - - -, f 5;
 #X connect 9 0 4 0;
 #X restore 63 108 pd Data_structure_arrays;
 #X obj 216 109 pddp/pddplink struct-help.pd;
@@ -216,9 +216,9 @@ menu arrays (both graphically and in their structure).;
 #X restore 214 378 graph;
 #N canvas 9 24 434 213 Setting_the_size_of_an_array 0;
 #X msg 214 88 \; exampleArray resize \$1;
-#X floatatom 214 66 5 0 0 0 - - -;
+#X floatatom 214 66 5 0 0 0 - - -, f 5;
 #X text 151 100 same as;
-#X floatatom 48 66 5 0 0 0 - - -;
+#X floatatom 48 66 5 0 0 0 - - -, f 5;
 #X obj 48 114 s exampleArray;
 #X msg 48 88 resize \$1;
 #X text 15 8 For "Put" menu arrays \, you can right-click and use the
@@ -364,7 +364,7 @@ terminal window \, or it can be saved to a text file.;
 #N canvas 1 2 418 389 Getting_the_size_of_an_array 0;
 #X obj 18 69 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 18 114 5 0 0 0 - - -;
+#X floatatom 18 114 5 0 0 0 - - -, f 5;
 #X msg 148 336 \; exampleArray print;
 #X text 15 11 If you deal with arrays often \, you will want have a
 look at the [expr] object \, which offers several functions for manipulating
@@ -373,7 +373,7 @@ in most Pd distributions.;
 #X obj 18 89 expr size("exampleArray");
 #X text 182 89 (Notice the quotes around the;
 #X text 185 104 array name.);
-#X floatatom 18 244 5 0 0 0 - - -;
+#X floatatom 18 244 5 0 0 0 - - -, f 5;
 #X text 15 138 You can use the special dollarsign variables of [expr]
 to dynamically change the array name:;
 #X obj 18 219 expr size("$s1");
@@ -543,7 +543,7 @@ element of the array and return its value. This is opposite of the
 #X obj 129 167 s \$1-length;
 #X obj 160 301 spigot;
 #X obj 203 276 < 1;
-#X floatatom 160 328 5 0 0 0 - - -;
+#X floatatom 160 328 5 0 0 0 - - -, f 5;
 #X text 209 327 First value.;
 #X text 208 345 ...to be deleted.;
 #X obj 304 239 - 1;
@@ -640,7 +640,7 @@ create silence in audio samples.;
 #X text 78 177 (arg: renormer...a number by which all array values
 will be normalized);
 #X msg 6 228 \; exampleArray normalize \$1;
-#X floatatom 6 206 5 0 0 0 - - -;
+#X floatatom 6 206 5 0 0 0 - - -, f 5;
 #N canvas 9 28 710 366 sine_waves 0;
 #X text 34 160 Sinesum;
 #X text 98 162 (arg 1: Number of Points - arg 2: list of partial strengths)

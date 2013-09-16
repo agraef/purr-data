@@ -1,4 +1,4 @@
-#N canvas 1 88 555 619 10;
+#N canvas 426 36 555 619 10;
 #X declare;
 #X declare;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
@@ -7,7 +7,7 @@
 -204280 -1 0;
 #X obj 0 105 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 252 494 344 META 0;
+#N canvas 483 286 494 344 META 0;
 #X text 12 65 LIBRARY internal;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,15 +25,13 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 386 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 90 486 428 103 Related_objects 0;
+#N canvas 215 523 428 103 Related_objects 0;
 #X obj 15 34 import;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 7 1 [declare] Related Objects;
 #X restore 101 597 pd Related_objects;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/declare -text
-pdpedia: declare;
-#X obj 470 3 declare;
+#X obj 494 12 declare;
 #X text 98 109 (none);
 #X text 98 139 (none);
 #X text 164 291 -lib;

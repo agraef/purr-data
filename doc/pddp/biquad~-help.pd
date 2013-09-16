@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 36 555 619 10;
 #X obj -1 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header biquad~ 3 12 0
 18 -204280 -1 0;
 #X obj -1 321 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 244 494 344 META 0;
+#N canvas 659 352 314 272 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -25,7 +25,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj -1 565 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8
 12 0 13 -228856 -1 0;
-#N canvas 46 487 428 102 Related_objects 0;
+#N canvas 211 524 428 102 Related_objects 0;
 #X obj 22 42 hip~;
 #X obj 62 41 lop~;
 #X obj 104 41 bp~;
@@ -36,9 +36,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X restore 101 597 pd Related_objects;
 #X obj 78 330 cnv 17 3 75 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 471 3 biquad~;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/biquad~ -text
-pdpedia: biquad~;
+#X obj 489 12 biquad~;
 #X obj 155 216 env~;
 #X floatatom 155 243 0 0 0 0 - - -;
 #X floatatom 66 98 0 0 0 0 - - -;
@@ -76,14 +74,15 @@ used to calculate the following difference equation:;
 ;
 #X text 168 330 - the incoming signal;
 #X text 168 426 - the outgoing signal;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 11 0 12 0;
-#X connect 13 0 22 0;
-#X connect 14 0 15 0;
-#X connect 16 0 11 0;
-#X connect 17 0 16 0;
-#X connect 20 0 16 0;
-#X connect 21 0 16 0;
-#X connect 22 0 14 0;
-#X connect 22 0 16 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 474 51 pddp/dsp;
+#X connect 10 0 11 0;
+#X connect 12 0 21 0;
+#X connect 13 0 14 0;
+#X connect 15 0 10 0;
+#X connect 16 0 15 0;
+#X connect 19 0 15 0;
+#X connect 20 0 15 0;
+#X connect 21 0 13 0;
+#X connect 21 0 15 0;

@@ -1,32 +1,86 @@
-#N canvas 0 26 536 355 10;
-#X text 170 85 this is probably only useful for mathematical calculations
-;
-#X text 37 324 make a wave that looks like a wave!!;
-#X msg 128 133 range 0 3.14159;
-#X obj 39 114 -~ 1.5708;
-#X obj 39 91 *~ 3.14159;
-#X obj 39 69 phasor~ 2;
-#X text 15 35 Hyperbolic cosine function (cosh(x)) for signals;
-#X obj 38 166 Scope~ 130 130 256 3 128 0 3.14159 0 0 0 0 102 255 51
-135 135 135 0;
-#X obj 38 138 cosh~;
-#X obj 122 109 loadbang;
-#N canvas 247 115 494 344 META 0;
-#X text 12 165 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 135 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 5 KEYWORDS signal max_compatible;
-#X text 12 45 DESCRIPTION hyperbolic cosine function ( cosh(x) ) for
+#N canvas 334 96 552 478 10;
+#X obj 0 455 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj 0 327 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 444 273 434 278 META 0;
+#X text 32 164 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 32 44 LICENSE SIBSD;
+#X text 32 144 AUTHOR Miller Puckette;
+#X text 32 184 RELEASE_DATE 1997;
+#X text 32 124 LIBRARY cyclone;
+#X text 32 64 DESCRIPTION takes the hyperbolic cosine function for
 signals;
-#X text 12 75 INLET_0 signal;
-#X text 12 95 OUTLET_0 signal;
-#X text 12 25 LICENSE SIBSD;
-#X text 12 115 AUTHOR Krzysztof Czaja;
-#X restore 486 333 pd META;
-#X connect 2 0 7 0;
-#X connect 3 0 8 0;
-#X connect 4 0 3 0;
-#X connect 5 0 4 0;
-#X connect 8 0 7 0;
-#X connect 9 0 2 0;
+#X text 32 84 INLET_0 signal;
+#X text 32 104 OUTLET_0 signal;
+#X text 32 22 KEYWORDS hyperbolic cos cosine cosh signal;
+#X text 32 206 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 497 457 pd META;
+#X obj 0 371 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 412 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 224 437 429 115 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 328 60 sinh~;
+#X obj 328 85 tanh~;
+#X obj 58 33 acosh~;
+#X obj 58 60 asin;
+#X obj 58 85 asinh~;
+#X obj 142 33 asin~;
+#X obj 142 60 atan~;
+#X obj 142 85 atanh~;
+#X obj 243 33 cosh~;
+#X obj 243 60 cosh;
+#X obj 243 85 cosx~;
+#X obj 327 33 acos~;
+#X restore 207 457 pd Related_objects;
+#X obj 83 382 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 0 -1 cnv 15 552 40 empty \$0-pddp.cnv.header cosh~ 3 12 0 18
+-204280 -1 0;
+#X text 117 343 signal;
+#X text 117 382 signal;
+#X text 117 423 (none);
+#X text 16 23 Hyperbolic cosine function (cosh(x)) for signals;
+#X msg 340 173 range 0 3.14159;
+#X obj 267 139 -~ 1.5708;
+#X obj 267 116 *~ 3.14159;
+#X obj 267 94 phasor~ 2;
+#X obj 266 202 Scope~ 166 85 256 3 128 0 3.14159 0 0 0 0 102 255 51
+135 135 135 0;
+#X obj 266 163 cosh~;
+#X obj 340 149 loadbang;
+#X text 173 343 - input to cosh function;
+#X obj 510 2 cosh~;
+#X obj 83 343 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 39 120 +~ 2;
+#X obj 40 203 Scope~ 165 83 256 3 128 1 11 0 0 0 0 102 255 51 135 135
+135 0;
+#X text 72 122 be greater than 1;
+#X text 71 110 input values must;
+#X obj 39 91 osc~ 2;
+#X obj 39 151 cosh~;
+#X obj 483 48 pddp/dsp;
+#X obj 135 150 loadbang;
+#X msg 135 174 range 1 11;
+#X text 173 382 - output of cosh function;
+#X text 339 89 this is probably only useful for mathematical calculations
+;
+#X obj 4 456 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 16 0;
+#X connect 13 0 17 0;
+#X connect 14 0 13 0;
+#X connect 15 0 14 0;
+#X connect 17 0 16 0;
+#X connect 18 0 12 0;
+#X connect 22 0 27 0;
+#X connect 26 0 22 0;
+#X connect 27 0 23 0;
+#X connect 29 0 30 0;
+#X connect 30 0 23 0;

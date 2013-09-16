@@ -5,7 +5,7 @@
 ;
 #X obj 1 352 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;
-#N canvas 44 246 494 344 META 0;
+#N canvas 444 363 420 149 META 0;
 #X text 12 85 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
 Wilkes revised the patch to conform to the PDDP template for Pd version
 0.42.;
@@ -14,7 +14,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 25 KEYWORDS needs_work;
 #X text 12 45 DESCRIPTION general info for Pure Data;
 #X restore 392 354 pd META;
-#N canvas 10 196 428 105 Related_objects 0;
+#N canvas 213 407 428 105 Related_objects 0;
 #X text 31 37 Hm...what to put here?;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -261106 -33289 0;

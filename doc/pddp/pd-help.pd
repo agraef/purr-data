@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 32 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pd 3 12 0 18 -204280
 -1 0;
 #X obj 0 175 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 47 271 494 344 META 0;
+#N canvas 484 282 494 344 META 0;
 #X text 12 105 PLATFORM windows macosx gnulinux;
 #X text 12 165 LIBRARY internal;
 #X text 12 205 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -28,7 +28,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 539 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 78 289 428 356 Related_objects 0;
+#N canvas 220 269 428 356 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [pd] Related Objects;
@@ -52,9 +52,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 78 184 cnv 17 3 110 empty \$0-pddp.cnv.let.n n 5 9 0 16 -228856
 -162280 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X restore 394 3 pd;
-#X obj 431 20 pddp/pddplink http://wiki.puredata.info/en/pd -text pdpedia:
-pd;
+#X restore 395 11 pd;
 #X text 11 23 subwindow (subpatch);
 #X text 98 183 anything;
 #X text 98 242 signal;
@@ -69,9 +67,9 @@ pd;
 object so that part of the subwindow is visible on the parent (referred
 to as "graph on parent" or "gop").;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X restore 513 3 page;
-#X text 419 3 or (deprecated);
-#X floatatom 242 86 5 0 0 0 - - -;
+#X restore 514 11 page;
+#X text 420 11 or (deprecated);
+#X floatatom 242 86 5 0 0 0 - - -, f 5;
 #X text 309 80 For help on inlets/outlets \, see:;
 #X obj 308 95 pddp/pddplink inlet-help.pd -text inlet-help;
 #X obj 308 110 pddp/pddplink inlet~-help.pd -text inlet~-help;
@@ -98,7 +96,7 @@ can click on the object to open the subwindow and see the objects inside.
 #X text 47 109 Use the [inlet] and [outlet] objects to add inlets and
 outlets to your subpatch.;
 #X obj 341 52 inlet;
-#X floatatom 341 79 5 0 0 0 - - -;
+#X floatatom 341 79 5 0 0 0 - - -, f 5;
 #X text 46 147 The horizontal order of the [inlet]/[outlet] objects
 corresponds to the placement of the inlets/outlets on the [pd] object
 itself. I.e. \, the leftmost inlet -> leftmost [inlet] \, rightmost
@@ -160,4 +158,4 @@ this argument without destroying the data inside the subpatch.;
 #X text 19 23 You can of course nest [pd] objects;
 #X text 19 38 inside other [pd] objects \, like this:;
 #X restore 382 572 pd nesting;
-#X connect 22 0 33 1;
+#X connect 21 0 32 1;

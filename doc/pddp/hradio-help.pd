@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 432 42 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header hradio 3 12 0 18
 -204280 -1 0;
 #X obj 0 295 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 54 246 494 344 META 0;
+#N canvas 487 294 494 344 META 0;
 #X text 12 135 LIBRARY internal;
 #X text 12 45 LICENSE SIBSD;
 #X text 12 155 AUTHOR Thomas Musil;
@@ -28,7 +28,7 @@ label label_pos label_font color pos delta;
 0 13 -228856 -1 0;
 #X obj 78 304 cnv 17 3 90 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 78 462 428 129 Related_objects 0;
+#N canvas 219 506 428 129 Related_objects 0;
 #X obj 22 43 bang;
 #X obj 69 43 trigger;
 #X obj 145 43 until;
@@ -45,21 +45,19 @@ label label_pos label_font color pos delta;
 #X text 291 165 and receive names. Right-;
 #X text 291 180 click and choose;
 #X text 290 196 "Properties" to set them \,;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/hradio -text
-pdpedia: hradio;
 #X obj 424 45 hradio 15 1 0 8 hradio-help-rcv empty empty 0 -8 0 10
 -262144 -1 -1 0;
 #X obj 27 50 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
-#X floatatom 27 207 4 0 0 0 - - -;
+#X floatatom 27 207 4 0 0 0 - - -, f 4;
 #X obj 27 229 bng 15 250 50 0 empty empty empty 8 -8 0 10 -262144 -1
 -1;
 #X obj 72 179 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 72 154 route 0 1 2 3 4 5 6 7 8 9;
 #X msg 172 71 set \$1;
-#X floatatom 172 50 4 0 9 0 - - -;
-#X floatatom 50 50 4 0 9 0 - - -;
+#X floatatom 172 50 4 0 9 0 - - -, f 4;
+#X floatatom 50 50 4 0 9 0 - - -, f 4;
 #X obj 91 179 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 111 179 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
@@ -83,8 +81,8 @@ pdpedia: hradio;
 150 -8 0 12 -128992 -204786 -1 0;
 #X msg 107 76 3;
 #X msg 107 50 7;
-#X floatatom 292 59 5 0 0 0 - - -;
-#X floatatom 292 128 5 0 0 0 - - -;
+#X floatatom 292 59 5 0 0 0 - - -, f 5;
+#X floatatom 292 128 5 0 0 0 - - -, f 5;
 #X obj 292 80 s hradio-help-rcv;
 #X obj 292 105 r hradio-help-snd;
 #X text 98 303 float;
@@ -135,13 +133,13 @@ a [hradio]:;
 #X msg 105 42 init 0;
 #X text 114 61 init value;
 #X text 115 75 on loadbang;
-#X floatatom 198 42 3 0 20 0 - #0-number -;
+#X floatatom 198 42 3 0 20 0 - #0-number -, f 3;
 #X msg 198 94 number \$1;
 #X msg 322 92 send vradio_snd;
 #X msg 11 94 size \$1;
 #X text 10 23 dimensions;
 #X obj 11 44 nbx 3 14 8 200 0 0 empty \$0-size empty 0 -8 0 12 -262144
--1 -1 15 256;
+-1 -1 15 256 0;
 #X text 61 41 size;
 #X text 300 155 label position;
 #X text 9 289 font properties;
@@ -156,9 +154,9 @@ a [hradio]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xlabel empty
-0 -8 0 12 -262144 -1 -1 0 256;
+0 -8 0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ylabel empty
-0 -8 0 12 -262144 -1 -1 -8 256;
+0 -8 0 12 -262144 -1 -1 -8 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -171,9 +169,9 @@ a [hradio]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 0 2 0 0 \$0-dummy \$0-font empty 0 -8 0 12
--262144 -1 -1 0 256;
+-262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-font-size empty
-0 -8 0 12 -262144 -1 -1 10 256;
+0 -8 0 12 -262144 -1 -1 10 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -190,11 +188,11 @@ a [hradio]:;
 #X obj 33 237 pack 0 0 0;
 #X obj 120 197 t b a;
 #X obj 103 104 nbx 3 14 0 29 0 0 \$0-dummy \$0-bg empty 0 -8 0 12 -262144
--1 -1 0 256;
+-1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 0 29 0 0 \$0-dummy \$0-front empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X obj 103 144 nbx 3 14 0 29 0 0 \$0-dummy \$0-label empty 0 -8 0 12
--262144 -1 -1 12 256;
+-262144 -1 -1 12 256 0;
 #X connect 0 0 2 0;
 #X connect 0 1 2 1;
 #X connect 2 0 1 0;
@@ -226,11 +224,11 @@ a [hradio]:;
 #X text 120 137 2.front;
 #X text 120 153 3.label;
 #X obj 103 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-r empty 0 -8 0 10 -262144
--258113 -1 0 256;
+-258113 -1 0 256 0;
 #X obj 133 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-g empty 0 -8 0 10 -262144
--13381 -1 0 256;
+-13381 -1 0 256 0;
 #X obj 163 105 nbx 3 14 0 255 0 0 \$0-dummy \$0-b empty 0 -8 0 10 -262144
--4160 -1 0 256;
+-4160 -1 0 256 0;
 #X connect 1 0 2 0;
 #X connect 1 1 2 1;
 #X connect 2 0 3 0;
@@ -275,9 +273,9 @@ a [hradio]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-xpos empty 0
--8 0 12 -262144 -1 -1 290 256;
+-8 0 12 -262144 -1 -1 290 256 0;
 #X obj 103 124 nbx 3 14 -1e+37 1e+37 0 0 \$0-dummy \$0-ypos empty 0
--8 0 12 -262144 -1 -1 550 256;
+-8 0 12 -262144 -1 -1 550 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -290,9 +288,9 @@ a [hradio]:;
 #X obj 103 149 t b a;
 #X obj 68 205 outlet;
 #X obj 103 104 nbx 3 14 -20 20 0 0 \$0-dummy \$0-xdelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X obj 103 124 nbx 3 14 -20 20 0 0 \$0-dummy \$0-ydelta empty 0 -8
-0 12 -262144 -1 -1 0 256;
+0 12 -262144 -1 -1 0 256 0;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 1 1 0 1;
@@ -304,7 +302,7 @@ a [hradio]:;
 0;
 #X obj 270 526 cnv 15 145 75 empty empty empty 20 12 0 14 -261682 -66577
 0;
-#X floatatom 291 580 5 0 0 0 - - -;
+#X floatatom 291 580 5 0 0 0 - - -, f 5;
 #X obj 290 550 hradio 15 1 0 8 hradio_snd hradio_rcv myHradio 0 -8
 0 10 -262144 -33289 -33289 0;
 #X obj 11 118 s hradio_rcv;
@@ -373,29 +371,30 @@ to dynamically instantiate a [hradio] object with custom properties:
 #X text 257 565 IEM KUG;
 #X text 232 577 graz \, austria 2002;
 #X text 168 367 - a list is truncated to the first element.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X text 98 351 bang;
 #X text 168 351 - output the last selected value.;
-#X text 329 2 [rdb] or [radiobut] or [radiobutton];
-#X connect 15 0 33 0;
-#X connect 16 0 17 0;
-#X connect 19 0 18 0;
-#X connect 19 1 23 0;
-#X connect 19 2 24 0;
-#X connect 19 3 25 0;
-#X connect 19 4 26 0;
-#X connect 19 5 27 0;
-#X connect 19 6 28 0;
-#X connect 19 7 29 0;
-#X connect 19 8 30 0;
-#X connect 19 9 31 0;
-#X connect 20 0 33 0;
-#X connect 21 0 20 0;
-#X connect 22 0 33 0;
-#X connect 33 0 16 0;
-#X connect 33 0 19 0;
+#X text 329 11 [rdb] or [radiobut] or [radiobutton];
+#X connect 14 0 32 0;
+#X connect 15 0 16 0;
+#X connect 18 0 17 0;
+#X connect 18 1 22 0;
+#X connect 18 2 23 0;
+#X connect 18 3 24 0;
+#X connect 18 4 25 0;
+#X connect 18 5 26 0;
+#X connect 18 6 27 0;
+#X connect 18 7 28 0;
+#X connect 18 8 29 0;
+#X connect 18 9 30 0;
+#X connect 19 0 32 0;
+#X connect 20 0 19 0;
+#X connect 21 0 32 0;
+#X connect 32 0 15 0;
+#X connect 32 0 18 0;
+#X connect 32 0 31 0;
 #X connect 33 0 32 0;
-#X connect 34 0 33 0;
-#X connect 35 0 33 0;
-#X connect 36 0 38 0;
-#X connect 39 0 37 0;
+#X connect 34 0 32 0;
+#X connect 35 0 37 0;
+#X connect 38 0 36 0;

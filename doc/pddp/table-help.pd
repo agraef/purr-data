@@ -1,11 +1,11 @@
-#N canvas 1 88 555 619 10;
+#N canvas 428 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header table 3 12 0 18
 -204280 -1 0;
 #X obj 0 347 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 75 242 465 344 META 0;
+#N canvas 511 284 465 344 META 0;
 #X text 12 65 LIBRARY internal;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 125 RELEASE_DATE 2009-06-12;
@@ -23,7 +23,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 0 13 -228856 -1 0;
 #X obj 0 529 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 84 273 428 334 Related_objects 0;
+#N canvas 215 295 428 334 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [table] Related Objects;
@@ -60,9 +60,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X restore 102 598 pd Related_objects;
 #X text 80 426 1) symbol atom;
 #X text 11 23 array of numbers;
-#X obj 461 20 pddp/pddplink http://wiki.puredata.info/en/table -text
-pdpedia: table;
-#X obj 493 3 table;
+#X obj 506 11 table;
 #X text 98 355 (none);
 #X text 98 385 (none);
 #X text 99 95 Note that the data (and other properties) of the array
@@ -103,8 +101,8 @@ array inside. The creation arguments specify the name and an optional
 size in points.;
 #X text 99 215 You can also send messages to the garray by name:;
 #X obj 404 269 tabread help-tab-2;
-#X floatatom 404 243 5 0 0 0 - - -;
-#X floatatom 404 297 5 0 0 0 - - -;
+#X floatatom 404 243 5 0 0 0 - - -, f 5;
+#X floatatom 404 297 5 0 0 0 - - -, f 5;
 #X text 167 426 - (optional) name of the [table] and garray contained
 within. Use the name within array-handling objects \, like [tabwrite~]
 \, or use it to send messages to the garray (see examples above). Duplicate
@@ -116,6 +114,6 @@ is given \, [table] objects will be named "table1" \, "table2" \, "table3"
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X obj 98 576 pddp/pddplink array-help.pd;
-#X connect 24 0 23 0;
-#X connect 28 0 30 0;
-#X connect 29 0 28 0;
+#X connect 23 0 22 0;
+#X connect 27 0 29 0;
+#X connect 28 0 27 0;

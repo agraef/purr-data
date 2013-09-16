@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 428 37 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header phasor~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 339 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 244 494 344 META 0;
+#N canvas 480 288 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,14 +26,14 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 547 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 109 480 428 109 Related_objects 0;
+#N canvas 214 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 osc~;
 #X obj 62 43 cos~;
 #X obj 103 43 tabread4~;
 #X text 8 2 [phasor~] Related Objects;
-#X restore 102 597 pd Related_objects;
+#X restore 102 598 pd Related_objects;
 #X obj 78 348 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X obj 78 447 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
@@ -41,9 +41,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 392 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
 -162280 0;
 #X text 98 391 float;
-#X obj 471 3 phasor~;
-#X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/phasor~ -text
-pdpedia: phasor~;
+#X obj 494 12 phasor~;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-array 100 float 0;
 #X coords 0 1 100 -1 200 100 1;
@@ -72,15 +70,15 @@ used for table lookup via [cos~] or [tabread4~].;
 #X text 168 492 - (optional) with a floating-point argument \, [phasor~]
 takes floating-point messages to change frequency. If no argument is
 supplied \, the input is taken to be an audio signal.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 480 51 pddp/dsp;
 #X obj 98 551 pddp/pddplink ../3.audio.examples/C02.sawtooth-foldover.pd
 -text doc/3.audio.exampmles/C02.sawtooth-foldover.pd;
 #X obj 98 566 pddp/pddplink ../3.audio.examples/J09.bandlimited.pd
 -text doc/3.audio.exampmles/J09.bandlimited.pd;
 #X obj 68 221 tabwrite~ \$0-array;
-#X connect 15 0 38 0;
-#X connect 16 0 19 0;
-#X connect 19 0 38 0;
-#X connect 21 0 15 0;
-#X connect 21 0 15 0;
+#X connect 14 0 37 0;
+#X connect 15 0 18 0;
+#X connect 18 0 37 0;
+#X connect 20 0 14 0;

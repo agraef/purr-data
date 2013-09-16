@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 431 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header openpanel 3 12 0
 18 -204280 -1 0;
 #X obj 0 310 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 243 494 344 META 0;
+#N canvas 485 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 479 (none);
-#N canvas 101 483 428 109 Related_objects 0;
+#N canvas 216 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 22 43 savepanel;
@@ -37,9 +37,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 -162280 0;
 #X obj 78 441 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 466 3 openpanel;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/openpanel
--text pdpedia: openpanel;
+#X obj 484 11 openpanel;
 #X msg 171 104 bang;
 #X obj 171 217 print;
 #X text 211 104 Starts open panel in current directory;
@@ -66,8 +64,9 @@ converted to a list the next time you open the patch.;
 #X text 11 23 query the user for a filename;
 #X text 168 398 - a list starting with a symbol will be truncated to
 the first element.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X connect 13 0 25 0;
-#X connect 16 0 25 0;
-#X connect 17 0 25 0;
-#X connect 25 0 14 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 12 0 24 0;
+#X connect 15 0 24 0;
+#X connect 16 0 24 0;
+#X connect 24 0 13 0;

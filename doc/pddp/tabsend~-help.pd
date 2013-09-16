@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header tabsend~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 464 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 247 494 344 META 0;
+#N canvas 481 287 494 344 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ to an array;
 0 13 -228856 -1 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 76 480 428 109 Related_objects 0;
+#N canvas 215 522 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 103 43 fft~;
@@ -35,9 +35,7 @@ to an array;
 #X restore 102 597 pd Related_objects;
 #X obj 78 473 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 466 3 tabsend~;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/tabsend~ -text
-pdpedia: tabsend~;
+#X obj 492 9 tabsend~;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-array 64 float 2;
 #X coords 0 1 64 -1 100 70 1;
@@ -84,10 +82,11 @@ to an array.;
 ;
 #X text 168 543 - the name of an array to write to.;
 #X text 80 543 1) symbol atom;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 484 54 pddp/dsp;
 #X obj 108 570 pddp/pddplink all_about_arrays.pd;
 #X obj 83 258 tabsend~ \$0-array;
-#X connect 12 0 18 0;
-#X connect 17 0 27 0;
-#X connect 18 0 17 0;
+#X connect 11 0 17 0;
+#X connect 16 0 26 0;
+#X connect 17 0 16 0;

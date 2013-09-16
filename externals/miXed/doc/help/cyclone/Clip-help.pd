@@ -1,40 +1,71 @@
-#N canvas 0 26 475 245 10;
-#X text 15 35 Constrains an int \, float or list within a certain range
-;
-#X floatatom 342 116 0 0 0 0 - - -;
-#X floatatom 190 116 0 0 0 0 - - -;
-#X text 337 138 set max (int or float);
-#X floatatom 26 82 0 0 0 0 - - -;
-#X msg 106 64 0 20 40 60 80 100 120;
-#X msg 118 97 set 100 200;
-#X floatatom 68 81 0 0 0 0 - - -;
-#X obj 68 183 print;
-#X text 126 184 Optional arguments set the range. Default is 0 \, 0
-;
-#X text 187 98 changes the clipping range;
-#X text 201 138 set min (int or float);
-#X obj 68 153 Clip 10 50;
-#N canvas 375 114 494 394 META 0;
-#X text 12 255 HELP_PATCH_AUTHORS Christoph Kummerer. Revised by Jonathan
-Wilkes for Pd-extended 0.42 to conform to the PDDP template.;
-#X text 12 5 GENRE help;
-#X text 12 215 WEBSITE http://suita.chopin.edu.pl/~czaja/miXed/externs/cyclone.html
-;
-#X text 12 45 KEYWORDS control max_compatible;
-#X text 12 135 INLET_1 float;
-#X text 12 115 INLET_0 float list set;
-#X text 12 175 OUTLET_0 float;
-#X text 12 25 NAME Clip;
-#X text 12 155 INLET_2 float;
-#X text 12 85 DESCRIPTION constrain an int \, float or list within
+#N canvas 409 100 553 550 10;
+#X obj -1 527 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#X obj -1 353 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 517 372 430 247 META 0;
+#X text 44 91 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 44 -42 LICENSE SIBSD;
+#X text 44 71 AUTHOR Miller Puckette;
+#X text 44 111 RELEASE_DATE 1997;
+#X text 44 51 LIBRARY cyclone;
+#X text 44 -62 KEYWORDS range constrain filter pass;
+#X text 44 -22 DESCRIPTION constrains an int \, float \, or list within
 a certain range;
-#X text 12 195 AUTHOR Krzysztof Czaja;
-#X text 12 65 LICENSE SIBSD;
-#X restore 425 225 pd META;
-#X connect 1 0 12 2;
-#X connect 2 0 12 1;
-#X connect 4 0 12 0;
-#X connect 5 0 12 0;
-#X connect 6 0 12 0;
-#X connect 7 0 12 0;
-#X connect 12 0 8 0;
+#X text 44 11 INLET_0 float list;
+#X text 44 31 OUTLET_0 float;
+#X text 44 131 HELP_PATCH_AUTHORS Alex Cleveland updated this patch
+for Pd-l2ork version 2013.05.28;
+#X restore 498 529 pd META;
+#X obj -1 414 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj -1 458 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#N canvas 78 483 428 109 Related_objects 0;
+#X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 6 1 Related Objects;
+#X obj 8 30 maxlib/limit;
+#X obj 92 30 clip~;
+#X restore 200 529 pd Related_objects;
+#X obj 79 362 cnv 17 3 42 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 79 426 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header Clip 3 12 0 18
+-204280 -1 0;
+#X text 11 23 Constrains an int \, float or list within a certain range
+;
+#X text 110 361 float;
+#X text 170 361 - float to pass through range filter;
+#X text 110 386 list;
+#X text 170 384 - list of floats to filter;
+#X floatatom 238 221 0 0 0 0 - - -;
+#X floatatom 209 194 0 0 0 0 - - -;
+#X text 268 219 set max (int or float);
+#X floatatom 129 137 0 0 0 0 - - -;
+#X msg 107 105 0 20 40 60 80 100 120;
+#X msg 165 164 set 100 200;
+#X obj 107 286 print;
+#X text 179 256 Optional arguments set the range. Default is 0 \, 0
+;
+#X text 237 163 changes the clipping range;
+#X text 242 194 set min (int or float);
+#X obj 107 256 Clip 10 50;
+#X text 110 425 float;
+#X text 170 425 - outputs number if inside range;
+#X text 91 467 1) float;
+#X text 170 467 - sets minimun number of range;
+#X text 92 488 2) float;
+#X text 170 489 - sets maximum number of range;
+#X obj 507 3 Clip;
+#X text 249 106 input a list or number to pass through range filter
+;
+#X obj 6 528 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X connect 14 0 24 2;
+#X connect 15 0 24 1;
+#X connect 17 0 24 0;
+#X connect 18 0 24 0;
+#X connect 19 0 24 0;
+#X connect 24 0 20 0;

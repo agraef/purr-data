@@ -1,13 +1,13 @@
 #N struct drawsymbol-help-template float x float y symbol cat symbol
 dog float dog-vis;
-#N canvas 0 0 555 619 10;
+#N canvas 428 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header drawsymbol 3 12
 0 18 -204280 -1 0;
 #X obj 0 113 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 245 494 344 META 0;
+#N canvas 485 286 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2009-06-12;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 440 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 55 423 428 169 Related_objects 0;
+#N canvas 212 456 428 169 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 192 42 drawpolygon;
@@ -50,9 +50,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 161 list;
 #X text 98 192 (none);
 #X text 179 60 <- subpatch to display the data structures;
-#X obj 458 3 drawsymbol;
-#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/drawsymbol
--text pdpedia: drawsymbol;
+#X obj 477 11 drawsymbol;
 #X text 98 444 Keyboard entry is not yet supported for drawsymbol.
 ;
 #N canvas 32 180 428 164 drawsymbol-help-data 0;

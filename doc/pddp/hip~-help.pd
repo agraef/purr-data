@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 425 40 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header hip~ 3 12 0 18 -204280
 -1 0;
 #X obj 0 381 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 52 244 494 344 META 0;
+#N canvas 485 284 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -28,7 +28,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 390 cnv 17 3 37 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 100 425 428 166 Related_objects 0;
+#N canvas 219 468 428 166 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [hip~] Related Objects;
@@ -47,9 +47,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 497 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 497 signal;
-#X obj 491 3 hip~;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/hip~ -text
-pdpedia: hip~;
+#X obj 510 11 hip~;
 #X obj 146 270 env~;
 #X floatatom 146 293 0 0 0 0 - - -;
 #X floatatom 195 215 0 0 0 0 - - -;
@@ -84,13 +82,14 @@ rolloff frequency.;
 dB.;
 #X text 168 497 - the output is the filtered audio signal.;
 #X text 80 543 1) float;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
-#X connect 14 0 15 0;
-#X connect 16 0 17 1;
-#X connect 17 0 14 0;
-#X connect 18 0 19 0;
-#X connect 20 0 22 0;
-#X connect 22 0 18 0;
-#X connect 22 0 17 0;
-#X connect 24 0 17 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 479 52 pddp/dsp;
+#X connect 13 0 14 0;
+#X connect 15 0 16 1;
+#X connect 16 0 13 0;
+#X connect 17 0 18 0;
+#X connect 19 0 21 0;
+#X connect 21 0 17 0;
+#X connect 21 0 16 0;
+#X connect 23 0 16 0;

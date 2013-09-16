@@ -1,13 +1,13 @@
 #N struct drawnumber-help-template float x float y float cat float
 dog float dog-vis;
-#N canvas 0 0 555 619 10;
+#N canvas 429 35 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header drawnumber 3 12
 0 18 -204280 -1 0;
 #X obj 0 119 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 50 243 494 344 META 0;
+#N canvas 487 282 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 165 RELEASE_DATE 2009-06-12;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 460 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 98 419 428 169 Related_objects 0;
+#N canvas 212 459 428 169 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X obj 92 42 struct;
@@ -118,9 +118,7 @@ values were initialized when this help patch was created.);
 #X connect 3 0 4 0;
 #X connect 7 0 4 1;
 #X restore 28 89 pd drawnumber-help-template;
-#X obj 461 3 drawnumber;
-#X obj 430 20 pddp/pddplink http://wiki.puredata.info/en/drawnumber
--text pdpedia: drawnumber;
+#X obj 474 12 drawnumber;
 #X text 99 464 When not in "edit" mode \, you can click and drag vertically
 on the numbers to change their values. (In edit mode you can move \,
 cut \, copy \, and paste the objects.);

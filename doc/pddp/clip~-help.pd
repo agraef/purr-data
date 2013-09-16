@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 425 36 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header clip~ 3 12 0 18
 -204280 -1 0;
 #X obj 0 357 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 53 245 494 344 META 0;
+#N canvas 481 286 494 344 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -30,7 +30,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 78 366 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#N canvas 69 480 428 108 Related_objects 0;
+#N canvas 208 523 428 108 Related_objects 0;
 #X obj 23 36 min~;
 #X obj 70 36 max~;
 #X obj 118 36 clip;
@@ -42,15 +42,13 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 458 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 458 signal;
-#X obj 486 3 clip~;
-#X obj 460 20 pddp/pddplink http://wiki.puredata.info/en/clip~ -text
-pdpedia: clip~;
+#X obj 502 12 clip~;
 #X obj 41 177 clip~ -0.5 0.5;
 #X obj 41 117 osc~ 1000;
 #X obj 57 226 metro 500;
 #X text 209 149 inlets to reset clip range;
-#X floatatom 101 149 4 0 0 0 - - -;
-#X floatatom 162 150 4 0 0 0 - - -;
+#X floatatom 101 149 4 0 0 0 - - -, f 4;
+#X floatatom 162 150 4 0 0 0 - - -, f 4;
 #X text 176 177 creation arguments initialize clip range;
 #X text 183 250 <- graph the output;
 #X obj 78 396 cnv 17 3 17 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
@@ -80,12 +78,13 @@ clip the signal.;
 clipped.;
 #X text 168 420 - maximum value above which the incoming signal is
 clipped.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 476 52 pddp/dsp;
 #X obj 41 250 tabwrite~ \$0-array;
-#X connect 14 0 40 0;
-#X connect 15 0 14 0;
-#X connect 16 0 40 0;
-#X connect 18 0 14 1;
-#X connect 19 0 14 2;
-#X connect 26 0 16 0;
+#X connect 13 0 39 0;
+#X connect 14 0 13 0;
+#X connect 15 0 39 0;
+#X connect 17 0 13 1;
+#X connect 18 0 13 2;
+#X connect 25 0 15 0;

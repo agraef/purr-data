@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 427 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header append 3 12 0 18
 -204280 -1 0;
 #X obj 0 226 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 56 334 494 344 META 0;
+#N canvas 563 355 411 274 META 0;
 #X text 12 145 LIBRARY internal;
 #X text 12 185 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -32,7 +32,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 78 235 cnv 17 3 78 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
 #X text 98 319 float;
-#N canvas 62 491 428 101 Related_objects 0;
+#N canvas 214 524 428 101 Related_objects 0;
 #X obj 14 38 get;
 #X obj 46 38 set;
 #X obj 136 38 getsize;
@@ -45,9 +45,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 14 -204280 -1 0;
 #X text 8 2 [append] Related Objects;
 #X restore 101 597 pd Related_objects;
-#X obj 484 3 append;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/append -text
-pdpedia: append;
+#X obj 498 12 append;
 #N canvas 116 162 428 109 help-append-template1 0;
 #X obj 22 69 filledpolygon z z 0 0 0 20 0 20 30 0 30;
 #X obj 22 42 struct help-append-template1 float x float y float z;
@@ -63,7 +61,7 @@ pdpedia: append;
 #X obj 281 104 pointer;
 #X msg 281 80 traverse pd-help-append-data \, bang;
 #X obj 80 152 append help-append-template1 x y z;
-#X floatatom 80 95 5 26 400 0 - - -;
+#X floatatom 80 95 5 26 400 0 - - -, f 5;
 #X obj 80 115 t f f;
 #X msg 372 138 \; pd-help-append-data clear;
 #X text 98 234 float;
@@ -107,10 +105,10 @@ doc/4.data.structures/04.append.pd;
 #X obj 325 557 pddp/pddplink scalar-help.pd;
 #X text 11 23 add a scalar to a canvas;
 #X msg 18 95 10 75 2;
-#X connect 15 0 17 3;
-#X connect 16 0 15 0;
-#X connect 18 0 19 0;
-#X connect 19 0 17 0;
-#X connect 19 1 17 1;
-#X connect 19 1 17 2;
-#X connect 45 0 17 0;
+#X connect 14 0 16 3;
+#X connect 15 0 14 0;
+#X connect 17 0 18 0;
+#X connect 18 0 16 0;
+#X connect 18 1 16 1;
+#X connect 18 1 16 2;
+#X connect 44 0 16 0;

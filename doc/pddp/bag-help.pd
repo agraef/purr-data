@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 430 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header bag 3 12 0 18 -204280
 -1 0;
 #X obj 0 288 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 46 242 494 367 META 0;
+#N canvas 562 360 414 263 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 542 (none);
-#N canvas 54 478 428 109 Related_objects 0;
+#N canvas 225 510 428 109 Related_objects 0;
 #X obj 62 43 makenote;
 #X obj 22 43 poly;
 #X obj 123 43 list;
@@ -65,9 +65,7 @@ were received \, and clear the collection.;
 #X text 168 353 - a (value \, flag) pair is distributed to the two
 inlets. Lists with more than two elements will be truncated.;
 #X text 11 23 collection of numbers;
-#X obj 493 3 bag;
-#X obj 465 20 pddp/pddplink http://wiki.puredata.info/en/bag -text
-pdpedia: bag;
+#X obj 518 10 bag;
 #X text 168 413 - clear the collection.;
 #X text 167 439 - a float to the right inlet sets the "flag": if zero
 \, values to the left inlet will not be added to the collection. If
@@ -77,7 +75,8 @@ nonzero \, values to the right inlet will be added to the collection.
 if the last value the right inlet received was nonzero. If the last
 value the right inlet received was zero \, the float sent to the right
 inlet will be removed from the collection.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
 #X connect 21 0 29 0;
 #X connect 22 0 29 0;
 #X connect 23 0 29 0;

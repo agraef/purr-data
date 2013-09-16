@@ -1,14 +1,14 @@
 #N struct struct-1 float x float y symbol dog array weasel struct-2
 ;
 #N struct struct-2 float y;
-#N canvas 0 0 555 619 10;
+#N canvas 430 33 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header struct 3 12 0 18
 -204280 -1 0;
 #X obj 0 189 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 58 228 494 344 META 0;
+#N canvas 484 285 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -27,7 +27,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 0 13 -228856 -1 0;
 #X obj 0 532 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
-#N canvas 111 510 428 109 Related_objects 0;
+#N canvas 217 517 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [struct] Related Objects;
@@ -45,9 +45,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X restore 102 597 pd Related_objects;
 #X obj 78 296 cnv 17 3 72 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 483 3 struct;
-#X obj 455 20 pddp/pddplink http://wiki.puredata.info/en/struct -text
-pdpedia: struct;
+#X obj 500 10 struct;
 #X text 11 23 declare the fields in a data structure;
 #X text 98 193 (none);
 #X text 98 295 click;

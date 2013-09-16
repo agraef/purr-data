@@ -1,11 +1,11 @@
-#N canvas 0 0 555 619 10;
+#N canvas 429 34 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header snapshot~ 3 12 0
 18 -204280 -1 0;
 #X obj 0 417 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 -228856 -1 0;
-#N canvas 51 246 494 344 META 0;
+#N canvas 486 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 25 LICENSE SIBSD;
@@ -26,7 +26,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 0 569 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
 0 13 -228856 -1 0;
 #X text 98 546 (none);
-#N canvas 104 479 428 109 Related_objects 0;
+#N canvas 218 518 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 -204280 -1 0;
 #X text 8 2 [snapshot~] Related Objects;
@@ -38,9 +38,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 508 float;
 #X obj 78 509 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
 -162280 0;
-#X obj 465 3 snapshot~;
-#X obj 435 20 pddp/pddplink http://wiki.puredata.info/en/snapshot~
--text pdpedia: snapshot~;
+#X obj 484 11 snapshot~;
 #X obj 91 307 snapshot~;
 #X floatatom 91 330 0 0 0 0 - - -;
 #X msg 102 255 bang;
@@ -71,12 +69,12 @@ to a control value whenever it receives a bang in its left outlet.
 This object is particularly useful for monitoring outputs.;
 #X text 156 329 This output updates each time bang is clicked above.
 ;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide;
-#X obj 455 51 pddp/dsp;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X obj 481 54 pddp/dsp;
 #X obj 99 572 pddp/pddplink ../3.audio.examples/C06.signal.to.control.pd
 -text doc/3.audio.examples/C06.signal.to.control.pd;
-#X connect 14 0 15 0;
-#X connect 14 0 15 0;
-#X connect 16 0 14 0;
-#X connect 17 0 14 0;
-#X connect 19 0 14 0;
+#X connect 13 0 14 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;
+#X connect 18 0 13 0;
