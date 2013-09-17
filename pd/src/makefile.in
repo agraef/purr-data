@@ -207,8 +207,7 @@ install: all tkpath tkdnd
 	install $(BIN_DIR)/$(GUINAME) $(DESTDIR)$(libpdbindir)/$(GUINAME)
 	install $(BIN_DIR)/pd-watchdog $(DESTDIR)$(libpdbindir)/pd-watchdog
 	install -m644 pd.tk $(DESTDIR)$(libpdbindir)/pd.tk
-	install -m644 pkgIndex.tcl $(DESTDIR)$(libpdbindir)/pkgIndex.tcl
-	install -m644 helpbrowser.tcl $(DESTDIR)$(libpdbindir)/helpbrowser.tcl
+	install -m644 *.tcl $(DESTDIR)$(libpdbindir)/
 	install -m644 ../tkpath/library/tkpath.tcl $(DESTDIR)$(libpdbindir)/tkpath.tcl
 	install -m644 ../tkpath/libtkpath*so $(DESTDIR)$(libpdbindir)/
 	install -m644 ../tkdnd/library/tkdnd.tcl $(DESTDIR)$(libpdbindir)/tkdnd.tcl

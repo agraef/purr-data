@@ -619,6 +619,12 @@ set help_top_directory $pd_guidir/doc
 #==============================================================================#
 # pd-gui-rewrite-0.43 help browser backport
 
+switch -- $pd_nt {
+    0  { set ::windowingsystem "x11" }
+    1  { set ::windowingsystem "win32" }
+    2  { set ::windowingsystem "aqua" }
+}
+
 # Pd's packages are stored in the same directory as the main script (pd-gui.tcl)
 set auto_path [linsert $auto_path 0 [file dirname [info script]]]
 # the pd-gui-rewrite-0.43 help browser is backported to Pd-extended 0.42
@@ -626,6 +632,15 @@ package require helpbrowser
 package require msgcat
 package require tkpng
 package require tkdnd
+package require pd_guiprefs
+package require pd_menus
+
+namespace import ::pd_guiprefs::init
+namespace import ::pd_guiprefs::update_recentfiles
+namespace import ::pd_guiprefs::write_recentfiles
+
+set total_recentfiles 5
+::pd_guiprefs::init
 
 # official GNU gettext msgcat shortcut
 proc _ {s} {return [::msgcat::mc $s]}
@@ -659,7 +674,7 @@ ttk::style configure IOErrorOff.TButton -background lightgrey
 ttk::style map IOErrorOff.TButton -background [list active $colors(-frame)]
 
 match_linux_wm [list menu .mbar -relief flat]
-match_linux_wm [list menu .mbar.file -tearoff $pd_tearoff]
+match_linux_wm [list menu .mbar.file -tearoff $pd_tearoff -postcommand [concat pdtk_fixfilemenu .mbar.file]]
 .mbar add cascade -label File -menu .mbar.file
 match_linux_wm [list menu .mbar.edit -tearoff $pd_tearoff]
 .mbar add cascade -label Edit -menu .mbar.edit
@@ -1041,6 +1056,10 @@ proc pdtk_canvas_menuclose {window reply} {
 	}
 }
 
+proc pdtk_fixfilemenu {name} {
+	::pd_menus::update_recentfiles_menu $name false
+}
+
 set menu_windowlist {} 
 
 proc pdtk_fixwindowmenu {} {
@@ -1183,6 +1202,7 @@ proc open_file {filename} {
     if {[regexp -nocase -- "\.(pd|pat|mxt)$" $basename]} {
         pd "pd open [pdtk_enquote $basename] [pdtk_enquote $directory] ;"
         set pd_opendir $directory
+        ::pd_guiprefs::update_recentfiles $filename 1
     }
 }
 
@@ -1543,13 +1563,11 @@ proc menu_addstd {mbar} {
 .mbar.file add command -label Open -command {menu_open} \
     -accelerator [accel_munge "Ctrl+o"]
 match_linux_wm [list .mbar.file add separator]
-.mbar.file add command -label Close -accelerator [accel_munge "Ctrl+w"] \
-	-state disabled
 .mbar.file add command -label Save -accelerator [accel_munge "Ctrl+s"] \
 	-state disabled
 .mbar.file add command -label "Save as..." -accelerator [accel_munge "Ctrl+S"] \
 	-state disabled
-match_linux_wm [list .mbar.file add  separator]
+match_linux_wm [list .mbar.file add separator]
 if {$pd_nt != 2} {
 	.mbar.file add command -label "Message..." -command {menu_send} \
 		-accelerator [accel_munge "Ctrl+m"]
@@ -1570,11 +1588,21 @@ if {$pd_nt != 2} {
 match_linux_wm [list .mbar.file add  separator]
 .mbar.file add command -label "Print..." -accelerator [accel_munge "Ctrl+p"] \
 	-state disabled
-if {$pd_nt != 2} {
-# Mac OS X doesn't put Quit on the File menu
+
+# update recent files
+match_linux_wm [list .mbar.file add separator]
+#if {[llength $::recentfiles_list] > 0} {
+#    ::pd_menus::update_recentfiles_menu .mbar.file false
+#}
+
 match_linux_wm [list .mbar.file add  separator]
-.mbar.file add command -label Quit -command {menu_quit} \
-    -accelerator [accel_munge "Ctrl+q"]
+.mbar.file add command -label Close -accelerator [accel_munge "Ctrl+w"] \
+	-state disabled
+
+if {$pd_nt != 2} {
+	# Mac OS X doesn't put Quit on the File menu
+	.mbar.file add command -label Quit -command {menu_quit} \
+	    -accelerator [accel_munge "Ctrl+q"]
 }
 
 #################### the "Edit" menu for the Pd window ##############
@@ -2765,7 +2793,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     # For the main window, they are created on load, at the 
     # top of this file.
     match_linux_wm [list menu $name.m -relief flat]
-    match_linux_wm [list menu $name.m.file -tearoff $pd_tearoff]
+    match_linux_wm [list menu $name.m.file  -postcommand [concat pdtk_fixfilemenu $name.m.file] -tearoff $pd_tearoff]
     $name.m add cascade -label File -menu $name.m.file
 
     $name.m.file add command -label New -command {menu_new} \
@@ -2779,9 +2807,6 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	}
 
     match_linux_wm [list $name.m.file add separator]
-    $name.m.file add command -label Close \
-        -command [concat menu_close $name] \
-        -accelerator [accel_munge "Ctrl+w"]
 
     $name.m.file add command -label Save -command [concat menu_save $name] \
         -accelerator [accel_munge "Ctrl+s"]
@@ -2814,9 +2839,20 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		$name.m.file add command -label "Print..." -command [concat menu_print $name] \
 		    -accelerator [accel_munge "Ctrl+p"]
 	}
+    # update recent files
+    match_linux_wm [list $name.m.file add separator]
+    #match_linux_wm [list $name.m.file add separator]
+    #if {[llength $::recentfiles_list] > 0} {
+    #    ::pd_menus::update_recentfiles_menu $name.m.file false
+    #}
+
+	match_linux_wm [list $name.m.file add separator]
+    $name.m.file add command -label Close \
+        -command [concat menu_close $name] \
+        -accelerator [accel_munge "Ctrl+w"]
+
 	if {$pd_nt != 2} {
 		# Mac OS X doesn't put Quit on the File menu
-		match_linux_wm [list $name.m.file add separator]
 		$name.m.file add command -label Quit -command {menu_quit} \
 			-accelerator [accel_munge "Ctrl+q"]
 	}
@@ -4722,6 +4758,8 @@ proc pdtk_canvas_saveas {name initfile initdir} {
             [pdtk_enquote $directory] \;]
     #       pd [concat $name savetofile $basename $directory \;]
     set untitled_directory $directory
+    # add to recentfiles
+    ::pd_guiprefs::update_recentfiles $filename 1
 }
 
 # zooming (a subset of dofont)

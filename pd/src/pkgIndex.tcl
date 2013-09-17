@@ -2,6 +2,8 @@
 #
 
 package ifneeded helpbrowser 0.1 [list source [file join $dir helpbrowser.tcl]]
+package ifneeded pd_guiprefs 0.1 [list source [file join $dir pd_guiprefs.tcl]]
+package ifneeded pd_menus 0.1 [list source [file join $dir pd_menus_SHORT.tcl]]
 
 namespace eval ::tkpath {
     proc load_package {dir} {
