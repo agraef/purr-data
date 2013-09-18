@@ -1,6 +1,0 @@
-#N canvas 433 184 450 300 10;
-#X obj 105 29 loadbang;
-#X obj 105 50 window_name;
-#X symbolatom 105 71 10 0 0 0 - - -, f 10;
-#X connect 0 0 1 0;
-#X connect 1 0 2 0;
