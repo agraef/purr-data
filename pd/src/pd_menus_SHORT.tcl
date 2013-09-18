@@ -81,10 +81,13 @@ proc ::pd_menus::update_recentfiles_on_menu {mymenu {write}} {
         $mymenu insert [expr $top_separator+1] command \
             -label [file tail $filename] -command "open_file {$filename}"
     }
-    set filename [lindex $::recentfiles_list 0]
-    $mymenu insert [expr $top_separator+1] command \
-        -label [file tail $filename] -command "open_file {$filename}"
-
+    if { [llength $::recentfiles_list] > 0 } {
+        set filename [lindex $::recentfiles_list 0]
+        $mymenu insert [expr $top_separator+1] command \
+            -label [file tail $filename] -command "open_file {$filename}"
+    } else {
+        $mymenu insert [expr $top_separator+1] command -label "No Recent Files" -state disabled
+    }
     # write to config file
     if {$write == true} { ::pd_guiprefs::write_recentfiles }
 }

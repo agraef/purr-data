@@ -1591,11 +1591,12 @@ match_linux_wm [list .mbar.file add  separator]
 
 # update recent files
 match_linux_wm [list .mbar.file add separator]
+.mbar.file add command -label "No Recent Files" -state disabled
 #if {[llength $::recentfiles_list] > 0} {
 #    ::pd_menus::update_recentfiles_menu .mbar.file false
 #}
 
-match_linux_wm [list .mbar.file add  separator]
+match_linux_wm [list .mbar.file add separator]
 .mbar.file add command -label Close -accelerator [accel_munge "Ctrl+w"] \
 	-state disabled
 
@@ -2841,6 +2842,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	}
     # update recent files
     match_linux_wm [list $name.m.file add separator]
+    $name.m.file add command -label "No Recent Files" -state disabled
     #match_linux_wm [list $name.m.file add separator]
     #if {[llength $::recentfiles_list] > 0} {
     #    ::pd_menus::update_recentfiles_menu $name.m.file false
