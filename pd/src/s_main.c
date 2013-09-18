@@ -160,7 +160,6 @@ int sys_defaultfont;
 
 static void openit(const char *dirname, const char *filename)
 {
-    fprintf(stderr,"openit\n");
     char dirbuf[FILENAME_MAX], *nameptr;
     int fd = open_via_path(dirname, filename, "", dirbuf, &nameptr,
         FILENAME_MAX, 0);
