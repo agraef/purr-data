@@ -73,7 +73,7 @@ proc ::pd_guiprefs::update_recentfiles {afile save} {
     set ::recentfiles_list [lreplace $::recentfiles_list $index $index]
     # insert new one in the beginning and crop the list
     set ::recentfiles_list [linsert $::recentfiles_list 0 $afile]
-    set ::recentfiles_list [lrange $::recentfiles_list 0 $::total_recentfiles]
+    set ::recentfiles_list [lrange $::recentfiles_list 0 [expr $::total_recentfiles - 1]]
     #::pd_menus::update_recentfiles_menu .mbar.file $save
     ::pd_guiprefs::write_recentfiles
 }

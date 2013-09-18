@@ -3300,7 +3300,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	bind $name <FocusIn> "menu_fixeditmenu $name"
 	# bind $name <FocusOut> { pdtk_noselect %W }
 	if { $k12_mode == 1 } { pd [concat $name tooltips 1 \;] }
-    after 100 [concat focus $name.c]
+    after idle [concat focus $name.c]
 
 	if { $k12_mode == 1 && $k12_saveas_on_new == 1 } {
 		after 1000 [concat pdtk_k12_saveas_on_new $name]
@@ -4354,7 +4354,6 @@ proc pdtk_canvas_sendkey {name state key iso shift focus serial} {
 
     # autorepeat logic
     if { $iso == "null" } { set iso "" }
-    if { $iso == "spc" } { set iso " " }
 	set autorepeat 1
 	if { $state == 1 } {
 		# press
@@ -4370,8 +4369,11 @@ proc pdtk_canvas_sendkey {name state key iso shift focus serial} {
 	} else {
 		# schedule release
 		set key_serial_release $serial
-		if { $iso == "" } { set iso null }
-		if { $iso == " " } { set iso spc }
+		if {$iso != ""} {
+        	scan $iso %c iso
+    	} else {
+			set iso "null"
+		}
 		after 0 [concat pdtk_canvas_sendkey $name $state $key $iso $shift $focus -1]
 		return
 	}
@@ -4398,7 +4400,11 @@ proc pdtk_canvas_sendkey {name state key iso shift focus serial} {
 		set key 127
     }
     if {$iso != ""} {
-        scan $iso %c key
+    	if {$serial != -1} {
+        	scan $iso %c key
+        } else {
+        	set key $iso
+        }
     }
 
 	if {$key == "Control_L"} {

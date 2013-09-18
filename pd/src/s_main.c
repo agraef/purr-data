@@ -160,6 +160,7 @@ int sys_defaultfont;
 
 static void openit(const char *dirname, const char *filename)
 {
+    fprintf(stderr,"openit\n");
     char dirbuf[FILENAME_MAX], *nameptr;
     int fd = open_via_path(dirname, filename, "", dirbuf, &nameptr,
         FILENAME_MAX, 0);
@@ -168,6 +169,8 @@ static void openit(const char *dirname, const char *filename)
         close (fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
 		sys_vgui("pdtk_set_current_dir %s\n", filename);
+        //sys_vgui("::pd_menus::update_recentfiles_menu .mbar.file 0\n");
+        sys_vgui("::pd_guiprefs::update_recentfiles %s 1\n", filename);
     }
     else
         error("%s: can't open", filename);
@@ -222,7 +225,7 @@ void glob_initfromgui(void *dummy, t_symbol *s, int argc, t_atom *argv)
     for  (nl = sys_externlist; nl; nl = nl->nl_next)
         if (!sys_load_lib(0, nl->nl_string))
             post("%s: can't load library", nl->nl_string);
-        /* open patches specifies with "-open" args */
+        /* open patches specified with "-open" args */
     for  (nl = sys_openlist; nl; nl = nl->nl_next)
         openit(cwd, nl->nl_string);
     namelist_free(sys_openlist);
