@@ -33,9 +33,6 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist);
 t_widgetbehavior hslider_widgetbehavior;
 static t_class *hslider_class;
 
-static double last;
-static int is_last_float = 0;
-
 /* widget helper functions */
 
 static void hslider_draw_update(t_gobj *client, t_glist *glist)
@@ -648,8 +645,8 @@ static void hslider_bang(t_hslider *x)
     if(x->x_lin0_log1)
         out = x->x_min*exp(x->x_k*(double)(x->x_val)*0.01);
     else {
-		if (is_last_float && last <= x->x_max && last >= x->x_min)
-			out = last;
+		if (x->x_is_last_float && x->x_last <= x->x_max && x->x_last >= x->x_min)
+			out = x->x_last;
 		else
         	out = (double)(x->x_val)*0.01*x->x_k + x->x_min;
 	}
@@ -705,7 +702,7 @@ static void hslider_dialog(t_hslider *x, t_symbol *s, int argc, t_atom *argv)
 
 static void hslider_motion(t_hslider *x, t_floatarg dx, t_floatarg dy)
 {
-	is_last_float = 0;
+	x->x_is_last_float = 0;
     int old = x->x_val;
 
     if(x->x_gui.x_fsf.x_finemoved)
@@ -828,8 +825,8 @@ static void hslider_steady(t_hslider *x, t_floatarg f)
 static void hslider_float(t_hslider *x, t_floatarg f)
 {
     double out;
-	is_last_float = 1;
-	last = f;
+	x->x_is_last_float = 1;
+	x->x_last = f;
 
     hslider_set(x, f);
     if(x->x_lin0_log1)
@@ -906,6 +903,8 @@ static void *hslider_new(t_symbol *s, int argc, t_atom *argv)
 
     x->x_gui.x_fsf.x_snd_able = 1;
     x->x_gui.x_fsf.x_rcv_able = 1;
+	x->x_is_last_float = 0;
+	x->x_last = 0.0;
 
     x->x_gui.x_glist = (t_glist *)canvas_getcurrent();
     if(x->x_gui.x_isa.x_loadinit)

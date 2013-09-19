@@ -248,6 +248,8 @@ typedef struct _hslider
     double   x_min;
     double   x_max;
     double   x_k;
+    double   x_last;
+    int      x_is_last_float;
 } t_hslider;
 
 typedef struct _hdial
@@ -288,6 +290,8 @@ typedef struct _vslider
     double   x_min;
     double   x_max;
     double   x_k;
+    double   x_last;
+    int      x_is_last_float;
 } t_vslider;
 
 typedef struct _vu

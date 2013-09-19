@@ -33,9 +33,6 @@ static void vslider_draw_select(t_vslider* x, t_glist* glist);
 t_widgetbehavior vslider_widgetbehavior;
 static t_class *vslider_class;
 
-static double last;
-static int is_last_float = 0;
-
 /* widget helper functions */
 
 static void vslider_draw_update(t_gobj *client, t_glist *glist)
@@ -632,8 +629,8 @@ static void vslider_bang(t_vslider *x)
     if(x->x_lin0_log1)
         out = x->x_min*exp(x->x_k*(double)(x->x_val)*0.01);
     else
-		if (is_last_float && last <= x->x_max && last >= x->x_min)
-			out = last;
+		if (x->x_is_last_float && x->x_last <= x->x_max && x->x_last >= x->x_min)
+			out = x->x_last;
 		else
         	out = (double)(x->x_val)*0.01*x->x_k + x->x_min;
     if((out < 1.0e-10)&&(out > -1.0e-10))
@@ -689,7 +686,7 @@ static void vslider_dialog(t_vslider *x, t_symbol *s, int argc, t_atom *argv)
 
 static void vslider_motion(t_vslider *x, t_floatarg dx, t_floatarg dy)
 {
-	is_last_float = 0;
+	x->x_is_last_float = 0;
     int old = x->x_val;
 
     if(x->x_gui.x_fsf.x_finemoved)
@@ -778,8 +775,8 @@ static void vslider_set(t_vslider *x, t_floatarg f)
 
 static void vslider_float(t_vslider *x, t_floatarg f)
 {
-	is_last_float = 1;
-	last = f;
+	x->x_is_last_float = 1;
+	x->x_last = f;
     vslider_set(x, f);
     if(x->x_gui.x_fsf.x_put_in2out)
         vslider_bang(x);
@@ -899,6 +896,8 @@ static void *vslider_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_draw = (t_iemfunptr)vslider_draw;
     x->x_gui.x_fsf.x_snd_able = 1;
     x->x_gui.x_fsf.x_rcv_able = 1;
+	x->x_is_last_float = 0;
+	x->x_last = 0.0;
     x->x_gui.x_glist = (t_glist *)canvas_getcurrent();
     if(x->x_gui.x_isa.x_loadinit)
         x->x_val = v;
