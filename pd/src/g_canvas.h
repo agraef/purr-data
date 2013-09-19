@@ -136,7 +136,7 @@ typedef struct _editor
 #define MA_PASSOUT 4    /* send on to e_grab */
 #define MA_DRAGTEXT 5   /* drag in text editor to alter selection */
 #define MA_RESIZE  6    /* drag to resize */
-#define MA_SCROLL  -1    /* scroll with middle click onto empty canvas */
+#define MA_SCROLL  7    /* scroll with middle click onto empty canvas */
 
 /* editor structure for "garrays".  We don't bother to delete and regenerate
 this structure when the "garray" becomes invisible or visible, although we
