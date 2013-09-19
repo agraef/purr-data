@@ -17,7 +17,7 @@ namespace eval ::tkpath {
     };# load_package
 }
 
-package ifneeded tkpath 0.3.2 [list ::tkpath::load_package $dir]
+package ifneeded tkpath 0.3.3 [list ::tkpath::load_package $dir]
 
 package ifneeded tkdnd 2.6 \
   "source \{$dir/tkdnd.tcl\} ; \
