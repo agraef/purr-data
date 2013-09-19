@@ -1212,7 +1212,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 
 		t_gobj *g;
 		//fprintf(stderr,"graph_select\n");
-		if (x->gl_list)
+		if (x->gl_list && !glist_istoplevel(x))
 			for (g = x->gl_list; g; g = g->g_next) {
 				//fprintf(stderr,"shouldvis %d\n",gobj_shouldvis(g, x));
 				if ((g && gobj_shouldvis(g, x) && (g->g_pd->c_wb->w_displacefnwtag != NULL) || (g && pd_class((t_pd *)g) == garray_class)))
