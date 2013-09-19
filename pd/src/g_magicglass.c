@@ -114,7 +114,7 @@ void magicGlass_drawNew(t_magicGlass *x)
 	//fprintf(stderr,"magicglass_drawNew\n");
     sys_vgui(".x%x.c create prect 0 0 0 0 -stroke #000000 -fill #000000 -tags magicGlassBg\n",
              x->x_c);
-    sys_vgui(".x%x.c create ppolygon 0 0 0 0 0 0 -fill #000000 -strokewidth 4 -tags magicGlassLine\n",
+    sys_vgui(".x%x.c create ppolygon 0 0 0 0 0 0 -fill #000000 -strokewidth 1 -tags magicGlassLine\n",
              x->x_c);
     sys_vgui(".x%x.c create text 0 0 -text {} -anchor w -fill #e87216 -font {{%s} -%d %s} -tags magicGlassText\n",
              x->x_c, sys_font, x->x_display_font, sys_fontweight);
