@@ -2357,7 +2357,7 @@ proc pdtk_k12_show_sound_icons {name} {
 	}
 }
 
-package require tkpath
+package require tkpath 0.3.3
 
 ############# pdtk_canvas_new -- create a new canvas ###############
 proc pdtk_canvas_new {name width height geometry editable} {
@@ -2413,6 +2413,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	}
 	if {![info exists ::font($name)]} {
 		set ::font($name) 10
+	}
+	if {![info exists ::doscroll($name)]} {
+		set ::doscroll($name) 0
 	}
 
 	if {$::menu($name) == 1} {
@@ -3830,7 +3833,7 @@ proc pdtk_canvas_toggle_scrollbars {rootname x} {
     }
 	if {[info exists ::loaded($rootname)]} {
 		#puts stderr getscroll
-		pdtk_canvas_force_getscroll $rootname.c
+		pdtk_canvas_getscroll $rootname.c
 	}
 }
 
@@ -4094,12 +4097,17 @@ proc pdtk_find_highest_widget_withtag {canvas name} {
 	#puts stderr "final_highest=$tag"
 }
 
-proc pdtk_canvas_force_getscroll {name} {
-	set ::update_tick([winfo parent $name]) 0
-	pdtk_canvas_getscroll $name
-}
+#proc pdtk_canvas_force_getscroll {name} {
+#	set ::update_tick([winfo parent $name]) 0
+#	after idle [concat pdtk_canvas_getscroll $name]
+#}
 
 proc pdtk_canvas_getscroll {name} {
+	catch { after cancel $::doscroll($name) }
+	set ::doscroll($name) [after idle [concat pdtk_canvas_do_getscroll $name]]
+}
+
+proc pdtk_canvas_do_getscroll {name} {
 	global pd_nt
     global pdtk_canvas_mouseup_name
     global pdtk_canvas_mouseup_xminval
@@ -4113,26 +4121,9 @@ proc pdtk_canvas_getscroll {name} {
     # kludge since this gets called sometimes after a canvas is destroyed
     if {![winfo exists $name]} {return}
 
-	if {$::update_tick([winfo parent $name]) == 1} {return}
-
-	#set ::update_tick([winfo parent $name]) 1
-
-	after 100 set ::update_tick([winfo parent $name]) 0
-
-	# waiting for refresh
-	#if {$::update_tick([winfo parent $name]) == 2} {return}
-
-	# init
-	#if {$::update_tick([winfo parent $name]) == 0} {
-	# 	set ::update_tick([winfo parent $name]) 1
-	#	pdtk_canvas_getscroll_ping $name		
-	#}
-
-	# update
-	#if {$::update_tick([winfo parent $name]) == 1} {
-	#	set ::update_tick([winfo parent $name]) 2
-	#	return
-	#}
+    # for use with tick mechanism
+	#if {$::update_tick([winfo parent $name]) == 1} {return}
+	#after 100 set ::update_tick([winfo parent $name]) 0
 
 	#puts stderr getscroll
 
@@ -4329,7 +4320,7 @@ proc pdtk_canvas_getscroll {name} {
 			set ::yscrollable($parentname) 0
 		}
 	}
-	set ::update_tick([winfo parent $name]) 1
+	#set ::update_tick([winfo parent $name]) 1
     pdtk_canvas_checkgeometry [canvastosym $name]
 	pdtk_canvas_draw_scrollbars $name
 	pdtk_canvas_update_sticky_tip $name

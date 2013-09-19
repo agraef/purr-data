@@ -2069,6 +2069,8 @@ t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     /* right-clicking on a canvas object pops up a menu. */
 static void canvas_rightclick(t_canvas *x, int xpos, int ypos, t_gobj *y_sel)
 {
+	//fprintf(stderr,"e_onmotion=%d\n",x->gl_editor->e_onmotion);
+	if (x->gl_editor->e_onmotion != MA_NONE) return;
     int canprop, canopen, isobject;
 	t_gobj *y = NULL;
 	int x1, y1, x2, y2;
@@ -2805,8 +2807,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         	sys_vgui(".x%lx.c raise all_cords\n", x);
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 		}
-        x->gl_editor->e_grab = 0;
-        x->gl_editor->e_onmotion = MA_NONE;
+		if (x->gl_editor->e_onmotion != MA_SCROLL) {
+	        x->gl_editor->e_grab = 0;
+	        x->gl_editor->e_onmotion = MA_NONE;
+	    }
     }
     //post("click %d %d %d %d", xpos, ypos, which, mod);
     
@@ -4511,6 +4515,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
 { 
     //fprintf(stderr,"motion %d %d %d %d\n", (int)xpos, (int)ypos, (int)fmod, canvas_last_glist_mod);
+    //fprintf(stderr,"canvas_motion=%d\n",x->gl_editor->e_onmotion);
     int mod = fmod;
     if (!x->gl_editor)
     {
@@ -6297,7 +6302,7 @@ void glob_pastetext(void *dummy, t_symbol *s, int ac, t_atom *av)
 	canvas_key(canvas_editing, s, ac-1, av+1);
 	if ((int)atom_getfloat(av) == 1) {
 		//fprintf(stderr,"force getscroll\n");
-		sys_vgui("pdtk_canvas_force_getscroll .x%lx.c\n", canvas_editing);
+		sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", canvas_editing);
 	}
 }
 
