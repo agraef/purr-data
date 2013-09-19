@@ -18,7 +18,7 @@
 
 /* Keep patch level release numbers odd and set even only on release. */
 #define TKPATH_VERSION    "0.3"
-#define TKPATH_PATCHLEVEL "0.3.2"
+#define TKPATH_PATCHLEVEL "0.3.3"
 #define TKPATH_REQUIRE    "8.5"
 
 int gAntiAlias = 1;

@@ -215,6 +215,8 @@ CreateAny(Tcl_Interp *interp, Tk_PathCanvas canvas, struct Tk_PathItem *itemPtr,
     itemExPtr->canvas = canvas;
     itemExPtr->styleObj = NULL;
     itemExPtr->styleInst = NULL;
+    itemPtr->bbox = NewEmptyPathRect();
+    itemPtr->totalBbox = NewEmptyPathRect();
     ellPtr->type = type;
 
     if (ellPtr->type == kOvalTypeCircle) {
@@ -290,7 +292,6 @@ ComputeEllipseBbox(Tk_PathCanvas canvas, EllipseItem *ellPtr)
     Tk_PathItem *itemPtr = &itemExPtr->header;
     Tk_PathStyle style;
     Tk_PathState state = itemExPtr->header.state;
-    PathRect totalBbox, bbox;
 
     if(state == TK_PATHSTATE_NULL) {
 	state = TkPathCanvasState(canvas);
@@ -301,9 +302,9 @@ ComputeEllipseBbox(Tk_PathCanvas canvas, EllipseItem *ellPtr)
         return;
     }
     style = TkPathCanvasInheritStyle(itemPtr, kPathMergeStyleNotFill);
-    bbox = GetBareBbox(ellPtr);
-    totalBbox = GetGenericPathTotalBboxFromBare(NULL, &style, &bbox);
-    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &totalBbox);
+    itemPtr->bbox = GetBareBbox(ellPtr);
+    itemPtr->totalBbox = GetGenericPathTotalBboxFromBare(NULL, &style, &itemPtr->bbox);
+    SetGenericPathHeaderBbox(&itemExPtr->header, style.matrixPtr, &itemPtr->totalBbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -399,7 +400,7 @@ DisplayEllipse(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, Display *display, Dra
 {
     EllipseItem *ellPtr = (EllipseItem *) itemPtr;
     TMatrix m = GetCanvasTMatrix(canvas);
-    PathRect bbox;
+    //PathRect bbox;
     PathAtom *atomPtr;
     EllipseAtom ellAtom;
     Tk_PathStyle style;    
@@ -419,9 +420,9 @@ DisplayEllipse(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, Display *display, Dra
     ellAtom.rx = ellPtr->rx;
     ellAtom.ry = ellPtr->ry;
     
-    bbox = GetBareBbox(ellPtr);
+    itemPtr->bbox = GetBareBbox(ellPtr);
     style = TkPathCanvasInheritStyle(itemPtr, 0);
-    TkPathDrawPath(Tk_PathCanvasTkwin(canvas), drawable, atomPtr, &style, &m, &bbox);
+    TkPathDrawPath(Tk_PathCanvasTkwin(canvas), drawable, atomPtr, &style, &m, &itemPtr->bbox);
     TkPathCanvasFreeInheritedStyle(&style);
 }
 
@@ -630,6 +631,9 @@ TranslateEllipse(Tk_PathCanvas canvas, Tk_PathItem *itemPtr, double deltaX, doub
 
     ellPtr->center[0] += deltaX;
     ellPtr->center[1] += deltaY;
+    //TranslatePathAtoms(ellPtr->atomPtr, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->bbox, deltaX, deltaY);
+    TranslatePathRect(&itemPtr->totalBbox, deltaX, deltaY);
     TranslateItemHeader(itemPtr, deltaX, deltaY);
 }
 
