@@ -1,6 +1,6 @@
 #N canvas 656 170 512 456 10;
 #X obj 129 189 ggee/image @pd_extra/K12/objects/audio_off.png 1;
-#X obj -53 26 inlet~;
+#X obj -54 26 inlet~;
 #N canvas 316 207 286 259 dsp 0;
 #X obj 178 43 route dsp;
 #X msg 11 184 \; pd dsp \$1;
@@ -19,16 +19,16 @@
 #X connect 7 0 2 0;
 #X restore 174 324 pd dsp logic;
 #X obj -54 131 *~;
-#X obj -53 97 z~ 64;
+#X obj -54 97 z~ 64;
 #X obj -7 97 limiter~;
 #X msg 5 74 compress 98 88 0.5;
 #X obj 183 414 loadbang;
 #X obj -54 389 svf~ 200;
-#X obj -31 346 sig~ 200;
-#X obj -10 367 sig~ 0.01;
+#X obj -32 346 sig~ 200;
+#X obj -9 367 sig~ 0.01;
 #X obj -54 458 dac~;
-#X obj -11 416 *~ 0.5;
-#X obj -54 416 *~ 0.5;
+#X obj -11 426 *~ 0.5;
+#X obj -54 426 *~ 0.5;
 #X obj 31 120 preset_node k12;
 #X obj 133 192 vsl 34 44 0 100 0 0 pd-l2ork-k12_main_out null empty
 0 -9 0 10 -262144 -1 -1 0 1;
@@ -48,7 +48,7 @@
 #X connect 5 0 7 0;
 #X connect 6 0 3 0;
 #X connect 7 0 6 0;
-#X restore -52 50 pd level;
+#X restore -54 50 pd level;
 #X obj 5 50 loadbang;
 #X obj 174 356 select 0 1;
 #X msg 202 392 open @pd_extra/K12/objects/audio_on.png;
@@ -57,15 +57,15 @@
 10 -262144 -1 -1 0 1;
 #X text 86 209 mode;
 #X text 86 200 stereo;
-#X obj -53 322 *~;
-#X obj 50 367 *~;
-#X obj 65 346 line~;
+#X obj -54 322 *~;
+#X obj 51 367 *~;
+#X obj 66 346 line~;
 #X obj -39 155 loadbang;
 #X obj 50 97 preset_node k12;
 #X obj -38 301 line~;
 #X msg -38 177 1;
 #X msg -9 177 0;
-#X msg 65 324 \$1 10;
+#X msg 66 324 \$1 10;
 #X msg -31 277 \$1 10;
 #X obj -31 255 expr 1-$f1;
 #X obj 227 74 sig~ 1;
