@@ -17,8 +17,8 @@
 2 5 36 %preset% 0 56 %preset% 1 56 %preset% 2 56 %preset% 3 56 %node%
 2 5 41 %preset% 0 44 %preset% 1 44 %preset% 2 44 %preset% 3 44 %node%
 2 5 46 %node% 2 5 51 %node% 2 5 56 %node% 2 5 61 %node% 2 5 66 %node%
-2 5 71 %node% 2 5 76 %preset% 0 36 %preset% 1 36 %preset% 2 36 %preset%
-3 36 %node% 2 5 81 %node% 2 6 11 %preset% 0 480 %preset% 1 480 %preset%
+2 5 71 %node% 2 5 76 %preset% 0 0 %preset% 1 0 %preset% 2 0 %preset%
+3 0 %node% 2 5 81 %node% 2 6 11 %preset% 0 480 %preset% 1 480 %preset%
 2 480 %preset% 3 480 %node% 2 7 19 %preset% 0 16 %preset% 1 16 %preset%
 2 16 %preset% 3 16 %node% 2 8 5 %preset% 0 1 %preset% 1 1 %preset%
 2 1 %preset% 3 1 %node% 2 8 11 %preset% 0 0 %preset% 1 0 %preset% 2
@@ -78,7 +78,7 @@
 0 127 %preset% 1 127 %preset% 2 127 %preset% 3 127 %node% 2 21 41 %preset%
 0 127 %preset% 1 127 %preset% 2 127 %preset% 3 127 %node% 2 21 46 %preset%
 0 127 %preset% 1 127 %preset% 2 127 %preset% 3 127 %node% 2 21 51 %preset%
-0 24 %preset% 1 24 %preset% 2 24 %preset% 3 24 %node% 2 21 56 %preset%
+0 0 %preset% 1 0 %preset% 2 0 %preset% 3 0 %node% 2 21 56 %preset%
 0 127 %preset% 1 127 %preset% 2 127 %preset% 3 127 %node% 2 21 61 %preset%
 0 0 %preset% 1 0 %preset% 2 0 %preset% 3 0 %node% 2 21 66 %preset%
 0 127 %preset% 1 127 %preset% 2 127 %preset% 3 127 %node% 2 21 71 %preset%
@@ -102,8 +102,8 @@
 8 %preset% 0 442.26 %preset% 1 442.26 %preset% 2 442.26 %preset% 3
 442.26 %node% 2 36 16 %preset% 0 653.425 %preset% 1 653.425 %preset%
 2 653.425 %preset% 3 653.425 %node% 2 40 10 %node% 2 38 4 %preset%
-0 46 %node% 2 41 4 %preset% 0 46 %node% 2 37 5 %preset% 0 67.02 %preset%
-1 67.02 %preset% 2 55.02 %preset% 3 60.02 %node% 2 38 7 %preset% 0
+0 46 %node% 2 41 4 %preset% 0 46 %node% 2 37 5 %preset% 0 53.02 %preset%
+1 65.02 %preset% 2 51.02 %preset% 3 67.02 %node% 2 38 7 %preset% 0
 12.04 %preset% 1 12.04 %preset% 2 12.04 %preset% 3 12.04 %node% 2 44
 4 %preset% 0 58.04 %node% 2 42 10 %preset% 0 0 %preset% 1 0 %preset%
 2 0 %preset% 3 0 %node% 2 43 14 %preset% 0 68.4419 %preset% 1 68.4419
@@ -119,10 +119,10 @@
 2 56.8182 %preset% 3 56.8182 %node% 2 54 16 %preset% 0 5 %preset% 1
 5 %preset% 2 5 %preset% 3 5 %node% 2 56 7 %preset% 0 0.5 %preset% 1
 0.5 %preset% 2 0.5 %preset% 3 0.5 %node% 2 58 7 %preset% 0 0 %preset%
-1 0 %preset% 2 1 %preset% 3 1 %node% 2 59 10 %preset% 0 468.75 %preset%
-1 781.25 %preset% 2 2734.38 %preset% 3 1718.75 %node% 2 61 7 %preset%
+1 0 %preset% 2 1 %preset% 3 1 %node% 2 59 10 %preset% 0 4375 %preset%
+1 2656.25 %preset% 2 4218.75 %preset% 3 781.25 %node% 2 61 7 %preset%
 0 0 %preset% 1 1 %preset% 2 1 %preset% 3 1 %node% 2 62 5 %preset% 0
-46 %preset% 1 24 %preset% 2 24 %preset% 3 48 %node% 2 63 15 %preset%
+36 %preset% 1 36 %preset% 2 36 %preset% 3 24 %node% 2 63 15 %preset%
 0 290 %preset% 1 290 %preset% 2 290 %preset% 3 290 %node% 2 63 16 %preset%
 0 56.8182 %preset% 1 56.8182 %preset% 2 56.8182 %preset% 3 56.8182
 %node% 2 69 2 %node% 2 69 14 %node% 2 64 3 %preset% 0 1 %preset% 1
@@ -136,15 +136,15 @@
 2 456.164 %preset% 3 456.164 %node% 2 69 7 %preset% 0 0.01 %preset%
 1 0.01 %preset% 2 0.01 %preset% 3 0.01 %node% 2 71 7 %preset% 0 -0.02
 %preset% 1 -0.02 %preset% 2 -0.02 %preset% 3 -0.02 %node% 2 73 5 %preset%
-0 46.01 %preset% 1 24.01 %preset% 2 24.01 %preset% 3 48.01 %node% 2
-74 5 %preset% 0 45.98 %preset% 1 23.98 %preset% 2 23.98 %preset% 3
-47.98 %node% 2 76 7 %preset% 0 0.25 %preset% 1 0.2 %preset% 2 0.2 %preset%
+0 36.01 %preset% 1 36.01 %preset% 2 36.01 %preset% 3 24.01 %node% 2
+74 5 %preset% 0 35.98 %preset% 1 35.98 %preset% 2 35.98 %preset% 3
+23.98 %node% 2 76 7 %preset% 0 0.2 %preset% 1 0.2 %preset% 2 0.2 %preset%
 3 0.2 %node% 2 77 7 %preset% 0 0 %preset% 1 0 %preset% 2 0 %preset%
 3 0 %node% 2 79 7 %preset% 0 -12 %preset% 1 -12 %preset% 2 -12 %preset%
-3 -12 %node% 2 81 4 %preset% 0 34 %preset% 1 12 %preset% 2 12 %preset%
-3 36 %node% 2 83 7 %preset% 0 10 %preset% 1 10 %preset% 2 10 %preset%
-3 10 %node% 2 87 5 %preset% 0 41.07 %preset% 1 41.07 %preset% 2 48.07
-%preset% 3 53.07 %node% 2 93 3 %preset% 0 1 %preset% 1 1 %preset% 2
+3 -12 %node% 2 81 4 %preset% 0 24 %preset% 1 24 %preset% 2 24 %preset%
+3 12 %node% 2 83 7 %preset% 0 10 %preset% 1 10 %preset% 2 10 %preset%
+3 10 %node% 2 87 5 %preset% 0 46.07 %preset% 1 58.07 %preset% 2 44.07
+%preset% 3 60.07 %node% 2 93 3 %preset% 0 1 %preset% 1 1 %preset% 2
 1 %preset% 3 1 %node% 2 93 19 %preset% 0 64 %preset% 1 64 %preset%
 2 64 %preset% 3 64 %node% 2 94 7 %preset% 0 128 %preset% 1 128 %preset%
 2 128 %preset% 3 128 %node% 2 92 3 %preset% 0 1 %preset% 1 1 %preset%
@@ -154,8 +154,8 @@
 1 30 %preset% 0 30 %node% 2 1 4 %preset% 3 1 %preset% 2 1 %preset%
 1 1 %preset% 0 1 %node% 2 6 0 %preset% 3 480 %preset% 2 480 %preset%
 1 480 %preset% 0 480 %node% 2 6 4 %preset% 3 1 %preset% 2 1 %preset%
-1 1 %preset% 0 1 %node% 2 9 0 %preset% 3 240 %preset% 2 240 %preset%
-1 240 %preset% 0 240 %node% 2 9 4 %preset% 3 1 %preset% 2 1 %preset%
+1 1 %preset% 0 1 %node% 2 9 0 %preset% 3 480 %preset% 2 480 %preset%
+1 480 %preset% 0 480 %node% 2 9 4 %preset% 3 1 %preset% 2 1 %preset%
 1 1 %preset% 0 1;
 #X obj 29 169 K12/logic_metronome 0;
 #X obj 29 32 K12/preset 0;
@@ -203,7 +203,7 @@
 #X obj 781 1765 K12/fx_multitap 0;
 #X obj 710 1236 K12/signal_multiply 0;
 #X obj 721 1150 K12/math_number 0;
-#X obj 893 1236 K12/signal_multiply 0;
+#X obj 894 1236 K12/signal_multiply 0;
 #X obj 904 1150 K12/math_number 0;
 #X obj 709 461 K12/math_multiply 0;
 #X obj 313 336 K12/math_number 0;
