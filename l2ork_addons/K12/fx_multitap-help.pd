@@ -1,23 +1,23 @@
-#N canvas 226 48 502 517 10;
+#N canvas 373 110 502 517 10;
 #X obj 245 44 preset_hub k12 %hidden% %node% 2 2 33 %node% 2 2 34 %node%
 2 3 14 %node% 2 3 28 %node% 2 9 8 %node% 2 9 16;
 #X obj 20 429 cnv 15 472 98 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 23 214 K12/wii_hit;
 #X obj 23 547 output;
-#N canvas 574 86 450 514 META 0;
-#X text 13 69 OUTLET_0 Connect this to the sound object or another
-yellow effect;
+#N canvas 501 346 450 170 META 0;
 #X text 13 43 INLET_0 Connect the signal to which you want the delay
 to be added;
 #X text 14 11 DESCRIPTION This effect object adds a delay or echo effect
 to a sound. The speed is adjustable using the slider.;
+#X text 13 69 OUTLET_0 Connect this to the output object \, signal
+processing objects (blue) or another yellow effect object;
 #X restore 457 663 pd META;
 #X obj 8 66 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
 #X obj 8 38 cnv 15 501 28 empty empty FX/Multitap 5 14 0 20 -139274
 -262144 0;
-#X obj 479 69 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 479 69 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 23 94 K12/wii_connect;
 #X obj 24 433 K12/fx_multitap;
 #X obj 23 323 K12/instr_short1;
