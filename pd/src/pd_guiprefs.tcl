@@ -220,7 +220,7 @@ proc ::pd_guiprefs::write_config_x11 {data {adomain} {akey}} {
 proc ::pd_guiprefs::prepare_configdir {} {
     if {[file isdirectory $::recentfiles_domain] != 1} {
         file mkdir $::recentfiles_domain
-        ::pdwindow::debug "$::recentfiles_domain was created.\n"
+        #::pdwindow::debug "Created $::recentfiles_domain preferences folder.\n"
     }
 }
 

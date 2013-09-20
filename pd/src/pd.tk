@@ -885,7 +885,8 @@ proc pdtk_update_root_edit_menu {value} {
 proc pdtk_post {stuff} {
 	.printout.frame.text configure -state normal
     .printout.frame.text insert end $stuff
-    .printout.frame.text yview end-2char
+    after cancel .printout.frame.text yview end-2char
+    after idle .printout.frame.text yview end-2char
 	.printout.frame.text configure -state disabled
 }
 
