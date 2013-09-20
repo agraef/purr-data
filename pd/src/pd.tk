@@ -2458,11 +2458,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	wm resizable $name $::resize($name) $::resize($name)
 	wm attributes $name -topmost $::topmost($name)
 
-	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		if {$::menu($name) == 1} {
+	#if {[info tclversion] >= 8.5 && $pd_nt == 0} {
+		#if {$::menu($name) == 1} {
 			#ttk::separator $name.eyecandy
-		}
-	}
+		#}
+	#}
 
 	if { $k12_mode == 1 } {
 		# K-12 menu
@@ -2775,11 +2775,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	#pdtk_standardkeybindings $name.c
 
-	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		if {$::menu($name) == 1} {
+	#if {[info tclversion] >= 8.5 && $pd_nt == 0} {
+		#if {$::menu($name) == 1} {
 			#pack $name.eyecandy $name.c -fill x -expand 0
-		}
-	}
+		#}
+	#}
 
     #match_linux_wm [list scrollbar $name.scrollvert -command "$name.c yview"]
     #match_linux_wm [list scrollbar $name.scrollhort -command "$name.c xview" \
