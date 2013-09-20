@@ -437,6 +437,8 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.data_on -file $extra_dir/K12/icons/data_on.png
 	image create photo i.sound_on -file $extra_dir/K12/icons/sound_on.png
 
+	.mbar.file insert 2 command -label {K12 Demos} -command {menu_k12_open_demos}
+
 	#pack forget .controls.switches.audiobutton
 	#pack forget .controls.inout
 	#.mbar.audio delete 0 2
