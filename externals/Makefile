@@ -146,7 +146,7 @@ else
     endif
   else
     # GNU/Linux, BSD, IRIX, etc.
-    LIB_TARGETS += hid pdp gem2pdp iem16
+    LIB_TARGETS += gem hid pdp gem2pdp iem16
   endif
 endif
 
@@ -582,6 +582,58 @@ freeverb_install:
 freeverb_clean:
 	make -C $(externals_src)/freeverb~ clean
 
+
+#------------------------------------------------------------------------------
+# GEM
+GEM_NAME = Gem
+$(gem_src)/configure:
+	cd $(gem_src) && ./autogen.sh
+
+$(gem_src)/Gem.dll: $(gem_src)/configure
+	cd $(gem_src) && ./configure \
+		CXXFLAGS="-DHAVE_S_STUFF_H" \
+		--prefix=$(prefix) \
+		--libdir=$(objectsdir) \
+		--disable-rpath \
+		--enable-sse2 \
+		--without-quicktime \
+		--with-video=plugins \
+		--with-film=plugins \
+		--with-pd=$(pd_src) \
+		--with-extension=dll
+	$(MAKE) -C $(gem_src)
+
+$(gem_src)/Gem.pd_linux: $(gem_src)/configure
+	cd $(gem_src) && ./configure \
+		CXXFLAGS="-DHAVE_S_STUFF_H" \
+		--prefix=$(prefix) \
+		--with-video=plugins \
+		--with-film=plugins \
+		--with-pd=$(pd_src)
+	$(MAKE) -C $(gem_src)
+
+$(gem_src)/Gem.pd_darwin: $(gem_src)/configure
+	cd $(gem_src) && ./configure \
+		CXXFLAGS="-DHAVE_S_STUFF_H" \
+		PKG_FTGL_CFLAGS="-I/sw/include -I/sw/include/freetype2 -I/sw/include/FTGL" \
+		--prefix=$(prefix) \
+		--libdir=$(objectsdir) \
+		--without-ALL \
+		--with-ftgl --with-ftgl-libs=/sw/lib \
+		--with-artoolkit-includes=/sw/include --with-artoolkit-libs=/sw/lib \
+		--with-video=plugins \
+		--with-film=plugins \
+		--with-pd=$(pd_src)
+	$(MAKE) -C $(gem_src)
+
+gem: $(gem_src)/Gem.$(EXTENSION)
+
+gem_install: gem
+	$(MAKE) -C $(gem_src) DESTDIR=$(DESTDIR) prefix=$(prefix) \
+		libdir=$(objectsdir) pkglibdir=$(objectsdir)/Gem install
+
+gem_clean:
+	-$(MAKE) -C $(gem_src) clean
 
 
 #------------------------------------------------------------------------------#
