@@ -2889,7 +2889,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
             if (!sys_k12_mode && ob && !x->gl_editor->e_textedfor &&
                 (ob->te_pd->c_wb == &text_widgetbehavior ||
                     ob->ob_pd == canvas_class) &&
-                        xpos >= x2-4 && ypos < y2-4)
+                        xpos >= x2-4 && ypos < y2-4 && ypos > y1+4)
             {
                 if (doit)
                 {
@@ -2987,6 +2987,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     // end jsarlo
                 }
                 else {
+                	canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
 					canvas_check_nlet_highlights(x);
 					if (doit)
 	                    goto nooutletafterall;
@@ -2995,6 +2996,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 /* look for an inlet (these are colored differently since they are not connectable) */
             else if (ob && (ninlet = obj_ninlets(ob)) && ypos <= y1+4)
             {
+            	canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
                 int width = x2 - x1;
                 int nin1 = (ninlet > 1 ? ninlet - 1 : 1);
                 int closest = ((xpos-x1) * (nin1) + width/2)/width;
@@ -3035,8 +3037,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 						}
 					}
 				} else {
-					if (x->gl_editor->e_onmotion != MA_CONNECT)
+					if (x->gl_editor->e_onmotion != MA_CONNECT) {
 						canvas_check_nlet_highlights(x);
+					}
 					if (doit)
 	                    goto nooutletafterall;
 				}
