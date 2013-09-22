@@ -1,4 +1,4 @@
-#N canvas 375 35 502 495 10;
+#N canvas 375 35 509 496 10;
 #X obj 233 -22 preset_hub k12 %hidden% %node% 2 4 14 %node% 2 4 28
 %node% 2 11 10;
 #X obj 11 358 cnv 1 479 99 empty empty empty 20 12 0 14 -228856 -66577
@@ -9,7 +9,7 @@
 -262144 0;
 #X obj 16 480 K12/output;
 #X obj 16 135 K12/wii_speed;
-#N canvas 8 50 450 514 META 0;
+#N canvas 469 325 392 172 META 0;
 #X text 7 7 DESCRIPTION This makes the sound more muffled when the
 slider is all the way to the left or unchanged when the slider is all
 the way to the right;
@@ -19,13 +19,13 @@ the way to the right;
 or sound generator);
 #X text 8 86 INLET_1 Connect a data control object here (like wii speed
 \, arduino analog or digital input channels);
-#X restore 450 547 pd META;
+#X restore 447 553 pd META;
 #X text 121 364 The filter is used to change the sound of the instrument
 by changing the highest frequency heard. This has a sort of "muffling"
 effect on the sound. To use the frequency change \, either move the
 line on the slider yourself \, or you can control the frequency response
 by inputing a a value between -1 and 1 on the right side input.;
-#X obj 471 1 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 471 1 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 16 24 K12/wii_connect;
 #X obj 16 248 K12/instr_sustained2;
 #X obj 16 363 K12/fx_filter;
