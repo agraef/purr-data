@@ -8931,8 +8931,8 @@ proc pdtk_gettip { w item xletno name helpname dir } {
 		}
     }
     # make Pd's comma atoms look pretty
-    regsub -all { \\,} $msg {,} msg
-    regsub -all {\n} $msg " " msg
+    regsub -all {\\,} $msg {,} msg
+    regsub -all {\n} $msg "" msg
     #regsub -all {\n\\,} $msg ",\n" msg
     pdtk_tip $w 0 1 $msg
 }
