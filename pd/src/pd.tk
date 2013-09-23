@@ -4618,6 +4618,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 
 proc pdtk_canvas_scroll {canvas xy distance} {
 	if {$xy eq "x" && $::xscrollable([winfo parent $canvas]) == 1 || $xy eq "y" && $::yscrollable([winfo parent $canvas]) == 1 } {
+		pdtk_canvas_leaveitem $canvas
     	$canvas [list $xy]view scroll $distance units
 		pdtk_canvas_draw_scrollbars $canvas
 	}
@@ -8689,6 +8690,14 @@ proc pdtk_canvas_leaveitem {w} {
 	set duplicate_tags -1;
 }
 
+proc pdtk_tip_delete {w} {
+	variable tooltip_visible
+	destroy $w.tiplabel
+	$w delete tiparrow
+	$w delete $w.tipwindow
+	set tooltip_visible 0
+}
+
 proc pdtk_tip {w fromc show args} {
 	#puts stderr "$w $fromc $show $args"
 	variable select_color
@@ -8710,12 +8719,9 @@ proc pdtk_tip {w fromc show args} {
 	set typeface [get_font_for_size $::font([string trimright $w .c])]
 	set exists [winfo exists $w.tiplabel]
     if {$show == 0} {
-        catch {
-			destroy $w.tiplabel
-			$w delete tiparrow
-        	$w delete $w.tipwindow
+    	if {$tooltip_visible == 1} {
+        	after idle [concat pdtk_tip_delete $w]
 		}
-		set tooltip_visible 0
     } else {
 		set tooltip_visible 1
 		if { $nlet_color == 0 } { set nlet_color $select_color }
@@ -8932,7 +8938,9 @@ proc pdtk_gettip { w item xletno name helpname dir } {
     }
     # make Pd's comma atoms look pretty
     regsub -all {\\,} $msg {,} msg
-    regsub -all {\n} $msg "" msg
+    regsub -all { ,} $msg {,} msg
+    regsub -all {\n} $msg { } msg
+    regsub -all {  } $msg { } msg
     #regsub -all {\n\\,} $msg ",\n" msg
     pdtk_tip $w 0 1 $msg
 }
