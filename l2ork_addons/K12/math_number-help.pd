@@ -7,10 +7,8 @@
 0;
 #X obj 123 -35 cnv 15 501 28 empty empty Math/Number 5 14 0 20 -139274
 -262144 0;
-#X obj 594 -4 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 594 -4 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #N canvas 71 83 450 514 META 0;
-#X text 6 5 DESCRIPTION This shows you the numbers that are passing
-through this object.;
 #X text 7 40 INLET_0 Connect any non-signal object here to monitor
 its value;
 #X text 6 99 OUTLET_0 Connect this to any math or instrument objects
@@ -18,6 +16,8 @@ its value;
 #X text 6 115 OUTLET_1 Connect this to any signal object;
 #X text 5 69 INLET_1 Connect any non-signal object here to push value
 set inside the object whenever a non-zero value is sent;
+#X text 6 5 DESCRIPTION This shows you the numbers that are passing
+through this object;
 #X restore 566 439 pd META;
 #X obj 138 135 K12/sarcduino_analog;
 #X obj 138 244 K12/math_number;
