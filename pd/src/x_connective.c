@@ -640,7 +640,7 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             {
                 if (e->e_w.w_symbol == &s_float)
                 {
-                    outlet_bang(e->e_outlet);
+                    outlet_float(e->e_outlet, argv[0].a_w.w_float);
                     return;
                 }
             }
@@ -651,7 +651,7 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             {
                 if (e->e_w.w_symbol == &s_symbol)
                 {
-                    outlet_bang(e->e_outlet);
+                    outlet_symbol(e->e_outlet, argv[0].a_w.w_symbol);
                     return;
                 }
             }
