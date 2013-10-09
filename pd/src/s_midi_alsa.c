@@ -5,14 +5,10 @@
 
 /* MIDI I/O for Linux using ALSA */
 
-#include "config.h"
-
 #include <stdio.h>
-
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -21,6 +17,11 @@
 #include <alsa/asoundlib.h>
 #include "m_pd.h"
 #include "s_stuff.h"
+
+//the maximum length of input messages
+#ifndef ALSA_MAX_EVENT_SIZE
+#define ALSA_MAX_EVENT_SIZE 512
+#endif
 
 static int alsa_nmidiin;
 static int alsa_midiinfd[MAXMIDIINDEV];
@@ -32,16 +33,6 @@ static snd_seq_t *midi_handle;
 static snd_midi_event_t *midiev;
 
 
-
-static unsigned short CombineBytes(unsigned char First, unsigned char Second)
-{
-    unsigned short _14bit;
-    _14bit = (unsigned short)Second;
-    _14bit <<= 7;
-    _14bit |= (unsigned short)First;
-    return(_14bit);
-}
-
 void sys_alsa_do_open_midi(int nmidiin, int *midiinvec,
     int nmidiout, int *midioutvec)
 {
@@ -51,11 +42,7 @@ void sys_alsa_do_open_midi(int nmidiin, int *midiinvec,
     int client;
     int i;
     snd_seq_client_info_t *alsainfo;
-    /* do we want to connect pd automatically with other devices ?; see below! */
-    /* LATER: think about a flag to enable/disable automatic connection
-     *        (sometimes it could be a pain)
-     */
-    int autoconnect = 1;
+
     alsa_nmidiin = 0;
     alsa_nmidiout = 0;
 
@@ -115,68 +102,10 @@ void sys_alsa_do_open_midi(int nmidiin, int *midiinvec,
     snd_seq_client_info_free(alsainfo);
     post("Opened Alsa Client %d in:%d out:%d",client,nmidiin,nmidiout);
     sys_setalarm(0);
-    snd_midi_event_new(20,&midiev);
+    snd_midi_event_new(ALSA_MAX_EVENT_SIZE,&midiev);
     alsa_nmidiout = nmidiout;
     alsa_nmidiin = nmidiin;
 
-    /* JMZ: connect all available devices to pd */
-    if (autoconnect)
-      {
-
-        snd_seq_client_info_t *cinfo;
-        snd_seq_port_info_t *pinfo;
-
-        snd_seq_port_subscribe_t *subs;
-        snd_seq_addr_t other, topd, frompd;
-        /* since i don't know how to connect multiple ports
-         * (connect everything to each port, modulo,...),
-         * i only fully connect where we have only one single port
-         */
-        if(alsa_nmidiin)
-          {
-            topd.client  =client;
-            topd.port    =alsa_midiinfd[0];
-          }
-        if(alsa_nmidiout)
-          {
-            frompd.client  =client;
-            frompd.port    =alsa_midioutfd[0];
-          }
-
-        snd_seq_port_subscribe_alloca(&subs);
-        
-        snd_seq_client_info_alloca(&cinfo);
-        snd_seq_port_info_alloca(&pinfo);
-        snd_seq_client_info_set_client(cinfo, -1);
-        while (snd_seq_query_next_client(midi_handle, cinfo) >= 0)
-          {
-            /* reset query info */
-            int client_id=snd_seq_client_info_get_client(cinfo);
-            
-            if((SND_SEQ_CLIENT_SYSTEM != client_id)&&(client != client_id))
-              { /* skipping port 0 and ourself */
-                snd_seq_port_info_set_client(pinfo, client_id);
-                snd_seq_port_info_set_port(pinfo, -1);
-                while (snd_seq_query_next_port(midi_handle, pinfo) >= 0) 
-                  {
-                    other.client=client_id;
-                    other.port  =snd_seq_port_info_get_port(pinfo);
-                    if(1==alsa_nmidiin) /* only autoconnect 1st port */
-                      {
-                        snd_seq_port_subscribe_set_sender(subs, &other);
-                        snd_seq_port_subscribe_set_dest(subs, &topd);
-                        snd_seq_subscribe_port(midi_handle, subs);
-                      }
-                    if(1==alsa_nmidiout) /* only autoconnect 1st port */
-                      {
-                        snd_seq_port_subscribe_set_sender(subs, &frompd);
-                        snd_seq_port_subscribe_set_dest(subs, &other);
-                        snd_seq_subscribe_port(midi_handle, subs);
-                      }
-                  }
-              }
-          }
-      }
     return;
  error:
     sys_setalarm(1000000);
@@ -197,7 +126,7 @@ void sys_alsa_putmidimess(int portno, int a, int b, int c)
         if (a >= 224)   // pitchbend
         {
             channel = a-224;
-            snd_seq_ev_set_pitchbend(&ev,channel,CombineBytes(b,c));
+            snd_seq_ev_set_pitchbend(&ev, channel, (((c<<7)|b)-8192)); /* b and c are already correct but alsa needs to recalculate them */
         }
         else if (a >= 208)      // touch
         {
@@ -256,7 +185,7 @@ void sys_alsa_putmidibyte(int portno, int byte)
     /* this version uses the asynchronous "read()" ... */
 void sys_alsa_poll_midi(void)
 {
-   unsigned char buf[20];
+   unsigned char buf[ALSA_MAX_EVENT_SIZE];
    int count, alsa_source;
    int i;
    snd_seq_event_t *midievent = NULL;
@@ -271,7 +200,7 @@ void sys_alsa_poll_midi(void)
         count = snd_seq_event_input(midi_handle,&midievent);
    if (midievent != NULL)
    {
-       count = snd_midi_event_decode(midiev,buf,20,midievent);
+       count = snd_midi_event_decode(midiev,buf,sizeof(buf),midievent);
        alsa_source = midievent->dest.port;
        for(i=0;i<count;i++)
            sys_midibytein(alsa_source, (buf[i] & 0xff));
