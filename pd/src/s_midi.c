@@ -509,9 +509,13 @@ void sys_get_midi_apis(char *buf)
 {
     int n = 0;
     strcpy(buf, "{ ");
-    sprintf(buf + strlen(buf), "{HARDWARE-MIDI %d} ", API_DEFAULT); n++;
+#ifndef USEAPI_ALSA
+    sprintf(buf + strlen(buf), "{OSS %d} ", API_DEFAULT); n++;
+#else
+    n++;
+#endif
 #ifdef USEAPI_ALSA
-    sprintf(buf + strlen(buf), "{ALSA-MIDI %d} ", API_ALSA); n++;
+    sprintf(buf + strlen(buf), "{ALSA %d} ", API_ALSA); n++;
 #endif
     strcat(buf, "}");
         /* then again, if only one API (or none) we don't offer any choice. */
