@@ -682,6 +682,7 @@ ggee:
 ggee_install:
 	make -C $(externals_src)/ggee DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
 	cp $(externals_src)/ggee/gui/logo100.gif $(DESTDIR)/$(objectsdir)/ggee
+	cp $(externals_src)/ggee/gui/empty_image.png $(DESTDIR)/$(objectsdir)/ggee
 
 ggee_clean:
 	make -C $(externals_src)/ggee clean

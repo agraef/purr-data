@@ -1,6 +1,5 @@
 #N canvas 0 26 462 618 10;
-#X obj 74 489 ggee/image @pd_extra/ggee/logo100.gif
-;
+#X obj 74 489 ggee/image @pd_extra/ggee/logo100.gif 0;
 #X text 26 12 Incorporate images. This is instantiated with;
 #X text 26 25 [image logo100.gif];
 #X msg 40 395 open \$1;
@@ -18,19 +17,19 @@ Wilkes for Pd version 0.42.;
 image;
 #X text 12 65 INLET_0 open gopspill;
 #X restore 405 590 pd META;
-#X obj 162 490 ggee/image @pd_extra/ggee/logo100.gif;
+#X obj 162 490 ggee/image @pd_extra/ggee/logo100.gif 1;
 #X obj 155 348 loadbang;
 #X msg 155 371 1;
 #X msg 155 395 gopspill \$1;
-#X floatatom 184 371 5 0 0 0 - - -;
-#X obj 252 448 ggee/image ;
+#X floatatom 184 371 5 0 0 0 - - -, f 5;
+#X obj 257 448 ggee/image @pd_extra/ggee/empty_image.png 0;
 #X msg 245 395 open \$1;
 #X obj 245 351 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1
 -1;
 #X obj 245 372 openpanel;
 #X text 26 48 [image] works with .gif \, .ppm \, .pgm and .png image
 formats only.;
-#X text 263 425 this is how an empty imagelooks like when createdwithout
+#X text 274 425 this is how an empty imagelooks like when createdwithout
 any parameters;
 #X text 27 83 Pd-L2Ork version of [image] also has a special feature
 that allows its reported rectangle to be smaller \, so it can be used
