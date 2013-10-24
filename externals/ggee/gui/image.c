@@ -179,9 +179,9 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 {
 	//fprintf(stderr,"image_select %d\n", state);
 	t_image *x = (t_image *)z;
-	x->x_selected = state;
 	if (state) {
 		if (x->x_glist == glist_getcanvas(glist)) {
+			x->x_selected = state;
 			if (!x->x_gop_spill && (x->x_img_width + x->x_img_height) >= 2)
 				sys_vgui(".x%x.c create rectangle \
 					%d %d %d %d -tags %xSEL -outline $select_color\n",
