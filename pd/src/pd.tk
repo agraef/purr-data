@@ -1835,7 +1835,7 @@ proc menu_print {name} {
                       -filetypes { {{postscript} {.ps}} }]
 
     if {$filename != ""} {
-        $name.c postscript -file $filename 
+        $name.c postscript -file $filename
     }
 }
 
