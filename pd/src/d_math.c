@@ -696,7 +696,7 @@ static void exp_tilde_setup(void)
 }
 
 /* ----------------------------- log ----------------------------- */
-static t_class *log_tilde_class;
+static t_class *log_tilde_class, *scalarlog_tilde_class;
 
 typedef struct _log_tilde
 {
@@ -704,13 +704,36 @@ typedef struct _log_tilde
     t_float x_f;
 } t_log_tilde;
 
+typedef struct _scalarlog_tilde
+{
+    t_object x_obj;
+    t_float x_f;
+    t_float x_g;
+} t_scalarlog_tilde;
+
+#include<stdio.h>
+
 static void *log_tilde_new(t_symbol *s, int argc, t_atom *argv)
 {
-    t_log_tilde *x = (t_log_tilde *)pd_new(log_tilde_class);
-    inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
-    outlet_new(&x->x_obj, &s_signal);
-    x->x_f = 0;
-    return (x);
+    if (argc > 1) post("log~: extra arguments ignored");
+    if (argc)
+    {
+        t_scalarlog_tilde *x =
+            (t_scalarlog_tilde *)pd_new(scalarlog_tilde_class);
+        floatinlet_new(&x->x_obj, &x->x_g);
+        x->x_g = atom_getfloatarg(0, argc, argv);
+        outlet_new(&x->x_obj, &s_signal);
+        x->x_f = 0;
+        return (x);
+    }
+    else
+    {
+        t_log_tilde *x = (t_log_tilde *)pd_new(log_tilde_class);
+        inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_signal, &s_signal);
+        x->x_f = 0;
+        outlet_new(&x->x_obj, &s_signal);
+        return (x);
+    }
 }
 
 t_int *log_tilde_perform(t_int *w)
@@ -732,18 +755,49 @@ t_int *log_tilde_perform(t_int *w)
     return (w+5);
 }
 
+t_int *scalarlog_tilde_perform(t_int *w)
+{
+    t_sample *in = (t_sample *)(w[1]);
+    t_float g = *(t_float *)(w[2]);
+    t_sample *out = (t_sample *)(w[3]);
+    int n = (int)(w[4]);
+    while (n--)
+    {
+        t_float f = *in++;
+        if (f <= 0)
+            *out = -1000;   /* rather than blow up, output a number << 0 */
+        else if (g <= 0)
+            *out = log(f);
+        else *out = log(f)/log(g);
+        out++;
+    }
+    return(w+5);
+}
+
 static void log_tilde_dsp(t_log_tilde *x, t_signal **sp)
 {
     dsp_add(log_tilde_perform, 4,
         sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 }
 
+static void scalarlog_tilde_dsp(t_scalarlog_tilde *x, t_signal **sp)
+{
+    dsp_add(scalarlog_tilde_perform, 4,
+        sp[0]->s_vec, &x->x_g, sp[1]->s_vec, sp[0]->s_n);
+}
+
 static void log_tilde_setup(void)
 {
     log_tilde_class = class_new(gensym("log~"), (t_newmethod)log_tilde_new, 0,
-        sizeof(t_log_tilde), 0, A_DEFFLOAT, 0);
+        sizeof(t_log_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(log_tilde_class, t_log_tilde, x_f);
     class_addmethod(log_tilde_class, (t_method)log_tilde_dsp, gensym("dsp"), 0);
+
+    scalarlog_tilde_class = class_new(gensym("log~"), 0, 0,
+        sizeof(t_scalarlog_tilde), 0, 0);
+    CLASS_MAINSIGNALIN(scalarlog_tilde_class, t_scalarlog_tilde, x_f);
+    class_addmethod(scalarlog_tilde_class, (t_method)scalarlog_tilde_dsp,
+        gensym("dsp"), 0);
 }
 
 /* ----------------------------- abs ----------------------------- */

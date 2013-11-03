@@ -17,7 +17,7 @@ for Pd-l2ork version 2013.05.28;
 signal;
 #X text 14 65 INLET_0 signal;
 #X text 14 105 OUTLET_0 signal;
-#X restore 498 375 pd META;
+#X restore 499 377 pd META;
 #X obj -2 296 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
 13 -228856 -1 0;
 #X obj -2 333 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
@@ -44,15 +44,15 @@ signal;
 #X text 109 307 signal;
 #X text 179 307 - log of the signal with specified base;
 #X text 91 346 1) float;
-#X text 179 344 - set the base of the logarithm.;
+#X text 179 346 - set the base of the logarithm.;
 #X obj 480 -56 pddp/dsp;
-#X obj 7 373 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 3 375 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 54 56 sig~;
+#X obj 55 56 sig~;
 #X obj 126 112 loadbang;
 #X obj 126 136 metro 100;
 #X obj 113 162 snapshot~;
-#X floatatom 54 32 5 0 0 0 - - -, f 5;
+#X floatatom 55 32 5 0 0 0 - - -, f 5;
 #X obj 95 56 sig~;
 #X floatatom 95 32 5 0 0 0 - - -, f 5;
 #X floatatom 113 187 7 0 0 0 - - -, f 7;
@@ -126,6 +126,5 @@ input.;
 #X connect 24 0 25 0;
 #X connect 25 0 29 0;
 #X connect 26 0 22 0;
-#X connect 27 0 31 1;
 #X connect 28 0 27 0;
 #X connect 31 0 25 0;
