@@ -1,4 +1,4 @@
-#N canvas 656 170 512 456 10;
+#N canvas 656 170 604 456 10;
 #X obj 129 189 ggee/image @pd_extra/K12/objects/audio_off.png 1;
 #X obj -54 26 inlet~;
 #N canvas 316 207 286 259 dsp 0;
@@ -78,6 +78,11 @@
 #X obj 179 224 change;
 #X obj 179 202 r pd-l2ork-k12_main_out;
 #X msg 133 251 set \$1;
+#X obj 374 163 value glob_l2ork_stereo;
+#X obj 89 251 change;
+#X obj 374 100 t b f;
+#X obj 374 121 s glob_l2ork_stereo_changed;
+#X obj 374 141 r glob_l2ork_stereo_changed;
 #X connect 1 0 16 0;
 #X connect 2 0 18 0;
 #X connect 3 0 24 0;
@@ -105,6 +110,7 @@
 #X connect 21 0 28 0;
 #X connect 21 0 32 0;
 #X connect 21 0 34 0;
+#X connect 21 0 46 0;
 #X connect 24 0 8 0;
 #X connect 25 0 13 0;
 #X connect 25 0 12 0;
@@ -123,7 +129,13 @@
 #X connect 37 0 41 0;
 #X connect 38 0 39 0;
 #X connect 41 0 36 0;
+#X connect 41 0 45 0;
 #X connect 42 0 15 0;
 #X connect 43 0 42 0;
 #X connect 44 0 42 0;
+#X connect 45 0 21 0;
+#X connect 46 0 47 0;
+#X connect 47 0 48 0;
+#X connect 47 1 45 0;
+#X connect 49 0 45 0;
 #X coords 0 -1 1 1 89 89 2 84 157;
