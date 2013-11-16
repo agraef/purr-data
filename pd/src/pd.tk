@@ -7083,9 +7083,9 @@ proc pdtk_pastetext {} {
 			# we add first digit to ask for force getscroll as we limit the number of 
 			# getscrolls we can get per second so last one is likely to be eaten up
 			# in the process
-        	pd [concat pd pastetext 1 1 $keynum 0 0\;]
+        	pd [concat pd pastetext 1 1 $keynum 0 0 0\;]
 		} else {
-        	pd [concat pd pastetext 0 1 $keynum 0 0\;]
+        	pd [concat pd pastetext 0 1 $keynum 0 0 0\;]
 		}
     }
 }
