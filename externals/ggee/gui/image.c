@@ -309,7 +309,7 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
 	} else {
 		//sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
 		//if (x->x_selected) {
-		image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
+		//image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
 		//image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 1);
 		//}
 		canvas_fixlinesfor(x->x_glist,(t_text*) x);
