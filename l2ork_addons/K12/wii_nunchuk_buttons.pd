@@ -18,7 +18,7 @@
 #X obj 240 -25 r blah;
 #X obj 65 -33 route button;
 #X obj 65 229 > 0;
-#X obj 262 116 ggee/image @pd_extra/K12/objects/wii_nunchuk_buttons.png
+#X obj 261 106 ggee/image @pd_extra/K12/objects/wii_nunchuk_buttons.png
 1;
 #X connect 0 0 9 0;
 #X connect 0 0 7 0;

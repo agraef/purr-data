@@ -1,0 +1,36 @@
+#N canvas 407 89 508 541 10;
+#X obj 18 133 cnv 15 480 262 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 507 463 450 134 META 0;
+#X text 8 43 INLET_0 Connect the Wii Connect object here;
+#X text 7 68 OUTLET_0 Outputs values between -1 and 1 for the selected
+axis;
+#X text 8 9 DESCRIPTION Monitors Motion Plus x-axis \, y \, or z-axis
+acceleration;
+#X restore 451 472 pd META;
+#X obj 24 21 K12/wii_connect;
+#X obj 8 -6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 24 418 K12/math_number;
+#X obj 251 -30 preset_hub k12 %hidden% %node% 2 5 14 %node% 2 5 28
+%node% 2 4 7 %node% 2 8 1 %node% 2 1 33 %node% 2 1 34 %node% 2 6 7
+%node% 2 7 10 %node% 2 7 6 %node% 2 8 10;
+#X obj 8 -35 cnv 15 501 28 empty empty Wii/SpeedXRY 5 14 0 20 -139274
+-262144 0;
+#X obj 478 -2 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#X obj 24 139 K12/wii_speed_xry;
+#X text 123 146 The Wii Speed XRY (X axis \, Roll \, Y-axis) object
+takes one input from the Wii Connect object. It calculates when the
+Wiimote's angular speed. This object REQUIRES MOTION PLUS to work.
+It outputs values between -1 and 1 reflecting speed and direction.
+Its output can be used in data calculations or to drive an instrumentt
+(e.g. control how loud it is based on wiimote motion.Click on one
+of the three buttons to select x \, roll \, or y axis as your source
+or click anywhere else inside the object to recalibrate motion plus.The
+object will automatically calibrate itself as soon as it receives first
+data from the wiimote object. In case the object outputs value other
+than 0 while Wiimote is still \, it may need to be recalibrated. To
+manually recalibrate motion plus \, place wiimote on a flat surface
+\, make sure it is still and click on the object.;
+#X connect 2 0 8 0;
+#X connect 8 0 4 0;

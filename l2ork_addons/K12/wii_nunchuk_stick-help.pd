@@ -1,0 +1,34 @@
+#N canvas 407 89 508 398 10;
+#X obj 18 133 cnv 15 477 116 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 507 463 450 120 META 0;
+#X text 8 43 INLET_0 Connect the Wii Connect object here;
+#X text 7 68 OUTLET_0 Outputs values between -1 and 1 for the X axis
+;
+#X text 7 88 OUTLET_1 Outputs values between -1 and 1 for the Y axis
+;
+#X text 5 10 DESCRIPTION Monitors nunchuk stick X and Y axis position
+(requires nunchuk);
+#X restore 451 330 pd META;
+#X obj 24 21 K12/wii_connect;
+#X obj 8 -6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 24 273 K12/math_number;
+#X obj 251 -30 preset_hub k12 %hidden% %node% 2 5 14 %node% 2 5 28
+%node% 2 4 7 %node% 2 8 1 %node% 2 1 33 %node% 2 1 34 %node% 2 6 7
+%node% 2 8 10 %node% 2 9 7;
+#X obj 8 -35 cnv 15 501 28 empty empty Wii/NunchukStick 5 14 0 20 -139274
+-262144 0;
+#X obj 478 -2 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#X obj 24 139 K12/wii_nunchuk_stick;
+#X obj 118 273 K12/math_number;
+#X text 123 146 The Wii Nunchuk Stick takes input from the Wii Connect
+object and outputs two values. It REQUIRES NUNCHUK EXTENSION. The first
+is the X axis (horizontal) of the joystick with a range of -1 to 1
+\, an the second one is the Y axis (vertical) with the same range of
+-1 and 1 Its outputs can be used in data calculations or to drive an
+instrumentt (e.g. control pitch or loudness using stick position).
+;
+#X connect 2 0 8 0;
+#X connect 8 0 4 0;
+#X connect 8 1 9 0;

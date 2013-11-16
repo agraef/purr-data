@@ -1,0 +1,32 @@
+#N canvas 401 100 508 564 10;
+#X obj 18 133 cnv 15 478 156 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 507 463 450 134 META 0;
+#X text 8 43 INLET_0 Connect the Wii Connect object here;
+#X text 7 68 OUTLET_0 Outputs values between -1 and 1 for the selected
+axis;
+#X text 8 9 DESCRIPTION Monitors Nunchuk x-axis \, y \, or z-axis acceleration
+(requires nunchuk extension);
+#X restore 453 500 pd META;
+#X obj 24 21 K12/wii_connect;
+#X obj 8 -6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 24 318 K12/math_number;
+#X obj 251 -30 preset_hub k12 %hidden% %node% 2 5 14 %node% 2 5 28
+%node% 2 4 7 %node% 2 8 1 %node% 2 1 33 %node% 2 1 34 %node% 2 6 7
+%node% 2 7 10 %node% 2 7 6 %node% 2 7 6 %node% 2 9 5 %node% 2 8 5;
+#X obj 8 -35 cnv 15 501 28 empty empty Wii/NunchukAccelerometer 5 14
+0 20 -139274 -262144 0;
+#X obj 478 -2 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#X obj 24 140 K12/wii_nunchuk_accelerometer;
+#X text 123 146 The Wii Nunchuk Accelerometer object takes one input
+from the Wii Connect object (REQUIRES NUNCHUK EXTENSION). It can monitor
+one of the three axes (X \, Y \, and Z) of the Nunchuk. It outputs
+values between -1 and 1 reflecting selected axis' acceleration and
+direction. Its output can be used in data calculations or to drive
+an instrument (e.g. control how loud it is based on wiimote motion.Click
+on one of the three buttons to select x \, y \, or z axis as your source.
+;
+#X obj 278 409 image @pd_extra/K12/icons/wiimote_axes.png 0;
+#X connect 2 0 8 0;
+#X connect 8 0 4 0;

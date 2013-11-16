@@ -3,7 +3,7 @@
 #X obj 337 78 bng 76 250 50 0 empty connect_r empty 17 7 0 10 -258699
 -1 -262144;
 #X obj 337 333 outlet;
-#N canvas 372 128 547 266 running_the_wiimote 0;
+#N canvas 372 128 648 266 running_the_wiimote 0;
 #X obj 20 8 inlet;
 #X obj 20 238 outlet;
 #X msg 20 113 discover;
@@ -13,26 +13,26 @@
 #X msg 262 84 reportAcceleration \$1;
 #X obj 262 57 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X msg 408 84 reportExpansion \$1;
 #X obj 408 59 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 227 6 inlet;
+#X obj 227 8 inlet;
 #X text 281 5 On connection \, start these;
 #X msg 94 113 disconnect;
-#X obj 94 11 inlet;
+#X obj 94 8 inlet;
+#X msg 408 84 reportExpansion \$1 \, togglePassthrough \$1;
 #X connect 0 0 2 0;
 #X connect 2 0 1 0;
 #X connect 3 0 1 0;
 #X connect 4 0 3 0;
 #X connect 5 0 1 0;
 #X connect 6 0 5 0;
-#X connect 7 0 1 0;
+#X connect 7 0 12 0;
+#X connect 8 0 4 0;
+#X connect 8 0 6 0;
 #X connect 8 0 7 0;
-#X connect 9 0 4 0;
-#X connect 9 0 6 0;
-#X connect 9 0 8 0;
-#X connect 11 0 1 0;
-#X connect 12 0 11 0;
+#X connect 10 0 1 0;
+#X connect 11 0 10 0;
+#X connect 12 0 1 0;
 #X restore 337 289 pd running_the_wiimote;
 #X obj 337 267 delay 1000;
 #X obj 375 103 ggee/image @pd_extra/K12/objects/wii_connect_off.png

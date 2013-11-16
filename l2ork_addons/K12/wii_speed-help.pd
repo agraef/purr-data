@@ -1,32 +1,34 @@
-#N canvas 363 24 502 429 10;
+#N canvas 363 24 508 448 10;
 #X obj 248 -25 preset_hub k12 %hidden%;
 #X obj 17 -1 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 26 136 cnv 15 481 210 empty empty empty 20 12 0 14 -228856 -66577
+#X obj 26 136 cnv 15 483 235 empty empty empty 20 12 0 14 -228856 -66577
 0;
 #X obj 33 142 K12/wii_speed;
-#N canvas 402 50 450 514 META 0;
-#X text 12 37 INLET_0 Attach the Wii Connect object here.;
+#N canvas 402 50 450 119 META 0;
 #X text 12 7 DESCRIPTION This tells you how fast the Wiimote is moving
-;
-#X text 12 64 OUTLET_0 Connect to an instrument to drive its loudness
-or to some other mathematical object that will modify its value;
-#X restore 464 374 pd META;
+(requires motion plus extension);
+#X text 12 37 INLET_0 Attach the Wii Connect object here;
+#X text 12 54 OUTLET_0 Outputs values between -1 and 1 Connect to an
+instrument to drive its loudness or to some other mathematical object
+that will modify its value;
+#X restore 464 388 pd META;
 #X obj 17 -30 cnv 15 501 28 empty empty Wii/Speed 5 14 0 20 -139274
 -262144 0;
-#X obj 488 1 ggee/image @pd_extra/K12/icons/l2ork.png;
+#X obj 488 1 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 33 24 K12/wii_connect;
-#X text 143 141 Wii Speed registers the motion of the Wiimote via the
-Wii Motion Plus Attachment. It takes one input from the Wii Connect
-object and outputs values between -1 and 1 that are displayed on the
-object and reflect the speed and motion direction. You can connect
-it to other mathematical objects or directly to a sound-making device
-to drive its loudness or some other parameter.;
-#X text 143 242 Since Wii Motion Plus by design requires calibration
-\, in the case the initial calibration is incorrect (e.g. the output
-reads something else than zero even though you are not moving the Wiimote)
-\, you canre-calibrate the object by laying wiimote flat and while
-keeping it still click anywhere on the object. The value should now
-read zero and you can pick up the Wiimote and resume playing with it.
-;
+#X text 143 141 Wii Speed registers the sum of all motion (x \, roll
+\, and y axes) of the Wiimote via the Wii Motion Plus Attachment (MOTION
+PLUS REQUIRED). It takes one input from the Wii Connect object and
+outputs values between -1 and 1 that are displayed on the object and
+reflect the speed and motion direction. You can connect it to other
+data objects or directly to a sound-making device to drive its loudness
+or some other parameter.;
+#X text 143 253 Since Wii Motion Plus by design requires calibration
+\, the object tries to automatically calibrate itself as soon as it
+receives data from the Wii Connect object. In case the object outputs
+value other than 0 while Wiimote is still \, it may need to be recalibrated.
+You can re-calibrate the object by laying wiimote flat and while keeping
+it still click anywhere on the object. The value should now read zero
+and you can pick up the Wiimote and resume playing with it.;
 #X connect 7 0 3 0;
