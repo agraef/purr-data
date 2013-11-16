@@ -35,13 +35,17 @@ static t_class *bng_class;
 
 /*  widget helper functions  */
 
-void bng_draw_update(t_bng *x, t_glist *glist)
+void bng_draw_update(t_gobj *xgobj, t_glist *glist)
 {
+	t_bng *x = (t_bng *)xgobj;
+	if (x->x_gui.x_changed != x->x_flashed) {
     if(glist_isvisible(glist))
-    {
-        sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", glist_getcanvas(glist), x,
-                 x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    }
+	    {
+	        sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", glist_getcanvas(glist), x,
+	                 x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
+	    }
+	    x->x_gui.x_changed = x->x_flashed;
+	}
 }
 
 void bng_draw_new(t_bng *x, t_glist *glist)
@@ -492,7 +496,8 @@ static void bng__motionhook(t_scalehandle *sh,
 void bng_draw(t_bng *x, t_glist *glist, int mode)
 {
     if(mode == IEM_GUI_DRAW_MODE_UPDATE)
-        bng_draw_update(x, glist);
+    	sys_queuegui((t_gobj*)x, x->x_gui.x_glist, bng_draw_update);
+        //bng_draw_update(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         bng_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW) {
@@ -875,6 +880,7 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_gui.label_vis = 0;
 
 	x->x_gui.x_obj.te_iemgui = 1;
+	x->x_gui.x_changed = 0;
 
     return (x);
 }

@@ -38,6 +38,7 @@ static t_class *hslider_class;
 static void hslider_draw_update(t_gobj *client, t_glist *glist)
 {
     t_hslider *x = (t_hslider *)client;
+    if (x->x_gui.x_changed == 0) return;
     t_canvas *canvas=glist_getcanvas(glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
 
@@ -64,6 +65,7 @@ static void hslider_draw_update(t_gobj *client, t_glist *glist)
             }
         }
     }
+    x->x_gui.x_changed = 0;
 }
 
 static void hslider_draw_new(t_hslider *x, t_glist *glist)
@@ -634,8 +636,11 @@ static void hslider_set(t_hslider *x, t_floatarg f)    /* bugfix */
     else
         g = (f - x->x_min) / x->x_k;
     x->x_val = (int)(100.0*g + 0.49999);
-    x->x_pos = x->x_val;
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    if (x->x_pos != x->x_val) {
+    	x->x_pos = x->x_val;
+    	x->x_gui.x_changed = 1;
+    	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    }
 }
 
 static void hslider_bang(t_hslider *x)
@@ -724,6 +729,7 @@ static void hslider_motion(t_hslider *x, t_floatarg dx, t_floatarg dy)
     }
     if(old != x->x_val)
     {
+    	x->x_gui.x_changed = 1;
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         hslider_bang(x);
     }
@@ -738,8 +744,11 @@ static void hslider_click(t_hslider *x, t_floatarg xpos, t_floatarg ypos,
         x->x_val = 100*x->x_gui.x_w - 100;
     if(x->x_val < 0)
         x->x_val = 0;
-    x->x_pos = x->x_val;
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    if (x->x_pos != x->x_val) {
+    	x->x_pos = x->x_val;
+    	x->x_gui.x_changed = 1;
+    	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    }
     hslider_bang(x);
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g, (t_glistmotionfn)hslider_motion,
                0, xpos, ypos);
@@ -970,6 +979,7 @@ static void *hslider_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_gui.label_vis = 0;
 
 	x->x_gui.x_obj.te_iemgui = 1;
+	x->x_gui.x_changed = 0;
 
     return (x);
 }

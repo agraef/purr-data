@@ -215,6 +215,7 @@ typedef struct _iemgui
 	int				   label_offset_y;
 	int				   label_vis;
 	int				   x_vis;				/* is the object drawn? */
+    int                x_changed;           /* has the value changed so that we need to do graphic update */
 } t_iemgui;
 
 typedef struct _iemguidummy

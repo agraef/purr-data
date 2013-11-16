@@ -17,6 +17,7 @@ Original Pure-Data source copyright (c) 1997-2001 Miller Puckette and others.
 #include "g_undo.h"
 #include "x_preset.h"
 #include <string.h>
+#include <math.h>
 #include "g_all_guis.h"
 
 void glist_readfrombinbuf(t_glist *x, t_binbuf *b, char *filename,
@@ -3351,11 +3352,24 @@ void canvas_sort_selection_according_to_location(t_canvas *x)
 }
 
 void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag, int issignal) {
+	int ymax = 0;
 	int halfx = (lx2 - lx1)/2;
 	int halfy = (ly2 - ly1)/2;
-	int yoff = abs((halfy+halfy)/2);
-	if (yoff < 2) yoff = 2;
-	if (yoff > 20) yoff = 20;
+	//int yoff = (abs(halfx)+abs(halfy))/2;
+	int yoff = abs(halfy);
+	//if (yoff < 2) yoff = 2;
+	if (halfy >= 0) {
+		//second object is below the first
+		if (abs(halfx) <=10) {
+			ymax = abs(halfy * pow((halfx/10.0),2));
+			if (ymax > 10) ymax = 10;
+		}
+		else ymax = 10;
+	} else {
+		//second object is above the first
+		ymax = 20;
+	}
+	if (yoff > ymax) yoff = ymax;
 	/*sys_vgui(".x%lx.c create polyline %d %d %d %d -stroke %s -strokewidth %s -tags {l%lx all_cords}\n",
         x, lx1, ly1, lx2, ly2,
         (issignal ? "$signal_cord" : "$msg_cord"),
@@ -3373,11 +3387,25 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_in
 }
 
 void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag) {
+	int ymax = 0;
 	int halfx = (lx2 - lx1)/2;
 	int halfy = (ly2 - ly1)/2;
-	int yoff = abs((halfy+halfy)/2);
-	if (yoff < 2) yoff = 2;
-	if (yoff > 20) yoff = 20;
+	//int yoff = (abs(halfx)+abs(halfy))/2;
+	int yoff = abs(halfy);
+	//if (yoff < 2) yoff = 2;
+	if (halfy >= 0) {
+		//second object is below the first
+		if (abs(halfx) <=10) {
+			ymax = abs(halfy * pow((halfx/10.0),2));
+			if (ymax > 10) ymax = 10;
+		}
+		else ymax = 10;
+	} else {
+		//second object is above the first
+		ymax = 20;
+	}
+	//fprintf(stderr,"pow%f halfx%d yoff%d ymax%d\n", pow((halfx/10.0),2), halfx, yoff, ymax);
+	if (yoff > ymax) yoff = ymax;
 	if (tag) {
 		//sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n", x, tag, lx1, ly1, lx2, ly2);
 		//bezier curves FTW

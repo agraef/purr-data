@@ -38,6 +38,7 @@ static t_class *vslider_class;
 static void vslider_draw_update(t_gobj *client, t_glist *glist)
 {
     t_vslider *x = (t_vslider *)client;
+    if (x->x_gui.x_changed == 0) return;
     t_canvas *canvas=glist_getcanvas(glist);
     if (glist_isvisible(glist))
     {
@@ -64,6 +65,7 @@ static void vslider_draw_update(t_gobj *client, t_glist *glist)
             }
         }
     }
+    x->x_gui.x_changed = 0;
 }
 
 static void vslider_draw_new(t_vslider *x, t_glist *glist)
@@ -706,8 +708,8 @@ static void vslider_motion(t_vslider *x, t_floatarg dx, t_floatarg dy)
         x->x_pos -= 50;
         x->x_pos -= x->x_pos%100;
     }
-    if(old != x->x_val)
-    {
+    if(old != x->x_val) {
+    	x->x_gui.x_changed = 1;
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         vslider_bang(x);
     }
@@ -722,8 +724,11 @@ static void vslider_click(t_vslider *x, t_floatarg xpos, t_floatarg ypos,
         x->x_val = 100*x->x_gui.x_h - 100;
     if(x->x_val < 0)
         x->x_val = 0;
-    x->x_pos = x->x_val;
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    if (x->x_pos != x->x_val) {
+    	x->x_pos = x->x_val;
+    	x->x_gui.x_changed = 1;
+    	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    }
     vslider_bang(x);
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
         (t_glistmotionfn)vslider_motion, 0, xpos, ypos);
@@ -769,8 +774,11 @@ static void vslider_set(t_vslider *x, t_floatarg f)
     else
         g = (f - x->x_min) / x->x_k;
     x->x_val = (int)(100.0*g + 0.49999);
-    x->x_pos = x->x_val;
-    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    if(x->x_pos != x->x_val) {
+    	x->x_pos = x->x_val;
+    	x->x_gui.x_changed = 1;
+    	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+    }
 }
 
 static void vslider_float(t_vslider *x, t_floatarg f)
@@ -959,6 +967,7 @@ static void *vslider_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_gui.label_vis = 0;
 
 	x->x_gui.x_obj.te_iemgui = 1;
+	x->x_gui.x_changed = 0;
 
     return (x);
 }

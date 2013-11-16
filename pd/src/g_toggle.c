@@ -36,17 +36,21 @@ static t_class *toggle_class;
 
 /* widget helper functions */
 
-void toggle_draw_update(t_toggle *x, t_glist *glist)
+void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
 {
-    if(glist_isvisible(glist))
-    {
-        t_canvas *canvas=glist_getcanvas(glist);
+	t_toggle *x = (t_toggle *)xgobj;
+	if (x->x_gui.x_changed) {
+	    if(glist_isvisible(glist))
+	    {
+	        t_canvas *canvas=glist_getcanvas(glist);
 
-        sys_vgui(".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n", canvas, x,
-                 (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-        sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
-                 (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    }
+	        sys_vgui(".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n", canvas, x,
+	                 (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
+	        sys_vgui(".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n", canvas, x,
+	                 (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol);
+	    }
+	    x->x_gui.x_changed = 0;
+	}
 }
 
 void toggle_draw_new(t_toggle *x, t_glist *glist)
@@ -495,7 +499,8 @@ static void toggle__motionhook(t_scalehandle *sh,
 void toggle_draw(t_toggle *x, t_glist *glist, int mode)
 {
     if(mode == IEM_GUI_DRAW_MODE_UPDATE)
-        toggle_draw_update(x, glist);
+    	sys_queuegui((t_gobj*)x, x->x_gui.x_glist, toggle_draw_update);
+        //toggle_draw_update(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         toggle_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW) {
@@ -572,6 +577,7 @@ static void toggle_properties(t_gobj *z, t_glist *owner)
 
 static void toggle_bang(t_toggle *x)
 {
+	x->x_gui.x_changed = 1;
     x->x_on = (x->x_on==0.0)?x->x_nonzero:0.0;
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
     outlet_float(x->x_gui.x_obj.ob_outlet, x->x_on);
@@ -624,6 +630,7 @@ static int toggle_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, 
 
 static void toggle_set(t_toggle *x, t_floatarg f)
 {
+	if (x->x_on != f) x->x_gui.x_changed = 1;
     x->x_on = f;
     if(f != 0.0)
         x->x_nonzero = f;
@@ -797,6 +804,8 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_gui.label_vis = 0;
 
 	x->x_gui.x_obj.te_iemgui = 1;
+
+	x->x_gui.x_changed = 1;
 
     return (x);
 }

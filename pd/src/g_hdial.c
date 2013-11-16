@@ -652,13 +652,15 @@ static void hradio_set(t_hradio *x, t_floatarg f)
         old = x->x_on_old;
         x->x_on_old = x->x_on;
         x->x_on = i;
-        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+        if (x->x_on != x->x_on_old)
+        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         x->x_on_old = old;
     }
     else
     {
         x->x_on = i;
-        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+        if (x->x_on != x->x_on_old)
+        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
     }
 }
 
@@ -724,7 +726,8 @@ static void hradio_fout(t_hradio *x, t_floatarg f)
     {
         x->x_on_old = x->x_on;
         x->x_on = i;
-        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+        if (i != x->x_on_old)
+        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         outlet_float(x->x_gui.x_obj.ob_outlet, x->x_on);
         if(x->x_gui.x_fsf.x_snd_able && x->x_gui.x_snd->s_thing)
             pd_float(x->x_gui.x_snd->s_thing, x->x_on);
@@ -772,7 +775,8 @@ static void hradio_float(t_hradio *x, t_floatarg f)
     {
         x->x_on_old = x->x_on;
         x->x_on = i;
-        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+        if (i != x->x_on_old)
+        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         if (x->x_gui.x_fsf.x_put_in2out)
         {
             outlet_float(x->x_gui.x_obj.ob_outlet, x->x_on);

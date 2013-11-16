@@ -686,6 +686,8 @@ static void vu__motionhook(t_scalehandle *sh,
 void vu_draw(t_vu *x, t_glist *glist, int mode)
 {
 	//fprintf(stderr,"vu_draw %d\n", mode);
+    if(mode == IEM_GUI_DRAW_MODE_UPDATE)
+    	sys_queuegui((t_gobj*)x, x->x_gui.x_glist, vu_draw_update);
     if(mode == IEM_GUI_DRAW_MODE_MOVE)
         vu_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW) {

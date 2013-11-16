@@ -139,6 +139,9 @@ void my_numbox_ftoa(t_my_numbox *x)
 static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
 {
     t_my_numbox *x = (t_my_numbox *)client;
+    if (x->x_gui.x_changed == 0) {
+    	return;
+    }
     if (glist_isvisible(glist))
     {
         if(x->x_gui.x_fsf.x_change)
@@ -183,6 +186,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
             x->x_buf[0] = 0;
         }
     }
+    x->x_gui.x_changed = 0;
 }
 
 static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
@@ -758,6 +762,7 @@ static void my_numbox_save(t_gobj *z, t_binbuf *b)
     {
         x->x_gui.x_fsf.x_change = 0;
         clock_unset(x->x_clock_reset);
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
     binbuf_addv(b, "ssiisiiffiisssiiiiiiifii", gensym("#X"),gensym("obj"),
@@ -822,6 +827,7 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
     {
         x->x_gui.x_fsf.x_change = 0;
         clock_unset(x->x_clock_reset);
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
 
     }
@@ -914,6 +920,7 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
 static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
 {
     double k2=1.0;
+   	int old = x->x_val;
 
     if(x->x_gui.x_fsf.x_finemoved)
         k2 = 0.01;
@@ -922,9 +929,12 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
     else
         x->x_val -= k2*dy;
     my_numbox_clip(x);
-    sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
-    my_numbox_bang(x);
-    clock_unset(x->x_clock_reset);
+    if (old != x->x_val) {
+    	x->x_gui.x_changed = 1;
+	    sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+	    my_numbox_bang(x);
+	}
+	clock_unset(x->x_clock_reset);
 }
 
 static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
@@ -960,6 +970,7 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
             x->x_gui.x_fsf.x_change = 0;
             clock_unset(x->x_clock_reset);
             x->x_buf[0] = 0;
+            x->x_gui.x_changed = 1;
             sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         }
     }
@@ -968,9 +979,12 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
 
 static void my_numbox_set(t_my_numbox *x, t_floatarg f)
 {
-    x->x_val = f;
-    my_numbox_clip(x);
-    sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+	if (x->x_val != f) {
+    	x->x_val = f;
+    	my_numbox_clip(x);
+    	x->x_gui.x_changed = 1;
+    	sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+    }
 }
 
 static void my_numbox_log_height(t_my_numbox *x, t_floatarg lh)
@@ -1033,6 +1047,7 @@ static void my_numbox_range(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
     if(my_numbox_check_minmax(x, (double)atom_getfloatarg(0, ac, av),
                               (double)atom_getfloatarg(1, ac, av)))
     {
+    	x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         /*my_numbox_bang(x);*/
     }
@@ -1074,6 +1089,7 @@ static void my_numbox_log(t_my_numbox *x)
     x->x_lin0_log1 = 1;
     if(my_numbox_check_minmax(x, x->x_min, x->x_max))
     {
+    	x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         /*my_numbox_bang(x);*/
     }
@@ -1109,6 +1125,7 @@ static void my_numbox_key(void *z, t_floatarg fkey)
     {
         x->x_gui.x_fsf.x_change = 0;
         clock_unset(x->x_clock_reset);
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         return;
     }
@@ -1119,6 +1136,7 @@ static void my_numbox_key(void *z, t_floatarg fkey)
         {
             buf[0] = c;
             strcat(x->x_buf, buf);
+            x->x_gui.x_changed = 1;
             sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         }
     }
@@ -1129,6 +1147,7 @@ static void my_numbox_key(void *z, t_floatarg fkey)
         if(sl < 0)
             sl = 0;
         x->x_buf[sl] = 0;
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
     else if((c=='\n')||(c==13))
@@ -1139,6 +1158,7 @@ static void my_numbox_key(void *z, t_floatarg fkey)
         clock_unset(x->x_clock_reset);
         my_numbox_clip(x);
         my_numbox_bang(x);
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
     clock_delay(x->x_clock_reset, 3000);
@@ -1280,6 +1300,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 	x->x_tmpfontsize = 0;
 
 	x->x_gui.x_obj.te_iemgui = 1;
+	x->x_gui.x_changed = 0;
 
     return (x);
 }
