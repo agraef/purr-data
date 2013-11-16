@@ -64,10 +64,10 @@
 #X obj 82 481 outlet;
 #X text 186 30 Live;
 #X text 303 30 Calibrated;
-#X obj 142 285 expr pow($f1 \, 1.6);
+#X obj 142 325 expr pow($f1 \, 1.6);
 #X obj 14 381 expr -pow(-$f1 \, 1.6);
 #X obj 14 214 expr $f1/2000;
-#X obj 142 256 - 0.085;
+#X obj 142 296 - 0.085;
 #X obj 14 243 moses 0.085;
 #X obj 14 308 moses -0.085;
 #X obj 14 346 + 0.085;
@@ -100,13 +100,13 @@
 #X obj 15 413 int;
 #X obj 15 391 * 100;
 #X obj 15 436 / 100;
-#X obj 162 62 loadbang;
+#X obj 155 62 loadbang;
 #X msg 3 322 \$1 50;
 #X obj 162 159 ggee/image @pd_extra/K12/objects/wii_speed.png 1;
 #X obj 128 162 cnv 15 61 26 empty \$0-speed_num 0 10 12 0 20 -262144
 -66577 0;
 #X obj 15 506 send \$0-speed_num;
-#X msg 162 85 open @pd_extra/K12/objects/wii_speed.png;
+#X msg 155 85 open @pd_extra/K12/objects/wii_speed.png;
 #X obj 3 345 line 0 25;
 #X connect 0 0 2 1;
 #X connect 1 0 2 0;

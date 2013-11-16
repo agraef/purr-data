@@ -1,0 +1,26 @@
+#N canvas 486 131 522 373 10;
+#X obj 66 268 outlet;
+#X obj 65 -75 inlet;
+#X obj 261 121 ggee/image @pd_extra/K12/objects/wii_nunchuk_stick.png
+1;
+#X obj 255 18 loadbang;
+#X obj 65 -54 route nunchuk;
+#X msg 255 41 open @pd_extra/K12/objects/wii_nunchuk_stick.png;
+#X obj 122 268 outlet;
+#X obj 65 29 unpack 0 0;
+#X obj 65 -33 route stick;
+#X obj 66 208 / 128;
+#X obj 66 229 - 1;
+#X obj 122 208 / 128;
+#X obj 122 229 - 1;
+#X connect 1 0 4 0;
+#X connect 4 0 8 0;
+#X connect 5 0 2 0;
+#X connect 7 0 9 0;
+#X connect 7 1 11 0;
+#X connect 8 0 7 0;
+#X connect 9 0 10 0;
+#X connect 10 0 0 0;
+#X connect 11 0 12 0;
+#X connect 12 0 6 0;
+#X coords 0 -1 1 1 89 89 2 216 89;

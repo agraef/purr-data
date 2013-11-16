@@ -1,0 +1,48 @@
+#N canvas 693 136 564 373 10;
+#X obj 46 268 outlet;
+#X obj 65 -75 inlet;
+#X obj 65 29 unpack 0 0 0;
+#X obj 261 121 ggee/image @pd_extra/K12/objects/wii_nunchuk_accelerometer.png
+1;
+#X obj 255 18 loadbang;
+#X obj 311 89 preset_node k12;
+#X obj 46 217 switch 3 1;
+#X obj 238 139 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 65 -33 route acceleration;
+#X obj 65 -54 route nunchuk;
+#X obj 46 238 / 2.5;
+#X msg 255 41 open @pd_extra/K12/objects/wii_nunchuk_accelerometer.png
+;
+#X obj 235 116 cnv 13 14 13 empty \$0-compare x 20 12 0 18 -262144
+-66577 0;
+#X obj 238 188 select 0 1 2;
+#X obj 238 232 tosymbol;
+#X obj 238 277 s \$0-compare;
+#X msg 238 254 label \$1;
+#X msg 238 210 x;
+#X msg 267 210 y;
+#X msg 296 210 z;
+#X obj 46 196 + 1;
+#X connect 1 0 9 0;
+#X connect 2 0 6 1;
+#X connect 2 1 6 2;
+#X connect 2 2 6 3;
+#X connect 5 0 7 0;
+#X connect 6 0 10 0;
+#X connect 7 0 13 0;
+#X connect 7 0 20 0;
+#X connect 8 0 2 0;
+#X connect 9 0 8 0;
+#X connect 10 0 0 0;
+#X connect 11 0 3 0;
+#X connect 13 0 17 0;
+#X connect 13 1 18 0;
+#X connect 13 2 19 0;
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
+#X connect 17 0 14 0;
+#X connect 18 0 14 0;
+#X connect 19 0 14 0;
+#X connect 20 0 6 0;
+#X coords 0 -1 1 1 89 89 2 216 89;
