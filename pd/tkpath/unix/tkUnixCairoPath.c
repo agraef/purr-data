@@ -98,6 +98,7 @@ TkPathContext TkPathInit(Tk_Window tkwin, Drawable d)
     surface = cairo_xlib_surface_create(Tk_Display(tkwin), d, Tk_Visual(tkwin),
 	    width, height);
     c = cairo_create(surface);
+    cairo_set_antialias(c, CAIRO_ANTIALIAS_GRAY);
     context->c = c;
     context->surface = surface;
     context->record = NULL;
