@@ -24,7 +24,7 @@ typedef struct _image
 	int x_gop_spill;
 	t_symbol* x_fname;
 	t_symbol* x_receive;
-	int x_selected;
+	//int x_selected;
 	//t_symbol* send;
 } t_image;
 
@@ -181,7 +181,7 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 	t_image *x = (t_image *)z;
 	if (state) {
 		if (x->x_glist == glist_getcanvas(glist)) {
-			x->x_selected = state;
+			//x->x_selected = state;
 			if (!x->x_gop_spill && (x->x_img_width + x->x_img_height) >= 2)
 				sys_vgui(".x%x.c create rectangle \
 					%d %d %d %d -tags %xSEL -outline $select_color\n",
@@ -308,10 +308,10 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
 			image_erase(x, glist_getcanvas(x->x_glist));
 	} else {
 		//sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
-		if (x->x_selected) {
-			image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
-			image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 1);
-		}
+		//if (x->x_selected) {
+		image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
+		//image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 1);
+		//}
 		canvas_fixlinesfor(x->x_glist,(t_text*) x);
 	}
 }
@@ -349,7 +349,7 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
 	x->x_img_width = 0;
 	x->x_img_height = 0;
 	x->x_gop_spill = 0;
-	x->x_selected = 0;
+	//x->x_selected = 0;
 
 	x->x_fname = get_filename(argc, argv);
 	if (strlen(x->x_fname->s_name) > 0) {
