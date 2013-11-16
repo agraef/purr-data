@@ -1306,7 +1306,7 @@ static int graph_click(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
     t_glist *x = (t_glist *)z;
-    t_gobj *y;
+    t_gobj *y, *clickme = NULL;
     int clickreturned = 0;
     if (!x->gl_isgraph)
         return (text_widgetbehavior.w_clickfn(z, glist,
@@ -1315,18 +1315,20 @@ static int graph_click(t_gobj *z, struct _glist *glist,
         return (0);
     else
     {
+        int x1, y1, x2, y2;
         for (y = x->gl_list; y; y = y->g_next)
         {
-            int x1, y1, x2, y2;
                 /* check if the object wants to be clicked */
             if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2)
                 &&  (clickreturned = gobj_click(y, x, xpix, ypix,
-                    shift, alt, 0, doit)))
-                        break;
+                    shift, alt, 0, 0)))
+                        clickme = y;
         }
+        if (clickme != NULL) clickreturned = gobj_click(clickme, x, xpix, ypix,
+                    shift, alt, 0, doit);
         if (!doit)
         {
-            if (y)
+            if (clickme)
                 canvas_setcursor(glist_getcanvas(x), clickreturned);
             else canvas_setcursor(glist_getcanvas(x), CURSOR_RUNMODE_NOTHING);
         }
