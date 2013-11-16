@@ -367,8 +367,15 @@ proc pdtk_enable_k12_mode {extra_dir} {
 
 	image create photo i.wii_connect -file $extra_dir/K12/icons/wii_connect_on.png
 	image create photo i.wii_buttons -file $extra_dir/K12/icons/wii_buttons.png
+	image create photo i.wii_speed_xry -file $extra_dir/K12/icons/wii_speed_xry.png
 	image create photo i.wii_speed -file $extra_dir/K12/icons/wii_speed.png
 	image create photo i.wii_hit -file $extra_dir/K12/icons/wii_hit.png
+
+	image create photo i.wii_accelerometer -file $extra_dir/K12/icons/wii_accelerometer.png
+	image create photo i.wii_nunchuk_buttons -file $extra_dir/K12/icons/wii_nunchuk_buttons.png
+	image create photo i.wii_nunchuk_hit -file $extra_dir/K12/icons/wii_nunchuk_hit.png
+	image create photo i.wii_nunchuk_accelerometer -file $extra_dir/K12/icons/wii_nunchuk_accelerometer.png
+	image create photo i.wii_nunchuk_stick -file $extra_dir/K12/icons/wii_nunchuk_stick.png
 
 	image create photo i.sarcduino -file $extra_dir/K12/icons/sarcduino_on.png
 	image create photo i.sarcduino_digital -file $extra_dir/K12/icons/sarcduino_digital.png
@@ -2349,7 +2356,7 @@ proc pdtk_k12_show_data_icons {name} {
 	$name.k12frame.datasound.sound configure -image i.sound
 	catch {
 		pack forget $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.fx $name.k12frame.output
-		pack $name.k12frame.wii $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
+		pack $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
 	}
 }
 
@@ -2357,7 +2364,7 @@ proc pdtk_k12_show_sound_icons {name} {
 	$name.k12frame.datasound.data configure -image i.data
 	$name.k12frame.datasound.sound configure -image i.sound_on
 	catch {
-		pack forget $name.k12frame.wii $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other
+		pack forget $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other
 		pack $name.k12frame.signal_1 $name.k12frame.signal_2 $name.k12frame.signal_3 $name.k12frame.instr $name.k12frame.fx $name.k12frame.output -side top -expand 0 -fill x
 	}
 }
@@ -2507,19 +2514,47 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-command [concat put_K12_objects $name wii_connect]]
 		match_linux_wm [list button $name.k12frame.wii.b_wii_buttons -image i.wii_buttons \
 			-command [concat put_K12_objects $name wii_buttons]]
-		match_linux_wm [list button $name.k12frame.wii.b_wii_speed -image i.wii_speed \
-			-command [concat put_K12_objects $name wii_speed]]
 		match_linux_wm [list button $name.k12frame.wii.b_wii_hit -image i.wii_hit \
 			-command [concat put_K12_objects $name wii_hit]]
-		pack $name.k12frame.wii.b_wii_connect $name.k12frame.wii.b_wii_buttons $name.k12frame.wii.b_wii_speed $name.k12frame.wii.b_wii_hit -side left -expand 0 -padx 1 -pady 1
+		match_linux_wm [list button $name.k12frame.wii.b_wii_accelerometer -image i.wii_accelerometer \
+			-command [concat put_K12_objects $name wii_accelerometer]]
+		match_linux_wm [list button $name.k12frame.wii.b_wii_speed_xry -image i.wii_speed_xry \
+			-command [concat put_K12_objects $name wii_speed_xry]]
+		pack $name.k12frame.wii.b_wii_connect $name.k12frame.wii.b_wii_buttons $name.k12frame.wii.b_wii_hit $name.k12frame.wii.b_wii_accelerometer $name.k12frame.wii.b_wii_speed_xry -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.wii.b_wii_connect "Wiimote Connect: Use this to connect wiimote to the computer"
 		setTooltip $name.k12frame.wii.b_wii_buttons "Wiimote Buttons: Use this to select which Wiimote button should activate objects connected to this object"
-		setTooltip $name.k12frame.wii.b_wii_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken"
-		setTooltip $name.k12frame.wii.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving"
+		setTooltip $name.k12frame.wii.b_wii_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken like a mallet"
+		setTooltip $name.k12frame.wii.b_wii_accelerometer "Wiimote Accelerometer: Use this to monitor Wiimotes acceleration across X, Y, and Z axes"
+		setTooltip $name.k12frame.wii.b_wii_speed_xry "Wiimote Speed X, Roll, Y: Use this to detect how quickly is Wiimote moving across individual axes x, roll, and y (requires motion plus)"
 		pdtk_standardkeybindings $name.k12frame.wii.b_wii_connect
 		pdtk_standardkeybindings $name.k12frame.wii.b_wii_buttons
-		pdtk_standardkeybindings $name.k12frame.wii.b_wii_speed
 		pdtk_standardkeybindings $name.k12frame.wii.b_wii_hit
+		pdtk_standardkeybindings $name.k12frame.wii.b_wii_accelerometer
+		pdtk_standardkeybindings $name.k12frame.wii.b_wii_speed_xry
+
+		# ---------------------------------- WII2 -----------------------------------------
+		match_linux_wm [list frame $name.k12frame.wii2 -relief flat]
+		match_linux_wm [list button $name.k12frame.wii2.b_wii_speed -image i.wii_speed \
+			-command [concat put_K12_objects $name wii_speed]]
+		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_buttons -image i.wii_nunchuk_buttons \
+			-command [concat put_K12_objects $name wii_nunchuk_buttons]]
+		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_hit -image i.wii_nunchuk_hit \
+			-command [concat put_K12_objects $name wii_nunchuk_hit]]
+		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_accelerometer -image i.wii_nunchuk_accelerometer \
+			-command [concat put_K12_objects $name wii_nunchuk_accelerometer]]
+		match_linux_wm [list button $name.k12frame.wii2.b_wii_nunchuk_stick -image i.wii_nunchuk_stick \
+			-command [concat put_K12_objects $name wii_nunchuk_stick]]
+		pack $name.k12frame.wii2.b_wii_speed $name.k12frame.wii2.b_wii_nunchuk_buttons $name.k12frame.wii2.b_wii_nunchuk_hit $name.k12frame.wii2.b_wii_nunchuk_accelerometer $name.k12frame.wii2.b_wii_nunchuk_stick -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.wii2.b_wii_speed "Wiimote Speed: Use this to detect how quickly is Wiimote moving (requires motion plus)"
+		setTooltip $name.k12frame.wii2.b_wii_nunchuk_buttons "Wiimote Nunchuk Buttons: Use this to select which Nunchuk button should activate objects connected to this object (requires nunchuk extension)"
+		setTooltip $name.k12frame.wii2.b_wii_nunchuk_hit "Wiimote Nunchuk Hit: Use this to detect when the wiimote has been shaken like a mallet (requires nunchuk extension)"
+		setTooltip $name.k12frame.wii2.b_wii_nunchuk_accelerometer "Wiimote Nunchuk Accelerometer: Use this to monitor Nunchuk acceleration across X, Y, and Z axes (requires nunchuk extension)"
+		setTooltip $name.k12frame.wii2.b_wii_nunchuk_stick "Wiimote Nunchuk stick: Use this to monitor Nunchuk stick motion across X and Y axes (requires nunchuk extension)"
+		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_speed
+		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_buttons
+		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_hit
+		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_accelerometer
+		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_stick
 
 		# ---------------------------------- ARDUINO -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.arduino -relief flat]
@@ -2765,7 +2800,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pdtk_standardkeybindings $name.k12frame.output.b_output
 
 		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
-		pack $name.k12frame.edit $name.k12frame.datasound $name.k12frame.wii $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
+		pack $name.k12frame.edit $name.k12frame.datasound $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
 	}
 
     tkp::canvas $name.c -width $width -height $height -background $::canvas_color($name) \
@@ -2793,7 +2828,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	if { $k12_mode == 0 } {
     	wm minsize $name 50 20
 	} else {
-		wm minsize $name 580 372
+		wm minsize $name 580 407
 	}
     wm geometry $name $geometry
     # the file menu

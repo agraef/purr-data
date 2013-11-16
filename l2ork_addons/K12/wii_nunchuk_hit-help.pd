@@ -1,25 +1,25 @@
-#N canvas 362 64 508 451 10;
-#X obj 18 132 cnv 15 477 170 empty empty empty 20 12 0 14 -233017 -66577
+#N canvas 362 64 508 441 10;
+#X obj 17 132 cnv 15 480 171 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 24 138 K12/wii_hit;
-#N canvas 572 86 395 115 META 0;
+#N canvas 572 86 450 104 META 0;
 #X text 8 33 INLET_0 Connect the Wii Connect object here;
-#X text 8 9 DESCRIPTION Registers jolts from the Wiimote as hits;
+#X text 8 9 DESCRIPTION Registers jolts from the Nunchuk as hits;
 #X text 7 58 OUTLET_0 Outputs 1 when a hit has been detected and a
 0 once the hit has ended;
-#X restore 457 388 pd META;
+#X restore 457 376 pd META;
 #X obj 24 21 K12/wii_connect;
 #X obj 8 -6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 24 320 K12/math_number;
+#X obj 24 317 K12/math_number;
 #X obj 251 -30 preset_hub k12 %hidden% %node% 2 5 14 %node% 2 5 28
 %node% 2 6 7 %node% 2 8 1 %node% 2 1 33 %node% 2 1 34 %node% 2 5 7
 ;
-#X obj 8 -35 cnv 15 501 28 empty empty Wii/Hit 5 14 0 20 -139274 -262144
-0;
+#X obj 8 -35 cnv 15 501 28 empty empty Wii/NunchukHit 5 14 0 20 -139274
+-262144 0;
 #X obj 478 -2 ggee/image @pd_extra/K12/icons/l2ork.png 0;
-#X text 123 137 The Wii Nunchuk Hit object takes one input from the
-Wii Connect object. It calculates when the Wiimote is jolted as it
+#X text 124 139 The Wii Nunchuk Hit object takes one input from the
+Wii Connect object. It calculates when the Nunchuk is jolted as it
 has hit something (e.g. a mallet hitting a drum).Use high setting
 to adjust the threshold of acceleration necessary to trigger a hit
 \, and use the low setting for a threshold which acceleration needs
