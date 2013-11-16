@@ -1,12 +1,12 @@
 #N canvas 407 89 508 541 10;
 #X obj 18 133 cnv 15 480 262 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#N canvas 507 463 450 134 META 0;
+#N canvas 507 463 450 407 META 0;
 #X text 8 43 INLET_0 Connect the Wii Connect object here;
 #X text 7 68 OUTLET_0 Outputs values between -1 and 1 for the selected
 axis;
 #X text 8 9 DESCRIPTION Monitors Motion Plus x-axis \, y \, or z-axis
-acceleration;
+speed;
 #X restore 451 472 pd META;
 #X obj 24 21 K12/wii_connect;
 #X obj 8 -6 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
@@ -19,10 +19,10 @@ acceleration;
 -262144 0;
 #X obj 478 -2 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 24 139 K12/wii_speed_xry;
-#X text 123 146 The Wii Speed XRY (X axis \, Roll \, Y-axis) object
-takes one input from the Wii Connect object. It calculates when the
-Wiimote's angular speed. This object REQUIRES MOTION PLUS to work.
-It outputs values between -1 and 1 reflecting speed and direction.
+#X text 122 145 The Wii Speed XRY (X axis \, Roll \, Y-axis) object
+takes one input from the Wii Connect object. It provides Motion Plus's
+angular speed of the selected axis. This object REQUIRES MOTION PLUS
+to work. It outputs values between -1 and 1 reflecting speed and direction.
 Its output can be used in data calculations or to drive an instrumentt
 (e.g. control how loud it is based on wiimote motion.Click on one
 of the three buttons to select x \, roll \, or y axis as your source

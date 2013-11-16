@@ -102,8 +102,6 @@
 #X obj 3 345 line 0 25;
 #X msg 155 85 open @pd_extra/K12/objects/wii_speed_xry.png;
 #X obj 210 127 preset_node k12;
-#X obj 137 177 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 0;
 #X obj 134 154 cnv 13 14 13 empty \$0-compare x 20 12 0 18 -262144
 -66577 0;
 #X obj 137 223 select 0 1 2;
@@ -115,6 +113,8 @@
 #X msg 166 245 r;
 #X obj 72 144 r blah;
 #X obj 3 366 / 8000;
+#X obj 137 177 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
 #X connect 0 0 2 1;
 #X connect 1 0 2 0;
 #X connect 2 0 3 5;
@@ -126,18 +126,18 @@
 #X connect 3 0 6 0;
 #X connect 5 0 9 0;
 #X connect 6 0 8 0;
-#X connect 8 0 21 0;
-#X connect 10 0 11 0;
-#X connect 11 0 13 0;
-#X connect 11 0 3 6;
-#X connect 13 0 17 0;
-#X connect 13 1 19 0;
-#X connect 13 2 18 0;
-#X connect 14 0 16 0;
-#X connect 16 0 15 0;
-#X connect 17 0 14 0;
-#X connect 18 0 14 0;
-#X connect 19 0 14 0;
-#X connect 20 0 2 0;
-#X connect 21 0 4 0;
+#X connect 8 0 20 0;
+#X connect 10 0 21 0;
+#X connect 12 0 16 0;
+#X connect 12 1 18 0;
+#X connect 12 2 17 0;
+#X connect 13 0 15 0;
+#X connect 15 0 14 0;
+#X connect 16 0 13 0;
+#X connect 17 0 13 0;
+#X connect 18 0 13 0;
+#X connect 19 0 2 0;
+#X connect 20 0 4 0;
+#X connect 21 0 12 0;
+#X connect 21 0 3 6;
 #X coords 0 -1 1 1 89 89 2 117 127;
