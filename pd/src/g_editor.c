@@ -2752,10 +2752,10 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 
     t_gobj *y;
     int shiftmod, runmode, altmod, doublemod = 0, rightclick;
-    int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
+    int x1=0, y1=0, x2=0, y2=0, clickreturned = 0, tmpclickreturned = 0;
 	t_gobj *yclick = NULL;
 
-	//fprintf(stderr,"canvas_doclick %d %d %d %d %d\n", xpos, ypos, which, mod, doit);
+	//fprintf(stderr,"MAIN canvas_doclick %d %d %d %d %d\n", xpos, ypos, which, mod, doit);
     
     if (!x->gl_editor)
     {
@@ -2827,21 +2827,36 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 	// if we are in runmode and it is not middle- or right-click
     if (runmode && !rightclick)
     {
+    	//fprintf(stderr, "runmode && !rightclick\n");
         for (y = x->gl_list; y; y = y->g_next)
         {
-            // check if the object wants to be clicked (we pick the topmost)
-            if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2))
-				yclick = y;
-        }
-		if (yclick) clickreturned = gobj_click(yclick, x, xpos, ypos,
+            // check if the object wants to be clicked (we pick the topmost clickable)
+            if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2) && (tmpclickreturned = gobj_click(y, x, xpos, ypos,
            		shiftmod, ((mod & CTRLMOD) && (!x->gl_edit)) || altmod,
-                0, doit);
+                0, 0))) {
+				yclick = y;
+				clickreturned = tmpclickreturned;
+				//fprintf(stderr,"    MAIN found clickable %d\n", clickreturned);
+			}
+        }
+		if (yclick && doit) {
+				clickreturned = gobj_click(yclick, x, xpos, ypos,
+           			shiftmod, ((mod & CTRLMOD) && (!x->gl_edit)) || altmod,
+                	0, doit);
+				//fprintf(stderr, "    MAIN clicking\n");
+        }
 		// if we are not clicking
         if (!doit)
         {
-            if (yclick)
+        	//fprintf(stderr, "    MAIN not clicking\n");
+            if (yclick) {
+            	//fprintf(stderr, "    MAIN cursor %d\n", clickreturned);
                 canvas_setcursor(x, clickreturned);
-            else canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
+        	}
+            else {
+            	//fprintf(stderr, "    MAIN cursor\n");
+            	canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
+            }
         }
         return;
     }
@@ -4554,7 +4569,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         return;
     }
     if (canvas_last_glist_mod == -1 && mod != -1) {
-    	//fprintf(stderr,"revert the cursor %d\n", x->gl_edit);
+    	fprintf(stderr,"revert the cursor %d\n", x->gl_edit);
     	if (x->gl_edit)
 	    	canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
 	    else

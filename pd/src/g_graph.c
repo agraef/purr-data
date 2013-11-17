@@ -1305,9 +1305,11 @@ static void graph_motion(void *z, t_floatarg dx, t_floatarg dy)
 static int graph_click(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
+    //fprintf(stderr, "graph_click\n");
     t_glist *x = (t_glist *)z;
     t_gobj *y, *clickme = NULL;
     int clickreturned = 0;
+    int tmpclickreturned = 0;
     if (!x->gl_isgraph)
         return (text_widgetbehavior.w_clickfn(z, glist,
             xpix, ypix, shift, alt, dbl, doit));
@@ -1320,17 +1322,29 @@ static int graph_click(t_gobj *z, struct _glist *glist,
         {
                 /* check if the object wants to be clicked */
             if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2)
-                &&  (clickreturned = gobj_click(y, x, xpix, ypix,
-                    shift, alt, 0, 0)))
-                        clickme = y;
+                &&  (tmpclickreturned = gobj_click(y, x, xpix, ypix,
+                shift, alt, 0, 0))) {
+                    clickme = y;
+                    clickreturned = tmpclickreturned;
+                    //fprintf(stderr,"    found clickable %d\n", clickreturned);
+            }
         }
-        if (clickme != NULL) clickreturned = gobj_click(clickme, x, xpix, ypix,
+        if (clickme != NULL && doit) {
+            //fprintf(stderr,"    clicking\n");
+            clickreturned = gobj_click(clickme, x, xpix, ypix,
                     shift, alt, 0, doit);
+        }
         if (!doit)
         {
-            if (clickme)
+            //fprintf(stderr,"    not clicking %lx %d\n", (t_int)clickme, clickreturned);
+            if (clickme != NULL) {
+                //fprintf(stderr,"    cursor %d\n", clickreturned);
                 canvas_setcursor(glist_getcanvas(x), clickreturned);
-            else canvas_setcursor(glist_getcanvas(x), CURSOR_RUNMODE_NOTHING);
+            }
+            else {
+                //fprintf(stderr,"    cursor 0\n");
+                canvas_setcursor(glist_getcanvas(x), CURSOR_RUNMODE_NOTHING);
+            }
         }
         return (clickreturned); 
     }
