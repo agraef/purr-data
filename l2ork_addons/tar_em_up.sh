@@ -190,7 +190,9 @@ then
 		# clean files that may remain stuck even after doing global make clean (if any)
 		cd externals/miXed
 		make clean
-		cd ../../Gem/src/
+		cd ../
+		make gem_clean
+		cd ../Gem/src/
 		make distclean
 		rm -rf ./.libs
 		rm -rf ./*/.libs
