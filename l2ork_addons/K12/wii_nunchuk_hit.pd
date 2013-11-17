@@ -1,4 +1,4 @@
-#N canvas 693 136 540 515 10;
+#N canvas 454 139 540 515 10;
 #X obj 25 -100 expr sqrt(pow($f1 \, 2) + pow($f2 \, 2) + pow($f3 \,
 2));
 #X obj 25 -50 -;
@@ -14,9 +14,9 @@
 #X obj 66 33 gate 1 0;
 #X msg 89 208 1;
 #X obj 25 140 moses 0.3;
-#X obj 25 -225 inlet;
-#X obj 25 -183 route acceleration;
-#X obj 25 -162 unpack 0 0 0;
+#X obj 25 -235 inlet;
+#X obj 25 -163 route acceleration;
+#X obj 25 -142 unpack 0 0 0;
 #X obj 261 121 ggee/image @pd_extra/K12/objects/wii_nunchuk_hit1.png
 1;
 #X obj 169 -9 select 0 1;
@@ -80,8 +80,39 @@
 #X text 225 131 low;
 #X obj 311 89 preset_node k12;
 #X obj 311 111 preset_node k12;
-#X obj 25 -204 route nunchuk;
 #X msg 261 40 open @pd_extra/K12/objects/wii_nunchuk_hit1.png;
+#X obj 25 -214 route nunchuk passthrough motionplus;
+#N canvas 411 217 455 392 check_4_wiimote_passthrough 0;
+#X obj 177 22 inlet;
+#X obj 246 22 inlet;
+#X obj 132 252 t 1 f;
+#X obj 132 329 s;
+#X obj 159 279 change;
+#X msg 159 300 symbol passthrough-\$1;
+#X obj 132 231 gate 1 0;
+#X obj 246 101 counter 0 10;
+#X obj 246 122 sel 0;
+#X obj 246 143 t 1 b;
+#X obj 273 165 delay 2000;
+#X msg 273 186 0;
+#X obj 246 59 route angle_rate;
+#X obj 246 80 t b;
+#X connect 0 0 6 1;
+#X connect 1 0 12 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 1;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 6 0;
+#X connect 9 1 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 6 0;
+#X connect 12 0 13 0;
+#X connect 13 0 7 0;
+#X restore 96 -185 pd check_4_wiimote_passthrough;
 #X connect 0 0 2 0;
 #X connect 1 0 3 0;
 #X connect 2 0 1 1;
@@ -98,7 +129,7 @@
 #X connect 11 0 9 0;
 #X connect 12 0 11 0;
 #X connect 13 1 4 1;
-#X connect 14 0 34 0;
+#X connect 14 0 35 0;
 #X connect 15 0 16 0;
 #X connect 16 0 0 0;
 #X connect 16 1 0 1;
@@ -108,7 +139,7 @@
 #X connect 19 0 27 0;
 #X connect 20 0 17 0;
 #X connect 21 0 20 1;
-#X connect 22 0 35 0;
+#X connect 22 0 34 0;
 #X connect 23 0 4 0;
 #X connect 24 1 5 0;
 #X connect 24 1 12 0;
@@ -123,6 +154,8 @@
 #X connect 29 0 9 1;
 #X connect 32 0 28 0;
 #X connect 33 0 29 0;
-#X connect 34 0 15 0;
-#X connect 35 0 17 0;
+#X connect 34 0 17 0;
+#X connect 35 0 15 0;
+#X connect 35 1 36 0;
+#X connect 35 2 36 1;
 #X coords 0 -1 1 1 89 89 2 216 89;

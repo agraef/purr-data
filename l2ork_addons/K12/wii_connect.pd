@@ -1,14 +1,14 @@
-#N canvas 456 127 558 396 10;
+#N canvas 570 134 558 396 10;
 #X obj 337 311 disis_wiimote;
 #X obj 337 78 bng 76 250 50 0 empty connect_r empty 17 7 0 10 -258699
 -1 -262144;
 #X obj 337 333 outlet;
-#N canvas 372 128 648 266 running_the_wiimote 0;
+#N canvas 96 309 648 345 running_the_wiimote 0;
 #X obj 20 8 inlet;
-#X obj 20 238 outlet;
+#X obj 20 318 outlet;
 #X msg 20 113 discover;
 #X obj 191 84 metro 100;
-#X obj 191 55 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 191 55 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X msg 262 84 reportAcceleration \$1;
 #X obj 262 57 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -19,10 +19,24 @@
 #X text 281 5 On connection \, start these;
 #X msg 94 113 disconnect;
 #X obj 94 8 inlet;
-#X msg 408 84 reportExpansion \$1 \, togglePassthrough \$1;
+#X msg 408 84 reportExpansion \$1;
+#X obj 408 230 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 408 271 togglePassthrough \$1;
+#X obj 191 135 sel 0;
+#X obj 191 114 counter 0 10;
+#X obj 191 318 outlet;
+#X obj 440 180 delay 2000;
+#X msg 440 201 0;
+#X obj 408 155 t f b;
+#X obj 408 250 change;
+#X obj 408 134 r passthrough-\$0;
+#X obj 191 156 f \$0;
+#X msg 191 177 passthrough \$1;
 #X connect 0 0 2 0;
 #X connect 2 0 1 0;
 #X connect 3 0 1 0;
+#X connect 3 0 16 0;
 #X connect 4 0 3 0;
 #X connect 5 0 1 0;
 #X connect 6 0 5 0;
@@ -33,6 +47,18 @@
 #X connect 10 0 1 0;
 #X connect 11 0 10 0;
 #X connect 12 0 1 0;
+#X connect 13 0 21 0;
+#X connect 14 0 1 0;
+#X connect 15 0 23 0;
+#X connect 16 0 15 0;
+#X connect 18 0 19 0;
+#X connect 19 0 13 0;
+#X connect 20 0 13 0;
+#X connect 20 1 18 0;
+#X connect 21 0 14 0;
+#X connect 22 0 20 0;
+#X connect 23 0 24 0;
+#X connect 24 0 17 0;
 #X restore 337 289 pd running_the_wiimote;
 #X obj 337 267 delay 1000;
 #X obj 375 103 ggee/image @pd_extra/K12/objects/wii_connect_off.png
@@ -70,6 +96,7 @@
 #X connect 0 1 12 1;
 #X connect 1 0 12 0;
 #X connect 3 0 0 0;
+#X connect 3 1 2 0;
 #X connect 4 0 3 0;
 #X connect 6 0 15 0;
 #X connect 7 0 15 0;
