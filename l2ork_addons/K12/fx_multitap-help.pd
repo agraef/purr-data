@@ -1,33 +1,38 @@
-#N canvas 373 110 502 517 10;
+#N canvas 373 110 510 518 10;
 #X obj 245 44 preset_hub k12 %hidden% %node% 2 2 33 %node% 2 2 34 %node%
-2 3 14 %node% 2 3 28 %node% 2 9 8 %node% 2 9 16;
-#X obj 20 429 cnv 15 472 98 empty empty empty 20 12 0 14 -233017 -66577
+2 3 14 %node% 2 3 28 %node% 2 9 8 %node% 2 9 16 %node% 2 9 7 %node%
+2 9 15 %node% 2 11 7;
+#X obj 19 429 cnv 15 476 106 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 23 214 K12/wii_hit;
-#X obj 23 547 output;
-#N canvas 501 346 450 170 META 0;
-#X text 13 43 INLET_0 Connect the signal to which you want the delay
+#X obj 23 577 output;
+#N canvas 454 430 403 161 META 0;
+#X text 14 43 INLET_0 Connect the signal to which you want the delay
 to be added;
 #X text 14 11 DESCRIPTION This effect object adds a delay or echo effect
 to a sound. The speed is adjustable using the slider.;
-#X text 13 69 OUTLET_0 Connect this to the output object \, signal
+#X text 14 105 OUTLET_0 Connect this to the output object \, signal
 processing objects (blue) or another yellow effect object;
-#X restore 457 663 pd META;
-#X obj 8 66 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+#X text 14 73 INLET_1 Change delay time using values between 0 (5 milliseconds)
+and 1 (2000 milliseconds).;
+#X restore 451 653 pd META;
+#X obj 6 66 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
 0;
-#X obj 8 38 cnv 15 501 28 empty empty FX/Multitap 5 14 0 20 -139274
+#X obj 6 38 cnv 15 501 28 empty empty FX/Multitap 5 14 0 20 -139274
 -262144 0;
 #X obj 479 69 ggee/image @pd_extra/K12/icons/l2ork.png 0;
 #X obj 23 94 K12/wii_connect;
-#X obj 24 433 K12/fx_multitap;
+#X obj 23 433 K12/fx_multitap;
 #X obj 23 323 K12/instr_short1;
-#X text 129 435 The Multitap Delay is an adjustable delay or echo that
+#X obj 130 352 K12/math_number;
+#X text 120 435 The Multitap Delay is an adjustable delay or echo that
 slowly decays over time. Connect the output of an instrument to the
-inlet. To adjust the delay \, use the slider on the object. The range
-is 5 ms to 2000 ms. Use the feedback slider to adjust how long the
-delay decays. The outlet sends out the original sound plus the delays.
-;
+left inlet. To adjust the delay \, use the slider on the object or
+send value between 0 and 1 in the right inlet. The range is 5 ms to
+2000 ms. Use the feedback slider to adjust how long the delay decays.
+The outlet sends out the original sound plus the delays.;
 #X connect 2 0 10 0;
 #X connect 8 0 2 0;
 #X connect 9 0 3 0;
 #X connect 10 0 9 0;
+#X connect 11 0 9 1;

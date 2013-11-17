@@ -1,4 +1,4 @@
-#N canvas 49 137 425 388 10;
+#N canvas 49 137 502 388 10;
 #X obj 13 207 inlet~;
 #X obj 12 500 outlet~;
 #X obj 198 394 *~ 0.85;
@@ -20,6 +20,8 @@
 #X obj 198 357 vd~ \$0-delread_ex;
 #X obj 198 336 line~;
 #X msg 198 315 \$1 50;
+#X obj 383 141 inlet;
+#X obj 383 162 * 2000;
 #X connect 0 0 3 0;
 #X connect 0 0 5 0;
 #X connect 2 0 3 0;
@@ -35,4 +37,6 @@
 #X connect 16 0 2 0;
 #X connect 17 0 16 0;
 #X connect 18 0 17 0;
+#X connect 19 0 20 0;
+#X connect 20 0 8 0;
 #X coords 0 -1 1 1 89 89 2 330 227;
