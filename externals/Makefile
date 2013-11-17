@@ -604,12 +604,13 @@ $(gem_src)/Gem.dll: $(gem_src)/configure
 	$(MAKE) -C $(gem_src)
 
 $(gem_src)/Gem.pd_linux: $(gem_src)/configure
-	cd $(gem_src) && ./configure \
-		CXXFLAGS="-DHAVE_S_STUFF_H" \
-		--prefix=$(prefix) \
-		--with-video=plugins \
-		--with-film=plugins \
-		--with-pd=$(pd_src)
+	test -s $(gem_src)/Gem.pd_linux || \
+		cd $(gem_src) && ./configure \
+			CXXFLAGS="-DHAVE_S_STUFF_H" \
+			--prefix=$(prefix) \
+			--with-video=plugins \
+			--with-film=plugins \
+			--with-pd=$(pd_src)
 	$(MAKE) -C $(gem_src)
 
 $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
