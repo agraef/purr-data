@@ -1,9 +1,9 @@
-#N canvas 203 131 548 278 10;
+#N canvas 203 131 548 305 10;
 #X obj 397 66 bng 86 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 440 96 ggee/image @pd_extra/K12/objects/fx_reverb1.png 1;
-#X obj 272 92 freeverb~;
-#X obj 273 150 outlet~;
+#X obj 271 92 freeverb~;
+#X obj 271 150 outlet~;
 #X obj 271 -53 inlet~;
 #N canvas 3 75 470 252 reverb_levels 0;
 #X msg 173 175 roomsize 0.98 \, wet 0.7 \, dry 0.5 \, width 0 \, damping
@@ -29,17 +29,18 @@
 #X connect 5 0 7 0;
 #X connect 6 0 2 0;
 #X restore 288 65 pd reverb_levels;
-#X obj 272 124 *~ 0.5;
+#X obj 271 124 *~ 0.5;
 #X obj 451 -7 loadbang;
 #X obj 451 -30 select 0 1 2 3;
 #X obj 271 36 +~ 1e-07;
-#X obj 459 -75 preset_node k12;
-#X floatatom 451 -52 5 0 0 0 - - -;
-#X obj 451 -98 counter 0 3;
+#X obj 459 -77 preset_node k12;
+#X floatatom 451 -54 5 0 0 0 - - -, f 5;
+#X obj 451 -100 counter 0 3;
 #X msg 451 16 open @pd_extra/K12/objects/fx_reverb1.png;
 #X msg 471 40 open @pd_extra/K12/objects/fx_reverb2.png;
 #X msg 491 63 open @pd_extra/K12/objects/fx_reverb3.png;
 #X msg 511 87 open @pd_extra/K12/objects/fx_reverb4.png;
+#X obj 482 -121 + 1;
 #X connect 0 0 12 0;
 #X connect 2 0 6 0;
 #X connect 2 1 6 0;
@@ -53,12 +54,13 @@
 #X connect 8 3 16 0;
 #X connect 9 0 2 0;
 #X connect 10 0 11 0;
-#X connect 11 0 10 0;
 #X connect 11 0 5 0;
 #X connect 11 0 8 0;
+#X connect 11 0 17 0;
 #X connect 12 0 11 0;
 #X connect 13 0 1 0;
 #X connect 14 0 1 0;
 #X connect 15 0 1 0;
 #X connect 16 0 1 0;
+#X connect 17 0 12 2;
 #X coords 0 -1 1 1 89 89 2 395 64;
