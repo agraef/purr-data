@@ -2,11 +2,11 @@
 #X obj 141 205 ggee/image @pd_extra/K12/objects/signal_sine.png 1;
 #X obj 141 82 loadbang;
 #X obj 75 53 inlet;
-#X obj 30 342 outlet~;
+#X obj 79 342 outlet~;
 #X obj 115 53 preset_node k12;
 #X obj 100 210 nbx 5 19 -1e+37 1e+37 0 0 \$0-s-null \$0-r-null empty
 0 -8 0 16 -262144 -1 -1 0 256 1;
-#X obj 29 317 osc~;
+#X obj 79 317 osc~;
 #X msg 141 105 open @pd_extra/K12/objects/signal_sine.png;
 #X obj 79 275 mtof;
 #X connect 1 0 7 0;

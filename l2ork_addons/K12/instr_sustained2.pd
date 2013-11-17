@@ -22,11 +22,11 @@
 #X obj 400 93 cnv 15 65 23 empty empty Brass 16 12 1 20 -262144 -66577
 0;
 #X obj 261 -4 inlet;
-#X msg 206 211 \$1 50;
 #X obj 300 -4 loadbang;
 #X msg 300 17 open @pd_extra/K12/objects/instr_sustained2.png;
 #X obj 261 17 mtof;
-#X connect 0 0 21 0;
+#X msg 206 211 \$1 25;
+#X connect 0 0 24 0;
 #X connect 1 0 5 0;
 #X connect 2 0 1 0;
 #X connect 3 0 1 1;
@@ -43,11 +43,11 @@
 #X connect 15 0 6 1;
 #X connect 16 0 6 1;
 #X connect 17 0 3 0;
-#X connect 20 0 24 0;
-#X connect 21 0 16 0;
-#X connect 22 0 23 0;
-#X connect 24 0 2 0;
-#X connect 24 0 17 0;
-#X connect 24 0 12 1;
-#X connect 24 0 10 0;
+#X connect 20 0 23 0;
+#X connect 21 0 22 0;
+#X connect 23 0 2 0;
+#X connect 23 0 17 0;
+#X connect 23 0 12 1;
+#X connect 23 0 10 0;
+#X connect 24 0 16 0;
 #X coords 0 -1 1 1 89 89 2 398 57;
