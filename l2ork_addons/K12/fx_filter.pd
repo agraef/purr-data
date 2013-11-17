@@ -7,12 +7,14 @@
 #X msg 301 118 \$1 100;
 #X obj 338 36 ggee/image @pd_extra/K12/objects/fx_filter.png 1;
 #X obj 338 -54 loadbang;
-#X obj 301 41 hsl 68 29 50 10000 0 0 \$0-s-filt0 \$0-r-filt0 empty
+#X obj 301 41 hsl 68 14 50 10000 0 0 \$0-s-filt0 \$0-r-filt0 empty
 -2 -8 0 10 -262144 -1 -1 0 1;
 #X obj 301 141 line~ 0;
 #X obj 391 4 preset_node k12;
 #X obj 301 -108 abs;
 #X msg 338 -33 open @pd_extra/K12/objects/fx_filter.png;
+#X text 300 52 low;
+#X text 348 52 high;
 #X connect 0 0 2 0;
 #X connect 2 3 1 0;
 #X connect 3 0 11 0;
