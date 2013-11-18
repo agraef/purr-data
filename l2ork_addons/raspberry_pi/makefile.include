@@ -1,0 +1,134 @@
+current: l_i386 l_ia64
+
+# which OS to compile for
+UNAME := $(shell uname -s)
+ifeq ($(UNAME),Linux)
+  OS_NAME = linux
+  EXTENSION = pd_linux
+  DYLIB_EXTENSION = so
+endif
+ifeq ($(UNAME),Darwin)
+  OS_NAME = darwin
+  EXTENSION = pd_darwin
+  DYLIB_EXTENSION = dylib
+endif
+ifeq (MINGW,$(findstring MINGW,$(UNAME)))
+  OS_NAME = windows
+  EXTENSION = dll
+  DYLIB_EXTENSION = dll
+endif
+ifeq (CYGWIN,$(findstring CYGWIN,$(UNAME)))
+  OS_NAME = windows
+  EXTENSION = dll
+  DYLIB_EXTENSION = dll
+endif
+# which CPU to compile for
+UNAME_MACHINE := $(shell uname -m)
+ifeq ($(UNAME_MACHINE),x86_64)
+  ARCH = l_ia64
+endif
+ifeq ($(UNAME_MACHINE),i386)
+  ARCH = l_i386
+endif
+ifeq ($(UNAME_MACHINE),i686)
+  ARCH = l_i386
+endif
+ifeq ($(UNAME_MACHINE),ppc)
+  ARCH = powerpc
+endif
+
+# ----------------------- Windows -----------------------
+
+pd_nt: $(NAME).dll
+
+.SUFFIXES: .dll
+
+PDNTCFLAGS = /W3 /WX /DNT /DPD /nologo
+VC="C:\Program Files\Microsoft Visual Studio\Vc98"
+
+PDNTINCLUDE = /I. /I..\pd\src /I..\..\pd\src  /I..\..\..\pd\src /I$(VC)\include
+
+PDNTLDIR = $(VC)\lib
+PDNTLIB = $(PDNTLDIR)\libc.lib \
+	$(PDNTLDIR)\oldnames.lib \
+	$(PDNTLDIR)\kernel32.lib \
+	..\..\bin\pd.lib 
+
+.c.dll:
+	cl $(PDNTCFLAGS) $(PDNTINCLUDE) /c $*.c
+	link /dll /export:$(CSYM)_setup $*.obj $(PDNTLIB)
+
+# ----------------------- LINUX i386 and ia64 -----------------------
+
+l_i386: $(NAME).l_i386
+l_ia64: $(NAME).l_ia64
+
+.SUFFIXES: .l_i386 .l_ia64 .l_arm
+
+LINUXCFLAGS = -DPD -O2 -funroll-loops -fomit-frame-pointer \
+    -fno-strict-aliasing -Wall -W -Wshadow -Wstrict-prototypes \
+    -Wno-unused -Wno-parentheses -Wno-switch $(CFLAGS)
+
+UNIXINCLUDE =  -I../pd/src -I../../pd/src -I../../../pd/src \
+    -I../../../../pd/src -I../../../../../pd/src
+LINUXINCLUDE =  $(UNIXINCLUDE)
+
+.c.l_i386:
+	$(CC) $(LINUXCFLAGS) $(LINUXINCLUDE) -m32 -o $*.o -c $*.c
+	$(CC) -m32 -shared -o $*.l_i386 $*.o -lc -lm
+	strip --strip-unneeded $*.l_i386
+	rm -f $*.o
+	mv $(NAME).l_i386 $(NAME).pd_linux
+
+.c.l_ia64:
+	cc $(LINUXCFLAGS) $(LINUXINCLUDE) -fPIC -o $*.o -c $*.c
+	ld  -shared -o $*.l_ia64 $*.o -lc -lm
+	strip --strip-unneeded $*.l_ia64
+	rm $*.o
+	mv $(NAME).l_ia64 $(NAME).pd_linux
+
+.c.l_arm:
+	cc $(LINUXCFLAGS) $(LINUXINCLUDE) -o $*.o -c $*.c
+	ld  -shared -o $*.l_arm $*.o -lc -lm
+	strip --strip-unneeded $*.l_arm
+	rm $*.o
+	mv $(NAME).l_arm $(NAME).pd_linux
+
+linux:
+ifeq ($(UNAME),Linux)
+ifeq ($(ARCH),l_ia64)
+	make l_ia64
+endif
+ifeq ($(ARCH),l_arm)
+		make l_arm
+endif
+ifeq ($(ARCH),l_i386)
+	make l_i386
+endif
+endif
+
+# ----------------------- Mac OSX -----------------------
+
+d_ppc: $(NAME).d_ppc
+d_fat: $(NAME).d_fat
+
+.SUFFIXES: .d_ppc .d_fat
+
+DARWINCFLAGS = -DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
+    -Wno-unused -Wno-parentheses -Wno-switch
+
+.c.d_ppc:
+	$(CC) $(DARWINCFLAGS) $(UNIXINCLUDE) -o $*.o -c $*.c
+	$(CC) -bundle -undefined suppress -flat_namespace -o $*.pd_darwin $*.o 
+	rm -f $*.o
+
+.c.d_fat:
+	$(CC) -arch i386 -arch ppc $(DARWINCFLAGS) $(UNIXINCLUDE) -o $*.o -c $*.c
+	$(CC) -arch i386 -arch ppc -bundle -undefined suppress -flat_namespace \
+	    -o $*.d_fat $*.o 
+	rm -f $*.o
+
+# ----------------------------------------------------------
+
+clean:
+	rm -f *.o *.pd_* *.d_ppc *.d_fat *.l_i386 *.l_ia64 *.dll
