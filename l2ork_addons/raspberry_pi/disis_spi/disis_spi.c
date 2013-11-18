@@ -181,7 +181,7 @@ static int disis_spi_write_read(t_disis_spi *spi, unsigned char *data, int lengt
 }
 
 /***********************************************************************
- * mcp3008 enabled eternal that by default interacts with /dev/spidev0.0 device using
+ * mcp3008 enabled external that by default interacts with /dev/spidev0.0 device using
  * disis_spi_MODE_0 (MODE 0) (defined in linux/spi/spidev.h), speed = 1MHz &
  * bitsPerWord=8.
  *
