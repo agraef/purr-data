@@ -11,7 +11,7 @@ extern "C" {
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
 #define PD_BUGFIX_VERSION 7
-#define PD_TEST_VERSION "20130906"
+#define PD_TEST_VERSION "20131117"
 #define PDL2ORK
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
@@ -447,6 +447,9 @@ EXTERN void class_domainsignalin(t_class *c, int onset);
 EXTERN void class_set_extern_dir(t_symbol *s);
 #define CLASS_MAINSIGNALIN(c, type, field) \
     class_domainsignalin(c, (char *)(&((type *)0)->field) - (char *)0)
+
+         /* classtable functions */
+EXTERN t_class *classtable_findbyname(t_symbol *s);
 
          /* prototype for functions to save Pd's to a binbuf */
 typedef void (*t_savefn)(t_gobj *x, t_binbuf *b);

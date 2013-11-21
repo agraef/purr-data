@@ -17,8 +17,6 @@
 #define MAXNDEV 20
 #define DEVDESCSIZE 80
 
-extern t_class *classtable_findbyname(t_symbol *s);
-
 /* -------------------------- print ------------------------------ */
 t_class *print_class;
 
@@ -268,18 +266,22 @@ void canvasinfo_filename(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
 {
     t_canvas *c = canvasinfo_dig(x);
-    int x1, y1, x2, y2;
+    int x1, y1, x2, y2, indexno;
     t_gobj *ob = canvas_findhitbox(c, xpos, ypos, &x1, &y1, &x2, &y2);
     if (ob)
     {
-        t_atom at[5];
+        t_gobj *y;
+        for (indexno = 0, y = c->gl_list; y && y != ob; y = y->g_next)
+            indexno++;
+        t_atom at[6];
         char *classname = class_getname(ob->g_pd);
         SETSYMBOL(at, gensym(classname));
-        SETFLOAT(at+1, (t_float)x1);
-        SETFLOAT(at+2, (t_float)y1);
-        SETFLOAT(at+3, (t_float)x2);
-        SETFLOAT(at+4, (t_float)y2);
-        info_out((t_text *)x, gensym("hitbox"), 5, at);
+        SETFLOAT(at+1, (t_float)indexno);
+        SETFLOAT(at+2, (t_float)x1);
+        SETFLOAT(at+3, (t_float)y1);
+        SETFLOAT(at+4, (t_float)x2);
+        SETFLOAT(at+5, (t_float)y2);
+        info_out((t_text *)x, gensym("hitbox"), 6, at);
     }
     else
         info_out((t_text *)x, gensym("hitbox"), 0, 0);
@@ -953,13 +955,16 @@ void classinfo_setup(void)
     post("classinfo: v.0.1");
     post("stable classinfo methods: size");
 
-/* todo: add "instance" method to return instances of a class on a canvas */
+/*
+   todo: make an objectinfo class to get the kind of info that canvasinfo "hitbox"
+   currently gives
+*/
 }
 
 void x_interface_setup(void)
 {
-	print_setup();
-	canvasinfo_setup();
-	pdinfo_setup();
-	classinfo_setup();
+    print_setup();
+    canvasinfo_setup();
+    pdinfo_setup();
+    classinfo_setup();
 }
