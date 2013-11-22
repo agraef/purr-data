@@ -1,5 +1,32 @@
-#N canvas 12 363 561 155 12;
-#X text 303 114 updated for Pd version 0.34;
-#X obj 34 68 dollarsign2 three 4;
-#X text 32 14 An abstraction's creation arguments may be either numbers
+#N canvas 433 237 448 139 10;
+#X obj 103 79 dollarsign2 three 4;
+#X text 19 37 An abstraction's creation arguments may be either numbers
 or symbols. Gory details are inside:;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header dollarsigns 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 117 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 29 301 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control abstraction;
+#X text 12 65 DESCRIPTION example patch for dollarsign variables;
+#X restore 382 119 pd META;
+#N canvas 13 202 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Dollar Signs- Related Help Documents;
+#X obj 63 53 pddp/pddplink ../5.reference/all_about_dollarsign_zero.pd
+-text doc/5.reference/all_about_dollarsign_zero.pd;
+#X obj 63 73 pddp/pddplink ../5.reference/all_about_atoms.pd -text
+doc/5.reference/all_about_atoms.pd;
+#X restore 103 119 pd References;
+#X obj 6 119 pddp/pddplink ../5.reference/pddp/help.pd -text help;

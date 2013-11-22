@@ -1,5 +1,5 @@
-#N canvas 222 84 642 346 12;
-#X floatatom 75 227 0 0 0;
+#N canvas 433 181 448 307 10;
+#X floatatom 48 209 0 0 0 0 - - -;
 #N canvas 159 26 495 266 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -51,37 +51,38 @@
 #X connect 22 0 23 0;
 #X connect 22 0 23 1;
 #X connect 24 0 21 0;
-#X restore 46 255 pd output;
-#X msg 123 227 MUTE;
-#X text 166 225 <-- output amplitude;
-#X obj 46 173 tabread4~ mtof;
-#X obj 46 197 osc~;
+#X restore 23 234 pd output;
+#X msg 74 209 MUTE;
+#X text 110 209 <-- output amplitude;
+#X obj 23 155 tabread4~ mtof;
+#X obj 23 179 osc~;
 #N canvas 247 30 505 439 tables 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array dbtorms 123 float 1;
 #A 0 0 0 1.25893e-05 1.41254e-05 1.58489e-05 1.77828e-05 1.99526e-05
 2.23872e-05 2.51189e-05 2.81838e-05 3.16228e-05 3.54813e-05 3.98107e-05
 4.46684e-05 5.01187e-05 5.62341e-05 6.30957e-05 7.07946e-05 7.94328e-05
-8.91251e-05 1e-04 0.000112202 0.000125893 0.000141254 0.000158489 0.000177828
-0.000199526 0.000223872 0.000251189 0.000281838 0.000316228 0.000354813
-0.000398107 0.000446684 0.000501187 0.000562341 0.000630957 0.000707946
-0.000794328 0.000891251 0.001 0.00112202 0.00125893 0.00141254 0.00158489
-0.00177828 0.00199526 0.00223872 0.00251189 0.00281838 0.00316228 0.00354813
-0.00398107 0.00446684 0.00501187 0.00562341 0.00630957 0.00707946 0.00794328
-0.00891251 0.01 0.0112202 0.0125893 0.0141254 0.0158489 0.0177828 0.0199526
-0.0223872 0.0251189 0.0281838 0.0316228 0.0354813 0.0398107 0.0446684
-0.0501187 0.0562341 0.0630957 0.0707946 0.0794328 0.0891251 0.1 0.112202
-0.125893 0.141254 0.158489 0.177828 0.199526 0.223872 0.251189 0.281838
-0.316228 0.354813 0.398107 0.446684 0.501187 0.562341 0.630957 0.707946
-0.794328 0.891251 1 1.12202 1.25893 1.41254 1.58489 1.77828 1.99526
-2.23872 2.51189 2.81838 3.16228 3.54813 3.98107 4.46684 5.01187 5.62341
-6.30957 7.07946 7.94328 8.91251 10 11.2202 12.5893;
+8.91251e-05 0.0001 0.000112202 0.000125893 0.000141254 0.000158489
+0.000177828 0.000199526 0.000223872 0.000251189 0.000281838 0.000316228
+0.000354813 0.000398107 0.000446684 0.000501187 0.000562341 0.000630957
+0.000707946 0.000794328 0.000891251 0.001 0.00112202 0.00125893 0.00141254
+0.00158489 0.00177828 0.00199526 0.00223872 0.00251189 0.00281838 0.00316228
+0.00354813 0.00398107 0.00446684 0.00501187 0.00562341 0.00630957 0.00707946
+0.00794328 0.00891251 0.01 0.0112202 0.0125893 0.0141254 0.0158489
+0.0177828 0.0199526 0.0223872 0.0251189 0.0281838 0.0316228 0.0354813
+0.0398107 0.0446684 0.0501187 0.0562341 0.0630957 0.0707946 0.0794328
+0.0891251 0.1 0.112202 0.125893 0.141254 0.158489 0.177828 0.199526
+0.223872 0.251189 0.281838 0.316228 0.354813 0.398107 0.446684 0.501187
+0.562341 0.630957 0.707946 0.794328 0.891251 1 1.12202 1.25893 1.41254
+1.58489 1.77828 1.99526 2.23872 2.51189 2.81838 3.16228 3.54813 3.98107
+4.46684 5.01187 5.62341 6.30957 7.07946 7.94328 8.91251 10 11.2202
+12.5893;
 #X coords 0 10 123 0 200 100 1;
 #X restore 129 49 graph;
 #X text 331 142 0;
 #X text 333 42 10;
 #X text 127 157 ------ 123 samples ------;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array mtof 130 float 1;
 #A 0 8.1758 8.66196 9.17702 9.72272 10.3009 10.9134 11.5623 12.2499
 12.9783 13.75 14.5676 15.4339 16.3516 17.3239 18.354 19.4454 20.6017
@@ -103,46 +104,69 @@
 #X text 128 336 ------ 130 samples ------;
 #X text 340 318 0;
 #X text 342 218 12000;
-#X restore 490 225 pd tables;
-#X text 35 6 PORTAMENTO;
-#X obj 46 149 line~;
-#X obj 46 101 r pitch;
-#X msg 316 101 36;
-#X msg 345 101 48;
-#X msg 372 101 60;
-#X msg 429 101 72;
-#X msg 401 101 67;
-#X msg 483 101 76;
-#X msg 457 101 74;
-#X obj 451 165 s pitch;
-#X msg 514 101 84;
-#X msg 544 101 96;
-#X floatatom 143 125 0 0 0;
-#X text 173 126 <-- change speed;
-#X floatatom 451 139 0 0 0;
-#X obj 46 125 pack 0 100;
-#X obj 388 192 loadbang;
-#X msg 387 214 \; pitch 72;
-#X text 40 37 Portamento can be done using just line~ \, but you still
-might want to sweep in pitch \, not frequency:;
-#X text 363 293 updated for Pd version 0.35;
+#X restore 370 245 pd tables;
+#X obj 23 131 line~;
+#X obj 23 83 r pitch;
+#X msg 176 111 36;
+#X msg 205 111 48;
+#X msg 232 111 60;
+#X msg 289 111 72;
+#X msg 261 111 67;
+#X msg 343 111 76;
+#X msg 317 111 74;
+#X obj 311 175 s pitch;
+#X msg 374 111 84;
+#X msg 404 111 96;
+#X floatatom 80 77 0 0 0 0 - - -;
+#X text 110 78 <-- change speed;
+#X floatatom 311 149 0 0 0 0 - - -;
+#X obj 23 107 pack 0 100;
+#X obj 267 212 loadbang;
+#X msg 267 234 \; pitch 72;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header portamento 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 20 37 Portamento can be done using just [line~] \, but you
+still might want to sweep in pitch \, not frequency:;
+#X obj 1 284 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION portamento;
+#X restore 392 286 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 portamento- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 286 pd References;
+#X obj 6 286 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 1 1;
 #X connect 1 0 0 0;
 #X connect 2 0 1 2;
 #X connect 4 0 5 0;
 #X connect 5 0 1 0;
-#X connect 8 0 4 0;
-#X connect 9 0 23 0;
-#X connect 10 0 22 0;
-#X connect 11 0 22 0;
-#X connect 12 0 22 0;
-#X connect 13 0 22 0;
-#X connect 14 0 22 0;
-#X connect 15 0 22 0;
-#X connect 16 0 22 0;
-#X connect 18 0 22 0;
-#X connect 19 0 22 0;
-#X connect 20 0 23 1;
-#X connect 22 0 17 0;
-#X connect 23 0 8 0;
-#X connect 24 0 25 0;
+#X connect 7 0 4 0;
+#X connect 8 0 22 0;
+#X connect 9 0 21 0;
+#X connect 10 0 21 0;
+#X connect 11 0 21 0;
+#X connect 12 0 21 0;
+#X connect 13 0 21 0;
+#X connect 14 0 21 0;
+#X connect 15 0 21 0;
+#X connect 17 0 21 0;
+#X connect 18 0 21 0;
+#X connect 19 0 22 1;
+#X connect 21 0 16 0;
+#X connect 22 0 7 0;
+#X connect 23 0 24 0;

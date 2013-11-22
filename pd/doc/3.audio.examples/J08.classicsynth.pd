@@ -1,4 +1,4 @@
-#N canvas 203 294 592 528 12;
+#N canvas 433 111 448 519 10;
 #N canvas 158 4 781 654 16x 0;
 #X obj 69 345 *~ 0.064;
 #X obj 69 368 rpole~ 0.93538;
@@ -64,36 +64,34 @@
 #X connect 25 0 26 0;
 #X connect 26 0 15 0;
 #X connect 28 0 27 0;
-#X restore 41 160 pd 16x;
-#X obj 44 255 output~;
-#X text 333 501 Updated for Pd version 0.39;
-#X text 151 7 THE CLASSIC SUBTRACTIVE SYNTH SOUND;
-#X obj 152 132 *~;
-#X obj 151 102 +~ 0.2;
-#X obj 151 156 *~ 2000;
-#X obj 108 221 *~;
-#X obj 43 218 *~;
-#X obj 41 122 mtof;
-#X obj 41 13 r \$0-note;
-#X obj 41 62 makenote 1;
-#X obj 404 150 + 20;
-#X obj 404 102 metro 300;
-#X obj 404 80 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
-;
-#X obj 404 201 s \$0-note;
-#X obj 404 125 random 70;
-#X obj 42 192 vcf~ 3;
-#X floatatom 228 112 3 0 0 0 - - -;
-#X floatatom 228 157 7 0 0 0 - - -;
-#X obj 228 133 mtof;
-#X obj 108 196 adsr 2 30 200 50 500;
-#X obj 151 77 adsr 1 10 200 50 500;
-#X obj 404 175 pack 0 200;
-#X obj 41 92 poly 1 1;
-#X obj 41 36 unpack;
-#X floatatom 480 80 3 0 0 0 - - -;
-#X floatatom 489 154 3 0 0 0 - - -;
-#X text 31 323 Now that we can make reasonably high-quality classic
+#X restore 22 189 pd 16x;
+#X obj 25 284 output~;
+#X obj 133 161 *~;
+#X obj 132 131 +~ 0.2;
+#X obj 132 185 *~ 2000;
+#X obj 89 250 *~;
+#X obj 24 247 *~;
+#X obj 22 151 mtof;
+#X obj 22 42 r \$0-note;
+#X obj 22 91 makenote 1;
+#X obj 344 170 + 20;
+#X obj 344 122 metro 300;
+#X obj 344 100 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 344 221 s \$0-note;
+#X obj 344 145 random 70;
+#X obj 23 221 vcf~ 3;
+#X floatatom 209 141 3 0 0 0 - - -, f 3;
+#X floatatom 209 186 7 0 0 0 - - -, f 7;
+#X obj 209 162 mtof;
+#X obj 89 225 adsr 2 30 200 50 500;
+#X obj 132 106 adsr 1 10 200 50 500;
+#X obj 344 195 pack 0 200;
+#X obj 22 121 poly 1 1;
+#X obj 22 65 unpack;
+#X floatatom 395 100 3 0 0 0 - - -, f 3;
+#X floatatom 401 174 3 0 0 0 - - -, f 3;
+#X text 22 343 Now that we can make reasonably high-quality classic
 waveforms using upsampling \, we combine an upsampled oscillator with
 a "vcf" filter and ADSR generators to control the filter resonant frequency
 and the amplitude to make the classic subtractive synthesis sound.
@@ -102,34 +100,59 @@ Send an "s \$0-note" object a (pitch \, duration) pair to play a note.
 can add controls to change the parameters of the ADSR envelopes and/or
 the vcf~ "Q" parameter. THe oscillators' waveforms and tuning relationship
 is controlled by other parameters set within the "pd 16x" window.;
-#X connect 0 0 17 0;
-#X connect 4 0 6 0;
-#X connect 5 0 4 0;
-#X connect 5 0 4 1;
-#X connect 6 0 17 1;
-#X connect 7 0 8 1;
-#X connect 8 0 1 0;
-#X connect 8 0 1 1;
-#X connect 9 0 0 0;
-#X connect 10 0 25 0;
-#X connect 11 0 24 0;
-#X connect 11 1 24 1;
-#X connect 12 0 23 0;
-#X connect 13 0 16 0;
-#X connect 14 0 13 0;
-#X connect 16 0 12 0;
-#X connect 17 0 8 0;
-#X connect 18 0 20 0;
-#X connect 19 0 6 1;
-#X connect 20 0 19 0;
-#X connect 21 0 7 0;
-#X connect 21 0 7 1;
-#X connect 22 0 5 0;
-#X connect 23 0 15 0;
-#X connect 24 1 9 0;
-#X connect 24 2 22 0;
-#X connect 24 2 21 0;
-#X connect 25 0 11 0;
-#X connect 25 1 11 2;
-#X connect 26 0 13 1;
-#X connect 27 0 23 1;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header the_classic_subtractive_synth_sound
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 497 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION the classic subtractive synth sound;
+#X restore 392 499 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 classic subtractive synth- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 499 pd References;
+#X obj 6 499 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 15 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 3 0 2 1;
+#X connect 4 0 15 1;
+#X connect 5 0 6 1;
+#X connect 6 0 1 0;
+#X connect 6 0 1 1;
+#X connect 7 0 0 0;
+#X connect 8 0 23 0;
+#X connect 9 0 22 0;
+#X connect 9 1 22 1;
+#X connect 10 0 21 0;
+#X connect 11 0 14 0;
+#X connect 12 0 11 0;
+#X connect 14 0 10 0;
+#X connect 15 0 6 0;
+#X connect 16 0 18 0;
+#X connect 17 0 4 1;
+#X connect 18 0 17 0;
+#X connect 19 0 5 0;
+#X connect 19 0 5 1;
+#X connect 20 0 3 0;
+#X connect 21 0 13 0;
+#X connect 22 1 7 0;
+#X connect 22 2 20 0;
+#X connect 22 2 19 0;
+#X connect 23 0 9 0;
+#X connect 23 1 9 2;
+#X connect 24 0 11 1;
+#X connect 25 0 21 1;

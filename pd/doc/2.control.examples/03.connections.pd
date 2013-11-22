@@ -1,46 +1,85 @@
-#N canvas 185 28 660 552 12;
-#X floatatom 76 400 0 0 0 0 - - -;
-#X floatatom 189 401 0 0 0 0 - - -;
-#X floatatom 76 307 0 0 0 0 - - -;
-#X floatatom 553 161 0 0 0 0 - - -;
-#X floatatom 599 162 0 0 0 0 - - -;
-#X obj 553 135 +;
-#X floatatom 553 105 0 0 0 0 - - -;
-#X obj 599 136 +;
-#X floatatom 26 109 0 0 0 0 - - -;
-#X floatatom 26 17 0 0 0 0 - - -;
-#X floatatom 48 41 0 0 0 0 - - -;
-#X obj 26 85 +;
-#X text 3 64 hot;
-#X text 53 66 cold;
-#X text 232 105 Here's the downside: drag this--->;
-#X text 551 180 good;
-#X text 600 181 bad;
-#X obj 76 376 *;
-#X obj 189 377 -;
-#X text 15 400 square;
-#X text 229 402 first difference;
-#X obj 76 330 trigger float float;
-#X text 412 526 updated for Pd version 0.33;
-#X text 19 433 Trigger takes any number of "bang" and "float" arguments
-(among others) and copies its input to its outlets \, in the requested
-forms \, in right-to-left order. Hook it to two inputs without crossing
-the wires and you get the expected result. Cross the wires and you
-get a memory effect.;
-#X text 9 136 In Pd you must sometimes think about what order an object
-is going to get its messages in. If an outlet is connected to more
-than one inlet it's undefined which inlet will get the cookie first.
-I've rigged this example so that the left-hand side box gets its inputs
-in the good \, right-to-left order \, so that the hot inlet gets hit
-when all the data are good. The "bad adder" happens to receive its
-inputs in the wrong order and is perpetually doing its addition before
-all the data are in. There's an object that exists solely to allow
+#N canvas 433 96 448 562 10;
+#X floatatom 28 518 0 0 0 0 - - -;
+#X floatatom 139 519 0 0 0 0 - - -;
+#X floatatom 28 417 0 0 0 0 - - -;
+#X floatatom 70 359 0 0 0 0 - - -;
+#X floatatom 106 359 0 0 0 0 - - -;
+#X obj 70 328 +;
+#X floatatom 70 278 0 0 0 0 - - -;
+#X obj 106 328 +;
+#X floatatom 180 164 0 0 0 0 - - -;
+#X floatatom 180 112 0 0 0 0 - - -;
+#X floatatom 215 112 0 0 0 0 - - -;
+#X obj 180 140 +;
+#X text 37 328 good;
+#X text 135 328 bad;
+#X obj 28 481 *;
+#X obj 139 482 -;
+#X obj 28 440 trigger float float;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header connections 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 540 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 42 254 494 284 META 0;
+#X text 12 115 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 95 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS control;
+#X text 12 135 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.33. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 65 DESCRIPTION connections between objects \, and hot and
+cold inlets;
+#X restore 382 541 pd META;
+#N canvas 13 202 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Connections- Related Help Documents;
+#X text 19 67 There's a little glossary at (link) where you can see
+the synonyms for terms like connection and others.;
+#X text 19 37 Connections are also called "wires" \, "cords" \, "patch
+cords" \, and sometimes just "lines".;
+#X restore 103 541 pd References;
+#X obj 6 541 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 82 133 hot inlet --->;
+#X text 215 133 <--- cold inlet;
+#X text 176 315 received its input. The "bad" adder;
+#X text 176 328 happens to receive its inputs in the;
+#X text 176 341 wrong order and is perpetually doing;
+#X text 176 354 its addition before the right inlet;
+#X text 176 367 receives its data.;
+#X text 108 275 <--- Connection order ambiguity;
+#X text 38 384 Luckily \, there's an object that exists solely to allow
 you to control message order explicitly:;
-#X text 114 16 In Pd \, most objects carry out their functions when
-they get messages in their leftmost inlets \, and their other inlets
-are for storing values that can modify the next action. Here \, the
-"+" object does its thing only when the left-hand input changes.;
-#X connect 2 0 21 0;
+#X text 176 439 others) and copies its input to its;
+#X text 175 452 outlets \, in the requested forms \, in;
+#X text 37 183 In Pd you must often consider the order in which an
+object is going to get its messages. If an outlet is connected to more
+than one inlet it's not possible to look at a patch and tell which
+inlet will receive data first. Pd happens to choose based on the order
+in which the connections were made. I've rigged the example below so
+the [+] on the left gets its inputs in the "good" right-to-left order.
+;
+#X text 175 465 right-to-left order. Hook it to two;
+#X text 175 478 inputs without crossing the wires and;
+#X text 176 491 you get the expected result. Cross the;
+#X text 171 504 wires and you get a memory effect.;
+#X text 176 426 of "bang" and "float" arguments (among;
+#X text 176 413 The [trigger] object takes any number;
+#X text 177 289 The "hot" inlet of the "good" adder;
+#X text 177 302 gets hit after the "cold" one has;
+#X text 54 520 <-- square;
+#X text 167 520 <-- first difference;
+#X text 37 24 In Pd \, most objects carry out their functions when
+they get messages in their leftmost inlets. Other inlets are for storing
+values that can modify the next action. The [+] object below sends
+output only when the left-hand input changes. For this reason the leftmost
+inlet is called the "hot" \, or active \, inlet \, while the storage
+inlets are called "cold" inlets.;
+#X connect 2 0 16 0;
 #X connect 5 0 3 0;
 #X connect 6 0 7 0;
 #X connect 6 0 7 1;
@@ -50,9 +89,9 @@ are for storing values that can modify the next action. Here \, the
 #X connect 9 0 11 0;
 #X connect 10 0 11 1;
 #X connect 11 0 8 0;
-#X connect 17 0 0 0;
-#X connect 18 0 1 0;
-#X connect 21 0 17 0;
-#X connect 21 0 18 1;
-#X connect 21 1 17 1;
-#X connect 21 1 18 0;
+#X connect 14 0 0 0;
+#X connect 15 0 1 0;
+#X connect 16 0 14 0;
+#X connect 16 0 15 1;
+#X connect 16 1 14 1;
+#X connect 16 1 15 0;

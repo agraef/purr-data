@@ -1,27 +1,59 @@
-#N canvas 24 192 606 297 12;
-#X floatatom 38 223 0 0 0;
-#X floatatom 191 221 0 0 0;
-#X text 356 264 updated for Pd version 0.34;
-#X text 32 14 You can use dollarsigns in abstractions to get local
+#N canvas 433 199 448 254 10;
+#X floatatom 22 194 0 0 0 0 - - -;
+#X floatatom 145 194 0 0 0 0 - - -;
+#X text 19 37 You can use dollarsigns in abstractions to get local
 sends and receives as shown here.;
-#X obj 29 85 dollarsign one;
-#X obj 167 86 dollarsign two;
-#X obj 38 196 r one-a;
-#X obj 191 194 r two-a;
-#X floatatom 110 225 0 0 0;
-#X floatatom 264 220 0 0 0;
-#X obj 110 197 r one-b;
-#X obj 264 191 r two-b;
-#X text 26 112 Open both copies to see what's happening...;
-#X floatatom 29 59 0 0 0;
-#X floatatom 124 58 0 0 0;
-#X floatatom 167 60 0 0 0;
-#X floatatom 264 58 0 0 0;
-#X connect 6 0 0 0;
-#X connect 7 0 1 0;
-#X connect 10 0 8 0;
-#X connect 11 0 9 0;
-#X connect 13 0 4 0;
-#X connect 14 0 4 1;
-#X connect 15 0 5 0;
-#X connect 16 0 5 1;
+#X obj 160 101 dollarsign two;
+#X obj 22 166 r one-a;
+#X obj 145 167 r two-a;
+#X floatatom 84 194 0 0 0 0 - - -;
+#X floatatom 208 194 0 0 0 0 - - -;
+#X obj 84 166 r one-b;
+#X obj 208 167 r two-b;
+#X text 19 132 Open both copies to see what's happening...;
+#X floatatom 22 74 0 0 0 0 - - -;
+#X floatatom 103 74 0 0 0 0 - - -;
+#X floatatom 160 75 0 0 0 0 - - -;
+#X floatatom 241 75 0 0 0 0 - - -;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header locality 20 10 1
+18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 232 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 21 325 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control nonlocal;
+#X text 12 65 DESCRIPTION dollarsign variables and locality in Pd;
+#X restore 382 234 pd META;
+#X obj 22 100 dollarsign one;
+#N canvas 13 202 428 196 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Locality- Related Help Documents;
+#X text 26 39 For more on dollarsigns \, see:;
+#X text 38 80 manual;
+#X text 27 58 help for message box;
+#X obj 26 99 pddp/pddplink ../5.reference/all_about_atoms.pd -text
+doc/5.reference/all_about_atoms.pd;
+#X obj 26 119 pddp/pddplink ../5.reference/all_about_dollarsign_zero.pd
+-text doc/5.reference/all_about_dollarsign_zero.pd;
+#X obj 26 139 pddp/pddplink ../5.reference/all_about_scope_and_locality.pd
+-text doc/5.reference/all_about_scope_and_locality.pd;
+#X restore 103 234 pd References;
+#X obj 6 234 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 4 0 0 0;
+#X connect 5 0 1 0;
+#X connect 8 0 6 0;
+#X connect 9 0 7 0;
+#X connect 11 0 19 0;
+#X connect 12 0 19 1;
+#X connect 13 0 3 0;
+#X connect 14 0 3 1;

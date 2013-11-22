@@ -1,25 +1,24 @@
-#N canvas 89 36 756 792 12;
-#X obj 127 608 cos~;
-#X obj 127 585 *~;
-#X obj 170 608 cos~;
-#X obj 225 553 wrap~;
-#X obj 189 553 -~;
-#X obj 170 585 +~;
-#X obj 163 638 -~;
-#X obj 183 670 *~;
-#X obj 145 670 +~;
-#X obj 189 521 samphold~;
-#X floatatom 189 321 4 0 127 0 - - -;
-#X text 185 283 center;
-#X obj 189 388 line~;
-#X obj 189 365 pack 0 50;
-#X obj 80 464 phasor~;
-#X floatatom 80 370 4 0 127 0 - - -;
-#X text 71 331 fundamental;
-#X floatatom 387 384 4 0 127 0 - - -;
-#X obj 387 455 line~;
-#X obj 298 584 *~;
-#X obj 387 432 pack 0 50;
+#N canvas 400 28 528 645 10;
+#X obj 76 528 cos~;
+#X obj 76 505 *~;
+#X obj 119 528 cos~;
+#X obj 174 473 wrap~;
+#X obj 138 473 -~;
+#X obj 119 505 +~;
+#X obj 112 558 -~;
+#X obj 132 590 *~;
+#X obj 94 590 +~;
+#X obj 138 441 samphold~;
+#X floatatom 138 241 4 0 127 0 - - -, f 4;
+#X obj 138 308 line~;
+#X obj 138 285 pack 0 50;
+#X obj 29 384 phasor~;
+#X floatatom 29 290 4 0 127 0 - - -, f 4;
+#X text 20 251 fundamental;
+#X floatatom 336 304 4 0 127 0 - - -, f 4;
+#X obj 336 375 line~;
+#X obj 247 504 *~;
+#X obj 336 352 pack 0 50;
 #N canvas 94 264 600 388 make-table 0;
 #X msg 81 44 bang;
 #X obj 81 73 t b b;
@@ -32,7 +31,7 @@
 #X obj 52 270 expr exp(-$f1*$f1);
 #X obj 63 168 sel 199;
 #X obj 51 241 expr ($f1-100)/25;
-#N canvas 0 0 450 300 graph4 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array bell-curve 200 float 1;
 #A 0 1.12535e-07 1.54727e-07 2.12059e-07 2.89706e-07 3.94519e-07 5.35535e-07
 7.24633e-07 9.77371e-07 1.31404e-06 1.76105e-06 2.35258e-06 3.13275e-06
@@ -79,39 +78,30 @@
 #X connect 8 0 7 0;
 #X connect 9 0 5 1;
 #X connect 10 0 8 0;
-#X restore 536 647 pd make-table;
-#X obj 298 558 cos~;
-#X obj 298 533 -~ 0.25;
-#X obj 298 610 +~ 100;
-#X obj 298 633 tabread4~ bell-curve;
-#X obj 184 699 *~;
-#X text 330 658 waveshaper;
-#X text 31 2 CHANGING PAF CONTROLS TO NATURAL UNITS;
-#X obj 80 394 mtof;
-#X obj 211 413 expr 1/$f1;
-#X obj 189 341 mtof;
-#X text 184 298 freq.;
-#X obj 189 437 *~;
-#X text 385 357 bandwidth;
-#X obj 387 406 mtof;
-#X obj 387 491 *~;
-#X obj 387 515 *~ 25;
-#X text 18 23 The more "natural" units for describing a formant might
-be center frequency and bandwidth \, so that you can change the fundamental
-without having the formant shift up and down in parallel. Here all
-three frequencies are expressed in MIDI units. The bandwidth and center
-frequency have to be divided by the fundamental (the expr 1/$f1 takes
-its reciprocal and two *~ objects finish the division.);
-#X text 427 490 divide by fundamental;
-#X text 445 514 range for table;
-#X text 364 609 offset to middle of table;
-#X text 196 459 C.F. relative;
-#X text 197 475 to fundamental;
-#X text 69 346 (MIDI units);
-#X text 220 697 ring mod;
-#X obj 184 726 output~;
-#X text 483 762 updated for Pd version 0.37;
-#X text 19 137 Here we take a somewhat lax approach to sampholding
+#X restore 255 647 pd make-table;
+#X obj 247 478 cos~;
+#X obj 247 453 -~ 0.25;
+#X obj 247 530 +~ 100;
+#X obj 247 553 tabread4~ bell-curve;
+#X obj 133 619 *~;
+#X text 279 578 waveshaper;
+#X obj 29 314 mtof;
+#X obj 160 333 expr 1/$f1;
+#X obj 138 261 mtof;
+#X obj 138 357 *~;
+#X text 334 277 bandwidth;
+#X obj 336 326 mtof;
+#X obj 336 411 *~;
+#X obj 336 435 *~ 25;
+#X text 376 410 divide by fundamental;
+#X text 394 434 range for table;
+#X text 313 529 offset to middle of table;
+#X text 145 379 C.F. relative;
+#X text 146 395 to fundamental;
+#X text 18 266 (MIDI units);
+#X text 169 617 ring mod;
+#X obj 133 646 output~;
+#X text 20 123 Here we take a somewhat lax approach to sampholding
 the center frequency control. The frequency itself changes instantly
 \, but the center/fundamental frequency ratio waits for the next period.
 This gives a slight "chirp" if the fundamental is abruptly raised a
@@ -119,7 +109,39 @@ couple of octaves. There's no easy way using Pd's built-in primitives
 to avoid this. Note however that there's a "paf~" extern available
 which solves this problem better and \, moreover \, runs much faster.
 ;
-#X obj 298 508 *~ 0.5;
+#X obj 247 428 *~ 0.5;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header changing_PAF_controls_to_natural_units
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 The more "natural" units for describing a formant might
+be center frequency and bandwidth \, so that you can change the fundamental
+without having the formant shift up and down in parallel. Here all
+three frequencies are expressed in MIDI units. The bandwidth and center
+frequency have to be divided by the fundamental (the expr 1/$f1 takes
+its reciprocal and two [*~] objects finish the division.);
+#X text 136 222 center freq.;
+#X obj 1 711 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION changing PAF controls to natural units;
+#X text 12 25 KEYWORDS signal;
+#X restore 392 713 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 PAF- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 713 pd References;
+#X obj 6 713 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 1;
 #X connect 0 0 8 0;
 #X connect 1 0 5 0;
@@ -131,34 +153,34 @@ which solves this problem better and \, moreover \, runs much faster.
 #X connect 5 0 2 0;
 #X connect 6 0 7 0;
 #X connect 7 0 8 1;
-#X connect 8 0 26 0;
+#X connect 8 0 25 0;
 #X connect 9 0 4 0;
 #X connect 9 0 3 0;
-#X connect 10 0 31 0;
-#X connect 12 0 33 0;
-#X connect 13 0 12 0;
-#X connect 14 0 9 1;
-#X connect 14 0 1 0;
-#X connect 14 0 5 1;
-#X connect 14 0 49 0;
-#X connect 15 0 29 0;
-#X connect 17 0 35 0;
-#X connect 18 0 36 0;
-#X connect 19 0 24 0;
-#X connect 20 0 18 0;
-#X connect 22 0 19 0;
-#X connect 23 0 22 0;
-#X connect 24 0 25 0;
-#X connect 25 0 26 1;
-#X connect 26 0 46 0;
-#X connect 26 0 46 1;
-#X connect 29 0 30 0;
-#X connect 29 0 14 0;
-#X connect 30 0 33 1;
-#X connect 30 0 36 1;
-#X connect 31 0 13 0;
-#X connect 33 0 9 0;
-#X connect 35 0 20 0;
-#X connect 36 0 37 0;
-#X connect 37 0 19 1;
-#X connect 49 0 23 0;
+#X connect 10 0 29 0;
+#X connect 11 0 30 0;
+#X connect 12 0 11 0;
+#X connect 13 0 9 1;
+#X connect 13 0 1 0;
+#X connect 13 0 5 1;
+#X connect 13 0 44 0;
+#X connect 14 0 27 0;
+#X connect 16 0 32 0;
+#X connect 17 0 33 0;
+#X connect 18 0 23 0;
+#X connect 19 0 17 0;
+#X connect 21 0 18 0;
+#X connect 22 0 21 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 1;
+#X connect 25 0 42 0;
+#X connect 25 0 42 1;
+#X connect 27 0 28 0;
+#X connect 27 0 13 0;
+#X connect 28 0 30 1;
+#X connect 28 0 33 1;
+#X connect 29 0 12 0;
+#X connect 30 0 9 0;
+#X connect 32 0 19 0;
+#X connect 33 0 34 0;
+#X connect 34 0 18 1;
+#X connect 44 0 22 0;

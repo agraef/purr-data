@@ -1,10 +1,6 @@
-#N canvas 19 35 777 377 12;
-#X text 103 7 DELAYS;
-#X text 248 79 The delwrite~ object creates the delay line \; you give
-it a name and a size in milliseconds. Each delwrite~ should have a
-different name.;
+#N canvas 424 20 448 557 10;
 #N canvas 0 0 548 248 sample 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array G01-tab 61079 float 0;
 #X coords 0 1 61078 -1 200 140 1;
 #X restore 100 20 graph;
@@ -13,36 +9,63 @@ different name.;
 #X msg 61 199 read -resize ../sound/voice.wav G01-tab;
 #X connect 1 0 3 0;
 #X connect 3 0 2 0;
-#X restore 253 337 pd sample;
-#X floatatom 38 196 4 0 999 0 - - -;
-#X text 81 195 <-- delay time;
-#X text 46 230 read from delay line;
-#X obj 38 249 delread~ delay1;
-#X obj 14 87 tabplay~ G01-tab;
-#X obj 14 63 metro 1000;
-#X obj 14 39 loadbang;
-#X text 40 146 write to delay line;
-#X obj 16 303 output~;
-#X obj 15 275 +~;
-#X obj 24 165 delwrite~ delay1 1000;
-#X text 499 348 updated for Pd version 0.37-1;
-#X text 248 24 You can delay a signal using the delwrite~ and delread~
+#X restore 205 241 pd sample;
+#X floatatom 38 189 4 0 999 0 - - -, f 4;
+#X text 72 189 <-- delay time;
+#X text 46 223 read from delay line;
+#X obj 38 242 delread~ delay1;
+#X obj 22 90 tabplay~ G01-tab;
+#X obj 22 66 metro 1000;
+#X obj 22 42 loadbang;
+#X text 48 139 write to delay line;
+#X obj 24 296 output~;
+#X obj 23 268 +~;
+#X obj 32 158 delwrite~ delay1 1000;
+#X text 36 110 test signal to delay;
+#X text 105 203 (msec);
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header delays 20 10 1 18
+-261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 535 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION delays;
+#X restore 392 537 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 delays- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 537 pd References;
+#X text 21 345 You can delay a signal using the [delwrite~] and [delread~]
 objects. In this example \, a sample loops continuously and is added
 to a delayed copy of itself.;
-#X text 247 215 The delread~ object always delays the signal an integer
+#X text 21 387 The [delwrite~] object creates the delay line \; you
+give it a name and a size in milliseconds. Each [delwrite~] should
+have a different name.;
+#X text 21 429 [delread~]'s arguments are the name of a [delwrite~]
+(of which there should be exactly one) and an optional delay time in
+milliseconds between 0 and the length of the delay line. Each [delwrite~]
+may have as many [delread~]s as you wish \, which can then function
+as multiple delay taps.;
+#X text 20 493 The [delread~] object always delays the signal an integer
 number of samples and does no interpolation.;
-#X text 28 107 test signal to delay;
-#X text 248 130 Delread~'s arguments are the name of a delwrite (of
-which there should be exactly one) and an optional delay time in milliseconds
-between 0 and the length of the delay line. Each delwrite~ may have
-as many delread~s as you wish \, which can then function as multiple
-delay taps.;
-#X text 114 209 (msec);
-#X connect 3 0 6 0;
-#X connect 6 0 12 1;
-#X connect 7 0 12 0;
-#X connect 7 0 13 0;
-#X connect 8 0 7 0;
-#X connect 9 0 8 0;
-#X connect 12 0 11 0;
-#X connect 12 0 11 1;
+#X obj 6 537 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 4 0;
+#X connect 4 0 10 1;
+#X connect 5 0 10 0;
+#X connect 5 0 11 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 10 0 9 0;
+#X connect 10 0 9 1;

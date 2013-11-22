@@ -1,28 +1,54 @@
-#N canvas 47 52 758 482 12;
-#X text 465 442 updated for Pd version 0.26;
-#X text 35 28 You can use "qlist" or "textfile" objects for sequencing.
-Qlist is simpler to use than the (more versatile) textfile.;
-#X obj 345 144 r receive1;
-#X obj 441 146 r receive2;
-#X msg 205 88 clear \, add receive1 1 \, add 1000 receive1 0 \, add
+#N canvas 433 132 448 454 10;
+#X obj 115 131 r receive1;
+#X obj 201 131 r receive2;
+#X msg 22 85 clear \, add receive1 1 \, add 1000 receive1 0 \, add
 receive2 2 \, add 1000 receive2 0 \, add receive1 3 \, bang;
-#X obj 205 129 qlist;
-#X floatatom 345 170 0 0 0 0 - - -;
-#X floatatom 441 171 0 0 0 0 - - -;
-#X text 48 202 The "add" messages add lines to the qlist \, so that
+#X obj 22 125 qlist;
+#X floatatom 115 156 0 0 0 0 - - -;
+#X floatatom 201 156 0 0 0 0 - - -;
+#X text 19 184 The "add" messages add lines to the qlist \, so that
 it contains:;
-#X text 155 238 receive1 1;
-#X text 154 259 1000 receive1 0;
-#X text 155 279 receive2 2;
-#X text 153 299 1000 receive2 0;
-#X text 155 317 receive1 3;
-#X text 16 391 If you have more than 5 lines or so wou will probably
+#X text 55 219 receive1 1;
+#X text 55 239 1000 receive1 0;
+#X text 55 259 receive2 2;
+#X text 55 279 1000 receive2 0;
+#X text 55 299 receive1 3;
+#X text 18 366 If you have more than 5 lines or so wou will probably
 want to store them as a separate file and have qlist read it. You can
 also write files \, set tempo \, and single step... see the help patch
 for details.;
-#X text 22 341 and the "bang" instructs qlist to play the sequence
+#X text 19 322 and the "bang" instructs qlist to play the sequence
 by sending messages to "receive" objects. Messages starting with numbers
 request that amount of delay.;
-#X connect 2 0 6 0;
-#X connect 3 0 7 0;
-#X connect 4 0 5 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header sequencing 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 432 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 33 353 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.26. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION sequencing with [qlist] and [textfile];
+#X restore 382 434 pd META;
+#X text 19 37 You can use [qlist] or [textfile] objects for sequencing.
+[qlist] is simpler to use than the (more versatile) [textfile].;
+#N canvas 15 364 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Sequencing- Related Help Documents;
+#X text 19 37 The [list] objects are also very good objects for sequencing.
+;
+#X obj 22 73 list;
+#X restore 103 434 pd References;
+#X obj 6 434 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 4 0;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;

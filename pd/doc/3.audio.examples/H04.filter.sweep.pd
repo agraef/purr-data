@@ -1,29 +1,27 @@
-#N canvas 360 22 557 528 12;
-#X floatatom 44 146 5 0 150 0 - #0-pitch -;
-#X text 126 9 SWEEPING FILTERS;
-#X obj 44 193 phasor~;
-#X obj 59 351 +~;
-#X floatatom 81 326 5 0 100 0 - #0-offset -;
-#X floatatom 60 222 5 0 0 0 - #0-speed -;
-#X floatatom 82 273 5 0 100 0 - #0-depth -;
-#X floatatom 75 404 5 0 1000 0 - #0-q -;
-#X obj 44 426 vcf~;
-#X obj 59 375 tabread4~ mtof;
-#X text 127 403 <-- Q (selectivity);
-#X text 115 182 sawtooth;
-#X text 116 198 oscillator;
-#X text 112 221 <-- sweep speed;
-#X text 137 245 LFO for sweep;
-#X text 134 274 <-- sweep depth;
-#X text 131 326 <-- base center frequency;
-#X text 103 350 add base to sweep;
-#X text 192 375 convert to Hz.;
-#X text 97 144 <-- pitch;
-#X obj 43 457 output~;
-#X obj 44 169 mtof;
-#X obj 60 244 phasor~;
-#X obj 60 298 *~;
-#X text 294 496 updated for Pd version 0.39;
+#N canvas 424 19 448 536 10;
+#X floatatom 22 138 5 0 150 0 - #0-pitch -, f 5;
+#X obj 22 185 phasor~;
+#X obj 37 343 +~;
+#X floatatom 52 318 5 0 100 0 - #0-offset -, f 5;
+#X floatatom 38 214 5 0 0 0 - #0-speed -, f 5;
+#X floatatom 53 265 5 0 100 0 - #0-depth -, f 5;
+#X floatatom 47 396 5 0 1000 0 - #0-q -, f 5;
+#X obj 22 418 vcf~;
+#X obj 37 367 tabread4~ mtof;
+#X text 87 396 <-- Q (selectivity);
+#X text 77 176 sawtooth;
+#X text 77 190 oscillator;
+#X text 79 214 <-- sweep speed;
+#X text 103 237 LFO for sweep;
+#X text 95 265 <-- sweep depth;
+#X text 95 318 <-- base center frequency;
+#X text 81 342 add base to sweep;
+#X text 131 367 convert to Hz.;
+#X text 60 137 <-- pitch;
+#X obj 21 449 output~;
+#X obj 22 161 mtof;
+#X obj 38 236 phasor~;
+#X obj 38 290 *~;
 #N canvas 706 247 450 300 startup 0;
 #X obj 85 16 loadbang;
 #X obj 85 40 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -36,47 +34,48 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 168 491 pd startup;
-#X text 14 109 Note the different effects of negative and positive
+#X restore 289 476 pd startup;
+#X text 19 101 Note the different effects of negative and positive
 sweep speeds.;
-#X text 13 32 If you want actively changing center frequencies \, use
-"vcf~" instead of "bp~". The vcf~ module takes an audio signal to set
-center frequency. (Q is still set by messages though.) Vcf is computationally
-somewhat more expensive than bp~.;
-#N canvas 0 22 612 404 conversion-tables 0;
-#N canvas 0 22 450 300 graph2 0;
-#X array mtof 130 float 1;
-#A 0 8.1758 8.66196 9.17702 9.72272 10.3009 10.9134 11.5623 12.2499
-12.9783 13.75 14.5676 15.4339 16.3516 17.3239 18.354 19.4454 20.6017
-21.8268 23.1247 24.4997 25.9565 27.5 29.1352 30.8677 32.7032 34.6478
-36.7081 38.8909 41.2034 43.6535 46.2493 48.9994 51.9131 55 58.2705
-61.7354 65.4064 69.2957 73.4162 77.7817 82.4069 87.3071 92.4986 97.9989
-103.826 110 116.541 123.471 130.813 138.591 146.832 155.563 164.814
-174.614 184.997 195.998 207.652 220 233.082 246.942 261.626 277.183
-293.665 311.127 329.628 349.228 369.994 391.995 415.305 440 466.164
-493.883 523.251 554.365 587.33 622.254 659.255 698.456 739.989 783.991
-830.609 880 932.328 987.767 1046.5 1108.73 1174.66 1244.51 1318.51
-1396.91 1479.98 1567.98 1661.22 1760 1864.66 1975.53 2093 2217.46 2349.32
-2489.02 2637.02 2793.83 2959.96 3135.96 3322.44 3520 3729.31 3951.07
-4186.01 4434.92 4698.64 4978.03 5274.04 5587.65 5919.91 6271.93 6644.88
-7040 7458.62 7902.13 8372.02 8869.84 9397.27 9956.06 10548.1 11175.3
-11839.8 12543.9 13289.8 14080;
-#X coords 0 12000 130 0 200 100 1;
-#X restore 309 225 graph;
-#X text 319 333 ------ 130 samples ------;
-#X text 518 318 0;
-#X text 520 218 12000;
-#X restore 168 463 pd conversion-tables;
-#X connect 0 0 21 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header sweeping_filters
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 If you want actively changing center frequencies \, use
+[vcf~] instead of [bp~]. The [vcf~] module takes an audio signal to
+set center frequency. (Q is still set by messages though.) [vcf~] is
+computationally somewhat more expensive than [bp~].;
+#X obj 1 514 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION sweeping filters;
+#X restore 392 516 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 sweeping filters- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 516 pd References;
+#X obj 6 516 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 20 0;
+#X connect 1 0 7 0;
 #X connect 2 0 8 0;
-#X connect 3 0 9 0;
-#X connect 4 0 3 1;
-#X connect 5 0 22 0;
-#X connect 6 0 23 1;
-#X connect 7 0 8 2;
-#X connect 8 0 20 0;
-#X connect 8 0 20 1;
-#X connect 9 0 8 1;
-#X connect 21 0 2 0;
-#X connect 22 0 23 0;
-#X connect 23 0 3 0;
+#X connect 3 0 2 1;
+#X connect 4 0 21 0;
+#X connect 5 0 22 1;
+#X connect 6 0 7 2;
+#X connect 7 0 19 0;
+#X connect 7 0 19 1;
+#X connect 8 0 7 1;
+#X connect 20 0 1 0;
+#X connect 21 0 22 0;
+#X connect 22 0 2 0;

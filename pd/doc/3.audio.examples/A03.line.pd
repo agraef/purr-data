@@ -1,48 +1,75 @@
-#N canvas 369 106 647 598 12;
-#X obj 56 79 osc~ 440;
-#X obj 56 309 dac~;
-#X msg 446 79 \; pd dsp 1;
-#X msg 538 79 \; pd dsp 0;
-#X text 467 112 ON;
-#X text 555 112 OFF;
-#X obj 56 269 *~;
-#X obj 72 243 line~;
-#X text 129 243 <--- ramp generator;
-#X text 132 78 <-- sine wave;
-#X msg 72 103 0.1 2000;
-#X msg 72 177 0 2000;
-#X msg 72 125 0.1 50;
-#X msg 72 199 0 50;
-#X msg 72 147 0.1;
-#X msg 72 221 0;
-#X text 274 124 ON;
-#X text 154 105 <-- slow;
-#X text 144 126 <-- fast;
-#X text 111 146 <-- instantly;
-#X text 271 197 OFF;
-#X text 136 178 <-- slow;
-#X text 129 199 <-- fast;
-#X text 109 219 <-- instantly;
-#X text 112 161 ----------------------;
-#X text 97 308 <-- out;
-#X text 103 7 CONTROLLING AMPLITUDE USING LINE~;
-#X text 38 342 Line~'s left inlet is a target value \; it reaches that
-target in the time specified (in milliseconds) to its right inlet.
-;
-#X text 34 495 The line~ object (and its control brother \, line) treat
-their right inlet specially. The inlets don't retain values the way
-other inlets do but revert to zero whenever a target is received.;
-#X text 14 27 In this patch \, the multiplier is configured to multiply
-two signals. The amplitude is now a signal computed by the line~ object.
-;
-#X text 37 395 (In this example \, message boxes with two numbers each
-are connected to line~'s left inlet. Except in some special cases \,
-Pd objects with more than one inlet will automatically distribute lists
-of numbers across their inlets. In this case \, "0 50" becomes \, "50
-at right and 0 at left.");
-#X text 386 557 updated for Pd version 0.36;
-#X text 93 268 <-- multiply the sine wave by the ramp. There's no longer
+#N canvas 433 100 448 550 10;
+#X obj 33 89 osc~ 440;
+#X obj 33 317 dac~;
+#X msg 316 79 \; pd dsp 1;
+#X msg 385 79 \; pd dsp 0;
+#X text 337 115 ON;
+#X text 402 115 OFF;
+#X obj 33 279 *~;
+#X obj 49 253 line~;
+#X text 106 253 <--- ramp generator;
+#X text 109 88 <-- sine wave;
+#X msg 49 113 0.1 2000;
+#X msg 49 187 0 2000;
+#X msg 49 135 0.1 50;
+#X msg 49 209 0 50;
+#X msg 49 157 0.1;
+#X msg 49 231 0;
+#X text 209 134 ON;
+#X text 131 115 <-- slow;
+#X text 121 136 <-- fast;
+#X text 88 156 <-- instantly;
+#X text 206 207 OFF;
+#X text 113 188 <-- slow;
+#X text 106 209 <-- fast;
+#X text 86 229 <-- instantly;
+#X text 89 171 ----------------------;
+#X text 74 316 <-- out;
+#X text 70 278 <-- multiply the sine wave by the ramp. There's no longer
 a "0" argument-- this tells Pd to expect a signal here.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header controlling_amplitude_using_[line~]
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 In this patch \, the multiplier is configured to multiply
+two signals. The amplitude is now a signal computed by the [line~]
+object.;
+#X text 19 343 [line~]'s left inlet is a target value \; it reaches
+that target in the time specified (in milliseconds) to its right inlet.
+;
+#X text 19 462 The [line~] object (and its control brother \, [line])
+treat their right inlet specially. The inlets don't retain values the
+way other inlets do but revert to zero whenever a target is received.
+;
+#X text 19 387 (In this example \, message boxes with two numbers each
+are connected to [line~]'s left inlet. Except in some special cases
+\, Pd objects with more than one inlet will automatically distribute
+lists of numbers across their inlets. In this case \, "0 50" becomes
+\, "50 at right and 0 at left.");
+#X obj 1 528 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 65 DESCRIPTION controlling amplitude using line~;
+#X text 12 25 KEYWORDS signal ramp;
+#X restore 392 530 pd META;
+#N canvas 12 325 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 using [line~]- Related Help Documents;
+#X text 19 37 Also see the control object for creating lines:;
+#X obj 22 58 line;
+#X text 19 87 For finer control than [line~] \, see:;
+#X obj 22 108 vline~;
+#X restore 103 530 pd References;
+#X obj 6 530 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 0;
 #X connect 6 0 1 0;
 #X connect 6 0 1 1;

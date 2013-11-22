@@ -1,25 +1,19 @@
-#N canvas 87 74 585 621 12;
-#X floatatom 354 464 4 0 0 0 - - -;
-#X floatatom 150 316 3 0 999 0 - #0-osc2 -;
-#X obj 150 336 osc~;
-#X text 162 12 ENVELOPE FOLLOWER;
-#X text 22 33 An envelope follower measures the mean square power of
-an signal as it changes over time. (You can convert mean square power
-to RMS ampitude or to decibels if you wish.) The term "mean square"
-means simply that the signal should be squared \, and then averaged.
-The averageing is done using a low-pass filter such as lop~.;
-#X obj 62 466 lop~;
-#X floatatom 93 444 3 0 100 0 - #0-lop -;
-#X obj 61 356 +~;
-#X text 187 317 <-- frequency of second oscillator;
-#X obj 62 330 osc~ 500;
-#X obj 62 413 *~;
-#X obj 62 522 snapshot~;
-#X floatatom 62 573 5 0 999 0 - - -;
-#X obj 62 545 sqrt;
-#X text 335 361 built-in envelope;
-#X obj 354 491 dbtorms;
-#X floatatom 354 518 5 0 999 0 - - -;
+#N canvas 424 26 448 582 10;
+#X floatatom 274 414 4 0 0 0 - - -, f 4;
+#X floatatom 117 260 3 0 999 0 - #0-osc2 -, f 3;
+#X obj 117 280 osc~;
+#X obj 22 416 lop~;
+#X floatatom 43 394 3 0 100 0 - #0-lop -, f 3;
+#X obj 21 306 +~;
+#X text 143 260 <-- frequency of second oscillator;
+#X obj 22 280 osc~ 500;
+#X obj 22 363 *~;
+#X obj 22 472 snapshot~;
+#X floatatom 22 523 5 0 999 0 - - -, f 5;
+#X obj 22 495 sqrt;
+#X text 254 316 built-in envelope;
+#X obj 274 441 dbtorms;
+#X floatatom 274 468 5 0 999 0 - - -, f 5;
 #N canvas 536 459 382 265 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -37,50 +31,79 @@ The averageing is done using a low-pass filter such as lop~.;
 #X connect 2 0 5 0;
 #X connect 6 0 8 0;
 #X connect 7 0 6 0;
-#X restore 217 598 pd startup;
-#X text 115 414 square the signal;
-#X text 124 440 <-- responsiveness;
-#X text 159 501 take snapshot;
-#X text 108 548 convert to RMS;
-#X text 327 599 updated for Pd version 0.39;
-#X text 334 381 follower for comparison;
-#X text 107 466 low-pass filter;
-#X text 114 573 output;
-#X obj 70 497 r \$0-tick;
-#X text 159 517 every 1/4 second;
-#X obj 389 439 r \$0-tick;
-#X obj 354 439 f;
-#X obj 376 414 env~;
-#X text 20 242 The env~ object at right \, which is a built-in envelope
-follower using a higher-quality low-pass filter than lop~ \, is shown
-for comparison. Its output is artificially slowed down to match the
-homemade one at left.;
-#X obj 150 359 *~;
-#X obj 185 360 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X restore 274 522 pd startup;
+#X text 52 362 square the signal;
+#X text 66 394 <-- responsiveness;
+#X text 93 451 take snapshot;
+#X text 61 495 convert to RMS;
+#X text 254 331 follower for comparison;
+#X text 56 416 low-pass filter;
+#X text 61 523 output;
+#X obj 30 447 r \$0-tick;
+#X text 93 466 every 1/4 second;
+#X obj 221 365 r \$0-tick;
+#X obj 274 389 f;
+#X obj 289 364 env~;
+#X obj 117 303 *~;
+#X obj 147 303 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 204 358 <-- on/off;
-#X text 20 128 Here we're adding two oscillators so the result should
+#X text 166 301 <-- on/off;
+#X text 19 112 Here we're adding two oscillators so the result should
 be an RMS of one if the second oscillator is on \, 0.707 otherwise.
 Note two effects: first \, the more responsive the envelope follower
 \, the less accurate the result (but the faster it responds). Second
 \, if the two oscillators are tuned close to each other their beating
 affects the nombers coming out.;
-#X connect 0 0 15 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header envelope_follower
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 560 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION envelope follower;
+#X restore 392 562 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 envelope follower- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 562 pd References;
+#X obj 6 562 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 37 An envelope follower measures the mean square power of
+an signal as it changes over time. (You can convert mean square power
+to RMS ampitude or to decibels if you wish.) The term "mean square"
+means simply that the signal should be squared \, and then averaged.
+The averageing is done using a low-pass filter such as [lop~].;
+#X text 18 198 The [env~] object at right \, which is a built-in envelope
+follower using a higher-quality low-pass filter than [lop~] \, is shown
+for comparison. Its output is artificially slowed down to match the
+homemade one at left.;
+#X connect 0 0 13 0;
 #X connect 1 0 2 0;
-#X connect 2 0 32 0;
-#X connect 5 0 11 0;
-#X connect 6 0 5 1;
-#X connect 7 0 10 0;
-#X connect 7 0 10 1;
-#X connect 7 0 30 0;
-#X connect 9 0 7 0;
-#X connect 10 0 5 0;
-#X connect 11 0 13 0;
-#X connect 13 0 12 0;
-#X connect 15 0 16 0;
-#X connect 26 0 11 0;
-#X connect 28 0 29 0;
-#X connect 29 0 0 0;
-#X connect 30 0 29 1;
-#X connect 32 0 7 1;
-#X connect 33 0 32 1;
+#X connect 2 0 28 0;
+#X connect 3 0 9 0;
+#X connect 4 0 3 1;
+#X connect 5 0 8 0;
+#X connect 5 0 8 1;
+#X connect 5 0 27 0;
+#X connect 7 0 5 0;
+#X connect 8 0 3 0;
+#X connect 9 0 11 0;
+#X connect 11 0 10 0;
+#X connect 13 0 14 0;
+#X connect 23 0 9 0;
+#X connect 25 0 26 0;
+#X connect 26 0 0 0;
+#X connect 27 0 26 1;
+#X connect 28 0 5 1;
+#X connect 29 0 28 1;

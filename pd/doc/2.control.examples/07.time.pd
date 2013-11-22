@@ -1,39 +1,70 @@
-#N canvas 0 0 724 474 12;
-#X text 34 13 Besides the metronome \, there are three objects for
+#N canvas 0 0 448 540 10;
+#X text 19 37 Besides the metronome \, there are three objects for
 dealing with time:;
-#X obj 64 117 print;
-#X msg 64 59 bang;
-#X msg 110 61 stop;
-#X obj 64 89 delay 2000;
-#X text 161 44 The delay objects sechedules an event for a future time
+#X obj 22 130 print;
+#X msg 22 72 bang;
+#X msg 68 74 stop;
+#X obj 22 102 delay 2000;
+#X msg 156 230 bang;
+#X obj 156 277 timer;
+#X text 89 163 The right inlet can be used to set the time value without
+scheduling any output.;
+#X obj 183 255 delay 123.45;
+#X floatatom 156 302 0 0 0 0 - - -;
+#X obj 22 458 pipe 2000;
+#X floatatom 22 431 0 0 0 0 - - -;
+#X floatatom 22 484 0 0 0 0 - - -;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header time 20 10 1 18
+-261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 518 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 42 254 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS control time;
+#X text 12 65 DESCRIPTION dealing with time in Pd;
+#X text 12 125 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.34. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X restore 382 520 pd META;
+#X text 90 100 The [delay] object schedules an event for a future time
 expressed in milliseconds. Unlike in Max \, time values need not be
 integers. If a delay has been scheduled and you "bang" it again \,
-it is rescheduled (the previously scheduled output is cancelled.);
-#X msg 76 190 bang;
-#X obj 76 237 timer;
-#X text 160 117 The right inlet can be used to set the time value without
-scheduling any output.;
-#X text 35 156 The timer \, shown below \, measures the time elapsed
-between its left and right inlets:;
-#X obj 106 212 delay 123.45;
-#X floatatom 76 262 0 0 0;
-#X text 29 287 Note that all time calculations are idealized \; they
-do not show the effects of computation time or OS latency. This way
-you can write deterministic algorithms dealing with time passage.;
-#X obj 74 385 pipe 2000;
-#X floatatom 74 358 0 0 0;
-#X floatatom 74 411 0 0 0;
-#X text 165 359 The pipe object allocates memory dynamically in order
+it is rescheduled (the previously scheduled output is cancelled).;
+#X text 19 196 The [timer] object \, shown below \, measures the time
+elapsed between its left and right inlets:;
+#X text 85 440 The [pipe] object allocates memory dynamically in order
 to schedule any number of delayed events. The events may hold any collection
 of data (as usual \, for more details you can consult the help window.)
 ;
-#X text 442 440 updated for Pd version 0.34;
+#N canvas 7 429 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Time- Related Help Documents;
+#X obj 22 84 realtime;
+#X obj 22 111 cputime;
+#X text 19 37 There are several other Pd objects for keeping track
+of time. Check out their help patches for more info (right-click and
+choose "Help").;
+#X restore 103 520 pd References;
+#X text 60 380 (Important note: unlike most Pd objects \, [timer] has
+a "hot" right inlet and a cold left one. It only triggers output when
+it receives a bang to the right-inlet.);
+#X text 19 323 Note that all time calculations are idealized with [timer]--
+they do not show the effects of computation time or OS latency. This
+way you can write deterministic algorithms dealing with time passage.
+;
+#X obj 6 520 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 2 0 4 0;
 #X connect 3 0 4 0;
 #X connect 4 0 1 0;
-#X connect 6 0 7 0;
-#X connect 6 0 10 0;
-#X connect 7 0 11 0;
-#X connect 10 0 7 1;
-#X connect 13 0 15 0;
-#X connect 14 0 13 0;
+#X connect 5 0 6 0;
+#X connect 5 0 8 0;
+#X connect 6 0 9 0;
+#X connect 8 0 6 1;
+#X connect 10 0 12 0;
+#X connect 11 0 10 0;

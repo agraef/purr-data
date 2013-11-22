@@ -1,45 +1,73 @@
-#N canvas 0 0 685 496 12;
-#X floatatom 107 424 0 0 0;
-#X msg 53 344 bang;
-#X obj 107 399 + 1;
-#X obj 376 262 + 1;
-#X floatatom 152 197 0 0 0;
-#X floatatom 108 245 0 0 0;
-#X msg 108 196 bang;
-#X floatatom 169 107 0 0 0;
-#X msg 112 58 bang;
-#X obj 169 82 + 1;
-#X text 31 21 Here's a simple counter. Click repeatedly on the "bang
-message to see it:;
-#X text 422 263 to its cold inlet.;
-#X text 25 284 The incremented value is stored for the next "bang"
+#N canvas 0 0 448 525 10;
+#X floatatom 72 473 0 0 0 0 - - -;
+#X msg 28 393 bang;
+#X obj 72 448 + 1;
+#X floatatom 231 216 0 0 0 0 - - -;
+#X floatatom 187 264 0 0 0 0 - - -;
+#X msg 187 215 bang;
+#X floatatom 179 124 0 0 0 0 - - -;
+#X msg 132 74 bang;
+#X obj 179 99 + 1;
+#X text 56 308 to its cold inlet.;
+#X text 25 328 The incremented value is stored for the next "bang"
 to spit out.;
-#X text 28 322 Here's a timed counter. Hit the "bang" to start it...
+#X text 25 369 Here's a timed counter. Hit the "bang" to start it...
 ;
-#X obj 53 373 metro 500;
-#X msg 99 344 stop;
-#X obj 112 83 float;
-#X text 28 132 The "float" box is a storage element holding one floating-point
-number. The cold inlet (i.e. \, the one on the right) stores numbers.
-Sending the message "bang" to the hot inlet gets the number back out:
+#X obj 28 422 metro 500;
+#X msg 74 393 stop;
+#X obj 132 99 float;
+#X obj 187 240 float;
+#X obj 28 448 float;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header counter 20 10 1
+18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X obj 108 221 float;
-#X obj 53 399 float;
-#X text 25 263 Float's outlet above is connected via;
-#X text 384 462 updated for Pd version 0.34;
-#X text 142 373 <-- new object: metronome. The "500" means every 500
-milliseconds--i.e. \, twice a second.;
-#X connect 1 0 14 0;
+#X obj 1 503 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 42 254 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION how to build a simple counter;
+#X text 12 125 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.34. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X restore 382 505 pd META;
+#X text 25 148 The [float] object is a storage element holding one
+floating-point number. The cold inlet (i.e. \, the one on the right)
+stores numbers. Sending the message "bang" to the hot inlet gets the
+number back out:;
+#X obj 28 308 + 1;
+#X text 25 288 The outlet of the [float] object at the top is connected
+via;
+#X text 104 422 <-- new object: [metro] \, which is a metronome. The
+"500" means it outputs a bang every 500 milliseconds-- i.e. \, twice
+a second.;
+#N canvas 19 408 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Counter- Related Help Documents;
+#X obj 53 74 mod;
+#X obj 95 74 %;
+#X text 50 37 To build a counter that resets after it reaches a specified
+value \, check out the [mod] object and the [%] object.;
+#X restore 103 505 pd References;
+#X obj 6 505 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 26 37 Here's a simple counter. Click repeatedly on the "bang"
+message to see it work:;
+#X connect 1 0 12 0;
 #X connect 2 0 0 0;
-#X connect 2 0 19 1;
-#X connect 4 0 18 1;
-#X connect 6 0 18 0;
-#X connect 8 0 16 0;
-#X connect 9 0 7 0;
-#X connect 9 0 16 1;
-#X connect 14 0 19 0;
-#X connect 15 0 14 0;
-#X connect 15 0 14 0;
-#X connect 16 0 9 0;
-#X connect 18 0 5 0;
-#X connect 19 0 2 0;
+#X connect 2 0 16 1;
+#X connect 3 0 15 1;
+#X connect 5 0 15 0;
+#X connect 7 0 14 0;
+#X connect 8 0 6 0;
+#X connect 8 0 14 1;
+#X connect 12 0 16 0;
+#X connect 13 0 12 0;
+#X connect 13 0 12 0;
+#X connect 14 0 8 0;
+#X connect 15 0 4 0;
+#X connect 16 0 2 0;

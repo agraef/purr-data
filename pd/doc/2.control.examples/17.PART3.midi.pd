@@ -1,27 +1,53 @@
-#N canvas 47 52 517 445 12;
-#X floatatom 108 89 0 0 0;
-#X floatatom 72 89 0 0 0;
-#X obj 36 62 notein;
-#X floatatom 36 88 0 0 0;
-#X floatatom 228 91 0 0 0;
-#X floatatom 192 91 0 0 0;
-#X floatatom 156 90 0 0 0;
-#X obj 156 64 ctlin;
-#X floatatom 319 90 0 0 0;
-#X floatatom 283 89 0 0 0;
-#X obj 283 63 bendin;
-#X floatatom 329 128 0 0 0;
-#X floatatom 285 127 0 0 0;
-#X obj 285 157 bendout;
-#X text 23 18 Pd offers input and output objects for MIDI:;
-#X text 358 154 ... ad nauseam.;
-#X text 254 417 updated for Pd version 0.34;
-#X obj 39 321 midiout;
-#X obj 244 368 sysexin;
-#X msg 39 291 240 \, 45 \, 93 \, 3 \, 65 \, 1 \, 2 \, 3 \, 4 \, 247
+#N canvas 424 82 448 355 10;
+#X floatatom 93 94 0 0 0 0 - - -;
+#X floatatom 57 94 0 0 0 0 - - -;
+#X obj 21 67 notein;
+#X floatatom 21 93 0 0 0 0 - - -;
+#X floatatom 213 96 0 0 0 0 - - -;
+#X floatatom 177 96 0 0 0 0 - - -;
+#X floatatom 141 95 0 0 0 0 - - -;
+#X obj 141 69 ctlin;
+#X floatatom 304 95 0 0 0 0 - - -;
+#X floatatom 268 94 0 0 0 0 - - -;
+#X obj 268 68 bendin;
+#X floatatom 314 133 0 0 0 0 - - -;
+#X floatatom 270 132 0 0 0 0 - - -;
+#X obj 270 162 bendout;
+#X text 19 38 Pd offers input and output objects for MIDI:;
+#X text 329 162 ... ad nauseam.;
+#X obj 21 260 midiout;
+#X obj 174 295 sysexin;
+#X msg 21 230 240 \, 45 \, 93 \, 3 \, 65 \, 1 \, 2 \, 3 \, 4 \, 247
 ;
-#X text 32 252 You can format your own SYSEX messages as shown:;
-#X text 28 366 and receive SYSEX via:;
+#X text 18 202 You can format your own SYSEX messages as shown:;
+#X text 18 293 and receive SYSEX via:;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header MIDI 20 10 1 18
+-261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 333 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control MIDI;
+#X text 12 65 DESCRIPTION simple MIDI input and output;
+#X restore 382 335 pd META;
+#N canvas 13 202 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 MIDI- Related Help Documents;
+#X text 59 79 list all the midi objects here too;
+#X obj 57 52 pddp/pddplink ../5.reference/all_about_midi_flags.pd -text
+doc/5.reference/all_about_midi_flags.pd;
+#X restore 103 335 pd References;
+#X obj 6 335 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 2 0 3 0;
 #X connect 2 1 1 0;
 #X connect 2 2 0 0;
@@ -32,4 +58,4 @@
 #X connect 10 1 8 0;
 #X connect 11 0 13 1;
 #X connect 12 0 13 0;
-#X connect 19 0 17 0;
+#X connect 18 0 16 0;

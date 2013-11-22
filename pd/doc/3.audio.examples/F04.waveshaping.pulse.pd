@@ -1,40 +1,39 @@
-#N canvas 240 229 900 586 12;
-#X obj 220 171 line~;
-#X obj 220 147 pack 0 50;
-#X floatatom 220 46 0 0 0 0 - - -;
-#X obj 70 108 *~;
-#X obj 220 72 / 10;
-#X obj 220 96 moses 0;
-#X msg 220 120 0;
-#X text 215 28 bandwidth;
-#X obj 78 141 *~;
-#X obj 18 141 sig~ 1;
-#X obj 39 194 /~;
-#X obj 54 168 +~;
-#X text 111 141 X^2;
-#X text 84 171 1+X^2;
-#X text 71 196 1/(1+X^2);
-#X text 28 4 ANOTHER PULSE WIDTH MOD ALGORITHM;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 370 23 611 541 10;
+#X obj 220 181 line~;
+#X obj 220 157 pack 0 50;
+#X floatatom 220 56 0 0 0 0 - - -;
+#X obj 70 118 *~;
+#X obj 220 82 / 10;
+#X obj 220 106 moses 0;
+#X msg 220 130 0;
+#X text 215 38 bandwidth;
+#X obj 78 151 *~;
+#X obj 18 151 sig~ 1;
+#X obj 39 204 /~;
+#X obj 54 178 +~;
+#X text 111 151 X^2;
+#X text 84 181 1+X^2;
+#X text 71 206 1/(1+X^2);
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F04-signal 882 float 0;
 #X coords 0 1.02 882 -1.02 200 130 1;
-#X restore 646 328 graph;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 396 313 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F04-spectrum 259 float 0;
 #X coords 0 1.01 258 -0.008 256 200 1;
-#X restore 587 38 graph;
-#X text 646 461 ---- 0.02 seconds ----;
-#X text 614 237 2;
-#X text 645 237 4;
-#X text 584 237 0;
-#X text 622 252 -- partial number --;
-#X text 677 237 6;
-#X text 710 237 8;
-#X text 738 237 10;
-#X text 770 237 12;
-#X text 802 237 14;
-#X obj 40 277 output~;
-#X obj 39 246 hip~;
+#X restore 307 48 graph;
+#X text 426 446 ---- 0.02 seconds ----;
+#X text 334 247 2;
+#X text 365 247 4;
+#X text 304 247 0;
+#X text 372 262 -- partial number --;
+#X text 397 247 6;
+#X text 430 247 8;
+#X text 458 247 10;
+#X text 490 247 12;
+#X text 522 247 14;
+#X obj 40 287 output~;
+#X obj 39 256 hip~;
 #N canvas 122 211 558 609 fft 0;
 #X obj 19 61 inlet~;
 #X obj 224 210 inlet;
@@ -86,30 +85,55 @@ until much later.;
 #X connect 20 0 24 0;
 #X connect 21 0 15 0;
 #X connect 22 0 25 0;
-#X restore 93 248 pd fft;
-#X obj 153 227 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 93 258 pd fft;
+#X obj 153 237 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 153 248 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 153 258 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 174 247 <-- repeatedly;
-#X text 175 227 <-- graph once;
-#X obj 69 81 osc~;
-#X text 632 540 updated for Pd version 0.37;
-#X text 23 515 NOTE: The PAF algorithm is protected by patents belonging
+#X text 174 257 <-- repeatedly;
+#X text 175 237 <-- graph once;
+#X obj 69 91 osc~;
+#X text 19 464 NOTE: The PAF algorithm is protected by patents belonging
 to IRCAM. Noncommercial use seems to be fine with them but contact
 them first if you want to sell something using this.;
-#X text 24 473 This is the form of pulse train used in the original
+#X text 19 433 This is the form of pulse train used in the original
 Phase Aligned Formant (PAF) algorithm.;
-#X text 23 342 Here we use waveshaping to make another form of pulse
+#X text 19 336 Here we use waveshaping to make another form of pulse
 train. This one has a neat spectrum: the partials drop off exponentially
 (with the "bandwidth" controlling the rate of dropoff.) In later patches
 we'll use a wavetable to do the waveshaping but for simplicity \, it's
 done algebraically here. The oscillator runs at half the fundamental
 frequency. The symmetry of the waveshaping doubles the frequency of
 the output.;
-#X text 849 222 0;
-#X text 846 35 1;
-#X obj 69 56 r freq/2;
+#X text 569 232 0;
+#X text 566 45 1;
+#X obj 69 66 r freq/2;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header another_pulse_width_mod_algorithm
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 519 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION another pulse width modulation algorithm
+;
+#X restore 392 521 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 pulse width modulation- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 521 pd References;
+#X obj 6 521 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 1;
 #X connect 1 0 0 0;
 #X connect 2 0 4 0;
@@ -122,12 +146,12 @@ the output.;
 #X connect 8 0 11 1;
 #X connect 9 0 10 0;
 #X connect 9 0 11 0;
+#X connect 10 0 28 0;
 #X connect 10 0 29 0;
-#X connect 10 0 30 0;
 #X connect 11 0 10 1;
-#X connect 29 0 28 0;
-#X connect 29 0 28 1;
-#X connect 31 0 30 1;
-#X connect 32 0 30 2;
-#X connect 35 0 3 0;
-#X connect 42 0 35 0;
+#X connect 28 0 27 0;
+#X connect 28 0 27 1;
+#X connect 30 0 29 1;
+#X connect 31 0 29 2;
+#X connect 34 0 3 0;
+#X connect 40 0 34 0;

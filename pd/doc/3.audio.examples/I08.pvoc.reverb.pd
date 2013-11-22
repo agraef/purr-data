@@ -1,4 +1,4 @@
-#N canvas 502 83 570 415 12;
+#N canvas 433 147 448 409 10;
 #N canvas 105 328 986 609 fft 0;
 #X obj 18 500 *~;
 #X obj 291 455 *~;
@@ -282,17 +282,16 @@ and phase;
 #X connect 57 0 12 0;
 #X connect 57 0 12 1;
 #X connect 57 0 28 3;
-#X restore 141 301 pd fft;
-#X floatatom 377 233 0 0 1000 0 - revtime-set -;
-#X floatatom 68 239 0 0 0 0 - - -;
-#X text 131 9 PIANO REVERB;
-#X text 418 236 reverb time;
-#X obj 141 331 output~;
-#X obj 36 333 output~;
-#X text 23 25 This is a phase vocoder acting as a reverberator. The
+#X restore 114 275 pd fft;
+#X floatatom 229 211 0 0 1000 0 - revtime-set -;
+#X floatatom 31 211 0 0 0 0 - - -;
+#X text 255 211 reverb time;
+#X obj 114 305 output~;
+#X obj 31 305 output~;
+#X text 19 36 This is a phase vocoder acting as a reverberator. The
 sound is more coherent (less "whispered") than a real room or a standard
 delay-based reverberator.;
-#X text 25 80 The technique is to "punch" the incoming sound into channels
+#X text 19 78 The technique is to "punch" the incoming sound into channels
 where (1) there's a peak \, and (2) the incoming sound drowns out whatever
 might already be there. If the sound already in any channel is louder
 than the input the input for that channel is ignored.;
@@ -327,16 +326,16 @@ than the input the input for that channel is ignored.;
 #X connect 10 0 9 0;
 #X connect 11 0 2 0;
 #X connect 12 0 13 0;
-#X restore 68 266 pd test-sound;
-#X text 56 217 short tone;
-#X obj 377 257 s revtime;
-#X text 24 164 For each window \, the amplitude in each channel is
+#X restore 31 238 pd test-sound;
+#X text 19 189 short tone;
+#X obj 229 235 s revtime;
+#X text 19 142 For each window \, the amplitude in each channel is
 propagated by a constant phase increment and multiplied downward by
 a gain that determines the "reverb time".;
 #N canvas 0 110 565 454 hann-window 0;
-#N canvas 0 0 450 300 graph1 0;
-#X array \$0-hann 4096 float 0;
-#X coords 0 1 4095 0 300 100 1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-hann 1024 float 0;
+#X coords 0 1 1024 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -382,40 +381,64 @@ and window-msec (analysis window size in seconds and msec).;
 #X connect 19 0 1 0;
 #X connect 19 1 4 0;
 #X connect 19 1 18 0;
-#X restore 360 305 pd hann-window;
+#X restore 229 311 pd hann-window;
 #N canvas 52 71 774 520 tables 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-last-real 2048 float 0;
 #X coords 0 500 2048 -500 200 150 1;
 #X restore 103 15 graph;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-last-imag 2048 float 0;
 #X coords 0 500 2048 500 200 150 1;
 #X restore 497 6 graph;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-amp-real 2048 float 0;
 #X coords 0 500 2048 -500 200 150 1;
 #X restore 105 185 graph;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-amp-imag 2048 float 0;
 #X coords 0 500 2048 -500 200 150 1;
 #X restore 501 178 graph;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-inc-real 2048 float 0;
 #X coords 0 1 2048 -1 200 150 1;
 #X restore 105 357 graph;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-inc-imag 2048 float 0;
 #X coords 0 1 2048 -1 200 150 1;
 #X restore 503 342 graph;
-#X restore 360 326 pd tables;
-#X text 307 383 Updated for Pd version 0.39;
-#X text 26 389 reverb in;
-#X text 133 388 reverb out;
-#X connect 0 0 5 0;
-#X connect 0 0 5 1;
-#X connect 1 0 11 0;
-#X connect 2 0 9 0;
-#X connect 9 0 0 0;
-#X connect 9 0 6 0;
-#X connect 9 0 6 1;
+#X restore 229 332 pd tables;
+#X text 32 354 reverb in;
+#X text 116 354 reverb out;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header piano_reverb 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 387 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION piano reverb;
+#X restore 392 389 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 piano reverb- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 389 pd References;
+#X obj 6 389 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 4 0;
+#X connect 0 0 4 1;
+#X connect 1 0 10 0;
+#X connect 2 0 8 0;
+#X connect 8 0 0 0;
+#X connect 8 0 5 0;
+#X connect 8 0 5 1;

@@ -1,42 +1,69 @@
-#N canvas 0 0 604 511 12;
-#X floatatom 113 218 5 0 0 0 - - -;
-#X obj 123 113 f;
-#X obj 104 198 random 4;
-#X obj 26 197 random 2;
-#X floatatom 35 219 5 0 0 0 - - -;
-#X obj 123 138 t b b f;
-#X obj 26 253 sel 0 1;
-#X obj 159 328 +;
-#X obj 123 87 metro 100;
-#X obj 123 65 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
-;
-#X obj 104 252 + 1;
-#X floatatom 242 153 5 0 0 0 - - -;
-#X obj 82 309 *;
-#X msg 26 282 -1;
-#X obj 242 83 moses 0;
-#X obj 316 83 moses 100;
-#X obj 242 107 * -1;
-#X obj 407 86 * -1;
-#X obj 407 111 + 200;
-#X msg 60 282 1;
-#X text 39 9 Random walk generator;
-#X text 143 64 on/off;
-#X text 298 152 output;
-#X text 22 375 A random walk is a special case of a Markov chain \,
+#N canvas 433 99 448 555 10;
+#X floatatom 97 297 5 0 0 0 - - -, f 5;
+#X obj 118 217 f;
+#X obj 87 275 random 4;
+#X obj 25 275 random 2;
+#X floatatom 34 297 5 0 0 0 - - -, f 5;
+#X obj 118 242 t b b f;
+#X obj 25 329 sel 0 1;
+#X obj 142 409 +;
+#X obj 118 163 metro 100;
+#X obj 118 141 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X obj 87 329 + 1;
+#X floatatom 224 191 5 0 0 0 - - -, f 5;
+#X obj 72 387 *;
+#X msg 25 354 -1;
+#X obj 224 94 moses 0;
+#X obj 263 118 moses 100;
+#X obj 224 118 * -1;
+#X obj 314 141 * -1;
+#X obj 314 163 + 200;
+#X msg 55 354 1;
+#X text 19 37 Random walk generator;
+#X text 138 140 on/off;
+#X text 260 190 output;
+#X text 22 434 A random walk is a special case of a Markov chain \,
 in which the states are integers and the transitions add or subtract
 a small amount from the previous state to get a new one. Here the "f"
 holds the state. When it gets a bang \, the previous state is added
 to a random number (from 1 to 4) multiplied by a random sign (-1 or
 1). The new value is then coerced into the range from 0 to 100;
-#X text 35 235 sign;
-#X text 113 234 magnitude;
-#X text 203 313 add prev value;
-#X text 200 330 to random increment;
-#X text 256 30 coercion to range 0-100 \; if out of range \, reflect
+#X text 34 312 sign;
+#X text 96 312 magnitude;
+#X text 174 401 add prev value;
+#X text 174 414 to random increment;
+#X text 222 51 coercion to range 0-100 \; if out of range \, reflect
 ;
-#X text 255 60 us back in.;
-#X text 323 492 updated for Pd version 0.37-1;
+#X text 222 74 us back in.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header random-walk 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 533 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION random walk generator;
+#X restore 382 535 pd META;
+#N canvas 11 381 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Random-walk- Related Help Documents;
+#X text 50 42 mention the thing about Max object \, and that there
+are libraries of objects in pd-extended where you can access Pd versions
+of such objects.;
+#X text 73 92 cyclone and maxlib;
+#X restore 103 535 pd References;
+#X obj 6 535 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 1 0 5 0;
 #X connect 2 0 0 0;
 #X connect 2 0 10 0;

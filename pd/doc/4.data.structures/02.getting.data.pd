@@ -1,17 +1,92 @@
 #N struct template2 float x float y float z float q float zz;
-#N canvas 138 2 630 580 12;
-#X text 345 543 updated for Pd version 0.32.;
-#N canvas 42 312 598 266 stuff 0;
-#X obj 353 159 pointer;
-#X obj 117 103 t b b b;
-#X msg 117 62 bang;
-#X obj 117 31 loadbang;
-#X text 163 62 click here to re-initialize;
-#X text 127 242 Explained later...;
-#X obj 28 208 append template2 x y z q;
-#X msg 353 101 \; pd-data2 clear;
-#X msg 353 137 traverse pd-data2 \, bang;
-#X msg 28 185 50 150 30 9 \, 200 100 -20 900 \, 100 100 -50 30;
+#N canvas 424 19 448 608 10;
+#X text 18 478 subpatches:;
+#X obj 21 283 pointer;
+#X msg 36 251 next;
+#X text 73 283 <- object that outputs pointers to scalars;
+#N canvas 385 73 307 198 data2 0;
+#X scalar template2 50 150 30 9 0 \;;
+#X scalar template2 200 100 -20 900 0 \;;
+#X scalar template2 100 100 -50 30 0 \;;
+#X restore 19 503 pd data2;
+#N canvas 368 314 428 153 template2 0;
+#X text 13 99 The template for the two scalars \, as in the last patch
+;
+#X obj 15 66 filledpolygon 244 q 5 0 0 20 z 40 0;
+#X obj 14 41 struct template2 float x float y float z float q;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Template;
+#X restore 19 526 pd template2;
+#X obj 21 335 get template2 x y z q;
+#X floatatom 21 364 5 0 0 0 - - -, f 5;
+#X floatatom 62 364 5 0 0 0 - - -, f 5;
+#X floatatom 103 364 5 0 0 0 - - -, f 5;
+#X floatatom 144 364 5 0 0 0 - - -, f 5;
+#X msg 21 226 traverse pd-data2;
+#X obj 60 310 print;
+#X text 101 310 <- this gets a bang when we reach the end;
+#X text 177 335 <- this takes incoming pointers;
+#X text 180 349 and outputs the values of x \, y \, z \, and q.;
+#X text 138 226 <- go to head of list (click first);
+#X text 76 251 <- output next item (click 4 times);
+#X text 19 36 The simplest thing you can do with a collection of scalars
+(a list) is to traverse it \, getting the numbers back out. This is
+done using two objects \, "pointer" which does the traversal \, and
+"get" which \, given a pointer to a scalar \, extracts numeric quantities
+from it.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header getting_data 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 586 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.32. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS data_structure;
+#X text 12 65 DESCRIPTION getting data;
+#X restore 392 588 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 getting data from scalars- Related Help Documents;
+#X restore 103 588 pd References;
+#X obj 6 588 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 100 You can send the [pointer] object a "traverse" message
+to point it to the head of the list. The argument "pd-data2" indicates
+the Pd window named "data2." The head of the list means \, not the
+first scalar in the list \, but the position before the first scalar
+\, which is a valid pointer in Pd but has no data or template.;
+#X text 18 175 The "next" message tells the [pointer] object to go
+to the next scalar in the list and output it. If there are no more
+\, "pointer" outputs a bang at right.;
+#X text 18 394 The [get] object takes a pointer \, checks that its
+template agrees with what [get] is expecting \, i.e. \, "template2"
+\, and if so outputs the values of x \, y \, z \, and q in the usual
+reverse order.;
+#X text 18 447 The pointer sent from [pointer] to [get] is an elementary
+Pd type on a level with "float" and "symbol".;
+#N canvas 42 312 428 290 init 0;
+#X obj 46 179 pointer;
+#X obj 27 85 t b b b;
+#X msg 27 58 bang;
+#X obj 27 31 loadbang;
+#X text 73 58 click here to re-initialize;
+#X text 28 262 Explained later...;
+#X obj 27 231 append template2 x y z q;
+#X msg 66 112 \; pd-data2 clear;
+#X msg 46 152 traverse pd-data2 \, bang;
+#X msg 27 206 50 150 30 9 \, 200 100 -20 900 \, 100 100 -50 30;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Initialization;
 #X connect 0 0 6 4;
 #X connect 1 0 9 0;
 #X connect 1 1 8 0;
@@ -20,58 +95,12 @@
 #X connect 3 0 2 0;
 #X connect 8 0 0 0;
 #X connect 9 0 6 0;
-#X restore 506 310 pd stuff;
-#X text 506 242 subpatches:;
-#X obj 15 303 pointer;
-#X msg 27 271 next;
-#X text 75 301 <- object that outputs pointers to scalars;
-#N canvas 13 22 307 198 data2 1;
-#X scalar template2 50 150 30 9 0 \;;
-#X scalar template2 200 100 -20 900 0 \;;
-#X scalar template2 100 100 -50 30 0 \;;
-#X restore 506 265 pd data2;
-#N canvas 315 125 554 155 template2 1;
-#X text 13 79 The template for the two scalars \, as in the last patch
-;
-#X obj 15 46 filledpolygon 244 q 5 0 0 20 z 40 0;
-#X obj 14 21 struct template2 float x float y float z float q;
-#X restore 506 288 pd template2;
-#X obj 15 355 get template2 x y z q;
-#X floatatom 15 384 5 0 0 0 - - -;
-#X floatatom 76 384 5 0 0 0 - - -;
-#X floatatom 137 384 5 0 0 0 - - -;
-#X floatatom 199 385 5 0 0 0 - - -;
-#X msg 15 246 traverse pd-data2;
-#X obj 59 330 print;
-#X text 111 331 <- this gets a bang when we reach the end;
-#X text 211 353 <- this takes incoming pointers;
-#X text 214 367 and outputs the values of x \, y \, z \, and q.;
-#X text 172 245 <- go to head of list (click first);
-#X text 68 273 <- output next item (click 4 times);
-#X text 14 5 The simplest thing you can do with a collection of scalars
-(a list) is to traverse it \, getting the numbers back out. This is
-done using two objects \, "pointer" which does the traversal \, and
-"get" which \, given a pointer to a scalar \, extracts numeric quantities
-from it.;
-#X text 14 85 You can send the "pointer" object a "traverse" message
-to point it to the head of the list. The argument "pd-data2" indicates
-the Pd window named "data2." The head of the list means \, not the
-first scalar in the list \, but the position before the first scalar
-\, which is a valid pointer in Pd but has no data or template.;
-#X text 14 180 The "next" message tells the "pointer" object to go
-to the next scalar in the list and output it. If there are no more
-\, "pointer" outputs a bang at right.;
-#X text 19 424 The "get" object takes a pointer \, checks that its
-template agrees with what "get" is expecting \, i.e. \, "template2"
-\, and if so outputs the values of x \, y \, z \, and q in the usual
-reverse order.;
-#X text 18 492 The pointer sent from "pointer" to "get" is an elementary
-Pd type on a level with "float" and "symbol".;
-#X connect 3 0 8 0;
-#X connect 3 1 14 0;
-#X connect 4 0 3 0;
-#X connect 8 0 9 0;
-#X connect 8 1 10 0;
-#X connect 8 2 11 0;
-#X connect 8 3 12 0;
-#X connect 13 0 3 0;
+#X restore 19 548 pd init;
+#X connect 1 0 6 0;
+#X connect 1 1 12 0;
+#X connect 2 0 1 0;
+#X connect 6 0 7 0;
+#X connect 6 1 8 0;
+#X connect 6 2 9 0;
+#X connect 6 3 10 0;
+#X connect 11 0 1 0;

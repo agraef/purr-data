@@ -1,7 +1,6 @@
-#N canvas 215 77 561 455 12;
-#X text 14 7 CONVERTING CONTROL TO SIGNALS;
-#X obj 29 350 output~;
-#X obj 107 352 output~;
+#N canvas 433 140 448 430 10;
+#X obj 21 310 output~;
+#X obj 99 310 output~;
 #N canvas 0 0 450 300 metro 0;
 #X obj 88 39 loadbang;
 #X msg 87 65 1;
@@ -17,32 +16,56 @@
 #X connect 3 0 4 0;
 #X connect 3 1 5 0;
 #X connect 6 0 2 0;
-#X restore 30 242 pd metro;
-#X msg 30 268 1 2;
-#X msg 97 270 0 2;
-#X obj 30 305 line~;
-#X obj 108 306 vline~;
-#X text 13 107 Here we try out line~ and vline~ as triangle wave generators.
-The subpatch is still sending alternating bangs as in the last patch
-\, but now at an audible frequency \, every 2 msec.;
-#X text 17 172 The effect of line~ rounding breakpoints to the nearest
-block (on the order of a millisecond) is that each 4-millisecond-long
-cycle has a different shape. Using vline~ resolves the problem.;
-#X text 385 437 Updated for Pd 0.37;
-#X text 16 411 Sometimes you will want to use vline~ in place of sig~
-for the same reason.;
-#X text 15 27 For controlling amplitudes \, line~ \, with its block-aligned
+#X restore 22 212 pd metro;
+#X msg 22 238 1 2;
+#X msg 100 238 0 2;
+#X obj 22 275 line~;
+#X obj 100 275 vline~;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header converting_controls_to_signals
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 For controlling amplitudes \, [line~] \, with its block-aligned
 breakpoints \, is accurate enough for most purposes. But certain usages
-\, such as this patch \, demand more accuracy. The vline~ object \,
-somewhat more expensive than line~ \, can handle breakpoints to sub-sample
-accuracy.;
-#X connect 3 0 4 0;
-#X connect 3 1 5 0;
+\, such as this patch \, demand more accuracy. The [vline~] object
+\, somewhat more expensive than [line~] \, can handle breakpoints to
+sub-sample accuracy.;
+#X text 19 101 Here we try out [line~] and [vline~] as triangle wave
+generators. The subpatch is still sending alternating bangs as in the
+last patch \, but now at an audible frequency \, every 2 msec.;
+#X text 18 154 The effect of [line~] rounding breakpoints to the nearest
+block (on the order of a millisecond) is that each 4-millisecond-long
+cycle has a different shape. Using [vline~] resolves the problem.;
+#X text 18 364 Sometimes you will want to use [vline~] in place of
+[sig~] for the same reason.;
+#X obj 1 408 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal conversion;
+#X text 12 65 DESCRIPTION converting controls to signals;
+#X restore 392 410 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 controls to signals- Related Help Documents;
+#X restore 103 410 pd References;
+#X obj 6 410 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 3 0 5 0;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
 #X connect 4 0 6 0;
-#X connect 4 0 7 0;
-#X connect 5 0 6 0;
-#X connect 5 0 7 0;
+#X connect 5 0 0 0;
+#X connect 5 0 0 1;
 #X connect 6 0 1 0;
 #X connect 6 0 1 1;
-#X connect 7 0 2 0;
-#X connect 7 0 2 1;

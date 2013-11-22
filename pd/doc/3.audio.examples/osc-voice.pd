@@ -1,4 +1,4 @@
-#N canvas 153 209 946 576 12;
+#N canvas 370 27 946 576 12;
 #X obj 163 390 line~;
 #X obj 401 438 line~;
 #X obj 163 511 *~;
@@ -23,10 +23,10 @@
 #X obj 96 486 inlet~;
 #X obj 96 538 outlet~;
 #X obj 96 512 +~;
-#X floatatom 293 342 0 0 0;
+#X floatatom 293 342 0 0 0 0 - - -;
 #X msg 294 316 set \$1;
 #X obj 294 368 s \$1;
-#X floatatom 96 336 0 0 0;
+#X floatatom 96 336 0 0 0 0 - - -;
 #X msg 96 310 set \$1;
 #X obj 96 362 s \$2;
 #X text 370 201 amplitude;
@@ -50,7 +50,8 @@ and amplitude are now in MIDI and dB \, and there's a summing bus arrangement
 #X text 451 403 The "pack" always gets a 30 \, but if you send a pair
 of numbers to amplitude \, the second one overrides the 30;
 #X text 439 254 first bang the "30" \, then pass the list on;
-#X text 62 7 This abstraction is used in patch 68.qlist.pd.;
+#X text 62 7 This abstraction is used in patch D13.additive.qlist.pd.
+;
 #X connect 0 0 17 0;
 #X connect 0 0 17 1;
 #X connect 1 0 19 0;

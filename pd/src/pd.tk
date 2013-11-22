@@ -342,6 +342,9 @@ font create console_font -family $defaultFontFamily -size 9 -weight normal
 font create text_font -family $defaultFontFamily -size 9 -weight normal
 # for text in Properties Panels and other panes
 font create highlight_font -family $defaultFontFamily -size 9 -weight bold
+if { $pd_nt == 0 } {
+	font create menufont -family $defaultFontFamily -size 9 -weight normal
+}
 
 # end Pd-extended font hacks -----------------------------
 
@@ -1546,7 +1549,7 @@ proc menu_addstd {mbar} {
         -command {menu_doc_open doc/1.manual index.htm} 
     $mbar.help add command -label {Browser} \
         -accelerator [accel_munge "Ctrl+b"] \
-        -command {::helpbrowser::open_helpbrowser}
+        -command {::dialog_search::open_helpbrowser .search}
     match_linux_wm [list $mbar.help add separator]
     #$mbar.help add command -label {puredata.info} \
     #    -command {menu_openhtml http://puredata.info} 
@@ -4613,7 +4616,7 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 			#if {$key == "Down"} {popup_action $name 4}
 			if {$key == "Down"} {pdtk_canvas_edit_menu_actions $topname "Send To Back"}
         	if {$key == "p" || $key == "P"} {menu_print $topname}
-			if {$key == "b" || $key == "B"} {::helpbrowser::open_helpbrowser}
+			if {$key == "b" || $key == "B"} {dialog_search::open_helpbrowser .search}
 		}
 		if {$key == "y" || $key == "Y"} {pdtk_canvas_edit_menu_actions $topname "Tidy Up"}
         if {$key == "q" || $key == "Q"} {menu_quit}
@@ -6841,7 +6844,7 @@ proc pdtk_pd_ctrlkey {name key shift} {
         if {$key == "q" || $key == "Q"} {menu_really_quit}
         if {$key == "r" || $key == "R"} {menu_toggle_console}
     } else {
-        if {$key == "b" || $key == "B"} {::helpbrowser::open_helpbrowser}
+        if {$key == "b" || $key == "B"} {::dialog_search::open_helpbrowser .search}
         if {$key == "n" || $key == "N"} {menu_new}
         if {$key == "o" || $key == "O"} {menu_open}
         if {$key == "q" || $key == "Q"} {menu_quit}
@@ -9009,3 +9012,5 @@ proc pdtk_check_unique {unique filenames} {
 	tk appname $appname
 	#puts stderr "this is unique instance [tk appname]"
 }
+
+source [file join [file dirname [info script]] search-plugin.tcl]

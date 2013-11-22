@@ -1,5 +1,5 @@
-#N canvas 251 127 807 425 12;
-#N canvas 0 0 450 300 graph3 0;
+#N canvas 375 139 624 433 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array spectrum-tab 127 float 1;
 #A 0 48.5713 48.5713 48.5713 48.2142 48.2142 48.2142 48.2142 48.2142
 48.2142 48.2142 48.2142 48.2142 48.2142 48.5713 48.5713 48.9284 48.9284
@@ -17,7 +17,7 @@
 0.714596 0.714596 0.714596 0.714596 0.714596 1.07174 1.07174 1.07174
 1.07174 0.714286 0.357143;
 #X coords 0 50 126 0 300 140 1;
-#X restore 496 136 graph;
+#X restore 284 92 graph;
 #N canvas 98 16 694 474 oscbank 0;
 #X obj 36 53 spectrum-partial 1;
 #X obj 36 79 spectrum-partial 2;
@@ -57,35 +57,58 @@ abstraction.;
 #X obj 395 287 spectrum-partial 30;
 #X connect 11 0 12 0;
 #X connect 12 0 13 0;
-#X restore 17 251 pd oscbank;
-#X obj 19 321 catch~ sum-bus;
-#X obj 16 153 s pitch;
-#X floatatom 16 125 4 0 0 0 - - -;
-#X text 43 18 DRAWABLE SPECTRA;
-#X floatatom 14 183 4 0 0 0 - - -;
-#X obj 14 211 s whammybar;
+#X restore 22 251 pd oscbank;
+#X obj 22 316 catch~ sum-bus;
+#X obj 22 153 s pitch;
+#X floatatom 22 125 4 0 0 0 - - -, f 4;
+#X floatatom 22 187 4 0 0 0 - - -, f 4;
+#X obj 22 215 s whammybar;
 #N canvas 0 0 650 341 table-setup 0;
 #X obj 39 227 loadbang;
 #X msg 39 261 \; spectrum-tab xlabel -5 0 12 24 36 48 60 72 84 96 108
 120;
 #X text 82 60 comment;
 #X connect 0 0 1 0;
-#X restore 17 283 pd table-setup;
-#X msg 596 65 \; spectrum-tab const 0;
-#X text 26 42 In this array \, you can draw a spectral envelope that
+#X restore 22 283 pd table-setup;
+#X msg 374 279 \; spectrum-tab const 0;
+#X text 19 36 In this array \, you can draw a spectral envelope that
 will be synthesized by an oscillator bank. Each oscillator in the bank
 computes its own frequency and uses it to look up amplitude from the
 array.;
-#X text 113 254 <-- the oscillator bank;
-#X text 71 128 <-- pitch;
-#X text 61 185 <-- left or right shift (normally 0);
-#X text 157 318 <-- here we just collect the sum of all the partials
+#X text 98 251 <-- the oscillator bank;
+#X text 55 125 <-- pitch;
+#X text 59 188 <-- left or right shift (normally 0);
+#X text 120 316 <-- here we just collect the sum of all the partials
 which are computed in "oscbank".;
-#X text 662 44 CLEAR;
-#X text 148 283 <-- make the number labels;
-#X obj 19 358 output~;
-#X text 556 389 Updated for Pd version 0.37;
-#X connect 2 0 17 0;
-#X connect 2 0 17 1;
+#X text 418 258 CLEAR;
+#X text 123 283 <-- make the number labels;
+#X obj 22 346 output~;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header drawable_spectra
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 411 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal array;
+#X text 12 65 DESCRIPTION drawable spectra;
+#X restore 392 413 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 drawable spectra- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 413 pd References;
+#X obj 6 413 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 2 0 16 0;
+#X connect 2 0 16 1;
 #X connect 4 0 3 0;
-#X connect 6 0 7 0;
+#X connect 5 0 6 0;

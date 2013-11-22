@@ -1,26 +1,67 @@
-#N canvas 0 0 591 442 12;
-#X floatatom 225 110 0 0 0;
-#X floatatom 184 109 0 0 0;
-#X msg 184 56 5 6;
-#X floatatom 132 108 0 0 0;
-#X floatatom 64 105 0 0 0;
-#X text 30 21 Most Pd messages are just numbers or short lists of numbers:;
-#X msg 64 55 5;
-#X obj 64 80 + 9;
-#X obj 132 83 +;
-#X obj 184 84 unpack;
-#X msg 288 55 5;
-#X obj 288 107 print;
-#X obj 288 81 pack 34 78;
-#X msg 132 55 5 6;
-#X floatatom 195 328 0 0 0;
-#X obj 195 303 +;
-#X msg 195 254 1.2 3.4;
-#X msg 205 277 5 6;
-#X text 36 206 Unlike Max \, in Pd all numbers are floating point. Numbers whose values happen to be integers are displayed without decimal points.;
-#X text 31 363 For more on messages \, get help on any message box by right-clicking.;
-#X text 329 409 updated for Pd release 0.33;
-#X text 34 149 If you send a list to an object with more than one inlet \, the items in the list are spread out over the inlets \, as seen in the 5+6 example above.;
+#N canvas 0 0 448 451 10;
+#X floatatom 210 123 0 0 0 0 - - -;
+#X floatatom 177 123 0 0 0 0 - - -;
+#X msg 177 71 5 6;
+#X floatatom 115 123 0 0 0 0 - - -;
+#X floatatom 47 123 0 0 0 0 - - -;
+#X text 19 37 Most Pd messages are just numbers or short lists of numbers:
+;
+#X msg 47 70 5;
+#X obj 47 98 + 9;
+#X obj 115 98 +;
+#X obj 177 98 unpack;
+#X msg 271 70 5;
+#X obj 271 122 print;
+#X obj 271 96 pack 34 78;
+#X msg 115 70 5 6;
+#X floatatom 165 345 0 0 0 0 - - -;
+#X obj 165 320 +;
+#X msg 165 271 1.2 3.4;
+#X msg 174 294 5 6;
+#X text 19 217 Unlike Max \, in Pd all numbers are floating point.
+Numbers whose values happen to be integers are displayed without decimal
+points.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header messages 20 10 1
+18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 428 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 79 230 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS control GUI;
+#X text 12 125 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.33. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 65 DESCRIPTION messages and message passing in Pd;
+#X restore 382 430 pd META;
+#N canvas 7 226 428 287 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Messages- Related Help Documents;
+#X obj 26 91 pddp/pddplink ../5.reference/all_about_messages.pd -text
+doc/5.reference/all_about_messages.pd;
+#X obj 26 193 pddp/pddplink ../5.reference/all_about_atoms.pd -text
+doc/5.reference/all_about_atoms.pd;
+#X text 26 38 There are a bunch of patches in doc/5.reference/ that
+go into more detail about many of the objects and concepts mentioned
+here. Follow the link below to see a more detailed patch about message
+syntax in Pd:;
+#X obj 24 141 pddp/pddplink ../1.manual/index.htm;
+#X text 26 113 Also \, make sure to have a look at the Pd manual to
+learn the nuts and bolts of messages in Pd:;
+#X text 26 165 To find out more about atoms \, or discrete pieces of
+data that make up messages \, see:;
+#X restore 103 430 pd References;
+#X obj 6 430 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 167 If you send a list to the leftmost inlet of an object
+with more than one inlet \, the items in the list are spread out over
+the inlets \, as seen in the 5+6 example above.;
+#X text 19 378 For more on messages \, bring up the message box help
+patch by right-clicking any message box and choosing "Help".;
 #X connect 2 0 9 0;
 #X connect 6 0 7 0;
 #X connect 7 0 4 0;

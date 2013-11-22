@@ -1,10 +1,35 @@
-#N canvas 440 252 579 286 12;
-#X text 87 6 INTRODUCTION TO THE PD AUDIO EXAMPLE PATCHES;
-#X text 328 257 updated for Pd version 0.37;
-#X text 34 45 This is the second of three tutorial series on Pd. This
+#N canvas 433 205 448 236 10;
+#X text 19 56 This is the second of three tutorial series on Pd. This
 one shows the time-domain audio processing features. (The first one
 showed how to use Pd to do "control" computations \, and the third
 is about frequency-domain techniques.);
-#X text 33 125 These patches are accompanied by an ONLINE BOOK:;
-#X text 100 158 http://www.crca.ucsd.edu/~msp/techniques.htm;
-#X text 37 189 which develops the underlying theory.;
+#X text 19 124 These patches are accompanied by an ONLINE BOOK:;
+#X text 20 174 which develops the underlying theory.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header introduction 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 214 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS;
+#X text 12 65 DESCRIPTION introduction to audio tutorials;
+#X restore 392 216 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Introduction- Related Help Documents;
+#X text 19 37 Link to the manual here;
+#X restore 103 216 pd References;
+#X obj 66 149 pddp/pddplink http://www.crca.ucsd.edu/~msp/techniques.htm
+;
+#X text 19 36 An Introduction to the Pd Audio Example Patches;
+#X obj 6 216 pddp/pddplink ../5.reference/pddp/help.pd -text help;

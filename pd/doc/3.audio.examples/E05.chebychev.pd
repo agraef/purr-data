@@ -1,17 +1,16 @@
-#N canvas 224 60 657 571 12;
-#X obj 23 269 output~;
-#X obj 45 74 / 100;
-#X floatatom 45 54 5 0 100 0 - - -;
-#X obj 23 144 *~;
-#X text 403 539 updated for Pd version 0.37;
-#X obj 22 29 osc~ 220;
-#X obj 45 97 pack 0 50;
-#X obj 45 121 line~;
-#X text 97 54 <-- index in;
-#X text 117 68 hundredths;
-#X obj 23 169 *~ 128;
-#X obj 23 217 tabread4~ E05-tab;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 392 109 573 523 10;
+#X obj 22 282 output~;
+#X obj 44 87 / 100;
+#X floatatom 44 67 5 0 100 0 - - -, f 5;
+#X obj 22 157 *~;
+#X obj 21 42 osc~ 220;
+#X obj 44 110 pack 0 50;
+#X obj 44 134 line~;
+#X text 96 67 <-- index in;
+#X text 116 81 hundredths;
+#X obj 22 182 *~ 128;
+#X obj 22 230 tabread4~ E05-tab;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array E05-tab 259 float 1;
 #A 0 -1.20148 -1 -0.810724 -0.63326 -0.467216 -0.31221 -0.167866 -0.0338144
 0.0903053 0.204849 0.310166 0.406597 0.494477 0.574137 0.645895 0.71007
@@ -49,8 +48,8 @@
 -0.204849 -0.0903053 0.0338144 0.167866 0.31221 0.467216 0.63326 0.810724
 1 1.20148;
 #X coords 0 1 258 -1 200 140 1;
-#X restore 262 46 graph;
-#X text 497 28 subpatch to;
+#X restore 202 66 graph;
+#X text 437 48 subpatch to;
 #N canvas 113 0 849 700 make-table 0;
 #X obj 141 304 t b b;
 #X obj 213 329 f;
@@ -201,57 +200,81 @@ them in a wavetable for use later.;
 #X connect 59 0 61 0;
 #X connect 60 0 58 0;
 #X connect 61 0 56 0;
-#X restore 489 146 pd make-table;
-#X obj 489 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 429 166 pd make-table;
+#X obj 429 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 517 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 457 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 545 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 485 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 573 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 513 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 600 126 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 540 146 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 497 45 calculate;
-#X text 495 64 Chebychev;
-#X text 496 83 polynomials;
-#X text 490 107 2;
-#X text 517 107 3;
-#X text 546 107 4;
-#X text 572 108 5;
-#X text 601 107 6;
-#X text 134 2 waveshaping with Chebychev polynomials;
-#X obj 23 193 +~ 129;
-#X obj 23 242 hip~ 5;
-#X text 107 256 This patch demonstrates using Chebychev polynomials
+#X text 437 65 calculate;
+#X text 435 84 Chebychev;
+#X text 436 103 polynomials;
+#X text 430 127 2;
+#X text 457 127 3;
+#X text 486 127 4;
+#X text 512 128 5;
+#X text 541 127 6;
+#X obj 22 206 +~ 129;
+#X obj 22 255 hip~ 5;
+#X text 107 276 This patch demonstrates using Chebychev polynomials
 (of the first kind) to generate pure harmonics using waveshaping. The
 pure harmonic only comes out when the index is one (top of the scale).
 Smaller indices will give various mixes of harmonics. The table initially
 holds the fifth Chebychev polynomial \, so you can get the fifth harmonic.
 ;
-#X text 106 355 There is an audible "rolling" sound as the index changes
+#X text 19 351 There is an audible "rolling" sound as the index changes
 for the higher degree polynomials \, because the amplitudes of the
 lower partials can rise and fall several times apiece as the index
 rises from zero to one.;
-#X text 105 422 Indices greater than one will try to read values outside
+#X text 19 404 Indices greater than one will try to read values outside
 the table (which would be clipped appropriately). Anyway \, the polynomials
 increase rapidly in value outside the interval from -1 to 1 that we
 are using here.;
-#X text 106 491 When you get tired of Chebychef polynomials you can
+#X text 20 457 When you get tired of Chebychef polynomials you can
 draw your own functions by hand and/or try other formulas.;
-#X connect 1 0 6 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header waveshaping_with_Chebychev_polynomials
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 501 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION waveshaping with Chebychev polynomials;
+#X restore 392 503 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 waveshaping- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 503 pd References;
+#X obj 6 503 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 5 0;
 #X connect 2 0 1 0;
-#X connect 3 0 10 0;
-#X connect 5 0 3 0;
-#X connect 6 0 7 0;
-#X connect 7 0 3 1;
-#X connect 10 0 29 0;
-#X connect 11 0 30 0;
-#X connect 15 0 14 0;
-#X connect 16 0 14 1;
-#X connect 17 0 14 2;
-#X connect 18 0 14 3;
-#X connect 19 0 14 4;
-#X connect 29 0 11 0;
-#X connect 30 0 0 0;
-#X connect 30 0 0 1;
+#X connect 3 0 9 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 3 1;
+#X connect 9 0 27 0;
+#X connect 10 0 28 0;
+#X connect 14 0 13 0;
+#X connect 15 0 13 1;
+#X connect 16 0 13 2;
+#X connect 17 0 13 3;
+#X connect 18 0 13 4;
+#X connect 27 0 10 0;
+#X connect 28 0 0 0;
+#X connect 28 0 0 1;

@@ -1,26 +1,26 @@
-#N canvas 60 64 790 527 12;
-#X obj 122 381 cos~;
-#X floatatom 173 184 4 0 200 0 - - -;
-#X obj 173 207 / 10;
-#X text 173 103 center;
-#X text 173 123 freq. (in;
-#X text 173 143 tenths of;
-#X text 173 163 fundamental);
-#X floatatom 70 192 4 0 0 0 - - -;
-#X text 46 145 fundamental;
-#X text 46 165 (= mod freq);
-#X text 251 208 index;
-#X text 251 228 (percent);
-#X floatatom 251 249 4 0 500 0 - - -;
-#X obj 251 318 line~;
-#X obj 201 338 *~;
-#X obj 251 272 / 100;
-#X obj 251 295 pack 0 50;
-#X obj 122 358 +~;
-#X text 204 364 modulating;
-#X text 209 381 oscillator;
-#X obj 123 459 output~;
-#X obj 122 428 hip~;
+#N canvas 376 33 596 536 10;
+#X obj 102 353 cos~;
+#X floatatom 153 156 4 0 200 0 - - -, f 4;
+#X obj 153 179 / 10;
+#X text 153 90 center;
+#X text 153 105 freq. (in;
+#X text 153 120 tenths of;
+#X text 153 135 fundamental);
+#X floatatom 50 164 4 0 0 0 - - -, f 4;
+#X text 26 127 fundamental;
+#X text 26 142 (= mod freq);
+#X text 221 182 index;
+#X text 221 197 (percent);
+#X floatatom 221 218 4 0 500 0 - - -, f 4;
+#X obj 221 287 line~;
+#X obj 181 310 *~;
+#X obj 221 241 / 100;
+#X obj 221 264 pack 0 50;
+#X obj 102 330 +~;
+#X text 189 339 modulating;
+#X text 189 353 oscillator;
+#X obj 103 448 output~;
+#X obj 102 417 hip~;
 #N canvas 122 211 558 609 fft 0;
 #X obj 23 55 inlet~;
 #X obj 210 303 inlet;
@@ -77,38 +77,62 @@ until much later.;
 #X connect 25 0 26 1;
 #X connect 26 0 2 0;
 #X connect 28 0 24 1;
-#X restore 176 428 pd fft;
-#X obj 236 407 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 156 417 pd fft;
+#X obj 189 373 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 236 428 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 189 394 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 257 427 <-- repeatedly;
-#X text 258 407 <-- graph once;
-#X text 530 479 updated for Pd version 0.37;
-#N canvas 0 0 450 300 graph1 0;
+#X text 210 393 <-- repeatedly;
+#X text 211 373 <-- graph once;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F11-spectrum 259 float 0;
 #X coords 0 0.51 258 -0.008 256 130 1;
-#X restore 514 291 graph;
-#X text 506 422 0;
-#X text 568 432 -- frequency --;
-#X text 743 427 2700;
-#X obj 173 256 *;
-#X obj 173 233 t b f;
-#X obj 201 315 osc~;
-#X obj 122 322 phasor~;
-#X text 31 30 Here's what happens if you just slide the carrier frequency
+#X restore 324 110 graph;
+#X text 316 242 0;
+#X text 408 252 -- frequency --;
+#X text 553 247 2700;
+#X obj 153 228 *;
+#X obj 153 205 t b f;
+#X obj 181 287 osc~;
+#X obj 102 294 phasor~;
+#X text 19 37 Here's what happens if you just slide the carrier frequency
 around. The spectrum moves up and down all right \, but is only periodic
 at the original period when the center frequency roosts on a harmonic.
 ;
-#X text 50 308 carrier;
-#X text 24 325 oscillator;
-#X text 167 6 HOW NOT TO APPLY TWO-COSINE CARRIER TO FM;
+#X text 52 285 carrier;
+#X text 34 299 oscillator;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header how_not_to_apply_two-cosine_carrier_to_fm
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 513 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION how not to apply two-cosine carrier to fm
+;
+#X restore 392 515 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 frequency modulation- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 515 pd References;
+#X obj 6 515 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 21 0;
 #X connect 0 0 22 0;
 #X connect 1 0 2 0;
-#X connect 2 0 33 0;
-#X connect 7 0 32 0;
-#X connect 7 0 34 0;
+#X connect 2 0 32 0;
+#X connect 7 0 31 0;
+#X connect 7 0 33 0;
 #X connect 12 0 15 0;
 #X connect 13 0 14 1;
 #X connect 14 0 17 1;
@@ -119,8 +143,8 @@ at the original period when the center frequency roosts on a harmonic.
 #X connect 21 0 20 1;
 #X connect 23 0 22 1;
 #X connect 24 0 22 2;
-#X connect 32 0 35 0;
-#X connect 33 0 32 0;
-#X connect 33 1 32 1;
-#X connect 34 0 14 0;
-#X connect 35 0 17 0;
+#X connect 31 0 34 0;
+#X connect 32 0 31 0;
+#X connect 32 1 31 1;
+#X connect 33 0 14 0;
+#X connect 34 0 17 0;

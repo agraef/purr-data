@@ -1,6 +1,6 @@
-#N canvas 288 109 559 650 12;
-#N canvas 0 22 604 396 conversion-tables 0;
-#N canvas 0 22 450 300 graph1 0;
+#N canvas 424 20 448 653 10;
+#N canvas 0 0 600 392 conversion-tables 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array dbtorms 123 float 1;
 #A 0 0 0 1.25893e-05 1.41254e-05 1.58489e-05 1.77828e-05 1.99526e-05
 2.23872e-05 2.51189e-05 2.81838e-05 3.16228e-05 3.54813e-05 3.98107e-05
@@ -25,7 +25,7 @@
 #X text 504 141 0;
 #X text 506 41 10;
 #X text 321 151 ------ 123 samples ------;
-#N canvas 0 22 450 300 graph2 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array mtof 130 float 1;
 #A 0 8.1758 8.66196 9.17702 9.72272 10.3009 10.9134 11.5623 12.2499
 12.9783 13.75 14.5676 15.4339 16.3516 17.3239 18.354 19.4454 20.6017
@@ -47,37 +47,36 @@
 #X text 319 333 ------ 130 samples ------;
 #X text 518 318 0;
 #X text 520 218 12000;
-#X restore 121 588 pd conversion-tables;
-#X obj 31 411 line~;
-#X obj 31 387 pack 0 100;
-#X floatatom 31 339 3 0 150 0 - #0-cf -;
-#X floatatom 47 461 3 0 999 0 - #0-q -;
-#X obj 16 512 vcf~;
-#X obj 31 436 tabread4~ mtof;
-#X text 81 461 <-- Q (selectivity);
-#X text 88 5 ANOTHER SWEEPING FILTER EXAMPLE;
-#X obj 15 267 clip~ 0 0.5;
-#X obj 15 291 *~ 2;
-#X obj 15 315 -~;
-#X text 119 268 trick to;
-#X text 120 285 make symmetric;
-#X text 118 302 triangle wave;
-#X obj 22 147 f;
-#X obj 55 145 + 1;
-#X obj 22 217 mtof;
-#X obj 55 169 mod 8;
-#N canvas 0 22 450 300 graph1 0;
+#X restore 233 284 pd conversion-tables;
+#X obj 31 401 line~;
+#X obj 31 377 pack 0 100;
+#X floatatom 31 329 3 0 150 0 - #0-cf -, f 3;
+#X floatatom 47 451 3 0 999 0 - #0-q -, f 3;
+#X obj 16 502 vcf~;
+#X obj 31 426 tabread4~ mtof;
+#X text 81 451 <-- Q (selectivity);
+#X obj 15 257 clip~ 0 0.5;
+#X obj 15 281 *~ 2;
+#X obj 15 305 -~;
+#X text 90 258 trick to;
+#X text 91 275 make symmetric;
+#X text 89 292 triangle wave;
+#X obj 22 137 f;
+#X obj 55 135 + 1;
+#X obj 22 207 mtof;
+#X obj 55 159 mod 8;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-array1 8 float 2;
 #X coords 0 96 8 36 200 100 1;
-#X restore 340 144 graph;
-#X text 73 336 <-- center frequency;
-#X obj 22 123 metro 85;
-#X text 107 147 sequencer for;
-#X text 122 164 8 note loop;
-#X obj 16 576 output~;
-#X obj 22 104 tgl 15 0 empty \$0-metro empty 0 -6 0 8 -262144 -1 -1
+#X restore 230 164 graph;
+#X text 73 326 <-- center frequency;
+#X obj 22 113 metro 85;
+#X text 107 137 sequencer for;
+#X text 122 154 8 note loop;
+#X obj 16 566 output~;
+#X obj 22 94 tgl 15 0 empty \$1-metro empty 0 -6 0 8 -262144 -1 -1
 0 1;
-#N canvas 876 177 379 259 startup 0;
+#N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
@@ -89,45 +88,69 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 121 611 pd startup;
-#X text 96 364 at least 61;
-#X obj 22 241 phasor~;
-#X text 294 616 updated for Pd version 0.39;
-#X obj 22 193 tabread \$0-array1;
-#X obj 16 540 vcf~;
-#X obj 31 362 max 61;
-#X text 82 409 smooth & convert to Hz.;
-#X obj 47 482 max 3;
-#X text 105 483 at least 3;
-#X text 11 28 Here's an approximate reconstruction of an old riff by
+#X restore 233 307 pd startup;
+#X text 96 354 at least 61;
+#X obj 22 231 phasor~;
+#X obj 22 183 tabread \$0-array1;
+#X obj 16 530 vcf~;
+#X obj 31 352 max 61;
+#X text 82 399 smooth & convert to Hz.;
+#X obj 47 472 max 3;
+#X text 105 473 at least 3;
+#X text 19 36 Here's an approximate reconstruction of an old riff by
 Pink Floyd. Because we're filtering a waveform with odd partials \,
 it's easier to pick out the partials in the filtered sound than if
 we had had both even and odd ones.;
-#X text 78 527 rejection of the stop bands without having;
-#X text 79 509 Put two vcf objects in series for better;
-#X text 77 545 to make the passband excessively narrow.;
+#X text 57 515 rejection of the stop bands without having;
+#X text 57 530 to make the passband excessively narrow.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header another_sweeping_filter_example
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 631 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION another sweeping filter example;
+#X restore 392 633 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 sweeping filter- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 633 pd References;
+#X obj 6 633 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 58 500 Put two [vcf~] objects in series for better;
 #X connect 1 0 6 0;
 #X connect 2 0 1 0;
-#X connect 3 0 32 0;
-#X connect 4 0 34 0;
-#X connect 5 0 31 0;
+#X connect 3 0 30 0;
+#X connect 4 0 32 0;
+#X connect 5 0 29 0;
 #X connect 6 0 5 1;
-#X connect 6 0 31 1;
+#X connect 6 0 29 1;
+#X connect 8 0 9 0;
 #X connect 9 0 10 0;
-#X connect 10 0 11 0;
-#X connect 11 0 5 0;
-#X connect 15 0 16 0;
-#X connect 15 0 30 0;
-#X connect 16 0 18 0;
-#X connect 17 0 28 0;
-#X connect 18 0 15 1;
-#X connect 21 0 15 0;
-#X connect 25 0 21 0;
-#X connect 28 0 9 0;
-#X connect 28 0 11 1;
-#X connect 30 0 17 0;
-#X connect 31 0 24 0;
-#X connect 31 0 24 1;
-#X connect 32 0 2 0;
-#X connect 34 0 5 2;
-#X connect 34 0 31 2;
+#X connect 10 0 5 0;
+#X connect 14 0 15 0;
+#X connect 14 0 28 0;
+#X connect 15 0 17 0;
+#X connect 16 0 27 0;
+#X connect 17 0 14 1;
+#X connect 20 0 14 0;
+#X connect 24 0 20 0;
+#X connect 27 0 8 0;
+#X connect 27 0 10 1;
+#X connect 28 0 16 0;
+#X connect 29 0 23 0;
+#X connect 29 0 23 1;
+#X connect 30 0 2 0;
+#X connect 32 0 5 2;
+#X connect 32 0 29 2;

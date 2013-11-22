@@ -1,6 +1,4 @@
-#N canvas 25 22 703 596 12;
-#X text 448 562 updated for Pd version 0.39;
-#X text 167 -1 PHASER;
+#N canvas 391 19 524 587 10;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -12,7 +10,7 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 323 561 pd startup;
+#X restore 123 527 pd startup;
 #N canvas 0 0 660 424 chord 0;
 #X obj 87 97 -~ 0.5;
 #X obj 87 146 clip~ -0.5 0.5;
@@ -60,50 +58,76 @@
 #X connect 20 0 11 0;
 #X connect 21 0 15 0;
 #X connect 23 0 4 0;
-#X restore 73 271 pd chord;
-#X obj 72 533 output~;
-#X obj 95 325 rpole~;
-#X obj 95 300 rzero_rev~;
-#X obj 95 374 rpole~;
-#X obj 95 349 rzero_rev~;
-#X obj 95 422 rpole~;
-#X obj 95 397 rzero_rev~;
-#X obj 95 471 rpole~;
-#X obj 95 446 rzero_rev~;
-#X obj 72 501 +~;
-#X text 23 17 The phaser ranks \, along with fuzz and wah-wah \, as
-one of the great guitar pedals. A phaser simply adds an all-passed
-copy of the signal to the original \, making phase reinforcement and
-cancellation at frequencies that depend on the all-pass coefficients.
-In this example the coefficients range from 0.88 to 0.98 \, controlled
-by a phasor~ object (no relation). The phasor~ is converted to a symmetrical
-triangle wave (abs($v1-0.5)) and then ranged appropriately.;
-#X obj 250 417 phasor~ 0.3;
-#X text 22 158 Many variations of this have been invented. A deeper
+#X restore 23 238 pd chord;
+#X obj 22 500 output~;
+#X obj 45 292 rpole~;
+#X obj 45 267 rzero_rev~;
+#X obj 45 341 rpole~;
+#X obj 45 316 rzero_rev~;
+#X obj 45 389 rpole~;
+#X obj 45 364 rzero_rev~;
+#X obj 45 438 rpole~;
+#X obj 45 413 rzero_rev~;
+#X obj 22 468 +~;
+#X obj 230 294 phasor~ 0.3;
+#X text 20 145 Many variations of this have been invented. A deeper
 effect can be obtained by using 12 all-pass filters and adding the
 outputs of the 4th \, 8th. and 12th one to the original. Various stereo
 configurations are possible. Some people use 6 instead of the 4 stages
 used here. Controls can be added to change the frequency of sweeping
 and the range of the all-pass coeefficients.;
-#X obj 250 449 expr~ 1 - 0.03 - 0.6*abs($v1-0.5)*abs($v1-0.5);
+#X obj 230 326 expr~ 1 - 0.03 - 0.6*abs($v1-0.5)*abs($v1-0.5);
+#X text 19 37 The phaser ranks \, along with fuzz and wah-wah \, as
+one of the great guitar pedals. A phaser simply adds an all-passed
+copy of the signal to the original \, making phase reinforcement and
+cancellation at frequencies that depend on the all-pass coefficients.
+In this example the coefficients range from 0.88 to 0.98 \, controlled
+by a [phasor~] object (no relation). The [phasor~] is converted to
+a symmetrical triangle wave (abs($v1-0.5)) and then ranged appropriately.
+;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header phaser 20 10 1 18
+-261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 565 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION phaser;
+#X restore 392 567 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 phaser- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 567 pd References;
+#X obj 6 567 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 4 0;
+#X connect 1 0 11 0;
 #X connect 3 0 6 0;
-#X connect 3 0 13 0;
+#X connect 4 0 3 0;
 #X connect 5 0 8 0;
 #X connect 6 0 5 0;
 #X connect 7 0 10 0;
 #X connect 8 0 7 0;
-#X connect 9 0 12 0;
+#X connect 9 0 11 1;
 #X connect 10 0 9 0;
-#X connect 11 0 13 1;
-#X connect 12 0 11 0;
-#X connect 13 0 4 0;
-#X connect 13 0 4 1;
-#X connect 15 0 17 0;
-#X connect 17 0 6 1;
-#X connect 17 0 5 1;
-#X connect 17 0 8 1;
-#X connect 17 0 7 1;
-#X connect 17 0 10 1;
-#X connect 17 0 9 1;
-#X connect 17 0 12 1;
-#X connect 17 0 11 1;
+#X connect 11 0 2 0;
+#X connect 11 0 2 1;
+#X connect 12 0 14 0;
+#X connect 14 0 4 1;
+#X connect 14 0 3 1;
+#X connect 14 0 6 1;
+#X connect 14 0 5 1;
+#X connect 14 0 8 1;
+#X connect 14 0 7 1;
+#X connect 14 0 10 1;
+#X connect 14 0 9 1;

@@ -1,42 +1,65 @@
-#N canvas 255 248 675 539 12;
-#X text 406 511 updated for Pd version 0.34;
-#X obj 39 232 receive;
-#X obj 39 203 send;
-#X obj 39 289 pack;
-#X obj 111 233 r;
-#X obj 82 203 s;
-#X obj 40 348 timer;
-#X obj 40 60 float;
-#X obj 39 175 select;
-#X obj 40 89 +;
-#X obj 40 117 >=;
-#X obj 39 146 print;
-#X obj 39 260 trigger;
-#X obj 95 61 f;
-#X obj 100 176 sel;
-#X obj 111 259 t;
-#X obj 39 318 unpack;
-#X obj 40 435 pipe;
-#X obj 40 377 delay;
-#X obj 40 406 metro;
-#X text 20 8 So far we've seen the following objects \, some of which
+#N canvas 433 104 448 540 10;
+#X obj 60 254 receive;
+#X obj 60 227 send;
+#X obj 60 308 pack;
+#X obj 116 254 r;
+#X obj 98 227 s;
+#X obj 60 362 timer;
+#X obj 60 92 float;
+#X obj 60 200 select;
+#X obj 60 119 +;
+#X obj 60 146 >=;
+#X obj 60 173 print;
+#X obj 60 281 trigger;
+#X obj 115 93 f;
+#X obj 110 200 sel;
+#X obj 116 281 t;
+#X obj 60 335 unpack;
+#X obj 60 443 pipe;
+#X obj 60 389 delay;
+#X obj 60 416 metro;
+#X text 19 37 So far we've seen the following objects \, some of which
 have abbreviations. Right click on any one to get reference documentation:
 ;
-#X text 150 205 wireless message send;
-#X text 151 229 wireless message receive;
-#X text 145 175 test for two equal numbers;
-#X text 151 258 control message order and format;
-#X text 148 293 combine atoms (e.g. \, numbers) into a list;
-#X text 146 319 take a list apart into atoms;
-#X text 146 146 printout;
-#X text 147 90 arithmetic;
-#X text 75 89 (etc.);
-#X text 74 117 (etc.);
-#X text 145 117 comparison;
-#X text 145 60 store a number;
-#X text 145 348 measure elapsed time;
-#X text 145 379 pass a message after delay;
-#X text 145 437 multiple delay;
-#X text 143 409 repeated message;
-#X text 38 473 There are many others... you can see a complete list
-in INTRO.txt in the reference patches (../5.reference).;
+#X text 156 227 wireless message send;
+#X text 156 254 wireless message receive;
+#X text 155 200 test for two equal numbers;
+#X text 156 281 control message order and format;
+#X text 156 308 combine atoms (e.g. \, numbers) into a list;
+#X text 156 335 take a list apart into atoms;
+#X text 155 173 printout;
+#X text 155 119 arithmetic;
+#X text 95 119 (etc.);
+#X text 95 145 (etc.);
+#X text 155 145 comparison;
+#X text 155 92 store a number;
+#X text 156 362 measure elapsed time;
+#X text 156 389 pass a message after delay;
+#X text 156 443 multiple delay;
+#X text 155 416 repeated message;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header review 20 10 1 18
+-261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 518 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION review of basic pd objects;
+#X text 12 125 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.34. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X restore 382 520 pd META;
+#N canvas 7 226 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Review- Related Help Documents;
+#X restore 103 520 pd References;
+#X obj 6 520 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 469 There are many others. You can see a complete list of
+internal Pd objects by right-clicking on an empty part of the patch
+and choosing "Help".;

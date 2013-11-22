@@ -1,44 +1,67 @@
-#N canvas 130 225 601 527 12;
-#X floatatom 36 197 5 -30 130 0 - - -;
-#X floatatom 58 322 0 0 0 0 - - -;
-#X text 88 196 <-- pitch;
-#X text 88 321 <-- delay time;
-#X text 287 420 write to delay line;
-#X text 246 346 read from delay line;
-#X text 72 393 add the original and the delayed signal;
-#X obj 36 233 mtof;
-#X msg 111 233 1;
-#X obj 37 282 *~;
-#X obj 37 394 +~;
-#X obj 58 370 *~ 0.7;
-#X text 116 370 feedback gain;
-#X text 57 9 DELAYS WITH FEEDBACK;
-#X text 33 39 You can feed the result of a delread~ module back into
-its own delwrite~ \, as long as you're careful about stability. For
-delays below 30 msec \, you can frequently hear the resonant pitch.
-For longer delay times you get the famous old delay loop effect.;
-#X obj 111 281 *~;
-#X obj 111 257 adsr 1 100 1000 0 1000;
-#X obj 37 463 output~;
-#X text 32 118 We've added an amplitude control here so that the test
+#N canvas 424 19 448 520 10;
+#X floatatom 22 167 5 -30 130 0 - - -, f 5;
+#X floatatom 39 292 0 0 0 0 - - -;
+#X text 61 166 <-- pitch;
+#X text 69 291 <-- delay time;
+#X text 58 363 add the original and the delayed signal;
+#X obj 22 203 mtof;
+#X msg 97 193 1;
+#X obj 23 262 *~;
+#X obj 23 364 +~;
+#X obj 39 340 *~ 0.7;
+#X text 97 340 feedback gain;
+#X obj 97 241 *~;
+#X obj 97 217 adsr 1 100 1000 0 1000;
+#X obj 23 433 output~;
+#X text 20 102 We've added an amplitude control here so that the test
 oscillator only speaks while you're dragging the pitch up and down.
 Be sure to try shift-dragging on the pitch control.;
-#X text 330 495 updated for Pd version 0.37-1;
-#X obj 36 257 phasor~;
-#X obj 58 346 delread~ G02-del 160;
-#X obj 77 419 delwrite~ G02-del 2000;
-#X connect 0 0 7 0;
-#X connect 0 0 8 0;
-#X connect 1 0 21 0;
-#X connect 7 0 20 0;
-#X connect 8 0 16 0;
-#X connect 9 0 10 0;
-#X connect 10 0 17 0;
-#X connect 10 0 17 1;
-#X connect 10 0 22 0;
-#X connect 11 0 10 1;
-#X connect 15 0 9 1;
-#X connect 16 0 15 0;
-#X connect 16 0 15 1;
-#X connect 20 0 9 0;
-#X connect 21 0 11 0;
+#X obj 22 227 phasor~;
+#X obj 39 316 delread~ G02-del 160;
+#X obj 63 389 delwrite~ G02-del 2000;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header delays_with_feedback
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 38 You can feed the result of a [delread~] module back into
+its own [delwrite~] \, as long as you're careful about stability. For
+delays below 30 msec \, you can frequently hear the resonant pitch.
+For longer delay times you get the famous old delay loop effect.;
+#X text 169 316 read from delay line;
+#X text 210 389 write to delay line;
+#X obj 1 498 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION delays with feedback;
+#X restore 392 500 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 delays with feedback- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 500 pd References;
+#X obj 6 500 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 5 0;
+#X connect 0 0 6 0;
+#X connect 1 0 16 0;
+#X connect 5 0 15 0;
+#X connect 6 0 12 0;
+#X connect 7 0 8 0;
+#X connect 8 0 13 0;
+#X connect 8 0 13 1;
+#X connect 8 0 17 0;
+#X connect 9 0 8 1;
+#X connect 11 0 7 1;
+#X connect 12 0 11 0;
+#X connect 12 0 11 1;
+#X connect 15 0 7 0;
+#X connect 16 0 9 0;

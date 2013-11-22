@@ -1,5 +1,5 @@
-#N canvas 55 137 777 467 12;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 433 153 448 392 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array pitchmod14 131 float 1;
 #A 0 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385
 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385 0.847385 0.863077
@@ -20,8 +20,8 @@
 -0.784615 -0.784615 -0.784615 -0.784615 -0.784615 -0.800308 -0.800308
 -0.800308 -0.800308 -0.800308 -0.800308 -0.800308;
 #X coords 0 1.02 130 -1.02 258 130 1;
-#X restore 462 30 graph;
-#X floatatom 191 277 0 0 100 0 - - -;
+#X restore 177 154 graph;
+#X floatatom 47 262 0 0 100 0 - - -;
 #N canvas 159 26 532 285 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -75,26 +75,49 @@
 #X connect 23 0 20 0;
 #X connect 26 0 5 0;
 #X connect 27 0 21 0;
-#X restore 153 305 pd output;
-#X msg 229 278 MUTE;
-#X floatatom 153 95 4 0 0 0 - - -;
-#X text 153 69 frequency;
-#X floatatom 195 206 4 0 0 0 - - -;
-#X text 155 50 modulation;
-#X obj 152 157 *~;
-#X text 255 150 modulation;
-#X text 253 169 depth;
-#X floatatom 201 157 4 0 0 0 - - -;
-#X obj 152 205 +~;
-#X text 250 212 frequency;
-#X obj 152 237 osc~;
-#X obj 153 122 tabosc4~ pitchmod14;
-#X text 254 194 carrier;
-#X text 33 8 FREQUENCY MODULATION BY WAVETABLE;
-#X text 47 356 This tabosc4~ controls the pitch of a sinusoidal oscillator
+#X restore 22 285 pd output;
+#X msg 73 262 MUTE;
+#X floatatom 22 77 4 0 0 0 - - -, f 4;
+#X text 18 52 frequency;
+#X floatatom 36 186 4 0 0 0 - - -, f 4;
+#X text 19 37 modulation;
+#X obj 21 157 *~;
+#X text 71 129 modulation;
+#X text 71 143 depth;
+#X floatatom 36 136 4 0 0 0 - - -, f 4;
+#X obj 21 208 +~;
+#X text 69 191 frequency;
+#X obj 21 235 osc~;
+#X obj 22 102 tabosc4~ pitchmod14;
+#X text 69 177 carrier;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header frequency_modulation_by_wavetable
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 20 316 This [tabosc4~] controls the pitch of a sinusoidal oscillator
 (osc~). Try changing the waveform as well as the three familiar parameters.
 ;
-#X text 520 438 updated for Pd version 0.37;
+#X obj 1 370 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal array;
+#X text 12 65 DESCRIPTION frequency modulation by wavetable;
+#X restore 392 372 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 frequency modulation- Related Help Documents;
+#X text 19 37 List other frequency modulation examples:;
+#X restore 103 372 pd References;
+#X obj 6 372 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 1 0 2 1;
 #X connect 2 0 1 0;
 #X connect 3 0 2 2;

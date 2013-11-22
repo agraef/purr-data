@@ -1,36 +1,63 @@
-#N canvas 308 71 688 415 12;
-#X obj 421 332 pointer;
-#X obj 108 277 t b b b;
-#X msg 120 241 bang;
-#X text 161 240 click here to re-initialize;
-#X msg 11 313 50 250 30 9 \, 200 200 -20 900 \, 100 200 -50 30;
-#X text 56 27 The objects below put three items in the data window.
-First the window is cleared. Then a "pointer" object is instructed
-to point to the beginning of the data window ("traverse pd-data") \,
-and to output its value ("bang") to the "append" object. This object
-is then given numeric values to create three items.;
-#X obj 11 336 append template4 x y z q;
-#X msg 421 269 \; pd-data4 clear;
-#N canvas 0 0 315 341 data4 1;
-#X restore 430 219 pd data4;
-#N canvas 15 278 519 148 template4 0;
-#X obj 17 44 filledpolygon 244 q 5 0 0 20 z 40 0;
-#X text 13 79 The template for the two scalars \, as in the last patch
+#N canvas 424 22 448 416 10;
+#X obj 295 322 pointer;
+#X obj 22 227 t b b b;
+#X msg 22 201 bang;
+#X text 63 200 click here to re-initialize;
+#X msg 22 303 50 250 30 9 \, 200 200 -20 900 \, 100 200 -50 30;
+#X obj 22 356 append template4 x y z q;
+#X msg 295 259 \; pd-data4 clear;
+#N canvas 448 54 315 341 data4 0;
+#X restore 302 196 pd data4;
+#N canvas 15 278 428 148 template4 0;
+#X obj 17 64 filledpolygon 244 q 5 0 0 20 z 40 0;
+#X text 15 89 The template for the two scalars \, as in the last patch
 ;
-#X obj 17 19 struct template4 float x float y float z float q;
-#X restore 428 243 pd template4;
-#X msg 421 309 traverse pd-data4 \, bang;
-#X text 57 165 The outlet of "append" is a pointer to the newly created
-scalar. You can pass that on to other append objects if you want to
-build heterogenous lists.;
-#X text 363 375 Updated for Pd version 0.32;
-#X text 57 121 The "append" object is given the argument "template4"
+#X obj 17 39 struct template4 float x float y float z float q;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Template- Related Help Documents;
+#X restore 302 223 pd template4;
+#X msg 295 299 traverse pd-data4 \, bang;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header appending_a_scalar
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 The objects below put three items in the data window.
+First the window is cleared. Then a [pointer] object is instructed
+to point to the beginning of the data window ("traverse pd-data") \,
+and to output its value ("bang") to the [append] object. This object
+is then given numeric values to create three items.;
+#X text 19 112 The [append] object is given the argument "template4"
 to specify what kind of data structure to append. The other arguments
 are the names of variables we'll set.;
-#X connect 0 0 6 4;
+#X text 19 155 The outlet of [append] is a pointer to the newly created
+scalar. You can pass that on to other append objects if you want to
+build heterogenous lists.;
+#X obj 1 394 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS data_structure;
+#X text 12 65 DESCRIPTION appending a scalar;
+#X restore 392 396 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 appending a scalar- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 396 pd References;
+#X obj 6 396 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 5 4;
 #X connect 1 0 4 0;
-#X connect 1 1 10 0;
-#X connect 1 2 7 0;
+#X connect 1 1 9 0;
+#X connect 1 2 6 0;
 #X connect 2 0 1 0;
-#X connect 4 0 6 0;
-#X connect 10 0 0 0;
+#X connect 4 0 5 0;
+#X connect 9 0 0 0;

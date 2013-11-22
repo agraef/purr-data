@@ -1,5 +1,5 @@
-#N canvas 281 223 567 589 12;
-#N canvas 228 148 651 544 fft-analysis 0;
+#N canvas 433 87 448 590 10;
+#N canvas 228 148 529 544 fft-analysis 0;
 #X obj 15 164 *~;
 #X obj 14 99 inlet~;
 #X obj 15 218 rfft~;
@@ -51,23 +51,21 @@ of "fft".;
 #X connect 9 0 7 0;
 #X connect 10 0 9 0;
 #X connect 22 0 6 0;
-#X restore 26 289 pd fft-analysis;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 26 319 pd fft-analysis;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-magnitude 256 float 0;
 #X coords 0 256 255 0 256 100 1;
-#X restore 287 208 graph;
-#X text 110 6 WINDOWING AND BLOCKING FOURIER TRANSFORMS;
-#X obj 25 264 osc~;
-#X floatatom 25 218 5 0 0 0 - - -;
-#X obj 25 240 * 10;
-#X text 305 559 updated for Pd version 0.39;
-#X text 349 183 magnitude;
-#X text 284 311 0;
-#X text 522 311 255;
-#X text 273 297 0;
-#X text 255 253 128;
-#X text 254 203 256;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 182 178 graph;
+#X obj 25 294 osc~;
+#X floatatom 25 248 5 0 0 0 - - -, f 5;
+#X obj 25 270 * 10;
+#X text 271 151 magnitude;
+#X text 179 281 0;
+#X text 417 281 255;
+#X text 168 267 0;
+#X text 150 223 128;
+#X text 149 173 256;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-hann 512 float 1;
 #A 0 0 3.76403e-05 0.000150591 0.000338793 0.000602275 0.000940949
 0.00135478 0.00184369 0.00240764 0.00304651 0.00376022 0.00454867 0.00541174
@@ -137,28 +135,28 @@ of "fft".;
 0.00135431 0.000940561 0.000601947 0.000338584 0.000150442 3.75807e-05
 ;
 #X coords 0 1 511 0 200 120 1;
-#X restore 278 401 graph;
-#X msg 156 415 0;
-#X obj 50 464 osc~;
-#X obj 50 416 samplerate~;
-#X obj 50 487 *~ -0.5;
-#X obj 50 510 +~ 0.5;
-#X obj 42 535 tabwrite~ \$0-hann;
-#X text 264 393 1;
-#X text 257 511 0;
-#X text 273 524 0;
-#X obj 50 440 / 512;
-#X obj 42 393 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 218 344 graph;
+#X msg 140 410 0;
+#X obj 34 459 osc~;
+#X obj 34 411 samplerate~;
+#X obj 34 482 *~ -0.5;
+#X obj 34 505 +~ 0.5;
+#X obj 26 530 tabwrite~ \$0-hann;
+#X text 204 336 1;
+#X text 197 454 0;
+#X text 213 467 0;
+#X obj 34 435 / 512;
+#X obj 26 383 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 321 373 Hann window;
-#X text 98 462 period 512;
-#X text 40 368 recalculate Hann;
-#X text 75 383 window table;
-#X text 100 233 tens of Hz.;
-#X text 80 215 <- frequency \,;
-#X text 98 270 click here and;
-#X text 170 286 <- see;
-#X text 21 32 In this example we use a sub-patch ("pd fft-analysis")
+#X text 281 314 Hann window;
+#X text 82 457 period 512;
+#X text 27 358 recalculate Hann;
+#X text 52 374 window table;
+#X text 84 266 tens of Hz.;
+#X text 64 248 <- frequency \,;
+#X text 79 300 click here and;
+#X text 127 319 <- see;
+#X text 19 37 In this example we use a sub-patch ("pd fft-analysis")
 to re-block the Fourier transform to 512 points. The signal is multiplied
 by the Hann window function (which is just a raised cosine.) The magnitude
 \, which is computed in the sub-patch \, is graphed below in this window.
@@ -166,16 +164,42 @@ The point at 255 corresponds to just below the Nyquist frequency. Phase
 isn't shown \, and unlike the previous patch we don't control the initial
 phase of the oscillator. (For fun \, try drawing other window functions
 with the mouse...);
-#X text 459 527 511;
-#X connect 3 0 0 0;
-#X connect 4 0 5 0;
-#X connect 5 0 3 0;
-#X connect 14 0 15 1;
-#X connect 15 0 17 0;
-#X connect 16 0 23 0;
-#X connect 17 0 18 0;
-#X connect 18 0 19 0;
-#X connect 23 0 15 0;
-#X connect 24 0 16 0;
-#X connect 24 0 14 0;
-#X connect 24 0 19 0;
+#X text 399 470 511;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header windowing_and_blocking_Fourier_transforms
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 568 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION windowing and blocking Fourier transforms
+;
+#X restore 392 570 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Hann window- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 570 pd References;
+#X obj 6 570 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
+#X connect 12 0 13 1;
+#X connect 13 0 15 0;
+#X connect 14 0 21 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 21 0 13 0;
+#X connect 22 0 14 0;
+#X connect 22 0 12 0;
+#X connect 22 0 17 0;

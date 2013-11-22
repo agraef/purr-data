@@ -1,4 +1,4 @@
-#N canvas 100 17 637 513 12;
+#N canvas 424 19 448 486 10;
 #N canvas 195 311 647 354 delay-writer 0;
 #X obj 86 220 inlet~;
 #X obj 86 326 outlet~;
@@ -32,48 +32,73 @@ the output level control as well.;
 #X connect 4 0 11 0;
 #X connect 5 0 10 0;
 #X connect 10 0 3 0;
-#X restore 153 420 pd delay-writer;
-#X obj 283 384 expr 1000/$f1;
-#X obj 283 358 mtof;
-#X msg 153 355 1;
-#X msg 192 355 0;
-#X obj 153 254 metro 500;
-#X obj 283 304 random 60;
-#X obj 153 228 loadbang;
-#X obj 283 330 + 30;
-#X text 86 9 CONTROLLING DELAY WITH BLOCK~;
-#X text 299 420 <-- here is the delay loop;
-#X text 63 43 In situations where a delay read feeds back to a delay
+#X restore 120 370 pd delay-writer;
+#X obj 207 333 expr 1000/$f1;
+#X obj 207 307 mtof;
+#X msg 120 305 1;
+#X msg 159 305 0;
+#X obj 120 204 metro 500;
+#X obj 207 253 random 60;
+#X obj 120 178 loadbang;
+#X obj 207 279 + 30;
+#X text 224 370 <-- here is the delay loop;
+#X text 19 36 In situations where a delay read feeds back to a delay
 write \, the minimum possible delay you can achieve is one block \,
 which by default is 64 samples \, or 1.45 msec at 44100 Hz. You can
 shorten the minimum delay by changing the block size. Do this in a
 subpatch (open it to see how).;
-#X obj 153 449 output~;
-#X obj 153 387 vline~;
-#X text 371 487 updated for Pd version 0.37-1;
-#X text 61 124 Here we use this principle to make a harpisichord-like
+#X obj 120 399 output~;
+#X obj 120 337 vline~;
+#X text 19 100 Here we use this principle to make a harpisichord-like
 sound by sending pulses into a recirculating delay line (which imitates
 the travel of the wave up and down the harpsichord string.) This is
 related to Karplus-Strong synthesis \, but the idea is probably much
 older than their paper.;
-#X text 33 328 this makes;
-#X text 32 346 a rectangular;
-#X text 31 384 long.;
-#X text 409 366 length of delay line is;
-#X text 410 384 1000/(frequency);
-#X obj 192 329 del 1;
-#X text 32 364 pulse 1 msec;
-#X connect 0 0 12 0;
-#X connect 0 0 12 1;
+#X text 19 288 this makes;
+#X text 20 303 a rectangular;
+#X text 19 333 long.;
+#X text 299 325 length of delay line is;
+#X text 300 340 1000/(frequency);
+#X obj 159 279 del 1;
+#X text 20 318 pulse 1 msec;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header controlling_delay_with_block~
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 464 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 165 RELEASE_VERSION 0.41.4;
+#X text 12 145 RELEASE_DATE 2009-06-12;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal nonlocal;
+#X text 12 65 DESCRIPTION controlling delay with block~;
+#X restore 392 466 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 delay and block~- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 466 pd References;
+#X obj 6 466 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 11 0;
+#X connect 0 0 11 1;
 #X connect 1 0 0 1;
 #X connect 2 0 1 0;
-#X connect 3 0 13 0;
-#X connect 4 0 13 0;
+#X connect 3 0 12 0;
+#X connect 4 0 12 0;
 #X connect 5 0 3 0;
 #X connect 5 0 6 0;
-#X connect 5 0 21 0;
+#X connect 5 0 19 0;
 #X connect 6 0 8 0;
 #X connect 7 0 5 0;
 #X connect 8 0 2 0;
-#X connect 13 0 0 0;
-#X connect 21 0 4 0;
+#X connect 12 0 0 0;
+#X connect 19 0 4 0;

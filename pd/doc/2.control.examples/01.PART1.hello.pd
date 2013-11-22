@@ -1,16 +1,69 @@
-#N canvas 9 21 600 496 12;
-#X msg 204 32 hello world;
-#X obj 204 105 print;
-#X floatatom 321 32 0 0 0;
-#X text 215 48 message;
-#X text 319 49 atom;
-#X text 201 123 object;
-#X text 53 150 There are four types of text objects in Pd: message \, atom \, object \, and comment.;
-#X text 54 187 Messages respond to mouse clicks by sending their contents to one or more destinations. The usual destination is the "outlet" at the lower left corner of the box.;
-#X text 55 239 Click the message box and watch the terminal window Pd was started in. You should see the "hello world" message appear.;
-#X text 55 278 Atoms respond to "Dragging" up and down with the mouse \, by changing their contents and sending the result out their outlets. You can also type at an atom after clicking on it \; hit "enter" to output the number or click anywhere else to cancel.;
-#X text 52 359 Objects \, like "print" above \, may have all sorts of functions depending on what's typed into them. The "print" object simply prints out every message it receives.;
-#X text 53 415 To get help on an object \, right-click it. You should see a "help window" for the object.;
-#X text 354 470 updated for release 0.33;
+#N canvas 0 0 448 496 10;
+#X msg 144 42 hello world;
+#X obj 144 116 print;
+#X floatatom 257 42 0 0 0 0 - - -;
+#X text 141 134 object;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header hello_world 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 474 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 94 237 494 284 META 0;
+#X text 12 115 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 95 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 135 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.33. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X text 12 65 DESCRIPTION the obligatory first program as in any programming
+language to print out "Hello World";
+#X text 12 25 KEYWORDS control GUI user_input;
+#X restore 382 476 pd META;
+#N canvas 20 281 428 279 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Hello World- Related Help Documents;
+#X text 19 37 Help patches and tutorials in Pure Data are themselves
+little programs called "patches". You can interact with the objects
+in them and even produce sound and edit the contents. The help patches
+and tutorials that come with Pd are read-only by default \, so you
+don't have to worry about changing them.;
+#X obj 18 247 pddp/pddplink http://lists.puredata.info/listinfo/pd-list
+;
+#X text 18 190 Netiquette guide:;
+#X obj 18 207 pddp/pddplink http://puredata.info/community/lists/Netiquette
+;
+#X text 18 110 Another "hello world" moment comes when you discover
+the Pd community that corresponds over the Pure Data user mailing list.
+You can search for answers to questions on there \, and if you're having
+a hard time finding info you can always ask questions \, too. See the
+netiquette page before posting \, though.;
+#X text 18 230 Pd user mailing list:;
+#X restore 103 476 pd References;
+#X obj 6 476 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 23 175 There are four types of text objects in Pd: message
+box \, atom box \, object \, and comment.;
+#X text 255 59 atom box;
+#X text 155 58 message box;
+#X text 23 210 Message boxes respond to mouse clicks by sending their
+contents to one or more destinations. The usual destination is the
+"outlet" at the lower left corner of the box.;
+#X text 74 50 outlet -->;
+#X text 23 258 Click the message box above and watch the terminal window
+Pd was started in. You should see the "hello world" message appear.
+;
+#X text 23 305 Atom boxes respond to clicking and dragging up and down
+with the mouse \, by changing their contents and sending the result
+out their outlets. You can also click an atom box and then type an
+atom. Hit "Enter" to output the number or click anywhere else to cancel.
+;
+#X text 23 376 Objects \, like [print] above \, may have all sorts
+of functions depending on what's typed into them. The [print] object
+simply prints out every message it receives.;
+#X text 23 425 To get help on an object \, right-click it then choose
+"Help" in the popup menu. You should see a "help window" for the object.
+;
 #X connect 0 0 1 0;
 #X connect 2 0 1 0;

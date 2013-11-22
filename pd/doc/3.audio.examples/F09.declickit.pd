@@ -1,17 +1,17 @@
-#N canvas 10 49 579 665 12;
-#X obj 130 481 cos~;
-#X obj 130 451 *~;
-#X obj 172 481 cos~;
-#X obj 214 397 wrap~;
-#X obj 177 402 -~;
-#X obj 172 451 +~;
-#X obj 172 516 -~;
-#X obj 192 548 *~;
-#X obj 170 573 +~;
-#X obj 204 159 loadbang;
-#X obj 204 185 metro 400;
-#X obj 216 209 del 200;
-#X obj 252 326 samphold~;
+#N canvas 420 23 448 659 10;
+#X obj 82 451 cos~;
+#X obj 82 421 *~;
+#X obj 124 451 cos~;
+#X obj 166 367 wrap~;
+#X obj 129 372 -~;
+#X obj 124 421 +~;
+#X obj 124 486 -~;
+#X obj 144 518 *~;
+#X obj 122 543 +~;
+#X obj 156 129 loadbang;
+#X obj 156 155 metro 400;
+#X obj 168 179 del 200;
+#X obj 204 296 samphold~;
 #N canvas 0 0 405 406 switch 0;
 #X obj 15 383 outlet~;
 #X obj 8 193 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
@@ -43,26 +43,49 @@
 #X connect 11 0 12 0;
 #X connect 12 0 0 0;
 #X coords 0 0 1 1 80 35 1;
-#X restore 177 351 pd switch;
-#X text 31 2 CHANGING THE CENTER FREQUENCY QUICKLY;
-#X text 34 27 Since in the previous patch the amplitudes of the two
+#X restore 129 321 pd switch;
+#X text 19 37 Since in the previous patch the amplitudes of the two
 cosines depend on "center frequency" we can't change that discontinuously
 without clicking \, as you hear in this patch. The fix is to use a
 samphold~ object to keep the center frequency frozen except at phase
 crossings. At the phase crossings the two weighted cosines add to one
 \, so we can discontinuously change the frequencies and weights there.
 ;
-#X text 266 365 <--toggles to select which one;
-#X text 369 384 is actually used;
-#X obj 171 602 output~;
-#X floatatom 225 264 3 0 50 0 - - -;
-#X obj 178 263 pack;
-#X text 258 263 <--gliss time;
-#X text 324 647 updated for Pd version 0.37;
-#X obj 178 287 line~;
-#X msg 216 239 13.5;
-#X msg 178 239 4;
-#X obj 70 287 phasor~ 80;
+#X text 218 335 <--toggles to select which one;
+#X text 321 354 is actually used;
+#X obj 123 572 output~;
+#X floatatom 177 234 3 0 50 0 - - -, f 3;
+#X obj 130 233 pack;
+#X text 210 233 <--gliss time;
+#X obj 130 257 line~;
+#X msg 168 209 13.5;
+#X msg 130 209 4;
+#X obj 22 257 phasor~ 80;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header changing_the_center_frequency_quickly
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 637 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION changing the center frequency quickly;
+#X restore 392 639 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 center frequency- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 639 pd References;
+#X obj 6 639 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 1;
 #X connect 0 0 8 0;
 #X connect 1 0 0 0;
@@ -74,21 +97,21 @@ crossings. At the phase crossings the two weighted cosines add to one
 #X connect 5 0 2 0;
 #X connect 6 0 7 0;
 #X connect 7 0 8 1;
-#X connect 8 0 18 0;
-#X connect 8 0 18 1;
+#X connect 8 0 17 0;
+#X connect 8 0 17 1;
 #X connect 9 0 10 0;
-#X connect 10 0 25 0;
+#X connect 10 0 23 0;
 #X connect 10 0 11 0;
-#X connect 11 0 24 0;
+#X connect 11 0 22 0;
 #X connect 12 0 13 1;
 #X connect 13 0 4 0;
 #X connect 13 0 3 0;
-#X connect 19 0 20 1;
-#X connect 20 0 23 0;
-#X connect 23 0 13 0;
-#X connect 23 0 12 0;
-#X connect 24 0 20 0;
-#X connect 25 0 20 0;
-#X connect 26 0 1 0;
-#X connect 26 0 5 1;
-#X connect 26 0 12 1;
+#X connect 18 0 19 1;
+#X connect 19 0 21 0;
+#X connect 21 0 13 0;
+#X connect 21 0 12 0;
+#X connect 22 0 19 0;
+#X connect 23 0 19 0;
+#X connect 24 0 1 0;
+#X connect 24 0 5 1;
+#X connect 24 0 12 1;

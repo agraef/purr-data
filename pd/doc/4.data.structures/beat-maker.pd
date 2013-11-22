@@ -1,4 +1,4 @@
-#N canvas 432 246 737 444 10;
+#N canvas 235 45 737 444 10;
 #X obj 114 109 until;
 #X obj 116 84 t b b;
 #X obj 116 147 f;
@@ -17,7 +17,7 @@
 #X obj 295 67 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 179 164 sel;
-#X floatatom 295 117 5 0 0 0 - - -;
+#X floatatom 295 117 5 0 0 0 - - -, f 5;
 #X obj 296 89 expr \$1 * \$2 + 1;
 #X obj 117 259 expr 40 + 100 * $f1/$f2;
 #X connect 0 0 2 0;

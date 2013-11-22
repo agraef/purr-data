@@ -1,4 +1,4 @@
-#N canvas 73 310 580 406 12;
+#N canvas 376 24 580 400 10;
 #N canvas 265 48 643 640 fft-analysis 0;
 #X obj 15 164 *~;
 #X obj 14 99 inlet~;
@@ -57,10 +57,9 @@ four. This window now computes blocks of 512 samples at intervals of
 #X connect 13 0 5 1;
 #X connect 16 0 13 0;
 #X connect 18 0 11 0;
-#X restore 26 289 pd fft-analysis;
-#X text 290 362 updated for Pd version 0.39;
+#X restore 23 279 pd fft-analysis;
 #N canvas 35 66 592 433 Hann-window 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-hann 512 float 0;
 #X coords 0 1 511 0 200 120 1;
 #X restore 293 249 graph;
@@ -96,10 +95,10 @@ the file smaller (it doesn't have to be saved with the array.);
 #X connect 11 0 6 0;
 #X connect 16 0 11 0;
 #X connect 16 0 17 0;
-#X restore 192 318 pd Hann-window;
-#X obj 27 323 output~;
-#X obj 25 264 noise~;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 152 340 pd Hann-window;
+#X obj 24 313 output~;
+#X obj 22 254 noise~;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-gain 256 float 3;
 #A 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -110,23 +109,47 @@ the file smaller (it doesn't have to be saved with the array.);
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
 #X coords 0 1 256 -0.01 512 60 1;
-#X restore 22 168 graph;
-#X msg 192 264 const 0;
-#X obj 192 293 s \$0-gain;
-#X text 138 0 FOURIER RESYNTHESIS;
-#X text 6 218 0;
-#X text 6 159 1;
-#X text 19 228 0;
-#X text 516 231 22K;
-#X text 270 261 <- reset gain;
-#X text 224 148 GAIN;
-#X text 21 24 Using Fourier resynthesis you can take an incoming sound
+#X restore 35 157 graph;
+#X msg 152 293 const 0;
+#X obj 152 315 s \$0-gain;
+#X text 19 207 0;
+#X text 19 148 1;
+#X text 32 217 0;
+#X text 529 220 22K;
+#X text 210 293 <- reset gain;
+#X text 237 137 GAIN;
+#X text 19 37 Using Fourier resynthesis you can take an incoming sound
 \, operate on its spectrum \, and hear the result. Here we start with
 white noise and apply a frequency-dependent gain \, which works as
 a graphic equalizer. There are N/2 = 256 points \, each spaced SR/512
 Hz. apart (although their frequency ranges overlap). Open the "fft-analysis"
 patch to see the workings.;
-#X connect 0 0 3 0;
-#X connect 0 0 3 1;
-#X connect 4 0 0 0;
-#X connect 6 0 7 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header Fourier_resynthesis
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 378 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION Fourier resynthesis;
+#X restore 392 380 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Fourier resynthesis- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 380 pd References;
+#X obj 6 380 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 3 0 0 0;
+#X connect 5 0 6 0;

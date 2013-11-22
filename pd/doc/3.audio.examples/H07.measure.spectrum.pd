@@ -1,37 +1,28 @@
-#N canvas 407 54 626 729 12;
-#X floatatom 145 654 5 0 0 0 - - -;
-#X obj 44 565 bp~;
-#X obj 44 536 bp~;
-#X obj 55 467 mtof;
-#X floatatom 55 490 7 0 0 0 - - -;
-#X floatatom 98 520 3 0 999 0 - #0-q -;
-#X floatatom 55 447 7 0 150 0 - #0-pitch -;
-#X obj 145 586 env~ 4096;
-#X obj 45 370 *~ 0;
-#X obj 44 395 +~ 1;
-#X obj 145 608 + 0.5;
-#X obj 145 631 int;
-#X text 12 41 In this example we use two cascaded bandpass filters
+#N canvas 424 19 448 637 10;
+#X floatatom 121 578 5 0 0 0 - - -, f 5;
+#X obj 20 489 bp~;
+#X obj 20 460 bp~;
+#X obj 31 391 mtof;
+#X floatatom 31 414 7 0 0 0 - - -, f 7;
+#X floatatom 74 444 3 0 999 0 - #0-q -, f 3;
+#X floatatom 31 371 7 0 150 0 - #0-pitch -, f 7;
+#X obj 121 510 env~ 4096;
+#X obj 21 294 *~ 0;
+#X obj 20 319 +~ 1;
+#X obj 121 532 + 0.5;
+#X obj 121 555 int;
+#X text 19 37 In this example we use two cascaded bandpass filters
 to troll for partials in Jonathan Harvey's famous bell sample.;
-#X text 16 233 You can hear partials around 48 \, 51.3 \, 55 (faint!)
+#X text 18 176 You can hear partials around 48 \, 51.3 \, 55 (faint!)
 \, 57 (fainter!) \, 60 \, two beating partials around 65 \, 67 \, 69
 \, 70.9 \, 71.75 \, 72.6 \, 74 \, 74.65 \, 75.6 \, 77 \, 81.2 \, 84.6
 \, 86.5 \, and probably many more. There's also one down at 36 \, but
 it's easier to see it on the meter than hear it.;
-#X text 124 447 <-- center pitch;
-#X text 120 463 (shift-drag to fine tune);
-#X text 131 491 <-- center frequency;
-#X text 138 520 <-- Q (filter selectivity);
-#X obj 44 614 output~;
-#X text 341 680 updated for Pd version 0.39;
-#X text 14 82 Note that filters can give unexpected level changes.
-The bp~ object is designed to have roughly unit gain at the pass band
-\, so the higher you set "Q" the more amplitude is lost. You can correct
-for this by pushing the output amplitude \, but be sure to remember
-to reset the output amplitude before you reduce Q again. I set the
-Q to 100 and the output amplitude to 110 or 120 (with the room gain
-way down.) Then holding the shift key \, slowly drag the center pitch
-upward listening for modes.;
+#X text 83 371 <-- center pitch;
+#X text 79 387 (shift-drag to fine tune);
+#X text 83 415 <-- center frequency;
+#X text 99 444 <-- Q (filter selectivity);
+#X obj 20 538 output~;
 #N canvas 316 21 483 471 startup 0;
 #X obj 53 335 r readfile;
 #X obj 53 388 soundfiler;
@@ -57,16 +48,49 @@ upward listening for modes.;
 #X connect 7 1 5 1;
 #X connect 8 0 7 0;
 #X connect 11 0 1 0;
-#X restore 456 625 pd startup;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 373 419 pd startup;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-array 155948 float 0;
 #X coords 0 1 155947 -1 200 150 1;
-#X restore 396 322 graph;
-#X obj 45 322 r \$0-loopf;
-#X obj 45 346 phasor~;
-#X obj 44 419 tabread4~ \$0-array;
-#X obj 89 370 r \$0-totsamps;
-#X text 109 12 MEASURING SPECTRA USING BANDPASS FILTERS;
+#X restore 237 256 graph;
+#X obj 21 246 r \$0-loopf;
+#X obj 21 270 phasor~;
+#X obj 20 343 tabread4~ \$0-array;
+#X obj 65 294 r \$0-totsamps;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header measuring_spectra_using_bandpass_filters
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 615 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION measuring spectra using bandpass filters
+;
+#X restore 392 617 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 bandpass filters- Related Help Documents;
+#X text 19 37 links;
+#X restore 103 617 pd References;
+#X obj 6 617 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 68 Note that filters can give unexpected level changes.
+The [bp~] object is designed to have roughly unit gain at the pass
+band \, so the higher you set "Q" the more amplitude is lost. You can
+correct for this by pushing the output amplitude \, but be sure to
+remember to reset the output amplitude before you reduce Q again. I
+set the Q to 100 and the output amplitude to 110 or 120 (with the room
+gain way down.) Then holding the shift key \, slowly drag the center
+pitch upward listening for modes.;
 #X connect 1 0 7 0;
 #X connect 1 0 18 0;
 #X connect 1 0 18 1;
@@ -79,10 +103,10 @@ upward listening for modes.;
 #X connect 6 0 3 0;
 #X connect 7 0 10 0;
 #X connect 8 0 9 0;
-#X connect 9 0 25 0;
+#X connect 9 0 23 0;
 #X connect 10 0 11 0;
 #X connect 11 0 0 0;
-#X connect 23 0 24 0;
-#X connect 24 0 8 0;
-#X connect 25 0 2 0;
-#X connect 26 0 8 1;
+#X connect 21 0 22 0;
+#X connect 22 0 8 0;
+#X connect 23 0 2 0;
+#X connect 24 0 8 1;

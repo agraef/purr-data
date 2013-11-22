@@ -1,49 +1,73 @@
-#N canvas 159 89 808 531 12;
-#X obj 21 438 output~;
-#X obj 21 411 +~;
-#X obj 33 192 delwrite~ G07-del 30;
-#X obj 99 391 line~;
-#X obj 63 391 *~;
-#X obj 93 335 line~;
-#X obj 57 335 *~;
-#X obj 80 281 line~;
-#X obj 44 281 *~;
-#X obj 58 221 line~;
-#X obj 22 221 *~;
-#X text 51 8 THE "SHAKER";
-#X obj 279 86 + 1;
-#X obj 279 109 mod 4;
-#X obj 244 83 f;
-#X obj 284 160 random 1000;
-#X obj 244 135 t f b;
-#X obj 244 37 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+#N canvas 370 22 611 540 10;
+#X obj 21 453 output~;
+#X obj 21 426 +~;
+#X obj 33 207 delwrite~ G07-del 30;
+#X obj 99 406 line~;
+#X obj 63 406 *~;
+#X obj 93 350 line~;
+#X obj 57 350 *~;
+#X obj 80 296 line~;
+#X obj 44 296 *~;
+#X obj 58 236 line~;
+#X obj 22 236 *~;
+#X obj 279 101 + 1;
+#X obj 279 124 mod 4;
+#X obj 244 98 f;
+#X obj 284 175 random 1000;
+#X obj 244 150 t f b;
+#X obj 244 52 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
-#X floatatom 347 34 5 10 1000 0 - - -;
-#X obj 244 242 route 0 1 2 3;
-#X obj 44 255 delread~ G07-del 30;
-#X obj 23 165 phasor~ 80;
-#X obj 57 309 delread~ G07-del 17;
-#X obj 63 365 delread~ G07-del 11;
-#X obj 347 59 * 4;
-#X obj 284 187 expr 2 * $f1/1000 - 0.7;
-#X floatatom 23 142 5 30 1000 0 - - -;
-#X obj 244 58 metro 50;
-#X obj 244 218 pack 0 0 200;
-#X text 23 118 frequency;
-#X text 225 17 on/off;
-#X text 344 13 time constant (msec);
-#X text 536 511 updated for Pd version 0.37-1;
-#X text 266 306 This is a time-varying comb filter \, combining four
+#X floatatom 347 49 5 10 1000 0 - - -, f 5;
+#X obj 244 257 route 0 1 2 3;
+#X obj 44 270 delread~ G07-del 30;
+#X obj 23 180 phasor~ 80;
+#X obj 57 324 delread~ G07-del 17;
+#X obj 63 380 delread~ G07-del 11;
+#X obj 347 74 * 4;
+#X obj 284 202 expr 2 * $f1/1000 - 0.7;
+#X floatatom 23 157 5 30 1000 0 - - -, f 5;
+#X obj 244 73 metro 50;
+#X obj 244 233 pack 0 0 200;
+#X text 23 133 frequency;
+#X text 225 32 on/off;
+#X text 344 28 time constant (msec);
+#X text 236 321 This is a time-varying comb filter \, combining four
 delayed copies of the input signal. The amplitude of each delayed copy
 varies randomly between -0.7 and +1.3. Each time the metronome goes
 off \, one of the four delay's gains is changed in sequence. The change
 occurs over the next four ticks of the metronome (so \, if the metronome
 ticks every 50 msec \, each message to a line~ has a second argument
 of 200.);
-#X text 268 424 Any collection of four gains for the four delayed copies
+#X text 236 407 Any collection of four gains for the four delayed copies
 of the signal (including the original) defines some sort of irregular
 comb filter. The peaks and valleys of the comb filter shift constantly
 as the gains change to new \, random values.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header the_"shaker" 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 518 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37-1. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal nonlocal;
+#X text 12 65 DESCRIPTION the "shaker" - a time-varying comb filter
+;
+#X restore 392 520 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 the shaker- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 520 pd References;
+#X obj 6 520 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 1 0 0 0;
 #X connect 1 0 0 1;
 #X connect 3 0 4 1;
@@ -54,27 +78,27 @@ as the gains change to new \, random values.;
 #X connect 8 0 1 1;
 #X connect 9 0 10 1;
 #X connect 10 0 1 0;
-#X connect 12 0 13 0;
-#X connect 13 0 14 1;
-#X connect 14 0 12 0;
-#X connect 14 0 16 0;
-#X connect 15 0 25 0;
-#X connect 16 0 28 0;
-#X connect 16 1 15 0;
-#X connect 17 0 27 0;
-#X connect 18 0 24 0;
-#X connect 18 0 27 1;
-#X connect 19 0 9 0;
-#X connect 19 1 7 0;
-#X connect 19 2 5 0;
-#X connect 19 3 3 0;
-#X connect 20 0 8 0;
-#X connect 21 0 2 0;
-#X connect 21 0 10 0;
-#X connect 22 0 6 0;
-#X connect 23 0 4 0;
-#X connect 24 0 28 2;
-#X connect 25 0 28 1;
-#X connect 26 0 21 0;
-#X connect 27 0 14 0;
-#X connect 28 0 19 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 1;
+#X connect 13 0 11 0;
+#X connect 13 0 15 0;
+#X connect 14 0 24 0;
+#X connect 15 0 27 0;
+#X connect 15 1 14 0;
+#X connect 16 0 26 0;
+#X connect 17 0 23 0;
+#X connect 17 0 26 1;
+#X connect 18 0 9 0;
+#X connect 18 1 7 0;
+#X connect 18 2 5 0;
+#X connect 18 3 3 0;
+#X connect 19 0 8 0;
+#X connect 20 0 2 0;
+#X connect 20 0 10 0;
+#X connect 21 0 6 0;
+#X connect 22 0 4 0;
+#X connect 23 0 27 2;
+#X connect 24 0 27 1;
+#X connect 25 0 20 0;
+#X connect 26 0 13 0;
+#X connect 27 0 18 0;

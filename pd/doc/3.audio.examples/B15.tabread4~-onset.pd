@@ -1,6 +1,5 @@
-#N canvas 88 58 563 680 12;
-#X text 355 655 updated for Pd version 0.42;
-#X text 28 36 Pd is usually compiled to work on 32-bit audio samples.
+#N canvas 433 87 448 590 10;
+#X text 19 37 Pd is usually compiled to work on 32-bit audio samples.
 These do not \, in general \, have enough precision for use as indices
 into an array of more than about 32K samples. This is because the mantissa
 of a 23-bit floating point number has only 24 bits \, out of which
@@ -9,58 +8,91 @@ into the array \, so there would remain 8 or fewer bits to supply the
 fraction. In the most extreme situation possible \, the sample could
 contain a Nyquist frequency sinusoid and the output would then have
 only about 8 bits of accuracy!;
-#X text 29 196 You can use the "onset" inlet to tabread4~ to get good
-accuracy reading longer arrays. The tabread4~ object adds the index
-and the "main" (signal) inlet in 64-bit precision. So if \, for example
-\, the onset inlet could specify an integer exactly up to about 8 million
-(190 seconds at 44100 Hz) \, and the signal inlet could act as a displacement.
-;
-#X text 116 13 USING ONSETS INTO TABREAD4~ TO IMPROVE ACCURACY;
-#X obj 41 587 output~;
-#X obj 395 507 samplerate~;
-#X obj 395 531 / 2;
-#X obj 384 445 loadbang;
-#X obj 384 582 tabwrite~ \$0-tab;
-#X obj 40 557 tabread4~ \$0-tab;
-#X obj 395 555 osc~;
-#X obj 172 557 tabread4~ \$0-tab;
-#X obj 173 589 output~;
-#X obj 384 486 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 21 492 output~;
+#X obj 285 411 samplerate~;
+#X obj 285 435 / 2;
+#X obj 274 349 loadbang;
+#X obj 274 486 tabwrite~ \$0-tab;
+#X obj 20 460 tabread4~ \$0-tab;
+#X obj 285 459 osc~;
+#X obj 140 460 tabread4~ \$0-tab;
+#X obj 141 492 output~;
+#X obj 274 390 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X msg 408 468 \; pd dsp 1;
-#X obj 41 474 *~ 10000;
-#X obj 41 527 +~;
-#X floatatom 192 476 6 0 0 0 - - -;
-#X msg 247 446 1;
-#X obj 383 610 table \$0-tab 200000;
-#X obj 42 446 phasor~ 0.02;
-#X msg 192 446 150001;
-#X text 28 310 At left below an onset (1 or 150000 samples) is added
+#X msg 298 372 \; pd dsp 1;
+#X obj 21 377 *~ 10000;
+#X obj 21 430 +~;
+#X floatatom 140 379 6 0 0 0 - - -, f 6;
+#X msg 195 349 1;
+#X obj 273 514 table \$0-tab 200000;
+#X obj 22 349 phasor~ 0.02;
+#X msg 140 349 150001;
+#X text 19 242 At left below an onset (1 or 150000 samples) is added
 to the index of a table lookup. If you select the onset of 150001 \,
 you should hear the truncation error. (The table contains a Nyquist
 signal and the "correct" output should be a 100 Hz. tone.) At right
 \, the onset is presented in the separate onset inlet. The worst-case
 truncation error drops by about 30 dB.;
-#X text 57 647 BAD;
-#X text 190 646 GOOD;
-#X text 193 425 ONSET INTO TABLE;
-#X text 384 426 This loads the table:;
-#X connect 5 0 6 0;
-#X connect 6 0 10 0;
-#X connect 7 0 13 0;
-#X connect 7 0 14 0;
-#X connect 9 0 4 0;
-#X connect 9 0 4 1;
-#X connect 10 0 8 0;
-#X connect 11 0 12 0;
-#X connect 11 0 12 1;
-#X connect 13 0 5 0;
-#X connect 13 0 8 0;
-#X connect 15 0 16 0;
-#X connect 15 0 11 0;
-#X connect 16 0 9 0;
-#X connect 17 0 11 1;
-#X connect 17 0 16 1;
-#X connect 18 0 17 0;
-#X connect 20 0 15 0;
-#X connect 21 0 17 0;
+#X text 39 540 BAD;
+#X text 158 540 GOOD;
+#X text 135 329 ONSET INTO TABLE;
+#X text 274 330 This loads the table:;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header onsets_into_[tabread4~]_to_improve_accuracy
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 568 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 25 KEYWORDS;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.42. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION onsets into tabread4~ to improve accuracy
+;
+#X restore 392 570 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Hello World- Related Help Documents;
+#X text 19 37 Mention the help link \, and the fact that you can basically
+click on anything to get a help patch on it. Also be sure to see the
+FAQ at puredata.info as you start out with Pd. A link can be found
+in the "Help" menu above.;
+#X text 18 90 Another hello world can be found in the mailing lists.
+You can search for answers to questions on there \, and if you're having
+a hard time finding info you can always ask questions \, too. (See
+the netiquette page before posting \, though.);
+#X text 69 159 rethink calling that an "atom";
+#X restore 103 570 pd References;
+#X obj 6 570 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 156 You can use the "onset" inlet to [tabread4~] to get
+good accuracy reading longer arrays. The [tabread4~] object adds the
+index and the "main" (signal) inlet in 64-bit precision. So if \, for
+example \, the onset inlet could specify an integer exactly up to about
+8 million (190 seconds at 44100 Hz) \, and the signal inlet could act
+as a displacement.;
+#X connect 2 0 3 0;
+#X connect 3 0 7 0;
+#X connect 4 0 10 0;
+#X connect 4 0 11 0;
+#X connect 6 0 1 0;
+#X connect 6 0 1 1;
+#X connect 7 0 5 0;
+#X connect 8 0 9 0;
+#X connect 8 0 9 1;
+#X connect 10 0 2 0;
+#X connect 10 0 5 0;
+#X connect 12 0 13 0;
+#X connect 12 0 8 0;
+#X connect 13 0 6 0;
+#X connect 14 0 8 1;
+#X connect 14 0 13 1;
+#X connect 15 0 14 0;
+#X connect 17 0 12 0;
+#X connect 18 0 14 0;

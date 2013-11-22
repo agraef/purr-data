@@ -1,28 +1,26 @@
-#N canvas 7 6 605 578 12;
-#X obj 188 393 cos~;
-#X obj 231 371 +~ -0.25;
-#X obj 231 394 cos~;
-#X obj 23 438 *~;
-#X obj 89 438 *~;
-#X obj 22 462 -~;
-#X floatatom 188 322 5 0 0 0 - - -;
-#X text 30 242 sample loop for;
-#X text 30 260 test signal;
-#X text 35 321 pair of allpass;
-#X text 34 338 filters to make;
-#X text 34 356 90 degree phase;
-#X text 32 373 shifted versions;
-#X text 238 323 <-- shift frequency;
-#X text 310 356 cosine and sine waves;
-#X text 55 7 SINGLE SIDEBAND MODULATION;
-#X text 300 7 (AKA FREQUENCY SHIFTING);
+#N canvas 424 21 448 560 10;
+#X obj 186 371 cos~;
+#X obj 229 349 +~ -0.25;
+#X obj 229 372 cos~;
+#X obj 21 416 *~;
+#X obj 87 416 *~;
+#X obj 20 440 -~;
+#X floatatom 186 300 5 0 0 0 - - -, f 5;
+#X text 24 221 sample loop for;
+#X text 24 236 test signal;
+#X text 33 299 pair of allpass;
+#X text 32 316 filters to make;
+#X text 32 334 90 degree phase;
+#X text 30 351 shifted versions;
+#X text 236 301 <-- shift frequency;
+#X text 290 334 cosine and sine waves;
 #N canvas 555 154 448 326 bell-loop 0;
 #X obj 23 142 /;
 #X obj 23 214 +~ 1;
 #X msg 23 117 44100;
 #X obj 23 91 t b f;
 #X obj 24 264 outlet~;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-array 155948 float 0;
 #X coords 0 1 155947 -1 200 150 1;
 #X restore 234 88 graph;
@@ -41,7 +39,7 @@
 #X connect 8 0 1 0;
 #X connect 9 0 8 0;
 #X connect 10 0 4 0;
-#X restore 24 279 pd bell-loop;
+#X restore 22 257 pd bell-loop;
 #N canvas 711 110 483 471 startup 0;
 #X obj 53 335 r readfile;
 #X obj 53 388 soundfiler;
@@ -66,38 +64,63 @@
 #X connect 7 1 5 1;
 #X connect 8 0 7 0;
 #X connect 10 0 1 0;
-#X restore 157 530 pd startup;
-#X obj 21 495 output~;
-#X text 352 547 updated for Pd version 0.39;
-#X obj 188 347 phasor~;
-#X text 123 438 <-- complex multipier;
-#X text 122 455 (calculates real part);
-#X text 309 371 to form the real and;
-#X text 309 387 imaginary part of a;
-#X text 309 404 complex sinusoid;
-#X text 43 37 The signal sideband modulator gives you only one sideband
+#X restore 125 500 pd startup;
+#X obj 19 473 output~;
+#X obj 186 325 phasor~;
+#X text 121 416 <-- complex multipier;
+#X text 120 433 (calculates real part);
+#X text 289 349 to form the real and;
+#X text 289 365 imaginary part of a;
+#X text 289 382 complex sinusoid;
+#X text 19 47 The signal sideband modulator gives you only one sideband
 for each frequency in the input signal (whereas ring modulation gave
 both a positive and negative sideband). You can set the shift frequency
 positive to shift all frequencies upward \, or negative to shift them
 downwards.;
-#X text 42 117 The technique is to filter the input into two versions
+#X text 19 111 The technique is to filter the input into two versions
 \, 90 degrees out of phase \, which can be interpreted as the real
 and imaginary part of a complex signal with positive frequencies only.
 You can then form the (complex) product of this with a (complex) sinusoid
 to modulate upward or downward in frequency.;
-#X obj 23 400 hilbert~;
-#X text 42 213 The "Hilbert~" object is an abstraction in pd/extra.
+#X obj 21 378 hilbert~;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header single_sideband_modulation
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
+#X text 60 27 (a.k.a. frequency shifting);
+#X text 18 186 The [hilbert~] object is an abstraction in pd/extra.
+;
+#X obj 1 538 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION single sideband modulation;
+#X restore 392 540 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 single sideband modulation- Related Help Documents;
+#X restore 103 540 pd References;
+#X obj 6 540 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 1;
 #X connect 1 0 2 0;
 #X connect 2 0 4 1;
 #X connect 3 0 5 0;
 #X connect 4 0 5 1;
-#X connect 5 0 19 0;
-#X connect 5 0 19 1;
-#X connect 6 0 21 0;
-#X connect 17 0 29 0;
-#X connect 21 0 1 0;
-#X connect 21 0 0 0;
-#X connect 29 0 3 0;
-#X connect 29 1 4 0;
+#X connect 5 0 17 0;
+#X connect 5 0 17 1;
+#X connect 6 0 18 0;
+#X connect 15 0 26 0;
+#X connect 18 0 1 0;
+#X connect 18 0 0 0;
+#X connect 26 0 3 0;
+#X connect 26 1 4 0;

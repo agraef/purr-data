@@ -1,70 +1,70 @@
-#N canvas 131 52 921 585 12;
-#X obj 12 219 r trigger;
-#X obj 12 437 *~;
-#X obj 12 330 *~ 0.01;
-#X obj 12 365 *~;
-#X obj 12 395 *~;
-#X obj 59 359 r pitch;
-#X obj 59 409 mtof;
-#X floatatom 59 384 4 0 0 0 - - -;
-#X floatatom 36 271 4 0 0 0 - - -;
-#X obj 36 246 r level;
-#X floatatom 110 271 4 0 0 0 - - -;
-#X obj 110 246 r attack;
-#X floatatom 195 271 4 0 0 0 - - -;
-#X obj 195 246 r decay;
-#X floatatom 270 271 4 0 0 0 - - -;
-#X floatatom 364 271 4 0 0 0 - - -;
-#X obj 270 246 r sustain;
-#X obj 364 246 r release;
+#N canvas 328 19 745 613 10;
+#X obj 22 229 r trigger;
+#X obj 22 447 *~;
+#X obj 22 340 *~ 0.01;
+#X obj 22 375 *~;
+#X obj 22 405 *~;
+#X obj 69 369 r pitch;
+#X obj 69 419 mtof;
+#X floatatom 69 394 4 0 0 0 - - -, f 4;
+#X floatatom 46 281 4 0 0 0 - - -, f 4;
+#X obj 46 256 r level;
+#X floatatom 120 281 4 0 0 0 - - -, f 4;
+#X obj 120 256 r attack;
+#X floatatom 205 281 4 0 0 0 - - -, f 4;
+#X obj 205 256 r decay;
+#X floatatom 280 281 4 0 0 0 - - -, f 4;
+#X floatatom 374 281 4 0 0 0 - - -, f 4;
+#X obj 280 256 r sustain;
+#X obj 374 256 r release;
 #X obj 499 158 r note;
-#X msg 500 236 \; trigger 1;
-#X obj 602 225 del;
-#X msg 602 247 \; trigger 0;
-#X obj 14 166 qlist;
-#X obj 14 7 r qlist;
-#X msg 35 34 bang;
-#X msg 35 59 rewind;
-#X obj 42 88 r tempo;
-#X floatatom 42 113 4 0 0 0 - - -;
-#X msg 42 138 tempo \$1;
+#X msg 499 256 \; trigger 1;
+#X obj 592 234 del;
+#X msg 592 256 \; trigger 0;
+#X obj 22 201 qlist;
+#X obj 22 42 r qlist;
+#X msg 43 69 bang;
+#X msg 43 94 rewind;
+#X obj 50 123 r tempo;
+#X floatatom 50 148 4 0 0 0 - - -, f 4;
+#X msg 50 173 tempo \$1;
 #X obj 499 201 t b f;
-#X obj 550 198 s pitch;
-#X obj 624 176 r duration;
-#X floatatom 624 201 4 0 0 0 - - -;
-#X floatatom 499 181 4 0 0 0 - - -;
-#X obj 268 319 r trigger;
-#X floatatom 294 375 4 0 0 0 - - -;
-#X floatatom 366 405 4 0 0 0 - - -;
-#X floatatom 456 405 4 0 0 0 - - -;
-#X floatatom 542 405 4 0 0 0 - - -;
-#X floatatom 638 405 4 0 0 0 - - -;
-#X obj 294 350 r level2;
-#X obj 366 380 r attack2;
-#X obj 456 380 r decay2;
-#X obj 542 380 r sustain2;
-#X obj 638 380 r release2;
-#X obj 59 434 tabosc4~ array1;
-#X floatatom 218 365 4 0 0 0 - - -;
-#X obj 12 481 vcf~;
-#X floatatom 119 487 4 0 0 0 - - -;
-#X obj 119 462 r q;
-#X obj 12 305 adsr 0 0 0 0 0;
-#X obj 268 443 adsr 0 0 0 0 0;
-#X obj 294 400 / 69.23;
-#X obj 218 390 mtof;
-#X obj 218 415 sqrt;
-#X obj 218 440 sqrt;
-#X obj 176 335 r filter;
-#X obj 219 493 *~;
-#X obj 219 518 *~;
-#X obj 268 468 +~ 1;
-#X obj 218 465 *~;
-#X text 118 214 ADSR for amplitude:;
+#X obj 526 233 s pitch;
+#X obj 607 185 r duration;
+#X floatatom 607 210 4 0 0 0 - - -, f 4;
+#X floatatom 499 181 4 0 0 0 - - -, f 4;
+#X obj 278 329 r trigger;
+#X floatatom 304 385 4 0 0 0 - - -, f 4;
+#X floatatom 376 415 4 0 0 0 - - -, f 4;
+#X floatatom 456 415 4 0 0 0 - - -, f 4;
+#X floatatom 542 415 4 0 0 0 - - -, f 4;
+#X floatatom 638 415 4 0 0 0 - - -, f 4;
+#X obj 304 360 r level2;
+#X obj 376 390 r attack2;
+#X obj 456 390 r decay2;
+#X obj 542 390 r sustain2;
+#X obj 638 390 r release2;
+#X obj 69 444 tabosc4~ array1;
+#X floatatom 228 375 4 0 0 0 - - -, f 4;
+#X obj 22 491 vcf~;
+#X floatatom 129 497 4 0 0 0 - - -, f 4;
+#X obj 129 472 r q;
+#X obj 22 315 adsr 0 0 0 0 0;
+#X obj 278 453 adsr 0 0 0 0 0;
+#X obj 304 410 / 69.23;
+#X obj 228 400 mtof;
+#X obj 228 425 sqrt;
+#X obj 228 450 sqrt;
+#X obj 186 345 r filter;
+#X obj 229 503 *~;
+#X obj 229 528 *~;
+#X obj 278 478 +~ 1;
+#X obj 228 475 *~;
+#X text 128 230 ADSR for amplitude:;
 #N canvas 0 258 703 380 otherstuff 0;
 #X obj 289 86 loadbang;
 #X obj 418 85 loadbang;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array array1 67 float 1;
 #A 0 0 0 0 0 0.714286 0.742857 0.757143 0.771429 0.778571 0.785714
 0.785714 0.785714 0.785714 0.790476 0.795238 0.614286 0.585714 0.442857
@@ -80,27 +80,50 @@
 tempo 4;
 #X connect 0 0 4 0;
 #X connect 1 0 3 0;
-#X restore 134 560 pd otherstuff;
-#X text 87 33 <--start loop;
-#X text 104 61 <--stop loop;
-#X text 90 113 <--set tempo;
-#X text 257 562 <--loadbangs and table;
-#X msg 447 517 \; qlist read qlist2.txt;
-#X text 441 493 click to reload qlist2.txt;
-#X obj 12 509 output~;
-#X text 229 19 This is an analog-synth sound made using a wavetable
+#X restore 144 553 pd otherstuff;
+#X text 95 68 <--start loop;
+#X text 112 96 <--stop loop;
+#X text 98 148 <--set tempo;
+#X text 230 553 <--loadbangs and table;
+#X msg 447 507 \; qlist read qlist2.txt;
+#X text 441 483 click to reload qlist2.txt;
+#X obj 22 519 output~;
+#X text 201 39 This is an analog-synth sound made using a wavetable
 oscillator and a "vcf~' object. Unkike the "floyd" example earlier
 \, we use a qlist object to do the sequencing. This can also be adapted
 to make a keyboard synth.;
-#X text 227 85 The qlist reads the file \, "qlist2.txt" \, which contains
+#X text 199 105 The qlist reads the file \, "qlist2.txt" \, which contains
 four "note" messages and a message at the end that restarts the qlist
 at the beginning. The "note" messages are translated into a pitch change
 and triggers for the ADSRs.;
-#X text 667 551 updated for Pd version 0.39;
-#X text 379 305 ADSR for filter. Here \, it works better to make the
+#X text 370 315 ADSR for filter. Here \, it works better to make the
 envelope modify a constant "filter pitch"--so the "filter" receive
 gets the "mtof" treatment and the ADSR is an offset in halftones.;
-#X text 231 1 ANALOG_STYLE SYNTH USING QLIST;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header analog_style_synth_using_qlist
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 591 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION analog style synth using qlist;
+#X restore 392 593 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 analog synth with qlist- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 593 pd References;
+#X obj 6 593 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 50 0;
 #X connect 1 0 47 0;
 #X connect 2 0 3 0;

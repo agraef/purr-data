@@ -1,32 +1,55 @@
-#N canvas 6 2 588 513 12;
-#X obj 108 109 osc~ 440;
-#X obj 108 168 dac~;
-#X text 187 111 <-- 440 Hz. sine wave at full blast;
-#X obj 108 138 *~ 0.05;
-#X text 202 3 MAKING A SINE WAVE;
-#X text 32 195 Audio computation can be turned on and off by sending
+#N canvas 433 125 448 475 10;
+#X obj 95 99 osc~ 440;
+#X obj 95 158 dac~;
+#X text 162 99 <-- 440 Hz. sine wave at full blast;
+#X obj 95 128 *~ 0.05;
+#X text 19 181 Audio computation can be turned on and off by sending
 messages to the global "pd" object as follows:;
-#X msg 98 239 \; pd dsp 1;
-#X msg 202 239 \; pd dsp 0;
-#X text 113 276 ON;
-#X text 222 276 OFF;
-#X text 29 297 You should see the Pd window change to reflect whether
+#X msg 85 217 \; pd dsp 1;
+#X msg 189 217 \; pd dsp 0;
+#X text 100 254 ON;
+#X text 209 254 OFF;
+#X text 16 275 You should see the Pd window change to reflect whether
 audio is on or off. You can also turn audio on and off using the "audio"
 menu \, but the buttons are provided as a shortcut.;
-#X text 30 368 When DSP is on \, you should hear a tone whose pitch
+#X text 17 336 When DSP is on \, you should hear a tone whose pitch
 is A 440 and whose amplitude is 0.05. If instead you are greeted with
 silence \, you might want to read the HTML documentation on setting
 up audio.;
-#X text 28 434 In general when you start a work session with Pd \,
+#X text 16 393 In general when you start a work session with Pd \,
 you will want to choose "test audio and MIDI" from the help window
 \, which opens a more comprehensive test patch than this one.;
-#X text 296 247 <-- click these;
-#X text 187 139 <-- reduce amplitude to 0.05;
-#X text 160 168 <----- send to the audio output device;
-#X text 32 23 Audio computation in Pd is done using "tilde objects"
+#X text 263 224 <-- click these;
+#X text 162 128 <-- reduce amplitude to 0.05;
+#X text 19 37 Audio computation in Pd is done using "tilde objects"
 such as the three below. They use continuous audio streams to intercommunicate
 \, as well as communicating with other ("control") Pd objects using
 messages.;
-#X text 342 490 updated for Pd version 0.36;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header making_a_sinewave
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 162 158 <-- send to the audio output device;
+#X obj 1 453 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS signal;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.36. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION making a sinewave;
+#X restore 392 455 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 making a sinewave- Related Help Documents;
+#X text 19 37 Refer to the manual \, as well as Miller's book.;
+#X restore 103 455 pd References;
+#X obj 6 455 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 0;
 #X connect 3 0 1 0;

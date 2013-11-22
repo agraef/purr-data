@@ -1,42 +1,65 @@
-#N canvas 40 23 609 630 12;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 433 88 448 588 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array adsr-output 44100 float 0;
 #X coords 0 1.02 44100 -1.02 200 130 1;
-#X restore 121 332 graph;
-#X text 121 464 ------ 1 second ------;
-#X obj 18 92 r trigger;
-#X obj 34 168 tabwrite~ adsr-output;
-#X obj 56 143 r graphit;
-#X msg 261 89 bang;
-#X text 305 90 <-- attack and delayed release;
-#X obj 272 113 del 500;
-#X text 376 196 <-- attack only;
-#X msg 261 177 \; pd dsp 1 \; trigger 1 \; graphit bang;
-#X text 377 273 <-- release only;
-#X msg 260 247 \; pd dsp 1 \; trigger 0 \; graphit bang;
-#X msg 272 138 \; trigger 0;
-#X text 324 452 -1;
-#X text 326 327 1;
-#X text 12 27 This patch introduces a simple "adsr" abstraction we'll
+#X restore 21 332 graph;
+#X text 50 464 ------ 1 second ------;
+#X obj 23 84 r trigger;
+#X obj 39 160 tabwrite~ adsr-output;
+#X obj 61 135 r graphit;
+#X msg 201 84 bang;
+#X text 245 85 <-- attack and delayed release;
+#X obj 212 108 del 500;
+#X text 296 191 <-- attack only;
+#X msg 201 172 \; pd dsp 1 \; trigger 1 \; graphit bang;
+#X text 296 261 <-- release only;
+#X msg 200 242 \; pd dsp 1 \; trigger 0 \; graphit bang;
+#X msg 212 133 \; trigger 0;
+#X text 224 452 -1;
+#X text 226 327 1;
+#X text 19 37 This patch introduces a simple "adsr" abstraction we'll
 use frequently. You can click on the "adsr" object to see what's inside.
 ;
-#X text 16 516 The active ingredient of the ADSR envelope generator
+#X text 18 489 The active ingredient of the ADSR envelope generator
 is a single line~ which gets passed messages to make the attack and
 release behavior. You can retrigger the ADSR envelope generator all
 you wish without having to wait for attacks or releases to finish;
-#X text 104 5 ENVELOPE GENERATOR ABSTRACTION;
-#X obj 18 118 adsr 1 100 200 50 300;
-#X text 356 601 updated for Pd version 0.37;
-#X obj 36 195 osc~ 440;
-#X obj 17 220 *~;
-#X obj 16 249 output~;
-#X connect 2 0 18 0;
+#X obj 23 110 adsr 1 100 200 50 300;
+#X obj 41 187 osc~ 440;
+#X obj 22 212 *~;
+#X obj 21 241 output~;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header envelope_generators_abstraction
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 566 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION envelope generators abstraction;
+#X restore 392 568 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 envelope generator absraction- Related Help Documents;
+#X restore 103 568 pd References;
+#X obj 6 568 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 2 0 17 0;
 #X connect 4 0 3 0;
 #X connect 5 0 9 0;
 #X connect 5 0 7 0;
 #X connect 7 0 12 0;
-#X connect 18 0 3 0;
-#X connect 18 0 21 0;
-#X connect 20 0 21 1;
-#X connect 21 0 22 0;
-#X connect 21 0 22 1;
+#X connect 17 0 3 0;
+#X connect 17 0 19 0;
+#X connect 18 0 19 1;
+#X connect 19 0 20 0;
+#X connect 19 0 20 1;

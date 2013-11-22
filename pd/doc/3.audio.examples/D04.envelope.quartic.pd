@@ -1,61 +1,84 @@
-#N canvas 130 66 646 584 12;
-#X obj 21 345 osc~;
-#X obj 21 370 *~;
-#X obj 81 350 line~;
-#X obj 21 320 line~;
-#X obj 163 455 osc~;
-#X obj 212 483 *~;
-#X obj 234 366 line~;
-#X obj 163 366 line~;
-#X obj 163 313 sqrt;
-#X obj 163 339 sqrt;
-#X obj 234 313 sqrt;
-#X obj 234 339 sqrt;
-#X obj 163 398 *~;
-#X obj 163 428 *~;
-#X obj 234 398 *~;
-#X obj 234 427 *~;
-#X obj 163 288 unpack;
-#X obj 234 288 unpack;
-#X obj 21 295 r freq;
-#X obj 81 326 r amp;
-#X obj 163 263 r freq;
-#X obj 234 263 r amp;
-#X msg 340 277 \; amp 0 5000 \;;
-#X msg 340 232 \; amp 1 5000 \;;
-#X msg 492 278 \; amp 0 1000 \;;
-#X msg 494 232 \; amp 1 1000 \;;
-#X msg 337 357 \; freq 1760 5000 \;;
-#X msg 338 404 \; freq 55 5000 \;;
-#X msg 493 357 \; freq 1760 1000 \;;
-#X msg 496 405 \; freq 55 1000 \;;
-#X text 90 15 QUARTIC AND LINEAR ENVELOPES COMPARED;
-#X obj 341 464 loadbang;
-#X msg 341 492 \; amp 1 \; freq 1760;
-#X text 22 265 LINEAR;
-#X text 168 236 QUARTIC;
-#X obj 21 397 output~;
-#X obj 212 509 output~;
-#X text 14 123 In the quartic example \, for both the amplitude and
-the frequency \, we have to take the fourth root of the target value
-(which we get by taking square root twice.) Then we raise the line~
-output to the fourth power by squaring twice (the *~ objects \, whose
-left and right inlets are the same.) The cost is mostly that of the
-four additional *~ objects.;
-#X text 350 553 updated for Pd version 0.37;
-#X text 19 39 This patch has two sine wave oscillators \, one with
+#N canvas 433 97 448 559 10;
+#X obj 21 268 osc~;
+#X obj 21 293 *~;
+#X obj 68 267 line~;
+#X obj 21 243 line~;
+#X obj 118 410 osc~;
+#X obj 118 447 *~;
+#X obj 181 321 line~;
+#X obj 118 321 line~;
+#X obj 118 268 sqrt;
+#X obj 118 294 sqrt;
+#X obj 181 268 sqrt;
+#X obj 181 294 sqrt;
+#X obj 118 353 *~;
+#X obj 118 383 *~;
+#X obj 181 353 *~;
+#X obj 181 382 *~;
+#X obj 118 243 unpack;
+#X obj 181 243 unpack;
+#X obj 21 218 r freq;
+#X obj 68 243 r amp;
+#X obj 118 218 r freq;
+#X obj 181 218 r amp;
+#X msg 232 293 \; amp 0 5000 \;;
+#X msg 232 248 \; amp 1 5000 \;;
+#X msg 340 294 \; amp 0 1000 \;;
+#X msg 340 248 \; amp 1 1000 \;;
+#X msg 232 353 \; freq 1760 5000 \;;
+#X msg 233 401 \; freq 55 5000 \;;
+#X msg 340 353 \; freq 1760 1000 \;;
+#X msg 340 401 \; freq 55 1000 \;;
+#X obj 246 451 loadbang;
+#X msg 246 474 \; amp 1 \; freq 1760;
+#X text 22 195 LINEAR;
+#X text 143 193 QUARTIC;
+#X obj 21 320 output~;
+#X obj 118 473 output~;
+#X text 19 37 This patch has two sine wave oscillators \, one with
 linear envelopes \, the other with quartic ones which sound more uniform.
 The message boxes sweep the amplitude and frequency up and down. You
 can compare the two to see that quartic-shaped changes sound more uniform
 than linear ones.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header quartic_and_linear_envelopes_compared
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 537 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION quartic and linear envelopes compared;
+#X restore 392 539 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 quartic envelopes- Related Help Documents;
+#X restore 103 539 pd References;
+#X text 18 101 In the quartic example \, for both the amplitude and
+the frequency \, we have to take the fourth root of the target value
+(which we get by taking square root twice.) Then we raise the [line~]
+output to the fourth power by squaring twice (the [*~] objects \, whose
+left and right inlets are the same.) The cost is mostly that of the
+four additional [*~] objects.;
+#X obj 6 539 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 1 0;
-#X connect 1 0 35 0;
-#X connect 1 0 35 1;
+#X connect 1 0 34 0;
+#X connect 1 0 34 1;
 #X connect 2 0 1 1;
 #X connect 3 0 0 0;
 #X connect 4 0 5 0;
-#X connect 5 0 36 0;
-#X connect 5 0 36 1;
+#X connect 5 0 35 0;
+#X connect 5 0 35 1;
 #X connect 6 0 14 0;
 #X connect 6 0 14 1;
 #X connect 7 0 12 0;
@@ -78,4 +101,4 @@ than linear ones.;
 #X connect 19 0 2 0;
 #X connect 20 0 16 0;
 #X connect 21 0 17 0;
-#X connect 31 0 32 0;
+#X connect 30 0 31 0;

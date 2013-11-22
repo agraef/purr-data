@@ -1,9 +1,10 @@
-#N canvas 32 67 900 421 12;
-#X obj 39 247 cos~;
-#X graph graph1 0 -1.02 44100 1.02 452 206 652 76;
+#N canvas 392 32 567 408 10;
+#X obj 23 262 cos~;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array env-output 44100 float 0;
-#X pop;
-#X floatatom 71 305 0 0 0;
+#X coords 0 1.02 44100 -1.02 200 130 1;
+#X restore 326 91 graph;
+#X floatatom 48 320 0 0 0 0 - - -;
 #N canvas 159 26 495 266 output 0;
 #X obj 338 160 t b;
 #X obj 338 110 f;
@@ -55,23 +56,23 @@
 #X connect 22 0 23 0;
 #X connect 22 0 23 1;
 #X connect 24 0 21 0;
-#X restore 39 333 pd output;
-#X msg 115 306 MUTE;
-#X msg 162 93 bang;
-#X text 203 93 <-- click to graph;
-#X obj 39 168 -~ 0.5;
-#X obj 39 192 *~;
-#X obj 39 219 clip~ -0.5 0.5;
-#X obj 39 274 hip~ 5;
-#X obj 126 60 *~;
-#X floatatom 205 142 0 0 0;
-#X floatatom 205 168 0 0 0;
-#X obj 126 27 phasor~ -4;
-#X obj 126 191 +~ 0.5;
-#X obj 162 117 tabwrite~ env-output;
-#X text 451 211 --------- 1 second ---------;
-#X floatatom 205 194 0 0 0;
-#X obj 126 142 lop~ 130;
+#X restore 23 348 pd output;
+#X msg 74 321 MUTE;
+#X msg 146 108 bang;
+#X text 184 108 <-- click to graph;
+#X obj 23 183 -~ 0.5;
+#X obj 23 207 *~;
+#X obj 23 234 clip~ -0.5 0.5;
+#X obj 23 289 hip~ 5;
+#X obj 110 75 *~;
+#X floatatom 189 157 0 0 0 0 - - -;
+#X floatatom 189 183 0 0 0 0 - - -;
+#X obj 110 42 phasor~ -4;
+#X obj 110 206 +~ 0.5;
+#X obj 146 132 tabwrite~ env-output;
+#X text 325 226 --------- 1 second ---------;
+#X floatatom 189 209 0 0 0 0 - - -;
+#X obj 110 157 lop~ 130;
 #N canvas 168 232 351 420 freq 0;
 #X obj 180 176 t f f;
 #X obj 181 202 *;
@@ -80,9 +81,9 @@
 #X obj 90 107 metro 100;
 #X obj 61 287 pack;
 #X obj 60 376 outlet;
-#X floatatom 89 82 0 0 0;
-#X floatatom 54 243 0 0 0;
-#X floatatom 94 248 0 0 0;
+#X floatatom 89 82 0 0 0 0 - - -;
+#X floatatom 54 243 0 0 0 0 - - -;
+#X floatatom 94 248 0 0 0 0 - - -;
 #X obj 60 348 pack 0 30;
 #X obj 55 202 + 150;
 #X obj 88 34 loadbang;
@@ -109,25 +110,49 @@
 #X connect 15 0 4 1;
 #X connect 15 0 9 0;
 #X connect 16 0 0 0;
-#X restore 38 94 pd freq;
-#X obj 39 119 line~;
-#X obj 39 144 phasor~;
-#X text 225 19 negative frequency;
-#X text 226 35 makes falling sawtooth;
-#X text 155 59 square it to make a curve;
-#X text 245 152 you can;
-#X text 243 170 adjust these;
-#X text 247 189 values;
-#X text 334 250 We interrupt this series of patches to bring you an
+#X restore 23 112 pd freq;
+#X obj 23 134 line~;
+#X obj 23 159 phasor~;
+#X text 181 33 negative frequency;
+#X text 181 48 makes falling sawtooth;
+#X text 139 74 square it to make a curve;
+#X text 227 167 you can;
+#X text 227 185 adjust these;
+#X text 227 204 values;
+#X text 198 265 We interrupt this series of patches to bring you an
 important message from Nancy Reagan. If \, anywhere \, at any time
 \, someone offers you an illicit drug \, just say one word in reply...
 ;
-#X text 334 313 Now that I'm sure you've heard this important message
+#X text 198 328 Now that I'm sure you've heard this important message
 \, we can return to the essentially frivolous occupation of making
 turn-of-the-millenium western art music.;
-#X obj 126 165 *~ 6;
-#X text 561 384 updated for Pd version 0.34;
-#X text 156 305 <-- output;
+#X obj 110 180 *~ 6;
+#X text 110 321 <-- output;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header just_say_no 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 386 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION portamento;
+#X restore 392 388 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 portamento- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 388 pd References;
+#X obj 6 388 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 10 0;
 #X connect 2 0 3 1;
 #X connect 3 0 2 0;

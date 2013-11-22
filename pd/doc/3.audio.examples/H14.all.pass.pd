@@ -1,6 +1,6 @@
-#N canvas 25 22 868 421 12;
-#X obj 25 338 filter-graph2 tab1 tab2;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 424 23 448 647 10;
+#X obj 22 254 filter-graph2 tab1 tab2;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array tab1 100 float 1;
 #A 0 0.999994 1.0015 1.00454 0.999907 0.99994 0.999773 1.00002 1.0004
 0.999993 0.998703 1 0.999993 1 0.999699 0.999312 0.99924 0.999999 1
@@ -15,8 +15,8 @@
 0.999996 0.99999 1 0.99999 0.999991 0.998888 1.00002 0.999955 0.999942
 0.999432 1.00007 1.00956;
 #X coords 0 2 99 0 200 140 1;
-#X restore 634 -1 graph;
-#N canvas 0 0 450 300 graph2 0;
+#X restore 230 249 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array tab2 100 float 3;
 #A 0 8.595e-06 0.0615936 0.127096 0.18809 0.251487 0.314087 0.376949
 0.439804 0.502669 0.565481 0.628309 0.691149 0.753982 0.816816 0.879645
@@ -31,19 +31,18 @@
 5.46619 5.52902 5.59185 5.65469 5.71752 5.78033 5.8432 5.90605 5.96891
 6.03151 6.09491 6.1559 6.21446;
 #X coords 0 6.283 99 0 200 140 1;
-#X restore 639 200 graph;
-#X text 621 56 1;
-#X text 633 342 0;
-#X text 615 265 pi;
-#X text 608 195 2pi;
-#X obj 25 203 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 235 450 graph;
+#X text 217 306 1;
+#X text 229 592 0;
+#X text 211 515 pi;
+#X text 204 445 2pi;
+#X obj 22 119 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 33 249 5 0 0 0 - - -;
-#X text 621 -8 2;
-#X text 610 382 updated for Pd version 0.39;
-#X text 691 145 frequency;
-#X text 631 141 0;
-#X text 814 144 44100;
+#X floatatom 30 165 5 0 0 0 - - -, f 5;
+#X text 217 242 2;
+#X text 287 395 frequency;
+#X text 227 391 0;
+#X text 410 394 44100;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -55,31 +54,55 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 398 370 pd startup;
-#X text 575 127 gain=0;
-#X text 574 327 phase=0;
-#X obj 25 226 filter-graph1 100 44100;
-#X text 44 202 <-- compute;
-#X text 34 266 index;
-#X text 104 -6 ALL-PASS FILTERS;
-#X floatatom 346 264 3 -99 99 0 - #0-pole -;
-#X obj 239 306 rpole~;
-#X obj 346 287 / 100;
-#X obj 239 281 rzero_rev~;
-#X text 341 240 pole (%);
-#X text 14 20 The all-pass filter has a phase response that depends
+#X restore 22 286 pd startup;
+#X text 171 377 gain=0;
+#X text 170 577 phase=0;
+#X obj 22 142 filter-graph1 100 44100;
+#X text 41 118 <-- compute;
+#X text 31 182 index;
+#X floatatom 253 177 3 -99 99 0 - #0-pole -, f 3;
+#X obj 156 227 rpole~;
+#X obj 253 200 / 100;
+#X obj 156 202 rzero_rev~;
+#X text 248 153 pole (%);
+#X text 19 37 The all-pass filter has a phase response that depends
 on its coefficient \, and a flat frequency response. The coefficient
 (p) gives the location of the pole. There is a zero at 1/p \, unless
 p=0. If p=0 the filter is effectively a one-sample delay. Negative
 values of $p$ are allowed \, as long as p is between -1 and 1;
-#X connect 7 0 17 0;
-#X connect 17 0 0 0;
-#X connect 17 0 8 0;
-#X connect 17 1 0 1;
-#X connect 17 1 24 0;
-#X connect 17 2 0 2;
-#X connect 21 0 23 0;
-#X connect 22 0 0 3;
-#X connect 23 0 24 1;
-#X connect 23 0 22 1;
-#X connect 24 0 22 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header all-pass_filters
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 625 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION all-pass filters;
+#X restore 392 627 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 all-pass filters- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 627 pd References;
+#X obj 6 627 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 7 0 16 0;
+#X connect 16 0 0 0;
+#X connect 16 0 8 0;
+#X connect 16 1 0 1;
+#X connect 16 1 22 0;
+#X connect 16 2 0 2;
+#X connect 19 0 21 0;
+#X connect 20 0 0 3;
+#X connect 21 0 22 1;
+#X connect 21 0 20 1;
+#X connect 22 0 20 0;

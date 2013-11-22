@@ -1,5 +1,5 @@
 #N canvas 230 71 587 465 12;
-#X floatatom 179 207 0 0 0;
+#X floatatom 179 207 0 0 0 0 - - -;
 #X obj 53 199 f;
 #X obj 89 194 + 1;
 #X obj 53 232 sel;
@@ -25,8 +25,13 @@
 #X obj 372 326 0;
 #X obj 238 130 t b b p b;
 #X text 229 93 pointer in;
-#X text 20 12 This is an abstraction used in the sequencer example. Here we take a pointer and sequence an array belonging to it \, either the amplitude or the frequency \, depending on the value of argument 2 The template of the scalar is given by argument 1 and that of the array elements by argument 3;
-#X text 90 431 Outlets: new y value \, new w value \, time to ramp to new values.;
+#X text 20 12 This is an abstraction used in the sequencer example.
+Here we take a pointer and sequence an array belonging to it \, either
+the amplitude or the frequency \, depending on the value of argument
+2 The template of the scalar is given by argument 1 and that of the
+array elements by argument 3;
+#X text 90 431 Outlets: new y value \, new w value \, time to ramp
+to new values.;
 #X connect 1 0 2 0;
 #X connect 1 0 3 0;
 #X connect 2 0 1 1;

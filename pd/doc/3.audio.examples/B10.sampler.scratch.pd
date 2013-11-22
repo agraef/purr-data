@@ -1,67 +1,100 @@
-#N canvas 53 232 936 654 12;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 365 74 653 628 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array table19 44103 float 0;
 #X coords 0 1.02 44100 -1.02 200 130 1;
-#X restore 680 8 graph;
-#X obj 40 382 hip~ 5;
-#X floatatom 99 51 0 0 0 0 - - -;
-#X text 146 50 <-- frequency (Hz.);
-#X floatatom 129 106 0 0 0 0 - - -;
-#X obj 129 135 * 441;
-#X obj 100 158 *~ 0;
-#X obj 100 181 +~ 1;
-#X msg 194 281 bang;
-#X text 164 106 <-- chunk size (100ths of a second);
-#X obj 591 369 adc~ 1;
-#X obj 591 395 hip~ 5;
-#X msg 609 423 bang;
-#N canvas 0 0 450 300 graph2 0;
+#X restore 400 48 graph;
+#X obj 23 376 hip~ 5;
+#X floatatom 82 45 0 0 0 0 - - -;
+#X text 129 44 <-- frequency (Hz.);
+#X floatatom 112 100 0 0 0 0 - - -;
+#X obj 112 129 * 441;
+#X obj 83 152 *~ 0;
+#X obj 83 175 +~ 1;
+#X msg 177 275 bang;
+#X text 147 100 <-- chunk size (100ths of a second);
+#X obj 311 349 adc~ 1;
+#X obj 311 375 hip~ 5;
+#X msg 329 400 bang;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array graph19 44100 float 0;
 #X coords 0 44100 44100 0 200 130 1;
-#X restore 681 196 graph;
-#X obj 40 356 *~;
-#X obj 123 276 line~;
-#X obj 123 228 * 441;
-#X floatatom 123 205 0 0 0 0 - - -;
-#X obj 123 252 pack 0 100;
-#X obj 101 310 +~;
-#X text 34 474 In this patch we can loop in any "window" of the input
+#X restore 400 236 graph;
+#X obj 23 350 *~;
+#X obj 106 270 line~;
+#X obj 106 222 * 441;
+#X floatatom 106 199 0 0 0 0 - - -;
+#X obj 106 246 pack 0 100;
+#X obj 84 304 +~;
+#X text 21 454 In this patch we can loop in any "window" of the input
 sample. The "read point" (0-100) gives the starting point of the window
 and "chunk" is its size (both in 100ths of a second.) Try \, for example
 \, frequency 4 \, sharpness 10 \, chunk size 25 \, and vary the read
 point from -25 to 100 \, listening to the result.;
-#X text 242 281 <-- graph table index;
-#X text 684 337 ----- 1 second ------;
-#X obj 595 490 loadbang;
-#X text 631 514 v-- re-read the original sample;
-#X obj 605 559 soundfiler;
-#X text 678 147 ---- 44103 samples ---;
-#X obj 591 455 tabwrite~ table19;
-#X msg 605 535 read ../sound/voice.wav table19;
-#X text 688 628 updated for Pd version 0.37;
-#X msg 595 585 \; graph19 ylabel 48000 0 44100;
-#X obj 39 103 -~ 0.5;
-#X obj 99 76 phasor~;
-#X obj 39 127 *~ 0.5;
-#X obj 39 150 cos~;
-#X text 157 206 <-- read point (100ths of a second);
-#X obj 41 406 output~;
-#X text 651 422 <-- record;
-#X text 36 13 ENVELOPING THE LOOPING SAMPLER;
-#X text 37 574 You should hear some doppler shift as you change the
+#X text 225 275 <-- graph table index;
+#X text 429 367 ----- 1 second ------;
+#X obj 398 465 loadbang;
+#X text 434 489 v-- re-read the original sample;
+#X obj 408 534 soundfiler;
+#X text 434 181 ---- 44103 samples ---;
+#X obj 311 425 tabwrite~ table19;
+#X msg 408 510 read ../sound/voice.wav table19;
+#X msg 398 560 \; graph19 ylabel 48000 0 44100;
+#X obj 22 97 -~ 0.5;
+#X obj 82 70 phasor~;
+#X obj 22 121 *~ 0.5;
+#X obj 22 144 cos~;
+#X text 140 200 <-- read point (100ths of a second);
+#X obj 24 400 output~;
+#X text 371 399 <-- record;
+#X text 22 529 You should hear some doppler shift as you change the
 read point. To see why \, click on "graph table index" and quickly
 start changing the read point--- you should see entertaining pictures
 in "table-index". The next patch shows how to prevent this if you wish
 to.;
-#X obj 100 336 tabread4~ table19;
-#X obj 194 307 tabwrite~ graph19;
-#X connect 1 0 36 0;
-#X connect 2 0 32 0;
+#X obj 83 330 tabread4~ table19;
+#X obj 177 301 tabwrite~ graph19;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header enveloping_the_looping_sampler
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 606 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 85 PLATFORM windows macosx gnulinux;
+#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 145 AUTHOR Miller Puckette;
+#X text 12 125 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 105 DATATYPE float;
+#X text 12 185 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION enveloping the looping sampler;
+#X restore 392 608 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Hello World- Related Help Documents;
+#X text 19 37 Mention the help link \, and the fact that you can basically
+click on anything to get a help patch on it. Also be sure to see the
+FAQ at puredata.info as you start out with Pd. A link can be found
+in the "Help" menu above.;
+#X text 18 90 Another hello world can be found in the mailing lists.
+You can search for answers to questions on there \, and if you're having
+a hard time finding info you can always ask questions \, too. (See
+the netiquette page before posting \, though.);
+#X text 69 159 rethink calling that an "atom";
+#X restore 103 608 pd References;
+#X obj 6 608 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 35 0;
+#X connect 2 0 31 0;
 #X connect 4 0 5 0;
 #X connect 5 0 6 1;
 #X connect 6 0 7 0;
 #X connect 7 0 19 0;
-#X connect 8 0 41 0;
+#X connect 8 0 39 0;
 #X connect 10 0 11 0;
 #X connect 11 0 27 0;
 #X connect 12 0 27 0;
@@ -70,14 +103,14 @@ to.;
 #X connect 16 0 18 0;
 #X connect 17 0 16 0;
 #X connect 18 0 15 0;
-#X connect 19 0 40 0;
-#X connect 19 0 41 0;
-#X connect 23 0 30 0;
+#X connect 19 0 38 0;
+#X connect 19 0 39 0;
+#X connect 23 0 29 0;
 #X connect 23 0 28 0;
 #X connect 28 0 25 0;
-#X connect 31 0 33 0;
-#X connect 32 0 6 0;
-#X connect 32 0 31 0;
-#X connect 33 0 34 0;
-#X connect 34 0 14 0;
-#X connect 40 0 14 1;
+#X connect 30 0 32 0;
+#X connect 31 0 6 0;
+#X connect 31 0 30 0;
+#X connect 32 0 33 0;
+#X connect 33 0 14 0;
+#X connect 38 0 14 1;

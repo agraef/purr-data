@@ -1,10 +1,9 @@
-#N canvas 29 10 595 573 12;
-#X obj 26 479 output~;
-#X text 324 527 updated for Pd version 0.39;
-#X obj 114 460 metro 250;
-#X obj 114 440 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#N canvas 402 19 504 516 10;
+#X obj 22 429 output~;
+#X obj 110 410 metro 250;
+#X obj 110 390 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 132 437 graphing on/off;
+#X text 128 387 graphing on/off;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array H02-graph 882 float 3;
 #A 0 0.86084 0.876465 0.891113 0.904785 0.917725 0.929688 0.940918
@@ -125,44 +124,68 @@
 -0.0324707 -0.0637207 -0.0949707 -0.125977 -0.157227 -0.187988 -0.21875
 -0.249268 -0.279297 -0.309326 -0.339111 -0.368408;
 #X coords 0 1 882 -1 200 140 1;
-#X restore 369 323 graph;
-#X text 393 465 --- 0.02 sec ---;
-#X text 24 31 Many synthesis algorithms and transformations can have
+#X restore 289 283 graph;
+#X text 313 425 --- 0.02 sec ---;
+#X text 19 36 Many synthesis algorithms and transformations can have
 outputs with a zero-freqency component (commonly called DC for "direct
 current"). These are inaudible and sometimes cause distortion in audio
 output devices \, or when converting to fixed-point soundfile formats.
 It is often desirable to filter an audio signal to remove its DC component.
 ;
-#X text 23 147 The simplest way to do this is to use a one-pole low-pass
+#X text 19 122 The simplest way to do this is to use a one-pole low-pass
 filter \, tuned to a low frequency such as 3 Hertz \, and to subtract
 its output from the original. This difference is called a one-pole
 \, one-zero high-pass filter \, and it is used so often that Pd provides
 one in the "hip~" object.;
-#X obj 26 270 +~ 1;
-#X obj 25 407 hip~ 5;
-#X text 88 407 high-pass filter;
-#X floatatom 74 366 5 0 0 0 - - -;
-#X msg 74 296 0;
-#X text 110 245 sinusoidal test signal;
-#X text 71 270 add "DC";
-#X text 112 296 zero for no filtering;
-#X msg 74 319 3;
-#X text 109 320 3 (or so) to remove DC;
-#X text 114 343 higher freqencies affect;
-#X text 154 359 the audible part of;
-#X text 154 375 the signal as well.;
-#X obj 26 245 osc~ 220;
-#X msg 74 342 220;
-#X text 131 4 ONE-POLE \, ONE-ZERO HIGH-PASS FILTER;
-#X obj 114 485 tabwrite~ H02-graph;
-#X connect 2 0 25 0;
-#X connect 3 0 2 0;
-#X connect 9 0 10 0;
-#X connect 10 0 0 0;
-#X connect 10 0 0 1;
-#X connect 10 0 25 0;
-#X connect 12 0 10 1;
-#X connect 13 0 12 0;
-#X connect 17 0 12 0;
-#X connect 22 0 9 0;
-#X connect 23 0 12 0;
+#X obj 22 220 +~ 1;
+#X obj 21 357 hip~ 5;
+#X text 84 357 high-pass filter;
+#X floatatom 70 316 5 0 0 0 - - -, f 5;
+#X msg 70 246 0;
+#X text 67 220 add "DC";
+#X text 108 246 zero for no filtering;
+#X msg 70 269 3;
+#X text 105 270 3 (or so) to remove DC;
+#X text 110 293 higher freqencies affect;
+#X text 150 309 the audible part of;
+#X text 150 325 the signal as well.;
+#X obj 22 195 osc~ 220;
+#X msg 70 292 220;
+#X obj 110 435 tabwrite~ H02-graph;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header one-pole_one-zero_high-pass_filter
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 86 195 sinusoidal test signal;
+#X obj 1 494 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 25 KEYWORDS;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION one-pole one-zero high-pass filter;
+#X restore 392 496 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 high-pass filter- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 496 pd References;
+#X obj 6 496 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 22 0;
+#X connect 2 0 1 0;
+#X connect 8 0 9 0;
+#X connect 9 0 0 0;
+#X connect 9 0 0 1;
+#X connect 9 0 22 0;
+#X connect 11 0 9 1;
+#X connect 12 0 11 0;
+#X connect 15 0 11 0;
+#X connect 20 0 8 0;
+#X connect 21 0 11 0;

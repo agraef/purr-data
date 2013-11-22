@@ -1,45 +1,44 @@
-#N canvas 36 68 722 738 12;
-#X obj 224 164 *~;
-#X floatatom 224 107 0 0 0 0 - - -;
-#X obj 312 144 line~;
-#X floatatom 128 121 0 0 0 0 - - -;
-#X obj 128 235 cos~;
-#X obj 128 191 +~;
-#X obj 224 132 osc~ 0;
-#X obj 312 118 pack 0 50;
-#X floatatom 312 65 0 0 0 0 - - -;
-#X obj 312 92 / 100;
-#X text 286 27 modulation index;
-#X text 286 42 in hundredths;
-#X text 125 78 carrier;
-#X text 124 96 frequency;
-#X text 209 83 frequency;
-#X text 210 66 modulation;
-#X text 33 132 carrier;
-#X text 33 147 phase -->;
-#X text 6 175 phase;
-#X text 5 190 modulation-->;
-#X text 12 217 output;
-#X text 11 234 waveform -->;
-#X text 129 1 PHASE MODULATION;
-#X text 16 378 Most implementations of "FM" actually use phase \, not
+#N canvas 371 19 618 656 10;
+#X obj 194 174 *~;
+#X floatatom 194 117 0 0 0 0 - - -;
+#X obj 282 154 line~;
+#X floatatom 98 131 0 0 0 0 - - -;
+#X obj 98 245 cos~;
+#X obj 98 201 +~;
+#X obj 194 142 osc~ 0;
+#X obj 282 128 pack 0 50;
+#X floatatom 282 75 0 0 0 0 - - -;
+#X obj 282 102 / 100;
+#X text 256 37 modulation index;
+#X text 256 52 in hundredths;
+#X text 95 88 carrier;
+#X text 94 106 frequency;
+#X text 179 93 frequency;
+#X text 180 76 modulation;
+#X text 33 142 carrier;
+#X text 33 157 phase -->;
+#X text 14 185 phase;
+#X text 13 200 modulation-->;
+#X text 20 227 output;
+#X text 19 244 waveform -->;
+#X text 19 366 Most implementations of "FM" actually use phase \, not
 frequency \, modulation \, because it extends in a more natural way
 to "multi-operator FM" with three or more oscillators.;
-#X text 16 434 To do phase modulation \, we split the "carrier oscillator"
+#X text 18 409 To do phase modulation \, we split the "carrier oscillator"
 into its phase calculation (phasor~) and its waveform lookup (cos~).
 These together would be equivalent to an osc~ object \, but the "+~"
 between them adds the modulating oscillator's output to the phase.
 ;
-#X text 20 652 We also have to use a line~ to smooth changes in the
+#X text 23 579 We also have to use a line~ to smooth changes in the
 modulation index \, which wasn't necessary in the previous patch.;
-#X obj 128 148 phasor~;
-#X obj 117 557 cos~;
-#X obj 117 529 phasor~;
-#X text 60 539 this:;
-#X text 219 532 is the same;
-#X text 220 551 as this:;
-#X obj 335 544 osc~;
-#N canvas 0 0 450 300 graph2 0;
+#X obj 98 158 phasor~;
+#X obj 79 504 cos~;
+#X obj 79 476 phasor~;
+#X text 22 486 this:;
+#X text 181 479 is the same;
+#X text 182 498 as this:;
+#X obj 297 491 osc~;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array phase-out 441 float 1;
 #A 0 0.43245 0.433463 0.434452 0.435418 0.43636 0.43728 0.438178 0.439056
 0.439912 0.440749 0.441567 0.442366 0.443148 0.443912 0.444659 0.445391
@@ -161,36 +160,60 @@ modulation index \, which wasn't necessary in the previous patch.;
 -0.600055 -0.582513 -0.564966 -0.547418 -0.529898 -0.512429 -0.495016
 -0.477676 -0.460438 -0.443287 -0.426265 -0.409364;
 #X coords 0 1 440 -1 200 140 1;
-#X restore 509 190 graph;
-#X obj 213 246 tabwrite~ phase-out;
-#X obj 213 273 tabwrite~ cos-out;
-#X msg 213 221 bang;
-#X text 260 220 <-- graph them;
-#X obj 126 296 output~;
-#X obj 127 270 hip~;
-#X text 408 98 ramped to avoid;
-#X text 407 114 clicks.);
-#X text 407 82 (the index is;
-#X text 435 704 updated for Pd version 0.37;
-#X text 21 588 The "modulation" index \, which in true FM is in units
+#X restore 399 200 graph;
+#X obj 183 256 tabwrite~ phase-out;
+#X obj 183 283 tabwrite~ cos-out;
+#X msg 183 231 bang;
+#X text 230 230 <-- graph them;
+#X obj 96 306 output~;
+#X obj 97 280 hip~;
+#X text 348 108 ramped to avoid;
+#X text 347 124 clicks.);
+#X text 347 92 (the index is;
+#X text 23 526 The "modulation" index \, which in true FM is in units
 of Hertz \, is dimensionless for phase moduation. "Good" values tend
 to be between 0 and 1... in this patch the index is in hundredths.
 ;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header phase_modulation
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 634 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION phase modulation;
+#X restore 392 636 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 phase modulation- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 636 pd References;
+#X obj 6 636 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 5 1;
 #X connect 1 0 6 0;
 #X connect 2 0 0 1;
-#X connect 3 0 26 0;
-#X connect 4 0 35 0;
-#X connect 4 0 39 0;
+#X connect 3 0 25 0;
+#X connect 4 0 34 0;
+#X connect 4 0 38 0;
 #X connect 5 0 4 0;
-#X connect 5 0 34 0;
+#X connect 5 0 33 0;
 #X connect 6 0 0 0;
 #X connect 7 0 2 0;
 #X connect 8 0 9 0;
 #X connect 9 0 7 0;
-#X connect 26 0 5 0;
-#X connect 28 0 27 0;
-#X connect 36 0 34 0;
-#X connect 36 0 35 0;
-#X connect 39 0 38 0;
-#X connect 39 0 38 1;
+#X connect 25 0 5 0;
+#X connect 27 0 26 0;
+#X connect 35 0 33 0;
+#X connect 35 0 34 0;
+#X connect 38 0 37 0;
+#X connect 38 0 37 1;

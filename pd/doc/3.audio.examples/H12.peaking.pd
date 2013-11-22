@@ -1,5 +1,5 @@
-#N canvas 41 39 854 640 12;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 326 19 738 592 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-tab1 100 float 1;
 #A 0 0.960563 0.960996 0.962862 0.970269 0.977017 0.985214 1.00122
 1.02249 1.05453 1.10332 1.18193 1.31034 1.5315 1.91468 2.37977 2.37001
@@ -15,11 +15,11 @@
 0.922781 0.92203 0.923331 0.923265 0.922948 0.922413 0.922799 0.925651
 0.921397 0.931729 0.976084;
 #X coords 0 5 99 0 200 300 1;
-#X restore 616 193 graph;
-#X obj 41 404 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 516 193 graph;
+#X obj 23 334 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 49 448 3 0 0 0 - - -;
-#X text 671 499 frequency;
+#X floatatom 31 378 3 0 0 0 - - -, f 3;
+#X text 571 499 frequency;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -31,82 +31,106 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 328 602 pd startup;
-#X floatatom 276 368 3 0 99 0 - #0-pole -;
-#X text 554 481 gain=0;
-#X obj 41 600 filter-graph2 \$0-tab1;
-#X obj 41 425 filter-graph1 100 22050;
-#X text 791 495 22050;
-#X obj 276 391 / 100;
-#X floatatom 330 367 4 0 100 0 - #0-zero -;
-#X obj 330 390 / 100;
-#X text 594 182 5;
-#X text 611 492 0;
-#X text 599 423 1;
-#X text 596 596 updated for Pd version 0.39;
-#X text 183 10 PEAKING FILTER;
-#X floatatom 406 366 3 0 180 0 - #0-pole -;
-#X text 415 328 angle;
-#X text 399 344 (degrees);
-#X obj 460 435 sin;
-#X obj 405 436 cos;
-#X obj 405 387 * 3.14159;
-#X obj 405 411 / 180;
-#X obj 241 515 *;
-#X obj 405 460 t b f;
-#X obj 460 460 t b f;
-#X obj 209 543 cpole~;
-#X obj 226 574 czero~;
-#X text 266 332 pole and zero;
-#X text 284 347 radii (%);
-#X obj 277 516 *;
-#X obj 314 542 *;
-#X obj 349 542 *;
-#X text 21 34 To get a peaking filter \, start with a shelving filter
+#X restore 310 532 pd startup;
+#X floatatom 258 298 3 0 99 0 - #0-pole -, f 3;
+#X text 454 481 gain=0;
+#X obj 23 530 filter-graph2 \$0-tab1;
+#X obj 23 355 filter-graph1 100 22050;
+#X text 691 495 22050;
+#X obj 258 321 / 100;
+#X floatatom 312 297 4 0 100 0 - #0-zero -, f 4;
+#X obj 312 320 / 100;
+#X text 494 182 5;
+#X text 511 492 0;
+#X text 499 423 1;
+#X floatatom 388 296 3 0 180 0 - #0-pole -, f 3;
+#X text 397 258 angle;
+#X text 381 274 (degrees);
+#X obj 442 365 sin;
+#X obj 387 366 cos;
+#X obj 387 317 * 3.14159;
+#X obj 387 341 / 180;
+#X obj 223 445 *;
+#X obj 387 390 t b f;
+#X obj 442 390 t b f;
+#X obj 191 473 cpole~;
+#X obj 208 504 czero~;
+#X text 248 262 pole and zero;
+#X text 266 277 radii (%);
+#X obj 259 446 *;
+#X obj 296 472 *;
+#X obj 331 472 *;
+#X text 20 198 Here the pole and zero radii (p and q) control the center-frequency
+gain by the formula (1-q)/(1-p). The closer to 1 the radii \, the narrower
+the band affected. The non-peak gain \, (1+q)/(1+p) \, is close to
+1 as long as p and q are at least 50% or so.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header peaking_filter 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 To get a peaking filter \, start with a shelving filter
 but rotate the pole and zero to the point on the unit circle you want
 to amplify or attenuate. The rpole~ and rzero~ filters are replaced
 with their complex-valued siblings \, cpole~ and czero~. These filters
 take a (real \, imaginary) pair to filter and another (real-imaginary)
-pair to specify the pole or zero. As for rpole~ and rzero~ \, the coefficients
-may change at audio rate.;
-#X text 22 162 The outputs of cpole~ and czero~ are also in the form
-of a (real-imaginary) pair. Both outlets of cpole~ are connected to
-czero~ in this example \, but then since we want a real-valued filter
-\, we only take the real part of the (complex) output of czero~.;
-#X text 23 246 Here the pole and zero radii (p and q) control the center-frequency
-gain by the formula (1-q)/(1-p). The closer to 1 the radii \, the narrower
-the band affected. The non-peak gain \, (1+q)/(1+p) \, is close to
-1 as long as p and q are at least 50% or so.;
+pair to specify the pole or zero. As for [rpole~] and [rzero~] \, the
+coefficients may change at audio rate.;
+#X obj 1 570 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION peaking filter;
+#X restore 392 572 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 peaking filter- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 572 pd References;
+#X obj 6 572 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 134 The outputs of [cpole~] and [czero~] are also in the
+form of a (real-imaginary) pair. Both outlets of [cpole~] are connected
+to [czero~] in this example \, but then since we want a real-valued
+filter \, we only take the real part of the (complex) output of [czero~].
+;
 #X connect 1 0 8 0;
 #X connect 5 0 10 0;
 #X connect 8 0 2 0;
 #X connect 8 0 7 0;
 #X connect 8 1 7 1;
-#X connect 8 1 28 0;
+#X connect 8 1 26 0;
 #X connect 8 2 7 2;
-#X connect 10 0 25 0;
-#X connect 10 0 32 0;
+#X connect 10 0 23 0;
+#X connect 10 0 30 0;
 #X connect 11 0 12 0;
-#X connect 12 0 33 0;
-#X connect 12 0 34 0;
-#X connect 18 0 23 0;
-#X connect 21 0 27 0;
-#X connect 22 0 26 0;
-#X connect 23 0 24 0;
-#X connect 24 0 22 0;
-#X connect 24 0 21 0;
-#X connect 25 0 28 2;
-#X connect 26 0 25 0;
-#X connect 26 0 33 0;
-#X connect 26 1 25 1;
-#X connect 26 1 33 1;
-#X connect 27 0 32 0;
-#X connect 27 0 34 0;
-#X connect 27 1 34 1;
-#X connect 27 1 32 1;
-#X connect 28 0 29 0;
-#X connect 28 1 29 1;
-#X connect 29 0 7 3;
-#X connect 32 0 28 3;
-#X connect 33 0 29 2;
-#X connect 34 0 29 3;
+#X connect 12 0 31 0;
+#X connect 12 0 32 0;
+#X connect 16 0 21 0;
+#X connect 19 0 25 0;
+#X connect 20 0 24 0;
+#X connect 21 0 22 0;
+#X connect 22 0 20 0;
+#X connect 22 0 19 0;
+#X connect 23 0 26 2;
+#X connect 24 0 23 0;
+#X connect 24 0 31 0;
+#X connect 24 1 23 1;
+#X connect 24 1 31 1;
+#X connect 25 0 30 0;
+#X connect 25 0 32 0;
+#X connect 25 1 32 1;
+#X connect 25 1 30 1;
+#X connect 26 0 27 0;
+#X connect 26 1 27 1;
+#X connect 27 0 7 3;
+#X connect 30 0 26 3;
+#X connect 31 0 27 2;
+#X connect 32 0 27 3;

@@ -1,5 +1,5 @@
-#N canvas 378 114 542 534 12;
-#N canvas 371 260 740 538 16x 0;
+#N canvas 433 122 448 484 10;
+#N canvas 284 230 740 538 16x 0;
 #X obj 21 269 *~ 0.125;
 #X obj 21 292 rzero~ -1;
 #X obj 21 315 rzero~ -1;
@@ -12,15 +12,15 @@
 #X obj 20 143 *~ 0.12532;
 #X obj 20 189 *~ 0.01668;
 #X obj 279 358 buttercoef3;
-#X floatatom 279 282 7 0 0 0 - - -;
+#X floatatom 279 282 7 0 0 0 - - -, f 7;
 #X obj 279 332 / 16;
-#X floatatom 279 488 7 0 0 0 - - -;
+#X floatatom 279 488 7 0 0 0 - - -, f 7;
 #X obj 279 307 / 22050;
-#X floatatom 293 468 7 0 0 0 - - -;
-#X floatatom 308 448 7 0 0 0 - - -;
-#X floatatom 323 428 7 0 0 0 - - -;
-#X floatatom 338 408 7 0 0 0 - - -;
-#X floatatom 353 388 7 0 0 0 - - -;
+#X floatatom 293 468 7 0 0 0 - - -, f 7;
+#X floatatom 308 448 7 0 0 0 - - -, f 7;
+#X floatatom 323 428 7 0 0 0 - - -, f 7;
+#X floatatom 338 408 7 0 0 0 - - -, f 7;
+#X floatatom 353 388 7 0 0 0 - - -, f 7;
 #X text 335 489 normalizer for rpole~;
 #X text 352 468 normalizer for cpole~;
 #X text 366 449 coef for rpole~;
@@ -60,32 +60,55 @@ H13.butterworth.pd in this series.;
 #X connect 27 1 28 1;
 #X connect 28 0 0 0;
 #X connect 29 0 12 0;
-#X restore 29 123 pd 16x;
-#X floatatom 29 86 7 0 0 0 - - -;
-#X obj 115 124 phasor~;
-#X obj 28 169 output~;
-#X obj 114 169 output~;
-#X obj 29 58 mtof;
-#X floatatom 29 34 3 -24 135 0 - - -;
-#X text 158 15 UPSAMPLING TO CONTROL FOLDOVER;
-#X text 62 32 <-- pitch;
-#X text 132 225 not;
-#X text 28 240 sampled;
-#X text 32 224 16x up-;
-#X text 26 268 The "pd 16x" subpatch at left contains a phasor~ object
+#X restore 22 131 pd 16x;
+#X floatatom 22 94 7 0 0 0 - - -, f 7;
+#X obj 108 132 phasor~;
+#X obj 22 177 output~;
+#X obj 108 177 output~;
+#X obj 22 66 mtof;
+#X floatatom 22 42 3 -24 135 0 - - -, f 3;
+#X text 47 41 <-- pitch;
+#X text 131 230 not;
+#X text 30 238 sampled;
+#X text 30 225 16x up-;
+#X text 19 263 The "pd 16x" subpatch at left contains a phasor~ object
 \, but is locally upsampled by a factor of sixteen. Without upsampling
 \, partials as low as 24 Khz. fold back over into the audible range.
 With upsampling \, the first audibly folding over partial is at almost
 700 Hz \, 29 times higher. The relevant partials will be 29 times \,
 or almost 30 dB \, quieter when upsampled.;
-#X text 27 378 A third-order Butterworth filter is used inside the
+#X text 19 349 A third-order Butterworth filter is used inside the
 "pd 16x" subpatch - without that \, the internal signal would fold
 over as it gets downsampled at the outlet~ object.;
-#X text 312 507 Updated for Pd version 0.42;
-#X text 26 430 You can trade off cutoff frequency with foldover. Here
+#X text 19 396 You can trade off cutoff frequency with foldover. Here
 \, the filter is set for a cutoff of 15 kHz. Lowering it to 7500 Hz
 would further reduce foldover by 18 dB at the expense of losing energy
 in the range 7500-15000 Hz.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header upsampling_to_control_foldover
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 462 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.42. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION upsampling to control foldover;
+#X restore 392 464 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 oversampling- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 464 pd References;
+#X obj 6 464 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 0;
 #X connect 0 0 3 1;
 #X connect 1 0 0 0;

@@ -1,44 +1,69 @@
-#N canvas 137 102 781 520 12;
-#X graph graph1 0 -1.02 10 1.02 468 159 648 29;
+#N canvas 433 106 448 534 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array waveform13 11 float 1;
 #A 0 1 1 1 1 1 1 1 -1 -1 -1 -1;
-#X pop;
-#X text 533 502 updated for Pd version 0.34;
-#X obj 156 157 +~ 1;
-#X text 21 81 phase;
-#X text 20 96 generation -->;
-#X text 25 117 range;
-#X text 24 132 adjustment -->;
-#X graph graph3 0 -1.02 440 1.02 469 362 769 222;
+#X coords 0 1.02 10 -1.02 180 130 1;
+#X restore 254 43 graph;
+#X obj 115 138 +~ 1;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array wave-out13 441 float 0;
-#X pop;
-#X msg 177 216 bang;
-#X text 223 217 <--click to graph;
+#X coords 0 1.02 440 -1.02 270 105 1;
+#X restore 165 274 graph;
+#X msg 136 197 bang;
+#X text 182 198 <--click to graph;
 #N canvas 11 418 523 216 other-stuff 0;
 #X obj 41 49 loadbang;
 #X msg 39 81 \; waveform13 0 1 1 1 1 1 1 1 -1 -1 -1 -1 \; waveform13
 xlabel -1.2 0 1 2 3 4 5 6 7 8 9 10 \; pd dsp 1;
 #X connect 0 0 1 0;
-#X restore 626 426 pd other-stuff;
-#X obj 156 247 tabwrite~ wave-out13;
-#X obj 156 184 tabread4~ waveform13;
-#X obj 156 131 *~ 8;
-#X obj 156 95 phasor~ 220;
-#X text 36 22 4-POINT INTERPOLATION IN DETAIL;
-#X obj 216 316 sig~ 220;
-#X obj 216 346 tabosc4~ waveform13;
-#X text 35 293 (this would be;
-#X text 36 313 equivalent to the;
-#X text 110 333 above) -->;
-#X text 18 409 This patch demonstrates 4-point interpolation in tabread4~.
+#X restore 316 408 pd other-stuff;
+#X obj 115 228 tabwrite~ wave-out13;
+#X obj 115 165 tabread4~ waveform13;
+#X obj 115 112 *~ 8;
+#X obj 115 76 phasor~ 220;
+#X obj 21 332 sig~ 220;
+#X obj 21 362 tabosc4~ waveform13;
+#X text 35 296 (this would be;
+#X text 37 314 equivalent to the;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header 4-point_interpolation_in_detail
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 18 61 phase;
+#X text 17 76 generation -->;
+#X text 19 97 range;
+#X text 18 112 adjustment -->;
+#X text 84 331 <-- above);
+#X text 18 423 This patch demonstrates 4-point interpolation in [tabread4~].
 The 11-point table \, waveform13 \, contains a transition from from
 1 to -1 \, which is "smoothed" as seen in wave-out13. There's no such
-transition at the wraparoind point--the interpolation always happens
+transition at the wraparound point-- the interpolation always happens
 between 4 consccutive samples of the table \, disregarding wraparound.
 ;
-#X connect 2 0 12 0;
-#X connect 8 0 11 0;
-#X connect 12 0 11 0;
-#X connect 13 0 2 0;
-#X connect 14 0 13 0;
-#X connect 16 0 17 0;
+#X obj 1 512 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal array;
+#X text 12 65 DESCRIPTION 4-point interpolation in detail;
+#X restore 392 514 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 interpolation- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 514 pd References;
+#X obj 6 514 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 7 0;
+#X connect 3 0 6 0;
+#X connect 7 0 6 0;
+#X connect 8 0 1 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;

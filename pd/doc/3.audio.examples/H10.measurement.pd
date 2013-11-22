@@ -1,6 +1,6 @@
-#N canvas 25 22 868 421 12;
-#X obj 25 338 filter-graph2 tab1 tab2;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 346 25 666 457 10;
+#X obj 25 336 filter-graph2 tab1 tab2;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array tab1 100 float 1;
 #A 0 0.830737 0.844715 0.882793 0.953057 1.0592 1.19383 1.30927 1.28362
 1.08532 0.848171 0.656605 0.517756 0.418204 0.345252 0.291106 0.249389
@@ -17,8 +17,8 @@
 0.517664 0.656606 0.848216 1.08532 1.28264 1.30927 1.19534 1.05919
 0.951738 0.882758 0.851605;
 #X coords 0 2 99 0 200 140 1;
-#X restore 634 -1 graph;
-#N canvas 0 0 450 300 graph2 0;
+#X restore 434 49 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array tab2 100 float 3;
 #A 0 8.59501e-06 0.0327982 0.0790568 0.143062 0.250239 0.425263 0.697661
 1.04745 1.37257 1.59826 1.73194 1.8042 1.83798 1.84726 1.84029 1.8221
@@ -33,20 +33,18 @@
 4.4609 4.44271 4.43574 4.44501 4.4788 4.55106 4.68474 4.91043 5.23555
 5.58534 5.85774 6.03276 6.13994 6.20394 6.24278;
 #X coords 0 6.283 99 0 200 140 1;
-#X restore 639 200 graph;
-#X text 621 56 1;
-#X text 633 342 0;
-#X text 615 265 pi;
-#X text 608 195 2pi;
-#X obj 25 203 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 439 250 graph;
+#X text 421 106 1;
+#X text 433 392 0;
+#X text 415 315 pi;
+#X text 408 245 2pi;
+#X obj 25 201 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 33 249 5 0 0 0 - - -;
-#X text 621 -8 2;
-#X text 104 -6 MEASURING FILTER FREQUENCY AND PHASE RESPONSE;
-#X text 610 382 updated for Pd version 0.39;
-#X text 691 145 frequency;
-#X text 631 141 0;
-#X text 814 144 44100;
+#X floatatom 33 247 5 0 0 0 - - -, f 5;
+#X text 421 42 2;
+#X text 491 195 frequency;
+#X text 431 191 0;
+#X text 614 194 44100;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -58,33 +56,59 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 285 350 pd startup;
-#X floatatom 238 257 5 0 10000 0 - #0-freq -;
-#X floatatom 249 280 3 0 999 0 - #0-q -;
-#X text 12 18 You can use the "filter-graph1" and "filter-graph2" abstractions
+#X restore 205 408 pd startup;
+#X floatatom 167 258 5 0 10000 0 - #0-freq -, f 5;
+#X floatatom 178 281 3 0 999 0 - #0-q -, f 3;
+#X text 19 36 You can use the "filter-graph1" and "filter-graph2" abstractions
 as shown to test filters. Connect them as shown with a filter between
 them. Try varying the parameters and/or substituting other filters.
 ;
-#X text 575 127 gain=0;
-#X text 574 327 phase=0;
-#X obj 25 226 filter-graph1 100 44100;
-#X obj 227 310 bp~;
-#X text 44 202 <-- compute;
-#X text 34 266 index;
-#X text 290 254 <-- center frequency;
-#X text 288 279 <-- "Q";
-#X text 9 86 "filter-graph1" takes as arguments the number of points
+#X text 385 177 gain=0;
+#X text 384 377 phase=0;
+#X obj 25 224 filter-graph1 100 44100;
+#X obj 160 311 bp~;
+#X text 44 200 <-- compute;
+#X text 34 264 index;
+#X text 204 257 <-- center frequency;
+#X text 204 281 <-- "Q";
+#X text 19 89 "filter-graph1" takes as arguments the number of points
 to graph and the frequency range. "filter-graph2 takes as arguments
 the name of a table to hold the (frequency dependent) gain \, and another
 \, if specified \, for the phase.;
-#X text 8 153 You can edit this patch to replace "bp" with any other
+#X text 19 142 You can edit this patch to replace "bp" with any other
 filter you're curious about.;
-#X connect 7 0 21 0;
-#X connect 16 0 22 1;
-#X connect 17 0 22 2;
-#X connect 21 0 0 0;
-#X connect 21 0 8 0;
-#X connect 21 1 0 1;
-#X connect 21 1 22 0;
-#X connect 21 2 0 2;
-#X connect 22 0 0 3;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header measuring_filter_frequency_&_phase_response
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 435 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION measuring filter frequency and phase response
+;
+#X restore 392 437 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 frequency and phase response- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 437 pd References;
+#X obj 6 437 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 7 0 19 0;
+#X connect 14 0 20 1;
+#X connect 15 0 20 2;
+#X connect 19 0 0 0;
+#X connect 19 0 8 0;
+#X connect 19 1 0 1;
+#X connect 19 1 20 0;
+#X connect 19 2 0 2;
+#X connect 20 0 0 3;

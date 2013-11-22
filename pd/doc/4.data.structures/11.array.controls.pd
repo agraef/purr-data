@@ -1,49 +1,76 @@
 #N struct template11 float x float y array a template11a;
 #N struct template11a float x float amp float w1 float w2;
-#N canvas 14 266 568 347 12;
-#X text 300 287 updated for Pd version 0.39;
-#N canvas 587 7 540 455 template11 1;
-#X obj 41 303 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#N canvas 424 19 448 287 10;
+#N canvas 38 150 428 395 template11 0;
+#X obj 22 266 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 41 325 t b b;
-#X obj 222 384 pointer;
-#X msg 72 353 traverse pd-data11 \, bang;
-#X obj 43 409 append template11 x y;
-#X msg 41 385 50 50;
-#X obj 23 19 struct template11 float x float y array a template11a
+#X obj 22 288 t b b;
+#X obj 145 340 pointer;
+#X msg 49 310 traverse pd-data11 \, bang;
+#X obj 22 362 append template11 x y;
+#X msg 22 340 50 50;
+#X obj 22 42 struct template11 float x float y array a template11a
 ;
-#X obj 31 254 filledpolygon 0 0 0 0 0 3 0 3 30 0 30 0 0;
-#X obj 31 134 plot -w w1 a 0 2 5 0;
-#X obj 33 190 plot -w w2 a 0 2 5 15;
-#X obj 40 83 plot -y amp(0:100)(0:100) a 500 2 5 30;
-#X text 41 61 Graph (x \, amp) pairs (using "amp" as the "y" field"):
+#X obj 22 227 filledpolygon 0 0 0 0 0 3 0 3 30 0 30 0 0;
+#X obj 22 133 plot -w w1 a 0 2 5 0;
+#X obj 22 182 plot -w w2 a 0 2 5 15;
+#X obj 22 88 plot -y amp(0:100)(0:100) a 500 2 5 30;
+#X text 21 69 Graph (x \, amp) pairs (using "amp" as the "y" field"):
 ;
-#X text 33 108 Graph "w1" as width ("y" is zero);
-#X text 30 168 also "w2" \, at (5 \, 15) to disambiguate the one at
+#X text 21 114 Graph "w1" as width ("y" is zero);
+#X text 21 160 also "w2" \, at (5 \, 15) to disambiguate the one at
 (5 \, 0);
-#X text 28 231 Mark the scalar itself;
+#X text 20 207 Mark the scalar itself;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Template;
 #X connect 0 0 1 0;
 #X connect 1 0 5 0;
 #X connect 1 1 3 0;
 #X connect 2 0 4 2;
 #X connect 3 0 2 0;
 #X connect 5 0 4 0;
-#X restore 40 233 pd template11;
-#N canvas 25 458 313 196 data11 1;
+#X restore 22 173 pd template11;
+#N canvas 478 218 313 196 data11 1;
 #X scalar template11 41 87 \; 2 0 0 0 \; 18 51 7 0 \; 98 41 0 5 \;
 109 0 0 0 \; \;;
 #X coords 0 196 1 195 0 0 0;
-#X restore 51 299 pd data11;
-#N canvas 336 497 561 109 template11a 0;
+#X restore 22 227 pd data11;
+#N canvas 77 231 394 109 template11a 0;
 #X obj 23 19 struct template11a float x float amp float w1 float w2
 ;
-#X restore 47 271 pd template11a;
-#X text 25 13 You can control which variable is used as "x" \, "y"
+#X restore 22 200 pd template11a;
+#X text 19 37 You can control which variable is used as "x" \, "y"
 \, and "width" when plotting an array. In this example a single array
 "a" is plotted three times \, to show the values of the "amp" \, "w1"
 and "w2" fields. This is convenient when you want to have several variables
 in each point of the array and need several traces of the same array
 to visualize it all.;
-#X text 24 127 In this example the array points have no "y" field at
+#X text 19 123 In this example the array points have no "y" field at
 all \, so if no variable is supplied to use instead of "y" \, the array
 is flat along its "x" axis.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header controlling_arrays
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 265 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS data_structure GUI;
+#X text 12 65 DESCRIPTION controlling arrays;
+#X restore 392 267 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 controlling arrays- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 267 pd References;
+#X obj 6 267 pddp/pddplink ../5.reference/pddp/help.pd -text help;

@@ -1,16 +1,15 @@
-#N canvas 127 136 697 536 12;
-#X obj 94 188 *~;
-#X obj 136 188 line~;
-#X obj 18 179 cos~;
-#X obj 18 154 +~;
-#X obj 136 165 pack 0 50;
-#X floatatom 136 117 0 0 0 0 - - -;
-#X obj 136 141 / 100;
-#X obj 18 129 phasor~;
-#X obj 18 284 output~;
-#X obj 17 253 hip~;
-#X text 442 513 updated for Pd version 0.37;
-#N canvas 122 211 558 609 fft 1;
+#N canvas 399 119 551 495 10;
+#X obj 94 208 *~;
+#X obj 136 208 line~;
+#X obj 18 199 cos~;
+#X obj 18 174 +~;
+#X obj 136 185 pack 0 50;
+#X floatatom 136 137 0 0 0 0 - - -;
+#X obj 136 161 / 100;
+#X obj 18 149 phasor~;
+#X obj 18 304 output~;
+#X obj 17 273 hip~;
+#N canvas 122 159 558 609 fft 0;
 #X obj 19 61 inlet~;
 #X obj 208 212 inlet;
 #X obj 29 92 rfft~;
@@ -31,7 +30,7 @@ until much later.;
 #X obj 19 459 samplerate~;
 #X obj 19 436 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 19 506 5 0 0 0 - - -;
+#X floatatom 19 506 5 0 0 0 - - -, f 5;
 #X obj 19 482 / 256;
 #X obj 19 412 loadbang;
 #X obj 75 528 s fundamental;
@@ -74,54 +73,79 @@ frequency for showing spectra: the 16th bin in a 4096-point spectrum
 #X connect 28 0 29 0;
 #X connect 28 1 20 0;
 #X connect 31 0 27 0;
-#X restore 62 243 pd fft;
-#X obj 122 222 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 62 263 pd fft;
+#X obj 122 242 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 122 243 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 122 263 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 143 242 <-- repeatedly;
-#X text 144 222 <-- graph once;
-#N canvas 0 0 450 300 graph1 0;
+#X text 143 262 <-- repeatedly;
+#X text 144 242 <-- graph once;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array E09-signal 882 float 0;
 #X coords 0 1.02 882 -1.02 200 80 1;
-#X restore 433 28 graph;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 283 46 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array E09-spectrum 259 float 0;
 #X coords 0 0.51 258 -0.008 259 130 1;
-#X restore 403 175 graph;
-#X text 442 114 ---- 0.02 seconds ----;
-#X text 433 306 2;
-#X text 464 306 4;
-#X text 403 306 0;
-#X text 441 321 -- partial number --;
-#X text 497 8 WAVEFORM;
-#X text 497 157 SPECTRUM;
-#X text 663 291 0;
-#X text 664 173 0.5;
-#X obj 93 117 osc~;
-#X obj 93 86 r fundamental;
-#X text 171 117 index (x100);
-#X text 496 306 6;
-#X text 529 306 8;
-#X text 557 306 10;
-#X text 589 306 12;
-#X text 621 306 14;
-#X text 43 3 SPECTRUM OF TWO-OPERATOR PHASE MODULATION;
-#X floatatom 18 58 3 0 15 0 - - -;
-#X obj 18 105 *;
-#X obj 18 33 r cm;
-#X text 52 57 carrier harmonic #;
-#X text 71 367 This patch measures the spectrum of two-operator phase
+#X restore 253 193 graph;
+#X text 292 132 ---- 0.02 seconds ----;
+#X text 283 324 2;
+#X text 314 324 4;
+#X text 253 324 0;
+#X text 291 339 -- partial number --;
+#X text 347 26 WAVEFORM;
+#X text 347 175 SPECTRUM;
+#X text 513 309 0;
+#X text 514 191 0.5;
+#X obj 93 137 osc~;
+#X obj 93 106 r fundamental;
+#X text 171 137 index (x100);
+#X text 346 324 6;
+#X text 379 324 8;
+#X text 407 324 10;
+#X text 439 324 12;
+#X text 471 324 14;
+#X floatatom 18 78 3 0 15 0 - - -, f 3;
+#X obj 18 125 *;
+#X obj 18 53 r cm;
+#X text 52 77 carrier harmonic #;
+#X text 15 363 This patch measures the spectrum of two-operator phase
 modulation. The carrier frequency is initially six times the modulation
 frequency \, but you can change it with the "carrier harmonic #" control.
 Changing the index changes the relative strengths of the harmonics.
 Past a certain index (which depends on the carrier frequency) the lower
 sidebands begin to reflect about the left edge of the spectrum \, causing
 complicated interference effects.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header spectrum_of_two-operator_phase_modulation
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 473 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION spectrum of two-operator phase modulation
+;
+#X restore 392 475 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 phase modulation- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 475 pd References;
+#X obj 6 475 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 1;
 #X connect 1 0 0 1;
 #X connect 2 0 9 0;
-#X connect 2 0 11 0;
+#X connect 2 0 10 0;
 #X connect 3 0 2 0;
 #X connect 4 0 1 0;
 #X connect 5 0 6 0;
@@ -129,11 +153,11 @@ complicated interference effects.;
 #X connect 7 0 3 0;
 #X connect 9 0 8 0;
 #X connect 9 0 8 1;
-#X connect 12 0 11 1;
-#X connect 13 0 11 2;
-#X connect 27 0 0 0;
-#X connect 28 0 27 0;
-#X connect 28 0 37 1;
-#X connect 36 0 37 0;
-#X connect 37 0 7 0;
-#X connect 38 0 36 0;
+#X connect 11 0 10 1;
+#X connect 12 0 10 2;
+#X connect 26 0 0 0;
+#X connect 27 0 26 0;
+#X connect 27 0 35 1;
+#X connect 34 0 35 0;
+#X connect 35 0 7 0;
+#X connect 36 0 34 0;

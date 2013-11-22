@@ -1,57 +1,55 @@
-#N canvas 124 20 599 828 12;
-#X floatatom 169 520 0 0 0 0 - - -;
-#X floatatom 169 446 0 0 0 0 - - -;
-#X text 462 208 START;
-#X floatatom 190 303 0 0 0 0 - - -;
-#X obj 190 280 r incr;
-#X obj 168 255 metro 50;
-#X floatatom 168 373 5 0 0 0 - - -;
-#X obj 168 394 s phase;
-#X obj 168 350 +;
-#X obj 169 469 s dropoff+;
-#X obj 169 622 s interval+;
-#X floatatom 169 599 0 0 0 0 - - -;
-#X obj 169 543 s pitch+;
-#X obj 169 423 r dropoff;
-#X obj 169 497 r pitch;
-#X obj 169 576 r interval;
-#X obj 168 212 r metro;
-#X obj 228 345 f;
-#X obj 12 212 shepvoice 0;
-#X floatatom 83 708 0 0 0 0 - - -;
-#X obj 83 685 r rev;
-#X obj 138 685 r revtime;
-#X floatatom 138 708 0 0 0 0 - - -;
-#X obj 228 368 mod 10000;
-#X obj 168 327 f;
-#X obj 73 742 rev2~;
-#X obj 12 769 output~;
-#X obj 168 235 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+#N canvas 433 93 448 573 10;
+#X floatatom 179 479 0 0 0 0 - - -;
+#X floatatom 179 405 0 0 0 0 - - -;
+#X text 352 178 START;
+#X floatatom 200 262 0 0 0 0 - - -;
+#X obj 200 239 r incr;
+#X obj 178 214 metro 50;
+#X floatatom 178 332 5 0 0 0 - - -, f 5;
+#X obj 178 353 s phase;
+#X obj 178 309 +;
+#X obj 179 428 s dropoff+;
+#X obj 179 581 s interval+;
+#X floatatom 179 558 0 0 0 0 - - -;
+#X obj 179 502 s pitch+;
+#X obj 179 382 r dropoff;
+#X obj 179 456 r pitch;
+#X obj 179 535 r interval;
+#X obj 178 171 r metro;
+#X obj 238 304 f;
+#X obj 22 171 shepvoice 0;
+#X floatatom 89 667 0 0 0 0 - - -;
+#X obj 89 644 r rev;
+#X obj 134 644 r revtime;
+#X floatatom 134 667 0 0 0 0 - - -;
+#X obj 238 327 mod 10000;
+#X obj 178 286 f;
+#X obj 83 701 rev2~;
+#X obj 22 728 output~;
+#X obj 178 194 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X msg 446 225 \; dropoff 10 \; pitch 60 \; interval 120 \; metro 1
+#X msg 336 195 \; dropoff 10 \; pitch 60 \; interval 120 \; metro 1
 \; rev 84 \; revtime 87 \; incr -2 \; pd dsp 1;
-#X text 27 7 SHEPARD TONE;
-#X text 339 804 updated for Pd version 0.37;
-#X obj 12 235 shepvoice 500;
-#X obj 12 258 shepvoice 1000;
-#X obj 12 281 shepvoice 1500;
-#X obj 12 304 shepvoice 2000;
-#X obj 12 327 shepvoice 2500;
-#X obj 12 350 shepvoice 3000;
-#X obj 12 373 shepvoice 3500;
-#X obj 12 396 shepvoice 4000;
-#X obj 12 419 shepvoice 4500;
-#X obj 12 442 shepvoice 5000;
-#X obj 12 465 shepvoice 5500;
-#X obj 12 488 shepvoice 6000;
-#X obj 12 511 shepvoice 6500;
-#X obj 12 534 shepvoice 7000;
-#X obj 12 557 shepvoice 7500;
-#X obj 12 580 shepvoice 8000;
-#X obj 12 603 shepvoice 8500;
-#X obj 12 626 shepvoice 9000;
-#X obj 12 649 shepvoice 9500;
-#X text 25 31 This patch is a bank of 20 sinusoids \, arranged so that
+#X obj 22 194 shepvoice 500;
+#X obj 22 217 shepvoice 1000;
+#X obj 22 240 shepvoice 1500;
+#X obj 22 263 shepvoice 2000;
+#X obj 22 286 shepvoice 2500;
+#X obj 22 309 shepvoice 3000;
+#X obj 22 332 shepvoice 3500;
+#X obj 22 355 shepvoice 4000;
+#X obj 22 378 shepvoice 4500;
+#X obj 22 401 shepvoice 5000;
+#X obj 22 424 shepvoice 5500;
+#X obj 22 447 shepvoice 6000;
+#X obj 22 470 shepvoice 6500;
+#X obj 22 493 shepvoice 7000;
+#X obj 22 516 shepvoice 7500;
+#X obj 22 539 shepvoice 8000;
+#X obj 22 562 shepvoice 8500;
+#X obj 22 585 shepvoice 9000;
+#X obj 22 608 shepvoice 9500;
+#X text 19 36 This patch is a bank of 20 sinusoids \, arranged so that
 their frequencies sweep upward or downward in parallel \, and their
 amplitudes fade in and out so that each one is quiet when it wraps
 around from one end to the other. The overall "phase" computed here
@@ -61,6 +59,31 @@ the slope at which the amplitudes fall off at the ends \, "pitch" the
 center pitch of the cluster \, "interval" the number of (tenths of
 halftones) between successive voices \, and "rev" and "revtime" the
 reverberator at bottom.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header shepard_tone 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 793 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION shepard tone;
+#X restore 392 795 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 shepard tone- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 795 pd References;
+#X obj 6 795 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 12 0;
 #X connect 1 0 9 0;
 #X connect 3 0 24 1;
@@ -75,7 +98,7 @@ reverberator at bottom.;
 #X connect 15 0 11 0;
 #X connect 16 0 27 0;
 #X connect 17 0 23 0;
-#X connect 18 0 31 0;
+#X connect 18 0 29 0;
 #X connect 19 0 25 1;
 #X connect 20 0 19 0;
 #X connect 21 0 22 0;
@@ -85,6 +108,8 @@ reverberator at bottom.;
 #X connect 25 0 26 0;
 #X connect 25 1 26 1;
 #X connect 27 0 5 0;
+#X connect 29 0 30 0;
+#X connect 30 0 31 0;
 #X connect 31 0 32 0;
 #X connect 32 0 33 0;
 #X connect 33 0 34 0;
@@ -101,8 +126,6 @@ reverberator at bottom.;
 #X connect 44 0 45 0;
 #X connect 45 0 46 0;
 #X connect 46 0 47 0;
-#X connect 47 0 48 0;
-#X connect 48 0 49 0;
-#X connect 49 0 25 0;
-#X connect 49 0 26 0;
-#X connect 49 0 26 1;
+#X connect 47 0 25 0;
+#X connect 47 0 26 0;
+#X connect 47 0 26 1;

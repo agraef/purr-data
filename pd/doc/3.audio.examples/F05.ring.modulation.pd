@@ -1,19 +1,18 @@
-#N canvas 83 89 793 595 12;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 367 20 625 517 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F05-signal 882 float 0;
 #X coords 0 1 882 -1 200 130 1;
-#X restore 554 218 graph;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 388 248 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F05-spectrum 256 float 0;
 #X coords 0 0.51 255 -0.008 256 130 1;
-#X restore 499 22 graph;
-#X text 552 349 ---- 0.02 seconds ----;
-#X text 507 563 updated for Pd version 0.37;
-#X text 495 155 0;
-#X text 534 174 -- partial number --;
-#X text 761 142 0;
-#X text 758 19 0.5;
-#X floatatom 51 61 0 0 100 0 - - -;
+#X restore 299 52 graph;
+#X text 386 379 ---- 0.02 seconds ----;
+#X text 295 185 0;
+#X text 334 204 -- partial number --;
+#X text 561 172 0;
+#X text 558 49 0.5;
+#X floatatom 22 42 0 0 100 0 - - -;
 #N canvas 329 22 680 421 pulse-train 0;
 #X obj 184 348 line~;
 #X obj 39 317 cos~;
@@ -54,13 +53,13 @@ oscillator we're multpplying with.;
 #X connect 13 0 12 0;
 #X connect 17 0 3 0;
 #X connect 18 0 17 0;
-#X restore 51 86 pd pulse-train;
-#X text 83 61 <-- bandwidth;
-#X obj 51 219 *~;
-#X text 113 123 <-- modulation frequency as;
-#X text 152 137 multiple of fundamental;
-#X obj 51 277 output~;
-#X obj 50 246 hip~;
+#X restore 22 67 pd pulse-train;
+#X text 54 42 <-- bandwidth;
+#X obj 22 200 *~;
+#X text 68 114 <-- modulation frequency as;
+#X text 107 128 multiple of fundamental;
+#X obj 22 275 output~;
+#X obj 21 244 hip~;
 #N canvas 122 211 563 534 fft 0;
 #X obj 19 61 inlet~;
 #X obj 208 212 inlet;
@@ -112,49 +111,73 @@ until much later.;
 #X connect 20 0 25 0;
 #X connect 21 0 15 0;
 #X connect 23 0 22 0;
-#X restore 98 245 pd fft;
-#X obj 158 224 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 69 243 pd fft;
+#X obj 102 199 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 158 245 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+#X obj 102 220 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 179 244 <-- repeatedly;
-#X text 180 224 <-- graph once;
-#X text 527 155 2;
-#X text 559 155 4;
-#X text 591 155 6;
-#X text 623 155 8;
-#X text 656 155 10;
-#X text 688 155 12;
-#X text 719 155 14;
-#X text 759 213 1;
-#X text 759 337 -1;
-#X text 122 185 modulating oscillator;
-#X text 153 6 RING MODULATED PULSE TRAINS;
-#X text 23 357 Now we take a pulse train and ring modulate it \, which
+#X text 123 219 <-- repeatedly;
+#X text 124 199 <-- graph once;
+#X text 327 185 2;
+#X text 359 185 4;
+#X text 391 185 6;
+#X text 423 185 8;
+#X text 456 185 10;
+#X text 488 185 12;
+#X text 519 185 14;
+#X text 593 243 1;
+#X text 593 367 -1;
+#X text 19 332 Now we take a pulse train and ring modulate it \, which
 effectively aliases the spectrum so that it is centered at any desired
 partial number. The "bandwidth" control still affects the shape of
 the peak \, independently of where it is centered. This generates a
 formant centered at the given partial.;
-#X floatatom 73 123 0 0 100 0 - - -;
-#X obj 73 182 osc~;
-#X obj 73 157 *;
-#X obj 107 157 r freq;
-#X text 23 457 This patch is limited to making formants centered on
+#X floatatom 38 114 0 0 100 0 - - -;
+#X obj 38 173 osc~;
+#X obj 38 148 *;
+#X obj 72 148 r freq;
+#X text 18 406 This patch is limited to making formants centered on
 harmonics. The center frequency thus can't be moved smoothly up and
 down at will (try shift-clicking on modulation frequency to make fractions).
 Next we'll look at two techniques for sliding a formant frequency without
 losing harmonicity.;
-#X text 184 85 <-- pulse train;
-#X text 220 101 generator from before;
-#X connect 8 0 9 0;
-#X connect 9 0 11 0;
-#X connect 11 0 15 0;
-#X connect 11 0 16 0;
-#X connect 15 0 14 0;
-#X connect 15 0 14 1;
-#X connect 17 0 16 1;
-#X connect 18 0 16 2;
-#X connect 33 0 35 0;
-#X connect 34 0 11 1;
-#X connect 35 0 34 0;
-#X connect 36 0 35 1;
+#X text 117 66 <-- pulse train;
+#X text 153 78 generator from before;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header ring_modulated_pulse_trains
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 74 173 modulating oscillator;
+#X obj 1 494 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION ring modulated pulse trains;
+#X restore 392 496 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 pulse trains- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 496 pd References;
+#X obj 6 496 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 7 0 8 0;
+#X connect 8 0 10 0;
+#X connect 10 0 14 0;
+#X connect 10 0 15 0;
+#X connect 14 0 13 0;
+#X connect 14 0 13 1;
+#X connect 16 0 15 1;
+#X connect 17 0 15 2;
+#X connect 30 0 32 0;
+#X connect 31 0 10 1;
+#X connect 32 0 31 0;
+#X connect 33 0 32 1;

@@ -1,5 +1,5 @@
-#N canvas 25 22 868 421 12;
-#N canvas 0 0 450 300 graph2 0;
+#N canvas 348 19 658 417 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-tab1 100 float 1;
 #A 0 1.39998 1.39868 1.3942 1.39349 1.38496 1.3772 1.36745 1.35633
 1.34208 1.32931 1.31817 1.30372 1.28879 1.27458 1.25944 1.24351 1.22874
@@ -15,11 +15,11 @@
 0.86826 0.867939 0.866731 0.867094 0.867762 0.867796 0.864339 0.872811
 0.920535;
 #X coords 0 5 99 0 200 300 1;
-#X restore 621 28 graph;
-#X obj 29 245 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 421 48 graph;
+#X obj 21 183 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 37 289 3 0 0 0 - - -;
-#X text 676 334 frequency;
+#X floatatom 29 227 3 0 0 0 - - -, f 3;
+#X text 476 354 frequency;
 #N canvas 876 177 375 255 startup 0;
 #X obj 22 24 loadbang;
 #X obj 22 48 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -31,44 +31,67 @@
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X connect 2 0 5 0;
-#X restore 289 390 pd startup;
-#X floatatom 281 265 3 -99 99 0 - #0-pole -;
-#X text 559 316 gain=0;
-#X text 108 34 SHELVING FILTER;
-#X obj 29 378 filter-graph2 \$0-tab1;
-#X obj 29 266 filter-graph1 100 22050;
-#X text 796 330 22050;
-#X obj 232 314 rpole~;
-#X obj 281 288 / 100;
-#X floatatom 335 264 4 -100 100 0 - #0-zero -;
-#X obj 335 287 / 100;
-#X obj 231 346 rzero~;
-#X text 608 21 5;
-#X text 616 327 0;
-#X text 604 258 1;
-#X text 16 58 This patch demonstrates using the raw filters \, rpole~
-and rzero~ (raw \, real-valued one-pole and one-zero filters) \, to
-make a shelving filter.;
-#X text 14 109 If the pole is at p and the zero is at q \, the gain
+#X restore 227 316 pd startup;
+#X floatatom 177 213 3 -99 99 0 - #0-pole -, f 3;
+#X text 359 336 gain=0;
+#X obj 21 316 filter-graph2 \$0-tab1;
+#X obj 21 204 filter-graph1 100 22050;
+#X text 596 350 22050;
+#X obj 144 262 rpole~;
+#X obj 177 236 / 100;
+#X floatatom 227 212 4 -100 100 0 - #0-zero -, f 4;
+#X obj 227 235 / 100;
+#X obj 143 294 rzero~;
+#X text 408 41 5;
+#X text 416 347 0;
+#X text 404 278 1;
+#X text 19 79 If the pole is at p and the zero is at q \, the gain
 at DC is (1-q)/(1-p) and the gain at Nyquist is (1+q)/(1+p). If the
 pole location is close to plus or minus one \, this can give large
 gains unless q is in the same vicinity. (try \, for example \, p=90%
 \, q=70%).;
-#X text 11 191 The crossover region varies from DC to Nyquist as p
+#X text 18 143 The crossover region varies from DC to Nyquist as p
 and q decrease from 100% to -100%.;
-#X text 278 241 pole;
-#X text 334 241 zero;
-#X text 383 263 (in hundredths);
-#X text 610 387 updated for Pd version 0.39;
-#X connect 1 0 9 0;
-#X connect 5 0 12 0;
-#X connect 9 0 2 0;
-#X connect 9 0 8 0;
-#X connect 9 1 8 1;
-#X connect 9 1 11 0;
-#X connect 9 2 8 2;
-#X connect 11 0 15 0;
-#X connect 12 0 11 1;
-#X connect 13 0 14 0;
-#X connect 14 0 15 1;
-#X connect 15 0 8 3;
+#X text 174 192 pole;
+#X text 226 192 zero;
+#X text 258 211 (in hundredths);
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header shelving_filter
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 395 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION shelving filter;
+#X restore 392 397 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 shelving filter- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 397 pd References;
+#X obj 6 397 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 37 This patch demonstrates using the raw filters \, [rpole~]
+and [rzero~] (raw \, real-valued one-pole and one-zero filters) \,
+to make a shelving filter.;
+#X connect 1 0 8 0;
+#X connect 5 0 11 0;
+#X connect 8 0 2 0;
+#X connect 8 0 7 0;
+#X connect 8 1 7 1;
+#X connect 8 1 10 0;
+#X connect 8 2 7 2;
+#X connect 10 0 14 0;
+#X connect 11 0 10 1;
+#X connect 12 0 13 0;
+#X connect 13 0 14 1;
+#X connect 14 0 7 3;

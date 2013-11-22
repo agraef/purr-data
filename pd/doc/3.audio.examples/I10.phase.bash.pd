@@ -1,5 +1,5 @@
-#N canvas 165 311 718 552 12;
-#X floatatom 407 323 0 0 0 0 - - -;
+#N canvas 395 91 564 579 10;
+#X floatatom 332 293 0 0 0 0 - - -;
 #N canvas 122 165 801 538 fft 0;
 #X obj 39 153 *~;
 #X obj 7 153 *~;
@@ -98,23 +98,21 @@
 #X connect 33 0 27 0;
 #X connect 34 0 35 0;
 #X connect 35 0 29 0;
-#X restore 22 459 pd fft;
-#X floatatom 586 377 0 0 120 0 - pitch-set -;
-#X floatatom 583 330 0 0 0 0 - specshift-set -;
-#X obj 583 353 s specshift;
-#X obj 407 443 s loco;
-#X obj 586 400 s pitch;
-#X obj 407 346 pack 0 100;
-#X obj 588 453 output~;
-#X text 214 -1 PHASE BASHING;
-#X text 455 515 updated for Pd version 0.39;
-#X floatatom 199 389 5 0 0 0 - #0-samp-msec -;
-#X text 197 403 sample length \, msec;
-#X msg 198 288 ../sound/bell.aiff;
-#X msg 198 313 ../sound/voice.wav;
-#X msg 198 338 ../sound/voice2.wav;
-#X text 201 266 change input sound;
-#X obj 198 364 s read-sample;
+#X restore 22 447 pd fft;
+#X floatatom 458 346 0 0 120 0 - pitch-set -;
+#X floatatom 455 299 0 0 0 0 - specshift-set -;
+#X obj 455 322 s specshift;
+#X obj 332 413 s loco;
+#X obj 458 369 s pitch;
+#X obj 332 316 pack 0 100;
+#X obj 457 422 output~;
+#X floatatom 159 357 5 0 0 0 - #0-samp-msec -, f 5;
+#X text 157 371 sample length \, msec;
+#X msg 158 256 ../sound/bell.aiff;
+#X msg 158 281 ../sound/voice.wav;
+#X msg 158 306 ../sound/voice2.wav;
+#X text 161 234 change input sound;
+#X obj 158 332 s read-sample;
 #N canvas 190 43 657 626 test-signal 0;
 #X obj 88 381 line~;
 #X obj 88 306 f;
@@ -172,13 +170,13 @@
 #X connect 21 0 17 1;
 #X connect 22 0 2 0;
 #X connect 23 0 22 0;
-#X restore 22 436 pd test-signal;
-#X obj 143 417 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 22 424 pd test-signal;
+#X obj 103 404 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #N canvas 0 110 565 454 hann-window 0;
-#N canvas 0 0 450 300 graph1 0;
-#X array \$0-hann 2048 float 0;
-#X coords 0 1 2047 0 300 100 1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-hann 1024 float 0;
+#X coords 0 1 1024 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -224,14 +222,14 @@ and window-msec (analysis window size in seconds and msec).;
 #X connect 19 0 1 0;
 #X connect 19 1 4 0;
 #X connect 19 1 18 0;
-#X restore 195 441 pd hann-window;
-#X msg 28 269 512;
-#X msg 28 290 1024;
-#X msg 28 312 2048;
-#X obj 28 357 s window-size;
-#X msg 28 334 4096;
+#X restore 135 446 pd hann-window;
+#X msg 22 239 512;
+#X msg 22 260 1024;
+#X msg 22 282 2048;
+#X obj 22 327 s window-size;
+#X msg 22 304 4096;
 #N canvas 388 86 736 499 insample 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-sample 62079 float 0;
 #X coords 0 1 62078 -1 400 150 1;
 #X restore 259 24 graph;
@@ -253,9 +251,9 @@ and window-msec (analysis window size in seconds and msec).;
 #X obj 19 328 s \$0-samp-msec;
 #X obj 57 281 r \$0-insamprate;
 #X msg 38 402 \; read-sample ../sound/voice.wav;
-#N canvas 0 0 450 300 graph1 0;
-#X array \$0-nophase 62079 float 0;
-#X coords 0 1 62078 -1 400 150 1;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array \$0-nophase 1 float 0;
+#X coords 0 1 1 -1 400 150 1;
 #X restore 256 185 graph;
 #X msg 376 403 resize \$1;
 #X obj 376 379 r \$0-samplength;
@@ -279,27 +277,27 @@ and window-msec (analysis window size in seconds and msec).;
 #X connect 17 0 14 1;
 #X connect 20 0 22 0;
 #X connect 21 0 20 0;
-#X restore 195 464 pd insample;
-#X obj 22 416 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 135 469 pd insample;
+#X obj 22 404 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 33 384 ---analyze---;
-#X text 20 399 sample;
-#X obj 94 489 tabwrite~ \$0-nophase;
+#X text 31 368 ---analyze---;
+#X text 20 387 sample;
+#X obj 104 492 tabwrite~ \$0-nophase;
 #X obj 21 492 output~;
-#X msg 415 384 0 \, 400 4000;
-#X msg 415 419 0 \, 400 10000;
-#X text 47 18 This patch takes an incoming sound \, does an overlap-2
+#X msg 340 354 0 \, 400 4000;
+#X msg 340 389 0 \, 400 10000;
+#X text 20 36 This patch takes an incoming sound \, does an overlap-2
 FFT analysis of it \, and bashes the phases of the spectra so that
 when regenerated the components will all have zero phase at the middle
 of each window. You can use the windows as waveforms and cross-fade
 them at will without getting phase modulation. This might be useful
 for making synthetic instruments that mimic the spectral variation
 of recorded sounds.;
-#X text 398 305 (hundredths of sec);
-#X text 401 289 location in sample;
-#X text 420 365 normal speed;
-#X text 422 403 slow;
-#X text 458 262 ------ playback -------;
+#X text 323 275 (hundredths of sec);
+#X text 326 259 location in sample;
+#X text 345 335 normal speed;
+#X text 347 373 slow;
+#X text 358 232 ------ playback -------;
 #N canvas 81 424 887 624 playback 0;
 #X obj 101 479 r invblk;
 #X obj 28 499 *~;
@@ -528,42 +526,67 @@ shift;
 #X connect 107 0 108 0;
 #X connect 108 0 112 0;
 #X connect 109 0 106 0;
-#X restore 589 428 pd playback;
-#X text 585 290 spectral shift;
-#X text 583 306 (hundredths of;
-#X text 646 323 octave);
-#X text 126 398 live;
-#X text 45 141 You can save the analyses and needn't be running the
+#X restore 458 397 pd playback;
+#X text 457 259 spectral shift;
+#X text 455 275 (hundredths of;
+#X text 500 292 octave);
+#X text 95 385 live;
+#X text 19 133 You can save the analyses and needn't be running the
 FFT patch to do the resynthesis. You can read a sample \, select window
 size \, and press "sample" to analyze it \, or else analyze a "live"
 input. You'll hear the phase-bashed sample as the analysis runs. You
 can regenerate the sound with specified pitch \, sample location \,
 and spectral shift \, using the "playback" controls.;
-#X text 83 278 analysis;
-#X text 80 264 (redo;
-#X text 83 294 after;
-#X text 84 309 changing;
-#X text 84 325 window;
-#X text 85 339 size);
+#X text 67 248 analysis;
+#X text 64 234 (redo;
+#X text 67 264 after;
+#X text 68 279 changing;
+#X text 68 295 window;
+#X text 69 309 size);
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header phase_bashing 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 557 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION phase bashing;
+#X restore 392 559 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 phase bashing- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 559 pd References;
+#X obj 6 559 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 7 0;
-#X connect 1 0 30 0;
-#X connect 1 0 31 0;
-#X connect 1 0 31 1;
-#X connect 1 1 30 0;
+#X connect 1 0 28 0;
+#X connect 1 0 29 0;
+#X connect 1 0 29 1;
+#X connect 1 1 28 0;
 #X connect 2 0 6 0;
 #X connect 3 0 4 0;
 #X connect 7 0 5 0;
-#X connect 13 0 17 0;
-#X connect 14 0 17 0;
-#X connect 15 0 17 0;
-#X connect 18 0 1 0;
-#X connect 19 0 18 1;
-#X connect 21 0 24 0;
-#X connect 22 0 24 0;
-#X connect 23 0 24 0;
-#X connect 25 0 24 0;
-#X connect 27 0 18 0;
-#X connect 32 0 5 0;
-#X connect 33 0 5 0;
-#X connect 40 0 8 0;
-#X connect 40 0 8 1;
+#X connect 11 0 15 0;
+#X connect 12 0 15 0;
+#X connect 13 0 15 0;
+#X connect 16 0 1 0;
+#X connect 17 0 16 1;
+#X connect 19 0 22 0;
+#X connect 20 0 22 0;
+#X connect 21 0 22 0;
+#X connect 23 0 22 0;
+#X connect 25 0 16 0;
+#X connect 30 0 5 0;
+#X connect 31 0 5 0;
+#X connect 38 0 8 0;
+#X connect 38 0 8 1;

@@ -1,23 +1,60 @@
-#N canvas 19 83 830 601 12;
-#X graph graph1 0 -1 5 1 569 304 769 154;
-#X array array99 5 float;
-#X array array98 7 float;
-#X pop;
-#X text 135 18 MORE ON ARRAYS;
-#X msg 17 229 \; array99 rename george;
-#X msg 221 229 \; george rename array99;
-#X msg 317 166 \; array99 3 -0.5 0.5;
-#X text 17 207 renaming an array:;
-#X text 16 276 setting the bounds rectangle:;
-#X msg 18 296 \; array99 bounds 0 -2 10 2;
-#X msg 245 294 \; array99 bounds 0 -1 5 1;
-#X msg 19 395 \; array99 xticks 0 1 1;
-#X msg 212 394 \; array99 yticks 0 0.1 5;
-#X text 15 342 adding x and y labels: give a point to put a tick \, the interval between ticks \, and the number of ticks overall per large tick.;
-#X msg 15 472 \; array99 xlabel -1.1 0 1 2 3 4 5;
-#X text 12 436 adding labels. Give a y value and a bunch of x values or vice versa:;
-#X msg 17 166 \; array98 0 -1 1 -1 1 -1 1 -1 1 -1;
-#X msg 305 472 \; array99 ylabel 5.15 -1 0 1;
-#X text 556 575 last updated for release 0.33;
-#X text 10 39 Arrays have methods to set their values explicitly \; to set their "bounds" rectangles \, to rename them (but if you have two with the same name this won't necessarily do what you want) and to add markings. To set values by message \, send a list whise first element gives the index to start at. The second example sets two values starting at index three. Indices count up from zero.;
-#X text 11 522 You can also change x and y range and size in the "properties" dialog. Note that information about size and ranges is saved \, but ticks \, labels \, and the actual data are lost between Pd sessions.;
+#N canvas 433 83 448 601 10;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array array99 5 float 0;
+#X array array98 7 float 0;
+#X coords 0 1 5 -1 150 90 1;
+#X restore 211 484 graph;
+#X msg 22 182 \; array99 rename george;
+#X msg 196 182 \; george rename array99;
+#X msg 247 128 \; array99 3 -0.5 0.5;
+#X text 22 162 renaming an array:;
+#X text 21 219 setting the bounds rectangle:;
+#X msg 23 239 \; array99 bounds 0 -2 10 2;
+#X msg 210 239 \; array99 bounds 0 -1 5 1;
+#X msg 23 315 \; array99 xticks 0 1 1;
+#X msg 176 314 \; array99 yticks 0 0.1 5;
+#X text 20 273 adding x and y labels: give a point to put a tick \,
+the interval between ticks \, and the number of ticks overall per large
+tick.;
+#X msg 19 382 \; array99 xlabel -1.1 0 1 2 3 4 5;
+#X text 16 351 adding labels. Give a y value and a bunch of x values
+or vice versa:;
+#X msg 22 128 \; array98 0 -1 1 -1 1 -1 1 -1 1 -1;
+#X msg 239 382 \; array99 ylabel 5.15 -1 0 1;
+#X text 19 31 Arrays have methods to set their values explicitly \;
+to set their "bounds" rectangles \, to rename them (but if you have
+two with the same name this won't necessarily do what you want) and
+to add markings. To set values by message \, send a list whise first
+element gives the index to start at. The second example sets two values
+starting at index three. Indices count up from zero.;
+#X text 17 417 You can also change x and y range and size in the "properties"
+dialog. Note that information about size and ranges is saved \, but
+ticks \, labels \, and the actual data are lost between Pd sessions.
+;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header more_arrays 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 579 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 115 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 155 RELEASE_VERSION 0.41.4;
+#X text 12 135 RELEASE_DATE 2009-06-12;
+#X text 12 95 AUTHOR Miller Puckette;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 175 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control array GUI;
+#X text 12 65 DESCRIPTION array methods for manipulating array data
+and appearance;
+#X restore 382 581 pd META;
+#N canvas 5 431 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Arrays- Related Help Documents;
+#X text 98 45 same links as other array tutorial;
+#X restore 103 581 pd References;
+#X obj 6 581 pddp/pddplink ../5.reference/pddp/help.pd -text help;

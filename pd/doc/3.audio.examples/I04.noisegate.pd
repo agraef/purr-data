@@ -1,6 +1,6 @@
-#N canvas 42 28 657 564 12;
-#X floatatom 316 376 0 0 0 0 - - -;
-#X floatatom 81 384 0 0 100 0 - - -;
+#N canvas 424 22 448 500 10;
+#X floatatom 196 343 0 0 0 0 - - -;
+#X floatatom 30 315 0 0 100 0 - - -;
 #N canvas 98 0 648 669 fft-analysis 0;
 #X obj 35 589 *~;
 #X obj 143 305 *~;
@@ -139,11 +139,11 @@ with each of the accumulating ones.;
 #X connect 32 0 13 1;
 #X connect 36 0 6 1;
 #X connect 36 0 4 1;
-#X restore 80 441 pd fft-analysis;
+#X restore 30 367 pd fft-analysis;
 #N canvas 0 110 565 454 hann-window 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-hann 1024 float 0;
-#X coords 0 1 1023 0 300 100 1;
+#X coords 0 1 1024 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -189,10 +189,10 @@ and window-msec (analysis window size in seconds and msec).;
 #X connect 19 0 1 0;
 #X connect 19 1 4 0;
 #X connect 19 1 18 0;
-#X restore 331 478 pd hann-window;
-#X text 197 355 noise;
+#X restore 320 418 pd hann-window;
+#X text 106 293 noise;
 #N canvas 132 255 660 373 insample 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-sample 155948 float 0;
 #X coords 0 1 155947 -1 400 150 1;
 #X restore 236 25 graph;
@@ -224,14 +224,13 @@ and window-msec (analysis window size in seconds and msec).;
 #X connect 12 0 3 0;
 #X connect 15 0 2 0;
 #X connect 15 1 12 0;
-#X restore 331 456 pd insample;
-#X obj 316 401 s mask-level;
-#X floatatom 202 379 0 0 100 0 - - -;
-#X text 317 325 on;
-#X text 362 326 off;
-#X text 317 309 masking;
-#X text 290 5 DENOISER;
-#X msg 361 349 0;
+#X restore 320 396 pd insample;
+#X obj 196 368 s mask-level;
+#X floatatom 111 315 0 0 100 0 - - -;
+#X text 197 293 on;
+#X text 242 294 off;
+#X text 204 270 masking;
+#X msg 241 316 0;
 #N canvas 190 43 812 571 test-signal 0;
 #X obj 75 328 line~;
 #X obj 75 250 f;
@@ -289,30 +288,30 @@ amplitude of each in dB.;
 #X connect 21 0 3 0;
 #X connect 22 0 20 0;
 #X connect 25 0 4 0;
-#X restore 81 409 pd test-signal;
-#X text 69 357 sampler;
-#X text 443 311 calculate noise mask;
-#X obj 80 488 output~;
-#X msg 462 338 \; make-mask 2000;
-#X msg 316 348 15;
+#X restore 30 340 pd test-signal;
+#X text 18 293 sampler;
+#X text 302 294 calculate noise mask;
+#X obj 30 413 output~;
+#X msg 320 316 \; make-mask 2000;
+#X msg 196 315 15;
 #N canvas 0 0 592 442 mask-table 0;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-mask 512 float 0;
 #X coords 0 500 511 0 400 300 1;
 #X restore 110 76 graph;
-#X text 25 14 This table ($0-mask) is the average power measured in
-each channel of the spectrum \, presumed to represent the noise floor.
-;
-#X restore 331 500 pd mask-table;
-#X text 80 322 amplitudes (dB);
-#X text 68 26 This patch attempts to scrub the noise floor from a sample
+#X text 25 14 This table (1010-mask) is the average power measured
+in each channel of the spectrum \, presumed to represent the noise
+floor.;
+#X restore 320 440 pd mask-table;
+#X text 32 270 amplitudes (dB);
+#X text 19 36 This patch attempts to scrub the noise floor from a sample
 in two steps. First using the "make-mask" message (which is caught
 in the "fft-analysis" window) \, you estimate the background spectrum.
 You would normally do this at a moment when only the background noise
 is audible. Then \, turn on "masking" (to 15 by default \, but try
 other values) and the patch will try to clean the background noise
 out of a signal.;
-#X text 67 149 For this demonstration \, you control the amplitudes
+#X text 19 134 For this demonstration \, you control the amplitudes
 of a looping sample and a filtered noise source. Normally you'd hit
 "calculate noise mask" with only hte noise turned on \, then turn both
 the noise and the sampler on \, and also "masking" \, to see if the
@@ -320,11 +319,35 @@ patch can clean the noise out of the signal. Open the "fft-analysis"
 window to see the algorithm \, or the "insample" window to change samples
 \, or "mask-table" to see the current mask (the average signal power
 of the noise to clean out of the signal).;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header denoiser 20 10 1
+18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION denoiser;
+#X restore 392 480 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 denoiser- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 480 pd References;
+#X obj 6 480 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 6 0;
-#X connect 1 0 13 0;
-#X connect 2 0 16 0;
-#X connect 2 0 16 1;
-#X connect 7 0 13 1;
-#X connect 12 0 0 0;
-#X connect 13 0 2 0;
-#X connect 18 0 0 0;
+#X connect 1 0 12 0;
+#X connect 2 0 15 0;
+#X connect 2 0 15 1;
+#X connect 7 0 12 1;
+#X connect 11 0 0 0;
+#X connect 12 0 2 0;
+#X connect 17 0 0 0;

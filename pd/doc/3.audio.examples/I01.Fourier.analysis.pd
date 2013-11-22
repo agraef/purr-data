@@ -1,52 +1,63 @@
-#N canvas 247 4 688 708 12;
-#X floatatom 38 264 7 0 0 0 - - -;
+#N canvas 343 19 688 666 10;
+#X floatatom 38 284 7 0 0 0 - - -, f 7;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-real 64 float 2;
 #X coords 0 64 64 -64 256 200 1;
-#X restore 423 184 graph;
-#X floatatom 38 168 5 0 32 0 - - -;
-#X obj 78 240 samplerate~;
-#X obj 38 215 t f b;
-#X obj 38 240 *;
-#X obj 80 568 metro 250;
-#X obj 38 637 tabwrite~ \$0-real;
-#X obj 67 614 tabwrite~ \$0-imaginary;
-#X obj 38 384 osc~;
+#X restore 393 194 graph;
+#X floatatom 38 188 5 0 32 0 - - -, f 5;
+#X obj 78 260 samplerate~;
+#X obj 38 235 t f b;
+#X obj 38 260 *;
+#X obj 80 588 metro 250;
+#X obj 38 657 tabwrite~ \$0-real;
+#X obj 67 634 tabwrite~ \$0-imaginary;
+#X obj 38 404 osc~;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-imaginary 64 float 2;
 #X coords 0 64 64 -64 256 200 1;
-#X restore 423 417 graph;
-#X obj 69 360 f;
-#X floatatom 91 316 3 0 100 0 - - -;
-#X obj 91 337 / 100;
-#X obj 38 191 / 64;
-#X text 595 165 real part;
-#X text 550 398 imaginary part;
-#X obj 80 545 loadbang;
-#X text 94 166 <- frequency;
-#X text 133 182 (as multiple;
-#X text 135 198 of SR/64 \, the;
-#X text 133 215 fundamental);
-#X text 170 345 of a cycle;
-#X text 431 638 updated for PD version 0.39;
-#X obj 89 590 s \$0-snap;
-#X obj 69 286 r \$0-snap;
-#X text 127 315 <- phase in;
-#X text 161 331 hundredths;
-#X text 113 264 <- frequency \, Hz.;
-#X text 87 415 given the real and imaginary part;
-#X text 88 431 of a complex-valued signal. Here;
-#X text 87 447 the imaginary part is zero (the;
-#X text 86 400 fft~ computes the Fourier transform \,;
-#X text 186 541 real and imaginary;
-#X text 186 557 outputs are graphed;
-#X text 185 574 separately.;
-#X text 86 464 input is real-valued). The output;
-#X text 85 482 is a (real \, imaginary) pair for each;
-#X text 86 500 frequency from 0 to 63 (in units of;
-#X text 87 520 SR/64).;
-#X text 145 -36 The "fft~" object has separate inlets for the real
-and imaginary parts of a complex-valued signal and outputs its Fourier
+#X restore 393 427 graph;
+#X obj 69 380 f;
+#X floatatom 91 336 3 0 100 0 - - -, f 3;
+#X obj 91 357 / 100;
+#X obj 38 211 / 64;
+#X text 565 175 real part;
+#X text 520 408 imaginary part;
+#X obj 80 565 loadbang;
+#X text 94 186 <- frequency;
+#X text 133 202 (as multiple;
+#X text 135 218 of SR/64 \, the;
+#X text 133 235 fundamental);
+#X text 170 365 of a cycle;
+#X obj 89 610 s \$0-snap;
+#X obj 69 306 r \$0-snap;
+#X text 127 335 <- phase in;
+#X text 161 351 hundredths;
+#X text 113 284 <- frequency \, Hz.;
+#X text 87 435 given the real and imaginary part;
+#X text 88 451 of a complex-valued signal. Here;
+#X text 87 467 the imaginary part is zero (the;
+#X text 86 420 fft~ computes the Fourier transform \,;
+#X text 186 561 real and imaginary;
+#X text 186 577 outputs are graphed;
+#X text 185 594 separately.;
+#X text 86 484 input is real-valued). The output;
+#X text 85 502 is a (real \, imaginary) pair for each;
+#X text 86 520 frequency from 0 to 63 (in units of;
+#X text 87 540 SR/64).;
+#X msg 38 99 0;
+#X msg 38 120 10;
+#X msg 38 141 10.5;
+#X text 159 303 bang-on-snapshot;
+#X text 157 317 from below;
+#X text 100 383 sync phase with snapshots;
+#X obj 37 443 fft~;
+#X msg 274 634 \; pd dsp 1;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header Fourier_analysis
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 135 28 The [fft~] object has separate inlets for the real and
+imaginary parts of a complex-valued signal and outputs its Fourier
 transform \, again using separate outlets for the real and imaginary
 part. The transform is done on one block of samples (here the block
 size is 64 \, Pd's default.) The outputs give the complex amplitudes
@@ -56,16 +67,27 @@ sample rate. If the frequency (in harmonics) is an integer \, the result
 is two harmonics symmetric about the Nyquist frequency. Fractional
 frequencies spill across harmonics. Changing the initial phase rotates
 energy from real to imaginary and back.;
-#X text 26 -24 ANALYSIS;
-#X text 27 -42 FOURIER;
-#X msg 38 79 0;
-#X msg 38 100 10;
-#X msg 38 121 10.5;
-#X text 159 283 bang-on-snapshot;
-#X text 157 297 from below;
-#X text 100 363 sync phase with snapshots;
-#X obj 37 423 fft~;
-#X msg 274 614 \; pd dsp 1;
+#X obj 1 687 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION Fourier analysis;
+#X restore 392 689 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Fourier analysis- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 689 pd References;
+#X obj 6 689 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 9 0;
 #X connect 2 0 14 0;
 #X connect 3 0 5 1;
@@ -74,17 +96,17 @@ energy from real to imaginary and back.;
 #X connect 5 0 0 0;
 #X connect 6 0 7 0;
 #X connect 6 0 8 0;
-#X connect 6 0 24 0;
-#X connect 9 0 49 0;
+#X connect 6 0 23 0;
+#X connect 9 0 45 0;
 #X connect 11 0 9 1;
 #X connect 12 0 13 0;
 #X connect 13 0 11 1;
 #X connect 14 0 4 0;
 #X connect 17 0 6 0;
-#X connect 17 0 50 0;
-#X connect 25 0 11 0;
-#X connect 43 0 2 0;
-#X connect 44 0 2 0;
-#X connect 45 0 2 0;
-#X connect 49 0 7 0;
-#X connect 49 1 8 0;
+#X connect 17 0 46 0;
+#X connect 24 0 11 0;
+#X connect 39 0 2 0;
+#X connect 40 0 2 0;
+#X connect 41 0 2 0;
+#X connect 45 0 7 0;
+#X connect 45 1 8 0;

@@ -1,20 +1,18 @@
-#N canvas 300 159 635 486 12;
-#X text 261 20 CONTROLLING OUTPUT AMPLITUDE;
-#X obj 32 27 osc~ 440;
-#X obj 54 55 osc~ 550;
-#X obj 54 116 osc~ 660;
-#X obj 32 88 +~;
-#X obj 32 142 +~;
-#X text 108 177 <-- this is a subwindow--right click on it;
-#X text 149 197 and select "open" to see inside.;
-#X text 30 401 The output control automatically starts DSP whenever
+#N canvas 433 138 448 436 10;
+#X obj 22 42 osc~ 440;
+#X obj 37 70 osc~ 550;
+#X obj 38 131 osc~ 660;
+#X obj 22 103 +~;
+#X obj 22 157 +~;
+#X text 103 188 <-- this is a subwindow--right click on it;
+#X text 144 203 and select "open" to see inside.;
+#X text 18 359 The output control automatically starts DSP whenever
 you touch the level control. Hitting "mute" toggles between the current
 level and zero.;
-#X obj 32 173 output~;
-#X text 383 463 updated for Pd version 0.36;
-#X text 143 115 <-- Here we make an A major triad as a test signal.
+#X obj 22 188 output~;
+#X text 97 131 <-- Here we make an A major triad as a test signal.
 ;
-#X text 31 250 In this and subsequent patches \, we'll use a subwindow
+#X text 19 248 In this and subsequent patches \, we'll use a subwindow
 \, "output" \, to control overall amplitude. The amplitudes are in
 decibels \, with 100 being full blast. In this example \, you can't
 actually push the output amplitude past 90 or so without clipping.
@@ -22,9 +20,34 @@ You'll know you're clipping if \, instead of an A major chord \, you
 hear a single \, distorted tone two octaves down. The clipping happens
 at Pd's last stage of audio output. Audio signals internal to Pd have
 essentially no level limit.;
-#X connect 1 0 4 0;
+#X obj 1 414 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.36. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal GUI;
+#X text 12 65 DESCRIPTION controlling output amplitude;
+#X restore 392 416 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 controlling output amplitude- Related Help Documents;
+#X text 19 37 List other amplitude GUIs here;
+#X restore 103 416 pd References;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header controlling_output_amplitude
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 6 416 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 3 0;
+#X connect 1 0 3 1;
 #X connect 2 0 4 1;
-#X connect 3 0 5 1;
-#X connect 4 0 5 0;
-#X connect 5 0 9 0;
-#X connect 5 0 9 1;
+#X connect 3 0 4 0;
+#X connect 4 0 8 0;
+#X connect 4 0 8 1;

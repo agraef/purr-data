@@ -1,24 +1,27 @@
 #N struct rect float x float y float w float h;
-#N canvas 193 140 549 265 10;
-#N canvas 457 224 643 316 rect 0;
-#X obj 134 219 pointer;
-#X msg 134 188 traverse pd-test \, bang;
-#X obj 69 99 filledpolygon 0 0 0 0 0 0 h w h w 0 0 0;
-#X obj 46 252 append rect x y w h;
-#X obj 68 76 struct rect float x float y float w float h;
-#X msg 46 219 50 50 50 2;
-#X obj 432 201 r this-ptr;
-#X obj 347 257 s this-ptr;
-#X obj 344 202 r add-rect;
-#X obj 346 232 append rect x y w h;
+#N canvas 424 20 448 188 10;
+#N canvas 127 107 428 301 rect 0;
+#X obj 134 140 pointer;
+#X msg 134 109 traverse pd-test \, bang;
+#X obj 23 65 filledpolygon 0 0 0 0 0 0 h w h w 0 0 0;
+#X obj 23 162 append rect x y w h;
+#X obj 22 42 struct rect float x float y float w float h;
+#X msg 23 140 50 50 50 2;
+#X obj 134 210 r this-ptr;
+#X obj 23 254 s this-ptr;
+#X obj 23 210 r add-rect;
+#X obj 23 232 append rect x y w h;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Template;
 #X connect 0 0 3 4;
 #X connect 1 0 0 0;
 #X connect 5 0 3 0;
 #X connect 6 0 9 4;
 #X connect 8 0 9 0;
 #X connect 9 0 7 0;
-#X restore 27 186 pd rect;
-#N canvas 34 58 616 659 output 1;
+#X restore 22 106 pd rect;
+#N canvas 318 26 616 659 output 0;
 #X scalar rect 57 179 2 10 \;;
 #X scalar rect 82 179 1 10 \;;
 #X scalar rect 107 179 1 10 \;;
@@ -353,8 +356,8 @@
 #X text 305 53 the beats and the lighter ones help;
 #X text 304 73 show the proportions.;
 #X coords 0 659 1 658 0 0 0;
-#X restore 26 208 pd output;
-#N canvas 386 64 781 519 generator 0;
+#X restore 22 128 pd output;
+#N canvas 123 79 781 519 generator 0;
 #X obj 646 4 r start;
 #X obj 645 71 pointer;
 #X obj 646 27 symbol;
@@ -449,7 +452,31 @@
 #X connect 27 0 26 0;
 #X connect 27 0 28 0;
 #X connect 28 0 39 0;
-#X restore 27 166 pd generator;
-#X text 27 21 Example: computing and graphing beat patterns. I made
+#X restore 22 84 pd generator;
+#X text 19 37 Example: computing and graphing beat patterns. I made
 this to make it easier to practice performing a-in-the-time-of-b time
 divisions.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header beat_patterns 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 166 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.35. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS data_structure GUI;
+#X text 12 65 DESCRIPTION beat patterns;
+#X restore 392 168 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 beat patterns - Related Help Documents;
+#X restore 103 168 pd References;
+#X obj 6 168 pddp/pddplink ../5.reference/pddp/help.pd -text help;

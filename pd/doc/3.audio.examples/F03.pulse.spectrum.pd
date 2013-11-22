@@ -1,28 +1,27 @@
-#N canvas 227 143 860 515 12;
-#X obj 189 166 line~;
-#X obj 42 187 cos~;
-#X obj 189 142 pack 0 50;
-#X floatatom 189 41 0 0 100 0 - - -;
-#X obj 43 114 -~ 0.5;
-#X obj 43 140 *~;
-#X obj 189 67 / 10;
-#X obj 189 91 moses 0;
-#X msg 189 115 0;
-#X obj 42 163 clip~ -0.5 0.5;
-#X text 184 23 bandwidth;
-#X obj 189 191 +~ 1;
-#X obj 42 211 +~ 1;
-#X text 63 1 PULSE SPECTRUM MEASUREMENT;
-#X text 14 357 Here is a measured amplitude spectrum for the pulse
+#N canvas 375 33 610 515 10;
+#X obj 169 180 line~;
+#X obj 22 201 cos~;
+#X obj 169 156 pack 0 50;
+#X floatatom 169 55 0 0 100 0 - - -;
+#X obj 23 128 -~ 0.5;
+#X obj 23 154 *~;
+#X obj 169 81 / 10;
+#X obj 169 105 moses 0;
+#X msg 169 129 0;
+#X obj 22 177 clip~ -0.5 0.5;
+#X text 164 37 bandwidth;
+#X obj 169 205 +~ 1;
+#X obj 22 225 +~ 1;
+#X text 19 357 Here is a measured amplitude spectrum for the pulse
 train. Nutice that \, other than a smallish spillover \, the energy
 sits in one "lobe" whose changing width justifies our calling the squeeze
 factor the "bandwidth.";
-#X text 16 428 The spectrum is in units of amplitude. THe sidelobes
+#X text 18 410 The spectrum is in units of amplitude. THe sidelobes
 \, although they look small \, are actually only about 34 dB down.
 You can design more complicated pulse trains \, little Blackman window
 functions \, which control the sidelobes much better.;
-#X obj 42 293 output~;
-#X obj 41 262 hip~;
+#X obj 22 307 output~;
+#X obj 21 276 hip~;
 #N canvas 122 211 558 609 fft 0;
 #X obj 19 61 inlet~;
 #X obj 208 212 inlet;
@@ -74,35 +73,59 @@ until much later.;
 #X connect 18 0 25 0;
 #X connect 21 0 23 0;
 #X connect 24 0 15 0;
-#X restore 95 264 pd fft;
-#X obj 155 243 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 75 278 pd fft;
+#X obj 135 257 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 155 264 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 135 278 tgl 18 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X text 176 263 <-- repeatedly;
-#X text 177 243 <-- graph once;
-#X obj 42 235 *~ 0.5;
-#X obj 43 90 phasor~;
-#N canvas 0 0 450 300 graph1 0;
+#X text 156 277 <-- repeatedly;
+#X text 157 257 <-- graph once;
+#X obj 22 249 *~ 0.5;
+#X obj 23 104 phasor~;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F03-signal 882 float 0;
 #X coords 0 1.02 882 -1.02 200 130 1;
-#X restore 640 321 graph;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 390 251 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array F03-spectrum 259 float 0;
 #X coords 0 0.51 258 -0.008 256 130 1;
-#X restore 579 99 graph;
-#X text 640 454 ---- 0.02 seconds ----;
-#X text 608 230 2;
-#X text 639 230 4;
-#X text 578 230 0;
-#X text 616 245 -- partial number --;
-#X text 671 230 6;
-#X text 704 230 8;
-#X text 732 230 10;
-#X text 764 230 12;
-#X text 796 230 14;
-#X text 605 488 updated for Pd version 0.37;
-#X obj 43 63 r freq;
+#X restore 279 56 graph;
+#X text 418 384 ---- 0.02 seconds ----;
+#X text 308 187 2;
+#X text 339 187 4;
+#X text 278 187 0;
+#X text 342 202 -- partial number --;
+#X text 371 187 6;
+#X text 404 187 8;
+#X text 432 187 10;
+#X text 464 187 12;
+#X text 496 187 14;
+#X obj 23 77 r freq;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header pulse_spectrum_measurement
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 487 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION pulse spectrum measurement;
+#X restore 392 489 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 pulse spectrum- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 489 pd References;
+#X obj 6 489 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 11 0;
 #X connect 1 0 12 0;
 #X connect 2 0 0 0;
@@ -115,12 +138,12 @@ until much later.;
 #X connect 8 0 2 0;
 #X connect 9 0 1 0;
 #X connect 11 0 5 1;
-#X connect 12 0 23 0;
-#X connect 17 0 16 0;
-#X connect 17 0 16 1;
-#X connect 19 0 18 1;
-#X connect 20 0 18 2;
-#X connect 23 0 17 0;
-#X connect 23 0 18 0;
-#X connect 24 0 4 0;
-#X connect 38 0 24 0;
+#X connect 12 0 22 0;
+#X connect 16 0 15 0;
+#X connect 16 0 15 1;
+#X connect 18 0 17 1;
+#X connect 19 0 17 2;
+#X connect 22 0 16 0;
+#X connect 22 0 17 0;
+#X connect 23 0 4 0;
+#X connect 36 0 23 0;

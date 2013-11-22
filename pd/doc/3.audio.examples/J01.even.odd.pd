@@ -1,66 +1,89 @@
-#N canvas 213 27 782 599 12;
-#X obj 80 156 wrap~;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 368 22 615 581 10;
+#X obj 80 186 wrap~;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-phasor 882 float 0;
 #X coords 0 1.02 882 -1.02 200 130 1;
-#X restore 567 35 graph;
-#X obj 24 57 -~ 0.5;
-#X obj 80 184 -~ 0.5;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 397 65 graph;
+#X obj 24 87 -~ 0.5;
+#X obj 80 214 -~ 0.5;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-sum 882 float 0;
 #X coords 0 1.02 882 -1.02 200 130 1;
-#X restore 567 189 graph;
-#N canvas 0 0 450 300 graph1 0;
+#X restore 397 219 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-difference 882 float 0;
 #X coords 0 1.02 882 -1.02 200 130 1;
-#X restore 566 343 graph;
-#X text 570 475 ---- 0.02 seconds ----;
-#X text 528 567 updated for Pd version 0.39;
-#X obj 22 335 output~;
-#X obj 138 78 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 396 373 graph;
+#X text 430 505 ---- 0.02 seconds ----;
+#X obj 22 365 output~;
+#X obj 138 108 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 29 270 output~;
-#X text 41 -1 Splitting a sawtooth wave into even and odd harmonics
-;
-#X obj 24 29 phasor~ 100;
-#X text 87 58 remove DC bias;
-#X text 132 29 original sawtooth;
-#X text 144 173 180-degree-out-of-phase;
-#X text 147 188 sawtooth;
-#X text 145 212 form the sum and difference;
-#X obj 23 224 +~;
-#X obj 59 223 -~;
-#X text 4 408 This patch splits a sawtooth wave into its even and odd
-harmonics. The wrap~ object is used to make the phased copy. Adding
+#X obj 29 300 output~;
+#X obj 24 59 phasor~ 100;
+#X text 74 87 remove DC bias;
+#X text 102 59 original sawtooth;
+#X text 144 203 180-degree-out-of-phase;
+#X text 147 218 sawtooth;
+#X text 145 242 form the sum and difference;
+#X obj 23 254 +~;
+#X obj 59 253 -~;
+#X text 19 418 This patch splits a sawtooth wave into its even and
+odd harmonics. The wrap~ object is used to make the phased copy. Adding
 and subtracting this to and from the original gives the results shown
 and heard. (Listen to the two outputs separately \, then together.)
 ;
-#X text 102 291 output level;
-#X text 93 367 for sum;
-#X text 95 350 output level;
-#X text 100 308 for difference;
-#X text 157 77 <-- click to graph;
-#X msg 148 97 \; pd dsp 1;
-#X obj 138 247 tabwrite~ \$0-difference;
-#X obj 138 270 tabwrite~ \$0-sum;
-#X obj 138 138 tabwrite~ \$0-phasor;
-#X text 4 491 This is a classic technique for gaining separate control
+#X text 100 319 output level;
+#X text 93 387 for sum;
+#X text 93 372 output level;
+#X text 100 333 for difference;
+#X text 157 107 <-- click to graph;
+#X msg 148 127 \; pd DSP 1;
+#X obj 138 277 tabwrite~ \$0-difference;
+#X obj 138 300 tabwrite~ \$0-sum;
+#X obj 138 168 tabwrite~ \$0-phasor;
+#X text 19 482 This is a classic technique for gaining separate control
 over the even and odd harmonics in a synthetic sound. It can also be
 used conceptually to understand the harmonic content of a square wave
 in terms of that of a sawtooth \, or vice versa.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header splitting_a_sawtooth_wave...
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 131 28 ... into even and odd harmonics;
+#X obj 1 559 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION splitting a sawtooth wave;
+#X restore 392 561 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 splitting a sawtooth- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 561 pd References;
+#X obj 6 561 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 3 0;
 #X connect 2 0 0 0;
-#X connect 2 0 18 0;
-#X connect 2 0 19 0;
-#X connect 2 0 29 0;
-#X connect 3 0 18 1;
-#X connect 3 0 19 1;
-#X connect 9 0 26 0;
-#X connect 9 0 27 0;
-#X connect 9 0 28 0;
-#X connect 9 0 29 0;
-#X connect 12 0 2 0;
-#X connect 18 0 8 0;
-#X connect 18 0 28 0;
-#X connect 19 0 10 1;
-#X connect 19 0 27 0;
+#X connect 2 0 16 0;
+#X connect 2 0 17 0;
+#X connect 2 0 27 0;
+#X connect 3 0 16 1;
+#X connect 3 0 17 1;
+#X connect 8 0 24 0;
+#X connect 8 0 25 0;
+#X connect 8 0 26 0;
+#X connect 8 0 27 0;
+#X connect 10 0 2 0;
+#X connect 16 0 7 0;
+#X connect 16 0 26 0;
+#X connect 17 0 9 1;
+#X connect 17 0 25 0;

@@ -1,44 +1,67 @@
-#N canvas 161 46 660 441 12;
-#X msg 103 95 bang;
-#X text 389 414 updated for Pd version 0.35;
-#X text 44 19 You can generate weighted random numbers from uniformly
+#N canvas 433 129 448 465 10;
+#X msg 123 95 bang;
+#X text 19 37 You can generate weighted random numbers from uniformly
 distributed ones. If you just want two possible outcomes with a varying
 probability for each one \, you can do as shown:;
-#X obj 103 121 random 100;
-#X obj 102 174 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 123 121 random 100;
+#X obj 123 194 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 169 174 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 168 194 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X floatatom 205 148 3 0 100;
-#X text 250 148 <-- change probablilty;
-#X obj 103 149 moses 80;
-#X text 152 93 <-- click to test;
-#X text 61 219 This outputs a number at left 80% of the time \, otherwise
+#X floatatom 168 143 3 0 100 0 - - -, f 3;
+#X text 193 143 <-- change probablilty;
+#X obj 123 169 moses 80;
+#X text 172 95 <-- click to test;
+#X text 19 224 This outputs a number at left 80% of the time \, otherwise
 at right \, unless you override the "80" using the number box. You
 may extend this to more than two possible outcomes \, for instance
 like this:;
-#X msg 106 305 bang;
-#X obj 106 331 random 100;
-#X obj 105 384 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X msg 106 282 bang;
+#X obj 106 308 random 100;
+#X obj 106 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 195 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 151 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 155 303 <-- click to test;
-#X obj 106 359 moses 10;
-#X obj 196 360 moses 30;
-#X obj 263 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X text 155 280 <-- click to test;
+#X obj 106 336 moses 10;
+#X obj 151 360 moses 30;
+#X obj 196 387 bng 20 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 103 409 10%;
-#X text 193 410 20%;
-#X text 265 409 70%;
-#X connect 0 0 3 0;
-#X connect 3 0 8 0;
-#X connect 6 0 8 1;
-#X connect 8 0 4 0;
-#X connect 8 1 5 0;
-#X connect 11 0 12 0;
-#X connect 12 0 16 0;
+#X text 104 410 10%;
+#X text 149 410 20%;
+#X text 198 409 70%;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header weighted-random
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 443 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION weighted-random numbers;
+#X text 12 25 KEYWORDS control random;
+#X restore 382 445 pd META;
+#N canvas 21 377 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Weighted-random- Related Help Documents;
+#X restore 103 445 pd References;
+#X obj 6 445 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 2 0;
+#X connect 2 0 7 0;
+#X connect 5 0 7 1;
+#X connect 7 0 3 0;
+#X connect 7 1 4 0;
+#X connect 10 0 11 0;
+#X connect 11 0 15 0;
+#X connect 15 0 12 0;
+#X connect 15 1 16 0;
 #X connect 16 0 13 0;
 #X connect 16 1 17 0;
-#X connect 17 0 14 0;
-#X connect 17 1 18 0;

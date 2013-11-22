@@ -1,32 +1,62 @@
-#N canvas 136 31 738 479 12;
-#X floatatom 88 199 0 0 0;
-#X obj 88 172 receive crackers;
-#X floatatom 248 204 0 0 0;
-#X obj 248 177 receive pickles;
-#X obj 88 145 send crackers;
-#X obj 250 139 send pickles;
-#X obj 389 138 send pickles;
-#X floatatom 392 203 0 0 0;
-#X obj 392 176 receive pickles;
-#X msg 51 306 \; pickles 99 \; crackers 56;
-#X floatatom 88 118 0 0 0;
-#X floatatom 250 112 0 0 0;
-#X floatatom 389 111 0 0 0;
-#X obj 371 404 r crackers;
-#X obj 371 377 s crackers;
-#X text 39 392 send and receive can be abbreviated:;
-#X text 48 245 You can use the semicolon feature of message boxes to
+#N canvas 0 0 448 494 10;
+#X floatatom 22 219 0 0 0 0 - - -;
+#X obj 22 192 receive crackers;
+#X floatatom 164 219 0 0 0 0 - - -;
+#X obj 164 192 receive pickles;
+#X obj 22 159 send crackers;
+#X obj 164 159 send pickles;
+#X obj 293 159 send pickles;
+#X floatatom 293 219 0 0 0 0 - - -;
+#X obj 293 192 receive pickles;
+#X msg 142 308 \; pickles 99 \; crackers 56;
+#X floatatom 22 132 0 0 0 0 - - -;
+#X floatatom 164 132 0 0 0 0 - - -;
+#X floatatom 293 132 0 0 0 0 - - -;
+#X obj 348 434 r crackers;
+#X obj 348 407 s crackers;
+#X text 19 261 You can use the semicolon feature of message boxes to
 address receives \, too. This is useful if you want to do a whole list
 of things:;
-#X text 166 305 The transaction takes place in zero time---i.e. \,
-if you tried to use "timer" to measure the time delay between the two
+#X text 19 357 The transaction takes place in zero time---i.e. \, if
+you tried to use "timer" to measure the time delay between the two
 \, you would get zero.;
-#X text 459 447 updated for Pd version 0.34;
-#X text 51 6 The send and receive objects allow you to make non-local
-connections. These work globally--you can use them to make two different
-patches intercommunicate if you wish. Any message a "send" gets appears
-at the output of every receive of the same name. There can be any number
-of sends and receives sharing the same name:;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header send_receive 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 472 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 125 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control nonlocal;
+#X text 12 65 DESCRIPTION introducing the send and receive objects
+;
+#X restore 382 474 pd META;
+#X text 19 419 [send] and [receive] can be abbreviated [s] and [r]:
+;
+#X text 19 38 The [send] and [receive] objects allow you to make non-local
+connections. These work globally-- you can use them to make two different
+patches intercommunicate if you wish. Any message a [send] gets appears
+at the output of every [receive] of the same name. There can be any
+number of [send] and [receive] objects sharing the same name:;
+#N canvas 11 287 428 174 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 [send] and [receive]- Related Help Documents;
+#X obj 20 71 pddp/pddplink ../5.reference/all_about_send_n_receive.pd
+-text all_about_send_n_receive;
+#X text 20 40 See the help patches for these objects \, as well as
+the one for message box. For more detailed info see:;
+#X text 20 102 Also have a look at the following object:;
+#X obj 23 127 value;
+#X restore 103 474 pd References;
+#X obj 6 474 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 1 0 0 0;
 #X connect 3 0 2 0;
 #X connect 8 0 7 0;

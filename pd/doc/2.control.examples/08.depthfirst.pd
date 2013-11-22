@@ -1,34 +1,58 @@
-#N canvas 144 162 632 551 12;
-#X msg 64 51 1;
-#X obj 89 150 + 1;
-#X obj 209 187 print x1;
-#X obj 64 209 print x3;
-#X obj 114 122 print x2;
-#X obj 209 100 + 1;
-#X obj 209 129 + 1;
-#X obj 209 158 + 1;
-#X obj 64 80 t f f f f;
-#X obj 89 179 print x2;
-#X text 34 13 In Pd \, message passing is depth first \, so that in
+#N canvas 0 0 448 563 10;
+#X msg 64 81 1;
+#X obj 81 176 + 1;
+#X obj 163 217 print x1;
+#X obj 64 229 print x3;
+#X obj 98 152 print x2;
+#X obj 163 145 + 1;
+#X obj 163 169 + 1;
+#X obj 163 193 + 1;
+#X obj 64 110 t f f f f;
+#X obj 81 200 print x2;
+#X text 19 37 In Pd \, message passing is depth first \, so that in
 this patch:;
-#X text 104 51 <-- click here;
-#X text 17 243 ... you get "x1" first \, notwidthstanding the fact
-that "x2" and "x3" appear to be closer to the source. This means that
-you shouldn't do this:;
-#X msg 76 304 1;
-#X text 116 304 <-- maybe you shouldn't click here;
-#X obj 115 334 + 1;
-#X obj 76 333 f;
-#X floatatom 76 365 0 0 0;
-#X text 377 520 updated for Pd version 0.34;
-#X text 35 393 ... because the "depth" is infinite. The counters you've
+#X text 104 81 <-- click here;
+#X msg 102 304 1;
+#X text 142 304 <-- maybe you shouldn't click here;
+#X obj 141 334 + 1;
+#X obj 102 333 f;
+#X floatatom 102 365 0 0 0 0 - - -;
+#X text 19 395 ... because the "depth" is infinite. The counters you've
 seen always have the message chain terminated somewhere in a cold inlet:
 ;
-#X msg 75 453 1;
-#X obj 114 483 + 1;
-#X obj 75 482 f;
-#X floatatom 75 514 0 0 0;
-#X text 115 453 <-- better;
+#X msg 105 448 1;
+#X obj 144 476 + 1;
+#X obj 105 475 f;
+#X floatatom 105 503 0 0 0 0 - - -;
+#X text 145 448 <-- better;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header depth_first 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 541 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION depth first message passing explained;
+#X text 12 145 HELP_PATCH_AUTHORS Miller Puckette. Updated for release
+0.34. Jonathan Wilkes revised the patch to conform to the PDDP template
+for Pd version 0.42.;
+#X restore 382 543 pd META;
+#X text 19 257 ... you get "x1" first \, notwithstanding the fact that
+"x2" and "x3" appear to be closer to the source. This means that you
+shouldn't do this:;
+#N canvas 13 202 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Depth First- Related Help Documents;
+#X text 19 38 See pd manual for more info;
+#X restore 103 543 pd References;
+#X obj 6 543 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 8 0;
 #X connect 1 0 9 0;
 #X connect 5 0 6 0;
@@ -38,11 +62,11 @@ seen always have the message chain terminated somewhere in a cold inlet:
 #X connect 8 1 1 0;
 #X connect 8 2 4 0;
 #X connect 8 3 5 0;
-#X connect 13 0 16 0;
+#X connect 12 0 15 0;
+#X connect 14 0 15 0;
 #X connect 15 0 16 0;
-#X connect 16 0 17 0;
-#X connect 16 0 15 0;
-#X connect 20 0 22 0;
-#X connect 21 0 22 1;
-#X connect 22 0 23 0;
-#X connect 22 0 21 0;
+#X connect 15 0 14 0;
+#X connect 18 0 20 0;
+#X connect 19 0 20 1;
+#X connect 20 0 21 0;
+#X connect 20 0 19 0;

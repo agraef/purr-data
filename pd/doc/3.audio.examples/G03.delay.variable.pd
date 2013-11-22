@@ -1,48 +1,72 @@
-#N canvas 100 17 660 504 12;
+#N canvas 424 19 448 503 10;
 #X obj 33 305 hip~ 10;
-#X floatatom 301 221 0 0 0 0 - - -;
-#X obj 301 269 line~;
-#X obj 301 245 pack 0 100;
-#X floatatom 226 191 0 0 0 0 - - -;
-#X floatatom 382 297 0 0 0 0 - - -;
-#X obj 382 369 line~;
-#X obj 382 345 pack 0 100;
-#X obj 382 321 * 0.01;
-#X floatatom 113 166 0 0 0 0 - - -;
-#X obj 113 237 line~;
-#X obj 113 213 pack 0 100;
+#X floatatom 251 216 0 0 0 0 - - -;
+#X obj 251 264 line~;
+#X obj 251 240 pack 0 100;
+#X floatatom 176 191 0 0 0 0 - - -;
+#X floatatom 295 297 0 0 0 0 - - -;
+#X obj 295 369 line~;
+#X obj 295 345 pack 0 100;
+#X obj 295 321 * 0.01;
+#X floatatom 94 166 0 0 0 0 - - -;
+#X obj 94 237 line~;
+#X obj 94 213 pack 0 100;
 #X obj 33 257 *~;
 #X obj 33 281 cos~;
 #X floatatom 33 134 0 0 0 0 - - -;
 #X obj 33 158 mtof;
 #X obj 33 182 * 0.5;
 #X obj 33 329 clip~ -0.2 0.2;
-#X obj 113 189 * 0.01;
+#X obj 94 189 * 0.01;
 #X obj 33 353 +~;
-#X obj 361 395 *~;
-#X obj 226 287 *~;
-#X obj 226 215 / 100;
+#X obj 281 395 *~;
+#X obj 176 287 *~;
+#X obj 176 215 / 100;
 #X obj 33 377 hip~ 5;
-#X obj 226 263 +~ 1;
-#X obj 226 239 osc~ 0;
-#X obj 226 311 +~ 1.46;
-#X text 154 164 <-- timbre;
-#X text 66 135 <-- pitch;
-#X text 279 191 <-- cycle frequency (hundredths);
-#X text 354 222 <-- cycle depth (msec);
-#X text 431 298 <-- feedback (hundredths);
-#X text 89 6 VARIABLE DELAYS;
+#X obj 176 263 +~ 1;
+#X obj 176 239 osc~ 0;
+#X obj 176 311 +~ 1.46;
+#X text 122 165 <-- timbre;
+#X text 58 135 <-- pitch;
+#X text 206 191 <-- cycle frequency (hundredths);
+#X text 277 217 <-- cycle depth (msec);
 #X obj 33 206 osc~ 0;
-#X text 46 32 This is a fuzzed FM generator going into a delay loop
-\, this time using a variable delay object (vd~). You can get several
+#X obj 32 409 output~;
+#X obj 176 335 vd~ G03-del;
+#X obj 281 443 delwrite~ G03-del 1000;
+#X obj 281 419 clip~ -1 1;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header variable_delays
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 343 309 (hundredths);
+#X text 322 297 <-- feedback;
+#X obj 1 481 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal nonlocal;
+#X text 12 65 DESCRIPTION variable delays;
+#X restore 392 483 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 variable delays- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 483 pd References;
+#X obj 6 483 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 19 37 This is a fuzzed FM generator going into a delay loop
+\, this time using a variable delay object-- [vd~]. You can get several
 interesting effects this way. We have taken the precaution of clipping
 inside the loop to avoid instabilities. You can push the loop gain
 past 1 if you want \, it will just oscillate.;
-#X obj 32 409 output~;
-#X obj 226 335 vd~ G03-del;
-#X obj 361 443 delwrite~ G03-del 1000;
-#X obj 361 419 clip~ -1 1;
-#X text 387 481 updated for Pd version 0.37-1;
 #X connect 0 0 17 0;
 #X connect 1 0 3 0;
 #X connect 2 0 21 1;
@@ -59,19 +83,19 @@ past 1 if you want \, it will just oscillate.;
 #X connect 13 0 0 0;
 #X connect 14 0 15 0;
 #X connect 15 0 16 0;
-#X connect 16 0 33 0;
+#X connect 16 0 31 0;
 #X connect 17 0 19 0;
 #X connect 18 0 11 0;
 #X connect 19 0 23 0;
-#X connect 20 0 38 0;
+#X connect 20 0 35 0;
 #X connect 21 0 26 0;
 #X connect 22 0 25 0;
 #X connect 23 0 20 0;
-#X connect 23 0 35 0;
-#X connect 23 0 35 1;
+#X connect 23 0 32 0;
+#X connect 23 0 32 1;
 #X connect 24 0 21 0;
 #X connect 25 0 24 0;
-#X connect 26 0 36 0;
-#X connect 33 0 12 0;
-#X connect 36 0 19 1;
-#X connect 38 0 37 0;
+#X connect 26 0 33 0;
+#X connect 31 0 12 0;
+#X connect 33 0 19 1;
+#X connect 35 0 34 0;

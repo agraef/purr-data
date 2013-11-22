@@ -1,4 +1,4 @@
-#N canvas 215 77 561 455 12;
+#N canvas 433 195 448 265 10;
 #N canvas 0 0 269 179 metro 0;
 #X obj 88 39 loadbang;
 #X msg 87 65 1;
@@ -9,17 +9,40 @@
 #X connect 0 0 4 0;
 #X connect 1 0 3 0;
 #X connect 3 0 2 0;
-#X restore 41 247 pd metro;
-#X text 374 425 Updated for Pd 0.37;
-#X obj 41 316 snapshot~;
-#X obj 66 286 phasor~ 1;
-#X floatatom 41 347 5 0 0 0 - - -;
-#X text 14 7 CONVERTING SIGNALS TO CONTROLS;
-#X text 15 35 The snapshot~ object allows you to convert from signals
-back to control streams (float messages) -- an opposite of signal~.
+#X restore 21 119 pd metro;
+#X obj 21 175 snapshot~;
+#X obj 46 145 phasor~ 1;
+#X floatatom 21 206 5 0 0 0 - - -, f 5;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header converting_signals_to_controls
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 18 38 The [snapshot~] object allows you to convert from signals
+back to control streams (float messages) -- an opposite of [signal~].
 The value output is always the end of the most recently computed audio
 block \, so that even if you bang it metronomically (as here) it need
 not give you samples that are exactly evenly spaced.;
-#X connect 0 0 2 0;
-#X connect 2 0 4 0;
-#X connect 3 0 2 0;
+#X obj 1 243 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal conversion;
+#X text 12 65 DESCRIPTION converting signals to controls;
+#X restore 392 245 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 signals to controls- Related Help Documents;
+#X restore 103 245 pd References;
+#X obj 6 245 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;

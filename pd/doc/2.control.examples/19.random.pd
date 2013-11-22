@@ -1,39 +1,70 @@
-#N canvas 47 52 722 449 12;
-#X text 460 422 updated for Pd version 0.26;
-#X text 35 28 Use the "random" object to make pseudo-random integers.
+#N canvas 433 135 448 447 10;
+#X obj 22 112 random 5;
+#X msg 22 86 bang;
+#X floatatom 22 138 0 0 0 0 - - -;
+#X text 56 138 outputs from 0 to 4;
+#X msg 207 86 bang;
+#X floatatom 207 164 0 0 0 0 - - -;
+#X obj 207 112 random 1000;
+#X obj 207 140 / 1000;
+#X text 235 165 from 0 to 0.999;
+#X obj 21 319 random 5;
+#X msg 92 232 bang;
+#X floatatom 21 345 0 0 0 0 - - -;
+#X obj 21 232 loadbang;
+#X obj 21 262 timer;
+#X text 134 232 <-- click to seed;
+#X msg 21 287 seed \$1;
+#X msg 83 287 bang;
+#X text 124 288 <-- click to get random numbers;
+#X text 18 191 If you don't want the same behavior every time you run
+the patch \, use the time from load to first click as a seed:;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header random 20 10 1 18
+-261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 425 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 95 PLATFORM windows macosx gnulinux;
+#X text 12 175 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 155 AUTHOR Miller Puckette;
+#X text 12 135 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 115 DATATYPE float;
+#X text 12 195 HELP_PATCH_AUTHORS Updated for release 0.26. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control random;
+#X text 12 65 DESCRIPTION generating pseudo-random integers with the
+[random] object;
+#X restore 382 427 pd META;
+#X text 19 37 Use the [random] object to make pseudo-random integers.
 To get continuously variable random numbers \, make a random number
 in a large range and divide:;
-#X obj 103 121 random 5;
-#X msg 103 95 bang;
-#X floatatom 103 147 0 0 0;
-#X text 137 147 outputs from 0 to 4;
-#X msg 337 87 bang;
-#X floatatom 336 165 0 0 0;
-#X obj 337 113 random 1000;
-#X obj 336 141 / 1000;
-#X text 402 166 from 0 to 0.999;
-#X obj 71 324 random 5;
-#X msg 162 255 bang;
-#X floatatom 71 350 0 0 0;
-#X obj 71 244 loadbang;
-#X obj 71 274 timer;
-#X text 204 255 <-- click to seed;
-#X msg 71 299 seed \$1;
-#X msg 163 299 bang;
-#X text 204 300 <-- click to get random numbers;
-#X text 24 382 If you give two randoms the same seed they give the
-same sequence. If you never seed them \, you'll get different sequences
-out of each one.;
-#X text 34 197 If you don't want the same behavior every time you run
-the patch \, use the time from load to first click as a seed:;
-#X connect 2 0 4 0;
-#X connect 3 0 2 0;
-#X connect 6 0 8 0;
-#X connect 8 0 9 0;
-#X connect 9 0 7 0;
-#X connect 11 0 13 0;
-#X connect 12 0 15 1;
-#X connect 14 0 15 0;
-#X connect 15 0 17 0;
-#X connect 17 0 11 0;
-#X connect 18 0 11 0;
+#X text 18 374 If you give two [random] objects the same seed they
+give the same sequence. If you never seed them \, you'll get different
+sequences out of each one.;
+#N canvas 8 315 428 179 References 0;
+#X obj 1 -2 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 -261139 -33289 0;
+#X text 7 -1 Randomness- Related Help Documents;
+#X obj 23 63 noise~;
+#X text 20 34 For randomness in an audio object \, see:;
+#X obj 26 130 expr random(0 \, 10);
+#X text 23 93 Also check out the [expr] object \, which includes a
+random function.;
+#X restore 103 427 pd References;
+#X obj 6 427 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 4 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 0;
+#X connect 9 0 11 0;
+#X connect 10 0 13 1;
+#X connect 12 0 13 0;
+#X connect 13 0 15 0;
+#X connect 15 0 9 0;
+#X connect 16 0 9 0;

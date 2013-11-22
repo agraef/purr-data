@@ -1,72 +1,104 @@
-#N canvas 84 47 648 623 12;
-#X msg 29 318 bang;
-#X floatatom 432 341 0 0 0;
-#X text 32 14 You can nest entire windows inside Pd boxes (and so on
+#N canvas 433 87 448 590 10;
+#X msg 22 319 bang;
+#X floatatom 307 343 0 0 0 0 - - -;
+#X text 19 37 You can nest entire windows inside Pd boxes (and so on
 \, as deep as you wish.) There are two different ways to do it. First
 \, if you just want to add a room to the house \, so to speak \, type
 ;
-#N canvas 344 151 422 119 sample-subpatch 1;
+#N canvas 17 300 422 119 sample-subpatch 0;
 #X text 39 43 this is a subpatch of the main patch.;
-#X restore 29 85 pd sample-subpatch;
-#X text 201 85 <-- you can give the window a name as an argument;
-#N canvas 0 0 654 340 eager-adder 0;
-#X obj 62 73 inlet;
-#X obj 118 73 inlet;
-#X obj 62 188 outlet;
-#X obj 118 101 t b f;
-#X obj 62 156 +;
-#X text 197 23 this is a sample subpatch which maintains the sum of
+#X restore 22 95 pd sample-subpatch;
+#N canvas 0 22 512 237 eager-adder 0;
+#X obj 22 17 inlet;
+#X obj 78 17 inlet;
+#X obj 22 121 outlet;
+#X obj 78 44 t b f;
+#X obj 22 89 +;
+#X text 15 165 Aside: this shows why \, in Pd and Max \, objects such
+as "+" only trigger on their left inlets: it's easy to build up from
+there \, but if more than one inlet were "hot" \, you wouldn't be able
+to change both of them without firing the calculation twice.;
+#X text 137 100 Because of the two inlets and the one outlet \, the
+containing box (int eh parent patch) has two inlets and one outlet.
+They respect the left-to-right order of the inlet and outlet objects
+in the subpatch.;
+#X text 137 11 This is a sample subpatch which maintains the sum of
 two inputs \, doing the computation when either input changes. IF it's
 the left input \, the "+" object takes care if it \; if the right \,
 the "trigger" object first gives the "+" the new value \, then "bangs"
 the right inlet to make "+" do the computation.;
-#X text 55 232 Aside: this shows why \, in Pd and Max \, objects such
-as "+" only trigger on their left inlets: it's easy to build up from
-there \, but if more than one inlet were "hot" \, you wouldn't be able
-to change both of them without firing the calculation twice.;
-#X text 197 112 Because of the two inlets and the one outlet \, the
-containing box (int eh parent patch) has two inlets and one outlet.
-They respect the left-to-right order of the inlet and outlet objects
-in the subpatch.;
 #X connect 0 0 4 0;
 #X connect 1 0 3 0;
 #X connect 3 0 4 0;
 #X connect 3 1 4 1;
 #X connect 4 0 2 0;
-#X restore 135 185 pd eager-adder;
-#X floatatom 135 158 0 0 0;
-#X floatatom 256 158 0 0 0;
-#X floatatom 135 213 0 0 0;
-#X text 26 235 There is also a facility for making many copies of a
-patch which track any changes you make in the original. The subpatches
-are called abstractions. For example \, here's a simple abstraction
-that sends a number to a "receive" on command:;
-#X obj 29 342 sendnumber 45 cookies;
-#X msg 226 314 bang;
-#X obj 226 341 sendnumber 67 pretzels;
-#X floatatom 519 341 0 0 0;
-#X text 27 553 note that "$1" \, etc \, has a different meaning in
-object boxes (open one of the "sendnumber" abstractions for comments.)
-;
-#X text 26 470 If you change one copy of an abstraction the change
-isn't automatically made on any other copies. You must keep track \,
-save the changes \, and cause Pd to reload the other copies (for example
-\, by closing and reopening the containing patch.);
-#X obj 432 314 r cookies;
-#X obj 519 314 r pretzels;
-#X text 31 107 If you click on the box (in run mode) the subwindow
+#X restore 125 194 pd eager-adder;
+#X floatatom 125 167 0 0 0 0 - - -;
+#X floatatom 206 167 0 0 0 0 - - -;
+#X floatatom 125 222 0 0 0 0 - - -;
+#X obj 22 343 sendnumber 45 cookies;
+#X msg 161 319 bang;
+#X floatatom 374 343 0 0 0 0 - - -;
+#X obj 307 316 r cookies;
+#X obj 374 316 r pretzels;
+#X text 19 120 If you click on the box (in run mode) the subwindow
 appears. Click on the one below to see how you give a subpatch inlets
 and outlets.;
-#X text 332 594 updated for Pd version 0.34;
-#X text 27 372 There is a separate file in this directory named "sendnumber.pd"
-which is loaded every time you type "sendnumber" in a box. Click on
-a "sendnumber" box above to see it. You can make changes in the subpatch
-and save them. The changes will be saved back to sendnumber.pd and
-not as part of this (containing) patch.;
-#X connect 0 0 10 0;
-#X connect 5 0 8 0;
-#X connect 6 0 5 0;
-#X connect 7 0 5 1;
-#X connect 11 0 12 0;
-#X connect 16 0 1 0;
-#X connect 17 0 13 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header subpatch 20 10 1
+18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 568 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.34. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control abstraction;
+#X text 12 65 DESCRIPTION subpatches in Pd;
+#X restore 382 570 pd META;
+#X text 141 95 <-- you can give the window a name as an argument;
+#X text 19 247 There is also a facility for making many copies of a
+patch which track any changes you make in the original. The subpatches
+are called abstractions. For example \, here's a simple abstraction
+that sends a number to a [receive] on command:;
+#X text 19 374 There is a separate file in this directory named "sendnumber.pd"
+which is loaded every time you type "sendnumber" in an object box.
+Click on a "sendnumber" box above to see it. You can make changes in
+the subpatch and save them. The changes will be saved back to sendnumber.pd
+and not as part of this (containing) patch.;
+#X text 19 454 If you change one copy of an abstraction the change
+isn't made on any other copies until you choose to save your changes.
+Keep in mind \, however \, that if you have many copies or if your
+abstraction is fairly large \, it may take awhile for Pd to update
+all the abstractions.;
+#X text 19 520 Also \, note that "\$1" \, etc \, has a different meaning
+in object boxes (open one of the "sendnumber" abstractions for comments.)
+;
+#X obj 161 343 sendnumber 67 pretzels;
+#N canvas 4 464 428 187 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Subpatch- Related Help Documents;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X restore 22 62 pd;
+#X text 19 38 Check out the help patch for:;
+#X text 20 82 For more on the graphical capabilities of subpatches
+\, see:;
+#X text 20 101 manual wherever;
+#X obj 20 121 pddp/pddplink ../5.reference/all_about_canvas_properties.pd
+-text all_about_canvas_properties;
+#X restore 103 570 pd References;
+#X obj 6 570 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 8 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 1;
+#X connect 9 0 23 0;
+#X connect 11 0 1 0;
+#X connect 12 0 10 0;

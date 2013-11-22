@@ -1,113 +1,136 @@
-#N canvas 66 7 617 909 12;
-#X text 164 5 ENVELOPE FOLLOWERS;
-#X text 10 25 The env~ object reports ths RMS signal level over the
+#N canvas 433 83 448 603 10;
+#X text 19 123 Envelope followers are frequently used to detect attacks
+and periods of silence. (There are fancier attack detectors out there
+\, though.) Here is a simple threshold-based attack and rest detector.
+;
+#X obj 102 267 dbtorms;
+#X obj 23 263 osc~ 440;
+#X obj 23 309 env~;
+#X floatatom 78 299 0 0 0 0 - - -;
+#X floatatom 102 244 0 0 0 0 - - -;
+#X msg 342 286 \; pd dsp 1;
+#X obj 110 350 t b f;
+#X floatatom 110 373 0 0 0 0 - - -;
+#X obj 116 418 pack;
+#X obj 116 441 route 0 1;
+#X obj 116 464 > 55;
+#X obj 166 464 < 45;
+#X obj 116 487 sel 1;
+#X obj 166 487 sel 1;
+#X msg 70 498 1;
+#X msg 70 476 0;
+#X obj 116 514 print attack;
+#X obj 110 395 != 0;
+#X obj 23 565 t b f;
+#X floatatom 23 591 0 0 0 0 - - -;
+#X obj 35 641 pack;
+#X obj 35 664 route 0 1;
+#X obj 35 700 sel 1;
+#X msg 14 809 1;
+#X msg 15 832 0;
+#X obj 28 619 != 0;
+#X obj 66 592 < 45;
+#X obj 39 736 timer;
+#X obj 121 665 sel 0;
+#X obj 103 785 sel 0;
+#X obj 53 785 sel 1;
+#X obj 53 826 print rest;
+#X obj 39 759 > 1000;
+#X text 153 373 state -- 1 if waiting for low threshold \,;
+#X text 190 388 0 if we've attained it and now want the;
+#X text 193 404 high one.;
+#X text 180 441 route the RMS value according to state;
+#X text 209 466 if off \, 55 dB means attack. If on \, 45;
+#X text 209 487 dB or less means state changes to off.;
+#X text 123 329 ATTACK DETECTION;
+#X text 33 546 REST DETECTION;
+#X text 98 590 Here we always will test RMS against a low value;
+#X text 123 607 but as before we route the result according to;
+#X text 145 624 our state \, 1 if "resting" \, 0 if not.;
+#X text 161 662 regardless of state \, when RMS isn't low;
+#X text 183 677 reset the timer;
+#X text 180 799 RMS isn't low enough.;
+#X text 108 697 If we're not in rest \, and the RMS is low \,;
+#X text 131 714 check elapsed time sinse RMS last wasn't low.;
+#X text 101 757 If more than 1 second \, report a rest.;
+#X text 148 781 If we're at rest \, pop out of it when;
+#X text 19 176 Both detectors are state machines with two states \,
+on and off. If on \, a test is run to determine whether to turn off
+\, and vice versa. The tests are run at each output of the rms~ object.
+;
+#X text 109 290 note 3.01 dB difference between;
+#X text 109 305 peak and RMS amplitudes.;
+#X obj 342 263 loadbang;
+#X obj 23 286 *~;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header envelope_followers
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 The [env~] object reports ths RMS signal level over the
 last 256 samples (by default) or any other power of 2 that's at least
 twice the block size. The analysis is done in an overlapped fashion
 so that results appear every N/2 points if N is the analysis window
 size. So the larger the window \, the stabler the result and the less
 frequently it appears. Computation time doesn't depend heavily on N.
 ;
-#X text 11 135 Envelope followers are frequently used to detect attacks
-and periods of silence. (There are fancier attack detectors out there
-\, though.) Here is a simple threshold-based attack and rest detector.
-;
-#X obj 102 297 dbtorms;
-#X obj 23 293 osc~ 440;
-#X obj 23 339 env~;
-#X floatatom 78 329 0 0 0 0 - - -;
-#X floatatom 102 274 0 0 0 0 - - -;
-#X msg 451 320 \; pd dsp 1;
-#X obj 119 380 t b f;
-#X floatatom 119 403 0 0 0 0 - - -;
-#X obj 126 458 pack;
-#X obj 126 481 route 0 1;
-#X obj 126 504 > 55;
-#X obj 176 504 < 45;
-#X obj 126 527 sel 1;
-#X obj 176 527 sel 1;
-#X msg 90 538 1;
-#X msg 90 516 0;
-#X obj 126 564 print attack;
-#X obj 119 435 != 0;
-#X obj 24 612 t b f;
-#X floatatom 15 638 0 0 0 0 - - -;
-#X obj 27 688 pack;
-#X obj 27 711 route 0 1;
-#X obj 27 749 sel 1;
-#X msg 6 856 1;
-#X msg 7 879 0;
-#X obj 20 666 != 0;
-#X obj 58 639 < 45;
-#X obj 31 783 timer;
-#X obj 113 712 sel 0;
-#X obj 95 832 sel 0;
-#X obj 45 832 sel 1;
-#X obj 45 873 print rest;
-#X obj 31 806 > 1000;
-#X text 162 403 state -- 1 if waiting for low threshold \,;
-#X text 199 418 0 if we've attained it and now want the;
-#X text 202 434 high one.;
-#X text 209 480 route the RMS value according to state;
-#X text 239 506 if off \, 55 dB means attack. If on \, 45;
-#X text 240 527 dB or less means state changes to off.;
-#X text 132 359 ATTACK DETECTION;
-#X text 40 594 REST DETECTION;
-#X text 100 637 Here we always will test RMS against a low value;
-#X text 125 654 but as before we route the result according to;
-#X text 147 671 our state \, 1 if "resting" \, 0 if not.;
-#X text 163 709 regardless of state \, when RMS isn't low;
-#X text 185 724 reset the timer;
-#X text 202 846 RMS isn't low enough.;
-#X text 120 744 If we're not in rest \, and the RMS is low \,;
-#X text 143 761 check elapsed time sinse RMS last wasn't low.;
-#X text 122 802 If more than 1 second \, report a rest.;
-#X text 170 828 If we're at rest \, pop out of it when;
-#X text 11 201 Both detectors are state machines with two states \,
-on and off. If on \, a test is run to determine whether to turn off
-\, and vice versa. The tests are run at each output of the rms~ object.
-;
-#X text 355 884 updated for Pd version 0.37;
-#X text 109 320 note 3.01 dB difference between;
-#X text 113 336 peak and RMS amplitudes.;
-#X obj 451 297 loadbang;
-#X obj 23 316 *~;
-#X connect 3 0 59 1;
-#X connect 4 0 59 0;
-#X connect 5 0 6 0;
-#X connect 5 0 9 0;
-#X connect 5 0 21 0;
-#X connect 7 0 3 0;
+#X obj 1 870 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION envelope followers;
+#X restore 392 872 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 envelope follower- Related Help Documents;
+#X restore 103 872 pd References;
+#X obj 6 872 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 1 0 56 1;
+#X connect 2 0 56 0;
+#X connect 3 0 4 0;
+#X connect 3 0 7 0;
+#X connect 3 0 19 0;
+#X connect 5 0 1 0;
+#X connect 7 0 8 0;
+#X connect 7 1 9 1;
+#X connect 8 0 18 0;
 #X connect 9 0 10 0;
-#X connect 9 1 11 1;
-#X connect 10 0 20 0;
-#X connect 11 0 12 0;
-#X connect 12 0 13 0;
-#X connect 12 1 14 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 11 0 13 0;
+#X connect 12 0 14 0;
 #X connect 13 0 15 0;
+#X connect 13 0 17 0;
 #X connect 14 0 16 0;
-#X connect 15 0 17 0;
-#X connect 15 0 19 0;
-#X connect 16 0 18 0;
-#X connect 17 0 10 0;
-#X connect 18 0 10 0;
-#X connect 20 0 11 0;
+#X connect 15 0 8 0;
+#X connect 16 0 8 0;
+#X connect 18 0 9 0;
+#X connect 19 0 20 0;
+#X connect 19 1 27 0;
+#X connect 20 0 26 0;
 #X connect 21 0 22 0;
-#X connect 21 1 29 0;
-#X connect 22 0 28 0;
-#X connect 23 0 24 0;
-#X connect 24 0 25 0;
-#X connect 24 1 32 0;
-#X connect 25 0 30 1;
-#X connect 26 0 22 0;
-#X connect 27 0 22 0;
-#X connect 28 0 23 0;
-#X connect 29 0 23 1;
-#X connect 29 0 31 0;
-#X connect 30 0 35 0;
-#X connect 31 0 30 0;
-#X connect 32 0 27 0;
-#X connect 33 0 26 0;
-#X connect 33 0 34 0;
-#X connect 35 0 33 0;
-#X connect 58 0 8 0;
-#X connect 59 0 5 0;
+#X connect 22 0 23 0;
+#X connect 22 1 30 0;
+#X connect 23 0 28 1;
+#X connect 24 0 20 0;
+#X connect 25 0 20 0;
+#X connect 26 0 21 0;
+#X connect 27 0 21 1;
+#X connect 27 0 29 0;
+#X connect 28 0 33 0;
+#X connect 29 0 28 0;
+#X connect 30 0 25 0;
+#X connect 31 0 24 0;
+#X connect 31 0 32 0;
+#X connect 33 0 31 0;
+#X connect 55 0 6 0;
+#X connect 56 0 3 0;

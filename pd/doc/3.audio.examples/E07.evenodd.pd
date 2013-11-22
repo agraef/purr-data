@@ -1,72 +1,71 @@
-#N canvas 187 149 784 591 12;
-#X obj 230 101 f;
-#X obj 264 77 + 1;
-#X obj 264 101 mod 11;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 340 102 729 544 10;
+#X obj 230 131 f;
+#X obj 264 107 + 1;
+#X obj 264 131 mod 11;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array E07 11 float 0;
 #X coords 0 96 11 36 100 160 1;
-#X restore 528 15 graph;
-#X floatatom 320 53 0 10 999 0 - - -;
-#X obj 230 173 mtof;
-#X msg 26 92 1;
-#X obj 27 217 *~;
-#X obj 27 267 cos~;
-#X obj 27 292 hip~ 5;
-#X obj 27 244 +~ 0.1;
-#X floatatom 61 144 0 0 0 0 - - -;
-#X floatatom 166 145 0 0 200 0 - - -;
-#X floatatom 96 144 0 0 999 0 - - -;
-#X floatatom 131 144 0 0 999 0 - - -;
-#X msg 112 267 0;
-#X msg 112 245 0.1;
-#X msg 112 289 0.25;
-#X text 68 108 ADSR controls;
-#X text 106 125 A;
-#X text 141 125 D;
-#X text 176 125 S;
-#X floatatom 320 77 0 1 11 0 - - -;
-#X text 354 79 <--increment;
-#X text 355 56 <--msec;
-#X obj 26 193 *~ 0.01;
-#X obj 230 29 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+#X restore 600 46 graph;
+#X floatatom 320 83 0 10 999 0 - - -;
+#X obj 230 203 mtof;
+#X msg 26 122 1;
+#X obj 27 247 *~;
+#X obj 27 297 cos~;
+#X obj 27 322 hip~ 5;
+#X obj 27 274 +~ 0.1;
+#X floatatom 49 174 0 0 0 0 - - -;
+#X floatatom 137 174 0 0 200 0 - - -;
+#X floatatom 77 174 0 0 999 0 - - -;
+#X floatatom 107 174 0 0 999 0 - - -;
+#X msg 112 297 0;
+#X msg 112 275 0.1;
+#X msg 112 319 0.25;
+#X text 56 138 ADSR controls;
+#X text 83 155 A;
+#X text 113 155 D;
+#X text 143 154 S;
+#X floatatom 320 107 0 1 11 0 - - -;
+#X text 354 109 <--increment;
+#X text 355 86 <--msec;
+#X obj 26 223 *~ 0.01;
+#X obj 230 59 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
-#X obj 27 321 output~;
-#X text 527 562 updated for Pd version 0.37;
-#X obj 26 170 adsr 70 10 90 50 500;
-#X obj 230 150 +;
-#X floatatom 265 150 0 -48 120 0 - - -;
-#X text 299 152 <--transpose;
+#X obj 27 351 output~;
+#X obj 26 200 adsr 70 10 90 50 500;
+#X obj 230 180 +;
+#X floatatom 265 180 0 -48 120 0 - - -;
+#X text 299 182 <--transpose;
 #N canvas 0 0 538 208 make-table 0;
 #X obj 38 71 loadbang;
-#X text 16 11 This patch loads a sequence of pitches into E07. The
+#X text 16 11 This patch loads a sequence of pitches into array1. The
 values are floating-point \, so we could use microtones (60.5 \, for
 example) if we wish.;
-#X msg 38 99 \; E07 0 55 56 57 55 57 61 55 61 63 57 63 \; E07
-yticks 36 12 1 \; E07 ylabel 12 36 48 60 72 84 96;
+#X msg 38 99 \; array1 0 55 56 57 55 57 61 55 61 63 57 63 \; array1
+yticks 36 12 1 \; array1 ylabel 12 36 48 60 72 84 96;
 #X connect 0 0 2 0;
-#X restore 527 195 pd make-table;
-#X obj 176 50 sel 0;
-#X msg 26 69 0;
-#X text 48 125 level;
-#X obj 230 53 metro 130;
-#X obj 60 217 osc~;
-#X text 111 225 symmetry;
-#X text 157 265 even;
-#X text 165 288 odd;
-#X text 147 244 mixed;
-#X obj 230 126 tabread E07;
-#X text 253 26 <--ON/OFF;
-#X text 238 232 This patch uses a stepping sequencer to control a waveshaping
+#X restore 527 225 pd make-table;
+#X obj 176 80 sel 0;
+#X msg 26 99 0;
+#X text 40 155 level;
+#X obj 230 83 metro 130;
+#X obj 60 247 osc~;
+#X text 111 255 symmetry;
+#X text 157 295 even;
+#X text 165 318 odd;
+#X text 147 274 mixed;
+#X obj 230 156 tabread E07;
+#X text 253 56 <--ON/OFF;
+#X text 208 262 This patch uses a stepping sequencer to control a waveshaping
 instrument. A metronome (metro 130) drives a counter (f \, +1 \, and
 mod 11) which counts repeatedly through 11 values which are read from
 the stored table (tabread E07). The values may be read in sequence
 \, by twos or threes \, etc. \, according to the "increment" parameter.
 ;
-#X text 239 328 The metronome also triggers an ADSR envelope \, whose
+#X text 207 337 The metronome also triggers an ADSR envelope \, whose
 parameters may also be changed using the "level" \, "A" \, "D" \, and
 "S" controls.;
-#X text 142 5 SEQUENCED WAVESHAPING SYNTHESIZER;
-#X text 240 380 The synthesis (osc~ \, *~ \, +~ 0.1 \, cos~) is a very
+#X text 142 35 SEQUENCED WAVESHAPING SYNTHESIZER;
+#X text 206 379 The synthesis (osc~ \, *~ \, +~ 0.1 \, cos~) is a very
 simple application of the waveshaping technique. The oscillator (whose
 amplitude depends on the ADSR generator) is used as an index into the
 "cos~" wavetable. An additional offset ("symmetry") controls how the
@@ -75,35 +74,60 @@ zero \, the oscillator reads into the (even) cosine function (producing
 only even harmonics). If the offset is 0.25 \, we read 1/4 wave into
 the cosine function: the result is an odd function and we get odd harmonics.
 Between the two we get mixtures of even and odd.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header sequenced_waveshaping_synthesizer
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 522 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION sequenced waveshaping synthesizer;
+#X restore 392 524 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 waveshaping synthesizer- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 524 pd References;
+#X obj 6 524 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 1 0;
-#X connect 0 0 43 0;
+#X connect 0 0 42 0;
 #X connect 1 0 2 0;
 #X connect 2 0 0 1;
-#X connect 4 0 37 1;
-#X connect 5 0 38 0;
-#X connect 6 0 29 0;
+#X connect 4 0 36 1;
+#X connect 5 0 37 0;
+#X connect 6 0 28 0;
 #X connect 7 0 10 0;
 #X connect 8 0 9 0;
 #X connect 9 0 27 0;
 #X connect 9 0 27 1;
 #X connect 10 0 8 0;
-#X connect 11 0 29 1;
-#X connect 12 0 29 4;
-#X connect 13 0 29 2;
-#X connect 14 0 29 3;
+#X connect 11 0 28 1;
+#X connect 12 0 28 4;
+#X connect 13 0 28 2;
+#X connect 14 0 28 3;
 #X connect 15 0 10 1;
 #X connect 16 0 10 1;
 #X connect 17 0 10 1;
 #X connect 22 0 1 1;
 #X connect 25 0 7 0;
-#X connect 26 0 34 0;
-#X connect 26 0 37 0;
-#X connect 29 0 25 0;
-#X connect 30 0 5 0;
-#X connect 31 0 30 1;
-#X connect 34 0 35 0;
-#X connect 35 0 29 0;
-#X connect 37 0 0 0;
-#X connect 37 0 6 0;
-#X connect 38 0 7 1;
-#X connect 43 0 30 0;
+#X connect 26 0 33 0;
+#X connect 26 0 36 0;
+#X connect 28 0 25 0;
+#X connect 29 0 5 0;
+#X connect 30 0 29 1;
+#X connect 33 0 34 0;
+#X connect 34 0 28 0;
+#X connect 36 0 0 0;
+#X connect 36 0 6 0;
+#X connect 37 0 7 1;
+#X connect 42 0 29 0;

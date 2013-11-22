@@ -1,11 +1,11 @@
-#N canvas 57 74 829 559 12;
+#N canvas 371 99 634 555 10;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array 29-sequence 9 float 3;
 #A 0 110 550 385 495 165 385 495 275 615;
 #X coords 0 500 9 0 200 100 1;
-#X restore 621 42 graph;
-#X obj 27 426 *~;
-#X obj 27 454 hip~ 5;
+#X restore 411 112 graph;
+#X obj 23 406 *~;
+#X obj 23 434 hip~ 5;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array 29-envelope 103 float 1;
 #A 0 -0.0199988 1.0673e-06 0.0500008 0.13 0.16 0.28 0.5 0.6 0.7 0.8
@@ -22,7 +22,7 @@
 0.111111 0.1 0.0888889 0.0777778 0.0666667 0.0555556 0.0444444 0.0333333
 0.0222222 0.0111111 0 -0.0111111;
 #X coords 0 1 102 0 200 100 1;
-#X restore 622 146 graph;
+#X restore 412 216 graph;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array 29-sample 259 float 1;
 #A 0 0.989177 1 0.989177 0.95694 0.903989 0.83147 0.740952 0.634394
@@ -61,23 +61,22 @@
 -0.19512 -0.0490981 0.0979867 0.24295 0.382655 0.514076 0.634369 0.74093
 0.831452 0.903976 0.956931 0.989172 1 0.989181;
 #X coords 0 1 258 -1 200 100 1;
-#X restore 619 281 graph;
-#X text 566 533 updated for Pd version 0.37;
-#X obj 26 218 tabread~ 29-sequence;
-#X obj 106 241 wrap~;
-#X obj 106 265 *~ 100;
-#X obj 106 289 +~ 1;
-#X obj 26 242 phasor~;
-#X obj 26 266 -~ 0.5;
-#X obj 27 377 cos~;
-#X obj 84 336 *~;
-#X obj 28 488 output~;
-#X obj 84 408 tabread4~ 29-sample;
-#X obj 106 313 tabread4~ 29-envelope;
-#X obj 84 360 *~ 128;
-#X obj 84 384 +~ 129;
-#X obj 27 401 +~ 1;
-#X obj 26 194 *~ 9;
+#X restore 409 351 graph;
+#X obj 22 198 tabread~ 29-sequence;
+#X obj 102 221 wrap~;
+#X obj 102 245 *~ 100;
+#X obj 102 269 +~ 1;
+#X obj 22 222 phasor~;
+#X obj 22 246 -~ 0.5;
+#X obj 23 357 cos~;
+#X obj 80 316 *~;
+#X obj 24 468 output~;
+#X obj 80 388 tabread4~ 29-sample;
+#X obj 102 293 tabread4~ 29-envelope;
+#X obj 80 340 *~ 128;
+#X obj 80 364 +~ 129;
+#X obj 23 381 +~ 1;
+#X obj 22 174 *~ 9;
 #N canvas 328 85 609 424 make-tables 0;
 #X msg 109 52 bang;
 #X obj 109 77 t b b;
@@ -114,43 +113,67 @@ then went in and changed it with the mouse afterward.);
 #X connect 9 0 5 1;
 #X connect 10 0 8 0;
 #X connect 11 0 8 0;
-#X restore 689 401 pd make-tables;
-#X text 46 1 ANALOG-SYNTH-STYLE SEQUENCER;
-#X obj 26 170 phasor~ 0.6;
-#X text 97 194 main loop: sawtooth of amplitude 9;
-#X text 218 219 read frequency sequence;
-#X text 162 241 9x original frequency sawtooth;
-#X text 173 266 adjust for reading;
-#X text 346 266 envelope sample;
-#X text 123 336 multiply envelope by audio-frequency sawtooth;
-#X text 147 361 adjust amplitude and center for wavetable;
-#X text 62 428 multiply by raised-cosine smoothing function;
-#X text 478 401 how to make the tables:;
-#X text 27 27 Some control operations can be carried out entirely by
+#X restore 339 501 pd make-tables;
+#X obj 22 150 phasor~ 0.6;
+#X text 93 174 main loop: sawtooth of amplitude 9;
+#X text 214 199 read frequency sequence;
+#X text 158 221 9x original frequency sawtooth;
+#X text 169 246 adjust for reading;
+#X text 292 246 envelope sample;
+#X text 119 316 multiply envelope by audio-frequency sawtooth;
+#X text 143 341 adjust amplitude and center for wavetable;
+#X text 58 408 multiply by raised-cosine smoothing function;
+#X text 198 501 how to make the tables:;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header analog-synth-style_sequencer
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 37 Some control operations can be carried out entirely by
 tilde objects passing audio signals around. Here is an imitation of
-an analog sequencer and envelope generator. A phasor~ loops through
+an analog sequencer and envelope generator. A [phasor~] loops through
 the "sequence" table at 0.6 Hz \, generating 9 frequencies. Simultaneously
 \, by multiplying by 9 and wrapping \, we create a sawtooth at 9*0.6=5.4
 Hz \, which reads a second table for an envelope shape. This becomes
 the grain size for a sampler based on the 18.sampler.looped example
 earlier.;
+#X obj 1 533 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION analog synth-style sequencer;
+#X restore 392 534 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 19 37 links:;
+#X text 7 2 analog synth- Related Help Documents;
+#X restore 103 535 pd References;
+#X obj 6 535 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 1 0 2 0;
-#X connect 2 0 14 0;
-#X connect 2 0 14 1;
-#X connect 6 0 10 0;
+#X connect 2 0 13 0;
+#X connect 2 0 13 1;
+#X connect 5 0 9 0;
+#X connect 6 0 7 0;
 #X connect 7 0 8 0;
-#X connect 8 0 9 0;
-#X connect 9 0 16 0;
+#X connect 8 0 15 0;
+#X connect 9 0 10 0;
+#X connect 10 0 12 0;
 #X connect 10 0 11 0;
-#X connect 11 0 13 0;
-#X connect 11 0 12 0;
-#X connect 12 0 19 0;
-#X connect 13 0 17 0;
-#X connect 15 0 1 1;
-#X connect 16 0 13 1;
-#X connect 17 0 18 0;
-#X connect 18 0 15 0;
-#X connect 19 0 1 0;
-#X connect 20 0 6 0;
-#X connect 20 0 7 0;
-#X connect 23 0 20 0;
+#X connect 11 0 18 0;
+#X connect 12 0 16 0;
+#X connect 14 0 1 1;
+#X connect 15 0 12 1;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 18 0 1 0;
+#X connect 19 0 5 0;
+#X connect 19 0 6 0;
+#X connect 21 0 19 0;

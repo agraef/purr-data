@@ -1,45 +1,69 @@
-#N canvas 266 135 637 523 12;
-#X obj 19 128 +~;
-#X obj 18 209 output~;
-#X text 141 3 NONLINEAR DISTORTION AND DIFFERENCE TONES;
-#X obj 154 171 / 100;
-#X floatatom 154 151 5 0 500 0 - - -;
-#X obj 18 181 clip~ -1 1;
-#X floatatom 42 81 5 0 0 0 - - -;
-#X obj 42 103 osc~ 200;
-#X obj 18 155 *~;
-#X obj 42 35 loadbang;
-#X msg 154 127 50;
-#X obj 154 103 loadbang;
-#X text 385 494 updated for Pd version 0.37;
-#X text 94 80 <-- frequency of second tone;
-#X text 209 151 <-- before clipping;
-#X text 234 134 amplitude of sum;
-#X obj 18 9 osc~ 300;
-#X msg 42 58 225;
-#X text 99 226 This patch demonstrates how nonlinear distortion (also
+#N canvas 433 116 448 504 10;
+#X obj 23 151 +~;
+#X obj 22 232 output~;
+#X obj 158 197 / 100;
+#X floatatom 158 174 5 0 500 0 - - -, f 5;
+#X obj 22 204 clip~ -1 1;
+#X floatatom 46 104 5 0 0 0 - - -, f 5;
+#X obj 46 126 osc~ 200;
+#X obj 22 178 *~;
+#X obj 46 58 loadbang;
+#X msg 158 150 50;
+#X obj 158 126 loadbang;
+#X text 88 103 <-- frequency of second tone;
+#X text 195 174 <-- before clipping;
+#X text 220 157 amplitude of sum;
+#X obj 22 32 osc~ 300;
+#X msg 46 81 225;
+#X text 20 286 This patch demonstrates how nonlinear distortion (also
 known as "waveshaping") can create difference tones from a pair of
 sinusoids. The sinusoids are initially tuned to 225 and 300 Hz \, a
 musical fourth \, and have amplitude of 50 percent (0.5) so that the
 sum is always less than 1 in absolute value. At these settings the
 "clip~" object passes its input through unchanged.;
-#X text 100 344 If the amplitude rises above 50 percent \, the clip~
+#X text 21 372 If the amplitude rises above 50 percent \, the clip~
 object starts altering the signal nonlinearly \, and the result is
 no longer as if the two sinusoids had been processed separately. Instead
 \, they "intermodulate" \, finding a common subharmonic if one exists.
 At 300 and 225 Hz \, the subharmonic is at 75 \, two octaves below
 the upper tone and a twelveth below the lower one. Change the frequency
 of the second tone and you will hear a variety of effects.;
-#X connect 0 0 8 0;
-#X connect 3 0 8 1;
-#X connect 4 0 3 0;
-#X connect 5 0 1 0;
-#X connect 5 0 1 1;
-#X connect 6 0 7 0;
-#X connect 7 0 0 1;
-#X connect 8 0 5 0;
-#X connect 9 0 17 0;
-#X connect 10 0 4 0;
-#X connect 11 0 10 0;
-#X connect 16 0 0 0;
-#X connect 17 0 6 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header nonlinear_distortion_and_difference_tones
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 482 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 25 KEYWORDS;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 65 DESCRIPTION nonlinear distortion and difference tones
+;
+#X restore 392 484 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 difference tones- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 484 pd References;
+#X obj 6 484 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 7 0;
+#X connect 2 0 7 1;
+#X connect 3 0 2 0;
+#X connect 4 0 1 0;
+#X connect 4 0 1 1;
+#X connect 5 0 6 0;
+#X connect 6 0 0 1;
+#X connect 7 0 4 0;
+#X connect 8 0 15 0;
+#X connect 9 0 3 0;
+#X connect 10 0 9 0;
+#X connect 14 0 0 0;
+#X connect 15 0 5 0;

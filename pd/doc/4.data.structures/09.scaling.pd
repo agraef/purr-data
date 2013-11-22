@@ -1,74 +1,119 @@
 #N struct template9b float x float y float w symbol s;
 #N struct template9a float x float y float a float b float c;
-#N canvas 387 17 573 330 12;
-#X text 319 276 updated for Pd version 0.39;
-#N canvas 1 11 363 341 data9 1;
+#N canvas 424 19 448 294 10;
+#N canvas 427 68 363 341 data9 0;
 #X scalar template9b 222 157 26.3158 why? \;;
-#X scalar template9a 149 243 23 57.1429 32 \;;
+#X scalar template9a 149 223 58 57.1429 40 \;;
 #X scalar template9a 84 80 100 20 32 \;;
 #X coords 0 341 1 340 0 0 0;
-#X restore 22 274 pd data9;
-#N canvas 48 362 604 524 template9a 0;
-#X obj 24 19 struct template9a float x float y float a float b float
+#X restore 23 234 pd data9;
+#N canvas 95 8 428 641 template9a 0;
+#X obj 24 34 struct template9a float x float y float a float b float
 c;
-#X obj 31 380 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 22 420 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 31 402 t b b;
-#X obj 210 461 pointer;
-#X msg 60 430 traverse pd-data9 \, bang;
-#X obj 31 486 append template9a x y a b c;
-#X msg 31 462 50 50 30 20 40;
-#X obj 23 115 drawpolygon 0 1 0 10 0 a(0:100)(10:110) -5 a(0:100)(5:105)
+#X obj 22 442 t b b;
+#X obj 181 502 pointer;
+#X msg 49 470 traverse pd-data9 \, bang;
+#X obj 22 526 append template9a x y a b c;
+#X msg 22 502 50 50 30 20 40;
+#X obj 23 112 drawpolygon 0 1 0 10 0 a(0:100)(10:110) -5 a(0:100)(5:105)
 0 a(0:100)(10:110) 5 a(0:100)(5:105);
-#X obj 25 287 drawcurve 0 1 0 -2 0 3 5 3 5 -8 -13 -8 -13 21;
-#X obj 25 247 drawpolygon 0 1 10 0 c(0:100)(10:110) 0 c(0:100)(5:105)
--5 c(0:100)(10:110) 0 c(0:100)(5:105) 5;
-#X obj 25 193 drawpolygon 0 1 7 7 b(0:100)(7:77) b(0:100)(7:77) b(0:100)(0:70)
+#X obj 22 356 drawcurve 0 1 0 -2 0 3 5 3 5 -8 -13 -8 -13 21;
+#X obj 23 185 drawpolygon 0 1 7 7 b(0:100)(7:77) b(0:100)(7:77) b(0:100)(0:70)
 b(0:100)(7:77) b(0:100)(7:77) b(0:100)(7:77) b(0:100)(7:77) b(0:100)(0:70)
 ;
-#X text 23 50 'a' controls an arrow pointing upward. The main segment
+#X text 20 60 'a' controls an arrow pointing upward. The main segment
 goes from (0.10) to (0 \, a+10). Then we hike 5 units down and left
 \, back to the point \, and then 5 units down and right.;
-#X text 28 154 Slightly more complicated construction to make an arrow
+#X text 20 155 Slightly more complicated construction to make an arrow
 at 45 degrees:;
-#X text 25 330 It's a good practice to put a small patch like this
+#X text 19 375 It's a good practice to put a small patch like this
 one in each template that you can use to make the first one (and will
 often find yourself wanting to use again later):;
+#X text 249 485 or \, if you won't be;
+#X text 249 499 using the pointer that;
+#X text 249 513 comes from the outlet;
+#X msg 161 574 scalar template9a 50 50 30 20 40;
+#X text 249 526 of [append] \, send a;
+#X text 249 540 "scalar" message to;
+#X text 249 553 the subpatch:;
+#X obj 161 618 s pd-data9;
+#X text 173 593 (structName fieldOne \, fieldTwo \, etc.);
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Template;
+#X obj 23 304 drawpolygon 0 1 10 0 c(0:100)(10:110)(20) 0 c(0:100)(5:105)(20)
+-5 c(0:100)(10:110)(20) 0 c(0:100)(5:105)(20) 5;
+#X text 20 240 'c' controls the horizontal arrow. Here we introduce
+the "quantum" value \, which can be added in parentheses after the
+scaling coordinates. This quantizes the arrow so that it moves in steps
+of 20 pixels. As of Pd 0.42 you can only set a literal quantum value
+(you can't use a variable).;
 #X connect 1 0 2 0;
 #X connect 2 0 6 0;
 #X connect 2 1 4 0;
 #X connect 3 0 5 5;
 #X connect 4 0 3 0;
 #X connect 6 0 5 0;
-#X restore 21 224 pd template9a;
-#N canvas 353 371 688 314 template9b 0;
-#X obj 351 176 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X connect 16 0 20 0;
+#X restore 23 190 pd template9a;
+#N canvas 220 239 428 329 template9b 0;
+#X obj 23 195 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 351 196 t b b;
-#X obj 567 254 pointer;
-#X msg 360 227 traverse pd-data9 \, bang;
-#X obj 24 19 struct template9b float x float y float w symbol s;
-#X obj 37 54 filledpolygon 900 0 1 w(0:100)(0:38) w(0:100)(0:92) w(0:100)(0:92)
+#X obj 23 215 t b b;
+#X obj 158 267 pointer;
+#X msg 50 237 traverse pd-data9 \, bang;
+#X obj 22 42 struct template9b float x float y float w symbol s;
+#X obj 22 69 filledpolygon 900 0 1 w(0:100)(0:38) w(0:100)(0:92) w(0:100)(0:92)
 w(0:100)(0:38) w(0:100)(0:92) w(0:100)(0:-38) w(0:100)(0:38) w(0:100)(0:-92)
 w(0:100)(0:-38) w(0:100)(0:-92) w(0:100)(0:-92) w(0:100)(0:-38) w(0:100)(0:-92)
 w(0:100)(0:38) w(0:100)(0:-38) w(0:100)(0:92);
-#X msg 351 257 50 50 30;
-#X obj 352 281 append template9b x y w;
-#X obj 36 171 drawsymbol s w(0:100)(10:-90) 10 0;
+#X msg 23 267 50 50 30;
+#X obj 23 289 append template9b x y w;
+#X obj 23 161 drawsymbol s w(0:100)(10:-90) 10 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Template;
 #X connect 0 0 1 0;
 #X connect 1 0 6 0;
 #X connect 1 1 3 0;
 #X connect 2 0 7 3;
 #X connect 3 0 2 0;
 #X connect 6 0 7 0;
-#X restore 21 248 pd template9b;
-#X text 35 7 Screen dimensions can be tailored to specific ranges by
-adding suffixes in the drawing instructions. For example \, in "template9a"
+#X restore 23 212 pd template9b;
+#X text 19 37 Screen dimensions can be tailored to specific ranges
+by adding suffixes in the drawing instructions. For example \, in "template9a"
 \, a coordinate such as "b(0:100)(7:77)" instructs the drawpolygon
 object to rescale b from the range 0-100 to the range 7-77.;
-#X text 39 93 The application is to introduce an offset to a coordinate.
+#X text 20 101 The application is to introduce an offset to a coordinate.
 For example \, the construction "a(0:100)(10:110)" just gives a+10.
 ;
-#X text 35 147 Each of the three arrows of template9a is controlled
+#X text 20 143 Each of the three arrows of template9a is controlled
 by a single parameter (a \, b \, or c) and the entire red octagon in
 template9b likewise.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header scaling_and_quantization
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 272 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS data_structure GUI;
+#X text 12 65 DESCRIPTION scaling and quantization;
+#X restore 392 274 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 scaling- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 274 pd References;
+#X obj 6 274 pddp/pddplink ../5.reference/pddp/help.pd -text help;

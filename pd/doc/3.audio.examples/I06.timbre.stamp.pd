@@ -1,4 +1,4 @@
-#N canvas 72 0 668 530 12;
+#N canvas 433 119 448 494 10;
 #N canvas 147 0 795 617 fft-analysis 0;
 #X obj 94 511 *~;
 #X obj 55 511 *~;
@@ -88,30 +88,29 @@ with the filter input.);
 #X connect 28 0 26 1;
 #X connect 29 0 18 0;
 #X connect 30 0 16 1;
-#X restore 86 444 pd fft-analysis;
-#X text 137 12 CORT&ZACK's SECRET;
-#X text 27 422 filter;
-#X text 29 437 input;
-#X text 232 441 source;
-#X text 233 422 control;
-#X floatatom 53 300 0 0 500 0 - squelch-set -;
-#X obj 53 324 s squelch;
-#X obj 86 468 output~;
-#X msg 157 278 ../sound/bell.aiff;
-#X msg 157 303 ../sound/voice.wav;
-#X msg 157 328 ../sound/voice2.wav;
-#X obj 157 354 s read-sound1;
-#X msg 373 280 ../sound/bell.aiff;
-#X msg 373 305 ../sound/voice.wav;
-#X msg 373 330 ../sound/voice2.wav;
-#X obj 373 355 s read-sound2;
-#X text 386 256 control source;
-#X text 169 255 filter input;
-#X text 255 231 change input sounds;
-#X floatatom 454 409 5 0 0 0 - #0-samp-msec -;
-#X obj 87 394 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X restore 57 384 pd fft-analysis;
+#X text 12 362 filter;
+#X text 14 377 input;
+#X text 170 381 source;
+#X text 171 362 control;
+#X floatatom 22 210 0 0 500 0 - squelch-set -;
+#X obj 22 234 s squelch;
+#X obj 57 408 output~;
+#X msg 137 218 ../sound/bell.aiff;
+#X msg 137 243 ../sound/voice.wav;
+#X msg 137 268 ../sound/voice2.wav;
+#X obj 137 294 s read-sound1;
+#X msg 303 218 ../sound/bell.aiff;
+#X msg 303 243 ../sound/voice.wav;
+#X msg 303 268 ../sound/voice2.wav;
+#X obj 303 294 s read-sound2;
+#X text 316 196 control source;
+#X text 156 196 filter input;
+#X text 215 171 change input sounds;
+#X floatatom 312 349 5 0 0 0 - #0-samp-msec -, f 5;
+#X obj 58 334 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 215 395 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 156 335 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #N canvas 190 43 661 593 test-signals 0;
 #X obj 90 444 line~;
@@ -209,8 +208,8 @@ with the filter input.);
 #X connect 42 0 35 0;
 #X connect 43 0 34 0;
 #X connect 44 0 30 0;
-#X restore 87 415 pd test-signals;
-#X text 104 393 <- record ->;
+#X restore 58 355 pd test-signals;
+#X text 75 333 <- record ->;
 #N canvas 388 86 722 350 insample2 0;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-sample2 62079 float 0;
@@ -251,8 +250,8 @@ with the filter input.);
 #X connect 12 0 9 0;
 #X connect 14 0 6 1;
 #X connect 16 0 10 1;
-#X restore 334 430 pd insample2;
-#N canvas 388 86 722 350 insample1 0;
+#X restore 222 370 pd insample2;
+#N canvas 302 86 722 350 insample1 0;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-sample 155948 float 0;
 #X coords 0 1 155947 -1 400 150 1;
@@ -292,12 +291,12 @@ with the filter input.);
 #X connect 14 0 15 0;
 #X connect 16 0 13 1;
 #X connect 17 0 10 0;
-#X restore 334 408 pd insample1;
-#X floatatom 453 432 5 0 0 0 - #0-samp2-msec -;
+#X restore 222 348 pd insample1;
+#X floatatom 311 372 5 0 0 0 - #0-samp2-msec -, f 5;
 #N canvas 0 110 565 454 hann-window 0;
 #N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-hann 1024 float 0;
-#X coords 0 1 1023 0 300 100 1;
+#X coords 0 1 1024 0 300 100 1;
 #X restore 82 311 graph;
 #X obj 378 165 osc~;
 #X obj 378 190 *~ -0.5;
@@ -343,10 +342,10 @@ and window-msec (analysis window size in seconds and msec).;
 #X connect 19 0 1 0;
 #X connect 19 1 4 0;
 #X connect 19 1 18 0;
-#X restore 334 455 pd hann-window;
-#X text 509 412 sample lengths \,;
-#X text 510 427 msec;
-#X text 27 35 This is a Fourier-based "vocoder" (perhaps better called
+#X restore 222 395 pd hann-window;
+#X text 351 352 sample lengths \,;
+#X text 352 367 msec;
+#X text 19 36 This is a Fourier-based "vocoder" (perhaps better called
 a "timbre stamp") like the one the Convolution brothers use. The "control
 source" is analyzed to get its spectral envelope \, which is then stamped
 onto the "filter input" by adjusting the amplitudes of its Fourier
@@ -354,17 +353,41 @@ transform. The "filter input" is first whitened by the compression
 algorithm from the previous patch in this series. The best value of
 "squelch" to use depends critically on what kind of sounds are used
 for the filter input and the control source.;
-#X text 402 498 updated for Pd version 0.39;
-#X connect 0 0 8 0;
-#X connect 0 0 8 1;
-#X connect 6 0 7 0;
-#X connect 9 0 12 0;
-#X connect 10 0 12 0;
-#X connect 11 0 12 0;
-#X connect 13 0 16 0;
-#X connect 14 0 16 0;
-#X connect 15 0 16 0;
-#X connect 21 0 23 0;
-#X connect 22 0 23 1;
-#X connect 23 0 0 0;
-#X connect 23 1 0 1;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header Cort_&_Zack's_secret
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 472 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION Cort and Zack's secret;
+#X restore 392 474 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Cort and Zack's secret- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 474 pd References;
+#X obj 6 474 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 7 0;
+#X connect 0 0 7 1;
+#X connect 5 0 6 0;
+#X connect 8 0 11 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 12 0 15 0;
+#X connect 13 0 15 0;
+#X connect 14 0 15 0;
+#X connect 20 0 22 0;
+#X connect 21 0 22 1;
+#X connect 22 0 0 0;
+#X connect 22 1 0 1;

@@ -1,16 +1,16 @@
 #N struct template3 float x float y float w float h float q;
-#N canvas 401 39 621 469 12;
-#X floatatom 60 371 0 0 0 0 - - -;
-#X floatatom 60 323 0 0 0 0 - - -;
-#X floatatom 60 275 0 0 0 0 - - -;
-#X floatatom 60 227 0 0 0 0 - - -;
-#X floatatom 324 322 0 0 0 0 - - -;
-#X floatatom 283 322 0 0 0 0 - - -;
-#X floatatom 240 322 0 0 0 0 - - -;
-#X obj 197 274 pointer;
-#X msg 205 249 next;
-#X floatatom 197 322 0 0 0 0 - - -;
-#N canvas 19 29 363 341 data3 1;
+#N canvas 433 123 448 481 10;
+#X floatatom 22 351 0 0 0 0 - - -;
+#X floatatom 22 303 0 0 0 0 - - -;
+#X floatatom 22 255 0 0 0 0 - - -;
+#X floatatom 22 207 0 0 0 0 - - -;
+#X floatatom 286 302 0 0 0 0 - - -;
+#X floatatom 245 302 0 0 0 0 - - -;
+#X floatatom 202 302 0 0 0 0 - - -;
+#X obj 159 254 pointer;
+#X msg 167 229 next;
+#X floatatom 159 302 0 0 0 0 - - -;
+#N canvas 429 68 389 382 data3 1;
 #X scalar template3 18 25 43 18 741 \;;
 #X scalar template3 111 109 75 25 72 \;;
 #X scalar template3 111 32 4 15 163 \;;
@@ -19,62 +19,113 @@
 #X scalar template3 173 221 76 48 763 \;;
 #X scalar template3 250 127 18 36 543 \;;
 #X scalar template3 124 210 78 21 107 \;;
-#X scalar template3 264 183 32 32 178 \;;
+#X scalar template3 264 183 1 33 178 \;;
 #X scalar template3 26 28 56 60 132 \;;
 #X scalar template3 2 202 66 2 808 \;;
-#X scalar template3 246 33 74 51 642 \;;
+#X scalar template3 270 46 74 51 881 \;;
 #X scalar template3 214 226 8 43 180 \;;
 #X scalar template3 57 145 51 58 939 \;;
 #X scalar template3 216 102 36 43 505 \;;
 #X scalar template3 166 86 68 9 614 \;;
 #X scalar template3 144 191 56 28 886 \;;
 #X scalar template3 228 2 62 1 758 \;;
-#X scalar template3 168 169 48 22 644 \;;
+#X scalar template3 168 169 28 23 654 \;;
 #X scalar template3 223 248 73 50 727 \;;
-#X restore 269 425 pd data3;
-#N canvas 100 436 466 223 template3 1;
-#X obj 25 68 filledpolygon q 0 1 0 0 w 0 w h 0 h;
-#X obj 26 163 drawnumber q 0 0 0;
-#X text 22 39 five numeric ("float") fields;
-#X text 25 88 drawing a rectangle \, interior color q \, border black
+#X restore 159 400 pd data3;
+#N canvas 145 268 428 247 template3 0;
+#X obj 25 88 filledpolygon q 0 1 0 0 w 0 w h 0 h;
+#X obj 26 183 drawnumber q 0 0 0;
+#X text 22 59 five numeric ("float") fields;
+#X text 25 108 drawing a rectangle \, interior color q \, border black
 and one unit thick \, through the points (0 \, 0) \, (w \, 0) \, (w
 \, h) \, and (0 \, h). Note that the three points containing variables
 become hot spots for mouse dragging.;
-#X text 26 184 Draw the value of q as an Araboc numeral \, at (0 \,
+#X text 26 204 Draw the value of q as an Araboc numeral \, at (0 \,
 0) \, in black.;
-#X obj 24 19 struct template3 float x float y float w float h float
+#X obj 24 39 struct template3 float x float y float w float h float
 q;
-#X restore 269 446 pd template3;
-#N canvas 313 223 587 367 stuff 0;
-#X obj 352 180 pointer;
-#X obj 352 204 t b b p;
-#X obj 222 333 append template3 x y w h q;
-#X obj 288 9 loadbang;
-#X obj 288 62 t b b b;
-#X msg 331 138 traverse pd-data3;
-#X msg 477 136 \; pd-data3 clear;
-#X msg 240 110 0;
-#X obj 187 136 f;
-#X obj 220 136 + 1;
-#X obj 189 112 until;
-#X obj 201 159 sel 20;
-#X obj 251 159 t b;
-#X msg 290 32 bang;
-#X obj 25 237 random 300;
-#X obj 100 237 random 300;
-#X obj 323 236 random 1000;
-#X obj 177 237 random 80;
-#X obj 252 237 random 80;
-#X obj 101 263 - 30;
-#X obj 354 11 inlet;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 setting scalar data- Related Help Documents;
+#X restore 159 421 pd template3;
+#X msg 159 354 remake;
+#X obj 159 278 get template3 x y w h q;
+#X floatatom 318 302 0 0 0 0 - - -;
+#X obj 22 231 set template3 x;
+#X obj 22 279 set template3 y;
+#X obj 22 327 set template3 w;
+#X obj 22 374 set template3 h;
+#X floatatom 22 398 0 0 0 0 - - -;
+#X obj 22 421 set template3 q;
+#X msg 159 206 traverse pd-data3;
+#X text 213 353 <- click to randomize;
+#X text 19 113 Getting parameter values is as in the previous patch
+\; however \, as you traverse the list with "next" messages the new
+pointers are also sent to the five "set" objects. These have as arguments
+the template name and the name of the field they will set. You can
+drag on the five number boxes (after selecting an object with "traverse"
+and "next" messages) to change its location \, shape \, and color.
+;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header setting_data 20
+10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 19 38 The [set] object allows you to change numeric values.
+In this example \, the template specifies five fields describing the
+(x \, y) location \, width \, height \, and color. A new feature is
+that the color is also getting printed out under the rectangles. This
+is done using the "drawnumber" object in the template.;
+#X obj 1 459 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS data_structure;
+#X text 12 65 DESCRIPTION setting data;
+#X restore 392 461 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 setting scalar data- Related Help Documents;
+#X restore 103 461 pd References;
+#X obj 6 461 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#N canvas 313 68 428 426 init 0;
+#X obj 304 205 pointer;
+#X obj 304 229 t b b p;
+#X obj 190 388 append template3 x y w h q;
+#X obj 171 32 loadbang;
+#X obj 171 66 t b b b;
+#X msg 304 183 traverse pd-data3;
+#X msg 270 91 \; pd-data3 clear;
+#X msg 212 117 0;
+#X obj 171 139 f;
+#X obj 204 139 + 1;
+#X obj 171 117 until;
+#X obj 171 161 sel 20;
+#X obj 221 161 t b;
+#X obj 7 291 random 300;
+#X obj 81 291 random 300;
+#X obj 291 291 random 1000;
+#X obj 155 291 random 80;
+#X obj 223 291 random 80;
+#X obj 81 313 - 30;
+#X obj 235 32 inlet;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Data Structure Initialization;
 #X connect 0 0 1 0;
-#X connect 1 0 14 0;
+#X connect 1 0 13 0;
+#X connect 1 1 14 0;
 #X connect 1 1 15 0;
 #X connect 1 1 16 0;
 #X connect 1 1 17 0;
-#X connect 1 1 18 0;
 #X connect 1 2 2 5;
-#X connect 3 0 13 0;
+#X connect 3 0 4 0;
 #X connect 4 0 10 0;
 #X connect 4 1 5 0;
 #X connect 4 1 7 0;
@@ -88,54 +139,30 @@ q;
 #X connect 11 0 10 1;
 #X connect 11 1 12 0;
 #X connect 12 0 0 0;
-#X connect 13 0 4 0;
-#X connect 14 0 2 0;
-#X connect 15 0 19 0;
-#X connect 16 0 2 4;
-#X connect 17 0 2 2;
-#X connect 18 0 2 3;
-#X connect 19 0 2 1;
-#X connect 20 0 13 0;
-#X restore 269 404 pd stuff;
-#X msg 269 379 remake;
-#X obj 197 298 get template3 x y w h q;
-#X floatatom 356 322 0 0 0 0 - - -;
-#X obj 60 251 set template3 x;
-#X obj 60 299 set template3 y;
-#X obj 60 347 set template3 w;
-#X obj 60 394 set template3 h;
-#X floatatom 60 418 0 0 0 0 - - -;
-#X obj 60 441 set template3 q;
-#X msg 197 226 traverse pd-data3;
-#X text 46 5 The "set" object allows you to change numeric values.
-In this example \, the template specifies five fields describing the
-(x \, y) location \, width \, height \, and color. A new feature is
-that the color is also getting printed out under the rectangles. This
-is done using the "drawnumber" object in the template.;
-#X text 323 378 <- click to randomize;
-#X text 45 99 Getting parameter values is as in the previous patch
-\; however \, as you traverse the list with "next" messages the new
-pointers are also sent to the five "set" objects. These have as arguments
-the template name and the name of the field they will set. You can
-drag on the five number boxes (after selecting an object with "traverse"
-and "next" messages) to change its location \, shape \, and color.
-;
-#X connect 0 0 19 0;
-#X connect 1 0 18 0;
-#X connect 2 0 17 0;
-#X connect 3 0 16 0;
-#X connect 7 0 14 0;
+#X connect 13 0 2 0;
+#X connect 14 0 18 0;
+#X connect 15 0 2 4;
+#X connect 16 0 2 2;
+#X connect 17 0 2 3;
+#X connect 18 0 2 1;
+#X connect 19 0 4 0;
+#X restore 159 379 pd init;
+#X connect 0 0 18 0;
+#X connect 1 0 17 0;
+#X connect 2 0 16 0;
+#X connect 3 0 15 0;
+#X connect 7 0 13 0;
+#X connect 7 0 15 1;
 #X connect 7 0 16 1;
 #X connect 7 0 17 1;
 #X connect 7 0 18 1;
-#X connect 7 0 19 1;
-#X connect 7 0 21 1;
+#X connect 7 0 20 1;
 #X connect 8 0 7 0;
-#X connect 13 0 12 0;
-#X connect 14 0 9 0;
-#X connect 14 1 6 0;
-#X connect 14 2 5 0;
-#X connect 14 3 4 0;
-#X connect 14 4 15 0;
-#X connect 20 0 21 0;
-#X connect 22 0 7 0;
+#X connect 12 0 31 0;
+#X connect 13 0 9 0;
+#X connect 13 1 6 0;
+#X connect 13 2 5 0;
+#X connect 13 3 4 0;
+#X connect 13 4 14 0;
+#X connect 19 0 20 0;
+#X connect 21 0 7 0;

@@ -1,37 +1,57 @@
-#N canvas 73 190 702 512 12;
-#X obj 64 65 osc~ 440;
-#X obj 64 283 dac~;
-#X text 145 66 <-- 440 Hz. sine wave at full blast;
-#X msg 431 7 \; pd dsp 1;
-#X msg 514 7 \; pd dsp 0;
-#X text 456 45 ON;
-#X text 534 43 OFF;
-#X text 164 18 CONTROLLING AMPLITUDE;
-#X text 35 327 Amplitudes of audio signals can have any reasonable
+#N canvas 433 136 448 442 10;
+#X obj 22 42 osc~ 440;
+#X obj 22 225 dac~;
+#X text 103 43 <-- 440 Hz. sine wave at full blast;
+#X text 19 271 Amplitudes of audio signals can have any reasonable
 range \, but when you output a signal via the dac~ object \, the samples
 should range between -1 and +1. Values out of that range will be "clipped."
 ;
-#X obj 64 202 *~ 0;
-#X floatatom 107 165 0 0 0 0 - - -;
-#X obj 95 132 dbtorms;
-#X floatatom 95 100 0 0 80 0 - - -;
-#X text 141 100 <-- set amplitude here in dB;
-#X text 211 133 <-- this converts dB to linear units;
-#X text 210 164 <-- this shows the linear gain;
-#X text 116 204 <-- multiply the sine wave by the gain \, reducing
-its amplitude. You can also use the "*~" object to multiply two signals.
+#X obj 22 166 *~ 0;
+#X floatatom 65 136 0 0 0 0 - - -;
+#X obj 53 103 dbtorms;
+#X floatatom 53 71 0 0 80 0 - - -;
+#X text 99 71 <-- set amplitude here in dB;
+#X text 109 104 <-- this converts dB to linear units;
+#X text 108 135 <-- this shows the linear gain;
+#X text 74 167 <-- multiply the sine wave by the gain \, reducing its
+amplitude. You can also use the "*~" object to multiply two signals.
 The "0" argument here instructs it that we'll just send it messages
 to set the multiplier.;
-#X text 35 396 Here we calculate a gain for the multiplier (*~) using
+#X text 19 330 Here we calculate a gain for the multiplier (*~) using
 a "dbtorms" object (acronym for "dB to RMS"). 100 dB is normalized
 to one \, and zero dB artificially outputs a true 0;
-#X text 34 452 Pd assumes you have a two channel audio system unless
+#X text 19 376 Pd assumes you have a two channel audio system unless
 you tell it otherwise.;
-#X text 440 486 updated for Pd version 0.33;
-#X text 114 282 <-- and out. We're sending to both channels now.;
-#X connect 0 0 9 0;
-#X connect 9 0 1 0;
-#X connect 9 0 1 1;
-#X connect 11 0 9 1;
-#X connect 11 0 10 0;
-#X connect 12 0 11 0;
+#X text 72 225 <-- and out. We're sending to both channels now.;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header controlling_amplitude
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 352 32 ../5.reference/pddp/dsp-reminder;
+#X obj 1 420 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.33. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 25 KEYWORDS signal conversion;
+#X text 12 65 DESCRIPTION controlling amplitude;
+#X restore 392 422 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 controlling amplitude- Related Help Documents;
+#X text 19 37 fill in later;
+#X restore 103 422 pd References;
+#X obj 6 422 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 4 0;
+#X connect 4 0 1 0;
+#X connect 4 0 1 1;
+#X connect 6 0 4 1;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;

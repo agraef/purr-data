@@ -1,26 +1,26 @@
-#N canvas 207 159 864 663 12;
-#X obj 327 413 line~;
-#X obj 55 456 cos~;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 341 22 692 622 10;
+#X obj 283 346 line~;
+#X obj 21 387 cos~;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array pulse-output 882 float 0;
 #X coords 0 1 882 -1 200 130 1;
-#X restore 627 339 graph;
-#X obj 327 390 pack 0 50;
-#X floatatom 327 344 0 0 0 0 - - -;
-#X obj 55 355 -~ 0.5;
-#X obj 55 410 *~;
-#X obj 327 367 / 10;
-#X obj 55 433 clip~ -0.5 0.5;
-#X text 327 322 bandwidth;
-#X obj 327 436 +~ 1;
-#X obj 55 479 +~ 1;
-#X obj 206 491 cos~;
-#X obj 56 547 *~;
-#X floatatom 228 346 4 0 0 0 - - -;
-#X obj 228 366 / 10;
-#X text 627 472 --- 0.02 seconds ---;
-#X obj 206 465 *~;
-#N canvas 129 316 777 218 graph 1;
+#X restore 447 394 graph;
+#X obj 283 323 pack 0 50;
+#X floatatom 283 277 0 0 0 0 - - -;
+#X obj 21 286 -~ 0.5;
+#X obj 21 341 *~;
+#X obj 283 300 / 10;
+#X obj 21 364 clip~ -0.5 0.5;
+#X text 264 254 bandwidth;
+#X obj 283 369 +~ 1;
+#X obj 21 410 +~ 1;
+#X obj 172 422 cos~;
+#X obj 22 478 *~;
+#X floatatom 188 277 4 0 0 0 - - -, f 4;
+#X obj 188 297 / 10;
+#X text 477 527 --- 0.02 seconds ---;
+#X obj 172 396 *~;
+#N canvas 129 316 777 218 graph 0;
 #X obj 70 76 inlet~;
 #X obj 662 76 inlet;
 #X obj 67 143 tabwrite~ pulse-output;
@@ -36,58 +36,81 @@
 #X connect 1 0 7 0;
 #X connect 3 0 5 0;
 #X connect 4 0 6 0;
-#X restore 100 572 pd graph;
-#X obj 228 412 line~;
-#X obj 228 389 pack 0 50;
-#N canvas 0 0 450 300 graph3 0;
+#X restore 66 503 pd graph;
+#X obj 188 343 line~;
+#X obj 188 320 pack 0 50;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array carrier 882 float 0;
 #X coords 0 1 881 -1 200 140 1;
-#X restore 627 188 graph;
-#N canvas 0 0 450 300 graph4 0;
+#X restore 447 223 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array window 882 float 0;
 #X coords 0 1 881 -1 200 140 1;
-#X restore 628 35 graph;
-#X text 204 573 <-- graph;
-#X floatatom 55 310 4 0 0 0 - - -;
-#X obj 55 331 phasor~ 100;
-#X text 31 2 WINDOWED PACKETS;
-#X text 51 266 fundamental;
-#X text 206 260 center;
-#X text 204 279 freq. (in;
-#X text 203 298 tenths of;
-#X text 202 318 fundamental);
-#X text 119 493 window;
-#X text 241 469 magnified phase;
-#X text 283 509 desired center frequency;
-#X text 255 492 <--this cosine goes at the;
-#X text 284 528 but its phase is reset each;
-#X text 282 547 fundamental period.;
-#X text 28 32 The simpler of two techniques for making slidable center
+#X restore 447 55 graph;
+#X text 170 504 <-- graph;
+#X floatatom 21 241 4 0 0 0 - - -, f 4;
+#X obj 21 262 phasor~ 100;
+#X text 18 202 fundamental;
+#X text 168 210 center;
+#X text 168 225 freq. (in;
+#X text 168 239 tenths of;
+#X text 168 254 fundamental);
+#X text 85 424 window;
+#X text 207 400 magnified phase;
+#X text 249 440 desired center frequency;
+#X text 221 423 <--this cosine goes at the;
+#X text 250 459 but its phase is reset each;
+#X text 248 478 fundamental period.;
+#X text 19 36 The simpler of two techniques for making slidable center
 frequencies is to synthesize enveloped sinusoidal wave packets. The
 packets should repeat at the fundamental frequency \, but the frequency
 of the packet itself controls the center frequency of the formant.
 The length of the packet varies inversely with bandwidth.;
-#X obj 55 604 output~;
-#X obj 55 580 hip~;
-#X obj 182 573 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+#X obj 21 535 output~;
+#X obj 21 511 hip~;
+#X obj 148 504 bng 18 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X text 601 635 updated for Pd version 0.37;
-#X obj 55 502 *~ 0.5;
-#X text 831 161 -1;
-#X text 833 31 1;
-#X text 831 314 -1;
-#X text 835 184 1;
-#X text 832 458 -1;
-#X text 835 333 1;
-#X text 26 132 In the patch below \, the "clip~" followed by "cos~"
+#X obj 21 433 *~ 0.5;
+#X text 650 181 -1;
+#X text 652 51 1;
+#X text 651 349 -1;
+#X text 655 219 1;
+#X text 652 513 -1;
+#X text 655 388 1;
+#X text 18 111 In the patch below \, the "clip~" followed by "cos~"
 and "+~ 1" is the enveloping ("windowing") function \, which appears
 in the top graph. The carrier \, on the other hand \, is a broken sinusoid
 made by amplifying the phasor~ (the "*~" controlled by "center freq.")
 and taking the cos~ of the result. The "breaks" in the sinusoid only
 occur when the enveloping signal is zero.;
-#X text 105 464 raised;
-#X text 113 479 cosine;
-#X text 51 285 frequency;
+#X text 71 395 raised;
+#X text 79 410 cosine;
+#X text 18 217 frequency;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header windowed_packets
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 600 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.37. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION windowed packets;
+#X restore 392 602 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 windowed packets- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 602 pd References;
+#X obj 6 602 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X connect 0 0 10 0;
 #X connect 1 0 11 0;
 #X connect 3 0 0 0;
@@ -98,11 +121,11 @@ occur when the enveloping signal is zero.;
 #X connect 7 0 3 0;
 #X connect 8 0 1 0;
 #X connect 10 0 6 1;
-#X connect 11 0 43 0;
+#X connect 11 0 41 0;
 #X connect 12 0 13 1;
 #X connect 12 0 18 2;
 #X connect 13 0 18 0;
-#X connect 13 0 40 0;
+#X connect 13 0 39 0;
 #X connect 14 0 15 0;
 #X connect 15 0 20 0;
 #X connect 17 0 12 0;
@@ -110,8 +133,8 @@ occur when the enveloping signal is zero.;
 #X connect 20 0 19 0;
 #X connect 24 0 25 0;
 #X connect 25 0 5 0;
-#X connect 40 0 39 0;
-#X connect 40 0 39 1;
-#X connect 41 0 18 3;
-#X connect 43 0 13 0;
-#X connect 43 0 18 1;
+#X connect 39 0 38 0;
+#X connect 39 0 38 1;
+#X connect 40 0 18 3;
+#X connect 41 0 13 0;
+#X connect 41 0 18 1;

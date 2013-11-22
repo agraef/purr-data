@@ -1,35 +1,32 @@
-#N canvas 111 30 606 531 12;
-#N canvas 0 0 450 300 graph1 0;
+#N canvas 387 37 514 475 10;
+#N canvas 0 0 450 300 (subpatch) 0;
 #X array \$0-sum 882 float 0;
 #X coords 0 0.5 881 -0.5 200 130 1;
-#X restore 382 119 graph;
-#X text 381 257 ---- 0.02 seconds ----;
-#X text 350 505 updated for Pd version 0.39;
-#X obj 46 242 output~;
-#X obj 140 276 tabwrite~ \$0-sum;
-#X obj 130 107 / 100;
-#X floatatom 130 86 4 0 100 0 - - -;
-#X obj 206 108 / 100;
-#X floatatom 206 87 4 0 100 0 - - -;
-#X obj 151 228 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+#X restore 302 99 graph;
+#X text 331 233 ---- 0.02 seconds ----;
+#X obj 54 246 output~;
+#X obj 149 273 tabwrite~ \$0-sum;
+#X obj 131 102 / 100;
+#X floatatom 131 81 4 0 100 0 - - -, f 4;
+#X obj 207 102 / 100;
+#X floatatom 207 81 4 0 100 0 - - -, f 4;
+#X obj 160 228 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X obj 151 250 metro 193;
-#X obj 19 95 phasor~;
-#X floatatom 19 74 5 0 0 0 - - -;
-#X text 11 51 frequency;
-#X text 126 50 SLOPES (percent);
-#X obj 108 137 *~;
-#X obj 19 129 *~ -1;
-#X obj 19 154 +~ 1;
-#X obj 184 156 *~;
-#X obj 108 189 min~;
-#X text 341 118 0.5;
-#X text 338 237 -0.5;
-#X text 30 4 Making waveforms with corners by specifying line segment
-slopes;
-#X text 136 67 up;
-#X text 209 68 down;
-#X text 29 317 Occasionally a second method for making corners is more
+#X obj 160 250 metro 193;
+#X obj 27 89 phasor~;
+#X floatatom 27 68 5 0 0 0 - - -, f 5;
+#X text 19 45 frequency;
+#X text 134 44 SLOPES (percent);
+#X obj 116 131 *~;
+#X obj 27 120 *~ -1;
+#X obj 27 145 +~ 1;
+#X obj 192 180 *~;
+#X obj 116 213 min~;
+#X text 269 95 0.5;
+#X text 266 216 -0.5;
+#X text 135 61 up;
+#X text 206 61 down;
+#X text 24 310 Occasionally a second method for making corners is more
 convenient. Here we specify the slopes of the rising and falling segments
 (as always \, in units per cycle). We then make a triangle wave with
 a corner at (0 \, 0) and another one \, placed somewhere within the
@@ -39,18 +36,44 @@ and t the falling one \, both as positive numbers). The y value is
 st/(s+t). If we wish instead to specify the corner location (x \, y)
 (with x in cycles \, 0<x<1) we set s = y/x and t = y/(1-x). The DC
 value is y/2.;
-#X connect 5 0 15 1;
-#X connect 6 0 5 0;
-#X connect 7 0 18 1;
-#X connect 8 0 7 0;
-#X connect 9 0 10 0;
-#X connect 10 0 4 0;
-#X connect 11 0 15 0;
-#X connect 11 0 16 0;
-#X connect 12 0 11 0;
-#X connect 15 0 19 0;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header making_waveforms_with_corners...
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X text 80 23 ... by specifying line segment slopes;
+#X obj 1 453 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS signal;
+#X text 12 65 DESCRIPTION making waveforms with corners;
+#X restore 392 455 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 waveforms with corners- Related Help Documents;
+#X text 19 37 links:;
+#X restore 103 455 pd References;
+#X obj 6 455 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 4 0 14 1;
+#X connect 5 0 4 0;
+#X connect 6 0 17 1;
+#X connect 7 0 6 0;
+#X connect 8 0 9 0;
+#X connect 9 0 3 0;
+#X connect 10 0 14 0;
+#X connect 10 0 15 0;
+#X connect 11 0 10 0;
+#X connect 14 0 18 0;
+#X connect 15 0 16 0;
 #X connect 16 0 17 0;
-#X connect 17 0 18 0;
-#X connect 18 0 19 1;
-#X connect 19 0 3 0;
-#X connect 19 0 4 0;
+#X connect 17 0 18 1;
+#X connect 18 0 2 0;
+#X connect 18 0 3 0;

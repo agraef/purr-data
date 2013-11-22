@@ -1,59 +1,88 @@
-#N canvas 538 239 665 516 12;
-#X text 395 489 updated for Pd version 0.26;
-#X obj 87 148 select 1 2;
-#X floatatom 87 120 0 0 0;
-#X obj 87 214 print select-1;
-#X obj 119 194 print select-2;
-#X obj 152 171 print select-3;
-#X floatatom 313 122 0 0 0;
-#X obj 313 155 pack;
-#X obj 313 182 route 1 2;
-#X obj 353 131 t b f;
-#X floatatom 353 107 0 0 0;
-#X obj 371 210 unpack;
-#X floatatom 313 210 0 0 0;
-#X floatatom 342 210 0 0 0;
-#X floatatom 371 233 0 0 0;
-#X floatatom 409 234 0 0 0;
-#X text 30 20 Pd provides at least four objects for doing conditioonal
-computations. The "select" object tests its input against its argumt(s)
-\, and outputs "bang" when they match. The "route" object works similarly
-but also copies data. In other wors \, "route" takes a list \, tests
+#N canvas 433 105 448 537 10;
+#X obj 23 158 select 1 2;
+#X floatatom 23 130 0 0 0 0 - - -;
+#X obj 23 235 print select-1;
+#X obj 51 208 print select-2;
+#X obj 80 181 print select-3;
+#X floatatom 243 150 0 0 0 0 - - -;
+#X obj 243 183 pack;
+#X obj 243 207 route 1 2;
+#X obj 273 151 t b f;
+#X floatatom 273 127 0 0 0 0 - - -;
+#X obj 294 235 unpack;
+#X floatatom 243 235 0 0 0 0 - - -;
+#X floatatom 268 235 0 0 0 0 - - -;
+#X floatatom 294 258 0 0 0 0 - - -;
+#X floatatom 327 256 0 0 0 0 - - -;
+#X floatatom 24 330 0 0 0 0 - - -;
+#X obj 24 355 spigot;
+#X floatatom 57 330 0 0 0 0 - - -;
+#X floatatom 24 379 0 0 0 0 - - -;
+#X text 87 331 <-- nonzero to open;
+#X text 56 379 if open \, messages coming in at left are sent to output.
+;
+#X floatatom 171 440 0 0 0 0 - - -;
+#X floatatom 171 489 0 0 0 0 - - -;
+#X obj 171 465 moses 5;
+#X floatatom 210 489 0 0 0 0 - - -;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header conditional 20 10
+1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 515 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 135 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 115 AUTHOR Miller Puckette;
+#X text 12 95 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 155 HELP_PATCH_AUTHORS Updated for release 0.26. Jonathan
+Wilkes revised the patch to conform to the PDDP template for Pd version
+0.42.;
+#X text 12 25 KEYWORDS control;
+#X text 12 65 DESCRIPTION creating conditional branches with control
+object;
+#X restore 382 517 pd META;
+#X text 20 283 You also get [spigot] which turns a flow of messages
+on and off (like the [gate] object in Max \, but with the inputs reversed):
+;
+#X text 21 405 And finally \, [moses] sends numbers to the left if
+they're less than the argument \, right otherwise:;
+#N canvas 21 442 428 143 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 Conditional- Related Help Documents;
+#X text 25 42 For very powerful conditionals \, see the [expr] object.
+;
+#X obj 33 66 expr;
+#X obj 31 96 pddp/pddplink ../5.reference/all_about_expr_if.pd -text
+doc/5.reference/all_about_expr_if.pd;
+#X restore 103 517 pd References;
+#X obj 6 517 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X text 20 38 Pd provides at least four objects for doing conditional
+computations. The [select] object tests its input against its argument(s)
+\, and outputs a "bang" when they match. The [route] object works similarly
+but also copies data. In other words \, [route] takes a list \, tests
 its first element \, and conditionally passes on the rest of the list.
 ;
-#X text 56 262 You also get "spigot" which turns a flow of messages
-on and off (like the Gate object in Max \, but with the inputs reversed):
-;
-#X floatatom 125 316 0 0 0;
-#X obj 125 341 spigot;
-#X floatatom 162 316 0 0 0;
-#X floatatom 125 365 0 0 0;
-#X text 192 317 <-- nonzero to open;
-#X text 157 365 if open \, messages coming in at left are sent to output.
-;
-#X text 55 396 And finally \, "moses" sends numbers to the left if
-they're less than the argument \, right otherwise:;
-#X floatatom 125 427 0 0 0;
-#X floatatom 125 476 0 0 0;
-#X obj 125 452 moses 5;
-#X floatatom 169 476 0 0 0;
-#X connect 1 0 3 0;
-#X connect 1 1 4 0;
-#X connect 1 2 5 0;
-#X connect 2 0 1 0;
+#X connect 0 0 2 0;
+#X connect 0 1 3 0;
+#X connect 0 2 4 0;
+#X connect 1 0 0 0;
+#X connect 5 0 6 0;
 #X connect 6 0 7 0;
-#X connect 7 0 8 0;
-#X connect 8 0 12 0;
-#X connect 8 1 13 0;
-#X connect 8 2 11 0;
-#X connect 9 0 7 0;
-#X connect 9 1 7 1;
-#X connect 10 0 9 0;
-#X connect 11 0 14 0;
-#X connect 11 1 15 0;
-#X connect 18 0 19 0;
-#X connect 19 0 21 0;
-#X connect 20 0 19 1;
-#X connect 25 0 27 0;
-#X connect 27 0 26 0;
-#X connect 27 1 28 0;
+#X connect 7 0 11 0;
+#X connect 7 1 12 0;
+#X connect 7 2 10 0;
+#X connect 8 0 6 0;
+#X connect 8 1 6 1;
+#X connect 9 0 8 0;
+#X connect 10 0 13 0;
+#X connect 10 1 14 0;
+#X connect 15 0 16 0;
+#X connect 16 0 18 0;
+#X connect 17 0 16 1;
+#X connect 21 0 23 0;
+#X connect 23 0 22 0;
+#X connect 23 1 24 0;
