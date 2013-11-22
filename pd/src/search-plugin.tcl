@@ -171,6 +171,7 @@ proc ::dialog_search::fff_navigate {w dir} {
 
 proc ::dialog_search::create_dialog {mytoplevel} {
     global pd_nt
+    global linux_wm_hlcolor
     variable searchfont
     variable selected_file
     variable genres [list [_ "All documents"] \
@@ -189,7 +190,7 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     wm geometry $mytoplevel 600x550+0+30
     wm minsize $mytoplevel 230 360
     # tweak: get rid of arrow so the combobox looks like a simple entry widget
-    ttk::style configure Entry.TCombobox -arrowsize 0 -highlightcolor $linux_wm_hlcolor
+    ttk::style configure Entry.TCombobox -highlightcolor $linux_wm_hlcolor
     ttk::style configure Genre.TCombobox
     ttk::style configure Search.TButton
     ttk::style configure Search.TCheckbutton
@@ -204,16 +205,19 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     	   option add *[string trim "$mytoplevel.$combobox" .]*Listbox.font menufont
         }
     }
+    #foreach combobox {searchtextentry f.genrebox} {
+    #   option add *[string trim "$mytoplevel.$combobox" .]*Listbox.selectbackground $linux_wm_hlcolor
+    #}
     ttk::frame $mytoplevel.f -padding 3
     ttk::combobox $mytoplevel.f.searchtextentry \
         -textvar ::dialog_search::searchtext \
 	-font "$searchfont -12" -style "Entry.TCombobox" -cursor "xterm"
-    ttk::button $mytoplevel.f.searchbutton -text [_ "Search"] -takefocus 0 \
+    ttk::button $mytoplevel.f.searchbutton -text [_ "Search"] -takefocus 1 \
 	-command ::dialog_search::search -style Search.TButton
     ttk::combobox $mytoplevel.f.genrebox -values $genres -state readonly \
-	-style "Genre.TCombobox"
+	-style "Genre.TCombobox" -takefocus 1
     $mytoplevel.f.genrebox current 0
-    ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground "#0000ff" \
+    ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground $linux_wm_hlcolor \
 	-anchor center -style Foo.TLabel
     text $mytoplevel.navtext -font "$searchfont -12" -height 1 -bd 0 -highlightthickness 0\
 	-padx 8 -pady 3 -bg white -fg black
@@ -271,7 +275,7 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     $mytoplevel.resultstext tag configure intro_libdirs -font "$searchfont -12"
     # make tags for both the results and the nav text widgets
     foreach textwidget [list "$mytoplevel.resultstext" "$mytoplevel.navtext"] {
-        $textwidget tag configure link -foreground "#0000ff"
+        $textwidget tag configure link -foreground $linux_wm_hlcolor
         $textwidget tag bind link <Enter> "$textwidget configure \
             -cursor hand2"
         $textwidget tag bind link <Leave> "$textwidget configure \
@@ -393,7 +397,9 @@ proc ::dialog_search::create_dialog {mytoplevel} {
         "::dialog_search::toggle_fff_bar $mytoplevel; break"
 
     # Add state and set focus
-    $mytoplevel.f.searchtextentry insert 0 [_ "Enter search terms"]
+    if {$::dialog_search::searchtext == ""} {
+        $mytoplevel.f.searchtextentry insert 0 [_ "Enter search terms"]
+    }
     $mytoplevel.f.searchtextentry selection range 0 end
     # go ahead and set tags for the default genre
     filter_results $mytoplevel.f.genrebox $mytoplevel.resultstext
