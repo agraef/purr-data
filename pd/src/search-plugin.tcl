@@ -190,7 +190,8 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     wm geometry $mytoplevel 600x550+0+30
     wm minsize $mytoplevel 230 360
     # tweak: get rid of arrow so the combobox looks like a simple entry widget
-    ttk::style configure Entry.TCombobox -highlightcolor $linux_wm_hlcolor
+    ttk::style configure EntryOut.TCombobox -selectbackground lightgray
+    ttk::style configure Entry.TCombobox -selectbackground $linux_wm_hlcolor
     ttk::style configure Genre.TCombobox
     ttk::style configure GenreFocused.TCombobox
     ttk::style map GenreFocused.TCombobox -fieldbackground [list readonly $linux_wm_hlcolor]
@@ -231,11 +232,11 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     ttk::label $mytoplevel.statusbar -text [_ "Pd-L2Ork Search"] -justify left \
         -padding {4 4 4 4}
 
-    grid $mytoplevel.f.searchtextentry -column 0 -columnspan 3 -row 0 -padx 3 \
+    grid $mytoplevel.f.searchtextentry -column 0 -columnspan 3 -row 0 -padx 2 \
         -pady 2 -sticky ew
-    grid $mytoplevel.f.searchbutton -column 3 -columnspan 2 -row 0 -padx 3 \
+    grid $mytoplevel.f.searchbutton -column 3 -columnspan 2 -row 0 -padx 2 -pady 2 \
         -sticky ew
-    grid $mytoplevel.f.genrebox -column 0 -columnspan 3 -row 1 -padx 3 -sticky w
+    grid $mytoplevel.f.genrebox -column 0 -columnspan 3 -row 1 -padx 2 -pady 2 -sticky w
     grid $mytoplevel.f.advancedlabel -column 3 -columnspan 2 -row 1 -sticky ew
     grid $mytoplevel.f -column 0 -columnspan 5 -row 0 -sticky ew
     grid $mytoplevel.navtext -column 0 -columnspan 5 -row 2 -sticky nsew
@@ -372,6 +373,8 @@ proc ::dialog_search::create_dialog {mytoplevel} {
 	"::dialog_search::ctrl_bksp $mytoplevel.f.searchtextentry"
     bind $mytoplevel.f.searchtextentry <$::modifier-Key-a> \
         "$mytoplevel.f.searchtextentry selection range 0 end; break"
+    bind $mytoplevel.f.searchtextentry <FocusIn> "$mytoplevel.f.searchtextentry configure -style Entry.TCombobox"
+    bind $mytoplevel.f.searchtextentry <FocusOut> "$mytoplevel.f.searchtextentry configure -style EntryOut.TCombobox"
     bind $mytoplevel.f.searchbutton <FocusIn> "$mytoplevel.statusbar configure -text \"Search\""
     bind $mytoplevel.f.searchbutton <FocusOut> "$mytoplevel.statusbar configure -text \"\""
     bind $mytoplevel.f.searchbutton <Enter> "$mytoplevel.statusbar configure -text \"Search\""
@@ -382,8 +385,8 @@ proc ::dialog_search::create_dialog {mytoplevel} {
         \"Filter the search results by category\"; $mytoplevel.f.genrebox configure -style GenreFocused.TCombobox"
     bind $mytoplevel.f.genrebox <FocusOut> "$mytoplevel.statusbar configure -text \"\"; $mytoplevel.f.genrebox configure -style Genre.TCombobox"
     bind $mytoplevel.f.genrebox <Enter> "$mytoplevel.statusbar configure -text \
-        \"Filter the search results by category\"; $mytoplevel.f.genrebox configure -style GenreFocused.TCombobox"
-    bind $mytoplevel.f.genrebox <Leave> "$mytoplevel.statusbar configure -text \"\"; $mytoplevel.f.genrebox configure -style Genre.TCombobox"
+        \"Filter the search results by category\""
+    bind $mytoplevel.f.genrebox <Leave> "$mytoplevel.statusbar configure -text \"\""
     set advancedlabeltext [_ "Advanced search options"]
     bind $mytoplevel.f.advancedlabel <Enter> "$mytoplevel.f.advancedlabel configure \
 	-cursor hand2; $mytoplevel.statusbar configure -text \"$advancedlabeltext\""
