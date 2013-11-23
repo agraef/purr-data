@@ -1,13 +1,159 @@
-#N canvas 495 201 450 300 10;
-#X msg 83 52 dsp;
-#X obj 53 132 pdinfo;
-#X obj 53 152 print;
-#X msg 53 23 bang;
-#X text 89 23 print all properties and values to the console;
-#X msg 94 77 version;
-#X msg 100 99 symbol dsp;
-#X connect 0 0 1 0;
-#X connect 1 0 2 0;
-#X connect 3 0 1 0;
-#X connect 5 0 1 0;
-#X connect 6 0 1 0;
+#N canvas 308 59 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header pdinfo 3 12 0 18
+-204280 -1 0;
+#X obj 0 389 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 34 81 482 506 META 0;
+#X text 12 175 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 235 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 5 KEYWORDS pd_op;
+#X text 12 45 DESCRIPTION get info from the global Pd instance that's
+running;
+#X msg 54 545 audio-api audio-apilist audio-apilist-raw audio-inchannels
+audio-indev audio-indevlist audio-multidev-support audio-outchannels
+audio-outdev audio-outdevlist blocksize dir dsp-status midi-api midi-apilist
+midi-indev midi-indevlist midi-outdev midi-outdevlist pi samplerate
+version;
+#X text 12 75 INLET_0 audio-api audio-apilist audio-apilist-raw audio-inchannels
+audio-indev audio-indevlist audio-multidev-support audio-outchannels
+audio-outdev audio-outdevlist blocksize dir dsp-status midi-api midi-apilist
+midi-indev midi-indevlist midi-outdev midi-outdevlist pi samplerate
+version;
+#X text 12 155 OUTLET_0 list;
+#X text 12 195 AUTHOR Jonathan Wilkes;
+#X text 12 215 RELEASE_DATE 2013;
+#X restore 500 597 pd META;
+#X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 523 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 397 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 102 481 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X obj 22 36 samplerate~;
+#X text 7 1 [pdinfo] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 495 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X text 11 20 get info from the global Pd instance that's running;
+#X obj 503 7 pdinfo;
+#X obj 39 286 pdinfo;
+#X msg 39 80 print;
+#X text 80 79 print all attributes to the console;
+#X msg 101 255 version;
+#X obj 39 317 print pd-version;
+#X text 155 254 version of Pd that's running (MAJOR MINOR TEST);
+#X msg 95 232 samplerate;
+#X text 169 231 global samplerate;
+#X msg 78 145 dir;
+#X text 107 144 directory of the Pd executable;
+#X msg 72 115 blocksize;
+#X text 144 114 global blocksize;
+#X msg 92 205 pi;
+#X text 121 204 value of Pi;
+#X msg 89 175 dsp-status;
+#X text 164 175 whether dsp is turned on (0 = off \, 1 = on);
+#N canvas 100 44 428 514 audio-attributes 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [pdinfo] Audio Attributes;
+#X obj 29 448 pdinfo;
+#X obj 29 469 print pd-version;
+#X msg 29 37 audio-api;
+#X text 94 37 audio api that is currently in use;
+#X msg 42 72 audio-apilist;
+#X text 134 71 list of available audio apis;
+#X msg 65 102 audio-apilist-raw;
+#X text 179 102 audio apis for all platforms;
+#X msg 79 132 audio-inchannels;
+#X text 184 132 number of incoming audio channels;
+#X text 179 188 input device at index \$1 (defaults to 0);
+#X floatatom 84 168 5 0 0 0 - - -, f 5;
+#X msg 84 189 audio-indev \$1;
+#X msg 87 229 audio-indevlist;
+#X text 192 229 list of input device names;
+#X msg 91 259 audio-multidev-support;
+#X text 236 259 whether the current setup;
+#X text 236 279 supports multiple devices;
+#X msg 88 309 audio-outchannels;
+#X text 203 309 number of outgoing audio channels;
+#X msg 84 377 audio-outdev \$1;
+#X text 183 376 input device at index \$1 (defaults to 0);
+#X floatatom 84 356 5 0 0 0 - - -, f 5;
+#X msg 84 414 audio-outdevlist;
+#X text 193 414 list of output device names;
+#X text 179 203 returns: device_index no_of_channels;
+#X text 183 391 returns: device_index no_of_channels;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;
+#X connect 6 0 2 0;
+#X connect 8 0 2 0;
+#X connect 10 0 2 0;
+#X connect 13 0 14 0;
+#X connect 14 0 2 0;
+#X connect 15 0 2 0;
+#X connect 17 0 2 0;
+#X connect 20 0 2 0;
+#X connect 22 0 2 0;
+#X connect 24 0 22 0;
+#X connect 25 0 2 0;
+#X restore 206 317 pd audio-attributes;
+#N canvas 125 83 428 395 midi-attributes 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [pdinfo] Midi Attributes;
+#X obj 23 324 pdinfo;
+#X obj 23 345 print pd-version;
+#X text 173 128 input device at index \$1 (defaults to 0);
+#X floatatom 78 108 5 0 0 0 - - -, f 5;
+#X text 186 169 list of input device names;
+#X text 177 237 input device at index \$1 (defaults to 0);
+#X floatatom 78 217 5 0 0 0 - - -, f 5;
+#X text 187 290 list of output device names;
+#X msg 23 45 midi-api;
+#X text 88 45 midi api that is currently in use;
+#X msg 36 80 midi-apilist;
+#X text 128 79 list of available midi apis;
+#X msg 78 129 midi-indev \$1;
+#X msg 81 169 midi-indevlist;
+#X msg 78 239 midi-outdev \$1;
+#X msg 78 290 midi-outdevlist;
+#X text 173 143 returns: device_index;
+#X text 177 250 returns: device_index;
+#X connect 2 0 3 0;
+#X connect 5 0 14 0;
+#X connect 8 0 16 0;
+#X connect 10 0 2 0;
+#X connect 12 0 2 0;
+#X connect 14 0 2 0;
+#X connect 15 0 2 0;
+#X connect 16 0 2 0;
+#X connect 17 0 2 0;
+#X restore 346 317 pd midi-attributes;
+#X text 98 396 print;
+#X text 168 396 - print out each available message (other than "print")
+followed by a semicolon and the output for that method.;
+#X text 99 495 list;
+#X text 81 540 none;
+#X text 168 436 pdinfo's available methods are shown above \, with
+audio-device and midi-device message in subpatches.;
+#X text 169 495 - output varies depending on the message sent to [pdinfo]
+;
+#X connect 13 0 17 0;
+#X connect 14 0 13 0;
+#X connect 16 0 13 0;
+#X connect 19 0 13 0;
+#X connect 21 0 13 0;
+#X connect 23 0 13 0;
+#X connect 25 0 13 0;
+#X connect 27 0 13 0;

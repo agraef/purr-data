@@ -192,6 +192,8 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     # tweak: get rid of arrow so the combobox looks like a simple entry widget
     ttk::style configure Entry.TCombobox -highlightcolor $linux_wm_hlcolor
     ttk::style configure Genre.TCombobox
+    ttk::style configure GenreFocused.TCombobox
+    ttk::style map GenreFocused.TCombobox -fieldbackground [list readonly $linux_wm_hlcolor]
     ttk::style configure Search.TButton
     ttk::style configure Search.TCheckbutton
     # widgets
@@ -214,7 +216,7 @@ proc ::dialog_search::create_dialog {mytoplevel} {
 	-font "$searchfont -12" -style "Entry.TCombobox" -cursor "xterm"
     ttk::button $mytoplevel.f.searchbutton -text [_ "Search"] -takefocus 1 \
 	-command ::dialog_search::search -style Search.TButton
-    ttk::combobox $mytoplevel.f.genrebox -values $genres -state readonly \
+    ttk::combobox $mytoplevel.f.genrebox -values $genres -state readonly\
 	-style "Genre.TCombobox" -takefocus 1
     $mytoplevel.f.genrebox current 0
     ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground $linux_wm_hlcolor \
@@ -370,15 +372,31 @@ proc ::dialog_search::create_dialog {mytoplevel} {
 	"::dialog_search::ctrl_bksp $mytoplevel.f.searchtextentry"
     bind $mytoplevel.f.searchtextentry <$::modifier-Key-a> \
         "$mytoplevel.f.searchtextentry selection range 0 end; break"
+    bind $mytoplevel.f.searchbutton <FocusIn> "$mytoplevel.statusbar configure -text \"Search\""
+    bind $mytoplevel.f.searchbutton <FocusOut> "$mytoplevel.statusbar configure -text \"\""
+    bind $mytoplevel.f.searchbutton <Enter> "$mytoplevel.statusbar configure -text \"Search\""
+    bind $mytoplevel.f.searchbutton <Leave> "$mytoplevel.statusbar configure -text \"\""
     bind $mytoplevel.f.genrebox <<ComboboxSelected>> "::dialog_search::filter_results \
 	$mytoplevel.f.genrebox $mytoplevel.resultstext"
+    bind $mytoplevel.f.genrebox <FocusIn> "$mytoplevel.statusbar configure -text \
+        \"Filter the search results by category\"; $mytoplevel.f.genrebox configure -style GenreFocused.TCombobox"
+    bind $mytoplevel.f.genrebox <FocusOut> "$mytoplevel.statusbar configure -text \"\"; $mytoplevel.f.genrebox configure -style Genre.TCombobox"
+    bind $mytoplevel.f.genrebox <Enter> "$mytoplevel.statusbar configure -text \
+        \"Filter the search results by category\"; $mytoplevel.f.genrebox configure -style GenreFocused.TCombobox"
+    bind $mytoplevel.f.genrebox <Leave> "$mytoplevel.statusbar configure -text \"\"; $mytoplevel.f.genrebox configure -style Genre.TCombobox"
     set advancedlabeltext [_ "Advanced search options"]
     bind $mytoplevel.f.advancedlabel <Enter> "$mytoplevel.f.advancedlabel configure \
 	-cursor hand2; $mytoplevel.statusbar configure -text \"$advancedlabeltext\""
     bind $mytoplevel.f.advancedlabel <Leave> "$mytoplevel.f.advancedlabel configure \
 	-cursor xterm; $mytoplevel.statusbar configure -text \"\""
+    bind $mytoplevel.f.advancedlabel <FocusIn> "$mytoplevel.f.advancedlabel configure \
+   -cursor hand2 -text \">Help<\"; $mytoplevel.statusbar configure -text \"$advancedlabeltext\""
+    bind $mytoplevel.f.advancedlabel <FocusOut> "$mytoplevel.f.advancedlabel configure \
+   -cursor xterm -text \"Help\"; $mytoplevel.statusbar configure -text \"\""
     bind $mytoplevel.f.advancedlabel <Button-1> \
 	{menu_doc_open doc/5.reference all_about_finding_objects.pd}
+    bind $mytoplevel.f.advancedlabel <Return> \
+    {menu_doc_open doc/5.reference all_about_finding_objects.pd}
 #   Right now we're suppressing dialog bindings because helpbrowser namespace
 #   doesn't work unless all procs are prefixed with dialog_
 #    ::pd_bindings::dialog_bindings $mytoplevel "search"
@@ -1181,11 +1199,11 @@ proc ::dialog_search::intro { t } {
     ]
     set i 1
     foreach {title dir desc} $intro_docs {
-        $t insert end "$title" "link clickable_dir intro_link$i spacing"
+        $t insert end "$title" "link clickable_dir intro_link$i spacing dt"
         $t insert end [file join $::sys_libdir doc $dir] basedir
         $t insert end "0" is_libdir
         $t insert end "dummy" filename
-	$t insert end " $desc\n" description
+	$t insert end "\t$desc\n" dd
 	set i [expr {($i+1)%30}]
     }
     $t insert end [_ "All About Pd"] "link homepage_file spacing"
@@ -1193,8 +1211,8 @@ proc ::dialog_search::intro { t } {
     $t insert end all_about.pd filename
     $t insert end " " description
     $t insert end \
-        [_ "reference patches for key concepts and settings in Pd"] \
-        description
+        [join  [list \t [_ "reference patches for key concepts and settings in Pd"]] ""] \
+        "description dd"
     $t insert end "\n"
 
     $t insert end [_ "Advanced Topics"] homepage_title
@@ -1213,11 +1231,11 @@ proc ::dialog_search::intro { t } {
     ]
     set i 0
     foreach {title dir desc} $advanced_docs {
-	$t insert end "$title" "link clickable_dir intro_link$i spacing"
+	$t insert end "$title" "link clickable_dir intro_link$i spacing dt"
 	$t insert end [file join $::sys_libdir doc $dir] basedir
 	$t insert end "0" is_libdir
 	$t insert end "dummy" filename
-	$t insert end " $desc\n" description
+	$t insert end "\t$desc\n" "description dd"
 	set i [expr {($i+1)%30}]
     }
 

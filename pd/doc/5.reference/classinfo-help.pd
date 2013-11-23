@@ -1,0 +1,111 @@
+#N canvas 425 49 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header classinfo 3 12 0
+18 -204280 -1 0;
+#X obj 0 321 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 323 205 482 332 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 OUTLET_0 list;
+#X text 12 165 AUTHOR Jonathan Wilkes;
+#X text 12 185 RELEASE_DATE 2013;
+#X text 12 205 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X text 12 5 KEYWORDS pd_op symbol_op;
+#X text 12 45 DESCRIPTION get info about a class;
+#X text 12 65 INLET_0 float args externdir methods print size;
+#X text 12 85 INLET_1 symbol;
+#X text 12 125 OUTLET_1 bang;
+#X restore 500 597 pd META;
+#X obj 0 494 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 329 cnv 17 3 122 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 196 385 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [classinfo] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 503 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X msg 53 61 print;
+#X text 94 60 print all attributes to the console;
+#X text 98 358 print;
+#X text 168 358 - print out each available message (other than "print")
+followed by a semicolon and the output for that method.;
+#X text 99 503 list;
+#X text 169 503 - output varies depending on the message sent to [pdinfo].
+;
+#X msg 83 81 args;
+#X obj 53 264 print;
+#X text 11 20 get info about a class;
+#X obj 462 3 classinfo;
+#X obj 140 264 print reject_outlet;
+#X text 125 81 list of argument types accepted by the object;
+#X msg 89 102 externdir;
+#X text 156 102 directory where an external's executable is located
+;
+#X msg 100 122 methods;
+#X text 155 122 total number of methods (not counting built-in methods)
+;
+#X msg 108 144 size;
+#X text 146 143 size of the class in bytes;
+#X obj 53 243 classinfo moses;
+#X msg 140 187 symbol nonexistent_object;
+#X text 295 276 todo: fix "print" method;
+#X text 295 291 when class doesn't exist;
+#X msg 153 210 symbol moses;
+#X obj 78 459 cnv 17 3 30 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
+-162280 0;
+#X text 98 458 symbol;
+#X text 98 388 args;
+#X text 168 388 - list of argument types accepted by the object;
+#X text 98 408 externdir;
+#X text 168 408 - directory where an external's executable is located
+;
+#X text 98 423 methods;
+#X text 168 423 - total number of methods (not counting built-in methods)
+;
+#X text 98 438 size;
+#X text 168 438 - size of the class \, in bytes;
+#X text 98 328 float;
+#X text 168 328 - method name and arguments for method entry at index
+specified by the incoming number;
+#X text 168 458 - name of a Pd class that is currently loaded;
+#X text 169 541 - name of a Pd class that is currently loaded;
+#N canvas 196 140 428 235 arg_types 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [classinfo] Argument types;
+#X text 25 34 Argument types for the class \, as well as its methods
+\, are as follows:;
+#X text 25 64 A_FLOAT: a required float argument;
+#X text 25 84 A_SYMBOL: a required symbol argument;
+#X text 25 104 A_DEFFLOAT: optional float argument (defaults to zero)
+;
+#X text 25 124 A_DEFSYM: optional symbol argument (defaults to empty
+symbol);
+#X text 25 154 A_GIMME: optional \, arbitrary-length list of atoms
+as an argument;
+#X restore 101 573 pd arg_types;
+#X text 81 541 1) symbol;
+#X floatatom 96 210 5 0 0 0 - - -, f 5;
+#X msg 340 201 symbol canvas;
+#X connect 11 0 29 0;
+#X connect 17 0 29 0;
+#X connect 23 0 29 0;
+#X connect 25 0 29 0;
+#X connect 27 0 29 0;
+#X connect 29 0 18 0;
+#X connect 29 1 21 0;
+#X connect 30 0 29 1;
+#X connect 33 0 29 1;
+#X connect 50 0 29 0;
+#X connect 51 0 29 1;

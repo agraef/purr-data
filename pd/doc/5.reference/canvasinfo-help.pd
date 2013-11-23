@@ -1,54 +1,217 @@
-#N canvas 275 179 549 358 10;
-#N canvas 530 268 625 300 foo 0;
-#X obj 42 195 canvasinfo;
-#X text 124 195 get information about the properties of a canvas;
-#X msg 42 17 bang;
-#X text 79 17 print all properties and values to the console;
-#X msg 58 40 editmode;
-#X obj 42 215 print output;
-#X text 119 40 send an anything to retrieve a property's value;
-#X floatatom 99 173 5 0 0 0 - - -;
-#X text 138 172 set the parent level to get properties from a parent
-canvas;
-#X symbolatom 76 91 10 0 0 0 - - -;
-#X text 184 80 or use a symbol;
-#X msg 87 145 dollarzero 1;
-#X msg 87 117 list dollarzero 1;
-#X text 207 117 or use a list to set parent level as well;
-#X text 177 145 or even an anything to do the same \, like [pack];
-#X msg 69 65 symbol editmode;
-#X connect 0 0 5 0;
-#X connect 2 0 0 0;
-#X connect 4 0 0 0;
-#X connect 7 0 0 1;
-#X connect 9 0 0 0;
-#X connect 11 0 0 0;
-#X connect 12 0 0 0;
-#X connect 15 0 0 0;
-#X restore 243 256 pd foo bar;
-#X obj 338 256 demo-abs foo bar bee;
-#X obj 62 225 canvasinfo;
-#X text 144 225 get information about the properties of a canvas;
-#X msg 62 47 bang;
-#X text 99 47 print all properties and values to the console;
-#X msg 78 70 editmode;
-#X obj 62 245 print output;
-#X text 139 70 send an anything to retrieve a property's value;
-#X floatatom 119 203 5 0 0 0 - - -;
-#X text 158 202 set the parent level to get properties from a parent
-canvas;
-#X symbolatom 96 121 10 0 0 0 - - -;
-#X text 204 110 or use a symbol;
-#X msg 107 175 dollarzero 1;
-#X msg 107 147 list dollarzero 1;
-#X text 227 147 or use a list to set parent level as well;
-#X text 197 175 or even an anything to do the same \, like [pack];
-#X msg 89 95 symbol editmode;
-#X connect 2 0 7 0;
-#X connect 4 0 2 0;
-#X connect 6 0 2 0;
-#X connect 9 0 2 1;
-#X connect 11 0 2 0;
-#X connect 13 0 2 0;
-#X connect 14 0 2 0;
-#X connect 17 0 2 0;
+#N canvas 0 19 555 619 10;
+#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -228856 -66577 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header canvasinfo 3 12
+0 18 -204280 -1 0;
+#X obj 0 431 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+-228856 -1 0;
+#N canvas 48 165 482 332 META 0;
+#X text 12 145 LIBRARY internal;
+#X text 12 25 LICENSE SIBSD;
+#X text 12 105 INLET_1 float;
+#X text 12 5 KEYWORDS patch_op canvas_op;
+#X text 12 45 DESCRIPTION get info about a canvas;
+#X text 12 65 INLET_0 args boxtext coords dir dirty dollarzero editmode
+filename hitbox name pointer posonparent screenpos toplevel vis;
+#X text 12 125 OUTLET_0 list;
+#X text 12 165 AUTHOR Jonathan Wilkes;
+#X text 12 185 RELEASE_DATE 2013;
+#X text 12 205 HELP_PATCH_AUTHORS Jonathan Wilkes;
+#X restore 500 597 pd META;
+#X obj 0 494 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 -228856 -1 0;
+#X obj 0 526 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 -228856 -1 0;
+#X obj 0 563 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 -228856 -1 0;
+#X obj 78 439 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#N canvas 196 385 428 108 Related_objects 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [canvasinfo] Related Objects;
+#X restore 101 597 pd Related_objects;
+#X obj 78 503 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
+-162280 0;
+#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+;
+#X msg 39 48 print;
+#X text 80 47 print all attributes to the console;
+#X text 98 438 print;
+#X text 168 438 - print out each available message (other than "print")
+followed by a semicolon and the output for that method.;
+#X text 168 464 pdinfo's availabe methods are shown above \, with audio-device
+and midi-device message in subpatches.;
+#X text 99 503 list;
+#X text 169 503 - output varies depending on the message sent to [pdinfo].
+;
+#X obj 483 5 canvasinfo;
+#X text 11 20 get info about a canvas;
+#X obj 39 390 canvasinfo;
+#X msg 69 68 args;
+#X msg 75 89 boxtext;
+#X msg 86 109 coords;
+#X text 141 109 list of coords for an abstraction;
+#X msg 94 131 dir;
+#X msg 104 153 dirty;
+#X text 143 152 whether this patch has been edited since the last time
+it was saved (0 = no \, 1 = yes);
+#X msg 108 180 dollarzero;
+#X msg 117 203 editmode;
+#X text 181 202 whether the canvas is in editmode (0 = no \, 1 = yes)
+;
+#X msg 123 223 filename;
+#X msg 133 244 hitbox;
+#X msg 138 265 name;
+#X text 176 265 symbolic receive name for the canvas;
+#X text 204 286 pointer to this canvas;
+#X msg 148 286 pointer;
+#X msg 155 308 posonparent;
+#X msg 165 328 screenpos;
+#X text 233 308 poson of a gop canvas on its parent canvas;
+#X text 233 328 screen position of a visible canvas;
+#X msg 175 368 vis;
+#X text 203 368 whether a canvas is visible on the screen;
+#X text 132 89 full text of the object box for an abstraction or subpatch
+;
+#X text 181 244 see whether a coordinate lies on an object in the canvas
+;
+#X text 123 130 directory for this canvas' environment;
+#X text 178 180 value of \$0 for this canvas' environment;
+#X text 185 223 filename for this canvas' environment;
+#X obj 39 411 print;
+#X msg 174 349 toplevel;
+#X text 235 348 whether this canvas is a toplevel (0 = no \, 1 = yes)
+;
+#N canvas 196 140 428 435 canvas_environment 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 25 34 A canvas can take several forms:;
+#X text 25 54 1) A toplevel patch (e.g. \, what you get when you create
+a new patch).;
+#X text 25 84 2) An abstraction \, or a Pd patch that has been instantiated
+in an object box.;
+#X text 25 114 3) A subpatch \, like [pd foo].;
+#X text 25 144 Toplevel patches and abstractions come with an "environment"
+that is inherited by all the [pd] subpatches contained within it.;
+#X text 25 184 For example \, this subpatch inherits its "environment
+from the canvasinfo-help.pd patch which contains it.;
+#X text 25 224 What's included in a canvas' environment?;
+#X obj 119 246 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 119 266 f \$0;
+#X floatatom 119 300 5 0 0 0 - - -, f 5;
+#N canvas 433 184 450 300 another-subpatch 0;
+#X msg 148 42 bang;
+#X obj 128 63 f \$0;
+#X floatatom 148 94 5 0 0 0 - - -, f 5;
+#X text 185 95 <-- the value for \$0 is the same for;
+#X text 185 109 all canvases in the same environment.;
+#X obj 128 21 inlet;
+#X obj 128 124 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 6 0;
+#X connect 5 0 1 0;
+#X restore 169 279 pd another-subpatch;
+#X text 197 259 get the same \$0:;
+#X text 25 379 * filename;
+#X text 25 359 * directory;
+#X text 25 244 * dollarzero:;
+#X text 25 329 * args: dollarsign variables \$1 \, \$2 \, \$3 \, and
+so on (if they exist);
+#X text 7 1 [canvasinfo] What is a Canvas' Environment?;
+#X text 197 244 So this subpatch will;
+#X obj 169 246 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 169 300 5 0 0 0 - - -, f 5;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 11 0 20 0;
+#X connect 19 0 11 0;
+#X restore 101 573 pd canvas_environment;
+#X text 111 68 list of dollarsign arguments for this canvas' environment
+;
+#N canvas 139 127 428 435 hitbox_and_coords 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [canvasinfo] hitbox and coords messages;
+#X text 25 34 The "hitbox" message tells whether there's an object
+on the canvas that includes the "x y" coordinates you send it:;
+#X obj 25 89 canvasinfo;
+#X msg 25 68 hitbox 50 75;
+#X text 111 67 <-- the point (50 \, 75) is contained within;
+#X text 134 83 the message box.;
+#X obj 25 110 unpack s f f f f;
+#X symbolatom 25 204 10 0 0 3 object - -, f 10;
+#X floatatom 93 204 5 0 0 3 top-x - -, f 5;
+#X floatatom 131 204 5 0 0 3 top-y - -, f 5;
+#X floatatom 169 204 5 0 0 3 btm-x - -, f 5;
+#X floatatom 207 203 5 0 0 3 btm-y - -, f 5;
+#X text 197 104 If there is a "hit" \, [canvasinfo];
+#X text 197 134 followed by coordinates for the;
+#X text 197 119 outputs the name of the object;
+#X text 197 149 top-right and bottom-left of its;
+#X text 197 164 bounding box.;
+#X msg 25 257 coords;
+#N canvas 433 184 450 300 gop-subpatch 0;
+#X obj 31 32 inlet;
+#X obj 31 53 canvasinfo;
+#X obj 31 184 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X coords 0 -1 1 1 94 40 1 100 100;
+#X restore 25 281 pd gop-subpatch;
+#X obj 25 334 unpack f f f f f f f f f;
+#X floatatom 25 375 5 0 0 3 x-min - -, f 5;
+#X floatatom 65 375 5 0 0 3 y-min - -, f 5;
+#X floatatom 105 375 5 0 0 3 x-max - -, f 5;
+#X floatatom 145 375 5 0 0 3 y-max - -, f 5;
+#X floatatom 185 375 5 0 0 3 width - -, f 5;
+#X floatatom 225 375 5 0 0 3 height - -, f 5;
+#X floatatom 270 375 5 0 0 3 gop - -, f 5;
+#X floatatom 310 375 5 0 0 3 x-margin - -, f 5;
+#X floatatom 365 375 5 0 0 3 y-margin - -, f 5;
+#X text 82 257 The "coords" message returns info that is set in the
+;
+#X text 132 272 "Properties" dialog for gop dimensions \,;
+#X text 132 287 data structure scaling \, and so on.;
+#X connect 3 0 7 0;
+#X connect 4 0 3 0;
+#X connect 7 0 8 0;
+#X connect 7 1 9 0;
+#X connect 7 2 10 0;
+#X connect 7 3 11 0;
+#X connect 7 4 12 0;
+#X connect 18 0 19 0;
+#X connect 19 0 20 0;
+#X connect 20 0 21 0;
+#X connect 20 1 22 0;
+#X connect 20 2 23 0;
+#X connect 20 3 24 0;
+#X connect 20 4 25 0;
+#X connect 20 5 26 0;
+#X connect 20 6 27 0;
+#X connect 20 7 28 0;
+#X connect 20 8 29 0;
+#X restore 251 573 pd hitbox_and_coords;
+#X text 81 541 1) float;
+#X text 169 541 - canvas stacking level (0 = this canvas \, 1 = parent
+\, etc.);
+#X connect 11 0 20 0;
+#X connect 20 0 48 0;
+#X connect 21 0 20 0;
+#X connect 22 0 20 0;
+#X connect 23 0 20 0;
+#X connect 25 0 20 0;
+#X connect 26 0 20 0;
+#X connect 28 0 20 0;
+#X connect 29 0 20 0;
+#X connect 31 0 20 0;
+#X connect 32 0 20 0;
+#X connect 33 0 20 0;
+#X connect 36 0 20 0;
+#X connect 37 0 20 0;
+#X connect 38 0 20 0;
+#X connect 41 0 20 0;
+#X connect 49 0 20 0;
