@@ -1280,6 +1280,29 @@ static void canvas_rename_method(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     else canvas_rename(x, gensym("Pd"), 0);
 }
 
+static int forwardmess_recurse = 0;
+
+static void canvas_forwardmess(t_canvas *x, t_symbol *s, int ac, t_atom *av)
+{
+    if (av[0].a_type != A_FLOAT)
+    {
+        pd_error(x, "error: canvas: forwardmess: need object index");
+        return;
+    }
+    t_int indexno = (t_int)atom_getfloatarg(0, ac--, av++);
+    if (indexno < 0) indexno = 0;
+    t_gobj *y;
+    t_int i;
+    for (i = 0, y = x->gl_list; y && i < indexno; i++)
+        y = y->g_next;
+    if (!y) return;
+    if (forwardmess_recurse++ < 1)
+        pd_forwardmess((t_pd *)y, ac, av);
+    else
+        pd_error(y, "error: canvas: forwardmess can't be in a recursive loop");
+    forwardmess_recurse = 0;
+}
+
 /* ------------------ table ---------------------------*/
 
 static int tabcount = 0;
@@ -2150,6 +2173,8 @@ void g_canvas_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_dsp, gensym("dsp"), 0);
     class_addmethod(canvas_class, (t_method)canvas_rename_method,
         gensym("rename"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_forwardmess,
+        gensym("forwardmess"), A_GIMME, 0);
 
 /*---------------------------- tables -- GG ------------------- */
 
