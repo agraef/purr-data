@@ -1352,26 +1352,26 @@ proc ::dialog_search::ctrl_bksp {mytoplevel} {
 proc ::dialog_search::font_size {text direction} {
     variable searchfont
     set offset {}
-    set min_fontsize 8
+    set min_fontsize -8
     if {$direction == 1} {
-	set offset 2
-    } else {
 	set offset -2
+    } else {
+	set offset 2
     }
     set update 1
     foreach tag [$text tag names] {
 	set val [$text tag cget $tag -font]
 	if {[string is digit -strict [lindex $val 1]] &&
-	    [expr {[lindex $val 1]+$offset}] < $min_fontsize} {
+	    [expr {[lindex $val 1]+$offset}] > $min_fontsize} {
 		set update 0
 	    }
     }
     if {$update} {
         foreach tag [$text tag names] {
 	    set val [$text tag cget $tag -font]
-	    if {[string is digit -strict [lindex $val 1]]} {
+	    if {[string is ascii -strict [lindex $val 1]]} {
 	        $text tag configure $tag -font "$searchfont \
-		    [expr -{max([lindex $val 1]+$offset,$min_fontsize)}]"
+		    [expr {min([lindex $val 1]+$offset,$min_fontsize)}]"
 	    }
         }
     }
