@@ -797,6 +797,7 @@ static void fielddesc_setfloat_var(t_fielddesc *fd, t_symbol *s)
 #define CLOSED 1
 #define BEZ 2
 #define NOMOUSE 4
+#define BBOX 8          /* pair of coords for rectangles and ellipses */
 #define A_ARRAY 55      /* LATER decide whether to enshrine this in m_pd.h */
 
 static void fielddesc_setfloatarg(t_fielddesc *fd, int argc, t_atom *argv)
@@ -964,6 +965,7 @@ typedef struct _curve
     t_object x_obj;
     int x_flags;            /* CLOSED and/or BEZ and/or NOMOUSE */
     t_fielddesc x_fillcolor;
+    t_fielddesc x_fillopacity;
     t_fielddesc x_outlinecolor;
     t_fielddesc x_width;
     t_fielddesc x_vis;
@@ -986,7 +988,8 @@ static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
         flags |= CLOSED;
     }
     else classname += 4;
-    if (classname[0] == 'c') flags |= BEZ;
+    if (classname[0] == 'c' || classname[0] == 'e') flags |= BEZ;
+    if (classname[0] == 'e' || classname[0] == 'r') flags |= BBOX;
     fielddesc_setfloat_const(&x->x_vis, 1);
     while (1)
     {
@@ -1018,7 +1021,7 @@ static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
     for (i = 0, fd = x->x_vec; i < argc; i++, fd++, argv++)
         fielddesc_setfloatarg(fd, 1, argv);
     if (argc & 1) fielddesc_setfloat_const(fd, 0);
-
+    fielddesc_setfloat_const(&x->x_fillopacity, 1);
     return (x);
 }
 
@@ -1037,6 +1040,17 @@ void curve_float(t_curve *x, t_floatarg f)
     canvas_redrawallfortemplatecanvas(x->x_canvas, 2);
     fielddesc_setfloat_const(&x->x_vis, (f != 0));
     canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
+}
+
+void curve_fillopacity(t_curve *x, t_symbol *s, t_int argc, t_atom *argv)
+{
+    char *classname = s->s_name;
+    if (classname[0] == 'd' || argc < 1) return;
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&x->x_fillopacity, argc, argv);
+        canvas_redrawallfortemplatecanvas(x->x_canvas, 0);
+    }
 }
 
 /* -------------------- widget behavior for curve ------------ */
@@ -1067,6 +1081,23 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         if (xloc > x2) x2 = xloc;
         if (yloc < y1) y1 = yloc;
         if (yloc > y2) y2 = yloc;
+    }
+    if ((x->x_flags & BEZ) && (x->x_flags & BBOX))
+    {
+        int cx = glist_xtopixels(glist,
+            basex + fielddesc_getcoord(x->x_vec, template,
+                data, 0));
+        int cy = glist_ytopixels(glist,
+            basey + fielddesc_getcoord(x->x_vec+1, template,
+                data, 0));
+        int rx = fielddesc_getfloat(x->x_vec+2, template,
+            data, 0);
+        int ry = fielddesc_getfloat(x->x_vec+3, template,
+            data, 0);
+        x1 = cx - rx;
+        y1 = cy - ry;
+        x2 = cx + rx;
+        y2 = cy + ry;
     }
 	//fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
     *xp1 = x1;
@@ -1172,17 +1203,52 @@ static void curve_vis(t_gobj *z, t_glist *glist,
                 numbertocolor(
                     fielddesc_getfloat(&x->x_fillcolor, template, data, 1),
                     fill);
-                sys_vgui(".x%lx.c create ppolygon\\\n",
-                    glist_getcanvas(glist));
+                if (flags & CLOSED && !(flags & BBOX))
+                {
+                    sys_vgui(".x%lx.c create ppolygon\\\n",
+                        glist_getcanvas(glist));
+                }
+                else if (flags & BBOX) /* rectangles and ellipses */
+                {
+                    n = 2; /* silently truncate extra coordinates */
+                    if(flags & BEZ)
+                        sys_vgui(".x%lx.c create ellipse\\\n",
+                            glist_getcanvas(glist));
+                    else
+                        sys_vgui(".x%lx.c create prect\\\n",
+                        glist_getcanvas(glist));
+                }
             }
-            else sys_vgui(".x%lx.c create polyline\\\n", glist_getcanvas(glist));
+            else
+            {
+                if(flags & BBOX)
+                {
+                    if(flags & BEZ)
+                        sys_vgui(".x%lx.c create ellipse\\\n", glist_getcanvas(glist));
+                    else
+                        sys_vgui(".x%lx.c create prect\\\n", glist_getcanvas(glist));
+                } else
+                    sys_vgui(".x%lx.c create polyline\\\n", glist_getcanvas(glist));
+            }
             for (i = 0; i < n; i++)
+            {
                 sys_vgui("%d %d\\\n", pix[2*i], pix[2*i+1]);
+                if ((flags & BEZ) && (flags & BBOX))
+                {
+                    sys_vgui("-rx %d -ry %d\\\n",
+                        (t_int)fielddesc_getfloat(x->x_vec+2,
+                            template, data, 1),
+                        (t_int)fielddesc_getfloat(x->x_vec+3,
+                            template, data, 1));
+                    break;
+                }
+            }
             sys_vgui("-strokewidth %f\\\n", width);
-			if (flags & CLOSED) sys_vgui("-fill %s -stroke %s\\\n",
-                fill, outline);
+		if (flags & CLOSED) sys_vgui("-fill %s -stroke %s -fillopacity %g\\\n",
+                fill, outline, fielddesc_getfloat(&x->x_fillopacity, template, data, 1));
+            else if(flags & BBOX) sys_vgui("-stroke %s\\\n", outline);
             else sys_vgui("-stroke %s\\\n", outline);
-            //if (flags & BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
+            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
             sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist,
 				data);
 			if (!glist_istoplevel(glist)) {
@@ -1344,8 +1410,18 @@ static void curve_setup(void)
         A_GIMME, 0);
     class_addcreator((t_newmethod)curve_new, gensym("filledcurve"),
         A_GIMME, 0);
+    class_addcreator((t_newmethod)curve_new, gensym("drawrectangle"),
+        A_GIMME, 0);
+    class_addcreator((t_newmethod)curve_new, gensym("filledrectangle"),
+        A_GIMME, 0);
+    class_addcreator((t_newmethod)curve_new, gensym("drawellipse"),
+        A_GIMME, 0);
+    class_addcreator((t_newmethod)curve_new, gensym("filledellipse"),
+        A_GIMME, 0);
     class_setparentwidget(curve_class, &curve_widgetbehavior);
     class_addfloat(curve_class, curve_float);
+    class_addmethod(curve_class, (t_method)curve_fillopacity,
+        gensym("fillopacity"), A_GIMME, 0);
 }
 
 /* --------- plots for showing arrays --------------- */
@@ -2764,6 +2840,381 @@ static void drawsymbol_setup(void)
     class_setparentwidget(drawsymbol_class, &drawsymbol_widgetbehavior);
 }
 
+/* ---------------- drawimage: draw an image ---------------- */
+/* ---------------- drawsprite: draw a sprite ---------------- */
+
+/*
+    drawimage draws an image (gif) at controllable locations.
+    invocation:
+    (drawimage|drawsprite) [-v <visible>] variable x y directory
+*/
+
+t_class *drawimage_class;
+
+#define DRAW_SPRITE 1
+
+typedef struct _drawimage
+{
+    t_object x_obj;
+    t_fielddesc x_value;
+    t_fielddesc x_xloc;
+    t_fielddesc x_yloc;
+    t_fielddesc x_vis;
+    t_symbol *x_img;
+    t_float x_w;
+    t_float x_h;
+    int x_flags;
+    t_canvas *x_canvas;
+} t_drawimage;
+
+static void *drawimage_new(t_symbol *classsym, t_int argc, t_atom *argv)
+{
+    t_drawimage *x = (t_drawimage *)pd_new(drawimage_class);
+    char *classname = classsym->s_name;
+    char buf[50];
+    sprintf(buf, ".x%lx", (t_int)x);
+    pd_bind(&x->x_obj.ob_pd, gensym(buf));
+    int flags = 0;
+    
+    if (classname[4] == 's')
+        flags |= DRAW_SPRITE;
+    x->x_flags = flags;
+    fielddesc_setfloat_const(&x->x_vis, 1);
+    x->x_canvas = canvas_getcurrent();
+    t_symbol *dir = canvas_getdir(x->x_canvas);
+    while (1)
+    {
+        t_symbol *firstarg = atom_getsymbolarg(0, argc, argv);
+        if (!strcmp(firstarg->s_name, "-v") && argc > 1)
+        {
+            fielddesc_setfloatarg(&x->x_vis, 1, argv+1);
+            argc -= 2; argv += 2;
+        }
+        else break;
+    }
+    if (argc && argv->a_type == A_SYMBOL)
+        x->x_img = atom_getsymbolarg(0, argc--, argv++);
+    else x->x_img = &s_;
+    if (argc) fielddesc_setfloatarg(&x->x_xloc, argc--, argv++);
+    else fielddesc_setfloat_const(&x->x_xloc, 0);
+    if (argc) fielddesc_setfloatarg(&x->x_yloc, argc--, argv++);
+    else fielddesc_setfloat_const(&x->x_yloc, 0);
+    if (argc)
+    {
+        fielddesc_setfloatarg(&x->x_value, argc--, argv++);
+        if (!(x->x_flags & DRAW_SPRITE))
+            post("drawimage warning: sequence variable is only "
+                 "used with drawsprite");
+    }
+    else fielddesc_setfloat_const(&x->x_value, 0);
+
+    /* [drawimage] allocates memory for an image or image sequence
+       while the object is creating. The corresponding scalar gets
+       drawn as a canvas image item using the "parent" tk image as
+       the source. ".x%lx" is the name for the parent tk image and
+       ".x%lx.i" is the tag given to a scalar's canvas image item.
+    */
+    sys_vgui("pdtk_drawimage_new .x%lx {%s} {%s} %d\n", (t_int)x,
+        x->x_img->s_name, dir->s_name, x->x_flags);
+    return (x);
+}
+
+void drawimage_float(t_drawimage *x, t_floatarg f)
+{
+    int viswas;
+    if (x->x_vis.fd_type != A_FLOAT || x->x_vis.fd_var)
+    {
+        pd_error(x, "global vis/invis for a template with variable visibility");
+        return;
+    }
+    viswas = (x->x_vis.fd_un.fd_float != 0);
+    
+    if ((f != 0 && viswas) || (f == 0 && !viswas))
+        return;
+    canvas_redrawallfortemplatecanvas(x->x_canvas, 2);
+    fielddesc_setfloat_const(&x->x_vis, (f != 0));
+    canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
+}
+
+void drawimage_size(t_drawimage *x, t_float w, t_float h)
+{
+    x->x_w = w;
+    x->x_h = h;
+}
+
+/* -------------------- widget behavior for drawimage ------------ */
+
+
+/*
+static void drawimage_sprintf(t_drawimage *x, char *buf, t_atom *ap)
+{
+    int nchars;
+    strncpy(buf, x->x_label->s_name, MAXPDSTRING);
+    buf[DRAWNUMBER_BUFSIZE - 1] = 0;
+    nchars = strlen(buf);
+    atom_string(ap, buf + nchars, DRAWNUMBER_BUFSIZE - nchars);
+}
+*/
+
+
+static void drawimage_getrect(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int *xp1, int *yp1, int *xp2, int *yp2)
+{
+    t_drawimage *x = (t_drawimage *)z;
+    int xloc, yloc;
+//    char buf[DRAWNUMBER_BUFSIZE];
+
+    if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
+    {
+        *xp1 = *yp1 = 0x7fffffff;
+        *xp2 = *yp2 = -0x7fffffff;
+        return;
+    }
+    xloc = glist_xtopixels(glist,
+        basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
+    yloc = glist_ytopixels(glist,
+        basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
+    *xp1 = xloc;
+    *yp1 = yloc;
+
+    *xp2 = xloc + x->x_w;
+    *yp2 = yloc + x->x_h;
+}
+
+static void drawimage_displace(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int dx, int dy)
+{
+    /* refuse */
+}
+
+static void drawimage_select(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int state)
+{
+    post("drawimage_select %d", state);
+    /* fill in later */
+}
+
+static void drawimage_activate(t_gobj *z, t_glist *glist,
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int state)
+{
+    post("drawimage_activate %d", state);
+}
+
+static void drawimage_vis(t_gobj *z, t_glist *glist, 
+    t_word *data, t_template *template, t_float basex, t_float basey,
+    int vis)
+{
+    t_drawimage *x = (t_drawimage *)z;
+    
+        /* see comment in plot_vis() */
+    if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
+        return;
+    if (vis)
+    {
+        t_atom at;
+        int xloc = glist_xtopixels(glist,
+            basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
+        int yloc = glist_ytopixels(glist,
+            basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
+        sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d ",
+            glist_getcanvas(glist), xloc, yloc, x, data,
+            (int)fielddesc_getfloat(&x->x_value, template, data, 0));
+        sys_vgui(".x%lx.x%lx.template%lx\n", glist_getcanvas(glist),
+            glist, data);
+    }
+    else sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
+        glist_getcanvas(glist), data);
+}
+
+static t_float drawimage_motion_ycumulative;
+static t_glist *drawimage_motion_glist;
+static t_scalar *drawimage_motion_scalar;
+static t_array *drawimage_motion_array;
+static t_word *drawimage_motion_wp;
+static t_template *drawimage_motion_template;
+static t_gpointer drawimage_motion_gpointer;
+static int drawimage_motion_sprite;
+static int drawimage_motion_firstkey;
+
+    /* LATER protect against the template changing or the scalar disappearing
+    probably by attaching a gpointer here ... */
+
+static void drawimage_motion(void *z, t_floatarg dx, t_floatarg dy)
+{
+    t_drawimage *x = (t_drawimage *)z;
+    t_fielddesc *f = &x->x_value;
+    t_atom at;
+    if (!gpointer_check(&drawimage_motion_gpointer, 0))
+    {
+        post("drawimage_motion: scalar disappeared");
+        return;
+    }
+    if (!drawimage_motion_sprite)
+    {
+        /* post("drawimage_motion: image"); */
+        return;
+    }
+    drawimage_motion_ycumulative -= dy;
+    template_setfloat(drawimage_motion_template,
+        f->fd_un.fd_varsym,
+            drawimage_motion_wp, 
+            drawimage_motion_ycumulative,
+                1);
+    if (drawimage_motion_scalar)
+        template_notifyforscalar(drawimage_motion_template,
+            drawimage_motion_glist, drawimage_motion_scalar,
+                gensym("change"), 1, &at);
+
+    if (drawimage_motion_scalar)
+        scalar_redraw(drawimage_motion_scalar, drawimage_motion_glist);
+    if (drawimage_motion_array)
+        array_redraw(drawimage_motion_array, drawimage_motion_glist);
+}
+
+static void drawimage_key(void *z, t_floatarg fkey)
+{
+    return;
+    t_drawnumber *x = (t_drawnumber *)z;
+    t_fielddesc *f = &x->x_value;
+    int key = fkey;
+    char sbuf[MAXPDSTRING];
+    t_atom at;
+    if (!gpointer_check(&drawnumber_motion_gpointer, 0))
+    {
+        post("drawnumber_motion: scalar disappeared");
+        return;
+    }
+    if (key == 0)
+        return;
+    if (drawnumber_motion_symbol)
+    {
+            /* key entry for a symbol field */
+        if (drawnumber_motion_firstkey)
+            sbuf[0] = 0;
+        else strncpy(sbuf, template_getsymbol(drawnumber_motion_template,
+            f->fd_un.fd_varsym, drawnumber_motion_wp, 1)->s_name,
+                MAXPDSTRING);
+        sbuf[MAXPDSTRING-1] = 0;
+        if (key == '\b')
+        {
+            if (*sbuf)
+                sbuf[strlen(sbuf)-1] = 0;
+        }
+        else
+        {
+            sbuf[strlen(sbuf)+1] = 0;
+            sbuf[strlen(sbuf)] = key;
+        }
+    }
+    else
+    {
+            /* key entry for a numeric field.  This is just a stopgap. */
+        double newf;
+        if (drawnumber_motion_firstkey)
+            sbuf[0] = 0;
+        else sprintf(sbuf, "%g", template_getfloat(drawnumber_motion_template,
+            f->fd_un.fd_varsym, drawnumber_motion_wp, 1));
+        drawnumber_motion_firstkey = (key == '\n');
+        if (key == '\b')
+        {
+            if (*sbuf)
+                sbuf[strlen(sbuf)-1] = 0;
+        }
+        else
+        {
+            sbuf[strlen(sbuf)+1] = 0;
+            sbuf[strlen(sbuf)] = key;
+        }
+        if (sscanf(sbuf, "%lg", &newf) < 1)
+            newf = 0;
+        template_setfloat(drawnumber_motion_template,
+            f->fd_un.fd_varsym, drawnumber_motion_wp, (t_float)newf, 1);
+        if (drawnumber_motion_scalar)
+            template_notifyforscalar(drawnumber_motion_template,
+                drawnumber_motion_glist, drawnumber_motion_scalar,
+                    gensym("change"), 1, &at);
+        if (drawnumber_motion_scalar)
+            scalar_redraw(drawnumber_motion_scalar, drawnumber_motion_glist);
+        if (drawnumber_motion_array)
+            array_redraw(drawnumber_motion_array, drawnumber_motion_glist);
+    }
+}
+
+static int drawimage_click(t_gobj *z, t_glist *glist, 
+    t_word *data, t_template *template, t_scalar *sc, t_array *ap,
+    t_float basex, t_float basey,
+    int xpix, int ypix, int shift, int alt, int dbl, int doit)
+{
+    t_drawimage *x = (t_drawimage *)z;
+    int x1, y1, x2, y2;
+    drawimage_getrect(z, glist,
+        data, template, basex, basey,
+        &x1, &y1, &x2, &y2);
+    if (xpix >= x1 && xpix <= x2 && ypix >= y1 && ypix <= y2
+        && x->x_value.fd_var &&
+            fielddesc_getfloat(&x->x_vis, template, data, 0))
+    {
+        if (doit)
+        {
+            drawimage_motion_glist = glist;
+            drawimage_motion_wp = data;
+            drawimage_motion_template = template;
+            drawimage_motion_scalar = sc;
+            drawimage_motion_array = ap;
+            drawimage_motion_firstkey = 1;
+            drawimage_motion_ycumulative =
+                fielddesc_getfloat(&x->x_value, template, data, 0);
+            drawimage_motion_sprite = ((x->x_flags & DRAW_SPRITE) != 0);
+            if (drawimage_motion_scalar)
+                gpointer_setglist(&drawimage_motion_gpointer, 
+                    drawimage_motion_glist, drawimage_motion_scalar);
+            else gpointer_setarray(&drawimage_motion_gpointer,
+                    drawimage_motion_array, drawimage_motion_wp);
+           glist_grab(glist, z, drawimage_motion, drawimage_key,
+                xpix, ypix);
+        }
+        return (1);
+    }
+    else return (0);
+}
+
+t_parentwidgetbehavior drawimage_widgetbehavior =
+{
+    drawimage_getrect,
+    drawimage_displace,
+    drawimage_select,
+    drawimage_activate,
+    drawimage_vis,
+    drawimage_click,
+};
+
+static void drawimage_free(t_drawimage *x)
+{
+    /* delete the parent image in the gui */
+    char buf[50];
+    sprintf(buf, ".x%lx", (t_int)x);
+    pd_unbind(&x->x_obj.ob_pd, gensym(buf));
+    sys_vgui("pdtk_drawimage_free .x%lx\n", (t_int)x);
+}
+
+static void drawimage_setup(void)
+{
+    drawimage_class = class_new(gensym("drawimage"),
+        (t_newmethod)drawimage_new, (t_method)drawimage_free,
+        sizeof(t_drawimage), 0, A_GIMME, 0);
+    class_setdrawcommand(drawimage_class);
+    class_addfloat(drawimage_class, drawimage_float);
+    class_addmethod(drawimage_class, (t_method)drawimage_size,
+        gensym("size"), A_FLOAT, A_FLOAT, 0);
+    class_addcreator((t_newmethod)drawimage_new, gensym("drawsprite"),
+        A_GIMME, 0);
+    class_setparentwidget(drawimage_class, &drawimage_widgetbehavior);
+}
+
 /* ---------------------- setup function ---------------------------- */
 
 void g_template_setup(void)
@@ -2773,6 +3224,7 @@ void g_template_setup(void)
     curve_setup();
     plot_setup();
     drawnumber_setup();
-	drawsymbol_setup();
+    drawsymbol_setup();
+    drawimage_setup();
 }
 

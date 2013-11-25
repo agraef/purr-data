@@ -9013,4 +9013,8 @@ proc pdtk_check_unique {unique filenames} {
 	#puts stderr "this is unique instance [tk appname]"
 }
 
+# Search plugin
 source [file join [file dirname [info script]] search-plugin.tcl]
+
+# Tcl/tk code for drawimage and drawsprite
+source [file join [file dirname [info script]] pdtk_drawimage.tcl]
