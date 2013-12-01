@@ -1,0 +1,59 @@
+#N canvas 423 183 777 495 10;
+#X obj 27 312 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 424 428 5 0 0 0 - - -, f 5;
+#X obj 424 449 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 27 333 metro 50;
+#X msg 210 126 open;
+#X msg 251 126 close;
+#X msg 26 68 export 27;
+#X msg 215 68 unexport;
+#X msg 26 126 direction in;
+#X msg 115 126 direction out;
+#X obj 424 407 disis_gpio 27;
+#X msg 164 68 export;
+#X msg 26 211 togglepwm \$1;
+#X obj 26 189 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 89 333 pwm \$1;
+#X obj 89 312 nbx 5 14 0 1023 0 0 empty empty empty 0 -8 0 10 -262144
+-1 -1 0 256 0;
+#X text 150 312 pwm range is 0-1023;
+#X msg 95 68 export 18;
+#X floatatom 499 428 5 0 0 0 - - -, f 5;
+#X text 24 27 1st export the desired pin or use "export" without an
+argument if you have pin already specified via previous export call
+or as a creation argument;
+#X text 24 107 2nd set the direction \, and open the pin;
+#X text 24 170 3rd (optional) enable hardware pwm (works only on pin
+18);
+#X text 24 250 4th either start sending data by sending float 0 or
+1 to a regular pin or a 0-1023 range to a pwm (18) pin. If receiving
+data \, start the metro to get updates through the first outlet. Metro
+is not needed if only sending data.;
+#X text 536 428 status (0=closed \, 1 open);
+#X text 336 427 incoming data;
+#X obj 424 312 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 444 311 if communicating to a pin without pwm (accepts 0 or
+1);
+#X text 512 406 optional arg sets the pin number;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 3 0 10 0;
+#X connect 4 0 10 0;
+#X connect 5 0 10 0;
+#X connect 6 0 10 0;
+#X connect 7 0 10 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X connect 10 1 18 0;
+#X connect 11 0 10 0;
+#X connect 12 0 10 0;
+#X connect 13 0 12 0;
+#X connect 14 0 10 0;
+#X connect 15 0 14 0;
+#X connect 17 0 10 0;
+#X connect 25 0 10 0;

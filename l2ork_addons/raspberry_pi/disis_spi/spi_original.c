@@ -203,7 +203,7 @@ int main(void)
 {
   t_spi *a2d = spi_new("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
   int a2dVal = 0;
-  int a2dChannel = 0;
+  int a2dChannel = 1;
   unsigned char data[3];
 
   while(1)

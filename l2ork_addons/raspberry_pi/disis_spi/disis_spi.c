@@ -12,14 +12,6 @@
  *            It can be only 0.5, 1, 2, 4, 8, 16, 32 MHz.
  *                Will use 1MHz for now and test it further.
  * spifd       -> file descriptor for the SPI device
- *
- * The class contains two constructors that initialize the above
- * variables and then open the appropriate spidev device using spiOpen().
- * The class contains one destructor that automatically closes the spidev
- * device when object is destroyed by calling spiClose().
- * The spiWriteRead() function sends the data "data" of length "length"
- * to the spidevice and at the same time receives data of the same length.
- * Resulting data is stored in the "data" variable after the function call.
  * ****************************************************************************/
 #include "m_pd.h"
 #include <unistd.h>
@@ -30,17 +22,22 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 
 static t_class *disis_spi_class;
-
-//#define FILE_PREFIX "/sys/class/gpio/"
-//#define FILE_EXPORT FILE_PREFIX "export"
 
 typedef struct _disis_spi
 {
     t_object x_obj;
     t_outlet *x_out1;
     t_outlet *x_out2;
+    t_outlet *x_out3;
+    t_outlet *x_out4;
+    t_outlet *x_out5;
+    t_outlet *x_out6;
+    t_outlet *x_out7;
+    t_outlet *x_out8;
+    t_outlet *x_out9;
     t_symbol *spidev;
     unsigned char mode;
     unsigned char bitsPerWord;
@@ -55,21 +52,23 @@ static int disis_spi_close(t_disis_spi *spi);
 static void disis_spi_free(t_disis_spi *spi);
 
 /**********************************************************
- * disis_spi_open() :function is called by the constructor.
+ * disis_spi_open() :function is called by the "open" command
  * It is responsible for opening the spidev device
  * "devspi" and then setting up the spidev interface.
- * private member variables are used to configure spidev.
- * They must be set appropriately by constructor before calling
+ * member variables are used to configure spidev.
+ * They must be set appropriately before calling
  * this function.
  * *********************************************************/
 static void disis_spi_open(t_disis_spi *spi, t_symbol *devspi){
     int statusVal = 0;
-    if (devspi == &s_)
+    if (strlen(devspi->s_name) == 0) {
       spi->spidev = gensym("/dev/spidev0.0");
-    else
+    } else {
       spi->spidev = devspi;
-    spi->spifd = open(devspi->s_name, O_RDWR);
+    }
+    spi->spifd = open(spi->spidev->s_name, O_RDWR);
     if(spi->spifd < 0) {
+      statusVal = -1;
       pd_error(spi, "could not open SPI device");
       goto spi_output;
     }
@@ -116,18 +115,19 @@ static void disis_spi_open(t_disis_spi *spi, t_symbol *devspi){
       goto spi_output;
     }
 spi_output:
-    outlet_float(spi->x_out2, statusVal);
+    if (!statusVal) statusVal = 1;
+    else statusVal = 0;
+    outlet_float(spi->x_out9, statusVal);
 }
 
 /***********************************************************
  * disis_spi_close(): Responsible for closing the spidev interface.
- * Called in destructor
  * *********************************************************/
  
 static int disis_spi_close(t_disis_spi *spi){
     int statusVal = -1;
     if (spi->spifd == -1) {
-      pd_error(spi, "disis_spi: device not open\n");
+      pd_error(spi, "disis_spi: device not open");
       return(-1);
     }
     statusVal = close(spi->spifd);
@@ -135,7 +135,9 @@ static int disis_spi_close(t_disis_spi *spi){
       pd_error(spi, "disis_spi: could not close SPI device");
       exit(1);
     }
-    return statusVal;
+    outlet_float(spi->x_out9, 0);
+    spi->spifd = -1;
+    return(statusVal);
 }
 
 /********************************************************************
@@ -195,32 +197,44 @@ static int disis_spi_write_read(t_disis_spi *spi, unsigned char *data, int lengt
  *                   byte3 = b7 - b0
  *    
  * after conversion must merge data[1] and data[2] to get final result
- *
- *
- *
  * *********************************************************************/
  
 static void disis_spi_bang(t_disis_spi *spi)
 {
-  int a2dVal = 0;
+  if (spi->spifd == -1) {
+    pd_error(spi, "device not open %d", spi->spifd);
+    return;
+  }
+  int a2dVal[8];
   int a2dChannel = 0;
   unsigned char data[3];
 
-  data[0] = 1;  //  first byte transmitted -> start bit
-  data[1] = 0b10000000 |( ((a2dChannel & 7) << 4)); // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
-  data[2] = 0; // third byte transmitted....don't care
+  for (a2dChannel = 0; a2dChannel < 8; a2dChannel++) {
 
-  disis_spi_write_read(spi, data, sizeof(data));
+    data[0] = 1;  //  first byte transmitted -> start bit
+    data[1] = 0b10000000 |( ((a2dChannel & 7) << 4)); // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
+    data[2] = 0; // third byte transmitted....don't care
 
-  a2dVal = 0;
-  a2dVal = (data[1]<< 8) & 0b1100000000; //merge data[1] & data[2] to get result
-  a2dVal |=  (data[2] & 0xff);
-  fprintf(stderr,"%d\n", a2dVal);
-  outlet_float(spi->x_out1, a2dVal);
+    disis_spi_write_read(spi, data, sizeof(data));
+
+    a2dVal[a2dChannel] = 0;
+    a2dVal[a2dChannel] = (data[1]<< 8) & 0b1100000000; //merge data[1] & data[2] to get result
+    a2dVal[a2dChannel] |=  (data[2] & 0xff);
+    //fprintf(stderr,"%d\n", a2dVal);
+  }
+
+  outlet_float(spi->x_out8, a2dVal[7]);
+  outlet_float(spi->x_out7, a2dVal[6]);
+  outlet_float(spi->x_out6, a2dVal[5]);
+  outlet_float(spi->x_out5, a2dVal[4]);
+  outlet_float(spi->x_out4, a2dVal[3]);
+  outlet_float(spi->x_out3, a2dVal[2]);
+  outlet_float(spi->x_out2, a2dVal[1]);
+  outlet_float(spi->x_out1, a2dVal[0]);
 }
 
 /*************************************************
- * init function. lets user set obj variables
+ * init function.
  * ***********************************************/
 static t_disis_spi *disis_spi_new(t_symbol *devspi){
     t_disis_spi *spi = (t_disis_spi *)pd_new(disis_spi_class);
@@ -228,6 +242,13 @@ static t_disis_spi *disis_spi_new(t_symbol *devspi){
     //t_disis_spi *a2d = disis_spi_new("/dev/spidev0.0", spi_MODE_0, 1000000, 8);
     spi->x_out1 = outlet_new(&spi->x_obj, gensym("float"));
     spi->x_out2 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out3 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out4 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out5 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out6 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out7 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out8 = outlet_new(&spi->x_obj, gensym("float"));
+    spi->x_out9 = outlet_new(&spi->x_obj, gensym("float"));
     spi->spidev = devspi;
     spi->mode = SPI_MODE_0;
     spi->bitsPerWord = 8;

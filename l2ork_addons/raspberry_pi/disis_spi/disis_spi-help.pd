@@ -1,0 +1,44 @@
+#N canvas 640 214 566 406 10;
+#X obj 26 304 disis_spi, f 51;
+#X msg 26 197 open;
+#X msg 202 197 close;
+#X floatatom 26 347 5 0 0 0 - - -, f 5;
+#X floatatom 349 347 5 0 0 0 - - -, f 5;
+#X msg 69 197 open /dev/spidev0.0;
+#X obj 209 262 metro 100;
+#X obj 209 238 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 63 347 5 0 0 0 - - -, f 5;
+#X floatatom 101 347 5 0 0 0 - - -, f 5;
+#X floatatom 139 347 5 0 0 0 - - -, f 5;
+#X floatatom 177 347 5 0 0 0 - - -, f 5;
+#X floatatom 215 347 5 0 0 0 - - -, f 5;
+#X floatatom 253 347 5 0 0 0 - - -, f 5;
+#X floatatom 291 347 5 0 0 0 - - -, f 5;
+#X text 27 367 8 channels of incoming analog data (range 0-1023);
+#X text 387 347 status (0=closed \, 1=open);
+#X text 231 238 toggle metro on to get updates;
+#X obj 23 111 pddplink http://moderndevice.com/product/lots-of-pots-lop-board-for-raspberry-pi/
+;
+#X text 23 20 disi_spi works with mcp3008 A/D converter and provides
+8 analog inputs into Raspberry Pi.The easiest way to get mcp3008
+installed on Raspberry Pi is to use Lots of Pots shield made and sold
+by Modern Device (you can get the cheaper NOP board without the pots
+so that you can wire other sensors):;
+#X text 23 151 The open the device simply press open (the implied devicename
+is /dev/spidev0.0) or do open <devicename>. To close device press close.
+;
+#X connect 0 0 3 0;
+#X connect 0 1 8 0;
+#X connect 0 2 9 0;
+#X connect 0 3 10 0;
+#X connect 0 4 11 0;
+#X connect 0 5 12 0;
+#X connect 0 6 13 0;
+#X connect 0 7 14 0;
+#X connect 0 8 4 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;

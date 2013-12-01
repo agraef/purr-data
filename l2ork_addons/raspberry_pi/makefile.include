@@ -1,5 +1,3 @@
-current: l_i386 l_ia64
-
 # which OS to compile for
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Linux)
@@ -36,6 +34,11 @@ endif
 ifeq ($(UNAME_MACHINE),ppc)
   ARCH = powerpc
 endif
+ifeq ($(UNAME_MACHINE),armv6l)
+  ARCH = l_arm
+endif
+
+current: $(ARCH)
 
 # ----------------------- Windows -----------------------
 
@@ -62,6 +65,7 @@ PDNTLIB = $(PDNTLDIR)\libc.lib \
 
 l_i386: $(NAME).l_i386
 l_ia64: $(NAME).l_ia64
+l_arm: $(NAME).l_arm
 
 .SUFFIXES: .l_i386 .l_ia64 .l_arm
 
@@ -75,21 +79,21 @@ LINUXINCLUDE =  $(UNIXINCLUDE)
 
 .c.l_i386:
 	$(CC) $(LINUXCFLAGS) $(LINUXINCLUDE) -m32 -o $*.o -c $*.c
-	$(CC) -m32 -shared -o $*.l_i386 $*.o -lc -lm
+	$(CC) -m32 -shared -o $*.l_i386 $*.o -lc -lm $(APPENDFLAGS)
 	strip --strip-unneeded $*.l_i386
 	rm -f $*.o
 	mv $(NAME).l_i386 $(NAME).pd_linux
 
 .c.l_ia64:
 	cc $(LINUXCFLAGS) $(LINUXINCLUDE) -fPIC -o $*.o -c $*.c
-	ld  -shared -o $*.l_ia64 $*.o -lc -lm
+	ld  -shared -o $*.l_ia64 $*.o -lc -lm $(APPENDFLAGS)
 	strip --strip-unneeded $*.l_ia64
 	rm $*.o
 	mv $(NAME).l_ia64 $(NAME).pd_linux
 
 .c.l_arm:
 	cc $(LINUXCFLAGS) $(LINUXINCLUDE) -o $*.o -c $*.c
-	ld  -shared -o $*.l_arm $*.o -lc -lm
+	ld  -shared -o $*.l_arm $*.o -lc -lm $(APPENDFLAGS)
 	strip --strip-unneeded $*.l_arm
 	rm $*.o
 	mv $(NAME).l_arm $(NAME).pd_linux
@@ -100,7 +104,7 @@ ifeq ($(ARCH),l_ia64)
 	make l_ia64
 endif
 ifeq ($(ARCH),l_arm)
-		make l_arm
+	make l_arm
 endif
 ifeq ($(ARCH),l_i386)
 	make l_i386
