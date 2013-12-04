@@ -4569,7 +4569,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         return;
     }
     if (canvas_last_glist_mod == -1 && mod != -1) {
-    	fprintf(stderr,"revert the cursor %d\n", x->gl_edit);
+    	//fprintf(stderr,"revert the cursor %d\n", x->gl_edit);
     	if (x->gl_edit)
 	    	canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
 	    else
