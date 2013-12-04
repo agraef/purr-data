@@ -1,4 +1,4 @@
-#N canvas 183 174 589 426 10;
+#N canvas 337 191 596 426 10;
 #X obj 254 116 bng 14 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X obj 245 134 bng 32 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -7,12 +7,12 @@
 #X obj 65 -125 inlet;
 #X obj 255 18 loadbang;
 #X msg 255 41 open @pd_extra/K12/objects/wii_nunchuk_buttons.png;
-#X msg 323 73 open @pd_extra/K12/objects/wii_nunchuk_buttons_C.png
+#X msg 313 123 open @pd_extra/K12/objects/wii_nunchuk_buttons_C.png
 ;
-#X msg 323 95 open @pd_extra/K12/objects/wii_nunchuk_buttons_Z.png
+#X msg 313 145 open @pd_extra/K12/objects/wii_nunchuk_buttons_Z.png
 ;
-#X msg 80 174 2;
-#X msg 110 174 1;
+#X msg 141 180 2;
+#X msg 171 180 1;
 #X obj 65 208 & 8;
 #X obj 65 -33 route button;
 #X obj 65 229 > 0;
@@ -50,21 +50,27 @@
 #X connect 12 0 13 0;
 #X connect 13 0 7 0;
 #X restore 136 -69 pd check_4_wiimote_passthrough;
+#X floatatom 141 230 5 0 0 0 - - -, f 5;
+#X obj 141 251 sel 2 1;
+#X obj 90 139 preset_node k12;
 #X connect 0 0 8 0;
-#X connect 0 0 6 0;
 #X connect 1 0 9 0;
-#X connect 1 0 7 0;
 #X connect 3 0 14 0;
 #X connect 4 0 5 0;
 #X connect 5 0 13 0;
 #X connect 6 0 13 0;
 #X connect 7 0 13 0;
-#X connect 8 0 10 1;
-#X connect 9 0 10 1;
+#X connect 8 0 16 0;
+#X connect 9 0 16 0;
 #X connect 10 0 12 0;
 #X connect 11 0 10 0;
 #X connect 12 0 2 0;
 #X connect 14 0 11 0;
 #X connect 14 1 15 0;
 #X connect 14 2 15 1;
+#X connect 16 0 10 1;
+#X connect 16 0 17 0;
+#X connect 17 0 6 0;
+#X connect 17 1 7 0;
+#X connect 18 0 16 0;
 #X coords 0 -1 1 1 89 89 2 216 89;
