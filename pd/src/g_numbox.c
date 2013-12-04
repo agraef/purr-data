@@ -862,7 +862,6 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     t_atom *argv)
 {
 	canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-	int need_to_redraw = 0;
 
     t_symbol *srl[3];
     int w = (int)atom_getintarg(0, argc, argv);
@@ -873,7 +872,6 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     int log_height = (int)atom_getintarg(6, argc, argv);
 	if (argc > 17) {
 		x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
-		need_to_redraw = 1;
 	}
     int sr_flags;
 
@@ -893,17 +891,17 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     /*if(my_numbox_check_minmax(x, min, max))
      my_numbox_bang(x);*/
     my_numbox_check_minmax(x, min, max);
-	if (need_to_redraw) {
-	    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
-	    //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
-		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_NEW);
-	} else {
+	//if (need_to_redraw) {
+    (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
+    //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
+	iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_NEW);
+	/*} else {
 		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
 		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
 		//(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
 		//(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
 		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-	}
+	}*/
 	
     canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
 
@@ -911,6 +909,8 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
 	if (x->x_gui.x_fsf.x_selected) {
 		my_numbox_draw_select(x, x->x_gui.x_glist);
 	}
+
+	canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x, iem_get_tag(x->x_gui.x_glist, (t_iemgui *)x), -1);
 
 	//ico@bukvic.net 100518 update scrollbars when object potentially exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
