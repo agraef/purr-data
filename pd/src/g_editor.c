@@ -4545,9 +4545,11 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 	{
 		//fprintf(stderr,"ctrl\n");
 		glob_ctrl = down;
-		if(x->gl_edit && x->gl_editor->e_onmotion == MA_NONE)
+		if(x->gl_edit && x->gl_editor->e_onmotion == MA_NONE) {
         	canvas_setcursor(x, down ?
             	CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
+        	sys_vgui("pdtk_canvas_editval .x%lx %d\n", (t_int)x, down ? 0 : 1);
+        }
 	}
 	//fprintf(stderr," %d %d %d %s %d %d\n", glob_shift, glob_ctrl, glob_alt, gotkeysym->s_name, keynum, down);
 	//canvas_motion(x, canvas_last_glist_x, canvas_last_glist_y, canvas_last_glist_mod);

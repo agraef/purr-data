@@ -2494,6 +2494,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pack $name.k12frame.edit.b -side left -expand 1 -padx 1 -pady 0
 		setTooltip $name.k12frame.edit.b "Toggle between building and playing an instrument"
 		pdtk_standardkeybindings $name.k12frame.edit.b
+		bind $name.k12frame.edit.b <Key> [list pdtk_canvas_sendkey $name.c 1 %K %A 0 1 %t]
+    	bind $name.k12frame.edit.b <KeyRelease> [list pdtk_canvas_sendkey $name.c 0 %K %A 0 1 %t]
 
 		# ---------------------------------- DATA VS SOUND BUTTONS ----------------------------------
 		match_linux_wm [list frame $name.k12frame.datasound -relief flat]
