@@ -696,6 +696,8 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 	t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
 	t_scalehandle *mh = (t_scalehandle *)(x->x_mhandle);
 
+    if (!sh || !mh) return; //in case we are an array which does not initialize its hooks
+
 	if(x->gl_edit && glist_isvisible(x) && glist_istoplevel(x) && x->gl_goprect && !x->gl_editor->e_selection) {
 		
 		//Drawing and Binding Resize_Blob for GOP
