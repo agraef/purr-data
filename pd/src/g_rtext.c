@@ -671,8 +671,26 @@ be printable in whatever 8-bit character set we find ourselves. */
 		        u8_dec(x->x_buf, &x->x_selstart);
 		}
     }
-        /* this should be improved...  life's too short */
-    else if (!strcmp(keysym->s_name, "Up") || !strcmp(keysym->s_name, "Home"))
+    else if (!strcmp(keysym->s_name, "Up"))
+    {
+        if (x->x_selstart)
+            u8_dec(x->x_buf, &x->x_selstart);
+        while (x->x_selstart > 0 && (x->x_buf[x->x_selstart] != '\n' && x->x_buf[x->x_selstart] != '\v'))
+            u8_dec(x->x_buf, &x->x_selstart);
+        x->x_selend = x->x_selstart;
+		last_sel = 0;
+    }
+    else if (!strcmp(keysym->s_name, "Down"))
+    {
+        while (x->x_selend < x->x_bufsize &&
+            (x->x_buf[x->x_selend] != '\n' && x->x_buf[x->x_selend] != '\v'))
+            u8_inc(x->x_buf, &x->x_selend);
+        if (x->x_selend < x->x_bufsize)
+            u8_inc(x->x_buf, &x->x_selend);
+        x->x_selstart = x->x_selend;
+		last_sel = 0;
+    }
+    else if (!strcmp(keysym->s_name, "Home"))
     {
         if (x->x_selstart)
             u8_dec(x->x_buf, &x->x_selstart);
@@ -681,7 +699,7 @@ be printable in whatever 8-bit character set we find ourselves. */
         x->x_selend = x->x_selstart;
 		last_sel = 0;
     }
-    else if (!strcmp(keysym->s_name, "Down") || !strcmp(keysym->s_name, "End"))
+    else if (!strcmp(keysym->s_name, "End"))
     {
         while (x->x_selend < x->x_bufsize &&
             x->x_buf[x->x_selend] != '\n')
