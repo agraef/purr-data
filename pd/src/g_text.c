@@ -1896,7 +1896,7 @@ void text_drawborder(t_text *x, t_glist *glist,
     {
         if (firsttime) {
             sys_vgui(".x%lx.c create pline\
- %d %d %d %d -tags [list %sR commentbar] -stroke $obj_box_fill\n",
+ %d %d %d %d -tags [list %sR commentbar] -stroke $box_outline\n",
                 glist_getcanvas(glist),
                 x2, y1,  x2, y2, tag);
         } else {
@@ -1981,7 +1981,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     {
         if (firsttime) {
             sys_vgui(".x%lx.c create pline\
- %d %d %d %d -tags [list %sR commentbar] -stroke $obj_box_fill\n",
+ %d %d %d %d -tags [list %sR commentbar] -stroke $box_outline\n",
                 glist_getcanvas(glist),
                 x2, y1,  x2, y2, tag);
         } else {
