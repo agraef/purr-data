@@ -152,7 +152,7 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
     t_object *ob;
 	//fprintf(stderr,"shouldvis %d %d %d %d\n", glist->gl_havewindow, glist->gl_isgraph, glist->gl_goprect, glist->gl_owner != NULL);
     if (!glist->gl_havewindow && glist->gl_isgraph && glist->gl_goprect &&
-        glist->gl_owner && (pd_class(&x->g_pd) != scalar_class) && (pd_class(&glist->gl_pd) != garray_class))
+        glist->gl_owner && (pd_class(&x->g_pd) != scalar_class) && (pd_class(&x->g_pd) != garray_class))
     {
         /* if we're graphing-on-parent and the object falls outside the
         graph rectangle, don't draw it. */
