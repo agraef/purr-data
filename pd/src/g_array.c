@@ -402,9 +402,11 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     int flags = fflags;
     if (size < 1)
         size = 1;
-    if (otherflag == 0 || (!(gl = glist_findgraph(parent))))
+    if (otherflag == 0 || (!(gl = glist_findgraph(parent)))) {
         gl = glist_addglist(parent, &s_, 0, 1,
             (size > 1 ? size-1 : size), -1, xdraw+30, ydraw+30, xdraw+30+GLIST_DEFGRAPHWIDTH, ydraw+30+GLIST_DEFGRAPHHEIGHT);
+        gl->gl_hidetext = 1;
+    }
     a = graph_array(gl, sharptodollar(name), &s_float, size, flags);
     canvas_dirty(parent, 1);
 	//canvas_redraw(glist_getcanvas(parent));
@@ -1031,6 +1033,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 static void array_getrect(t_array *array, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
+    //fprintf(stderr,"array getrect\n");
     t_float x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
