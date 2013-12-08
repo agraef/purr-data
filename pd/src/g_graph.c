@@ -857,7 +857,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         {
 			//i++;
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw\
-             -font {{%s} %d %s} -tags {%s} -fill %s\n",
+             -font {{%s} -%d %s} -tags {%s} -fill %s\n",
              (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name, sys_font,
                 sys_hostfontsize(glist_getfont(x)), sys_fontweight, tag,
 				(glist_isselected(x, gr) ? "$select_color" : "$graph_outline"));
@@ -1010,6 +1010,10 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 
 	//fprintf(stderr,"graph_checkgop_rect\n");
 	t_glist *x = (t_glist *)z;
+    t_gobj *g;
+    int fw = sys_fontwidth(x->gl_font);
+    int fh = sys_fontheight(x->gl_font);
+
 	if (!x->gl_hidetext) {
 		int x21, y21, x22, y22;
 		text_widgetbehavior.w_getrectfn(z, glist, &x21, &y21, &x22, &y22);
@@ -1017,8 +1021,6 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 		    *xp2 = x22;
 		if (y22 > *yp2) 
 		    *yp2 = y22;
-		int fw = sys_fontwidth(x->gl_font);
-		int fh = sys_fontheight(x->gl_font);
 		// WARNING: ugly hack trying to replicate rtext_senditup if we have no parent
 		// later consider fixing hardwired values
 		int tcols = strlen(x->gl_name->s_name) - 3;
@@ -1030,6 +1032,26 @@ void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 		if (th + *yp1 > *yp2)
 			*yp2 = th + *yp1;
 	}
+
+    // check if the gop has array members and if so, make its minimum size based on array names size
+    t_symbol *arrayname;
+    int cols_tmp = 0;
+    int arrayname_cols = 0;
+    int arrayname_rows = 0;
+    for (g = x->gl_list; g; g = g->g_next) {
+        if (pd_class(&g->g_pd) == garray_class && !garray_getname((t_garray *)g, &arrayname)) {
+            arrayname_rows += 1;
+            cols_tmp = strlen(arrayname->s_name);
+            if(cols_tmp > arrayname_cols) arrayname_cols = cols_tmp;
+        }
+    }
+    if (arrayname_rows) {
+        int fontwidth = sys_fontwidth(x->gl_font);
+        int fontheight = sys_fontheight(x->gl_font);
+        if ((arrayname_rows * fontheight - 1) > (*yp2 - *yp1)) *yp2 = *yp1 + (arrayname_rows * fontheight - 1);
+        if ((arrayname_cols * fontwidth + 2) > (*xp2 - *xp1)) *xp2 = *xp1 + (arrayname_cols * fontwidth + 2);
+    }
+
 	// failsafe where we cannot have a gop that is smaller than 1x1 pixels
 	// regardless whether the text is hidden
 	int in = obj_ninlets(pd_checkobject(&z->g_pd)) * IOWIDTH;
