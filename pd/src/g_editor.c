@@ -6366,8 +6366,17 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     x->gl_edit = !x->gl_edit;
     if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x)){
 		//dpsaha@vt.edu add the resize blobs on GOP
+		t_gobj *g;
+        t_object *ob;
 		if (x->gl_goprect)	canvas_draw_gop_resize_hooks(x);
 		canvas_setcursor(x, CURSOR_EDITMODE_NOTHING);
+        for (g = x->gl_list; g; g = g->g_next)
+            if ((ob = pd_checkobject(&g->g_pd)) && ob->te_type == T_TEXT)
+        {
+            t_rtext *y = glist_findrtext(x, ob);
+            text_drawborder(ob, x,
+                rtext_gettag(y), rtext_width(y), rtext_height(y), 1);
+        }
 	}
     else
     {
@@ -6375,6 +6384,11 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         glist_noselect(x);
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
+        	if (glist_isvisible(x) && glist_istoplevel(x))
+        	{
+            	canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
+            	sys_vgui(".x%lx.c delete commentbar\n", glist_getcanvas(x));
+        	}
             // jsarlo
             if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
             {

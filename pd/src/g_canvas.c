@@ -1235,6 +1235,7 @@ static void *subcanvas_new(t_symbol *s)
 {
     t_atom a[6];
     t_canvas *x, *z = canvas_getcurrent();
+    fprintf(stderr,"subcanvas_new current canvas .x%lx\n", (t_int)z);
     if (!*s->s_name) s = gensym("/SUBPATCH/");
     SETFLOAT(a, 0);
     SETFLOAT(a+1, GLIST_DEFCANVASYLOC);
@@ -1810,6 +1811,8 @@ int canvas_open(t_canvas *x, const char *name, const char *ext,
 static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     static int warned;
+    //fprintf(stderr,"canvas_f .x%lx\n", (t_int)x);
+    t_canvas *xp = x; //parent window for a special case dealing with subpatches
     t_gobj *g, *g2;
     t_object *ob;
     if (argc > 1 && !warned)
@@ -1817,17 +1820,30 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         post("** ignoring width or font settings from future Pd version **");
         warned = 1;
     }
-    if (!x->gl_list)
-        return;
+    if (!x->gl_list) {
+        if (x->gl_owner && !x->gl_isgraph) {
+            // this means that we are a canvas that was just created
+            // and that our width applies to our appearance on our parent
+            xp = x->gl_owner;
+            for (g = xp->gl_list; g != (t_gobj *)x; g = g->g_next) {
+                //fprintf(stderr,".x%lx .x%lx\n", (t_int)g, (t_int)x);
+                ;
+            }
+            //fprintf(stderr,"done %d\n", (g != NULL ? 1: 0));
+        } else return;
+    } else {
     for (g = x->gl_list; g2 = g->g_next; g = g2)
         ;
-    if (ob = pd_checkobject(&g->g_pd))
+    }
+    //fprintf(stderr,"is canvas_class? %d\n", (pd_class(&g->g_pd) == canvas_class ? 1:0));
+    if ((ob = pd_checkobject(&g->g_pd)) || pd_class(&g->g_pd) == canvas_class)
     {
+        //fprintf(stderr,"f received\n");
         ob->te_width = atom_getfloatarg(0, argc, argv);
-        if (glist_isvisible(x))
+        if (glist_isvisible(xp))
         {
-            gobj_vis(g, x, 0);
-            gobj_vis(g, x, 1);
+            gobj_vis(g, xp, 0);
+            gobj_vis(g, xp, 1);
         }
     }
 }

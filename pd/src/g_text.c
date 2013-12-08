@@ -105,7 +105,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 extern t_pd *newest;
 void canvas_getargs(int *argcp, t_atom **argvp);
 
-static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
+static void canvas_objtext(t_glist *gl, int xpix, int ypix, int width, int selected,
     t_binbuf *b)
 {
 	//fprintf(stderr,"canvas_objtext\n");
@@ -167,7 +167,7 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int selected,
 
     x->te_xpix = xpix;
     x->te_ypix = ypix;
-    x->te_width = 0;
+    x->te_width = width;
     x->te_type = T_OBJECT;
 	/* let's see if iemgui objects did not already set the value to 1, otherwise set it explicitly to 0 */
 	if (x->te_iemgui != 1)
@@ -275,7 +275,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         t_binbuf *b = binbuf_new();
         binbuf_restore(b, argc-2, argv+2);
         canvas_objtext(gl, atom_getintarg(0, argc, argv),
-            atom_getintarg(1, argc, argv), 0, b);
+            atom_getintarg(1, argc, argv), 0, 0, b);
     }
         /* JMZ: don't go into interactive mode in a closed canvas */
     else if (!glist_isvisible(gl))
@@ -287,7 +287,7 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         int connectme, xpix, ypix, indx, nobj;
         canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
-        canvas_objtext(gl, xpix, ypix, 1, b);
+        canvas_objtext(gl, xpix, ypix, 0, 1, b);
         if (connectme == 1) {
 			//fprintf(stderr,"canvas_obj calls canvas_connect\n");
 			connect_exception = 1;
@@ -323,7 +323,7 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom
 	if (sys_k12_mode)
 		pd_vmess (&gl->gl_pd, gensym("tooltips"), "i", 1);
 #endif
-    canvas_objtext(gl, xpix+atom_getintarg(1, argc, argv), ypix+atom_getintarg(2, argc, argv), 1, b);
+    canvas_objtext(gl, xpix+atom_getintarg(1, argc, argv), ypix+atom_getintarg(2, argc, argv), 0, 1, b);
 
 	// the object is now the last on the glist so we locate it and send it loadbang
 	// we know we have at least one object since we just created one so we don't check for y being valid
@@ -375,7 +375,7 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     glist_noselect(gl);
     SETSYMBOL(&at, guiobjname);
     binbuf_restore(b, 1, &at);
-	canvas_objtext(gl, xpix, ypix, 1, b);
+	canvas_objtext(gl, xpix, ypix, 0, 1, b);
     if (connectme == 1)
         canvas_connect(gl, indx, 0, nobj, 0);
     //glist_getnextxy(gl, &xpix, &ypix);
@@ -1375,10 +1375,13 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
     t_rtext *y = glist_findrtext(glist, x);
     char *outline;
     rtext_select(y, state);
-	//fprintf(stderr,"text_select %s\n", rtext_gettag(y));
-    if (pd_class(&x->te_pd) == text_class)
+	//fprintf(stderr,"text_select %s %d\n", rtext_gettag(y), state);
+
+    // text_class is either a comment or an object that failed to creates
+    // so we distinguish between it and comment using T_TEXT type check
+    if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT) {
         outline = "$dash_outline";
-    else
+    } else
         outline = "$box_outline";
 	//fprintf(stderr,"text_select isvisible=%d shouldvis=%d istoplevel=%d\n", glist_isvisible(glist), gobj_shouldvis(&x->te_g, glist), glist_istoplevel(glist));
     if (gobj_shouldvis(&x->te_g, glist)) {
@@ -1886,6 +1889,21 @@ void text_drawborder(t_text *x, t_glist *glist,
                 glist_getcanvas(glist), tag,
                 x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
     }
+        /* for comments, just draw a bar on RHS if unlocked; when a visible
+        canvas is unlocked we have to call this anew on all comments, and when
+        locked we erase them all via the annoying "commentbar" tag. */
+    else if (x->te_type == T_TEXT && glist->gl_edit)
+    {
+        if (firsttime) {
+            sys_vgui(".x%lx.c create pline\
+ %d %d %d %d -tags [list %sR commentbar] -stroke $obj_box_fill\n",
+                glist_getcanvas(glist),
+                x2, y1,  x2, y2, tag);
+        } else {
+            sys_vgui(".x%lx.c coords %sR %d %d %d %d\n",
+                glist_getcanvas(glist), tag, x2, y1,  x2, y2);
+        }
+    }
 
 	/* draw inlets/outlets */    
     if (ob = pd_checkobject(&x->te_pd)) {
@@ -1956,6 +1974,21 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
                      x2, y2,  x1, y2,  x1, y1, 
                     tag, tag);
     }
+        /* for comments, just draw a bar on RHS if unlocked; when a visible
+        canvas is unlocked we have to call this anew on all comments, and when
+        locked we erase them all via the annoying "commentbar" tag. */
+    else if (x->te_type == T_TEXT && glist->gl_edit)
+    {
+        if (firsttime) {
+            sys_vgui(".x%lx.c create pline\
+ %d %d %d %d -tags [list %sR commentbar] -stroke $obj_box_fill\n",
+                glist_getcanvas(glist),
+                x2, y1,  x2, y2, tag);
+        } else {
+            sys_vgui(".x%lx.c coords %sR %d %d %d %d\n",
+                glist_getcanvas(glist), tag, x2, y1,  x2, y2);
+        }
+    }
         /* draw inlets/outlets */
     
     if (ob = pd_checkobject(&x->te_pd)) {
@@ -1985,7 +2018,7 @@ void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
 
 void text_eraseborder(t_text *x, t_glist *glist, char *tag)
 {
-    if (x->te_type == T_TEXT) return;
+    //if (x->te_type == T_TEXT) return;
     sys_vgui(".x%lx.c delete %sR\n",
         glist_getcanvas(glist), tag);
     glist_eraseiofor(glist, x, tag);
@@ -2003,7 +2036,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
     if (x->te_type == T_OBJECT)
     {
         t_binbuf *b = binbuf_new();
-        int natom1, natom2;
+        int natom1, natom2, widthwas = x->te_width;
         t_atom *vec1, *vec2;
         binbuf_text(b, buf, bufsize);
         natom1 = binbuf_getnatom(x->te_binbuf);
@@ -2047,7 +2080,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 		        int xwas = x->te_xpix, ywas = x->te_ypix;
 				canvas_eraselinesfor(glist, x);
 		        glist_delete(glist, &x->te_g);
-		        canvas_objtext(glist, xwas, ywas, 0, b);
+		        canvas_objtext(glist, xwas, ywas, widthwas, 0, b);
 		            /* if it's an abstraction loadbang it here */
 		        if (newest && pd_class(newest) == canvas_class)
 		            canvas_loadbang((t_canvas *)newest);
