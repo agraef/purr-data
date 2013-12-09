@@ -23,9 +23,9 @@ static void dopost(const char *s)
     {
         char upbuf[MAXPDSTRING];
         int ptin = 0, ptout = 0, len = strlen(s);
-        static int heldcr = 0;
-        if (heldcr)
-            upbuf[ptout++] = '\n', heldcr = 0;
+        //static int heldcr = 0;
+        //if (heldcr)
+        //    upbuf[ptout++] = '\n', heldcr = 0;
         for (; ptin < len && ptout < MAXPDSTRING-3;
             ptin++, ptout++)
         {
@@ -34,8 +34,8 @@ static void dopost(const char *s)
                 upbuf[ptout++] = '\\';
             upbuf[ptout] = s[ptin];
         }
-        if (ptout && upbuf[ptout-1] == '\n')
-            upbuf[--ptout] = 0, heldcr = 1;
+        //if (ptout && upbuf[ptout-1] == '\n')
+        //    upbuf[--ptout] = 0, heldcr = 1;
         upbuf[ptout] = 0;
         sys_vgui("pdtk_post {%s}\n", upbuf);
     }
