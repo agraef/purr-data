@@ -1327,11 +1327,11 @@ static void graph_motion(void *z, t_floatarg dx, t_floatarg dy)
 static int graph_click(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr, "graph_click\n");
+    fprintf(stderr, "graph_click %d\n", doit);
     t_glist *x = (t_glist *)z;
     t_gobj *y, *clickme = NULL;
     int clickreturned = 0;
-    int tmpclickreturned = 0;
+    //int tmpclickreturned = 0;
     if (!x->gl_isgraph)
         return (text_widgetbehavior.w_clickfn(z, glist,
             xpix, ypix, shift, alt, dbl, doit));
@@ -1343,15 +1343,12 @@ static int graph_click(t_gobj *z, struct _glist *glist,
         for (y = x->gl_list; y; y = y->g_next)
         {
                 /* check if the object wants to be clicked */
-            if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2)
-                &&  (tmpclickreturned = gobj_click(y, x, xpix, ypix,
-                shift, alt, 0, 0))) {
+            if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2)) {
                     clickme = y;
-                    clickreturned = tmpclickreturned;
                     //fprintf(stderr,"    found clickable %d\n", clickreturned);
             }
         }
-        if (clickme != NULL && doit) {
+        if (clickme) {
             //fprintf(stderr,"    clicking\n");
             clickreturned = gobj_click(clickme, x, xpix, ypix,
                     shift, alt, 0, doit);
