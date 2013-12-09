@@ -593,14 +593,18 @@ void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
 int glist_isgraph(t_glist *x)
 {
     // testing to see if we have an array and force hiding text (later update GUI accordingly)
+    // we likely need this to silently update legacy arrays
+    // (no regressions are expected but this needs to be tested)
     t_gobj *g = x->gl_list;
     int hasarray = 0;
     while (g) {
         if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
         g = g->g_next;
     }
-    if (hasarray && x->gl_isgraph && !x->gl_hidetext)
+    if (hasarray)  {
+        x->gl_isgraph = 1;
         x->gl_hidetext = 1;
+    }
     return (x->gl_isgraph|(x->gl_hidetext<<1));
 }
 
