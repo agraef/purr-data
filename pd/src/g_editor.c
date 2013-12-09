@@ -2370,6 +2370,19 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 		}
         x->gl_isgraph = 1;
         x->gl_hidetext = !(!(flag&2));
+        
+
+        // check if we have array inside GOP, if so, make sure hidetext is always hidden no matter what
+        t_gobj *g = x->gl_list;
+        int hasarray = 0;
+        while (g) {
+        	if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
+        	g = g->g_next;
+        }
+        if (hasarray)
+        	x->gl_hidetext = 1;
+
+
         if (!nogoprect && !x->gl_goprect)
         {
 			/* Ivica Ico Bukvic 5/16/10 <ico@bukvic.net> */

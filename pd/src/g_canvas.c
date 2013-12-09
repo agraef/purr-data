@@ -592,7 +592,16 @@ void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
     otherwise it appears as a text box. */
 int glist_isgraph(t_glist *x)
 {
-  return (x->gl_isgraph|(x->gl_hidetext<<1));
+    // testing to see if we have an array and force hiding text (later update GUI accordingly)
+    t_gobj *g = x->gl_list;
+    int hasarray = 0;
+    while (g) {
+        if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
+        g = g->g_next;
+    }
+    if (hasarray && x->gl_isgraph && !x->gl_hidetext)
+        x->gl_hidetext = 1;
+    return (x->gl_isgraph|(x->gl_hidetext<<1));
 }
 
     /* This is sent from the GUI to inform a toplevel that its window has been
