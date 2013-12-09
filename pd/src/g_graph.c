@@ -1327,7 +1327,7 @@ static void graph_motion(void *z, t_floatarg dx, t_floatarg dy)
 static int graph_click(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    fprintf(stderr, "graph_click %d\n", doit);
+    //fprintf(stderr, "graph_click %d\n", doit);
     t_glist *x = (t_glist *)z;
     t_gobj *y, *clickme = NULL;
     int clickreturned = 0;
