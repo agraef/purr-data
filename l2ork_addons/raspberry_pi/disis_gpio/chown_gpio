@@ -1,3 +1,0 @@
-sudo chown -R $USER:$USER /sys/class/gpio/*
-sudo chown $USER:$USER /sys/class/gpio/gpio*/*
-exit 0
