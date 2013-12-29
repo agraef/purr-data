@@ -467,40 +467,35 @@ int open_via_path(const char *dir, const char *name, const char *ext,
     search attempts. */
 void open_via_helppath(const char *name, const char *dir)
 {
-    char realname[FILENAME_MAX], propername[FILENAME_MAX], dirbuf[FILENAME_MAX];
-    char *basename;
+    char realname[MAXPDSTRING], dirbuf[MAXPDSTRING], *basename;
         /* make up a silly "dir" if none is supplied */
     const char *usedir = (*dir ? dir : "./");
     int fd;
 
         /* 1. "objectname-help.pd" */
-    strncpy(realname, name, FILENAME_MAX-10);
-    realname[FILENAME_MAX-10] = 0;
+    strncpy(realname, name, MAXPDSTRING-10);
+    realname[MAXPDSTRING-10] = 0;
     if (strlen(realname) > 3 && !strcmp(realname+strlen(realname)-3, ".pd"))
         realname[strlen(realname)-3] = 0;
     strcat(realname, "-help.pd");
-    strncpy(propername, realname, FILENAME_MAX);
-    if ((fd = do_open_via_path(dir, realname, "", dirbuf, &basename, 
-        FILENAME_MAX, 0, sys_helppath)) >= 0)
+    if ((fd = do_open_via_path(usedir, realname, "", dirbuf, &basename, 
+        MAXPDSTRING, 0, sys_helppath)) >= 0)
             goto gotone;
 
         /* 2. "help-objectname.pd" */
     strcpy(realname, "help-");
-    strncat(realname, name, FILENAME_MAX-10);
-    realname[FILENAME_MAX-1] = 0;
-    if ((fd = do_open_via_path(dir, realname, "", dirbuf, &basename, 
-        FILENAME_MAX, 0, sys_helppath)) >= 0)
-            goto gotone_deprecated;
+    strncat(realname, name, MAXPDSTRING-10);
+    realname[MAXPDSTRING-1] = 0;
+    if ((fd = do_open_via_path(usedir, realname, "", dirbuf, &basename, 
+        MAXPDSTRING, 0, sys_helppath)) >= 0)
+            goto gotone;
 
         /* 3. "objectname.pd" */
-    if ((fd = do_open_via_path(dir, name, "", dirbuf, &basename, 
-        FILENAME_MAX, 0, sys_helppath)) >= 0)
-            goto gotone_deprecated;
+    if ((fd = do_open_via_path(usedir, name, "", dirbuf, &basename, 
+        MAXPDSTRING, 0, sys_helppath)) >= 0)
+            goto gotone;
     post("sorry, couldn't find help patch for \"%s\"", name);
     return;
-gotone_deprecated:
-    error("'%s' is a deprecated name format for a help patch.\n\tPlease rename to '%s'!",
-          basename, propername);
 gotone:
     close (fd);
     glob_evalfile(0, gensym((char*)basename), gensym(dirbuf));
