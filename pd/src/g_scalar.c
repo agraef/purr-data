@@ -240,9 +240,14 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 	if (state) {
 		sys_vgui(".x%lx.c addtag selected withtag scalar%lx\n",
 			glist_getcanvas(owner), x);
-		if (x->sc_vec)
-			sys_vgui(".x%lx.c addtag selected withtag .x%lx.x%lx.template%lx\n",
-				glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+		/* how do we navigate through a t_word list?
+        if (x->sc_vec) {
+            t_word *v = x->sc_vec;
+            while(v) {
+    			sys_vgui(".x%lx.c addtag selected withtag .x%lx.x%lx.template%lx\n",
+    				glist_getcanvas(owner), glist_getcanvas(owner), owner, v);
+            }
+        }*/
 		/*if (templatecanvas) {
 			// get the universal tag for all nested objects
 			t_canvas *tag = owner;
@@ -255,8 +260,14 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 	} else {
 		sys_vgui(".x%lx.c dtag scalar%lx selected\n",
 			glist_getcanvas(owner), x);
-		sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
-			glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+        /* how do we navigate through a t_word list?
+        if (x->sc_vec) {
+            t_word *v = x->sc_vec;
+            while (v) {
+        		sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
+        			glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+            }
+        }*/
 		/*if (templatecanvas) {
 			// get the universal tag for all nested objects
 			t_canvas *tag = owner;
@@ -382,7 +393,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     {
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
-        (*wb->w_parentvisfn)(y, owner, x->sc_vec, template, basex, basey, vis);
+        (*wb->w_parentvisfn)(y, owner, x, x->sc_vec, template, basex, basey, vis);
     }
     sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))

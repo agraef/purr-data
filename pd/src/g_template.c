@@ -1059,7 +1059,7 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"curve_getrect\n");
+	//fprintf(stderr,">>>>>>>>>>>>>>>>>>>>>>curve_getrect %lx\n", (t_int)z);
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
     t_fielddesc *f = x->x_vec;
@@ -1100,6 +1100,8 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         y2 = cy + ry;
     }
 	//fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    //sys_vgui(".x%lx.c create prect %d %d %d %d -stroke red -tags blah\n",
+    //        glist_getcanvas(glist), x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -1117,6 +1119,7 @@ static void curve_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
+    fprintf(stderr,"curve_select %d\n", state);
     /* fill in later */
 }
 
@@ -1156,7 +1159,7 @@ static void numbertocolor(int n, char *s)
         rangecolor(green));
 }
 
-static void curve_vis(t_gobj *z, t_glist *glist, 
+static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
     t_word *data, t_template *template, t_float basex, t_float basey,
     int vis)
 {
@@ -1249,8 +1252,8 @@ static void curve_vis(t_gobj *z, t_glist *glist,
             else if(flags & BBOX) sys_vgui("-stroke %s\\\n", outline);
             else sys_vgui("-stroke %s\\\n", outline);
             //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
-            sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist,
-				data);
+            sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
+				data, sc);
 			if (!glist_istoplevel(glist)) {
 				t_canvas *gl = glist_getcanvas(glist);
 				//glist_noselect(gl);
@@ -1651,6 +1654,13 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     int i;
     t_float xpix1, xpix2, ypix, wpix;
     t_fielddesc *xfielddesc, *yfielddesc, *wfielddesc;
+        /* if we're the only plot in the glist claim the whole thing */
+    if (glist->gl_list && !glist->gl_list->g_next)
+    {
+        *xp1 = *yp1 = -0x7fffffff;
+        *xp2 = *yp2 = 0x7fffffff;
+        return;
+    }
     if (!plot_readownertemplate(x, data, template, 
         &elemtemplatesym, &array, &linewidth, &xloc, &xinc, &yloc, &style,
             &vis, &scalarvis, &xfielddesc, &yfielddesc, &wfielddesc) &&
@@ -1689,12 +1699,14 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                     usexloc = basex + xloc + fielddesc_cvttocoord(xfielddesc, 
                         *(t_float *)(((char *)(array->a_vec) + elemsize * i)
                             + xonset));
-                else usexloc = x1; //usexloc = basex + xsum, xsum += xinc;
+                //else usexloc = x1; //usexloc = basex + xsum, xsum += xinc;
+                usexloc = basex + xsum, xsum += xinc;
                 if (yonset >= 0)
                     yval = *(t_float *)(((char *)(array->a_vec) + elemsize * i)
                         + yonset);
                 else yval = 0;
-                useyloc = (y1+y2)/2; //basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
+                //useyloc = (y1+y2)/2; //basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
+                useyloc = basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
 					//fprintf(stderr,".-.-. usexloc %f useyloc %f (alt %f %f)\n", usexloc, useyloc, basex + xloc + fielddesc_cvttocoord(xfielddesc, *(t_float *)(((char *)(array->a_vec) + elemsize * i) + xonset)), *(t_float *)(((char *)(array->a_vec) + elemsize * i) + yonset));
@@ -1739,6 +1751,7 @@ static void plot_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
+    fprintf(stderr,"plot_select %d\n", state);
     /* not yet */
 }
 
@@ -1749,7 +1762,7 @@ static void plot_activate(t_gobj *z, t_glist *glist,
         /* not yet */
 }
 
-static void plot_vis(t_gobj *z, t_glist *glist, 
+static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
     t_word *data, t_template *template, t_float basex, t_float basey,
     int tovis)
 {
@@ -1842,14 +1855,14 @@ static void plot_vis(t_gobj *z, t_glist *glist,
 					if (draw_me) {*/
 					//we subtract 1 from y to keep it in sync with the rest of the types of templates
 		               sys_vgui(
-	".x%lx.c create prect %d %d %d %d -fill black -strokewidth 0 -tags {.x%lx.x%lx.template%lx}\n",
+	".x%lx.c create prect %d %d %d %d -fill black -strokewidth 0 -tags {.x%lx.x%lx.template%lx scalar%lx}\n",
 		                    glist_getcanvas(glist),
 		                    ixpix, (int)glist_ytopixels(glist, 
 		                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
 		                    inextx, (int)(glist_ytopixels(glist, 
 		                        basey + fielddesc_cvttocoord(yfielddesc, maxyval))
 		                            + linewidth) - 1, glist_getcanvas(glist), glist,
-							 data);
+							 data, sc);
 
 					//} //part of experimental code above
                     ndrawn++;
@@ -1944,8 +1957,8 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                     outline);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
-                sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist,
-					 data);
+                sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
+					 data, sc);
             }
             else if (linewidth > 0)
             {
@@ -1988,7 +2001,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 //sys_vgui("-fill %s\\\n", outline);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
-                sys_vgui("-tags {.x%lx.x%lx.template%lx}\n", glist_getcanvas(glist), glist, data);
+                sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist, data,sc);
             }
         }
             /* We're done with the outline; now draw all the points.
@@ -2013,7 +2026,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 {
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
-                    (*wb->w_parentvisfn)(y, glist,
+                    (*wb->w_parentvisfn)(y, glist, sc,
                         (t_word *)(elem + elemsize * i),
                             elemtemplate, usexloc, useyloc, tovis);
                 }
@@ -2043,7 +2056,7 @@ static void plot_vis(t_gobj *z, t_glist *glist,
                 {
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
-                    (*wb->w_parentvisfn)(y, glist,
+                    (*wb->w_parentvisfn)(y, glist, sc,
                         (t_word *)(elem + elemsize * i), elemtemplate,
                             0, 0, 0);
                 }
@@ -2246,7 +2259,7 @@ static void drawnumber_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    //post("drawnumber_select %d", state);
+    fprintf(stderr,"drawnumber_select %d", state);
     /* fill in later */
 }
 
@@ -2257,7 +2270,7 @@ static void drawnumber_activate(t_gobj *z, t_glist *glist,
     //post("drawnumber_activate %d", state);
 }
 
-static void drawnumber_vis(t_gobj *z, t_glist *glist, 
+static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int vis)
 {
@@ -2293,8 +2306,8 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
 				 sys_hostfontsize(fontsize), sys_fontweight);
-        sys_vgui(" -tags {.x%lx.x%lx.template%lx}\n", 
-			glist_getcanvas(glist), glist, data);
+        sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
+			glist_getcanvas(glist), glist, data, sc);
     }
     else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n", glist_getcanvas(glist), 
 		glist_getcanvas(glist), glist, data);
@@ -2612,7 +2625,7 @@ static void drawsymbol_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    //post("drawsymbol_select %d", state);
+    fprintf(stderr,"drawsymbol_select %d", state);
     /* fill in later */
 }
 
@@ -2623,7 +2636,7 @@ static void drawsymbol_activate(t_gobj *z, t_glist *glist,
     //post("drawsymbol_activate %d", state);
 }
 
-static void drawsymbol_vis(t_gobj *z, t_glist *glist, 
+static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int vis)
 {
@@ -2658,8 +2671,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
 				 sys_hostfontsize(fontsize), sys_fontweight);
-        sys_vgui(" -tags {.x%lx.x%lx.template%lx}\n", 
-			glist_getcanvas(glist), glist, data);
+        sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
+			glist_getcanvas(glist), glist, data, sc);
     }
     else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n", glist_getcanvas(glist), 
 		glist_getcanvas(glist), glist, data);
@@ -2993,7 +3006,7 @@ static void drawimage_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    post("drawimage_select %d", state);
+    fprintf(stderr,"drawimage_select %d", state);
     /* fill in later */
 }
 
@@ -3004,7 +3017,7 @@ static void drawimage_activate(t_gobj *z, t_glist *glist,
     post("drawimage_activate %d", state);
 }
 
-static void drawimage_vis(t_gobj *z, t_glist *glist, 
+static void drawimage_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
     t_word *data, t_template *template, t_float basex, t_float basey,
     int vis)
 {
@@ -3023,8 +3036,8 @@ static void drawimage_vis(t_gobj *z, t_glist *glist,
         sys_vgui("pdtk_drawimage_vis .x%lx.c %d %d .x%lx .x%lx.i %d ",
             glist_getcanvas(glist), xloc, yloc, x, data,
             (int)fielddesc_getfloat(&x->x_value, template, data, 0));
-        sys_vgui(".x%lx.x%lx.template%lx\n", glist_getcanvas(glist),
-            glist, data);
+        sys_vgui(".x%lx.x%lx.template%lx scalar%lx\n", glist_getcanvas(glist),
+            glist, data, sc);
     }
     else sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
         glist_getcanvas(glist), data);

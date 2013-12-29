@@ -64,12 +64,12 @@ proc pdtk_drawimage_new {obj path canvasdir flags} {
     }
 }
 
-proc pdtk_drawimage_vis {c x y obj tag seqno l2orktag} {
+proc pdtk_drawimage_vis {c x y obj tag seqno l2orktag1 l2orktag2} {
     set img ::drawimage_${obj}
     set len [llength [lsearch -glob -all [image names] ${img}*]]
     if {$len < 1} {return}
     if {$seqno >= $len || $seqno < 0} {set seqno [expr {$seqno % $len}]}
-    $c create image $x $y -image ${img}$seqno -anchor nw -tags [list $tag $l2orktag]
+    $c create image $x $y -image ${img}$seqno -anchor nw -tags [list $tag $l2orktag1 $l2orktag2]
 }
 
 proc pdtk_drawimage_unvis {c tag} {

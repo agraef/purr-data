@@ -362,7 +362,7 @@ typedef void (*t_parentactivatefn)(t_gobj *x, struct _glist *glist,
     t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int state);
         /*  making visible or invisible */
-typedef void (*t_parentvisfn)(t_gobj *x, struct _glist *glist,
+typedef void (*t_parentvisfn)(t_gobj *x, struct _glist *glist, t_scalar *sc, 
     t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int flag);
         /*  field a mouse click */
