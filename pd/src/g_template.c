@@ -1119,7 +1119,7 @@ static void curve_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    fprintf(stderr,"curve_select %d\n", state);
+    //fprintf(stderr,"curve_select %d\n", state);
     /* fill in later */
 }
 
@@ -1655,12 +1655,12 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     t_float xpix1, xpix2, ypix, wpix;
     t_fielddesc *xfielddesc, *yfielddesc, *wfielddesc;
         /* if we're the only plot in the glist claim the whole thing */
-    if (glist->gl_list && !glist->gl_list->g_next)
+    /*if (glist->gl_list && !glist->gl_list->g_next)
     {
         *xp1 = *yp1 = -0x7fffffff;
         *xp2 = *yp2 = 0x7fffffff;
         return;
-    }
+    }*/
     if (!plot_readownertemplate(x, data, template, 
         &elemtemplatesym, &array, &linewidth, &xloc, &xinc, &yloc, &style,
             &vis, &scalarvis, &xfielddesc, &yfielddesc, &wfielddesc) &&
@@ -1751,7 +1751,7 @@ static void plot_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    fprintf(stderr,"plot_select %d\n", state);
+    //fprintf(stderr,"plot_select %d\n", state);
     /* not yet */
 }
 
@@ -2259,7 +2259,7 @@ static void drawnumber_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    fprintf(stderr,"drawnumber_select %d", state);
+    //fprintf(stderr,"drawnumber_select %d", state);
     /* fill in later */
 }
 
@@ -2625,7 +2625,7 @@ static void drawsymbol_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    fprintf(stderr,"drawsymbol_select %d", state);
+    //fprintf(stderr,"drawsymbol_select %d", state);
     /* fill in later */
 }
 
@@ -3006,7 +3006,7 @@ static void drawimage_select(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    fprintf(stderr,"drawimage_select %d", state);
+    //fprintf(stderr,"drawimage_select %d", state);
     /* fill in later */
 }
 
@@ -3014,7 +3014,7 @@ static void drawimage_activate(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int state)
 {
-    post("drawimage_activate %d", state);
+    //post("drawimage_activate %d", state);
 }
 
 static void drawimage_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 

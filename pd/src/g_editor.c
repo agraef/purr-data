@@ -5414,8 +5414,10 @@ static void canvas_paste_xyoffset(t_canvas *x)
 static void canvas_paste_atmouse(t_canvas *x)
 {
     t_selection *sel;
+    //fprintf(stderr,"paste_atmouse\n");
 	/* use safe values for x1 and y1 which are essentially the same as xyoffset */
 	int x1 = x->gl_editor->e_xwas+10, y1 = x->gl_editor->e_ywas+10, init = 0;
+	t_float sx = 0.0, sy = 0.0;
 	t_glist *g;
 	t_text *t;
 
@@ -5429,13 +5431,19 @@ static void canvas_paste_atmouse(t_canvas *x)
 			//			it explicitly here once again to prevent that from being a problem
 			gobj_select((t_gobj *)g, x, 1);
 		}
-		t = (t_text *)g;
-		if (!init) {
-			x1 = t->te_xpix;
-			y1 = t->te_ypix;
-			init = 1;
-		} else if ( t->te_xpix < x1 ) {
-			x1 = t->te_xpix;
+		if (pd_class(&((t_gobj *)g)->g_pd) == scalar_class) {
+			scalar_getbasexy((t_scalar *)g, &sx, &sy);
+			x1 = (int)sx;
+			y1 = (int)sy;			
+		} else {
+			t = (t_text *)g;
+			if (!init) {
+				x1 = t->te_xpix;
+				y1 = t->te_ypix;
+				init = 1;
+			} else if ( t->te_xpix < x1 ) {
+				x1 = t->te_xpix;
+			}
 		}
 	}
 	/* redraw objects */
@@ -5455,7 +5463,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	do_not_redraw += 1;
 	int was_dnr = do_not_redraw;
 	
-    t_gobj *newgobj, *last, *g2;
+    t_gobj *newgobj, *last, *g2, *first;
     int dspstate = canvas_suspend_dsp(), nbox, count;
 	int canvas_empty = 0;
 	int offset = 1;
@@ -5466,6 +5474,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
 	//autopatching variables
 	int connectme, xpix, ypix, indx, nobj;
+	t_float sx = 0.0, sy = 0.0;
 	connectme = 0;
 
     canvas_editmode(x, 1.);
@@ -5531,11 +5540,19 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 	//fprintf(stderr,"dopaste autopatching? %d==%d %d\n", count, nbox, connectme);
 	do_not_redraw -= 1;
 
+	// TODO: Ico: because figuring out exact position/size for a scalar is not simple to assess
+	// and besides, I am not even sure if we can have a scalar with an inlet,
+	// we currently ignore scalar autopatching 
+	if (connectme == 1 && pd_class(&(x->gl_editor->e_selection->sel_what)->g_pd) == scalar_class) {
+		connectme = 0;
+	}
+
 	//if we are pasting only one object autoposition it below our selection
 	if (count == nbox+1 && connectme == 1) {
+
     	canvas_connect(x, indx, 0, nobj, 0);
 
-		//is this universally safe? I think so
+		//is this universally safe? Not for scalars
 		t_text *z = (t_text *)x->gl_editor->e_selection->sel_what;
 		//fprintf(stderr,"%d %d %d %d\n", z->te_xpix, z->te_ypix, xpix, ypix);
 
