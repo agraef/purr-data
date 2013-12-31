@@ -1370,7 +1370,7 @@ static int graph_click(t_gobj *z, struct _glist *glist,
                 //fprintf(stderr,"    cursor %d\n", clickreturned);
                 canvas_setcursor(glist_getcanvas(x), clickreturned);
             }
-            else {
+            else if (!array_joc) {
                 //fprintf(stderr,"    cursor 0\n");
                 canvas_setcursor(glist_getcanvas(x), CURSOR_RUNMODE_NOTHING);
             }
