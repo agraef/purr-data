@@ -570,6 +570,8 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     return (x);
 }
 
+extern int we_are_undoing;
+
     /* call glist_addglist from a Pd message */
 void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
 {
@@ -586,6 +588,9 @@ void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
     t_float px2 = atom_getfloatarg(7, argc, argv);  
     t_float py2 = atom_getfloatarg(8, argc, argv);
     glist_addglist(g, sym, x1, y1, x2, y2, px1, py1, px2, py2);
+    if (!we_are_undoing)
+        canvas_undo_add(glist_getcanvas(g), 9, "create",
+            (void *)canvas_undo_set_create(glist_getcanvas(g)));
 }
 
     /* return true if the glist should appear as a graph on parent;
