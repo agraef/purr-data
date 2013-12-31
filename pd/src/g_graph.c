@@ -848,7 +848,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             glist_getcanvas(x->gl_owner),
             x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag, tag);*/
         sys_vgui(".x%lx.c create prect\
-            %d %d %d %d -stroke $pd_colors(graph_border) -fill $pd_colors(graph) -tags {%sR graph}\n",
+            %d %d %d %d -stroke $pd_colors(graph_border) -tags {%sR graph}\n", //REMOVED: -fill $pd_colors(graph) 
             glist_getcanvas(x->gl_owner),
             x1, y1, x2, y2, tag); // -fill $pd_colors(graph)
         
