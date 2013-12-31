@@ -84,26 +84,26 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
 
 		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxHSLDR %s text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_border) -fill #%6.6x -tags {%lxBASE %lxHSLDR %s text iemgui border}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x, nlet_tag);
-		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 -stroke #%6.6x -tags {%lxKNOB %lxHSLDR %s text}\n",
+		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 -stroke #%6.6x -tags {%lxKNOB %lxHSLDR %s text iemgui}\n",
 		         canvas, r, ypos+2, r,
 		         ypos + x->x_gui.x_h-2, x->x_gui.x_fcol, x, x, nlet_tag);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR % text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHSLDR % text iemgui}\n",
 		         canvas, xpos+x->x_gui.x_ldx,
 		         ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR %s outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHSLDR%so%d %so%d %lxHSLDR %s outlet iemgui}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
 		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR %s inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHSLDR%si%d %si%d %lxHSLDR %s inlet iemgui}\n",
 		         canvas, xpos, ypos,
 		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 	//}
@@ -176,7 +176,7 @@ static void hslider_draw_config(t_hslider* x,t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
 
 	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $pd_colors(selection) -text {%s} \n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 	else
@@ -199,13 +199,13 @@ static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
 		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%so%d %so%d %lxHSLDR %s outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHSLDR%so%d %so%d %lxHSLDR %s outlet iemgui}\n",
 		         canvas, xpos, ypos + x->x_gui.x_h-1,
 		         xpos+7, ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxHSLDR%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxHSLDR%si%d %si%d %lxHSLDR %s inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHSLDR%si%d %si%d %lxHSLDR %s inlet iemgui}\n",
 		         canvas, xpos, ypos,
 		         xpos+7, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
@@ -229,15 +229,15 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 
 				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $pd_colors(selection)\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $pd_colors(selection)\n", canvas, x);
 
 				if (x->x_gui.scale_vis) {
 					sys_vgui("destroy %s\n", sh->h_pathname);
 					sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 				}
 
-				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+				sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHSLDR %s}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 5 - SCALEHANDLE_WIDTH - 1,
@@ -259,7 +259,7 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 						sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 					}
 
-					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+					sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
 					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxHSLDR %s}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
@@ -280,7 +280,7 @@ static void hslider_draw_select(t_hslider* x,t_glist* glist)
 		}
 		else
 		{
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x, IEM_GUI_COLOR_NORMAL);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
 			sys_vgui(".x%lx.c dtag %lxHSLDR selected\n", canvas, x);
 			sys_vgui("destroy %s\n", sh->h_pathname);
@@ -361,7 +361,7 @@ static void hslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, 
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
 			sys_vgui(".x%x.c create prect %d %d %d %d\
-	 -stroke $select_color -strokewidth 1 -tags %s\n",
+	 -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + 5 + x->x_gui.x_w,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);

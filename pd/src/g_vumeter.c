@@ -120,7 +120,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 
 		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxVU %s text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_border) -fill #%6.6x -tags {%lxBASE %lxVU %s text iemgui border}\n",
 		         canvas, xpos, ypos,
 		         xpos+x->x_gui.x_w+2,
 		         ypos+x->x_gui.x_h+4, x->x_gui.x_bcol, x, x, nlet_tag);
@@ -128,11 +128,11 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		{
 		    led_col = iemgui_vu_col[i];
 		    yyy = k4 + k1*(k2-i);
-		    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -stroke #%6.6x -tags {%lxRLED%d %lxVU %s text}\n",
+		    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -stroke #%6.6x -tags {%lxRLED%d %lxVU %s text iemgui}\n",
 		             canvas, quad1+1, yyy+2, quad3, yyy+2, x->x_led_size, iemgui_color_hex[led_col], x, i, x, nlet_tag);
 		    if(((i+2)&3) && (x->x_scale))
 		        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		                 -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %s text}\n",
+		                 -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %s text iemgui}\n",
 		                 canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i], 
 						 x->x_gui.x_font, x->x_gui.x_fontsize,
 		                 sys_fontweight, x->x_gui.x_lcol, x, i, x, nlet_tag);
@@ -142,31 +142,31 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		    i=IEM_VU_STEPS+1;
 		    yyy = k4 + k1*(k2-i);
 		    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %s text}\n",
+		             -font {{%s} -%d %s} -fill #%6.6x -tags {%lxSCALE%d %lxVU %s text iemgui}\n",
 		             canvas, end+1, yyy+k3+2, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight,
 		             x->x_gui.x_lcol, x, i, x, nlet_tag);
 		}
-		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxRCOVER %lxVU %s text}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxRCOVER %lxVU %s text iemgui}\n",
 		         canvas, quad1+1, ypos+1, quad3,
 		         ypos+1 + k1*IEM_VU_STEPS, x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, nlet_tag);
-		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -fill #%6.6x -tags {%lxPLED %lxVU %s text}\n",
+		sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d -fill #%6.6x -tags {%lxPLED %lxVU %s text iemgui}\n",
 		         canvas, mid+1, ypos+12,
 		         mid+1, ypos+12, x->x_led_size, x->x_gui.x_bcol, x, x, nlet_tag);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVU %s text}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxVU %s text iemgui}\n",
 		         canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         x->x_gui.x_lcol, x, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
 		{
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %s outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxVU%so%d %so%d %lxVU %s outlet iemgui}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
 		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %s outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxVU%so%d %so%d %lxVU %s outlet iemgui}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
@@ -174,12 +174,12 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
 		{
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %s inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxVU%si%d %si%d %lxVU %s inlet iemgui}\n",
 		         canvas,
 		         xpos, ypos,
 		         xpos + IOWIDTH, ypos+1,
 		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%si%d %si%d %lxVU %s inlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxVU%si%d %si%d %lxVU %s inlet iemgui}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos,
 		         xpos+x->x_gui.x_w+2, ypos+1,
@@ -284,7 +284,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 	/*
 	char color[64];
 	if (x->x_gui.x_fsf.x_selected)
-		sprintf(color, "$select_color");
+		sprintf(color, "$pd_colors(selection)");
 	else
 		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
 	*/
@@ -295,7 +295,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
                  x->x_led_size);
         if(((i+2)&3) && (x->x_scale))
 			if (x->x_gui.x_fsf.x_selected)
-            	sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill $select_color\n",
+            	sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill $pd_colors(selection)\n",
                      canvas, x, i, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight);
 			else
@@ -308,7 +308,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
     {
         i=IEM_VU_STEPS+1;
 		if (x->x_gui.x_fsf.x_selected)
-		    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill $select_color\n",
+		    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} -font {{%s} -%d %s} -fill $pd_colors(selection)\n",
 		             canvas, x, i, iemgui_vu_scale_str[i], x->x_gui.x_font, 
 					 x->x_gui.x_fontsize, sys_fontweight);
 		else
@@ -318,7 +318,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 		             x->x_gui.x_lcol);
     }
 	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
+		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $pd_colors(selection) -text {%s} \n",
 		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 	else
@@ -349,12 +349,12 @@ static void vu_draw_io(t_vu* x, t_glist* glist, int old_snd_rcv_flags)
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
 		{
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %s outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxVU%so%d %so%d %lxVU %s outlet}\n",
 		         canvas,
 		         xpos, ypos + x->x_gui.x_h+3,
 		         xpos + IOWIDTH, ypos + x->x_gui.x_h+4,
 		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxVU%so%d %so%d %lxVU %s outlet}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxVU%so%d %so%d %lxVU %s outlet}\n",
 		         canvas,
 		         xpos+x->x_gui.x_w+2-IOWIDTH, ypos + x->x_gui.x_h+3,
 		         xpos+x->x_gui.x_w+2, ypos + x->x_gui.x_h+4,
@@ -403,27 +403,27 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 
 				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $pd_colors(selection)\n", canvas, x);
 				for(i=1; i<=IEM_VU_STEPS; i++)
 				{
 				    if(((i+2)&3) && (x->x_scale))
-				        sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $select_color\n",
+				        sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $pd_colors(selection)\n",
 				                 canvas, x, i);
 				}
 				if(x->x_scale)
 				{
 				    i=IEM_VU_STEPS+1;
-				    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $select_color\n",
+				    sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -fill $pd_colors(selection)\n",
 				             canvas, x, i);
 				}
-				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $pd_colors(selection)\n", canvas, x);
 
 				if (x->x_gui.scale_vis) {
 					sys_vgui("destroy %s\n", sh->h_pathname);
 					sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 				}
 
-				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+				sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxVU %s}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 2 - SCALEHANDLE_WIDTH - 1,
@@ -444,7 +444,7 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 						sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 					}
 
-					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+					sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
 					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxVU %s}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
@@ -466,7 +466,7 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 		else
 		{
 			sys_vgui(".x%lx.c dtag %lxVU selected\n", canvas, x);
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x, IEM_GUI_COLOR_NORMAL);
 		    for(i=1; i<=IEM_VU_STEPS; i++)
 		    {
 		        if(((i+2)&3) && (x->x_scale))
@@ -552,7 +552,7 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
 			sys_vgui(".x%x.c create prect %d %d %d %d\
-	 -stroke $select_color -strokewidth 1 -tags %s\n",
+	 -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + x->x_gui.x_w + 2,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h + 4, sh->h_outlinetag);

@@ -65,10 +65,10 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 		if (!moved) {
 			char *color;
 			if (x->x_issignal || strcmp(x->x_old_string, x->x_string)) {
-				color = "#ffffff";
+				color = "$pd_colors(magic_glass_text)";
 			}
 			else {
-				color = "#e87216";
+				color = "$pd_colors(magic_glass_flash)";
 				clock_delay(x->x_flashClock, MG_CLOCK_FLASH_DELAY);
 			}
 		    sys_vgui(".x%x.c itemconfigure magicGlassText -text {%s} -fill %s -font {{%s} -%d %s}\n",
@@ -112,11 +112,11 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 void magicGlass_drawNew(t_magicGlass *x)
 {
 	//fprintf(stderr,"magicglass_drawNew\n");
-    sys_vgui(".x%x.c create prect 0 0 0 0 -stroke #000000 -fill #000000 -tags magicGlassBg\n",
+    sys_vgui(".x%x.c create prect 0 0 0 0 -stroke $pd_colors(magic_glass_bg) -fill $pd_colors(magic_glass_bg) -tags magicGlassBg\n",
              x->x_c);
-    sys_vgui(".x%x.c create ppolygon 0 0 0 0 0 0 -fill #000000 -strokewidth 1 -tags magicGlassLine\n",
+    sys_vgui(".x%x.c create ppolygon 0 0 0 0 0 0 -fill $pd_colors(magic_glass_bd) -strokewidth 1 -tags magicGlassLine\n",
              x->x_c);
-    sys_vgui(".x%x.c create text 0 0 -text {} -anchor w -fill #e87216 -font {{%s} -%d %s} -tags magicGlassText\n",
+    sys_vgui(".x%x.c create text 0 0 -text {} -anchor w -fill $pd_colors(magic_glass_flash) -font {{%s} -%d %s} -tags magicGlassText\n",
              x->x_c, sys_font, x->x_display_font, sys_fontweight);
     sys_vgui(".x%x.c raise magicGlassBg\n",
              x->x_c);
@@ -137,7 +137,7 @@ void magicGlass_undraw(t_magicGlass *x)
 void magicGlass_flashText(t_magicGlass *x)
 {
 	//fprintf(stderr,"magicglass_flashText\n");
-    sys_vgui(".x%x.c itemconfigure magicGlassText -fill #ffffff\n",
+    sys_vgui(".x%x.c itemconfigure magicGlassText -fill $pd_colors(magic_glass_text)\n",
          x->x_c);
 }
 

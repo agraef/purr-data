@@ -64,31 +64,31 @@ void bng_draw_new(t_bng *x, t_glist *glist)
 
 		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -tags {%lxBASE %lxBNG text %s}\n",
+		sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_border) -fill #%6.6x -tags {%lxBASE %lxBNG text iemgui border %s}\n",
 		         canvas, xpos, ypos,
 		         xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
 		         x->x_gui.x_bcol, x, x, nlet_tag);
 		t_float cr = (x->x_gui.x_w-2)/2.0;
 		t_float cx = xpos+cr+1.5;
 		t_float cy = ypos+cr+1.5;
-		sys_vgui(".x%lx.c create circle %f %f -r %f -fill #%6.6x -tags {%lxBUT %lxBNG text %s}\n",
+		sys_vgui(".x%lx.c create circle %f %f -r %f -stroke $pd_colors(iemgui_border) -fill #%6.6x -tags {%lxBUT %lxBNG text iemgui border %s}\n",
 		         canvas, cx, cy, cr,
 		         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, nlet_tag);
 		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxBNG text %s}\n",
+		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxBNG text iemgui %s}\n",
 		         canvas, xpos+x->x_gui.x_ldx,
 		         ypos+x->x_gui.x_ldy,
 		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
 		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
 				 x->x_gui.x_lcol, x, x, nlet_tag);
 		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist) {
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%so%d %so%d %lxBNG outlet %s}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxBNG%so%d %so%d %lxBNG outlet iemgui %s}\n",
 		         canvas, xpos,
 		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
 		         ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		}
 		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist) {
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%si%d %si%d %lxBNG inlet %s}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxBNG%si%d %si%d %lxBNG inlet iemgui %s}\n",
 		         canvas, xpos, ypos,
 		         xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		}
@@ -111,7 +111,7 @@ void bng_draw_move(t_bng *x, t_glist *glist)
 		t_float cr = (x->x_gui.x_w-2)/2.0;
 		t_float cx = xpos+cr+1.5;
 		t_float cy = ypos+cr+1.5;
-		/*sys_vgui(".x%lx.c create circle %d %d -r %d -stroke #%6.6x -tags {%lxBUT %lxBNG %lx text}\n",
+		/*sys_vgui(".x%lx.c create circle %d %d -r %d -stroke #%6.6x -tags {%lxBUT %lxBNG %lx text iemgui}\n",
 		         canvas, cx, cy, cr,*/
 		sys_vgui(".x%lx.c coords %lxBUT %f %f\n",
 		         canvas, x, cx, cy);
@@ -165,13 +165,13 @@ void bng_draw_config(t_bng* x, t_glist* glist)
 	/*
 	char color[64];
 	if (x->x_gui.x_fsf.x_selected)
-		sprintf(color, "$select_color");
+		sprintf(color, "$pd_colors(selection)");
 	else
 		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
 	*/
 
 	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-	    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $select_color -text {%s} \n",
+	    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $pd_colors(selection) -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
 	else
@@ -197,14 +197,14 @@ void bng_draw_io(t_bng* x, t_glist* glist, int old_snd_rcv_flags)
 		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
 		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%so%d %so%d %lxBNG outlet %s}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxBNG%so%d %so%d %lxBNG outlet iemgui %s}\n",
 		         canvas, xpos,
 		         ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
 		         ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
 		    sys_vgui(".x%lx.c delete %lxBNG%so%d\n", canvas, x, nlet_tag, 0);
 		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -tags {%lxBNG%si%d %si%d %lxBNG inlet %s}\n",
+		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxBNG%si%d %si%d %lxBNG inlet iemgui %s}\n",
 		         canvas, xpos, ypos,
 		         xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
 		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
@@ -228,18 +228,18 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 
 				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $select_color\n", canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke $select_color\n", canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $select_color\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke $pd_colors(selection)\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke $pd_colors(selection)\n", canvas, x);
+				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $pd_colors(selection)\n", canvas, x);
 
 				if (x->x_gui.scale_vis) {
 					sys_vgui("destroy %s\n", sh->h_pathname);
 					sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
 				}
 
-				sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+				sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor bottom_right_corner\n",
 					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxBNG %s}\n",
+				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxBNG iemgui %s}\n",
 					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w - SCALEHANDLE_WIDTH - 1,
 					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
 					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
@@ -259,9 +259,9 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 						sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
 					}
 
-					sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+					sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor crosshair\n",
 						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxBNG %s}\n",
+					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxBNG iemgui %s}\n",
 						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
 						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
 						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
@@ -280,8 +280,8 @@ void bng_draw_select(t_bng* x, t_glist* glist)
 		}
 		else
 		{
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
-		    sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke #%6.6x\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x, IEM_GUI_COLOR_NORMAL);
+		    sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke %s\n", canvas, x, IEM_GUI_COLOR_NORMAL);
 		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x, x->x_gui.x_lcol);
 			sys_vgui(".x%lx.c dtag %lxBNG selected\n", canvas, x);
 			sys_vgui("destroy %s\n", sh->h_pathname);
@@ -357,7 +357,7 @@ static void bng__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_fl
 		{
 			sys_vgui("lower %s\n", sh->h_pathname);
 			sys_vgui(".x%x.c create prect %d %d %d %d\
-	 -stroke $select_color -strokewidth 1 -tags %s\n",
+	 -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
 				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
 					x->x_gui.x_obj.te_xpix + x->x_gui.x_w,
 					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);

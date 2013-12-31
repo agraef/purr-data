@@ -435,7 +435,7 @@ void canvas_resortinlets(t_canvas *x)
 		for (i = 0; i < ninlets; i++) {
             sys_vgui(".x%x.c itemconfigure %si%d -fill %s -width 1\n",
                      x, rtext_gettag(rt), i, 
-                     (obj_issignalinlet(ob, i) ? "$signal_nlet" : "$msg_nlet"));
+                     (obj_issignalinlet(ob, i) ? "$signal_nlet" : "$pd_colors_control_nlet)"));
 		}
 */
 		//glist_redraw(x);
@@ -817,7 +817,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 	    if (vis && gobj_shouldvis(gr, parent_glist))
 	    {
 	        sys_vgui(".x%lx.c create ppolygon\
- %d %d %d %d %d %d %d %d %d %d -tags {%sfill} -fill $graph_outline -stroke $graph_outline\n",
+ %d %d %d %d %d %d %d %d %d %d -tags {%sfill graph} -fill $pd_colors(graph_border) -stroke $pd_colors(graph_border)\n",
 	            glist_getcanvas(x->gl_owner),
 				//parent_glist,
 	            x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag);
@@ -841,13 +841,13 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         t_garray *ga;
             /* draw a rectangle around the graph */
         /*sys_vgui(".x%lx.c create polyline\
-            %d %d %d %d %d %d %d %d %d %d -stroke $graph_outline -tags {%sR %s}\n",
+            %d %d %d %d %d %d %d %d %d %d -stroke $pd_colors(graph_border) -tags {%sR %s graph}\n",
             glist_getcanvas(x->gl_owner),
             x1, y1, x1, y2, x2, y2, x2, y1, x1, y1, tag, tag);*/
         sys_vgui(".x%lx.c create prect\
-            %d %d %d %d -stroke $graph_outline -tags {%sR}\n",
+            %d %d %d %d -stroke $pd_colors(graph_border) -fill $pd_colors(graph) -tags {%sR graph}\n",
             glist_getcanvas(x->gl_owner),
-            x1, y1, x2, y2, tag); // -fill $obj_box_fill
+            x1, y1, x2, y2, tag); // -fill $pd_colors(graph)
         
             /* if there's just one "garray" in the graph, write its name
                 along the top */
@@ -857,10 +857,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         {
 			//i++;
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw\
-             -font {{%s} -%d %s} -tags {%s} -fill %s\n",
+             -font {{%s} %d %s} -tags {%s label graph} -fill %s\n",
              (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name, sys_font,
                 sys_hostfontsize(glist_getfont(x)), sys_fontweight, tag,
-				(glist_isselected(x, gr) ? "$select_color" : "$graph_outline"));
+				(glist_isselected(x, gr) ? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
             i += sys_fontheight(glist_getfont(x));
         }
         
@@ -1217,19 +1217,19 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
 		}
 		if(glist_istoplevel(glist)) {
         	sys_vgui(".x%lx.c itemconfigure %sR -stroke %s\n", canvas, 
-                 rtext_gettag(y), (state? "$select_color" : "$graph_outline"));
+                 rtext_gettag(y), (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
 /*
         sys_vgui(".x%lx.c itemconfigure graph%lx -fill %s\n",
                  glist_getcanvas(glist), z, 
-                 (state? "$select_color" : "$graph_outline"));
+                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
 */
         	sys_vgui(".x%lx.c itemconfigure %sT -fill %s\n",
                  canvas, rtext_gettag(y), 
-                 (state? "$select_color" : "$graph_outline"));
+                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
 
         	sys_vgui(".x%lx.c itemconfigure %sfill -stroke %s -fill %s\n",
                  canvas, rtext_gettag(y), 
-                 (state? "$select_color" : "$graph_outline"), (state? "$select_color" : "$graph_outline"));
+                 (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"), (state? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
 		}
 
 		t_gobj *g;

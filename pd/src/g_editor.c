@@ -307,8 +307,8 @@ void canvas_check_nlet_highlights(t_glist *x)
 	{
 		sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
 		       	x, x->gl_editor->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -324,8 +324,8 @@ void canvas_check_nlet_highlights(t_glist *x)
 	{
 		sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
 		       	x, x->gl_editor->canvas_cnct_outlet_tag,
-				(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -350,7 +350,7 @@ void glist_selectline(t_glist *x, t_outconnect *oc, int index1,
         x->gl_editor->e_selectline_index2 = index2;
         x->gl_editor->e_selectline_inno = inno;
         x->gl_editor->e_selectline_tag = oc;
-        sys_vgui(".x%lx.c itemconfigure l%lx -stroke $select_color\n",
+        sys_vgui(".x%lx.c itemconfigure l%lx -stroke $pd_colors(selection)\n",
             x, x->gl_editor->e_selectline_tag);
         sys_vgui(".x%lx.c addtag selected withtag l%lx\n",
             glist_getcanvas(x), x->gl_editor->e_selectline_tag);
@@ -377,7 +377,7 @@ void glist_deselectline(t_glist *x)
             issignal = 0;
         sys_vgui(".x%lx.c itemconfigure l%lx -stroke %s\n",
             x, x->gl_editor->e_selectline_tag,
-            (issignal ? "$signal_cord" : "$msg_cord"));
+            (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"));
         sys_vgui(".x%lx.c dtag l%lx selected\n",
             glist_getcanvas(x), glist_getcanvas(x)->gl_editor->e_selectline_tag);
 		canvas_draw_gop_resize_hooks(x);
@@ -2970,13 +2970,14 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         sys_vgui(
                         	/*".x%lx.c create polyline %d %d %d %d -stroke %s -strokewidth %s -tags x\n",
 									x, xpos, ypos, xpos, ypos,
-									(issignal ? "$signal_cord" : "$msg_cord"),
-                                    (issignal ? "$signal_cord_width" : "$msg_cord_width"));*/
+									(issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
+                                    (issignal ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"));*/
 							// bezier is too slow for the time being
-			 			  ".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" -stroke %s -strokewidth %s -tags x\n",
+			 			  ".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" -stroke %s -strokewidth %s -tags {x all_cords %s}\n",
                                 x, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos, xpos, ypos,
-									(issignal ? "$signal_cord" : "$msg_cord"),
-                                    (issignal ? "$signal_cord_width" : "$msg_cord_width"));
+									(issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
+                                    (issignal ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"),
+                                    (issignal ? "signal" : "control"));
                     }   
     	    	    else
                     // jsarlo
@@ -2987,8 +2988,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         {
                             sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                                    	x, x->gl_editor->canvas_cnct_outlet_tag,
-									(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-									(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+									(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+									(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
                         }
                         if (yr)
                         {
@@ -3046,8 +3047,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     {
                         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                                	x, x->gl_editor->canvas_cnct_inlet_tag,
-								(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-								(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+								(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+								(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
                     }
 
                     if (yr)
@@ -3125,8 +3126,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 {
                     sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                            	x, x->gl_editor->canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+							(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+							(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 					if (objtooltip) {
 						objtooltip = 0;
 						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3138,8 +3139,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 {
                     sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                            	x, x->gl_editor->canvas_cnct_outlet_tag,
-							(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-							(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+							(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+							(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 					if (objtooltip) {
 						objtooltip = 0;
 						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3231,8 +3232,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 		        {
 					sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
 				   			x, x->gl_editor->canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+							(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+							(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 					if (objtooltip) {
 						objtooltip = 0;
 						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3243,8 +3244,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 		        {
 		            sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
 		                   	x, x->gl_editor->canvas_cnct_outlet_tag,
-							(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-							(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+							(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+							(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 					if (objtooltip) {
 						objtooltip = 0;
 						sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3261,8 +3262,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     {
 		sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
        			x, x->gl_editor->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3274,8 +3275,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     {
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                	x, x->gl_editor->canvas_cnct_outlet_tag,
-				(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3300,7 +3301,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
 			//buf->u_redo = (t_undo_sel *)canvas_undo_set_selection(x);
 			//canvas_undo_add(x, 11, "selection", buf);
 		}
-        sys_vgui(".x%lx.c create prect %d %d %d %d -tags x -stroke $select_color\n",
+        sys_vgui(".x%lx.c create prect %d %d %d %d -tags x -stroke $pd_colors(selection_rectangle)\n",
               x, xpos, ypos, xpos, ypos);
         x->gl_editor->e_xwas = xpos;
         x->gl_editor->e_ywas = ypos;
@@ -3406,17 +3407,17 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_in
 	if (yoff > ymax) yoff = ymax;
 	/*sys_vgui(".x%lx.c create polyline %d %d %d %d -stroke %s -strokewidth %s -tags {l%lx all_cords}\n",
         x, lx1, ly1, lx2, ly2,
-        (issignal ? "$signal_cord" : "$msg_cord"),
-        (issignal ? "$signal_cord_width" : "$msg_cord_width"), 
+        (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
+        (issignal ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"), 
         tag);*/
 	//bezier curves FTW
-	sys_vgui(".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" -stroke %s -strokewidth %s -tags {l%lx all_cords}\n",
+	sys_vgui(".x%lx.c create path \"M %d %d Q %d %d %d %d Q %d %d %d %d\" -stroke %s -strokewidth %s -tags {l%lx all_cords %s}\n",
         x, lx1, ly1,
 		lx1, ly1 + yoff, lx1 + halfx, ly1 + halfy,
 		lx2, ly2 - yoff, lx2, ly2,
-        (issignal ? "$signal_cord" : "$msg_cord"),
-        (issignal ? "$signal_cord_width" : "$msg_cord_width"), 
-        tag);
+        (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
+        (issignal ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"), 
+        tag, (issignal ? "signal" : "control"));
 
 }
 
@@ -3533,15 +3534,15 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
     /*sys_vgui(".x%lx.c create polyline %d %d %d %d -stroke %s -strokewidth %s -tags {l%lx all_cords}\n",
         glist_getcanvas(x),
             lx1, ly1, lx2, ly2,
-        (issignal ? "$signal_cord" : "$msg_cord"),
-        (issignal ? "$signal_cord_width" : "$msg_cord_width"), 
+        (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
+        (issignal ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"), 
         oc);*/
     if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
     {
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                	x, x->gl_editor->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (obj_issignalinlet(ob2, closest2) ? "$signal_cord" : "$msg_cord")),
-				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_inlet_filter ? "black" : (obj_issignalinlet(ob2, closest2) ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -3552,8 +3553,8 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2, int closest1, int
     {
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                	x, x->gl_editor->canvas_cnct_outlet_tag,
-				(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -4023,8 +4024,8 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 {
                     sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                            	x, x->gl_editor->canvas_cnct_inlet_tag,
-							(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-							(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));                
+							(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+							(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));                
                 }
                 if (y)
                 {
@@ -4058,8 +4059,8 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     {
         sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                	x, x->gl_editor->canvas_cnct_inlet_tag,
-				(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-				(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+				(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+				(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		if (objtooltip) {
 			objtooltip = 0;
 			sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
@@ -4245,15 +4246,15 @@ void canvas_mouseup(t_canvas *x,
 		{
 			sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
 				   	x, x->gl_editor->canvas_cnct_outlet_tag,
-					(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-					(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+					(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+					(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 		}
 		if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
 		{
 			sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
 		   			x, x->gl_editor->canvas_cnct_inlet_tag,
-					(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-					(inlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+					(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+					(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
 			x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
 		}
 
@@ -5812,8 +5813,8 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
 			canvas_drawconnection(x, 0, 0, 0, 0, (t_int)oc, obj_issignaloutlet(objsrc, outno));
 		    /*sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %s -stroke %s -tags {l%lx all_cords}\n",
 		        glist_getcanvas(x), 0, 0, 0, 0,
-		        (obj_issignaloutlet(objsrc, outno) ? "$signal_cord_width" : "$msg_cord_width"),
-		        (obj_issignaloutlet(objsrc, outno) ? "$signal_cord" : "$msg_cord"), oc);*/
+		        (obj_issignaloutlet(objsrc, outno) ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"),
+		        (obj_issignaloutlet(objsrc, outno) ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"), oc);*/
 		    canvas_fixlinesfor(x, objsrc);
 		}
 	}
@@ -6430,16 +6431,16 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
             {
                 sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                        	x, x->gl_editor->canvas_cnct_inlet_tag,
-						(last_inlet_filter ? "black" : (inlet_issignal ? "$signal_cord" : "$msg_cord")),
-						(inlet_issignal ? "$signal_nlet" : "$msg_nlet")); 
+						(last_inlet_filter ? "black" : (inlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+						(inlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)")); 
                 x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
             }
             if (x->gl_editor->canvas_cnct_outlet_tag[0] != 0)
             {
                 sys_vgui(".x%x.c itemconfigure %s -stroke %s -fill %s -strokewidth 1\n",
                        	x, x->gl_editor->canvas_cnct_outlet_tag,
-						(last_outlet_filter ? "black" : (outlet_issignal ? "$signal_cord" : "$msg_cord")),
-						(outlet_issignal ? "$signal_nlet" : "$msg_nlet"));
+						(last_outlet_filter ? "black" : (outlet_issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)")),
+						(outlet_issignal ? "$pd_colors(signal_nlet)" : "$pd_colors(control_nlet)"));
                 x->gl_editor->canvas_cnct_outlet_tag[0] = 0;                  
             }
 			if(x->gl_editor && x->gl_editor->gl_magic_glass) {

@@ -354,18 +354,19 @@ set k12_saveas_on_new 0
 
 # Only can be enabled at startup (cannot be toggled afterwards)
 proc pdtk_enable_k12_mode {extra_dir} {
+pdtk_post "fucking truckin!\n\n\n\n"
 	global k12_mode
 	global signal_cord_width
 	global autotips
 	global signal_cord_highlight
-	global signal_cord
+#	global signal_cord
 	global highlight_width
 
 	set k12_mode 1
 	set signal_cord_width 5
 	set autotips 1
 	set signal_cord_highlight "#474"
-	set signal_cord "#2ca7d4"
+#	set signal_cord "#2ca7d4"
 	set highlight_width 7
 
 	image create photo i.wii_connect -file $extra_dir/K12/icons/wii_connect_on.png
@@ -543,29 +544,58 @@ set pd_array_listview_entry(0) 0
 set pd_array_listview_page(0) 0
 # end jsarlo
 
+# Prefences Dialog
+# dialog_prefs.tcl must come first because dialog_gui.tcl depends on it
+# This is an ugly hack-- it should just be loaded as tcl packages like
+# in 0.43...
+source [file join [file dirname [info script]] dialog_prefs.tcl]
+source [file join [file dirname [info script]] dialog_gui.tcl]
+source [file join [file dirname [info script]] dialog_midi.tcl]
+source [file join [file dirname [info script]] dialog_audio.tcl]
+
+# Add a trace for the color array. This way any gui-plugin can make
+# color changes simply by changing one of the elements of the pd_colors
+# array, and all the preference dialog stuff and open patches will
+# magically update
+trace add variable pd_colors write ::dialog_prefs::set_color
+
+# ... and a trace for the ::gui_preset variable.  There's probably
+# a way to do this inside the dropdown code, which would be better...
+trace add variable gui_preset write "::dialog_gui::set_gui_preset"
+
+# Now that we've got a trace for the colors, we can set a
+# color scheme (defined in dialog_gui.tcl)
+set gui_preset L2ork
+
+# todo: find a home for these:
+set ::pd_colors(signal_cord_width) 3
+set ::pd_colors(control_cord_width) 1
+
 # color scheme
-set canvas_fill "white"
-set text_color "#000"
-set select_color "#e87216"
-set dash_outline "#f00"
-set dash_fill "#f7f7f7"
-set box_outline "#ccc"
-set graph_outline "#777"
-set atom_box_fill "#eee"
-set msg_box_fill "#f8f8f6"
-set obj_box_fill "#f6f8f8"
-set signal_cord_highlight "#58a"
-set signal_cord "#808095"
-set signal_nlet $signal_cord
-set signal_cord_width 3
-set msg_cord_highlight "#474"
-set msg_cord "#565"
-set msg_nlet "white"
-set mixed_nlet "#88aaff"
-set msg_cord_width 1
+# set canvas_fill "white"
+# set text_color "#000"
+# set select_color "#e87216"
+# set dash_outline "#f00"
+# set dash_fill "#f7f7f7"
+# set box_outline "#ccc"
+# set graph_outline "#777"
+# set atom_box_fill "#eee"
+# set msg_box_fill "#f8f8f6"
+# set obj_box_fill "#f6f8f8"
+# Doesn't look like signal_cord_highlight is used
+# set signal_cord_highlight "#58a"
+# set signal_cord "#808095"
+# set signal_nlet $signal_cord
+# Todo: make sure these work in k12 mode
+# set signal_cord_width 3
+# set msg_cord_highlight "#474"
+# set msg_cord "#565"
+# set msg_nlet "white"
+# set mixed_nlet "#88aaff"
+# set msg_cord_width 1
 
 #nlet highlighting stuff
-set select_nlet_color $select_color
+set select_nlet_color $pd_colors(selection)
 set highlight_width 5
 
 if {$pd_nt == 1} {
@@ -1486,24 +1516,24 @@ proc menu_addstd {mbar} {
         -command {menu_audio 1} 
     $mbar.audio add command -label {Audio OFF} -accelerator [accel_munge "Ctrl+."] \
         -command {menu_audio 0} 
-	match_linux_wm [list $mbar.audio add separator]
-	$mbar.audio add command -label {Audio Settings} -state disabled
-    for {set x 1} {$x<[llength $pd_apilist]} {incr x} {
-        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_apilist $x] 0] Driver] \
-            -command {menu_audio 0} -variable pd_whichapi \
-            -value [lindex [lindex $pd_apilist $x] 1]\
-			-selectcolor "#dddddd" \
-            -command {pd [concat pd audio-setapi $pd_whichapi \;]}
-    }
-	match_linux_wm [list $mbar.audio add separator]
-	$mbar.audio add command -label {MIDI Settings} -state disabled
-    for {set x 0} {$x<[llength $pd_midiapilist]} {incr x} {
-        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_midiapilist $x] 0] Driver]\
-            -command {menu_midi 0} -variable pd_whichmidiapi \
-            -value [lindex [lindex $pd_midiapilist $x] 1]\
-			-selectcolor "#dddddd" \
-            -command {pd [concat pd midi-setapi $pd_whichmidiapi \;]}
-    }
+#	match_linux_wm [list $mbar.audio add separator]
+#	$mbar.audio add command -label {Audio Settings} -state disabled
+#    for {set x 1} {$x<[llength $pd_apilist]} {incr x} {
+#        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_apilist $x] 0] Driver] \
+#            -command {menu_audio 0} -variable pd_whichapi \
+#            -value [lindex [lindex $pd_apilist $x] 1]\
+#			-selectcolor "#dddddd" \
+#            -command {pd [concat pd audio-setapi $pd_whichapi \;]}
+#    }
+#	match_linux_wm [list $mbar.audio add separator]
+#	$mbar.audio add command -label {MIDI Settings} -state disabled
+#    for {set x 0} {$x<[llength $pd_midiapilist]} {incr x} {
+#        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_midiapilist $x] 0] Driver]\
+#            -command {menu_midi 0} -variable pd_whichmidiapi \
+#            -value [lindex [lindex $pd_midiapilist $x] 1]\
+#			-selectcolor "#dddddd" \
+#            -command {pd [concat pd midi-setapi $pd_whichmidiapi \;]}
+#    }
     #if {$pd_nt != 2} {
 	#	$mbar.audio add separator
     #    $mbar.audio add command -label {Audio settings...} \
@@ -1689,6 +1719,9 @@ match_linux_wm [list .mbar.edit add separator]
     	-state disabled
 .mbar.edit add command -label {Edit mode} -accelerator [accel_munge "Ctrl+e"] \
     -state disabled
+match_linux_wm [list .mbar.edit add separator]
+.mbar.edit add command -label {Preferences...} \
+    -command {::dialog_prefs::open_prefs_dialog .}
 
 #################### the "Find" menu for the Pd window ##############
 
@@ -2379,7 +2412,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
     global pd_tearoff put_tearoff
     global pd_nt
     global tcl_version
-    global canvas_fill
+#    global canvas_fill
 	global colors
 	global global_clipboard
 	global global_selection
@@ -2399,8 +2432,14 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	if {![info exists ::menu($name)]} {
 		set ::menu($name) 1
 	}
-	if {![info exists ::canvas_color($name)]} {
-		set ::canvas_color($name) $canvas_fill
+        # attempt at getting global presets to play
+        # well with local settings.
+        set my_canvas_color {}
+#        set ::canvas_color($name) orange
+	if {[info exists ::canvas_color($name)]} {
+            set my_canvas_color $::canvas_color($name)
+        } else {
+            set my_canvas_color $::pd_colors(canvas_color)
 	}
 	if {![info exists ::topmost($name)]} {
 		set ::topmost($name) 0
@@ -2807,8 +2846,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
 		pack $name.k12frame.edit $name.k12frame.datasound $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
 	}
-
-    tkp::canvas $name.c -width $width -height $height -background $::canvas_color($name) \
+    tkp::canvas $name.c -width $width -height $height -background $my_canvas_color \
 		-highlightthickness 0 -bd 0
         #-yscrollcommand "$name.scrollvert set" \
         #-xscrollcommand "$name.scrollhort set" \
@@ -2836,7 +2874,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		wm minsize $name 580 407
 	}
     wm geometry $name $geometry
-    # the file menu
+    # the "File" menu
 	
     # The menus are instantiated here for the patch windows.
     # For the main window, they are created on load, at the 
@@ -2907,7 +2945,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-accelerator [accel_munge "Ctrl+q"]
 	}
 
-    # the edit menu
+    # the "Edit" menu
     match_linux_wm [list menu $name.m.edit -postcommand [concat menu_fixeditmenu $name] -tearoff $pd_tearoff]
     $name.m add cascade -label Edit -menu $name.m.edit
     
@@ -3039,6 +3077,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
         -indicatoron false -selectcolor black \
         -command [concat menu_editmode $name] \
         -accelerator [accel_munge "Ctrl+e"]
+    if {$k12_mode == 0} {
+    	match_linux_wm [list $name.m.edit add separator]
+        $name.m.edit add command -label {Preferences...} \
+        -command {::dialog_prefs::open_prefs_dialog .}
+    }
 
 	if { $editable == 1 } {
     	$name.m.edit entryconfigure "Edit mode" -background "#7dd37d" -foreground black
@@ -3062,7 +3105,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 
 	if { $k12_mode == 0 } {
 
-		# the put menu
+		# the "Put" menu
 		match_linux_wm [list menu $name.m.put -tearoff $put_tearoff]
 		$name.m add cascade -label Put -menu $name.m.put
 
@@ -3189,7 +3232,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		    $name.m add cascade -label "Apple" -menu $name.m.apple 
 		}
 
-		# the help menu
+		# the "Help" menu
 
 		match_linux_wm [list menu $name.m.help -tearoff $pd_tearoff]
 		$name.m add cascade -label Help -menu $name.m.help
@@ -6798,7 +6841,6 @@ proc pdtk_canvas_update_paste_menu {value} {
 proc pdtk_text_new {canvasname myname x y text font color} {
     #    if {$font < 13} {set fontname [format -*-courier-bold----%d-* $font]}
     #    if {$font >= 13} {set fontname [format -*-courier-----%d-* $font]}
-
     global pd_fontlist pd_nt
 #    switch -- $font {
 #        8  { set typeface [lindex $pd_fontlist 0] }
@@ -7267,7 +7309,7 @@ proc audio_popup {name buttonname varname devlist} {
 # opening several devices; if not, we get an extra button to turn longform
 # on and restart the dialog.
 
-proc pdtk_audio_dialog {id indev1 indev2 indev3 indev4 \
+proc old_audio_dialog {id indev1 indev2 indev3 indev4 \
         inchan1 inchan2 inchan3 inchan4 \
         outdev1 outdev2 outdev3 outdev4 \
         outchan1 outchan2 outchan3 outchan4 sr advance multi callback \
@@ -7575,7 +7617,7 @@ proc midi_popup {name buttonname varname devlist} {
 # start a dialog window to select midi devices.  "longform" asks us to make
 # controls for opening several devices; if not, we get an extra button to
 # turn longform on and restart the dialog.
-proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
+proc pdtk_midi_dialog_old {id indev1 indev2 indev3 indev4 \
         outdev1 outdev2 outdev3 outdev4 longform} {
     global midi_indev1 midi_indev2 midi_indev3 midi_indev4 
     global midi_outdev1 midi_outdev2 midi_outdev3 midi_outdev4
@@ -7714,7 +7756,7 @@ proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
     }
 }
 
-proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
+proc pdtk_alsa_midi_dialog_old {id indev1 indev2 indev3 indev4 \
         outdev1 outdev2 outdev3 outdev4 longform alsa} {
     global midi_indev1 midi_indev2 midi_indev3 midi_indev4 
     global midi_outdev1 midi_outdev2 midi_outdev3 midi_outdev4
@@ -8654,7 +8696,7 @@ proc pdtk_canvas_enteritem_gettags {tkcanvas x y item} {
 		if { $object ne "text" } {
 			set nlet_color [$tkcanvas itemcget [lindex $tags 0] -stroke]
 		} else {
-			set nlet_color $select_color
+			set nlet_color $::pd_colors(selection)
 		}
 
         pd [concat $mytoplevel enter $object \
@@ -8766,8 +8808,8 @@ proc pdtk_tip {w fromc show args} {
 		}
     } else {
 		set tooltip_visible 1
-		if { $nlet_color == 0 } { set nlet_color $select_color }
-		if { $nlet_color ne $select_color } {
+		if { $nlet_color == 0 } { set nlet_color $::pd_colors(selection) }
+		if { $nlet_color ne $::pd_colors(selection) } {
 			set fg "#ffffff"
 		} else {
 			set fg "#000000"
@@ -9020,3 +9062,34 @@ source [file join [file dirname [info script]] search-plugin.tcl]
 
 # Tcl/tk code for drawimage and drawsprite
 source [file join [file dirname [info script]] pdtk_drawimage.tcl]
+
+# Ugly, ugly hack to send off to procs in dialog_audio.tcl and
+# dialog_midi.tcl.  Should just load the packages properly instead...
+
+proc pdtk_audio_dialog {mytoplevel indev1 indev2 indev3 indev4 \
+        inchan1 inchan2 inchan3 inchan4 \
+        outdev1 outdev2 outdev3 outdev4 \
+        outchan1 outchan2 outchan3 outchan4 sr advance multi callback \
+        longform} {
+    set blocksize 64
+    ::dialog_audio::pdtk_audio_dialog \
+        $mytoplevel $indev1 $indev2 $indev3 $indev4 \
+        $inchan1 $inchan2 $inchan3 $inchan4 \
+        $outdev1 $outdev2 $outdev3 $outdev4 \
+        $outchan1 $outchan2 $outchan3 $outchan4 $sr $advance $multi $callback \
+        $longform $blocksize
+}
+
+proc pdtk_midi_dialog {id indev1 indev2 indev3 indev4 \
+        outdev1 outdev2 outdev3 outdev4 longform} {
+    ::dialog_midi::pdtk_midi_dialog \
+        $id $indev1 $indev2 $indev3 $indev4 \
+        $outdev1 $outdev2 $outdev3 $outdev4 $longform
+}
+
+proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
+        outdev1 outdev2 outdev3 outdev4 longform alsa} {
+    ::dialog_midi::pdtk_alsa_midi_dialog \
+        $id $indev1 $indev2 $indev3 $indev4 \
+        $outdev1 $outdev2 $outdev3 $outdev4 $longform $alsa
+}

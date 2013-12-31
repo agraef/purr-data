@@ -333,7 +333,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
 		        dispx + LMARGIN, dispy + TMARGIN,
 		        outchars_b, tempbuf, sys_hostfontsize(font),
 		        (glist_isselected(x->x_glist,
-		            &x->x_glist->gl_gobj)? "$select_color" : "$text_color"));
+		            &x->x_glist->gl_gobj)? "$pd_colors(selection)" : "$pd_colors(text)"));
 		}
 		else if (action == SEND_UPDATE)
 		{
@@ -500,7 +500,7 @@ void rtext_select(t_rtext *x, int state)
     t_canvas *canvas = glist_getcanvas(glist);
 	if (glist_istoplevel(glist))
 		sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
-		    x->x_tag, (state? "$select_color" : "$text_color"));
+		    x->x_tag, (state? "$pd_colors(selection)" : "$pd_colors(text)"));
 	if (x->x_text->te_pd->c_wb && x->x_text->te_pd->c_wb->w_displacefnwtag) {
 		if (state)
 			sys_vgui(".x%lx.c addtag selected withtag %s\n",

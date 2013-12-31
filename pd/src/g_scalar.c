@@ -208,7 +208,7 @@ static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
         x1--; x2++; y1--; y2++;
 		if (glist_istoplevel(glist))
 		    sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d %d %d %d %d \
-		        -strokewidth 1 -stroke $select_color -tags {select%lx selected}\n",
+		        -strokewidth 1 -stroke $pd_colors(selection) -tags {select%lx selected}\n",
 		            glist_getcanvas(glist), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
 		            x);
     }

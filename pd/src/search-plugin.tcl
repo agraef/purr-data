@@ -103,8 +103,6 @@ proc ::dialog_search::resultstext_search {w key} {
     }
     set resultstext .search.resultstext
     $resultstext tag remove sel 1.0 end
-    pdtk_post "key is $key\n"
-    pdtk_post "[$w get]\n"
     set fff_string [$w get]
     set offset 1
     if {$::dialog_search::fff_direction eq "backwards"} {
@@ -115,12 +113,10 @@ proc ::dialog_search::resultstext_search {w key} {
         "[$resultstext index insert] + $offset display chars"
     }
     set insert [$resultstext index insert]
-    pdtk_post "insert is [$resultstext index insert]\n"
     set count ""
     set match ""
     set match [$resultstext search -$::dialog_search::fff_direction \
         -nocase -count count -- $fff_string $insert]
-    pdtk_post "coutn is $count\n"
     if {$match ne ""} {
         $resultstext see $match
         $resultstext tag add sel $match "$match + $count display chars"
@@ -133,7 +129,6 @@ proc ::dialog_search::toggle_fff_bar {mytoplevel} {
     # widgets for the fff bar
     set f $mytoplevel.fff
     set e $f.e
-    pdtk_post "grid slaves is [grid slaves $mytoplevel]\n"
     if {[lsearch -exact [grid slaves $mytoplevel] $f] ne -1} {
         grid forget $f
         focus .search.f.searchtextentry
@@ -167,6 +162,22 @@ proc ::dialog_search::toggle_fff_bar {mytoplevel} {
 proc ::dialog_search::fff_navigate {w dir} {
     set ::dialog_search::fff_direction $dir
     resultstext_search $w 36
+}
+
+# this is stolen from pd_bindings.tcl
+proc ::dialog_search::dialog_bindings {mytoplevel dialogname} {
+    variable modifier
+
+    bind $mytoplevel <KeyPress-Escape> "dialog_${dialogname}::cancel $mytoplevel"
+    bind $mytoplevel <KeyPress-Return> "dialog_${dialogname}::ok $mytoplevel"
+    bind $mytoplevel <$::modifier-Key-w> "dialog_${dialogname}::cancel $mytoplevel"
+    # these aren't supported in the dialog, so alert the user, then break so
+    # that no other key bindings are run
+    bind $mytoplevel <$::modifier-Key-s>       {bell; break}
+    bind $mytoplevel <$::modifier-Shift-Key-S> {bell; break}
+    bind $mytoplevel <$::modifier-Key-p>       {bell; break}
+
+    wm protocol $mytoplevel WM_DELETE_WINDOW "dialog_${dialogname}::cancel $mytoplevel"
 }
 
 proc ::dialog_search::create_dialog {mytoplevel} {
@@ -220,13 +231,16 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     ttk::combobox $mytoplevel.f.genrebox -values $genres -state readonly\
 	-style "Genre.TCombobox" -takefocus 1
     $mytoplevel.f.genrebox current 0
-    ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground $linux_wm_hlcolor \
+    ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground $pd_colors(link) \
 	-anchor center -style Foo.TLabel
-    text $mytoplevel.navtext -font "$searchfont -12" -height 1 -bd 0 -highlightthickness 0\
-	-padx 8 -pady 3 -bg white -fg black
-    text $mytoplevel.resultstext -yscrollcommand "$mytoplevel.yscrollbar set" \
-        -bg white -highlightcolor blue -height 30 -wrap word -state disabled \
-	-padx 8 -pady 3 -spacing3 2 -bd 0 -highlightthickness 0 -fg black
+    text $mytoplevel.navtext -font "$searchfont -12" -height 1 -bd 0 \
+        -highlightthickness 0 -bg $::pd_colors(canvas_color) \
+	-padx 8 -pady 3 -fg $::pd_colors(text)
+    text $mytoplevel.resultstext \
+        -yscrollcommand "$mytoplevel.yscrollbar set" \
+        -bg $::pd_colors(canvas_color) -fg $::pd_colors(text) \
+        -highlightcolor blue -height 30 -wrap word -state disabled \
+	-padx 8 -pady 3 -spacing3 2 -bd 0 -highlightthickness 0
     ttk::scrollbar $mytoplevel.yscrollbar -command "$mytoplevel.resultstext yview" \
         -takefocus 0
     ttk::label $mytoplevel.statusbar -text [_ "Pd-L2Ork Search"] -justify left \
@@ -278,7 +292,7 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     $mytoplevel.resultstext tag configure intro_libdirs -font "$searchfont -12"
     # make tags for both the results and the nav text widgets
     foreach textwidget [list "$mytoplevel.resultstext" "$mytoplevel.navtext"] {
-        $textwidget tag configure link -foreground $linux_wm_hlcolor
+        $textwidget tag configure link -foreground $::pd_colors(link)
         $textwidget tag bind link <Enter> "$textwidget configure \
             -cursor hand2"
         $textwidget tag bind link <Leave> "$textwidget configure \
@@ -400,9 +414,10 @@ proc ::dialog_search::create_dialog {mytoplevel} {
 	{menu_doc_open doc/5.reference all_about_finding_objects.pd}
     bind $mytoplevel.f.advancedlabel <Return> \
     {menu_doc_open doc/5.reference all_about_finding_objects.pd}
-#   Right now we're suppressing dialog bindings because helpbrowser namespace
-#   doesn't work unless all procs are prefixed with dialog_
-#    ::pd_bindings::dialog_bindings $mytoplevel "search"
+    # hardcoded this into ::dialog_search namespace from 0.43's
+    # pd_bindings.tcl.  But really l2ork just needs to use 0.43's
+    # API
+    ::dialog_search::dialog_bindings $mytoplevel "search"
 #    bind $mytoplevel <KeyPress-Escape> "search::cancel $mytoplevel"
 #    bind $mytoplevel <KeyPress-Return> "search::ok $mytoplevel"
 #    bind $mytoplevel <$::modifier-Key-w> "search::cancel $mytoplevel"
@@ -1518,7 +1533,7 @@ proc ::dialog_search::print_navbar {foo} {
     set separator /
     set text .search.navtext
     $text configure -state normal
-    $text delet 1.0 end
+    $text delete 1.0 end
     $text insert 1.0 [_ "Home"] "link intro navbar"
     if {[llength $navbar] == 0} {
 	$text configure -state disabled

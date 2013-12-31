@@ -723,7 +723,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 		sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
 		sys_vgui("destroy %s\n", sh->h_pathname);	
 		sys_vgui(".x%lx.c delete GOP_resblob\n", x);	
-		sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor bottom_right_corner\n",
+		sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor bottom_right_corner\n",
 				 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 		sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxGOP GOP_resblob}\n",
 				 x, x->gl_xmargin + x->gl_pixwidth - SCALEHANDLE_WIDTH - 1,
@@ -742,7 +742,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 		sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
 		sys_vgui("destroy %s\n", mh->h_pathname);
 		sys_vgui(".x%lx.c delete GOP_movblob\n", x);	
-		sys_vgui("canvas %s -width %d -height %d -bg $select_color -bd 0 -cursor crosshair\n",
+		sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor crosshair\n",
 				 mh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
 		sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxMOVE %lxGOP GOP_movblob}\n",
 				 x, x->gl_xmargin + 2 ,
@@ -959,9 +959,9 @@ static void canvas_drawlines(t_canvas *x)
 		if (!(pd_class(&t.tr_ob2->ob_g.g_pd) == preset_node_class && pd_class(&t.tr_ob->ob_g.g_pd) != message_class))
 			canvas_drawconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc, issignal);
 		    /*sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %s -stroke %s \
-	-tags {l%lx all_cords}\n",
+	-tags {l%lx all_cords %s}\n",
 		             glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, 
-		             (issignal ? "$signal_cord_width" : "$msg_cord_width"), (issignal ? "$signal_cord" : "$msg_cord"),
+		             (issignal ? "$pd_colors(signal_cord_width)" : "$pd_colors(control_cord_width)"), (issignal ? "$pd_colors(signal_cord)" : "$pd_colors(control_cord)"),
 		             oc);*/
     }
 }
@@ -2009,7 +2009,7 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 			sys_vgui("lower %s\n", sh->h_pathname);
 			sys_vgui(".x%lx.c delete GOP \n",  x);							//delete GOP rect where it started from
 			sys_vgui(".x%x.c create rectangle %d %d %d %d\
-	 			-outline $select_color -width 1 -tags %s\n",\
+	 			-outline $pd_colors(selection) -width 1 -tags %s\n",\
 				 x, x->gl_xmargin, x->gl_ymargin,\
 					x->gl_xmargin + x->gl_pixwidth,\
 					x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);

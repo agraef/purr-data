@@ -42,7 +42,7 @@
 #define IEM_GUI_COLOR_SELECTED       16749334
 /* end deprecated */
 
-#define IEM_GUI_COLOR_NORMAL         0
+#define IEM_GUI_COLOR_NORMAL         "$pd_colors(iemgui_border)"
 
 #define IEM_GUI_MAX_COLOR            30
 
