@@ -1209,17 +1209,17 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     fill);
                 if (flags & CLOSED && !(flags & BBOX))
                 {
-                    sys_vgui(".x%lx.c create ppolygon\\\n",
+                    sys_vgui(".x%lx.c create ppolygon \\\n",
                         glist_getcanvas(glist));
                 }
                 else if (flags & BBOX) /* rectangles and ellipses */
                 {
                     n = 2; /* silently truncate extra coordinates */
                     if(flags & BEZ)
-                        sys_vgui(".x%lx.c create ellipse\\\n",
+                        sys_vgui(".x%lx.c create ellipse \\\n",
                             glist_getcanvas(glist));
                     else
-                        sys_vgui(".x%lx.c create prect\\\n",
+                        sys_vgui(".x%lx.c create prect \\\n",
                         glist_getcanvas(glist));
                 }
             }
@@ -1228,18 +1228,18 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 if(flags & BBOX)
                 {
                     if(flags & BEZ)
-                        sys_vgui(".x%lx.c create ellipse\\\n", glist_getcanvas(glist));
+                        sys_vgui(".x%lx.c create ellipse \\\n", glist_getcanvas(glist));
                     else
-                        sys_vgui(".x%lx.c create prect\\\n", glist_getcanvas(glist));
+                        sys_vgui(".x%lx.c create prect \\\n", glist_getcanvas(glist));
                 } else
-                    sys_vgui(".x%lx.c create polyline\\\n", glist_getcanvas(glist));
+                    sys_vgui(".x%lx.c create polyline \\\n", glist_getcanvas(glist));
             }
             for (i = 0; i < n; i++)
             {
-                sys_vgui("%d %d\\\n", pix[2*i], pix[2*i+1]);
+                sys_vgui("%d %d \\\n", pix[2*i], pix[2*i+1]);
                 if ((flags & BEZ) && (flags & BBOX))
                 {
-                    sys_vgui("-rx %d -ry %d\\\n",
+                    sys_vgui("-rx %d -ry %d \\\n",
                         (t_int)fielddesc_getfloat(x->x_vec+2,
                             template, data, 1),
                         (t_int)fielddesc_getfloat(x->x_vec+3,
@@ -1247,12 +1247,12 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     break;
                 }
             }
-            sys_vgui("-strokewidth %f\\\n", width);
-		if (flags & CLOSED) sys_vgui("-fill %s -stroke %s -fillopacity %g\\\n",
+            sys_vgui("-strokewidth %f \\\n", width);
+		if (flags & CLOSED) sys_vgui("-fill %s -stroke %s -fillopacity %g \\\n",
                 fill, outline, fielddesc_getfloat(&x->x_fillopacity, template, data, 1));
-            else if(flags & BBOX) sys_vgui("-stroke %s\\\n", outline);
-            else sys_vgui("-stroke %s\\\n", outline);
-            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
+            else if(flags & BBOX) sys_vgui("-stroke %s \\\n", outline);
+            else sys_vgui("-stroke %s \\\n", outline);
+            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
             sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
 				data, sc);
 			if (!glist_istoplevel(glist)) {
@@ -1923,7 +1923,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     int mey1 = (int)glist_ytopixels(glist, basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1;
                     int mex2 = inextx;
                     int mey2 = py2;
-                    sys_vgui("M %d %d H %d V %d H %d z\\\n",
+                    sys_vgui("M %d %d H %d V %d H %d z \\\n",
                         mex1, mey1, mex2, mey2, mex1);
                //} //part of experimental code above
                     ndrawn++;
@@ -2020,9 +2020,9 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                                 fielddesc_cvttocoord(wfielddesc, wval)));
                 }
             ouch:
-                sys_vgui(" -strokewidth 1 -fill %s -stroke %s\\\n",
+                sys_vgui(" -strokewidth 1 -fill %s -stroke %s \\\n",
                     symfill->s_name, symoutline->s_name);
-                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
+                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
 
                 sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
 					 data, sc);
@@ -2064,11 +2064,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     glist_ytopixels(glist, basey + yloc + 
                         fielddesc_cvttocoord(yfielddesc, yval)));
 
-                //sys_vgui("-strokewidth %f\\\n", linewidth);
-                //sys_vgui("-fill %s\\\n", outline);
-                sys_vgui("-strokewidth %f -stroke %s\\\n", linewidth, symoutline->s_name);
-                //sys_vgui("-fill %s\\\n", symoutline->s_name);
-                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
+                //sys_vgui("-strokewidth %f \\\n", linewidth);
+                //sys_vgui("-fill %s \\\n", outline);
+                sys_vgui("-strokewidth %f -stroke %s \\\n", linewidth, symoutline->s_name);
+                //sys_vgui("-fill %s \\\n", symoutline->s_name);
+                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
  
                 sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist, data,sc);
             }

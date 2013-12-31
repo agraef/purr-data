@@ -1130,12 +1130,12 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 				has_garray = 1;
 			}
 		}
-		if (has_garray) {
+		/*if (has_garray) {
 			x1 -= 1;
 			y1 -= 2;
 			//x2 += 1;
 			y2 += 1;
-		}
+		}*/
     }
     else text_widgetbehavior.w_getrectfn(z, glist, &x1, &y1, &x2, &y2);
     *xp1 = x1;

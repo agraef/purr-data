@@ -191,6 +191,11 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
 			t_preset_hub *ph = (t_preset_hub *)x;
 			if (ph->ph_invis > 0) return(0);
 		}
+		/*fprintf(stderr,"checking %d\n", (glist->gl_havewindow ||
+            (ob->te_pd != canvas_class &&
+                ob->te_pd->c_wb != &text_widgetbehavior) ||
+            (ob->te_pd == canvas_class && (((t_glist *)ob)->gl_isgraph)) ||
+            (glist->gl_goprect && (ob->te_type == T_TEXT))));*/
         return (glist->gl_havewindow ||
             (ob->te_pd != canvas_class &&
                 ob->te_pd->c_wb != &text_widgetbehavior) ||
