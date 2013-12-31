@@ -251,7 +251,7 @@ pdtk_post "full bajitas is \
                 (16 * $::joc_button($mytoplevel))] \
 \n"
 
-pdtk_post "mytop fucking level is $mytoplevel\n"
+pdtk_post "mytop level is $mytoplevel\n"
     pd "[concat $mytoplevel arraydialog \
             $mofo \
             [$mytoplevel.size.entry get] \
