@@ -11,7 +11,8 @@
 #include "g_canvas.h"
 
 void array_redraw(t_array *a, t_glist *glist);
-
+void graph_graphrect(t_gobj *z, t_glist *glist,
+    int *xp1, int *yp1, int *xp2, int *yp2);
 /*
 This file contains text objects you would put in a canvas to define a
 template.  Templates describe objects of type "array" (g_array.c) and
@@ -1447,6 +1448,8 @@ typedef struct _plot
     t_fielddesc x_wpoints;
     t_fielddesc x_vis;          /* visible */
     t_fielddesc x_scalarvis;    /* true if drawing the scalar at each point */
+    t_fielddesc x_symoutlinecolor; /* color as hex symbol */
+    t_fielddesc x_symfillcolor;    /* fill color as hex symbol */
 } t_plot;
 
 static void *plot_new(t_symbol *classsym, t_int argc, t_atom *argv)
@@ -1511,6 +1514,10 @@ static void *plot_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_xinc, 1);
     if (argc) fielddesc_setfloatarg(&x->x_style, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_style, defstyle);
+    if (argc) fielddesc_setsymbolarg(&x->x_symfillcolor, argc--, argv++);
+    else argc--, argv++;
+    if (argc) fielddesc_setsymbolarg(&x->x_symoutlinecolor, argc--, argv++);
+
     return (x);
 }
 
@@ -1541,7 +1548,8 @@ static int plot_readownertemplate(t_plot *x,
     t_symbol **elemtemplatesymp, t_array **arrayp,
     t_float *linewidthp, t_float *xlocp, t_float *xincp, t_float *ylocp, t_float *stylep,
     t_float *visp, t_float *scalarvisp,
-    t_fielddesc **xfield, t_fielddesc **yfield, t_fielddesc **wfield)
+    t_fielddesc **xfield, t_fielddesc **yfield, t_fielddesc **wfield, t_symbol **fillcolorp,
+    t_symbol **outlinecolorp)
 {
     int arrayonset, type;
     t_symbol *elemtemplatesym;
@@ -1577,6 +1585,11 @@ static int plot_readownertemplate(t_plot *x,
     *xfield = &x->x_xpoints;
     *yfield = &x->x_ypoints;
     *wfield = &x->x_wpoints;
+    *fillcolorp = fielddesc_getsymbol(&x->x_symfillcolor, ownertemplate,
+        data, 1);
+    *outlinecolorp = fielddesc_getsymbol(&x->x_symoutlinecolor, ownertemplate,
+        data, 1);
+
     return (0);
 }
 
@@ -1648,6 +1661,8 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     t_symbol *elemtemplatesym;
+    t_symbol *symfillcolor;
+    t_symbol *symoutlinecolor;
     t_float linewidth, xloc, xinc, yloc, style, xsum, yval, vis, scalarvis;
     t_array *array;
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
@@ -1663,7 +1678,8 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     }*/
     if (!plot_readownertemplate(x, data, template, 
         &elemtemplatesym, &array, &linewidth, &xloc, &xinc, &yloc, &style,
-            &vis, &scalarvis, &xfielddesc, &yfielddesc, &wfielddesc) &&
+        &vis, &scalarvis, &xfielddesc, &yfielddesc, &wfielddesc,
+        &symfillcolor, &symoutlinecolor) &&
                 (vis != 0) &&
             !array_getfields(elemtemplatesym, &elemtemplatecanvas,
                 &elemtemplate, &elemsize, 
@@ -1781,6 +1797,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     t_symbol *elemtemplatesym;
     t_float linewidth, xloc, xinc, yloc, style, usexloc, xsum, yval, vis,
         scalarvis;
+    t_symbol *symfill;
+    t_symbol *symoutline;
+    char outline[20];
+    numbertocolor(fielddesc_getfloat(&x->x_outlinecolor, template,
+        data, 1), outline);
     t_array *array;
     int nelem;
     char *elem;
@@ -1796,7 +1817,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
         
     if (plot_readownertemplate(x, data, template, 
         &elemtemplatesym, &array, &linewidth, &xloc, &xinc, &yloc, &style,
-        &vis, &scalarvis, &xfielddesc, &yfielddesc, &wfielddesc) ||
+        &vis, &scalarvis, &xfielddesc, &yfielddesc, &wfielddesc, &symfill,
+        &symoutline) ||
             ((vis == 0) && tovis) /* see above for 'tovis' */
             || array_getfields(elemtemplatesym, &elemtemplatecanvas,
                 &elemtemplate, &elemsize, xfielddesc, yfielddesc, wfielddesc,
@@ -1807,10 +1829,20 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
 
     if (tovis)
     {
-        if (style == PLOTSTYLE_POINTS)
+        /* check if old 3-digit color field is being used... */
+        int dscolor = fielddesc_getfloat(&x->x_outlinecolor, template, data, 1);
+        if (dscolor != 0)
         {
+            char outline[20];
+            numbertocolor(dscolor, outline);
+            symoutline = gensym(outline);
+        }
+        if (style == PLOTSTYLE_POINTS || style == PLOTSTYLE_BARS)
+        {
+            symfill = style == PLOTSTYLE_POINTS ? symoutline : symfill;
             t_float minyval = 1e20, maxyval = -1e20;
             int ndrawn = 0;
+            sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
             for (xsum = basex + xloc, i = 0; i < nelem; i++)
             {
                 t_float yval, xpix, ypix, nextxloc;
@@ -1843,44 +1875,79 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     minyval = yval;
                 if (i == nelem-1 || inextx != ixpix)
                 {
-					//fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
-					// with the following experimental code we can prevent drawing outside the gop window (preferred but needs to be further tested)
-					/*if (glist->gl_y2 > glist->gl_y1) {
-						if (minyval >= glist->gl_y1 && maxyval <= glist->gl_y2) draw_me = 1;
-						else draw_me = 0; 
-					} else {
-						if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1) draw_me = 1;
-						else draw_me = 0; 
-					}
-					if (draw_me) {*/
-					//we subtract 1 from y to keep it in sync with the rest of the types of templates
-		               sys_vgui(
-	".x%lx.c create prect %d %d %d %d -fill black -strokewidth 0 -tags {.x%lx.x%lx.template%lx scalar%lx}\n",
-		                    glist_getcanvas(glist),
-		                    ixpix, (int)glist_ytopixels(glist, 
-		                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
-		                    inextx, (int)(glist_ytopixels(glist, 
-		                        basey + fielddesc_cvttocoord(yfielddesc, maxyval))
-		                            + linewidth) - 1, glist_getcanvas(glist), glist,
-							 data, sc);
+                    int py2 = 0;
+                    int border = 0;
+                    if(style == PLOTSTYLE_POINTS)
+                        py2 = (int)(glist_ytopixels(glist,
+                            basey + fielddesc_cvttocoord(yfielddesc, maxyval))
+                                + linewidth) - 1;
+                    else
+                    {
+                        /* this should probably be changed to anchor to the
+                           y-minimum instead of the bottom of the graph. That
+                           way the user can invert the y min/max to get a graph
+                           anchored from the top */
 
-					//} //part of experimental code above
+                        if(glist->gl_isgraph && !glist->gl_havewindow)
+                        {
+                            int x1, y1, x2, y2;
+                            graph_graphrect(&glist->gl_gobj, glist->gl_owner,
+                                &x1, &y1, &x2, &y2);
+                            py2 = y2;
+                            border = 1;
+                        }
+                    }
+                //fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
+                // with the following experimental code we can prevent drawing outside the gop window (preferred but needs to be further tested)
+                /*if (glist->gl_y2 > glist->gl_y1) {
+                   if (minyval >= glist->gl_y1 && maxyval <= glist->gl_y2) draw_me = 1;
+                   else draw_me = 0; 
+                } else {
+                if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1) draw_me = 1;
+                else draw_me = 0; 
+                }
+                if (draw_me) {*/
+                //we subtract 1 from y to keep it in sync with the rest of the types of templates
+                        /* This is the old, inefficient code that creates a separate canvas item for each element... 
+                sys_vgui(
+                        ".x%lx.c create prect %d %d %d %d -fill %s -stroke %s -strokewidth %d -tags {.x%lx.x%lx.template%lx array}\n",
+                    glist_getcanvas(glist),
+                    ixpix, (int)glist_ytopixels(glist, 
+                            basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
+                            inextx, py2, symfill->s_name, symoutline->s_name,
+                            border, glist_getcanvas(glist), glist, data);
+                        */
+
+                    /* For efficiency, we make a single path item for the trace or bargraph */
+                    int mex1 = ixpix;
+                    int mey1 = (int)glist_ytopixels(glist, basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1;
+                    int mex2 = inextx;
+                    int mey2 = py2;
+                    sys_vgui("M %d %d H %d V %d H %d z\\\n",
+                        mex1, mey1, mex2, mey2, mex1);
+               //} //part of experimental code above
                     ndrawn++;
                     minyval = 1e20;
                     maxyval = -1e20;
                 }
                 if (ndrawn > 2000 || ixpix >= 3000) break;
             }
+            /* end of the path item from above */
+            sys_vgui("} -fill %s -stroke %s -strokewidth %d -tags {.x%lx.x%lx.template%lx array}\n",
+                        symfill->s_name, symoutline->s_name,
+                        style == PLOTSTYLE_POINTS ? 0 : 1,
+                        glist_getcanvas(glist), glist, data);
+
         }
         else
         {
-            char outline[20];
+            //char outline[20];
             int lastpixel = -1, ndrawn = 0;
             t_float yval = 0, wval = 0, xpix;
             int ixpix = 0;
                 /* draw the trace */
-            numbertocolor(fielddesc_getfloat(&x->x_outlinecolor, template,
-                data, 1), outline);
+            //numbertocolor(fielddesc_getfloat(&x->x_outlinecolor, template,
+            //    data, 1), outline);
             if (wonset >= 0)
             {
                     /* found "w" field which controls linewidth.  The trace is
@@ -1953,8 +2020,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                                 fielddesc_cvttocoord(wfielddesc, wval)));
                 }
             ouch:
-                sys_vgui(" -strokewidth 1 -stroke %s\\\n",
-                    outline);
+                sys_vgui(" -strokewidth 1 -fill %s -stroke %s\\\n",
+                    symfill->s_name, symoutline->s_name);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
                 sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
@@ -1997,13 +2064,19 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     glist_ytopixels(glist, basey + yloc + 
                         fielddesc_cvttocoord(yfielddesc, yval)));
 
-                sys_vgui("-strokewidth %f\\\n", linewidth);
+                //sys_vgui("-strokewidth %f\\\n", linewidth);
                 //sys_vgui("-fill %s\\\n", outline);
+                sys_vgui("-strokewidth %f -stroke %s\\\n", linewidth, symoutline->s_name);
+                //sys_vgui("-fill %s\\\n", symoutline->s_name);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
-
+ 
                 sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist, data,sc);
             }
         }
+        /* make sure the array drawings are behind the graph */
+        sys_vgui(".x%lx.c lower plot%lx graph%lx\n", glist_getcanvas(glist),
+            data, glist);
+
             /* We're done with the outline; now draw all the points.
             This code is inefficient since the template has to be
             searched for drawing instructions for every last point. */
@@ -2079,11 +2152,14 @@ static int plot_click(t_gobj *z, t_glist *glist,
     t_float linewidth, xloc, xinc, yloc, style, vis, scalarvis;
     t_array *array;
     t_fielddesc *xfielddesc, *yfielddesc, *wfielddesc;
+    t_symbol *symfillcolor;
+    t_symbol *symoutlinecolor;
 
     if (!plot_readownertemplate(x, data, template, 
         &elemtemplatesym, &array, &linewidth, &xloc, &xinc, &yloc, &style,
         &vis, &scalarvis,
-        &xfielddesc, &yfielddesc, &wfielddesc) && (vis != 0))
+        &xfielddesc, &yfielddesc, &wfielddesc, &symfillcolor, &symoutlinecolor)
+        && (vis != 0))
     {
 		//fprintf(stderr,"	->array_doclick\n");
         return (array_doclick(array, glist, sc, ap,

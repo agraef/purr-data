@@ -403,6 +403,7 @@ extern int glist_valid;         /* incremented when pointers might be stale */
 #define PLOTSTYLE_POINTS 0     /* plotting styles for arrays */
 #define PLOTSTYLE_POLY 1
 #define PLOTSTYLE_BEZ 2
+#define PLOTSTYLE_BARS 3
 
 /* ------------------- functions on any gobj ----------------------------- */
 EXTERN void gobj_getrect(t_gobj *x, t_glist *owner, int *x1, int *y1,
@@ -457,7 +458,8 @@ EXTERN void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     t_float x1, t_float y1, t_float x2, t_float y2,
     t_float px1, t_float py1, t_float px2, t_float py2);
-EXTERN void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv);
+EXTERN void glist_arraydialog(t_glist *parent, t_symbol *s,
+    int argc, t_atom *argv);
 EXTERN t_binbuf *glist_writetobinbuf(t_glist *x, int wholething);
 EXTERN int glist_isgraph(t_glist *x);
 EXTERN void glist_redraw(t_glist *x);
@@ -600,11 +602,11 @@ EXTERN void linetraverser_skipobject(t_linetraverser *t);
 EXTERN t_template *garray_template(t_garray *x);
 
 /* -------------------- arrays --------------------- */
-EXTERN t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *tmpl,
-    t_floatarg f, t_floatarg saveit);
+EXTERN t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_array *array_new(t_symbol *templatesym, t_gpointer *parent);
 EXTERN void array_resize(t_array *x, int n);
 EXTERN void array_free(t_array *x);
+int array_joc; /* for "jump on click" array inside a graph */
 
 /* --------------------- gpointers and stubs ---------------- */
 EXTERN t_gstub *gstub_new(t_glist *gl, t_array *a);

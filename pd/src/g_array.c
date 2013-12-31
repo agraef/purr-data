@@ -9,6 +9,8 @@
 #include "g_canvas.h"
 #include <math.h>
 
+extern int glob_lmclick;
+
 /* jsarlo { */
 #define ARRAYPAGESIZE 1000  /* this should match the page size in u_main.tk */
 /* } jsarlo */
@@ -134,10 +136,13 @@ struct _garray
     t_symbol *x_realname;   /* expanded name (symbol we're bound to) */
     char x_usedindsp;       /* true if some DSP routine is using this */
     char x_saveit;          /* true if we should save this with parent */
+    char x_joc;             /* true if we should "jump on click" in a graph */
     char x_listviewing;     /* true if list view window is open */
     char x_hidename;        /* don't print name above graph */
-	int x_style;			/* so much simpler to keep it here */
-	t_symbol *x_send;		/* send_changed hook */
+    int x_style;            /* so much simpler to keep it here */
+    t_symbol *x_send;       /* send_changed hook */
+    t_symbol *x_fillcolor;       /* color for filled area of the are */
+    t_symbol *x_outlinecolor;    /* color of the outline around the element */
 };
 
 t_pd *garray_arraytemplatecanvas;
@@ -145,8 +150,8 @@ t_pd *garray_floattemplatecanvas;
 static char garray_arraytemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
 #X obj 43 31 struct _float_array array z float float style\n\
-float linewidth float color;\n\
-#X obj 43 70 plot z color linewidth 0 0 1 style;\n\
+float linewidth float color symbol fillcolor symbol outlinecolor;\n\
+#X obj 43 70 plot z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
 ";
 static char garray_floattemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
@@ -185,7 +190,7 @@ always called by graph_array() below; but when we make a more general way
 to save and create arrays this might get called more directly. */
 
 static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
-    int saveit)
+    t_symbol *fill, t_symbol *outline, int saveit)
 {
     int i, zz;
     t_garray *x;
@@ -193,8 +198,8 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     t_template *template;
     char *str;
     t_gpointer gp;
-    if (!template_findbyname(templatesym))
-        return (0);  
+    if (!(template = template_findbyname(templatesym)))
+        return (0);
     x = (t_garray *)pd_new(garray_class);
     x->x_scalar = scalar_new(gl, templatesym);
     x->x_name = s;
@@ -203,6 +208,10 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     x->x_usedindsp = 0;
     x->x_saveit = saveit;
     x->x_listviewing = 0;
+    template_setsymbol(template, gensym("fillcolor"), x->x_scalar->sc_vec,
+        fill, 1);
+    template_setsymbol(template, gensym("outlinecolor"), x->x_scalar->sc_vec,
+        outline, 1);
     glist_add(gl, &x->x_gobj);
     x->x_glist = gl;
 	char buf[MAXPDSTRING];
@@ -262,6 +271,12 @@ int garray_getname(t_garray *x, t_symbol **namep)
     return (x->x_hidename);
 }
 
+    /* find out if array elements should "jump on click" in a graph */
+int garray_joc(t_garray *x)
+{
+    return (x->x_joc);
+}
+
         /* if there is one garray in a graph, reset the graph's coordinates
             to fit a new size and style for the garray */
 void garray_fittograph(t_garray *x, int n)
@@ -273,7 +288,8 @@ void garray_fittograph(t_garray *x, int n)
     {
         vmess(&gl->gl_pd, gensym("bounds"), "ffff",
             0., gl->gl_y1, (double)
-                (x->x_style == PLOTSTYLE_POINTS || n == 1 ? n : n-1),
+                (x->x_style == PLOTSTYLE_POINTS || x->x_style == PLOTSTYLE_BARS
+                    || n == 1 ? n : n-1),
                     gl->gl_y2);
                 /* close any dialogs that might have the wrong info now... */
         gfxstub_deleteforkey(gl);
@@ -286,10 +302,23 @@ an appropriate template; then set size and flags.  This is called
 from the menu and in the file format for patches.  LATER replace this
 by a more coherent (and general) invocation. */
 
-t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *templateargsym,
-    t_floatarg fsize, t_floatarg fflags)
+t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
-    int n = fsize, i, zz, nwords, zonset, ztype, saveit;
+    t_symbol *fill;
+    t_symbol *outline;
+    int fflags;
+
+    if (argc < 3) {pd_error(gl, "garray: not enough args"); return 0;}
+    t_symbol *name = atom_getsymbolarg(0, argc--, argv++);
+    int fsize = (int)atom_getfloatarg(0, argc--, argv++);
+    t_symbol *templateargsym = atom_getsymbolarg(0, argc--, argv++);
+    if (argc) fflags = (int)atom_getfloatarg(0, argc--, argv++);
+    else fflags = 0;
+    if (argc) fill = atom_getsymbolarg(0, argc--, argv++);
+    else fill = gensym("black");
+    if (argc) outline = atom_getsymbolarg(0, argc--, argv++);
+    else outline = gensym("black");
+    int n = fsize, i, zz, nwords, zonset, ztype, saveit, joc;
     t_symbol *zarraytype;
     t_garray *x;
     t_pd *x2;
@@ -332,9 +361,12 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *templateargsym,
         return (0);
     }
     saveit = ((flags & 1) != 0);
-    x = graph_scalar(gl, s, templatesym, saveit);
+    x = graph_scalar(gl, name, templatesym, fill, outline, saveit);
     x->x_hidename = ((flags & 8) >> 3);
-	x->x_style = style;
+    x->x_joc = ((flags & 16) >> 4);
+    x->x_fillcolor = fill;
+    x->x_outlinecolor = outline;
+    x->x_style = style;
 
     if (n <= 0)
         n = 100;
@@ -344,11 +376,19 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *templateargsym,
         x->x_style, 1);
     template_setfloat(template, gensym("linewidth"), x->x_scalar->sc_vec, 
         ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
+    template_setsymbol(template, gensym("fillcolor"), x->x_scalar->sc_vec,
+        fill, 1);
+    template_setsymbol(template, gensym("outlinecolor"), x->x_scalar->sc_vec,
+        outline, 1);
     if (x2 = pd_findbyclass(gensym("#A"), garray_class))
         pd_unbind(x2, gensym("#A"));
-
     pd_bind(&x->x_gobj.g_pd, gensym("#A"));
     garray_redraw(x);
+
+/* todo: need to test to see if this is necessary
+   doesn't seem like it is...
+    garray_fittograph(x, n);
+*/
     return (x);
 }
 
@@ -358,7 +398,8 @@ void canvas_menuarray(t_glist *canvas)
     t_glist *x = (t_glist *)canvas;
 	pd_vmess(&x->gl_pd, gensym("editmode"), "i", 1);
     char cmdbuf[200];
-    sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx\n", gcount+1, (long unsigned int)canvas);
+    sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx black black\n",
+        ++gcount, (long unsigned int)canvas);
     gfxstub_new(&x->gl_pd, x, cmdbuf);
 }
 
@@ -368,7 +409,6 @@ void garray_properties(t_garray *x, t_glist *canvas)
     char cmdbuf[200];
     t_array *a = garray_getarray(x);
     t_scalar *sc = x->x_scalar;
-
     if (!a)
         return;
     gfxstub_deleteforkey(x);
@@ -376,11 +416,11 @@ void garray_properties(t_garray *x, t_glist *canvas)
         properly; right now we just detect a leading '$' and escape
         it.  There should be a systematic way of doing this. */
     sprintf(cmdbuf, ((x->x_name->s_name[0] == '$') ?
-        "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx\n" :
-        "pdtk_array_dialog %%s %s %d %d 0 .x%lx\n"),
-            x->x_name->s_name, a->a_n, x->x_saveit + 
-            2 * (int)(template_getfloat(template_findbyname(sc->sc_template),
-            gensym("style"), x->x_scalar->sc_vec, 1)), (long unsigned int)glist_getcanvas(canvas));
+        "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx %s %s\n" :
+        "pdtk_array_dialog %%s %s %d %d 0 .x%lx %s %s\n"), x->x_name->s_name,
+            a->a_n, x->x_saveit +  2 * x->x_style + 8 * x->x_hidename +
+            16 * x->x_joc, (long unsigned int)glist_getcanvas(canvas),
+             x->x_fillcolor->s_name, x->x_outlinecolor->s_name);
     gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
 }
 
@@ -389,13 +429,18 @@ void garray_properties(t_garray *x, t_glist *canvas)
 void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
 //t_floatarg size, t_floatarg fflags, t_floatarg otherflag, float xdraw, float ydraw)
 {
-	t_float size, fflags, otherflag, xdraw, ydraw;
-	t_symbol *name = atom_getsymbolarg(0, argc, argv);
-	size = atom_getfloatarg(1, argc, argv);
-	fflags = atom_getfloatarg(2, argc, argv);
-	otherflag = atom_getfloatarg(3, argc, argv);
-	xdraw = atom_getfloatarg(4, argc, argv);
-	ydraw = atom_getfloatarg(5, argc, argv);
+    t_atom at[6];
+    if (argc !=8) {pd_error(parent,
+        "arraydialog: wrong number of args"); return;}
+    t_float size, fflags, otherflag, xdraw, ydraw;
+    t_symbol *name = atom_getsymbolarg(0, argc, argv);
+    size = atom_getfloatarg(1, argc, argv);
+    fflags = atom_getfloatarg(2, argc, argv);
+    otherflag = atom_getfloatarg(3, argc, argv);
+    xdraw = atom_getfloatarg(4, argc, argv);
+    ydraw = atom_getfloatarg(5, argc, argv);
+    t_symbol *fillcolor = atom_getsymbolarg(6, argc, argv);
+    t_symbol *outlinecolor = atom_getsymbolarg(7, argc, argv);
 
     t_glist *gl;
     t_garray *a;
@@ -407,8 +452,23 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
             (size > 1 ? size-1 : size), -1, xdraw+30, ydraw+30, xdraw+30+GLIST_DEFGRAPHWIDTH, ydraw+30+GLIST_DEFGRAPHHEIGHT);
         gl->gl_hidetext = 1;
     }
-    a = graph_array(gl, sharptodollar(name), &s_float, size, flags);
+    //a = graph_array(gl, sharptodollar(name), &s_float, size, flags);
+    SETSYMBOL(at, sharptodollar(name));
+    SETFLOAT(at+1, size);
+    SETSYMBOL(at+2, &s_float);
+    SETFLOAT(at+3, flags);
+
+    /* no idea what xdraw and ydraw are used for...
+       graph_array doesn't seem to use them 
+    SETFLOAT(at+4, xdraw);
+    SETFLOAT(at+5, ydraw);
+    */
+
+    SETSYMBOL(at+4, fillcolor);
+    SETSYMBOL(at+5, outlinecolor);
+    a = graph_array(gl, gensym("array"), 8, at);
     canvas_dirty(parent, 1);
+    
 	//canvas_redraw(glist_getcanvas(parent));
 	garray_fittograph(a, (int)size);
 	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(parent));
@@ -417,32 +477,46 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
 extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 
     /* this is called from the properties dialog window for an existing array */
-void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
-    t_floatarg fflags, t_floatarg deleteit)
+void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
 {
-	//fprintf(stderr,"================garray_arraydialog\n");
+    //fprintf(stderr,"================garray_arraydialog\n");
+
+    int deleteit = atom_getfloatarg(3, argc, argv);
     if (deleteit != 0)
     {
-		//fprintf(stderr,"deleteit\n");
-		//glist_select(x->x_glist, &x->x_gobj);
-		//canvas_undo_add(x->x_glist, 3, "delete", canvas_undo_set_cut(x->x_glist, 2)); // 2 = UCUT_CLEAR (from g_editor.c)
-		//currently cannot be undo'd until we do a new kind of undo
-		int dspwas = canvas_suspend_dsp();
+	//fprintf(stderr,"deleteit\n");
+	//glist_select(x->x_glist, &x->x_gobj);
+	//canvas_undo_add(x->x_glist, 3, "delete", canvas_undo_set_cut(x->x_glist, 2)); // 2 = UCUT_CLEAR (from g_editor.c)
+	//currently cannot be undo'd until we do a new kind of undo
+	int dspwas = canvas_suspend_dsp();
         glist_delete(x->x_glist, &x->x_gobj);
-		canvas_resume_dsp(dspwas);
-		canvas_redraw(glist_getcanvas(x->x_glist));
+	canvas_resume_dsp(dspwas);
+	canvas_redraw(glist_getcanvas(x->x_glist));
     }
-	else 
-	{
-		//need a new kind of undo
-		//canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
+    else 
+    {
+        //need a new kind of undo
+        //canvas_apply_setundo(glist_getcanvas(x->x_glist), (t_gobj *)x);
 
-		int flags = fflags;
-		int saveit = ((flags & 1) != 0);
-		int style = ((flags & 6) >> 1);
-		/*t_float stylewas = template_getfloat(
-		    template_findbyname(x->x_scalar->sc_template),
-		        gensym("style"), x->x_scalar->sc_vec, 1);*/
+        if (argc !=8)
+        {
+            pd_error(x, "arraydialog: wrong number of args"); return;
+        }
+        t_symbol *name = atom_getsymbolarg(0, argc, argv);
+        int fsize = atom_getfloatarg(1, argc, argv);
+        int flags = atom_getfloatarg(2, argc, argv);
+        t_symbol *fill = atom_getsymbolarg(6, argc, argv);
+        t_symbol *outline = atom_getsymbolarg(7, argc, argv);
+	int saveit = ((flags & 1) != 0);
+	int style = ((flags & 6) >> 1);
+        /* todo: revisit this filestyle business
+        if (style < 2) style = !style;
+        */
+        int hidename = ((flags & 8) >> 3);
+        int joc = ((flags & 16) >> 4);
+	/*t_float stylewas = template_getfloat(
+	    template_findbyname(x->x_scalar->sc_template),
+	    gensym("style"), x->x_scalar->sc_vec, 1);*/
         int size;
         int styleonset, styletype;
         t_symbol *stylearraytype;
@@ -484,21 +558,30 @@ void garray_arraydialog(t_garray *x, t_symbol *name, t_floatarg fsize,
         if (size != a->a_n)
             garray_resize(x, size);
         if (style != x->x_style) {
-			x->x_style = style;
+	    x->x_style = style;
             garray_fittograph(x, size);
-		}
-		//fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
+	}
+	//fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
         template_setfloat(scalartemplate, gensym("style"),
             x->x_scalar->sc_vec, (t_float)x->x_style, 0);
     	template_setfloat(scalartemplate, gensym("linewidth"),
-			x->x_scalar->sc_vec, ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
+	    x->x_scalar->sc_vec, ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
+        template_setsymbol(scalartemplate, gensym("fillcolor"),
+            x->x_scalar->sc_vec, fill, 0);
+        template_setsymbol(scalartemplate, gensym("outlinecolor"),
+            x->x_scalar->sc_vec, outline, 0);
 
-		char buf[MAXPDSTRING];
-		sprintf(buf, "%s_changed", x->x_realname->s_name);
-		x->x_send = gensym(buf);
+	char buf[MAXPDSTRING];
+	sprintf(buf, "%s_changed", x->x_realname->s_name);
+	x->x_send = gensym(buf);
 
         garray_setsaveit(x, (saveit != 0));
-		//fprintf(stderr,"GARRAY_REDRAW\n");
+        x->x_joc = joc;
+        x->x_hidename = hidename;
+        x->x_fillcolor = fill;
+        x->x_outlinecolor = outline;
+        x->x_style = style;
+	//fprintf(stderr,"GARRAY_REDRAW\n");
         garray_redraw(x);
         canvas_dirty(x->x_glist, 1);
     }
@@ -656,6 +739,7 @@ void array_getcoordinate(t_glist *glist,
     *wp = wpix;
 }
 
+extern int array_joc; /* from g_canvas.h */
 static t_float array_motion_xcumulative;
 static t_float array_motion_ycumulative;
 static t_fielddesc *array_motion_xfield;
@@ -780,7 +864,6 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_array *ap, struct _glist *owner,
     t_float xloc, t_float yloc, int xpix, int ypix,
     int shift, int alt, int dbl, int doit);
-
     /* try clicking on an element of the array as a scalar (if clicking
     on the trace of the array failed) */
 static int array_doclick_element(t_array *array, t_glist *glist,
@@ -834,7 +917,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
     t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"array_doclick %d\n", doit);
+    //fprintf(stderr,"array_doclick %d\n", doit);
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i;
@@ -855,9 +938,12 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 			//fprintf(stderr,"	array_getcoordinate %d: pxpix:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
             if (pwpix < 4)
                 pwpix = 4;
-			if (xpix >= pxpix1 && xpix <= pxpix2 && ypix >= pypix-pwpix && ypix <= pypix+pwpix) {
-				best = i;
-				break;
+			if (xpix >= (int)pxpix1 && xpix <= (int)pxpix2 &&
+                            ((array_joc) ||
+                                (ypix >= pypix-pwpix && ypix <= pypix+pwpix)))
+                        {
+                            best = i;
+                            break;
 			}
 /*
             if (pwpix < 4)
@@ -884,7 +970,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 			//fprintf(stderr,"	1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);*/
         }
 		//fprintf(stderr,"	best = %f\n", best);
-        if (best == -1) //this is the arbitrary radius away from the actual object's center, originally 8
+        if (best == -1 && (array_joc == 0)) //this is the arbitrary radius away from the actual object's center, originally 8
         {
 			//fprintf(stderr,"	best > 8\n");
             if (scalarvis != 0) {
@@ -923,6 +1009,20 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             //if (dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best)
             //{
 				//fprintf(stderr, "dy=%f dy2=%f dy3=%f\n", dy, dy2, dy3);
+
+/* from array-rev */
+
+            int hit = 0;
+            if(array_joc)
+            {
+                    hit = (xpix >= pxpix1) && (xpix < pxpix2);
+            }
+            else
+                hit = dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best;
+
+
+/* end array-rev */
+
                 if (dy < dy2 && dy < dy3) {
                     array_motion_fatten = 0;
 					//fprintf(stderr,"A\n");
@@ -931,11 +1031,11 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     array_motion_fatten = -1;
 					//fprintf(stderr,"B\n");
 				}
-                else {
+                else if (!array_joc) {
 					array_motion_fatten = 1;
 					//fprintf(stderr,"C\n");
 				}
-                if (doit)
+                if (doit || (glob_lmclick && array_joc))
                 {
                     char *elem = (char *)array->a_vec;
                     array_motion_elemsize = elemsize;
@@ -1003,10 +1103,12 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     else if (yonset >= 0)
                     {
                         array_motion_yfield = yfield;
-                        array_motion_ycumulative = 
+                        array_motion_ycumulative =
                             fielddesc_getcoord(yfield, array_motion_template,
                                 (t_word *)(elem + i * elemsize), 1);
                             /* *(t_float *)((elem + elemsize * i) + yonset); */
+                        if (array_joc)
+                            array_motion(0, 0, ypix - pypix);
                     }
                     else
                     {
@@ -1148,9 +1250,11 @@ static void garray_save(t_gobj *z, t_binbuf *b)
             x->x_scalar->sc_vec, 0); */
     filestyle = (x->x_style == PLOTSTYLE_POINTS ? 0 : 
         (x->x_style == PLOTSTYLE_POLY ? 1 : x->x_style)); 
-    binbuf_addv(b, "sssisi;", gensym("#X"), gensym("array"),
+
+    binbuf_addv(b, "sssisiss;", gensym("#X"), gensym("array"),
         x->x_name, array->a_n, &s_float,
-            x->x_saveit + 2 * filestyle + 8*x->x_hidename);
+        x->x_saveit + 2 * filestyle + 8*x->x_hidename +
+        16 * x->x_joc, x->x_fillcolor, x->x_outlinecolor);
     if (x->x_saveit)
     {
         int n = array->a_n, n2 = 0;
@@ -1325,7 +1429,7 @@ static void garray_dofo(t_garray *x, int npoints, t_float dcval,
     if (npoints == 0)
         npoints = 512;  /* dunno what a good default would be... */
     if (npoints != (1 << ilog2(npoints)))
-        post("%s: rounnding to %d points", array->a_templatesym->s_name,
+        post("%s: rounding to %d points", array->a_templatesym->s_name,
             (npoints = (1<<ilog2(npoints))));
     garray_resize(x, npoints + 3);
     phaseincr = 2. * 3.14159 / npoints;
@@ -1648,7 +1752,7 @@ void g_array_setup(void)
     class_addmethod(garray_class, (t_method)garray_normalize,
         gensym("normalize"), A_DEFFLOAT, 0);
     class_addmethod(garray_class, (t_method)garray_arraydialog,
-        gensym("arraydialog"), A_SYMBOL, A_FLOAT, A_FLOAT, A_FLOAT, A_NULL);
+        gensym("arraydialog"), A_GIMME, 0);
 /* jsarlo { */
     class_addmethod(garray_class, (t_method)garray_arrayviewlist_new,
         gensym("arrayviewlistnew"), A_NULL);

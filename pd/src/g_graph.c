@@ -16,10 +16,13 @@ to this file... */
 #include <stdio.h>
 #include <string.h>
 
+extern int array_joc;
+int garray_joc(t_garray *x);
+
 /* ---------------------- forward definitions ----------------- */
 
 static void graph_vis(t_gobj *gr, t_glist *unused_glist, int vis);
-static void graph_graphrect(t_gobj *z, t_glist *glist,
+void graph_graphrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 static void graph_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
@@ -857,7 +860,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         {
 			//i++;
             sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor nw\
-             -font {{%s} %d %s} -tags {%s label graph} -fill %s\n",
+             -font {{%s} -%d %s} -tags {%s label graph} -fill %s\n",
              (long)glist_getcanvas(x),  x1+2, i, arrayname->s_name, sys_font,
                 sys_hostfontsize(glist_getfont(x)), sys_fontweight, tag,
 				(glist_isselected(x, gr) ? "$pd_colors(selection)" : "$pd_colors(graph_border)"));
@@ -987,7 +990,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     /* get the graph's rectangle, not counting extra swelling for controls
     to keep them inside the graph.  This is the "logical" pixel size. */
 
-static void graph_graphrect(t_gobj *z, t_glist *glist,
+void graph_graphrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     t_glist *x = (t_glist *)z;
@@ -1339,11 +1342,18 @@ static int graph_click(t_gobj *z, struct _glist *glist,
         return (0);
     else
     {
-        int x1, y1, x2, y2;
         for (y = x->gl_list; y; y = y->g_next)
         {
+            if(pd_class(&y->g_pd) == garray_class &&
+               !y->g_next &&
+               (array_joc = garray_joc((t_garray *)y)) &&
+               (clickreturned = gobj_click(y, x, xpix, ypix, shift, alt, 0, doit)))
+                       break;
+            else
+            {
+                int x1, y1, x2, y2;
                 /* check if the object wants to be clicked */
-            if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2)) {
+                if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2))
                     clickme = y;
                     //fprintf(stderr,"    found clickable %d\n", clickreturned);
             }
@@ -1409,7 +1419,7 @@ void g_graph_setup(void)
     class_addmethod(canvas_class, (t_method)graph_ylabel, gensym("ylabel"),
         A_GIMME, 0);
     class_addmethod(canvas_class, (t_method)graph_array, gensym("array"),
-        A_SYMBOL, A_FLOAT, A_SYMBOL, A_DEFFLOAT, A_NULL);
+        A_GIMME, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_menuarray,
         gensym("menuarray"), A_NULL);
     class_addmethod(canvas_class, (t_method)glist_sort,

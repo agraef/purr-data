@@ -1331,6 +1331,7 @@ static int tabcount = 0;
 static void *table_new(t_symbol *s, t_floatarg f)
 {
     t_atom a[9];
+    t_atom ga[4];
     t_glist *gl;
     t_canvas *x, *z = canvas_getcurrent();
     if (s == &s_)
@@ -1356,7 +1357,11 @@ static void *table_new(t_symbol *s, t_floatarg f)
     gl = glist_addglist((t_glist*)x, &s_, 0, -1, (f > 1 ? f-1 : 1), 1,
         50, 350, 550, 50);
 
-    graph_array(gl, s, &s_float, f, 0);
+    SETSYMBOL(ga, s);
+    SETFLOAT(ga+1, f);
+    SETSYMBOL(ga+2, &s_float);
+    SETFLOAT(ga+3, 0);
+    graph_array(gl, gensym("array"), 4, ga);
 
     canvas_pop(x, 0); 
 
