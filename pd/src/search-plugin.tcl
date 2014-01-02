@@ -231,7 +231,7 @@ proc ::dialog_search::create_dialog {mytoplevel} {
     ttk::combobox $mytoplevel.f.genrebox -values $genres -state readonly\
 	-style "Genre.TCombobox" -takefocus 1
     $mytoplevel.f.genrebox current 0
-    ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground $pd_colors(link) \
+    ttk::label $mytoplevel.f.advancedlabel -text [_ "Help"] -foreground $::pd_colors(link) \
 	-anchor center -style Foo.TLabel
     text $mytoplevel.navtext -font "$searchfont -12" -height 1 -bd 0 \
         -highlightthickness 0 -bg $::pd_colors(canvas_color) \
