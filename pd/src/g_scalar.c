@@ -152,44 +152,56 @@ void scalar_getbasexy(t_scalar *x, t_float *basex, t_float *basey)
     *basey = template_getfloat(template, gensym("y"), x->sc_vec, 0);
 }
 
+extern int array_joc;
+
 static void scalar_getrect(t_gobj *z, t_glist *owner,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"scalar_getrect\n");
+	//fprintf(stderr,"scalar_getrect %d\n", array_joc);
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
     t_canvas *templatecanvas = template_findcanvas(template);
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
     t_gobj *y;
     t_float basex, basey;
-    scalar_getbasexy(x, &basex, &basey);
-        /* if someone deleted the template canvas, we're just a point */
-    if (!templatecanvas)
-    {
-		//fprintf(stderr,"...point\n");
-        x1 = x2 = glist_xtopixels(owner, basex);
-        y1 = y2 = glist_ytopixels(owner, basey);
+
+    // EXPERIMENTAL: we assume that entire canvas is withing the rectangle--this is for arrays
+    // with "jump on click" enabled TODO: test for other regressions (there shouuld not be any
+    // provided the global variable array_joc is properly maintained)
+    if (glist_istoplevel(owner) && array_joc) {
+        x1 = -0x7fffffff, y1 = -0x7fffffff, x2 = 0x7fffffff, y2 = 0x7fffffff;
     }
-    else
-    {
-        x1 = y1 = 0x7fffffff;
-        x2 = y2 = -0x7fffffff;
-        for (y = templatecanvas->gl_list; y; y = y->g_next)
+
+    else {
+        scalar_getbasexy(x, &basex, &basey);
+            /* if someone deleted the template canvas, we're just a point */
+        if (!templatecanvas)
         {
-            t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-            int nx1, ny1, nx2, ny2;
-            if (!wb) continue;
-            (*wb->w_parentgetrectfn)(y, owner,
-                x->sc_vec, template, basex, basey,
-                &nx1, &ny1, &nx2, &ny2);
-            if (nx1 < x1) x1 = nx1;
-            if (ny1 < y1) y1 = ny1;
-            if (nx2 > x2) x2 = nx2;
-            if (ny2 > y2) y2 = ny2;
-			//fprintf(stderr,"	====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
+    		//fprintf(stderr,"...point\n");
+            x1 = x2 = glist_xtopixels(owner, basex);
+            y1 = y2 = glist_ytopixels(owner, basey);
         }
-        if (x2 < x1 || y2 < y1)
-            x1 = y1 = x2 = y2 = 0;
+        else
+        {
+            x1 = y1 = 0x7fffffff;
+            x2 = y2 = -0x7fffffff;
+            for (y = templatecanvas->gl_list; y; y = y->g_next)
+            {
+                t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+                int nx1, ny1, nx2, ny2;
+                if (!wb) continue;
+                (*wb->w_parentgetrectfn)(y, owner,
+                    x->sc_vec, template, basex, basey,
+                    &nx1, &ny1, &nx2, &ny2);
+                if (nx1 < x1) x1 = nx1;
+                if (ny1 < y1) y1 = ny1;
+                if (nx2 > x2) x2 = nx2;
+                if (ny2 > y2) y2 = ny2;
+    			//fprintf(stderr,"	====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
+            }
+            if (x2 < x1 || y2 < y1)
+                x1 = y1 = x2 = y2 = 0;
+        }
     }
     //fprintf(stderr,"FINAL scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
     *xp1 = x1;

@@ -395,6 +395,7 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     /* called from array menu item to create a new one */
 void canvas_menuarray(t_glist *canvas)
 {
+    if (canvas_hasarray(canvas)) return;
     t_glist *x = (t_glist *)canvas;
 	pd_vmess(&x->gl_pd, gensym("editmode"), "i", 1);
     char cmdbuf[200];
@@ -766,6 +767,7 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     array_motion_xcumulative += dx * array_motion_xperpix;
     array_motion_ycumulative += dy * array_motion_yperpix;
+    //fprintf(stderr,"array_motion %f %f %f %f\n", array_motion_xcumulative, array_motion_ycumulative, dx, dy);
 
 	// used to set up boundaries and update sends accordingly
 	t_glist *graph = NULL;
@@ -873,7 +875,7 @@ static int array_doclick_element(t_array *array, t_glist *glist,
     t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"array_doclick_element %d\n", doit);
+	//fprintf(stderr,"array_doclick_element linewidth%f xloc%f xinc%f yloc%f xpix%d ypix%d doit%d\n", linewidth, xloc, xinc, yloc, xpix, ypix, doit);
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i, incr, hit;
@@ -917,7 +919,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
     t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"array_doclick %d\n", doit);
+    //fprintf(stderr,"array_doclick linewidth%f xloc%f xinc%f yloc%f xpix%d ypix%d doit%d\n", linewidth, xloc, xinc, yloc, xpix, ypix, doit);
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i;
@@ -935,7 +937,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
                 xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
-			//fprintf(stderr,"	array_getcoordinate %d: pxpix:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
+			//fprintf(stderr,"	array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
             if (pwpix < 4)
                 pwpix = 4;
 			if (xpix >= (int)pxpix1 && xpix <= (int)pxpix2 &&
@@ -1072,6 +1074,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     }
                     if (xonset >= 0)
                     {
+                        //fprintf(stderr, "   xonset >=0\n");
                         array_motion_xfield = xfield;
                         array_motion_xcumulative = 
                             fielddesc_getcoord(xfield, array_motion_template,
@@ -1083,6 +1086,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     }
                     else
                     {
+                        //fprintf(stderr, "   !(xonset >=0)\n");
                         array_motion_xfield = 0;
                         array_motion_xcumulative = 0;
                         array_motion_wp = (t_word *)elem;
@@ -1094,6 +1098,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     }
                     if (array_motion_fatten)
                     {
+                        //fprintf(stderr, "   motion_fatten\n");
                         array_motion_yfield = wfield;
                         array_motion_ycumulative = 
                             fielddesc_getcoord(wfield, array_motion_template,
@@ -1102,20 +1107,40 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     }
                     else if (yonset >= 0)
                     {
+                        //fprintf(stderr, "   yonset >=0\n");
                         array_motion_yfield = yfield;
                         array_motion_ycumulative =
                             fielddesc_getcoord(yfield, array_motion_template,
                                 (t_word *)(elem + i * elemsize), 1);
                             /* *(t_float *)((elem + elemsize * i) + yonset); */
-                        if (array_joc)
-                            array_motion(0, 0, ypix - pypix);
+                        //if (array_joc) {
+                        // we do cursor detection based on the kind of a graph.
+                        // (e.g. 3-point PLOYSTYLE_POINTS creates a graph that has 4 delimiting points,
+                        // while a 3-point PLOTSTYLE_POLY creates a graph that has only 3 delimiting points)
+                        // This, therefore takes into account whether we should count the center point
+                        // of a bar or the starting point (poly) as our reference
+                        // TODO: see if we can reimplement Bezier curves
+                        if (array_garray->x_style == PLOTSTYLE_POLY || array_garray->x_style == PLOTSTYLE_BEZ)
+                            array_motion(0, xpix - pxpix1, ypix - pypix);
+                        else
+                            array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)), ypix - pypix);
+                        //}
+                        //else {
+                        //    array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)), ypix - pypix);
+                        //}
+                        //fprintf(stderr, "xpix:%d pxpix1:%f half:%f result:%f\n", xpix, pxpix1, (pxpix2-pxpix1)/2, xpix - (pxpix1 + (pxpix2 - pxpix1)/2));
                     }
                     else
                     {
+                        //fprintf(stderr, "   else 0\n");
                         array_motion_yfield = 0;
                         array_motion_ycumulative = 0;
                     }
+                    //fprintf(stderr,"    glist_grab %d %d\n", xpix, ypix);
                     glist_grab(glist, 0, array_motion, 0, xpix, ypix);
+                    //fprintf(stderr,"    VALUES: array_motion_initx:%f array_motion_lastx:%d array_motion_xperpix:%f array_motion_xcumulative:%f\n", array_motion_initx, array_motion_lastx, array_motion_xperpix, array_motion_xcumulative);
+                    //fprintf(stderr,"    array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
+
                 }
                 if (alt)
                 {
@@ -1135,12 +1160,12 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
 static void array_getrect(t_array *array, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-    //fprintf(stderr,"array getrect\n");
+    //fprintf(stderr,"array getrect %d %d\n", glist_istoplevel(glist), (array_joc != 0 ? 1 : 0));
     t_float x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i;
-
+    
     if (!array_getfields(array->a_templatesym, &elemtemplatecanvas,
         &elemtemplate, &elemsize, 0, 0, 0, &xonset, &yonset, &wonset))
     {
@@ -1181,6 +1206,7 @@ static void array_getrect(t_array *array, t_glist *glist,
 static void garray_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
+    //fprintf(stderr,"garray_getrect\n");
     t_garray *x = (t_garray *)z;
     gobj_getrect(&x->x_scalar->sc_gobj, glist, xp1, yp1, xp2, yp2);
 }

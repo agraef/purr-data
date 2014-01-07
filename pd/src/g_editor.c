@@ -2385,9 +2385,10 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
 	    }
 	    if (hasarray) x->gl_hidetext = 1;
 
-        if (!nogoprect && !x->gl_goprect)
+        if (!nogoprect && !x->gl_goprect && !hasarray)
         {
-			/* Ivica Ico Bukvic 5/16/10 <ico@bukvic.net> */
+			// Ivica Ico Bukvic 5/16/10 <ico@bukvic.net>
+			// this draws gop immediately when enabled
 			x->gl_goprect = 1;
         }
         if (glist_isvisible(x) && x->gl_goprect) {
@@ -6399,6 +6400,10 @@ void glob_pastetext(void *dummy, t_symbol *s, int ac, t_atom *av)
 void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
 {
 	//fprintf(stderr,"canvas_editmode %f\n", fyesplease);
+
+	//first check if this is a canvas hosting an array and if so refuse to add any further objects
+    if (canvas_hasarray(x)) return;
+
     int yesplease = fyesplease;
     if (yesplease && x->gl_edit) {
 	    //if (x->gl_edit && glist_isvisible(x) && glist_istoplevel(x))

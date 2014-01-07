@@ -82,6 +82,18 @@ int canvas_setdeleting(t_canvas *x, int flag)
     return (ret);
 }
 
+    /* check if canvas has an array and return 1, otherwise return 0
+    this is used to prevent creation of new objects in an array window */
+int canvas_hasarray(t_canvas *x) {
+    t_gobj *g = x->gl_list;
+    int hasarray = 0;
+    while (g) {
+        if (pd_class(&g->g_pd) == garray_class) hasarray = 1;
+        g = g->g_next;
+    }
+    return(hasarray);
+}
+
 /* JMZ: emit a closebang message */
 void canvas_closebang(t_canvas *x);
 

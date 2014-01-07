@@ -52,6 +52,7 @@ extern void glob_preset_node_list_seek_hub(void);
 
 void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
+    if (canvas_hasarray(gl)) return;
     t_text *x = (t_text *)pd_new(text_class);
     t_atom at;
     x->te_width = 0;                            /* don't know it yet. */
@@ -269,6 +270,7 @@ EXTERN int connect_exception;
 void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
 	//fprintf(stderr,"canvas_obj\n");
+    if (canvas_hasarray(gl)) return;
     t_text *x;
     if (argc >= 2)
     {
@@ -310,6 +312,7 @@ extern void glist_setlastxy(t_glist *gl, int xval, int yval);
 /* invoked from tcl/tk: abstraction_name x_offset y_offset */
 void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
+    if (canvas_hasarray(gl)) return;
 	//fprintf(stderr,"canvas_abstraction_from_menu\n");
     //t_text *x;
 	t_gobj *y;
@@ -348,6 +351,7 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s, int argc, t_atom
 /* iemlib */
 void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
 {
+    if (canvas_hasarray(gl)) return;
 	//fprintf(stderr,"canvas_iemguis\n");
     t_atom at;
     t_binbuf *b = binbuf_new();
@@ -629,6 +633,7 @@ static void message_free(t_message *x)
 
 void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
+    if (canvas_hasarray(gl)) return;
 	/*fprintf(stderr,"canvas_msg\n");
 	int i = 0;
 	while(i < argc) {
@@ -1093,6 +1098,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 void canvas_atom(t_glist *gl, t_atomtype type,
     t_symbol *s, int argc, t_atom *argv)
 {
+    if (canvas_hasarray(gl)) return;
 	//fprintf(stderr,"canvas_atom\n");
     t_gatom *x = (t_gatom *)pd_new(gatom_class);
     t_atom at;
