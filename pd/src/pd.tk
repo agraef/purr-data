@@ -6790,11 +6790,12 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
     wm protocol $id WM_DELETE_WINDOW [concat canvas_cancel $id]
 
     ttk::style layout Plain.TNotebook.Tab {Notebook.tab -side left}
-    ttk::notebook $id.n -style Plain.TNotebook
+    #ttk::notebook $id.n -style Plain.TNotebook
+    ttk::notebook $id.n -style TNotebook
     $id.n add [match_linux_wm [list frame $id.n.canvasdialog]] \
         -text "Graph" -sticky nsew -padding 6
 
-    pack $id.n -fill x
+    pack $id.n -fill x -padx 3 -pady 3
     # store the current canvas_dialog gfxstub id
     # in a global variable.  This will be fetched by
     # pdtk_array_dialog so that it can append
