@@ -2782,6 +2782,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     int shiftmod, runmode, altmod, doublemod = 0, rightclick;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
 	t_gobj *yclick = NULL;
+	t_object *ob;
 
 	//fprintf(stderr,"MAIN canvas_doclick %d %d %d %d %d\n", xpos, ypos, which, mod, doit);
     
@@ -2859,8 +2860,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         for (y = x->gl_list; y; y = y->g_next)
         {
             // check if the object wants to be clicked (we pick the topmost clickable)
-            if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)) {
-				yclick = y;
+            if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2) && (ob = pd_checkobject(&y->g_pd))) {
+            	if (ob->te_type != T_TEXT) // do not give clicks to comments during runtime
+					yclick = y;
 				//fprintf(stderr,"    MAIN found clickable %d\n", clickreturned);
 			}
         }
@@ -2888,7 +2890,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         /* if in editmode click, fall here. */
     if (y = canvas_findhitbox(x, xpos, ypos, &x1, &y1, &x2, &y2))
     {
-        t_object *ob;
             /* check you're in the rectangle */
         ob = pd_checkobject(&y->g_pd);
         if (rightclick)

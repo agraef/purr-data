@@ -1364,9 +1364,11 @@ static int graph_click(t_gobj *z, struct _glist *glist,
             else
             {
                 int x1, y1, x2, y2;
-                /* check if the object wants to be clicked */
-                if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2))
-                    clickme = y;
+                t_object *ob;
+                /* check if the object wants to be clicked and pick the topmost with the exception of the text (comment)*/
+                if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2) && (ob = pd_checkobject(&y->g_pd)))
+                    if (ob->te_type != T_TEXT) // do not give clicks to comments during runtime
+                        clickme = y;
                     //fprintf(stderr,"    found clickable %d\n", clickreturned);
             }
         }
