@@ -579,7 +579,8 @@ void sys_closesocket(int fd)
 /* ---------------------- sending messages to the GUI ------------------ */
 #define GUI_ALLOCCHUNK 8192
 #define GUI_UPDATESLICE 512 /* how much we try to do in one idle period */
-#define GUI_BYTESPERPING 1024 /* how much we send up per ping */
+//#define GUI_BYTESPERPING 1024 /* how much we send up per ping */
+#define GUI_BYTESPERPING 0x7fffffff /* as per Miller's suggestion to disable the flow control */
 
 typedef struct _guiqueue
 {
