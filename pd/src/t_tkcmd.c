@@ -555,10 +555,15 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
 void tcl_mess(char *s)
 {
     int result;
+
+    // PRODUCTION VERSION
 	char catch_s[strlen(s)+10];
 	sprintf(catch_s, "catch { %s }", s);
+
+    // DEBUGGING VERSION
 	//char catch_s[strlen(s)];
 	//sprintf(catch_s, "%s", s);
+
     Tcl_Obj *messageObjPtr = Tcl_NewStringObj(catch_s,-1);
     Tcl_IncrRefCount(messageObjPtr);
     result = Tcl_EvalObjEx(tk_pdinterp, messageObjPtr, TCL_EVAL_GLOBAL);
