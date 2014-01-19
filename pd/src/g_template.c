@@ -1586,9 +1586,9 @@ static int plot_readownertemplate(t_plot *x,
     *yfield = &x->x_ypoints;
     *wfield = &x->x_wpoints;
     *fillcolorp = fielddesc_getsymbol(&x->x_symfillcolor, ownertemplate,
-        data, 1);
+        data, 0);
     *outlinecolorp = fielddesc_getsymbol(&x->x_symoutlinecolor, ownertemplate,
-        data, 1);
+        data, 0);
 
     return (0);
 }
