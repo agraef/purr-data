@@ -1120,7 +1120,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                         // This, therefore takes into account whether we should count the center point
                         // of a bar or the starting point (poly) as our reference
                         // TODO: see if we can reimplement Bezier curves
-                        if (array_garray->x_style == PLOTSTYLE_POLY || array_garray->x_style == PLOTSTYLE_BEZ)
+                        if (array_garray != NULL && (array_garray->x_style == PLOTSTYLE_POLY || array_garray->x_style == PLOTSTYLE_BEZ))
                             array_motion(0, xpix - pxpix1, ypix - pypix);
                         else
                             array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)), ypix - pypix);
