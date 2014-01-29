@@ -29,6 +29,8 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
 void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
+extern t_template *template_findbydrawcommand(t_gobj *g);
+
 extern int do_not_redraw;
 int gop_redraw = 0;
 
@@ -68,8 +70,10 @@ void glist_add(t_glist *x, t_gobj *y)
     if (glist_isvisible(x))
         gobj_vis(y, x, 1);
     if (class_isdrawcommand(y->g_pd)) 
-        canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
-            glist_getcanvas(x)->gl_name)), 0);
+    {
+        t_template *tmpl = template_findbydrawcommand(y);
+        canvas_redrawallfortemplate(tmpl, 0);
+    }
 }
 
     /* this is to protect against a hairy problem in which deleting
@@ -109,6 +113,7 @@ void glist_delete(t_glist *x, t_gobj *y)
 		//fprintf(stderr,"glist_delete YES\n");
 		t_gobj *g;
 		t_object *ob;
+                t_template *tmpl;
 		t_gotfn chkdsp = zgetfn(&y->g_pd, gensym("dsp"));
 		t_canvas *canvas = glist_getcanvas(x);
 		int drawcommand = class_isdrawcommand(y->g_pd);
@@ -153,11 +158,14 @@ void glist_delete(t_glist *x, t_gobj *y)
 		        }
 		    }
 		}
-		    /* if we're a drawing command, erase all scalars now, before deleting
-		    it; we'll redraw them once it's deleted below. */
+		    /* if we're a drawing command, erase all scalars that
+                       belong to our template, before deleting
+		       it; we'll redraw them once it's deleted below. */
 		if (drawcommand)
-		    canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
-		        glist_getcanvas(x)->gl_name)), 2);
+                {
+                    tmpl = template_findbydrawcommand(y);
+                    canvas_redrawallfortemplate(tmpl, 2);
+                }
 		if (glist_isvisible(canvas))
 		    gobj_vis(y, x, 0);
 		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd))) {
@@ -186,8 +194,7 @@ void glist_delete(t_glist *x, t_gobj *y)
 		pd_free(&y->g_pd);
 		if (chkdsp) canvas_update_dsp();
 		if (drawcommand)
-		    canvas_redrawallfortemplate(template_findbyname(canvas_makebindsym(
-		        glist_getcanvas(x)->gl_name)), 1);
+                    canvas_redrawallfortemplate(tmpl, 1);
 		canvas_setdeleting(canvas, wasdeleting);
 		x->gl_valid = ++glist_valid;
 		if (late_rtext_free) {
@@ -1193,6 +1200,16 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     {
 		// first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
 		t_gobj *g;
+                /* special case for scalars, which have a group for
+                   the transform matrix */
+                for (g = x->gl_list; g; g = g->g_next)
+                {
+                    if (pd_class((t_pd *)g) == scalar_class &&
+                        g->g_pd->c_wb->w_displacefnwtag != NULL)
+                    {
+                        (*(g->g_pd->c_wb->w_displacefnwtag))(g, glist, dx, dy);
+                    }
+                }
 		for (g = x->gl_list; g; g = g->g_next) {
 			//fprintf(stderr,"shouldvis %d %d\n", gobj_shouldvis(g, glist), gobj_shouldvis(g, x));
 			if (g && gobj_shouldvis(g, x) && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {
@@ -1204,6 +1221,7 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 		}
 		// else we do things the new and more elegant way
 		//fprintf(stderr,"new way\n");
+
 		
         x->gl_obj.te_xpix += dx;
         x->gl_obj.te_ypix += dy;
@@ -1366,10 +1384,12 @@ static int graph_click(t_gobj *z, struct _glist *glist,
                 int x1, y1, x2, y2;
                 t_object *ob;
                 /* check if the object wants to be clicked and pick the topmost with the exception of the text (comment)*/
-                if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2) && (ob = pd_checkobject(&y->g_pd)))
-                    if (ob->te_type != T_TEXT) // do not give clicks to comments during runtime
+                if (canvas_hitbox(x, y, xpix, ypix, &x1, &y1, &x2, &y2)) {
+                    ob = pd_checkobject(&y->g_pd);
+                    if (!ob || ob->te_type != T_TEXT) // do not give clicks to comments during runtime
                         clickme = y;
                     //fprintf(stderr,"    found clickable %d\n", clickreturned);
+                }
             }
         }
         if (clickme) {

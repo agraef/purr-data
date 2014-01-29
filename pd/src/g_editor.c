@@ -2860,8 +2860,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         for (y = x->gl_list; y; y = y->g_next)
         {
             // check if the object wants to be clicked (we pick the topmost clickable)
-            if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2) && (ob = pd_checkobject(&y->g_pd))) {
-            	if (ob->te_type != T_TEXT) // do not give clicks to comments during runtime
+            if (canvas_hitbox(x, y, xpos, ypos, &x1, &y1, &x2, &y2)) {
+                ob = pd_checkobject(&y->g_pd);
+                if (!ob || ob->te_type != T_TEXT) // do not give clicks to comments during runtime
 					yclick = y;
 				//fprintf(stderr,"    MAIN found clickable %d\n", clickreturned);
 			}
