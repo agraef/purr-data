@@ -113,7 +113,7 @@ void glist_delete(t_glist *x, t_gobj *y)
 		//fprintf(stderr,"glist_delete YES\n");
 		t_gobj *g;
 		t_object *ob;
-                t_template *tmpl;
+        t_template *tmpl;
 		t_gotfn chkdsp = zgetfn(&y->g_pd, gensym("dsp"));
 		t_canvas *canvas = glist_getcanvas(x);
 		int drawcommand = class_isdrawcommand(y->g_pd);
@@ -162,10 +162,10 @@ void glist_delete(t_glist *x, t_gobj *y)
                        belong to our template, before deleting
 		       it; we'll redraw them once it's deleted below. */
 		if (drawcommand)
-                {
-                    tmpl = template_findbydrawcommand(y);
-                    canvas_redrawallfortemplate(tmpl, 2);
-                }
+        {
+            tmpl = template_findbydrawcommand(y);
+            canvas_redrawallfortemplate(tmpl, 2);
+        }
 		if (glist_isvisible(canvas))
 		    gobj_vis(y, x, 0);
 		if (x->gl_editor && (ob = pd_checkobject(&y->g_pd))) {
@@ -194,7 +194,7 @@ void glist_delete(t_glist *x, t_gobj *y)
 		pd_free(&y->g_pd);
 		if (chkdsp) canvas_update_dsp();
 		if (drawcommand)
-                    canvas_redrawallfortemplate(tmpl, 1);
+            canvas_redrawallfortemplate(tmpl, 1);
 		canvas_setdeleting(canvas, wasdeleting);
 		x->gl_valid = ++glist_valid;
 		if (late_rtext_free) {
@@ -1200,16 +1200,16 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     {
 		// first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
 		t_gobj *g;
-                /* special case for scalars, which have a group for
-                   the transform matrix */
-                for (g = x->gl_list; g; g = g->g_next)
-                {
-                    if (pd_class((t_pd *)g) == scalar_class &&
-                        g->g_pd->c_wb->w_displacefnwtag != NULL)
-                    {
-                        (*(g->g_pd->c_wb->w_displacefnwtag))(g, glist, dx, dy);
-                    }
-                }
+        /* special case for scalars, which have a group for
+           the transform matrix */
+        for (g = x->gl_list; g; g = g->g_next)
+        {
+            if (pd_class((t_pd *)g) == scalar_class &&
+                g->g_pd->c_wb->w_displacefnwtag != NULL)
+            {
+                (*(g->g_pd->c_wb->w_displacefnwtag))(g, glist, dx, dy);
+            }
+        }
 		for (g = x->gl_list; g; g = g->g_next) {
 			//fprintf(stderr,"shouldvis %d %d\n", gobj_shouldvis(g, glist), gobj_shouldvis(g, x));
 			if (g && gobj_shouldvis(g, x) && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {

@@ -154,6 +154,11 @@ void scalar_getbasexy(t_scalar *x, t_float *basex, t_float *basey)
 
 extern int array_joc;
 
+extern void template_notifyforscalar(t_template *template, t_glist *owner,
+    t_scalar *sc, t_symbol *s, int argc, t_atom *argv);
+
+static int sc_isentered = 0;
+static t_scalar *sc_entered = 0;
 static void scalar_getrect(t_gobj *z, t_glist *owner,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
@@ -164,6 +169,27 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
     t_gobj *y;
     t_float basex, basey;
+
+    /* hack for enter/leave struct notifications */
+    if (sc_entered == x)
+    {
+        if (sc_isentered == 1)
+        {
+            /* change value to see if there's a call
+               to scalar_click the next time around. Of
+               course it will be too late so we'll be
+               one pixel off, but it's better than nothing.
+            */
+            sc_isentered = -1;
+        }
+        else if (sc_isentered == -1)
+        {
+            t_atom at[1];
+            template_notifyforscalar(template, owner, x, gensym("leave"), 1, at);
+            sc_entered = 0;
+            sc_isentered = 0;
+        }
+    }
 
     // EXPERIMENTAL: we assume that entire canvas is withing the rectangle--this is for arrays
     // with "jump on click" enabled TODO: test for other regressions (there shouuld not be any
@@ -210,7 +236,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     *yp2 = y2; 
 }
 
-static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
+void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 {
     if (state)
     {
@@ -231,7 +257,27 @@ static void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
     }
 }
 
-static void scalar_select(t_gobj *z, t_glist *owner, int state)
+/* This is a workaround.  Since scalars are contained within a tkpath
+   group, and since tkpath groups don't have coords, we have to fudge
+   things with regard to Pd-l2ork's normal *_displace_withtag functionality.
+   (Additionally, we can't just fall back to the old displace method
+   because it too assumes the canvas item has an xy coord.)
+
+   We draw the selection rect but don't add the scalar to the
+   "selected" tag.  This means when Pd-l2ork issues the canvas "move"
+   command, our scalar doesn't go anywhere.  Instead we get the callback
+   to scalar_displace_withtag and do another workaround to get the
+   new position and feed it to the scalar's matrix.
+
+   This creates a problem with gop canvases, and yet _another_ partial
+   workaround.  We need the global variable below to let the so that
+   we can figure out whether the displace call is coming from the scalar
+   itself or from a parent graph.  This means scalars won't currently
+   respond properly in nested gops.  (I think that requires a window
+   item on the canvas to replace the current gop rect.)
+*/
+t_glist *select_owner = 0; /* kludge variable used by displace_withtag fn */
+void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
 	//fprintf(stderr,"scalar_select %d\n", state);
     t_scalar *x = (t_scalar *)z;
@@ -250,7 +296,8 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 	}
     gpointer_unset(&gp);
 	if (state) {
-		sys_vgui(".x%lx.c addtag selected withtag scalar%lx\n",
+                select_owner = owner;
+		sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
 			glist_getcanvas(owner), x);
 		/* how do we navigate through a t_word list?
         if (x->sc_vec) {
@@ -270,8 +317,11 @@ static void scalar_select(t_gobj *z, t_glist *owner, int state)
 				glist_getcanvas(owner), (t_int)tag);
 		}*/
 	} else {
-		sys_vgui(".x%lx.c dtag scalar%lx selected\n",
+        select_owner = 0;
+		sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
 			glist_getcanvas(owner), x);
+                sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
+                    glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
         /* how do we navigate through a t_word list?
         if (x->sc_vec) {
             t_word *v = x->sc_vec;
@@ -304,16 +354,17 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     t_atom at[3];
     t_gpointer gp;
     int xonset, yonset, xtype, ytype, gotx, goty;
+    t_float basex = 0, basey = 0;
     if (!template)
     {
         error("scalar: couldn't find template %s", templatesym->s_name);
         return;
     }
     gotx = template_find_field(template, gensym("x"), &xonset, &xtype, &zz);
-    if (gotx && (xtype != DT_FLOAT))
+    if ((gotx && (xtype != DT_FLOAT)) || select_owner != glist)
         gotx = 0;
     goty = template_find_field(template, gensym("y"), &yonset, &ytype, &zz);
-    if (goty && (ytype != DT_FLOAT))
+    if ((goty && (ytype != DT_FLOAT)) || select_owner != glist)
         goty = 0;
     if (gotx)
         *(t_float *)(((char *)(x->sc_vec)) + xonset) +=
@@ -330,6 +381,13 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     scalar_redraw(x, glist);
 }
 
+/* Very complicated at the moment. If a scalar is in a gop canvas, then
+   we don't need to update its x/y fields (if it even has them) when displacing
+   it.  Otherwise we do.  The global selected_owner variable is used to store
+   the "owner" canvas-- if it matches the glist parameter below then we know
+   the scalar is directly selected.  If not it's in a gop canvas.  (This doesn't
+   yet handle nested GOPs, unfortunately.)
+*/
 static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
 	//fprintf(stderr,"scalar_displace_withtag %lx %d %d\n", (t_int)z, dx, dy);
@@ -340,16 +398,17 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_atom at[3];
     t_gpointer gp;
     int xonset, yonset, xtype, ytype, gotx, goty;
+    t_float basex = 0, basey = 0;
     if (!template)
     {
         error("scalar: couldn't find template %s", templatesym->s_name);
         return;
     }
     gotx = template_find_field(template, gensym("x"), &xonset, &xtype, &zz);
-    if (gotx && (xtype != DT_FLOAT))
+    if ((gotx && (xtype != DT_FLOAT)) || select_owner != glist)
         gotx = 0;
     goty = template_find_field(template, gensym("y"), &yonset, &ytype, &zz);
-    if (goty && (ytype != DT_FLOAT))
+    if ((goty && (ytype != DT_FLOAT)) || select_owner != glist)
         goty = 0;
     if (gotx)
         *(t_float *)(((char *)(x->sc_vec)) + xonset) +=
@@ -357,12 +416,20 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     if (goty)
         *(t_float *)(((char *)(x->sc_vec)) + yonset) +=
             dy * (glist_pixelstoy(glist, 1) - glist_pixelstoy(glist, 0));
+    scalar_getbasexy(x, &basex, &basey);
     gpointer_init(&gp);
     gpointer_setglist(&gp, glist, x);
     SETPOINTER(&at[0], &gp);
     SETFLOAT(&at[1], (t_float)dx);
     SETFLOAT(&at[2], (t_float)dy);
     template_notify(template, gensym("displace"), 2, at);
+
+    t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+    t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+
+    sys_vgui(".x%lx.c itemconfigure {.scalar%lx} -matrix { {%g %g} {%g %g} {%d %d} }\n",
+        glist_getcanvas(glist), x->sc_vec, 1.0, 0.0, 0.0, 1.0, (int)glist_xtopixels(select_owner, basex) + (select_owner == glist ? 0 : dx), (int)glist_ytopixels(select_owner, basey) + (select_owner == glist ? 0 : dy));
+
     //scalar_redraw(x, glist);
 }
 
@@ -377,6 +444,25 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
     /* nothing to do */
 }
 
+/* At preset, scalars have a three-level hierarchy in tkpath,
+   with two levels accessible from within Pd:
+   scalar - tkpath group with a matrix based on x/y fields,
+     |      gop basexy, and gop/parent canvas scaling values.
+     |      This group is not configurable by the user.  This
+     |      way [draw group] doesn't need extra code to include
+     |      basexy and gop settings.
+     v
+   dgroup - user-facing group that is parent to all the scalar's
+     |      drawing instructions.  Its matrix and options can be
+     |      accessed from [draw group]
+     v
+   draw   - various drawing instructions (rectangles, paths, etc.).
+            Each has its own matrix and options that can be
+            accessed from the corresponding [draw] instruction.
+
+   The tag "blankscalar" is for scalars that don't have a visual
+   representation, but maybe this can just be merged with "scalar"
+*/
 static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
 	//fprintf(stderr,"scalar_vis %d\n", vis);
@@ -393,13 +479,28 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         {
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
-            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {scalar%lx}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {blankscalar%lx}\n",
                 glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x);
         }
-        else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
+        else sys_vgui(".x%lx.c delete blankscalar%lx\n", glist_getcanvas(owner), x);
         return;
     }
-	//else sys_vgui(".x%lx.c delete scalar%lx\n", glist_getcanvas(owner), x);
+	//else sys_vgui(".x%lx.c delete blankscalar%lx\n", glist_getcanvas(owner), x);
+
+    if (vis)
+    {
+        t_float xscale = glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0);
+        t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
+        /* we could use the tag .template%lx for easy access from
+           the draw_class, but that's not necessary at this point */
+        sys_vgui(".x%lx.c create group -tags {.scalar%lx} "
+            "-matrix { {%g %g} {%g %g} {%d %d} }\n",
+            glist_getcanvas(owner), x->sc_vec,
+            1.0, 0.0, 0.0, 1.0, (int)glist_xtopixels(owner, basex), (int)glist_ytopixels(owner, basey)
+            );
+        sys_vgui(".x%lx.c create group -tags {.dgroup%lx} -parent {.scalar%lx}\n",
+            glist_getcanvas(owner), x->sc_vec, x->sc_vec);
+    }
 
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {
@@ -407,6 +508,9 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         if (!wb) continue;
         (*wb->w_parentvisfn)(y, owner, x, x->sc_vec, template, basex, basey, vis);
     }
+    if (!vis)
+        sys_vgui(".x%lx.c delete .scalar%lx\n", glist_getcanvas(owner), x->sc_vec);
+
     sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))
     {
@@ -432,9 +536,6 @@ void scalar_redraw(t_scalar *x, t_glist *glist)
 		scalar_doredraw((t_gobj *)x, glist);
         //sys_queuegui(x, glist, scalar_doredraw);
 }
-
-extern void template_notifyforscalar(t_template *template, t_glist *owner,
-    t_scalar *sc, t_symbol *s, int argc, t_atom *argv);
 
 int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_array *ap, struct _glist *owner,
@@ -485,6 +586,17 @@ static int scalar_click(t_gobj *z, struct _glist *owner,
 	//fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
+
+    /* hack for enter/leave notifications */
+    if (sc_isentered == 0)
+    {
+        t_atom at[1];
+        template_notifyforscalar(template, owner, x, gensym("enter"), 1, at);
+        sc_isentered = 1;
+        sc_entered = x;
+    }
+    else sc_isentered = 1;
+    
     return (scalar_doclick(x->sc_vec, template, x, 0,
         owner, 0, 0, xpix, ypix, shift, alt, dbl, doit));
 }

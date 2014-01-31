@@ -1581,7 +1581,7 @@ void *canvas_getblock(t_class *blockclass, t_canvas **canvasp)
     /* redraw all "scalars" (do this if a drawing command is changed.) 
     LATER we'll use the "template" information to select which ones we
     redraw.   Action = 0 for redraw, 1 for draw only, 2 for erase. */
-static void glist_redrawall(t_glist *gl, int action)
+static void glist_redrawall(t_template *template, t_glist *gl, int action)
 {
 	//fprintf(stderr,"glist_redrawall\n");
     t_gobj *g;
@@ -1589,7 +1589,8 @@ static void glist_redrawall(t_glist *gl, int action)
     for (g = gl->gl_list; g; g = g->g_next)
     {
         t_class *cl;
-        if (vis && g->g_pd == scalar_class)
+        if (vis && g->g_pd == scalar_class &&
+            template == template_findbyname(((t_scalar *)g)->sc_template))
         {
             if (action == 1)
             {
@@ -1604,7 +1605,7 @@ static void glist_redrawall(t_glist *gl, int action)
             else scalar_redraw((t_scalar *)g, gl);
         }
         else if (g->g_pd == canvas_class)
-            glist_redrawall((t_glist *)g, action);
+            glist_redrawall(template, (t_glist *)g, action);
     }
 	if (glist_isselected(glist_getcanvas(gl), (t_gobj *)gl)) {
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(gl), gl, 1);
@@ -1617,7 +1618,7 @@ void canvas_redrawallfortemplate(t_template *template, int action)
     t_canvas *x;
         /* find all root canvases */
     for (x = canvas_list; x; x = x->gl_next)
-        glist_redrawall(x, action);
+        glist_redrawall(template, x, action);
 }
 
     /* find the template defined by a canvas, and redraw all elements
@@ -1639,7 +1640,7 @@ void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
         if (argv[0].a_type != A_SYMBOL || argv[1].a_type != A_SYMBOL
             || argv[0].a_w.w_symbol != s1)
                 continue;
-        tmpl = template_findbyname(argv[1].a_w.w_symbol);
+        tmpl = template_findbyname(canvas_makebindsym(argv[1].a_w.w_symbol));
         canvas_redrawallfortemplate(tmpl, action);
     }
     canvas_redrawallfortemplate(0, action);

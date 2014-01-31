@@ -104,6 +104,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 /* ----------------- the "object" object.  ------------------ */
 
 extern t_pd *newest;
+extern void glist_scalar(t_glist *canvas, t_symbol *s, int argc, t_atom *argv);
 void canvas_getargs(int *argcp, t_atom **argvp);
 
 static void canvas_objtext(t_glist *gl, int xpix, int ypix, int width, int selected,
@@ -127,6 +128,30 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix, int width, int selec
     {
         if (!newest)
         {
+            /* let's see if there's a scalar by this name... */
+            t_atom *scalar_at = binbuf_getvec(b);
+            if (scalar_at->a_type == A_SYMBOL)
+            {
+                t_symbol *templatesym = 
+                    canvas_makebindsym(atom_getsymbol(scalar_at));
+                if (template_findbyname(templatesym))
+                {
+                    //post("Hmm, we found a scalar from %s... let's try to instantiate it!", templatesym->s_name);
+                    t_binbuf *scalarbuf = binbuf_new();
+                    t_atom coords_at[2];
+                    SETFLOAT(coords_at, (t_float)xpix);
+                    SETFLOAT(coords_at+1, (t_float)ypix);
+                    binbuf_add(scalarbuf, 1, scalar_at);
+                    binbuf_add(scalarbuf, 2, coords_at);
+                    binbuf_add(scalarbuf, binbuf_getnatom(b)-1, scalar_at+1);
+                    t_atom *scalar_create_at = binbuf_getvec(scalarbuf);
+                    glist_scalar(gl, gensym("scalar_from_canvas_objtext"), binbuf_getnatom(b)+2, scalar_create_at);
+                    binbuf_free(scalarbuf);
+                    binbuf_free(b);
+                    canvas_unsetcurrent((t_canvas *)gl);
+                    return;
+                }
+            }
             binbuf_print(b);
             post("... couldn't create");
             x = 0;
