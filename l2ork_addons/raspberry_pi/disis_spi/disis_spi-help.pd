@@ -25,7 +25,7 @@
 installed on Raspberry Pi is to use Lots of Pots shield made and sold
 by Modern Device (you can get the cheaper NOP board without the pots
 so that you can wire other sensors):;
-#X text 23 151 The open the device simply press open (the implied devicename
+#X text 23 140 The open the device simply press open (the implied devicename
 is /dev/spidev0.0) or do open <devicename>. To close device press close.
 ;
 #X connect 0 0 3 0;
