@@ -159,6 +159,29 @@ extern void template_notifyforscalar(t_template *template, t_glist *owner,
 
 static int sc_isentered = 0;
 static t_scalar *sc_entered = 0;
+
+static void scalar_leave(t_scalar *x, t_glist *owner, t_template *template,
+    int force_leave)
+{
+    /* hack for enter/leave struct notifications */
+    if (sc_isentered == 1)
+    {
+        /* change value to see if there's a call
+           to scalar_click the next time around. Of
+           course it will be too late so we'll be
+           one pixel off, but it's better than nothing.
+        */
+        sc_isentered = -1;
+    }
+    else if (sc_isentered == -1 || force_leave)
+    {
+        t_atom at[1];
+        template_notifyforscalar(template, owner, x, gensym("leave"), 1, at);
+        sc_entered = 0;
+        sc_isentered = 0;
+    }
+}
+
 static void scalar_getrect(t_gobj *z, t_glist *owner,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
@@ -170,26 +193,8 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     t_gobj *y;
     t_float basex, basey;
 
-    /* hack for enter/leave struct notifications */
     if (sc_entered == x)
-    {
-        if (sc_isentered == 1)
-        {
-            /* change value to see if there's a call
-               to scalar_click the next time around. Of
-               course it will be too late so we'll be
-               one pixel off, but it's better than nothing.
-            */
-            sc_isentered = -1;
-        }
-        else if (sc_isentered == -1)
-        {
-            t_atom at[1];
-            template_notifyforscalar(template, owner, x, gensym("leave"), 1, at);
-            sc_entered = 0;
-            sc_isentered = 0;
-        }
-    }
+        scalar_leave(x, owner, template, 0);
 
     // EXPERIMENTAL: we assume that entire canvas is withing the rectangle--this is for arrays
     // with "jump on click" enabled TODO: test for other regressions (there shouuld not be any
@@ -444,21 +449,22 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
     /* nothing to do */
 }
 
-/* At preset, scalars have a three-level hierarchy in tkpath,
-   with two levels accessible from within Pd:
-   scalar - tkpath group with a matrix based on x/y fields,
-     |      gop basexy, and gop/parent canvas scaling values.
-     |      This group is not configurable by the user.  This
-     |      way [draw group] doesn't need extra code to include
-     |      basexy and gop settings.
+/* At present, scalars have a three-level hierarchy in tkpath,
+   with two levels accessible by the user from within Pd:
+   scalar - tkpath group with matrix derived from x/y fields,
+     |      gop basexy, and gop scaling values. This group is
+     |      not configurable by the user. This means that the
+     |      [draw group] below can ignore basexy and gop junk
+     |      when computing the transform matrix.
      v
-   dgroup - user-facing group that is parent to all the scalar's
-     |      drawing instructions.  Its matrix and options can be
-     |      accessed from [draw group]
+   dgroup - user-facing group which is the parent for all the
+     |      scalar's drawing commands. Its matrix and options
+     |      can be accessed from the [draw group] object (one
+     |      per templatecanvas).
      v
-   draw   - various drawing instructions (rectangles, paths, etc.).
-            Each has its own matrix and options that can be
-            accessed from the corresponding [draw] instruction.
+   draw   - the actual drawing command: rectangle, path, etc.
+            Each has its own matrix and options which can set
+            with messages to the corresponding [draw] object.
 
    The tag "blankscalar" is for scalars that don't have a visual
    representation, but maybe this can just be merged with "scalar"
@@ -587,10 +593,20 @@ static int scalar_click(t_gobj *z, struct _glist *owner,
     t_scalar *x = (t_scalar *)z;
     t_template *template = template_findbyname(x->sc_template);
 
-    /* hack for enter/leave notifications */
-    if (sc_isentered == 0)
+    /* hack for enter/leave notifications. The second part
+       of the conditional is to catch edge cases where the
+       pointer enters a scalar in one window then moves to
+       an overlapping window before leaving the first one.
+
+       There is an edge case with this hack-- if the mouse
+       is inside a scalar in one window and then moves to
+    */
+    if (sc_isentered == 0 ||
+        (sc_entered && sc_entered != x))
     {
         t_atom at[1];
+        if (sc_entered && sc_entered !=x)
+            scalar_leave(sc_entered, owner, template, 1);
         template_notifyforscalar(template, owner, x, gensym("enter"), 1, at);
         sc_isentered = 1;
         sc_entered = x;

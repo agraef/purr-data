@@ -1123,10 +1123,11 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
     if (argc && x->x_drawtype == gensym("path"))
     {
         if (argv->a_type != A_SYMBOL ||
-            atom_getsymbol(argv) != gensym("M"))
+            (atom_getsymbol(argv) != gensym("M") &&
+             atom_getsymbol(argv) != gensym("m")))
         {
             pd_error(x, "draw path: path data must start "
-                        "with a moveto command (M)");
+                        "with a moveto command (M or m)");
             return 0;
         }
     }
@@ -1412,8 +1413,7 @@ void draw_fill(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
         }
         if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
         {
-            draw_fillopacity(x, s, argc, argv);
-            return;
+            draw_fillopacity(x, gensym("fill-opacity"), argc, argv);
         }
     }
     draw_update(x, s);
