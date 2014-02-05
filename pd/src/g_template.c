@@ -3043,7 +3043,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
     if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
         return (0);
     int nxy = n >> 1;
-    for (i = 0, f = x->x_vec; i < n; i++, f += 2)
+    for (i = 0, f = x->x_vec; i < nxy; i++, f += 2)
     {
         t_float xval = fielddesc_getcoord(f, template, data, 0);
         t_float yval = fielddesc_getcoord(f+1, template, data, 0);
