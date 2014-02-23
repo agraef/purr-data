@@ -1735,22 +1735,26 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
             t_float m1, m2, m3, m4, m5, m6;
             draw_parsetransform(x, template, ((t_scalar *)g)->sc_vec,
                 &m1, &m2, &m3, &m4, &m5, &m6);
-        t_canvas *visible = c;
-        while(visible->gl_isgraph && visible->gl_owner)
-            visible = visible->gl_owner;
-        if (x->x_drawtype == gensym("group"))
-            sys_vgui(".x%lx.c itemconfigure .dgroup%lx -matrix { {%g %g} {%g %g} {%g %g} }\n",
-                visible, ((t_scalar *)g)->sc_vec, m1, m2, m3, m4, m5, m6);
-        else
-            sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx -matrix { {%g %g} {%g %g} {%g %g} }\n",
-                visible, x, ((t_scalar*)g)->sc_vec,
-                m1, m2, m3, m4, m5, m6);
-        }
-        if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
-        {
-            scalar_select(g, c, 1);
-            scalar_drawselectrect((t_scalar *)g, c, 0);
-            scalar_drawselectrect((t_scalar *)g, c, 1);
+            t_canvas *visible = c;
+            while(visible->gl_isgraph && visible->gl_owner)
+                visible = visible->gl_owner;
+            if (x->x_drawtype == gensym("group"))
+                sys_vgui(".x%lx.c itemconfigure .dgroup%lx -matrix "
+                    "{ {%g %g} {%g %g} {%g %g} }\n",
+                    visible, ((t_scalar *)g)->sc_vec, m1, m2, m3, m4, m5, m6);
+            else
+                sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx -matrix "
+                    "{ {%g %g} {%g %g} {%g %g} }\n",
+                    visible, x, ((t_scalar*)g)->sc_vec,
+                    m1, m2, m3, m4, m5, m6);
+            /* uncache the scalar's bbox */
+            ((t_scalar *)g)->sc_bboxcache = 0;
+            if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
+            {
+                scalar_select(g, c, 1);
+                scalar_drawselectrect((t_scalar *)g, c, 0);
+                scalar_drawselectrect((t_scalar *)g, c, 1);
+            }
         }
         if (g->g_pd == canvas_class)
             draw_doupdatetransform(x, (t_glist *)g);

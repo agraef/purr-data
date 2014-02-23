@@ -187,6 +187,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
 {
 	//fprintf(stderr,"scalar_getrect %d\n", array_joc);
     t_scalar *x = (t_scalar *)z;
+
     t_template *template = template_findbyname(x->sc_template);
     t_canvas *templatecanvas = template_findcanvas(template);
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
@@ -214,6 +215,15 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
         }
         else
         {
+            /* todo: bad flow with internal return here. make it cleaner */
+            if (x->sc_bboxcache)
+            {
+                *xp1 = x->sc_x1;
+                *yp1 = x->sc_y1;
+                *xp2 = x->sc_x2;
+                *yp2 = x->sc_y2;
+                return;
+            }
             x1 = y1 = 0x7fffffff;
             x2 = y2 = -0x7fffffff;
             for (y = templatecanvas->gl_list; y; y = y->g_next)
@@ -235,10 +245,11 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
         }
     }
     //fprintf(stderr,"FINAL scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
-    *xp1 = x1;
-    *yp1 = y1;
-    *xp2 = x2;
-    *yp2 = y2; 
+    *xp1 = x->sc_x1 = x1;
+    *yp1 = x->sc_y1 = y1;
+    *xp2 = x->sc_x2 = x2;
+    *yp2 = x->sc_y2 = y2; 
+    x->sc_bboxcache = 1;
 }
 
 void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
@@ -416,11 +427,19 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     if ((goty && (ytype != DT_FLOAT)) || select_owner != glist)
         goty = 0;
     if (gotx)
+    {
         *(t_float *)(((char *)(x->sc_vec)) + xonset) +=
             dx * (glist_pixelstox(glist, 1) - glist_pixelstox(glist, 0));
+        x->sc_x1 += dx;
+        x->sc_x2 += dx;
+    }
     if (goty)
+    {
         *(t_float *)(((char *)(x->sc_vec)) + yonset) +=
             dy * (glist_pixelstoy(glist, 1) - glist_pixelstoy(glist, 0));
+        x->sc_y1 += dy;
+        x->sc_y2 += dy;
+    }
     scalar_getbasexy(x, &basex, &basey);
     gpointer_init(&gp);
     gpointer_setglist(&gp, glist, x);
@@ -473,6 +492,9 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
 	//fprintf(stderr,"scalar_vis %d\n", vis);
     t_scalar *x = (t_scalar *)z;
+
+    x->sc_bboxcache = 0;
+
     t_template *template = template_findbyname(x->sc_template);
     t_canvas *templatecanvas = template_findcanvas(template);
     t_gobj *y;
@@ -516,6 +538,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     }
     if (!vis)
         sys_vgui(".x%lx.c delete .scalar%lx\n", glist_getcanvas(owner), x->sc_vec);
+
 
     sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))

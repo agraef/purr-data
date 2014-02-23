@@ -190,6 +190,11 @@ typedef struct _scalar      /* a graphical object holding data */
 {
     t_gobj sc_gobj;         /* header for graphical object */
     t_symbol *sc_template;  /* template name (LATER replace with pointer) */
+    int sc_x1;
+    int sc_x2;
+    int sc_y1;
+    int sc_y2;
+    int sc_bboxcache;
     t_word sc_vec[1];       /* indeterminate-length array of words */
 } t_scalar;
 
