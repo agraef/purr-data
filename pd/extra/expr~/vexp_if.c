@@ -164,8 +164,8 @@ expr_ff(t_expr *x)
                 y = x->exp_proxy;
         }
         for (i = 0 ; i < x->exp_nexpr; i++);
-                if (x->exp_stack[i])
-                        fts_free(x->exp_stack[i]);
+                if (x->exp_stack[i-1])
+                        fts_free(x->exp_stack[i-1]);
 /*
  * SDY free all the allocated buffers here for expr~ and fexpr~
  * check to see if there are others
