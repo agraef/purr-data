@@ -1215,10 +1215,10 @@ static char *rgb_to_hex(int r, int g, int b)
 
 char *get_strokelinecap(int a)
 {
-    static char strokelinecap[8];
+    static char strokelinecap[15];
     if (a == 0) sprintf(strokelinecap, "butt");
     else if (a == 1) sprintf(strokelinecap, "round");
-    else if (a == 2) sprintf(strokelinecap, "square");
+    else if (a == 2) sprintf(strokelinecap, "projecting");
     else sprintf(strokelinecap, "butt");
     return (strokelinecap);
 }
@@ -2157,8 +2157,10 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
         path2_vec[1] = yy;
     }
     
-    /* loop through and get absolute values. I don't handle
-       transformations yet */
+    /* loop through and get absolute values. This is more
+       complicated than it needs to be. If there were explicit
+       single-letter cmds for each subset of path data then I
+       could just use the default below for C, S, Q, T, and L. */
     int i = 0;
     for(i = start; i < x->x_npathcmds; i++)
     {
@@ -2172,19 +2174,28 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
         switch (cmd)
         {
         case 'A':
-            *ia = fielddesc_getcoord(fd, template, data, 1);
-            *(ia+1) = fielddesc_getcoord(fd+1, template, data, 1);
-            *(ia+2) = fielddesc_getfloat(fd+2, template, data, 1);
-            *(ia+3) = fielddesc_getfloat(fd+3, template, data, 1);
-            *(ia+4) = fielddesc_getfloat(fd+4, template, data, 1);
-            *(ia+5) = fielddesc_getcoord(fd+5, template, data, 1) + (rel? xx : 0);
-            *(ia+6) = fielddesc_getcoord(fd+6, template, data, 1) + (rel? yy : 0);
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j += 7)
+            {
+                *ia = fielddesc_getcoord(fd, template, data, 1);
+                *(ia+1) = fielddesc_getcoord(fd+1, template, data, 1);
+                *(ia+2) = fielddesc_getfloat(fd+2, template, data, 1);
+                *(ia+3) = fielddesc_getfloat(fd+3, template, data, 1);
+                *(ia+4) = fielddesc_getfloat(fd+4, template, data, 1);
+                xx = *(ia+5) = fielddesc_getcoord(fd+5, template, data, 1)
+                    + (rel? xx : 0);
+                yy = *(ia+6) = fielddesc_getcoord(fd+6, template, data, 1)
+                    + (rel? yy : 0);
+            }
             break;
         case 'V':
-            *ia = fielddesc_getcoord(fd, template, data, 1) + (rel? yy : 0);
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+                yy = *ia = fielddesc_getcoord(fd, template, data, 1)
+                    + (rel? yy : 0);
             break;
         case 'H':
-            *ia = fielddesc_getcoord(fd, template, data, 1) + (rel? xx : 0);
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+                xx = *ia = fielddesc_getcoord(fd, template, data, 1)
+                    + (rel? xx : 0);
             break;
         case 'L':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
@@ -2197,19 +2208,64 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                         + (rel? yy : 0);
             }      
             break;
+        case 'C':
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+            {
+                if (j%6 == 4)
+                    xx = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? xx : 0);
+                else if (j%6 == 5)
+                    yy = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? yy : 0);
+                else if (j%2 == 0)
+                    *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? xx : 0);
+                else
+                    *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? yy : 0);
+            }
+            break;
+        case 'Q':
+        case 'S':
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+            {
+                if (j%4 == 2)
+                    xx = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? xx : 0);
+                else if (j%4 == 3)
+                    yy = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? yy : 0);
+                else if (j%2 == 0)
+                    *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? xx : 0);
+                else
+                    *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? yy : 0);
+            }
+            break;
         case 'M':
             mx = fielddesc_getcoord(fd, template, data, 1) + (rel? xx : 0);
             my = fielddesc_getcoord(fd+1, template, data, 1) + (rel? yy : 0);
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+            {
+                if (j%2 == 0)
+                    xx = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? xx : 0);
+                else
+                    yy = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1)
+                        + (rel? yy : 0);
+            }
+            break;
         default:
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
             {
                 if (j%2 == 0)
                 {
-                    *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1) + (rel? xx : 0);
+                    xx = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1) + (rel? xx : 0);
                 }
                 else
                 {
-                   *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1) + (rel? yy : 0);
+                   yy = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1) + (rel? yy : 0);
                 }
             }
             break;
@@ -2543,7 +2599,7 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     if (x->x_drawtype == gensym("path"))
     {
         /* this could get damned expensive with complex paths 
-        so a caching mechanism would be nice */
+        which is why there's a caching mechanism */
         draw_getpathrect(x, glist, data, template, basex, basey,
             &x1, &y1, &x2, &y2);
     }
@@ -4077,6 +4133,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
             numbertocolor(dscolor, outline);
             symoutline = gensym(outline);
         }
+        if (symoutline == &s_) symoutline = gensym("#000000");
+        if (symfill == &s_) symfill = gensym("#000000");
         if (style == PLOTSTYLE_POINTS || style == PLOTSTYLE_BARS)
         {
             symfill = style == PLOTSTYLE_POINTS ? symoutline : symfill;

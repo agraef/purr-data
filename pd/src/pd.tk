@@ -9321,3 +9321,29 @@ proc pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
         $id $indev1 $indev2 $indev3 $indev4 \
         $outdev1 $outdev2 $outdev3 $outdev4 $longform $alsa
 }
+
+set ::sc_entered ""
+
+proc scalar_mouseover_after {canvas sendsym state} {
+    pd [concat $canvas scalar_mouseover $sendsym $state \;]
+    set ::sc_entered {}
+}
+
+proc scalar_mouseover {scalar canvas sendsym state} {
+    if {$state == 0} {
+        after cancel "scalar_mouseover_after $canvas $sendsym 1"
+        if {$scalar ne $::sc_entered} {
+            pd [concat $canvas scalar_mouseover $sendsym 0 \;]
+        }
+        set ::sc_entered $scalar
+    } else {
+        after 0 "scalar_mouseover_after $canvas $sendsym 1"
+    }
+}
+
+proc pdtk_bind_scalar_mouseover {canvas scalar sendsym} {
+    $canvas bind $scalar <Enter> \
+        "scalar_mouseover $scalar [canvastosym $canvas] $sendsym 0"
+    $canvas bind $scalar <Leave> \
+        "scalar_mouseover $scalar [canvastosym $canvas] $sendsym 1"
+}

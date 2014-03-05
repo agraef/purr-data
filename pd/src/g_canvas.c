@@ -707,6 +707,16 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
     }
 }
 
+extern t_canvas *sc_mouseover_canvas;
+void canvas_scalar_mouseover(t_canvas *x, t_symbol *sendsym, t_floatarg state)
+{
+    t_atom at[1];
+    SETFLOAT(&at[0], state);
+    sc_mouseover_canvas = x;
+    if (sendsym->s_thing) typedmess(sendsym->s_thing, gensym("mouseover"),
+        1, at);
+}
+
 extern void canvas_check_nlet_highlights(t_canvas *x);
 
 /*********** dpsaha@vt.edu resize move hooks ****************/
@@ -2202,6 +2212,9 @@ void g_canvas_setup(void)
     class_addmethod(canvas_class, (t_method)canvas_dirty,
         gensym("dirty"), A_FLOAT, A_NULL);
     class_setpropertiesfn(canvas_class, (t_propertiesfn)canvas_properties);
+
+    class_addmethod(canvas_class, (t_method)canvas_scalar_mouseover,
+        gensym("scalar_mouseover"), A_SYMBOL, A_FLOAT, 0);
 
 /* ---------------------- list handling ------------------------ */
     class_addmethod(canvas_class, (t_method)glist_clear, gensym("clear"),

@@ -111,6 +111,9 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
     x->sc_template = templatesym;
     gpointer_setglist(&gp, owner, x);
     word_init(x->sc_vec, template, &gp);
+    char buf[50];
+    sprintf(buf, ".x%lx", (long unsigned int)x);
+    pd_bind(&x->sc_gobj.g_pd, gensym(buf));
     return (x);
 }
 
@@ -157,29 +160,17 @@ extern int array_joc;
 extern void template_notifyforscalar(t_template *template, t_glist *owner,
     t_scalar *sc, t_symbol *s, int argc, t_atom *argv);
 
-static int sc_isentered = 0;
-static t_scalar *sc_entered = 0;
-
-static void scalar_leave(t_scalar *x, t_glist *owner, t_template *template,
-    int force_leave)
+t_canvas *sc_mouseover_canvas;
+static void scalar_mouseover(t_scalar *x, t_floatarg state)
 {
-    /* hack for enter/leave struct notifications */
-    if (sc_isentered == 1)
-    {
-        /* change value to see if there's a call
-           to scalar_click the next time around. Of
-           course it will be too late so we'll be
-           one pixel off, but it's better than nothing.
-        */
-        sc_isentered = -1;
-    }
-    else if (sc_isentered == -1 || force_leave)
-    {
-        t_atom at[1];
-        template_notifyforscalar(template, owner, x, gensym("leave"), 1, at);
-        sc_entered = 0;
-        sc_isentered = 0;
-    }
+    t_atom at[1];
+    t_template *template = template_findbyname(x->sc_template);
+    if (state)
+        template_notifyforscalar(template, sc_mouseover_canvas,
+            x, gensym("leave"), 1, at);
+    else
+        template_notifyforscalar(template, sc_mouseover_canvas,
+            x, gensym("enter"), 1, at);
 }
 
 static void scalar_getrect(t_gobj *z, t_glist *owner,
@@ -193,9 +184,6 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
     t_gobj *y;
     t_float basex, basey;
-
-    if (sc_entered == x)
-        scalar_leave(x, owner, template, 0);
 
     // EXPERIMENTAL: we assume that entire canvas is withing the rectangle--this is for arrays
     // with "jump on click" enabled TODO: test for other regressions (there shouuld not be any
@@ -260,10 +248,18 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
        
         scalar_getrect(&x->sc_gobj, glist, &x1, &y1, &x2, &y2);
         x1--; x2++; y1--; y2++;
+                /* we're not giving the rectangle the "select" tag
+                   because we have to manually displace the scalar
+                   in scalar_displace_withtag. The reason for that
+                   is the "displace" message may trigger a redraw
+                   of the bbox at the new position, and Pd-l2ork's
+                   general "move selected" subcommand will end up
+                   offsetting such a rect by dx dy.
+                */
 		if (glist_istoplevel(glist))
-		    sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d %d %d %d %d \
-		        -strokewidth 1 -stroke $pd_colors(selection) -tags {select%lx selected}\n",
-		            glist_getcanvas(glist), x1, y1, x1, y2, x2, y2, x2, y1, x1, y1,
+		    sys_vgui(".x%lx.c create prect %d %d %d %d \
+		        -strokewidth 1 -stroke $pd_colors(selection) -tags {select%lx}\n",
+		            glist_getcanvas(glist), x1, y1, x2, y2,
 		            x);
     }
     else
@@ -383,11 +379,19 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     if ((goty && (ytype != DT_FLOAT)) || select_owner != glist)
         goty = 0;
     if (gotx)
+    {
         *(t_float *)(((char *)(x->sc_vec)) + xonset) +=
             dx * (glist_pixelstox(glist, 1) - glist_pixelstox(glist, 0));
+        x->sc_x1 += dx;
+        x->sc_x2 += dx;
+    }
     if (goty)
+    {
         *(t_float *)(((char *)(x->sc_vec)) + yonset) +=
             dy * (glist_pixelstoy(glist, 1) - glist_pixelstoy(glist, 0));
+        x->sc_y1 += dy;
+        x->sc_y2 += dy;
+    }
     gpointer_init(&gp);
     gpointer_setglist(&gp, glist, x);
     SETPOINTER(&at[0], &gp);
@@ -414,6 +418,7 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_atom at[3];
     t_gpointer gp;
     int xonset, yonset, xtype, ytype, gotx, goty;
+    int bx1, bx2, by1, by2;
     t_float basex = 0, basey = 0;
     if (!template)
     {
@@ -447,6 +452,16 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     SETFLOAT(&at[1], (t_float)dx);
     SETFLOAT(&at[2], (t_float)dy);
     template_notify(template, gensym("displace"), 2, at);
+
+    /* this is a hack to make sure the bbox gets drawn in
+       the right location.  If the scalar is selected
+       then it's possible that a "displace" message
+       from the [struct] will trigger a redraw of the
+       bbox. So we don't update the cached bbox until
+       after that redraw, so we can move the bbox below.
+    */
+    sys_vgui(".x%lx.c coords {select%lx} %d %d %d %d\n", glist, x,
+        x->sc_x1 - 1, x->sc_y1 - 1, x->sc_x2 + 1, x->sc_y2 + 1);
 
     t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
     t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
@@ -528,6 +543,9 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             );
         sys_vgui(".x%lx.c create group -tags {.dgroup%lx} -parent {.scalar%lx}\n",
             glist_getcanvas(owner), x->sc_vec, x->sc_vec);
+        sys_vgui("pdtk_bind_scalar_mouseover "
+                 ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
+            glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec, x);
     }
 
     for (y = templatecanvas->gl_list; y; y = y->g_next)
@@ -614,28 +632,11 @@ static int scalar_click(t_gobj *z, struct _glist *owner,
 {
 	//fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
     t_scalar *x = (t_scalar *)z;
+
+    x->sc_bboxcache = 0;
+
     t_template *template = template_findbyname(x->sc_template);
 
-    /* hack for enter/leave notifications. The second part
-       of the conditional is to catch edge cases where the
-       pointer enters a scalar in one window then moves to
-       an overlapping window before leaving the first one.
-
-       There is an edge case with this hack-- if the mouse
-       is inside a scalar in one window and then moves to
-    */
-    if (sc_isentered == 0 ||
-        (sc_entered && sc_entered != x))
-    {
-        t_atom at[1];
-        if (sc_entered && sc_entered !=x)
-            scalar_leave(sc_entered, owner, template, 1);
-        template_notifyforscalar(template, owner, x, gensym("enter"), 1, at);
-        sc_isentered = 1;
-        sc_entered = x;
-    }
-    else sc_isentered = 1;
-    
     return (scalar_doclick(x->sc_vec, template, x, 0,
         owner, 0, 0, xpix, ypix, shift, alt, dbl, doit));
 }
@@ -700,6 +701,9 @@ static void scalar_free(t_scalar *x)
         return;
     }
     word_free(x->sc_vec, template);
+    char buf[50];
+    sprintf(buf, ".x%lx", (long unsigned int)x);
+    pd_unbind(&x->sc_gobj.g_pd, gensym(buf));
     gfxstub_deleteforkey(x);
         /* the "size" field in the class is zero, so Pd doesn't try to free
         us automatically (see pd_free()) */
@@ -712,6 +716,8 @@ void g_scalar_setup(void)
 {
     scalar_class = class_new(gensym("scalar"), 0, (t_method)scalar_free, 0,
         CLASS_GOBJ, 0);
+    class_addmethod(scalar_class, (t_method)scalar_mouseover,
+        gensym("mouseover"), A_FLOAT, A_NULL);
     class_setwidget(scalar_class, &scalar_widgetbehavior);
     class_setsavefn(scalar_class, scalar_save);
     class_setpropertiesfn(scalar_class, scalar_properties);
