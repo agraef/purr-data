@@ -1751,7 +1751,7 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
             ((t_scalar *)g)->sc_bboxcache = 0;
             if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
             {
-                scalar_select(g, c, 1);
+                //scalar_select(g, c, 1);
                 scalar_drawselectrect((t_scalar *)g, c, 0);
                 scalar_drawselectrect((t_scalar *)g, c, 1);
             }
