@@ -1342,9 +1342,12 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
                    visible, x, data, str);
             }
         }
-        if (g->g_pd == canvas_class)
+        if (g->g_pd == canvas_class) {
             draw_doupdate(x, (t_glist *)g, s);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_glist *)g);
+        }
     }
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", c);
 }
 
 extern t_canvas *canvas_list;
@@ -1353,6 +1356,7 @@ void draw_update(t_draw *x, t_symbol *s)
     t_canvas *c;
     for (c = canvas_list; c; c = c->gl_next)
         draw_doupdate(x, c, s);
+
 }
 
 void draw_fillopacity(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
@@ -1756,9 +1760,12 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
                 scalar_drawselectrect((t_scalar *)g, c, 1);
             }
         }
-        if (g->g_pd == canvas_class)
+        if (g->g_pd == canvas_class) {
             draw_doupdatetransform(x, (t_glist *)g);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_glist *)g);
+        }
     }
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", c);
 }
 
 void draw_queueupdatetransform(t_gobj *g, t_glist *glist)
