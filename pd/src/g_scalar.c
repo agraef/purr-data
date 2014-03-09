@@ -282,13 +282,8 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
    new position and feed it to the scalar's matrix.
 
    This creates a problem with gop canvases, and yet _another_ partial
-   workaround.  We need the global variable below to let the so that
-   we can figure out whether the displace call is coming from the scalar
-   itself or from a parent graph.  This means scalars won't currently
-   respond properly in nested gops.  (I think that requires a window
-   item on the canvas to replace the current gop rect.)
+   workaround which I apologize for inside t_scalar def in m_pd.h.
 */
-t_glist *select_owner = 0; /* kludge variable used by displace_withtag fn */
 void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
 	//fprintf(stderr,"scalar_select %d\n", state);
@@ -308,7 +303,7 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
 	}
     gpointer_unset(&gp);
 	if (state) {
-                select_owner = owner;
+                x->sc_selected = owner;
 		sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
 			glist_getcanvas(owner), x);
 		/* how do we navigate through a t_word list?
@@ -329,7 +324,7 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
 				glist_getcanvas(owner), (t_int)tag);
 		}*/
 	} else {
-        select_owner = 0;
+        x->sc_selected = 0;
 		sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
 			glist_getcanvas(owner), x);
                 sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
@@ -373,10 +368,10 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         return;
     }
     gotx = template_find_field(template, gensym("x"), &xonset, &xtype, &zz);
-    if ((gotx && (xtype != DT_FLOAT)) || select_owner != glist)
+    if ((gotx && (xtype != DT_FLOAT)) || x->sc_selected != glist)
         gotx = 0;
     goty = template_find_field(template, gensym("y"), &yonset, &ytype, &zz);
-    if ((goty && (ytype != DT_FLOAT)) || select_owner != glist)
+    if ((goty && (ytype != DT_FLOAT)) || x->sc_selected != glist)
         goty = 0;
     if (gotx)
     {
@@ -426,10 +421,10 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
         return;
     }
     gotx = template_find_field(template, gensym("x"), &xonset, &xtype, &zz);
-    if ((gotx && (xtype != DT_FLOAT)) || select_owner != glist)
+    if ((gotx && (xtype != DT_FLOAT)) || x->sc_selected != glist)
         gotx = 0;
     goty = template_find_field(template, gensym("y"), &yonset, &ytype, &zz);
-    if ((goty && (ytype != DT_FLOAT)) || select_owner != glist)
+    if ((goty && (ytype != DT_FLOAT)) || x->sc_selected != glist)
         goty = 0;
     if (gotx)
     {
@@ -467,7 +462,7 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
 
     sys_vgui(".x%lx.c itemconfigure {.scalar%lx} -matrix { {%g %g} {%g %g} {%d %d} }\n",
-        glist_getcanvas(glist), x->sc_vec, 1.0, 0.0, 0.0, 1.0, (int)glist_xtopixels(select_owner, basex) + (select_owner == glist ? 0 : dx), (int)glist_ytopixels(select_owner, basey) + (select_owner == glist ? 0 : dy));
+        glist_getcanvas(glist), x->sc_vec, 1.0, 0.0, 0.0, 1.0, (int)glist_xtopixels(x->sc_selected, basex) + (x->sc_selected == glist ? 0 : dx), (int)glist_ytopixels(x->sc_selected, basey) + (x->sc_selected == glist ? 0 : dy));
 
     //scalar_redraw(x, glist);
 }

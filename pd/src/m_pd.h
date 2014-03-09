@@ -190,11 +190,22 @@ typedef struct _scalar      /* a graphical object holding data */
 {
     t_gobj sc_gobj;         /* header for graphical object */
     t_symbol *sc_template;  /* template name (LATER replace with pointer) */
-    int sc_x1;
-    int sc_x2;
-    int sc_y1;
-    int sc_y2;
-    int sc_bboxcache;
+    int sc_x1;              /* cached bbox... which is already in the */
+    int sc_x2;              /* GUI. Doing this right would require me */
+    int sc_y1;              /* to redesign the whole program. Instead */
+    int sc_y2;              /* please enjoy the duplication of a bbox */
+    int sc_bboxcache;       /* caching mechanism already in tkpath.   */
+    t_glist *sc_selected;   /* I'm really sorry... I can't figure out
+                               a non-stupid and non-hacky way to make
+                               scalars in a gop patch displace right.
+                               Pd Vanilla just redraws all of the gop
+                               contents-- dumb. Here I keep the owner
+                               glist handy so I can compare it to the
+                               glist in scalar_displace_withtag. Then
+                               if they don't match it's a gop, so the
+                               x/y fields do not need to get updated.
+                               That's dumb, too, but slightly less so
+                               which is another way to say "progress" */
     t_word sc_vec[1];       /* indeterminate-length array of words */
 } t_scalar;
 
