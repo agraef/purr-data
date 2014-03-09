@@ -68,7 +68,7 @@ void garray_arrayviewlist_close(t_garray *x);
 
 void array_resize(t_array *x, int n)
 {
-	//fprintf(stderr,"array_resize\n");
+    //fprintf(stderr,"array_resize\n");
     int elemsize, oldn;
     t_gpointer *gp;
     t_template *template = template_findbyname(x->a_templatesym);
@@ -94,7 +94,7 @@ void array_resize(t_array *x, int n)
 
 static void array_resize_and_redraw(t_array *array, t_glist *glist, int n)
 {
-	//fprintf(stderr,"array_resize_and_redraw\n");
+    //fprintf(stderr,"array_resize_and_redraw\n");
     t_array *a2 = array;
     int vis = glist_isvisible(glist);
     while (a2->a_gp.gp_stub->gs_which == GP_ARRAY)
@@ -214,9 +214,9 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
         outline, 1);
     glist_add(gl, &x->x_gobj);
     x->x_glist = gl;
-	char buf[MAXPDSTRING];
-	sprintf(buf, "%s_changed", x->x_realname->s_name);
-	x->x_send = gensym(buf);
+    char buf[MAXPDSTRING];
+    sprintf(buf, "%s_changed", x->x_realname->s_name);
+    x->x_send = gensym(buf);
     return (x);
 }
 
@@ -281,7 +281,7 @@ int garray_joc(t_garray *x)
             to fit a new size and style for the garray */
 void garray_fittograph(t_garray *x, int n)
 {
-	//fprintf(stderr,"garray_fittoraph %d\n", n);
+    //fprintf(stderr,"garray_fittoraph %d\n", n);
     t_array *array = garray_getarray(x);
     t_glist *gl = x->x_glist;
     if (gl->gl_list == &x->x_gobj && !x->x_gobj.g_next)
@@ -328,7 +328,7 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     int flags = fflags;
     t_gpointer gp;
     int filestyle = ((flags & 6) >> 1);
-	//fprintf(stderr,"filestyle = %d\n", filestyle);
+    //fprintf(stderr,"filestyle = %d\n", filestyle);
     int style = (filestyle == 0 ? PLOTSTYLE_POINTS :
         (filestyle == 1 ? PLOTSTYLE_POLY : filestyle));
     if (templateargsym != &s_float)
@@ -397,7 +397,7 @@ void canvas_menuarray(t_glist *canvas)
 {
     if (canvas_hasarray(canvas)) return;
     t_glist *x = (t_glist *)canvas;
-	pd_vmess(&x->gl_pd, gensym("editmode"), "i", 1);
+    pd_vmess(&x->gl_pd, gensym("editmode"), "i", 1);
     char cmdbuf[200];
     sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx black black\n",
         ++gcount, (long unsigned int)canvas);
@@ -448,9 +448,11 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     int flags = fflags;
     if (size < 1)
         size = 1;
-    if (otherflag == 0 || (!(gl = glist_findgraph(parent)))) {
+    if (otherflag == 0 || (!(gl = glist_findgraph(parent))))
+    {
         gl = glist_addglist(parent, &s_, 0, 1,
-            (size > 1 ? size-1 : size), -1, xdraw+30, ydraw+30, xdraw+30+GLIST_DEFGRAPHWIDTH, ydraw+30+GLIST_DEFGRAPHHEIGHT);
+            (size > 1 ? size-1 : size), -1, xdraw+30, ydraw+30,
+            xdraw+30+GLIST_DEFGRAPHWIDTH, ydraw+30+GLIST_DEFGRAPHHEIGHT);
         gl->gl_hidetext = 1;
     }
     //a = graph_array(gl, sharptodollar(name), &s_float, size, flags);
@@ -470,9 +472,10 @@ void glist_arraydialog(t_glist *parent, t_symbol *s, int argc, t_atom *argv)
     a = graph_array(gl, gensym("array"), 8, at);
     canvas_dirty(parent, 1);
     
-	//canvas_redraw(glist_getcanvas(parent));
-	garray_fittograph(a, (int)size);
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(parent));
+    //canvas_redraw(glist_getcanvas(parent));
+    garray_fittograph(a, (int)size);
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n",
+        (long unsigned int)glist_getcanvas(parent));
 }
 
 extern void canvas_apply_setundo(t_canvas *x, t_gobj *y);
@@ -485,14 +488,14 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
     int deleteit = atom_getfloatarg(3, argc, argv);
     if (deleteit != 0)
     {
-	//fprintf(stderr,"deleteit\n");
-	//glist_select(x->x_glist, &x->x_gobj);
-	//canvas_undo_add(x->x_glist, 3, "delete", canvas_undo_set_cut(x->x_glist, 2)); // 2 = UCUT_CLEAR (from g_editor.c)
-	//currently cannot be undo'd until we do a new kind of undo
-	int dspwas = canvas_suspend_dsp();
+        //fprintf(stderr,"deleteit\n");
+        //glist_select(x->x_glist, &x->x_gobj);
+        //canvas_undo_add(x->x_glist, 3, "delete", canvas_undo_set_cut(x->x_glist, 2)); // 2 = UCUT_CLEAR (from g_editor.c)
+//currently cannot be undo'd until we do a new kind of undo
+        int dspwas = canvas_suspend_dsp();
         glist_delete(x->x_glist, &x->x_gobj);
-	canvas_resume_dsp(dspwas);
-	canvas_redraw(glist_getcanvas(x->x_glist));
+        canvas_resume_dsp(dspwas);
+        canvas_redraw(glist_getcanvas(x->x_glist));
     }
     else 
     {
@@ -508,16 +511,20 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         int flags = atom_getfloatarg(2, argc, argv);
         t_symbol *fill = atom_getsymbolarg(6, argc, argv);
         t_symbol *outline = atom_getsymbolarg(7, argc, argv);
-	int saveit = ((flags & 1) != 0);
-	int style = ((flags & 6) >> 1);
+        int saveit = ((flags & 1) != 0);
+        int style = ((flags & 6) >> 1);
+
         /* todo: revisit this filestyle business
         if (style < 2) style = !style;
         */
+
         int hidename = ((flags & 8) >> 3);
         int joc = ((flags & 16) >> 4);
-	/*t_float stylewas = template_getfloat(
-	    template_findbyname(x->x_scalar->sc_template),
-	    gensym("style"), x->x_scalar->sc_vec, 1);*/
+
+        /*t_float stylewas = template_getfloat(
+        template_findbyname(x->x_scalar->sc_template),
+        gensym("style"), x->x_scalar->sc_vec, 1);*/
+
         int size;
         int styleonset, styletype;
         t_symbol *stylearraytype;
@@ -549,32 +556,34 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
             pd_bind(&x->x_gobj.g_pd, x->x_realname);
         }
             /* redraw the whole glist, just so the name change shows up */
-        if (x->x_glist->gl_havewindow) {
+        if (x->x_glist->gl_havewindow)
+        {
             canvas_redraw(glist_getcanvas(x->x_glist));
-			//fprintf(stderr,"================REDRAW\n");
-		}
+            //fprintf(stderr,"================REDRAW\n");
+        }
         size = fsize;
         if (size < 1)
             size = 1;
         if (size != a->a_n)
             garray_resize(x, size);
-        if (style != x->x_style) {
-	    x->x_style = style;
+        if (style != x->x_style)
+        {
+            x->x_style = style;
             garray_fittograph(x, size);
-	}
-	//fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
+        }
+        //fprintf(stderr,"style=%d %f\n", style, (t_float)x->x_style);
         template_setfloat(scalartemplate, gensym("style"),
             x->x_scalar->sc_vec, (t_float)x->x_style, 0);
-    	template_setfloat(scalartemplate, gensym("linewidth"),
-	    x->x_scalar->sc_vec, ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
+        template_setfloat(scalartemplate, gensym("linewidth"),
+            x->x_scalar->sc_vec, ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
         template_setsymbol(scalartemplate, gensym("fillcolor"),
             x->x_scalar->sc_vec, fill, 0);
         template_setsymbol(scalartemplate, gensym("outlinecolor"),
             x->x_scalar->sc_vec, outline, 0);
 
-	char buf[MAXPDSTRING];
-	sprintf(buf, "%s_changed", x->x_realname->s_name);
-	x->x_send = gensym(buf);
+        char buf[MAXPDSTRING];
+        sprintf(buf, "%s_changed", x->x_realname->s_name);
+        x->x_send = gensym(buf);
 
         garray_setsaveit(x, (saveit != 0));
         x->x_joc = joc;
@@ -582,7 +591,7 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
         x->x_fillcolor = fill;
         x->x_outlinecolor = outline;
         x->x_style = style;
-	//fprintf(stderr,"GARRAY_REDRAW\n");
+        //fprintf(stderr,"GARRAY_REDRAW\n");
         garray_redraw(x);
         canvas_dirty(x->x_glist, 1);
     }
@@ -624,7 +633,7 @@ void garray_arrayviewlist_fillpage(t_garray *x,
                                    t_float page,
                                    t_float fTopItem)
 {
-	//fprintf(stderr,"garray_fillpage\n");
+    //fprintf(stderr,"garray_fillpage\n");
     int i, xonset=0, yonset=0, type=0, elemsize=0, topItem;
     t_float yval;
     char cmdbuf[200];
@@ -638,13 +647,15 @@ void garray_arrayviewlist_fillpage(t_garray *x,
         error("error in garray_arrayviewlist_new()");
     }
 
-    if (page < 0) {
+    if (page < 0)
+    {
       page = 0;
       sys_vgui("pdtk_array_listview_setpage %s %d\n",
                x->x_realname->s_name,
                (int)page);
     }
-    else if ((page * ARRAYPAGESIZE) >= a->a_n) {
+    else if ((page * ARRAYPAGESIZE) >= a->a_n)
+    {
       page = (int)(((int)a->a_n - 1)/ (int)ARRAYPAGESIZE);
       sys_vgui("pdtk_array_listview_setpage %s %d\n",
                x->x_realname->s_name,
@@ -762,16 +773,17 @@ static int array_motion_fatten;
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
 
-// this is called when a mouse drag happens inside an array (either scalar or the whole array--this needs to be tested)
+    /* this is called when a mouse drag happens inside an array (either
+       scalar or the whole array--this needs to be tested) */
 static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     array_motion_xcumulative += dx * array_motion_xperpix;
     array_motion_ycumulative += dy * array_motion_yperpix;
     //fprintf(stderr,"array_motion %f %f %f %f\n", array_motion_xcumulative, array_motion_ycumulative, dx, dy);
 
-	// used to set up boundaries and update sends accordingly
-	t_glist *graph = NULL;
-	if (array_garray != NULL) graph = array_garray->x_glist;
+    // used to set up boundaries and update sends accordingly
+    t_glist *graph = NULL;
+    if (array_garray != NULL) graph = array_garray->x_glist;
 
     if (array_motion_xfield)
     {
@@ -821,18 +833,21 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
                     (t_word *)(((char *)array_motion_wp) +
                         array_motion_elemsize * array_motion_lastx),
                             1);
-		// here we block scalar from exceeding the array GOP edges
-		if (graph) {
-			if (graph->gl_y1 > graph->gl_y2) {
-				if (newy > graph->gl_y1) newy = graph->gl_y1;
-				if (newy < graph->gl_y2) newy = graph->gl_y2;
-			}
-			else {
-				if (newy < graph->gl_y1) newy = graph->gl_y1;
-				if (newy > graph->gl_y2) newy = graph->gl_y2;
-			}
-		}
-		//fprintf(stderr, "y = %f\n", newy);
+        // here we block scalar from exceeding the array GOP edges
+        if (graph)
+        {
+            if (graph->gl_y1 > graph->gl_y2)
+            {
+                if (newy > graph->gl_y1) newy = graph->gl_y1;
+                if (newy < graph->gl_y2) newy = graph->gl_y2;
+            }
+            else
+            {
+                if (newy < graph->gl_y1) newy = graph->gl_y1;
+                if (newy > graph->gl_y2) newy = graph->gl_y2;
+            }
+        }
+        //fprintf(stderr, "y = %f\n", newy);
         t_float ydiff = newy - oldy;
         if (thisx < 0) thisx = 0;
         else if (thisx >= array_motion_npoints)
@@ -851,15 +866,17 @@ static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
          }
          array_motion_lastx = thisx;
     }
-	//fprintf(stderr, "%f %f\n", graph->gl_y1, graph->gl_y2);
+    //fprintf(stderr, "%f %f\n", graph->gl_y1, graph->gl_y2);
 
     if (array_motion_scalar)
         scalar_redraw(array_motion_scalar, array_motion_glist);
     if (array_motion_array)
         array_redraw(array_motion_array, array_motion_glist);
 
-	/* send a bang to the associated send to reflect the change via mouse click/drag */
-	if (graph && array_garray->x_send->s_thing) pd_bang(array_garray->x_send->s_thing);
+    /* send a bang to the associated send to reflect the change
+       via mouse click/drag */
+    if (graph && array_garray->x_send->s_thing)
+        pd_bang(array_garray->x_send->s_thing);
 }
 
 int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
@@ -875,7 +892,7 @@ static int array_doclick_element(t_array *array, t_glist *glist,
     t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"array_doclick_element linewidth%f xloc%f xinc%f yloc%f xpix%d ypix%d doit%d\n", linewidth, xloc, xinc, yloc, xpix, ypix, doit);
+    //fprintf(stderr,"array_doclick_element linewidth%f xloc%f xinc%f yloc%f xpix%d ypix%d doit%d\n", linewidth, xloc, xinc, yloc, xpix, ypix, doit);
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
     int elemsize, yonset, wonset, xonset, i, incr, hit;
@@ -937,16 +954,16 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, xloc, yloc, xinc,
                 xfield, yfield, wfield, &pxpix1, &pxpix2, &pypix, &pwpix);
-			//fprintf(stderr,"	array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
+            //fprintf(stderr,"    array_getcoordinate %d: pxpix1:%f pxpix2:%f pypix:%f pwpix:%f dx:%f dy:%f elemsize:%d yonset:%d wonset:%d xonset:%d xloc:%f yloc:%f xinc:%f\n", i, pxpix1, pxpix2, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, xloc, yloc, xinc);
             if (pwpix < 4)
                 pwpix = 4;
-			if (xpix >= (int)pxpix1 && xpix <= (int)pxpix2 &&
-                            ((array_joc) ||
-                                (ypix >= pypix-pwpix && ypix <= pypix+pwpix)))
-                        {
-                            best = i;
-                            break;
-			}
+            if (xpix >= (int)pxpix1 && xpix <= (int)pxpix2 &&
+                ((array_joc) ||
+                 (ypix >= pypix-pwpix && ypix <= pypix+pwpix)))
+            {
+                best = i;
+                break;
+            }
 /*
             if (pwpix < 4)
                 pwpix = 4;
@@ -969,23 +986,25 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 if (dx + dy < best)
                     best = dx + dy;
             }
-			//fprintf(stderr,"	1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);*/
+            //fprintf(stderr,"    1st %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, elemsize, yonset, wonset, xonset, i);*/
         }
-		//fprintf(stderr,"	best = %f\n", best);
+        //fprintf(stderr,"    best = %f\n", best);
         if (best == -1 && (array_joc == 0)) //this is the arbitrary radius away from the actual object's center, originally 8
         {
-			//fprintf(stderr,"	best > 8\n");
-            if (scalarvis != 0) {
-				//fprintf(stderr,"		array_doclick_element\n");
+            //fprintf(stderr,"    best > 8\n");
+            if (scalarvis != 0)
+            {
+                //fprintf(stderr,"    array_doclick_element\n");
                 return (array_doclick_element(array, glist, sc, ap,
                     elemtemplatesym, linewidth, xloc, xinc, yloc,
                         xfield, yfield, wfield,
                         xpix, ypix, shift, alt, dbl, doit));
-			}
-            else {
-				//fprintf(stderr,"		return 0\n");
-				return (0);
-			}
+            }
+            else
+            {
+                //fprintf(stderr,"    return 0\n");
+                return (0);
+            }
         }
         //best += 0.001;  /* add truncation error margin */
         //for (i = 0; i < array->a_n; i += incr)
@@ -1007,10 +1026,10 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     dy = 100;
             }
             else dy2 = dy3 = 100;
-			//fprintf(stderr,"	2nd %f %f %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, dy2, dy3, elemsize, yonset, wonset, xonset, i);
+            //fprintf(stderr,"    2nd %f %f %f %f %f %f %f %d %d %d %d %d\n", pxpix, pypix, pwpix, dx, dy, dy2, dy3, elemsize, yonset, wonset, xonset, i);
             //if (dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best)
             //{
-				//fprintf(stderr, "dy=%f dy2=%f dy3=%f\n", dy, dy2, dy3);
+            //fprintf(stderr, "dy=%f dy2=%f dy3=%f\n", dy, dy2, dy3);
 
 /* from array-rev */
 
@@ -1021,22 +1040,23 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
             }
             else
                 hit = dx + dy <= best || dx + dy2 <= best || dx + dy3 <= best;
-
-
 /* end array-rev */
 
-                if (dy < dy2 && dy < dy3) {
+                if (dy < dy2 && dy < dy3)
+                {
                     array_motion_fatten = 0;
-					//fprintf(stderr,"A\n");
-				}
-                else if (dy2 < dy3) {
+                    //fprintf(stderr,"A\n");
+                }
+                else if (dy2 < dy3)
+                {
                     array_motion_fatten = -1;
-					//fprintf(stderr,"B\n");
-				}
-                else if (!array_joc) {
-					array_motion_fatten = 1;
-					//fprintf(stderr,"C\n");
-				}
+                    //fprintf(stderr,"B\n");
+                }
+                else if (!array_joc)
+                {
+                    array_motion_fatten = 1;
+                    //fprintf(stderr,"C\n");
+                }
                 if (doit || (glob_lmclick && array_joc))
                 {
                     char *elem = (char *)array->a_vec;
@@ -1055,22 +1075,22 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                             (char *)(array->a_vec) + elemsize * (i+1),
                                 (array->a_n - 1 - i) * elemsize);
                         //array_resize_and_redraw(array, glist, array->a_n - 1);
-						garray_resize(array_garray, array->a_n - 1);
-						canvas_setcursor(glist_getcanvas(glist), 0);
+                        garray_resize(array_garray, array->a_n - 1);
+                        canvas_setcursor(glist_getcanvas(glist), 0);
                         return (0);
                     }
                     else if (shift)
                     {
                         /* add a point (after the clicked-on one) */
-						//fprintf(stderr,"add a point\n");
+                        //fprintf(stderr,"add a point\n");
                         //array_resize_and_redraw(array, glist, array->a_n + 1);
                         elem = (char *)array->a_vec;
                         memmove(elem + elemsize * (i+1), 
                             elem + elemsize * i,
                                 (array->a_n - i - 1) * elemsize);
                         i++;
-						garray_resize(array_garray, array->a_n + 1);
-						canvas_setcursor(glist_getcanvas(glist), 0);
+                        garray_resize(array_garray, array->a_n + 1);
+                        canvas_setcursor(glist_getcanvas(glist), 0);
                     }
                     if (xonset >= 0)
                     {
@@ -1146,9 +1166,10 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 {
                     return (CURSOR_EDITMODE_DISCONNECT);
                 }
-                else if (shift) {
-					return (CURSOR_RUNMODE_ADDPOINT);
-				}
+                else if (shift)
+                {
+                    return (CURSOR_RUNMODE_ADDPOINT);
+                }
                 else return (array_motion_fatten ?
                     CURSOR_RUNMODE_THICKEN : CURSOR_RUNMODE_CLICKME);
             //}
@@ -1194,7 +1215,7 @@ static void array_getrect(t_array *array, t_glist *glist,
                 y2 = pypix + pwpix;
         }
     }
-	//fprintf(stderr,"array_getrect %f %f %f %f\n", x1, y1, x2, y2);
+    //fprintf(stderr,"array_getrect %f %f %f %f\n", x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -1218,8 +1239,9 @@ static void garray_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void garray_select(t_gobj *z, t_glist *glist, int state)
 {
-    t_garray *x = (t_garray *)z;	
-	sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), x->x_glist, state);
+    t_garray *x = (t_garray *)z;
+    sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+        glist_getcanvas(glist), x->x_glist, state);
     /* fill in later */
 }
 
@@ -1234,19 +1256,19 @@ static void garray_delete(t_gobj *z, t_glist *glist)
 
 static void garray_vis(t_gobj *z, t_glist *glist, int vis)
 {
-	//fprintf(stderr,"garray_vis %d\n", vis);
+    //fprintf(stderr,"garray_vis %d\n", vis);
     t_garray *x = (t_garray *)z;
-	gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
-	//if (((t_glist *)z)->gl_isgraph)
-	//	fprintf(stderr,"garray_vis am_graph\n");
+    gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
+    //if (((t_glist *)z)->gl_isgraph)
+    //    fprintf(stderr,"garray_vis am_graph\n");
 }
 
 static int garray_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"garray_click\n");
+    //fprintf(stderr,"garray_click\n");
     t_garray *x = (t_garray *)z;
-	array_garray = x;
+    array_garray = x;
     return (gobj_click(&x->x_scalar->sc_gobj, glist,
         xpix, ypix, shift, alt, dbl, doit));
 }
@@ -1309,7 +1331,7 @@ t_widgetbehavior garray_widgetbehavior =
     garray_delete,
     garray_vis,
     garray_click,
-	NULL,
+    NULL,
 };
 
 /* ----------------------- public functions -------------------- */
@@ -1321,37 +1343,41 @@ void garray_usedindsp(t_garray *x)
 
 static void garray_doredraw(t_gobj *client, t_glist *glist)
 {
-	//fprintf(stderr,"garray_doredraw\n");
+    //fprintf(stderr,"garray_doredraw\n");
     t_garray *x = (t_garray *)client;
     if (glist_isvisible(x->x_glist))
     {
         garray_vis(&x->x_gobj, x->x_glist, 0); 
         garray_vis(&x->x_gobj, x->x_glist, 1);
     }
-		/* we do this to reposition objects back where they belong */
-	if (!glist_istoplevel(glist)) {
-		canvas_restore_original_position(glist_getcanvas(glist), (t_gobj *)glist, 0, -1);
-	}
-	if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist)) {
-		//fprintf(stderr,"garray_doredraw isselected\n");
-		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), glist, 1);
-	}
+    /* we do this to reposition objects back where they belong */
+    if (!glist_istoplevel(glist))
+    {
+        canvas_restore_original_position(glist_getcanvas(glist),
+            (t_gobj *)glist, 0, -1);
+    }
+    if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist))
+    {
+        //fprintf(stderr,"garray_doredraw isselected\n");
+        sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+            glist_getcanvas(glist), glist, 1);
+    }
 }
 
 void garray_redraw(t_garray *x)
 {
-	//fprintf(stderr,"garray_redraw\n");
+    //fprintf(stderr,"garray_redraw\n");
     if (glist_isvisible(x->x_glist))
         sys_queuegui(&x->x_gobj, x->x_glist, garray_doredraw);
-		//garray_doredraw(&x->x_gobj, x->x_glist);
+    //garray_doredraw(&x->x_gobj, x->x_glist);
     /* jsarlo { */
     /* this happens in garray_vis() when array is visible for
        performance reasons */
     else
     {
-	  //fprintf(stderr,"garray_redraw_listviewing\n");
-      if (x->x_listviewing)
-        sys_vgui("pdtk_array_listview_fillpage %s\n",
+        //fprintf(stderr,"garray_redraw_listviewing\n");
+        if (x->x_listviewing)
+            sys_vgui("pdtk_array_listview_fillpage %s\n",
                  x->x_realname->s_name);
     }
     /* } jsarlo */
@@ -1632,17 +1658,17 @@ static void garray_rename(t_garray *x, t_symbol *s)
     /* } jsarlo */
     pd_unbind(&x->x_gobj.g_pd, x->x_realname);
 
-	x->x_name = s;
-	x->x_realname = canvas_realizedollar(x->x_glist, x->x_name);
+    x->x_name = s;
+    x->x_realname = canvas_realizedollar(x->x_glist, x->x_name);
 
     pd_bind(&x->x_gobj.g_pd, x->x_realname);
 
-	char buf[MAXPDSTRING];
-	sprintf(buf, "%s_changed", x->x_realname->s_name);
-	x->x_send = gensym(buf);
+    char buf[MAXPDSTRING];
+    sprintf(buf, "%s_changed", x->x_realname->s_name);
+    x->x_send = gensym(buf);
 
     //garray_redraw(x);
-	glist_redraw(x->x_glist);
+    glist_redraw(x->x_glist);
 }
 
 static void garray_read(t_garray *x, t_symbol *filename)

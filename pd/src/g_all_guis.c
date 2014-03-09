@@ -406,37 +406,40 @@ void iemgui_label(void *x, t_iemgui *iemgui, t_symbol *s)
     int pargc, tail_len, nth_arg;
     t_atom *pargv;
 
-        /* tb: fix for empty label { */
-        if (s == gensym(""))
-                s = gensym("empty");
-        /* tb } */
+    /* tb: fix for empty label { */
+    if (s == gensym(""))
+        s = gensym("empty");
+    /* tb } */
 
     lab = iemgui_raute2dollar(s);
     iemgui->x_lab_unexpanded = lab;
     iemgui->x_lab = lab = canvas_realizedollar(iemgui->x_glist, lab);
 
-    if(glist_isvisible(iemgui->x_glist)) {
+    if(glist_isvisible(iemgui->x_glist))
+    {
         sys_vgui(".x%lx.c itemconfigure %lxLABEL -text {%s} \n",
-                 glist_getcanvas(iemgui->x_glist), x,
-                 strcmp(s->s_name, "empty")?iemgui->x_lab->s_name:"");
-		iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_CONFIG);
-	}
+            glist_getcanvas(iemgui->x_glist), x,
+            strcmp(s->s_name, "empty")?iemgui->x_lab->s_name:"");
+        iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_CONFIG);
+    }
 }
 
 void iemgui_label_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
 {
     iemgui->x_ldx = (int)atom_getintarg(0, ac, av);
     iemgui->x_ldy = (int)atom_getintarg(1, ac, av);
-    if(glist_isvisible(iemgui->x_glist)) {
-	    sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-	             glist_getcanvas(iemgui->x_glist), x,
-                 text_xpix((t_object *)x,iemgui->x_glist)+iemgui->x_ldx,
-                 text_ypix((t_object *)x,iemgui->x_glist)+iemgui->x_ldy);
-		iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_CONFIG);
-	}
+    if(glist_isvisible(iemgui->x_glist))
+    {
+        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+            glist_getcanvas(iemgui->x_glist), x,
+            text_xpix((t_object *)x,iemgui->x_glist)+iemgui->x_ldx,
+            text_ypix((t_object *)x,iemgui->x_glist)+iemgui->x_ldy);
+        iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_CONFIG);
+    }
 }
 
-void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
+void iemgui_label_font(void *x, t_iemgui *iemgui,
+    t_symbol *s, int ac, t_atom *av)
 {
     int f = (int)atom_getintarg(0, ac, av);
 
@@ -452,12 +455,13 @@ void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *a
     if(f < 4)
         f = 4;
     iemgui->x_fontsize = f;
-    if(glist_isvisible(iemgui->x_glist)) {
+    if(glist_isvisible(iemgui->x_glist))
+    {
         sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s}\n",
-                 glist_getcanvas(iemgui->x_glist), x, iemgui->x_font, 
-				 iemgui->x_fontsize, sys_fontweight);
-		iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_CONFIG);
-	}
+            glist_getcanvas(iemgui->x_glist), x, iemgui->x_font, 
+            iemgui->x_fontsize, sys_fontweight);
+            iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_CONFIG);
+    }
 }
 
 //Sans: 84 x 10 (14) -> 6 x 10 -> 1.0
@@ -470,148 +474,187 @@ void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *a
 // misinterpreted as part of the "hot" area of a widget (e.g. toggle)
 extern int gop_redraw;
 
-void iemgui_label_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *xp2, int *yp2)
+void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
+    int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"gop_redraw = %d\n", gop_redraw);
-	if (!gop_redraw) {
-		//fprintf(stderr,"ignoring label\n");
-		return;
-	}
+    //fprintf(stderr,"gop_redraw = %d\n", gop_redraw);
+    if (!gop_redraw)
+    {
+        //fprintf(stderr,"ignoring label\n");
+	return;
+    }
 
-	t_float width_multiplier;
-	int label_length;	
-	int label_x1;
-	int label_y1;
-	int label_x2;
-	int label_y2;
-	int actual_fontsize; //seems tk does its own thing when it comes to rendering
-	int actual_height;
+    t_float width_multiplier;
+    int label_length;	
+    int label_x1;
+    int label_y1;
+    int label_x2;
+    int label_y2;
+    int actual_fontsize; //seems tk does its own thing when it comes to rendering
+    int actual_height;
 
-	if (x->gl_isgraph && !glist_istoplevel(x)) {
-		//fprintf(stderr,"iemgui_label_getrect\n");
+    if (x->gl_isgraph && !glist_istoplevel(x))
+    {
+        //fprintf(stderr,"iemgui_label_getrect\n");
 
-		if (strcmp(x_gui.x_lab->s_name, "empty")) {
-			switch(x_gui.x_fsf.x_font_style) {
-				case 1:
-					width_multiplier = 0.83333;
-					break;
-				case 2:
-					width_multiplier = 0.735;
-					break;
-				default:
-					width_multiplier = 1.0;
-					break;
-			}
-			if (x_gui.x_fontsize % 2 == 0) {
-				actual_fontsize = x_gui.x_fontsize;
-			} else {
-				actual_fontsize = x_gui.x_fontsize;
-			}
-			actual_height = actual_fontsize;
-			//exceptions
-			if (x_gui.x_fsf.x_font_style == 0 && (actual_fontsize == 8 || actual_fontsize == 13 || actual_fontsize % 10 == 1 || actual_fontsize % 10 == 6 || (actual_fontsize > 48 && actual_fontsize < 100 && (actual_fontsize %10 == 4 || actual_fontsize %10 == 9))) ) {
-				actual_fontsize += 1;
-			}
-			else if (x_gui.x_fsf.x_font_style == 1 && actual_fontsize >= 5 && actual_fontsize < 13 && actual_fontsize % 2 == 1)
-				actual_fontsize += 1;
-			else if (x_gui.x_fsf.x_font_style == 2 && actual_fontsize >= 5 && actual_fontsize % 2 == 1)
-				actual_fontsize += 1;
-			if (actual_height == 9)
-				actual_height += 1;
-			//done with exceptions
+        if (strcmp(x_gui.x_lab->s_name, "empty"))
+        {
+            switch(x_gui.x_fsf.x_font_style)
+            {
+                case 1:
+                    width_multiplier = 0.83333;
+                    break;
+                case 2:
+                    width_multiplier = 0.735;
+                    break;
+                default:
+                    width_multiplier = 1.0;
+                    break;
+            }
+            if (x_gui.x_fontsize % 2 == 0)
+            {
+                actual_fontsize = x_gui.x_fontsize;
+            }
+            else
+            {
+                actual_fontsize = x_gui.x_fontsize;
+            }
+            actual_height = actual_fontsize;
+	    //exceptions
+            if (x_gui.x_fsf.x_font_style == 0 &&
+                (actual_fontsize == 8 || actual_fontsize == 13 ||
+                actual_fontsize % 10 == 1 || actual_fontsize % 10 == 6 ||
+                    (actual_fontsize > 48 && actual_fontsize < 100 &&
+                    (actual_fontsize %10 == 4 || actual_fontsize %10 == 9))))
+            {
+                actual_fontsize += 1;
+            }
+            else if (x_gui.x_fsf.x_font_style == 1 && actual_fontsize >= 5 &&
+                actual_fontsize < 13 && actual_fontsize % 2 == 1)
+                actual_fontsize += 1;
+            else if (x_gui.x_fsf.x_font_style == 2 && actual_fontsize >= 5 &&
+                actual_fontsize % 2 == 1)
+                actual_fontsize += 1;
+            if (actual_height == 9)
+                actual_height += 1;
+            //done with exceptions
 
-			width_multiplier = width_multiplier * (actual_fontsize * 0.6);
+            width_multiplier = width_multiplier * (actual_fontsize * 0.6);
 
-			label_length = strlen(x_gui.x_lab->s_name);
-			label_x1 = *xp1 + x_gui.x_ldx;
-			label_y1 = *yp1 + x_gui.x_ldy - actual_height/2;
-			label_x2 = label_x1 + (label_length * width_multiplier);
-			label_y2 = label_y1 + actual_height*1.1;
+            label_length = strlen(x_gui.x_lab->s_name);
+            label_x1 = *xp1 + x_gui.x_ldx;
+            label_y1 = *yp1 + x_gui.x_ldy - actual_height/2;
+            label_x2 = label_x1 + (label_length * width_multiplier);
+            label_y2 = label_y1 + actual_height*1.1;
 
-			//DEBUG
-			//fprintf(stderr,"%f %d %d\n", width_multiplier, label_length, x_gui.x_fsf.x_font_style);
-			//sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
-			//sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags iemguiDEBUG\n", x, label_x1, label_y1, label_x2, label_y2);
-			if (label_x1 < *xp1) *xp1 = label_x1;
-			if (label_x2 > *xp2) *xp2 = label_x2;
-			if (label_y1 < *yp1) *yp1 = label_y1;
-			if (label_y2 > *yp2) *yp2 = label_y2;
-			//DEBUG
-			//sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
-			//sys_vgui(".x%lx.c create rectangle %d %d %d %d -tags iemguiDEBUG\n", x, *xp1, *yp1, *xp2, *yp2);
-		}
-	}
+            //DEBUG
+            //fprintf(stderr,"%f %d %d\n", width_multiplier,
+            //    label_length, x_gui.x_fsf.x_font_style);
+            //sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
+            //sys_vgui(".x%lx.c create rectangle %d %d %d %d "
+            //    "-tags iemguiDEBUG\n",
+            //    x, label_x1, label_y1, label_x2, label_y2);
+            if (label_x1 < *xp1) *xp1 = label_x1;
+            if (label_x2 > *xp2) *xp2 = label_x2;
+            if (label_y1 < *yp1) *yp1 = label_y1;
+            if (label_y2 > *yp2) *yp2 = label_y2;
+            //DEBUG
+            //sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
+            //sys_vgui(".x%lx.c create rectangle %d %d %d %d "
+            //    "-tags iemguiDEBUG\n", x, *xp1, *yp1, *xp2, *yp2);
+        }
+    }
 }
 
 void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
 {
-	gop_redraw = 1;
-	if(gobj_shouldvis(x, iemgui->x_glist)) {
-		if (!iemgui->x_vis) {
-			//fprintf(stderr,"draw new %d\n", mode);
-    		(*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_NEW);
-    		canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
-			iemgui->x_vis = 1;
-			if (iemgui->x_glist != glist_getcanvas(iemgui->x_glist)) {
-				// if we are inside gop and just have had our object's properties changed
-				// we'll adjust our layer position to ensure that ordering is honored
-				t_canvas *canvas = glist_getcanvas(iemgui->x_glist);
-				t_gobj *y = (t_gobj *)iemgui->x_glist;
-				gobj_vis(y, canvas, 0);
-				gobj_vis(y, canvas, 1);
-				// reorder it visually
-				glist_redraw(canvas);
-				/* some day when the object tagging is properly done for all GUI objects
-				glist_noselect(canvas);
-				glist_select(canvas, y);
-				t_gobj *yy = canvas->gl_list;
-				if (yy != y) {
-					fprintf(stderr,"not bottom\n");
-					while (yy && yy->g_next != y) {
-						fprintf(stderr,"+\n");
-						yy = yy->g_next;
-					}
-					// now we have yy which is right before our y graph
-					t_object *ob = NULL;
-					t_rtext *yr = NULL;
-					if (yy) {
-						yr = glist_findrtext(canvas, (t_text *)yy);
-					}
-					if (yr) {
-						fprintf(stderr,"lower\n");
-						sys_vgui(".x%lx.c lower selected %s\n", canvas, rtext_gettag(yr));
-						sys_vgui(".x%lx.c raise selected %s\n", canvas, rtext_gettag(yr));
-						//sys_vgui(".x%lx.c raise all_cords\n", canvas);
-					} else {
-						// fall back to legacy redraw for objects that are not patchable
-						fprintf(stderr,"lower fallback redraw\n");
-						canvas_redraw(canvas);
-					}
-				} else {
-					// we get here if we are supposed to go all the way to the bottom
-					fprintf(stderr,"lower to the bottom\n");
-					sys_vgui(".x%lx.c lower selected\n", canvas);
-				}
-				glist_noselect(canvas);*/
-			}
-		}
-		//fprintf(stderr,"draw move iemgui->x_w=%d\n", iemgui->x_w);
-	    (*iemgui->x_draw)(x, iemgui->x_glist, mode);
-	    canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
-	} else if (iemgui->x_vis) {
-		//fprintf(stderr,"draw erase %d\n", mode);
-		(*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_ERASE);
-		iemgui->x_vis = 0;
-	}
-	gop_redraw = 0;
+    gop_redraw = 1;
+    if(gobj_shouldvis(x, iemgui->x_glist))
+    {
+        if (!iemgui->x_vis)
+        {
+            //fprintf(stderr,"draw new %d\n", mode);
+            (*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_NEW);
+            canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
+            iemgui->x_vis = 1;
+            if (iemgui->x_glist != glist_getcanvas(iemgui->x_glist))
+            {
+                /* if we are inside gop and just have had our object's
+                   properties changed we'll adjust our layer position
+                   to ensure that ordering is honored */
+                t_canvas *canvas = glist_getcanvas(iemgui->x_glist);
+                t_gobj *y = (t_gobj *)iemgui->x_glist;
+                gobj_vis(y, canvas, 0);
+                gobj_vis(y, canvas, 1);
+                // reorder it visually
+                glist_redraw(canvas);
+
+                /*
+                    // some day when the object tagging is
+                    // properly done for all GUI objects
+                glist_noselect(canvas);
+                glist_select(canvas, y);
+                t_gobj *yy = canvas->gl_list;
+                if (yy != y)
+                {
+                    fprintf(stderr,"not bottom\n");
+                    while (yy && yy->g_next != y)
+                    {
+                        fprintf(stderr,"+\n");
+                        yy = yy->g_next;
+                    }
+                    // now we have yy which is right before our y graph
+                    t_object *ob = NULL;
+                    t_rtext *yr = NULL;
+                    if (yy)
+                    {
+                        yr = glist_findrtext(canvas, (t_text *)yy);
+                    }
+                    if (yr)
+                    {
+                        fprintf(stderr,"lower\n");
+                        sys_vgui(".x%lx.c lower selected %s\n",
+                            canvas, rtext_gettag(yr));
+                        sys_vgui(".x%lx.c raise selected %s\n",
+                            canvas, rtext_gettag(yr));
+                        //sys_vgui(".x%lx.c raise all_cords\n", canvas);
+		    }
+                    else
+                    {
+                        // fall back to legacy redraw for objects
+                        //   that are not patchable
+                        fprintf(stderr,"lower fallback redraw\n");
+                        canvas_redraw(canvas);
+                    }
+                }
+                else
+                {
+                    // we get here if we are supposed to go
+                    //   all the way to the bottom
+                    fprintf(stderr,"lower to the bottom\n");
+                    sys_vgui(".x%lx.c lower selected\n", canvas);
+                }
+                glist_noselect(canvas);
+                */
+            }
+        }
+        //fprintf(stderr,"draw move iemgui->x_w=%d\n", iemgui->x_w);
+        (*iemgui->x_draw)(x, iemgui->x_glist, mode);
+        canvas_fixlinesfor(glist_getcanvas(iemgui->x_glist), (t_text*)x);
+    }
+    else if (iemgui->x_vis)
+    {
+        //fprintf(stderr,"draw erase %d\n", mode);
+        (*iemgui->x_draw)(x, iemgui->x_glist, IEM_GUI_DRAW_MODE_ERASE);
+        iemgui->x_vis = 0;
+    }
+    gop_redraw = 0;
 }
 
 void iemgui_size(void *x, t_iemgui *iemgui)
 {
     if(glist_isvisible(iemgui->x_glist))
-    {
-		iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);		
-    }
+        iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);		
 }
 
 void iemgui_delta(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
@@ -620,7 +663,7 @@ void iemgui_delta(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
     iemgui->x_obj.te_ypix += (int)atom_getintarg(1, ac, av);
     if(glist_isvisible(iemgui->x_glist))
     {
-		//fprintf(stderr,"iemgui_delta->shouldvis\n");
+        //fprintf(stderr,"iemgui_delta->shouldvis\n");
         iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);
     }
 }
@@ -630,7 +673,7 @@ void iemgui_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
     iemgui->x_obj.te_xpix = (int)atom_getintarg(0, ac, av);
     iemgui->x_obj.te_ypix = (int)atom_getintarg(1, ac, av);
     if(glist_isvisible(iemgui->x_glist))
-		iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);
+        iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);
 }
 
 void iemgui_color(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)
@@ -681,18 +724,20 @@ void iemgui_delete(t_gobj *z, t_glist *glist)
 void iemgui_vis(t_gobj *z, t_glist *glist, int vis)
 {
     t_iemguidummy *x = (t_iemguidummy *)z;
-	if (gobj_shouldvis(z, glist)) {
-		if (vis) {
-		    (*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_NEW);
-			x->x_gui.x_vis = 1;
-		}
-		else
-		{
-		    (*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_ERASE);
-		    sys_unqueuegui(z);
-			x->x_gui.x_vis = 0;
-		}
-	}
+    if (gobj_shouldvis(z, glist))
+    {
+        if (vis)
+        {
+            (*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_NEW);
+            x->x_gui.x_vis = 1;
+        }
+        else
+        {
+            (*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_ERASE);
+            sys_unqueuegui(z);
+            x->x_gui.x_vis = 0;
+        }
+    }
 }
 
 void iemgui_save(t_iemgui *iemgui, t_symbol **srl, int *bflcol)
@@ -837,16 +882,17 @@ int iem_fstyletoint(t_iem_fstyle_flags *fstylep)
 
 char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj)
 {
-	t_gobj *y = (t_gobj *)iem_obj;
-	t_object *ob = pd_checkobject(&y->g_pd);
+    t_gobj *y = (t_gobj *)iem_obj;
+    t_object *ob = pd_checkobject(&y->g_pd);
 
-	/* GOP objects are unable to call findrtext triggering consistency check error */
-	t_rtext *yyyy = NULL;
-	if (!glist->gl_isgraph || glist_istoplevel(glist))
-		yyyy = glist_findrtext(glist_getcanvas(glist), (t_text *)&ob->ob_g);
+    /* GOP objects are unable to call findrtext
+       triggering consistency check error */
+    t_rtext *yyyy = NULL;
+    if (!glist->gl_isgraph || glist_istoplevel(glist))
+        yyyy = glist_findrtext(glist_getcanvas(glist), (t_text *)&ob->ob_g);
 
-	/* on GOP we cause segfault as text_gettag() returns bogus data */
-	if (yyyy) return(rtext_gettag(yyyy));
-	else return("bogus");
+    /* on GOP we cause segfault as text_gettag() returns bogus data */
+    if (yyyy) return(rtext_gettag(yyyy));
+    else return("bogus");
 }
 
