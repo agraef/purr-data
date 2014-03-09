@@ -1,8 +1,8 @@
-#N canvas 146 25 548 407 10;
-#X obj 13 108 hsl 67 18 0.01 1 1 0 \$0-v \$0-v volume 20 10 1 9 -245500
+#N canvas 146 25 463 390 10;
+#X obj 12 110 hsl 63 18 0.01 1 1 0 \$0-v \$0-v volume 20 10 1 9 -245500
 -13381 -1 0 0;
-#X obj 82 90 tgl 18 0 THIS_IS_HERE_TO_GET_RID_OF_THE_OUTLET \$0-dsp-toggle
-dsp 2 9 1 9 -225271 -195568 -33289 1 1;
+#X obj 80 92 tgl 18 0 THIS_IS_HERE_TO_GET_RID_OF_THE_OUTLET \$0-dsp-toggle
+dsp 2 9 1 9 -262144 -195568 -33289 0 1;
 #N canvas 366 514 482 356 dsp 0;
 #X obj 11 7 inlet;
 #X obj 92 226 select 0 1;
@@ -37,8 +37,8 @@ dsp 2 9 1 9 -225271 -195568 -33289 1 1;
 #X connect 13 0 10 0;
 #X restore 112 118 pd dsp logic;
 #X obj 315 2 inlet;
-#X obj 82 108 bng 18 1000 50 0 THIS_IS_HERE_TO_GET_RID_OF_THE_OUTLET
-\$0-MUTE_TOGGLE empty 0 9 2 8 -261234 -258113 -1;
+#X obj 80 110 bng 18 1000 50 0 THIS_IS_HERE_TO_GET_RID_OF_THE_OUTLET
+\$0-MUTE_TOGGLE empty 0 9 2 8 -261689 -258699 -195568;
 #X obj 191 2 inlet~;
 #X obj 86 273 line~;
 #X obj 186 333 *~;

@@ -1,8 +1,8 @@
 #N canvas 134 172 468 408 10;
-#X obj 13 106 hsl 42 23 0.01 1 1 0 \$0-v \$0-v volume 7 13 1 9 -245500
+#X obj 10 106 hsl 42 23 0.01 1 1 0 \$0-v \$0-v volume 7 13 1 9 -245500
 -13381 -1 0 0;
 #X obj 57 106 tgl 18 0 THIS_IS_HERE_TO_GET_RID_OF_THE_OUTLET \$0-dsp-toggle
-dsp 2 9 1 9 -225271 -195568 -33289 1 1;
+dsp 2 9 1 9 -262144 -195568 -33289 0 1;
 #N canvas 366 514 482 356 dsp 0;
 #X obj 11 7 inlet;
 #X obj 92 226 select 0 1;
@@ -45,8 +45,8 @@ dsp 2 9 1 9 -225271 -195568 -33289 1 1;
 #X obj 248 342 *~;
 #X obj 201 83 hip~ 3;
 #X obj 263 83 hip~ 3;
-#X obj 12 298 send pd;
-#X msg 12 277 dsp 1;
+#X obj 10 298 send pd;
+#X msg 10 277 dsp 1;
 #X obj 86 262 pack 0 50;
 #X text 153 261 <-- make a ramp to avoid clicks or zipper noise;
 #X msg 86 227 0;
