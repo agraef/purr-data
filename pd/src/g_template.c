@@ -1237,6 +1237,9 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
 {
     t_gobj *g;
     t_template *template;
+    t_canvas *visible = c;
+    while(visible->gl_isgraph && visible->gl_owner)
+        visible = visible->gl_owner;
     int isgroup = (x->x_drawtype == gensym("group"));
     for (g = c->gl_list; g; g = g->g_next)
     {
@@ -1248,9 +1251,6 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
         {
             t_word *data = ((t_scalar *)g)->sc_vec;
             char str[MAXPDSTRING];
-            t_canvas *visible = c;
-            while(visible->gl_isgraph && visible->gl_owner)
-                visible = visible->gl_owner;
             if (s == gensym("fill"))
             {
                 char *fill;
@@ -1341,13 +1341,12 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
                    visible, x, data, str);
             }
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
         }
         if (g->g_pd == canvas_class) {
             draw_doupdate(x, (t_glist *)g, s);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_glist *)g);
         }
     }
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", c);
 }
 
 extern t_canvas *canvas_list;
@@ -1718,6 +1717,9 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
     draw_mset(mtx2, 0, 0, 0, 0, 0, 0);
     t_gobj *g;
     t_template *template;
+    t_canvas *visible = c;
+    while(visible->gl_isgraph && visible->gl_owner)
+        visible = visible->gl_owner;
 
     /* we'll probably get a different bbox now, so we
        will calculate a new one the next time we call
@@ -1739,9 +1741,6 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
             t_float m1, m2, m3, m4, m5, m6;
             draw_parsetransform(x, template, ((t_scalar *)g)->sc_vec,
                 &m1, &m2, &m3, &m4, &m5, &m6);
-            t_canvas *visible = c;
-            while(visible->gl_isgraph && visible->gl_owner)
-                visible = visible->gl_owner;
             if (x->x_drawtype == gensym("group"))
                 sys_vgui(".x%lx.c itemconfigure .dgroup%lx -matrix "
                     "{ {%g %g} {%g %g} {%g %g} }\n",
@@ -1759,13 +1758,12 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
                 scalar_drawselectrect((t_scalar *)g, c, 0);
                 scalar_drawselectrect((t_scalar *)g, c, 1);
             }
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
         }
         if (g->g_pd == canvas_class) {
             draw_doupdatetransform(x, (t_glist *)g);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_glist *)g);
         }
     }
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", c);
 }
 
 void draw_queueupdatetransform(t_gobj *g, t_glist *glist)

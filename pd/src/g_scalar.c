@@ -570,7 +570,7 @@ static void scalar_doredraw(t_gobj *client, t_glist *glist)
 		//fprintf(stderr,"yes\n");
 		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), glist, 1);
 	}
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist_getcanvas(glist));
 }
 
 void scalar_redraw(t_scalar *x, t_glist *glist)

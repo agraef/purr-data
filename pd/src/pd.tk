@@ -3406,12 +3406,13 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	set ::canvasheight($name) 0
 }
 
+set SCROLL_OPACITY 0.33
 set HSCROLL_PAD_L 6
 set HSCROLL_PAD_R 13
 set VSCROLL_PAD_U 6
 set VSCROLL_PAD_D 13
 set SCROLL_PAD_EDGE 5
-set SCROLL_THICKNESS 5
+set SCROLL_THICKNESS 6
 set scrollbar_color "#555"
 
 proc pdtk_canvas_draw_scrollbars {name} {
@@ -3423,6 +3424,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 	global VSCROLL_PAD_D
 	global SCROLL_PAD_EDGE
 	global SCROLL_THICKNESS
+	global SCROLL_OPACITY
 	set name [string trimright $name .c]
 	catch {
 		$name.c delete xscroll
@@ -3440,7 +3442,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			set scrolly1 [expr [$name.c canvasy 0] + [winfo height $name.c] - $SCROLL_PAD_EDGE]
 			set scrollx2 [expr $scrollx1 + $width]
 			#puts stderr "$vx1 $vx2 $npix $width $loffset $scrollx1 $scrollx2"
-			set hscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx2 $scrolly1 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags xscroll -strokelinecap round]
+			set hscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx2 $scrolly1 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity $SCROLL_OPACITY -tags xscroll -strokelinecap round]
 			$name.c addtag noscroll withtag xscroll
 			#$name.c bind $hscroll <Button-1> {pdtk_canvas_scroll_horizontal_click %W %x %y %b 0}
 			$name.c bind $hscroll <Enter> {pdtk_canvas_enter_scrollbar %W %x %y}
@@ -3460,7 +3462,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			set scrolly1 [expr [$name.c canvasy 0] + $VSCROLL_PAD_U +$toffset]
 			set scrolly2 [expr $scrolly1 + $height]
 			#puts stderr "$vy1 $vy2 $npix $height $toffset $scrolly1 $scrolly2"
-			set vscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx1 $scrolly2 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity 0.25 -tags yscroll -strokelinecap round]
+			set vscroll [$name.c create polyline $scrollx1 $scrolly1 $scrollx1 $scrolly2 -stroke $scrollbar_color -strokewidth $SCROLL_THICKNESS -strokeopacity $SCROLL_OPACITY -tags yscroll -strokelinecap round]
 			$name.c addtag noscroll withtag yscroll
 			#$name.c bind $vscroll <Button-1> {pdtk_canvas_scroll_vertical_click %W %x %y %b 0}
 			$name.c bind $vscroll <Enter> {pdtk_canvas_enter_scrollbar %W %x %y}
@@ -4204,10 +4206,12 @@ proc pdtk_canvas_do_getscroll {name} {
     global pdtk_canvas_mouseup_ymaxval
 	#global ::update_tick([winfo parent $name])
 
-	#puts stderr "pdtk_canvas_getscroll $name"
-
     # kludge since this gets called sometimes after a canvas is destroyed
     if {![winfo exists $name]} {return}
+
+    set parentname [winfo parent $name]
+    #puts stderr "pdtk_canvas_getscroll $name $::scroll($parentname)"
+	if {$::scroll($parentname) == 0} {return}
 
     # for use with tick mechanism
 	#if {$::update_tick([winfo parent $name]) == 1} {return}
@@ -4302,8 +4306,6 @@ proc pdtk_canvas_do_getscroll {name} {
 	}
 
 	#puts stderr "$x1 $x2 $y1 $y2"
-
-	set parentname [winfo parent $name]
 
 	if {$x1 != 1.0e30} {
 
