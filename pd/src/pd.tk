@@ -4193,6 +4193,8 @@ proc pdtk_find_highest_widget_withtag {canvas name} {
 #}
 
 proc pdtk_canvas_getscroll {name} {
+	set parentname [winfo parent $name]
+	if {$::scroll($parentname) == 0} {return}
 	catch { after cancel $::doscroll($name) }
 	set ::doscroll($name) [after idle [concat pdtk_canvas_do_getscroll $name]]
 }
