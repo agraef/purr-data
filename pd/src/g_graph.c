@@ -1190,6 +1190,24 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 extern int old_displace; //from g_editor.c for legacy drawing
 
+static void graph_displace_scalars(t_glist *x, t_glist *glist, int dx, int dy)
+{
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if (pd_class((t_pd *)g) == scalar_class &&
+            g->g_pd->c_wb->w_displacefnwtag != NULL)
+        {
+            (*(g->g_pd->c_wb->w_displacefnwtag))(g, glist, dx, dy);
+        }
+        else if (pd_class(&g->g_pd) == canvas_class &&
+                 ((t_glist *)g)->gl_isgraph)
+        {
+            graph_displace_scalars((t_glist *)g, glist, dx, dy); 
+        }
+    }
+}
+
 static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
 	//fprintf(stderr,"graph_displace_withtag %d %d\n", dx, dy);
@@ -1198,29 +1216,23 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
         text_widgetbehavior.w_displacefnwtag(z, glist, dx, dy);
     else
     {
-		// first check for legacy objects that don't offer displacefnwtag and fallback on the old way of doing things
-		t_gobj *g;
+        // first check for legacy objects that don't offer displacefnwtag
+        // and fallback on the old way of doing things
+        t_gobj *g;
         /* special case for scalars, which have a group for
            the transform matrix */
-        for (g = x->gl_list; g; g = g->g_next)
-        {
-            if (pd_class((t_pd *)g) == scalar_class &&
-                g->g_pd->c_wb->w_displacefnwtag != NULL)
-            {
-                (*(g->g_pd->c_wb->w_displacefnwtag))(g, glist, dx, dy);
+        graph_displace_scalars(x, glist, dx, dy); 
+        for (g = x->gl_list; g; g = g->g_next) {
+        //fprintf(stderr,"shouldvis %d %d\n", gobj_shouldvis(g, glist), gobj_shouldvis(g, x));
+        if (g && gobj_shouldvis(g, x) && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {
+            //fprintf(stderr,"old way\n");
+            old_displace = 1;
+            graph_displace(z, glist, dx, dy);
+            return;
             }
         }
-		for (g = x->gl_list; g; g = g->g_next) {
-			//fprintf(stderr,"shouldvis %d %d\n", gobj_shouldvis(g, glist), gobj_shouldvis(g, x));
-			if (g && gobj_shouldvis(g, x) && g->g_pd->c_wb->w_displacefnwtag == NULL && pd_class((t_pd *)g) != garray_class) {
-				//fprintf(stderr,"old way\n");
-				old_displace = 1;
-				graph_displace(z, glist, dx, dy);
-				return;
-			}
-		}
-		// else we do things the new and more elegant way
-		//fprintf(stderr,"new way\n");
+        // else we do things the new and more elegant way
+        //fprintf(stderr,"new way\n");
 
 		
         x->gl_obj.te_xpix += dx;
