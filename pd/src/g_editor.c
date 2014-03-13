@@ -231,75 +231,79 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag, 
 {
 	// we do this instead to save us costly redraw of the canvas
 	//fprintf(stderr,"canvas_restore_original_position %lx %lx %s %d\n", (t_int)x, (t_int)y, objtag, dir);
-	t_object *ob = NULL;
-	t_rtext *yrnxt = NULL, *yr = NULL;
 	int ret = 0;
+	// we only do this if we are not embedded inside gop, otherwise when gop is done redrawing we
+	// will get properly repositioned by gop's call to restore original position
+	if (pd_class(&y->g_pd) != canvas_class || ((t_glist *)y)->gl_owner == x) {
+		t_object *ob = NULL;
+		t_rtext *yrnxt = NULL, *yr = NULL;
 
-	if (y->g_next) {
-		ob = pd_checkobject(&y->g_next->g_pd);
-	}
-	if (ob) {
-		yrnxt = glist_findrtext(x, (t_text *)&ob->ob_g);
-	}
-	if (y) {
-		ob = pd_checkobject(&y->g_pd);
-	} else {
-		ret = 1;
-	}
-	if (ob) {
-		yr = glist_findrtext(x, (t_text *)&ob->ob_g);
-	}
-	if (ret != 1) {
-		if (dir == -1) {
-			if (x->gl_list == y) {
-				// we get here if we are supposed to go all the way to the bottom
-				if (objtag)
-					sys_vgui(".x%lx.c addtag arrange withtag %s\n", x, objtag);
-				else
-					sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
-				sys_vgui(".x%lx.c lower arrange\n", x);
-				if (objtag)
-					sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
-				else
-					sys_vgui(".x%lx.c dtag selected arrange\n", x);
-			} else if (yrnxt) {
-				// lower into middle
-				if (objtag)
-					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
-				else {
-					sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
-					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
-				}
-			} else {
-				// fall back to legacy redraw for objects that are not patchable
-				canvas_redraw(x);
-				ret = -1;
-			}
+		if (y->g_next) {
+			ob = pd_checkobject(&y->g_next->g_pd);
+		}
+		if (ob) {
+			yrnxt = glist_findrtext(x, (t_text *)&ob->ob_g);
+		}
+		if (y) {
+			ob = pd_checkobject(&y->g_pd);
 		} else {
-			if (yrnxt) {
-				// raise into middle
-				if (objtag)
-					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
-				else {
-					sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
-					sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
+			ret = 1;
+		}
+		if (ob) {
+			yr = glist_findrtext(x, (t_text *)&ob->ob_g);
+		}
+		if (ret != 1) {
+			if (dir == -1) {
+				if (x->gl_list == y) {
+					// we get here if we are supposed to go all the way to the bottom
+					if (objtag)
+						sys_vgui(".x%lx.c addtag arrange withtag %s\n", x, objtag);
+					else
+						sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
+					sys_vgui(".x%lx.c lower arrange\n", x);
+					if (objtag)
+						sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
+					else
+						sys_vgui(".x%lx.c dtag selected arrange\n", x);
+				} else if (yrnxt) {
+					// lower into middle
+					if (objtag)
+						sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
+					else {
+						sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
+						sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
+					}
+				} else {
+					// fall back to legacy redraw for objects that are not patchable
+					canvas_redraw(x);
+					ret = -1;
 				}
-			} else if (y->g_next == NULL) {
-				// we get here if we are supposed to go all the way to the top
-				if (objtag)
-					sys_vgui(".x%lx.c addtag arrange withtag %s\n", x, objtag);
-				else
-					sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
-				sys_vgui(".x%lx.c raise arrange\n", x);
-				if (objtag)
-					sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
-				else
-					sys_vgui(".x%lx.c dtag selected arrange\n", x);
-				sys_vgui(".x%lx.c raise all_cords\n", x);
 			} else {
-				// fall back to legacy redraw for objects that are not patchable
-				canvas_redraw(x);
-				ret = -1;
+				if (yrnxt) {
+					// raise into middle
+					if (objtag)
+						sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
+					else {
+						sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
+						sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange .x%lx.c %s %s 0\n", x, rtext_gettag(yrnxt), rtext_gettag(yr));
+					}
+				} else if (y->g_next == NULL) {
+					// we get here if we are supposed to go all the way to the top
+					if (objtag)
+						sys_vgui(".x%lx.c addtag arrange withtag %s\n", x, objtag);
+					else
+						sys_vgui(".x%lx.c addtag arrange withtag selected\n", x);
+					sys_vgui(".x%lx.c raise arrange\n", x);
+					if (objtag)
+						sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
+					else
+						sys_vgui(".x%lx.c dtag selected arrange\n", x);
+					sys_vgui(".x%lx.c raise all_cords\n", x);
+				} else {
+					// fall back to legacy redraw for objects that are not patchable
+					canvas_redraw(x);
+					ret = -1;
+				}
 			}
 		}
 	}
