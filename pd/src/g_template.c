@@ -470,10 +470,11 @@ t_template *template_findbyname(t_symbol *s)
 t_canvas *template_findcanvas(t_template *template)
 {
     t_gtemplate *gt;
-    if (!template) {
+    if (!template)
+    {
         bug("template_findcanvas");
-		return (0);
-	}
+        return (0);
+    }
     if (!(gt = template->t_list))
         return (0);
     return (gt->x_owner);
@@ -962,7 +963,6 @@ be attached to fields in the template.
 todo: draw_click doesn't work with paths yet
 todo: some better way than drawcurve for defining click widgetbehaviors (just
       checking for field variables and moving joints is too simplistic)
-todo: make pathgetrect
 */
 
 t_class *draw_class;
@@ -1343,7 +1343,8 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
             }
             sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
         }
-        if (g->g_pd == canvas_class) {
+        if (g->g_pd == canvas_class)
+        {
             draw_doupdate(x, (t_glist *)g, s);
         }
     }
@@ -1760,7 +1761,8 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
             }
             sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
         }
-        if (g->g_pd == canvas_class) {
+        if (g->g_pd == canvas_class)
+        {
             draw_doupdatetransform(x, (t_glist *)g);
         }
     }
@@ -1857,24 +1859,17 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     t_float *xmax, t_float *ymax, t_float mtx1[][3])
 {
     t_float mtx2[3][3];
-    //post("inside curvedim...");
     int i;
     t_float a = (c2x - 2 * c1x + p1x) - (p2x - 2 * c2x + c1x);
     t_float        b = 2 * (c1x - p1x) - 2 * (c2x - c1x),
             c = p1x - c1x;
-    //post("a is %g", a);
-    //post("b is %g", b);
-    //post("c is %g", c);
     t_float        syntax_sanity_check = 42,
             t1 = (a ? ((-b + sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0),
             t2 = (a ? ((-b - sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
-    //post("t1 is %g", t1);
-    //post("t2 is %g", t2);
-    //post("syntax_sanity_check %g", syntax_sanity_check);
     t_float xy[12];
     xy[0] = p1x; xy[1] = p1y; xy[2] = p2x; xy[3] = p2y;
 
-/* mtx mult */
+    /* mtx mult */
     draw_mset(mtx2, p1x, p1y, p2x, p2y, 0, 0);
     mtx2[2][0] = 1; mtx2[2][1] = 1;
     draw_mmult(mtx1, mtx2, mtx2);
@@ -1886,7 +1881,6 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     if (abs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
     {
-    //post("found a dot");
         draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
         draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
@@ -1898,7 +1892,6 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     }
     if (t2 > 0 && t2 < 1)
     {
-    //post("found a second dot");
         draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t2, &dotx, &doty);
         draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
@@ -1911,15 +1904,12 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     a = (c2y - 2 * c1y + p1y) - (p2y - 2 * c2y + c1y);
     b = 2 * (c1y - p1y) - 2 * (c2y - c1y);
     c = p1y - c1y;
-    //post("a is %g and b is %g and c is %g", a, b, c);
     t1 = (a ? ((-b + sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
     t2 = (a ? ((-b - sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
-    //post("t1 is %g and t2 is %g", t1, t2);
     if (abs(t1) > 1e12) t1 = 0.5;
     if (abs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
     {
-    //post("found 3rd dot");
         draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
         draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
@@ -1931,7 +1921,6 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     }
     if (t2 > 0 && t2 < 1)
     {
-    //post("found 4th dot");
         draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t2, &dotx, &doty);
         draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
@@ -1946,16 +1935,11 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     *xmax = *ymax = -0x7fffffff;
     for (i = 0; i < xyc; i+=2)
     {
-    //post("final points:");
-    //post("x %g", xy[i]);
-    //post("y %g", xy[i+1]);
         if (xy[i] < *xmin) *xmin = xy[i];
         if (xy[i] > *xmax) *xmax = xy[i];
         if (xy[i+1] < *ymin) *ymin = xy[i+1];
         if (xy[i+1] > *ymax) *ymax = xy[i+1];
     }
-    //post("end of curvedim:");
-    //post("xmin %g ymin %g xmax %g ymax %g", *xmin, *ymin, *xmax, *ymax);
 }
 
 static t_float draw_getangle(t_float bx, t_float by)
@@ -1972,7 +1956,6 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
    t_float *xmax, t_float *ymax)
 {
     t_float pi = (t_float)3.14159265358979323846;
-
     if (rx == 0 || ry == 0)
     {
         *xmin = (x1 < x2 ? x1 : x2);
@@ -1981,15 +1964,12 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
         *ymax = (y1 > y2 ? y1 : y2);
         return;
     }
-
     if (rx < 0) rx *= -1;
     if (ry < 0) ry *= -1;
-
     const double x1prime = cos(phi)*(x1 - x2)/2 + sin(phi)*(y1 - y2)/2;
     const double y1prime = -sin(phi)*(x1 - x2)/2 + cos(phi)*(y1 - y2)/2;
-
-    double radicant = (rx*rx*ry*ry - rx*rx*y1prime*y1prime - ry*ry*x1prime*x1prime);
-
+    double radicant = (rx*rx*ry*ry - rx*rx*y1prime*y1prime -
+        ry*ry*x1prime*x1prime);
     double divisor = (rx*rx*y1prime*y1prime + ry*ry*x1prime*x1prime);
     radicant = divisor ? radicant / divisor : 0;
     t_float cxprime = 0.0;
@@ -2013,16 +1993,12 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
     else
     {
         t_float factor = (large_arc==sweep ? -1.0 : 1.0)*sqrt(radicant);
-
         cxprime = factor*rx*y1prime/ry;
         cyprime = -factor*ry*x1prime/rx;
     }
-
     t_float cx = cxprime*cos(phi) - cyprime*sin(phi) + (x1 + x2)/2;
     t_float cy = cxprime*sin(phi) + cyprime*cos(phi) + (y1 + y2)/2;
-
     t_float txmin, txmax, tymin, tymax;
-
     if (phi == 0 || phi == pi)
     {
         *xmin = cx - rx;
@@ -2064,7 +2040,6 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
         txmin = draw_getangle(*xmin - cx, tmpY - cy);
         tmpY = cy + rx*cos(txmax)*sin(phi) + ry*sin(txmax)*cos(phi);
         txmax = draw_getangle(*xmax - cx, tmpY - cy);
-
         tymin = atan(ry/(tan(phi)*rx));
         tymax = atan(ry/(tan(phi)*rx))+pi;
         *ymin = cy + rx*cos(tymin)*sin(phi) + ry*sin(tymin)*cos(phi);
@@ -2083,17 +2058,14 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
         tmpX = cx + rx*cos(tymax)*cos(phi) - ry*sin(tymax)*sin(phi);
         tymax = draw_getangle(tmpX - cx, *ymax - cy);
     }
-
     t_float angle1 = draw_getangle(x1 - cx, y1 - cy);
     t_float angle2 = draw_getangle(x2 - cx, y2 - cy);
-
     if (!sweep)
     {
         t_float tmp = angle1;
         angle1 = angle2;
         angle2 = tmp;
     }
-
     int other_arc = 0;
     if (angle1 > angle2)
     {
@@ -2102,21 +2074,24 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
         angle2 = tmp;
         other_arc = 1;
     }
-
-    if ((!other_arc && (angle1 > txmin || angle2 < txmin)) || (other_arc && !(angle1 > txmin || angle2 < txmin)))
-    *xmin = x1 < x2 ? x1 : x2;
-  if ((!other_arc && (angle1 > txmax || angle2 < txmax)) || (other_arc && !(angle1 > txmax || angle2 < txmax)))
-    *xmax = x1 > x2 ? x1 : x2;
-  if ((!other_arc && (angle1 > tymin || angle2 < tymin)) || (other_arc && !(angle1 > tymin || angle2 < tymin)))
-    *ymin = y1 < y2 ? y1 : y2;
-  if ((!other_arc && (angle1 > tymax || angle2 < tymax)) || (other_arc && !(angle1 > tymax || angle2 < tymax)))
-    *ymax = y1 > y2 ? y1 : y2;
+    if ((!other_arc && (angle1 > txmin || angle2 < txmin)) ||
+        (other_arc && !(angle1 > txmin || angle2 < txmin)))
+        *xmin = x1 < x2 ? x1 : x2;
+    if ((!other_arc && (angle1 > txmax || angle2 < txmax)) ||
+        (other_arc && !(angle1 > txmax || angle2 < txmax)))
+        *xmax = x1 > x2 ? x1 : x2;
+    if ((!other_arc && (angle1 > tymin || angle2 < tymin))
+        || (other_arc && !(angle1 > tymin || angle2 < tymin)))
+        *ymin = y1 < y2 ? y1 : y2;
+    if ((!other_arc && (angle1 > tymax || angle2 < tymax)) ||
+        (other_arc && !(angle1 > tymax || angle2 < tymax)))
+        *ymax = y1 > y2 ? y1 : y2;
 }
 
-/* get bbox for a path, based very roughly on
-   Raphael.js "pathbbox" function.  Too complex to finish
-   here, but maybe this could eventually get merged in to
-   tkpath-- it will probably give a more accurate result... */
+    /* get bbox for a path, based very roughly on
+       Raphael.js "pathbbox" function.  Too complex to finish
+       here, but maybe this could eventually get merged in to
+       tkpath-- it will probably give a more accurate result... */
 static void draw_getpathrect(t_draw *x, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
@@ -2460,34 +2435,6 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                 finaly1 = y1 < finaly1 ? y1 : finaly1;
                 finaly2 = y2 > finaly2 ? y2 : finaly2;
             }
-/*
-            draw_mset(mtx2, x1, y1, x2, y2, 0, 0);
-            mtx2[2][0] = 1; mtx2[2][1] = 1;
-            draw_mmult(mtx1, mtx2, mtx2);
-            tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            tmpx = mtx2[0][1]; tmpy = mtx2[1][1];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            draw_mset(mtx2, x1, y2, x2, y1, 0, 0);
-            mtx2[2][0] = 1; mtx2[2][1] = 1;
-            draw_mmult(mtx1, mtx2, mtx2);
-            tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            tmpx = mtx2[0][1]; tmpy = mtx2[1][1];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-*/
             break;
         case 'V':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
@@ -2547,17 +2494,6 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
     *xp2 = (int)finalx2;
     *yp1 = (int)finaly1;
     *yp2 = (int)finaly2;
-}
-
-static void draw_setrect(t_draw *x, t_floatarg x1,
-    t_floatarg y1, t_floatarg x2, t_floatarg y2)
-{
-    /* todo: grab from getpathrect to allow caching the
-       auto-calculation */
-    x->x_x1 = x1 < 0 ? 0 : x1;
-    x->x_x2 = x2 < 0 ? 0 : x2;
-    x->x_y1 = y1 < 0 ? 0 : y1;
-    x->x_y2 = y2 < 0 ? 0 : y2;
 }
 
 static int call_from_vis = 0;
@@ -2787,7 +2723,8 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
 
     /*// get the universal tag for all nested objects
     t_canvas *tag = x->x_canvas;
-    while (tag->gl_owner) {
+    while (tag->gl_owner)
+    {
         tag = tag->gl_owner;
     }*/
     
@@ -2993,12 +2930,8 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     else
     {
         if (n > 1)
-
-/* if in_array then delete the container group */
-
-sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), glist,
-            data);      
+            sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+                glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
     }
 }
 
@@ -3242,16 +3175,7 @@ typedef struct _curve
     t_object x_obj;
     int x_flags;            /* CLOSED and/or BEZ and/or NOMOUSE */
     t_fielddesc x_fillcolor;
-    t_fielddesc x_fillopacity;
-    t_fielddesc x_fillrule;
     t_fielddesc x_outlinecolor;
-    t_fielddesc *x_strokedasharray; /* array of lengths */
-    t_fielddesc x_strokelinecap;
-    t_fielddesc x_strokelinejoin;
-    t_fielddesc x_strokemiterlimit;
-    t_fielddesc x_strokeopacity;
-    t_fielddesc x_strokewidth;
-    t_fielddesc *x_matrix;
     t_fielddesc x_width;
     t_fielddesc x_vis;
     int x_npoints;
@@ -3306,7 +3230,6 @@ static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
     for (i = 0, fd = x->x_vec; i < argc; i++, fd++, argv++)
         fielddesc_setfloatarg(fd, 1, argv);
     if (argc & 1) fielddesc_setfloat_const(fd, 0);
-    fielddesc_setfloat_const(&x->x_fillopacity, 1);
     return (x);
 }
 
@@ -3327,24 +3250,13 @@ void curve_float(t_curve *x, t_floatarg f)
     canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
 }
 
-void curve_fillopacity(t_curve *x, t_symbol *s, t_int argc, t_atom *argv)
-{
-    char *classname = s->s_name;
-    if (classname[0] == 'd' || argc < 1) return;
-    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
-    {
-        fielddesc_setfloatarg(&x->x_fillopacity, argc, argv);
-        canvas_redrawallfortemplatecanvas(x->x_canvas, 0);
-    }
-}
-
 /* -------------------- widget behavior for curve ------------ */
 
 static void curve_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,">>>>>>>>>>>>>>>>>>>>>>curve_getrect %lx\n", (t_int)z);
+    //fprintf(stderr,">>>>>>>>>>>>>>>>>>>>>>curve_getrect %lx\n", (t_int)z);
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
     t_fielddesc *f = x->x_vec;
@@ -3384,7 +3296,7 @@ static void curve_getrect(t_gobj *z, t_glist *glist,
         x2 = cx + rx;
         y2 = cy + ry;
     }
-	//fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    //fprintf(stderr,"FINAL curve_getrect %d %d %d %d\n", x1, y1, x2, y2);
     //sys_vgui(".x%lx.c create prect %d %d %d %d -stroke red -tags blah\n",
     //        glist_getcanvas(glist), x1, y1, x2, y2);
     *xp1 = x1;
@@ -3452,11 +3364,12 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     int i, n = x->x_npoints;
     t_fielddesc *f = x->x_vec;
 
-	/*// get the universal tag for all nested objects
-	t_canvas *tag = x->x_canvas;
-	while (tag->gl_owner) {
-		tag = tag->gl_owner;
-	}*/
+    /*// get the universal tag for all nested objects
+    t_canvas *tag = x->x_canvas;
+    while (tag->gl_owner)
+    {
+        tag = tag->gl_owner;
+    }*/
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -3548,30 +3461,33 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 }
             }
             sys_vgui("-strokewidth %f \\\n", width);
-		if (flags & CLOSED) sys_vgui("-fill %s -stroke %s -fillopacity %g \\\n",
-                fill, outline, fielddesc_getfloat(&x->x_fillopacity, template, data, 1));
+            if (flags & CLOSED) sys_vgui("-fill %s -stroke %s \\\n",
+                fill, outline);
             else if(flags & BBOX) sys_vgui("-stroke %s \\\n", outline);
             else sys_vgui("-stroke %s \\\n", outline);
             sys_vgui("-parent .dgroup%lx \\\n", sc->sc_vec);
-            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
-            sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
-				data, sc);
-			if (!glist_istoplevel(glist)) {
-				t_canvas *gl = glist_getcanvas(glist);
-				//glist_noselect(gl);
-				//glist_select(gl, (t_gobj *)glist);
-				char objtag[64];
-				sprintf(objtag, ".x%lx.x%lx.template%lx", (t_int)gl, (t_int)glist, (t_int)data);
-				canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
-			}
+            // this doesn't work with tkpath...
+            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1 \\\n");
+            sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
+                glist_getcanvas(glist), glist, data, sc);
+            if (!glist_istoplevel(glist))
+            {
+                t_canvas *gl = glist_getcanvas(glist);
+                //glist_noselect(gl);
+                //glist_select(gl, (t_gobj *)glist);
+                char objtag[64];
+                sprintf(objtag, ".x%lx.x%lx.template%lx",
+                    (t_int)gl, (t_int)glist, (t_int)data);
+                canvas_restore_original_position(gl, (t_gobj *)glist,
+                    objtag, -1);
+            }
         }
         else post("warning: curves need at least two points to be graphed");
     }
     else
     {
         if (n > 1) sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), glist,
-			data);      
+            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);      
     }
 }
 
@@ -3594,7 +3510,7 @@ static t_gpointer curve_motion_gpointer;
 
 static void curve_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
-	//fprintf(stderr,"curve_motion\n");
+    //fprintf(stderr,"curve_motion\n");
     t_curve *x = (t_curve *)z;
     t_fielddesc *f = x->x_vec + curve_motion_field;
     t_atom at;
@@ -3632,7 +3548,8 @@ static int curve_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"curve_click %f %f %d %d %lx\n", basex, basey, xpix, ypix, (t_int)data);
+    //fprintf(stderr,"curve_click %f %f %d %d %lx\n", basex, basey,
+    //    xpix, ypix, (t_int)data);
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
     int bestn = -1;
@@ -3725,8 +3642,6 @@ static void curve_setup(void)
         A_GIMME, 0);
     class_setparentwidget(curve_class, &curve_widgetbehavior);
     class_addfloat(curve_class, curve_float);
-    class_addmethod(curve_class, (t_method)curve_fillopacity,
-        gensym("fillopacity"), A_GIMME, 0);
 }
 
 /* --------- plots for showing arrays --------------- */
@@ -3956,7 +3871,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"plot_getrect\n");
+    //fprintf(stderr,"plot_getrect\n");
     t_plot *x = (t_plot *)z;
     int elemsize, yonset, wonset, xonset;
     t_canvas *elemtemplatecanvas;
@@ -3996,8 +3911,13 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                 /* get the coords of the point proper */
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, basex + xloc, basey + yloc, xinc,
-                xfielddesc, yfielddesc, wfielddesc, &xpix1, &xpix2, &ypix, &wpix);
-			//fprintf(stderr,"		!!!!!!!!elemsize%d yonset%d wonset%d xonset%d i%d basex%f xloc%f basey%f yloc%f xinc%f xpix%f ypix%f wpix%f\n", elemsize, yonset, wonset, xonset, i, basex, xloc, basey, yloc, xinc, xpix, ypix, wpix);
+                xfielddesc, yfielddesc, wfielddesc,
+                &xpix1, &xpix2, &ypix, &wpix);
+            //fprintf(stderr,"elemsize%d yonset%d wonset%d xonset%d "
+            //               "i%d basex%f xloc%f basey%f yloc%f xinc%f "
+            //               "xpix%f ypix%f wpix%f\n",
+            //    elemsize, yonset, wonset, xonset, i, basex, xloc, basey, yloc,
+            //    xinc, xpix, ypix, wpix);
             if (xpix1 < x1)
                 x1 = xpix1;
             if (xpix2 > x2)
@@ -4007,7 +3927,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
             if (ypix + wpix > y2)
                 y2 = ypix + wpix;
 
-			//fprintf(stderr,"	/////plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+            //fprintf(stderr,"plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
             
             if (scalarvis != 0)
             {
@@ -4026,7 +3946,15 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                 useyloc = basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
-					//fprintf(stderr,".-.-. usexloc %f useyloc %f (alt %f %f)\n", usexloc, useyloc, basex + xloc + fielddesc_cvttocoord(xfielddesc, *(t_float *)(((char *)(array->a_vec) + elemsize * i) + xonset)), *(t_float *)(((char *)(array->a_vec) + elemsize * i) + yonset));
+                    //fprintf(stderr,".-.-. usexloc %f useyloc %f "
+                    //               "(alt %f %f)\n",
+                    //  usexloc, useyloc,
+                    //  basex + xloc +
+                    //  fielddesc_cvttocoord(xfielddesc,
+                    //      *(t_float *)(((char *)(array->a_vec) + elemsize * i)
+                    //      + xonset)),
+                    //  *(t_float *)(((char *)(array->a_vec) + elemsize * i) +
+                    //  yonset));
                     int xx1, xx2, yy1, yy2;
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
@@ -4034,7 +3962,8 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                         (t_word *)((char *)(array->a_vec) + elemsize * i),
                             elemtemplate, usexloc, useyloc, 
                                 &xx1, &yy1, &xx2, &yy2);
-					//fprintf(stderr,"	.....plot_getrect %d %d %d %d\n", xx1, yy1, xx2, yy2); 
+                    //fprintf(stderr,"  .....plot_getrect %d %d %d %d\n",
+                    //    xx1, yy1, xx2, yy2); 
                     if (xx1 < x1)
                         x1 = xx1;
                     if (yy1 < y1)
@@ -4043,14 +3972,15 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                         x2 = xx2;
                     if (yy2 > y2)
                         y2 = yy2;
-					//fprintf(stderr,"	.....plot_getrect %d %d %d %d\n", x1, y1, x2, y2); 
+                    //fprintf(stderr,"  ....plot_getrect %d %d %d %d\n",
+                    //    x1, y1, x2, y2); 
                 }
             }
-			//fprintf(stderr,"	>====plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+            //fprintf(stderr,"  >====plot_getrect %d %d %d %d\n",
+            //    x1, y1, x2, y2);
         }
     }
-	//fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
-
+    //fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -4084,14 +4014,21 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     int tovis)
 {
     t_plot *x = (t_plot *)z;
-	/*// get the universal tag for all nested objects
-	t_canvas *tag = x->x_canvas;
-	while (tag->gl_owner) {
-		tag = tag->gl_owner;
-	}*/
+    /*// get the universal tag for all nested objects
+    t_canvas *tag = x->x_canvas;
+    while (tag->gl_owner)
+    {
+        tag = tag->gl_owner;
+    }*/
 
-	//fprintf(stderr,"===============plot %lx glist %lx glist_getcanvas %lx plot->x_obj %lx plot->x_canvas %lx glist_getcanvas(plot->x_canvas) %lx\n", (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist), (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
-	int draw_me = 1;	//used for experimental disabling of drawing outside GOP bounds
+    //fprintf(stderr,"===============plot %lx glist %lx glist_getcanvas %lx "
+    //                 "plot->x_obj %lx plot->x_canvas %lx "
+    //                 "glist_getcanvas(plot->x_canvas) %lx\n",
+    //    (t_int)x, (t_int)glist, (t_int)glist_getcanvas(glist),
+    //    (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
+
+    /* used for experimental disabling of drawing outside GOP bounds */
+    int draw_me = 1;
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -4202,28 +4139,39 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     }
                 //fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
                 // with the following experimental code we can prevent drawing outside the gop window (preferred but needs to be further tested)
-                /*if (glist->gl_y2 > glist->gl_y1) {
-                   if (minyval >= glist->gl_y1 && maxyval <= glist->gl_y2) draw_me = 1;
-                   else draw_me = 0; 
+                /*if (glist->gl_y2 > glist->gl_y1)
+                {
+                    if (minyval >= glist->gl_y1 && maxyval <= glist->gl_y2)
+                        draw_me = 1;
+                    else
+                        draw_me = 0; 
                 } else {
-                if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1) draw_me = 1;
-                else draw_me = 0; 
+                    if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1)
+                        draw_me = 1;
+                    else
+                        draw_me = 0; 
                 }
-                if (draw_me) {*/
-                //we subtract 1 from y to keep it in sync with the rest of the types of templates
-                        /* This is the old, inefficient code that creates a separate canvas item for each element... 
-                sys_vgui(
-                        ".x%lx.c create prect %d %d %d %d -fill %s -stroke %s -strokewidth %d -tags {.x%lx.x%lx.template%lx array}\n",
-                    glist_getcanvas(glist),
-                    ixpix, (int)glist_ytopixels(glist, 
-                            basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
-                            inextx, py2, symfill->s_name, symoutline->s_name,
-                            border, glist_getcanvas(glist), glist, data);
-                        */
+                if (draw_me)
+                {*/
+                    //we subtract 1 from y to keep it in sync with
+                    //the rest of the types of templates
+                    /* This is the old, inefficient code that creates
+                       a separate canvas item for each element... 
+                    sys_vgui(".x%lx.c create prect %d %d %d %d -fill %s "
+                             "-stroke %s -strokewidth %d "
+                             "-tags {.x%lx.x%lx.template%lx array}\n",
+                        glist_getcanvas(glist),
+                        ixpix, (int)glist_ytopixels(glist, 
+                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1,
+                        inextx, py2, symfill->s_name, symoutline->s_name,
+                        border, glist_getcanvas(glist), glist, data);
+                    */
 
-                    /* For efficiency, we make a single path item for the trace or bargraph */
+                    /* For efficiency, we make a single path item
+                       for the trace or bargraph */
                     int mex1 = ixpix;
-                    int mey1 = (int)glist_ytopixels(glist, basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1;
+                    int mey1 = (int)glist_ytopixels(glist,
+                        basey + fielddesc_cvttocoord(yfielddesc, minyval)) - 1;
                     int mex2 = inextx;
                     int mey2 = py2;
                     sys_vgui("M %d %d H %d V %d H %d z \\\n",
@@ -4236,11 +4184,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 if (ndrawn > 2000 || ixpix >= 3000) break;
             }
             /* end of the path item from above */
-            sys_vgui("} -fill %s -stroke %s -strokewidth %d -tags {.x%lx.x%lx.template%lx array}\n",
-                        symfill->s_name, symoutline->s_name,
-                        style == PLOTSTYLE_POINTS ? 0 : 1,
-                        glist_getcanvas(glist), glist, data);
-
+            sys_vgui("} -fill %s -stroke %s -strokewidth %d "
+                     "-tags {.x%lx.x%lx.template%lx array}\n",
+                symfill->s_name, symoutline->s_name,
+                style == PLOTSTYLE_POINTS ? 0 : 1,
+                glist_getcanvas(glist), glist, data);
         }
         else
         {
@@ -4325,10 +4273,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
             ouch:
                 sys_vgui(" -strokewidth 1 -fill %s -stroke %s \\\n",
                     symfill->s_name, symoutline->s_name);
-                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
+                // this doesn't work with tkpath...
+                //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n");
 
-                sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n", glist_getcanvas(glist), glist,
-					 data, sc);
+                sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
+                    glist_getcanvas(glist), glist, data, sc);
             }
             else if (linewidth > 0)
             {
@@ -4408,20 +4357,28 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 }
             }
         }
-		if (!glist_istoplevel(glist)) {
-			t_canvas *gl = glist_getcanvas(glist);
-			char objtag[64];
-			sprintf(objtag, ".x%lx.x%lx.template%lx", (t_int)gl, (t_int)glist, (t_int)data);
-			canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
-		}
-			/*
-			sys_vgui(".x%lx.c lower .x%lx.x%lx.plot%lx %s\n", glist_getcanvas(glist), glist_getcanvas(glist), glist, data, rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
-			sys_vgui(".x%lx.c raise .x%lx.x%lx.plot%lx %s\n", glist_getcanvas(glist), glist_getcanvas(glist), glist, data, rtext_gettag(glist_findrtext(glist_getcanvas(glist), &glist->gl_obj)));
-		}*/
+        if (!glist_istoplevel(glist))
+        {
+            t_canvas *gl = glist_getcanvas(glist);
+            char objtag[64];
+            sprintf(objtag, ".x%lx.x%lx.template%lx",
+                (t_int)gl, (t_int)glist, (t_int)data);
+            canvas_restore_original_position(gl, (t_gobj *)glist, objtag, -1);
+        }
+        /*
+        sys_vgui(".x%lx.c lower .x%lx.x%lx.plot%lx %s\n",
+            glist_getcanvas(glist), glist_getcanvas(glist), glist, data,
+            rtext_gettag(glist_findrtext(glist_getcanvas(glist),
+            &glist->gl_obj)));
+        sys_vgui(".x%lx.c raise .x%lx.x%lx.plot%lx %s\n",
+            glist_getcanvas(glist), glist_getcanvas(glist), glist, data,
+            rtext_gettag(glist_findrtext(glist_getcanvas(glist),
+            &glist->gl_obj)));
+         */
     }
     else
     {
-            /* un-draw the individual points */
+        /* un-draw the individual points */
         if (scalarvis != 0)
         {
             int i;
@@ -4449,7 +4406,8 @@ static int plot_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"plot_click %lx %lx %f %f %d %d\n", (t_int)z, (t_int)glist, basex, basey, xpix, ypix);
+    //fprintf(stderr,"plot_click %lx %lx %f %f %d %d\n",
+    //    (t_int)z, (t_int)glist, basex, basey, xpix, ypix);
     t_plot *x = (t_plot *)z;
     t_symbol *elemtemplatesym;
     t_float linewidth, xloc, xinc, yloc, style, vis, scalarvis;
@@ -4464,7 +4422,7 @@ static int plot_click(t_gobj *z, t_glist *glist,
         &xfielddesc, &yfielddesc, &wfielddesc, &symfillcolor, &symoutlinecolor)
         && (vis != 0))
     {
-		//fprintf(stderr,"	->array_doclick\n");
+    //fprintf(stderr,"  ->array_doclick\n");
         return (array_doclick(array, glist, sc, ap,
             elemtemplatesym,
             linewidth, basex + xloc, xinc, basey + yloc, scalarvis,
@@ -4513,7 +4471,7 @@ typedef struct _drawnumber
     t_fielddesc x_yloc;
     t_fielddesc x_color;
     t_fielddesc x_vis;
-	t_fielddesc x_fontsize;
+    t_fielddesc x_fontsize;
     t_symbol *x_label;
     int x_flags;
     t_canvas *x_canvas;
@@ -4556,8 +4514,8 @@ static void *drawnumber_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_yloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_color, 1);
-	if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
-	else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+    if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
+    else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
     if (argc)
         x->x_label = atom_getsymbolarg(0, argc, argv);
     else x->x_label = &s_;
@@ -4614,7 +4572,7 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
     yloc = glist_ytopixels(glist,
         basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
     font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
-	if (!font) font = glist_getfont(glist);
+    if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
         fontheight = sys_fontheight(font);
     if (x->x_flags & DRAW_SYMBOL)
@@ -4653,14 +4611,15 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int vis)
 {
-	//fprintf(stderr,"drawnumber_vis %d\n", vis);
+    //fprintf(stderr,"drawnumber_vis %d\n", vis);
     t_drawnumber *x = (t_drawnumber *)z;
 
-	/*// get the universal tag for all nested objects
-	t_canvas *tag = x->x_canvas;
-	while (tag->gl_owner) {
-		tag = tag->gl_owner;
-	}*/
+    /*// get the universal tag for all nested objects
+    t_canvas *tag = x->x_canvas;
+    while (tag->gl_owner)
+    {
+        tag = tag->gl_owner;
+    }*/
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -4668,8 +4627,8 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     if (vis)
     {
         t_atom at;
-		int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
-		if (!fontsize) fontsize = glist_getfont(glist);
+        int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
+        if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
             basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
         int yloc = glist_ytopixels(glist,
@@ -4687,7 +4646,7 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
         /*sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
-				 sys_hostfontsize(fontsize), sys_fontweight);*/
+            sys_hostfontsize(fontsize), sys_fontweight);*/
         sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
                 glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
         /* have to remove fontweight for the time being... */
@@ -4695,10 +4654,10 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 sys_hostfontsize(fontsize));
         sys_vgui(" -parent .scalar%lx", data);
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
-			glist_getcanvas(glist), glist, data, sc);
+            glist_getcanvas(glist), glist, data, sc);
     }
-    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n", glist_getcanvas(glist), 
-		glist_getcanvas(glist), glist, data);
+    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+        glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
 }
 
 static t_float drawnumber_motion_ycumulative;
@@ -4888,7 +4847,7 @@ typedef struct _drawsymbol
     t_fielddesc x_yloc;
     t_fielddesc x_color;
     t_fielddesc x_vis;
-	t_fielddesc x_fontsize;
+    t_fielddesc x_fontsize;
     t_symbol *x_label;
     int x_flags;
     t_canvas *x_canvas;
@@ -4931,8 +4890,8 @@ static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_yloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_color, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_color, 1);
-	if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
-	else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
+    if (argc == 2) fielddesc_setfloatarg(&x->x_fontsize, argc--, argv++);
+    else fielddesc_setfloatarg(&x->x_fontsize, 0, NULL);
     if (argc)
         x->x_label = atom_getsymbolarg(0, argc, argv);
     else x->x_label = &s_;
@@ -4989,7 +4948,7 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     yloc = glist_ytopixels(glist,
         basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
     font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
-	if (!font) font = glist_getfont(glist);
+    if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
         fontheight = sys_fontheight(font);
     if (x->x_flags & DRAW_SYMBOL)
@@ -5030,11 +4989,12 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
-	/*// get the universal tag for all nested objects
-	t_canvas *tag = x->x_canvas;
-	while (tag->gl_owner) {
-		tag = tag->gl_owner;
-	}*/
+    /*// get the universal tag for all nested objects
+    t_canvas *tag = x->x_canvas;
+    while (tag->gl_owner)
+    {
+        tag = tag->gl_owner;
+    }*/
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -5042,8 +5002,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     if (vis)
     {
         t_atom at;
-		int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
-		if (!fontsize) fontsize = glist_getfont(glist);
+        int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
+        if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
             basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
         int yloc = glist_ytopixels(glist,
@@ -5061,17 +5021,17 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
         /*sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
-				 sys_hostfontsize(fontsize), sys_fontweight);*/
+            sys_hostfontsize(fontsize), sys_fontweight);*/
         sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
                 glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
         sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font,
                 sys_hostfontsize(fontsize));
         sys_vgui(" -parent .scalar%lx", data);
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
-			glist_getcanvas(glist), glist, data, sc);
+            glist_getcanvas(glist), glist, data, sc);
     }
-    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n", glist_getcanvas(glist), 
-		glist_getcanvas(glist), glist, data);
+    else sys_vgui(".x%lx.c delete .x%lx.x%lx.template%lx\n",
+        glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
 }
 
 static t_float drawsymbol_motion_ycumulative;
