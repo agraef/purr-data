@@ -1,0 +1,36 @@
+#N struct drawtut-rect float x float y;
+#N canvas 0 19 638 678 10;
+#X text 0 1 __________________________;
+#X text 0 1 New Drawing Commands: rect;
+#X obj 53 87 struct drawtut-rect float x float y;
+#X text 53 63 Let's start with another [struct]:;
+#X obj 53 239 draw rect 0 0 100 40;
+#X scalar drawtut-rect 56 369 \;;
+#X obj 193 239 draw rect 120 0 40 100;
+#X text 53 115 As stated in the previous tutorial \, all [draw] objects
+have the same interface. The first word (called the selector) is always
+"draw". The first argument is the name of the svg shape to draw. Finally
+\, any arguments after that are coordinate and other data that define
+how to draw the shape.;
+#X text 53 475 You can select the scalar like any other Pd object \,
+move it \, cut/paste it \, and undo/redo any actions you take.;
+#X text 53 23 So what can we draw with [draw]? All shapes from the
+svg specification. These are "rect" \, "polygon" \, "polyline" \, "ellipse"
+\, "circle" \, "line" \, and "path".;
+#X text 53 179 In the case of "rect" \, there are only four coordinates.
+The first two are the x/y coordinates of the top-left corner of the
+rectangle. The third and fourth arguments are the width and height
+of the rectangle. That's it!;
+#X text 53 265 You can use positive and negative numbers for the first
+two arguments \, but only positive numbers for the width and height.
+Coordinates and dimensions can be integers or floats. (One exception
+are "flag" values in path arcs but these will just be converted automatically
+to integers.);
+#X text 53 505 Also note that you can define a [struct] without any
+"x" or "y" fields. This is because data structures may be used for
+purposes other than visualizing data. But if you do draw objects with
+x/y fields \, it will draw the scalar at 0/0 and you won't be able
+to move it with the mouse in "edit mode".;
+#X text 53 336 Below is a scalar defined by the [struct] above. As
+you can tell it's just two rectangles. Pretty boring stuff so far...
+;

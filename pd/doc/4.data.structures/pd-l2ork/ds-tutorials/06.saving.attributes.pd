@@ -1,0 +1,26 @@
+#N struct drawtut-attr-saving float x float y;
+#N canvas 0 19 638 678 10;
+#X obj 53 153 draw rect 0 0 50 50;
+#X text 0 1 New Drawing Commands: attributes (continued);
+#X text 0 1 ____________________________________________;
+#X text 53 23 Saving attributes is fairly straightforward using message
+boxes with commas separating each attribute:;
+#X obj 53 94 loadbang;
+#X obj 53 57 struct drawtut-attr-saving float x float y;
+#X scalar drawtut-attr-saving 53 184 \;;
+#X msg 53 117 fill green \, stroke-width 5 \, stroke brown \, stroke-dasharray
+2 6;
+#X obj 102 279;
+#X text 228 280 <- Create another scalar in the empty object box by
+typing the name of the [struct] into it.;
+#X text 52 354 Scalars can also save data with the patch. For example
+\, the ones above remember their x/y location because that data is
+saved as the "x" and "y" fields for each scalar. Each scalar has its
+own values for "x" and "y"-- that's we can put the two scalars above
+at separate locations in the patch.;
+#X text 52 434 We can define more data fields than just "x" and "y".
+Later we will use new fields to associate a scalar's data with the
+svg attributes \, which will let use change the visual appearance of
+each scalar.;
+#X connect 4 0 7 0;
+#X connect 7 0 0 0;

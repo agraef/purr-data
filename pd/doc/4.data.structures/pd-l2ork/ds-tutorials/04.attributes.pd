@@ -1,0 +1,46 @@
+#N struct drawtut-attr float x float y;
+#N canvas 0 19 638 678 10;
+#X text 0 1 New Drawing Commands: attributes;
+#X text 0 1 ________________________________;
+#X text 53 23 Our shapes are pretty boring so far. Black lines around
+white space. How do we get more variety?;
+#X text 53 53 Svg objects have various attributes that define how the
+shapes (and other objects) appear and generally behave. On the web
+these attributes are specified with the drawing data. In Pd \, these
+attributes are controlled by sending messages to the relevant [draw]
+object.;
+#X text 53 123 Svg is a complex specification \, and not all of its
+object attributes are supported in Pd. But the basic ones are.;
+#X obj 53 207 struct drawtut-attr float x float y;
+#X obj 53 313 draw rect 0 0 50 50;
+#X scalar drawtut-attr 55 339 \;;
+#X text 53 153 For example \, below is a [struct] definition \, [draw]
+object and a scalar created from them. Let's send a message to make
+the rectangle more interesting.;
+#X msg 53 252 fill red;
+#X msg 123 252 fill white;
+#X text 53 229 Click a message box to change the "fill" attribute:
+;
+#X text 53 394 As you can see \, the "fill" message changes the fill
+color of the rectangle. You can use a couple different ways to tell
+Pd what color to use:;
+#X text 53 436 * English language color names: red \, green \, orange
+\, and so on. These should be the common names listed in the svg spec
+\, although x11 names might work too. (But don't depend on that.);
+#X text 53 487 * html colors. These begin with a number sign "#" followed
+by hexadecimal values like "#ccddcc" or "#68ef68". (You can also use
+the 3-digit shorthands if you wish.);
+#X text 53 526 * rgb color values using 3 float arguments. Each float
+should be in the range 0-255.;
+#X text 53 556 * rgba \, with 4 float arguments. Same as above with
+the fourth argument specifying opacity.;
+#X floatatom 244 253 5 0 0 0 - - -, f 5;
+#X msg 244 274 fill 0 \$1 0;
+#X text 54 597 You can set attributes like "fill" automatically by
+using a [loadbang] message. Notice that attributes will be the same
+for all scalars created from this [struct]. Later you will see how
+to set attributes to be different for each scalar.;
+#X connect 9 0 6 0;
+#X connect 10 0 6 0;
+#X connect 17 0 18 0;
+#X connect 18 0 6 0;

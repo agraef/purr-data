@@ -1,0 +1,40 @@
+#N struct drawtut-path float x float y;
+#N canvas 0 19 867 610 10;
+#X text 0 1 New Drawing Commands: path;
+#X text 1 1 __________________________;
+#X text 53 23 Paths are complex drawings.;
+#X obj 53 57 struct drawtut-path float x float y;
+#X scalar drawtut-path 292 174 \;;
+#X msg 53 127 stroke black \, stroke-width 1 \, fill yellow \, transform
+scale 2;
+#X text 671 271 <- a complex path;
+#X obj 53 102 loadbang;
+#X text 52 424 Svg paths are quite complex and powerful. After the
+word "path" \, you must specify single-letter drawing commands followed
+by numeric coordinate and shape data for the command. A single path
+can have several subpaths-- the one to the left has three \, one for
+each letter.;
+#X text 52 494 You can find out more about them in the svg specification:
+;
+#X obj 52 515 pddp/pddplink http://www.w3.org/TR/SVG/paths.html;
+#X obj 53 153 draw path m 156.27 34.6306 3.94531 0 0 25.8398 14.1992
+0 0 3.32031 -18.1445 0 0 -29.1602 m -19.6484 2.67578 c -2.86459 2.7e-05
+-5.14324 1.06773 -6.83593 3.20312 -1.6797 2.13544 -2.51954 5.04559
+-2.51953 8.73047 -1e-05 3.67189 0.83983 6.57553 2.51953 8.71094 1.69269
+2.13542 3.97134 3.20313 6.83593 3.20312 2.86457 2e-06 5.13019 -1.06771
+6.79688 -3.20312 1.67966 -2.13541 2.5195 -5.03905 2.51953 -8.71094
+-3e-05 -3.68488 -0.83987 -6.59503 -2.51953 -8.73047 -1.66669 -2.13539
+-3.93231 -3.2031 -6.79688 -3.20312 m 0 -3.20312 c 4.08853 3e-05 7.35675
+1.37373 9.80469 4.12109 2.44789 2.7344 3.67185 6.40627 3.67188 11.0156
+-3e-05 4.59636 -1.22399 8.26824 -3.67188 11.0156 -2.44794 2.73438 -5.71616
+4.10156 -9.80469 4.10156 -4.10157 -1e-06 -7.38282 -1.36719 -9.84375
+-4.10156 -2.44792 -2.73437 -3.67187 -6.40624 -3.67187 -11.0156 0 -4.60936
+1.22395 -8.28123 3.67187 -11.0156 2.46093 -2.74737 5.74218 -4.12106
+9.84375 -4.12109 m -32.6953 0.527344 3.94531 0 0 25.8398 14.1992 0
+0 3.32031 -18.1445 0 0 -29.1602;
+#X text 468 349 Unfortunately the bounding-box calculation for some
+curves doesn't work as precisely as it should. This means some paths
+may extend past the edges of the selection rectangle in Pd. (Like the
+bottom of the "O" in the example above;
+#X connect 5 0 11 0;
+#X connect 7 0 5 0;

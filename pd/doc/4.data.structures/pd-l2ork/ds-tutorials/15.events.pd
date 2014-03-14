@@ -1,0 +1,29 @@
+#N struct drawtut-events float x float y;
+#N canvas 0 19 591 589 10;
+#X scalar drawtut-events 54 210 \;;
+#X text 1 1 __________________________________;
+#X text 0 1 New Drawing Commands: mouse events;
+#X text 53 43 When the user mouses over or clicks a scalar a message
+gets sent to the outlet of the corresponding [struct] object.;
+#X obj 373 97 loadbang;
+#X msg 373 118 fill blue;
+#X text 109 221 <- Click and move the mouse over this scalar;
+#X text 53 273 The following events are reported:;
+#X text 53 333 click - clicking the scalar in "Run mode";
+#X text 53 393 enter - moving the mouse over a scalar;
+#X text 53 413 leave - moving the mouse out of a scalar's area;
+#X text 53 433 select - select a scalar in "Edit mode";
+#X text 53 353 deselect - deselect a scalar in "Edit mode";
+#X text 53 373 displace - move a scalar in "Edit mode";
+#X text 53 303 change - click-drag an area of a scalar to change its
+shape or value;
+#X symbolatom 53 173 10 0 0 1 event_type - -, f 10;
+#X obj 53 148 list split 1;
+#X obj 63 123 print;
+#X obj 373 139 draw rect 0 0 40 40;
+#X obj 53 97 struct drawtut-events float x float y;
+#X connect 4 0 5 0;
+#X connect 5 0 18 0;
+#X connect 16 0 15 0;
+#X connect 19 0 16 0;
+#X connect 19 0 17 0;

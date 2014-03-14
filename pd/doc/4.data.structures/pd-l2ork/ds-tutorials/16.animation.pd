@@ -1,0 +1,45 @@
+#N struct drawtut-animation float x float y;
+#N canvas -9 19 537 571 10;
+#X scalar drawtut-animation 47 306 \;;
+#X obj 47 271 draw rect 0 0 40 40;
+#X obj 47 135 struct drawtut-animation float x float y;
+#X text 0 1 New Drawing Commands: animation;
+#X text 1 1 _______________________________;
+#X text 47 26 The svg specification has some handy attributes which
+can be used to animate the transition between values for other attributes.
+Unfortunately the new [draw] commands don't currently support those
+attributes.;
+#X text 47 86 However \, if you can do the same thing using some of
+Pd's core objects. For example \, with [line] you can create a ramp
+between values.;
+#X obj 47 166 tgl 23 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
+;
+#X obj 47 193 * 255;
+#X msg 47 212 \$1 500;
+#X text 171 271 <- use the 2nd argument to set the "grain" rate;
+#X text 47 358 This is less efficient than svg's animation interface.
+Here \, Pd must send a message for each change in value during the
+ramp. However \, you can use the 2nd argument to [line] to tell it
+how many milliseconds it should wait before outputting a ramp value.
+Use the objects below to convert between "grain" rate and frames-per-second.
+;
+#X floatatom 50 451 5 0 0 0 - - -, f 5;
+#X msg 50 472 1000 \$1;
+#X obj 50 493 /;
+#X floatatom 50 514 5 0 0 1 - - -, f 5;
+#X obj 47 232 line 0 33.333;
+#X text 112 450 <-- If you want to convert grain-rate to fps \, type
+the grain-rate in the box and read out the answer in the bottom box.
+On the other hand if you want to convert fps to grain-rate simply think
+your desire at the patch and Pd will automatically do the conversion
+in the other direction!;
+#X text 112 516 How does it know?;
+#X msg 47 252 fill \$1 \$1 \$1;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 16 0;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 16 0 19 0;
+#X connect 19 0 1 0;

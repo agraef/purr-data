@@ -1,0 +1,35 @@
+#N struct instance-attr float x float y float a;
+#N canvas 0 19 791 484 10;
+#X obj 466 124 pointer;
+#X obj 600 124 pointer;
+#X floatatom 427 138 5 0 0 0 - - -, f 5;
+#X floatatom 553 136 5 0 0 0 - - -, f 5;
+#X scalar instance-attr 81 355 0.35 \;;
+#X obj 159 109 draw path M 0 0 l 100 0 0 -100;
+#X scalar instance-attr 328 421 -0.31 \;;
+#X msg 159 84 transform rotate a;
+#X obj 159 59 loadbang;
+#X obj 466 83 loadbang;
+#X obj 600 83 loadbang;
+#X text 46 154 This demo shows how you can use struct variables to
+control a shape's attributes \, including affine transformations. Use
+the number boxes to set the "a" variable for each scalar.;
+#X text 46 204 The only difficulty comes with path data. To avoid ambiguity
+you have to choose a variable name that isn't a drawing command (M
+\, l \, q \, etc.).;
+#X obj 137 15 struct instance-attr float x float y float a;
+#X obj 427 179 set instance-attr a;
+#X obj 553 179 set instance-attr a;
+#X msg 466 103 traverse ob \, next;
+#X msg 600 103 traverse ob \, next \, next;
+#X obj 466 32 namecanvas ob;
+#X connect 0 0 14 1;
+#X connect 1 0 15 1;
+#X connect 2 0 14 0;
+#X connect 3 0 15 0;
+#X connect 7 0 5 0;
+#X connect 8 0 7 0;
+#X connect 9 0 16 0;
+#X connect 10 0 17 0;
+#X connect 16 0 0 0;
+#X connect 17 0 1 0;

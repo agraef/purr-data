@@ -1,0 +1,8 @@
+#N struct blah float x float y;
+#N canvas -7 0 618 300 10;
+#X obj 99 13 struct blah float x float y;
+#X scalar blah 80 40 \;;
+#X msg 105 157 stroke-dasharray 1 2 3 4 5 6;
+#X obj 105 183 draw line 20 20 400 20;
+#X text 102 107 Stroke-dasharray method. Try it:;
+#X connect 2 0 3 0;

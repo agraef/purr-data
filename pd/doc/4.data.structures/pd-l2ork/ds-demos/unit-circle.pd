@@ -1,0 +1,150 @@
+#N struct unit_circle float x float y float rx float ry float lx array
+a balls float l2y;
+#N struct balls float y;
+#N canvas -7 0 1026 585 10;
+#X obj 645 215 draw circle 0 0 100;
+#X scalar unit_circle 128 94 99.9997 -0.238894 778 -0.318509 \; 2.51094
+\; 5.01555 \; 7.5075 \; 9.98051 \; 12.4283 \; 14.8448 \; 17.2238 \;
+19.5593 \; 21.8455 \; 24.0765 \; 26.2468 \; 28.3509 \; 30.3834 \; 32.3392
+\; 34.2134 \; 36.0013 \; 37.6983 \; 39.3002 \; 40.803 \; 42.2027 \;
+43.496 \; 44.6795 \; 45.7502 \; 46.7055 \; 47.543 \; 48.2604 \; 48.8561
+\; 49.3285 \; 49.6764 \; 49.8989 \; 49.9955 \; 49.966 \; 49.8104 \;
+49.529 \; 49.1227 \; 48.5924 \; 47.9395 \; 47.1656 \; 46.2727 \; 45.263
+\; 44.1391 \; 42.9038 \; 41.5603 \; 40.1118 \; 38.5622 \; 36.9152 \;
+35.1751 \; 33.3462 \; 31.4331 \; 29.4408 \; 27.3741 \; 25.2384 \; 23.0389
+\; 20.7814 \; 18.4714 \; 16.1147 \; 13.7174 \; 11.2855 \; 8.82515 \;
+6.34249 \; 3.84383 \; 1.33547 \; -1.17627 \; -3.68503 \; -6.18449 \;
+-8.66835 \; -11.1303 \; -13.5642 \; -15.9639 \; -18.3233 \; -20.6364
+\; -22.8975 \; -25.1008 \; -27.2407 \; -29.3119 \; -31.3091 \; -33.2274
+\; -35.0617 \; -36.8076 \; -38.4606 \; -40.0166 \; -41.4715 \; -42.8218
+\; -44.0641 \; -45.1951 \; -46.2121 \; -47.1125 \; -47.894 \; -48.5546
+\; -49.0928 \; -49.507 \; -49.7962 \; -49.9599 \; -49.9974 \; -49.9088
+\; -49.6942 \; -49.3542 \; -48.8897 \; -48.3018 \; -47.592 \; -46.7622
+\; -45.8143 \; -44.7507 \; -43.5743 \; -42.2879 \; -40.8948 \; -39.3985
+\; -37.8028 \; -36.1116 \; -34.3294 \; -32.4605 \; -30.5097 \; -28.4819
+\; -26.3822 \; -24.216 \; -21.9886 \; -19.7058 \; -17.3732 \; -14.9968
+\; -12.5825 \; -10.1365 \; -7.66492 \; -5.17398 \; -2.66999 \; -0.159255
+\; \;;
+#X obj 318 440 pointer;
+#X floatatom 57 119 5 0 0 0 - - -, f 5;
+#X obj 41 338 * 6.28;
+#X obj 41 389 sin;
+#X obj 41 410 * 100;
+#X obj 95 389 cos;
+#X obj 41 359 t a a;
+#X obj 95 410 * 100;
+#X obj 41 313 + 0.25;
+#X obj 645 278 draw line 0 0 rx ry;
+#X obj 41 226 / 180;
+#X obj 41 288 * -1;
+#X obj 202 421 + 150;
+#X obj 201 369 * 628;
+#X obj 645 354 draw line 150 0 lx 0;
+#X obj 296 492 setsize unit_circle a;
+#X obj 287 520 element unit_circle a;
+#X obj 224 545 set balls y;
+#X obj 247 400 div 5;
+#X obj 41 247 t a a a;
+#X obj 148 369 * 6.28;
+#X obj 148 390 sin;
+#X obj 148 410 * 100;
+#X msg 41 75 0 \, 180 5000;
+#X obj 645 417 draw path M 0 100 L 0 120 0 -120 M 0 0 L -120 0 798
+0 M 0 -100 l 0 0 798 0 M 0 100 l 798 0 M 150 -120 l 0 0 0 240 m 157
+0 l 0 0 0 -240 m 157 0 l 0 0 0 240 m 157 0 l 0 0 0 -240 m 157 0 l 0
+0 0 240;
+#X msg 645 396 stroke-width 2 \, stroke gray \, stroke-opacity 0.6
+;
+#X msg 645 320 stroke-width 4 \, stroke blue \, stroke-opacity 0.6
+\, stroke-linecap 1;
+#N canvas 433 184 450 300 nested 0;
+#X obj 171 35 struct balls float y;
+#X restore 485 523 pd nested;
+#X msg 645 181 fill black \, fill-opacity 0.1 \, stroke blue \, stroke-opacity
+0.6 \, stroke-width 4;
+#X obj 645 36 struct unit_circle float x float y float rx float ry
+float lx array a balls float l2y;
+#X obj 645 526 draw line rx ry lx l2y;
+#X msg 645 504 stroke orange \, stroke-width 2;
+#X msg 645 257 stroke-width 3 \, stroke blue \, stroke-opacity 0.6
+;
+#X obj 645 482 loadbang;
+#X obj 645 160 loadbang;
+#X obj 645 236 loadbang;
+#X obj 645 299 loadbang;
+#X obj 645 375 loadbang;
+#X obj 318 398 loadbang;
+#X msg 318 419 traverse pd-unit-circle.pd \, next;
+#X obj 41 96 line 0 40;
+#X obj 41 45 bng 21 250 50 0 empty empty Go! 28 10 0 10 -4034 -1 -1
+;
+#X obj 645 135 draw group;
+#X msg 645 114 transform translate 75 0 scale \$1;
+#X obj 224 484 * 0.5;
+#X obj 645 72 loadbang;
+#X msg 645 93 0.5;
+#X text 130 160 This unit circle demo (which I just realized spins
+the wrong direction-- oops) shows some of the benefits and drawbacks
+of [draw] as it's currently implemented:;
+#X text 131 204 Benefits:;
+#X text 131 219 * you can easily scale the entire group;
+#X text 131 234 * a struct field can be used in different [draw] objects
+;
+#X text 266 260 Drawbacks:;
+#X text 266 277 * [draw group] doesn't affect [plot]. Thus I have to
+manually scale the x-spacing and y value accordingly.;
+#X text 266 303 * traversing the canvas is a pain. Fortunately \, you
+only need to do it once for arrays. But if you modify the patch at
+all you have to traverse again. This means it's way easier to send
+messages to [draw]-- which affect all scalars-- than it is to use field
+variables-- which are local to a particular scalar.;
+#X obj 485 545 plot a 0 1 150 0 2.5;
+#X obj 247 421 change;
+#X obj 41 545 set unit_circle rx ry l2y lx;
+#X connect 2 0 17 1;
+#X connect 2 0 18 1;
+#X connect 2 0 58 4;
+#X connect 3 0 12 0;
+#X connect 4 0 8 0;
+#X connect 5 0 6 0;
+#X connect 6 0 58 0;
+#X connect 7 0 9 0;
+#X connect 8 0 5 0;
+#X connect 8 1 7 0;
+#X connect 9 0 58 1;
+#X connect 10 0 4 0;
+#X connect 12 0 21 0;
+#X connect 13 0 10 0;
+#X connect 14 0 58 3;
+#X connect 15 0 14 0;
+#X connect 15 0 20 0;
+#X connect 18 0 19 1;
+#X connect 20 0 57 0;
+#X connect 21 0 13 0;
+#X connect 21 1 22 0;
+#X connect 21 2 15 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 24 0 46 0;
+#X connect 24 0 58 2;
+#X connect 25 0 42 0;
+#X connect 27 0 26 0;
+#X connect 28 0 16 0;
+#X connect 30 0 0 0;
+#X connect 33 0 32 0;
+#X connect 34 0 11 0;
+#X connect 35 0 33 0;
+#X connect 36 0 30 0;
+#X connect 37 0 34 0;
+#X connect 38 0 28 0;
+#X connect 39 0 27 0;
+#X connect 40 0 41 0;
+#X connect 41 0 2 0;
+#X connect 42 0 12 0;
+#X connect 43 0 25 0;
+#X connect 45 0 44 0;
+#X connect 46 0 19 0;
+#X connect 47 0 48 0;
+#X connect 48 0 45 0;
+#X connect 57 0 17 0;
+#X connect 57 0 18 0;

@@ -1,0 +1,232 @@
+#N struct staff float x float y;
+#N canvas -7 0 681 643 10;
+#X scalar staff 280 153 \;;
+#N canvas 631 56 682 517 notes 0;
+#X obj 1914 -324 struct staff float x float y;
+#X obj 1902 -292 loadbang;
+#X obj 2554 70 loadbang;
+#X obj 2052 173 draw path M 220 138 c 56 0 109 -29 109 -91 c 0 -72
+-56 -121 -103 -149 c -36 -21 -76 -36 -117 -36 c -56 0 -109 29 -109
+91 c 0 72 56 121 103 149 c 36 21 76 36 117 36 z;
+#X obj 2052 114 loadbang;
+#X obj 2052 229 loadbang;
+#X obj 2052 343 loadbang;
+#X obj 2052 451 loadbang;
+#X obj 1686 -169 draw group;
+#X obj 2554 126 draw path M 359 27 c -49 0 -75 42 -75 75 c 0 38 27
+77 72 77 c 4 0 9 0 14 -1 c -28 37 -72 59 -120 59 c -106 0 -113 -73
+-113 -186 v -51 v -51 c 0 -113 7 -187 113 -187 c 80 0 139 70 158 151
+c 2 7 7 10 12 10 c 6 0 13 -4 13 -12 c 0 -94 -105 -174 -183 -174 c -68
+0 -137 21 -184 70 c -49 51 -66 122 -66 193 s 17 142 66 193 c 47 49
+116 69 184 69 c 87 0 160 -64 175 -150 c 1 -5 1 -9 1 -13 c 0 -40 -30
+-72 -67 -72 z;
+#X obj 1902 -235 draw path M 335 -262 c -188 0 -333 172 -333 374 c
+0 181 132 314 251 452 c -22 70 -40 142 -49 215 c -6 55 -8 109 -8 165
+c 0 119 55 230 150 302 c 3 2 7 4 10 4 c 4 0 7 -1 10 -4 c 77 -89 145
+-263 145 -384 c 0 -149 -90 -265 -188 -379 c 23 -73 44 -147 63 -221
+c 1 0 2 1 3 1 c 155 0 256 -128 256 -261 c 0 -76 -33 -154 -107 -210
+c -25 -19 -53 -31 -83 -39 v -32 c 0 -48 -1 -97 -4 -145 c -7 -122 -95
+-228 -216 -228 c -112 0 -202 92 -202 205 c 0 58 53 104 112 104 c 54
+0 95 -48 95 -104 c 0 -52 -43 -95 -95 -95 c -12 0 -23 3 -34 8 c 26 -45
+73 -75 127 -75 c 98 0 165 91 171 191 c 3 46 4 93 4 139 v 23 c -26 -4
+-51 -6 -78 -6 z M 454 -205 c 72 23 121 95 121 167 c 0 88 -63 176 -164
+191 c 23 -109 39 -236 43 -358 z M 338 -219 c 25 0 50 1 74 4 c -4 126
+-21 258 -45 370 c -86 -5 -135 -61 -135 -122 c 0 -44 26 -92 82 -124
+c 5 -5 7 -10 7 -15 c 0 -11 -10 -22 -22 -22 c -3 0 -6 1 -9 2 c -80 43
+-117 115 -117 185 c 0 91 62 179 170 199 c -16 63 -34 125 -53 187 c
+-109 -125 -218 -250 -218 -415 c 0 -136 130 -249 266 -249 z M 406 1103
+c -100 -53 -163 -157 -163 -270 c 0 -87 22 -158 43 -230 c 84 102 155
+209 155 341 c 0 70 -7 98 -35 159 z;
+#X msg 1902 -271 transform translate 15.0264 8.8453 scale 0.004 -0.004
+\, fill black;
+#X msg 2554 92 transform translate 19.2264 7.8453 scale 0.004 -0.004
+\, fill black;
+#X msg 2052 135 transform translate 22.9264 10.8453 scale 0.004 -0.004
+\, fill black;
+#X msg 2052 250 transform translate 25.9406 10.3453 scale 0.004 -0.004
+\, fill black;
+#X msg 2052 364 transform translate 28.9548 9.8453 scale 0.004 -0.004
+\, fill black;
+#X msg 2052 472 transform translate 31.969 9.3453 scale 0.004 -0.004
+\, fill black;
+#X floatatom 1686 -287 5 0 0 0 - - -, f 5;
+#X obj 2283 -260 draw line 0.05 -0 21.1469 -0;
+#X obj 2283 -315 loadbang;
+#X msg 2283 -294 transform translate 14.2264 9.8453 \, stroke-linejoin
+1 \, stroke-linecap 1 \, stroke-width 0.1;
+#X obj 2283 -235 loadbang;
+#X obj 2283 -180 draw line 0.05 -0 21.1469 -0;
+#X msg 2283 -216 transform translate 14.2264 8.8453 \, stroke-linejoin
+1 \, stroke-linecap 1 \, stroke-width 0.1;
+#X obj 2283 -155 loadbang;
+#X msg 2281 -136 transform translate 14.2264 7.8453 \, stroke-linejoin
+1 \, stroke-linecap 1 \, stroke-width 0.1;
+#X obj 2281 -100 draw line 0.05 -0 21.1469 -0;
+#X obj 2283 -75 loadbang;
+#X obj 2281 -20 draw line 0.05 -0 21.1469 -0;
+#X msg 2281 -55 transform translate 14.2264 6.8453 \, stroke-linejoin
+1 \, stroke-linecap 1 \, stroke-width 0.1;
+#X obj 2283 5 loadbang;
+#X msg 2281 25 transform translate 14.2264 5.8453 \, stroke-linejoin
+1 \, stroke-linecap 1 \, stroke-width 0.1;
+#X obj 2281 60 draw line 0.05 -0 21.1469 -0;
+#X text 1831 -140 clef ->;
+#X text 2431 161 time signature ->;
+#X text 1960 187 middle c ->;
+#X text 1970 295 d ->;
+#X text 1967 412 e ->;
+#X text 1966 525 f ->;
+#X obj 1775 22 loadbang;
+#X obj 1775 80 draw rect 16.9068 -0.1 1.9743 0.2;
+#X msg 1775 44 transform translate 5.6906 10.8453 \, stroke-width 0.1
+\, fill black;
+#X text 1667 54 ledger-line ->;
+#X obj 1704 119 key;
+#X obj 1704 153 route 99 100 101 102;
+#X msg 1704 184 99;
+#X msg 1734 184 100;
+#X msg 1764 184 101;
+#X msg 1794 184 102;
+#X obj 1704 260 t a b;
+#X obj 1994 120 r c;
+#X msg 1994 141 fill \$1;
+#X obj 1994 230 r d;
+#X msg 1994 251 fill \$1;
+#X obj 1992 346 r e;
+#X msg 1992 367 fill \$1;
+#X obj 1995 461 r f;
+#X msg 1995 482 fill \$1;
+#X obj 1741 -311 loadbang;
+#X msg 1731 287 \; c - black \; d - black \; e - black \; f - black
+;
+#X msg 1704 370 \; \$1 - red;
+#X obj 1829 239 route 99 100 101 102;
+#X obj 1829 218 keyup;
+#X obj 1745 -19 r cl;
+#X msg 1745 2 fill \$1 \, stroke \$1;
+#X obj 2052 400 draw path M 220 138 c 56 0 109 -29 109 -91 c 0 -72
+-56 -121 -103 -149 c -36 -21 -76 -36 -117 -36 c -56 0 -109 29 -109
+91 c 0 72 56 121 103 149 c 36 21 76 36 117 36 z;
+#X obj 1686 -311 inlet;
+#X obj 1686 -266 * 0.01;
+#X msg 1741 -290 11;
+#X obj 1686 -245 * 11;
+#X msg 1686 -190 transform scale \$1 translate -20 -10;
+#X obj 2052 509 draw path M 220 138 c 56 0 109 -29 109 -91 c 0 -72
+-56 -121 -103 -149 c -36 -21 -76 -36 -117 -36 c -56 0 -109 29 -109
+91 c 0 72 56 121 103 149 c 36 21 76 36 117 36 z;
+#X obj 2052 283 draw path M 220 138 c 56 0 109 -29 109 -91 c 0 -72
+-56 -121 -103 -149 c -36 -21 -76 -36 -117 -36 c -56 0 -109 29 -109
+91 c 0 72 56 121 103 149 c 36 21 76 36 117 36 z;
+#X obj 1936 141 s cl;
+#X obj 1704 239 makefilename %c;
+#X connect 1 0 11 0;
+#X connect 2 0 12 0;
+#X connect 4 0 13 0;
+#X connect 5 0 14 0;
+#X connect 6 0 15 0;
+#X connect 7 0 16 0;
+#X connect 11 0 10 0;
+#X connect 12 0 9 0;
+#X connect 13 0 3 0;
+#X connect 14 0 72 0;
+#X connect 15 0 65 0;
+#X connect 16 0 71 0;
+#X connect 17 0 67 0;
+#X connect 19 0 20 0;
+#X connect 20 0 18 0;
+#X connect 21 0 23 0;
+#X connect 23 0 22 0;
+#X connect 24 0 25 0;
+#X connect 25 0 26 0;
+#X connect 27 0 29 0;
+#X connect 29 0 28 0;
+#X connect 30 0 31 0;
+#X connect 31 0 32 0;
+#X connect 39 0 41 0;
+#X connect 41 0 40 0;
+#X connect 43 0 44 0;
+#X connect 44 0 45 0;
+#X connect 44 1 46 0;
+#X connect 44 2 47 0;
+#X connect 44 3 48 0;
+#X connect 45 0 74 0;
+#X connect 46 0 74 0;
+#X connect 47 0 74 0;
+#X connect 48 0 74 0;
+#X connect 49 0 60 0;
+#X connect 49 1 59 0;
+#X connect 50 0 51 0;
+#X connect 50 0 73 0;
+#X connect 51 0 3 0;
+#X connect 52 0 53 0;
+#X connect 53 0 72 0;
+#X connect 54 0 55 0;
+#X connect 55 0 65 0;
+#X connect 56 0 57 0;
+#X connect 57 0 71 0;
+#X connect 58 0 68 0;
+#X connect 61 0 59 0;
+#X connect 61 1 59 0;
+#X connect 61 2 59 0;
+#X connect 61 3 59 0;
+#X connect 61 4 59 0;
+#X connect 62 0 61 0;
+#X connect 63 0 64 0;
+#X connect 64 0 40 0;
+#X connect 66 0 17 0;
+#X connect 67 0 69 0;
+#X connect 68 0 70 0;
+#X connect 69 0 70 0;
+#X connect 70 0 8 0;
+#X connect 74 0 49 0;
+#X restore 417 392 pd notes;
+#X msg 154 342 0;
+#X msg 194 342 2;
+#X obj 154 383 + 69;
+#X obj 320 292 keyup;
+#X obj 155 457 osc~ 0;
+#X obj 155 542 *~;
+#X msg 203 456 1;
+#X msg 320 456 0;
+#X msg 203 487 \$1 100;
+#X obj 203 508 line~;
+#X obj 154 405 mtof;
+#X obj 153 308 route 99 100 101 102;
+#X obj 154 426 t a b;
+#X obj 151 287 key;
+#X msg 234 342 4;
+#X msg 274 342 5;
+#X text 326 568 Engraved by Lilypond :);
+#X floatatom 417 355 5 0 0 1 Zoom(%) - -, f 5;
+#X obj 417 292 loadbang;
+#X msg 417 313 100;
+#X text 147 22 Click a note name on the computer keyboard (in lower
+case) to play one of the four notes shown:;
+#X text 147 222 The notation software Lilypond can output svg files.
+Pd can't automatically import such a file at the moment. Here I ported
+the path instructions by hand.;
+#X obj 155 563 output~;
+#X connect 2 0 4 0;
+#X connect 3 0 4 0;
+#X connect 4 0 12 0;
+#X connect 5 0 9 0;
+#X connect 6 0 7 0;
+#X connect 7 0 24 0;
+#X connect 8 0 10 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 7 1;
+#X connect 12 0 14 0;
+#X connect 13 0 2 0;
+#X connect 13 1 3 0;
+#X connect 13 2 16 0;
+#X connect 13 3 17 0;
+#X connect 14 0 6 0;
+#X connect 14 1 8 0;
+#X connect 15 0 13 0;
+#X connect 16 0 4 0;
+#X connect 17 0 4 0;
+#X connect 19 0 1 0;
+#X connect 20 0 21 0;
+#X connect 21 0 19 0;

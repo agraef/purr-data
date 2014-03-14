@@ -1,0 +1,36 @@
+#N struct drawtut-polygon float x float y;
+#N canvas -9 19 867 610 10;
+#X msg 53 117 stroke blue;
+#X msg 142 117 fill yellow;
+#X msg 228 117 stroke-width \$1;
+#X floatatom 228 93 5 0 0 0 - - -, f 5;
+#X obj 53 57 struct drawtut-polygon float x float y;
+#X scalar drawtut-polygon -138 117 \;;
+#X text 0 1 New Drawing Commands: polygon;
+#X text 0 1 _____________________________;
+#X text 53 23 Polygons are closed shapes.;
+#X obj 53 153 draw polygon 350 75 379 161 469 161 397 215 423 301 350
+250 277 301 303 215 231 161 321 161;
+#X text 52 444 The polygon shape is like polyline \, except it creates
+a closed shape.;
+#X obj 432 153 draw polygon 250 75 323 301 131 161 369 161 177 301
+;
+#X text 632 311 <- two polygons;
+#X obj 595 97 loadbang;
+#X text 52 484 For the polygon on the right \, you can see how the
+line segments actually intersect each other. When you want to fill
+such a shape \, use the "fill-rule" message to specify the algorithm
+for how to fill overlapping areas.;
+#X msg 595 121 transform translate 375 0 \, fill red;
+#X msg 432 56 fill-rule 0;
+#X text 517 57 nonzero;
+#X text 527 87 evenodd;
+#X msg 442 86 fill-rule 1;
+#X connect 0 0 9 0;
+#X connect 1 0 9 0;
+#X connect 2 0 9 0;
+#X connect 3 0 2 0;
+#X connect 13 0 15 0;
+#X connect 15 0 11 0;
+#X connect 16 0 11 0;
+#X connect 19 0 11 0;

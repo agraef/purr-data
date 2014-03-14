@@ -1,0 +1,65 @@
+#N struct animation float x float y;
+#N canvas 0 19 774 535 10;
+#X obj 202 20 struct animation float x float y;
+#X scalar animation 93 121 \;;
+#X obj 310 50 loadbang;
+#X obj 310 141 loadbang;
+#X msg 310 162 fill #333333 \, stroke "";
+#X msg 310 71 fill #fff \, stroke "" \, fill-opacity 0.2;
+#X obj 310 182 draw rect -100 -100 200 200;
+#X obj 310 94 draw path m -10 -10 l 20 0 0 -6 10 16 -10 16 0 -6 -20
+0 0 6 -10 -16 10 -16 z;
+#X obj 380 262 loadbang;
+#X obj 380 305 draw circle -50 0 20;
+#X obj 380 339 loadbang;
+#X obj 380 397 draw circle -50 0 20;
+#X obj 384 421 loadbang;
+#X msg 384 442 stroke-dasharray 5 2 \, stroke #fff \, stroke-opacity
+0.2 \, stroke-width 2;
+#X msg 380 360 stroke-dasharray 5 2 \, stroke #fff \, stroke-opacity
+0.2 \, stroke-width 2;
+#X obj 384 476 draw circle 50 0 20;
+#X obj 202 98 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 202 118 \$1 1000;
+#X obj 202 160 t a a;
+#X obj 202 181 * 100;
+#X obj 202 202 pack 0 0;
+#X msg 203 228 transform translate \$1 0 \, fill-opacity \$2;
+#X msg 380 283 stroke-width 2 \, fill red \, fill-opacity 0 \, stroke
+#fff;
+#X obj 202 54 route click;
+#X obj 202 75 b;
+#X obj 202 139 line 0 33.33;
+#X text 48 230 ^ CLICK ABOVE ^;
+#X text 0 291 This is based off one of the animations from a Raphael.js
+\, available here:;
+#X obj 0 325 pddp/pddplink http://raphaeljs.com/animation.html;
+#X text 0 351 Since this is all a single scalar you can click it anywhere
+to trigger the animation. In the original only the arrow triggers the
+animation. To do that here one would need to use a separate scalar
+for the arrow. However \, there is not currently a way to control the
+z order among _different_ scalars. (But within a scalar \, the stacking
+order of the parent drawing commands determines the stacking order
+of the drawings.);
+#X connect 0 0 23 0;
+#X connect 2 0 5 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 7 0;
+#X connect 8 0 22 0;
+#X connect 10 0 14 0;
+#X connect 12 0 13 0;
+#X connect 13 0 15 0;
+#X connect 14 0 11 0;
+#X connect 16 0 17 0;
+#X connect 17 0 25 0;
+#X connect 18 0 19 0;
+#X connect 18 1 20 1;
+#X connect 19 0 20 0;
+#X connect 20 0 21 0;
+#X connect 21 0 9 0;
+#X connect 22 0 9 0;
+#X connect 23 0 24 0;
+#X connect 24 0 16 0;
+#X connect 25 0 18 0;

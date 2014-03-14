@@ -1,0 +1,100 @@
+#N struct quick-graph float x float y float y0 float y1 float y2 float
+y3 float y4 float y5 float y6;
+#N struct hotspot float x float y float y1 float idx float r float
+g float b float radius;
+#N canvas 0 19 611 390 10;
+#X scalar quick-graph 30 105 52 79 57 70 43 79 86 \;;
+#X msg 243 97 fill blue \, stroke blue \, stroke-width 2 \, fill-opacity
+0.6;
+#X obj 24 33 struct quick-graph float x float y float y0 float y1 float
+y2 float y3 float y4 float y5 float y6;
+#X obj 243 76 loadbang;
+#N canvas 667 49 641 427 hotspot 0;
+#X obj 189 402 set quick-graph y0 y1 y2 y3 y4 y5 y6;
+#X obj 186 328 get quick-graph y0 y1 y2 y3 y4 y5 y6;
+#X msg 186 252 traverse pd-quick-graph.pd \, next;
+#X obj 186 273 pointer quick-graph;
+#X msg 241 295 next;
+#X obj 171 373 f;
+#X obj 171 135 get hotspot idx y1;
+#X obj 171 162 pack;
+#X obj 431 252 t a;
+#X obj 171 183 t b a b;
+#X obj 432 327 route 0 1 2 3 4 5 6;
+#X obj 563 328 t a;
+#X obj 171 29 struct hotspot float x float y float y1 float idx float
+r float g float b float radius;
+#X obj 469 121 draw circle 0 y1 radius;
+#X obj 18 135 set hotspot r g b radius;
+#X obj 171 70 route enter change leave;
+#X obj 264 112 set hotspot r g b radius;
+#X msg 264 91 0 0 255 4 \$1;
+#X msg 19 114 50 50 255 8 \$1;
+#X msg 469 96 fill r g b \, stroke black;
+#X obj 469 71 loadbang;
+#X obj 458 187 draw circle 0 y1 8;
+#X obj 458 147 loadbang;
+#X msg 458 168 stroke "";
+#X connect 1 0 5 1;
+#X connect 1 1 0 1;
+#X connect 1 2 0 2;
+#X connect 1 3 0 3;
+#X connect 1 4 0 4;
+#X connect 1 5 0 5;
+#X connect 1 6 0 6;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 3 0 11 0;
+#X connect 3 1 4 0;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
+#X connect 6 0 7 0;
+#X connect 6 1 7 1;
+#X connect 7 0 9 0;
+#X connect 8 0 10 0;
+#X connect 9 0 5 0;
+#X connect 9 1 8 0;
+#X connect 9 2 2 0;
+#X connect 10 0 5 1;
+#X connect 10 1 0 1;
+#X connect 10 2 0 2;
+#X connect 10 3 0 3;
+#X connect 10 4 0 4;
+#X connect 10 5 0 5;
+#X connect 10 6 0 6;
+#X connect 11 0 0 7;
+#X connect 12 0 15 0;
+#X connect 15 0 6 0;
+#X connect 15 0 18 0;
+#X connect 15 1 6 0;
+#X connect 15 2 17 0;
+#X connect 17 0 16 0;
+#X connect 18 0 14 0;
+#X connect 19 0 13 0;
+#X connect 20 0 19 0;
+#X connect 22 0 23 0;
+#X connect 23 0 21 0;
+#X restore 243 174 pd hotspot;
+#X scalar hotspot 30 98 52 0 0 0 255 4 \;;
+#X scalar hotspot 50 99 79 1 0 0 255 4 \;;
+#X scalar hotspot 70 99 57 2 0 0 255 4 \;;
+#X scalar hotspot 90 99 70 3 0 0 255 4 \;;
+#X scalar hotspot 110 99 43 4 0 0 255 4 \;;
+#X scalar hotspot 130 99 79 5 0 0 255 4 \;;
+#X scalar hotspot 150 99 86 6 0 0 255 4 \;;
+#X obj 243 120 draw path -x M 0 y0 C 10 y0 10 y1 20 y1 C 30 y1 30 y2
+40 y2 C 50 y2 50 y3 60 y3 C 70 y3 70 y4 80 y4 C 90 y4 90 y5 100 y5
+110 y5 110 y6 120 y6 L 120 150 0 150 z;
+#X text 241 217 Quick graph demo showing some mouseover animation.
+;
+#X text 241 237 When you mouse over a scalar \, Pd will give you two
+new notifications to the struct outlet:;
+#X text 241 267 * "enter" when the mouse first enters the bbox of the
+scalar;
+#X text 241 287 * "leave" when the mouse leaves the bbox of the scalar
+;
+#X text 241 317 Of course \, this would be more robust if the notifications
+only happened with the mouse enters a shape \, rather than the bbox.
+;
+#X connect 1 0 12 0;
+#X connect 3 0 1 0;

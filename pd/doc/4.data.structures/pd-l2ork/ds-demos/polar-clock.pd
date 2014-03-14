@@ -1,0 +1,204 @@
+#N struct polar-clock float x float y float ax float ay float flag
+float xloc float yloc float mx float my float r;
+#N canvas 0 4 966 611 10;
+#X scalar polar-clock 201 342 183.826 -98.6289 0 0 0 50 -150 200 \;
+;
+#X obj 57 29 struct polar-clock float x float y float ax float ay float
+flag float xloc float yloc float mx float my float r;
+#X obj 59 65 loadbang;
+#X scalar polar-clock 201 342 168.903 157.061 0 0 0 50 -110 160 \;
+;
+#X scalar polar-clock 201 342 18.9419 165.911 1 0 0 50 -70 120 \;;
+#X scalar polar-clock 201 342 33.3672 128.252 1 0 0 50 -30 80 \;;
+#X scalar polar-clock 201 352 84.641 30 0 0 0 50 10 40 \;;
+#N canvas 45 51 917 566 guts 0;
+#X floatatom 661 -13 5 0 0 0 total - -, f 5;
+#X msg 581 8 360 \$1;
+#X obj 581 29 /;
+#X obj 515 48 *;
+#X floatatom 462 -19 5 0 0 0 value - -, f 5;
+#X msg 515 89 90 \$1;
+#X obj 515 110 -;
+#X obj 515 173 t a a;
+#X obj 547 358 * 30;
+#X obj 515 358 * 30;
+#X obj 716 412 pointer;
+#X obj 515 194 cos;
+#X obj 542 194 sin;
+#X obj 515 394 + 50;
+#X obj 547 420 -;
+#X obj 515 69 t a a;
+#X obj 755 214 > 180;
+#X obj 515 131 * 3.14159;
+#X obj 515 152 / 180;
+#X floatatom 591 165 5 0 0 0 x - -, f 5;
+#X floatatom 634 165 5 0 0 0 y - -, f 5;
+#X obj 547 394 swap;
+#X floatatom 671 223 5 0 0 0 r - -, f 5;
+#X obj 623 358 -;
+#X obj 671 254 t b a;
+#X obj 153 67 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 153 88 metro 1000;
+#X obj 153 129 zexy/time;
+#X obj 120 427 s \$0-value;
+#X obj 192 427 s \$0-total;
+#X obj 261 426 s \$0-x;
+#X obj 311 426 s \$0-y;
+#X obj 361 426 s \$0-r;
+#X obj 710 223 r \$0-r;
+#X obj 626 223 f;
+#X obj 637 198 r \$0-y;
+#X obj 580 -38 r \$0-total;
+#X obj 514 -1 r \$0-value;
+#X obj 306 371 unpack 0 0 0 0 0 0;
+#X msg 188 240 \$1 60 50 50 200 1;
+#X obj 411 426 s \$0-p;
+#X obj 779 307 r \$0-p;
+#X obj 779 328 t a b;
+#X obj 720 356 until;
+#X msg 720 377 next;
+#X msg 169 287 \$1 60 50 50 160 2;
+#X msg 151 334 \$1 24 50 50 120 3;
+#X obj 169 266 change;
+#X obj 151 312 change;
+#X obj 288 131 zexy/date;
+#X msg 316 215 \$1 30 50 50 80 4;
+#X msg 302 191 \$1 12 50 50 40 5;
+#X obj 153 41 loadbang;
+#X obj 188 214 line;
+#X msg 188 191 \$1 250;
+#X obj 578 198 f;
+#X obj 578 131 r \$0-x;
+#X obj 514 443 set polar-clock ax ay mx my r flag;
+#X obj 366 162 outlet;
+#X obj 249 162 outlet;
+#X obj 199 162 outlet;
+#X obj 109 172 outlet;
+#X obj 59 162 outlet;
+#X msg 806 351 traverse polar_clock;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 1;
+#X connect 3 0 15 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 17 0;
+#X connect 7 0 11 0;
+#X connect 7 1 12 0;
+#X connect 8 0 21 0;
+#X connect 9 0 13 0;
+#X connect 10 0 57 6;
+#X connect 11 0 9 0;
+#X connect 12 0 8 0;
+#X connect 13 0 57 0;
+#X connect 14 0 57 1;
+#X connect 15 0 5 0;
+#X connect 15 1 16 0;
+#X connect 16 0 57 5;
+#X connect 17 0 18 0;
+#X connect 18 0 7 0;
+#X connect 19 0 55 0;
+#X connect 20 0 34 0;
+#X connect 21 0 14 0;
+#X connect 21 1 14 1;
+#X connect 22 0 24 0;
+#X connect 23 0 57 3;
+#X connect 24 0 23 0;
+#X connect 24 1 23 1;
+#X connect 24 1 57 4;
+#X connect 24 1 8 1;
+#X connect 24 1 9 1;
+#X connect 25 0 26 0;
+#X connect 26 0 27 0;
+#X connect 27 0 62 0;
+#X connect 27 0 48 0;
+#X connect 27 1 61 0;
+#X connect 27 1 47 0;
+#X connect 27 2 54 0;
+#X connect 27 2 60 0;
+#X connect 33 0 24 0;
+#X connect 34 0 23 0;
+#X connect 34 0 21 1;
+#X connect 35 0 34 0;
+#X connect 36 0 1 0;
+#X connect 37 0 3 0;
+#X connect 38 0 28 0;
+#X connect 38 1 29 0;
+#X connect 38 2 30 0;
+#X connect 38 3 31 0;
+#X connect 38 4 32 0;
+#X connect 38 5 40 0;
+#X connect 39 0 38 0;
+#X connect 41 0 42 0;
+#X connect 42 0 43 0;
+#X connect 42 1 63 0;
+#X connect 43 0 44 0;
+#X connect 44 0 10 0;
+#X connect 45 0 38 0;
+#X connect 46 0 38 0;
+#X connect 47 0 45 0;
+#X connect 48 0 46 0;
+#X connect 49 1 51 0;
+#X connect 49 1 59 0;
+#X connect 49 2 50 0;
+#X connect 49 2 58 0;
+#X connect 50 0 38 0;
+#X connect 51 0 38 0;
+#X connect 52 0 25 0;
+#X connect 53 0 39 0;
+#X connect 54 0 53 0;
+#X connect 55 0 13 1;
+#X connect 55 0 57 2;
+#X connect 56 0 55 0;
+#X connect 63 0 10 0;
+#X restore 527 544 pd guts;
+#X msg 59 86 stroke-width 30 \, stroke ay ax ay;
+#X floatatom 703 594 5 0 0 0 - - -, f 5;
+#X floatatom 658 594 5 0 0 1 / - -, f 5;
+#X floatatom 608 594 5 0 0 0 - - -, f 5;
+#X floatatom 568 594 5 0 0 0 - - -, f 5;
+#X floatatom 527 594 5 0 0 1 : - -, f 5;
+#X obj 429 29 namecanvas polar_clock;
+#X obj 315 126 draw circle mx mx r;
+#X msg 315 89 stroke gray \, stroke-width 5 \, stroke-dasharray 1 15
+\, stroke-linecap 1 \, stroke-opacity 0.4;
+#X obj 59 110 draw path M mx my A r r 0 flag 1 ax ay;
+#X obj 315 65 loadbang;
+#X text 524 138 Raphael Polar Clock;
+#X text 524 138 ___________________;
+#X text 524 310 If there's a lesson here \, it's this: if you make
+a spec like svg and you want other human beings to use it correctly
+\, make it clear and easy to use. Then go get a coffee and rewrite
+your incomprehensible \, ill-considered draft to actually make the
+documentation equally clear. Otherwise that part of the spec will be
+prone to errors and confusion \, from the backend to the wrapper libraries.
+;
+#X text 524 160 It turns out trigonometry is difficult to grasp and
+just as hard to explain. This example is ported from Raphael's polar
+clock \, which draws an arc that follows the circumference of a circle.
+The original code is left uncommented \, causing more than one question
+on the internet equivalent to \, "how the heck does this thing work?".
+;
+#X text 524 240 In addition \, drawing the arcs for this patch has
+revealed both an error in tkpath's calculations for the arc's bounding
+box \, and an error somewhere in the drawing routine that causes the
+"jitter" from 3 to 6 o'clock in the animation.;
+#X text 524 410 If you think that's the job of a textbook \, do realize
+that the hypothetical textbook author is going to use your crappy spec
+as the main (and probably _only_) reference. So take a sip of coffee
+\, think how much easier it is to write code for a living than loading
+things into a truck \, and get to work.;
+#X text 524 480 This is just a partial port from Raphael. For example
+\, drawing commands don't support the easing style. I'm just using
+[line] \, but it's not hard to build a wrapper. (See easing.pd for
+an example.);
+#X connect 2 0 8 0;
+#X connect 7 0 13 0;
+#X connect 7 1 12 0;
+#X connect 7 2 11 0;
+#X connect 7 3 10 0;
+#X connect 7 4 9 0;
+#X connect 8 0 17 0;
+#X connect 16 0 15 0;
+#X connect 18 0 16 0;

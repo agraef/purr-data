@@ -1,0 +1,55 @@
+#N struct circlehand float x float y;
+#N canvas 0 23 826 503 10;
+#X obj 481 1 struct circlehand float x float y;
+#X scalar circlehand -135 -183 \;;
+#X obj 594 205 draw path M 320 240 c -50 100 50 110 0 190;
+#X obj 519 332 draw circle 320 430 5;
+#X obj 357 452 draw circle 320 220 20;
+#X obj 519 278 loadbang;
+#X obj 519 403 draw circle 530 430 20;
+#X obj 519 251 draw circle 320 220 20;
+#X msg 519 135 transform rotate \$1 320 430;
+#X obj 519 92 pow 2;
+#X msg 518 48 0 \, 1 1000;
+#X obj 519 113 * 1.57;
+#X obj 357 408 loadbang;
+#X msg 357 429 fill blue \, stroke blue \, stroke-width 2 \, fill-opacity
+0.4;
+#X msg 531 228 stroke-width 2 \, stroke blue \, stroke-opacity 0.4
+;
+#X obj 519 68 line;
+#X msg 594 180 stroke-width 2 \, stroke blue;
+#X msg 519 305 fill blue \, stroke blue \, stroke-opacity 1 \, fill-opacity
+1;
+#X msg 599 47 0;
+#X obj 519 360 loadbang;
+#X msg 519 381 stroke-width 2 \, stroke blue \, fill blue \, fill-opacity
+0.4;
+#X obj 481 22 route click;
+#X obj 594 156 loadbang;
+#X obj 531 205 loadbang;
+#X text 81 303 This is just a quick animation \, based on a demo from
+Raphael.js.;
+#X text 81 343 It uses [line] to control the animation. You can essentially
+control the frame rate using the second argument of [line].;
+#X text 81 383 The original is here:;
+#X obj 81 404 pddp/pddplink http://raphaeljs.com/hand.html;
+#X connect 0 0 21 0;
+#X connect 5 0 17 0;
+#X connect 8 0 2 0;
+#X connect 8 0 7 0;
+#X connect 9 0 11 0;
+#X connect 10 0 15 0;
+#X connect 11 0 8 0;
+#X connect 12 0 13 0;
+#X connect 13 0 4 0;
+#X connect 14 0 7 0;
+#X connect 15 0 9 0;
+#X connect 16 0 2 0;
+#X connect 17 0 3 0;
+#X connect 18 0 15 0;
+#X connect 19 0 20 0;
+#X connect 20 0 6 0;
+#X connect 21 0 10 0;
+#X connect 22 0 16 0;
+#X connect 23 0 14 0;

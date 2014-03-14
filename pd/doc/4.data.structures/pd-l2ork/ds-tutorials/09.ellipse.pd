@@ -1,0 +1,24 @@
+#N struct drawtut-ellipse float x float y;
+#N canvas 0 19 638 498 10;
+#X msg 53 117 stroke blue;
+#X msg 142 117 fill yellow;
+#X msg 228 117 stroke-width \$1;
+#X floatatom 228 93 5 0 0 0 - - -, f 5;
+#X obj 53 153 draw ellipse 0 0 86 42;
+#X text 259 246 <- an ellipse;
+#X text 0 1 New Drawing Commands: ellipse;
+#X text 0 1 _____________________________;
+#X text 53 23 An ellipse.;
+#X obj 53 57 struct drawtut-ellipse float x float y;
+#X scalar drawtut-ellipse 155 253 \;;
+#X text 52 334 The [draw] object above creates an ellipse with its
+center at (0 \, 0) \, with an x-radius of 86 and a y-radius of 42;
+#X text 52 384 Like a circle \, the coordinate (0 \, 0) specifies the
+center of the shape \, but you can easily figure out the top-left corner
+of its bounding-box by offsetting its coordinates by the x and y radius
+values \, respectively. (So the one above would be [draw ellipse 86
+42 86 42].);
+#X connect 0 0 4 0;
+#X connect 1 0 4 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;

@@ -1,0 +1,273 @@
+#N struct peak-template float x float y float amp float ampreal float
+ampimag;
+#N canvas 427 19 448 552 10;
+#X msg 211 385 bang;
+#X obj 21 390 pack 0 100;
+#X obj 21 414 line~;
+#X obj 21 366 dbtorms;
+#N canvas 95 102 724 400 fft 0;
+#X obj 64 67 inlet~;
+#X obj 134 107 print~;
+#X msg 137 71 bang;
+#X obj 64 104 rfft~;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array array3 4096 float 0;
+#X coords 0 100 4096 -100 400 150 1;
+#X restore 254 14 graph;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array array4 4096 float 0;
+#X coords 0 100 4096 -100 400 150 1;
+#X restore 256 165 graph;
+#X obj 9 185 tabsend~ array3;
+#X obj 50 158 tabsend~ array4;
+#X msg 37 246 \; array3 resize 4096 \; array4 resize 4096;
+#X obj 62 38 block~ 4096 1;
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X connect 3 1 7 0;
+#X restore 81 436 pd fft;
+#X obj 21 438 *~;
+#X obj 186 361 adc~;
+#N canvas 204 36 521 368 analysis 0;
+#X obj 206 37 inlet;
+#X msg 207 68 bang;
+#X obj 275 52 r snapshot;
+#X msg 220 169 4096 array3 array4 50;
+#X obj 127 252 print;
+#X obj 206 103 t b b b;
+#X obj 122 140 s done-analysis;
+#X obj 248 133 s start-analysis;
+#X obj 220 219 s found-peak;
+#X obj 154 194 r loud;
+#X obj 128 226 spigot;
+#X obj 220 193 pique;
+#X connect 0 0 1 0;
+#X connect 1 0 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 11 0;
+#X connect 5 0 6 0;
+#X connect 5 1 3 0;
+#X connect 5 2 7 0;
+#X connect 9 0 10 1;
+#X connect 10 0 4 0;
+#X connect 11 0 8 0;
+#X connect 11 0 10 0;
+#X restore 296 409 pd analysis;
+#X obj 21 343 r loop-amp;
+#X msg 296 385 snapshot;
+#X text 19 142 click here first;
+#X text 296 361 analysis;
+#N canvas 36 255 884 389 peak-saver 0;
+#X floatatom 710 310 0 0 0 0 - - -;
+#X floatatom 633 309 0 0 0 0 - - -;
+#X floatatom 560 305 0 0 0 0 - - -;
+#X floatatom 484 303 0 0 0 0 - - -;
+#X obj 406 251 pointer;
+#X obj 354 150 pointer;
+#X msg 374 60 bang;
+#X obj 142 243 rmstodb;
+#X obj 10 244 * 0.1;
+#X obj 141 268 * -3;
+#X floatatom 416 300 0 0 0 0 - - -;
+#X obj 353 36 r start-analysis;
+#X obj 354 89 t b b;
+#X msg 29 89 50 60 70;
+#X obj 28 120 append peak-template x y amp;
+#X msg 426 225 next;
+#X obj 402 276 get peak-template x y amp ampreal ampimag;
+#X obj 9 293 append peak-template x y amp ampreal ampimag;
+#X obj 116 167 r found-peak;
+#X obj 117 196 unpack 0 0 0 0 0;
+#X msg 76 244 330;
+#X msg 400 87 \; pd-peak-list clear;
+#X msg 354 125 traverse pd-peak-list \, bang;
+#X msg 408 201 traverse pd-peak-list \, next;
+#X connect 4 0 16 0;
+#X connect 5 0 14 3;
+#X connect 5 0 17 5;
+#X connect 6 0 12 0;
+#X connect 7 0 9 0;
+#X connect 8 0 17 0;
+#X connect 9 0 17 2;
+#X connect 11 0 12 0;
+#X connect 12 0 22 0;
+#X connect 12 1 21 0;
+#X connect 13 0 14 0;
+#X connect 15 0 4 0;
+#X connect 16 0 10 0;
+#X connect 16 1 3 0;
+#X connect 16 2 2 0;
+#X connect 16 3 1 0;
+#X connect 16 4 0 0;
+#X connect 18 0 19 0;
+#X connect 19 1 8 0;
+#X connect 19 2 20 0;
+#X connect 19 2 7 0;
+#X connect 19 3 17 3;
+#X connect 19 4 17 4;
+#X connect 20 0 17 1;
+#X connect 22 0 5 0;
+#X connect 23 0 4 0;
+#X restore 309 201 pd peak-saver;
+#N canvas 231 169 656 237 peak-template 0;
+#X obj 45 90 filledpolygon 3 3 3 0 0 0 amp 0 0;
+#X obj 37 16 struct peak-template float x float y float amp float ampreal
+float ampimag;
+#X restore 309 223 pd peak-template;
+#N canvas 0 0 600 382 peak-list 0;
+#X scalar peak-template 6.52298 330 -195.561 0.0125191 -0.0131689 \;
+;
+#X scalar peak-template 13.0656 330 -262.841 0.222392 0.0909196 \;
+;
+#X scalar peak-template 26.2816 330 -188.229 0.0133818 0.00299871 \;
+;
+#X scalar peak-template 34.1579 330 -182.784 -0.0111106 0.000616574
+\;;
+#X scalar peak-template 39.2398 330 -192.587 0.00649353 -0.0148522
+\;;
+#X scalar peak-template 54.2567 330 -169.462 -0.00637704 0.00196744
+\;;
+#X scalar peak-template 64.6374 330 -153.343 -0.00231745 -0.00274854
+\;;
+#X scalar peak-template 70.731 330 -228.984 -0.0391646 -0.0525299 \;
+;
+#X scalar peak-template 83.4018 330 -157.354 0.00213705 0.00360794
+\;;
+#X scalar peak-template 89.0428 330 -164.547 0.00509053 0.00215158
+\;;
+#X scalar peak-template 96.8527 330 -127.029 0.00018868 -0.00129597
+\;;
+#X scalar peak-template 108.145 330 -206.524 -0.0244265 0.0130057 \;
+;
+#X scalar peak-template 119.672 330 -139.871 0.000310867 0.00212115
+\;;
+#X scalar peak-template 129.195 330 -154.988 0.00101519 -0.00369247
+\;;
+#X scalar peak-template 148.144 330 -131.59 -0.000488336 0.00148172
+\;;
+#X scalar peak-template 156.394 330 -157.846 0.00107442 -0.00413614
+\;;
+#X scalar peak-template 168.637 330 -126.924 0.0001938 -0.00128991
+\;;
+#X scalar peak-template 189.884 330 -119.499 0.000252664 -0.000947853
+\;;
+#X scalar peak-template 211.047 330 -130.949 0.000525129 0.0014288
+\;;
+#X restore 309 245 pd peak-list;
+#X msg 34 167 \; pd dsp 1;
+#X obj 377 409 s loud;
+#X text 185 341 live sample;
+#X text 374 347 print out;
+#X text 374 362 peak list;
+#X text 19 36 This patch reads a soundfile or records a live sound.
+When you click on "snapshot" the peak-list window shows a list of the
+sinusoidal peaks that were found at that instant in the sound. You
+can also ask for the peak lists to be printed out.;
+#N canvas 132 255 634 331 insample 0;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array sample 155948 float 0;
+#X coords 0 1 155947 -1 400 150 1;
+#X restore 199 18 graph;
+#X obj 19 70 r read-sample;
+#X obj 19 95 unpack s f;
+#X obj 53 121 s insamprate;
+#X obj 19 171 soundfiler;
+#X msg 19 147 read -resize \$1 sample;
+#X obj 19 201 s insamplength;
+#X msg 357 197 \; sample resize 220500 \; insamplength 220500;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 2 1 3 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X restore 309 179 pd insample;
+#N canvas 186 103 405 461 test-signal 0;
+#X obj 135 296 tabread4~ sample;
+#X obj 135 271 line~;
+#X obj 95 146 f;
+#X obj 254 46 r insamprate;
+#X obj 135 415 outlet~;
+#X obj 146 33 r insamplength;
+#X msg 134 247 0 \, \$1 \$2;
+#X obj 134 221 pack 0 0;
+#X obj 209 190 /;
+#X obj 299 99 * 0.001;
+#X obj 135 388 hip~ 5;
+#X obj 33 5 loadbang;
+#X text 242 13 sample playback;
+#X msg 33 25 1;
+#X obj 33 69 metro 1000;
+#X floatatom 33 48 0 0 0 0 - - -;
+#X obj 255 75 t b b f;
+#X obj 161 84 t b f;
+#X connect 0 0 10 0;
+#X connect 1 0 0 0;
+#X connect 2 0 7 0;
+#X connect 3 0 16 0;
+#X connect 5 0 17 0;
+#X connect 6 0 1 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 1;
+#X connect 8 0 14 1;
+#X connect 9 0 8 1;
+#X connect 10 0 4 0;
+#X connect 11 0 13 0;
+#X connect 13 0 15 0;
+#X connect 14 0 2 0;
+#X connect 15 0 14 0;
+#X connect 16 0 13 0;
+#X connect 16 1 8 0;
+#X connect 16 2 9 0;
+#X connect 17 0 13 0;
+#X connect 17 1 8 0;
+#X connect 17 1 2 1;
+#X restore 81 413 pd test-signal;
+#X text 92 343 amplitude;
+#X text 110 199 read a sample;
+#X msg 34 218 \; read-sample ../sound/bell.aiff 44100;
+#X text 18 100 The active ingredient is "pique" in the "analysis" subwindow
+\, which is in the "extras" directory in the Pd release.;
+#X msg 34 255 \; read-sample ../sound/voice.wav 32000;
+#X obj 187 409 tabwrite~ sample;
+#X obj 377 387 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 34 293 \; read-sample ../sound/voice2.wav;
+#X obj 20 465 output~;
+#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header spectral_snapshots
+20 10 1 18 -261139 -33289 0;
+#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
+;
+#X obj 1 530 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 -233017 -33289 0;
+#N canvas 44 246 494 284 META 0;
+#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 105 AUTHOR Miller Puckette;
+#X text 12 85 LIBRARY PDDP;
+#X text 12 5 GENRE tutorial;
+#X text 12 45 LICENSE SIBSD;
+#X text 12 145 HELP_PATCH_AUTHORS Jonathan Wilkes revised the patch
+to conform to the PDDP template for Pd version 0.42.;
+#X text 12 25 KEYWORDS data_structure;
+#X text 12 65 DESCRIPTION spectral snapshots;
+#X restore 392 532 pd META;
+#N canvas 13 202 428 190 References 0;
+#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -261139 -33289 0;
+#X text 7 2 spectral snapshots- Related Help Documents;
+#X text 19 37 Links:;
+#X restore 103 532 pd References;
+#X obj 6 532 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X connect 0 0 28 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 5 0 31 0;
+#X connect 5 0 31 1;
+#X connect 6 0 28 0;
+#X connect 8 0 3 0;
+#X connect 9 0 7 0;
+#X connect 22 0 4 0;
+#X connect 22 0 5 1;
+#X connect 29 0 16 0;

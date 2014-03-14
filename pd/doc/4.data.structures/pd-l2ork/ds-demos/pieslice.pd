@@ -1,0 +1,164 @@
+#N struct pieslicer float x float y float cx float cy float x1 float
+y1 float r float flag float x2 float y2 float r1 float g float b float
+s float tx float ty;
+#N canvas -7 0 929 536 10;
+#X scalar pieslicer 380 -50 300 300 500 300 200 1 237.416 489.956 10
+80 250 1 0 0 \;;
+#X scalar pieslicer 380 -50 300 300 237.416 489.956 200 0 491.793 356.705
+255 0 255 1 0 0 \;;
+#X scalar pieslicer 380 -50 300 300 491.793 356.705 200 0 500 300 255
+50 10 1 0 0 \;;
+#X obj 69 -16 namecanvas c;
+#X obj 69 200 draw path M cx cy L x1 y1 A r r 0 flag 0 x2 y2 z;
+#X obj 69 143 loadbang;
+#X obj 69 55 route enter leave;
+#X obj 69 115 set pieslicer tx ty s;
+#X msg 69 166 fill r1 g b \, fill-opacity 0.4 \, stroke black \, stroke-width
+3 \, stroke-opacity 0.4 \, transform translate tx ty scale s;
+#X obj 69 8 struct pieslicer float x float y float cx float cy float
+x1 float y1 float r float flag float x2 float y2 float r1 float g float
+b float s float tx float ty;
+#X msg 69 84 -30 -30 1.1 \$1;
+#X msg 174 84 0 0 1 \$1;
+#X text 638 3 draw;
+#X text 906 282 curve;
+#X text 787 452 canvas;
+#X text 67 244 A quick graph based on a Raphael demo. I left the messy
+patch I used to generate the data from the sizes for the draw \, curve
+\, and canvas classes. As you can see draw class is rather bloated
+\, even compared to the canvas class.;
+#X text 67 294 But it should be possible to make this more general
+\, so you can plug in any classes and generate a pie chart.;
+#X text 67 324 With this many members for the struct \, it becomes
+obvious that the scalar "Properties" dialog needs to be more user-friendly.
+Editing a long list of floats is simply too prone to error.;
+#X text 268 436 Based on:;
+#X obj 268 457 pddp/pddplink http://raphaeljs.com/pie.html;
+#N canvas 159 103 522 352 bake 0;
+#X obj 176 -13 classinfo draw;
+#X msg 176 -35 size;
+#X msg 294 -60 size;
+#X obj 294 -39 classinfo canvas;
+#X msg 311 -9 size;
+#X obj 311 12 classinfo curve;
+#X obj 280 58 +;
+#X obj 297 97 +;
+#X floatatom 298 127 5 0 0 1 total - -, f 5;
+#X floatatom 133 159 5 0 0 0 angleplus - -, f 5;
+#X obj 177 80 t a;
+#X obj 177 101 * 360;
+#X obj 177 132 /;
+#X msg 229 153 0;
+#X obj 214 189 f;
+#N canvas 178 176 726 457 sector 0;
+#X obj 60 35 inlet;
+#X text 100 36 cx;
+#X obj 130 35 inlet;
+#X text 170 36 cy;
+#X obj 200 35 inlet;
+#X text 240 36 r;
+#X obj 270 35 inlet;
+#X text 310 36 angle;
+#X obj 370 35 inlet;
+#X text 410 36 angle+angleplus;
+#X obj 124 139 v cx;
+#X obj 162 100 v cy;
+#X obj 228 97 v r;
+#X obj 295 99 v startangle;
+#X obj 406 94 v endangle;
+#X obj 60 56 t b a;
+#X obj 567 50 loadbang;
+#X msg 567 71 pi;
+#X obj 567 92 pdinfo;
+#X obj 567 113 / 180;
+#X obj 470 279 loadbang;
+#X msg 470 300 traverse c \, bang;
+#X obj 470 321 pointer;
+#X obj 60 270 t b b b a;
+#X obj 96 313 v r;
+#X obj 66 313 v cy;
+#X obj 26 313 v cx;
+#X obj 567 134 v rad;
+#X obj 51 378 append pieslicer cx cy r x1 x2 y1 y2 flag;
+#X floatatom 321 313 5 0 0 0 - - -, f 5;
+#X floatatom 251 313 5 0 0 0 - - -, f 5;
+#X floatatom 201 313 5 0 0 0 - - -, f 5;
+#X floatatom 525 137 5 0 0 0 - - -, f 5;
+#X floatatom 161 313 5 0 0 0 - - -, f 5;
+#X obj 60 197 expr cx + r * cos(-1 * startangle * rad) \; cx + r *
+cos(-1 * endangle * rad) \; cy + r * sin(-1 * startangle * rad) \;
+cy + r * sin(-1 * endangle * rad) \; (endangle - startangle) > 180
+;
+#X connect 0 0 15 0;
+#X connect 2 0 11 0;
+#X connect 4 0 12 0;
+#X connect 6 0 13 0;
+#X connect 8 0 14 0;
+#X connect 15 0 34 0;
+#X connect 15 1 10 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 18 0 19 0;
+#X connect 19 0 27 0;
+#X connect 19 0 32 0;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 22 0 28 8;
+#X connect 23 0 26 0;
+#X connect 23 1 25 0;
+#X connect 23 2 24 0;
+#X connect 23 3 28 3;
+#X connect 24 0 28 2;
+#X connect 25 0 28 1;
+#X connect 26 0 28 0;
+#X connect 34 0 23 0;
+#X connect 34 1 28 4;
+#X connect 34 1 33 0;
+#X connect 34 2 28 5;
+#X connect 34 2 31 0;
+#X connect 34 3 28 6;
+#X connect 34 3 30 0;
+#X connect 34 4 28 7;
+#X connect 34 4 29 0;
+#X restore 132 253 pd sector;
+#X floatatom 38 186 0 0 0 0 cx - -;
+#X floatatom 88 186 0 0 0 0 cy - -;
+#X floatatom 133 186 5 0 0 0 r - -, f 5;
+#X obj 177 189 +;
+#X obj 177 153 t a b;
+#X text 21 -35 Quick-and-dirty subpatch;
+#X text 21 -15 to create the pie slices;
+#X connect 0 0 6 0;
+#X connect 0 0 10 0;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 6 1;
+#X connect 3 0 10 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 1;
+#X connect 5 0 10 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 7 0 12 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 12 0 9 0;
+#X connect 12 0 20 0;
+#X connect 13 0 14 1;
+#X connect 14 0 15 3;
+#X connect 14 0 19 1;
+#X connect 16 0 15 0;
+#X connect 17 0 15 1;
+#X connect 18 0 15 2;
+#X connect 19 0 15 4;
+#X connect 19 0 14 1;
+#X connect 20 0 19 0;
+#X connect 20 1 14 0;
+#X restore 78 446 pd bake;
+#X connect 5 0 8 0;
+#X connect 6 0 10 0;
+#X connect 6 1 11 0;
+#X connect 8 0 4 0;
+#X connect 9 0 6 0;
+#X connect 10 0 7 0;
+#X connect 11 0 7 0;

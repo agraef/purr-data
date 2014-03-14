@@ -1,0 +1,39 @@
+#N struct drawtut-polyline float x float y;
+#N canvas 0 19 532 554 10;
+#X msg 228 137 stroke-width \$1;
+#X floatatom 228 116 5 0 0 0 - - -, f 5;
+#X text 0 1 New Drawing Commands: polyline;
+#X text 0 1 ______________________________;
+#X text 53 23 Polyline is a multi-segment line.;
+#X obj 53 57 struct drawtut-polyline float x float y;
+#X obj 53 173 draw polyline 50 375 150 375 150 325 250 325 250 375
+350 375 350 250 450 250 450 375 550 375 550 175 650 175 650 375 750
+375 750 100 850 100 850 375 950 375 950 25 1050 25 1050 375 1150 375
+;
+#X scalar drawtut-polyline 62 235 \;;
+#X text 416 288 <- a polyline;
+#X obj 440 51 loadbang;
+#X text 52 374 The polyline shape is like the line \, except you can
+give it as many x/y coordinate pairs as you wish. It will connect them
+in a continuous series of line segments.;
+#X floatatom 440 93 5 0 0 0 - - -, f 5;
+#X msg 348 137 transform scale \$1;
+#X text 52 424 This particular polyline comes from the svg specification
+on the w3 website \, which was scaled down \, so we are using the "transform"
+message to scale it accordingly. There's a tutorial specifically on
+the "transform" message \, but here you can already see how it makes
+the [draw] object quite powerful.;
+#X msg 440 72 0.3;
+#X msg 53 137 stroke purple;
+#X msg 142 137 fill gray;
+#X msg 228 95 10;
+#X connect 0 0 6 0;
+#X connect 1 0 0 0;
+#X connect 9 0 14 0;
+#X connect 9 0 17 0;
+#X connect 11 0 12 0;
+#X connect 12 0 6 0;
+#X connect 14 0 11 0;
+#X connect 15 0 6 0;
+#X connect 16 0 6 0;
+#X connect 17 0 1 0;
