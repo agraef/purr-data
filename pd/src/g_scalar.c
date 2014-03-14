@@ -458,11 +458,13 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     sys_vgui(".x%lx.c coords {select%lx} %d %d %d %d\n", glist, x,
         x->sc_x1 - 1, x->sc_y1 - 1, x->sc_x2 + 1, x->sc_y2 + 1);
 
-    t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-    t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+    t_float xscale = glist_xtopixels(x->sc_selected, 1) -
+        glist_xtopixels(x->sc_selected, 0);
+    t_float yscale = glist_ytopixels(x->sc_selected, 1) -
+        glist_ytopixels(x->sc_selected, 0);
 
     sys_vgui(".x%lx.c itemconfigure {.scalar%lx} -matrix { {%g %g} {%g %g} {%d %d} }\n",
-        glist_getcanvas(glist), x->sc_vec, 1.0, 0.0, 0.0, 1.0, (int)glist_xtopixels(x->sc_selected, basex) + (x->sc_selected == glist ? 0 : dx), (int)glist_ytopixels(x->sc_selected, basey) + (x->sc_selected == glist ? 0 : dy));
+        glist_getcanvas(glist), x->sc_vec, xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(x->sc_selected, basex) + (x->sc_selected == glist ? 0 : dx), (int)glist_ytopixels(x->sc_selected, basey) + (x->sc_selected == glist ? 0 : dy));
 
     //scalar_redraw(x, glist);
 }
@@ -534,7 +536,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sys_vgui(".x%lx.c create group -tags {.scalar%lx} "
             "-matrix { {%g %g} {%g %g} {%d %d} }\n",
             glist_getcanvas(owner), x->sc_vec,
-            1.0, 0.0, 0.0, 1.0, (int)glist_xtopixels(owner, basex), (int)glist_ytopixels(owner, basey)
+            xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex), (int)glist_ytopixels(owner, basey)
             );
         sys_vgui(".x%lx.c create group -tags {.dgroup%lx} -parent {.scalar%lx}\n",
             glist_getcanvas(owner), x->sc_vec, x->sc_vec);
@@ -682,7 +684,7 @@ static t_widgetbehavior scalar_widgetbehavior =
     scalar_delete,
     scalar_vis,
     scalar_click,
-	scalar_displace_withtag,
+    scalar_displace_withtag,
 };
 
 static void scalar_free(t_scalar *x)
