@@ -76,7 +76,7 @@ int my_numbox_calc_fontwidth(t_my_numbox *x)
     w = x->x_gui.x_fontsize * f * x->x_gui.x_w;
     w /= 36;
     w = w + (x->x_gui.x_h / 2) + 4;
-	return w;	
+    return w;    
 }
 
 void my_numbox_ftoa(t_my_numbox *x)
@@ -139,8 +139,9 @@ void my_numbox_ftoa(t_my_numbox *x)
 static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
 {
     t_my_numbox *x = (t_my_numbox *)client;
-    if (x->x_gui.x_changed == 0) {
-    	return;
+    if (x->x_gui.x_changed == 0)
+    {
+        return;
     }
     if (glist_isvisible(glist))
     {
@@ -156,7 +157,7 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
                 if(sl >= x->x_gui.x_w)
                     cp += sl - x->x_gui.x_w + 1;
                 sys_vgui(
-                    ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s} \n",
+                    ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s}\n",
                          glist_getcanvas(glist), x, IEM_GUI_COLOR_EDITED, cp);
                 x->x_buf[sl] = 0;
             }
@@ -164,18 +165,18 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
             {
                 my_numbox_ftoa(x);
                 sys_vgui(
-                    ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s} \n",
+                    ".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x -text {%s}\n",
                     glist_getcanvas(glist), x, IEM_GUI_COLOR_EDITED, x->x_buf);
                 x->x_buf[0] = 0;
             }
         }
         else
         {
-			char color[64];
-			if (x->x_gui.x_fsf.x_selected)
-				sprintf(color, "$pd_colors(selection)");
-			else
-				sprintf(color, "#%6.6x", x->x_gui.x_fcol);
+            char color[64];
+            if (x->x_gui.x_fsf.x_selected)
+                sprintf(color, "$pd_colors(selection)");
+            else
+                sprintf(color, "#%6.6x", x->x_gui.x_fcol);
 
             my_numbox_ftoa(x);
             sys_vgui(
@@ -196,69 +197,79 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
-	sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)sh);
+    t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
+    sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)sh);
 
-	t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
-	sprintf(lh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)lh);
+    t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
+    sprintf(lh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)lh);
 
-	//if (glist_isvisible(canvas)) {
+    //if (glist_isvisible(canvas)) {
 
-		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		if (x->x_hide_frame <= 1) {
-			sys_vgui(
-				".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke %s \
-					-fill #%6.6x -tags {%lxBASE1 %lxNUM %s text iemgui border}\n",
-				     canvas, xpos, ypos,
-				     xpos + x->x_numwidth-4, ypos,
-				     xpos + x->x_numwidth, ypos+4,
-				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
-				     xpos, ypos + x->x_gui.x_h,
-				     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, nlet_tag);
-			if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxNUM%so%d %so%d %lxNUM %s outlet iemgui}\n",
-				     canvas,
-				     xpos, ypos + x->x_gui.x_h-1,
-				     xpos+IOWIDTH, ypos + x->x_gui.x_h,
-				     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-			if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxNUM%si%d %si%d %lxNUM %s inlet iemgui}\n",
-				     canvas,
-				     xpos, ypos,
-				     xpos+IOWIDTH, ypos+1,
-				     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		} else {
-			sys_vgui(
-				".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke #%6.6x \
-					-fill #%6.6x -tags {%lxBASE1 %lxNUM %s text iemgui}\n",
-				     canvas, xpos, ypos,
-				     xpos + x->x_numwidth-4, ypos,
-				     xpos + x->x_numwidth, ypos+4,
-				     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
-				     xpos, ypos + x->x_gui.x_h,
-				     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, nlet_tag);
-		}
-		if (!x->x_hide_frame || x->x_hide_frame == 2)
-			sys_vgui(
-				".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x -tags {%lxBASE2 %lxNUM %s text iemgui}\n",
-				canvas, xpos, ypos,
-				xpos + half, ypos + half,
-				xpos, ypos + x->x_gui.x_h,
-				x->x_gui.x_fcol, x, x, nlet_tag);
-		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxNUM %s text iemgui}\n",
-		    canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
-		    strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-		    x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x, nlet_tag);
-		my_numbox_ftoa(x);
-		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		    -font {{%s} -%d %s} -fill #%6.6x -tags {%lxNUMBER %lxNUM %s noscroll text iemgui}\n",
-		    canvas, xpos+half+2, ypos+half+d,
-		    x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		    x->x_gui.x_fcol, x, x, nlet_tag);
-	//}
+        if (x->x_hide_frame <= 1)
+        {
+            sys_vgui(
+                ".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d "
+                "-stroke %s -fill #%6.6x "
+                "-tags {%lxBASE1 %lxNUM %s text iemgui border}\n",
+                     canvas, xpos, ypos,
+                     xpos + x->x_numwidth-4, ypos,
+                     xpos + x->x_numwidth, ypos+4,
+                     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
+                     xpos, ypos + x->x_gui.x_h,
+                     IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, nlet_tag);
+            if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
+                sys_vgui(".x%lx.c create prect %d %d %d %d "
+                         "-stroke $pd_colors(iemgui_nlet) "
+                         "-tags {%lxNUM%so%d %so%d %lxNUM %s outlet iemgui}\n",
+                     canvas,
+                     xpos, ypos + x->x_gui.x_h-1,
+                     xpos+IOWIDTH, ypos + x->x_gui.x_h,
+                     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+            if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
+                sys_vgui(".x%lx.c create prect %d %d %d %d "
+                         "-stroke $pd_colors(iemgui_nlet) "
+                         "-tags {%lxNUM%si%d %si%d %lxNUM %s inlet iemgui}\n",
+                     canvas,
+                     xpos, ypos,
+                     xpos+IOWIDTH, ypos+1,
+                     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+        }
+        else
+        {
+            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d "
+                     "-stroke #%6.6x -fill #%6.6x "
+                     "-tags {%lxBASE1 %lxNUM %s text iemgui}\n",
+                     canvas, xpos, ypos,
+                     xpos + x->x_numwidth-4, ypos,
+                     xpos + x->x_numwidth, ypos+4,
+                     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
+                     xpos, ypos + x->x_gui.x_h,
+                     x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, nlet_tag);
+        }
+        if (!x->x_hide_frame || x->x_hide_frame == 2)
+            sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
+                     "-tags {%lxBASE2 %lxNUM %s text iemgui}\n",
+                canvas, xpos, ypos,
+                xpos + half, ypos + half,
+                xpos, ypos + x->x_gui.x_h,
+                x->x_gui.x_fcol, x, x, nlet_tag);
+        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
+                 "-font {{%s} -%d %s} -fill #%6.6x "
+                 "-tags {%lxLABEL %lxNUM %s text iemgui}\n",
+            canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
+            strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+            x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+                 x->x_gui.x_lcol, x, x, nlet_tag);
+        my_numbox_ftoa(x);
+        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
+                 "-font {{%s} -%d %s} -fill #%6.6x "
+                 "-tags {%lxNUMBER %lxNUM %s noscroll text iemgui}\n",
+            canvas, xpos+half+2, ypos+half+d,
+            x->x_buf, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+            x->x_gui.x_fcol, x, x, nlet_tag);
+    //}
 }
 
 static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
@@ -268,450 +279,543 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	if (glist_isvisible(canvas)) {
+    if (glist_isvisible(canvas))
+    {
 
-		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
-			     canvas, x, xpos, ypos,
-			     xpos + x->x_numwidth-4, ypos,
-			     xpos + x->x_numwidth, ypos+4,
-			     xpos + x->x_numwidth, ypos + x->x_gui.x_h,
-			     xpos, ypos + x->x_gui.x_h);
-		if (x->x_hide_frame <= 1) {
-		   if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c coords %lxNUM%so%d %d %d %d %d\n",
-				     canvas, x, nlet_tag, 0,
-				     xpos, ypos + x->x_gui.x_h-1,
-				     xpos+IOWIDTH, ypos + x->x_gui.x_h);
-		   if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-				sys_vgui(".x%lx.c coords %lxNUM%si%d %d %d %d %d\n",
-				     canvas, x, nlet_tag, 0,
-				     xpos, ypos,
-				     xpos+IOWIDTH, ypos+1);
-		}
-		if (!x->x_hide_frame || x->x_hide_frame == 2)
-			sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
-				     canvas, x, xpos, ypos,
-				     xpos + half, ypos + half,
-				     xpos, ypos + x->x_gui.x_h);
-		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-		         canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
-		sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
-		         canvas, x, xpos+half+2, ypos+half+d);
-		/* redraw scale handle rectangle if selected */
-		if (x->x_gui.x_fsf.x_selected)
-			my_numbox_draw_select(x, x->x_gui.x_glist);
-	}
+        sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
+                 canvas, x, xpos, ypos,
+                 xpos + x->x_numwidth-4, ypos,
+                 xpos + x->x_numwidth, ypos+4,
+                 xpos + x->x_numwidth, ypos + x->x_gui.x_h,
+                 xpos, ypos + x->x_gui.x_h);
+        if (x->x_hide_frame <= 1)
+        {
+           if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
+                sys_vgui(".x%lx.c coords %lxNUM%so%d %d %d %d %d\n",
+                     canvas, x, nlet_tag, 0,
+                     xpos, ypos + x->x_gui.x_h-1,
+                     xpos+IOWIDTH, ypos + x->x_gui.x_h);
+           if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
+                sys_vgui(".x%lx.c coords %lxNUM%si%d %d %d %d %d\n",
+                     canvas, x, nlet_tag, 0,
+                     xpos, ypos,
+                     xpos+IOWIDTH, ypos+1);
+        }
+        if (!x->x_hide_frame || x->x_hide_frame == 2)
+            sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
+                     canvas, x, xpos, ypos,
+                     xpos + half, ypos + half,
+                     xpos, ypos + x->x_gui.x_h);
+        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+                 canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
+        sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
+                 canvas, x, xpos+half+2, ypos+half+d);
+        /* redraw scale handle rectangle if selected */
+        if (x->x_gui.x_fsf.x_selected)
+            my_numbox_draw_select(x, x->x_gui.x_glist);
+    }
 }
 
 static void my_numbox_draw_erase(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-	sys_vgui(".x%lx.c delete %lxNUM\n", canvas, x);
-	sys_vgui(".x%lx.c dtag all %lxNUM\n", canvas, x);
-	if (x->x_gui.x_fsf.x_selected) {
-		t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-		sys_vgui("destroy %s\n", sh->h_pathname);
-		sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-		t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
-		sys_vgui("destroy %s\n", lh->h_pathname);
-		sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-	}
+    sys_vgui(".x%lx.c delete %lxNUM\n", canvas, x);
+    sys_vgui(".x%lx.c dtag all %lxNUM\n", canvas, x);
+    if (x->x_gui.x_fsf.x_selected)
+    {
+        t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+        sys_vgui("destroy %s\n", sh->h_pathname);
+        sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+        t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
+        sys_vgui("destroy %s\n", lh->h_pathname);
+        sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
+    }
 }
 
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
 
-	/*
-	char color[64];
-	char lcolor[64];
-	if (x->x_gui.x_fsf.x_selected) {
-		sprintf(color, "$pd_colors(selection)");
-		sprintf(lcolor, "$pd_colors(selection)");
-	}
-	else {
-		sprintf(color, "#%6.6x", x->x_gui.x_fcol);
-		sprintf(lcolor, "#%6.6x", x->x_gui.x_lcol);
-	}
-	*/
+    /*
+    char color[64];
+    char lcolor[64];
+    if (x->x_gui.x_fsf.x_selected)
+    {
+        sprintf(color, "$pd_colors(selection)");
+        sprintf(lcolor, "$pd_colors(selection)");
+    }
+    else
+    {
+        sprintf(color, "#%6.6x", x->x_gui.x_fcol);
+        sprintf(lcolor, "#%6.6x", x->x_gui.x_lcol);
+    }
+    */
 
-	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas) {
-		sys_vgui(" .x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $pd_colors(selection) -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill $pd_colors(selection) \n .x%lx.c itemconfigure %lxBASE2 -stroke $pd_colors(selection)\n",
-		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-				 canvas,x);
-		/*
-		sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill $pd_colors(selection) \n",
-		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight);
-		sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $pd_colors(selection)\n", canvas,
-		         x);
-		*/
-	}
-	else {
-		sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n .x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} -fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
-		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-				 canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_fcol, canvas, x, x->x_gui.x_fcol);
-		/*sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} -fill #%6.6x \n",
-		         canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_fcol);
-		sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n", canvas,
-		         x, x->x_gui.x_fcol);*/
-	}
+    if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
+    {
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+                 "-fill $pd_colors(selection) -text {%s} \n "
+                 ".x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} "
+                 "-fill $pd_colors(selection) \n "
+                 ".x%lx.c itemconfigure %lxBASE2 "
+                 "-stroke $pd_colors(selection)\n",
+                 canvas, x, x->x_gui.x_font,
+                 x->x_gui.x_fontsize, sys_fontweight,
+                 strcmp(
+                     x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+                 canvas, x, x->x_gui.x_font,
+                 x->x_gui.x_fontsize, sys_fontweight,
+                 canvas,x);
+        /*
+        sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} "
+                 "-fill $pd_colors(selection) \n",
+                 canvas, x, x->x_gui.x_font,
+                 x->x_gui.x_fontsize, sys_fontweight);
+        sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $pd_colors(selection)\n",
+                 canvas, x);
+        */
+    }
+    else
+    {
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+                 "-fill #%6.6x -text {%s} \n "
+                 ".x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} "
+                 "-fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 "
+                 "-stroke #%6.6x\n",
+                 canvas, x, x->x_gui.x_font,
+                 x->x_gui.x_fontsize, sys_fontweight,
+                 x->x_gui.x_lcol,
+                 strcmp(
+                     x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+                 canvas, x, x->x_gui.x_font,
+                 x->x_gui.x_fontsize, sys_fontweight,
+                 x->x_gui.x_fcol, canvas, x, x->x_gui.x_fcol);
+
+        /*sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} "
+                   "-fill #%6.6x \n",
+                 canvas, x, x->x_gui.x_font,
+                 x->x_gui.x_fontsize, sys_fontweight,
+                 x->x_gui.x_fcol);
+        sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill #%6.6x\n",
+                 canvas,
+                 x, x->x_gui.x_fcol);*/
+
+    }
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x;\n", canvas,
              x, x->x_gui.x_bcol);
 }
 
-static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist, int old_snd_rcv_flags)
+static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist,
+    int old_snd_rcv_flags)
 {
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
+    if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist)
+    {
 
-		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxNUM%so%d %so%d %lxNUM %s outlet iemgui}\n",
-		         canvas,
-		         xpos, ypos + x->x_gui.x_h-1,
-		         xpos+IOWIDTH, ypos + x->x_gui.x_h,
-		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
-		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxNUM%si%d %si%d %lxNUM %s inlet iemgui}\n",
-		         canvas,
-		         xpos, ypos,
-		         xpos+IOWIDTH, ypos+1,
-		         x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
-
-	}
+        if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
+            !x->x_gui.x_fsf.x_snd_able)
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_nlet) "
+                     "-tags {%lxNUM%so%d %so%d %lxNUM %s outlet iemgui}\n",
+                 canvas,
+                 xpos, ypos + x->x_gui.x_h-1,
+                 xpos+IOWIDTH, ypos + x->x_gui.x_h,
+                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+        if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG)
+            && x->x_gui.x_fsf.x_snd_able)
+            sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
+        if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
+            !x->x_gui.x_fsf.x_rcv_able)
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_nlet) "
+                     "-tags {%lxNUM%si%d %si%d %lxNUM %s inlet iemgui}\n",
+                 canvas,
+                 xpos, ypos,
+                 xpos+IOWIDTH, ypos+1,
+                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+        if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
+            x->x_gui.x_fsf.x_rcv_able)
+            sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
+    }
 }
 
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-	t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
+    t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+    t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
 
-	//if (glist_isvisible(canvas)) {
+    //if (glist_isvisible(canvas)) {
 
-		if(x->x_gui.x_fsf.x_selected)
-		{
-		    if(x->x_gui.x_fsf.x_change)
-		    {
-		        x->x_gui.x_fsf.x_change = 0;
-		        clock_unset(x->x_clock_reset);
-		        x->x_buf[0] = 0;
-		        sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
-		    }
+        if(x->x_gui.x_fsf.x_selected)
+        {
+            if(x->x_gui.x_fsf.x_change)
+            {
+                x->x_gui.x_fsf.x_change = 0;
+                clock_unset(x->x_clock_reset);
+                x->x_buf[0] = 0;
+                sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+            }
 
-			// check if we are drawing inside a gop abstraction visible on parent canvas
-			// if so, disable highlighting
-			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
+            // check if we are drawing inside a gop abstraction
+            // visible on parent canvas
+            // if so, disable highlighting
+            if (x->x_gui.x_glist == glist_getcanvas(glist))
+            {
 
-				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-				sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke $pd_colors(selection)\n",
-			    	canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke $pd_colors(selection)\n",
-					canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $pd_colors(selection)\n",
-					canvas, x);
-				sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill $pd_colors(selection)\n",
-					canvas, x);
+                sys_vgui(".x%lx.c itemconfigure %lxBASE1 "
+                         "-stroke $pd_colors(selection)\n",
+                    canvas, x);
+                sys_vgui(".x%lx.c itemconfigure %lxBASE2 "
+                         "-stroke $pd_colors(selection)\n",
+                    canvas, x);
+                sys_vgui(".x%lx.c itemconfigure %lxLABEL "
+                         "-fill $pd_colors(selection)\n",
+                    canvas, x);
+                sys_vgui(".x%lx.c itemconfigure %lxNUMBER "
+                         "-fill $pd_colors(selection)\n",
+                    canvas, x);
 
-				if (x->x_gui.scale_vis) {
-					sys_vgui("destroy %s\n", sh->h_pathname);
-					sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-				}
+                if (x->x_gui.scale_vis)
+                {
+                    sys_vgui("destroy %s\n", sh->h_pathname);
+                    sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+                }
 
-				sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor bottom_right_corner\n",
-					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxNUM %s}\n",
-					 canvas, x->x_gui.x_obj.te_xpix + x->x_numwidth - SCALEHANDLE_WIDTH - 1,
-					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
-					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x, nlet_tag);
-				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-					 sh->h_pathname, sh->h_bindsym->s_name);
-				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-					 sh->h_pathname, sh->h_bindsym->s_name);
-				sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-					 sh->h_pathname, sh->h_bindsym->s_name);
-				x->x_gui.scale_vis = 1;
-				if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
-				{
-					if (x->x_gui.label_vis) {
-						sys_vgui("destroy %s\n", lh->h_pathname);
-						sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-					}
+                sys_vgui("canvas %s -width %d -height %d "
+                         "-bg $pd_colors(selection) -bd 0 "
+                         "-cursor bottom_right_corner\n",
+                     sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+                sys_vgui(".x%x.c create window %d %d -anchor nw "
+                         "-width %d -height %d -window %s "
+                         "-tags {%lxSCALE %lxNUM %s}\n",
+                     canvas, x->x_gui.x_obj.te_xpix + x->x_numwidth -
+                         SCALEHANDLE_WIDTH - 1,
+                     x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
+                         SCALEHANDLE_HEIGHT - 1,
+                     SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+                     sh->h_pathname, x, x, nlet_tag);
+                sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+                     sh->h_pathname, sh->h_bindsym->s_name);
+                sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+                     sh->h_pathname, sh->h_bindsym->s_name);
+                sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+                     sh->h_pathname, sh->h_bindsym->s_name);
+                x->x_gui.scale_vis = 1;
+                if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
+                {
+                    if (x->x_gui.label_vis)
+                    {
+                        sys_vgui("destroy %s\n", lh->h_pathname);
+                        sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
+                    }
 
-					sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor crosshair\n",
-						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxNUM %s}\n",
-						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
-						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
-						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x, nlet_tag);
-					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-						lh->h_pathname, lh->h_bindsym->s_name);
-					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-						lh->h_pathname, lh->h_bindsym->s_name);
-					sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-						lh->h_pathname, lh->h_bindsym->s_name); 
-					x->x_gui.label_vis = 1;
-				}
-			}
+                    sys_vgui("canvas %s -width %d -height %d "
+                             "-bg $pd_colors(selection) "
+                             "-bd 0 -cursor crosshair\n",
+                        lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
+                    sys_vgui(".x%x.c create window %d %d -anchor nw "
+                             "-width %d -height %d -window %s "
+                             "-tags {%lxLABEL %lxLABELH %lxNUM %s}\n",
+                        canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx -
+                            LABELHANDLE_WIDTH,
+                        x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy -
+                            LABELHANDLE_HEIGHT,
+                        LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
+                        lh->h_pathname, x, x, x, nlet_tag);
+                    sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+                        lh->h_pathname, lh->h_bindsym->s_name);
+                    sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+                        lh->h_pathname, lh->h_bindsym->s_name);
+                    sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+                        lh->h_pathname, lh->h_bindsym->s_name); 
+                    x->x_gui.label_vis = 1;
+                }
+            }
 
-			sys_vgui(".x%lx.c addtag selected withtag %lxNUM\n", canvas, x);
-		}
-		else
-		{
-			sys_vgui(".x%lx.c dtag %lxNUM selected\n", canvas, x);
+            sys_vgui(".x%lx.c addtag selected withtag %lxNUM\n", canvas, x);
+        }
+        else
+        {
+            sys_vgui(".x%lx.c dtag %lxNUM selected\n", canvas, x);
 
-			if (x->x_hide_frame <= 1)
-		    	sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n",
-		        	canvas, x, IEM_GUI_COLOR_NORMAL);
-			else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke #%6.6x\n",
-		        	canvas, x, x->x_gui.x_bcol);
+            if (x->x_hide_frame <= 1)
+                sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n",
+                    canvas, x, IEM_GUI_COLOR_NORMAL);
+            else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke #%6.6x\n",
+                    canvas, x, x->x_gui.x_bcol);
 
-		    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
-		        canvas, x, x->x_gui.x_fcol);
-		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
-		        canvas, x, x->x_gui.x_lcol);
-		    sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x\n",
-		        canvas, x, x->x_gui.x_fcol);
-			sys_vgui("destroy %s\n", sh->h_pathname);
-			sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-			x->x_gui.scale_vis = 0;
-			sys_vgui("destroy %s\n", lh->h_pathname);
-			sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-			x->x_gui.label_vis = 0;
-		}
-	//}
+            sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
+                canvas, x, x->x_gui.x_fcol);
+            sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
+                canvas, x, x->x_gui.x_lcol);
+            sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x\n",
+                canvas, x, x->x_gui.x_fcol);
+            sys_vgui("destroy %s\n", sh->h_pathname);
+            sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+            x->x_gui.scale_vis = 0;
+            sys_vgui("destroy %s\n", lh->h_pathname);
+            sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
+            x->x_gui.label_vis = 0;
+        }
+    //}
 }
 
-static void my_numbox__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+static void my_numbox__clickhook(t_scalehandle *sh, t_floatarg f,
+    t_floatarg xxx, t_floatarg yyy)
 {
 
-	t_my_numbox *x = (t_my_numbox *)(sh->h_master);
+    t_my_numbox *x = (t_my_numbox *)(sh->h_master);
 
- 	if (xxx) {
- 		x->x_gui.scale_offset_x = xxx;
- 		x->x_gui.label_offset_x = xxx;
- 	}
- 	if (yyy) {
- 		x->x_gui.scale_offset_y = yyy;
- 		x->x_gui.label_offset_y = yyy;
- 	}
+     if (xxx)
+     {
+         x->x_gui.scale_offset_x = xxx;
+         x->x_gui.label_offset_x = xxx;
+     }
+     if (yyy)
+     {
+         x->x_gui.scale_offset_y = yyy;
+         x->x_gui.label_offset_y = yyy;
+     }
 
     int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
-		/* done dragging */
+        /* done dragging */
 
-		/* first set up the undo apply */
-		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        /* first set up the undo apply */
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
-		if (sh->h_dragx || sh->h_dragy) {
+        if (sh->h_dragx || sh->h_dragy)
+        {
 
-			x->x_gui.x_fontsize = x->x_tmpfontsize;
-			x->x_gui.x_w = x->x_scalewidth;
-			x->x_gui.x_h = x->x_scaleheight;
+            x->x_gui.x_fontsize = x->x_tmpfontsize;
+            x->x_gui.x_w = x->x_scalewidth;
+            x->x_gui.x_h = x->x_scaleheight;
 
-			x->x_numwidth = my_numbox_calc_fontwidth(x);
+            x->x_numwidth = my_numbox_calc_fontwidth(x);
 
-			canvas_dirty(x->x_gui.x_glist, 1);
-		}
+            canvas_dirty(x->x_gui.x_glist, 1);
+        }
 
-		int properties = gfxstub_haveproperties((void *)x);
+        int properties = gfxstub_haveproperties((void *)x);
 
-		if (properties) {
-			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
-			sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
-			sys_vgui(".gfxstub%lx.label.fontsize_entry delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.label.fontsize_entry insert 0 %d\n", properties, x->x_gui.x_fontsize);
-		}
+        if (properties)
+        {
+            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties,
+                x->x_gui.x_w);
+            sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties,
+                x->x_gui.x_h);
+            sys_vgui(".gfxstub%lx.label.fontsize_entry delete 0 end\n",
+                properties);
+            sys_vgui(".gfxstub%lx.label.fontsize_entry insert 0 %d\n",
+                properties, x->x_gui.x_fontsize);
+        }
 
-		if (glist_isvisible(x->x_gui.x_glist))
-		{
-			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
-			my_numbox_draw_move(x, x->x_gui.x_glist);
-			my_numbox_draw_config(x, x->x_gui.x_glist);
-			my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
-			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
-		}
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+            my_numbox_draw_move(x, x->x_gui.x_glist);
+            my_numbox_draw_config(x, x->x_gui.x_glist);
+            my_numbox_draw_update((t_gobj*)x, x->x_gui.x_glist);
+            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+        }
     }
     else if (!sh->h_dragon && newstate && sh->h_scale)
     {
-		/* dragging */
-		if (glist_isvisible(x->x_gui.x_glist))
-		{
-			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create prect %d %d %d %d\
-	 -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
-				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
-					x->x_gui.x_obj.te_xpix + x->x_numwidth,
-					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
-		}
+        /* dragging */
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui("lower %s\n", sh->h_pathname);
+            sys_vgui(".x%x.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
+                x->x_gui.x_glist, x->x_gui.x_obj.te_xpix,
+                x->x_gui.x_obj.te_ypix,
+                x->x_gui.x_obj.te_xpix + x->x_numwidth,
+                x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
+        }
 
-		x->x_scalewidth = x->x_gui.x_w;
-		x->x_scaleheight = x->x_gui.x_h;
-		x->x_tmpfontsize = x->x_gui.x_fontsize;
-		sh->h_dragx = 0;
-		sh->h_dragy = 0;
+        x->x_scalewidth = x->x_gui.x_w;
+        x->x_scaleheight = x->x_gui.x_h;
+        x->x_tmpfontsize = x->x_gui.x_fontsize;
+        sh->h_dragx = 0;
+        sh->h_dragy = 0;
     }
-	else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
+    else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
     {
-		/* done dragging */
+        /* done dragging */
 
-		/* first set up the undo apply */
-		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        /* first set up the undo apply */
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
-		if (sh->h_dragx || sh->h_dragy) {
+        if (sh->h_dragx || sh->h_dragy)
+        {
 
-			x->x_gui.x_ldx = x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x;
-			x->x_gui.x_ldy = x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y;
+            x->x_gui.x_ldx =
+                x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x;
+            x->x_gui.x_ldy =
+                x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y;
 
-			canvas_dirty(x->x_gui.x_glist, 1);
-		}
+            canvas_dirty(x->x_gui.x_glist, 1);
+        }
 
-		int properties = gfxstub_haveproperties((void *)x);
+        int properties = gfxstub_haveproperties((void *)x);
 
-		if (properties) {
-			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
-			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
-			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
-		}
+        if (properties)
+        {
+            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties,
+                x->x_gui.x_w);
+            //sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+            //sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties,
+            //    x->x_gui.x_h);
+        }
 
-		if (glist_isvisible(x->x_gui.x_glist))
-		{
-			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
-			my_numbox_draw_move(x, x->x_gui.x_glist);
-			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
-		}
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+            my_numbox_draw_move(x, x->x_gui.x_glist);
+            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+        }
     }
     else if (!sh->h_dragon && newstate && !sh->h_scale)
     {
-		/* dragging */
-		if (glist_isvisible(x->x_gui.x_glist)) {
-			sys_vgui("lower %s\n", sh->h_pathname);
-			t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
-			sys_vgui("lower .x%lx.h%lx\n", (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
-		}
+        /* dragging */
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui("lower %s\n", sh->h_pathname);
+            t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
+            sys_vgui("lower .x%lx.h%lx\n",
+                (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
+        }
 
-		sh->h_dragx = 0;
-		sh->h_dragy = 0;
+        sh->h_dragx = 0;
+        sh->h_dragy = 0;
     }
     sh->h_dragon = newstate;
 }
 
 static void my_numbox__motionhook(t_scalehandle *sh,
-				    t_floatarg f1, t_floatarg f2)
+                    t_floatarg f1, t_floatarg f2)
 {
     if (sh->h_dragon && sh->h_scale)
     {
-		t_my_numbox *x = (t_my_numbox *)(sh->h_master);
-		int dx = (int)f1, dy = (int)f2;
-		int newx, newy;
+        t_my_numbox *x = (t_my_numbox *)(sh->h_master);
+        int dx = (int)f1, dy = (int)f2;
+        int newx, newy;
 
-		/* first calculate y */
-		newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h + (dy - x->x_gui.scale_offset_y);
-		if (newy < x->x_gui.x_obj.te_ypix + SCALE_NUM_MINHEIGHT)
-			newy = x->x_gui.x_obj.te_ypix + SCALE_NUM_MINHEIGHT;
+        /* first calculate y */
+        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h +
+            (dy - x->x_gui.scale_offset_y);
+        if (newy < x->x_gui.x_obj.te_ypix + SCALE_NUM_MINHEIGHT)
+            newy = x->x_gui.x_obj.te_ypix + SCALE_NUM_MINHEIGHT;
 
-		/* then readjust fontsize */
-		x->x_tmpfontsize = (newy - x->x_gui.x_obj.te_ypix) * 0.8;
-		if (x->x_tmpfontsize < IEM_FONT_MINSIZE)
-			x->x_tmpfontsize = IEM_FONT_MINSIZE;
+        /* then readjust fontsize */
+        x->x_tmpfontsize = (newy - x->x_gui.x_obj.te_ypix) * 0.8;
+        if (x->x_tmpfontsize < IEM_FONT_MINSIZE)
+            x->x_tmpfontsize = IEM_FONT_MINSIZE;
 
-		int f = 31;
-		if(x->x_gui.x_fsf.x_font_style == 1)
-		    f = 27;
-		else if(x->x_gui.x_fsf.x_font_style == 2)
-		    f = 25;
-		int char_w = x->x_tmpfontsize * f;
-		char_w /= 36;
+        int f = 31;
+        if(x->x_gui.x_fsf.x_font_style == 1)
+            f = 27;
+        else if(x->x_gui.x_fsf.x_font_style == 2)
+            f = 25;
+        int char_w = x->x_tmpfontsize * f;
+        char_w /= 36;
 
-		/* get the new total width */
-		int new_total_width = x->x_numwidth + (dx - x->x_gui.scale_offset_x);
-		
-		/* now figure out what does this translate into in terms of character length */
-		int new_char_len = (new_total_width - ((newy - x->x_gui.x_obj.te_ypix) / 2) - 4) / char_w;
-		if (new_char_len < SCALE_NUM_MINWIDTH)
-			new_char_len = SCALE_NUM_MINWIDTH;
+        /* get the new total width */
+        int new_total_width = x->x_numwidth + (dx - x->x_gui.scale_offset_x);
+        
+        /* now figure out what does this translate into in terms of
+           character length */
+        int new_char_len = (new_total_width -
+            ((newy - x->x_gui.x_obj.te_ypix) / 2) - 4) / char_w;
+        if (new_char_len < SCALE_NUM_MINWIDTH)
+            new_char_len = SCALE_NUM_MINWIDTH;
 
-		newx = x->x_gui.x_obj.te_xpix +
-			new_char_len * char_w +
-			((newy - x->x_gui.x_obj.te_ypix) / 2) + 4;
+        newx = x->x_gui.x_obj.te_xpix +
+            new_char_len * char_w +
+            ((newy - x->x_gui.x_obj.te_ypix) / 2) + 4;
 
-		if (glist_isvisible(x->x_gui.x_glist)) {
-			sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-				 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
-				 x->x_gui.x_obj.te_ypix, newx, newy);
-		}
-		sh->h_dragx = dx;
-		sh->h_dragy = dy;
-		x->x_scalewidth = new_char_len;
-		x->x_scaleheight = newy - x->x_gui.x_obj.te_ypix;
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+                 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
+                 x->x_gui.x_obj.te_ypix, newx, newy);
+        }
+        sh->h_dragx = dx;
+        sh->h_dragy = dy;
+        x->x_scalewidth = new_char_len;
+        x->x_scaleheight = newy - x->x_gui.x_obj.te_ypix;
 
-		int properties = gfxstub_haveproperties((void *)x);
-		if (properties) {
-			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_scalewidth);
-			sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_scaleheight);
-			sys_vgui(".gfxstub%lx.label.fontsize_entry delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.label.fontsize_entry insert 0 %d\n", properties, x->x_tmpfontsize);
-		}
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n",
+                properties, x->x_scalewidth);
+            sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n",
+                properties, x->x_scaleheight);
+            sys_vgui(".gfxstub%lx.label.fontsize_entry delete 0 end\n",
+                properties);
+            sys_vgui(".gfxstub%lx.label.fontsize_entry insert 0 %d\n",
+                properties, x->x_tmpfontsize);
+        }
     }
-	if (sh->h_dragon && !sh->h_scale)
+    if (sh->h_dragon && !sh->h_scale)
     {
-		t_bng *x = (t_bng *)(sh->h_master);
-		int dx = (int)f1, dy = (int)f2;
-		int newx, newy;
-		newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w - x->x_gui.scale_offset_x + dx;
-		newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h - x->x_gui.scale_offset_y + dy;
+        t_bng *x = (t_bng *)(sh->h_master);
+        int dx = (int)f1, dy = (int)f2;
+        int newx, newy;
+        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w -
+            x->x_gui.scale_offset_x + dx;
+        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
+            x->x_gui.scale_offset_y + dy;
 
-		sh->h_dragx = dx;
-		sh->h_dragy = dy;
+        sh->h_dragx = dx;
+        sh->h_dragy = dy;
 
-		int properties = gfxstub_haveproperties((void *)x);
+        int properties = gfxstub_haveproperties((void *)x);
 
-		if (properties) {
-			int new_x = x->x_gui.x_ldx - x->x_gui.label_offset_x + sh->h_dragx;
-			int new_y = x->x_gui.x_ldy - x->x_gui.label_offset_y + sh->h_dragy;
-			sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n", properties, new_x);
-			sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n", properties, new_y);
-		}
+        if (properties)
+        {
+            int new_x = x->x_gui.x_ldx - x->x_gui.label_offset_x + sh->h_dragx;
+            int new_y = x->x_gui.x_ldy - x->x_gui.label_offset_y + sh->h_dragy;
+            sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n",
+                properties, new_x);
+            sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n",
+                properties, new_y);
+        }
 
-		if (glist_isvisible(x->x_gui.x_glist)) {
-			int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
-    		int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
-    		t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
-			sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
- 		    	canvas, x, xpos+x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x,
- 		    	ypos+x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y);
-		}
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+            int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+            t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
+            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+                 canvas, x,
+                 xpos+x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x,
+                 ypos+x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y);
+        }
     }
 }
 
@@ -721,10 +825,11 @@ void my_numbox_draw(t_my_numbox *x, t_glist *glist, int mode)
         sys_queuegui(x, glist, my_numbox_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         my_numbox_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
+    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    {
         my_numbox_draw_new(x, glist);
-		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
-	}
+        sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+    }
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         my_numbox_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
@@ -748,7 +853,7 @@ static void my_numbox_getrect(t_gobj *z, t_glist *glist,
     *xp2 = *xp1 + x->x_numwidth;
     *yp2 = *yp1 + x->x_gui.x_h;
 
-	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
+    iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
 static void my_numbox_save(t_gobj *z, t_binbuf *b)
@@ -840,7 +945,8 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
             %d %d \
             %d %d %d\n",
             x->x_gui.x_w, 1, x->x_gui.x_h, 8,
-            x->x_min, x->x_max, x->x_hide_frame,/*EXCEPTION: x_hide_frame instead of schedule*/
+            x->x_min, x->x_max,
+            x->x_hide_frame, /*EXCEPTION: x_hide_frame instead of schedule*/
             x->x_lin0_log1, x->x_gui.x_isa.x_loadinit, -1,
                 x->x_log_height, /*no multi, but iem-characteristic*/
             srl[0]->s_name, srl[1]->s_name,
@@ -861,7 +967,7 @@ static void my_numbox_bang(t_my_numbox *x)
 static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     t_atom *argv)
 {
-	canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
     t_symbol *srl[3];
     int w = (int)atom_getintarg(0, argc, argv);
@@ -870,9 +976,10 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     double max = (double)atom_getfloatarg(3, argc, argv);
     int lilo = (int)atom_getintarg(4, argc, argv);
     int log_height = (int)atom_getintarg(6, argc, argv);
-	if (argc > 17) {
-		x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
-	}
+    if (argc > 17)
+    {
+        x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
+    }
     int sr_flags;
 
     if(lilo != 0) lilo = 1;
@@ -891,36 +998,39 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     /*if(my_numbox_check_minmax(x, min, max))
      my_numbox_bang(x);*/
     my_numbox_check_minmax(x, min, max);
-	//if (need_to_redraw) {
+    //if (need_to_redraw) {
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
     //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
-	iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_NEW);
-	/*} else {
-		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
-		(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-		//(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-		//(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-	}*/
-	
+    iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_NEW);
+    /*} else {
+        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+        (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
+        //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+        //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+        iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
+    }*/
+    
     canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
 
-	/* forcing redraw of the scale handle */
-	if (x->x_gui.x_fsf.x_selected) {
-		my_numbox_draw_select(x, x->x_gui.x_glist);
-	}
+    /* forcing redraw of the scale handle */
+    if (x->x_gui.x_fsf.x_selected)
+    {
+        my_numbox_draw_select(x, x->x_gui.x_glist);
+    }
 
-	canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x, iem_get_tag(x->x_gui.x_glist, (t_iemgui *)x), -1);
+    canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x,
+        iem_get_tag(x->x_gui.x_glist, (t_iemgui *)x), -1);
 
-	//ico@bukvic.net 100518 update scrollbars when object potentially exceeds window size
+    //ico@bukvic.net 100518 update scrollbars
+    //when object potentially exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
 }
 
 static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
 {
     double k2=1.0;
-   	int old = x->x_val;
+       int old = x->x_val;
 
     if(x->x_gui.x_fsf.x_finemoved)
         k2 = 0.01;
@@ -929,12 +1039,13 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
     else
         x->x_val -= k2*dy;
     my_numbox_clip(x);
-    if (old != x->x_val) {
-    	x->x_gui.x_changed = 1;
-	    sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
-	    my_numbox_bang(x);
-	}
-	clock_unset(x->x_clock_reset);
+    if (old != x->x_val)
+    {
+        x->x_gui.x_changed = 1;
+        sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+        my_numbox_bang(x);
+    }
+    clock_unset(x->x_clock_reset);
 }
 
 static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
@@ -979,11 +1090,12 @@ static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
 
 static void my_numbox_set(t_my_numbox *x, t_floatarg f)
 {
-	if (x->x_val != f) {
-    	x->x_val = f;
-    	my_numbox_clip(x);
-    	x->x_gui.x_changed = 1;
-    	sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+    if (x->x_val != f)
+    {
+        x->x_val = f;
+        my_numbox_clip(x);
+        x->x_gui.x_changed = 1;
+        sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
 }
 
@@ -1003,11 +1115,11 @@ static void my_numbox_hide_frame(t_my_numbox *x, t_floatarg lh)
 {
     if(lh < 0.0)
         lh = 0.0;
-	if (lh > 3.0)
-		lh = 3.0;
+    if (lh > 3.0)
+        lh = 3.0;
     x->x_hide_frame = (int)lh;
-	my_numbox_draw(x, x->x_gui.x_glist, 4);
-	my_numbox_draw(x, x->x_gui.x_glist, 2);  
+    my_numbox_draw(x, x->x_gui.x_glist, 4);
+    my_numbox_draw(x, x->x_gui.x_glist, 2);  
 }
 
 static void my_numbox_float(t_my_numbox *x, t_floatarg f)
@@ -1047,7 +1159,7 @@ static void my_numbox_range(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
     if(my_numbox_check_minmax(x, (double)atom_getfloatarg(0, ac, av),
                               (double)atom_getfloatarg(1, ac, av)))
     {
-    	x->x_gui.x_changed = 1;
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         /*my_numbox_bang(x);*/
     }
@@ -1089,7 +1201,7 @@ static void my_numbox_log(t_my_numbox *x)
     x->x_lin0_log1 = 1;
     if(my_numbox_check_minmax(x, x->x_min, x->x_max))
     {
-    	x->x_gui.x_changed = 1;
+        x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         /*my_numbox_bang(x);*/
     }
@@ -1215,10 +1327,10 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     {
         log_height = (int)atom_getintarg(17, argc, argv);
     }
-	x->x_hide_frame = 0; // default behavior
+    x->x_hide_frame = 0; // default behavior
     if((argc == 19)&&IS_A_FLOAT(argv,18))
     {
-		//fprintf(stderr,"blah %d\n", (int)atom_getintarg(18, argc, argv));
+        //fprintf(stderr,"blah %d\n", (int)atom_getintarg(18, argc, argv));
         x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
     }
     x->x_gui.x_draw = (t_iemfunptr)my_numbox_draw;
@@ -1238,10 +1350,15 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
         x->x_gui.x_fsf.x_snd_able = 0;
     if (!strcmp(x->x_gui.x_rcv->s_name, "empty"))
         x->x_gui.x_fsf.x_rcv_able = 0;
-    if(x->x_gui.x_fsf.x_font_style == 1) strcpy(x->x_gui.x_font, "helvetica");
-    else if(x->x_gui.x_fsf.x_font_style == 2) strcpy(x->x_gui.x_font, "times");
-    else { x->x_gui.x_fsf.x_font_style = 0;
-        strcpy(x->x_gui.x_font, sys_font); }
+    if (x->x_gui.x_fsf.x_font_style == 1)
+        strcpy(x->x_gui.x_font, "helvetica");
+    else if(x->x_gui.x_fsf.x_font_style == 2)
+        strcpy(x->x_gui.x_font, "times");
+    else
+    {
+        x->x_gui.x_fsf.x_font_style = 0;
+        strcpy(x->x_gui.x_font, sys_font);
+    }
     if (x->x_gui.x_fsf.x_rcv_able)
         pd_bind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     x->x_gui.x_ldx = ldx;
@@ -1265,7 +1382,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_fsf.x_change = 0;
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-	/* scale handle init */
+    /* scale handle init */
     t_scalehandle *sh;
     char buf[64];
     x->x_gui.x_handle = pd_new(scalehandle_class);
@@ -1275,32 +1392,32 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
     sprintf(sh->h_outlinetag, "h%lx", (t_int)sh);
     sh->h_dragon = 0;
-	sh->h_scale = 1;
-	x->x_gui.scale_offset_x = 0;
-	x->x_gui.scale_offset_y = 0;
-	x->x_gui.scale_vis = 0;
+    sh->h_scale = 1;
+    x->x_gui.scale_offset_x = 0;
+    x->x_gui.scale_offset_y = 0;
+    x->x_gui.scale_vis = 0;
 
-	/* label handle init */
-	t_scalehandle *lh;
-	char lhbuf[64];
-	x->x_gui.x_lhandle = pd_new(scalehandle_class);
-	lh = (t_scalehandle *)x->x_gui.x_lhandle;
-	lh->h_master = (t_gobj*)x;
-	sprintf(lhbuf, "_h%lx", (t_int)lh);
-	pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
-	sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
-	lh->h_dragon = 0;
-	lh->h_scale = 0;
-	x->x_gui.label_offset_x = 0;
-	x->x_gui.label_offset_y = 0;
-	x->x_gui.label_vis = 0;
-	
-	x->x_scalewidth = 0;
-	x->x_scaleheight = 0;
-	x->x_tmpfontsize = 0;
+    /* label handle init */
+    t_scalehandle *lh;
+    char lhbuf[64];
+    x->x_gui.x_lhandle = pd_new(scalehandle_class);
+    lh = (t_scalehandle *)x->x_gui.x_lhandle;
+    lh->h_master = (t_gobj*)x;
+    sprintf(lhbuf, "_h%lx", (t_int)lh);
+    pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
+    sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
+    lh->h_dragon = 0;
+    lh->h_scale = 0;
+    x->x_gui.label_offset_x = 0;
+    x->x_gui.label_offset_y = 0;
+    x->x_gui.label_vis = 0;
+    
+    x->x_scalewidth = 0;
+    x->x_scaleheight = 0;
+    x->x_tmpfontsize = 0;
 
-	x->x_gui.x_obj.te_iemgui = 1;
-	x->x_gui.x_changed = 0;
+    x->x_gui.x_obj.te_iemgui = 1;
+    x->x_gui.x_changed = 0;
 
     return (x);
 }
@@ -1313,19 +1430,21 @@ static void my_numbox_free(t_my_numbox *x)
     clock_free(x->x_clock_wait);
     gfxstub_deleteforkey(x);
 
-	/* scale handle deconstructor */
+    /* scale handle deconstructor */
     if (x->x_gui.x_handle)
     {
-		pd_unbind(x->x_gui.x_handle, ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
-		pd_free(x->x_gui.x_handle);
+        pd_unbind(x->x_gui.x_handle,
+            ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
+        pd_free(x->x_gui.x_handle);
     }
 
-	/* label handle deconstructor */
-	if (x->x_gui.x_lhandle)
-	{
-		pd_unbind(x->x_gui.x_lhandle, ((t_scalehandle *)x->x_gui.x_lhandle)->h_bindsym);
-		pd_free(x->x_gui.x_lhandle);
-	}
+    /* label handle deconstructor */
+    if (x->x_gui.x_lhandle)
+    {
+        pd_unbind(x->x_gui.x_lhandle,
+            ((t_scalehandle *)x->x_gui.x_lhandle)->h_bindsym);
+        pd_free(x->x_gui.x_lhandle);
+    }
 }
 
 void g_numbox_setup(void)
@@ -1384,14 +1503,14 @@ void g_numbox_setup(void)
     my_numbox_widgetbehavior.w_deletefn =     iemgui_delete;
     my_numbox_widgetbehavior.w_visfn =        iemgui_vis;
     my_numbox_widgetbehavior.w_clickfn =      my_numbox_newclick;
-	my_numbox_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
+    my_numbox_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
  
     scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-				  sizeof(t_scalehandle), CLASS_PD, 0);
+                  sizeof(t_scalehandle), CLASS_PD, 0);
     class_addmethod(scalehandle_class, (t_method)my_numbox__clickhook,
-		    gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(scalehandle_class, (t_method)my_numbox__motionhook,
-		    gensym("_motion"), A_FLOAT, A_FLOAT, 0);
+            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
     class_setwidget(my_numbox_class, &my_numbox_widgetbehavior);
     class_sethelpsymbol(my_numbox_class, gensym("numbox2"));
