@@ -354,18 +354,20 @@ set k12_saveas_on_new 0
 
 # Only can be enabled at startup (cannot be toggled afterwards)
 proc pdtk_enable_k12_mode {extra_dir} {
-pdtk_post "fucking truckin!\n\n\n\n"
 	global k12_mode
-	global signal_cord_width
+#	global signal_cord_width
 	global autotips
-	global signal_cord_highlight
+#	global signal_cord_highlight
 #	global signal_cord
 	global highlight_width
 
 	set k12_mode 1
-	set signal_cord_width 5
+#	set signal_cord_width 5
+	set ::pd_colors(signal_cord_width) 5
 	set autotips 1
-	set signal_cord_highlight "#474"
+#	set signal_cord_highlight "#474"
+	set ::pd_colors(signal_cord) "#2ca7d4"
+	set ::pd_colors(signal_nlet) "#2ca7d4"
 #	set signal_cord "#2ca7d4"
 	set highlight_width 7
 
