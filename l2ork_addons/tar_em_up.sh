@@ -172,20 +172,20 @@ then
 	#	read dummy
 	#	if [ $no_cwiid -eq 0 ]
 	#	then
-			cd l2ork_addons/cwiid/
-			# install cwiid
-			aclocal
-			autoconf
-			./configure --with-python=python2
-			make
-			# we have disabled system-wide install because as of 23-03-2013
-			# we now statically link disis_wiimote against custom L2Ork version
-			# of the cwiid library
-			if [ $sys_cwiid -eq 1 ]
-			then
-				sudo make install
-			fi
-			cd ../../
+		cd l2ork_addons/cwiid/
+		# install cwiid
+		aclocal
+		autoconf
+		./configure --with-python=python2
+		make
+		# we have disabled system-wide install because as of 23-03-2013
+		# we now statically link disis_wiimote against custom L2Ork version
+		# of the cwiid library
+		if [ $sys_cwiid -eq 1 ]
+		then
+			sudo make install
+		fi
+		cd ../../
 	#	fi
 		# clean files that may remain stuck even after doing global make clean (if any)
 		cd externals/miXed
@@ -246,7 +246,7 @@ then
 		cat ../../externals/OSCx/src/Makefile | sed -e s/-lpd//g > ../../externals/OSCx/src/Makefile
 	fi
 	make install prefix=$inst_dir
-	echo "copying l2ork-specific externals..."
+	echo "copying pd-l2ork-specific externals..."
 	# patch_name
 	cd ../../l2ork_addons/patch_name
 	make clean
@@ -283,6 +283,13 @@ then
 	cp -f spectdelay~.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f spectdelay~-help.pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	# install raspberry pi externals (possibly also useful for non-rpi installs)
+	cd ../raspberry_pi
+	./makeall.sh
+	cp -f disis_gpio/disis_gpio.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f disis_gpio/disis_gpio-help.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f disis_spi/disis_spi.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	cp -f disis_spi/disis_spi-help.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# return to l2ork_addons folder
 	cd ../../
 	# finish install
