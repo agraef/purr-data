@@ -3991,6 +3991,9 @@ static void plot_displace(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int dx, int dy)
 {
+    /* a very temporary hack. See comment inside scalar_displace_withtag */
+    sys_vgui(".x%lx.c move .x%lx.x%lx.template%lx %d %d\n",
+        glist_getcanvas(glist), glist_getcanvas(glist), glist, data, dx, dy);
         /* not yet */
 }
 
@@ -4145,7 +4148,9 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                         draw_me = 1;
                     else
                         draw_me = 0; 
-                } else {
+                }
+                else
+                {
                     if (minyval >= glist->gl_y2 && maxyval <= glist->gl_y1)
                         draw_me = 1;
                     else

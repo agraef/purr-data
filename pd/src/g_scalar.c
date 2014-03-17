@@ -176,7 +176,7 @@ static void scalar_mouseover(t_scalar *x, t_floatarg state)
 static void scalar_getrect(t_gobj *z, t_glist *owner,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-	//fprintf(stderr,"scalar_getrect %d\n", array_joc);
+    //fprintf(stderr,"scalar_getrect %d\n", array_joc);
     t_scalar *x = (t_scalar *)z;
 
     t_template *template = template_findbyname(x->sc_template);
@@ -185,19 +185,23 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     t_gobj *y;
     t_float basex, basey;
 
-    // EXPERIMENTAL: we assume that entire canvas is withing the rectangle--this is for arrays
-    // with "jump on click" enabled TODO: test for other regressions (there shouuld not be any
+    // EXPERIMENTAL: we assume that entire canvas is within
+    // the rectangle--this is for arrays
+    // with "jump on click" enabled TODO: test for other regressions
+    // (there shouuld not be any
     // provided the global variable array_joc is properly maintained)
-    if (glist_istoplevel(owner) && array_joc) {
+    if (glist_istoplevel(owner) && array_joc)
+    {
         x1 = -0x7fffffff, y1 = -0x7fffffff, x2 = 0x7fffffff, y2 = 0x7fffffff;
     }
 
-    else {
+    else
+    {
         scalar_getbasexy(x, &basex, &basey);
             /* if someone deleted the template canvas, we're just a point */
         if (!templatecanvas)
         {
-    		//fprintf(stderr,"...point\n");
+            //fprintf(stderr,"...point\n");
             x1 = x2 = glist_xtopixels(owner, basex);
             y1 = y2 = glist_ytopixels(owner, basey);
         }
@@ -226,13 +230,15 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
                 if (ny1 < y1) y1 = ny1;
                 if (nx2 > x2) x2 = nx2;
                 if (ny2 > y2) y2 = ny2;
-    			//fprintf(stderr,"	====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
+                //fprintf(stderr,"====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n",
+                //    x1, y1, x2, y2);
             }
             if (x2 < x1 || y2 < y1)
                 x1 = y1 = x2 = y2 = 0;
         }
     }
-    //fprintf(stderr,"FINAL scalar_getrect x1 %d y1 %d x2 %d y2 %d\n", x1, y1, x2, y2);
+    //fprintf(stderr,"FINAL scalar_getrect x1 %d y1 %d x2 %d y2 %d\n",
+    //    x1, y1, x2, y2);
     *xp1 = x->sc_x1 = x1;
     *yp1 = x->sc_y1 = y1;
     *xp2 = x->sc_x2 = x2;
@@ -256,16 +262,17 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
                    general "move selected" subcommand will end up
                    offsetting such a rect by dx dy.
                 */
-		if (glist_istoplevel(glist))
-		    sys_vgui(".x%lx.c create prect %d %d %d %d \
-		        -strokewidth 1 -stroke $pd_colors(selection) -tags {select%lx}\n",
-		            glist_getcanvas(glist), x1, y1, x2, y2,
-		            x);
+        if (glist_istoplevel(glist))
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-strokewidth 1 -stroke $pd_colors(selection) "
+                     "-tags {select%lx}\n",
+                    glist_getcanvas(glist), x1, y1, x2, y2,
+                    x);
     }
     else
     {
-		if (glist_istoplevel(glist))
-        	sys_vgui(".x%lx.c delete select%lx\n", glist_getcanvas(glist), x);
+        if (glist_istoplevel(glist))
+            sys_vgui(".x%lx.c delete select%lx\n", glist_getcanvas(glist), x);
     }
 }
 
@@ -286,74 +293,88 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 */
 void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
-	//fprintf(stderr,"scalar_select %d\n", state);
+    //fprintf(stderr,"scalar_select %d\n", state);
     t_scalar *x = (t_scalar *)z;
     t_template *tmpl;
     t_symbol *templatesym = x->sc_template;
     t_atom at;
-	t_canvas *templatecanvas = NULL;
+    t_canvas *templatecanvas = NULL;
     t_gpointer gp;
     gpointer_init(&gp);
     gpointer_setglist(&gp, owner, x);
     SETPOINTER(&at, &gp);
-    if (tmpl = template_findbyname(templatesym)) {
+    if (tmpl = template_findbyname(templatesym))
+    {
         template_notify(tmpl, (state ? gensym("select") : gensym("deselect")),
             1, &at);
-		templatecanvas = template_findcanvas(tmpl);
-	}
+        templatecanvas = template_findcanvas(tmpl);
+    }
     gpointer_unset(&gp);
-	if (state) {
+    if (state)
+    {
                 x->sc_selected = owner;
-		sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
-			glist_getcanvas(owner), x);
-		/* how do we navigate through a t_word list?
-        if (x->sc_vec) {
-            t_word *v = x->sc_vec;
-            while(v) {
-    			sys_vgui(".x%lx.c addtag selected withtag .x%lx.x%lx.template%lx\n",
-    				glist_getcanvas(owner), glist_getcanvas(owner), owner, v);
-            }
-        }*/
-		/*if (templatecanvas) {
-			// get the universal tag for all nested objects
-			t_canvas *tag = owner;
-			while (tag->gl_owner) {
-				tag = tag->gl_owner;
-			}
-			sys_vgui(".x%lx.c addtag selected withtag %lx\n",
-				glist_getcanvas(owner), (t_int)tag);
-		}*/
-	} else {
-        x->sc_selected = 0;
-		sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
-			glist_getcanvas(owner), x);
-                sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
-                    glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+        sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
+            glist_getcanvas(owner), x);
         /* how do we navigate through a t_word list?
-        if (x->sc_vec) {
+        if (x->sc_vec)
+        {
             t_word *v = x->sc_vec;
-            while (v) {
-        		sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
-        			glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec);
+            while(v)
+            {
+                sys_vgui(".x%lx.c "
+                         "addtag selected withtag .x%lx.x%lx.template%lx\n",
+                    glist_getcanvas(owner), glist_getcanvas(owner), owner, v);
             }
         }*/
-		/*if (templatecanvas) {
-			// get the universal tag for all nested objects
-			t_canvas *tag = owner;
-			while (tag->gl_owner) {
-				tag = tag->gl_owner;
-			}
-			sys_vgui(".x%lx.c dtag %lx selected\n",
-				glist_getcanvas(owner), (t_int)tag);
-		}*/
-	}
-	//sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(owner), owner, state);
+        /*if (templatecanvas) {
+            // get the universal tag for all nested objects
+            t_canvas *tag = owner;
+            while (tag->gl_owner)
+            {
+                tag = tag->gl_owner;
+            }
+            sys_vgui(".x%lx.c addtag selected withtag %lx\n",
+                glist_getcanvas(owner), (t_int)tag);
+        }*/
+    }
+    else
+    {
+        x->sc_selected = 0;
+        sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
+            glist_getcanvas(owner), x);
+                sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
+                    glist_getcanvas(owner), glist_getcanvas(owner),
+                    owner, x->sc_vec);
+        /* how do we navigate through a t_word list?
+        if (x->sc_vec)
+        {
+            t_word *v = x->sc_vec;
+            while (v)
+            {
+                sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
+                    glist_getcanvas(owner), glist_getcanvas(owner),
+                    owner, x->sc_vec);
+            }
+        }*/
+        /*if (templatecanvas) {
+            // get the universal tag for all nested objects
+            t_canvas *tag = owner;
+            while (tag->gl_owner)
+            {
+                tag = tag->gl_owner;
+            }
+            sys_vgui(".x%lx.c dtag %lx selected\n",
+                glist_getcanvas(owner), (t_int)tag);
+        }*/
+    }
+    //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+    //    glist_getcanvas(owner), owner, state);
     scalar_drawselectrect(x, owner, state);
 }
 
 static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
-	//fprintf(stderr,"scalar_displace\n");
+    //fprintf(stderr,"scalar_displace\n");
     t_scalar *x = (t_scalar *)z;
     t_symbol *templatesym = x->sc_template;
     t_template *template = template_findbyname(templatesym);
@@ -405,7 +426,7 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 */
 static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
-	//fprintf(stderr,"scalar_displace_withtag %lx %d %d\n", (t_int)z, dx, dy);
+    //fprintf(stderr,"scalar_displace_withtag %lx %d %d\n", (t_int)z, dx, dy);
     t_scalar *x = (t_scalar *)z;
     t_symbol *templatesym = x->sc_template;
     t_template *template = template_findbyname(templatesym);
@@ -463,8 +484,41 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_float yscale = glist_ytopixels(x->sc_selected, 1) -
         glist_ytopixels(x->sc_selected, 0);
 
-    sys_vgui(".x%lx.c itemconfigure {.scalar%lx} -matrix { {%g %g} {%g %g} {%d %d} }\n",
-        glist_getcanvas(glist), x->sc_vec, xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(x->sc_selected, basex) + (x->sc_selected == glist ? 0 : dx), (int)glist_ytopixels(x->sc_selected, basey) + (x->sc_selected == glist ? 0 : dy));
+    sys_vgui(".x%lx.c itemconfigure {.scalar%lx} "
+             "-matrix { {%g %g} {%g %g} {%d %d} }\n",
+        glist_getcanvas(glist), x->sc_vec, xscale, 0.0, 0.0, yscale,
+        (int)glist_xtopixels(x->sc_selected, basex) +
+            (x->sc_selected == glist ? 0 : dx),
+        (int)glist_ytopixels(x->sc_selected, basey) +
+            (x->sc_selected == glist ? 0 : dy));
+
+    /* This awful hack is here because plot_vis is used by both ds arrays
+       and garrays.  Unlike the other drawing commands, plot_vis still does
+       all the gop scaling and basex/basey calculations manually.  So
+       currently the trace does not use the scalar group as its "-parent".
+
+       Once all the calculations inside plot_vis, array_doclick, and
+       array_motion remove the glist_[xy]topixels and basex/y stuff, plot_vis
+       can use the scalar "-parent" and this awful hack can be removed.
+
+       Garrays follow their Pd-l2ork's standard select and displace_withtag
+       behavior, so we don't use the hack for them.  (Non-garray scalars
+       should follow that behavior too, but cannot atm for the reason given
+       in the comment above scalar_select...)
+    */
+
+    if (template->t_sym != gensym("_float_array"))
+    {
+        t_gobj *y;
+        t_canvas *templatecanvas = template_findcanvas(template);
+        for (y = templatecanvas->gl_list; y; y = y->g_next)
+            {
+                t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+                if (!wb) continue;
+                (*wb->w_parentdisplacefn)(y, glist, x->sc_vec, template,
+                    basex, basey, dx, dy);
+            }
+    }
 
     //scalar_redraw(x, glist);
 }
@@ -502,7 +556,7 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
 */
 static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
-	//fprintf(stderr,"scalar_vis %d\n", vis);
+    //fprintf(stderr,"scalar_vis %d\n", vis);
     t_scalar *x = (t_scalar *)z;
 
     x->sc_bboxcache = 0;
@@ -519,13 +573,16 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         {
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
-            sys_vgui(".x%lx.c create prect %d %d %d %d -tags {blankscalar%lx}\n",
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-tags {blankscalar%lx}\n",
                 glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x);
         }
-        else sys_vgui(".x%lx.c delete blankscalar%lx\n", glist_getcanvas(owner), x);
+        else sys_vgui(".x%lx.c delete blankscalar%lx\n",
+            glist_getcanvas(owner), x);
         return;
     }
-	//else sys_vgui(".x%lx.c delete blankscalar%lx\n", glist_getcanvas(owner), x);
+    //else sys_vgui(".x%lx.c delete blankscalar%lx\n",
+    //    glist_getcanvas(owner), x);
 
     if (vis)
     {
@@ -536,29 +593,33 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         sys_vgui(".x%lx.c create group -tags {.scalar%lx} "
             "-matrix { {%g %g} {%g %g} {%d %d} }\n",
             glist_getcanvas(owner), x->sc_vec,
-            xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex), (int)glist_ytopixels(owner, basey)
+            xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex),
+            (int)glist_ytopixels(owner, basey)
             );
-        sys_vgui(".x%lx.c create group -tags {.dgroup%lx} -parent {.scalar%lx}\n",
+        sys_vgui(".x%lx.c create group -tags {.dgroup%lx} "
+                 "-parent {.scalar%lx}\n",
             glist_getcanvas(owner), x->sc_vec, x->sc_vec);
         sys_vgui("pdtk_bind_scalar_mouseover "
                  ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
-            glist_getcanvas(owner), glist_getcanvas(owner), owner, x->sc_vec, x);
+            glist_getcanvas(owner), glist_getcanvas(owner),
+            owner, x->sc_vec, x);
     }
 
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
-        (*wb->w_parentvisfn)(y, owner, x, x->sc_vec, template, basex, basey, vis);
+        (*wb->w_parentvisfn)(y, owner, x, x->sc_vec, template,
+            basex, basey, vis);
     }
     if (!vis)
-        sys_vgui(".x%lx.c delete .scalar%lx\n", glist_getcanvas(owner), x->sc_vec);
-
+        sys_vgui(".x%lx.c delete .scalar%lx\n", glist_getcanvas(owner),
+            x->sc_vec);
 
     sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))
     {
-		scalar_select(z, owner, 1);
+        scalar_select(z, owner, 1);
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
     }
@@ -568,17 +629,19 @@ static void scalar_doredraw(t_gobj *client, t_glist *glist)
 {
     scalar_vis(client, glist, 0);
     scalar_vis(client, glist, 1);
-	if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist)) {
-		//fprintf(stderr,"yes\n");
-		sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n", glist_getcanvas(glist), glist, 1);
-	}
+    if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist))
+    {
+        //fprintf(stderr,"yes\n");
+        sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+            glist_getcanvas(glist), glist, 1);
+    }
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist_getcanvas(glist));
 }
 
 void scalar_redraw(t_scalar *x, t_glist *glist)
 {
     if (glist_isvisible(glist))
-		scalar_doredraw((t_gobj *)x, glist);
+        scalar_doredraw((t_gobj *)x, glist);
         //sys_queuegui(x, glist, scalar_doredraw);
 }
 
@@ -593,34 +656,41 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_atom at[2];
     t_float basex = template_getfloat(template, gensym("x"), data, 0);
     t_float basey = template_getfloat(template, gensym("y"), data, 0);
-	//fprintf(stderr,"=================scalar_doclick %f %f %f %f %d\n", basex, basey, xloc, yloc, doit);
+    //fprintf(stderr,"=================scalar_doclick %f %f %f %f %d\n",
+    //    basex, basey, xloc, yloc, doit);
 
-	SETFLOAT(at, basex + xloc);
-	SETFLOAT(at+1, basey + yloc);
-    if (doit) {
-		//fprintf(stderr,"	doit\n");
+    SETFLOAT(at, basex + xloc);
+    SETFLOAT(at+1, basey + yloc);
+    if (doit)
+    {
+        //fprintf(stderr,"    doit\n");
         template_notifyforscalar(template, owner, 
             sc, gensym("click"), 2, at);
-	}
+    }
 
-	// if we are nested ignore xloc and yloc, otherwise nested objects get their hitbox miscalculated
-	if (xloc != 0.0 || yloc != 0.0) {
-		//fprintf(stderr,"ignoring\n");
-		basex = 0.0;
-		basey = 0.0;
-	}
+    // if we are nested ignore xloc and yloc, otherwise
+    // nested objects get their hitbox miscalculated
+    if (xloc != 0.0 || yloc != 0.0)
+    {
+        //fprintf(stderr,"ignoring\n");
+        basex = 0.0;
+        basey = 0.0;
+    }
 
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {
-		//fprintf(stderr,"looking for template... %f %f %f %f %lx %lx\n", basex, basey, xloc, yloc, (t_int)owner, (t_int)data);
+        //fprintf(stderr,"looking for template... %f %f %f %f %lx %lx\n",
+        //    basex, basey, xloc, yloc, (t_int)owner, (t_int)data);
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
-	    if (hit = (*wb->w_parentclickfn)(y, owner,
-	        data, template, sc, ap, basex + xloc, basey + yloc,
-	        xpix, ypix, shift, alt, dbl, doit)) {
-				//fprintf(stderr,"	...got it %f %f\n", basex + xloc, basey + yloc);
-	            return (hit);
-		}
+        if (hit = (*wb->w_parentclickfn)(y, owner,
+            data, template, sc, ap, basex + xloc, basey + yloc,
+            xpix, ypix, shift, alt, dbl, doit))
+        {
+                //fprintf(stderr,"    ...got it %f %f\n",
+                //    basex + xloc, basey + yloc);
+                return (hit);
+        }
     }
     return (0);
 }
@@ -628,7 +698,7 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-	//fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
+    //fprintf(stderr,"scalar_click %d %d\n", xpix, ypix);
     t_scalar *x = (t_scalar *)z;
 
     x->sc_bboxcache = 0;
