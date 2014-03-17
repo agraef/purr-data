@@ -248,7 +248,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
 
 void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 {
-    fprintf(stderr,"scalar_drawselecterect%d\n", state);
+    //fprintf(stderr,"scalar_drawselecterect%d\n", state);
     if (state)
     {
         int x1, y1, x2, y2;
@@ -294,7 +294,7 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 */
 void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
-    fprintf(stderr,"scalar_select %d\n", state);
+    //fprintf(stderr,"scalar_select %d\n", state);
     t_scalar *x = (t_scalar *)z;
     t_template *tmpl;
     t_symbol *templatesym = x->sc_template;
@@ -306,13 +306,11 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
     SETPOINTER(&at, &gp);
     if (tmpl = template_findbyname(templatesym))
     {
-        fprintf(stderr,"blah\n");
         template_notify(tmpl, (state ? gensym("select") : gensym("deselect")),
             1, &at);
         //templatecanvas = template_findcanvas(tmpl);
     }
     gpointer_unset(&gp);
-    fprintf(stderr,"continue\n");
     if (state)
     {
         x->sc_selected = owner;
@@ -622,7 +620,7 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))
     {
-        scalar_select(z, owner, 1);
+        //scalar_select(z, owner, 1);
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
     }
