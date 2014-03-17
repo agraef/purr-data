@@ -1,5 +1,5 @@
 #N struct working-man-scalar float x float y;
-#N canvas 0 19 895 618 10;
+#N canvas 226 49 895 618 10;
 #N canvas 695 40 671 300 template 0;
 #X obj 115 -2451 loadbang;
 #X obj 115 -2409 draw path M 41.184 453.06 C 18.504 453.06 0 434.556
@@ -248,11 +248,6 @@ naming scheme of [draw shape] \, but [drawpolygon] is already taken
 and has a different interface. So I'll either change [draw shape] to
 some one-word selector or change [drawsprite] to make it more consistent
 with what I have so far.;
-#X text 43 490 * mouse-dragging hotspots. This currently works like
-old-school scalars \, and it even works with transforms. It's original
-design is too limiting \, and with ds arrays the element hotspot may
-even conflict with the coordinate hotspot. A more expressive way is
-needed \, maybe something ported or inspired by Raphael.;
 #X text 43 570 * scalar bbox caching. All that code is essentially
 a duplication of tkpath and needs to happen in the GUI.;
 #X text 480 333 Upcoming:;
@@ -268,3 +263,8 @@ transformable. (Maybe the same with drawsprite \, not sure...);
 #X text 480 543 * better [draw group] inheritance. Currently drawing
 a shape gives it a bunch of default attributes which you have to manually
 turn off to inherit attributes from a group.;
+#X text 43 490 * mouse-dragging hotspots. This currently works like
+old-school scalars \, and it even works with transforms. Its original
+design is too limiting \, and with ds arrays the element hotspot may
+even conflict with the coordinate hotspot. A more expressive way is
+needed \, maybe something ported or inspired by Raphael.;
