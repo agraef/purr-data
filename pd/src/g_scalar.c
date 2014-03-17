@@ -293,7 +293,7 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 */
 void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
-    //fprintf(stderr,"scalar_select %d\n", state);
+    fprintf(stderr,"scalar_select %d\n", state);
     t_scalar *x = (t_scalar *)z;
     t_template *tmpl;
     t_symbol *templatesym = x->sc_template;
@@ -305,6 +305,7 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
     SETPOINTER(&at, &gp);
     if (tmpl = template_findbyname(templatesym))
     {
+        fprintf(stderr,"blah\n");
         template_notify(tmpl, (state ? gensym("select") : gensym("deselect")),
             1, &at);
         templatecanvas = template_findcanvas(tmpl);
@@ -342,9 +343,9 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
         x->sc_selected = 0;
         sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
             glist_getcanvas(owner), x);
-                sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
-                    glist_getcanvas(owner), glist_getcanvas(owner),
-                    owner, x->sc_vec);
+        sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
+            glist_getcanvas(owner), glist_getcanvas(owner),
+            owner, x->sc_vec);
         /* how do we navigate through a t_word list?
         if (x->sc_vec)
         {

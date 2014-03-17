@@ -262,6 +262,11 @@ typedef struct _template
     t_pd t_pdobj;               /* header */
     struct _gtemplate *t_list;  /* list of "struct"/gtemplate objects */
     t_symbol *t_sym;            /* name */
+    int t_transformable;        /* counts number of arrays in template
+                                   drawn objects that depend on this
+                                   template can only be transformed
+                                   (scaled/skewed,rotated, etc.)
+                                   if this var is 0 */
     int t_n;                    /* number of dataslots (fields) */
     t_dataslot *t_vec;          /* array of dataslots */
 } t_template;

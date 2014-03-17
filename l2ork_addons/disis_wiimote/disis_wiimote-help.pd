@@ -77,9 +77,9 @@ case. The total acceleration is given by:;
 #X msg 122 488 traverse pd-IR-data \, next;
 #X obj 134 63 route 0 1 2 3;
 #X obj 23 482 unpack 0 0 0;
-#X floatatom 483 44 5 0 0 0 IR-Blob: - -;
-#X floatatom 522 44 5 0 0 0 - - -;
-#X floatatom 562 44 5 0 0 0 - - -;
+#X floatatom 483 44 5 0 0 0 IR-Blob: - -, f 5;
+#X floatatom 522 44 5 0 0 0 - - -, f 5;
+#X floatatom 562 44 5 0 0 0 - - -, f 5;
 #X obj 15 533 set IR-blobs x y;
 #X obj 231 400 pointer;
 #X obj 132 372 unpack 0 0 0;
@@ -163,9 +163,9 @@ case. The total acceleration is given by:;
 #X restore 106 444 pd \$0-nunchuck-stuff;
 #X obj 579 406 cnv 15 275 230 empty empty Expansion: 10 15 0 14 -228992
 -355 0;
-#X floatatom 718 468 7 0 0 1 - #0-nc-accX-set #0-nc-accX;
-#X floatatom 718 482 7 0 0 1 - #0-nc-accY-set #0-nc-accY;
-#X floatatom 718 496 7 0 0 1 - #0-nc-accZ-set #0-nc-accZ;
+#X floatatom 718 468 7 0 0 1 - #0-nc-accX-set #0-nc-accX, f 7;
+#X floatatom 718 482 7 0 0 1 - #0-nc-accY-set #0-nc-accY, f 7;
+#X floatatom 718 496 7 0 0 1 - #0-nc-accZ-set #0-nc-accZ, f 7;
 #X obj 588 468 hsl 128 14 -1 1 0 0 \$0-nc-accX \$0-nc-accX-set X 4
 8 0 10 -261681 -1 -1 0 1;
 #X obj 588 482 hsl 128 14 -1 1 0 0 \$0-nc-accY \$0-nc-accY-set Y 4
@@ -173,7 +173,7 @@ case. The total acceleration is given by:;
 #X obj 588 496 hsl 128 14 -1 1 0 0 \$0-nc-accZ \$0-nc-accZ-set Z 4
 8 0 10 -261681 -1 -1 0 1;
 #X obj 723 530 nbx 3 16 -1e+37 1e+37 0 0 empty \$0-nc-btn-set empty
--80 8 0 10 -261681 -1 -1 0 256;
+-80 8 0 10 -261681 -1 -1 0 256 0;
 #X text 584 452 Acceleration:;
 #N canvas 154 209 610 221 NC-stick 0;
 #X obj 39 34 struct NC-stick float x float y;
@@ -184,9 +184,9 @@ case. The total acceleration is given by:;
 #X text 785 452 Stick:;
 #X obj 579 5 cnv 15 275 400 empty empty Wiimote: 10 15 0 14 -261689
 -143491 0;
-#X floatatom 742 80 7 0 0 1 _X #0-wii-accX-set #0-wii-accX;
-#X floatatom 742 94 7 0 0 1 _Y #0-wii-accY-set #0-wii-accY;
-#X floatatom 742 108 7 0 0 1 _Z #0-wii-accZ-set #0-wii-accZ;
+#X floatatom 742 80 7 0 0 1 _X #0-wii-accX-set #0-wii-accX, f 7;
+#X floatatom 742 94 7 0 0 1 _Y #0-wii-accY-set #0-wii-accY, f 7;
+#X floatatom 742 108 7 0 0 1 _Z #0-wii-accZ-set #0-wii-accZ, f 7;
 #X obj 612 80 hsl 128 14 -1 1 0 0 \$0-wii-accX \$0-wii-accX-set empty
 -2 -8 0 10 -225271 -1 -1 0 1;
 #X obj 612 94 hsl 128 14 -1 1 0 0 \$0-wii-accY \$0-wii-accY-set empty
@@ -200,23 +200,25 @@ case. The total acceleration is given by:;
 #X scalar IR-blobs 419 760 blob4 \;;
 #X coords 0 0 1024 768 256 196 1;
 #X restore 590 183 pd IR-data;
-#N canvas 303 253 342 204 IR-blobs 0;
+#N canvas 136 244 342 204 IR-blobs 0;
 #X obj 39 34 struct IR-blobs float x float y symbol s;
 #X obj 39 71 filledcurve 9 30 0 0 -30 -30 0 0 30 30 0;
-#X obj 65 109 drawsymbol s -60 -75 0 1 blob;
+#X obj 63 109 drawsymbol s -35 -75 0 24 blob;
 #X restore 776 384 pd IR-blobs;
 #X text 648 166 IR Blobs (1024x768):;
-#X floatatom 742 128 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch;
+#X floatatom 742 128 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch,
+f 7;
 #X obj 612 128 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-pitch \$0-wii-pitch-set
 empty -2 -8 0 10 -225280 -1 -1 0 1;
-#X floatatom 742 142 7 0 0 1 _ROLL #0-wii-roll-set #0-wii-roll;
+#X floatatom 742 142 7 0 0 1 _ROLL #0-wii-roll-set #0-wii-roll, f
+7;
 #X obj 612 142 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-roll \$0-wii-roll-set
 empty -2 -8 0 10 -225280 -1 -1 0 1;
 #X text 608 64 Acceleration (-1 to 1):;
 #X obj 779 23 nbx 2 16 -1e+37 1e+37 0 0 empty \$0-wii-btn01-set empty
--100 10 0 12 -225280 -1 -1 0 256;
+-100 10 0 12 -225280 -1 -1 0 256 0;
 #X obj 814 23 nbx 2 16 -1e+37 1e+37 0 0 empty \$0-wii-btn02-set empty
-0 10 0 12 -225280 -1 -1 0 256;
+0 10 0 12 -225280 -1 -1 0 256 0;
 #N canvas 0 0 330 216 \$0-button-stuff 0;
 #X obj 41 33 inlet;
 #X obj 41 86 unpack 0 0;
@@ -383,11 +385,11 @@ balance battery;
 #X text 166 63 <- You can connect to a specific address;
 #X msg 6 366 status;
 #X msg 6 344 debug;
-#X floatatom 317 409 5 0 0 0 - - -;
-#X floatatom 317 427 5 0 0 0 - - -;
-#X floatatom 283 409 5 0 0 0 - - -;
-#X floatatom 283 427 5 0 0 0 - - -;
-#X floatatom 391 407 5 0 0 0 - - -;
+#X floatatom 317 409 5 0 0 0 - - -, f 5;
+#X floatatom 317 427 5 0 0 0 - - -, f 5;
+#X floatatom 283 409 5 0 0 0 - - -, f 5;
+#X floatatom 283 427 5 0 0 0 - - -, f 5;
+#X floatatom 391 407 5 0 0 0 - - -, f 5;
 #X text 263 441 balance board (kg);
 #X text 425 400 battery level;
 #X text 423 412 (click on the status msg);
@@ -431,8 +433,8 @@ balance battery;
 1 4 0;
 #X restore 356 174 pd CL-R-stick;
 #X obj 690 3 unpack 0 0;
-#X floatatom 690 25 5 0 0 0 - - -;
-#X floatatom 747 25 5 0 0 0 - - -;
+#X floatatom 690 25 5 0 0 0 - - -, f 5;
+#X floatatom 747 25 5 0 0 0 - - -, f 5;
 #N canvas 185 133 481 416 CL-R-data 0;
 #X scalar CL-R-stick 15 15 \;;
 #X coords 0 30 30 0 80 80 1 0 0;

@@ -65,6 +65,7 @@ t_template *template_new(t_symbol *templatesym, int argc, t_atom *argv)
 {
     t_template *x = (t_template *)pd_new(template_class);
     x->t_n = 0;
+    x->t_transformable = 0;
     x->t_vec = (t_dataslot *)t_getbytes(0);
     while (argc > 0)
     {
@@ -574,6 +575,17 @@ another one to add new fields, for example. */
 
 static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
 {
+    t_canvas *cur = canvas_getcurrent();
+    t_gobj *gob = cur->gl_list;
+    while (gob)
+    {
+        if (pd_class(&gob->g_pd) == gtemplate_class)
+        {
+            error("%s: only one struct allowed per canvas.", cur->gl_name->s_name);
+            return(0);
+        }
+        gob = gob->g_next;
+    }
     t_gtemplate *x = (t_gtemplate *)pd_new(gtemplate_class);
     t_template *t = template_findbyname(sym);
     int i;
@@ -1180,6 +1192,9 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
 
     pd_bind(&x->x_obj.ob_pd, gensym(buf));
     
+    // hack of unprecedented proportions that doesn't even work
+    //sys_queuegui((t_gobj *)x->x_canvas, 0, (t_guicallbackfn)canvas_redrawallfortemplatecanvas);
+    
     return (x);
 }
 
@@ -1717,7 +1732,8 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
     draw_mset(mtx1, 0, 0, 0, 0, 0, 0);
     draw_mset(mtx2, 0, 0, 0, 0, 0, 0);
     t_gobj *g;
-    t_template *template;
+    t_template *template = NULL;
+    t_template *warn_template = NULL;
     t_canvas *visible = c;
     while(visible->gl_isgraph && visible->gl_owner)
         visible = visible->gl_owner;
@@ -1736,9 +1752,14 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
         if (glist_isvisible(c) && g->g_pd == scalar_class &&
             x->x_canvas ==
             template_findcanvas((template = template_findbyname(
-                (((t_scalar *)g)->sc_template))))
+                (((t_scalar *)g)->sc_template)))) &&
+            template->t_transformable == 0
            )
         {
+            //fprintf(stderr,"draw_doupdatetransform > template:%lx(%s)
+            //    transform:%d\n", (t_int)template,
+            //    ((t_scalar *)g)->sc_template->s_name,
+            //    template->t_transformable);
             t_float m1, m2, m3, m4, m5, m6;
             draw_parsetransform(x, template, ((t_scalar *)g)->sc_vec,
                 &m1, &m2, &m3, &m4, &m5, &m6);
@@ -1760,6 +1781,12 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
                 scalar_drawselectrect((t_scalar *)g, c, 1);
             }
             sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
+        } 
+        else if (template != NULL && warn_template != template)
+        {
+            /* this is not a transformable template, warn user of that */
+            post("warning: transform ignored on the template %s because it includes an array", template->t_sym->s_name);
+            warn_template = template;
         }
         if (g->g_pd == canvas_class)
         {
@@ -2954,7 +2981,6 @@ static t_gpointer draw_motion_gpointer;
 
 static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
-    //fprintf(stderr,"draw_motion\n");
     t_draw *x = (t_draw *)z;
     t_float mtx1[3][3];
     t_float mtx2[3][3];
@@ -3673,6 +3699,18 @@ static void *plot_new(t_symbol *classsym, t_int argc, t_atom *argv)
     t_plot *x = (t_plot *)pd_new(plot_class);
     int defstyle = PLOTSTYLE_POLY;
     x->x_canvas = canvas_getcurrent();
+    //fprintf(stderr,"plot new %s\n",
+    //    (canvas_makebindsym(x->x_canvas->gl_name))->s_name);
+    t_template *t = template_findbyname(
+        canvas_makebindsym(x->x_canvas->gl_name));
+    if (t)
+    {
+        /* increment variable of the template
+           to prevent transform as that would
+           make arrays break their hitboxes
+           and all kinds of other bad stuff */
+        t->t_transformable++;
+    }
 
     fielddesc_setfloat_var(&x->x_xpoints, gensym("x"));
     fielddesc_setfloat_var(&x->x_ypoints, gensym("y"));
@@ -4384,6 +4422,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     else
     {
         /* un-draw the individual points */
+        //fprintf(stderr,"plot_vis UNVIS\n");
         if (scalarvis != 0)
         {
             int i;
@@ -4437,6 +4476,28 @@ static int plot_click(t_gobj *z, t_glist *glist,
     else return (0);
 }
 
+extern int we_are_undoing;
+
+static void plot_free(t_plot *x)
+{
+    //fprintf(stderr,"plot_free\n");
+    //sys_queuegui(x->x_canvas, 0, canvas_redrawallfortemplatecanvas);
+    /* decrement variable of the template
+       to prevent transform as that would
+       make arrays break their hitboxes
+       and all kinds of other bad stuff */
+    t_template *t = template_findbyname(
+        canvas_makebindsym(x->x_canvas->gl_name)
+    );
+    if (t)
+    {
+        t->t_transformable--;
+        //fprintf(stderr,"plot_free > template:%lx(%s) transform:%d\n",
+        //    (t_int)t, canvas_makebindsym(x->x_canvas->gl_name)->s_name,
+        //    t->t_transformable);
+    }
+}
+
 t_parentwidgetbehavior plot_widgetbehavior =
 {
     plot_getrect,
@@ -4449,8 +4510,8 @@ t_parentwidgetbehavior plot_widgetbehavior =
 
 static void plot_setup(void)
 {
-    plot_class = class_new(gensym("plot"), (t_newmethod)plot_new, 0,
-        sizeof(t_plot), 0, A_GIMME, 0);
+    plot_class = class_new(gensym("plot"), (t_newmethod)plot_new,
+        (t_method)plot_free, sizeof(t_plot), 0, A_GIMME, 0);
     class_setdrawcommand(plot_class);
     class_addfloat(plot_class, plot_float);
     class_setparentwidget(plot_class, &plot_widgetbehavior);
@@ -4656,7 +4717,7 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
         /* have to remove fontweight for the time being... */
         sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font,
-                sys_hostfontsize(fontsize));
+                fontsize);
         sys_vgui(" -parent .scalar%lx", data);
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
@@ -5030,7 +5091,7 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
         sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
                 glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
         sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font,
-                sys_hostfontsize(fontsize));
+                fontsize);
         sys_vgui(" -parent .scalar%lx", data);
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
