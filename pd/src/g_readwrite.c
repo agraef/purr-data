@@ -602,12 +602,13 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
     linetraverser_start(&t, x);
     while (oc = linetraverser_next(&t))
     {
-		if (outconnect_visible(oc)) {
-		    int srcno = canvas_getindex(x, &t.tr_ob->ob_g);
-		    int sinkno = canvas_getindex(x, &t.tr_ob2->ob_g);
-		    binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
-		        srcno, t.tr_outno, sinkno, t.tr_inno);
-		}
+        if (outconnect_visible(oc))
+        {
+            int srcno = canvas_getindex(x, &t.tr_ob->ob_g);
+            int sinkno = canvas_getindex(x, &t.tr_ob2->ob_g);
+            binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
+                srcno, t.tr_outno, sinkno, t.tr_inno);
+        }
     }
         /* unless everything is the default (as in ordinary subpatches)
         print out a "coords" message to set up the coordinate systems */
