@@ -4476,8 +4476,6 @@ static int plot_click(t_gobj *z, t_glist *glist,
     else return (0);
 }
 
-extern int we_are_undoing;
-
 static void plot_free(t_plot *x)
 {
     //fprintf(stderr,"plot_free\n");
