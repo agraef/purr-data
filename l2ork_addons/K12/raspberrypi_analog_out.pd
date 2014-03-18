@@ -1,40 +1,61 @@
-#N canvas 231 85 539 512 10;
-#X obj 292 314 outlet;
+#N canvas 396 92 455 542 10;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/raspberrypi_gpio_analog_out_off.png
 1;
 #X obj 221 -161 loadbang;
-#X obj 227 56 nbx 2 14 0 10 0 0 empty empty empty -48 8 0 11 -262144
+#X obj 241 52 nbx 2 14 0 10 0 0 empty empty channel: -48 8 0 11 -262144
 -1 -1 0 256 3;
 #X obj 278 0 preset_node k12;
-#X obj 227 117 coll rpi_gpio.coll;
+#X obj 241 117 coll rpi_gpio.coll;
 #C restore;
-#X obj 292 285 disis_gpio;
-#X obj 155 197 inlet;
-#X msg 155 227 pwm \$1;
+#X obj 227 346 disis_gpio;
+#X obj 413 256 inlet;
+#X msg 368 307 pwm \$1;
 #X obj 222 -105 sel 0 1;
-#X msg 227 227 unexport \, export \$1 \, direction out \, open \, togglesoftpwm
-1;
-#X obj 205 55 cnv 15 52 15 empty \$0-r-cnv pin:0 4 7 0 11 -262144 -1
+#X obj 218 69 cnv 15 52 15 empty \$0-r-cnv pin:0 4 7 0 11 -262144 -99865
 0;
-#X obj 240 142 sprintf pin:%d;
-#X obj 240 163 tosymbol;
-#X msg 240 184 label \$1;
-#X obj 240 205 s \$0-r-cnv;
+#X obj 241 141 sprintf pin:%d;
+#X obj 241 162 tosymbol;
+#X msg 241 183 label \$1;
+#X obj 241 204 s \$0-r-cnv;
 #X msg 222 -83 open @pd_extra/K12/objects/raspberrypi_gpio_analog_out_off.png
 ;
 #X msg 246 -44 open @pd_extra/K12/objects/raspberrypi_gpio_analog_out_on.png
 ;
-#X connect 3 0 4 0;
-#X connect 3 0 5 0;
-#X connect 4 0 3 0;
-#X connect 5 0 10 0;
-#X connect 5 0 12 0;
-#X connect 7 0 8 0;
-#X connect 9 0 16 0;
-#X connect 9 1 17 0;
+#X obj 368 286 gate 1 0;
+#X obj 145 203 sel 0;
+#X obj 145 181 change;
+#X obj 222 -128 change;
+#X msg 335 200 togglesoftpwm 1;
+#X obj 335 178 loadbang;
+#X msg 145 227 unexport;
+#X msg 227 227 unexport \, export \$1 \, direction out \, open;
+#X obj 306 36 loadbang;
+#X msg 306 57 0;
+#X connect 2 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 10 0;
+#X connect 4 0 18 0;
+#X connect 5 1 16 0;
+#X connect 5 1 19 0;
+#X connect 6 0 16 1;
+#X connect 7 0 5 0;
+#X connect 8 0 14 0;
+#X connect 8 1 15 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
 #X connect 12 0 13 0;
-#X connect 13 0 14 0;
-#X connect 14 0 15 0;
-#X connect 16 0 1 0;
-#X connect 17 0 1 0;
+#X connect 14 0 0 0;
+#X connect 15 0 0 0;
+#X connect 16 0 7 0;
+#X connect 17 0 22 0;
+#X connect 17 1 23 0;
+#X connect 18 0 17 0;
+#X connect 19 0 8 0;
+#X connect 20 0 5 0;
+#X connect 21 0 20 0;
+#X connect 22 0 5 0;
+#X connect 23 0 5 0;
+#X connect 24 0 25 0;
+#X connect 25 0 2 0;
 #X coords 0 -1 1 1 89 89 2 183 13;
