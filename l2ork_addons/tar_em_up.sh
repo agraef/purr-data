@@ -283,13 +283,15 @@ then
 	cp -f spectdelay~.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f spectdelay~-help.pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	# install raspberry pi externals (possibly also useful for non-rpi installs)
-	cd ../raspberry_pi
-	./makeall.sh
-	cp -f disis_gpio/disis_gpio.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_gpio/disis_gpio-help.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_spi/disis_spi.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-	cp -f disis_spi/disis_spi-help.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	# install raspberry pi externals
+	if [ $rpi -eq 1 ]
+		cd ../raspberry_pi
+		./makeall.sh
+		cp -f disis_gpio/disis_gpio.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_gpio/disis_gpio-help.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_spi/disis_spi.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_spi/disis_spi-help.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+	fi
 	# return to l2ork_addons folder
 	cd ../../
 	# finish install
