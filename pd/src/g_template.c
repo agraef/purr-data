@@ -1656,7 +1656,9 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
         /* this doesn't jibe with glist_xtopixels, ytopixels, etc. */
         else if (type == gensym("rotate"))
         {
-            t_float a = fielddesc_getfloat(fd++, template, data, 0);
+            /* we need to convert degrees to radians */
+            t_float a = (fielddesc_getfloat(fd++, template, data, 0)) *
+                3.14159 / 180;
             argc--;
             t_float cx = 0, cy = 0;
             if (argc && fd->fd_type == A_FLOAT)
