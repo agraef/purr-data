@@ -1521,24 +1521,24 @@ proc menu_addstd {mbar} {
         -command {menu_audio 1} 
     $mbar.audio add command -label {Audio OFF} -accelerator [accel_munge "Ctrl+."] \
         -command {menu_audio 0} 
-#	match_linux_wm [list $mbar.audio add separator]
-#	$mbar.audio add command -label {Audio Settings} -state disabled
-#    for {set x 1} {$x<[llength $pd_apilist]} {incr x} {
-#        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_apilist $x] 0] Driver] \
-#            -command {menu_audio 0} -variable pd_whichapi \
-#            -value [lindex [lindex $pd_apilist $x] 1]\
-#			-selectcolor "#dddddd" \
-#            -command {pd [concat pd audio-setapi $pd_whichapi \;]}
-#    }
-#	match_linux_wm [list $mbar.audio add separator]
-#	$mbar.audio add command -label {MIDI Settings} -state disabled
-#    for {set x 0} {$x<[llength $pd_midiapilist]} {incr x} {
-#        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_midiapilist $x] 0] Driver]\
-#            -command {menu_midi 0} -variable pd_whichmidiapi \
-#            -value [lindex [lindex $pd_midiapilist $x] 1]\
-#			-selectcolor "#dddddd" \
-#            -command {pd [concat pd midi-setapi $pd_whichmidiapi \;]}
-#    }
+	match_linux_wm [list $mbar.audio add separator]
+	$mbar.audio add command -label {Audio Settings} -state disabled
+    for {set x 1} {$x<[llength $pd_apilist]} {incr x} {
+        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_apilist $x] 0] Driver] \
+            -command {menu_audio 0} -variable pd_whichapi \
+            -value [lindex [lindex $pd_apilist $x] 1]\
+			-selectcolor "#dddddd" \
+            -command {pd [concat pd audio-setapi $pd_whichapi \;]}
+    }
+	match_linux_wm [list $mbar.audio add separator]
+	$mbar.audio add command -label {MIDI Settings} -state disabled
+    for {set x 0} {$x<[llength $pd_midiapilist]} {incr x} {
+        $mbar.audio add radiobutton -label [concat [lindex [lindex $pd_midiapilist $x] 0] Driver]\
+            -command {menu_midi 0} -variable pd_whichmidiapi \
+            -value [lindex [lindex $pd_midiapilist $x] 1]\
+			-selectcolor "#dddddd" \
+            -command {pd [concat pd midi-setapi $pd_whichmidiapi \;]}
+    }
     #if {$pd_nt != 2} {
 	#	$mbar.audio add separator
     #    $mbar.audio add command -label {Audio settings...} \
