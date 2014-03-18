@@ -145,8 +145,12 @@ else
       LIB_TARGETS += hid
     endif
   else
-    # GNU/Linux, BSD, IRIX, etc.
-    LIB_TARGETS += gem hid pdp gem2pdp iem16
+    # GNU/Linux, BSD, IRIX, etc. (we use exported variable INCREMENTAL to avoid rebuilding entire Gem lib that takes a long time to compile)
+    ifeq ($(INCREMENTAL),yes)
+    	LIB_TARGETS += hid pdp gem2pdp iem16
+    else
+    	LIB_TARGETS += gem hid pdp gem2pdp iem16
+    endif
   endif
 endif
 

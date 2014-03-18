@@ -202,6 +202,7 @@ then
 		rm Gem.pd_linux
 		aclocal
 		./autogen.sh
+		export INCREMENTAL=""
 	#elif [ $full -eq 3 ]
 	#then
 	#	echo "Since pd-l2ork relies on a unique version of cwiid library, we will need to install it to make disis_wiimote external work properly. YOU SHOULD REMOVE EXISTING CWIID LIBRARIES PRIOR TO RUNNING THIS INSTALL... No worries though, L2Ork version is fully backwards compatible while also offering unique features like full extension support including the passthrough mode. To install cwiid library go to <pd-l2ork-root-git-folder>/l2ork-addons/cwiid/ folder and install it using the usual:"
@@ -227,6 +228,7 @@ then
 	#	./autogen.sh
 	else
 		cd Gem/
+		export INCREMENTAL="yes"
 	fi
 	cd ../packages/linux_make
 	if [ $full -gt 1 -o $deb -eq 2 ]
