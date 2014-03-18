@@ -42,12 +42,12 @@ typedef struct _params
 //  The softPWM Frequency is derived from the "pulse time" below. Essentially,
 //  the frequency is a function of the range and this pulse time.
 //  The total period will be range * pulse time in uS, so a pulse time
-//  of 100 and a range of 100 gives a period of 100 * 100 = 10,000 uS
-//  which is a frequency of 100Hz.
+//  of 10 and a range of 1000 gives a period of 100 * 100 = 10,000 uS
+//  which is a frequency of 1000Hz.
 //
 //  It's possible to get a higher frequency by lowering the pulse time,
 //  however CPU uage will skyrocket as wiringPi uses a hard-loop to time
-//  periods under 100uS - this is because the Linux timer calls are just
+//  periods under 10uS - this is because the Linux timer calls are just
 //  accurate at all, and have an overhead.
 //
 //  Another way to increase the frequency is to reduce the range - however
