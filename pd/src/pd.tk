@@ -390,18 +390,21 @@ proc pdtk_enable_k12_mode {extra_dir} {
 	image create photo i.sarcduino_piezo -file $extra_dir/K12/icons/sarcduino_piezo.png
 	#image create photo i.sarcduino_net -file $extra_dir/K12/icons/sarcduino_net.png
 
+	image create photo i.raspberry_digital -file $extra_dir/K12/icons/raspberrypi_gpio_digital_on.png
+	image create photo i.raspberry_analog_out -file $extra_dir/K12/icons/raspberrypi_gpio_analog_out_on.png
+	image create photo i.raspberry_analog_in -file $extra_dir/K12/icons/raspberrypi_3008_analog_in_on.png
 	image create photo i.math_number -file $extra_dir/K12/icons/math_number.png
 	image create photo i.math_netsend -file $extra_dir/K12/icons/math_netsend.png
+
 	image create photo i.math_netreceive -file $extra_dir/K12/icons/math_netreceive.png
 	image create photo i.math_tag -file $extra_dir/K12/icons/math_tag.png
 	image create photo i.math_routebytag -file $extra_dir/K12/icons/math_routebytag.png
-
 	image create photo i.math_average -file $extra_dir/K12/icons/math_average.png
 	image create photo i.math_random -file $extra_dir/K12/icons/math_random.png
+
 	image create photo i.math_add -file $extra_dir/K12/icons/math_add.png
 	image create photo i.math_subtract -file $extra_dir/K12/icons/math_subtract.png
 	image create photo i.math_multiply -file $extra_dir/K12/icons/math_multiply.png
-
 	image create photo i.math_divide -file $extra_dir/K12/icons/math_divide.png
 	image create photo i.math_scale -file $extra_dir/K12/icons/math_scale.png
 
@@ -2626,66 +2629,78 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino_hit
 		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino_piezo
 
-		# ---------------------------------- MATH ROW 1 -----------------------------------------
+		# ---------------------------------- RPI & MATH ROW 1 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
 		#match_linux_wm [list button $name.k12frame.math_1.b_sarcduino_net -image i.sarcduino_net \
 		#	-command [concat put_K12_objects $name sarcduino_net]]
+		match_linux_wm [list button $name.k12frame.math_1.b_rpi_digital -image i.raspberry_digital \
+			-command [concat put_K12_objects $name raspberrypi_digital]]
+		match_linux_wm [list button $name.k12frame.math_1.b_rpi_analog_out -image i.raspberry_analog_out \
+			-command [concat put_K12_objects $name raspberrypi_analog_out]]
+		match_linux_wm [list button $name.k12frame.math_1.b_rpi_analog_in -image i.raspberry_analog_in \
+			-command [concat put_K12_objects $name raspberrypi_analog_in]]
 		match_linux_wm [list button $name.k12frame.math_1.b_math_number -image i.math_number \
 			-command [concat put_K12_objects $name math_number]]
 		match_linux_wm [list button $name.k12frame.math_1.b_math_netsend -image i.math_netsend \
 			-command [concat put_K12_objects $name math_netsend]]
-		match_linux_wm [list button $name.k12frame.math_1.b_math_netreceive -image i.math_netreceive \
-			-command [concat put_K12_objects $name math_netreceive]]
-		match_linux_wm [list button $name.k12frame.math_1.b_math_tag -image i.math_tag \
-			-command [concat put_K12_objects $name math_tag]]
-		match_linux_wm [list button $name.k12frame.math_1.b_math_routebytag -image i.math_routebytag \
-			-command [concat put_K12_objects $name math_routebytag]]
-		pack $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_netsend $name.k12frame.math_1.b_math_netreceive $name.k12frame.math_1.b_math_tag $name.k12frame.math_1.b_math_routebytag -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.math_1.b_rpi_digital $name.k12frame.math_1.b_rpi_analog_out $name.k12frame.math_1.b_rpi_analog_in $name.k12frame.math_1.b_math_number $name.k12frame.math_1.b_math_netsend -side left -expand 0 -padx 1 -pady 1
 		#setTooltip $name.k12frame.math_1.b_sarcduino_net "Arduino Net: Use this to retrieve data from arduino devices connected via network"
+		setTooltip $name.k12frame.math_1.b_rpi_digital "RaspberryPi Digital: Use this to read from or write to GPIO pins in digital format"
+		setTooltip $name.k12frame.math_1.b_rpi_analog_out "RaspberryPi Analog Out: Use this to write to GPIO pins in analog format using PWM"
+		setTooltip $name.k12frame.math_1.b_rpi_analog_in "RaspberryPi Analog In: Use this to read from RaspberryPi LOP Shield's analog inputs"
 		setTooltip $name.k12frame.math_1.b_math_number "Number: Use this to assign a value to other objects"
 		setTooltip $name.k12frame.math_1.b_math_netsend "Netsend: Use this to send data over network to another computer"
-		setTooltip $name.k12frame.math_1.b_math_netreceive "Netreceive: Use this to receive data from another computer over network"
-		setTooltip $name.k12frame.math_1.b_math_tag "Tag: Use this to tag data to be sent over network"
-		setTooltip $name.k12frame.math_1.b_math_routebytag "Route By Tag: Use this to filter incoming network data by tag"
+		pdtk_standardkeybindings $name.k12frame.math_1.b_rpi_digital
+		pdtk_standardkeybindings $name.k12frame.math_1.b_rpi_analog_out
+		pdtk_standardkeybindings $name.k12frame.math_1.b_rpi_analog_in
 		pdtk_standardkeybindings $name.k12frame.math_1.b_math_number
 		pdtk_standardkeybindings $name.k12frame.math_1.b_math_netsend
-		pdtk_standardkeybindings $name.k12frame.math_1.b_math_netreceive
-		pdtk_standardkeybindings $name.k12frame.math_1.b_math_tag
-		pdtk_standardkeybindings $name.k12frame.math_1.b_math_routebytag
 
 		# ---------------------------------- MATH ROW 2 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_2 -relief flat]
+		match_linux_wm [list button $name.k12frame.math_2.b_math_netreceive -image i.math_netreceive \
+			-command [concat put_K12_objects $name math_netreceive]]
+		match_linux_wm [list button $name.k12frame.math_2.b_math_tag -image i.math_tag \
+			-command [concat put_K12_objects $name math_tag]]
+		match_linux_wm [list button $name.k12frame.math_2.b_math_routebytag -image i.math_routebytag \
+			-command [concat put_K12_objects $name math_routebytag]]
 		match_linux_wm [list button $name.k12frame.math_2.b_math_add -image i.math_add \
 			-command [concat put_K12_objects $name math_add]]
 		match_linux_wm [list button $name.k12frame.math_2.b_math_subtract -image i.math_subtract \
 			-command [concat put_K12_objects $name math_subtract]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_multiply -image i.math_multiply \
-			-command [concat put_K12_objects $name math_multiply]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_divide -image i.math_divide \
-			-command [concat put_K12_objects $name math_divide]]
-		match_linux_wm [list button $name.k12frame.math_2.b_math_random -image i.math_random \
-			-command [concat put_K12_objects $name math_random]]
-		pack $name.k12frame.math_2.b_math_add $name.k12frame.math_2.b_math_subtract $name.k12frame.math_2.b_math_multiply $name.k12frame.math_2.b_math_divide $name.k12frame.math_2.b_math_random -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.math_2.b_math_netreceive $name.k12frame.math_2.b_math_tag $name.k12frame.math_2.b_math_routebytag $name.k12frame.math_2.b_math_add $name.k12frame.math_2.b_math_subtract -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.math_2.b_math_netreceive "Netreceive: Use this to receive data from another computer over network"
+		setTooltip $name.k12frame.math_2.b_math_tag "Tag: Use this to tag data to be sent over network"
+		setTooltip $name.k12frame.math_2.b_math_routebytag "Route By Tag: Use this to filter incoming network data by tag"
 		setTooltip $name.k12frame.math_2.b_math_add "Add: Use this to add two values"
 		setTooltip $name.k12frame.math_2.b_math_subtract "Subtract: Use this to subtract two values"
-		setTooltip $name.k12frame.math_2.b_math_multiply "Multiply: Use this to multiply two values"
-		setTooltip $name.k12frame.math_2.b_math_divide "Divide: Use this to divide two values"
-		setTooltip $name.k12frame.math_2.b_math_random "Random: Use this to generate random numbers"
+		pdtk_standardkeybindings $name.k12frame.math_2.b_math_netreceive
+		pdtk_standardkeybindings $name.k12frame.math_2.b_math_tag
+		pdtk_standardkeybindings $name.k12frame.math_2.b_math_routebytag
 		pdtk_standardkeybindings $name.k12frame.math_2.b_math_add
 		pdtk_standardkeybindings $name.k12frame.math_2.b_math_subtract
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_multiply
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_divide
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_random
 
 		# ---------------------------------- MATH ROW 3 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_3 -relief flat]
+		match_linux_wm [list button $name.k12frame.math_3.b_math_multiply -image i.math_multiply \
+			-command [concat put_K12_objects $name math_multiply]]
+		match_linux_wm [list button $name.k12frame.math_3.b_math_divide -image i.math_divide \
+			-command [concat put_K12_objects $name math_divide]]
+		match_linux_wm [list button $name.k12frame.math_3.b_math_random -image i.math_random \
+			-command [concat put_K12_objects $name math_random]]
 		match_linux_wm [list button $name.k12frame.math_3.b_math_average -image i.math_average \
 			-command [concat put_K12_objects $name math_average]]
 		match_linux_wm [list button $name.k12frame.math_3.b_math_scale -image i.math_scale \
 			-command [concat put_K12_objects $name math_scale]]
-		pack $name.k12frame.math_3.b_math_average $name.k12frame.math_3.b_math_scale -side left -expand 0 -padx 1 -pady 1
+		pack $name.k12frame.math_3.b_math_multiply $name.k12frame.math_3.b_math_divide $name.k12frame.math_3.b_math_random $name.k12frame.math_3.b_math_average $name.k12frame.math_3.b_math_scale -side left -expand 0 -padx 1 -pady 1
+		setTooltip $name.k12frame.math_3.b_math_multiply "Multiply: Use this to multiply two values"
+		setTooltip $name.k12frame.math_3.b_math_divide "Divide: Use this to divide two values"
+		setTooltip $name.k12frame.math_3.b_math_random "Random: Use this to generate random numbers"
 		setTooltip $name.k12frame.math_3.b_math_average "Average: Use this to calculate average from a stream of numbers"
 		setTooltip $name.k12frame.math_3.b_math_scale "Scale: Use this to scale incoming values to a new range and direction"
+		pdtk_standardkeybindings $name.k12frame.math_3.b_math_multiply
+		pdtk_standardkeybindings $name.k12frame.math_3.b_math_divide
+		pdtk_standardkeybindings $name.k12frame.math_3.b_math_random
 		pdtk_standardkeybindings $name.k12frame.math_3.b_math_average
 		pdtk_standardkeybindings $name.k12frame.math_3.b_math_scale
 
