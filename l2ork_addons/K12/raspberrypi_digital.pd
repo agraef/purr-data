@@ -1,0 +1,58 @@
+#N canvas 257 133 627 499 10;
+#X obj 292 314 outlet;
+#X obj 228 45 ggee/image @pd_extra/K12/objects/raspberrypi_gpio_digital_off.png
+1;
+#X obj 221 -161 loadbang;
+#X obj 223 50 nbx 2 14 0 10 0 0 empty empty empty -48 8 0 11 -262144
+-1 -1 0 256 3;
+#X obj 283 8 preset_node k12;
+#X obj 398 114 coll rpi_gpio.coll;
+#C restore;
+#X obj 292 285 disis_gpio;
+#X obj 229 67 hradio 15 1 0 2 empty empty I/O: -25 7 0 10 -262144 -260097
+-1 0;
+#X text 231 65 I;
+#X text 247 65 O;
+#X msg 323 196 symbol out;
+#X msg 258 196 symbol in;
+#X obj 276 149 select 0 1, f 11;
+#X obj 194 154 - 1;
+#X obj 194 175 abs;
+#X obj 194 196 metro 100;
+#X obj 303 31 preset_node k12;
+#X obj 527 226 inlet;
+#X obj 230 -98 sel 0 1;
+#X msg 276 226 direction \$1 \, open;
+#X msg 398 226 unexport \, export \$1;
+#X obj 201 51 cnv 15 52 15 empty \$0-r-cnv pin:0 4 7 0 11 -262144 -1
+0;
+#X obj 410 140 sprintf pin:%d;
+#X obj 410 161 tosymbol;
+#X msg 410 182 label \$1;
+#X obj 410 203 s \$0-r-cnv;
+#X msg 221 -76 open @pd_extra/K12/objects/raspberrypi_gpio_digital_off.png
+;
+#X msg 249 -53 open @pd_extra/K12/objects/raspberrypi_gpio_digital_on.png
+;
+#X connect 3 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 20 0;
+#X connect 5 0 22 0;
+#X connect 7 0 12 0;
+#X connect 7 0 13 0;
+#X connect 10 0 19 0;
+#X connect 11 0 19 0;
+#X connect 12 0 11 0;
+#X connect 12 1 10 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 16 0 7 0;
+#X connect 18 0 26 0;
+#X connect 18 1 27 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 24 0 25 0;
+#X connect 26 0 1 0;
+#X connect 27 0 1 0;
+#X coords 0 -1 1 1 89 89 2 183 13;
