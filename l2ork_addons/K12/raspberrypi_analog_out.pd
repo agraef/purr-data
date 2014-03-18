@@ -11,7 +11,7 @@
 #X obj 413 256 inlet;
 #X msg 368 307 pwm \$1;
 #X obj 222 -105 sel 0 1;
-#X obj 218 69 cnv 15 52 15 empty \$0-r-cnv pin:0 4 7 0 11 -262144 -99865
+#X obj 218 67 cnv 15 52 15 empty \$0-r-cnv pin:0 4 7 0 11 -262144 -99865
 0;
 #X obj 241 141 sprintf pin:%d;
 #X obj 241 162 tosymbol;
