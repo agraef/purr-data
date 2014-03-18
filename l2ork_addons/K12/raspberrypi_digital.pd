@@ -1,5 +1,5 @@
-#N canvas 257 133 436 499 10;
-#X obj 292 314 outlet;
+#N canvas 257 133 436 523 10;
+#X obj 292 333 outlet;
 #X obj 228 45 ggee/image @pd_extra/K12/objects/raspberrypi_gpio_digital_off.png
 1;
 #X obj 221 -161 loadbang;
@@ -38,12 +38,14 @@
 #X msg 407 164 unexport;
 #X text 231 75 i;
 #X text 246 75 o;
+#X obj 527 247 change;
+#X obj 292 309 change;
 #X connect 3 0 4 0;
 #X connect 3 0 27 0;
 #X connect 4 0 3 0;
 #X connect 5 0 20 0;
 #X connect 5 0 28 0;
-#X connect 6 0 0 0;
+#X connect 6 0 33 0;
 #X connect 6 1 26 0;
 #X connect 7 0 10 0;
 #X connect 7 0 11 0;
@@ -55,7 +57,7 @@
 #X connect 12 0 13 0;
 #X connect 13 0 6 0;
 #X connect 14 0 7 0;
-#X connect 15 0 6 0;
+#X connect 15 0 32 0;
 #X connect 16 0 24 0;
 #X connect 16 1 25 0;
 #X connect 17 0 6 0;
@@ -71,4 +73,6 @@
 #X connect 28 0 29 0;
 #X connect 28 1 18 0;
 #X connect 29 0 6 0;
+#X connect 32 0 6 0;
+#X connect 33 0 0 0;
 #X coords 0 -1 1 1 89 89 2 183 13;

@@ -27,6 +27,6 @@ direction. Its output can be used in data calculations or to drive
 an instrument (e.g. control how loud it is based on wiimote motion.Click
 on one of the three buttons to select x \, y \, or z axis as your source.
 ;
-#X obj 278 409 image @pd_extra/K12/icons/wiimote_axes.png 0;
+#X obj 278 409 image @pd_extra/K12/images/wiimote_axes.png 0;
 #X connect 2 0 8 0;
 #X connect 8 0 4 0;

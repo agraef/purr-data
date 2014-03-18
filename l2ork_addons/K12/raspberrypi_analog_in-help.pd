@@ -1,0 +1,38 @@
+#N canvas 289 30 507 597 10;
+#X obj 375 -29 preset_hub k12 %hidden% %node% 2 5 5 %node% 2 6 7 %node%
+2 6 7 %node% 2 7 5 %node% 2 7 4 %node% 2 7 14 %node% 2 8 7;
+#X obj 134 38 cnv 15 478 292 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 123 -7 cnv 3 501 3 empty empty empty 5 14 0 20 -260097 -191407
+0;
+#X obj 123 -35 cnv 15 501 28 empty empty RaspberryPi/AnalogIn 5 14
+0 20 -139274 -262144 0;
+#X obj 594 -4 ggee/image @pd_extra/K12/icons/l2ork.png 0;
+#N canvas 398 289 382 201 META 0;
+#X text 6 71 OUTLET_0 Receive data (0-1023) from a desired Raspberry
+Pi analog channel (0-7).;
+#X text 7 5 DESCRIPTION This is used to get the analog data from the
+Modern Device's Raspberry Pi Lots of Pots shield using MCP3008 analog-to-digital
+converter. Specify channel (0-7) to connect. Use channel -1 to disconnect.
+;
+#X restore 571 535 pd META;
+#X obj 143 353 K12/math_number;
+#X obj 144 47 K12/raspberrypi_analog_in;
+#X text 240 44 The Raspberry Pi Analog Input object allows for receiving
+analog data. It achieves this by leveraging Modern Device Lots of Pots'
+(LOP) onboard MCP3008 digital-to-analog converter.Channel -1 is reserved
+for "off" position. The remaining 8 channels (0-7) correspond to analog
+inputs (in order found on Modern Device's Lots-of-Pots shield). To
+change channel \, click on the channel number and enter new one (between
+0 and 7) or click on the number and while holding the mouse button
+down \, drag it up and down. If the object has successfuly connected
+to the desired analog channel \, the logo will light up.Once connected
+\, the object will output captured analog sensor data up to one hundred
+times per second with values ranging between 0 and 1023 (a total range
+of 1024).NB: Modern Device LOP board comes in two flavors \, equipped
+with 8 pan pots (one assigned to each analog channel) \, or as a "naked"
+(NOP) board that allows for easier access to pins.;
+#X obj 370 421 ggee/image @pd_extra/K12/images/lop_board.png 0;
+#X obj 149 497 pddplink http://moderndevice.com/product/lots-of-pots-lop-board-for-raspberry-pi/
+;
+#X connect 7 0 6 0;
