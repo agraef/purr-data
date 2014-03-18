@@ -71,9 +71,9 @@ static void *disisSoftPwmThread(void *val)
       digitalWrite (*(p->p_pin), LOW) ;
     delayMicroseconds ((1000 - *(p->p_val)) * 10);
   }
-  //printf("thread exit %d\n", *(p->p_thread));
+  //fprintf(stderr, "thread exit %d\n", *(p->p_thread));
   *(p->p_thread) = 2;
-  return NULL ;
+  return NULL;
 }
 
 /*
@@ -111,6 +111,7 @@ typedef struct _disis_gpio
     int x_dir;
     int x_pwm;
     int x_softpwm;
+    int x_waspwm; // 0 = no pwm active, 1 = pwm, 2 = softpwm; this is used when reopening connection to retain last state
     int x_softpwmval;
     int x_softpwm_thread; // -1 = not necessary, 0 = start when necessary, 1 = close thread, 2 = thread has been closed
     t_params x_params;
@@ -229,6 +230,11 @@ static void disis_gpio_open(t_disis_gpio *x)
         x->x_fdvalue = open(buf, O_RDWR);
         if (x->x_fdvalue < 0) {
             post("%s: %s", buf, strerror(errno));
+        } else {
+            if (x->x_softpwm)
+                disis_gpio_togglesoftpwm(x, 1);
+            if (x->x_pwm)
+                disis_gpio_togglepwm(x, 1);
         }
     }
     disis_gpio_reflectstatus(x);
@@ -241,6 +247,7 @@ static void disis_gpio_close(t_disis_gpio *x)
     else
     {
         if (x->x_softpwm_thread == 0) {
+            //disis_gpio_togglesoftpwm(x, 0);
             x->x_softpwm_thread = 1;
             while (x->x_softpwm_thread != 2)
                 usleep(100);
@@ -271,9 +278,9 @@ static void disis_gpio_pwm(t_disis_gpio *x, t_float val)
     int out;
     if (x->x_fdvalue != -1 && (x->x_pwm || x->x_softpwm)) {
         if ((int)val < 0)
-            out = 0 ;
+            out = 0;
         else if ((int)val > 1023)
-            out = 1023 ;
+            out = 1023;
         else out = (int)val;
         if (x->x_pwm)
             pwmWrite (x->x_pin, out);
@@ -288,7 +295,7 @@ static void disis_gpio_pwm(t_disis_gpio *x, t_float val)
 static void disis_gpio_togglesoftpwm(t_disis_gpio *x, t_float state)
 {
     if (x->x_fdvalue != -1) {
-        if (x->x_softpwm == (int)state) {
+        if (state && x->x_softpwm_thread != -1 || !state && x->x_softpwm_thread == -1) {
             if (x->x_softpwm)
                 post("disis_gpio: soft pwm already enabled");
             else
@@ -299,13 +306,12 @@ static void disis_gpio_togglesoftpwm(t_disis_gpio *x, t_float state)
                     disis_gpio_togglepwm(x, 0);
                     post("disis_gpio: disabling hardware pwm");
                 }
-                x->x_softpwm = (int)state;
-                if (x->x_softpwm) {
+                if (state && x->x_softpwm_thread == -1) {
                     x->x_softpwm_thread = 0;
                     x->x_softpwmval = 0;
                     disisSoftPwmCreate (&x->x_params);
                 }
-                else {
+                else if (x->x_softpwm_thread != -1) {
                     x->x_softpwm_thread = 1;
                     while (x->x_softpwm_thread != 2)
                         usleep(100);
@@ -314,6 +320,7 @@ static void disis_gpio_togglesoftpwm(t_disis_gpio *x, t_float state)
             }
         }    
     }
+    x->x_softpwm = (int)state;
 }
 
 static void disis_gpio_togglepwm(t_disis_gpio *x, t_float state)
