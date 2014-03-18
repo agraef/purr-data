@@ -183,16 +183,16 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 		if (x->x_glist == glist_getcanvas(glist)) {
 			//x->x_selected = state;
 			if (!x->x_gop_spill && (x->x_img_width + x->x_img_height) >= 2)
-				sys_vgui(".x%x.c create rectangle \
-					%d %d %d %d -tags %xSEL -outline $select_color\n",
+				sys_vgui(".x%x.c create prect %d %d %d %d \
+						-tags %xSEL -strokewidth 1 -stroke $pd_colors(selection)\n",
 					glist_getcanvas(glist),
 					text_xpix(&x->x_obj, glist) - x->x_img_width/2,
 					text_ypix(&x->x_obj, glist) - x->x_img_height/2,
 					text_xpix(&x->x_obj, glist) + x->x_img_width/2,
 					text_ypix(&x->x_obj, glist) + x->x_img_height/2, x);
 			else
-				sys_vgui(".x%x.c create rectangle \
-					%d %d %d %d -tags %xSEL -outline $select_color\n",
+				sys_vgui(".x%x.c create prect %d %d %d %d \
+						-tags %xSEL -strokewidth 1 -stroke $pd_colors(selection)\n",
 					glist_getcanvas(glist),
 					text_xpix(&x->x_obj, glist) - x->x_width/2,
 					text_ypix(&x->x_obj, glist) - x->x_height/2,
