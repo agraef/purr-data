@@ -285,6 +285,7 @@ then
 	cp -f array* ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 	# install raspberry pi externals
 	if [ $rpi -eq 1 ]
+	then
 		cd ../raspberry_pi
 		./makeall.sh
 		cp -f disis_gpio/disis_gpio.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
