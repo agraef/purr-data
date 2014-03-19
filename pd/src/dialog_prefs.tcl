@@ -68,6 +68,9 @@ proc ::dialog_prefs::open_prefs_dialog {mytoplevel} {
     if {[winfo exists .prefs]} {
         wm deiconify .prefs
         raise .prefs
+        # obtain last known mouse coords and pop the menu there
+        global pointer_x_global pointer_y_global
+        wm geometry .prefs "+$pointer_x_global+$pointer_y_global"
     } else {
         create_dialog $mytoplevel
     }
@@ -285,7 +288,7 @@ proc ::dialog_prefs::swatchbutton {name variable} {
     }
     # Tk's color chooser for x11 isn't very good. So instead, the user
     # gets a matrix of predefined colors to choose from. If a few custom
-    # colors could be added (or maybe triggering Ivica's L2ork color
+    # colors could be added (or maybe triggering Ivica's L2Ork color
     # chooser) this would be improved.
     ttk::menubutton $name -menu $name.m -style PrefsColors.TMenubutton
     menu $name.m
@@ -360,12 +363,21 @@ proc ::dialog_prefs::dialog_bindings {mytoplevel dialogname} {
 }
 
 proc ::dialog_prefs::create_dialog {mytoplevel} {
-    toplevel .prefs -class DialogWindow
+    toplevel .prefs -class [winfo class .]
     wm title .prefs [_ "Pure Data Preferences"]
 #    wm geometry .prefs =475x125+150+150
     wm group .prefs .
     wm resizable .prefs 0 0
     wm transient .prefs
+
+    # obtain last known mouse coords and pop the menu there
+    global pointer_x_global pointer_y_global
+    if {$pointer_x_global == 0 && $pointer_y_global == 0} {
+        set pointer_x_global [expr [winfo rootx .]+30]
+        set pointer_y_global [expr [winfo rooty .]+30]
+    }
+    wm geometry .prefs "+$pointer_x_global+$pointer_y_global"
+
 #    .prefs configure -menu $::dialog_menubar
 
 # todo: check this on the mac and on windows

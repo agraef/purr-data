@@ -570,7 +570,7 @@ trace add variable gui_preset write "::dialog_gui::set_gui_preset"
 
 # Now that we've got a trace for the colors, we can set a
 # color scheme (defined in dialog_gui.tcl)
-set gui_preset L2ork
+set gui_preset L2Ork
 
 # todo: find a home for these:
 set ::pd_colors(signal_cord_width) 3
@@ -4798,6 +4798,7 @@ proc pdtk_canvas_motion {name x y mods} {
 	set pointer_y_local $y
 	set pointer_x_global [expr $pointer_x_local + [winfo rootx $name]]
 	set pointer_y_global [expr $pointer_y_local + [winfo rooty $name]]
+	#puts stderr "motion $pointer_x_global $pointer_y_global"
 
 	set scroll_name [string trimright $name .c]
 	if { $::hit_scrollbar($scroll_name) != 0 } { set mods -1 }

@@ -305,10 +305,10 @@ proc ::dialog_midi::pdtk_alsa_midi_dialog {id indev1 indev2 indev3 indev4 \
         }
         grid rowconfigure $devfr all -pad 3
     } else {
-        label $devfr.l1 -text [_ "In Ports:"]
+        ttk::label $devfr.l1 -text [_ "In Ports:"]
         entry $devfr.x1 -textvariable midi_alsain -width 4
         pack $devfr.l1 $devfr.x1 -side left
-        label $devfr.l2 -text [_ "Out Ports:"]
+        ttk::label $devfr.l2 -text [_ "Out Ports:"]
         entry $devfr.x2 -textvariable midi_alsaout -width 4
         pack $devfr.l2 $devfr.x2 -side left
     }

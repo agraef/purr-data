@@ -93,7 +93,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(magic_glass_text) "#000000"
             set ::pd_colors(magic_glass_flash) "#e87216"
         }
-        L2ork    {
+        L2Ork    {
             set ::pd_colors(atom_box)        "#eee"
             set ::pd_colors(atom_box_border) "#ccc"
             set ::pd_colors(canvas_color)     white
@@ -124,7 +124,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(magic_glass_text)  white
             set ::pd_colors(magic_glass_flash) "#e87216"
         }
-        L2ork_Inverted {
+        L2Ork_Inverted {
             set ::pd_colors(atom_box)       black
             set ::pd_colors(atom_box_border) white
             set ::pd_colors(canvas_color)     black
@@ -289,9 +289,9 @@ proc ::dialog_gui::create_gui_dialog {mytoplevel} {
     set fr [ttk::frame $mytoplevel.colors]
     set p [ttk::frame $fr.presets]
     ttk::label $p.presetlabel -text "Color Preset"
-#    ttk::combobox $fr.presets -state readonly -values {Inverted L2ork Foo}
+#    ttk::combobox $fr.presets -state readonly -values {Inverted L2Ork Foo}
 # todo: set presets in _one_ place
-    ::dialog_prefs::dropdown $p.presets ::gui_preset {Vanilla Inverted L2ork L2ork_Inverted Extended C64 Strongbad Subdued}
+    ::dialog_prefs::dropdown $p.presets ::gui_preset {Vanilla Inverted L2Ork L2Ork_Inverted Extended C64 Strongbad Subdued}
     pack $fr -side top
     grid $p -column 0 -columnspan 3 -row 0 -sticky w -pady 21
     pack $p.presetlabel -side left -padx 7
