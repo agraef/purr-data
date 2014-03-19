@@ -227,6 +227,9 @@ install: all tkpath tkdnd
 		install -d $(DESTDIR)$(pddocdir)/$$dir ; \
 		install -m644 -p ../doc/$$dir/*.* $(DESTDIR)$(pddocdir)/$$dir ; \
 	done
+# kludge install of additional pd-l2ork data structures docs
+	cp -rf ../doc/4.data.structures/pd-l2ork $(DESTDIR)$(pddocdir)/4.data.structures/	
+# and now the rest
 	for dir in $(shell ls -1 ../doc/7.stuff | grep -v CVS); do \
 		echo "installing 7.stuff/$$dir"; \
 		install -d $(DESTDIR)$(pddocdir)/7.stuff/$$dir ; \
