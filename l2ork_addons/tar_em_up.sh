@@ -292,10 +292,10 @@ then
 	then
 		cd raspberry_pi
 		./makeall.sh
-		cp -f disis_gpio/disis_gpio.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-		cp -f disis_gpio/disis_gpio-help.pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-		cp -f disis_spi/disis_spi.pd_linux ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
-		cp -f disis_spi/disis_spi-help.pd ../../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_gpio/disis_gpio.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_gpio/disis_gpio-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_spi/disis_spi.pd_linux ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
+		cp -f disis_spi/disis_spi-help.pd ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra
 		cd ../
 	fi
 	# finish install
