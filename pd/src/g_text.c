@@ -137,7 +137,10 @@ static void canvas_objtext(t_glist *gl, int xpix, int ypix,
             {
                 t_symbol *templatesym = 
                     canvas_makebindsym(atom_getsymbol(scalar_at));
-                if (template_findbyname(templatesym))
+                t_template *tmpl = template_findbyname(templatesym);
+                if (template_findbyname(templatesym) &&
+                    template_cancreate(tmpl) &&
+                    template_hasxy(tmpl))
                 {
                     //post("Hmm, found a scalar from struct %s... ",
                     //    templatesym->s_name);

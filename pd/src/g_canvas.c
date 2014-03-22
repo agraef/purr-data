@@ -1634,7 +1634,10 @@ static void glist_redrawall(t_template *template, t_glist *gl, int action)
     {
         t_class *cl;
         if (vis && g->g_pd == scalar_class &&
-            template == template_findbyname(((t_scalar *)g)->sc_template))
+            ((template == template_findbyname(((t_scalar *)g)->sc_template))
+            || template_has_elemtemplate(
+                   template_findbyname(((t_scalar *)g)->sc_template),
+                       template)))
         {
             if (action == 1)
             {

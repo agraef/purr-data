@@ -87,6 +87,74 @@ void word_free(t_word *wp, t_template *template)
     }
 }
 
+/* some of this code is used in a function in g_canvas.c...
+   need to modularize it */
+static t_object *template_getstruct(t_template *template)
+{
+    if (template)
+    {
+        t_gobj *y;
+        t_canvas *c;
+        if (c = template_findcanvas(template))
+        {
+            t_symbol *s1 = gensym("struct");
+            for (y = c->gl_list; y; y = y->g_next)
+            {
+                t_object *ob = pd_checkobject(&y->g_pd);
+                t_atom *argv;
+                if (!ob || ob->te_type != T_OBJECT ||
+                    binbuf_getnatom(ob->te_binbuf) < 2)
+                    continue;
+                argv = binbuf_getvec(ob->te_binbuf);
+                if (argv[0].a_w.w_symbol != s1)
+                    continue;
+                if (canvas_makebindsym(argv[1].a_w.w_symbol) == template->t_sym)
+                    return (ob);
+            }
+        }
+    }
+    return (0);
+}
+
+int template_hasxy(t_template *template)
+{
+    t_symbol *zz;
+    int xonset, yonset, xtype, ytype, gotx, goty;
+    if (!template)
+    {
+        error("struct: couldn't find template %s", template->t_sym->s_name);
+        return 0;
+    }
+    gotx = template_find_field(template, gensym("x"), &xonset, &xtype, &zz);
+    goty = template_find_field(template, gensym("y"), &yonset, &ytype, &zz);
+    if ((gotx && (xtype == DT_FLOAT)) &&
+        (goty && (ytype == DT_FLOAT)) &&
+        (xonset == 0) && (yonset == sizeof(t_word)))
+    {
+        return 1;
+    }
+    else
+        return 0;
+}
+
+int template_cancreate(t_template *template)
+{
+    int i, type, nitems = template->t_n;
+    t_dataslot *datatypes = template->t_vec;
+    t_template *elemtemplate;
+    for (i = 0; i < nitems; i++, datatypes++)
+        if (datatypes->ds_type == DT_ARRAY &&
+            (!(elemtemplate = template_findbyname(datatypes->ds_arraytemplate))
+                || !template_cancreate(elemtemplate)))
+    {
+        t_object *ob = template_getstruct(template);
+        pd_error(ob, "%s: no such template",
+            datatypes->ds_arraytemplate->s_name);
+        return (0);
+    }
+    return (1);
+}
+
     /* make a new scalar and add to the glist.  We create a "gp" here which
     will be used for array items to point back here.  This gp doesn't do
     reference counting or "validation" updates though; the parent won't go away
@@ -105,6 +173,8 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
         error("scalar: couldn't find template %s", templatesym->s_name);
         return (0);
     }
+    if (!template_cancreate(template))
+        return (0);
     x = (t_scalar *)getbytes(sizeof(t_scalar) +
         (template->t_n - 1) * sizeof(*x->sc_vec));
     x->sc_gobj.g_pd = scalar_class;
@@ -145,6 +215,36 @@ void glist_scalar(t_glist *glist,
     
     glist_readscalar(glist, natoms, vec, &nextmsg, 0);
     binbuf_free(b);
+}
+
+    /* search template fields recursively to see if the template
+       depends on elemtemplate */
+int template_has_elemtemplate(t_template *t, t_template *elemtemplate)
+{
+    int returnval = 0;
+    if (t && elemtemplate)
+    {
+        int i;
+	t_dataslot *d = t->t_vec;
+        for (i = 0; i < t->t_n; i++, d++)
+        {
+            if (d->ds_type == DT_ARRAY)
+            {
+                if (d->ds_arraytemplate == elemtemplate->t_sym)
+                {
+                    returnval = 1;
+                    break;
+                }
+                else
+                {
+                    returnval = template_has_elemtemplate(
+                        template_findbyname(d->ds_arraytemplate),
+                        elemtemplate);
+                }
+            }
+        }
+    }
+    return (returnval);
 }
 
 /* -------------------- widget behavior for scalar ------------ */
@@ -506,8 +606,11 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
        behavior, so we don't use the hack for them.  (Non-garray scalars
        should follow that behavior too, but cannot atm for the reason given
        in the comment above scalar_select...)
-    */
 
+       Apparently this is no longer needed, so it is commented out.  Once
+       we test it we should be able to delete it for good... */
+
+    /*
     if (template->t_sym != gensym("_float_array"))
     {
         t_gobj *y;
@@ -520,6 +623,7 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
                     basex, basey, dx, dy);
             }
     }
+    */
 
     //scalar_redraw(x, glist);
 }

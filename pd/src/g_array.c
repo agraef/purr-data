@@ -151,7 +151,7 @@ static char garray_arraytemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
 #X obj 43 31 struct _float_array array z float float style\n\
 float linewidth float color symbol fillcolor symbol outlinecolor;\n\
-#X obj 43 70 plot z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
+#X obj 43 70 old_plot z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
 ";
 static char garray_floattemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
