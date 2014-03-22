@@ -629,7 +629,7 @@ EXTERN t_scalar *scalar_new(t_glist *owner,
 EXTERN void word_free(t_word *wp, t_template *tmpl);
 EXTERN void scalar_getbasexy(t_scalar *x, t_float *basex, t_float *basey);
 EXTERN void scalar_redraw(t_scalar *x, t_glist *glist);
-EXTERN int template_has_elemtemplate(t_template *t, t_template *template);
+EXTERN int template_has_elemtemplate(t_template *t, t_template *tmp);
 
 /* ------helper routines for "garrays" and "plots" -------------- */
 EXTERN int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
@@ -667,8 +667,8 @@ EXTERN void template_setsymbol(t_template *x, t_symbol *fieldname,
 
 EXTERN t_template *gtemplate_get(t_gtemplate *x);
 EXTERN t_template *template_findbyname(t_symbol *s);
-EXTERN int template_cancreate(t_template *template);
-EXTERN int template_hasxy(t_template *template);
+EXTERN int template_cancreate(t_template *tmp);
+EXTERN int template_hasxy(t_template *tmp);
 EXTERN t_canvas *template_findcanvas(t_template *tmpl);
 EXTERN void template_notify(t_template *tmpl,
     t_symbol *s, int argc, t_atom *argv);
