@@ -511,10 +511,10 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
 {
     Tcl_DString dstring; /* used to convert the Tcl string to the OS encoding */
     char *dstring_char;
-    if (argc == 2)
+    /*if (argc == 2)
     {
         int n = strlen(argv[1]);
-        /* NULL as first arg means use the current system encoding */
+        // NULL as first arg means use the current system encoding
         dstring_char = Tcl_UtfToExternalDString(NULL, argv[1], -1, &dstring);
         if (send(sockfd, dstring_char, n, 0) < n)
         {
@@ -523,7 +523,7 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
         }
     }
     else
-    {
+    {*/
         int i;
         char buf[MAXWRITE];
         buf[0] = 0;
@@ -535,7 +535,7 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
                                  Tcl_NewStringObj("pd: arg list too long", -1));
                 return (TCL_ERROR);     
             }
-            if (i > 1) strcat(buf, " ");
+            strcat(buf, " ");
             strcat(buf, argv[i]);
         }
         /* NULL as first arg means use the current system encoding */
@@ -545,7 +545,8 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
             perror("stdout");
             tcl_mess("exit\n");
         }
-    }
+    //}
+    //fprintf(stderr, "dstring_char = <%s>\n", dstring_char);
     Tcl_DStringFree(&dstring);
     return (TCL_OK);
 }
@@ -611,8 +612,8 @@ void pdgui_startup(Tcl_Interp *interp)
         /* add our own TK commands */
     Tcl_CreateCommand(interp, "pd",  (Tcl_CmdProc*)pdCmd, (ClientData)NULL, 
         (Tcl_CmdDeleteProc *)NULL);
-    Tcl_CreateCommand(interp, "pdsend",  (Tcl_CmdProc*)pdCmd, (ClientData)NULL, 
-        (Tcl_CmdDeleteProc *)NULL); 
+    //Tcl_CreateCommand(interp, "pdsend",  (Tcl_CmdProc*)pdCmd, (ClientData)NULL, 
+    //    (Tcl_CmdDeleteProc *)NULL); 
 #ifdef MSW
     Tcl_CreateCommand(interp, "pd_pollsocket",(Tcl_CmdProc*)  pd_pollsocketCmd,
         (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);

@@ -329,6 +329,15 @@ proc center_window { w args } {
     wm geom $w +$x+$y
 }
 
+# backported workaround for pdsend
+#proc pdsend { args } {
+#	#puts stderr "===============pdsend pdtk $args"
+#	pd [concat pd $args \;]
+#}
+proc ::pdsend {args} {
+	#puts stderr "===============[join $args { }]"
+	pd "[join $args { }] ;"
+}
 
 # start Pd-extended font hacks -----------------------------
 
