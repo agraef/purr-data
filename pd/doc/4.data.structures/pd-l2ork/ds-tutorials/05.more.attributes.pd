@@ -1,5 +1,5 @@
 #N struct drawtut-attr-cont float x float y;
-#N canvas 0 19 638 678 10;
+#N canvas 0 19 601 660 10;
 #X obj 53 553 draw rect 0 0 50 50;
 #X msg 53 92 fill red;
 #X text 0 1 New Drawing Commands: attributes (continued);

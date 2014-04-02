@@ -1,5 +1,5 @@
 #N struct drawtut-transform float x float y;
-#N canvas -9 19 867 589 10;
+#N canvas 0 19 836 610 10;
 #X text 0 1 New Drawing Commands: transform;
 #X text 1 1 _______________________________;
 #X text 53 23 All [draw] objects understand the "transform" message.

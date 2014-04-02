@@ -1,13 +1,13 @@
 #N struct drawtut-ellipse float x float y;
-#N canvas 0 19 638 498 10;
+#N canvas 0 19 445 477 10;
 #X msg 53 117 stroke blue;
 #X msg 142 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
 #X floatatom 228 93 5 0 0 0 - - -, f 5;
 #X obj 53 153 draw ellipse 0 0 86 42;
 #X text 259 246 <- an ellipse;
-#X text 0 1 New Drawing Commands: ellipse;
-#X text 0 1 _____________________________;
+#X text 5 1 New Drawing Commands: ellipse;
+#X text 5 1 _____________________________;
 #X text 53 23 An ellipse.;
 #X obj 53 57 struct drawtut-ellipse float x float y;
 #X scalar drawtut-ellipse 155 253 \;;

@@ -1,5 +1,5 @@
 #N struct drawtut-attr float x float y;
-#N canvas 0 19 638 678 10;
+#N canvas 0 19 470 676 10;
 #X text 0 1 New Drawing Commands: attributes;
 #X text 0 1 ________________________________;
 #X text 53 23 Our shapes are pretty boring so far. Black lines around

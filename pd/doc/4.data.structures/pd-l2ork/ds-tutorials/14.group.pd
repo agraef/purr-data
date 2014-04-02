@@ -1,5 +1,5 @@
 #N struct drawtut-group float x float y;
-#N canvas 0 19 648 502 10;
+#N canvas 0 19 657 493 10;
 #X scalar drawtut-group 54 209 \;;
 #X symbolatom 53 173 10 0 0 1 event_type - -, f 10;
 #X obj 53 148 list split 1;

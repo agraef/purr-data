@@ -1,5 +1,5 @@
 #N struct drawtut-circle float x float y;
-#N canvas -9 19 638 554 10;
+#N canvas 0 19 439 554 10;
 #X msg 53 117 stroke blue;
 #X text 52 484 Lines are only a single stroke. They don't have any
 inner area to fill \, so none of the messages like "fill" or "fill-rule"

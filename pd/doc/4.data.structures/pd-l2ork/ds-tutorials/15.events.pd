@@ -1,5 +1,5 @@
 #N struct drawtut-events float x float y;
-#N canvas 0 19 591 589 10;
+#N canvas 0 19 525 484 10;
 #X scalar drawtut-events 54 210 \;;
 #X text 1 1 __________________________________;
 #X text 0 1 New Drawing Commands: mouse events;
