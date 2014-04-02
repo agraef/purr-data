@@ -22,17 +22,17 @@ channel (1-10).;
 #X obj 149 527 pddplink http://moderndevice.com/product/lots-of-pots-lop-board-for-raspberry-pi/
 ;
 #X text 240 104 The Raspberry Pi Analog Output object allows for sending
-analog data using GPIOs in combination with Pulse Width Modulation
-(PWM) algorithm. PWM produces values between on and off states by quickly
-switching on and off up to 1000 times a second. This is particularly
-effective when using the object in combination with an LED.Channel
+analog data using GPIOs using Pulse Width Modulation (PWM) algorithm.
+PWM produces values between on and off states by quickly switching
+on and off up to 1000 times a second. This is particularly effective
+when using the object in combination with an LED (Light Emitting Diode).Channel
 0 is reserved for "off" position. The remaining 10 channels (1-10)
 correspond to GPIO pins (in order found on Modern Device's Lots of
 Pots shield). To change channel \, click on the channel number and
-enter new one (between 0 and 10) or click on the number and while holding
-the mouse button down \, drag it up and down. If the object has successfuly
-connected to the desired analog channel \, the logo will light up.Once
-connected \, the object will be capable of sendin voltage to its output
-up to a thousand times per second with values ranging between 0 and
-1023 (a total range of 1024).;
+enter a new one (between 0 and 10) or click on the number and while
+holding the mouse button down \, drag the mouse up and down. If the
+object has successfuly connected to the desired analog channel \, the
+object logo will light up.Once connected \, the object will be capable
+of sending voltage to its output up to a thousand times per second
+with values ranging between 0 and 1023 (a total range of 1024).;
 #X connect 6 0 7 0;

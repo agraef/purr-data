@@ -19,21 +19,21 @@ Pi GPIO pin.;
 #X obj 146 393 K12/math_number;
 #X obj 147 117 K12/raspberrypi_digital;
 #X obj 147 26 K12/math_number;
-#X text 240 114 The Raspberry Pi Digital object allows for both sending
-and receiving digital data. The object can do either one or the other
-but not both at the same time.To set the input/output preference
-\, click on the "i" or "o" box. The highlighted box will be the one
-currently active.Channel 0 is reserved for "off" position. The remaining
-10 channels have corresponding GPIO pins (in order found on Modern
-Device's Lots of Pots shield). To change channel \, click on the channel
-number and enter new one (between 1 and 10) or click on the number
-and while holding the mouse button down \, drag it up and down. If
-the object has successfuly connected to the desired GPIO pin \, the
-logo will light up.Depending on the direction \, the object will
-either await user input (0 or a 1) or will output 0 or a 1 up to one
-hundred times per second.;
 #X obj 370 460 ggee/image @pd_extra/K12/images/lop_board.png 0;
 #X obj 149 536 pddplink http://moderndevice.com/product/lots-of-pots-lop-board-for-raspberry-pi/
 ;
+#X text 240 114 The Raspberry Pi Digital object allows for both sending
+and receiving digital data. The object can do either one or the other
+but not both at the same time. This is a limitation of GPIO design.
+To set the input/output preference \, click on the "i" or "o" box.
+The highlighted box will be the one currently active.Channel 0 is
+reserved for "off" position. The remaining 10 channels have corresponding
+GPIO pins (in order found on Modern Device's Lots of Pots shield).
+To change channel \, click on the channel number and enter new one
+(between 1 and 10) or click on the number and while holding the mouse
+button down \, drag the mouse up and down. If the object has successfuly
+connected to the desired GPIO pin \, the object logo will light up.Depending
+on the direction \, the object will either await user input (0 or a
+1) or will output 0 or a 1 up to one hundred times per second.;
 #X connect 7 0 6 0;
 #X connect 8 0 7 0;

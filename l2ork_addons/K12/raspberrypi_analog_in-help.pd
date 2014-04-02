@@ -18,6 +18,9 @@ converter. Specify channel (0-7) to connect. Use channel -1 to disconnect.
 #X restore 571 535 pd META;
 #X obj 143 353 K12/math_number;
 #X obj 144 47 K12/raspberrypi_analog_in;
+#X obj 370 421 ggee/image @pd_extra/K12/images/lop_board.png 0;
+#X obj 149 497 pddplink http://moderndevice.com/product/lots-of-pots-lop-board-for-raspberry-pi/
+;
 #X text 240 44 The Raspberry Pi Analog Input object allows for receiving
 analog data. It achieves this by leveraging Modern Device Lots of Pots'
 (LOP) onboard MCP3008 digital-to-analog converter.Channel -1 is reserved
@@ -25,14 +28,12 @@ for "off" position. The remaining 8 channels (0-7) correspond to analog
 inputs (in order found on Modern Device's Lots-of-Pots shield). To
 change channel \, click on the channel number and enter new one (between
 0 and 7) or click on the number and while holding the mouse button
-down \, drag it up and down. If the object has successfuly connected
-to the desired analog channel \, the logo will light up.Once connected
-\, the object will output captured analog sensor data up to one hundred
-times per second with values ranging between 0 and 1023 (a total range
-of 1024).NB: Modern Device LOP board comes in two flavors \, equipped
-with 8 pan pots (one assigned to each analog channel) \, or as a "naked"
-(NOP) board that allows for easier access to pins.;
-#X obj 370 421 ggee/image @pd_extra/K12/images/lop_board.png 0;
-#X obj 149 497 pddplink http://moderndevice.com/product/lots-of-pots-lop-board-for-raspberry-pi/
+down \, drag mouse up and down. If the object has successfuly connected
+to the desired analog channel \, the object logo will light up.Once
+connected \, the object will output captured analog sensor data up
+to one hundred times per second with values ranging between 0 and 1023
+(a total range of 1024).NB: Modern Device LOP board comes in two
+flavors \, equipped with 8 pan pots (one assigned to each analog channel)
+\, or as a "naked" (NOP) board that allows for easier access to pins.
 ;
 #X connect 7 0 6 0;
