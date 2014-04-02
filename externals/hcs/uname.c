@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------*/
 /*                                                                           */
 /* object for getting uname info                                             */
-/* Written by Hans-Christoph Steiner <hans@at.or.at>                         */
+/* Written by Hans-Christoph Steiner <hans@eds.org>                         */
 /*                                                                           */
 /* Copyright (c) 2006,2010 Hans-Christoph Steiner                            */
 /*                                                                           */

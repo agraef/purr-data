@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------*/
 /*                                                                           */
 /* converts a UID number to a user name symbol                               */
-/* Written by Hans-Christoph Steiner <hans@at.or.at>                         */
+/* Written by Hans-Christoph Steiner <hans@eds.org>                         */
 /*                                                                           */
 /* Copyright (c) 2006 Hans-Christoph Steiner                                 */
 /*                                                                           */
@@ -40,8 +40,6 @@
 #include <string.h>
 
 static char *version = "$Revision: 1.3 $";
-
-t_int passwd_instance_count;
 
 #define DEBUG(x)
 //#define DEBUG(x) x 
@@ -162,14 +160,6 @@ static void *passwd_new(t_symbol *s, int argc, t_atom *argv)
 
 	t_passwd *x = (t_passwd *)pd_new(passwd_class);
 
-	if(!passwd_instance_count) 
-	{
-		post("[passwd] %s",version);  
-		post("\twritten by Hans-Christoph Steiner <hans@at.or.at>");
-		post("\tcompiled on "__DATE__" at "__TIME__ " ");
-	}
-	passwd_instance_count++;
-
     floatinlet_new(&x->x_obj, &x->x_uid);
 	x->x_data_outlet = outlet_new(&x->x_obj, 0);
 	x->x_status_outlet = outlet_new(&x->x_obj, 0);
@@ -209,6 +199,10 @@ void passwd_setup(void)
 					gensym("set"), 
 					A_GIMME, 
 					0);
+
+    logpost(NULL, 4, "[passwd] %s",version);  
+    logpost(NULL, 4, "\twritten by Hans-Christoph Steiner <hans@eds.org>");
+    logpost(NULL, 4, "\tcompiled on "__DATE__" at "__TIME__ " ");
 }
 
 #endif /* NOT _WIN32 */

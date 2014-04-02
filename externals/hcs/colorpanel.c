@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <m_pd.h>
-
-#define DEBUG(x)
+#include <m_imp.h>
 
 static t_class *colorpanel_class;
 
@@ -16,13 +15,12 @@ typedef struct _colorpanel
 
 static void colorpanel_bang(t_colorpanel *x)
 {
-    sys_vgui("pd [concat %s callback [tk_chooseColor -initialcolor %s] \\;]\n", 
+    sys_vgui("after idle [list after 100 ::hcs::colorpanel::open %s %s]\n",
              x->x_s->s_name, x->current_color);
 }
 
 static void colorpanel_symbol(t_colorpanel *x, t_symbol *s)
 {
-    DEBUG(post("setting initial color: %s", s->s_name););
     strncpy(x->current_color, s->s_name, MAXPDSTRING);
     colorpanel_bang(x);
 }
@@ -36,7 +34,8 @@ static void colorpanel_list(t_colorpanel *x, t_symbol *s, int argc, t_atom *argv
     char color_string[MAXPDSTRING];
 
     strncpy(color_string,"#",MAXPDSTRING);
-    if(argc > 2) post("[colorpanel] warning more than three elements in list");
+    if(argc > 3) 
+        logpost(x, 2, "[colorpanel] warning more than three elements in list");
     for(i=0; i<3; i++)
     {
         tmp_symbol = atom_getsymbolarg(i, argc, argv);
@@ -48,11 +47,11 @@ static void colorpanel_list(t_colorpanel *x, t_symbol *s, int argc, t_atom *argv
         }
         else 
         {
-            pd_error(x,"[colorpanel] symbol atom in color list");
+            pd_error(x,"[colorpanel] symbols are not allowed in the color list");
+            return;
         }
     }
     memcpy(x->current_color, color_string, 7);
-    DEBUG(post("setting initial color: %s", x->current_color););
     colorpanel_bang(x);
 }
 
@@ -99,4 +98,8 @@ void colorpanel_setup(void)
     class_addlist(colorpanel_class, (t_method)colorpanel_list);
     class_addmethod(colorpanel_class, (t_method)colorpanel_callback, 
                     gensym("callback"), A_DEFSYMBOL, 0);
+
+    sys_vgui("eval [read [open {%s/%s.tcl}]]\n",
+             colorpanel_class->c_externdir->s_name,
+             colorpanel_class->c_name->s_name);
 }

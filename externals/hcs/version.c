@@ -3,7 +3,7 @@
 /* object for getting the version of Pd-extended                             */
 /* (it gets the version at compile time, so it will show the version of Pd   */
 /* that is was compiled against)                                             */
-/* Written by Hans-Christoph Steiner <hans@at.or.at>                         */
+/* Written by Hans-Christoph Steiner <hans@eds.org>                         */
 /*                                                                           */
 /* Copyright (c) 2006, 2010 Hans-Christoph Steiner                           */
 /*                                                                           */

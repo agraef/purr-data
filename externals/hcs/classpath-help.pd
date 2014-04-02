@@ -1,65 +1,16 @@
-#N canvas 427 35 555 619 10;
-#X declare;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
-#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header classpath 3 12 0
-18 -204280 -1 0;
-#X obj 0 294 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
-#X obj 0 399 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj 0 485 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#X obj 0 535 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#N canvas 214 518 428 109 Related_objects 0;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
-#X text 7 1 [path] Related Objects;
-#X obj 22 42 declare;
-#X restore 102 597 pd Related_objects;
-#X obj 78 303 cnv 17 3 80 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 78 408 cnv 17 3 30 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 78 441 cnv 17 3 35 empty \$0-pddp.cnv.let.1 1 5 9 0 16 -228856
--162280 0;
-#X msg 91 84 bang;
-#X symbolatom 102 188 0 0 0 0 - - -;
-#X obj 91 214 print;
-#X text 138 83 get next item in list of loaded libs;
-#X text 150 137 start at the top of the list again;
-#X msg 103 138 rewind;
-#X text 97 539 [path] appends directories to the canvas-local path.
-;
-#X text 98 302 bang;
-#X text 98 407 symbol;
-#X text 98 440 bang;
-#X obj 208 188 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#N canvas 0 26 425 241 10;
+#X obj 40 130 classpath;
+#X msg 40 92 bang;
+#X obj 65 180 print;
+#X symbolatom 40 208 0 0 0 0 - - -;
+#X obj 101 155 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X text 229 187 bang after the end of the list is reached;
-#X text 11 23 load paths from a patch;
-#X text 168 407 - a "bang" to the inlet of [path] sends a symbol to
-the left outlet which the name of a loaded path.;
-#X text 167 440 - once [path] has output the last path in the list
-\, sending another "bang" to its inlet will cause a "bang" to be sent
-out its right outlet.;
-#X text 80 501 n) symbol atom;
-#X text 167 501 - the arguments to [path] specify the paths to load
-for patch.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
-;
-#X msg 98 111 append lib/extrahiddenstuff;
-#X text 274 109 add another path to the list;
-#X text 98 362 rewind;
-#X text 98 336 append;
-#X text 168 362 - resets to output at the top of the list of paths.
-;
-#X text 168 336 - add a path to the end of the list of paths.;
-#X obj 91 162 classpath ../lib abs;
-#X obj 483 9 classpath;
-#X text 168 302 - sending a "bang" to [classpath] makes it output the
-loaded paths one at a time (i.e. \, one per bang).;
+#X text 19 22 This object returns each path in the global classpath
+one at a time with each bang. [reset( refreshs the classpath data and
+starts again at the top of the list \, like [textfile] or [qlist]'s
+[reset(.;
+#X text 124 154 <-- banged when the end of the list is reached;
+#X msg 82 92 rewind;
 #N canvas 435 26 494 344 META 0;
 #X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
@@ -70,10 +21,9 @@ Wilkes for Pd version 0.42.;
 #X text 12 85 OUTLET_0 symbol;
 #X text 12 105 OUTLET_1 bang;
 #X text 12 5 KEYWORDS control pd-op;
-#X restore 504 599 pd META;
-#X connect 10 0 34 0;
-#X connect 15 0 34 0;
-#X connect 28 0 34 0;
-#X connect 34 0 11 0;
-#X connect 34 0 12 0;
-#X connect 34 1 20 0;
+#X restore 376 221 pd META;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 0 1 4 0;
+#X connect 1 0 0 0;
+#X connect 7 0 0 0;

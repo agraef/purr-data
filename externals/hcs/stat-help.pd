@@ -1,4 +1,4 @@
-#N canvas 0 26 577 526 10;
+#N canvas 1 88 577 526 10;
 #X msg 108 68 bang;
 #X text 150 68 run on current folder;
 #X symbolatom 6 470 0 0 0 3 filename - -;
@@ -69,7 +69,7 @@ on its right outlet:;
 #X text 47 242 unknown;
 #X restore 398 218 pd possible errors;
 #X text 8 3 [stat] gets information about files;
-#N canvas 280 175 494 344 META 0;
+#N canvas 278 183 494 344 META 0;
 #X text 12 165 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 25 LICENSE GPL v3;
@@ -79,7 +79,7 @@ Wilkes for Pd version 0.42.;
 #X text 12 85 INLET_1;
 #X text 12 105 OUTLET_0 anything;
 #X text 12 125 OUTLET_1 anything;
-#X text 12 5 KEYWORDS control needs_work (xlets);
+#X text 12 5 KEYWORDS control;
 #X restore 528 505 pd META;
 #X obj 270 405 gid2group_name;
 #X connect 0 0 21 0;

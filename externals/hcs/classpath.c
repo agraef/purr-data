@@ -40,8 +40,6 @@
 
 static char *version = "$Revision: 1.3 $";
 
-t_int classpath_instance_count;
-
 #define DEBUG(x)
 //#define DEBUG(x) x 
 
@@ -103,16 +101,6 @@ static void *classpath_new()
 	DEBUG(post("classpath_new"););
 	t_classpath *x = (t_classpath *)pd_new(classpath_class);
 
-	if(!classpath_instance_count) 
-	{
-		post("[classpath] %s",version);  
-		post("\twritten by Hans-Christoph Steiner <hans@at.or.at>");
-		post("\tcompiled on "__DATE__" at "__TIME__ " ");
-		post("\tcompiled against Pd version %d.%d.%d", PD_MAJOR_VERSION, 
-			 PD_MINOR_VERSION, PD_BUGFIX_VERSION);
-	}
-	classpath_instance_count++;
-
 	x->x_data_outlet = outlet_new(&x->x_obj, &s_symbol);
 	x->x_status_outlet = outlet_new(&x->x_obj, 0);
 
@@ -144,5 +132,11 @@ void classpath_setup(void)
 					gensym("rewind"), 0);
 	class_addmethod(classpath_class,(t_method) classpath_add,gensym("add"), 
 					A_DEFSYMBOL, 0);
+
+    logpost(NULL, 4, "[classpath] %s",version);  
+    logpost(NULL, 4, "\twritten by Hans-Christoph Steiner <hans@eds.org>");
+    logpost(NULL, 4, "\tcompiled on "__DATE__" at "__TIME__ " ");
+    logpost(NULL, 4, "\tcompiled against Pd version %d.%d.%d", PD_MAJOR_VERSION, 
+            PD_MINOR_VERSION, PD_BUGFIX_VERSION);
 }
 

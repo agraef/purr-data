@@ -1,4 +1,4 @@
-#N canvas 0 31 659 523 10;
+#N canvas 1 88 659 523 10;
 #X obj 388 293 pddp/pddplink http://tcl.tk/man/tcl8.5/TkCmd/cursors.htm
 ;
 #X text 273 276 Here's a complete list of the available cursors:;
@@ -65,7 +65,7 @@
 #X restore 509 309 pd image of all cursors;
 #X msg 328 124 clock;
 #X msg 288 124 arrow;
-#N canvas 415 238 494 344 META 0;
+#N canvas 413 246 494 344 META 0;
 #X text 12 155 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
 #X text 12 25 LICENSE GPL v3;
@@ -75,7 +75,7 @@ Wilkes for Pd version 0.42.;
 runmode_addpoint editmode_nothing editmode_connect editmode_disconnect
 ;
 #X text 12 115 OUTLET_0;
-#X text 12 5 KEYWORDS control canvas-op needs_work (outlet?);
+#X text 12 5 KEYWORDS control canvas-op user_input;
 #X restore 600 498 pd META;
 #X connect 2 0 8 1;
 #X connect 3 0 8 1;

@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------*/
 /*                                                                           */
 /* converts a GID number to a user name symbol                               */
-/* Written by Hans-Christoph Steiner <hans@at.or.at>                         */
+/* Written by Hans-Christoph Steiner <hans@eds.org>                         */
 /*                                                                           */
 /* Copyright (c) 2006 Hans-Christoph Steiner                                 */
 /*                                                                           */
@@ -41,8 +41,6 @@
 #include <string.h>
 
 static char *version = "$Revision: 1.3 $";
-
-t_int group_instance_count;
 
 #define DEBUG(x)
 //#define DEBUG(x) x 
@@ -213,13 +211,6 @@ static void *group_new(t_symbol *s, int argc, t_atom *argv)
 
 	t_group *x = (t_group *)pd_new(group_class);
 
-	if(!group_instance_count) 
-	{
-		post("[group] %s",version);  
-		post("\twritten by Hans-Christoph Steiner <hans@at.or.at>");
-		post("\tcompiled on "__DATE__" at "__TIME__ " ");
-	}
-	group_instance_count++;
 
     floatinlet_new(&x->x_obj, &x->x_gid);
 	x->x_data_outlet = outlet_new(&x->x_obj, 0);
@@ -260,6 +251,9 @@ void group_setup(void)
 					gensym("set"), 
 					A_GIMME, 
 					0);
+    logpost(NULL, 4, "[group] %s",version);  
+    logpost(NULL, 4, "\twritten by Hans-Christoph Steiner <hans@eds.org>");
+    logpost(NULL, 4, "\tcompiled on "__DATE__" at "__TIME__ " ");
 }
 
 #endif /* NOT _WIN32 */

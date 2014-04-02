@@ -1,4 +1,4 @@
-#N canvas 196 22 620 614 10;
+#N canvas 194 88 620 614 10;
 #X obj 78 213 sys_gui;
 #X text 136 59 open the help browser;
 #X msg 51 93 set text_color #f0f;
@@ -110,7 +110,7 @@ are Tcl/Tk commands from the pd to the Pg GUI process.;
 #X connect 5 0 4 0;
 #X connect 5 1 4 1;
 #X restore 170 489 pd pak ------------------;
-#N canvas 280 175 494 344 META 0;
+#N canvas 278 183 494 344 META 0;
 #X text 12 65 PLATFORM windows macosx gnulinux;
 #X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;
@@ -120,7 +120,7 @@ Wilkes for Pd version 0.42.;
 ;
 #X text 12 85 INLET_0 anything;
 #X text 12 105 OUTLET_0;
-#X text 12 5 KEYWORDS control pd_op needs_work (outlet?);
+#X text 12 5 KEYWORDS control pd_op;
 #X restore 512 562 pd META;
 #X obj 78 236 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;

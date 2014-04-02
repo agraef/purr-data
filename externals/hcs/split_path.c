@@ -1,6 +1,6 @@
 /* (C) Guenter Geiger <geiger@epy.co.at> */
 
-/* I started with stripdir.c and turned it into split_path.c <hans@at.or.at> */
+/* I started with stripdir.c and turned it into split_path.c <hans@eds.org> */
 
 #include <m_pd.h>
 #include <string.h>
@@ -12,8 +12,6 @@
 #endif
 
 static char *version = "$Revision: 1.1 $";
-
-t_int split_path_instance_count;
 
 /* ------------------------ split_path ----------------------------- */
 
@@ -60,12 +58,6 @@ static void *split_path_new()
     t_split_path *x = (t_split_path *)pd_new(split_path_class);
 	x->x_path_outlet = (t_outlet *)outlet_new(&x->x_obj, &s_symbol);
 	x->x_filename_outlet = (t_outlet *)outlet_new(&x->x_obj, &s_symbol);
-	if(!split_path_instance_count) 
-	{
-		post("[split_path] %s",version);  
-		post("\twritten by Hans-Christoph Steiner <hans@at.or.at>");
-	}
-	split_path_instance_count++;
 	return (x);
 }
 
@@ -74,6 +66,8 @@ void split_path_setup(void)
     split_path_class = class_new(gensym("split_path"), (t_newmethod)split_path_new, 0,
 				sizeof(t_split_path), 0,0);
     class_addsymbol(split_path_class,split_path_symbol);
+    logpost(NULL, 4, "[split_path] %s",version);  
+    logpost(NULL, 4, "\twritten by Hans-Christoph Steiner <hans@eds.org>");
 }
 
 

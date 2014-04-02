@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------*/
 /*                                                                           */
 /* object for getting file listings using wildcard patterns                  */
-/* Written by Hans-Christoph Steiner <hans@at.or.at>                         */
+/* Written by Hans-Christoph Steiner <hans@eds.org>                         */
 /*                                                                           */
 /* Copyright (c) 2006 Hans-Christoph Steiner                                 */
 /*                                                                           */
@@ -188,10 +188,11 @@ static void folder_list_set(t_folder_list* x, t_symbol *s)
     char envVarBuffer[FILENAME_MAX];
     if( (s->s_name[0] == '~') && (s->s_name[1] == '/'))
     {
+        // TODO this is probably never freed!
         patternBuffer = getbytes(FILENAME_MAX);
         strcpy(patternBuffer,"%USERPROFILE%");
         strncat(patternBuffer, s->s_name + 1, FILENAME_MAX - 1);
-        post("set: %s", patternBuffer);
+        verbose(-1, "set: %s", patternBuffer);
     }
     else
     {
@@ -237,7 +238,7 @@ static void *folder_list_new(t_symbol *s)
 		strncpy(buffer,currentdir->s_name,MAXPDSTRING);
 		strncat(buffer,"/*",MAXPDSTRING);
 		x->x_pattern = gensym(buffer);
-		post("setting pattern to default: %s",x->x_pattern->s_name);
+		logpost(x, 3, "setting pattern to default: %s",x->x_pattern->s_name);
 	}
 
 	return (x);

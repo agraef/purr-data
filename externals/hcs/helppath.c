@@ -128,9 +128,9 @@ void helppath_setup(void)
 	class_addmethod(helppath_class,(t_method) helppath_add,gensym("add"), 
 					A_DEFSYMBOL, 0);
 
-    post("[helppath] %s", version);  
-    post("\tcompiled on "__DATE__" at "__TIME__ " ");
-    post("\tcompiled against Pd version %d.%d.%d", PD_MAJOR_VERSION, 
-         PD_MINOR_VERSION, PD_BUGFIX_VERSION);
+    logpost(NULL, 4, "[helppath] %s", version);  
+    logpost(NULL, 4, "\tcompiled on "__DATE__" at "__TIME__ " ");
+    logpost(NULL, 4, "\tcompiled against Pd version %d.%d.%d", PD_MAJOR_VERSION, 
+            PD_MINOR_VERSION, PD_BUGFIX_VERSION);
 }
 

@@ -1,6 +1,6 @@
 /*
  * object for generating SQL queries with SQL ? placeholders
- * Written by Hans-Christoph Steiner <hans@at.or.at>
+ * Written by Hans-Christoph Steiner <hans@eds.org>
  *
  * Copyright (c) 2007 Free Software Foundation
  *

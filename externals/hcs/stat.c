@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------*/
 /*                                                                           */
 /* object for getting file type (dir, link, exe, etc) using a filename       */
-/* Written by Hans-Christoph Steiner <hans@at.or.at>                         */
+/* Written by Hans-Christoph Steiner <hans@eds.org>                         */
 /*                                                                           */
 /* Copyright (c) 2006 Hans-Christoph Steiner                                 */
 /*                                                                           */
@@ -39,8 +39,6 @@
 #include <errno.h>
 
 static char *version = "$Revision: 1.5 $";
-
-t_int stat_instance_count;
 
 #define DEBUG(x)
 //#define DEBUG(x) x 
@@ -264,15 +262,6 @@ static void *stat_new(t_symbol *s)
 
 	t_stat *x = (t_stat *)pd_new(stat_class);
 
-	if(!stat_instance_count) 
-	{
-		post("[stat] %s",version);  
-		post("\twritten by Hans-Christoph Steiner <hans@at.or.at>");
-		post("\tcompiled on "__DATE__" at "__TIME__ " ");
-	}
-	stat_instance_count++;
-
-
     symbolinlet_new(&x->x_obj, &x->x_filename);
 	x->x_data_outlet = outlet_new(&x->x_obj, 0);
 	x->x_status_outlet = outlet_new(&x->x_obj, 0);
@@ -308,5 +297,8 @@ void stat_setup(void)
 	/* add inlet message methods */
 	class_addmethod(stat_class,(t_method) stat_set,gensym("set"), 
 					A_DEFSYM, 0);
+    logpost(NULL, 4, "[stat] %s",version);  
+    logpost(NULL, 4, "\twritten by Hans-Christoph Steiner <hans@eds.org>");
+    logpost(NULL, 4, "\tcompiled on "__DATE__" at "__TIME__ " ");
 }
 

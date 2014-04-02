@@ -14,7 +14,7 @@ typedef struct _screensize
 
 static void screensize_bang(t_screensize *x)
 {
-    sys_vgui("pd [concat %s screensize [winfo screenwidth .] [winfo screenheight .] \\;]\n",
+    sys_vgui("pdsend \"%s screensize [winfo screenwidth .] [winfo screenheight .]\"\n",
              x->receive_symbol->s_name);
 }
 
