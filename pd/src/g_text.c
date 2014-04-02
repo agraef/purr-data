@@ -1495,8 +1495,8 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 sys_vgui(".x%lx.c addtag selected withtag %sR \n",
                     glist_getcanvas(glist), rtext_gettag(y));
 
-                if (pd_class(&x->te_pd) == text_class && glist_istoplevel(glist))
-                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 "
+                if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT && glist_istoplevel(glist))
+                    sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 1 -strokedasharray {} "
                              "-fill $pd_colors(box)\n",
                         glist_getcanvas(glist), rtext_gettag(y));
 
@@ -1525,8 +1525,8 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
                 sys_vgui(".x%lx.c dtag %sR selected\n",
                     glist_getcanvas(glist), rtext_gettag(y));
 
-                if (pd_class(&x->te_pd) == text_class)
-                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 "
+                if (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT)
+                       sys_vgui(".x%lx.c itemconfigure %sR -strokewidth 2 -strokedasharray {2 3} "
                                 "-fill %s\n",
                         glist_getcanvas(glist), 
                         rtext_gettag(y), invalid_fill);
@@ -1960,7 +1960,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         if (pd_class(&x->te_pd) == text_class)
         {
             pattern = "-";
-            outline = "$pd_colors(dash_outline) -strokewidth 2";
+            outline = "$pd_colors(dash_outline) -strokewidth 2 -strokelinecap projecting -strokedasharray {2 3}"; //-strokedasharray {4 1}
             fill = invalid_fill;
             box_tag = "broken box";
         }
@@ -1968,7 +1968,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         {
             pattern = "\"\"";
             outline = "$pd_colors(box_border)";
-        fill = "$pd_colors(box)";
+            fill = "$pd_colors(box)";
             box_tag = "box";
         }
         if (firsttime)
@@ -2034,15 +2034,19 @@ void text_drawborder(t_text *x, t_glist *glist,
     {
         if (firsttime)
         {
-            sys_vgui(".x%lx.c create pline\
- %d %d %d %d -tags [list %sR commentbar] -stroke $box_outline\n",
+            /*sys_vgui(".x%lx.c create pline\
+                 %d %d %d %d -tags [list %sR commentbar] -stroke $pd_colors(atom_box_border)\n",*/
+            sys_vgui(".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d\
+                -tags [list %sR commentbar] -stroke $pd_colors(box_border)\
+                -strokewidth 1 -strokedasharray {2 2} -strokelinecap butt\n",
                 glist_getcanvas(glist),
-                x2, y1,  x2, y2, tag);
+                //x2, y1,  x2, y2, tag);
+                x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1, tag);
         }
         else
         {
-            sys_vgui(".x%lx.c coords %sR %d %d %d %d\n",
-                glist_getcanvas(glist), tag, x2, y1,  x2, y2);
+            sys_vgui(".x%lx.c coords %sR %d %d %d %d %d %d %d %d %d %d\n",
+                glist_getcanvas(glist), tag, x1, y1,  x2, y1,  x2, y2,  x1, y2,  x1, y1);
         }
     }
 
