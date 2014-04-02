@@ -4771,6 +4771,7 @@ void glob_closeall(void*dummy, t_floatarg fforce)
     the user really wants to discard changes  */
 void glob_verifyquit(void *dummy, t_floatarg f)
 {
+	//fprintf(stderr, "glob_verifyquit %f\n", f);
     t_glist *g, *g2;
         /* find all root canvases */
     for (g = canvas_list; g; g = g->gl_next)
