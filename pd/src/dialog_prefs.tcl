@@ -201,7 +201,7 @@ proc ::dialog_prefs::set_color {array key op} {
                 selected&&border&&iemgui -outline $c"
         }
         box_border {set commands [list "itemconfigure \
-            border&&(!iemgui) -outline $c"]}
+            (box)&&(!iemgui) -stroke $c"]}
         iemgui_border {
             set commands [list "itemconfigure border&&iemgui -stroke $c"]}
         atom_box {set commands [list "itemconfigure \
@@ -282,32 +282,9 @@ proc ::dialog_prefs::swatchbutton_colorchooser {name variable} {
 }
 
 proc ::dialog_prefs::swatchbutton {name variable} {
-    if {$::windowingsystem ne "x11"} {
-        ttk::button $name -command "::dialog_prefs::swatchbutton_colorchooser $name $variable"
-        return
-    }
-    # Tk's color chooser for x11 isn't very good. So instead, the user
-    # gets a matrix of predefined colors to choose from. If a few custom
-    # colors could be added (or maybe triggering Ivica's L2Ork color
-    # chooser) this would be improved.
-    ttk::menubutton $name -menu $name.m -style PrefsColors.TMenubutton
-    menu $name.m
-    bind $name.m <Left>  "::dialog_prefs::swatchmenu_nav %W -1"
-    bind $name.m <Right> "::dialog_prefs::swatchmenu_nav %W 1"
-    set i 0
-    foreach swatch [::dialog_prefs::get_colorswatches] {
-        set columnbreak [expr {$i % 7 == 0}]
-        # Note: there is a trace set in pd-gui.tcl that calls
-        # ::dialog_prefs::set_color whenever the value of a
-        # ::pd_colors variable is changed.  So for the menu we just
-        # have to link to one of those variables and trace does the rest
-        $name.m add radiobutton -value $swatch -variable $variable \
-            -image ::img::colorswatches::$swatch -columnbreak $columnbreak \
-            -hidemargin 1
-        incr i
-    }
+    ttk::button $name \
+        -command "::dialog_prefs::swatchbutton_colorchooser $name $variable"
 }
-    
 
 # These are images used to build the menu for choosing
 # colors. The images hang around in memory until you exit
