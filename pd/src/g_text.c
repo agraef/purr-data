@@ -2205,12 +2205,11 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         vec2 = binbuf_getvec(b);
         /* special case: if pd subpatch is valid and its args change,
            and its new name is valid, just pass the message on. */
-        if (x->te_pd == canvas_class &&
-            (natom1 >= 1 && natom2 >= 1 && vec1[0].a_type == A_SYMBOL
-            && !strcmp(vec1[0].a_w.w_symbol->s_name, "pd") &&
-             vec2[0].a_type == A_SYMBOL
-            && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd") &&
-            vec2[1].a_type == A_SYMBOL))
+        if (x->te_pd == canvas_class && natom1 >= 1 && natom2 >= 1
+            && vec1[0].a_type == A_SYMBOL
+            && !strcmp(vec1[0].a_w.w_symbol->s_name, "pd")
+            && vec2[0].a_type == A_SYMBOL
+            && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
         {
             //fprintf(stderr,"setto canvas\n");
             //first check if the contents have changed to see if there is
