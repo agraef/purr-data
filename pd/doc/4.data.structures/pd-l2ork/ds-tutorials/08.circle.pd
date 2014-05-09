@@ -1,5 +1,5 @@
 #N struct drawtut-circle float x float y;
-#N canvas 0 19 439 554 10;
+#N canvas 0 19 638 554 10;
 #X msg 53 117 stroke blue;
 #X text 52 484 Lines are only a single stroke. They don't have any
 inner area to fill \, so none of the messages like "fill" or "fill-rule"
@@ -8,8 +8,8 @@ have any effect.;
 #X text 0 1 ____________________________;
 #X text 53 23 Circles are another simple shape.;
 #X obj 53 57 struct drawtut-circle float x float y;
-#X scalar drawtut-circle 147 283 \;;
-#X text 238 270 <- a circle;
+#X scalar drawtut-circle 157 283 \;;
+#X text 248 270 <- a circle;
 #X msg 142 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
 #X floatatom 228 93 5 0 0 0 - - -, f 5;

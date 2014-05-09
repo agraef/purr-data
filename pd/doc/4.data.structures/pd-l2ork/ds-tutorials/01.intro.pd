@@ -1,5 +1,5 @@
 #N struct foo float x float y;
-#N canvas 0 19 565 491 10;
+#N canvas -9 19 565 491 10;
 #X scalar foo 96 105 \;;
 #N canvas 429 132 808 465 welcome-animation 0;
 #X obj 877 107 bng 54 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -130,8 +130,14 @@
 #X connect 54 0 34 0;
 #X restore 339 86 pd welcome-animation;
 #N canvas 457 133 772 478 welcome-struct 0;
-#X obj 606 -8 draw rect -40 -50 200 90;
-#X obj 300 94 draw path m 93.8047 87.029 c 0 1.17187 0.859375 2.05078
+#X obj 311 66 draw rect -40 -50 200 90;
+#X obj 189 -26 struct foo float x float y;
+#X obj 189 4 loadbang;
+#X msg 311 35 stroke-dasharray 10 4 \, stroke-width 4 \, stroke gray
+;
+#N canvas 433 184 450 300 welcome-text 0;
+#N canvas 71 237 450 300 w 0;
+#X obj 40 215 draw path m 93.8047 87.029 c 0 1.17187 0.859375 2.05078
 0.859375 3.20312 0 0.976561 -0.488281 1.66016 -0.683593 2.46094 l -0.78125
 2.40234 c -0.292969 0.839843 -0.9375 1.15234 -0.9375 2.12891 -0.136719
 0.234375 -0.976563 1.19141 -1.09375 1.38672 -0.332031 0.546874 -0.605469
@@ -211,8 +217,27 @@ c 0 -0.0976 0.87891 -1.11328 0.95704 -1.24999 0.52734 -1.01562 0.52734
 0 -0.800782 0.156251 -0.800782 0.703125 0 1.05469 1.85547 0.546876
 2.14844 1.19141 0.273437 0.703125 0.3125 1.48438 0.605469 2.24609 l
 0.410156 0.761719 0.976562 2.75391 0 0.117188;
-#X obj 301 -46 struct foo float x float y;
-#X obj 716 93 draw path m 113.062 98.0641 c 0.27344 0.781249 0.23438
+#X obj 39 103 loadbang;
+#X obj 121 130 pack;
+#X floatatom 121 95 5 0 0 0 - - -, f 5;
+#X floatatom 178 95 5 0 0 0 - - -, f 5;
+#X obj 178 114 t b a;
+#X msg 40 184 transform scale \$1 translate -100 -100 rotate \$2 96
+93;
+#X msg 39 132 1 0;
+#X obj 72 132 r \$0-0;
+#X connect 1 0 7 0;
+#X connect 2 0 6 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 6 0;
+#X restore 37 -43 group w;
+#N canvas 433 184 450 300 e 0;
+#X obj 45 146 draw path m 113.062 98.0641 c 0.27344 0.781249 0.23438
 1.52344 0.46875 2.22656 1.38672 3.92578 3.98438 6.5625 8.33984 6.5625
 l 1.46485 -0.23438 0.23437 0.0391 2.08985 -1.05469 c 0.41015 -0.50781
 0.64453 -0.33203 1.07422 -0.64453 1.23046 -0.83985 1.52343 -1.54297
@@ -240,7 +265,27 @@ c 0.0977 0 0.41016 -0.175782 0.44922 -0.175782 0.39063 0 0.70313 0.371094
 1.15234 -1.38672 1.28906 -0.54687 0.117188 -0.95703 0.253907 -1.52344
 0.253907 l -1.66015 -0.136719 -2.59766 0.410156 -0.60547 0 c -0.21484
 -0.05859 -0.41015 -0.9375 -0.41015 -1.21094;
-#X obj 1143 93 draw path m 132.32 106.658 c 0.60547 0 1.32813 0.0977
+#X obj 45 45 loadbang;
+#X obj 128 74 pack;
+#X floatatom 128 39 5 0 0 0 - - -, f 5;
+#X floatatom 185 39 5 0 0 0 - - -, f 5;
+#X obj 185 58 t b a;
+#X msg 45 74 1 0;
+#X msg 45 115 transform scale \$1 translate -100 -100 rotate \$2 122
+98;
+#X obj 78 74 r \$0-1;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 -23 group e;
+#N canvas 433 184 450 300 l 0;
+#X obj 40 175 draw path m 132.32 106.658 c 0.60547 0 1.32813 0.0977
 1.9336 0.15625 0.97656 -0.0195 1.54297 -0.25391 2.69531 -0.29297 0.0391
 0 0.0977 0.0391 0.0977 0.0391 l 0.95704 0.0586 c 0.0977 0 0.80078 0.0391
 0.8789 0.0586 l 0.60547 0.0781 c 0.3125 0.0586 0.50781 0.0586 0.68359
@@ -277,8 +322,28 @@ l 0.0586 -1.34766 -0.0195 -1.01562 c 0 -0.624999 0.0195 -1.26953 0.23438
 0.13672 -0.82031 0.13672 -0.0195 0 -0.42969 0 -0.66407 0.0977 l -0.44922
 0.70313 0 0.91797 0.23438 0.19531 0.41016 0 c 0.13671 0.0391 0.23437
 0.0391 0.3125 0.0391 l 1.03515 -0.0977;
-#X obj 1571 94 draw path m 148.922 106.521 0.35157 0.29297 0.60547
-0 c 2.77343 0 5.9375 -1.3086 6.8164 -4.25782 l 0 -0.23437 c 0 -0.42969
+#X obj 40 64 loadbang;
+#X obj 128 93 pack;
+#X floatatom 128 58 5 0 0 0 - - -, f 5;
+#X floatatom 185 58 5 0 0 0 - - -, f 5;
+#X obj 185 77 t b a;
+#X msg 40 93 1 0;
+#X msg 40 144 transform scale \$1 translate -100 -100 rotate \$2 132
+92;
+#X obj 73 93 r \$0-2;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 -3 group l;
+#N canvas 433 184 450 300 c 0;
+#X obj 26 127 draw path m 148.922 106.521 0.35157 0.29297 0.60547 0
+c 2.77343 0 5.9375 -1.3086 6.8164 -4.25782 l 0 -0.23437 c 0 -0.42969
 -0.13672 -0.60547 -0.60547 -0.60547 -0.50781 0 -1.11328 0.82031 -1.52343
 1.11328 -0.9375 0.72266 -2.28516 1.28906 -3.47657 1.28906 -1.01562
 0 -1.17187 -0.3125 -1.99218 -0.91797 -0.17578 -0.15625 -0.60547 -0.13671
@@ -300,7 +365,27 @@ C 146.793 100.291 146.5 99.8024 146.5 98.611 l 0 -0.546875 -0.17578
 0.58594 1.58203 l 0 1.05468 c 0.0195 0.19532 0.70313 1.58203 0.76172
 1.85547 l 0.95703 0.97656 c 0.87891 1.48438 2.32422 2.07032 3.98438
 2.07032 l 0.29296 0;
-#X obj 2001 95 draw path m 159.449 98.0055 0.15625 1.52344 c 0 1.01562
+#X obj 25 25 loadbang;
+#X obj 116 54 pack;
+#X floatatom 116 19 5 0 0 0 - - -, f 5;
+#X floatatom 173 19 5 0 0 0 - - -, f 5;
+#X obj 173 38 t b a;
+#X msg 25 54 1 0;
+#X msg 26 95 transform scale \$1 translate -100 -100 rotate \$2 152
+98;
+#X obj 58 54 r \$0-3;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 17 group c;
+#N canvas 433 184 450 300 o 0;
+#X obj 56 165 draw path m 159.449 98.0055 0.15625 1.52344 c 0 1.01562
 0.68359 1.71875 1.15234 2.55859 0.27344 0.3711 0.58594 0.78125 0.87891
 1.28907 0.3125 0.46875 0.58594 1.05468 1.05469 1.30859 l 0.46875 0.21484
 1.93359 1.34766 0.19531 0.0977 1.25 0.0977 0.54688 0.11719 c 0.37109
@@ -335,7 +420,27 @@ l 0.0586 2.03125 -1.34765 2.1289 c -0.46875 0.50782 -0.97656 0.89844
 l -0.78125 0 c -0.70312 -0.29297 -1.11328 -1.01563 -1.62109 -1.66016
 l -0.74219 -0.70313 c -0.50781 -0.64453 -1.05469 -1.67968 -1.25 -2.53906
 -0.0977 -0.50781 0 -0.664061 -0.41015 -1.15234 l 0 -2.12891;
-#X obj 2505 97 draw path m 180.895 105.779 c 0 0.29297 0.0195 0.60547
+#X obj 56 72 loadbang;
+#X obj 137 101 pack;
+#X floatatom 137 66 5 0 0 0 - - -, f 5;
+#X floatatom 194 66 5 0 0 0 - - -, f 5;
+#X obj 194 85 t b a;
+#X msg 56 101 1 0;
+#X msg 56 138 transform scale \$1 translate -100 -100 rotate \$2 169
+98;
+#X obj 89 101 r \$0-4;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 37 group o;
+#N canvas 433 184 450 300 m 0;
+#X obj 45 118 draw path m 180.895 105.779 c 0 0.29297 0.0195 0.60547
 0.19531 0.74219 0.0977 0.0391 0.44922 0.0391 0.50782 0.0977 0.0781
 0.0586 0.17578 0.0586 0.23437 0.0586 l 2.03125 -0.11719 2.30469 0 1.30859
 0.0586 c 0.46875 0 1.21094 0 1.5625 -0.33203 0.15625 -0.13672 0.15625
@@ -419,7 +524,27 @@ c -0.3125 0.605468 -0.33203 1.21094 -0.33203 1.83594 l 0 1.36719 -0.0781
 0.37109 -0.15625 0.0391 -0.27344 0.13672 -0.33203 0.17578 -0.0586 0.0195
 -0.27344 0.15625 -0.41016 0.15625 -0.23437 0 -0.50781 0 -0.64453 0.0391
 -0.15625 0.0781 -0.15625 0.19532 -0.15625 0.54688;
-#X obj 2944 97 draw path m 211.734 98.0641 c 0.27344 0.781249 0.23438
+#X obj 45 13 loadbang;
+#X obj 126 43 pack;
+#X floatatom 126 9 5 0 0 0 - - -, f 5;
+#X floatatom 183 8 5 0 0 0 - - -, f 5;
+#X obj 183 27 t b a;
+#X msg 45 42 1 0;
+#X msg 45 95 transform scale \$1 translate -100 -100 rotate \$2 193
+98;
+#X obj 78 43 r \$0-5;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 57 group m;
+#N canvas 433 184 450 300 e 0;
+#X obj 43 136 draw path m 211.734 98.0641 c 0.27344 0.781249 0.23438
 1.52344 0.46875 2.22656 1.38672 3.92578 3.98438 6.5625 8.33985 6.5625
 l 1.46484 -0.23438 0.23438 0.0391 2.08984 -1.05469 c 0.41016 -0.50781
 0.64453 -0.33203 1.07422 -0.64453 1.23047 -0.83985 1.52344 -1.54297
@@ -447,7 +572,27 @@ c 0.0977 0 0.41016 -0.175782 0.44922 -0.175782 0.39062 0 0.70312 0.371094
 -0.41015 1.15234 -1.38671 1.28906 -0.54688 0.117188 -0.95704 0.253907
 -1.52344 0.253907 l -1.66016 -0.136719 -2.59765 0.410156 -0.60547 0
 c -0.21485 -0.05859 -0.41016 -0.9375 -0.41016 -1.21094;
-#X obj 3393 97 draw path m 232.496 104.724 c 0 0.0781 0 0.41016 0 0.41016
+#X obj 43 41 loadbang;
+#X obj 124 70 pack;
+#X floatatom 123 35 5 0 0 0 - - -, f 5;
+#X floatatom 181 35 5 0 0 0 - - -, f 5;
+#X obj 181 54 t b a;
+#X msg 43 70 1 0;
+#X msg 43 111 transform scale \$1 translate -100 -100 rotate \$2 220
+98;
+#X obj 76 70 r \$0-6;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 77 group e;
+#N canvas 433 184 450 300 exclamation-point 0;
+#X obj 39 178 draw path m 232.496 104.724 c 0 0.0781 0 0.41016 0 0.41016
 0.0586 0.17578 0.46875 0.9375 0.56641 1.11328 0.13672 0.19531 0.50781
 0.23437 0.82031 0.23437 0.17578 0 0.29297 0 0.3711 0 1.48437 0 2.05078
 -0.68359 2.05078 -2.08984 0 -1.32812 -1.07422 -1.71875 -2.1875 -1.71875
@@ -469,179 +614,31 @@ c -0.21485 -0.05859 -0.41016 -0.9375 -0.41016 -1.21094;
 1.42578 0.56641 2.12891 0 0.05859 0 0.09766 0 0.175781 0 0.136719 -0.0195
 0.273438 -0.19531 0.332032 -0.0391 0.546874 -0.17578 3.18359 -0.17578
 3.75 0 0.03906 0 0.332031 0 0.410156;
-#X msg 300 65 fill black;
-#X obj 300 12 loadbang;
-#X obj 501 27 pack;
-#X floatatom 501 -8 5 0 0 0 - - -, f 5;
-#X floatatom 558 -8 5 0 0 0 - - -, f 5;
-#X obj 558 11 t b a;
-#X msg 382 63 transform scale \$1 translate -100 -100 rotate \$2 96
-93;
-#X msg 381 41 1 0;
-#X msg 716 65 fill black;
-#X obj 716 12 loadbang;
-#X obj 921 27 pack;
-#X floatatom 921 -8 5 0 0 0 - - -, f 5;
-#X floatatom 978 -8 5 0 0 0 - - -, f 5;
-#X obj 978 11 t b a;
-#X msg 801 41 1 0;
-#X msg 803 62 transform scale \$1 translate -100 -100 rotate \$2 122
+#X obj 39 73 loadbang;
+#X obj 130 102 pack;
+#X floatatom 129 67 5 0 0 0 - - -, f 5;
+#X floatatom 187 67 5 0 0 0 - - -, f 5;
+#X obj 187 86 t b a;
+#X msg 39 102 1 0;
+#X msg 39 148 transform scale \$1 translate -100 -100 rotate \$2 233
 98;
-#X msg 1150 65 fill black;
-#X obj 1150 12 loadbang;
-#X obj 1351 27 pack;
-#X floatatom 1351 -8 5 0 0 0 - - -, f 5;
-#X floatatom 1408 -8 5 0 0 0 - - -, f 5;
-#X obj 1408 11 t b a;
-#X msg 1231 41 1 0;
-#X msg 1233 62 transform scale \$1 translate -100 -100 rotate \$2 132
-92;
-#X msg 1570 65 fill black;
-#X obj 1570 12 loadbang;
-#X obj 1771 27 pack;
-#X floatatom 1771 -8 5 0 0 0 - - -, f 5;
-#X floatatom 1828 -8 5 0 0 0 - - -, f 5;
-#X obj 1828 11 t b a;
-#X msg 1651 41 1 0;
-#X msg 1653 62 transform scale \$1 translate -100 -100 rotate \$2 152
-98;
-#X msg 2010 65 fill black;
-#X obj 2010 12 loadbang;
-#X obj 2211 27 pack;
-#X floatatom 2211 -8 5 0 0 0 - - -, f 5;
-#X floatatom 2268 -8 5 0 0 0 - - -, f 5;
-#X obj 2268 11 t b a;
-#X msg 2091 41 1 0;
-#X msg 2102 68 transform scale \$1 translate -100 -100 rotate \$2 169
-98;
-#X msg 2500 65 fill black;
-#X obj 2500 12 loadbang;
-#X obj 2701 27 pack;
-#X floatatom 2702 -7 5 0 0 0 - - -, f 5;
-#X floatatom 2758 -8 5 0 0 0 - - -, f 5;
-#X obj 2758 11 t b a;
-#X msg 2581 41 1 0;
-#X msg 2592 67 transform scale \$1 translate -100 -100 rotate \$2 193
-98;
-#X msg 2950 65 fill black;
-#X obj 2950 12 loadbang;
-#X obj 3151 27 pack;
-#X floatatom 3150 -8 5 0 0 0 - - -, f 5;
-#X floatatom 3208 -8 5 0 0 0 - - -, f 5;
-#X obj 3208 11 t b a;
-#X msg 3031 41 1 0;
-#X msg 3042 68 transform scale \$1 translate -100 -100 rotate \$2 220
-98;
-#X msg 3400 65 fill black;
-#X obj 3400 12 loadbang;
-#X obj 3601 27 pack;
-#X floatatom 3600 -8 5 0 0 0 - - -, f 5;
-#X floatatom 3658 -8 5 0 0 0 - - -, f 5;
-#X obj 3658 11 t b a;
-#X msg 3481 41 1 0;
-#X msg 3492 67 transform scale \$1 translate -100 -100 rotate \$2 233
-98;
-#X obj 414 41 r \$0-0;
-#X obj 834 41 r \$0-1;
-#X obj 1264 41 r \$0-2;
-#X obj 1684 41 r \$0-3;
-#X obj 2124 41 r \$0-4;
-#X obj 2614 42 r \$0-5;
-#X obj 3064 41 r \$0-6;
-#X obj 3514 41 r \$0-7;
-#X obj 606 -50 loadbang;
-#X msg 606 -29 stroke-dasharray 10 4 \, stroke-width 4 \, stroke gray
-;
-#X connect 10 0 1 0;
-#X connect 11 0 10 0;
-#X connect 11 0 17 0;
-#X connect 12 0 16 0;
-#X connect 13 0 12 0;
-#X connect 14 0 15 0;
-#X connect 15 0 13 0;
-#X connect 15 1 12 1;
-#X connect 16 0 1 0;
-#X connect 17 0 16 0;
-#X connect 18 0 3 0;
-#X connect 19 0 18 0;
-#X connect 19 0 24 0;
-#X connect 20 0 25 0;
-#X connect 21 0 20 0;
-#X connect 22 0 23 0;
-#X connect 23 0 21 0;
-#X connect 23 1 20 1;
-#X connect 24 0 25 0;
-#X connect 25 0 3 0;
-#X connect 26 0 4 0;
-#X connect 27 0 26 0;
-#X connect 27 0 32 0;
-#X connect 28 0 33 0;
-#X connect 29 0 28 0;
-#X connect 30 0 31 0;
-#X connect 31 0 29 0;
-#X connect 31 1 28 1;
-#X connect 32 0 33 0;
-#X connect 33 0 4 0;
-#X connect 34 0 5 0;
-#X connect 35 0 34 0;
-#X connect 35 0 40 0;
-#X connect 36 0 41 0;
-#X connect 37 0 36 0;
-#X connect 38 0 39 0;
-#X connect 39 0 37 0;
-#X connect 39 1 36 1;
-#X connect 40 0 41 0;
-#X connect 41 0 5 0;
-#X connect 42 0 6 0;
-#X connect 43 0 42 0;
-#X connect 43 0 48 0;
-#X connect 44 0 49 0;
-#X connect 45 0 44 0;
-#X connect 46 0 47 0;
-#X connect 47 0 45 0;
-#X connect 47 1 44 1;
-#X connect 48 0 49 0;
-#X connect 49 0 6 0;
-#X connect 50 0 7 0;
-#X connect 51 0 50 0;
-#X connect 51 0 56 0;
-#X connect 52 0 57 0;
-#X connect 53 0 52 0;
-#X connect 54 0 55 0;
-#X connect 55 0 53 0;
-#X connect 55 1 52 1;
-#X connect 56 0 57 0;
-#X connect 57 0 7 0;
-#X connect 58 0 8 0;
-#X connect 59 0 58 0;
-#X connect 59 0 64 0;
-#X connect 60 0 65 0;
-#X connect 61 0 60 0;
-#X connect 62 0 63 0;
-#X connect 63 0 61 0;
-#X connect 63 1 60 1;
-#X connect 64 0 65 0;
-#X connect 65 0 8 0;
-#X connect 66 0 9 0;
-#X connect 67 0 66 0;
-#X connect 67 0 72 0;
-#X connect 68 0 73 0;
-#X connect 69 0 68 0;
-#X connect 70 0 71 0;
-#X connect 71 0 69 0;
-#X connect 71 1 68 1;
-#X connect 72 0 73 0;
-#X connect 73 0 9 0;
-#X connect 74 0 16 0;
-#X connect 75 0 25 0;
-#X connect 76 0 33 0;
-#X connect 77 0 41 0;
-#X connect 78 0 49 0;
-#X connect 79 0 57 0;
-#X connect 80 0 65 0;
-#X connect 81 0 73 0;
-#X connect 82 0 83 0;
-#X connect 83 0 0 0;
+#X obj 72 102 r \$0-7;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 5 1 2 1;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 37 97 group exclamation-point;
+#X restore 189 66 group welcome-text;
+#X msg 189 37 fill black;
+#X connect 2 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 0 0;
+#X connect 5 0 4 0;
 #X restore 339 39 pd welcome-struct;
 #X text 0 1 New Drawing Commands: Intro;
 #X text 0 1 ___________________________;

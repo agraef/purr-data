@@ -1,13 +1,13 @@
 #N struct drawtut-polygon float x float y;
-#N canvas 106 54 849 580 10;
+#N canvas 0 19 845 575 10;
 #X msg 53 117 stroke blue;
 #X msg 142 117 fill yellow;
 #X msg 228 117 stroke-width \$1;
 #X floatatom 228 93 5 0 0 0 - - -, f 5;
 #X obj 53 57 struct drawtut-polygon float x float y;
 #X scalar drawtut-polygon -138 117 \;;
-#X text 4 1 New Drawing Commands: polygon;
-#X text 4 1 _____________________________;
+#X text 0 1 New Drawing Commands: polygon;
+#X text 0 1 _____________________________;
 #X text 53 23 Polygons are closed shapes.;
 #X obj 53 153 draw polygon 350 75 379 161 469 161 397 215 423 301 350
 250 277 301 303 215 231 161 321 161;

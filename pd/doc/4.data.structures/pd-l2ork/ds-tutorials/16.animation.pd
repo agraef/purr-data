@@ -1,5 +1,5 @@
 #N struct drawtut-animation float x float y;
-#N canvas 0 19 514 563 10;
+#N canvas -9 19 537 571 10;
 #X scalar drawtut-animation 47 306 \;;
 #X obj 47 271 draw rect 0 0 40 40;
 #X obj 47 135 struct drawtut-animation float x float y;

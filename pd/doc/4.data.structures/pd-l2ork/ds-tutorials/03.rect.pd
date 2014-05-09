@@ -1,5 +1,5 @@
 #N struct drawtut-rect float x float y;
-#N canvas 196 51 467 625 10;
+#N canvas 0 19 515 614 10;
 #X text 0 1 __________________________;
 #X text 0 1 New Drawing Commands: rect;
 #X obj 53 87 struct drawtut-rect float x float y;

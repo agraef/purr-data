@@ -1,27 +1,27 @@
 #N struct drawtut-transform float x float y;
-#N canvas 0 19 836 610 10;
+#N canvas 0 19 867 589 10;
 #X text 0 1 New Drawing Commands: transform;
 #X text 1 1 _______________________________;
 #X text 53 23 All [draw] objects understand the "transform" message.
 It allows you to do affine transformations on shapes.;
 #X text 53 83 Let's start with a simple rectangle:;
-#X obj 57 358 draw rect 0 0 100 40;
-#X floatatom 57 157 5 0 0 0 x/y - -, f 5;
-#X msg 57 249 transform translate \$1 \$2 rotate \$3 scale \$4 skewx
+#X obj 57 388 draw rect 0 0 100 40;
+#X floatatom 57 187 5 0 0 0 x/y - -, f 5;
+#X msg 57 279 transform translate \$1 \$2 rotate \$3 scale \$4 skewx
 \$5 skewy \$6;
-#X scalar drawtut-transform 197 409 \;;
-#X floatatom 97 157 5 0 0 0 - - -, f 5;
-#X obj 97 178 t b a;
-#X floatatom 177 157 5 0 0 0 rotate - -, f 5;
-#X obj 177 178 t b a;
-#X floatatom 257 157 5 1 100 0 scale - -, f 5;
-#X obj 257 178 t b a;
-#X floatatom 337 157 5 0 0 0 skewx - -, f 5;
-#X obj 337 178 t b a;
-#X floatatom 407 157 5 0 0 0 skewy - -, f 5;
-#X obj 407 178 t b a;
-#X floatatom 127 285 5 0 0 0 - - -, f 5;
-#X msg 127 306 transform rotate \$1 50 20;
+#X scalar drawtut-transform 197 449 \;;
+#X floatatom 97 187 5 0 0 0 - - -, f 5;
+#X obj 97 208 t b a;
+#X floatatom 177 187 5 0 0 0 rotate - -, f 5;
+#X obj 177 208 t b a;
+#X floatatom 257 167 5 0 0 0 scale - -, f 5;
+#X obj 257 208 t b a;
+#X floatatom 337 167 5 -100 100 0 skewx - -, f 5;
+#X obj 337 208 t b a;
+#X floatatom 407 167 5 -100 100 0 skewy - -, f 5;
+#X obj 407 208 t b a;
+#X floatatom 127 315 5 0 0 0 - - -, f 5;
+#X msg 127 336 transform rotate \$1 50 20;
 #X text 447 449 For "scale" \, you can either specify a single value
 to applied to both the x- and y-axis \, or one value for each. For
 rotation \, you can supply an additional x/y coordinate to specify
@@ -30,40 +30,49 @@ the center of rotation. An example is in the second message box above.
 #X text 57 529 After the word "transform" \, you specify the name of
 the affine transformation you'd like to apply. All are shown above.
 Pd then takes them and applies them in the order you specified.;
-#X msg 127 332 transform matrix 1 0 0 1 0 0;
-#X text 312 332 <- You can just feed the matrix values directly \,
+#X msg 127 362 transform matrix 1 0 0 1 0 0;
+#X text 312 362 <- You can just feed the matrix values directly \,
 too.;
-#X text 295 289 <- For rotations \, you can specify two extra floats
+#X text 295 319 <- For rotations \, you can specify two extra floats
 for the center of rotation. Here \, it makes the rotation happen around
 the center of the rectangle.;
 #X text 447 519 Notice that "transform" data doesn't accumulate in
 a [draw] object. When you send a new "transform" message the old values
 are forgotten. That's why you have to gang them all together in a single
 message if you want multiple transformations.;
-#X obj 257 109 loadbang;
-#X obj 257 130 f 1;
-#X obj 57 228 pack 0 0 0 0 0 0;
+#X obj 257 119 loadbang;
+#X obj 57 258 pack 0 0 0 0 0 0;
 #X obj 53 57 struct drawtut-transform float x float y;
-#X connect 5 0 28 0;
+#X obj 257 140 f 100;
+#X obj 257 188 * 0.01;
+#X obj 337 188 * 0.01;
+#X obj 407 188 * 0.01;
+#X text 470 168 <- The attributes skewx and skewy can take any value.
+Here I limit them to be between -1 and 1 \, just so that the rectangle's
+dimensions don't grow too large.;
+#X connect 5 0 27 0;
 #X connect 6 0 4 0;
 #X connect 8 0 9 0;
 #X connect 9 0 5 0;
-#X connect 9 1 28 1;
+#X connect 9 1 27 1;
 #X connect 10 0 11 0;
 #X connect 11 0 8 0;
-#X connect 11 1 28 2;
-#X connect 12 0 13 0;
+#X connect 11 1 27 2;
+#X connect 12 0 30 0;
 #X connect 13 0 10 0;
-#X connect 13 1 28 3;
-#X connect 14 0 15 0;
+#X connect 13 1 27 3;
+#X connect 14 0 31 0;
 #X connect 15 0 12 0;
-#X connect 15 1 28 4;
-#X connect 16 0 17 0;
+#X connect 15 1 27 4;
+#X connect 16 0 32 0;
 #X connect 17 0 14 0;
-#X connect 17 1 28 5;
+#X connect 17 1 27 5;
 #X connect 18 0 19 0;
 #X connect 19 0 4 0;
 #X connect 22 0 4 0;
-#X connect 26 0 27 0;
-#X connect 27 0 12 0;
-#X connect 28 0 6 0;
+#X connect 26 0 29 0;
+#X connect 27 0 6 0;
+#X connect 29 0 12 0;
+#X connect 30 0 13 0;
+#X connect 31 0 15 0;
+#X connect 32 0 17 0;

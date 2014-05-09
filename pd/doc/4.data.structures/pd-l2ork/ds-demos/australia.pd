@@ -10,7 +10,7 @@
 #X obj 504 611 struct australia float x float y;
 #X scalar australia 50 43 \;;
 #X obj 21 291 vradio 22 1 0 8 empty empty empty 0 -8 0 10 -262144 -1
--1 7;
+-1 0;
 #X text 52 319 Northern Territory;
 #X text 52 341 Queensland;
 #X text 52 385 New South Wales;
@@ -975,7 +975,7 @@ l -1.705 -2.129 l -1.276 1.491 l 0.853 0.212 V 224.637 z;
 #X scalar ausql 50 20 \;;
 #X scalar aust 50 20 \;;
 #X text 52 449 Reset;
-#N canvas 159 139 578 421 sfx 1;
+#N canvas 159 139 578 421 sfx 0;
 #X obj 435 118 noise~;
 #X obj 313 76 line~;
 #X obj 365 168 -~;

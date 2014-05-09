@@ -1,5 +1,5 @@
 #N struct drawtut-line float x float y;
-#N canvas 0 19 453 618 10;
+#N canvas 0 19 638 634 10;
 #X obj 53 84 loadbang;
 #X text 0 1 New Drawing Commands: line;
 #X text 0 1 __________________________;
@@ -16,7 +16,6 @@ end.;
 #X text 52 454 Lines are only a single stroke. They don't have any
 inner area to fill \, so none of the messages like "fill" or "fill-rule"
 have any effect.;
-#X msg 53 107 stroke blue \, stroke-width 10;
 #X msg 75 177 stroke-linecap \$1;
 #X text 52 504 Also \, notice the stroke-linecap message above. It
 takes a number to set one of the following:;
@@ -30,9 +29,10 @@ past the end point.;
 #X text 105 138 butt;
 #X text 173 138 rounded;
 #X text 258 138 square;
-#X connect 0 0 10 0;
+#X msg 53 107 stroke blue \, stroke-width 15;
+#X connect 0 0 21 0;
 #X connect 10 0 5 0;
-#X connect 11 0 5 0;
-#X connect 16 0 11 0;
-#X connect 17 0 11 0;
-#X connect 18 0 11 0;
+#X connect 15 0 10 0;
+#X connect 16 0 10 0;
+#X connect 17 0 10 0;
+#X connect 21 0 5 0;

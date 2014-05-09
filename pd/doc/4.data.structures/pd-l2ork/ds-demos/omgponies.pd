@@ -45,12 +45,17 @@
 #X connect 16 0 14 0;
 #X connect 17 0 0 0;
 #X connect 18 0 1 0;
-#X restore 485 97 pd animate;
+#X restore 425 148 pd animate;
 #X obj 365 14 struct pony float x float y float a float pizzazz;
-#X text 33 27 Demo for drawing scalars in object boxes;
-#X text 54 58 1) Create an object box;
-#X text 54 78 2) type the word "pony" in it;
-#X text 54 98 3) Repeat to get a pony with a different level of "pizzazz"
+#X text 33 77 Demo for drawing scalars in object boxes;
+#X text 54 108 1) Create an object box;
+#X text 54 128 2) type the word "pony" in it;
+#X text 54 148 3) Repeat to get a pony with a different level of "pizzazz"
 ;
-#X text 54 118 4) Profit;
-#X obj 365 46 drawsprite ./omgponies 0 0 a;
+#X text 54 168 4) Profit;
+#X obj 365 44 loadbang;
+#X msg 365 65 index a;
+#X obj 365 87 draw sprite /home/bud/Desktop/funstuff/pd-with-prefs/omgponies
+;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;

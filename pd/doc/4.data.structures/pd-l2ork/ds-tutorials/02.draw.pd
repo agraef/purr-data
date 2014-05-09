@@ -1,4 +1,4 @@
-#N canvas 0 19 476 614 10;
+#N canvas 0 19 495 603 10;
 #X text 0 1 New Drawing Commands: draw;
 #X text 0 1 __________________________;
 #X obj 53 47 struct drawtut-one float x float y;
@@ -37,4 +37,4 @@ canvas in the running Pd instance. For convenience we created everything
 in the main patch \, but since there's only one [struct] per canvas
 you typically will want to keep your [struct] and any [draw] objects
 in their own subpatch.;
-#X obj 53 463;
+#X obj 56 463;

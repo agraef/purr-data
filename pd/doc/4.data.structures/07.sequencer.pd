@@ -2,7 +2,7 @@
 template-pitch array amp template-amp;
 #N struct template-pitch float x float y float w;
 #N struct template-amp float x float y float w;
-#N canvas 424 19 448 576 10;
+#N canvas 710 51 448 576 10;
 #N canvas 95 388 428 166 template-toplevel 0;
 #X obj 25 106 plot pitch voiceno 3 10 0;
 #X obj 25 133 plot amp 0 3 10 0;
@@ -95,12 +95,23 @@ array pitch template-pitch array amp template-amp;
 #X msg 22 435 start;
 #X msg 73 435 stop;
 #N canvas 386 74 426 367 data 1;
-#X scalar template-toplevel 3 86 0 \; 0 0 0 \; \; 0 0 0 \; \;;
-#X scalar template-toplevel 14 80 0 \; 0 0 0 \; \; 0 0 0 \; \;;
-#X scalar template-toplevel 38 43.25 0 \; 0 0 0 \; \; 0 0 0 \; \;;
-#X scalar template-toplevel 64 80 0 \; 0 0 0 \; \; 0 0 0 \; \;;
-#X scalar template-toplevel 142 105 0 \; 0 0 0 \; \; 0 0 0 \; \;;
-#X scalar template-toplevel 319 63.5 0 \; 0 0 0 \; \; 0 0 0 \; \;;
+#X scalar template-toplevel 22 86 900 \; 0 0 12 \; 10 0 12 \; \; 0
+0 0 \; 10 0 2.5 \; 11 0 0 \; \;;
+#X scalar template-toplevel 33 80 990 \; 0 0 12 \; 10 0 12 \; \; 0
+0 2.5 \; 10 0 2.5 \; 11 0 0 \; \;;
+#X scalar template-toplevel 57 43.25 90 \; 0 65 12 \; 100 10 0 \; 100
+10 12 \; 230 50 0 \; 230 10 3 \; 240 60 0 \; 240 25 10 \; 250 60 0
+\; 250 37 10 \; 260 65 0.5 \; 285 65 0.5 \; \; 1 0 2 \; 103 0 1 \;
+195 0 2 \; 220 0 0.75 \; 225 0 1.25 \; 248 0 2.5 \; 251 0 2.25 \; 255
+0 0 \; 256 0 1.5 \; 260 0 0 \; 261 0 2 \; 265 0 0 \; 266 0 2.5 \; 270
+0 0 \; 271 0 3 \; 275 0 0 \; \;;
+#X scalar template-toplevel 83 80 900 \; 0 5 0.25 \; 60 5 0.25 \; \;
+0 0 0 \; 28 -0.25 3.5 \; 58 -0.25 0 \; \;;
+#X scalar template-toplevel 161 105 900 \; 0 0 12 \; 70 -20 12 \; \;
+0 0 0 \; 10 0 2.5 \; 20 0 0 \; 30 0 0 \; 40 0 2.5 \; 50 0 0 \; 60 0
+2.5 \; 70 0 0 \; \;;
+#X scalar template-toplevel 338 63.5 909 \; 0 0 12 \; 50 0 12 \; \;
+0 0 4 \; 10 0 2.5 \; 50 0 0 \; \;;
 #X coords 0 91.75 1 91.5 0 0 0;
 #X restore 22 318 pd data;
 #X obj 176 318 r tempo;

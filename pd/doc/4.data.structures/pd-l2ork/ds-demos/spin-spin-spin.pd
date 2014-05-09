@@ -1,5 +1,5 @@
 #N struct leaf float x float y;
-#N canvas -9 19 910 680 10;
+#N canvas 0 19 910 680 10;
 #N canvas 2 65 668 608 render 0;
 #X obj 92 557 draw rect 0 0 300 300;
 #X obj 53 47 struct leaf float x float y;

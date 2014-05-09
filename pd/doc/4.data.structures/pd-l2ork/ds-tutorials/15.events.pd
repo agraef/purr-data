@@ -1,29 +1,44 @@
 #N struct drawtut-events float x float y;
-#N canvas 0 19 525 484 10;
-#X scalar drawtut-events 54 210 \;;
+#N canvas 0 19 591 620 10;
+#X scalar drawtut-events 54 240 \;;
 #X text 1 1 __________________________________;
 #X text 0 1 New Drawing Commands: mouse events;
 #X text 53 43 When the user mouses over or clicks a scalar a message
 gets sent to the outlet of the corresponding [struct] object.;
-#X obj 373 97 loadbang;
-#X msg 373 118 fill blue;
-#X text 109 221 <- Click and move the mouse over this scalar;
-#X text 53 273 The following events are reported:;
-#X text 53 333 click - clicking the scalar in "Run mode";
-#X text 53 393 enter - moving the mouse over a scalar;
-#X text 53 413 leave - moving the mouse out of a scalar's area;
-#X text 53 433 select - select a scalar in "Edit mode";
-#X text 53 353 deselect - deselect a scalar in "Edit mode";
-#X text 53 373 displace - move a scalar in "Edit mode";
-#X text 53 303 change - click-drag an area of a scalar to change its
+#X obj 373 87 loadbang;
+#X msg 373 108 fill blue;
+#X text 53 430 The following events are reported:;
+#X text 53 490 click - clicking the scalar in "Run mode";
+#X text 53 550 enter - moving the mouse over a scalar;
+#X text 53 570 leave - moving the mouse out of a scalar's area;
+#X text 53 590 select - select a scalar in "Edit mode";
+#X text 53 510 deselect - deselect a scalar in "Edit mode";
+#X text 53 530 displace - move a scalar in "Edit mode";
+#X text 53 460 change - click-drag an area of a scalar to change its
 shape or value;
-#X symbolatom 53 173 10 0 0 1 event_type - -, f 10;
-#X obj 53 148 list split 1;
-#X obj 63 123 print;
-#X obj 373 139 draw rect 0 0 40 40;
-#X obj 53 97 struct drawtut-events float x float y;
+#X symbolatom 53 203 10 0 0 1 event_type - -, f 10;
+#X obj 53 138 list split 1;
+#X obj 63 113 print;
+#X obj 53 87 struct drawtut-events float x float y;
+#X msg 411 200 fill white;
+#X text 149 261 <- Click and move the mouse over these shapes;
+#X obj 373 157 loadbang;
+#X text 149 299 Notice that when you move from the circle's border
+to its center \, you generate a "leave" event. This is because the
+circle has no fill color. Once you set a fill color-- even white--
+then the middle will count as part of the shape.;
+#X text 149 359 Unfortunately this creates a discrepancy with the "click"
+event \, which will register a click for anything inside the scalar's
+bounding box (i.e. \, the selection rectangle that appears when you
+select it in edit-mode.;
+#X obj 373 129 draw rect 0 0 60 60;
+#X msg 373 178 stroke-width 20;
+#X obj 373 221 draw circle 30 120 25;
 #X connect 4 0 5 0;
-#X connect 5 0 18 0;
-#X connect 16 0 15 0;
-#X connect 19 0 16 0;
-#X connect 19 0 17 0;
+#X connect 5 0 23 0;
+#X connect 15 0 14 0;
+#X connect 17 0 15 0;
+#X connect 17 0 16 0;
+#X connect 18 0 25 0;
+#X connect 20 0 24 0;
+#X connect 24 0 25 0;

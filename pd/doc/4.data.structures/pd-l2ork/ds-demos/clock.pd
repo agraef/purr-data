@@ -15,7 +15,7 @@
 #X msg 391 82 stroke-width 4 \, stroke-linecap 1;
 #X obj 401 381 loadbang;
 #X msg 401 400 stroke "" \, fill gray50;
-#X obj 487 228 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 487 228 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 488 294 f;
 #X obj 538 294 + 1;

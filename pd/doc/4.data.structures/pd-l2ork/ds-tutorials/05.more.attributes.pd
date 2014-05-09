@@ -1,67 +1,70 @@
 #N struct drawtut-attr-cont float x float y;
-#N canvas 0 19 601 660 10;
-#X obj 53 553 draw rect 0 0 50 50;
-#X msg 53 92 fill red;
+#N canvas 0 19 638 678 10;
+#X obj 93 563 draw rect 0 0 50 50;
+#X msg 93 92 fill red;
 #X text 0 1 New Drawing Commands: attributes (continued);
 #X text 0 1 ____________________________________________;
 #X text 53 23 There are quite a few attributes we can control to change
 the appearance of a shape:;
 #X obj 53 57 struct drawtut-attr-cont float x float y;
-#X scalar drawtut-attr-cont 54 583 \;;
-#X text 160 92 fill color. 1 symbol \, 3 floats (rgb) \, or 4 floats
+#X scalar drawtut-attr-cont 24 283 \;;
+#X text 200 92 fill color. 1 symbol \, 3 floats (rgb) \, or 4 floats
 (rgba);
-#X text 160 140 opacity for fill color. float in range 0-1;
-#X floatatom 60 115 5 0 0 0 - - -, f 5;
-#X text 100 116 (shift-click for more precision);
-#X msg 60 139 fill-opacity \$1;
-#X text 160 166 fill-rule for overlapping polygons. 0 = nonzero \,
+#X text 200 150 opacity for fill color. float in range 0-1;
+#X msg 100 149 fill-opacity \$1;
+#X text 200 176 fill-rule for overlapping polygons. 0 = nonzero \,
 1 = evenodd;
-#X floatatom 73 191 5 0 0 0 - - -, f 5;
-#X floatatom 80 236 5 0 0 0 - - -, f 5;
-#X msg 73 213 rx \$1;
-#X msg 80 260 ry \$1;
-#X text 120 213 x value for rounded rectangle corner;
-#X text 124 261 y value for rounded rectangle corner;
-#X text 174 287 stroke color. 1 symbol \, 3 floats (rgb) \, or 4 floats
+#X floatatom 113 201 5 0 0 0 - - -, f 5;
+#X floatatom 120 246 5 0 0 0 - - -, f 5;
+#X msg 113 223 rx \$1;
+#X msg 120 270 ry \$1;
+#X text 160 223 x value for rounded rectangle corner;
+#X text 164 271 y value for rounded rectangle corner;
+#X text 214 297 stroke color. 1 symbol \, 3 floats (rgb) \, or 4 floats
 (rgba);
-#X text 234 314 list of numbers to specify dash lengths;
-#X msg 100 341 stroke-linecap 0;
-#X text 214 341 for ends of open subpaths. 0 = butt \, 1 = round \,
+#X text 274 324 list of numbers to specify dash lengths;
+#X msg 140 351 stroke-linecap 0;
+#X text 254 351 for ends of open subpaths. 0 = butt \, 1 = round \,
 2 = square;
-#X text 224 369 shape of path corners. 0 = miter \, 1 = round \, 2
+#X text 264 379 shape of path corners. 0 = miter \, 1 = round \, 2
 = bevel;
-#X text 246 395 limit miter length;
-#X text 246 422 opacity for the stroke. float in range 0-1;
-#X text 246 448 width of the stroke.;
-#X msg 106 368 stroke-linejoin 0;
-#X msg 111 395 stroke-miterlimit 0;
-#X msg 115 422 stroke-opacity 0.4;
-#X text 246 526 affine transformation on the object.;
-#X msg 118 449 stroke-width 10;
-#X floatatom 121 481 5 0 0 0 - - -, f 5;
-#X msg 121 526 transform skewx \$1;
-#X obj 121 502 * 0.01;
-#X text 275 570 Read more about svg attributes here:;
-#X obj 275 591 pddp/pddplink http://www.w3.org/TR/SVG11/painting.html
+#X text 286 405 limit miter length;
+#X text 286 432 opacity for the stroke. float in range 0-1;
+#X text 286 458 width of the stroke.;
+#X msg 146 378 stroke-linejoin 0;
+#X msg 151 405 stroke-miterlimit 0;
+#X msg 155 432 stroke-opacity 0.4;
+#X text 286 536 affine transformation on the object.;
+#X msg 158 459 stroke-width 10;
+#X floatatom 161 491 5 0 0 0 - - -, f 5;
+#X msg 161 536 transform skewx \$1;
+#X obj 161 512 * 0.01;
+#X text 275 580 Read more about svg attributes here:;
+#X obj 275 601 pddp/pddplink http://www.w3.org/TR/SVG11/painting.html
 ;
-#X msg 67 166 fill-rule 0;
-#X msg 94 314 stroke-dasharray 5 10;
-#X msg 87 287 stroke purple;
+#X msg 107 176 fill-rule 0;
+#X msg 134 324 stroke-dasharray 5 10;
+#X msg 127 297 stroke purple;
+#X obj 127 121 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 600 1;
+#X text 107 121 0;
+#X text 268 121 1;
+#X text 25 348 (scalar);
 #X connect 1 0 0 0;
-#X connect 9 0 11 0;
-#X connect 11 0 0 0;
-#X connect 13 0 15 0;
-#X connect 14 0 16 0;
-#X connect 15 0 0 0;
-#X connect 16 0 0 0;
-#X connect 21 0 0 0;
+#X connect 9 0 0 0;
+#X connect 11 0 13 0;
+#X connect 12 0 14 0;
+#X connect 13 0 0 0;
+#X connect 14 0 0 0;
+#X connect 19 0 0 0;
+#X connect 25 0 0 0;
+#X connect 26 0 0 0;
 #X connect 27 0 0 0;
-#X connect 28 0 0 0;
 #X connect 29 0 0 0;
+#X connect 30 0 32 0;
 #X connect 31 0 0 0;
-#X connect 32 0 34 0;
-#X connect 33 0 0 0;
-#X connect 34 0 33 0;
+#X connect 32 0 31 0;
+#X connect 35 0 0 0;
+#X connect 36 0 0 0;
 #X connect 37 0 0 0;
-#X connect 38 0 0 0;
-#X connect 39 0 0 0;
+#X connect 38 0 9 0;

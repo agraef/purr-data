@@ -1,19 +1,20 @@
 #N struct curvebbox float x float y;
 #N canvas -9 19 619 300 10;
 #X obj 151 34 struct curvebbox float x float y;
-#X floatatom 189 84 5 0 0 0 - - -, f 5;
-#X obj 189 128 draw path M 20 120 C 20 30 40 50 60 70;
-#X msg 189 105 transform rotate \$1;
-#X floatatom 441 110 5 0 0 0 - - -, f 5;
-#X msg 441 131 transform rotate \$1;
-#X obj 441 152 draw group;
 #X scalar curvebbox 47 43 \;;
 #X text 197 181 Short demo showing that Pd should find the correct
 bounding box for a transformed scalar in edit-mode.;
 #X text 197 221 Unfortunately it doesn't quite get it right for curves.
 You can see with rotation at some angles it doesn't include part of
 the curve.;
-#X connect 1 0 3 0;
-#X connect 3 0 2 0;
-#X connect 4 0 5 0;
+#N canvas 433 184 450 300 (subpatch) 0;
+#X floatatom 163 116 5 0 0 0 - - -, f 5;
+#X obj 163 160 draw path M 20 120 C 20 30 40 50 60 70;
+#X msg 163 137 transform rotate \$1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 417 94 group;
+#X floatatom 408 21 5 0 0 0 - - -, f 5;
+#X msg 408 42 transform translate \$1 0;
 #X connect 5 0 6 0;
+#X connect 6 0 4 0;

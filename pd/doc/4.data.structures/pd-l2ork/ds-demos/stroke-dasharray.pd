@@ -1,5 +1,5 @@
 #N struct blah float x float y;
-#N canvas -7 0 618 300 10;
+#N canvas 0 21 618 300 10;
 #X obj 99 13 struct blah float x float y;
 #X scalar blah 80 40 \;;
 #X msg 105 157 stroke-dasharray 1 2 3 4 5 6;

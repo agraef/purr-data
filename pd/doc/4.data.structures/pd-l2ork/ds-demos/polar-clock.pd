@@ -1,16 +1,17 @@
 #N struct polar-clock float x float y float ax float ay float flag
 float xloc float yloc float mx float my float r;
-#N canvas 0 4 966 636 10;
-#X scalar polar-clock 201 342 245.63 8.41769 0 0 0 50 -150 200 \;;
-#X obj 57 29 struct polar-clock float x float y float ax float ay float
-flag float xloc float yloc float mx float my float r;
-#X obj 59 65 loadbang;
-#X scalar polar-clock 201 342 130 188.564 0 0 0 50 -110 160 \;;
-#X scalar polar-clock 201 342 81.0584 -65.9111 0 0 0 50 -70 120 \;
+#N canvas -9 19 1062 664 10;
+#X scalar polar-clock 281 372 131.348 -132.709 0 0 0 50 -150 200 \;
 ;
-#X scalar polar-clock 201 342 33.3672 128.252 1 0 0 50 -30 80 \;;
-#X scalar polar-clock 201 352 84.641 30 0 0 0 50 10 40 \;;
-#N canvas 45 51 917 566 guts 0;
+#X obj 137 29 struct polar-clock float x float y float ax float ay
+float flag float xloc float yloc float mx float my float r;
+#X obj 139 65 loadbang;
+#X scalar polar-clock 281 372 -29.9998 188.564 1 0 0 50 -110 160 \;
+;
+#X scalar polar-clock 281 372 -70 50.0003 1 0 0 50 -70 120 \;;
+#X scalar polar-clock 281 372 33.3672 128.252 1 0 0 50 -30 80 \;;
+#X scalar polar-clock 281 382 84.641 30 0 0 0 50 10 40 \;;
+#N canvas 405 57 917 566 guts 0;
 #X floatatom 661 -13 5 0 0 0 total - -, f 5;
 #X msg 581 8 360 \$1;
 #X obj 581 29 /;
@@ -151,47 +152,46 @@ flag float xloc float yloc float mx float my float r;
 #X connect 55 0 57 2;
 #X connect 56 0 55 0;
 #X connect 63 0 10 0;
-#X restore 527 544 pd guts;
-#X msg 59 86 stroke-width 30 \, stroke ay ax ay;
-#X floatatom 703 594 5 0 0 0 - - -, f 5;
-#X floatatom 658 594 5 0 0 1 / - -, f 5;
-#X floatatom 608 594 5 0 0 0 - - -, f 5;
-#X floatatom 568 594 5 0 0 0 - - -, f 5;
-#X floatatom 527 594 5 0 0 1 : - -, f 5;
-#X obj 429 29 namecanvas polar_clock;
-#X obj 315 126 draw circle mx mx r;
-#X msg 315 89 stroke gray \, stroke-width 5 \, stroke-dasharray 1 15
+#X restore 607 542 pd guts;
+#X msg 139 86 stroke-width 30 \, stroke ay ax ay;
+#X floatatom 783 592 5 0 0 0 - - -, f 5;
+#X floatatom 738 592 5 0 0 1 / - -, f 5;
+#X floatatom 688 592 5 0 0 0 - - -, f 5;
+#X floatatom 648 592 5 0 0 0 - - -, f 5;
+#X floatatom 607 592 5 0 0 1 : - -, f 5;
+#X obj 509 29 namecanvas polar_clock;
+#X obj 395 126 draw circle mx mx r;
+#X msg 395 89 stroke gray \, stroke-width 5 \, stroke-dasharray 1 15
 \, stroke-linecap 1 \, stroke-opacity 0.4;
-#X obj 59 110 draw path M mx my A r r 0 flag 1 ax ay;
-#X obj 315 65 loadbang;
-#X text 524 125 Raphael Polar Clock;
-#X text 524 125 ___________________;
-#X text 524 300 If there's a lesson here \, it's this: if you make
+#X obj 139 110 draw path M mx my A r r 0 flag 1 ax ay;
+#X obj 395 65 loadbang;
+#X text 604 148 Raphael Polar Clock;
+#X text 604 148 ___________________;
+#X text 604 253 In addition \, drawing the arcs for this patch has
+revealed both an error in tkpath's calculations for the arc's bounding
+box \, and an error somewhere in the drawing routine that causes the
+"jitter" from 45 to 90 degrees in the animation.;
+#X text 604 170 It turns out trigonometry is difficult to grasp and
+just as hard to explain. This example is ported from Raphael's polar
+clock \, which draws an arc that follows the circumference of a circle.
+The original code is left uncommented \, causing more than one question
+on Stackexchange.com equivalent to \, "how the heck does this thing
+work?".;
+#X text 604 323 If there's a lesson here \, it's this: if you make
 a spec like svg and you want other human beings to use it correctly
 \, make it clear and easy to use. Then go get a coffee and rewrite
 your incomprehensible \, ill-considered draft to actually make the
 documentation equally clear. Otherwise that part of the spec will be
 prone to errors and confusion \, from the backend to the wrapper libraries.
 ;
-#X text 524 147 It turns out trigonometry is difficult to grasp and
-just as hard to explain. This example is ported from Raphael's polar
-clock \, which draws an arc that follows the circumference of a circle.
-The original code is left uncommented \, causing more than one question
-on the internet equivalent to \, "how the heck does this thing work?".
-;
-#X text 524 230 In addition \, drawing the arcs for this patch has
-revealed both an error in tkpath's calculations for the arc's bounding
-box \, and an error somewhere in the drawing routine that causes the
-"jitter" from 3 to 6 o'clock in the animation.;
-#X text 524 397 If you think that's the job of a textbook \, do realize
-that the hypothetical textbook author is going to use your incomplete
-spec as the main (and probably _only_) reference. So take a sip of
-coffee \, think how much easier it is to write code for a living than
-loading things into a truck \, and get to work.;
-#X text 524 480 This is just a partial port from Raphael. For example
-\, drawing commands don't support the easing style. I'm just using
-[line] \, but it's not hard to build a wrapper. (See easing.pd for
-an example);
+#X text 604 488 This is just a partial port from Raphael. For example
+\, drawing commands don't support svg's animation method/style. I'm
+just using [line].;
+#X text 604 418 If you think that's the job of a textbook \, do realize
+that the hypothetical textbook author is going to use your inane spec
+as the main (and probably _only_) reference. So take a sip of coffee
+\, think how much easier it is to write code for a living than loading
+shit into a truck \, and get to work;
 #X connect 2 0 8 0;
 #X connect 7 0 13 0;
 #X connect 7 1 12 0;

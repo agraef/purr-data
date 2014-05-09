@@ -1,35 +1,46 @@
 #N struct drawtut-group float x float y;
-#N canvas 0 19 657 493 10;
-#X scalar drawtut-group 54 209 \;;
-#X symbolatom 53 173 10 0 0 1 event_type - -, f 10;
-#X obj 53 148 list split 1;
-#X obj 63 123 print;
-#X obj 373 99 draw rect 0 0 40 40;
+#N canvas 0 19 648 468 10;
+#X scalar drawtut-group 54 159 \;;
 #X text 1 1 ___________________________;
 #X text 0 1 New Drawing Commands: group;
 #X text 53 43 If you use several [draw] commands to represent a single
 scalar \, it is helpful to make changes to them as a group instead
 of individually.;
 #X obj 53 97 struct drawtut-group float x float y;
-#X obj 373 139 draw circle 100 20 20 20;
-#X obj 373 180 draw path M 160 0 l 40 40 M 160 40 l 40 -40;
-#X obj 374 325 draw group;
-#X floatatom 374 245 5 0 0 1 %_zoom - -, f 5;
-#X obj 374 269 * 0.01;
-#X msg 374 293 transform scale \$1;
-#X text 53 373 The [draw group] object _should_ be able to set any
-attribute that is common to all the other shapes. Unfortunately it
-only works for transforms at the moment.;
-#X text 53 433 You can only have one [draw group] object per canvas.
-Unfortunately you cannot nest them yet like you can with svg drawing
-instructions.;
-#X obj 374 201 loadbang;
-#X msg 374 222 100;
-#X connect 2 0 1 0;
-#X connect 8 0 2 0;
-#X connect 8 0 3 0;
-#X connect 12 0 13 0;
-#X connect 13 0 14 0;
-#X connect 14 0 11 0;
-#X connect 17 0 18 0;
-#X connect 18 0 12 0;
+#X floatatom 434 155 5 0 0 1 %_zoom - -, f 5;
+#X obj 434 189 * 0.01;
+#X msg 434 213 transform scale \$1;
+#X obj 434 101 loadbang;
+#X msg 434 122 100;
+#N canvas 638 82 450 300 (subpatch) 0;
+#X obj 35 72 draw rect 0 0 40 40;
+#X obj 35 175 draw circle 100 20 20 20;
+#X obj 35 253 draw path M 160 0 l 40 40 M 160 40 l 40 -40;
+#X obj 35 26 loadbang;
+#X msg 35 47 fill blue;
+#X obj 35 210 loadbang;
+#X msg 35 231 stroke-width 10;
+#X obj 35 101 loadbang;
+#X msg 35 122 stroke darkgreen \, stroke-width 10;
+#X msg 49 148 fill white;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 5 0 6 0;
+#X connect 6 0 2 0;
+#X connect 7 0 8 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;
+#X restore 434 236 group;
+#X text 53 263 The [group] object is essentially just a subpatch with
+an inlet. You can send it all the same messages that you can send to
+shapes. This will set the attributes for any drawing commands inside
+the [group] which you haven't already set explicitly.;
+#X text 53 343 Like [pd] subpatches \, you can use [inlet] and [outlet].
+The "main" inlet for the group-- the one that sets attributes-- is
+always the furthest to the right.;
+#X text 485 236 <- click to open;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 9 0 5 0;

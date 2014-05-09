@@ -1,55 +1,28 @@
 #N struct pieslicer float x float y float cx float cy float x1 float
 y1 float r float flag float x2 float y2 float r1 float g float b float
 s float tx float ty;
-#N canvas -7 0 929 536 10;
+#N canvas -9 19 929 640 10;
 #X scalar pieslicer 380 -50 300 300 500 300 200 1 237.416 489.956 10
 80 250 1 0 0 \;;
 #X scalar pieslicer 380 -50 300 300 237.416 489.956 200 0 491.793 356.705
 255 0 255 1 0 0 \;;
 #X scalar pieslicer 380 -50 300 300 491.793 356.705 200 0 500 300 255
 50 10 1 0 0 \;;
-#X obj 69 -16 namecanvas c;
-#X obj 69 200 draw path M cx cy L x1 y1 A r r 0 flag 0 x2 y2 z;
-#X obj 69 143 loadbang;
-#X obj 69 55 route enter leave;
-#X obj 69 115 set pieslicer tx ty s;
-#X msg 69 166 fill r1 g b \, fill-opacity 0.4 \, stroke black \, stroke-width
-3 \, stroke-opacity 0.4 \, transform translate tx ty scale s;
-#X obj 69 8 struct pieslicer float x float y float cx float cy float
-x1 float y1 float r float flag float x2 float y2 float r1 float g float
-b float s float tx float ty;
-#X msg 69 84 -30 -30 1.1 \$1;
-#X msg 174 84 0 0 1 \$1;
-#X text 638 3 draw;
-#X text 906 282 curve;
-#X text 787 452 canvas;
-#X text 67 244 A quick graph based on a Raphael demo. I left the messy
-patch I used to generate the data from the sizes for the draw \, curve
-\, and canvas classes. As you can see draw class is rather bloated
-\, even compared to the canvas class.;
-#X text 67 294 But it should be possible to make this more general
-\, so you can plug in any classes and generate a pie chart.;
-#X text 67 324 With this many members for the struct \, it becomes
-obvious that the scalar "Properties" dialog needs to be more user-friendly.
-Editing a long list of floats is simply too prone to error.;
-#X text 268 436 Based on:;
-#X obj 268 457 pddp/pddplink http://raphaeljs.com/pie.html;
-#N canvas 159 103 522 352 bake 0;
-#X obj 176 -13 classinfo draw;
-#X msg 176 -35 size;
-#X msg 294 -60 size;
-#X obj 294 -39 classinfo canvas;
-#X msg 311 -9 size;
-#X obj 311 12 classinfo curve;
-#X obj 280 58 +;
-#X obj 297 97 +;
-#X floatatom 298 127 5 0 0 1 total - -, f 5;
-#X floatatom 133 159 5 0 0 0 angleplus - -, f 5;
-#X obj 177 80 t a;
-#X obj 177 101 * 360;
-#X obj 177 132 /;
-#X msg 229 153 0;
-#X obj 214 189 f;
+#X obj 227 275 classinfo draw;
+#X msg 227 253 size;
+#X msg 345 228 size;
+#X obj 345 249 classinfo canvas;
+#X msg 362 279 size;
+#X obj 362 300 classinfo curve;
+#X obj 331 346 +;
+#X obj 348 385 +;
+#X floatatom 349 415 5 0 0 1 total - -, f 5;
+#X floatatom 184 447 5 0 0 0 angleplus - -, f 5;
+#X obj 228 368 t a;
+#X obj 228 389 * 360;
+#X obj 228 420 /;
+#X msg 280 441 0;
+#X obj 265 477 f;
 #N canvas 178 176 726 457 sector 0;
 #X obj 60 35 inlet;
 #X text 100 36 cx;
@@ -120,45 +93,68 @@ cy + r * sin(-1 * endangle * rad) \; (endangle - startangle) > 180
 #X connect 34 3 30 0;
 #X connect 34 4 28 7;
 #X connect 34 4 29 0;
-#X restore 132 253 pd sector;
-#X floatatom 38 186 0 0 0 0 cx - -;
-#X floatatom 88 186 0 0 0 0 cy - -;
-#X floatatom 133 186 5 0 0 0 r - -, f 5;
-#X obj 177 189 +;
-#X obj 177 153 t a b;
-#X text 21 -35 Quick-and-dirty subpatch;
-#X text 21 -15 to create the pie slices;
-#X connect 0 0 6 0;
-#X connect 0 0 10 0;
-#X connect 1 0 0 0;
-#X connect 2 0 3 0;
-#X connect 3 0 6 1;
-#X connect 3 0 10 0;
-#X connect 4 0 5 0;
-#X connect 5 0 7 1;
-#X connect 5 0 10 0;
-#X connect 6 0 7 0;
+#X restore 183 541 pd sector;
+#X floatatom 89 474 0 0 0 0 cx - -;
+#X floatatom 139 474 0 0 0 0 cy - -;
+#X floatatom 184 474 5 0 0 0 r - -, f 5;
+#X obj 228 477 +;
+#X obj 69 -16 namecanvas c;
+#X obj 69 200 draw path M cx cy L x1 y1 A r r 0 flag 0 x2 y2 z;
+#X obj 228 441 t a b;
+#X obj 69 143 loadbang;
+#X obj 69 55 route enter leave;
+#X obj 69 115 set pieslicer tx ty s;
+#X msg 69 166 fill r1 g b \, fill-opacity 0.4 \, stroke black \, stroke-width
+3 \, stroke-opacity 0.4 \, transform translate tx ty scale s;
+#X obj 69 8 struct pieslicer float x float y float cx float cy float
+x1 float y1 float r float flag float x2 float y2 float r1 float g float
+b float s float tx float ty;
+#X msg 69 84 -30 -30 1.1 \$1;
+#X msg 174 84 0 0 1 \$1;
+#X text 638 3 draw;
+#X text 906 282 curve;
+#X text 787 452 canvas;
+#X text 367 474 A quick graph based on a Raphael demo. I left the messy
+patch I used to generate the data from the sizes for the draw \, curve
+\, and canvas classes. As you can see draw class is rather bloated
+\, even compared to the canvas class.;
+#X text 367 524 But it should be possible to make this more general
+\, so you can plug in any classes and generate a pie chart.;
+#X text 367 554 With this many members for the struct \, it becomes
+obvious that the scalar "Properties" dialog needs to be more user-friendly.
+Editing a long list of floats is simply too prone to error.;
+#X text 778 516 Based on:;
+#X obj 778 537 pddp/pddplink http://raphaeljs.com/pie.html;
+#X connect 3 0 9 0;
+#X connect 3 0 13 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 9 1;
+#X connect 6 0 13 0;
 #X connect 7 0 8 0;
-#X connect 7 0 12 1;
+#X connect 8 0 10 1;
+#X connect 8 0 13 0;
+#X connect 9 0 10 0;
 #X connect 10 0 11 0;
-#X connect 11 0 12 0;
-#X connect 12 0 9 0;
-#X connect 12 0 20 0;
-#X connect 13 0 14 1;
-#X connect 14 0 15 3;
-#X connect 14 0 19 1;
-#X connect 16 0 15 0;
-#X connect 17 0 15 1;
-#X connect 18 0 15 2;
-#X connect 19 0 15 4;
-#X connect 19 0 14 1;
-#X connect 20 0 19 0;
-#X connect 20 1 14 0;
-#X restore 78 446 pd bake;
-#X connect 5 0 8 0;
-#X connect 6 0 10 0;
-#X connect 6 1 11 0;
-#X connect 8 0 4 0;
-#X connect 9 0 6 0;
-#X connect 10 0 7 0;
-#X connect 11 0 7 0;
+#X connect 10 0 15 1;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 15 0 12 0;
+#X connect 15 0 25 0;
+#X connect 16 0 17 1;
+#X connect 17 0 18 3;
+#X connect 17 0 22 1;
+#X connect 19 0 18 0;
+#X connect 20 0 18 1;
+#X connect 21 0 18 2;
+#X connect 22 0 18 4;
+#X connect 22 0 17 1;
+#X connect 25 0 22 0;
+#X connect 25 1 17 0;
+#X connect 26 0 29 0;
+#X connect 27 0 31 0;
+#X connect 27 1 32 0;
+#X connect 29 0 24 0;
+#X connect 30 0 27 0;
+#X connect 31 0 28 0;
+#X connect 32 0 28 0;

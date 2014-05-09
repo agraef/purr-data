@@ -1,5 +1,5 @@
 #N struct instance-attr float x float y float a;
-#N canvas 0 19 791 484 10;
+#N canvas -8 19 791 484 10;
 #X obj 466 124 pointer;
 #X obj 600 124 pointer;
 #X floatatom 427 138 5 0 0 0 - - -, f 5;
