@@ -939,6 +939,8 @@ int glist_getfont(t_glist *x)
     return (x->gl_font);
 }
 
+extern void canvas_group_free(t_pd *x);
+
 void canvas_free(t_canvas *x)
 {
     //fprintf(stderr,"canvas_free %lx\n", x);
@@ -970,6 +972,8 @@ void canvas_free(t_canvas *x)
     gfxstub_deleteforkey(x);        /* probably unnecessary */
     if (!x->gl_owner)
         canvas_takeofflist(x);
+    if (x->gl_svg)                   /* for groups, free the data */
+        canvas_group_free(x->gl_svg);
 }
 
 /* ----------------- lines ---------- */
@@ -1092,11 +1096,26 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
     //fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
 }
 
+extern void *svg_new(t_pd *x, t_symbol *s, int argc, t_atom *argv);
+extern t_pd *svg_header(t_pd *x);
+
+static void group_svginit(t_glist *gl)
+{
+    gl->gl_svg = (t_pd *)(svg_new((t_pd *)gl, gensym("group"), 0, 0));
+    t_pd *proxy = svg_header(gl->gl_svg);
+    inlet_new(&gl->gl_obj, proxy, 0, 0);
+}
+
 void canvas_objfor(t_glist *gl, t_text *x, int argc, t_atom *argv);
 
 void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_pd *z;
+    /* for [group] we add an inlet to the svg attr proxy */
+    if (argc > 2 && argv[2].a_w.w_symbol == gensym("group"))
+    {
+        group_svginit(x);
+    }
     if (argc > 3)
     {
         t_atom *ap=argv+3;
@@ -1310,6 +1329,12 @@ static void *subcanvas_new(t_symbol *s)
     return (x);
 }
 
+static void *group_new(t_symbol *s)
+{
+    t_canvas *x = subcanvas_new(s);
+    group_svginit(x);
+    return (x);
+}
 static void canvas_click(t_canvas *x,
     t_floatarg xpos, t_floatarg ypos,
         t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
@@ -1671,9 +1696,11 @@ void canvas_redrawallfortemplate(t_template *template, int action)
 
     /* find the template defined by a canvas, and redraw all elements
     for that */
+extern t_canvas *canvas_templatecanvas_forgroup(t_canvas *x);
+
 void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
 {
-    //fprintf(stderr,"canvas_redrawallfortemplatecanvas\n");
+    fprintf(stderr,"canvas_redrawallfortemplatecanvas\n");
     t_gobj *g;
     t_template *tmpl;
     t_symbol *s1 = gensym("struct");
@@ -2291,6 +2318,7 @@ void g_canvas_setup(void)
 /* ----- subcanvases, which you get by typing "pd" in a box ---- */
     class_addcreator((t_newmethod)subcanvas_new, gensym("pd"), A_DEFSYMBOL, 0);
     class_addcreator((t_newmethod)subcanvas_new, gensym("page"),  A_DEFSYMBOL, 0);
+    class_addcreator((t_newmethod)group_new, gensym("group"), A_DEFSYM, 0);
 
     class_addmethod(canvas_class, (t_method)canvas_click,
         gensym("click"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
@@ -2303,6 +2331,11 @@ void g_canvas_setup(void)
 /*---------------------------- tables -- GG ------------------- */
 
     class_addcreator((t_newmethod)table_new, gensym("table"),
+        A_DEFSYM, A_DEFFLOAT, 0);
+
+/*--------------------------- svg groups ---------------------- */
+
+    class_addcreator((t_newmethod)group_new, gensym("group"),
         A_DEFSYM, A_DEFFLOAT, 0);
 
 /*---------------------------- declare ------------------- */

@@ -273,6 +273,38 @@ static void scalar_mouseover(t_scalar *x, t_floatarg state)
             x, gensym("enter"), 1, at);
 }
 
+static void scalar_getgrouprect(t_glist *owner, t_glist *groupcanvas,
+    t_word *data, t_template *template, int basex, int basey,
+    int *x1, int *x2, int *y1, int *y2)
+{
+    t_gobj *y;
+    for (y = groupcanvas->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == canvas_class &&
+	    ((t_canvas *)y)->gl_svg)
+        {
+            /* todo: accumulate basex and basey for correct offset */
+            scalar_getgrouprect(owner, (t_glist *)y, data, template,
+	        basex, basey, x1, x2, y1, y2);
+        }
+        else
+        {
+            t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+            int nx1, ny1, nx2, ny2;
+            if (!wb) continue;
+            (*wb->w_parentgetrectfn)(y, owner,
+                data, template, basex, basey,
+                &nx1, &ny1, &nx2, &ny2);
+            if (nx1 < *x1) *x1 = nx1;
+            if (ny1 < *y1) *y1 = ny1;
+            if (nx2 > *x2) *x2 = nx2;
+            if (ny2 > *y2) *y2 = ny2;
+            //fprintf(stderr,"====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n",
+            //    x1, y1, x2, y2);
+        }
+    }
+}
+ 
 static void scalar_getrect(t_gobj *z, t_glist *owner,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
@@ -288,7 +320,7 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     // EXPERIMENTAL: we assume that entire canvas is within
     // the rectangle--this is for arrays
     // with "jump on click" enabled TODO: test for other regressions
-    // (there shouuld not be any
+    // (there should not be any
     // provided the global variable array_joc is properly maintained)
     if (glist_istoplevel(owner) && array_joc)
     {
@@ -318,22 +350,9 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
             }
             x1 = y1 = 0x7fffffff;
             x2 = y2 = -0x7fffffff;
-            for (y = templatecanvas->gl_list; y; y = y->g_next)
-            {
-                t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-                int nx1, ny1, nx2, ny2;
-                if (!wb) continue;
-                (*wb->w_parentgetrectfn)(y, owner,
-                    x->sc_vec, template, basex, basey,
-                    &nx1, &ny1, &nx2, &ny2);
-                if (nx1 < x1) x1 = nx1;
-                if (ny1 < y1) y1 = ny1;
-                if (nx2 > x2) x2 = nx2;
-                if (ny2 > y2) y2 = ny2;
-                //fprintf(stderr,"====scalar_getrect x1 %d y1 %d x2 %d y2 %d\n",
-                //    x1, y1, x2, y2);
-            }
-            if (x2 < x1 || y2 < y1)
+            scalar_getgrouprect(owner, templatecanvas, x->sc_vec, template,
+	        basex, basey, &x1, &x2, &y1, &y2);
+           if (x2 < x1 || y2 < y1)
                 x1 = y1 = x2 = y2 = 0;
         }
     }
@@ -639,6 +658,36 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
     /* nothing to do */
 }
 
+extern void svg_grouptogui(t_glist *g, t_template *template, t_word *data);
+
+static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
+    t_glist *gl, t_glist *parent, int vis)
+{
+    t_gobj *y;
+    if (vis)
+    {
+        sys_vgui(".x%lx.c create group -tags {.dgroup%lx.%lx} "
+                 "-parent {.dgroup%lx.%lx}\\\n",
+            glist_getcanvas(owner), gl, x->sc_vec,
+            parent, x->sc_vec);
+        svg_grouptogui(gl, template, x->sc_vec);
+        sys_gui("\n");
+
+    }
+    for (y = gl->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == canvas_class &&
+	    ((t_glist *)y)->gl_svg)
+        {
+	    scalar_groupvis(x, owner, template, (t_glist *)y, gl, vis);
+        }
+        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+        if (!wb) continue;
+        (*wb->w_parentvisfn)(y, owner, gl, x, x->sc_vec, template,
+            0, 0, vis);
+    }
+}
+
 /* At present, scalars have a three-level hierarchy in tkpath,
    with two levels accessible by the user from within Pd:
    scalar - tkpath group with matrix derived from x/y fields,
@@ -647,14 +696,19 @@ static void scalar_delete(t_gobj *z, t_glist *glist)
      |      [draw group] below can ignore basexy and gop junk
      |      when computing the transform matrix.
      v
-   dgroup - user-facing group which is the parent for all the
+   group  - user-facing group which is the parent for all the
      |      scalar's drawing commands. Its matrix and options
      |      can be accessed from the [draw group] object (one
      |      per templatecanvas).
      v
-   draw   - the actual drawing command: rectangle, path, etc.
-            Each has its own matrix and options which can set
-            with messages to the corresponding [draw] object.
+   (draw  - the actual drawing command: rectangle, path, etc.
+     or     Each has its own matrix and options which can set
+   scelem   with messages to the corresponding [draw] object.
+     or   - ds arrays can nest arbitrarily deep. Scelem is for
+   group)   data structure arrays.  group is for more groups.
+     |
+     v
+    etc.
 
    The tag "blankscalar" is for scalars that don't have a visual
    representation, but maybe this can just be merged with "scalar"
@@ -701,20 +755,30 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex),
             (int)glist_ytopixels(owner, basey)
             );
-        sys_vgui(".x%lx.c create group -tags {.dgroup%lx} "
+        sys_vgui(".x%lx.c create group -tags {.dgroup%lx.%lx} "
                  "-parent {.scalar%lx}\n",
-            glist_getcanvas(owner), x->sc_vec, x->sc_vec);
+            glist_getcanvas(owner), templatecanvas, x->sc_vec, x->sc_vec);
         sys_vgui("pdtk_bind_scalar_mouseover "
                  ".x%lx.c .x%lx.x%lx.template%lx {.x%lx}\n",
             glist_getcanvas(owner), glist_getcanvas(owner),
             owner, x->sc_vec, x);
     }
 
+    /* warning: don't need--- have recursive func. */
     for (y = templatecanvas->gl_list; y; y = y->g_next)
     {
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-        if (!wb) continue;
-        (*wb->w_parentvisfn)(y, owner, x, x->sc_vec, template,
+        if (!wb)
+        {
+               /* check subpatches for more drawing commands.  This
+               can be optimized to only search [group] subpatches */
+            if (pd_class(&y->g_pd) == canvas_class &&
+	        ((t_glist *)y)->gl_svg)
+                scalar_groupvis(x, owner, template,
+                    (t_glist *)y, templatecanvas, vis);
+            continue;
+        }
+        (*wb->w_parentvisfn)(y, owner, 0, x, x->sc_vec, template,
             basex, basey, vis);
     }
     if (!vis)
@@ -750,6 +814,39 @@ void scalar_redraw(t_scalar *x, t_glist *glist)
         //sys_queuegui(x, glist, scalar_doredraw);
 }
 
+int scalar_groupclick(struct _glist *groupcanvas,
+    t_word *data, t_template *template, t_scalar *sc,
+    t_array *ap, struct _glist *owner,
+    t_float xloc, t_float yloc, int xpix, int ypix,
+    int shift, int alt, int dbl, int doit, t_float basex, t_float basey)
+{
+    int hit = 0;
+    t_gobj *y;
+    for (y = groupcanvas->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == canvas_class &&
+            ((t_glist *)y)->gl_svg)
+        {
+//            fprintf(stderr, "fuck dolphins");
+            if (hit = scalar_groupclick((t_glist *)y, data, template, sc, ap,
+                owner, xloc, yloc, xpix, ypix,
+                shift, alt, dbl, doit, basex, basey))
+            {
+                return (hit);
+            }
+        }
+        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+        if (!wb) continue;
+        if (hit = (*wb->w_parentclickfn)(y, owner,
+            data, template, sc, ap, basex + xloc, basey + yloc,
+            xpix, ypix, shift, alt, dbl, doit))
+        {
+            return (hit);
+        }
+    }
+    return 0;
+}
+
 int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
     t_array *ap, struct _glist *owner,
     t_float xloc, t_float yloc, int xpix, int ypix,
@@ -782,22 +879,27 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
         basey = 0.0;
     }
 
-    for (y = templatecanvas->gl_list; y; y = y->g_next)
-    {
+    hit = scalar_groupclick(templatecanvas, data, template, sc, ap,
+                owner, xloc, yloc, xpix, ypix,
+                shift, alt, dbl, doit, basex, basey);
+    return hit;
+
+//    for (y = templatecanvas->gl_list; y; y = y->g_next)
+//    {
         //fprintf(stderr,"looking for template... %f %f %f %f %lx %lx\n",
         //    basex, basey, xloc, yloc, (t_int)owner, (t_int)data);
-        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-        if (!wb) continue;
-        if (hit = (*wb->w_parentclickfn)(y, owner,
-            data, template, sc, ap, basex + xloc, basey + yloc,
-            xpix, ypix, shift, alt, dbl, doit))
-        {
+//        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+//        if (!wb) continue;
+//        if (hit = (*wb->w_parentclickfn)(y, owner,
+//            data, template, sc, ap, basex + xloc, basey + yloc,
+//            xpix, ypix, shift, alt, dbl, doit))
+//        {
                 //fprintf(stderr,"    ...got it %f %f\n",
                 //    basex + xloc, basey + yloc);
-                return (hit);
-        }
-    }
-    return (0);
+//                return (hit);
+//        }
+//    }
+//    return (0);
 }
 
 static int scalar_click(t_gobj *z, struct _glist *owner,

@@ -38,6 +38,30 @@ int gop_redraw = 0;
 
 void canvas_drawredrect(t_canvas *x, int doit);
 
+static int canvas_isgroup(t_canvas *x)
+{
+/*    t_binbuf *b = x->gl_obj.te_binbuf;
+    if (!b)
+    {
+        bug("canvas_isgroup");
+	return 0;
+    }
+    t_atom *argv = binbuf_getvec(x->gl_obj.te_binbuf);
+    if (argv[0].a_type == A_SYMBOL &&
+        argv[0].a_w.w_symbol == gensym("group"))
+        return 1;
+    else
+        return 0;
+*/
+    if (x->gl_svg)
+        return 1;
+    else
+        return 0;
+}
+
+extern t_template *canvas_findtemplate(t_canvas *c);
+extern t_canvas *canvas_templatecanvas_forgroup(t_canvas *c);
+
 void glist_add(t_glist *x, t_gobj *y)
 {
 	//fprintf(stderr,"glist_add %lx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
@@ -73,6 +97,14 @@ void glist_add(t_glist *x, t_gobj *y)
     {
         t_template *tmpl = template_findbydrawcommand(y);
         canvas_redrawallfortemplate(tmpl, 0);
+    }
+    if (pd_class(&y->g_pd) == canvas_class &&
+        canvas_isgroup((t_canvas *)y))
+    {
+        t_canvas *templatecanvas =
+	    canvas_templatecanvas_forgroup((t_canvas *)y);
+	t_template *tmpl = canvas_findtemplate(templatecanvas);
+	canvas_redrawallfortemplate(tmpl, 0);
     }
 }
 
@@ -422,8 +454,7 @@ void canvas_resortinlets(t_canvas *x)
     for (ninlets = 0, y = x->gl_list; y; y = y->g_next)
         if (pd_class(&y->g_pd) == vinlet_class) ninlets++;
 
-    if (ninlets < 2) return;
-    
+    if (ninlets < 2  && !(canvas_isgroup(x))) return;
     vec = (t_gobj **)getbytes(ninlets * sizeof(*vec));
     
     for (y = x->gl_list, vp = vec; y; y = y->g_next)

@@ -225,6 +225,7 @@ struct _glist
 	int				   move_offset_x;
 	int				   move_offset_y;
 	int				   move_vis;
+	t_pd *gl_svg;
 };
 
 #define gl_gobj gl_obj.te_g
@@ -367,7 +368,8 @@ typedef void (*t_parentactivatefn)(t_gobj *x, struct _glist *glist,
     t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int state);
         /*  making visible or invisible */
-typedef void (*t_parentvisfn)(t_gobj *x, struct _glist *glist, t_scalar *sc, 
+typedef void (*t_parentvisfn)(t_gobj *x, struct _glist *glist,
+    struct _glist *parentglist, t_scalar *sc, 
     t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int flag);
         /*  field a mouse click */

@@ -2184,6 +2184,20 @@ void text_eraseborder(t_text *x, t_glist *glist, char *tag)
     glist_eraseiofor(glist, x, tag);
 }
 
+static int compare_subpatch_selectors(t_atom *a, t_atom *b)
+{
+    if (a[0].a_type == A_SYMBOL && b[0].a_type == A_SYMBOL)
+    {
+        return (!strcmp(a[0].a_w.w_symbol->s_name, "pd") &&
+                !strcmp(b[0].a_w.w_symbol->s_name, "pd"))
+               ||
+               (!strcmp(a[0].a_w.w_symbol->s_name, "group") &&
+                !strcmp(b[0].a_w.w_symbol->s_name, "group"));
+    }
+    else
+        return 0;
+}
+
     /* change text; if T_OBJECT, remake it. */
 
 void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
@@ -2205,11 +2219,8 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         vec2 = binbuf_getvec(b);
         /* special case: if pd subpatch is valid and its args change,
            and its new name is valid, just pass the message on. */
-        if (x->te_pd == canvas_class && natom1 >= 1 && natom2 >= 1
-            && vec1[0].a_type == A_SYMBOL
-            && !strcmp(vec1[0].a_w.w_symbol->s_name, "pd")
-            && vec2[0].a_type == A_SYMBOL
-            && !strcmp(vec2[0].a_w.w_symbol->s_name, "pd"))
+        if (x->te_pd == canvas_class && natom1 >= 1 && natom2 >= 1 &&
+            compare_subpatch_selectors(vec1, vec2))
         {
             //fprintf(stderr,"setto canvas\n");
             //first check if the contents have changed to see if there is

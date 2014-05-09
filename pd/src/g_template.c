@@ -40,6 +40,7 @@ static void template_conformarray(t_template *tfrom, t_template *tto,
     int *conformaction, t_array *a);
 static void template_conformglist(t_template *tfrom, t_template *tto,
     t_glist *glist,  int *conformaction);
+t_canvas *canvas_templatecanvas_forgroup(t_canvas *c);
 
 /* ---------------------- storage ------------------------- */
 
@@ -984,41 +985,46 @@ draws belong to templates and describe how the data in the template are to
 be drawn.  The coordinates of the draw (and other display features) can
 be attached to fields in the template.
 
-todo: draw_click doesn't work with paths yet
 todo: some better way than drawcurve for defining click widgetbehaviors (just
       checking for field variables and moving joints is too simplistic)
 */
 
 t_class *draw_class;
 
-typedef struct _draw
+t_class *svg_class;
+
+typedef struct _svg_attr
 {
-    t_object x_obj;
-    int x_flags;            /* CLOSED and/or BEZ and/or NOMOUSE */
-    t_symbol *x_drawtype;
-    t_symbol *x_fill;
-    t_fielddesc x_fill_r;
-    t_fielddesc x_fill_g;
-    t_fielddesc x_fill_b;
-    t_fielddesc x_fillopacity;
-    t_fielddesc x_fillrule;
-    t_symbol *x_stroke;
-    t_fielddesc x_stroke_r;
-    t_fielddesc x_stroke_g;
-    t_fielddesc x_stroke_b;
+    int a_flag;
+    t_fielddesc a_attr;
+} t_svg_attr;
+
+/* svg attributes */
+typedef struct _svg
+{
+    t_pd x_pd;
+    void *x_parent; /* parent object-- currently either [group] or [draw] */
+    int x_flags;
+    t_symbol *x_type;
+    t_fielddesc x_fill[3];
+    int x_filltype;
+    t_svg_attr x_fillopacity;
+    t_svg_attr x_fillrule;
+    t_fielddesc x_stroke[3];
+    int x_stroketype;
     int x_ndash;
     t_fielddesc *x_strokedasharray; /* array of lengths */
-    t_fielddesc x_strokelinecap;
-    t_fielddesc x_strokelinejoin;
-    t_fielddesc x_strokemiterlimit;
-    t_fielddesc x_strokeopacity;
-    t_fielddesc x_strokewidth;
-    t_fielddesc x_rx; /* for rounded rectangles */
-    t_fielddesc x_ry;
+    t_svg_attr x_strokelinecap;
+    t_svg_attr x_strokelinejoin;
+    t_svg_attr x_strokemiterlimit;
+    t_svg_attr x_strokeopacity;
+    t_svg_attr x_strokewidth;
+    t_svg_attr x_rx; /* for rounded rectangles */
+    t_svg_attr x_ry;
     int x_transform_n;
     t_fielddesc *x_transform;
     t_fielddesc x_width;
-    t_fielddesc x_vis;
+    t_svg_attr x_vis;
     int x_pathrect_cache; /* 0 to recalc on next draw_getrect call
                              1 for cached
                             -1 to turn off caching */
@@ -1031,8 +1037,32 @@ typedef struct _draw
     int *x_nargs_per_cmd;      /* points per each path command */
     int x_npathcmds;
     char *x_pathcmds; /* for path commands */
+} t_svg;
+
+typedef struct _draw
+{
+    t_object x_obj;
+//    int x_flags;            /* CLOSED and/or BEZ and/or NOMOUSE */
+    t_symbol *x_drawtype;
     t_canvas *x_canvas;
+    t_pd *x_attr;
 } t_draw;
+
+typedef struct _drawimage
+{
+    t_object x_obj;
+    t_fielddesc x_value; /* todo: rename to index */
+    t_fielddesc x_xloc;
+    t_fielddesc x_yloc;
+    t_fielddesc x_vis;
+    t_symbol *x_img;
+    t_float x_w;
+    t_float x_h;
+    int x_flags;
+    int x_deleteme;
+    t_canvas *x_canvas;
+    t_pd *x_attr;
+} t_drawimage;
 
 static int is_svgpath_cmd(t_symbol *s)
 {
@@ -1061,6 +1091,7 @@ static int path_ncmds(int argc, t_atom *argv)
     return j;
 }
 
+/* this can probably be deleted now */
 t_draw *draw_getgroup(t_draw *x)
 {
     t_gobj *g;
@@ -1068,6 +1099,7 @@ t_draw *draw_getgroup(t_draw *x)
     t_template *templ;
     t_symbol *s1 = gensym("draw");
     t_symbol *s2 = gensym("group");
+    
     for(g = x->x_canvas->gl_list; g; g = g->g_next)
     {
         t_object *ob = pd_checkobject(&g->g_pd);
@@ -1085,39 +1117,22 @@ t_draw *draw_getgroup(t_draw *x)
     return (dgroup);
 }
 
-static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
+void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
 {
-    t_draw *x = (t_draw *)pd_new(draw_class);
-   /* not sure about classname here... */
-    if (argc && argv->a_type == A_SYMBOL)
-        x->x_drawtype = atom_getsymbolarg(0, argc--, argv++);
-    else
-    {
-        pd_error(x, "draw: need an svg shape (rect, circle, path, etc.)");
-    }
+    t_svg *x = (t_svg *)pd_new(svg_class);
+    x->x_type = s;
+    x->x_parent = (void *)parent;
+    fielddesc_setfloat_const(&x->x_vis.a_attr, 1);
+    /* let it inherit visibility from parent group, if present */
+    x->x_vis.a_flag = 0;
     int flags = 0;
+    /* the following should be set in method space */
+    /* flags |= NOMOUSE; */
+    x->x_flags = flags;
     int nxy, i;
     t_fielddesc *fd;
-    x->x_canvas = canvas_getcurrent();
-    fielddesc_setfloat_const(&x->x_vis, 1);
-    while (1)
-    {
-        t_symbol *firstarg = atom_getsymbolarg(0, argc, argv);
-        if (!strcmp(firstarg->s_name, "-v") && argc > 1)
-        {
-            fielddesc_setfloatarg(&x->x_vis, 1, argv+1);
-            argc -= 2; argv += 2;
-        }
-        else if (!strcmp(firstarg->s_name, "-x"))
-        {
-            flags |= NOMOUSE;
-            argc -= 1; argv += 1;
-        }
-        else break;
-    }
-    x->x_flags = flags;
     if (argc < 0) argc = 0;
-    if (x->x_drawtype == gensym("path"))
+    if (x->x_type == gensym("path"))
     {
         int ncmds = x->x_npathcmds = path_ncmds(argc, argv);
         x->x_pathcmds = (char *)t_getbytes(ncmds * sizeof(char));
@@ -1125,17 +1140,11 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
         for (i = 0; i < ncmds; i++) x->x_nargs_per_cmd[i] = 0;
         nxy = x->x_nargs = argc - ncmds;
     }
-    else if (x->x_drawtype == gensym("group"))
+    else if (x->x_type == gensym("group"))
     {
         nxy = 0;
         x->x_nargs = 0;
         x->x_vec = 0;
-        t_draw *dgroup = draw_getgroup(x);
-        if (dgroup)
-        {
-            pd_error(x, "draw group: only one group per canvas allowed");
-            return (0);
-        }
     }
     else /* all other shapes */
     {
@@ -1143,14 +1152,14 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
         x->x_nargs = nxy;
     }
     x->x_vec = (t_fielddesc *)t_getbytes(nxy * sizeof(t_fielddesc));
-
-    if (argc && x->x_drawtype == gensym("path"))
+    if (argc && x->x_type == gensym("path"))
     {
         if (argv->a_type != A_SYMBOL ||
             (atom_getsymbol(argv) != gensym("M") &&
              atom_getsymbol(argv) != gensym("m")))
         {
-            pd_error(x, "draw path: path data must start "
+            /* this should probably be the parent instead of "x" */
+            pd_error(x->x_parent, "draw path: path data must start "
                         "with a moveto command (M or m)");
             return 0;
         }
@@ -1159,7 +1168,7 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
     int cmdn = -1; /* hack */
     for (i = 0, fd = x->x_vec; i < argc; i++, argv++)
     {
-        if (x->x_drawtype == gensym("path") &&
+        if (x->x_type == gensym("path") &&
             argv->a_type == A_SYMBOL &&
             is_svgpath_cmd(atom_getsymbol(argv)))
         {
@@ -1169,7 +1178,7 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
         {
             fielddesc_setfloatarg(fd++, 1, argv);
             /* post("got a coord"); */
-            if (x->x_drawtype == gensym("path"))
+            if (x->x_type == gensym("path"))
             {
                 (x->x_nargs_per_cmd[cmdn])++;
                 /* if we get a field variable, just
@@ -1179,52 +1188,114 @@ static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
             }
         }
     }
-    if (argc & 1 && x->x_drawtype != gensym("path")) fielddesc_setfloat_const(fd, 0);
-    x->x_fill = gensym("\"\"");
-    fielddesc_setfloat_const(&x->x_fillopacity, 1);
-    fielddesc_setfloat_const(&x->x_fillrule, 0);
-    x->x_stroke = gensym("black");
-    fielddesc_setfloat_const(&x->x_strokelinecap, 0);
-    fielddesc_setfloat_const(&x->x_strokelinejoin, 0);
-    fielddesc_setfloat_const(&x->x_strokemiterlimit, 0);
-    fielddesc_setfloat_const(&x->x_strokeopacity, 1);
-    fielddesc_setfloat_const(&x->x_strokewidth, 1);
+    if (argc & 1 && x->x_type != gensym("path")) fielddesc_setfloat_const(fd, 0);
+    x->x_filltype = 42;
+    x->x_fillopacity.a_flag = 0;
+    x->x_fillrule.a_flag = 0;
+    x->x_stroketype = 0;
+    x->x_strokelinecap.a_flag = 0;
+    x->x_strokelinejoin.a_flag = 0;
+    x->x_strokemiterlimit.a_flag = 0;
+    x->x_strokeopacity.a_flag = 0;
+    x->x_strokewidth.a_flag = 0;
     x->x_x1 = 0;
     x->x_x2 = 0;
     x->x_y1 = 0;
     x->x_y2 = 0;
 
     x->x_ndash = 0;
-    x->x_strokedasharray = (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
+    x->x_strokedasharray =
+        (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
     x->x_transform_n = 0;
     x->x_transform = (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
 
     char buf[50];
     sprintf(buf, ".x%lx", (long unsigned int)x);
 
-    pd_bind(&x->x_obj.ob_pd, gensym(buf));
-    
-    // hack of unprecedented proportions that doesn't even work
-    //sys_queuegui((t_gobj *)x->x_canvas, 0, (t_guicallbackfn)canvas_redrawallfortemplatecanvas);
-    
     return (x);
 }
 
-void draw_float(t_draw *x, t_floatarg f)
+t_pd *svg_header(t_pd *x)
 {
-    int viswas;
-    if (x->x_vis.fd_type != A_FLOAT || x->x_vis.fd_var)
-    {
-        pd_error(x, "global vis/invis for a template with variable visibility");
-        return;
-    }
-    viswas = (x->x_vis.fd_un.fd_float != 0);
+    return (&(((t_svg *)x)->x_pd));
+}
 
-    if ((f != 0 && viswas) || (f == 0 && !viswas))
-        return;
-    canvas_redrawallfortemplatecanvas(x->x_canvas, 2);
-    fielddesc_setfloat_const(&x->x_vis, (f != 0));
-    canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
+static int symbol_isdrawtype(t_symbol *s)
+{
+    if (s == gensym("circle")  || s == gensym("ellipse")  ||
+        s == gensym("line")    || s == gensym("path")     ||
+        s == gensym("polygon") || s == gensym("polyline") ||
+        s == gensym("rect")    || s == gensym("image")    ||
+        s == gensym("sprite"))
+    {
+        return 1;
+    }
+    else
+        return 0;
+}
+
+static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv);
+
+static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
+{
+    t_symbol *type = 0;
+    if (argc && argv->a_type == A_SYMBOL &&
+        symbol_isdrawtype(argv[0].a_w.w_symbol))
+    {
+        type = atom_getsymbolarg(0, argc--, argv++);
+        /* sprite has its own widgetbehavior and, therefore, its own class */
+        if (type == gensym("sprite") || type == gensym("image"))
+            return (drawimage_new(type, argc, argv));
+    }
+    t_draw *x = (t_draw *)pd_new(draw_class);
+    if (!type) 
+    {
+        pd_error(x, "draw: need an svg shape (rect, circle, path, etc.)");
+    }
+    /* create a proxy for drawing/svg attributes */
+    if (!(x->x_attr = (t_pd *)svg_new((t_pd *)x, type, argc--, argv++)))
+    {
+        pd_error(x, "draw: path data must start with 'm' or 'M'");
+        return (0);
+    }
+    /* now that we have our proxy, make an inlet for it.
+       The inlet will belong to our draw object, but the
+       svg_class will actually receive the messages
+       to the inlet. */
+    t_svg *sa = (t_svg *)x->x_attr;
+    inlet_new(&x->x_obj, &sa->x_pd, 0, 0);
+    /* x_canvas can stay here */
+    x->x_canvas = canvas_getcurrent();
+    return (x);
+}
+
+t_canvas *svg_parentcanvas(t_svg *x)
+{
+    /* this is probably a better interface... I am
+       returning c sometimes because it works for my
+       use case, but that doesn't seem like a sensible
+       interface in general. */
+    t_canvas *ret = 0;
+    if (x->x_type == gensym("group"))
+    {
+        t_canvas *c = (t_canvas *)x->x_parent;
+        if (c->gl_owner)
+            ret = c->gl_owner;
+        else
+            ret = c;
+    }
+    else if (x->x_type == gensym("sprite") ||
+             x->x_type == gensym("image"))
+    {
+        t_drawimage *d = (t_drawimage *)x->x_parent;
+        ret = d->x_canvas;
+    }
+    else
+    {
+        t_draw *d = (t_draw *)x->x_parent;
+        ret = d->x_canvas;
+    }
+    return (ret);
 }
 
 static char *rgb_to_hex(int r, int g, int b)
@@ -1260,18 +1331,23 @@ char *get_strokelinejoin(int a)
     return (strokelinejoin);
 }
 
-void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
+/* todo: i think svg_togui and this are unnecessarily
+   duplicating some code... */
+void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
 {
     t_gobj *g;
     t_template *template;
     t_canvas *visible = c;
+    void *parent = x->x_parent;
+    t_canvas *parentcanvas =
+        canvas_templatecanvas_forgroup(svg_parentcanvas(x));
     while(visible->gl_isgraph && visible->gl_owner)
         visible = visible->gl_owner;
-    int isgroup = (x->x_drawtype == gensym("group"));
+    int isgroup = (x->x_type == gensym("group"));
     for (g = c->gl_list; g; g = g->g_next)
     {
         if (glist_isvisible(c) && g->g_pd == scalar_class &&
-            x->x_canvas ==
+            parentcanvas ==
             template_findcanvas(template = (template_findbyname(
                 (((t_scalar *)g)->sc_template))))
            )
@@ -1280,68 +1356,77 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
             char str[MAXPDSTRING];
             if (s == gensym("fill"))
             {
-                char *fill;
-                if (x->x_fill)
-                    fill = x->x_fill->s_name;
-                else
+                t_symbol *fill;
+                t_fielddesc *fd = x->x_fill;
+                if (x->x_filltype == 1)
+                    fill = fielddesc_getsymbol(fd, template, data, 1);
+                else if (x->x_filltype == 2)
                 {
-                    fill = rgb_to_hex(
-                        (int)fielddesc_getfloat(&x->x_fill_r,
+                    fill = gensym(rgb_to_hex(
+                        (int)fielddesc_getfloat(fd,
                             template, data, 1),
-                        (int)fielddesc_getfloat(&x->x_fill_g,
+                        (int)fielddesc_getfloat(fd+1,
                             template, data, 1),
-                        (int)fielddesc_getfloat(&x->x_fill_b,
-                            template, data, 1));
+                        (int)fielddesc_getfloat(fd+2,
+                            template, data, 1)));
                 }
-                sprintf(str, "-fill %s", fill);
+                else
+                    fill = &s_;
+                sprintf(str, "-fill %s", fill->s_name);
             }
             else if (s == gensym("stroke"))
             {
-                char *stroke;
-                if (x->x_stroke)
-                    stroke = x->x_stroke->s_name;
-                else
+                t_symbol *stroke;
+                t_fielddesc *fd = x->x_stroke;
+                if (x->x_stroketype == 1)
+                    stroke = fielddesc_getsymbol(fd, template, data, 1);
+                else if (x->x_stroketype == 2)
                 {
-                    stroke = rgb_to_hex(
-                        (int)fielddesc_getfloat(&x->x_stroke_r,
+                    stroke = gensym(rgb_to_hex(
+                        (int)fielddesc_getfloat(fd,
                             template, data, 1),
-                        (int)fielddesc_getfloat(&x->x_stroke_g,
+                        (int)fielddesc_getfloat(fd+1,
                             template, data, 1),
-                        (int)fielddesc_getfloat(&x->x_stroke_b,
-                            template, data, 1));
+                        (int)fielddesc_getfloat(fd+2,
+                            template, data, 1)));
                 }
-                sprintf(str, "-stroke %s", stroke);
+                else stroke = &s_;
+                sprintf(str, "-stroke %s", stroke->s_name);
             }
             else if (s == gensym("fill-opacity"))
                 sprintf(str, "-fillopacity %g",
-                    fielddesc_getcoord(&x->x_fillopacity, template, data, 1));
+                    fielddesc_getcoord(&x->x_fillopacity.a_attr,
+                        template, data, 1));
             else if (s == gensym("fill-rule"))
                 sprintf(str, "-fillrule %s", (int)fielddesc_getcoord(
-                    &x->x_fillrule, template, data, 1) ?
+                    &x->x_fillrule.a_attr, template, data, 1) ?
                        "evenodd" : "nonzero");
             else if (s == gensym("stroke-linecap"))
                 sprintf(str, "-strokelinecap %s", get_strokelinecap(
-                    (int)fielddesc_getcoord(&x->x_strokelinecap,
+                    (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
                         template, data, 1)));
             else if (s == gensym("stroke-linejoin"))
                 sprintf(str, "-strokelinejoin %s", get_strokelinejoin(
-                    (int)fielddesc_getcoord(&x->x_strokelinejoin,
+                    (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
                         template, data, 1)));
             else if (s == gensym("stroke-miterlimit"))
                 sprintf(str, "-strokemiterlimit %g", fielddesc_getcoord(
-                    &x->x_strokemiterlimit, template, data, 1));
+                    &x->x_strokemiterlimit.a_attr, template, data, 1));
             else if (s == gensym("stroke-opacity"))
                 sprintf(str, "-strokeopacity %g", fielddesc_getcoord(
-                    &x->x_strokeopacity, template, data, 1));
+                    &x->x_strokeopacity.a_attr, template, data, 1));
             else if (s == gensym("stroke-width"))
                 sprintf(str, "-strokewidth %g", fielddesc_getcoord(
-                    &x->x_strokewidth, template, data, 1));
+                    &x->x_strokewidth.a_attr, template, data, 1));
             else if (s == gensym("rx"))
                 sprintf(str, "-rx %g", fielddesc_getcoord(
-                    &x->x_rx, template, data, 1));
+                    &x->x_rx.a_attr, template, data, 1));
             else if (s == gensym("ry"))
                 sprintf(str, "-ry %g", fielddesc_getcoord(
-                    &x->x_ry, template, data, 1));
+                    &x->x_ry.a_attr, template, data, 1));
+            else if (s == gensym("vis"))
+                sprintf(str, "-state %s", (int)fielddesc_getcoord(
+                    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
             else if (s == gensym("stroke-dasharray"))
             {
                 if (x->x_ndash)
@@ -1358,69 +1443,89 @@ void draw_doupdate(t_draw *x, t_canvas *c, t_symbol *s)
                 }
                 else return;
             }
-            if (x->x_drawtype == gensym("group"))
+            if (x->x_type == gensym("group"))
             {
-                sys_vgui(".x%lx.c itemconfigure .dgroup%lx %s\n",
-                   visible, data, str);
+                sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx %s\n",
+                   visible, parent, data, str);
             }
             else
             {
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
-                   visible, x, data, str);
+                   visible, parent, data, str);
             }
             sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
         }
         if (g->g_pd == canvas_class)
         {
-            draw_doupdate(x, (t_glist *)g, s);
+            svg_doupdate(x, (t_glist *)g, s);
         }
     }
 }
 
 extern t_canvas *canvas_list;
-void draw_update(t_draw *x, t_symbol *s)
+void svg_update(t_svg *x, t_symbol *s)
 {
     t_canvas *c;
     for (c = canvas_list; c; c = c->gl_next)
-        draw_doupdate(x, c, s);
-
+        svg_doupdate(x, c, s);
 }
 
-void draw_fillopacity(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_vis(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_fillopacity, argc, argv);
-        draw_update(x, s);
+        fielddesc_setfloatarg(&x->x_vis.a_attr, argc, argv);
+        x->x_vis.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_strokeopacity(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_fillopacity(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_strokeopacity, argc, argv);
-        draw_update(x, s);
+        /* the svg_attr stuff should probably be set with a function */
+        fielddesc_setfloatarg(&x->x_fillopacity.a_attr, argc, argv);
+        x->x_fillopacity.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_strokedasharray(t_draw *x, t_symbol *s, int argc, t_atom *argv)
+void svg_strokeopacity(t_svg *x, t_symbol *s,
+    t_int argc, t_atom *argv)
+{
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&x->x_strokeopacity.a_attr, argc, argv);
+        x->x_strokeopacity.a_flag = 1;
+        svg_update(x, s);
+    }
+}
+
+void svg_strokedasharray(t_svg *x, t_symbol *s,
+    int argc, t_atom *argv)
 {
     t_fielddesc *fd;
-    x->x_strokedasharray = (t_fielddesc *)t_resizebytes(x->x_strokedasharray,
-        x->x_ndash * sizeof(*x->x_strokedasharray),
-        argc * sizeof(*x->x_strokedasharray));
+    x->x_strokedasharray =
+        (t_fielddesc *)t_resizebytes(x->x_strokedasharray,
+            x->x_ndash * sizeof(*x->x_strokedasharray),
+            argc * sizeof(*x->x_strokedasharray));
     x->x_ndash = argc;
     fd = x->x_strokedasharray;
     while (argc)
         fielddesc_setfloatarg(fd++, argc--, argv++);
-    draw_update(x, s);
+    svg_update(x, s);
 }
 
-void draw_fill(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_fill(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
-    if (argc == 1 && argv->a_type == A_SYMBOL)
-        x->x_fill = atom_getsymbolarg(0, argc, argv);
+    if (argc <= 0)
+        x->x_filltype = 0;
+    else if (argc == 1 && argv->a_type == A_SYMBOL)
+    {
+        fielddesc_setsymbol_const(x->x_fill, atom_getsymbolarg(0, argc, argv));
+        x->x_filltype = 1;
+    }
     else if (argc > 2)
     {
         int i, var = 0;
@@ -1430,110 +1535,129 @@ void draw_fill(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
             var = (argv[i].a_type == A_SYMBOL) ? 1 : var;
         if (var)
         {
-            fielddesc_setfloatarg(&x->x_fill_r, argc--, argv++);
-            fielddesc_setfloatarg(&x->x_fill_g, argc--, argv++);
-            fielddesc_setfloatarg(&x->x_fill_b, argc--, argv++);
-            x->x_fill = 0;
+            t_fielddesc *fd = x->x_fill;
+            fielddesc_setfloatarg(fd, argc--, argv++);
+            fielddesc_setfloatarg(fd+1, argc--, argv++);
+            fielddesc_setfloatarg(fd+2, argc--, argv++);
+            x->x_filltype = 2;
         }
         else
         {
             int r = (int)atom_getfloatarg(0, argc--, argv++);
             int g = (int)atom_getfloatarg(0, argc--, argv++);
             int b = (int)atom_getfloatarg(0, argc--, argv++);
-            x->x_fill = gensym(rgb_to_hex(r, g, b));
+            fielddesc_setsymbol_const(x->x_fill,
+                gensym(rgb_to_hex(r, g, b)));
+            x->x_filltype = 1;
         }
         if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
         {
-            draw_fillopacity(x, gensym("fill-opacity"), argc, argv);
+            svg_fillopacity(x, gensym("fill-opacity"), argc, argv);
         }
     }
-    draw_update(x, s);
+    svg_update(x, s);
 }
 
-void draw_stroke(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_stroke(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
-    if (argc == 1 && argv->a_type == A_SYMBOL)
-        x->x_stroke = atom_getsymbolarg(0, argc, argv);
+    if (argc <= 0)
+        x->x_stroketype = 0;
+    else if (argc == 1 && argv->a_type == A_SYMBOL)
+    {
+        fielddesc_setsymbol_const(x->x_stroke, atom_getsymbolarg(0, argc, argv));
+        x->x_stroketype = 1;
+    }
     else if (argc > 2)
     {
         int var = 0, i;
+	t_fielddesc *fd = x->x_stroke;
         for(i = 0; i < argc; i++)
             var = (argv[i].a_type == A_SYMBOL) ? 1 : var;
         if (var)
         {
-            fielddesc_setfloatarg(&x->x_stroke_r, argc--, argv++);
-            fielddesc_setfloatarg(&x->x_stroke_g, argc--, argv++);
-            fielddesc_setfloatarg(&x->x_stroke_b, argc--, argv++);
-            x->x_stroke = 0;
+            fielddesc_setfloatarg(fd, argc--, argv++);
+            fielddesc_setfloatarg(fd+1, argc--, argv++);
+            fielddesc_setfloatarg(fd+2, argc--, argv++);
+            x->x_stroketype = 2;
         }
         else
         {
-            /* if no variables, then precompute x_stroke so it doesn't
+            /* if no variables, then precompute a_stroke so it doesn't
                have to happen every call to draw_vis */
             int r = (int)atom_getfloatarg(0, argc--, argv++);
             int g = (int)atom_getfloatarg(0, argc--, argv++);
             int b = (int)atom_getfloatarg(0, argc--, argv++);
-            x->x_stroke = gensym(rgb_to_hex(r, g, b));
+            fielddesc_setsymbol_const(x->x_stroke,
+                gensym(rgb_to_hex(r, g, b)));
+            x->x_stroketype = 1;
         }
         if (argc && (argv->a_type == A_FLOAT || argv->a_type == A_SYMBOL))
         {
-            draw_strokeopacity(x, s, argc, argv);
+            svg_strokeopacity(x, s, argc, argv);
             return;
         }
     }
-    draw_update(x, s);
+    svg_update(x, s);
 }
 
-void draw_strokelinecap(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_strokelinecap(t_svg *x, t_symbol *s,
+    t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_strokelinecap, argc, argv);
-        draw_update(x, s);
+        fielddesc_setfloatarg(&x->x_strokelinecap.a_attr, argc, argv);
+        x->x_strokelinecap.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_strokelinejoin(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_strokelinejoin(t_svg *x, t_symbol *s,
+    t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_strokelinejoin, argc, argv);
-        draw_update(x, s);
+        fielddesc_setfloatarg(&x->x_strokelinejoin.a_attr, argc, argv);
+        x->x_strokelinejoin.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_strokemiterlimit(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_strokemiterlimit(t_svg *x, t_symbol *s,
+    t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_strokemiterlimit, argc, argv);
-        draw_update(x, s);
+        fielddesc_setfloatarg(&x->x_strokemiterlimit.a_attr, argc, argv);
+        x->x_strokemiterlimit.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_strokewidth(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_strokewidth(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_strokewidth, argc, argv);
-        draw_update(x, s);
+        fielddesc_setfloatarg(&x->x_strokewidth.a_attr, argc, argv);
+        x->x_strokewidth.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_fillrule(t_draw *x, t_symbol *s, t_int argc, t_atom *argv)
+void svg_fillrule(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
 {
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
-        fielddesc_setfloatarg(&x->x_fillrule, argc, argv);
-        draw_update(x, s);
+        fielddesc_setfloatarg(&x->x_fillrule.a_attr, argc, argv);
+        x->x_fillrule.a_flag = 1;
+        svg_update(x, s);
     }
 }
 
-void draw_rx(t_draw *x, t_symbol *s, int argc, t_atom *argv)
+void svg_rx(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (x->x_drawtype != gensym("rect"))
+    if (x->x_type != gensym("rect"))
     {
-        pd_error(x, "draw: %s: no method for 'rx'", x->x_drawtype->s_name);
+        pd_error(x, "draw: %s: no method for 'rx'", x->x_type->s_name);
         return;
     }
     if (!argc || argv->a_type != A_FLOAT)
@@ -1541,15 +1665,16 @@ void draw_rx(t_draw *x, t_symbol *s, int argc, t_atom *argv)
         pd_error(x, "draw: rect: bad arguments for method 'rx'");
         return;
     }
-    fielddesc_setfloatarg(&x->x_rx, argc, argv);
-    draw_update(x, s);
+    fielddesc_setfloatarg(&x->x_rx.a_attr, argc, argv);
+    x->x_rx.a_flag = 1;
+    svg_update(x, s);
 }
 
-void draw_ry(t_draw *x, t_symbol *s, int argc, t_atom *argv)
+void svg_ry(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (x->x_drawtype != gensym("rect"))
+    if (x->x_type != gensym("rect"))
     {
-        pd_error(x, "draw: %s: no method for 'ry'", x->x_drawtype->s_name);
+        pd_error(x, "draw: %s: no method for 'ry'", x->x_type->s_name);
         return;
     }
     if (!argc || argv->a_type != A_FLOAT)
@@ -1557,11 +1682,12 @@ void draw_ry(t_draw *x, t_symbol *s, int argc, t_atom *argv)
         pd_error(x, "draw: rect: bad arguments for method 'ry'");
         return;
     }
-    fielddesc_setfloatarg(&x->x_ry, argc, argv);
-    draw_update(x, s);
+    fielddesc_setfloatarg(&x->x_ry.a_attr, argc, argv);
+    x->x_ry.a_flag = 1;
+    svg_update(x, s);
 }
 
-static int draw_minv(t_float a[][3], t_float b[][3])
+static int minv(t_float a[][3], t_float b[][3])
 {
     t_float tmp[3][3], determinant = 0;
     int i, j;
@@ -1583,7 +1709,7 @@ static int draw_minv(t_float a[][3], t_float b[][3])
 
 /* multiply matrix a by b and put result in c. if desired, c
    can point to a or b. */
-void draw_mmult(t_float a[][3], t_float b[][3], t_float c[][3])
+static void mmult(t_float a[][3], t_float b[][3], t_float c[][3])
 {
     t_float tmp[3][3] = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} };
     int i, j, k;
@@ -1600,7 +1726,7 @@ void draw_mmult(t_float a[][3], t_float b[][3], t_float c[][3])
             c[i][j] = tmp[i][j];
 }
 
-void draw_mset(t_float mtx[][3], t_float m1, t_float m2, t_float m3,
+static void mset(t_float mtx[][3], t_float m1, t_float m2, t_float m3,
     t_float m4, t_float m5, t_float m6)
 {
     mtx[0][0] = m1; mtx[1][0] = m2; mtx[0][1] = m3;
@@ -1609,14 +1735,14 @@ void draw_mset(t_float mtx[][3], t_float m1, t_float m2, t_float m3,
 }
 
 /* not sure if this is useful... */
-void draw_mget(t_float mtx[][3], t_float *mp1, t_float *mp2, t_float *mp3,
+static void mget(t_float mtx[][3], t_float *mp1, t_float *mp2, t_float *mp3,
     t_float *mp4, t_float *mp5, t_float *mp6)
 {
     *mp1 = mtx[0][0]; *mp2 = mtx[1][0]; *mp3 = mtx[0][1];
     *mp4 = mtx[1][1]; *mp5 = mtx[0][2]; *mp6 = mtx[1][2];
 }
 
-void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
+void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
     t_float *mp1, t_float *mp2, t_float *mp3,
     t_float *mp4, t_float *mp5, t_float *mp6)
 {
@@ -1625,8 +1751,8 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
     int i, j;
     t_float m[3][3];
     t_float m2[3][3];
-    draw_mset(m, 1, 0, 0, 1, 0, 0); /* init to the identity matrix... */
-    draw_mset(m2, 0, 0, 0, 0, 0, 0);
+    mset(m, 1, 0, 0, 1, 0, 0); /* init to the identity matrix... */
+    mset(m2, 0, 0, 0, 0, 0, 0);
     int argc = x->x_transform_n;
     t_fielddesc *fd = x->x_transform;
     /* should probably change this to argc > 0 since a screwup
@@ -1648,8 +1774,8 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
            argc--;
            t_float ty = fielddesc_getfloat(fd++, template, data, 0);
            argc--;
-           draw_mset(m2, 1, 0, 0, 1, tx, ty);
-           draw_mmult(m, m2, m);
+           mset(m2, 1, 0, 0, 1, tx, ty);
+           mmult(m, m2, m);
         }
         else if (type == gensym("scale"))
         {
@@ -1661,8 +1787,8 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
                sy = fielddesc_getfloat(fd++, template, data, 0);
                argc--;
            }
-           draw_mset(m2, sx, 0, 0, sy, 0, 0);
-           draw_mmult(m, m2, m);
+           mset(m2, sx, 0, 0, sy, 0, 0);
+           mmult(m, m2, m);
         }
         /* cx and cy are optional */
         /* this doesn't jibe with glist_xtopixels, ytopixels, etc. */
@@ -1683,24 +1809,24 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
                 cy = fielddesc_getfloat(fd++, template, data, 0);
                 argc--;
             }
-            draw_mset(m2, cos(a), sin(a), sin(a) * -1, cos(a),
+            mset(m2, cos(a), sin(a), sin(a) * -1, cos(a),
                       sin(a) * cy + cx * -1 * cos(a) + cx,
                       sin(a) * cx * -1 + cos(a) * cy * -1 + cy);
-            draw_mmult(m, m2, m);
+            mmult(m, m2, m);
         }
         else if (type == gensym("skewx"))
         {
             t_float a = fielddesc_getfloat(fd++, template, data, 0);
             argc--;
-            draw_mset(m2, 1, 0, tan(a), 1, 0, 0);
-            draw_mmult(m, m2, m);
+            mset(m2, 1, 0, tan(a), 1, 0, 0);
+            mmult(m, m2, m);
         }
         else if (type == gensym("skewy"))
         {
             t_float a = fielddesc_getfloat(fd++, template, data, 0);
             argc--;
-            draw_mset(m2, 1, tan(a), 0, 1, 0, 0);
-            draw_mmult(m, m2, m);
+            mset(m2, 1, tan(a), 0, 1, 0, 0);
+            mmult(m, m2, m);
         }
         else if (type == gensym("matrix"))
         {
@@ -1711,12 +1837,12 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
             d = fielddesc_getfloat(fd++, template, data, 0); argc--;
             e = fielddesc_getfloat(fd++, template, data, 0); argc--;
             f = fielddesc_getfloat(fd++, template, data, 0); argc--;
-            draw_mset(m2, a, b, c, d, e, f);
-            draw_mmult(m, m2, m);
+            mset(m2, a, b, c, d, e, f);
+            mmult(m, m2, m);
         }
     }
     t_float a1, a2, a3, a4, a5, a6;
-    draw_mget(m, &a1, &a2, &a3, &a4, &a5, &a6);
+    mget(m, &a1, &a2, &a3, &a4, &a5, &a6);
     *mp1 = a1;
     *mp2 = a2;
     *mp3 = a3;
@@ -1725,30 +1851,76 @@ void draw_parsetransform(t_draw *x, t_template *template, t_word *data,
     *mp6 = a6;
 }
 
-void draw_group_pathrect_cache(t_draw *x, int state)
+static void svg_dogroupmtx(t_canvas *c, t_template *template, t_word *data,
+    t_float mtx[][3])
+{
+    t_float mtx2[3][3];
+    t_float m1, m2, m3, m4, m5, m6;
+    t_canvas *parent_group = c->gl_owner;
+    if (parent_group && parent_group->gl_svg)
+        svg_dogroupmtx(parent_group, template, data, mtx);
+    t_svg *svg = (t_svg *)c->gl_svg;
+    if (svg->x_transform)
+    {
+        svg_parsetransform(svg, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
+        mset(mtx2, m1, m2, m3, m4, m5, m6);
+    }
+    else
+    {
+        mset(mtx2, 1, 0, 0, 1, 0, 0);
+    }
+    mmult(mtx, mtx2, mtx);
+}
+
+/* should this return an int to signal something? */
+static void svg_groupmtx(t_svg *x, t_template *template, t_word *data,
+    t_float mtx[][3])
+{
+    t_canvas *c = svg_parentcanvas(x);
+    mset(mtx, 1, 0, 0, 1, 0, 0);
+    /* if the t_svg isn't inside a group,
+       then we're done.  Otherwise we do
+       matrix multiplications from the
+       outermost group down. */
+    if (c->gl_owner && c->gl_svg)
+        svg_dogroupmtx(c, template, data, mtx);
+}
+
+void svg_group_pathrect_cache(t_svg *x, int state)
 {
     t_gobj *y;
-    for (y = x->x_canvas->gl_list; y; y = y->g_next)
+    t_canvas *c = (t_canvas *)x->x_parent;
+    for (y = c->gl_list; y; y = y->g_next)
     {
-        if (pd_class(&y->g_pd) == draw_class &&
-            ((t_draw *)y)->x_pathrect_cache != -1)
-                ((t_draw *)y)->x_pathrect_cache = state;
+        if (pd_class(&y->g_pd) == canvas_class &&
+            ((t_canvas *)y)->gl_svg)
+        {
+            svg_group_pathrect_cache((t_svg *)(((t_canvas *)y)->gl_svg), state);
+        }
+        /* todo: probably need to recurse down into subgroups */
+        if (pd_class(&y->g_pd) == draw_class)
+        {
+            t_svg *a = (t_svg *)(((t_draw *)y)->x_attr);
+	    if (a->x_pathrect_cache != -1)
+                a->x_pathrect_cache = state;
+        }
     } 
 }
 
 extern void scalar_select(t_gobj *z, t_glist *owner, int state);
 extern void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state);
-void draw_doupdatetransform(t_draw *x, t_canvas *c)
+void svg_doupdatetransform(t_svg *x, t_canvas *c)
 {
     t_float mtx1[3][3];
     t_float mtx2[3][3];
     t_float mtx3[3][3];
-    draw_mset(mtx1, 0, 0, 0, 0, 0, 0);
-    draw_mset(mtx2, 0, 0, 0, 0, 0, 0);
+    mset(mtx1, 0, 0, 0, 0, 0, 0);
+    mset(mtx2, 0, 0, 0, 0, 0, 0);
     t_gobj *g;
     t_template *template = NULL;
     t_template *warn_template = NULL;
     t_canvas *visible = c;
+    t_canvas *parent = canvas_templatecanvas_forgroup(svg_parentcanvas(x));
     while(visible->gl_isgraph && visible->gl_owner)
         visible = visible->gl_owner;
 
@@ -1757,14 +1929,14 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
        draw_getrect for this draw command. For groups
        we need to do it for all of the draw commands.
     */
-    if (x->x_drawtype == gensym("group"))
-        draw_group_pathrect_cache(x, 0);
+    if (x->x_type == gensym("group"))
+        svg_group_pathrect_cache(x, 0);
     else if (x->x_pathrect_cache != -1)
         x->x_pathrect_cache = 0;
     for (g = c->gl_list; g; g = g->g_next)
     {
         if (glist_isvisible(c) && g->g_pd == scalar_class &&
-            x->x_canvas ==
+            parent ==
             template_findcanvas((template = template_findbyname(
                 (((t_scalar *)g)->sc_template)))) &&
             template->t_transformable == 0
@@ -1775,16 +1947,19 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
             //    ((t_scalar *)g)->sc_template->s_name,
             //    template->t_transformable);
             t_float m1, m2, m3, m4, m5, m6;
-            draw_parsetransform(x, template, ((t_scalar *)g)->sc_vec,
+            svg_parsetransform(x, template, ((t_scalar *)g)->sc_vec,
                 &m1, &m2, &m3, &m4, &m5, &m6);
-            if (x->x_drawtype == gensym("group"))
-                sys_vgui(".x%lx.c itemconfigure .dgroup%lx -matrix "
+            if (x->x_type == gensym("group"))
+            {
+                sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx -matrix "
                     "{ {%g %g} {%g %g} {%g %g} }\n",
-                    visible, ((t_scalar *)g)->sc_vec, m1, m2, m3, m4, m5, m6);
+                    visible, x->x_parent, ((t_scalar *)g)->sc_vec,
+                    m1, m2, m3, m4, m5, m6);
+            }
             else
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx -matrix "
                     "{ {%g %g} {%g %g} {%g %g} }\n",
-                    visible, x, ((t_scalar*)g)->sc_vec,
+                    visible, x->x_parent, ((t_scalar*)g)->sc_vec,
                     m1, m2, m3, m4, m5, m6);
             /* uncache the scalar's bbox */
             ((t_scalar *)g)->sc_bboxcache = 0;
@@ -1804,24 +1979,25 @@ void draw_doupdatetransform(t_draw *x, t_canvas *c)
         }
         if (g->g_pd == canvas_class)
         {
-            draw_doupdatetransform(x, (t_glist *)g);
+            svg_doupdatetransform(x, (t_glist *)g);
         }
     }
 }
 
-void draw_queueupdatetransform(t_gobj *g, t_glist *glist)
+void svg_queueupdatetransform(t_gobj *g, t_glist *glist)
 {
-    t_draw *x = (t_draw *)g;
-    draw_doupdatetransform(x, glist);
+    /* not sure about this... */
+    t_svg *x = (t_svg *)((t_draw *)g);
+    svg_doupdatetransform(x, glist);
 }
 
 extern t_canvas *canvas_list;
-void draw_updatetransform(t_draw *x)
+void svg_updatetransform(t_svg *x)
 {
     t_canvas *c;
     int i;
     for (c = canvas_list; c; c = c->gl_next)
-        draw_doupdatetransform(x, c);
+        svg_doupdatetransform(x, c);
     /* Attempted to use sys_queuegui above, but
        it actually ended up being slightly less
        efficient. Maybe I was using it wrong...
@@ -1829,12 +2005,13 @@ void draw_updatetransform(t_draw *x)
     */
 }
 
-void draw_transform(t_draw *x, t_symbol *s, int argc, t_atom *argv)
+void svg_transform(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     /* probably need to do error checking here */
     t_fielddesc *fd;
     x->x_transform = (t_fielddesc *)t_resizebytes(x->x_transform,
-        x->x_ndash * sizeof(*x->x_transform), argc * sizeof(*x->x_transform));
+        x->x_ndash * sizeof(*x->x_transform),
+        argc * sizeof(*x->x_transform));
     x->x_transform_n = argc;
     fd = x->x_transform;
     while (argc)
@@ -1851,18 +2028,18 @@ void draw_transform(t_draw *x, t_symbol *s, int argc, t_atom *argv)
         else
         {
             if (argv->a_type == A_SYMBOL &&
-                x->x_drawtype == gensym("path"))
+                x->x_type == gensym("path"))
                     x->x_pathrect_cache = -1;
             fielddesc_setfloatarg(fd++, argc--, argv++);
         }
     }
-    draw_updatetransform(x);
+    svg_updatetransform(x);
 }
 
 /* -------------------- widget behavior for draw ------------ */
 
 /* from Raphael.js lib */
-static void draw_q2c(t_float x1, t_float y1, t_float *cx1, t_float *cy1,
+static void svg_q2c(t_float x1, t_float y1, t_float *cx1, t_float *cy1,
     t_float *cx2, t_float *cy2, t_float *cx, t_float *cy)
 {
     t_float _13 = 1.0 / 3.0;
@@ -1878,7 +2055,7 @@ static void draw_q2c(t_float x1, t_float y1, t_float *cx1, t_float *cy1,
 }
 
 /* from Raphael.js lib */
-static void draw_findDotAtSegment(t_float p1x, t_float p1y,
+static void svg_findDotAtSegment(t_float p1x, t_float p1y,
     t_float c1x, t_float c1y, t_float c2x, t_float c2y,
     t_float p2x, t_float p2y, t_float t, t_float *dotx, t_float *doty)
 {
@@ -1894,7 +2071,7 @@ static void draw_findDotAtSegment(t_float p1x, t_float p1y,
 }
 
 /* from Raphael.js lib */
-static void draw_curvedim(t_float p1x, t_float p1y,
+static void svg_curvedim(t_float p1x, t_float p1y,
     t_float c1x, t_float c1y, t_float c2x, t_float c2y,
     t_float p2x, t_float p2y, t_float *xmin, t_float *ymin,
     t_float *xmax, t_float *ymax, t_float mtx1[][3])
@@ -1911,9 +2088,9 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     xy[0] = p1x; xy[1] = p1y; xy[2] = p2x; xy[3] = p2y;
 
     /* mtx mult */
-    draw_mset(mtx2, p1x, p1y, p2x, p2y, 0, 0);
+    mset(mtx2, p1x, p1y, p2x, p2y, 0, 0);
     mtx2[2][0] = 1; mtx2[2][1] = 1;
-    draw_mmult(mtx1, mtx2, mtx2);
+    mmult(mtx1, mtx2, mtx2);
     xy[0] = mtx2[0][0]; xy[1] = mtx2[1][0]; xy[2] = mtx2[0][1]; xy[3] = mtx2[1][1];
     int xyc = 4;
     t_float dotx, doty;
@@ -1922,10 +2099,10 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     if (abs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
     {
-        draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
-        draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
+        svg_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
+        mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
+        mmult(mtx1, mtx2, mtx2);
         dotx = mtx2[0][0];
         doty = mtx2[1][0];
         xy[xyc++] = dotx;
@@ -1933,10 +2110,10 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     }
     if (t2 > 0 && t2 < 1)
     {
-        draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t2, &dotx, &doty);
-        draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
+        svg_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t2, &dotx, &doty);
+        mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
+        mmult(mtx1, mtx2, mtx2);
         dotx = mtx2[0][0];
         doty = mtx2[1][0];
         xy[xyc++] = dotx;
@@ -1951,10 +2128,10 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     if (abs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
     {
-        draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
-        draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
+        svg_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
+        mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
+        mmult(mtx1, mtx2, mtx2);
         dotx = mtx2[0][0];
         doty = mtx2[1][0];
         xy[xyc++] = dotx;
@@ -1962,10 +2139,10 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     }
     if (t2 > 0 && t2 < 1)
     {
-        draw_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t2, &dotx, &doty);
-        draw_mset(mtx2, dotx, doty, 0, 0, 0, 0);
+        svg_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t2, &dotx, &doty);
+        mset(mtx2, dotx, doty, 0, 0, 0, 0);
         mtx2[2][0] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
+        mmult(mtx1, mtx2, mtx2);
         dotx = mtx2[0][0];
         doty = mtx2[1][0];
         xy[xyc++] = dotx;
@@ -1983,7 +2160,7 @@ static void draw_curvedim(t_float p1x, t_float p1y,
     }
 }
 
-static t_float draw_getangle(t_float bx, t_float by)
+static t_float svg_getangle(t_float bx, t_float by)
 {
   t_float pi = (t_float)3.14159265358979323846;
   t_float divisor = sqrt(bx * bx + by * by);
@@ -1991,7 +2168,7 @@ static t_float draw_getangle(t_float bx, t_float by)
               acos( divisor? (bx / divisor) : 0 ), 2*pi);
 }
 
-void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
+void svg_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
    t_float phi, t_float large_arc, t_float sweep,
    t_float x2, t_float y2, t_float *xmin, t_float *ymin,
    t_float *xmax, t_float *ymax)
@@ -2043,24 +2220,24 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
     if (phi == 0 || phi == pi)
     {
         *xmin = cx - rx;
-        txmin = draw_getangle(-rx, 0);
+        txmin = svg_getangle(-rx, 0);
         *xmax = cx + rx;
-        txmax = draw_getangle(rx, 0);
+        txmax = svg_getangle(rx, 0);
         *ymin = cy - ry;
-        tymin = draw_getangle(0, -ry);
+        tymin = svg_getangle(0, -ry);
         *ymax = cy + ry;
-        tymax = draw_getangle(0, ry);
+        tymax = svg_getangle(0, ry);
     }
     else if (phi == pi / 2.0 || phi == 3.0*pi/2.0)
     {
         *xmin = cx - ry;
-        txmin = draw_getangle(-ry, 0);
+        txmin = svg_getangle(-ry, 0);
         *xmax = cx + ry;
-        txmax = draw_getangle(ry, 0);
+        txmax = svg_getangle(ry, 0);
         *ymin = cy - rx;
-        tymin = draw_getangle(0, -rx);
+        tymin = svg_getangle(0, -rx);
         *ymax = cy + rx;
-        tymax = draw_getangle(0, rx);
+        tymax = svg_getangle(0, rx);
     }
     else
     {
@@ -2078,9 +2255,9 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
             txmin = tmp;
         }
         t_float tmpY = cy + rx*cos(txmin)*sin(phi) + ry*sin(txmin)*cos(phi);
-        txmin = draw_getangle(*xmin - cx, tmpY - cy);
+        txmin = svg_getangle(*xmin - cx, tmpY - cy);
         tmpY = cy + rx*cos(txmax)*sin(phi) + ry*sin(txmax)*cos(phi);
-        txmax = draw_getangle(*xmax - cx, tmpY - cy);
+        txmax = svg_getangle(*xmax - cx, tmpY - cy);
         tymin = atan(ry/(tan(phi)*rx));
         tymax = atan(ry/(tan(phi)*rx))+pi;
         *ymin = cy + rx*cos(tymin)*sin(phi) + ry*sin(tymin)*cos(phi);
@@ -2095,12 +2272,12 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
             tymin = tmp;
         }
         t_float tmpX = cx + rx*cos(tymin)*cos(phi) - ry*sin(tymin)*sin(phi);
-        tymin = draw_getangle(tmpX - cx, *ymin - cy);
+        tymin = svg_getangle(tmpX - cx, *ymin - cy);
         tmpX = cx + rx*cos(tymax)*cos(phi) - ry*sin(tymax)*sin(phi);
-        tymax = draw_getangle(tmpX - cx, *ymax - cy);
+        tymax = svg_getangle(tmpX - cx, *ymax - cy);
     }
-    t_float angle1 = draw_getangle(x1 - cx, y1 - cy);
-    t_float angle2 = draw_getangle(x2 - cx, y2 - cy);
+    t_float angle1 = svg_getangle(x1 - cx, y1 - cy);
+    t_float angle2 = svg_getangle(x2 - cx, y2 - cy);
     if (!sweep)
     {
         t_float tmp = angle1;
@@ -2133,30 +2310,21 @@ void draw_arc2bbox(t_float x1, t_float y1, t_float rx, t_float ry,
        Raphael.js "pathbbox" function.  Too complex to finish
        here, but maybe this could eventually get merged in to
        tkpath-- it will probably give a more accurate result... */
-static void draw_getpathrect(t_draw *x, t_glist *glist,
+static void svg_getpathrect(t_svg *x, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     /* todo: revisit the attr from Raphael for processPath. */ 
-
     t_float path2_vec[x->x_nargs];
     char path2cmds[x->x_npathcmds];
     t_float mtx1[3][3];
     t_float mtx2[3][3];
     t_float m1, m2, m3, m4, m5, m6;
-    t_draw *dgroup = draw_getgroup(x);
-    if (dgroup)
-    {
-        draw_parsetransform(dgroup, template, data, &m1, &m2, &m3,
-            &m4, &m5, &m6);
-        draw_mset(mtx1, m1, m2, m3, m4, m5, m6);
-    }
-    else
-        draw_mset(mtx1, 1, 0, 0, 1, 0, 0);
-    draw_parsetransform(x, template, data, &m1, &m2, &m3,
+    svg_groupmtx(x, template, data, mtx1);
+    svg_parsetransform(x, template, data, &m1, &m2, &m3,
         &m4, &m5, &m6);
-    draw_mset(mtx2, m1, m2, m3, m4, m5, m6);
-    draw_mmult(mtx1, mtx2, mtx1);
+    mset(mtx2, m1, m2, m3, m4, m5, m6);
+    mmult(mtx1, mtx2, mtx1);
     
     /* first let's get absolute path */
 
@@ -2330,13 +2498,13 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
         switch (cmd)
         {
         case 'A':
-            draw_arc2bbox(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
+            svg_arc2bbox(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
                 *(ia+4), *(ia+5), *(ia+6), &x1, &y1, &x2, &y2);
             xprev = *(ia+5);
             yprev = *(ia+6);
-            draw_mset(mtx2, x1, y1, x2, y2, 0, 0);
+            mset(mtx2, x1, y1, x2, y2, 0, 0);
             mtx2[2][0] = 1; mtx2[2][1] = 1;
-            draw_mmult(mtx1, mtx2, mtx2);
+            mmult(mtx1, mtx2, mtx2);
             tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
             finalx1 = tmpx < finalx1 ? tmpx : finalx1;
             finalx2 = tmpx > finalx2 ? tmpx : finalx2;
@@ -2347,9 +2515,9 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
             finalx2 = tmpx > finalx2 ? tmpx : finalx2;
             finaly1 = tmpy < finaly1 ? tmpy : finaly1;
             finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            draw_mset(mtx2, x1, y2, x2, y1, 0, 0);
+            mset(mtx2, x1, y2, x2, y1, 0, 0);
             mtx2[2][0] = 1; mtx2[2][1] = 1;
-            draw_mmult(mtx1, mtx2, mtx2);
+            mmult(mtx1, mtx2, mtx2);
             tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
             finalx1 = tmpx < finalx1 ? tmpx : finalx1;
             finalx2 = tmpx > finalx2 ? tmpx : finalx2;
@@ -2380,7 +2548,7 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                     nx = xprev;
                     ny = yprev;
                 }
-                draw_curvedim(xprev, yprev,
+                svg_curvedim(xprev, yprev,
                     nx, ny, *ia, *(ia+1), *(ia+2), *(ia+3),
                     &x1, &y1, &x2, &y2, mtx1);
                 xprev = *(ia+2);
@@ -2416,8 +2584,8 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                 }
                 t_float cx1 = qxprev, cy1 = qyprev, cx2 = *ia, cy2 = *(ia+1),
                     cx, cy;
-                draw_q2c(xprev, yprev, &cx1, &cy1, &cx2, &cy2, &cx, &cy);
-                draw_curvedim(xprev, yprev, cx1, cy1, cx2, cy2, cx, cy,
+                svg_q2c(xprev, yprev, &cx1, &cy1, &cx2, &cy2, &cx, &cy);
+                svg_curvedim(xprev, yprev, cx1, cy1, cx2, cy2, cx, cy,
                     &x1, &y1, &x2, &y2, mtx1);
                 xprev = *ia;
                 yprev = *(ia+1);
@@ -2440,8 +2608,8 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                         break;
                 t_float cx1 = *ia, cy1 = *(ia+1),
                     cx2 = *(ia+2), cy2 = *(ia+3), cx, cy;
-                draw_q2c(xprev, yprev, &cx1, &cy1, &cx2, &cy2, &cx, &cy);
-                draw_curvedim(xprev, yprev, cx1, cy1, cx2, cy2, cx, cy,
+                svg_q2c(xprev, yprev, &cx1, &cy1, &cx2, &cy2, &cx, &cy);
+                svg_curvedim(xprev, yprev, cx1, cy1, cx2, cy2, cx, cy,
                     &x1, &y1, &x2, &y2, mtx1);
                 xprev = *(ia+2);
                 yprev = *(ia+3);
@@ -2461,7 +2629,7 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                 /* hack */
                 if ((j + 5) >= x->x_nargs_per_cmd[i])
                     break;
-                draw_curvedim(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
+                svg_curvedim(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
                     *(ia+4), *(ia+5), &x1, &y1, &x2, &y2, mtx1);
                 xprev = *(ia+4);
                 yprev = *(ia+5);
@@ -2480,9 +2648,9 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
         case 'V':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
             {
-                draw_mset(mtx2, xprev, *ia, 0, 0, 0, 0);
+                mset(mtx2, xprev, *ia, 0, 0, 0, 0);
                 mtx2[2][0] = 1;
-                draw_mmult(mtx1, mtx2, mtx2);
+                mmult(mtx1, mtx2, mtx2);
                 tmpy = mtx2[1][0];
                 finaly1 = tmpy < finaly1 ? tmpy : finaly1;
                 finaly2 = tmpy > finaly2 ? tmpy : finaly2;
@@ -2492,9 +2660,9 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
         case 'H':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
             {
-                draw_mset(mtx2, *ia, yprev, 0, 0, 0, 0);
+                mset(mtx2, *ia, yprev, 0, 0, 0, 0);
                 mtx2[2][0] = 1;
-                draw_mmult(mtx1, mtx2, mtx2);
+                mmult(mtx1, mtx2, mtx2);
                 tmpx = mtx2[0][0];  
                 finalx1 = tmpx < finalx1 ? tmpx : finalx1;
                 finalx2 = tmpx > finalx2 ? tmpx : finalx2;
@@ -2507,9 +2675,9 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
                     /* hack */
                     if ((j + 1) >= x->x_nargs_per_cmd[i])
                         break;
-                    draw_mset(mtx2, *(ia+j), *(ia+j+1), 0, 0, 0, 0);
+                    mset(mtx2, *(ia+j), *(ia+j+1), 0, 0, 0, 0);
                     mtx2[2][0] = 1;
-                    draw_mmult(mtx1, mtx2, mtx2);
+                    mmult(mtx1, mtx2, mtx2);
                     tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
                     finalx1 = tmpx < finalx1 ? tmpx : finalx1;
                     finalx2 = tmpx > finalx2 ? tmpx : finalx2;
@@ -2538,17 +2706,20 @@ static void draw_getpathrect(t_draw *x, t_glist *glist,
 }
 
 static int call_from_vis = 0;
+
 static void draw_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     t_draw *x = (t_draw *)z;
-    if (x->x_pathrect_cache == 1)
+    t_svg *sa = (t_svg *)x->x_attr;
+    /* todo: put this after the var inits below */
+    if (sa->x_pathrect_cache == 1)
     {
-        *xp1 = glist_xtopixels(glist, basex + x->x_x1);
-        *xp2 = glist_xtopixels(glist, basex + x->x_x2);
-        *yp1 = glist_ytopixels(glist, basey + x->x_y1);
-        *yp2 = glist_ytopixels(glist, basey + x->x_y2);
+        *xp1 = glist_xtopixels(glist, basex + sa->x_x1);
+        *xp2 = glist_xtopixels(glist, basex + sa->x_x2);
+        *yp1 = glist_ytopixels(glist, basey + sa->x_y1);
+        *yp2 = glist_ytopixels(glist, basey + sa->x_y2);
         return;
     }
 
@@ -2557,52 +2728,43 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
     t_float m1, m2, m3, m4, m5, m6;
     
     //fprintf(stderr,"draw_getrect\n");
-    t_draw *dgroup = draw_getgroup(x);
-    int i, n = x->x_nargs;
-    t_fielddesc *f = x->x_vec;
+    int i, n = sa->x_nargs;
+    t_fielddesc *f = sa->x_vec;
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
-    if (!fielddesc_getfloat(&x->x_vis, template, data, 0) ||
-        (x->x_flags & NOMOUSE) || (x->x_drawtype == gensym("group")))
+    if (!fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0) ||
+        (sa->x_flags & NOMOUSE) || (sa->x_type == gensym("group")))
     {
         *xp1 = *yp1 = 0x7fffffff;
         *xp2 = *yp2 = -0x7fffffff;
         return;
     }
 
-    if (dgroup)
-    {
-        draw_parsetransform(dgroup, template, data, &m1, &m2,
-            &m3, &m4, &m5, &m6);
-        draw_mset(mtx1, m1, m2, m3, m4, m5, m6);
-    }
-    else
-        draw_mset(mtx1, 1, 0, 0, 1, 0, 0);
-
-    if (x->x_drawtype == gensym("path"))
+    svg_groupmtx(sa, template, data, mtx1);
+    if (sa->x_type == gensym("path"))
     {
         /* this could get damned expensive with complex paths 
         which is why there's a caching mechanism */
-        draw_getpathrect(x, glist, data, template, basex, basey,
+        svg_getpathrect(sa, glist, data, template, basex, basey,
             &x1, &y1, &x2, &y2);
     }
-    else if (x->x_drawtype == gensym("polyline") ||
-             x->x_drawtype == gensym("line") ||
-             x->x_drawtype == gensym("polygon"))
+    else if (sa->x_type == gensym("polyline") ||
+             sa->x_type == gensym("line") ||
+             sa->x_type == gensym("polygon"))
     {
         int nxy = n >> 1;
-        draw_parsetransform(x, template, data, &m1, &m2, &m3,
+        svg_parsetransform(sa, template, data, &m1, &m2, &m3,
             &m4, &m5, &m6);
-        draw_mset(mtx2, m1, m2, m3, m4, m5, m6);
-        draw_mmult(mtx1, mtx2, mtx1);
+        mset(mtx2, m1, m2, m3, m4, m5, m6);
+        mmult(mtx1, mtx2, mtx1);
 
-        for (i = 0, f = x->x_vec; i < n; i+=2, f+=2)
+        for (i = 0, f = sa->x_vec; i < n; i+=2, f+=2)
         {
             t_float xloc = fielddesc_getcoord(f, template, data, 0);
             t_float yloc = fielddesc_getcoord(f+1, template, data, 0);
 
-            draw_mset(mtx2, xloc, yloc, 0, 0, 0, 0);
+            mset(mtx2, xloc, yloc, 0, 0, 0, 0);
             mtx2[2][0] = 1;
-            draw_mmult(mtx1, mtx2, mtx2);
+            mmult(mtx1, mtx2, mtx2);
             xloc = mtx2[0][0];
             yloc = mtx2[1][0];
 
@@ -2619,49 +2781,57 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
             y2 = glist_ytopixels(glist, basey + y2);
         }
     }
-    else if (x->x_drawtype == gensym("rect") ||
-             x->x_drawtype == gensym("circle") ||
-             x->x_drawtype == gensym("ellipse"))
+    else if (sa->x_type == gensym("rect") ||
+             sa->x_type == gensym("circle") ||
+             sa->x_type == gensym("ellipse"))
     {
         t_float m1, m2, m3, m4, m5, m6; /* matrix */
         t_float xx1, yy1, xx2, yy2;
         t_float tx1, ty1, tx2, ty2, t5, t6; /* transformed points */
-        if (x->x_drawtype == gensym("rect"))
+        if (sa->x_type == gensym("rect"))
         {
-            xx1 = fielddesc_getcoord(x->x_vec, template, data, 0);
-            yy1 = fielddesc_getcoord(x->x_vec+1, template, data, 0);
-            t_float rwidth = fielddesc_getcoord(x->x_vec+2, template, data, 0);
-            t_float rheight = fielddesc_getcoord(x->x_vec+3, template, data, 0);
+            xx1 = fielddesc_getcoord(sa->x_vec, template, data, 0);
+            yy1 = fielddesc_getcoord(sa->x_vec+1, template, data, 0);
+            t_float rwidth = fielddesc_getcoord(sa->x_vec+2,
+                template, data, 0);
+            t_float rheight = fielddesc_getcoord(sa->x_vec+3,
+                template, data, 0);
             xx2 = xx1 + rwidth;
             yy2 = yy1 + rheight;
         }
         else
         {
-            /* Yes, I realize this isn't the tightest-fitting bbox but it's
-               late and I'm losing steam... */
-            t_float cx = fielddesc_getcoord(x->x_vec, template, data, 0);
-            t_float cy = fielddesc_getcoord(x->x_vec+1, template, data, 0);
-            t_float rx = fielddesc_getcoord(x->x_vec+2, template, data, 0);
-            t_float ry = fielddesc_getcoord(x->x_vec +
-                (x->x_drawtype == gensym("ellipse")? 3 : 2), template,
+            /* Yes, I realize this isn't a correct bbox but it's
+               late and I'm losing steam... Need to just port Raphael's
+               path bbox method to c, then convert ellipses to paths... */
+            t_float cx = fielddesc_getcoord(sa->x_vec,
+                template, data, 0);
+            t_float cy = fielddesc_getcoord(sa->x_vec+1, template, data, 0);
+            t_float rx = fielddesc_getcoord(sa->x_vec+2, template, data, 0);
+            t_float ry = fielddesc_getcoord(sa->x_vec +
+                (sa->x_type == gensym("ellipse")? 3 : 2), template,
                 data, 0);
-            xx1 = cx - rx;
-            yy1 = cy - ry;
-            xx2 = cx + rx;
-            yy2 = cy + ry;
+            xx1 = cx;
+            yy1 = cy;
+            xx2 = rx;
+            yy2 = ry;
+ 
         }
-        draw_parsetransform(x, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
-        draw_mset(mtx2, m1, m2, m3, m4, m5, m6);
-        draw_mmult(mtx1, mtx2, mtx1);
+        svg_parsetransform(sa, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
+        mset(mtx2, m1, m2, m3, m4, m5, m6);
+        mmult(mtx1, mtx2, mtx1);
         /* There's probably a much easier way to do this.  I'm just
            setting the first two columns to x/y points to get them
            transformed.  Since the shapes could be crazy skewed/rotated
            I have to check each coordinate of the rect, so I do it again
            below. */
-        draw_mset(mtx2, xx1, yy1, xx2, yy2, 0, 0);
+        if (sa->x_type == gensym("rect"))
+            mset(mtx2, xx1, yy1, xx2, yy1, 0, 0);
+        else
+            mset(mtx2, xx1, yy1 + yy2, xx1 + xx2, yy1, 0, 0);
         mtx2[2][0] = 1; mtx2[2][1] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
-        draw_mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
+        mmult(mtx1, mtx2, mtx2);
+        mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
         if (tx1 < x1) x1 = tx1;
         if (tx2 < x1) x1 = tx2;
         if (ty1 < y1) y1 = ty1;
@@ -2670,10 +2840,13 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
         if (tx2 > x2) x2 = tx2;
         if (ty1 > y2) y2 = ty1;
         if (ty2 > y2) y2 = ty2;
-        draw_mset(mtx2, xx1, yy2, xx2, yy1, 0, 0);
+        if (sa->x_type == gensym("rect"))
+            mset(mtx2, xx2, yy2, xx1, yy2, 0, 0);
+        else
+            mset(mtx2, xx1, yy1 - yy2, xx1 - xx2, yy1, 0, 0);
         mtx2[2][0] = 1; mtx2[2][1] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
-        draw_mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
+        mmult(mtx1, mtx2, mtx2);
+        mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
         if (tx1 < x1) x1 = tx1;
         if (tx2 < x1) x1 = tx2;
         if (ty1 < y1) y1 = ty1;
@@ -2687,9 +2860,9 @@ static void draw_getrect(t_gobj *z, t_glist *glist,
         y1 = glist_ytopixels(glist, basey + y1);
         y2 = glist_ytopixels(glist, basey + y2);
     }
-    if (fielddesc_getfloat(&x->x_strokewidth, template, data, 0))
+    if (fielddesc_getfloat(&sa->x_strokewidth.a_attr, template, data, 0))
     {
-        int padding = fielddesc_getcoord(&x->x_strokewidth,
+        int padding = fielddesc_getcoord(&sa->x_strokewidth.a_attr,
             template, data, 0) * 0.5;
         x1 -= padding;
         y1 -= padding;
@@ -2724,13 +2897,107 @@ static void draw_activate(t_gobj *z, t_glist *glist,
     /* fill in later */
 }
 
+static void svg_togui(t_svg *x, t_template *template, t_word *data)
+{
+    if (x->x_type != gensym("line"))
+    {
+        if (x->x_filltype)
+        {
+            t_fielddesc *fd = x->x_fill;
+            if (x->x_filltype == 1)
+            {
+                t_symbol *f = fielddesc_getsymbol(fd, template, data, 1);
+                sys_vgui("-fill %s ", f->s_name);
+            }
+            else if (x->x_filltype == 2)
+                sys_vgui("-fill %s ", rgb_to_hex(
+                    (int)fielddesc_getfloat(fd,
+                    template, data, 1),
+                    (int)fielddesc_getfloat(fd+1,
+                    template, data, 1),
+                    (int)fielddesc_getfloat(fd+2,
+                    template, data, 1)));
+        }
+        if (x->x_fillopacity.a_flag)
+            sys_vgui("-fillopacity %g ",
+                fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
+        if (x->x_fillrule.a_flag)
+            sys_vgui("-fillrule %s ", (int)fielddesc_getfloat(
+                &x->x_fillrule.a_attr, template, data, 1) ? "evenodd" : "nonzero");
+    }
+    if (x->x_stroketype)
+    {
+        t_fielddesc *fd = x->x_stroke;
+        if (x->x_stroketype == 1)
+        {
+            t_symbol *s = fielddesc_getsymbol(fd, template, data, 1);
+            sys_vgui("-stroke %s ", s->s_name);
+        }
+        else if (x->x_stroketype == 2)
+            sys_vgui("-stroke %s ", rgb_to_hex(
+                (int)fielddesc_getfloat(fd,
+                template, data, 1),
+                (int)fielddesc_getfloat(fd+1,
+                template, data, 1),
+                (int)fielddesc_getfloat(fd+2,
+                template, data, 1)));
+    }
+    if (x->x_strokewidth.a_flag)
+        sys_vgui("-strokewidth %g\\\n",
+            fielddesc_getfloat(&x->x_strokewidth.a_attr, template, data, 1));
+    if (x->x_strokeopacity.a_flag)
+        sys_vgui("-strokeopacity %g ", fielddesc_getfloat(&x->x_strokeopacity.a_attr,
+            template, data, 1));
+    if (x->x_strokelinecap.a_flag)
+        sys_vgui("-strokelinecap %s ", get_strokelinecap(
+            (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
+            template, data, 1)));
+    if (x->x_strokelinejoin.a_flag)
+        sys_vgui("-strokelinejoin %s ", get_strokelinejoin(
+            (int)fielddesc_getfloat(&x->x_strokelinejoin.a_attr,
+        template, data, 1)));
+    if (x->x_strokemiterlimit.a_flag)
+        sys_vgui("-strokemiterlimit %g ",
+            fielddesc_getfloat(&x->x_strokemiterlimit.a_attr,
+            template, data, 1));
+    if (x->x_ndash)
+    {
+        int i;
+        t_fielddesc *fd;
+        sys_gui(" -strokedasharray {\\\n");
+        for (i = 0, fd = x->x_strokedasharray; i < x->x_ndash; i++)
+        {
+            sys_vgui("%d\\\n", (int)fielddesc_getfloat(fd+i,
+            template, data, 1));
+        }
+        sys_gui("}\\\n");
+    }
+    if (x->x_transform_n > 0)
+    {
+        /* todo: premultiply this */
+        t_float m1, m2, m3, m4, m5, m6;
+        svg_parsetransform(x, template, data, &m1, &m2, &m3,
+            &m4, &m5, &m6);
+        sys_vgui("-matrix { {%g %g} {%g %g} {%g %g} }\\\n",
+            m1, m2, m3, m4, m5, m6);
+    }
+}
+
+void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
+{
+    t_svg *x = (t_svg *)g->gl_svg;
+    svg_togui(x, template, data);
+}
+
 /* todo: create the group somewhere in here..., and use the template
 tag on it so that it can get deleted on unvising */
-static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int vis)
+static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int vis)
 {
     t_draw *x = (t_draw *)z;
+    t_svg *sa = (t_svg *)x->x_attr;
+    /* todo: I don't think this comment applies anymore... */
     /* As a quick hack we are sending the group matrix to the
        gui. This is inefficient since the group matrix is the
        same for all the other drawing instructions. It should
@@ -2745,22 +3012,22 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
        and draw_updatetransform need to be made more general.
     */
 
-    if (x->x_drawtype == gensym("group"))
+    if (sa->x_type == gensym("group"))
     {
         t_float m1, m2, m3, m4, m5, m6;
-        draw_parsetransform(x, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
+        svg_parsetransform(sa, template, data,
+            &m1, &m2, &m3, &m4, &m5, &m6);
         sys_vgui(".x%lx.c itemconfigure .dgroup%lx -matrix { {%g %g} {%g %g} {%g %g} }\n", glist, data, m1, m2, m3, m4, m5, m6);
         return;
     }
 
-    //post("number of points in draw_vis is %d", x->x_nargs);
-    int i, n = x->x_nargs;
+    int i, n = sa->x_nargs;
     t_float mtx1[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
     t_float mtx2[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
     /* need to scale some attributes like radii, widths, etc. */
     t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
     t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-    t_fielddesc *f = x->x_vec;
+    t_fielddesc *f = sa->x_vec;
 
     /*// get the universal tag for all nested objects
     t_canvas *tag = x->x_canvas;
@@ -2770,7 +3037,7 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     }*/
     
         /* see comment in plot_vis() */
-    if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
+    if (vis && !fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0))
         return;
     if (vis)
     {
@@ -2780,40 +3047,24 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                array. See curve_vis comment for more info
                and feel free to revise this to make it a
                more sane approach.
+
+               [plot] doesn't work completely with [group]s yet. But
+               as far as I can tell, all the old ds tutorials and
+               patches work and look fine.
             */
+
             int in_array = (sc->sc_vec == data) ? 0 : 1;
             if (in_array)
-                sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
-                    "-parent .dgroup%lx -matrix { {1 0} {0 1} {%g %g} }\n",
-                    glist_getcanvas(glist), data, sc->sc_vec, basex, basey);
-            int flags = x->x_flags;
-            char *outline;
-            char *fill;
-            char *stroke;
-            char *strokelinecap = get_strokelinecap(
-                (int)fielddesc_getfloat(&x->x_strokelinecap,
-                    template, data, 1));
-            char *strokelinejoin = get_strokelinejoin(
-                (int)fielddesc_getfloat(&x->x_strokelinejoin,
-                    template, data, 1));
-            if (x->x_fill)
-                fill = x->x_fill->s_name;
-            else
             {
-                fill = rgb_to_hex(
-                    (int)fielddesc_getfloat(&x->x_fill_r, template, data, 1),
-                    (int)fielddesc_getfloat(&x->x_fill_g, template, data, 1),
-                    (int)fielddesc_getfloat(&x->x_fill_b, template, data, 1));
+                /* we probably don't need 'p' anymore... */
+                t_canvas *p =
+                    template_findcanvas(template_findbyname(sc->sc_template));
+               sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
+                    "-parent .scelem%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
+                    glist_getcanvas(glist), data,
+                    parentglist, data, basex, basey);
             }
-            if (x->x_stroke)
-                stroke = x->x_stroke->s_name;
-            else
-            {
-                stroke = rgb_to_hex(
-                    (int)fielddesc_getfloat(&x->x_stroke_r, template, data, 1),
-                    (int)fielddesc_getfloat(&x->x_stroke_g, template, data, 1),
-                    (int)fielddesc_getfloat(&x->x_stroke_b, template, data, 1));
-            }
+            int flags = sa->x_flags;
             t_float pix[200];
             if (n > 200)
                 n = 200;
@@ -2821,52 +3072,52 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 out the TK message so that "error" printout won't be
                 interspersed with it.  Only show up to 100 points so we don't
                 have to allocate memory here. */
-            if (x->x_drawtype != gensym("path"))
+            if (sa->x_type != gensym("path"))
             {
                 int nxy = n >> 1;
-                for (i = 0, f = x->x_vec; i < nxy; i++, f += 2)
+                for (i = 0, f = sa->x_vec; i < nxy; i++, f += 2)
                 {
                     pix[2*i] = fielddesc_getcoord(f, template, data, 1);
                     pix[2*i+1] = fielddesc_getcoord(f+1, template, data, 1);
-                    if (x->x_drawtype == gensym("circle")) break;
+                    if (sa->x_type == gensym("circle")) break;
                 }
             }
             /* begin the gui drawing command */
-            if (x->x_drawtype == gensym("rect"))
+            if (sa->x_type == gensym("rect"))
                 sys_vgui(".x%lx.c create prect\\\n", glist_getcanvas(glist));
-            else if (x->x_drawtype == gensym("ellipse"))
+            else if (sa->x_type == gensym("ellipse"))
                 sys_vgui(".x%lx.c create ellipse\\\n", glist_getcanvas(glist));
-            else if (x->x_drawtype == gensym("line"))
+            else if (sa->x_type == gensym("line"))
                 sys_vgui(".x%lx.c create pline\\\n", glist_getcanvas(glist));
-            else if (x->x_drawtype == gensym("polyline"))
+            else if (sa->x_type == gensym("polyline"))
                 sys_vgui(".x%lx.c create polyline\\\n", glist_getcanvas(glist));
-            else if (x->x_drawtype == gensym("polygon"))
+            else if (sa->x_type == gensym("polygon"))
                 sys_vgui(".x%lx.c create ppolygon\\\n", glist_getcanvas(glist));
-            else if (x->x_drawtype == gensym("path"))
+            else if (sa->x_type == gensym("path"))
                 sys_vgui(".x%lx.c create path {\\\n", glist_getcanvas(glist));
-            else if (x->x_drawtype == gensym("circle"))
+            else if (sa->x_type == gensym("circle"))
                 sys_vgui(".x%lx.c create ellipse\\\n", glist_getcanvas(glist));
             /* next send the gui drawing arguments: commands and points
                for paths, points for everything else */
-            if (x->x_drawtype == gensym("path"))
+            if (sa->x_type == gensym("path"))
             {
                 /* let's turn off bbox caching so we can recalculate
                    the bbox */
-                if (x->x_pathrect_cache != -1)
-                    x->x_pathrect_cache = 0;
+                if (sa->x_pathrect_cache != -1)
+                    sa->x_pathrect_cache = 0;
                 char *cmd;
                 int totalpoints = 0; /* running tally */
                 /* path parser: no error checking yet */
-                for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
+                for (i = 0, cmd = sa->x_pathcmds; i < sa->x_npathcmds; i++, cmd++)
                 {
                     int j;
-                    int cargs = x->x_nargs_per_cmd[i];
-                    f = (x->x_vec)+totalpoints;
+                    int cargs = sa->x_nargs_per_cmd[i];
+                    f = (sa->x_vec)+totalpoints;
                     sys_vgui("%c\\\n", *(cmd));
-                    for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+                    for (j = 0; j < sa->x_nargs_per_cmd[i]; j++)
                         sys_vgui("%g\\\n", fielddesc_getcoord(
                             f+j, template, data, 1));
-                    totalpoints += x->x_nargs_per_cmd[i];
+                    totalpoints += sa->x_nargs_per_cmd[i];
                 }
                 sys_gui("}\\\n");
             }
@@ -2876,79 +3127,50 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 for (i = 0; i < nxy; i++)
                 {
                     sys_vgui("%g %g\\\n", pix[2*i], pix[2*i+1]);
-                    if ((x->x_drawtype == gensym("ellipse") ||
-                         x->x_drawtype == gensym("circle")) && n > 1)
+                    if ((sa->x_type == gensym("ellipse") ||
+                         sa->x_type == gensym("circle")) && n > 1)
                     {
                         sys_vgui("-rx %d -ry %d\\\n",
-                            (int)(fielddesc_getcoord(x->x_vec+2,
+                            (int)(fielddesc_getcoord(sa->x_vec+2,
                                 template, data, 1)),
-                            (int)(fielddesc_getcoord(x->x_vec +
-                                (x->x_drawtype == gensym("ellipse")?
+                            (int)(fielddesc_getcoord(sa->x_vec +
+                                (sa->x_type == gensym("ellipse")?
                                  3 : 2),
                                 template, data, 1)));
                         break;
                     }
-                    else if (x->x_drawtype == gensym("rect") && n > 1)
+                    else if (sa->x_type == gensym("rect") && n > 1)
                     {
                         sys_vgui("%g %g\\\n",
-                            fielddesc_getcoord(x->x_vec,
+                            fielddesc_getcoord(sa->x_vec,
                                 template, data, 1) +
-                                fielddesc_getcoord(x->x_vec+2,
+                                fielddesc_getcoord(sa->x_vec+2,
                                 template, data, 1),
-                            fielddesc_getcoord(x->x_vec+1,
+                            fielddesc_getcoord(sa->x_vec+1,
                                 template, data, 1) +
-                                fielddesc_getcoord(x->x_vec+3,
+                                fielddesc_getcoord(sa->x_vec+3,
                                 template, data, 1));
                         break;
                     }
-                    else if (x->x_drawtype == gensym("circle"))
+                    else if (sa->x_type == gensym("circle"))
                     {
                         sys_vgui("-r %d\\\n",
-                            (t_int)fielddesc_getcoord(x->x_vec+2,
+                            (t_int)fielddesc_getcoord(sa->x_vec+2,
                                 template, data, 1));
                         break;
                     }
                 }
             }
-            sys_vgui("-strokewidth %g\\\n", fielddesc_getfloat(&x->x_strokewidth, template, data, 1));
-            if (x->x_drawtype != gensym("line"))
-                sys_vgui("-fill %s -fillopacity %g -fillrule %s\\\n",
-                    fill,
-                    fielddesc_getfloat(&x->x_fillopacity, template, data, 1),
-                    (int)fielddesc_getfloat(
-                    &x->x_fillrule, template, data, 1) ? "evenodd" : "nonzero");
-            sys_vgui("-stroke %s -strokeopacity %g -strokelinecap %s -strokelinejoin %s -strokemiterlimit %g\\\n",
-                stroke,
-                fielddesc_getfloat(&x->x_strokeopacity, template, data, 1),
-                strokelinecap, strokelinejoin,
-                fielddesc_getfloat(&x->x_strokemiterlimit, template, data, 1)
-            );
-            if (x->x_ndash)
-            {
-                int i;
-                t_fielddesc *fd;
-                sys_gui(" -strokedasharray {\\\n");
-                for (i = 0, fd = x->x_strokedasharray; i < x->x_ndash; i++)
-                {
-                    sys_vgui("%d\\\n", (int)fielddesc_getfloat(fd+i,
-                        template, data, 1));
-                }
-                sys_gui("}\\\n");
-            }
-            if (x->x_transform_n > 0)
-            {
-                /* todo: premultiply this */
-                t_float m1, m2, m3, m4, m5, m6;
-                draw_parsetransform(x, template, data, &m1, &m2, &m3,
-                    &m4, &m5, &m6);
-                sys_vgui("-matrix { {%g %g} {%g %g} {%g %g} }\\\n",
-                    m1, m2, m3, m4, m5, m6);
-            }
-            //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
+
+            svg_togui(sa, template, data);
+            //if ((flags & BEZ) && !(flags & BBOX))
+            //    sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
+
             if (in_array)
                 sys_vgui(" -parent .scelem%lx \\\n", data);
             else
-                sys_vgui(" -parent .dgroup%lx \\\n", sc->sc_vec);
+                sys_vgui(" -parent .dgroup%lx.%lx \\\n",
+                    x->x_canvas, data);
             /* tags - one for this scalar (not sure why the double glist thingy)
               one for this specific draw item
             */
@@ -2996,33 +3218,27 @@ static t_gpointer draw_motion_gpointer;
 static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_draw *x = (t_draw *)z;
+    t_svg *sa = (t_svg *)x->x_attr;
     t_float mtx1[3][3];
     t_float mtx2[3][3];
     t_float m1, m2, m3, m4, m5, m6, tdx, tdy;
-    t_draw *g = draw_getgroup(x);
-    if (g)
-    {
-        draw_parsetransform(g, draw_motion_template, draw_motion_wp,
-            &m1, &m2, &m3, &m4, &m5, &m6);
-        draw_mset(mtx1, m1, m2, m3, m4, m5, m6);
-    }
-    else
-        draw_mset(mtx1, 1, 0, 0, 1, 0, 0);
-    draw_parsetransform(x, draw_motion_template, draw_motion_wp,
+
+    svg_groupmtx(sa, draw_motion_template, draw_motion_wp, mtx1);
+    svg_parsetransform(sa, draw_motion_template, draw_motion_wp,
         &m1, &m2, &m3, &m4, &m5, &m6);
-    draw_mset(mtx2, m1, m2, m3, m4, m5, m6);
-    draw_mmult(mtx1, mtx2, mtx1);
-    draw_minv(mtx1, mtx1);
+    mset(mtx2, m1, m2, m3, m4, m5, m6);
+    mmult(mtx1, mtx2, mtx1);
+    minv(mtx1, mtx1);
     /* get rid of translation so it doesn't factor
        in to our deltas */
     mtx1[0][2] = 0;
     mtx1[1][2] = 0;
-    draw_mset(mtx2, dx, dy, 0, 0, 0, 0);
+    mset(mtx2, dx, dy, 0, 0, 0, 0);
     mtx2[2][0] = 1;
-    draw_mmult(mtx1, mtx2, mtx2);
+    mmult(mtx1, mtx2, mtx2);
     tdx = mtx2[0][0];
     tdy = mtx2[1][0];
-    t_fielddesc *f = x->x_vec + draw_motion_field;
+    t_fielddesc *f = sa->x_vec + draw_motion_field;
     t_atom at;
     if (!gpointer_check(&draw_motion_gpointer, 0))
     {
@@ -3058,36 +3274,32 @@ static int draw_click(t_gobj *z, t_glist *glist,
     t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
-    //fprintf(stderr,"draw_click %f %f %d %d %lx\n", basex, basey, xpix, ypix, (t_int)data);
+    //fprintf(stderr,"draw_click %f %f %d %d %lx\n",
+    //    basex, basey, xpix, ypix, (t_int)data);
     t_draw *x = (t_draw *)z;
+    t_svg *sa = (t_svg *)x->x_attr;
     t_float mtx1[3][3];
     t_float mtx2[3][3];
     t_float m1, m2, m3, m4, m5, m6;
-    t_draw *g = draw_getgroup(x);
-    if (g)
-    {
-        draw_parsetransform(g, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
-        draw_mset(mtx1, m1, m2, m3, m4, m5, m6);
-    }
-    else
-        draw_mset(mtx1, 1, 0, 0, 1, 0, 0);
-    draw_parsetransform(x, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
-    draw_mset(mtx2, m1, m2, m3, m4, m5, m6);
-    draw_mmult(mtx1, mtx2, mtx1);
-    int i, n = x->x_nargs;
+
+    svg_groupmtx(sa, template, data, mtx1);
+    svg_parsetransform(sa, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
+    mset(mtx2, m1, m2, m3, m4, m5, m6);
+    mmult(mtx1, mtx2, mtx1);
+    int i, n = sa->x_nargs;
     int bestn = -1;
     int besterror = 0x7fffffff;
     t_fielddesc *f;
-    if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
+    if (!fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0))
         return (0);
     int nxy = n >> 1;
-    for (i = 0, f = x->x_vec; i < nxy; i++, f += 2)
+    for (i = 0, f = sa->x_vec; i < nxy; i++, f += 2)
     {
         t_float xval = fielddesc_getcoord(f, template, data, 0);
         t_float yval = fielddesc_getcoord(f+1, template, data, 0);
-        draw_mset(mtx2, xval, yval, 0, 0, 0, 0);
+        mset(mtx2, xval, yval, 0, 0, 0, 0);
         mtx2[2][0] = 1;
-        draw_mmult(mtx1, mtx2, mtx2);
+        mmult(mtx1, mtx2, mtx2);
         t_float txval = mtx2[0][0];
         t_float tyval = mtx2[1][0];
         int xloc = glist_xtopixels(glist, basex + txval);
@@ -3145,58 +3357,83 @@ t_parentwidgetbehavior draw_widgetbehavior =
     draw_click,
 };
 
-static void draw_free(t_draw *x)
+static void svg_free(t_svg *x)
 {
-    /* [draw group] has no pts in x_vec, but it looks like
+
+    /* [group] has no pts in x_attr->a_vec, but it looks like
        t_freebytes allocates a single byte so freeing it
        should be fine */
-    t_freebytes(x->x_vec, x->x_nargs * sizeof(*x->x_vec));
+    t_freebytes(x->x_vec,
+        x->x_nargs * sizeof(*x->x_vec));
     t_freebytes(x->x_strokedasharray,
         x->x_ndash * sizeof(*x->x_strokedasharray));
     t_freebytes(x->x_transform,
         x->x_transform_n * sizeof(*x->x_transform));
-    if (x->x_drawtype == gensym("path"))
+    if (x->x_type == gensym("path"))
     {
         t_freebytes(x->x_pathcmds, x->x_npathcmds * sizeof(*x->x_pathcmds));
         t_freebytes(x->x_nargs_per_cmd, x->x_npathcmds * sizeof(*x->x_nargs_per_cmd));
     }
+    /* not sure about this one */
+/*    t_freebytes(x->x_attr, sizeof(*x->x_attr)); */
     char buf[50];
     sprintf(buf, ".x%lx", (long unsigned int)x);
-    pd_unbind(&x->x_obj.ob_pd, gensym(buf));
+    /* don't think this is needed anymore ... */
+/*    pd_unbind(&x->x_obj.ob_pd, gensym(buf)); */
 }
+
+void canvas_group_free(t_pd *x)
+{
+    t_svg *svg = (t_svg *)x;
+    svg_free(svg);
+}
+
+static void draw_free(t_draw *x)
+{
+    t_svg *sa = (t_svg *)x->x_attr;
+    svg_free(sa);
+}
+
 
 static void draw_setup(void)
 {
     draw_class = class_new(gensym("draw"), (t_newmethod)draw_new,
-        (t_method)draw_free, sizeof(t_draw), 0, A_GIMME, 0);
+        (t_method)draw_free, sizeof(t_draw), CLASS_NOINLET, A_GIMME, 0);
+    /* proxy inlet for [draw] and [group] */
+    svg_class = class_new(gensym("_svg"), 0, 0,
+          sizeof(struct _svg), CLASS_PD, 0);
     class_setdrawcommand(draw_class);
     class_setparentwidget(draw_class, &draw_widgetbehavior);
-    class_addfloat(draw_class, draw_float);
-    class_addmethod(draw_class, (t_method)draw_fill,
+    /* methods for svg_class-- these will be accessible
+       from the inlet of [draw] and the (rightmost) inlet of
+       [group] */
+    class_addmethod(svg_class, (t_method)svg_vis,
+        gensym("vis"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_fill,
         gensym("fill"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_fillopacity,
+    class_addmethod(svg_class, (t_method)svg_fillopacity,
         gensym("fill-opacity"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_fillrule,
+    class_addmethod(svg_class, (t_method)svg_fillrule,
         gensym("fill-rule"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_stroke,
+    class_addmethod(svg_class, (t_method)svg_stroke,
         gensym("stroke"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_strokedasharray,
+    class_addmethod(svg_class, (t_method)svg_strokedasharray,
         gensym("stroke-dasharray"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_strokeopacity,
+    class_addmethod(svg_class, (t_method)svg_strokeopacity,
         gensym("stroke-opacity"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_strokelinecap,
+    class_addmethod(svg_class, (t_method)svg_strokelinecap,
         gensym("stroke-linecap"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_strokelinejoin,
+    class_addmethod(svg_class, (t_method)svg_strokelinejoin,
         gensym("stroke-linejoin"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_strokemiterlimit,
+    class_addmethod(svg_class, (t_method)svg_strokemiterlimit,
         gensym("stroke-miterlimit"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_strokewidth,
+    class_addmethod(svg_class, (t_method)svg_strokewidth,
         gensym("stroke-width"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_transform,
+    class_addmethod(svg_class, (t_method)svg_transform,
         gensym("transform"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_rx,
+    class_addmethod(svg_class, (t_method)svg_rx,
         gensym("rx"), A_GIMME, 0);
-    class_addmethod(draw_class, (t_method)draw_ry,
+    class_addmethod(svg_class, (t_method)svg_ry,
         gensym("ry"), A_GIMME, 0);
 }
 
@@ -3396,9 +3633,9 @@ static void numbertocolor(int n, char *s)
         rangecolor(green));
 }
 
-static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int vis)
+static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int vis)
 {
     t_curve *x = (t_curve *)z;
     int i, n = x->x_npoints;
@@ -3429,6 +3666,18 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                revised so it's done in a more sane fashion
             */
             int in_array = (sc->sc_vec == data) ? 0 : 1;
+            if (in_array)
+            {
+               /* since the old drawing commands don't have svg attributes
+                  or transforms, we just make them children of the scalar's
+                  group.  That seems to work just fine. */
+               t_canvas *p =
+                    template_findcanvas(template_findbyname(sc->sc_template));
+               sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
+                    "-parent .dgroup%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
+                    glist_getcanvas(glist), data,
+                    p, sc->sc_vec, basex, basey);
+            }
             int flags = x->x_flags, closed = (flags & CLOSED);
             t_float width = fielddesc_getfloat(&x->x_width, template, data, 1);
             char outline[20], fill[20];
@@ -3505,7 +3754,10 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 fill, outline);
             else if(flags & BBOX) sys_vgui("-stroke %s \\\n", outline);
             else sys_vgui("-stroke %s \\\n", outline);
-            sys_vgui("-parent .dgroup%lx \\\n", sc->sc_vec);
+            if (in_array)
+                sys_vgui("-parent .scelem%lx \\\n", data);
+            else
+                sys_vgui("-parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
             // this doesn't work with tkpath...
             //if ((flags & BEZ) && !(flags & BBOX)) sys_vgui("-smooth 1 \\\n");
             sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
@@ -3919,12 +4171,68 @@ int array_getfields(t_symbol *elemtemplatesym,
     return (0);
 }
 
+static void plot_getgrouprect(t_glist *glist, t_template *elemtemplate,
+    t_canvas *groupcanvas, int elemsize,
+    t_array *array, int i, t_float usexloc, t_float useyloc,
+    int *x1, int *y1, int *x2, int *y2)
+{
+    t_gobj *y;
+	for (y = groupcanvas->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == canvas_class &&
+            ((t_canvas *)y)->gl_svg)
+        {
+            plot_getgrouprect(glist, elemtemplate, (t_canvas *)y,
+                elemsize, array, i, usexloc, useyloc, x1, y1, x2, y2);
+        }
+        //fprintf(stderr,".-.-. usexloc %f useyloc %f "
+        //               "(alt %f %f)\n",
+        //  usexloc, useyloc,
+        //  basex + xloc +
+        //  fielddesc_cvttocoord(xfielddesc,
+        //      *(t_float *)(((char *)(array->a_vec) + elemsize * i)
+        //      + xonset)),
+        //  *(t_float *)(((char *)(array->a_vec) + elemsize * i) +
+        //  yonset));
+        int xx1, xx2, yy1, yy2;
+        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+        if (!wb) continue;
+        (*wb->w_parentgetrectfn)(y, glist,
+            (t_word *)((char *)(array->a_vec) + elemsize * i),
+                elemtemplate, usexloc, useyloc, 
+                    &xx1, &yy1, &xx2, &yy2);
+        //fprintf(stderr,"  .....plot_getrect %d %d %d %d\n",
+        //    xx1, yy1, xx2, yy2); 
+        if (xx1 < *x1)
+            *x1 = xx1;
+        if (yy1 < *y1)
+            *y1 = yy1;
+        if (xx2 > *x2)
+            *x2 = xx2;
+        if (yy2 > *y2)
+            *y2 = yy2;
+        //fprintf(stderr,"  ....plot_getrect %d %d %d %d\n",
+        //    x1, y1, x2, y2); 
+    }
+} 
+
+
+
 static void plot_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     //fprintf(stderr,"plot_getrect\n");
     t_plot *x = (t_plot *)z;
+    t_float mtx1[3][3], mtx2[3][3];
+
+    /* todo: svg_groupmtx should be changed so we
+       can just call it here.  But it takes an
+       t_svg and t_plot doesn't have one */
+    mset(mtx1, 1, 0, 0, 1, 0, 0);
+    if (x->x_canvas->gl_owner && x->x_canvas->gl_svg)
+        svg_dogroupmtx(x->x_canvas, template, data, mtx1);
+//post("plot_getrect matrix: %g %g %g %g %g %g", mtx1[0][0], mtx1[1][0], mtx1[0][1], mtx1[1][1], mtx1[0][2], mtx1[2][1]);
     int elemsize, yonset, wonset, xonset;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -3935,7 +4243,7 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
     t_array *array;
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
     int i;
-    t_float xpix1, xpix2, ypix, wpix;
+    t_float xpix1, xpix2, ypix, ypix2, wpix;
     t_fielddesc *xfielddesc, *yfielddesc, *wfielddesc;
         /* if we're the only plot in the glist claim the whole thing */
     /*if (glist->gl_list && !glist->gl_list->g_next)
@@ -3970,17 +4278,32 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
             //               "xpix%f ypix%f wpix%f\n",
             //    elemsize, yonset, wonset, xonset, i, basex, xloc, basey, yloc,
             //    xinc, xpix, ypix, wpix);
+            mset(mtx2, xpix1 - basex, ypix - basey,
+                       xpix2 - basex, ypix - basey, 0, 0);
+            mtx2[2][0] = 1; mtx2[2][1] = 1;
+            mmult(mtx1, mtx2, mtx2);
+            xpix1 = mtx2[0][0] + basex;
+            xpix2 = mtx2[0][1] + basex;
+            ypix = mtx2[1][0] + basey;
+            ypix2 = mtx2[1][1] + basey;
             if (xpix1 < x1)
                 x1 = xpix1;
+            if (xpix1 > x2)
+                x2 = xpix1;
+            if (xpix2 < x1)
+                x1 = xpix2;
             if (xpix2 > x2)
                 x2 = xpix2;
             if (ypix - wpix < y1)
                 y1 = ypix - wpix;
             if (ypix + wpix > y2)
                 y2 = ypix + wpix;
+            if (ypix2 - wpix < y1)
+                y1 = ypix2 - wpix;
+            if (ypix2 + wpix > y2)
+                y2 = ypix2 + wpix;
 
             //fprintf(stderr,"plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
-            
             if (scalarvis != 0)
             {
                     /* check also the drawing instructions for the scalar */ 
@@ -3996,6 +4319,10 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                 else yval = 0;
                 //useyloc = (y1+y2)/2; //basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
                 useyloc = basey + yloc + fielddesc_cvttocoord(yfielddesc, yval);
+
+                plot_getgrouprect(glist, elemtemplate, elemtemplatecanvas,
+                    elemsize, array, i, usexloc, useyloc, &x1, &y1, &x2, &y2);
+/*
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
                     //fprintf(stderr,".-.-. usexloc %f useyloc %f "
@@ -4027,12 +4354,14 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
                     //fprintf(stderr,"  ....plot_getrect %d %d %d %d\n",
                     //    x1, y1, x2, y2); 
                 }
+*/
             }
             //fprintf(stderr,"  >====plot_getrect %d %d %d %d\n",
             //    x1, y1, x2, y2);
         }
     }
-    //fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    fprintf(stderr,"basex %g basey %g\n", basex, basey);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -4043,14 +4372,6 @@ static void plot_displace(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int dx, int dy)
 {
-    /* a very temporary hack. See comment inside scalar_displace_withtag */
-
-    /* Looks like it's no longer needed, so we're commenting it out for
-       the time being. */
-    /*
-    sys_vgui(".x%lx.c move .x%lx.x%lx.template%lx %d %d\n",
-        glist_getcanvas(glist), glist_getcanvas(glist), glist, data, dx, dy);
-    */
         /* not yet */
 }
 
@@ -4069,9 +4390,35 @@ static void plot_activate(t_gobj *z, t_glist *glist,
         /* not yet */
 }
 
-static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int tovis)
+static void plot_groupvis(t_scalar *x, t_glist *owner, t_word *data,
+    t_template *template,
+    t_glist *groupcanvas, t_glist *parent, t_float basex, t_float basey)
+{
+    t_gobj *y;
+    sys_vgui(".x%lx.c create group -tags .scelem%lx.%lx "
+             "-parent {.scelem%lx.%lx}\\\n",
+         glist_getcanvas(owner), groupcanvas, data,
+         parent, data);
+    svg_grouptogui(groupcanvas, template, data);
+    sys_gui("\n");
+    for (y = groupcanvas->gl_list; y; y = y->g_next)
+    {
+        if (pd_class(&y->g_pd) == canvas_class &&
+            ((t_glist *)y)->gl_svg)
+        {
+            plot_groupvis(x, owner, data, template, (t_glist *)y, groupcanvas,
+                basex, basey);
+        }
+        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
+        if (!wb) continue;
+        (*wb->w_parentvisfn)(y, owner, groupcanvas, x, data, template,
+            basex, basey, 1);
+    }
+}
+
+static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int tovis)
 {
     t_plot *x = (t_plot *)z;
     /*// get the universal tag for all nested objects
@@ -4129,9 +4476,12 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
     {
         int in_array = (sc->sc_vec == data) ? 0 : 1;
         if (in_array)
-            sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
-                "-parent .dgroup%lx -matrix { {1 0} {0 1} {%g %g} }\n",
-                glist_getcanvas(glist), data, sc->sc_vec, basex, basey);
+        {
+           sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
+                "-parent .dgroup%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
+                glist_getcanvas(glist), data, x->x_canvas, sc->sc_vec,
+                basex, basey);
+        }
         /* check if old 3-digit color field is being used... */
         int dscolor = fielddesc_getfloat(&x->x_outlinecolor, template, data, 1);
         if (dscolor != 0)
@@ -4157,20 +4507,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 {
                     usexloc = xloc +
                         *(t_float *)((elem + elemsize * i) + xonset);
-// revisite xtopixels...
-                    ixpix = glist_xtopixels(glist, 
-                        fielddesc_cvttocoord(xfielddesc, usexloc));
+                    ixpix = fielddesc_cvttocoord(xfielddesc, usexloc);
                     inextx = ixpix + 2;
                 }
                 else
                 {
                     usexloc = xsum;
                     xsum += xinc;
-                    ixpix = glist_xtopixels(glist,
-                        fielddesc_cvttocoord(xfielddesc, usexloc));
-                    inextx = glist_xtopixels(glist,
-                        fielddesc_cvttocoord(xfielddesc, xsum));
-                }
+                    ixpix = fielddesc_cvttocoord(xfielddesc, usexloc);
+                    inextx = fielddesc_cvttocoord(xfielddesc, xsum);
+               }
 
                 if (yonset >= 0)
                     yval = yloc + *(t_float *)((elem + elemsize * i) + yonset);
@@ -4184,9 +4530,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     int py2 = 0;
                     int border = 0;
                     if(style == PLOTSTYLE_POINTS)
-                        py2 = (int)(glist_ytopixels(glist,
-                            fielddesc_cvttocoord(yfielddesc, maxyval))
-                                + linewidth) - 1;
+                        py2 = (int)fielddesc_cvttocoord(yfielddesc, maxyval)
+                                + linewidth - 1;
                     else
                     {
                         /* this should probably be changed to anchor to the
@@ -4240,8 +4585,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     /* For efficiency, we make a single path item
                        for the trace or bargraph */
                     int mex1 = ixpix;
-                    int mey1 = (int)glist_ytopixels(glist,
-                        fielddesc_cvttocoord(yfielddesc, minyval)) - 1;
+                    int mey1 = (int)fielddesc_cvttocoord(yfielddesc, minyval) - 1;
+
                     int mex2 = inextx;
                     int mey2 = py2;
                     sys_vgui("M %d %d H %d V %d H %d z \\\n",
@@ -4255,17 +4600,12 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
             }
             /* end of the path item from above */
             sys_vgui("} -fill %s -stroke %s -strokewidth %d "
-                     "-parent {.dgroup%lx} "
-                     "-tags {.x%lx.x%lx.template%lx array}\\\n",
+                     "-parent {.dgroup%lx.%lx} "
+                     "-tags {.x%lx.x%lx.template%lx array}\n",
                 symfill->s_name, symoutline->s_name,
                 style == PLOTSTYLE_POINTS ? 0 : 1,
-                data,
+                x->x_canvas, data,
                 glist_getcanvas(glist), glist, data);
-            if (in_array)
-                sys_vgui("-parent .scelem%lx \n", data);
-            else
-                sys_vgui("-parent .dgroup%lx \n", sc->sc_vec);
-
         }
         else
         {
@@ -4293,16 +4633,15 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                         yval = *(t_float *)((elem + elemsize * i) + yonset);
                     else yval = 0;
                     wval = *(t_float *)((elem + elemsize * i) + wonset);
-                    xpix = glist_xtopixels(glist,
-                        fielddesc_cvttocoord(xfielddesc, usexloc));
+                    xpix = fielddesc_cvttocoord(xfielddesc, usexloc);
+
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
                         sys_vgui("%d %f \\\n", ixpix,
-                            glist_ytopixels(glist,
                                 fielddesc_cvttocoord(yfielddesc, 
                                     yloc + yval) -
-                                        fielddesc_cvttocoord(wfielddesc,wval)));
+                                        fielddesc_cvttocoord(wfielddesc,wval));
                         ndrawn++;
                     }
                     lastpixel = ixpix;
@@ -4320,15 +4659,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                         yval = *(t_float *)((elem + elemsize * i) + yonset);
                     else yval = 0;
                     wval = *(t_float *)((elem + elemsize * i) + wonset);
-                    xpix = glist_xtopixels(glist,
-                        fielddesc_cvttocoord(xfielddesc, usexloc));
+                    xpix = fielddesc_cvttocoord(xfielddesc, usexloc);
+
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
-                        sys_vgui("%d %f \\\n", ixpix, glist_ytopixels(glist,
+                        sys_vgui("%d %f \\\n", ixpix,
                             yloc + fielddesc_cvttocoord(yfielddesc,
                                 yval) +
-                                    fielddesc_cvttocoord(wfielddesc, wval)));
+                                    fielddesc_cvttocoord(wfielddesc, wval));
+
                         ndrawn++;
                     }
                     lastpixel = ixpix;
@@ -4338,24 +4678,24 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     There should be at least two already. */
                 if (ndrawn < 4)
                 {
-                    sys_vgui("%d %f \\\n", ixpix + 10, glist_ytopixels(glist,
+                    sys_vgui("%d %f \\\n", ixpix + 10,
                         yloc + fielddesc_cvttocoord(yfielddesc,
                             yval) +
-                                fielddesc_cvttocoord(wfielddesc, wval)));
-                    sys_vgui("%d %f \\\n", ixpix + 10, glist_ytopixels(glist,
+                                fielddesc_cvttocoord(wfielddesc, wval));
+                    sys_vgui("%d %f \\\n", ixpix + 10,
                         yloc + fielddesc_cvttocoord(yfielddesc,
                             yval) -
-                                fielddesc_cvttocoord(wfielddesc, wval)));
+                                fielddesc_cvttocoord(wfielddesc, wval));
                 }
             ouch:
                 sys_vgui(" -strokewidth 1 -fill %s -stroke %s \\\n",
-                    symfill->s_name, symoutline->s_name);
+                    symoutline->s_name, symoutline->s_name);
                 // this doesn't work with tkpath...
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n");
                 if (in_array)
                     sys_vgui(" -parent .scelem%lx \\\n", data);
                 else
-                    sys_vgui(" -parent .dgroup%lx \\\n", sc->sc_vec);
+                    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
                 sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
                     glist_getcanvas(glist), glist, data, sc);
             }
@@ -4376,15 +4716,15 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     if (yonset >= 0)
                         yval = *(t_float *)((elem + elemsize * i) + yonset);
                     else yval = 0;
-                    xpix = glist_xtopixels(glist,
-                        fielddesc_cvttocoord(xfielddesc, usexloc));
+
+                    xpix = fielddesc_cvttocoord(xfielddesc, usexloc);
+
                     ixpix = xpix + 0.5;
                     if (xonset >= 0 || ixpix != lastpixel)
                     {
                         sys_vgui("%d %f \\\n", ixpix,
-                            glist_ytopixels(glist,
                                 yloc + fielddesc_cvttocoord(yfielddesc,
-                                    yval)));
+                                    yval));
                         ndrawn++;
                     }
                     lastpixel = ixpix;
@@ -4392,19 +4732,19 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 }
                     /* TK will complain if there aren't at least 2 points... */
                 if (ndrawn == 0) sys_vgui("0 0 0 0 \\\n");
-                else if (ndrawn == 1) sys_vgui("%d %f \\\n", ixpix + 10,
-                    glist_ytopixels(glist, yloc + 
-                        fielddesc_cvttocoord(yfielddesc, yval)));
+                else if (ndrawn == 1)
+                {
+                    sys_vgui("%d %f \\\n", ixpix + 10,
+                    yloc + 
+                        fielddesc_cvttocoord(yfielddesc, yval));
+                }
 
-                //sys_vgui("-strokewidth %f \\\n", linewidth);
-                //sys_vgui("-fill %s \\\n", outline);
                 sys_vgui("-strokewidth %f -stroke %s \\\n", linewidth, symoutline->s_name);
-                //sys_vgui("-fill %s \\\n", symoutline->s_name);
                 //if (style == PLOTSTYLE_BEZ) sys_vgui("-smooth 1 \\\n"); //this doesn't work with tkpath
                 if (in_array)
                     sys_vgui(" -parent .scelem%lx \\\n", data);
                 else
-                    sys_vgui(" -parent .dgroup%lx \\\n", sc->sc_vec);
+                    sys_vgui(" -parent .dgroup%lx.%lx \\\n", x->x_canvas, sc->sc_vec);
  
                 sys_vgui("-tags {.x%lx.x%lx.template%lx scalar%lx}\n",
                           glist_getcanvas(glist), glist, data,sc);
@@ -4436,9 +4776,22 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                     fielddesc_cvttocoord(yfielddesc, yval);
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
+                    if (pd_class(&y->g_pd) == canvas_class &&
+                        ((t_glist *)y)->gl_svg)
+                    {
+                        sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
+                                 "-parent {.dgroup%lx.%lx}\n",
+                            glist_getcanvas(glist), elemtemplatecanvas,
+                            (t_word *)(elem + elemsize * i),
+                            x->x_canvas, data);
+                        plot_groupvis(sc, glist,
+                            (t_word *)(elem + elemsize * i),
+                        template, (t_glist *)y, 
+                            elemtemplatecanvas, usexloc, useyloc);
+                    }
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
-                    (*wb->w_parentvisfn)(y, glist, sc,
+                    (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i),
                             elemtemplate, usexloc, useyloc, tovis);
                 }
@@ -4478,7 +4831,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 {
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
-                    (*wb->w_parentvisfn)(y, glist, sc,
+                    (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i), elemtemplate,
                             0, 0, 0);
                 }
@@ -4880,9 +5233,9 @@ static void old_plot_activate(t_gobj *z, t_glist *glist,
         /* not yet */
 }
 
-static void old_plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int tovis)
+static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int tovis)
 {
     t_old_plot *x = (t_old_plot *)z;
     /*// get the universal tag for all nested objects
@@ -5224,7 +5577,7 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 {
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
-                    (*wb->w_parentvisfn)(y, glist, sc,
+                    (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i),
                             elemtemplate, usexloc, useyloc, tovis);
                 }
@@ -5263,7 +5616,7 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
                 {
                     t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
                     if (!wb) continue;
-                    (*wb->w_parentvisfn)(y, glist, sc,
+                    (*wb->w_parentvisfn)(y, glist, elemtemplatecanvas, sc,
                         (t_word *)(elem + elemsize * i), elemtemplate,
                             0, 0, 0);
                 }
@@ -5501,9 +5854,9 @@ static void drawnumber_activate(t_gobj *z, t_glist *glist,
     //post("drawnumber_activate %d", state);
 }
 
-static void drawnumber_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int vis)
+static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int vis)
 {
     //fprintf(stderr,"drawnumber_vis %d\n", vis);
     t_drawnumber *x = (t_drawnumber *)z;
@@ -5877,9 +6230,9 @@ static void drawsymbol_activate(t_gobj *z, t_glist *glist,
     //post("drawsymbol_activate %d", state);
 }
 
-static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int vis)
+static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int vis)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
@@ -6116,24 +6469,15 @@ t_class *drawimage_class;
 
 #define DRAW_SPRITE 1
 
-typedef struct _drawimage
-{
-    t_object x_obj;
-    t_fielddesc x_value;
-    t_fielddesc x_xloc;
-    t_fielddesc x_yloc;
-    t_fielddesc x_vis;
-    t_symbol *x_img;
-    t_float x_w;
-    t_float x_h;
-    int x_flags;
-    int x_deleteme;
-    t_canvas *x_canvas;
-} t_drawimage;
+/* t_drawimage defined above */
 
-static void *drawimage_new(t_symbol *classsym, t_int argc, t_atom *argv)
+static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv)
 {
     t_drawimage *x = (t_drawimage *)pd_new(drawimage_class);
+
+    /* we need a t_svg to associate with it */
+    x->x_attr = (t_pd *)svg_new((t_pd *)x, classsym, 0, 0);
+
     x->x_deleteme = 0;
     char *classname = classsym->s_name;
     char buf[50];
@@ -6141,22 +6485,12 @@ static void *drawimage_new(t_symbol *classsym, t_int argc, t_atom *argv)
     pd_bind(&x->x_obj.ob_pd, gensym(buf));
     int flags = 0;
     
-    if (classname[4] == 's')
+    if (classname[0] == 's')
         flags |= DRAW_SPRITE;
     x->x_flags = flags;
     fielddesc_setfloat_const(&x->x_vis, 1);
     x->x_canvas = canvas_getcurrent();
     t_symbol *dir = canvas_getdir(x->x_canvas);
-    while (1)
-    {
-        t_symbol *firstarg = atom_getsymbolarg(0, argc, argv);
-        if (!strcmp(firstarg->s_name, "-v") && argc > 1)
-        {
-            fielddesc_setfloatarg(&x->x_vis, 1, argv+1);
-            argc -= 2; argv += 2;
-        }
-        else break;
-    }
     if (argc && argv->a_type == A_SYMBOL)
         x->x_img = atom_getsymbolarg(0, argc--, argv++);
     else x->x_img = &s_;
@@ -6164,15 +6498,6 @@ static void *drawimage_new(t_symbol *classsym, t_int argc, t_atom *argv)
     else fielddesc_setfloat_const(&x->x_xloc, 0);
     if (argc) fielddesc_setfloatarg(&x->x_yloc, argc--, argv++);
     else fielddesc_setfloat_const(&x->x_yloc, 0);
-    if (argc)
-    {
-        fielddesc_setfloatarg(&x->x_value, argc--, argv++);
-        if (!(x->x_flags & DRAW_SPRITE))
-            post("drawimage warning: sequence variable is only "
-                 "used with drawsprite");
-    }
-    else fielddesc_setfloat_const(&x->x_value, 0);
-
     /* [drawimage] allocates memory for an image or image sequence
        while the object is creating. The corresponding scalar gets
        drawn as a canvas image item using the "parent" tk image as
@@ -6185,27 +6510,74 @@ static void *drawimage_new(t_symbol *classsym, t_int argc, t_atom *argv)
     return (x);
 }
 
-void drawimage_float(t_drawimage *x, t_floatarg f)
-{
-    int viswas;
-    if (x->x_vis.fd_type != A_FLOAT || x->x_vis.fd_var)
-    {
-        pd_error(x, "global vis/invis for a template with variable visibility");
-        return;
-    }
-    viswas = (x->x_vis.fd_un.fd_float != 0);
-    
-    if ((f != 0 && viswas) || (f == 0 && !viswas))
-        return;
-    canvas_redrawallfortemplatecanvas(x->x_canvas, 2);
-    fielddesc_setfloat_const(&x->x_vis, (f != 0));
-    canvas_redrawallfortemplatecanvas(x->x_canvas, 1);
-}
-
 void drawimage_size(t_drawimage *x, t_float w, t_float h)
 {
     x->x_w = w;
     x->x_h = h;
+}
+
+static void drawimage_index(t_drawimage *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        if (!(x->x_flags & DRAW_SPRITE))
+            post("drawimage warning: sequence variable is only "
+                 "used with drawsprite");
+        fielddesc_setfloatarg(&x->x_value, argc, argv);
+        canvas_redrawallfortemplatecanvas(x->x_canvas, 0);
+    }
+}
+
+void drawimage_float(t_drawimage *x, t_floatarg f)
+{
+    t_atom at[1];
+    SETFLOAT(at, f);
+    /* note: no symbol set here */
+    drawimage_index(x, 0, 1, at); 
+}
+
+void drawimage_symbol(t_drawimage *x, t_symbol *s)
+{
+    t_atom at[1];
+    SETSYMBOL(at, s);
+    /* note: no symbol set here */
+    drawimage_index(x, 0, 1, at); 
+}
+
+static void drawimage_x(t_drawimage *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&x->x_xloc, argc, argv);
+        canvas_redrawallfortemplatecanvas(x->x_canvas, 0);
+    }
+}
+
+static void drawimage_y(t_drawimage *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        fielddesc_setfloatarg(&x->x_yloc, argc, argv);
+        canvas_redrawallfortemplatecanvas(x->x_canvas, 0);
+    }
+}
+
+static void drawimage_forward(t_drawimage *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    /* forward to t_svg thingy */
+    pd_typedmess(x->x_attr, s, argc, argv);
+}
+
+static void drawimage_anything(t_drawimage *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    /* this could be used to just forward all messages to the svg. But
+       since tkpath's pimage only uses the matrix option we just use
+       drawimage_transform above for that. */
 }
 
 /* -------------------- widget behavior for drawimage ------------ */
@@ -6229,23 +6601,64 @@ static void drawimage_getrect(t_gobj *z, t_glist *glist,
 {
     t_drawimage *x = (t_drawimage *)z;
     int xloc, yloc;
-//    char buf[DRAWNUMBER_BUFSIZE];
+    int x1, y1, x2, y2;
+    x1 = y1 = 0x7fffffff;
+    x2 = y2 = -0x7fffffff;
 
+//    char buf[DRAWNUMBER_BUFSIZE];
+    t_float mtx1[3][3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
+    t_float mtx2[3][3] = { {1, 0, 0}, {0, 1, 0}, {1, 0, 1} };
+    t_float m1, m2, m3, m4, m5, m6,
+            tx1, ty1, tx2, ty2, t5, t6;
+    t_svg *sa = (t_svg *)x->x_attr;
+    svg_groupmtx(sa, template, data, mtx1);
+    svg_parsetransform(sa, template, data, &m1, &m2, &m3,
+        &m4, &m5, &m6);
+    mset(mtx2, m1, m2, m3, m4, m5, m6);
+    mmult(mtx1, mtx2, mtx1);
+    xloc = fielddesc_getcoord(&x->x_xloc, template, data, 0);
+    yloc = fielddesc_getcoord(&x->x_yloc, template, data, 0);
+ 
+    mset(mtx2, xloc, yloc, xloc + x->x_w, yloc + x->x_h, 0, 0);
+    mtx2[2][0] = 1; mtx2[2][1] = 1;
+    mmult(mtx1, mtx2, mtx2);
+    mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
+    if (tx1 < x1) x1 = tx1;
+    if (tx2 < x1) x1 = tx2;
+    if (ty1 < y1) y1 = ty1;
+    if (ty2 < y1) y1 = ty2;
+    if (tx1 > x2) x2 = tx1;
+    if (tx2 > x2) x2 = tx2;
+    if (ty1 > y2) y2 = ty1;
+    if (ty2 > y2) y2 = ty2;
+    mset(mtx2, xloc, yloc + x->x_h, xloc + x->x_w, yloc, 0, 0);
+    mtx2[2][0] = 1; mtx2[2][1] = 1;
+    mmult(mtx1, mtx2, mtx2);
+    mget(mtx2, &tx1, &ty1, &tx2, &ty2, &t5, &t6);
+    if (tx1 < x1) x1 = tx1;
+    if (tx2 < x1) x1 = tx2;
+    if (ty1 < y1) y1 = ty1;
+    if (ty2 < y1) y1 = ty2;
+    if (tx1 > x2) x2 = tx1;
+    if (tx2 > x2) x2 = tx2;
+    if (ty1 > y2) y2 = ty1;
+    if (ty2 > y2) y2 = ty2;
+    x1 = glist_xtopixels(glist, basex + x1);
+    x2 = glist_xtopixels(glist, basex + x2);
+    y1 = glist_ytopixels(glist, basey + y1);
+    y2 = glist_ytopixels(glist, basey + y2);
+
+    /* todo: put these up top */
     if (!fielddesc_getfloat(&x->x_vis, template, data, 0))
     {
         *xp1 = *yp1 = 0x7fffffff;
         *xp2 = *yp2 = -0x7fffffff;
         return;
     }
-    xloc = glist_xtopixels(glist,
-        basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
-    yloc = glist_ytopixels(glist,
-        basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));
-    *xp1 = xloc;
-    *yp1 = yloc;
-
-    *xp2 = xloc + x->x_w;
-    *yp2 = yloc + x->x_h;
+    *xp1 = x1;
+    *yp1 = y1;
+    *xp2 = x2;
+    *yp2 = y2;
 }
 
 static void drawimage_displace(t_gobj *z, t_glist *glist,
@@ -6270,11 +6683,12 @@ static void drawimage_activate(t_gobj *z, t_glist *glist,
     //post("drawimage_activate %d", state);
 }
 
-static void drawimage_vis(t_gobj *z, t_glist *glist, t_scalar *sc, 
-    t_word *data, t_template *template, t_float basex, t_float basey,
-    int vis)
+static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
+    t_scalar *sc, t_word *data, t_template *template,
+    t_float basex, t_float basey, int vis)
 {
     t_drawimage *x = (t_drawimage *)z;
+    t_svg *svg = (t_svg *)x->x_attr;
     
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
@@ -6294,8 +6708,13 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_scalar *sc,
             (int)fielddesc_getfloat(&x->x_value, template, data, 0));
         //sys_vgui(".x%lx.x%lx.template%lx scalar%lx\n", glist_getcanvas(glist),
         //    glist, data, sc);
-        sys_vgui(".x%lx.x%lx.template%lx scalar%lx .scalar%lx\n", glist_getcanvas(glist),
-            glist, data, sc, data);
+        sys_vgui(".x%lx.x%lx.template%lx scalar%lx .scalar%lx "
+                 ".draw%lx.%lx\n", glist_getcanvas(glist),
+            glist, data, sc, data, x, data);
+        sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
+            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+        svg_togui(svg, template, data);
+        sys_gui("\n");
     }
     else sys_vgui("pdtk_drawimage_unvis .x%lx.c .x%lx.i\n",
         glist_getcanvas(glist), data);
@@ -6475,19 +6894,84 @@ static void drawimage_free(t_drawimage *x)
 
 static void drawimage_setup(void)
 {
+    /* we need drawimage_class in order to get
+       a different set of widget behavior than
+       draw_class. But we also want to use the
+       [draw shape] syntax for consistency. So
+       for class_new we set the constructor to
+       zero and call drawimage_new from inside
+       draw_new. This way the user has to type
+       "draw image" or "draw sprite" to create
+       the objects. */
     drawimage_class = class_new(gensym("drawimage"),
-        (t_newmethod)drawimage_new, (t_method)drawimage_free,
+        0, (t_method)drawimage_free,
         sizeof(t_drawimage), 0, A_GIMME, 0);
     class_setdrawcommand(drawimage_class);
     class_addfloat(drawimage_class, drawimage_float);
+    class_addsymbol(drawimage_class, drawimage_symbol);
     class_addmethod(drawimage_class, (t_method)drawimage_size,
         gensym("size"), A_FLOAT, A_FLOAT, 0);
-    class_addcreator((t_newmethod)drawimage_new, gensym("drawsprite"),
-        A_GIMME, 0);
+    class_addmethod(drawimage_class, (t_method)drawimage_index,
+        gensym("index"), A_GIMME, 0);
+    class_addmethod(drawimage_class, (t_method)drawimage_forward,
+        gensym("transform"), A_GIMME, 0);
+    class_addmethod(drawimage_class, (t_method)drawimage_forward,
+        gensym("vis"), A_GIMME, 0);
+    class_addmethod(drawimage_class, (t_method)drawimage_x,
+        gensym("x"), A_GIMME, 0);
+    class_addmethod(drawimage_class, (t_method)drawimage_y,
+        gensym("y"), A_GIMME, 0);
+//    class_addanything(drawimage_class, drawimage_anything);
     class_setparentwidget(drawimage_class, &drawimage_widgetbehavior);
 }
 
 /* ------------- convenience functions for all drawcommands --------------*/
+
+t_template *canvas_findtemplate(t_canvas *c)
+{
+    t_gobj *g;
+    t_template *tmpl;
+    t_symbol *s1 = gensym("struct");
+    for (g = c->gl_list; g; g = g->g_next)
+    {
+        t_object *ob = pd_checkobject(&g->g_pd);
+        t_atom *argv;
+        if (!ob || ob->te_type != T_OBJECT ||
+        binbuf_getnatom(ob->te_binbuf) < 2)
+        continue;
+        argv = binbuf_getvec(ob->te_binbuf);
+        if (argv[0].a_type != A_SYMBOL || argv[1].a_type != A_SYMBOL
+        || argv[0].a_w.w_symbol != s1)
+              continue;
+        return (template_findbyname(canvas_makebindsym(argv[1].a_w.w_symbol)));
+    }
+    return 0;
+}
+
+t_canvas *canvas_templatecanvas_forgroup(t_canvas *c)
+{
+    t_canvas *templatecanvas = c;
+    if (!c->gl_owner)
+    {
+    return templatecanvas;
+    }
+
+/* warning: this needs to be carefully considered-- seems like
+   canvas's struct may not be initialized before the objects within
+   it. */
+    t_binbuf *b = c->gl_obj.te_binbuf;
+    if (!b)
+    {
+    return c;
+    }
+    t_atom *argv = binbuf_getvec(c->gl_obj.te_binbuf);
+    if (argv[0].a_type == A_SYMBOL &&
+        argv[0].a_w.w_symbol == gensym("group"))
+    {
+        templatecanvas = canvas_templatecanvas_forgroup(c->gl_owner);
+    }
+    return templatecanvas;
+}
 
 /* works for [draw] and old style curves, drawnumber, etc. */
 t_template *template_findbydrawcommand(t_gobj *g)
@@ -6506,6 +6990,7 @@ t_template *template_findbydrawcommand(t_gobj *g)
     else if (g->g_pd == plot_class)
         c = ((t_plot *)g)->x_canvas;
     else return (0);
+    c = canvas_templatecanvas_forgroup(c);
     t_template *tmpl;
     t_symbol *s1 = gensym("struct");
     for (g = c->gl_list; g; g = g->g_next)
