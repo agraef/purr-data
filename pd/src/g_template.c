@@ -4360,8 +4360,8 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
             //    x1, y1, x2, y2);
         }
     }
-    fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
-    fprintf(stderr,"basex %g basey %g\n", basex, basey);
+    //fprintf(stderr,"FINAL plot_getrect %d %d %d %d\n", x1, y1, x2, y2);
+    //fprintf(stderr,"basex %g basey %g\n", basex, basey);
     *xp1 = x1;
     *yp1 = y1;
     *xp2 = x2;
@@ -6519,13 +6519,14 @@ void drawimage_size(t_drawimage *x, t_float w, t_float h)
 static void drawimage_index(t_drawimage *x, t_symbol *s, int argc,
     t_atom *argv)
 {
+    t_canvas *c = canvas_templatecanvas_forgroup(x->x_canvas);
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
         if (!(x->x_flags & DRAW_SPRITE))
             post("drawimage warning: sequence variable is only "
                  "used with drawsprite");
         fielddesc_setfloatarg(&x->x_value, argc, argv);
-        canvas_redrawallfortemplatecanvas(x->x_canvas, 0);
+        canvas_redrawallfortemplatecanvas(c, 0);
     }
 }
 
@@ -6689,7 +6690,7 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 {
     t_drawimage *x = (t_drawimage *)z;
     t_svg *svg = (t_svg *)x->x_attr;
-    
+    t_canvas *parent = svg_parentcanvas(svg);
         /* see comment in plot_vis() */
     if (vis && !fielddesc_getfloat(&x->x_vis, template, data, 0))
         return;
@@ -6708,9 +6709,9 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             (int)fielddesc_getfloat(&x->x_value, template, data, 0));
         //sys_vgui(".x%lx.x%lx.template%lx scalar%lx\n", glist_getcanvas(glist),
         //    glist, data, sc);
-        sys_vgui(".x%lx.x%lx.template%lx scalar%lx .scalar%lx "
+        sys_vgui(".x%lx.x%lx.template%lx scalar%lx .dgroup%lx.%lx "
                  ".draw%lx.%lx\n", glist_getcanvas(glist),
-            glist, data, sc, data, x, data);
+            glist, data, sc, parent, data, x, data);
         sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
             glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
         svg_togui(svg, template, data);

@@ -1700,7 +1700,7 @@ extern t_canvas *canvas_templatecanvas_forgroup(t_canvas *x);
 
 void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
 {
-    fprintf(stderr,"canvas_redrawallfortemplatecanvas\n");
+    //fprintf(stderr,"canvas_redrawallfortemplatecanvas\n");
     t_gobj *g;
     t_template *tmpl;
     t_symbol *s1 = gensym("struct");
