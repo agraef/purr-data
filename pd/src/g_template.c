@@ -2981,6 +2981,11 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         sys_vgui("-matrix { {%g %g} {%g %g} {%g %g} }\\\n",
             m1, m2, m3, m4, m5, m6);
     }
+    if (x->x_vis.a_flag) 
+    { 
+        sys_vgui("-state %s ", fielddesc_getfloat(&x->x_vis.a_attr, 
+        template, data, 1) ? "normal" : "hidden"); 
+    }
 }
 
 void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
@@ -3037,8 +3042,8 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     }*/
     
         /* see comment in plot_vis() */
-    if (vis && !fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0))
-        return;
+    /*if (vis && !fielddesc_getfloat(&sa->x_vis.a_attr, template, data, 0))
+        return; */
     if (vis)
     {
         if (n > 2)
