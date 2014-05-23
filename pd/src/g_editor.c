@@ -469,6 +469,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
     if (x->gl_editor)
     {
         t_selection *sel, *sel2;
+        t_rtext *fuddy = 0;
         t_rtext *z = 0;
         if (!glist_isselected(x, y)) bug("glist_deselect");
 		// following information is for undo_apply
@@ -478,7 +479,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
         if (x->gl_editor->e_textedfor)
         {
 			//fprintf(stderr, "e_textedfor\n");
-            t_rtext *fuddy = glist_findrtext(x, (t_text *)y);
+            fuddy = glist_findrtext(x, (t_text *)y);
             if (x->gl_editor->e_textedfor == fuddy)
             {
 				//fprintf(stderr, "e_textedfor == fuddy\n");
@@ -514,6 +515,10 @@ void glist_deselect(t_glist *x, t_gobj *y)
                 }
             }
         }
+        // if we have an invalid object even if the text hasn't changed, we should still try to recreate it
+        if (!z && fuddy && pd_class(&((t_text *)y)->te_pd) == text_class && ((t_text *)y)->te_type != T_TEXT)
+        	z = fuddy;
+
         if (z)
         {
 			//fprintf(stderr, "setto\n");
@@ -2153,6 +2158,7 @@ static void editor_free(t_editor *x, t_glist *y)
     sub-glists, as long as they aren't toplevels. */
 void canvas_create_editor(t_glist *x)
 {
+	//fprintf(stderr,"create_editor %lx\n", x);
     t_gobj *y;
     t_object *ob;
     if (!x->gl_editor)
@@ -2166,6 +2172,7 @@ void canvas_create_editor(t_glist *x)
 
 void canvas_destroy_editor(t_glist *x)
 {
+	//fprintf(stderr,"destroy_editor %lx\n", x);
     t_gobj *y;
     t_object *ob;
 	glist_noselect(x);
@@ -2227,6 +2234,13 @@ void canvas_vis(t_canvas *x, t_floatarg f)
 			sys_vgui("pdtk_canvas_set_font .x%lx %d\n", x, x->gl_font);
             canvas_reflecttitle(x);
             x->gl_havewindow = 1;
+
+            // check if this is a subpatch with an array
+            // if so, make it non-scrollable
+            //t_gobj *g = x->gl_list;
+            //if (g && (pd_class(&g->g_pd) == garray_class)
+            //	sys_vgui("pdtk_canvas_set_scrollless .x%lx\n", x);
+            //else
 			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
 
 /*
@@ -2354,7 +2368,7 @@ void canvas_setgraph(t_glist *x, int flag, int nogoprect)
         int hadeditor = (x->gl_editor != 0);
         if (x->gl_owner && !x->gl_loading && glist_isvisible(x->gl_owner))
             gobj_vis(&x->gl_gobj, x->gl_owner, 0);
-        if (hadeditor)
+        if (hadeditor && !glist_isvisible(x))
             canvas_destroy_editor(x);
         x->gl_isgraph = 0;
 		x->gl_hidetext = 0;
@@ -6438,11 +6452,8 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         glist_noselect(x);
         if (glist_isvisible(x) && glist_istoplevel(x))
         {
-        	if (glist_isvisible(x) && glist_istoplevel(x))
-        	{
-            	canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
-            	sys_vgui(".x%lx.c delete commentbar\n", glist_getcanvas(x));
-        	}
+            canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
+            sys_vgui(".x%lx.c delete commentbar\n", glist_getcanvas(x));
             // jsarlo
             if (x->gl_editor->canvas_cnct_inlet_tag[0] != 0)
             {
