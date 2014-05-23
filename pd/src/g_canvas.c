@@ -567,6 +567,7 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
         pd_pushsym(&x->gl_pd);
     glist_add(g, &x->gl_gobj);
     if (!do_not_redraw) sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(g));
+    //fprintf(stderr,"    ... %f %f\n", x->gl_x1, x->gl_x2);
     return (x);
 }
 
