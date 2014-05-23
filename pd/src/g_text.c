@@ -2027,10 +2027,14 @@ void text_drawborder(t_text *x, t_glist *glist,
                 glist_getcanvas(glist), tag,
                 x1, y1,  x2-4, y1,  x2, y1+4,  x2, y2,  x1, y2,  x1, y1);
     }
-        /* for comments, just draw a bar on RHS if unlocked; when a visible
+        /* for comments, just draw a dotted rectangle unlocked; when a visible
         canvas is unlocked we have to call this anew on all comments, and when
-        locked we erase them all via the annoying "commentbar" tag. */
-    else if (x->te_type == T_TEXT && glist->gl_edit)
+        locked we erase them all via the annoying "commentbar" tag. IB: However
+        we do not draw these unless the comments in question are being drawn
+        on top level--this avoids bugggy behavior where comment rectangles are
+        drawn inside a GOP on another toplevel glist when the GOP subpatch is
+        in edit mode */
+    else if (x->te_type == T_TEXT && glist->gl_edit  && glist_istoplevel(glist))
     {
         if (firsttime)
         {
@@ -2209,6 +2213,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
 
     if (x->te_type == T_OBJECT)
     {
+        //fprintf(stderr,"setto T_OBJECT\n");
         t_binbuf *b = binbuf_new();
         int natom1, natom2, widthwas = x->te_width;
         t_atom *vec1, *vec2;
@@ -2253,9 +2258,12 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             //fprintf(stderr,"setto not canvas\n");
             binbuf_gettext(x->te_binbuf, &c1, &i1);
             binbuf_gettext(b, &c2, &i2);
-            if (strcmp(c1, c2))
+            //if the string doesn't match or if the object we entered is invalid
+            //(e.g. we created an object that failed to create but now we have an
+            //abstraction in patch's path named the same as the desired object)
+            if (strcmp(c1, c2) || (pd_class(&x->te_pd) == text_class && x->te_type != T_TEXT))
             {
-                //fprintf(stderr,"text_setto calls canvas_undo_add\n");
+                //fprintf(stderr,"text_setto calls canvas_undo_add recreate\n");
                 canvas_undo_add(glist_getcanvas(glist), 10, "recreate",
                     (void *)canvas_undo_set_recreate(glist_getcanvas(glist),
                     &x->te_g, pos));
