@@ -3456,7 +3456,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 		$name.c delete xscroll
 		$name.c delete yscroll
 	}
-	if {$::xscrollable($name)} {
+	if { $::xscrollable($name) == 1 } {
 		set visible [$name.c xview]
 		set vx1 [lindex $visible 0]
 		set vx2 [lindex $visible 1]
@@ -3476,7 +3476,7 @@ proc pdtk_canvas_draw_scrollbars {name} {
 			$name.c bind $hscroll <Leave> {pdtk_canvas_leave_scrollbar %W %x %y}
 		#}
 	}
-	if {$::yscrollable($name)} {
+	if { $::yscrollable($name) == 1 } {
 		set visible [$name.c yview]
 		set vy1 [lindex $visible 0]
 		set vy2 [lindex $visible 1]
@@ -3952,6 +3952,11 @@ proc pdtk_canvas_toggle_scrollbars {rootname x} {
 		pdtk_canvas_getscroll $rootname.c
 	}
 }
+
+# proc pdtk_canvas_set_scrollless {rootname} {
+#	# EXPERIMENTAL: set scroll to permanently disabled for array and scalar GOP windows
+#	set ::scroll($rootname) -1
+#}
 
 proc pdtk_set_canvas_background {rootname color} {
 	set ::canvas_color($rootname) $color
