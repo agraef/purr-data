@@ -677,9 +677,9 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
     for (y = gl->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
-	    ((t_glist *)y)->gl_svg)
+	           ((t_glist *)y)->gl_svg)
         {
-	    scalar_groupvis(x, owner, template, (t_glist *)y, gl, vis);
+	       scalar_groupvis(x, owner, template, (t_glist *)y, gl, vis);
         }
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;

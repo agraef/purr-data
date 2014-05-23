@@ -102,9 +102,9 @@ void glist_add(t_glist *x, t_gobj *y)
         canvas_isgroup((t_canvas *)y))
     {
         t_canvas *templatecanvas =
-	    canvas_templatecanvas_forgroup((t_canvas *)y);
-	t_template *tmpl = canvas_findtemplate(templatecanvas);
-	canvas_redrawallfortemplate(tmpl, 0);
+	        canvas_templatecanvas_forgroup((t_canvas *)y);
+	    t_template *tmpl = canvas_findtemplate(templatecanvas);
+	    canvas_redrawallfortemplate(tmpl, 0);
     }
 }
 
