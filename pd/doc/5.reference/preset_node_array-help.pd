@@ -1,7 +1,7 @@
 #N canvas 317 67 553 610 10;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array myarray1 64 float 0;
-#X coords 0 1 63 0 202 89 1 0 0;
+#X array myarray1 64 float 0 black black;
+#X coords 0 1 63 0 202 89 1;
 #X restore 63 219 graph;
 #X obj 63 171 preset_hub foo %hidden% %node% 2 1 0 %preset% 1 1 1 1
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
@@ -89,7 +89,7 @@ Dan Wilcox. Additional improvements/fixes/clean-up by Ivica Ico Bukvic
 14 -204280 -1 0;
 #X text 7 1 [preset_node_array] Related Objects;
 #X obj 21 36 preset_node;
-#X obj 97 36 preset_hub  %hidden% %node% 2 13 2;
+#X obj 97 36 preset_hub %hidden% %node% 2 13 2 %node% 1 2;
 #X restore 140 587 pd Related_objects;
 #X obj 43 587 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
