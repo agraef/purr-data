@@ -282,6 +282,10 @@ int garray_joc(t_garray *x)
 void garray_fittograph(t_garray *x, int n)
 {
     //fprintf(stderr,"garray_fittoraph %d\n", n);
+    // here we check for x->x_glist validity because when creating
+    // a new array from the menu gl is null at the first garray_vis call
+    if (!x->x_glist)
+        return;
     t_array *array = garray_getarray(x);
     t_glist *gl = x->x_glist;
     if (gl->gl_list == &x->x_gobj && !x->x_gobj.g_next)
@@ -291,7 +295,9 @@ void garray_fittograph(t_garray *x, int n)
                 (x->x_style == PLOTSTYLE_POINTS || x->x_style == PLOTSTYLE_BARS
                     || n == 1 ? n : n-1),
                     gl->gl_y2);
-                /* close any dialogs that might have the wrong info now... */
+                /* close any dialogs that might have the wrong info now... 
+                TODO: make changes dynamic to avoid this as it causes Apply to
+                close the properties which is annoying */
         gfxstub_deleteforkey(gl);
     }
     array_resize_and_redraw(array, x->x_glist, n);
@@ -371,6 +377,13 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     if (n <= 0)
         n = 100;
     array_resize(x->x_scalar->sc_vec[zonset].w_array, n);
+
+    // let's make sure that the GOP glist has sane x values to ensure that
+    // the entire array fits inside the box (this gets properly initialized
+    // when creating from the menu but not when loading from the file)
+    int gop_w = (x->x_style == PLOTSTYLE_POINTS || x->x_style == PLOTSTYLE_BARS
+                    || n == 1 ? n : n-1);
+    if (gl->gl_x2 < gop_w) gl->gl_x2 = gop_w;
 
     template_setfloat(template, gensym("style"), x->x_scalar->sc_vec,
         x->x_style, 1);
@@ -1258,6 +1271,17 @@ static void garray_vis(t_gobj *z, t_glist *glist, int vis)
 {
     //fprintf(stderr,"garray_vis %d\n", vis);
     t_garray *x = (t_garray *)z;
+
+    if (vis) {
+        t_array *a = garray_getarray(x);
+        int ne = a->a_n;
+        int n = (x->x_style == PLOTSTYLE_POINTS ||
+            x->x_style == PLOTSTYLE_BARS || ne == 1 ? ne : ne-1);
+        if (glist->gl_x2 < n) {
+            glist->gl_x2 = n;
+            garray_fittograph(x, n);
+        }
+    }
     gobj_vis(&x->x_scalar->sc_gobj, glist, vis);
     //if (((t_glist *)z)->gl_isgraph)
     //    fprintf(stderr,"garray_vis am_graph\n");
