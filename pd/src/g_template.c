@@ -1918,7 +1918,7 @@ void svg_doupdatetransform(t_svg *x, t_canvas *c)
     mset(mtx2, 0, 0, 0, 0, 0, 0);
     t_gobj *g;
     t_template *template = NULL;
-    t_template *warn_template = NULL;
+    //t_template *warn_template = NULL;
     t_canvas *visible = c;
     t_canvas *parent = canvas_templatecanvas_forgroup(svg_parentcanvas(x));
     while(visible->gl_isgraph && visible->gl_owner)
@@ -1971,12 +1971,12 @@ void svg_doupdatetransform(t_svg *x, t_canvas *c)
             }
             sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
         } 
-        else if (template != NULL && warn_template != template)
+        /*else if (template != NULL && warn_template != template)
         {
-            /* this is not a transformable template, warn user of that */
+            // this is not a transformable template, warn user of that
             post("warning: transform ignored on the template %s because it includes an array", template->t_sym->s_name);
             warn_template = template;
-        }
+        }*/
         if (g->g_pd == canvas_class)
         {
             svg_doupdatetransform(x, (t_glist *)g);
@@ -6197,7 +6197,7 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     font = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
     if (!font) font = glist_getfont(glist);
     fontwidth = sys_fontwidth(font);
-        fontheight = sys_fontheight(font);
+    fontheight = sys_fontheight(font);
     if (x->x_flags & DRAW_SYMBOL)
         SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
     else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
