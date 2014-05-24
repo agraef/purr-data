@@ -5663,13 +5663,35 @@ static void canvas_duplicate(t_canvas *x)
 	//if (x->gl_editor->e_onmotion == MA_NONE && x->gl_editor->e_selection)
 	if (x->gl_editor->e_onmotion == MA_NONE && c_selection && c_selection->gl_editor->e_selection)
     {
+    	// Check if we are trying to duplicate an object that we just typed in and which has not been
+    	// instantiated yet. If so, let's deselect it to instatiate it and then reselect it again.
+    	// If this is the case, only one object will be selected. We temporarily borrow g object for
+    	// this operation.
+    	t_gobj *g;
+
+    	g = c_selection->gl_editor->e_selection->sel_what;
+    	if (!c_selection->gl_editor->e_selection->sel_next &&
+    			c_selection->gl_editor->e_textedfor &&
+    			pd_class(&g->g_pd) == text_class &&
+    			((t_text *)x)->te_type == T_OBJECT)
+    	{
+    		//fprintf(stderr,"got uninitiated object we are trying to duplicate...\n");
+    		glist_deselect(x, g);
+    		// now we need to find the newly instantiated object and reselect it
+			g = x->gl_list;
+			if (g)
+				while (g->g_next)
+					g = g->g_next;
+
+    	}
+
         //canvas_copy(x);
         //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
         //    "duplicate");
         //canvas_dopaste(x, copy_binbuf);
         //canvas_paste_xyoffset(x);
         //canvas_dirty(x, 1);
-		t_gobj *g = x->gl_list;
+		g = x->gl_list;
 		if (g)
 			while (g->g_next)
 				g = g->g_next;
