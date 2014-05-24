@@ -71,6 +71,7 @@ proc ::pd_guiprefs::update_recentfiles {afile save} {
     # remove duplicates first
     set index [lsearch -exact $::recentfiles_list $afile]
     set ::recentfiles_list [lreplace $::recentfiles_list $index $index]
+    #puts stderr "afile=$afile save=$save"
     # insert new one in the beginning and crop the list
     set ::recentfiles_list [linsert $::recentfiles_list 0 $afile]
     set ::recentfiles_list [lrange $::recentfiles_list 0 [expr $::total_recentfiles - 1]]
@@ -139,7 +140,7 @@ proc ::pd_guiprefs::get_config_win {adomain {akey} {arr false}} {
 }
 
 # ------------------------------------------------------------------------------
-# linux: read a config file and return its lines splitted.
+# linux: read a config file and return its lines split into individual entries
 #
 proc ::pd_guiprefs::get_config_x11 {adomain {akey} {arr false}} {
     set filename [file join $adomain $akey]

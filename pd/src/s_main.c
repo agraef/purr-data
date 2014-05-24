@@ -169,7 +169,11 @@ static void openit(const char *dirname, const char *filename)
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
 		sys_vgui("pdtk_set_current_dir %s\n", filename);
         //sys_vgui("::pd_menus::update_recentfiles_menu .mbar.file 0\n");
-        sys_vgui("::pd_guiprefs::update_recentfiles %s 1\n", filename);
+#ifndef MSW
+        sys_vgui("::pd_guiprefs::update_recentfiles %s/%s 1\n", dirname, filename);
+#else
+        sys_vgui("::pd_guiprefs::update_recentfiles %s\%s 1\n", dirname, filename);
+#endif
     }
     else
         error("%s: can't open", filename);
