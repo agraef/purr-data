@@ -612,6 +612,8 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
         (int)glist_ytopixels(x->sc_selected, basey) +
             (x->sc_selected == glist ? 0 : dy));
 
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
+     
     /* This awful hack is here because plot_vis is used by both ds arrays
        and garrays.  Unlike the other drawing commands, plot_vis still does
        all the gop scaling and basex/basey calculations manually.  So

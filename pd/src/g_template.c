@@ -1333,6 +1333,8 @@ char *get_strokelinejoin(int a)
 
 /* todo: i think svg_togui and this are unnecessarily
    duplicating some code... */
+extern void scalar_select(t_gobj *z, t_glist *owner, int state);
+extern void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state);
 void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
 {
     t_gobj *g;
@@ -1341,7 +1343,12 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
     void *parent = x->x_parent;
     t_canvas *parentcanvas =
         canvas_templatecanvas_forgroup(svg_parentcanvas(x));
-    while(visible->gl_isgraph && visible->gl_owner)
+    int redraw_bbox = 0;
+     /* "visible" is here because we could be drawn in a gop, in
+       which case we must "climb" out to the parent canvas on
+       which we are drawn. There's probably a function somewhere
+       that abstracts this away... */
+   while(visible->gl_isgraph && visible->gl_owner)
         visible = visible->gl_owner;
     int isgroup = (x->x_type == gensym("group"));
     for (g = c->gl_list; g; g = g->g_next)
@@ -1416,17 +1423,23 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 sprintf(str, "-strokeopacity %g", fielddesc_getcoord(
                     &x->x_strokeopacity.a_attr, template, data, 1));
             else if (s == gensym("stroke-width"))
+            {
                 sprintf(str, "-strokewidth %g", fielddesc_getcoord(
                     &x->x_strokewidth.a_attr, template, data, 1));
+                redraw_bbox = 1;
+            }
             else if (s == gensym("rx"))
-                sprintf(str, "-rx %g", fielddesc_getcoord(
+                sprintf(str, "-rx %d", (int)fielddesc_getcoord(
                     &x->x_rx.a_attr, template, data, 1));
             else if (s == gensym("ry"))
-                sprintf(str, "-ry %g", fielddesc_getcoord(
+                sprintf(str, "-ry %d", (int)fielddesc_getcoord(
                     &x->x_ry.a_attr, template, data, 1));
             else if (s == gensym("vis"))
+            {
                 sprintf(str, "-state %s", (int)fielddesc_getcoord(
                     &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
+                redraw_bbox = 1;
+            }
             else if (s == gensym("stroke-dasharray"))
             {
                 if (x->x_ndash)
@@ -1453,7 +1466,19 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
                    visible, parent, data, str);
             }
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
+//            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
+            if (redraw_bbox)
+            {
+                /* uncache the scalar's bbox */
+                ((t_scalar *)g)->sc_bboxcache = 0;
+                if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
+                {
+                    //scalar_select(g, c, 1);
+                    scalar_drawselectrect((t_scalar *)g, c, 0);
+                    scalar_drawselectrect((t_scalar *)g, c, 1);
+                }
+                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
+            }
         }
         if (g->g_pd == canvas_class)
         {
@@ -1907,8 +1932,6 @@ void svg_group_pathrect_cache(t_svg *x, int state)
     } 
 }
 
-extern void scalar_select(t_gobj *z, t_glist *owner, int state);
-extern void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state);
 void svg_doupdatetransform(t_svg *x, t_canvas *c)
 {
     t_float mtx1[3][3];
@@ -2984,7 +3007,17 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
     if (x->x_vis.a_flag) 
     { 
         sys_vgui("-state %s ", fielddesc_getfloat(&x->x_vis.a_attr, 
-        template, data, 1) ? "normal" : "hidden"); 
+            template, data, 1) ? "normal" : "hidden"); 
+    }
+    if (x->x_rx.a_flag)
+    {
+        sys_vgui("-rx %d ", (int)fielddesc_getfloat(&x->x_rx.a_attr,
+            template, data, 1));
+    }
+    if (x->x_ry.a_flag)
+    {
+        sys_vgui("-ry %d ", (int)fielddesc_getfloat(&x->x_ry.a_attr,
+            template, data, 1));
     }
 }
 
@@ -6617,6 +6650,14 @@ static void drawimage_getrect(t_gobj *z, t_glist *glist,
     t_float m1, m2, m3, m4, m5, m6,
             tx1, ty1, tx2, ty2, t5, t6;
     t_svg *sa = (t_svg *)x->x_attr;
+    if (sa->x_vis.a_flag && !fielddesc_getfloat(&sa->x_vis.a_attr,
+            template, data, 0))
+    {
+        *xp1 = *yp1 = 0x7fffffff;
+        *xp2 = *yp2 = -0x7fffffff;
+        return;
+    }
+
     svg_groupmtx(sa, template, data, mtx1);
     svg_parsetransform(sa, template, data, &m1, &m2, &m3,
         &m4, &m5, &m6);
@@ -6717,8 +6758,11 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sys_vgui(".x%lx.x%lx.template%lx scalar%lx .dgroup%lx.%lx "
                  ".draw%lx.%lx\n", glist_getcanvas(glist),
             glist, data, sc, parent, data, x, data);
-        sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
-            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+        /* need to revisit all these tags, they are getting confusing... */
+//        sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
+//            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
+        sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx\\\n",
+            glist_getcanvas(glist), x, data);
         svg_togui(svg, template, data);
         sys_gui("\n");
     }
