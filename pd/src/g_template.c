@@ -981,12 +981,12 @@ void fielddesc_setcoord(t_fielddesc *f, t_template *template,
 /* ---------------- draw svg shapes and paths ---------------- */
 
 /*
-draws belong to templates and describe how the data in the template are to
-be drawn.  The coordinates of the draw (and other display features) can
-be attached to fields in the template.
+draw objects belong to templates and describe how the data in the template
+are to be drawn.  The coordinates of the draw (and other display features)
+can be attached to fields in the template.
 
-todo: some better way than drawcurve for defining click widgetbehaviors (just
-      checking for field variables and moving joints is too simplistic)
+todo: some better way than drawcurve has for defining click widgetbehaviors
+    (just checking for field variables and moving joints is too simplistic)
 */
 
 t_class *draw_class;
@@ -1042,7 +1042,6 @@ typedef struct _svg
 typedef struct _draw
 {
     t_object x_obj;
-//    int x_flags;            /* CLOSED and/or BEZ and/or NOMOUSE */
     t_symbol *x_drawtype;
     t_canvas *x_canvas;
     t_pd *x_attr;
@@ -1085,36 +1084,11 @@ static int path_ncmds(int argc, t_atom *argv)
     int i, j = 0;
     for(i = 0; i < argc; i++)
     {
-        if (argv[i].a_type == A_SYMBOL && is_svgpath_cmd(atom_getsymbol(argv+i)))
+        if (argv[i].a_type == A_SYMBOL &&
+            is_svgpath_cmd(atom_getsymbol(argv+i)))
             j++;
     }
     return j;
-}
-
-/* this can probably be deleted now */
-t_draw *draw_getgroup(t_draw *x)
-{
-    t_gobj *g;
-    t_draw *dgroup = 0;
-    t_template *templ;
-    t_symbol *s1 = gensym("draw");
-    t_symbol *s2 = gensym("group");
-    
-    for(g = x->x_canvas->gl_list; g; g = g->g_next)
-    {
-        t_object *ob = pd_checkobject(&g->g_pd);
-        t_atom *argv;
-        if (!ob || ob->te_type != T_OBJECT ||
-            binbuf_getnatom(ob->te_binbuf) < 2)
-            continue;
-        argv = binbuf_getvec(ob->te_binbuf);
-        if (argv[0].a_type != A_SYMBOL || argv[1].a_type != A_SYMBOL
-            || argv[0].a_w.w_symbol != s1 || argv[1].a_w.w_symbol != s2)
-            continue;
-        dgroup = (t_draw *)g;
-        break;
-    }
-    return (dgroup);
 }
 
 void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
@@ -1188,7 +1162,8 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
             }
         }
     }
-    if (argc & 1 && x->x_type != gensym("path")) fielddesc_setfloat_const(fd, 0);
+    if (argc & 1 && x->x_type != gensym("path"))
+        fielddesc_setfloat_const(fd, 0);
     x->x_filltype = 42;
     x->x_fillopacity.a_flag = 0;
     x->x_fillrule.a_flag = 0;
@@ -1208,10 +1183,6 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
     x->x_transform_n = 0;
     x->x_transform = (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
-
-    char buf[50];
-    sprintf(buf, ".x%lx", (long unsigned int)x);
-
     return (x);
 }
 
@@ -1348,9 +1319,8 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
        which case we must "climb" out to the parent canvas on
        which we are drawn. There's probably a function somewhere
        that abstracts this away... */
-   while(visible->gl_isgraph && visible->gl_owner)
+    while(visible->gl_isgraph && visible->gl_owner)
         visible = visible->gl_owner;
-    int isgroup = (x->x_type == gensym("group"));
     for (g = c->gl_list; g; g = g->g_next)
     {
         if (glist_isvisible(c) && g->g_pd == scalar_class &&
@@ -1466,7 +1436,6 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
                    visible, parent, data, str);
             }
-//            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
             if (redraw_bbox)
             {
                 /* uncache the scalar's bbox */
@@ -1476,8 +1445,9 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                     //scalar_select(g, c, 1);
                     scalar_drawselectrect((t_scalar *)g, c, 0);
                     scalar_drawselectrect((t_scalar *)g, c, 1);
+                    /* only get the scroll if we had to redraw the bbox */
+                    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
                 }
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
             }
         }
         if (g->g_pd == canvas_class)
@@ -1589,7 +1559,8 @@ void svg_stroke(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
         x->x_stroketype = 0;
     else if (argc == 1 && argv->a_type == A_SYMBOL)
     {
-        fielddesc_setsymbol_const(x->x_stroke, atom_getsymbolarg(0, argc, argv));
+        fielddesc_setsymbol_const(x->x_stroke,
+            atom_getsymbolarg(0, argc, argv));
         x->x_stroketype = 1;
     }
     else if (argc > 2)
@@ -1950,7 +1921,8 @@ void svg_doupdatetransform(t_svg *x, t_canvas *c)
     /* we'll probably get a different bbox now, so we
        will calculate a new one the next time we call
        draw_getrect for this draw command. For groups
-       we need to do it for all of the draw commands.
+       we need to do it for all of the draw commands
+       inside it.
     */
     if (x->x_type == gensym("group"))
         svg_group_pathrect_cache(x, 0);
@@ -2007,6 +1979,7 @@ void svg_doupdatetransform(t_svg *x, t_canvas *c)
     }
 }
 
+/* not used atm-- it doesn't seem to speed anything up */
 void svg_queueupdatetransform(t_gobj *g, t_glist *glist)
 {
     /* not sure about this... */
@@ -3027,37 +3000,12 @@ void svg_grouptogui(t_glist *g, t_template *template, t_word *data)
     svg_togui(x, template, data);
 }
 
-/* todo: create the group somewhere in here..., and use the template
-tag on it so that it can get deleted on unvising */
 static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
     t_float basex, t_float basey, int vis)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
-    /* todo: I don't think this comment applies anymore... */
-    /* As a quick hack we are sending the group matrix to the
-       gui. This is inefficient since the group matrix is the
-       same for all the other drawing instructions. It should
-       instead be sent once inside scalar_vis, but that means
-       searching the templatecanvas for a [draw group] object
-       rather than just a single loop to find all the drawing
-       command parentvisfn functions which it does currently.
-
-       Really, [draw group] needs to be a separate class, but
-       that means putting all the options-- stroke, etc.-- in
-       a separate struct. It would also mean that draw_update
-       and draw_updatetransform need to be made more general.
-    */
-
-    if (sa->x_type == gensym("group"))
-    {
-        t_float m1, m2, m3, m4, m5, m6;
-        svg_parsetransform(sa, template, data,
-            &m1, &m2, &m3, &m4, &m5, &m6);
-        sys_vgui(".x%lx.c itemconfigure .dgroup%lx -matrix { {%g %g} {%g %g} {%g %g} }\n", glist, data, m1, m2, m3, m4, m5, m6);
-        return;
-    }
 
     int i, n = sa->x_nargs;
     t_float mtx1[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
@@ -3412,12 +3360,6 @@ static void svg_free(t_svg *x)
         t_freebytes(x->x_pathcmds, x->x_npathcmds * sizeof(*x->x_pathcmds));
         t_freebytes(x->x_nargs_per_cmd, x->x_npathcmds * sizeof(*x->x_nargs_per_cmd));
     }
-    /* not sure about this one */
-/*    t_freebytes(x->x_attr, sizeof(*x->x_attr)); */
-    char buf[50];
-    sprintf(buf, ".x%lx", (long unsigned int)x);
-    /* don't think this is needed anymore ... */
-/*    pd_unbind(&x->x_obj.ob_pd, gensym(buf)); */
 }
 
 void canvas_group_free(t_pd *x)
