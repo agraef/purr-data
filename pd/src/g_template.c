@@ -1398,12 +1398,37 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                     &x->x_strokewidth.a_attr, template, data, 1));
                 redraw_bbox = 1;
             }
+            else if (s == gensym("r"))
+            {
+                sprintf(str, "-rx %g -ry %g",
+                fielddesc_getcoord(x->x_vec+2, template, data, 1),
+                fielddesc_getcoord(x->x_vec+2, template, data, 1));
+                redraw_bbox = 1;
+            }
             else if (s == gensym("rx"))
-                sprintf(str, "-rx %d", (int)fielddesc_getcoord(
-                    &x->x_rx.a_attr, template, data, 1));
+            {
+                if (x->x_type == gensym("rect"))
+                    sprintf(str, "-rx %d", (int)fielddesc_getcoord(
+                        &x->x_rx.a_attr, template, data, 1));
+                else
+                {
+                    sprintf(str, "-rx %g", fielddesc_getcoord(
+                        x->x_vec+2, template, data, 1));
+                    redraw_bbox = 1;
+                }
+            }
             else if (s == gensym("ry"))
-                sprintf(str, "-ry %d", (int)fielddesc_getcoord(
-                    &x->x_ry.a_attr, template, data, 1));
+            {
+                if (x->x_type == gensym("rect"))
+                    sprintf(str, "-ry %d", (int)fielddesc_getcoord(
+                        &x->x_ry.a_attr, template, data, 1));
+                else
+                {
+                     sprintf(str, "-ry %g", fielddesc_getcoord(
+                         x->x_vec+3, template, data, 1));
+                     redraw_bbox = 1;
+                }
+           }
             else if (s == gensym("vis"))
             {
                 sprintf(str, "-state %s", (int)fielddesc_getcoord(
@@ -1426,12 +1451,81 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 }
                 else return;
             }
-            if (x->x_type == gensym("group"))
+            else if (s == gensym("data"))
+            {
+                /* this needs to be abstracted out somehow... */
+                sys_vgui(".x%lx.c coords .draw%lx.%lx {\\\n",
+                    visible, parent, data);
+                /* let's turn off bbox caching so we can recalculate
+                   the bbox */
+                if (x->x_pathrect_cache != -1)
+                   x->x_pathrect_cache = 0;
+                redraw_bbox = 1;
+                int i;
+                char *cmd;
+                t_fielddesc *f;
+                int totalpoints = 0; /* running tally */
+                /* path parser: no error checking yet */
+                for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
+                {
+                    int j;
+                    int cargs = x->x_nargs_per_cmd[i];
+                    f = (x->x_vec)+totalpoints;
+                    sys_vgui("%c\\\n", *(cmd));
+                    for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+                        sys_vgui("%g\\\n", fielddesc_getcoord(
+                            f+j, template, data, 1));
+                    totalpoints += x->x_nargs_per_cmd[i];
+                }
+                sys_gui("}\n");
+            }
+            else if (s == gensym("points"))
+            {
+                /* this needs to be abstracted out somehow... */
+                sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
+                    visible, parent, data);
+                /* let's turn off bbox caching so we can recalculate
+                   the bbox */
+                if (x->x_pathrect_cache != -1)
+                   x->x_pathrect_cache = 0;
+                redraw_bbox = 1;
+                int i;
+                t_fielddesc *f = x->x_vec;
+                if (x->x_type == gensym("rect") ||
+                    x->x_type == gensym("ellipse"))
+                {
+                    t_float xval, yval, w, h;
+                    xval = fielddesc_getcoord(f, template, data, 1);
+                    yval = fielddesc_getcoord(f+1, template, data, 1);
+                    if (x->x_type == gensym("rect"))
+                    {
+                        w = xval + (fielddesc_getcoord(f+2, template, data, 1));
+                        h = yval + (fielddesc_getcoord(f+3, template, data, 1));
+                        sys_vgui("%g %g %g %g\\\n", xval, yval, w, h);
+                    }
+                    else
+                    {
+                        sys_vgui("%g %g\\\n", xval, yval);
+                    }
+                }
+                else
+                {
+                    int n = (x->x_type == gensym("circle")) ? 2 : x->x_nargs;
+                    for (i = 0; i < n; i++)
+                    {
+                        sys_vgui("%g\\\n", fielddesc_getcoord(
+                            f+i, template, data, 1));
+                    }
+                }
+                sys_gui("\n");
+            }
+            if (x->x_type == gensym("group") && s != gensym("data") &&
+                s != gensym("points"))
             {
                 sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx %s\n",
                    visible, parent, data, str);
             }
-            else
+            else if (s != gensym("data") && s != gensym("points"))
             {
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
                    visible, parent, data, str);
@@ -1440,13 +1534,13 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
             {
                 /* uncache the scalar's bbox */
                 ((t_scalar *)g)->sc_bboxcache = 0;
+                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
                 if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
                 {
                     //scalar_select(g, c, 1);
                     scalar_drawselectrect((t_scalar *)g, c, 0);
                     scalar_drawselectrect((t_scalar *)g, c, 1);
                     /* only get the scroll if we had to redraw the bbox */
-                    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
                 }
             }
         }
@@ -1473,6 +1567,65 @@ void svg_vis(t_svg *x, t_symbol *s, int argc, t_atom *argv)
         x->x_vis.a_flag = 1;
         svg_update(x, s);
     }
+}
+
+/* resize x_vec et all for path or shape coordinate data */
+void svg_resizecoords(t_svg *x, int argc, t_atom *argv)
+{
+//    if (x->x_type != gensym("path")) return;
+    int oldn = x->x_npathcmds;
+    /* for polyline and polygon, we don't want any path commands */
+    x->x_npathcmds = (x->x_type == gensym("path")) ?
+        path_ncmds(argc, argv) : 0;
+    x->x_pathcmds = (char *)t_resizebytes(x->x_pathcmds,
+        oldn * sizeof(char),
+        x->x_npathcmds * sizeof(char));
+
+    x->x_nargs_per_cmd = (int *)t_resizebytes(x->x_nargs_per_cmd,
+        oldn * sizeof(*x->x_nargs_per_cmd),
+        x->x_npathcmds * sizeof(*x->x_nargs_per_cmd));
+
+    oldn = x->x_nargs;
+    x->x_nargs = argc - x->x_npathcmds;
+
+    x->x_vec = (t_fielddesc *)t_resizebytes(x->x_vec,
+        oldn * sizeof(*x->x_vec),
+        x->x_nargs * sizeof(*x->x_vec));
+}
+
+void svg_data(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    /* only process path data and polygon/polyline points */
+    if (x->x_type != gensym("path") && s != gensym("points")) return;
+    /* resize the path data fields to fit the incoming data */
+    svg_resizecoords(x, argc, argv);
+    /* todo: loop is copy/pasted from draw_new-- break it out */
+    t_fielddesc *fd;
+    int i, cmdn = -1; /* hack */
+    for (i = 0, fd = x->x_vec; i < argc; i++, argv++)
+    {
+        if (x->x_type == gensym("path") &&
+            argv->a_type == A_SYMBOL &&
+            is_svgpath_cmd(atom_getsymbol(argv)))
+        {
+                x->x_pathcmds[++cmdn] = *(atom_getsymbol(argv)->s_name);
+                x->x_nargs_per_cmd[cmdn] = 0;
+        }
+        else
+        {
+            fielddesc_setfloatarg(fd++, 1, argv);
+            /* post("got a coord"); */
+            if (x->x_type == gensym("path"))
+            {
+                (x->x_nargs_per_cmd[cmdn])++;
+                /* if we get a field variable, just
+                   turn off the get_rect caching */
+                if (argv->a_type == A_SYMBOL)
+                    x->x_pathrect_cache = -1;
+            }
+        }
+    }
+    svg_update(x, s);
 }
 
 void svg_fillopacity(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
@@ -1649,38 +1802,145 @@ void svg_fillrule(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
     }
 }
 
+void svg_r(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (x->x_type != gensym("circle"))
+    {
+        pd_error(x, "draw: %s: no method for 'r'", x->x_type->s_name);
+        return;
+    }
+    if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+    {
+        t_fielddesc *fd = x->x_vec;
+        fielddesc_setfloatarg(fd+2, argc, argv);
+        svg_update(x, s);
+    }
+}
+
 void svg_rx(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (x->x_type != gensym("rect"))
+    t_symbol *type = x->x_type;
+    if (type == gensym("rect") || type == gensym("ellipse"))
+    {
+        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        {
+            if (type == gensym("rect"))
+            {
+                fielddesc_setfloatarg(&x->x_rx.a_attr, argc, argv);
+                x->x_rx.a_flag = 1;
+            }
+            else
+            {
+                fielddesc_setfloatarg(x->x_vec+2, argc, argv);
+            }
+            svg_update(x, s);
+        }
+    }
+    else
     {
         pd_error(x, "draw: %s: no method for 'rx'", x->x_type->s_name);
         return;
     }
-    if (!argc || argv->a_type != A_FLOAT)
-    {
-        pd_error(x, "draw: rect: bad arguments for method 'rx'");
-        return;
-    }
-    fielddesc_setfloatarg(&x->x_rx.a_attr, argc, argv);
-    x->x_rx.a_flag = 1;
-    svg_update(x, s);
 }
 
 void svg_ry(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (x->x_type != gensym("rect"))
+    t_symbol *type = x->x_type;
+    if (type == gensym("rect") || type == gensym("ellipse"))
+    {
+        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        {
+            if (type == gensym("rect"))
+            {
+                fielddesc_setfloatarg(&x->x_ry.a_attr, argc, argv);
+                x->x_rx.a_flag = 1;
+            }
+            else
+            {
+                fielddesc_setfloatarg(x->x_vec+3, argc, argv);
+            }
+            svg_update(x, s);
+        }
+    }
+    else
     {
         pd_error(x, "draw: %s: no method for 'ry'", x->x_type->s_name);
         return;
     }
-    if (!argc || argv->a_type != A_FLOAT)
+}
+
+/* todo: ensure that rect has 4 coords pre-allocated! otherwise a crash */
+void svg_rectpoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (x->x_type == gensym("rect"))
     {
-        pd_error(x, "draw: rect: bad arguments for method 'ry'");
+        int i;
+        if (s == gensym("x")) i = 0;
+        else if (s == gensym("y")) i = 1;
+        else if (s == gensym("width")) i = 2;
+        else i = 3; /* height */
+        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        {
+            t_fielddesc *fd = x->x_vec;
+            fielddesc_setfloatarg(fd + i, argc, argv);
+            /* just piggybacking on the "points" message */
+            svg_update(x, gensym("points"));
+        }
+    }
+    else
+    {
+        pd_error(x, "draw: %s: no poopy for '%s'",
+            x->x_type->s_name, s->s_name);
         return;
     }
-    fielddesc_setfloatarg(&x->x_ry.a_attr, argc, argv);
-    x->x_ry.a_flag = 1;
-    svg_update(x, s);
+}
+
+void svg_ellipsepoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (x->x_type == gensym("circle") || x->x_type == gensym("ellipse"))
+    {
+        int i;
+        if (s == gensym("cx")) i = 0;
+        else i = 1;
+        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        {
+            t_fielddesc *fd = x->x_vec;
+            fielddesc_setfloatarg(fd + i, argc, argv);
+            /* just piggybacking on the "points" message */
+            svg_update(x, gensym("points"));
+        }
+    }
+    else
+    {
+        pd_error(x, "draw: %s: no method for '%s'",
+            x->x_type->s_name, s->s_name);
+        return;
+    }
+}
+
+void svg_linepoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
+{
+    int i = 0;
+    if (x->x_type == gensym("line"))
+    {
+        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        {
+            if (s == gensym("x1")) i = 0;
+            else if (s == gensym("y1")) i = 1;
+            else if (s == gensym("x2")) i = 2;
+            else if (s == gensym("y2")) i = 3;
+            t_fielddesc *fd = x->x_vec;
+            fielddesc_setfloatarg(fd + i, argc, argv);
+            /* just simulate the "points" method */
+            svg_update(x, gensym("points"));
+        }
+    }
+    else
+    {
+        pd_error(x, "draw: %s: no method for '%s'",
+            x->x_type->s_name, s->s_name);
+        return;
+    }
 }
 
 static int minv(t_float a[][3], t_float b[][3])
@@ -3387,14 +3647,28 @@ static void draw_setup(void)
     /* methods for svg_class-- these will be accessible
        from the inlet of [draw] and the (rightmost) inlet of
        [group] */
-    class_addmethod(svg_class, (t_method)svg_vis,
-        gensym("vis"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_ellipsepoints,
+        gensym("cx"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_ellipsepoints,
+        gensym("cy"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_data,
+        gensym("data"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fill,
         gensym("fill"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fillopacity,
         gensym("fill-opacity"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_fillrule,
         gensym("fill-rule"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_rectpoints,
+        gensym("height"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_data,
+        gensym("points"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_r,
+        gensym("r"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_rx,
+        gensym("rx"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_ry,
+        gensym("ry"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_stroke,
         gensym("stroke"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_strokedasharray,
@@ -3411,10 +3685,22 @@ static void draw_setup(void)
         gensym("stroke-width"), A_GIMME, 0);
     class_addmethod(svg_class, (t_method)svg_transform,
         gensym("transform"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_rx,
-        gensym("rx"), A_GIMME, 0);
-    class_addmethod(svg_class, (t_method)svg_ry,
-        gensym("ry"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_vis,
+        gensym("vis"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_rectpoints,
+        gensym("width"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_rectpoints,
+        gensym("x"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_linepoints,
+        gensym("x1"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_linepoints,
+        gensym("x2"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_rectpoints,
+        gensym("y"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_linepoints,
+        gensym("y1"), A_GIMME, 0);
+    class_addmethod(svg_class, (t_method)svg_linepoints,
+        gensym("y2"), A_GIMME, 0);
 }
 
 /* ---------------- curves and polygons (joined segments) ---------------- */
