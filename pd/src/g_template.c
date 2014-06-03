@@ -1091,21 +1091,27 @@ static int path_ncmds(int argc, t_atom *argv)
     return j;
 }
 
+void svg_initvec(t_svg *x)
+{
+    t_fielddesc *fd = x->x_vec;
+    int i;
+    for (i = 0; i < 4; i++)
+        fielddesc_setfloat_const(fd+i, 0);
+}
+
 void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
 {
+    t_fielddesc *fd;
+    int nxy, i, flags = 0;
     t_svg *x = (t_svg *)pd_new(svg_class);
+    x->x_flags = flags;
     x->x_type = s;
     x->x_parent = (void *)parent;
     fielddesc_setfloat_const(&x->x_vis.a_attr, 1);
     /* let it inherit visibility from parent group, if present */
     x->x_vis.a_flag = 0;
-    int flags = 0;
     /* the following should be set in method space */
     /* flags |= NOMOUSE; */
-    x->x_flags = flags;
-    int nxy, i;
-    t_fielddesc *fd;
-    if (argc < 0) argc = 0;
     if (x->x_type == gensym("path"))
     {
         int ncmds = x->x_npathcmds = path_ncmds(argc, argv);
@@ -1123,9 +1129,24 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     else /* all other shapes */
     {
         nxy =  (argc + (argc & 1));
+        /* give basic shapes at least 4 points */
+        if (x->x_type == gensym("rect") ||
+            x->x_type == gensym("circle") ||
+            x->x_type == gensym("ellipse"))
+        {
+            nxy = 4;
+        }
         x->x_nargs = nxy;
     }
     x->x_vec = (t_fielddesc *)t_getbytes(nxy * sizeof(t_fielddesc));
+    if (x->x_type == gensym("rect") ||
+        x->x_type == gensym("circle") ||
+        x->x_type == gensym("ellipse"))
+    {
+        /* set x_vec to all zeros in case the user didn't provide
+           enough arguments */
+        svg_initvec(x);
+    }
     if (argc && x->x_type == gensym("path"))
     {
         if (argv->a_type != A_SYMBOL ||
@@ -1209,22 +1230,26 @@ static void *drawimage_new(t_symbol *classsym, int argc, t_atom *argv);
 
 static void *draw_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
-    t_symbol *type = 0;
+    t_symbol *type;
     if (argc && argv->a_type == A_SYMBOL &&
         symbol_isdrawtype(argv[0].a_w.w_symbol))
     {
         type = atom_getsymbolarg(0, argc--, argv++);
-        /* sprite has its own widgetbehavior and, therefore, its own class */
+        /* sprite and image have their own widgetbehavior, so they
+        have their own class and new function */
         if (type == gensym("sprite") || type == gensym("image"))
             return (drawimage_new(type, argc, argv));
     }
-    t_draw *x = (t_draw *)pd_new(draw_class);
-    if (!type) 
+    else
     {
-        pd_error(x, "draw: need an svg shape (rect, circle, path, etc.)");
+        type = gensym("rect");
+        post("warning: draw: no shape specified, defaulting to 'rect'");
     }
+
+    t_draw *x = (t_draw *)pd_new(draw_class);
+
     /* create a proxy for drawing/svg attributes */
-    if (!(x->x_attr = (t_pd *)svg_new((t_pd *)x, type, argc--, argv++)))
+    if (!(x->x_attr = (t_pd *)svg_new((t_pd *)x, type, argc, argv)))
     {
         pd_error(x, "draw: path data must start with 'm' or 'M'");
         return (0);
@@ -1869,27 +1894,38 @@ void svg_ry(t_svg *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-/* todo: ensure that rect has 4 coords pre-allocated! otherwise a crash */
+/* The svg spec actually says that the rect shouldn't be rendered if
+   height or width = 0. Current behavior is to draw a straight line,
+   and only fail to draw if both are 0. Also, svg spec says to handle
+   negative values as an error-- most of Pd doesn't do that so instead
+   I just bash to zero. */
 void svg_rectpoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_type == gensym("rect"))
     {
-        int i;
-        if (s == gensym("x")) i = 0;
-        else if (s == gensym("y")) i = 1;
-        else if (s == gensym("width")) i = 2;
-        else i = 3; /* height */
-        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        if (argc)
         {
-            t_fielddesc *fd = x->x_vec;
-            fielddesc_setfloatarg(fd + i, argc, argv);
-            /* just piggybacking on the "points" message */
-            svg_update(x, gensym("points"));
+            int i;
+            t_atomtype type = argv[0].a_type;
+            if (s == gensym("x")) i = 0;
+            else if (s == gensym("y")) i = 1;
+            else if (s == gensym("width")) i = 2;
+            else i = 3; /* height */
+            if (type == A_FLOAT || type == A_SYMBOL)
+            {
+                t_fielddesc *fd = x->x_vec;
+                if (type == A_FLOAT && argv[0].a_w.w_float < 0)
+                    fielddesc_setfloat_const(fd + i, 0);
+                else
+                    fielddesc_setfloatarg(fd + i, argc, argv);
+                /* just piggyback on the "points" message */
+                svg_update(x, gensym("points"));
+            }
         }
     }
     else
     {
-        pd_error(x, "draw: %s: no poopy for '%s'",
+        pd_error(x, "draw: %s: no  for '%s'",
             x->x_type->s_name, s->s_name);
         return;
     }
@@ -1899,15 +1935,18 @@ void svg_ellipsepoints(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_type == gensym("circle") || x->x_type == gensym("ellipse"))
     {
-        int i;
-        if (s == gensym("cx")) i = 0;
-        else i = 1;
-        if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+        if (argc)
         {
-            t_fielddesc *fd = x->x_vec;
-            fielddesc_setfloatarg(fd + i, argc, argv);
-            /* just piggybacking on the "points" message */
-            svg_update(x, gensym("points"));
+            int i;
+            if (s == gensym("cx")) i = 0;
+            else i = 1;
+            if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
+            {
+                t_fielddesc *fd = x->x_vec;
+                fielddesc_setfloatarg(fd + i, argc, argv);
+                /* just piggybacking on the "points" message */
+                svg_update(x, gensym("points"));
+            }
         }
     }
     else
