@@ -102,7 +102,7 @@ static void print_setup(void)
     class_addanything(print_class, print_anything);
 }
 
-/* -----------------canvasinfo, pdinfo, classinfo ------------------------------ */
+/* --------------pdinfo, canvasinfo, classinfo, objectinfo --------------- */
 static t_class *canvasinfo_class;
 
 typedef struct _canvasinfo {
@@ -125,9 +125,19 @@ typedef struct _classinfo {
     t_symbol *x_name;
 } t_classinfo;
 
+static t_class *objectinfo_class;
+
+typedef struct _objectinfo {
+    t_object x_obj;
+    t_outlet *x_out2;
+    t_canvas *x_canvas;
+    t_float x_index;
+    t_float x_depth;
+} t_objectinfo;
+
 /* used by all the *info objects */
 
-static t_int info_to_console = 0;
+static int info_to_console = 0;
 
 void info_out(t_text *te, t_symbol *s, int argc, t_atom *argv)
 {
@@ -158,27 +168,32 @@ void info_print(t_text *te)
     for(i = c->c_nmethod, m = c->c_methods; i; i--, m++)
         if(m->me_name != gensym("print"))
             (m->me_fun)(te, m->me_name, 0, 0);
-/*  pd_forwardmess(te->te_pd, 0, 0); not sure why this doesn't work */
+    /* not sure why this doesn't work... */
+    /* pd_forwardmess(te->te_pd, 0, 0); */
     info_to_console = 0;
 }
 
 /* -------------------------- canvasinfo ------------------------------ */
-t_canvas *canvasinfo_dig(t_canvasinfo *x)
+/* climb up to a parent canvas */
+t_canvas *canvas_climb(t_canvas *c, int level)
 {
-  int depth = (int)x->x_depth;
-  t_canvas *c = x->x_canvas;
-  if(depth<0) depth = 0;
-
-  while(depth && c->gl_owner) {
-    c = c->gl_owner;
-    depth--;
+  if(level <= 0)
+      return c;
+  else
+  {
+      t_canvas *ret = c;
+      while(level && ret->gl_owner)
+      {
+        ret = ret->gl_owner;
+        level--;
+      }
+      return c;
   }
-  return c;
 }
 
 void canvasinfo_args(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     int n = 0;
     t_atom *a = 0;
     t_binbuf *b;
@@ -202,7 +217,7 @@ void canvasinfo_args(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_coords(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_int gop = c->gl_isgraph + c->gl_hidetext;
     t_atom at[9];
     SETFLOAT(at, (c->gl_isgraph) ? c->gl_x1 : 0);
@@ -219,7 +234,7 @@ void canvasinfo_coords(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_dir(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     c = canvas_getrootfor(c);
     t_atom at[1];
     SETSYMBOL(at, canvas_getdir(c));
@@ -228,7 +243,7 @@ void canvasinfo_dir(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_dirty(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[1];
     SETFLOAT(at, c->gl_dirty);
     info_out((t_text *)x, s, 1, at);
@@ -236,7 +251,7 @@ void canvasinfo_dirty(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_dollarzero(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     c = canvas_getrootfor(c);
     t_symbol *d = gensym("$0");
     t_symbol *ret = canvas_realizedollar(c, d);
@@ -248,7 +263,7 @@ void canvasinfo_dollarzero(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_editmode(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[1];
     SETFLOAT(at, c->gl_edit);
     info_out((t_text *)x, s, 1, at);
@@ -256,7 +271,7 @@ void canvasinfo_editmode(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_filename(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     c = canvas_getrootfor(c);
     t_atom at[1];
     SETSYMBOL(at, c->gl_name);
@@ -265,7 +280,7 @@ void canvasinfo_filename(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     int x1, y1, x2, y2, indexno;
     t_gobj *ob = canvas_findhitbox(c, xpos, ypos, &x1, &y1, &x2, &y2);
     if (ob)
@@ -289,7 +304,7 @@ void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
 
 void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     char buf[MAXPDSTRING];
     snprintf(buf, MAXPDSTRING, ".x%lx", (long unsigned int)c);
     t_atom at[1];
@@ -299,7 +314,7 @@ void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_pointer(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[1];
     t_gpointer gp;
     gpointer_init(&gp);
@@ -312,7 +327,7 @@ void canvasinfo_pointer(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 void canvasinfo_posonparent(t_canvasinfo *x, t_symbol *s,
     int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[2];
     SETFLOAT(at, c->gl_obj.te_xpix);
     SETFLOAT(at+1, c->gl_obj.te_ypix);
@@ -321,7 +336,7 @@ void canvasinfo_posonparent(t_canvasinfo *x, t_symbol *s,
 
 void canvasinfo_screenpos(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[4];
     SETFLOAT(at, c->gl_screenx1);
     SETFLOAT(at+1, c->gl_screeny1);
@@ -332,7 +347,7 @@ void canvasinfo_screenpos(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_toplevel(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_float f = c->gl_owner ? 0 : 1;
     t_atom at[1];
     SETFLOAT(at, f);
@@ -341,7 +356,7 @@ void canvasinfo_toplevel(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void canvasinfo_vis(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_canvas *c = canvasinfo_dig(x);
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_atom at[1];
     SETFLOAT(at, glist_isvisible(c));
     info_out((t_text *)x, s, 1, at);
@@ -961,10 +976,138 @@ void classinfo_setup(void)
 */
 }
 
+/* -------------------------- objectinfo ------------------------------ */
+
+t_gobj *objectinfo_getobject(t_canvas *c, int index)
+{
+    int i = index;
+    t_gobj *y = c->gl_list;
+    while(i-- && y)
+        y = y->g_next;
+    return y;
+}
+
+void objectinfo_float(t_floatarg f)
+{
+
+}
+
+void objectinfo_boxtext(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    t_gobj *ob;
+   
+    if(ob = objectinfo_getobject(c, x->x_index))
+    {
+        int n = 0;
+        t_atom *a = 0;
+        t_binbuf *b;
+        /* if it's not t_object (e.g., a scalar), or if it is but
+           does not have any binbuf content, send a bang... */
+        if (!pd_checkobject(&ob->g_pd) ||
+            !(b = ((t_text *)ob)->te_binbuf))
+        {
+            info_out((t_text *)x, &s_bang, 0, 0);
+        }
+        else
+        {
+            n = binbuf_getnatom(b);
+            a = binbuf_getvec(b);
+            info_out((t_text *)x, s, n, a);
+        }
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+
+void objectinfo_bbox(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_gobj *ob;
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    int x1, y1, x2, y2;
+    if(ob = objectinfo_getobject(c, x->x_index))
+    {
+        /* check for a getrectfn */
+        if (ob->g_pd->c_wb && ob->g_pd->c_wb->w_getrectfn)
+        {
+            t_atom at[4];
+            gobj_getrect(ob, c, &x1, &y1, &x2, &y2);
+            SETFLOAT(at, (t_float)x1);
+            SETFLOAT(at+1, (t_float)y1);
+            SETFLOAT(at+2, (t_float)x2);
+            SETFLOAT(at+3, (t_float)y2);
+            info_out((t_text *)x, s, 4, at);
+        }
+        else
+        {
+            info_out((t_text *)x, &s_bang, 0, 0);
+        }
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+
+
+void objectinfo_classname(t_objectinfo *x, t_symbol *s,
+    int argc, t_atom *argv)
+{
+    t_atom at[1];
+    t_gobj *ob;
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    if(ob = objectinfo_getobject(c, x->x_index))
+    {
+        char *classname = class_getname(ob->g_pd);
+        SETSYMBOL(at, gensym(classname));
+        info_out((t_text *)x, s, 1, at);
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+
+void objectinfo_print(t_classinfo *x)
+{
+    info_print((t_text *)x);
+}
+
+void *objectinfo_new(t_floatarg f)
+{
+    t_objectinfo *x = (t_objectinfo *)pd_new(objectinfo_class);
+    t_glist *glist = (t_glist *)canvas_getcurrent();
+    x->x_canvas = (t_canvas*)glist_getcanvas(glist);
+    x->x_index = f;
+    floatinlet_new(&x->x_obj, &x->x_index);
+    floatinlet_new(&x->x_obj, &x->x_depth);
+    outlet_new(&x->x_obj, &s_anything);
+    x->x_out2 = outlet_new(&x->x_obj, &s_bang);
+    return (void *)x;
+}
+
+void objectinfo_setup(void)
+{
+    objectinfo_class = class_new(gensym("objectinfo"),
+        (t_newmethod)objectinfo_new, 0,
+        sizeof(t_objectinfo),
+        CLASS_DEFAULT, A_DEFFLOAT, 0);
+
+    class_addfloat(objectinfo_class, objectinfo_float);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_bbox,
+        gensym("bbox"), A_GIMME, 0);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_boxtext,
+        gensym("boxtext"), A_GIMME, 0);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_classname,
+        gensym("class"), A_GIMME, 0);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_print,
+        gensym("print"), 0);
+
+    post("objectinfo: v.0.1");
+    post("stable objectinfo methods: class");
+}
+
 void x_interface_setup(void)
 {
     print_setup();
     canvasinfo_setup();
     pdinfo_setup();
     classinfo_setup();
+    objectinfo_setup();
 }
