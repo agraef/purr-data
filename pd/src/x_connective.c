@@ -358,6 +358,13 @@ static void sel1_proxy_symbol(t_sel1_proxy *x, t_symbol *s)
     SETSYMBOL(&p->x_atom, s);
 }
 
+static void sel1_proxy_anything(t_sel1_proxy *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    t_sel1 *parent = (t_sel1 *)x->parent;
+    pd_error(parent, "select: no method for %s", s->s_name);
+}
+
 static void sel1_float(t_sel1 *x, t_float f)
 {
     if (x->x_atom.a_type == A_FLOAT && f == x->x_atom.a_w.w_float)
@@ -495,6 +502,7 @@ void select_setup(void)
         0, 0, sizeof(t_sel1_proxy), 0, 0);
     class_addfloat(sel1_proxy_class, (t_method)sel1_proxy_float);
     class_addsymbol(sel1_proxy_class, (t_method)sel1_proxy_symbol);
+    class_addanything(sel1_proxy_class, (t_method)sel1_proxy_anything);
     sel1_class = class_new(gensym("select"), 0, 0,
         sizeof(t_sel1), 0, 0);
     class_addfloat(sel1_class, sel1_float);

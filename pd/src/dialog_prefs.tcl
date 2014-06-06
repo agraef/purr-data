@@ -194,7 +194,7 @@ proc ::dialog_prefs::set_color {array key op} {
             all_cords&&control -stroke $c"]}
         selection {
             set commands [list "itemconfigure \
-                selected&&text -fill $c"]
+                selected&&text&&(!box&&!iemgui) -fill $c"]
             lappend commands "itemconfigure \
                 selected&&(border&&(!iemgui)) -fill $c"
             lappend commands "itemconfigure \
@@ -226,7 +226,10 @@ proc ::dialog_prefs::set_color {array key op} {
                 .search.navtext tag configure link -foreground $c
                 .search.f.advancedlabel configure -foreground $c
             }
-            return
+            if {[winfo exists .printout.frame.text]} {
+                .printout.frame.text tag configure link -foreground $c
+            }
+            # return
         }
         default {}
     }

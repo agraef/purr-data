@@ -530,7 +530,7 @@ typedef struct _message
     t_clock *m_clock;
 } t_message;
 
-static t_class *messresponder_class;
+t_class *messresponder_class;
 
 static void messresponder_bang(t_messresponder *x)
 {

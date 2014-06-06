@@ -5053,13 +5053,19 @@ static int glist_dofinderror(t_glist *gl, void *error_object)
     return (0);
 }
 
+extern t_class *messresponder_class;
 void canvas_finderror(void *error_object)
 {
     t_canvas *x;
+    void *error_gobj = error_object;
+    /* Since the messresponder_class isn't patchable,
+       we climb up to the parent message_class addy. */
+    if(((t_gobj *)error_object)->g_pd == messresponder_class)
+        error_gobj = error_object - sizeof(t_text);
         /* find all root canvases */
     for (x = canvas_list; x; x = x->gl_next)
     {
-        if (glist_dofinderror(x, error_object))
+        if (glist_dofinderror(x, error_gobj))
             return;
     }
     post("... sorry, I couldn't find the source of that error.");

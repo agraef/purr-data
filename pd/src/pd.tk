@@ -944,6 +944,35 @@ proc pdtk_post {stuff} {
 	.printout.frame.text configure -state disabled
 }
 
+proc pderror_select_by_id {objectid} {
+    if [llength $objectid] {
+        pdsend "pd findinstance $objectid"
+    }
+}
+
+# stopgap for ::pdwindow::logpost
+proc pdtk_posterror {objectid loglevel errormsg} {
+    set t .printout.frame.text
+    $t configure -state normal
+    # if we have an object id, make a friendly link...
+    if {$objectid ne ""} {
+        $t insert end "error" [list obj$objectid link]
+        $t tag bind obj$objectid <1> "pderror_select_by_id $objectid; break"
+        $t tag bind obj$objectid <Enter> "$t configure -cursor hand2"
+        $t tag bind obj$objectid <Leave> "$t configure -cursor xterm"
+        $t tag configure link -foreground "$::pd_colors(link)" \
+            -underline on
+    } else {
+        $t insert end "error"
+    }
+    $t insert end ": "
+    $t insert end $errormsg
+
+    after cancel .printout.frame.text yview end-2char
+    after idle .printout.frame.text yview end-2char
+	.printout.frame.text configure -state disabled
+}
+
 proc pdtk_standardkeybindings {id} {
     global pd_nt ctrl_key
     bind $id <$ctrl_key-Key> {pdtk_canvas_ctrlkey %W %K 0}

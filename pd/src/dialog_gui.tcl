@@ -110,7 +110,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(signal_cord)      #808095
             set ::pd_colors(signal_nlet)      $::pd_colors(signal_cord)
             set ::pd_colors(xlet_hover)       grey
-            set ::pd_colors(link)             #eb5f28
+            set ::pd_colors(link)             "#eb5f28"
             set ::pd_colors(selection)        #e87216
             set ::pd_colors(selection_rectangle) #e87216
             set ::pd_colors(highlighted_text) black

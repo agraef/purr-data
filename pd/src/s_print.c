@@ -13,6 +13,58 @@
 t_printhook sys_printhook;
 int sys_printtostderr;
 
+/* escape characters for tcl/tk */
+static char* strnescape(char *dest, const char *src, size_t len)
+{
+    int ptin = 0;
+    unsigned ptout = 0;
+    for(; ptout < len; ptin++, ptout++)
+    {
+        int c = src[ptin];
+        if (c == '\\' || c == '{' || c == '}')
+            dest[ptout++] = '\\';
+            dest[ptout] = src[ptin];
+            if (c==0) break;
+    }
+
+    if(ptout < len)
+        dest[ptout]=0;
+    else
+        dest[len-1]=0;
+
+    return dest;
+}
+
+static char* strnpointerid(char *dest, const void *pointer, size_t len)
+{
+    *dest=0;
+    if (pointer)
+        snprintf(dest, len, ".x%lx", (unsigned long)pointer);
+    return dest;
+}
+
+static void doerror(const void *object, const char *s)
+{
+    char upbuf[MAXPDSTRING];
+    upbuf[MAXPDSTRING-1]=0;
+
+    // what about sys_printhook_error ?
+    if (sys_printhook)
+    {
+        snprintf(upbuf, MAXPDSTRING-1, "error: %s", s);
+        (*sys_printhook)(upbuf);
+    }
+    else if (sys_printtostderr)
+        fprintf(stderr, "error: %s", s);
+    else
+    {
+        char obuf[MAXPDSTRING];
+        sys_vgui("pdtk_posterror {%s} 1 {%s}\n",
+            strnpointerid(obuf, object, MAXPDSTRING),
+            strnescape(upbuf, s, MAXPDSTRING));
+    }
+}
+
 static void dopost(const char *s)
 {
     if (sys_printhook)
@@ -102,12 +154,13 @@ void error(const char *fmt, ...)
     va_list ap;
     t_int arg[8];
     int i;
-    dopost("error: ");
+
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
     strcat(buf, "\n");
-    dopost(buf);
+
+    doerror(NULL, buf);
 }
 
 void verbose(int level, const char *fmt, ...)
@@ -143,12 +196,14 @@ void pd_error(void *object, const char *fmt, ...)
     t_int arg[8];
     int i;
     static int saidit;
-    dopost("error: ");
+
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
     strcat(buf, "\n");
-    dopost(buf);
+
+    doerror(object, buf);
+
     error_object = object;
     if (!saidit)
     {
@@ -166,6 +221,19 @@ void glob_finderror(t_pd *dummy)
         post("last trackable error:");
         post("%s", error_string);
         canvas_finderror(error_object);
+    }
+}
+
+void glob_findinstance(t_pd *dummy, t_symbol*s)
+{
+    // revert s to (potential) pointer to object
+    long obj = 0;
+    if (sscanf(s->s_name, ".x%lx", &obj))
+    {
+        if (obj)
+        {
+            canvas_finderror((void *)obj);
+        }
     }
 }
 
