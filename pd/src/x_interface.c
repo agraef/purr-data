@@ -187,7 +187,7 @@ t_canvas *canvas_climb(t_canvas *c, int level)
         ret = ret->gl_owner;
         level--;
       }
-      return c;
+      return ret;
   }
 }
 
