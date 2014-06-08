@@ -5665,6 +5665,7 @@ static int glist_dofinderror(t_glist *gl, void *error_object)
 }
 
 extern t_class *messresponder_class;
+extern t_class *message_class;
 void canvas_finderror(void *error_object)
 {
     t_canvas *x;
@@ -5672,10 +5673,26 @@ void canvas_finderror(void *error_object)
     /* Since the messresponder_class isn't patchable,
        we climb up to the parent message_class addy. */
     if(((t_gobj *)error_object)->g_pd == messresponder_class)
-        error_gobj = error_object - sizeof(t_text);
+    {
+        /* do pointer math to potentially get the parent message */
+        void *msg = error_object - sizeof(t_text);
+        /* if it looks like a message, it must be a message */
+        if(((t_gobj *)msg)->g_pd == message_class)
+            error_gobj = msg;
+    }
         /* find all root canvases */
     for (x = canvas_list; x; x = x->gl_next)
     {
+        if ((void *)x == error_gobj)
+        {
+            /* If the error is associated with a toplevel canvas, we
+               do a quick-and-dirty unvis and vis to give some basic
+               visual feedback to the user */
+            glist_noselect(x);
+            canvas_vis(glist_getcanvas(x), 0);
+            canvas_vis(glist_getcanvas(x), 1);
+            return;
+        }
         if (glist_dofinderror(x, error_gobj))
             return;
     }

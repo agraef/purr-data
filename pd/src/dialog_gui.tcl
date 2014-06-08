@@ -210,7 +210,7 @@ proc ::dialog_gui::set_gui_preset {args} {
             set ::pd_colors(selection_rectangle) #7c71da
             set ::pd_colors(highlighted_text) #3e32a2
             set ::pd_colors(highlighted_text_bg) #a49aea
-            set ::pd_colors(dash_outline)  "#f00"
+            set ::pd_colors(dash_outline)  "#ff9933"
             set ::pd_colors(dash_fill)     "#3e32a2"
             set ::pd_colors(graph_border)  "#777"
             set ::pd_colors(graph)         "#3e32a2"

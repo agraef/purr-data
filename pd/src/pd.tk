@@ -956,12 +956,12 @@ proc pdtk_posterror {objectid loglevel errormsg} {
     $t configure -state normal
     # if we have an object id, make a friendly link...
     if {$objectid ne ""} {
-        $t insert end "error" [list obj$objectid link]
+        $t insert end "error" [list obj$objectid errorlink]
         $t tag bind obj$objectid <1> "pderror_select_by_id $objectid; break"
         $t tag bind obj$objectid <Enter> "$t configure -cursor hand2"
         $t tag bind obj$objectid <Leave> "$t configure -cursor xterm"
-        $t tag configure link -foreground "$::pd_colors(link)" \
-            -underline on
+        $t tag configure errorlink -foreground "$::pd_colors(dash_outline)" \
+            -underline on -background "$::pd_colors(dash_fill)"
     } else {
         $t insert end "error"
     }

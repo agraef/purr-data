@@ -211,9 +211,21 @@ proc ::dialog_prefs::set_color {array key op} {
         graph_border {set commands [list "itemconfigure \
             graph&&(!label) -stroke $c"]}
         graph {set commands [list "itemconfigure graph&&(!label) -fill $c"]}
-        dash_fill {set commands [list "itemconfigure broken&&box -fill $c"]}
-        dash_outline {set commands [list "itemconfigure \
-            broken&&box -stroke $c"]}
+        dash_fill {
+            set commands [list "itemconfigure broken&&box -fill $c"]
+            if {[winfo exists .printout.frame.text]} {
+                .printout.frame.text tag configure errorlink -background $c
+            }
+        }
+        dash_outline {
+            set commands [list "itemconfigure broken&&box -stroke $c"]
+            if {[winfo exists .printout.frame.text]} {
+                .printout.frame.text tag configure errorlink -foreground $c
+            }
+        }
+
+
+
         magic_glass_bg {set commands [list "itemconfigure \
             magicGlassBg -fill $c"]}
         magic_glass_bd {set commands [list "itemconfigure \
@@ -225,9 +237,6 @@ proc ::dialog_prefs::set_color {array key op} {
                 .search.resultstext tag configure link -foreground $c
                 .search.navtext tag configure link -foreground $c
                 .search.f.advancedlabel configure -foreground $c
-            }
-            if {[winfo exists .printout.frame.text]} {
-                .printout.frame.text tag configure link -foreground $c
             }
             # return
         }
