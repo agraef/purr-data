@@ -6415,6 +6415,7 @@ static void canvas_duplicate(t_canvas *x)
                    nature between the gui and the engine, so we select it
                    explicitly here once again to prevent that from being
                    a problem */
+                //fprintf(stderr,"post-duplicate reselect hack for gop objects\n");
                 gobj_select(g, x, 1);
             }
             g = g->g_next;
