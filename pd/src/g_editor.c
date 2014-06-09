@@ -6260,7 +6260,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
         //now displace it but without undo
         //(by spoofing canvas_undo_already_set_move)
         canvas_undo_already_set_move = 1;
-         canvas_displaceselection(x, delta_x, delta_y);
+        canvas_displaceselection(x, delta_x, delta_y);
         //reset canvas_undo_already_set_move
         canvas_undo_already_set_move = 0;
     }
