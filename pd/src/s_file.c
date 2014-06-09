@@ -138,8 +138,7 @@ static FILE *sys_prefsavefp;
 
 static void sys_initsavepreferences( void)
 {
-    char filenamebuf[FILENAME_MAX], errbuf[FILENAME_MAX],
-        *homedir = getenv("HOME");
+    char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
     FILE *fp;
 
     if (!homedir)
@@ -148,8 +147,8 @@ static void sys_initsavepreferences( void)
     filenamebuf[FILENAME_MAX-1] = 0;
     if ((sys_prefsavefp = fopen(filenamebuf, "w")) == NULL)
     {
-        snprintf(errbuf, FILENAME_MAX, "%s: %s",filenamebuf, strerror(errno));
-        pd_error(0, errbuf);
+        //snprintf(errbuf, FILENAME_MAX, "%s: %s",filenamebuf, strerror(errno));
+        pd_error(0, "%s: %s",filenamebuf, strerror(errno));
     }
 }
 
