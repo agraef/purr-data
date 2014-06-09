@@ -1252,6 +1252,7 @@ static void garray_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void garray_select(t_gobj *z, t_glist *glist, int state)
 {
+    //fprintf(stderr,">>>>>>>>>>>>garray_select %d\n", state);
     t_garray *x = (t_garray *)z;
     sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
         glist_getcanvas(glist), x->x_glist, state);
@@ -1373,18 +1374,32 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
     {
         garray_vis(&x->x_gobj, x->x_glist, 0); 
         garray_vis(&x->x_gobj, x->x_glist, 1);
-    }
-    /* we do this to reposition objects back where they belong */
-    if (!glist_istoplevel(glist))
-    {
-        canvas_restore_original_position(glist_getcanvas(glist),
-            (t_gobj *)glist, 0, -1);
-    }
-    if (glist_isselected(glist_getcanvas(glist), (t_gobj *)glist))
-    {
-        //fprintf(stderr,"garray_doredraw isselected\n");
-        sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
-            glist_getcanvas(glist), glist, 1);
+
+        /* we do this to reposition objects back where they belong */
+        if (!glist_istoplevel(glist))
+        {
+            canvas_restore_original_position(glist_getcanvas(glist),
+                (t_gobj *)glist, 0, -1);
+        }
+        //fprintf(stderr,"check if we need to reselect %lx %lx %lx\n",
+        //    glist_getcanvas(glist), (t_gobj *)glist, glist->gl_owner);
+        int selected = 0;
+        t_glist *sel = glist->gl_owner;
+        while (sel && sel != glist_getcanvas(glist))
+        {
+            if (glist_isselected(glist_getcanvas(glist), (t_gobj *)sel))
+            {
+                selected = 1;
+                break;
+            }
+            sel = sel->gl_owner;
+        }
+        if (selected)
+        {
+            //fprintf(stderr,"garray_doredraw isselected\n");
+            sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+                glist_getcanvas(glist), glist, 1);
+        }
     }
 }
 
