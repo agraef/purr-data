@@ -689,6 +689,9 @@ typedef t_pd *(*t_fun5)(t_int i1, t_int i2, t_int i3, t_int i4, t_int i5,
 typedef t_pd *(*t_fun6)(t_int i1, t_int i2, t_int i3, t_int i4, t_int i5, t_int i6,
     t_floatarg d1, t_floatarg d2, t_floatarg d3, t_floatarg d4, t_floatarg d5);
 
+/* needed for proper error reporting */
+extern t_pd *pd_mess_from_responder(t_pd *x);
+
 void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_method *f;
@@ -849,6 +852,10 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
     (*c->c_anymethod)(x, s, argc, argv);
     return;
 badarg:
+    /* if x is a messresponder class, tweak it to point to the
+       message that contains it (so it can be selected when 'Find
+       Error' is used). */
+    x = pd_mess_from_responder(x);
     pd_error(x, "Bad arguments for message '%s' to object '%s'",
         s->s_name, c->c_name->s_name);
 }

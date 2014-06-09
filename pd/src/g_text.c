@@ -530,7 +530,7 @@ typedef struct _message
     t_clock *m_clock;
 } t_message;
 
-t_class *messresponder_class;
+static t_class *messresponder_class;
 
 static void messresponder_bang(t_messresponder *x)
 {
@@ -685,6 +685,19 @@ static void message_tick(t_message *x)
 static void message_free(t_message *x)
 {
     clock_free(x->m_clock);
+}
+
+t_pd *pd_mess_from_responder(t_pd *x)
+{
+    if (pd_class(x) == messresponder_class)
+    {
+        /* do pointer math to try to get to the container message struct */
+        void *tmp = (void *)x - sizeof(t_text);
+        /* if it looks like a message, it must be a message */
+        if(((t_text *)tmp)->te_pd == message_class)
+            return ((t_pd *)tmp);
+    }
+    return x;
 }
 
 void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
