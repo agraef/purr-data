@@ -272,7 +272,7 @@ int sys_main(int argc, char **argv)
     int i, noprefs;
     sys_externalschedlib = 0;
     sys_extraflags = 0;
-    char * filenames;
+    char * filenames = NULL;
 #ifdef PD_DEBUG
     fprintf(stderr, "Pd-L2Ork: COMPILED FOR DEBUGGING\n");
 #endif
@@ -532,7 +532,10 @@ void sys_findprogdir(char *progname)
     sys_libdir = gensym(sbuf2);
     sys_guidir = &s_;   /* in MSW the guipath just depends on the libdir */
 #else
-    realpath(sbuf2, sbuf);
+    char *res = realpath(sbuf2, sbuf);
+    if (!res) {
+        error("%s: Cannot get a real path", sbuf2);
+    }
     strncpy(sbuf2, sbuf, FILENAME_MAX-30);
     sbuf[FILENAME_MAX-30] = 0;
     strcat(sbuf2, "/lib/pd-l2ork");
