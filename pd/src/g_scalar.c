@@ -717,7 +717,7 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
 */
 static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
-    //fprintf(stderr,"scalar_vis %d\n", vis);
+    //fprintf(stderr,"scalar_vis %d %lx\n", vis, (t_int)z);
     t_scalar *x = (t_scalar *)z;
 
     x->sc_bboxcache = 0;
@@ -790,6 +790,8 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     sys_unqueuegui(x);
     if (glist_isselected(owner, &x->sc_gobj))
     {
+        // we removed this because it caused infinite recursion
+        // in the scalar-help.pd example
         //scalar_select(z, owner, 1);
         scalar_drawselectrect(x, owner, 0);
         scalar_drawselectrect(x, owner, 1);
