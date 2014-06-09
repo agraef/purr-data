@@ -449,8 +449,8 @@ static int socketreceiver_doread(t_socketreceiver *x)
             binbuf_text(inbinbuf, messbuf, bp - messbuf);
             if (sys_debuglevel & DEBUG_MESSDOWN)
             {
-                write(2,  messbuf, bp - messbuf);
-                write(2, "\n", 1);
+                int res = write(2,  messbuf, bp - messbuf);
+                res = write(2, "\n", 1);
             }
             x->sr_inhead = inhead;
             x->sr_intail = intail;
