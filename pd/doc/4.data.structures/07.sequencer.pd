@@ -2,29 +2,20 @@
 template-pitch array amp template-amp;
 #N struct template-pitch float x float y float w;
 #N struct template-amp float x float y float w;
-#N canvas 710 51 448 576 10;
-#N canvas 95 388 428 166 template-toplevel 0;
-#X obj 25 106 plot pitch voiceno 3 10 0;
-#X obj 25 133 plot amp 0 3 10 0;
-#X obj 25 41 struct template-toplevel float x float y float voiceno
+#N canvas 124 61 556 609 12;
+#N canvas 565 104 524 166 template-toplevel 0;
+#X obj 25 86 plot pitch voiceno 3 10 0;
+#X obj 25 113 plot amp 0 3 10 0;
+#X obj 25 21 struct template-toplevel float x float y float voiceno
 array pitch template-pitch array amp template-amp;
-#X obj 27 81 filledpolygon 9 9 0 0 -2 0 2 5 2 5 -2;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -261139 -33289 0;
-#X text 7 2 Data Structure Top Level Template;
-#X restore 22 340 pd template-toplevel;
-#N canvas 0 0 428 102 template-amp 0;
-#X obj 21 42 struct template-amp float x float y float w;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -261139 -33289 0;
-#X text 7 2 Data Structure Template;
-#X restore 22 362 pd template-amp;
-#N canvas 42 221 428 118 template-pitch 0;
-#X obj 22 42 struct template-pitch float x float y float w;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -261139 -33289 0;
-#X text 7 2 Data Structure Template;
-#X restore 22 384 pd template-pitch;
+#X obj 27 61 filledpolygon 9 9 0 0 -2 0 2 5 2 5 -2;
+#X restore 55 385 pd template-toplevel;
+#N canvas 0 0 419 102 template-amp 0;
+#X obj 15 41 struct template-amp float x float y float w;
+#X restore 55 407 pd template-amp;
+#N canvas 42 221 452 87 template-pitch 0;
+#X obj 21 29 struct template-pitch float x float y float w;
+#X restore 57 430 pd template-pitch;
 #N canvas 323 50 551 562 synthesis 0;
 #X msg 125 220 next;
 #X msg 108 172 traverse pd-data \, next;
@@ -90,11 +81,11 @@ array pitch template-pitch array amp template-amp;
 #X connect 26 0 27 0;
 #X connect 27 0 28 0;
 #X connect 28 0 14 0;
-#X restore 22 462 pd synthesis;
-#X floatatom 176 365 0 0 0 0 - - -;
-#X msg 22 435 start;
-#X msg 73 435 stop;
-#N canvas 386 74 426 367 data 1;
+#X restore 55 511 pd synthesis;
+#X floatatom 269 464 0 0 0 0 - - -;
+#X msg 55 484 start;
+#X msg 106 484 stop;
+#N canvas 258 114 425 363 data 1;
 #X scalar template-toplevel 22 86 900 \; 0 0 12 \; 10 0 12 \; \; 0
 0 0 \; 10 0 2.5 \; 11 0 0 \; \;;
 #X scalar template-toplevel 33 80 990 \; 0 0 12 \; 10 0 12 \; \; 0
@@ -112,70 +103,46 @@ array pitch template-pitch array amp template-amp;
 2.5 \; 70 0 0 \; \;;
 #X scalar template-toplevel 338 63.5 909 \; 0 0 12 \; 50 0 12 \; \;
 0 0 4 \; 10 0 2.5 \; 50 0 0 \; \;;
-#X coords 0 91.75 1 91.5 0 0 0;
-#X restore 22 318 pd data;
-#X obj 176 318 r tempo;
-#X msg 176 341 set \$1;
-#X obj 176 389 s tempo;
-#X text 20 37 This patch shows an example of how to use data collections
+#X coords 0 90.75 1 90.5 0 0 0;
+#X restore 55 364 pd data;
+#N canvas 82 467 332 145 stuff 0;
+#X msg 1 101 \; pd-data write xx.txt;
+#X msg -3 39 \; pd-data read score.txt;
+#X obj 208 7 loadbang;
+#X msg 208 34 \; tempo 60;
+#X msg 198 101 \; pd-data sort;
+#X connect 2 0 3 0;
+#X restore 56 452 pd stuff;
+#X obj 269 417 r tempo;
+#X msg 269 440 set \$1;
+#X obj 269 488 s tempo;
+#X text 13 4 This patch shows an example of how to use data collections
 as musical sequences (with apologies to Yuasa and Stockhausen). Here
 the black traces show dynamics and the colored ones show pitch. The
 fatness of the pitch traces give bandwidth. Any of the three can change
 over the life of the event.;
-#X text 19 112 To hear the result \, turn the volume up to 70 or so
+#X text 11 97 To hear the result \, turn the volume up to 70 or so
 (higher if it's not loud enough the first time) and hit "start". You
 can set the tempo lower if that helps you follow the "score" the first
 couple of times.;
-#X obj 22 490 output~;
-#X text 19 239 This confuses Tk's scroll bars \, by the way \, and
+#X text 302 464 <--- tempo;
+#X obj 55 539 output~;
+#X text 304 574 Updated for Pd version 0.39;
+#X text 10 259 This confuses Tk's scroll bars \, by the way \, and
 when you resize the window the image still sticks to the top and not
 the bottom of the window as it should. When you resize a canvas with
 y having positive units (growing upward) \, just hit 'save' and Pd
 will check the scrolling and correct if necessary.;
-#X text 20 164 Note the screen units in the "data" window (open it
+#X text 10 161 Note the screen units in the "data" window (open it
 and get "properties" to see them.) Normally \, there are -1 y units
 per pixel - that is \, adding 1 to y moves down one pixel. This is
 the "natural" y unit for most drawing programs. In the data window
 \, each pixel is 0.25 units \, meaning that adding one to a 'y' value
 moves it up four pixels.;
-#X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header sequencer 20 10
-1 18 -261139 -33289 0;
-#X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
-;
-#X obj 1 554 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -233017 -33289 0;
-#N canvas 44 246 494 284 META 0;
-#X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
-#X text 12 105 AUTHOR Miller Puckette;
-#X text 12 85 LIBRARY PDDP;
-#X text 12 5 GENRE tutorial;
-#X text 12 45 LICENSE SIBSD;
-#X text 12 145 HELP_PATCH_AUTHORS Updated for release 0.39. Jonathan
-Wilkes revised the patch to conform to the PDDP template for Pd version
-0.42.;
-#X text 12 25 KEYWORDS data_structure GUI;
-#X text 12 65 DESCRIPTION sequencer;
-#X restore 392 556 pd META;
-#N canvas 13 202 428 190 References 0;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -261139 -33289 0;
-#X text 7 2 data structure sequencer- Related Help Documents;
-#X text 19 37 Links:;
-#X restore 103 556 pd References;
-#X obj 6 556 pddp/pddplink ../5.reference/pddp/help.pd -text help;
-#X text 209 365 <-- tempo;
-#N canvas 94 417 332 145 init 0;
-#X msg 1 91 \; pd-data write xx.txt;
-#X msg 1 29 \; pd-data read score.txt;
-#X obj 198 27 loadbang;
-#X msg 198 54 \; tempo 60;
-#X msg 198 101 \; pd-data sort;
-#X connect 2 0 3 0;
-#X restore 22 406 pd init;
-#X connect 3 0 13 0;
-#X connect 3 0 13 1;
-#X connect 4 0 10 0;
+#X connect 3 0 15 0;
+#X connect 3 0 15 1;
+#X connect 4 0 11 0;
 #X connect 5 0 3 0;
 #X connect 6 0 3 0;
-#X connect 8 0 9 0;
-#X connect 9 0 4 0;
+#X connect 9 0 10 0;
+#X connect 10 0 4 0;
