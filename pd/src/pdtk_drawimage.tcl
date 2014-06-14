@@ -72,6 +72,12 @@ proc pdtk_drawimage_vis {c x y obj tag seqno l2orktag1 l2orktag2 tag3 drawtag} {
     $c create pimage $x $y -image ${img}$seqno -tags [list $tag $l2orktag1 $l2orktag2 $drawtag] -parent $tag3
 }
 
+proc pdtk_drawimage_index {c obj drawtag index} {
+    pdtk_post "drawimage thinking \n"
+    set img ::drawimage_${obj}
+    $c itemconfigure $drawtag -image ${img}$index
+}
+
 proc pdtk_drawimage_unvis {c tag} {
     $c delete $tag
 }

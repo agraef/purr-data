@@ -41,6 +41,7 @@ static void template_conformarray(t_template *tfrom, t_template *tto,
 static void template_conformglist(t_template *tfrom, t_template *tto,
     t_glist *glist,  int *conformaction);
 t_canvas *canvas_templatecanvas_forgroup(t_canvas *c);
+static int drawimage_getindex(void *z, t_template *template, t_word *data);
 
 /* ---------------------- storage ------------------------- */
 
@@ -1453,7 +1454,7 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                          x->x_vec+3, template, data, 1));
                      redraw_bbox = 1;
                 }
-           }
+            }
             else if (s == gensym("vis"))
             {
                 sprintf(str, "-state %s", (int)fielddesc_getcoord(
@@ -1504,6 +1505,12 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 }
                 sys_gui("}\n");
             }
+            else if (s == gensym("index"))
+            {
+                sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
+                    visible, parent, parent, data, drawimage_getindex(parent, 
+                        template, data)); 
+            }
             else if (s == gensym("points"))
             {
                 /* this needs to be abstracted out somehow... */
@@ -1545,12 +1552,13 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
                 sys_gui("\n");
             }
             if (x->x_type == gensym("group") && s != gensym("data") &&
-                s != gensym("points"))
+                s != gensym("points") && s != gensym("index"))
             {
                 sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx %s\n",
                    visible, parent, data, str);
             }
-            else if (s != gensym("data") && s != gensym("points"))
+            else if (s != gensym("data") && s != gensym("points") &&
+                s != gensym("index"))
             {
                 sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
                    visible, parent, data, str);
@@ -3504,6 +3512,7 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
+
     t_float mtx1[3][3];
     t_float mtx2[3][3];
     t_float m1, m2, m3, m4, m5, m6, tdx, tdy;
@@ -6821,6 +6830,13 @@ void drawimage_size(t_drawimage *x, t_float w, t_float h)
     x->x_h = h;
 }
 
+static int drawimage_getindex(void *z, t_template *template, t_word *data)
+{
+    t_drawimage *x = (t_drawimage *)z;
+    int index = (int)fielddesc_getcoord(&x->x_value, template, data, 1);
+    return (index);
+}
+
 static void drawimage_index(t_drawimage *x, t_symbol *s, int argc,
     t_atom *argv)
 {
@@ -6831,7 +6847,7 @@ static void drawimage_index(t_drawimage *x, t_symbol *s, int argc,
             post("drawimage warning: sequence variable is only "
                  "used with drawsprite");
         fielddesc_setfloatarg(&x->x_value, argc, argv);
-        canvas_redrawallfortemplatecanvas(c, 0);
+        svg_update((t_svg *)x->x_attr, gensym("index"));
     }
 }
 
