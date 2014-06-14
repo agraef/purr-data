@@ -73,7 +73,6 @@ proc pdtk_drawimage_vis {c x y obj tag seqno l2orktag1 l2orktag2 tag3 drawtag} {
 }
 
 proc pdtk_drawimage_index {c obj drawtag index} {
-    pdtk_post "drawimage thinking \n"
     set img ::drawimage_${obj}
     $c itemconfigure $drawtag -image ${img}$index
 }
