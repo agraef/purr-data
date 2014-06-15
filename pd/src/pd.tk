@@ -3146,6 +3146,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
     	$name.m.edit entryconfigure "Autotips" -background "#7dd37d" -foreground "#dddddd"
 	}
 
+	set ::editmode($name) $editable
+
 	#if { $magicglass == 1 } {
     #	$name.m.edit entryconfigure "Cord Inspector" -background "#7dd37d"
 	#	menu_magicglass $name
@@ -4255,8 +4257,13 @@ proc pdtk_find_highest_widget_withtag {canvas name} {
 proc pdtk_canvas_getscroll {name} {
 	set parentname [winfo parent $name]
 	if {$::scroll($parentname) == 0} {return}
-	catch { after cancel $::doscroll($name) }
-	set ::doscroll($name) [after idle [concat pdtk_canvas_do_getscroll $name]]
+	# if {$::editmode($parentname) == 0} {
+	# 	if { $::doscroll($parentname) != 0 } {
+	# 		return
+	# 	}
+	# }
+	catch { after cancel $::doscroll($parentname) }
+	set ::doscroll($parentname) [after idle [concat pdtk_canvas_do_getscroll $name]]
 }
 
 proc pdtk_canvas_do_getscroll {name} {
@@ -4272,6 +4279,9 @@ proc pdtk_canvas_do_getscroll {name} {
     if {![winfo exists $name]} {return}
 
     set parentname [winfo parent $name]
+
+	set ::doscroll($parentname) 0
+
     #puts stderr "pdtk_canvas_getscroll $name $::scroll($parentname)"
 	if {$::scroll($parentname) == 0} {return}
 
@@ -7041,6 +7051,7 @@ proc pdtk_data_dialog {name stuff} {
 #####################iemlib#######################
 proc pdtk_canvas_editval {name value} {
 	global k12_mode
+	set set ::editmode($name) $value
 	#if {[winfo exists $name]} {
 		if { $value } {
 		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d" -foreground black

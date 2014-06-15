@@ -600,14 +600,16 @@ static void message_set(t_message *x, t_symbol *s, int argc, t_atom *argv)
     binbuf_clear(x->m_text.te_binbuf);
     binbuf_add(x->m_text.te_binbuf, argc, argv);
     glist_retext(x->m_glist, &x->m_text);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_add2(t_message *x, t_symbol *s, int argc, t_atom *argv)
 {
     binbuf_add(x->m_text.te_binbuf, argc, argv);
     glist_retext(x->m_glist, &x->m_text);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_add(t_message *x, t_symbol *s, int argc, t_atom *argv)
@@ -615,7 +617,8 @@ static void message_add(t_message *x, t_symbol *s, int argc, t_atom *argv)
     binbuf_add(x->m_text.te_binbuf, argc, argv);
     binbuf_addsemi(x->m_text.te_binbuf);
     glist_retext(x->m_glist, &x->m_text);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_addcomma(t_message *x)
@@ -624,13 +627,15 @@ static void message_addcomma(t_message *x)
     SETCOMMA(&a);
     binbuf_add(x->m_text.te_binbuf, 1, &a);
     glist_retext(x->m_glist, &x->m_text);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_addsemi(t_message *x)
 {
     message_add(x, 0, 0, 0);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_adddollar(t_message *x, t_floatarg f)
@@ -642,7 +647,8 @@ static void message_adddollar(t_message *x, t_floatarg f)
     SETDOLLAR(&a, n);
     binbuf_add(x->m_text.te_binbuf, 1, &a);
     glist_retext(x->m_glist, &x->m_text);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_adddollsym(t_message *x, t_symbol *s)
@@ -655,7 +661,8 @@ static void message_adddollsym(t_message *x, t_symbol *s)
     SETDOLLSYM(&a, gensym(buf));
     binbuf_add(x->m_text.te_binbuf, 1, &a);
     glist_retext(x->m_glist, &x->m_text);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
+    if (glist_isvisible(glist_getcanvas(x->m_glist)))
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->m_glist);
 }
 
 static void message_click(t_message *x,
