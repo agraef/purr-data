@@ -64,42 +64,53 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
     int xx11b=text_xpix(&x->x_gui.x_obj, glist), xx11=xx11b, xx21=xx11b+s4;
     int xx22=xx11b+dx-s4;
 
-	t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
-	sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)sh);
-	t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
-	sprintf(lh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)lh);
+    t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
+    sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)sh);
+    t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
+    sprintf(lh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)lh);
 
-	//if (glist_isvisible(canvas)) {
+    //if (glist_isvisible(canvas)) {
 
-		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		for(i=0; i<n; i++)
-		{
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_border) -fill #%6.6x -tags {%lxBASE%d %lxHRDO %s text iemgui border}\n",
-		             canvas, xx11, yy11, xx11+dx, yy12,
-		             x->x_gui.x_bcol, x, i, x, nlet_tag);
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x -tags {%lxBUT%d %lxHRDO %s text iemgui}\n",
-		             canvas, xx21, yy21, xx22, yy22,
-		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-		             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, i, x, nlet_tag);
-		    xx11 += dx;
-		    xx21 += dx;
-		    xx22 += dx;
-		    x->x_drawn = x->x_on;
-		}
-		sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w \
-		         -font {{%s} -%d %s} -fill #%6.6x -tags {%lxLABEL %lxHRDO %s text iemgui}\n",
-		         canvas, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy,
-		         strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-		         x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-		         x->x_gui.x_lcol, x, x, nlet_tag);
-		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet iemgui}\n",
-		         canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet iemgui}\n",
-		         canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-	//}
+        for(i=0; i<n; i++)
+        {
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
+                     "-tags {%lxBASE%d %lxHRDO %s text iemgui border}\n",
+                 canvas, xx11, yy11, xx11+dx, yy12,
+                 x->x_gui.x_bcol, x, i, x, nlet_tag);
+            sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
+                     "-stroke #%6.6x -tags {%lxBUT%d %lxHRDO %s text iemgui}\n",
+                 canvas, xx21, yy21, xx22, yy22,
+                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
+                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
+                 x, i, x, nlet_tag);
+            xx11 += dx;
+            xx21 += dx;
+            xx22 += dx;
+            x->x_drawn = x->x_on;
+        }
+        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
+                 "-font {{%s} -%d %s} -fill #%6.6x "
+                 "-tags {%lxLABEL %lxHRDO %s text iemgui}\n",
+             canvas, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy,
+             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
+             x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
+             x->x_gui.x_lcol, x, x, nlet_tag);
+        if (!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_nlet) "
+                     "-tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet iemgui}\n",
+                 canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12,
+                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+        if (!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_nlet) "
+                     "-tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet iemgui}\n",
+                 canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1,
+                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+    //}
 }
 
 void hradio_draw_move(t_hradio *x, t_glist *glist)
@@ -111,35 +122,36 @@ void hradio_draw_move(t_hradio *x, t_glist *glist)
     int xx11b=text_xpix(&x->x_gui.x_obj, glist), xx11=xx11b, xx21=xx11b+s4;
     int xx22=xx11b+dx-s4;
 
-	if (glist_isvisible(canvas)) {
+    if (glist_isvisible(canvas))
+    {
 
-		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		xx11 = xx11b;
-		xx21=xx11b+s4;
-		xx22=xx11b+dx-s4;
-		for(i=0; i<n; i++)
-		{
-		    sys_vgui(".x%lx.c coords %lxBASE%d %d %d %d %d\n",
-		             canvas, x, i, xx11, yy11, xx11+dx, yy12);
-		    sys_vgui(".x%lx.c coords %lxBUT%d %d %d %d %d\n",
-		             canvas, x, i, xx21, yy21, xx22, yy22);
-		    xx11 += dx;
-		    xx21 += dx;
-		    xx22 += dx;
-		}
-		sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-		         canvas, x, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy);
-		if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c coords %lxHRDO%so%d %d %d %d %d\n",
-		         canvas, x, nlet_tag, 0, xx11b, yy12-1, xx11b + IOWIDTH, yy12);
-		if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-		    sys_vgui(".x%lx.c coords %lxHRDO%si%d %d %d %d %d\n",
-		         canvas, x, nlet_tag, 0, xx11b, yy11, xx11b + IOWIDTH, yy11+1);
-		/* redraw scale handle rectangle if selected */
-		if (x->x_gui.x_fsf.x_selected)
-			hradio_draw_select(x, x->x_gui.x_glist);
-	}
+        xx11 = xx11b;
+        xx21=xx11b+s4;
+        xx22=xx11b+dx-s4;
+        for(i=0; i<n; i++)
+        {
+            sys_vgui(".x%lx.c coords %lxBASE%d %d %d %d %d\n",
+                     canvas, x, i, xx11, yy11, xx11+dx, yy12);
+            sys_vgui(".x%lx.c coords %lxBUT%d %d %d %d %d\n",
+                     canvas, x, i, xx21, yy21, xx22, yy22);
+            xx11 += dx;
+            xx21 += dx;
+            xx22 += dx;
+        }
+        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+                 canvas, x, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy);
+        if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
+            sys_vgui(".x%lx.c coords %lxHRDO%so%d %d %d %d %d\n",
+                 canvas, x, nlet_tag, 0, xx11b, yy12-1, xx11b + IOWIDTH, yy12);
+        if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
+            sys_vgui(".x%lx.c coords %lxHRDO%si%d %d %d %d %d\n",
+                 canvas, x, nlet_tag, 0, xx11b, yy11, xx11b + IOWIDTH, yy11+1);
+        /* redraw scale handle rectangle if selected */
+        if (x->x_gui.x_fsf.x_selected)
+            hradio_draw_select(x, x->x_gui.x_glist);
+    }
 }
 
 void hradio_draw_erase(t_hradio* x, t_glist* glist)
@@ -147,16 +159,17 @@ void hradio_draw_erase(t_hradio* x, t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
 
-	sys_vgui(".x%lx.c delete %lxHRDO\n", canvas, x);
-	sys_vgui(".x%lx.c dtag all %lxHRDO\n", canvas, x);
-	if (x->x_gui.x_fsf.x_selected) {
-		t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-		sys_vgui("destroy %s\n", sh->h_pathname);
-		sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-		t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
-		sys_vgui("destroy %s\n", lh->h_pathname);
-		sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-	}
+    sys_vgui(".x%lx.c delete %lxHRDO\n", canvas, x);
+    sys_vgui(".x%lx.c dtag all %lxHRDO\n", canvas, x);
+    if (x->x_gui.x_fsf.x_selected)
+    {
+        t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+        sys_vgui("destroy %s\n", sh->h_pathname);
+        sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+        t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
+        sys_vgui("destroy %s\n", lh->h_pathname);
+        sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
+    }
 /*
     for(i=0; i<n; i++)
     {
@@ -176,30 +189,35 @@ void hradio_draw_config(t_hradio* x, t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
 
-	/*
-	char color[64];
-	if (x->x_gui.x_fsf.x_selected)
-		sprintf(color, "$pd_colors(selection)");
-	else
-		sprintf(color, "#%6.6x", x->x_gui.x_lcol);
-	*/
+    /*
+    char color[64];
+    if (x->x_gui.x_fsf.x_selected)
+        sprintf(color, "$pd_colors(selection)");
+    else
+        sprintf(color, "#%6.6x", x->x_gui.x_lcol);
+    */
 
-	if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-	    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill $pd_colors(selection) -text {%s} \n",
+    if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+                 "-fill $pd_colors(selection) -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
              strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-	else
-	    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} -fill #%6.6x -text {%s} \n",
+    else
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+                 "-fill #%6.6x -text {%s} \n",
              canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
              x->x_gui.x_lcol,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");		
+             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");        
     for(i=0; i<n; i++)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -fill #%6.6x\n .x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n", 
-			 canvas, x, i, x->x_gui.x_bcol, canvas, x, i,
+        sys_vgui(".x%lx.c itemconfigure %lxBASE%d "
+                 "-fill #%6.6x\n "
+                 ".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
+             canvas, x, i, x->x_gui.x_bcol, canvas, x, i,
              (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
              (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-        /*sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -outline #%6.6x\n", canvas, x, i,
+        /*sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x "
+                   "-outline #%6.6x\n", canvas, x, i,
                  (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
                  (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);*/
     }
@@ -211,303 +229,364 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
 
-	if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist) {
+    if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist)
+    {
 
-		char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-		if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && !x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet iemgui}\n",
-		             canvas,
-		             xpos, ypos + x->x_gui.x_w-1,
-		             xpos + IOWIDTH, ypos + x->x_gui.x_w,
-		             x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) && x->x_gui.x_fsf.x_snd_able)
-		    sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
-		if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && !x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c create prect %d %d %d %d -stroke $pd_colors(iemgui_nlet) -tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet iemgui}\n",
-		             canvas,
-		             xpos, ypos,
-		             xpos + IOWIDTH, ypos+1, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-		if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) && x->x_gui.x_fsf.x_rcv_able)
-		    sys_vgui(".x%lx.c delete %lxHRDO%si%d\n", canvas, x, nlet_tag, 0);
-	}
+        if ((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
+           !x->x_gui.x_fsf.x_snd_able)
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_nlet) "
+                     "-tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet iemgui}\n",
+                 canvas,
+                 xpos, ypos + x->x_gui.x_w-1,
+                 xpos + IOWIDTH, ypos + x->x_gui.x_w,
+                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+        if (!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
+            x->x_gui.x_fsf.x_snd_able)
+            sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
+        if ((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
+            !x->x_gui.x_fsf.x_rcv_able)
+            sys_vgui(".x%lx.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(iemgui_nlet) "
+                     "-tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet iemgui}\n",
+                 canvas,
+                 xpos, ypos,
+                 xpos + IOWIDTH, ypos+1,
+                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+        if (!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
+            x->x_gui.x_fsf.x_rcv_able)
+            sys_vgui(".x%lx.c delete %lxHRDO%si%d\n", canvas, x, nlet_tag, 0);
+    }
 }
 
 void hradio_draw_select(t_hradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-	t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-	t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
+    t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
+    t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
     int n=x->x_number, i;
 
-	//if (glist_isvisible(canvas)) {
+    //if (glist_isvisible(canvas)) {
 
-		if(x->x_gui.x_fsf.x_selected)
-		{
-			// check if we are drawing inside a gop abstraction visible on parent canvas
-			// if so, disable highlighting
-			if (x->x_gui.x_glist == glist_getcanvas(glist)) {
+        if(x->x_gui.x_fsf.x_selected)
+        {
+            // check if we are drawing inside a gop abstraction
+            // visible on parent canvas.  If so, disable highlighting
+            if (x->x_gui.x_glist == glist_getcanvas(glist))
+            {
 
-				char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-				for(i=0; i<n; i++)
-				{
-				    sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke $pd_colors(selection)\n", canvas, x, i);
-				}
-				sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill $pd_colors(selection)\n", canvas, x);
+                for(i=0; i<n; i++)
+                {
+                    sys_vgui(".x%lx.c itemconfigure %lxBASE%d "
+                             "-stroke $pd_colors(selection)\n",
+                         canvas, x, i);
+                }
+                sys_vgui(".x%lx.c itemconfigure %lxLABEL "
+                         "-fill $pd_colors(selection)\n",
+                    canvas, x);
 
-				if (x->x_gui.scale_vis) {
-					sys_vgui("destroy %s\n", sh->h_pathname);
-					sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-				}
+                if (x->x_gui.scale_vis)
+                {
+                    sys_vgui("destroy %s\n", sh->h_pathname);
+                    sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+                }
 
-				sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor bottom_right_corner\n",
-					 sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-				sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxSCALE %lxHRDO %s iemgui}\n",
-					 canvas, x->x_gui.x_obj.te_xpix + x->x_gui.x_w * x->x_number - SCALEHANDLE_WIDTH - 1,
-					 x->x_gui.x_obj.te_ypix + x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
-					 SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-					 sh->h_pathname, x, x, nlet_tag);
-				sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-					 sh->h_pathname, sh->h_bindsym->s_name);
-				sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-					 sh->h_pathname, sh->h_bindsym->s_name);
-				sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-					 sh->h_pathname, sh->h_bindsym->s_name);
-				x->x_gui.scale_vis = 1;
-				if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
-				{
-					if (x->x_gui.label_vis) {
-						sys_vgui("destroy %s\n", lh->h_pathname);
-						sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-					}
+                sys_vgui("canvas %s -width %d -height %d "
+                         "-bg $pd_colors(selection) -bd 0 "
+                         "-cursor bottom_right_corner\n",
+                     sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
+                sys_vgui(".x%x.c create window %d %d -anchor nw "
+                         "-width %d -height %d -window %s "
+                         "-tags {%lxSCALE %lxHRDO %s iemgui}\n",
+                     canvas, x->x_gui.x_obj.te_xpix +
+                         x->x_gui.x_w * x->x_number - SCALEHANDLE_WIDTH - 1,
+                     x->x_gui.x_obj.te_ypix +
+                         x->x_gui.x_h - SCALEHANDLE_HEIGHT - 1,
+                     SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
+                     sh->h_pathname, x, x, nlet_tag);
+                sys_vgui("bind %s <Button> "
+                         "{pd [concat %s _click 1 %%x %%y \\;]}\n",
+                     sh->h_pathname, sh->h_bindsym->s_name);
+                sys_vgui("bind %s <ButtonRelease> "
+                         "{pd [concat %s _click 0 0 0 \\;]}\n",
+                     sh->h_pathname, sh->h_bindsym->s_name);
+                sys_vgui("bind %s <Motion> "
+                         "{pd [concat %s _motion %%x %%y \\;]}\n",
+                     sh->h_pathname, sh->h_bindsym->s_name);
+                x->x_gui.scale_vis = 1;
+                if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
+                {
+                    if (x->x_gui.label_vis)
+                    {
+                        sys_vgui("destroy %s\n", lh->h_pathname);
+                        sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
+                    }
 
-					sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 -cursor crosshair\n",
-						lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-					sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d -window %s -tags {%lxLABEL %lxLABELH %lxHRDO %s iemgui}\n",
-						canvas, x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx - LABELHANDLE_WIDTH,
-						x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
-						LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-						lh->h_pathname, x, x, x, nlet_tag);
-					sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-						lh->h_pathname, lh->h_bindsym->s_name);
-					sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-						lh->h_pathname, lh->h_bindsym->s_name);
-					sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-						lh->h_pathname, lh->h_bindsym->s_name); 
-					x->x_gui.label_vis = 1;
-				}
-			}
+                    sys_vgui("canvas %s -width %d -height %d "
+                             "-bg $pd_colors(selection) -bd 0 "
+                             "-cursor crosshair\n",
+                        lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
+                    sys_vgui(".x%x.c create window %d %d -anchor nw "
+                             "-width %d -height %d -window %s "
+                             "-tags {%lxLABEL %lxLABELH %lxHRDO %s iemgui}\n",
+                        canvas, x->x_gui.x_obj.te_xpix +
+                            x->x_gui.x_ldx - LABELHANDLE_WIDTH,
+                        x->x_gui.x_obj.te_ypix +
+                            x->x_gui.x_ldy - LABELHANDLE_HEIGHT,
+                        LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
+                        lh->h_pathname, x, x, x, nlet_tag);
+                    sys_vgui("bind %s <Button> "
+                             "{pd [concat %s _click 1 %%x %%y \\;]}\n",
+                        lh->h_pathname, lh->h_bindsym->s_name);
+                    sys_vgui("bind %s <ButtonRelease> "
+                             "{pd [concat %s _click 0 0 0 \\;]}\n",
+                        lh->h_pathname, lh->h_bindsym->s_name);
+                    sys_vgui("bind %s <Motion> "
+                             "{pd [concat %s _motion %%x %%y \\;]}\n",
+                        lh->h_pathname, lh->h_bindsym->s_name); 
+                    x->x_gui.label_vis = 1;
+                }
+            }
 
-			sys_vgui(".x%lx.c addtag selected withtag %lxHRDO\n", canvas, x);
-		}
-		else
-		{
-			sys_vgui(".x%lx.c dtag %lxHRDO selected\n", canvas, x);
-		    for(i=0; i<n; i++)
-		    {
-		        sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke %s\n", canvas, x, i,
-		                 IEM_GUI_COLOR_NORMAL);
-		    }
-		    sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n", canvas, x,
-		             x->x_gui.x_lcol);
-			sys_vgui("destroy %s\n", sh->h_pathname);
-			sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-			x->x_gui.scale_vis = 0;
-			sys_vgui("destroy %s\n", lh->h_pathname);
-			sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-			x->x_gui.label_vis = 0;
-		}
-	//}
+            sys_vgui(".x%lx.c addtag selected withtag %lxHRDO\n", canvas, x);
+        }
+        else
+        {
+            sys_vgui(".x%lx.c dtag %lxHRDO selected\n", canvas, x);
+            for(i=0; i<n; i++)
+            {
+                sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke %s\n",
+                    canvas, x, i, IEM_GUI_COLOR_NORMAL);
+            }
+            sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
+                canvas, x, x->x_gui.x_lcol);
+            sys_vgui("destroy %s\n", sh->h_pathname);
+            sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
+            x->x_gui.scale_vis = 0;
+            sys_vgui("destroy %s\n", lh->h_pathname);
+            sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
+            x->x_gui.label_vis = 0;
+        }
+    //}
 }
 
-static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
+    t_floatarg yyy)
 {
 
-	t_hradio *x = (t_hradio *)(sh->h_master);
+    t_hradio *x = (t_hradio *)(sh->h_master);
 
- 	if (xxx) {
- 		x->x_gui.scale_offset_x = xxx;
- 		x->x_gui.label_offset_x = xxx;
- 	}
- 	if (yyy) {
- 		x->x_gui.scale_offset_y = yyy;
- 		x->x_gui.label_offset_y = yyy;
- 	}
+     if (xxx)
+     {
+         x->x_gui.scale_offset_x = xxx;
+         x->x_gui.label_offset_x = xxx;
+     }
+     if (yyy)
+     {
+         x->x_gui.scale_offset_y = yyy;
+         x->x_gui.label_offset_y = yyy;
+     }
 
     int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
-		/* done dragging */
+        /* done dragging */
 
-		/* first set up the undo apply */
-		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        /* first set up the undo apply */
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
-		if (sh->h_dragx || sh->h_dragy) {
+        if (sh->h_dragx || sh->h_dragy)
+        {
 
-			sh->h_dragx = sh->h_dragy;
+            sh->h_dragx = sh->h_dragy;
 
-			x->x_gui.x_w = x->x_gui.x_w + sh->h_dragx - x->x_gui.scale_offset_y;
-			if (x->x_gui.x_w < SCALE_HRDO_MINWIDTH)
-				x->x_gui.x_w = SCALE_HRDO_MINWIDTH;
-			x->x_gui.x_h = x->x_gui.x_h + sh->h_dragy - x->x_gui.scale_offset_y;
-			if (x->x_gui.x_h < SCALE_HRDO_MINHEIGHT)
-				x->x_gui.x_h = SCALE_HRDO_MINHEIGHT;
+            x->x_gui.x_w = x->x_gui.x_w + sh->h_dragx - x->x_gui.scale_offset_y;
+            if (x->x_gui.x_w < SCALE_HRDO_MINWIDTH)
+                x->x_gui.x_w = SCALE_HRDO_MINWIDTH;
+            x->x_gui.x_h = x->x_gui.x_h + sh->h_dragy - x->x_gui.scale_offset_y;
+            if (x->x_gui.x_h < SCALE_HRDO_MINHEIGHT)
+                x->x_gui.x_h = SCALE_HRDO_MINHEIGHT;
 
-			canvas_dirty(x->x_gui.x_glist, 1);
-		}
+            canvas_dirty(x->x_gui.x_glist, 1);
+        }
 
-		int properties = gfxstub_haveproperties((void *)x);
+        int properties = gfxstub_haveproperties((void *)x);
 
-		if (properties) {
-			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
-			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
-			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
-		}
+        if (properties)
+        {
+            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n",
+                properties, x->x_gui.x_w);
+            //sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+            //sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
+        }
 
-		if (glist_isvisible(x->x_gui.x_glist))
-		{
-			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
-			hradio_draw_move(x, x->x_gui.x_glist);
-			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
-		}
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+            hradio_draw_move(x, x->x_gui.x_glist);
+            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+        }
     }
     else if (!sh->h_dragon && newstate && sh->h_scale)
     {
-		/* dragging */
-		if (glist_isvisible(x->x_gui.x_glist))
-		{
-			sys_vgui("lower %s\n", sh->h_pathname);
-			sys_vgui(".x%x.c create prect %d %d %d %d\
-	 -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
-				 x->x_gui.x_glist, x->x_gui.x_obj.te_xpix, x->x_gui.x_obj.te_ypix,
-					x->x_gui.x_obj.te_xpix + (x->x_gui.x_w * x->x_number),
-					x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
-		}
+        /* dragging */
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui("lower %s\n", sh->h_pathname);
+            sys_vgui(".x%x.c create prect %d %d %d %d "
+                     "-stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
+                x->x_gui.x_glist, x->x_gui.x_obj.te_xpix,
+                x->x_gui.x_obj.te_ypix,
+                x->x_gui.x_obj.te_xpix + (x->x_gui.x_w * x->x_number),
+                x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
+        }
 
-		sh->h_dragx = 0;
-		sh->h_dragy = 0;
+        sh->h_dragx = 0;
+        sh->h_dragy = 0;
     }
-	else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
+    else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
     {
-		/* done dragging */
+        /* done dragging */
 
-		/* first set up the undo apply */
-		canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+        /* first set up the undo apply */
+        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
-		if (sh->h_dragx || sh->h_dragy) {
+        if (sh->h_dragx || sh->h_dragy)
+        {
+            x->x_gui.x_ldx =
+                x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x;
+            x->x_gui.x_ldy =
+                x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y;
 
-			x->x_gui.x_ldx = x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x;
-			x->x_gui.x_ldy = x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y;
+            canvas_dirty(x->x_gui.x_glist, 1);
+        }
 
-			canvas_dirty(x->x_gui.x_glist, 1);
-		}
+        int properties = gfxstub_haveproperties((void *)x);
 
-		int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n",
+                properties, x->x_gui.x_w);
+            //sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+            //sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n",
+            //    properties, x->x_gui.x_h);
+        }
 
-		if (properties) {
-			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
-			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
-			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, x->x_gui.x_h);
-		}
-
-		if (glist_isvisible(x->x_gui.x_glist))
-		{
-			sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
-			hradio_draw_move(x, x->x_gui.x_glist);
-			iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-			canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-			sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
-		}
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
+            hradio_draw_move(x, x->x_gui.x_glist);
+            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
+            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
+            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+        }
     }
     else if (!sh->h_dragon && newstate && !sh->h_scale)
     {
-		/* started dragging label */
-		if (glist_isvisible(x->x_gui.x_glist)) {
-			sys_vgui("lower %s\n", sh->h_pathname);
-			t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
-			sys_vgui("lower .x%lx.h%lx\n", (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
-		}
+        /* started dragging label */
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui("lower %s\n", sh->h_pathname);
+            t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
+            sys_vgui("lower .x%lx.h%lx\n",
+                (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
+        }
 
-		sh->h_dragx = 0;
-		sh->h_dragy = 0;
+        sh->h_dragx = 0;
+        sh->h_dragy = 0;
     }
 
     sh->h_dragon = newstate;
 }
 
 static void hradio__motionhook(t_scalehandle *sh,
-				    t_floatarg f1, t_floatarg f2)
+                    t_floatarg f1, t_floatarg f2)
 {
     if (sh->h_dragon && sh->h_scale)
     {
-		t_hradio *x = (t_hradio *)(sh->h_master);
-		int dx = (int)f1, dy = (int)f2;
-		int newx, newy;
+        t_hradio *x = (t_hradio *)(sh->h_master);
+        int dx = (int)f1, dy = (int)f2;
+        int newx, newy;
 
-		dx = dy;
+        dx = dy;
 
-		newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w*x->x_number + (dx - x->x_gui.scale_offset_y) * x->x_number;
-		newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h + (dy - x->x_gui.scale_offset_y);
+        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w*x->x_number +
+            (dx - x->x_gui.scale_offset_y) * x->x_number;
+        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h +
+            (dy - x->x_gui.scale_offset_y);
 
-		if (newx < x->x_gui.x_obj.te_xpix + SCALE_HRDO_MINWIDTH*x->x_number)
-			newx = x->x_gui.x_obj.te_xpix + SCALE_HRDO_MINWIDTH*x->x_number;
-		if (newy < x->x_gui.x_obj.te_ypix + SCALE_HRDO_MINHEIGHT)
-			newy = x->x_gui.x_obj.te_ypix + SCALE_HRDO_MINHEIGHT;
+        if (newx < x->x_gui.x_obj.te_xpix + SCALE_HRDO_MINWIDTH*x->x_number)
+            newx = x->x_gui.x_obj.te_xpix + SCALE_HRDO_MINWIDTH*x->x_number;
+        if (newy < x->x_gui.x_obj.te_ypix + SCALE_HRDO_MINHEIGHT)
+            newy = x->x_gui.x_obj.te_ypix + SCALE_HRDO_MINHEIGHT;
 
-		if (glist_isvisible(x->x_gui.x_glist)) {
-			sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-				 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
-				 x->x_gui.x_obj.te_ypix, newx, newy);
-		}
-		sh->h_dragx = dx;
-		sh->h_dragy = dy;
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
+                 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
+                 x->x_gui.x_obj.te_ypix, newx, newy);
+        }
+        sh->h_dragx = dx;
+        sh->h_dragy = dy;
 
-		int properties = gfxstub_haveproperties((void *)x);
+        int properties = gfxstub_haveproperties((void *)x);
 
-		if (properties) {
-			int new_w = x->x_gui.x_w - x->x_gui.scale_offset_x + sh->h_dragx;
-			//int new_h = x->x_gui.x_h - x->x_gui.scale_offset_y + sh->h_dragy;
-			sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, new_w);
-			//sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
-			//sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n", properties, new_h);
-		}
+        if (properties)
+        {
+            int new_w = x->x_gui.x_w - x->x_gui.scale_offset_x + sh->h_dragx;
+            //int new_h = x->x_gui.x_h - x->x_gui.scale_offset_y + sh->h_dragy;
+            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, new_w);
+            //sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
+            //sys_vgui(".gfxstub%lx.dim.h_ent insert 0 %d\n",
+            //    properties, new_h);
+        }
     }
-	else if (sh->h_dragon && !sh->h_scale)
+    else if (sh->h_dragon && !sh->h_scale)
     {
-		t_bng *x = (t_bng *)(sh->h_master);
-		int dx = (int)f1, dy = (int)f2;
-		int newx, newy;
-		newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w - x->x_gui.scale_offset_x + dx;
-		newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h - x->x_gui.scale_offset_y + dy;
+        t_bng *x = (t_bng *)(sh->h_master);
+        int dx = (int)f1, dy = (int)f2;
+        int newx, newy;
+        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w -
+            x->x_gui.scale_offset_x + dx;
+        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
+            x->x_gui.scale_offset_y + dy;
 
-		sh->h_dragx = dx;
-		sh->h_dragy = dy;
+        sh->h_dragx = dx;
+        sh->h_dragy = dy;
 
-		int properties = gfxstub_haveproperties((void *)x);
+        int properties = gfxstub_haveproperties((void *)x);
 
-		if (properties) {
-			int new_x = x->x_gui.x_ldx - x->x_gui.label_offset_x + sh->h_dragx;
-			int new_y = x->x_gui.x_ldy - x->x_gui.label_offset_y + sh->h_dragy;
-			sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n", properties, new_x);
-			sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
-			sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n", properties, new_y);
-		}
+        if (properties)
+        {
+            int new_x = x->x_gui.x_ldx - x->x_gui.label_offset_x + sh->h_dragx;
+            int new_y = x->x_gui.x_ldy - x->x_gui.label_offset_y + sh->h_dragy;
+            sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n",
+                properties, new_x);
+            sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
+            sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n",
+                properties, new_y);
+        }
 
-		if (glist_isvisible(x->x_gui.x_glist)) {
-			int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
-    		int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
-    		t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
-			sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
- 		    	canvas, x, xpos+x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x,
- 		    	ypos+x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y);
-		}
+        if (glist_isvisible(x->x_gui.x_glist))
+        {
+            int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
+            int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
+            t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
+            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+                 canvas, x,
+                 xpos+x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x,
+                 ypos+x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y);
+        }
     }
 }
 
@@ -517,10 +596,11 @@ void hradio_draw(t_hradio *x, t_glist *glist, int mode)
         sys_queuegui(x, glist, hradio_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)
         hradio_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW) {
+    else if(mode == IEM_GUI_DRAW_MODE_NEW)
+    {
         hradio_draw_new(x, glist);
-		sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
-	}
+        sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+    }
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         hradio_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
@@ -533,7 +613,8 @@ void hradio_draw(t_hradio *x, t_glist *glist, int mode)
 
 /* ------------------------ hdl widgetbehaviour----------------------------- */
 
-static void hradio_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1, int *xp2, int *yp2)
+static void hradio_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1,
+    int *xp2, int *yp2)
 {
     t_hradio *x = (t_hradio *)z;
 
@@ -542,7 +623,7 @@ static void hradio_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1, int *x
     *xp2 = *xp1 + x->x_gui.x_w*x->x_number;
     *yp2 = *yp1 + x->x_gui.x_h;
 
-	iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
+    iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 }
 
 static void hradio_save(t_gobj *z, t_binbuf *b)
@@ -589,13 +670,14 @@ static void hradio_properties(t_gobj *z, t_glist *owner)
             srl[0]->s_name, srl[1]->s_name,
             srl[2]->s_name, x->x_gui.x_ldx, x->x_gui.x_ldy,
             x->x_gui.x_fsf.x_font_style, x->x_gui.x_fontsize,
-            0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol, 0xffffff & x->x_gui.x_lcol);
+            0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol,
+            0xffffff & x->x_gui.x_lcol);
     gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
 }
 
 static void hradio_dialog(t_hradio *x, t_symbol *s, int argc, t_atom *argv)
 {
-	canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
+    canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
     t_symbol *srl[3];
     int a = (int)atom_getintarg(0, argc, argv);
@@ -625,17 +707,19 @@ static void hradio_dialog(t_hradio *x, t_symbol *s, int argc, t_atom *argv)
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
         //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
         //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
-		iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
+        iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     }
 
-	/* forcing redraw of the scale handle */
-	if (x->x_gui.x_fsf.x_selected) {
-		hradio_draw_select(x, x->x_gui.x_glist);
-	}
+    /* forcing redraw of the scale handle */
+    if (x->x_gui.x_fsf.x_selected)
+    {
+        hradio_draw_select(x, x->x_gui.x_glist);
+    }
 
-	//ico@bukvic.net 100518 update scrollbars when object potentially exceeds window size
+    // ico@bukvic.net 100518
+    // update scrollbars when object potentially exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-	sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
 }
 
 static void hradio_set(t_hradio *x, t_floatarg f)
@@ -653,14 +737,14 @@ static void hradio_set(t_hradio *x, t_floatarg f)
         x->x_on_old = x->x_on;
         x->x_on = i;
         if (x->x_on != x->x_on_old)
-        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+            (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         x->x_on_old = old;
     }
     else
     {
         x->x_on = i;
         if (x->x_on != x->x_on_old)
-        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+            (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
     }
 }
 
@@ -727,7 +811,7 @@ static void hradio_fout(t_hradio *x, t_floatarg f)
         x->x_on_old = x->x_on;
         x->x_on = i;
         if (i != x->x_on_old)
-        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+            (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         outlet_float(x->x_gui.x_obj.ob_outlet, x->x_on);
         if(x->x_gui.x_fsf.x_snd_able && x->x_gui.x_snd->s_thing)
             pd_float(x->x_gui.x_snd->s_thing, x->x_on);
@@ -745,7 +829,7 @@ static void hradio_float(t_hradio *x, t_floatarg f)
 
     if (pd_class(&x->x_gui.x_obj.ob_pd) == hradio_old_class)
     {
-            /* compatibility with earlier  "vdial" behavior */
+        /* compatibility with earlier  "vdial" behavior */
         if((x->x_change)&&(i != x->x_on_old))
         {
             if(x->x_gui.x_fsf.x_put_in2out)
@@ -776,7 +860,7 @@ static void hradio_float(t_hradio *x, t_floatarg f)
         x->x_on_old = x->x_on;
         x->x_on = i;
         if (i != x->x_on_old)
-        	(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+            (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
         if (x->x_gui.x_fsf.x_put_in2out)
         {
             outlet_float(x->x_gui.x_obj.ob_outlet, x->x_on);
@@ -786,17 +870,22 @@ static void hradio_float(t_hradio *x, t_floatarg f)
     }
 }
 
-static void hradio_click(t_hradio *x, t_floatarg xpos, t_floatarg ypos, t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
+static void hradio_click(t_hradio *x, t_floatarg xpos, t_floatarg ypos,
+    t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
     int xx = (int)xpos - (int)text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
 
     hradio_fout(x, (t_float)(xx / x->x_gui.x_w));
 }
 
-static int hradio_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, int shift, int alt, int dbl, int doit)
+static int hradio_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix,
+    int shift, int alt, int dbl, int doit)
 {
     if(doit)
-        hradio_click((t_hradio *)z, (t_floatarg)xpix, (t_floatarg)ypix, (t_floatarg)shift, 0, (t_floatarg)alt);
+    {
+        hradio_click((t_hradio *)z, (t_floatarg)xpix, (t_floatarg)ypix,
+            (t_floatarg)shift, 0, (t_floatarg)alt);
+    }
     return (1);
 }
 
@@ -874,7 +963,8 @@ static void *hradio_donew(t_symbol *s, int argc, t_atom *argv, int old)
     int a=IEM_GUI_DEFAULTSIZE, on=0, f=0;
     int ldx=0, ldy=-8, chg=1, num=8;
     int fs=10;
-    int ftbreak=IEM_BNG_DEFAULTBREAKFLASHTIME, fthold=IEM_BNG_DEFAULTHOLDFLASHTIME;
+    int ftbreak=IEM_BNG_DEFAULTBREAKFLASHTIME,
+        fthold=IEM_BNG_DEFAULTHOLDFLASHTIME;
     char str[144];
 
     iem_inttosymargs(&x->x_gui.x_isa, 0);
@@ -912,10 +1002,15 @@ static void *hradio_donew(t_symbol *s, int argc, t_atom *argv, int old)
         x->x_gui.x_fsf.x_snd_able = 0;
     if (!strcmp(x->x_gui.x_rcv->s_name, "empty"))
         x->x_gui.x_fsf.x_rcv_able = 0;
-    if(x->x_gui.x_fsf.x_font_style == 1) strcpy(x->x_gui.x_font, "helvetica");
-    else if(x->x_gui.x_fsf.x_font_style == 2) strcpy(x->x_gui.x_font, "times");
-    else { x->x_gui.x_fsf.x_font_style = 0;
-        strcpy(x->x_gui.x_font, sys_font); }
+    if (x->x_gui.x_fsf.x_font_style == 1)
+        strcpy(x->x_gui.x_font, "helvetica");
+    else if(x->x_gui.x_fsf.x_font_style == 2)
+        strcpy(x->x_gui.x_font, "times");
+    else
+    {
+        x->x_gui.x_fsf.x_font_style = 0;
+        strcpy(x->x_gui.x_font, sys_font);
+    }
     if(num < 1)
         num = 1;
     if(num > IEM_RADIO_MAX)
@@ -944,7 +1039,7 @@ static void *hradio_donew(t_symbol *s, int argc, t_atom *argv, int old)
     iemgui_all_colfromload(&x->x_gui, bflcol);
     outlet_new(&x->x_gui.x_obj, &s_list);
 
-	/* scale handle init */
+    /* scale handle init */
     t_scalehandle *sh;
     char buf[64];
     x->x_gui.x_handle = pd_new(scalehandle_class);
@@ -954,27 +1049,27 @@ static void *hradio_donew(t_symbol *s, int argc, t_atom *argv, int old)
     pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
     sprintf(sh->h_outlinetag, "h%lx", (t_int)sh);
     sh->h_dragon = 0;
-	sh->h_scale = 1;
-	x->x_gui.scale_offset_x = 0;
-	x->x_gui.scale_offset_y = 0;
-	x->x_gui.scale_vis = 0;
+    sh->h_scale = 1;
+    x->x_gui.scale_offset_x = 0;
+    x->x_gui.scale_offset_y = 0;
+    x->x_gui.scale_vis = 0;
 
-	/* label handle init */
-	t_scalehandle *lh;
-	char lhbuf[64];
-	x->x_gui.x_lhandle = pd_new(scalehandle_class);
-	lh = (t_scalehandle *)x->x_gui.x_lhandle;
-	lh->h_master = (t_gobj*)x;
-	sprintf(lhbuf, "_h%lx", (t_int)lh);
-	pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
-	sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
-	lh->h_dragon = 0;
-	lh->h_scale = 0;
-	x->x_gui.label_offset_x = 0;
-	x->x_gui.label_offset_y = 0;
-	x->x_gui.label_vis = 0;
+    /* label handle init */
+    t_scalehandle *lh;
+    char lhbuf[64];
+    x->x_gui.x_lhandle = pd_new(scalehandle_class);
+    lh = (t_scalehandle *)x->x_gui.x_lhandle;
+    lh->h_master = (t_gobj*)x;
+    sprintf(lhbuf, "_h%lx", (t_int)lh);
+    pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
+    sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
+    lh->h_dragon = 0;
+    lh->h_scale = 0;
+    x->x_gui.label_offset_x = 0;
+    x->x_gui.label_offset_y = 0;
+    x->x_gui.label_vis = 0;
 
-	x->x_gui.x_obj.te_iemgui = 1;
+    x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);
 }
@@ -995,19 +1090,21 @@ static void hradio_ff(t_hradio *x)
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     gfxstub_deleteforkey(x);
 
-	/* scale handle deconstructor */
+    /* scale handle deconstructor */
     if (x->x_gui.x_handle)
     {
-		pd_unbind(x->x_gui.x_handle, ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
-		pd_free(x->x_gui.x_handle);
+        pd_unbind(x->x_gui.x_handle,
+            ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
+        pd_free(x->x_gui.x_handle);
     }
 
-	/* label handle deconstructor */
-	if (x->x_gui.x_lhandle)
-	{
-		pd_unbind(x->x_gui.x_lhandle, ((t_scalehandle *)x->x_gui.x_lhandle)->h_bindsym);
-		pd_free(x->x_gui.x_lhandle);
-	}
+    /* label handle deconstructor */
+    if (x->x_gui.x_lhandle)
+    {
+        pd_unbind(x->x_gui.x_lhandle,
+            ((t_scalehandle *)x->x_gui.x_lhandle)->h_bindsym);
+        pd_free(x->x_gui.x_lhandle);
+    }
 }
 
 void g_hradio_setup(void)
@@ -1052,11 +1149,11 @@ void g_hradio_setup(void)
         gensym("double_change"), 0);
  
     scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-				  sizeof(t_scalehandle), CLASS_PD, 0);
+                  sizeof(t_scalehandle), CLASS_PD, 0);
     class_addmethod(scalehandle_class, (t_method)hradio__clickhook,
-		    gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(scalehandle_class, (t_method)hradio__motionhook,
-		    gensym("_motion"), A_FLOAT, A_FLOAT, 0);
+            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
     hradio_widgetbehavior.w_getrectfn = hradio_getrect;
     hradio_widgetbehavior.w_displacefn = iemgui_displace;

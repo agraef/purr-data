@@ -62,7 +62,7 @@ static void *sigdelwrite_new(t_symbol *s, t_floatarg msec)
     if (!*s->s_name) s = gensym("delwrite~");
     pd_bind(&x->x_obj.ob_pd, s);
     x->x_sym = s;
-	if (msec == 0) msec = 1000;
+    if (msec == 0) msec = 1000;
     nsamps = msec * sys_getsr() * (t_float)(0.001f);
     if (nsamps < 1) nsamps = 1;
     nsamps += ((- nsamps) & (SAMPBLK - 1));

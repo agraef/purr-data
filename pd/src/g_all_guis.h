@@ -126,8 +126,8 @@
 #define SCALEHANDLE_WIDTH   5
 #define SCALEHANDLE_HEIGHT  5
 
-#define LABELHANDLE_WIDTH	5
-#define LABELHANDLE_HEIGHT	5
+#define LABELHANDLE_WIDTH   5
+#define LABELHANDLE_HEIGHT  5
 
 typedef struct _iem_fstyle_flags
 {
@@ -171,7 +171,7 @@ typedef struct _scalehandle
     t_pd       h_pd;
     t_gobj    *h_master;
     t_symbol  *h_bindsym;
-	int		   h_scale;
+    int        h_scale;
     char       h_pathname[64];
     char       h_outlinetag[64];
     int        h_dragon;
@@ -206,15 +206,15 @@ typedef struct _iemgui
     t_symbol           *x_lab_unexpanded;
     int                x_binbufindex;       /* where in binbuf to find these */
     int                x_labelbindex;       /* where in binbuf to find label */
-	t_pd	   		   *x_handle;
-	int 			   scale_offset_x;
-	int				   scale_offset_y;
-	int				   scale_vis;
-	t_pd			   *x_lhandle;
-	int				   label_offset_x;
-	int				   label_offset_y;
-	int				   label_vis;
-	int				   x_vis;				/* is the object drawn? */
+    t_pd               *x_handle;
+    int                scale_offset_x;
+    int                scale_offset_y;
+    int                scale_vis;
+    t_pd               *x_lhandle;
+    int                label_offset_x;
+    int                label_offset_y;
+    int                label_vis;
+    int                x_vis;               /* is the object drawn? */
     int                x_changed;           /* has the value changed so that we need to do graphic update */
 } t_iemgui;
 
@@ -322,11 +322,11 @@ typedef struct _my_numbox
     int      x_lin0_log1;
     char     x_buf[IEMGUI_MAX_NUM_LEN];
     int      x_numwidth;
-    int      x_scalewidth; 		/* temporary value when resizing */
-	int		 x_scaleheight; 	/* temporary value when resizing */
-    int      x_tmpfontsize; 	/* temporary value when resizing */
+    int      x_scalewidth;  /* temporary value when resizing */
+    int      x_scaleheight; /* temporary value when resizing */
+    int      x_tmpfontsize; /* temporary value when resizing */
     int      x_log_height;
-	int		 x_hide_frame;		/* 0 default, 1 just arrow, 2, just frame, 3 both */
+    int      x_hide_frame;  /* 0 default, 1 just arrow, 2, just frame, 3 both */
 } t_my_numbox;
 
 typedef struct _vdial

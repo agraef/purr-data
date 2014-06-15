@@ -481,16 +481,16 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
     if (!gop_redraw)
     {
         //fprintf(stderr,"ignoring label\n");
-	return;
+        return;
     }
 
     t_float width_multiplier;
-    int label_length;	
+    int label_length;
     int label_x1;
     int label_y1;
     int label_x2;
     int label_y2;
-    int actual_fontsize; //seems tk does its own thing when it comes to rendering
+    int actual_fontsize; //seems tk does its own thing when rendering
     int actual_height;
 
     if (x->gl_isgraph && !glist_istoplevel(x))
@@ -520,7 +520,7 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
                 actual_fontsize = x_gui.x_fontsize;
             }
             actual_height = actual_fontsize;
-	    //exceptions
+            //exceptions
             if (x_gui.x_fsf.x_font_style == 0 &&
                 (actual_fontsize == 8 || actual_fontsize == 13 ||
                 actual_fontsize % 10 == 1 || actual_fontsize % 10 == 6 ||
@@ -618,7 +618,7 @@ void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
                         sys_vgui(".x%lx.c raise selected %s\n",
                             canvas, rtext_gettag(yr));
                         //sys_vgui(".x%lx.c raise all_cords\n", canvas);
-		    }
+                    }
                     else
                     {
                         // fall back to legacy redraw for objects
@@ -654,7 +654,7 @@ void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode)
 void iemgui_size(void *x, t_iemgui *iemgui)
 {
     if(glist_isvisible(iemgui->x_glist))
-        iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);		
+        iemgui_shouldvis(x, iemgui, IEM_GUI_DRAW_MODE_MOVE);
 }
 
 void iemgui_delta(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av)

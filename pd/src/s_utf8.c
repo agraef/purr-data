@@ -299,12 +299,12 @@ void u8_dec(char *s, int *i)
 void u8_inc_ptr(char **sp)
 {
   (void)(isutf(*(++(*sp))) || isutf(*(++(*sp))) ||
-	 isutf(*(++(*sp))) || ++(*sp));
+     isutf(*(++(*sp))) || ++(*sp));
 }
 
 /*-- moo --*/
 void u8_dec_ptr(char **sp)
 {
   (void)(isutf(*(--(*sp))) || isutf(*(--(*sp))) ||
-	 isutf(*(--(*sp))) || --(*sp));
+     isutf(*(--(*sp))) || --(*sp));
 }
