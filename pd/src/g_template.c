@@ -1752,7 +1752,7 @@ void svg_stroke(t_svg *x, t_symbol *s, t_int argc, t_atom *argv)
     else if (argc > 2)
     {
         int var = 0, i;
-	t_fielddesc *fd = x->x_stroke;
+        t_fielddesc *fd = x->x_stroke;
         for(i = 0; i < argc; i++)
             var = (argv[i].a_type == A_SYMBOL) ? 1 : var;
         if (var)
@@ -2204,7 +2204,7 @@ void svg_group_pathrect_cache(t_svg *x, int state)
         if (pd_class(&y->g_pd) == draw_class)
         {
             t_svg *a = (t_svg *)(((t_draw *)y)->x_attr);
-	    if (a->x_pathrect_cache != -1)
+            if (a->x_pathrect_cache != -1)
                 a->x_pathrect_cache = state;
         }
     } 
@@ -4491,7 +4491,7 @@ static void plot_getgrouprect(t_glist *glist, t_template *elemtemplate,
     int *x1, int *y1, int *x2, int *y2)
 {
     t_gobj *y;
-	for (y = groupcanvas->gl_list; y; y = y->g_next)
+    for (y = groupcanvas->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
             ((t_canvas *)y)->gl_svg)

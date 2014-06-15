@@ -83,7 +83,7 @@
 /* #undef HAVE_LIBTCL8_4 */
 
 /* Define to 1 if you have the `tcl8.5' library (-ltcl8.5). */
-#define HAVE_LIBTCL8_5 1
+/* #undef HAVE_LIBTCL8_5 */
 
 /* Define to 1 if you have the `tk84' library (-ltk84). */
 /* #undef HAVE_LIBTK84 */
@@ -104,7 +104,7 @@
 /* #undef HAVE_LIBTK8_4 */
 
 /* Define to 1 if you have the `tk8.5' library (-ltk8.5). */
-#define HAVE_LIBTK8_5 1
+/* #undef HAVE_LIBTK8_5 */
 
 /* Define to 1 if you have the <limits.h> header file. */
 #define HAVE_LIMITS_H 1
@@ -211,7 +211,7 @@
 #define TIME_WITH_SYS_TIME 1
 
 /* Number of bits in a file offset, on hosts where this is settable. */
-/* #undef _FILE_OFFSET_BITS */
+#define _FILE_OFFSET_BITS 64
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */

@@ -225,7 +225,7 @@ int template_has_elemtemplate(t_template *t, t_template *elemtemplate)
     if (t && elemtemplate)
     {
         int i;
-	t_dataslot *d = t->t_vec;
+        t_dataslot *d = t->t_vec;
         for (i = 0; i < t->t_n; i++, d++)
         {
             if (d->ds_type == DT_ARRAY)
@@ -281,11 +281,11 @@ static void scalar_getgrouprect(t_glist *owner, t_glist *groupcanvas,
     for (y = groupcanvas->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
-	    ((t_canvas *)y)->gl_svg)
+            ((t_canvas *)y)->gl_svg)
         {
             /* todo: accumulate basex and basey for correct offset */
             scalar_getgrouprect(owner, (t_glist *)y, data, template,
-	        basex, basey, x1, x2, y1, y2);
+                basex, basey, x1, x2, y1, y2);
         }
         else
         {
@@ -351,8 +351,8 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
             x1 = y1 = 0x7fffffff;
             x2 = y2 = -0x7fffffff;
             scalar_getgrouprect(owner, templatecanvas, x->sc_vec, template,
-	        basex, basey, &x1, &x2, &y1, &y2);
-           if (x2 < x1 || y2 < y1)
+                basex, basey, &x1, &x2, &y1, &y2);
+            if (x2 < x1 || y2 < y1)
                 x1 = y1 = x2 = y2 = 0;
         }
     }
@@ -679,9 +679,9 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
     for (y = gl->gl_list; y; y = y->g_next)
     {
         if (pd_class(&y->g_pd) == canvas_class &&
-	           ((t_glist *)y)->gl_svg)
+            ((t_glist *)y)->gl_svg)
         {
-	       scalar_groupvis(x, owner, template, (t_glist *)y, gl, vis);
+            scalar_groupvis(x, owner, template, (t_glist *)y, gl, vis);
         }
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb) continue;
@@ -772,12 +772,14 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
         if (!wb)
         {
-               /* check subpatches for more drawing commands.  This
+            /* check subpatches for more drawing commands.  This
                can be optimized to only search [group] subpatches */
             if (pd_class(&y->g_pd) == canvas_class &&
-	        ((t_glist *)y)->gl_svg)
+                ((t_glist *)y)->gl_svg)
+            {
                 scalar_groupvis(x, owner, template,
                     (t_glist *)y, templatecanvas, vis);
+            }
             continue;
         }
         (*wb->w_parentvisfn)(y, owner, 0, x, x->sc_vec, template,
