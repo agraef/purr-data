@@ -76,7 +76,7 @@ void sched_audio_callbackfn(void);
 void sched_reopenmeplease(void);
 
 #ifdef USEAPI_JACK
-	/* needed to fix srate when using jack, inclded in s_audio_jack.c */
+    /* needed to fix srate when using jack, inclded in s_audio_jack.c */
 extern int jack_get_srate(void);
 #endif /* JACK */
 
@@ -102,11 +102,13 @@ void sys_get_audio_params(
         paudiooutdev[i] = audio_audiooutdev[i],
             choutdev[i] = audio_audiochoutdev[i];
 #ifdef USEAPI_JACK
-	if (sys_audioapiopened == API_JACK) {
-		if (jack_get_srate()) {
-			audio_rate = jack_get_srate();
-		}
-	}
+    if (sys_audioapiopened == API_JACK)
+    {
+        if (jack_get_srate())
+        {
+            audio_rate = jack_get_srate();
+        }
+    }
 #endif /* JACK */
     *prate = audio_rate;
     *padvance = audio_advance;
@@ -672,9 +674,10 @@ void glob_audio_properties(t_pd *dummy, t_floatarg flongform)
         &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
 
 #ifdef USEAPI_JACK
-	if (sys_audioapiopened == API_JACK) {
-		sys_setchsr(audio_nextinchans, audio_nextoutchans, rate);
-	}
+    if (sys_audioapiopened == API_JACK)
+    {
+        sys_setchsr(audio_nextinchans, audio_nextoutchans, rate);
+    }
 #endif /* JACK */
 
     /* post("naudioindev %d naudiooutdev %d longform %f",
