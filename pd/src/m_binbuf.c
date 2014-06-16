@@ -82,7 +82,7 @@ void binbuf_clear(t_binbuf *x)
     /* convert text to a binbuf */
 void binbuf_text(t_binbuf *x, char *text, size_t size)
 {
-	//fprintf(stderr, "current text: %s\n", text);
+    //fprintf(stderr, "current text: %s\n", text);
     char buf[MAXPDSTRING+1], *bufp, *ebuf = buf+MAXPDSTRING;
     const char *textp = text, *etext = text+size;
     t_atom *ap;
@@ -170,8 +170,8 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
                     }
                 }
                 if (!lastslash && c == '$' && (textp != etext && 
-                	((textp[0] >= '0' && textp[0] <= '9')||
-                	textp[0]=='@'))) /* JMZ: $@ and $# expansion */
+                    ((textp[0] >= '0' && textp[0] <= '9')||
+                    textp[0]=='@'))) /* JMZ: $@ and $# expansion */
                         dollar = 1;
                 if (!slash) bufp++;
                 else if (lastslash)
@@ -198,25 +198,27 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
             {
                 if(buf[1]=='@') /* JMZ: $@ expansion */
                 {
-                	if(buf[2]==0) /* only expand A_DOLLAR $@ */
+                    if(buf[2]==0) /* only expand A_DOLLAR $@ */
                     {
-                    	ap->a_type = A_DOLLAR;
-                    	ap->a_w.w_symbol = gensym("@");
+                        ap->a_type = A_DOLLAR;
+                        ap->a_w.w_symbol = gensym("@");
                     } 
-                  	else /* there is no A_DOLLSYM $@ */
+                    else /* there is no A_DOLLSYM $@ */
                     {
-                    	SETSYMBOL(ap, gensym(buf));
+                        SETSYMBOL(ap, gensym(buf));
                     }
-                } else {
-		            if (buf[0] != '$') 
-		                dollar = 0;
-		            for (bufp = buf+1; *bufp; bufp++)
-		                if (*bufp < '0' || *bufp > '9')
-		                    dollar = 0;
-		            if (dollar)
-		                SETDOLLAR(ap, atoi(buf+1));
-		            else SETDOLLSYM(ap, gensym(buf));
-				}
+                }
+                else
+                {
+                    if (buf[0] != '$') 
+                        dollar = 0;
+                    for (bufp = buf+1; *bufp; bufp++)
+                        if (*bufp < '0' || *bufp > '9')
+                            dollar = 0;
+                    if (dollar)
+                        SETDOLLAR(ap, atoi(buf+1));
+                    else SETDOLLSYM(ap, gensym(buf));
+                }
             }
             else SETSYMBOL(ap, gensym(buf));
         }
@@ -268,7 +270,7 @@ void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
             length--;
         }
     }
-	//fprintf(stderr,"binbuf_gettext: <%s>\n", buf);
+    //fprintf(stderr,"binbuf_gettext: <%s>\n", buf);
     *bufp = buf;
     *lengthp = length;
 }
@@ -278,7 +280,7 @@ writing to file doesn't buffer everything together. */
 
 void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
 {
-	//fprintf(stderr,"binbuf_add_started %d\n", argc);
+    //fprintf(stderr,"binbuf_add_started %d\n", argc);
     int newsize = x->b_n + argc, i;
     t_atom *ap;
     if (ap = t_resizebytes(x->b_vec, x->b_n * sizeof(*x->b_vec),
@@ -289,8 +291,8 @@ void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
         error("binbuf_addmessage: out of space");
         return;
     }
-	/*
-	for (i=0; i < argc; i++) {
+    /*
+    for (i=0; i < argc; i++) {
         if (argv[i].a_type == A_SYMBOL)
         {
             fprintf(stderr, "binbuf_add: %s\n", argv[i].a_w.w_symbol->s_name);
@@ -299,8 +301,8 @@ void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
         {
             fprintf(stderr, "binbuf_add: %g\n", argv[i].a_w.w_float);
         }
-	}
-	*/
+    }
+    */
 #if 0
     startpost("binbuf_add: ");
     postatom(argc, argv);
@@ -309,13 +311,13 @@ void binbuf_add(t_binbuf *x, int argc, t_atom *argv)
     for (ap = x->b_vec + x->b_n, i = argc; i--; ap++)
         *ap = *(argv++);
     x->b_n = newsize;
-	//fprintf(stderr,"done binbuf_add\n");
+    //fprintf(stderr,"done binbuf_add\n");
 }
 
 #define MAXADDMESSV 100
 void binbuf_addv(t_binbuf *x, char *fmt, ...)
 {
-	//fprintf(stderr,"binbuf_addv started\n");
+    //fprintf(stderr,"binbuf_addv started\n");
     va_list ap;
     t_atom arg[MAXADDMESSV], *at =arg;
     int nargs = 0;
@@ -332,14 +334,14 @@ void binbuf_addv(t_binbuf *x, char *fmt, ...)
         switch(*fp++)
         {
         case 'i': SETFLOAT(at, va_arg(ap, int));
-					//fprintf(stderr, "i = %f\n", at->a_w.w_float);
-					break;
+                    //fprintf(stderr, "i = %f\n", at->a_w.w_float);
+                    break;
         case 'f': SETFLOAT(at, va_arg(ap, double)); 
-					//fprintf(stderr, "f = %f\n", at->a_w.w_float);
-					break;
+                    //fprintf(stderr, "f = %f\n", at->a_w.w_float);
+                    break;
         case 's': SETSYMBOL(at, va_arg(ap, t_symbol *)); 
-					//fprintf(stderr, "s = %s\n", at->a_w.w_symbol->s_name);
-					break;
+                    //fprintf(stderr, "s = %s\n", at->a_w.w_symbol->s_name);
+                    break;
         case ';': SETSEMI(at); break;
         case ',': SETCOMMA(at); break;
         default: goto done;
@@ -349,7 +351,7 @@ void binbuf_addv(t_binbuf *x, char *fmt, ...)
     }
 done:
     va_end(ap);
-	//fprintf(stderr,"done binbuf_addv\n");
+    //fprintf(stderr,"done binbuf_addv\n");
     binbuf_add(x, nargs, arg);
 }
 
@@ -359,7 +361,7 @@ no symbol whose name is ";" - should we be escaping those?. */
 
 void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
 {
-	//fprintf(stderr,"starting binbuf_addbinbuf\n");
+    //fprintf(stderr,"starting binbuf_addbinbuf\n");
     t_binbuf *z = binbuf_new();
     int i;
     t_atom *ap;
@@ -370,32 +372,32 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
         switch (ap->a_type)
         {
         case A_FLOAT:
-			//fprintf(stderr,"addbinbuf: float\n");
+            //fprintf(stderr,"addbinbuf: float\n");
             break;
         case A_SEMI:
-			//fprintf(stderr,"addbinbuf: semi\n");
+            //fprintf(stderr,"addbinbuf: semi\n");
             SETSYMBOL(ap, gensym(";"));
             break;
         case A_COMMA:
-			//fprintf(stderr,"addbinbuf: comma\n");
+            //fprintf(stderr,"addbinbuf: comma\n");
             SETSYMBOL(ap, gensym(","));
             break;
         case A_DOLLAR:
-			//fprintf(stderr,"addbinbuf: dollar\n");
+            //fprintf(stderr,"addbinbuf: dollar\n");
             if(ap->a_w.w_symbol==gensym("@")){ /* JMZ: $@ expansion */
-            	SETSYMBOL(ap, gensym("$@"));
+                SETSYMBOL(ap, gensym("$@"));
             } else {
-            	sprintf(tbuf, "$%d", ap->a_w.w_index);
-            	SETSYMBOL(ap, gensym(tbuf));
+                sprintf(tbuf, "$%d", ap->a_w.w_index);
+                SETSYMBOL(ap, gensym(tbuf));
             }
             break;
         case A_DOLLSYM:
-			//fprintf(stderr,"addbinbuf: dollsym\n");
+            //fprintf(stderr,"addbinbuf: dollsym\n");
             atom_string(ap, tbuf, MAXPDSTRING);
             SETSYMBOL(ap, gensym(tbuf));
             break;
         case A_SYMBOL:
-			//fprintf(stderr,"addbinbuf: symbol\n");
+            //fprintf(stderr,"addbinbuf: symbol\n");
                 /* FIXME make this general */
             /*if (!strcmp(ap->a_w.w_symbol->s_name, ";"))
                 SETSYMBOL(ap, gensym(";"));
@@ -408,7 +410,7 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
     }
     
     binbuf_add(x, z->b_n, z->b_vec);
-	//fprintf(stderr,"done binbuf_addbinbuf\n");
+    //fprintf(stderr,"done binbuf_addbinbuf\n");
 }
 
 void binbuf_addsemi(t_binbuf *x)
@@ -507,8 +509,8 @@ void binbuf_print(t_binbuf *x)
             startpost("");
             startedpost = 1;
         }
-		if (ISSYMBOL(x->b_vec + i, "%hidden%"))
-			i = x->b_n - 1;
+        if (ISSYMBOL(x->b_vec + i, "%hidden%"))
+            i = x->b_n - 1;
         postatom(1, x->b_vec + i);
         if (x->b_vec[i].a_type == A_SEMI)
             newline = 1;
@@ -554,7 +556,8 @@ int canvas_getdollarzero( void);
  * buf="10"
  * return value = 1; (s+1=="-bla")
  */
-int binbuf_expanddollsym(char*s, char*buf,t_atom dollar0, int ac, t_atom *av, int tonew)
+int binbuf_expanddollsym(char*s, char*buf,t_atom dollar0, int ac, t_atom *av,
+    int tonew)
 {
   int argno=atol(s);
   int arglen=0;
@@ -562,8 +565,9 @@ int binbuf_expanddollsym(char*s, char*buf,t_atom dollar0, int ac, t_atom *av, in
   char c=*cs;
   *buf=0;
 
-  while(c&&(c>='0')&&(c<='9')){
-    c=*cs++;
+  while(c && (c >= '0') && (c <= '9'))
+  {
+    c = *cs++;
     arglen++;
   }
 
@@ -599,7 +603,8 @@ t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av, int tonew)
     while(i--)buf2[i]=0;
 
 #if 1
-    /* JMZ: currently, a symbol is detected to be A_DOLLSYM if it starts with '$'
+    /* JMZ: currently, a symbol is detected to be
+     * A_DOLLSYM if it starts with '$'
      * the leading $ is stripped and the rest stored in "s"
      * i would suggest to NOT strip the leading $
      * and make everything a A_DOLLSYM that contains(!) a $
@@ -671,19 +676,23 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
     t_atom *at = x->b_vec;
     int ac = x->b_n;
     int nargs, maxnargs = 0;
-	int at_arg = 0;
+    int at_arg = 0;
 
-	//first we need to check if the list of arguments has $@
-	//fprintf(stderr,"=========\nbinbuf_eval argc:%d ac:%d\n", argc, (int)ac);
-	int count;
-	for (count = 0; count < ac; count++) {
-		//fprintf(stderr, "count %d\n", count);
-		if (at[count].a_type == A_DOLLAR && at[count].a_w.w_symbol==gensym("@")) {
-			//fprintf(stderr,"found @ count:%d ac:%d argc:%d ac+argc-1:%d\n", count, ac, argc, ac+argc-1);
-			ac = ac + argc;
-			maxnargs = ac;
-		}
-	}
+    //first we need to check if the list of arguments has $@
+    //fprintf(stderr,"=========\nbinbuf_eval argc:%d ac:%d\n", argc, (int)ac);
+    int count;
+    for (count = 0; count < ac; count++)
+    {
+        //fprintf(stderr, "count %d\n", count);
+        if (at[count].a_type == A_DOLLAR &&
+            at[count].a_w.w_symbol==gensym("@"))
+        {
+            //fprintf(stderr,"found @ count:%d ac:%d argc:%d ac+argc-1:%d\n",
+            //    count, ac, argc, ac+argc-1);
+            ac = ac + argc;
+            maxnargs = ac;
+        }
+    }
 
     if (ac <= SMALLMSG)
         mstack = smallstack;
@@ -699,8 +708,9 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             points there. */
         if (target == &pd_objectmaker) {
             maxnargs = ac;
-			//if (at && x->b_n) fprintf(stderr,"pd_objectmaker %s %d %d %d\n", at[0].a_w.w_symbol->s_name, ac, argc, maxnargs);
-		}
+            //if (at && x->b_n) fprintf(stderr,"pd_objectmaker %s %d %d %d\n",
+            //    at[0].a_w.w_symbol->s_name, ac, argc, maxnargs);
+        }
         else if (!maxnargs) //we set maxnargs=ac if we encounter $@ arg (see above) so we avoid this place because A_SEMI and A_COMMA tend to be detected at location 220. Why? No idea. Perhaps it is a line delimiter for one line in the saved file?
         {
             int i, j = (target ? 0 : -1);
@@ -708,15 +718,15 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
             {
                 if (at[i].a_type == A_SEMI) {
                     j = -1;
-					//fprintf(stderr,"A_SEMI %d\n", i);
+                    //fprintf(stderr,"A_SEMI %d\n", i);
                 } else if (at[i].a_type == A_COMMA) {
                     j = 0;
-					//fprintf(stderr,"A_COMMA %d\n", i);
+                    //fprintf(stderr,"A_COMMA %d\n", i);
                 } else if (++j > maxnargs) {
                     maxnargs = j;
-				}
+                }
             }
-			//fprintf(stderr,"maxnargs = %d\n", maxnargs);
+            //fprintf(stderr,"maxnargs = %d\n", maxnargs);
         }
         if (maxnargs <= SMALLMSG)
             mstack = smallstack;
@@ -732,8 +742,8 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
 
     }
     msp = mstack;
-	//fprintf(stderr,"maxnargs=%d ac=%d argc=%d\n", maxnargs, ac, argc);
-	//static t_atom *ems = mstack+MSTACKSIZE;
+    //fprintf(stderr,"maxnargs=%d ac=%d argc=%d\n", maxnargs, ac, argc);
+    //static t_atom *ems = mstack+MSTACKSIZE;
     while (1)
     {
         t_pd *nexttarget;
@@ -828,21 +838,23 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                     //    error("message stack overflow");
                     //    goto broken;
                     //}
-	                for (i=0; i<argc; i++)
-	                {
-						//fprintf(stderr, "@: %d %d\n", i, maxnargs);
-	                    *msp++=argv[i];
-	                    nargs++;
-						ac--;
-	                }
+                    for (i=0; i<argc; i++)
+                    {
+                        //fprintf(stderr, "@: %d %d\n", i, maxnargs);
+                        *msp++=argv[i];
+                        nargs++;
+                        ac--;
+                    }
                     msp--;
                     nargs--;
-					//fprintf(stderr,"x->b_n=%d ac=%d maxnargs=%d nargs=%d argc=%d\n", x->b_n, ac, maxnargs, nargs, argc);
+                    //fprintf(stderr,"x->b_n=%d ac=%d maxnargs=%d "
+                    //               "nargs=%d argc=%d\n",
+                    //    x->b_n, ac, maxnargs, nargs, argc);
                 }
                 else if (at->a_w.w_index > 0 && at->a_w.w_index <= argc)
-	                *msp = argv[at->a_w.w_index-1];
-	            else if (at->a_w.w_index == 0)
-	                SETFLOAT(msp, canvas_getdollarzero());
+                    *msp = argv[at->a_w.w_index-1];
+                else if (at->a_w.w_index == 0)
+                    SETFLOAT(msp, canvas_getdollarzero());
                 else
                 {
                     if (target == &pd_objectmaker)
@@ -860,7 +872,8 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                     target == &pd_objectmaker);
                 if (!s9)
                 {
-                    error("%s: argument number out of range", at->a_w.w_symbol->s_name);
+                    error("%s: argument number out of range",
+                        at->a_w.w_symbol->s_name);
                     SETSYMBOL(msp, at->a_w.w_symbol);
                 }
                 else SETSYMBOL(msp, s9);
@@ -1064,7 +1077,7 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             char bp2[WBUFSIZE];
             atom_string(ap, bp2, WBUFSIZE);
             strnescape(bp, bp2, (ep-bp)-2);
-			//atom_string(ap, bp, (ep-bp)-2);
+            //atom_string(ap, bp, (ep-bp)-2);
             length = strlen(bp);
             bp += length;
             ncolumn += length;
@@ -1672,9 +1685,9 @@ t_pd *glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir)
     {
         x = s__X.s_thing;
         vmess(x, gensym("pop"), "i", 1);
-	}
+    }
     pd_doloadbang();
     canvas_resume_dsp(dspstate);
-	s__X.s_thing = boundx;
-	return x;
+    s__X.s_thing = boundx;
+    return x;
 }
