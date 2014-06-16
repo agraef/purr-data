@@ -337,15 +337,17 @@ struct _outconnect
 {
     struct _outconnect *oc_next;
     t_pd *oc_to;
-	int oc_vis;	// whether the connection should be visible
+    int oc_vis;    // whether the connection should be visible
 };
 
-int outconnect_visible(t_outconnect *oc) {
-	return oc->oc_vis;
+int outconnect_visible(t_outconnect *oc)
+{
+    return oc->oc_vis;
 }
 
-void outconnect_setvisible(t_outconnect *oc, int vis) {
-	oc->oc_vis = vis;
+void outconnect_setvisible(t_outconnect *oc, int vis)
+{
+    oc->oc_vis = vis;
 }
 
 struct _outlet
@@ -482,16 +484,16 @@ void outlet_free(t_outlet *x)
 t_outconnect *obj_connect(t_object *source, int outno,
     t_object *sink, int inno)
 {
-	//fprintf(stderr,"obj_connect\n");
+    //fprintf(stderr,"obj_connect\n");
     t_inlet *i;
     t_outlet *o;
     t_pd *to;
     t_outconnect *oc, *oc2;
 
-	/* ignore attempts to connect to the same object
-	   this occurs sometimes using undo/redo */
-	if (source == sink)
-		return (0);
+    /* ignore attempts to connect to the same object
+       this occurs sometimes using undo/redo */
+    if (source == sink)
+        return (0);
     
     for (o = source->ob_outlet; o && outno; o = o->o_next, outno--) ;
     if (!o) return (0);
@@ -573,9 +575,9 @@ int obj_noutlets(t_object *x)
 {
     int n = 0;
     t_outlet *o;
-	if (x && x->ob_outlet)
-	    for (o = x->ob_outlet, n = 0; o; o = o->o_next) n++;
-   	return (n);
+    if (x && x->ob_outlet)
+        for (o = x->ob_outlet, n = 0; o; o = o->o_next) n++;
+    return (n);
 }
 
 int obj_ninlets(t_object *x)

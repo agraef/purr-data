@@ -28,7 +28,7 @@ void *getbytes(size_t nbytes)
     fprintf(stderr, "new  %lx %d\n", (int)ret, nbytes);
 #endif /* LOUD */
 #ifdef DEBUGMEM
-	
+
     totalmem += nbytes;
 #endif
     if (!ret)
@@ -80,7 +80,7 @@ void freebytes(void *fatso, size_t nbytes)
     totalmem -= nbytes;
 #endif
     free(fatso);
-	fatso = NULL;
+    fatso = NULL;
 }
 
 #ifdef DEBUGMEM

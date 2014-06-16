@@ -88,7 +88,7 @@ void conf_init(void)
     x_qlist_setup();
     x_gui_setup();
     x_list_setup();
-	x_preset_setup();
+    x_preset_setup();
     d_arithmetic_setup();
     d_array_setup();
     d_ctl_setup();

@@ -704,7 +704,7 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
     int narg = 0;
     t_pd *bonzo;
     
-	//fprintf(stderr,"\nstart %s %d\n", s->s_name, c->c_nmethod);
+    //fprintf(stderr,"\nstart %s %d\n", s->s_name, c->c_nmethod);
 
         /* check for messages that are handled by fixed slots in the class
         structure.  We don't catch "pointer" though so that sending "pointer"
@@ -743,111 +743,116 @@ void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
-        //if (m->me_name == s)
-		if (m && m->me_name == s)
     {
-		//fprintf(stderr,"me_name %s\n", m->me_name);
-        wp = m->me_arg;
-        if (*wp == A_GIMME)
+        //if (m->me_name == s)
+        if (m && m->me_name == s)
         {
+            //fprintf(stderr,"me_name %s\n", m->me_name);
+            wp = m->me_arg;
+            if (*wp == A_GIMME)
+            {
+                if (x == &pd_objectmaker)
+                    newest = (*((t_newgimme)(m->me_fun)))(s, argc, argv);
+                else (*((t_messgimme)(m->me_fun)))(x, s, argc, argv);
+                return;
+            }
+            if (argc > MAXPDARG) argc = MAXPDARG;
+            if (x != &pd_objectmaker) *(ap++) = (t_int)x, narg++;
+            while (wanttype = *wp++)
+            {
+                switch (wanttype)
+                {
+                case A_POINTER:
+                    if (!argc) goto badarg;
+                    else
+                    {
+                        if (argv->a_type == A_POINTER)
+                            *ap = (t_int)(argv->a_w.w_gpointer);
+                        else goto badarg;
+                        argc--;
+                        argv++;
+                    }
+                    narg++;
+                    ap++;
+                    break;
+                case A_FLOAT:
+                    if (!argc) goto badarg;
+                case A_DEFFLOAT:
+                    if (!argc) *dp = 0;
+                    else
+                    {
+                        if (argv->a_type == A_FLOAT)
+                            *dp = argv->a_w.w_float;
+                        else goto badarg;
+                        argc--;
+                        argv++;
+                    }
+                    dp++;
+                    break;
+                case A_BLOB:/* MP 20070106 blob type */
+                    /*post("pd_typedmess A_BLOB");*/
+                    if (!argc) goto badarg;
+                    if (argv->a_type == A_BLOB)
+                    {
+                        /*post("argv->a_type == A_BLOB, argc = %d, narg= %d",
+                        //    argc, narg);*/
+                        *ap = (t_int)(argv->a_w.w_blob);
+                    }
+                    argc--;
+                    argv++;
+                    narg++;
+                    ap++;
+                    break;
+                case A_SYMBOL:
+                    if (!argc) goto badarg;
+                case A_DEFSYM:
+                    if (!argc) *ap = (t_int)(&s_);
+                    else
+                    {
+                        if (argv->a_type == A_SYMBOL)
+                            *ap = (t_int)(argv->a_w.w_symbol);
+                                /* if it's an unfilled "dollar" argument it
+                                   appears as zero here; cheat and bash it
+                                   to the null symbol.  Unfortunately, this
+                                   lets real zeros pass as symbols too, which
+                                   seems wrong... */
+                        else if (x == &pd_objectmaker &&
+                                 argv->a_type == A_FLOAT
+                                 && argv->a_w.w_float == 0)
+                            *ap = (t_int)(&s_);
+                        else goto badarg;
+                        argc--;
+                        argv++;
+                    }
+                    narg++;
+                    ap++;
+                }
+            }
+            switch (narg)
+            {
+            case 0 : bonzo = (*(t_fun0)(m->me_fun))
+                (ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            case 1 : bonzo = (*(t_fun1)(m->me_fun))
+                (ai[0], ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            case 2 : bonzo = (*(t_fun2)(m->me_fun))
+                (ai[0], ai[1], ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            case 3 : bonzo = (*(t_fun3)(m->me_fun))
+                (ai[0], ai[1], ai[2], ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            case 4 : bonzo = (*(t_fun4)(m->me_fun))
+                (ai[0], ai[1], ai[2], ai[3],
+                    ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            case 5 : bonzo = (*(t_fun5)(m->me_fun))
+                (ai[0], ai[1], ai[2], ai[3], ai[4],
+                    ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            case 6 : bonzo = (*(t_fun6)(m->me_fun))
+                (ai[0], ai[1], ai[2], ai[3], ai[4], ai[5],
+                    ad[0], ad[1], ad[2], ad[3], ad[4]); break;
+            default: bonzo = 0;
+            }
             if (x == &pd_objectmaker)
-                newest = (*((t_newgimme)(m->me_fun)))(s, argc, argv);
-            else (*((t_messgimme)(m->me_fun)))(x, s, argc, argv);
+                newest = bonzo;
             return;
         }
-        if (argc > MAXPDARG) argc = MAXPDARG;
-        if (x != &pd_objectmaker) *(ap++) = (t_int)x, narg++;
-        while (wanttype = *wp++)
-        {
-            switch (wanttype)
-            {
-            case A_POINTER:
-                if (!argc) goto badarg;
-                else
-                {
-                    if (argv->a_type == A_POINTER)
-                        *ap = (t_int)(argv->a_w.w_gpointer);
-                    else goto badarg;
-                    argc--;
-                    argv++;
-                }
-                narg++;
-                ap++;
-                break;
-            case A_FLOAT:
-                if (!argc) goto badarg;
-            case A_DEFFLOAT:
-                if (!argc) *dp = 0;
-                else
-                {
-                    if (argv->a_type == A_FLOAT)
-                        *dp = argv->a_w.w_float;
-                    else goto badarg;
-                    argc--;
-                    argv++;
-                }
-                dp++;
-                break;
-            case A_BLOB:/* MP 20070106 blob type */
-                /*post("pd_typedmess A_BLOB");*/
-                if (!argc) goto badarg;
-                if (argv->a_type == A_BLOB)
-                {
-                    /*post("argv->a_type == A_BLOB, argc = %d, narg= %d", argc, narg);*/
-                    *ap = (t_int)(argv->a_w.w_blob);
-                }
-                argc--;
-                argv++;
-                narg++;
-                ap++;
-                break;
-            case A_SYMBOL:
-                if (!argc) goto badarg;
-            case A_DEFSYM:
-                if (!argc) *ap = (t_int)(&s_);
-                else
-                {
-                    if (argv->a_type == A_SYMBOL)
-                        *ap = (t_int)(argv->a_w.w_symbol);
-                            /* if it's an unfilled "dollar" argument it appears
-                            as zero here; cheat and bash it to the null
-                            symbol.  Unfortunately, this lets real zeros
-                            pass as symbols too, which seems wrong... */
-                    else if (x == &pd_objectmaker && argv->a_type == A_FLOAT
-                        && argv->a_w.w_float == 0)
-                        *ap = (t_int)(&s_);
-                    else goto badarg;
-                    argc--;
-                    argv++;
-                }
-                narg++;
-                ap++;
-            }
-        }
-        switch (narg)
-        {
-        case 0 : bonzo = (*(t_fun0)(m->me_fun))
-            (ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        case 1 : bonzo = (*(t_fun1)(m->me_fun))
-            (ai[0], ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        case 2 : bonzo = (*(t_fun2)(m->me_fun))
-            (ai[0], ai[1], ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        case 3 : bonzo = (*(t_fun3)(m->me_fun))
-            (ai[0], ai[1], ai[2], ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        case 4 : bonzo = (*(t_fun4)(m->me_fun))
-            (ai[0], ai[1], ai[2], ai[3],
-                ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        case 5 : bonzo = (*(t_fun5)(m->me_fun))
-            (ai[0], ai[1], ai[2], ai[3], ai[4],
-                ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        case 6 : bonzo = (*(t_fun6)(m->me_fun))
-            (ai[0], ai[1], ai[2], ai[3], ai[4], ai[5],
-                ad[0], ad[1], ad[2], ad[3], ad[4]); break;
-        default: bonzo = 0;
-        }
-        if (x == &pd_objectmaker)
-            newest = bonzo;
-        return;
     }
     (*c->c_anymethod)(x, s, argc, argv);
     return;

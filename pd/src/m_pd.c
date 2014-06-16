@@ -20,12 +20,12 @@ extern t_redundant_mem *rm_end;
 t_pd *pd_new(t_class *c)
 {
     t_pd *x = NULL;
-	t_pd *y = NULL;
+    t_pd *y = NULL;
 
     if (!c) 
         bug ("pd_new: apparently called before setup routine");
 
-	x = (t_pd *)t_getbytes(c->c_size);
+    x = (t_pd *)t_getbytes(c->c_size);
     *x = c;
     if (c->c_patchable)
     {
@@ -68,7 +68,7 @@ typedef struct _bindelem
 {
     t_pd *e_who;
     struct _bindelem *e_next;
-	int e_delayed_free;
+    int e_delayed_free;
 } t_bindelem;
 
 typedef struct _bindlist
@@ -81,28 +81,28 @@ static int change_bindlist_via_graph = 0;
 
 static void bindlist_cleanup(t_bindlist *x)
 {
-	//fprintf(stderr,"bindlist_cleanup\n");
-	t_bindelem *e, *e2;
+    //fprintf(stderr,"bindlist_cleanup\n");
+    t_bindelem *e, *e2;
     if (x->b_list->e_delayed_free == 1)
     {
-		e = x->b_list;
+        e = x->b_list;
         x->b_list = e->e_next;
         freebytes(e, sizeof(t_bindelem));
-		//fprintf(stderr,"success B1a\n");
+        //fprintf(stderr,"success B1a\n");
     }
     for (e = x->b_list; e2 = e->e_next; e = e2)
         if (e2->e_delayed_free == 1)
     {
         e->e_next = e2->e_next;
         freebytes(e2, sizeof(t_bindelem));
-		//fprintf(stderr,"success B1b\n");
+        //fprintf(stderr,"success B1b\n");
         break;
     }
     if (!x->b_list->e_next)
     {
         freebytes(x->b_list, sizeof(t_bindelem));
         pd_free(&x->b_pd);
-		//fprintf(stderr,"success B2\n");
+        //fprintf(stderr,"success B2\n");
     }
 }
 
@@ -110,48 +110,48 @@ static void bindlist_bang(t_bindlist *x)
 {
     t_bindelem *e;
         int save = change_bindlist_via_graph;
-	change_bindlist_via_graph = 1;
+    change_bindlist_via_graph = 1;
     for (e = x->b_list; e; e = e->e_next)
         if (e->e_who != NULL) pd_bang(e->e_who);
-	if (change_bindlist_via_graph > 1)
-		bindlist_cleanup(x);
-	change_bindlist_via_graph = save;
+    if (change_bindlist_via_graph > 1)
+        bindlist_cleanup(x);
+    change_bindlist_via_graph = save;
 }
 
 static void bindlist_float(t_bindlist *x, t_float f)
 {
     t_bindelem *e;
         int save = change_bindlist_via_graph;
-	change_bindlist_via_graph = 1;
+    change_bindlist_via_graph = 1;
     for (e = x->b_list; e; e = e->e_next)
         if (e->e_who != NULL) pd_float(e->e_who, f);
-	if (change_bindlist_via_graph > 1)
-		bindlist_cleanup(x);
-	change_bindlist_via_graph = save;
+    if (change_bindlist_via_graph > 1)
+        bindlist_cleanup(x);
+    change_bindlist_via_graph = save;
 }
 
 static void bindlist_symbol(t_bindlist *x, t_symbol *s)
 {
     t_bindelem *e;
         int save = change_bindlist_via_graph;
-	change_bindlist_via_graph = 1;
+    change_bindlist_via_graph = 1;
     for (e = x->b_list; e; e = e->e_next)
         if (e->e_who != NULL) pd_symbol(e->e_who, s);
-	if (change_bindlist_via_graph > 1)
-		bindlist_cleanup(x);
-	change_bindlist_via_graph = save;
+    if (change_bindlist_via_graph > 1)
+        bindlist_cleanup(x);
+    change_bindlist_via_graph = save;
 }
 
 static void bindlist_pointer(t_bindlist *x, t_gpointer *gp)
 {
     t_bindelem *e;
         int save = change_bindlist_via_graph;
-	change_bindlist_via_graph = 1;
+    change_bindlist_via_graph = 1;
     for (e = x->b_list; e; e = e->e_next)
         if (e->e_who != NULL) pd_pointer(e->e_who, gp);
-	if (change_bindlist_via_graph > 1)
-		bindlist_cleanup(x);
-	change_bindlist_via_graph = save;
+    if (change_bindlist_via_graph > 1)
+        bindlist_cleanup(x);
+    change_bindlist_via_graph = save;
 }
 
 static void bindlist_list(t_bindlist *x, t_symbol *s,
@@ -159,12 +159,12 @@ static void bindlist_list(t_bindlist *x, t_symbol *s,
 {
     t_bindelem *e;
         int save = change_bindlist_via_graph;
-	change_bindlist_via_graph = 1;
+    change_bindlist_via_graph = 1;
     for (e = x->b_list; e; e = e->e_next)
         if (e->e_who != NULL) pd_list(e->e_who, s, argc, argv);
-	if (change_bindlist_via_graph > 1)
-		bindlist_cleanup(x);
-	change_bindlist_via_graph = save;
+    if (change_bindlist_via_graph > 1)
+        bindlist_cleanup(x);
+    change_bindlist_via_graph = save;
 }
 
 static void bindlist_anything(t_bindlist *x, t_symbol *s,
@@ -172,12 +172,12 @@ static void bindlist_anything(t_bindlist *x, t_symbol *s,
 {
     t_bindelem *e;
         int save = change_bindlist_via_graph;
-	change_bindlist_via_graph = 1;
+    change_bindlist_via_graph = 1;
     for (e = x->b_list; e; e = e->e_next)
         if (e->e_who != NULL) pd_typedmess(e->e_who, s, argc, argv);
-	if (change_bindlist_via_graph > 1)
-		bindlist_cleanup(x);
-	change_bindlist_via_graph = save;
+    if (change_bindlist_via_graph > 1)
+        bindlist_cleanup(x);
+    change_bindlist_via_graph = save;
 }
 
 void m_pd_setup(void)
@@ -194,107 +194,118 @@ void m_pd_setup(void)
 
 void pd_bind(t_pd *x, t_symbol *s)
 {
-	//fprintf(stderr,"pd_bind %s\n", s->s_name);
+    //fprintf(stderr,"pd_bind %s\n", s->s_name);
     if (s->s_thing)
     {
         if (*s->s_thing == bindlist_class)
         {
-			//fprintf(stderr,"pd_bind option 1A %lx\n", (t_int)x);
+            //fprintf(stderr,"pd_bind option 1A %lx\n", (t_int)x);
             t_bindlist *b = (t_bindlist *)s->s_thing;
             t_bindelem *e = (t_bindelem *)getbytes(sizeof(t_bindelem));
             e->e_next = b->b_list;
             e->e_who = x;
-			e->e_delayed_free = 0;
+            e->e_delayed_free = 0;
             b->b_list = e;
         }
         else
         {
-			//fprintf(stderr,"pd_bind option 1B %lx\n", (t_int)x);
+            //fprintf(stderr,"pd_bind option 1B %lx\n", (t_int)x);
             t_bindlist *b = (t_bindlist *)pd_new(bindlist_class);
             t_bindelem *e1 = (t_bindelem *)getbytes(sizeof(t_bindelem));
             t_bindelem *e2 = (t_bindelem *)getbytes(sizeof(t_bindelem));
             b->b_list = e1;
             e1->e_who = x;
             e1->e_next = e2;
-			e1->e_delayed_free = 0;
+            e1->e_delayed_free = 0;
             e2->e_who = s->s_thing;
             e2->e_next = 0;
-			e2->e_delayed_free = 0;
+            e2->e_delayed_free = 0;
             s->s_thing = &b->b_pd;
         }
     }
     else {
-		//fprintf(stderr,"pd_bind option 2 %lx\n", (t_int)x);
-		s->s_thing = x;
-	}
+        //fprintf(stderr,"pd_bind option 2 %lx\n", (t_int)x);
+        s->s_thing = x;
+    }
 }
 
 void pd_unbind(t_pd *x, t_symbol *s)
 {
-	//fprintf(stderr,"pd_unbind %s\n", s->s_name);
+    //fprintf(stderr,"pd_unbind %s\n", s->s_name);
     if (s->s_thing == x) {
-		//fprintf(stderr,"pd_unbind option A %lx\n", (t_int)x);
-		s->s_thing = 0;
-	}
+        //fprintf(stderr,"pd_unbind option A %lx\n", (t_int)x);
+        s->s_thing = 0;
+    }
     else if (s->s_thing && *s->s_thing == bindlist_class)
     {
-            /* bindlists always have at least two elements... if the number
-            goes down to one, get rid of the bindlist and bind the symbol
-            straight to the remaining element. */
+        /* bindlists always have at least two elements... if the number
+           goes down to one, get rid of the bindlist and bind the symbol
+           straight to the remaining element. */
 
-			/* in pd-l2ork, we however also check whether changes to the bindlist
-			occur via graph (through code execution, e.g. dynamic change of receives)
-			and if so, we do not deallocate memory until the entire bindlist_<datatype>
-			function is complete with its execution, after which we call
-			bindlist_cleanup(). we control the execution via static int variable
-			change_bindlist_via_graph */
+        /* in pd-l2ork, we however also check whether changes to the bindlist
+           occur via graph (through code execution, e.g. dynamic change of
+           receives) and if so, we do not deallocate memory until the entire
+           bindlist_<datatype> function is complete with its execution, after
+           which we call bindlist_cleanup(). we control the execution via
+           static int variable change_bindlist_via_graph */
 
-		//fprintf(stderr,"pd_unbind option B %lx\n", (t_int)x);
+        //fprintf(stderr,"pd_unbind option B %lx\n", (t_int)x);
 
         t_bindlist *b = (t_bindlist *)s->s_thing;
         t_bindelem *e, *e2;
         if ((e = b->b_list)->e_who == x)
         {
-			if (change_bindlist_via_graph) {
-				change_bindlist_via_graph++;
-				e->e_delayed_free = 1;
-			} else {
-            	b->b_list = e->e_next;
-            	freebytes(e, sizeof(t_bindelem));
-			}
-			//fprintf(stderr,"success B1a\n");
+            if (change_bindlist_via_graph)
+            {
+                change_bindlist_via_graph++;
+                e->e_delayed_free = 1;
+            }
+            else
+            {
+                b->b_list = e->e_next;
+                freebytes(e, sizeof(t_bindelem));
+            }
+            //fprintf(stderr,"success B1a\n");
         }
         else for (e = b->b_list; e2 = e->e_next; e = e2)
-            if (e2->e_who == x)
         {
-			if (change_bindlist_via_graph) {
-				change_bindlist_via_graph++;
-				e2->e_delayed_free = 1;
-			} else {
-		        e->e_next = e2->e_next;
-		        freebytes(e2, sizeof(t_bindelem));
-			}
-			//fprintf(stderr,"success B1b\n");
-            break;
+            if (e2->e_who == x)
+            {
+                if (change_bindlist_via_graph)
+                {
+                    change_bindlist_via_graph++;
+                    e2->e_delayed_free = 1;
+                }
+                else
+                {
+                    e->e_next = e2->e_next;
+                    freebytes(e2, sizeof(t_bindelem));
+                }
+                //fprintf(stderr,"success B1b\n");
+                break;
+            }
         }
 
-		int count_valid = 0;
-		t_bindelem *e1 = NULL;
+        int count_valid = 0;
+        t_bindelem *e1 = NULL;
         for (e = b->b_list; e; e = e->e_next)
         {
-			if (e->e_who != NULL && !e->e_delayed_free) {
-				count_valid++;
-				e1 = e;
-			}
+            if (e->e_who != NULL && !e->e_delayed_free)
+            {
+                count_valid++;
+                e1 = e;
+            }
 
-		}
-		if (count_valid == 1) {
+        }
+        if (count_valid == 1)
+        {
             s->s_thing = e1->e_who;
-			if (!change_bindlist_via_graph) {
-            	freebytes(b->b_list, sizeof(t_bindelem));
-            	pd_free(&b->b_pd);
-			}
-			//fprintf(stderr,"success B2\n");
+            if (!change_bindlist_via_graph)
+            {
+                freebytes(b->b_list, sizeof(t_bindelem));
+                pd_free(&b->b_pd);
+            }
+            //fprintf(stderr,"success B2\n");
         }
     }
     else pd_error(x, "%s: couldn't unbind", s->s_name);
@@ -314,19 +325,19 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
         t_bindelem *e, *e2;
         int warned = 0;
         for (e = b->b_list; e; e = e->e_next)
-		{
+        {
             //if (e->e_who != NULL && *e->e_who == c)
             if (e->e_delayed_free != 1 && *e->e_who == c)
-		    {
-		        if (x && !warned)
-		        {
-		            zz();
-		            post("warning: %s: multiply defined", s->s_name);
-		            warned = 1;
-		        }
-		        x = e->e_who;
-		    }
-		}
+            {
+                if (x && !warned)
+                {
+                    zz();
+                    post("warning: %s: multiply defined", s->s_name);
+                    warned = 1;
+                }
+                x = e->e_who;
+            }
+        }
     }
     return x;
 }
@@ -370,10 +381,11 @@ extern int abort_when_pasting_from_external_buffer;
 
 void pd_popsym(t_pd *x)
 {
-    if (!gstack_head || s__X.s_thing != x) {
-		abort_when_pasting_from_external_buffer = 1;
-		bug("gstack_pop");
-	}
+    if (!gstack_head || s__X.s_thing != x)
+    {
+        abort_when_pasting_from_external_buffer = 1;
+        bug("gstack_pop");
+    }
     else
     {
         t_gstack *headwas = gstack_head;
