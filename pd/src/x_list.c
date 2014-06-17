@@ -64,18 +64,19 @@ void alist_init(t_alist *x)
 
 void alist_clear(t_alist *x)
 {
-	if (x->l_n) {
-    	int i;
-		for (i = 0; i < x->l_n; i++)
-		{
-		    if (x->l_vec[i].l_a.a_type == A_POINTER)
-		        gpointer_unset(x->l_vec[i].l_a.a_w.w_gpointer);
-		}
-		if (x->l_vec)
-		    freebytes(x->l_vec, x->l_n * sizeof(*x->l_vec));
-	}
-	x->l_n = 0;
-	x->l_npointer = 0;
+    if (x->l_n)
+    {
+        int i;
+        for (i = 0; i < x->l_n; i++)
+        {
+            if (x->l_vec[i].l_a.a_type == A_POINTER)
+                gpointer_unset(x->l_vec[i].l_a.a_w.w_gpointer);
+        }
+        if (x->l_vec)
+            freebytes(x->l_vec, x->l_n * sizeof(*x->l_vec));
+    }
+    x->l_n = 0;
+    x->l_npointer = 0;
 }
 
 void alist_list(t_alist *x, t_symbol *s, int argc, t_atom *argv)
@@ -262,7 +263,7 @@ typedef struct _list_cat
 {
     t_object x_obj;
     t_alist x_alist;
-	t_list_cat_proxy x_pxy;
+    t_list_cat_proxy x_pxy;
 } t_list_cat;
 
 static void list_cat_clear(t_list_cat *x);
@@ -309,14 +310,14 @@ static void list_cat_list(t_list_cat *x, t_symbol *s,
         alist_toatoms(&x->x_alist, outv);
         outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
     }
-	alist_list(&x->x_alist, s, outc, outv);
+    alist_list(&x->x_alist, s, outc, outv);
     XL_ATOMS_FREEA(outv, outc);
 }
 
 static void list_cat_anything(t_list_cat *x, t_symbol *s,
     int argc, t_atom *argv)
 {
-	t_atom *outv;
+    t_atom *outv;
     int n, outc = x->x_alist.l_n + argc + 1;
     XL_ATOMS_ALLOCA(outv, outc);
     SETSYMBOL(outv + x->x_alist.l_n, s);
@@ -334,10 +335,10 @@ static void list_cat_anything(t_list_cat *x, t_symbol *s,
         alist_toatoms(&x->x_alist, outv);
         outlet_list(x->x_obj.ob_outlet, &s_list, outc, outv);
     }
-	if (x->x_alist.l_n <= 1)
-		alist_anything(&x->x_alist, s, outc, outv);
-	else
-		alist_list(&x->x_alist, s, outc, outv);
+    if (x->x_alist.l_n <= 1)
+        alist_anything(&x->x_alist, s, outc, outv);
+    else
+        alist_list(&x->x_alist, s, outc, outv);
     XL_ATOMS_FREEA(outv, outc);
 }
 
@@ -362,7 +363,8 @@ static void list_cat_setup(void)
 
     list_cat_proxy_class = class_new(gensym("list cat pxy"), 0, 0,
         sizeof(t_list_cat_proxy), 0, 0);
-	class_addmethod(list_cat_proxy_class, (t_method)list_cat_proxy_clear, gensym("clear"), 0);
+    class_addmethod(list_cat_proxy_class, (t_method)list_cat_proxy_clear,
+        gensym("clear"), 0);
 }
 
 /* ------------- list prepend --------------------- */

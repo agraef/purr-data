@@ -80,43 +80,43 @@ static void sys_path_replace(
     char const * const pattern, 
     char const * const replacement
 ) {
-	size_t const replen = strlen(replacement);
-	size_t const patlen = strlen(pattern);
-	size_t const orilen = strlen(original);
+    size_t const replen = strlen(replacement);
+    size_t const patlen = strlen(pattern);
+    size_t const orilen = strlen(original);
 
-	size_t patcnt = 0;
-	const char * oriptr;
-	const char * patloc;
+    size_t patcnt = 0;
+    const char * oriptr;
+    const char * patloc;
 
-	// find how many times the pattern occurs in the original string
-	for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
-	{
-		patcnt++;
-	}
+    // find how many times the pattern occurs in the original string
+    for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
+    {
+        patcnt++;
+    }
 
-	{
-		// allocate memory for the new string
-		size_t const retlen = orilen + patcnt * (replen - patlen);
+    {
+        // allocate memory for the new string
+        size_t const retlen = orilen + patcnt * (replen - patlen);
 
-		if (returned != NULL)
-		{
-			// copy the original string, 
-			// replacing all the instances of the pattern
-			char *retptr = returned;
-			for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
-			{
-				size_t const skplen = patloc - oriptr;
-				// copy the section until the occurence of the pattern
-				strncpy(retptr, oriptr, skplen);
-				retptr += skplen;
-				// copy the replacement 
-				strncpy(retptr, replacement, replen);
-				retptr += replen;
-			}
-			// copy the rest of the string.
-			strcpy(retptr, oriptr);
-		}
-	}
+        if (returned != NULL)
+        {
+            // copy the original string, 
+            // replacing all the instances of the pattern
+            char *retptr = returned;
+            for (oriptr = original; patloc = strstr(oriptr, pattern); oriptr = patloc + patlen)
+            {
+                size_t const skplen = patloc - oriptr;
+                // copy the section until the occurence of the pattern
+                strncpy(retptr, oriptr, skplen);
+                retptr += skplen;
+                // copy the replacement 
+                strncpy(retptr, replacement, replen);
+                retptr += replen;
+            }
+            // copy the rest of the string.
+            strcpy(retptr, oriptr);
+        }
+    }
 }
 
 /* expand env vars and ~ at the beginning of a path and make a copy to return */
@@ -148,21 +148,24 @@ static void sys_expandpath(const char *from, char *to)
 /* used for expanding paths for various objects */
 void sys_expandpathelems(const char *name, char *result)
 {
-	//check for expandable elements in path (e.g. @pd_extra, ~/) and replace
-	//fprintf(stderr,"sys_expandpathelems name=<%s>\n", name);
-	char interim[FILENAME_MAX];
-	if (strstr(name, "@pd_extra") != NULL) {
-		t_namelist *path = pd_extrapath;
-		while (path->nl_next)
-			path = path->nl_next;
-		sys_path_replace(name, interim, "@pd_extra", path->nl_string);
-		//fprintf(stderr,"path->nl_string=<%s>\n", path->nl_string);
-	} else {
-		strcpy(interim, name);
-	}
-	//fprintf(stderr,"sys_expandpathelems interim=<%s>\n", interim);
-	sys_expandpath(interim, result);
-	//fprintf(stderr,"sys_expandpathelems result=<%s>\n", result);
+    //check for expandable elements in path (e.g. @pd_extra, ~/) and replace
+    //fprintf(stderr,"sys_expandpathelems name=<%s>\n", name);
+    char interim[FILENAME_MAX];
+    if (strstr(name, "@pd_extra") != NULL)
+    {
+        t_namelist *path = pd_extrapath;
+        while (path->nl_next)
+            path = path->nl_next;
+        sys_path_replace(name, interim, "@pd_extra", path->nl_string);
+        //fprintf(stderr,"path->nl_string=<%s>\n", path->nl_string);
+    }
+    else
+    {
+        strcpy(interim, name);
+    }
+    //fprintf(stderr,"sys_expandpathelems interim=<%s>\n", interim);
+    sys_expandpath(interim, result);
+    //fprintf(stderr,"sys_expandpathelems result=<%s>\n", result);
 }
 
 /* test if path is absolute or relative, based on leading /, env vars, ~, etc */
@@ -420,10 +423,10 @@ static int do_open_via_path(const char *dir, const char *name,
 {
     t_namelist *nl;
     int fd = -1;
-	char final_name[FILENAME_MAX];
+    char final_name[FILENAME_MAX];
 
-		/* first check for @ and ~ (and later others) and replace */
-	sys_expandpathelems(name, final_name);	
+        /* first check for @ and ~ (and later others) and replace */
+    sys_expandpathelems(name, final_name);    
 
         /* first check if "name" is absolute (and if so, try to open) */
     if (sys_open_absolute(final_name, ext, dirresult, nameresult, size, bin, &fd))
@@ -438,7 +441,7 @@ static int do_open_via_path(const char *dir, const char *name,
     for (nl = searchpath; nl; nl = nl->nl_next)
         if ((fd = sys_trytoopenone(nl->nl_string, final_name, ext,
             dirresult, nameresult, size, bin)) >= 0)
-				goto do_open_via_path_end;
+                goto do_open_via_path_end;
 
         /* next look in built-in paths like "extra" */
     if (sys_usestdpath)
@@ -451,7 +454,7 @@ static int do_open_via_path(const char *dir, const char *name,
     *nameresult = dirresult;
     return (-1);
 do_open_via_path_end:
-	return (fd);
+    return (fd);
 }
 
     /* open via path, using the global search path. */

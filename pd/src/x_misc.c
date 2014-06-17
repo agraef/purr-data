@@ -127,7 +127,7 @@ static void loadbang_setup(void)
         sizeof(t_loadbang), CLASS_NOINLET, 0);
     class_addmethod(loadbang_class, (t_method)loadbang_loadbang,
         gensym("loadbang"), 0);
-	class_addmethod(loadbang_class, (t_method)loadbang_click, gensym("click"),
+    class_addmethod(loadbang_class, (t_method)loadbang_click, gensym("click"),
         A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
 }
 

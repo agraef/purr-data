@@ -47,11 +47,11 @@ int sys_noloadbang;
 int sys_nogui;
 int sys_hipriority = -1;    /* -1 = don't care; 0 = no; 1 = yes */
 int sys_guisetportnumber;   /* if started from the GUI, this is the port # */
-int sys_nosleep = 0;  	/* skip all "sleep" calls and spin instead */
-int sys_console = 0;	/* default settings for the console is off */
-int sys_k12_mode = 0;	/* by default k12 mode is off */
-int sys_unique = 0;     /* by default off, prevents multiple instances of pd-l2ork */
-
+int sys_nosleep = 0;    /* skip all "sleep" calls and spin instead */
+int sys_console = 0;    /* default settings for the console is off */
+int sys_k12_mode = 0;   /* by default k12 mode is off */
+int sys_unique = 0;     /* by default off, prevents multiple instances
+                           of pd-l2ork */
 char *sys_guicmd;
 t_symbol *sys_libdir;
 t_symbol *sys_guidir;
@@ -167,18 +167,24 @@ static void openit(const char *dirname, const char *filename)
     {
         close (fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
-		sys_vgui("pdtk_set_current_dir %s\n", filename);
+        sys_vgui("pdtk_set_current_dir %s\n", filename);
         //sys_vgui("::pd_menus::update_recentfiles_menu .mbar.file 0\n");
-        if (strstr(filename, dirname) != NULL) {
-        // when opening files from a command line (at startup), filename contains full path
-        // so, if dirname is already included in filename we only pass filename variable
-        // otherwise combine the two and send them together
+        if (strstr(filename, dirname) != NULL)
+        {
+            /* when opening files from a command line (at startup), filename
+               contains full path so, if dirname is already included in
+               filename we only pass filename variable otherwise combine the
+               two and send them together */
 #ifndef MSW
-            sys_vgui("::pd_guiprefs::update_recentfiles %s/%s 1\n", dirname, filename);
+            sys_vgui("::pd_guiprefs::update_recentfiles %s/%s 1\n",
+                dirname, filename);
 #else
-            sys_vgui("::pd_guiprefs::update_recentfiles %s\%s 1\n", dirname, filename);
+            sys_vgui("::pd_guiprefs::update_recentfiles %s\%s 1\n",
+                dirname, filename);
 #endif
-        } else {
+        }
+        else
+        {
             sys_vgui("::pd_guiprefs::update_recentfiles %s 1\n", filename);
         }
     }
@@ -218,8 +224,8 @@ void glob_initfromgui(void *dummy, t_symbol *s, int argc, t_atom *argv)
         sys_fontlist[i].fi_hostfontsize = atom_getintarg(3 * best + 2, argc, argv);
         sys_fontlist[i].fi_width = atom_getintarg(3 * best + 3, argc, argv);
         sys_fontlist[i].fi_height = atom_getintarg(3 * best + 4, argc, argv);
-		sys_fontlist[i].fi_maxwidth = sys_fontlist[i].fi_width;
-		sys_fontlist[i].fi_maxheight = sys_fontlist[i].fi_height;
+        sys_fontlist[i].fi_maxwidth = sys_fontlist[i].fi_width;
+        sys_fontlist[i].fi_maxheight = sys_fontlist[i].fi_height;
     }
 #if 0
     for (i = 0; i < 6; i++)
@@ -258,8 +264,9 @@ static void pd_makeversion(void)
 {
     char foo[100];
 
-    //snprintf(foo, sizeof(foo), "Pd-l2ork version %d.%d-%d%s\n", PD_MAJOR_VERSION,
-    //    PD_MINOR_VERSION, PD_BUGFIX_VERSION, PD_TEST_VERSION);	
+    //snprintf(foo, sizeof(foo), "Pd-l2ork version %d.%d-%d%s\n",
+    //    PD_MAJOR_VERSION, PD_MINOR_VERSION,
+    //    PD_BUGFIX_VERSION, PD_TEST_VERSION);    
 
     snprintf(foo, sizeof(foo), "Pd-L2Ork version %s\n", PD_TEST_VERSION);
 
@@ -300,28 +307,35 @@ int sys_main(int argc, char **argv)
         return(1);
         /* check if we are unique, otherwise, just focus existing
         instance, and if necessary open file inside it */\
-    if (sys_openlist) {
+    if (sys_openlist)
+    {
         // let's create one continuous string from all files
         int length = 0;
         t_namelist *nl;
         for (nl = sys_openlist; nl; nl = nl->nl_next)
             length = length + strlen(nl->nl_string) + 1;
-        if((filenames = malloc(length)) != NULL) {
+        if((filenames = malloc(length)) != NULL)
+        {
             filenames[0] = '\0';   // ensures the memory is an empty string
-            if (sys_openlist) {
-                for (nl = sys_openlist; nl; nl = nl->nl_next) {
+            if (sys_openlist)
+            {
+                for (nl = sys_openlist; nl; nl = nl->nl_next)
+                {
                     strcat(filenames,nl->nl_string);
                     if (nl->nl_next)
                         strcat(filenames," ");
                 }
             }
             //fprintf(stderr,"final list: <%s>\n", filenames);
-        } else {
+        }
+        else
+        {
             error("filelist malloc failed!\n");
             return(1);
         }
     }
-    sys_vgui("pdtk_check_unique %d %s\n", sys_unique, (filenames ? filenames : "0"));
+    sys_vgui("pdtk_check_unique %d %s\n", sys_unique,
+        (filenames ? filenames : "0"));
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
             sys_extraflagsstring));
@@ -333,13 +347,14 @@ int sys_main(int argc, char **argv)
         sys_reopen_midi();
         sys_reopen_audio();
 
-		if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
-		if (sys_k12_mode) {
-			t_namelist *path = pd_extrapath;
-			while (path->nl_next)
-				path = path->nl_next;
-			sys_vgui("pdtk_enable_k12_mode %s\n", path->nl_string);
-		}
+        if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
+        if (sys_k12_mode)
+        {
+            t_namelist *path = pd_extrapath;
+            while (path->nl_next)
+                path = path->nl_next;
+            sys_vgui("pdtk_enable_k12_mode %s\n", path->nl_string);
+        }
 
          /* run scheduler until it quits */
         return (m_mainloop());
@@ -533,7 +548,8 @@ void sys_findprogdir(char *progname)
     sys_guidir = &s_;   /* in MSW the guipath just depends on the libdir */
 #else
     char *res = realpath(sbuf2, sbuf);
-    if (!res) {
+    if (!res)
+    {
         error("%s: Cannot get a real path", sbuf2);
     }
     strncpy(sbuf2, sbuf, FILENAME_MAX-30);
@@ -612,7 +628,8 @@ int sys_argparse(int argc, char **argv)
 
             argc -= 2; argv += 2;
         }
-        else if (!strcmp(*argv, "-soundbuf") || !strcmp(*argv, "-audiobuf") && (argc > 1))
+        else if (!strcmp(*argv, "-soundbuf") ||
+                 !strcmp(*argv, "-audiobuf") && (argc > 1))
         {
             sys_main_advance = atoi(argv[1]);
             argc -= 2; argv += 2;
@@ -822,12 +839,12 @@ int sys_argparse(int argc, char **argv)
             sys_printtostderr = sys_nogui = 1;
             argc--; argv++;
         }
-		else if (!strcmp(*argv, "-console"))
+        else if (!strcmp(*argv, "-console"))
         {
             sys_console = 1;
             argc--; argv++;
         }
-		else if (!strcmp(*argv, "-k12"))
+        else if (!strcmp(*argv, "-k12"))
         {
             sys_k12_mode = 1;
             argc--; argv++;

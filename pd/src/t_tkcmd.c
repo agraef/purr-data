@@ -558,12 +558,12 @@ void tcl_mess(char *s)
     int result;
 
     // PRODUCTION VERSION
-	char catch_s[strlen(s)+10];
-	sprintf(catch_s, "catch { %s }", s);
+    char catch_s[strlen(s)+10];
+    sprintf(catch_s, "catch { %s }", s);
 
     // DEBUGGING VERSION
-	//char catch_s[strlen(s)];
-	//sprintf(catch_s, "%s", s);
+    //char catch_s[strlen(s)];
+    //sprintf(catch_s, "%s", s);
 
     Tcl_Obj *messageObjPtr = Tcl_NewStringObj(catch_s,-1);
     Tcl_IncrRefCount(messageObjPtr);
@@ -590,8 +590,8 @@ void pdgui_doevalfile(Tcl_Interp *interp, char *s)
     if (Tcl_EvalFile(interp, buf) != TCL_OK)
     {
         char buf2[1000];
-		const char *trace = Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
-		printf("error in file %s: %s\n", buf, trace);
+        const char *trace = Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
+        printf("error in file %s: %s\n", buf, trace);
         sprintf(buf2, "puts [concat tcl: %s: can't open script]\n",
             buf);
         tcl_mess(buf2);

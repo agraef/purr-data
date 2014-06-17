@@ -53,21 +53,21 @@ static void sys_initloadpreferences( void)
 {
     char filenamebuf[FILENAME_MAX], *homedir = getenv("HOME");
     int fd, length;
-	char user_prefs_file[FILENAME_MAX]; /* user prefs file */
+    char user_prefs_file[FILENAME_MAX]; /* user prefs file */
         /* default prefs embedded in the package */
-	char default_prefs_file[FILENAME_MAX];
+    char default_prefs_file[FILENAME_MAX];
     struct stat statbuf;
 
-	snprintf(default_prefs_file, FILENAME_MAX, "%s/default.pdl2ork", 
-			 sys_libdir->s_name);
+    snprintf(default_prefs_file, FILENAME_MAX, "%s/default.pdl2ork", 
+             sys_libdir->s_name);
 
     if (homedir)
-		snprintf(user_prefs_file, FILENAME_MAX, "%s/.pdl2ork", homedir);
-	if (stat(user_prefs_file, &statbuf) == 0) 
-		strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
-	else if (stat(default_prefs_file, &statbuf) == 0)
-		strncpy(filenamebuf, default_prefs_file, FILENAME_MAX);
-	else
+        snprintf(user_prefs_file, FILENAME_MAX, "%s/.pdl2ork", homedir);
+    if (stat(user_prefs_file, &statbuf) == 0) 
+        strncpy(filenamebuf, user_prefs_file, FILENAME_MAX);
+    else if (stat(default_prefs_file, &statbuf) == 0)
+        strncpy(filenamebuf, default_prefs_file, FILENAME_MAX);
+    else
         return;
     filenamebuf[FILENAME_MAX-1] = 0;
     if ((fd = open(filenamebuf, 0)) < 0)
@@ -240,38 +240,38 @@ static int sys_getpreference(const char *key, char *value, int size)
 {
     char cmdbuf[256];
     int nread = 0, nleft = size;
-	char default_prefs[FILENAME_MAX]; // default prefs embedded in the package
-	char embedded_prefs[FILENAME_MAX]; // overrides others for standalone app
-	char embedded_prefs_file[FILENAME_MAX];
-	char user_prefs_file[FILENAME_MAX];
-	char *homedir = getenv("HOME");
+    char default_prefs[FILENAME_MAX]; // default prefs embedded in the package
+    char embedded_prefs[FILENAME_MAX]; // overrides others for standalone app
+    char embedded_prefs_file[FILENAME_MAX];
+    char user_prefs_file[FILENAME_MAX];
+    char *homedir = getenv("HOME");
     struct stat statbuf;
-	/* the 'defaults' command expects the filename without .plist at the end */
-	snprintf(default_prefs, FILENAME_MAX, "%s/../org.puredata.pdl2ork.default", 
-			 sys_libdir->s_name);
-	snprintf(embedded_prefs, FILENAME_MAX, "%s/../org.puredata.pdl2ork", 
-			 sys_libdir->s_name);
-	snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
-	snprintf(user_prefs_file, FILENAME_MAX, 
-			 "%s/Library/Preferences/org.puredata.pdl2ork.plist", homedir);
-	if (stat(embedded_prefs_file, &statbuf) == 0) 
-	{
-		snprintf(cmdbuf, FILENAME_MAX + 20, 
-				 "defaults read '%s' %s 2> /dev/null\n", embedded_prefs, key);
+    /* the 'defaults' command expects the filename without .plist at the end */
+    snprintf(default_prefs, FILENAME_MAX, "%s/../org.puredata.pdl2ork.default", 
+             sys_libdir->s_name);
+    snprintf(embedded_prefs, FILENAME_MAX, "%s/../org.puredata.pdl2ork", 
+             sys_libdir->s_name);
+    snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
+    snprintf(user_prefs_file, FILENAME_MAX, 
+             "%s/Library/Preferences/org.puredata.pdl2ork.plist", homedir);
+    if (stat(embedded_prefs_file, &statbuf) == 0) 
+    {
+        snprintf(cmdbuf, FILENAME_MAX + 20, 
+                 "defaults read '%s' %s 2> /dev/null\n", embedded_prefs, key);
         strncpy(current_prefs, embedded_prefs, FILENAME_MAX);
-	}
-	else if (stat(user_prefs_file, &statbuf) == 0) 
-	{
-		snprintf(cmdbuf, FILENAME_MAX + 20, 
-				 "defaults read org.puredata.pdl2ork %s 2> /dev/null\n", key);
+    }
+    else if (stat(user_prefs_file, &statbuf) == 0) 
+    {
+        snprintf(cmdbuf, FILENAME_MAX + 20, 
+                 "defaults read org.puredata.pdl2ork %s 2> /dev/null\n", key);
         strcpy(current_prefs, "org.puredata.pdl2ork");
-	}
-	else 
-	{
-		snprintf(cmdbuf, FILENAME_MAX + 20, 
-				 "defaults read '%s' %s 2> /dev/null\n", default_prefs, key);
+    }
+    else 
+    {
+        snprintf(cmdbuf, FILENAME_MAX + 20, 
+                 "defaults read '%s' %s 2> /dev/null\n", default_prefs, key);
         strcpy(current_prefs, "org.puredata.pdl2ork");
-	}
+    }
     FILE *fp = popen(cmdbuf, "r");
     while (nread < size)
     {

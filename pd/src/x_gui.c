@@ -87,14 +87,17 @@ void gfxstub_new(t_pd *owner, void *key, const char *cmd)
     sys_gui(buf);
 }
 
-int gfxstub_haveproperties(void *key) {
+int gfxstub_haveproperties(void *key)
+{
     t_gfxstub *x;
-    for (x = gfxstub_list; x; x = x->x_next) {
-        if (x->x_key == key) {
+    for (x = gfxstub_list; x; x = x->x_next)
+    {
+        if (x->x_key == key)
+        {
             return (t_int)x;
-		}
-	}
-	return 0;
+        }
+    }
+    return 0;
 }
 
 static void gfxstub_offlist(t_gfxstub *x)

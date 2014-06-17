@@ -705,9 +705,9 @@ void sys_vgui(char *fmt, ...)
             msglen = sys_guibufsize - sys_guibufhead;
     }
     if (sys_debuglevel & DEBUG_MESSUP) {
-		//blargh();
+        //blargh();
         fprintf(stderr, "%s",  sys_guibuf + sys_guibufhead);
-	}
+    }
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
 }
@@ -861,8 +861,8 @@ void sys_unqueuegui(void *client)
 int sys_pollgui(void)
 {
     // return (sys_domicrosleep(0, 1) || sys_poll_togui());
-	// "fix" for sluggish gui proposed by Miller on 12/16/2012
-	return (sys_domicrosleep(0, 1) + sys_poll_togui());
+    // "fix" for sluggish gui proposed by Miller on 12/16/2012
+    return (sys_domicrosleep(0, 1) + sys_poll_togui());
 }
 
 
@@ -1182,7 +1182,7 @@ int sys_startgui(const char *guidir)
     if (sys_hipriority == -1)
         sys_hipriority = 1; //(!getuid() || !geteuid());
     
-	sprintf(cmdbuf, "%s/pd-watchdog\n", guidir);
+    sprintf(cmdbuf, "%s/pd-watchdog\n", guidir);
     if (sys_hipriority)
     {
             /* To prevent lockup, we fork off a watchdog process with
@@ -1326,16 +1326,19 @@ extern int do_not_redraw;
 
 void glob_quit(void *dummy)
 {
-	//If we're going to try to cleanly close everything here, we should do the same for all open
-	//patches and that is currently not the case, so for the time being, let's just leave OS to deal
-	//with freeing of all memory when the program exits...
+    /* If we're going to try to cleanly close everything here, we should
+       do the same for all open patches and that is currently not the case,
+       so for the time being, let's just leave OS to deal with freeing of all
+       memory when the program exits... */
 
-	//let's try to cleanly remove invisible template canvases
-	//if (garray_arraytemplatecanvas) canvas_free( (t_canvas *)garray_arraytemplatecanvas);
-	//if (garray_floattemplatecanvas) canvas_free( (t_canvas *)garray_floattemplatecanvas);
-	canvas_suspend_dsp();
-	do_not_redraw = 1;
-	glob_closeall(0, 1);
+    /* Let's try to cleanly remove invisible template canvases */
+    //if (garray_arraytemplatecanvas)
+    //    canvas_free((t_canvas *)garray_arraytemplatecanvas);
+    //if (garray_floattemplatecanvas)
+    //    canvas_free( (t_canvas *)garray_floattemplatecanvas);
+    canvas_suspend_dsp();
+    do_not_redraw = 1;
+    glob_closeall(0, 1);
     sys_vgui("exit\n");
     if (!sys_nogui)
     {

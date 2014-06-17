@@ -73,7 +73,7 @@ static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
     int i;
     if (argc && argv->a_type != A_SYMBOL)
-		startpost("%s%s%g", x->x_sym->s_name,
+        startpost("%s%s%g", x->x_sym->s_name,
             (*x->x_sym->s_name ? ": " : ""),
             atom_getfloatarg(0, argc--, argv++));
     else startpost("%s: %s", x->x_sym->s_name,
@@ -148,7 +148,8 @@ void info_out(t_text *te, t_symbol *s, int argc, t_atom *argv)
             postatom(argc, argv);
         endpost();
     }
-    else {
+    else
+    {
         outlet_list(te->ob_outlet,
             &s_list, argc, argv);
     }

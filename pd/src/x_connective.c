@@ -381,7 +381,7 @@ static void sel1_symbol(t_sel1 *x, t_symbol *s)
 
 static void sel1_bang(t_sel1 *x)
 {
-	sel1_symbol(x, gensym("bang"));
+    sel1_symbol(x, gensym("bang"));
 }
 
 static t_class *sel2_class;
@@ -436,7 +436,7 @@ static void sel2_symbol(t_sel2 *x, t_symbol *s)
 
 static void sel2_bang(t_sel2 *x)
 {
-	sel2_symbol(x, gensym("bang"));
+    sel2_symbol(x, gensym("bang"));
 }
 
 static void sel2_free(t_sel2 *x)
@@ -513,7 +513,7 @@ void select_setup(void)
         sizeof(t_sel2), 0, 0);
     class_addfloat(sel2_class, sel2_float);
     class_addsymbol(sel2_class, sel2_symbol);
-	class_addbang(sel2_class, sel2_bang);
+    class_addbang(sel2_class, sel2_bang);
 
     class_addcreator((t_newmethod)select_new, gensym("select"),  A_GIMME, 0);
     class_addcreator((t_newmethod)select_new, gensym("sel"),  A_GIMME, 0);
@@ -545,7 +545,7 @@ typedef struct _route
     t_routeelement *x_vec;
     t_outlet *x_rejectout;
     t_route_proxy x_pxy;
-	t_int x_mixed;
+    t_int x_mixed;
 } t_route;
 
 static void route_proxy_init(t_route_proxy *x, t_route *p)
@@ -557,15 +557,15 @@ static void route_proxy_init(t_route_proxy *x, t_route *p)
 static void route_proxy_float(t_route_proxy *x, t_float f)
 {
     t_route *p = (t_route *)x->parent;
-	p->x_type = A_FLOAT;
-	p->x_vec->e_w.w_float = f;
+    p->x_type = A_FLOAT;
+    p->x_vec->e_w.w_float = f;
 }
 
 static void route_proxy_symbol(t_route_proxy *x, t_symbol *s)
 {
     t_route *p = (t_route *)x->parent;
-	p->x_type = A_SYMBOL;
-	p->x_vec->e_w.w_symbol = s;
+    p->x_type = A_SYMBOL;
+    p->x_vec->e_w.w_symbol = s;
 }
 
 static void route_anything(t_route *x, t_symbol *sel, int argc, t_atom *argv)
@@ -589,7 +589,7 @@ static void route_anything(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 
 static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
 {
-	//fprintf(stderr,"route_list\n");
+    //fprintf(stderr,"route_list\n");
     t_routeelement *e;
     int nelement;
     if (x->x_type == A_FLOAT || x->x_mixed)
@@ -605,12 +605,13 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             if (argc > 1 && argv[1].a_type == A_SYMBOL)
                 outlet_anything(e->e_outlet, argv[1].a_w.w_symbol,
                     argc-2, argv+2);
-            else {
-				if (argc > 1)
-					outlet_list(e->e_outlet, 0, argc-1, argv+1);
-				else
-					outlet_bang(e->e_outlet);
-			}
+            else
+            {
+                if (argc > 1)
+                    outlet_list(e->e_outlet, 0, argc-1, argv+1);
+                else
+                    outlet_bang(e->e_outlet);
+            }
             return;
         }
     }
@@ -687,40 +688,43 @@ static void *route_new(t_symbol *s, int argc, t_atom *argv)
         SETFLOAT(&a, 0);
         argv = &a;
     }
-	x->x_type = argv[0].a_type;
+    x->x_type = argv[0].a_type;
     x->x_nelement = argc;
     x->x_vec = (t_routeelement *)getbytes(argc * sizeof(*x->x_vec));
     for (n = 0, e = x->x_vec; n < argc; n++, e++)
     {
         e->e_outlet = outlet_new(&x->x_obj, &s_list);
-        if (argv[n].a_type == A_FLOAT) {
+        if (argv[n].a_type == A_FLOAT)
+        {
             e->e_w.w_float = atom_getfloatarg(n, argc, argv);
-			flt = 1;
-		} else {
-			e->e_w.w_symbol = atom_getsymbolarg(n, argc, argv);
-			sym = 1;
-		}
+            flt = 1;
+        }
+        else
+        {
+            e->e_w.w_symbol = atom_getsymbolarg(n, argc, argv);
+            sym = 1;
+        }
     }
     if (argc == 1)
     {
-		route_proxy_init(&x->x_pxy, x);
-		inlet_new(&x->x_obj, &x->x_pxy.l_pd, 0, 0);
+        route_proxy_init(&x->x_pxy, x);
+        inlet_new(&x->x_obj, &x->x_pxy.l_pd, 0, 0);
         /*if (argv->a_type == A_FLOAT)
             floatinlet_new(&x->x_obj, &x->x_vec->e_w.w_float);
-		else
-			symbolinlet_new(&x->x_obj, &x->x_vec->e_w.w_symbol);*/
+        else
+            symbolinlet_new(&x->x_obj, &x->x_vec->e_w.w_symbol);*/
     }
-	x->x_mixed = flt * sym;
+    x->x_mixed = flt * sym;
     x->x_rejectout = outlet_new(&x->x_obj, &s_list);
     return (x);
 }
 
 void route_setup(void)
 {
-	route_proxy_class = class_new(gensym("route_inlet"),
-		0, 0, sizeof(t_route_proxy), 0, 0);
-	class_addfloat(route_proxy_class, (t_method)route_proxy_float);
-	class_addsymbol(route_proxy_class, (t_method)route_proxy_symbol);
+    route_proxy_class = class_new(gensym("route_inlet"),
+        0, 0, sizeof(t_route_proxy), 0, 0);
+    class_addfloat(route_proxy_class, (t_method)route_proxy_float);
+    class_addsymbol(route_proxy_class, (t_method)route_proxy_symbol);
     route_class = class_new(gensym("route"), (t_newmethod)route_new,
         (t_method)route_free, sizeof(t_route), 0, A_GIMME, 0);
     class_addlist(route_class, route_list);
@@ -870,10 +874,10 @@ static void pack_symbol(t_pack *x, t_symbol *s)
 
 static void pack_list(t_pack *x, t_symbol *s, int ac, t_atom *av)
 {
-	if (ac==0)
-		pack_bang(x);
-	else
-	    obj_list(&x->x_obj, 0, ac, av);
+    if (ac==0)
+        pack_bang(x);
+    else
+        obj_list(&x->x_obj, 0, ac, av);
 }
 
 static void pack_anything(t_pack *x, t_symbol *s, int ac, t_atom *av)
@@ -1034,8 +1038,8 @@ static t_class *trigger_class;
 typedef struct triggerout
 {
     int u_type;         /* outlet type from above */
-	t_symbol u_sym; 	/* static value */
-	t_float u_float;	/* static value */
+    t_symbol u_sym;     /* static value */
+    t_float u_float;    /* static value */
     t_outlet *u_outlet;
 } t_triggerout;
 
@@ -1068,25 +1072,26 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
     {
         t_atomtype thistype = ap->a_type;
         char c;
-        if (thistype == TR_SYMBOL) {
-			if (strlen(ap->a_w.w_symbol->s_name) == 1)
-				c = ap->a_w.w_symbol->s_name[0];
-			else if (strcmp(ap->a_w.w_symbol->s_name, "anything") == 0)
-				c = 'a';
-			else if (strcmp(ap->a_w.w_symbol->s_name, "bang") == 0)
-				c = 'b';
-			else if (strcmp(ap->a_w.w_symbol->s_name, "float") == 0)
-				c = 'f';
-			else if (strcmp(ap->a_w.w_symbol->s_name, "list") == 0)
-				c = 'l';
-			else if (strcmp(ap->a_w.w_symbol->s_name, "pointer") == 0)
-				c = 'p';			
-			else if (strcmp(ap->a_w.w_symbol->s_name, "symbol") == 0)
-				c = 's';
-			else c = 'S';
-		}
+        if (thistype == TR_SYMBOL)
+        {
+            if (strlen(ap->a_w.w_symbol->s_name) == 1)
+                c = ap->a_w.w_symbol->s_name[0];
+            else if (strcmp(ap->a_w.w_symbol->s_name, "anything") == 0)
+                c = 'a';
+            else if (strcmp(ap->a_w.w_symbol->s_name, "bang") == 0)
+                c = 'b';
+            else if (strcmp(ap->a_w.w_symbol->s_name, "float") == 0)
+                c = 'f';
+            else if (strcmp(ap->a_w.w_symbol->s_name, "list") == 0)
+                c = 'l';
+            else if (strcmp(ap->a_w.w_symbol->s_name, "pointer") == 0)
+                c = 'p';            
+            else if (strcmp(ap->a_w.w_symbol->s_name, "symbol") == 0)
+                c = 's';
+            else c = 'S';
+        }
         else if (thistype == TR_FLOAT)
-			c = 'F';
+            c = 'F';
         else c = 0;
         if (c == 'p')
             u->u_type = TR_POINTER,
@@ -1103,18 +1108,22 @@ static void *trigger_new(t_symbol *s, int argc, t_atom *argv)
         else if (c == 'a')
             u->u_type = TR_ANYTHING,
                 u->u_outlet = outlet_new(&x->x_obj, &s_symbol);
-		else if (c == 'F') {
-			//static float
-			u->u_float = ap->a_w.w_float;
-			u->u_type = TR_STATIC_FLOAT;
-			u->u_outlet = outlet_new(&x->x_obj, &s_float);
-		}
-        else if (c == 'S') {
-			//static symbol
-			u->u_sym = *ap->a_w.w_symbol;
+        else if (c == 'F')
+        {
+            //static float
+            u->u_float = ap->a_w.w_float;
+            u->u_type = TR_STATIC_FLOAT;
+            u->u_outlet = outlet_new(&x->x_obj, &s_float);
+        }
+        else if (c == 'S')
+        {
+            //static symbol
+            u->u_sym = *ap->a_w.w_symbol;
             u->u_type = TR_STATIC_SYMBOL;
-	        u->u_outlet = outlet_new(&x->x_obj, &s_symbol);
-		} else {
+            u->u_outlet = outlet_new(&x->x_obj, &s_symbol);
+        }
+        else
+        {
             pd_error(x, "trigger: %s: bad type", ap->a_w.w_symbol->s_name);
             u->u_type = TR_FLOAT, u->u_outlet = outlet_new(&x->x_obj, &s_float);
         }
@@ -1143,40 +1152,41 @@ static void trigger_list(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
                 pd_error(x, "unpack: bad pointer");
             else outlet_pointer(u->u_outlet, argv->a_w.w_gpointer);
         }
-		else if (u->u_type == TR_STATIC_FLOAT)
-		{
-			outlet_float(u->u_outlet, u->u_float);	
-		}
-		else if (u->u_type == TR_STATIC_SYMBOL)
-		{
-			outlet_symbol(u->u_outlet, &u->u_sym);
-		}
+        else if (u->u_type == TR_STATIC_FLOAT)
+        {
+            outlet_float(u->u_outlet, u->u_float);    
+        }
+        else if (u->u_type == TR_STATIC_SYMBOL)
+        {
+            outlet_symbol(u->u_outlet, &u->u_sym);
+        }
         else outlet_list(u->u_outlet, &s_list, argc, argv);
     }
 }
 
 static void trigger_anything(t_trigger *x, t_symbol *s, int argc, t_atom *argv)
 {
-	//fprintf(stderr,"trigger_anything %s\n", s->s_name);
+    //fprintf(stderr,"trigger_anything %s\n", s->s_name);
     t_triggerout *u;
     int i;
     for (i = x->x_n, u = x->x_vec + i; u--, i--;)
     {
         if (u->u_type == TR_BANG)
             outlet_bang(u->u_outlet);
-        else if (u->u_type == TR_ANYTHING) {
-			//fprintf(stderr,"TR_ANYTHING\n");
+        else if (u->u_type == TR_ANYTHING)
+        {
+            //fprintf(stderr,"TR_ANYTHING\n");
             outlet_anything(u->u_outlet, s, argc, argv);
-		}
-		else if (u->u_type == TR_STATIC_FLOAT)
-		{
-			outlet_float(u->u_outlet, u->u_float);	
-		}
-		else if (u->u_type == TR_STATIC_SYMBOL)
-		{
-			outlet_symbol(u->u_outlet, &u->u_sym);
-		}        
-		else trigger_symbol(x, s);
+        }
+        else if (u->u_type == TR_STATIC_FLOAT)
+        {
+            outlet_float(u->u_outlet, u->u_float);    
+        }
+        else if (u->u_type == TR_STATIC_SYMBOL)
+        {
+            outlet_symbol(u->u_outlet, &u->u_sym);
+        }        
+        else trigger_symbol(x, s);
     }
 }
 
@@ -1387,25 +1397,31 @@ static void makefilename_scanformat(t_makefilename *x)
     char *str,*chr;
     if (!x->x_format) return;
     x->x_accept = A_NULL;
-    for (str=x->x_format->s_name; *str; str++) {
-        if (!infmt && *str=='%') {
+    for (str=x->x_format->s_name; *str; str++)
+    {
+        if (!infmt && *str=='%')
+        {
             infmt=1;
             continue;
         }
-        if (infmt) {
+        if (infmt)
+        {
             if (strchr("-.#0123456789",*str)!=0)
                 continue;
-            if (*str=='s') {
+            if (*str=='s')
+            {
                 x->x_accept = A_SYMBOL;
                 x->x_intconvert = 0;
                 break;
             }
-            if (strchr("fgGeE",*str)!=0) {
+            if (strchr("fgGeE",*str)!=0)
+            {
                 x->x_accept = A_FLOAT;
                 x->x_intconvert = 0;
                 break;
             }
-            if (strchr("xXdiouc",*str)!=0) {
+            if (strchr("xXdiouc",*str)!=0)
+            {
                 x->x_accept = A_FLOAT;
                 x->x_intconvert = 1;
                 break;
@@ -1431,7 +1447,8 @@ static void *makefilename_new(t_symbol *s)
 static void makefilename_float(t_makefilename *x, t_floatarg f)
 {
     char buf[MAXPDSTRING];
-    if (x->x_accept == A_FLOAT) {
+    if (x->x_accept == A_FLOAT)
+    {
         if (x->x_intconvert)
             sprintf(buf, x->x_format->s_name, (int)f);
         else sprintf(buf, x->x_format->s_name, f);
