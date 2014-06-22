@@ -1140,7 +1140,6 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         }
         x->x_nargs = nxy;
     }
-    post("nxy is %d", nxy);
     x->x_vec = (t_fielddesc *)t_getbytes(nxy * sizeof(t_fielddesc));
     if (x->x_type == gensym("rect") ||
         x->x_type == gensym("circle") ||
