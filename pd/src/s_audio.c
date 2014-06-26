@@ -516,7 +516,16 @@ int sys_send_dacs(void)
 
 t_float sys_getsr(void)
 {
-     return (sys_dacsr);
+    // when starting with -nogui option, it is conceivable that sys_dacsr
+    // is not initialized even though the audio_rate by this time has
+    // proper sample rate entered. Hence we check for this here and avoid
+    // the -nogui nonsense where we have to do various workarounds to make
+    // sure that audio objects that depend on this call get the proper sr
+    if (sys_dacsr == 0)
+    {
+        sys_dacsr = (t_float)audio_rate;
+    }
+    return (sys_dacsr);
 }
 
 int sys_get_outchannels(void)
