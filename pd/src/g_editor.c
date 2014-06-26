@@ -7344,8 +7344,11 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
         canvas_setcursor(x, CURSOR_RUNMODE_NOTHING);
     }
     if (glist_isvisible(x))
+    {
+        int edit = !glob_ctrl && x->gl_edit;
         sys_vgui("pdtk_canvas_editval .x%lx %d\n",
-            glist_getcanvas(x), x->gl_edit);
+            glist_getcanvas(x), edit);
+    }
     /*if (!x->gl_edit) {
         sys_vgui(".x%lx.m.edit entryconfigure \"Cord Inspector\" "
                  "-indicatoron false -state disabled\n", glist_getcanvas(x));
