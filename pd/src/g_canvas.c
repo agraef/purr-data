@@ -246,14 +246,14 @@ void canvas_rename(t_canvas *x, t_symbol *s, t_symbol *dir)
     canvas_unbind(x);
     x->gl_name = s;
     canvas_bind(x);
-    if (glist_isvisible(x))
-    if (x->gl_havewindow) //was glist_isvisible(x)
-        canvas_reflecttitle(x);
     if (dir && dir != &s_)
     {
         t_canvasenvironment *e = canvas_getenv(x);
         e->ce_dir = dir;
     }
+    if (glist_isvisible(x))
+        if (x->gl_havewindow) //was glist_isvisible(x)
+            canvas_reflecttitle(x);
 }
 
 /* --------------- traversing the set of lines in a canvas ----------- */
@@ -659,7 +659,6 @@ t_symbol *canvas_makebindsym(t_symbol *s)
 
 void canvas_reflecttitle(t_canvas *x)
 {
-    //fprintf(stderr,"canvas_reflecttitle\n");
     char namebuf[MAXPDSTRING];
     t_canvasenvironment *env = canvas_getenv(x);
     if (env->ce_argc)
