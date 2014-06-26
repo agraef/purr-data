@@ -1136,6 +1136,7 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
             x->x_type == gensym("ellipse"))
         {
             nxy = 4;
+            if (argc > 4) argc = 4;
         }
         x->x_nargs = nxy;
     }
@@ -1202,9 +1203,10 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
 
     x->x_ndash = 0;
     x->x_strokedasharray =
-        (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
+        (t_fielddesc *)t_getbytes(x->x_ndash * sizeof(t_fielddesc));
     x->x_transform_n = 0;
-    x->x_transform = (t_fielddesc *)t_getbytes(1 * sizeof(t_fielddesc));
+    x->x_transform = (t_fielddesc *)t_getbytes(x->x_transform_n *
+        sizeof(t_fielddesc));
     return (x);
 }
 
