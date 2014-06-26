@@ -7051,7 +7051,7 @@ proc pdtk_data_dialog {name stuff} {
 #####################iemlib#######################
 proc pdtk_canvas_editval {name value} {
 	global k12_mode
-	set set ::editmode($name) $value
+	set ::editmode($name) $value
 	#if {[winfo exists $name]} {
 		if { $value } {
 		    $name.m.edit entryconfigure "Edit mode" -indicatoron false -background "#7dd37d" -foreground black
