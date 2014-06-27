@@ -1,6 +1,7 @@
-#N canvas 432 106 428 491 10;
-#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_player.png 1;
-#X obj 142 91 loadbang;
+#N canvas 432 106 433 518 10;
+#X obj 141 205 ggee/image @pd_extra/K12/objects/signal_player.png 1
+;
+#X obj 142 94 loadbang;
 #X obj -11 91 inlet;
 #X obj 99 220 hsl 78 11 0 100 0 1 \$0-s-null \$0-r-null start 26 5
 0 10 -262144 -1 -1 0 1;
@@ -13,7 +14,7 @@
 #X obj 234 174 preset_node k12;
 #X obj 234 150 preset_node k12;
 #X msg 142 114 open @pd_extra/K12/objects/signal_player.png;
-#X obj 99 91 inlet;
+#X obj 97 34 inlet;
 #X obj 207 427 outlet;
 #X obj 99 203 bng 15 250 50 0 empty empty empty 17 7 0 10 -257985 -1
 -1;
@@ -30,14 +31,14 @@
 #X obj 142 312 pack s f;
 #X msg 142 335 read \$1 \$2-buffer;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-buffer 480000 float 2;
-#X coords 0 1 480000 -1 101 53 1 0 0;
+#X array \$0-buffer 480000 float 2 black black;
+#X coords 0 1 480000 -1 101 53 1;
 #X restore 355 171 graph;
 #X text 45 -25 load a new file;
 #X obj 247 58 \$0;
 #X msg 247 80 \; \$1-buffer const 0;
 #X obj 142 181 openpanel;
-#X symbolatom 142 226 10 0 0 0 - - -;
+#X symbolatom 142 226 10 0 0 0 - - -, f 10;
 #X obj 39 177 preset_node k12;
 #X obj 142 -1 t b b;
 #X obj 39 270 wavinfo;
@@ -146,8 +147,10 @@
 #X obj 35 519 *~;
 #X msg 78 477 0 5 \, 1 5 5;
 #X obj 78 499 vline~;
-#X obj 99 114 t f f;
-#X obj 99 136 pipe 5;
+#X obj 97 114 pipe 5;
+#X obj 97 54 t f b;
+#X obj 97 74 split 0 1;
+#X obj 97 94 int;
 #X connect 1 0 10 0;
 #X connect 2 0 7 0;
 #X connect 3 0 9 0;
@@ -159,7 +162,7 @@
 #X connect 7 1 24 1;
 #X connect 8 0 4 0;
 #X connect 9 0 3 0;
-#X connect 11 0 31 0;
+#X connect 11 0 32 0;
 #X connect 13 0 17 0;
 #X connect 15 0 26 0;
 #X connect 17 0 19 3;
@@ -180,7 +183,9 @@
 #X connect 28 0 16 0;
 #X connect 29 0 30 0;
 #X connect 30 0 28 1;
-#X connect 31 0 32 0;
-#X connect 31 1 29 0;
-#X connect 32 0 5 0;
+#X connect 31 0 5 0;
+#X connect 32 0 33 0;
+#X connect 32 1 29 0;
+#X connect 33 0 34 0;
+#X connect 34 0 31 0;
 #X coords 0 -1 1 1 89 89 2 96 173;
