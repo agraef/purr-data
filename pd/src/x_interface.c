@@ -282,25 +282,21 @@ void canvasinfo_filename(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 void canvasinfo_hitbox(t_canvasinfo *x, t_floatarg xpos, t_floatarg ypos)
 {
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
-    int x1, y1, x2, y2, indexno;
-    t_gobj *ob = canvas_findhitbox(c, xpos, ypos, &x1, &y1, &x2, &y2);
-    if (ob)
+    int x1, y1, x2, y2, i, atom_count = 0;
+    t_atom at[500]; /* hack to avoid memory allocation. Maybe later... */
+    t_gobj *y;
+    for (y = c->gl_list, i = 0; y && atom_count < 500; y = y->g_next, i++)
     {
-        t_gobj *y;
-        for (indexno = 0, y = c->gl_list; y && y != ob; y = y->g_next)
-            indexno++;
-        t_atom at[6];
-        char *classname = class_getname(ob->g_pd);
-        SETSYMBOL(at, gensym(classname));
-        SETFLOAT(at+1, (t_float)indexno);
-        SETFLOAT(at+2, (t_float)x1);
-        SETFLOAT(at+3, (t_float)y1);
-        SETFLOAT(at+4, (t_float)x2);
-        SETFLOAT(at+5, (t_float)y2);
-        info_out((t_text *)x, gensym("hitbox"), 6, at);
+        if (canvas_hitbox(c, y, xpos, ypos, &x1, &y1, &x2, &y2))
+        {
+            SETFLOAT(at+atom_count, (t_float)i);
+            atom_count++;
+        }
     }
-    else
-        info_out((t_text *)x, gensym("hitbox"), 0, 0);
+    if (atom_count >= 500)
+        post("canvasinfo: warning: hitbox is currently limited to 500 objects. "
+             "Truncating the output to 500 indices...");
+    info_out((t_text *)x, gensym("hitbox"), atom_count, at);
 }
 
 void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
@@ -993,8 +989,36 @@ void objectinfo_float(t_floatarg f)
 
 }
 
+void objectinfo_parseargs(t_objectinfo *x, int argc, t_atom *argv)
+{
+    /* probably don't need to specify index number as an argument */
+    /*
+    if (argc)
+    {
+        if (argv->a_type == A_FLOAT)
+        {
+            x->x_index = atom_getfloatarg(0, argc, argv);
+        }
+        else
+        {
+            pd_error(x, "expected float but didn't get float");
+        }
+        argc--;
+        argv++;
+    }
+    */
+    if (argc)
+    {
+        if (argv->a_type == A_FLOAT)
+            x->x_index = atom_getfloatarg(0, argc, argv);
+        else
+            pd_error(x, "expected float but didn't get a float");
+    }
+}
+
 void objectinfo_boxtext(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
+    objectinfo_parseargs(x, argc, argv);
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     t_gobj *ob;
    
@@ -1023,6 +1047,7 @@ void objectinfo_boxtext(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 
 void objectinfo_bbox(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
+    objectinfo_parseargs(x, argc, argv);
     t_gobj *ob;
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     int x1, y1, x2, y2;
@@ -1048,10 +1073,10 @@ void objectinfo_bbox(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
         outlet_bang(x->x_out2);
 }
 
-
 void objectinfo_classname(t_objectinfo *x, t_symbol *s,
     int argc, t_atom *argv)
 {
+    objectinfo_parseargs(x, argc, argv);
     t_atom at[1];
     t_gobj *ob;
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
@@ -1065,8 +1090,29 @@ void objectinfo_classname(t_objectinfo *x, t_symbol *s,
         outlet_bang(x->x_out2);
 }
 
-void objectinfo_print(t_classinfo *x)
+void objectinfo_xlets(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
+    objectinfo_parseargs(x, argc, argv);
+    t_atom at[1];
+    t_gobj *ob;
+    t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
+    if(ob = objectinfo_getobject(c, x->x_index))
+    {
+        if (pd_class(&ob->g_pd) != scalar_class)
+        {
+            post("not a scalar...");
+            t_object *o = (t_object *)ob;
+            int n = (s == gensym("inlets") ? obj_ninlets(o) : obj_noutlets(o));
+            SETFLOAT(at, (t_float)n);
+            info_out((t_text *)x, s, 1, at);
+        }
+    }
+    else
+        outlet_bang(x->x_out2);
+}
+void objectinfo_print(t_objectinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    objectinfo_parseargs(x, argc, argv);
     info_print((t_text *)x);
 }
 
@@ -1097,8 +1143,14 @@ void objectinfo_setup(void)
         gensym("boxtext"), A_GIMME, 0);
     class_addmethod(objectinfo_class, (t_method)objectinfo_classname,
         gensym("class"), A_GIMME, 0);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_xlets,
+        gensym("inlets"), A_GIMME, 0);
+    class_addmethod(objectinfo_class, (t_method)objectinfo_xlets,
+        gensym("outlets"), A_GIMME, 0);
+
+
     class_addmethod(objectinfo_class, (t_method)objectinfo_print,
-        gensym("print"), 0);
+        gensym("print"), A_GIMME, 0);
 
     post("objectinfo: v.0.1");
     post("stable objectinfo methods: class");
