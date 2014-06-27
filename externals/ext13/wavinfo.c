@@ -85,7 +85,7 @@ static void wavinfo_symbol(t_wavinfo *x, t_symbol *filename)
    char fname[FILENAME_MAX];
 
    canvas_makefilename(x->x_canvas, filename->s_name, fname, MAXPDSTRING);
-   fprintf(stderr,"... %s %s\n", filename->s_name, fname);
+   //fprintf(stderr,"... %s %s\n", filename->s_name, fname);
 
    int ok=(stat(fname, &statbuf) >= 0);
    if (ok>0) {
