@@ -970,6 +970,13 @@ int sys_argparse(int argc, char **argv)
             return (1);
         }
     }
+    if (sys_listplease && !sys_printtostderr)
+    {
+        // if we asked to list devices and are not using stderr output
+        // open console to facilitate understanding where devices have 
+        // been listed
+        sys_console = 1;
+    }
     if (!sys_defaultfont)
         sys_defaultfont = DEFAULTFONT;
     for (; argc > 0; argc--, argv++) 
