@@ -1134,12 +1134,19 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         if (x->x_type == gensym("rect") ||
             x->x_type == gensym("line") ||
             x->x_type == gensym("circle") ||
-            x->x_type == gensym("ellipse") ||
-            x->x_type == gensym("polygon") ||
-            x->x_type == gensym("polyline"))
+            x->x_type == gensym("ellipse"))
         {
             nxy = 4;
             if (argc > 4) argc = 4;
+        }
+        if (x->x_type == gensym("polygon") ||
+            x->x_type == gensym("polyline"))
+        {
+            if (argc < 4)
+            {
+                argc = 4;
+                nxy = 4;
+            }
         }
         x->x_nargs = nxy;
     }
@@ -1636,9 +1643,25 @@ void svg_resizecoords(t_svg *x, int argc, t_atom *argv)
 
 void svg_data(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
-    /* only process path data and polygon/polyline points */
-/* fix this!!! */
-    if (x->x_type != gensym("path") && s != gensym("points")) return;
+    if (argc)
+    {
+        /* only paths and polys */
+        if (x->x_type != gensym("path") && x->x_type != gensym("polyline") &&
+            x->x_type != gensym("polygon"))
+            return;
+        /* "points" for polys... */
+        if (s == gensym("data") && x->x_type != gensym("path"))
+            return;
+        /* and "data" for paths */
+        if (x->x_type == gensym("path"))
+        {
+            if (s == gensym("points")) return;
+            if (argv->a_type == A_SYMBOL &&
+                !is_svgpath_cmd(atom_getsymbol(argv)) ||
+                argv->a_type != A_SYMBOL)
+                return;
+        }
+    }
     /* resize the path data fields to fit the incoming data */
     svg_resizecoords(x, argc, argv);
     /* todo: loop is copy/pasted from draw_new-- break it out */
