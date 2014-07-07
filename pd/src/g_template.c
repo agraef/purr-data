@@ -1132,8 +1132,11 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
         nxy =  (argc + (argc & 1));
         /* give basic shapes at least 4 points */
         if (x->x_type == gensym("rect") ||
+            x->x_type == gensym("line") ||
             x->x_type == gensym("circle") ||
-            x->x_type == gensym("ellipse"))
+            x->x_type == gensym("ellipse") ||
+            x->x_type == gensym("polygon") ||
+            x->x_type == gensym("polyline"))
         {
             nxy = 4;
             if (argc > 4) argc = 4;
@@ -1142,8 +1145,11 @@ void *svg_new(t_pd *parent, t_symbol *s, int argc, t_atom *argv)
     }
     x->x_vec = (t_fielddesc *)t_getbytes(nxy * sizeof(t_fielddesc));
     if (x->x_type == gensym("rect") ||
+        x->x_type == gensym("line") ||
         x->x_type == gensym("circle") ||
-        x->x_type == gensym("ellipse"))
+        x->x_type == gensym("ellipse") ||
+        x->x_type == gensym("polygon") ||
+        x->x_type == gensym("polyline"))
     {
         /* set x_vec to all zeros in case the user didn't provide
            enough arguments */
@@ -1604,7 +1610,7 @@ void svg_vis(t_svg *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-/* resize x_vec et all for path or shape coordinate data */
+/* resize x_vec et al for path or shape coordinate data */
 void svg_resizecoords(t_svg *x, int argc, t_atom *argv)
 {
 //    if (x->x_type != gensym("path")) return;
@@ -1631,6 +1637,7 @@ void svg_resizecoords(t_svg *x, int argc, t_atom *argv)
 void svg_data(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     /* only process path data and polygon/polyline points */
+/* fix this!!! */
     if (x->x_type != gensym("path") && s != gensym("points")) return;
     /* resize the path data fields to fit the incoming data */
     svg_resizecoords(x, argc, argv);
@@ -3360,9 +3367,9 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     parentglist, data, basex, basey);
             }
             int flags = sa->x_flags;
-            t_float pix[200];
-            if (n > 200)
-                n = 200;
+            t_float pix[500];
+            if (n > 500)
+                n = 500;
                 /* calculate the pixel values before we start printing
                 out the TK message so that "error" printout won't be
                 interspersed with it.  Only show up to 100 points so we don't
@@ -6190,6 +6197,13 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     if (vis)
     {
         t_atom at;
+
+        /* hack to keep the font from scaling with the gop */
+        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+        t_float xinv = xscale == 0 ? 0 : 1 / yscale;
+        t_float yinv = yscale == 0 ? 0 : 1 / xscale;
+
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
@@ -6211,11 +6225,12 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
             sys_hostfontsize(fontsize), sys_fontweight);*/
         sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
-                glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
+               glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
         /* have to remove fontweight for the time being... */
         sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font,
                 fontsize);
         sys_vgui(" -parent .scalar%lx", data);
+        sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv);
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
     }
@@ -6552,6 +6567,7 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
+
     /*// get the universal tag for all nested objects
     t_canvas *tag = x->x_canvas;
     while (tag->gl_owner)
@@ -6565,6 +6581,13 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     if (vis)
     {
         t_atom at;
+
+        /* hack to keep the font from scaling with the gop */
+        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+        t_float xinv = xscale == 0 ? 0 : 1 / yscale;
+        t_float yinv = yscale == 0 ? 0 : 1 / xscale;
+
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
@@ -6581,6 +6604,8 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             SETSYMBOL(&at, fielddesc_getsymbol(&x->x_value, template, data, 0));
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
         drawsymbol_sprintf(x, buf, &at);
+
+
         /*sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
@@ -6588,8 +6613,9 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
                 glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
         sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font,
-                fontsize);
+               fontsize);
         sys_vgui(" -parent .scalar%lx", data);
+        sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv);
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
     }
