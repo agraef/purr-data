@@ -1121,7 +1121,7 @@ void *objectinfo_new(t_floatarg f)
     t_objectinfo *x = (t_objectinfo *)pd_new(objectinfo_class);
     t_glist *glist = (t_glist *)canvas_getcurrent();
     x->x_canvas = (t_canvas*)glist_getcanvas(glist);
-    x->x_index = f;
+    x->x_depth = f;
     floatinlet_new(&x->x_obj, &x->x_index);
     floatinlet_new(&x->x_obj, &x->x_depth);
     outlet_new(&x->x_obj, &s_anything);
