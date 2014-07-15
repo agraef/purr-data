@@ -5184,7 +5184,7 @@ extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 
 void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg fmod)
-{ 
+{
     //fprintf(stderr,"motion %d %d %d %d\n",
     //    (int)xpos, (int)ypos, (int)fmod, canvas_last_glist_mod);
     //fprintf(stderr,"canvas_motion=%d\n",x->gl_editor->e_onmotion);

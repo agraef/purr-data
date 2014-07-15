@@ -833,7 +833,6 @@ int scalar_groupclick(struct _glist *groupcanvas,
         if (pd_class(&y->g_pd) == canvas_class &&
             ((t_glist *)y)->gl_svg)
         {
-//            fprintf(stderr, "fuck dolphins");
             if (hit = scalar_groupclick((t_glist *)y, data, template, sc, ap,
                 owner, xloc, yloc, xpix, ypix,
                 shift, alt, dbl, doit, basex, basey))

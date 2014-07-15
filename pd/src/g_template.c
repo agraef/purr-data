@@ -5121,14 +5121,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     fielddesc_cvttocoord(yfielddesc, yval);
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
+                    /* We're setting up a special group that will get set as
+                       the parent by array elements */
+                    sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
+                             "-parent {.dgroup%lx.%lx}\n",
+                        glist_getcanvas(glist), elemtemplatecanvas,
+                        (t_word *)(elem + elemsize * i),
+                        x->x_canvas, data);
                     if (pd_class(&y->g_pd) == canvas_class &&
                         ((t_glist *)y)->gl_svg)
                     {
-                        sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
-                                 "-parent {.dgroup%lx.%lx}\n",
-                            glist_getcanvas(glist), elemtemplatecanvas,
-                            (t_word *)(elem + elemsize * i),
-                            x->x_canvas, data);
                         plot_groupvis(sc, glist,
                             (t_word *)(elem + elemsize * i),
                         template, (t_glist *)y, 
