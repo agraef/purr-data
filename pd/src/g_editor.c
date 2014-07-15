@@ -4923,7 +4923,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
     }
     if (dx || dy)
     {
-        sys_vgui(".x%lx.c move selected %d %d\n", x, dx, dy);
+        sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
         if (resortin) canvas_resortinlets(x);
         if (resortout) canvas_resortoutlets(x);
         //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
