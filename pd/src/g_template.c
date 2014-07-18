@@ -2807,8 +2807,8 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
             yy = *ia;
             break;
         case 'M':
-            mx = *(ia+(x->x_nargs_per_cmd[i] - 2));
-            my = *(ia+(x->x_nargs_per_cmd[i] - 1));
+            mx = *(ia);
+            my = *(ia+1);
         default:
             xx = *(ia+(x->x_nargs_per_cmd[i] - 2));
             yy = *(ia+(x->x_nargs_per_cmd[i] - 1));
