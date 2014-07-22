@@ -456,14 +456,14 @@ void pdinfo_dir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_dsp(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_dsp(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     SETFLOAT(at, (t_float)canvas_dspstate);
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     t_symbol *api = getapiname(sys_audioapi);
@@ -471,12 +471,20 @@ void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
     info_out((t_text *)x, s, 1, at);
 }
 
+void pdinfo_classtable(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    int size = classtable_size();
+    t_atom at[size];
+    classtable_tovec(size, at);
+    info_out((t_text *)x, s, size, at);
+}
+
 void pdinfo_audioin(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
 {
 //        char i
 }
 
-void pdinfo_audio_api_list_raw(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_api_list_raw(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[7];
     int i;
@@ -485,7 +493,7 @@ void pdinfo_audio_api_list_raw(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
     info_out((t_text *)x, s, i, at);
 }
 
-void pdinfo_audio_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[8];
     int n = 0;
@@ -553,10 +561,10 @@ void pdinfo_audio_listdevs(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int devno;
-    if (argc) devno = (int)atom_getfloatarg(0, argc, arg);
+    if (argc) devno = (int)atom_getfloatarg(0, argc, argv);
     else devno = 0;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
@@ -579,7 +587,7 @@ void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
         info_out((t_text *)x, s, 0, 0);
 }
 
-void pdinfo_midi_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_midi_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     t_symbol *api, *def = gensym("DEFAULT");
@@ -591,7 +599,7 @@ void pdinfo_midi_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_midi_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_midi_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[8];
     int n = 0;
@@ -629,13 +637,13 @@ void pdinfo_midi_listdevs(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-void pdinfo_midi_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_midi_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int devno, nmidiindev, midiindev[MAXMIDIINDEV],
         nmidioutdev, midioutdev[MAXMIDIOUTDEV];
     int *dev, *chan, ndev;
     t_atom at[4];
-    if (argc) devno = (int)atom_getfloatarg(0, argc, arg);
+    if (argc) devno = (int)atom_getfloatarg(0, argc, argv);
     else devno = 0;
     sys_get_midi_params(&nmidiindev, midiindev, &nmidioutdev, midioutdev);
     if (s == gensym("midi-indev"))
@@ -652,10 +660,10 @@ void pdinfo_midi_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
         info_out((t_text *)x, s, 0, 0);
 }
 
-void pdinfo_audio_outdev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_outdev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int devno;
-    if (argc) devno = (int)atom_getfloatarg(0, argc, arg);
+    if (argc) devno = (int)atom_getfloatarg(0, argc, argv);
     else devno = 0;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
@@ -673,14 +681,14 @@ void pdinfo_audio_outdev(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
         info_out((t_text *)x, s, 0, 0);
 }
 
-void pdinfo_audio_inchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_inchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     SETFLOAT(at, (t_float)sys_get_inchannels());
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_audio_outchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_outchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     SETFLOAT(at, (t_float)sys_get_outchannels());
@@ -688,21 +696,21 @@ void pdinfo_audio_outchannels(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
 }
 
 
-void pdinfo_audio_samplerate(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_samplerate(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     SETFLOAT(at, (t_float)sys_getsr());
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_audio_blocksize(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_audio_blocksize(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     SETFLOAT(at, (t_float)sys_getblksize());
     info_out((t_text *)x, s, 1, at);
 }
 
-void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int major=0, minor=0, bugfix=0;
     sys_getversion(&major, &minor, &bugfix);
@@ -713,7 +721,7 @@ void pdinfo_version(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
     info_out((t_text *)x, s, 3, at);
 }
 
-void pdinfo_pi(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
+void pdinfo_pi(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
     const t_float Pi = 3.141592653589793;
@@ -762,6 +770,10 @@ void pdinfo_setup(void)
         gensym("audio-outdevlist"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_audio_blocksize,
         gensym("blocksize"), A_GIMME, 0);
+    /* this needs a better name-- the user doesn't have to know the
+       name used in the implementation */
+    class_addmethod(pdinfo_class, (t_method)pdinfo_classtable,
+        gensym("classtable"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_dir,
         gensym("dir"), A_GIMME, 0);
     class_addmethod(pdinfo_class, (t_method)pdinfo_dsp,
@@ -1121,7 +1133,7 @@ void *objectinfo_new(t_floatarg f)
     t_objectinfo *x = (t_objectinfo *)pd_new(objectinfo_class);
     t_glist *glist = (t_glist *)canvas_getcurrent();
     x->x_canvas = (t_canvas*)glist_getcanvas(glist);
-    x->x_index = f;
+    x->x_depth = f;
     floatinlet_new(&x->x_obj, &x->x_index);
     floatinlet_new(&x->x_obj, &x->x_depth);
     outlet_new(&x->x_obj, &s_anything);

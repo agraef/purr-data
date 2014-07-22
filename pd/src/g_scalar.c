@@ -374,18 +374,10 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
        
         scalar_getrect(&x->sc_gobj, glist, &x1, &y1, &x2, &y2);
         x1--; x2++; y1--; y2++;
-                /* we're not giving the rectangle the "select" tag
-                   because we have to manually displace the scalar
-                   in scalar_displace_withtag. The reason for that
-                   is the "displace" message may trigger a redraw
-                   of the bbox at the new position, and Pd-l2ork's
-                   general "move selected" subcommand will end up
-                   offsetting such a rect by dx dy.
-                */
         if (glist_istoplevel(glist))
             sys_vgui(".x%lx.c create prect %d %d %d %d "
                      "-strokewidth 1 -stroke $pd_colors(selection) "
-                     "-tags {select%lx}\n",
+                     "-tags {select%lx selected}\n",
                     glist_getcanvas(glist), x1, y1, x2, y2,
                     x);
     }
@@ -397,19 +389,18 @@ void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state)
 }
 
 /* This is a workaround.  Since scalars are contained within a tkpath
-   group, and since tkpath groups don't have coords, we have to fudge
-   things with regard to Pd-l2ork's normal *_displace_withtag functionality.
-   (Additionally, we can't just fall back to the old displace method
-   because it too assumes the canvas item has an xy coord.)
+   group, and since tkpath groups don't have coords, we can't just use
+   the same "selected" tag that is used to move all other Pd objects. That
+   would move scalars in their local coordinate system, which is wrong
+   for transformed objects. For example, if a rectangle is rotated 45 and
+   we try to do a [canvas move 10 0] command on it, it would get moved to
+   the northeast instead of to the right!
 
-   We draw the selection rect but don't add the scalar to the
-   "selected" tag.  This means when Pd-l2ork issues the canvas "move"
-   command, our scalar doesn't go anywhere.  Instead we get the callback
-   to scalar_displace_withtag and do another workaround to get the
-   new position and feed it to the scalar's matrix.
-
-   This creates a problem with gop canvases, and yet _another_ partial
-   workaround which I apologize for inside t_scalar def in m_pd.h.
+   Instead, we tag selected scalars with the "scalar_selected" tag. Then in
+   the GUI we use that tag to loop through and change each scalar's group
+   matrix, and add (dx,dy) to its current translation values. The scalar
+   group matrix .scalar%lx isn't accessible by the user, so it will only
+   ever contain these translation values.
 */
 void scalar_select(t_gobj *z, t_glist *owner, int state)
 {
@@ -435,57 +426,16 @@ void scalar_select(t_gobj *z, t_glist *owner, int state)
         x->sc_selected = owner;
         sys_vgui(".x%lx.c addtag selected withtag blankscalar%lx\n",
             glist_getcanvas(owner), x);
-        /* how do we navigate through a t_word list?
-        if (x->sc_vec)
-        {
-            t_word *v = x->sc_vec;
-            while(v)
-            {
-                sys_vgui(".x%lx.c "
-                         "addtag selected withtag .x%lx.x%lx.template%lx\n",
-                    glist_getcanvas(owner), glist_getcanvas(owner), owner, v);
-            }
-        }*/
-        /*if (templatecanvas) {
-            // get the universal tag for all nested objects
-            t_canvas *tag = owner;
-            while (tag->gl_owner)
-            {
-                tag = tag->gl_owner;
-            }
-            sys_vgui(".x%lx.c addtag selected withtag %lx\n",
-                glist_getcanvas(owner), (t_int)tag);
-        }*/
+        sys_vgui(".x%lx.c addtag scalar_selected withtag {.scalar%lx}\n",
+            glist_getcanvas(owner), x->sc_vec);
     }
     else
     {
         x->sc_selected = 0;
         sys_vgui(".x%lx.c dtag blankscalar%lx selected\n",
             glist_getcanvas(owner), x);
-        sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
-            glist_getcanvas(owner), glist_getcanvas(owner),
-            owner, x->sc_vec);
-        /* how do we navigate through a t_word list?
-        if (x->sc_vec)
-        {
-            t_word *v = x->sc_vec;
-            while (v)
-            {
-                sys_vgui(".x%lx.c dtag .x%lx.x%lx.template%lx selected\n",
-                    glist_getcanvas(owner), glist_getcanvas(owner),
-                    owner, x->sc_vec);
-            }
-        }*/
-        /*if (templatecanvas) {
-            // get the universal tag for all nested objects
-            t_canvas *tag = owner;
-            while (tag->gl_owner)
-            {
-                tag = tag->gl_owner;
-            }
-            sys_vgui(".x%lx.c dtag %lx selected\n",
-                glist_getcanvas(owner), (t_int)tag);
-        }*/
+        sys_vgui(".x%lx.c dtag .scalar%lx scalar_selected\n",
+            glist_getcanvas(owner), x->sc_vec);
     }
     //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
     //    glist_getcanvas(owner), owner, state);
@@ -537,12 +487,11 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     scalar_redraw(x, glist);
 }
 
-/* Very complicated at the moment. If a scalar is in a gop canvas, then
+/* Kind of complicated at the moment. If a scalar is in a gop canvas, then
    we don't need to update its x/y fields (if it even has them) when displacing
-   it.  Otherwise we do.  The global selected_owner variable is used to store
-   the "owner" canvas-- if it matches the glist parameter below then we know
-   the scalar is directly selected.  If not it's in a gop canvas.  (This doesn't
-   yet handle nested GOPs, unfortunately.)
+   it.  Otherwise we do.  The member sc_selected is used to store the canvas
+   where the selection exists-- if it matches the glist parameter below then we
+   know the scalar is directly selected.  If not it's in a gop canvas.
 */
 static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 {
@@ -589,48 +538,15 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     SETFLOAT(&at[2], (t_float)dy);
     template_notify(template, gensym("displace"), 2, at);
 
-    /* this is a hack to make sure the bbox gets drawn in
-       the right location.  If the scalar is selected
-       then it's possible that a "displace" message
-       from the [struct] will trigger a redraw of the
-       bbox. So we don't update the cached bbox until
-       after that redraw, so we can move the bbox below.
-    */
-    sys_vgui(".x%lx.c coords {select%lx} %d %d %d %d\n", glist, x,
-        x->sc_x1 - 1, x->sc_y1 - 1, x->sc_x2 + 1, x->sc_y2 + 1);
-
     t_float xscale = glist_xtopixels(x->sc_selected, 1) -
         glist_xtopixels(x->sc_selected, 0);
     t_float yscale = glist_ytopixels(x->sc_selected, 1) -
         glist_ytopixels(x->sc_selected, 0);
 
-    sys_vgui(".x%lx.c itemconfigure {.scalar%lx} "
-             "-matrix { {%g %g} {%g %g} {%d %d} }\n",
-        glist_getcanvas(glist), x->sc_vec, xscale, 0.0, 0.0, yscale,
-        (int)glist_xtopixels(x->sc_selected, basex) +
-            (x->sc_selected == glist ? 0 : dx),
-        (int)glist_ytopixels(x->sc_selected, basey) +
-            (x->sc_selected == glist ? 0 : dy));
-
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
      
-    /* This awful hack is here because plot_vis is used by both ds arrays
-       and garrays.  Unlike the other drawing commands, plot_vis still does
-       all the gop scaling and basex/basey calculations manually.  So
-       currently the trace does not use the scalar group as its "-parent".
-
-       Once all the calculations inside plot_vis, array_doclick, and
-       array_motion remove the glist_[xy]topixels and basex/y stuff, plot_vis
-       can use the scalar "-parent" and this awful hack can be removed.
-
-       Garrays follow their Pd-l2ork's standard select and displace_withtag
-       behavior, so we don't use the hack for them.  (Non-garray scalars
-       should follow that behavior too, but cannot atm for the reason given
-       in the comment above scalar_select...)
-
-       Apparently this is no longer needed, so it is commented out.  Once
-       we test it we should be able to delete it for good... */
-
+    /* Apparently this is no longer needed, so it is commented out.  But if
+       we merge garrays back into this code we may need it... */
     /*
     if (template->t_sym != gensym("_float_array"))
     {
@@ -735,8 +651,10 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             int x1 = glist_xtopixels(owner, basex);
             int y1 = glist_ytopixels(owner, basey);
             sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-tags {blankscalar%lx}\n",
-                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x);
+                     "-tags {blankscalar%lx %s}\n",
+                glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x,
+                (glist_isselected(owner, &x->sc_gobj) ?
+                    "scalar_selected" : ""));
         }
         else sys_vgui(".x%lx.c delete blankscalar%lx\n",
             glist_getcanvas(owner), x);
@@ -751,9 +669,10 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
         t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
         /* we could use the tag .template%lx for easy access from
            the draw_class, but that's not necessary at this point */
-        sys_vgui(".x%lx.c create group -tags {.scalar%lx} "
+        sys_vgui(".x%lx.c create group -tags {.scalar%lx %s} "
             "-matrix { {%g %g} {%g %g} {%d %d} }\n",
             glist_getcanvas(owner), x->sc_vec,
+            (glist_isselected(owner, &x->sc_gobj) ? "scalar_selected" : ""),
             xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex),
             (int)glist_ytopixels(owner, basey)
             );
@@ -833,7 +752,6 @@ int scalar_groupclick(struct _glist *groupcanvas,
         if (pd_class(&y->g_pd) == canvas_class &&
             ((t_glist *)y)->gl_svg)
         {
-//            fprintf(stderr, "fuck dolphins");
             if (hit = scalar_groupclick((t_glist *)y, data, template, sc, ap,
                 owner, xloc, yloc, xpix, ypix,
                 shift, alt, dbl, doit, basex, basey))
@@ -889,25 +807,11 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
                 owner, xloc, yloc, xpix, ypix,
                 shift, alt, dbl, doit, basex, basey);
     return hit;
-
-//    for (y = templatecanvas->gl_list; y; y = y->g_next)
-//    {
-        //fprintf(stderr,"looking for template... %f %f %f %f %lx %lx\n",
-        //    basex, basey, xloc, yloc, (t_int)owner, (t_int)data);
-//        t_parentwidgetbehavior *wb = pd_getparentwidget(&y->g_pd);
-//        if (!wb) continue;
-//        if (hit = (*wb->w_parentclickfn)(y, owner,
-//            data, template, sc, ap, basex + xloc, basey + yloc,
-//            xpix, ypix, shift, alt, dbl, doit))
-//        {
-                //fprintf(stderr,"    ...got it %f %f\n",
-                //    basex + xloc, basey + yloc);
-//                return (hit);
-//        }
-//    }
-//    return (0);
 }
 
+/* Unfortunately, nested gops don't yet handle scalar clicks correctly. The
+   nested scalar seems not to receive the click.  However, the enter/leave
+   messages happen just fine since most of their logic is in tcl/tk. */
 static int scalar_click(t_gobj *z, struct _glist *owner,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {

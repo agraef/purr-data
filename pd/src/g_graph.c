@@ -803,7 +803,7 @@ int text_ypix(t_text *x, t_glist *glist)
     This is too conservative -- for instance, when you draw an "open"
     rectangle on the parent, you shouldn't have to redraw the window!  */
 void glist_redraw(t_glist *x)
-{  
+{
     if (glist_isvisible(x))
     {
             /* LATER fix the graph_vis() code to handle both cases */

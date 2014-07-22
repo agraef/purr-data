@@ -184,6 +184,27 @@ void classtable_register(t_class *c)
     ct = t;
 }
 
+int classtable_size(void) {
+    t_classtable *t;
+    int i;
+    for(t = ct, i = 0; t; t = t->ct_next)
+        i++;
+    return i;
+}
+
+void classtable_tovec(int size, t_atom *vec)
+{
+    t_classtable *t;
+    int i;
+    for(t = ct, i = 0; t && i < size; t = t->ct_next, i++)
+        if (!t->ct_class->c_name)
+        {
+            SETSYMBOL(vec+i, gensym("anonymous-class"));
+        }
+        else
+            SETSYMBOL(vec+i, t->ct_class->c_name);
+}
+
 // todo-- make accessors so m_imp.h isn't needed by x_interface.c
 
 t_class *classtable_findbyname(t_symbol *s)

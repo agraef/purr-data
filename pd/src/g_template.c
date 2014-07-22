@@ -2414,10 +2414,9 @@ static void svg_curvedim(t_float p1x, t_float p1y,
     t_float mtx2[3][3];
     int i;
     t_float a = (c2x - 2 * c1x + p1x) - (p2x - 2 * c2x + c1x);
-    t_float        b = 2 * (c1x - p1x) - 2 * (c2x - c1x),
+    t_float b = 2 * (c1x - p1x) - 2 * (c2x - c1x),
             c = p1x - c1x;
-    t_float        syntax_sanity_check = 42,
-            t1 = (a ? ((-b + sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0),
+    t_float t1 = (a ? ((-b + sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0),
             t2 = (a ? ((-b - sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
     t_float xy[12];
     xy[0] = p1x; xy[1] = p1y; xy[2] = p2x; xy[3] = p2y;
@@ -2808,8 +2807,8 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
             yy = *ia;
             break;
         case 'M':
-            mx = *(ia+(x->x_nargs_per_cmd[i] - 2));
-            my = *(ia+(x->x_nargs_per_cmd[i] - 1));
+            mx = *(ia);
+            my = *(ia+1);
         default:
             xx = *(ia+(x->x_nargs_per_cmd[i] - 2));
             yy = *(ia+(x->x_nargs_per_cmd[i] - 1));
@@ -2867,9 +2866,9 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
         case 'S':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j += 4)
             {
-                    /* hack */
-                    if ((j + 3) >= x->x_nargs_per_cmd[i])
-                        break;
+                /* hack */
+                if ((j + 3) >= x->x_nargs_per_cmd[i])
+                    break;
                 if (pcmd == 'C' || pcmd == 'S')
                 {
                     /* this is wrong... we need a
@@ -2884,12 +2883,12 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
                     ny = yprev;
                 }
                 svg_curvedim(xprev, yprev,
-                    nx, ny, *ia, *(ia+1), *(ia+2), *(ia+3),
+                    nx, ny, *ia+j, *(ia+j+1), *(ia+j+2), *(ia+j+3),
                     &x1, &y1, &x2, &y2, mtx1);
-                xprev = *(ia+2);
-                yprev = *(ia+3);
-                bx = *ia;
-                by = *(ia + 1);
+                xprev = *(ia+j+2);
+                yprev = *(ia+j+3);
+                bx = *ia+j;
+                by = *(ia + j + 1);
 
                 if (x1 == 0x7fffffff && y1 == 0x7fffffff &&
                 x2 == -0x7fffffff && y2 == -0x7fffffff)
@@ -2917,13 +2916,13 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
                     qxprev = xprev;
                     qyprev = yprev;
                 }
-                t_float cx1 = qxprev, cy1 = qyprev, cx2 = *ia, cy2 = *(ia+1),
-                    cx, cy;
+                t_float cx1 = qxprev, cy1 = qyprev, cx2 = *ia+j,
+                    cy2 = *(ia+j+1), cx, cy;
                 svg_q2c(xprev, yprev, &cx1, &cy1, &cx2, &cy2, &cx, &cy);
                 svg_curvedim(xprev, yprev, cx1, cy1, cx2, cy2, cx, cy,
                     &x1, &y1, &x2, &y2, mtx1);
-                xprev = *ia;
-                yprev = *(ia+1);
+                xprev = *ia+j;
+                yprev = *(ia+j+1);
 
                 if (x1 == 0x7fffffff && y1 == 0x7fffffff &&
                 x2 == -0x7fffffff && y2 == -0x7fffffff)
@@ -2941,13 +2940,13 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
                     /* hack */
                     if ((j + 3) >= x->x_nargs_per_cmd[i])
                         break;
-                t_float cx1 = *ia, cy1 = *(ia+1),
-                    cx2 = *(ia+2), cy2 = *(ia+3), cx, cy;
+                t_float cx1 = *ia+j, cy1 = *(ia+j+1),
+                    cx2 = *(ia+j+2), cy2 = *(ia+j+3), cx, cy;
                 svg_q2c(xprev, yprev, &cx1, &cy1, &cx2, &cy2, &cx, &cy);
                 svg_curvedim(xprev, yprev, cx1, cy1, cx2, cy2, cx, cy,
                     &x1, &y1, &x2, &y2, mtx1);
-                xprev = *(ia+2);
-                yprev = *(ia+3);
+                xprev = *(ia+j+2);
+                yprev = *(ia+j+3);
 
                 if (x1 == 0x7fffffff && y1 == 0x7fffffff &&
                     x2 == -0x7fffffff && y2 == -0x7fffffff)
@@ -2964,12 +2963,12 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
                 /* hack */
                 if ((j + 5) >= x->x_nargs_per_cmd[i])
                     break;
-                svg_curvedim(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
-                    *(ia+4), *(ia+5), &x1, &y1, &x2, &y2, mtx1);
-                xprev = *(ia+4);
-                yprev = *(ia+5);
-                bx = *(ia+2);
-                by = *(ia+3);
+                svg_curvedim(xprev, yprev, *(ia+j), *(ia+j+1), *(ia+j+2),
+                    *(ia+j+3), *(ia+j+4), *(ia+j+5), &x1, &y1, &x2, &y2, mtx1);
+                xprev = *(ia+j+4);
+                yprev = *(ia+j+5);
+                bx = *(ia+j+2);
+                by = *(ia+j+3);
 
                 if (x1 == 0x7fffffff && y1 == 0x7fffffff &&
                     x2 == -0x7fffffff && y2 == -0x7fffffff)
@@ -2983,25 +2982,25 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
         case 'V':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
             {
-                mset(mtx2, xprev, *ia, 0, 0, 0, 0);
+                mset(mtx2, xprev, *ia+j, 0, 0, 0, 0);
                 mtx2[2][0] = 1;
                 mmult(mtx1, mtx2, mtx2);
                 tmpy = mtx2[1][0];
                 finaly1 = tmpy < finaly1 ? tmpy : finaly1;
                 finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-                yprev = *ia;
+                yprev = *ia+j;
             }
             break;
         case 'H':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
             {
-                mset(mtx2, *ia, yprev, 0, 0, 0, 0);
+                mset(mtx2, *ia+j, yprev, 0, 0, 0, 0);
                 mtx2[2][0] = 1;
                 mmult(mtx1, mtx2, mtx2);
                 tmpx = mtx2[0][0];  
                 finalx1 = tmpx < finalx1 ? tmpx : finalx1;
                 finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-                xprev = *ia;
+                xprev = *ia+j;
             }
             break;
         default:
@@ -5122,14 +5121,16 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     fielddesc_cvttocoord(yfielddesc, yval);
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
+                    /* We're setting up a special group that will get set as
+                       the parent by array elements */
+                    sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
+                             "-parent {.dgroup%lx.%lx}\n",
+                        glist_getcanvas(glist), elemtemplatecanvas,
+                        (t_word *)(elem + elemsize * i),
+                        x->x_canvas, data);
                     if (pd_class(&y->g_pd) == canvas_class &&
                         ((t_glist *)y)->gl_svg)
                     {
-                        sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
-                                 "-parent {.dgroup%lx.%lx}\n",
-                            glist_getcanvas(glist), elemtemplatecanvas,
-                            (t_word *)(elem + elemsize * i),
-                            x->x_canvas, data);
                         plot_groupvis(sc, glist,
                             (t_word *)(elem + elemsize * i),
                         template, (t_glist *)y, 

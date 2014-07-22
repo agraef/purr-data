@@ -466,6 +466,8 @@ EXTERN void class_set_extern_dir(t_symbol *s);
 
          /* classtable functions */
 EXTERN t_class *classtable_findbyname(t_symbol *s);
+EXTERN int classtable_size(void);
+EXTERN void classtable_tovec(int size, t_atom *vec);
 
          /* prototype for functions to save Pd's to a binbuf */
 typedef void (*t_savefn)(t_gobj *x, t_binbuf *b);

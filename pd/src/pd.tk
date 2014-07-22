@@ -9057,6 +9057,17 @@ proc pdtk_canvas_update_sticky_tip {w} {
 		}
 	#}
 }
+    # move normal selected items and add (dx, dy) to selected scalars' matrices
+proc pdtk_canvas_displace_withtag {w dx dy} {
+    $w move selected $dx $dy
+    foreach item [$w find withtag scalar_selected] {
+        set matrix [lindex [$w itemconfigure $item -matrix] 4]
+        set newx [expr {[lindex $matrix 2 0] + $dx}]
+        set newy [expr {[lindex $matrix 2 1] + $dy}]
+        set matrix [lreplace $matrix 2 2 [list $newx $newy]]
+        $w itemconfigure $item -matrix $matrix
+    }
+}
 
 # move activewidth to toggle on editmode?
 proc pdtk_canvas_leaveitem {w} {
