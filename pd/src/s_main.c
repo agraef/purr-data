@@ -168,24 +168,15 @@ static void openit(const char *dirname, const char *filename)
         close (fd);
         glob_evalfile(0, gensym(nameptr), gensym(dirbuf));
         sys_vgui("pdtk_set_current_dir %s\n", filename);
+        char actualpath[PATH_MAX];
+        char *path_ptr = NULL;
+        path_ptr = realpath(filename, actualpath);
         //sys_vgui("::pd_menus::update_recentfiles_menu .mbar.file 0\n");
-        if (strstr(filename, dirname) != NULL)
+        //fprintf(stderr, "%s %s %s %s %s\n", dirname, filename, 
+        //    strstr(filename, dirname), actualpath, path_ptr);
+        if (path_ptr != NULL)
         {
-            /* when opening files from a command line (at startup), filename
-               contains full path so, if dirname is already included in
-               filename we only pass filename variable otherwise combine the
-               two and send them together */
-#ifndef MSW
-            sys_vgui("::pd_guiprefs::update_recentfiles %s/%s 1\n",
-                dirname, filename);
-#else
-            sys_vgui("::pd_guiprefs::update_recentfiles %s\%s 1\n",
-                dirname, filename);
-#endif
-        }
-        else
-        {
-            sys_vgui("::pd_guiprefs::update_recentfiles %s 1\n", filename);
+            sys_vgui("::pd_guiprefs::update_recentfiles %s 1\n", actualpath);
         }
     }
     else
