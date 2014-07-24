@@ -41,7 +41,7 @@ LDFLAGS = @LDFLAGS@
 LIB =  @PDLIB@
 
 WARN_CFLAGS = -Wall -W -Wstrict-prototypes \
-    -Wno-unused -Wno-parentheses -Wno-switch
+    -Wno-unused-parameter -Wno-parentheses -Wno-switch
 ARCH_CFLAGS = -DPD 
 
 CFLAGS = @CFLAGS@ $(ARCH_CFLAGS) $(WARN_CFLAGS) $(CPPFLAGS) $(MORECFLAGS)
