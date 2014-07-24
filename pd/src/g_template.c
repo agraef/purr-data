@@ -229,8 +229,8 @@ int template_match(t_template *x1, t_template *x2)
             x1->t_vec[i].ds_type == DT_LIST)
                 return (0);
     }
-    if (x2->t_n > x1->t_n)
-        post("add elements...");
+    //if (x2->t_n > x1->t_n)
+    //    post("add elements...");
     for (i = 0; i < x2->t_n; i++)
         if (!dataslot_matches(&x1->t_vec[i], &x2->t_vec[i], 1))
             return (0);
@@ -456,8 +456,8 @@ void template_conform(t_template *tfrom, t_template *tto)
         t_glist *gl;
         post("conforming template '%s' to new structure",
             tfrom->t_sym->s_name);
-        for (i = 0; i < nto; i++)
-            post("... %d", conformaction[i]);
+        //for (i = 0; i < nto; i++)
+        //    post("... %d", conformaction[i]);
         for (gl = canvas_list; gl; gl = gl->gl_next)
             template_conformglist(tfrom, tto, gl, conformaction);
     }

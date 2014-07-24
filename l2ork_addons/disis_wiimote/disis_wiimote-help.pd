@@ -195,15 +195,15 @@ case. The total acceleration is given by:;
 -2 -8 0 10 -225271 -1 -1 0 1;
 #N canvas 526 148 481 416 IR-data 0;
 #X scalar IR-blobs 616 680 blob1 \;;
-#X scalar IR-blobs 211 368 blob2 \;;
+#X scalar IR-blobs 283.383 344 blob2 \;;
 #X scalar IR-blobs 943 759 blob3 \;;
-#X scalar IR-blobs 419 760 blob4 \;;
+#X scalar IR-blobs 306.168 723.077 blob4 \;;
 #X coords 0 0 1024 768 256 196 1;
 #X restore 590 183 pd IR-data;
 #N canvas 136 244 342 204 IR-blobs 0;
 #X obj 39 34 struct IR-blobs float x float y symbol s;
 #X obj 39 71 filledcurve 9 30 0 0 -30 -30 0 0 30 30 0;
-#X obj 63 109 drawsymbol s -35 -75 0 24 blob;
+#X obj 63 109 drawsymbol s -13 -30 0 24 blob 10;
 #X restore 776 384 pd IR-blobs;
 #X text 648 166 IR Blobs (1024x768):;
 #X floatatom 742 128 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch,
