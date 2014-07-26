@@ -2699,6 +2699,8 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
         case 'A':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j += 7)
             {
+                if (x->x_nargs_per_cmd[i] < 7)
+                    break;
                 *ia = fielddesc_getcoord(fd, template, data, 1);
                 *(ia+1) = fielddesc_getcoord(fd+1, template, data, 1);
                 *(ia+2) = fielddesc_getfloat(fd+2, template, data, 1);
@@ -2767,8 +2769,10 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
             }
             break;
         case 'M':
-            mx = fielddesc_getcoord(fd, template, data, 1) + (rel? xx : 0);
-            my = fielddesc_getcoord(fd+1, template, data, 1) + (rel? yy : 0);
+            if (x->x_nargs_per_cmd[i] > 0)
+                mx = fielddesc_getcoord(fd, template, data, 1) + (rel? xx : 0);
+            if (x->x_nargs_per_cmd[i] > 1)
+                my = fielddesc_getcoord(fd+1, template, data, 1) + (rel? yy : 0);
             for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
             {
                 if (j%2 == 0)
@@ -2801,17 +2805,25 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
             yy = my;
             break;
         case 'H':
-            xx = *ia;
+            if (x->x_nargs_per_cmd[i])
+                xx = *ia;
             break;
         case 'V':
-            yy = *ia;
+            if (x->x_nargs_per_cmd[i])
+                yy = *ia;
             break;
         case 'M':
-            mx = *(ia);
-            my = *(ia+1);
+            if (x->x_nargs_per_cmd[i] > 1)
+            {
+                mx = *(ia);
+                my = *(ia+1);
+            }
         default:
-            xx = *(ia+(x->x_nargs_per_cmd[i] - 2));
-            yy = *(ia+(x->x_nargs_per_cmd[i] - 1));
+            if (x->x_nargs_per_cmd[i] > 1)
+            {
+                xx = *(ia+(x->x_nargs_per_cmd[i] - 2));
+                yy = *(ia+(x->x_nargs_per_cmd[i] - 1));
+            }
         }
     }
     /* need to normalize everything to curves next ... */
@@ -2832,37 +2844,42 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
         switch (cmd)
         {
         case 'A':
-            svg_arc2bbox(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
-                *(ia+4), *(ia+5), *(ia+6), &x1, &y1, &x2, &y2);
-            xprev = *(ia+5);
-            yprev = *(ia+6);
-            mset(mtx2, x1, y1, x2, y2, 0, 0);
-            mtx2[2][0] = 1; mtx2[2][1] = 1;
-            mmult(mtx1, mtx2, mtx2);
-            tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            tmpx = mtx2[0][1]; tmpy = mtx2[1][1];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            mset(mtx2, x1, y2, x2, y1, 0, 0);
-            mtx2[2][0] = 1; mtx2[2][1] = 1;
-            mmult(mtx1, mtx2, mtx2);
-            tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            tmpx = mtx2[0][1]; tmpy = mtx2[1][1];
-            finalx1 = tmpx < finalx1 ? tmpx : finalx1;
-            finalx2 = tmpx > finalx2 ? tmpx : finalx2;
-            finaly1 = tmpy < finaly1 ? tmpy : finaly1;
-            finaly2 = tmpy > finaly2 ? tmpy : finaly2;
-            break;
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j += 7)
+            {
+                if (x->x_nargs_per_cmd[i] < 7)
+                    break;
+                svg_arc2bbox(xprev, yprev, *ia, *(ia+1), *(ia+2), *(ia+3),
+                    *(ia+4), *(ia+5), *(ia+6), &x1, &y1, &x2, &y2);
+                xprev = *(ia+5);
+                yprev = *(ia+6);
+                mset(mtx2, x1, y1, x2, y2, 0, 0);
+                mtx2[2][0] = 1; mtx2[2][1] = 1;
+                mmult(mtx1, mtx2, mtx2);
+                tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
+                finalx1 = tmpx < finalx1 ? tmpx : finalx1;
+                finalx2 = tmpx > finalx2 ? tmpx : finalx2;
+                finaly1 = tmpy < finaly1 ? tmpy : finaly1;
+                finaly2 = tmpy > finaly2 ? tmpy : finaly2;
+                tmpx = mtx2[0][1]; tmpy = mtx2[1][1];
+                finalx1 = tmpx < finalx1 ? tmpx : finalx1;
+                finalx2 = tmpx > finalx2 ? tmpx : finalx2;
+                finaly1 = tmpy < finaly1 ? tmpy : finaly1;
+                finaly2 = tmpy > finaly2 ? tmpy : finaly2;
+                mset(mtx2, x1, y2, x2, y1, 0, 0);
+                mtx2[2][0] = 1; mtx2[2][1] = 1;
+                mmult(mtx1, mtx2, mtx2);
+                tmpx = mtx2[0][0]; tmpy = mtx2[1][0];
+                finalx1 = tmpx < finalx1 ? tmpx : finalx1;
+                finalx2 = tmpx > finalx2 ? tmpx : finalx2;
+                finaly1 = tmpy < finaly1 ? tmpy : finaly1;
+                finaly2 = tmpy > finaly2 ? tmpy : finaly2;
+                tmpx = mtx2[0][1]; tmpy = mtx2[1][1];
+                finalx1 = tmpx < finalx1 ? tmpx : finalx1;
+                finalx2 = tmpx > finalx2 ? tmpx : finalx2;
+                finaly1 = tmpy < finaly1 ? tmpy : finaly1;
+                finaly2 = tmpy > finaly2 ? tmpy : finaly2;
+            }
+                break;
         case 'S':
             for (j = 0; j < x->x_nargs_per_cmd[i]; j += 4)
             {
