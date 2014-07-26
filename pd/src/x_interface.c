@@ -474,9 +474,20 @@ void pdinfo_audio_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 void pdinfo_classtable(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int size = classtable_size();
-    t_atom at[size];
-    classtable_tovec(size, at);
-    info_out((t_text *)x, s, size, at);
+    if (info_to_console)
+    {
+        t_atom at[2];
+        SETFLOAT(at, size);
+        SETSYMBOL(at+1, gensym("classes loaded (\"classtable\" outputs "
+                               "the full list)"));
+        info_out((t_text *)x, s, 2, at);
+    }
+    else
+    {
+        t_atom at[size];
+        classtable_tovec(size, at);
+        info_out((t_text *)x, s, size, at);
+    }
 }
 
 void pdinfo_audioin(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
