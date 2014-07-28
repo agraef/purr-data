@@ -6178,6 +6178,10 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
         *xp2 = *yp2 = -0x7fffffff;
         return;
     }
+    /* hack to keep the font scaling with the gop */
+    t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+    t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+
     xloc = glist_xtopixels(glist,
         basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
     yloc = glist_ytopixels(glist,
@@ -6192,8 +6196,8 @@ static void drawnumber_getrect(t_gobj *z, t_glist *glist,
     drawnumber_sprintf(x, buf, &at);
     *xp1 = xloc;
     *yp1 = yloc;
-    *xp2 = xloc + fontwidth * strlen(buf);
-    *yp2 = yloc + fontheight;
+    *xp2 = xloc + (fontwidth * strlen(buf) * xscale);
+    *yp2 = yloc + (fontheight * yscale);
 }
 
 static void drawnumber_displace(t_gobj *z, t_glist *glist,
@@ -6239,12 +6243,6 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         t_atom at;
 
-        /* hack to keep the font from scaling with the gop */
-        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-        t_float xinv = xscale == 0 ? 0 : 1 / yscale;
-        t_float yinv = yscale == 0 ? 0 : 1 / xscale;
-
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
@@ -6265,13 +6263,15 @@ static void drawnumber_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 glist_getcanvas(glist), xloc, yloc, colorstring, buf);
         sys_vgui(" -font {{%s} -%d %s}", sys_font,
             sys_hostfontsize(fontsize), sys_fontweight);*/
-        sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
-               glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
+        sys_vgui(".x%lx.c create ptext %d "
+                 "[expr {[font metrics {{%s} %d} -ascent] + %d}] "
+                 "-textanchor start -fill %s -text {%s}\\\n",
+               glist_getcanvas(glist), xloc, sys_font,
+               sys_hostfontsize(fontsize), yloc, colorstring, buf);
         /* have to remove fontweight for the time being... */
-        sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font,
-                fontsize);
+        sys_vgui(" -fontfamily {%s} -fontsize %d", sys_font, fontsize);
         sys_vgui(" -parent .scalar%lx", data);
-        sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv);
+        /* sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv); */
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
     }
@@ -6562,6 +6562,10 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
         *xp2 = *yp2 = -0x7fffffff;
         return;
     }
+    /* hack to keep the font scaling with the gop */
+    t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+    t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+
     xloc = glist_xtopixels(glist,
         basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
     yloc = glist_ytopixels(glist,
@@ -6576,8 +6580,8 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     drawsymbol_sprintf(x, buf, &at);
     *xp1 = xloc;
     *yp1 = yloc;
-    *xp2 = xloc + fontwidth * strlen(buf);
-    *yp2 = yloc + fontheight;
+    *xp2 = (xloc + (fontwidth * strlen(buf) * xscale));
+    *yp2 = (yloc + (fontheight * yscale));
 }
 
 static void drawsymbol_displace(t_gobj *z, t_glist *glist,
@@ -6608,7 +6612,6 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
-
     /*// get the universal tag for all nested objects
     t_canvas *tag = x->x_canvas;
     while (tag->gl_owner)
@@ -6623,18 +6626,12 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     {
         t_atom at;
 
-        /* hack to keep the font from scaling with the gop */
-        t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-        t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
-        t_float xinv = xscale == 0 ? 0 : 1 / yscale;
-        t_float yinv = yscale == 0 ? 0 : 1 / xscale;
-
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
         if (!fontsize) fontsize = glist_getfont(glist);
         /*int xloc = glist_xtopixels(glist,
             basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
         int yloc = glist_ytopixels(glist,
-            basey + fielddesc_getcoord(&x->x_yloc, template, data, 0));*/
+            basey + fielddesc_getcoord(&x->x_yloc, template, data, 0)); */
         int xloc = fielddesc_getcoord(&x->x_xloc, template, data, 0);
         int yloc = fielddesc_getcoord(&x->x_yloc, template, data, 0);
 
@@ -6646,17 +6643,14 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         else SETFLOAT(&at, fielddesc_getfloat(&x->x_value, template, data, 0));
         drawsymbol_sprintf(x, buf, &at);
 
-
-        /*sys_vgui(".x%lx.c create text %d %d -anchor nw -fill %s -text {%s}",
-                glist_getcanvas(glist), xloc, yloc, colorstring, buf);
-        sys_vgui(" -font {{%s} -%d %s}", sys_font,
-            sys_hostfontsize(fontsize), sys_fontweight);*/
-        sys_vgui(".x%lx.c create ptext %d [expr {[font metrics {{%s} %d} -ascent] + %d}] -textanchor start -fill %s -text {%s}\\\n",
-                glist_getcanvas(glist), xloc, sys_font, sys_hostfontsize(fontsize), yloc, colorstring, buf);
-        sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font,
-               fontsize);
+        sys_vgui(".x%lx.c create ptext %d "
+                 "[expr {[font metrics {{%s} %d} -ascent] + %d}] "
+                 "-textanchor start -fill %s -text {%s}\\\n",
+                glist_getcanvas(glist), xloc, sys_font,
+                sys_hostfontsize(fontsize), yloc, colorstring, buf);
+        sys_vgui(" -fontfamily {%s} -fontsize %d ", sys_font, fontsize);
         sys_vgui(" -parent .scalar%lx", data);
-        sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv);
+        /*  sys_vgui(" -matrix {{%g 0.0} {0.0 %g} {0.0 0.0}}", xinv, yinv); */
         sys_vgui(" -tags {.x%lx.x%lx.template%lx scalar%lx}\n", 
             glist_getcanvas(glist), glist, data, sc);
     }
