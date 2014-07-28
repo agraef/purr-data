@@ -58,6 +58,7 @@ namespace eval ::dialog_search:: {
 
 ################## help browser and support functions #########################
 proc ::dialog_search::open_helpbrowser {mytoplevel} {
+    reset_ctrl_on_popup_window
     if {[winfo exists $mytoplevel]} {
         wm deiconify $mytoplevel
         raise $mytoplevel

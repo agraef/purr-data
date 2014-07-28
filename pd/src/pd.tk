@@ -973,6 +973,14 @@ proc pdtk_posterror {objectid loglevel errormsg} {
 	.printout.frame.text configure -state disabled
 }
 
+proc pdtk_k12panel_standardkeybindings {id} {
+    global pd_nt ctrl_key
+    set names [split $id .]
+    set name [concat .[lindex $names 1].c]
+    bind $id <$ctrl_key-Key> "pdtk_canvas_ctrlkey $name %K 0"
+	bind $id <$ctrl_key-Shift-Key> "pdtk_canvas_ctrlkey $name %K 1"
+}
+
 proc pdtk_standardkeybindings {id} {
     global pd_nt ctrl_key
     bind $id <$ctrl_key-Key> {pdtk_canvas_ctrlkey %W %K 0}
@@ -1219,6 +1227,16 @@ proc menu_new {} {
     set untitled_number [expr $untitled_number + 1]
 }
 
+############## the helper command for buggy popups #################
+# this is an ugly workaround that should go away
+
+proc reset_ctrl_on_popup_window {} {
+	global menu_windowlist
+	set first_patch_window_name [lindex $menu_windowlist 0 1]
+	pdtk_canvas_sendkey $first_patch_window_name.c 0 Control_L null 0 1 -1
+	pdtk_canvas_sendkey $first_patch_window_name.c 0 Control_R null 0 1 -1
+}
+
 ################## the "Open" menu command #########################
 
 proc menu_open {} {
@@ -1227,6 +1245,7 @@ proc menu_open {} {
     set files [tk_getOpenFile -defaultextension .pd \
 					  -multiple true \
                       -filetypes $filetypes -initialdir $pd_opendir]
+    reset_ctrl_on_popup_window
     if {$files != ""} {
 		foreach filename $files {
 			open_file $filename
@@ -1295,6 +1314,7 @@ proc open_file {filename} {
 ################## the "Message" menu command #########################
 proc menu_send {} {
     global pd_nt ctrl_key
+    reset_ctrl_on_popup_window
     if { [winfo exists .sendpanel.entry] } {
         raise .sendpanel
     } else {
@@ -2029,10 +2049,12 @@ proc menu_selectall {name} {
 }
 
 proc menu_texteditor {name} {
+	reset_ctrl_on_popup_window
     pd [concat $name texteditor \;]
 }
 
 proc menu_font {name} {
+	reset_ctrl_on_popup_window
     pd [concat $name menufont \;]
 }
 
@@ -2323,6 +2345,8 @@ proc menu_findobject {canvas} {
 	global pd_nt
 	global pointer_x_global pointer_y_global
 
+	reset_ctrl_on_popup_window
+
     if { [winfo exists .find.frame.entry] } {
         raise .find
 		wm geometry .find "+$pointer_x_global+$pointer_y_global"
@@ -2467,6 +2491,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 	#retaining window-specific preferences
 	global window_prefs
 
+	reset_ctrl_on_popup_window
+
     # local vars for window-specific behavior
 	# visibility of menu and scrollbars, plus canvas background
 	if {![info exists ::scroll($name)]} {
@@ -2575,7 +2601,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		}
 		pack $name.k12frame.edit.b -side left -expand 1 -padx 1 -pady 0
 		setTooltip $name.k12frame.edit.b "Toggle between building and playing an instrument"
-		pdtk_standardkeybindings $name.k12frame.edit.b
+		pdtk_k12panel_standardkeybindings $name.k12frame.edit.b
 		bind $name.k12frame.edit.b <Key> [list pdtk_canvas_sendkey $name.c 1 %K %A 0 1 %t]
     	bind $name.k12frame.edit.b <KeyRelease> [list pdtk_canvas_sendkey $name.c 0 %K %A 0 1 %t]
 
@@ -2586,8 +2612,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pack $name.k12frame.datasound.data $name.k12frame.datasound.sound -side left -pady 1 -padx 1 -expand 0
 		setTooltip $name.k12frame.datasound.data "Show DATA objects"
 		setTooltip $name.k12frame.datasound.sound "Show SOUND objects"
-		pdtk_standardkeybindings $name.k12frame.datasound.data
-		pdtk_standardkeybindings $name.k12frame.datasound.sound
+		pdtk_k12panel_standardkeybindings $name.k12frame.datasound.data
+		pdtk_k12panel_standardkeybindings $name.k12frame.datasound.sound
 
 		# ---------------------------------- MESSAGES LABEL -----------------------------------------
 
@@ -2613,11 +2639,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.wii.b_wii_hit "Wiimote Hit: Use this to detect when the wiimote has been shaken like a mallet"
 		setTooltip $name.k12frame.wii.b_wii_accelerometer "Wiimote Accelerometer: Use this to monitor Wiimotes acceleration across X, Y, and Z axes"
 		setTooltip $name.k12frame.wii.b_wii_speed_xry "Wiimote Speed X, Roll, Y: Use this to detect how quickly is Wiimote moving across individual axes x, roll, and y (requires motion plus)"
-		pdtk_standardkeybindings $name.k12frame.wii.b_wii_connect
-		pdtk_standardkeybindings $name.k12frame.wii.b_wii_buttons
-		pdtk_standardkeybindings $name.k12frame.wii.b_wii_hit
-		pdtk_standardkeybindings $name.k12frame.wii.b_wii_accelerometer
-		pdtk_standardkeybindings $name.k12frame.wii.b_wii_speed_xry
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_connect
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_buttons
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_hit
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_accelerometer
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii.b_wii_speed_xry
 
 		# ---------------------------------- WII2 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.wii2 -relief flat]
@@ -2637,11 +2663,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.wii2.b_wii_nunchuk_hit "Wiimote Nunchuk Hit: Use this to detect when the wiimote has been shaken like a mallet (requires nunchuk extension)"
 		setTooltip $name.k12frame.wii2.b_wii_nunchuk_accelerometer "Wiimote Nunchuk Accelerometer: Use this to monitor Nunchuk acceleration across X, Y, and Z axes (requires nunchuk extension)"
 		setTooltip $name.k12frame.wii2.b_wii_nunchuk_stick "Wiimote Nunchuk stick: Use this to monitor Nunchuk stick motion across X and Y axes (requires nunchuk extension)"
-		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_speed
-		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_buttons
-		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_hit
-		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_accelerometer
-		pdtk_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_stick
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_speed
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_buttons
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_hit
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_accelerometer
+		pdtk_k12panel_standardkeybindings $name.k12frame.wii2.b_wii_nunchuk_stick
 
 		# ---------------------------------- ARDUINO -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.arduino -relief flat]
@@ -2661,11 +2687,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.arduino.b_sarcduino_analog "Arduino Analog: Use this to monitor analog sensor speed"
 		setTooltip $name.k12frame.arduino.b_sarcduino_hit "Arduino Hit: Use this to detect when the arduino analog sensor data has rapidly changed"
 		setTooltip $name.k12frame.arduino.b_sarcduino_piezo "Arduino Piezo: Use this to analyze data coming from a piezo microphone sensor"
-		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino
-		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino_digital
-		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino_analog
-		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino_hit
-		pdtk_standardkeybindings $name.k12frame.arduino.b_sarcduino_piezo
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_digital
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_analog
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_hit
+		pdtk_k12panel_standardkeybindings $name.k12frame.arduino.b_sarcduino_piezo
 
 		# ---------------------------------- RPI & MATH ROW 1 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_1 -relief flat]
@@ -2688,11 +2714,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.math_1.b_rpi_analog_in "RaspberryPi Analog In: Use this to read from RaspberryPi LOP Shield's analog inputs"
 		setTooltip $name.k12frame.math_1.b_math_number "Number: Use this to assign a value to other objects"
 		setTooltip $name.k12frame.math_1.b_math_netsend "Netsend: Use this to send data over network to another computer"
-		pdtk_standardkeybindings $name.k12frame.math_1.b_rpi_digital
-		pdtk_standardkeybindings $name.k12frame.math_1.b_rpi_analog_out
-		pdtk_standardkeybindings $name.k12frame.math_1.b_rpi_analog_in
-		pdtk_standardkeybindings $name.k12frame.math_1.b_math_number
-		pdtk_standardkeybindings $name.k12frame.math_1.b_math_netsend
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_rpi_digital
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_rpi_analog_out
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_rpi_analog_in
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_math_number
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_1.b_math_netsend
 
 		# ---------------------------------- MATH ROW 2 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_2 -relief flat]
@@ -2712,11 +2738,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.math_2.b_math_routebytag "Route By Tag: Use this to filter incoming network data by tag"
 		setTooltip $name.k12frame.math_2.b_math_add "Add: Use this to add two values"
 		setTooltip $name.k12frame.math_2.b_math_subtract "Subtract: Use this to subtract two values"
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_netreceive
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_tag
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_routebytag
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_add
-		pdtk_standardkeybindings $name.k12frame.math_2.b_math_subtract
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_netreceive
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_tag
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_routebytag
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_add
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_2.b_math_subtract
 
 		# ---------------------------------- MATH ROW 3 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.math_3 -relief flat]
@@ -2736,11 +2762,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.math_3.b_math_random "Random: Use this to generate random numbers"
 		setTooltip $name.k12frame.math_3.b_math_average "Average: Use this to calculate average from a stream of numbers"
 		setTooltip $name.k12frame.math_3.b_math_scale "Scale: Use this to scale incoming values to a new range and direction"
-		pdtk_standardkeybindings $name.k12frame.math_3.b_math_multiply
-		pdtk_standardkeybindings $name.k12frame.math_3.b_math_divide
-		pdtk_standardkeybindings $name.k12frame.math_3.b_math_random
-		pdtk_standardkeybindings $name.k12frame.math_3.b_math_average
-		pdtk_standardkeybindings $name.k12frame.math_3.b_math_scale
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_multiply
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_divide
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_random
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_average
+		pdtk_k12panel_standardkeybindings $name.k12frame.math_3.b_math_scale
 
 		# ---------------------------------- LOGIC -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.logic -relief flat]
@@ -2760,11 +2786,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.logic.b_logic_metronome "Metronome: Use this to create a steady pulse"
 		setTooltip $name.k12frame.logic.b_logic_counter "Counter: Use this to count events"
 		setTooltip $name.k12frame.logic.b_logic_sequencer "Sequencer: Use this to map values to MIDI pitches"
-		pdtk_standardkeybindings $name.k12frame.logic.b_logic_compare
-		pdtk_standardkeybindings $name.k12frame.logic.b_logic_mapper
-		pdtk_standardkeybindings $name.k12frame.logic.b_logic_metronome
-		pdtk_standardkeybindings $name.k12frame.logic.b_logic_counter
-		pdtk_standardkeybindings $name.k12frame.logic.b_logic_sequencer
+		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_compare
+		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_mapper
+		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_metronome
+		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_counter
+		pdtk_k12panel_standardkeybindings $name.k12frame.logic.b_logic_sequencer
 
 		# ---------------------------------- OTHER -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.other -relief flat]
@@ -2775,8 +2801,8 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		pack $name.k12frame.other.b_preset $name.k12frame.other.b_comment -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.other.b_preset "Preset: Use this to store and recall up to four different states of your instrument"
 		setTooltip $name.k12frame.other.b_comment "Comment: Use this to post comments inside your patch"
-		pdtk_standardkeybindings $name.k12frame.other.b_preset
-		pdtk_standardkeybindings $name.k12frame.other.b_comment
+		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_preset
+		pdtk_k12panel_standardkeybindings $name.k12frame.other.b_comment
 
 		# ---------------------------------- SOUND LABEL -----------------------------------------
 		#match_linux_wm [list frame $name.k12frame.sound -relief flat]
@@ -2803,11 +2829,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.signal_1.b_signal_netreceive "Netreceive Sound: Use this to receive sound from another computer over network"
 		setTooltip $name.k12frame.signal_1.b_signal_sampler "Sampler: Use this to record audio from microphone and play it back in various ways"
 		setTooltip $name.k12frame.signal_1.b_signal_player "Player: Use this to play WAV files in various ways"
-		pdtk_standardkeybindings $name.k12frame.signal_1.b_signal_microphone
-		pdtk_standardkeybindings $name.k12frame.signal_1.b_signal_netsend
-		pdtk_standardkeybindings $name.k12frame.signal_1.b_signal_netreceive
-		pdtk_standardkeybindings $name.k12frame.signal_1.b_signal_sampler
-		pdtk_standardkeybindings $name.k12frame.signal_1.b_signal_player
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_microphone
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_netsend
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_netreceive
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_sampler
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_1.b_signal_player
 
 		# ---------------------------------- SIGNAL ROW 2 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.signal_2 -relief flat]
@@ -2827,11 +2853,11 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.signal_2.b_signal_square "Square: Use this to generate square tone"
 		setTooltip $name.k12frame.signal_2.b_signal_triangle "Triangle: Use this to generate triangle tone"
 		setTooltip $name.k12frame.signal_2.b_signal_envelope "Envelope: Use this to shape sound loudness"
-		pdtk_standardkeybindings $name.k12frame.signal_2.b_signal_sine
-		pdtk_standardkeybindings $name.k12frame.signal_2.b_signal_saw
-		pdtk_standardkeybindings $name.k12frame.signal_2.b_signal_square
-		pdtk_standardkeybindings $name.k12frame.signal_2.b_signal_triangle
-		pdtk_standardkeybindings $name.k12frame.signal_2.b_signal_envelope
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_sine
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_saw
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_square
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_triangle
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_2.b_signal_envelope
 
 		# ---------------------------------- SIGNAL ROW 3 -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.signal_3 -relief flat]
@@ -2848,10 +2874,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.signal_3.b_signal_pink "Pink: Use this to generate pink (softer) noise"
 		setTooltip $name.k12frame.signal_3.b_signal_add "Signal Add: Use this to add two sounds (signals)"
 		setTooltip $name.k12frame.signal_3.b_signal_multiply "Signal Multiply: Use this to multiply two sounds (signals)"
-		pdtk_standardkeybindings $name.k12frame.signal_3.b_signal_noise 
-		pdtk_standardkeybindings $name.k12frame.signal_3.b_signal_pink
-		pdtk_standardkeybindings $name.k12frame.signal_3.b_signal_add
-		pdtk_standardkeybindings $name.k12frame.signal_3.b_signal_multiply
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_noise 
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_pink
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_add
+		pdtk_k12panel_standardkeybindings $name.k12frame.signal_3.b_signal_multiply
 
 		# ---------------------------------- INSTRUMENTS -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.instr -relief flat]
@@ -2868,10 +2894,10 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.instr.b_instr_short2 "Snare Drum: Use this to produce short sounds like a single snare drum hit"
 		setTooltip $name.k12frame.instr.b_instr_sustained1 "Air Instrument: Use this to produce long sustained sound like a sound of a woodwind instrument"
 		setTooltip $name.k12frame.instr.b_instr_sustained2 "Brass Instrument: Use this to produce long sustained sound like a sound of brass instrument"
-		pdtk_standardkeybindings $name.k12frame.instr.b_instr_short1
-		pdtk_standardkeybindings $name.k12frame.instr.b_instr_short2
-		pdtk_standardkeybindings $name.k12frame.instr.b_instr_sustained1
-		pdtk_standardkeybindings $name.k12frame.instr.b_instr_sustained2
+		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_short1
+		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_short2
+		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_sustained1
+		pdtk_k12panel_standardkeybindings $name.k12frame.instr.b_instr_sustained2
 
 		# ---------------------------------- F/X -----------------------------------------
 		match_linux_wm [list frame $name.k12frame.fx -relief flat]
@@ -2885,9 +2911,9 @@ proc pdtk_canvas_new {name width height geometry editable} {
 		setTooltip $name.k12frame.fx.b_fx_filter "Filter: Use this to make sound appear muffled or brighter"
 		setTooltip $name.k12frame.fx.b_fx_multitap "Echo: Use this to make sound echo"
 		setTooltip $name.k12frame.fx.b_fx_reverb "Reverb: Use this to make sound appear as if it is being played in a large space"
-		pdtk_standardkeybindings $name.k12frame.fx.b_fx_filter
-		pdtk_standardkeybindings $name.k12frame.fx.b_fx_multitap
-		pdtk_standardkeybindings $name.k12frame.fx.b_fx_reverb
+		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_filter
+		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_multitap
+		pdtk_k12panel_standardkeybindings $name.k12frame.fx.b_fx_reverb
 
 		# ---------------------------------- OUTPUT/OTHER -----------------------------------------
 
@@ -2896,7 +2922,7 @@ proc pdtk_canvas_new {name width height geometry editable} {
 			-command [concat put_K12_objects $name output]] 	
 		pack $name.k12frame.output.b_output -side left -expand 0 -padx 1 -pady 1
 		setTooltip $name.k12frame.output.b_output "Output: Use this to send audio from computer into speakers"
-		pdtk_standardkeybindings $name.k12frame.output.b_output
+		pdtk_k12panel_standardkeybindings $name.k12frame.output.b_output
 
 		# ---------------------------------------- NOW PACK THEM ALL -----------------------------------------
 		pack $name.k12frame.edit $name.k12frame.datasound $name.k12frame.wii $name.k12frame.wii2 $name.k12frame.arduino $name.k12frame.math_1 $name.k12frame.math_2 $name.k12frame.math_3 $name.k12frame.logic $name.k12frame.other -side top -expand 0 -fill x
@@ -4676,9 +4702,9 @@ proc pdtk_canvas_ctrlkey {name key shift} {
     # puts stderr [concat ctrl-key $key $topname $name]
 	# puts stderr [string match .controls* $name] 
 	#.printout.frame.text .controls.* .
-	#pdtk_post canvas_ctrlkey
+	# pdtk_post canvas_ctrlkey
 
-	#puts stderr $name
+	# puts stderr "$name $key $shift"
 
 	if {[string match *.c $name] || [info exists $name.c]} {
 		set ignore 0
@@ -4735,8 +4761,8 @@ proc pdtk_canvas_ctrlkey {name key shift} {
 			#if {$key == "Down"} {popup_action $name 4}
 			if {$key == "Down"} {pdtk_canvas_edit_menu_actions $topname "Send To Back"}
         	if {$key == "p" || $key == "P"} {menu_print $topname}
-			if {$key == "b" || $key == "B"} {dialog_search::open_helpbrowser .search}
 		}
+		if {$key == "b" || $key == "B"} {dialog_search::open_helpbrowser .search}
 		if {$key == "y" || $key == "Y"} {pdtk_canvas_edit_menu_actions $topname "Tidy Up"}
         if {$key == "q" || $key == "Q"} {menu_quit}
         #if {$key == "z" || $key == "Z"} {menu_undo $topname}
@@ -4898,7 +4924,7 @@ proc pdtk_canvas_saveas {name initfile initdir} {
     set filename [tk_getSaveFile -initialfile $initfile -initialdir $initdir \
 					  -defaultextension .pd -filetypes $filetypes \
 					  -parent $name]
-
+	reset_ctrl_on_popup_window
     if {$filename eq ""} return; # they clicked cancel
 
     set extension [file extension $filename]
