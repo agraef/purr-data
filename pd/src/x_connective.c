@@ -1658,6 +1658,11 @@ value_setfloat(t_symbol *s, t_float f)
     return (0); 
 }
 
+static void vcommon_float(t_vcommon *x, t_float f)
+{
+    x->c_f = f;
+}
+
 static void *value_new(t_symbol *s)
 {
     t_value *x = (t_value *)pd_new(value_class);
@@ -1692,6 +1697,7 @@ static void value_setup(void)
     class_addfloat(value_class, value_float);
     vcommon_class = class_new(gensym("value"), 0, 0,
         sizeof(t_vcommon), CLASS_PD, 0);
+    class_addfloat(vcommon_class, vcommon_float);
 }
 
 /* -------------- overall setup routine for this file ----------------- */
