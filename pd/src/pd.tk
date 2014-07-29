@@ -1233,8 +1233,10 @@ proc menu_new {} {
 proc reset_ctrl_on_popup_window {} {
 	global menu_windowlist
 	set first_patch_window_name [lindex $menu_windowlist 0 1]
-	pdtk_canvas_sendkey $first_patch_window_name.c 0 Control_L null 0 1 -1
-	pdtk_canvas_sendkey $first_patch_window_name.c 0 Control_R null 0 1 -1
+	if { $first_patch_window_name != "" } {
+		pdtk_canvas_sendkey $first_patch_window_name.c 0 Control_L null 0 1 -1
+		pdtk_canvas_sendkey $first_patch_window_name.c 0 Control_R null 0 1 -1
+	}
 }
 
 ################## the "Open" menu command #########################
