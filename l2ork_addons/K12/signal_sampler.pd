@@ -37,8 +37,8 @@
 #X msg 142 335 read \$1 \$2-buffer;
 #X obj 218 93 f 0;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-buffer 480000 float 2;
-#X coords 0 1 480000 -1 101 53 1 0 0;
+#X array \$0-buffer 480000 float 2 black black;
+#X coords 0 1 480000 -1 101 53 1;
 #X restore 355 171 graph;
 #X obj 218 -23 inlet;
 #X text 255 -25 save as soon as the recording is finished;
@@ -172,7 +172,9 @@
 #X obj 191 569 vline~;
 #X msg 191 545 0 5 \, 1 5 5;
 #X obj 29 117 pipe 5;
-#X obj 29 92 t f f;
+#X obj 29 92 t f b;
+#X obj 275 350 t f b;
+#X obj 275 371 pipe 5;
 #X connect 1 0 4 0;
 #X connect 1 0 21 0;
 #X connect 2 0 44 0;
@@ -203,7 +205,7 @@
 #X connect 26 0 27 0;
 #X connect 27 0 22 0;
 #X connect 28 0 26 0;
-#X connect 29 0 19 0;
+#X connect 29 0 45 0;
 #X connect 30 0 31 1;
 #X connect 31 0 40 0;
 #X connect 32 0 17 1;
@@ -222,4 +224,7 @@
 #X connect 43 0 25 0;
 #X connect 44 0 43 0;
 #X connect 44 1 42 0;
+#X connect 45 0 46 0;
+#X connect 45 1 42 0;
+#X connect 46 0 19 0;
 #X coords 0 -1 1 1 89 89 2 96 173;
