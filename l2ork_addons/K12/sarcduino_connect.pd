@@ -65,18 +65,18 @@
 #X obj 405 212 != 1;
 #X obj 356 304 list prepend d;
 #X obj 356 327 outlet;
-#X obj 39 257 list prepend 0;
-#X obj 91 235 list prepend 1;
-#X obj 143 257 list prepend 2;
-#X obj 195 235 list prepend 3;
-#X obj 248 257 list prepend 4;
-#X obj 304 235 list prepend 5;
-#X obj 405 257 list prepend 6;
-#X obj 457 235 list prepend 7;
-#X obj 509 257 list prepend 8;
-#X obj 561 235 list prepend 9;
-#X obj 614 257 list prepend 10;
-#X obj 670 235 list prepend 11;
+#X obj 39 257 list prepend 2;
+#X obj 91 235 list prepend 3;
+#X obj 143 257 list prepend 4;
+#X obj 195 235 list prepend 5;
+#X obj 248 257 list prepend 6;
+#X obj 304 235 list prepend 7;
+#X obj 405 257 list prepend 8;
+#X obj 457 235 list prepend 9;
+#X obj 509 257 list prepend 10;
+#X obj 561 235 list prepend 11;
+#X obj 614 257 list prepend 12;
+#X obj 670 235 list prepend 13;
 #X connect 0 0 1 0;
 #X connect 0 0 2 0;
 #X connect 0 0 3 0;
@@ -208,8 +208,7 @@
 #X text 41 358 analog = a <channel> <val>;
 #X obj 185 15 bng 85 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_off.png 1
-;
+#X obj 228 45 ggee/image @pd_extra/K12/objects/sarcduino_on.png 1;
 #X obj 302 46 loadbang;
 #X obj 336 24 select 0 1;
 #X obj 140 127 gate 2 1;
