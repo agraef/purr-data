@@ -1,4 +1,4 @@
-#N canvas 581 112 466 575 10;
+#N canvas 313 64 466 575 10;
 #X obj 141 205 ggee/image @pd_extra/K12/objects/signal_sampler.png
 1;
 #X obj 142 91 loadbang;
@@ -200,6 +200,7 @@
 #X connect 21 0 15 0;
 #X connect 22 0 24 0;
 #X connect 24 0 29 0;
+#X connect 24 1 18 0;
 #X connect 25 0 22 0;
 #X connect 25 1 29 1;
 #X connect 26 0 27 0;

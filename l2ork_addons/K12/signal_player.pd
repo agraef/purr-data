@@ -1,4 +1,4 @@
-#N canvas 432 106 433 518 10;
+#N canvas 384 53 433 555 10;
 #X obj 141 205 ggee/image @pd_extra/K12/objects/signal_player.png 1
 ;
 #X obj 142 94 loadbang;
@@ -15,11 +15,11 @@
 #X obj 234 150 preset_node k12;
 #X msg 142 114 open @pd_extra/K12/objects/signal_player.png;
 #X obj 97 34 inlet;
-#X obj 207 427 outlet;
+#X obj 207 457 outlet;
 #X obj 99 203 bng 15 250 50 0 empty empty empty 17 7 0 10 -257985 -1
 -1;
 #X text 96 186 open;
-#X obj 35 425 tabread4~ \$0-buffer;
+#X obj 35 435 tabread4~ \$0-buffer;
 #X obj 35 558 outlet~;
 #N canvas 755 199 523 405 fileio_logic 0;
 #X obj 142 -23 inlet;
@@ -62,7 +62,7 @@
 #X connect 16 0 17 0;
 #X connect 16 3 18 0;
 #X restore 47 270 pd fileio_logic;
-#X obj 35 400 line~;
+#X obj 35 410 line~;
 #N canvas 571 227 380 308 play_logic 0;
 #X obj 155 54 inlet;
 #X obj 227 230 t b f;
@@ -116,12 +116,12 @@
 #X connect 21 0 18 0;
 #X connect 21 1 19 1;
 #X connect 21 1 18 1;
-#X restore 207 338 pd play_logic;
-#X msg 35 377 \$2 \, \$3 \$4;
-#X obj 207 262 sel 1;
-#X obj 207 382 delay;
-#X msg 207 360 \$4;
-#X obj 207 316 f 60;
+#X restore 207 358 pd play_logic;
+#X msg 35 387 \$2 \, \$3 \$4;
+#X obj 207 242 sel 1;
+#X obj 207 412 delay;
+#X msg 207 390 \$4;
+#X obj 207 266 f 60;
 #N canvas 289 190 450 300 envelope_logic 0;
 #X obj 145 50 inlet;
 #X msg 145 72 \$4;
@@ -141,16 +141,18 @@
 #X connect 5 0 6 0;
 #X connect 6 0 7 0;
 #X connect 7 0 8 0;
-#X restore 85 446 pd envelope_logic;
-#X obj 35 477 *~;
-#X obj 207 404 t 1 0;
-#X obj 35 519 *~;
-#X msg 78 477 0 5 \, 1 5 5;
-#X obj 78 499 vline~;
+#X restore 85 456 pd envelope_logic;
+#X obj 35 487 *~;
+#X obj 207 434 t 1 0;
+#X obj 35 529 *~;
+#X msg 78 487 0 5 \, 1 5 5;
+#X obj 78 509 vline~;
 #X obj 97 114 pipe 5;
 #X obj 97 54 t f b;
 #X obj 97 74 split 0 1;
 #X obj 97 94 int;
+#X obj 207 287 t f b;
+#X obj 207 308 pipe 5;
 #X connect 1 0 10 0;
 #X connect 2 0 7 0;
 #X connect 3 0 9 0;
@@ -173,9 +175,10 @@
 #X connect 19 0 25 0;
 #X connect 20 0 18 0;
 #X connect 21 0 24 0;
+#X connect 21 1 18 0;
 #X connect 22 0 27 0;
 #X connect 23 0 22 0;
-#X connect 24 0 19 0;
+#X connect 24 0 35 0;
 #X connect 25 0 26 1;
 #X connect 26 0 28 0;
 #X connect 27 0 12 0;
@@ -188,4 +191,7 @@
 #X connect 32 1 29 0;
 #X connect 33 0 34 0;
 #X connect 34 0 31 0;
+#X connect 35 0 36 0;
+#X connect 35 1 29 0;
+#X connect 36 0 19 0;
 #X coords 0 -1 1 1 89 89 2 96 173;
