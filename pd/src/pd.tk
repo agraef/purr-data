@@ -9388,8 +9388,15 @@ proc pdtk_check_unique {unique filenames} {
 	#puts stderr "pdtk_check_unique $unique $filenames"
 	global appname
 	if { $unique == 0 } {
-		#puts stderr "send pd-l2ork pdtk_open_files_via_unique $filenames"
-		set outcome [catch {send pd-l2ork pdtk_open_files_via_unique $filenames}]
+		foreach file $filenames {
+			cd [file dirname $file]
+			set dir [pwd]
+			set name [file tail $file]
+			#puts stderr "********DIR:$dir FILE:$name COMBINED:[file join $dir $name]"
+			lappend final_filenames [file join $dir $name]
+		}
+		#puts stderr "send pd-l2ork pdtk_open_files_via_unique $final_filenames"
+		set outcome [catch {send pd-l2ork pdtk_open_files_via_unique \{$final_filenames\}}]
 		#puts stderr "outcome = $outcome"
 		if { $outcome == 0 } {
 			menu_really_quit

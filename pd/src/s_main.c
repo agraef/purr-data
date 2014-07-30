@@ -325,7 +325,7 @@ int sys_main(int argc, char **argv)
             return(1);
         }
     }
-    sys_vgui("pdtk_check_unique %d %s\n", sys_unique,
+    sys_vgui("pdtk_check_unique %d {%s}\n", sys_unique,
         (filenames ? filenames : "0"));
     if (sys_externalschedlib)
         return (sys_run_scheduler(sys_externalschedlibname,
