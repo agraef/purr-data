@@ -59,7 +59,7 @@ static void clip_setup(void)
     clip_class = class_new(gensym("clip~"), (t_newmethod)clip_new, 0,
         sizeof(t_clip), 0, A_DEFFLOAT, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(clip_class, t_clip, x_f);
-    class_addmethod(clip_class, (t_method)clip_dsp, gensym("dsp"), 0);
+    class_addmethod(clip_class, (t_method)clip_dsp, gensym("dsp"), A_CANT, 0);
 }
 
 /* sigrsqrt - reciprocal square root good to 8 mantissa bits  */
@@ -171,7 +171,8 @@ void sigrsqrt_setup(void)
             /* an old name for it: */
     class_addcreator(sigrsqrt_new, gensym("q8_rsqrt~"), 0);
     CLASS_MAINSIGNALIN(sigrsqrt_class, t_sigrsqrt, x_f);
-    class_addmethod(sigrsqrt_class, (t_method)sigrsqrt_dsp, gensym("dsp"), 0);
+    class_addmethod(sigrsqrt_class, (t_method)sigrsqrt_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 
@@ -223,7 +224,8 @@ void sigsqrt_setup(void)
         sizeof(t_sigsqrt), 0, 0);
     class_addcreator(sigsqrt_new, gensym("q8_sqrt~"), 0);   /* old name */
     CLASS_MAINSIGNALIN(sigsqrt_class, t_sigsqrt, x_f);
-    class_addmethod(sigsqrt_class, (t_method)sigsqrt_dsp, gensym("dsp"), 0);
+    class_addmethod(sigsqrt_class, (t_method)sigsqrt_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 /* ------------------------------ wrap~ -------------------------- */
@@ -268,7 +270,8 @@ void sigwrap_setup(void)
     sigwrap_class = class_new(gensym("wrap~"), (t_newmethod)sigwrap_new, 0,
         sizeof(t_sigwrap), 0, 0);
     CLASS_MAINSIGNALIN(sigwrap_class, t_sigwrap, x_f);
-    class_addmethod(sigwrap_class, (t_method)sigwrap_dsp, gensym("dsp"), 0);
+    class_addmethod(sigwrap_class, (t_method)sigwrap_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 /* ------------------------------ mtof_tilde~ -------------------------- */
@@ -316,7 +319,8 @@ void mtof_tilde_setup(void)
     mtof_tilde_class = class_new(gensym("mtof~"), (t_newmethod)mtof_tilde_new, 0,
         sizeof(t_mtof_tilde), 0, 0);
     CLASS_MAINSIGNALIN(mtof_tilde_class, t_mtof_tilde, x_f);
-    class_addmethod(mtof_tilde_class, (t_method)mtof_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(mtof_tilde_class, (t_method)mtof_tilde_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 /* ------------------------------ ftom_tilde~ -------------------------- */
@@ -359,7 +363,8 @@ void ftom_tilde_setup(void)
     ftom_tilde_class = class_new(gensym("ftom~"), (t_newmethod)ftom_tilde_new, 0,
         sizeof(t_ftom_tilde), 0, 0);
     CLASS_MAINSIGNALIN(ftom_tilde_class, t_ftom_tilde, x_f);
-    class_addmethod(ftom_tilde_class, (t_method)ftom_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(ftom_tilde_class, (t_method)ftom_tilde_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 /* ------------------------------ dbtorms~ -------------------------- */
@@ -408,7 +413,8 @@ void dbtorms_tilde_setup(void)
     dbtorms_tilde_class = class_new(gensym("dbtorms~"), (t_newmethod)dbtorms_tilde_new, 0,
         sizeof(t_dbtorms_tilde), 0, 0);
     CLASS_MAINSIGNALIN(dbtorms_tilde_class, t_dbtorms_tilde, x_f);
-    class_addmethod(dbtorms_tilde_class, (t_method)dbtorms_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(dbtorms_tilde_class, (t_method)dbtorms_tilde_dsp,
+        gensym("dsp"), A_CANT, 0);
 }
 
 /* ------------------------------ rmstodb~ -------------------------- */
@@ -456,7 +462,8 @@ void rmstodb_tilde_setup(void)
     rmstodb_tilde_class = class_new(gensym("rmstodb~"), (t_newmethod)rmstodb_tilde_new, 0,
         sizeof(t_rmstodb_tilde), 0, 0);
     CLASS_MAINSIGNALIN(rmstodb_tilde_class, t_rmstodb_tilde, x_f);
-    class_addmethod(rmstodb_tilde_class, (t_method)rmstodb_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(rmstodb_tilde_class, (t_method)rmstodb_tilde_dsp,
+        gensym("dsp"), A_CANT, 0);
 }
 
 /* ------------------------------ dbtopow~ -------------------------- */
@@ -505,7 +512,8 @@ void dbtopow_tilde_setup(void)
     dbtopow_tilde_class = class_new(gensym("dbtopow~"), (t_newmethod)dbtopow_tilde_new, 0,
         sizeof(t_dbtopow_tilde), 0, 0);
     CLASS_MAINSIGNALIN(dbtopow_tilde_class, t_dbtopow_tilde, x_f);
-    class_addmethod(dbtopow_tilde_class, (t_method)dbtopow_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(dbtopow_tilde_class, (t_method)dbtopow_tilde_dsp,
+        gensym("dsp"), A_CANT, 0);
 }
 
 /* ------------------------------ powtodb~ -------------------------- */
@@ -553,7 +561,8 @@ void powtodb_tilde_setup(void)
     powtodb_tilde_class = class_new(gensym("powtodb~"), (t_newmethod)powtodb_tilde_new, 0,
         sizeof(t_powtodb_tilde), 0, 0);
     CLASS_MAINSIGNALIN(powtodb_tilde_class, t_powtodb_tilde, x_f);
-    class_addmethod(powtodb_tilde_class, (t_method)powtodb_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(powtodb_tilde_class, (t_method)powtodb_tilde_dsp,
+        gensym("dsp"), A_CANT, 0);
 }
 
 /* ----------------------------- pow ----------------------------- */
@@ -647,12 +656,13 @@ static void pow_tilde_setup(void)
     pow_tilde_class = class_new(gensym("pow~"), (t_newmethod)pow_tilde_new, 0,
         sizeof(t_pow_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(pow_tilde_class, t_pow_tilde, x_f);
-    class_addmethod(pow_tilde_class, (t_method)pow_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(pow_tilde_class, (t_method)pow_tilde_dsp, gensym("dsp"),
+        A_CANT, 0);
     scalarpow_tilde_class = class_new(gensym("pow~"), 0, 0,
         sizeof(t_scalarpow_tilde), 0, 0);
     CLASS_MAINSIGNALIN(scalarpow_tilde_class, t_scalarpow_tilde, x_f);
     class_addmethod(scalarpow_tilde_class, (t_method)scalarpow_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
 }
 
 /* ----------------------------- exp ----------------------------- */
@@ -692,7 +702,8 @@ static void exp_tilde_setup(void)
     exp_tilde_class = class_new(gensym("exp~"), (t_newmethod)exp_tilde_new, 0,
         sizeof(t_exp_tilde), 0, 0);
     CLASS_MAINSIGNALIN(exp_tilde_class, t_exp_tilde, x_f);
-    class_addmethod(exp_tilde_class, (t_method)exp_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(exp_tilde_class, (t_method)exp_tilde_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 /* ----------------------------- log ----------------------------- */
@@ -791,13 +802,14 @@ static void log_tilde_setup(void)
     log_tilde_class = class_new(gensym("log~"), (t_newmethod)log_tilde_new, 0,
         sizeof(t_log_tilde), 0, A_GIMME, 0);
     CLASS_MAINSIGNALIN(log_tilde_class, t_log_tilde, x_f);
-    class_addmethod(log_tilde_class, (t_method)log_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(log_tilde_class, (t_method)log_tilde_dsp, gensym("dsp"),
+        A_CANT, 0);
 
     scalarlog_tilde_class = class_new(gensym("log~"), 0, 0,
         sizeof(t_scalarlog_tilde), 0, 0);
     CLASS_MAINSIGNALIN(scalarlog_tilde_class, t_scalarlog_tilde, x_f);
     class_addmethod(scalarlog_tilde_class, (t_method)scalarlog_tilde_dsp,
-        gensym("dsp"), 0);
+        gensym("dsp"), A_CANT, 0);
 }
 
 /* ----------------------------- abs ----------------------------- */
@@ -840,7 +852,8 @@ static void abs_tilde_setup(void)
     abs_tilde_class = class_new(gensym("abs~"), (t_newmethod)abs_tilde_new, 0,
         sizeof(t_abs_tilde), 0, 0);
     CLASS_MAINSIGNALIN(abs_tilde_class, t_abs_tilde, x_f);
-    class_addmethod(abs_tilde_class, (t_method)abs_tilde_dsp, gensym("dsp"), 0);
+    class_addmethod(abs_tilde_class, (t_method)abs_tilde_dsp, gensym("dsp"),
+        A_CANT, 0);
 }
 
 /* ------------------------ global setup routine ------------------------- */

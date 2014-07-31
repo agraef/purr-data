@@ -2322,7 +2322,8 @@ void g_canvas_setup(void)
 
     class_addmethod(canvas_class, (t_method)canvas_click,
         gensym("click"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(canvas_class, (t_method)canvas_dsp, gensym("dsp"), 0);
+    class_addmethod(canvas_class, (t_method)canvas_dsp, gensym("dsp"),
+        A_CANT, 0);
     class_addmethod(canvas_class, (t_method)canvas_rename_method,
         gensym("rename"), A_GIMME, 0);
     class_addmethod(canvas_class, (t_method)canvas_forwardmess,
