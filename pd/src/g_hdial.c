@@ -157,7 +157,6 @@ void hradio_draw_move(t_hradio *x, t_glist *glist)
 void hradio_draw_erase(t_hradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int n=x->x_number, i;
 
     sys_vgui(".x%lx.c delete %lxHRDO\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxHRDO\n", canvas, x);
@@ -960,12 +959,9 @@ static void *hradio_donew(t_symbol *s, int argc, t_atom *argv, int old)
 {
     t_hradio *x = (t_hradio *)pd_new(old? hradio_old_class : hradio_class);
     int bflcol[]={-262144, -1, -1};
-    int a=IEM_GUI_DEFAULTSIZE, on=0, f=0;
+    int a=IEM_GUI_DEFAULTSIZE, on=0;
     int ldx=0, ldy=-8, chg=1, num=8;
     int fs=10;
-    int ftbreak=IEM_BNG_DEFAULTBREAKFLASHTIME,
-        fthold=IEM_BNG_DEFAULTHOLDFLASHTIME;
-    char str[144];
 
     iem_inttosymargs(&x->x_gui.x_isa, 0);
     iem_inttofstyle(&x->x_gui.x_fsf, 0);

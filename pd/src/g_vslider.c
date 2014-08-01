@@ -959,10 +959,9 @@ static void *vslider_new(t_symbol *s, int argc, t_atom *argv)
     t_vslider *x = (t_vslider *)pd_new(vslider_class);
     int bflcol[]={-262144, -1, -1};
     int w=IEM_GUI_DEFAULTSIZE, h=IEM_SL_DEFAULTSIZE;
-    int lilo=0, f=0, ldx=0, ldy=-9;
+    int lilo=0, ldx=0, ldy=-9;
     int fs=10, v=0, steady=1;
     double min=0.0, max=(double)(IEM_SL_DEFAULTSIZE-1);
-    char str[144];
 
     iem_inttosymargs(&x->x_gui.x_isa, 0);
     iem_inttofstyle(&x->x_gui.x_fsf, 0);

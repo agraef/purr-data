@@ -805,11 +805,10 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_toggle *x = (t_toggle *)pd_new(toggle_class);
     int bflcol[]={-262144, -1, -1};
-    int a=IEM_GUI_DEFAULTSIZE, f=0;
+    int a=IEM_GUI_DEFAULTSIZE;
     int ldx=17, ldy=7;
     int fs=10;
     t_float on=0.0, nonzero=1.0;
-    char str[144];
 
     iem_inttosymargs(&x->x_gui.x_isa, 0);
     iem_inttofstyle(&x->x_gui.x_fsf, 0);

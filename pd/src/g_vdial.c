@@ -957,12 +957,9 @@ static void *vradio_donew(t_symbol *s, int argc, t_atom *argv, int old)
 {
     t_vradio *x = (t_vradio *)pd_new(old? vradio_old_class : vradio_class);
     int bflcol[]={-262144, -1, -1};
-    int a=IEM_GUI_DEFAULTSIZE, on=0, f=0;
+    int a=IEM_GUI_DEFAULTSIZE, on=0;
     int ldx=0, ldy=-8, chg=1, num=8;
     int fs=10;
-    int ftbreak = IEM_BNG_DEFAULTBREAKFLASHTIME,
-        fthold = IEM_BNG_DEFAULTHOLDFLASHTIME;
-    char str[144];
 
     if((argc == 15)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)&&IS_A_FLOAT(argv,2)
        &&IS_A_FLOAT(argv,3)
