@@ -247,8 +247,7 @@ extern int sys_noautopatch;
 void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     int *indexp, int *totalp)
 {
-    int xpix, ypix, indx = 0, nobj = 0, n2, x1, x2, y1, y2;
-    t_gobj *selected;
+    int indx = 0, nobj = 0, n2, x1, x2, y1, y2;
 
     /*
     int connectme = 0;
@@ -314,7 +313,6 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 {
     //fprintf(stderr,"canvas_obj\n");
     if (canvas_hasarray(gl)) return;
-    t_text *x;
     if (argc >= 2)
     {
         t_binbuf *b = binbuf_new();
@@ -1109,10 +1107,8 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
     /* ---------------- gatom-specific widget functions --------------- */
 static void gatom_getwherelabel(t_gatom *x, t_glist *glist, int *xp, int *yp)
 {
-    int x1, y1, x2, y2, width, height;
+    int x1, y1, x2, y2;
     text_getrect(&x->a_text.te_g, glist, &x1, &y1, &x2, &y2);
-    width = x2 - x1;
-    height = y2 - y1;
     if (x->a_wherelabel == ATOM_LABELLEFT)
     {
         *xp = x1 - 3 -
@@ -1420,7 +1416,7 @@ static void text_displace_withtag(t_gobj *z, t_glist *glist,
     x->te_ypix += dy;
     if (glist_isvisible(glist))
     {
-        t_rtext *y = glist_findrtext(glist, x);
+        //t_rtext *y = glist_findrtext(glist, x);
         //text_drawborder_withtag(x, glist, rtext_gettag(y),
         //    rtext_width(y), rtext_height(y), 0);
         canvas_fixlinesfor(glist_getcanvas(glist), x);
@@ -1463,7 +1459,7 @@ static void text_displace_withtag(t_gobj *z, t_glist *glist,
 static void gatom_displace_withtag(t_gobj *z, t_glist *glist,
     int dx, int dy)
 {
-    t_gatom *x = (t_gatom*)z;
+    //t_gatom *x = (t_gatom*)z;
     text_displace_withtag(z, glist, dx, dy);
     //sys_vgui(".x%lx.c move %lx.l %d %d\n", glist_getcanvas(glist), 
     //    x, dx, dy);
@@ -1504,7 +1500,7 @@ static void text_select(t_gobj *z, t_glist *glist, int state)
         }
         if (z->g_pd->c_wb && z->g_pd->c_wb->w_displacefnwtag)
         {
-            int i, ni, no;
+            int i;
             if (state)
             {
                 if (z->g_pd == gatom_class)
@@ -1948,7 +1944,7 @@ void text_drawborder(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
     t_object *ob;
-    int x1, y1, x2, y2, width, height, msg_draw_const, atom_draw_const;
+    int x1, y1, x2, y2;
 
     /* if this is gop patcher, the getrect should be equal to gop-ed window
        rather than just the size of text */
@@ -1970,8 +1966,6 @@ void text_drawborder(t_text *x, t_glist *glist,
         text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
     }
 
-    width = x2 - x1;
-    height = y2 - y1;
     if (x->te_type == T_OBJECT)
     {
         char *pattern; char *outline; char *fill;
@@ -2093,10 +2087,9 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     char *tag, int width2, int height2, int firsttime)
 {
     t_object *ob;
-    int x1, y1, x2, y2, width, height, msg_draw_const, atom_draw_const;
+    int x1, y1, x2, y2, msg_draw_const, atom_draw_const;
     text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
-    width = x2 - x1;
-    height = y2 - y1;
+
     if (x->te_type == T_OBJECT)
     {
         char *pattern; char *outline; char *fill;

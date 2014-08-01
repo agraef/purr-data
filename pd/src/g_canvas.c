@@ -1264,7 +1264,7 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
         canvas_setbounds(x, txpix, typix,
             txpix + cw, typix + ch);
     /* readjust garrays (if any) */
-    t_gobj *g, *gg = NULL;
+    t_gobj *g;
     t_garray *ga = NULL;
     t_array *a = NULL;
     int  num_elem = 0;
@@ -1347,7 +1347,6 @@ static void canvas_click(t_canvas *x,
 void canvas_fattensub(t_canvas *x,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
-    t_gobj *y;
     *xp2 += 50;     /* fake for now */
     *yp2 += 50;
 }
@@ -1657,7 +1656,6 @@ static void glist_redrawall(t_template *template, t_glist *gl, int action)
     int vis = glist_isvisible(gl);
     for (g = gl->gl_list; g; g = g->g_next)
     {
-        t_class *cl;
         if (vis && g->g_pd == scalar_class &&
             ((template == template_findbyname(((t_scalar *)g)->sc_template))
             || template_has_elemtemplate(
@@ -1862,7 +1860,6 @@ static void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 int canvas_open(t_canvas *x, const char *name, const char *ext,
     char *dirresult, char **nameresult, unsigned int size, int bin)
 {
-    t_namelist *nl, thislist;
     int fd = -1;
     int result = 0;
     t_canvas *y;

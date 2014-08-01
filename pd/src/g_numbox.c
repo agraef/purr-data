@@ -980,11 +980,10 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     {
         x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
     }
-    int sr_flags;
 
     if(lilo != 0) lilo = 1;
     x->x_lin0_log1 = lilo;
-    sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    iemgui_dialog(&x->x_gui, srl, argc, argv);
     if(w < 1)
         w = 1;
     x->x_gui.x_w = w;
@@ -1290,11 +1289,10 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     t_my_numbox *x = (t_my_numbox *)pd_new(my_numbox_class);
     int bflcol[]={-262144, -1, -1};
     int w=5, h=14;
-    int lilo=0, f=0, ldx=0, ldy=-8;
+    int lilo=0, ldx=0, ldy=-8;
     int fs=10;
     int log_height=256;
     double min=-1.0e+37, max=1.0e+37,v=0.0;
-    char str[144];
 
     if((argc >= 17)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)
        &&IS_A_FLOAT(argv,2)&&IS_A_FLOAT(argv,3)

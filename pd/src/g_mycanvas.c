@@ -560,7 +560,7 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     int a = (int)atom_getintarg(0, argc, argv);
     int w = (int)atom_getintarg(2, argc, argv);
     int h = (int)atom_getintarg(3, argc, argv);
-    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    iemgui_dialog(&x->x_gui, srl, argc, argv);
 
     x->x_gui.x_isa.x_loadinit = 0;
     if(a < 1)
@@ -648,9 +648,8 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     t_my_canvas *x = (t_my_canvas *)pd_new(my_canvas_class);
     int bflcol[]={-233017, -1, -66577};
     int a=IEM_GUI_DEFAULTSIZE, w=100, h=60;
-    int ldx=20, ldy=12, f=2, i=0;
+    int ldx=20, ldy=12, i=0;
     int fs=14;
-    char str[144];
 
     iem_inttosymargs(&x->x_gui.x_isa, 0);
     iem_inttofstyle(&x->x_gui.x_fsf, 0);
