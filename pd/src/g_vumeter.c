@@ -280,7 +280,6 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
 
 static void vu_draw_erase(t_vu* x,t_glist* glist)
 {
-    int i;
     t_canvas *canvas=glist_getcanvas(glist);
 
     sys_vgui(".x%lx.c delete %lxVU\n", canvas, x);
@@ -744,11 +743,6 @@ static void vu__motionhook(t_scalehandle *sh,
     {
         t_bng *x = (t_bng *)(sh->h_master);
         int dx = (int)f1, dy = (int)f2;
-        int newx, newy;
-        newx = x->x_gui.x_obj.te_xpix +
-            x->x_gui.x_w - x->x_gui.scale_offset_x + dx;
-        newy = x->x_gui.x_obj.te_ypix +
-            x->x_gui.x_h - x->x_gui.scale_offset_y + dy;
 
         sh->h_dragx = dx;
         sh->h_dragy = dy;
@@ -974,7 +968,7 @@ static void vu_scale(t_vu *x, t_floatarg fscale)
     }
     if(!x->x_scale && scale)
     {
-        int w4=x->x_gui.x_w/4, end=text_xpix(&x->x_gui.x_obj,
+        int end=text_xpix(&x->x_gui.x_obj,
             x->x_gui.x_glist)+x->x_gui.x_w+4;
         int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
         int yyy, k4=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist)-k3;
@@ -1159,10 +1153,7 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     t_vu *x = (t_vu *)pd_new(vu_class);
     int bflcol[] = {-66577, -1, -1};
     int w = IEM_GUI_DEFAULTSIZE, h = IEM_VU_STEPS*IEM_VU_DEFAULTSIZE;
-    int ldx = -1, ldy = -8, f = 0, fs = 10, scale = 1;
-    int ftbreak = IEM_BNG_DEFAULTBREAKFLASHTIME,
-        fthold = IEM_BNG_DEFAULTHOLDFLASHTIME;
-    char str[144];
+    int ldx = -1, ldy = -8, fs = 10, scale = 1;
 
     iem_inttosymargs(&x->x_gui.x_isa, 0);
     iem_inttofstyle(&x->x_gui.x_fsf, 0);
