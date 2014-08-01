@@ -179,8 +179,6 @@ typedef struct _scalehandle
     int        h_dragy;
 } t_scalehandle;
 
-static t_class *scalehandle_class;
-
 typedef struct _iemgui
 {
     t_object           x_obj;

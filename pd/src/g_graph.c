@@ -248,7 +248,7 @@ void glist_delete(t_glist *x, t_gobj *y)
     /* remove every object from a glist.  Experimental. */
 void glist_clear(t_glist *x)
 {
-    t_gobj *y, *y2;
+    t_gobj *y;
     int dspstate = 0, suspended = 0;
     t_symbol *dspsym = gensym("dsp");
     while (y = x->gl_list)
@@ -269,7 +269,6 @@ void glist_clear(t_glist *x)
 
 void glist_retext(t_glist *glist, t_text *y)
 {
-    t_canvas *c = glist_getcanvas(glist);
         /* check that we have built rtexts yet.  LATER need a better test. */
     if (glist->gl_editor && glist->gl_editor->e_rtext)
     {
@@ -922,7 +921,6 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
         t_float f;
         t_gobj *g;
         t_symbol *arrayname;
-        t_garray *ga;
             /* draw a rectangle around the graph */
         /*sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d %d %d %d %d "
                    "-stroke $pd_colors(graph_border) -tags {%sR %s graph}\n",
@@ -1167,15 +1165,12 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     int x1 = 0x7fffffff, y1 = 0x7fffffff, x2 = -0x7fffffff, y2 = -0x7fffffff;
-    int tx1 = 0x7fffffff, ty1 = 0x7fffffff,
-        tx2 = -0x7fffffff, ty2 = -0x7fffffff;
     t_glist *x = (t_glist *)z;
     //fprintf(stderr,"graph_getrect %d\n", x->gl_isgraph);
     if (x->gl_isgraph)
     {
         int hadwindow;
         t_gobj *g;
-        t_text *ob;
         int x21, y21, x22, y22;
 
         graph_graphrect(z, glist, &x1, &y1, &x2, &y2);
