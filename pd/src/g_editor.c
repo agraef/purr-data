@@ -552,9 +552,9 @@ void glist_deselect(t_glist *x, t_gobj *y)
 {
     //fprintf(stderr, "deselect\n");
     int fixdsp = 0;
-    static int reenter = 0;
+    //static int reenter = 0;
     /* if (reenter) return; */
-    reenter = 1;
+    //reenter = 1;
     if (x->gl_editor)
     {
         t_selection *sel, *sel2;
@@ -629,7 +629,7 @@ void glist_deselect(t_glist *x, t_gobj *y)
             sys_vgui("pdtk_canvas_update_edit_menu .x%lx 0\n", x);
         canvas_draw_gop_resize_hooks(x);
     }
-    reenter = 0;
+    //reenter = 0;
 }
 
 void glist_noselect(t_glist *x)
@@ -2649,7 +2649,7 @@ static void canvas_donecanvasdialog(t_glist *x,
 {
     t_float xperpix, yperpix, x1, y1, x2, y2, xpix, ypix, xmargin, ymargin;
     int rx1=0, ry1=0, rx2=0, ry2=0; //for getrect
-    int graphme, redraw = 0;
+    int graphme;
 
     xperpix = atom_getfloatarg(0, argc, argv);
     yperpix = atom_getfloatarg(1, argc, argv);
@@ -2718,8 +2718,6 @@ static void canvas_donecanvasdialog(t_glist *x,
     }
     else
     {
-        if (xperpix != glist_dpixtodx(x, 1) || yperpix != glist_dpixtody(x, 1))
-            redraw = 1;
         if (xperpix > 0)
         {
             x->gl_x1 = 0;
@@ -4814,7 +4812,7 @@ void canvas_mouseup(t_canvas *x,
 void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     t_floatarg which, t_floatarg mod)
 {
-    int shiftmod, runmode, altmod, rightclick, middleclick;
+    int middleclick;
 
     // remove stale tooltips, if any
     if (objtooltip)
@@ -4824,10 +4822,6 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     }
     
     // read key and mouse button states
-    shiftmod = ((int)mod & SHIFTMOD);
-    runmode = (((int)mod & CTRLMOD) || (!x->gl_edit));
-    altmod = ((int)mod & ALTMOD);
-    rightclick = ((int)mod & RIGHTCLICK);
     x->gl_editor->e_xwas = (int)xpos;
     x->gl_editor->e_ywas = (int)ypos;
     middleclick = (which == 2 ? 1 : 0);
@@ -5227,7 +5221,6 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
                 &x11, &y11, &x12, &y12))
         {
             int wantwidth = xpos - x11;
-            t_gotfn sizefn;
             t_object *ob = pd_checkobject(&y1->g_pd);
             if (ob && ob->te_pd->c_wb == &text_widgetbehavior ||
                     (ob->ob_pd == canvas_class &&
@@ -6127,7 +6120,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     do_not_redraw += 1;
     int was_dnr = do_not_redraw;
     
-    t_gobj *newgobj, *g2;
+    t_gobj *g2;
     int dspstate = canvas_suspend_dsp(), nbox, count;
     int canvas_empty = 0;
     int offset = 1;
@@ -6448,8 +6441,8 @@ static void canvas_reselect(t_canvas *x)
         if ((gwas = x->gl_editor->e_selection->sel_what) &&
             !x->gl_editor->e_selection->sel_next)
         {
-            int nobjwas = glist_getindex(x, 0),
-                indx = canvas_getindex(x, x->gl_editor->e_selection->sel_what);
+            //int nobjwas = glist_getindex(x, 0);
+            //int indx = canvas_getindex(x, x->gl_editor->e_selection->sel_what);
             glist_noselect(x);
             for (g = x->gl_list; g; g = g->g_next)
                 if (g == gwas)
@@ -7105,7 +7098,7 @@ static void canvas_tidy(t_canvas *x)
     /* LATER might have to speed this up */
 static void canvas_tidyold(t_canvas *x)
 {
-    t_gobj *y, *y2, *y3;
+    t_gobj *y, *y2;
     int ax1, ay1, ax2, ay2, bx1, by1, bx2, by2;
     int histogram[NHIST], *ip, i, besthist, bestdist;
         /* if nobody is selected, this means do it to all boxes;

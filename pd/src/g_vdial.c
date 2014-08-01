@@ -155,8 +155,6 @@ void vradio_draw_move(t_vradio *x, t_glist *glist)
 void vradio_draw_erase(t_vradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int n=x->x_number, i;
-
     sys_vgui(".x%lx.c delete %lxVRDO\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxVRDO\n", canvas, x);
     if (x->x_gui.x_fsf.x_selected)
@@ -550,12 +548,6 @@ static void vradio__motionhook(t_scalehandle *sh,
     {
         t_bng *x = (t_bng *)(sh->h_master);
         int dx = (int)f1, dy = (int)f2;
-        int newx, newy;
-        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w -
-            x->x_gui.scale_offset_x + dx;
-        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
-            x->x_gui.scale_offset_y + dy;
-
         sh->h_dragx = dx;
         sh->h_dragy = dy;
 

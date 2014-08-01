@@ -538,7 +538,7 @@ static void toggle__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
         if (properties)
         {
             int new_w = x->x_gui.x_w - x->x_gui.scale_offset_x + sh->h_dragx;
-            int new_h = x->x_gui.x_h - x->x_gui.scale_offset_y + sh->h_dragy;
+            //int new_h = x->x_gui.x_h - x->x_gui.scale_offset_y + sh->h_dragy;
             sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
             sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, new_w);
             //sys_vgui(".gfxstub%lx.dim.h_ent delete 0 end\n", properties);
@@ -549,12 +549,6 @@ static void toggle__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
     {
         t_bng *x = (t_bng *)(sh->h_master);
         int dx = (int)f1, dy = (int)f2;
-        int newx, newy;
-        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w -
-            x->x_gui.scale_offset_x + dx;
-        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
-            x->x_gui.scale_offset_y + dy;
-
         sh->h_dragx = dx;
         sh->h_dragy = dy;
 
