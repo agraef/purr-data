@@ -602,7 +602,7 @@ void garray_arraydialog(t_garray *x, t_symbol *s, int argc, t_atom *argv)
 /* jsarlo { */
 void garray_arrayviewlist_new(t_garray *x)
 {
-    int i, type=0, elemsize=0;
+    int i, type=0, elemsize=0, yonset=0;
     t_float yval;
     char cmdbuf[200];
     t_array *a = garray_getarray_floatonly(x, &yonset, &elemsize);
