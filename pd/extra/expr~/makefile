@@ -80,7 +80,7 @@ LINUXOBJ =  vexp.pd_linux_o vexp_fun.pd_linux_o vexp_if.pd_linux_o
 
 LINUXCFLAGS = -DPD -O2 -funroll-loops -fomit-frame-pointer -fPIC \
     -fno-strict-aliasing -Wall -W -Wshadow -Wstrict-prototypes \
-    -Wno-unused -Wno-parentheses -Wno-switch 
+    -Wno-unused-parameter -Wno-parentheses -Wno-switch 
 
 LINUXINCLUDE =  -I../../src
 
@@ -123,7 +123,7 @@ MACOSXOBJ =  vexp.d_fat_o vexp_fun.d_fat_o vexp_if.d_fat_o
 .SUFFIXES: .d_ppc_o .d_fat_o
 
 MACOSXCFLAGS = -DMACOSX -DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
-    -Wno-unused -Wno-parentheses -Wno-switch 
+    -Wno-unused-parameter -Wno-parentheses -Wno-switch 
 
 MACOSXINCLUDE =  -I../../src
 
