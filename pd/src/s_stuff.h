@@ -47,6 +47,9 @@ extern int sys_verbose;
 extern int sys_noloadbang;
 extern int sys_nogui;
 extern char *sys_guicmd;
+#ifdef QTGUI
+extern int sys_qtcanvas;
+#endif
 
 EXTERN int sys_nearestfontsize(int fontsize);
 EXTERN int sys_hostfontsize(int fontsize);

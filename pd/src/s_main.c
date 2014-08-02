@@ -13,8 +13,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#define UNISTD
-
 #ifdef UNISTD
 #include <unistd.h>
 #endif
@@ -54,6 +52,11 @@ int sys_console = 0;    /* default settings for the console is off */
 int sys_k12_mode = 0;   /* by default k12 mode is off */
 int sys_unique = 0;     /* by default off, prevents multiple instances
                            of pd-l2ork */
+
+#ifdef QTGUI
+int sys_qtcanvas = 0; /* enable Qt */
+#endif
+
 char *sys_guicmd;
 t_symbol *sys_libdir;
 t_symbol *sys_guidir;
@@ -447,7 +450,7 @@ static char *(usagemessage[]) = {
 };
 
 #ifdef QTGUI
-//   -nogui applies only to Tk until further notice.
+//   -nogui applies only to Tk.
 //   -qtcanvas should open a Qt window for every pd canvas (two toolkits at once)
 //   more options could go here, to enable a Qt main window, menus, dialogues.
 //   those are transitory options, until Tk is removed, at which point
@@ -476,6 +479,7 @@ static void sys_parsedevlist(int *np, int *vecp, int max, char *str)
     *np = n;
 }
 
+/*
 static int sys_getmultidevchannels(int n, int *devlist)
 {
     int sum = 0;
@@ -484,6 +488,7 @@ static int sys_getmultidevchannels(int n, int *devlist)
     while(n--)sum+=*devlist++;
     return sum;
 }
+*/
 
 
     /* this routine tries to figure out where to find the auxilliary files
@@ -871,6 +876,13 @@ int sys_argparse(int argc, char **argv)
             sys_guicmd = argv[1];
             argc -= 2; argv += 2;
         }
+#ifdef QTGUI
+        else if (!strcmp(*argv, "-qtcanvas"))
+		{
+			sys_qtcanvas = 1;
+			argc--; argv++;
+		}
+#endif
         else if (!strcmp(*argv, "-send") && argc > 1)
         {
             sys_messagelist = namelist_append(sys_messagelist, argv[1], 1);
