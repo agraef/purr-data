@@ -505,7 +505,6 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
         socketreceiver_getudp(x, fd);
     else  /* TCP ("streaming") socket protocol */
     {
-        char *semi;
         int readto =
             (x->sr_inhead >= x->sr_intail ? INBUFSIZE : x->sr_intail-1);
         int ret;
@@ -663,7 +662,7 @@ void blargh(void) {
 
 void sys_vgui(char *fmt, ...)
 {
-    int msglen, bytesleft, headwas, nwrote;
+    int msglen;
     va_list ap;
 
     if (sys_nogui)

@@ -13,6 +13,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+#define UNISTD
+
 #ifdef UNISTD
 #include <unistd.h>
 #endif
@@ -444,6 +446,15 @@ static char *(usagemessage[]) = {
 "\n",
 };
 
+#ifdef QTGUI
+//   -nogui applies only to Tk until further notice.
+//   -qtcanvas should open a Qt window for every pd canvas (two toolkits at once)
+//   more options could go here, to enable a Qt main window, menus, dialogues.
+//   those are transitory options, until Tk is removed, at which point
+//   -nogui will apply to Qt, -guiport and -guiport will be removed, and
+//   all transitory options will be removed.
+#endif
+
 static void sys_parsedevlist(int *np, int *vecp, int max, char *str)
 {
     int n = 0;
@@ -481,8 +492,8 @@ static int sys_getmultidevchannels(int n, int *devlist)
     INSTALL_PREFIX.  In MSW, we don't try to use INSTALL_PREFIX. */
 void sys_findprogdir(char *progname)
 {
-    char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX], *sp;
-    char *lastslash; 
+    char sbuf[FILENAME_MAX], sbuf2[FILENAME_MAX];
+    //char *lastslash; 
 #ifdef UNISTD
     struct stat statbuf;
 #endif
@@ -577,8 +588,6 @@ static int sys_mmio = 0;
 
 int sys_argparse(int argc, char **argv)
 {
-    char sbuf[MAXPDSTRING];
-    int i;
     while ((argc > 0) && **argv == '-')
     {
         if (!strcmp(*argv, "-r") && argc > 1 &&
@@ -1081,7 +1090,7 @@ static void sys_afterargparse(void)
     sys_open_midi(nmidiindev, midiindev, nmidioutdev, midioutdev, 0);
 }
 
-static void sys_addreferencepath(void)
-{
-    char sbuf[MAXPDSTRING];
-}
+//static void sys_addreferencepath(void)
+//{
+//    char sbuf[MAXPDSTRING];
+//}
