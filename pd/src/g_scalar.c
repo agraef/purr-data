@@ -139,7 +139,6 @@ int template_hasxy(t_template *template)
 
 int template_cancreate(t_template *template)
 {
-	//return 1;
     int i, type, nitems = template->t_n;
     t_dataslot *datatypes = template->t_vec;
     t_template *elemtemplate;
@@ -176,7 +175,6 @@ t_scalar *scalar_new(t_glist *owner, t_symbol *templatesym)
     }
     if (!template_cancreate(template))
         return (0);
-    post("ALLÔ");
     x = (t_scalar *)getbytes(sizeof(t_scalar) +
         (template->t_n - 1) * sizeof(*x->sc_vec));
     x->sc_gobj.g_pd = scalar_class;
