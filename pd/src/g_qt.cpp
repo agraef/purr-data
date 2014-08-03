@@ -30,6 +30,7 @@ void *qt_thread_main (void *) {
 	int argc=0; char **argv=0;
 	QApplication app(argc,argv);
 	app.setApplicationName("PureData L2ork for Qt");
+	setlocale(LC_NUMERIC,"C"); //HACK because QApplication constructor sets LC_NUMERIC while pd assumes a C locale.
 	MainWindow mainWin;
 	mainWin.show();
 	app.exec();
