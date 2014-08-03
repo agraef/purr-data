@@ -908,8 +908,6 @@ int sys_startgui(const char *guidir)
     pid_t childpid;
     char cmdbuf[4*MAXPDSTRING];
     struct sockaddr_in server;
-    int msgsock;
-    char buf[15];
     int len = sizeof(server);
     int ntry = 0, portno = FIRSTPORTNUM;
     int xsock = -1;

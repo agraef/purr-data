@@ -128,7 +128,6 @@ int template_size(t_template *x)
 int template_find_field(t_template *x, t_symbol *name, int *p_onset,
     int *p_type, t_symbol **p_arraytype)
 {
-    t_template *t;
     int i, n;
     if (!x)
     {
@@ -250,7 +249,7 @@ elements might still be old ones.)
 static void template_conformwords(t_template *tfrom, t_template *tto,
     int *conformaction, t_word *wfrom, t_word *wto)
 {
-    int nfrom = tfrom->t_n, nto = tto->t_n, i;
+    int nto = tto->t_n, i;
     for (i = 0; i < nto; i++)
     {
         if (conformaction[i] >= 0)
@@ -270,7 +269,7 @@ static t_scalar *template_conformscalar(t_template *tfrom, t_template *tto,
 {
     t_scalar *x;
     t_gpointer gp;
-    int nto = tto->t_n, nfrom = tfrom->t_n, i;
+    int i;
     t_template *scalartemplate;
     /* post("conform scalar"); */
         /* possibly replace the scalar */
@@ -592,7 +591,6 @@ static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
     t_template *t = template_findbyname(sym);
 
     int i;
-    t_symbol *sx = gensym("x");
     x->x_owner = canvas_getcurrent();
     x->x_next = 0;
     x->x_sym = sym;
@@ -780,7 +778,6 @@ static void fielddesc_setsymbol_const(t_fielddesc *fd, t_symbol *s)
 static void fielddesc_setfloat_var(t_fielddesc *fd, t_symbol *s)
 {
     char *s1, *s2, *s3, strbuf[MAXPDSTRING];
-    int i;
     fd->fd_type = A_FLOAT;
     fd->fd_var = 1;
     if (!(s1 = strchr(s->s_name, '(')) || !(s2 = strchr(s->s_name, ')'))
@@ -885,7 +882,7 @@ static t_float fielddesc_getfloat(t_fielddesc *f, t_template *template,
     /* convert a variable's value to a screen coordinate via its fielddesc */
 t_float fielddesc_cvttocoord(t_fielddesc *f, t_float val)
 {
-    t_float coord, pix, extreme, div;
+    t_float coord, extreme, div;
     if (f->fd_v2 == f->fd_v1)
         return (val);
     div = (f->fd_screen2 - f->fd_screen1)/(f->fd_v2 - f->fd_v1);
@@ -2083,7 +2080,6 @@ void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
 {
     /* parse the args */
     t_symbol *type;
-    int i, j;
     t_float m[3][3];
     t_float m2[3][3];
     mset(m, 1, 0, 0, 1, 0, 0); /* init to the identity matrix... */
@@ -2246,7 +2242,6 @@ void svg_doupdatetransform(t_svg *x, t_canvas *c)
 {
     t_float mtx1[3][3];
     t_float mtx2[3][3];
-    t_float mtx3[3][3];
     mset(mtx1, 0, 0, 0, 0, 0, 0);
     mset(mtx2, 0, 0, 0, 0, 0, 0);
     t_gobj *g;
@@ -2330,7 +2325,6 @@ extern t_canvas *canvas_list;
 void svg_updatetransform(t_svg *x)
 {
     t_canvas *c;
-    int i;
     for (c = canvas_list; c; c = c->gl_next)
         svg_doupdatetransform(x, c);
     /* Attempted to use sys_queuegui above, but
@@ -2428,7 +2422,6 @@ static void svg_curvedim(t_float p1x, t_float p1y,
     xy[0] = mtx2[0][0]; xy[1] = mtx2[1][0]; xy[2] = mtx2[0][1]; xy[3] = mtx2[1][1];
     int xyc = 4;
     t_float dotx, doty;
-    t_float dot;
     if (abs(t1) > 1e12) t1 = 0.5;
     if (abs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
@@ -3056,8 +3049,6 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
     *yp2 = (int)finaly2;
 }
 
-static int call_from_vis = 0;
-
 static void draw_getrect(t_gobj *z, t_glist *glist,
     t_word *data, t_template *template, t_float basex, t_float basey,
     int *xp1, int *yp1, int *xp2, int *yp2)
@@ -3363,11 +3354,11 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_svg *sa = (t_svg *)x->x_attr;
 
     int i, n = sa->x_nargs;
-    t_float mtx1[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
-    t_float mtx2[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
+    //t_float mtx1[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
+    //t_float mtx2[3][3] =  { { 0, 0, 0}, {0, 0, 0}, {0, 0, 1} };
     /* need to scale some attributes like radii, widths, etc. */
-    t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
-    t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
+    //t_float xscale = glist_xtopixels(glist, 1) - glist_xtopixels(glist, 0);
+    //t_float yscale = glist_ytopixels(glist, 1) - glist_ytopixels(glist, 0);
     t_fielddesc *f = sa->x_vec;
 
     /*// get the universal tag for all nested objects
@@ -3398,14 +3389,14 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             if (in_array)
             {
                 /* we probably don't need 'p' anymore... */
-                t_canvas *p =
-                    template_findcanvas(template_findbyname(sc->sc_template));
+                //t_canvas *p =
+                //    template_findcanvas(template_findbyname(sc->sc_template));
                sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
                     "-parent .scelem%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
                     glist_getcanvas(glist), data,
                     parentglist, data, basex, basey);
             }
-            int flags = sa->x_flags;
+            //int flags = sa->x_flags;
             t_float pix[500];
             if (n > 500)
                 n = 500;
@@ -4040,7 +4031,7 @@ static void curve_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     glist_getcanvas(glist), data,
                     p, sc->sc_vec, basex, basey);
             }
-            int flags = x->x_flags, closed = (flags & CLOSED);
+            int flags = x->x_flags;
             t_float width = fielddesc_getfloat(&x->x_width, template, data, 1);
             char outline[20], fill[20];
             int pix[200];
@@ -4483,7 +4474,7 @@ int array_getfields(t_symbol *elemtemplatesym,
     t_fielddesc *xfielddesc, t_fielddesc *yfielddesc, t_fielddesc *wfielddesc, 
     int *xonsetp, int *yonsetp, int *wonsetp)
 {
-    int arrayonset, elemsize, yonset, wonset, xonset, type;
+    int elemsize, yonset, wonset, xonset, type;
     t_template *elemtemplate;
     t_symbol *dummy, *varname;
     t_canvas *elemtemplatecanvas = 0;
@@ -4629,7 +4620,6 @@ static void plot_getrect(t_gobj *z, t_glist *glist,
         for (i = 0, xsum = 0; i < array->a_n; i += incr)
         {
             t_float usexloc, useyloc;
-            t_gobj *y;
                 /* get the coords of the point proper */
             array_getcoordinate(glist, (char *)(array->a_vec) + i * elemsize,
                 xonset, yonset, wonset, i, basex + xloc, basey + yloc, xinc,
@@ -4797,7 +4787,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     //    (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
 
     /* used for experimental disabling of drawing outside GOP bounds */
-    int draw_me = 1;
+    //int draw_me = 1;
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -4862,7 +4852,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
             for (xsum = xloc, i = 0; i < nelem; i++)
             {
-                t_float yval, xpix, ypix, nextxloc;
+                t_float yval;
                 int ixpix, inextx;
 
                 if (xonset >= 0)
@@ -4890,7 +4880,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (i == nelem-1 || inextx != ixpix)
                 {
                     int py2 = 0;
-                    int border = 0;
+                    //int border = 0;
                     if(style == PLOTSTYLE_POINTS)
                         py2 = (int)fielddesc_cvttocoord(yfielddesc, maxyval)
                                 + linewidth - 1;
@@ -4907,7 +4897,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                             graph_graphrect(&glist->gl_gobj, glist->gl_owner,
                                 &x1, &y1, &x2, &y2);
                             py2 = y2;
-                            border = 1;
+                            //border = 1;
                         }
                     }
                 //fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
@@ -5616,7 +5606,7 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     //    (t_int)&x->x_obj, (t_int)x->x_canvas, (t_int)x->x_canvas->gl_owner);
 
     /* used for experimental disabling of drawing outside GOP bounds */
-    int draw_me = 1;
+    //int draw_me = 1;
     int elemsize, yonset, wonset, xonset, i;
     t_canvas *elemtemplatecanvas;
     t_template *elemtemplate;
@@ -5673,7 +5663,7 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             sys_vgui(".x%lx.c create path { \\\n", glist_getcanvas(glist));
             for (xsum = basex + xloc, i = 0; i < nelem; i++)
             {
-                t_float yval, xpix, ypix, nextxloc;
+                t_float yval;
                 int ixpix, inextx;
 
                 if (xonset >= 0)
@@ -5704,7 +5694,7 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 if (i == nelem-1 || inextx != ixpix)
                 {
                     int py2 = 0;
-                    int border = 0;
+                    //int border = 0;
                     if(style == PLOTSTYLE_POINTS)
                         py2 = (int)(glist_ytopixels(glist,
                             basey + fielddesc_cvttocoord(yfielddesc, maxyval))
@@ -5722,7 +5712,7 @@ static void old_plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                             graph_graphrect(&glist->gl_gobj, glist->gl_owner,
                                 &x1, &y1, &x2, &y2);
                             py2 = y2;
-                            border = 1;
+                            //border = 1;
                         }
                     }
                 //fprintf(stderr,"%f %f %f %f %f\n", basey, minyval, maxyval,glist->gl_y2,glist->gl_y1);
@@ -6903,7 +6893,7 @@ static int drawimage_getindex(void *z, t_template *template, t_word *data)
 static void drawimage_index(t_drawimage *x, t_symbol *s, int argc,
     t_atom *argv)
 {
-    t_canvas *c = canvas_templatecanvas_forgroup(x->x_canvas);
+    //t_canvas *c = canvas_templatecanvas_forgroup(x->x_canvas);
     if (argv[0].a_type == A_FLOAT || argv[0].a_type == A_SYMBOL)
     {
         if (!(x->x_flags & DRAW_SPRITE))
@@ -7088,7 +7078,6 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         return;
     if (vis)
     {
-        t_atom at;
         /*int xloc = glist_xtopixels(glist,
             basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
         int yloc = glist_ytopixels(glist,
@@ -7326,7 +7315,6 @@ static void drawimage_setup(void)
 t_template *canvas_findtemplate(t_canvas *c)
 {
     t_gobj *g;
-    t_template *tmpl;
     t_symbol *s1 = gensym("struct");
     for (g = c->gl_list; g; g = g->g_next)
     {
@@ -7387,7 +7375,6 @@ t_template *template_findbydrawcommand(t_gobj *g)
         c = ((t_plot *)g)->x_canvas;
     else return (0);
     c = canvas_templatecanvas_forgroup(c);
-    t_template *tmpl;
     t_symbol *s1 = gensym("struct");
     for (g = c->gl_list; g; g = g->g_next)
     {

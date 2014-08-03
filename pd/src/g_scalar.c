@@ -139,7 +139,7 @@ int template_hasxy(t_template *template)
 
 int template_cancreate(t_template *template)
 {
-    int i, type, nitems = template->t_n;
+    int i, nitems = template->t_n;
     t_dataslot *datatypes = template->t_vec;
     t_template *elemtemplate;
     for (i = 0; i < nitems; i++, datatypes++)
@@ -314,7 +314,6 @@ static void scalar_getrect(t_gobj *z, t_glist *owner,
     t_template *template = template_findbyname(x->sc_template);
     t_canvas *templatecanvas = template_findcanvas(template);
     int x1 = 0x7fffffff, x2 = -0x7fffffff, y1 = 0x7fffffff, y2 = -0x7fffffff;
-    t_gobj *y;
     t_float basex, basey;
 
     // EXPERIMENTAL: we assume that entire canvas is within
@@ -452,7 +451,6 @@ static void scalar_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     t_atom at[3];
     t_gpointer gp;
     int xonset, yonset, xtype, ytype, gotx, goty;
-    t_float basex = 0, basey = 0;
     if (!template)
     {
         error("scalar: couldn't find template %s", templatesym->s_name);
@@ -503,7 +501,6 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_atom at[3];
     t_gpointer gp;
     int xonset, yonset, xtype, ytype, gotx, goty;
-    int bx1, bx2, by1, by2;
     t_float basex = 0, basey = 0;
     if (!template)
     {
@@ -537,11 +534,6 @@ static void scalar_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     SETFLOAT(&at[1], (t_float)dx);
     SETFLOAT(&at[2], (t_float)dy);
     template_notify(template, gensym("displace"), 2, at);
-
-    t_float xscale = glist_xtopixels(x->sc_selected, 1) -
-        glist_xtopixels(x->sc_selected, 0);
-    t_float yscale = glist_ytopixels(x->sc_selected, 1) -
-        glist_ytopixels(x->sc_selected, 0);
 
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", glist);
      
@@ -778,7 +770,6 @@ int scalar_doclick(t_word *data, t_template *template, t_scalar *sc,
 {
     int hit = 0;
     t_canvas *templatecanvas = template_findcanvas(template);
-    t_gobj *y;
     t_atom at[2];
     t_float basex = template_getfloat(template, gensym("x"), data, 0);
     t_float basey = template_getfloat(template, gensym("y"), data, 0);
@@ -833,8 +824,6 @@ static void scalar_save(t_gobj *z, t_binbuf *b)
 {
     t_scalar *x = (t_scalar *)z;
     t_binbuf *b2 = binbuf_new();
-    t_atom a, *argv;
-    int i, argc;
     canvas_writescalar(x->sc_template, x->sc_vec, b2, 0);
     binbuf_addv(b, "ss", &s__X, gensym("scalar"));
     binbuf_addbinbuf(b, b2);
@@ -876,8 +865,6 @@ static t_widgetbehavior scalar_widgetbehavior =
 
 static void scalar_free(t_scalar *x)
 {
-    int i;
-    t_dataslot *datatypes, *dt;
     t_symbol *templatesym = x->sc_template;
     t_template *template = template_findbyname(templatesym);
     if (!template)
