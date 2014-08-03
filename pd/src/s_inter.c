@@ -114,6 +114,11 @@ static t_binbuf *inbinbuf;
 static t_socketreceiver *sys_socketreceiver;
 extern int sys_addhist(int phase);
 
+#ifdef QTGUI
+pthread_t sys_thread_main;
+pthread_t sys_thread_qt;
+#endif
+
 /* ----------- functions for timing, signals, priorities, etc  --------- */
 
 #ifdef MSW
@@ -889,6 +894,15 @@ static int defaultfontshit[MAXFONTS] = {
         24, 15, 28};
 #define NDEFAULTFONT (sizeof(defaultfontshit)/sizeof(*defaultfontshit))
 
+
+#ifdef QTGUI
+void sys_start_qt () {
+	sys_thread_main = pthread_self();
+	int r = pthread_create(&sys_thread_qt,0,qt_thread_main,0);
+	if (r) fprintf(stderr,"pthread_create: %s",strerror(r));
+}
+#endif
+
 int sys_startgui(const char *guidir)
 {
     pid_t childpid;
@@ -1166,6 +1180,10 @@ int sys_startgui(const char *guidir)
 
 #endif /* MSW */
     }
+    
+#ifdef QTGUI
+	if (sys_qtcanvas) sys_start_qt();
+#endif
 
 #if defined(__linux__) || defined(IRIX)
         /* now that we've spun off the child process we can promote

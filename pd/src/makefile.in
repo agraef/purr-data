@@ -141,10 +141,10 @@ $(ASIOOBJ): %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDE) -c -o $(OBJ_DIR)/$*.o $*.cpp
 
 ../obj/g_qt.moc.cpp : g_qt.h
-	$(MOC) $(CPPFLAGS) $(QT_INCLUDE) $< -o ../obj/$@
+	$(MOC) $(subst $(CPPFLAGS),-fno-strict-aliasing,) $(QT_INCLUDE) $< -o ../obj/$@
 
 ../obj/g_qt.moc.o : ../obj/g_qt.moc.cpp
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(QT_INCLUDE) -c ../obj/g_qt.moc.cpp -o ../obj/g_qt.moc.o
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $(QT_INCLUDE) -fPIC -c ../obj/g_qt.moc.cpp -o ../obj/g_qt.moc.o
 
 ../obj/g_qt.o : g_qt.cpp
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(QT_INCLUDE) -fPIC -c g_qt.cpp -o ../obj/g_qt.o

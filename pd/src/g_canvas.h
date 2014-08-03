@@ -770,6 +770,12 @@ EXTERN void *canvas_undo_set_font(t_canvas *x, int font);
 /* ------------------------------- */
 
 
+/* ---------- interface to Qt (libQt5) with threads -------------------- */
+
+void *qt_thread_main (void *);
+
+/* --------------------------------------------------------------------- */
+
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
 #endif
