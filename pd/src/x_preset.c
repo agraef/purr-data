@@ -100,7 +100,6 @@ int glob_preset_node_list_delete(t_preset_node *x)
 {
     if(PH_DEBUG) fprintf(stderr,"glob_preset_node_list_delete\n");
     t_glob_preset_node_list *n1, *n2;
-    int found;
 
     if (!gpnl)
         return(1);
@@ -273,7 +272,6 @@ int glob_preset_hub_list_delete(t_preset_hub *x)
 {
     if(PH_DEBUG) fprintf(stderr,"glob_preset_hub_list_delete\n");
     t_glob_preset_hub_list *h1, *h2;
-    int found;
 
     if (!gphl)
         return(1);
@@ -559,7 +557,6 @@ static void preset_node_anything(t_preset_node *x, t_symbol *s, int argc, t_atom
 
 int preset_node_check_location(t_preset_node *x)
 {
-    int result;
     if (x->pn_hub)
     {
         preset_node_update_my_glist_location(x);
@@ -794,7 +791,6 @@ static void *preset_node_new(t_symbol *s, int argc, t_atom *argv)
     }
 
     x->pn_canvas = canvas;
-    t_canvas *y = x->pn_canvas;
     //t_preset_hub *h;
     alist_init(&x->pn_val);
 
@@ -932,7 +928,6 @@ typedef enum
 void preset_hub_save(t_gobj *z, t_binbuf *b)
 {
     if(PH_DEBUG) fprintf(stderr,"preset_hub_save\n");
-    t_atom *outv;
     int i;
     t_preset_hub_data *phd;
     t_node_preset *np;
@@ -1066,7 +1061,6 @@ void preset_hub_store(t_preset_hub *h, t_float f)
     t_preset_hub_data *hd1;
     t_node_preset *np1, *np2;
     int overwrite;
-    t_atom val;
     int changed = 0;
 
     np1 = NULL;
@@ -1319,7 +1313,6 @@ void preset_hub_reset(t_preset_hub *h)
     t_glob_preset_node_list *nl;
     t_preset_hub_data *hd1, *hd2;
     t_node_preset *np1, *np2;
-    t_preset_hub *h1, *h2;
     int changed = 0;
 
     if(PH_DEBUG) fprintf(stderr,"preset_hub_reset\n");
@@ -1616,7 +1609,6 @@ void preset_hub_read(t_preset_hub *x, t_symbol *filename)
     int loc_pos = 0;
     int node_preset = -1;
     int found_node = 0;
-    int found_preset = 0;
     int ignore_entry = 0;
     int data_count = 0;
 
@@ -1897,7 +1889,6 @@ void preset_hub_write(t_preset_hub *x, t_symbol *filename)
 
     t_atom ap[1];
     int result = 0;
-    t_atom *outv;
     int i;
     t_preset_hub_data *phd;
     t_node_preset *np;
@@ -1993,7 +1984,6 @@ void preset_hub_readpreset(t_preset_hub *x, t_symbol *filename)
     int loc_pos = 0;
     int node_preset = -1;
     int found_node = 0;
-    int found_preset = 0;
     int ignore_entry = 0;
     int data_count = 0;
 
@@ -2289,7 +2279,6 @@ void preset_hub_writepreset(t_preset_hub *x, t_symbol *filename, float preset)
 
     t_atom ap[1];
     int result = 0;
-    t_atom *outv;
     int i;
     t_preset_hub_data *phd;
     t_node_preset *np;
@@ -2367,8 +2356,6 @@ void preset_hub_writepreset(t_preset_hub *x, t_symbol *filename, float preset)
 static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
 {
     if(PH_DEBUG) fprintf(stderr,"===preset_hub_new===\n");
-    t_glob_preset_node_list *nl;
-    t_glob_preset_hub_list *hl;
     t_preset_hub_data *hd1, *hd2;
     t_node_preset *np1, *np2;
     t_hub_parser h_cur = H_NONE;
@@ -2376,7 +2363,7 @@ static void *preset_hub_new(t_symbol *s, int argc, t_atom *argv)
     t_preset_hub *x, *check;
     t_atom *name;
     int i, pos, loc_pos;
-    int j, data_count; //for lists
+    int data_count; //for lists
     t_glist *glist=(t_glist *)canvas_getcurrent();
     t_canvas *canvas = (t_canvas *)glist_getcanvas(glist);
 

@@ -36,7 +36,6 @@ static t_class *qlist_class;
 
 static void *qlist_new( void)
 {
-    t_symbol *name, *filename = 0;
     t_qlist *x = (t_qlist *)pd_new(qlist_class);
     x->x_binbuf = binbuf_new();
     x->x_clock = clock_new(x, (t_method)qlist_tick);
@@ -243,7 +242,6 @@ typedef t_qlist t_textfile;
 
 static void *textfile_new( void)
 {
-    t_symbol *name, *filename = 0;
     t_textfile *x = (t_textfile *)pd_new(textfile_class);
     x->x_binbuf = binbuf_new();
     outlet_new(&x->x_ob, &s_list);
@@ -260,8 +258,7 @@ static void *textfile_new( void)
 
 static void textfile_bang(t_textfile *x)
 {
-    int argc = binbuf_getnatom(x->x_binbuf),
-        count, onset = x->x_onset, onset2;
+    int argc = binbuf_getnatom(x->x_binbuf), onset = x->x_onset, onset2;
     t_atom *argv = binbuf_getvec(x->x_binbuf);
     t_atom *ap = argv + onset, *ap2;
     while (onset < argc &&

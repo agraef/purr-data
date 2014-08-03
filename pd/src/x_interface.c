@@ -71,7 +71,6 @@ static void print_float(t_print *x, t_float f)
 
 static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
-    int i;
     if (argc && argv->a_type != A_SYMBOL)
         startpost("%s%s%g", x->x_sym->s_name,
             (*x->x_sym->s_name ? ": " : ""),
@@ -85,7 +84,6 @@ static void print_list(t_print *x, t_symbol *s, int argc, t_atom *argv)
 
 static void print_anything(t_print *x, t_symbol *s, int argc, t_atom *argv)
 {
-    int i;
     startpost("%s: %s", x->x_sym->s_name, s->s_name);
     postatom(argc, argv);
     endpost();
@@ -579,7 +577,7 @@ void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     else devno = 0;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
-    int rate, advance, callback, blocksize;
+    int rate, advance, callback;
     sys_get_audio_params(&naudioindev, audioindev, chindev,
         &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
     int *dev, *chan, ndev;
@@ -652,8 +650,7 @@ void pdinfo_midi_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     int devno, nmidiindev, midiindev[MAXMIDIINDEV],
         nmidioutdev, midioutdev[MAXMIDIOUTDEV];
-    int *dev, *chan, ndev;
-    t_atom at[4];
+    int *dev, ndev;
     if (argc) devno = (int)atom_getfloatarg(0, argc, argv);
     else devno = 0;
     sys_get_midi_params(&nmidiindev, midiindev, &nmidioutdev, midioutdev);
@@ -678,7 +675,7 @@ void pdinfo_audio_outdev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     else devno = 0;
     int naudioindev, audioindev[MAXAUDIOINDEV], chindev[MAXAUDIOINDEV];
     int naudiooutdev, audiooutdev[MAXAUDIOOUTDEV], choutdev[MAXAUDIOOUTDEV];
-    int rate, advance, callback, blocksize;
+    int rate, advance, callback;
     sys_get_audio_params(&naudioindev, audioindev, chindev,
         &naudiooutdev, audiooutdev, choutdev, &rate, &advance, &callback);
     if (devno >= 0 && devno < naudioindev)

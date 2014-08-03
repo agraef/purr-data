@@ -201,7 +201,6 @@ static void netreceive_notify(t_netreceive *x)
 
 static void netreceive_doit(void *z, t_binbuf *b)
 {
-    t_atom messbuf[1024];
     t_netreceive *x = (t_netreceive *)z;
     int msg, natom = binbuf_getnatom(b);
     t_atom *at = binbuf_getvec(b);

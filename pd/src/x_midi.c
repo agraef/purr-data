@@ -568,7 +568,7 @@ void inmidi_clk(double timing)
 
     static t_float prev = 0;
     static t_float count = 0;
-    t_float cur,diff;
+    t_float diff;
 
     if (midiclkin_sym->s_thing)
     {
@@ -1041,7 +1041,6 @@ static void *stripnote_new(void )
     
 static void stripnote_float(t_stripnote *x, t_float f)
 {
-    t_hang *hang;
     if (!x->x_velo) return;
     outlet_float(x->x_velout, x->x_velo);
     outlet_float(x->x_pitchout, f);

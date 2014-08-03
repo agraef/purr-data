@@ -666,7 +666,6 @@ static void route_list(t_route *x, t_symbol *sel, int argc, t_atom *argv)
             }
         }
     }
- rejected:
     outlet_list(x->x_rejectout, 0, argc, argv);
 }
 
@@ -748,7 +747,7 @@ typedef struct _pack
 static void *pack_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_pack *x = (t_pack *)pd_new(pack_class);
-    t_atom defarg[2], *ap, *vec, *vp;
+    t_atom defarg[2], *ap, *vp;
     t_gpointer *gp;
     int nptr = 0;
     int i;
@@ -761,7 +760,7 @@ static void *pack_new(t_symbol *s, int argc, t_atom *argv)
     }
 
     x->x_n = argc;
-    vec = x->x_vec = (t_atom *)getbytes(argc * sizeof(*x->x_vec));
+    x->x_vec = (t_atom *)getbytes(argc * sizeof(*x->x_vec));
     x->x_outvec = (t_atom *)getbytes(argc * sizeof(*x->x_outvec));
 
     for (i = argc, ap = argv; i--; ap++)
@@ -1393,8 +1392,8 @@ typedef struct _makefilename
 
 static void makefilename_scanformat(t_makefilename *x)
 {
-    int num=0, infmt=0;
-    char *str,*chr;
+    int infmt=0;
+    char *str;
     if (!x->x_format) return;
     x->x_accept = A_NULL;
     for (str=x->x_format->s_name; *str; str++)
