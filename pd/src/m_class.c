@@ -715,7 +715,6 @@ extern t_pd *pd_mess_from_responder(t_pd *x);
 
 void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_method *f;
     t_class *c = *x;
     t_methodentry *m;
     t_atomtype *wp, wanttype;

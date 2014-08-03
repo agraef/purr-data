@@ -97,8 +97,6 @@ void post(const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
@@ -110,8 +108,6 @@ void startpost(const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
@@ -137,7 +133,6 @@ void postatom(int argc, t_atom *argv)
 
 void postfloat(t_float f)
 {
-    char buf[80];
     t_atom a;
     SETFLOAT(&a, f);
     postatom(1, &a);
@@ -152,9 +147,6 @@ void error(const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
-
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
@@ -167,8 +159,6 @@ void verbose(int level, const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
     if(level>sys_verbose)return;
     dopost("verbose(");
     postfloat((t_float)level);
@@ -193,8 +183,6 @@ void pd_error(void *object, const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
     static int saidit;
 
     va_start(ap, fmt);
@@ -241,8 +229,6 @@ void bug(const char *fmt, ...)
 {
     char buf[MAXPDSTRING];
     va_list ap;
-    t_int arg[8];
-    int i;
     dopost("consistency check failed: ");
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);

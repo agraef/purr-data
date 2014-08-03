@@ -1329,7 +1329,7 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                     if (!strcmp(third, "hslider"))
                     {
                         t_float range = atom_getfloatarg(7, natom, nextmess);
-                        t_float multiplier = atom_getfloatarg(8, natom, nextmess);
+                        //t_float multiplier = atom_getfloatarg(8, natom, nextmess);
                         t_float offset = atom_getfloatarg(9, natom, nextmess);
                         binbuf_addv(newb, "ssffsffffffsssfffffffff;",
                                     gensym("#X"), gensym("obj"),
@@ -1347,7 +1347,7 @@ static t_binbuf *binbuf_convert(t_binbuf *oldb, int maxtopd)
                     else if (!strcmp(third, "uslider"))
                     {
                         t_float range = atom_getfloatarg(7, natom, nextmess);
-                        t_float multiplier = atom_getfloatarg(8, natom, nextmess);
+                        //t_float multiplier = atom_getfloatarg(8, natom, nextmess);
                         t_float offset = atom_getfloatarg(9, natom, nextmess);
                         binbuf_addv(newb, "ssffsffffffsssfffffffff;",
                                     gensym("#X"), gensym("obj"),

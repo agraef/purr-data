@@ -136,7 +136,6 @@ static void inlet_blob(t_inlet *x, t_blob *st) /* MP20061226 blob type */
 
 static void inlet_list(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_atom at;
     if (x->i_symfrom == &s_list || x->i_symfrom == &s_float
         || x->i_symfrom == &s_symbol || x->i_symfrom == &s_pointer)
             typedmess(x->i_dest, x->i_symto, argc, argv);
@@ -730,9 +729,8 @@ int obj_sigoutletindex(t_object *x, int m)
 
 int obj_issignaloutlet(t_object *x, int m)
 {
-    int n;
     t_outlet *o2;
-    for (o2 = x->ob_outlet, n = 0; o2 && m--; o2 = o2->o_next);
+    for (o2 = x->ob_outlet; o2 && m--; o2 = o2->o_next);
     return (o2 && (o2->o_sym == &s_signal));
 }
 

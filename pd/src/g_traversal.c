@@ -275,10 +275,6 @@ static void ptrobj_next(t_ptrobj *x)
 }
 static void ptrobj_sendwindow(t_ptrobj *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_scalar *sc;
-    t_symbol *templatesym;
-    int n;
-    t_typedout *to;
     t_glist *glist;
     t_pd *canvas;
     t_gstub *gs;
@@ -336,12 +332,7 @@ static void ptrobj_pointer(t_ptrobj *x, t_gpointer *gp)
 
 static void ptrobj_rewind(t_ptrobj *x)
 {
-    t_scalar *sc;
-    t_symbol *templatesym;
-    int n;
-    t_typedout *to;
     t_glist *glist;
-    t_pd *canvas;
     t_gstub *gs;
     if (!gpointer_check(&x->x_gp, 1))
     {
@@ -735,13 +726,12 @@ static void *getsize_new(t_symbol *templatesym, t_symbol *fieldsym)
 
 static void getsize_pointer(t_getsize *x, t_gpointer *gp)
 {
-    int nitems, onset, type;
+    int onset, type;
     t_symbol *templatesym = x->x_templatesym, *fieldsym = x->x_fieldsym,
         *elemtemplatesym;
     t_template *template = template_findbyname(templatesym);
     t_word *w;
     t_array *array;
-    int elemsize;
     t_gstub *gs = gp->gp_stub;
     if (!template)
     {
@@ -816,7 +806,6 @@ static void setsize_float(t_setsize *x, t_float f)
     t_template *template = template_findbyname(templatesym);
     t_template *elemtemplate;
     t_word *w;
-    t_atom at;
     t_array *array;
     int elemsize;
     int newsize = f;
@@ -898,7 +887,7 @@ static void setsize_float(t_setsize *x, t_float f)
     if (newsize > nitems)
     {
         char *newelem = ((char *)array->a_vec) + nitems * elemsize;
-        int i = 0, nnew = newsize - nitems;
+        int nnew = newsize - nitems;
         
         while (nnew--)
         {
@@ -1092,8 +1081,6 @@ static void sublist_pointer(t_sublist *x, t_gpointer *gp)
     t_symbol *templatesym = x->x_templatesym, *dummy;
     t_template *template = template_findbyname(templatesym);
     t_gstub *gs = gp->gp_stub;
-    t_word *vec; 
-    t_getvariable *vp;
     int onset, type;
     t_word *w;
 

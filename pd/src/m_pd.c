@@ -20,8 +20,6 @@ extern t_redundant_mem *rm_end;
 t_pd *pd_new(t_class *c)
 {
     t_pd *x = NULL;
-    t_pd *y = NULL;
-
     if (!c) 
         bug ("pd_new: apparently called before setup routine");
 
@@ -322,7 +320,7 @@ t_pd *pd_findbyclass(t_symbol *s, t_class *c)
     if (*s->s_thing == bindlist_class)
     {
         t_bindlist *b = (t_bindlist *)s->s_thing;
-        t_bindelem *e, *e2;
+        t_bindelem *e;
         int warned = 0;
         for (e = b->b_list; e; e = e->e_next)
         {
