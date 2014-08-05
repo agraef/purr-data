@@ -215,16 +215,9 @@ struct _glist
 	//infinite undo goodies (have to stay here rather than the editor to prevent its obliteration when editor is deleted)
 	t_undo_action *u_queue;
 	t_undo_action *u_last;
-	//dpsaha@vt.edu for the gop dynamic resizing
-	t_pd	   		   *x_handle;
-	int 			   scale_offset_x;	
-	int				   scale_offset_y;
-	int				   scale_vis;	
-	//dpsaha@vt.edu for the move handle
-	t_pd			   *x_mhandle;
-	int				   move_offset_x;
-	int				   move_offset_y;
-	int				   move_vis;
+	//dpsaha@vt.edu for the gop dynamic resizing & move handle (refactored by mathieu)
+	struct _scalehandle *x_handle;
+	struct _scalehandle *x_mhandle;
 	t_pd *gl_svg;
 };
 

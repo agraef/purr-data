@@ -923,11 +923,10 @@ const char *nlet_tag, const char *class_tag) {
 
     //printf("scalehandle_draw_select(x%lx,x%lx,%d,%d,\"%s\",\"%s\")\n",h,canvas,px,py,nlet_tag,class_tag);
 
-    if (h->h_scale ? x->scale_vis : x->label_vis)
-        scalehandle_draw_erase(h,canvas);
+    if (h->h_vis) scalehandle_draw_erase(h,canvas);
 
-//    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
-    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
+    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
+//    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
         "-cursor %s\n", h->h_pathname, sx, sy, cursor);
     // there was a %lxBNG tag (or similar) in every scalehandle,
     // but it didn't seem to be used —mathieu
@@ -943,27 +942,42 @@ const char *nlet_tag, const char *class_tag) {
         "-window %s -tags {%s}\n", canvas, x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy,
         sx, sy, h->h_pathname, tags);
     scalehandle_bind(h);
-    if (h->h_scale) x->scale_vis = 1;
-    else            x->label_vis = 1;
+    h->h_vis = 1;
 }
 
 void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
         sys_vgui("destroy %s\n", h->h_pathname);
         sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
+        h->h_vis = 0;
 }
 
 void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
-    /*if (x->x_fsf.x_selected)
-    {
-        scalehandle_draw_erase((t_scalehandle *)(x->x_handle),canvas);
-        scalehandle_draw_erase((t_scalehandle *)(x->x_lhandle),canvas);
-    }*/
-    if (x->scale_vis) {
-		scalehandle_draw_erase((t_scalehandle *)(x->x_handle),canvas);
-		x->scale_vis = 0;
-	}
-    if (x->label_vis) {
-		scalehandle_draw_erase((t_scalehandle *)(x->x_lhandle),canvas);
-		x->label_vis = 0;
-	}
+	t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
+	t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
+    if (sh->h_vis) scalehandle_draw_erase(sh,canvas);
+    if (lh->h_vis) scalehandle_draw_erase(lh,canvas);
+}
+
+void scalehandle_draw_new(t_scalehandle *h, t_glist *canvas) {
+    sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)h);
+}
+
+t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
+    t_scalehandle *h = (t_scalehandle *)pd_new(c);
+    char buf[64];
+    h->h_master = (t_gobj*)x;
+    sprintf(buf, "_h%lx", (t_int)h);
+    pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
+    sprintf(h->h_outlinetag, "h%lx", (t_int)h);
+    h->h_dragon = 0;
+    h->h_scale = scale;
+    h->h_offset_x = 0;
+    h->h_offset_y = 0;
+    h->h_vis = 0;
+    return h;
+}
+
+void scalehandle_free(t_scalehandle *h) {
+    pd_unbind((t_pd *)h, h->h_bindsym);
+    pd_free((t_pd *)h);
 }

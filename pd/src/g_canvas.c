@@ -438,40 +438,11 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_font = sys_nearestfontsize(font);
     pd_pushsym(&x->gl_pd);
 
-    //dpsaha@vt.edu gop resize
-
-    //resize blob
-    t_scalehandle *sh;
-    char buf[64];
-    x->x_handle = pd_new(scalehandle_class);
-    sh = (t_scalehandle *)x->x_handle;
-    sh->h_master = (t_gobj*)x;
-    sprintf(buf, "_h%lx", (t_int)sh);
-    pd_bind(x->x_handle, sh->h_bindsym = gensym(buf));
-    sprintf(sh->h_outlinetag, "h%lx", (t_int)sh);
-    sh->h_dragon = 0;
-    sh->h_scale = 1;
-    x->scale_offset_x = 0;
-    x->scale_offset_y = 0;
-    x->scale_vis = 0;
-    
-    //move blob    
-    t_scalehandle *mh;
-    char mbuf[64];
-    x->x_mhandle = pd_new(scalehandle_class);
-    mh = (t_scalehandle *)x->x_mhandle;
-    mh->h_master = (t_gobj*)x;
-    sprintf(mbuf, "_h%lx", (t_int)mh);
-    pd_bind(x->x_mhandle, mh->h_bindsym = gensym(mbuf));
-    sprintf(mh->h_outlinetag, "h%lx", (t_int)mh);
-    mh->h_dragon = 0;
-    mh->h_scale = 0;
-    x->move_offset_x = 0;
-    x->move_offset_y = 0;
-    x->move_vis = 0;
+    //dpsaha@vt.edu gop resize (refactored by mathieu)
+    x-> x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
+    x->x_mhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
 
     x->u_queue = canvas_undo_init(x);
-
     return(x);
 }
 
@@ -737,7 +708,9 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sys_vgui("destroy %s\n", sh->h_pathname);    
         sys_vgui(".x%lx.c delete GOP_resblob\n", x);    
-        
+
+        // instead should call scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag, const char *class_tag);
+        // but the tags are different
         sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) "
                  "-bd 0 -cursor bottom_right_corner\n",
             sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
@@ -764,6 +737,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
             SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
             mh->h_pathname, x, x);
         scalehandle_bind(mh);
+        // end of part to be replaced by scalehandle_draw_select
     }
     else
     {
@@ -1987,8 +1961,8 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
     t_canvas *x = (t_canvas *)(sh->h_master);
 
-    if (xxx) x->scale_offset_x = xxx;
-    if (yyy) x->scale_offset_y = yyy;
+    if (xxx) sh->h_offset_x = xxx;
+    if (yyy) sh->h_offset_y = yyy;
 
     int newstate = (int)f;
     if (sh->h_dragon && newstate == 0)
@@ -2003,11 +1977,11 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
             if (sh->h_dragx || sh->h_dragy) 
             {
                 x->gl_pixwidth = x->gl_pixwidth + sh->h_dragx -
-                    x->scale_offset_x;
+                    sh->h_offset_x;
                 if (x->gl_pixwidth < SCALE_GOP_MINWIDTH)
                     x->gl_pixwidth = SCALE_GOP_MINWIDTH;
                 x->gl_pixheight = x->gl_pixheight + sh->h_dragy -
-                    x->scale_offset_y;
+                    sh->h_offset_y;
                 if (x->gl_pixheight < SCALE_GOP_MINHEIGHT)
                     x->gl_pixheight = SCALE_GOP_MINHEIGHT;
 
@@ -2063,8 +2037,8 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
             if (sh->h_dragx || sh->h_dragy) 
             {
-                x->gl_xmargin = x->gl_xmargin + sh->h_dragx - x->scale_offset_x;
-                x->gl_ymargin = x->gl_ymargin + sh->h_dragy - x->scale_offset_y;
+                x->gl_xmargin = x->gl_xmargin + sh->h_dragx - sh->h_offset_x;
+                x->gl_ymargin = x->gl_ymargin + sh->h_dragy - sh->h_offset_y;
                 canvas_dirty(x, 1);
             }
 
@@ -2127,8 +2101,8 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
     {
         if(sh->h_scale) //enter if resize_gop hook
         {            
-            newx = x->gl_xmargin + x->gl_pixwidth - x->scale_offset_x + dx;
-            newy = x->gl_ymargin + x->gl_pixheight - x->scale_offset_y + dy;
+            newx = x->gl_xmargin + x->gl_pixwidth - sh->h_offset_x + dx;
+            newy = x->gl_ymargin + x->gl_pixheight - sh->h_offset_y + dy;
 
             if (newx < x->gl_xmargin + SCALE_GOP_MINWIDTH)
                 newx = x->gl_xmargin + SCALE_GOP_MINWIDTH;
@@ -2145,8 +2119,8 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
-                int new_w = x->gl_pixwidth - x->scale_offset_x + sh->h_dragx;
-                int new_h = x->gl_pixheight - x->scale_offset_y + sh->h_dragy;
+                int new_w = x->gl_pixwidth - sh->h_offset_x + sh->h_dragx;
+                int new_h = x->gl_pixheight - sh->h_offset_y + sh->h_dragy;
                 sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n",
                     properties);
                 sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n",
@@ -2159,8 +2133,8 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
         }
         else //enter if move_gop hook
         {
-            newx = x->gl_xmargin - x->scale_offset_x + dx;
-            newy = x->gl_ymargin - x->scale_offset_y + dy;
+            newx = x->gl_xmargin - sh->h_offset_x + dx;
+            newy = x->gl_ymargin - sh->h_offset_y + dy;
         
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)

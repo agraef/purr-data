@@ -177,6 +177,9 @@ typedef struct _scalehandle
     int        h_dragon;
     int        h_dragx;
     int        h_dragy;
+    int        h_offset_x;
+    int        h_offset_y;
+    int        h_vis;
 } t_scalehandle;
 
 static t_class *scalehandle_class;
@@ -198,22 +201,16 @@ typedef struct _iemgui
     int                x_fcol;
     int                x_bcol;
     int                x_lcol;
-    t_symbol           *x_snd;              /* send symbol */
-    t_symbol           *x_rcv;              /* receive */
-    t_symbol           *x_lab;              /* label */
-    t_symbol           *x_snd_unexpanded;   /* same 3, with '$' unexpanded */
-    t_symbol           *x_rcv_unexpanded;
-    t_symbol           *x_lab_unexpanded;
+    t_symbol          *x_snd;              /* send symbol */
+    t_symbol          *x_rcv;              /* receive */
+    t_symbol          *x_lab;              /* label */
+    t_symbol          *x_snd_unexpanded;   /* same 3, with '$' unexpanded */
+    t_symbol          *x_rcv_unexpanded;
+    t_symbol          *x_lab_unexpanded;
     int                x_binbufindex;       /* where in binbuf to find these */
     int                x_labelbindex;       /* where in binbuf to find label */
-    t_pd               *x_handle;
-    int                scale_offset_x;
-    int                scale_offset_y;
-    int                scale_vis;
-    t_pd               *x_lhandle;
-    int                label_offset_x;
-    int                label_offset_y;
-    int                label_vis;
+    t_scalehandle     *x_handle;
+    t_scalehandle     *x_lhandle;
     int                x_vis;               /* is the object drawn? */
     int                x_changed;           /* has the value changed so that we need to do graphic update */
 } t_iemgui;
@@ -410,3 +407,6 @@ EXTERN void scalehandle_bind(t_scalehandle *h);
 EXTERN void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag, const char *class_tag);
 EXTERN void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas);
 EXTERN void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas);
+EXTERN void scalehandle_draw_new(t_scalehandle *x, t_glist *canvas);
+EXTERN t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale);
+EXTERN void scalehandle_free(t_scalehandle *h);

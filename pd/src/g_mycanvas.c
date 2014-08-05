@@ -41,11 +41,8 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     t_canvas *canvas=glist_getcanvas(glist);
 
-    t_scalehandle *sh = (t_scalehandle *)x->x_gui.x_handle;
-    sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)sh);
-
-    t_scalehandle *lh = (t_scalehandle *)x->x_gui.x_lhandle;
-    sprintf(lh->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)lh);
+    scalehandle_draw_new(x->x_gui. x_handle,canvas);
+    scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
     //if (glist_isvisible(glist) {
         char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
@@ -181,13 +178,11 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
 
     if (xxx)
     {
-        x->x_gui.scale_offset_x = xxx;
-        x->x_gui.label_offset_x = xxx;
+        sh->h_offset_x = xxx;
     }
     if (yyy)
     {
-        x->x_gui.scale_offset_y = yyy;
-        x->x_gui.label_offset_y = yyy;
+        sh->h_offset_y = yyy;
     }
 
     int newstate = (int)f;
@@ -201,10 +196,10 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
         if (sh->h_dragx || sh->h_dragy)
         {
 
-            x->x_vis_w = x->x_vis_w + sh->h_dragx - x->x_gui.scale_offset_x;
+            x->x_vis_w = x->x_vis_w + sh->h_dragx - sh->h_offset_x;
             if (x->x_vis_w < SCALE_CNV_MINWIDTH)
                 x->x_vis_w = SCALE_CNV_MINWIDTH;
-            x->x_vis_h = x->x_vis_h + sh->h_dragy - x->x_gui.scale_offset_y;
+            x->x_vis_h = x->x_vis_h + sh->h_dragy - sh->h_offset_y;
             if (x->x_vis_h < SCALE_CNV_MINHEIGHT)
                 x->x_vis_h = SCALE_CNV_MINHEIGHT;
 
@@ -265,9 +260,9 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
         {
 
             x->x_gui.x_ldx = x->x_gui.x_ldx + sh->h_dragx -
-                x->x_gui.label_offset_x;
+                sh->h_offset_x;
             x->x_gui.x_ldy = x->x_gui.x_ldy + sh->h_dragy -
-                x->x_gui.label_offset_y;
+                sh->h_offset_y;
 
             canvas_dirty(x->x_gui.x_glist, 1);
         }
@@ -298,7 +293,7 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
         if (glist_isvisible(x->x_gui.x_glist))
         {
             sys_vgui("lower %s\n", sh->h_pathname);
-            t_scalehandle *othersh = (t_scalehandle *)x->x_gui.x_handle;
+            t_scalehandle *othersh = x->x_gui.x_handle;
             sys_vgui("lower .x%lx.h%lx\n",
                 (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
         }
@@ -318,9 +313,9 @@ static void my_canvas__motionhook(t_scalehandle *sh,
         int dx = (int)f1, dy = (int)f2;
         int newx, newy;
         newx = x->x_gui.x_obj.te_xpix + x->x_vis_w -
-            x->x_gui.scale_offset_x + dx;
+            sh->h_offset_x + dx;
         newy = x->x_gui.x_obj.te_ypix + x->x_vis_h -
-            x->x_gui.scale_offset_y + dy;
+            sh->h_offset_y + dy;
 
         if (newx < x->x_gui.x_obj.te_xpix + SCALE_CNV_MINWIDTH)
             newx = x->x_gui.x_obj.te_xpix + SCALE_CNV_MINWIDTH;
@@ -340,8 +335,8 @@ static void my_canvas__motionhook(t_scalehandle *sh,
 
         if (properties)
         {
-            int new_w = x->x_vis_w - x->x_gui.scale_offset_x + sh->h_dragx;
-            int new_h = x->x_vis_h - x->x_gui.scale_offset_y + sh->h_dragy;
+            int new_w = x->x_vis_w - sh->h_offset_x + sh->h_dragx;
+            int new_h = x->x_vis_h - sh->h_offset_y + sh->h_dragy;
             sys_vgui(".gfxstub%lx.rng.min_ent delete 0 end\n", properties);
             sys_vgui(".gfxstub%lx.rng.min_ent insert 0 %d\n", properties, new_w);
             sys_vgui(".gfxstub%lx.rng.max_ent delete 0 end\n", properties);
@@ -365,8 +360,8 @@ static void my_canvas__motionhook(t_scalehandle *sh,
 
         if (properties)
         {
-            int new_x = x->x_gui.x_ldx - x->x_gui.label_offset_x + sh->h_dragx;
-            int new_y = x->x_gui.x_ldy - x->x_gui.label_offset_y + sh->h_dragy;
+            int new_x = x->x_gui.x_ldx - sh->h_offset_x + sh->h_dragx;
+            int new_y = x->x_gui.x_ldy - sh->h_offset_y + sh->h_dragy;
             sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
             sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n", properties, new_x);
             sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
@@ -380,8 +375,8 @@ static void my_canvas__motionhook(t_scalehandle *sh,
             t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
             sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
                 canvas, x,
-                xpos+x->x_gui.x_ldx + sh->h_dragx - x->x_gui.label_offset_x,
-                ypos+x->x_gui.x_ldy + sh->h_dragy - x->x_gui.label_offset_y);
+                xpos+x->x_gui.x_ldx + sh->h_dragx - sh->h_offset_x,
+                ypos+x->x_gui.x_ldy + sh->h_dragy - sh->h_offset_y);
         }
     }
 }
@@ -660,36 +655,8 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     x->x_at[1].a_type = A_FLOAT;
     iemgui_verify_snd_ne_rcv(&x->x_gui);
 
-    /* scale handle init */
-    t_scalehandle *sh;
-    char buf[64];
-    x->x_gui.x_handle = pd_new(scalehandle_class);
-    sh = (t_scalehandle *)x->x_gui.x_handle;
-    sh->h_master = (t_gobj*)x;
-    sprintf(buf, "_h%lx", (t_int)sh);
-    pd_bind(x->x_gui.x_handle, sh->h_bindsym = gensym(buf));
-    sprintf(sh->h_outlinetag, "h%lx", (t_int)sh);
-    sh->h_dragon = 0;
-    sh->h_scale = 1;
-    x->x_gui.scale_offset_x = 0;
-    x->x_gui.scale_offset_y = 0;
-    x->x_gui.scale_vis = 0;
-
-    /* label handle init */
-    t_scalehandle *lh;
-    char lhbuf[64];
-    x->x_gui.x_lhandle = pd_new(scalehandle_class);
-    lh = (t_scalehandle *)x->x_gui.x_lhandle;
-    lh->h_master = (t_gobj*)x;
-    sprintf(lhbuf, "_h%lx", (t_int)lh);
-    pd_bind(x->x_gui.x_lhandle, lh->h_bindsym = gensym(lhbuf));
-    sprintf(lh->h_outlinetag, "h%lx", (t_int)lh);
-    lh->h_dragon = 0;
-    lh->h_scale = 0;
-    x->x_gui.label_offset_x = 0;
-    x->x_gui.label_offset_y = 0;
-    x->x_gui.label_vis = 0;
-
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);
@@ -701,21 +668,8 @@ static void my_canvas_ff(t_my_canvas *x)
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     gfxstub_deleteforkey(x);
 
-    /* scale handle deconstructor */
-    if (x->x_gui.x_handle)
-    {
-        pd_unbind(x->x_gui.x_handle,
-            ((t_scalehandle *)x->x_gui.x_handle)->h_bindsym);
-        pd_free(x->x_gui.x_handle);
-    }
-
-    /* label handle deconstructor */
-    if (x->x_gui.x_lhandle)
-    {
-        pd_unbind(x->x_gui.x_lhandle,
-            ((t_scalehandle *)x->x_gui.x_lhandle)->h_bindsym);
-        pd_free(x->x_gui.x_lhandle);
-    }
+    if (x->x_gui. x_handle) scalehandle_free(x->x_gui. x_handle);
+    if (x->x_gui.x_lhandle) scalehandle_free(x->x_gui.x_lhandle);
 }
 
 void g_mycanvas_setup(void)
