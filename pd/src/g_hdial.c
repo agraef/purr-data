@@ -161,18 +161,6 @@ void hradio_draw_erase(t_hradio* x, t_glist* glist)
     sys_vgui(".x%lx.c delete %lxHRDO\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxHRDO\n", canvas, x);
     scalehandle_draw_erase2(&x->x_gui,glist);
-/*
-    for(i=0; i<n; i++)
-    {
-        sys_vgui(".x%lx.c delete %lxBASE%d\n", canvas, x, i);
-        sys_vgui(".x%lx.c delete %lxBUT%d\n", canvas, x, i);
-    }
-    sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
-    if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c delete %so%d\n", canvas, rtext_gettag(yy), 0);
-    if(!x->x_gui.x_fsf.x_rcv_able)
-    sys_vgui(".x%lx.c delete %si%d\n", canvas, rtext_gettag(yy), 0);
-*/
 }
 
 void hradio_draw_config(t_hradio* x, t_glist* glist)

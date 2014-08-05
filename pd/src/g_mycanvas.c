@@ -103,9 +103,6 @@ void my_canvas_draw_erase(t_my_canvas* x, t_glist* glist)
     sys_vgui(".x%lx.c delete %lxMYCNV\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxMYCNV\n", canvas, x);
     scalehandle_draw_erase2(&x->x_gui,glist);
-    //sys_vgui(".x%lx.c delete %lxBASE\n", canvas, x);
-    //sys_vgui(".x%lx.c delete %lxRECT\n", canvas, x);
-    //sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
 }
 
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)

@@ -166,15 +166,6 @@ static void hslider_draw_erase(t_hslider* x,t_glist* glist)
     sys_vgui(".x%lx.c delete %lxHSLDR\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxHSLDR\n", canvas, x);
     scalehandle_draw_erase2(&x->x_gui,glist);
-/*
-    sys_vgui(".x%lx.c delete %lxBASE\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxKNOB\n", canvas, x);
-    sys_vgui(".x%lx.c delete %lxLABEL\n", canvas, x);
-    if(!x->x_gui.x_fsf.x_snd_able)
-        sys_vgui(".x%lx.c delete %lxOUT%d\n", canvas, x, 0);
-    if(!x->x_gui.x_fsf.x_rcv_able)
-        sys_vgui(".x%lx.c delete %lxIN%d\n", canvas, x, 0);
-*/
 }
 
 static void hslider_draw_config(t_hslider* x,t_glist* glist)
