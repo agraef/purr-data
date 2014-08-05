@@ -892,3 +892,78 @@ char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj)
     else return("bogus");
 }
 
+//----------------------------------------------------------------
+// SCALEHANDLE COMMON CODE
+
+// in all 20 cases :
+// [bng], [tgl], [hradio], [vradio], [hsl], [vsl], [cnv], [nbx], [vu]
+// for both scale & label, plus canvas' scale & move.
+void scalehandle_bind(t_scalehandle *h) {
+    sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
+        h->h_pathname, h->h_bindsym->s_name);
+    sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
+        h->h_pathname, h->h_bindsym->s_name);
+    sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
+        h->h_pathname, h->h_bindsym->s_name);
+}
+
+// in 18 cases only, because canvas does not fit the pattern below.
+// this works only on iemgui, and also, canvas has no label handle and has a motion handle
+void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py,
+const char *nlet_tag, const char *class_tag) {
+    char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    //if (!nlet_tag) nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
+
+    const char *cursor = h->h_scale ? "bottom_right_corner" : "crosshair";
+    int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
+    int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
+    //int px = h->h_scale ? (x->x_gui.x_w-1) : x->x_gui.x_ldx;
+    //int py = h->h_scale ? (x->x_gui.x_h-1) : x->x_gui.x_ldy;
+
+    //printf("scalehandle_draw_select(x%lx,x%lx,%d,%d,\"%s\",\"%s\")\n",h,canvas,px,py,nlet_tag,class_tag);
+
+    if (h->h_scale ? x->scale_vis : x->label_vis)
+        scalehandle_draw_erase(h,canvas);
+
+//    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
+    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
+        "-cursor %s\n", h->h_pathname, sx, sy, cursor);
+    // there was a %lxBNG tag (or similar) in every scalehandle,
+    // but it didn't seem to be used —mathieu
+    if (h->h_scale) {
+        sprintf(tags,"%lx%s %lxSCALE iemgui %s",
+            (long)x,class_tag,(long)x,nlet_tag);
+    } else {
+        //sprintf(tags,"%lx%s %lxLABEL %lxLABELH iemgui %s", // causes unknown option "-fill"
+        sprintf(tags,"%lx%s %lxLABELH iemgui %s",
+            (long)x,class_tag,(long)x,nlet_tag);
+    }
+    sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
+        "-window %s -tags {%s}\n", canvas, x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy,
+        sx, sy, h->h_pathname, tags);
+    scalehandle_bind(h);
+    if (h->h_scale) x->scale_vis = 1;
+    else            x->label_vis = 1;
+}
+
+void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
+        sys_vgui("destroy %s\n", h->h_pathname);
+        sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
+}
+
+void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
+    /*if (x->x_fsf.x_selected)
+    {
+        scalehandle_draw_erase((t_scalehandle *)(x->x_handle),canvas);
+        scalehandle_draw_erase((t_scalehandle *)(x->x_lhandle),canvas);
+    }*/
+    if (x->scale_vis) {
+		scalehandle_draw_erase((t_scalehandle *)(x->x_handle),canvas);
+		x->scale_vis = 0;
+	}
+    if (x->label_vis) {
+		scalehandle_draw_erase((t_scalehandle *)(x->x_lhandle),canvas);
+		x->label_vis = 0;
+	}
+}

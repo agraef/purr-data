@@ -737,6 +737,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sys_vgui("destroy %s\n", sh->h_pathname);    
         sys_vgui(".x%lx.c delete GOP_resblob\n", x);    
+        
         sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) "
                  "-bd 0 -cursor bottom_right_corner\n",
             sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
@@ -747,13 +748,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
              x->gl_ymargin + 3 + x->gl_pixheight - SCALEHANDLE_HEIGHT - 4,
              SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
              sh->h_pathname, x, x);
-        
-        sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-                 sh->h_pathname, sh->h_bindsym->s_name);
-        sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-                 sh->h_pathname, sh->h_bindsym->s_name);
-        sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-                 sh->h_pathname, sh->h_bindsym->s_name);
+        scalehandle_bind(sh);
 
         //Drawing and Binding Move_Blob for GOP
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
@@ -768,14 +763,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
             x->gl_ymargin + 2 ,
             SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
             mh->h_pathname, x, x);
-        
-        sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-                 mh->h_pathname, mh->h_bindsym->s_name);
-        sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-                 mh->h_pathname, mh->h_bindsym->s_name);
-        sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-                 mh->h_pathname, mh->h_bindsym->s_name);
-
+        scalehandle_bind(mh);
     }
     else
     {

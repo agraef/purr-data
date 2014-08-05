@@ -163,15 +163,7 @@ void toggle_draw_erase(t_toggle* x, t_glist* glist)
 
     sys_vgui(".x%lx.c delete %lxTGL\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxTGL\n", canvas, x);
-    if (x->x_gui.x_fsf.x_selected)
-    {
-        t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-        sys_vgui("destroy %s\n", sh->h_pathname);
-        sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-        t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
-        sys_vgui("destroy %s\n", lh->h_pathname);
-        sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-    }
+    scalehandle_draw_erase2(&x->x_gui,glist);
 }
 
 void toggle_draw_config(t_toggle* x, t_glist* glist)
@@ -272,70 +264,17 @@ void toggle_draw_select(t_toggle* x, t_glist* glist)
             if (x->x_gui.x_glist == glist_getcanvas(glist))
             {
 
-            char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-            sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                     "-stroke $pd_colors(selection)\n", canvas, x);
-            sys_vgui(".x%lx.c itemconfigure %lxLABEL "
-                     "-fill $pd_colors(selection)\n", canvas, x);
+                sys_vgui(".x%lx.c itemconfigure %lxBASE "
+                         "-stroke $pd_colors(selection)\n", canvas, x);
+                sys_vgui(".x%lx.c itemconfigure %lxLABEL "
+                         "-fill $pd_colors(selection)\n", canvas, x);
 
-                if (x->x_gui.scale_vis)
-                {
-                    sys_vgui("destroy %s\n", sh->h_pathname);
-                    sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-                }
-
-                sys_vgui("canvas %s -width %d -height %d "
-                         "-bg $pd_colors(selection) -bd 0 "
-                         "-cursor bottom_right_corner\n",
-                     sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-                sys_vgui(".x%x.c create window %d %d -anchor nw "
-                         "-width %d -height %d -window %s "
-                         "-tags {%lxSCALE %lxTGL %s}\n",
-                     canvas,
-                     x->x_gui.x_obj.te_xpix + x->x_gui.x_w -
-                         SCALEHANDLE_WIDTH - 1,
-                     x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
-                         SCALEHANDLE_HEIGHT - 1,
-                     SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-                     sh->h_pathname, x, x, nlet_tag);
-                sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-                     sh->h_pathname, sh->h_bindsym->s_name);
-                sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-                     sh->h_pathname, sh->h_bindsym->s_name);
-                sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-                     sh->h_pathname, sh->h_bindsym->s_name);
-                x->x_gui.scale_vis = 1;
-
+                scalehandle_draw_select(sh,canvas,x->x_gui.x_w-1,x->x_gui.x_h-1,nlet_tag,"TGL");
                 if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
                 {
-                    if (x->x_gui.label_vis)
-                    {
-                        sys_vgui("destroy %s\n", lh->h_pathname);
-                        sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-                    }
-
-                    sys_vgui("canvas %s -width %d -height %d "
-                             "-bg $pd_colors(selection) -bd 0 "
-                             "-cursor crosshair\n",
-                        lh->h_pathname, LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT);
-                    sys_vgui(".x%x.c create window %d %d -anchor nw "
-                             "-width %d -height %d -window %s "
-                             "-tags {%lxLABEL %lxLABELH %lxTGL %s}\n",
-                        canvas,
-                        x->x_gui.x_obj.te_xpix+ x->x_gui.x_ldx -
-                            LABELHANDLE_WIDTH,
-                        x->x_gui.x_obj.te_ypix + x->x_gui.x_ldy -
-                            LABELHANDLE_HEIGHT,
-                        LABELHANDLE_WIDTH, LABELHANDLE_HEIGHT,
-                        lh->h_pathname, x, x, x, nlet_tag);
-                    sys_vgui("bind %s <Button> {pd [concat %s _click 1 %%x %%y \\;]}\n",
-                        lh->h_pathname, lh->h_bindsym->s_name);
-                    sys_vgui("bind %s <ButtonRelease> {pd [concat %s _click 0 0 0 \\;]}\n",
-                        lh->h_pathname, lh->h_bindsym->s_name);
-                    sys_vgui("bind %s <Motion> {pd [concat %s _motion %%x %%y \\;]}\n",
-                        lh->h_pathname, lh->h_bindsym->s_name);
-                    x->x_gui.label_vis = 1;
+                    scalehandle_draw_select(lh,canvas,x->x_gui.x_ldx,x->x_gui.x_ldy,nlet_tag,"TGL");
                 }
             }
 
@@ -348,12 +287,7 @@ void toggle_draw_select(t_toggle* x, t_glist* glist)
             sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
                 canvas, x, x->x_gui.x_lcol);
             sys_vgui(".x%lx.c dtag %lxTGL selected\n", canvas, x);
-            sys_vgui("destroy %s\n", sh->h_pathname);
-            sys_vgui(".x%lx.c delete %lxSCALE\n", canvas, x);
-            x->x_gui.scale_vis = 0;
-            sys_vgui("destroy %s\n", lh->h_pathname);
-            sys_vgui(".x%lx.c delete %lxLABELH\n", canvas, x);
-            x->x_gui.label_vis = 0;
+            scalehandle_draw_erase2(&x->x_gui,glist);
         }
     //}
 }
