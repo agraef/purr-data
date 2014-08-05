@@ -553,17 +553,19 @@ static int pdCmd(ClientData cd, Tcl_Interp *interp, int argc,  char **argv)
 
 /***********  "c" level access to tk functions. ******************/
 
+#define DEBUG_TCL
+
 void tcl_mess(char *s)
 {
     int result;
 
-    // PRODUCTION VERSION
+#ifdef DEBUG_TCL
+    char catch_s[strlen(s)];
+    sprintf(catch_s, "%s", s);
+#else
     char catch_s[strlen(s)+10];
     sprintf(catch_s, "catch { %s }", s);
-
-    // DEBUGGING VERSION
-    //char catch_s[strlen(s)];
-    //sprintf(catch_s, "%s", s);
+#endif
 
     Tcl_Obj *messageObjPtr = Tcl_NewStringObj(catch_s,-1);
     Tcl_IncrRefCount(messageObjPtr);
@@ -571,7 +573,9 @@ void tcl_mess(char *s)
     Tcl_DecrRefCount(messageObjPtr);
     if (result != TCL_OK)
     {
-        if (tk_pdinterp) printf("%s\n",  Tcl_GetStringResult(tk_pdinterp));
+        if (tk_pdinterp) printf("in sys_gui \e[0;1;36m%s\e[31m%s\e[0m\n",
+            s, Tcl_GetStringResult(tk_pdinterp));
+        else printf("no error\n");
     }
 }
 
