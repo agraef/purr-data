@@ -950,9 +950,9 @@ const char *nlet_tag, const char *class_tag) {
     h->h_vis = 1;
 }
 
-void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, const char *class_tag) {
+void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, const char *class_tag, int sx, int sy) {
     char *nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
-    scalehandle_draw_select(x->x_handle,canvas,x->x_w-1,x->x_h-1,nlet_tag,class_tag);
+    scalehandle_draw_select(x->x_handle,canvas,sx,sy,nlet_tag,class_tag);
     if (strcmp(x->x_lab->s_name, "empty") != 0)
     {
         scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy,nlet_tag,class_tag);

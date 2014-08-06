@@ -254,7 +254,8 @@ static void vslider_draw_select(t_vslider *x, t_glist *glist)
                          "-stroke $pd_colors(selection)\n", canvas, x);
                 sys_vgui(".x%lx.c itemconfigure %lxLABEL "
                          "-fill $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"VSLDR");
+                scalehandle_draw_select2(&x->x_gui,glist,"VSLDR",
+                    x->x_gui.x_w-1,x->x_gui.x_h+5-1);
             }
             sys_vgui(".x%lx.c addtag selected withtag %lxVSLDR\n", canvas, x);
         }

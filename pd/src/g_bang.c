@@ -237,7 +237,8 @@ void bng_draw_select(t_bng* x, t_glist* glist)
                      "-stroke $pd_colors(selection)\n", canvas, x);
             sys_vgui(".x%lx.c itemconfigure %lxLABEL "
                      "-fill $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"BNG");
+            scalehandle_draw_select2(&x->x_gui,glist,"BNG",
+                x->x_gui.x_w-1,x->x_gui.x_h-1);
         }
         sys_vgui(".x%lx.c addtag selected withtag %lxBNG\n", canvas, x);
     }

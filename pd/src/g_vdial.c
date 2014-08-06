@@ -259,7 +259,8 @@ void vradio_draw_select(t_vradio* x, t_glist* glist)
                 }
                 sys_vgui(".x%lx.c itemconfigure %lxLABEL "
                          "-fill $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"VRDO");
+                scalehandle_draw_select2(&x->x_gui,glist,"VRDO",
+                    x->x_gui.x_w-1,x->x_gui.x_h*x->x_number-1);
             }
 
             sys_vgui(".x%lx.c addtag selected withtag %lxVRDO\n", canvas, x);

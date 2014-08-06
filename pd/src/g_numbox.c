@@ -458,7 +458,8 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
                          "-stroke $pd_colors(selection)\n", canvas, x, x);
                 sys_vgui(".x%lx.c itemconfigure {%lxLABEL||%lxNUMBER} "
                          "-fill $pd_colors(selection)\n", canvas, x, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"NUM");
+                scalehandle_draw_select2(&x->x_gui,glist,"NUM",
+                    x->x_numwidth-1,x->x_gui.x_h-1);
             }
             sys_vgui(".x%lx.c addtag selected withtag %lxNUM\n", canvas, x);
         }

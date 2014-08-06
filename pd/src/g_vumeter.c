@@ -442,7 +442,8 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
                 }
                 sys_vgui(".x%lx.c itemconfigure %lxLABEL "
                          "-fill $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"BNG");
+                scalehandle_draw_select2(&x->x_gui,glist,"BNG",
+                    x->x_gui.x_w+2-1,x->x_gui.x_h+4-1);
             }
 
             sys_vgui(".x%lx.c addtag selected withtag %lxVU\n", canvas, x);

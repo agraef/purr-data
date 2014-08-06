@@ -144,7 +144,8 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
                 char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
                 sys_vgui(".x%lx.c itemconfigure %lxBASE "
                          "-stroke $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"MYCNV");
+                scalehandle_draw_select2(&x->x_gui,glist,"MYCNV",
+                    x->x_vis_w,x->x_vis_h);
             }
             sys_vgui(".x%lx.c addtag selected withtag %lxMYCNV\n", canvas, x);
         }
