@@ -215,12 +215,9 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
 
         if (properties)
         {
-            sys_vgui(".gfxstub%lx.rng.min_ent delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.rng.min_ent insert 0 %d\n", properties, x->x_vis_w);
-            sys_vgui(".gfxstub%lx.rng.max_ent delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.rng.max_ent insert 0 %d\n", properties, x->x_vis_h);
-            sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, x->x_gui.x_w);
+            properties_set_field_int(properties,"rng.min_ent",x->x_vis_w);
+            properties_set_field_int(properties,"rng.max_ent",x->x_vis_h);
+            properties_set_field_int(properties,"dim.w_ent",x->x_gui.x_w);
         }
 
         if (glist_isvisible(x->x_gui.x_glist))
@@ -271,12 +268,8 @@ static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
 
         if (properties)
         {
-            sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n", properties,
-                x->x_gui.x_ldx);
-            sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n", properties,
-                x->x_gui.x_ldy);
+            properties_set_field_int(properties,"label.xy.x_entry",x->x_gui.x_ldx);
+            properties_set_field_int(properties,"label.xy.y_entry",x->x_gui.x_ldy);
         }
 
         if (glist_isvisible(x->x_gui.x_glist))
@@ -337,48 +330,17 @@ static void my_canvas__motionhook(t_scalehandle *sh,
         {
             int new_w = x->x_vis_w - sh->h_offset_x + sh->h_dragx;
             int new_h = x->x_vis_h - sh->h_offset_y + sh->h_dragy;
-            sys_vgui(".gfxstub%lx.rng.min_ent delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.rng.min_ent insert 0 %d\n", properties, new_w);
-            sys_vgui(".gfxstub%lx.rng.max_ent delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.rng.max_ent insert 0 %d\n", properties, new_h);
+            properties_set_field_int(properties,"rng.min_ent",new_w);
+            properties_set_field_int(properties,"rng.max_ent",new_h);
+
             int min = (new_w < new_h ? new_w : new_h);
             if (min <= x->x_gui.x_w)
             {
-                sys_vgui(".gfxstub%lx.dim.w_ent delete 0 end\n", properties);
-                sys_vgui(".gfxstub%lx.dim.w_ent insert 0 %d\n", properties, min);
+                properties_set_field_int(properties,"dim.w_ent",min);
             }
         }
     }
-    else if (sh->h_dragon && !sh->h_scale)
-    {
-        t_my_canvas *x = (t_my_canvas *)(sh->h_master);
-        int dx = (int)f1, dy = (int)f2;
-        sh->h_dragx = dx;
-        sh->h_dragy = dy;
-
-        int properties = gfxstub_haveproperties((void *)x);
-
-        if (properties)
-        {
-            int new_x = x->x_gui.x_ldx - sh->h_offset_x + sh->h_dragx;
-            int new_y = x->x_gui.x_ldy - sh->h_offset_y + sh->h_dragy;
-            sys_vgui(".gfxstub%lx.label.xy.x_entry delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.label.xy.x_entry insert 0 %d\n", properties, new_x);
-            sys_vgui(".gfxstub%lx.label.xy.y_entry delete 0 end\n", properties);
-            sys_vgui(".gfxstub%lx.label.xy.y_entry insert 0 %d\n", properties, new_y);
-        }
-
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            int xpos=text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
-            int ypos=text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
-            t_canvas *canvas=glist_getcanvas(x->x_gui.x_glist);
-            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                canvas, x,
-                xpos+x->x_gui.x_ldx + sh->h_dragx - sh->h_offset_x,
-                ypos+x->x_gui.x_ldy + sh->h_dragy - sh->h_offset_y);
-        }
-    }
+    scalehandle_dragon_label(sh,f1,f2);
 }
 
 void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)

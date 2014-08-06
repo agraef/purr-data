@@ -410,3 +410,5 @@ EXTERN void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas);
 EXTERN void scalehandle_draw_new(t_scalehandle *x, t_glist *canvas);
 EXTERN t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale);
 EXTERN void scalehandle_free(t_scalehandle *h);
+EXTERN void properties_set_field_int(long props, const char *gui_field, int value);
+EXTERN void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2);

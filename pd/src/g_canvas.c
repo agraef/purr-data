@@ -706,49 +706,21 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         //fprintf(stderr,"draw_gop_resize_hooks %lx %lx\n",
         //    (t_int)x, (t_int)glist_getcanvas(x));
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
-        sys_vgui("destroy %s\n", sh->h_pathname);    
-        sys_vgui(".x%lx.c delete GOP_resblob\n", x);    
-
-        // instead should call scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag, const char *class_tag);
-        // but the tags are different
-        sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) "
-                 "-bd 0 -cursor bottom_right_corner\n",
-            sh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-        sys_vgui(".x%x.c create window %d %d -anchor nw "
-                 "-width %d -height %d -window %s "
-                 "-tags {%lxSCALE %lxGOP GOP_resblob}\n",
-             x, x->gl_xmargin + x->gl_pixwidth - SCALEHANDLE_WIDTH - 1,
-             x->gl_ymargin + 3 + x->gl_pixheight - SCALEHANDLE_HEIGHT - 4,
-             SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-             sh->h_pathname, x, x);
-        scalehandle_bind(sh);
-
-        //Drawing and Binding Move_Blob for GOP
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
-        sys_vgui("destroy %s\n", mh->h_pathname);
-        sys_vgui(".x%lx.c delete GOP_movblob\n", x);    
-        sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) "
-                 "-bd 0 -cursor crosshair\n",
-            mh->h_pathname, SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT);
-        sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
-                 "-window %s -tags {%lxMOVE %lxGOP GOP_movblob}\n",
-            x, x->gl_xmargin + 2 ,
-            x->gl_ymargin + 2 ,
-            SCALEHANDLE_WIDTH, SCALEHANDLE_HEIGHT,
-            mh->h_pathname, x, x);
-        scalehandle_bind(mh);
-        // end of part to be replaced by scalehandle_draw_select
+
+        scalehandle_draw_select(sh,x,
+            -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
+            -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight,
+            "GOP_resblob","GOP");
+        scalehandle_draw_select(mh,x,
+            2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
+            2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin,
+            "GOP_movblob","GOP");
     }
     else
     {
-        if (sh && sh->h_pathname)
-            sys_vgui("destroy %s\n", sh->h_pathname);
-        if (mh && mh->h_pathname)
-            sys_vgui("destroy %s\n", mh->h_pathname);
-        //delete the GOP_resblob and GOP_movblob    
-        sys_vgui(".x%lx.c delete GOP_resblob ; "
-                 ".x%lx.c delete GOP_movblob ;\n",
-            x, x);
+        scalehandle_draw_erase(sh,x);
+        scalehandle_draw_erase(mh,x);
     }
     canvas_check_nlet_highlights(x);
 }
@@ -2011,14 +1983,8 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
             if (properties)
             {
-                sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n",
-                    properties, x->gl_pixwidth);
-                sys_vgui(".gfxstub%lx.yrange.entry3 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.yrange.entry3 insert 0 %d\n",
-                    properties, x->gl_pixheight);
+                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry3",x->gl_pixwidth);
+                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry3",x->gl_pixheight);
             }
 
             if (glist_isvisible(x))
@@ -2044,14 +2010,8 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
             int properties = gfxstub_haveproperties((void *)x);
             if (properties) {
-                sys_vgui(".gfxstub%lx.xrange.entry4 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.xrange.entry4 insert 0 %d\n",
-                    properties, x->gl_xmargin);
-                sys_vgui(".gfxstub%lx.yrange.entry4 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.yrange.entry4 insert 0 %d\n",
-                    properties, x->gl_ymargin);
+                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry4",x->gl_xmargin);
+                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry4",x->gl_ymargin);
             }
         
             if (glist_isvisible(x))
@@ -2080,6 +2040,7 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
         }
         else //enter if move_gop hook
         {
+            //scalehandle_draw_erase(sh,x);
             sys_vgui("lower %s\n", sh->h_pathname);
             //delete GOP_resblob when moving the whole GOP
             sys_vgui(".x%lx.c delete GOP_resblob \n",  x);
@@ -2121,14 +2082,8 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
             {
                 int new_w = x->gl_pixwidth - sh->h_offset_x + sh->h_dragx;
                 int new_h = x->gl_pixheight - sh->h_offset_y + sh->h_dragy;
-                sys_vgui(".gfxstub%lx.xrange.entry3 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.xrange.entry3 insert 0 %d\n",
-                    properties, new_w);
-                sys_vgui(".gfxstub%lx.yrange.entry3 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.yrange.entry3 insert 0 %d\n",
-                    properties, new_h);
+                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry3",new_w);
+                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry3",new_h);
             }
         }
         else //enter if move_gop hook
@@ -2139,14 +2094,8 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
-                sys_vgui(".gfxstub%lx.xrange.entry4 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.xrange.entry4 insert 0 %d\n",
-                    properties, newx);
-                sys_vgui(".gfxstub%lx.yrange.entry4 delete 0 end\n",
-                    properties);
-                sys_vgui(".gfxstub%lx.yrange.entry4 insert 0 %d\n",
-                    properties, newy);
+                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry4",newx);
+                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry4",newy);
             }
 
             sys_vgui(".x%x.c coords GOP %d %d %d %d %d %d %d %d %d %d\n",
@@ -2160,7 +2109,6 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
         }
     }
 }
-/*------------------------------------------------------------------------*/
 
 /* ------------------------------- setup routine ------------------------ */
 

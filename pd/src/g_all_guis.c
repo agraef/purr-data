@@ -908,25 +908,24 @@ void scalehandle_bind(t_scalehandle *h) {
 }
 
 // in 18 cases only, because canvas does not fit the pattern below.
-// this works only on iemgui, and also, canvas has no label handle and has a motion handle
+// canvas has no label handle and has a motion handle
+// but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py,
 const char *nlet_tag, const char *class_tag) {
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
-    t_iemgui *x = (t_iemgui *)h->h_master;
+    t_text *x = (t_text *)h->h_master;
     //if (!nlet_tag) nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
 
     const char *cursor = h->h_scale ? "bottom_right_corner" : "crosshair";
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
     int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
-    //int px = h->h_scale ? (x->x_gui.x_w-1) : x->x_gui.x_ldx;
-    //int py = h->h_scale ? (x->x_gui.x_h-1) : x->x_gui.x_ldy;
 
     //printf("scalehandle_draw_select(x%lx,x%lx,%d,%d,\"%s\",\"%s\")\n",h,canvas,px,py,nlet_tag,class_tag);
 
     if (h->h_vis) scalehandle_draw_erase(h,canvas);
 
-    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
-//    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
+//    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
+    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
         "-cursor %s\n", h->h_pathname, sx, sy, cursor);
     // there was a %lxBNG tag (or similar) in every scalehandle,
     // but it didn't seem to be used —mathieu
@@ -935,11 +934,11 @@ const char *nlet_tag, const char *class_tag) {
             (long)x,class_tag,(long)x,nlet_tag);
     } else {
         //sprintf(tags,"%lx%s %lxLABEL %lxLABELH iemgui %s", // causes unknown option "-fill"
-        sprintf(tags,"%lx%s %lxLABELH iemgui %s",
-            (long)x,class_tag,(long)x,nlet_tag);
+        sprintf(tags,"%lx%s %lx%s iemgui %s", (long)x,class_tag,
+            (long)x,strcmp(class_tag,"GOP")?"LABELH":"MOVE",nlet_tag);
     }
     sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
-        "-window %s -tags {%s}\n", canvas, x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy,
+        "-window %s -tags {%s}\n", canvas, x->te_xpix+px-sx, x->te_ypix+py-sy,
         sx, sy, h->h_pathname, tags);
     scalehandle_bind(h);
     h->h_vis = 1;
@@ -980,4 +979,37 @@ t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
 void scalehandle_free(t_scalehandle *h) {
     pd_unbind((t_pd *)h, h->h_bindsym);
     pd_free((t_pd *)h);
+}
+
+void properties_set_field_int(long props, const char *gui_field, int value) {
+    sys_vgui(".gfxstub%lx.%s delete 0 end\n", props, gui_field);
+    sys_vgui(".gfxstub%lx.%s insert 0 %d\n", props, gui_field, value);
+};
+
+void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
+    if (h->h_dragon && !h->h_scale)
+    {
+        t_iemgui *x = (t_iemgui *)(h->h_master);
+        int dx = (int)f1, dy = (int)f2;
+        h->h_dragx = dx;
+        h->h_dragy = dy;
+        int properties = gfxstub_haveproperties((void *)x);
+        if (properties)
+        {
+            int new_x = x->x_ldx - h->h_offset_x + h->h_dragx;
+            int new_y = x->x_ldy - h->h_offset_y + h->h_dragy;
+            properties_set_field_int(properties,"label.xy.x_entry",new_x);
+            properties_set_field_int(properties,"label.xy.y_entry",new_y);
+        }
+        if (glist_isvisible(x->x_glist))
+        {
+            int xpos=text_xpix(&x->x_obj, x->x_glist);
+            int ypos=text_ypix(&x->x_obj, x->x_glist);
+            t_canvas *canvas=glist_getcanvas(x->x_glist);
+            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+                canvas, x,
+                xpos+x->x_ldx + h->h_dragx - h->h_offset_x,
+                ypos+x->x_ldy + h->h_dragy - h->h_offset_y);
+        }
+    }
 }
