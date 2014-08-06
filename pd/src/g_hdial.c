@@ -241,10 +241,7 @@ void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 void hradio_draw_select(t_hradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-    t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
     int n=x->x_number, i;
-
     //if (glist_isvisible(canvas)) {
 
         if(x->x_gui.x_fsf.x_selected)
@@ -253,26 +250,15 @@ void hradio_draw_select(t_hradio* x, t_glist* glist)
             // visible on parent canvas.  If so, disable highlighting
             if (x->x_gui.x_glist == glist_getcanvas(glist))
             {
-
-                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
                 for(i=0; i<n; i++)
                 {
                     sys_vgui(".x%lx.c itemconfigure %lxBASE%d "
-                             "-stroke $pd_colors(selection)\n",
-                         canvas, x, i);
+                             "-stroke $pd_colors(selection)\n", canvas, x, i);
                 }
                 sys_vgui(".x%lx.c itemconfigure %lxLABEL "
-                         "-fill $pd_colors(selection)\n",
-                    canvas, x);
-
-                scalehandle_draw_select(sh,canvas,x->x_gui.x_w*x->x_number-1,x->x_gui.x_h-1,nlet_tag,"HRDO");
-                if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
-                {
-                    scalehandle_draw_select(lh,canvas,x->x_gui.x_ldx,x->x_gui.x_ldy,nlet_tag,"HRDO");
-                }
+                         "-fill $pd_colors(selection)\n", canvas, x);
+                scalehandle_draw_select2(&x->x_gui,glist,"HRDO");
             }
-
             sys_vgui(".x%lx.c addtag selected withtag %lxHRDO\n", canvas, x);
         }
         else
@@ -294,157 +280,53 @@ static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
     t_floatarg yyy)
 {
     t_hradio *x = (t_hradio *)(sh->h_master);
-
-     if (xxx)
-     {
-         sh->h_offset_x = xxx;
-     }
-     if (yyy)
-     {
-         sh->h_offset_y = yyy;
-     }
-
     int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
-        /* done dragging */
-
-        /* first set up the undo apply */
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-
         if (sh->h_dragx || sh->h_dragy)
         {
-
-            sh->h_dragx = sh->h_dragy;
-
-            x->x_gui.x_w = x->x_gui.x_w + sh->h_dragx - sh->h_offset_y;
-            if (x->x_gui.x_w < SCALE_HRDO_MINWIDTH)
-                x->x_gui.x_w = SCALE_HRDO_MINWIDTH;
-            x->x_gui.x_h = x->x_gui.x_h + sh->h_dragy - sh->h_offset_y;
-            if (x->x_gui.x_h < SCALE_HRDO_MINHEIGHT)
-                x->x_gui.x_h = SCALE_HRDO_MINHEIGHT;
-
+            x->x_gui.x_w += sh->h_dragy;
+            x->x_gui.x_h += sh->h_dragy;
             canvas_dirty(x->x_gui.x_glist, 1);
         }
-
-        int properties = gfxstub_haveproperties((void *)x);
-
-        if (properties)
-        {
-            properties_set_field_int(properties,"dim.w_ent",x->x_gui.x_w);
-        }
-
         if (glist_isvisible(x->x_gui.x_glist))
         {
-            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
             hradio_draw_move(x, x->x_gui.x_glist);
-            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
         }
     }
     else if (!sh->h_dragon && newstate && sh->h_scale)
     {
-        /* dragging */
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui("lower %s\n", sh->h_pathname);
-            sys_vgui(".x%x.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
-                x->x_gui.x_glist, x->x_gui.x_obj.te_xpix,
-                x->x_gui.x_obj.te_ypix,
-                x->x_gui.x_obj.te_xpix + (x->x_gui.x_w * x->x_number),
-                x->x_gui.x_obj.te_ypix + x->x_gui.x_h, sh->h_outlinetag);
-        }
-
-        sh->h_dragx = 0;
-        sh->h_dragy = 0;
+        scalehandle_click_scale(sh);
     }
     else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
     {
-        /* done dragging */
-
-        /* first set up the undo apply */
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-
-        if (sh->h_dragx || sh->h_dragy)
-        {
-            x->x_gui.x_ldx =
-                x->x_gui.x_ldx + sh->h_dragx - sh->h_offset_x;
-            x->x_gui.x_ldy =
-                x->x_gui.x_ldy + sh->h_dragy - sh->h_offset_y;
-
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-
-        int properties = gfxstub_haveproperties((void *)x);
-        if (properties)
-        {
-            properties_set_field_int(properties,"dim.w_ent",x->x_gui.x_w);
-        }
-
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
-            hradio_draw_move(x, x->x_gui.x_glist);
-            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
-        }
+        scalehandle_unclick_label(sh);
     }
     else if (!sh->h_dragon && newstate && !sh->h_scale)
     {
-        /* started dragging label */
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui("lower %s\n", sh->h_pathname);
-            t_scalehandle *othersh = x->x_gui.x_handle;
-            sys_vgui("lower .x%lx.h%lx\n",
-                (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
-        }
-
-        sh->h_dragx = 0;
-        sh->h_dragy = 0;
+        scalehandle_click_label(sh);
     }
-
     sh->h_dragon = newstate;
 }
 
-static void hradio__motionhook(t_scalehandle *sh,
-                    t_floatarg f1, t_floatarg f2)
+static void hradio__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
 {
     if (sh->h_dragon && sh->h_scale)
     {
         t_hradio *x = (t_hradio *)(sh->h_master);
         int dx = (int)f1, dy = (int)f2;
-        int newx, newy;
-
-        dx = dy;
-
-        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w*x->x_number +
-            (dx - sh->h_offset_y) * x->x_number;
-        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h +
-            (dy - sh->h_offset_y);
-
-        if (newx < x->x_gui.x_obj.te_xpix + SCALE_HRDO_MINWIDTH*x->x_number)
-            newx = x->x_gui.x_obj.te_xpix + SCALE_HRDO_MINWIDTH*x->x_number;
-        if (newy < x->x_gui.x_obj.te_ypix + SCALE_HRDO_MINHEIGHT)
-            newy = x->x_gui.x_obj.te_ypix + SCALE_HRDO_MINHEIGHT;
-
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-                 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
-                 x->x_gui.x_obj.te_ypix, newx, newy);
-        }
+        dx = maxi(dx,(IEM_GUI_MINSIZE-x->x_gui.x_w)*x->x_number);
+        dy = dx/x->x_number;
         sh->h_dragx = dx;
         sh->h_dragy = dy;
+        scalehandle_drag_scale(sh);
 
         int properties = gfxstub_haveproperties((void *)x);
-
         if (properties)
         {
-            int new_w = x->x_gui.x_w - sh->h_offset_x + sh->h_dragx;
+            int new_w = x->x_gui.x_w + sh->h_dragx;
             properties_set_field_int(properties,"dim.w_ent",new_w);
         }
     }

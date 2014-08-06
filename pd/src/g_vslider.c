@@ -243,34 +243,19 @@ static void vslider_draw_io(t_vslider* x,t_glist* glist, int old_snd_rcv_flags)
 static void vslider_draw_select(t_vslider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    t_scalehandle *sh = (t_scalehandle *)(x->x_gui.x_handle);
-    t_scalehandle *lh = (t_scalehandle *)(x->x_gui.x_lhandle);
-
     //if (glist_isvisible(canvas)) {
-
         if(x->x_gui.x_fsf.x_selected)
         {
             // check if we are drawing inside a gop abstraction
             // visible on parent canvas. If so, disable highlighting
             if (x->x_gui.x_glist == glist_getcanvas(glist))
             {
-
-                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
                 sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                         "-stroke $pd_colors(selection)\n",
-                     canvas, x);
+                         "-stroke $pd_colors(selection)\n", canvas, x);
                 sys_vgui(".x%lx.c itemconfigure %lxLABEL "
-                         "-fill $pd_colors(selection)\n",
-                     canvas, x);
-
-                scalehandle_draw_select(sh,canvas,x->x_gui.x_w-1,x->x_gui.x_h+5-1,nlet_tag,"VSLDR");
-                if (strcmp(x->x_gui.x_lab->s_name, "empty") != 0)
-                {
-                    scalehandle_draw_select(lh,canvas,x->x_gui.x_ldx,x->x_gui.x_ldy,nlet_tag,"VSLDR");
-                }
+                         "-fill $pd_colors(selection)\n", canvas, x);
+                scalehandle_draw_select2(&x->x_gui,glist,"VSLDR");
             }
-
             sys_vgui(".x%lx.c addtag selected withtag %lxVSLDR\n", canvas, x);
         }
         else
@@ -291,163 +276,59 @@ void vslider_check_height(t_vslider *x, int w);
 static void vslider__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
     t_floatarg yyy)
 {
-
     t_vslider *x = (t_vslider *)(sh->h_master);
-
-     if (xxx)
-     {
-         sh->h_offset_x = xxx;
-     }
-     if (yyy)
-     {
-         sh->h_offset_y = yyy;
-     }
-
     int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
-        /* done dragging */
-
-        /* first set up the undo apply */
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-
         if (sh->h_dragx || sh->h_dragy)
         {
-
-            double height_change_ratio = (double)(x->x_gui.x_h + sh->h_dragy -
-                sh->h_offset_y)/(double)x->x_gui.x_h;
+            double height_change_ratio = (double)(x->x_gui.x_h + sh->h_dragy)
+                /(double)x->x_gui.x_h;
             x->x_val = x->x_val * height_change_ratio;
-
-            x->x_gui.x_w = x->x_gui.x_w + sh->h_dragx - sh->h_offset_x;
-            if (x->x_gui.x_w < SCALE_VSLD_MINWIDTH)
-                x->x_gui.x_w = SCALE_VSLD_MINWIDTH;
-            x->x_gui.x_h = x->x_gui.x_h + sh->h_dragy - sh->h_offset_y;
-            if (x->x_gui.x_h < SCALE_VSLD_MINHEIGHT)
-                x->x_gui.x_h = SCALE_VSLD_MINHEIGHT;
-
+            x->x_gui.x_w += sh->h_dragx;
+            vslider_check_height(x, x->x_gui.x_h + sh->h_dragy);
+            vslider_check_minmax(x, x->x_min, x->x_max);
             canvas_dirty(x->x_gui.x_glist, 1);
         }
-
-        vslider_check_height(x, x->x_gui.x_h);
-        vslider_check_minmax(x, x->x_min, x->x_max);
-
-        int properties = gfxstub_haveproperties((void *)x);
-
-        if (properties)
-        {
-            properties_set_field_int(properties,"dim.w_ent",x->x_gui.x_w);
-            properties_set_field_int(properties,"dim.h_ent",x->x_gui.x_h);
-        }
-
         if (glist_isvisible(x->x_gui.x_glist))
         {
-            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
             vslider_draw_move(x, x->x_gui.x_glist);
-            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
+            scalehandle_unclick_scale(sh);
         }
     }
     else if (!sh->h_dragon && newstate && sh->h_scale)
     {
-        /* dragging */
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui("lower %s\n", sh->h_pathname);
-            sys_vgui(".x%x.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
-                x->x_gui.x_glist, x->x_gui.x_obj.te_xpix,
-                x->x_gui.x_obj.te_ypix,
-                x->x_gui.x_obj.te_xpix + x->x_gui.x_w,
-                x->x_gui.x_obj.te_ypix + 5 + x->x_gui.x_h, sh->h_outlinetag);
-        }
-
-        sh->h_dragx = 0;
-        sh->h_dragy = 0;
+        scalehandle_click_scale(sh);
     }
     else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
     {
-        /* done dragging */
-
-        /* first set up the undo apply */
-        canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-
-        if (sh->h_dragx || sh->h_dragy)
-        {
-
-            x->x_gui.x_ldx = x->x_gui.x_ldx +
-                sh->h_dragx - sh->h_offset_x;
-            x->x_gui.x_ldy = x->x_gui.x_ldy +
-                sh->h_dragy - sh->h_offset_y;
-
-            canvas_dirty(x->x_gui.x_glist, 1);
-        }
-
-        int properties = gfxstub_haveproperties((void *)x);
-        if (properties)
-        {
-            properties_set_field_int(properties,"dim.w_ent",x->x_gui.x_w);
-        }
-
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui(".x%x.c delete %s\n", x->x_gui.x_glist, sh->h_outlinetag);
-            vslider_draw_move(x, x->x_gui.x_glist);
-            iemgui_select((t_gobj *)x, x->x_gui.x_glist, 1);
-            canvas_fixlinesfor(x->x_gui.x_glist, (t_text *)x);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_gui.x_glist);
-        }
+        scalehandle_unclick_label(sh);
     }
     else if (!sh->h_dragon && newstate && !sh->h_scale)
     {
-        /* dragging */
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui("lower %s\n", sh->h_pathname);
-            t_scalehandle *othersh = x->x_gui.x_handle;
-            sys_vgui("lower .x%lx.h%lx\n",
-                (t_int)glist_getcanvas(x->x_gui.x_glist), (t_int)othersh);
-        }
-
-        sh->h_dragx = 0;
-        sh->h_dragy = 0;
+        scalehandle_click_label(sh);
     }
-
     sh->h_dragon = newstate;
 }
 
-static void vslider__motionhook(t_scalehandle *sh,
-                    t_floatarg f1, t_floatarg f2)
+static void vslider__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
 {
     if (sh->h_dragon && sh->h_scale)
     {
         t_vslider *x = (t_vslider *)(sh->h_master);
         int dx = (int)f1, dy = (int)f2;
-        int newx, newy;
-        newx = x->x_gui.x_obj.te_xpix + x->x_gui.x_w -
-            sh->h_offset_x + dx;
-        newy = x->x_gui.x_obj.te_ypix + x->x_gui.x_h -
-            sh->h_offset_y + dy;
-
-        if (newx < x->x_gui.x_obj.te_xpix + SCALE_VSLD_MINWIDTH)
-            newx = x->x_gui.x_obj.te_xpix + SCALE_VSLD_MINWIDTH;
-        if (newy < x->x_gui.x_obj.te_ypix + SCALE_VSLD_MINHEIGHT)
-            newy = x->x_gui.x_obj.te_ypix + SCALE_VSLD_MINHEIGHT;
-
-        if (glist_isvisible(x->x_gui.x_glist))
-        {
-            sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-                 x->x_gui.x_glist, sh->h_outlinetag, x->x_gui.x_obj.te_xpix,
-                 x->x_gui.x_obj.te_ypix, newx, newy + 5);
-        }
+        dx = maxi(dx,IEM_GUI_MINSIZE-x->x_gui.x_w);
+        dy = maxi(dy, IEM_SL_MINSIZE-x->x_gui.x_h);
         sh->h_dragx = dx;
         sh->h_dragy = dy;
+        scalehandle_drag_scale(sh);
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
-            int new_w = x->x_gui.x_w - sh->h_offset_x + sh->h_dragx;
-            int new_h = x->x_gui.x_h - sh->h_offset_y + sh->h_dragy;
+            int new_w = x->x_gui.x_w + sh->h_dragx;
+            int new_h = x->x_gui.x_h + sh->h_dragy;
             properties_set_field_int(properties,"dim.w_ent",new_w);
             properties_set_field_int(properties,"dim.h_ent",new_h);
         }

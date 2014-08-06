@@ -730,15 +730,11 @@ void canvas_drawredrect(t_canvas *x, int doit)
 {
     if (doit)
     {
-        //fprintf(stderr,"GOP %d %d\n", x->gl_pixwidth, x->gl_pixheight);
+        int x1=x->gl_xmargin, y1=x->gl_ymargin;
+        int x2=x1+x->gl_pixwidth, y2=y1+x->gl_pixheight;
         sys_vgui(".x%lx.c create line\
             %d %d %d %d %d %d %d %d %d %d -fill #ff8080 -tags GOP\n",
-            glist_getcanvas(x),
-            x->gl_xmargin, x->gl_ymargin,
-            x->gl_xmargin + x->gl_pixwidth, x->gl_ymargin,
-            x->gl_xmargin + x->gl_pixwidth, x->gl_ymargin + x->gl_pixheight,
-            x->gl_xmargin, x->gl_ymargin + x->gl_pixheight,
-            x->gl_xmargin, x->gl_ymargin);
+            glist_getcanvas(x), x1, y1, x2, y1, x2, y2, x1, y2, x1, y1);
         //dpsaha@vt.edu for drawing the GOP_blobs
         if (x->gl_goprect && x->gl_edit)
             canvas_draw_gop_resize_hooks(x);
@@ -756,10 +752,6 @@ void canvas_map(t_canvas *x, t_floatarg f)
     t_gobj *y;
     if (flag)
     {
-        //fprintf(stderr,"canvas_map 1\n");
-        //if (!glist_isvisible(x))
-        //{
-        //fprintf(stderr,"canvas_map 1 isvisible\n");
         t_selection *sel;
         if (!x->gl_havewindow)
         {
@@ -1896,8 +1888,6 @@ void canvasgop_draw_move(t_canvas *x, int doit)
     {
         canvas_redraw(x);
     }
-    //fprintf(stderr,"%d %d\n", (x->gl_owner ? 1:0),
-    //    glist_isvisible(x->gl_owner));
 
     if (x->gl_owner && glist_isvisible(x->gl_owner))
     {
@@ -1929,12 +1919,7 @@ extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
 
 void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
 {
-    int x1=0, y1=0, x2=0, y2=0; //for getrect
-
     t_canvas *x = (t_canvas *)(sh->h_master);
-
-    if (xxx) sh->h_offset_x = xxx;
-    if (yyy) sh->h_offset_y = yyy;
 
     int newstate = (int)f;
     if (sh->h_dragon && newstate == 0)
@@ -1948,39 +1933,30 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
 
             if (sh->h_dragx || sh->h_dragy) 
             {
-                x->gl_pixwidth = x->gl_pixwidth + sh->h_dragx -
-                    sh->h_offset_x;
-                if (x->gl_pixwidth < SCALE_GOP_MINWIDTH)
-                    x->gl_pixwidth = SCALE_GOP_MINWIDTH;
-                x->gl_pixheight = x->gl_pixheight + sh->h_dragy -
-                    sh->h_offset_y;
-                if (x->gl_pixheight < SCALE_GOP_MINHEIGHT)
-                    x->gl_pixheight = SCALE_GOP_MINHEIGHT;
-
-                // check if the text is not hidden
-                // if so make minimum width and height based retrieved
-                // from getrect
+                x->gl_pixwidth += sh->h_dragx;
+                x->gl_pixheight += sh->h_dragy;
+                // check if the text is not hidden. if so, make minimum
+                // width and height based retrieved from getrect.
                 if (!x->gl_hidetext)
                 {
+                    int x1=0, y1=0, x2=0, y2=0;
                     if (x->gl_owner)
                     {
                         gobj_getrect((t_gobj*)x, x->gl_owner,
                             &x1, &y1, &x2, &y2);
-                        if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
-                        if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
                     }
                     else
                     {
                         graph_checkgop_rect((t_gobj*)x, x, &x1, &y1, &x2, &y2);
-                        if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
-                        if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
                     }
+                    if (x2-x1 > x->gl_pixwidth) x->gl_pixwidth = x2-x1;
+                    if (y2-y1 > x->gl_pixheight) x->gl_pixheight = y2-y1;
                 }
                 canvas_dirty(x, 1);
             }
 
+            // can't remove this update because the text size check above is not in motionhook
             int properties = gfxstub_haveproperties((void *)x);
-
             if (properties)
             {
                 properties_set_field_int(properties,"n.canvasdialog.x.f2.entry3",x->gl_pixwidth);
@@ -1996,24 +1972,14 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
             }
         }
         else //enter if move_gop hook
-        {
-            /* first set up the undo apply */
-            //canvas_canvas_setundo(x);
+        {// this block is similar to scalehandle_unclick_label but not enough
             canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
-
             if (sh->h_dragx || sh->h_dragy) 
             {
-                x->gl_xmargin = x->gl_xmargin + sh->h_dragx - sh->h_offset_x;
-                x->gl_ymargin = x->gl_ymargin + sh->h_dragy - sh->h_offset_y;
+                x->gl_xmargin += sh->h_dragx;
+                x->gl_ymargin += sh->h_dragy;
                 canvas_dirty(x, 1);
             }
-
-            int properties = gfxstub_haveproperties((void *)x);
-            if (properties) {
-                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry4",x->gl_xmargin);
-                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry4",x->gl_ymargin);
-            }
-        
             if (glist_isvisible(x))
             {
                 canvasgop_draw_move(x,1);
@@ -2028,15 +1994,12 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
         {
             sys_vgui("lower %s\n", sh->h_pathname);
             //delete GOP rect where it started from
-            sys_vgui(".x%lx.c delete GOP \n",  x);
+            sys_vgui(".x%lx.c delete GOP\n", x);
             sys_vgui(".x%x.c create rectangle %d %d %d %d\
-                 -outline $pd_colors(selection) -width 1 -tags %s\n",\
-                 x, x->gl_xmargin, x->gl_ymargin,\
-                    x->gl_xmargin + x->gl_pixwidth,\
+                 -outline $pd_colors(selection) -width 1 -tags %s\n",
+                 x, x->gl_xmargin, x->gl_ymargin,
+                    x->gl_xmargin + x->gl_pixwidth,
                     x->gl_ymargin + x->gl_pixheight, sh->h_outlinetag);
-
-            sh->h_dragx = 0;
-            sh->h_dragy = 0;
         }
         else //enter if move_gop hook
         {
@@ -2044,10 +2007,9 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
             sys_vgui("lower %s\n", sh->h_pathname);
             //delete GOP_resblob when moving the whole GOP
             sys_vgui(".x%lx.c delete GOP_resblob \n",  x);
-
-            sh->h_dragx = 0;
-            sh->h_dragy = 0;
         }
+        sh->h_dragx = 0;
+        sh->h_dragy = 0;
     }
     sh->h_dragon = newstate;
 }
@@ -2061,41 +2023,47 @@ void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2)
     if (sh->h_dragon)
     {
         if(sh->h_scale) //enter if resize_gop hook
-        {            
-            newx = x->gl_xmargin + x->gl_pixwidth - sh->h_offset_x + dx;
-            newy = x->gl_ymargin + x->gl_pixheight - sh->h_offset_y + dy;
-
-            if (newx < x->gl_xmargin + SCALE_GOP_MINWIDTH)
-                newx = x->gl_xmargin + SCALE_GOP_MINWIDTH;
-            if (newy < x->gl_ymargin + SCALE_GOP_MINHEIGHT)
-                newy = x->gl_ymargin + SCALE_GOP_MINHEIGHT;
+        {
+            int sx = maxi(SCALE_GOP_MINWIDTH ,x->gl_pixwidth +dx);
+            int sy = maxi(SCALE_GOP_MINHEIGHT,x->gl_pixheight+dy);
+            //int x1=0, y1=0, x2=0, y2=0;
+            // if text is not hidden, use it as min height & width.
+            /*if (!x->gl_hidetext)
+            {
+                if (x->gl_owner)
+                    gobj_getrect((t_gobj*)x, x->gl_owner, &x1, &y1, &x2, &y2);
+                else
+                    graph_checkgop_rect((t_gobj*)x, x, &x1, &y1, &x2, &y2);
+                sx = maxi(sx,x2-x1);
+                sy = maxi(sy,y2-y1);
+            }*/ // does not work, needs a gobj_getrect that does not use pixwidth & pixheight
+            newx = x->gl_xmargin + sx;
+            newy = x->gl_ymargin + sy;
 
             sys_vgui(".x%x.c coords %s %d %d %d %d\n",
-                 x, sh->h_outlinetag, x->gl_xmargin,
-                 x->gl_ymargin, newx, newy);
+                x, sh->h_outlinetag, x->gl_xmargin, x->gl_ymargin, newx, newy);
 
-            sh->h_dragx = dx;
-            sh->h_dragy = dy;
+            sh->h_dragx = sx-x->gl_pixwidth;
+            sh->h_dragy = sy-x->gl_pixheight;
 
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
-                int new_w = x->gl_pixwidth - sh->h_offset_x + sh->h_dragx;
-                int new_h = x->gl_pixheight - sh->h_offset_y + sh->h_dragy;
-                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry3",new_w);
-                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry3",new_h);
+                properties_set_field_int(properties,
+                    "n.canvasdialog.x.f2.entry3",x->gl_pixwidth + sh->h_dragx);
+                properties_set_field_int(properties,
+                    "n.canvasdialog.y.f2.entry3",x->gl_pixheight + sh->h_dragy);
             }
         }
         else //enter if move_gop hook
         {
-            newx = x->gl_xmargin - sh->h_offset_x + dx;
-            newy = x->gl_ymargin - sh->h_offset_y + dy;
-        
             int properties = gfxstub_haveproperties((void *)x);
             if (properties)
             {
-                properties_set_field_int(properties,"n.canvasdialog.x.f2.entry4",newx);
-                properties_set_field_int(properties,"n.canvasdialog.y.f2.entry4",newy);
+                properties_set_field_int(properties,
+                    "n.canvasdialog.x.f2.entry4",x->gl_xmargin + dx);
+                properties_set_field_int(properties,
+                    "n.canvasdialog.y.f2.entry4",x->gl_ymargin + dy);
             }
 
             sys_vgui(".x%x.c coords GOP %d %d %d %d %d %d %d %d %d %d\n",

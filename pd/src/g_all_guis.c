@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include "m_pd.h"
 #include "g_canvas.h"
+#include "m_imp.h"
 #include "t_tk.h"
 #include "g_all_guis.h"
 #include <math.h>
@@ -895,6 +896,11 @@ char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj)
 //----------------------------------------------------------------
 // SCALEHANDLE COMMON CODE
 
+extern int gfxstub_haveproperties(void *key);
+
+int mini(int a, int b) {return a<b?a:b;}
+int maxi(int a, int b) {return a>b?a:b;}
+
 // in all 20 cases :
 // [bng], [tgl], [hradio], [vradio], [hsl], [vsl], [cnv], [nbx], [vu]
 // for both scale & label, plus canvas' scale & move.
@@ -944,6 +950,15 @@ const char *nlet_tag, const char *class_tag) {
     h->h_vis = 1;
 }
 
+void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, const char *class_tag) {
+    char *nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
+    scalehandle_draw_select(x->x_handle,canvas,x->x_w-1,x->x_h-1,nlet_tag,class_tag);
+    if (strcmp(x->x_lab->s_name, "empty") != 0)
+    {
+        scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy,nlet_tag,class_tag);
+    }
+}
+
 void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
         sys_vgui("destroy %s\n", h->h_pathname);
         sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
@@ -970,8 +985,8 @@ t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
     sprintf(h->h_outlinetag, "h%lx", (t_int)h);
     h->h_dragon = 0;
     h->h_scale = scale;
-    h->h_offset_x = 0;
-    h->h_offset_y = 0;
+    //h->h_offset_x = 0; // unused (maybe keep for later)
+    //h->h_offset_y = 0; // unused (maybe keep for later)
     h->h_vis = 0;
     return h;
 }
@@ -996,8 +1011,8 @@ void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
         {
-            int new_x = x->x_ldx - h->h_offset_x + h->h_dragx;
-            int new_y = x->x_ldy - h->h_offset_y + h->h_dragy;
+            int new_x = x->x_ldx + h->h_dragx;
+            int new_y = x->x_ldy + h->h_dragy;
             properties_set_field_int(properties,"label.xy.x_entry",new_x);
             properties_set_field_int(properties,"label.xy.y_entry",new_y);
         }
@@ -1006,10 +1021,84 @@ void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2) {
             int xpos=text_xpix(&x->x_obj, x->x_glist);
             int ypos=text_ypix(&x->x_obj, x->x_glist);
             t_canvas *canvas=glist_getcanvas(x->x_glist);
-            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                canvas, x,
-                xpos+x->x_ldx + h->h_dragx - h->h_offset_x,
-                ypos+x->x_ldy + h->h_dragy - h->h_offset_y);
+            sys_vgui(".x%lx.c coords %lxLABEL %d %d\n", canvas, x,
+                xpos+x->x_ldx + h->h_dragx,
+                ypos+x->x_ldy + h->h_dragy);
         }
     }
 }
+
+void scalehandle_unclick_label(t_scalehandle *h) {
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    canvas_apply_setundo(x->x_glist, (t_gobj *)x);
+    if (h->h_dragx || h->h_dragy)
+    {
+        x->x_ldx += h->h_dragx;
+        x->x_ldy += h->h_dragy;
+        canvas_dirty(x->x_glist, 1);
+    }
+    if (glist_isvisible(x->x_glist))
+    {
+        iemgui_select((t_gobj *)x, x->x_glist, 1);
+        canvas_fixlinesfor(x->x_glist, (t_text *)x);
+        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_glist);
+    }
+}
+
+void scalehandle_click_label(t_scalehandle *h) {
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    if (glist_isvisible(x->x_glist))
+    {
+        sys_vgui("lower %s\n", h->h_pathname);
+        t_scalehandle *othersh = x->x_handle;
+        sys_vgui("lower .x%lx.h%lx\n",
+            (t_int)glist_getcanvas(x->x_glist), (t_int)othersh);
+    }
+    h->h_dragx = 0;
+    h->h_dragy = 0;
+}
+
+extern t_class *my_canvas_class;
+void scalehandle_getrect_master(t_scalehandle *h, int *x1, int *y1, int *x2, int *y2) {
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    t_class *c = pd_class((t_pd *)x);
+    c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,x1,y1,x2,y2);
+    //printf("%s\n",c->c_name->s_name);
+    if (c==my_canvas_class) {
+        t_my_canvas *xx = (t_my_canvas *)x;
+        *x2=*x1+xx->x_vis_w;
+        *y2=*y1+xx->x_vis_h;
+    }
+}
+
+void scalehandle_click_scale(t_scalehandle *h) {
+    int x1,y1,x2,y2;
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    scalehandle_getrect_master(h,&x1,&y1,&x2,&y2);
+    if (glist_isvisible(x->x_glist)) {
+        sys_vgui("lower %s\n", h->h_pathname);
+        sys_vgui(".x%x.c create prect %d %d %d %d -stroke $pd_colors(selection) -strokewidth 1 -tags %s\n",
+            x->x_glist, x1, y1, x2, y2, h->h_outlinetag);
+    }
+    h->h_dragx = 0;
+    h->h_dragy = 0;
+}
+
+void scalehandle_unclick_scale(t_scalehandle *h) {
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    sys_vgui(".x%x.c delete %s\n", x->x_glist, h->h_outlinetag);
+    iemgui_select((t_gobj *)x, x->x_glist, 1);
+    canvas_fixlinesfor(x->x_glist, (t_text *)x);
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_glist);
+}
+
+void scalehandle_drag_scale(t_scalehandle *h) {
+    int x1,y1,x2,y2;
+    t_iemgui *x = (t_iemgui *)h->h_master;
+    scalehandle_getrect_master(h,&x1,&y1,&x2,&y2);
+    if (glist_isvisible(x->x_glist)) {
+        sys_vgui(".x%x.c coords %s %d %d %d %d\n", x->x_glist, h->h_outlinetag,
+            x1, y1, x2+h->h_dragx, y2+h->h_dragy);
+    }
+}
+
