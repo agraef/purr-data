@@ -76,7 +76,7 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
                  xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
         iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
         /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_fsf.x_selected)
+        if (x->x_gui.x_selected)
         {
             my_canvas_draw_select(x, x->x_gui.x_glist);
         }
@@ -88,7 +88,7 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -stroke #%6.6x\n",
              canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
-    if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
+    if (x->x_gui.x_selected && x->x_gui.x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxBASE "
                  "-stroke $pd_colors(selection)\n", canvas, x);
     else
@@ -100,7 +100,7 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    if(x->x_gui.x_fsf.x_selected)
+    if(x->x_gui.x_selected)
     {
         // check if we are drawing inside a gop abstraction
         // visible on parent canvas
@@ -241,8 +241,8 @@ static void my_canvas_save(t_gobj *z, t_binbuf *b)
                 (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
                 gensym("cnv"), x->x_gui.x_w, x->x_vis_w, x->x_vis_h,
                 srl[0], srl[1], srl[2], x->x_gui.x_ldx, x->x_gui.x_ldy,
-                iem_fstyletoint(&x->x_gui.x_fsf), x->x_gui.x_fontsize,
-                bflcol[0], bflcol[2], iem_symargstoint(&x->x_gui.x_isa));
+                iem_fstyletoint(&x->x_gui), x->x_gui.x_fontsize,
+                bflcol[0], bflcol[2], iem_symargstoint(&x->x_gui));
     binbuf_addv(b, ";");
 }
 
@@ -266,14 +266,14 @@ static void my_canvas_properties(t_gobj *z, t_glist *owner)
             -1, -1, -1, -1,/*no linlog, no init, no multi*/
             srl[0]->s_name, srl[1]->s_name,
             srl[2]->s_name, x->x_gui.x_ldx, x->x_gui.x_ldy,
-            x->x_gui.x_fsf.x_font_style, x->x_gui.x_fontsize,
+            x->x_gui.x_font_style, x->x_gui.x_fontsize,
             0xffffff & x->x_gui.x_bcol, -1/*no frontcolor*/, 0xffffff & x->x_gui.x_lcol);
     gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
 }
 
 static void my_canvas_get_pos(t_my_canvas *x)
 {
-    if(x->x_gui.x_fsf.x_snd_able && x->x_gui.x_snd->s_thing)
+    if(iemgui_has_snd(&x->x_gui) && x->x_gui.x_snd->s_thing)
     {
         x->x_at[0].a_w.w_float = text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist);
         x->x_at[1].a_w.w_float = text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist);
@@ -291,7 +291,7 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     int h = (int)atom_getintarg(3, argc, argv);
     iemgui_dialog(&x->x_gui, srl, argc, argv);
 
-    x->x_gui.x_isa.x_loadinit = 0;
+    x->x_gui.x_loadinit = 0;
     if(a < 1)
         a = 1;
     x->x_gui.x_w = a;
@@ -304,10 +304,10 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     x->x_vis_h = h;
     (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
     //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-    iemgui_shouldvis((void *)x, &x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
+    iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
     /* forcing redraw of the scale handle */
-    if (x->x_gui.x_fsf.x_selected)
+    if (x->x_gui.x_selected)
     {
         my_canvas_draw_select(x, x->x_gui.x_glist);
     }
@@ -326,14 +326,8 @@ static void my_canvas_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
         i = 1;
     x->x_gui.x_w = i;
     x->x_gui.x_h = i;
-    iemgui_size((void *)x, &x->x_gui);
+    iemgui_size(&x->x_gui);
 }
-
-static void my_canvas_delta(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
-{iemgui_delta((void *)x, &x->x_gui, s, ac, av);}
-
-static void my_canvas_pos(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
-{iemgui_pos((void *)x, &x->x_gui, s, ac, av);}
 
 static void my_canvas_vis_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
@@ -354,24 +348,6 @@ static void my_canvas_vis_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
         (*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
 }
 
-static void my_canvas_color(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
-{iemgui_color((void *)x, &x->x_gui, s, ac, av);}
-
-static void my_canvas_send(t_my_canvas *x, t_symbol *s)
-{iemgui_send(x, &x->x_gui, s);}
-
-static void my_canvas_receive(t_my_canvas *x, t_symbol *s)
-{iemgui_receive(x, &x->x_gui, s);}
-
-static void my_canvas_label(t_my_canvas *x, t_symbol *s)
-{iemgui_label((void *)x, &x->x_gui, s);}
-
-static void my_canvas_label_pos(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
-{iemgui_label_pos((void *)x, &x->x_gui, s, ac, av);}
-
-static void my_canvas_label_font(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
-{iemgui_label_font((void *)x, &x->x_gui, s, ac, av);}
-
 static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_my_canvas *x = (t_my_canvas *)pd_new(my_canvas_class);
@@ -380,8 +356,8 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     int ldx=20, ldy=12, i=0;
     int fs=14;
 
-    iem_inttosymargs(&x->x_gui.x_isa, 0);
-    iem_inttofstyle(&x->x_gui.x_fsf, 0);
+    iem_inttosymargs(&x->x_gui, 0);
+    iem_inttofstyle(&x->x_gui, 0);
 
     if(((argc >= 10)&&(argc <= 13))
        &&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)&&IS_A_FLOAT(argv,2))
@@ -416,23 +392,17 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
         x->x_gui.x_labelbindex = i+4;
         ldx = (int)atom_getintarg(i+4, argc, argv);
         ldy = (int)atom_getintarg(i+5, argc, argv);
-        iem_inttofstyle(&x->x_gui.x_fsf, atom_getintarg(i+6, argc, argv));
+        iem_inttofstyle(&x->x_gui, atom_getintarg(i+6, argc, argv));
         fs = (int)atom_getintarg(i+7, argc, argv);
         bflcol[0] = (int)atom_getintarg(i+8, argc, argv);
         bflcol[2] = (int)atom_getintarg(i+9, argc, argv);
     }
     if((argc == 13)&&IS_A_FLOAT(argv,i+10))
     {
-        iem_inttosymargs(&x->x_gui.x_isa, atom_getintarg(i+10, argc, argv));
+        iem_inttosymargs(&x->x_gui, atom_getintarg(i+10, argc, argv));
     }
     x->x_gui.x_draw = (t_iemfunptr)my_canvas_draw;
-    x->x_gui.x_fsf.x_snd_able = 1;
-    x->x_gui.x_fsf.x_rcv_able = 1;
     x->x_gui.x_glist = (t_glist *)canvas_getcurrent();
-    if (!strcmp(x->x_gui.x_snd->s_name, "empty"))
-        x->x_gui.x_fsf.x_snd_able = 0;
-    if (!strcmp(x->x_gui.x_rcv->s_name, "empty"))
-        x->x_gui.x_fsf.x_rcv_able = 0;
     if(a < 1)
         a = 1;
     x->x_gui.x_w = a;
@@ -443,16 +413,8 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     if(h < 1)
         h = 1;
     x->x_vis_h = h;
-    if(x->x_gui.x_fsf.x_font_style == 1)
-        strcpy(x->x_gui.x_font, "helvetica");
-    else if(x->x_gui.x_fsf.x_font_style == 2)
-        strcpy(x->x_gui.x_font, "times");
-    else
-    {
-        x->x_gui.x_fsf.x_font_style = 0;
-        strcpy(x->x_gui.x_font, sys_font);
-    }
-    if (x->x_gui.x_fsf.x_rcv_able)
+    if (x->x_gui.x_font_style<0 || x->x_gui.x_font_style>2) x->x_gui.x_font_style=0;
+    if (iemgui_has_rcv(&x->x_gui))
         pd_bind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     x->x_gui.x_ldx = ldx;
     x->x_gui.x_ldy = ldy;
@@ -473,7 +435,7 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
 
 static void my_canvas_ff(t_my_canvas *x)
 {
-    if(x->x_gui.x_fsf.x_rcv_able)
+    if(iemgui_has_rcv(&x->x_gui))
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     gfxstub_deleteforkey(x);
 
@@ -491,24 +453,9 @@ void g_mycanvas_setup(void)
         gensym("dialog"), A_GIMME, 0);
     class_addmethod(my_canvas_class, (t_method)my_canvas_size,
         gensym("size"), A_GIMME, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_delta,
-        gensym("delta"), A_GIMME, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_pos,
-        gensym("pos"), A_GIMME, 0);
+    iemgui_class_addmethods(my_canvas_class);
     class_addmethod(my_canvas_class, (t_method)my_canvas_vis_size,
         gensym("vis_size"), A_GIMME, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_color,
-        gensym("color"), A_GIMME, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_send,
-        gensym("send"), A_DEFSYM, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_receive,
-        gensym("receive"), A_DEFSYM, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_label,
-        gensym("label"), A_DEFSYM, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_label_pos,
-        gensym("label_pos"), A_GIMME, 0);
-    class_addmethod(my_canvas_class, (t_method)my_canvas_label_font,
-        gensym("label_font"), A_GIMME, 0);
     class_addmethod(my_canvas_class, (t_method)my_canvas_get_pos,
         gensym("get_pos"), 0);
 

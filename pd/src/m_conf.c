@@ -11,6 +11,7 @@ void g_array_setup(void);
 void g_canvas_setup(void);
 void g_guiconnect_setup(void);
 /* iemlib */
+void g_iemgui_setup(void);
 void g_bang_setup(void);
 void g_hradio_setup(void);
 void g_hslider_setup(void);
@@ -61,6 +62,7 @@ void conf_init(void)
     g_canvas_setup();
     g_guiconnect_setup();
 /* iemlib */
+    g_iemgui_setup();
     g_bang_setup();
     g_hradio_setup();
     g_hslider_setup();
