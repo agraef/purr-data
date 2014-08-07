@@ -328,6 +328,12 @@ static t_scalar *template_conformscalar(t_template *tfrom, t_template *tto,
         }
         else if (ds->ds_type == DT_ARRAY)
         {
+            t_symbol *arraytemplate = ds->ds_arraytemplate;
+            if (arraytemplate == tfrom->t_sym ||
+                arraytemplate == tto->t_sym)
+            {
+                return 0;
+            }
             template_conformarray(tfrom, tto, conformaction, 
                 x->sc_vec[i].w_array);
         }
@@ -1340,10 +1346,311 @@ char *get_strokelinejoin(int a)
     return (strokelinejoin);
 }
 
-/* todo: i think svg_togui and this are unnecessarily
-   duplicating some code... */
-extern void scalar_select(t_gobj *z, t_glist *owner, int state);
+void svg_parsetransform(t_svg *x, t_template *template, t_word *data,
+    t_float *mp1, t_float *mp2, t_float *mp3,
+    t_float *mp4, t_float *mp5, t_float *mp6);
+
+void svg_group_pathrect_cache(t_svg *x, int state);
+
 extern void scalar_drawselectrect(t_scalar *x, t_glist *glist, int state);
+
+void svg_sendupdate(t_svg *x, t_canvas *c, t_symbol *s,
+    t_template *template, t_word *data, int *predraw_bbox, void *parent,
+    t_scalar *sc)
+{
+ /* todo-- I'm mixing "c" with glist_getcanvas(c) a little too freely...
+    need to experiment with gop scalars to make sure I'm not breaking
+    anything */ 
+   char tag[MAXPDSTRING];
+    if (x->x_type == gensym("group"))
+    {
+        template_findcanvas(template);
+        sprintf(tag, ".dgroup%lx.%lx",
+            (long unsigned int)template_findcanvas(template),
+            (long unsigned int)data);
+    }
+    else
+    {
+        sprintf(tag, ".draw%lx.%lx",
+            (long unsigned int)x->x_parent,
+            (long unsigned int)data);
+    }
+    if (s == gensym("fill"))
+    {
+        t_symbol *fill;
+        t_fielddesc *fd = x->x_fill;
+        if (x->x_filltype == 1)
+            fill = fielddesc_getsymbol(fd, template, data, 1);
+        else if (x->x_filltype == 2)
+        {
+            fill = gensym(rgb_to_hex(
+                (int)fielddesc_getfloat(fd, template, data, 1),
+                (int)fielddesc_getfloat(fd+1, template, data, 1),
+                (int)fielddesc_getfloat(fd+2, template, data, 1)));
+        }
+        else
+            fill = &s_;
+        sys_vgui(".x%lx.c itemconfigure %s -fill %s\n",
+            glist_getcanvas(c), tag, fill->s_name);
+    }
+    else if (s == gensym("stroke"))
+    {
+        t_symbol *stroke;
+        t_fielddesc *fd = x->x_stroke;
+        if (x->x_stroketype == 1)
+            stroke = fielddesc_getsymbol(fd, template, data, 1);
+        else if (x->x_stroketype == 2)
+        {
+            stroke = gensym(rgb_to_hex(
+                (int)fielddesc_getfloat(fd, template, data, 1),
+                (int)fielddesc_getfloat(fd+1, template, data, 1),
+                (int)fielddesc_getfloat(fd+2, template, data, 1)));
+        }
+        else stroke = &s_;
+        sys_vgui(".x%lx.c itemconfigure %s -stroke %s\n",
+            glist_getcanvas(c), tag, stroke->s_name);
+    }
+    else if (s == gensym("fill-opacity"))
+        sys_vgui(".x%lx.c itemconfigure %s -fillopacity %g\n",
+            glist_getcanvas(c), tag,
+            fielddesc_getcoord(&x->x_fillopacity.a_attr, template, data, 1));
+    else if (s == gensym("fill-rule"))
+        sys_vgui(".x%lx.c itemconfigure %s -fillrule %s\n",
+            glist_getcanvas(c), tag, (int)fielddesc_getcoord(
+                &x->x_fillrule.a_attr, template, data, 1) ?
+                    "evenodd" : "nonzero");
+    else if (s == gensym("stroke-linecap"))
+        sys_vgui(".x%lx.c itemconfigure %s -strokelinecap %s\n",
+            glist_getcanvas(c), tag, get_strokelinecap(
+                (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
+                    template, data, 1)));
+    else if (s == gensym("stroke-linejoin"))
+        sys_vgui(".x%lx.c itemconfigure %s -strokelinejoin %s\n",
+            glist_getcanvas(c), tag, get_strokelinejoin(
+                (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
+                    template, data, 1)));
+    else if (s == gensym("stroke-miterlimit"))
+        sys_vgui(".x%lx.c itemconfigure %s -strokemiterlimit %g\n",
+            glist_getcanvas(c), tag, fielddesc_getcoord(
+                &x->x_strokemiterlimit.a_attr, template, data, 1));
+    else if (s == gensym("stroke-opacity"))
+        sys_vgui(".x%lx.c itemconfigure %s -strokeopacity %g\n",
+            glist_getcanvas(c), tag, fielddesc_getcoord(
+                &x->x_strokeopacity.a_attr, template, data, 1));
+    else if (s == gensym("stroke-width"))
+    {
+        sys_vgui(".x%lx.c itemconfigure %s -strokewidth %g\n",
+            glist_getcanvas(c), tag, fielddesc_getcoord(
+                &x->x_strokewidth.a_attr, template, data, 1));
+        *predraw_bbox = 1;
+    }
+    else if (s == gensym("r"))
+    {
+        sys_vgui(".x%lx.c itemconfigure %s -rx %g -ry %g\n",
+        glist_getcanvas(c), tag,
+        fielddesc_getcoord(x->x_vec+2, template, data, 1),
+        fielddesc_getcoord(x->x_vec+2, template, data, 1));
+        *predraw_bbox = 1;
+    }
+    else if (s == gensym("rx"))
+    {
+        if (x->x_type == gensym("rect"))
+            sys_vgui(".x%lx.c itemconfigure %s -rx %d\n",
+                glist_getcanvas(c), tag, (int)fielddesc_getcoord(
+                    &x->x_rx.a_attr, template, data, 1));
+        else
+        {
+            sys_vgui(".x%lx.c itemconfigure %s -rx %g\n",
+                glist_getcanvas(c), tag, fielddesc_getcoord(
+                x->x_vec+2, template, data, 1));
+            *predraw_bbox = 1;
+        }
+    }
+    else if (s == gensym("ry"))
+    {
+        if (x->x_type == gensym("rect"))
+            sys_vgui(".x%lx.c itemconfigure %s -ry %d\n",
+                glist_getcanvas(c), tag, (int)fielddesc_getcoord(
+                &x->x_ry.a_attr, template, data, 1));
+        else
+        {
+             sys_vgui(".x%lx.c itemconfigure %s -ry %g\n",
+                 glist_getcanvas(c), tag, fielddesc_getcoord(
+                 x->x_vec+3, template, data, 1));
+             *predraw_bbox = 1;
+        }
+    }
+    else if (s == gensym("transform"))
+    {
+        t_float m1, m2, m3, m4, m5, m6;
+        /* we'll probably get a different bbox now, so we
+           will calculate a new one the next time we call
+           draw_getrect for this draw command. For groups
+           we need to do it for all of the draw commands
+           inside it.
+        */
+        if (x->x_type == gensym("group"))
+            svg_group_pathrect_cache(x, 0);
+        else if (x->x_pathrect_cache != -1)
+        {
+            x->x_pathrect_cache = 0;
+        }
+        svg_parsetransform(x, template, data, &m1, &m2, &m3, &m4, &m5, &m6);
+        if (x->x_type == gensym("group"))
+        {
+            sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx -matrix "
+                "{ {%g %g} {%g %g} {%g %g} }\n",
+                glist_getcanvas(c), x->x_parent, data,
+                m1, m2, m3, m4, m5, m6);
+        }
+        else
+            sys_vgui(".x%lx.c itemconfigure %s -matrix "
+                    "{ {%g %g} {%g %g} {%g %g} }\n",
+                    glist_getcanvas(c), tag,
+                    m1, m2, m3, m4, m5, m6);
+        *predraw_bbox = 1;
+
+    }
+    else if (s == gensym("vis"))
+    {
+        sys_vgui(".x%lx.c itemconfigure %s -state %s\n",
+            glist_getcanvas(c), tag, (int)fielddesc_getcoord(
+            &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
+        *predraw_bbox = 1;
+    }
+    else if (s == gensym("stroke-dasharray"))
+    {
+        if (x->x_ndash)
+        {
+            t_fielddesc *fd = x->x_strokedasharray;
+            int i;
+            sys_vgui(".x%lx.c itemconfigure %s -strokedasharray {",
+                glist_getcanvas(c), tag);
+            for (i = 0; i < x->x_ndash; i++)
+            {
+                sys_vgui(" %g ", fielddesc_getcoord(fd+i, template, data, 1));
+            }
+            sys_gui("}\n");
+        }
+    }
+    else if (s == gensym("data"))
+    {
+        sys_vgui(".x%lx.c coords .draw%lx.%lx {\\\n",
+            glist_getcanvas(c), parent, data);
+        /* let's turn off bbox caching so we can recalculate the bbox */
+        if (x->x_pathrect_cache != -1)
+           x->x_pathrect_cache = 0;
+        *predraw_bbox = 1;
+        int i;
+        char *cmd;
+        t_fielddesc *f;
+        int totalpoints = 0; /* running tally */
+        /* path parser: no error checking yet */
+        for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
+        {
+            int j;
+            int cargs = x->x_nargs_per_cmd[i];
+            f = (x->x_vec)+totalpoints;
+            sys_vgui("%c\\\n", *(cmd));
+            for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
+                sys_vgui("%g\\\n", fielddesc_getcoord(
+                    f+j, template, data, 1));
+            totalpoints += x->x_nargs_per_cmd[i];
+        }
+        sys_gui("}\n");
+    }
+    else if (s == gensym("index"))
+    {
+        sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
+            glist_getcanvas(c), parent, parent, data, drawimage_getindex(parent,
+                template, data)); 
+    }
+    else if (s == gensym("points"))
+    {
+        sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
+            glist_getcanvas(c), parent, data);
+        /* let's turn off bbox caching so we can recalculate the bbox */
+        if (x->x_pathrect_cache != -1)
+           x->x_pathrect_cache = 0;
+        *predraw_bbox = 1;
+        int i;
+        t_fielddesc *f = x->x_vec;
+        if (x->x_type == gensym("rect") ||
+            x->x_type == gensym("ellipse"))
+        {
+            t_float xval, yval, w, h;
+            xval = fielddesc_getcoord(f, template, data, 1);
+            yval = fielddesc_getcoord(f+1, template, data, 1);
+            if (x->x_type == gensym("rect"))
+            {
+                w = xval + (fielddesc_getcoord(f+2, template, data, 1));
+                h = yval + (fielddesc_getcoord(f+3, template, data, 1));
+                sys_vgui("%g %g %g %g\\\n", xval, yval, w, h);
+            }
+            else
+            {
+                sys_vgui("%g %g\\\n", xval, yval);
+            }
+        }
+        else
+        {
+            int n = (x->x_type == gensym("circle")) ? 2 : x->x_nargs;
+            for (i = 0; i < n; i++)
+            {
+                sys_vgui("%g\\\n", fielddesc_getcoord(
+                    f+i, template, data, 1));
+            }
+        }
+        sys_gui("\n");
+    }
+}
+
+void svg_updatevec(t_canvas *c, t_word *data, t_template *template,
+    t_template *target, void *parent, t_symbol *s, t_svg *x, t_scalar *sc,
+    int *predraw_bbox)
+{
+    int i, j;
+    for (i = 0; i < template->t_n; i++)
+    {
+        if (template->t_vec[i].ds_type == DT_ARRAY)
+        {
+            int arrayonset, type, elemsize;
+            t_symbol *targetsym = target->t_sym, *elemtemplatesym;
+            t_array *array;
+            char *elem;
+            if (!template_find_field(template, ((template->t_vec)+i)->ds_name,
+                &arrayonset, &type, &elemtemplatesym))
+            {
+                error("draw: problem finding array...");
+                return;
+            }
+
+            t_template *elemtemplate = template_findbyname(elemtemplatesym);
+            t_canvas *elemtemplatecanvas = template_findcanvas(elemtemplate);
+            /* this is a doozy... */
+            array = *(t_array **)(((char *)data) + arrayonset);
+            elem = (char *)array->a_vec;
+
+            if (elemtemplatesym == targetsym)
+            {
+                elemsize = array->a_elemsize;
+                for (j = 0; j < array->a_n; j++)
+                {
+                        int redraw_bbox = 0;
+                        svg_sendupdate(x, glist_getcanvas(c), s,
+                            elemtemplate, (t_word *)(elem + elemsize * j),
+                            predraw_bbox, parent, sc);
+                }
+            }
+            svg_updatevec(c, (t_word *)elem, elemtemplate, target, parent,
+                s, x, sc, predraw_bbox);
+        }
+    }
+}
+
+/* todo: i think svg_togui and this are unnecessarily duplicating code... */
+extern void scalar_select(t_gobj *z, t_glist *owner, int state);
+t_template *canvas_findtemplate(t_canvas *c);
 void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
 {
     t_gobj *g;
@@ -1352,6 +1659,7 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
     void *parent = x->x_parent;
     t_canvas *parentcanvas =
         canvas_templatecanvas_forgroup(svg_parentcanvas(x));
+    t_template *parenttemplate = canvas_findtemplate(parentcanvas);
     int redraw_bbox = 0;
      /* "visible" is here because we could be drawn in a gop, in
        which case we must "climb" out to the parent canvas on
@@ -1361,231 +1669,35 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
         visible = visible->gl_owner;
     for (g = c->gl_list; g; g = g->g_next)
     {
-        if (glist_isvisible(c) && g->g_pd == scalar_class &&
-            parentcanvas ==
-            template_findcanvas(template = (template_findbyname(
-                (((t_scalar *)g)->sc_template))))
-           )
+        if (glist_isvisible(c) && g->g_pd == scalar_class)
         {
+            template = template_findbyname((((t_scalar *)g)->sc_template));
+            /* still kinda hacky-- redrawbbox side-effect is weird */
             t_word *data = ((t_scalar *)g)->sc_vec;
-            char str[MAXPDSTRING];
-            if (s == gensym("fill"))
+            if (parenttemplate == template)
+            { 
+                svg_sendupdate(x, visible, s, template,
+                    data, &redraw_bbox, parent, (t_scalar *)g);
+            }
+            else
             {
-                t_symbol *fill;
-                t_fielddesc *fd = x->x_fill;
-                if (x->x_filltype == 1)
-                    fill = fielddesc_getsymbol(fd, template, data, 1);
-                else if (x->x_filltype == 2)
+                if (template_has_elemtemplate(template, parenttemplate))
                 {
-                    fill = gensym(rgb_to_hex(
-                        (int)fielddesc_getfloat(fd,
-                            template, data, 1),
-                        (int)fielddesc_getfloat(fd+1,
-                            template, data, 1),
-                        (int)fielddesc_getfloat(fd+2,
-                            template, data, 1)));
+                    svg_updatevec(c, ((t_scalar *)g)->sc_vec, template,
+                        parenttemplate, parent, s, x, (t_scalar *)g,
+                        &redraw_bbox);
                 }
-                else
-                    fill = &s_;
-                sprintf(str, "-fill %s", fill->s_name);
-            }
-            else if (s == gensym("stroke"))
-            {
-                t_symbol *stroke;
-                t_fielddesc *fd = x->x_stroke;
-                if (x->x_stroketype == 1)
-                    stroke = fielddesc_getsymbol(fd, template, data, 1);
-                else if (x->x_stroketype == 2)
-                {
-                    stroke = gensym(rgb_to_hex(
-                        (int)fielddesc_getfloat(fd,
-                            template, data, 1),
-                        (int)fielddesc_getfloat(fd+1,
-                            template, data, 1),
-                        (int)fielddesc_getfloat(fd+2,
-                            template, data, 1)));
-                }
-                else stroke = &s_;
-                sprintf(str, "-stroke %s", stroke->s_name);
-            }
-            else if (s == gensym("fill-opacity"))
-                sprintf(str, "-fillopacity %g",
-                    fielddesc_getcoord(&x->x_fillopacity.a_attr,
-                        template, data, 1));
-            else if (s == gensym("fill-rule"))
-                sprintf(str, "-fillrule %s", (int)fielddesc_getcoord(
-                    &x->x_fillrule.a_attr, template, data, 1) ?
-                       "evenodd" : "nonzero");
-            else if (s == gensym("stroke-linecap"))
-                sprintf(str, "-strokelinecap %s", get_strokelinecap(
-                    (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
-                        template, data, 1)));
-            else if (s == gensym("stroke-linejoin"))
-                sprintf(str, "-strokelinejoin %s", get_strokelinejoin(
-                    (int)fielddesc_getcoord(&x->x_strokelinejoin.a_attr,
-                        template, data, 1)));
-            else if (s == gensym("stroke-miterlimit"))
-                sprintf(str, "-strokemiterlimit %g", fielddesc_getcoord(
-                    &x->x_strokemiterlimit.a_attr, template, data, 1));
-            else if (s == gensym("stroke-opacity"))
-                sprintf(str, "-strokeopacity %g", fielddesc_getcoord(
-                    &x->x_strokeopacity.a_attr, template, data, 1));
-            else if (s == gensym("stroke-width"))
-            {
-                sprintf(str, "-strokewidth %g", fielddesc_getcoord(
-                    &x->x_strokewidth.a_attr, template, data, 1));
-                redraw_bbox = 1;
-            }
-            else if (s == gensym("r"))
-            {
-                sprintf(str, "-rx %g -ry %g",
-                fielddesc_getcoord(x->x_vec+2, template, data, 1),
-                fielddesc_getcoord(x->x_vec+2, template, data, 1));
-                redraw_bbox = 1;
-            }
-            else if (s == gensym("rx"))
-            {
-                if (x->x_type == gensym("rect"))
-                    sprintf(str, "-rx %d", (int)fielddesc_getcoord(
-                        &x->x_rx.a_attr, template, data, 1));
-                else
-                {
-                    sprintf(str, "-rx %g", fielddesc_getcoord(
-                        x->x_vec+2, template, data, 1));
-                    redraw_bbox = 1;
-                }
-            }
-            else if (s == gensym("ry"))
-            {
-                if (x->x_type == gensym("rect"))
-                    sprintf(str, "-ry %d", (int)fielddesc_getcoord(
-                        &x->x_ry.a_attr, template, data, 1));
-                else
-                {
-                     sprintf(str, "-ry %g", fielddesc_getcoord(
-                         x->x_vec+3, template, data, 1));
-                     redraw_bbox = 1;
-                }
-            }
-            else if (s == gensym("vis"))
-            {
-                sprintf(str, "-state %s", (int)fielddesc_getcoord(
-                    &x->x_vis.a_attr, template, data, 1) ? "normal" : "hidden");
-                redraw_bbox = 1;
-            }
-            else if (s == gensym("stroke-dasharray"))
-            {
-                if (x->x_ndash)
-                {
-                    t_fielddesc *fd = x->x_strokedasharray;
-                    int i;
-                    char *cur = str, * const end = str + sizeof str;
-                    cur += snprintf(cur, end-cur, "-strokedasharray {");
-                    for (i = 0; i < x->x_ndash; i++)
-                        if (cur < end)
-                            cur += snprintf(cur, end-cur, " %g ",
-                                fielddesc_getcoord(fd+i, template, data, 1));
-                    cur += snprintf(cur, end-cur, "}\n");
-                }
-                else return;
-            }
-            else if (s == gensym("data"))
-            {
-                /* this needs to be abstracted out somehow... */
-                sys_vgui(".x%lx.c coords .draw%lx.%lx {\\\n",
-                    visible, parent, data);
-                /* let's turn off bbox caching so we can recalculate
-                   the bbox */
-                if (x->x_pathrect_cache != -1)
-                   x->x_pathrect_cache = 0;
-                redraw_bbox = 1;
-                int i;
-                char *cmd;
-                t_fielddesc *f;
-                int totalpoints = 0; /* running tally */
-                /* path parser: no error checking yet */
-                for (i = 0, cmd = x->x_pathcmds; i < x->x_npathcmds; i++, cmd++)
-                {
-                    int j;
-                    int cargs = x->x_nargs_per_cmd[i];
-                    f = (x->x_vec)+totalpoints;
-                    sys_vgui("%c\\\n", *(cmd));
-                    for (j = 0; j < x->x_nargs_per_cmd[i]; j++)
-                        sys_vgui("%g\\\n", fielddesc_getcoord(
-                            f+j, template, data, 1));
-                    totalpoints += x->x_nargs_per_cmd[i];
-                }
-                sys_gui("}\n");
-            }
-            else if (s == gensym("index"))
-            {
-                sys_vgui("pdtk_drawimage_index .x%lx.c .x%lx .draw%lx.%lx %d\n",
-                    visible, parent, parent, data, drawimage_getindex(parent, 
-                        template, data)); 
-            }
-            else if (s == gensym("points"))
-            {
-                /* this needs to be abstracted out somehow... */
-                sys_vgui(".x%lx.c coords .draw%lx.%lx \\\n",
-                    visible, parent, data);
-                /* let's turn off bbox caching so we can recalculate
-                   the bbox */
-                if (x->x_pathrect_cache != -1)
-                   x->x_pathrect_cache = 0;
-                redraw_bbox = 1;
-                int i;
-                t_fielddesc *f = x->x_vec;
-                if (x->x_type == gensym("rect") ||
-                    x->x_type == gensym("ellipse"))
-                {
-                    t_float xval, yval, w, h;
-                    xval = fielddesc_getcoord(f, template, data, 1);
-                    yval = fielddesc_getcoord(f+1, template, data, 1);
-                    if (x->x_type == gensym("rect"))
-                    {
-                        w = xval + (fielddesc_getcoord(f+2, template, data, 1));
-                        h = yval + (fielddesc_getcoord(f+3, template, data, 1));
-                        sys_vgui("%g %g %g %g\\\n", xval, yval, w, h);
-                    }
-                    else
-                    {
-                        sys_vgui("%g %g\\\n", xval, yval);
-                    }
-                }
-                else
-                {
-                    int n = (x->x_type == gensym("circle")) ? 2 : x->x_nargs;
-                    for (i = 0; i < n; i++)
-                    {
-                        sys_vgui("%g\\\n", fielddesc_getcoord(
-                            f+i, template, data, 1));
-                    }
-                }
-                sys_gui("\n");
-            }
-            if (x->x_type == gensym("group") && s != gensym("data") &&
-                s != gensym("points") && s != gensym("index"))
-            {
-                sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx %s\n",
-                   visible, parent, data, str);
-            }
-            else if (s != gensym("data") && s != gensym("points") &&
-                s != gensym("index"))
-            {
-                sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx %s\n",
-                   visible, parent, data, str);
             }
             if (redraw_bbox)
             {
                 /* uncache the scalar's bbox */
                 ((t_scalar *)g)->sc_bboxcache = 0;
+                /* only get the scroll if we had to redraw the bbox */
                 sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
                 if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
                 {
-                    //scalar_select(g, c, 1);
                     scalar_drawselectrect((t_scalar *)g, c, 0);
                     scalar_drawselectrect((t_scalar *)g, c, 1);
-                    /* only get the scroll if we had to redraw the bbox */
                 }
             }
         }
@@ -1596,7 +1708,6 @@ void svg_doupdate(t_svg *x, t_canvas *c, t_symbol *s)
     }
 }
 
-extern t_canvas *canvas_list;
 void svg_update(t_svg *x, t_symbol *s)
 {
     t_canvas *c;
@@ -2238,102 +2349,6 @@ void svg_group_pathrect_cache(t_svg *x, int state)
     } 
 }
 
-void svg_doupdatetransform(t_svg *x, t_canvas *c)
-{
-    t_float mtx1[3][3];
-    t_float mtx2[3][3];
-    mset(mtx1, 0, 0, 0, 0, 0, 0);
-    mset(mtx2, 0, 0, 0, 0, 0, 0);
-    t_gobj *g;
-    t_template *template = NULL;
-    //t_template *warn_template = NULL;
-    t_canvas *visible = c;
-    t_canvas *parent = canvas_templatecanvas_forgroup(svg_parentcanvas(x));
-    while(visible->gl_isgraph && visible->gl_owner)
-        visible = visible->gl_owner;
-
-    /* we'll probably get a different bbox now, so we
-       will calculate a new one the next time we call
-       draw_getrect for this draw command. For groups
-       we need to do it for all of the draw commands
-       inside it.
-    */
-    if (x->x_type == gensym("group"))
-        svg_group_pathrect_cache(x, 0);
-    else if (x->x_pathrect_cache != -1)
-        x->x_pathrect_cache = 0;
-    for (g = c->gl_list; g; g = g->g_next)
-    {
-        if (glist_isvisible(c) && g->g_pd == scalar_class &&
-            parent ==
-            template_findcanvas((template = template_findbyname(
-                (((t_scalar *)g)->sc_template)))) &&
-            template->t_transformable == 0
-           )
-        {
-            //fprintf(stderr,"draw_doupdatetransform > template:%lx(%s)
-            //    transform:%d\n", (t_int)template,
-            //    ((t_scalar *)g)->sc_template->s_name,
-            //    template->t_transformable);
-            t_float m1, m2, m3, m4, m5, m6;
-            svg_parsetransform(x, template, ((t_scalar *)g)->sc_vec,
-                &m1, &m2, &m3, &m4, &m5, &m6);
-            if (x->x_type == gensym("group"))
-            {
-                sys_vgui(".x%lx.c itemconfigure .dgroup%lx.%lx -matrix "
-                    "{ {%g %g} {%g %g} {%g %g} }\n",
-                    visible, x->x_parent, ((t_scalar *)g)->sc_vec,
-                    m1, m2, m3, m4, m5, m6);
-            }
-            else
-                sys_vgui(".x%lx.c itemconfigure .draw%lx.%lx -matrix "
-                    "{ {%g %g} {%g %g} {%g %g} }\n",
-                    visible, x->x_parent, ((t_scalar*)g)->sc_vec,
-                    m1, m2, m3, m4, m5, m6);
-            /* uncache the scalar's bbox */
-            ((t_scalar *)g)->sc_bboxcache = 0;
-            if (glist_isselected(c, &((t_scalar *)g)->sc_gobj))
-            {
-                //scalar_select(g, c, 1);
-                scalar_drawselectrect((t_scalar *)g, c, 0);
-                scalar_drawselectrect((t_scalar *)g, c, 1);
-            }
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", visible);
-        } 
-        /*else if (template != NULL && warn_template != template)
-        {
-            // this is not a transformable template, warn user of that
-            post("warning: transform ignored on the template %s because it includes an array", template->t_sym->s_name);
-            warn_template = template;
-        }*/
-        if (g->g_pd == canvas_class)
-        {
-            svg_doupdatetransform(x, (t_glist *)g);
-        }
-    }
-}
-
-/* not used atm-- it doesn't seem to speed anything up */
-void svg_queueupdatetransform(t_gobj *g, t_glist *glist)
-{
-    /* not sure about this... */
-    t_svg *x = (t_svg *)((t_draw *)g);
-    svg_doupdatetransform(x, glist);
-}
-
-extern t_canvas *canvas_list;
-void svg_updatetransform(t_svg *x)
-{
-    t_canvas *c;
-    for (c = canvas_list; c; c = c->gl_next)
-        svg_doupdatetransform(x, c);
-    /* Attempted to use sys_queuegui above, but
-       it actually ended up being slightly less
-       efficient. Maybe I was using it wrong...
-       sys_queuegui((t_gobj *)x, c, draw_queueupdatetransform);
-    */
-}
-
 void svg_transform(t_svg *x, t_symbol *s, int argc, t_atom *argv)
 {
     /* probably need to do error checking here */
@@ -2362,7 +2377,7 @@ void svg_transform(t_svg *x, t_symbol *s, int argc, t_atom *argv)
             fielddesc_setfloatarg(fd++, argc--, argv++);
         }
     }
-    svg_updatetransform(x);
+    svg_update(x, s);
 }
 
 /* -------------------- widget behavior for draw ------------ */
@@ -3262,10 +3277,11 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         }
         if (x->x_fillopacity.a_flag)
             sys_vgui("-fillopacity %g ",
-                fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
+               fielddesc_getfloat(&x->x_fillopacity.a_attr, template, data, 1));
         if (x->x_fillrule.a_flag)
             sys_vgui("-fillrule %s ", (int)fielddesc_getfloat(
-                &x->x_fillrule.a_attr, template, data, 1) ? "evenodd" : "nonzero");
+                &x->x_fillrule.a_attr, template, data, 1) ?
+                    "evenodd" : "nonzero");
     }
     if (x->x_stroketype)
     {
@@ -3288,8 +3304,8 @@ static void svg_togui(t_svg *x, t_template *template, t_word *data)
         sys_vgui("-strokewidth %g\\\n",
             fielddesc_getfloat(&x->x_strokewidth.a_attr, template, data, 1));
     if (x->x_strokeopacity.a_flag)
-        sys_vgui("-strokeopacity %g ", fielddesc_getfloat(&x->x_strokeopacity.a_attr,
-            template, data, 1));
+        sys_vgui("-strokeopacity %g ",
+            fielddesc_getfloat(&x->x_strokeopacity.a_attr, template, data, 1));
     if (x->x_strokelinecap.a_flag)
         sys_vgui("-strokelinecap %s ", get_strokelinecap(
             (int)fielddesc_getcoord(&x->x_strokelinecap.a_attr,
@@ -3386,16 +3402,16 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             */
 
             int in_array = (sc->sc_vec == data) ? 0 : 1;
-            if (in_array)
-            {
+//            if (in_array)
+//            {
                 /* we probably don't need 'p' anymore... */
                 //t_canvas *p =
                 //    template_findcanvas(template_findbyname(sc->sc_template));
-               sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
-                    "-parent .scelem%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
-                    glist_getcanvas(glist), data,
-                    parentglist, data, basex, basey);
-            }
+//               sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
+//                    "-parent .scelem%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
+//                    glist_getcanvas(glist), data,
+//                    parentglist, data, basex, basey);
+//            }
             //int flags = sa->x_flags;
             t_float pix[500];
             if (n > 500)
@@ -3499,7 +3515,7 @@ static void draw_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             //    sys_vgui("-smooth 1\\\n"); //this doesn't work with tkpath
 
             if (in_array)
-                sys_vgui(" -parent .scelem%lx \\\n", data);
+                sys_vgui(" -parent .scelem%lx.%lx \\\n", parentglist, data);
             else
                 sys_vgui(" -parent .dgroup%lx.%lx \\\n",
                     x->x_canvas, data);
@@ -4827,13 +4843,6 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     if (tovis)
     {
         int in_array = (sc->sc_vec == data) ? 0 : 1;
-        if (in_array)
-        {
-           sys_vgui(".x%lx.c create group -tags {.scelem%lx} "
-                "-parent .dgroup%lx.%lx -matrix { {1 0} {0 1} {%g %g} }\n",
-                glist_getcanvas(glist), data, x->x_canvas, sc->sc_vec,
-                basex, basey);
-        }
         /* check if old 3-digit color field is being used... */
         int dscolor = fielddesc_getfloat(&x->x_outlinecolor, template, data, 1);
         if (dscolor != 0)
@@ -5111,8 +5120,11 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             searched for drawing instructions for every last point. */
         if (scalarvis != 0)
         {
-            t_float xoffset = in_array ? basex : 0;
-            t_float yoffset = in_array ? basey : 0;
+            //t_float xoffset = in_array ? basex: 0;
+            //t_float yoffset = in_array ? basey: 0;
+            t_float xoffset = 0;
+            t_float yoffset = 0;
+
             for (xsum = xloc, i = 0; i < nelem; i++)
             {
                 t_float usexloc, useyloc;
@@ -5126,15 +5138,26 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 else yval = 0;
                 useyloc = yloc + yoffset +
                     fielddesc_cvttocoord(yfielddesc, yval);
+                 /* We're setting up a special group that will get set as
+                   the parent by array elements */
+
+
+                   /* todo: need to check if plot itself is in an array */
+                sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
+                         "-matrix {{1.0 0.0} {0.0 1.0} {%g %g}} ",
+                    glist_getcanvas(glist), elemtemplatecanvas,
+                    (t_word *)(elem + elemsize * i),
+                    x->x_canvas, data, usexloc, useyloc);
+                if (in_array)
+                {
+                    sys_vgui("-parent {.scelem%lx.%lx}\n", parentglist, data);
+                }
+                else
+                {
+                    sys_vgui("-parent {.dgroup%lx.%lx}\n", x->x_canvas, data);
+                }
                 for (y = elemtemplatecanvas->gl_list; y; y = y->g_next)
                 {
-                    /* We're setting up a special group that will get set as
-                       the parent by array elements */
-                    sys_vgui(".x%lx.c create group -tags {.scelem%lx.%lx} "
-                             "-parent {.dgroup%lx.%lx}\n",
-                        glist_getcanvas(glist), elemtemplatecanvas,
-                        (t_word *)(elem + elemsize * i),
-                        x->x_canvas, data);
                     if (pd_class(&y->g_pd) == canvas_class &&
                         ((t_glist *)y)->gl_svg)
                     {
@@ -6614,6 +6637,7 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         return;
     if (vis)
     {
+        int in_array = (sc->sc_vec == data) ? 0 : 1;
         t_atom at;
 
         int fontsize = fielddesc_getfloat(&x->x_fontsize, template, data, 0);
@@ -7078,6 +7102,7 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
         return;
     if (vis)
     {
+        int in_array = (sc->sc_vec == data) ? 0: 1;
         /*int xloc = glist_xtopixels(glist,
             basex + fielddesc_getcoord(&x->x_xloc, template, data, 0));
         int yloc = glist_ytopixels(glist,
@@ -7090,9 +7115,12 @@ static void drawimage_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
             (int)fielddesc_getfloat(&x->x_value, template, data, 0));
         //sys_vgui(".x%lx.x%lx.template%lx scalar%lx\n", glist_getcanvas(glist),
         //    glist, data, sc);
-        sys_vgui(".x%lx.x%lx.template%lx scalar%lx .dgroup%lx.%lx "
+        sys_vgui(".x%lx.x%lx.template%lx scalar%lx %s%lx.%lx "
                  ".draw%lx.%lx\n", glist_getcanvas(glist),
-            glist, data, sc, parent, data, x, data);
+            glist, data, sc,
+            (in_array ? ".scelem" : ".dgroup"),
+            (in_array ? parentglist : parent), data,
+            x, data);
         /* need to revisit all these tags, they are getting confusing... */
 //        sys_vgui(".x%lx.c itemconfigure .x%lx.x%lx.template%lx\\\n",
 //            glist_getcanvas(glist), glist_getcanvas(glist), glist, data);
@@ -7340,9 +7368,9 @@ t_canvas *canvas_templatecanvas_forgroup(t_canvas *c)
     return templatecanvas;
     }
 
-/* warning: this needs to be carefully considered-- seems like
-   canvas's struct may not be initialized before the objects within
-   it. */
+   /* warning: this needs to be carefully considered-- seems like
+      canvas's struct may not be initialized before the objects within
+      it. */
     t_binbuf *b = c->gl_obj.te_binbuf;
     if (!b)
     {

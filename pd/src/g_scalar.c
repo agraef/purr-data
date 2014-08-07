@@ -600,18 +600,21 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
 
 /* At present, scalars have a three-level hierarchy in tkpath,
    with two levels accessible by the user from within Pd:
-   scalar - tkpath group with matrix derived from x/y fields,
+   scalar - ".scalar%lx", x->sc_vec
+     |      tkpath group with matrix derived from x/y fields,
      |      gop basexy, and gop scaling values. This group is
      |      not configurable by the user. This means that the
      |      [draw group] below can ignore basexy and gop junk
      |      when computing the transform matrix.
      v
-   group  - user-facing group which is the parent for all the
-     |      scalar's drawing commands. Its matrix and options
-     |      can be accessed from the [draw group] object (one
-     |      per templatecanvas).
+   group  - ".dgroup%lx.%lx", templatecanvas, x->sc_vec
+     |      group used as parent for all the toplevel drawing
+     |      commands of the scalar (i.e., the ones located on
+     |      the same canvas as the [struct]).  Its matrix and
+     |      options aren't yet accessible by the user.
      v
-   (draw  - the actual drawing command: rectangle, path, etc.
+   (draw  - ".draw%lx.%lx", (t_draw *ptr), x->sc_vec
+     |      the actual drawing command: rectangle, path, etc.
      or     Each has its own matrix and options which can set
    scelem   with messages to the corresponding [draw] object.
      or   - ds arrays can nest arbitrarily deep. Scelem is for
