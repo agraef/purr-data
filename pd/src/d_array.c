@@ -424,7 +424,6 @@ static t_int *tabread4_tilde_perform(t_int *w)
         double findex = *in++ + onset;
         int index = findex;
         t_sample frac,  a,  b,  c,  d, cminusb;
-        static int count;
         if (index < 1)
             index = 1, frac = 0;
         else if (index > maxindex)
@@ -582,9 +581,7 @@ static t_int *tabosc4_tilde_perform(t_int *w)
     t_float fnpoints = x->x_fnpoints;
     int mask = fnpoints - 1;
     t_float conv = fnpoints * x->x_conv;
-    int maxindex;
     t_word *tab = x->x_vec, *addr;
-    int i;
     double dphase = fnpoints * x->x_phase + UNITBIT32;
 
     if (!tab) goto zero;
@@ -741,7 +738,7 @@ bad:
 
 static void tabsend_dsp(t_tabsend *x, t_signal **sp)
 {
-    int i, vecsize;
+    int vecsize;
     t_garray *a;
 
     if (!(a = (t_garray *)pd_findbyclass(x->x_arrayname, garray_class)))
@@ -972,7 +969,7 @@ typedef struct _tabwrite
 
 static void tabwrite_float(t_tabwrite *x, t_float f)
 {
-    int i, vecsize;
+    int vecsize;
     t_garray *a;
     t_word *vec;
 

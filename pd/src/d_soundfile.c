@@ -253,7 +253,6 @@ int open_soundfile_via_fd(int fd, int headersize,
         swap = (bigendian != garray_ambigendian());
         if (format == FORMAT_NEXT)   /* nextstep header */
         {
-            uint32 param;
             if (bytesread < (int)sizeof(t_nextstep))
                 goto badheader;
             nchannels = swap4(((t_nextstep *)buf)->ns_nchans, swap);
@@ -1156,7 +1155,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
 {
     int headersize = -1, channels = 0, bytespersamp = 0, bigendian = 0,
         resize = 0, i, j;
-    long skipframes = 0, finalsize = 0, itemsleft,
+    long skipframes = 0, finalsize = 0,
         maxsize = DEFMAXSIZE, itemsread = 0, bytelimit  = 0x7fffffff;
     int fd = -1;
     char endianness, *filename;
@@ -1312,7 +1311,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         
     for (i = 0; i < argc; i++)
     {
-        int nzero, vecsize;
+        int vecsize;
         garray_getfloatwords(garrays[i], &vecsize, &vecs[i]);
         for (j = itemsread; j < vecsize; j++)
             vecs[i][j].w_float = 0;
@@ -1348,14 +1347,12 @@ done:
 long soundfiler_dowrite(void *obj, t_canvas *canvas,
     int argc, t_atom *argv)
 {
-    int headersize, bytespersamp, bigendian,
-        endianness, swap, filetype, normalize, i, j, nchannels;
-    long onset, nframes, itemsleft,
-        maxsize = DEFMAXSIZE, itemswritten = 0;
+    int bytespersamp, bigendian, swap, filetype, normalize, i, j, nchannels;
+    long onset, nframes, itemswritten = 0;
     t_garray *garrays[MAXSFCHANS];
     t_word *vecs[MAXSFCHANS];
     char sampbuf[SAMPBUFSIZE];
-    int bufframes, nitems;
+    int bufframes;
     int fd = -1;
     t_sample normfactor, biggest = 0;
     t_float samplerate;
@@ -1425,7 +1422,7 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
 
     for (itemswritten = 0; itemswritten < nframes; )
     {
-        int thiswrite = nframes - itemswritten, nitems, nbytes;
+        int thiswrite = nframes - itemswritten, nbytes;
         thiswrite = (thiswrite > bufframes ? bufframes : thiswrite);
         soundfile_xferout_float(argc, (t_float **)vecs, (unsigned char *)sampbuf,
             thiswrite, onset, bytespersamp, bigendian, normfactor,
@@ -2199,7 +2196,6 @@ static void *writesf_child_main(void *zz)
             if (x->x_fd >= 0)
             {
                 int bytesperframe = x->x_bytespersample * x->x_sfchannels;
-                int bigendian = x->x_bigendian;
                 char *filename = x->x_filename;
                 int fd = x->x_fd;
                 int filetype = x->x_filetype;
@@ -2425,10 +2421,9 @@ static void *writesf_new(t_floatarg fnchannels, t_floatarg fbufsize)
 static t_int *writesf_perform(t_int *w)
 {
     t_writesf *x = (t_writesf *)(w[1]);
-    int vecsize = x->x_vecsize, sfchannels = x->x_sfchannels, i, j,
+    int vecsize = x->x_vecsize, sfchannels = x->x_sfchannels,
         bytespersample = x->x_bytespersample,
         bigendian = x->x_bigendian;
-    t_sample *fp;
     if (x->x_state == STATE_STREAM)
     {
         int wantbytes;
