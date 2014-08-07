@@ -1108,7 +1108,7 @@ abort();
         case ET_LB:
         default:
                 post_error((fts_object_t *) expr,
-                        "expr: ex_eval: unexpected type %d\n", eptr->ex_type);
+                        "expr: ex_eval: unexpected type %ld\n", eptr->ex_type);
                 return (exNULL);
         }
         if (!eptr[1].ex_type) {
@@ -1190,7 +1190,7 @@ abort();
         case OP_COMMA:
         case OP_SEMI:
         default:
-                post_error((fts_object_t *) expr, "expr: ex_print: bad op 0x%x\n", eptr->ex_op);
+                post_error((fts_object_t *) expr, "expr: ex_print: bad op 0x%lx\n", eptr->ex_op);
                 return (exNULL);
         }
 
@@ -1258,12 +1258,6 @@ eval_store(struct expr *expr, struct ex_ex *eptr, struct ex_ex *optr, int idx)
 /* the operation stack */
 /* the result pointer */
 {
-        struct ex_ex arg;
-        int isvalue;
-        char *tbl = (char *) 0;
-        char *var = (char *) 0;
-        int badleft = 0;
-
 post("store called\n");
 ex_print(eptr);
 eptr = ex_eval(expr, ++eptr, optr, idx);
@@ -1365,7 +1359,6 @@ eval_var(struct expr *expr, struct ex_ex *eptr, struct ex_ex *optr, int idx)
 /* the operation stack */
 /* the result pointer */
 {
-        struct ex_ex arg;
         char *var = (char *) 0;
         int novar = 0;
         
@@ -1411,10 +1404,9 @@ eval_sigidx(struct expr *expr, struct ex_ex *eptr, struct ex_ex *optr, int idx)
 {
         struct ex_ex arg;
         struct ex_ex *reteptr;
-        int i = 0, j = 0;
+        int i = 0;
         t_float fi = 0,         /* index in float */
               rem_i = 0;        /* remains of the float */
-        char *tbl;
 
         arg.ex_type = 0;
         arg.ex_int = 0;
