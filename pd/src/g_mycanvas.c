@@ -44,7 +44,6 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
-    //if (glist_isvisible(glist) {
         char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
         sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x "
@@ -57,14 +56,7 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
                  canvas, xpos, ypos,
                  xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
                  x->x_gui.x_bcol, x, x, nlet_tag);
-        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-                 "-font {{%s} -%d %s} -fill #%6.6x "
-                 "-tags {%lxLABEL %lxMYCNV %s text iemgui}\n",
-                 canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
-                 strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-                 x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-                 x->x_gui.x_lcol, x, x, nlet_tag);
-    //}
+    iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag,"MYCNV");
 }
 
 void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
@@ -82,9 +74,7 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
         sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
                  canvas, x, xpos, ypos,
                  xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                 canvas, x, xpos+x->x_gui.x_ldx,
-                 ypos+x->x_gui.x_ldy);
+        iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
         /* redraw scale handle rectangle if selected */
         if (x->x_gui.x_fsf.x_selected)
         {
@@ -93,70 +83,46 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
     }
 }
 
-void my_canvas_draw_erase(t_my_canvas* x, t_glist* glist)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    sys_vgui(".x%lx.c delete %lxMYCNV\n", canvas, x);
-    sys_vgui(".x%lx.c dtag all %lxMYCNV\n", canvas, x);
-    scalehandle_draw_erase2(&x->x_gui,glist);
-}
-
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-
-    /*
-    char color[64];
-    if (x->x_gui.x_fsf.x_selected)
-        sprintf(color, "$pd_colors(selection)");
-    else
-        sprintf(color, "#%6.6x", x->x_gui.x_bcol);
-    */
-
     sys_vgui(".x%lx.c itemconfigure %lxRECT -fill #%6.6x -stroke #%6.6x\n",
              canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
     if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                 "-stroke $pd_colors(selection)\n",
-                 canvas, x);
+                 "-stroke $pd_colors(selection)\n", canvas, x);
     else
         sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n", canvas, x,
              x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-             "-fill #%6.6x -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             x->x_gui.x_lcol,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
+    iemgui_label_draw_config(&x->x_gui,canvas);
 }
 
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    //if (glist_isvisible(canvas)) {
-        if(x->x_gui.x_fsf.x_selected)
+    if(x->x_gui.x_fsf.x_selected)
+    {
+        // check if we are drawing inside a gop abstraction
+        // visible on parent canvas
+        // if so, disable highlighting
+        if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            // check if we are drawing inside a gop abstraction
-            // visible on parent canvas
-            // if so, disable highlighting
-            if (x->x_gui.x_glist == glist_getcanvas(glist))
-            {
-                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-                sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                         "-stroke $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"MYCNV",
-                    x->x_vis_w,x->x_vis_h);
-            }
-            sys_vgui(".x%lx.c addtag selected withtag %lxMYCNV\n", canvas, x);
+            sys_vgui(".x%lx.c itemconfigure %lxBASE "
+                     "-stroke $pd_colors(selection)\n", canvas, x);
+            scalehandle_draw_select2(&x->x_gui,glist,"MYCNV",
+                x->x_vis_w,x->x_vis_h);
         }
-        else
-        {
-            sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n",
-                canvas, x, x->x_gui.x_bcol);
-            sys_vgui(".x%lx.c dtag %lxMYCNV selected\n", canvas, x);
-            scalehandle_draw_erase2(&x->x_gui,glist);
-        }
-    //}
+        sys_vgui(".x%lx.c addtag selected withtag %lxMYCNV\n", canvas, x);
+    }
+    else
+    {
+        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n",
+            canvas, x, x->x_gui.x_bcol);
+        sys_vgui(".x%lx.c dtag %lxMYCNV selected\n", canvas, x);
+        scalehandle_draw_erase2(&x->x_gui,glist);
+    }
+    iemgui_label_draw_select(&x->x_gui,canvas);
+    iemgui_tag_selected(&x->x_gui,canvas,"MYCNV");
 }
 
 static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -236,7 +202,7 @@ void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         my_canvas_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        my_canvas_draw_erase(x, glist);
+        iemgui_draw_erase(&x->x_gui, glist, "MYCNV");
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         my_canvas_draw_config(x, glist);
 }
@@ -553,14 +519,7 @@ void g_mycanvas_setup(void)
     class_addmethod(scalehandle_class, (t_method)my_canvas__motionhook,
             gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
-    my_canvas_widgetbehavior.w_getrectfn = my_canvas_getrect;
-    my_canvas_widgetbehavior.w_displacefn = iemgui_displace;
-    my_canvas_widgetbehavior.w_selectfn = iemgui_select;
-    my_canvas_widgetbehavior.w_activatefn = NULL;
-    my_canvas_widgetbehavior.w_deletefn = iemgui_delete;
-    my_canvas_widgetbehavior.w_visfn = iemgui_vis;
-    my_canvas_widgetbehavior.w_clickfn = NULL;
-    my_canvas_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
+    wb_init(&my_canvas_widgetbehavior,my_canvas_getrect,0);
     class_setwidget(my_canvas_class, &my_canvas_widgetbehavior);
     class_sethelpsymbol(my_canvas_class, gensym("my_canvas"));
     class_setsavefn(my_canvas_class, my_canvas_save);

@@ -54,6 +54,12 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
     }
 }
 
+void toggle_draw_io(t_toggle* x, t_glist* glist, int old_snd_rcv_flags)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"TGL");
+}
+
 void toggle_draw_new(t_toggle *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
@@ -62,8 +68,6 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
 
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
-
-    //if (glist_isvisible(canvas)) {
 
         char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
@@ -89,28 +93,8 @@ void toggle_draw_new(t_toggle *x, t_glist *glist)
                  canvas, xx+w+1, yy + x->x_gui.x_h-w-1,
                  xx + x->x_gui.x_w-w-1, yy+w+1, w,
                  (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, nlet_tag);
-        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-                 "-font {{%s} -%d %s} -fill #%6.6x "
-                 "-tags {%lxLABEL %lxTGL %s text iemgui}\n",
-                 canvas, xx+x->x_gui.x_ldx,
-                 yy+x->x_gui.x_ldy,
-                 strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-                 x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-                 x->x_gui.x_lcol, x, x, nlet_tag);
-        if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxTGL%so%d %so%d %lxTGL %s outlet iemgui}\n",
-                 canvas, xx, yy + x->x_gui.x_h-1,
-                 xx + IOWIDTH, yy + x->x_gui.x_h,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxTGL%si%d %si%d %lxTGL %s inlet iemgui}\n",
-                 canvas, xx, yy, xx + IOWIDTH, yy+1,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-    //}
+        iemgui_label_draw_new(&x->x_gui,canvas,xx,yy,nlet_tag,"TGL");
+    toggle_draw_io(x,glist,7);
 }
 
 void toggle_draw_move(t_toggle *x, t_glist *glist)
@@ -139,8 +123,7 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
         sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
                  canvas, x, xx+w+1,
                  yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w-1, yy+w+1);
-        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                 canvas, x, xx+x->x_gui.x_ldx, yy+x->x_gui.x_ldy);
+        iemgui_label_draw_move(&x->x_gui,canvas,xx,yy);
         if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
             sys_vgui(".x%lx.c coords %lxTGL%so%d %d %d %d %d\n",
                  canvas, x, nlet_tag, 0, xx,
@@ -154,47 +137,10 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
     }
 }
 
-void toggle_draw_erase(t_toggle* x, t_glist* glist)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    sys_vgui(".x%lx.c delete %lxTGL\n", canvas, x);
-    sys_vgui(".x%lx.c dtag all %lxTGL\n", canvas, x);
-    scalehandle_draw_erase2(&x->x_gui,glist);
-}
-
 void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-
-    /*
-    char color[64];
-    if (x->x_gui.x_fsf.x_selected)
-        sprintf(color, "$pd_colors(selection)");
-    else
-        sprintf(color, "#%6.6x", x->x_gui.x_lcol); 
-
-    sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} %d %s} "
-             "-fill %s -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             color,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    */
-    if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-    {
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-                 "-fill $pd_colors(selection) -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    }
-    else
-    {
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-                 "-fill #%6.6x -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             x->x_gui.x_lcol,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    }
+    iemgui_label_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n "
              ".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n "
              ".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n",
@@ -209,71 +155,30 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
     */
 }
 
-void toggle_draw_io(t_toggle* x, t_glist* glist, int old_snd_rcv_flags)
-{
-    int xpos=text_xpix(&x->x_gui.x_obj, glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist)
-    {
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
-            !x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxTGL%so%d %so%d %lxTGL %s outlet iemgui}\n",
-                 canvas, xpos,
-                 ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
-                 ypos + x->x_gui.x_h, x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
-            x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c delete %lxTGL%so%d\n", canvas, x, nlet_tag, 0);
-        if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
-            !x->x_gui.x_fsf.x_rcv_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxTGL%si%d %si%d %lxTGL %s inlet iemgui}\n",
-                 canvas, xpos, ypos,
-                 xpos + IOWIDTH, ypos+1, x,
-                 nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
-            x->x_gui.x_fsf.x_rcv_able)
-            sys_vgui(".x%lx.c delete %lxTGL%si%d\n", canvas, x, nlet_tag, 0);
-    }
-}
-
 void toggle_draw_select(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    //if (glist_isvisible(canvas)) {
-        if(x->x_gui.x_fsf.x_selected)
+    if(x->x_gui.x_fsf.x_selected)
+    {
+        // check if we are drawing inside a gop abstraction
+        // visible on parent canvas
+        // if so, disable highlighting
+        if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            // check if we are drawing inside a gop abstraction
-            // visible on parent canvas
-            // if so, disable highlighting
-            if (x->x_gui.x_glist == glist_getcanvas(glist))
-            {
-                sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                         "-stroke $pd_colors(selection)\n", canvas, x);
-                sys_vgui(".x%lx.c itemconfigure %lxLABEL "
-                         "-fill $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"TGL",
-                    x->x_gui.x_w-1,x->x_gui.x_h-1);
-            }
-            sys_vgui(".x%lx.c addtag selected withtag %lxTGL\n", canvas, x);
+            sys_vgui(".x%lx.c itemconfigure %lxBASE "
+                     "-stroke $pd_colors(selection)\n", canvas, x);
+            scalehandle_draw_select2(&x->x_gui,glist,"TGL",
+                x->x_gui.x_w-1,x->x_gui.x_h-1);
         }
-        else
-        {
-            sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
-                canvas, x, IEM_GUI_COLOR_NORMAL);
-            sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
-                canvas, x, x->x_gui.x_lcol);
-            sys_vgui(".x%lx.c dtag %lxTGL selected\n", canvas, x);
-            scalehandle_draw_erase2(&x->x_gui,glist);
-        }
-    //}
+    }
+    else
+    {
+        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
+            canvas, x, IEM_GUI_COLOR_NORMAL);
+        scalehandle_draw_erase2(&x->x_gui,glist);
+    }
+    iemgui_label_draw_select(&x->x_gui,canvas);
+    iemgui_tag_selected(&x->x_gui,canvas,"TGL");
 }
 
 static void toggle__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -348,7 +253,7 @@ void toggle_draw(t_toggle *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         toggle_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        toggle_draw_erase(x, glist);
+        iemgui_draw_erase(&x->x_gui, glist, "TGL");
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         toggle_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -684,14 +589,7 @@ void g_toggle_setup(void)
     class_addmethod(scalehandle_class, (t_method)toggle__motionhook,
             gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
-    toggle_widgetbehavior.w_getrectfn = toggle_getrect;
-    toggle_widgetbehavior.w_displacefn = iemgui_displace;
-    toggle_widgetbehavior.w_selectfn = iemgui_select;
-    toggle_widgetbehavior.w_activatefn = NULL;
-    toggle_widgetbehavior.w_deletefn = iemgui_delete;
-    toggle_widgetbehavior.w_visfn = iemgui_vis;
-    toggle_widgetbehavior.w_clickfn = toggle_newclick;
-    toggle_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
+    wb_init(&toggle_widgetbehavior,toggle_getrect,toggle_newclick);
     class_setwidget(toggle_class, &toggle_widgetbehavior);
     class_sethelpsymbol(toggle_class, gensym("toggle"));
     class_setsavefn(toggle_class, toggle_save);

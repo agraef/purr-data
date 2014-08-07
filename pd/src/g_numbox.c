@@ -189,6 +189,12 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     x->x_gui.x_changed = 0;
 }
 
+static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist,
+    int old_snd_rcv_flags)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"NUM");
+}
 static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 {
     int half=x->x_gui.x_h/2, d=1+x->x_gui.x_h/34;
@@ -215,22 +221,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
                      xpos + x->x_numwidth, ypos + x->x_gui.x_h,
                      xpos, ypos + x->x_gui.x_h,
                      IEM_GUI_COLOR_NORMAL, x->x_gui.x_bcol, x, x, nlet_tag);
-            if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-                sys_vgui(".x%lx.c create prect %d %d %d %d "
-                         "-stroke $pd_colors(iemgui_nlet) "
-                         "-tags {%lxNUM%so%d %so%d %lxNUM %s outlet iemgui}\n",
-                     canvas,
-                     xpos, ypos + x->x_gui.x_h-1,
-                     xpos+IOWIDTH, ypos + x->x_gui.x_h,
-                     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-            if(!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-                sys_vgui(".x%lx.c create prect %d %d %d %d "
-                         "-stroke $pd_colors(iemgui_nlet) "
-                         "-tags {%lxNUM%si%d %si%d %lxNUM %s inlet iemgui}\n",
-                     canvas,
-                     xpos, ypos,
-                     xpos+IOWIDTH, ypos+1,
-                     x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
+            my_numbox_draw_io(x,glist,7);
         }
         else
         {
@@ -251,13 +242,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
                 xpos + half, ypos + half,
                 xpos, ypos + x->x_gui.x_h,
                 x->x_gui.x_fcol, x, x, nlet_tag);
-        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-                 "-font {{%s} -%d %s} -fill #%6.6x "
-                 "-tags {%lxLABEL %lxNUM %s text iemgui}\n",
-            canvas, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy,
-            strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-            x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-                 x->x_gui.x_lcol, x, x, nlet_tag);
+        iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag,"NUM");
         my_numbox_ftoa(x);
         sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
                  "-font {{%s} -%d %s} -fill #%6.6x "
@@ -304,8 +289,7 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
                      canvas, x, xpos, ypos,
                      xpos + half, ypos + half,
                      xpos, ypos + x->x_gui.x_h);
-        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                 canvas, x, xpos+x->x_gui.x_ldx, ypos+x->x_gui.x_ldy);
+        iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
         sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
                  canvas, x, xpos+half+2, ypos+half+d);
         /* redraw scale handle rectangle if selected */
@@ -314,52 +298,21 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
     }
 }
 
-static void my_numbox_draw_erase(t_my_numbox* x,t_glist* glist)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    sys_vgui(".x%lx.c delete %lxNUM\n", canvas, x);
-    sys_vgui(".x%lx.c dtag all %lxNUM\n", canvas, x);
-    scalehandle_draw_erase2(&x->x_gui,glist);
-}
-
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-
-    /*
-    char color[64];
-    char lcolor[64];
-    if (x->x_gui.x_fsf.x_selected)
-    {
-        sprintf(color, "$pd_colors(selection)");
-        sprintf(lcolor, "$pd_colors(selection)");
-    }
-    else
-    {
-        sprintf(color, "#%6.6x", x->x_gui.x_fcol);
-        sprintf(lcolor, "#%6.6x", x->x_gui.x_lcol);
-    }
-    */
-
     if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-                 "-fill $pd_colors(selection) -text {%s} \n "
-                 ".x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} "
-                 "-fill $pd_colors(selection) \n "
+        sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} "
+                 "-fill $pd_colors(selection)\n"
                  ".x%lx.c itemconfigure %lxBASE2 "
                  "-stroke $pd_colors(selection)\n",
-                 canvas, x, x->x_gui.x_font,
-                 x->x_gui.x_fontsize, sys_fontweight,
-                 strcmp(
-                     x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
                  canvas, x, x->x_gui.x_font,
                  x->x_gui.x_fontsize, sys_fontweight,
                  canvas,x);
         /*
         sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} %d %s} "
-                 "-fill $pd_colors(selection) \n",
+                 "-fill $pd_colors(selection)\n",
                  canvas, x, x->x_gui.x_font,
                  x->x_gui.x_fontsize, sys_fontweight);
         sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill $pd_colors(selection)\n",
@@ -368,16 +321,9 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     }
     else
     {
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-                 "-fill #%6.6x -text {%s} \n "
-                 ".x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} "
+        sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font {{%s} -%d %s} "
                  "-fill #%6.6x \n .x%lx.c itemconfigure %lxBASE2 "
                  "-stroke #%6.6x\n",
-                 canvas, x, x->x_gui.x_font,
-                 x->x_gui.x_fontsize, sys_fontweight,
-                 x->x_gui.x_lcol,
-                 strcmp(
-                     x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
                  canvas, x, x->x_gui.x_font,
                  x->x_gui.x_fontsize, sys_fontweight,
                  x->x_gui.x_fcol, canvas, x, x->x_gui.x_fcol);
@@ -392,96 +338,52 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
                  x, x->x_gui.x_fcol);*/
 
     }
+    iemgui_label_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x;\n", canvas,
              x, x->x_gui.x_bcol);
-}
-
-static void my_numbox_draw_io(t_my_numbox* x,t_glist* glist,
-    int old_snd_rcv_flags)
-{
-    int xpos=text_xpix(&x->x_gui.x_obj, glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist)
-    {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        if((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
-            !x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxNUM%so%d %so%d %lxNUM %s outlet iemgui}\n",
-                 canvas,
-                 xpos, ypos + x->x_gui.x_h-1,
-                 xpos+IOWIDTH, ypos + x->x_gui.x_h,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if(!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG)
-            && x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c delete %lxNUM%so%d\n", canvas, x, nlet_tag, 0);
-        if((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
-            !x->x_gui.x_fsf.x_rcv_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxNUM%si%d %si%d %lxNUM %s inlet iemgui}\n",
-                 canvas,
-                 xpos, ypos,
-                 xpos+IOWIDTH, ypos+1,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if(!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
-            x->x_gui.x_fsf.x_rcv_able)
-            sys_vgui(".x%lx.c delete %lxNUM%si%d\n", canvas, x, nlet_tag, 0);
-    }
 }
 
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    //if (glist_isvisible(canvas)) {
-        if(x->x_gui.x_fsf.x_selected)
+    if(x->x_gui.x_fsf.x_selected)
+    {
+        if(x->x_gui.x_fsf.x_change)
         {
-            if(x->x_gui.x_fsf.x_change)
-            {
-                x->x_gui.x_fsf.x_change = 0;
-                clock_unset(x->x_clock_reset);
-                x->x_buf[0] = 0;
-                sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
-            }
-            // check if we are drawing inside a gop abstraction
-            // visible on parent canvas
-            // if so, disable highlighting
-            if (x->x_gui.x_glist == glist_getcanvas(glist))
-            {
-                char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-                sys_vgui(".x%lx.c itemconfigure {%lxBASE1||%lxBASE2} "
-                         "-stroke $pd_colors(selection)\n", canvas, x, x);
-                sys_vgui(".x%lx.c itemconfigure {%lxLABEL||%lxNUMBER} "
-                         "-fill $pd_colors(selection)\n", canvas, x, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"NUM",
-                    x->x_numwidth-1,x->x_gui.x_h-1);
-            }
-            sys_vgui(".x%lx.c addtag selected withtag %lxNUM\n", canvas, x);
+            x->x_gui.x_fsf.x_change = 0;
+            clock_unset(x->x_clock_reset);
+            x->x_buf[0] = 0;
+            sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         }
-        else
+        // check if we are drawing inside a gop abstraction
+        // visible on parent canvas
+        // if so, disable highlighting
+        if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            sys_vgui(".x%lx.c dtag %lxNUM selected\n", canvas, x);
-
-            if (x->x_hide_frame <= 1)
-                sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n",
-                    canvas, x, IEM_GUI_COLOR_NORMAL);
-            else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke #%6.6x\n",
-                    canvas, x, x->x_gui.x_bcol);
-
-            sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
-                canvas, x, x->x_gui.x_fcol);
-            sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
-                canvas, x, x->x_gui.x_lcol);
-            sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x\n",
-                canvas, x, x->x_gui.x_fcol);
-            scalehandle_draw_erase2(&x->x_gui,glist);
+            sys_vgui(".x%lx.c itemconfigure {%lxBASE1||%lxBASE2} "
+                     "-stroke $pd_colors(selection)\n", canvas, x, x);
+            sys_vgui(".x%lx.c itemconfigure %lxNUMBER "
+                     "-fill $pd_colors(selection)\n", canvas, x);
+            scalehandle_draw_select2(&x->x_gui,glist,"NUM",
+                x->x_numwidth-1,x->x_gui.x_h-1);
         }
-    //}
+    }
+    else
+    {
+        if (x->x_hide_frame <= 1)
+            sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n",
+                canvas, x, IEM_GUI_COLOR_NORMAL);
+        else sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke #%6.6x\n",
+                canvas, x, x->x_gui.x_bcol);
+
+        sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke #%6.6x\n",
+            canvas, x, x->x_gui.x_fcol);
+        sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill #%6.6x\n",
+            canvas, x, x->x_gui.x_fcol);
+        scalehandle_draw_erase2(&x->x_gui,glist);
+    }
+    iemgui_label_draw_select(&x->x_gui,canvas);
+    iemgui_tag_selected(&x->x_gui,canvas,"NUM");
 }
 
 static void my_numbox__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -593,7 +495,7 @@ void my_numbox_draw(t_my_numbox *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         my_numbox_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        my_numbox_draw_erase(x, glist);
+        iemgui_draw_erase(&x->x_gui, glist, "NUM");
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         my_numbox_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -1212,15 +1114,7 @@ void g_numbox_setup(void)
         gensym("log_height"), A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_hide_frame,
         gensym("hide_frame"), A_FLOAT, 0);
-    my_numbox_widgetbehavior.w_getrectfn =    my_numbox_getrect;
-    my_numbox_widgetbehavior.w_displacefn =   iemgui_displace;
-    my_numbox_widgetbehavior.w_selectfn =     iemgui_select;
-    my_numbox_widgetbehavior.w_activatefn =   NULL;
-    my_numbox_widgetbehavior.w_deletefn =     iemgui_delete;
-    my_numbox_widgetbehavior.w_visfn =        iemgui_vis;
-    my_numbox_widgetbehavior.w_clickfn =      my_numbox_newclick;
-    my_numbox_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
- 
+
     scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
                   sizeof(t_scalehandle), CLASS_PD, 0);
     class_addmethod(scalehandle_class, (t_method)my_numbox__clickhook,
@@ -1228,6 +1122,7 @@ void g_numbox_setup(void)
     class_addmethod(scalehandle_class, (t_method)my_numbox__motionhook,
             gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
+    wb_init(&my_numbox_widgetbehavior,my_numbox_getrect,my_numbox_newclick);
     class_setwidget(my_numbox_class, &my_numbox_widgetbehavior);
     class_sethelpsymbol(my_numbox_class, gensym("numbox2"));
     class_setsavefn(my_numbox_class, my_numbox_save);

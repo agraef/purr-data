@@ -54,7 +54,11 @@ void hradio_draw_update(t_gobj *client, t_glist *glist)
         x->x_drawn = x->x_on;
     }
 }
-
+void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"HRDO");
+}
 void hradio_draw_new(t_hradio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
@@ -67,17 +71,15 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
-    //if (glist_isvisible(canvas)) {
-
         char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
         for(i=0; i<n; i++)
         {
             sys_vgui(".x%lx.c create prect %d %d %d %d "
                      "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-                     "-tags {%lxBASE%d %lxHRDO %s text iemgui border}\n",
+                     "-tags {%lxBASE%d %lxBASE %lxHRDO %s text iemgui border}\n",
                  canvas, xx11, yy11, xx11+dx, yy12,
-                 x->x_gui.x_bcol, x, i, x, nlet_tag);
+                 x->x_gui.x_bcol, x, i, x, x, nlet_tag);
             sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
                      "-stroke #%6.6x -tags {%lxBUT%d %lxHRDO %s text iemgui}\n",
                  canvas, xx21, yy21, xx22, yy22,
@@ -89,26 +91,8 @@ void hradio_draw_new(t_hradio *x, t_glist *glist)
             xx22 += dx;
             x->x_drawn = x->x_on;
         }
-        sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-                 "-font {{%s} -%d %s} -fill #%6.6x "
-                 "-tags {%lxLABEL %lxHRDO %s text iemgui}\n",
-             canvas, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"",
-             x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             x->x_gui.x_lcol, x, x, nlet_tag);
-        if (!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet iemgui}\n",
-                 canvas, xx11b, yy12-1, xx11b + IOWIDTH, yy12,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if (!x->x_gui.x_fsf.x_rcv_able && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet iemgui}\n",
-                 canvas, xx11b, yy11, xx11b + IOWIDTH, yy11+1,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-    //}
+    iemgui_label_draw_new(&x->x_gui,canvas,xx11b,yy11,nlet_tag,"HRDO");
+    hradio_draw_io(x,glist,7);
 }
 
 void hradio_draw_move(t_hradio *x, t_glist *glist)
@@ -138,8 +122,7 @@ void hradio_draw_move(t_hradio *x, t_glist *glist)
             xx21 += dx;
             xx22 += dx;
         }
-        sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
-                 canvas, x, xx11b+x->x_gui.x_ldx, yy11+x->x_gui.x_ldy);
+        iemgui_label_draw_move(&x->x_gui,canvas,xx11b,yy11);
         if(!x->x_gui.x_fsf.x_snd_able && canvas == x->x_gui.x_glist)
             sys_vgui(".x%lx.c coords %lxHRDO%so%d %d %d %d %d\n",
                  canvas, x, nlet_tag, 0, xx11b, yy12-1, xx11b + IOWIDTH, yy12);
@@ -152,39 +135,11 @@ void hradio_draw_move(t_hradio *x, t_glist *glist)
     }
 }
 
-void hradio_draw_erase(t_hradio* x, t_glist* glist)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-
-    sys_vgui(".x%lx.c delete %lxHRDO\n", canvas, x);
-    sys_vgui(".x%lx.c dtag all %lxHRDO\n", canvas, x);
-    scalehandle_draw_erase2(&x->x_gui,glist);
-}
-
 void hradio_draw_config(t_hradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
-
-    /*
-    char color[64];
-    if (x->x_gui.x_fsf.x_selected)
-        sprintf(color, "$pd_colors(selection)");
-    else
-        sprintf(color, "#%6.6x", x->x_gui.x_lcol);
-    */
-
-    if (x->x_gui.x_fsf.x_selected && x->x_gui.x_glist == canvas)
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-                 "-fill $pd_colors(selection) -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");
-    else
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
-                 "-fill #%6.6x -text {%s} \n",
-             canvas, x, x->x_gui.x_font, x->x_gui.x_fontsize, sys_fontweight,
-             x->x_gui.x_lcol,
-             strcmp(x->x_gui.x_lab->s_name, "empty")?x->x_gui.x_lab->s_name:"");        
+    iemgui_label_draw_config(&x->x_gui,canvas);
     for(i=0; i<n; i++)
     {
         sys_vgui(".x%lx.c itemconfigure %lxBASE%d "
@@ -200,81 +155,29 @@ void hradio_draw_config(t_hradio* x, t_glist* glist)
     }
 }
 
-void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-    int xpos=text_xpix(&x->x_gui.x_obj, glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-
-    if (glist_isvisible(canvas) && canvas == x->x_gui.x_glist)
-    {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        if ((old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
-           !x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxHRDO%so%d %so%d %lxHRDO %s outlet iemgui}\n",
-                 canvas,
-                 xpos, ypos + x->x_gui.x_w-1,
-                 xpos + IOWIDTH, ypos + x->x_gui.x_w,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if (!(old_snd_rcv_flags & IEM_GUI_OLD_SND_FLAG) &&
-            x->x_gui.x_fsf.x_snd_able)
-            sys_vgui(".x%lx.c delete %lxHRDO%so%d\n", canvas, x, nlet_tag, 0);
-        if ((old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
-            !x->x_gui.x_fsf.x_rcv_able)
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_nlet) "
-                     "-tags {%lxHRDO%si%d %si%d %lxHRDO %s inlet iemgui}\n",
-                 canvas,
-                 xpos, ypos,
-                 xpos + IOWIDTH, ypos+1,
-                 x, nlet_tag, 0, nlet_tag, 0, x, nlet_tag);
-        if (!(old_snd_rcv_flags & IEM_GUI_OLD_RCV_FLAG) &&
-            x->x_gui.x_fsf.x_rcv_able)
-            sys_vgui(".x%lx.c delete %lxHRDO%si%d\n", canvas, x, nlet_tag, 0);
-    }
-}
-
 void hradio_draw_select(t_hradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int n=x->x_number, i;
-    //if (glist_isvisible(canvas)) {
-
-        if(x->x_gui.x_fsf.x_selected)
+    if(x->x_gui.x_fsf.x_selected)
+    {
+        // check if we are drawing inside a gop abstraction
+        // visible on parent canvas.  If so, disable highlighting
+        if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            // check if we are drawing inside a gop abstraction
-            // visible on parent canvas.  If so, disable highlighting
-            if (x->x_gui.x_glist == glist_getcanvas(glist))
-            {
-                for(i=0; i<n; i++)
-                {
-                    sys_vgui(".x%lx.c itemconfigure %lxBASE%d "
-                             "-stroke $pd_colors(selection)\n", canvas, x, i);
-                }
-                sys_vgui(".x%lx.c itemconfigure %lxLABEL "
-                         "-fill $pd_colors(selection)\n", canvas, x);
-                scalehandle_draw_select2(&x->x_gui,glist,"HRDO",
-                    x->x_gui.x_w*x->x_number-1,x->x_gui.x_h-1);
-            }
-            sys_vgui(".x%lx.c addtag selected withtag %lxHRDO\n", canvas, x);
+            sys_vgui(".x%lx.c itemconfigure %lxBASE "
+                "-stroke $pd_colors(selection)\n", canvas, x);
+            scalehandle_draw_select2(&x->x_gui,glist,"HRDO",
+                x->x_gui.x_w*x->x_number-1,x->x_gui.x_h-1);
         }
-        else
-        {
-            sys_vgui(".x%lx.c dtag %lxHRDO selected\n", canvas, x);
-            for(i=0; i<n; i++)
-            {
-                sys_vgui(".x%lx.c itemconfigure %lxBASE%d -stroke %s\n",
-                    canvas, x, i, IEM_GUI_COLOR_NORMAL);
-            }
-            sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
-                canvas, x, x->x_gui.x_lcol);
-            scalehandle_draw_erase2(&x->x_gui,glist);
-        }
-    //}
+    }
+    else
+    {
+        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
+            canvas, x, IEM_GUI_COLOR_NORMAL);
+        scalehandle_draw_erase2(&x->x_gui,glist);
+    }
+    iemgui_label_draw_select(&x->x_gui,canvas);
+    iemgui_tag_selected(&x->x_gui,canvas,"HRDO");
 }
 
 static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
@@ -348,7 +251,7 @@ void hradio_draw(t_hradio *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         hradio_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        hradio_draw_erase(x, glist);
+        iemgui_draw_erase(&x->x_gui, glist, "HRDO");
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         hradio_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -855,14 +758,7 @@ void g_hradio_setup(void)
     class_addmethod(scalehandle_class, (t_method)hradio__motionhook,
             gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
-    hradio_widgetbehavior.w_getrectfn = hradio_getrect;
-    hradio_widgetbehavior.w_displacefn = iemgui_displace;
-    hradio_widgetbehavior.w_selectfn = iemgui_select;
-    hradio_widgetbehavior.w_activatefn = NULL;
-    hradio_widgetbehavior.w_deletefn = iemgui_delete;
-    hradio_widgetbehavior.w_visfn = iemgui_vis;
-    hradio_widgetbehavior.w_clickfn = hradio_newclick;
-    hradio_widgetbehavior.w_displacefnwtag = iemgui_displace_withtag;
+    wb_init(&hradio_widgetbehavior,hradio_getrect,hradio_newclick);
     class_setwidget(hradio_class, &hradio_widgetbehavior);
     class_sethelpsymbol(hradio_class, gensym("hradio"));
     class_setsavefn(hradio_class, hradio_save);

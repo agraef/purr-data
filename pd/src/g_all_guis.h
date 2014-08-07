@@ -84,7 +84,7 @@
 #define IEM_GUI_DRAW_MODE_SELECT 3
 #define IEM_GUI_DRAW_MODE_ERASE  4
 #define IEM_GUI_DRAW_MODE_CONFIG 5
-#define IEM_GUI_DRAW_MODE_IO     6
+#define IEM_GUI_DRAW_MODE_IO     6 /* also reserves 7,8,9 by adding old_sr_flags */
 
 
 #define IS_A_POINTER(atom,index) ((atom+index)->a_type == A_POINTER)
@@ -102,65 +102,39 @@
 #define IEM_GUI_COLOR_EDITED 16711680
 #define IEMGUI_MAX_NUM_LEN 32
 
-#define SCALE_BNG_MINWIDTH 8
-#define SCALE_BNG_MINHEIGHT 8
-#define SCALE_CNV_MINWIDTH 1
-#define SCALE_CNV_MINHEIGHT 1
-#define SCALE_HRDO_MINWIDTH 8
-#define SCALE_HRDO_MINHEIGHT 8
-#define SCALE_HSLD_MINWIDTH 2
-#define SCALE_HSLD_MINHEIGHT 8
 #define SCALE_NUM_MINWIDTH 1
 #define SCALE_NUM_MINHEIGHT 8
-#define SCALE_TGL_MINWIDTH 8
-#define SCALE_TGL_MINHEIGHT 8
-#define SCALE_VRDO_MINWIDTH 8
-#define SCALE_VRDO_MINHEIGHT 8
-#define SCALE_VSLD_MINWIDTH 8
-#define SCALE_VSLD_MINHEIGHT 2
-#define SCALE_VU_MINWIDTH 8
-#define SCALE_VU_MINHEIGHT 80
 #define SCALE_GOP_MINWIDTH 12
 #define SCALE_GOP_MINHEIGHT 12
-
 #define SCALEHANDLE_WIDTH   5
 #define SCALEHANDLE_HEIGHT  5
-
 #define LABELHANDLE_WIDTH   5
 #define LABELHANDLE_HEIGHT  5
 
-typedef struct _iem_fstyle_flags
-{
-    unsigned int x_font_style:6;
-    unsigned int x_rcv_able:1;
-    unsigned int x_snd_able:1;
-    unsigned int x_lab_is_unique:1;
-    unsigned int x_rcv_is_unique:1;
-    unsigned int x_snd_is_unique:1;
-    unsigned int x_lab_arg_tail_len:6;
-    unsigned int x_lab_is_arg_num:6;
-    unsigned int x_shiftdown:1;
-    unsigned int x_selected:1;
-    unsigned int x_finemoved:1;
-    unsigned int x_put_in2out:1;
-    unsigned int x_change:1;
-    unsigned int x_thick:1;
-    unsigned int x_lin0_log1:1;
-    unsigned int x_steady:1;
+typedef struct _iem_fstyle_flags // (15 used of 32)
+{                                 // grep -w "$1" *.[ch]|wc -l (after refactor#5)
+    unsigned int x_font_style:6;  // 56 matches
+    unsigned int x_rcv_able:1;    // 59 matches
+    unsigned int x_snd_able:1;    // 65 matches
+    unsigned int unused:16;
+    unsigned int x_selected:1;    // 38 matches
+    unsigned int x_finemoved:1;   // 11 matches
+    unsigned int x_put_in2out:1;  // 17 matches
+    unsigned int x_change:1;      // 37 matches
+    unsigned int x_thick:1;       // 14 matches
+    unsigned int x_lin0_log1:1;   // 38 matches
+    unsigned int x_steady:1;      // 18 matches
     unsigned int dummy:1;
 } t_iem_fstyle_flags;
 
-typedef struct _iem_init_symargs
+typedef struct _iem_init_symargs // (5 used of 32)
 {
-    unsigned int x_loadinit:1;
-    unsigned int x_rcv_arg_tail_len:6;
-    unsigned int x_snd_arg_tail_len:6;
-    unsigned int x_rcv_is_arg_num:6;
-    unsigned int x_snd_is_arg_num:6;
-    unsigned int x_scale:1;
-    unsigned int x_flashed:1;
-    unsigned int x_locked:1;
-    unsigned int x_reverse:1; /* bugfix */
+    unsigned int x_loadinit:1;         // 33 matches
+    unsigned int unused:24;
+    unsigned int x_scale:1;            // 22 matches
+    unsigned int x_flashed:1;          // 16 matches
+    unsigned int x_locked:1;           //  8 matches
+    unsigned int x_reverse:1; /* bugfix */ // 8 matches
     unsigned int dummy:3;
 } t_iem_init_symargs;
 
@@ -422,3 +396,15 @@ EXTERN void scalehandle_drag_scale(t_scalehandle *h);
 EXTERN int mini(int a, int b);
 EXTERN int maxi(int a, int b);
 
+// other refactor by Mathieu
+EXTERN void iemgui_tag_selected(     t_iemgui *x, t_glist *canvas, const char *class_tag);
+EXTERN void iemgui_label_draw_new(   t_iemgui *x, t_glist *canvas, int xpos, int ypos, const char *nlet_tag, const char *class_tag);
+EXTERN void iemgui_label_draw_move(  t_iemgui *x, t_glist *canvas, int xpos, int ypos);
+EXTERN void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas);
+EXTERN void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas);
+EXTERN void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags, const char *class_tag);
+EXTERN void iemgui_draw_erase(t_iemgui *x, t_glist* glist, const char *class_tag);
+
+EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl);
+
+extern t_symbol *s_empty;

@@ -26,6 +26,8 @@
 #include <io.h>
 #endif
 
+t_symbol *s_empty;
+
 /*  #define GGEE_HSLIDER_COMPATIBLE  */
 
 /*------------------ global varaibles -------------------------*/
@@ -861,7 +863,6 @@ void iem_inttofstyle(t_iem_fstyle_flags *fstylep, int n)
 {
     memset(fstylep, 0, sizeof(*fstylep));
     fstylep->x_font_style = (n >> 0);
-    fstylep->x_shiftdown = 0;
     fstylep->x_selected = 0;
     fstylep->x_finemoved = 0;
     fstylep->x_put_in2out = 0;
@@ -894,7 +895,7 @@ char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj)
 }
 
 //----------------------------------------------------------------
-// SCALEHANDLE COMMON CODE
+// SCALEHANDLE COMMON CODE (by Mathieu, refactored from existing code)
 
 extern int gfxstub_haveproperties(void *key);
 
@@ -1102,3 +1103,110 @@ void scalehandle_drag_scale(t_scalehandle *h) {
     }
 }
 
+//----------------------------------------------------------------
+// IEMGUI refactor (by Mathieu)
+
+void iemgui_tag_selected(t_iemgui *x, t_glist *canvas, const char *class_tag) {
+    if(x->x_fsf.x_selected)
+        sys_vgui(".x%lx.c addtag selected withtag %lx%s\n", canvas, x, class_tag);
+    else
+        sys_vgui(".x%lx.c dtag %lx%s selected\n", canvas, x, class_tag);
+}
+
+void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas, int xpos, int ypos, const char *nlet_tag, const char *class_tag) {
+    sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
+             "-font {{%s} -%d %s} -fill #%6.6x "
+             "-tags {%lxLABEL %lx%s text iemgui %s}\n",
+         canvas, xpos+x->x_ldx, ypos+x->x_ldy,
+         strcmp(x->x_lab->s_name, "empty")?x->x_lab->s_name:"",
+         x->x_font, x->x_fontsize, sys_fontweight,
+         x->x_lcol, x, x, class_tag, nlet_tag);
+}
+void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas, int xpos, int ypos) {
+    sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+        canvas, x, xpos+x->x_ldx, ypos+x->x_ldy);
+}
+void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
+    if (x->x_fsf.x_selected && x->x_glist == canvas)
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+                 "-fill $pd_colors(selection) -text {%s} \n",
+             canvas, x, x->x_font, x->x_fontsize, sys_fontweight,
+             strcmp(x->x_lab->s_name, "empty")?x->x_lab->s_name:"");
+    else
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+                 "-fill #%6.6x -text {%s} \n",
+             canvas, x, x->x_font, x->x_fontsize, sys_fontweight,
+             x->x_lcol, strcmp(x->x_lab->s_name, "empty")?x->x_lab->s_name:"");
+}
+void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
+    if(x->x_fsf.x_selected)
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL "
+            "-fill $pd_colors(selection)\n", canvas, x);
+    else
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -fill #%6.6x\n",
+            canvas, x, x->x_lcol);
+}
+
+void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags, const char *class_tag) {
+    int a,b;
+    t_class *c = pd_class((t_pd *)x);
+    //printf("--- iemgui_io_draw %s flags=%d\n",c->c_name->s_name,old_sr_flags);
+    char *nlet_tag = iem_get_tag(/*glist*/ x->x_glist, (t_iemgui *)x);
+
+    if (!(old_sr_flags&4) && (!glist_isvisible(canvas) || !(canvas == x->x_glist))) {
+        //printf("---/iemgui_io_draw not visible\n");
+        return;
+    }
+
+    int x1,y1,x2,y2;
+    c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+
+    a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
+    //b=x->x_fsf.x_snd_able; // not inited at moment of new
+    b=x->x_snd!=s_empty;
+    //printf("a=%d b=%d snd=%s\n",a,b,x->x_snd->s_name);
+    if(a && !b)
+        //printf("%s create outlet\n",c->c_name->s_name), fflush(stdout),
+        sys_vgui(".x%lx.c create prect %d %d %d %d "
+                 "-stroke $pd_colors(iemgui_nlet) "
+                 "-tags {%lx%s%so%d %so%d %lx%s outlet iemgui %s}\n",
+             canvas, x1, y2-1, x1 + IOWIDTH, y2,
+             x, class_tag, nlet_tag, 0, nlet_tag, 0, x, class_tag, nlet_tag);
+    if(!a && b)
+        //printf("%s delete outlet\n",c->c_name->s_name), fflush(stdout),
+        sys_vgui(".x%lx.c delete %lx%s%so%d\n", canvas, x, class_tag, nlet_tag, 0);
+
+    a=old_sr_flags&IEM_GUI_OLD_RCV_FLAG;
+    //b=x->x_fsf.x_rcv_able; // not inited at moment of new
+    b=x->x_rcv!=s_empty;
+    //printf("a=%d b=%d rcv=%s\n",a,b,x->x_rcv->s_name);
+    if(a && !b)
+        //printf("%s create inlet\n",c->c_name->s_name), fflush(stdout),
+        sys_vgui(".x%lx.c create prect %d %d %d %d "
+                 "-stroke $pd_colors(iemgui_nlet) "
+                 "-tags {%lx%s%si%d %si%d %lx%s inlet iemgui %s}\n",
+             canvas, x1, y1, x1 + IOWIDTH, y1+1,
+             x, class_tag, nlet_tag, 0, nlet_tag, 0, x, class_tag, nlet_tag);
+    if(!a && b)
+        //printf("%s delete inlet\n",c->c_name->s_name), fflush(stdout),
+        sys_vgui(".x%lx.c delete %lx%s%si%d\n", canvas, x, class_tag, nlet_tag, 0);
+    //printf("---/iemgui_io_draw\n");
+}
+
+void iemgui_draw_erase(t_iemgui *x, t_glist* glist, const char *class_tag) {
+    t_canvas *canvas=glist_getcanvas(glist);
+    sys_vgui(".x%lx.c delete %lx%s\n", canvas, x, class_tag);
+    sys_vgui(".x%lx.c dtag all %lx%s\n", canvas, x, class_tag);
+    scalehandle_draw_erase2(x,glist);
+}
+
+void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl) {
+    wb->w_getrectfn = gr;
+    wb->w_displacefn = iemgui_displace;
+    wb->w_selectfn = iemgui_select;
+    wb->w_activatefn = NULL;
+    wb->w_deletefn = iemgui_delete;
+    wb->w_visfn = iemgui_vis;
+    wb->w_clickfn = cl;
+    wb->w_displacefnwtag = iemgui_displace_withtag;
+}
