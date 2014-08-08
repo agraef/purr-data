@@ -70,14 +70,6 @@
 
 #define IEM_RADIO_MAX   128
 
-#define IEM_SYM_UNIQUE_SND  256
-#define IEM_SYM_UNIQUE_RCV  512
-#define IEM_SYM_UNIQUE_LAB  1024
-#define IEM_SYM_UNIQUE_ALL  1792
-#define IEM_FONT_STYLE_ALL  255
-
-#define IEM_MAX_SYM_LEN      127
-
 #define IEM_GUI_DRAW_MODE_UPDATE 0
 #define IEM_GUI_DRAW_MODE_MOVE   1
 #define IEM_GUI_DRAW_MODE_NEW    2
@@ -85,7 +77,6 @@
 #define IEM_GUI_DRAW_MODE_ERASE  4
 #define IEM_GUI_DRAW_MODE_CONFIG 5
 #define IEM_GUI_DRAW_MODE_IO     6 /* also reserves 7,8,9 by adding old_sr_flags */
-
 
 #define IS_A_POINTER(atom,index) ((atom+index)->a_type == A_POINTER)
 #define IS_A_FLOAT(atom,index) ((atom+index)->a_type == A_FLOAT)
@@ -110,33 +101,6 @@
 #define SCALEHANDLE_HEIGHT  5
 #define LABELHANDLE_WIDTH   5
 #define LABELHANDLE_HEIGHT  5
-
-typedef struct _iem_fstyle_flags // (15 used of 32)
-{                                 // grep -w "$1" *.[ch]|wc -l (after refactor#5)
-    unsigned int x_font_style:6;  // 56 matches
-    unsigned int x_rcv_able:1;    // 59 matches
-    unsigned int x_snd_able:1;    // 65 matches
-    unsigned int unused:16;
-    unsigned int x_selected:1;    // 38 matches
-    unsigned int x_finemoved:1;   // 11 matches
-    unsigned int x_put_in2out:1;  // 17 matches
-    unsigned int x_change:1;      // 37 matches
-    unsigned int x_thick:1;       // 14 matches
-    unsigned int x_lin0_log1:1;   // 38 matches
-    unsigned int x_steady:1;      // 18 matches
-    unsigned int dummy:1;
-} t_iem_fstyle_flags;
-
-typedef struct _iem_init_symargs // (5 used of 32)
-{
-    unsigned int x_loadinit:1;         // 33 matches
-    unsigned int unused:24;
-    unsigned int x_scale:1;            // 22 matches
-    unsigned int x_flashed:1;          // 16 matches
-    unsigned int x_locked:1;           //  8 matches
-    unsigned int x_reverse:1; /* bugfix */ // 8 matches
-    unsigned int dummy:3;
-} t_iem_init_symargs;
 
 typedef void (*t_iemfunptr)(void *x, t_glist *glist, int mode);
 
@@ -168,10 +132,7 @@ typedef struct _iemgui
     int                x_w;
     int                x_ldx;
     int                x_ldy;
-    char               x_font[MAXPDSTRING]; /* font names can be long! */
-    t_iem_fstyle_flags x_fsf;
     int                x_fontsize;
-    t_iem_init_symargs x_isa;
     int                x_fcol;
     int                x_bcol;
     int                x_lcol;
@@ -187,15 +148,25 @@ typedef struct _iemgui
     t_scalehandle     *x_lhandle;
     int                x_vis;               /* is the object drawn? */
     int                x_changed;           /* has the value changed so that we need to do graphic update */
-} t_iemgui;
 
-typedef struct _iemguidummy
-{
-    t_iemgui x_gui;
-    int      x_dum1;
-    int      x_dum2;
-    int      x_dum3;
-} t_iemguidummy;
+                                  // grep -w "$1" *.[ch]|wc -l
+    // from t_iem_fstyle_flags
+    unsigned int x_font_style:6;  // 39 matches
+    unsigned int x_selected:1;    // 38 matches
+    unsigned int x_finemoved:1;   // 11 matches
+    unsigned int x_put_in2out:1;  // 17 matches
+    unsigned int x_change:1;      // 37 matches
+    unsigned int x_thick:1;       // 14 matches
+    unsigned int x_lin0_log1:1;   // 38 matches
+    unsigned int x_steady:1;      // 18 matches
+    // from t_iem_init_symargs
+    unsigned int x_loadinit:1;    // 33 matches
+    unsigned int x_scale:1;       // 22 matches
+    unsigned int x_flashed:1;     // 16 matches
+    unsigned int x_locked:1;      //  8 matches
+    unsigned int x_reverse:1; /* bugfix */ // 8 matches
+    unsigned int dummy:14;
+} t_iemgui;
 
 typedef struct _bng
 {
@@ -316,46 +287,24 @@ typedef struct _vdial
 
 extern int sys_noloadbang;
 extern int iemgui_color_hex[];
-extern int iemgui_vu_db2i[];
-extern int iemgui_vu_col[];
-extern char *iemgui_vu_scale_str[];
 
 EXTERN int iemgui_clip_size(int size);
 EXTERN int iemgui_clip_font(int size);
-EXTERN int iemgui_modulo_color(int col);
-EXTERN t_symbol *iemgui_unique2dollarzero(t_symbol *s, int unique_num, int and_unique_flag);
-EXTERN t_symbol *iemgui_sym2dollararg(t_symbol *s, int nth_arg, int tail_len);
-EXTERN t_symbol *iemgui_dollarzero2unique(t_symbol *s, int unique_num);
-EXTERN t_symbol *iemgui_dollararg2sym(t_symbol *s, int nth_arg, int tail_len, int pargc, t_atom *pargv);
-EXTERN int iemgui_is_dollarzero(t_symbol *s);
-EXTERN int iemgui_is_dollararg(t_symbol *s, int *tail_len);
-EXTERN void iemgui_fetch_unique(t_iemgui *iemgui);
-EXTERN void iemgui_fetch_parent_args(t_iemgui *iemgui, int *pargc, t_atom **pargv);
 EXTERN void iemgui_verify_snd_ne_rcv(t_iemgui *iemgui);
-EXTERN void iemgui_all_unique2dollarzero(t_iemgui *iemgui, t_symbol **srlsym);
-EXTERN void iemgui_all_sym2dollararg(t_iemgui *iemgui, t_symbol **srlsym);
-EXTERN void iemgui_all_dollarzero2unique(t_iemgui *iemgui, t_symbol **srlsym);
 EXTERN t_symbol *iemgui_new_dogetname(t_iemgui *iemgui, int indx, t_atom *argv);
 EXTERN void iemgui_new_getnames(t_iemgui *iemgui, int indx, t_atom *argv);
-EXTERN void iemgui_all_dollararg2sym(t_iemgui *iemgui, t_symbol **srlsym);
-EXTERN void iemgui_first_dollararg2sym(t_iemgui *iemgui, t_symbol **srlsym);
-EXTERN void iemgui_all_col2save(t_iemgui *iemgui, int *bflcol);
 EXTERN void iemgui_all_colfromload(t_iemgui *iemgui, int *bflcol);
-EXTERN int iemgui_compatible_col(int i);
-EXTERN void iemgui_all_dollar2raute(t_symbol **srlsym);
-EXTERN void iemgui_all_raute2dollar(t_symbol **srlsym);
-EXTERN void iemgui_send(void *x, t_iemgui *iemgui, t_symbol *s);
-EXTERN void iemgui_receive(void *x, t_iemgui *iemgui, t_symbol *s);
-EXTERN void iemgui_label(void *x, t_iemgui *iemgui, t_symbol *s);
-EXTERN void iemgui_label_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
-EXTERN void iemgui_label_font(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
+EXTERN void iemgui_send(t_iemgui *x, t_symbol *s);
+EXTERN void iemgui_receive(t_iemgui *x, t_symbol *s);
+EXTERN void iemgui_label(t_iemgui *x, t_symbol *s);
+EXTERN void iemgui_label_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av);
+EXTERN void iemgui_label_font(t_iemgui *x, t_symbol *s, int ac, t_atom *av);
 EXTERN void iemgui_label_getrect(t_iemgui x_gui, t_glist *x, int *xp1, int *yp1, int *xp2, int *yp2);
-EXTERN void iemgui_shouldvis(void *x, t_iemgui *iemgui, int mode);
-EXTERN void iemgui_size(void *x, t_iemgui *iemgui);
-EXTERN void iemgui_delta(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
-EXTERN void iemgui_pos(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
-EXTERN void iemgui_color(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
-EXTERN int iemgui_list(void *x, t_iemgui *iemgui, t_symbol *s, int ac, t_atom *av);
+EXTERN void iemgui_shouldvis(t_iemgui *x, int mode);
+EXTERN void iemgui_size(t_iemgui *x);
+EXTERN void iemgui_delta(t_iemgui *x, t_symbol *s, int ac, t_atom *av);
+EXTERN void iemgui_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av);
+EXTERN void iemgui_color(t_iemgui *x, t_symbol *s, int ac, t_atom *av);
 EXTERN void iemgui_displace(t_gobj *z, t_glist *glist, int dx, int dy);
 EXTERN void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy);
 EXTERN void iemgui_select(t_gobj *z, t_glist *glist, int selected);
@@ -365,13 +314,10 @@ EXTERN void iemgui_save(t_iemgui *iemgui, t_symbol **srl, int *bflcol);
 EXTERN void iemgui_properties(t_iemgui *iemgui, t_symbol **srl);
 EXTERN int iemgui_dialog(t_iemgui *iemgui, t_symbol **srl, int argc, t_atom *argv);
 
-EXTERN int canvas_getdollarzero(void);
-EXTERN void canvas_getargs(int *argcp, t_atom **argvp);
-
-EXTERN void iem_inttosymargs(t_iem_init_symargs *symargp, int n);
-EXTERN int iem_symargstoint(t_iem_init_symargs *symargp);
-EXTERN void iem_inttofstyle(t_iem_fstyle_flags *fstylep, int n);
-EXTERN int iem_fstyletoint(t_iem_fstyle_flags *fstylep);
+EXTERN void iem_inttosymargs(t_iemgui *x, int n);
+EXTERN int iem_symargstoint(t_iemgui *x);
+EXTERN void iem_inttofstyle(t_iemgui *x, int n);
+EXTERN int iem_fstyletoint(t_iemgui *x);
 EXTERN char *iem_get_tag(t_canvas *glist, t_iemgui *iem_obj);
 
 EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);
@@ -408,3 +354,12 @@ EXTERN void iemgui_draw_erase(t_iemgui *x, t_glist* glist, const char *class_tag
 EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl);
 
 extern t_symbol *s_empty;
+
+//static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd_unexpanded!=s_empty;}
+//static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv_unexpanded!=s_empty;}
+static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd!=s_empty;}
+static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv!=s_empty;}
+EXTERN const char *iemgui_font(t_iemgui *x);
+EXTERN void iemgui_class_addmethods(t_class *c);
+
+

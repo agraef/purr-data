@@ -28,8 +28,6 @@
 
 t_symbol *s_empty;
 
-/*  #define GGEE_HSLIDER_COMPATIBLE  */
-
 /*------------------ global varaibles -------------------------*/
 
 int iemgui_color_hex[]=
@@ -41,91 +39,6 @@ int iemgui_color_hex[]=
     12369084, 6316128, 0, 9177096, 5779456,
     7874580, 2641940, 17488, 5256, 5767248
 };
-
-int iemgui_vu_db2i[]=
-{
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-    9, 9, 9, 9, 9,10,10,10,10,10,
-    11,11,11,11,11,12,12,12,12,12,
-    13,13,13,13,14,14,14,14,15,15,
-    15,15,16,16,16,16,17,17,17,18,
-    18,18,19,19,19,20,20,20,21,21,
-    22,22,23,23,24,24,25,26,27,28,
-    29,30,31,32,33,33,34,34,35,35,
-    36,36,37,37,37,38,38,38,39,39,
-    39,39,39,39,40,40
-};
-
-int iemgui_vu_col[]=
-{
-    0,17,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,
-    15,15,15,15,15,15,15,15,15,15,14,14,13,13,13,13,13,13,13,13,13,13,13,19,19,19
-};
-
-char *iemgui_vu_scale_str[]=
-{
-    "",
-    "<-99",
-    "",
-    "",
-    "",
-    "-50",
-    "",
-    "",
-    "",
-    "-30",
-    "",
-    "",
-    "",
-    "-20",
-    "",
-    "",
-    "",
-    "-12",
-    "",
-    "",
-    "",
-    "-6",
-    "",
-    "",
-    "",
-    "-2",
-    "",
-    "",
-    "",
-    "-0dB",
-    "",
-    "",
-    "",
-    "+2",
-    "",
-    "",
-    "",
-    "+6",
-    "",
-    "",
-    "",
-    ">+12",
-    "",
-    "",
-    "",
-    "",
-    "",
-};
-
 
 /*------------------ global functions -------------------------*/
 
@@ -144,13 +57,11 @@ int iemgui_clip_font(int size)
     return(size);
 }
 
-int iemgui_modulo_color(int col)
+static int iemgui_modulo_color(int col)
 {
-    while(col >= IEM_GUI_MAX_COLOR)
-        col -= IEM_GUI_MAX_COLOR;
-    while(col < 0)
-        col += IEM_GUI_MAX_COLOR;
-    return(col);
+    col %= IEM_GUI_MAX_COLOR;
+    if (col<0) col += IEM_GUI_MAX_COLOR;
+    return col;
 }
 
 t_symbol *iemgui_dollar2raute(t_symbol *s)
@@ -269,11 +180,6 @@ void iemgui_all_sym2dollararg(t_iemgui *iemgui, t_symbol **srlsym)
     srlsym[2] = iemgui->x_lab_unexpanded;
 }
 
-void iemgui_first_dollararg2sym(t_iemgui *iemgui, t_symbol **srlsym)
-{
-    /* delete this function */
-}
-
 void iemgui_all_col2save(t_iemgui *iemgui, int *bflcol)
 {
     bflcol[0] = -1 - (((0xfc0000 & iemgui->x_bcol) >> 6)|
@@ -321,17 +227,11 @@ void iemgui_all_colfromload(t_iemgui *iemgui, int *bflcol)
     }
 }
 
-int iemgui_compatible_col(int i)
+static int iemgui_compatible_col(int i)
 {
-    int j;
-
     if(i >= 0)
-    {
-        j = iemgui_modulo_color(i);
-        return(iemgui_color_hex[(j)]);
-    }
-    else
-        return((-1 -i)&0xffffff);
+        return(iemgui_color_hex[(iemgui_modulo_color(i))]);
+    return((-1-i)&0xffffff);
 }
 
 void iemgui_all_dollar2raute(t_symbol **srlsym)
