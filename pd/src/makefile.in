@@ -18,6 +18,7 @@ bindir = @bindir@
 includedir = @includedir@
 libdir = @libdir@
 mandir = @mandir@
+datarootdir = @datarootdir@
 
 GFLAGS = -DINSTALL_PREFIX=\"$(prefix)\"
 
@@ -232,7 +233,7 @@ tkdnd:
 BINARYMODE=@binarymode@
 
 ABOUT_FILE=$(DESTDIR)$(pddocdir)/1.manual/1.introduction.txt
-install: all tkpath tkdnd
+install: all tkpath tkdnd install-icon
 	install -d $(DESTDIR)$(libpdbindir)
 	install $(BIN_DIR)/$(GUINAME) $(DESTDIR)$(libpdbindir)/$(GUINAME)
 	install $(BIN_DIR)/pd-watchdog $(DESTDIR)$(libpdbindir)/pd-watchdog
@@ -347,4 +348,10 @@ etags_Linux:
 
 etags_MINGW:
 	find /usr/local/include/ -type f -name \*.h -exec etags -a '{}' \;
+
+install-icon::
+	D=$$(case "$(DESTDIR)$(prefix)" in /home/*) echo "$$HOME/.local/share";; *) echo "/usr/share";; esac); \
+	echo $$D; \
+	install -m644 ../icons/pd-l2ork_48px.png $$D/icons/hicolor/48x48/apps/pd-l2ork.png; \
+	install -m644 ../icons/pd-l2ork.desktop  $$D/applications/pd-l2ork.desktop
 
