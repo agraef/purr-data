@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=pd-l2ork
-Exec=/home/matju/src/pd-l2ork/pd/bin/pd-l2ork
-Icon=/home/matju/.local/share/icons/hicolor/48x48/apps/pd-l2ork.png
+Exec=pd-l2ork
+Icon=pd-l2ork
 StartupNotify=true
 
