@@ -233,11 +233,9 @@ void sys_poll_midi(void)
 void sys_poll_midi(void)
 {
     int i, throttle = 100;
-    struct timeval timout;
-    int did = 1, maxfd = 0;
+    int did = 1;
     while (did)
     {
-        fd_set readset, writeset, exceptset;
         did = 0;
         if (throttle-- < 0)
             break;

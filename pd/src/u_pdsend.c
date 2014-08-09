@@ -32,7 +32,9 @@ int main(int argc, char **argv)
     struct sockaddr_in server;
     struct hostent *hp;
     char *hostname;
+#if 0
     int nretry = 10;
+#endif
 #ifdef MSW
     short version = MAKEWORD(2, 0);
     WSADATA nobby;

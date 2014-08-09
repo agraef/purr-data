@@ -163,7 +163,6 @@ void sys_pollmidioutqueue( void)
 
 static void sys_queuemidimess(int portno, int onebyte, int a, int b, int c)
 {
-    t_midiqelem *midiqelem;
     int newhead = midi_outhead +1;
     if (newhead == MIDIQSIZE)
         newhead = 0;
@@ -448,7 +447,6 @@ void sys_pollmidiinqueue( void)
 void sys_midibytein(int portno, int byte)
 {
     static int warned = 0;
-    t_midiqelem *midiqelem;
     int newhead = midi_inhead +1;
     if (newhead == MIDIQSIZE)
         newhead = 0;
@@ -730,8 +728,6 @@ void glob_midi_properties(t_pd *dummy, t_floatarg flongform)
     /* new values from dialog window */
 void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 {
-    int nmidiindev, midiindev[MAXMIDIINDEV];
-    int nmidioutdev, midioutdev[MAXMIDIOUTDEV];
     int i, nindev, noutdev;
     int newmidiindev[4], newmidioutdev[4];
     int alsadevin, alsadevout;

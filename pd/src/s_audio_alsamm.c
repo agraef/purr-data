@@ -81,11 +81,6 @@
    so  i will change it maybe in future...
 */
 
-static int alsamm_incards = 0;
-static t_alsa_dev *alsamm_indevice[ALSA_MAXDEV];
-static int alsamm_outcards = 0;
-static t_alsa_dev *alsamm_outdevice[ALSA_MAXDEV];
-
 /*
    we need same samplerate, buffertime and so on for
    each card soo we use global vars...
@@ -163,8 +158,6 @@ static void show_availist(void)
 #endif
 
 /* protos */
-static char *alsamm_getdev(int nr);
-
 static int set_hwparams(snd_pcm_t *handle,
                                snd_pcm_hw_params_t *params, int *chs);
 static int set_swparams(snd_pcm_t *handle,
@@ -184,21 +177,14 @@ static void check_error(int err, const char *why)
 
 int alsamm_open_audio(int rate)
 {
-  int err;
-  char devname[80];
-  char *cardname;
+  int err, i;
   snd_pcm_hw_params_t* hw_params;
   snd_pcm_sw_params_t* sw_params;
-
 
   /* fragsize is an old concept now use periods, used to be called fragments. */
   /* Be aware in ALSA periodsize can be in bytes, where buffersize is in frames, 
      but sometimes buffersize is in bytes and periods in frames, crazy alsa...      
      ...we use periodsize and buffersize in frames */
-
-  int i;
-  short* tmp_buf;
-  unsigned int tmp_uint;
 
   snd_pcm_hw_params_alloca(&hw_params);
   snd_pcm_sw_params_alloca(&sw_params);
@@ -322,8 +308,6 @@ int alsamm_open_audio(int rate)
   /* check for linked handles of input for each output*/
   
   for(i=0; i<(alsa_noutdev < alsa_nindev ? alsa_noutdev:alsa_nindev); i++){
-    t_alsa_dev *ad = &alsa_outdev[i];
-
     if (alsa_outdev[i].a_devno == alsa_indev[i].a_devno){
       if ((err = snd_pcm_link (alsa_indev[i].a_handle,
                                alsa_outdev[i].a_handle)) == 0){
@@ -430,7 +414,6 @@ static int set_hwparams(snd_pcm_t *handle, snd_pcm_hw_params_t *params,int *chs)
 #ifndef ALSAAPI9
   unsigned int rrate;
   int err, dir;
-  int channels_allocated = 0;
 
   /* choose all parameters */
   err = snd_pcm_hw_params_any(handle, params);
@@ -847,8 +830,6 @@ static int alsamm_start()
   int err = 0;
   int devno;
   int chn,nchns;
-
-  const snd_pcm_channel_area_t *mm_areas;
 
 #ifdef ALSAMM_DEBUG
   if(sys_verbose)
@@ -1354,7 +1335,6 @@ void alsamm_showstat(snd_pcm_t *handle)
 {
   int err;
   snd_pcm_status_t *status;
-  snd_output_t *output = NULL;
 
   snd_pcm_status_alloca(&status);
   if ((err = snd_pcm_status(handle, status)) < 0) {

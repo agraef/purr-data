@@ -52,7 +52,6 @@ int main(int argc, char **argv)
 {
     int portno;
     struct sockaddr_in server;
-    int nretry = 10;
 #ifdef MSW
     short version = MAKEWORD(2, 0);
     WSADATA nobby;
@@ -119,7 +118,6 @@ usage:
 
 static void addport(int fd)
 {
-    int nfd = nfdpoll;
     t_fdpoll *fp;
     fdpoll = (t_fdpoll *)realloc(fdpoll,
         (nfdpoll+1) * sizeof(t_fdpoll));
@@ -138,8 +136,7 @@ static void addport(int fd)
 
 static void rmport(t_fdpoll *x)
 {
-    int nfd = nfdpoll;
-    int i, size = nfdpoll * sizeof(t_fdpoll);
+    int i;
     t_fdpoll *fp;
     for (i = nfdpoll, fp = fdpoll; i--; fp++)
     {

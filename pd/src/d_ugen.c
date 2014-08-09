@@ -362,7 +362,7 @@ static t_signal *signal_usedlist;
     /* call this when DSP is stopped to free all the signals */
 void signal_cleanup(void)
 {
-    t_signal **svec, *sig, *sig2;
+    t_signal *sig;
     int i;
     while (sig = signal_usedlist)
     {
@@ -429,9 +429,8 @@ void signal_makereusable(t_signal *sig)
 
 t_signal *signal_new(int n, t_float sr)
 {
-    int logn, n2, vecsize = 0;
+    int logn, vecsize = 0;
     t_signal *ret, **whichlist;
-    t_sample *fp;
     logn = ilog2(n);
     if (n)
     {
@@ -555,8 +554,6 @@ static t_dspcontext *ugen_currentcontext;
 
 void ugen_stop(void)
 {
-    t_signal *s;
-    int i;
     if (dsp_chain)
     {
         freebytes(dsp_chain, dsp_chainsize * sizeof (t_int));
@@ -612,8 +609,6 @@ t_dspcontext *ugen_start_graph(int toplevel, t_signal **sp,
     int ninlets, int noutlets)
 {
     t_dspcontext *dc = (t_dspcontext *)getbytes(sizeof(*dc));
-    t_float parent_srate, srate;
-    int parent_vecsize, vecsize;
 
     if (ugen_loud) post("ugen_start_graph...");
 
@@ -707,7 +702,7 @@ static void ugen_doit(t_dspcontext *dc, t_ugenbox *u)
 {
     t_sigoutlet *uout;
     t_siginlet *uin;
-    t_sigoutconnect *oc, *oc2;
+    t_sigoutconnect *oc;
     t_class *class = pd_class(&u->u_obj->ob_pd);
     int i, n;
         /* suppress creating new signals for the outputs of signal
@@ -860,7 +855,7 @@ static void ugen_doit(t_dspcontext *dc, t_ugenbox *u)
 
 void ugen_done_graph(t_dspcontext *dc)
 {
-    t_ugenbox *u, *u2;
+    t_ugenbox *u;
     t_sigoutlet *uout;
     t_siginlet *uin;
     t_sigoutconnect *oc, *oc2;
@@ -869,7 +864,7 @@ void ugen_done_graph(t_dspcontext *dc)
     t_dspcontext *parent_context = dc->dc_parentcontext;
     t_float parent_srate;
     int parent_vecsize;
-    int period, frequency, phase, vecsize, calcsize;
+    int period, frequency, vecsize, calcsize;
     t_float srate;
     int chainblockbegin;    /* DSP chain onset before block prolog code */
     int chainblockend;      /* and after block epilog code */
@@ -936,7 +931,6 @@ void ugen_done_graph(t_dspcontext *dc)
             (parent_vecsize * realoverlap * upsample);
         frequency = (parent_vecsize * realoverlap * upsample)/
             (vecsize * downsample);
-        phase = blk->x_phase;
         srate = parent_srate * realoverlap * upsample / downsample;
         if (period < 1) period = 1;
         if (frequency < 1) frequency = 1;
@@ -956,7 +950,6 @@ void ugen_done_graph(t_dspcontext *dc)
         calcsize = (parent_context ? parent_context->dc_calcsize : vecsize);
         downsample = upsample = 1;
         period = frequency = 1;
-        phase = 0;
         if (!parent_context) reblock = 1;
         switched = 0;
     }
@@ -1004,7 +997,7 @@ void ugen_done_graph(t_dspcontext *dc)
     for (u = dc->dc_ugenlist; u; u = u->u_next)
     {
         t_pd *zz = &u->u_obj->ob_pd;
-        t_signal **insigs = dc->dc_iosigs, **outsigs = dc->dc_iosigs;
+        t_signal **outsigs = dc->dc_iosigs;
         if (outsigs) outsigs += dc->dc_ninlets;
 
         if (pd_class(zz) == vinlet_class)
