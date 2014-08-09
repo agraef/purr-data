@@ -349,9 +349,3 @@ etags_Linux:
 etags_MINGW:
 	find /usr/local/include/ -type f -name \*.h -exec etags -a '{}' \;
 
-install-icon::
-	D=$$(case "$(DESTDIR)$(prefix)" in /home/*) echo "$$HOME/.local/share";; *) echo "/usr/share";; esac); \
-	echo $$D; \
-	install -m644 ../icons/pd-l2ork_48px.png $$D/icons/hicolor/48x48/apps/pd-l2ork.png; \
-	install -m644 ../icons/pd-l2ork.desktop  $$D/applications/pd-l2ork.desktop
-
