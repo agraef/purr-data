@@ -233,7 +233,7 @@ tkdnd:
 BINARYMODE=@binarymode@
 
 ABOUT_FILE=$(DESTDIR)$(pddocdir)/1.manual/1.introduction.txt
-install: all tkpath tkdnd install-icon
+install: all tkpath tkdnd
 	install -d $(DESTDIR)$(libpdbindir)
 	install $(BIN_DIR)/$(GUINAME) $(DESTDIR)$(libpdbindir)/$(GUINAME)
 	install $(BIN_DIR)/pd-watchdog $(DESTDIR)$(libpdbindir)/pd-watchdog
