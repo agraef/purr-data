@@ -785,7 +785,7 @@ static void canvas_undo(t_canvas *x)
         if (glist_isvisible(x) && glist_istoplevel(x))
             sys_vgui("pdtk_undomenu .x%lx no %s\n", x, canvas_undo_name);
         canvas_undo_whatnext = UNDO_REDO;
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        scrollbar_update(x);
     }
 }
 
@@ -804,7 +804,7 @@ static void canvas_redo(t_canvas *x)
         if (glist_isvisible(x) && glist_istoplevel(x))
             sys_vgui("pdtk_undomenu .x%lx %s no\n", x, canvas_undo_name);
         canvas_undo_whatnext = UNDO_UNDO;
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        scrollbar_update(x);
     }
 }
 
@@ -1893,9 +1893,8 @@ void canvas_undo_canvas_apply(t_canvas *x, void *z, int action)
                 properties, x->gl_ymargin);
         }*/
 
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
-        if (canvas != x)
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
+        scrollbar_update(x);
+        if (canvas != x) scrollbar_update(canvas);
     }
 
     else if (action == UNDO_FREE)
@@ -2425,7 +2424,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
             //if (g && (pd_class(&g->g_pd) == garray_class)
             //    sys_vgui("pdtk_canvas_set_scrollless .x%lx\n", x);
             //else
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+            scrollbar_update(x);
 
 /*
             //newly opened arrays created prior to pd-l2ork require fittograph
@@ -2496,7 +2495,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 canvas_destroy_editor(x);
             return;
         }
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        scrollbar_update(x);
         glist_noselect(x);
         if (glist_isvisible(x))
             canvas_map(x, 0);
@@ -2780,7 +2779,7 @@ static void canvas_donecanvasdialog(t_glist *x,
     t_canvas *canvas=(t_canvas *)glist_getcanvas(x);
     //if gop is being disabled go one level up (if u can)
     if (!graphme && canvas->gl_owner) canvas=canvas->gl_owner;
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)canvas);
+    scrollbar_update(x);
 }
 
 /* called by undo/redo arrange and done_canvas_popup. only done_canvas_popup
@@ -3076,7 +3075,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         {        
             //fprintf(stderr,"letting go of objects\n");
             sys_vgui(".x%lx.c raise all_cords\n", x);
-            sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+            scrollbar_update(x);
         }
         if (x->gl_editor->e_onmotion != MA_SCROLL)
         {
@@ -3302,7 +3301,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                             {
                                 objtooltip = 1;
                                 sys_vgui("pdtk_canvas_enteritem "
-                                         ".x%x.c %d %d %s -1\n;",
+                                         ".x%x.c %d %d %s -1\n",
                                     x, xpos, ypos,
                                     x->gl_editor->canvas_cnct_outlet_tag);
                             }
@@ -3374,7 +3373,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                         {
                             objtooltip = 1;
                             sys_vgui("pdtk_canvas_enteritem "
-                                     ".x%x.c %d %d %s -1\n;",
+                                     ".x%x.c %d %d %s -1\n",
                                 x, xpos, ypos,
                                 x->gl_editor->canvas_cnct_inlet_tag);
                         }
@@ -3432,7 +3431,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     //sys_vgui("pdtk_toggle_xy_tooltip .x%lx %d\n", x, 1);
                     x->gl_editor->e_onmotion = MA_MOVE;
                     if (tooltips)
-                        sys_vgui("pdtk_tip .x%x.c 0 0\n;", x);
+                        sys_vgui("pdtk_tip .x%x.c 0 0\n", x);
                 }
             }
             else
@@ -4095,6 +4094,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     return_val = canvas_doconnect_doit(
                         x, y1, y2, closest1 + i, closest2 + i, 1, 1);
                 }
+                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             return(return_val);
         /* end of FIRST OPTION */
@@ -4159,6 +4159,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         }
                     }
                 }    
+                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             return(return_val);
         /* end of SECOND OPTION */
@@ -4225,7 +4226,8 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                                 x, sel->sel_what, y2, closest1, closest2, 1, 1);
                         }
                     }
-                }    
+                }
+                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             return(return_val);
         /* end of THIRD OPTION */
@@ -4272,6 +4274,8 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         (width2 - IOWIDTH) * closest2 / (ninlet2-1);
                 }
                 else closest2 = 0, hotspot2 = x21;
+
+                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
 
                 if (closest1 >= noutlet1)
                     closest1 = noutlet1 - 1;
@@ -4507,6 +4511,8 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     (width2 - IOWIDTH) * closest2 / (ninlet2-1);
             }
             else closest2 = 0, hotspot2 = x21;
+
+            hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
 
             if (closest1 >= noutlet1)
                 closest1 = noutlet1 - 1;
@@ -4755,7 +4761,7 @@ void canvas_mouseup(t_canvas *x,
                 gobj_activate(x->gl_editor->e_selection->sel_what, x, 1);
             //}
         }
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        scrollbar_update(x);
     }
     else if (x->gl_editor->e_onmotion == MA_SCROLL)
     {
@@ -4898,7 +4904,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
         sys_vgui("pdtk_canvas_displace_withtag .x%lx.c %d %d\n", x, dx, dy);
         if (resortin) canvas_resortinlets(x);
         if (resortout) canvas_resortoutlets(x);
-        //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        //scrollbar_update(x);
         if (x->gl_editor->e_selection)
             canvas_dirty(x, 1);
     }
@@ -4919,7 +4925,7 @@ static void canvas_displaceselection(t_canvas *x, int dx, int dy)
 void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 {
     static t_symbol *keynumsym, *keyupsym, *keynamesym;
-    int keynum, fflag;
+    int keynum;
     t_symbol *gotkeysym;
         
     int down, shift;
@@ -4986,7 +4992,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         }
     }
     else gotkeysym = gensym("?");
-    fflag = (av[0].a_type == A_FLOAT ? av[0].a_w.w_float : 0);
+    //fflag = (av[0].a_type == A_FLOAT ? av[0].a_w.w_float : 0);
     keynum = (av[1].a_type == A_FLOAT ? av[1].a_w.w_float : 0);
     if (keynum == '\\' || keynum == '{' || keynum == '}')
     {
@@ -5098,24 +5104,24 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
             if (!strcmp(gotkeysym->s_name, "Up"))
             {
                 canvas_displaceselection(x, 0, shift ? -10 : -1);
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+                scrollbar_update(x);
             }
             else if (!strcmp(gotkeysym->s_name, "Down"))
             {
                 canvas_displaceselection(x, 0, shift ? 10 : 1);
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+                scrollbar_update(x);
             }
             else if (!strcmp(gotkeysym->s_name, "Left") ||
                      !strcmp(gotkeysym->s_name, "ShiftLeft"))
             {
                 canvas_displaceselection(x, shift ? -10 : -1, 0);
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+                scrollbar_update(x);
             }
             else if (!strcmp(gotkeysym->s_name, "Right") ||
                      !strcmp(gotkeysym->s_name, "ShiftRight"))
             {
                 canvas_displaceselection(x, shift ? 10 : 1, 0);
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+                scrollbar_update(x);
             }
         }
     }
@@ -5182,7 +5188,7 @@ void canvas_motion(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
         x->gl_editor->e_ywas = ypos;
         x->gl_editor->e_xnew = xpos;
         x->gl_editor->e_ynew = ypos;
-        //sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        //    scrollbar_update(x);
         //sys_vgui("pdtk_check_scroll_on_motion .x%lx.c 20\n", x);  
     }
     else if (x->gl_editor->e_onmotion == MA_REGION)
@@ -5982,7 +5988,7 @@ static void canvas_doclear(t_canvas *x)
 restore:
     canvas_dirty(x, 1);
     //canvas_redraw(x);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+    scrollbar_update(x);
     canvas_resume_dsp(dspstate);
 }
 
@@ -6014,7 +6020,7 @@ static void canvas_cut(t_canvas *x)
         canvas_doclear(x);
         glob_preset_node_list_check_loc_and_update();
         paste_xyoffset = 0;
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        scrollbar_update(x);
     }
 }
 
@@ -6259,7 +6265,7 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
         // canvas_redraw(x);
     //}
 
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+    scrollbar_update(x);
     if (!abort_when_pasting_from_external_buffer)
     {
         glist_donewloadbangs(x);
@@ -7085,7 +7091,7 @@ static void canvas_tidy(t_canvas *x)
 
     }
     canvas_dirty(x, 1);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+    scrollbar_update(x);
 }
 
 
@@ -7225,7 +7231,7 @@ void glob_pastetext(void *dummy, t_symbol *s, int ac, t_atom *av)
     if ((int)atom_getfloat(av) == 1)
     {
         //fprintf(stderr,"force getscroll\n");
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", canvas_editing);
+        scrollbar_update(canvas_editing);
     }
 }
 
@@ -7412,7 +7418,7 @@ static void canvas_dofont(t_canvas *x, t_floatarg font, t_floatarg xresize,
         if (pd_class(&y->g_pd) == canvas_class
             && !canvas_isabstraction((t_canvas *)y))
                 canvas_dofont((t_canvas *)y, font, xresize, yresize);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+    scrollbar_update(x);
 }
 
     /* canvas_menufont calls up a TK dialog which calls this back */

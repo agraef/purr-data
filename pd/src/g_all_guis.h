@@ -153,18 +153,15 @@ typedef struct _iemgui
     // from t_iem_fstyle_flags
     unsigned int x_font_style:6;  // 39 matches
     unsigned int x_selected:1;    // 38 matches
-    unsigned int x_finemoved:1;   // 11 matches
+    unsigned int x_finemoved:1;   // 11 matches (sliders and [nbx] only)
     unsigned int x_put_in2out:1;  // 17 matches
-    unsigned int x_change:1;      // 37 matches
-    unsigned int x_thick:1;       // 14 matches
-    unsigned int x_lin0_log1:1;   // 38 matches
-    unsigned int x_steady:1;      // 18 matches
+    unsigned int x_change:1;      // 37 matches  // what's this and why is there also a x_changed ?
+    unsigned int dummy2:3;
     // from t_iem_init_symargs
     unsigned int x_loadinit:1;    // 33 matches
-    unsigned int x_scale:1;       // 22 matches
-    unsigned int x_flashed:1;     // 16 matches
-    unsigned int x_locked:1;      //  8 matches
-    unsigned int x_reverse:1; /* bugfix */ // 8 matches
+    unsigned int dummy3:2;
+    unsigned int x_locked:1;      //  8 matches ([bng] only)
+    unsigned int x_reverse:1;     //  8 matches (sliders only)
     unsigned int dummy:14;
 } t_iemgui;
 
@@ -184,7 +181,7 @@ typedef struct _hslider
     t_iemgui x_gui;
     int      x_pos;
     int      x_val;
-    int      x_center;
+    int      x_center; // is this necessary ?
     int      x_thick;
     int      x_lin0_log1;
     int      x_steady;
@@ -324,8 +321,8 @@ EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 
 // scalehandle code, as refactored by Mathieu
 EXTERN void scalehandle_bind(t_scalehandle *h);
-EXTERN void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag, const char *class_tag);
-EXTERN void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, const char *class_tag, int sx, int sy);
+EXTERN void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag);
+EXTERN void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, int sx, int sy);
 EXTERN void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas);
 EXTERN void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas);
 EXTERN void scalehandle_draw_new(t_scalehandle *x, t_glist *canvas);
@@ -343,17 +340,22 @@ EXTERN int mini(int a, int b);
 EXTERN int maxi(int a, int b);
 
 // other refactor by Mathieu
-EXTERN void iemgui_tag_selected(     t_iemgui *x, t_glist *canvas, const char *class_tag);
-EXTERN void iemgui_label_draw_new(   t_iemgui *x, t_glist *canvas, int xpos, int ypos, const char *nlet_tag, const char *class_tag);
+EXTERN void iemgui_tag_selected(     t_iemgui *x, t_glist *canvas);
+EXTERN void iemgui_label_draw_new(   t_iemgui *x, t_glist *canvas, int xpos, int ypos, const char *nlet_tag);
 EXTERN void iemgui_label_draw_move(  t_iemgui *x, t_glist *canvas, int xpos, int ypos);
 EXTERN void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags, const char *class_tag);
-EXTERN void iemgui_draw_erase(t_iemgui *x, t_glist* glist, const char *class_tag);
+EXTERN void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags);
+EXTERN void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag);
+EXTERN void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas, const char *nlet_tag);
+EXTERN void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag);
+EXTERN void iemgui_base_draw_config(t_iemgui *x, t_glist *canvas);
 
-EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl);
+EXTERN void iemgui_draw_erase(t_iemgui *x, t_glist* glist);
+EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl); // rename this to iemgui_wb_init
 
 extern t_symbol *s_empty;
+EXTERN const char *selection_color;
 
 //static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd_unexpanded!=s_empty;}
 //static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv_unexpanded!=s_empty;}
@@ -361,5 +363,8 @@ static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd!=s_empty;}
 static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv!=s_empty;}
 EXTERN const char *iemgui_font(t_iemgui *x);
 EXTERN void iemgui_class_addmethods(t_class *c);
+
+EXTERN void scrollbar_update(t_glist *glist);
+
 
 

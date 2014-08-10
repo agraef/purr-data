@@ -47,40 +47,31 @@ void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
         char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
         sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x "
-                 "-tags {%lxRECT %lxMYCNV %s text iemgui}\n",
+                 "-tags {%lxRECT %lxOBJ %s text iemgui}\n",
                  canvas, xpos, ypos,
                  xpos + x->x_vis_w, ypos + x->x_vis_h,
                  x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, nlet_tag);
         sys_vgui(".x%lx.c create prect %d %d %d %d -stroke #%6.6x "
-                 "-tags {%lxBASE %lxMYCNV %s text iemgui}\n",
+                 "-tags {%lxBASE %lxOBJ %s text iemgui}\n",
                  canvas, xpos, ypos,
                  xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
                  x->x_gui.x_bcol, x, x, nlet_tag);
-    iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag,"MYCNV");
+    iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag);
 }
 
 void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
 {
+    t_canvas *canvas=glist_getcanvas(glist);
+    if (!glist_isvisible(canvas)) return;
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    t_canvas *canvas=glist_getcanvas(glist);
 
-    if (glist_isvisible(canvas))
-    {
-
-        sys_vgui(".x%lx.c coords %lxRECT %d %d %d %d\n",
-                 canvas, x, xpos, ypos, xpos + x->x_vis_w,
-                 ypos + x->x_vis_h);
-        sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-                 canvas, x, xpos, ypos,
-                 xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-        iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
-        /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_selected)
-        {
-            my_canvas_draw_select(x, x->x_gui.x_glist);
-        }
-    }
+    sys_vgui(".x%lx.c coords %lxRECT %d %d %d %d\n",
+        canvas, x, xpos, ypos, xpos + x->x_vis_w, ypos + x->x_vis_h);
+    sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
+        canvas, x, xpos, ypos, xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
+    iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
+    if (x->x_gui.x_selected) my_canvas_draw_select(x, x->x_gui.x_glist);
 }
 
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
@@ -109,20 +100,20 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
         {
             sys_vgui(".x%lx.c itemconfigure %lxBASE "
                      "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"MYCNV",
+            scalehandle_draw_select2(&x->x_gui,glist,
                 x->x_vis_w,x->x_vis_h);
         }
-        sys_vgui(".x%lx.c addtag selected withtag %lxMYCNV\n", canvas, x);
+        sys_vgui(".x%lx.c addtag selected withtag %lxOBJ\n", canvas, x);
     }
     else
     {
         sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke #%6.6x\n",
             canvas, x, x->x_gui.x_bcol);
-        sys_vgui(".x%lx.c dtag %lxMYCNV selected\n", canvas, x);
+        sys_vgui(".x%lx.c dtag %lxOBJ selected\n", canvas, x);
         scalehandle_draw_erase2(&x->x_gui,glist);
     }
     iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas,"MYCNV");
+    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -202,7 +193,7 @@ void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         my_canvas_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist, "MYCNV");
+        iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         my_canvas_draw_config(x, glist);
 }
@@ -306,16 +297,8 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     //(*x->x_gui.x_draw)(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
-    /* forcing redraw of the scale handle */
-    if (x->x_gui.x_selected)
-    {
-        my_canvas_draw_select(x, x->x_gui.x_glist);
-    }
-
-    //ico@bukvic.net 100518 update scrollbars when object
-    //potentially exceeds window size
-    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    if (x->x_gui.x_selected) my_canvas_draw_select(x, x->x_gui.x_glist);
+    scrollbar_update(x->x_gui.x_glist);
 }
 
 static void my_canvas_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)

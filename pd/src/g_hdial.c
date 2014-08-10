@@ -2,13 +2,11 @@
  * For information on usage and redistribution, and for a DISCLAIMER OF ALL
  * WARRANTIES, see the file, "LICENSE.txt," in this distribution. */
 
-/* g_7_guis.c written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
+/* vdial.c written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
 /* thanks to Miller Puckette, Guenther Geiger and Krzystof Czaja */
 
-/* name change to hradio by MSP and changed to
+/* name change to vradio by MSP (it's a radio button really) and changed to
 put out a "float" as in sliders, toggles, etc. */
-
-#include "config.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -19,14 +17,6 @@ put out a "float" as in sliders, toggles, etc. */
 #include "t_tk.h"
 #include "g_all_guis.h"
 #include <math.h>
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_IO_H
-#include <io.h>
-#endif
 
 extern int gfxstub_haveproperties(void *key);
 void hradio_draw_select(t_hradio* x, t_glist* glist);
@@ -41,98 +31,71 @@ static t_class *hradio_class, *hradio_old_class;
 void hradio_draw_update(t_gobj *client, t_glist *glist)
 {
     t_hradio *x = (t_hradio *)client;
-    if(glist_isvisible(glist))
-    {
-        t_canvas *canvas=glist_getcanvas(glist);
-
-        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
-                 canvas, x, x->x_drawn,
-                 x->x_gui.x_bcol, x->x_gui.x_bcol);
-        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
-                 canvas, x, x->x_on,
-                 x->x_gui.x_fcol, x->x_gui.x_fcol);
-        x->x_drawn = x->x_on;
-    }
+    if(!glist_isvisible(glist)) return;
+    t_canvas *canvas=glist_getcanvas(glist);
+    sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
+        canvas, x, x->x_drawn, x->x_gui.x_bcol, x->x_gui.x_bcol);
+    sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
+        canvas, x, x->x_on,    x->x_gui.x_fcol, x->x_gui.x_fcol);
+    x->x_drawn = x->x_on;
 }
 void hradio_draw_io(t_hradio* x, t_glist* glist, int old_snd_rcv_flags)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"HRDO");
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags);
 }
 void hradio_draw_new(t_hradio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int n=x->x_number, i, dx=x->x_gui.x_w, s4=dx/4;
-    int yy11=text_ypix(&x->x_gui.x_obj, glist), yy12=yy11+dx;
-    int yy21=yy11+s4, yy22=yy12-s4;
-    int xx11b=text_xpix(&x->x_gui.x_obj, glist), xx11=xx11b, xx21=xx11b+s4;
-    int xx22=xx11b+dx-s4;
+    int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
+    int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
+    int y1=text_ypix(&x->x_gui.x_obj, glist); 
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
+    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        for(i=0; i<n; i++)
-        {
-            sys_vgui(".x%lx.c create prect %d %d %d %d "
-                     "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-                     "-tags {%lxBASE%d %lxBASE %lxHRDO %s text iemgui border}\n",
-                 canvas, xx11, yy11, xx11+dx, yy12,
-                 x->x_gui.x_bcol, x, i, x, x, nlet_tag);
-            sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
-                     "-stroke #%6.6x -tags {%lxBUT%d %lxHRDO %s text iemgui}\n",
-                 canvas, xx21, yy21, xx22, yy22,
-                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-                 x, i, x, nlet_tag);
-            xx11 += dx;
-            xx21 += dx;
-            xx22 += dx;
-            x->x_drawn = x->x_on;
-        }
-    iemgui_label_draw_new(&x->x_gui,canvas,xx11b,yy11,nlet_tag,"HRDO");
+    for(i=0; i<n; i++)
+    {
+        if (i) sys_vgui(".x%lx.c create pline %d %d %d %d "
+            "-stroke $pd_colors(iemgui_border) "
+            "-tags {%lxBASE%d %lxBASEL %lxOBJ %s text iemgui border}\n",
+            canvas, xi, y1, xi, y1+d, x, i, x, x, nlet_tag);
+        sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
+            "-stroke #%6.6x -tags {%lxBUT%d %lxOBJ %s text iemgui}\n",
+            canvas, xi+s, y1+s, xi+d-s, y1+d-s,
+            (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
+            (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
+            x, i, x, nlet_tag);
+        xi += d;
+        x->x_drawn = x->x_on;
+    }
+    iemgui_label_draw_new(&x->x_gui,canvas,x1,y1,nlet_tag);
     hradio_draw_io(x,glist,7);
 }
 
 void hradio_draw_move(t_hradio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int n=x->x_number, i, dx=x->x_gui.x_w, s4=dx/4;
-    int yy11=text_ypix(&x->x_gui.x_obj, glist), yy12=yy11+dx;
-    int yy21=yy11+s4, yy22=yy12-s4;
-    int xx11b=text_xpix(&x->x_gui.x_obj, glist), xx11=xx11b, xx21=xx11b+s4;
-    int xx22=xx11b+dx-s4;
+    if (!glist_isvisible(canvas)) return;
+    int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
+    int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
+    int y1=text_ypix(&x->x_gui.x_obj, glist); 
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
 
-    if (glist_isvisible(canvas))
+    for(i=0; i<n; i++)
     {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        xx11 = xx11b;
-        xx21=xx11b+s4;
-        xx22=xx11b+dx-s4;
-        for(i=0; i<n; i++)
-        {
-            sys_vgui(".x%lx.c coords %lxBASE%d %d %d %d %d\n",
-                     canvas, x, i, xx11, yy11, xx11+dx, yy12);
-            sys_vgui(".x%lx.c coords %lxBUT%d %d %d %d %d\n",
-                     canvas, x, i, xx21, yy21, xx22, yy22);
-            xx11 += dx;
-            xx21 += dx;
-            xx22 += dx;
-        }
-        iemgui_label_draw_move(&x->x_gui,canvas,xx11b,yy11);
-        if(!iemgui_has_snd(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxHRDO%so%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0, xx11b, yy12-1, xx11b + IOWIDTH, yy12);
-        if(!iemgui_has_rcv(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxHRDO%si%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0, xx11b, yy11, xx11b + IOWIDTH, yy11+1);
-        /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_selected)
-            hradio_draw_select(x, x->x_gui.x_glist);
+        sys_vgui(".x%lx.c coords %lxBASE%d %d %d %d %d\n",
+                 canvas, x, i, xi, y1, xi, y1+d);
+        sys_vgui(".x%lx.c coords %lxBUT%d %d %d %d %d\n",
+                 canvas, x, i, xi+s,y1+s, xi+d-s, y1+d-s);
+        xi += d;
     }
+    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
+    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    if (x->x_gui.x_selected) hradio_draw_select(x, x->x_gui.x_glist);
 }
 
 void hradio_draw_config(t_hradio* x, t_glist* glist)
@@ -140,44 +103,36 @@ void hradio_draw_config(t_hradio* x, t_glist* glist)
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
     iemgui_label_draw_config(&x->x_gui,canvas);
+    iemgui_base_draw_config(&x->x_gui,canvas);
     for(i=0; i<n; i++)
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE%d "
-                 "-fill #%6.6x\n "
-                 ".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
-             canvas, x, i, x->x_gui.x_bcol, canvas, x, i,
-             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);
-        /*sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x "
-                   "-outline #%6.6x\n", canvas, x, i,
-                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-                 (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol);*/
+        sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
+             canvas, x, i,
+             (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol,
+             (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol);
     }
 }
 
 void hradio_draw_select(t_hradio* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_base_draw_config(&x->x_gui,canvas);
     if(x->x_gui.x_selected)
     {
         // check if we are drawing inside a gop abstraction
         // visible on parent canvas.  If so, disable highlighting
         if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"HRDO",
+            scalehandle_draw_select2(&x->x_gui,glist,
                 x->x_gui.x_w*x->x_number-1,x->x_gui.x_h-1);
         }
     }
     else
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
-            canvas, x, IEM_GUI_COLOR_NORMAL);
         scalehandle_draw_erase2(&x->x_gui,glist);
     }
     iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas,"HRDO");
+    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 static void hradio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
@@ -251,7 +206,7 @@ void hradio_draw(t_hradio *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         hradio_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist, "HRDO");
+        iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         hradio_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -362,11 +317,7 @@ static void hradio_dialog(t_hradio *x, t_symbol *s, int argc, t_atom *argv)
     {
         hradio_draw_select(x, x->x_gui.x_glist);
     }
-
-    // ico@bukvic.net 100518
-    // update scrollbars when object potentially exceeds window size
-    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    scrollbar_update(x->x_gui.x_glist);
 }
 
 static void hradio_set(t_hradio *x, t_floatarg f)

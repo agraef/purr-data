@@ -537,7 +537,7 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     if (!menu)
         pd_pushsym(&x->gl_pd);
     glist_add(g, &x->gl_gobj);
-    if (!do_not_redraw) sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)glist_getcanvas(g));
+    if (!do_not_redraw) scrollbar_update(glist_getcanvas(g));
     //fprintf(stderr,"    ... %f %f\n", x->gl_x1, x->gl_x2);
     return (x);
 }
@@ -711,11 +711,11 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         scalehandle_draw_select(sh,x,
             -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
             -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight,
-            "GOP_resblob","GOP");
+            "GOP_resblob");
         scalehandle_draw_select(mh,x,
             2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
             2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin,
-            "GOP_movblob","GOP");
+            "GOP_movblob");
     }
     else
     {
@@ -773,7 +773,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
         canvas_drawlines(x);
         if (x->gl_isgraph && x->gl_goprect)
             canvas_drawredrect(x, 1);
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+        scrollbar_update(x);
         //}
     }
     else
@@ -1907,9 +1907,9 @@ void canvasgop_draw_move(t_canvas *x, int doit)
         canvas=canvas->gl_owner;
         //canvas_redraw(canvas);
     }
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x);
+    scrollbar_update(x);
     if (x->gl_owner && glist_isvisible(x->gl_owner))
-        sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (t_int)x->gl_owner);
+        scrollbar_update(x->gl_owner);
 }
 
 extern int gfxstub_haveproperties(void *key);
@@ -1968,7 +1968,7 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
                 sys_vgui(".x%x.c delete %s\n", x, sh->h_outlinetag);
                 canvasgop_draw_move(x,1);
                 canvas_fixlinesfor(x, (t_text *)x);
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+                scrollbar_update(x);
             }
         }
         else //enter if move_gop hook
@@ -1984,7 +1984,7 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
             {
                 canvasgop_draw_move(x,1);
                 canvas_fixlinesfor(x, (t_text *)x);
-                sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x);
+                scrollbar_update(x);
             }
         }
     }

@@ -38,44 +38,25 @@ static t_class *vslider_class;
 static void vslider_draw_update(t_gobj *client, t_glist *glist)
 {
     t_vslider *x = (t_vslider *)client;
-    if (x->x_gui.x_changed == 0) return;
-    t_canvas *canvas=glist_getcanvas(glist);
-    if (glist_isvisible(glist))
-    {
-        int r = text_ypix(&x->x_gui.x_obj, glist) + 2 + x->x_gui.x_h - (x->x_val + 50)/100;
-        int xpos=text_xpix(&x->x_gui.x_obj, glist);
-
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-                 canvas, x, xpos+2, r,
-                 xpos + x->x_gui.x_w-2, r);
-        if(x->x_val == x->x_center)
-        {
-            if(!x->x_thick)
-            {
-                sys_vgui(".x%lx.c itemconfigure %lxKNOB "
-                         "-strokewidth 7\n",
-                     canvas, x);
-                x->x_thick = 1;
-            }
-        }
-        else
-        {
-            if(x->x_thick)
-            {
-                sys_vgui(".x%lx.c itemconfigure %lxKNOB "
-                         "-strokewidth 3\n",
-                     canvas, x);
-                x->x_thick = 0;
-            }
-        }
-    }
+    if (!x->x_gui.x_changed) return;
     x->x_gui.x_changed = 0;
+    t_canvas *canvas=glist_getcanvas(glist);
+    if (!glist_isvisible(glist)) return;
+    int r = text_ypix(&x->x_gui.x_obj, glist) + 2 + x->x_gui.x_h - (x->x_val + 50)/100;
+    int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_gui.x_w;
+    sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        canvas, x, x1+2, r, x2-2, r);
+    int t = x->x_thick;
+    x->x_thick = x->x_val == x->x_center;
+    if (t!=x->x_thick)
+        sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth %d\n",
+            canvas, x, 4*x->x_thick+3);
 }
 
 static void vslider_draw_io(t_vslider* x,t_glist* glist, int old_snd_rcv_flags)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"VSLDR");
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags);
 }
 
 static void vslider_draw_new(t_vslider *x, t_glist *glist)
@@ -85,97 +66,66 @@ static void vslider_draw_new(t_vslider *x, t_glist *glist)
     int r = ypos + 2 + x->x_gui.x_h - (x->x_val + 50)/100;
     t_canvas *canvas=glist_getcanvas(glist);
 
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        sys_vgui(".x%lx.c create prect %d %d %d %d "
-                 "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-                 "-tags {%lxBASE %lxVSLDR %s text iemgui border}\n",
-             canvas, xpos, ypos,
-             xpos + x->x_gui.x_w, ypos + x->x_gui.x_h+5,
-             x->x_gui.x_bcol, x, x, nlet_tag);
-        sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-                 "-stroke #%6.6x -tags {%lxKNOB %lxVSLDR %s text iemgui}\n",
-             canvas, xpos+2, r,
-             xpos + x->x_gui.x_w-2, r, x->x_gui.x_fcol, x, x, nlet_tag);
-        iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag,"VSLDR");
+    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
+        "-stroke #%6.6x -tags {%lxKNOB %lxOBJ %s text iemgui}\n",
+        canvas, xpos+2, r,
+        xpos + x->x_gui.x_w-2, r, x->x_gui.x_fcol, x, x, nlet_tag);
+        iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag);
     vslider_draw_io(x,glist,7);
 }
 
 static void vslider_draw_move(t_vslider *x, t_glist *glist)
 {
+    t_canvas *canvas=glist_getcanvas(glist);
+    if (!glist_isvisible(canvas)) return;
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     int r = ypos + 2 + x->x_gui.x_h - (x->x_val + 50)/100;
-    t_canvas *canvas=glist_getcanvas(glist);
 
-    if (glist_isvisible(canvas))
-    {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-                 canvas, x,
-                 xpos, ypos,
-                 xpos + x->x_gui.x_w, ypos + x->x_gui.x_h+5);
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-                 canvas, x, xpos+2, r,
-                 xpos + x->x_gui.x_w-2, r);
-        iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
-        if(!iemgui_has_snd(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxVSLDR%so%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0,
-                 xpos, ypos + x->x_gui.x_h+4,
-                 xpos+7, ypos + x->x_gui.x_h+5);
-        if(!iemgui_has_rcv(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxVSLDR%si%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0,
-                 xpos, ypos,
-                 xpos+7, ypos+1);
-        /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_selected)
-        {
-            vslider_draw_select(x, x->x_gui.x_glist);
-        }
-    }
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
+        canvas, x, xpos, ypos, xpos + x->x_gui.x_w, ypos + x->x_gui.x_h+5);
+    sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        canvas, x, xpos+2, r, xpos + x->x_gui.x_w-2, r);
+    iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
+    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    if (x->x_gui.x_selected) vslider_draw_select(x, x->x_gui.x_glist);
 }
 
 static void vslider_draw_config(t_vslider* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_label_draw_config(&x->x_gui,canvas);
-    sys_vgui(".x%lx.c itemconfigure %lxKNOB "
-             "-stroke #%6.6x\n .x%lx.c itemconfigure %lxBASE -fill #%6.6x\n",
-         canvas, x, x->x_gui.x_fcol, canvas, x, x->x_gui.x_bcol);
-    /*sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas,
-             x, x->x_gui.x_bcol);*/
+    iemgui_base_draw_config(&x->x_gui,canvas);
+    sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
+         canvas, x, x->x_gui.x_fcol);
 }
 
 static void vslider_draw_select(t_vslider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_base_draw_config(&x->x_gui,canvas);
     if(x->x_gui.x_selected)
     {
         // check if we are drawing inside a gop abstraction
         // visible on parent canvas. If so, disable highlighting
         if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                     "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"VSLDR",
+            scalehandle_draw_select2(&x->x_gui,glist,
                 x->x_gui.x_w-1,x->x_gui.x_h+5-1);
         }
     }
     else
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
-            canvas, x, IEM_GUI_COLOR_NORMAL);
         scalehandle_draw_erase2(&x->x_gui,glist);
     }
     iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas,"VSLDR");
+    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 void vslider_check_minmax(t_vslider *x, double min, double max);
@@ -258,7 +208,7 @@ void vslider_draw(t_vslider *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         vslider_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist, "VSLDR");
+        iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         vslider_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -427,16 +377,8 @@ static void vslider_dialog(t_vslider *x, t_symbol *s, int argc, t_atom *argv)
     //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
-    /* forcing redraw of the scale handle */
-    if (x->x_gui.x_selected)
-    {
-        vslider_draw_select(x, x->x_gui.x_glist);
-    }
-
-    // ico@bukvic.net 100518
-    // update scrollbars when object potentially exceeds window size
-    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    if (x->x_gui.x_selected) vslider_draw_select(x, x->x_gui.x_glist);
+    scrollbar_update(x->x_gui.x_glist);
 }
 
 static void vslider_motion(t_vslider *x, t_floatarg dx, t_floatarg dy)

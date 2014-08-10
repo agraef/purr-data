@@ -38,21 +38,19 @@ static t_class *bng_class;
 void bng_draw_update(t_gobj *xgobj, t_glist *glist)
 {
     t_bng *x = (t_bng *)xgobj;
-    if (x->x_gui.x_changed != x->x_flashed)
+    
+    if (x->x_gui.x_changed != x->x_flashed && glist_isvisible(glist))
     {
-        if(glist_isvisible(glist))
-        {
-            sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
-                glist_getcanvas(glist), x,
-                x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
-        }
-        x->x_gui.x_changed = x->x_flashed;
+        sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
+            glist_getcanvas(glist), x,
+            x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
     }
+    x->x_gui.x_changed = x->x_flashed;
 }
 void bng_draw_io(t_bng* x, t_glist* glist, int old_snd_rcv_flags)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"BNG");
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags);
 }
 
 void bng_draw_new(t_bng *x, t_glist *glist)
@@ -66,101 +64,72 @@ void bng_draw_new(t_bng *x, t_glist *glist)
 
     char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
 
-    sys_vgui(".x%lx.c create prect %d %d %d %d "
-             "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-             "-tags {%lxBASE %lxBNG text iemgui border %s}\n",
-         canvas, xpos, ypos, xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
-         x->x_gui.x_bcol, x, x, nlet_tag);
+    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = xpos+cr+1.5;
     t_float cy = ypos+cr+1.5;
     sys_vgui(".x%lx.c create circle %f %f -r %f "
              "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-             "-tags {%lxBUT %lxBNG text iemgui border %s}\n",
+             "-tags {%lxBUT %lxOBJ text iemgui border %s}\n",
          canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
          x, x, nlet_tag);
-    iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag,"BNG");
+    iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag);
     bng_draw_io(x,glist,7);
 }
 
 void bng_draw_move(t_bng *x, t_glist *glist)
 {
+    t_canvas *canvas=glist_getcanvas(glist);
+    if (!glist_isvisible(canvas)) return;
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
-    t_canvas *canvas=glist_getcanvas(glist);
 
-    if (glist_isvisible(canvas))
-    {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-            canvas, x, xpos, ypos,
-            xpos + x->x_gui.x_w, ypos + x->x_gui.x_h);
-        t_float cr = (x->x_gui.x_w-2)/2.0;
-        t_float cx = xpos+cr+1.5;
-        t_float cy = ypos+cr+1.5;
-
-        /*sys_vgui(".x%lx.c create circle %d %d -r %d "
-                   "-stroke #%6.6x "
-                   "-tags {%lxBUT %lxBNG %lx text iemgui}\n",
-             canvas, cx, cy, cr,*/
-
-        sys_vgui(".x%lx.c coords %lxBUT %f %f\n",
-            canvas, x, cx, cy);
-        sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
-            canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
-        iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
-        if(!iemgui_has_snd(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxBNG%so%d %d %d %d %d\n",
-                canvas, x, nlet_tag, 0, xpos,
-                ypos + x->x_gui.x_h-1, xpos + IOWIDTH,
-                ypos + x->x_gui.x_h);
-        if(!iemgui_has_rcv(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxBNG%si%d %d %d %d %d\n",
-                canvas, x, nlet_tag, 0, xpos, ypos,
-                xpos + IOWIDTH, ypos+1);
-        /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_selected)
-            bng_draw_select(x, x->x_gui.x_glist);
-    }
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    t_float cr = (x->x_gui.x_w-2)/2.0;
+    t_float cx = xpos+cr+1.5;
+    t_float cy = ypos+cr+1.5;
+    sys_vgui(".x%lx.c coords %lxBUT %f %f\n", canvas, x, cx, cy);
+    sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
+        canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
+    iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
+    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    if (x->x_gui.x_selected) bng_draw_select(x, x->x_gui.x_glist);
 }
 
 void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_label_draw_config(&x->x_gui,canvas);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n "
-             ".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
-         canvas, x, x->x_gui.x_bcol, canvas, x,
-         x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    /*sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n", canvas, x,
-             x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);*/
+    iemgui_base_draw_config(&x->x_gui,canvas);
+    sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
+        canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
 }
 
 void bng_draw_select(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_base_draw_config(&x->x_gui,canvas);
     if(x->x_gui.x_selected)
     {
         /* check if we are drawing inside a gop abstraction visible
            on parent canvas -- if so, disable highlighting */
         if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            sys_vgui(".x%lx.c itemconfigure {%lxBASE||%lxBUT} "
-                     "-stroke $pd_colors(selection)\n", canvas, x, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"BNG",
+            sys_vgui(".x%lx.c itemconfigure %lxBUT "
+                     "-stroke $pd_colors(selection)\n", canvas, x);
+            scalehandle_draw_select2(&x->x_gui,glist,
                 x->x_gui.x_w-1,x->x_gui.x_h-1);
         }
     }
     else
     {
-        sys_vgui(".x%lx.c itemconfigure {%lxBASE||%lxBUT} -stroke %s\n",
-            canvas, x, x, IEM_GUI_COLOR_NORMAL);
+        sys_vgui(".x%lx.c itemconfigure %lxBUT -stroke %s\n",
+            canvas, x, IEM_GUI_COLOR_NORMAL);
         scalehandle_draw_erase2(&x->x_gui,glist);
     }
     iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas,"BNG");
+    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 static void bng__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -235,7 +204,7 @@ void bng_draw(t_bng *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         bng_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist, "BNG");
+        iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         bng_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -404,11 +373,7 @@ static void bng_dialog(t_bng *x, t_symbol *s, int argc, t_atom *argv)
     {
         bng_draw_select(x, x->x_gui.x_glist);
     }
-
-    //ico@bukvic.net 100518 update scrollbars when object potentially
-    //exceeds window size
-    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    scrollbar_update(x->x_gui.x_glist);
 }
 
 static void bng_click(t_bng *x, t_floatarg xpos, t_floatarg ypos,

@@ -38,42 +38,25 @@ static t_class *hslider_class;
 static void hslider_draw_update(t_gobj *client, t_glist *glist)
 {
     t_hslider *x = (t_hslider *)client;
-    if (x->x_gui.x_changed == 0) return;
-    t_canvas *canvas=glist_getcanvas(glist);
-    int ypos=text_ypix(&x->x_gui.x_obj, glist);
-
-    if (glist_isvisible(glist))
-    {
-        int r = text_xpix(&x->x_gui.x_obj, glist) + 3 + (x->x_val + 50)/100;
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-                 canvas, x, r, ypos+2,
-                 r, ypos + x->x_gui.x_h-2);
-        if(x->x_val == x->x_center)
-        {
-            if(!x->x_thick)
-            {
-                sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth 7\n",
-                    canvas, x);
-                x->x_thick = 1;
-            }
-        }
-        else
-        {
-            if(x->x_thick)
-            {
-                sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth 3\n",
-                    canvas, x);
-                x->x_thick = 0;
-            }
-        }
-    }
+    if (!x->x_gui.x_changed) return;
     x->x_gui.x_changed = 0;
+    if (!glist_isvisible(glist)) return;
+    t_canvas *canvas=glist_getcanvas(glist);
+    int y1=text_ypix(&x->x_gui.x_obj, glist);
+    int r = text_xpix(&x->x_gui.x_obj, glist) + 3 + (x->x_val + 50)/100;
+    sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        canvas, x, r, y1+2, r, y1 + x->x_gui.x_h-2);
+    int t = x->x_thick;
+    x->x_thick = x->x_val == x->x_center;
+    if (t!=x->x_thick)
+        sys_vgui(".x%lx.c itemconfigure %lxKNOB -strokewidth %d\n",
+            canvas, x, 4*x->x_thick+3);
 }
 
 static void hslider_draw_io(t_hslider* x,t_glist* glist, int old_snd_rcv_flags)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"HSLDR");
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags);
 }
 static void hslider_draw_new(t_hslider *x, t_glist *glist)
 {
@@ -82,95 +65,72 @@ static void hslider_draw_new(t_hslider *x, t_glist *glist)
     int r = xpos + 3 + (x->x_val + 50)/100;
     t_canvas *canvas=glist_getcanvas(glist);
 
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
+
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        sys_vgui(".x%lx.c create prect %d %d %d %d "
-                 "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-                 "-tags {%lxBASE %lxHSLDR %s text iemgui border}\n",
-             canvas, xpos, ypos,
-             xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h,
-             x->x_gui.x_bcol, x, x, nlet_tag);
-        sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-                 "-stroke #%6.6x -tags {%lxKNOB %lxHSLDR %s text iemgui}\n",
-             canvas, r, ypos+2, r,
-             ypos + x->x_gui.x_h-2, x->x_gui.x_fcol, x, x, nlet_tag);
-        iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag,"HSLDR");
+    sys_vgui(".x%lx.c create prect %d %d %d %d "
+        "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
+        "-tags {%lxBASE %lxOBJ %s text iemgui border}\n",
+        canvas, xpos, ypos,
+        xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h,
+        x->x_gui.x_bcol, x, x, nlet_tag);
+    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
+        "-stroke #%6.6x -tags {%lxKNOB %lxOBJ %s text iemgui}\n",
+        canvas, r, ypos+2, r,
+        ypos + x->x_gui.x_h-2, x->x_gui.x_fcol, x, x, nlet_tag);
+    iemgui_label_draw_new(&x->x_gui,canvas,xpos,ypos,nlet_tag);
     hslider_draw_io(x,glist,7);
 }
 
 static void hslider_draw_move(t_hslider *x, t_glist *glist)
 {
+    t_canvas *canvas=glist_getcanvas(glist);
+    if (!glist_isvisible(canvas)) return;
     int xpos=text_xpix(&x->x_gui.x_obj, glist);
     int ypos=text_ypix(&x->x_gui.x_obj, glist);
     int r = xpos + 3 + (x->x_val + 50)/100;
-    t_canvas *canvas=glist_getcanvas(glist);
 
-    if (glist_isvisible(canvas))
-    {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-                 canvas, x,
-                 xpos, ypos,
-                 xpos + x->x_gui.x_w+5, ypos + x->x_gui.x_h);
-        sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
-                 canvas, x, r, ypos+2,
-                 r, ypos + x->x_gui.x_h-2);
-        iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
-        if(!iemgui_has_snd(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxHSLDR%so%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0,
-                 xpos, ypos + x->x_gui.x_h-1,
-                 xpos+7, ypos + x->x_gui.x_h);
-        if(!iemgui_has_rcv(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxHSLDR%si%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0,
-                 xpos, ypos,
-                 xpos+7, ypos+1);
-        /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_selected)
-        {
-            hslider_draw_select(x, x->x_gui.x_glist);
-        }
-    }
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
+        canvas, x, r, ypos+2, r, ypos + x->x_gui.x_h-2);
+    iemgui_label_draw_move(&x->x_gui,canvas,xpos,ypos);
+    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    if (x->x_gui.x_selected) hslider_draw_select(x, x->x_gui.x_glist);
 }
 
 static void hslider_draw_config(t_hslider* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_label_draw_config(&x->x_gui,canvas);
-    sys_vgui(".x%lx.c itemconfigure %lxKNOB "
-             "-stroke #%6.6x\n .x%lx.c itemconfigure %lxBASE -fill #%6.6x\n",
-        canvas, x, x->x_gui.x_fcol, canvas, x, x->x_gui.x_bcol);
+    iemgui_base_draw_config(&x->x_gui,canvas);
+    sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
+        canvas, x, x->x_gui.x_fcol);
 }
 
 static void hslider_draw_select(t_hslider* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_base_draw_config(&x->x_gui,canvas);
     if(x->x_gui.x_selected)
     {
         // check if we are drawing inside a gop abstraction
         // visible on parent canvas. If so, disable highlighting
         if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                     "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"HSLDR",
+            scalehandle_draw_select2(&x->x_gui,glist,
                 x->x_gui.x_w+5-1,x->x_gui.x_h-1);
         }
     }
     else
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
-            canvas, x, IEM_GUI_COLOR_NORMAL);
         scalehandle_draw_erase2(&x->x_gui,glist);
     }
     iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas,"HSLDR");
+    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 void hslider_check_minmax(t_hslider *x, double min, double max);
@@ -254,7 +214,7 @@ void hslider_draw(t_hslider *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         hslider_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist, "HSLDR");
+        iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         hslider_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -453,16 +413,8 @@ static void hslider_dialog(t_hslider *x, t_symbol *s, int argc, t_atom *argv)
     //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
-    /* forcing redraw of the scale handle */
-    if (x->x_gui.x_selected)
-    {
-        hslider_draw_select(x, x->x_gui.x_glist);
-    }
-
-    // ico@bukvic.net 100518
-    // update scrollbars when object potentially exceeds window size
-    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    if (x->x_gui.x_selected) hslider_draw_select(x, x->x_gui.x_glist);
+    scrollbar_update(x->x_gui.x_glist);
 }
 
 static void hslider_motion(t_hslider *x, t_floatarg dx, t_floatarg dy)
@@ -700,9 +652,7 @@ void g_hslider_setup(void)
 {
     hslider_class = class_new(gensym("hsl"), (t_newmethod)hslider_new,
         (t_method)hslider_free, sizeof(t_hslider), 0, A_GIMME, 0);
-#ifndef GGEE_HSLIDER_COMPATIBLE
     class_addcreator((t_newmethod)hslider_new, gensym("hslider"), A_GIMME, 0);
-#endif
     class_addbang(hslider_class,hslider_bang);
     class_addfloat(hslider_class,hslider_float);
     class_addmethod(hslider_class, (t_method)hslider_click, gensym("click"),

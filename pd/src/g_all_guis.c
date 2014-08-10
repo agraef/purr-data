@@ -709,17 +709,13 @@ int iemgui_dialog(t_iemgui *iemgui, t_symbol **srl, int argc, t_atom *argv)
 void iem_inttosymargs(t_iemgui *x, int n)
 {
     x->x_loadinit = (n >>  0);
-    x->x_scale = (n >>  20);
-    x->x_flashed = 0;
     x->x_locked = 0;
     x->x_reverse = 0;
 }
 
 int iem_symargstoint(t_iemgui *x)
 {
-    return (
-        (((x->x_loadinit & 1) <<  0) |
-        ((x->x_scale & 1) <<  20)));
+    return ((x->x_loadinit & 1) <<  0);
 }
 
 void iem_inttofstyle(t_iemgui *x, int n)
@@ -729,9 +725,6 @@ void iem_inttofstyle(t_iemgui *x, int n)
     x->x_finemoved = 0;
     x->x_put_in2out = 0;
     x->x_change = 0;
-    x->x_thick = 0;
-    x->x_lin0_log1 = 0;
-    x->x_steady = 0;
 }
 
 int iem_fstyletoint(t_iemgui *x)
@@ -779,7 +772,7 @@ void scalehandle_bind(t_scalehandle *h) {
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py,
-const char *nlet_tag, const char *class_tag) {
+const char *nlet_tag) {
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
     t_text *x = (t_text *)h->h_master;
     //if (!nlet_tag) nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
@@ -788,7 +781,7 @@ const char *nlet_tag, const char *class_tag) {
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
     int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
 
-    //printf("scalehandle_draw_select(x%lx,x%lx,%d,%d,\"%s\",\"%s\")\n",h,canvas,px,py,nlet_tag,class_tag);
+    //printf("scalehandle_draw_select(x%lx,x%lx,%d,%d,\"%s\",\"%s\")\n",h,canvas,px,py,nlet_tag);
 
     if (h->h_vis) scalehandle_draw_erase(h,canvas);
 
@@ -798,12 +791,12 @@ const char *nlet_tag, const char *class_tag) {
     // there was a %lxBNG tag (or similar) in every scalehandle,
     // but it didn't seem to be used —mathieu
     if (h->h_scale) {
-        sprintf(tags,"%lx%s %lxSCALE iemgui %s",
-            (long)x,class_tag,(long)x,nlet_tag);
+        sprintf(tags,"%lxOBJ %lxSCALE iemgui %s",
+            (long)x,(long)x,nlet_tag);
     } else {
         //sprintf(tags,"%lx%s %lxLABEL %lxLABELH iemgui %s", // causes unknown option "-fill"
-        sprintf(tags,"%lx%s %lx%s iemgui %s", (long)x,class_tag,
-            (long)x,strcmp(class_tag,"GOP")?"LABELH":"MOVE",nlet_tag);
+        sprintf(tags,"%lxOBJ %lx%s iemgui %s", (long)x,
+            (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH",nlet_tag);
     }
     sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
         "-window %s -tags {%s}\n", canvas, x->te_xpix+px-sx, x->te_ypix+py-sy,
@@ -812,12 +805,12 @@ const char *nlet_tag, const char *class_tag) {
     h->h_vis = 1;
 }
 
-void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, const char *class_tag, int sx, int sy) {
+void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, int sx, int sy) {
     char *nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
-    scalehandle_draw_select(x->x_handle,canvas,sx,sy,nlet_tag,class_tag);
+    scalehandle_draw_select(x->x_handle,canvas,sx,sy,nlet_tag);
     if (x->x_lab!=s_empty)
     {
-        scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy,nlet_tag,class_tag);
+        scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy,nlet_tag);
     }
 }
 
@@ -967,21 +960,21 @@ void scalehandle_drag_scale(t_scalehandle *h) {
 //----------------------------------------------------------------
 // IEMGUI refactor (by Mathieu)
 
-void iemgui_tag_selected(t_iemgui *x, t_glist *canvas, const char *class_tag) {
+void iemgui_tag_selected(t_iemgui *x, t_glist *canvas) {
     if(x->x_selected)
-        sys_vgui(".x%lx.c addtag selected withtag %lx%s\n", canvas, x, class_tag);
+        sys_vgui(".x%lx.c addtag selected withtag %lxOBJ\n", canvas, x);
     else
-        sys_vgui(".x%lx.c dtag %lx%s selected\n", canvas, x, class_tag);
+        sys_vgui(".x%lx.c dtag %lxOBJ selected\n", canvas, x);
 }
 
-void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas, int xpos, int ypos, const char *nlet_tag, const char *class_tag) {
+void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas, int xpos, int ypos, const char *nlet_tag) {
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
              "-font {{%s} -%d %s} -fill #%6.6x "
-             "-tags {%lxLABEL %lx%s text iemgui %s}\n",
+             "-tags {%lxLABEL %lxOBJ text iemgui %s}\n",
          canvas, xpos+x->x_ldx, ypos+x->x_ldy,
          x->x_lab!=s_empty?x->x_lab->s_name:"",
          iemgui_font(x), x->x_fontsize, sys_fontweight,
-         x->x_lcol, x, x, class_tag, nlet_tag);
+         x->x_lcol, x, x, nlet_tag);
 }
 void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas, int xpos, int ypos) {
     sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
@@ -1008,7 +1001,9 @@ void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
             canvas, x, x->x_lcol);
 }
 
-void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags, const char *class_tag) {
+extern t_class *vu_class;
+void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
+	if (x->x_glist != canvas) return; // is gop
     int a,b;
     t_class *c = pd_class((t_pd *)x);
     //printf("--- iemgui_io_draw %s flags=%d\n",c->c_name->s_name,old_sr_flags);
@@ -1022,43 +1017,83 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags, const char *
     int x1,y1,x2,y2;
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
 
+    int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
+
     a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
-    //b=iemgui_has_snd(x); // not inited at moment of new
     b=x->x_snd!=s_empty;
     //printf("a=%d b=%d snd=%s\n",a,b,x->x_snd->s_name);
-    if(a && !b)
-        //printf("%s create outlet\n",c->c_name->s_name), fflush(stdout),
+    if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
-                 "-tags {%lx%s%so%d %so%d %lx%s outlet iemgui %s}\n",
-             canvas, x1, y2-1, x1 + IOWIDTH, y2,
-             x, class_tag, nlet_tag, 0, nlet_tag, 0, x, class_tag, nlet_tag);
-    if(!a && b)
-        //printf("%s delete outlet\n",c->c_name->s_name), fflush(stdout),
-        sys_vgui(".x%lx.c delete %lx%s%so%d\n", canvas, x, class_tag, nlet_tag, 0);
+                 "-tags {%lxOBJ%so%d %so%d %lxOBJ outlet iemgui %s}\n",
+             canvas, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2,
+             x, nlet_tag, i, nlet_tag, i, x, nlet_tag);
+    if(!a && b) for (i=0; i<n; i++)
+        sys_vgui(".x%lx.c delete %lxOBJ%so%d\n", canvas, x, nlet_tag, 0);
 
     a=old_sr_flags&IEM_GUI_OLD_RCV_FLAG;
-    //b=iemgui_has_rcv(x); // not inited at moment of new
     b=x->x_rcv!=s_empty;
     //printf("a=%d b=%d rcv=%s\n",a,b,x->x_rcv->s_name);
-    if(a && !b)
-        //printf("%s create inlet\n",c->c_name->s_name), fflush(stdout),
+    if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
-                 "-tags {%lx%s%si%d %si%d %lx%s inlet iemgui %s}\n",
-             canvas, x1, y1, x1 + IOWIDTH, y1+1,
-             x, class_tag, nlet_tag, 0, nlet_tag, 0, x, class_tag, nlet_tag);
-    if(!a && b)
-        //printf("%s delete inlet\n",c->c_name->s_name), fflush(stdout),
-        sys_vgui(".x%lx.c delete %lx%s%si%d\n", canvas, x, class_tag, nlet_tag, 0);
+                 "-tags {%lxOBJ%si%d %si%d %lxOBJ inlet iemgui %s}\n",
+             canvas, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1,
+             x, nlet_tag, i, nlet_tag, i, x, nlet_tag);
+    if(!a && b) for (i=0; i<n; i++)
+        sys_vgui(".x%lx.c delete %lxOBJ%si%d\n", canvas, x, nlet_tag, 0);
     //printf("---/iemgui_io_draw\n");
 }
 
-void iemgui_draw_erase(t_iemgui *x, t_glist* glist, const char *class_tag) {
+void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
+    t_class *c = pd_class((t_pd *)x);
+    int x1,y1,x2,y2;
+    c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+    int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
+    if(!iemgui_has_snd(x) && canvas == x->x_glist) for (i=0; i<n; i++)
+        sys_vgui(".x%lx.c coords %lxOBJ%so%d %d %d %d %d\n",
+            canvas, x, nlet_tag, i, x1+i*k, y2-1, x1+i*k+IOWIDTH, y2);
+    if(!iemgui_has_rcv(x) && canvas == x->x_glist) for (i=0; i<n; i++)
+        sys_vgui(".x%lx.c coords %lxOBJ%si%d %d %d %d %d\n",
+            canvas, x, nlet_tag, i, x1+i*k, y1, x1+i*k+IOWIDTH, y1+1);
+}
+
+void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
+    t_class *c = pd_class((t_pd *)x);
+    int x1,y1,x2,y2;
+    c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    sys_vgui(".x%lx.c create prect %d %d %d %d "
+             "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
+             "-tags {%lxBASE %lxOBJ text iemgui border %s}\n",
+         canvas, x1,y1,x2,y2, x->x_bcol, x, x, nlet_tag);
+}
+
+void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
+    t_class *c = pd_class((t_pd *)x);
+    int x1,y1,x2,y2;
+    c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
+}
+
+void iemgui_base_draw_config(t_iemgui *x, t_glist *canvas) {
+    char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
+    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_bcol);
+    sys_vgui(".x%lx.c itemconfigure {%lxBASE||%lxBASEL} -stroke %s\n", canvas, x, x,
+        x->x_selected && x->x_glist == canvas ? selection_color : fcol);
+}
+
+void iemgui_draw_erase(t_iemgui *x, t_glist* glist) {
     t_canvas *canvas=glist_getcanvas(glist);
-    sys_vgui(".x%lx.c delete %lx%s\n", canvas, x, class_tag);
-    sys_vgui(".x%lx.c dtag all %lx%s\n", canvas, x, class_tag);
+    sys_vgui(".x%lx.c delete %lxOBJ\n", canvas, x);
+    sys_vgui(".x%lx.c dtag all %lxOBJ\n", canvas, x);
     scalehandle_draw_erase2(x,glist);
+}
+
+void scrollbar_update(t_glist *glist) {
+    //ico@bukvic.net 100518 update scrollbars when object potentially
+    //exceeds window size
+    t_canvas *canvas=(t_canvas *)glist_getcanvas(glist);
+    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
 }
 
 void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl) {
@@ -1102,3 +1137,6 @@ void iemgui_class_addmethods(t_class *c) {
 void g_iemgui_setup (void) {
     s_empty = gensym("empty");
 }
+
+const char *selection_color = "$pd_colors(selection)";
+

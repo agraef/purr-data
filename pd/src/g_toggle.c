@@ -57,128 +57,79 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
 void toggle_draw_io(t_toggle* x, t_glist* glist, int old_snd_rcv_flags)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags,"TGL");
+    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags);
 }
 
 void toggle_draw_new(t_toggle *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int w=1, xx=text_xpix(&x->x_gui.x_obj, glist),
-        yy=text_ypix(&x->x_gui.x_obj, glist);
-
+    int w=(x->x_gui.x_w+29)/30;
+    int x1=text_xpix(&x->x_gui.x_obj, glist);
+    int y1=text_ypix(&x->x_gui.x_obj, glist);
+    int x2=x1+x->x_gui.x_w, y2=y1+x->x_gui.x_h;
+    int col = (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol;
     scalehandle_draw_new(x->x_gui. x_handle,canvas);
     scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
 
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        if(x->x_gui.x_w >= 30)
-            w = 2;
-        if(x->x_gui.x_w >= 60)
-            w = 3;
-        sys_vgui(".x%lx.c create prect %d %d %d %d "
-                 "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-                 "-tags {%lxBASE %lxTGL %s text iemgui border}\n",
-                 canvas, xx, yy, xx + x->x_gui.x_w, yy + x->x_gui.x_h,
-                 x->x_gui.x_bcol, x, x, nlet_tag);
-        sys_vgui(".x%lx.c create polyline %d %d %d %d "
-                 "-strokewidth %d -stroke #%6.6x "
-                 "-tags {%lxX1 %lxTGL %s text iemgui}\n",
-                 canvas, xx+w+1, yy+w+1,
-                 xx + x->x_gui.x_w-w-1, yy + x->x_gui.x_h-w-1, w,
-                 (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x,
-                 nlet_tag);
-        sys_vgui(".x%lx.c create polyline %d %d %d %d "
-                 "-strokewidth %d -stroke #%6.6x "
-                 "-tags {%lxX2 %lxTGL %s text iemgui}\n",
-                 canvas, xx+w+1, yy + x->x_gui.x_h-w-1,
-                 xx + x->x_gui.x_w-w-1, yy+w+1, w,
-                 (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol, x, x, nlet_tag);
-        iemgui_label_draw_new(&x->x_gui,canvas,xx,yy,nlet_tag,"TGL");
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
+    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
+        "-stroke #%6.6x -tags {%lxX1 %lxOBJ %s text iemgui}\n",
+        canvas, x1+w+1, y1+w+1, x2-w-1, y2-w-1, w, col, x, x, nlet_tag);
+    sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
+        "-stroke #%6.6x -tags {%lxX2 %lxOBJ %s text iemgui}\n",
+        canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x, nlet_tag);
+    iemgui_label_draw_new(&x->x_gui,canvas,x1,y1,nlet_tag);
     toggle_draw_io(x,glist,7);
 }
 
 void toggle_draw_move(t_toggle *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int w=1, xx=text_xpix(&x->x_gui.x_obj, glist),
-        yy=text_ypix(&x->x_gui.x_obj, glist);
+    if (!glist_isvisible(canvas)) return;
+    int w=(x->x_gui.x_w+29)/30, s=w+1;
+    int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_gui.x_w;
+    int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    if (glist_isvisible(canvas))
-    {
-
-        char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-
-        if(x->x_gui.x_w >= 30)
-            w = 2;
-
-        if(x->x_gui.x_w >= 60)
-            w = 3;
-        sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
-                 canvas, x, xx, yy, xx + x->x_gui.x_w, yy + x->x_gui.x_h);
-        sys_vgui(".x%lx.c itemconfigure %lxX1 -strokewidth %d\n", canvas, x, w);
-        sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
-                 canvas, x, xx+w+1, yy+w+1,
-                 xx + x->x_gui.x_w-w-1, yy + x->x_gui.x_h-w-1);
-        sys_vgui(".x%lx.c itemconfigure %lxX2 -strokewidth %d\n", canvas, x, w);
-        sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
-                 canvas, x, xx+w+1,
-                 yy + x->x_gui.x_h-w-1, xx + x->x_gui.x_w-w-1, yy+w+1);
-        iemgui_label_draw_move(&x->x_gui,canvas,xx,yy);
-        if(!iemgui_has_snd(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxTGL%so%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0, xx,
-                 yy + x->x_gui.x_h-1, xx + IOWIDTH, yy + x->x_gui.x_h);
-        if(!iemgui_has_rcv(&x->x_gui) && canvas == x->x_gui.x_glist)
-            sys_vgui(".x%lx.c coords %lxTGL%si%d %d %d %d %d\n",
-                 canvas, x, nlet_tag, 0, xx, yy, xx + IOWIDTH, yy+1);
-        /* redraw scale handle rectangle if selected */
-        if (x->x_gui.x_selected)
-            toggle_draw_select(x, x->x_gui.x_glist);
-    }
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -strokewidth %d\n", canvas, x, x, w);
+    sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
+        canvas, x, x1+s, y1+s, x2-s, y2-s);
+    sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
+        canvas, x, x1+s, y2-s, x2-s, y1+s);
+    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
+    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    if (x->x_gui.x_selected) toggle_draw_select(x, x->x_gui.x_glist);
 }
 
 void toggle_draw_config(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_label_draw_config(&x->x_gui,canvas);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n "
-             ".x%lx.c itemconfigure %lxX1 -stroke #%6.6x\n "
-             ".x%lx.c itemconfigure %lxX2 -stroke #%6.6x\n",
-             canvas, x, x->x_gui.x_bcol , canvas, x,
-             x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol, canvas, x,
-             x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    /*
-    sys_vgui(".x%lx.c itemconfigure %lxX1 -fill #%6.6x\n", canvas, x,
-             x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    sys_vgui(".x%lx.c itemconfigure %lxX2 -fill #%6.6x\n", canvas, x,
-             x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
-    */
+    iemgui_base_draw_config(&x->x_gui,canvas);
+    sys_vgui(".x%lx.c itemconfigure {%lxX1||%lX2} -fill #%6.6x\n",
+        canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
 }
 
 void toggle_draw_select(t_toggle* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_base_draw_config(&x->x_gui,canvas);
     if(x->x_gui.x_selected)
     {
-        // check if we are drawing inside a gop abstraction
-        // visible on parent canvas
-        // if so, disable highlighting
         if (x->x_gui.x_glist == glist_getcanvas(glist))
         {
-            sys_vgui(".x%lx.c itemconfigure %lxBASE "
-                     "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,"TGL",
+            scalehandle_draw_select2(&x->x_gui,glist,
                 x->x_gui.x_w-1,x->x_gui.x_h-1);
         }
     }
     else
     {
-        sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n",
-            canvas, x, IEM_GUI_COLOR_NORMAL);
         scalehandle_draw_erase2(&x->x_gui,glist);
     }
     iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas,"TGL");
+    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 static void toggle__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -253,7 +204,7 @@ void toggle_draw(t_toggle *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_SELECT)
         toggle_draw_select(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist, "TGL");
+        iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
         toggle_draw_config(x, glist);
     else if(mode >= IEM_GUI_DRAW_MODE_IO)
@@ -352,16 +303,8 @@ static void toggle_dialog(t_toggle *x, t_symbol *s, int argc, t_atom *argv)
     //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
 
-    /* forcing redraw of the scale handle */
-    if (x->x_gui.x_selected)
-    {
-        toggle_draw_select(x, x->x_gui.x_glist);
-    }
-
-    //ico@bukvic.net 100518 update scrollbars when
-    //object potentially exceeds window size
-    t_canvas *canvas=(t_canvas *)glist_getcanvas(x->x_gui.x_glist);
-    sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", (long unsigned int)canvas);
+    if (x->x_gui.x_selected) toggle_draw_select(x, x->x_gui.x_glist);
+    scrollbar_update(x->x_gui.x_glist);
 }
 
 static void toggle_click(t_toggle *x, t_floatarg xpos, t_floatarg ypos,
