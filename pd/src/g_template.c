@@ -580,6 +580,8 @@ instructions for the template.  The template doesn't go away when the
 "struct" is deleted, so that you can replace it with
 another one to add new fields, for example. */
 
+static void gtemplate_free(t_gtemplate *x);
+
 static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
 {
     t_canvas *cur = canvas_getcurrent();
@@ -626,16 +628,6 @@ static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
                 our own and conform it. */
             t_template *y = template_new(&s_, argc, argv);
 
-            /* I'm not _exactly_ sure about this. It's possible
-               that the user could screw up a nested array construction
-               and end up with scalars that aren't able to conform. On
-               the other hand, this keeps us from crashing if a non-
-               existent array template is typed into the box. */
-            if (!template_cancreate(y))
-            {
-                return 0;
-            }
-
             canvas_redrawallfortemplate(t, 2);
                 /* Unless the new template is different from the old one,
                 there's nothing to do.  */
@@ -656,9 +648,53 @@ static void *gtemplate_donew(t_symbol *sym, int argc, t_atom *argv)
             /* otherwise make a new one and we're the only struct on it. */
         x->x_template = t = template_new(sym, argc, argv);
         t->t_list = x;
-    }
+   }
     outlet_new(&x->x_obj, 0);
     return (x);
+}
+
+int template_check_array_fields(t_symbol *structname, t_template *template);
+
+/* probably duplicating some code from template_new here... */
+int gtemplate_cancreate(t_symbol *templatename, int argc, t_atom *argv)
+{
+    while (argc > 1)
+    {
+        t_symbol *typesym = argv[0].a_w.w_symbol;
+        if (typesym == &s_float || typesym == &s_symbol)
+        {
+            argc -= 2;
+            argv += 2; 
+        }
+        else if (typesym == gensym("array"))
+        {
+            if (argc > 2 && argv[2].a_type == A_SYMBOL)
+            {
+                /* check for cancreation here */
+                t_template *elemtemplate =
+                    template_findbyname(canvas_makebindsym(argv[2].a_w.w_symbol));
+                if (!elemtemplate ||
+                    !template_check_array_fields(
+                        canvas_makebindsym(templatename), elemtemplate))
+                {
+                    return 0;
+                }
+                argc -= 3;
+                argv += 3;
+            }
+            else
+            {
+                argc -= 2;
+                argv += 2;
+            }
+        }
+        else
+        {
+            argc -= 2;
+            argv += 2;
+        }
+    }
+    return 1;
 }
 
 static void *gtemplate_new(t_symbol *s, int argc, t_atom *argv)
@@ -666,7 +702,12 @@ static void *gtemplate_new(t_symbol *s, int argc, t_atom *argv)
     t_symbol *sym = atom_getsymbolarg(0, argc, argv);
     if (argc >= 1)
         argc--; argv++;
-    return (gtemplate_donew(canvas_makebindsym(sym), argc, argv));
+    if (gtemplate_cancreate(sym, argc, argv))
+    {
+        return (gtemplate_donew(canvas_makebindsym(sym), argc, argv));
+    }
+    else
+        return 0;
 }
 
     /* old version (0.34) -- delete 2003 or so */

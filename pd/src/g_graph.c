@@ -202,7 +202,10 @@ void glist_delete(t_glist *x, t_gobj *y)
         if (drawcommand)
         {
             tmpl = template_findbydrawcommand(y);
-            canvas_redrawallfortemplate(tmpl, 2);
+            if (!(canvas_isgroup(canvas) && canvas->gl_isdeleting))
+            {
+                canvas_redrawallfortemplate(tmpl, 2);
+            }
         }
         if (glist_isvisible(canvas))
             gobj_vis(y, x, 0);
@@ -234,7 +237,10 @@ void glist_delete(t_glist *x, t_gobj *y)
         pd_free(&y->g_pd);
         if (chkdsp) canvas_update_dsp();
         if (drawcommand)
-            canvas_redrawallfortemplate(tmpl, 1);
+        {
+            if (!(canvas_isgroup(canvas) && canvas->gl_isdeleting))
+                canvas_redrawallfortemplate(tmpl, 1);
+        }
         canvas_setdeleting(canvas, wasdeleting);
         x->gl_valid = ++glist_valid;
         if (late_rtext_free)

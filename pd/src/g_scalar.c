@@ -137,22 +137,63 @@ int template_hasxy(t_template *template)
         return 0;
 }
 
-int template_cancreate(t_template *template)
+int template_check_array_fields(t_symbol *structname, t_template *template)
 {
+    /* We're calling this from template_cancreate as well as
+       gtemplate_cancreate.
+       With gtemplate_cancreate, the t_template doesn't exist yet.
+       So we send the struct name to see if it matches the name of any
+       array field templates that our gtemplate will depend on. If we find
+       a match we will refuse to create the gtemplate.
+       However, template_cancreate starts from the struct name for a template
+       that already exists.  So on the first time through this recursive
+       function, there isn't a containing structname yet.
+       So we suppress this conditional the first
+       time through the recursive loop, and then set the structname for
+       all subsequent iterations through the loop. */
+    if (structname && structname == template->t_sym)
+    {
+        return 0;
+    }
     int i, nitems = template->t_n;
     t_dataslot *datatypes = template->t_vec;
     t_template *elemtemplate;
     for (i = 0; i < nitems; i++, datatypes++)
-        if (datatypes->ds_type == DT_ARRAY &&
-            (!(elemtemplate = template_findbyname(datatypes->ds_arraytemplate))
-                || !template_cancreate(elemtemplate)))
     {
-        t_object *ob = template_getstruct(template);
-        pd_error(ob, "%s: no such template",
-            datatypes->ds_arraytemplate->s_name);
-        return (0);
+        if (datatypes->ds_type == DT_ARRAY)
+        {
+            elemtemplate = template_findbyname(datatypes->ds_arraytemplate);
+            if (!(elemtemplate))
+            {
+                t_object *ob = template_getstruct(template);
+                pd_error(ob, "%s: no such template",
+                    datatypes->ds_arraytemplate->s_name);
+                return (0);
+            }
+            else if (elemtemplate->t_sym == structname)
+            {
+                t_object *ob = template_getstruct(template);
+                pd_error(ob, "%s: circular dependency",
+                    datatypes->ds_arraytemplate->s_name);
+                return (0);
+            }
+            else
+            {
+                if (!structname)
+                {
+                    structname = template->t_sym;
+                }
+                return (template_check_array_fields(structname, elemtemplate));
+            }
+        }
     }
     return (1);
+}
+
+int template_cancreate(t_template *template)
+{
+    /* we send "0" for the structname since there is no container struct */
+    return (template_check_array_fields(0, template));
 }
 
     /* make a new scalar and add to the glist.  We create a "gp" here which
