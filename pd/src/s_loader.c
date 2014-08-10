@@ -89,7 +89,7 @@ void class_set_extern_dir(t_symbol *s);
 static int sys_do_load_lib(t_canvas *canvas, char *objectname)
 {
     char symname[MAXPDSTRING], filename[FILENAME_MAX], dirbuf[FILENAME_MAX],
-        *classname, *nameptr, altsymname[MAXPDSTRING];
+        *classname, *nameptr;
     void *dlobj;
     t_xxx makeout = NULL;
     int i, hexmunge = 0, fd;

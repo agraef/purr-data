@@ -82,7 +82,6 @@ static void sys_path_replace(
 ) {
     size_t const replen = strlen(replacement);
     size_t const patlen = strlen(pattern);
-    size_t const orilen = strlen(original);
 
     size_t patcnt = 0;
     const char * oriptr;
@@ -96,8 +95,6 @@ static void sys_path_replace(
 
     {
         // allocate memory for the new string
-        size_t const retlen = orilen + patcnt * (replen - patlen);
-
         if (returned != NULL)
         {
             // copy the original string, 
@@ -253,7 +250,7 @@ t_namelist *namelist_append_files(t_namelist *listwas, const char *s)
 {
     const char *npos;
     char temp[MAXPDSTRING];
-    t_namelist *nl = listwas, *rtn = listwas;
+    t_namelist *nl = listwas;
     
     npos = s;
     do
@@ -519,10 +516,8 @@ int sys_rcfile(void)
 {
     FILE* file;
     int i;
-    int k;
     int rcargc;
     char* rcargv[NUMARGS];
-    char* buffer;
     char  fname[FILENAME_MAX], buf[1000], *home = getenv("HOME");
     int retval = 1; /* that's what we will return at the end; for now, let's think it'll be an error */
  

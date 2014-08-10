@@ -57,7 +57,7 @@ union tabfudge
 };
 
 /* -------------------------- phasor~ ------------------------------ */
-static t_class *phasor_class, *scalarphasor_class;
+static t_class *phasor_class;
 
 #if 1   /* in the style of R. Hoeldrich (ICMC 1995 Banff) */
 
@@ -237,7 +237,7 @@ static void cos_setup(void)
 
 /* ------------------------ osc~ ----------------------------- */
 
-static t_class *osc_class, *scalarosc_class;
+static t_class *osc_class;
 
 typedef struct _osc
 {

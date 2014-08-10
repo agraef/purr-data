@@ -237,10 +237,8 @@ int alsa_open_audio(int naudioindev, int *audioindev, int nchindev,
 {
     int err, inchans = 0, outchans = 0, subunitdir;
     char devname[512];
-    snd_output_t* out;
     int frag_size = (sys_blocksize ? sys_blocksize : ALSA_DEFFRAGSIZE);
     int nfrags, i, iodev, dev2;
-    int wantinchans, wantoutchans, device;
 
     nfrags = sys_schedadvance * (float)rate / (1e6 * frag_size);
         /* save our belief as to ALSA's buffer size for later */
@@ -394,8 +392,8 @@ int alsa_send_dacs(void)
 #endif
     static double timenow;
     double timelast;
-    t_sample *fp, *fp1, *fp2;
-    int i, j, k, err, iodev, result, ch; 
+    t_sample *fp1, *fp2;
+    int i, j, k, iodev, result, ch; 
     int chansintogo, chansouttogo;
     unsigned int transfersize;
 
@@ -611,7 +609,7 @@ int alsa_send_dacs(void)
 
 void alsa_printstate( void)
 {
-    int i, result, iodev = 0;
+    int result, iodev = 0;
     snd_pcm_sframes_t indelay, outdelay;
     if (sys_audioapi != API_ALSA)
     {
@@ -695,7 +693,7 @@ void alsa_getzeros(int iodev, int n)
     /* call this only if both input and output are open */
 static void alsa_checkiosync( void)
 {
-    int i, result, giveup = 1000, alreadylogged = 0, iodev = 0;
+    int result, giveup = 1000, alreadylogged = 0, iodev = 0;
     snd_pcm_sframes_t minphase, maxphase, thisphase, outdelay;
 
     while (1)

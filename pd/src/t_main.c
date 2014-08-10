@@ -92,8 +92,6 @@ int
 Tcl_AppInit(interp)
     Tcl_Interp *interp;         /* Interpreter for application. */
 {
-    Tk_Window mainwindow;
-
     if (Tcl_Init(interp) == TCL_ERROR) {
         return TCL_ERROR;
     }

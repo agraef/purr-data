@@ -355,11 +355,9 @@ static void pd_startfromgui( void)
     char cmdbuf[1000], pdbuf[1000], *lastchar;
     const char *arg0;
     struct sockaddr_in server;
-    int msgsock;
-    int len = sizeof(server), nchar;
+    int len = sizeof(server);
     int ntry = 0, portno = FIRSTPORTNUM;
     int xsock = -1;
-    char morebuf[256];
 #ifdef MSW
     short version = MAKEWORD(2, 0);
     WSADATA nobby;
