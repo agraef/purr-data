@@ -226,13 +226,17 @@ externs:
 	make -C ../extra/pd~      @EXTERNTARGET@
 	make -C ../extra/stdout   @EXTERNTARGET@
 
-tkpath:
+../tkpath/Makefile: ../tkpath/Makefile.in ../tkpath/configure.in
 	cd ../tkpath && aclocal && autoconf && ./configure --prefix=$(prefix)
+
+tkpath: ../tkpath/Makefile
 	make -C ../tkpath
 	cd ../src
 
-tkdnd:
+../tkdnd/Makefile: ../tkdnd/Makefile.in ../tkdnd/configure.in
 	cd ../tkdnd && aclocal && autoconf && ./configure --prefix=$(prefix)
+
+tkdnd: ../tkdnd/Makefile
 	make -C ../tkdnd
 	cd ../src
 
