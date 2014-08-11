@@ -8,10 +8,12 @@
 extern "C" {
 #endif
 
+#include <stdarg.h>
+
 #define PD_MAJOR_VERSION 0
 #define PD_MINOR_VERSION 42
 #define PD_BUGFIX_VERSION 7
-#define PD_TEST_VERSION "20140614"
+#define PD_TEST_VERSION "20140811"
 #define PDL2ORK
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
@@ -642,8 +644,21 @@ EXTERN int value_setfloat(t_symbol *s, t_float f);
 /* ------- GUI interface - functions to send strings to TK --------- */
 typedef void (*t_guicallbackfn)(t_gobj *client, t_glist *glist);
 
-EXTERN void sys_vgui(char *fmt, ...);
-EXTERN void sys_gui(char *s);
+#ifdef CHECK_VGUI_ARGS
+EXTERN void sys_vgui(const char *fmt, ...)
+    __attribute__((format(printf,1,2)));
+EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...)
+    __attribute__((format(printf,1,2)));
+EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list)
+    __attribute__((format(printf,3,4)));
+#else
+EXTERN void sys_vgui(const char *fmt, ...);
+EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...);
+EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list);
+#endif
+EXTERN void sys_gui(const char *s);
+#define sys_vgui(args...) sys_vguid(__FILE__,__LINE__,args)
+
 EXTERN void sys_pretendguibytes(int n);
 EXTERN void sys_queuegui(void *client, t_glist *glist, t_guicallbackfn f);
 EXTERN void sys_unqueuegui(void *client);
@@ -660,7 +675,7 @@ extern t_class *glob_pdobject;  /* object to send "pd" messages */
 typedef t_class *t_externclass;
 
 EXTERN void c_extern(t_externclass *cls, t_newmethod newroutine,
-    t_method freeroutine, t_symbol *name, size_t size, int tiny, \
+    t_method freeroutine, t_symbol *name, size_t size, int tiny,
     t_atomtype arg1, ...);
 EXTERN void c_addmess(t_method fn, t_symbol *sel, t_atomtype arg1, ...);
 

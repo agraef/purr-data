@@ -665,10 +665,11 @@ void blargh(void) {
 #endif
 }
 
-void sys_vgui(char *fmt, ...)
-{
+static int lastend = -1;
+void sys_vvgui(const char *fmt, va_list ap) {
+	va_list aq;
+	va_copy(aq,ap);
     int msglen;
-    va_list ap;
 
     if (sys_nogui)
         return;
@@ -684,7 +685,6 @@ void sys_vgui(char *fmt, ...)
     }
     if (sys_guibufhead > sys_guibufsize - (GUI_ALLOCCHUNK/2))
         sys_trytogetmoreguibuf(sys_guibufsize + GUI_ALLOCCHUNK);
-    va_start(ap, fmt);
     msglen = vsnprintf(sys_guibuf + sys_guibufhead,
         sys_guibufsize - sys_guibufhead, fmt, ap);
     va_end(ap);
@@ -699,7 +699,7 @@ void sys_vgui(char *fmt, ...)
             (msglen > GUI_ALLOCCHUNK ? msglen : GUI_ALLOCCHUNK);
         sys_trytogetmoreguibuf(newsize);
 
-        va_start(ap, fmt);
+        va_copy(ap,aq);
         msglen2 = vsnprintf(sys_guibuf + sys_guibufhead,
             sys_guibufsize - sys_guibufhead, fmt, ap);
         va_end(ap);
@@ -714,9 +714,27 @@ void sys_vgui(char *fmt, ...)
     }
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
+    int fmtlen = strlen(fmt);
+    if (fmtlen) lastend = fmt[fmtlen-1];
 }
-
-void sys_gui(char *s)
+#undef sys_vgui
+void sys_vgui(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    sys_vvgui(fmt,ap);
+}
+void sys_vvguid(const char *file, int line, const char *fmt, va_list ap) {
+    if ((sys_debuglevel&4) && /*line>=0 &&*/ (lastend=='\n' || lastend=='\r' || lastend==-1)) {
+        sys_vgui("AT %s:%d; ",file,line);
+    }
+    sys_vvgui(fmt,ap);
+}
+void sys_vguid(const char *file, int line, const char *fmt, ...) {
+	va_list ap;
+    va_start(ap, fmt);
+    sys_vvguid(file,line,fmt,ap);
+}
+void sys_gui(const char *s)
 {
     sys_vgui("%s", s);
 }
