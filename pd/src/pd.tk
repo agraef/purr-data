@@ -9469,3 +9469,6 @@ proc pdtk_bind_scalar_mouseover {canvas scalar sendsym} {
     $canvas bind $scalar <Leave> \
         "scalar_mouseover $scalar [canvastosym $canvas] $sendsym 1"
 }
+
+proc AT {p} {}
+
