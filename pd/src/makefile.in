@@ -43,6 +43,8 @@ LIB =  @PDLIB@
 
 WARN_CFLAGS = -Wall -W -Wstrict-prototypes \
     -Wno-unused-parameter -Wno-parentheses -Wno-switch
+#WARN_CFLAGS += -Werror=implicit-function-declaration
+
 ARCH_CFLAGS = -DPD 
 
 CFLAGS = @CFLAGS@ $(ARCH_CFLAGS) $(WARN_CFLAGS) $(CPPFLAGS) $(MORECFLAGS)
@@ -121,7 +123,8 @@ endif
 #  ------------------ targets ------------------------------------
 #
 
-.PHONY: pd gui externs all
+.PHONY: pd gui externs all bin pd tkpath tkdnd install \
+        TAGS etags etags_Darwin etags_Linux etags_MINGW
 
 all: pd $(BIN_DIR)/pd-watchdog gui $(BIN_DIR)/pdsend \
     $(BIN_DIR)/pdreceive externs
@@ -160,23 +163,25 @@ endif
 
 pd-watchdog: $(BIN_DIR)/pd-watchdog
 
-$(BIN_DIR):
-	test -d $(BIN_DIR) || mkdir -p $(BIN_DIR)
+# just make sure ../bin exists without making it a target, because if you
+# make it a target, "make" looks at the folder's changing timestamp and
+# rebuilds for no reason. — Mathieu
+NOTHING = $(shell mkdir -p $(BIN_DIR))
 
-$(BIN_DIR)/pd-watchdog: s_watchdog.c $(BIN_DIR)
+$(BIN_DIR)/pd-watchdog: s_watchdog.c
 	$(CC) $(CFLAGS) $(STRIPFLAG) -o $(BIN_DIR)/pd-watchdog s_watchdog.c
 
-$(BIN_DIR)/pdsend: u_pdsend.c $(BIN_DIR)
+$(BIN_DIR)/pdsend: u_pdsend.c
 	$(CC) $(CFLAGS)  $(STRIPFLAG) -o $(BIN_DIR)/pdsend u_pdsend.c
 
 $(BIN_DIR)/pdreceive: u_pdreceive.c $(BIN_DIR)
 	$(CC) $(CFLAGS)  $(STRIPFLAG) -o $(BIN_DIR)/pdreceive u_pdreceive.c
 
 ifeq ($(QTGUI),yes)
-$(PDEXEC): $(OBJ) $(BIN_DIR)
+$(PDEXEC): $(OBJ)
 	cd ../obj;  $(CXX) $(LDFLAGS) $(DBG_CFLAGS) -o $(PDEXEC) $(OBJ) $(LIB)
 else
-$(PDEXEC): $(OBJ) $(BIN_DIR)
+$(PDEXEC): $(OBJ)
 	cd ../obj;  $(CC) $(LDFLAGS) $(DBG_CFLAGS) -o $(PDEXEC) $(OBJ) $(LIB)
 endif
 
@@ -189,7 +194,8 @@ ifeq ($(shell uname -r | sed 's|\([0-9][0-9]*\)\.[0-9][0-9]*\.[0-9][0-9]*|\1|'),
 else
   ARCH_FLAG = 
 endif
-#this is for Max OSX only...
+
+#this is for Mac OSX only...
 $(BIN_DIR)/libPdTcl.dylib: $(GOBJ) $(GSRC)
 	cd ../obj && $(CC) $(ARCH_FLAG) $(CFLAGS) -dynamiclib -read_only_relocs warning  \
 		-o $(BIN_DIR)/libPdTcl.dylib $(GOBJ)  \
