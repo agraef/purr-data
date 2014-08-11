@@ -15,6 +15,7 @@ to be different but are now unified except for some fossilized names.) */
 #include "g_all_guis.h"
 #include <string.h>
 
+static t_class *scalehandle_class;
 extern int do_not_redraw;
 extern void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag, int issignal);
 extern void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
