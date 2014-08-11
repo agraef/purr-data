@@ -108,15 +108,9 @@ void toggle_draw_select(t_toggle* x, t_glist* glist)
     if(x->x_gui.x_selected)
     {
         if (x->x_gui.x_glist == glist_getcanvas(glist))
-        {
-            scalehandle_draw_select2(&x->x_gui,glist,
-                x->x_gui.x_w-1,x->x_gui.x_h-1);
-        }
+            scalehandle_draw_select2(&x->x_gui,glist);
     }
-    else
-    {
-        scalehandle_draw_erase2(&x->x_gui,glist);
-    }
+    else scalehandle_draw_erase2(&x->x_gui,glist);
     iemgui_label_draw_select(&x->x_gui,canvas);
     iemgui_tag_selected(&x->x_gui,canvas);
 }
@@ -338,11 +332,6 @@ static void toggle_size(t_toggle *x, t_symbol *s, int ac, t_atom *av)
     iemgui_size(&x->x_gui);
 }
 
-static void toggle_init(t_toggle *x, t_floatarg f)
-{
-    x->x_gui.x_loadinit = (f==0.0)?0:1;
-}
-
 static void toggle_nonzero(t_toggle *x, t_floatarg f)
 {
     if(f != 0.0)
@@ -444,7 +433,7 @@ void g_toggle_setup(void)
     class_addmethod(toggle_class, (t_method)toggle_size, gensym("size"),
         A_GIMME, 0);
     iemgui_class_addmethods(toggle_class);
-    class_addmethod(toggle_class, (t_method)toggle_init, gensym("init"),
+    class_addmethod(toggle_class, (t_method)iemgui_init, gensym("init"),
         A_FLOAT, 0);
     class_addmethod(toggle_class, (t_method)toggle_nonzero, gensym("nonzero"),
         A_FLOAT, 0);

@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include "m_pd.h"
 #include "g_canvas.h"
 #include "g_all_guis.h"
@@ -104,8 +103,7 @@ void bng_draw_select(t_bng* x, t_glist* glist)
         {
             sys_vgui(".x%lx.c itemconfigure %lxBUT "
                      "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,
-                x->x_gui.x_w-1,x->x_gui.x_h-1);
+            scalehandle_draw_select2(&x->x_gui,glist);
         }
     }
     else
@@ -223,9 +221,7 @@ void bng_check_minmax(t_bng *x, int ftbreak, int fthold)
 {
     if(ftbreak > fthold)
     {
-        int h;
-
-        h = ftbreak;
+        int h = ftbreak;
         ftbreak = fthold;
         fthold = h;
     }
@@ -281,7 +277,6 @@ static void bng_set(t_bng *x)
 
 static void bng_bout1(t_bng *x)/*wird nur mehr gesendet, wenn snd != rcv*/
 {
-    fprintf(stderr,"bng_bout1: snd=%s rcv=%s\n",x->x_gui.x_snd->s_name,x->x_gui.x_rcv->s_name);
     if(!x->x_gui.x_put_in2out)
     {
         x->x_gui.x_locked = 1;
@@ -366,19 +361,10 @@ static int bng_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix,
     return (1);
 }
 
-static void bng_float(t_bng *x, t_floatarg f)
-{bng_bang2(x);}
-
-static void bng_symbol(t_bng *x, t_symbol *s)
-{bng_bang2(x);}
-
-static void bng_pointer(t_bng *x, t_gpointer *gp)
-{bng_bang2(x);}
-
-static void bng_list(t_bng *x, t_symbol *s, int ac, t_atom *av)
-{
-    bng_bang2(x);
-}
+static void bng_float(t_bng *x, t_floatarg f)                  {bng_bang2(x);}
+static void bng_symbol(t_bng *x, t_symbol *s)                  {bng_bang2(x);}
+static void bng_pointer(t_bng *x, t_gpointer *gp)              {bng_bang2(x);}
+static void bng_list(t_bng *x, t_symbol *s, int ac, t_atom *av){bng_bang2(x);}
 
 static void bng_anything(t_bng *x, t_symbol *s, int argc, t_atom *argv)
 {bng_bang2(x);}
@@ -394,8 +380,7 @@ static void bng_loadbang(t_bng *x)
 
 static void bng_size(t_bng *x, t_symbol *s, int ac, t_atom *av)
 {
-    x->x_gui.x_w = iemgui_clip_size((int)atom_getintarg(0, ac, av));
-    x->x_gui.x_h = x->x_gui.x_w;
+    x->x_gui.x_h = x->x_gui.x_w = iemgui_clip_size((int)atom_getintarg(0, ac, av));
     iemgui_size(&x->x_gui);
 }
 
@@ -403,11 +388,6 @@ static void bng_flashtime(t_bng *x, t_symbol *s, int ac, t_atom *av)
 {
     bng_check_minmax(x, (int)atom_getintarg(0, ac, av),
                      (int)atom_getintarg(1, ac, av));
-}
-
-static void bng_init(t_bng *x, t_floatarg f)
-{
-    x->x_gui.x_loadinit = (f==0.0)?0:1;
 }
 
 static void bng_tick_hld(t_bng *x)
@@ -529,7 +509,7 @@ void g_bang_setup(void)
     iemgui_class_addmethods(bng_class);
     class_addmethod(bng_class, (t_method)bng_flashtime, gensym("flashtime"),
         A_GIMME, 0);
-    class_addmethod(bng_class, (t_method)bng_init, gensym("init"), A_FLOAT, 0);
+    class_addmethod(bng_class, (t_method)iemgui_init, gensym("init"), A_FLOAT, 0);
  
     scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
                   sizeof(t_scalehandle), CLASS_PD, 0);

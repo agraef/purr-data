@@ -254,8 +254,7 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
         issel ? selection_color : fcol);
     if(issel) 
-        scalehandle_draw_select2(&x->x_gui,glist,
-            x->x_numwidth-1,x->x_gui.x_h-1);
+        scalehandle_draw_select2(&x->x_gui,glist);
     else
         scalehandle_draw_erase2(&x->x_gui,glist);
     iemgui_label_draw_select(&x->x_gui,canvas);
@@ -704,11 +703,6 @@ static void my_numbox_lin(t_my_numbox *x)
     x->x_lin0_log1 = 0;
 }
 
-static void my_numbox_init(t_my_numbox *x, t_floatarg f)
-{
-    x->x_gui.x_loadinit = (f==0.0)?0:1;
-}
-
 static void my_numbox_loadbang(t_my_numbox *x)
 {
     if(!sys_noloadbang && x->x_gui.x_loadinit)
@@ -910,7 +904,7 @@ void g_numbox_setup(void)
         gensym("log"), 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_lin,
         gensym("lin"), 0);
-    class_addmethod(my_numbox_class, (t_method)my_numbox_init,
+    class_addmethod(my_numbox_class, (t_method)iemgui_init,
         gensym("init"), A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_log_height,
         gensym("log_height"), A_FLOAT, 0);

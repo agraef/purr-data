@@ -292,7 +292,7 @@ EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 // scalehandle code, as refactored by Mathieu
 EXTERN void scalehandle_bind(t_scalehandle *h);
 EXTERN void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag);
-EXTERN void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, int sx, int sy);
+EXTERN void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas);
 EXTERN void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas);
 EXTERN void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas);
 EXTERN void scalehandle_draw_new(t_scalehandle *x, t_glist *canvas);
@@ -334,9 +334,6 @@ static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd!=s_empty;}
 static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv!=s_empty;}
 EXTERN const char *iemgui_font(t_iemgui *x);
 EXTERN void iemgui_class_addmethods(t_class *c);
-
 EXTERN void scrollbar_update(t_glist *glist);
-
-
-EXTERN void radio_draw_update(t_gobj *client, t_glist *glist);
+EXTERN void iemgui_init(t_iemgui *x, t_floatarg f);
 

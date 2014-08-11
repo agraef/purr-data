@@ -270,14 +270,10 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
     int issel = x->x_gui.x_selected && x->x_gui.x_glist==canvas;
     sys_vgui(".x%lx.c itemconfigure %lxSCALEN "
         "-fill %s\n", canvas, x, issel ? selection_color : lcol);
-    if(issel) {
-        scalehandle_draw_select2(&x->x_gui,glist,
-            x->x_gui.x_w+2-1,x->x_gui.x_h+4-1);
-    }
+    if(issel)
+        scalehandle_draw_select2(&x->x_gui,glist);
     else
-    {
         scalehandle_draw_erase2(&x->x_gui,glist);
-    }
     iemgui_label_draw_select(&x->x_gui,canvas);
     iemgui_tag_selected(&x->x_gui,canvas);
 }
@@ -305,8 +301,7 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
             scalehandle_unclick_scale(sh);
         }
     }
-    else iemgui__clickhook3(sh,newstate);
-    sh->h_dragon = newstate;
+    iemgui__clickhook3(sh,newstate);
 }
 
 static void vu__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)

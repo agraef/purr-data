@@ -89,8 +89,7 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
         {
             sys_vgui(".x%lx.c itemconfigure %lxBASE "
                      "-stroke $pd_colors(selection)\n", canvas, x);
-            scalehandle_draw_select2(&x->x_gui,glist,
-                x->x_vis_w,x->x_vis_h);
+            scalehandle_draw_select2(&x->x_gui,glist);
         }
         sys_vgui(".x%lx.c addtag selected withtag %lxOBJ\n", canvas, x);
     }

@@ -14,21 +14,10 @@
 #include "m_pd.h"
 #include "g_canvas.h"
 #include "m_imp.h"
-#include "t_tk.h"
 #include "g_all_guis.h"
 #include <math.h>
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_IO_H
-#include <io.h>
-#endif
-
 t_symbol *s_empty;
-
-/*------------------ global varaibles -------------------------*/
 
 int iemgui_color_hex[]=
 {
@@ -39,9 +28,6 @@ int iemgui_color_hex[]=
     12369084, 6316128, 0, 9177096, 5779456,
     7874580, 2641940, 17488, 5256, 5767248
 };
-
-/*------------------ global functions -------------------------*/
-
 
 int iemgui_clip_size(int size)
 {
@@ -165,8 +151,7 @@ static void iemgui_init_sym2dollararg(t_iemgui *iemgui, t_symbol **symp,
     }
 }
 
-    /* get the unexpanded versions of the symbols; initialize them if
-    necessary. */
+/* get the unexpanded versions of the symbols; initialize them if necessary. */
 void iemgui_all_sym2dollararg(t_iemgui *iemgui, t_symbol **srlsym)
 {
     iemgui_init_sym2dollararg(iemgui, &iemgui->x_snd_unexpanded,
@@ -180,51 +165,30 @@ void iemgui_all_sym2dollararg(t_iemgui *iemgui, t_symbol **srlsym)
     srlsym[2] = iemgui->x_lab_unexpanded;
 }
 
+static int col2save(int col) {
+    return -1-(((0xfc0000 & col) >> 6)|((0xfc00 & col) >> 4)|((0xfc & col) >> 2));
+}
 void iemgui_all_col2save(t_iemgui *iemgui, int *bflcol)
 {
-    bflcol[0] = -1 - (((0xfc0000 & iemgui->x_bcol) >> 6)|
-                      ((0xfc00 & iemgui->x_bcol) >> 4)|((0xfc & iemgui->x_bcol) >> 2));
-    bflcol[1] = -1 - (((0xfc0000 & iemgui->x_fcol) >> 6)|
-                      ((0xfc00 & iemgui->x_fcol) >> 4)|((0xfc & iemgui->x_fcol) >> 2));
-    bflcol[2] = -1 - (((0xfc0000 & iemgui->x_lcol) >> 6)|
-                      ((0xfc00 & iemgui->x_lcol) >> 4)|((0xfc & iemgui->x_lcol) >> 2));
+    bflcol[0] = col2save(iemgui->x_bcol);
+    bflcol[1] = col2save(iemgui->x_fcol);
+    bflcol[2] = col2save(iemgui->x_lcol);
 }
 
+static int colfromload(int col) {
+    if(col)
+    {
+        col = -1-col;
+        return ((col & 0x3f000) << 6)|((col & 0xfc0) << 4)|((col & 0x3f) << 2);
+    }
+    else
+        return iemgui_color_hex[iemgui_modulo_color(col)];
+}
 void iemgui_all_colfromload(t_iemgui *iemgui, int *bflcol)
 {
-    if(bflcol[0] < 0)
-    {
-        bflcol[0] = -1 - bflcol[0];
-        iemgui->x_bcol = ((bflcol[0] & 0x3f000) << 6)|((bflcol[0] & 0xfc0) << 4)|
-            ((bflcol[0] & 0x3f) << 2);
-    }
-    else
-    {
-        bflcol[0] = iemgui_modulo_color(bflcol[0]);
-        iemgui->x_bcol = iemgui_color_hex[bflcol[0]];
-    }
-    if(bflcol[1] < 0)
-    {
-        bflcol[1] = -1 - bflcol[1];
-        iemgui->x_fcol = ((bflcol[1] & 0x3f000) << 6)|((bflcol[1] & 0xfc0) << 4)|
-            ((bflcol[1] & 0x3f) << 2);
-    }
-    else
-    {
-        bflcol[1] = iemgui_modulo_color(bflcol[1]);
-        iemgui->x_fcol = iemgui_color_hex[bflcol[1]];
-    }
-    if(bflcol[2] < 0)
-    {
-        bflcol[2] = -1 - bflcol[2];
-        iemgui->x_lcol = ((bflcol[2] & 0x3f000) << 6)|((bflcol[2] & 0xfc0) << 4)|
-            ((bflcol[2] & 0x3f) << 2);
-    }
-    else
-    {
-        bflcol[2] = iemgui_modulo_color(bflcol[2]);
-        iemgui->x_lcol = iemgui_color_hex[bflcol[2]];
-    }
+    iemgui->x_bcol = colfromload(bflcol[0]);
+    iemgui->x_fcol = colfromload(bflcol[1]);
+    iemgui->x_lcol = colfromload(bflcol[2]);
 }
 
 static int iemgui_compatible_col(int i)
@@ -370,30 +334,15 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
 
     if (x->gl_isgraph && !glist_istoplevel(x))
     {
-        //fprintf(stderr,"iemgui_label_getrect\n");
-
         if (x_gui.x_lab!=s_empty)
         {
             switch(x_gui.x_font_style)
             {
-                case 1:
-                    width_multiplier = 0.83333;
-                    break;
-                case 2:
-                    width_multiplier = 0.735;
-                    break;
-                default:
-                    width_multiplier = 1.0;
-                    break;
+                case 1:  width_multiplier = 0.83333; break;
+                case 2:  width_multiplier = 0.735;   break;
+                default: width_multiplier = 1.0;     break;
             }
-            if (x_gui.x_fontsize % 2 == 0)
-            {
-                actual_fontsize = x_gui.x_fontsize;
-            }
-            else
-            {
-                actual_fontsize = x_gui.x_fontsize;
-            }
+            actual_fontsize = x_gui.x_fontsize;
             actual_height = actual_fontsize;
             //exceptions
             if (x_gui.x_font_style == 0 &&
@@ -577,7 +526,7 @@ void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_iemgui *x = (t_iemgui *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    //(*x->x_gui.x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_MOVE);
+    //x->x_gui.x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_MOVE);
     canvas_fixlinesfor(glist_getcanvas(glist), (t_text *)z);
 }
 
@@ -587,7 +536,7 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
     t_iemgui *x = (t_iemgui *)z;
 
     x->x_selected = selected;
-    (*x->x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
+    x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
 }
 
 void iemgui_delete(t_gobj *z, t_glist *glist)
@@ -602,15 +551,14 @@ void iemgui_vis(t_gobj *z, t_glist *glist, int vis)
     {
         if (vis)
         {
-            (*x->x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_NEW);
-            x->x_vis = 1;
+            x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_NEW);
         }
         else
         {
-            (*x->x_draw)((void *)z, glist, IEM_GUI_DRAW_MODE_ERASE);
+            x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_ERASE);
             sys_unqueuegui(z);
-            x->x_vis = 0;
         }
+        x->x_vis = vis;
     }
 }
 
@@ -771,11 +719,21 @@ void scalehandle_bind(t_scalehandle *h) {
 // in 18 cases only, because canvas does not fit the pattern below.
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
-void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py,
-const char *nlet_tag) {
+void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py, const char *nlet_tag) {
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
-    t_text *x = (t_text *)h->h_master;
+    t_iemgui *x = (t_iemgui *)h->h_master;
     //if (!nlet_tag) nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
+
+    //int px,py;
+    //t_class *c = pd_class((t_pd *)x);
+    //if (h->h_scale) {
+    //    int x1,y1,x2,y2;
+    //    c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+    //    px=x2-x1; py=y2-y1;
+    //} else if (c==canvas_class) {  
+    //} else {
+    //    px=x->x_ldx; py=x->x_ldy;
+    //}
 
     const char *cursor = h->h_scale ? "bottom_right_corner" : "crosshair";
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
@@ -785,8 +743,8 @@ const char *nlet_tag) {
 
     if (h->h_vis) scalehandle_draw_erase(h,canvas);
 
-//    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
-    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
+    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
+//    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
         "-cursor %s\n", h->h_pathname, sx, sy, cursor);
     // there was a %lxBNG tag (or similar) in every scalehandle,
     // but it didn't seem to be used —mathieu
@@ -799,19 +757,20 @@ const char *nlet_tag) {
             (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH",nlet_tag);
     }
     sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
-        "-window %s -tags {%s}\n", canvas, x->te_xpix+px-sx, x->te_ypix+py-sy,
+        "-window %s -tags {%s}\n", canvas, x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy,
         sx, sy, h->h_pathname, tags);
     scalehandle_bind(h);
     h->h_vis = 1;
 }
 
-void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas, int sx, int sy) {
+void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
     char *nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
-    scalehandle_draw_select(x->x_handle,canvas,sx,sy,nlet_tag);
+    t_class *c = pd_class((t_pd *)x);
+    int x1,y1,x2,y2;
+   c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+    scalehandle_draw_select(x->x_handle,canvas,x2-x1-1,y2-y1-1,nlet_tag);
     if (x->x_lab!=s_empty)
-    {
         scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy,nlet_tag);
-    }
 }
 
 void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
@@ -1124,6 +1083,8 @@ const char *iemgui_font(t_iemgui *x) {
     if(f == 2) return "times";
     return "invalid-font";
 }
+
+void iemgui_init(t_iemgui *x, t_floatarg f) {x->x_loadinit = f!=0.0;}
 
 void iemgui_class_addmethods(t_class *c) {
     class_addmethod(c, (t_method)iemgui_delta,

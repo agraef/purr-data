@@ -1928,8 +1928,6 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
         /* done dragging */
         if(sh->h_scale) //enter if resize_gop hook
         {
-            /* first set up the undo apply */
-            //canvas_canvas_setundo(x);
             canvas_undo_add(x, 8, "apply", canvas_undo_set_canvas(x));
 
             if (sh->h_dragx || sh->h_dragy) 
