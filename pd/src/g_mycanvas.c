@@ -5,26 +5,15 @@
 /* g_7_guis.c written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
 /* thanks to Miller Puckette, Guenther Geiger and Krzystof Czaja */
 
-#include "config.h"
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include "m_pd.h"
 #include "g_canvas.h"
-#include "t_tk.h"
 #include "g_all_guis.h"
 #include <math.h>
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_IO_H
-#include <io.h>
-#endif
-
+static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist);
 

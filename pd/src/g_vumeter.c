@@ -5,15 +5,11 @@
 /* g_7_guis.c written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
 /* thanks to Miller Puckette, Guenther Geiger and Krzystof Czaja */
 
-#include "config.h"
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include "m_pd.h"
 #include "g_canvas.h"
-#include "t_tk.h"
 #include "g_all_guis.h"
 #include <math.h>
 
@@ -74,6 +70,7 @@ int iemgui_vu_col[]=
     15,15,15,15,15,15,15,15,15,15,14,14,13,13,13,13,13,13,13,13,13,13,13,19,19,19
 };
 
+static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 static void vu_draw_select(t_vu* x, t_glist* glist);
 void vu_check_height(t_vu *x, int h);
@@ -267,7 +264,6 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 
 static void vu_draw_select(t_vu* x,t_glist* glist)
 {
-    int i;
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_base_draw_config(&x->x_gui,canvas);
     char lcol[8]; sprintf(lcol,"#%6.6x", x->x_gui.x_lcol);
@@ -309,18 +305,7 @@ static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
             scalehandle_unclick_scale(sh);
         }
     }
-    else if (!sh->h_dragon && newstate && sh->h_scale)
-    {
-        scalehandle_click_scale(sh);
-    }
-    else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
-    {
-        scalehandle_unclick_label(sh);
-    }
-    else if (!sh->h_dragon && newstate && !sh->h_scale)
-    {
-        scalehandle_click_label(sh);
-    }
+    else iemgui__clickhook3(sh,newstate);
     sh->h_dragon = newstate;
 }
 

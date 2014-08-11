@@ -957,6 +957,16 @@ void scalehandle_drag_scale(t_scalehandle *h) {
     }
 }
 
+void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
+    if (!sh->h_dragon && newstate && sh->h_scale)
+        scalehandle_click_scale(sh);
+    else if (sh->h_dragon && newstate == 0 && !sh->h_scale)
+        scalehandle_unclick_label(sh);
+    else if (!sh->h_dragon && newstate && !sh->h_scale)
+        scalehandle_click_label(sh);
+    sh->h_dragon = newstate;
+}
+
 //----------------------------------------------------------------
 // IEMGUI refactor (by Mathieu)
 

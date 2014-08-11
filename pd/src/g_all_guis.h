@@ -120,8 +120,6 @@ typedef struct _scalehandle
     int        h_vis;
 } t_scalehandle;
 
-static t_class *scalehandle_class;
-
 typedef struct _iemgui
 {
     t_object           x_obj;
@@ -176,7 +174,7 @@ typedef struct _bng
     t_clock  *x_clock_lck;
 } t_bng;
 
-typedef struct _hslider
+typedef struct _slider
 {
     t_iemgui x_gui;
     int      x_pos;
@@ -190,18 +188,20 @@ typedef struct _hslider
     double   x_k;
     double   x_last;
     int      x_is_last_float;
-} t_hslider;
+    int      x_orient; // 0=horiz, 1=vert
+} t_slider;
 
-typedef struct _hdial
+typedef struct _radio
 {
     t_iemgui x_gui;
     int      x_on;
-    int      x_on_old;  /* LATER delete this; it's used for old version */
+    int      x_on_old; /* for use by [hdl] [vdl] */
     int      x_change;
     int      x_number;
     int      x_drawn;
     t_atom   x_at[2];
-} t_hdial;
+    int      x_orient; // 0=horiz, 1=vert
+} t_radio;
 
 typedef struct _toggle
 {
@@ -217,22 +217,6 @@ typedef struct _my_canvas
     int      x_vis_w;
     int      x_vis_h;
 } t_my_canvas;
-
-typedef struct _vslider
-{
-    t_iemgui x_gui;
-    int      x_pos;
-    int      x_val;
-    int      x_center;
-    int      x_thick;
-    int      x_lin0_log1;
-    int      x_steady;
-    double   x_min;
-    double   x_max;
-    double   x_k;
-    double   x_last;
-    int      x_is_last_float;
-} t_vslider;
 
 typedef struct _vu
 {
@@ -267,20 +251,6 @@ typedef struct _my_numbox
     int      x_log_height;
     int      x_hide_frame;  /* 0 default, 1 just arrow, 2, just frame, 3 both */
 } t_my_numbox;
-
-typedef struct _vdial
-{
-    t_iemgui x_gui;
-    int      x_on;
-    int      x_on_old;
-    int      x_change;
-    int      x_number;
-    int      x_drawn;
-    t_atom   x_at[2];
-} t_vdial;
-
-#define t_vradio t_vdial
-#define t_hradio t_hdial
 
 extern int sys_noloadbang;
 extern int iemgui_color_hex[];
@@ -335,6 +305,7 @@ EXTERN void scalehandle_click_label(t_scalehandle *h);
 EXTERN void scalehandle_click_scale(t_scalehandle *h);
 EXTERN void scalehandle_unclick_scale(t_scalehandle *h);
 EXTERN void scalehandle_drag_scale(t_scalehandle *h);
+EXTERN void iemgui__clickhook3(t_scalehandle *sh, int newstate);
 
 EXTERN int mini(int a, int b);
 EXTERN int maxi(int a, int b);
@@ -367,4 +338,5 @@ EXTERN void iemgui_class_addmethods(t_class *c);
 EXTERN void scrollbar_update(t_glist *glist);
 
 
+EXTERN void radio_draw_update(t_gobj *client, t_glist *glist);
 
