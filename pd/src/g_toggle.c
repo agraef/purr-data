@@ -141,7 +141,7 @@ static void toggle__clickhook(t_scalehandle *sh, t_floatarg f,
             scalehandle_unclick_scale(sh);
         }
     }
-    else iemgui__clickhook3(sh,newstate);
+    iemgui__clickhook3(sh,newstate);
 }
 
 static void toggle__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)

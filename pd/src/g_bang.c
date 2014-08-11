@@ -138,7 +138,7 @@ static void bng__clickhook(t_scalehandle *sh, t_floatarg f,
             scalehandle_unclick_scale(sh);
         }
     }
-    else iemgui__clickhook3(sh,newstate);
+    iemgui__clickhook3(sh,newstate);
 }
 
 static void bng__motionhook(t_scalehandle *sh,
