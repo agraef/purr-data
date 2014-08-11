@@ -3,6 +3,7 @@ AC_INIT(d_arithmetic.c)
 
 AC_CONFIG_HEADER(config.h)
 
+AC_SUBST(oss, yes)
 AC_SUBST(alsa, yes)
 AC_SUBST(jack, no)
 AC_SUBST(portaudio, no)
@@ -32,13 +33,15 @@ dnl other defaults
 
 dnl check for features
 
-AC_ARG_ENABLE(alsa,     [  --enable-alsa           alsa audio driver], 
+AC_ARG_ENABLE(oss,      [  --disable-oss           OSS audio driver], 
+    oss=$enableval)
+AC_ARG_ENABLE(alsa,     [  --enable-alsa           ALSA audio driver], 
     alsa=$enableval)
-AC_ARG_ENABLE(jack,     [  --enable-jack           jack audio server],
+AC_ARG_ENABLE(jack,     [  --enable-jack           Jack audio server],
     jack=$enableval)
-AC_ARG_ENABLE(portaudio,[  --enable-portaudio      portaudio],
+AC_ARG_ENABLE(portaudio,[  --enable-portaudio      PortAudio],
     portaudio=$enableval)
-AC_ARG_ENABLE(portmidi, [  --enable-portmidi       portmidi],
+AC_ARG_ENABLE(portmidi, [  --enable-portmidi       PortMidi],
     portmidi=$enableval)
 AC_ARG_ENABLE(debug,    [  --enable-debug          debugging support],
     USE_DEBUG_CFLAGS=$enableval)
@@ -205,16 +208,18 @@ dnl This should be fixed so Pd can use ALSA shared libraries where appropriate.
       LDFLAGS="$LDFLAGS -static"
     fi 
     EXT=pd_linux
-    CPPFLAGS="-DDL_OPEN -DPA_USE_OSS -DUNIX -DUNISTD\
-        -DUSEAPI_OSS \
-        -fno-strict-aliasing"
+    CPPFLAGS="-DDL_OPEN -DPA_USE_OSS -DUNIX -DUNISTD -fno-strict-aliasing"
 dnl No OSS on hurd
     if test `uname -s` = "GNU";
     then
         SYSSRC="s_midi_dummy.c"
     else
-        SYSSRC="s_midi_oss.c s_audio_oss.c"
-        CPPFLAGS=$CPPFLAGS" -DPA_USE_OSS -DUSEAPI_OSS"
+        if test x$oss = "xyes"; then
+            SYSSRC="s_midi_oss.c s_audio_oss.c"
+            CPPFLAGS=$CPPFLAGS" -DPA_USE_OSS -DUSEAPI_OSS"
+        else
+            SYSSRC="s_midi_dummy.c"
+        fi
     fi
 	
 	
