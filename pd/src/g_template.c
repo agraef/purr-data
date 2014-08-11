@@ -7442,6 +7442,8 @@ t_template *template_findbydrawcommand(t_gobj *g)
         c = ((t_drawimage *)g)->x_canvas;
     else if (g->g_pd == plot_class)
         c = ((t_plot *)g)->x_canvas;
+    else if (g->g_pd == canvas_class)
+        c = (t_canvas *)g;
     else return (0);
     c = canvas_templatecanvas_forgroup(c);
     t_symbol *s1 = gensym("struct");

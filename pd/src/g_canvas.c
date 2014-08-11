@@ -420,6 +420,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
         (canvas_newfilename ? canvas_newfilename : gensym("Pd")));
     canvas_bind(x);
     x->gl_loading = 1;
+    x->gl_unloading = 0;
     //fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", (t_int)x, (t_int)x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
         /* cancel "vis" flag if we're a subpatch of an
@@ -882,6 +883,7 @@ void canvas_free(t_canvas *x)
     if (canvas_whichfind == x)
         canvas_whichfind = 0;
     glist_noselect(x);
+    x->gl_unloading = 1;
     while (y = x->gl_list)
         glist_delete(x, y);
     if (x == glist_getcanvas(x))

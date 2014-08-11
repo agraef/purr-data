@@ -161,6 +161,13 @@ void glist_delete(t_glist *x, t_gobj *y)
         {
           /* JMZ: send a closebang to the canvas */
           canvas_closebang((t_canvas *)y);
+          /* and this little hack so drawing commands can tell
+             if a [group] is deleting them (and thus suppress
+             their own redraws) */
+          ((t_canvas *)y)->gl_unloading = 1;
+          /* if we are a group, let's call ourselves a drawcommand */
+          if (((t_canvas *)y)->gl_svg)
+              drawcommand = 1;
         }
      
         wasdeleting = canvas_setdeleting(canvas, 1);
@@ -202,7 +209,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         if (drawcommand)
         {
             tmpl = template_findbydrawcommand(y);
-            if (!(canvas_isgroup(canvas) && canvas->gl_isdeleting))
+            if (!(canvas_isgroup(canvas) && canvas->gl_unloading))
             {
                 canvas_redrawallfortemplate(tmpl, 2);
             }
@@ -238,8 +245,10 @@ void glist_delete(t_glist *x, t_gobj *y)
         if (chkdsp) canvas_update_dsp();
         if (drawcommand)
         {
-            if (!(canvas_isgroup(canvas) && canvas->gl_isdeleting))
+            if (!(canvas_isgroup(canvas) && canvas->gl_unloading))
+            {
                 canvas_redrawallfortemplate(tmpl, 1);
+            }
         }
         canvas_setdeleting(canvas, wasdeleting);
         x->gl_valid = ++glist_valid;
