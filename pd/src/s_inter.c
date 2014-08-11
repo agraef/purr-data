@@ -714,8 +714,7 @@ void sys_vvgui(const char *fmt, va_list ap) {
     }
     sys_guibufhead += msglen;
     sys_bytessincelastping += msglen;
-    int fmtlen = strlen(fmt);
-    if (fmtlen) lastend = fmt[fmtlen-1];
+    if (sys_guibufhead>0) lastend=sys_guibuf[sys_guibufhead-1];
 }
 #undef sys_vgui
 void sys_vgui(const char *fmt, ...) {
