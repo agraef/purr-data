@@ -15,7 +15,6 @@
 
 static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
-static void slider_draw_select(t_slider *x, t_glist *glist);
 t_widgetbehavior slider_widgetbehavior;
 t_class *hslider_class;
 t_class *vslider_class;
@@ -47,24 +46,17 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
             canvas, x, 4*x->x_thick+3);
 }
 
-static void slider_draw_io(t_slider *x, t_glist *glist, int old_snd_rcv_flags)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(&x->x_gui,canvas,old_snd_rcv_flags);
-}
 static void slider_draw_new(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_gui.x_w;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
     if (x->x_orient) y2+=5; else x2+=5;
     int r;
     if (x->x_orient) r = y2-3 - (x->x_val + 50)/100;
     else             r = x1+3 + (x->x_val + 50)/100;
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
-    scalehandle_draw_new(x->x_gui. x_handle,canvas);
-    scalehandle_draw_new(x->x_gui.x_lhandle,canvas);
     if (x->x_orient) {
         sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
             "-stroke #%6.6x -tags {%lxKNOB %lxOBJ %s text iemgui}\n",
@@ -74,8 +66,6 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
             "-stroke #%6.6x -tags {%lxKNOB %lxOBJ %s text iemgui}\n",
             canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x, nlet_tag);
     }
-    iemgui_label_draw_new(&x->x_gui,canvas,x1,y1,nlet_tag);
-    slider_draw_io(x,glist,7);
 }
 
 static void slider_draw_move(t_slider *x, t_glist *glist)
@@ -98,7 +88,6 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
             canvas, x, r, y1+2, r, y2-2);
     iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
     iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
-    if (x->x_gui.x_selected) slider_draw_select(x, x->x_gui.x_glist);
 }
 
 static void slider_draw_config(t_slider *x, t_glist *glist)
@@ -108,20 +97,6 @@ static void slider_draw_config(t_slider *x, t_glist *glist)
     iemgui_base_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
         canvas, x, x->x_gui.x_fcol);
-}
-
-static void slider_draw_select(t_slider *x, t_glist *glist)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_base_draw_config(&x->x_gui,canvas);
-    if(x->x_gui.x_selected)
-    {
-        if (x->x_gui.x_glist == glist_getcanvas(glist))
-            scalehandle_draw_select2(&x->x_gui,glist);
-    }
-    else scalehandle_draw_erase2(&x->x_gui,glist);
-    iemgui_label_draw_select(&x->x_gui,canvas);
-    iemgui_tag_selected(&x->x_gui,canvas);
 }
 
 void slider_check_minmax(t_slider *x, double min, double max);
@@ -196,23 +171,11 @@ static void slider__motionhook(t_scalehandle *sh, t_floatarg f1, t_floatarg f2)
 
 void slider_draw(t_slider *x, t_glist *glist, int mode)
 {
-    if(mode == IEM_GUI_DRAW_MODE_UPDATE)
-        sys_queuegui(x, glist, slider_draw_update);
-    else if(mode == IEM_GUI_DRAW_MODE_MOVE)
-        slider_draw_move(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_NEW)
-    {
-        slider_draw_new(x, glist);
-        sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
-    }
-    else if(mode == IEM_GUI_DRAW_MODE_SELECT)
-        slider_draw_select(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)
-        iemgui_draw_erase(&x->x_gui, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_CONFIG)
-        slider_draw_config(x, glist);
-    else if(mode >= IEM_GUI_DRAW_MODE_IO)
-        slider_draw_io(x, glist, mode - IEM_GUI_DRAW_MODE_IO);
+    if(mode == IEM_GUI_DRAW_MODE_UPDATE)      sys_queuegui(x, glist, slider_draw_update);
+    else if(mode == IEM_GUI_DRAW_MODE_MOVE)   slider_draw_move(x, glist);
+    else if(mode == IEM_GUI_DRAW_MODE_NEW)    slider_draw_new(x, glist);
+    else if(mode == IEM_GUI_DRAW_MODE_ERASE)  iemgui_draw_erase(&x->x_gui, glist);
+    else if(mode == IEM_GUI_DRAW_MODE_CONFIG) slider_draw_config(x, glist);
 }
 
 static void slider_getrect(t_gobj *z, t_glist *glist,
@@ -273,13 +236,11 @@ void slider_check_minmax(t_slider *x, double min, double max)
             max = 1.0;
         if(max > 0.0)
         {
-            if(min <= 0.0)
-                min = 0.01*max;
+            if(min <= 0.0) min = 0.01*max;
         }
         else
         {
-            if(min > 0.0)
-                max = 0.01*min;
+            if(min >  0.0) max = 0.01*min;
         }
     }
     x->x_min = min;
@@ -330,9 +291,7 @@ static void slider_bang(t_slider *x)
     }
     if((out < 1.0e-10)&&(out > -1.0e-10))
         out = 0.0;
-    outlet_float(x->x_gui.x_obj.ob_outlet, out);
-    if(iemgui_has_snd(&x->x_gui) && x->x_gui.x_snd->s_thing)
-        pd_float(x->x_gui.x_snd->s_thing, out);
+    iemgui_out_float(&x->x_gui, 0, 0, out);
 }
 
 static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
@@ -340,39 +299,31 @@ static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
 
     t_symbol *srl[3];
-    int w = (int)atom_getintarg(0, argc, argv);
-    int h = (int)atom_getintarg(1, argc, argv);
-    double min = (double)atom_getfloatarg(2, argc, argv);
-    double max = (double)atom_getfloatarg(3, argc, argv);
-    int lilo = (int)atom_getintarg(4, argc, argv);
-    int steady = (int)atom_getintarg(17, argc, argv);
-    int sr_flags, oldl;
-
-    if(lilo != 0) lilo = 1;
-    x->x_lin0_log1 = lilo;
-    x->x_steady = !!steady;
-    sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    int w = atom_getintarg(0, argc, argv);
+    int h = atom_getintarg(1, argc, argv);
+    double min = atom_getfloatarg(2, argc, argv);
+    double max = atom_getfloatarg(3, argc, argv);
+    x->x_lin0_log1 = !!atom_getintarg(4, argc, argv);
+    x->x_steady = !!atom_getintarg(17, argc, argv);
+    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
     if (x->x_orient) {
         x->x_gui.x_w = iemgui_clip_size(w);
-        oldl = x->x_gui.x_h;
+        int oldl = x->x_gui.x_h;
         slider_check_length(x, h);
         if (x->x_gui.x_h != oldl)
-            x->x_val = x->x_val * ((double)x->x_gui.x_h/(double)oldl);
+            x->x_val *= ((double)x->x_gui.x_h/(double)oldl);
     } else {
         x->x_gui.x_h = iemgui_clip_size(h);
-        oldl = x->x_gui.x_w;
+        int oldl = x->x_gui.x_w;
         slider_check_length(x, w);
         if (x->x_gui.x_w != oldl)
-            x->x_val = x->x_val * ((double)x->x_gui.x_w/(double)oldl);
+            x->x_val *= ((double)x->x_gui.x_w/(double)oldl);
     }
     slider_check_minmax(x, min, max);
     x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-    //x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-    //canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
+    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-
-    if (x->x_gui.x_selected) slider_draw_select(x, x->x_gui.x_glist);
+    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
     scrollbar_update(x->x_gui.x_glist);
 }
 
@@ -385,17 +336,15 @@ static void slider_motion(t_slider *x, t_floatarg dx, t_floatarg dy)
     x->x_pos += d;
     x->x_val = x->x_pos;
     int w = x->x_orient ? x->x_gui.x_h : x->x_gui.x_w;
-    if(x->x_val > (100*w - 100))
+    if(x->x_val > 100*(w-1))
     {
-        x->x_val = 100*w - 100;
-        x->x_pos += 50;
-        x->x_pos -= x->x_pos%100;
+        x->x_val = 100*(w-1);
+        x->x_pos += 50 - (x->x_pos%100);
     }
     if(x->x_val < 0)
     {
         x->x_val = 0;
-        x->x_pos -= 50;
-        x->x_pos -= x->x_pos%100;
+        x->x_pos -= 50 + (x->x_pos%100);
     }
     if(old != x->x_val)
     {
@@ -443,19 +392,13 @@ static void slider_set(t_slider *x, t_floatarg f)
 {
     double g;
     if(x->x_gui.x_reverse)
-    {
-        if(f > x->x_min) f = x->x_min;
-        if(f < x->x_max) f = x->x_max;
-    }
+        f = maxi(mini(f,x->x_min),x->x_max);
     else
-    {
-        if(f > x->x_max) f = x->x_max;
-        if(f < x->x_min) f = x->x_min;
-    }
+        f = maxi(mini(f,x->x_max),x->x_min);
     if(x->x_lin0_log1)
         g = log(f/x->x_min)/x->x_k;
     else
-        g = (f - x->x_min) / x->x_k;
+        g =    (f-x->x_min)/x->x_k;
     x->x_val = (int)(100.0*g + 0.49999);
     if (x->x_pos != x->x_val)
     {
@@ -549,21 +492,21 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
        &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,13)
        &&IS_A_FLOAT(argv,14)&&IS_A_FLOAT(argv,15)&&IS_A_FLOAT(argv,16))
     {
-        w = (int)atom_getintarg(0, argc, argv);
-        h = (int)atom_getintarg(1, argc, argv);
-        min = (double)atom_getfloatarg(2, argc, argv);
-        max = (double)atom_getfloatarg(3, argc, argv);
-        lilo = (int)atom_getintarg(4, argc, argv);
+        w = atom_getintarg(0, argc, argv);
+        h = atom_getintarg(1, argc, argv);
+        min = atom_getfloatarg(2, argc, argv);
+        max = atom_getfloatarg(3, argc, argv);
+        lilo = !!atom_getintarg(4, argc, argv);
         iem_inttosymargs(&x->x_gui, atom_getintarg(5, argc, argv));
         iemgui_new_getnames(&x->x_gui, 6, argv);
-        ldx = (int)atom_getintarg(9, argc, argv);
-        ldy = (int)atom_getintarg(10, argc, argv);
+        ldx = atom_getintarg(9, argc, argv);
+        ldy = atom_getintarg(10, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(11, argc, argv));
-        fs = (int)atom_getintarg(12, argc, argv);
+        fs = maxi(atom_getintarg(12, argc, argv),4);
         bflcol[0] = (int)atom_getintarg(13, argc, argv);
         bflcol[1] = (int)atom_getintarg(14, argc, argv);
         bflcol[2] = (int)atom_getintarg(15, argc, argv);
-        v = (int)atom_getintarg(16, argc, argv);
+        v = atom_getintarg(16, argc, argv);
     }
     else iemgui_new_getnames(&x->x_gui, 6, 0);
     if((argc == 18)&&IS_A_FLOAT(argv,17))
@@ -572,12 +515,8 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     x->x_is_last_float = 0;
     x->x_last = 0.0;
     x->x_gui.x_glist = (t_glist *)canvas_getcurrent();
-    if(x->x_gui.x_loadinit)
-        x->x_val = v;
-    else
-        x->x_val = 0;
+    x->x_val = x->x_gui.x_loadinit ? v : 0;
     x->x_pos = x->x_val;
-    if(lilo != 0) lilo = 1;
     x->x_lin0_log1 = lilo;
     if(steady != 0) steady = 1;
     x->x_steady = steady;
@@ -586,8 +525,6 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
         pd_bind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     x->x_gui.x_ldx = ldx;
     x->x_gui.x_ldy = ldy;
-    if(fs < 4)
-        fs = 4;
     x->x_gui.x_fontsize = fs;
     if (orient) {
         x->x_gui.x_w = iemgui_clip_size(w);

@@ -125,7 +125,6 @@ typedef struct _iemgui
     t_object           x_obj;
     t_glist            *x_glist;
     t_iemfunptr        x_draw;
-    t_iemfunptr        x_draw_withtag;
     int                x_h;
     int                x_w;
     int                x_ldx;
@@ -295,7 +294,7 @@ EXTERN void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, i
 EXTERN void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas);
 EXTERN void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas);
 EXTERN void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas);
-EXTERN void scalehandle_draw_new(t_scalehandle *x, t_glist *canvas);
+EXTERN void scalehandle_draw(t_iemgui *x, t_glist *glist);
 EXTERN t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale);
 EXTERN void scalehandle_free(t_scalehandle *h);
 EXTERN void properties_set_field_int(long props, const char *gui_field, int value);
@@ -318,10 +317,11 @@ EXTERN void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags);
 EXTERN void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag);
+EXTERN void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_snd_rcv_flags);
 EXTERN void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas, const char *nlet_tag);
 EXTERN void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag);
 EXTERN void iemgui_base_draw_config(t_iemgui *x, t_glist *canvas);
-
+EXTERN void iemgui_draw_new(t_iemgui *x, t_glist *glist);
 EXTERN void iemgui_draw_erase(t_iemgui *x, t_glist* glist);
 EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl); // rename this to iemgui_wb_init
 
@@ -337,3 +337,6 @@ EXTERN void iemgui_class_addmethods(t_class *c);
 EXTERN void scrollbar_update(t_glist *glist);
 EXTERN void iemgui_init(t_iemgui *x, t_floatarg f);
 
+EXTERN void iemgui_out_bang(t_iemgui *x, int o, int chk_putin);
+EXTERN void iemgui_out_float(t_iemgui *x, int o, int chk_putin, t_float f);
+EXTERN void iemgui_out_list(t_iemgui *x, int o, int chk_putin, t_symbol *s, int argc, t_atom *argv);

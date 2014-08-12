@@ -223,7 +223,7 @@ void iemgui_send(t_iemgui *x, t_symbol *s)
     x->x_snd_unexpanded = snd;
     x->x_snd = snd = canvas_realizedollar(x->x_glist, snd);
     iemgui_verify_snd_ne_rcv(x);
-    x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_IO + oldsndrcvable);
+    iemgui_draw_io(x, x->x_glist, IEM_GUI_DRAW_MODE_IO + oldsndrcvable);
 }
 
 void iemgui_receive(t_iemgui *x, t_symbol *s)
@@ -252,7 +252,7 @@ void iemgui_receive(t_iemgui *x, t_symbol *s)
         x->x_rcv = rcv;
     }
     iemgui_verify_snd_ne_rcv(x);
-    x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_IO + oldsndrcvable);
+    iemgui_draw_io(x, x->x_glist, IEM_GUI_DRAW_MODE_IO + oldsndrcvable);
 }
 
 void iemgui_label(t_iemgui *x, t_symbol *s)
@@ -398,7 +398,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
         if (!x->x_vis)
         {
             //fprintf(stderr,"draw new %d\n", mode);
-            x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
+            iemgui_draw_new(x, x->x_glist);
             canvas_fixlinesfor(glist_getcanvas(x->x_glist), (t_text*)x);
             x->x_vis = 1;
             if (x->x_glist != glist_getcanvas(x->x_glist))
@@ -534,9 +534,15 @@ void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 void iemgui_select(t_gobj *z, t_glist *glist, int selected)
 {
     t_iemgui *x = (t_iemgui *)z;
-
+    t_canvas *canvas=glist_getcanvas(glist);
     x->x_selected = selected;
+    char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
+    sys_vgui(".x%lx.c itemconfigure {%lxOBJ&&border} -stroke %s\n", canvas, x,
+        x->x_selected && x->x_glist == canvas ? selection_color : fcol);
     x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
+    scalehandle_draw(x,glist);
+    iemgui_label_draw_select(x,canvas);
+    iemgui_tag_selected(x,canvas);
 }
 
 void iemgui_delete(t_gobj *z, t_glist *glist)
@@ -550,9 +556,7 @@ void iemgui_vis(t_gobj *z, t_glist *glist, int vis)
     if (gobj_shouldvis(z, glist))
     {
         if (vis)
-        {
-            x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_NEW);
-        }
+            iemgui_draw_new(x, glist);
         else
         {
             x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_ERASE);
@@ -767,7 +771,7 @@ void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
     char *nlet_tag = iem_get_tag(canvas, (t_iemgui *)x);
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2;
-   c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+    c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
     scalehandle_draw_select(x->x_handle,canvas,x2-x1-1,y2-y1-1,nlet_tag);
     if (x->x_lab!=s_empty)
         scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy,nlet_tag);
@@ -786,8 +790,11 @@ void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
     if (lh->h_vis) scalehandle_draw_erase(lh,canvas);
 }
 
-void scalehandle_draw_new(t_scalehandle *h, t_glist *canvas) {
-    sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)canvas, (t_int)h);
+void scalehandle_draw(t_iemgui *x, t_glist *glist) {
+    if (x->x_glist == glist_getcanvas(glist)) {
+        if(x->x_selected) scalehandle_draw_select2(x,glist);
+        else              scalehandle_draw_erase2(x,glist);
+    }
 }
 
 t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
@@ -802,6 +809,7 @@ t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
     //h->h_offset_x = 0; // unused (maybe keep for later)
     //h->h_offset_y = 0; // unused (maybe keep for later)
     h->h_vis = 0;
+    sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)x->x_glist, (t_int)h);
     return h;
 }
 
@@ -976,24 +984,21 @@ void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
 extern t_class *vu_class;
 void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
 	if (x->x_glist != canvas) return; // is gop
-    int a,b;
     t_class *c = pd_class((t_pd *)x);
-    //printf("--- iemgui_io_draw %s flags=%d\n",c->c_name->s_name,old_sr_flags);
     char *nlet_tag = iem_get_tag(/*glist*/ x->x_glist, (t_iemgui *)x);
 
     if (!(old_sr_flags&4) && (!glist_isvisible(canvas) || !(canvas == x->x_glist))) {
-        //printf("---/iemgui_io_draw not visible\n");
         return;
     }
+    if (c==my_canvas_class) return;
 
     int x1,y1,x2,y2;
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
 
     int i, n = c==vu_class ? 2 : 1, k=(x2-x1)-IOWIDTH;
 
-    a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
-    b=x->x_snd!=s_empty;
-    //printf("a=%d b=%d snd=%s\n",a,b,x->x_snd->s_name);
+    int a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
+    int b=x->x_snd!=s_empty;
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
@@ -1005,7 +1010,6 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
 
     a=old_sr_flags&IEM_GUI_OLD_RCV_FLAG;
     b=x->x_rcv!=s_empty;
-    //printf("a=%d b=%d rcv=%s\n",a,b,x->x_rcv->s_name);
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
@@ -1014,7 +1018,6 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
              x, nlet_tag, i, nlet_tag, i, x, nlet_tag);
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete %lxOBJ%si%d\n", canvas, x, nlet_tag, 0);
-    //printf("---/iemgui_io_draw\n");
 }
 
 void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
@@ -1052,11 +1055,24 @@ void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
 void iemgui_base_draw_config(t_iemgui *x, t_glist *canvas) {
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_bcol);
-    sys_vgui(".x%lx.c itemconfigure {%lxBASE||%lxBASEL} -stroke %s\n", canvas, x, x,
-        x->x_selected && x->x_glist == canvas ? selection_color : fcol);
 }
 
-void iemgui_draw_erase(t_iemgui *x, t_glist* glist) {
+void iemgui_draw_new(t_iemgui *x, t_glist *glist) {
+    x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
+    t_canvas *canvas=glist_getcanvas(glist);
+    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
+    int x1=text_xpix(&x->x_obj, glist);
+    int y1=text_ypix(&x->x_obj, glist);
+    iemgui_label_draw_new(x,canvas,x1,y1,nlet_tag);
+    iemgui_draw_io(x,glist,7);
+    sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(x->x_glist)); // used to be inside x_draw
+}
+void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_snd_rcv_flags)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    iemgui_io_draw(x,glist_getcanvas(canvas),old_snd_rcv_flags);
+}
+void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
     t_canvas *canvas=glist_getcanvas(glist);
     sys_vgui(".x%lx.c delete %lxOBJ\n", canvas, x);
     sys_vgui(".x%lx.c dtag all %lxOBJ\n", canvas, x);
@@ -1115,4 +1131,20 @@ void g_iemgui_setup (void) {
 }
 
 const char *selection_color = "$pd_colors(selection)";
+
+#define GET_OUTLET t_outlet *out = x->x_obj.ob_outlet; /* can't use int o because there's not obj_nth_outlet function */
+#define SEND_BY_SYMBOL (iemgui_has_snd(x) && x->x_snd->s_thing && (!chk_putin || x->x_put_in2out))
+
+void iemgui_out_bang(t_iemgui *x, int o, int chk_putin) {
+    GET_OUTLET outlet_bang(out);
+    if(SEND_BY_SYMBOL) pd_bang(x->x_snd->s_thing);
+}
+void iemgui_out_float(t_iemgui *x, int o, int chk_putin, t_float f) {
+    GET_OUTLET outlet_float(out,f);
+    if(SEND_BY_SYMBOL) pd_float(x->x_snd->s_thing,f);
+}
+void iemgui_out_list(t_iemgui *x, int o, int chk_putin, t_symbol *s, int argc, t_atom *argv) {
+    GET_OUTLET outlet_list(out,s,argc,argv);
+    if(SEND_BY_SYMBOL) pd_list(x->x_snd->s_thing,s,argc,argv);
+}
 

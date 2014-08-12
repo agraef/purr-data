@@ -770,6 +770,7 @@ void canvas_noundo(t_canvas *x)
         canvas_setundo(0, 0, 0, "foo");
 }
 
+#if 0
 static void canvas_undo(t_canvas *x)
 {
     //fprintf(stderr,"canvas_undo\n");
@@ -807,6 +808,7 @@ static void canvas_redo(t_canvas *x)
         scrollbar_update(x);
     }
 }
+#endif
 
 /* ------- specific undo methods: 1. connect -------- */
 
