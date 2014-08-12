@@ -1029,8 +1029,9 @@ void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
 
 void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
     t_class *c = pd_class((t_pd *)x);
-    int x1,y1,x2,y2;
+    int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    gop_redraw=gr;
     sys_vgui(".x%lx.c create prect %d %d %d %d "
              "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
              "-tags {%lxBASE %lxOBJ text iemgui border %s}\n",
@@ -1039,8 +1040,9 @@ void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
 
 void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas, const char *nlet_tag) {
     t_class *c = pd_class((t_pd *)x);
-    int x1,y1,x2,y2;
+    int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
+    gop_redraw=gr;
     sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
 }
 
