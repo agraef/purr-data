@@ -945,10 +945,12 @@ void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas, int xpos, int ypos, con
          iemgui_font(x), x->x_fontsize, sys_fontweight,
          x->x_lcol, x, x, nlet_tag);
 }
+
 void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas, int xpos, int ypos) {
     sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
         canvas, x, xpos+x->x_ldx, ypos+x->x_ldy);
 }
+
 void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
     if (x->x_selected && x->x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
@@ -961,8 +963,9 @@ void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
              canvas, x, iemgui_font(x), x->x_fontsize, sys_fontweight,
              x->x_lcol, x->x_lab!=s_empty?x->x_lab->s_name:"");
 }
+
 void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
-    if(x->x_selected)
+    if (x->x_selected && x->x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxLABEL "
             "-fill $pd_colors(selection)\n", canvas, x);
     else
