@@ -51,7 +51,7 @@ struct _rtext
     int x_drawnheight;
     t_text *x_text;
     t_glist *x_glist;
-    char x_tag[50];
+    char x_tag[20];
     struct _rtext *x_next;
 };
 
@@ -66,8 +66,7 @@ t_rtext *rtext_new(t_glist *glist, t_text *who)
         x->x_drawnwidth = x->x_drawnheight = 0;
     binbuf_gettext(who->te_binbuf, &x->x_buf, &x->x_bufsize);
     glist->gl_editor->e_rtext = x;
-    sprintf(x->x_tag, ".x%lx.t%lx", (t_int)glist_getcanvas(x->x_glist),
-        (t_int)x);
+    sprintf(x->x_tag, "x%lx", (long)who);
     return (x);
 }
 
