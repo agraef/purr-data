@@ -13,9 +13,13 @@
 #include "g_all_guis.h"
 #include <math.h>
 
+#define IEM_BNG_DEFAULTHOLDFLASHTIME 250
+#define IEM_BNG_DEFAULTBREAKFLASHTIME 50
+#define IEM_BNG_MINHOLDFLASHTIME 50
+#define IEM_BNG_MINBREAKFLASHTIME 10
+
 static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
- 
 t_widgetbehavior bng_widgetbehavior;
 static t_class *bng_class;
 
@@ -34,19 +38,18 @@ void bng_draw_update(t_gobj *xgobj, t_glist *glist)
 void bng_draw_new(t_bng *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
-    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_new(&x->x_gui, canvas);
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
     sys_vgui(".x%lx.c create circle %f %f -r %f "
              "-stroke $pd_colors(iemgui_border) -fill #%6.6x "
-             "-tags {%lxBUT %lxOBJ text iemgui border %s}\n",
+             "-tags {%lxBUT x%lx text iemgui border}\n",
          canvas, cx, cy, cr, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol,
-         x, x, nlet_tag);
+         x, x);
 }
 
 void bng_draw_move(t_bng *x, t_glist *glist)
@@ -56,16 +59,15 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_move(&x->x_gui, canvas);
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
     sys_vgui(".x%lx.c coords %lxBUT %f %f\n", canvas, x, cx, cy);
     sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
         canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
-    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
-    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    iemgui_label_draw_move(&x->x_gui,canvas);
+    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 void bng_draw_config(t_bng* x, t_glist* glist)
@@ -127,7 +129,6 @@ void bng_draw(t_bng *x, t_glist *glist, int mode)
     if(mode == IEM_GUI_DRAW_MODE_UPDATE)      sys_queuegui(x, x->x_gui.x_glist, bng_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)   bng_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW)    bng_draw_new(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)  iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG) bng_draw_config(x, glist);
 }
 
@@ -171,12 +172,8 @@ void bng_check_minmax(t_bng *x, int ftbreak, int fthold)
         ftbreak = fthold;
         fthold = h;
     }
-    if(ftbreak < IEM_BNG_MINBREAKFLASHTIME)
-        ftbreak = IEM_BNG_MINBREAKFLASHTIME;
-    if(fthold < IEM_BNG_MINHOLDFLASHTIME)
-        fthold = IEM_BNG_MINHOLDFLASHTIME;
-    x->x_flashtime_break = ftbreak;
-    x->x_flashtime_hold = fthold;
+    x->x_flashtime_break = maxi(ftbreak,IEM_BNG_MINBREAKFLASHTIME);
+    x->x_flashtime_hold  = maxi(fthold,  IEM_BNG_MINHOLDFLASHTIME);
 }
 
 static void bng_properties(t_gobj *z, t_glist *owner)

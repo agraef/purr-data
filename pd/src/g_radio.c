@@ -16,6 +16,8 @@
 #include "g_all_guis.h"
 #include <math.h>
 
+#define IEM_RADIO_MAX   128
+
 static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 t_widgetbehavior radio_widgetbehavior;
@@ -37,36 +39,35 @@ void radio_draw_update(t_gobj *client, t_glist *glist)
 void radio_draw_new(t_radio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
     int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
     int y1=text_ypix(&x->x_gui.x_obj, glist), yi=y1; 
-    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_new(&x->x_gui, canvas);
 
     for(i=0; i<n; i++) if (x->x_orient) {
         if (i) sys_vgui(".x%lx.c create pline %d %d %d %d "
             "-stroke $pd_colors(iemgui_border) "
-            "-tags {%lxBASE%d %lxBASEL %lxOBJ %s text iemgui border}\n",
-            canvas, x1, yi, x1+d, yi, x, i, x, x, nlet_tag);
+            "-tags {%lxBASE%d %lxBASEL x%lx text iemgui border}\n",
+            canvas, x1, yi, x1+d, yi, x, i, x, x);
         sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
-            "-stroke #%6.6x -tags {%lxBUT%d %lxOBJ %s text iemgui}\n",
+            "-stroke #%6.6x -tags {%lxBUT%d x%lx text iemgui}\n",
             canvas, x1+s, yi+s, x1+d-s, yi+d-s,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-            x, i, x, nlet_tag);
+            x, i, x);
         yi += d;
         x->x_drawn = x->x_on;
     } else {
         if (i) sys_vgui(".x%lx.c create pline %d %d %d %d "
             "-stroke $pd_colors(iemgui_border) "
-            "-tags {%lxBASE%d %lxBASEL %lxOBJ %s text iemgui border}\n",
-            canvas, xi, y1, xi, y1+d, x, i, x, x, nlet_tag);
+            "-tags {%lxBASE%d %lxBASEL x%lx text iemgui border}\n",
+            canvas, xi, y1, xi, y1+d, x, i, x, x);
         sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x "
-            "-stroke #%6.6x -tags {%lxBUT%d %lxOBJ %s text iemgui}\n",
+            "-stroke #%6.6x -tags {%lxBUT%d x%lx text iemgui}\n",
             canvas, xi+s, y1+s, xi+d-s, y1+d-s,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
             (x->x_on==i)?x->x_gui.x_fcol:x->x_gui.x_bcol,
-            x, i, x, nlet_tag);
+            x, i, x);
         xi += d;
         x->x_drawn = x->x_on;
     }
@@ -79,8 +80,7 @@ void radio_draw_move(t_radio *x, t_glist *glist)
     int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
     int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
     int y1=text_ypix(&x->x_gui.x_obj, glist), yi=y1;
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_move(&x->x_gui, canvas);
     for(i=0; i<n; i++) if (x->x_orient) {
         sys_vgui(".x%lx.c coords %lxBASE%d %d %d %d %d\n",
             canvas, x, i, x1, yi, x1+d, yi);
@@ -94,8 +94,8 @@ void radio_draw_move(t_radio *x, t_glist *glist)
             canvas, x, i, xi+s, y1+s, xi+d-s, y1+d-s);
         xi += d;
     }
-    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
-    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    iemgui_label_draw_move(&x->x_gui,canvas);
+    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 void radio_draw_config(t_radio *x, t_glist *glist)
@@ -174,7 +174,6 @@ void radio_draw(t_radio *x, t_glist *glist, int mode)
     if(mode == IEM_GUI_DRAW_MODE_UPDATE)        sys_queuegui(x, glist, radio_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)     radio_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW)      radio_draw_new(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)    iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG)   radio_draw_config(x, glist);
 }
 
@@ -252,7 +251,7 @@ static void radio_dialog(t_radio *x, t_symbol *s, int argc, t_atom *argv)
     int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
     if(x->x_number != num)
     {
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
+        iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
         x->x_number = num;
         if(x->x_on >= x->x_number)
         {
@@ -392,7 +391,7 @@ static void radio_number(t_radio *x, t_floatarg num)
     int n=mini(maxi((int)num,1),IEM_RADIO_MAX);
     if(n != x->x_number)
     {
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
+        iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
         x->x_number = n;
         if(x->x_on >= x->x_number)
             x->x_on = x->x_number - 1;

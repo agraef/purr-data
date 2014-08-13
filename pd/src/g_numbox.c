@@ -11,6 +11,7 @@
 #include "g_canvas.h"
 #include "g_all_guis.h"
 #include <math.h>
+#define IEM_GUI_COLOR_EDITED 0xff0000
 
 static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
@@ -148,7 +149,6 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
 static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int half=x->x_gui.x_h/2, d=1+x->x_gui.x_h/34;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
@@ -156,24 +156,24 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
 
     sys_vgui(
         ".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke %s"
-        " -fill %s -tags {%lxBASE1 %lxOBJ %s text iemgui}\n",
+        " -fill %s -tags {%lxBASE1 x%lx text iemgui}\n",
         canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
         x->x_hide_frame <= 1 ? IEM_GUI_COLOR_NORMAL : bcol,
-        bcol, x, x, nlet_tag);
+        bcol, x, x);
 
     if (x->x_hide_frame <= 1) iemgui_draw_io(&x->x_gui,glist,7);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
-            "-tags {%lxBASE2 %lxOBJ %s text iemgui}\n",
+            "-tags {%lxBASE2 x%lx text iemgui}\n",
             canvas, x1, y1, x1 + half, y1 + half, x1, y2,
-            x->x_gui.x_fcol, x, x, nlet_tag);
+            x->x_gui.x_fcol, x, x);
     my_numbox_ftoa(x);
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
         "-font {{%s} -%d %s} -fill #%6.6x "
-        "-tags {%lxNUMBER %lxOBJ %s noscroll text iemgui}\n",
+        "-tags {%lxNUMBER x%lx noscroll text iemgui}\n",
         canvas, x1+half+2, y1+half+d,
         x->x_buf, iemgui_font(&x->x_gui), x->x_gui.x_fontsize, sys_fontweight,
-        x->x_gui.x_fcol, x, x, nlet_tag);
+        x->x_gui.x_fcol, x, x);
 }
 
 static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
@@ -184,15 +184,14 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
         canvas, x, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2);
     if (x->x_hide_frame <= 1)
-        iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+        iemgui_io_draw_move(&x->x_gui,canvas);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
             canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
-    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
+    iemgui_label_draw_move(&x->x_gui,canvas);
     sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
         canvas, x, x1+half+2, y1+half+d);
 }
@@ -340,7 +339,6 @@ void my_numbox_draw(t_my_numbox *x, t_glist *glist, int mode)
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)   my_numbox_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW)    my_numbox_draw_new(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_SELECT) my_numbox_draw_select(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)  iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG) my_numbox_draw_config(x, glist);
 }
 
@@ -481,7 +479,7 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
     //if (need_to_redraw) {
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_ERASE);
+    iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_NEW);
     /*} else {
         x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
@@ -491,8 +489,7 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
         iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     }*/
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
-    canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x,
-        iem_get_tag(x->x_gui.x_glist, (t_iemgui *)x), -1);
+    //canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x,"bogus",-1);
     scrollbar_update(x->x_gui.x_glist);
 }
 

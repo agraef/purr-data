@@ -23,18 +23,17 @@ t_widgetbehavior my_canvas_widgetbehavior;
 void my_canvas_draw_new(t_my_canvas *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
     sys_vgui(".x%lx.c create prect %d %d %d %d -fill #%6.6x -stroke #%6.6x "
-        "-tags {%lxRECT %lxOBJ %s text iemgui}\n",
+        "-tags {%lxRECT x%lx text iemgui}\n",
         canvas, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h,
-        x->x_gui.x_bcol, x->x_gui.x_bcol, x, x, nlet_tag);
+        x->x_gui.x_bcol, x->x_gui.x_bcol, x, x);
     sys_vgui(".x%lx.c create prect %d %d %d %d -stroke #%6.6x "
-        "-tags {%lxBASE %lxOBJ %s text iemgui}\n",
+        "-tags {%lxBASE x%lx text iemgui}\n",
         canvas, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h,
-        x->x_gui.x_bcol, x, x, nlet_tag);
+        x->x_gui.x_bcol, x, x);
 }
 
 void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
@@ -48,7 +47,7 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
         canvas, x, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h);
     sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
         canvas, x, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h);
-    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
+    iemgui_label_draw_move(&x->x_gui,canvas);
 }
 
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
@@ -131,7 +130,6 @@ void my_canvas_draw(t_my_canvas *x, t_glist *glist, int mode)
     if(mode == IEM_GUI_DRAW_MODE_MOVE)        my_canvas_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW)    my_canvas_draw_new(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_SELECT) my_canvas_draw_select(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)  iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG) my_canvas_draw_config(x, glist);
 }
 
@@ -163,7 +161,6 @@ static void my_canvas_save(t_gobj *z, t_binbuf *b)
     t_my_canvas *x = (t_my_canvas *)z;
     int bflcol[3];
     t_symbol *srl[3];
-
     iemgui_save(&x->x_gui, srl, bflcol);
     binbuf_addv(b, "ssiisiiisssiiiiiii;", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
@@ -294,7 +291,7 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
             /* disastrously, the "label" sits in a different part of the
             message.  So we have to track its location separately (in
             the slot x_labelbindex) and initialize it specially here. */
-        iemgui_new_dogetname(&x->x_gui, i+3, argv);
+        iemgui_getfloatsym(argv+i+3);
         x->x_gui.x_labelbindex = i+4;
         ldx = atom_getintarg(i+4, argc, argv);
         ldy = atom_getintarg(i+5, argc, argv);

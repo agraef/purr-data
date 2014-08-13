@@ -712,12 +712,10 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 
         scalehandle_draw_select(sh,x,
             -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
-            -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight,
-            "GOP_resblob");
+            -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);
         scalehandle_draw_select(mh,x,
             2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
-            2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin,
-            "GOP_movblob");
+            2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin /*,"GOP_movblob"*/);
     }
     else
     {

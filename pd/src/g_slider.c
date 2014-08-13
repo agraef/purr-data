@@ -49,22 +49,21 @@ static void slider_draw_update(t_gobj *client, t_glist *glist)
 static void slider_draw_new(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_gui.x_w;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
     if (x->x_orient) y2+=5; else x2+=5;
     int r;
     if (x->x_orient) r = y2-3 - (x->x_val + 50)/100;
     else             r = x1+3 + (x->x_val + 50)/100;
-    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_new(&x->x_gui, canvas);
     if (x->x_orient) {
         sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-            "-stroke #%6.6x -tags {%lxKNOB %lxOBJ %s text iemgui}\n",
-            canvas, x1+2, r, x2-2, r, x->x_gui.x_fcol, x, x, nlet_tag);
+            "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
+            canvas, x1+2, r, x2-2, r, x->x_gui.x_fcol, x, x);
     } else {
         sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
-            "-stroke #%6.6x -tags {%lxKNOB %lxOBJ %s text iemgui}\n",
-            canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x, nlet_tag);
+            "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
+            canvas, r, y1+2, r, y2-2, x->x_gui.x_fcol, x, x);
     }
 }
 
@@ -78,16 +77,15 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
     int r;
     if (x->x_orient) r = y2-3 - (x->x_val + 50)/100;
     else             r = x1+3 + (x->x_val + 50)/100;
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_move(&x->x_gui, canvas);
     if (x->x_orient)
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
             canvas, x, x1+2, r, x2-2, r);
     else
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
             canvas, x, r, y1+2, r, y2-2);
-    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
-    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    iemgui_label_draw_move(&x->x_gui,canvas);
+    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 static void slider_draw_config(t_slider *x, t_glist *glist)
@@ -174,7 +172,6 @@ void slider_draw(t_slider *x, t_glist *glist, int mode)
     if(mode == IEM_GUI_DRAW_MODE_UPDATE)      sys_queuegui(x, glist, slider_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)   slider_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW)    slider_draw_new(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)  iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG) slider_draw_config(x, glist);
 }
 
@@ -196,7 +193,6 @@ static void slider_save(t_gobj *z, t_binbuf *b)
     t_slider *x = (t_slider *)z;
     int bflcol[3];
     t_symbol *srl[3];
-
     iemgui_save(&x->x_gui, srl, bflcol);
     binbuf_addv(b, "ssiisiiffiisssiiiiiiiii", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,

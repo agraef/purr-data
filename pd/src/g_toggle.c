@@ -39,20 +39,19 @@ void toggle_draw_update(t_gobj *xgobj, t_glist *glist)
 void toggle_draw_new(t_toggle *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
     int w=(x->x_gui.x_w+29)/30;
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
     int x2=x1+x->x_gui.x_w, y2=y1+x->x_gui.x_h;
     int col = (x->x_on!=0.0)?x->x_gui.x_fcol:x->x_gui.x_bcol;
 
-    iemgui_base_draw_new(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_new(&x->x_gui, canvas);
     sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
-        "-stroke #%6.6x -tags {%lxX1 %lxOBJ %s text iemgui}\n",
-        canvas, x1+w+1, y1+w+1, x2-w-1, y2-w-1, w, col, x, x, nlet_tag);
+        "-stroke #%6.6x -tags {%lxX1 x%lx text iemgui}\n",
+        canvas, x1+w+1, y1+w+1, x2-w-1, y2-w-1, w, col, x, x);
     sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth %d "
-        "-stroke #%6.6x -tags {%lxX2 %lxOBJ %s text iemgui}\n",
-        canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x, nlet_tag);
+        "-stroke #%6.6x -tags {%lxX2 x%lx text iemgui}\n",
+        canvas, x1+w+1, y2-w-1, x2-w-1, y1+w+1, w, col, x, x);
 }
 
 void toggle_draw_move(t_toggle *x, t_glist *glist)
@@ -63,15 +62,14 @@ void toggle_draw_move(t_toggle *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_gui.x_w;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    char *nlet_tag = iem_get_tag(glist, (t_iemgui *)x);
-    iemgui_base_draw_move(&x->x_gui, canvas, nlet_tag);
+    iemgui_base_draw_move(&x->x_gui, canvas);
     sys_vgui(".x%lx.c itemconfigure {%lxX1||%lxX2} -strokewidth %d\n", canvas, x, x, w);
     sys_vgui(".x%lx.c coords %lxX1 %d %d %d %d\n",
         canvas, x, x1+s, y1+s, x2-s, y2-s);
     sys_vgui(".x%lx.c coords %lxX2 %d %d %d %d\n",
         canvas, x, x1+s, y2-s, x2-s, y1+s);
-    iemgui_label_draw_move(&x->x_gui,canvas,x1,y1);
-    iemgui_io_draw_move(&x->x_gui,canvas,nlet_tag);
+    iemgui_label_draw_move(&x->x_gui,canvas);
+    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 void toggle_draw_config(t_toggle* x, t_glist* glist)
@@ -133,7 +131,6 @@ void toggle_draw(t_toggle *x, t_glist *glist, int mode)
     if(mode == IEM_GUI_DRAW_MODE_UPDATE)      sys_queuegui(x, x->x_gui.x_glist, toggle_draw_update);
     else if(mode == IEM_GUI_DRAW_MODE_MOVE)   toggle_draw_move(x, glist);
     else if(mode == IEM_GUI_DRAW_MODE_NEW)    toggle_draw_new(x, glist);
-    else if(mode == IEM_GUI_DRAW_MODE_ERASE)  iemgui_draw_erase(&x->x_gui, glist);
     else if(mode == IEM_GUI_DRAW_MODE_CONFIG) toggle_draw_config(x, glist);
 }
 
