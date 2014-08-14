@@ -17,12 +17,12 @@
 #GUI improvements and dynamic runtime 8.5 widget upgrade for Linux by Ivica Ico Bukvic
 #http://ico.bukvic.net <ico@vt.edu>
 
-rename proc proque
-proque proc {name args body} {
-  puts "proc $name"
-  uplevel 1 [list proque $name $args $body]
-}
-
+# Mathieu's way of listing all defined procs
+#rename proc proque
+#proque proc {name args body} {
+#  puts "proc $name"
+#  uplevel 1 [list proque $name $args $body]
+#}
 
 #puts stderr [info tclversion]
 ##--moo: force default system and stdio encoding to UTF-8
@@ -5152,15 +5152,6 @@ proc pdtk_canvas_dofont {name canvas initsize} {
 
 ############ pdtk_gatom_dialog -- run a gatom dialog #########
 
-# dialogs like this one can come up in many copies; but in TK the easiest
-# way to get data from an "entry", etc., is to set an associated variable
-# name.  This is especially true for grouped "radio buttons".  So we have
-# to synthesize variable names for each instance of the dialog.  The dialog
-# gets a TK pathname $id, from which it strips the leading "." to make a
-# variable suffix $vid.  Then you can get the actual value out by asking for
-# [eval concat $$variablename].  There should be an easier way but I don't see
-# it yet.
-
 proc gatom_escape {sym} {
     if {[string length $sym] == 0} {
         set ret "-"
@@ -5191,32 +5182,11 @@ proc gatom_unescape {sym} {
 proc dogatom_apply {id} {
     set vid [string trimleft $id .]
 
-    set var_gatomwidth [concat gatomwidth_$vid]
-    global $var_gatomwidth
-    set var_gatomlo [concat gatomlo_$vid]
-    global $var_gatomlo
-    set var_gatomhi [concat gatomhi_$vid]
-    global $var_gatomhi
-    set var_gatomwherelabel [concat gatomwherelabel_$vid]
-    global $var_gatomwherelabel
-    set var_gatomlabel [concat gatomlabel_$vid]
-    global $var_gatomlabel
-    set var_gatomsymfrom [concat gatomsymfrom_$vid]
-    global $var_gatomsymfrom
-    set var_gatomsymto [concat gatomsymto_$vid]
-    global $var_gatomsymto
-
-    #    set cmd [concat $id param $gatomwidth $gatomlo $gatomhi \;]
-    
     set cmd [concat $id param \
-                 [eval concat $$var_gatomwidth] \
-                 [eval concat $$var_gatomlo] \
-                 [eval concat $$var_gatomhi] \
-                 [eval gatom_escape $$var_gatomlabel] \
-                 [eval concat $$var_gatomwherelabel] \
-                 [eval gatom_escape $$var_gatomsymfrom] \
-                 [eval gatom_escape $$var_gatomsymto] \
-                 \;]
+        $::dialog($vid:width) $::dialog($vid:lo) $::dialog($vid:hi) \
+        [gatom_escape $::dialog($vid:label)] $::dialog($vid:wherelabel) \
+        [gatom_escape $::dialog($vid:symfrom)] \
+        [gatom_escape $::dialog($vid:symto)] \;]
 
     #    puts stderr $cmd
     pd $cmd
@@ -5235,33 +5205,14 @@ proc dogatom_ok {name} {
 
 proc pdtk_gatom_dialog {id initwidth initlo inithi \
                             wherelabel label symfrom symto} {
-
     set vid [string trimleft $id .]
-
-	global pd_nt
-
-    set var_gatomwidth [concat gatomwidth_$vid]
-    global $var_gatomwidth
-    set var_gatomlo [concat gatomlo_$vid]
-    global $var_gatomlo
-    set var_gatomhi [concat gatomhi_$vid]
-    global $var_gatomhi
-    set var_gatomwherelabel [concat gatomwherelabel_$vid]
-    global $var_gatomwherelabel
-    set var_gatomlabel [concat gatomlabel_$vid]
-    global $var_gatomlabel
-    set var_gatomsymfrom [concat gatomsymfrom_$vid]
-    global $var_gatomsymfrom
-    set var_gatomsymto [concat gatomsymto_$vid]
-    global $var_gatomsymto
-
-    set $var_gatomwidth $initwidth
-    set $var_gatomlo $initlo
-    set $var_gatomhi $inithi
-    set $var_gatomwherelabel $wherelabel
-    set $var_gatomlabel [gatom_unescape $label]
-    set $var_gatomsymfrom [gatom_unescape $symfrom]
-    set $var_gatomsymto [gatom_unescape $symto]
+    set ::dialog($vid:width) $initwidth
+    set ::dialog($vid:lo) $initlo
+    set ::dialog($vid:hi) $inithi
+    set ::dialog($vid:wherelabel) $wherelabel
+    set ::dialog($vid:label) [gatom_unescape $label]
+    set ::dialog($vid:symfrom) [gatom_unescape $symfrom]
+    set ::dialog($vid:symto) [gatom_unescape $symto]
 
     toplevel $id -class [winfo class .]
     wm title $id "Atom Box Properties"
@@ -5277,7 +5228,7 @@ proc pdtk_gatom_dialog {id initwidth initlo inithi \
     pack $id.params -side top
     match_linux_wm [list label $id.params.entryname -text "width"]
     match_linux_wm [list entry $id.params.entry \
-		-textvariable $var_gatomwidth -width 4]
+		-textvariable ::dialog($vid:width) -width 4]
     pack $id.params.entryname $id.params.entry -side left -pady 3
 
     match_linux_wm [list labelframe $id.limits -text "limits" \
@@ -5288,14 +5239,14 @@ proc pdtk_gatom_dialog {id initwidth initlo inithi \
     pack $id.limits.lower -side left
     match_linux_wm [list label $id.limits.lower.entryname -text "lower"]
     match_linux_wm [list entry $id.limits.lower.entry \
-		-textvariable $var_gatomlo -width 8]
+		-textvariable ::dialog($vid:lo) -width 8]
     pack $id.limits.lower.entryname $id.limits.lower.entry -side left -padx 3 -pady 3
     match_linux_wm [list frame $id.limits.upper]
     pack $id.limits.upper -side left
     match_linux_wm [list frame $id.limits.upper.spacer -width 20]
     match_linux_wm [list label $id.limits.upper.entryname -text "upper"]
     match_linux_wm [list entry $id.limits.upper.entry \
-		-textvariable $var_gatomhi -width 8]
+		-textvariable ::dialog($vid:hi) -width 8]
     pack  $id.limits.upper.spacer $id.limits.upper.entryname \
         $id.limits.upper.entry -side left -padx 3 -pady 3
 
@@ -5309,21 +5260,21 @@ proc pdtk_gatom_dialog {id initwidth initlo inithi \
     match_linux_wm [list frame $id.label.name]
     pack $id.label.name -side top
     match_linux_wm [list entry $id.label.name.entry \
-		-textvariable $var_gatomlabel -width 35]
+		-textvariable ::dialog($vid:label) -width 35]
     pack $id.label.name.entry -side left
     match_linux_wm [list frame $id.label.radio]
     pack $id.label.radio -side top
     match_linux_wm [list radiobutton $id.label.radio.left -value 0 \
-        -variable $var_gatomwherelabel \
+        -variable ::dialog($vid:wherelabel) \
         -text "left   "]
     match_linux_wm [list radiobutton $id.label.radio.right -value 1 \
-        -variable $var_gatomwherelabel \
+        -variable ::dialog($vid:wherelabel) \
         -text "right"]
     match_linux_wm [list radiobutton $id.label.radio.top -value 2 \
-        -variable $var_gatomwherelabel \
+        -variable ::dialog($vid:wherelabel) \
         -text "top"]
     match_linux_wm [list radiobutton $id.label.radio.bottom -value 3 \
-        -variable $var_gatomwherelabel \
+        -variable ::dialog($vid:wherelabel) \
         -text "bottom"]
     pack $id.label.radio.left -side left -anchor w
     pack $id.label.radio.right -side right -anchor w
@@ -5341,14 +5292,14 @@ proc pdtk_gatom_dialog {id initwidth initlo inithi \
     pack $id.s_r.paramsymto -side top -anchor e
     match_linux_wm [list label $id.s_r.paramsymto.entryname -text "send symbol"]
     match_linux_wm [list entry $id.s_r.paramsymto.entry \
-		-textvariable $var_gatomsymto -width 21]
+		-textvariable ::dialog($vid:symto) -width 21]
     pack $id.s_r.paramsymto.entry $id.s_r.paramsymto.entryname -side right -pady 3
 
     match_linux_wm [list frame $id.s_r.paramsymfrom]
     pack $id.s_r.paramsymfrom -side top -anchor e
     match_linux_wm [list label $id.s_r.paramsymfrom.entryname -text "receive symbol"]
     match_linux_wm [list entry $id.s_r.paramsymfrom.entry \
-		-textvariable $var_gatomsymfrom -width 21]
+		-textvariable ::dialog($vid:symfrom) -width 21]
     pack $id.s_r.paramsymfrom.entry $id.s_r.paramsymfrom.entryname -side right -pady 3
     
     match_linux_wm [list frame $id.buttonframe -pady 5]
@@ -5422,105 +5373,73 @@ set iemgui_define_min_fontsize 4
 
 proc iemgui_clip_dim {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_wdt [concat iemgui_wdt_$vid]
-    global $var_iemgui_wdt
-    set var_iemgui_min_wdt [concat iemgui_min_wdt_$vid]
-    global $var_iemgui_min_wdt
-    set var_iemgui_hgt [concat iemgui_hgt_$vid]
-    global $var_iemgui_hgt
-    set var_iemgui_min_hgt [concat iemgui_min_hgt_$vid]
-    global $var_iemgui_min_hgt
-    
-	#pdtk_post "iemdim: [eval concat $$var_iemgui_wdt] [eval concat $$var_iemgui_min_wdt] [eval concat $$var_iemgui_hgt] [eval concat $$var_iemgui_min_hgt]\n"
-
-    if {[eval concat $$var_iemgui_wdt] < [eval concat $$var_iemgui_min_wdt]} {
-        set $var_iemgui_wdt [eval concat $$var_iemgui_min_wdt]
-        $id.dim.w_ent configure -textvariable $var_iemgui_wdt
+    if {$::dialog($vid:wdt) < $::dialog($vid:min_wdt)} {
+        set ::dialog($vid:wdt) $::dialog($vid:min_wdt)
+        $id.dim.w_ent configure -textvariable ::dialog($vid:wdt)
     }
-    if {[eval concat $$var_iemgui_hgt] < [eval concat $$var_iemgui_min_hgt]} {
-        set $var_iemgui_hgt [eval concat $$var_iemgui_min_hgt]
-        $id.dim.h_ent configure -textvariable $var_iemgui_hgt
+    if {$::dialog($vid:hgt) < $::dialog($vid:min_hgt)} {
+        set ::dialog($vid:hgt) $::dialog($vid:min_hgt)
+        $id.dim.h_ent configure -textvariable ::dialog($vid:hgt)
     }
 }
 
 proc iemgui_clip_num {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_num [concat iemgui_num_$vid]
-    global $var_iemgui_num
-    
-    if {[eval concat $$var_iemgui_num] > 2000} {
-        set $var_iemgui_num 2000
-        $id.para.num_ent configure -textvariable $var_iemgui_num
+    if {$::dialog($vid:num) > 2000} {
+        set ::dialog($vid:num) 2000
+        $id.para.num_ent configure -textvariable ::dialog($vid:num)
     }
-    if {[eval concat $$var_iemgui_num] < 1} {
-        set $var_iemgui_num 1
-        $id.para.num_ent configure -textvariable $var_iemgui_num
+    if {$::dialog($vid:num) < 1} {
+        set ::dialog($vid:num) 1
+        $id.para.num_ent configure -textvariable ::dialog($vid:num)
     }
 }
 
 proc iemgui_sched_rng {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_min_rng [concat iemgui_min_rng_$vid]
-    global $var_iemgui_min_rng
-    set var_iemgui_max_rng [concat iemgui_max_rng_$vid]
-    global $var_iemgui_max_rng
-    set var_iemgui_rng_sch [concat iemgui_rng_sch_$vid]
-    global $var_iemgui_rng_sch
-
     global iemgui_define_min_flashhold
     global iemgui_define_min_flashbreak
     
-    if {[eval concat $$var_iemgui_rng_sch] == 2} {
-        if {[eval concat $$var_iemgui_max_rng] < [eval concat $$var_iemgui_min_rng]} {
-            set hhh [eval concat $$var_iemgui_min_rng]
-            set $var_iemgui_min_rng [eval concat $$var_iemgui_max_rng]
-            set $var_iemgui_max_rng $hhh
-            $id.rng.max_ent configure -textvariable $var_iemgui_max_rng
-            $id.rng.min_ent configure -textvariable $var_iemgui_min_rng }
-        if {[eval concat $$var_iemgui_max_rng] < $iemgui_define_min_flashhold} {
-            set $var_iemgui_max_rng $iemgui_define_min_flashhold
-            $id.rng.max_ent configure -textvariable $var_iemgui_max_rng
+    if {$::dialog($vid:rng_sch) == 2} {
+        if {$::dialog($vid:max_rng) < $::dialog($vid:min_rng)} {
+            set hhh $::dialog($vid:min_rng)
+            set ::dialog($vid:min_rng) $::dialog($vid:max_rng)
+            set ::dialog($vid:max_rng) $hhh
+            $id.rng.max_ent configure -textvariable ::dialog($vid:max_rng)
+            $id.rng.min_ent configure -textvariable ::dialog($vid:min_rng) }
+        if {$::dialog($vid:max_rng) < $iemgui_define_min_flashhold} {
+            set ::dialog($vid:max_rng) $iemgui_define_min_flashhold
+            $id.rng.max_ent configure -textvariable ::dialog($vid:max_rng)
         }
-        if {[eval concat $$var_iemgui_min_rng] < $iemgui_define_min_flashbreak} {
-            set $var_iemgui_min_rng $iemgui_define_min_flashbreak
-            $id.rng.min_ent configure -textvariable $var_iemgui_min_rng
+        if {$::dialog($vid:min_rng) < $iemgui_define_min_flashbreak} {
+            set ::dialog($vid:min_rng) $iemgui_define_min_flashbreak
+            $id.rng.min_ent configure -textvariable ::dialog($vid:min_rng)
         }
     }
-    if {[eval concat $$var_iemgui_rng_sch] == 1} {
-        if {[eval concat $$var_iemgui_min_rng] == 0.0} {
-            set $var_iemgui_min_rng 1.0
-            $id.rng.min_ent configure -textvariable $var_iemgui_min_rng
+    if {$::dialog($vid:rng_sch) == 1} {
+        if {$::dialog($vid:min_rng) == 0.0} {
+            set ::dialog($vid:min_rng) 1.0
+            $id.rng.min_ent configure -textvariable ::dialog($vid:min_rng)
         }
     }
 }
 
 proc iemgui_verify_rng {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_min_rng [concat iemgui_min_rng_$vid]
-    global $var_iemgui_min_rng
-    set var_iemgui_max_rng [concat iemgui_max_rng_$vid]
-    global $var_iemgui_max_rng
-    set var_iemgui_lin0_log1 [concat iemgui_lin0_log1_$vid]
-    global $var_iemgui_lin0_log1
-    
-    if {[eval concat $$var_iemgui_lin0_log1] == 1} {
-        if {[eval concat $$var_iemgui_max_rng] == 0.0 && [eval concat $$var_iemgui_min_rng] == 0.0} {
-            set $var_iemgui_max_rng 1.0
-            $id.rng.max_ent configure -textvariable $var_iemgui_max_rng
+    if {$::dialog($vid:lin0_log1) == 1} {
+        if {$::dialog($vid:max_rng) == 0.0 && $::dialog($vid:min_rng) == 0.0} {
+            set ::dialog($vid:max_rng) 1.0
+            $id.rng.max_ent configure -textvariable ::dialog($vid:max_rng)
         }
-        if {[eval concat $$var_iemgui_max_rng] > 0} {
-            if {[eval concat $$var_iemgui_min_rng] <= 0} {
-                set $var_iemgui_min_rng [expr [eval concat $$var_iemgui_max_rng] * 0.01]
-                $id.rng.min_ent configure -textvariable $var_iemgui_min_rng
+        if {$::dialog($vid:max_rng) > 0} {
+            if {$::dialog($vid:min_rng) <= 0} {
+                set ::dialog($vid:min_rng) [expr $::dialog($vid:max_rng) * 0.01]
+                $id.rng.min_ent configure -textvariable ::dialog($vid:min_rng)
             }
         } else {
-            if {[eval concat $$var_iemgui_min_rng] > 0} {
-                set $var_iemgui_max_rng [expr [eval concat $$var_iemgui_min_rng] * 0.01]
-                $id.rng.max_ent configure -textvariable $var_iemgui_max_rng
+            if {$::dialog($vid:min_rng) > 0} {
+                set ::dialog($vid:max_rng) [expr $::dialog($vid:min_rng) * 0.01]
+                $id.rng.max_ent configure -textvariable ::dialog($vid:max_rng)
             }
         }
     }
@@ -5528,142 +5447,109 @@ proc iemgui_verify_rng {id} {
 
 proc iemgui_clip_fontsize {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_gn_fs [concat iemgui_gn_fs_$vid]
-    global $var_iemgui_gn_fs
-    
     global iemgui_define_min_fontsize
-
-    if {[eval concat $$var_iemgui_gn_fs] < $iemgui_define_min_fontsize} {
-        set $var_iemgui_gn_fs $iemgui_define_min_fontsize
-        $id.label.fontsize_entry configure -textvariable $var_iemgui_gn_fs
+    if {$::dialog($vid:gn_fs) < $iemgui_define_min_fontsize} {
+        set ::dialog($vid:gn_fs) $iemgui_define_min_fontsize
+        $id.label.fontsize_entry configure -textvariable ::dialog($vid:gn_fs)
     }
 }
 
 proc iemgui_set_col_example {id} {
     set vid [string trimleft $id .]
 
-    set var_iemgui_bcol [concat iemgui_bcol_$vid]
-    global $var_iemgui_bcol
-    set var_iemgui_fcol [concat iemgui_fcol_$vid]
-    global $var_iemgui_fcol
-    set var_iemgui_lcol [concat iemgui_lcol_$vid]
-    global $var_iemgui_lcol
-
     $id.colors.sections.lb_bk configure \
-        -background [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-        -activebackground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-        -foreground [format "#%6.6x" [eval concat $$var_iemgui_lcol]] \
-        -activeforeground [format "#%6.6x" [eval concat $$var_iemgui_lcol]]
+        -background [format "#%6.6x" $::dialog($vid:bcol)] \
+        -activebackground [format "#%6.6x" $::dialog($vid:bcol)] \
+        -foreground [format "#%6.6x" $::dialog($vid:lcol)] \
+        -activeforeground [format "#%6.6x" $::dialog($vid:lcol)]
     
-    if { [eval concat $$var_iemgui_fcol] >= 0 } {
+    if { $::dialog($vid:fcol) >= 0 } {
         $id.colors.sections.fr_bk configure \
-            -background [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -activebackground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -foreground [format "#%6.6x" [eval concat $$var_iemgui_fcol]] \
-            -activeforeground [format "#%6.6x" [eval concat $$var_iemgui_fcol]]
+            -background [format "#%6.6x" $::dialog($vid:bcol)] \
+            -activebackground [format "#%6.6x" $::dialog($vid:bcol)] \
+            -foreground [format "#%6.6x" $::dialog($vid:fcol)] \
+            -activeforeground [format "#%6.6x" $::dialog($vid:fcol)]
     } else {
         $id.colors.sections.fr_bk configure \
-            -background [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -activebackground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -foreground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -activeforeground [format "#%6.6x" [eval concat $$var_iemgui_bcol]]}
+            -background [format "#%6.6x" $::dialog($vid:bcol)] \
+            -activebackground [format "#%6.6x" $::dialog($vid:bcol)] \
+            -foreground [format "#%6.6x" $::dialog($vid:bcol)] \
+            -activeforeground [format "#%6.6x" $::dialog($vid:bcol)]}
 }
 
 proc iemgui_preset_col {id presetcol} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_l2_f1_b0 [concat iemgui_l2_f1_b0_$vid]
-    global $var_iemgui_l2_f1_b0
-    set var_iemgui_bcol [concat iemgui_bcol_$vid]
-    global $var_iemgui_bcol
-    set var_iemgui_fcol [concat iemgui_fcol_$vid]
-    global $var_iemgui_fcol
-    set var_iemgui_lcol [concat iemgui_lcol_$vid]
-    global $var_iemgui_lcol
-    
-    if { [eval concat $$var_iemgui_l2_f1_b0] == 0 } { set $var_iemgui_bcol $presetcol }
-    if { [eval concat $$var_iemgui_l2_f1_b0] == 1 } { set $var_iemgui_fcol $presetcol }
-    if { [eval concat $$var_iemgui_l2_f1_b0] == 2 } { set $var_iemgui_lcol $presetcol }
+    if { $::dialog($vid:l2_f1_b0) == 0 } { set ::dialog($vid:bcol) $presetcol }
+    if { $::dialog($vid:l2_f1_b0) == 1 } { set ::dialog($vid:fcol) $presetcol }
+    if { $::dialog($vid:l2_f1_b0) == 2 } { set ::dialog($vid:lcol) $presetcol }
     catch { iemgui_set_col_example $id }
 }
 
 proc iemgui_choose_col_bkfrlb {id} {
 	global hex_color color_applied pd_nt
-
     set vid [string trimleft $id .]
-
-    set var_iemgui_l2_f1_b0 [concat iemgui_l2_f1_b0_$vid]
-    global $var_iemgui_l2_f1_b0
-    set var_iemgui_bcol [concat iemgui_bcol_$vid]
-    global $var_iemgui_bcol
-    set var_iemgui_fcol [concat iemgui_fcol_$vid]
-    global $var_iemgui_fcol
-    set var_iemgui_lcol [concat iemgui_lcol_$vid]
-    global $var_iemgui_lcol
-
 	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		if {[eval concat $$var_iemgui_l2_f1_b0] == 0} {
-		    set $var_iemgui_bcol [expr [eval concat $$var_iemgui_bcol] & 0xFFFFFF]
+		if {$::dialog($vid:l2_f1_b0) == 0} {
+		    set ::dialog($vid:bcol) [expr $::dialog($vid:bcol) & 0xFFFFFF]
 			set loop [pdtk_pd_color_dlg [format "#%6.6x" \
-				[eval concat $$var_iemgui_bcol]]]
+				$::dialog($vid:bcol)]]
 			vwait color_applied
 			set color_applied -1
-		    set $var_iemgui_bcol [string replace $hex_color 0 0 "0x"]
-		    set $var_iemgui_bcol [expr [eval concat $$var_iemgui_bcol] & 0xFFFFFF]
+		    set ::dialog($vid:bcol) [string replace $hex_color 0 0 "0x"]
+		    set ::dialog($vid:bcol) [expr $::dialog($vid:bcol) & 0xFFFFFF]
 		}
 	} else {
-		if {[eval concat $$var_iemgui_l2_f1_b0] == 0} {
-			set $var_iemgui_bcol [expr [eval concat $$var_iemgui_bcol] & 0xFCFCFC]
+		if {$::dialog($vid:l2_f1_b0) == 0} {
+			set ::dialog($vid:bcol) [expr $::dialog($vid:bcol) & 0xFCFCFC]
 			set helpstring [tk_chooseColor -title "Custom Background Color" \
-				-initialcolor [format "#%6.6x" [eval concat $$var_iemgui_bcol]]]
+				-initialcolor [format "#%6.6x" $::dialog($vid:bcol)]]
 			if { $helpstring != "" } {
-			    set $var_iemgui_bcol [string replace $helpstring 0 0 "0x"]
-			    set $var_iemgui_bcol [expr [eval concat $$var_iemgui_bcol] & 0xFCFCFC] 
+			    set ::dialog($vid:bcol) [string replace $helpstring 0 0 "0x"]
+			    set ::dialog($vid:bcol) [expr $::dialog($vid:bcol) & 0xFCFCFC] 
 			}
 		}
     }
 
 	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		if {[eval concat $$var_iemgui_l2_f1_b0] == 1} {
-		    set $var_iemgui_fcol [expr [eval concat $$var_iemgui_fcol] & 0xFFFFFF]
+		if {$::dialog($vid:l2_f1_b0) == 1} {
+		    set ::dialog($vid:fcol) [expr $::dialog($vid:fcol) & 0xFFFFFF]
 			set loop [pdtk_pd_color_dlg [format "#%6.6x" \
-				[eval concat $$var_iemgui_fcol]]]
+				$::dialog($vid:fcol)]]
 			vwait color_applied
 			set color_applied -1
-		    set $var_iemgui_fcol [string replace $hex_color 0 0 "0x"]
-		    set $var_iemgui_fcol [expr [eval concat $$var_iemgui_fcol] & 0xFFFFFF]
+		    set ::dialog($vid:fcol) [string replace $hex_color 0 0 "0x"]
+		    set ::dialog($vid:fcol) [expr $::dialog($vid:fcol) & 0xFFFFFF]
 		}
 	} else {
-		if {[eval concat $$var_iemgui_l2_f1_b0] == 1} {
-		    set $var_iemgui_fcol [expr [eval concat $$var_iemgui_fcol] & 0xFCFCFC]
+		if {$::dialog($vid:l2_f1_b0) == 1} {
+		    set ::dialog($vid:fcol) [expr $::dialog($vid:fcol) & 0xFCFCFC]
 		    set helpstring [tk_chooseColor -title "Custom Foreground Color" \
-				-initialcolor [format "#%6.6x" [eval concat $$var_iemgui_fcol]]]
+				-initialcolor [format "#%6.6x" $::dialog($vid:fcol)]]
 		    if { $helpstring != "" } {
-		        set $var_iemgui_fcol [string replace $helpstring 0 0 "0x"]
-		        set $var_iemgui_fcol [expr [eval concat $$var_iemgui_fcol] & 0xFCFCFC]
+		        set ::dialog($vid:fcol) [string replace $helpstring 0 0 "0x"]
+		        set ::dialog($vid:fcol) [expr $::dialog($vid:fcol) & 0xFCFCFC]
 			}
 		}
 	}
 
 	if {[info tclversion] >= 8.5 && $pd_nt == 0} {
-		if {[eval concat $$var_iemgui_l2_f1_b0] == 2} {
-		    set $var_iemgui_lcol [expr [eval concat $$var_iemgui_lcol] & 0xFFFFFF]
+		if {$::dialog($vid:l2_f1_b0) == 2} {
+		    set ::dialog($vid:lcol) [expr $::dialog($vid:lcol) & 0xFFFFFF]
 			set loop [pdtk_pd_color_dlg [format "#%6.6x" \
-				[eval concat $$var_iemgui_lcol]]]
+				$::dialog($vid:lcol)]]
 			vwait color_applied
 			set color_applied -1
-		    set $var_iemgui_lcol [string replace $hex_color 0 0 "0x"]
-		    set $var_iemgui_lcol [expr [eval concat $$var_iemgui_lcol] & 0xFFFFFF]
+		    set ::dialog($vid:lcol) [string replace $hex_color 0 0 "0x"]
+		    set ::dialog($vid:lcol) [expr $::dialog($vid:lcol) & 0xFFFFFF]
 		}
 	} else {
-		if {[eval concat $$var_iemgui_l2_f1_b0] == 2} {
-		    set $var_iemgui_lcol [expr [eval concat $$var_iemgui_lcol] & 0xFCFCFC]
+		if {$::dialog($vid:l2_f1_b0) == 2} {
+		    set ::dialog($vid:lcol) [expr $::dialog($vid:lcol) & 0xFCFCFC]
 		    set helpstring [tk_chooseColor -title "Label-Color" \
-				-initialcolor [format "#%6.6x" [eval concat $$var_iemgui_lcol]]]
+				-initialcolor [format "#%6.6x" $::dialog($vid:lcol)]]
 		    if { $helpstring != "" } {
-		        set $var_iemgui_lcol [string replace $helpstring 0 0 "0x"]
-		        set $var_iemgui_lcol [expr [eval concat $$var_iemgui_lcol] & 0xFCFCFC]
+		        set ::dialog($vid:lcol) [string replace $helpstring 0 0 "0x"]
+		        set ::dialog($vid:lcol) [expr $::dialog($vid:lcol) & 0xFCFCFC]
 			}
 		}
 	}
@@ -5673,61 +5559,28 @@ proc iemgui_choose_col_bkfrlb {id} {
 
 proc iemgui_lilo {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_lin0_log1 [concat iemgui_lin0_log1_$vid]
-    global $var_iemgui_lin0_log1
-    set var_iemgui_lilo0 [concat iemgui_lilo0_$vid]
-    global $var_iemgui_lilo0
-    set var_iemgui_lilo1 [concat iemgui_lilo1_$vid]
-    global $var_iemgui_lilo1
-    
     iemgui_sched_rng $id
-
-    if {[eval concat $$var_iemgui_lin0_log1] == 0} {
-        set $var_iemgui_lin0_log1 1
-        $id.para.lilo configure -text [eval concat $$var_iemgui_lilo1]
+    if {$::dialog($vid:lin0_log1) == 0} {
+        set ::dialog($vid:lin0_log1) 1
+        $id.para.lilo configure -text $::dialog($vid:lilo1)
         iemgui_verify_rng $id
         iemgui_sched_rng $id
     } else {
-        set $var_iemgui_lin0_log1 0
-        $id.para.lilo configure -text [eval concat $$var_iemgui_lilo0]
+        set ::dialog($vid:lin0_log1) 0
+        $id.para.lilo configure -text $::dialog($vid:lilo0)
     }
 }
 
 proc iemgui_hide_frame {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_hide [concat iemgui_hide_$vid]
-    global $var_iemgui_hide
-
-    switch -- [eval concat $$var_iemgui_hide] {
-        3	{
-				set $var_iemgui_hide 0
-				$id.dim.h configure -text "normal"
-			}
-        0	{
-				set $var_iemgui_hide 1
-				$id.dim.h configure -text "frame"
-			}
-		1	{
-				set $var_iemgui_hide 2
-				$id.dim.h configure -text "arrow"
-			}
-		2	{
-				set $var_iemgui_hide 3
-				$id.dim.h configure -text "none"
-			}
-    }
+    set ::dialog($vid:hide) [expr ($::dialog($vid:hide) + 1) % 4]
+	$id.dim.h configure -text [lindex {normal frame arrow none} $::dialog($vid:hide)]
 }
 
 proc iemgui_toggle_font {id gn_f} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_gn_f [concat iemgui_gn_f_$vid]
-    global $var_iemgui_gn_f
     global fontname fontweight
-    
-    set $var_iemgui_gn_f $gn_f
+    set ::dialog($vid:gn_f) $gn_f
 
     switch -- $gn_f {
         0 { set current_font $fontname}
@@ -5745,30 +5598,22 @@ proc iemgui_toggle_font {id gn_f} {
 
 proc iemgui_lb {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_loadbang [concat iemgui_loadbang_$vid]
-    global $var_iemgui_loadbang
-
-    if {[eval concat $$var_iemgui_loadbang] == 0} {
-        set $var_iemgui_loadbang 1
+    if {$::dialog($vid:loadbang) == 0} {
+        set ::dialog($vid:loadbang) 1
         $id.para.lb configure -text "init"
     } else {
-        set $var_iemgui_loadbang 0
+        set ::dialog($vid:loadbang) 0
         $id.para.lb configure -text "no init"
     }
 }
 
 proc iemgui_stdy_jmp {id} {
     set vid [string trimleft $id .]
-
-    set var_iemgui_steady [concat iemgui_steady_$vid]
-    global $var_iemgui_steady
-    
-    if {[eval concat $$var_iemgui_steady]} {
-        set $var_iemgui_steady 0
+    if {$::dialog($vid:steady)} {
+        set ::dialog($vid:steady) 0
         $id.para.stdy_jmp configure -text "jump on click"
     } else {
-        set $var_iemgui_steady 1
+        set ::dialog($vid:steady) 1
         $id.para.stdy_jmp configure -text "steady on click"
     }
 }
@@ -5779,58 +5624,8 @@ proc iemgui_apply {id} {
 		destroy .color_dlg
 		set color_applied -1
 	}
-
 	set vid [string trimleft $id .]
 
-	set var_iemgui_wdt [concat iemgui_wdt_$vid]
-	global $var_iemgui_wdt
-	set var_iemgui_min_wdt [concat iemgui_min_wdt_$vid]
-	global $var_iemgui_min_wdt
-	set var_iemgui_hgt [concat iemgui_hgt_$vid]
-	global $var_iemgui_hgt
-	set var_iemgui_min_hgt [concat iemgui_min_hgt_$vid]
-	global $var_iemgui_min_hgt
-	set var_iemgui_min_rng [concat iemgui_min_rng_$vid]
-	global $var_iemgui_min_rng
-	set var_iemgui_max_rng [concat iemgui_max_rng_$vid]
-	global $var_iemgui_max_rng
-    set var_iemgui_rng_sch [concat iemgui_rng_sch_$vid]
-    global $var_iemgui_rng_sch
-	set var_iemgui_lin0_log1 [concat iemgui_lin0_log1_$vid]
-	global $var_iemgui_lin0_log1
-	set var_iemgui_lilo0 [concat iemgui_lilo0_$vid]
-	global $var_iemgui_lilo0
-	set var_iemgui_lilo1 [concat iemgui_lilo1_$vid]
-	global $var_iemgui_lilo1
-	set var_iemgui_loadbang [concat iemgui_loadbang_$vid]
-	global $var_iemgui_loadbang
-	set var_iemgui_num [concat iemgui_num_$vid]
-	global $var_iemgui_num
-	set var_iemgui_steady [concat iemgui_steady_$vid]
-	global $var_iemgui_steady
-	set var_iemgui_snd [concat iemgui_snd_$vid]
-	global $var_iemgui_snd
-	set var_iemgui_rcv [concat iemgui_rcv_$vid]
-	global $var_iemgui_rcv
-	set var_iemgui_gui_nam [concat iemgui_gui_nam_$vid]
-	global $var_iemgui_gui_nam
-	set var_iemgui_gn_dx [concat iemgui_gn_dx_$vid]
-	global $var_iemgui_gn_dx
-	set var_iemgui_gn_dy [concat iemgui_gn_dy_$vid]
-	global $var_iemgui_gn_dy
-	set var_iemgui_gn_f [concat iemgui_gn_f_$vid]
-	global $var_iemgui_gn_f
-	set var_iemgui_gn_fs [concat iemgui_gn_fs_$vid]
-	global $var_iemgui_gn_fs
-	set var_iemgui_bcol [concat iemgui_bcol_$vid]
-	global $var_iemgui_bcol
-	set var_iemgui_fcol [concat iemgui_fcol_$vid]
-	global $var_iemgui_fcol
-	set var_iemgui_lcol [concat iemgui_lcol_$vid]
-	global $var_iemgui_lcol
-	set var_iemgui_hide [concat iemgui_hide_$vid]
-	global $var_iemgui_hide
-	
 	iemgui_clip_dim $id
 	iemgui_clip_num $id
 	iemgui_sched_rng $id
@@ -5838,11 +5633,11 @@ proc iemgui_apply {id} {
 	iemgui_sched_rng $id
 	iemgui_clip_fontsize $id
 	
-	if {[eval concat $$var_iemgui_snd] == ""} {set hhhsnd "empty"} else {set hhhsnd [eval concat $$var_iemgui_snd]}
-	if {[eval concat $$var_iemgui_rcv] == ""} {set hhhrcv "empty"} else {set hhhrcv [eval concat $$var_iemgui_rcv]}
-	if {[eval concat $$var_iemgui_gui_nam] == ""} {set hhhgui_nam "empty"
+	if {$::dialog($vid:snd) == ""} {set hhhsnd "empty"} else {set hhhsnd $::dialog($vid:snd)}
+	if {$::dialog($vid:rcv) == ""} {set hhhrcv "empty"} else {set hhhrcv $::dialog($vid:rcv)}
+	if {$::dialog($vid:gui_nam) == ""} {set hhhgui_nam "empty"
 	} else {
-	    set hhhgui_nam [eval concat $$var_iemgui_gui_nam]}
+	    set hhhgui_nam $::dialog($vid:gui_nam)}
 
 	if {[string index $hhhsnd 0] == "$"} {
 	    set hhhsnd [string replace $hhhsnd 0 0 #] }
@@ -5856,30 +5651,20 @@ proc iemgui_apply {id} {
 	set hhhgui_nam [pdtk_unspace $hhhgui_nam]
 
 	# make sure the offset boxes have a value
-    if {[eval concat $$var_iemgui_gn_dx] eq ""} {set $var_iemgui_gn_dx 0}
-    if {[eval concat $$var_iemgui_gn_dy] eq ""} {set $var_iemgui_gn_dy 0}
+    if {$::dialog($vid:gn_dx) eq ""} {set ::dialog($vid:gn_dx) 0}
+    if {$::dialog($vid:gn_dy) eq ""} {set ::dialog($vid:gn_dy) 0}
 
 	pd [concat $id dialog \
-		    [eval concat $$var_iemgui_wdt] \
-		    [eval concat $$var_iemgui_hgt] \
-		    [eval concat $$var_iemgui_min_rng] \
-		    [eval concat $$var_iemgui_max_rng] \
-		    [eval concat $$var_iemgui_lin0_log1] \
-		    [eval concat $$var_iemgui_loadbang] \
-		    [eval concat $$var_iemgui_num] \
-		    $hhhsnd \
-		    $hhhrcv \
-		    $hhhgui_nam \
-		    [eval concat $$var_iemgui_gn_dx] \
-		    [eval concat $$var_iemgui_gn_dy] \
-		    [eval concat $$var_iemgui_gn_f] \
-		    [eval concat $$var_iemgui_gn_fs] \
-		    [eval concat $$var_iemgui_bcol] \
-		    [eval concat $$var_iemgui_fcol] \
-		    [eval concat $$var_iemgui_lcol] \
-		    [eval concat $$var_iemgui_steady] \
-			[eval concat $$var_iemgui_hide] \
-		    \;]
+		$::dialog($vid:wdt) $::dialog($vid:hgt) \
+		$::dialog($vid:min_rng) $::dialog($vid:max_rng) \
+		$::dialog($vid:lin0_log1) $::dialog($vid:loadbang) \
+		$::dialog($vid:num) \
+		$hhhsnd $hhhrcv $hhhgui_nam \
+		$::dialog($vid:gn_dx) $::dialog($vid:gn_dy) \
+		$::dialog($vid:gn_f) $::dialog($vid:gn_fs) \
+		$::dialog($vid:bcol) $::dialog($vid:fcol) \
+		$::dialog($vid:lcol) \
+		$::dialog($vid:steady) $::dialog($vid:hide) \;]
 }
 
 proc iemgui_cancel {id} {
@@ -5897,113 +5682,56 @@ proc iemgui_ok {id} {
 }
 
 proc pdtk_iemgui_dialog {id mainheader \
-                             dim_header wdt min_wdt wdt_label hgt min_hgt hgt_label \
-                             rng_header min_rng min_rng_label max_rng max_rng_label rng_sched \
-                             lin0_log1 lilo0_label lilo1_label loadbang steady num_label num \
-                             snd rcv \
-                             gui_name \
-                             gn_dx gn_dy \
-                             gn_f gn_fs \
-                             bcol fcol lcol} {
-
+  dim_header wdt min_wdt wdt_label hgt min_hgt hgt_label \
+  rng_header min_rng min_rng_label max_rng max_rng_label rng_sched \
+  lin0_log1 lilo0_label lilo1_label loadbang steady num_label num \
+  snd rcv gui_name gn_dx gn_dy gn_f gn_fs bcol fcol lcol} {
     set vid [string trimleft $id .]
-
     global pd_nt
     global fontname fontweight
 
-    set var_iemgui_wdt [concat iemgui_wdt_$vid]
-    global $var_iemgui_wdt
-    set var_iemgui_min_wdt [concat iemgui_min_wdt_$vid]
-    global $var_iemgui_min_wdt
-    set var_iemgui_hgt [concat iemgui_hgt_$vid]
-    global $var_iemgui_hgt
-    set var_iemgui_min_hgt [concat iemgui_min_hgt_$vid]
-    global $var_iemgui_min_hgt
-    set var_iemgui_min_rng [concat iemgui_min_rng_$vid]
-    global $var_iemgui_min_rng
-    set var_iemgui_max_rng [concat iemgui_max_rng_$vid]
-    global $var_iemgui_max_rng
-    set var_iemgui_rng_sch [concat iemgui_rng_sch_$vid]
-    global $var_iemgui_rng_sch
-    set var_iemgui_lin0_log1 [concat iemgui_lin0_log1_$vid]
-    global $var_iemgui_lin0_log1
-    set var_iemgui_lilo0 [concat iemgui_lilo0_$vid]
-    global $var_iemgui_lilo0
-    set var_iemgui_lilo1 [concat iemgui_lilo1_$vid]
-    global $var_iemgui_lilo1
-    set var_iemgui_loadbang [concat iemgui_loadbang_$vid]
-    global $var_iemgui_loadbang
-    set var_iemgui_num [concat iemgui_num_$vid]
-    global $var_iemgui_num
-    set var_iemgui_steady [concat iemgui_steady_$vid]
-    global $var_iemgui_steady
-    set var_iemgui_snd [concat iemgui_snd_$vid]
-    global $var_iemgui_snd
-    set var_iemgui_rcv [concat iemgui_rcv_$vid]
-    global $var_iemgui_rcv
-    set var_iemgui_gui_nam [concat iemgui_gui_nam_$vid]
-    global $var_iemgui_gui_nam
-    set var_iemgui_gn_dx [concat iemgui_gn_dx_$vid]
-    global $var_iemgui_gn_dx
-    set var_iemgui_gn_dy [concat iemgui_gn_dy_$vid]
-    global $var_iemgui_gn_dy
-    set var_iemgui_gn_f [concat iemgui_gn_f_$vid]
-    global $var_iemgui_gn_f
-    set var_iemgui_gn_fs [concat iemgui_gn_fs_$vid]
-    global $var_iemgui_gn_fs
-    set var_iemgui_l2_f1_b0 [concat iemgui_l2_f1_b0_$vid]
-    global $var_iemgui_l2_f1_b0
-    set var_iemgui_bcol [concat iemgui_bcol_$vid]
-    global $var_iemgui_bcol
-    set var_iemgui_fcol [concat iemgui_fcol_$vid]
-    global $var_iemgui_fcol
-    set var_iemgui_lcol [concat iemgui_lcol_$vid]
-    global $var_iemgui_lcol
-    set var_iemgui_hide [concat iemgui_hide_$vid]
-    global $var_iemgui_hide
-
-    set $var_iemgui_wdt $wdt
-    set $var_iemgui_min_wdt $min_wdt
-    set $var_iemgui_hgt $hgt
-    set $var_iemgui_min_hgt $min_hgt
-    set $var_iemgui_min_rng $min_rng
-    set $var_iemgui_max_rng $max_rng
+    set ::dialog($vid:wdt) $wdt
+    set ::dialog($vid:min_wdt) $min_wdt
+    set ::dialog($vid:hgt) $hgt
+    set ::dialog($vid:min_hgt) $min_hgt
+    set ::dialog($vid:min_rng) $min_rng
+    set ::dialog($vid:max_rng) $max_rng
 	if ([string compare "|nbx|" $mainheader]) {
-		set $var_iemgui_hide 0
-    	set $var_iemgui_rng_sch $rng_sched
+		set ::dialog($vid:hide) 0
+    	set ::dialog($vid:rng_sch) $rng_sched
 	} else {
-    	set $var_iemgui_hide $rng_sched
-		set $var_iemgui_rng_sch 0
+    	set ::dialog($vid:hide) $rng_sched
+		set ::dialog($vid:rng_sch) 0
 	}
-    set $var_iemgui_lin0_log1 $lin0_log1
-    set $var_iemgui_lilo0 $lilo0_label
-    set $var_iemgui_lilo1 $lilo1_label
-    set $var_iemgui_loadbang $loadbang
-    set $var_iemgui_num $num
-    set $var_iemgui_steady $steady
-    if {$snd == "empty"} {set $var_iemgui_snd [format ""]
-    } else {set $var_iemgui_snd [format "%s" $snd]}
-    if {$rcv == "empty"} {set $var_iemgui_rcv [format ""]
-    } else {set $var_iemgui_rcv [format "%s" $rcv]}
-    if {$gui_name == "empty"} {set $var_iemgui_gui_nam [format ""]
-    } else {set $var_iemgui_gui_nam [format "%s" $gui_name]}
+    set ::dialog($vid:lin0_log1) $lin0_log1
+    set ::dialog($vid:lilo0) $lilo0_label
+    set ::dialog($vid:lilo1) $lilo1_label
+    set ::dialog($vid:loadbang) $loadbang
+    set ::dialog($vid:num) $num
+    set ::dialog($vid:steady) $steady
+    if {$snd == "empty"} {set ::dialog($vid:snd) [format ""]
+    } else {set ::dialog($vid:snd) [format "%s" $snd]}
+    if {$rcv == "empty"} {set ::dialog($vid:rcv) [format ""]
+    } else {set ::dialog($vid:rcv) [format "%s" $rcv]}
+    if {$gui_name == "empty"} {set ::dialog($vid:gui_nam) [format ""]
+    } else {set ::dialog($vid:gui_nam) [format "%s" $gui_name]}
     
-    if {[string index [eval concat $$var_iemgui_snd] 0] == "#"} {
-        set $var_iemgui_snd [string replace [eval concat $$var_iemgui_snd] 0 0 $] }
-    if {[string index [eval concat $$var_iemgui_rcv] 0] == "#"} {
-        set $var_iemgui_rcv [string replace [eval concat $$var_iemgui_rcv] 0 0 $] }
-    if {[string index [eval concat $$var_iemgui_gui_nam] 0] == "#"} {
-        set $var_iemgui_gui_nam [string replace [eval concat $$var_iemgui_gui_nam] 0 0 $] }
-    set $var_iemgui_gn_dx $gn_dx
-    set $var_iemgui_gn_dy $gn_dy
-    set $var_iemgui_gn_f $gn_f
-	set $var_iemgui_gn_fs $gn_fs 
+    if {[string index $::dialog($vid:snd) 0] == "#"} {
+        set ::dialog($vid:snd) [string replace $::dialog($vid:snd) 0 0 $] }
+    if {[string index $::dialog($vid:rcv) 0] == "#"} {
+        set ::dialog($vid:rcv) [string replace $::dialog($vid:rcv) 0 0 $] }
+    if {[string index $::dialog($vid:gui_nam) 0] == "#"} {
+        set ::dialog($vid:gui_nam) [string replace $::dialog($vid:gui_nam) 0 0 $] }
+    set ::dialog($vid:gn_dx) $gn_dx
+    set ::dialog($vid:gn_dy) $gn_dy
+    set ::dialog($vid:gn_f) $gn_f
+	set ::dialog($vid:gn_fs) $gn_fs 
 
-    set $var_iemgui_bcol $bcol
-    set $var_iemgui_fcol $fcol
-    set $var_iemgui_lcol $lcol
+    set ::dialog($vid:bcol) $bcol
+    set ::dialog($vid:fcol) $fcol
+    set ::dialog($vid:lcol) $lcol
     
-    set $var_iemgui_l2_f1_b0 0
+    set ::dialog($vid:l2_f1_b0) 0
 
     toplevel $id -class [winfo class .]
     wm title $id [format "%s Properties" $mainheader]
@@ -6019,21 +5747,21 @@ proc pdtk_iemgui_dialog {id mainheader \
     pack $id.dim -side top
     match_linux_wm [list label $id.dim.head -text $dim_header]
     match_linux_wm [list label $id.dim.w_lab -text $wdt_label -width 6]
-    match_linux_wm [list entry $id.dim.w_ent -textvariable $var_iemgui_wdt -width 5]
+    match_linux_wm [list entry $id.dim.w_ent -textvariable ::dialog($vid:wdt) -width 5]
     match_linux_wm [list label $id.dim.h_lab -text $hgt_label -width 6]
-    match_linux_wm [list entry $id.dim.h_ent -textvariable $var_iemgui_hgt -width 5]
+    match_linux_wm [list entry $id.dim.h_ent -textvariable ::dialog($vid:hgt) -width 5]
     pack $id.dim.head -side top
 	if (![string compare "|nbx|" $mainheader]) {
-		if {[eval concat $$var_iemgui_hide] == 0} {
+		if {$::dialog($vid:hide) == 0} {
 			match_linux_wm [list button $id.dim.h -text {normal} -width 7 -command "iemgui_hide_frame $id"]
 		}
-		if {[eval concat $$var_iemgui_hide] == 1} {
+		if {$::dialog($vid:hide) == 1} {
 			match_linux_wm [list button $id.dim.h -text {frame} -width 7 -command "iemgui_hide_frame $id"]
 		}
-		if {[eval concat $$var_iemgui_hide] == 2} {
+		if {$::dialog($vid:hide) == 2} {
 			match_linux_wm [list button $id.dim.h -text {arrow} -width 7 -command "iemgui_hide_frame $id"]
 		}
-		if {[eval concat $$var_iemgui_hide] == 3} {
+		if {$::dialog($vid:hide) == 3} {
 			match_linux_wm [list button $id.dim.h -text {none} -width 7 -command "iemgui_hide_frame $id"]
 		}
 		match_linux_wm [list label $id.dim.dummy1 -text " " -width 1]
@@ -6051,11 +5779,11 @@ proc pdtk_iemgui_dialog {id mainheader \
     match_linux_wm [list label $id.rng.head -text $rng_header]
     match_linux_wm [list label $id.rng.min_lab -text $min_rng_label -width 6]
     match_linux_wm [list entry $id.rng.min_ent \
-		-textvariable $var_iemgui_min_rng -width 9]
+		-textvariable ::dialog($vid:min_rng) -width 9]
     match_linux_wm [list label $id.rng.dummy1 -text " " -width 1]
     match_linux_wm [list label $id.rng.max_lab -text $max_rng_label -width 8]
     match_linux_wm [list entry $id.rng.max_ent \
-		-textvariable $var_iemgui_max_rng -width 9]
+		-textvariable ::dialog($vid:max_rng) -width 9]
     if { $rng_header != "empty" } {
         pack $id.rng.head -side top
         if { $min_rng_label != "empty" } {
@@ -6064,7 +5792,7 @@ proc pdtk_iemgui_dialog {id mainheader \
             pack $id.rng.dummy1 \
                 $id.rng.max_lab $id.rng.max_ent -side left} }
     
-    if { [eval concat $$var_iemgui_lin0_log1] >= 0 || [eval concat $$var_iemgui_loadbang] >= 0 || [eval concat $$var_iemgui_num] > 0 || [eval concat $$var_iemgui_steady] >= 0 } {
+    if { $::dialog($vid:lin0_log1) >= 0 || $::dialog($vid:loadbang) >= 0 || $::dialog($vid:num) > 0 || $::dialog($vid:steady) >= 0 } {
         match_linux_wm [list label $id.space1 -text ""]
         pack $id.space1 -side top }
 
@@ -6072,40 +5800,40 @@ proc pdtk_iemgui_dialog {id mainheader \
     pack $id.para -side top
     match_linux_wm [list label $id.para.dummy2 -text "" -width 1]
     match_linux_wm [list label $id.para.dummy3 -text "" -width 1]
-    if {[eval concat $$var_iemgui_lin0_log1] == 0} {
-		match_linux_wm [list button $id.para.lilo -text [eval concat \
-			$$var_iemgui_lilo0] -width 7 -command "iemgui_lilo $id"]
+    if {$::dialog($vid:lin0_log1) == 0} {
+		match_linux_wm [list button $id.para.lilo -text \
+			$::dialog($vid:lilo0) -width 7 -command "iemgui_lilo $id"]
 	}
-    if {[eval concat $$var_iemgui_lin0_log1] == 1} {
-		match_linux_wm [list button $id.para.lilo -text [eval concat \
-			$$var_iemgui_lilo1] -width 7 -command "iemgui_lilo $id"]
+    if {$::dialog($vid:lin0_log1) == 1} {
+		match_linux_wm [list button $id.para.lilo -text \
+			$::dialog($vid:lilo1) -width 7 -command "iemgui_lilo $id"]
 	}
-    if {[eval concat $$var_iemgui_loadbang] == 0} {
+    if {$::dialog($vid:loadbang) == 0} {
 		match_linux_wm [list button $id.para.lb -text "no init" \
 			-width 6 -command "iemgui_lb $id"]
 	}
-    if {[eval concat $$var_iemgui_loadbang] == 1} {
+    if {$::dialog($vid:loadbang) == 1} {
 		match_linux_wm [list button $id.para.lb -text "init" \
 			-width 6 -command "iemgui_lb $id"]
 	}
     match_linux_wm [list label $id.para.num_lab -text $num_label -width 9]
     match_linux_wm [list entry $id.para.num_ent \
-		-textvariable $var_iemgui_num -width 4]
-    if {[eval concat $$var_iemgui_steady] == 0} {
+		-textvariable ::dialog($vid:num) -width 4]
+    if {$::dialog($vid:steady) == 0} {
         match_linux_wm [list button $id.para.stdy_jmp \
 			-text "jump on click" -width 12 -command "iemgui_stdy_jmp $id"]
 	}
-    if {[eval concat $$var_iemgui_steady] == 1} {
+    if {$::dialog($vid:steady) == 1} {
         match_linux_wm [list button $id.para.stdy_jmp \
 			-text "steady on click" -width 12 -command "iemgui_stdy_jmp $id"]
 	}
-    if {[eval concat $$var_iemgui_lin0_log1] >= 0} {
+    if {$::dialog($vid:lin0_log1) >= 0} {
         pack $id.para.lilo -side left -expand 1}
-    if {[eval concat $$var_iemgui_loadbang] >= 0} {
+    if {$::dialog($vid:loadbang) >= 0} {
         pack $id.para.dummy2 $id.para.lb -side left -expand 1}
-    if {[eval concat $$var_iemgui_num] > 0} {
+    if {$::dialog($vid:num) > 0} {
         pack $id.para.dummy3 $id.para.num_lab $id.para.num_ent -side left -expand 1}
-    if {[eval concat $$var_iemgui_steady] >= 0} {
+    if {$::dialog($vid:steady) >= 0} {
         pack $id.para.dummy3 $id.para.stdy_jmp -side left -expand 1}
 
     match_linux_wm [list frame $id.spacer0 -height 4]
@@ -6120,7 +5848,7 @@ proc pdtk_iemgui_dialog {id mainheader \
     match_linux_wm [list label $id.s_r.send.lab \
 		-text "   send-symbol:" -width 12  -justify right]
     match_linux_wm [list entry $id.s_r.send.ent \
-		-textvariable $var_iemgui_snd -width 22]
+		-textvariable ::dialog($vid:snd) -width 22]
     if { $snd != "nosndno" } {
         pack $id.s_r.send.lab $id.s_r.send.ent -side left -pady 3
 	}    
@@ -6129,15 +5857,15 @@ proc pdtk_iemgui_dialog {id mainheader \
     match_linux_wm [list label $id.s_r.receive.lab \
 		-text "receive-symbol:" -width 12 -justify right]
     match_linux_wm [list entry $id.s_r.receive.ent \
-		-textvariable $var_iemgui_rcv -width 22]
+		-textvariable ::dialog($vid:rcv) -width 22]
     if { $rcv != "norcvno" } {
         pack $id.s_r.receive.lab $id.s_r.receive.ent -side left
 	}    
     # get the current font name from the int given from C-space (gn_f)
     set current_font $fontname
-    if {[eval concat $$var_iemgui_gn_f] == 1} \
+    if {$::dialog($vid:gn_f) == 1} \
         { set current_font "Helvetica" }
-    if {[eval concat $$var_iemgui_gn_f] == 2} \
+    if {$::dialog($vid:gn_f) == 2} \
         { set current_font "Times" }
 
     match_linux_wm [list frame $id.spacer1 -height 7]
@@ -6148,7 +5876,7 @@ proc pdtk_iemgui_dialog {id mainheader \
         -font highlight_font]
     pack $id.label -side top -fill x -padx 3 -ipadx 3 -ipady 3
     match_linux_wm [list entry $id.label.name_entry \
-		-textvariable $var_iemgui_gui_nam -width 30 \
+		-textvariable ::dialog($vid:gui_nam) -width 30 \
         -font [list $current_font 9 $fontweight]]
     pack $id.label.name_entry -side top -expand yes -fill both -padx 5 -pady 3
     
@@ -6156,11 +5884,11 @@ proc pdtk_iemgui_dialog {id mainheader \
     pack $id.label.xy -side top
     match_linux_wm [list label $id.label.xy.x_lab -text "x offset" -width 6]
     match_linux_wm [list entry $id.label.xy.x_entry \
-		-textvariable $var_iemgui_gn_dx -width 5]
+		-textvariable ::dialog($vid:gn_dx) -width 5]
     match_linux_wm [list label $id.label.xy.dummy1 -text " " -width 2]
     match_linux_wm [list label $id.label.xy.y_lab -text "y offset" -width 6]
     match_linux_wm [list entry $id.label.xy.y_entry \
-		-textvariable $var_iemgui_gn_dy -width 5]
+		-textvariable ::dialog($vid:gn_dy) -width 5]
     pack $id.label.xy.x_lab $id.label.xy.x_entry $id.label.xy.dummy1 \
         $id.label.xy.y_lab $id.label.xy.y_entry -side left -anchor e
     match_linux_wm [list label $id.label.fontpopup_label -text $current_font \
@@ -6168,7 +5896,7 @@ proc pdtk_iemgui_dialog {id mainheader \
     pack $id.label.fontpopup_label -side left -anchor w -expand yes -fill x -padx 3
     match_linux_wm [list label $id.label.fontsize_label -text "size" -width 4]
     match_linux_wm [list entry $id.label.fontsize_entry \
-		-textvariable $var_iemgui_gn_fs -width 5]
+		-textvariable ::dialog($vid:gn_fs) -width 5]
     pack $id.label.fontsize_entry $id.label.fontsize_label \
         -side right -anchor e -padx 5 -pady 3
     match_linux_wm [list menu $id.popup -tearoff 0]
@@ -6197,12 +5925,12 @@ proc pdtk_iemgui_dialog {id mainheader \
     match_linux_wm [list frame $id.colors.select]
     pack $id.colors.select -side top
     match_linux_wm [list radiobutton $id.colors.select.radio0 -value 0 -variable \
-        $var_iemgui_l2_f1_b0 -text "background" -width 10]
+        ::dialog($vid:l2_f1_b0) -text "background" -width 10]
     match_linux_wm [list radiobutton $id.colors.select.radio1 -value 1 -variable \
-        $var_iemgui_l2_f1_b0 -text "front" -width 5]
+        ::dialog($vid:l2_f1_b0) -text "front" -width 5]
     match_linux_wm [list radiobutton $id.colors.select.radio2 -value 2 -variable \
-        $var_iemgui_l2_f1_b0 -text "label" -width 5]
-    if { [eval concat $$var_iemgui_fcol] >= 0 } {
+        ::dialog($vid:l2_f1_b0) -text "label" -width 5]
+    if { $::dialog($vid:fcol) >= 0 } {
         pack $id.colors.select.radio0 $id.colors.select.radio1 \
             $id.colors.select.radio2 -side left
     } else {
@@ -6217,26 +5945,26 @@ proc pdtk_iemgui_dialog {id mainheader \
     pack $id.colors.sections.but -side left -anchor w -padx 3 -pady 5 \
         -expand yes -fill x
 	bind $id <Alt-KeyPress-s> [format "iemgui_choose_col_bkfrlb %s" $id]
-    if { [eval concat $$var_iemgui_fcol] >= 0 } {
+    if { $::dialog($vid:fcol) >= 0 } {
         match_linux_wm [list label $id.colors.sections.fr_bk -text "o=||=o" -width 6 \
-            -background [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -activebackground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -foreground [format "#%6.6x" [eval concat $$var_iemgui_fcol]] \
-            -activeforeground [format "#%6.6x" [eval concat $$var_iemgui_fcol]] \
+            -background [format "#%6.6x" $::dialog($vid:bcol)] \
+            -activebackground [format "#%6.6x" $::dialog($vid:bcol)] \
+            -foreground [format "#%6.6x" $::dialog($vid:fcol)] \
+            -activeforeground [format "#%6.6x" $::dialog($vid:fcol)] \
             -font [list $current_font 9 $fontweight] -padx 2 -pady 2 -relief ridge]
     } else {
         match_linux_wm [list label $id.colors.sections.fr_bk -text "o=||=o" -width 6 \
-            -background [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -activebackground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -foreground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-            -activeforeground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
+            -background [format "#%6.6x" $::dialog($vid:bcol)] \
+            -activebackground [format "#%6.6x" $::dialog($vid:bcol)] \
+            -foreground [format "#%6.6x" $::dialog($vid:bcol)] \
+            -activeforeground [format "#%6.6x" $::dialog($vid:bcol)] \
             -font [list $current_font 9 $fontweight] -padx 2 -pady 2 -relief ridge]
     }
     match_linux_wm [list label $id.colors.sections.lb_bk -text "testlabel" -width 9 \
-        -background [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-        -activebackground [format "#%6.6x" [eval concat $$var_iemgui_bcol]] \
-        -foreground [format "#%6.6x" [eval concat $$var_iemgui_lcol]] \
-        -activeforeground [format "#%6.6x" [eval concat $$var_iemgui_lcol]] \
+        -background [format "#%6.6x" $::dialog($vid:bcol)] \
+        -activebackground [format "#%6.6x" $::dialog($vid:bcol)] \
+        -foreground [format "#%6.6x" $::dialog($vid:lcol)] \
+        -activeforeground [format "#%6.6x" $::dialog($vid:lcol)] \
         -font [list $current_font 9 $fontweight] -padx 2 -pady 2 -relief ridge]
     pack $id.colors.sections.lb_bk $id.colors.sections.fr_bk \
         -side right -anchor e -expand yes -fill both -pady 7 -padx 3
@@ -6329,33 +6057,15 @@ proc pdtk_iemgui_dialog {id mainheader \
 proc array_apply {id canvas} {
     # strip "." from the TK id to make a variable name suffix 
     set vid [string trimleft $id .]
-    # for each variable, make a local variable to hold its name...
-    set var_array_name [concat array_name_$vid]
-    global $var_array_name
-    set var_array_n [concat array_n_$vid]
-    global $var_array_n
-    set var_array_saveit [concat array_saveit_$vid]
-    global $var_array_saveit
-    set var_array_drawasrects [concat array_drawasrects_$vid]
-    global $var_array_drawasrects
-    set var_array_joc [concat array_joc_$vid]
-    global $var_array_joc
-    set var_array_otherflag [concat array_otherflag_$vid]
-    global $var_array_otherflag
-    set var_array_fill [concat array_fill_$vid]
-    global $var_array_fill
-    set var_array_outline [concat array_outline_$vid]
-    global $var_array_outline
-
-    set mofo [eval concat $$var_array_name]
+    set mofo $::dialog($vid:name)
     if {[string index $mofo 0] == "$"} {
         set mofo [string replace $mofo 0 0 #] }
 
-    set saveit [eval concat $$var_array_saveit]
-    set drawasrects [eval concat $$var_array_drawasrects]
-    set joc [eval concat $$var_array_joc]
-    set fill [eval concat $$var_array_fill]
-    set outline [eval concat $$var_array_outline]
+    set saveit $::dialog($vid:saveit)
+    set drawasrects $::dialog($vid:drawasrects)
+    set joc $::dialog($vid:joc)
+    set fill $::dialog($vid:fill)
+    set outline $::dialog($vid:outline)
 
 	# puts stderr "...[expr $saveit + 2 * $drawasrects + 16 * $joc]"
 
@@ -6363,9 +6073,9 @@ proc array_apply {id canvas} {
 	set ydraw [expr int([$canvas.c canvasy 0])]
 
     pd [concat $id arraydialog $mofo \
-            [eval concat $$var_array_n] \
+            $::dialog($vid:n) \
             [expr $saveit + 2 * $drawasrects + 16 * $joc] \
-            [eval concat $$var_array_otherflag] \
+            $::dialog($vid:otherflag) \
 			$xdraw \
 			$ydraw \
             $fill $outline \
@@ -6452,36 +6162,16 @@ proc pdtk_array_dialog {gfxstub name n flags newone canvas fill outline} {
 
 
 if {[catch {
-
     set vid [string trimleft $gfxstub .]
-    set var_array_canvas [concat array_canvas_$vid]
-    global $var_array_canvas
-    set var_array_name [concat array_name_$vid]
-    global $var_array_name
-    set var_array_n [concat array_n_$vid]
-    global $var_array_n
-    set var_array_saveit [concat array_saveit_$vid]
-    global $var_array_saveit
-    set var_array_drawasrects [concat array_drawasrects_$vid]
-    global $var_array_drawasrects
-    set var_array_joc [concat array_joc_$vid]
-    global $var_array_joc
-    set var_array_otherflag [concat array_otherflag_$vid]
-    global $var_array_otherflag
-    set var_array_fill [concat array_fill_$vid]
-    global $var_array_fill
-    set var_array_outline [concat array_outline_$vid]
-    global $var_array_outline
-
-    set $var_array_canvas $canvas
-    set $var_array_name $name
-    set $var_array_n $n
-    set $var_array_saveit [expr ( $flags & 1 ) != 0]
-    set $var_array_drawasrects [expr ( $flags & 6 ) >> 1]
-    set $var_array_joc [expr ( $flags & 16 ) != 0]
-    set $var_array_otherflag 0
-    set $var_array_fill $fill
-    set $var_array_outline $outline
+    set ::dialog($vid:canvas) $canvas
+    set ::dialog($vid:name) $name
+    set ::dialog($vid:n) $n
+    set ::dialog($vid:saveit) [expr ( $flags & 1 ) != 0]
+    set ::dialog($vid:drawasrects) [expr ( $flags & 6 ) >> 1]
+    set ::dialog($vid:joc) [expr ( $flags & 16 ) != 0]
+    set ::dialog($vid:otherflag) 0
+    set ::dialog($vid:fill) $fill
+    set ::dialog($vid:outline) $outline
 
     set multiarray_graph 0
 
@@ -6553,13 +6243,13 @@ if {[catch {
     match_linux_wm [list frame $id.name]
     pack $id.name -side top -pady 3
     match_linux_wm [list label $id.name.label -text "name"]
-    match_linux_wm [list entry $id.name.entry -textvariable $var_array_name]
+    match_linux_wm [list entry $id.name.entry -textvariable ::dialog($vid:name)]
     pack $id.name.label $id.name.entry -side left -padx 3 -pady 3
 
     match_linux_wm [list frame $id.n]
     pack $id.n -side top
     match_linux_wm [list label $id.n.label -text "   size"]
-    match_linux_wm [list entry $id.n.entry -textvariable $var_array_n]
+    match_linux_wm [list entry $id.n.entry -textvariable ::dialog($vid:n)]
     pack $id.n.label $id.n.entry -side left -padx 3 -pady 6
 
     # hack so I don't have to rename everything
@@ -6568,10 +6258,10 @@ if {[catch {
     pack $id
 
     match_linux_wm [list checkbutton $id.saveme -text {save contents} \
-	-variable $var_array_saveit]
+	-variable ::dialog($vid:saveit)]
     pack $id.saveme -side top -pady 1 -anchor w
     match_linux_wm [list checkbutton $id.joc -text {jump on click} \
-        -variable $var_array_joc]
+        -variable ::dialog($vid:joc)]
     pack $id.joc -side top -pady 1 -anchor w
 
     set ffr $id.fillframe
@@ -6583,19 +6273,19 @@ if {[catch {
     match_linux_wm [list label $id.drawasrects.l -text "draw as:"]
     pack $id.drawasrects.l -side top -pady 3 -anchor w
     match_linux_wm [list radiobutton $id.drawasrects.drawasrects0 -value 0 \
-        -variable $var_array_drawasrects \
+        -variable ::dialog($vid:drawasrects) \
         -text "points" \
         -command "array_update_drawas 0 $ffr $ofr $olabel"]
     match_linux_wm [list radiobutton $id.drawasrects.drawasrects1 -value 1 \
-        -variable $var_array_drawasrects \
+        -variable ::dialog($vid:drawasrects) \
         -text "polygon" \
         -command "array_update_drawas 1 $ffr $ofr $olabel"]
     #match_linux_wm [list radiobutton $id.drawasrects.drawasrects2 -value 2 \
-    #    -variable $var_array_drawasrects \
+    #    -variable ::dialog($vid:drawasrects) \
     #    -text "bezier curve" \
     #    -command "array_update_drawas 2 $ffr $ofr $olabel"]
     match_linux_wm [list radiobutton $id.drawasrects.drawasrects3 -value 3 \
-        -variable $var_array_drawasrects \
+        -variable ::dialog($vid:drawasrects) \
         -text "bar graph" \
         -command "array_update_drawas 3 $ffr $ofr $olabel"]
     pack $id.drawasrects.drawasrects0 -side top -anchor w
@@ -6609,7 +6299,7 @@ if {[catch {
         button $f.b -relief raised -padx 7 -pady 0 \
             -background [set $attr] -activebackground [set $attr] \
             -command \
-                "array_choosecolor $f.b $mytoplevel [set var_array_$attr]"
+                "array_choosecolor $f.b $mytoplevel $::dialog($vid:$attr)"
         pack $f.b -side left -anchor w
         match_linux_wm [list label $f.l -text "$attr color"]
         pack $f.l -side left -anchor w
@@ -6617,16 +6307,16 @@ if {[catch {
         bind $f.l <Leave> "$f.l configure -foreground black"
         bind $f.l <1> "$f.b invoke"
     }
-    array_update_drawas [set $var_array_drawasrects] $ffr $ofr $olabel
+    array_update_drawas [set ::dialog($vid:drawasrects)] $ffr $ofr $olabel
 
     if {$newone != 0} { 
         match_linux_wm [list frame $id.radio]
         pack $id.radio -side top -pady 3 -anchor w
         match_linux_wm [list radiobutton $id.radio.radio0 -value 0 \
-            -variable $var_array_otherflag \
+            -variable ::dialog($vid:otherflag) \
             -text "in new graph"]
         match_linux_wm [list radiobutton $id.radio.radio1 -value 1 \
-            -variable $var_array_otherflag \
+            -variable ::dialog($vid:otherflag) \
             -text "in last graph"]
         pack $id.radio.radio0 -side top -anchor w
         pack $id.radio.radio1 -side top -anchor w
@@ -6640,7 +6330,7 @@ if {[catch {
            -command "array_viewlist $gfxstub $mytoplevel"]
         pack $id.listview -side right -padx 3 -pady 3
         match_linux_wm [list checkbutton $id.deleteme -text {delete me} \
-            -variable $var_array_otherflag]
+            -variable ::dialog($vid:otherflag)]
         if {$multiarray_graph} {
             pack $id.deleteme -side left
         }
@@ -6669,7 +6359,7 @@ if {[catch {
     	$id.name.entry select adjust end
 	}
     focus $id.name.entry
-} fid]} {pdtk_post "array dialog error: $fid\n"}
+}]} {pdtk_post "array dialog error: $::errorInfo\n"}
 }
 
 ############ pdtk_canvas_dialog -- dialog window for canvass #########
@@ -6682,51 +6372,22 @@ proc canvas_apply {id} {
     foreach tab [$id.n tabs] {
         set arraytab ""
         if {[regexp [list $id\.n(\.gfxstub.+)] $tab - arrayid]} {
-        set arrayvid [string trimleft $arrayid .]
-        set var_array_canvas [concat array_canvas_$arrayvid]
-        global $var_array_canvas
-        array_apply $arrayid [set $var_array_canvas]
+            set arrayvid [string trimleft $arrayid .]
+            array_apply $arrayid [set ::dialog($arrayvid:canvas)]
+        }
     }
-
-
-}
-    set var_canvas_xscale [concat canvas_xscale_$vid]
-    global $var_canvas_xscale
-    set var_canvas_yscale [concat canvas_yscale_$vid]
-    global $var_canvas_yscale
-    set var_canvas_graphme [concat canvas_graphme_$vid]
-    global $var_canvas_graphme
-    set var_canvas_hidetext [concat canvas_hidetext_$vid]
-    global $var_canvas_hidetext
-    set var_canvas_x1 [concat canvas_x1_$vid]
-    global $var_canvas_x1
-    set var_canvas_x2 [concat canvas_x2_$vid]
-    global $var_canvas_x2
-    set var_canvas_xpix [concat canvas_xpix_$vid]
-    global $var_canvas_xpix
-    set var_canvas_xmargin [concat canvas_xmargin_$vid]
-    global $var_canvas_xmargin
-    set var_canvas_y1 [concat canvas_y1_$vid]
-    global $var_canvas_y1
-    set var_canvas_y2 [concat canvas_y2_$vid]
-    global $var_canvas_y2
-    set var_canvas_ypix [concat canvas_ypix_$vid]
-    global $var_canvas_ypix
-    set var_canvas_ymargin [concat canvas_ymargin_$vid]
-    global $var_canvas_ymargin
-
     pd [concat $id donecanvasdialog \
-            [eval concat $$var_canvas_xscale] \
-            [eval concat $$var_canvas_yscale] \
-            [expr [eval concat $$var_canvas_graphme]+2*[eval concat $$var_canvas_hidetext]] \
-            [eval concat $$var_canvas_x1] \
-            [eval concat $$var_canvas_y1] \
-            [eval concat $$var_canvas_x2] \
-            [eval concat $$var_canvas_y2] \
-            [eval concat $$var_canvas_xpix] \
-            [eval concat $$var_canvas_ypix] \
-            [eval concat $$var_canvas_xmargin] \
-            [eval concat $$var_canvas_ymargin] \
+            $::dialog($vid:xscale) \
+            $::dialog($vid:yscale) \
+            [expr $::dialog($vid:graphme)+2*$::dialog($vid:hidetext)] \
+            $::dialog($vid:x1) \
+            $::dialog($vid:y1) \
+            $::dialog($vid:x2) \
+            $::dialog($vid:y2) \
+            $::dialog($vid:xpix) \
+            $::dialog($vid:ypix) \
+            $::dialog($vid:xmargin) \
+            $::dialog($vid:ymargin) \
             \;]
 }
 
@@ -6742,37 +6403,8 @@ proc canvas_ok {id} {
 
 proc canvas_checkcommand {id} {
     set vid [string trimleft $id .]
-    #    puts stderr [concat canvas_checkcommand $id $vid]
-
-    set var_canvas_xscale [concat canvas_xscale_$vid]
-    global $var_canvas_xscale
-    set var_canvas_yscale [concat canvas_yscale_$vid]
-    global $var_canvas_yscale
-    set var_canvas_graphme [concat canvas_graphme_$vid]
-    global $var_canvas_graphme
-    set var_canvas_hidetext [concat canvas_hidetext_$vid]
-    global $var_canvas_hidetext
-    set var_canvas_x1 [concat canvas_x1_$vid]
-    global $var_canvas_x1
-    set var_canvas_x2 [concat canvas_x2_$vid]
-    global $var_canvas_x2
-    set var_canvas_xpix [concat canvas_xpix_$vid]
-    global $var_canvas_xpix
-    set var_canvas_xmargin [concat canvas_xmargin_$vid]
-    global $var_canvas_xmargin
-    set var_canvas_y1 [concat canvas_y1_$vid]
-    global $var_canvas_y1
-    set var_canvas_y2 [concat canvas_y2_$vid]
-    global $var_canvas_y2
-    set var_canvas_ypix [concat canvas_ypix_$vid]
-    global $var_canvas_ypix
-    set var_canvas_ymargin [concat canvas_ymargin_$vid]
-    global $var_canvas_ymargin
-
-
     set id $id.n.canvasdialog
-
-    if { [eval concat $$var_canvas_graphme] != 0 } {
+    if { $::dialog($vid:graphme) != 0 } {
         $id.hidetext configure -state normal
         $id.x.f1.entry1 configure -state normal
         $id.x.f1.entry2 configure -state normal
@@ -6784,24 +6416,24 @@ proc canvas_checkcommand {id} {
         $id.y.f2.entry4 configure -state normal
         $id.xscale.entry configure -state disabled
         $id.yscale.entry configure -state disabled
-        set x1 [eval concat $$var_canvas_x1]
-        set y1 [eval concat $$var_canvas_y1]
-        set x2 [eval concat $$var_canvas_x2]
-        set y2 [eval concat $$var_canvas_y2]
-        if { [eval concat $$var_canvas_x1] == 0 && \
-                 [eval concat $$var_canvas_y1] == 0 && \
-                 [eval concat $$var_canvas_x2] == 0 && \
-                 [eval concat $$var_canvas_y2] == 0 } {
-            set $var_canvas_x2 1
-            set $var_canvas_y2 1
+        set x1 $::dialog($vid:x1)
+        set y1 $::dialog($vid:y1)
+        set x2 $::dialog($vid:x2)
+        set y2 $::dialog($vid:y2)
+        if { $::dialog($vid:x1) == 0 && \
+                 $::dialog($vid:y1) == 0 && \
+                 $::dialog($vid:x2) == 0 && \
+                 $::dialog($vid:y2) == 0 } {
+            set ::dialog($vid:x2) 1
+            set ::dialog($vid:y2) 1
         }
-        if { [eval concat $$var_canvas_xpix] == 0 } {
-            set $var_canvas_xpix 85
-            set $var_canvas_xmargin 100
+        if { $::dialog($vid:xpix) == 0 } {
+            set ::dialog($vid:xpix) 85
+            set ::dialog($vid:xmargin) 100
         }
-        if { [eval concat $$var_canvas_ypix] == 0 } {
-            set $var_canvas_ypix 60
-            set $var_canvas_ymargin 100
+        if { $::dialog($vid:ypix) == 0 } {
+            set ::dialog($vid:ypix) 60
+            set ::dialog($vid:ymargin) 100
         }
     } else {
         $id.hidetext configure -state disabled
@@ -6815,14 +6447,14 @@ proc canvas_checkcommand {id} {
         $id.y.f2.entry4 configure -state disabled
         $id.xscale.entry configure -state normal
         $id.yscale.entry configure -state normal
-        if { [eval concat $$var_canvas_xscale] == 0 } {
-            set $var_canvas_xscale 1
+        if { $::dialog($vid:xscale) == 0 } {
+            set ::dialog($vid:xscale) 1
         }
-        if { [eval concat $$var_canvas_yscale] == 0 } {
-            set $var_canvas_yscale -1
+        if { $::dialog($vid:yscale) == 0 } {
+            set ::dialog($vid:yscale) -1
         }
-        if { [eval concat $$var_canvas_hidetext] == 1 } {
-            set $var_canvas_hidetext 0
+        if { $::dialog($vid:hidetext) == 1 } {
+            set ::dialog($vid:hidetext) 0
         }
     }
 }
@@ -6852,44 +6484,18 @@ proc pdtk_canvas_dialog_undo_update {name x y} {
 proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
                              xpix ypix xmargin ymargin} {
     set vid [string trimleft $id .]
-    #puts stderr $id
-    set var_canvas_xscale [concat canvas_xscale_$vid]
-    global $var_canvas_xscale
-    set var_canvas_yscale [concat canvas_yscale_$vid]
-    global $var_canvas_yscale
-    set var_canvas_graphme [concat canvas_graphme_$vid]
-    global $var_canvas_graphme
-    set var_canvas_hidetext [concat canvas_hidetext_$vid]
-    global $var_canvas_hidetext
-    set var_canvas_x1 [concat canvas_x1_$vid]
-    global $var_canvas_x1
-    set var_canvas_x2 [concat canvas_x2_$vid]
-    global $var_canvas_x2
-    set var_canvas_xpix [concat canvas_xpix_$vid]
-    global $var_canvas_xpix
-    set var_canvas_xmargin [concat canvas_xmargin_$vid]
-    global $var_canvas_xmargin
-    set var_canvas_y1 [concat canvas_y1_$vid]
-    global $var_canvas_y1
-    set var_canvas_y2 [concat canvas_y2_$vid]
-    global $var_canvas_y2
-    set var_canvas_ypix [concat canvas_ypix_$vid]
-    global $var_canvas_ypix
-    set var_canvas_ymargin [concat canvas_ymargin_$vid]
-    global $var_canvas_ymargin
-
-    set $var_canvas_xscale $xscale
-    set $var_canvas_yscale $yscale
-    set $var_canvas_graphme [expr ($graphme!=0)?1:0]
-    set $var_canvas_hidetext [expr ($graphme&2)?1:0]
-    set $var_canvas_x1 $x1
-    set $var_canvas_y1 $y1
-    set $var_canvas_x2 $x2
-    set $var_canvas_y2 $y2
-    set $var_canvas_xpix $xpix
-    set $var_canvas_ypix $ypix
-    set $var_canvas_xmargin $xmargin
-    set $var_canvas_ymargin $ymargin
+    set ::dialog($vid:xscale) $xscale
+    set ::dialog($vid:yscale) $yscale
+    set ::dialog($vid:graphme) [expr ($graphme!=0)?1:0]
+    set ::dialog($vid:hidetext) [expr ($graphme&2)?1:0]
+    set ::dialog($vid:x1) $x1
+    set ::dialog($vid:y1) $y1
+    set ::dialog($vid:x2) $x2
+    set ::dialog($vid:y2) $y2
+    set ::dialog($vid:xpix) $xpix
+    set ::dialog($vid:ypix) $ypix
+    set ::dialog($vid:xmargin) $xmargin
+    set ::dialog($vid:ymargin) $ymargin
 
     toplevel $id -class [winfo class .]
     wm title $id {Canvas Properties}
@@ -6929,24 +6535,24 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
     pack $id.xscale -side top -pady 3
     match_linux_wm [list label $id.xscale.label -text "X units per pixel"]
     match_linux_wm [list entry $id.xscale.entry \
-		-textvariable $var_canvas_xscale -width 10]
+		-textvariable ::dialog($vid:xscale) -width 10]
     pack $id.xscale.label $id.xscale.entry -side left -pady 3 -padx 3
 
     match_linux_wm [list frame $id.yscale]
     pack $id.yscale -side top
     match_linux_wm [list label $id.yscale.label -text "Y units per pixel"]
     match_linux_wm [list entry $id.yscale.entry \
-		-textvariable $var_canvas_yscale -width 10]
+		-textvariable ::dialog($vid:yscale) -width 10]
     pack $id.yscale.label $id.yscale.entry -side left -padx 3
 
     match_linux_wm [list checkbutton $id.graphme -text {graph on parent} \
-        -variable $var_canvas_graphme \
+        -variable ::dialog($vid:graphme) \
         -command [concat canvas_checkcommand $wid]]
     pack $id.graphme -side top
 
     match_linux_wm [list checkbutton $id.hidetext \
 		-text {hide object name and arguments} \
-        -variable $var_canvas_hidetext \
+        -variable ::dialog($vid:hidetext) \
         -command [concat canvas_checkcommand $wid]]
     pack $id.hidetext -side top
 
@@ -6958,16 +6564,16 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
     pack $id.x.f2 -side top -fill x
     match_linux_wm [list label $id.x.f1.label1 -text "from"]
     match_linux_wm [list entry $id.x.f1.entry1 \
-		-textvariable $var_canvas_x1 -width 6]
+		-textvariable ::dialog($vid:x1) -width 6]
     match_linux_wm [list label $id.x.f1.label2 -text "to"]
     match_linux_wm [list entry $id.x.f1.entry2 \
-		-textvariable $var_canvas_x2 -width 6]
+		-textvariable ::dialog($vid:x2) -width 6]
     match_linux_wm [list label $id.x.f2.label3 -text "size"]
     match_linux_wm [list entry $id.x.f2.entry3 \
-		-textvariable $var_canvas_xpix -width 4]
+		-textvariable ::dialog($vid:xpix) -width 4]
     match_linux_wm [list label $id.x.f2.label4 -text "margin"]
     match_linux_wm [list entry $id.x.f2.entry4 \
-		-textvariable $var_canvas_xmargin -width 4]
+		-textvariable ::dialog($vid:xmargin) -width 4]
     pack $id.x.f1.label1 $id.x.f1.entry1 \
         $id.x.f1.label2 $id.x.f1.entry2 \
         -side left -pady 3 -padx 3 -expand 1
@@ -6987,16 +6593,16 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
     pack $id.y -side top
     match_linux_wm [list label $id.y.f1.label1 -text "from"]
     match_linux_wm [list entry $id.y.f1.entry1 \
-		-textvariable $var_canvas_y1 -width 6]
+		-textvariable ::dialog($vid:y1) -width 6]
     match_linux_wm [list label $id.y.f1.label2 -text "to"]
     match_linux_wm [list entry $id.y.f1.entry2 \
-		-textvariable $var_canvas_y2 -width 6]
+		-textvariable ::dialog($vid:y2) -width 6]
     match_linux_wm [list label $id.y.f2.label3 -text "size"]
     match_linux_wm [list entry $id.y.f2.entry3 \
-		-textvariable $var_canvas_ypix -width 4]
+		-textvariable ::dialog($vid:ypix) -width 4]
     match_linux_wm [list label $id.y.f2.label4 -text "margin"]
     match_linux_wm [list entry $id.y.f2.entry4 \
-		-textvariable $var_canvas_ymargin -width 4]
+		-textvariable ::dialog($vid:ymargin) -width 4]
     pack $id.y.f1.label1 $id.y.f1.entry1 \
         $id.y.f1.label2 $id.y.f1.entry2 \
         -side left -pady 3 -padx 3 -expand 1
