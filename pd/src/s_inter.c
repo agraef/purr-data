@@ -717,6 +717,7 @@ void sys_vvgui(const char *fmt, va_list ap) {
     if (sys_guibufhead>0) lastend=sys_guibuf[sys_guibufhead-1];
 }
 #undef sys_vgui
+#undef sys_gui
 void sys_vgui(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
