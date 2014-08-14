@@ -295,6 +295,7 @@ if { $tcl_platform(platform) == "windows" }  {
 
 proc bgerror {message} {
 	pdtk_post "\ntcl error: $message"
+	#puts "\033\[0;1;33mtcl error: $::errorInfo\033\[0m"
 }     
 
 # make sure the user folder for installing externals exists
@@ -6105,7 +6106,6 @@ proc array_choosecolor {widget mytoplevel colorvar} {
 #        set initcolor [set $colorp]
 #    } else {
 #        set initcolor "black"}
-    global $colorvar
     set tmp [tk_chooseColor -parent $mytoplevel -initialcolor [set $colorvar]]
     if {$tmp eq ""} {
         return
@@ -6299,7 +6299,7 @@ if {[catch {
         button $f.b -relief raised -padx 7 -pady 0 \
             -background [set $attr] -activebackground [set $attr] \
             -command \
-                "array_choosecolor $f.b $mytoplevel $::dialog($vid:$attr)"
+                "array_choosecolor $f.b $mytoplevel ::dialog($vid:$attr)"
         pack $f.b -side left -anchor w
         match_linux_wm [list label $f.l -text "$attr color"]
         pack $f.l -side left -anchor w
