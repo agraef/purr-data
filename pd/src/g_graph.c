@@ -38,7 +38,7 @@ int gop_redraw = 0;
 
 void canvas_drawredrect(t_canvas *x, int doit);
 
-static int canvas_isgroup(t_canvas *x)
+int canvas_isgroup(t_canvas *x)
 {
 /*    t_binbuf *b = x->gl_obj.te_binbuf;
     if (!b)

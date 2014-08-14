@@ -3870,8 +3870,29 @@ typedef struct _curve
     t_canvas *x_canvas;
 } t_curve;
 
+/* We use this to prevent the user from creating plot and other legacy
+   drawing commands inside a [group]. (However, they can still sneak in
+   when loading a file.) The reason is that they have not had their
+   motionfn revised to respect the parent affine transformations.  If they
+   did then we could allow them inside a [group]. */
+extern canvas_isgroup(t_canvas *x);
+
+static int legacy_draw_in_group(t_canvas *c)
+{
+    if (canvas_isgroup(c))
+    {
+        pd_error(c, "group: can't contain curve or plot");
+        return (1);
+    }
+    else
+        return (0);
+}
+
+    
 static void *curve_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
+    if (legacy_draw_in_group(canvas_getcurrent()))
+        return 0;
     t_curve *x = (t_curve *)pd_new(curve_class);
     char *classname = classsym->s_name;
     int flags = 0;
@@ -4372,6 +4393,9 @@ typedef struct _plot
 
 static void *plot_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
+     if (legacy_draw_in_group(canvas_getcurrent()))
+        return 0;
+
     t_plot *x = (t_plot *)pd_new(plot_class);
     int defstyle = PLOTSTYLE_POLY;
     x->x_canvas = canvas_getcurrent();
@@ -6144,6 +6168,9 @@ typedef struct _drawnumber
 
 static void *drawnumber_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
+    if (legacy_draw_in_group(canvas_getcurrent()))
+        return 0;
+
     t_drawnumber *x = (t_drawnumber *)pd_new(drawnumber_class);
     char *classname = classsym->s_name;
     int flags = 0;
@@ -6528,6 +6555,9 @@ typedef struct _drawsymbol
 
 static void *drawsymbol_new(t_symbol *classsym, t_int argc, t_atom *argv)
 {
+    if (legacy_draw_in_group(canvas_getcurrent()))
+        return 0;
+
     t_drawsymbol *x = (t_drawsymbol *)pd_new(drawsymbol_class);
     char *classname = classsym->s_name;
     int flags = 0;
