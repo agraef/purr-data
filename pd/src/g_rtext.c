@@ -509,9 +509,8 @@ void rtext_activate(t_rtext *x, int state)
     int w = 0, h = 0, indx;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
-    if (state && x->x_active) {
-        printf("duplicate rtext_activate\n");
-    }
+    //if (state && x->x_active) printf("duplicate rtext_activate\n");
+    if (state == x->x_active) return; // avoid excess calls
     if (state)
     {
         sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);
