@@ -358,13 +358,11 @@ static void slider_click(t_slider *x, t_floatarg xpos, t_floatarg ypos,
         x->x_val = x->x_orient ?
          (int)(100.0 * (x->x_gui.x_h + text_ypix(&x->x_gui.x_obj, x->x_gui.x_glist) - ypos)) :
          (int)(100.0 * (        xpos - text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist)));
-    printf("slider_click x->val=%d x->pos=%d\n",x->x_val,x->x_pos);
 
     int w = x->x_orient ? x->x_gui.x_h : x->x_gui.x_w;
     x->x_val = mini(maxi(x->x_val,0),100*(w-1));
     if (x->x_pos != x->x_val)
     {
-        printf("slider_click x->val=%d x->pos=%d\n",x->x_val,x->x_pos);
         x->x_pos = x->x_val;
         x->x_gui.x_changed = 1;
         x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_UPDATE);
@@ -401,7 +399,6 @@ static void slider_set(t_slider *x, t_floatarg f)
     else
         g =    (f-x->x_min)/x->x_k;
     x->x_val = (int)(100.0*g + 0.49999);
-    printf("slider_set val=%d pos=%d of=%f f=%f g=%f min=%f max=%f reverse=%d\n",x->x_val,x->x_pos,of,f,g,x->x_min,x->x_max,x->x_gui.x_reverse);
     if (x->x_pos != x->x_val)
     {
         x->x_pos = x->x_val;
@@ -412,14 +409,11 @@ static void slider_set(t_slider *x, t_floatarg f)
 
 static void slider_float(t_slider *x, t_floatarg f)
 {
-    printf("(1)slider_float x->val=%d x->pos=%d f=%f\n",x->x_val,x->x_pos,f);
     x->x_is_last_float = 1;
     x->x_last = f;
     slider_set(x, f);
-    printf("(2)slider_float x->val=%d x->pos=%d\n",x->x_val,x->x_pos);
     if(x->x_gui.x_put_in2out)
         slider_bang(x);
-    printf("(3)slider_float x->val=%d x->pos=%d\n",x->x_val,x->x_pos);
 }
 
 static void slider_size(t_slider *x, t_symbol *s, int ac, t_atom *av)
