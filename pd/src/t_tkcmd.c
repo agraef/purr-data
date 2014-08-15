@@ -558,10 +558,10 @@ void tcl_mess(char *s)
     int result;
 
 #ifdef DEBUG_TCL
-    char catch_s[strlen(s)];
+    char catch_s[strlen(s)+1];
     sprintf(catch_s, "%s", s);
 #else
-    char catch_s[strlen(s)+10];
+    char catch_s[strlen(s)+11];
     sprintf(catch_s, "catch { %s }", s);
 #endif
 
