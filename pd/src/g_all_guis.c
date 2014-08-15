@@ -675,11 +675,20 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
     h->h_vis = 1;
 }
 
+extern t_class *my_canvas_class;
+
 void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
     t_class *c = pd_class((t_pd *)x);
-    int x1,y1,x2,y2;
-    c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
-    scalehandle_draw_select(x->x_handle,canvas,x2-x1-1,y2-y1-1);
+    int sx,sy;
+    if (c==my_canvas_class) {
+        t_my_canvas *y = (t_my_canvas *)x;
+        sx=y->x_vis_w; sy=y->x_vis_h;
+    } else {
+        int x1,y1,x2,y2;
+        c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
+        sx=x2-x1; sy=y2-y1;
+    }
+    scalehandle_draw_select(x->x_handle,canvas,sx-1,sy-1);
     if (x->x_lab!=s_empty)
         scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy);
 }
@@ -787,7 +796,6 @@ void scalehandle_click_label(t_scalehandle *h) {
     h->h_dragy = 0;
 }
 
-extern t_class *my_canvas_class;
 void scalehandle_getrect_master(t_scalehandle *h, int *x1, int *y1, int *x2, int *y2) {
     t_iemgui *x = (t_iemgui *)h->h_master;
     t_class *c = pd_class((t_pd *)x);
