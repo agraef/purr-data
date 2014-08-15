@@ -393,9 +393,9 @@ static void slider_set(t_slider *x, t_floatarg f)
     double g;
     t_floatarg of=f;
     if(x->x_gui.x_reverse)
-        f = maxi(mini(f,x->x_min),x->x_max);
+        f = maxf(minf(f,x->x_min),x->x_max);
     else
-        f = maxi(mini(f,x->x_max),x->x_min);
+        f = maxf(minf(f,x->x_max),x->x_min);
     if(x->x_lin0_log1)
         g = log(f/x->x_min)/x->x_k;
     else
