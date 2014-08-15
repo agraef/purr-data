@@ -294,15 +294,13 @@ static void slider_bang(t_slider *x)
 static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
 {
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-
-    t_symbol *srl[3];
     int w = atom_getintarg(0, argc, argv);
     int h = atom_getintarg(1, argc, argv);
     double min = atom_getfloatarg(2, argc, argv);
     double max = atom_getfloatarg(3, argc, argv);
     x->x_lin0_log1 = !!atom_getintarg(4, argc, argv);
     x->x_steady = !!atom_getintarg(17, argc, argv);
-    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     if (x->x_orient) {
         x->x_gui.x_w = iemgui_clip_size(w);
         int oldl = x->x_gui.x_h;
@@ -318,7 +316,7 @@ static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
     }
     slider_check_minmax(x, min, max);
     x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
+    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
     scrollbar_update(x->x_gui.x_glist);

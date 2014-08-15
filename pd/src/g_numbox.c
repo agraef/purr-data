@@ -159,7 +159,7 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         ".x%lx.c create ppolygon %d %d %d %d %d %d %d %d %d %d -stroke %s"
         " -fill %s -tags {%lxBASE1 x%lx text iemgui}\n",
         canvas, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2,
-        x->x_hide_frame <= 1 ? IEM_GUI_COLOR_NORMAL : bcol,
+        x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
         bcol, x, x);
 
     if (x->x_hide_frame <= 1) iemgui_draw_io(&x->x_gui,glist,7);
@@ -224,7 +224,7 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     char fcol[8]; sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n", canvas, x,
-        issel ? selection_color : x->x_hide_frame <= 1 ? IEM_GUI_COLOR_NORMAL : bcol);
+        issel ? selection_color : x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n", canvas, x,
         issel ? selection_color : fcol);
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
@@ -463,7 +463,6 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     t_atom *argv)
 {
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-    t_symbol *srl[3];
     x->x_gui.x_w = maxi(atom_getintarg(0, argc, argv),1);
     x->x_gui.x_h = maxi(atom_getintarg(1, argc, argv),8);
     double min = atom_getfloatarg(2, argc, argv);
@@ -472,7 +471,7 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     x->x_log_height = maxi(atom_getintarg(6, argc, argv),10);
     if (argc > 17)
         x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
-    iemgui_dialog(&x->x_gui, srl, argc, argv);
+    iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
     iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);

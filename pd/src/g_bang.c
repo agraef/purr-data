@@ -238,14 +238,13 @@ static void bng_bang2(t_bng *x)/*wird immer gesendet, wenn moeglich*/
 static void bng_dialog(t_bng *x, t_symbol *s, int argc, t_atom *argv)
 {
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-    t_symbol *srl[3];
     x->x_gui.x_h = x->x_gui.x_w = atom_getintarg(0, argc, argv);
     int fthold = atom_getintarg(2, argc, argv);
     int ftbreak = atom_getintarg(3, argc, argv);
-    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     bng_check_minmax(x, ftbreak, fthold);
     x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
+    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
     scrollbar_update(x->x_gui.x_glist);

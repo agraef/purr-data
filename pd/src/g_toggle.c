@@ -194,7 +194,6 @@ static void toggle_bang(t_toggle *x)
 static void toggle_dialog(t_toggle *x, t_symbol *s, int argc, t_atom *argv)
 {
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-    t_symbol *srl[3];
     x->x_gui.x_h =
     x->x_gui.x_w = iemgui_clip_size(atom_getintarg(0, argc, argv));
     t_float nonzero = atom_getfloatarg(2, argc, argv);
@@ -203,9 +202,9 @@ static void toggle_dialog(t_toggle *x, t_symbol *s, int argc, t_atom *argv)
     x->x_nonzero = nonzero;
     if(x->x_on != 0.0)
         x->x_on = x->x_nonzero;
-    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
+    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
     scrollbar_update(x->x_gui.x_glist);

@@ -243,12 +243,11 @@ static void radio_properties(t_gobj *z, t_glist *owner)
 static void radio_dialog(t_radio *x, t_symbol *s, int argc, t_atom *argv)
 {
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-    t_symbol *srl[3];
     x->x_gui.x_h =
     x->x_gui.x_w = iemgui_clip_size(atom_getintarg(0, argc, argv));
     x->x_change = !!atom_getintarg(4, argc, argv);
     int num = atom_getintarg(6, argc, argv);
-    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     if(x->x_number != num)
     {
         iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
@@ -263,7 +262,7 @@ static void radio_dialog(t_radio *x, t_symbol *s, int argc, t_atom *argv)
     else
     {
         x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-        iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
+        iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
         iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     }
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);

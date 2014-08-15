@@ -30,6 +30,7 @@ int iemgui_clip_font(int size) {return maxi(size,IEM_FONT_MINSIZE);}
 
 static int iemgui_modulo_color(int col)
 {
+    const int IEM_GUI_MAX_COLOR = 30;
     col %= IEM_GUI_MAX_COLOR;
     if (col<0) col += IEM_GUI_MAX_COLOR;
     return col;
@@ -184,7 +185,7 @@ void iemgui_send(t_iemgui *x, t_symbol *s)
     x->x_snd_unexpanded = snd;
     x->x_snd = snd = canvas_realizedollar(x->x_glist, snd);
     iemgui_verify_snd_ne_rcv(x);
-    iemgui_draw_io(x, x->x_glist, IEM_GUI_DRAW_MODE_IO + oldsndrcvable);
+    iemgui_draw_io(x, x->x_glist, oldsndrcvable);
 }
 
 void iemgui_receive(t_iemgui *x, t_symbol *s)
@@ -213,7 +214,7 @@ void iemgui_receive(t_iemgui *x, t_symbol *s)
         x->x_rcv = rcv;
     }
     iemgui_verify_snd_ne_rcv(x);
-    iemgui_draw_io(x, x->x_glist, IEM_GUI_DRAW_MODE_IO + oldsndrcvable);
+    iemgui_draw_io(x, x->x_glist, oldsndrcvable);
 }
 
 void iemgui_label(t_iemgui *x, t_symbol *s)
@@ -547,8 +548,9 @@ void iemgui_properties(t_iemgui *x, t_symbol **srl)
     srl[2] = iemgui_dollar2raute(srl[2]);
 }
 
-int iemgui_dialog(t_iemgui *x, t_symbol **srl, int argc, t_atom *argv)
+int iemgui_dialog(t_iemgui *x, int argc, t_atom *argv)
 {
+    t_symbol *srl[3];
     x->x_loadinit = !!atom_getintarg(5, argc, argv);
     srl[0] = iemgui_getfloatsymarg(7,argc,argv);
     srl[1] = iemgui_getfloatsymarg(8,argc,argv);
@@ -561,8 +563,8 @@ int iemgui_dialog(t_iemgui *x, t_symbol **srl, int argc, t_atom *argv)
     x->x_fcol = atom_getintarg(15, argc, argv) & 0xffffff;
     x->x_lcol = atom_getintarg(16, argc, argv) & 0xffffff;
     int oldsndrcvable=0;
-    if(iemgui_has_rcv(x)) oldsndrcvable += IEM_GUI_OLD_RCV_FLAG;
-    if(iemgui_has_snd(x)) oldsndrcvable += IEM_GUI_OLD_SND_FLAG;
+    if(iemgui_has_rcv(x)) oldsndrcvable |= IEM_GUI_OLD_RCV_FLAG;
+    if(iemgui_has_snd(x)) oldsndrcvable |= IEM_GUI_OLD_SND_FLAG;
     iemgui_all_raute2dollar(srl);
     x->x_snd_unexpanded=srl[0]; srl[0]=canvas_realizedollar(x->x_glist, srl[0]);
     x->x_rcv_unexpanded=srl[1]; srl[1]=canvas_realizedollar(x->x_glist, srl[1]);
@@ -580,7 +582,7 @@ int iemgui_dialog(t_iemgui *x, t_symbol **srl, int argc, t_atom *argv)
     x->x_font_style = f;
     iemgui_verify_snd_ne_rcv(x);
     canvas_dirty(x->x_glist, 1);
-    return(oldsndrcvable);
+    return oldsndrcvable;
 }
 
 void iem_inttosymargs(t_iemgui *x, int n)
@@ -904,8 +906,10 @@ void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
 }
 
 extern t_class *vu_class;
-void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
-	if (x->x_glist != canvas) return; // is gop
+void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags)
+{
+    t_canvas *canvas=glist_getcanvas(glist);
+    if (x->x_glist != canvas) return; // is gop
     t_class *c = pd_class((t_pd *)x);
 
     if (!(old_sr_flags&4) && (!glist_isvisible(canvas) || !(canvas == x->x_glist))) {
@@ -920,7 +924,7 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
 
     int a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
     int b=x->x_snd!=s_empty;
-    fprintf(stderr,"%lx SND: old_sr_flags=%d SND_FLAG=%d || OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
+    //fprintf(stderr,"%lx SND: old_sr_flags=%d SND_FLAG=%d || OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
     
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
@@ -929,11 +933,11 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
              canvas, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2,
              x, i, x);
     if(!a && b) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c delete x%lxo%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete x%lxo%d\n", canvas, x, i);
 
     a=old_sr_flags&IEM_GUI_OLD_RCV_FLAG;
     b=x->x_rcv!=s_empty;
-    fprintf(stderr,"%lx RCV: old_sr_flags=%d RCV_FLAG=%d || OUTCOME: OLD_RCV_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_RCV_FLAG, a, b);
+    //fprintf(stderr,"%lx RCV: old_sr_flags=%d RCV_FLAG=%d || OUTCOME: OLD_RCV_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_RCV_FLAG, a, b);
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
@@ -941,7 +945,7 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
              canvas, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1,
              x, i, x);
     if(!a && b) for (i=0; i<n; i++)
-        sys_vgui(".x%lx.c delete x%lxi%d\n", canvas, x, 0);
+        sys_vgui(".x%lx.c delete x%lxi%d\n", canvas, x, i);
 }
 
 void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas) {
@@ -987,11 +991,6 @@ void iemgui_draw_new(t_iemgui *x, t_glist *glist) {
     iemgui_label_draw_new(x,canvas);
     iemgui_draw_io(x,glist,7);
     canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
-}
-void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags)
-{
-    t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_io_draw(x,glist_getcanvas(canvas),old_sr_flags);
 }
 void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
     t_canvas *canvas=glist_getcanvas(glist);

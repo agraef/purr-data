@@ -3,25 +3,8 @@
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution. */
 /* g_7_guis.h written by Thomas Musil (c) IEM KUG Graz Austria 2000-2001 */
 
-
-// the three used by any externals ([room_sim_2d] [room_sim_3d] [cube_sphere])
-// the other colours still exist in the array but are not referred by name.
-#define IEM_GUI_COLNR_GREEN          16
-#define IEM_GUI_COLNR_L_GREY         20
-#define IEM_GUI_COLNR_D_ORANGE       24
-
-/* deprecated in favor of the global iemgui_select var
-   left here for legacy externals that may rely upon this */
-#define IEM_GUI_COLOR_SELECTED       16749334
-/* end deprecated */
-
-#define IEM_GUI_COLOR_NORMAL         "$pd_colors(iemgui_border)"
-
-#define IEM_GUI_MAX_COLOR            30
-
 #define IEM_GUI_DEFAULTSIZE 15
 #define IEM_GUI_MINSIZE 8
-#define IEM_GUI_MAXSIZE 1000
 #define IEM_SL_DEFAULTSIZE 128
 #define IEM_SL_MINSIZE 2
 #define IEM_FONT_MINSIZE 4
@@ -30,15 +13,10 @@
 #define IEM_GUI_DRAW_MODE_MOVE   1
 #define IEM_GUI_DRAW_MODE_NEW    2
 #define IEM_GUI_DRAW_MODE_SELECT 3
-#define IEM_GUI_DRAW_MODE_ERASE  4 // obsolete since 2014.08
 #define IEM_GUI_DRAW_MODE_CONFIG 5
-#define IEM_GUI_DRAW_MODE_IO     6 /* also reserves 7,8,9 by adding old_sr_flags */
 
 #define IS_A_FLOAT(atom,index) ((atom+index)->a_type == A_FLOAT)
 #define IS_A_SYMBOL(atom,index) ((atom+index)->a_type == A_SYMBOL)
-
-#define IEM_FSTYLE_FLAGS_ALL 0x007fffff
-#define IEM_INIT_ARGS_ALL    0x01ffffff
 
 #define IEM_GUI_OLD_SND_FLAG 1
 #define IEM_GUI_OLD_RCV_FLAG 2
@@ -231,7 +209,7 @@ EXTERN void iemgui_delete(t_gobj *z, t_glist *glist);
 EXTERN void iemgui_vis(t_gobj *z, t_glist *glist, int vis);
 EXTERN void iemgui_save(t_iemgui *x, t_symbol **srl, int *bflcol);
 EXTERN void iemgui_properties(t_iemgui *x, t_symbol **srl);
-EXTERN int iemgui_dialog(t_iemgui *x, t_symbol **srl, int argc, t_atom *argv);
+EXTERN int iemgui_dialog(t_iemgui *x, int argc, t_atom *argv);
 
 EXTERN void iem_inttosymargs(t_iemgui *x, int n);
 EXTERN int iem_symargstoint(t_iemgui *x);
@@ -269,7 +247,6 @@ EXTERN void iemgui_label_draw_new(   t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_label_draw_move(  t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags);
 EXTERN void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas);
 EXTERN void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags);
 EXTERN void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas);
