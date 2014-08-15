@@ -491,7 +491,10 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
 {
     t_iemgui *x = (t_iemgui *)z;
     t_canvas *canvas=glist_getcanvas(glist);
-    x->x_selected = selected;
+    if (selected)
+        x->x_selected = canvas;
+    else
+        x->x_selected = NULL;
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
     sys_vgui(".x%lx.c itemconfigure {x%lx&&border} -stroke %s\n", canvas, x,
         x->x_selected && x->x_glist == canvas ? selection_color : fcol);
@@ -595,7 +598,7 @@ int iem_symargstoint(t_iemgui *x)
 void iem_inttofstyle(t_iemgui *x, int n)
 {
     x->x_font_style = (n >> 0);
-    x->x_selected = 0;
+    x->x_selected = NULL;
     x->x_finemoved = 0;
     x->x_put_in2out = 0;
     x->x_change = 0;
@@ -696,7 +699,7 @@ void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
 
 void scalehandle_draw(t_iemgui *x, t_glist *glist) {
     if (x->x_glist == glist_getcanvas(glist)) {
-        if(x->x_selected) scalehandle_draw_select2(x,glist);
+        if(x->x_selected == x->x_glist) scalehandle_draw_select2(x,glist);
         else              scalehandle_draw_erase2(x,glist);
     }
 }
@@ -866,7 +869,7 @@ void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas) {
 }
 
 void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
-    if (x->x_selected && x->x_glist == canvas)
+    if (x->x_selected == canvas && x->x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s "
                  "-fill $pd_colors(selection) -text {%s} \n",
              canvas, x, iemgui_font(x), 
@@ -876,10 +879,15 @@ void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
                  "-fill #%6.6x -text {%s} \n",
              canvas, x, iemgui_font(x),
              x->x_lcol, x->x_lab!=s_empty?x->x_lab->s_name:"");
+    if (x->x_lab==s_empty && x->x_selected)
+    {
+        t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
+        scalehandle_draw_erase(lh,canvas);
+    }
 }
 
 void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
-    if (x->x_selected && x->x_glist == canvas)
+    if (x->x_selected == canvas && x->x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxLABEL "
             "-fill $pd_colors(selection)\n", canvas, x);
     else
@@ -904,6 +912,8 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
 
     int a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
     int b=x->x_snd!=s_empty;
+    fprintf(stderr,"%lx SND: old_sr_flags=%d SND_FLAG=%d || OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
+    
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
@@ -915,6 +925,7 @@ void iemgui_io_draw(t_iemgui *x, t_glist *canvas, int old_sr_flags) {
 
     a=old_sr_flags&IEM_GUI_OLD_RCV_FLAG;
     b=x->x_rcv!=s_empty;
+    fprintf(stderr,"%lx RCV: old_sr_flags=%d RCV_FLAG=%d || OUTCOME: OLD_RCV_FLAG=%d not_empty=%d\n", (t_int)x, old_sr_flags, IEM_GUI_OLD_RCV_FLAG, a, b);
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "

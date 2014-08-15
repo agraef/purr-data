@@ -5710,9 +5710,9 @@ proc pdtk_iemgui_dialog {id mainheader \
     set ::dialog($vid:loadbang) $loadbang
     set ::dialog($vid:num) $num
     set ::dialog($vid:steady) $steady
-    if {$snd == "empty"} {set ::dialog($vid:snd) [format ""]
+    if {$snd == "empty" || $snd == "nosndno"} {set ::dialog($vid:snd) [format ""]
     } else {set ::dialog($vid:snd) [format "%s" $snd]}
-    if {$rcv == "empty"} {set ::dialog($vid:rcv) [format ""]
+    if {$rcv == "empty" || $snd == "norcvno"} {set ::dialog($vid:rcv) [format ""]
     } else {set ::dialog($vid:rcv) [format "%s" $rcv]}
     if {$gui_name == "empty"} {set ::dialog($vid:gui_nam) [format ""]
     } else {set ::dialog($vid:gui_nam) [format "%s" $gui_name]}

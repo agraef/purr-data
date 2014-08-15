@@ -57,7 +57,7 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
              canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
-        x->x_gui.x_selected && x->x_gui.x_glist == canvas ?
+        x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
         "$pd_colors(selection)" : bcol);
     iemgui_label_draw_config(&x->x_gui,canvas);
 }
@@ -68,7 +68,7 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
     if (x->x_gui.x_glist != glist_getcanvas(glist)) return;
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
-        x->x_gui.x_selected && x->x_gui.x_glist == canvas ?
+        x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
         "$pd_colors(selection)" : bcol);
 }
 

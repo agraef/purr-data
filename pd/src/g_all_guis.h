@@ -101,7 +101,7 @@ typedef struct _iemgui
                                   // grep -w "$1" *.[ch]|wc -l
     // from t_iem_fstyle_flags
     unsigned int x_font_style:6;  // 33 matches
-    unsigned int x_selected:1;    // 15 matches
+    t_glist     *x_selected;      // 15 matches
     unsigned int x_finemoved:1;   //  7 matches (sliders and [nbx] only)
     unsigned int x_put_in2out:1;  //  9 matches
     unsigned int x_change:1;      // 28 matches  // what's this and why is there also a x_changed ?

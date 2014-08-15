@@ -217,7 +217,8 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
                 canvas, x, i, x->x_led_size);
         if((i&3)==1) sys_vgui(".x%lx.c itemconfigure %lxSCALE%d -text {%s} "
             "-font %s -fill %s\n", canvas, x, i, iemgui_vu_scale_str[i/4],
-            iemgui_font(&x->x_gui), x->x_scale ? selection_color : lcol);
+            iemgui_font(&x->x_gui), x->x_gui.x_selected == canvas &&
+            x->x_gui.x_glist == canvas && x->x_scale ? selection_color : lcol);
     }
     iemgui_label_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxRCOVER -fill #%6.6x -stroke #%6.6x\n",
@@ -231,7 +232,7 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     char lcol[8]; sprintf(lcol,"#%6.6x", x->x_gui.x_lcol);
-    int issel = x->x_gui.x_selected && x->x_gui.x_glist==canvas;
+    int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     sys_vgui(".x%lx.c itemconfigure %lxSCALEN -fill %s\n",
         canvas, x, issel ? selection_color : lcol);
 }

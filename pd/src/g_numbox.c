@@ -141,7 +141,8 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
         sys_vgui(
             ".x%lx.c itemconfigure %lxNUMBER -fill %s -text {%s} \n",
             glist_getcanvas(glist), x,
-            x->x_gui.x_selected && !x->x_gui.x_change ? selection_color : fcol, x->x_buf);
+            x->x_gui.x_selected == glist_getcanvas(glist) && 
+                !x->x_gui.x_change ? selection_color : fcol, x->x_buf);
         x->x_buf[0] = 0;
     }
 }
@@ -198,7 +199,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     char fcol[8]; sprintf(fcol, "%6.6x", x->x_gui.x_fcol);
-    int issel = x->x_gui.x_selected && x->x_gui.x_glist == canvas;
+    int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font %s -fill %s\n",
         canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill %s\n",
@@ -212,7 +213,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    int issel = x->x_gui.x_selected && x->x_gui.x_glist == canvas;
+    int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     if(x->x_gui.x_selected && x->x_gui.x_change)
     {
         x->x_gui.x_change = 0;
