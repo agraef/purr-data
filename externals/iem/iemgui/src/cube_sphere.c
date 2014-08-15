@@ -7,7 +7,7 @@ iemgui written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2008 *
 #include "iemlib.h"
 #include "iemgui.h"
 #include "g_canvas.h"
-#include "g_all_guis.h"
+#include "../../../old_g_all_guis.inc"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -148,7 +148,7 @@ void cube_sphere_draw_new(t_cube_sphere *x, t_glist *glist)
   
   sys_vgui(".x%x.c create rectangle %d %d %d %d -outline #%6.6x -tags %xBASE\n",
     canvas, xpos, ypos, xpos + x->x_gui.x_w, ypos + x->x_gui.x_h,
-    x->x_gui.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_fcol, x);
+    x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_fcol, x);
   sys_vgui(".x%x.c create oval %d %d %d %d -fill #%6.6x -tags %xCIRC_AQ\n",
     canvas, xpos, ypos, xpos + x->x_gui.x_w, ypos + x->x_gui.x_h, x->x_gui.x_bcol, x);
   sys_vgui(".x%x.c create oval %d %d %d %d -tags %xCIRC_WK\n",
@@ -228,7 +228,7 @@ void cube_sphere_draw_select(t_cube_sphere* x, t_glist* glist)
   t_canvas *canvas=glist_getcanvas(glist);
   
   sys_vgui(".x%x.c itemconfigure %xBASE -outline #%6.6x\n",
-    canvas, x, x->x_gui.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_fcol);
+    canvas, x, x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_fcol);
 }
 
 void cube_sphere_draw(t_cube_sphere *x, t_glist *glist, int mode)
@@ -591,7 +591,7 @@ static void cube_sphere_frame_col(t_cube_sphere *x, t_floatarg fcol)
   }
   if(glist_isvisible(x->x_gui.x_glist))
     sys_vgui(".x%x.c itemconfigure %xBASE -outline #%6.6x\n",
-    canvas, x, x->x_gui.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_fcol);
+    canvas, x, x->x_gui.x_fsf.x_selected?IEM_GUI_COLOR_SELECTED:x->x_gui.x_fcol);
 }
 
 static void cube_sphere_src_col(t_cube_sphere *x, t_symbol *s, int argc, t_atom *argv)

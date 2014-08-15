@@ -7,7 +7,7 @@ iemgui written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2008 *
 #include "iemlib.h"
 #include "iemgui.h"
 #include "g_canvas.h"
-#include "g_all_guis.h"
+#include "../../../old_g_all_guis.inc"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
