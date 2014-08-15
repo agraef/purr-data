@@ -10,7 +10,6 @@
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
-#include "t_tk.h"
 #include "g_canvas.h"
 #include <stdio.h>
 #include <string.h>
@@ -2075,7 +2074,7 @@ void text_drawborder(t_text *x, t_glist *glist,
     }
     /* raise cords over everything else */
     if (firsttime && glist==glist_getcanvas(glist))
-        sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+        canvas_raise_all_cords(glist);
 
     //ico@bukvic.net 100518 update scrollbars when GOP
     //potentially exceeds window size
@@ -2170,7 +2169,7 @@ void text_drawborder_withtag(t_text *x, t_glist *glist,
     }
     /* raise cords over everything else */
     if (firsttime && glist==glist_getcanvas(glist))
-        sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+        canvas_raise_all_cords(glist);
 
     //ico@bukvic.net 100518 update scrollbars when GOP
     //potentially exceeds window size

@@ -36,6 +36,9 @@ glist has its own window, even if miniaturized.
 /* NOTE: this file describes Pd implementation details which may change
 in future releases.  The public (stable) API is in m_pd.h. */  
 
+#ifndef PD_G_CANVAS_H
+#define PD_G_CANVAS_H
+
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 extern "C" {
 #endif
@@ -492,24 +495,23 @@ EXTERN int text_ypix(t_text *x, t_glist *glist);
 #define RTEXT_DBL 3
 #define RTEXT_SHIFT 4
 
-EXTERN t_rtext *rtext_new(t_glist *glist, t_text *who);
-EXTERN t_rtext *glist_findrtext(t_glist *gl, t_text *who);
-EXTERN void rtext_draw(t_rtext *x);
-EXTERN void rtext_erase(t_rtext *x);
-EXTERN t_rtext *rtext_remove(t_rtext *first, t_rtext *x);
-EXTERN int rtext_height(t_rtext *x);
-EXTERN void rtext_displace(t_rtext *x, int dx, int dy);
-EXTERN void rtext_select(t_rtext *x, int state);
-EXTERN void rtext_activate(t_rtext *x, int state);
-EXTERN void rtext_free(t_rtext *x);
-EXTERN void rtext_key(t_rtext *x, int n, t_symbol *s);
-EXTERN void rtext_mouse(t_rtext *x, int xval, int yval, int flag);
-EXTERN void rtext_retext(t_rtext *x);
-EXTERN int rtext_width(t_rtext *x);
-EXTERN int rtext_height(t_rtext *x);
-EXTERN char *rtext_gettag(t_rtext *x);
-EXTERN void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
-EXTERN void rtext_getseltext(t_rtext *x, char **buf, int *bufsize);
+// number in comment is the number in grep -w|wc
+EXTERN t_rtext *rtext_new(t_glist *glist, t_text *who); //5
+EXTERN t_rtext *glist_findrtext(t_glist *gl, t_text *who); //53
+EXTERN void rtext_draw(t_rtext *x); //4
+EXTERN void rtext_erase(t_rtext *x); //4
+EXTERN int rtext_width(t_rtext *x); //9
+EXTERN int rtext_height(t_rtext *x); //9
+EXTERN void rtext_displace(t_rtext *x, int dx, int dy); //3
+EXTERN void rtext_select(t_rtext *x, int state); //4
+EXTERN void rtext_activate(t_rtext *x, int state); //3
+EXTERN void rtext_free(t_rtext *x); //4
+EXTERN void rtext_key(t_rtext *x, int n, t_symbol *s); //6
+EXTERN void rtext_mouse(t_rtext *x, int xval, int yval, int flag); //5
+EXTERN void rtext_retext(t_rtext *x); //5
+EXTERN char *rtext_gettag(t_rtext *x); //47
+EXTERN void rtext_gettext(t_rtext *x, char **buf, int *bufsize); //9
+EXTERN void rtext_getseltext(t_rtext *x, char **buf, int *bufsize); //4
 
 /* -------------------- functions on canvases ------------------------ */
 EXTERN t_class *canvas_class;
@@ -768,8 +770,14 @@ EXTERN void *canvas_undo_set_font(t_canvas *x, int font);
 
 void *qt_thread_main (void *);
 
+/* ---------- other things added by Mathieu (aug.2014) ----------------- */
+
+void canvas_raise_all_cords (t_canvas *x);
+
 /* --------------------------------------------------------------------- */
 
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
 #endif
+
+#endif // PD_G_CANVAS_H

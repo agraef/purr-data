@@ -186,7 +186,7 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
                 return (0);
         }
         if (glist==glist_getcanvas(glist))
-            sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(glist));
+            canvas_raise_all_cords(glist);
     }
     if (ob = pd_checkobject(&x->g_pd))
     {
@@ -288,39 +288,20 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 {
                     /* we get here if we are supposed to go all the way
                        to the bottom */
-                    if (objtag)
-                    {
-                        sys_vgui(".x%lx.c addtag arrange withtag %s\n",
-                            x, objtag);
-                    }
-                    else
-                    {
-                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",
-                            x);
-                    }
+                    sys_vgui(".x%lx.c addtag arrange withtag %s\n",
+                        x, objtag ? objtag : "selected");
                     sys_vgui(".x%lx.c lower arrange\n", x);
-                    if (objtag)
-                        sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
-                    else
-                        sys_vgui(".x%lx.c dtag selected arrange\n", x);
+                    sys_vgui(".x%lx.c dtag %s arrange\n",
+                        x, objtag ? objtag : "selected");
                 }
                 else if (yrnxt)
                 {
                     /* lower into middle */
-                    if (objtag)
-                    {
-                        sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                                 ".x%lx.c %s %s %s\n",
-                            x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
-                    }
-                    else
-                    {
-                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",
-                            x);
-                        sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                                 ".x%lx.c %s %s 0\n",
-                            x, rtext_gettag(yrnxt), rtext_gettag(yr));
-                    }
+                    if (!objtag)
+                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
+                    sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
+                        ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
+                        rtext_gettag(yr), objtag ? objtag : "0");
                 }
                 else
                 {
@@ -335,41 +316,22 @@ int canvas_restore_original_position(t_glist *x, t_gobj *y, const char* objtag,
                 if (yrnxt)
                 {
                     /* raise into middle */
-                    if (objtag)
-                    {
-                        sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                                 ".x%lx.c %s %s %s\n",
-                            x, rtext_gettag(yrnxt), rtext_gettag(yr), objtag);
-                    }
-                    else
-                    {
-                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",
-                            x);
-                        sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
-                                 ".x%lx.c %s %s 0\n",
-                            x, rtext_gettag(yrnxt), rtext_gettag(yr));
-                    }
+                    if (!objtag)
+                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",x);
+                    sys_vgui("pdtk_find_lowest_widget_withtag_and_arrange "
+                        ".x%lx.c %s %s %s\n", x, rtext_gettag(yrnxt),
+                        rtext_gettag(yr), objtag ? objtag : "0");
                 }
                 else if (y->g_next == NULL)
                 {
                     /* we get here if we are supposed to go all the way
                        to the top */
-                    if (objtag)
-                    {
-                        sys_vgui(".x%lx.c addtag arrange withtag %s\n",
-                            x, objtag);
-                    }
-                    else
-                    {
-                        sys_vgui(".x%lx.c addtag arrange withtag selected\n",
-                            x);
-                    }
+                    sys_vgui(".x%lx.c addtag arrange withtag %s\n",
+                        x, objtag ? objtag : "selected");
                     sys_vgui(".x%lx.c raise arrange\n", x);
-                    if (objtag)
-                        sys_vgui(".x%lx.c dtag %s arrange\n", x, objtag);
-                    else
-                        sys_vgui(".x%lx.c dtag selected arrange\n", x);
-                    sys_vgui(".x%lx.c raise all_cords\n", x);
+                    sys_vgui(".x%lx.c dtag %s arrange\n", x,
+                        objtag ? objtag : "selected");
+                    canvas_raise_all_cords(x);
                 }
                 else
                 {
@@ -397,7 +359,7 @@ void canvas_check_nlet_highlights(t_glist *x)
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_inlet_tag[0] = 0;
         //if (x->gl_editor->e_onmotion == MA_CONNECT) {
@@ -418,7 +380,7 @@ void canvas_check_nlet_highlights(t_glist *x)
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_outlet_tag[0] = 0;
         //if (x->gl_editor->e_onmotion == MA_CONNECT) {
@@ -2807,7 +2769,7 @@ static void canvas_doarrange(t_canvas *x, t_float which, t_gobj *oldy,
         // and finally redraw
         //fprintf(stderr,"raise\n");
         sys_vgui(".x%lx.c raise selected\n", x);
-        sys_vgui(".x%lx.c raise all_cords\n", x);
+        canvas_raise_all_cords(x);
     }
     if (which == 4) /* to back */
     {
@@ -3032,7 +2994,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     if (objtooltip)
     {
         objtooltip = 0;
-        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
     }
     
     // read key and mouse button states
@@ -3076,7 +3038,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         if (x->gl_editor->e_onmotion == MA_MOVE)
         {        
             //fprintf(stderr,"letting go of objects\n");
-            sys_vgui(".x%lx.c raise all_cords\n", x);
+            canvas_raise_all_cords(x);
             scrollbar_update(x);
         }
         if (x->gl_editor->e_onmotion != MA_SCROLL)
@@ -3455,7 +3417,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     if (objtooltip)
                     {
                         objtooltip = 0;
-                        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+                        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
                     }
                     x->gl_editor->canvas_cnct_inlet_tag[0] = 0;
                 }
@@ -3476,7 +3438,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     if (objtooltip)
                     {
                         objtooltip = 0;
-                        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+                        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
                     }
                     x->gl_editor->canvas_cnct_outlet_tag[0] = 0;                  
                 }
@@ -3493,8 +3455,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 {
                     t_rtext *yr = glist_findrtext(x, (t_text *)&ob->ob_g);
                     objtooltip = 1;
-                    sys_vgui("pdtk_canvas_enteritem "
-                             ".x%x.c %d %d %s -1;\n",
+                    sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1\n",
                         x, xpos, ypos, rtext_gettag(yr));
                 }
             }
@@ -3585,7 +3546,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     if (objtooltip)
                     {
                         objtooltip = 0;
-                        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+                        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
                     }
                     x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
                 }
@@ -3605,7 +3566,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                     if (objtooltip)
                     {
                         objtooltip = 0;
-                        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+                        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
                     }
                     x->gl_editor->canvas_cnct_outlet_tag[0] = 0;                  
                 }
@@ -3630,7 +3591,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
     }
@@ -3650,7 +3611,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_outlet_tag[0] = 0;                  
     }
@@ -3972,7 +3933,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_inlet_tag[0] = 0;                  
     }
@@ -3991,7 +3952,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_outlet_tag[0] = 0;                  
     }
@@ -4564,7 +4525,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     if (tooltips)
                     {
                         objtooltip = 1;
-                        sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1;\n",
+                        sys_vgui("pdtk_canvas_enteritem .x%x.c %d %d %s -1\n",
                             x, xpos, ypos, x->gl_editor->canvas_cnct_inlet_tag);
                     }
                 }
@@ -4590,7 +4551,7 @@ void canvas_doconnect(t_canvas *x, int xpos, int ypos, int which, int doit)
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
         x->gl_editor->canvas_cnct_inlet_tag[0] = 0;              
     }
@@ -4826,7 +4787,7 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     if (objtooltip)
     {
         objtooltip = 0;
-        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
     }
     
     // read key and mouse button states
@@ -4938,7 +4899,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     if (objtooltip)
     {
         objtooltip = 0;
-        sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+        sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
     }
     
     if (ac < 5)
@@ -5317,8 +5278,8 @@ extern int sys_perf;
 
 void canvas_print(t_canvas *x, t_symbol *s)
 {
-    if (*s->s_name) sys_vgui(".x%lx.c postscript -file %s\n", x, s->s_name);
-    else sys_vgui(".x%lx.c postscript -file x.ps\n", x);
+    sys_vgui(".x%lx.c postscript -file %s\n", x,
+        *s->s_name ? s->s_name : "x.ps");
 }
 
     /* find a dirty sub-glist, if any, of this one (including itself) */
@@ -5615,7 +5576,7 @@ static void canvas_find_parent(t_canvas *x)
             canvas_vis(owner, 1);
     }
     else {
-        sys_gui("menu_raise_console;\n");
+        sys_gui("menu_raise_console\n");
     }
 }
 
@@ -6581,7 +6542,13 @@ bad:
             (sink? class_getname(pd_class(&sink->g_pd)) : "???"));
 }
 
-/* new implementation works in such a way that it first tries to line up all objects in the same line depending on the minimal distance between values (e.g. if objects' y values are closer than x values the alignment will happen vertically and vice-versa). If the objects already exhibit 0 difference across one axis, it will pick the top/left-most two objects and use them as a reference for spatialization between the remaining selected objects. any further tidy calls will be ignored */
+/* new implementation works in such a way that it first tries to line up all
+ * objects in the same line depending on the minimal distance between values
+ * (e.g. if objects' y values are closer than x values the alignment will
+ * happen vertically and vice-versa). If the objects already exhibit 0
+ * difference across one axis, it will pick the top/left-most two objects and
+ * use them as a reference for spatialization between the remaining selected
+ * objects. any further tidy calls will be ignored */
 
 // struct for storing spatially aware list of selected gobjects
 typedef struct _sgobj
@@ -7374,7 +7341,7 @@ void canvas_tooltips(t_canvas *x, t_floatarg fyesplease)
         if (objtooltip)
         {
             objtooltip = 0;
-            sys_vgui("pdtk_canvas_leaveitem .x%x.c;\n", x);
+            sys_vgui("pdtk_canvas_leaveitem .x%x.c\n", x);
         }
     }
     sys_vgui("pdtk_canvas_tooltips .x%lx %d\n",
@@ -7533,6 +7500,10 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         }
         sys_gui("\n");
     }
+}
+
+void canvas_raise_all_cords (t_canvas *x) {
+    sys_vgui(".x%lx.c raise all_cords\n", x);
 }
 
 void g_editor_setup(void)
