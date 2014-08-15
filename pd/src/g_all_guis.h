@@ -30,7 +30,7 @@
 #define IEM_GUI_DRAW_MODE_MOVE   1
 #define IEM_GUI_DRAW_MODE_NEW    2
 #define IEM_GUI_DRAW_MODE_SELECT 3
-//#define IEM_GUI_DRAW_MODE_ERASE  4 // obsolete since 2014.08
+#define IEM_GUI_DRAW_MODE_ERASE  4 // obsolete since 2014.08
 #define IEM_GUI_DRAW_MODE_CONFIG 5
 #define IEM_GUI_DRAW_MODE_IO     6 /* also reserves 7,8,9 by adding old_sr_flags */
 
@@ -260,6 +260,8 @@ EXTERN void iemgui__clickhook3(t_scalehandle *sh, int newstate);
 
 EXTERN int mini(int a, int b);
 EXTERN int maxi(int a, int b);
+EXTERN float minf(float a, float b);
+EXTERN float maxf(float a, float b);
 
 // other refactor by Mathieu
 EXTERN void iemgui_tag_selected(     t_iemgui *x, t_glist *canvas);
@@ -283,6 +285,8 @@ EXTERN const char *selection_color;
 static inline int iemgui_has_snd (t_iemgui *x) {return x->x_snd!=s_empty;}
 static inline int iemgui_has_rcv (t_iemgui *x) {return x->x_rcv!=s_empty;}
 EXTERN const char *iemgui_font(t_iemgui *x);
+EXTERN const char *iemgui_typeface(t_iemgui *x);
+
 EXTERN void iemgui_class_addmethods(t_class *c);
 EXTERN void scrollbar_update(t_glist *glist);
 EXTERN void iemgui_init(t_iemgui *x, t_floatarg f);

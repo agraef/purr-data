@@ -254,7 +254,7 @@ void iemgui_label_font(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
     x->x_fontsize = maxi(atom_getintarg(1, ac, av),4);
     if(glist_isvisible(x->x_glist))
     {
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s}\n",
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s\n",
             glist_getcanvas(x->x_glist), x, iemgui_font(x), 
             x->x_fontsize, sys_fontweight);
             iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_CONFIG);
@@ -399,7 +399,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
                             canvas, rtext_gettag(yr));
                         sys_vgui(".x%lx.c raise selected %s\n",
                             canvas, rtext_gettag(yr));
-                        //sys_vgui(".x%lx.c raise all_cords\n", canvas);
+                        //canvas_raise_all_cords(canvas);
                     }
                     else
                     {
@@ -611,8 +611,10 @@ int iem_fstyletoint(t_iemgui *x)
 
 extern int gfxstub_haveproperties(void *key);
 
-int mini(int a, int b) {return a<b?a:b;}
-int maxi(int a, int b) {return a>b?a:b;}
+int   mini(int   a, int   b) {return a<b?a:b;}
+int   maxi(int   a, int   b) {return a>b?a:b;}
+float minf(float a, float b) {return a<b?a:b;}
+float maxf(float a, float b) {return a>b?a:b;}
 
 // in all 20 cases :
 // [bng], [tgl], [hradio], [vradio], [hsl], [vsl], [cnv], [nbx], [vu]
@@ -850,12 +852,10 @@ void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas) {
     int x1=text_xpix(&x->x_obj, x->x_glist);
     int y1=text_ypix(&x->x_obj, x->x_glist);
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
-             "-font {{%s} -%d %s} -fill #%6.6x "
-             "-tags {%lxLABEL x%lx text iemgui}\n",
+             "-font %s -fill #%6.6x -tags {%lxLABEL x%lx text iemgui}\n",
          canvas, x1+x->x_ldx, y1+x->x_ldy,
          x->x_lab!=s_empty?x->x_lab->s_name:"",
-         iemgui_font(x), x->x_fontsize, sys_fontweight,
-         x->x_lcol, x, x);
+         iemgui_font(x), x->x_lcol, x, x);
 }
 
 void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas) {
@@ -867,14 +867,14 @@ void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas) {
 
 void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
     if (x->x_selected && x->x_glist == canvas)
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s "
                  "-fill $pd_colors(selection) -text {%s} \n",
-             canvas, x, iemgui_font(x), x->x_fontsize, sys_fontweight,
+             canvas, x, iemgui_font(x), 
              x->x_lab!=s_empty?x->x_lab->s_name:"");
     else
-        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font {{%s} -%d %s} "
+        sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s "
                  "-fill #%6.6x -text {%s} \n",
-             canvas, x, iemgui_font(x), x->x_fontsize, sys_fontweight,
+             canvas, x, iemgui_font(x),
              x->x_lcol, x->x_lab!=s_empty?x->x_lab->s_name:"");
 }
 
@@ -967,7 +967,7 @@ void iemgui_draw_new(t_iemgui *x, t_glist *glist) {
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_label_draw_new(x,canvas);
     iemgui_draw_io(x,glist,7);
-    sys_vgui(".x%lx.c raise all_cords\n", glist_getcanvas(x->x_glist)); // used to be inside x_draw
+    canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
 }
 void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags)
 {
@@ -999,12 +999,20 @@ void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl) {
     wb->w_displacefnwtag = iemgui_displace_withtag;
 }
 
-const char *iemgui_font(t_iemgui *x) {
-	int f = x->x_font_style;
-	if(f == 0) return sys_font;
+const char *iemgui_typeface(t_iemgui *x) {
+    int f = x->x_font_style;
+    if(f == 0) return sys_font;
     if(f == 1) return "helvetica";
     if(f == 2) return "times";
     return "invalid-font";
+}
+// this uses a static buffer, so don't use it twice in the same sys_vgui.
+// the static buffer could be replaced by a malloc when sys_vgui is replaced
+// by something that frees that memory.
+const char *iemgui_font(t_iemgui *x) {
+    static char buf[64];
+    sprintf(buf, "{{%s} -%d %s}", iemgui_typeface(x), x->x_fontsize, sys_fontweight);
+    return buf;
 }
 
 void iemgui_init(t_iemgui *x, t_floatarg f) {x->x_loadinit = f!=0.0;}
