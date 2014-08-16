@@ -658,9 +658,9 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
         sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
             "-cursor %s\n", h->h_pathname, sx, sy, cursor);
         if (h->h_scale) {
-            sprintf(tags,"x%lx %lxSCALE iemgui", (long)x,(long)x);
+            sprintf(tags,"x%lx %lxSCALE iemgui selected", (long)x,(long)x);
         } else {
-            sprintf(tags,"x%lx %lx%s iemgui", (long)x,
+            sprintf(tags,"x%lx %lx%s iemgui selected", (long)x,
                 (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH");
         }
         sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "

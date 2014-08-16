@@ -468,8 +468,8 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+    iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
+    iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_NEW);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
     iemgui_label_draw_new(&x->x_gui, x->x_gui.x_glist);
     if (x->x_gui.x_selected)
