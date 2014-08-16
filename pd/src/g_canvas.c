@@ -711,11 +711,6 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
 
-        // Need to reset handles' vis values because they are erased via map
-        // (when applying properties, for instance)
-        scalehandle_draw_erase(sh,x);
-        scalehandle_draw_erase(mh,x);
-
         scalehandle_draw_select(sh,x,
             -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
             -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);

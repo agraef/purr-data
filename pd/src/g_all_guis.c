@@ -657,6 +657,8 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
     int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
 
+    scalehandle_draw_erase(h,canvas);
+
     if (!h->h_vis) {
         sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
             "-cursor %s\n", h->h_pathname, sx, sy, cursor);
@@ -672,9 +674,11 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
             h->h_pathname, tags);
         scalehandle_bind(h);
         h->h_vis = 1;
+    /* not yet (this is not supported by current implementation)
     } else {
         sys_vgui(".x%x.c coords %s %d %d\n", canvas, h->h_pathname,
             x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy);
+        sys_vgui("raise %s\n", h->h_pathname); */
     }
 }
 
