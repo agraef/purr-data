@@ -198,13 +198,12 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char fcol[8]; sprintf(fcol, "%6.6x", x->x_gui.x_fcol);
+    char fcol[8]; sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font %s -fill %s\n",
         canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n",
         canvas, x, issel ? selection_color : fcol);
-
     iemgui_label_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x\n", canvas,
              x, x->x_gui.x_bcol);
@@ -434,23 +433,18 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
 
     }
     sprintf(buf, "pdtk_iemgui_dialog %%s |nbx| \
-            -------dimensions(digits)(pix):------- %d %d width: %d %d height: \
-            -----------output-range:----------- %g min: %g max: %d \
-            %d lin log %d %d log-height: %d \
-            {%s} {%s} \
-            {%s} %d %d \
-            %d %d \
-            %d %d %d\n",
-            x->x_gui.x_w, 1, x->x_gui.x_h, 8,
-            x->x_min, x->x_max,
-            x->x_hide_frame, /*EXCEPTION: x_hide_frame instead of schedule*/
-            x->x_lin0_log1, x->x_gui.x_loadinit, -1,
-                x->x_log_height, /*no multi, but iem-characteristic*/
-            srl[0]->s_name, srl[1]->s_name,
-            srl[2]->s_name, x->x_gui.x_ldx, x->x_gui.x_ldy,
-            x->x_gui.x_font_style, x->x_gui.x_fontsize,
-            0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol,
-                0xffffff & x->x_gui.x_lcol);
+        -------dimensions(digits)(pix):------- %d %d width: %d %d height: \
+        -----------output-range:----------- %g min: %g max: %d \
+        %d lin log %d %d log-height: %d {%s} {%s} {%s} %d %d %d %d %d %d %d\n",
+        x->x_gui.x_w, 1, x->x_gui.x_h, 8, x->x_min, x->x_max,
+        x->x_hide_frame, /*EXCEPTION: x_hide_frame instead of schedule*/
+        x->x_lin0_log1, x->x_gui.x_loadinit, -1,
+        x->x_log_height, /*no multi, but iem-characteristic*/
+        srl[0]->s_name, srl[1]->s_name, srl[2]->s_name,
+        x->x_gui.x_ldx, x->x_gui.x_ldy,
+        x->x_gui.x_font_style, x->x_gui.x_fontsize,
+        0xffffff & x->x_gui.x_bcol, 0xffffff & x->x_gui.x_fcol,
+        0xffffff & x->x_gui.x_lcol);
     gfxstub_new(&x->x_gui.x_obj.ob_pd, x, buf);
 }
 
@@ -474,8 +468,8 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
-    iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
-    iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_NEW);
+    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
     iemgui_label_draw_new(&x->x_gui, x->x_gui.x_glist);
     if (x->x_gui.x_selected)
@@ -490,7 +484,7 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
 static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
 {
     double k2=1.0;
-       int old = x->x_val;
+    int old = x->x_val;
 
     if(x->x_gui.x_finemoved)
         k2 = 0.01;

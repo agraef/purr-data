@@ -654,26 +654,25 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
     int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
 
-    if (h->h_vis) scalehandle_draw_erase(h,canvas);
-
-    sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
-//    sys_vgui("canvas %s -width %d -height %d -bg #0080ff -bd 0 "
-        "-cursor %s\n", h->h_pathname, sx, sy, cursor);
-    // there was a %lxBNG tag (or similar) in every scalehandle,
-    // but it didn't seem to be used —mathieu
-    if (h->h_scale) {
-        sprintf(tags,"x%lx %lxSCALE iemgui",
-            (long)x,(long)x);
+    if (!h->h_vis) {
+        sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
+            "-cursor %s\n", h->h_pathname, sx, sy, cursor);
+        if (h->h_scale) {
+            sprintf(tags,"x%lx %lxSCALE iemgui", (long)x,(long)x);
+        } else {
+            sprintf(tags,"x%lx %lx%s iemgui", (long)x,
+                (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH");
+        }
+        sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
+            "-window %s -tags {%s}\n", canvas,
+            x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy, sx, sy,
+            h->h_pathname, tags);
+        scalehandle_bind(h);
+        h->h_vis = 1;
     } else {
-        //sprintf(tags,"%lx%s %lxLABEL %lxLABELH iemgui %s", // causes unknown option "-fill"
-        sprintf(tags,"x%lx %lx%s iemgui", (long)x,
-            (long)x,pd_class((t_pd *)x)==canvas_class?"MOVE":"LABELH");
+        sys_vgui(".x%x.c coords %s %d %d\n", canvas, h->h_pathname,
+            x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy);
     }
-    sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
-        "-window %s -tags {%s}\n", canvas, x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy,
-        sx, sy, h->h_pathname, tags);
-    scalehandle_bind(h);
-    h->h_vis = 1;
 }
 
 extern t_class *my_canvas_class;
@@ -695,14 +694,15 @@ void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
 }
 
 void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
-        sys_vgui("destroy %s\n", h->h_pathname);
-        sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
-        h->h_vis = 0;
+    if (!h->h_vis) return;
+    sys_vgui("destroy %s\n", h->h_pathname);
+    sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
+    h->h_vis = 0;
 }
 
 void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
-	t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
-	t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
+    t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
+    t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
     if (sh->h_vis) scalehandle_draw_erase(sh,canvas);
     if (lh->h_vis) scalehandle_draw_erase(lh,canvas);
 }
@@ -997,7 +997,6 @@ void iemgui_draw_new(t_iemgui *x, t_glist *glist) {
 void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
     t_canvas *canvas=glist_getcanvas(glist);
     sys_vgui(".x%lx.c delete x%lx\n", canvas, x);
-    sys_vgui(".x%lx.c dtag all x%lx\n", canvas, x);
     scalehandle_draw_erase2(x,glist);
     x->x_vis = 0;
 }
