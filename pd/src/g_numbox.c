@@ -198,7 +198,7 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    char fcol[8]; sprintf(fcol, "%6.6x", x->x_gui.x_fcol);
+    char fcol[8]; sprintf(fcol, "#%6.6x", x->x_gui.x_fcol);
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font %s -fill %s\n",
         canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
