@@ -209,7 +209,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
 {
     int i;
     t_canvas *canvas=glist_getcanvas(glist);
-    char lcol[8]; sprintf(lcol, "%6.6x", x->x_gui.x_lcol);
+    char lcol[8]; sprintf(lcol, "#%6.6x", x->x_gui.x_lcol);
     for(i = 1; i <= IEM_VU_STEPS+1; i++)
     {
         if (i <= IEM_VU_STEPS)
@@ -488,20 +488,20 @@ static void vu_properties(t_gobj *z, t_glist *owner)
 static void vu_dialog(t_vu *x, t_symbol *s, int argc, t_atom *argv)
 {
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-    t_symbol *srl[3];
+    //t_symbol *srl[3];
     int w = atom_getintarg(0, argc, argv);
     int h = atom_getintarg(1, argc, argv);
     int scale = !!atom_getintarg(4, argc, argv);
-    srl[0] = s_empty;
-    int sr_flags = iemgui_dialog(&x->x_gui, srl, argc, argv);
+    //srl[0] = s_empty;
+    int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     x->x_gui.x_loadinit = 0;
     x->x_gui.x_w = iemgui_clip_size(w);
     vu_check_height(x, h);
     vu_scale(x, (t_float)scale);
     x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_IO + sr_flags);
-    iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
+    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     scrollbar_update(x->x_gui.x_glist);
 }
 

@@ -429,7 +429,6 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
     {
         //fprintf(stderr,"draw erase %d\n", mode);
         iemgui_draw_erase(x, x->x_glist);
-        x->x_vis = 0;
     }
     gop_redraw = 0;
 }
@@ -711,7 +710,7 @@ void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
 void scalehandle_draw(t_iemgui *x, t_glist *glist) {
     if (x->x_glist == glist_getcanvas(glist)) {
         if(x->x_selected == x->x_glist) scalehandle_draw_select2(x,glist);
-        else              scalehandle_draw_erase2(x,glist);
+        else scalehandle_draw_erase2(x,glist);
     }
 }
 
@@ -889,10 +888,13 @@ void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
                  "-fill #%6.6x -text {%s} \n",
              canvas, x, iemgui_font(x),
              x->x_lcol, x->x_lab!=s_empty?x->x_lab->s_name:"");
-    if (x->x_lab==s_empty && x->x_selected)
+    if (x->x_selected)
     {
         t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
-        scalehandle_draw_erase(lh,canvas);
+        if (x->x_lab==s_empty)    
+            scalehandle_draw_erase((t_scalehandle *)(x->x_lhandle),canvas);
+        else if (lh->h_vis == 0)
+            scalehandle_draw_select(lh,canvas,x->x_ldx,x->x_ldy);
     }
 }
 
@@ -997,6 +999,7 @@ void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
     sys_vgui(".x%lx.c delete x%lx\n", canvas, x);
     sys_vgui(".x%lx.c dtag all x%lx\n", canvas, x);
     scalehandle_draw_erase2(x,glist);
+    x->x_vis = 0;
 }
 
 void scrollbar_update(t_glist *glist) {

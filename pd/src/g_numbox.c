@@ -202,7 +202,7 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -font %s -fill %s\n",
         canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
-    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -fill %s\n",
+    sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n",
         canvas, x, issel ? selection_color : fcol);
 
     iemgui_label_draw_config(&x->x_gui,canvas);
@@ -477,6 +477,12 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_NEW);
     scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    iemgui_label_draw_new(&x->x_gui, x->x_gui.x_glist);
+    if (x->x_gui.x_selected)
+    {
+        scalehandle_draw(&x->x_gui,x->x_gui.x_glist);
+        iemgui_select((t_gobj *)x,x->x_gui.x_glist,1);
+    }
     //canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x,"bogus",-1);
     scrollbar_update(x->x_gui.x_glist);
 }
