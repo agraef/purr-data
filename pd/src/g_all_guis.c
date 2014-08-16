@@ -830,9 +830,13 @@ void scalehandle_click_scale(t_scalehandle *h) {
     h->h_dragy = 0;
 }
 
+// here we don't need to use glist_getcanvas(t_canvas *)
+// because scalehandle on iemgui objects appears only when
+// they are on their own canvas
 void scalehandle_unclick_scale(t_scalehandle *h) {
     t_iemgui *x = (t_iemgui *)h->h_master;
     sys_vgui(".x%x.c delete %s\n", x->x_glist, h->h_outlinetag);
+    iemgui_io_draw_move(x, x->x_glist);
     iemgui_select((t_gobj *)x, x->x_glist, 1);
     canvas_fixlinesfor(x->x_glist, (t_text *)x);
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_glist);
@@ -999,7 +1003,6 @@ void iemgui_draw_new(t_iemgui *x, t_glist *glist) {
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
     t_canvas *canvas=glist_getcanvas(glist);
     iemgui_label_draw_new(x,canvas);
-    iemgui_draw_io(x,glist,7);
     canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
 }
 void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
