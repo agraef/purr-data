@@ -177,6 +177,7 @@ void iemgui_all_raute2dollar(t_symbol **srlsym)
 void iemgui_send(t_iemgui *x, t_symbol *s)
 {
     t_symbol *snd;
+    if (s == &s_) s = s_empty; //tb: fix for empty label
     int oldsndrcvable=0;
     if(iemgui_has_rcv(x)) oldsndrcvable += IEM_GUI_OLD_RCV_FLAG;
     if(iemgui_has_snd(x)) oldsndrcvable += IEM_GUI_OLD_SND_FLAG;
@@ -191,6 +192,7 @@ void iemgui_send(t_iemgui *x, t_symbol *s)
 void iemgui_receive(t_iemgui *x, t_symbol *s)
 {
     t_symbol *rcv;
+    if (s == &s_) s = s_empty; //tb: fix for empty label
     int oldsndrcvable=0;
     if(iemgui_has_rcv(x)) oldsndrcvable += IEM_GUI_OLD_RCV_FLAG;
     if(iemgui_has_snd(x)) oldsndrcvable += IEM_GUI_OLD_SND_FLAG;
@@ -198,7 +200,7 @@ void iemgui_receive(t_iemgui *x, t_symbol *s)
     rcv = iemgui_raute2dollar(s);
     x->x_rcv_unexpanded = rcv;
     rcv = canvas_realizedollar(x->x_glist, rcv);
-    if(iemgui_has_rcv(x))
+    if(s!=s_empty)
     {
         if(rcv!=x->x_rcv)
         {
@@ -208,7 +210,7 @@ void iemgui_receive(t_iemgui *x, t_symbol *s)
             pd_bind((t_pd *)x, x->x_rcv);
         }
     }
-    else if(s!=s_empty && iemgui_has_rcv(x))
+    else if(s==s_empty && iemgui_has_rcv(x))
     {
         pd_unbind((t_pd *)x, x->x_rcv);
         x->x_rcv = rcv;
@@ -429,6 +431,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
     {
         //fprintf(stderr,"draw erase %d\n", mode);
         iemgui_draw_erase(x, x->x_glist);
+        x->x_vis = 0;
     }
     gop_redraw = 0;
 }
@@ -697,7 +700,6 @@ void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
     if (!h->h_vis) return;
     sys_vgui("destroy %s\n", h->h_pathname);
     sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
-    h->h_vis = 0;
 }
 
 void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
@@ -998,7 +1000,6 @@ void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
     t_canvas *canvas=glist_getcanvas(glist);
     sys_vgui(".x%lx.c delete x%lx\n", canvas, x);
     scalehandle_draw_erase2(x,glist);
-    x->x_vis = 0;
 }
 
 void scrollbar_update(t_glist *glist) {
