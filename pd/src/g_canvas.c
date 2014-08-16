@@ -699,16 +699,22 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
 {
     t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
     t_scalehandle *mh = (t_scalehandle *)(x->x_mhandle);
+    //fprintf(stderr,"draw_gop_resize_hooks START\n");
     //in case we are an array which does not initialize its hooks
     if (!sh || !mh) return;
     if(x->gl_edit && glist_isvisible(x) && glist_istoplevel(x) &&
         x->gl_goprect && !x->gl_editor->e_selection)
     {
         //Drawing and Binding Resize_Blob for GOP
-        //fprintf(stderr,"draw_gop_resize_hooks %lx %lx\n",
+        //fprintf(stderr,"draw_gop_resize_hooks DRAW %lx %lx\n",
         //    (t_int)x, (t_int)glist_getcanvas(x));
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
+
+        // Need to reset handles' vis values because they are erased via map
+        // (when applying properties, for instance)
+        scalehandle_draw_erase(sh,x);
+        scalehandle_draw_erase(mh,x);
 
         scalehandle_draw_select(sh,x,
             -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
@@ -719,6 +725,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
     }
     else
     {
+        //fprintf(stderr,"draw_gop_resize_hooks ERASE\n");
         scalehandle_draw_erase(sh,x);
         scalehandle_draw_erase(mh,x);
     }
@@ -2005,7 +2012,7 @@ void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_flo
             //scalehandle_draw_erase(sh,x);
             sys_vgui("lower %s\n", sh->h_pathname);
             //delete GOP_resblob when moving the whole GOP
-            sys_vgui(".x%lx.c delete GOP_resblob \n",  x);
+            sys_vgui(".x%lx.c delete %lxSCALE\n", x, x);
         }
         sh->h_dragx = 0;
         sh->h_dragy = 0;

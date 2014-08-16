@@ -699,7 +699,9 @@ void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
 void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
     if (!h->h_vis) return;
     sys_vgui("destroy %s\n", h->h_pathname);
-    sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master, h->h_scale ? "SCALE" : "LABELH");
+    sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master,
+        h->h_scale ? "SCALE" : pd_class((t_pd *)h->h_master)==canvas_class?"MOVE":"LABELH");
+    h->h_vis = 0;
 }
 
 void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
