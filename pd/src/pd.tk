@@ -801,7 +801,7 @@ match_linux_wm [list frame .controls]
 #if { [info tclversion] >= 8.5 && $pd_nt == 0 } {
 #	ttk::separator .eyecandy
 #	pack .eyecandy .controls -fill x -expand 0
-#} else {
+#} else {checkbutton
 pack .controls -fill x -expand 1
 #}
 match_linux_wm [list frame .controls.switches]
@@ -6545,12 +6545,12 @@ proc pdtk_canvas_dialog {id xscale yscale graphme x1 y1 x2 y2 \
 		-textvariable ::dialog($vid:yscale) -width 10]
     pack $id.yscale.label $id.yscale.entry -side left -padx 3
 
-    match_linux_wm [list checkbutton $id.graphme -text {graph on parent} \
+    match_linux_wm [list ttk::checkbutton $id.graphme -text {graph on parent} \
         -variable ::dialog($vid:graphme) \
         -command [concat canvas_checkcommand $wid]]
     pack $id.graphme -side top
 
-    match_linux_wm [list checkbutton $id.hidetext \
+    match_linux_wm [list ttk::checkbutton $id.hidetext \
 		-text {hide object name and arguments} \
         -variable ::dialog($vid:hidetext) \
         -command [concat canvas_checkcommand $wid]]
