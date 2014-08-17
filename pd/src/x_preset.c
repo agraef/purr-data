@@ -1013,7 +1013,7 @@ void preset_hub_recall(t_preset_hub *x, t_float f)
             hd = x->ph_data;
             while (hd)
             {
-                if(PH_DEBUG) fprintf(stderr,"   searching\n");
+                if(PH_DEBUG) fprintf(stderr,"    searching\n");
                 // now check if the object is active (node pointer is not NULL)
                 if (hd->phd_node)
                 {
