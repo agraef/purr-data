@@ -41,6 +41,7 @@ extern void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
 extern void *canvas_undo_set_create(t_canvas *x);
 extern void canvas_undo_create(t_canvas *x, void *z, int action);
 extern int we_are_undoing;
+extern void glob_preset_node_list_check_loc_and_update(void);
 extern void glob_preset_node_list_seek_hub(void);
 
 /* ----------------- the "text" object.  ------------------ */
@@ -2253,6 +2254,8 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                 typedmess(&x->te_pd, gensym("rename"), natom2-1, vec2+1);
                 binbuf_free(x->te_binbuf);
                 x->te_binbuf = b;
+                glob_preset_node_list_seek_hub();
+                glob_preset_node_list_check_loc_and_update();
                 //canvas_apply_restore_original_position(glist_getcanvas(glist),
                 //    pos);
             }
@@ -2288,6 +2291,7 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
                     canvas_loadbang((t_canvas *)newest);
                 canvas_restoreconnections(glist_getcanvas(glist));
                 glob_preset_node_list_seek_hub();
+                glob_preset_node_list_check_loc_and_update();
                 //canvas_apply_restore_original_position(glist_getcanvas(glist),
                 //    pos);
             }
@@ -2329,6 +2333,11 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
         }
         binbuf_text(x->te_binbuf, buf, bufsize);
         binbuf_free(b);
+
+        //probably don't need this here, but doesn't hurt to leave it in
+        glob_preset_node_list_seek_hub();
+
+        glob_preset_node_list_check_loc_and_update();
     }
 }
 
