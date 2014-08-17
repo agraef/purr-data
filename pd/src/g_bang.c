@@ -41,7 +41,7 @@ void bng_draw_new(t_bng *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
-    iemgui_base_draw_new(&x->x_gui, canvas);
+    iemgui_base_draw_new(&x->x_gui);
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
@@ -59,22 +59,19 @@ void bng_draw_move(t_bng *x, t_glist *glist)
     int x1=text_xpix(&x->x_gui.x_obj, glist);
     int y1=text_ypix(&x->x_gui.x_obj, glist);
 
-    iemgui_base_draw_move(&x->x_gui, canvas);
+    iemgui_base_draw_move(&x->x_gui);
     t_float cr = (x->x_gui.x_w-2)/2.0;
     t_float cx = x1+cr+1.5;
     t_float cy = y1+cr+1.5;
     sys_vgui(".x%lx.c coords %lxBUT %f %f\n", canvas, x, cx, cy);
     sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x -r %f\n",
         canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol, cr);
-    iemgui_label_draw_move(&x->x_gui,canvas);
-    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_label_draw_config(&x->x_gui,canvas);
-    iemgui_base_draw_config(&x->x_gui,canvas);
+    iemgui_base_draw_config(&x->x_gui);
     sys_vgui(".x%lx.c itemconfigure %lxBUT -fill #%6.6x\n",
         canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
 }
@@ -243,10 +240,10 @@ static void bng_dialog(t_bng *x, t_symbol *s, int argc, t_atom *argv)
     int ftbreak = atom_getintarg(3, argc, argv);
     int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     bng_check_minmax(x, ftbreak, fthold);
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
+    iemgui_draw_config(&x->x_gui);
+    iemgui_draw_io(&x->x_gui, sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    scalehandle_draw(&x->x_gui);
     scrollbar_update(x->x_gui.x_glist);
 }
 
@@ -371,8 +368,8 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
     x->x_clock_lck = clock_new(x, (t_method)bng_tick_lck);
     outlet_new(&x->x_gui.x_obj, &s_bang);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,0);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
 

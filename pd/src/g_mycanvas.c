@@ -47,7 +47,6 @@ void my_canvas_draw_move(t_my_canvas *x, t_glist *glist)
         canvas, x, x1, y1, x1+x->x_vis_w, y1+x->x_vis_h);
     sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n",
         canvas, x, x1, y1, x1+x->x_gui.x_w, y1+x->x_gui.x_h);
-    iemgui_label_draw_move(&x->x_gui,canvas);
 }
 
 void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
@@ -59,7 +58,6 @@ void my_canvas_draw_config(t_my_canvas* x, t_glist* glist)
     sys_vgui(".x%lx.c itemconfigure %lxBASE -stroke %s\n", canvas, x,
         x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas ?
         "$pd_colors(selection)" : bcol);
-    iemgui_label_draw_config(&x->x_gui,canvas);
 }
 
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
@@ -216,9 +214,9 @@ static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv
     x->x_vis_h = maxi(atom_getintarg(3, argc, argv),1);
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_gui.x_loadinit = 0;
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+    iemgui_draw_config(&x->x_gui);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    scalehandle_draw(&x->x_gui);
     scrollbar_update(x->x_gui.x_glist);
 }
 
@@ -248,8 +246,7 @@ static void my_canvas_vis_size(t_my_canvas *x, t_symbol *s, int ac, t_atom *av)
             i = 1;
     }
     x->x_vis_h = i;
-    if(glist_isvisible(x->x_gui.x_glist))
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
+    if(glist_isvisible(x->x_gui.x_glist)) iemgui_draw_move(&x->x_gui);
 }
 
 static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
@@ -323,8 +320,8 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     x->x_at[1].a_type = A_FLOAT;
     iemgui_verify_snd_ne_rcv(&x->x_gui);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,0);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);

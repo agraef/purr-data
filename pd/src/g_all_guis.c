@@ -187,7 +187,7 @@ void iemgui_send(t_iemgui *x, t_symbol *s)
     x->x_snd_unexpanded = snd;
     x->x_snd = snd = canvas_realizedollar(x->x_glist, snd);
     iemgui_verify_snd_ne_rcv(x);
-    iemgui_draw_io(x, x->x_glist, oldsndrcvable);
+    iemgui_draw_io(x, oldsndrcvable);
 }
 
 void iemgui_receive(t_iemgui *x, t_symbol *s)
@@ -217,7 +217,7 @@ void iemgui_receive(t_iemgui *x, t_symbol *s)
         x->x_rcv = rcv;
     }
     iemgui_verify_snd_ne_rcv(x);
-    iemgui_draw_io(x, x->x_glist, oldsndrcvable);
+    iemgui_draw_io(x, oldsndrcvable);
 }
 
 void iemgui_label(t_iemgui *x, t_symbol *s)
@@ -352,6 +352,49 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
     }
 }
 
+#if 0 // future way of reordering stuff for iemgui_shouldvis
+/*
+    // some day when the object tagging is
+    // properly done for all GUI objects
+    glist_noselect(canvas);
+    glist_select(canvas, y);
+    t_gobj *yy = canvas->gl_list;
+    if (yy != y)
+    {
+        while (yy && yy->g_next != y)
+            yy = yy->g_next;
+        // now we have yy which is right before our y graph
+        t_rtext *yr = NULL;
+        if (yy)
+        {
+            yr = glist_findrtext(canvas, (t_text *)yy);
+        }
+        if (yr)
+        {
+            fprintf(stderr,"lower\n");
+            sys_vgui(".x%lx.c lower selected %s\n", canvas, rtext_gettag(yr));
+            sys_vgui(".x%lx.c raise selected %s\n", canvas, rtext_gettag(yr));
+            //canvas_raise_all_cords(canvas);
+        }
+        else
+        {
+            // fall back to legacy redraw for objects
+            //   that are not patchable
+            fprintf(stderr,"lower fallback redraw\n");
+            canvas_redraw(canvas);
+        }
+    }
+    else
+    {
+        // we get here if we are supposed to go
+        //   all the way to the bottom
+        fprintf(stderr,"lower to the bottom\n");
+        sys_vgui(".x%lx.c lower selected\n", canvas);
+    }
+    glist_noselect(canvas);
+*/
+#endif
+
 void iemgui_shouldvis(t_iemgui *x, int mode)
 {
     gop_redraw = 1;
@@ -360,7 +403,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
         if (!x->x_vis)
         {
             //fprintf(stderr,"draw new %d\n", mode);
-            iemgui_draw_new(x, x->x_glist);
+            iemgui_draw_new(x);
             canvas_fixlinesfor(glist_getcanvas(x->x_glist), (t_text*)x);
             x->x_vis = 1;
             if (x->x_glist != glist_getcanvas(x->x_glist))
@@ -375,64 +418,20 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
                 // reorder it visually
                 glist_redraw(canvas);
 
-                /*
-                    // some day when the object tagging is
-                    // properly done for all GUI objects
-                glist_noselect(canvas);
-                glist_select(canvas, y);
-                t_gobj *yy = canvas->gl_list;
-                if (yy != y)
-                {
-                    fprintf(stderr,"not bottom\n");
-                    while (yy && yy->g_next != y)
-                    {
-                        fprintf(stderr,"+\n");
-                        yy = yy->g_next;
-                    }
-                    // now we have yy which is right before our y graph
-                    t_object *ob = NULL;
-                    t_rtext *yr = NULL;
-                    if (yy)
-                    {
-                        yr = glist_findrtext(canvas, (t_text *)yy);
-                    }
-                    if (yr)
-                    {
-                        fprintf(stderr,"lower\n");
-                        sys_vgui(".x%lx.c lower selected %s\n",
-                            canvas, rtext_gettag(yr));
-                        sys_vgui(".x%lx.c raise selected %s\n",
-                            canvas, rtext_gettag(yr));
-                        //canvas_raise_all_cords(canvas);
-                    }
-                    else
-                    {
-                        // fall back to legacy redraw for objects
-                        //   that are not patchable
-                        fprintf(stderr,"lower fallback redraw\n");
-                        canvas_redraw(canvas);
-                    }
-                }
-                else
-                {
-                    // we get here if we are supposed to go
-                    //   all the way to the bottom
-                    fprintf(stderr,"lower to the bottom\n");
-                    sys_vgui(".x%lx.c lower selected\n", canvas);
-                }
-                glist_noselect(canvas);
-                */
             }
         }
         //fprintf(stderr,"draw move x->x_w=%d\n", x->x_w);
-        x->x_draw(x, x->x_glist, mode);
+        if      (mode==IEM_GUI_DRAW_MODE_NEW)    iemgui_draw_new(   x);
+        else if (mode==IEM_GUI_DRAW_MODE_MOVE)   iemgui_draw_move(  x);
+        else if (mode==IEM_GUI_DRAW_MODE_CONFIG) iemgui_draw_config(x);
+        else bug("iemgui_shouldvis");
         scalehandle_check_and_redraw(x);
         canvas_fixlinesfor(glist_getcanvas(x->x_glist), (t_text*)x);
     }
     else if (x->x_vis)
     {
         //fprintf(stderr,"draw erase %d\n", mode);
-        iemgui_draw_erase(x, x->x_glist);
+        iemgui_draw_erase(x);
         x->x_vis = 0;
     }
     gop_redraw = 0;
@@ -487,7 +486,7 @@ void iemgui_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_iemgui *x = (t_iemgui *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    //x->x_gui.x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_MOVE);
+    //iemgui_draw_move(x);
     canvas_fixlinesfor(glist_getcanvas(glist), (t_text *)z);
 }
 
@@ -504,9 +503,9 @@ void iemgui_select(t_gobj *z, t_glist *glist, int selected)
     sys_vgui(".x%lx.c itemconfigure {x%lx&&border} -stroke %s\n", canvas, x,
         x->x_selected && x->x_glist == canvas ? selection_color : fcol);
     x->x_draw((void *)z, glist, IEM_GUI_DRAW_MODE_SELECT);
-    scalehandle_draw(x,glist);
-    iemgui_label_draw_select(x,canvas);
-    iemgui_tag_selected(x,canvas);
+    scalehandle_draw(x);
+    iemgui_label_draw_select(x);
+    iemgui_tag_selected(x);
 }
 
 void iemgui_delete(t_gobj *z, t_glist *glist)
@@ -520,10 +519,10 @@ void iemgui_vis(t_gobj *z, t_glist *glist, int vis)
     if (gobj_shouldvis(z, glist))
     {
         if (vis)
-            iemgui_draw_new(x, glist);
+            iemgui_draw_new(x);
         else
         {
-            iemgui_draw_erase(x, x->x_glist);
+            iemgui_draw_erase(x);
             sys_unqueuegui(z);
         }
         x->x_vis = vis;
@@ -640,9 +639,10 @@ void scalehandle_bind(t_scalehandle *h) {
 // in 18 cases only, because canvas does not fit the pattern below.
 // canvas has no label handle and has a motion handle
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
-void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) {
+void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
     t_iemgui *x = (t_iemgui *)h->h_master;
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
 
     //int px,py;
     //t_class *c = pd_class((t_pd *)x);
@@ -659,7 +659,7 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
     int sx = h->h_scale ? SCALEHANDLE_WIDTH  : LABELHANDLE_WIDTH;
     int sy = h->h_scale ? SCALEHANDLE_HEIGHT : LABELHANDLE_HEIGHT;
 
-    scalehandle_draw_erase(h,canvas);
+    scalehandle_draw_erase(h);
 
     if (!h->h_vis) {
         sys_vgui("canvas %s -width %d -height %d -bg $pd_colors(selection) -bd 0 "
@@ -676,17 +676,18 @@ void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py) 
             h->h_pathname, tags);
         scalehandle_bind(h);
         h->h_vis = 1;
-    /* not yet (this is not supported by current implementation)
-    } else {
+    /* not yet (this is not supported by current implementation) */
+    }/* else {
         sys_vgui(".x%x.c coords %s %d %d\n", canvas, h->h_pathname,
             x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy);
-        sys_vgui("raise %s\n", h->h_pathname); */
-    }
+        sys_vgui("raise %s\n", h->h_pathname);
+    }*/
 }
 
 extern t_class *my_canvas_class;
 
-void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
+void scalehandle_draw_select2(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int sx,sy;
     if (c==my_canvas_class) {
@@ -697,12 +698,13 @@ void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas) {
         c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
         sx=x2-x1; sy=y2-y1;
     }
-    scalehandle_draw_select(x->x_handle,canvas,sx-1,sy-1);
+    scalehandle_draw_select(x->x_handle,sx-1,sy-1);
     if (x->x_lab!=s_empty)
-        scalehandle_draw_select(x->x_lhandle,canvas,x->x_ldx,x->x_ldy);
+        scalehandle_draw_select(x->x_lhandle,x->x_ldx,x->x_ldy);
 }
 
-void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
+void scalehandle_draw_erase(t_scalehandle *h) {
+    t_canvas *canvas=glist_getcanvas(h->h_glist);
     if (!h->h_vis) return;
     sys_vgui("destroy %s\n", h->h_pathname);
     sys_vgui(".x%lx.c delete %lx%s\n", canvas, h->h_master,
@@ -710,24 +712,25 @@ void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas) {
     h->h_vis = 0;
 }
 
-void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas) {
+void scalehandle_draw_erase2(t_iemgui *x) {
     t_scalehandle *sh = (t_scalehandle *)(x->x_handle);
     t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
-    if (sh->h_vis) scalehandle_draw_erase(sh,canvas);
-    if (lh->h_vis) scalehandle_draw_erase(lh,canvas);
+    if (sh->h_vis) scalehandle_draw_erase(sh);
+    if (lh->h_vis) scalehandle_draw_erase(lh);
 }
 
-void scalehandle_draw(t_iemgui *x, t_glist *glist) {
-    if (x->x_glist == glist_getcanvas(glist)) {
-        if(x->x_selected == x->x_glist) scalehandle_draw_select2(x,glist);
-        else scalehandle_draw_erase2(x,glist);
+void scalehandle_draw(t_iemgui *x) {
+    if (x->x_glist == glist_getcanvas(x->x_glist)) {
+        if(x->x_selected == x->x_glist) scalehandle_draw_select2(x);
+        else scalehandle_draw_erase2(x);
     }
 }
 
-t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
+t_scalehandle *scalehandle_new(t_class *c, t_gobj *x, t_glist *glist, int scale) {
     t_scalehandle *h = (t_scalehandle *)pd_new(c);
     char buf[64];
     h->h_master = (t_gobj*)x;
+    h->h_glist = glist;
     sprintf(buf, "_h%lx", (t_int)h);
     pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     sprintf(h->h_outlinetag, "h%lx", (t_int)h);
@@ -736,7 +739,7 @@ t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale) {
     //h->h_offset_x = 0; // unused (maybe keep for later)
     //h->h_offset_y = 0; // unused (maybe keep for later)
     h->h_vis = 0;
-    sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)x->x_glist, (t_int)h);
+    sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)h->h_glist, (t_int)h);
     return h;
 }
 
@@ -838,7 +841,7 @@ void scalehandle_click_scale(t_scalehandle *h) {
 void scalehandle_unclick_scale(t_scalehandle *h) {
     t_iemgui *x = (t_iemgui *)h->h_master;
     sys_vgui(".x%x.c delete %s\n", x->x_glist, h->h_outlinetag);
-    iemgui_io_draw_move(x, x->x_glist);
+    iemgui_io_draw_move(x);
     iemgui_select((t_gobj *)x, x->x_glist, 1);
     canvas_fixlinesfor(x->x_glist, (t_text *)x);
     sys_vgui("pdtk_canvas_getscroll .x%lx.c\n", x->x_glist);
@@ -870,20 +873,22 @@ void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
 static void scalehandle_check_and_redraw(t_iemgui *x)
 {
     if(x->x_selected == x->x_glist)
-        scalehandle_draw_select2(x,x->x_glist);
+        scalehandle_draw_select2(x);
 }
 
 //----------------------------------------------------------------
 // IEMGUI refactor (by Mathieu)
 
-void iemgui_tag_selected(t_iemgui *x, t_glist *canvas) {
+void iemgui_tag_selected(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     if(x->x_selected)
         sys_vgui(".x%lx.c addtag selected withtag x%lx\n", canvas, x);
     else
         sys_vgui(".x%lx.c dtag x%lx selected\n", canvas, x);
 }
 
-void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas) {
+void iemgui_label_draw_new(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     int x1=text_xpix(&x->x_obj, x->x_glist);
     int y1=text_ypix(&x->x_obj, x->x_glist);
     sys_vgui(".x%lx.c create text %d %d -text {%s} -anchor w "
@@ -893,14 +898,16 @@ void iemgui_label_draw_new(t_iemgui *x, t_glist *canvas) {
          iemgui_font(x), x->x_lcol, x, x);
 }
 
-void iemgui_label_draw_move(t_iemgui *x, t_glist *canvas) {
+void iemgui_label_draw_move(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     int x1=text_xpix(&x->x_obj, x->x_glist);
     int y1=text_ypix(&x->x_obj, x->x_glist);
     sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
         canvas, x, x1+x->x_ldx, y1+x->x_ldy);
 }
 
-void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
+void iemgui_label_draw_config(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_selected == canvas && x->x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxLABEL -font %s "
                  "-fill $pd_colors(selection) -text {%s} \n",
@@ -915,13 +922,14 @@ void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
     {
         t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
         if (x->x_lab==s_empty)    
-            scalehandle_draw_erase((t_scalehandle *)(x->x_lhandle),canvas);
+            scalehandle_draw_erase(x->x_lhandle);
         else if (lh->h_vis == 0)
-            scalehandle_draw_select(lh,canvas,x->x_ldx,x->x_ldy);
+            scalehandle_draw_select(lh,x->x_ldx,x->x_ldy);
     }
 }
 
-void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
+void iemgui_label_draw_select(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_selected == canvas && x->x_glist == canvas)
         sys_vgui(".x%lx.c itemconfigure %lxLABEL "
             "-fill $pd_colors(selection)\n", canvas, x);
@@ -930,12 +938,14 @@ void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas) {
             canvas, x, x->x_lcol);
 }
 
+extern t_class *my_numbox_class;
 extern t_class *vu_class;
-void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags)
+void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
 {
-    t_canvas *canvas=glist_getcanvas(glist);
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_glist != canvas) return; // is gop
     t_class *c = pd_class((t_pd *)x);
+    if (c==my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1) return; //sigh
 
     if (!(old_sr_flags&4) && (!glist_isvisible(canvas) || !(canvas == x->x_glist))) {
         return;
@@ -973,7 +983,8 @@ void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags)
         sys_vgui(".x%lx.c delete x%lxi%d\n", canvas, x, i);
 }
 
-void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas) {
+void iemgui_io_draw_move(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2;
     c->c_wb->w_getrectfn((t_gobj *)x,canvas,&x1,&y1,&x2,&y2);
@@ -986,7 +997,8 @@ void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas) {
             canvas, x, i, x1+i*k, y1, x1+i*k+IOWIDTH, y1+1);
 }
 
-void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas) {
+void iemgui_base_draw_new(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
@@ -997,7 +1009,8 @@ void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas) {
          canvas, x1,y1,x2,y2, x->x_bcol, x, x);
 }
 
-void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas) {
+void iemgui_base_draw_move(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     t_class *c = pd_class((t_pd *)x);
     int x1,y1,x2,y2,gr=gop_redraw; gop_redraw=0;
     c->c_wb->w_getrectfn((t_gobj *)x,x->x_glist,&x1,&y1,&x2,&y2);
@@ -1005,21 +1018,40 @@ void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas) {
     sys_vgui(".x%lx.c coords %lxBASE %d %d %d %d\n", canvas, x, x1, y1, x2, y2);
 }
 
-void iemgui_base_draw_config(t_iemgui *x, t_glist *canvas) {
+void iemgui_base_draw_config(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE -fill #%6.6x\n", canvas, x, x->x_bcol);
 }
 
-void iemgui_draw_new(t_iemgui *x, t_glist *glist) {
+void iemgui_draw_update(t_iemgui *x, t_glist *glist) {
+    x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_UPDATE);
+}
+
+void iemgui_draw_new(t_iemgui *x) {
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
-    t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_label_draw_new(x,canvas);
+    iemgui_label_draw_new(x);
+    iemgui_draw_io(x,7);
     canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
 }
-void iemgui_draw_erase(t_iemgui *x, t_glist *glist) {
-    t_canvas *canvas=glist_getcanvas(glist);
+
+void iemgui_draw_config(t_iemgui *x) {
+    x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+    iemgui_label_draw_config(x);
+    //iemgui_base_draw_config(x); // can't
+}
+
+void iemgui_draw_move(t_iemgui *x) {
+    x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_MOVE);
+    iemgui_label_draw_move(x);
+    //iemgui_base_draw_move(x); // can't
+    iemgui_io_draw_move(x);
+}
+
+void iemgui_draw_erase(t_iemgui *x) {
+    t_canvas *canvas=glist_getcanvas(x->x_glist);
     sys_vgui(".x%lx.c delete x%lx\n", canvas, x);
-    scalehandle_draw_erase2(x,glist);
+    scalehandle_draw_erase2(x);
 }
 
 void scrollbar_update(t_glist *glist) {

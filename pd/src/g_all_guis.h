@@ -38,6 +38,7 @@ typedef struct _scalehandle
 {
     t_pd       h_pd;
     t_gobj    *h_master;
+    t_glist   *h_glist;
     t_symbol  *h_bindsym;
     int        h_scale;
     char       h_pathname[64];
@@ -220,12 +221,12 @@ EXTERN void canvas_apply_setundo(t_canvas *x, t_gobj *y);
 
 // scalehandle code, as refactored by Mathieu
 EXTERN void scalehandle_bind(t_scalehandle *h);
-EXTERN void scalehandle_draw_select(t_scalehandle *h, t_glist *canvas, int px, int py);
-EXTERN void scalehandle_draw_select2(t_iemgui *x, t_glist *canvas);
-EXTERN void scalehandle_draw_erase(t_scalehandle *h, t_glist *canvas);
-EXTERN void scalehandle_draw_erase2(t_iemgui *x, t_glist *canvas);
-EXTERN void scalehandle_draw(t_iemgui *x, t_glist *glist);
-EXTERN t_scalehandle *scalehandle_new(t_class *c, t_iemgui *x, int scale);
+EXTERN void scalehandle_draw_select(t_scalehandle *h, int px, int py);
+EXTERN void scalehandle_draw_select2(t_iemgui *x);
+EXTERN void scalehandle_draw_erase(t_scalehandle *h);
+EXTERN void scalehandle_draw_erase2(t_iemgui *x);
+EXTERN void scalehandle_draw(t_iemgui *x);
+EXTERN t_scalehandle *scalehandle_new(t_class *c, t_gobj *x, t_glist *glist, int scale);
 EXTERN void scalehandle_free(t_scalehandle *h);
 EXTERN void properties_set_field_int(long props, const char *gui_field, int value);
 EXTERN void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2);
@@ -242,18 +243,20 @@ EXTERN float minf(float a, float b);
 EXTERN float maxf(float a, float b);
 
 // other refactor by Mathieu
-EXTERN void iemgui_tag_selected(     t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_label_draw_new(   t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_label_draw_move(  t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_label_draw_select(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_io_draw_move(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_draw_io(t_iemgui *x, t_glist *glist, int old_sr_flags);
-EXTERN void iemgui_base_draw_new(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_base_draw_move(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_base_draw_config(t_iemgui *x, t_glist *canvas);
-EXTERN void iemgui_draw_new(t_iemgui *x, t_glist *glist);
-EXTERN void iemgui_draw_erase(t_iemgui *x, t_glist* glist);
+EXTERN void iemgui_tag_selected(     t_iemgui *x);
+EXTERN void iemgui_label_draw_new(   t_iemgui *x);
+EXTERN void iemgui_label_draw_move(  t_iemgui *x);
+EXTERN void iemgui_label_draw_config(t_iemgui *x);
+EXTERN void iemgui_label_draw_select(t_iemgui *x);
+EXTERN void iemgui_io_draw_move(t_iemgui *x);
+EXTERN void iemgui_draw_io(t_iemgui *x, int old_sr_flags);
+EXTERN void iemgui_base_draw_new(t_iemgui *x);
+EXTERN void iemgui_base_draw_move(t_iemgui *x);
+EXTERN void iemgui_base_draw_config(t_iemgui *x);
+EXTERN void iemgui_draw_new(t_iemgui *x);
+EXTERN void iemgui_draw_config(t_iemgui *x);
+EXTERN void iemgui_draw_move(t_iemgui *x);
+EXTERN void iemgui_draw_erase(t_iemgui *x);
 EXTERN void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl); // rename this to iemgui_wb_init
 
 extern t_symbol *s_empty;

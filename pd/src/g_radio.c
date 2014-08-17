@@ -42,7 +42,7 @@ void radio_draw_new(t_radio *x, t_glist *glist)
     int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
     int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
     int y1=text_ypix(&x->x_gui.x_obj, glist), yi=y1; 
-    iemgui_base_draw_new(&x->x_gui, canvas);
+    iemgui_base_draw_new(&x->x_gui);
 
     for(i=0; i<n; i++) if (x->x_orient) {
         if (i) sys_vgui(".x%lx.c create pline %d %d %d %d "
@@ -80,7 +80,7 @@ void radio_draw_move(t_radio *x, t_glist *glist)
     int n=x->x_number, i, d=x->x_gui.x_w, s=d/4;
     int x1=text_xpix(&x->x_gui.x_obj, glist), xi=x1;
     int y1=text_ypix(&x->x_gui.x_obj, glist), yi=y1;
-    iemgui_base_draw_move(&x->x_gui, canvas);
+    iemgui_base_draw_move(&x->x_gui);
     for(i=0; i<n; i++) if (x->x_orient) {
         sys_vgui(".x%lx.c coords %lxBASE%d %d %d %d %d\n",
             canvas, x, i, x1, yi, x1+d, yi);
@@ -94,16 +94,13 @@ void radio_draw_move(t_radio *x, t_glist *glist)
             canvas, x, i, xi+s, y1+s, xi+d-s, y1+d-s);
         xi += d;
     }
-    iemgui_label_draw_move(&x->x_gui,canvas);
-    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 void radio_draw_config(t_radio *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     int n=x->x_number, i;
-    iemgui_label_draw_config(&x->x_gui,canvas);
-    iemgui_base_draw_config(&x->x_gui,canvas);
+    iemgui_base_draw_config(&x->x_gui);
     for(i=0; i<n; i++)
     {
         sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
@@ -250,7 +247,7 @@ static void radio_dialog(t_radio *x, t_symbol *s, int argc, t_atom *argv)
     int sr_flags = iemgui_dialog(&x->x_gui, argc, argv);
     if(x->x_number != num)
     {
-        iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
+        iemgui_draw_erase(&x->x_gui);
         x->x_number = num;
         if(x->x_on >= x->x_number)
         {
@@ -261,11 +258,11 @@ static void radio_dialog(t_radio *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-        iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
+        iemgui_draw_config(&x->x_gui);
+        iemgui_draw_io(&x->x_gui, sr_flags);
         iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
     }
-    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    scalehandle_draw(&x->x_gui);
     scrollbar_update(x->x_gui.x_glist);
 }
 
@@ -390,12 +387,12 @@ static void radio_number(t_radio *x, t_floatarg num)
     int n=mini(maxi((int)num,1),IEM_RADIO_MAX);
     if(n != x->x_number)
     {
-        iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
+        iemgui_draw_erase(&x->x_gui);
         x->x_number = n;
         if(x->x_on >= x->x_number)
             x->x_on = x->x_number - 1;
         x->x_on_old = x->x_on;
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_NEW);
+        iemgui_draw_new(&x->x_gui);
     }
 }
 
@@ -463,9 +460,8 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
     iemgui_all_colfromload(&x->x_gui, bflcol);
     outlet_new(&x->x_gui.x_obj, &s_list);
 
-    t_class *sc = scalehandle_class;
-    x->x_gui. x_handle = scalehandle_new(sc,(t_iemgui *)x,1);
-    x->x_gui.x_lhandle = scalehandle_new(sc,(t_iemgui *)x,0);
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,0);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);

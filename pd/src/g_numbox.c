@@ -19,7 +19,7 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist);
 static void my_numbox_key(void *z, t_floatarg fkey);
 static void my_numbox_draw_update(t_gobj *client, t_glist *glist);
 t_widgetbehavior my_numbox_widgetbehavior;
-static t_class *my_numbox_class;
+/*static*/ t_class *my_numbox_class;
 
 static void my_numbox_tick_reset(t_my_numbox *x)
 {
@@ -162,7 +162,6 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol,
         bcol, x, x);
 
-    if (x->x_hide_frame <= 1) iemgui_draw_io(&x->x_gui,glist,7);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
             "-tags {%lxBASE2 x%lx text iemgui}\n",
@@ -186,11 +185,10 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
     sys_vgui(".x%lx.c coords %lxBASE1 %d %d %d %d %d %d %d %d %d %d\n",
         canvas, x, x1, y1, x2-4, y1, x2, y1+4, x2, y2, x1, y2);
     if (x->x_hide_frame <= 1)
-        iemgui_io_draw_move(&x->x_gui,canvas);
+        iemgui_io_draw_move(&x->x_gui);
     if (!x->x_hide_frame || x->x_hide_frame == 2)
         sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
             canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
-    iemgui_label_draw_move(&x->x_gui,canvas);
     sys_vgui(".x%lx.c coords %lxNUMBER %d %d\n",
         canvas, x, x1+half+2, y1+half+d);
 }
@@ -204,7 +202,6 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
         canvas, x, iemgui_font(&x->x_gui), issel ? selection_color : fcol);
     sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n",
         canvas, x, issel ? selection_color : fcol);
-    iemgui_label_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxBASE1 -fill #%6.6x\n", canvas,
              x, x->x_gui.x_bcol);
 }
@@ -229,9 +226,9 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
         issel ? selection_color : fcol);
     if(issel) 
-        scalehandle_draw_select2(&x->x_gui,glist);
+        scalehandle_draw_select2(&x->x_gui);
     else
-        scalehandle_draw_erase2(&x->x_gui,glist);
+        scalehandle_draw_erase2(&x->x_gui);
 }
 
 static void my_numbox__clickhook(t_scalehandle *sh, t_floatarg f,
@@ -468,15 +465,13 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
-    iemgui_draw_erase(&x->x_gui, x->x_gui.x_glist);
-    iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_NEW);
-    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
-    iemgui_label_draw_new(&x->x_gui, x->x_gui.x_glist);
-    if (x->x_gui.x_selected)
-    {
-        scalehandle_draw(&x->x_gui,x->x_gui.x_glist);
-        iemgui_select((t_gobj *)x,x->x_gui.x_glist,1);
-    }
+    // normally, you'd do move+config, but here you have to do erase+new
+    // because iemgui_draw_io does not support changes to x_hide_frame.
+    iemgui_draw_erase(&x->x_gui);
+    iemgui_draw_new(&x->x_gui);
+    //iemgui_draw_move(&x->x_gui);
+    //iemgui_draw_config(&x->x_gui);
+    scalehandle_draw(&x->x_gui);
     //canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x,"bogus",-1);
     scrollbar_update(x->x_gui.x_glist);
 }
@@ -762,8 +757,8 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_change = 0;
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,0);
     x->x_scalewidth = 0;
     x->x_scaleheight = 0;
     x->x_tmpfontsize = 0;

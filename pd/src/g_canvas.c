@@ -441,8 +441,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     pd_pushsym(&x->gl_pd);
 
     //dpsaha@vt.edu gop resize (refactored by mathieu)
-    x-> x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
-    x->x_mhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
+    x-> x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x,1);
+    x->x_mhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x,0);
 
     x->u_queue = canvas_undo_init(x);
     return(x);
@@ -711,18 +711,18 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
 
-        scalehandle_draw_select(sh,x,
+        scalehandle_draw_select(sh,
             -1-x->gl_obj.te_xpix+x->gl_xmargin + x->gl_pixwidth,
             -1-x->gl_obj.te_ypix+x->gl_ymargin + x->gl_pixheight/*,GOP_resblob*/);
-        scalehandle_draw_select(mh,x,
+        scalehandle_draw_select(mh,
             2+SCALEHANDLE_WIDTH -x->gl_obj.te_xpix+x->gl_xmargin,
             2+SCALEHANDLE_HEIGHT-x->gl_obj.te_ypix+x->gl_ymargin /*,"GOP_movblob"*/);
     }
     else
     {
         //fprintf(stderr,"draw_gop_resize_hooks ERASE\n");
-        scalehandle_draw_erase(sh,x);
-        scalehandle_draw_erase(mh,x);
+        scalehandle_draw_erase(sh);
+        scalehandle_draw_erase(mh);
     }
     canvas_check_nlet_highlights(x);
 }

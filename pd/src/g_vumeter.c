@@ -136,7 +136,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
     int quad3=x2-w4, end=x2+4;
     int k1=x->x_led_size+1, k2=IEM_VU_STEPS+1, k3=k1/2;
     int led_col, yyy, i, k4=y1-k3;
-    iemgui_base_draw_new(&x->x_gui, canvas);
+    iemgui_base_draw_new(&x->x_gui);
 
     for(i = 1; i <= IEM_VU_STEPS+1; i++)
     {
@@ -164,7 +164,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         "-tags {%lxPLED x%lx text iemgui}\n",
         canvas, mid+1, y1+12,
         mid+1, y1+12, x->x_led_size, x->x_gui.x_bcol, x, x);
-    iemgui_draw_io(&x->x_gui,glist,7);
+    iemgui_draw_io(&x->x_gui,7);
     x->x_updaterms = x->x_updatepeak = 1;
     sys_queuegui(x, x->x_gui.x_glist, vu_draw_update);
 }
@@ -201,8 +201,6 @@ static void vu_draw_move(t_vu *x, t_glist *glist)
     }
     x->x_updaterms = x->x_updatepeak = 1;
     sys_queuegui(x, glist, vu_draw_update);
-    iemgui_label_draw_move(&x->x_gui,canvas);
-    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 static void vu_draw_config(t_vu* x, t_glist* glist)
@@ -220,12 +218,11 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
             iemgui_font(&x->x_gui), x->x_gui.x_selected == canvas &&
             x->x_gui.x_glist == canvas && x->x_scale ? selection_color : lcol);
     }
-    iemgui_label_draw_config(&x->x_gui,canvas);
     sys_vgui(".x%lx.c itemconfigure %lxRCOVER -fill #%6.6x -stroke #%6.6x\n",
              canvas, x, x->x_gui.x_bcol, x->x_gui.x_bcol);
     sys_vgui(".x%lx.c itemconfigure %lxPLED -strokewidth %d\n",
              canvas, x, x->x_led_size);
-    iemgui_base_draw_config(&x->x_gui,canvas);
+    iemgui_base_draw_config(&x->x_gui);
 }
 
 static void vu_draw_select(t_vu* x,t_glist* glist)
@@ -496,10 +493,10 @@ static void vu_dialog(t_vu *x, t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_w = iemgui_clip_size(w);
     vu_check_height(x, h);
     vu_scale(x, (t_float)scale);
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
+    iemgui_draw_config(&x->x_gui);
+    iemgui_draw_io(&x->x_gui, sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    scalehandle_draw(&x->x_gui);
     scrollbar_update(x->x_gui.x_glist);
 }
 
@@ -510,8 +507,8 @@ static void vu_size(t_vu *x, t_symbol *s, int ac, t_atom *av)
         vu_check_height(x, (int)atom_getintarg(1, ac, av));
     if(glist_isvisible(x->x_gui.x_glist))
     {
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_MOVE);
-        x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+        iemgui_draw_move(&x->x_gui);
+        iemgui_draw_config(&x->x_gui);
         canvas_fixlinesfor(glist_getcanvas(x->x_gui.x_glist), (t_text*)x);
     }
 }
@@ -620,8 +617,8 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     x->x_out_rms = outlet_new(&x->x_gui.x_obj, &s_float);
     x->x_out_peak = outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_iemgui *)x,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_iemgui *)x,0);
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,0);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);

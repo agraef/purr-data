@@ -55,7 +55,7 @@ static void slider_draw_new(t_slider *x, t_glist *glist)
     int r;
     if (x->x_orient) r = y2-3 - (x->x_val + 50)/100;
     else             r = x1+3 + (x->x_val + 50)/100;
-    iemgui_base_draw_new(&x->x_gui, canvas);
+    iemgui_base_draw_new(&x->x_gui);
     if (x->x_orient) {
         sys_vgui(".x%lx.c create polyline %d %d %d %d -strokewidth 3 "
             "-stroke #%6.6x -tags {%lxKNOB x%lx text iemgui}\n",
@@ -77,22 +77,19 @@ static void slider_draw_move(t_slider *x, t_glist *glist)
     int r;
     if (x->x_orient) r = y2-3 - (x->x_val + 50)/100;
     else             r = x1+3 + (x->x_val + 50)/100;
-    iemgui_base_draw_move(&x->x_gui, canvas);
+    iemgui_base_draw_move(&x->x_gui);
     if (x->x_orient)
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
             canvas, x, x1+2, r, x2-2, r);
     else
         sys_vgui(".x%lx.c coords %lxKNOB %d %d %d %d\n",
             canvas, x, r, y1+2, r, y2-2);
-    iemgui_label_draw_move(&x->x_gui,canvas);
-    iemgui_io_draw_move(&x->x_gui,canvas);
 }
 
 static void slider_draw_config(t_slider *x, t_glist *glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
-    iemgui_label_draw_config(&x->x_gui,canvas);
-    iemgui_base_draw_config(&x->x_gui,canvas);
+    iemgui_base_draw_config(&x->x_gui);
     sys_vgui(".x%lx.c itemconfigure %lxKNOB -stroke #%6.6x\n",
         canvas, x, x->x_gui.x_fcol);
 }
@@ -315,10 +312,10 @@ static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
             x->x_val *= ((double)x->x_gui.x_w/(double)oldl);
     }
     slider_check_minmax(x, min, max);
-    x->x_gui.x_draw(x, x->x_gui.x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-    iemgui_draw_io(&x->x_gui, x->x_gui.x_glist, sr_flags);
+    iemgui_draw_config(&x->x_gui);
+    iemgui_draw_io(&x->x_gui, sr_flags);
     iemgui_shouldvis(&x->x_gui, IEM_GUI_DRAW_MODE_MOVE);
-    scalehandle_draw(&x->x_gui, x->x_gui.x_glist);
+    scalehandle_draw(&x->x_gui);
     scrollbar_update(x->x_gui.x_glist);
 }
 
@@ -536,9 +533,8 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    t_class *sc = scalehandle_class;
-    x->x_gui. x_handle = scalehandle_new(sc,(t_iemgui *)x,1);
-    x->x_gui.x_lhandle = scalehandle_new(sc,(t_iemgui *)x,0);
+    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,1);
+    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_gobj *)x,x->x_gui.x_glist,0);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
 
