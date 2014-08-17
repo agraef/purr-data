@@ -1031,7 +1031,6 @@ void iemgui_draw_update(t_iemgui *x, t_glist *glist) {
 void iemgui_draw_new(t_iemgui *x) {
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
     iemgui_label_draw_new(x);
-    iemgui_draw_io(x,7);
     canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
 }
 

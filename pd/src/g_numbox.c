@@ -472,6 +472,11 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     //iemgui_draw_move(&x->x_gui);
     //iemgui_draw_config(&x->x_gui);
     scalehandle_draw(&x->x_gui);
+    if (x->x_gui.x_selected)
+    {
+        scalehandle_draw(&x->x_gui,x->x_gui.x_glist);
+        iemgui_select((t_gobj *)x,x->x_gui.x_glist,1);
+    }
     //canvas_restore_original_position(x->x_gui.x_glist, (t_gobj *)x,"bogus",-1);
     scrollbar_update(x->x_gui.x_glist);
 }
