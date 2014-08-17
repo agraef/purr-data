@@ -641,8 +641,10 @@ void scalehandle_bind(t_scalehandle *h) {
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
-    t_iemgui *x = (t_iemgui *)h->h_master;
-    t_canvas *canvas=glist_getcanvas(x->x_glist);
+    // casting x as t_object so that it can work both with t_glist (GOP scalehandles)
+    // and t_iemgui (iemgui scalehandles)
+    t_object *x = (t_object *)h->h_master;
+    t_canvas *canvas=glist_getcanvas(h->h_glist);
 
     //int px,py;
     //t_class *c = pd_class((t_pd *)x);
@@ -672,14 +674,14 @@ void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
         }
         sys_vgui(".x%x.c create window %d %d -anchor nw -width %d -height %d "
             "-window %s -tags {%s}\n", canvas,
-            x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy, sx, sy,
+            x->te_xpix+px-sx, x->te_ypix+py-sy, sx, sy,
             h->h_pathname, tags);
         scalehandle_bind(h);
         h->h_vis = 1;
-    /* not yet (this is not supported by current implementation) */
+    /* not yet (this is not supported by the current implementation) */
     }/* else {
         sys_vgui(".x%x.c coords %s %d %d\n", canvas, h->h_pathname,
-            x->x_obj.te_xpix+px-sx, x->x_obj.te_ypix+py-sy);
+            x->te_xpix+px-sx, x->te_ypix+py-sy);
         sys_vgui("raise %s\n", h->h_pathname);
     }*/
 }
@@ -1031,6 +1033,7 @@ void iemgui_draw_update(t_iemgui *x, t_glist *glist) {
 void iemgui_draw_new(t_iemgui *x) {
     x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_NEW);
     iemgui_label_draw_new(x);
+    iemgui_draw_io(x,7);
     canvas_raise_all_cords(glist_getcanvas(x->x_glist)); // used to be inside x_draw
 }
 

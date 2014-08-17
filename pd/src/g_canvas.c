@@ -706,8 +706,7 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         x->gl_goprect && !x->gl_editor->e_selection)
     {
         //Drawing and Binding Resize_Blob for GOP
-        //fprintf(stderr,"draw_gop_resize_hooks DRAW %lx %lx\n",
-        //    (t_int)x, (t_int)glist_getcanvas(x));
+        //fprintf(stderr,"draw_gop_resize_hooks DRAW %lx %lx\n", (t_int)x, (t_int)glist_getcanvas(x));
         sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
         sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
 
