@@ -27,6 +27,7 @@ int iemgui_color_hex[] = {
 
 int iemgui_clip_size(int size) {return maxi(size,IEM_GUI_MINSIZE);}
 int iemgui_clip_font(int size) {return maxi(size,IEM_FONT_MINSIZE);}
+static void scalehandle_check_and_redraw(t_iemgui *x);
 
 static int iemgui_modulo_color(int col)
 {
@@ -425,6 +426,7 @@ void iemgui_shouldvis(t_iemgui *x, int mode)
         }
         //fprintf(stderr,"draw move x->x_w=%d\n", x->x_w);
         x->x_draw(x, x->x_glist, mode);
+        scalehandle_check_and_redraw(x);
         canvas_fixlinesfor(glist_getcanvas(x->x_glist), (t_text*)x);
     }
     else if (x->x_vis)
@@ -862,6 +864,15 @@ void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
     sh->h_dragon = newstate;
 }
 
+// function for updating of handles on iemgui objects
+// we don't need glist_getcanvas() because handles are only
+// drawn when object is selected on its canvas (instead of GOP)
+static void scalehandle_check_and_redraw(t_iemgui *x)
+{
+    if(x->x_selected == x->x_glist)
+        scalehandle_draw_select2(x,x->x_glist);
+}
+
 //----------------------------------------------------------------
 // IEMGUI refactor (by Mathieu)
 
@@ -900,7 +911,7 @@ void iemgui_label_draw_config(t_iemgui *x, t_glist *canvas) {
                  "-fill #%6.6x -text {%s} \n",
              canvas, x, iemgui_font(x),
              x->x_lcol, x->x_lab!=s_empty?x->x_lab->s_name:"");
-    if (x->x_selected)
+    if (x->x_selected == canvas && x->x_glist == canvas)
     {
         t_scalehandle *lh = (t_scalehandle *)(x->x_lhandle);
         if (x->x_lab==s_empty)    

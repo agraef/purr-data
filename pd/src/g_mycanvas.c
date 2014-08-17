@@ -207,9 +207,9 @@ static void my_canvas_get_pos(t_my_canvas *x)
 
 static void my_canvas_dialog(t_my_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    printf("cnv_dialog: selected=%d\n",x->x_gui.x_selected);
+    //printf("cnv_dialog: selected=%d\n",x->x_gui.x_selected);
     canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
-    printf("cnv_dialog: selected=%d\n",x->x_gui.x_selected);
+    //printf("cnv_dialog: selected=%d\n",x->x_gui.x_selected);
     x->x_gui.x_h =
     x->x_gui.x_w = maxi(atom_getintarg(0, argc, argv),1);
     x->x_vis_w = maxi(atom_getintarg(2, argc, argv),1);
