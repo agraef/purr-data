@@ -164,7 +164,6 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
         "-tags {%lxPLED x%lx text iemgui}\n",
         canvas, mid+1, y1+12,
         mid+1, y1+12, x->x_led_size, x->x_gui.x_bcol, x, x);
-    iemgui_draw_io(&x->x_gui,7);
     x->x_updaterms = x->x_updatepeak = 1;
     sys_queuegui(x, x->x_gui.x_glist, vu_draw_update);
 }

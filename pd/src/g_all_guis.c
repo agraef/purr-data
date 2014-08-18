@@ -966,9 +966,9 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
-                 "-tags {x%lxo%d x%lx outlet iemgui}\n",
+                 "-tags {x%lxo%d x%lx outlet %s}\n",
              canvas, x1+i*k, y2-1, x1+i*k + IOWIDTH, y2,
-             x, i, x);
+             x, i, x, x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete x%lxo%d\n", canvas, x, i);
 
@@ -978,9 +978,9 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     if(a && !b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c create prect %d %d %d %d "
                  "-stroke $pd_colors(iemgui_nlet) "
-                 "-tags {x%lxi%d x%lx inlet iemgui}\n",
+                 "-tags {x%lxi%d x%lx inlet %s}\n",
              canvas, x1+i*k, y1, x1+i*k + IOWIDTH, y1+1,
-             x, i, x);
+             x, i, x, x->x_selected == x->x_glist ? "iemgui selected" : "iemgui");
     if(!a && b) for (i=0; i<n; i++)
         sys_vgui(".x%lx.c delete x%lxi%d\n", canvas, x, i);
 }
