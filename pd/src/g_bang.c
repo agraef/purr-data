@@ -18,7 +18,6 @@
 #define IEM_BNG_MINHOLDFLASHTIME 50
 #define IEM_BNG_MINBREAKFLASHTIME 10
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 t_widgetbehavior bng_widgetbehavior;
 static t_class *bng_class;
@@ -76,11 +75,9 @@ void bng_draw_config(t_bng* x, t_glist* glist)
         canvas, x, x->x_flashed?x->x_gui.x_fcol:x->x_gui.x_bcol);
 }
 
-static void bng__clickhook(t_scalehandle *sh, t_floatarg f,
-    t_floatarg xxx, t_floatarg yyy)
+static void bng__clickhook(t_scalehandle *sh, int newstate)
 {
     t_bng *x = (t_bng *)(sh->h_master);
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -368,8 +365,8 @@ static void *bng_new(t_symbol *s, int argc, t_atom *argv)
     x->x_clock_lck = clock_new(x, (t_method)bng_tick_lck);
     outlet_new(&x->x_gui.x_obj, &s_bang);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,bng__clickhook,bng__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,bng__clickhook,bng__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
 
@@ -410,13 +407,6 @@ void g_bang_setup(void)
         A_GIMME, 0);
     class_addmethod(bng_class, (t_method)iemgui_init, gensym("init"), A_FLOAT, 0);
  
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-                  sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)bng__clickhook,
-            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)bng__motionhook,
-            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
-
     wb_init(&bng_widgetbehavior,bng_getrect,bng_newclick);
     class_setwidget(bng_class, &bng_widgetbehavior);
     class_sethelpsymbol(bng_class, gensym("bng"));

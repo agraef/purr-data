@@ -60,7 +60,6 @@ int iemgui_vu_col[]=
     15,15,15,15,15,15,15,15,15,15,14,14,13,13,13,13,13,13,13,13,13,13,13,19,19,19
 };
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 void vu_check_height(t_vu *x, int h);
 t_widgetbehavior vu_widgetbehavior;
@@ -233,11 +232,9 @@ static void vu_draw_select(t_vu* x,t_glist* glist)
         canvas, x, issel ? selection_color : lcol);
 }
 
-static void vu__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
-    t_floatarg yyy)
+static void vu__clickhook(t_scalehandle *sh, int newstate)
 {
     t_vu *x = (t_vu *)(sh->h_master);
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0  && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -616,8 +613,8 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     x->x_out_rms = outlet_new(&x->x_gui.x_obj, &s_float);
     x->x_out_peak = outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,vu__clickhook,vu__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,vu__clickhook,vu__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);
@@ -646,12 +643,6 @@ void g_vumeter_setup(void)
     class_addmethod(vu_class, (t_method)vu_scale,
         gensym("scale"), A_DEFFLOAT, 0);
     iemgui_class_addmethods(vu_class);
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-                  sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)vu__clickhook,
-            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)vu__motionhook,
-            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
     wb_init(&vu_widgetbehavior,vu_getrect,0);
     class_setwidget(vu_class,&vu_widgetbehavior);

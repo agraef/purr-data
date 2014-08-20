@@ -13,7 +13,6 @@
 #include "g_all_guis.h"
 #include <math.h>
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 t_widgetbehavior toggle_widgetbehavior;
 static t_class *toggle_class;
@@ -78,11 +77,9 @@ void toggle_draw_config(t_toggle* x, t_glist* glist)
         canvas, x, x, x->x_on?x->x_gui.x_fcol:x->x_gui.x_bcol);
 }
 
-static void toggle__clickhook(t_scalehandle *sh, t_floatarg f,
-    t_floatarg xxx, t_floatarg yyy)
+static void toggle__clickhook(t_scalehandle *sh, int newstate)
 {
     t_toggle *x = (t_toggle *)(sh->h_master);
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -318,8 +315,8 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,toggle__clickhook,toggle__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,toggle__clickhook,toggle__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 1;
 
@@ -359,13 +356,6 @@ void g_toggle_setup(void)
     class_addmethod(toggle_class, (t_method)toggle_nonzero, gensym("nonzero"),
         A_FLOAT, 0);
  
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-                  sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)toggle__clickhook,
-            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)toggle__motionhook,
-            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
-
     wb_init(&toggle_widgetbehavior,toggle_getrect,toggle_newclick);
     class_setwidget(toggle_class, &toggle_widgetbehavior);
     class_sethelpsymbol(toggle_class, gensym("toggle"));

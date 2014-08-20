@@ -13,7 +13,6 @@
 #include <math.h>
 #define IEM_GUI_COLOR_EDITED 0xff0000
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist);
 static void my_numbox_key(void *z, t_floatarg fkey);
@@ -231,11 +230,9 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
         scalehandle_draw_erase2(&x->x_gui);
 }
 
-static void my_numbox__clickhook(t_scalehandle *sh, t_floatarg f,
-    t_floatarg xxx, t_floatarg yyy)
+static void my_numbox__clickhook(t_scalehandle *sh, int newstate)
 {
     t_my_numbox *x = (t_my_numbox *)(sh->h_master);
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -759,8 +756,8 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_change = 0;
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,my_numbox__clickhook,my_numbox__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,my_numbox__clickhook,my_numbox__motionhook);
     x->x_scalewidth = 0;
     x->x_scaleheight = 0;
     x->x_tmpfontsize = 0;
@@ -816,13 +813,6 @@ void g_numbox_setup(void)
         gensym("log_height"), A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_hide_frame,
         gensym("hide_frame"), A_FLOAT, 0);
-
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-                  sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)my_numbox__clickhook,
-            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)my_numbox__motionhook,
-            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
     wb_init(&my_numbox_widgetbehavior,my_numbox_getrect,my_numbox_newclick);
     class_setwidget(my_numbox_class, &my_numbox_widgetbehavior);

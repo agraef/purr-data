@@ -18,7 +18,6 @@
 
 #define IEM_RADIO_MAX   128
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 t_widgetbehavior radio_widgetbehavior;
 t_class *hradio_class, *hradio_old_class;
@@ -110,10 +109,8 @@ void radio_draw_config(t_radio *x, t_glist *glist)
     }
 }
 
-static void radio__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx,
-    t_floatarg yyy)
+static void radio__clickhook(t_scalehandle *sh, int newstate)
 {
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         t_radio *x = (t_radio *)(sh->h_master);
@@ -460,8 +457,8 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
     iemgui_all_colfromload(&x->x_gui, bflcol);
     outlet_new(&x->x_gui.x_obj, &s_list);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,radio__clickhook,radio__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,radio__clickhook,radio__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);
@@ -528,12 +525,4 @@ void g_radio_setup(void)
     class_sethelpsymbol(hradio_old_class, gensym("hradio"));
     class_sethelpsymbol(vradio_class, gensym("vradio"));
     class_sethelpsymbol(vradio_old_class, gensym("vradio"));
-
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-        sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)radio__clickhook,
-        gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)radio__motionhook,
-        gensym("_motion"), A_FLOAT, A_FLOAT, 0);
-
 }
