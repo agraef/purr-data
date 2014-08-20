@@ -234,6 +234,13 @@ then
 	if [ $full -gt 1 -o $deb -eq 2 ]
 	then
 		make distclean
+cp ../../pd/src/g_all_guis.h ../../externals/build/include
+cp ../../pd/src/g_canvas.h ../../externals/build/include
+cp ../../pd/src/m_imp.h ../../externals/build/include
+cp ../../pd/src/m_pd.h ../../externals/build/include
+cp ../../pd/src/s_stuff.h ../../externals/build/include
+cp ../../pd/src/t_tk.h ../../externals/build/include
+cp ../../pd/src/g_all_guis.h ../../externals/build/include								
 		rm -rf build/
 	fi
 	if [ $rpi -eq 0 ]
