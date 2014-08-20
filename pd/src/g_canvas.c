@@ -889,6 +889,14 @@ void canvas_free(t_canvas *x)
         canvas_vis(x, 0);
      if (x->gl_editor)
          canvas_destroy_editor(x);   /* bug workaround; should already be gone*/
+
+    /*
+    if (x-> x_handle)
+        scalehandle_free(x->x_handle);
+    if (x-> x_mhandle)
+        scalehandle_free(x->x_mhandle);
+    */
+    
     canvas_unbind(x);
     if (x->gl_env)
     {
