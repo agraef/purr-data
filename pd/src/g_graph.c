@@ -245,7 +245,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         if (chkdsp) canvas_update_dsp();
         if (drawcommand)
         {
-            if (!(canvas_isgroup(canvas) && canvas->gl_unloading))
+            if (tmpl && !(canvas_isgroup(canvas) && canvas->gl_unloading))
             {
                 canvas_redrawallfortemplate(tmpl, 1);
             }
