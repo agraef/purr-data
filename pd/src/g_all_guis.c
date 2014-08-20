@@ -644,9 +644,7 @@ void scalehandle_bind(t_scalehandle *h) {
 // but in the case of canvas, the "iemgui" tag is added (it wasn't the case originally)
 void scalehandle_draw_select(t_scalehandle *h, int px, int py) {
     char tags[128]; // BNG may need up to 100 chars in 64-bit mode, for example
-    // casting x as t_object so that it can work both with t_glist (GOP scalehandles)
-    // and t_iemgui (iemgui scalehandles)
-    t_object *x = (t_object *)h->h_master;
+    t_object *x = h->h_master;
     t_canvas *canvas=glist_getcanvas(h->h_glist);
 
     //int px,py;
@@ -731,10 +729,10 @@ void scalehandle_draw(t_iemgui *x) {
     }
 }
 
-t_scalehandle *scalehandle_new(t_class *c, t_gobj *x, t_glist *glist, int scale) {
+t_scalehandle *scalehandle_new(t_class *c, t_object *x, t_glist *glist, int scale) {
     t_scalehandle *h = (t_scalehandle *)pd_new(c);
-    char buf[64];
-    h->h_master = (t_gobj*)x;
+    char buf[19]; // 3 + max size of %lx
+    h->h_master = x;
     h->h_glist = glist;
     sprintf(buf, "_h%lx", (t_int)h);
     pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
@@ -952,7 +950,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     t_class *c = pd_class((t_pd *)x);
     if (c==my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1) return; //sigh
 
-    if (!(old_sr_flags&4) && (!glist_isvisible(canvas) || !(canvas == x->x_glist))) {
+    if (!(old_sr_flags&4) && !glist_isvisible(canvas)) {
         return;
     }
     if (c==my_canvas_class) return;
