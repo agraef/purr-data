@@ -140,20 +140,25 @@ int template_hasxy(t_template *template)
 int template_check_array_fields(t_symbol *structname, t_template *template)
 {
     /* We're calling this from template_cancreate as well as
-       gtemplate_cancreate.
-       With gtemplate_cancreate, the t_template doesn't exist yet.
-       So we send the struct name to see if it matches the name of any
-       array field templates that our gtemplate will depend on. If we find
-       a match we will refuse to create the gtemplate.
-       However, template_cancreate starts from the struct name for a template
-       that already exists.  So on the first time through this recursive
-       function, there isn't a containing structname yet.
-       So we suppress this conditional the first
-       time through the recursive loop, and then set the structname for
-       all subsequent iterations through the loop. */
+       gtemplate_cancreate. With gtemplate_cancreate, the t_template doesn't
+       exist yet. So we send the struct name to see if it matches the name of
+       any array field templates that our gtemplate will depend on. If we find
+       a match we will refuse to create the gtemplate. However,
+       template_cancreate starts from the struct name for a template that
+       already exists.  On the first time through this recursive function,
+       there isn't a containing structname yet. So we suppress this conditional
+       the first time through the recursive loop, and then set the structname
+       for all subsequent iterations through the loop.
+       
+       1 = success
+       0 = circular dependency
+       -1 = non-existant array elemtemplate found */
     if (structname && structname == template->t_sym)
     {
-        return 0;
+        t_object *ob = template_getstruct(template);
+        pd_error(ob, "%s: circular dependency",
+            template->t_sym->s_name);
+       return (0);
     }
     int i, nitems = template->t_n;
     t_dataslot *datatypes = template->t_vec;
@@ -168,7 +173,7 @@ int template_check_array_fields(t_symbol *structname, t_template *template)
                 t_object *ob = template_getstruct(template);
                 pd_error(ob, "%s: no such template",
                     datatypes->ds_arraytemplate->s_name);
-                return (0);
+                return (-1);
             }
             else if (elemtemplate->t_sym == structname)
             {
@@ -187,13 +192,13 @@ int template_check_array_fields(t_symbol *structname, t_template *template)
             }
         }
     }
-    return (1);
+    return 1;
 }
 
 int template_cancreate(t_template *template)
 {
     /* we send "0" for the structname since there is no container struct */
-    return (template_check_array_fields(0, template));
+    return (template_check_array_fields(0, template) == 1);
 }
 
     /* make a new scalar and add to the glist.  We create a "gp" here which
@@ -703,10 +708,16 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     {
         t_float xscale = glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0);
         t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
-        /* we could use the tag .template%lx for easy access from
-           the draw_class, but that's not necessary at this point */
+        /* we translate the .scalar%lx group to displace it on the tk side.
+           This is the outermost group for the scalar, something like a
+           poor man's viewport.
+           Also, the default stroke is supposed to be "none" and default
+           fill is supposed to be black. Unfortunately tkpath does the
+           opposite.  To fix this, we set the correct fill/stroke options
+           here on the .scalar%lx group. Notice also that tkpath doesn't
+           understand "None"-- instead we must send an empty symbol. */
         sys_vgui(".x%lx.c create group -tags {.scalar%lx %s} "
-            "-matrix { {%g %g} {%g %g} {%d %d} }\n",
+            "-matrix { {%g %g} {%g %g} {%d %d} } -stroke \"\" -fill black\n",
             glist_getcanvas(owner), x->sc_vec,
             (glist_isselected(owner, &x->sc_gobj) ? "scalar_selected" : ""),
             xscale, 0.0, 0.0, yscale, (int)glist_xtopixels(owner, basex),
