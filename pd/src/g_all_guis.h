@@ -34,6 +34,12 @@
 
 typedef void (*t_iemfunptr)(void *x, t_glist *glist, int mode);
 
+struct _scalehandle;
+typedef void (*t_clickhandlefn)(struct _scalehandle *sh, int newstate);
+typedef void (*t_motionhandlefn)(struct _scalehandle *sh, t_floatarg f1, t_floatarg f2);
+
+EXTERN t_class *scalehandle_class;
+
 typedef struct _scalehandle
 {
     t_pd       h_pd;
@@ -46,9 +52,11 @@ typedef struct _scalehandle
     int        h_dragon; // bool
     int        h_dragx;
     int        h_dragy;
-    int        h_offset_x; // unused. bring back their use for extra precision.
-    int        h_offset_y; // ditto.
+    int        h_offset_x;
+    int        h_offset_y;
     int        h_vis; // bool
+    t_clickhandlefn h_clickfn;
+    t_motionhandlefn h_motionfn;
 } t_scalehandle;
 
 typedef struct _iemgui
@@ -224,7 +232,7 @@ EXTERN void scalehandle_draw_select2(t_iemgui *x);
 EXTERN void scalehandle_draw_erase(t_scalehandle *h);
 EXTERN void scalehandle_draw_erase2(t_iemgui *x);
 EXTERN void scalehandle_draw(t_iemgui *x);
-EXTERN t_scalehandle *scalehandle_new(t_class *c, t_object *x, t_glist *glist, int scale);
+EXTERN t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickhandlefn chf, t_motionhandlefn mhf);
 EXTERN void scalehandle_free(t_scalehandle *h);
 EXTERN void properties_set_field_int(long props, const char *gui_field, int value);
 EXTERN void scalehandle_dragon_label(t_scalehandle *h, float f1, float f2);

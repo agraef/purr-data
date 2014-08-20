@@ -18,6 +18,7 @@
 #include <math.h>
 
 t_symbol *s_empty;
+t_class *scalehandle_class;
 
 int iemgui_color_hex[] = {
     0xfcfcfc, 0xa0a0a0, 0x404040, 0xfce0e0, 0xfce0c0, 0xfcfcc8, 0xd8fcd8, 0xd8fcfc, 0xdce4fc, 0xf8d8fc,
@@ -742,8 +743,8 @@ void scalehandle_draw(t_iemgui *x) {
     }
 }
 
-t_scalehandle *scalehandle_new(t_class *c, t_object *x, t_glist *glist, int scale) {
-    t_scalehandle *h = (t_scalehandle *)pd_new(c);
+t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale, t_clickhandlefn chf, t_motionhandlefn mhf) {
+    t_scalehandle *h = (t_scalehandle *)pd_new(scalehandle_class);
     char buf[19]; // 3 + max size of %lx
     h->h_master = x;
     h->h_glist = glist;
@@ -756,6 +757,8 @@ t_scalehandle *scalehandle_new(t_class *c, t_object *x, t_glist *glist, int scal
     //h->h_offset_y = 0; // unused (maybe keep for later)
     h->h_vis = 0;
     sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)h->h_glist, (t_int)h);
+    h->h_clickfn = chf;
+    h->h_motionfn = mhf;
     return h;
 }
 
@@ -871,6 +874,21 @@ void scalehandle_drag_scale(t_scalehandle *h) {
         sys_vgui(".x%x.c coords %s %d %d %d %d\n", x->x_glist, h->h_outlinetag,
             x1, y1, x2+h->h_dragx, y2+h->h_dragy);
     }
+}
+
+static void scalehandle_clickhook(t_scalehandle *h, t_floatarg f,
+    t_floatarg xxx, t_floatarg yyy)
+{
+    h->h_offset_x=xxx;
+    h->h_offset_y=yyy;
+    h->h_clickfn(h,f);
+    
+}
+
+static void scalehandle_motionhook(t_scalehandle *h,
+    t_floatarg f1, t_floatarg f2)
+{
+    h->h_motionfn(h,f1-h->h_offset_x,f2-h->h_offset_y);
 }
 
 void iemgui__clickhook3(t_scalehandle *sh, int newstate) {
@@ -1127,6 +1145,12 @@ void iemgui_class_addmethods(t_class *c) {
 
 void g_iemgui_setup (void) {
     s_empty = gensym("empty");
+    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
+                  sizeof(t_scalehandle), CLASS_PD, 0);
+    class_addmethod(scalehandle_class, (t_method)scalehandle_clickhook,
+            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
+    class_addmethod(scalehandle_class, (t_method)scalehandle_motionhook,
+            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 }
 
 const char *selection_color = "$pd_colors(selection)";

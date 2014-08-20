@@ -13,7 +13,6 @@
 #include "g_all_guis.h"
 #include <math.h>
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 void my_canvas_draw_select(t_my_canvas* x, t_glist* glist);
 
@@ -70,11 +69,9 @@ void my_canvas_draw_select(t_my_canvas* x, t_glist* glist)
         "$pd_colors(selection)" : bcol);
 }
 
-static void my_canvas__clickhook(t_scalehandle *sh, t_floatarg f,
-    t_floatarg xxx, t_floatarg yyy)
+static void my_canvas__clickhook(t_scalehandle *sh, int newstate)
 {
     t_my_canvas *x = (t_my_canvas *)(sh->h_master);
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
@@ -320,8 +317,8 @@ static void *my_canvas_new(t_symbol *s, int argc, t_atom *argv)
     x->x_at[1].a_type = A_FLOAT;
     iemgui_verify_snd_ne_rcv(&x->x_gui);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,my_canvas__clickhook,my_canvas__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,my_canvas__clickhook,my_canvas__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
 
     return (x);
@@ -352,13 +349,6 @@ void g_mycanvas_setup(void)
         gensym("vis_size"), A_GIMME, 0);
     class_addmethod(my_canvas_class, (t_method)my_canvas_get_pos,
         gensym("get_pos"), 0);
-
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-                  sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)my_canvas__clickhook,
-            gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)my_canvas__motionhook,
-            gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 
     wb_init(&my_canvas_widgetbehavior,my_canvas_getrect,0);
     class_setwidget(my_canvas_class, &my_canvas_widgetbehavior);

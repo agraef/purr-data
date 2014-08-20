@@ -15,7 +15,6 @@ to be different but are now unified except for some fossilized names.) */
 #include "g_all_guis.h"
 #include <string.h>
 
-static t_class *scalehandle_class;
 extern int do_not_redraw;
 extern void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag, int issignal);
 extern void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2, t_int tag);
@@ -350,6 +349,9 @@ void glist_init(t_glist *x)
     x->gl_ylabel = (t_symbol **)t_getbytes(0);
 }
 
+void canvasgop__clickhook(t_scalehandle *sh, int newstate);
+void canvasgop__motionhook(t_scalehandle *sh,t_floatarg f1, t_floatarg f2);
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
@@ -441,8 +443,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     pd_pushsym(&x->gl_pd);
 
     //dpsaha@vt.edu gop resize (refactored by mathieu)
-    x-> x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x,1);
-    x->x_mhandle = scalehandle_new(scalehandle_class,(t_object *)x,x,0);
+    x-> x_handle = scalehandle_new((t_object *)x,x,1,canvasgop__clickhook,canvasgop__motionhook);
+    x->x_mhandle = scalehandle_new((t_object *)x,x,0,canvasgop__clickhook,canvasgop__motionhook);
 
     x->u_queue = canvas_undo_init(x);
     return(x);
@@ -1924,11 +1926,9 @@ extern void canvas_canvas_setundo(t_canvas *x);
 extern void graph_checkgop_rect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2);
 
-void canvasgop__clickhook(t_scalehandle *sh, t_floatarg f, t_floatarg xxx, t_floatarg yyy)
+void canvasgop__clickhook(t_scalehandle *sh, int newstate)
 {
     t_canvas *x = (t_canvas *)(sh->h_master);
-
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0)
     {
         /* done dragging */
@@ -2228,12 +2228,4 @@ void g_canvas_setup(void)
     g_graph_setup();
     g_editor_setup();
     g_readwrite_setup();
-
-/* -------------- dpsaha@vt.edu gop resize move-----------------------*/
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-        sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)canvasgop__clickhook,
-        gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)canvasgop__motionhook,
-        gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 }

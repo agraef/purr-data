@@ -13,7 +13,6 @@
 #include "g_all_guis.h"
 #include <math.h>
 
-static t_class *scalehandle_class;
 extern int gfxstub_haveproperties(void *key);
 t_widgetbehavior slider_widgetbehavior;
 t_class *hslider_class;
@@ -114,10 +113,8 @@ static void vslider__clickhook2(t_scalehandle *sh, t_slider *x) {
     slider_check_minmax(x, x->x_min, x->x_max);
 }
 
-static void slider__clickhook(t_scalehandle *sh, t_floatarg f,
-    t_floatarg xxx, t_floatarg yyy)
+static void slider__clickhook(t_scalehandle *sh, int newstate)
 {
-    int newstate = (int)f;
     if (sh->h_dragon && newstate == 0 && sh->h_scale)
     {
         t_slider *x = (t_slider *)(sh->h_master);
@@ -533,8 +530,8 @@ static void *slider_new(t_symbol *s, int argc, t_atom *argv)
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     outlet_new(&x->x_gui.x_obj, &s_float);
 
-    x->x_gui. x_handle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,1);
-    x->x_gui.x_lhandle = scalehandle_new(scalehandle_class,(t_object *)x,x->x_gui.x_glist,0);
+    x->x_gui. x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,slider__clickhook,slider__motionhook);
+    x->x_gui.x_lhandle = scalehandle_new((t_object *)x,x->x_gui.x_glist,0,slider__clickhook,slider__motionhook);
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
 
@@ -593,11 +590,4 @@ void g_slider_setup(void)
  
     class_sethelpsymbol(hslider_class, gensym("hslider"));
     class_sethelpsymbol(vslider_class, gensym("vslider"));
-
-    scalehandle_class = class_new(gensym("_scalehandle"), 0, 0,
-        sizeof(t_scalehandle), CLASS_PD, 0);
-    class_addmethod(scalehandle_class, (t_method)slider__clickhook,
-        gensym("_click"), A_FLOAT, A_FLOAT, A_FLOAT, 0);
-    class_addmethod(scalehandle_class, (t_method)slider__motionhook,
-        gensym("_motion"), A_FLOAT, A_FLOAT, 0);
 }
