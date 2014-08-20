@@ -8,10 +8,13 @@
 extern "C" {
 #endif
 
+#include <stdarg.h>
+
 #define PD_MAJOR_VERSION 0
-#define PD_MINOR_VERSION 40
-#define PD_BUGFIX_VERSION 1
-#define PD_TEST_VERSION ""
+#define PD_MINOR_VERSION 42
+#define PD_BUGFIX_VERSION 7
+#define PD_TEST_VERSION "20140813"
+#define PDL2ORK
 
 /* old name for "MSW" flag -- we have to take it for the sake of many old
 "nmakefiles" for externs, which will define NT and not MSW */
@@ -25,7 +28,10 @@ extern "C" {
 #pragma warning( disable : 4305 )  /* uncast const double to float */
 #pragma warning( disable : 4244 )  /* uncast float/int conversion etc. */
 #pragma warning( disable : 4101 )  /* unused automatic variables */
+/* not using GNU C, __attribute__ means nothing */
+#  define  __attribute__(x)
 #endif /* _MSC_VER */
+
 
     /* the external storage class is "extern" in UNIX; in MSW it's ugly. */
 #ifdef MSW
@@ -51,15 +57,19 @@ extern "C" {
 #include <stddef.h>     /* just for size_t -- how lame! */
 #endif
 
-#define MAXPDSTRING 1000        /* use this for anything you want */
+#define MAXPDSTRING 1000        /* must be >= FILENAME_MAX */
 #define MAXPDARG 5              /* max number of args we can typecheck today */
 
 /* signed and unsigned integer types the size of a pointer:  */
-/* GG: long is the size of a pointer */
-typedef long t_int;
-
-typedef float t_float;  /* a floating-point number at most the same size */
-typedef float t_floatarg;  /* floating-point type for function calls */
+#if !defined(PD_LONGINTTYPE)
+#define PD_LONGINTTYPE long
+#endif
+#if !defined(PD_FLOATTYPE)
+#define PD_FLOATTYPE float
+#endif
+typedef PD_LONGINTTYPE t_int;       /* pointer-size integer */
+typedef PD_FLOATTYPE t_float;       /* a float type at most the same size */
+typedef PD_FLOATTYPE t_floatarg;    /* float type for function calls */
 
 typedef struct _symbol
 {
@@ -102,6 +112,16 @@ typedef struct _gpointer           /* pointer to a gobj in a glist */
     t_gstub *gp_stub;               /* stub which points to glist/array */
 } t_gpointer;
 
+#define PD_BLOBS 1 /* MP20070211 Use this to test for blob capability */
+/* MP20061223 blob type: */
+typedef struct _blob /* pointer to a blob */
+{
+   unsigned long s_length; /* length of blob in bytes */
+   unsigned char *s_data; /* pointer to 1st byte of blob */
+} t_blob;
+/* ...MP20061223 blob type */
+
+
 typedef union word
 {
     t_float w_float;
@@ -110,6 +130,7 @@ typedef union word
     t_array *w_array;
     struct _glist *w_list;
     int w_index;
+    t_blob *w_blob; /* MP20061223 blob type */
 } t_word;
 
 typedef enum
@@ -125,7 +146,8 @@ typedef enum
     A_DOLLAR, 
     A_DOLLSYM,
     A_GIMME,
-    A_CANT
+    A_CANT,
+    A_BLOB /* MP20061223 blob type */
 }  t_atomtype;
 
 #define A_DEFSYMBOL A_DEFSYM    /* better name for this */
@@ -170,6 +192,22 @@ typedef struct _scalar      /* a graphical object holding data */
 {
     t_gobj sc_gobj;         /* header for graphical object */
     t_symbol *sc_template;  /* template name (LATER replace with pointer) */
+    int sc_x1;              /* cached bbox... which is already in the */
+    int sc_x2;              /* GUI. Doing this right would require me */
+    int sc_y1;              /* to redesign the whole program. Instead */
+    int sc_y2;              /* please enjoy the duplication of a bbox */
+    int sc_bboxcache;       /* caching mechanism already in tkpath.   */
+    t_glist *sc_selected;   /* I'm really sorry... I can't figure out
+                               a non-stupid and non-hacky way to make
+                               scalars in a gop patch displace right.
+                               Pd Vanilla just redraws all of the gop
+                               contents-- dumb. Here I keep the owner
+                               glist handy so I can compare it to the
+                               glist in scalar_displace_withtag. Then
+                               if they don't match it's a gop, so the
+                               x/y fields do not need to get updated.
+                               That's dumb, too, but slightly less so
+                               which is another way to say "progress" */
     t_word sc_vec[1];       /* indeterminate-length array of words */
 } t_scalar;
 
@@ -183,11 +221,12 @@ typedef struct _text        /* patchable object - graphical, with text */
     short te_ypix;
     short te_width;             /* requested width in chars, 0 if auto */
     unsigned int te_type:2;     /* from defs below */
+	unsigned int te_iemgui:1;	/* if this is an iemgui (for nlets color) */
 } t_text;
 
 #define T_TEXT 0        /* just a textual comment */
 #define T_OBJECT 1      /* a MAX style patchable object */
-#define T_MESSAGE 2     /* a MAX stype message */
+#define T_MESSAGE 2     /* a MAX style message */
 #define T_ATOM 3        /* a cell to display a number or symbol */
 
 #define te_pd te_g.g_pd
@@ -212,6 +251,7 @@ EXTERN t_pd pd_canvasmaker;     /* factory for creating canvases */
 EXTERN t_symbol s_pointer;
 EXTERN t_symbol s_float;
 EXTERN t_symbol s_symbol;
+EXTERN t_symbol s_blob;
 EXTERN t_symbol s_bang;
 EXTERN t_symbol s_list;
 EXTERN t_symbol s_anything;
@@ -225,7 +265,7 @@ EXTERN t_symbol s_;
 /* --------- prototypes from the central message system ----------- */
 EXTERN void pd_typedmess(t_pd *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void pd_forwardmess(t_pd *x, int argc, t_atom *argv);
-EXTERN t_symbol *gensym(char *s);
+EXTERN t_symbol *gensym(const char *s);
 EXTERN t_gotfn getfn(t_pd *x, t_symbol *s);
 EXTERN t_gotfn zgetfn(t_pd *x, t_symbol *s);
 EXTERN void nullfn(void);
@@ -255,6 +295,7 @@ EXTERN void *resizebytes(void *x, size_t oldsize, size_t newsize);
 #define SETFLOAT(atom, f) ((atom)->a_type = A_FLOAT, (atom)->a_w.w_float = (f))
 #define SETSYMBOL(atom, s) ((atom)->a_type = A_SYMBOL, \
     (atom)->a_w.w_symbol = (s))
+#define SETBLOB(atom, st) ((atom)->a_type = A_BLOB, (atom)->a_w.w_blob = (st)) /* MP 20061226 blob type */
 #define SETDOLLAR(atom, n) ((atom)->a_type = A_DOLLAR, \
     (atom)->a_w.w_index = (n))
 #define SETDOLLSYM(atom, s) ((atom)->a_type = A_DOLLSYM, \
@@ -263,6 +304,7 @@ EXTERN void *resizebytes(void *x, size_t oldsize, size_t newsize);
 EXTERN t_float atom_getfloat(t_atom *a);
 EXTERN t_int atom_getint(t_atom *a);
 EXTERN t_symbol *atom_getsymbol(t_atom *a);
+EXTERN t_blob *atom_getblob(t_atom *a);/* MP 20070108 blob type */
 EXTERN t_symbol *atom_gensym(t_atom *a);
 EXTERN t_float atom_getfloatarg(int which, int argc, t_atom *argv);
 EXTERN t_int atom_getintarg(int which, int argc, t_atom *argv);
@@ -326,6 +368,7 @@ EXTERN void pd_bang(t_pd *x);
 EXTERN void pd_pointer(t_pd *x, t_gpointer *gp);
 EXTERN void pd_float(t_pd *x, t_float f);
 EXTERN void pd_symbol(t_pd *x, t_symbol *s);
+EXTERN void pd_blob(t_pd *x, t_blob *st); /* MP 20061226 blob type */
 EXTERN void pd_list(t_pd *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void pd_anything(t_pd *x, t_symbol *s, int argc, t_atom *argv);
 #define pd_class(x) (*(x))
@@ -350,6 +393,7 @@ EXTERN void outlet_bang(t_outlet *x);
 EXTERN void outlet_pointer(t_outlet *x, t_gpointer *gp);
 EXTERN void outlet_float(t_outlet *x, t_float f);
 EXTERN void outlet_symbol(t_outlet *x, t_symbol *s);
+EXTERN void outlet_blob(t_outlet *x, t_blob *st); /* MP 20061226 blob type */
 EXTERN void outlet_list(t_outlet *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void outlet_anything(t_outlet *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_symbol *outlet_getsymbol(t_outlet *x);
@@ -368,6 +412,8 @@ EXTERN t_glist *canvas_getcurrent(void);
 EXTERN void canvas_makefilename(t_glist *c, char *file,
     char *result,int resultsize);
 EXTERN t_symbol *canvas_getdir(t_glist *x);
+EXTERN char sys_font[]; /* default typeface set in s_main.c */
+EXTERN char sys_fontweight[]; /* default font weight set in s_main.c */
 EXTERN int sys_fontwidth(int fontsize);
 EXTERN int sys_fontheight(int fontsize);
 EXTERN void canvas_dataproperties(t_glist *x, t_scalar *sc, t_binbuf *b);
@@ -404,6 +450,7 @@ EXTERN void class_addbang(t_class *c, t_method fn);
 EXTERN void class_addpointer(t_class *c, t_method fn);
 EXTERN void class_doaddfloat(t_class *c, t_method fn);
 EXTERN void class_addsymbol(t_class *c, t_method fn);
+EXTERN void class_addblob(t_class *c, t_method fn);/* MP 20061226 blob type */
 EXTERN void class_addlist(t_class *c, t_method fn);
 EXTERN void class_addanything(t_class *c, t_method fn);
 EXTERN void class_sethelpsymbol(t_class *c, t_symbol *s);
@@ -415,8 +462,14 @@ EXTERN char *class_gethelpname(t_class *c);
 EXTERN void class_setdrawcommand(t_class *c);
 EXTERN int class_isdrawcommand(t_class *c);
 EXTERN void class_domainsignalin(t_class *c, int onset);
+EXTERN void class_set_extern_dir(t_symbol *s);
 #define CLASS_MAINSIGNALIN(c, type, field) \
     class_domainsignalin(c, (char *)(&((type *)0)->field) - (char *)0)
+
+         /* classtable functions */
+EXTERN t_class *classtable_findbyname(t_symbol *s);
+EXTERN int classtable_size(void);
+EXTERN void classtable_tovec(int size, t_atom *vec);
 
          /* prototype for functions to save Pd's to a binbuf */
 typedef void (*t_savefn)(t_gobj *x, t_binbuf *b);
@@ -432,6 +485,7 @@ EXTERN t_propertiesfn class_getpropertiesfn(t_class *c);
 #define class_addpointer(x, y) class_addpointer((x), (t_method)(y))
 #define class_addfloat(x, y) class_doaddfloat((x), (t_method)(y))
 #define class_addsymbol(x, y) class_addsymbol((x), (t_method)(y))
+#define class_addblob(x, y) class_addblob((x), (t_method)(y)) /* MP20061226 blob type */
 #define class_addlist(x, y) class_addlist((x), (t_method)(y))
 #define class_addanything(x, y) class_addanything((x), (t_method)(y))
 #endif
@@ -440,13 +494,13 @@ EXTERN t_propertiesfn class_getpropertiesfn(t_class *c);
 EXTERN void post(const char *fmt, ...);
 EXTERN void startpost(const char *fmt, ...);
 EXTERN void poststring(const char *s);
-EXTERN void postfloat(float f);
+EXTERN void postfloat(t_floatarg f);
 EXTERN void postatom(int argc, t_atom *argv);
 EXTERN void endpost(void);
-EXTERN void error(const char *fmt, ...);
-EXTERN void verbose(int level, const char *fmt, ...);
-EXTERN void bug(const char *fmt, ...);
-EXTERN void pd_error(void *object, const char *fmt, ...);
+EXTERN void error(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+EXTERN void verbose(int level, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
+EXTERN void bug(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+EXTERN void pd_error(void *object, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
 EXTERN void sys_logerror(const char *object, const char *s);
 EXTERN void sys_unixerror(const char *object);
 EXTERN void sys_ouch(void);
@@ -454,6 +508,7 @@ EXTERN void sys_ouch(void);
 
 /* ------------  system interface routines ------------------- */
 EXTERN int sys_isreadablefile(const char *name);
+EXTERN int sys_isabsolutepath(const char *dir);
 EXTERN void sys_bashfilename(const char *from, char *to);
 EXTERN void sys_unbashfilename(const char *from, char *to);
 EXTERN int open_via_path(const char *name, const char *ext, const char *dir,
@@ -471,7 +526,7 @@ EXTERN int sys_trylock(void);
 
 /* --------------- signals ----------------------------------- */
 
-typedef float t_sample;
+typedef PD_FLOATTYPE t_sample;
 #define MAXLOGSIG 32
 #define MAXSIGSIZE (1 << MAXLOGSIG)
 
@@ -479,7 +534,7 @@ typedef struct _signal
 {
     int s_n;            /* number of points in the array */
     t_sample *s_vec;    /* the array */
-    float s_sr;         /* sample rate */
+    t_float s_sr;         /* sample rate */
     int s_refcount;     /* number of times used */
     int s_isborrowed;   /* whether we're going to borrow our array */
     struct _signal *s_borrowedfrom;     /* signal to borrow it from */
@@ -496,24 +551,24 @@ EXTERN t_int *copy_perform(t_int *args);
 
 EXTERN void dsp_add_plus(t_sample *in1, t_sample *in2, t_sample *out, int n);
 EXTERN void dsp_add_copy(t_sample *in, t_sample *out, int n);
-EXTERN void dsp_add_scalarcopy(t_sample *in, t_sample *out, int n);
+EXTERN void dsp_add_scalarcopy(t_float *in, t_sample *out, int n);
 EXTERN void dsp_add_zero(t_sample *out, int n);
 
 EXTERN int sys_getblksize(void);
-EXTERN float sys_getsr(void);
+EXTERN t_float sys_getsr(void);
 EXTERN int sys_get_inchannels(void);
 EXTERN int sys_get_outchannels(void);
 
 EXTERN void dsp_add(t_perfroutine f, int n, ...);
 EXTERN void dsp_addv(t_perfroutine f, int n, t_int *vec);
-EXTERN void pd_fft(float *buf, int npoints, int inverse);
+EXTERN void pd_fft(t_float *buf, int npoints, int inverse);
 EXTERN int ilog2(int n);
 
-EXTERN void mayer_fht(float *fz, int n);
-EXTERN void mayer_fft(int n, float *real, float *imag);
-EXTERN void mayer_ifft(int n, float *real, float *imag);
-EXTERN void mayer_realfft(int n, float *real);
-EXTERN void mayer_realifft(int n, float *real);
+EXTERN void mayer_fht(t_sample *fz, int n);
+EXTERN void mayer_fft(int n, t_sample *real, t_sample *imag);
+EXTERN void mayer_ifft(int n, t_sample *real, t_sample *imag);
+EXTERN void mayer_realfft(int n, t_sample *real);
+EXTERN void mayer_realifft(int n, t_sample *real);
 
 EXTERN float *cos_table;
 #define LOGCOSTABSIZE 9
@@ -532,13 +587,13 @@ typedef struct _resample
   t_int downsample; /* downsampling factor */
   t_int upsample;   /* upsampling factor */
 
-  t_float *s_vec;   /* here we hold the resampled data */
+  t_sample *s_vec;   /* here we hold the resampled data */
   int      s_n;
 
-  t_float *coeffs;  /* coefficients for filtering... */
+  t_sample *coeffs;  /* coefficients for filtering... */
   int      coefsize;
 
-  t_float *buffer;  /* buffer for filtering */
+  t_sample *buffer;  /* buffer for filtering */
   int      bufsize;
 } t_resample;
 
@@ -550,18 +605,18 @@ EXTERN void resamplefrom_dsp(t_resample *x, t_sample *in, int insize, int outsiz
 EXTERN void resampleto_dsp(t_resample *x, t_sample *out, int insize, int outsize, int method);
 
 /* ----------------------- utility functions for signals -------------- */
-EXTERN float mtof(float);
-EXTERN float ftom(float);
-EXTERN float rmstodb(float);
-EXTERN float powtodb(float);
-EXTERN float dbtorms(float);
-EXTERN float dbtopow(float);
+EXTERN t_float mtof(t_float);
+EXTERN t_float ftom(t_float);
+EXTERN t_float rmstodb(t_float);
+EXTERN t_float powtodb(t_float);
+EXTERN t_float dbtorms(t_float);
+EXTERN t_float dbtopow(t_float);
 
-EXTERN float q8_sqrt(float);
-EXTERN float q8_rsqrt(float);
+EXTERN t_float q8_sqrt(t_float);
+EXTERN t_float q8_rsqrt(t_float);
 #ifndef N32     
-EXTERN float qsqrt(float);  /* old names kept for extern compatibility */
-EXTERN float qrsqrt(float);
+EXTERN t_float qsqrt(t_float);  /* old names kept for extern compatibility */
+EXTERN t_float qrsqrt(t_float);
 #endif
 /* --------------------- data --------------------------------- */
 
@@ -571,7 +626,8 @@ EXTERN_STRUCT _garray;
 
 EXTERN t_class *garray_class;
 EXTERN int garray_getfloatarray(t_garray *x, int *size, t_float **vec);
-EXTERN float garray_get(t_garray *x, t_symbol *s, t_int indx);
+EXTERN int garray_getfloatwords(t_garray *x, int *size, t_word **vec);
+EXTERN t_float garray_get(t_garray *x, t_symbol *s, t_int indx);
 EXTERN void garray_redraw(t_garray *x);
 EXTERN int garray_npoints(t_garray *x);
 EXTERN char *garray_vec(t_garray *x);
@@ -588,8 +644,22 @@ EXTERN int value_setfloat(t_symbol *s, t_float f);
 /* ------- GUI interface - functions to send strings to TK --------- */
 typedef void (*t_guicallbackfn)(t_gobj *client, t_glist *glist);
 
-EXTERN void sys_vgui(char *fmt, ...);
-EXTERN void sys_gui(char *s);
+#ifdef CHECK_VGUI_ARGS
+EXTERN void sys_vgui(const char *fmt, ...)
+    __attribute__((format(printf,1,2)));
+EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...)
+    __attribute__((format(printf,1,2)));
+EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list)
+    __attribute__((format(printf,3,4)));
+#else
+EXTERN void sys_vgui(const char *fmt, ...);
+EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...);
+EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list);
+#endif
+EXTERN void sys_gui(const char *s);
+#define sys_vgui(args...) sys_vguid(__FILE__,__LINE__,args)
+#define sys_gui(s)        sys_vguid(__FILE__,__LINE__,"%s",s)
+
 EXTERN void sys_pretendguibytes(int n);
 EXTERN void sys_queuegui(void *client, t_glist *glist, t_guicallbackfn f);
 EXTERN void sys_unqueuegui(void *client);
@@ -606,7 +676,7 @@ extern t_class *glob_pdobject;  /* object to send "pd" messages */
 typedef t_class *t_externclass;
 
 EXTERN void c_extern(t_externclass *cls, t_newmethod newroutine,
-    t_method freeroutine, t_symbol *name, size_t size, int tiny, \
+    t_method freeroutine, t_symbol *name, size_t size, int tiny,
     t_atomtype arg1, ...);
 EXTERN void c_addmess(t_method fn, t_symbol *sel, t_atomtype arg1, ...);
 
@@ -616,13 +686,20 @@ EXTERN void c_addmess(t_method fn, t_symbol *sel, t_atomtype arg1, ...);
 #define typedmess pd_typedmess
 #define vmess pd_vmess
 
+// jsarlo
+EXTERN char sys_signal_line_color[8];
+EXTERN char sys_control_line_color[8];
+EXTERN char sys_iolet_select_color[8];
+EXTERN int sys_iolet_select_width;
+EXTERN int sys_dropshadow;
+// end jsarlo
+
 /* A definition to help gui objects straddle 0.34-0.35 changes.  If this is
 defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 
 #define PD_USE_TE_XPIX
 
-
-#ifdef __i386__
+#if defined(__i386__) || defined(__x86_64__)
 /* a test for NANs and denormals.  Should only be necessary on i386. */
 #define PD_BADFLOAT(f) ((((*(unsigned int*)&(f))&0x7f800000)==0) || \
     (((*(unsigned int*)&(f))&0x7f800000)==0x7f800000))
@@ -633,6 +710,9 @@ defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 #define PD_BADFLOAT(f) 0
 #define PD_BIGORSMALL(f) 0
 #endif
+
+    /* get version number at run time */
+EXTERN void sys_getversion(int *major, int *minor, int *bugfix);
 
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }

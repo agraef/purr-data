@@ -7,8 +7,8 @@ functions.  "Glists" and "canvases" and "graphs" used to be different
 structures until being unified in version 0.35.
 
 A glist occupies its own window if the "gl_havewindow" flag is set.  Its
-appearance on its "parent" or "owner" (if it has one) is as a graph if
-"gl_isgraph" is set, and otherwise as a text box.
+appearance on its "parent", also called "owner", (if it has one) is as a graph
+if "gl_isgraph" is set, and otherwise as a text box.
 
 A glist is "root" if it has no owner, i.e., a document window.  In this
 case "gl_havewindow" is always set.
@@ -36,10 +36,13 @@ glist has its own window, even if miniaturized.
 /* NOTE: this file describes Pd implementation details which may change
 in future releases.  The public (stable) API is in m_pd.h. */  
 
+#ifndef PD_G_CANVAS_H
+#define PD_G_CANVAS_H
+
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 extern "C" {
 #endif
-
+  
 /* --------------------- geometry ---------------------------- */
 #define IOWIDTH 7       /* width of an inlet/outlet in pixels */
 #define IOMIDDLE ((IOWIDTH-1)/2)
@@ -73,6 +76,22 @@ EXTERN_STRUCT _tscalar;
 EXTERN_STRUCT _canvasenvironment;
 #define t_canvasenvironment struct _canvasenvironment 
 
+EXTERN_STRUCT _fielddesc;
+#define t_fielddesc struct _fielddesc
+
+// jsarlo
+EXTERN_STRUCT _magicGlass;
+#define t_magicGlass struct _magicGlass
+// end jsarlo
+
+// undo stuff
+EXTERN_STRUCT _undo_action;
+#define t_undo_action struct _undo_action
+
+// preset hub stuff
+EXTERN_STRUCT _preset_hub;
+#define t_preset_hub struct _preset_hub
+
 typedef struct _selection
 {
     t_gobj *sel_what;
@@ -105,6 +124,12 @@ typedef struct _editor
     unsigned int e_lastmoved: 1;    /* one if mouse has moved since click */
     unsigned int e_textdirty: 1;    /* one if e_textedfor has changed */
     unsigned int e_selectedline: 1; /* one if a line is selected */
+    t_magicGlass *gl_magic_glass;   /* magic glass object */
+	char canvas_cnct_inlet_tag[4096]; /* tags for currently highlighted nlets */
+	char canvas_cnct_outlet_tag[4096];
+    t_clock *e_clock;               /* clock to filter GUI move messages */
+    int e_xnew;                     /* xpos for next move event */
+    int e_ynew;                     /* ypos, similarly */
 } t_editor;
 
 #define MA_NONE    0    /* e_onmotion: do nothing on mouse motion */
@@ -113,6 +138,8 @@ typedef struct _editor
 #define MA_REGION  3    /* selection region */
 #define MA_PASSOUT 4    /* send on to e_grab */
 #define MA_DRAGTEXT 5   /* drag in text editor to alter selection */
+#define MA_RESIZE  6    /* drag to resize */
+#define MA_SCROLL  7    /* scroll with middle click onto empty canvas */
 
 /* editor structure for "garrays".  We don't bother to delete and regenerate
 this structure when the "garray" becomes invisible or visible, although we
@@ -124,12 +151,15 @@ typedef struct _arrayvis
     t_garray *av_garray;            /* owning structure */    
 } t_arrayvis;
 
+t_garray* array_garray;				/* used for sending bangs when
+									   array is changed  via gui */
+
 /* the t_tick structure describes where to draw x and y "ticks" for a glist */
 
 typedef struct _tick    /* where to put ticks on x or y axes */
 {
-    float k_point;      /* one point to draw a big tick at */
-    float k_inc;        /* x or y increment per little tick */
+    t_float k_point;      /* one point to draw a big tick at */
+    t_float k_inc;        /* x or y increment per little tick */
     int k_lperb;        /* little ticks per big; 0 if no ticks to draw */
 } t_tick;
 
@@ -137,6 +167,8 @@ typedef struct _tick    /* where to put ticks on x or y axes */
 area of a window.
 
 */
+
+//#include "g_undo.h"
 
 struct _glist
 {  
@@ -147,22 +179,24 @@ struct _glist
     struct _glist *gl_owner;    /* parent glist, supercanvas, or 0 if none */
     int gl_pixwidth;            /* width in pixels (on parent, if a graph) */
     int gl_pixheight;
-    float gl_x1;                /* bounding rectangle in our own coordinates */
-    float gl_y1;
-    float gl_x2;
-    float gl_y2;
+    t_float gl_x1;                /* bounding rectangle in our own coordinates */
+    t_float gl_y1;
+    t_float gl_x2;
+    t_float gl_y2;
     int gl_screenx1;            /* screen coordinates when toplevel */
     int gl_screeny1;
     int gl_screenx2;
     int gl_screeny2;
+    int gl_xmargin;                /* origin for GOP rectangle */
+    int gl_ymargin;
     t_tick gl_xtick;            /* ticks marking X values */    
     int gl_nxlabels;            /* number of X coordinate labels */
     t_symbol **gl_xlabel;           /* ... an array to hold them */
-    float gl_xlabely;               /* ... and their Y coordinates */
+    t_float gl_xlabely;               /* ... and their Y coordinates */
     t_tick gl_ytick;            /* same as above for Y ticks and labels */
     int gl_nylabels;
     t_symbol **gl_ylabel;
-    float gl_ylabelx;
+    t_float gl_ylabelx;
     t_editor *gl_editor;        /* editor structure when visible */
     t_symbol *gl_name;          /* symbol bound here */
     int gl_font;                /* nominal font size in points, e.g., 10 */
@@ -175,12 +209,37 @@ struct _glist
     unsigned int gl_willvis:1;      /* make me visible after loading */ 
     unsigned int gl_edit:1;         /* edit mode */
     unsigned int gl_isdeleting:1;   /* we're inside glist_delete -- hack! */
-    unsigned int gl_stretch:1;      /* stretch contents on resize */
+    unsigned int gl_unloading:1;    /* we're inside canvas_free */
+    unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
     unsigned int gl_isgraph:1;      /* show as graph on parent */
+    unsigned int gl_hidetext:1;     /* hide object-name + args when doing graph on parent */
+	unsigned int gl_gop_initialized:1;     /* used for tagged moving of gop-ed objects to avoid redundant reinit */
+	//global preset array pointer
+	t_preset_hub *gl_phub;
+	//infinite undo goodies (have to stay here rather than the editor to prevent its obliteration when editor is deleted)
+	t_undo_action *u_queue;
+	t_undo_action *u_last;
+	//dpsaha@vt.edu for the gop dynamic resizing & move handle (refactored by mathieu)
+	struct _scalehandle *x_handle;
+	struct _scalehandle *x_mhandle;
+	t_pd *gl_svg;
 };
 
 #define gl_gobj gl_obj.te_g
 #define gl_pd gl_gobj.g_pd
+
+/*-------------------universal preset stuff---------------------*/
+// for the universal preset_node ability (see g_editor.c doconnect/disconnect functions)
+// this is where all the classes capable of being controlled via preset should be defined
+
+// preset objects
+t_class *preset_hub_class;
+t_class *preset_node_class;
+
+// special case objects
+extern t_class *print_class;
+extern t_class *message_class;
+/*-----------------end universal preset stuff-------------------*/
 
 /* a data structure to describe a field in a pure datum */
 
@@ -196,13 +255,16 @@ typedef struct _dataslot
     t_symbol *ds_arraytemplate;     /* filled in for arrays only */
 } t_dataslot;
 
-
-/* T.Grill - changed t_pd member to t_pdobj to avoid name clashed */
 typedef struct _template
 {
     t_pd t_pdobj;               /* header */
     struct _gtemplate *t_list;  /* list of "struct"/gtemplate objects */
     t_symbol *t_sym;            /* name */
+    int t_transformable;        /* counts number of arrays in template
+                                   drawn objects that depend on this
+                                   template can only be transformed
+                                   (scaled/skewed,rotated, etc.)
+                                   if this var is 0 */
     int t_n;                    /* number of dataslots (fields) */
     t_dataslot *t_vec;          /* array of dataslots */
 } t_template;
@@ -215,7 +277,7 @@ struct _array
     t_symbol *a_templatesym;    /* template for elements */
     int a_valid;        /* protection against stale pointers into array */
     t_gpointer a_gp;    /* pointer to scalar or array element we're in */
-    t_gstub *a_stub;
+    t_gstub *a_stub;    /* stub for pointing into this array */
 };
 
     /* structure for traversing all the connections in a glist */
@@ -236,6 +298,9 @@ typedef struct _linetraverser
     t_outconnect *tr_nextoc;
     int tr_nextoutno;
 } t_linetraverser;
+
+EXTERN int outconnect_visible(t_outconnect *oc);
+EXTERN int outconnect_setvisible(t_outconnect *oc, int vis);
 
 /* function types used to define graphical behavior for gobjs, a bit like X
 widgets.  We don't use Pd methods because Pd's typechecking can't specify the
@@ -258,6 +323,8 @@ typedef void (*t_visfn)(t_gobj *x, struct _glist *glist, int flag);
         /* field a mouse click (when not in "edit" mode) */
 typedef int (*t_clickfn)(t_gobj *x, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit);
+        /* and this to displace a gobj using tags: */
+typedef void (*t_displacefnwtag)(t_gobj *x, struct _glist *glist, int dx, int dy);
         /* ... and later, resizing; getting/setting font or color... */
 
 struct _widgetbehavior
@@ -269,6 +336,7 @@ struct _widgetbehavior
     t_deletefn w_deletefn;
     t_visfn w_visfn;
     t_clickfn w_clickfn;
+	t_displacefnwtag w_displacefnwtag;
 };
 
 /* -------- behaviors for scalars defined by objects in template --------- */
@@ -282,27 +350,29 @@ doesn't work on array elements... LATER reconsider this */
 
         /* bounding rectangle: */
 typedef void (*t_parentgetrectfn)(t_gobj *x, struct _glist *glist,
-    t_word *data, t_template *tmpl, float basex, float basey,
+    t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int *x1, int *y1, int *x2, int *y2);
         /* displace it */
 typedef void (*t_parentdisplacefn)(t_gobj *x, struct _glist *glist, 
-    t_word *data, t_template *tmpl, float basex, float basey,
+    t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int dx, int dy);
         /* change color to show selection */
 typedef void (*t_parentselectfn)(t_gobj *x, struct _glist *glist,
-    t_word *data, t_template *tmpl, float basex, float basey,
+    t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int state);
         /* change appearance to show activation/deactivation: */
 typedef void (*t_parentactivatefn)(t_gobj *x, struct _glist *glist,
-    t_word *data, t_template *tmpl, float basex, float basey,
+    t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int state);
         /*  making visible or invisible */
 typedef void (*t_parentvisfn)(t_gobj *x, struct _glist *glist,
-    t_word *data, t_template *tmpl, float basex, float basey,
+    struct _glist *parentglist, t_scalar *sc, 
+    t_word *data, t_template *tmpl, t_float basex, t_float basey,
     int flag);
         /*  field a mouse click */
 typedef int (*t_parentclickfn)(t_gobj *x, struct _glist *glist,
-    t_scalar *sc, t_template *tmpl, float basex, float basey,
+    t_word *data, t_template *tmpl, t_scalar *sc, t_array *ap,
+    t_float basex, t_float basey,
     int xpix, int ypix, int shift, int alt, int dbl, int doit);
 
 struct _parentwidgetbehavior
@@ -323,6 +393,9 @@ struct _parentwidgetbehavior
 #define CURSOR_EDITMODE_NOTHING 4
 #define CURSOR_EDITMODE_CONNECT 5
 #define CURSOR_EDITMODE_DISCONNECT 6
+#define CURSOR_EDITMODE_RESIZE 7
+#define CURSOR_EDITMODE_RESIZE_BOTTOM_RIGHT 8
+#define CURSOR_SCROLL 9
 EXTERN void canvas_setcursor(t_glist *x, unsigned int cursornum);
 
 extern t_canvas *canvas_editing;    /* last canvas to start text edting */ 
@@ -330,6 +403,11 @@ extern t_canvas *canvas_whichfind;  /* last canvas we did a find in */
 extern t_canvas *canvas_list;       /* list of all root canvases */
 extern t_class *vinlet_class, *voutlet_class;
 extern int glist_valid;         /* incremented when pointers might be stale */
+
+#define PLOTSTYLE_POINTS 0     /* plotting styles for arrays */
+#define PLOTSTYLE_POLY 1
+#define PLOTSTYLE_BEZ 2
+#define PLOTSTYLE_BARS 3
 
 /* ------------------- functions on any gobj ----------------------------- */
 EXTERN void gobj_getrect(t_gobj *x, t_glist *owner, int *x1, int *y1,
@@ -344,15 +422,12 @@ EXTERN int gobj_click(t_gobj *x, struct _glist *glist,
 EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN void gobj_properties(t_gobj *x, struct _glist *glist);
 EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
-EXTERN void gobj_redraw(t_gobj *gobj, t_glist *glist);
+EXTERN int gobj_shouldvis(t_gobj *x, struct _glist *glist);
 
 /* -------------------- functions on glists --------------------- */
 EXTERN t_glist *glist_new( void);
 EXTERN void glist_init(t_glist *x);
 EXTERN void glist_add(t_glist *x, t_gobj *g);
-EXTERN void glist_cleanup(t_glist *x);
-EXTERN void glist_free(t_glist *x);
-
 EXTERN void glist_clear(t_glist *x);
 EXTERN t_canvas *glist_getcanvas(t_glist *x);
 EXTERN int glist_isselected(t_glist *x, t_gobj *y);
@@ -372,42 +447,44 @@ EXTERN void glist_sort(t_glist *canvas);
 EXTERN void glist_read(t_glist *x, t_symbol *filename, t_symbol *format);
 EXTERN void glist_mergefile(t_glist *x, t_symbol *filename, t_symbol *format);
 
-EXTERN float glist_pixelstox(t_glist *x, float xpix);
-EXTERN float glist_pixelstoy(t_glist *x, float ypix);
-EXTERN float glist_xtopixels(t_glist *x, float xval);
-EXTERN float glist_ytopixels(t_glist *x, float yval);
-EXTERN float glist_dpixtodx(t_glist *x, float dxpix);
-EXTERN float glist_dpixtody(t_glist *x, float dypix);
+EXTERN t_float glist_pixelstox(t_glist *x, t_float xpix);
+EXTERN t_float glist_pixelstoy(t_glist *x, t_float ypix);
+EXTERN t_float glist_xtopixels(t_glist *x, t_float xval);
+EXTERN t_float glist_ytopixels(t_glist *x, t_float yval);
+EXTERN t_float glist_dpixtodx(t_glist *x, t_float dxpix);
+EXTERN t_float glist_dpixtody(t_glist *x, t_float dypix);
 
-EXTERN void glist_redrawitem(t_glist *owner, t_gobj *gobj);
 EXTERN void glist_getnextxy(t_glist *gl, int *xval, int *yval);
 EXTERN void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_glist *glist_addglist(t_glist *g, t_symbol *sym,
-    float x1, float y1, float x2, float y2,
-    float px1, float py1, float px2, float py2);
-EXTERN void glist_arraydialog(t_glist *parent, t_symbol *name,
-    t_floatarg size, t_floatarg saveit, t_floatarg newgraph);
+    t_float x1, t_float y1, t_float x2, t_float y2,
+    t_float px1, t_float py1, t_float px2, t_float py2);
+EXTERN void glist_arraydialog(t_glist *parent, t_symbol *s,
+    int argc, t_atom *argv);
 EXTERN t_binbuf *glist_writetobinbuf(t_glist *x, int wholething);
 EXTERN int glist_isgraph(t_glist *x);
 EXTERN void glist_redraw(t_glist *x);
 EXTERN void glist_drawiofor(t_glist *glist, t_object *ob, int firsttime,
     char *tag, int x1, int y1, int x2, int y2);
 EXTERN void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag);
-EXTERN void canvas_create_editor(t_glist *x, int createit);
-void canvas_deletelinesforio(t_canvas *x, t_text *text,
+EXTERN void canvas_create_editor(t_glist *x);
+EXTERN void canvas_destroy_editor(t_glist *x);
+EXTERN void canvas_deletelinesforio(t_canvas *x, t_text *text,
     t_inlet *inp, t_outlet *outp);
-
+EXTERN int glist_amreloadingabstractions; /* stop GUI changes while reloading */
+EXTERN int canvas_restore_original_position(t_glist *x, t_gobj *y, const char *objtag, int dir);
 
 /* -------------------- functions on texts ------------------------- */
-EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize);
+EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos);
 EXTERN void text_drawborder(t_text *x, t_glist *glist, char *tag,
+    int width, int height, int firsttime);
+EXTERN void text_drawborder_withtag(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
 EXTERN void text_eraseborder(t_text *x, t_glist *glist, char *tag);
 EXTERN int text_xcoord(t_text *x, t_glist *glist);
 EXTERN int text_ycoord(t_text *x, t_glist *glist);
 EXTERN int text_xpix(t_text *x, t_glist *glist);
 EXTERN int text_ypix(t_text *x, t_glist *glist);
-EXTERN int text_shouldvis(t_text *x, t_glist *glist);
 
 /* -------------------- functions on rtexts ------------------------- */
 #define RTEXT_DOWN 1
@@ -415,24 +492,23 @@ EXTERN int text_shouldvis(t_text *x, t_glist *glist);
 #define RTEXT_DBL 3
 #define RTEXT_SHIFT 4
 
-EXTERN t_rtext *rtext_new(t_glist *glist, t_text *who);
-EXTERN t_rtext *glist_findrtext(t_glist *gl, t_text *who);
-EXTERN void rtext_draw(t_rtext *x);
-EXTERN void rtext_erase(t_rtext *x);
-EXTERN t_rtext *rtext_remove(t_rtext *first, t_rtext *x);
-EXTERN int rtext_height(t_rtext *x);
-EXTERN void rtext_displace(t_rtext *x, int dx, int dy);
-EXTERN void rtext_select(t_rtext *x, int state);
-EXTERN void rtext_activate(t_rtext *x, int state);
-EXTERN void rtext_free(t_rtext *x);
-EXTERN void rtext_key(t_rtext *x, int n, t_symbol *s);
-EXTERN void rtext_mouse(t_rtext *x, int xval, int yval, int flag);
-EXTERN void rtext_retext(t_rtext *x);
-EXTERN int rtext_width(t_rtext *x);
-EXTERN int rtext_height(t_rtext *x);
-EXTERN char *rtext_gettag(t_rtext *x);
-EXTERN void rtext_gettext(t_rtext *x, char **buf, int *bufsize);
-EXTERN void rtext_getseltext(t_rtext *x, char **buf, int *bufsize);
+// number in comment is the number in grep -w|wc
+EXTERN t_rtext *rtext_new(t_glist *glist, t_text *who); //5
+EXTERN t_rtext *glist_findrtext(t_glist *gl, t_text *who); //53
+EXTERN void rtext_draw(t_rtext *x); //4
+EXTERN void rtext_erase(t_rtext *x); //4
+EXTERN int rtext_width(t_rtext *x); //9
+EXTERN int rtext_height(t_rtext *x); //9
+EXTERN void rtext_displace(t_rtext *x, int dx, int dy); //3
+EXTERN void rtext_select(t_rtext *x, int state); //4
+EXTERN void rtext_activate(t_rtext *x, int state); //3
+EXTERN void rtext_free(t_rtext *x); //4
+EXTERN void rtext_key(t_rtext *x, int n, t_symbol *s); //6
+EXTERN void rtext_mouse(t_rtext *x, int xval, int yval, int flag); //5
+EXTERN void rtext_retext(t_rtext *x); //5
+EXTERN char *rtext_gettag(t_rtext *x); //47
+EXTERN void rtext_gettext(t_rtext *x, char **buf, int *bufsize); //9
+EXTERN void rtext_getseltext(t_rtext *x, char **buf, int *bufsize); //4
 
 /* -------------------- functions on canvases ------------------------ */
 EXTERN t_class *canvas_class;
@@ -442,6 +518,7 @@ EXTERN t_symbol *canvas_makebindsym(t_symbol *s);
 EXTERN void canvas_vistext(t_canvas *x, t_text *y);
 EXTERN void canvas_fixlinesfor(t_canvas *x, t_text *text);
 EXTERN void canvas_deletelinesfor(t_canvas *x, t_text *text);
+EXTERN void canvas_eraselinesfor(t_canvas *x, t_text *text);
 EXTERN void canvas_stowconnections(t_canvas *x);
 EXTERN void canvas_restoreconnections(t_canvas *x);
 EXTERN void canvas_redraw(t_canvas *x);
@@ -450,7 +527,8 @@ EXTERN t_inlet *canvas_addinlet(t_canvas *x, t_pd *who, t_symbol *sym);
 EXTERN void canvas_rminlet(t_canvas *x, t_inlet *ip);
 EXTERN t_outlet *canvas_addoutlet(t_canvas *x, t_pd *who, t_symbol *sym);
 EXTERN void canvas_rmoutlet(t_canvas *x, t_outlet *op);
-EXTERN void canvas_redrawallfortemplate(t_canvas *tmpl);
+EXTERN void canvas_redrawallfortemplate(t_template *tmpl, int action);
+EXTERN void canvas_redrawallfortemplatecanvas(t_canvas *x, int action);
 EXTERN void canvas_zapallfortemplate(t_canvas *tmpl);
 EXTERN void canvas_setusedastemplate(t_canvas *x);
 EXTERN t_canvas *canvas_getcurrent(void);
@@ -458,7 +536,7 @@ EXTERN void canvas_setcurrent(t_canvas *x);
 EXTERN void canvas_unsetcurrent(t_canvas *x);
 EXTERN t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s);
 EXTERN t_canvas *canvas_getrootfor(t_canvas *x);
-EXTERN void canvas_dirty(t_canvas *x, t_int n);
+EXTERN void canvas_dirty(t_canvas *x, t_floatarg n);
 EXTERN int canvas_getfont(t_canvas *x);
 typedef int (*t_canvasapply)(t_canvas *x, t_int x1, t_int x2, t_int x3);
 
@@ -479,7 +557,14 @@ EXTERN void canvas_rename(t_canvas *x, t_symbol *s, t_symbol *dir);
 EXTERN void canvas_loadbang(t_canvas *x);
 EXTERN int canvas_hitbox(t_canvas *x, t_gobj *y, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p);
+EXTERN t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
+    int *x1p, int *y1p, int *x2p, int *y2p);
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
+EXTERN int canvas_hasarray(t_canvas *x);
+
+/* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
+
+EXTERN void sys_expandpathelems(const char *name, const char *result);
 
 typedef void (*t_undofn)(t_canvas *canvas, void *buf,
     int action);        /* a function that does UNDO/REDO */
@@ -491,12 +576,10 @@ EXTERN void canvas_setundo(t_canvas *x, t_undofn undofn, void *buf,
 EXTERN void canvas_noundo(t_canvas *x);
 EXTERN int canvas_getindex(t_canvas *x, t_gobj *y);
 
-/* T.Grill - made public for dynamic object creation */
-/* in g_editor.c */
 EXTERN void canvas_connect(t_canvas *x,
     t_floatarg fwhoout, t_floatarg foutno,t_floatarg fwhoin, t_floatarg finno);
 EXTERN void canvas_disconnect(t_canvas *x,
-    float index1, float outno, float index2, float inno);
+    t_float index1, t_float outno, t_float index2, t_float inno);
 EXTERN int canvas_isconnected (t_canvas *x,
     t_text *ob1, int n1, t_text *ob2, int n2);
 EXTERN void canvas_selectinrect(t_canvas *x, int lox, int loy, int hix, int hiy);
@@ -515,29 +598,22 @@ EXTERN void linetraverser_start(t_linetraverser *t, t_canvas *x);
 EXTERN t_outconnect *linetraverser_next(t_linetraverser *t);
 EXTERN void linetraverser_skipobject(t_linetraverser *t);
 
-/* --------------------- functions on tscalars --------------------- */
-
-EXTERN void tscalar_getrect(t_tscalar *x, t_glist *owner,
-    int *xp1, int *yp1, int *xp2, int *yp2);
-EXTERN void tscalar_vis(t_tscalar *x, t_glist *owner, int flag);
-EXTERN int tscalar_click(t_tscalar *x, int xpix, int ypix, int shift,
-    int alt, int dbl, int doit);
-
 /* --------- functions on garrays (graphical arrays) -------------------- */
 
 EXTERN t_template *garray_template(t_garray *x);
 
 /* -------------------- arrays --------------------- */
-EXTERN t_garray *graph_array(t_glist *gl, t_symbol *s, t_symbol *tmpl,
-    t_floatarg f, t_floatarg saveit);
+EXTERN t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv);
 EXTERN t_array *array_new(t_symbol *templatesym, t_gpointer *parent);
-EXTERN void array_resize(t_array *x, t_template *tmpl, int n);
+EXTERN void array_resize(t_array *x, int n);
 EXTERN void array_free(t_array *x);
+int array_joc; /* for "jump on click" array inside a graph */
 
 /* --------------------- gpointers and stubs ---------------- */
 EXTERN t_gstub *gstub_new(t_glist *gl, t_array *a);
 EXTERN void gstub_cutoff(t_gstub *gs);
 EXTERN void gpointer_setglist(t_gpointer *gp, t_glist *glist, t_scalar *x);
+EXTERN void gpointer_setarray(t_gpointer *gp, t_array *array, t_word *w);
 
 /* --------------------- scalars ------------------------- */
 EXTERN void word_init(t_word *wp, t_template *tmpl, t_gpointer *gp);
@@ -545,22 +621,28 @@ EXTERN void word_restore(t_word *wp, t_template *tmpl,
     int argc, t_atom *argv);
 EXTERN t_scalar *scalar_new(t_glist *owner,
     t_symbol *templatesym);
-EXTERN void scalar_getbasexy(t_scalar *x, float *basex, float *basey);
+EXTERN void word_free(t_word *wp, t_template *tmpl);
+EXTERN void scalar_getbasexy(t_scalar *x, t_float *basex, t_float *basey);
+EXTERN void scalar_redraw(t_scalar *x, t_glist *glist);
+EXTERN int template_has_elemtemplate(t_template *t, t_template *tmp);
 
 /* ------helper routines for "garrays" and "plots" -------------- */
-EXTERN int array_doclick(t_array *array, t_glist *glist, t_gobj *gobj,
+EXTERN int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
     t_symbol *elemtemplatesym,
-    float linewidth, float xloc, float xinc, float yloc,
+    t_float linewidth, t_float xloc, t_float xinc, t_float yloc, t_float scalarvis,
+    t_fielddesc *xfield, t_fielddesc *yfield, t_fielddesc *wfield,
     int xpix, int ypix, int shift, int alt, int dbl, int doit);
 
 EXTERN void array_getcoordinate(t_glist *glist,
     char *elem, int xonset, int yonset, int wonset, int indx,
-    float basex, float basey, float xinc,
-    float *xp, float *yp, float *wp);
+    t_float basex, t_float basey, t_float xinc,
+    t_fielddesc *xfielddesc, t_fielddesc *yfielddesc, t_fielddesc *wfielddesc,
+    t_float *xp1, t_float *xp2, t_float *yp, t_float *wp);
 
 EXTERN int array_getfields(t_symbol *elemtemplatesym,
     t_canvas **elemtemplatecanvasp,
     t_template **elemtemplatep, int *elemsizep,
+    t_fielddesc *xfielddesc, t_fielddesc *yfielddesc, t_fielddesc *wfielddesc, 
     int *xonsetp, int *yonsetp, int *wonsetp);
 
 /* --------------------- templates ------------------------- */
@@ -580,7 +662,11 @@ EXTERN void template_setsymbol(t_template *x, t_symbol *fieldname,
 
 EXTERN t_template *gtemplate_get(t_gtemplate *x);
 EXTERN t_template *template_findbyname(t_symbol *s);
+EXTERN int template_cancreate(t_template *tmp);
+EXTERN int template_hasxy(t_template *tmp);
 EXTERN t_canvas *template_findcanvas(t_template *tmpl);
+EXTERN void template_notify(t_template *tmpl,
+    t_symbol *s, int argc, t_atom *argv);
 
 EXTERN t_float template_getfloat(t_template *x, t_symbol *fieldname,
     t_word *wp, int loud);
@@ -590,6 +676,12 @@ EXTERN t_symbol *template_getsymbol(t_template *x, t_symbol *fieldname,
     t_word *wp, int loud);
 EXTERN void template_setsymbol(t_template *x, t_symbol *fieldname,
     t_word *wp, t_symbol *s, int loud);
+EXTERN t_float fielddesc_getcoord(t_fielddesc *f, t_template *tmpl,
+    t_word *wp, int loud);
+EXTERN void fielddesc_setcoord(t_fielddesc *f, t_template *tmpl,
+    t_word *wp, t_float pix, int loud);
+EXTERN t_float fielddesc_cvttocoord(t_fielddesc *f, t_float val);
+EXTERN t_float fielddesc_cvtfromcoord(t_fielddesc *f, t_float coord);
 
 /* ----------------------- guiconnects, g_guiconnect.c --------- */
 EXTERN t_guiconnect *guiconnect_new(t_pd *who, t_symbol *sym);
@@ -599,6 +691,90 @@ EXTERN void guiconnect_notarget(t_guiconnect *x, double timedelay);
 EXTERN t_symbol *iemgui_raute2dollar(t_symbol *s);
 EXTERN t_symbol *iemgui_dollar2raute(t_symbol *s);
 
+/* ---------- infinite undo/redo routines found in g_undo.c ------------ */
+
+EXTERN t_undo_action *canvas_undo_init(t_canvas *x);
+EXTERN t_undo_action *canvas_undo_add(t_canvas *x,
+	int type, const char *name, void *data);
+EXTERN void canvas_undo_undo(t_canvas *x);
+EXTERN void canvas_undo_redo(t_canvas *x);
+EXTERN void canvas_undo_rebranch(t_canvas *x);
+EXTERN void canvas_undo_check_canvas_pointers(t_canvas *x);
+EXTERN void canvas_undo_purge_abstraction_actions(t_canvas *x);
+EXTERN void canvas_undo_free(t_canvas *x);
+
+/* --------- 1. connect ---------- */
+
+EXTERN void *canvas_undo_set_connect(t_canvas *x,
+    int index1, int outno, int index2, int inno);
+EXTERN void canvas_undo_connect(t_canvas *x, void *z, int action);
+
+/* --------- 2. disconnect ------- */
+
+EXTERN void *canvas_undo_set_disconnect(t_canvas *x,
+    int index1, int outno, int index2, int inno);
+EXTERN void canvas_undo_disconnect(t_canvas *x, void *z, int action);
+
+/* --------- 3. cut -------------- */
+
+EXTERN void *canvas_undo_set_cut(t_canvas *x, int mode);
+EXTERN void canvas_undo_cut(t_canvas *x, void *z, int action);
+
+/* --------- 4. move ------------- */
+
+EXTERN void *canvas_undo_set_move(t_canvas *x, int selected);
+EXTERN void canvas_undo_move(t_canvas *x, void *z, int action);
+
+/* --------- 5. paste ------------ */
+
+EXTERN void *canvas_undo_set_paste(t_canvas *x, int offset, int duplicate, int d_offset);
+EXTERN void canvas_undo_paste(t_canvas *x, void *z, int action);
+
+/* --------- 6. apply ------------ */
+
+EXTERN void *canvas_undo_set_apply(t_canvas *x, int n);
+EXTERN void canvas_undo_apply(t_canvas *x, void *z, int action);
+
+/* --------- 7. arrange ---------- */
+
+EXTERN void *canvas_undo_set_arrange(t_canvas *x, t_gobj *obj, int newindex);
+EXTERN void canvas_undo_arrange(t_canvas *x, void *z, int action);
+
+/* --------- 8. canvas apply ----- */
+
+EXTERN void *canvas_undo_set_canvas(t_canvas *x);
+EXTERN void canvas_undo_canvas_apply(t_canvas *x, void *z, int action);
+
+/* --------- 9. create ----------- */
+
+EXTERN void canvas_undo_create(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_create(t_canvas *x);
+
+/* --------- 10. recreate -------- */
+
+EXTERN void canvas_undo_recreate(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_recreate(t_canvas *x, t_gobj *y, int old_pos);
+
+/* --------- 11. font ------------ */
+
+EXTERN void canvas_undo_font(t_canvas *x, void *z, int action);
+EXTERN void *canvas_undo_set_font(t_canvas *x, int font);
+
+/* ------------------------------- */
+
+
+/* ---------- interface to Qt (libQt5) with threads -------------------- */
+
+void *qt_thread_main (void *);
+
+/* ---------- other things added by Mathieu (aug.2014) ----------------- */
+
+void canvas_raise_all_cords (t_canvas *x);
+
+/* --------------------------------------------------------------------- */
+
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
 #endif
+
+#endif // PD_G_CANVAS_H

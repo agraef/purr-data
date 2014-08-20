@@ -7,14 +7,18 @@
 /* NOTE: this file describes Pd implementation details which may change
 in future releases.  The public (stable) API is in m_pd.h. */  
 
+#ifndef __s_stuff_h_
+#define __s_stuff_h_
+
 /* in s_path.c */
 
-typedef struct _namelist
+typedef struct _namelist    /* element in a linked list of stored strings */
 {
-    struct _namelist *nl_next;
-    char *nl_string;
+    struct _namelist *nl_next;  /* next in list */
+    char *nl_string;            /* the string */
 } t_namelist;
 
+t_namelist *pd_extrapath;
 t_namelist *namelist_append(t_namelist *listwas, const char *s, int allowdup);
 t_namelist *namelist_append_files(t_namelist *listwas, const char *s);
 void namelist_free(t_namelist *listwas);
@@ -24,6 +28,11 @@ extern int sys_usestdpath;
 extern t_namelist *sys_externlist;
 extern t_namelist *sys_searchpath;
 extern t_namelist *sys_helppath;
+int sys_open_absolute(const char *name, const char* ext,
+    char *dirresult, char **nameresult, unsigned int size, int bin, int *fdp);
+int sys_trytoopenone(const char *dir, const char *name, const char* ext,
+    char *dirresult, char **nameresult, unsigned int size, int bin);
+t_symbol *sys_decodedialog(t_symbol *s);
 
 /* s_file.c */
 
@@ -38,15 +47,21 @@ extern int sys_verbose;
 extern int sys_noloadbang;
 extern int sys_nogui;
 extern char *sys_guicmd;
+#ifdef QTGUI
+extern int sys_qtcanvas;
+#endif
 
 EXTERN int sys_nearestfontsize(int fontsize);
 EXTERN int sys_hostfontsize(int fontsize);
 
 extern int sys_defaultfont;
 extern t_symbol *sys_libdir;    /* library directory for auxilliary files */
+extern t_symbol *sys_guidir;    /* directory holding pd_gui, u_pdsend, etc */
 
 /* s_loader.c */
-int sys_load_lib(char *dirname, char *filename);
+typedef int (*loader_t)(t_canvas *canvas, char *classname); /* callback type */
+EXTERN int sys_load_lib(t_canvas *canvas, char *filename);
+EXTERN void sys_register_loader(loader_t loader);
 
 /* s_audio.c */
 
@@ -63,13 +78,13 @@ extern int sys_inchannels;
 extern int sys_outchannels;
 extern int sys_advance_samples; /* scheduler advance in samples */
 extern int sys_blocksize;       /* audio I/O block size in sample frames */
-extern float sys_dacsr;
+extern t_float sys_dacsr;
 extern int sys_schedadvance;
 extern int sys_sleepgrain;
-void sys_open_audio(int naudioindev, int *audioindev,
+void sys_set_audio_settings(int naudioindev, int *audioindev,
     int nchindev, int *chindev,
     int naudiooutdev, int *audiooutdev, int nchoutdev, int *choutdev,
-    int srate, int advance, int enable);
+    int srate, int advance, int callback);
 void sys_reopen_audio( void);
 void sys_close_audio(void);
 
@@ -78,13 +93,19 @@ int sys_send_dacs(void);
 void sys_reportidle(void);
 void sys_set_priority(int higher);
 void sys_audiobuf(int nbufs);
-void sys_getmeters(float *inmax, float *outmax);
+void sys_getmeters(t_sample *inmax, t_sample *outmax);
 void sys_listdevs(void);
 void sys_setblocksize(int n);
+
+EXTERN void sys_get_audio_devs(char *indevlist, int *nindevs,
+                          char *outdevlist, int *noutdevs, int *canmulti, int *cancallback, 
+                          int maxndev, int devdescsize);
+EXTERN void sys_get_audio_apis(char *buf);
 
 /* s_midi.c */
 #define MAXMIDIINDEV 16         /* max. number of input ports */
 #define MAXMIDIOUTDEV 16        /* max. number of output ports */
+extern int sys_midiapi;
 extern int sys_nmidiin;
 extern int sys_nmidiout;
 extern int sys_midiindevlist[];
@@ -92,8 +113,15 @@ extern int sys_midioutdevlist[];
 
 void sys_open_midi(int nmidiin, int *midiinvec,
     int nmidiout, int *midioutvec, int enable);
+
+EXTERN void sys_get_midi_apis(char *buf);
+EXTERN void sys_get_midi_devs(char *indevlist, int *nindevs,
+    char *outdevlist, int *noutdevs, 
+   int maxndev, int devdescsize);
 void sys_get_midi_params(int *pnmidiindev, int *pmidiindev,
     int *pnmidioutdev, int *pmidioutdev);
+
+void sys_get_midi_apis(char *buf);
 
 void sys_reopen_midi( void);
 void sys_close_midi( void);
@@ -109,6 +137,22 @@ void midi_getdevs(char *indevlist, int *nindevs,
 void sys_do_open_midi(int nmidiindev, int *midiindev,
     int nmidioutdev, int *midioutdev);
 
+#ifdef USEAPI_ALSA
+EXTERN void sys_alsa_putmidimess(int portno, int a, int b, int c);
+EXTERN void sys_alsa_putmidibyte(int portno, int a);
+EXTERN void sys_alsa_poll_midi(void);
+EXTERN void sys_alsa_setmiditimediff(double inbuftime, double outbuftime);
+EXTERN void sys_alsa_midibytein(int portno, int byte);
+EXTERN void sys_alsa_close_midi( void);
+
+
+    /* implemented in the system dependent MIDI code (s_midi_pm.c, etc. ) */
+void midi_alsa_getdevs(char *indevlist, int *nindevs,
+    char *outdevlist, int *noutdevs, int maxndev, int devdescsize);
+void sys_alsa_do_open_midi(int nmidiindev, int *midiindev,
+    int nmidioutdev, int *midioutdev);
+#endif
+
 /* m_sched.c */
 EXTERN void sys_log_error(int type);
 #define ERR_NOTHING 0
@@ -116,7 +160,11 @@ EXTERN void sys_log_error(int type);
 #define ERR_DACSLEPT 2
 #define ERR_RESYNC 3
 #define ERR_DATALATE 4
-void sched_set_using_dacs(int flag);
+
+#define SCHED_AUDIO_NONE 0
+#define SCHED_AUDIO_POLL 1 
+#define SCHED_AUDIO_CALLBACK 2
+void sched_set_using_audio(int flag);
 
 /* s_inter.c */
 
@@ -145,6 +193,7 @@ void sys_setalarm(int microsec);
 void sys_setvirtualalarm( void);
 #endif
 
+#define API_NONE 0
 #define API_ALSA 1
 #define API_OSS 2
 #define API_MMIO 3
@@ -153,14 +202,14 @@ void sys_setvirtualalarm( void);
 #define API_SGI 6
 
 #ifdef __linux__
-#define API_DEFAULT API_OSS
-#define API_DEFSTRING "OSS"
+#define API_DEFAULT API_ALSA
+#define API_DEFSTRING "ALSA"
 #endif
 #ifdef MSW
 #define API_DEFAULT API_MMIO
 #define API_DEFSTRING "MMIO"
 #endif
-#ifdef MACOSX
+#ifdef __APPLE__
 #define API_DEFAULT API_PORTAUDIO
 #define API_DEFSTRING "portaudio"
 #endif
@@ -176,15 +225,21 @@ void sys_setvirtualalarm( void);
 #define DEFMIDIDEV 0
 
 #define DEFAULTSRATE 44100
-#ifdef MSW
-#define DEFAULTADVANCE 70
-#else
+#ifdef _WIN32
+#define DEFAULTADVANCE 100
+#endif
+#ifdef __linux__
 #define DEFAULTADVANCE 50
 #endif
+#ifdef __APPLE__
+#define DEFAULTADVANCE 20
+#endif
+
+typedef void (*t_audiocallback)(void);
 
 int pa_open_audio(int inchans, int outchans, int rate, t_sample *soundin,
     t_sample *soundout, int framesperbuf, int nbuffers,
-    int indeviceno, int outdeviceno);
+    int indeviceno, int outdeviceno, t_audiocallback callback);
 void pa_close_audio(void);
 int pa_send_dacs(void);
 void sys_reportidle(void);
@@ -195,7 +250,7 @@ void pa_getdevs(char *indevlist, int *nindevs,
 
 int oss_open_audio(int naudioindev, int *audioindev, int nchindev,
     int *chindev, int naudiooutdev, int *audiooutdev, int nchoutdev,
-    int *choutdev, int rate); /* IOhannes */
+    int *choutdev, int rate);
 void oss_close_audio(void);
 int oss_send_dacs(void);
 void oss_reportidle(void);
@@ -222,7 +277,7 @@ void jack_getdevs(char *indevlist, int *nindevs,
         int maxndev, int devdescsize);
 void jack_listdevs(void);
 
-void mmio_open_audio(int naudioindev, int *audioindev,
+int mmio_open_audio(int naudioindev, int *audioindev,
     int nchindev, int *chindev, int naudiooutdev, int *audiooutdev,
     int nchoutdev, int *choutdev, int rate);
 void mmio_close_audio( void);
@@ -233,6 +288,7 @@ void mmio_getdevs(char *indevlist, int *nindevs,
         int maxndev, int devdescsize);
 
 void sys_listmididevs(void);
+void sys_set_midi_api(int whichapi);
 void sys_set_audio_api(int whichapi);
 void sys_get_audio_apis(char *buf);
 extern int sys_audioapi;
@@ -245,20 +301,18 @@ void linux_alsa_devname(char *devname);
 void sys_get_audio_params(
     int *pnaudioindev, int *paudioindev, int *chindev,
     int *pnaudiooutdev, int *paudiooutdev, int *choutdev,
-    int *prate, int *padvance);
+    int *prate, int *padvance, int *callback);
 void sys_save_audio_params(
     int naudioindev, int *audioindev, int *chindev,
     int naudiooutdev, int *audiooutdev, int *choutdev,
-    int rate, int advance);
+    int rate, int advance, int callback);
 
 /* s_file.c */
 
 typedef void (*t_printhook)(const char *s);
 extern t_printhook sys_printhook;  /* set this to override printing */
 extern int sys_printtostderr;
-#ifdef MSW
-#define vsnprintf  _vsnprintf /* jsarlo -- alias this name for msw */
-#endif
+extern int sys_k12_mode;
 
 /* jsarlo { */
 
@@ -272,7 +326,7 @@ EXTERN int* get_sys_main_advance(void ) ;
 EXTERN double* get_sys_time_per_dsp_tick(void ) ;
 EXTERN int* get_sys_schedblocksize(void ) ;
 EXTERN double* get_sys_time(void ) ;
-EXTERN float* get_sys_dacsr(void ) ;
+EXTERN t_float* get_sys_dacsr(void ) ;
 EXTERN int* get_sys_sleepgrain(void ) ;
 EXTERN int* get_sys_schedadvance(void ) ;
 
@@ -298,3 +352,64 @@ EXTERN void inmidi_polyaftertouch(int portno,
                                   int pitch,
                                   int value);
 /* } jsarlo */
+extern t_widgetbehavior text_widgetbehavior;
+
+/* in x_list.c */
+    /* List element for storage.  Keep an atom and, in case it's a pointer,
+        an associated 'gpointer' to protect against stale pointers. */
+typedef struct _listelem
+{
+    t_atom l_a;
+    t_gpointer l_p;
+} t_listelem;
+
+struct _alist
+{
+    t_pd l_pd;          /* object to point inlets to */
+    int l_n;            /* number of items */
+    int l_npointer;     /* number of pointers */
+    t_listelem *l_vec;  /* pointer to items */
+};
+
+#ifndef t_alist
+#define t_alist struct _alist
+#endif
+
+#if 0 /* probably won't use this version... */
+#ifdef HAVE_ALLOCA
+#define LIST_ALLOCA(x, n) ( \
+    (x).l_n = (n), \
+    (x).l_vec = (t_listelem *)((n) < LIST_NGETBYTE ?  \
+        alloca((n) * sizeof(t_listelem)) : getbytes((n) * sizeof(t_listelem))))     \
+#define LIST_FREEA(x) ( \
+    ((x).l_n < LIST_NGETBYTE ||
+        (freebytes((x).l_vec, (x).l_n * sizeof(t_listelem)), 0)))
+
+#else
+#define LIST_ALLOCA(x, n) ( \
+    (x).l_n = (n), \
+    (x).l_vec = (t_listelem *)getbytes((n) * sizeof(t_listelem))) 
+#define LIST_FREEA(x) (freebytes((x).l_vec, (x).l_n * sizeof(t_listelem)))
+#endif
+#endif
+
+#if HAVE_ALLOCA
+#define XL_ATOMS_ALLOCA(x, n) ((x) = (t_atom *)((n) < LIST_NGETBYTE ?  \
+        alloca((n) * sizeof(t_atom)) : getbytes((n) * sizeof(t_atom))))
+#define XL_ATOMS_FREEA(x, n) ( \
+    ((n) < LIST_NGETBYTE || (freebytes((x), (n) * sizeof(t_atom)), 0)))
+#else
+#define XL_ATOMS_ALLOCA(x, n) ((x) = (t_atom *)getbytes((n) * sizeof(t_atom)))
+#define XL_ATOMS_FREEA(x, n) (freebytes((x), (n) * sizeof(t_atom)))
+#endif
+
+EXTERN void atoms_copy(int argc, t_atom *from, t_atom *to);
+EXTERN t_class *alist_class;
+EXTERN void alist_init(t_alist *x);
+EXTERN void alist_clear(t_alist *x);
+EXTERN void alist_list(t_alist *x, t_symbol *s, int argc, t_atom *argv);
+EXTERN void alist_anything(t_alist *x, t_symbol *s, int argc, t_atom *argv);
+EXTERN void alist_toatoms(t_alist *x, t_atom *to);
+EXTERN void alist_clone(t_alist *x, t_alist *y);
+
+#endif /* __s_stuff_h_ */
